@@ -1,0 +1,54 @@
+spring:
+
+server:
+  port: 8081
+  use-forward-headers: true
+  servlet:
+    context-path: "/"
+    session.timeout: 7200
+  error:
+    include-stacktrace: always
+    
+
+host: "http://localhost:${server.port}"
+
+management:
+  server:
+    servlet.context-path: "/manage"
+    add-application-context-header: false
+      
+
+# disable all configurations 
+digiexpress.enabled: true
+
+#
+digiexpress.composer.ui.enabled: true
+digiexpress.composer.ui.redirect: false
+digiexpress.composer.ui.https: false 
+digiexpress.composer.ui.oidc-path:  ''
+digiexpress.composer.ui.status-path: ''
+digiexpress.composer.ui.service-path: /ide
+
+digiexpress.composer.service.enabled: true
+digiexpress.composer.service.service-path: /assets
+
+# form releated db enabled, default path classpath*:assets/
+digiexpress.db.inmemory.enabled: false
+digiexpress.db.inmemory.path: classpath*:assets/
+
+#form db config - local file storage
+digiexpress.db.file.enabled: false
+digiexpress.db.file.path: src/main/resources
+digiexpress.db.file.email: asset.manager@resys.io
+
+#form db config - postgresql storage
+digiexpress.db.pg.enabled: false
+digiexpress.db.pg.autoCreate: true
+digiexpress.db.pg.repositoryName: "digiexpress-repo-1" 
+digiexpress.db.pg.branchSpecifier: "main"
+digiexpress.db.pg.pgHost: "localhost"
+digiexpress.db.pg.pgDb: "postgres"
+digiexpress.db.pg.pgUser: "postgres"
+digiexpress.db.pg.pgPass: "example"
+
+
