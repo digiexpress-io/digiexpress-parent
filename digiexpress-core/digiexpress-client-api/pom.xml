@@ -15,6 +15,21 @@
 
   <dependencies>
     <dependency>
+      <groupId>io.dialob</groupId>
+      <artifactId>dialob-client-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.resys.hdes</groupId>
+      <artifactId>hdes-client-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.thestencil</groupId>
+      <artifactId>stencil-client-api</artifactId>
+    </dependency>
+
+
+
+    <dependency>
       <groupId>io.smallrye.reactive</groupId>
       <artifactId>mutiny</artifactId>
     </dependency>
