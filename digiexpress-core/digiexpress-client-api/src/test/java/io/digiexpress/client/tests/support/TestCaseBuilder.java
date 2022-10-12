@@ -19,6 +19,7 @@ import io.dialob.client.spi.function.FunctionRegistryImpl;
 import io.dialob.client.spi.store.DialobStoreConfig;
 import io.dialob.client.spi.store.ImmutableDialobStoreConfig;
 import io.dialob.rule.parser.function.DefaultFunctions;
+import io.digiexpress.client.api.DigiexpressClient;
 import io.resys.hdes.client.api.HdesClient;
 import io.resys.hdes.client.spi.HdesClientImpl;
 import io.resys.hdes.client.spi.ThenaStore;
@@ -41,6 +42,7 @@ public class TestCaseBuilder {
   private final DialobClient dialobClient;
   private final HdesClient hdesClient;
   private final StencilClient stencilClient;
+  private final DigiexpressClient client;
   
   
   public TestCaseBuilder(io.vertx.mutiny.pgclient.PgPool pgPool) {
