@@ -1,13 +1,14 @@
-package io.digiexpress.client.api.model;
+package io.digiexpress.client.api;
 
 import java.util.List;
 import java.util.Optional;
 
 import io.dialob.client.api.DialobDocument.FormReleaseDocument;
+import io.digiexpress.client.api.model.ServiceDef;
 import io.resys.hdes.client.api.ast.AstTag;
 import io.thestencil.client.api.StencilClient;
 
-public interface ServiceDefEnvir {
+public interface DigiexpressEnvir {
   List<ServiceDef> findAll();
   ServiceDef get(String id);
   ServiceDef get(String name, String version);
@@ -15,10 +16,10 @@ public interface ServiceDefEnvir {
   
   
   
-  interface ServiceDefEnvirBuilder {
-    ServiceDefEnvirBuilder from(ServiceDefEnvir envir);
+  interface Builder {
+    Builder from(DigiexpressEnvir envir);
     EnvirCommandFormatBuilder addCommand();
-    ServiceDefEnvir build();
+    DigiexpressEnvir build();
   }
   interface EnvirCommandFormatBuilder {
     EnvirCommandFormatBuilder id(String externalId);
@@ -28,6 +29,6 @@ public interface ServiceDefEnvir {
     EnvirCommandFormatBuilder hdes(AstTag release);
     EnvirCommandFormatBuilder stencil(StencilClient.Release release);
 
-    ServiceDefEnvirBuilder build();
+    Builder build();
   }
 }

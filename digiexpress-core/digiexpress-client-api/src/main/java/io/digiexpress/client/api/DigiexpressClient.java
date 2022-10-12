@@ -1,35 +1,20 @@
 package io.digiexpress.client.api;
 
-import java.io.Serializable;
-
-import io.digiexpress.client.api.model.ExecutionState;
-import io.digiexpress.client.api.model.ServiceDefEnvir;
-import io.digiexpress.client.api.model.ServiceDefEnvir.ServiceDefEnvirBuilder;
+import io.smallrye.mutiny.Uni;
 
 
 public interface DigiexpressClient {
-  ExecutorBuilder executor(ServiceDefEnvir envir);
-  ServiceDefEnvirBuilder envir();
-
-
+  DigiexpressExecutor.Builder executor(DigiexpressEnvir envir);
+  DigiexpressEnvir.Builder envir();
   
-  interface ExecutorBuilder {
-    ExecutorBuilder serviceId(String id);
-    StartActivityExecutor activity(String id);
-    CreateFillExecutor fill(String id);
-    RestoreFillExecutor restore(String id);
-    
-  }
-  interface StartActivityExecutor {
-    StartActivityExecutor contextValue(String name, Serializable value);
-    ExecutionState build();
-  }
+  DigiexpressStore getStore();
+  DigiexpressConfig getConfig();
+  DigiexpressClientRepoBuilder repo();
   
-  interface CreateFillExecutor {
-    
-  }
-  
-  interface RestoreFillExecutor {
-    
+  interface DigiexpressClientRepoBuilder {
+    DigiexpressClientRepoBuilder repoName(String repoName);
+    DigiexpressClientRepoBuilder headName(String headName);
+    Uni<DigiexpressClient> create();
+    DigiexpressClient build();
   }
 }
