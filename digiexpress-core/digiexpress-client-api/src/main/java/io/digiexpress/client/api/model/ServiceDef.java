@@ -2,6 +2,7 @@ package io.digiexpress.client.api.model;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface ServiceDef {
   String getId();
@@ -9,27 +10,37 @@ public interface ServiceDef {
   
   String getName(); // mutable
   String getDesc(); // mutable
-  ServiceDefConfig getConfig();
-  
+
   LocalDateTime getCreated();
   LocalDateTime getUpdated();
-  
-  List<Activity> getActivities();
-  List<Intl> getIntl();
+  ServiceDefBody getBody();
 
   
-  interface ServiceDefConfig {
-    ProjectConfig getMain();
-    ProjectConfig getStencil();
-    ProjectConfig getDialob();
-    ProjectConfig getWrench();
+  interface ServiceDefBody {
+    ServiceDefConfig getConfig();
+    
+    List<ActivityDef> getActivities();
+    List<FlowDef> getFlows();
+    List<FormDef> getForms();
+    List<ArticleDef> getArticles();
+    
+    List<Intl> getIntl();
   }
   
-  interface ProjectConfig {
+  interface FlowDef {
     String getId();
   }
 
-  interface Activity {
+  interface FormDef {
+    String getId();
+  }
+  
+  interface ArticleDef {
+    String getId();
+  }
+
+  
+  interface ActivityDefRevision {
     String getId();
     String getVersion();
     LocalDateTime getCreated();
@@ -38,18 +49,18 @@ public interface ServiceDef {
     String getActivityName();
     String getActivityDesc();
     
-    ActivityRevision getHead();
-    List<ActivityRevision> getRevisions();
+    ActivityDef getHead();
+    List<ActivityDef> getRevisions();
   }
   
-  interface ActivityRevision {
+  interface ActivityDef {
     String getId();
     String getRevisionName();
-    
-    IntlLink getIntl();
-    DialobLink getDialob();
-    WrenchLink getWrench();
     StencilLink getStencil();
+    
+    Optional<IntlLink> getIntl();
+    Optional<DialobLink> getDialob();
+    Optional<WrenchLink> getWrench();
   }
   
   interface Intl {

@@ -7,16 +7,15 @@ import java.util.Map;
 
 import io.dialob.api.questionnaire.Questionnaire;
 
-public interface ActivityState extends Serializable {
+public interface ExecutionState extends Serializable {
   String getId();
   String getVersion();
-  String getProjectId();
   
   Steps getSteps();
-  StepType getStepType();
+  
+  StepType getPointer();
   LocalDateTime getStart();
   LocalDateTime getEnd();
-  
   
   interface Steps extends Serializable {
     String getId();
