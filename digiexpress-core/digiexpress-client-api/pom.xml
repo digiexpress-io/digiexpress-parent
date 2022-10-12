@@ -24,9 +24,24 @@
     </dependency>
     <dependency>
       <groupId>io.thestencil</groupId>
-      <artifactId>stencil-client-api</artifactId>
+      <artifactId>stencil-client</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>io.resys.hdes</groupId>
+      <artifactId>thena-docdb-pgsql</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.dialob</groupId>
+      <artifactId>dialob-form-store-pgsql</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.resys.hdes</groupId>
+      <artifactId>hdes-store-thena</artifactId>
+      <scope>test</scope>
+    </dependency>
 
 
     <dependency>
@@ -57,5 +72,7 @@
       <groupId>com.fasterxml.jackson.datatype</groupId>
       <artifactId>jackson-datatype-guava</artifactId>
     </dependency>
+
+
   </dependencies>
 </project>

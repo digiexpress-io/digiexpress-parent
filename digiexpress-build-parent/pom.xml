@@ -30,7 +30,7 @@
     <maven-spotbugs-plugin.version>4.5.3.0</maven-spotbugs-plugin.version>
     <maven-jib-plugin.version>3.2.0</maven-jib-plugin.version>
 
-
+    <thena.version>1.1.24</thena.version>
     <hdes.version>3.130.52</hdes.version>
     <stencil.version>1.148.7</stencil.version>
     <dialob.version>3.0.3</dialob.version>
@@ -211,6 +211,13 @@
 
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>io.resys.hdes</groupId>
+        <artifactId>thena-bom</artifactId>
+        <version>${thena.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
       <dependency>
         <groupId>io.thestencil</groupId>
         <artifactId>stencil-bom</artifactId>
