@@ -28,6 +28,7 @@
         <artifactId>digiexpress-client-api</artifactId>
         <version>${project.version}</version>
       </dependency>
+
       <dependency>
         <groupId>io.digiexpress</groupId>
         <artifactId>digiexpress-composer</artifactId>

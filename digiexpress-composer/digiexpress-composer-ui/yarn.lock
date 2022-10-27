@@ -2892,9 +2892,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@the-wrench-io/react-burger@npm:^1.0.36":
-  version: 1.0.36
-  resolution: "@the-wrench-io/react-burger@npm:1.0.36"
+"@the-wrench-io/react-burger@npm:^1.0.39":
+  version: 1.0.39
+  resolution: "@the-wrench-io/react-burger@npm:1.0.39"
   peerDependencies:
     "@emotion/react": ^11.4.1
     "@emotion/styled": ^11.3.0
@@ -2904,7 +2904,7 @@ __metadata:
     "@mui/styles": ^5.0.1
     react: ^17.0.2
     react-dom: ^17.0.2
-  checksum: c6c55e6f526659c3674edb740bdafdb35008e89542ab0f110ac5ab579ffd11ecaeffc7c548c45b5c43dc3d10c76e0de48735a2e729516ad5276f33b46d34b130
+  checksum: ac3be6e3cfa2612e722de0f803cd737b8a33c890c09b800f522b95eba8c9bf9dce9a8871e82c00a4600b78ecac3023029d9d52a2c44012e4042f21ecf23cf2bf
   languageName: node
   linkType: hard
 
@@ -5488,7 +5488,7 @@ __metadata:
     "@mui/material": ^5.0.1
     "@mui/styles": ^5.0.1
     "@mui/system": ^5.0.1
-    "@the-wrench-io/react-burger": ^1.0.36
+    "@the-wrench-io/react-burger": ^1.0.39
     "@types/node": ^12.19.9
     "@types/react": ^17.0.1
     "@types/react-dom": ^17.0.1

@@ -11,7 +11,7 @@
     "@mui/material": "^5.0.1",
     "@mui/styles": "^5.0.1",
     "@mui/system": "^5.0.1",
-    "@the-wrench-io/react-burger": "^1.0.36",
+    "@the-wrench-io/react-burger": "^1.0.39",
     "notistack": "^2.0.3",
     "prop-types": "^15.8.0",
     "react": "^17.0.2",

@@ -1,4 +1,4 @@
-package io.digiexpress.client.api.model;
+package io.digiexpress.client.api;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -7,34 +7,17 @@ import java.util.Map;
 
 import io.dialob.api.questionnaire.Questionnaire;
 
-public interface ExecutionState extends Serializable {
+public interface ProcessState extends Serializable {
   String getId();
   String getVersion();
-  
-  Steps getSteps();
-  
-  StepType getPointer();
-  LocalDateTime getStart();
-  LocalDateTime getEnd();
-  
-  interface Steps extends Serializable {
-    String getId();
-    String getSummary();
-    List<Step<?>> getValues();
-    
-    // last instance of the step
-    Step<ActivityStarted> getActivityStarted();
-    Step<FillCreated> getFillCreated();
-    Step<FillInProgress> getFillInProgress();
-    Step<FillCompleted> getFillCompleted();
-    Step<FlowError> getFlowError();
-    Step<FlowError> getFlowCompleted();
-  }
+  List<Step<?>> getSteps();
+  StepType getStepType();
   
   interface Step<T extends StepBody> extends Serializable {
     String getId();
-    Integer getCount();
-    LocalDateTime getDateTime();
+    Integer getRunCount();
+    LocalDateTime getStart();
+    LocalDateTime getEnd();
     List<Error> getErrors();
     StepType getType();
     T getBody();
@@ -42,12 +25,12 @@ public interface ExecutionState extends Serializable {
   
   interface StepBody {}
   
-  interface ActivityStarted extends StepBody {
+  interface ProcessStarted extends StepBody {
     RevisionId getServiceId();
-    RevisionId getActivityId();
+    RevisionId getProcessId();
   }
   
-  interface FillCreated extends StepBody {
+  interface FillStarted extends StepBody {
     RevisionId getFormId();
     Map<String, Serializable> getAccepts();
     QuestionnaireSessionId getReturns();
@@ -86,11 +69,27 @@ public interface ExecutionState extends Serializable {
   
   
   enum StepType {
-    ACTIVITY_STARTED,
-    FILL_CREATED,
+    PROCESS_STARTED,
+    
+    FILL_STARTED,
     FILL_IN_PROGRESS,
     FILL_COMPLETED,
-    FLOW_ERROR,
-    FLOW_COMPLETED
+    
+    FLOW_STARTED,
+    FLOW_COMPLETED,
+
+    PROCESS_COMPLETED
   }
+  
+  
+  interface ProcessStateWrapper extends Serializable {
+    
+    // last instance of the step
+    Step<ProcessStarted> getProcessStarted();
+    Step<FillStarted> getFillStarted();
+    Step<FillInProgress> getFillInProgress();
+    Step<FillCompleted> getFillCompleted();
+    Step<FlowError> getFlowCompleted();
+  }
+  
 }

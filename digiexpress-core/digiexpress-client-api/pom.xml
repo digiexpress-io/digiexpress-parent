@@ -14,33 +14,32 @@
   <artifactId>digiexpress-client-api</artifactId>
 
   <dependencies>
+
     <dependency>
       <groupId>io.dialob</groupId>
       <artifactId>dialob-client-api</artifactId>
     </dependency>
     <dependency>
-      <groupId>io.resys.hdes</groupId>
-      <artifactId>hdes-client-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.thestencil</groupId>
-      <artifactId>stencil-client</artifactId>
+      <groupId>io.dialob</groupId>
+      <artifactId>dialob-form-store-pgsql</artifactId>
     </dependency>
 
     <dependency>
       <groupId>io.resys.hdes</groupId>
-      <artifactId>thena-docdb-pgsql</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.dialob</groupId>
-      <artifactId>dialob-form-store-pgsql</artifactId>
-      <scope>test</scope>
+      <artifactId>hdes-client-api</artifactId>
     </dependency>
     <dependency>
       <groupId>io.resys.hdes</groupId>
       <artifactId>hdes-store-thena</artifactId>
-      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>io.thestencil</groupId>
+      <artifactId>stencil-client-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.resys.hdes</groupId>
+      <artifactId>thena-docdb-pgsql</artifactId>
     </dependency>
 
 

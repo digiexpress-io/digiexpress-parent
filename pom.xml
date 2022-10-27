@@ -84,9 +84,12 @@
   <modules>
     <module>digiexpress-bom</module>
     <module>digiexpress-build-parent</module>
+    
+ 
     <module>digiexpress-core</module>
     <module>digiexpress-composer</module>
     <module>digiexpress-dev</module>
+     
   </modules>
 
   <profiles>
