@@ -1,0 +1,37 @@
+{
+  "locales": [
+    {
+      "locale": "en"
+    }
+  ],
+  "pages": [
+    {
+      "articleId": "index",
+      "locale": "en",
+      "content": "# This is opening page"
+    }
+  ],
+  "articles": [
+    {
+      "parentId": null,
+      "name": "index",
+      "order": null
+    }
+  ],
+  "workflows": [
+    {
+      "value": "general-message",
+      "articles": [
+        "index"
+      ],
+      "labels": [
+        {
+          "locale": "en",
+          "labelValue": "send us a message using a form"
+        }
+      ],
+      "devMode": null
+    }
+  ],
+  "links": []
+}
