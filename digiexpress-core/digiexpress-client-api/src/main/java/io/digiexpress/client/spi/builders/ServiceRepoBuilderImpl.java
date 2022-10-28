@@ -221,7 +221,7 @@ public class ServiceRepoBuilderImpl implements ServiceRepoBuilder {
         .type(ServiceDocument.DocumentType.SERVICE_CONFIG)
         .dialob(ImmutableServiceConfigValue.builder().type(ConfigType.DIALOB).id(namings.getRepoDialob()).build())
         .stencil(ImmutableServiceConfigValue.builder().type(ConfigType.STENCIL).id(namings.getRepoStencil()).build())
-        .hdes(ImmutableServiceConfigValue.builder().type(ConfigType.WRENCH).id(namings.getRepoHdes()).build())
+        .hdes(ImmutableServiceConfigValue.builder().type(ConfigType.HDES).id(namings.getRepoHdes()).build())
         .service(ImmutableServiceConfigValue.builder().type(ConfigType.SERVICE).id(namings.getRepoService()).build())
         .build();
     final var command = ImmutableCreateStoreEntity.builder()

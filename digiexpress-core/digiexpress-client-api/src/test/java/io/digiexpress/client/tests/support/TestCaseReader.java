@@ -9,6 +9,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.dialob.api.form.Form;
 import io.dialob.client.api.DialobDocument.FormDocument;
 import io.dialob.client.api.ImmutableFormDocument;
+import io.resys.hdes.client.api.HdesComposer.CreateEntity;
+import io.resys.hdes.client.api.ImmutableCreateEntity;
+import io.resys.hdes.client.api.ast.AstBody;
+import io.resys.hdes.client.api.ast.AstCommand.AstCommandValue;
+import io.resys.hdes.client.api.ast.ImmutableAstCommand;
 import io.thestencil.client.api.CreateBuilder.BatchSite;
 import lombok.RequiredArgsConstructor;
 
@@ -43,7 +48,29 @@ public class TestCaseReader {
         .data(form(file)).build();
   }
   
-  
+  public CreateEntity flow(String file) {
+    final var body = toString(file);
+    
+    return ImmutableCreateEntity.builder()
+        .type(AstBody.AstBodyType.FLOW)
+        .addBody(ImmutableAstCommand.builder()
+            .type(AstCommandValue.SET_BODY)
+            .value(body)
+            .build())
+        .build();
+  }  
+  public CreateEntity flowService(String file) {
+    final var body = toString(file);
+    
+    return ImmutableCreateEntity.builder()
+        .type(AstBody.AstBodyType.FLOW_TASK)
+        .addBody(ImmutableAstCommand.builder()
+            .type(AstCommandValue.SET_BODY)
+            .value(body)
+            .build())
+        .build();
+  }
+
   private String toString(String resource) {
     try {
       final var type = TestCaseReader.class;

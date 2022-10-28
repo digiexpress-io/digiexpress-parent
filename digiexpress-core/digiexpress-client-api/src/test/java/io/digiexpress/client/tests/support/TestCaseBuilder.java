@@ -16,8 +16,9 @@ import io.resys.thena.docdb.spi.ClientCollections;
 import io.resys.thena.docdb.spi.ClientState;
 import io.resys.thena.docdb.spi.pgsql.PgErrors;
 import io.resys.thena.docdb.sql.DocDBFactorySql;
+import lombok.extern.slf4j.Slf4j;
 
-
+@Slf4j
 public class TestCaseBuilder {
   private final ObjectMapper objectMapper;
   private final ServiceClient client;
@@ -53,18 +54,18 @@ public class TestCaseBuilder {
   }
   
   public String print(ServiceStore store) {
+    doc.repo().query().find().collect().asList().await().atMost(Duration.ofMinutes(1))
+    .forEach(e -> log.info("queried repo: " + e));
+    
     Repo repo = doc.repo().query().id(store.getRepoName()).get()
         .await().atMost(Duration.ofMinutes(1));
     
     return new RepoPrinter(docState, objectMapper).print(repo);
   }
-  
   private DocDB getClient(io.vertx.mutiny.pgclient.PgPool pgPool, String db) {
     return DocDBFactorySql.create().client(pgPool).db(db).errorHandler(new PgErrors()).build();
   }
-
   public ServiceClient getClient() {
     return client;
   }
-   
 }

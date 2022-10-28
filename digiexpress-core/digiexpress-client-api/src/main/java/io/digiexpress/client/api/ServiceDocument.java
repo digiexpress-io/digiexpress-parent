@@ -13,7 +13,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 public interface ServiceDocument {
  enum DocumentType { PROCESS_REV, PROCESS_DEF, SERVICE_CONFIG, SERVICE_RELEASE }
- enum ConfigType { STENCIL, DIALOB, WRENCH, SERVICE }
+ enum ConfigType { STENCIL, DIALOB, HDES, SERVICE }
  
  @Nullable String getId(); // unique id
  @Nullable String getVersion(); // not really nullable, just in serialization
@@ -71,7 +71,7 @@ public interface ServiceDocument {
  interface RefIdValue extends Serializable {
    @Nullable String getId();
    String getRefName();
-   String getRefRevName();
+   String getTagName();
    ConfigType getType(); 
  }
  @Value.Immutable @JsonSerialize(as = ImmutableServiceConfigValue.class) @JsonDeserialize(as = ImmutableServiceConfigValue.class)

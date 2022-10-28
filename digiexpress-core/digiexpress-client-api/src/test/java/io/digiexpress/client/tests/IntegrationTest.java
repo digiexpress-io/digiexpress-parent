@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import io.digiexpress.client.api.ImmutableCreateRevision;
+import io.digiexpress.client.api.ImmutableRefIdValue;
+import io.digiexpress.client.api.ServiceDocument.ConfigType;
 import io.digiexpress.client.tests.support.PgProfile;
 import io.digiexpress.client.tests.support.TestCase;
 import io.quarkus.test.junit.QuarkusTest;
@@ -32,10 +34,17 @@ public class IntegrationTest extends TestCase {
     // create site with one workflow('general-message')
     stencil(client).create().batch(builder.reader().content("case_1_content.json")).await().atMost(atMost);
     
+    // create wrench service and flow
+    hdes(client).create(builder.reader().flowService("case_1_service.txt")).await().atMost(atMost);
+    hdes(client).create(builder.reader().flow("case_1_flow.txt")).await().atMost(atMost);
+
+    
     // define process 
     service(client).create().revision(ImmutableCreateRevision.builder()
-        .name("general-message")
+        .name("general-message-process")
         .description("process to handle general message")
+        .addValues(ImmutableRefIdValue.builder().type(ConfigType.DIALOB).refName("general-message-form").tagName("main").build())
+        .addValues(ImmutableRefIdValue.builder().type(ConfigType.HDES).refName("case 1 flow").tagName("main").build())
         .build()).await().atMost(atMost);
     
     
