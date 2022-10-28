@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import io.digiexpress.client.api.ImmutableCreateRevision;
 import io.digiexpress.client.tests.support.PgProfile;
 import io.digiexpress.client.tests.support.TestCase;
 import io.quarkus.test.junit.QuarkusTest;
@@ -14,7 +15,7 @@ import io.quarkus.test.junit.TestProfile;
 @QuarkusTest
 @TestProfile(PgProfile.class)
 public class IntegrationTest extends TestCase {
-  private final Duration atMost = Duration.ofMillis(400);
+  private final Duration atMost = Duration.ofMillis(1000);
   
   @Test
   public void init() throws JsonProcessingException {
@@ -32,10 +33,17 @@ public class IntegrationTest extends TestCase {
     stencil(client).create().batch(builder.reader().content("case_1_content.json")).await().atMost(atMost);
     
     // define process 
+    service(client).create().revision(ImmutableCreateRevision.builder()
+        .name("general-message")
+        .description("process to handle general message")
+        .build()).await().atMost(atMost);
+    
     
     System.out.println(builder.print(client.getConfig().getStore()));
 
   }
+  
+  
   
 //  @Test
 //  public void tojson() throws JsonProcessingException {

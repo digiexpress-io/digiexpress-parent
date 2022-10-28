@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import org.immutables.value.Value;
 
-import io.digiexpress.client.api.ServiceDocument.DocumentType;
+import io.digiexpress.client.api.ServiceStore.GidProvider;
 import io.digiexpress.client.api.ServiceStore.StoreEntity;
 import io.digiexpress.client.api.ServiceStore.StoreState;
 import io.resys.thena.docdb.api.DocDB;
@@ -20,12 +20,6 @@ public interface ServiceStoreConfig {
   String getRepoName();
   String getHeadName();
   AuthorProvider getAuthorProvider();
-  
-  @FunctionalInterface
-  interface GidProvider {
-    String getNextId(DocumentType entity);
-  }
-  
   GidProvider getGidProvider();
   
   @FunctionalInterface

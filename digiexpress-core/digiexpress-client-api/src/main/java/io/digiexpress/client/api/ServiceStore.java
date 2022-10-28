@@ -12,6 +12,7 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import io.digiexpress.client.api.ServiceDocument.DocumentType;
 import io.smallrye.mutiny.Uni;
 
 public interface ServiceStore {
@@ -25,6 +26,13 @@ public interface ServiceStore {
   
   String getRepoName();
   String getHeadName();
+
+  GidProvider getGid();
+
+  @FunctionalInterface
+  interface GidProvider {
+    String getNextId(DocumentType entity);
+  }
   
   
   interface StoreRepoBuilder {

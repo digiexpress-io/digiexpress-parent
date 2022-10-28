@@ -2,7 +2,12 @@ package io.digiexpress.client.spi;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.digiexpress.client.api.ImmutableProcessDocument;
+import io.digiexpress.client.api.ImmutableProcessRevisionDocument;
 import io.digiexpress.client.api.ImmutableServiceConfigDocument;
+import io.digiexpress.client.api.ServiceDocument;
+import io.digiexpress.client.api.ServiceDocument.ProcessDocument;
+import io.digiexpress.client.api.ServiceDocument.ProcessRevisionDocument;
 import io.digiexpress.client.api.ServiceDocument.ServiceConfigDocument;
 import io.digiexpress.client.api.ServiceMapper;
 import io.digiexpress.client.api.ServiceStore.StoreEntity;
@@ -27,9 +32,36 @@ public class ServiceMapperImpl implements ServiceMapper {
   }
 
   @Override
-  public String toBody(ServiceConfigDocument entity) {
+  public String toBody(ServiceDocument entity) {
+    if(entity instanceof ServiceConfigDocument) {
+      return toConfigBody((ServiceConfigDocument) entity);
+    } else if(entity instanceof ProcessDocument) {
+      return toProcessBody((ProcessDocument) entity);
+    } else if(entity instanceof ProcessRevisionDocument) {
+      return toRevisionBody((ProcessRevisionDocument) entity);
+    }
+    throw new JsonMappingException("Unknown document: " + entity); 
+  }
+
+  protected String toRevisionBody(ProcessRevisionDocument entity) {
+    try {
+      return om.writeValueAsString(ImmutableProcessRevisionDocument.builder().from(entity).id(null).version(null).build());
+    } catch (Exception e) {
+      throw new JsonMappingException(e.getMessage() + System.lineSeparator() + entity, e);
+    }
+  }
+  
+  protected String toConfigBody(ServiceConfigDocument entity) {
     try {
       return om.writeValueAsString(ImmutableServiceConfigDocument.builder().from(entity).id(null).version(null).build());
+    } catch (Exception e) {
+      throw new JsonMappingException(e.getMessage() + System.lineSeparator() + entity, e);
+    }
+  }
+  
+  protected String toProcessBody(ProcessDocument entity) {
+    try {
+      return om.writeValueAsString(ImmutableProcessDocument.builder().from(entity).id(null).version(null).build());
     } catch (Exception e) {
       throw new JsonMappingException(e.getMessage() + System.lineSeparator() + entity, e);
     }

@@ -27,7 +27,6 @@ public interface ServiceDocument {
  interface ProcessRevisionDocument extends ServiceDocument {
    String getHead(); //latest proccess id
    String getName();
-   @Nullable String getDescription();
    List<ProcessRevisionValue> getValues();
    @Value.Default
    default DocumentType getType() { return DocumentType.PROCESS_REV; }
@@ -70,7 +69,7 @@ public interface ServiceDocument {
  
  @Value.Immutable @JsonSerialize(as = ImmutableRefIdValue.class) @JsonDeserialize(as = ImmutableRefIdValue.class)
  interface RefIdValue extends Serializable {
-   String getId();
+   @Nullable String getId();
    String getRefName();
    String getRefRevName();
    ConfigType getType(); 
@@ -87,8 +86,6 @@ public interface ServiceDocument {
    String getProcessDocumentId();
    LocalDateTime getCreated();
    LocalDateTime getUpdated();
-   @Nullable
-   String getDescription();
  }
  @Value.Immutable @JsonSerialize(as = ImmutableServiceReleaseValue.class) @JsonDeserialize(as = ImmutableServiceReleaseValue.class)
  interface ServiceReleaseValue extends Serializable {

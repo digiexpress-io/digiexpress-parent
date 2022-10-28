@@ -5,5 +5,5 @@ import io.digiexpress.client.api.ServiceStore.StoreEntity;
 
 public interface ServiceMapper {
   ServiceConfigDocument toConfig(StoreEntity entity);
-  String toBody(ServiceConfigDocument entity);
+  String toBody(ServiceDocument entity);
 }

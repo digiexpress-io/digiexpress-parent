@@ -35,15 +35,14 @@ public class ServiceStorePg extends ServiceStoreTemplate implements ServiceStore
   public ServiceStorePg(ServiceStoreConfig config) {
     super(config);
   }
-
-  public static Builder builder() {
-    return new Builder();
-  }
   @Override
   public QueryBuilder query() {
     return new ServiceStoreQueryBuilderImpl(config);
   }
-
+  @Override
+  public GidProvider getGid() {
+    return config.getGidProvider();
+  }
   @Override
   public StoreRepoBuilder repo() {
     return new StoreRepoBuilder() {
@@ -100,7 +99,10 @@ public class ServiceStorePg extends ServiceStoreTemplate implements ServiceStore
     };
   }
   
-
+  public static Builder builder() {
+    return new Builder();
+  }
+  
   @Slf4j
   @Accessors(fluent = true, chain = true)
   @Getter(AccessLevel.NONE)
@@ -109,7 +111,7 @@ public class ServiceStorePg extends ServiceStoreTemplate implements ServiceStore
     private String repoName;
     private String headName;
     private ObjectMapper objectMapper;
-    private ServiceStoreConfig.GidProvider gidProvider;
+    private ServiceStore.GidProvider gidProvider;
     private ServiceStoreConfig.AuthorProvider authorProvider;
     private io.vertx.mutiny.pgclient.PgPool pgPool;
     private String pgHost;
@@ -119,7 +121,7 @@ public class ServiceStorePg extends ServiceStoreTemplate implements ServiceStore
     private String pgPass;
     private Integer pgPoolSize;
     
-    private ServiceStoreConfig.GidProvider getGidProvider() {
+    private ServiceStore.GidProvider getGidProvider() {
       return this.gidProvider == null ? type -> {
         return OidUtils.gen();
      } : this.gidProvider;
