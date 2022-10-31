@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import org.immutables.value.Value;
 
+import io.digiexpress.client.api.ServiceMapper;
 import io.digiexpress.client.api.ServiceStore.GidProvider;
 import io.digiexpress.client.api.ServiceStore.StoreEntity;
 import io.digiexpress.client.api.ServiceStore.StoreState;
@@ -21,6 +22,7 @@ public interface ServiceStoreConfig {
   String getHeadName();
   AuthorProvider getAuthorProvider();
   GidProvider getGidProvider();
+  ServiceMapper getMapper();
   
   @FunctionalInterface
   interface Serializer {

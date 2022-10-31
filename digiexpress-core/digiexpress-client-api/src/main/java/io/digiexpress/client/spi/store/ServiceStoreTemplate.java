@@ -269,8 +269,8 @@ public class ServiceStoreTemplate implements ServiceStoreConfig.Commands {
             final var blob = state.getObjects().getBlobs().get(blobId);
             final var entity = config.getDeserializer().fromString(blob);
             switch(entity.getBodyType()) {
-             case PROCESS_DEF: builder.putRevs(entity.getId(), entity); break;
-             case PROCESS_REV: builder.putProcesses(entity.getId(), entity);  break;
+             case SERVICE_DEF: builder.putRevs(entity.getId(), entity); break;
+             case SERVICE_REV: builder.putProcesses(entity.getId(), entity);  break;
              case SERVICE_RELEASE: builder.putReleases(entity.getId(), entity);  break;
              case SERVICE_CONFIG: builder.putConfigs(entity.getId(), entity);  break;
              default: throw new RuntimeException("Unknown type: " + entity.getBodyType() + "!");
@@ -326,6 +326,8 @@ public class ServiceStoreTemplate implements ServiceStoreConfig.Commands {
 
   protected StoreExceptionMsg convertMessages1(ObjectsResult<BlobObject> state) {
     return ImmutableStoreExceptionMsg.builder()
+        .id("STATE_FAIL")
+        .value("")
         .addAllArgs(state.getMessages().stream().map(message->message.getText()).collect(Collectors.toList()))
         .build();
   }

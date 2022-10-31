@@ -1,5 +1,7 @@
 package io.digiexpress.client.tests.support;
 
+import java.util.function.Consumer;
+
 import javax.inject.Inject;
 
 import org.junit.jupiter.api.AfterEach;
@@ -14,7 +16,9 @@ import io.resys.hdes.client.api.HdesComposer;
 import io.resys.hdes.client.spi.HdesComposerImpl;
 import io.thestencil.client.api.StencilComposer;
 import io.thestencil.client.spi.StencilComposerImpl;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class TestCase {
   @Inject io.vertx.mutiny.pgclient.PgPool pgPool;
   private TestCaseBuilder builder;
@@ -51,5 +55,11 @@ public class TestCase {
   
   public ServiceComposer service(ServiceClient client) {
     return new ServiceComposerImpl(client);
+  }
+  
+  public Consumer<Throwable> log() {
+    return (ex) -> {
+      log.error(ex.getMessage(), ex);
+    }; 
   }
 }

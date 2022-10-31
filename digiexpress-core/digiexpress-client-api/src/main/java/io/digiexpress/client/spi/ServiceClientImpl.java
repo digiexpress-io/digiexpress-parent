@@ -1,5 +1,7 @@
 package io.digiexpress.client.spi;
 
+import static io.digiexpress.client.spi.query.QueryFactoryImpl.HEAD_NAME;
+
 import java.io.IOException;
 import java.util.function.Supplier;
 
@@ -20,10 +22,12 @@ import io.dialob.client.spi.support.OidUtils;
 import io.dialob.rule.parser.function.DefaultFunctions;
 import io.dialob.rule.parser.function.FunctionRegistry;
 import io.digiexpress.client.api.ImmutableServiceClientConfig;
+import io.digiexpress.client.api.QueryFactory;
 import io.digiexpress.client.api.ServiceCache;
 import io.digiexpress.client.api.ServiceClient;
 import io.digiexpress.client.api.ServiceEnvir;
 import io.digiexpress.client.spi.builders.ServiceRepoBuilderImpl;
+import io.digiexpress.client.spi.query.QueryFactoryImpl;
 import io.digiexpress.client.spi.store.ImmutableServiceStoreConfig;
 import io.digiexpress.client.spi.store.ServiceStorePg;
 import io.digiexpress.client.spi.support.ServiceAssert;
@@ -44,16 +48,18 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 
+
+
 @Slf4j
 @RequiredArgsConstructor
 public class ServiceClientImpl implements ServiceClient {
 
   private final ServiceClientConfig config;
-  private final DocDB docDb;
   
   @Override
   public ServiceRepoBuilder repo() {
-    return new ServiceRepoBuilderImpl(config, docDb);
+    ServiceAssert.notNull(config.getDocDb(), () -> "config.docDb: DocDB must be defined!");
+    return new ServiceRepoBuilderImpl(config, config.getDocDb());
   }
   @Override
   public ServiceEnvirBuilder envir() {
@@ -69,6 +75,10 @@ public class ServiceClientImpl implements ServiceClient {
   public ServiceClientConfig getConfig() {
     return config;
   }
+  @Override
+  public QueryFactory getQuery() {
+    return QueryFactoryImpl.from(this);
+  }
   public static Builder builder() {
     return new Builder();
   }
@@ -78,7 +88,7 @@ public class ServiceClientImpl implements ServiceClient {
   public static class Builder {
     protected DocDB doc;
     protected ObjectMapper om;
-    protected String headName = ServiceRepoBuilderImpl.HEAD_NAME;
+    protected String headName = HEAD_NAME;
     protected ServiceCache cache;
     protected String repoStencil;
     protected String repoHdes;
@@ -164,6 +174,7 @@ public class ServiceClientImpl implements ServiceClient {
         this.cache = ServiceEhCache.builder().build(repoService);
       }
 
+      final var mapper = new ServiceMapperImpl(om);
       final var config = ImmutableServiceClientConfig.builder()
           .store(new ServiceStorePg(ImmutableServiceStoreConfig.builder()
               .authorProvider(() -> repoAuthor.get())
@@ -172,15 +183,17 @@ public class ServiceClientImpl implements ServiceClient {
               .deserializer(new io.digiexpress.client.spi.store.BlobDeserializer(om))
               .serializer((entity) -> applyOm((om) -> om.writeValueAsString(io.digiexpress.client.api.ImmutableStoreEntity.builder().from(entity).build())))
               .client(doc)
+              .mapper(mapper)
               .build()))
           .cache(cache)
           .stencil(stencil())
           .dialob(dialob())
           .hdes(hdes())
-          .mapper(new ServiceMapperImpl(om))
+          .docDb(doc)
+          .mapper(mapper)
           .build();
       
-      return new ServiceClientImpl(config, doc);
+      return new ServiceClientImpl(config);
     }
     
     protected StencilClient stencil() {

@@ -19,10 +19,9 @@ public class ServiceStoreQueryBuilderImpl extends ServiceStoreTemplate implement
   public Uni<StoreState> get() {
     return super.get();
   }
-
   @Override
   public Uni<StoreEntity> get(String id) {
-    var result = super.getEntityState(id);
+    final var result = super.getEntityState(id);
     return result.onItem().transform(entityState -> entityState.getEntity());
   }
 }

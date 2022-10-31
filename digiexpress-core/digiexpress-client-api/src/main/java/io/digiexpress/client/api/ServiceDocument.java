@@ -8,11 +8,12 @@ import javax.annotation.Nullable;
 
 import org.immutables.value.Value;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 public interface ServiceDocument {
- enum DocumentType { PROCESS_REV, PROCESS_DEF, SERVICE_CONFIG, SERVICE_RELEASE }
+ enum DocumentType { SERVICE_REV, SERVICE_DEF, SERVICE_CONFIG, SERVICE_RELEASE }
  enum ConfigType { STENCIL, DIALOB, HDES, SERVICE }
  
  @Nullable String getId(); // unique id
@@ -23,24 +24,31 @@ public interface ServiceDocument {
  LocalDateTime getUpdated();
  
  
- @Value.Immutable @JsonSerialize(as = ImmutableProcessRevisionDocument.class) @JsonDeserialize(as = ImmutableProcessRevisionDocument.class)
- interface ProcessRevisionDocument extends ServiceDocument {
+ @Value.Immutable @JsonSerialize(as = ImmutableServiceRevisionDocument.class) @JsonDeserialize(as = ImmutableServiceRevisionDocument.class)
+ interface ServiceRevisionDocument extends ServiceDocument {
    String getHead(); //latest proccess id
    String getName();
-   List<ProcessRevisionValue> getValues();
+   List<ServiceRevisionValue> getValues();
    @Value.Default
-   default DocumentType getType() { return DocumentType.PROCESS_REV; }
+   default DocumentType getType() { return DocumentType.SERVICE_REV; }
+
+   @JsonIgnore
+   default String getHeadDefId() {
+     return getValues().stream().filter(e -> e.getId().equals(getHead())).map(e -> e.getProcessDocumentId()).findFirst().get();
+   }
+   
  }
  
- @Value.Immutable @JsonSerialize(as = ImmutableProcessDocument.class) @JsonDeserialize(as = ImmutableProcessDocument.class)
- interface ProcessDocument extends ServiceDocument {
-   String getProcessName();
-   List<RefIdValue> getValues();
-   Boolean getDevMode();
+ @Value.Immutable @JsonSerialize(as = ImmutableServiceDefinitionDocument.class) @JsonDeserialize(as = ImmutableServiceDefinitionDocument.class)
+ interface ServiceDefinitionDocument extends ServiceDocument {
+   List<RefIdValue> getRefs(); // stencil and wrench
+   List<ProcessValue> getProcesses();
    @Value.Default
-   default DocumentType getType() { return DocumentType.PROCESS_DEF; }
+   default DocumentType getType() { return DocumentType.SERVICE_DEF; }
+   @JsonIgnore
+   default RefIdValue getHdes() { return this.getRefs().stream().filter(e -> e.getType().equals(ConfigType.HDES)).findFirst().get(); }
  }
- 
+
  @Value.Immutable @JsonSerialize(as = ImmutableServiceReleaseDocument.class) @JsonDeserialize(as = ImmutableServiceReleaseDocument.class)
  interface ServiceReleaseDocument extends ServiceDocument {
    String getRepoId();
@@ -64,14 +72,20 @@ public interface ServiceDocument {
    default DocumentType getType() { return DocumentType.SERVICE_CONFIG; }
  }
 
- 
 
- 
+ @Value.Immutable @JsonSerialize(as = ImmutableProcessValue.class) @JsonDeserialize(as = ImmutableProcessValue.class)
+ interface ProcessValue extends Serializable {
+   @Nullable String getId();
+   String getName();
+   String getDesc();
+   String getFlowId();
+   String getFormId();
+ }
  @Value.Immutable @JsonSerialize(as = ImmutableRefIdValue.class) @JsonDeserialize(as = ImmutableRefIdValue.class)
  interface RefIdValue extends Serializable {
    @Nullable String getId();
-   String getRefName();
    String getTagName();
+   String getRepoId();
    ConfigType getType(); 
  }
  @Value.Immutable @JsonSerialize(as = ImmutableServiceConfigValue.class) @JsonDeserialize(as = ImmutableServiceConfigValue.class)
@@ -79,10 +93,10 @@ public interface ServiceDocument {
    String getId();
    ConfigType getType();
  }
- @Value.Immutable @JsonSerialize(as = ImmutableProcessRevisionValue.class) @JsonDeserialize(as = ImmutableProcessRevisionValue.class)
- interface ProcessRevisionValue extends Serializable {
+ @Value.Immutable @JsonSerialize(as = ImmutableServiceRevisionValue.class) @JsonDeserialize(as = ImmutableServiceRevisionValue.class)
+ interface ServiceRevisionValue extends Serializable {
    String getId();
-   String getRevisionName();
+   String getRevisionName(); // iteration X
    String getProcessDocumentId();
    LocalDateTime getCreated();
    LocalDateTime getUpdated();

@@ -27,7 +27,7 @@
     <maven-jib-plugin.version>3.2.0</maven-jib-plugin.version>
 
     <thena.version>1.1.24</thena.version>
-    <hdes.version>3.130.52</hdes.version>
+    <hdes.version>3.130.54</hdes.version>
     <stencil.version>1.148.11</stencil.version>
     <dialob.version>3.0.3</dialob.version>
 

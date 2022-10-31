@@ -2,13 +2,13 @@ package io.digiexpress.client.spi;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.digiexpress.client.api.ImmutableProcessDocument;
-import io.digiexpress.client.api.ImmutableProcessRevisionDocument;
 import io.digiexpress.client.api.ImmutableServiceConfigDocument;
+import io.digiexpress.client.api.ImmutableServiceDefinitionDocument;
+import io.digiexpress.client.api.ImmutableServiceRevisionDocument;
 import io.digiexpress.client.api.ServiceDocument;
-import io.digiexpress.client.api.ServiceDocument.ProcessDocument;
-import io.digiexpress.client.api.ServiceDocument.ProcessRevisionDocument;
 import io.digiexpress.client.api.ServiceDocument.ServiceConfigDocument;
+import io.digiexpress.client.api.ServiceDocument.ServiceDefinitionDocument;
+import io.digiexpress.client.api.ServiceDocument.ServiceRevisionDocument;
 import io.digiexpress.client.api.ServiceMapper;
 import io.digiexpress.client.api.ServiceStore.StoreEntity;
 import io.digiexpress.client.spi.support.JsonMappingException;
@@ -30,22 +30,35 @@ public class ServiceMapperImpl implements ServiceMapper {
       throw new JsonMappingException(e.getMessage() + System.lineSeparator() + entity.getBody(), e);
     }
   }
+  
+  @Override
+  public ServiceRevisionDocument toRev(StoreEntity entity) {
+    try {
+      return ImmutableServiceRevisionDocument.builder()
+          .from(om.readValue(entity.getBody(), ServiceRevisionDocument.class))
+          .id(entity.getId())
+          .version(entity.getVersion())
+          .build();
+    } catch (Exception e) {
+      throw new JsonMappingException(e.getMessage() + System.lineSeparator() + entity.getBody(), e);
+    }
+  }
 
   @Override
   public String toBody(ServiceDocument entity) {
     if(entity instanceof ServiceConfigDocument) {
       return toConfigBody((ServiceConfigDocument) entity);
-    } else if(entity instanceof ProcessDocument) {
-      return toProcessBody((ProcessDocument) entity);
-    } else if(entity instanceof ProcessRevisionDocument) {
-      return toRevisionBody((ProcessRevisionDocument) entity);
+    } else if(entity instanceof ServiceDefinitionDocument) {
+      return toDefBody((ServiceDefinitionDocument) entity);
+    } else if(entity instanceof ServiceRevisionDocument) {
+      return toRevisionBody((ServiceRevisionDocument) entity);
     }
     throw new JsonMappingException("Unknown document: " + entity); 
   }
 
-  protected String toRevisionBody(ProcessRevisionDocument entity) {
+  protected String toRevisionBody(ServiceRevisionDocument entity) {
     try {
-      return om.writeValueAsString(ImmutableProcessRevisionDocument.builder().from(entity).id(null).version(null).build());
+      return om.writeValueAsString(ImmutableServiceRevisionDocument.builder().from(entity).id(null).version(null).build());
     } catch (Exception e) {
       throw new JsonMappingException(e.getMessage() + System.lineSeparator() + entity, e);
     }
@@ -59,11 +72,24 @@ public class ServiceMapperImpl implements ServiceMapper {
     }
   }
   
-  protected String toProcessBody(ProcessDocument entity) {
+  protected String toDefBody(ServiceDefinitionDocument entity) {
     try {
-      return om.writeValueAsString(ImmutableProcessDocument.builder().from(entity).id(null).version(null).build());
+      return om.writeValueAsString(ImmutableServiceDefinitionDocument.builder().from(entity).id(null).version(null).build());
     } catch (Exception e) {
       throw new JsonMappingException(e.getMessage() + System.lineSeparator() + entity, e);
+    }
+  }
+
+  @Override
+  public ServiceDefinitionDocument toDef(StoreEntity entity) {
+    try {
+      return ImmutableServiceDefinitionDocument.builder()
+          .from(om.readValue(entity.getBody(), ServiceDefinitionDocument.class))
+          .id(entity.getId())
+          .version(entity.getVersion())
+          .build();
+    } catch (Exception e) {
+      throw new JsonMappingException(e.getMessage() + System.lineSeparator() + entity.getBody(), e);
     }
   }
 }

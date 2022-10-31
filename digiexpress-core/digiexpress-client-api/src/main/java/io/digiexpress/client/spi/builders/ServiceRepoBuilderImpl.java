@@ -1,6 +1,9 @@
 package io.digiexpress.client.spi.builders;
 
 
+import static io.digiexpress.client.spi.query.QueryFactoryImpl.FIXED_ID;
+import static io.digiexpress.client.spi.query.QueryFactoryImpl.HEAD_NAME;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -28,15 +31,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.Accessors;
-
+import lombok.experimental.Accessors;;
 
 @Data
 @Getter(AccessLevel.NONE)
 @Accessors(fluent = true, chain = true)
 @RequiredArgsConstructor
 public class ServiceRepoBuilderImpl implements ServiceRepoBuilder {
-  public static final String HEAD_NAME = "main";
   protected final ServiceClientConfig config;  
   protected final DocDB docDb;
   protected String repoStencil;
@@ -87,7 +88,7 @@ public class ServiceRepoBuilderImpl implements ServiceRepoBuilder {
           .stencil(config.getStencil().repo().repoName(body.getStencil().getId()).headName(HEAD_NAME).build())
           .dialob(config.getDialob().repo().repoName(body.getDialob().getId()).headName(HEAD_NAME).build())
           .hdes(config.getHdes().repo().repoName(body.getHdes().getId()).headName(HEAD_NAME).build())
-          .build(), docDb));
+          .build()));
     });
   }
 
@@ -116,7 +117,7 @@ public class ServiceRepoBuilderImpl implements ServiceRepoBuilder {
         .cache(newCache)
         .store(newStore)
         .build();
-    return new ServiceClientImpl(newConfig, docDb);
+    return new ServiceClientImpl(newConfig);
   }
   
   protected Namings buildNamings() {
@@ -210,12 +211,12 @@ public class ServiceRepoBuilderImpl implements ServiceRepoBuilder {
               .onItem().transform(hdes -> builder.hdes(hdes));
         })
         
-        .onItem().transform(builder -> new ServiceClientImpl(builder.build(), docDb));
+        .onItem().transform(builder -> new ServiceClientImpl(builder.docDb(docDb).build()));
   }
   
   protected Uni<ServiceConfigDocument> createServiceConfig(ServiceStore store, Namings namings) {
     final var body = ImmutableServiceConfigDocument.builder()
-        .id(null).version(null)
+        .id(null).version(null) // FIXED ID, one config per repo
         .created(LocalDateTime.now())
         .updated(LocalDateTime.now())
         .type(ServiceDocument.DocumentType.SERVICE_CONFIG)
@@ -225,10 +226,15 @@ public class ServiceRepoBuilderImpl implements ServiceRepoBuilder {
         .service(ImmutableServiceConfigValue.builder().type(ConfigType.SERVICE).id(namings.getRepoService()).build())
         .build();
     final var command = ImmutableCreateStoreEntity.builder()
+        .id(FIXED_ID)
         .bodyType(ServiceDocument.DocumentType.SERVICE_CONFIG)
         .body(config.getMapper().toBody(body))
         .build();
-    return store.create(command).onItem().transform((_resp) -> body);    
+    return store.create(command).onItem().transform((resp) -> ImmutableServiceConfigDocument.builder()
+        .from(body)
+        .id(resp.getId())
+        .version(resp.getVersion())
+        .build());    
   }
   
 }

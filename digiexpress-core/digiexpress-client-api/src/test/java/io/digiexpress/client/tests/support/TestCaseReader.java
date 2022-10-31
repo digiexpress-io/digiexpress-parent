@@ -42,10 +42,13 @@ public class TestCaseReader {
   }
   
   public FormDocument formDocument(String file) {
+    final var data = form(file);
     return ImmutableFormDocument.builder()
+        .id(data.getId())
+        .version(data.getId())
         .created(fixed)
         .updated(fixed)
-        .data(form(file)).build();
+        .data(data).build();
   }
   
   public CreateEntity flow(String file) {

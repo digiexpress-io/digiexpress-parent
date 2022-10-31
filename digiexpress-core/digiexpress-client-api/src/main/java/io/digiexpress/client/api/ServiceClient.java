@@ -13,6 +13,7 @@ import io.digiexpress.client.api.ServiceDocument.ServiceReleaseDocument;
 import io.digiexpress.client.api.ServiceStore.StoreEntity;
 import io.resys.hdes.client.api.HdesClient;
 import io.resys.hdes.client.api.HdesClient.FlowExecutor;
+import io.resys.thena.docdb.api.DocDB;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.MigrationBuilder.LocalizedSite;
 import io.thestencil.client.api.StencilClient;
@@ -21,10 +22,9 @@ public interface ServiceClient {
   ServiceEnvirBuilder envir();
   ServiceRepoBuilder repo();
   ServiceExecutorBuilder executor(ServiceEnvir envir);
-  
   ServiceClientConfig getConfig();
+  QueryFactory getQuery();
   
-
   interface ServiceClientException {}
 
   interface ServiceExecutorBuilder {
@@ -102,5 +102,7 @@ public interface ServiceClient {
     DialobClient getDialob();
     HdesClient getHdes();
     StencilClient getStencil();
+
+    DocDB getDocDb();
   }
 }
