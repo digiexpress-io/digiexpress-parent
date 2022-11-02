@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class TestCaseBuilder {
-  private final ObjectMapper objectMapper;
+  public final ObjectMapper objectMapper;
   private final ServiceClient client;
   private final DocDB doc;
   private final ClientState docState;

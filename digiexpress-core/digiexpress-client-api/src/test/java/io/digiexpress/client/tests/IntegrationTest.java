@@ -1,6 +1,7 @@
 package io.digiexpress.client.tests;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.Test;
 
@@ -9,6 +10,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.digiexpress.client.api.ImmutableCreateProcess;
 import io.digiexpress.client.api.ImmutableCreateServiceRevision;
 import io.digiexpress.client.api.ServiceDocument.ServiceRevisionDocument;
+import io.digiexpress.client.spi.builders.CreateReleaseVisitor;
 import io.digiexpress.client.tests.support.PgProfile;
 import io.digiexpress.client.tests.support.TestCase;
 import io.quarkus.test.junit.QuarkusTest;
@@ -45,7 +47,7 @@ public class IntegrationTest extends TestCase {
         .description("first iterator process to handle general message")
         .build()).await().atMost(atMost);
     
-    service(client).create().process(ImmutableCreateProcess.builder()
+    final var def = service(client).create().process(ImmutableCreateProcess.builder()
         .name("process-for-bindig-gen-msg-to-task")
         .desc("process-desc")
         .flowId("case 1 flow")
@@ -54,7 +56,12 @@ public class IntegrationTest extends TestCase {
         .serviceRevisionVersionId(revision.getVersion())
         .build()).await().atMost(atMost);
     
+    
+    final var release = new CreateReleaseVisitor(client).visit(def, "snapshot", LocalDateTime.now()).await().atMost(atMost);
+    System.out.println(toJson(release));
     System.out.println(builder.print(client.getConfig().getStore()));
+    
+    
     //        .addValues(ImmutableRefIdValue.builder().type(ConfigType.DIALOB).refName("general-message-form").tagName("main").build())
     // .addValues(ImmutableRefIdValue.builder().type(ConfigType.HDES).refName("case 1 flow").tagName("main").build())
   }

@@ -175,8 +175,8 @@ public class ServiceRepoBuilderImpl implements ServiceRepoBuilder {
   protected Uni<ServiceClient> create(final List<Repo> repos, final Namings namings) {
     final var serviceStore = config.getStore().repo().repoName(namings.getRepoService()).headName(HEAD_NAME).build();
     return Uni.createFrom().item(ImmutableServiceClientConfig.builder()
+          .from(config)
           .cache(config.getCache().withName(namings.getRepoService()))
-          .mapper(config.getMapper())
           .store(serviceStore))
         // Stencil config
         .onItem().transformToUni(builder -> {

@@ -18,11 +18,9 @@ public interface ServiceDocument {
  
  @Nullable String getId(); // unique id
  @Nullable String getVersion(); // not really nullable, just in serialization
- 
- DocumentType getType();
  LocalDateTime getCreated();
  LocalDateTime getUpdated();
- 
+ DocumentType getType();
  
  @Value.Immutable @JsonSerialize(as = ImmutableServiceRevisionDocument.class) @JsonDeserialize(as = ImmutableServiceRevisionDocument.class)
  interface ServiceRevisionDocument extends ServiceDocument {
@@ -47,15 +45,16 @@ public interface ServiceDocument {
    default DocumentType getType() { return DocumentType.SERVICE_DEF; }
    @JsonIgnore
    default RefIdValue getHdes() { return this.getRefs().stream().filter(e -> e.getType().equals(ConfigType.HDES)).findFirst().get(); }
+   @JsonIgnore
+   default RefIdValue getStencil() { return this.getRefs().stream().filter(e -> e.getType().equals(ConfigType.STENCIL)).findFirst().get(); }
  }
 
  @Value.Immutable @JsonSerialize(as = ImmutableServiceReleaseDocument.class) @JsonDeserialize(as = ImmutableServiceReleaseDocument.class)
  interface ServiceReleaseDocument extends ServiceDocument {
-   String getRepoId();
-   String getReleaseName();
-   @Nullable String getReleaseDescription();
    LocalDateTime getActiveFrom();
-   
+   String getRepoId();
+   String getName();
+   List<String> getDesc();
    List<ServiceReleaseValue> getValues();
    @Value.Default
    default DocumentType getType() { return DocumentType.SERVICE_RELEASE; }
@@ -103,9 +102,10 @@ public interface ServiceDocument {
  }
  @Value.Immutable @JsonSerialize(as = ImmutableServiceReleaseValue.class) @JsonDeserialize(as = ImmutableServiceReleaseValue.class)
  interface ServiceReleaseValue extends Serializable {
-   ConfigType getId();
-   String getBodyHash();
+   String getId();
    String getBody();
+   String getBodyHash();
+   ConfigType getBodyType();
  }
 
 }

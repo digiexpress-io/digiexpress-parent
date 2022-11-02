@@ -102,7 +102,7 @@ public interface ServiceClient {
     DialobClient getDialob();
     HdesClient getHdes();
     StencilClient getStencil();
-
+    CompressionMapper getCompression();
     DocDB getDocDb();
   }
 }

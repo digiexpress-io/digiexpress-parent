@@ -186,6 +186,7 @@ public class ServiceClientImpl implements ServiceClient {
               .mapper(mapper)
               .build()))
           .cache(cache)
+          .compression(new CompressionMapperImpl(mapper))
           .stencil(stencil())
           .dialob(dialob())
           .hdes(hdes())

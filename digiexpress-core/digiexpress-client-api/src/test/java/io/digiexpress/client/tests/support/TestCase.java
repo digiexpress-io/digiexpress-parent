@@ -7,6 +7,9 @@ import javax.inject.Inject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
+import com.fasterxml.jackson.core.util.DefaultIndenter;
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
+
 import io.dialob.client.api.DialobComposer;
 import io.dialob.client.spi.DialobComposerImpl;
 import io.digiexpress.client.api.ServiceClient;
@@ -57,6 +60,18 @@ public class TestCase {
     return new ServiceComposerImpl(client);
   }
   
+  
+  public String toJson(Object v) {
+    try {
+      final var prettyPrinter = new DefaultPrettyPrinter();
+      prettyPrinter.indentArraysWith(DefaultIndenter.SYSTEM_LINEFEED_INSTANCE);
+      return builder.objectMapper
+          .writer(prettyPrinter)
+          .writeValueAsString(v);
+    } catch(Exception e) {
+      throw new RuntimeException(e.getMessage(), e);
+    }
+  }
   public Consumer<Throwable> log() {
     return (ex) -> {
       log.error(ex.getMessage(), ex);

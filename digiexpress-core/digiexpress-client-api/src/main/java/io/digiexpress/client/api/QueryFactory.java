@@ -12,8 +12,10 @@ import io.digiexpress.client.api.ServiceDocument.ServiceConfigDocument;
 import io.digiexpress.client.api.ServiceDocument.ServiceDefinitionDocument;
 import io.digiexpress.client.api.ServiceDocument.ServiceRevisionDocument;
 import io.resys.hdes.client.api.ast.AstFlow;
+import io.resys.hdes.client.api.ast.AstTag;
 import io.resys.thena.docdb.api.models.Repo;
 import io.smallrye.mutiny.Uni;
+import io.thestencil.client.api.MigrationBuilder.Sites;
 
 public interface QueryFactory {
   Uni<List<Repo>> getRepos();
@@ -22,11 +24,13 @@ public interface QueryFactory {
   Uni<ServiceRevisionDocument> getServiceRevision(String id);
   Uni<ServiceDefinitionDocument> getServiceDef(String id);
   Uni<FlowDocument> getFlow(String tagName, String flowName);
-  
+  Uni<Sites> getStencil(String tagName);
+  Uni<AstTag> getHdes(String tagName);
   
   @Value.Immutable @JsonSerialize(as = ImmutableFlowDocument.class) @JsonDeserialize(as = ImmutableFlowDocument.class)
   interface FlowDocument {
     String getId();
     AstFlow getData();
   }
+  
 }

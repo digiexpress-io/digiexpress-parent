@@ -1,6 +1,11 @@
 package io.digiexpress.client.spi.query;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import io.dialob.client.api.DialobDocument.FormDocument;
 import io.digiexpress.client.api.ImmutableFlowDocument;
@@ -13,8 +18,17 @@ import io.digiexpress.client.api.ServiceDocument.ServiceDefinitionDocument;
 import io.digiexpress.client.api.ServiceDocument.ServiceRevisionDocument;
 import io.digiexpress.client.spi.support.ServiceAssert;
 import io.resys.hdes.client.api.ast.AstBody.AstBodyType;
+import io.resys.hdes.client.api.ast.AstTag;
+import io.resys.hdes.client.api.ast.AstTag.AstTagValue;
+import io.resys.hdes.client.api.ast.ImmutableAstTag;
+import io.resys.hdes.client.api.ast.ImmutableAstTagValue;
+import io.resys.hdes.client.api.ast.ImmutableHeaders;
 import io.resys.thena.docdb.api.models.Repo;
 import io.smallrye.mutiny.Uni;
+import io.thestencil.client.api.MigrationBuilder.Sites;
+import io.thestencil.client.api.StencilComposer.SiteState;
+import lombok.Builder;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -22,6 +36,8 @@ public class QueryFactoryImpl implements QueryFactory {
   public static final String FIXED_ID = ServiceDocument.DocumentType.SERVICE_CONFIG.name();
   public static final String HEAD_NAME = "main";
   
+  private final String imagePath = "/images";
+  private final List<AstBodyType> HDES_ASSETS = Arrays.asList(AstBodyType.DT, AstBodyType.FLOW, AstBodyType.FLOW_TASK);
   private final ServiceClientConfig config;
   
   public static QueryFactoryImpl from(ServiceClient client) {
@@ -103,4 +119,87 @@ public class QueryFactoryImpl implements QueryFactory {
     final var result = config.getStore().query().get(id);
     return result.onItem().transform(entityState -> config.getMapper().toDef(entityState));
   }
+  @Override
+  public Uni<Sites> getStencil(String tagName) {
+
+    return config.getStencil().getStore().query().head()
+    .onItem().transformToUni((SiteState e) -> {
+      if(HEAD_NAME.equals(tagName)) {        
+        final var md = config.getStencil().markdown().json(e, false).build();
+        final var site = config.getStencil().sites().created(System.currentTimeMillis()).imagePath(imagePath).source(md).build();
+        return Uni.createFrom().item(site);
+      }
+      
+      final var foundTag = e.getReleases().values().stream()
+          .filter(r -> r.getId().equals(tagName) || r.getBody().getName().equals(tagName))
+          .findFirst();
+      ServiceAssert.notNull(foundTag, () -> "Can't find stencil tag with id or name: '" + tagName + "'");
+      
+      
+      return config.getStencil().getStore().query().release(foundTag.get().getId()).onItem()
+      .transform(release -> {
+        final var md = config.getStencil().markdown().json(release, false).build();
+        return config.getStencil().sites().created(System.currentTimeMillis()).source(md).build();
+      });
+    });
+  
+  }
+  @Override
+  public Uni<AstTag> getHdes(String tagName) {
+    return config.getHdes().store().query().get()
+    .onItem().transform(state -> {
+      
+      if(tagName.equals(HEAD_NAME)) {
+        final List<AstTagValue> values = new ArrayList<>();
+        Stream.of(
+            state.getFlows().values().stream(),
+            state.getDecisions().values().stream(),
+            state.getServices().values().stream()
+        )
+        .flatMap(e -> e)
+        .forEach(entity -> {
+          final var tag = ImmutableAstTagValue.builder()
+              .id(entity.getId())
+              .hash(entity.getHash())
+              .bodyType(entity.getBodyType())
+              .commands(entity.getBody())
+              .build(); 
+          values.add(tag);
+        });
+        
+        
+        return ImmutableAstTag.builder()
+            .created(LocalDateTime.now())
+            .bodyType(AstBodyType.TAG)
+            .name(tagName).description("snapshot")
+            .values(values)
+            .headers(ImmutableHeaders.builder().build())
+            .build();
+      }
+      
+      final var foundTag = state.getTags().values().stream()
+        .map(e -> AstTagDoc.builder().id(e.getId()).data(config.getHdes().ast().commands(e.getBody()).tag()).build())
+        .filter(e -> e.getData().getName().equals(tagName) || e.getId().equals(tagName))
+        .map(e -> ImmutableAstTag.builder()
+            .from(e.getData())
+            .values(
+                e.getData().getValues().stream()
+                .filter(v -> HDES_ASSETS.contains(v.getBodyType()))
+                .collect(Collectors.toList())
+            )
+            .build())
+        .findFirst();
+      ServiceAssert.notNull(foundTag, () -> "Can't find hdes tag with id or name: '" + tagName + "'");
+      
+      return foundTag.get();
+    });
+  }
+  
+  
+  @Builder @Data
+  private static class AstTagDoc {
+    private final String id;
+    private final AstTag data;
+  }
+
 }
