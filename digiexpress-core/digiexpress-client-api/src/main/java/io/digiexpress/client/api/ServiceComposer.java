@@ -1,6 +1,7 @@
 package io.digiexpress.client.api;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 import javax.annotation.Nullable;
@@ -28,6 +29,7 @@ public interface ServiceComposer {
   interface CreateBuilder {
     Uni<ServiceRevisionDocument> revision(CreateServiceRevision init);
     Uni<ServiceDefinitionDocument> process(CreateProcess process);
+    Uni<ServiceReleaseDocument> release(CreateRelease rel);
   }
 
   interface Command extends Serializable {}
@@ -36,6 +38,14 @@ public interface ServiceComposer {
   interface CreateServiceRevision extends Command {
     String getName();
     String getDescription();
+  }
+  @Value.Immutable @JsonSerialize(as = ImmutableCreateServiceRevision.class) @JsonDeserialize(as = ImmutableCreateServiceRevision.class)
+  interface CreateRelease extends Command {
+    String getServiceDefinitionId();
+    String getName();
+    String getDesc();
+    LocalDateTime getActiveFrom();
+    LocalDateTime getTargetDate();
   }
   
   @Value.Immutable @JsonSerialize(as = ImmutableCreateServiceRevision.class) @JsonDeserialize(as = ImmutableCreateServiceRevision.class)

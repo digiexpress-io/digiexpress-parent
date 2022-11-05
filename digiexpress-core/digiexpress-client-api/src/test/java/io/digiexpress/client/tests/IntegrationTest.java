@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import io.digiexpress.client.api.ImmutableCreateProcess;
+import io.digiexpress.client.api.ImmutableCreateRelease;
 import io.digiexpress.client.api.ImmutableCreateServiceRevision;
 import io.digiexpress.client.api.ServiceDocument.ServiceRevisionDocument;
-import io.digiexpress.client.spi.builders.CreateReleaseVisitor;
 import io.digiexpress.client.tests.support.PgProfile;
 import io.digiexpress.client.tests.support.TestCase;
 import io.quarkus.test.junit.QuarkusTest;
@@ -56,8 +56,15 @@ public class IntegrationTest extends TestCase {
         .serviceRevisionVersionId(revision.getVersion())
         .build()).await().atMost(atMost);
     
+    final var targetDate = LocalDateTime.of(2022, 11, 5, 11, 07);
     
-    final var release = new CreateReleaseVisitor(client).visit(def, "snapshot", LocalDateTime.now()).await().atMost(atMost);
+    final var release = service(client).create().release(ImmutableCreateRelease.builder()
+        .name("snapshot").desc("")
+        .serviceDefinitionId(def.getId())
+        .activeFrom(targetDate)
+        .targetDate(targetDate)
+        .build()).await().atMost(atMost);
+  
     System.out.println(toJson(release));
     System.out.println(builder.print(client.getConfig().getStore()));
     

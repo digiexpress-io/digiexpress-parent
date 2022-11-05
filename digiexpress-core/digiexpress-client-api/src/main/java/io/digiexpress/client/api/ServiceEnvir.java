@@ -1,7 +1,6 @@
 package io.digiexpress.client.api;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nullable;
@@ -10,35 +9,22 @@ import org.immutables.value.Value;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import io.digiexpress.client.api.ServiceDocument.DocumentType;
-import io.digiexpress.client.api.ServiceException.ProgramNotFoundException;
+import io.digiexpress.client.api.ProcessState.ServiceRef;
+import io.digiexpress.client.api.ProcessState.ServiceRel;
+import io.digiexpress.client.api.ServiceDocument.ServiceDefinitionDocument;
+import io.digiexpress.client.api.ServiceDocument.ServiceReleaseDocument;
 
 public interface ServiceEnvir {
-  Map<String, Program> getValues();
+  Map<String, ServiceWrapper> getValues();
 
-  ArticleWrapper getArticle() throws ProgramNotFoundException;
-  ProcessWrapper getProcess(String id) throws ProgramNotFoundException;
-  ProcessWrapper getProcess(String id, String revision) throws ProgramNotFoundException;
-
-  
-  interface Program extends Serializable {
-    String getSource();
-    DocumentType getSourceType();
-    ProgramStatus getStatus();
-    List<ProgramMessage> getErrors();
-  }
-  
-  
-  @Value.Immutable
-  interface ArticleWrapper extends Program {
+  interface ServiceWrapper extends Serializable {
+    String getId();
+    ServiceRef getRefId();
+    ServiceRel getRelId();
     
+    ServiceDefinitionDocument getDef();
+    ServiceReleaseDocument getRel();
   }
-
-  @Value.Immutable
-  interface ProcessWrapper extends Program {
-    
-  }
-  
   
   @Value.Immutable
   interface ProgramMessage {
@@ -51,6 +37,6 @@ public interface ServiceEnvir {
   }
   
   enum ProgramStatus { CREATED, COMPILING, UP, ERROR, }
-  
+  enum ProgramType { PROCESS, HDES, DIALOB, STENCIL }
 
 }

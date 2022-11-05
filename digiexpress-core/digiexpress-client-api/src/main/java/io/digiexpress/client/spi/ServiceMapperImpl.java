@@ -5,10 +5,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.dialob.api.form.Form;
 import io.digiexpress.client.api.ImmutableServiceConfigDocument;
 import io.digiexpress.client.api.ImmutableServiceDefinitionDocument;
+import io.digiexpress.client.api.ImmutableServiceReleaseDocument;
 import io.digiexpress.client.api.ImmutableServiceRevisionDocument;
 import io.digiexpress.client.api.ServiceDocument;
 import io.digiexpress.client.api.ServiceDocument.ServiceConfigDocument;
 import io.digiexpress.client.api.ServiceDocument.ServiceDefinitionDocument;
+import io.digiexpress.client.api.ServiceDocument.ServiceReleaseDocument;
 import io.digiexpress.client.api.ServiceDocument.ServiceRevisionDocument;
 import io.digiexpress.client.api.ServiceMapper;
 import io.digiexpress.client.api.ServiceStore.StoreEntity;
@@ -48,6 +50,19 @@ public class ServiceMapperImpl implements ServiceMapper {
   }
 
   @Override
+  public ServiceReleaseDocument toService(StoreEntity entity) {
+    try {
+      return ImmutableServiceReleaseDocument.builder()
+          .from(om.readValue(entity.getBody(), ServiceReleaseDocument.class))
+          .id(entity.getId())
+          .version(entity.getVersion())
+          .build();
+    } catch (Exception e) {
+      throw new JsonMappingException(e.getMessage() + System.lineSeparator() + entity.getBody(), e);
+    }
+  }
+
+  @Override
   public String toBody(ServiceDocument entity) {
     if(entity instanceof ServiceConfigDocument) {
       return toConfigBody((ServiceConfigDocument) entity);
@@ -55,10 +70,18 @@ public class ServiceMapperImpl implements ServiceMapper {
       return toDefBody((ServiceDefinitionDocument) entity);
     } else if(entity instanceof ServiceRevisionDocument) {
       return toRevisionBody((ServiceRevisionDocument) entity);
+    }else if(entity instanceof ServiceReleaseDocument) {
+      return toServiceBody((ServiceReleaseDocument) entity);
     }
     throw new JsonMappingException("Unknown document: " + entity); 
   }
-
+  protected String toServiceBody(ServiceReleaseDocument entity) {
+    try {
+      return om.writeValueAsString(ImmutableServiceReleaseDocument.builder().from(entity).id(null).version(null).build());
+    } catch (Exception e) {
+      throw new JsonMappingException(e.getMessage() + System.lineSeparator() + entity, e);
+    }
+  }
   protected String toRevisionBody(ServiceRevisionDocument entity) {
     try {
       return om.writeValueAsString(ImmutableServiceRevisionDocument.builder().from(entity).id(null).version(null).build());

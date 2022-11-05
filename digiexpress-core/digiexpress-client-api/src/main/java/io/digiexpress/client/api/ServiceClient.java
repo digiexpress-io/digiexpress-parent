@@ -1,18 +1,14 @@
 package io.digiexpress.client.api;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Map;
-
-import javax.annotation.Nullable;
 
 import org.immutables.value.Value;
 
 import io.dialob.client.api.DialobClient;
-import io.dialob.client.api.DialobStore.StoreState;
 import io.digiexpress.client.api.ServiceDocument.ServiceReleaseDocument;
-import io.digiexpress.client.api.ServiceStore.StoreEntity;
 import io.resys.hdes.client.api.HdesClient;
-import io.resys.hdes.client.api.HdesClient.FlowExecutor;
 import io.resys.thena.docdb.api.DocDB;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.MigrationBuilder.LocalizedSite;
@@ -28,31 +24,37 @@ public interface ServiceClient {
   interface ServiceClientException {}
 
   interface ServiceExecutorBuilder {
-    ProcessExecutor process(String nameOrId, @Nullable String rev);
-    FlowExecutor flow(ProcessState state);
-    FillExecutor fill(ProcessState state);
+    CreateProcessExecutor create(String nameOrId);
+    FillProcessExecutor fill(ProcessState state);
+    FlowProcessExecutor flow(ProcessState state);
     ArticleExecutor article();
   }
 
   // returns new process instance and new fill session
-  interface ProcessExecutor {
-    ArticleExecutor actions(Map<String, Serializable> initVariables);
-    ArticleExecutor action(String variableName, Serializable variableValue);
-    ExecutionBody<ProcessState> build();
+  interface CreateProcessExecutor {
+    CreateProcessExecutor targetDate(LocalDateTime now);
+    CreateProcessExecutor actions(Map<String, Serializable> initVariables);
+    CreateProcessExecutor action(String variableName, Serializable variableValue);
+    ExecutionBody<Map<String, Serializable>> build();
+  }
+
+  // continues fill
+  interface FillProcessExecutor {
+    FillProcessExecutor actions(io.dialob.api.proto.Actions userActions);
+    ExecutionBody<io.dialob.api.proto.Actions> build();
   }
   
+  interface FlowProcessExecutor {
+    
+  }
+
   // returns stencil content
   interface ArticleExecutor {
     ArticleExecutor actions(String locale);
     ExecutionBody<LocalizedSite> build();
   }
   
-  // continues fill
-  interface FillExecutor {
-    FillExecutor actions(io.dialob.api.proto.Actions userActions);
-    ExecutionBody<io.dialob.api.proto.Actions> build();
-  }
-  
+  @Value.Immutable
   interface ExecutionBody<T> {
     ProcessState getState();
     T getActions();
@@ -71,27 +73,9 @@ public interface ServiceClient {
   
   
   interface ServiceEnvirBuilder {
-    ServiceEnvirBuilder from(ServiceEnvir previous);
-    ServiceEnvirBuilder from(StoreState state);
     ServiceEnvirBuilder from(ServiceReleaseDocument release);
-    ServiceEnvirValueBuilder addCommand();
     ServiceEnvir build();
   }
-
-  
-  interface ServiceEnvirValueBuilder {
-    ServiceEnvirValueBuilder id(String externalId);
-    ServiceEnvirValueBuilder version(String version);
-    ServiceEnvirValueBuilder cachless();
-    
-    ServiceEnvirValueBuilder rev(StoreEntity v);
-    ServiceEnvirValueBuilder process(StoreEntity v);
-    ServiceEnvirValueBuilder release(StoreEntity v);
-    ServiceEnvirValueBuilder config(StoreEntity v);
-    
-    ServiceEnvirBuilder build();
-  }
-  
   
   @Value.Immutable
   interface ServiceClientConfig {

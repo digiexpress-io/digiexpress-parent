@@ -1,5 +1,5 @@
 
-package io.digiexpress.client.spi.builders;
+package io.digiexpress.client.spi.builders.visitors;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ import io.digiexpress.client.api.CompressionMapper;
 import io.digiexpress.client.api.ImmutableServiceReleaseDocument;
 import io.digiexpress.client.api.ImmutableServiceReleaseValue;
 import io.digiexpress.client.api.QueryFactory;
-import io.digiexpress.client.api.ServiceClient;
+import io.digiexpress.client.api.ServiceClient.ServiceClientConfig;
 import io.digiexpress.client.api.ServiceDocument.ConfigType;
 import io.digiexpress.client.api.ServiceDocument.ProcessValue;
 import io.digiexpress.client.api.ServiceDocument.RefIdValue;
@@ -33,17 +33,15 @@ import io.resys.thena.docdb.spi.commits.Sha2;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.MigrationBuilder.Sites;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public class CreateReleaseVisitor {
-  private final ServiceClient client;
+  
+  private final ServiceClientConfig config;
   private final QueryFactory query;
   private final LocalDateTime now;
-  public CreateReleaseVisitor(ServiceClient client) {
-    super();
-    this.client = client;
-    this.query = client.getQuery();
-    this.now = LocalDateTime.now();
-  }
+  
   
   public Uni<ServiceReleaseDocument> visit(final ServiceDefinitionDocument def, final String name, final LocalDateTime activeFrom) {
     return Multi.createFrom().items(def.getStencil(), def.getHdes())
@@ -66,7 +64,7 @@ public class CreateReleaseVisitor {
         return ImmutableServiceReleaseDocument.builder()
             .name(name)
             .desc(visitDesc(def, compressed, name, activeFrom))
-            .repoId(client.getConfig().getStore().getRepoName())
+            .repoId(config.getStore().getRepoName())
             .created(now)
             .updated(now)
             .activeFrom(now)
@@ -170,7 +168,7 @@ public class CreateReleaseVisitor {
     return ImmutableResolvedAssetForm.builder().form(form).build();
   }
   protected CompressedAsset visitCompression(ResolvedAsset source) {
-    final var mapper = this.client.getConfig().getCompression();
+    final var mapper = this.config.getCompression();
     final var releaseValue = ImmutableServiceReleaseValue.builder();
     final CompressionMapper.Compressed target;
     if(source instanceof ResolvedAssetHdes) {
@@ -196,7 +194,7 @@ public class CreateReleaseVisitor {
   protected Uni<ResolvedAsset> visitRef(RefIdValue value) {
     if(value.getType() == ConfigType.HDES) {
       return query.getHdes(value.getTagName()).onItem().transform(ast -> {
-        final var envir = client.getConfig().getHdes().envir();
+        final var envir = config.getHdes().envir();
         ast.getValues().forEach(asset -> {
           final var entity = io.resys.hdes.client.api.ImmutableStoreEntity.builder()
             .bodyType(asset.getBodyType())

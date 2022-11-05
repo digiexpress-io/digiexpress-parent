@@ -1,19 +1,19 @@
 package io.digiexpress.client.spi.builders;
 
-import io.digiexpress.client.api.ImmutableComposerState;
+import io.digiexpress.client.api.ImmutableCreateStoreEntity;
 import io.digiexpress.client.api.ImmutableProcessValue;
 import io.digiexpress.client.api.ImmutableServiceDefinitionDocument;
 import io.digiexpress.client.api.ImmutableUpdateStoreEntity;
 import io.digiexpress.client.api.ServiceClient;
 import io.digiexpress.client.api.ServiceComposer;
-import io.digiexpress.client.api.ServiceComposer.ComposerState;
 import io.digiexpress.client.api.ServiceComposer.CreateProcess;
+import io.digiexpress.client.api.ServiceComposer.CreateRelease;
 import io.digiexpress.client.api.ServiceComposer.CreateServiceRevision;
 import io.digiexpress.client.api.ServiceDocument.DocumentType;
 import io.digiexpress.client.api.ServiceDocument.ServiceDefinitionDocument;
+import io.digiexpress.client.api.ServiceDocument.ServiceReleaseDocument;
 import io.digiexpress.client.api.ServiceDocument.ServiceRevisionDocument;
-import io.digiexpress.client.api.ServiceEnvir;
-import io.digiexpress.client.api.ServiceStore.StoreState;
+import io.digiexpress.client.spi.builders.visitors.CreateReleaseVisitor;
 import io.digiexpress.client.spi.builders.visitors.CreateRevisionVisitor;
 import io.digiexpress.client.spi.query.QueryFactoryImpl;
 import io.digiexpress.client.spi.support.ServiceAssert;
@@ -28,7 +28,6 @@ public class ServiceComposerCreateBuilderImpl implements ServiceComposer.CreateB
   public Uni<ServiceDefinitionDocument> process(CreateProcess process) {
 
     final var query = client.getQuery();
-    
     
     return query.getServiceRevision(process.getServiceRevisionId())
     .onItem().transformToUni(rev -> {
@@ -67,8 +66,6 @@ public class ServiceComposerCreateBuilderImpl implements ServiceComposer.CreateB
         });
     });
   }
-  
-  
 
   @Override
   public Uni<ServiceRevisionDocument> revision(CreateServiceRevision init) {
@@ -85,34 +82,20 @@ public class ServiceComposerCreateBuilderImpl implements ServiceComposer.CreateB
       }));
   }
 
-  private ComposerState state(StoreState source) {
-    final var envir = client.envir();
-    source.getRevs().values().forEach(v -> envir.addCommand().id(v.getId()).rev(v).build());
-    source.getProcesses().values().forEach(v -> envir.addCommand().id(v.getId()).process(v).build());
-    source.getReleases().values().forEach(v -> envir.addCommand().id(v.getId()).release(v).build());
-    source.getConfigs().values().forEach(v -> envir.addCommand().id(v.getId()).config(v).build());
-    
-    final var nextState = ImmutableComposerState.builder();
-    envir.build().getValues().values().forEach(v -> toComposer(nextState, v));
-    return nextState.build(); 
-  }
-  
-  
-  public static void toComposer(ImmutableComposerState.Builder builder, ServiceEnvir.Program wrapper) {
-    switch (wrapper.getSourceType()) {
-    case SERVICE_DEF:
-
-      break;
-    case SERVICE_REV:
-      break;
-      
-    case SERVICE_CONFIG:
-      break;
-      
-    case SERVICE_RELEASE:
-      break;
-    default:
-      break;
-    }
+  @Override
+  public Uni<ServiceReleaseDocument> release(CreateRelease init) {
+    final var query = QueryFactoryImpl.from(client.getConfig());
+    return query.getServiceDef(init.getServiceDefinitionId())
+      .onItem().transformToUni(def ->  
+          new CreateReleaseVisitor(client.getConfig(), query, init.getTargetDate())
+          .visit(def, init.getName(), init.getActiveFrom()))
+      .onItem().transformToUni((release) -> client.getConfig().getStore()
+          .create(ImmutableCreateStoreEntity.builder()
+              .id(release.getId())
+              .version(release.getVersion())
+              .body(client.getConfig().getMapper().toBody(release))
+              .bodyType(DocumentType.SERVICE_RELEASE)
+              .build())
+          .onItem().transform((_resp) -> release));
   }
 }
