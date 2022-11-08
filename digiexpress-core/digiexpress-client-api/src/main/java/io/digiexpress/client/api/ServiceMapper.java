@@ -16,6 +16,12 @@ public interface ServiceMapper {
   ServiceReleaseDocument toService(StoreEntity entity);
   String toBody(ServiceDocument entity);
   
+  AstTag toHdes(String body);
+  Sites toStencil(String body);
+  Form toDialob(String body);
+  ServiceDefinitionDocument toService(String body);
+  
+  String toReleaseBody(ServiceDefinitionDocument service);
   String toReleaseBody(AstTag hdes);
   String toReleaseBody(Form form);
   String toReleaseBody(Sites sites);

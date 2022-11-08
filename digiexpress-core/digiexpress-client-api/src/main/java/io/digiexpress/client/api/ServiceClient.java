@@ -73,7 +73,7 @@ public interface ServiceClient {
   
   
   interface ServiceEnvirBuilder {
-    ServiceEnvirBuilder from(ServiceReleaseDocument release);
+    ServiceEnvirBuilder add(ServiceReleaseDocument release);
     ServiceEnvir build();
   }
   

@@ -21,7 +21,7 @@ import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class ServiceComposerCreateBuilderImpl implements ServiceComposer.CreateBuilder {
+public class ComposerCreateBuilderImpl implements ServiceComposer.CreateBuilder {
   private final ServiceClient client;
 
   @Override

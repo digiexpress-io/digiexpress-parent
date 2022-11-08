@@ -102,7 +102,7 @@ public interface ServiceDocument {
  }
  @Value.Immutable @JsonSerialize(as = ImmutableServiceReleaseValue.class) @JsonDeserialize(as = ImmutableServiceReleaseValue.class)
  interface ServiceReleaseValue extends Serializable {
-   String getId();
+   String getId(); // hdes or stencil tagname/dialob form id
    String getBody();
    String getBodyHash();
    ConfigType getBodyType();

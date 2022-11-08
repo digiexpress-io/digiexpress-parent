@@ -2,7 +2,7 @@ package io.digiexpress.client.spi;
 
 import io.digiexpress.client.api.ServiceClient;
 import io.digiexpress.client.api.ServiceComposer;
-import io.digiexpress.client.spi.builders.ServiceComposerCreateBuilderImpl;
+import io.digiexpress.client.spi.builders.ComposerCreateBuilderImpl;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -12,7 +12,7 @@ public class ServiceComposerImpl implements ServiceComposer {
 
   @Override
   public CreateBuilder create() {
-    return new ServiceComposerCreateBuilderImpl(client);
+    return new ComposerCreateBuilderImpl(client);
   }
 
   @Override

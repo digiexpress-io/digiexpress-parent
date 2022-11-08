@@ -29,10 +29,13 @@ import io.resys.hdes.client.api.ast.AstDecision;
 import io.resys.hdes.client.api.ast.AstFlow;
 import io.resys.hdes.client.api.ast.AstService;
 import io.resys.hdes.client.api.ast.AstTag;
+import io.resys.hdes.client.api.ast.ImmutableAstTag;
+import io.resys.hdes.client.api.ast.ImmutableHeaders;
 import io.resys.thena.docdb.spi.commits.Sha2;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.MigrationBuilder.Sites;
+import io.thestencil.client.spi.beans.SitesBean;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -41,12 +44,13 @@ public class CreateReleaseVisitor {
   private final ServiceClientConfig config;
   private final QueryFactory query;
   private final LocalDateTime now;
+  private final LocalDateTime ZERO_DATE = LocalDateTime.of(1970, 01, 01, 01, 01);
   
   
   public Uni<ServiceReleaseDocument> visit(final ServiceDefinitionDocument def, final String name, final LocalDateTime activeFrom) {
     return Multi.createFrom().items(def.getStencil(), def.getHdes())
       .onItem().transformToUni(this::visitRef).concatenate().collect().asList()
-      .onItem().transformToUni(this::visitResolvedRef)
+      .onItem().transformToUni((refs) -> visitResolvedRef(refs, def, name))
       .onItem().transformToUni((ResolvedAssetEnvir envir) -> {
         
         // resolve forms
@@ -183,6 +187,10 @@ public class CreateReleaseVisitor {
       final var form = ((ResolvedAssetForm) source).getForm();
       target = mapper.compress(form);
       releaseValue.bodyType(ConfigType.DIALOB).id(form.getId());
+    } else if(source instanceof ResolvedAssetService) {
+      final var service = ((ResolvedAssetService) source).getService();
+      target = mapper.compress(service);
+      releaseValue.bodyType(ConfigType.SERVICE).id(((ResolvedAssetService) source).getTagName());
     } else {
       throw new ReleaseException("Unknown compression asset type: " + source.getClass().getSimpleName());
     }
@@ -195,7 +203,10 @@ public class CreateReleaseVisitor {
     if(value.getType() == ConfigType.HDES) {
       return query.getHdes(value.getTagName()).onItem().transform(ast -> {
         final var envir = config.getHdes().envir();
-        ast.getValues().forEach(asset -> {
+        
+        final var newAst = ast.getValues().stream()
+        .sorted((a, b) -> a.getId().compareTo(b.getId()))
+        .map(asset -> {
           final var entity = io.resys.hdes.client.api.ImmutableStoreEntity.builder()
             .bodyType(asset.getBodyType())
             .body(asset.getCommands())
@@ -209,18 +220,32 @@ public class CreateReleaseVisitor {
           } else if(asset.getBodyType() == AstBodyType.DT) {
             envir.addCommand().id(asset.getId()).decision(entity).build();
           }
-        });
-        return ImmutableResolvedAssetHdes.builder().astTag(ast).envir(envir.build()).build();
+          return asset;
+        }).collect(Collectors.toList());
+        
+        return ImmutableResolvedAssetHdes.builder()
+            .astTag(ImmutableAstTag.builder()
+                .created(ZERO_DATE)
+                .headers(ImmutableHeaders.builder().build())
+                .bodyType(ast.getBodyType())
+                .name(ast.getName())
+                .values(newAst)
+                .build())
+            .envir(envir.build())
+            .build();
       });
       
     } else if(value.getType() == ConfigType.STENCIL) {
       return query.getStencil(value.getTagName()).onItem()
-          .transform(sites -> ImmutableResolvedAssetStencil.builder().tagName(value.getTagName()).sites(sites).build());
+          .transform(sites -> ImmutableResolvedAssetStencil.builder()
+              .tagName(value.getTagName())
+              .sites(SitesBean.builder().from(sites).created(0l).build())
+              .build());
     }
     throw new ReleaseException("Unknown ref type: " + value.getType());
   }
   
-  protected Uni<ResolvedAssetEnvir> visitResolvedRef(List<ResolvedAsset> refs) {
+  protected Uni<ResolvedAssetEnvir> visitResolvedRef(final List<ResolvedAsset> refs, final ServiceDefinitionDocument def, final String defName) {
     final var stencil = refs.stream()
         .filter(r -> r instanceof ResolvedAssetStencil)
         .map(r -> (ResolvedAssetStencil) r)
@@ -232,11 +257,18 @@ public class CreateReleaseVisitor {
     return Uni.createFrom().item(ImmutableResolvedAssetEnvir.builder()
         .stencil(stencil.get())
         .hdes(hdes.get())
+        .service(ImmutableResolvedAssetService.builder().service(def).tagName(defName).build())
         .build());
   }
 
   public interface ResolvedAsset {}
 
+  @Value.Immutable
+  public interface ResolvedAssetService extends ResolvedAsset {
+    String getTagName();
+    ServiceDefinitionDocument getService();
+  }
+  
   @Value.Immutable
   public interface ResolvedAssetStencil extends ResolvedAsset {
     String getTagName();
@@ -255,8 +287,9 @@ public class CreateReleaseVisitor {
   public interface ResolvedAssetEnvir {
     ResolvedAssetStencil getStencil();
     ResolvedAssetHdes getHdes();
+    ResolvedAssetService getService();
     default List<ResolvedAsset> getResolved() {
-      return Arrays.asList(getStencil(), getHdes());
+      return Arrays.asList(getStencil(), getHdes(), getService());
     };
   }
   

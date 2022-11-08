@@ -1,29 +1,23 @@
 package io.digiexpress.client.api;
 
 import java.io.Serializable;
+import java.util.Optional;
 
-import org.immutables.value.Value;
+import io.digiexpress.client.api.ServiceDocument.ConfigType;
+import io.digiexpress.client.api.ServiceEnvir.Program;
 
 public interface ServiceCache {
 
   ServiceCache withName(String name);
   void flush(String id);
-//  
-//  Optional<DialobProgram> getProgram(StoreEntity src);
-//  Optional<DialobDocument> getAst(StoreEntity src);
-//  
-//  DialobProgram setProgram(DialobProgram program, StoreEntity src);
-//  DialobDocument setAst(DialobDocument ast, StoreEntity src);
-//  
 
-//  
-  @Value.Immutable
+  CacheEntry save(Program<?> src);
+  <T> Optional<Program<T>> get(String id);
+  
+
   interface CacheEntry extends Serializable {
     String getId();
-    String getRev();
-//    StoreEntity getSource();
-//    DialobDocument getAst();
-//    Optional<DialobProgram> getProgram();
+    ConfigType getType();
+    <T> Program<T> getProgram();
   }
-
 }

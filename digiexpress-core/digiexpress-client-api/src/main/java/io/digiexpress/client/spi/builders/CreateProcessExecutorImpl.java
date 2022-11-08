@@ -16,14 +16,14 @@ import io.digiexpress.client.api.ServiceClient.ExecutionBody;
 import io.digiexpress.client.api.ServiceClient.ServiceClientConfig;
 import io.digiexpress.client.api.ServiceDocument;
 import io.digiexpress.client.api.ServiceDocument.ProcessValue;
-import io.digiexpress.client.api.ServiceEnvir.ServiceWrapper;
+import io.digiexpress.client.api.ServiceEnvir.ServiceEnvirValue;
 import io.digiexpress.client.spi.support.ServiceExecutorException;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class CreateProcessExecutorImpl implements CreateProcessExecutor {
   private final ServiceClientConfig config;
-  private final ServiceWrapper wrapper;
+  private final ServiceEnvirValue wrapper;
   private final ProcessValue processValue;
   private final Map<String, Serializable> values = new HashMap<>();
   private LocalDateTime targetDate;

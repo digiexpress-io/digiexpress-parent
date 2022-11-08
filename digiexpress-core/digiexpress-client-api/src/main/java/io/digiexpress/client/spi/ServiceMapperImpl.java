@@ -70,7 +70,7 @@ public class ServiceMapperImpl implements ServiceMapper {
       return toDefBody((ServiceDefinitionDocument) entity);
     } else if(entity instanceof ServiceRevisionDocument) {
       return toRevisionBody((ServiceRevisionDocument) entity);
-    }else if(entity instanceof ServiceReleaseDocument) {
+    } else if(entity instanceof ServiceReleaseDocument) {
       return toServiceBody((ServiceReleaseDocument) entity);
     }
     throw new JsonMappingException("Unknown document: " + entity); 
@@ -143,6 +143,51 @@ public class ServiceMapperImpl implements ServiceMapper {
       return om.writeValueAsString(entity);
     } catch (Exception e) {
       throw new JsonMappingException(e.getMessage() + System.lineSeparator() + entity, e);
+    }
+  }
+
+  @Override
+  public String toReleaseBody(ServiceDefinitionDocument entity) {
+    try {
+      return om.writeValueAsString(entity);
+    } catch (Exception e) {
+      throw new JsonMappingException(e.getMessage() + System.lineSeparator() + entity, e);
+    }
+  }
+
+  @Override
+  public AstTag toHdes(String body) {
+    try {
+      return om.readValue(body, AstTag.class);
+    } catch (Exception e) {
+      throw new JsonMappingException(e.getMessage() + System.lineSeparator() + body, e);
+    }
+  }
+
+  @Override
+  public Sites toStencil(String body) {
+    try {
+      return om.readValue(body, Sites.class);
+    } catch (Exception e) {
+      throw new JsonMappingException(e.getMessage() + System.lineSeparator() + body, e);
+    }
+  }
+
+  @Override
+  public Form toDialob(String body) {
+    try {
+      return om.readValue(body, Form.class);
+    } catch (Exception e) {
+      throw new JsonMappingException(e.getMessage() + System.lineSeparator() + body, e);
+    }
+  }
+
+  @Override
+  public ServiceDefinitionDocument toService(String body) {
+    try {
+      return om.readValue(body, ServiceDefinitionDocument.class);
+    } catch (Exception e) {
+      throw new JsonMappingException(e.getMessage() + System.lineSeparator() + body, e);
     }
   }
 }

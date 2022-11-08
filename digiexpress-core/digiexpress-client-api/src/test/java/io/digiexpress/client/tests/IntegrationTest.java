@@ -2,7 +2,9 @@ package io.digiexpress.client.tests;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.stream.Collectors;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -10,6 +12,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.digiexpress.client.api.ImmutableCreateProcess;
 import io.digiexpress.client.api.ImmutableCreateRelease;
 import io.digiexpress.client.api.ImmutableCreateServiceRevision;
+import io.digiexpress.client.api.ServiceDocument.ServiceReleaseDocument;
 import io.digiexpress.client.api.ServiceDocument.ServiceRevisionDocument;
 import io.digiexpress.client.tests.support.PgProfile;
 import io.digiexpress.client.tests.support.TestCase;
@@ -58,16 +61,28 @@ public class IntegrationTest extends TestCase {
     
     final var targetDate = LocalDateTime.of(2022, 11, 5, 11, 07);
     
-    final var release = service(client).create().release(ImmutableCreateRelease.builder()
+    final var release1 = service(client).create().release(ImmutableCreateRelease.builder()
         .name("snapshot").desc("")
         .serviceDefinitionId(def.getId())
         .activeFrom(targetDate)
         .targetDate(targetDate)
         .build()).await().atMost(atMost);
   
-    System.out.println(toJson(release));
+    final var release2 = service(client).create().release(ImmutableCreateRelease.builder()
+        .name("snapshot-clone").desc("")
+        .serviceDefinitionId(def.getId())
+        .activeFrom(targetDate)
+        .targetDate(targetDate)
+        .build()).await().atMost(atMost);
+  
+    // content hashes must be same, because there are no changes
+    Assertions.assertEquals(toHashes(release1), toHashes(release2));
+    
+    
+    System.out.println(toJson(release1));
     System.out.println(builder.print(client.getConfig().getStore()));
     
+    //client.envir().from(null);
     
     //        .addValues(ImmutableRefIdValue.builder().type(ConfigType.DIALOB).refName("general-message-form").tagName("main").build())
     // .addValues(ImmutableRefIdValue.builder().type(ConfigType.HDES).refName("case 1 flow").tagName("main").build())
@@ -87,4 +102,14 @@ public class IntegrationTest extends TestCase {
 //    
 //    System.out.println(res);
 //  }
+  
+  
+  private String toHashes(ServiceReleaseDocument release) {
+    final var values = release.getValues().stream()
+      .sorted((a, b) -> a.getId().compareTo(b.getId()))
+      .map(e -> e.getBodyType() + "/" + e.getBodyHash())
+      .collect(Collectors.toList());
+    
+    return String.join(System.lineSeparator(), values);
+  }
 }
