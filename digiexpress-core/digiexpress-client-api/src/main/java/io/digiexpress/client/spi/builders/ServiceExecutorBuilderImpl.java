@@ -10,7 +10,7 @@ import io.digiexpress.client.api.ServiceClient.FlowProcessExecutor;
 import io.digiexpress.client.api.ServiceClient.ServiceClientConfig;
 import io.digiexpress.client.api.ServiceClient.ServiceExecutorBuilder;
 import io.digiexpress.client.api.ServiceEnvir;
-import io.digiexpress.client.api.ServiceEnvir.ServiceEnvirValue;
+import io.digiexpress.client.api.ServiceEnvir.ServiceProgram;
 import io.digiexpress.client.spi.support.ServiceExecutorException;
 import lombok.RequiredArgsConstructor;
 
@@ -21,7 +21,7 @@ public class ServiceExecutorBuilderImpl implements ServiceExecutorBuilder {
   
   @Override
   public CreateProcessExecutor create(String nameOrId) {
-    final ServiceEnvirValue doc = envir.getValues().values().stream().findFirst()
+    final ServiceProgram doc = envir.getValues().values().stream().findFirst()
         .orElseThrow(() ->
             ServiceExecutorException.serviceNotFound(
             () -> "Services available" + 

@@ -1,7 +1,10 @@
 package io.digiexpress.client.api;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.annotation.Nullable;
 
@@ -9,44 +12,48 @@ import org.immutables.value.Value;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import io.dialob.api.form.Form;
-import io.digiexpress.client.api.ProcessState.ServiceRef;
-import io.digiexpress.client.api.ProcessState.ServiceRel;
+import io.dialob.program.DialobProgram;
+import io.digiexpress.client.api.ServiceClient.ServiceClientConfig;
 import io.digiexpress.client.api.ServiceDocument.ConfigType;
 import io.digiexpress.client.api.ServiceDocument.ServiceDefinitionDocument;
-import io.digiexpress.client.api.ServiceDocument.ServiceReleaseDocument;
-import io.resys.hdes.client.api.ast.AstTag;
-import io.thestencil.client.api.MigrationBuilder.Sites;
 
 public interface ServiceEnvir {
-  Map<String, ServiceEnvirValue> getValues();
-
-  interface ProgramSource extends Serializable {
+  Map<String, ServiceProgramSource> getSources(); //id to source
+  ServiceProgram getByHash(String hash);
+  ServiceProgram getById(String objectId);
+  ServiceProgramService getDef(LocalDateTime targetDate);
+  
+  
+  interface ServiceProgramSource extends Serializable {
+    String getId();       // unique id of resource
     String getHash();     // hash of the uncompressed body
     String getBody();     // compressed source code -> stencil/hdes/dialob/service
     ConfigType getType(); // body content type
-    
-    Sites toStencil(CompressionMapper mapper);
-    Form toForm(CompressionMapper mapper);
-    AstTag toHdes(CompressionMapper mapper);
-    ServiceDefinitionDocument toService(CompressionMapper mapper);
-  }
-
-  interface Program<T> extends Serializable {
-    String getId();
-    ProgramSource getSource();
-    T getBody();
   }
   
-  
-  interface ServiceEnvirValue extends Serializable {
+  interface ServiceProgram extends Serializable {
     String getId();
-    ServiceRef getRefId();
-    ServiceRel getRelId();
-    
-    ServiceDefinitionDocument getDef();
-    ServiceReleaseDocument getRel();
+    ProgramStatus getStatus();
+    List<ProgramMessage> getErrors();
+    ServiceProgramSource getSource();
   }
+  
+  interface ServiceProgramHdes extends ServiceProgram {
+    io.resys.hdes.client.api.ast.AstTag getDelegate(ServiceClientConfig config);
+    Optional<io.resys.hdes.client.api.programs.ProgramEnvir> getCompiled(ServiceClientConfig config);
+  }
+  interface ServiceProgramDialob extends ServiceProgram {
+    io.dialob.api.form.Form getDelegate(ServiceClientConfig config);
+    Optional<DialobProgram> getCompiled(ServiceClientConfig config);
+  }
+  interface ServiceProgramStencil extends ServiceProgram {
+    io.thestencil.client.api.MigrationBuilder.Sites getDelegate(ServiceClientConfig config);
+  }
+  
+  interface ServiceProgramService extends ServiceProgram {
+    ServiceDefinitionDocument getDelegate(ServiceClientConfig config);
+  }
+  
   
   @Value.Immutable
   interface ProgramMessage {
@@ -58,7 +65,6 @@ public interface ServiceEnvir {
     Exception getException();
   }
   
-  enum ProgramStatus { CREATED, COMPILING, UP, ERROR, }
-  enum ProgramType { PROCESS, HDES, DIALOB, STENCIL }
+  enum ProgramStatus { CREATED, PARSED, UP, ERROR, }
 
 }

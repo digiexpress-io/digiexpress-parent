@@ -26,6 +26,7 @@ import io.digiexpress.client.api.QueryFactory;
 import io.digiexpress.client.api.ServiceCache;
 import io.digiexpress.client.api.ServiceClient;
 import io.digiexpress.client.api.ServiceEnvir;
+import io.digiexpress.client.spi.builders.ServiceEnvirBuilderImpl;
 import io.digiexpress.client.spi.builders.ServiceRepoBuilderImpl;
 import io.digiexpress.client.spi.query.QueryFactoryImpl;
 import io.digiexpress.client.spi.store.ImmutableServiceStoreConfig;
@@ -63,8 +64,7 @@ public class ServiceClientImpl implements ServiceClient {
   }
   @Override
   public ServiceEnvirBuilder envir() {
-    // TODO Auto-generated method stub
-    return null;
+    return new ServiceEnvirBuilderImpl(config);
   }
   @Override
   public ServiceExecutorBuilder executor(ServiceEnvir envir) {

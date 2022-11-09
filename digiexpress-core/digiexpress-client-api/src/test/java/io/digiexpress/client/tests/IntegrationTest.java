@@ -14,6 +14,7 @@ import io.digiexpress.client.api.ImmutableCreateRelease;
 import io.digiexpress.client.api.ImmutableCreateServiceRevision;
 import io.digiexpress.client.api.ServiceDocument.ServiceReleaseDocument;
 import io.digiexpress.client.api.ServiceDocument.ServiceRevisionDocument;
+import io.digiexpress.client.api.ServiceEnvir.ServiceProgramDialob;
 import io.digiexpress.client.tests.support.PgProfile;
 import io.digiexpress.client.tests.support.TestCase;
 import io.quarkus.test.junit.QuarkusTest;
@@ -71,16 +72,28 @@ public class IntegrationTest extends TestCase {
     final var release2 = service(client).create().release(ImmutableCreateRelease.builder()
         .name("snapshot-clone").desc("")
         .serviceDefinitionId(def.getId())
-        .activeFrom(targetDate)
-        .targetDate(targetDate)
+        .activeFrom(LocalDateTime.of(2022, 11, 5, 11, 8))
+        .targetDate(LocalDateTime.of(2022, 11, 5, 11, 8))
         .build()).await().atMost(atMost);
   
     // content hashes must be same, because there are no changes
     Assertions.assertEquals(toHashes(release1), toHashes(release2));
     
     
-    System.out.println(toJson(release1));
-    System.out.println(builder.print(client.getConfig().getStore()));
+    final var envir = builder.getClient().envir().add(release1).add(release2).build();
+    envir.getSources().values().forEach(src -> 
+      Assertions.assertEquals(envir.getById(src.getId()), envir.getByHash(src.getHash()))
+    );
+    
+    final var dialob = (ServiceProgramDialob) envir.getById("c89b6d0b-51a7-11bc-358d-3094ca98d40b/DIALOB");
+    Assertions.assertNotNull(dialob.getCompiled(builder.getClient().getConfig()));
+    
+    for(final var v : envir.getSources().values()) {
+      System.out.println(toJson(envir.getById(v.getId())));
+    }
+
+//    System.out.println(toJson(release1));
+//    System.out.println(builder.print(client.getConfig().getStore()));
     
     //client.envir().from(null);
     

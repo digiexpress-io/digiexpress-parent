@@ -6,25 +6,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.dialob.api.form.Form;
-import io.digiexpress.client.api.CompressionMapper;
+import io.digiexpress.client.api.ServiceClient.ServiceClientConfig;
 import io.digiexpress.client.api.ServiceClient.ServiceEnvirBuilder;
 import io.digiexpress.client.api.ServiceDocument.ConfigType;
-import io.digiexpress.client.api.ServiceDocument.ServiceDefinitionDocument;
 import io.digiexpress.client.api.ServiceDocument.ServiceReleaseDocument;
 import io.digiexpress.client.api.ServiceDocument.ServiceReleaseValue;
 import io.digiexpress.client.api.ServiceEnvir;
-import io.digiexpress.client.api.ServiceEnvir.ProgramSource;
+import io.digiexpress.client.api.ServiceEnvir.ServiceProgramSource;
+import io.digiexpress.client.spi.envir.ServiceEnvirImpl;
 import io.digiexpress.client.spi.support.EnvirException;
-import io.resys.hdes.client.api.ast.AstTag;
-import io.thestencil.client.api.MigrationBuilder.Sites;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@RequiredArgsConstructor
 public class ServiceEnvirBuilderImpl implements ServiceEnvirBuilder {
-
+  private final ServiceClientConfig config;
+  
   // hash to source
-  private final Map<String, ProgramSource> hash_to_source = new HashMap<>();
+  private final Map<String, ServiceProgramSource> hash_to_source = new HashMap<>();
   private final Map<LocalDateTime, List<String>> active_to_hash = new HashMap<>();
   
   @Override
@@ -38,8 +38,7 @@ public class ServiceEnvirBuilderImpl implements ServiceEnvirBuilder {
 
   @Override
   public ServiceEnvir build() {
-    // TODO Auto-generated method stub
-    return null;
+    return new ServiceEnvirImpl(config, hash_to_source, active_to_hash);
   }
   
   private void addSrc(ServiceReleaseValue value, ServiceReleaseDocument release) {
@@ -58,32 +57,21 @@ public class ServiceEnvirBuilderImpl implements ServiceEnvirBuilder {
       return;
     }
     
-    final var src = ImmutableProgramSource.builder().body(value.getBody()).type(value.getBodyType()).hash(value.getBodyHash()).build();
-    hash_to_source.put(value.getId(), src);    
+    final var src = ImmutableProgramSource.builder()
+        .id(value.getId() + "/" + value.getBodyType())
+        .body(value.getBody())
+        .type(value.getBodyType())
+        .hash(value.getBodyHash())
+        .build();
+    hash_to_source.put(value.getBodyHash(), src);    
   }
   
   @lombok.Data @lombok.Builder
-  private static class ImmutableProgramSource implements ProgramSource {
+  private static class ImmutableProgramSource implements ServiceProgramSource {
     private static final long serialVersionUID = -3967877009056482722L;
+    private final String id;
     private final String hash;
     private final String body;
     private final ConfigType type;
-    
-    @Override
-    public Sites toStencil(CompressionMapper mapper) {
-      return mapper.decompressionStencil(body);
-    }
-    @Override
-    public Form toForm(CompressionMapper mapper) {
-      return mapper.decompressionDialob(body);
-    }
-    @Override
-    public AstTag toHdes(CompressionMapper mapper) {
-      return mapper.decompressionHdes(body);
-    }
-    @Override
-    public ServiceDefinitionDocument toService(CompressionMapper mapper) {
-      return mapper.decompressionService(body);
-    }
   }
 }

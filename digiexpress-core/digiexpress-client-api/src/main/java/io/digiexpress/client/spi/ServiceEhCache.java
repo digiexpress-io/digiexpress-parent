@@ -10,7 +10,7 @@ import org.ehcache.config.builders.ResourcePoolsBuilder;
 
 import io.digiexpress.client.api.ServiceCache;
 import io.digiexpress.client.api.ServiceDocument.ConfigType;
-import io.digiexpress.client.api.ServiceEnvir.Program;
+import io.digiexpress.client.api.ServiceEnvir.ServiceProgram;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -77,7 +77,7 @@ public class ServiceEhCache implements ServiceCache {
     cache.remove(entity.getProgram().getSource().getHash());
   }
   @Override
-  public CacheEntry save(Program<?> src) {
+  public CacheEntry save(ServiceProgram src) {
     final var entry = ImmutableCacheEntry.builder()
         .id(src.getId())
         .program(src)
@@ -94,9 +94,8 @@ public class ServiceEhCache implements ServiceCache {
     cache.put(entry.getId(), entry);
     return entry;
   }
-  @SuppressWarnings("unchecked")
   @Override
-  public Optional<Program<?>> get(String id) {
+  public Optional<ServiceProgram> get(String id) {
     final var cache = getCache();
     final var entity = cache.get(id);
     return Optional.ofNullable(entity).map(e -> e.getProgram());
@@ -107,12 +106,12 @@ public class ServiceEhCache implements ServiceCache {
     private static final long serialVersionUID = -1824945964044225824L;
     private final String id;
     private final ConfigType type;
-    private final Program<?> program;
+    private final ServiceProgram program;
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> Program<T> getProgram() {
-      return (Program<T>) program;
+    public <T extends ServiceProgram> T getProgram() {
+      return (T) program;
     }
   }
 }
