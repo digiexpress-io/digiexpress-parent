@@ -14,7 +14,11 @@ import io.digiexpress.client.api.ImmutableCreateRelease;
 import io.digiexpress.client.api.ImmutableCreateServiceRevision;
 import io.digiexpress.client.api.ServiceDocument.ServiceReleaseDocument;
 import io.digiexpress.client.api.ServiceDocument.ServiceRevisionDocument;
+import io.digiexpress.client.api.ServiceEnvir.ServiceProgramDef;
 import io.digiexpress.client.api.ServiceEnvir.ServiceProgramDialob;
+import io.digiexpress.client.api.ServiceEnvir.ServiceProgramHdes;
+import io.digiexpress.client.api.ServiceEnvir.ServiceProgramStatus;
+import io.digiexpress.client.api.ServiceEnvir.ServiceProgramStencil;
 import io.digiexpress.client.tests.support.PgProfile;
 import io.digiexpress.client.tests.support.TestCase;
 import io.quarkus.test.junit.QuarkusTest;
@@ -63,7 +67,7 @@ public class IntegrationTest extends TestCase {
     final var targetDate = LocalDateTime.of(2022, 11, 5, 11, 07);
     
     final var release1 = service(client).create().release(ImmutableCreateRelease.builder()
-        .name("snapshot").desc("")
+        .name("main").desc("")
         .serviceDefinitionId(def.getId())
         .activeFrom(targetDate)
         .targetDate(targetDate)
@@ -81,24 +85,32 @@ public class IntegrationTest extends TestCase {
     
     
     final var envir = builder.getClient().envir().add(release1).add(release2).build();
-    envir.getSources().values().forEach(src -> 
-      Assertions.assertEquals(envir.getById(src.getId()), envir.getByHash(src.getHash()))
-    );
+    envir.getSources().values().forEach(src -> {
+      Assertions.assertEquals(envir.getById(src.getId()), envir.getByHash(src.getHash()));
+    });
     
+    
+    final var stencil = (ServiceProgramStencil) envir.getById("main/STENCIL");
     final var dialob = (ServiceProgramDialob) envir.getById("c89b6d0b-51a7-11bc-358d-3094ca98d40b/DIALOB");
+    final var hdes = (ServiceProgramHdes) envir.getById("main/HDES");    
+    final var service = (ServiceProgramDef) envir.getById("main/SERVICE");    
+
+    Assertions.assertNotNull(stencil.getDelegate(builder.getClient().getConfig()));
     Assertions.assertNotNull(dialob.getCompiled(builder.getClient().getConfig()));
+    Assertions.assertNotNull(hdes.getCompiled(builder.getClient().getConfig()));
+    Assertions.assertNotNull(service.getDelegate(builder.getClient().getConfig()));
     
-    for(final var v : envir.getSources().values()) {
-      System.out.println(toJson(envir.getById(v.getId())));
-    }
+    Assertions.assertEquals(ServiceProgramStatus.UP, stencil.getStatus());
+    Assertions.assertEquals(ServiceProgramStatus.UP, dialob.getStatus());
+    Assertions.assertEquals(ServiceProgramStatus.UP, hdes.getStatus());
+    Assertions.assertEquals(ServiceProgramStatus.UP, service.getStatus());
+    
+    final var stencilOnDate = client.executor(envir).stencil().build();
+    System.out.println(toJson(stencilOnDate));
 
 //    System.out.println(toJson(release1));
 //    System.out.println(builder.print(client.getConfig().getStore()));
-    
-    //client.envir().from(null);
-    
-    //        .addValues(ImmutableRefIdValue.builder().type(ConfigType.DIALOB).refName("general-message-form").tagName("main").build())
-    // .addValues(ImmutableRefIdValue.builder().type(ConfigType.HDES).refName("case 1 flow").tagName("main").build())
+//    client.envir().from(null);
   }
   
   
@@ -115,8 +127,7 @@ public class IntegrationTest extends TestCase {
 //    
 //    System.out.println(res);
 //  }
-  
-  
+
   private String toHashes(ServiceReleaseDocument release) {
     final var values = release.getValues().stream()
       .sorted((a, b) -> a.getId().compareTo(b.getId()))

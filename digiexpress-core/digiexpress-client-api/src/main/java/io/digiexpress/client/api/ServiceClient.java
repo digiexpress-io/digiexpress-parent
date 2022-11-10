@@ -24,40 +24,40 @@ public interface ServiceClient {
   interface ServiceClientException {}
 
   interface ServiceExecutorBuilder {
-    CreateProcessExecutor create(String nameOrId);
-    FillProcessExecutor fill(ProcessState state);
-    FlowProcessExecutor flow(ProcessState state);
-    ArticleExecutor article();
+    ProcessExecutor process(String nameOrId);
+    DialobExecutor dialob(ProcessState state);
+    HdesExecutor hdes(ProcessState state);
+    StencilExecutor stencil();
   }
 
   // returns new process instance and new fill session
-  interface CreateProcessExecutor {
-    CreateProcessExecutor targetDate(LocalDateTime now);
-    CreateProcessExecutor actions(Map<String, Serializable> initVariables);
-    CreateProcessExecutor action(String variableName, Serializable variableValue);
+  interface ProcessExecutor {
+    ProcessExecutor targetDate(LocalDateTime now);
+    ProcessExecutor actions(Map<String, Serializable> initVariables);
+    ProcessExecutor action(String variableName, Serializable variableValue);
     ExecutionBody<Map<String, Serializable>> build();
   }
 
   // continues fill
-  interface FillProcessExecutor {
-    FillProcessExecutor actions(io.dialob.api.proto.Actions userActions);
+  interface DialobExecutor {
+    DialobExecutor actions(io.dialob.api.proto.Actions userActions);
     ExecutionBody<io.dialob.api.proto.Actions> build();
   }
   
-  interface FlowProcessExecutor {
+  interface HdesExecutor {
     
   }
 
   // returns stencil content
-  interface ArticleExecutor {
-    ArticleExecutor actions(String locale);
+  interface StencilExecutor {
+    StencilExecutor targetDate(LocalDateTime targetDate);
+    StencilExecutor locale(String locale);
     ExecutionBody<LocalizedSite> build();
   }
   
   @Value.Immutable
   interface ExecutionBody<T> {
-    ProcessState getState();
-    T getActions();
+    T getBody();
   }
 
   interface ServiceRepoBuilder {

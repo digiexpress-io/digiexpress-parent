@@ -1,9 +1,8 @@
-package io.digiexpress.client.spi.builders;
+package io.digiexpress.client.spi.executors;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
 import io.digiexpress.client.api.ImmutableExecutionBody;
@@ -11,37 +10,38 @@ import io.digiexpress.client.api.ImmutableProcessCreated;
 import io.digiexpress.client.api.ImmutableProcessState;
 import io.digiexpress.client.api.ImmutableStep;
 import io.digiexpress.client.api.ProcessState.ProcessCreated;
-import io.digiexpress.client.api.ServiceClient.CreateProcessExecutor;
 import io.digiexpress.client.api.ServiceClient.ExecutionBody;
+import io.digiexpress.client.api.ServiceClient.ProcessExecutor;
 import io.digiexpress.client.api.ServiceClient.ServiceClientConfig;
 import io.digiexpress.client.api.ServiceDocument;
-import io.digiexpress.client.api.ServiceDocument.ProcessValue;
-import io.digiexpress.client.api.ServiceEnvir.ServiceProgram;
-import io.digiexpress.client.spi.support.ServiceExecutorException;
+import io.digiexpress.client.api.ServiceEnvir;
+import io.digiexpress.client.spi.support.ExecutorException;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class CreateProcessExecutorImpl implements CreateProcessExecutor {
+public class ProcessExecutorImpl implements ProcessExecutor {
   private final ServiceClientConfig config;
-  private final ServiceProgram wrapper;
-  private final ProcessValue processValue;
-  private final Map<String, Serializable> values = new HashMap<>();
-  private LocalDateTime targetDate;
+  private final String nameOrId;
+  private final ServiceEnvir envir;
+//  private final ServiceProgram wrapper;
+//  private final ProcessValue processValue;
+//  private final Map<String, Serializable> values = new HashMap<>();
+//  private LocalDateTime targetDate;
   
   @Override
-  public CreateProcessExecutor actions(Map<String, Serializable> initVariables) {
+  public ProcessExecutor actions(Map<String, Serializable> initVariables) {
     values.putAll(initVariables);
     return this;
   }
   @Override
-  public CreateProcessExecutor action(String variableName, Serializable variableValue) {
+  public ProcessExecutor action(String variableName, Serializable variableValue) {
     if(values.containsKey(variableName)) {
-      throw ServiceExecutorException.processInitVariableAlreadyDefined(wrapper, processValue, () -> "Variable name: " + variableName);
+      throw ExecutorException.processInitVariableAlreadyDefined(wrapper, processValue, () -> "Variable name: " + variableName);
     }
     return this;
   }
   @Override
-  public CreateProcessExecutor targetDate(LocalDateTime now) {
+  public ProcessExecutor targetDate(LocalDateTime now) {
     this.targetDate = now;
     return this;
   }
@@ -69,4 +69,27 @@ public class CreateProcessExecutorImpl implements CreateProcessExecutor {
         .state(state)
         .build();
   }
+  
+//final ServiceProgram doc = envir.getValues().values().stream().findFirst()
+//.orElseThrow(() ->
+//    ServiceExecutorException.serviceNotFound(
+//    () -> "Services available" + 
+//      String.join(",", envir.getValues().values().stream()
+//        .map(p -> p.getId())
+//        .collect(Collectors.toList())) + 
+//  "!"));
+//
+//
+//final var process = doc.getDef().getProcesses().stream()
+//.filter(p -> p.getId().equals(nameOrId) || p.getName().equals(nameOrId))
+//.findFirst()
+//.orElseThrow(() -> ServiceExecutorException.processNotFound(doc, nameOrId, 
+//  () -> "Accepted in: '" + doc.getId() + "' process id/name: " + 
+//      String.join(",", doc.getDef().getProcesses().stream()
+//        .map(p -> p.getId() + "/" + p.getName())
+//        .collect(Collectors.toList())) + 
+//  "!"));
+//
+//return new CreateProcessExecutorImpl(config, doc, process);
+
 }

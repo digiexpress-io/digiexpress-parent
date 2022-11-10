@@ -14,7 +14,7 @@ import io.dialob.client.api.ImmutableFormDocument;
 import io.dialob.program.DialobProgram;
 import io.digiexpress.client.api.ServiceClient.ServiceClientConfig;
 import io.digiexpress.client.api.ServiceEnvir.ProgramMessage;
-import io.digiexpress.client.api.ServiceEnvir.ProgramStatus;
+import io.digiexpress.client.api.ServiceEnvir.ServiceProgramStatus;
 import io.digiexpress.client.api.ServiceEnvir.ServiceProgramDialob;
 import io.digiexpress.client.api.ServiceEnvir.ServiceProgramSource;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +28,7 @@ public class ServiceProgramDialobImpl implements ServiceProgramDialob {
   private final String id;
   private final List<ProgramMessage> errors = new ArrayList<>();
   private final ServiceProgramSource source;
-  private ProgramStatus status = ProgramStatus.CREATED;
+  private ServiceProgramStatus status = ServiceProgramStatus.CREATED;
   
   @JsonIgnore
   private transient Form delegate;
@@ -46,7 +46,7 @@ public class ServiceProgramDialobImpl implements ServiceProgramDialob {
     if(this.delegate == null) {
       final var form = config.getCompression().decompressionDialob(source.getBody());
       this.delegate = form;
-      this.status = ProgramStatus.PARSED;
+      this.status = ServiceProgramStatus.PARSED;
     }
     return this.delegate;
   }
@@ -71,10 +71,10 @@ public class ServiceProgramDialobImpl implements ServiceProgramDialob {
             .build();
         final var dialob = config.getDialob().program().form(doc).build();
         this.compiled = dialob;
-        this.status = ProgramStatus.UP;
+        this.status = ServiceProgramStatus.UP;
       } catch(Exception e) {
         log.error(e.getMessage(), e);
-        this.status = ProgramStatus.ERROR;
+        this.status = ServiceProgramStatus.ERROR;
       }
     }
     return Optional.ofNullable(this.compiled);

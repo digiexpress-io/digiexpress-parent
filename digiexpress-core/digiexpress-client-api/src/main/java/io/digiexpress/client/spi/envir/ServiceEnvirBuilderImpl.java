@@ -1,4 +1,4 @@
-package io.digiexpress.client.spi.builders;
+package io.digiexpress.client.spi.envir;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -13,7 +13,6 @@ import io.digiexpress.client.api.ServiceDocument.ServiceReleaseDocument;
 import io.digiexpress.client.api.ServiceDocument.ServiceReleaseValue;
 import io.digiexpress.client.api.ServiceEnvir;
 import io.digiexpress.client.api.ServiceEnvir.ServiceProgramSource;
-import io.digiexpress.client.spi.envir.ServiceEnvirImpl;
 import io.digiexpress.client.spi.support.EnvirException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,6 +48,7 @@ public class ServiceEnvirBuilderImpl implements ServiceEnvirBuilder {
       active = new ArrayList<>();
       active_to_hash.put(release.getActiveFrom(), active);
     }
+    active.add(value.getBodyHash());
     
     if(hash_to_source.containsKey(value.getBodyHash())) {
       log.info(
@@ -63,7 +63,8 @@ public class ServiceEnvirBuilderImpl implements ServiceEnvirBuilder {
         .type(value.getBodyType())
         .hash(value.getBodyHash())
         .build();
-    hash_to_source.put(value.getBodyHash(), src);    
+    hash_to_source.put(value.getBodyHash(), src);
+
   }
   
   @lombok.Data @lombok.Builder

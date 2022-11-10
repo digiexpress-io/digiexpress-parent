@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.digiexpress.client.api.ServiceClient.ServiceClientConfig;
 import io.digiexpress.client.api.ServiceEnvir.ProgramMessage;
-import io.digiexpress.client.api.ServiceEnvir.ProgramStatus;
+import io.digiexpress.client.api.ServiceEnvir.ServiceProgramStatus;
 import io.digiexpress.client.api.ServiceEnvir.ServiceProgramSource;
 import io.digiexpress.client.api.ServiceEnvir.ServiceProgramStencil;
 import io.thestencil.client.api.MigrationBuilder.Sites;
@@ -19,7 +19,7 @@ public class ServiceProgramStencilImpl implements ServiceProgramStencil {
   private final String id;
   private final List<ProgramMessage> errors = new ArrayList<>();
   private final ServiceProgramSource source;
-  private ProgramStatus status = ProgramStatus.CREATED;
+  private ServiceProgramStatus status = ServiceProgramStatus.CREATED;
   @JsonIgnore
   private transient Sites delegate;
 
@@ -34,7 +34,7 @@ public class ServiceProgramStencilImpl implements ServiceProgramStencil {
     if(this.delegate == null) {
       final var sites = config.getCompression().decompressionStencil(source.getBody());
       this.delegate = sites;
-      this.status = ProgramStatus.UP;
+      this.status = ServiceProgramStatus.UP;
     }
     return this.delegate;
   }

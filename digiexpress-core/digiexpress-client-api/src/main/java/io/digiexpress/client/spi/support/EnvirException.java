@@ -1,5 +1,6 @@
 package io.digiexpress.client.spi.support;
 
+import java.time.LocalDateTime;
 import java.util.function.Supplier;
 
 import io.digiexpress.client.api.ServiceDocument.ServiceReleaseDocument;
@@ -29,6 +30,12 @@ public class EnvirException extends RuntimeException {
   public static EnvirException notSupportedSource(ServiceProgramSource src, Supplier<String> msg) {
     return new EnvirException(
         "Service program source with id: '" + src.getId() + "/" + src.getType() + "' is not supported." + 
+        System.lineSeparator() + msg.get());
+  }
+  
+  public static EnvirException notFoundDef(LocalDateTime targetDate, Supplier<String> msg) {
+    return new EnvirException(
+        "Service program def not found (on or after): '" + targetDate + "'!" + 
         System.lineSeparator() + msg.get());
   }  
 }

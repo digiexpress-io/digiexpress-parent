@@ -10,7 +10,6 @@ import java.util.stream.Stream;
 import io.dialob.client.api.DialobDocument.FormDocument;
 import io.digiexpress.client.api.ImmutableFlowDocument;
 import io.digiexpress.client.api.QueryFactory;
-import io.digiexpress.client.api.ServiceClient;
 import io.digiexpress.client.api.ServiceClient.ServiceClientConfig;
 import io.digiexpress.client.api.ServiceDocument;
 import io.digiexpress.client.api.ServiceDocument.ServiceConfigDocument;
@@ -40,9 +39,6 @@ public class QueryFactoryImpl implements QueryFactory {
   private final List<AstBodyType> HDES_ASSETS = Arrays.asList(AstBodyType.DT, AstBodyType.FLOW, AstBodyType.FLOW_TASK);
   private final ServiceClientConfig config;
   
-  public static QueryFactoryImpl from(ServiceClient client) {
-    return new QueryFactoryImpl(client.getConfig());
-  }  
   public static QueryFactoryImpl from(ServiceClientConfig config) {
     return new QueryFactoryImpl(config);
   }

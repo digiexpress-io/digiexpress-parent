@@ -17,6 +17,7 @@ import io.digiexpress.client.api.ServiceStore.StoreEntity;
 import io.digiexpress.client.spi.support.JsonMappingException;
 import io.resys.hdes.client.api.ast.AstTag;
 import io.thestencil.client.api.MigrationBuilder.Sites;
+import io.thestencil.client.spi.beans.SitesBean;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -167,7 +168,7 @@ public class ServiceMapperImpl implements ServiceMapper {
   @Override
   public Sites toStencil(String body) {
     try {
-      return om.readValue(body, Sites.class);
+      return om.readValue(body, SitesBean.class);
     } catch (Exception e) {
       throw new JsonMappingException(e.getMessage() + System.lineSeparator() + body, e);
     }

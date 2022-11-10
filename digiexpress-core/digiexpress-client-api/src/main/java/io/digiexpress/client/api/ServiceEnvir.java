@@ -15,13 +15,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.dialob.program.DialobProgram;
 import io.digiexpress.client.api.ServiceClient.ServiceClientConfig;
 import io.digiexpress.client.api.ServiceDocument.ConfigType;
+import io.digiexpress.client.api.ServiceDocument.RefIdValue;
 import io.digiexpress.client.api.ServiceDocument.ServiceDefinitionDocument;
 
 public interface ServiceEnvir {
   Map<String, ServiceProgramSource> getSources(); //id to source
   ServiceProgram getByHash(String hash);
   ServiceProgram getById(String objectId);
-  ServiceProgramService getDef(LocalDateTime targetDate);
+  ServiceProgram getByRefId(RefIdValue ref);
+  ServiceProgramDef getDef(LocalDateTime targetDate);
   
   
   interface ServiceProgramSource extends Serializable {
@@ -33,7 +35,7 @@ public interface ServiceEnvir {
   
   interface ServiceProgram extends Serializable {
     String getId();
-    ProgramStatus getStatus();
+    ServiceProgramStatus getStatus();
     List<ProgramMessage> getErrors();
     ServiceProgramSource getSource();
   }
@@ -50,7 +52,7 @@ public interface ServiceEnvir {
     io.thestencil.client.api.MigrationBuilder.Sites getDelegate(ServiceClientConfig config);
   }
   
-  interface ServiceProgramService extends ServiceProgram {
+  interface ServiceProgramDef extends ServiceProgram {
     ServiceDefinitionDocument getDelegate(ServiceClientConfig config);
   }
   
@@ -65,6 +67,6 @@ public interface ServiceEnvir {
     Exception getException();
   }
   
-  enum ProgramStatus { CREATED, PARSED, UP, ERROR, }
+  enum ServiceProgramStatus { CREATED, PARSED, UP, ERROR, }
 
 }

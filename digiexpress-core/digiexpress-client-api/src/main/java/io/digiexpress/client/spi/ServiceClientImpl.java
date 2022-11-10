@@ -22,12 +22,17 @@ import io.dialob.client.spi.support.OidUtils;
 import io.dialob.rule.parser.function.DefaultFunctions;
 import io.dialob.rule.parser.function.FunctionRegistry;
 import io.digiexpress.client.api.ImmutableServiceClientConfig;
+import io.digiexpress.client.api.ProcessState;
 import io.digiexpress.client.api.QueryFactory;
 import io.digiexpress.client.api.ServiceCache;
 import io.digiexpress.client.api.ServiceClient;
 import io.digiexpress.client.api.ServiceEnvir;
-import io.digiexpress.client.spi.builders.ServiceEnvirBuilderImpl;
 import io.digiexpress.client.spi.builders.ServiceRepoBuilderImpl;
+import io.digiexpress.client.spi.envir.ServiceEnvirBuilderImpl;
+import io.digiexpress.client.spi.executors.DialobExecutorImpl;
+import io.digiexpress.client.spi.executors.HdesExecutorImpl;
+import io.digiexpress.client.spi.executors.ProcessExecutorImpl;
+import io.digiexpress.client.spi.executors.StencilExecutorImpl;
 import io.digiexpress.client.spi.query.QueryFactoryImpl;
 import io.digiexpress.client.spi.store.ImmutableServiceStoreConfig;
 import io.digiexpress.client.spi.store.ServiceStorePg;
@@ -54,12 +59,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 public class ServiceClientImpl implements ServiceClient {
-
   private final ServiceClientConfig config;
   
   @Override
   public ServiceRepoBuilder repo() {
-    ServiceAssert.notNull(config.getDocDb(), () -> "config.docDb: DocDB must be defined!");
     return new ServiceRepoBuilderImpl(config, config.getDocDb());
   }
   @Override
@@ -67,22 +70,25 @@ public class ServiceClientImpl implements ServiceClient {
     return new ServiceEnvirBuilderImpl(config);
   }
   @Override
-  public ServiceExecutorBuilder executor(ServiceEnvir envir) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-  @Override
   public ServiceClientConfig getConfig() {
     return config;
   }
   @Override
   public QueryFactory getQuery() {
-    return QueryFactoryImpl.from(this);
+    return new QueryFactoryImpl(config);
+  }
+  @Override
+  public ServiceExecutorBuilder executor(ServiceEnvir envir) {
+    return new ServiceExecutorBuilder() {
+      @Override public StencilExecutor stencil() { return new StencilExecutorImpl(config, envir); }
+      @Override public HdesExecutor hdes(ProcessState state) { return new HdesExecutorImpl(config, state, envir); }
+      @Override public DialobExecutor dialob(ProcessState state) { return new DialobExecutorImpl(config, state, envir); }
+      @Override public ProcessExecutor process(String nameOrId) { return new ProcessExecutorImpl(config, nameOrId, envir); }
+    };
   }
   public static Builder builder() {
     return new Builder();
   }
-
   @Data @Getter(AccessLevel.NONE)
   @Accessors(fluent = true, chain = true)
   public static class Builder {
@@ -100,57 +106,6 @@ public class ServiceClientImpl implements ServiceClient {
     protected ServiceInit hdesServiceInit;
     protected QuestionnaireEventPublisher dialobEventPub;
     protected FunctionRegistry dialobFr;
-    
-    
-    
-    public Builder defaultObjectMapper() {
-      ObjectMapper objectMapper = new ObjectMapper();
-      objectMapper.registerModule(new GuavaModule());
-      objectMapper.registerModule(new JavaTimeModule());
-      objectMapper.registerModule(new Jdk8Module());
-      om = objectMapper;
-      return this;
-    }
-    
-    public Builder defaultDialobEventPub() {
-      final var  publisher = new EventPublisher() {
-        @Override
-        public void publish(Event event) {
-          log.debug("dialob event publisher: " + event);
-        }
-      };
-      this.dialobEventPub = new QuestionnaireEventPublisher(publisher);
-      return this;
-    }
-    public Builder defaultDialobFr() {
-      this.dialobFr = new FunctionRegistryImpl();
-      final var defaultFunctions = new DefaultFunctions(dialobFr);
-      log.debug("dialob default functions: " + defaultFunctions.getClass().getCanonicalName());
-      return this;
-    }
-    
-    public Builder defaultHdesDjc() {
-      this.hdesDjc = new DependencyInjectionContext() {
-        @Override
-        public <T> T get(Class<T> type) {
-          return null;
-        }
-      };
-      return this;
-    }
-    public Builder defaultHdesServiceInit() {
-      this.hdesServiceInit = new ServiceInit() {
-        @Override
-        public <T> T get(Class<T> type) {
-          try {
-            return type.getDeclaredConstructor().newInstance();
-          } catch(Exception e) {
-            throw new RuntimeException(e.getMessage(), e);
-          }
-        }
-      };
-      return this;
-    }
     
     public ServiceClientImpl build() {
       ServiceAssert.notNull(doc, () -> "doc: DocDB must be defined!");
@@ -256,6 +211,54 @@ public class ServiceClientImpl implements ServiceClient {
     @FunctionalInterface
     protected interface DoInOm<T> {
       T apply(ObjectMapper om) throws IOException;
+    }
+    
+    public Builder defaultObjectMapper() {
+      ObjectMapper objectMapper = new ObjectMapper();
+      objectMapper.registerModule(new GuavaModule());
+      objectMapper.registerModule(new JavaTimeModule());
+      objectMapper.registerModule(new Jdk8Module());
+      om = objectMapper;
+      return this;
+    }
+    
+    public Builder defaultDialobEventPub() {
+      final var  publisher = new EventPublisher() {
+        @Override
+        public void publish(Event event) {
+          log.debug("dialob event publisher: " + event);
+        }
+      };
+      this.dialobEventPub = new QuestionnaireEventPublisher(publisher);
+      return this;
+    }
+    public Builder defaultDialobFr() {
+      this.dialobFr = new FunctionRegistryImpl();
+      final var defaultFunctions = new DefaultFunctions(dialobFr);
+      log.debug("dialob default functions: " + defaultFunctions.getClass().getCanonicalName());
+      return this;
+    }
+    public Builder defaultHdesDjc() {
+      this.hdesDjc = new DependencyInjectionContext() {
+        @Override
+        public <T> T get(Class<T> type) {
+          return null;
+        }
+      };
+      return this;
+    }
+    public Builder defaultHdesServiceInit() {
+      this.hdesServiceInit = new ServiceInit() {
+        @Override
+        public <T> T get(Class<T> type) {
+          try {
+            return type.getDeclaredConstructor().newInstance();
+          } catch(Exception e) {
+            throw new RuntimeException(e.getMessage(), e);
+          }
+        }
+      };
+      return this;
     }
   }
 }

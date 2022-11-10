@@ -59,8 +59,7 @@ public class TestCase {
   public ServiceComposer service(ServiceClient client) {
     return new ServiceComposerImpl(client);
   }
-  
-  
+    
   public String toJson(Object v) {
     try {
       final var prettyPrinter = new DefaultPrettyPrinter();
