@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.immutables.value.Value;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -14,7 +15,6 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.dialob.api.questionnaire.Questionnaire;
-import io.digiexpress.client.api.ServiceDocument.ProcessValue;
 
 
 @Value.Immutable @JsonSerialize(as = ImmutableProcessState.class) @JsonDeserialize(as = ImmutableProcessState.class)
@@ -22,10 +22,21 @@ public interface ProcessState extends Serializable {
   String getId();
   Integer getVersion();
   
-  ServiceRef getRef(); // service definition doc
+  ServiceRef getDef(); // service definition doc
   ServiceRel getRel(); // service release doc
   
   List<Step<?>> getSteps();
+  
+  @SuppressWarnings("unchecked")
+  @JsonIgnore
+  default Step<ProcessCreated> getStepCreated() {
+    return getSteps().stream()
+        .sorted((a, b) -> b.getStart().compareTo(b.getStart()))
+        .filter(a -> a.getBody().getType() == StepType.PROCESS_CREATED)
+        .findFirst()
+        .map(e -> (Step<ProcessCreated>) e)
+        .orElseThrow(() -> new IllegalStateException("Step: '" + StepType.PROCESS_CREATED + "' not available at this state!"));
+  }
   
   @Value.Immutable @JsonSerialize(as = ImmutableStep.class) @JsonDeserialize(as = ImmutableStep.class)
   interface Step<T extends StepBody> extends Serializable {
@@ -50,7 +61,7 @@ public interface ProcessState extends Serializable {
     String getName();
   }
   
-  @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+  @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "type")
   @JsonSubTypes({        
     @Type(value = ProcessCreated.class, name = "PROCESS_CREATED"),
     
@@ -69,7 +80,10 @@ public interface ProcessState extends Serializable {
   
   @Value.Immutable @JsonSerialize(as = ImmutableProcessCreated.class) @JsonDeserialize(as = ImmutableProcessCreated.class)
   interface ProcessCreated extends StepBody {
-    ProcessValue getProcessValue();
+    String getName();
+    String getDesc();
+    String getFlowId();
+    String getFormId();
     @Value.Default
     default StepType getType() { return StepType.PROCESS_CREATED; }
   }

@@ -16,6 +16,7 @@ import io.dialob.api.form.Form;
 import io.digiexpress.client.api.CompressionMapper;
 import io.digiexpress.client.api.ImmutableCompressed;
 import io.digiexpress.client.api.ServiceDocument.ServiceDefinitionDocument;
+import io.digiexpress.client.api.ServiceDocument.ServiceReleaseDocument;
 import io.digiexpress.client.api.ServiceMapper;
 import io.resys.hdes.client.api.ast.AstTag;
 import io.resys.hdes.client.spi.staticresources.Sha2;
@@ -43,7 +44,35 @@ public class CompressionMapperImpl implements CompressionMapper {
   public Compressed compress(ServiceDefinitionDocument def) {
     return writeGZip(mapper.toReleaseBody(def));
   }
-
+  @Override
+  public Compressed compress(ServiceReleaseDocument rel) {
+    return writeGZip(mapper.toReleaseBody(rel));
+  }
+  @Override
+  public AstTag decompressionHdes(String body) {
+    final var resp = readGzip(new ByteArrayInputStream(body.getBytes(UTF_8)));
+    return mapper.toHdes(resp);
+  }
+  @Override
+  public Sites decompressionStencil(String body) {
+    final var resp = readGzip(new ByteArrayInputStream(body.getBytes(UTF_8)));
+    return mapper.toStencil(resp);
+  }
+  @Override
+  public Form decompressionDialob(String body) {
+    final var resp = readGzip(new ByteArrayInputStream(body.getBytes(UTF_8)));
+    return mapper.toDialob(resp);
+  }
+  @Override
+  public ServiceDefinitionDocument decompressionService(String body) {
+    final var resp = readGzip(new ByteArrayInputStream(body.getBytes(UTF_8)));
+    return mapper.toService(resp);
+  }
+  @Override
+  public ServiceReleaseDocument decompressionRelease(String body) {
+    final var resp = readGzip(new ByteArrayInputStream(body.getBytes(UTF_8)));
+    return mapper.toRelease(resp);
+  }
   public Compressed writeGZip(String json) {
     try {        
       final var hash = Sha2.blob(json);      
@@ -77,25 +106,5 @@ public class CompressionMapperImpl implements CompressionMapper {
     } catch(IOException e) {
       throw new RuntimeException(e.getMessage(), e);
     }
-  }
-  @Override
-  public AstTag decompressionHdes(String body) {
-    final var resp = readGzip(new ByteArrayInputStream(body.getBytes(UTF_8)));
-    return mapper.toHdes(resp);
-  }
-  @Override
-  public Sites decompressionStencil(String body) {
-    final var resp = readGzip(new ByteArrayInputStream(body.getBytes(UTF_8)));
-    return mapper.toStencil(resp);
-  }
-  @Override
-  public Form decompressionDialob(String body) {
-    final var resp = readGzip(new ByteArrayInputStream(body.getBytes(UTF_8)));
-    return mapper.toDialob(resp);
-  }
-  @Override
-  public ServiceDefinitionDocument decompressionService(String body) {
-    final var resp = readGzip(new ByteArrayInputStream(body.getBytes(UTF_8)));
-    return mapper.toService(resp);
   }
 }

@@ -12,6 +12,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.digiexpress.client.api.ImmutableCreateProcess;
 import io.digiexpress.client.api.ImmutableCreateRelease;
 import io.digiexpress.client.api.ImmutableCreateServiceRevision;
+import io.digiexpress.client.api.ProcessState;
+import io.digiexpress.client.api.ProcessState.ProcessCreated;
+import io.digiexpress.client.api.ProcessState.Step;
 import io.digiexpress.client.api.ServiceDocument.ServiceReleaseDocument;
 import io.digiexpress.client.api.ServiceDocument.ServiceRevisionDocument;
 import io.digiexpress.client.api.ServiceEnvir.ServiceProgramDef;
@@ -109,8 +112,12 @@ public class IntegrationTest extends TestCase {
     final var workflow = stencilOnDate.getBody().getLinks().get("d6249d85647a72e9b9d8981f1c612b16");
     Assertions.assertNotNull(workflow);
     
-    final var newProcess = client.executor(envir).process(workflow.getId()).build();
-    System.out.println(toJson(newProcess.getBody()));
+    final ProcessState newProcess = client.executor(envir).process(workflow.getId()).build().getBody();
+    final Step<ProcessCreated> processCreated = newProcess.getStepCreated(); 
+    Assertions.assertNotNull(processCreated);
+    
+    
+    System.out.println(toJson(processCreated));
 
 //    System.out.println(toJson(release1));
 //    System.out.println(builder.print(client.getConfig().getStore()));

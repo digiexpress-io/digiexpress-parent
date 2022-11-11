@@ -17,13 +17,16 @@ import io.digiexpress.client.api.ServiceClient.ServiceClientConfig;
 import io.digiexpress.client.api.ServiceDocument.ConfigType;
 import io.digiexpress.client.api.ServiceDocument.RefIdValue;
 import io.digiexpress.client.api.ServiceDocument.ServiceDefinitionDocument;
+import io.digiexpress.client.api.ServiceDocument.ServiceReleaseDocument;
 
 public interface ServiceEnvir {
   Map<String, ServiceProgramSource> getSources(); //id to source
   ServiceProgram getByHash(String hash);
   ServiceProgram getById(String objectId);
   ServiceProgram getByRefId(RefIdValue ref);
+  ServiceProgramStencil getStecil(LocalDateTime targetDate);
   ServiceProgramDef getDef(LocalDateTime targetDate);
+  ServiceProgramRel getRel(LocalDateTime targetDate);
   
   
   interface ServiceProgramSource extends Serializable {
@@ -50,6 +53,10 @@ public interface ServiceEnvir {
   }
   interface ServiceProgramStencil extends ServiceProgram {
     io.thestencil.client.api.MigrationBuilder.Sites getDelegate(ServiceClientConfig config);
+  }
+  
+  interface ServiceProgramRel extends ServiceProgram {
+    ServiceReleaseDocument getDelegate(ServiceClientConfig config);
   }
   
   interface ServiceProgramDef extends ServiceProgram {

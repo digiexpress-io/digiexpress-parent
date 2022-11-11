@@ -2,10 +2,13 @@ package io.digiexpress.client.spi.envir;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.digiexpress.client.api.ImmutableServiceReleaseDocument;
+import io.digiexpress.client.api.ImmutableServiceReleaseValue;
 import io.digiexpress.client.api.ServiceClient.ServiceClientConfig;
 import io.digiexpress.client.api.ServiceClient.ServiceEnvirBuilder;
 import io.digiexpress.client.api.ServiceDocument.ConfigType;
@@ -32,6 +35,19 @@ public class ServiceEnvirBuilderImpl implements ServiceEnvirBuilder {
       throw EnvirException.isDefined(release, () -> "");
     }
     release.getValues().forEach(value -> addSrc(value, release));
+    
+    final var self = config.getCompression().compress(ImmutableServiceReleaseDocument.builder()
+        .from(release)
+        .values(Collections.emptyList())
+        .build());
+    final var selfSrc = ImmutableServiceReleaseValue.builder()
+      .id(release.getName())
+      .bodyHash(self.getHash())
+      .body(self.getValue())
+      .bodyType(ConfigType.RELEASE)
+      .build();
+    addSrc(selfSrc, release);
+    
     return this;
   }
 

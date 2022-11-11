@@ -191,4 +191,22 @@ public class ServiceMapperImpl implements ServiceMapper {
       throw new JsonMappingException(e.getMessage() + System.lineSeparator() + body, e);
     }
   }
+
+  @Override
+  public ServiceReleaseDocument toRelease(String body) {
+    try {
+      return om.readValue(body, ServiceReleaseDocument.class);
+    } catch (Exception e) {
+      throw new JsonMappingException(e.getMessage() + System.lineSeparator() + body, e);
+    }
+  }
+
+  @Override
+  public String toReleaseBody(ServiceReleaseDocument entity) {
+    try {
+      return om.writeValueAsString(entity);
+    } catch (Exception e) {
+      throw new JsonMappingException(e.getMessage() + System.lineSeparator() + entity, e);
+    }
+  }
 }

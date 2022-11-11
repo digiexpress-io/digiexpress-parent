@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 public interface ServiceDocument {
  enum DocumentType { SERVICE_REV, SERVICE_DEF, SERVICE_CONFIG, SERVICE_RELEASE }
- enum ConfigType { STENCIL, DIALOB, HDES, SERVICE }
+ enum ConfigType { STENCIL, DIALOB, HDES, SERVICE, RELEASE }
  
  @Nullable String getId(); // unique id
  @Nullable String getVersion(); // not really nullable, just in serialization

@@ -3,17 +3,22 @@ package io.digiexpress.client.spi.executors;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import io.digiexpress.client.api.ImmutableExecutionBody;
 import io.digiexpress.client.api.ImmutableProcessCreated;
 import io.digiexpress.client.api.ImmutableProcessState;
+import io.digiexpress.client.api.ImmutableServiceRef;
+import io.digiexpress.client.api.ImmutableServiceRel;
 import io.digiexpress.client.api.ImmutableStep;
+import io.digiexpress.client.api.ProcessState;
 import io.digiexpress.client.api.ProcessState.ProcessCreated;
 import io.digiexpress.client.api.ServiceClient.ExecutionBody;
 import io.digiexpress.client.api.ServiceClient.ProcessExecutor;
 import io.digiexpress.client.api.ServiceClient.ServiceClientConfig;
 import io.digiexpress.client.api.ServiceDocument;
+import io.digiexpress.client.api.ServiceDocument.ProcessValue;
 import io.digiexpress.client.api.ServiceEnvir;
 import io.digiexpress.client.spi.support.ExecutorException;
 import lombok.RequiredArgsConstructor;
@@ -23,11 +28,9 @@ public class ProcessExecutorImpl implements ProcessExecutor {
   private final ServiceClientConfig config;
   private final String nameOrId;
   private final ServiceEnvir envir;
-//  private final ServiceProgram wrapper;
-//  private final ProcessValue processValue;
-//  private final Map<String, Serializable> values = new HashMap<>();
-//  private LocalDateTime targetDate;
-  
+  private final Map<String, Serializable> values = new HashMap<>();
+  private LocalDateTime targetDate;
+
   @Override
   public ProcessExecutor actions(Map<String, Serializable> initVariables) {
     values.putAll(initVariables);
@@ -36,7 +39,7 @@ public class ProcessExecutorImpl implements ProcessExecutor {
   @Override
   public ProcessExecutor action(String variableName, Serializable variableValue) {
     if(values.containsKey(variableName)) {
-      throw ExecutorException.processInitVariableAlreadyDefined(wrapper, processValue, () -> "Variable name: " + variableName);
+      throw ExecutorException.processInitVariableAlreadyDefined(nameOrId, () -> "Variable name: " + variableName);
     }
     return this;
   }
@@ -46,28 +49,51 @@ public class ProcessExecutorImpl implements ProcessExecutor {
     return this;
   }
   @Override
-  public ExecutionBody<Map<String, Serializable>> build() {
+  public ExecutionBody<ProcessState> build() {
     final var targetDate = this.targetDate == null ? LocalDateTime.now() : this.targetDate;
+    final var rel = this.envir.getRel(targetDate).getDelegate(config);
+    final var def = this.envir.getDef(targetDate).getDelegate(config);
+    
+    
+    ProcessValue processValue = def.getProcesses().stream()
+        .filter(p -> p.getId().equalsIgnoreCase(nameOrId) || p.getName().equalsIgnoreCase(nameOrId))
+        .findFirst().orElse(null);
+    
+    if(processValue == null) {
+      final var wk = this.envir.getStecil(targetDate).getDelegate(config).getSites().values().stream()
+          .flatMap(e -> e.getLinks().values().stream().filter(t -> t.getWorkflow()))
+          .filter(w -> w.getId().equals(nameOrId) || w.getName().equals(nameOrId))
+          .findFirst()
+          .orElseThrow(() -> ExecutorException.processNotFound(nameOrId, () -> ""));
+      
+      processValue = def.getProcesses().stream()
+          .filter(p -> p.getName().equalsIgnoreCase(wk.getValue()))
+          .findFirst().orElseThrow(() -> ExecutorException.processNotFound(nameOrId, () -> ""));
+    }
+
+  
     final var step = ImmutableStep.<ProcessCreated>builder()
         .id(config.getStore().getGid().getNextId(ServiceDocument.DocumentType.SERVICE_DEF))
         .version(1)
-        .body(ImmutableProcessCreated.builder().processValue(processValue).build())
+        .body(ImmutableProcessCreated.builder()
+            .flowId(processValue.getFlowId())
+            .formId(processValue.getFormId())
+            .desc(processValue.getDesc())
+            .name(processValue.getName())
+            .build())
         .start(targetDate)
         .end(targetDate)
         .build();
     
-    final var actions = Collections.unmodifiableMap(values);
+    final var iniParams = Collections.unmodifiableMap(values);
     final var state = ImmutableProcessState.builder()
-        .id(config.getStore().getGid().getNextId(ServiceDocument.DocumentType.SERVICE_DEF))
+        .id(config.getStore().getGid().getNextId(ServiceDocument.DocumentType.SERVICE_RELEASE))
         .version(1)
-        .ref(wrapper.getRefId())
-        .rel(wrapper.getRelId())
+        .def(ImmutableServiceRef.builder().id(def.getId()).version(def.getVersion()).build())
+        .rel(ImmutableServiceRel.builder().id(rel.getId()).version(rel.getVersion()).name(rel.getName()).build())
         .addSteps(step)
         .build();
-    return ImmutableExecutionBody.<Map<String, Serializable>>builder()
-        .actions(actions)
-        .state(state)
-        .build();
+    return ImmutableExecutionBody.<ProcessState>builder().body(state).build();
   }
   
 //final ServiceProgram doc = envir.getValues().values().stream().findFirst()

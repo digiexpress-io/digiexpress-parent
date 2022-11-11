@@ -20,7 +20,9 @@ public interface ServiceMapper {
   Sites toStencil(String body);
   Form toDialob(String body);
   ServiceDefinitionDocument toService(String body);
-  
+  ServiceReleaseDocument toRelease(String body);
+
+  String toReleaseBody(ServiceReleaseDocument release);
   String toReleaseBody(ServiceDefinitionDocument service);
   String toReleaseBody(AstTag hdes);
   String toReleaseBody(Form form);

@@ -97,9 +97,64 @@ public class ServiceEnvirImpl implements ServiceEnvir {
     case SERVICE: program = new ServiceProgramDefImpl(source); break;
     case DIALOB: program = new ServiceProgramDialobImpl(source); break;
     case HDES: program = new ServiceProgramHdesImpl(source); break;
+    case RELEASE: program = new ServiceProgramRelImpl(source); break;
     default: throw EnvirException.notSupportedSource(source, () -> "");
     }
     config.getCache().save(program);
     return program;
+  }
+  @Override
+  public ServiceProgramRel getRel(LocalDateTime targetDate) {
+    ServiceAssert.notNull(targetDate, () -> "targetDate must be defined!");
+    
+    final var activeFrom = active_to_hash.keySet().stream().sorted().collect(Collectors.toList());
+    LocalDateTime found = null; 
+    for(final var candidate : activeFrom) {
+      if(candidate.compareTo(targetDate) <= 0) {
+        found = candidate;
+      }
+    }
+    
+    if(found == null) {
+      throw EnvirException.notFoundDef(targetDate, () -> {
+        final var others = activeFrom.stream().sorted().map(e -> e.toString()).collect(Collectors.toList());
+        return "Possible candidates: " + String.join(",", others);
+      });
+    }
+    
+    final var service = active_to_hash.get(found).stream()
+      .map(e -> hash_to_source.get(e))
+      .filter(e -> e.getType() == ConfigType.RELEASE)
+      .map(e -> getById(e.getId()))
+      .findFirst().orElse(null);
+    ServiceAssert.notNull(service, () -> "Can't resolve service rel for (target date): '" + targetDate + "'!");
+    return (ServiceProgramRel) service;
+  }
+  @Override
+  public ServiceProgramStencil getStecil(LocalDateTime targetDate) {
+    ServiceAssert.notNull(targetDate, () -> "targetDate must be defined!");
+    
+    final var activeFrom = active_to_hash.keySet().stream().sorted().collect(Collectors.toList());
+    LocalDateTime found = null; 
+    for(final var candidate : activeFrom) {
+      if(candidate.compareTo(targetDate) <= 0) {
+        found = candidate;
+      }
+    }
+    
+    if(found == null) {
+      throw EnvirException.notFoundDef(targetDate, () -> {
+        final var others = activeFrom.stream().sorted().map(e -> e.toString()).collect(Collectors.toList());
+        return "Possible candidates: " + String.join(",", others);
+      });
+    }
+    
+    final var service = active_to_hash.get(found).stream()
+      .map(e -> hash_to_source.get(e))
+      .filter(e -> e.getType() == ConfigType.STENCIL)
+      .map(e -> getById(e.getId()))
+      .findFirst().orElse(null);
+    ServiceAssert.notNull(service, () -> "Can't resolve stencil for (target date): '" + targetDate + "'!");
+    return (ServiceProgramStencil) service;
   }
 }
