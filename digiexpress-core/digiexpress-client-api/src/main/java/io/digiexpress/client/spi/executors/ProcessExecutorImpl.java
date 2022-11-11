@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.digiexpress.client.api.ImmutableExecutionBody;
+import io.digiexpress.client.api.ImmutableExecution;
 import io.digiexpress.client.api.ImmutableProcessCreated;
 import io.digiexpress.client.api.ImmutableProcessState;
 import io.digiexpress.client.api.ImmutableServiceRef;
@@ -14,7 +14,7 @@ import io.digiexpress.client.api.ImmutableServiceRel;
 import io.digiexpress.client.api.ImmutableStep;
 import io.digiexpress.client.api.ProcessState;
 import io.digiexpress.client.api.ProcessState.ProcessCreated;
-import io.digiexpress.client.api.ServiceClient.ExecutionBody;
+import io.digiexpress.client.api.ServiceClient.Execution;
 import io.digiexpress.client.api.ServiceClient.ProcessExecutor;
 import io.digiexpress.client.api.ServiceClient.ServiceClientConfig;
 import io.digiexpress.client.api.ServiceDocument;
@@ -49,7 +49,7 @@ public class ProcessExecutorImpl implements ProcessExecutor {
     return this;
   }
   @Override
-  public ExecutionBody<ProcessState> build() {
+  public Execution<ProcessState> build() {
     final var targetDate = this.targetDate == null ? LocalDateTime.now() : this.targetDate;
     final var rel = this.envir.getRel(targetDate).getDelegate(config);
     final var def = this.envir.getDef(targetDate).getDelegate(config);
@@ -93,7 +93,7 @@ public class ProcessExecutorImpl implements ProcessExecutor {
         .rel(ImmutableServiceRel.builder().id(rel.getId()).version(rel.getVersion()).name(rel.getName()).build())
         .addSteps(step)
         .build();
-    return ImmutableExecutionBody.<ProcessState>builder().body(state).build();
+    return ImmutableExecution.<ProcessState>builder().body(state).build();
   }
   
 //final ServiceProgram doc = envir.getValues().values().stream().findFirst()

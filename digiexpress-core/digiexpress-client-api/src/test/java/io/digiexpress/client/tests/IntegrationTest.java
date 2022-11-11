@@ -15,6 +15,8 @@ import io.digiexpress.client.api.ImmutableCreateServiceRevision;
 import io.digiexpress.client.api.ProcessState;
 import io.digiexpress.client.api.ProcessState.ProcessCreated;
 import io.digiexpress.client.api.ProcessState.Step;
+import io.digiexpress.client.api.ServiceClient.Execution;
+import io.digiexpress.client.api.ServiceClient.ExecutionDialobBody;
 import io.digiexpress.client.api.ServiceDocument.ServiceReleaseDocument;
 import io.digiexpress.client.api.ServiceDocument.ServiceRevisionDocument;
 import io.digiexpress.client.api.ServiceEnvir.ServiceProgramDef;
@@ -116,6 +118,8 @@ public class IntegrationTest extends TestCase {
     final Step<ProcessCreated> processCreated = newProcess.getStepCreated(); 
     Assertions.assertNotNull(processCreated);
     
+    
+    final Execution<ExecutionDialobBody> actions = client.executor(envir).dialob(newProcess).build();
     
     System.out.println(toJson(processCreated));
 

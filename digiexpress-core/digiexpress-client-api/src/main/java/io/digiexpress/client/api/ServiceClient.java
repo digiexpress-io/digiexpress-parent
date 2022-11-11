@@ -35,13 +35,13 @@ public interface ServiceClient {
     ProcessExecutor targetDate(LocalDateTime now);
     ProcessExecutor actions(Map<String, Serializable> initVariables);
     ProcessExecutor action(String variableName, Serializable variableValue);
-    ExecutionBody<ProcessState> build();
+    Execution<ProcessState> build();
   }
 
   // continues fill
   interface DialobExecutor {
     DialobExecutor actions(io.dialob.api.proto.Actions userActions);
-    ExecutionBody<io.dialob.api.proto.Actions> build();
+    Execution<ExecutionDialobBody> build();
   }
   
   interface HdesExecutor {
@@ -52,12 +52,18 @@ public interface ServiceClient {
   interface StencilExecutor {
     StencilExecutor targetDate(LocalDateTime targetDate);
     StencilExecutor locale(String locale);
-    ExecutionBody<LocalizedSite> build();
+    Execution<LocalizedSite> build();
   }
   
   @Value.Immutable
-  interface ExecutionBody<T> {
+  interface Execution<T> {
     T getBody();
+  }
+
+  @Value.Immutable
+  interface ExecutionDialobBody {
+    ProcessState getState();
+    io.dialob.api.proto.Actions getActions();
   }
 
   interface ServiceRepoBuilder {

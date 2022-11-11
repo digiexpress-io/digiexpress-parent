@@ -3,7 +3,8 @@ package io.digiexpress.client.spi.executors;
 import io.dialob.api.proto.Actions;
 import io.digiexpress.client.api.ProcessState;
 import io.digiexpress.client.api.ServiceClient.DialobExecutor;
-import io.digiexpress.client.api.ServiceClient.ExecutionBody;
+import io.digiexpress.client.api.ServiceClient.Execution;
+import io.digiexpress.client.api.ServiceClient.ExecutionDialobBody;
 import io.digiexpress.client.api.ServiceClient.ServiceClientConfig;
 import io.digiexpress.client.api.ServiceEnvir;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ public class DialobExecutorImpl implements DialobExecutor {
     return null;
   }
   @Override
-  public ExecutionBody<Actions> build() {
+  public Execution<ExecutionDialobBody> build() {
     // TODO Auto-generated method stub
     return null;
   }

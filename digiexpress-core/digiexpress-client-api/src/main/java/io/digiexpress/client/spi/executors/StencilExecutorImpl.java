@@ -2,8 +2,8 @@ package io.digiexpress.client.spi.executors;
 
 import java.time.LocalDateTime;
 
-import io.digiexpress.client.api.ImmutableExecutionBody;
-import io.digiexpress.client.api.ServiceClient.ExecutionBody;
+import io.digiexpress.client.api.ImmutableExecution;
+import io.digiexpress.client.api.ServiceClient.Execution;
 import io.digiexpress.client.api.ServiceClient.ServiceClientConfig;
 import io.digiexpress.client.api.ServiceClient.StencilExecutor;
 import io.digiexpress.client.api.ServiceEnvir;
@@ -34,7 +34,7 @@ public class StencilExecutorImpl implements StencilExecutor {
     return this;
   }
   @Override
-  public ExecutionBody<LocalizedSite> build() {
+  public Execution<LocalizedSite> build() {
     final var targetDate = this.targetDate == null ? LocalDateTime.now() : this.targetDate;
     final var def = envir.getDef(targetDate).getDelegate(config);
     final var program = (ServiceProgramStencil) envir.getByRefId(def.getStencil());
@@ -42,7 +42,7 @@ public class StencilExecutorImpl implements StencilExecutor {
     
     if(locale == null || locale.isEmpty()) {
       final var site = sites.getSites().values().iterator().next();
-      return ImmutableExecutionBody.<LocalizedSite>builder().body(site).build();
+      return ImmutableExecution.<LocalizedSite>builder().body(site).build();
     }
     
     final var site = sites.getSites().values().stream()
@@ -51,6 +51,6 @@ public class StencilExecutorImpl implements StencilExecutor {
           final var candidates = String.join(",", sites.getSites().keySet());
           return "There is no content for locale: '" + locale + "'. Possible candidates: " + candidates + "!";
         }));
-    return ImmutableExecutionBody.<LocalizedSite>builder().body(site).build();
+    return ImmutableExecution.<LocalizedSite>builder().body(site).build();
   }
 }
