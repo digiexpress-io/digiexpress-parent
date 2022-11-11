@@ -24,6 +24,7 @@ public interface ServiceEnvir {
   ServiceProgram getByHash(String hash);
   ServiceProgram getById(String objectId);
   ServiceProgram getByRefId(RefIdValue ref);
+  ServiceProgramDialob getForm(String objectId);
   ServiceProgramStencil getStecil(LocalDateTime targetDate);
   ServiceProgramDef getDef(LocalDateTime targetDate);
   ServiceProgramRel getRel(LocalDateTime targetDate);

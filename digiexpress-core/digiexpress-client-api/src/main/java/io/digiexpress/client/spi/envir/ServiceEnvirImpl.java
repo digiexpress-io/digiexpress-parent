@@ -157,4 +157,11 @@ public class ServiceEnvirImpl implements ServiceEnvir {
     ServiceAssert.notNull(service, () -> "Can't resolve stencil for (target date): '" + targetDate + "'!");
     return (ServiceProgramStencil) service;
   }
+  @Override
+  public ServiceProgramDialob getForm(String objectId) {
+    ServiceAssert.notNull(objectId, () -> "objectId must be defined!");
+    
+    final var service = getById(objectId + "/" + ConfigType.DIALOB);
+    return (ServiceProgramDialob) service;
+  }
 }
