@@ -1,12 +1,10 @@
-package io.digiexpress.client.spi.builders;
+package io.digiexpress.client.spi.store;
 
 
 
 import io.digiexpress.client.api.ServiceStore;
 import io.digiexpress.client.api.ServiceStore.StoreEntity;
 import io.digiexpress.client.api.ServiceStore.StoreState;
-import io.digiexpress.client.spi.store.ServiceStoreConfig;
-import io.digiexpress.client.spi.store.ServiceStoreTemplate;
 import io.smallrye.mutiny.Uni;
 
 public class ServiceStoreQueryBuilderImpl extends ServiceStoreTemplate implements ServiceStore.QueryBuilder {

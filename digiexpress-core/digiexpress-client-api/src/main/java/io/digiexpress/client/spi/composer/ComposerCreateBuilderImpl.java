@@ -1,4 +1,4 @@
-package io.digiexpress.client.spi.builders;
+package io.digiexpress.client.spi.composer;
 
 import io.digiexpress.client.api.ImmutableCreateStoreEntity;
 import io.digiexpress.client.api.ImmutableProcessValue;
@@ -13,8 +13,8 @@ import io.digiexpress.client.api.ServiceDocument.DocumentType;
 import io.digiexpress.client.api.ServiceDocument.ServiceDefinitionDocument;
 import io.digiexpress.client.api.ServiceDocument.ServiceReleaseDocument;
 import io.digiexpress.client.api.ServiceDocument.ServiceRevisionDocument;
-import io.digiexpress.client.spi.builders.visitors.CreateReleaseVisitor;
-import io.digiexpress.client.spi.builders.visitors.CreateRevisionVisitor;
+import io.digiexpress.client.spi.composer.visitors.CreateReleaseVisitor;
+import io.digiexpress.client.spi.composer.visitors.CreateRevisionVisitor;
 import io.digiexpress.client.spi.query.QueryFactoryImpl;
 import io.digiexpress.client.spi.support.ServiceAssert;
 import io.smallrye.mutiny.Uni;

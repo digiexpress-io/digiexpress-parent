@@ -1,4 +1,4 @@
-package io.digiexpress.client.spi.builders.visitors;
+package io.digiexpress.client.spi.composer.visitors;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;

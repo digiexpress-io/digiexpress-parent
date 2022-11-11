@@ -106,7 +106,11 @@ public class IntegrationTest extends TestCase {
     Assertions.assertEquals(ServiceProgramStatus.UP, service.getStatus());
     
     final var stencilOnDate = client.executor(envir).stencil().build();
-    System.out.println(toJson(stencilOnDate));
+    final var workflow = stencilOnDate.getBody().getLinks().get("d6249d85647a72e9b9d8981f1c612b16");
+    Assertions.assertNotNull(workflow);
+    
+    final var newProcess = client.executor(envir).process(workflow.getId()).build();
+    System.out.println(toJson(newProcess.getBody()));
 
 //    System.out.println(toJson(release1));
 //    System.out.println(builder.print(client.getConfig().getStore()));

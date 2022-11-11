@@ -20,7 +20,7 @@
   ],
   "workflows": [
     {
-      "value": "general-message",
+      "value": "process-for-bindig-gen-msg-to-task",
       "articles": [
         "index"
       ],

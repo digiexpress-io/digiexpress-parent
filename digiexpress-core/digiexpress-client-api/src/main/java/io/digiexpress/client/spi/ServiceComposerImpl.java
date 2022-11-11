@@ -2,7 +2,7 @@ package io.digiexpress.client.spi;
 
 import io.digiexpress.client.api.ServiceClient;
 import io.digiexpress.client.api.ServiceComposer;
-import io.digiexpress.client.spi.builders.ComposerCreateBuilderImpl;
+import io.digiexpress.client.spi.composer.ComposerCreateBuilderImpl;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

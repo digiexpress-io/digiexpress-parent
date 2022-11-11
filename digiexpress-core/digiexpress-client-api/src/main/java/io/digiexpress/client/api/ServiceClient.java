@@ -35,7 +35,7 @@ public interface ServiceClient {
     ProcessExecutor targetDate(LocalDateTime now);
     ProcessExecutor actions(Map<String, Serializable> initVariables);
     ProcessExecutor action(String variableName, Serializable variableValue);
-    ExecutionBody<Map<String, Serializable>> build();
+    ExecutionBody<ProcessState> build();
   }
 
   // continues fill

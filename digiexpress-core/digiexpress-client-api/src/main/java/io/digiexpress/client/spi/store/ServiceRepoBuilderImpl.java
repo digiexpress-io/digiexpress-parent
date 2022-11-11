@@ -1,4 +1,4 @@
-package io.digiexpress.client.spi.builders;
+package io.digiexpress.client.spi.store;
 
 
 import static io.digiexpress.client.spi.query.QueryFactoryImpl.FIXED_ID;

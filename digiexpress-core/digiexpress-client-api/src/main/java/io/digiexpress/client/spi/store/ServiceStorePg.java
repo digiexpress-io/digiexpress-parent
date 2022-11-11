@@ -13,7 +13,6 @@ import io.dialob.client.spi.support.OidUtils;
 import io.digiexpress.client.api.ImmutableStoreEntity;
 import io.digiexpress.client.api.ImmutableStoreExceptionMsg;
 import io.digiexpress.client.api.ServiceStore;
-import io.digiexpress.client.spi.builders.ServiceStoreQueryBuilderImpl;
 import io.digiexpress.client.spi.support.ServiceAssert;
 import io.resys.thena.docdb.api.DocDB;
 import io.resys.thena.docdb.api.actions.RepoActions.RepoStatus;

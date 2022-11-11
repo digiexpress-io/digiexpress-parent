@@ -1,4 +1,4 @@
-package io.digiexpress.client.spi.builders.visitors;
+package io.digiexpress.client.spi.composer.visitors;
 
 import io.digiexpress.client.api.ServiceClient;
 import io.digiexpress.client.api.ServiceComposer.CreateProcess;

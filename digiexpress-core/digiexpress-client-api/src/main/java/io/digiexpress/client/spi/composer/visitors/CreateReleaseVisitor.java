@@ -1,9 +1,10 @@
 
-package io.digiexpress.client.spi.builders.visitors;
+package io.digiexpress.client.spi.composer.visitors;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,6 +25,7 @@ import io.digiexpress.client.api.ServiceDocument.ServiceDefinitionDocument;
 import io.digiexpress.client.api.ServiceDocument.ServiceReleaseDocument;
 import io.digiexpress.client.api.ServiceDocument.ServiceReleaseValue;
 import io.digiexpress.client.spi.support.ReleaseException;
+import io.digiexpress.client.spi.support.ServiceAssert;
 import io.resys.hdes.client.api.ast.AstBody.AstBodyType;
 import io.resys.hdes.client.api.ast.AstDecision;
 import io.resys.hdes.client.api.ast.AstFlow;
@@ -34,7 +36,9 @@ import io.resys.hdes.client.api.ast.ImmutableHeaders;
 import io.resys.thena.docdb.spi.commits.Sha2;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
+import io.thestencil.client.api.MigrationBuilder.LocalizedSite;
 import io.thestencil.client.api.MigrationBuilder.Sites;
+import io.thestencil.client.api.MigrationBuilder.TopicLink;
 import io.thestencil.client.spi.beans.SitesBean;
 import lombok.RequiredArgsConstructor;
 
@@ -65,6 +69,9 @@ public class CreateReleaseVisitor {
       .onItem().transformToMulti(resp -> Multi.createFrom().items(resp))
       .onItem().transform(this::visitCompression)
       .collect().asList().onItem().transform((List<CompressedAsset> compressed) -> {
+        
+        visitSanity(compressed);
+        
         return ImmutableServiceReleaseDocument.builder()
             .name(name)
             .desc(visitDesc(def, compressed, name, activeFrom))
@@ -75,6 +82,69 @@ public class CreateReleaseVisitor {
             .values(compressed.stream().map(e -> e.getValue()).collect(Collectors.toList()))
             .build();
       });
+  }
+  
+  protected void visitSanity(List<CompressedAsset> compressed) {
+    final var service = compressed.stream()
+      .filter(c -> c.getSource() instanceof ResolvedAssetService)
+      .map(e -> (ResolvedAssetService) e.getSource())
+      .findFirst();
+    final var stencil = compressed.stream().filter(c -> c.getSource() instanceof ResolvedAssetStencil)
+        .map(e -> (ResolvedAssetStencil) e.getSource())
+        .findFirst();
+    final var hdes = compressed.stream().filter(c -> c.getSource() instanceof ResolvedAssetHdes)
+        .map(e -> (ResolvedAssetHdes) e.getSource())
+        .findFirst();
+    final var forms = compressed.stream().filter(c -> c.getSource() instanceof ResolvedAssetForm)
+        .map(e -> (ResolvedAssetForm) e.getSource())
+        .map(e -> e.getForm())
+        .collect(Collectors.toMap(e -> e.getId(), e -> e));
+
+    
+    ServiceAssert.isTrue(service.isPresent(), () -> "service asset not found!");
+    ServiceAssert.isTrue(stencil.isPresent(), () -> "stencil asset not found!");
+    ServiceAssert.isTrue(hdes.isPresent(), () -> "hdes asset not found!");
+
+    final var flows = hdes.get().getEnvir().getFlowsByName().values().stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
+    
+    final var errors = new StringBuilder();
+    final var def = service.get().getService();
+    for(final var process : def.getProcesses()) {
+      if(!flows.containsKey(process.getFlowId())) {
+        errors.append(visitMissingFlow(hdes.get().getEnvir(), process, def));
+      }
+      if(!forms.containsKey(process.getFormId())) {
+        errors.append(visitMissingForm(forms.values(), process, def));
+      }
+    }
+    
+    final var processes = def.getProcesses().stream().collect(Collectors.toMap(e -> e.getName(), e -> e));
+    for(final var site : stencil.get().getSites().getSites().values()) {
+      for(final var link : site.getLinks().values()) {
+        if(!link.getWorkflow()) {
+          continue;
+        }
+       if(!processes.containsKey(link.getValue())) {
+         errors.append(visitMissingWorkflow(processes.values(), link, site, def));
+       }
+      }
+    }
+    
+    if(errors.length() > 0) {
+      throw ReleaseException.sanityRuleViolations(() -> errors.toString());
+    }
+  }
+  private String visitMissingWorkflow(Collection<ProcessValue> processes, TopicLink workflow, LocalizedSite site, ServiceDefinitionDocument def) {
+    return "  - missing ProcessValue with name: '" + workflow.getValue() + "' for site locale: '"  + site.getLocale()+ "'!" + System.lineSeparator();
+  }  
+  private String visitMissingFlow(
+      io.resys.hdes.client.api.programs.ProgramEnvir hdes, 
+      ProcessValue process, ServiceDefinitionDocument def) {
+    return "  - missing Flow with name: '" + process.getFlowId() + "' for ProcessValue(id/name): '"  + process.getId() + "/" + process.getName() + "'!" + System.lineSeparator();
+  }
+  
+  private String visitMissingForm(Collection<Form> forms, ProcessValue process, ServiceDefinitionDocument def) {
+    return "  - missing Form with id: '" + process.getFormId() + "' for ProcessValue(id/name): '"  + process.getId() + "/" + process.getName() + "'!" + System.lineSeparator();
   }
   
   protected List<String> visitDesc(ServiceDefinitionDocument def, List<CompressedAsset> compressed, String name, LocalDateTime activeFrom) {
@@ -299,5 +369,7 @@ public class CreateReleaseVisitor {
     CompressionMapper.Compressed getTarget();
     ServiceReleaseValue getValue();
   }
+  
+  
   
 }
