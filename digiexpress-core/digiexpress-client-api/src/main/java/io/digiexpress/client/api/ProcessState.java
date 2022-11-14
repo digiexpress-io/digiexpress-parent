@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.immutables.value.Value;
 
@@ -13,8 +14,6 @@ import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
-import io.dialob.api.questionnaire.Questionnaire;
 
 
 @Value.Immutable @JsonSerialize(as = ImmutableProcessState.class) @JsonDeserialize(as = ImmutableProcessState.class)
@@ -27,17 +26,35 @@ public interface ProcessState extends Serializable {
   
   List<Step<?>> getSteps();
   
-  @SuppressWarnings("unchecked")
-  @JsonIgnore
-  default Step<ProcessCreated> getStepCreated() {
-    return getSteps().stream()
-        .sorted((a, b) -> b.getStart().compareTo(b.getStart()))
-        .filter(a -> a.getBody().getType() == StepType.PROCESS_CREATED)
-        .findFirst()
+  @JsonIgnore @SuppressWarnings("unchecked")
+  default Step<ProcessCreated> getStepProcessCreated() {
+    return getStep(StepType.PROCESS_CREATED)
         .map(e -> (Step<ProcessCreated>) e)
         .orElseThrow(() -> new IllegalStateException("Step: '" + StepType.PROCESS_CREATED + "' not available at this state!"));
   }
   
+  @JsonIgnore @SuppressWarnings("unchecked")
+  default Optional<Step<FillCreated>> getStepFillCreated() {
+    return getStep(StepType.FILL_CREATED).map(e -> (Step<FillCreated>) e);
+  }
+
+  @JsonIgnore @SuppressWarnings("unchecked")
+  default Optional<Step<FillInProgress>> getStepFillInProgress() {
+    return getStep(StepType.FILL_IN_PROGRESS).map(e -> (Step<FillInProgress>) e);
+  }
+  @JsonIgnore @SuppressWarnings("unchecked")
+  default Optional<Step<FillCompleted>> getStepFillCompleted() {
+    return getStep(StepType.FILL_COMPLETED).map(e -> (Step<FillCompleted>) e);
+  }
+  
+  @JsonIgnore
+  default Optional<Step<?>> getStep(StepType type) {
+    return getSteps().stream()
+        .sorted((a, b) -> b.getStart().compareTo(b.getStart()))
+        .filter(a -> a.getBody().getType() == type)
+        .findFirst();
+  }
+
   @Value.Immutable @JsonSerialize(as = ImmutableStep.class) @JsonDeserialize(as = ImmutableStep.class)
   interface Step<T extends StepBody> extends Serializable {
     String getId();
@@ -88,15 +105,23 @@ public interface ProcessState extends Serializable {
     default StepType getType() { return StepType.PROCESS_CREATED; }
   }
   
+  @Value.Immutable @JsonSerialize(as = ImmutableFillCreated.class) @JsonDeserialize(as = ImmutableFillCreated.class)
   interface FillCreated extends StepBody {
-    Questionnaire getReturns();
-  }
-  
-  interface FillInProgress extends StepBody {
-    Questionnaire getReturns();
+    String getQuestionnaireSessionId();
+    @Value.Default
+    default StepType getType() { return StepType.FILL_CREATED; }
   }
 
+  @Value.Immutable @JsonSerialize(as = ImmutableFillInProgress.class) @JsonDeserialize(as = ImmutableFillInProgress.class)
+  interface FillInProgress extends StepBody {
+    String getQuestionnaireSessionId();
+    default StepType getType() { return StepType.FILL_IN_PROGRESS; }
+  }
+
+  @Value.Immutable @JsonSerialize(as = ImmutableFillCompleted.class) @JsonDeserialize(as = ImmutableFillCompleted.class)
   interface FillCompleted extends StepBody {
+    String getQuestionnaireSessionId();
+    default StepType getType() { return StepType.FILL_COMPLETED; }
   }
 
   interface FlowStarted extends StepBody {

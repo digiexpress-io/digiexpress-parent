@@ -1,5 +1,9 @@
 package io.digiexpress.client.tests.support;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 import javax.inject.Inject;
@@ -10,30 +14,59 @@ import org.junit.jupiter.api.BeforeEach;
 import com.fasterxml.jackson.core.util.DefaultIndenter;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 
+import io.dialob.api.proto.Action;
+import io.dialob.api.proto.Actions;
+import io.dialob.api.proto.ImmutableAction;
+import io.dialob.api.proto.ImmutableActions;
+import io.dialob.api.questionnaire.Questionnaire;
 import io.dialob.client.api.DialobComposer;
 import io.dialob.client.spi.DialobComposerImpl;
+import io.digiexpress.client.api.ProcessState;
 import io.digiexpress.client.api.ServiceClient;
+import io.digiexpress.client.api.ServiceClient.Execution;
+import io.digiexpress.client.api.ServiceClient.ExecutionDialobBody;
+import io.digiexpress.client.api.ServiceClient.QuestionnaireStore;
 import io.digiexpress.client.api.ServiceComposer;
+import io.digiexpress.client.api.ServiceEnvir;
 import io.digiexpress.client.spi.ServiceComposerImpl;
 import io.resys.hdes.client.api.HdesComposer;
 import io.resys.hdes.client.spi.HdesComposerImpl;
 import io.thestencil.client.api.StencilComposer;
 import io.thestencil.client.spi.StencilComposerImpl;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class TestCase {
   @Inject io.vertx.mutiny.pgclient.PgPool pgPool;
   private TestCaseBuilder builder;
+  private QuestionnaireStore questionnaireStore;
+  private Map<String, Questionnaire> in_memory_questionnaire = new HashMap<>();
   
   @BeforeEach
   public void setUp() {
     builder = new TestCaseBuilder(pgPool);
+    questionnaireStore = new QuestionnaireStore() {
+      @Override
+      public Questionnaire get(String questionnaireId) {
+        return in_memory_questionnaire.get(questionnaireId);
+      }
+    };
   }
   
   @AfterEach
   public void tearDown() {
     builder = null;
+  }
+  
+  public AnswersBuilder answers(Execution<ExecutionDialobBody> exec) {
+    return new AnswersBuilder(exec.getBody().getActions().getRev());
+  }
+  
+  public Execution<ExecutionDialobBody> save(Execution<ExecutionDialobBody> value) {
+    in_memory_questionnaire.put(value.getBody().getQuestionnaire().getId(), value.getBody().getQuestionnaire());
+    return value;
   }
   
   public TestCaseBuilder builder(String testcases) {
@@ -75,5 +108,94 @@ public class TestCase {
     return (ex) -> {
       log.error(ex.getMessage(), ex);
     }; 
+  }
+
+  public QuestionnaireStore getQuestionnaireStore() {
+    return questionnaireStore;
+  }
+  
+  @RequiredArgsConstructor
+  public static class AnswersBuilder {
+    private final String rev;
+    private final List<Action> answered = new ArrayList<>();
+    
+    public AnswersBuilder answerQuestion(String questionId, String answer) {
+      final var action = ImmutableAction.builder()
+        .type(Action.Type.ANSWER)
+        .answer(answer)
+        .id(questionId)
+        .build();
+      answered.add(action);
+      return this;
+    }
+    
+    public Actions build() {
+      return ImmutableActions.builder()
+          .rev(rev)
+          .actions(answered)
+          .build();
+    }
+  }
+  
+  public FillTestCase fill(ServiceEnvir envir, ServiceClient client, ProcessState state) {
+    return new FillTestCase(envir, client, questionnaireStore, in_memory_questionnaire, state, null, null);
+  }
+  
+  @AllArgsConstructor
+  public static class FillTestCase {
+    private final ServiceEnvir envir;
+    private final ServiceClient client;
+    private final QuestionnaireStore store;
+    private final Map<String, Questionnaire> mem;
+    private ProcessState state;
+    private String id;
+    private Actions output;
+
+    public FillTestCase start() {
+      final var start = client.executor(envir).dialob(state).store(store).build();
+      final var questionnaire = start.getBody().getQuestionnaire();
+      this.id = questionnaire.getId();
+      this.mem.put(this.id, questionnaire);
+      this.state = start.getBody().getState();
+      return this;
+    }
+
+    public FillTestCase complete() {
+      final var input = ImmutableActions.builder()
+          .rev(mem.get(id).getRev())
+          .addActions(ImmutableAction.builder()
+              .type(Action.Type.COMPLETE)
+              .build())
+          .build();
+      
+      final var result = client.executor(envir).dialob(state).store(store).actions(input).build();
+      final var questionnaire = result.getBody().getQuestionnaire();
+      this.id = questionnaire.getId();
+      this.mem.put(this.id, questionnaire);
+      this.state = result.getBody().getState();
+      return this;
+    }
+    
+    public AnswersBuilder answers() {
+      return new AnswersBuilder(mem.get(id).getRev()) {
+        @Override
+        public Actions build() {
+          final var input = super.build();
+          final var result = client.executor(envir).dialob(state).store(store).actions(input).build();
+          state = result.getBody().getState();
+          mem.put(id, result.getBody().getQuestionnaire());
+          output = result.getBody().getActions();
+          return input;
+        }
+      };
+    }
+
+    public Actions getActions() {
+      return output;
+    }
+
+    public ProcessState getState() {
+      return state;
+    }
   }
 }

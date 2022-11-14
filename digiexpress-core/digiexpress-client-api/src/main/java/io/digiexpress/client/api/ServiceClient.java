@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.immutables.value.Value;
 
+import io.dialob.api.questionnaire.Questionnaire;
 import io.dialob.client.api.DialobClient;
 import io.digiexpress.client.api.ServiceDocument.ServiceReleaseDocument;
 import io.resys.hdes.client.api.HdesClient;
@@ -40,6 +41,7 @@ public interface ServiceClient {
 
   // continues fill
   interface DialobExecutor {
+    DialobExecutor store(QuestionnaireStore store);
     DialobExecutor actions(io.dialob.api.proto.Actions userActions);
     Execution<ExecutionDialobBody> build();
   }
@@ -63,6 +65,7 @@ public interface ServiceClient {
   @Value.Immutable
   interface ExecutionDialobBody {
     ProcessState getState();
+    io.dialob.api.questionnaire.Questionnaire getQuestionnaire();
     io.dialob.api.proto.Actions getActions();
   }
 
@@ -77,6 +80,9 @@ public interface ServiceClient {
     ServiceClient build();
   }
   
+  interface QuestionnaireStore {
+    Questionnaire get(String questionnaireId);
+  }
   
   interface ServiceEnvirBuilder {
     ServiceEnvirBuilder add(ServiceReleaseDocument release);

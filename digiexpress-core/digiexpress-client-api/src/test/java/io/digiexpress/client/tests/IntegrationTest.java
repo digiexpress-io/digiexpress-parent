@@ -15,8 +15,6 @@ import io.digiexpress.client.api.ImmutableCreateServiceRevision;
 import io.digiexpress.client.api.ProcessState;
 import io.digiexpress.client.api.ProcessState.ProcessCreated;
 import io.digiexpress.client.api.ProcessState.Step;
-import io.digiexpress.client.api.ServiceClient.Execution;
-import io.digiexpress.client.api.ServiceClient.ExecutionDialobBody;
 import io.digiexpress.client.api.ServiceDocument.ServiceReleaseDocument;
 import io.digiexpress.client.api.ServiceDocument.ServiceRevisionDocument;
 import io.digiexpress.client.api.ServiceEnvir.ServiceProgramDef;
@@ -115,20 +113,28 @@ public class IntegrationTest extends TestCase {
     Assertions.assertNotNull(workflow);
     
     final ProcessState newProcess = client.executor(envir).process(workflow.getId()).build().getBody();
-    final Step<ProcessCreated> processCreated = newProcess.getStepCreated(); 
+    final Step<ProcessCreated> processCreated = newProcess.getStepProcessCreated(); 
     Assertions.assertNotNull(processCreated);
     
     
-    final Execution<ExecutionDialobBody> actions = client.executor(envir).dialob(newProcess).build();
+    final var fill = fill(envir, client, newProcess);
+    {
+      // create and answer session questions
+      fill.start();
+      fill.answers().answerQuestion("mainCategory", "residence").build();
+      fill.answers().answerQuestion("list1", "else").build();
+      fill.answers().answerQuestion("Viesti", "my personal msg").build();
+      fill.complete();
+    }
+    final var state = fill.getState();
+    Assertions.assertNotNull(state.getStepFillCompleted());
     
-    System.out.println(toJson(processCreated));
-
+    
 //    System.out.println(toJson(release1));
 //    System.out.println(builder.print(client.getConfig().getStore()));
 //    client.envir().from(null);
   }
-  
-  
+
 //  @Test
 //  public void tojson() throws JsonProcessingException {
 //    ImmutableBatchSite site = ImmutableBatchSite.builder()
