@@ -13,9 +13,9 @@ tasks:
       id: "task-1"
       then: "end"
       service:   
-        ref: newService
+        ref: Type1Service
         collection: false
         inputs:
-          firstName: firstName
-          lastName: lastName
+          first: firstName
+          last: lastName
       

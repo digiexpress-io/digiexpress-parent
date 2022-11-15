@@ -26,7 +26,9 @@ import io.digiexpress.client.tests.support.PgProfile;
 import io.digiexpress.client.tests.support.TestCase;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @QuarkusTest
 @TestProfile(PgProfile.class)
 public class IntegrationTest extends TestCase {
@@ -112,10 +114,14 @@ public class IntegrationTest extends TestCase {
     final var workflow = stencilOnDate.getBody().getLinks().get("d6249d85647a72e9b9d8981f1c612b16");
     Assertions.assertNotNull(workflow);
     
-    final ProcessState newProcess = client.executor(envir).process(workflow.getId()).build().getBody();
+    final ProcessState newProcess = client.executor(envir).process(workflow.getId())
+        .action("firstName", "Sam")
+        .action("lastName", "Vimes")
+        .build().getBody();
     final Step<ProcessCreated> processCreated = newProcess.getStepProcessCreated(); 
     Assertions.assertNotNull(processCreated);
-    
+    Assertions.assertNotNull(processCreated.getBody().getParams().get("firstName"));
+    Assertions.assertNotNull(processCreated.getBody().getParams().get("lastName"));    
     
     final var fill = fill(envir, client, newProcess);
     {
@@ -126,28 +132,15 @@ public class IntegrationTest extends TestCase {
       fill.answers().answerQuestion("Viesti", "my personal msg").build();
       fill.complete();
     }
-    final var state = fill.getState();
-    Assertions.assertNotNull(state.getStepFillCompleted());
+    final ProcessState fillState = fill.getState();
+    Assertions.assertNotNull(fillState.getStepFillCompleted());
     
-    
-//    System.out.println(toJson(release1));
-//    System.out.println(builder.print(client.getConfig().getStore()));
-//    client.envir().from(null);
+    final var flow = client.executor(envir).hdes(fillState).store(getQuestionnaireStore()).build().getBody();
+  
+    log.debug(toJson(flow.getState()));
+//    log.debug(toJson(release1));
+//    log.debug(builder.print(client.getConfig().getStore()));
   }
-
-//  @Test
-//  public void tojson() throws JsonProcessingException {
-//    ImmutableBatchSite site = ImmutableBatchSite.builder()
-//    .addLocales(ImmutableCreateLocale.builder().locale("en").build())
-//    .addArticles(ImmutableCreateArticle.builder().name("index").build())
-//    .addPages(ImmutableCreatePage.builder().content("# This is opening page").articleId("index").locale("en").build())
-//    .addWorkflows(ImmutableCreateWorkflow.builder().addArticles("index").value("general-message").addLabels(ImmutableLocaleLabel.builder().locale("en").labelValue("send us a message using a form").build()).build())
-//    .build();
-//    
-//    final var res = new ObjectMapper().writeValueAsString(site);
-//    
-//    System.out.println(res);
-//  }
 
   private String toHashes(ServiceReleaseDocument release) {
     final var values = release.getValues().stream()

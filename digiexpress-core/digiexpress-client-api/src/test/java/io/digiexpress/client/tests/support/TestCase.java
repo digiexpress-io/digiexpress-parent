@@ -198,4 +198,17 @@ public class TestCase {
       return state;
     }
   }
+//@Test
+//public void tojson() throws JsonProcessingException {
+//  ImmutableBatchSite site = ImmutableBatchSite.builder()
+//  .addLocales(ImmutableCreateLocale.builder().locale("en").build())
+//  .addArticles(ImmutableCreateArticle.builder().name("index").build())
+//  .addPages(ImmutableCreatePage.builder().content("# This is opening page").articleId("index").locale("en").build())
+//  .addWorkflows(ImmutableCreateWorkflow.builder().addArticles("index").value("general-message").addLabels(ImmutableLocaleLabel.builder().locale("en").labelValue("send us a message using a form").build()).build())
+//  .build();
+//  
+//  final var res = new ObjectMapper().writeValueAsString(site);
+//  
+//  System.out.println(res);
+//}
 }

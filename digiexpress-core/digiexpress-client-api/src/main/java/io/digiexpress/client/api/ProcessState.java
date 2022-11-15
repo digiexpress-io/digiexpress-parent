@@ -86,8 +86,7 @@ public interface ProcessState extends Serializable {
     @Type(value = FillInProgress.class, name = "FILL_IN_PROGRESS"),
     @Type(value = FillCompleted.class, name = "FILL_COMPLETED"),
     
-    @Type(value = FlowStarted.class, name = "FLOW_STARTED"),
-    @Type(value = FillInProgress.class, name = "FLOW_COMPLETED"),
+    @Type(value = FlowCompleted.class, name = "FLOW_COMPLETED"),
     
     @Type(value = ProcessCompleted.class, name = "PROCESS_COMPLETED"),
     })
@@ -101,6 +100,7 @@ public interface ProcessState extends Serializable {
     String getDesc();
     String getFlowId();
     String getFormId();
+    Map<String, Serializable> getParams();
     @Value.Default
     default StepType getType() { return StepType.PROCESS_CREATED; }
   }
@@ -124,12 +124,11 @@ public interface ProcessState extends Serializable {
     default StepType getType() { return StepType.FILL_COMPLETED; }
   }
 
-  interface FlowStarted extends StepBody {
-    Map<String, Serializable> getAccepts();
-  }
-
+  @Value.Immutable @JsonSerialize(as = ImmutableFlowCompleted.class) @JsonDeserialize(as = ImmutableFlowCompleted.class)
   interface FlowCompleted extends StepBody {
+    Map<String, Serializable> getAccepts();
     Map<String, Serializable> getReturns();
+    default StepType getType() { return StepType.FLOW_COMPLETED; }
   }
 
   interface ProcessCompleted extends StepBody {
@@ -147,8 +146,7 @@ public interface ProcessState extends Serializable {
     FILL_CREATED,
     FILL_IN_PROGRESS,
     FILL_COMPLETED,
-    
-    FLOW_STARTED,
+
     FLOW_COMPLETED,
 
     PROCESS_COMPLETED

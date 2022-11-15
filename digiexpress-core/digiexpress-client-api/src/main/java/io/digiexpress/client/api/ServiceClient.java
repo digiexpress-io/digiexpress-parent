@@ -10,6 +10,7 @@ import io.dialob.api.questionnaire.Questionnaire;
 import io.dialob.client.api.DialobClient;
 import io.digiexpress.client.api.ServiceDocument.ServiceReleaseDocument;
 import io.resys.hdes.client.api.HdesClient;
+import io.resys.hdes.client.api.programs.FlowProgram.FlowResult;
 import io.resys.thena.docdb.api.DocDB;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.MigrationBuilder.LocalizedSite;
@@ -47,7 +48,9 @@ public interface ServiceClient {
   }
   
   interface HdesExecutor {
-    
+    HdesExecutor store(QuestionnaireStore store);
+    HdesExecutor targetDate(LocalDateTime targetDate);
+    Execution<ExecutionHdesBody> build();
   }
 
   // returns stencil content
@@ -56,6 +59,7 @@ public interface ServiceClient {
     StencilExecutor locale(String locale);
     Execution<LocalizedSite> build();
   }
+  
   
   @Value.Immutable
   interface Execution<T> {
@@ -67,6 +71,12 @@ public interface ServiceClient {
     ProcessState getState();
     io.dialob.api.questionnaire.Questionnaire getQuestionnaire();
     io.dialob.api.proto.Actions getActions();
+  }
+  
+  @Value.Immutable
+  interface ExecutionHdesBody {
+    ProcessState getState();
+    FlowResult getFlow();
   }
 
   interface ServiceRepoBuilder {

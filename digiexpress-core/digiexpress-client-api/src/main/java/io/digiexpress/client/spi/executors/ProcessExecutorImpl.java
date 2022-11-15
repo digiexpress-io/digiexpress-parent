@@ -2,7 +2,6 @@ package io.digiexpress.client.spi.executors;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,6 +40,7 @@ public class ProcessExecutorImpl implements ProcessExecutor {
     if(values.containsKey(variableName)) {
       throw ExecutorException.processInitVariableAlreadyDefined(nameOrId, () -> "Variable name: " + variableName);
     }
+    values.put(variableName, variableValue);
     return this;
   }
   @Override
@@ -71,7 +71,7 @@ public class ProcessExecutorImpl implements ProcessExecutor {
           .findFirst().orElseThrow(() -> ExecutorException.processNotFound(nameOrId, () -> ""));
     }
 
-  
+
     final var step = ImmutableStep.<ProcessCreated>builder()
         .id(config.getStore().getGid().getNextId(ServiceDocument.DocumentType.SERVICE_DEF))
         .version(1)
@@ -80,12 +80,13 @@ public class ProcessExecutorImpl implements ProcessExecutor {
             .formId(processValue.getFormId())
             .desc(processValue.getDesc())
             .name(processValue.getName())
+            .params(values)
             .build())
         .start(targetDate)
         .end(targetDate)
         .build();
     
-    final var iniParams = Collections.unmodifiableMap(values);
+
     final var state = ImmutableProcessState.builder()
         .id(config.getStore().getGid().getNextId(ServiceDocument.DocumentType.SERVICE_RELEASE))
         .version(1)

@@ -1,18 +1,21 @@
 package io.digiexpress.client.spi.envir;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.digiexpress.client.api.ServiceClient.ServiceClientConfig;
 import io.digiexpress.client.api.ServiceEnvir.ProgramMessage;
-import io.digiexpress.client.api.ServiceEnvir.ServiceProgramStatus;
 import io.digiexpress.client.api.ServiceEnvir.ServiceProgramHdes;
 import io.digiexpress.client.api.ServiceEnvir.ServiceProgramSource;
+import io.digiexpress.client.api.ServiceEnvir.ServiceProgramStatus;
+import io.digiexpress.client.spi.support.ServiceAssert;
 import io.resys.hdes.client.api.ImmutableStoreEntity;
 import io.resys.hdes.client.api.ast.AstBody.AstBodyType;
 import io.resys.hdes.client.api.ast.AstTag;
@@ -25,14 +28,17 @@ import lombok.extern.slf4j.Slf4j;
 public class ServiceProgramHdesImpl implements ServiceProgramHdes {
   private static final long serialVersionUID = -3297896329693016040L;
   private final String id;
-  private final List<ProgramMessage> errors = new ArrayList<>();
   private final ServiceProgramSource source;
+  private final List<ProgramMessage> errors = new ArrayList<>();
   private ServiceProgramStatus status = ServiceProgramStatus.CREATED;
   @JsonIgnore
   private transient AstTag delegate;
   @JsonIgnore
   private transient ProgramEnvir compiled;
-
+  @JsonIgnore
+  private transient Map<String, String> flow_id_to_name;
+  
+  
   public ServiceProgramHdesImpl(ServiceProgramSource source) {
     super();
     this.source = source;
@@ -81,6 +87,11 @@ public class ServiceProgramHdesImpl implements ServiceProgramHdes {
         }
         this.compiled = builder.build();
         this.status = ServiceProgramStatus.UP;
+        
+        final Map<String, String> flows = compiled.getFlowsByName().values().stream()
+          .collect(Collectors.toMap(e -> e.getId(), e -> e.getAst().get().getName()));
+        this.flow_id_to_name = Collections.unmodifiableMap(flows);
+        
       } catch(Exception e) {
         log.error(e.getMessage(), e);
         this.status = ServiceProgramStatus.ERROR;
@@ -88,7 +99,13 @@ public class ServiceProgramHdesImpl implements ServiceProgramHdes {
     }
     return Optional.ofNullable(this.compiled);
   }
-  
-  
 
+  @Override
+  public String getFlowName(String flowId, ServiceClientConfig config) {
+    final var compiled = getCompiled(config);
+    ServiceAssert.isTrue(compiled.isPresent(), () -> "can't compile hdes envir!");
+    ServiceAssert.notNull(flowId, () -> "flowId must be defined!");
+    ServiceAssert.isTrue(this.flow_id_to_name.containsKey(flowId), () -> "no flow with id: '" + flowId + "'!");
+    return this.flow_id_to_name.get(flowId);
+  }
 }

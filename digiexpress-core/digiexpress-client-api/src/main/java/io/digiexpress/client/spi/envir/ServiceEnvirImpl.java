@@ -158,6 +158,33 @@ public class ServiceEnvirImpl implements ServiceEnvir {
     return (ServiceProgramStencil) service;
   }
   @Override
+  public ServiceProgramHdes getHdes(LocalDateTime targetDate) {
+    ServiceAssert.notNull(targetDate, () -> "targetDate must be defined!");
+    
+    final var activeFrom = active_to_hash.keySet().stream().sorted().collect(Collectors.toList());
+    LocalDateTime found = null; 
+    for(final var candidate : activeFrom) {
+      if(candidate.compareTo(targetDate) <= 0) {
+        found = candidate;
+      }
+    }
+    
+    if(found == null) {
+      throw EnvirException.notFoundDef(targetDate, () -> {
+        final var others = activeFrom.stream().sorted().map(e -> e.toString()).collect(Collectors.toList());
+        return "Possible candidates: " + String.join(",", others);
+      });
+    }
+    
+    final var service = active_to_hash.get(found).stream()
+      .map(e -> hash_to_source.get(e))
+      .filter(e -> e.getType() == ConfigType.HDES)
+      .map(e -> getById(e.getId()))
+      .findFirst().orElse(null);
+    ServiceAssert.notNull(service, () -> "Can't resolve hdes for (target date): '" + targetDate + "'!");
+    return (ServiceProgramHdes) service;
+  }
+  @Override
   public ServiceProgramDialob getForm(String objectId) {
     ServiceAssert.notNull(objectId, () -> "objectId must be defined!");
     

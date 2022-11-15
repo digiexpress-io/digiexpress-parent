@@ -25,6 +25,7 @@ public interface ServiceEnvir {
   ServiceProgram getById(String objectId);
   ServiceProgram getByRefId(RefIdValue ref);
   ServiceProgramDialob getForm(String objectId);
+  ServiceProgramHdes getHdes(LocalDateTime targetDate);
   ServiceProgramStencil getStecil(LocalDateTime targetDate);
   ServiceProgramDef getDef(LocalDateTime targetDate);
   ServiceProgramRel getRel(LocalDateTime targetDate);
@@ -45,6 +46,7 @@ public interface ServiceEnvir {
   }
   
   interface ServiceProgramHdes extends ServiceProgram {
+    String getFlowName(String flowId, ServiceClientConfig config);
     io.resys.hdes.client.api.ast.AstTag getDelegate(ServiceClientConfig config);
     Optional<io.resys.hdes.client.api.programs.ProgramEnvir> getCompiled(ServiceClientConfig config);
   }

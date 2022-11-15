@@ -6,7 +6,7 @@ import io.resys.hdes.client.api.ast.AstBody.AstBodyType;
 import java.io.Serializable;
 
 
-@ServiceRef(value="newService", type=AstBodyType.DT)
+//@ServiceRef(value="newService", type=AstBodyType.DT)
 public class Type1Service {
 
   public Output execute(Input input) {

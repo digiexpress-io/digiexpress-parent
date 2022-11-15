@@ -21,6 +21,8 @@
   <logger name="io.dialob.client.spi.DialobProgramEnvirFactory" level="INFO"/>
   <logger name="io.dialob.client.tests" level="DEBUG"/>
   
+  <logger name="io.digiexpress" level="DEBUG"/>
+  
   <root level="INFO">
     <appender-ref ref="STDOUT" />
   </root>
