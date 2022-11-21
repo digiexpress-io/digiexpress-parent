@@ -45,13 +45,16 @@ echo "Git checkout refname: '${refname}' branch: '${branch}' commit: '${GITHUB_S
 echo "Dev version: '${PROJECT_VERSION}' release version: '${RELEASE_VERSION}'"
 echo "Releasing: '${RELEASE_VERSION}', previous: '${LAST_RELEASE_VERSION}'"
 
+MAVEN_OPTS="--add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED"
+export MAVEN_OPTS
+
 mvn versions:set -DnewVersion=${RELEASE_VERSION}
 git config --global user.name "$BOT_NAME";
 git config --global user.email "$BOT_EMAIL";
 git commit -am "release: ${RELEASE_VERSION}"
 git tag -a ${RELEASE_VERSION} -m "release ${RELEASE_VERSION}"
 
-mvn clean deploy --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED -Pdigiexpress-release --settings digiexpress-build-parent/ci-maven-settings.xml -B -Dmaven.javadoc.skip=false -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+mvn clean deploy -Pdigiexpress-release --settings digiexpress-build-parent/ci-maven-settings.xml -B -Dmaven.javadoc.skip=false -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
 mvn versions:set -DnewVersion=${PROJECT_VERSION}
 git commit -am "release: ${RELEASE_VERSION}"
 git push
