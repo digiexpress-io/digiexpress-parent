@@ -8,7 +8,7 @@
   <parent>
     <artifactId>digiexpress-core</artifactId>
     <groupId>io.digiexpress</groupId>
-    <version>1.1.2</version>
+    <version>999-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>digiexpress-client-api</artifactId>
