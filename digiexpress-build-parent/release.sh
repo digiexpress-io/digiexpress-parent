@@ -28,11 +28,6 @@ gpg --batch --import ./private.key
 rm ./private.key
 echo "JAVA_HOME '$JAVA_HOME'"
 
-# Config GIT
-echo "Setup git user name to '$BOT_NAME' and email to '$BOT_EMAIL' GPG key ID $GPG_KEY_ID"
-git config --global user.name "$BOT_NAME";
-git config --global user.email "$BOT_EMAIL";
-
 # Current and next version
 LAST_RELEASE_VERSION=$(cat digiexpress-build-parent/release.version)
 [[ $LAST_RELEASE_VERSION =~ ([^\\.]*)$ ]]
