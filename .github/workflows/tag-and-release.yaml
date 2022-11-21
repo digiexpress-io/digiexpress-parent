@@ -24,7 +24,7 @@ jobs:
       run: ./digiexpress-build-parent/release.sh
       env:
         CI: false
-        BOT_NAME: olev mutso
+        BOT_NAME: olev-mutso
         BOT_EMAIL: olev.mutso@resys.io  
         GITHUB_SHA: ${GITHUB_SHA}
         GITHUB_REF: ${GITHUB_REF}
