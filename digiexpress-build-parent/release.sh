@@ -51,6 +51,10 @@ git config --global user.email "$BOT_EMAIL";
 git commit -am "release: ${RELEASE_VERSION}"
 git tag -a ${RELEASE_VERSION} -m "release ${RELEASE_VERSION}"
 
+# nexus staging plugin workaroud...
+MAVEN_OPTS="--add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED --add-opens=java.base/java.text=ALL-UNNAMED --add-opens=java.desktop/java.awt.font=ALL-UNNAMED"
+export MAVEN_OPTS
+
 mvn clean deploy -Pdigiexpress-release \
   --settings digiexpress-build-parent/ci-maven-settings.xml \
   -B -Dmaven.javadoc.skip=false \
