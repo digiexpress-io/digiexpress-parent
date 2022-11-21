@@ -16,8 +16,9 @@ jobs:
         ref: main
         token: ${{ secrets.REPO_TOKEN }}
 
-    - uses: joschi/setup-jdk@v2
+    - uses: actions/setup-jdk@v2
       with:
+        distribution: 'zulu'
         java-version: '17'
     
     - name: tag and release step
