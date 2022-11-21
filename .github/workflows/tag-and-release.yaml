@@ -16,7 +16,7 @@ jobs:
         ref: main
         token: ${{ secrets.REPO_TOKEN }}
 
-    - uses: actions/setup-jdk@v2
+    - uses: actions/setup-java@v2
       with:
         distribution: 'zulu'
         java-version: '17'
