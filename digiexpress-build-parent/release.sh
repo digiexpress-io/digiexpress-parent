@@ -46,6 +46,8 @@ echo "Dev version: '${PROJECT_VERSION}' release version: '${RELEASE_VERSION}'"
 echo "Releasing: '${RELEASE_VERSION}', previous: '${LAST_RELEASE_VERSION}'"
 
 mvn versions:set -DnewVersion=${RELEASE_VERSION}
+git config --global user.name "$BOT_NAME";
+git config --global user.email "$BOT_EMAIL";
 git commit -am "release: ${RELEASE_VERSION}"
 git tag -a ${RELEASE_VERSION} -m "release ${RELEASE_VERSION}"
 
