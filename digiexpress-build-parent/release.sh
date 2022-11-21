@@ -29,6 +29,7 @@ rm ./private.key
 echo "JAVA_HOME '$JAVA_HOME'"
 
 # Current and next version
+echo "$(cat digiexpress-build-parent/release.version)"
 LAST_RELEASE_VERSION=$(cat digiexpress-build-parent/release.version)
 [[ $LAST_RELEASE_VERSION =~ ([^\\.]*)$ ]]
 MINOR_VERSION=`expr ${BASH_REMATCH[1]}`
