@@ -32,7 +32,7 @@ jobs:
         GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}
         GPG_KEY_ID: ${{ secrets.GPG_KEY_ID }}
         GPG_KEY: ${{ secrets.GPG_KEY }}
-        GPG_KEY_SEC:  ${{ secrets.GPG_SEC }}
+        GPG_KEY_SEC:  ${{ secrets.GPG_KEY_SEC }}
         OSSRH_PASS: ${{ secrets.OSSRH_PASS }}
         OSSRH_USER: ${{ secrets.OSSRH_USER }}
         
