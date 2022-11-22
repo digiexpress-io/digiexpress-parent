@@ -59,12 +59,13 @@ public class DigiexpressComposerServiceController {
     final var uiPath = ctx.getEnvironment().getProperty(UiConfigBean.UI_SPRING_CTX_PATH);    
     final var uiEnabled = ctx.getEnvironment().getProperty(UiConfigBean.UI_ENABLED);
     
-    final var log = new StringBuilder()
-    .append("Digiexpress, Composer Service: UP").append(System.lineSeparator())
-    .append("service paths:").append(System.lineSeparator())
-    .append("  - GET, html").append(uiPath).append(": ").append("user interface, enabled: ").append(uiEnabled).append(System.lineSeparator())
+    final var logBuilder = new StringBuilder()
+      .append("Digiexpress, Composer Service: UP").append(System.lineSeparator())
+      .append("service paths:").append(System.lineSeparator())
+      .append("  - GET, html").append(uiPath).append(": ").append("user interface, enabled: ").append(uiEnabled).append(System.lineSeparator())
+      .append("  - service path").append(servicePath).append(": ").append(System.lineSeparator())
     ;
     
-    DigiexpressComposerServiceController.log.info(log.toString());
+    log.info(logBuilder.toString());
   }
 }

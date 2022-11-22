@@ -70,7 +70,12 @@ public interface ServiceComposer {
     Map<String, ServiceDocument> getProcesses();
     Map<String, ServiceReleaseDocument> getReleases();
     Map<String, ServiceConfigDocument> getConfigs();
+    Map<String, ComposerForm> getForms();
+    Map<String, ComposerFlow> getFlows();
   }
+  
+  interface ComposerFlow {}
+  interface ComposerForm {}
   
   enum SiteContentType { OK, ERRORS, NOT_CREATED, EMPTY, RELEASE }
 }
