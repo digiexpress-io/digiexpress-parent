@@ -1,119 +1,89 @@
 package io.digiexpress.client.tests.migration;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.time.Duration;
-import java.util.Map;
-
-import javax.inject.Inject;
-
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.guava.GuavaModule;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 
-import io.dialob.client.api.DialobClient;
-import io.dialob.client.api.DialobDocument.FormReleaseDocument;
-import io.dialob.client.pgsql.PgSqlDialobStore;
-import io.dialob.client.pgsql.migration.MigrationClient;
-import io.dialob.client.spi.DialobComposerImpl;
-import io.dialob.client.spi.migration.MigrationSupport;
-import io.dialob.client.spi.support.OidUtils;
-import io.dialob.pgsql.test.CreateMigrationDB.MigrationProfile;
-import io.dialob.pgsql.test.config.DialobClientImplForTests;
-import io.quarkus.test.junit.QuarkusTest;
-import io.quarkus.test.junit.QuarkusTestProfile;
-import io.quarkus.test.junit.TestProfile;
+import io.dialob.api.form.Form;
+import io.dialob.client.api.DialobDocument.FormDocument;
+import io.dialob.client.api.DialobDocument.FormRevisionDocument;
+import io.digiexpress.client.spi.support.ServiceAssert;
+import io.digiexpress.client.tests.migration.DialobMigrationVisitor.DialobFormMeta;
+import io.digiexpress.client.tests.migration.DialobMigrationVisitor.DialobFormTag;
 import lombok.extern.slf4j.Slf4j;
 
-@Disabled
-@QuarkusTest
 @Slf4j
-@TestProfile(MigrationProfile.class)
+@lombok.Builder
 public class DialobMigration {
+  @lombok.Builder.Default
+  private final String src = MigrationsDefaults.folder + "dialob";
+  @lombok.Builder.Default
+  private final ObjectMapper om = MigrationsDefaults.om;
   
-  @Inject io.vertx.mutiny.pgclient.PgPool pgPool;
-  MigrationClient client;
-  ObjectMapper om = new ObjectMapper().registerModules(new JavaTimeModule(), new Jdk8Module(), new GuavaModule());
-  
-  
-  public static class MigrationProfile implements QuarkusTestProfile {
-    @Override
-    public Map<String, String> getConfigOverrides() {
-      return MigrationClient.withProfile(Map.of(          
-        "quarkus.datasource.devservices.enabled", "false",
-        "quarkus.datasource.db-kind", "postgresql", 
-        "quarkus.datasource.username", "postgres",
-        "quarkus.datasource.password", "example",
-        "quarkus.datasource.reactive.max-size", "3",
-        "quarkus.datasource.reactive.url", "postgresql://localhost:5432/postgres")
-      );
-    }
-
-    @Override
-    public String getConfigProfile() {
-      return "migration-profile";
-    }
+  @lombok.Data @lombok.Builder
+  public static class FormsAndRevs {
+    private List<FormRevisionDocument> revs;
+    private List<FormDocument> forms;
   }
   
-  
-  @Test
-  public void downloadDataFromOldDB() throws IOException {
-    final var client = new MigrationClient(pgPool);
+  public FormsAndRevs execute() {
+    final var dir = new File(src);
+    ServiceAssert.isTrue(dir.isDirectory() && dir.canRead() && dir.exists(), () -> src + " must be a directory with dialob *form.json-s");
+    final var files = dir.listFiles((file, name) -> name.endsWith(".json"));
     
-    final var migration = client.getRelease("");
-    LOGGER.error(migration.getLog());
-    
-    final var file = new File("src/test/resources/migration_dump.txt");
-    if(!file.exists()) {
-      file.createNewFile();
+    final var summary = MigrationsDefaults.summary("file name", "form name", "status", "type");
+    final var forms = new ArrayList<Form>();
+    for(final var file : files) {
+      if(file.getName().equals("allforms.json") || file.getName().equals("alltags.json")) {
+        continue;
+      }
+      try {
+        final var form = om.readValue(file, Form.class);
+        forms.add(form);
+        summary.addRow(file.getName(), form.getName(), "OK", "form");
+      } catch (Exception e) {
+        summary.addRow(file.getName(), null, "FAIL", "form");
+        throw new RuntimeException("Failed to read dialob form json: " + file.getName() + e.getMessage(), e);
+      }
     }
     
-    LOGGER.error("Created migration dump: " + file.getAbsolutePath());
-   
-    final var output = new FileOutputStream(file);
-    client.write(migration, output);
-    output.close();
-  }
-  
-
-  @Test
-  public void readReleaseFromDump() throws IOException {
-    final var client = new MigrationClient(pgPool);
-    final var file = new File("src/test/resources/migration_dump.txt");   
-    final var input = new FileInputStream(file);
-    final var release = client.read(input);
-    
-    for(final var value : release.getValues())  {
-      LOGGER.error(value.getCommands());
-    }
-    input.close();
-  }
-  
-  @Test
-  public void uploadToNewDB() {
-    final var store = PgSqlDialobStore.builder().repoName("import-release")
-        .pgPool(pgPool).objectMapper(om).gidProvider((type) -> OidUtils.gen()).build()
-        ;
-        //.repo().repoName("import-release").create().await().atMost(Duration.ofMinutes(1));
-    
-    final var client = DialobClientImplForTests.builder().store(store).objectMapper(om).build();
-    final var composer = new DialobComposerImpl(client);
-  
-    composer.importRelease(getRelease(client)).await().atMost(Duration.ofMinutes(1));
-  }
-    
-  public FormReleaseDocument getRelease(DialobClient client) {
+    final var allFormsJson = new File(dir, "allforms.json");
+    final var allFormMetas = new ArrayList<DialobFormMeta>();
     try {
-      final var input = new FileInputStream(new File("src/test/resources/migration_dump.txt"));   
-      return new MigrationSupport(client.getConfig().getMapper()).read(input).getRelease();
-    } catch(IOException e) {
-      throw new RuntimeException(e.getMessage(), e);
+      final var allmeta = om.readValue(allFormsJson, DialobFormMeta[].class);
+      allFormMetas.addAll(Arrays.asList(allmeta));
+      summary.addRow(allFormsJson.getName(), allFormsJson.getName(), "OK", "meta");
+    } catch (Exception e) {
+      summary.addRow(allFormsJson.getName(), null, "FAIL", "meta");
+      log.error(summary.toString());
+      throw new RuntimeException("Failed to read dialob form json: " + allFormsJson.getName() + e.getMessage(), e);
     }
+    final var allTags = new ArrayList<DialobFormTag>();
+    final var allTagsJson = new File(dir, "alltags.json");
+    try {
+      
+      for(final var value : om.readValue(new File(dir, "alltags.json"), ArrayNode.class)) {
+        final var tags = om.convertValue(value, DialobFormTag[].class);
+        allTags.addAll(Arrays.asList(tags));
+      }
+      summary.addRow(allTagsJson.getName(), allTagsJson.getName(), "OK", "tags");
+    } catch (Exception e) {
+      summary.addRow(allTagsJson.getName(), null, "FAIL", "tag");
+      log.error(summary.toString());
+      throw new RuntimeException("Failed to read dialob form json: " + allTagsJson.getName() + e.getMessage(), e);
+    }
+  
+    log.info("Reading dialob forms from: '" + src + "', found: " + files.length + summary.toString());
+    final var visitor = new DialobMigrationVisitor();
+    allFormMetas.forEach(meta -> visitor.visitFormRev(meta));
+    forms.forEach(form -> visitor.visitForm(form));
+    allTags.forEach(tag -> visitor.visitTag(tag));
+    return visitor.build();
   }
+  
+  
 }

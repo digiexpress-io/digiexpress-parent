@@ -36,6 +36,7 @@ public class IntegrationTest extends TestCase {
   
   @Test
   public void init() throws JsonProcessingException {
+    
     final var builder = builder("test_cases/case_1/");
 
     // create stencil/dialob/wrench/process projects

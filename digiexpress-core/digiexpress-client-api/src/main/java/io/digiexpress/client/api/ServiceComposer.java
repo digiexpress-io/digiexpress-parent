@@ -2,6 +2,7 @@ package io.digiexpress.client.api;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nullable;
@@ -11,11 +12,16 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import io.dialob.client.api.DialobDocument.FormDocument;
+import io.dialob.client.api.DialobDocument.FormRevisionDocument;
 import io.digiexpress.client.api.ServiceDocument.ServiceConfigDocument;
 import io.digiexpress.client.api.ServiceDocument.ServiceDefinitionDocument;
 import io.digiexpress.client.api.ServiceDocument.ServiceReleaseDocument;
 import io.digiexpress.client.api.ServiceDocument.ServiceRevisionDocument;
+import io.resys.hdes.client.api.ast.AstTag;
 import io.smallrye.mutiny.Uni;
+import io.thestencil.client.api.ImmutableCreateRelease;
+import io.thestencil.client.api.StencilClient.Release;
 
 public interface ServiceComposer {
   CreateBuilder create();
@@ -30,6 +36,7 @@ public interface ServiceComposer {
     Uni<ServiceRevisionDocument> revision(CreateServiceRevision init);
     Uni<ServiceDefinitionDocument> process(CreateProcess process);
     Uni<ServiceReleaseDocument> release(CreateRelease rel);
+    Uni<MigrationState> migrate(CreateMigration mig);
   }
 
   interface Command extends Serializable {}
@@ -39,7 +46,7 @@ public interface ServiceComposer {
     String getName();
     String getDescription();
   }
-  @Value.Immutable @JsonSerialize(as = ImmutableCreateServiceRevision.class) @JsonDeserialize(as = ImmutableCreateServiceRevision.class)
+  @Value.Immutable @JsonSerialize(as = ImmutableCreateRelease.class) @JsonDeserialize(as = ImmutableCreateRelease.class)
   interface CreateRelease extends Command {
     String getServiceDefinitionId();
     String getName();
@@ -48,7 +55,7 @@ public interface ServiceComposer {
     LocalDateTime getTargetDate();
   }
   
-  @Value.Immutable @JsonSerialize(as = ImmutableCreateServiceRevision.class) @JsonDeserialize(as = ImmutableCreateServiceRevision.class)
+  @Value.Immutable @JsonSerialize(as = ImmutableCreateProcess.class) @JsonDeserialize(as = ImmutableCreateProcess.class)
   interface CreateProcess extends Command {
     String getServiceRevisionId();
     String getServiceRevisionVersionId();
@@ -56,6 +63,18 @@ public interface ServiceComposer {
     String getDesc();
     String getFormId();
     String getFlowId();
+  }
+  
+  @Value.Immutable @JsonSerialize(as = ImmutableCreateMigration.class) @JsonDeserialize(as = ImmutableCreateMigration.class)
+  interface CreateMigration extends Command {
+    
+  }
+  @Value.Immutable @JsonSerialize(as = ImmutableMigrationState.class) @JsonDeserialize(as = ImmutableMigrationState.class)
+  interface MigrationState {
+    List<FormRevisionDocument> getFormRevs();
+    List<FormDocument> getForms();
+    List<AstTag> getHdes();
+    List<Release> getStencil();
   }
   
   @Value.Immutable

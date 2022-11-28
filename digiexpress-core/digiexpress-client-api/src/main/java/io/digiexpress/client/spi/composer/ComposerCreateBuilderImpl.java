@@ -6,9 +6,11 @@ import io.digiexpress.client.api.ImmutableServiceDefinitionDocument;
 import io.digiexpress.client.api.ImmutableUpdateStoreEntity;
 import io.digiexpress.client.api.ServiceClient;
 import io.digiexpress.client.api.ServiceComposer;
+import io.digiexpress.client.api.ServiceComposer.CreateMigration;
 import io.digiexpress.client.api.ServiceComposer.CreateProcess;
 import io.digiexpress.client.api.ServiceComposer.CreateRelease;
 import io.digiexpress.client.api.ServiceComposer.CreateServiceRevision;
+import io.digiexpress.client.api.ServiceComposer.MigrationState;
 import io.digiexpress.client.api.ServiceDocument.DocumentType;
 import io.digiexpress.client.api.ServiceDocument.ServiceDefinitionDocument;
 import io.digiexpress.client.api.ServiceDocument.ServiceReleaseDocument;
@@ -97,5 +99,11 @@ public class ComposerCreateBuilderImpl implements ServiceComposer.CreateBuilder 
               .bodyType(DocumentType.SERVICE_RELEASE)
               .build())
           .onItem().transform((_resp) -> release));
+  }
+
+  @Override
+  public Uni<MigrationState> migrate(CreateMigration mig) {
+    // TODO Auto-generated method stub
+    return null;
   }
 }
