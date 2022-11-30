@@ -32,7 +32,7 @@ public interface ServiceDocument {
 
    @JsonIgnore
    default String getHeadDefId() {
-     return getValues().stream().filter(e -> e.getId().equals(getHead())).map(e -> e.getProcessDocumentId()).findFirst().get();
+     return getValues().stream().filter(e -> e.getId().equals(getHead())).map(e -> e.getDefId()).findFirst().get();
    }
    
  }
@@ -96,7 +96,7 @@ public interface ServiceDocument {
  interface ServiceRevisionValue extends Serializable {
    String getId();
    String getRevisionName(); // iteration X
-   String getProcessDocumentId();
+   String getDefId();
    LocalDateTime getCreated();
    LocalDateTime getUpdated();
  }

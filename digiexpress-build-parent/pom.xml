@@ -27,8 +27,8 @@
     <maven-jib-plugin.version>3.2.0</maven-jib-plugin.version>
 
     <thena.version>1.1.24</thena.version>
-    <hdes.version>3.130.54</hdes.version>
-    <stencil.version>1.148.11</stencil.version>
+    <hdes.version>3.130.55</hdes.version>
+    <stencil.version>1.148.15</stencil.version>
     <dialob.version>3.0.3</dialob.version>
 
     <quarkus.version>2.14.1.Final</quarkus.version>

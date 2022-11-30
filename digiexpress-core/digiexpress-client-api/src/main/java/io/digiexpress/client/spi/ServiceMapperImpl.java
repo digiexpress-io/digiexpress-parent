@@ -51,7 +51,7 @@ public class ServiceMapperImpl implements ServiceMapper {
   }
 
   @Override
-  public ServiceReleaseDocument toService(StoreEntity entity) {
+  public ServiceReleaseDocument toRel(StoreEntity entity) {
     try {
       return ImmutableServiceReleaseDocument.builder()
           .from(om.readValue(entity.getBody(), ServiceReleaseDocument.class))

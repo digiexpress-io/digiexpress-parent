@@ -15,6 +15,7 @@ import io.digiexpress.client.api.ServiceDocument.DocumentType;
 import io.digiexpress.client.api.ServiceDocument.ServiceDefinitionDocument;
 import io.digiexpress.client.api.ServiceDocument.ServiceReleaseDocument;
 import io.digiexpress.client.api.ServiceDocument.ServiceRevisionDocument;
+import io.digiexpress.client.spi.composer.visitors.CreateMigrationVisitor;
 import io.digiexpress.client.spi.composer.visitors.CreateReleaseVisitor;
 import io.digiexpress.client.spi.composer.visitors.CreateRevisionVisitor;
 import io.digiexpress.client.spi.query.QueryFactoryImpl;
@@ -103,7 +104,6 @@ public class ComposerCreateBuilderImpl implements ServiceComposer.CreateBuilder 
 
   @Override
   public Uni<MigrationState> migrate(CreateMigration mig) {
-    // TODO Auto-generated method stub
-    return null;
+    return new CreateMigrationVisitor(mig, client).visit();
   }
 }

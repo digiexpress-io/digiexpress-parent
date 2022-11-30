@@ -54,7 +54,7 @@ public class TestCase {
       }
     };
   }
-  
+
   @AfterEach
   public void tearDown() {
     builder = null;

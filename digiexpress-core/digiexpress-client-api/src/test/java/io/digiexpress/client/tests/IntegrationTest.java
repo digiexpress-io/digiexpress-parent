@@ -22,6 +22,7 @@ import io.digiexpress.client.api.ServiceEnvir.ServiceProgramDialob;
 import io.digiexpress.client.api.ServiceEnvir.ServiceProgramHdes;
 import io.digiexpress.client.api.ServiceEnvir.ServiceProgramStatus;
 import io.digiexpress.client.api.ServiceEnvir.ServiceProgramStencil;
+import io.digiexpress.client.spi.support.ServiceAssert;
 import io.digiexpress.client.tests.support.PgProfile;
 import io.digiexpress.client.tests.support.TestCase;
 import io.quarkus.test.junit.QuarkusTest;
@@ -73,7 +74,7 @@ public class IntegrationTest extends TestCase {
     final var targetDate = LocalDateTime.of(2022, 11, 5, 11, 07);
     
     final var release1 = service(client).create().release(ImmutableCreateRelease.builder()
-        .name("main").desc("")
+        .name(ServiceAssert.BRANCH_MAIN).desc("")
         .serviceDefinitionId(def.getId())
         .activeFrom(targetDate)
         .targetDate(targetDate)

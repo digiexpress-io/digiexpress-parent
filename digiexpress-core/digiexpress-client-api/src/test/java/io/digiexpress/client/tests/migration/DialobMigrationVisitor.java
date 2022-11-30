@@ -88,7 +88,7 @@ public class DialobMigrationVisitor {
         .id(src.getId())
         .name(src.getMetadata().getLabel())
         .description("")
-        .head("main")
+        .head(ServiceAssert.BRANCH_MAIN)
         .created(toDateTime.apply(created))
         .updated(toDateTime.apply(updated))
         .build();
@@ -163,6 +163,10 @@ public class DialobMigrationVisitor {
           entries.add(entry);
           cleanedForms.add(forms.get(entry.getFormId()));
         }
+      }
+      if(entries.isEmpty()) {
+        summary.addRow(rev.getId(), null, rev.getCreated(), null, "SKIP");
+        continue;
       }
       
       cleanedRevs.add(ImmutableFormRevisionDocument.builder()

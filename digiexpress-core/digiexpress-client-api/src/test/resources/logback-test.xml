@@ -36,6 +36,9 @@
 
   <root level="INFO">
     <appender-ref ref="STDOUT" />
-    <appender-ref ref="FILE" />
   </root>
+
+  <logger level="INFO" name="io.digiexpress.client.tests.migration">
+    <appender-ref ref="FILE" />
+  </logger>
 </configuration>

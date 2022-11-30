@@ -15,6 +15,7 @@ import io.digiexpress.client.api.ServiceDocument;
 import io.digiexpress.client.api.ServiceDocument.ServiceConfigDocument;
 import io.digiexpress.client.api.ServiceDocument.ServiceDefinitionDocument;
 import io.digiexpress.client.api.ServiceDocument.ServiceRevisionDocument;
+import io.digiexpress.client.api.ServiceStore.StoreState;
 import io.digiexpress.client.spi.support.ServiceAssert;
 import io.resys.hdes.client.api.ast.AstBody.AstBodyType;
 import io.resys.hdes.client.api.ast.AstTag;
@@ -33,7 +34,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class QueryFactoryImpl implements QueryFactory {
   public static final String FIXED_ID = ServiceDocument.DocumentType.SERVICE_CONFIG.name();
-  public static final String HEAD_NAME = "main";
+  public static final String HEAD_NAME = ServiceAssert.BRANCH_MAIN;
   
   private final String imagePath = "/images";
   private final List<AstBodyType> HDES_ASSETS = Arrays.asList(AstBodyType.DT, AstBodyType.FLOW, AstBodyType.FLOW_TASK);
@@ -41,6 +42,10 @@ public class QueryFactoryImpl implements QueryFactory {
   
   public static QueryFactoryImpl from(ServiceClientConfig config) {
     return new QueryFactoryImpl(config);
+  }
+  @Override
+  public Uni<StoreState> head() {
+    return config.getStore().query().get();
   }
   @Override
   public Uni<ServiceConfigDocument> getConfigDoc() {
@@ -197,5 +202,4 @@ public class QueryFactoryImpl implements QueryFactory {
     private final String id;
     private final AstTag data;
   }
-
 }

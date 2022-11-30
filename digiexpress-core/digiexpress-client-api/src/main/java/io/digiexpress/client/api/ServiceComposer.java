@@ -18,10 +18,10 @@ import io.digiexpress.client.api.ServiceDocument.ServiceConfigDocument;
 import io.digiexpress.client.api.ServiceDocument.ServiceDefinitionDocument;
 import io.digiexpress.client.api.ServiceDocument.ServiceReleaseDocument;
 import io.digiexpress.client.api.ServiceDocument.ServiceRevisionDocument;
-import io.resys.hdes.client.api.ast.AstTag;
+import io.resys.hdes.client.api.HdesStore.StoreState;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.ImmutableCreateRelease;
-import io.thestencil.client.api.StencilClient.Release;
+import io.thestencil.client.api.StencilComposer.SiteState;
 
 public interface ServiceComposer {
   CreateBuilder create();
@@ -67,14 +67,15 @@ public interface ServiceComposer {
   
   @Value.Immutable @JsonSerialize(as = ImmutableCreateMigration.class) @JsonDeserialize(as = ImmutableCreateMigration.class)
   interface CreateMigration extends Command {
-    
+    List<FormRevisionDocument> getFormRevs();
+    List<FormDocument> getForms();
+    ServiceDefinitionDocument getServices();
+    StoreState getHdes();
+    SiteState getStencil();    
   }
   @Value.Immutable @JsonSerialize(as = ImmutableMigrationState.class) @JsonDeserialize(as = ImmutableMigrationState.class)
   interface MigrationState {
-    List<FormRevisionDocument> getFormRevs();
-    List<FormDocument> getForms();
-    List<AstTag> getHdes();
-    List<Release> getStencil();
+
   }
   
   @Value.Immutable

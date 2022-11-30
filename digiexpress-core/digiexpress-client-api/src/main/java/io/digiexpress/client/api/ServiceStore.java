@@ -51,7 +51,7 @@ public interface ServiceStore {
   @Value.Immutable @JsonSerialize(as = ImmutableStoreState.class) @JsonDeserialize(as = ImmutableStoreState.class)
   interface StoreState {
     Map<String, StoreEntity> getRevs();
-    Map<String, StoreEntity> getProcesses();
+    Map<String, StoreEntity> getDefs();
     Map<String, StoreEntity> getReleases();
     Map<String, StoreEntity> getConfigs();
   }

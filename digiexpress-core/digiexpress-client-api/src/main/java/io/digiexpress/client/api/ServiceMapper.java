@@ -13,7 +13,7 @@ public interface ServiceMapper {
   ServiceConfigDocument toConfig(StoreEntity entity);
   ServiceRevisionDocument toRev(StoreEntity entity);
   ServiceDefinitionDocument toDef(StoreEntity entity);
-  ServiceReleaseDocument toService(StoreEntity entity);
+  ServiceReleaseDocument toRel(StoreEntity entity);
   String toBody(ServiceDocument entity);
   
   AstTag toHdes(String body);

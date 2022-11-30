@@ -69,7 +69,7 @@ public class CreateRevisionVisitor {
     final var head = ImmutableServiceRevisionValue.builder()
       .id(nextId(DocumentType.SERVICE_REV)).created(now).updated(now)
       .revisionName(init.getName())
-      .processDocumentId(service.getId())
+      .defId(service.getId())
       .build();
       
     final var rev = ImmutableServiceRevisionDocument.builder()
@@ -91,7 +91,7 @@ public class CreateRevisionVisitor {
   }
   
   protected ImmutableRefIdValue.Builder visitRef() {
-    return ImmutableRefIdValue.builder().id(nextId(DocumentType.SERVICE_DEF)).tagName("main");
+    return ImmutableRefIdValue.builder().id(nextId(DocumentType.SERVICE_DEF)).tagName(ServiceAssert.BRANCH_MAIN);
   }
   
   protected CreateStoreEntity toStoreCommand(ServiceDocument doc) {

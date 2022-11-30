@@ -11,6 +11,7 @@ import io.dialob.client.api.DialobDocument.FormDocument;
 import io.digiexpress.client.api.ServiceDocument.ServiceConfigDocument;
 import io.digiexpress.client.api.ServiceDocument.ServiceDefinitionDocument;
 import io.digiexpress.client.api.ServiceDocument.ServiceRevisionDocument;
+import io.digiexpress.client.api.ServiceStore.StoreState;
 import io.resys.hdes.client.api.ast.AstFlow;
 import io.resys.hdes.client.api.ast.AstTag;
 import io.resys.thena.docdb.api.models.Repo;
@@ -18,6 +19,7 @@ import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.MigrationBuilder.Sites;
 
 public interface QueryFactory {
+  Uni<StoreState> head();
   Uni<List<Repo>> getRepos();
   Uni<FormDocument> getForm(String formId);
   Uni<ServiceConfigDocument> getConfigDoc();

@@ -227,7 +227,7 @@ public class ServiceStoreTemplate implements ServiceStoreConfig.Commands {
   }
   
   public StoreEntity getEntityFromState(StoreState state, String id) {
-    var entity = state.getProcesses().get(id);
+    var entity = state.getDefs().get(id);
     if(entity == null) {
       entity = state.getRevs().get(id);
     }
@@ -269,8 +269,8 @@ public class ServiceStoreTemplate implements ServiceStoreConfig.Commands {
             final var blob = state.getObjects().getBlobs().get(blobId);
             final var entity = config.getDeserializer().fromString(blob);
             switch(entity.getBodyType()) {
-             case SERVICE_DEF: builder.putRevs(entity.getId(), entity); break;
-             case SERVICE_REV: builder.putProcesses(entity.getId(), entity);  break;
+             case SERVICE_REV: builder.putRevs(entity.getId(), entity); break;
+             case SERVICE_DEF: builder.putDefs(entity.getId(), entity);  break;
              case SERVICE_RELEASE: builder.putReleases(entity.getId(), entity);  break;
              case SERVICE_CONFIG: builder.putConfigs(entity.getId(), entity);  break;
              default: throw new RuntimeException("Unknown type: " + entity.getBodyType() + "!");

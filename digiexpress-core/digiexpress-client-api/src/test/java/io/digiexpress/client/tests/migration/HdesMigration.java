@@ -5,16 +5,14 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.dialob.client.api.DialobDocument.FormDocument;
-import io.dialob.client.api.DialobDocument.FormRevisionDocument;
 import io.digiexpress.client.spi.support.ServiceAssert;
 import io.resys.hdes.client.api.HdesClient;
 import io.resys.hdes.client.api.HdesStore.StoreState;
 import io.resys.hdes.client.api.ast.AstTag;
+import io.resys.hdes.client.api.programs.ProgramEnvir;
 import io.resys.hdes.client.spi.HdesInMemoryStore;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,12 +25,12 @@ public class HdesMigration {
   private final ObjectMapper om = MigrationsDefaults.om;
   
   @lombok.Data @lombok.Builder
-  public static class FormsAndRevs {
-    private List<FormRevisionDocument> revs;
-    private List<FormDocument> forms;
+  public static class HdesState {
+    private StoreState storeState;
+    private ProgramEnvir programEnvir;  
   }
   
-  public StoreState execute(HdesClient client) {
+  public HdesState execute(HdesClient client) {
     final var dir = new File(src);
     ServiceAssert.isTrue(dir.isDirectory() && dir.canRead() && dir.exists(), () -> src + " must be a directory with hdes *AstTag.json-s");
     final var files = dir.listFiles((file, name) -> name.endsWith(".json"));
@@ -40,7 +38,7 @@ public class HdesMigration {
     final var summary = MigrationsDefaults.summary("tag name", "asset name", "type", "status");
     final var tags = new ArrayList<AstTag>();
     StoreState state = null;
-    
+    ProgramEnvir envir = null;
     for(final var file : files) {
       try {
         final var input = new String(Files.newInputStream(file.toPath()).readAllBytes(), StandardCharsets.UTF_8);
@@ -61,7 +59,7 @@ public class HdesMigration {
           envirBuilder.addCommand().service(entity).id(entity.getId()).build();
         }        
         
-        final var envir = envirBuilder.build();
+        envir = envirBuilder.build();
         for(final var wrapper : envir.getValues().values()) {
           summary.addRow(tag.getName(), wrapper.getAst().map(a -> a.getName()).orElse(wrapper.getId()), wrapper.getType(), wrapper.getStatus());          
         }
@@ -73,7 +71,7 @@ public class HdesMigration {
     }
     
     log.info("Reading hdes tags: '" + src + "', found: " + files.length + summary.toString());
-    return state;
+    return HdesState.builder().storeState(state).programEnvir(envir).build();
   }
   
   

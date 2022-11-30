@@ -145,7 +145,7 @@ public class ServiceStorePg extends ServiceStoreTemplate implements ServiceStore
     public ServiceStorePg build() {
       ServiceAssert.notNull(repoName, () -> "repoName must be defined!");
     
-      final var headName = this.headName == null ? "main": this.headName;
+      final var headName = this.headName == null ? ServiceAssert.BRANCH_MAIN: this.headName;
       if(log.isDebugEnabled()) {
         final var msg = new StringBuilder()
           .append(System.lineSeparator())

@@ -7,7 +7,13 @@ import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.digiexpress.client.api.ImmutableProcessValue;
+import io.digiexpress.client.api.ImmutableServiceDefinitionDocument;
+import io.digiexpress.client.api.ServiceDocument.ProcessValue;
+import io.digiexpress.client.api.ServiceDocument.ServiceDefinitionDocument;
 import io.digiexpress.client.spi.support.ServiceAssert;
+import io.digiexpress.client.tests.migration.DialobMigration.FormsAndRevs;
+import io.digiexpress.client.tests.migration.HdesMigration.HdesState;
 import lombok.extern.jackson.Jacksonized;
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,29 +37,55 @@ public class WorkflowMigration {
     private LocalDateTime updated;
   }
   
-  public List<Workflow> execute() {
+  public ServiceDefinitionDocument execute(HdesState hdes, FormsAndRevs dialob) {
     final var dir = new File(src);
     ServiceAssert.isTrue(dir.isDirectory() && dir.canRead() && dir.exists(), () -> src + " must be a directory with *workflows.json-s");
     final var files = dir.listFiles((file, name) -> name.endsWith(".json"));
     
-    final var summary = MigrationsDefaults.summary("file name", "name", "form id", "flow name", "status", "type");
+    final var summary_workflows = MigrationsDefaults.summary("file name", "name", "form id", "flow name", "status", "type");
     final var workflows = new ArrayList<Workflow>();
     for(final var file : files) {
       try {
         for(final var wk : om.readValue(file, Workflow[].class)) {
           workflows.add(wk);
-          summary.addRow(file.getName(), wk.getName(), wk.getFormId(), wk.getFlowName(), "OK", "process");
+          summary_workflows.addRow(file.getName(), wk.getName(), wk.getFormId(), wk.getFlowName(), "OK", "process");
         }
       } catch (Exception e) {
-        summary.addRow(file.getName(), null, "FAIL", "workflows");
+        summary_workflows.addRow(file.getName(), null, "FAIL", "workflows");
         throw new RuntimeException("Failed to read workflows form json: " + file.getName() + e.getMessage(), e);
       }
     }
-    
-  
-    log.info("Reading workflows from: '" + src + "', found: " + files.length + summary.toString());
 
-    return workflows;
+    log.info("Reading workflows from: '" + src + "', found: " + files.length + summary_workflows.toString());
+
+    final var summary_service = MigrationsDefaults.summary("workflow name", "form id", "flow id", "status");
+    final List<ProcessValue> processes = new ArrayList<>();
+    for(final var workflow : workflows) {
+      try {
+        final var processValue = ImmutableProcessValue.builder()
+          .id(workflow.getId())
+          .name(workflow.getName())
+          .desc("")
+          .flowId(hdes.getProgramEnvir().getFlowsByName().get(workflow.getFlowName()).getId())
+          .formId(workflow.getFormId())
+          .build();
+        processes.add(processValue);
+        summary_service.addRow(processValue.getName(), processValue.getFormId(), processValue.getFlowId(), "OK");
+      } catch(Exception e) {
+        final var flowId = hdes.getProgramEnvir().getFlowsByName().containsKey(workflow.getFlowName()) ? "FOUND" : "MISSING";
+        final var formId = dialob.getForms().stream().filter(f -> f.getId().equals(workflow.getFormId())).findAny().isPresent() ? "FOUND" : "MISSING";
+        summary_service.addRow(workflow.getName(), formId, flowId, "FAIL");        
+      }
+    }
+    
+    log.info("Creating services from: '" + src + "', found workflows: " + workflows.size() + summary_service.toString());
+
+    
+    return ImmutableServiceDefinitionDocument.builder()
+        .created(LocalDateTime.now())
+        .updated(LocalDateTime.now())
+        .processes(processes)
+        .build();
   }
   
   
