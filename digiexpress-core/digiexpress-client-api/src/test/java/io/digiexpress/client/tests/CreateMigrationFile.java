@@ -15,11 +15,11 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
 import lombok.extern.slf4j.Slf4j;
 
-//@org.junit.jupiter.api.Disabled
+@org.junit.jupiter.api.Disabled
 @Slf4j
 @QuarkusTest
 @TestProfile(PgProfile.class)
-public class CreateMigration extends TestCase {
+public class CreateMigrationFile extends TestCase {
   private final Duration atMost = Duration.ofMillis(100000);
   
   @Test
@@ -41,6 +41,7 @@ public class CreateMigration extends TestCase {
         .stencil(stencil)
         .services(services)
         .build();
+    super.writeOutput(migration);
     
     //test drive the migration
     final var composer = service(client);

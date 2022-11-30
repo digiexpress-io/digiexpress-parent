@@ -1,5 +1,7 @@
 package io.digiexpress.client.tests.support;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +31,7 @@ import io.digiexpress.client.api.ServiceClient.QuestionnaireStore;
 import io.digiexpress.client.api.ServiceComposer;
 import io.digiexpress.client.api.ServiceEnvir;
 import io.digiexpress.client.spi.ServiceComposerImpl;
+import io.digiexpress.client.tests.migration.MigrationsDefaults;
 import io.resys.hdes.client.api.HdesComposer;
 import io.resys.hdes.client.spi.HdesComposerImpl;
 import io.thestencil.client.api.StencilComposer;
@@ -196,6 +199,17 @@ public class TestCase {
 
     public ProcessState getState() {
       return state;
+    }
+  }
+  
+  public void writeOutput(ServiceComposer.CreateMigration migration) {
+    try {
+      final var file = new File(MigrationsDefaults.folder + "output/ImmutableCreateMigration.json");
+      file.createNewFile();
+      
+      MigrationsDefaults.om.writer().withDefaultPrettyPrinter().writeValue(file, migration);
+    } catch(IOException e) {
+      throw new RuntimeException(e.getMessage(), e);
     }
   }
 //@Test
