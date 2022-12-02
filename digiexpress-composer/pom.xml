@@ -13,7 +13,9 @@
   <packaging>pom</packaging>
 
   <modules>
+  <!-- 
     <module>digiexpress-composer-ui</module>
+     -->
     <module>digiexpress-composer-spring</module>
   </modules>
 

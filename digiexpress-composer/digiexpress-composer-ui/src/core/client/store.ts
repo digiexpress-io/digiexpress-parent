@@ -23,6 +23,8 @@ class DefaultStore implements Store {
       const headers: Record<string, string> = this._defRef.headers as any;
       headers[this._config.csrf.key] = this._config.csrf.value;
     }
+    
+    console.log("Composer::init DefaultStore", config);
   }
   get config() {
     return this._config;
@@ -74,18 +76,22 @@ class DefaultStore implements Store {
     return this.iapRefresh();
   }
 
-  fetch<T>(path: string, req?: RequestInit): Promise<T> {
+  fetch<T>(path: string, req?: RequestInit & { notFound?: () => T}): Promise<T> {
     if (!path) {
       throw new Error("can't fetch with undefined url")
     }
 
     const url = this._config.url;
-    const finalInit: RequestInit = Object.assign({}, this._defRef, req ? req : {});
+    const finalInit: RequestInit  & { notFound?: () => T} = Object.assign({}, this._defRef, req ? req : {});
     return fetch(url + path, finalInit)
       .then(response => {
         if (response.status === 302) {
           return null;
         }
+        if(response.status === 404) {
+          return finalInit.notFound ? finalInit.notFound() : null;
+        }
+        
         if (response.status === 401) {
           return this.handle401()
             .then(() => fetch(url + path, finalInit))

@@ -1,21 +1,57 @@
 export type EntityId = string;
 export type ProgramStatus = "UP" | "AST_ERROR" | "PROGRAM_ERROR" | "DEPENDENCY_ERROR";
+export type DocumentType = 'SERVICE_REV' | 'SERVICE_DEF' | 'SERVICE_CONFIG' | 'SERVICE_RELEASE';
+export type ConfigType = 'STENCIL' | 'DIALOB' | 'HDES' | 'SERVICE' | 'RELEASE';
 export type LocalDateTime = string;
 
 export interface AstCommand {
   
 }
 
+
 export interface ProgramMessage {
   id: string;
   msg: string;
 }
+export interface ServiceDocument {
+  id: string; // unique id
+  version: string; // not really nullable, just in serialization
+  created: string;
+  updated: string;
+  type: DocumentType;
+}
+
+export interface ServiceDefinitionDocument extends ServiceDocument {
+  
+}
+export interface ServiceRevisionDocument extends ServiceDocument {
+  
+}
+export interface ServiceReleaseDocument extends ServiceDocument {
+  
+}
+export interface ServiceConfigDocument extends ServiceDocument {
+  stencil: ServiceConfigValue;
+  dialob: ServiceConfigValue;
+  hdes: ServiceConfigValue;
+  service: ServiceConfigValue;
+  type: DocumentType 
+}
+
+export interface ServiceConfigValue {
+  id: string
+  type: ConfigType;
+}
 
 export interface Site {
   name: string,
-  contentType: "OK" | "NOT_CREATED" | "EMPTY" | "ERRORS" | "NO_CONNECTION",
+  commit?: string,
+  contentType: "OK" | "NOT_CREATED" | "EMPTY" | "ERRORS" | "NO_CONNECTION" | "BACKEND_NOT_FOUND",
+  revisions: Record<string, ServiceRevisionDocument>,
+  definitions: Record<string, ServiceDefinitionDocument>,
+  releases: Record<string, ServiceReleaseDocument>,
+  configs: Record<string, ServiceConfigDocument>
 }
-
 
 export interface Entity {  
   id: EntityId; 
@@ -54,6 +90,7 @@ export interface Service {
   create(): CreateBuilder;
   getSite(): Promise<Site>
   copy(id: string, name: string): Promise<Site>
+  head(): Promise<Site>
 }
 export interface StoreConfig {
   url: string;
@@ -63,6 +100,6 @@ export interface StoreConfig {
 }
 export interface Store {
   config: StoreConfig;
-  fetch<T>(path: string, init?: RequestInit): Promise<T>;
+  fetch<T>(path: string, init?: RequestInit & { notFound?: () => T }): Promise<T>;
 }
 

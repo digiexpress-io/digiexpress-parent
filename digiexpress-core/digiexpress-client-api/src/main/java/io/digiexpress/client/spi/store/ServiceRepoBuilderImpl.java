@@ -40,18 +40,29 @@ import lombok.experimental.Accessors;;
 public class ServiceRepoBuilderImpl implements ServiceRepoBuilder {
   protected final ServiceClientConfig config;  
   protected final DocDB docDb;
-  protected String repoStencil;
-  protected String repoHdes;
-  protected String repoDialob;
-  protected String repoService;  
-
+  protected Namings namings = Namings.builder().build();
   
-  @Data @Builder @Accessors(chain = true)
-  private static class Namings {
+  @Data @Builder(toBuilder = true) @Accessors(chain = true)
+  public static class Namings {
     private final String repoService;
     private final String repoStencil;
     private final String repoDialob;
     private final String repoHdes;
+    
+    public Namings withDefaults() {
+      final var repoService = this.repoService == null ? "service" : this.repoService;
+      final var repoStencil = this.repoStencil == null ? this.repoService + "-stencil" : this.repoStencil;
+      final var repoDialob = this.repoDialob == null ? this.repoService + "-dialob" : this.repoDialob;
+      final var repoHdes = this.repoHdes == null ? this.repoService + "-hdes" : this.repoHdes;
+      ServiceAssert.isUnique(() -> "repo values must be unique!", repoStencil, repoHdes, repoDialob, repoService);
+
+      return Namings.builder()
+            .repoDialob(repoDialob)
+            .repoHdes(repoHdes)
+            .repoService(repoService)
+            .repoStencil(repoStencil)
+          .build();
+    }
   }
   
   @Data @Builder @Accessors(chain = true)
@@ -65,21 +76,21 @@ public class ServiceRepoBuilderImpl implements ServiceRepoBuilder {
   
   @Override
   public Uni<ServiceClient> load() {
-    ServiceAssert.notNull(repoService, () -> "repoService: string must be defined!");
-    ServiceAssert.isNull(repoStencil, () -> "repoStencil: string must be undefined!");
-    ServiceAssert.isNull(repoDialob, () -> "repoDialob: string must be undefined!");
-    ServiceAssert.isNull(repoHdes, () -> "repoHdes: string must be undefined!");    
+    ServiceAssert.notNull(namings.getRepoService(), () -> "repoService: string must be defined!");
+    ServiceAssert.isNull(namings.getRepoStencil(), () -> "repoStencil: string must be undefined!");
+    ServiceAssert.isNull(namings.getRepoDialob(), () -> "repoDialob: string must be undefined!");
+    ServiceAssert.isNull(namings.getRepoHdes(), () -> "repoHdes: string must be undefined!");    
 
     return docDb.repo().query().find().collect().asList()
     .onItem().transformToUni(repos -> {
-      final var existingServiceRepo = repos.stream().filter(e -> e.getName().equals(repoService)).findFirst();
+      final var existingServiceRepo = repos.stream().filter(e -> e.getName().equals(namings.getRepoService())).findFirst();
       
       final var newStore = config.getStore().repo().repoName(existingServiceRepo.get().getName()).headName(HEAD_NAME).build();
       final Uni<ServiceConfigDocument> doc = newStore.query().get()
           .onItem().transform(state -> {
             final var result = state.getConfigs().values().stream().findFirst().map(entity -> config.getMapper().toConfig(entity));
           
-            ServiceAssert.isTrue(result.isPresent(), () -> "repoService: string does not exists by name: '" + repoService + "'!");
+            ServiceAssert.isTrue(result.isPresent(), () -> "repoService: string does not exists by name: '" + namings.getRepoService() + "'!");
             return result.get();
           });
       final var newCache = config.getCache().withName(newStore.getRepoName());
@@ -94,8 +105,7 @@ public class ServiceRepoBuilderImpl implements ServiceRepoBuilder {
 
   @Override
   public Uni<ServiceClient> create() {
-    final var namings = buildNamings();
-    
+    final var namings = this.namings.withDefaults();
     return docDb.repo().query().find().collect().asList()
     .onItem().transformToUni(repos -> {
       final var doc = getOrCreateDoc(repos, namings);
@@ -105,7 +115,7 @@ public class ServiceRepoBuilderImpl implements ServiceRepoBuilder {
   
   @Override
   public ServiceClient build() {
-    final var namings = buildNamings();
+    final var namings = this.namings.withDefaults();
     
     final var newStore = config.getStore().repo().repoName(namings.getRepoService()).headName(HEAD_NAME).build();
     final var newCache = config.getCache().withName(namings.getRepoService());
@@ -119,25 +129,9 @@ public class ServiceRepoBuilderImpl implements ServiceRepoBuilder {
         .build();
     return new ServiceClientImpl(newConfig);
   }
-  
-  protected Namings buildNamings() {
-    final var repoService = this.repoService == null ? "service" : this.repoService;
-    final var repoStencil = this.repoStencil == null ? this.repoService + "-stencil" : this.repoStencil;
-    final var repoDialob = this.repoDialob == null ? this.repoService + "-dialob" : this.repoDialob;
-    final var repoHdes = this.repoHdes == null ? this.repoService + "-hdes" : this.repoHdes;
-    ServiceAssert.isUnique(() -> "repo values must be unique!", repoStencil, repoHdes, repoDialob, repoService);
-
-    return Namings.builder()
-          .repoDialob(repoDialob)
-          .repoHdes(repoHdes)
-          .repoService(repoService)
-          .repoStencil(repoStencil)
-        .build();
-  }
-  
 
   protected Uni<ServiceConfigDocument> getOrCreateDoc(final List<Repo> repos, final Namings namings) {
-    final var existingServiceRepo = repos.stream().filter(e -> e.getName().equals(repoService)).findFirst();
+    final var existingServiceRepo = repos.stream().filter(e -> e.getName().equals(this.namings.getRepoService())).findFirst();
     
     if(existingServiceRepo.isEmpty()) {
       return config.getStore().repo().repoName(namings.getRepoService()).headName(HEAD_NAME).create()
@@ -152,20 +146,20 @@ public class ServiceRepoBuilderImpl implements ServiceRepoBuilder {
           .onItem().transform(newConfig -> {
             
             ServiceAssert.isTrue(
-                repoStencil == null || newConfig.getStencil().getId().equals(repoStencil), 
-                () -> "Incorrect user configuration.repoStencil expected = '" + newConfig.getStencil().getId() + "', actual = '" + repoStencil + "'");
+                this.namings.getRepoStencil() == null || newConfig.getStencil().getId().equals(this.namings.getRepoStencil()), 
+                () -> "Incorrect user configuration.repoStencil expected = '" + newConfig.getStencil().getId() + "', actual = '" + this.namings.getRepoStencil() + "'");
 
             ServiceAssert.isTrue(
-                repoStencil == null || newConfig.getDialob().getId().equals(repoDialob), 
-                () -> "Incorrect user configuration.repoDialob expected = '" + newConfig.getDialob().getId() + "', actual = '" + repoDialob + "'");
+                this.namings.getRepoDialob() == null || newConfig.getDialob().getId().equals(this.namings.getRepoDialob()), 
+                () -> "Incorrect user configuration.repoDialob expected = '" + newConfig.getDialob().getId() + "', actual = '" + this.namings.getRepoDialob() + "'");
             
             ServiceAssert.isTrue(
-                repoStencil == null || newConfig.getHdes().getId().equals(repoHdes), 
-                () -> "Incorrect user configuration.repoHdes expected = '" + newConfig.getHdes().getId() + "', actual = '" + repoHdes + "'");
+                this.namings.getRepoHdes() == null || newConfig.getHdes().getId().equals(this.namings.getRepoHdes()), 
+                () -> "Incorrect user configuration.repoHdes expected = '" + newConfig.getHdes().getId() + "', actual = '" + this.namings.getRepoHdes() + "'");
             
             ServiceAssert.isTrue(
-                repoService == null || newConfig.getService().getId().equals(repoService), 
-                () -> "Incorrect user configuration.repoService expected = '" + newConfig.getService().getId() + "', actual = '" + repoService + "'");
+                this.namings.getRepoService() == null || newConfig.getService().getId().equals(this.namings.getRepoService()), 
+                () -> "Incorrect user configuration.repoService expected = '" + newConfig.getService().getId() + "', actual = '" + this.namings.getRepoService() + "'");
             
             return newConfig;
           });
@@ -236,5 +230,25 @@ public class ServiceRepoBuilderImpl implements ServiceRepoBuilder {
         .version(resp.getVersion())
         .build());    
   }
-  
+
+  @Override
+  public ServiceRepoBuilder repoStencil(String repoStencil) {
+    this.namings = this.namings.toBuilder().repoStencil(repoStencil).build();
+    return this;
+  }
+  @Override
+  public ServiceRepoBuilder repoHdes(String repoHdes) {
+    this.namings = this.namings.toBuilder().repoHdes(repoHdes).build();
+    return this;
+  }
+  @Override
+  public ServiceRepoBuilder repoDialob(String repoDialob) {
+    this.namings = this.namings.toBuilder().repoDialob(repoDialob).build();
+    return this;
+  }
+  @Override
+  public ServiceRepoBuilder repoService(String repoService) {
+    this.namings = this.namings.toBuilder().repoService(repoService).build();
+    return this;
+  }
 }

@@ -39,7 +39,7 @@ class SessionData implements Composer.Session {
     pages?: Record<Client.EntityId, Composer.PageUpdate>;
     cache?: SiteCache;
   }) {
-    this._site = props.site ? props.site : { name: "", contentType: "OK" };
+    this._site = props.site ? props.site : { name: "", contentType: "OK", revisions: {}, definitions: {}, configs: {}, releases: {} };
     this._pages = props.pages ? props.pages : {};
     this._cache = props.cache ? props.cache : new SiteCache(this._site);
   }

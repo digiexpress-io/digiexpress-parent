@@ -29,6 +29,7 @@ import io.resys.thena.docdb.api.actions.ObjectsActions.BlobObject;
 import io.resys.thena.docdb.api.actions.ObjectsActions.BlobObjects;
 import io.resys.thena.docdb.api.actions.ObjectsActions.ObjectsResult;
 import io.resys.thena.docdb.api.actions.ObjectsActions.ObjectsStatus;
+import io.resys.thena.docdb.api.models.Repo;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
@@ -240,6 +241,10 @@ public class ServiceStoreTemplate implements ServiceStoreConfig.Commands {
     return null;
   }
 
+  public Uni<List<Repo>> getRepos() {
+    return config.getClient().repo().query().find().collect().asList();
+  }
+  
   @Override
   public Uni<StoreState> get() {
     return config.getClient()
@@ -251,14 +256,16 @@ public class ServiceStoreTemplate implements ServiceStoreConfig.Commands {
         .onItem().transform(state -> {
           if(state.getStatus() != ObjectsStatus.OK) {
             throw new StoreException("GET_REPO_STATE_FAIL", null, ImmutableStoreExceptionMsg.builder()
-                .id(state.getRepo().getName())
-                .value(state.getRepo().getId())
+                .id(state.getRepo() == null ? config.getRepoName() : state.getRepo().getName())
+                .value(state.getRepo() == null ? "no-repo" : state.getRepo().getId())
                 .addAllArgs(state.getMessages().stream().map(message->message.getText()).collect(Collectors.toList()))
                 .build()); 
           }
           
 
-          final var builder = ImmutableStoreState.builder();
+          final var builder = ImmutableStoreState.builder()
+              .commit(state.getObjects().getCommit().getId())
+              .commitMsg(state.getObjects().getCommit().getMessage());
           if(state.getObjects() == null) {
             return builder.build(); 
           }

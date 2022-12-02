@@ -52,7 +52,7 @@ public class DigiexpressComposerUiController {
   private final IdeOnClasspath ideOnClasspath;
   private final Optional<SpringIdeTokenSupplier> token;
 
-  
+
   @RequestMapping(value = UiConfigBean.UI_SPRING_CTX_PATH_EXP, produces = MediaType.TEXT_HTML_VALUE)
   public String ui(
       HttpServletRequest request,

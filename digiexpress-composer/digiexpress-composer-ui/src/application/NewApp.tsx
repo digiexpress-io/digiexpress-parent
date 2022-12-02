@@ -1,12 +1,16 @@
 import React from 'react';
 
 import { IntlProvider } from 'react-intl';
-import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
+import { ThemeProvider, StyledEngineProvider, CircularProgress, LinearProgress } from '@mui/material';
 import SnackbarProvider from './SnakbarWrapper';
 import Burger, { siteTheme } from '@the-wrench-io/react-burger';
 import Client, { messages, Main, Secondary, Toolbar, Composer } from '../core';
 
 
+import Connection from './Connection';
+
+
+interface Csrf { key: string, value: string }
 declare global {
   interface Window {
     _env_: {
@@ -17,65 +21,64 @@ declare global {
     }
   }
 }
-
-interface Csrf {
-  key: string, value: string
-}
-
-
 const getUrl = () => {
   if (window._env_ && window._env_.url) {
     const url = window._env_.url;
-    if (url.endsWith("/")) {
-      return url.substring(0, url.length - 1)
-    }
-    return url;
+    return url.endsWith("/") ? url.substring(0, url.length - 1) : url;
   }
-
-  return "http://localhost:8081/assets";
+  return "http://localhost:8081/q/digi/rest/api/";
 }
 
-console.log("WINDOW CONFIG", window._env_);
-
-const init = {
-  locale: 'en',
+const store: Client.Store = new Client.StoreImpl({
   url: getUrl(),
   csrf: window._env_?.csrf,
   oidc: window._env_?.oidc,
   status: window._env_?.status,
-};
+});
+const backend = new Client.ServiceImpl(store);
 
-console.log("INIT", init);
-
-
-const store: Client.Store = new Client.StoreImpl(init);
-
-
-const CreateApps: React.FC<{}> = () => {
+const Apps: React.FC<{services: Client.Site}> = ({services}) => {
   // eslint-disable-next-line 
-  const backend = React.useMemo(() => new Client.ServiceImpl(store), [store]);
-  const wrenchComposer: Burger.App<Composer.ContextType> = {
-    id: "digiexpress-composer",
+  const serviceComposer: Burger.App<Composer.ContextType> = React.useMemo(() => ({
+    id: "service-composer",
     components: { primary: Main, secondary: Secondary, toolbar: Toolbar },
     state: [
       (children: React.ReactNode, restorePoint?: Burger.AppState<Composer.ContextType>) => (<>{children}</>),
       () => ({})
     ]
-  };
+  }), [Main, Secondary, Toolbar]);
 
-  return (
-    <Composer.Provider service={backend}>
-      <Burger.Provider children={[wrenchComposer]} secondary="toolbar.assets" drawerOpen/>
-    </Composer.Provider>
-  )
+  return (<Composer.Provider service={backend} head={services}>
+    <Burger.Provider children={[serviceComposer]} secondary="toolbar.assets" drawerOpen />
+  </Composer.Provider>)
 }
 
+const LoadApps = React.lazy(async () => {
+  const head = await backend.head();
+  if(head.contentType === 'NO_CONNECTION') {
+    const Result: React.FC<{}> = () => <Connection.Down client={backend} />;
+    return ({default: Result})
+  } else if (head.contentType === 'BACKEND_NOT_FOUND') {
+    const Result: React.FC<{}> = () => <Connection.Misconfigured client={backend} />;
+    return ({default: Result})    
+  }
+  const Result: React.FC<{}> = () => {
+    const snackbar = Composer.useSnackbar(); 
+    React.useEffect(() => {
+      snackbar.enqueueSnackbar({id: 'init.loaded', values: {name: head.name}}, {variant: 'success'})
+    }, []);
+    return <Apps services={head}/>
+  };
+  return ({default: Result}) 
+});
+
+const locale = 'en';
 const NewApp = (
-  <IntlProvider locale={init.locale} messages={messages[init.locale]}>
+  <IntlProvider locale={locale} messages={messages[locale]}>
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={siteTheme}>
         <SnackbarProvider>
-          <CreateApps />
+          <React.Suspense fallback={<Connection.Loading client={backend} />}><LoadApps /></React.Suspense>
         </SnackbarProvider>
       </ThemeProvider>
     </StyledEngineProvider>

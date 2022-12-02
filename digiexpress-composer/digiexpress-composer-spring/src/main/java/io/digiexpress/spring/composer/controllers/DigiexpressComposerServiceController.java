@@ -21,17 +21,22 @@ package io.digiexpress.spring.composer.controllers;
  */
 
 import java.time.Duration;
-import java.util.Map;
 
-import org.immutables.value.Value;
 import org.springframework.context.ApplicationContext;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import io.digiexpress.client.api.ServiceClient;
+import io.digiexpress.client.api.ServiceComposer;
+import io.digiexpress.client.api.ServiceComposer.CreateMigration;
+import io.digiexpress.client.api.ServiceComposer.MigrationState;
+import io.digiexpress.client.spi.ServiceComposerImpl;
 import io.digiexpress.spring.composer.config.UiConfigBean;
 import lombok.extern.slf4j.Slf4j;
 
@@ -40,20 +45,14 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping(UiConfigBean.REST_SPRING_CTX_PATH_EXP)
 public class DigiexpressComposerServiceController {
   
-  private final ObjectMapper objectMapper;
+  private final ServiceClient client;
+  private final ServiceComposer composer;
   private static final Duration timeout = Duration.ofMillis(10000);
-
   
-  @Value.Immutable @JsonSerialize(as = ImmutableInitSession.class) @JsonDeserialize(as = ImmutableInitSession.class)
-  public interface InitSession {
-    String getFormId();
-    String getLanguage();
-    Map<String, Object> getContextValues();
-  }
-  
-  public DigiexpressComposerServiceController(ObjectMapper objectMapper, ApplicationContext ctx) {
+  public DigiexpressComposerServiceController(ObjectMapper objectMapper, ApplicationContext ctx, ServiceClient client) {
     super();
-    this.objectMapper = objectMapper;
+    this.client = client;
+    this.composer = new ServiceComposerImpl(client);
     
     final var servicePath = ctx.getEnvironment().getProperty(UiConfigBean.REST_SPRING_CTX_PATH);
     final var uiPath = ctx.getEnvironment().getProperty(UiConfigBean.UI_SPRING_CTX_PATH);    
@@ -62,10 +61,17 @@ public class DigiexpressComposerServiceController {
     final var logBuilder = new StringBuilder()
       .append("Digiexpress, Composer Service: UP").append(System.lineSeparator())
       .append("service paths:").append(System.lineSeparator())
-      .append("  - GET, html").append(uiPath).append(": ").append("user interface, enabled: ").append(uiEnabled).append(System.lineSeparator())
-      .append("  - service path").append(servicePath).append(": ").append(System.lineSeparator())
+      .append("  - GET, user interface, ").append("enabled: ").append(uiEnabled).append(", path: '").append(uiPath).append("' ").append(System.lineSeparator())
+      .append("  - restapi: ").append(servicePath).append(System.lineSeparator())
     ;
-    
     log.info(logBuilder.toString());
+  }
+  @PostMapping(path = "/" + UiConfigBean.API_MIGRATE, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+  public MigrationState migrate(@RequestBody CreateMigration entity) {
+    return composer.create().migrate(entity).await().atMost(timeout);
+  }
+  @GetMapping(path = "/" + UiConfigBean.API_STATE, produces = MediaType.APPLICATION_JSON_VALUE)
+  public ServiceComposer.ComposerState head() {
+    return composer.query().head().await().atMost(timeout);
   }
 }

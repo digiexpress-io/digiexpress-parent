@@ -6,6 +6,9 @@ import Client from '../client';
 import Burger from '@the-wrench-io/react-burger';
 import { ReducerDispatch, Reducer } from './Reducer';
 import { SessionData, ImmutableTabData } from './SessionData';
+import { useSnackbar as useSnackbarAs, SnackbarMessage, OptionsObject, SnackbarKey } from 'notistack';
+import { FormattedMessage } from 'react-intl';
+
 
 declare namespace Composer {
 
@@ -137,7 +140,7 @@ namespace Composer {
   }
 
 
-  export const Provider: React.FC<{ children: React.ReactNode, service: Client.Service }> = ({ children, service }) => {
+  export const Provider: React.FC<{ children: React.ReactNode, service: Client.Service, head?: Client.Site }> = ({ children, service, head }) => {
     const [session, dispatch] = React.useReducer(Reducer, sessionData);
     const actions = React.useMemo(() => {
       console.log("init ide dispatch");
@@ -146,13 +149,33 @@ namespace Composer {
 
     React.useLayoutEffect(() => {
       console.log("init ide data");
-      actions.handleLoad();
-    }, [service, actions]);
+      if(head) {
+        actions.handleLoadSite(head);
+      } else {
+        actions.handleLoad(); 
+      }
+    }, [service, actions, head]);
 
     return (<ComposerContext.Provider value={{ session, actions, service }}>
       {children}
     </ComposerContext.Provider>);
   };
+  
+  export const Intl: React.FC<{id: string, values?: {}}> = ({id, values}) => {
+    return <FormattedMessage id={id} values={values}/>
+  }
+  
+  export const useSnackbar = () => {
+    const snackbar = useSnackbarAs();
+    
+    return {
+      enqueueSnackbar: (message: SnackbarMessage & {id: string, values?: {}}, options?: OptionsObject): SnackbarKey => {
+        const next = message.id ? <FormattedMessage id={message.id} values={message.values}/> : message;
+        return snackbar.enqueueSnackbar(next, options);
+      },
+      closeSnackbar: snackbar.closeSnackbar
+    };
+  }
 }
 
 const ArticleTabIndicator: React.FC<{ entity: Client.Entity }> = ({ entity }) => {

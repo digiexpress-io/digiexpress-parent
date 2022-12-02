@@ -83,19 +83,32 @@ public interface ServiceComposer {
   @JsonDeserialize(as = ImmutableComposerState.class)
   interface ComposerState {
     String getName();
-    @Nullable
-    String getCommit();
+    @Nullable String getCommit();
+    @Nullable String getCommitMsg();
     SiteContentType getContentType();
     Map<String, ServiceRevisionDocument> getRevisions();
-    Map<String, ServiceDocument> getProcesses();
+    Map<String, ServiceDefinitionDocument> getDefinitions();
     Map<String, ServiceReleaseDocument> getReleases();
     Map<String, ServiceConfigDocument> getConfigs();
     Map<String, ComposerForm> getForms();
     Map<String, ComposerFlow> getFlows();
+    List<ComposerMessage> getMessages(); 
+    
+  }
+  
+
+  
+  @Value.Immutable
+  @JsonSerialize(as = ImmutableComposerMessage.class)
+  @JsonDeserialize(as = ImmutableComposerMessage.class)
+  interface ComposerMessage {
+    String getId();
+    String getValue();
+    List<String> getArgs();
   }
   
   interface ComposerFlow {}
   interface ComposerForm {}
   
-  enum SiteContentType { OK, ERRORS, NOT_CREATED, EMPTY, RELEASE }
+  enum SiteContentType { OK, ERRORS, NOT_CREATED  }
 }
