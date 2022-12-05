@@ -30,17 +30,22 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;;
 
 @Data
 @Getter(AccessLevel.NONE)
 @Accessors(fluent = true, chain = true)
-@RequiredArgsConstructor
+
 public class ServiceRepoBuilderImpl implements ServiceRepoBuilder {
   protected final ServiceClientConfig config;  
   protected final DocDB docDb;
-  protected Namings namings = Namings.builder().build();
+  protected Namings namings;
+  
+  public ServiceRepoBuilderImpl(ServiceClientConfig config, DocDB docDb) {
+    this.config = config;
+    this.docDb = docDb;
+    this.namings = Namings.builder().repoService(config.getStore().getRepoName()).build();
+  }
   
   @Data @Builder(toBuilder = true) @Accessors(chain = true)
   public static class Namings {

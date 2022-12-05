@@ -65,8 +65,10 @@ const LoadApps = React.lazy(async () => {
   const Result: React.FC<{}> = () => {
     const snackbar = Composer.useSnackbar(); 
     React.useEffect(() => {
-      snackbar.enqueueSnackbar({id: 'init.loaded', values: {name: head.name}}, {variant: 'success'})
-    }, []);
+      if(head.contentType === 'OK') {
+        snackbar.enqueueSnackbar({id: 'init.loaded', values: {name: head.name}}, {variant: 'success'})
+      }
+    }, [head.name]);
     return <Apps services={head}/>
   };
   return ({default: Result}) 

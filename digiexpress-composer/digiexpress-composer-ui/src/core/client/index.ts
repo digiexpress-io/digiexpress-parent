@@ -10,7 +10,11 @@ import {
   ServiceRevisionDocument,
   ServiceReleaseDocument,
   ServiceConfigDocument,
-  ServiceConfigValue
+  ServiceConfigValue,
+  SiteMigrate,
+  
+  FormRevisionDocument, FormDocument, HdesState
+
 } from "./api";
 
 import { StoreErrorImpl as StoreErrorImplAs, StoreError } from './error';
@@ -23,7 +27,9 @@ declare namespace DigiexpressClient {
     Site, Entity, EntityId,
     CreateBuilder, DeleteBuilder, InitSession,
     ServiceErrorMsg, ServiceErrorProps, Service, Store, StoreError, StoreConfig,
+    SiteMigrate, 
     DocumentType, ConfigType,
+    FormRevisionDocument, FormDocument, HdesState,
     ServiceDocument,
     ServiceDefinitionDocument,
     ServiceRevisionDocument,
@@ -56,7 +62,13 @@ namespace DigiexpressClient {
       });
     }
     create(): DigiexpressClient.CreateBuilder {
-      return {} as any;
+      const site = () => this._store.fetch<DigiexpressClient.Site>("head", { method: "POST", body: JSON.stringify({ }) });
+      const migrate: (init: SiteMigrate) => Promise<DigiexpressClient.Site> = (init) => this._store.fetch<DigiexpressClient.Site>("migrate", { method: "POST", body: JSON.stringify(init) })
+      const release:(props: {name: string, desc: string}) => Promise<DigiexpressClient.Site> = () => {
+        return {} as any;
+      };
+      
+      return { site, migrate, release };
     }
     delete(): DigiexpressClient.DeleteBuilder {
       return {} as any;

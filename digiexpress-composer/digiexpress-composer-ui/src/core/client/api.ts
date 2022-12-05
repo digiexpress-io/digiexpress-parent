@@ -5,9 +5,31 @@ export type ConfigType = 'STENCIL' | 'DIALOB' | 'HDES' | 'SERVICE' | 'RELEASE';
 export type LocalDateTime = string;
 
 export interface AstCommand {
-  
+
 }
 
+export interface SiteMigrate {
+  formRevs: FormRevisionDocument[];
+  forms: FormDocument[];
+  services: ServiceDefinitionDocument;
+  hdes: HdesState;
+  stencil: StencilState;
+}
+
+export interface FormRevisionDocument {
+
+}
+
+export interface FormDocument {
+
+}
+export interface HdesState {
+
+}
+
+export interface StencilState {
+
+}
 
 export interface ProgramMessage {
   id: string;
@@ -22,20 +44,20 @@ export interface ServiceDocument {
 }
 
 export interface ServiceDefinitionDocument extends ServiceDocument {
-  
+
 }
 export interface ServiceRevisionDocument extends ServiceDocument {
-  
+
 }
 export interface ServiceReleaseDocument extends ServiceDocument {
-  
+
 }
 export interface ServiceConfigDocument extends ServiceDocument {
   stencil: ServiceConfigValue;
   dialob: ServiceConfigValue;
   hdes: ServiceConfigValue;
   service: ServiceConfigValue;
-  type: DocumentType 
+  type: DocumentType
 }
 
 export interface ServiceConfigValue {
@@ -53,10 +75,10 @@ export interface Site {
   configs: Record<string, ServiceConfigDocument>
 }
 
-export interface Entity {  
-  id: EntityId; 
+export interface Entity {
+  id: EntityId;
   name?: string;
-  created: LocalDateTime; 
+  created: LocalDateTime;
 }
 
 export interface ServiceErrorMsg {
@@ -71,8 +93,8 @@ export interface ServiceErrorProps {
 
 export interface CreateBuilder {
   site(): Promise<Site>;
-  importData(init: string): Promise<Site>;
-  release(props: {name: string, desc: string}): Promise<Site>;
+  migrate(init: SiteMigrate): Promise<Site>;
+  release(props: { name: string, desc: string }): Promise<Site>;
 }
 
 export interface InitSession {

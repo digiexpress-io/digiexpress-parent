@@ -41,6 +41,8 @@ public class ServiceComposerImpl implements ServiceComposer {
   private Uni<ComposerState> getState() {
     return client.getQuery().head()
     .onItem().transform(state -> (ComposerState) ImmutableComposerState.builder()
+          .name(client.getConfig().getStore().getRepoName())
+          .contentType(SiteContentType.OK)
           .commit(state.getCommit())
           .commitMsg(state.getCommitMsg())
           .build())

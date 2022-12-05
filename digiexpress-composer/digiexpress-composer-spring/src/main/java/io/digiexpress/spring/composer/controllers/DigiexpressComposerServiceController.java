@@ -38,6 +38,8 @@ import io.digiexpress.client.api.ServiceComposer.CreateMigration;
 import io.digiexpress.client.api.ServiceComposer.MigrationState;
 import io.digiexpress.client.spi.ServiceComposerImpl;
 import io.digiexpress.spring.composer.config.UiConfigBean;
+import lombok.Data;
+import lombok.extern.jackson.Jacksonized;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -48,6 +50,12 @@ public class DigiexpressComposerServiceController {
   private final ServiceClient client;
   private final ServiceComposer composer;
   private static final Duration timeout = Duration.ofMillis(10000);
+  
+  
+  @Data @Jacksonized
+  public static class HeadCreate {
+    
+  }
   
   public DigiexpressComposerServiceController(ObjectMapper objectMapper, ApplicationContext ctx, ServiceClient client) {
     super();
@@ -68,10 +76,16 @@ public class DigiexpressComposerServiceController {
   }
   @PostMapping(path = "/" + UiConfigBean.API_MIGRATE, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   public MigrationState migrate(@RequestBody CreateMigration entity) {
-    return composer.create().migrate(entity).await().atMost(timeout);
+    return composer.create().migrate(entity).await().atMost(Duration.ofMillis(90000));
   }
   @GetMapping(path = "/" + UiConfigBean.API_STATE, produces = MediaType.APPLICATION_JSON_VALUE)
   public ServiceComposer.ComposerState head() {
     return composer.query().head().await().atMost(timeout);
+  }
+  @PostMapping(path = "/" + UiConfigBean.API_STATE, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ServiceComposer.ComposerState headCreate(HeadCreate create) {
+    return client.repo().create()
+        .onItem().transformToUni((_created) -> composer.query().head())
+        .await().atMost(timeout);
   }
 }

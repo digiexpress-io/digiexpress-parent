@@ -51,6 +51,7 @@ digiexpress.db.file.email: asset.manager@resys.io
 #     \password digiexpress
 #     password: example
 
+
 digiexpress.db.pg.enabled: true
 digiexpress.db.pg.autoCreate: true
 digiexpress.db.pg.repositoryName: "digiexpress-repo-1" 

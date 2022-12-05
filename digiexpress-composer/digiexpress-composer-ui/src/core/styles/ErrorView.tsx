@@ -6,8 +6,10 @@ import { Client } from '../context';
 
 
 const ErrorView: React.FC<{ error: Client.StoreError }> = ({ error }) => {
+  
+  console.log(error);
   const items: React.ReactNode[] = [];
-  for (let index = 0; index < error.errors.length; index++) {
+  for (let index = 0; index < error.errors?.length; index++) {
     const v = error.errors[index];
     
     items.push(<Box key={index}>

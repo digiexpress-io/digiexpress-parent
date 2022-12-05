@@ -71,7 +71,7 @@ public interface ServiceComposer {
     List<FormDocument> getForms();
     ServiceDefinitionDocument getServices();
     StoreState getHdes();
-    SiteState getStencil();    
+    SiteState getStencil();
   }
   @Value.Immutable @JsonSerialize(as = ImmutableMigrationState.class) @JsonDeserialize(as = ImmutableMigrationState.class)
   interface MigrationState {
