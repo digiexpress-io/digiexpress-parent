@@ -34,7 +34,7 @@ public class ServiceComposerImpl implements ServiceComposer {
       @Override public Uni<ServiceComposerState> head() { return client.getQuery().getRepos().onItem().transformToUni(parent::headState); }
     };
   }
-    
+
   private Uni<ServiceComposerState> headState(List<Repo> repos) { 
     final var created = repos.stream()
         .filter(repo -> 

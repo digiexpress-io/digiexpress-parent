@@ -39,38 +39,56 @@ public interface ServiceComposerState extends Serializable {
   enum SiteContentType { OK, ERRORS, NOT_CREATED  }
   
   @Value.Immutable @JsonSerialize(as = ImmutableMigrationState.class) @JsonDeserialize(as = ImmutableMigrationState.class)
-  interface MigrationState {
+  interface MigrationState extends Serializable {
 
   }
-  
 
-  
-  @Value.Immutable
-  @JsonSerialize(as = ImmutableComposerMessage.class)
-  @JsonDeserialize(as = ImmutableComposerMessage.class)
-  interface ComposerMessage {
+  @Value.Immutable @JsonSerialize(as = ImmutableComposerMessage.class) @JsonDeserialize(as = ImmutableComposerMessage.class)
+  interface ComposerMessage extends Serializable {
     String getId();
     String getValue();
     List<String> getArgs();
   }
   
-  @Value.Immutable
-  @JsonSerialize(as = ImmutableComposerHdes.class)
-  @JsonDeserialize(as = ImmutableComposerHdes.class)
-  interface ComposerHdes {
-    
-  }
-  @Value.Immutable
-  @JsonSerialize(as = ImmutableComposerDialob.class)
-  @JsonDeserialize(as = ImmutableComposerDialob.class)
-  interface ComposerDialob {
 
+  @Value.Immutable @JsonSerialize(as = ImmutableComposerHdes.class) @JsonDeserialize(as = ImmutableComposerHdes.class)
+  interface ComposerHdes extends Serializable {
+    ComposerHdesTag getHead();
+    Map<String, ComposerHdesTag> getTags();
   }
-  @Value.Immutable
-  @JsonSerialize(as = ImmutableComposerStencil.class)
-  @JsonDeserialize(as = ImmutableComposerStencil.class)
-  interface ComposerStencil {
-    
+  @Value.Immutable @JsonSerialize(as = ImmutableComposerHdesTag.class) @JsonDeserialize(as = ImmutableComposerHdesTag.class)
+  interface ComposerHdesTag extends Serializable {
+    String getId();
   }
   
+  
+  @Value.Immutable @JsonSerialize(as = ImmutableComposerStencil.class) @JsonDeserialize(as = ImmutableComposerStencil.class)
+  interface ComposerStencil extends Serializable {
+    ComposerStencilTag getHead();
+    Map<String, ComposerStencilTag> getTags();
+  }
+  @Value.Immutable @JsonSerialize(as = ImmutableComposerStencilTag.class) @JsonDeserialize(as = ImmutableComposerStencilTag.class)
+  interface ComposerStencilTag extends Serializable {
+    String getId();
+  }
+  
+  
+  @Value.Immutable @JsonSerialize(as = ImmutableComposerDialob.class) @JsonDeserialize(as = ImmutableComposerDialob.class)
+  interface ComposerDialob extends Serializable {
+    Map<String, ComposerDialobForm> getForms();
+    Map<String, ComposerDialobTag> getTags();
+    Map<String, ComposerDialobMeta> getMeta();
+  }
+  @Value.Immutable @JsonSerialize(as = ImmutableComposerDialobForm.class) @JsonDeserialize(as = ImmutableComposerDialobForm.class)
+  interface ComposerDialobForm extends Serializable {
+    String getId();
+  }
+  @Value.Immutable @JsonSerialize(as = ImmutableComposerDialobTag.class) @JsonDeserialize(as = ImmutableComposerDialobTag.class)
+  interface ComposerDialobTag extends Serializable {
+    String getId(); 
+  }
+  @Value.Immutable @JsonSerialize(as = ImmutableComposerDialobMeta.class) @JsonDeserialize(as = ImmutableComposerDialobMeta.class)
+  interface ComposerDialobMeta extends Serializable {
+    String getId();
+  }
 }
