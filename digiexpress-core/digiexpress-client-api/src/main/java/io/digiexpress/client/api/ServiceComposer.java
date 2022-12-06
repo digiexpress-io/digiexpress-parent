@@ -5,6 +5,7 @@ import io.digiexpress.client.api.ServiceComposerCommand.CreateProcess;
 import io.digiexpress.client.api.ServiceComposerCommand.CreateRelease;
 import io.digiexpress.client.api.ServiceComposerCommand.CreateServiceRevision;
 import io.digiexpress.client.api.ServiceComposerState.MigrationState;
+import io.digiexpress.client.api.ServiceComposerState.ServiceComposerDefinitionState;
 import io.digiexpress.client.api.ServiceDocument.ServiceDefinitionDocument;
 import io.digiexpress.client.api.ServiceDocument.ServiceReleaseDocument;
 import io.digiexpress.client.api.ServiceDocument.ServiceRevisionDocument;
@@ -16,6 +17,7 @@ public interface ServiceComposer {
   
   interface QueryBuilder {
     Uni<ServiceComposerState> head();
+    Uni<ServiceComposerDefinitionState> definition(String definitionId);
     Uni<ServiceComposerState> release(String releaseId);
   }
   

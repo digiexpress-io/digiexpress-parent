@@ -30,13 +30,20 @@ public interface ServiceComposerState extends Serializable {
   Map<String, ServiceDefinitionDocument> getDefinitions();
   Map<String, ServiceReleaseDocument> getReleases();
   Map<String, ServiceConfigDocument> getConfigs();
-
   List<ComposerMessage> getMessages();
-  ComposerDialob getDialob();
-  ComposerStencil getStencil();
-  ComposerHdes getHdes();
   
   enum SiteContentType { OK, ERRORS, NOT_CREATED  }
+
+
+  @Value.Immutable
+  @JsonSerialize(as = ImmutableServiceComposerState.class)
+  @JsonDeserialize(as = ImmutableServiceComposerState.class)
+  public interface ServiceComposerDefinitionState extends Serializable {
+    ServiceDefinitionDocument getDefinition();
+    ComposerDialob getDialob();
+    ComposerStencil getStencil();
+    ComposerHdes getHdes();
+  }
   
   @Value.Immutable @JsonSerialize(as = ImmutableMigrationState.class) @JsonDeserialize(as = ImmutableMigrationState.class)
   interface MigrationState extends Serializable {
@@ -53,7 +60,6 @@ public interface ServiceComposerState extends Serializable {
 
   @Value.Immutable @JsonSerialize(as = ImmutableComposerHdes.class) @JsonDeserialize(as = ImmutableComposerHdes.class)
   interface ComposerHdes extends Serializable {
-    ComposerHdesTag getHead();
     Map<String, ComposerHdesTag> getTags();
   }
   @Value.Immutable @JsonSerialize(as = ImmutableComposerHdesTag.class) @JsonDeserialize(as = ImmutableComposerHdesTag.class)
@@ -64,7 +70,6 @@ public interface ServiceComposerState extends Serializable {
   
   @Value.Immutable @JsonSerialize(as = ImmutableComposerStencil.class) @JsonDeserialize(as = ImmutableComposerStencil.class)
   interface ComposerStencil extends Serializable {
-    ComposerStencilTag getHead();
     Map<String, ComposerStencilTag> getTags();
   }
   @Value.Immutable @JsonSerialize(as = ImmutableComposerStencilTag.class) @JsonDeserialize(as = ImmutableComposerStencilTag.class)

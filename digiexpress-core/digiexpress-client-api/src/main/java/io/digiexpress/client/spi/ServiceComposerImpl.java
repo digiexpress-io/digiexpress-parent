@@ -4,11 +4,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import io.digiexpress.client.api.ImmutableComposerMessage;
+import io.digiexpress.client.api.ImmutableServiceComposerDefinitionState;
 import io.digiexpress.client.api.ImmutableServiceComposerState;
 import io.digiexpress.client.api.ServiceClient;
 import io.digiexpress.client.api.ServiceComposer;
 import io.digiexpress.client.api.ServiceComposerState;
+import io.digiexpress.client.api.ServiceComposerState.ServiceComposerDefinitionState;
 import io.digiexpress.client.api.ServiceComposerState.SiteContentType;
+import io.digiexpress.client.api.ServiceDocument.ServiceDefinitionDocument;
 import io.digiexpress.client.api.ServiceStore.StoreState;
 import io.digiexpress.client.spi.composer.ComposerCreateBuilderImpl;
 import io.digiexpress.client.spi.store.StoreException;
@@ -32,9 +35,16 @@ public class ServiceComposerImpl implements ServiceComposer {
     return new ServiceComposer.QueryBuilder() {
       @Override public Uni<ServiceComposerState> release(String releaseId) { return null; }
       @Override public Uni<ServiceComposerState> head() { return client.getQuery().getRepos().onItem().transformToUni(parent::headState); }
+      @Override public Uni<ServiceComposerDefinitionState> definition(String definitionId) { return client.getQuery().getServiceDef(definitionId).onItem().transformToUni(parent::defState); }
     };
   }
 
+  private Uni<ServiceComposerDefinitionState> defState(ServiceDefinitionDocument definition) {
+    return Uni.createFrom().item(ImmutableServiceComposerDefinitionState.builder()
+        .definition(definition)
+        .build());
+  }
+  
   private Uni<ServiceComposerState> headState(List<Repo> repos) { 
     final var created = repos.stream()
         .filter(repo -> 
