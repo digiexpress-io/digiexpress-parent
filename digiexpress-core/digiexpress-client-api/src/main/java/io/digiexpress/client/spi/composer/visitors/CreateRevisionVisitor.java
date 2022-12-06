@@ -10,7 +10,7 @@ import io.digiexpress.client.api.ImmutableServiceDefinitionDocument;
 import io.digiexpress.client.api.ImmutableServiceRevisionDocument;
 import io.digiexpress.client.api.ImmutableServiceRevisionValue;
 import io.digiexpress.client.api.ServiceClient;
-import io.digiexpress.client.api.ServiceComposer.CreateServiceRevision;
+import io.digiexpress.client.api.ServiceComposerCommand.CreateServiceRevision;
 import io.digiexpress.client.api.ServiceDocument;
 import io.digiexpress.client.api.ServiceDocument.ConfigType;
 import io.digiexpress.client.api.ServiceDocument.DocumentType;

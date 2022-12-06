@@ -29,6 +29,7 @@ import io.digiexpress.client.api.ServiceClient.Execution;
 import io.digiexpress.client.api.ServiceClient.ExecutionDialobBody;
 import io.digiexpress.client.api.ServiceClient.QuestionnaireStore;
 import io.digiexpress.client.api.ServiceComposer;
+import io.digiexpress.client.api.ServiceComposerCommand.CreateMigration;
 import io.digiexpress.client.api.ServiceEnvir;
 import io.digiexpress.client.spi.ServiceComposerImpl;
 import io.digiexpress.client.tests.migration.MigrationsDefaults;
@@ -202,7 +203,7 @@ public class TestCase {
     }
   }
   
-  public void writeOutput(ServiceComposer.CreateMigration migration) {
+  public void writeOutput(CreateMigration migration) {
     try {
       final var file = new File(MigrationsDefaults.folder + "output/ImmutableCreateMigration.json");
       file.createNewFile();
