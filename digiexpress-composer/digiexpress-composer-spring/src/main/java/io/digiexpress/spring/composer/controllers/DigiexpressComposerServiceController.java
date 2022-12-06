@@ -34,8 +34,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.digiexpress.client.api.ServiceClient;
 import io.digiexpress.client.api.ServiceComposer;
-import io.digiexpress.client.api.ServiceComposer.CreateMigration;
-import io.digiexpress.client.api.ServiceComposer.MigrationState;
+import io.digiexpress.client.api.ServiceComposerCommand.CreateMigration;
+import io.digiexpress.client.api.ServiceComposerState;
+import io.digiexpress.client.api.ServiceComposerState.MigrationState;
 import io.digiexpress.client.spi.ServiceComposerImpl;
 import io.digiexpress.spring.composer.config.UiConfigBean;
 import lombok.Data;
@@ -79,11 +80,11 @@ public class DigiexpressComposerServiceController {
     return composer.create().migrate(entity).await().atMost(Duration.ofMillis(90000));
   }
   @GetMapping(path = "/" + UiConfigBean.API_STATE, produces = MediaType.APPLICATION_JSON_VALUE)
-  public ServiceComposer.ComposerState head() {
+  public ServiceComposerState head() {
     return composer.query().head().await().atMost(timeout);
   }
   @PostMapping(path = "/" + UiConfigBean.API_STATE, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ServiceComposer.ComposerState headCreate(HeadCreate create) {
+  public ServiceComposerState headCreate(HeadCreate create) {
     return client.repo().create()
         .onItem().transformToUni((_created) -> composer.query().head())
         .await().atMost(timeout);
