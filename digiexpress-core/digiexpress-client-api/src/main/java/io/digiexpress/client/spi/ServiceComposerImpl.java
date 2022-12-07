@@ -68,9 +68,9 @@ public class ServiceComposerImpl implements ServiceComposer {
     final var mapper = client.getConfig().getMapper();
     final var configs = store.getConfigs().values().stream()
         .collect(Collectors.toMap(e -> e.getId(), mapper::toConfig));
-    final var revisions = store.getConfigs().values().stream()
+    final var revisions = store.getRevs().values().stream()
         .collect(Collectors.toMap(e -> e.getId(), mapper::toRev));
-    final var definitions = store.getConfigs().values().stream()
+    final var definitions = store.getDefs().values().stream()
         .collect(Collectors.toMap(e -> e.getId(), mapper::toDef));
     
     

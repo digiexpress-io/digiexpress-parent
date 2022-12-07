@@ -1,8 +1,12 @@
 export type EntityId = string;
+export type ServiceRevisionValueId = string;
+export type ServiceDefinitionDocumentId = string;
+export type ProcessValueId = string; 
 export type ProgramStatus = "UP" | "AST_ERROR" | "PROGRAM_ERROR" | "DEPENDENCY_ERROR";
 export type DocumentType = 'SERVICE_REV' | 'SERVICE_DEF' | 'SERVICE_CONFIG' | 'SERVICE_RELEASE';
 export type ConfigType = 'STENCIL' | 'DIALOB' | 'HDES' | 'SERVICE' | 'RELEASE';
 export type LocalDateTime = string;
+
 
 export interface AstCommand {
 
@@ -36,18 +40,45 @@ export interface ProgramMessage {
   msg: string;
 }
 export interface ServiceDocument {
-  id: string; // unique id
+  id: ServiceDefinitionDocumentId; // unique id
   version: string; // not really nullable, just in serialization
   created: string;
   updated: string;
   type: DocumentType;
 }
 
-export interface ServiceDefinitionDocument extends ServiceDocument {
+export interface ServiceRevisionValue {
+  id: ServiceRevisionValueId;
+  revisionName: string
+  defId: string;
+  created: string;
+  updated: string;
+}
 
+export interface RefIdValue {
+  id: string;
+  tagName: string;
+  repoId: string;
+  type: ConfigType;
+}
+
+export interface ProcessValue {
+  id: ProcessValueId;
+  name: string;
+  desc: string;
+  flowId: string
+  formId: string;
+}
+
+export interface ServiceDefinitionDocument extends ServiceDocument {
+  refs: RefIdValue[];
+  processes: ProcessValue[];
 }
 export interface ServiceRevisionDocument extends ServiceDocument {
-
+  head: ServiceRevisionValueId;
+  name: string;
+  values: ServiceRevisionValue[];
+  type: DocumentType;
 }
 export interface ServiceReleaseDocument extends ServiceDocument {
 

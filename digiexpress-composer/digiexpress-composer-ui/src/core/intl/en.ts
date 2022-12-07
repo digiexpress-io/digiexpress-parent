@@ -9,6 +9,7 @@ const en = {
   'init.loaded': 'Loaded repo: {name}',
   
   'activities.title': 'Activities',
+  'activities.desc': ' ',
   'activities.migration.title': 'Migrate',
   'activities.migration.desc': 'Migrate content from release or old format',
   
@@ -18,7 +19,20 @@ const en = {
   'project.dialog.requireProject.content': 'Looks like there is no project with name: "{name}"',
   
   'migrations.dialog.title': 'Migrate dialob, stencil, wrench, process data',
-  'migrations.dialog.select': 'Select file to upload'
+  'migrations.dialog.select': 'Select file to upload',
+  
+  'explorer.tabs.services': 'Services',
+  'explorer.tabs.search': 'Search...',
+  
+  'processValue.simulate.title': 'Simulate/Debug',
+  'processValue.copyas.title': 'Copy process with new name',
+  'processValue.delete.title': 'Delete',
+  'processValue.edit.title': 'Edit',
+  'processValue.options': 'Options',
+  'processValue.dialob': 'Dialob Form',
+  'processValue.hdes': 'Wrench Flow',
+  'processValue.stencil': 'Stencil Articles',
+  
 };
 
 export default en;

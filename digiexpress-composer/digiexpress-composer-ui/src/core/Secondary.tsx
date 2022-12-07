@@ -2,6 +2,7 @@ import React from 'react';
 import { Tabs, Tab, Box, TabProps, TabsProps, TextField, TextFieldProps, alpha } from '@mui/material';
 import { styled } from "@mui/material/styles";
 import { useIntl } from 'react-intl';
+import { ServicesExplorer } from './explorer';
 
 
 const TextFieldRoot = styled(TextField)<TextFieldProps>(({ theme }) => ({
@@ -52,18 +53,18 @@ const Secondary: React.FC<{}> = () => {
   const intl = useIntl();
   const getLabel = (id: string) => intl.formatMessage({ id });
 
-  const [tab, setTab] = React.useState("tabs.revs")
+  const [tab, setTab] = React.useState("tabs.services")
   const [searchString, setSearchString] = React.useState("");
 
   let component = <></>;
-//  if (tab === 'tabs.revs') {
-//    component = (<FormrevExplorer />)
-//  }
+  if (tab === 'tabs.services') {
+    component = (<ServicesExplorer />)
+  }
 
   return (<Box sx={{ backgroundColor: "explorer.main", height: '100%' }}>
     <Box display="flex" >
       <StyledTabs value={tab} onChange={(_event: any, value: string) => setTab(value)}>
-        <StyledTab label={getLabel("explorer.tabs.revs")} value='tabs.revs' />
+        <StyledTab label={getLabel("explorer.tabs.services")} value='tabs.services' />
       </StyledTabs>
       
       <Box alignSelf="center" sx={{ m: 1 }}>
