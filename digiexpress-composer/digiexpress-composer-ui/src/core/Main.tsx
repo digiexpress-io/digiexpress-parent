@@ -7,6 +7,7 @@ import Burger from '@the-wrench-io/react-burger';
 import Activities from './activities';
 import { Composer } from './context';
 
+import ComposerServices from './composer-services';
 import { Client } from './context';
 
 
@@ -35,8 +36,12 @@ const Main: React.FC<{}> = () => {
       return (<Box sx={root}><Activities /></Box>);
     } 
     
+    if(entity && entity.type === 'SERVICE_DEF') {
+      return <Box sx={root}><ComposerServices value={entity as Client.ServiceDefinitionDocument}/></Box>      
+    }
+    
     if (entity) {
-      return <Box sx={root}>entity editor</Box>
+      return <Box sx={root}>entity editor: {JSON.stringify(active)}</Box>
     }
     throw new Error("unknown view: " + JSON.stringify(active, null, 2));
 

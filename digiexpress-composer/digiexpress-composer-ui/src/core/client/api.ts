@@ -1,11 +1,12 @@
 export type EntityId = string;
 export type ServiceRevisionValueId = string;
-export type ServiceDefinitionDocumentId = string;
+export type ServiceDocumentId = string;
 export type ProcessValueId = string; 
 export type ProgramStatus = "UP" | "AST_ERROR" | "PROGRAM_ERROR" | "DEPENDENCY_ERROR";
 export type DocumentType = 'SERVICE_REV' | 'SERVICE_DEF' | 'SERVICE_CONFIG' | 'SERVICE_RELEASE';
 export type ConfigType = 'STENCIL' | 'DIALOB' | 'HDES' | 'SERVICE' | 'RELEASE';
 export type LocalDateTime = string;
+export type EntityType = DocumentType;
 
 
 export interface AstCommand {
@@ -40,7 +41,7 @@ export interface ProgramMessage {
   msg: string;
 }
 export interface ServiceDocument {
-  id: ServiceDefinitionDocumentId; // unique id
+  id: ServiceDocumentId; // unique id
   version: string; // not really nullable, just in serialization
   created: string;
   updated: string;
@@ -109,7 +110,7 @@ export interface Site {
 export interface Entity {
   id: EntityId;
   name?: string;
-  created: LocalDateTime;
+  type: EntityType
 }
 
 export interface ServiceErrorMsg {

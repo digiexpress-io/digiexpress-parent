@@ -4,6 +4,7 @@ const en = {
   'buttons.delete': "Delete",
   'button.cancel': "Cancel",
   'buttons.copy': "Copy",
+  'buttons.edit': "Edit",
   'buttons.download': "Download",
   
   'init.loaded': 'Loaded repo: {name}',
@@ -23,7 +24,13 @@ const en = {
   
   'explorer.tabs.services': 'Services',
   'explorer.tabs.search': 'Search...',
+
+  'explorer.services.headItem': "Project: {name}",
+  'explorer.services.headItem.info1': "Total services: {items}",
   
+  'tabs.services': 'Services', 
+  
+/*  
   'processValue.simulate.title': 'Simulate/Debug',
   'processValue.copyas.title': 'Copy process with new name',
   'processValue.delete.title': 'Delete',
@@ -32,6 +39,7 @@ const en = {
   'processValue.dialob': 'Dialob Form',
   'processValue.hdes': 'Wrench Flow',
   'processValue.stencil': 'Stencil Articles',
+  */
   
 };
 

@@ -13,7 +13,7 @@ import {
   ServiceConfigValue,
   SiteMigrate,
   
-  ProcessValue, RefIdValue, ProcessValueId, ServiceDefinitionDocumentId, 
+  ProcessValue, RefIdValue, ProcessValueId, ServiceDocumentId, 
 
   FormRevisionDocument, FormDocument, HdesState
 
@@ -24,7 +24,7 @@ import { DefaultStore, StoreConfig } from './store';
 
 declare namespace DigiexpressClient {
   export type {
-    ProcessValueId, ServiceDefinitionDocumentId, 
+    ProcessValueId, ServiceDocumentId, 
     AstCommand,
     ProcessValue, RefIdValue,
     ProgramStatus, ProgramMessage,

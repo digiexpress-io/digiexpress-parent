@@ -28,7 +28,7 @@ declare namespace Composer {
 
   interface PageUpdate {
     saved: boolean;
-    origin: Client.Entity;
+    origin: Client.ServiceDocument;
     value: Client.AstCommand[];
     withValue(value: Client.AstCommand): PageUpdate;
   }
@@ -36,13 +36,13 @@ declare namespace Composer {
 
   interface Session {
     site: Client.Site,
-    pages: Record<Client.EntityId, PageUpdate>;
+    pages: Record<Client.ServiceDocumentId, PageUpdate>;
 
-    getEntity(id: Client.EntityId): undefined | Client.Entity;
+    getEntity(id: Client.ServiceDocumentId): undefined | Client.ServiceDocument;
 
-    withPage(page: Client.EntityId): Session;
-    withPageValue(page: Client.EntityId, value: Client.AstCommand[]): Session;
-    withoutPages(pages: Client.EntityId[]): Session;
+    withPage(page: Client.ServiceDocumentId): Session;
+    withPageValue(page: Client.ServiceDocumentId, value: Client.AstCommand[]): Session;
+    withoutPages(pages: Client.ServiceDocumentId[]): Session;
 
     withSite(site: Client.Site): Session;
   }
@@ -50,8 +50,8 @@ declare namespace Composer {
   interface Actions {
     handleLoad(): Promise<void>;
     handleLoadSite(site?: Client.Site): Promise<void>;
-    handlePageUpdate(page: Client.EntityId, value: Client.AstCommand[]): void;
-    handlePageUpdateRemove(pages: Client.EntityId[]): void;
+    handlePageUpdate(page: Client.ServiceDocumentId, value: Client.AstCommand[]): void;
+    handlePageUpdateRemove(pages: Client.ServiceDocumentId[]): void;
   }
 
   interface ContextType {
@@ -64,7 +64,7 @@ declare namespace Composer {
 namespace Composer {
   const sessionData = new SessionData({});
 
-  export const createTab = (props: { nav: Composer.Nav, page?: Client.Entity }) => new ImmutableTabData(props);
+  export const createTab = (props: { nav: Composer.Nav, page?: Client.ServiceDocument }) => new ImmutableTabData(props);
 
   export const ComposerContext = React.createContext<ContextType>({
     session: sessionData,
@@ -72,19 +72,19 @@ namespace Composer {
     service: {} as Client.Service
   });
 
-  export const useUnsaved = (entity: Client.Entity) => {
+  export const useUnsaved = (entity: Client.ServiceDocument) => {
     const ide: ContextType = React.useContext(ComposerContext);
     return !isSaved(entity, ide);
   }
 
-  const isSaved = (entity: Client.Entity, ide: ContextType): boolean => {
+  const isSaved = (entity: Client.ServiceDocument, ide: ContextType): boolean => {
     const unsaved = Object.values(ide.session.pages).filter(p => !p.saved).filter(p => p.origin.id === entity.id);
     return unsaved.length === 0
   }
 
   export const useComposer = () => {
     const result: ContextType = React.useContext(ComposerContext);
-    const isArticleSaved = (entity: Client.Entity): boolean => isSaved(entity, result);
+    const isArticleSaved = (entity: Client.ServiceDocument): boolean => isSaved(entity, result);
 
     return {
       session: result.session, service: result.service, actions: result.actions, site: result.session.site,
@@ -105,7 +105,7 @@ namespace Composer {
     const layout = Burger.useTabs();
 
 
-    const handleInTab = (props: { article: Client.Entity, id?: string }) => {
+    const handleInTab = (props: { article: Client.ServiceDocument, name?: string, id?: string }) => {
       console.log("Route Into Tab", props.article.id, props.id)
       const id = props.id ? props.id : props.article.id
       const nav = { value: id };
@@ -113,7 +113,7 @@ namespace Composer {
       const icon = <ArticleTabIndicator entity={props.article} />;
       const tab: Composer.Tab = {
         id, icon,
-        label: props.article.name ? props.article.name : props.article.id,
+        label: props.name ? props.name : props.article.id,
         data: Composer.createTab({ nav })
       };
 
@@ -181,7 +181,7 @@ namespace Composer {
   }
 }
 
-const ArticleTabIndicator: React.FC<{ entity: Client.Entity }> = ({ entity }) => {
+const ArticleTabIndicator: React.FC<{ entity: Client.ServiceDocument }> = ({ entity }) => {
   const theme = useTheme();
   const { isArticleSaved } = Composer.useComposer();
   const saved = isArticleSaved(entity);

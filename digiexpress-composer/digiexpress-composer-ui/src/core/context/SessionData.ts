@@ -10,7 +10,7 @@ class SiteCache {
     
   }
 
-  getEntity(entityId: Client.EntityId): Client.Entity {
+  getEntity(entityId: Client.ServiceDocumentId): Client.ServiceDocument {
     /*
     if(entityId.startsWith("debug-fill/")) {
       entityId = entityId.substring(11);
@@ -24,6 +24,10 @@ class SiteCache {
     }
     */
     var entity = {} as any;
+    if(this._site.definitions[entityId]) {
+      entity = this._site.definitions[entityId];
+    }
+    
     console.log("Retrieving entity from session", entityId, entity);
     return entity;
   }
@@ -31,12 +35,12 @@ class SiteCache {
 
 class SessionData implements Composer.Session {
   private _site: Client.Site;
-  private _pages: Record<Client.EntityId, Composer.PageUpdate>;
+  private _pages: Record<Client.ServiceDocumentId, Composer.PageUpdate>;
   private _cache: SiteCache;
   
   constructor(props: {
     site?: Client.Site;
-    pages?: Record<Client.EntityId, Composer.PageUpdate>;
+    pages?: Record<Client.ServiceDocumentId, Composer.PageUpdate>;
     cache?: SiteCache;
   }) {
     this._site = props.site ? props.site : { name: "", contentType: "OK", revisions: {}, definitions: {}, configs: {}, releases: {} };
@@ -49,15 +53,15 @@ class SessionData implements Composer.Session {
   get pages() {
     return this._pages;
   }
-  getEntity(entityId: Client.EntityId): Client.Entity | undefined {
+  getEntity(entityId: Client.ServiceDocumentId): Client.ServiceDocument | undefined {
     return this._cache.getEntity(entityId);
   }
   withSite(site: Client.Site) {
     return new SessionData({ site: site, pages: this._pages });
   }
 
-  withoutPages(pageIds: Client.EntityId[]): Composer.Session {
-    const pages: Record<Client.EntityId, Composer.PageUpdate> = {};
+  withoutPages(pageIds: Client.ServiceDocumentId[]): Composer.Session {
+    const pages: Record<Client.ServiceDocumentId, Composer.PageUpdate> = {};
     for (const page of Object.values(this._pages)) {
       if (pageIds.includes(page.origin.id)) {
         continue;
@@ -66,7 +70,7 @@ class SessionData implements Composer.Session {
     }
     return new SessionData({ site: this._site, pages, cache: this._cache });
   }
-  withPage(page: Client.EntityId): Composer.Session {
+  withPage(page: Client.ServiceDocumentId): Composer.Session {
     if (this._pages[page]) {
       return this;
     }
@@ -94,12 +98,12 @@ class SessionData implements Composer.Session {
 
 class ImmutablePageUpdate implements Composer.PageUpdate {
   private _saved: boolean;
-  private _origin: Client.Entity;
+  private _origin: Client.ServiceDocument;
   private _value: Client.AstCommand[];
 
   constructor(props: {
     saved: boolean;
-    origin: Client.Entity;
+    origin: Client.ServiceDocument;
     value: Client.AstCommand[];
   }) {
     this._saved = props.saved;

@@ -10,14 +10,14 @@ enum ActionType {
 
 interface Action {
   type: ActionType;
-  setPageUpdateRemove?: {pages: Client.EntityId[]}
-  setPageUpdate?: { page: Client.EntityId, value: Client.AstCommand[] };
+  setPageUpdateRemove?: {pages: Client.ServiceDocumentId[]}
+  setPageUpdate?: { page: Client.ServiceDocumentId, value: Client.AstCommand[] };
   setSite?: { site: Client.Site };
 }
 
 const ActionBuilder = {
-  setPageUpdateRemove: (setPageUpdateRemove: { pages: Client.EntityId[] } ) => ({type: ActionType.setPageUpdateRemove, setPageUpdateRemove }),
-  setPageUpdate: (setPageUpdate: { page: Client.EntityId, value: Client.AstCommand[] }) => ({ type: ActionType.setPageUpdate, setPageUpdate }),
+  setPageUpdateRemove: (setPageUpdateRemove: { pages: Client.ServiceDocumentId[] } ) => ({type: ActionType.setPageUpdateRemove, setPageUpdateRemove }),
+  setPageUpdate: (setPageUpdate: { page: Client.ServiceDocumentId, value: Client.AstCommand[] }) => ({ type: ActionType.setPageUpdate, setPageUpdate }),
   setSite: (setSite: { site: Client.Site }) => ({ type: ActionType.setSite, setSite })
 }
 
