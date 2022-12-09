@@ -1,3 +1,3 @@
-import ComposerServices from './ComposerServices';
+import Composer from './Composer';
 
-export default ComposerServices;
+export default Composer;

@@ -30,6 +30,8 @@ const en = {
   
   'tabs.services': 'Services', 
   
+  'composer.services.processName': 'Process name',
+  'composer.services.version': 'stencil: {stencil}, wrench: {hdes}, version: {version}'
 /*  
   'processValue.simulate.title': 'Simulate/Debug',
   'processValue.copyas.title': 'Copy process with new name',
