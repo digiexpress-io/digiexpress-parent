@@ -4,10 +4,12 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import io.dialob.client.api.DialobDocument.FormDocument;
+import io.dialob.client.api.DialobDocument.FormRevisionDocument;
 import io.digiexpress.client.api.ImmutableFlowDocument;
 import io.digiexpress.client.api.QueryFactory;
 import io.digiexpress.client.api.ServiceClient.ServiceClientConfig;
@@ -60,6 +62,31 @@ public class QueryFactoryImpl implements QueryFactory {
   @Override
   public Uni<List<Repo>> getRepos() {
     return config.getDocDb().repo().query().find().collect().asList();
+  }
+  @Override
+  public Uni<FormRevisionDocument> getFormRev(String formId) {
+    final var mapper = config.getDialob().getConfig().getMapper();
+    return config.getDialob().getConfig().getStore()
+        .query().get()
+        .onItem().transform(state -> {
+          final Optional<FormRevisionDocument> result = state.getRevs().values().stream().map(mapper::toFormRevDoc)
+          .filter(rev -> {
+            if(rev.getId().equals(formId) || rev.getName().equals(formId)) {
+              return true;
+            }
+            final var containsEntry = rev.getEntries().stream()
+                .filter((e) -> 
+                    e.getFormId().equals(formId) || 
+                    e.getRevisionName().equals(formId) || 
+                    formId.equals(e.getId())  
+                ).findFirst().isPresent();
+            return containsEntry;
+          })
+          .findFirst();
+          
+          ServiceAssert.isTrue(result.isPresent(), () -> "Can't find form rev by id or name: '" + formId + "'!");
+          return result.get();
+        });
   }
   @Override
   public Uni<FormDocument> getForm(String formId) {

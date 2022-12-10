@@ -2763,6 +2763,70 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@projectstorm/geometry@npm:^6.7.4":
+  version: 6.7.4
+  resolution: "@projectstorm/geometry@npm:6.7.4"
+  checksum: 373ebc9a4016a9dcae8409c39e20238c321c7975b6bea88fbb0c34e2c8328a20c0dfdc09182d7dd0da60642d3fc1c9de26c2733be6b1e8fd223e1b5ba9ea6180
+  languageName: node
+  linkType: hard
+
+"@projectstorm/react-canvas-core@npm:^6.7.4":
+  version: 6.7.4
+  resolution: "@projectstorm/react-canvas-core@npm:6.7.4"
+  dependencies:
+    "@projectstorm/geometry": ^6.7.4
+  peerDependencies:
+    lodash: 4.*
+    react: 16.* || 17.*
+  checksum: 426c62306d089b1279c0dc741f4e8682bdb2e4e240cbb3d8a36bcfd3e970f6bbc0f95e94479fe5cc2959a141cefcd8a2ce80f3304025d38d461caef5907c7848
+  languageName: node
+  linkType: hard
+
+"@projectstorm/react-diagrams-core@npm:^6.7.4":
+  version: 6.7.4
+  resolution: "@projectstorm/react-diagrams-core@npm:6.7.4"
+  dependencies:
+    "@projectstorm/geometry": ^6.7.4
+    "@projectstorm/react-canvas-core": ^6.7.4
+  peerDependencies:
+    lodash: 4.*
+    react: 18.*
+    resize-observer-polyfill: ^1.5.1
+  checksum: c66fc1bef1835fadde27ebad1018d9ee5ba8616c4cebd7c96526c34d7b19cd2672e55effe3d2a3ddf67d6d4123de005ab4ba9159b059c092f866b8fbcd6e2355
+  languageName: node
+  linkType: hard
+
+"@projectstorm/react-diagrams-defaults@npm:^6.7.4":
+  version: 6.7.4
+  resolution: "@projectstorm/react-diagrams-defaults@npm:6.7.4"
+  dependencies:
+    "@projectstorm/react-diagrams-core": ^6.7.4
+  peerDependencies:
+    "@emotion/react": ^11.*
+    "@emotion/styled": ^11.*
+    lodash: 4.*
+    react: 18.*
+  checksum: 5b4f75fa660bb3ae39ecd2557f57a168a14738de2e3d7fb7e6a955c81207e8ab61ef0e79b98f8c3c1f5a665e1e98d98f83415c7825e76f3afbde528c940e207a
+  languageName: node
+  linkType: hard
+
+"@projectstorm/react-diagrams-routing@npm:^6.7.4":
+  version: 6.7.4
+  resolution: "@projectstorm/react-diagrams-routing@npm:6.7.4"
+  dependencies:
+    "@projectstorm/geometry": ^6.7.4
+    "@projectstorm/react-diagrams-core": ^6.7.4
+    "@projectstorm/react-diagrams-defaults": ^6.7.4
+  peerDependencies:
+    dagre: ^0.8.5
+    lodash: 4.*
+    pathfinding: ^0.4.18
+    paths-js: ^0.4.11
+    react: 18.*
+  checksum: 96b5f4dccb662f2c5919a59a6d4750e9c153f0d57cd642bb1f818ab1d50cf151859130feec53df7378c811d327fb4fd60616d07feff25426cc70694e37390504
+  languageName: node
+  linkType: hard
+
 "@rollup/plugin-babel@npm:^5.2.0":
   version: 5.3.1
   resolution: "@rollup/plugin-babel@npm:5.3.1"
@@ -5606,6 +5670,11 @@ __metadata:
     "@mui/material": ^5.0.1
     "@mui/styles": ^5.0.1
     "@mui/system": ^5.0.1
+    "@projectstorm/geometry": ^6.7.4
+    "@projectstorm/react-canvas-core": ^6.7.4
+    "@projectstorm/react-diagrams-core": ^6.7.4
+    "@projectstorm/react-diagrams-defaults": ^6.7.4
+    "@projectstorm/react-diagrams-routing": ^6.7.4
     "@the-wrench-io/react-burger": ^1.0.39
     "@types/node": ^12.19.9
     "@types/react": ^17.0.1

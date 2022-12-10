@@ -14,27 +14,9 @@ export interface AstCommand {
 }
 
 export interface SiteMigrate {
-  formRevs: FormRevisionDocument[];
-  forms: FormDocument[];
-  services: ServiceDefinitionDocument;
-  hdes: HdesState;
-  stencil: StencilState;
+  
 }
 
-export interface FormRevisionDocument {
-
-}
-
-export interface FormDocument {
-
-}
-export interface HdesState {
-
-}
-
-export interface StencilState {
-
-}
 
 export interface ProgramMessage {
   id: string;
@@ -107,6 +89,20 @@ export interface Site {
   configs: Record<string, ServiceConfigDocument>
 }
 
+export interface SiteDefinition {
+  definition: ServiceDefinitionDocument;
+  dialob: ComposerDialob;
+  stencil: ComposerStencil;
+  hdes: ComposerHdes;
+}
+
+export interface ComposerDialob { 
+}
+export interface ComposerStencil { 
+}
+export interface ComposerHdes { 
+}
+
 export interface Entity {
   id: EntityId;
   name?: string;
@@ -145,6 +141,7 @@ export interface Service {
   getSite(): Promise<Site>
   copy(id: string, name: string): Promise<Site>
   head(): Promise<Site>
+  definition(id: ServiceDocumentId): Promise<SiteDefinition>
 }
 export interface StoreConfig {
   url: string;

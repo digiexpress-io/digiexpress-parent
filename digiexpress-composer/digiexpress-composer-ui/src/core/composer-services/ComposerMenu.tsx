@@ -1,6 +1,6 @@
 import React from "react";
 import {
-  Box, Typography, styled,
+  Box, Typography, styled, Divider,
   AppBar, Toolbar, IconButton, Badge, InputBase, BadgeProps
 } from "@mui/material";
 
@@ -93,7 +93,6 @@ const ComposerMenu: React.FC<{ value: Client.ServiceDefinitionDocument }> = ({ v
           </StyledBadge>
         </IconButton>
       </Box>
-
 
     </Toolbar>
   </AppBar>);

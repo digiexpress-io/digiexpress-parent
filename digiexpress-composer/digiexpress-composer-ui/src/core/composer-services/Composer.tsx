@@ -18,11 +18,16 @@ import ProcessCard from './ProcessCard';
 const ComposerServices: React.FC<{ value: Client.ServiceDefinitionDocument }> = ({ value }) => {
   const intl = useIntl();
   const nav = Composer.useNav();
-  const { } = Composer.useSite();
+  const service = Composer.useService();
+  const [state, setState] = React.useState<Client.SiteDefinition>();
+  const { id } = value; 
 
+  React.useEffect(() => {
+    service.definition(id).then(setState);
+  }, [id]);
 
   return (
-    <Box>
+    <Box sx={{ backgroundColor: 'mainContent.main' }}>
       <ComposerMenu value={value}/>
       <Box sx={{ width: '40%', ml: 2, mr: 2 }}>
         <Stack spacing={2}>

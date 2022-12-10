@@ -25,6 +25,7 @@ import java.time.Duration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,6 +38,7 @@ import io.digiexpress.client.api.ServiceComposer;
 import io.digiexpress.client.api.ServiceComposerCommand.CreateMigration;
 import io.digiexpress.client.api.ServiceComposerState;
 import io.digiexpress.client.api.ServiceComposerState.MigrationState;
+import io.digiexpress.client.api.ServiceComposerState.ServiceComposerDefinitionState;
 import io.digiexpress.client.spi.ServiceComposerImpl;
 import io.digiexpress.spring.composer.config.UiConfigBean;
 import lombok.Data;
@@ -79,11 +81,15 @@ public class DigiexpressComposerServiceController {
   public MigrationState migrate(@RequestBody CreateMigration entity) {
     return composer.create().migrate(entity).await().atMost(Duration.ofMillis(90000));
   }
-  @GetMapping(path = "/" + UiConfigBean.API_STATE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(path = "/" + UiConfigBean.API_HEAD, produces = MediaType.APPLICATION_JSON_VALUE)
   public ServiceComposerState head() {
     return composer.query().head().await().atMost(timeout);
   }
-  @PostMapping(path = "/" + UiConfigBean.API_STATE, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(path = "/" + UiConfigBean.API_DEF + "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ServiceComposerDefinitionState def(@PathVariable String id) {
+    return composer.query().definition(id).await().atMost(timeout);
+  }
+  @PostMapping(path = "/" + UiConfigBean.API_HEAD, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   public ServiceComposerState headCreate(HeadCreate create) {
     return client.repo().create()
         .onItem().transformToUni((_created) -> composer.query().head())

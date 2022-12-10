@@ -159,7 +159,7 @@ public class DialobMigrationVisitor {
       for(final var entry : rev.getEntries()) {
         final var status = forms.containsKey(entry.getFormId()) ? "OK" : "MISSING";
         summary.addRow(rev.getId(), entry.getRevisionName(), entry.getCreated(), entry.getFormId(), status);
-        if(status.equals("OK")) {
+        if(forms.containsKey(entry.getFormId())) {
           entries.add(entry);
           cleanedForms.add(forms.get(entry.getFormId()));
         }

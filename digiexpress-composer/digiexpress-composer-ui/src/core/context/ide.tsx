@@ -91,7 +91,10 @@ namespace Composer {
       isArticleSaved
     };
   }
-
+  export const useService = () => {
+    const result: ContextType = React.useContext(ComposerContext);
+    return result.service;
+  }
   export const useSite = () => {
     const result: ContextType = React.useContext(ComposerContext);
     return result.session.site;

@@ -6,6 +6,8 @@ import {
   AstCommand,
   DocumentType, ConfigType,
   ServiceDocument,
+  
+  SiteDefinition,
   ServiceDefinitionDocument,
   ServiceRevisionDocument,
   ServiceReleaseDocument,
@@ -15,7 +17,6 @@ import {
   
   ProcessValue, RefIdValue, ProcessValueId, ServiceDocumentId, 
 
-  FormRevisionDocument, FormDocument, HdesState
 
 } from "./api";
 
@@ -32,8 +33,8 @@ declare namespace DigiexpressClient {
     CreateBuilder, DeleteBuilder, InitSession,
     ServiceErrorMsg, ServiceErrorProps, Service, Store, StoreError, StoreConfig,
     SiteMigrate, 
-    DocumentType, ConfigType,
-    FormRevisionDocument, FormDocument, HdesState,
+    DocumentType, ConfigType, SiteDefinition,
+    
     ServiceDocument,
     ServiceDefinitionDocument,
     ServiceRevisionDocument,
@@ -73,6 +74,9 @@ namespace DigiexpressClient {
       };
       
       return { site, migrate, release };
+    }
+    definition(id: ServiceDocumentId): Promise<DigiexpressClient.SiteDefinition> {
+      return this._store.fetch<DigiexpressClient.SiteDefinition>(`def/${id}`); 
     }
     delete(): DigiexpressClient.DeleteBuilder {
       return {} as any;

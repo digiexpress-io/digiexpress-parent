@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.dialob.client.api.DialobDocument.FormDocument;
+import io.dialob.client.api.DialobDocument.FormRevisionDocument;
 import io.digiexpress.client.api.ServiceDocument.ServiceConfigDocument;
 import io.digiexpress.client.api.ServiceDocument.ServiceDefinitionDocument;
 import io.digiexpress.client.api.ServiceDocument.ServiceRevisionDocument;
@@ -21,6 +22,7 @@ import io.thestencil.client.api.MigrationBuilder.Sites;
 public interface QueryFactory {
   Uni<StoreState> head();
   Uni<List<Repo>> getRepos();
+  Uni<FormRevisionDocument> getFormRev(String formId);
   Uni<FormDocument> getForm(String formId);
   Uni<ServiceConfigDocument> getConfigDoc();
   Uni<ServiceRevisionDocument> getServiceRevision(String id);
