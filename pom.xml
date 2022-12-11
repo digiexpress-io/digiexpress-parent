@@ -80,11 +80,11 @@
   </properties>
 
   <modules>
-    <module>digiexpress-bom</module>
-    <module>digiexpress-build-parent</module>
-    <module>digiexpress-core</module>
-    <module>digiexpress-composer</module>
-    <module>digiexpress-dev</module>
+    <module>bom</module>
+    <module>build-parent</module>
+    <module>core</module>
+    <module>composer</module>
+    <module>dev</module>
   </modules>
 
   <profiles>

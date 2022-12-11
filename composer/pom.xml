@@ -14,9 +14,9 @@
 
   <modules>
   <!-- 
-    <module>digiexpress-composer-ui</module>
+    <module>composer-ui</module>
      -->
-    <module>digiexpress-composer-spring</module>
+    <module>composer-spring</module>
   </modules>
 
 

@@ -14,7 +14,7 @@
   <packaging>pom</packaging>
 
   <modules>
-    <module>digiexpress-client-api</module>
+    <module>client-api</module>
   </modules>
 
 </project>
