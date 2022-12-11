@@ -8,39 +8,39 @@ import org.ehcache.config.builders.CacheConfigurationBuilder;
 import org.ehcache.config.builders.CacheManagerBuilder;
 import org.ehcache.config.builders.ResourcePoolsBuilder;
 
-import io.digiexpress.client.api.ServiceCache;
-import io.digiexpress.client.api.ServiceDocument.ConfigType;
+import io.digiexpress.client.api.ClientCache;
+import io.digiexpress.client.api.ClientEntity.ConfigType;
 import io.digiexpress.client.api.ServiceEnvir.ServiceProgram;
 import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
-public class ServiceEhCache implements ServiceCache {
-  private static final String CACHE_PREFIX = ServiceCache.class.getCanonicalName();
+public class ClientEhCache implements ClientCache {
+  private static final String CACHE_PREFIX = ClientCache.class.getCanonicalName();
   private final CacheManager cacheManager;
   private final String cacheName;
   
-  private ServiceEhCache(CacheManager cacheManager, String cacheName) {
+  private ClientEhCache(CacheManager cacheManager, String cacheName) {
     super();
     this.cacheManager = cacheManager;
     this.cacheName = cacheName;
   }
   private Cache<String, CacheEntry> getCache() {
-    return cacheManager.getCache(cacheName, String.class, ServiceCache.CacheEntry.class);
+    return cacheManager.getCache(cacheName, String.class, ClientCache.CacheEntry.class);
   }
   
   @Override
-  public ServiceEhCache withName(String name) {
+  public ClientEhCache withName(String name) {
     final var cacheName = createName(name);
     final var cacheHeap = 500;
     final var cacheManager = CacheManagerBuilder.newCacheManagerBuilder() 
         .withCache(cacheName,
             CacheConfigurationBuilder.newCacheConfigurationBuilder(
-                String.class, ServiceCache.CacheEntry.class, 
+                String.class, ClientCache.CacheEntry.class, 
                 ResourcePoolsBuilder.heap(cacheHeap))) 
         .build(); 
     cacheManager.init();
-    return new ServiceEhCache(cacheManager, cacheName);
+    return new ClientEhCache(cacheManager, cacheName);
   }
   
   public static Builder builder() {
@@ -48,18 +48,18 @@ public class ServiceEhCache implements ServiceCache {
   }
   
   public static class Builder {
-    public ServiceEhCache build(String name) {
+    public ClientEhCache build(String name) {
       final var cacheName = createName(name);
       final var cacheHeap = 500;
       final var cacheManager = CacheManagerBuilder.newCacheManagerBuilder() 
           .withCache(cacheName,
               CacheConfigurationBuilder.newCacheConfigurationBuilder(
-                  String.class, ServiceCache.CacheEntry.class, 
+                  String.class, ClientCache.CacheEntry.class, 
                   ResourcePoolsBuilder.heap(cacheHeap))) 
           .build(); 
       cacheManager.init();
       
-      return new ServiceEhCache(cacheManager, cacheName);
+      return new ClientEhCache(cacheManager, cacheName);
     }
   }
   

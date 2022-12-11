@@ -5,9 +5,9 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import io.digiexpress.client.api.ImmutableServiceReleaseDocument;
-import io.digiexpress.client.api.ServiceClient.ServiceClientConfig;
-import io.digiexpress.client.api.ServiceDocument.ServiceReleaseDocument;
+import io.digiexpress.client.api.Client.ClientConfig;
+import io.digiexpress.client.api.ClientEntity.ServiceRelease;
+import io.digiexpress.client.api.ImmutableServiceRelease;
 import io.digiexpress.client.api.ServiceEnvir.ProgramMessage;
 import io.digiexpress.client.api.ServiceEnvir.ServiceProgramRel;
 import io.digiexpress.client.api.ServiceEnvir.ServiceProgramSource;
@@ -23,7 +23,7 @@ public class ServiceProgramRelImpl implements ServiceProgramRel {
   private final ServiceProgramSource source;
   private ServiceProgramStatus status = ServiceProgramStatus.CREATED;
   @JsonIgnore
-  private transient ServiceReleaseDocument delegate;
+  private transient ServiceRelease delegate;
 
   public ServiceProgramRelImpl(ServiceProgramSource source) {
     super();
@@ -32,12 +32,12 @@ public class ServiceProgramRelImpl implements ServiceProgramRel {
   }
   
   @Override
-  public ServiceReleaseDocument getDelegate(ServiceClientConfig config) {
+  public ServiceRelease getDelegate(ClientConfig config) {
     if(this.delegate == null) {
-      var service = config.getCompression().decompressionRelease(source.getBody());
+      var service = config.getArchiver().decompressionRelease(source.getBody());
       if(service.getId() == null) {
         log.warn(String.format("release has no id: '{}', using source id and and hash", service.getName()));
-        service = ImmutableServiceReleaseDocument.builder().from(service).id(source.getId()).version(source.getHash()).build();
+        service = ImmutableServiceRelease.builder().from(service).id(source.getId()).version(source.getHash()).build();
       }
       
       this.delegate = service;

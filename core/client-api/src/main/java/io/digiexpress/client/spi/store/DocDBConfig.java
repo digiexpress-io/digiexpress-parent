@@ -4,10 +4,10 @@ import java.util.Collection;
 
 import org.immutables.value.Value;
 
-import io.digiexpress.client.api.ServiceMapper;
-import io.digiexpress.client.api.ServiceStore.GidProvider;
-import io.digiexpress.client.api.ServiceStore.StoreEntity;
-import io.digiexpress.client.api.ServiceStore.StoreState;
+import io.digiexpress.client.api.ClientStore.StoreEntity;
+import io.digiexpress.client.api.ClientStore.StoreGid;
+import io.digiexpress.client.api.ClientStore.StoreState;
+import io.digiexpress.client.api.Parser;
 import io.resys.thena.docdb.api.DocDB;
 import io.resys.thena.docdb.api.actions.ObjectsActions.BlobObject;
 import io.resys.thena.docdb.api.actions.ObjectsActions.ObjectsResult;
@@ -16,41 +16,41 @@ import io.smallrye.mutiny.Uni;
 
 
 @Value.Immutable
-public interface ServiceStoreConfig {
+public interface DocDBConfig {
   DocDB getClient();
+  DocDBAuthorProvider getAuthorProvider();
+  DocDBSerializer getSerializer();
+  DocDBDeserializer getDeserializer();
+  
   String getRepoName();
   String getHeadName();
-  AuthorProvider getAuthorProvider();
-  GidProvider getGidProvider();
-  ServiceMapper getMapper();
-  
+  StoreGid getGid();
+  Parser getParser();
+
+
   @FunctionalInterface
-  interface Serializer {
+  interface DocDBSerializer {
     String toString(StoreEntity entity);
   }
-  
-  interface Deserializer {
+  @FunctionalInterface  
+  interface DocDBDeserializer {
     StoreEntity fromString(Blob value);
   }
-  Serializer getSerializer();
-  Deserializer getDeserializer();
-  
   @FunctionalInterface
-  interface AuthorProvider {
+  interface DocDBAuthorProvider {
     String getAuthor();
   }
-  
-  @Value.Immutable
-  interface EntityState {
-    ObjectsResult<BlobObject> getSrc();
-    StoreEntity getEntity();
-  }
-  
-  interface Commands {
+  interface DocDBCommands {
     Uni<StoreEntity> delete(StoreEntity toBeDeleted);
     Uni<StoreState> get();
-    Uni<EntityState> getEntityState(String id);
+    Uni<StoreEntityState> getState(String id);
     Uni<StoreEntity> save(StoreEntity toBeSaved);
     Uni<Collection<StoreEntity>> save(Collection<StoreEntity> toBeSaved);
   }
+  
+  @Value.Immutable
+  interface StoreEntityState {
+    ObjectsResult<BlobObject> getBlob();
+    StoreEntity getEntity();
+  } 
 }

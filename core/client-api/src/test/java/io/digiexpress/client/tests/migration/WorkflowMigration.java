@@ -7,10 +7,10 @@ import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.digiexpress.client.api.ImmutableProcessValue;
-import io.digiexpress.client.api.ImmutableServiceDefinitionDocument;
-import io.digiexpress.client.api.ServiceDocument.ProcessValue;
-import io.digiexpress.client.api.ServiceDocument.ServiceDefinitionDocument;
+import io.digiexpress.client.api.ClientEntity.ServiceDefinition;
+import io.digiexpress.client.api.ClientEntity.ServiceDescriptor;
+import io.digiexpress.client.api.ImmutableServiceDefinition;
+import io.digiexpress.client.api.ImmutableServiceDescriptor;
 import io.digiexpress.client.spi.support.ServiceAssert;
 import io.digiexpress.client.tests.migration.DialobMigration.FormsAndRevs;
 import io.digiexpress.client.tests.migration.HdesMigration.HdesState;
@@ -37,7 +37,7 @@ public class WorkflowMigration {
     private LocalDateTime updated;
   }
   
-  public ServiceDefinitionDocument execute(HdesState hdes, FormsAndRevs dialob) {
+  public ServiceDefinition execute(HdesState hdes, FormsAndRevs dialob) {
     final var dir = new File(src);
     ServiceAssert.isTrue(dir.isDirectory() && dir.canRead() && dir.exists(), () -> src + " must be a directory with *workflows.json-s");
     final var files = dir.listFiles((file, name) -> name.endsWith(".json"));
@@ -59,10 +59,10 @@ public class WorkflowMigration {
     log.info("Reading workflows from: '" + src + "', found: " + files.length + summary_workflows.toString());
 
     final var summary_service = MigrationsDefaults.summary("workflow name", "form id", "flow id", "status");
-    final List<ProcessValue> processes = new ArrayList<>();
+    final List<ServiceDescriptor> processes = new ArrayList<>();
     for(final var workflow : workflows) {
       try {
-        final var processValue = ImmutableProcessValue.builder()
+        final var processValue = ImmutableServiceDescriptor.builder()
           .id(workflow.getId())
           .name(workflow.getName())
           .desc("")
@@ -81,10 +81,11 @@ public class WorkflowMigration {
     log.info("Creating services from: '" + src + "', found workflows: " + workflows.size() + summary_service.toString());
 
     
-    return ImmutableServiceDefinitionDocument.builder()
+    return ImmutableServiceDefinition.builder()
+        .projectId("")
         .created(LocalDateTime.now())
         .updated(LocalDateTime.now())
-        .processes(processes)
+        .descriptors(processes)
         .build();
   }
   

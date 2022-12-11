@@ -5,26 +5,26 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import io.digiexpress.client.api.ServiceClient.ServiceClientException;
-import io.digiexpress.client.api.ServiceDocument;
+import io.digiexpress.client.api.Client.ServiceClientException;
+import io.digiexpress.client.api.ClientEntity;
 
 
 
 public class ConstraintException extends RuntimeException implements ServiceClientException {
   private static final long serialVersionUID = 7190168525508589141L;
   
-  private final List<ServiceDocument> entity = new ArrayList<>();
+  private final List<ClientEntity> entity = new ArrayList<>();
   
-  public ConstraintException(ServiceDocument entity, String msg) {
+  public ConstraintException(ClientEntity entity, String msg) {
     super(msg(Arrays.asList(entity), msg));
     this.entity.add(entity);
   }
   
-  public List<ServiceDocument> getEntity() {
+  public List<ClientEntity> getEntity() {
     return entity;
   }
   
-  private static String msg(List<ServiceDocument> entity, String msg) {
+  private static String msg(List<ClientEntity> entity, String msg) {
     StringBuilder messages = new StringBuilder()
       .append(System.lineSeparator())
       .append("  - ").append(msg);

@@ -7,9 +7,9 @@ import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import io.digiexpress.client.api.ServiceClient;
-import io.digiexpress.client.api.ServiceStore;
-import io.digiexpress.client.spi.ServiceClientImpl;
+import io.digiexpress.client.api.Client;
+import io.digiexpress.client.api.ClientStore;
+import io.digiexpress.client.spi.ClientImpl;
 import io.resys.thena.docdb.api.DocDB;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.spi.ClientCollections;
@@ -21,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TestCaseBuilder {
   public final ObjectMapper objectMapper;
-  private final ServiceClient client;
+  private final Client client;
   private final DocDB doc;
   private final ClientState docState;
   private TestCaseReader testCaseReader;
@@ -30,7 +30,7 @@ public class TestCaseBuilder {
     this.objectMapper = new ObjectMapper().registerModules(new JavaTimeModule(), new Jdk8Module(), new GuavaModule());
     this.doc = getClient(pgPool, "junit");
     this.docState = DocDBFactorySql.state(ClientCollections.defaults("junit"), pgPool, new PgErrors());
-    this.client = ServiceClientImpl.builder()
+    this.client = ClientImpl.builder()
         .om(objectMapper)
         .defaultDialobEventPub()
         .defaultDialobFr()
@@ -53,7 +53,7 @@ public class TestCaseBuilder {
     return this.testCaseReader;
   }
   
-  public String print(ServiceStore store) {
+  public String print(ClientStore store) {
     doc.repo().query().find().collect().asList().await().atMost(Duration.ofMinutes(1))
     .forEach(e -> log.info("queried repo: " + e));
     
@@ -65,7 +65,7 @@ public class TestCaseBuilder {
   private DocDB getClient(io.vertx.mutiny.pgclient.PgPool pgPool, String db) {
     return DocDBFactorySql.create().client(pgPool).db(db).errorHandler(new PgErrors()).build();
   }
-  public ServiceClient getClient() {
+  public Client getClient() {
     return client;
   }
 }

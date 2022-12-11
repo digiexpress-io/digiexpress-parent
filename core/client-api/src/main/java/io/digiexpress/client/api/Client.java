@@ -8,7 +8,7 @@ import org.immutables.value.Value;
 
 import io.dialob.api.questionnaire.Questionnaire;
 import io.dialob.client.api.DialobClient;
-import io.digiexpress.client.api.ServiceDocument.ServiceReleaseDocument;
+import io.digiexpress.client.api.ClientEntity.ServiceRelease;
 import io.resys.hdes.client.api.HdesClient;
 import io.resys.hdes.client.api.programs.FlowProgram.FlowResult;
 import io.resys.thena.docdb.api.DocDB;
@@ -16,11 +16,11 @@ import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.MigrationBuilder.LocalizedSite;
 import io.thestencil.client.api.StencilClient;
 
-public interface ServiceClient {
+public interface Client {
   ServiceEnvirBuilder envir();
-  ServiceRepoBuilder repo();
+  TenantBuilder repo();
   ServiceExecutorBuilder executor(ServiceEnvir envir);
-  ServiceClientConfig getConfig();
+  ClientConfig getConfig();
   QueryFactory getQuery();
   
   interface ServiceClientException {}
@@ -79,15 +79,15 @@ public interface ServiceClient {
     FlowResult getFlow();
   }
 
-  interface ServiceRepoBuilder {
-    ServiceRepoBuilder repoStencil(String repoStencil);
-    ServiceRepoBuilder repoHdes(String repoHdes);
-    ServiceRepoBuilder repoDialob(String repoDialob);
-    ServiceRepoBuilder repoService(String repoService);
+  interface TenantBuilder {
+    TenantBuilder repoStencil(String repoStencil);
+    TenantBuilder repoHdes(String repoHdes);
+    TenantBuilder repoDialob(String repoDialob);
+    TenantBuilder repoProject(String repoService);
 
-    Uni<ServiceClient> load();
-    Uni<ServiceClient> create();
-    ServiceClient build();
+    Uni<Client> load();
+    Uni<Client> create();
+    Client build();
   }
   
   interface QuestionnaireStore {
@@ -95,20 +95,20 @@ public interface ServiceClient {
   }
   
   interface ServiceEnvirBuilder {
-    ServiceEnvirBuilder add(ServiceReleaseDocument release);
+    ServiceEnvirBuilder add(ServiceRelease release);
     ServiceEnvir build();
   }
   
   @Value.Immutable
-  interface ServiceClientConfig {
-    ServiceStore getStore();
-    ServiceCache getCache();
-    ServiceMapper getMapper();
+  interface ClientConfig {
+    ClientStore getStore();
+    ClientCache getCache();
+    Parser getParser();
     
     DialobClient getDialob();
     HdesClient getHdes();
     StencilClient getStencil();
-    CompressionMapper getCompression();
+    Archiver getArchiver();
     DocDB getDocDb();
   }
 }

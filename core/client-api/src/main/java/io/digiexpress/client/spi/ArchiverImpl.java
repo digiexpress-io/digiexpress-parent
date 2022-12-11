@@ -13,40 +13,40 @@ import org.apache.commons.codec.binary.Base64InputStream;
 import org.apache.commons.codec.binary.Base64OutputStream;
 
 import io.dialob.api.form.Form;
-import io.digiexpress.client.api.CompressionMapper;
+import io.digiexpress.client.api.Archiver;
 import io.digiexpress.client.api.ImmutableCompressed;
-import io.digiexpress.client.api.ServiceDocument.ServiceDefinitionDocument;
-import io.digiexpress.client.api.ServiceDocument.ServiceReleaseDocument;
-import io.digiexpress.client.api.ServiceMapper;
+import io.digiexpress.client.api.ClientEntity.ServiceDefinition;
+import io.digiexpress.client.api.ClientEntity.ServiceRelease;
+import io.digiexpress.client.api.Parser;
 import io.resys.hdes.client.api.ast.AstTag;
 import io.resys.hdes.client.spi.staticresources.Sha2;
 import io.thestencil.client.api.MigrationBuilder.Sites;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class CompressionMapperImpl implements CompressionMapper {
+public class ArchiverImpl implements Archiver {
   private static Charset UTF_8 = StandardCharsets.UTF_8;
-  private final ServiceMapper mapper;
+  private final Parser mapper;
   
   @Override
   public Compressed compress(AstTag hdes) {
-    return writeGZip(mapper.toReleaseBody(hdes));
+    return writeGZip(mapper.toRelease(hdes));
   }
   @Override
   public Compressed compress(Sites stencil) {
-    return writeGZip(mapper.toReleaseBody(stencil));
+    return writeGZip(mapper.toRelease(stencil));
   }
   @Override
   public Compressed compress(Form form) {
-    return writeGZip(mapper.toReleaseBody(form));
+    return writeGZip(mapper.toRelease(form));
   }
   @Override
-  public Compressed compress(ServiceDefinitionDocument def) {
-    return writeGZip(mapper.toReleaseBody(def));
+  public Compressed compress(ServiceDefinition def) {
+    return writeGZip(mapper.toRelease(def));
   }
   @Override
-  public Compressed compress(ServiceReleaseDocument rel) {
-    return writeGZip(mapper.toReleaseBody(rel));
+  public Compressed compress(ServiceRelease rel) {
+    return writeGZip(mapper.toRelease(rel));
   }
   @Override
   public AstTag decompressionHdes(String body) {
@@ -64,12 +64,12 @@ public class CompressionMapperImpl implements CompressionMapper {
     return mapper.toDialob(resp);
   }
   @Override
-  public ServiceDefinitionDocument decompressionService(String body) {
+  public ServiceDefinition decompressionService(String body) {
     final var resp = readGzip(new ByteArrayInputStream(body.getBytes(UTF_8)));
-    return mapper.toService(resp);
+    return mapper.toDefinition(resp);
   }
   @Override
-  public ServiceReleaseDocument decompressionRelease(String body) {
+  public ServiceRelease decompressionRelease(String body) {
     final var resp = readGzip(new ByteArrayInputStream(body.getBytes(UTF_8)));
     return mapper.toRelease(resp);
   }

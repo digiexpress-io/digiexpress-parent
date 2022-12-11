@@ -7,7 +7,7 @@ import Burger from '@the-wrench-io/react-burger';
 import { useSnackbar } from 'notistack';
 
 import { Composer, Client } from '../context';
-import { ErrorView } from '../styles';
+import Errors from '../Errors';
 
 
 const RequireProject: React.FC<{ }> = ({ }) => {
@@ -41,7 +41,7 @@ const RequireProject: React.FC<{ }> = ({ }) => {
       <Typography variant="h4">
         <FormattedMessage id="project.dialog.requireProject.errorsTitle" />
       </Typography>
-      <ErrorView error={errors} />
+      <Errors error={errors} />
     </Box>)
   } else {
     editor = (<Box>

@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import io.digiexpress.client.api.ServiceClient.ServiceClientConfig;
+import io.digiexpress.client.api.Client.ClientConfig;
 import io.digiexpress.client.api.ServiceEnvir.ProgramMessage;
 import io.digiexpress.client.api.ServiceEnvir.ServiceProgramHdes;
 import io.digiexpress.client.api.ServiceEnvir.ServiceProgramSource;
@@ -46,9 +46,9 @@ public class ServiceProgramHdesImpl implements ServiceProgramHdes {
   }
   
   @Override
-  public AstTag getDelegate(ServiceClientConfig config) {
+  public AstTag getDelegate(ClientConfig config) {
     if(this.delegate == null) {
-      final var tag = config.getCompression().decompressionHdes(source.getBody());
+      final var tag = config.getArchiver().decompressionHdes(source.getBody());
       this.delegate = tag;
       this.status = ServiceProgramStatus.PARSED;
     }
@@ -56,7 +56,7 @@ public class ServiceProgramHdesImpl implements ServiceProgramHdes {
   }
 
   @Override
-  public Optional<ProgramEnvir> getCompiled(ServiceClientConfig config) {
+  public Optional<ProgramEnvir> getCompiled(ClientConfig config) {
     if(this.compiled == null) {
       try {
         final var tag = getDelegate(config);
@@ -101,7 +101,7 @@ public class ServiceProgramHdesImpl implements ServiceProgramHdes {
   }
 
   @Override
-  public String getFlowName(String flowId, ServiceClientConfig config) {
+  public String getFlowName(String flowId, ClientConfig config) {
     final var compiled = getCompiled(config);
     ServiceAssert.isTrue(compiled.isPresent(), () -> "can't compile hdes envir!");
     ServiceAssert.notNull(flowId, () -> "flowId must be defined!");

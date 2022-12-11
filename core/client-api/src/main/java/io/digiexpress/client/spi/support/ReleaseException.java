@@ -2,7 +2,7 @@ package io.digiexpress.client.spi.support;
 
 import java.util.function.Supplier;
 
-import io.digiexpress.client.api.ServiceClient.ServiceClientException;
+import io.digiexpress.client.api.Client.ServiceClientException;
 
 public class ReleaseException extends RuntimeException implements ServiceClientException {
 

@@ -3,7 +3,7 @@ package io.digiexpress.client.spi.support;
 import java.time.LocalDateTime;
 import java.util.function.Supplier;
 
-import io.digiexpress.client.api.ServiceDocument.ServiceReleaseDocument;
+import io.digiexpress.client.api.ClientEntity.ServiceRelease;
 import io.digiexpress.client.api.ServiceEnvir.ServiceProgramSource;
 
 public class EnvirException extends RuntimeException {
@@ -12,7 +12,7 @@ public class EnvirException extends RuntimeException {
   public EnvirException(String msg) {
     super(msg);
   }  
-  public static EnvirException isDefined(ServiceReleaseDocument wrapper, Supplier<String> msg) {
+  public static EnvirException isDefined(ServiceRelease wrapper, Supplier<String> msg) {
     return new EnvirException(
         "Service release: '" + wrapper.getName() + "' can't be defined because there is already a " + 
         "release for date: '" + wrapper.getActiveFrom() + "'!" + System.lineSeparator() + msg.get());

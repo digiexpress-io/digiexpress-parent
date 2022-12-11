@@ -4,7 +4,7 @@ import { SxProps } from '@mui/system';
 
 import Burger from '@the-wrench-io/react-burger';
 
-import Activities from './activities';
+import Activities from './Activities';
 import { Composer } from './context';
 
 import ComposerServices from './composer-services';

@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import io.digiexpress.client.api.ServiceClient.ServiceClientConfig;
+import io.digiexpress.client.api.Client.ClientConfig;
 import io.digiexpress.client.api.ServiceEnvir.ProgramMessage;
 import io.digiexpress.client.api.ServiceEnvir.ServiceProgramStatus;
 import io.digiexpress.client.api.ServiceEnvir.ServiceProgramSource;
@@ -30,9 +30,9 @@ public class ServiceProgramStencilImpl implements ServiceProgramStencil {
   }
   
   @Override
-  public Sites getDelegate(ServiceClientConfig config) {
+  public Sites getDelegate(ClientConfig config) {
     if(this.delegate == null) {
-      final var sites = config.getCompression().decompressionStencil(source.getBody());
+      final var sites = config.getArchiver().decompressionStencil(source.getBody());
       this.delegate = sites;
       this.status = ServiceProgramStatus.UP;
     }

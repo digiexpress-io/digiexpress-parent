@@ -10,14 +10,12 @@ import java.util.stream.Stream;
 
 import io.dialob.client.api.DialobDocument.FormDocument;
 import io.dialob.client.api.DialobDocument.FormRevisionDocument;
+import io.digiexpress.client.api.Client.ClientConfig;
+import io.digiexpress.client.api.ClientEntity.Project;
+import io.digiexpress.client.api.ClientEntity.ServiceDefinition;
+import io.digiexpress.client.api.ClientStore.StoreState;
 import io.digiexpress.client.api.ImmutableFlowDocument;
 import io.digiexpress.client.api.QueryFactory;
-import io.digiexpress.client.api.ServiceClient.ServiceClientConfig;
-import io.digiexpress.client.api.ServiceDocument;
-import io.digiexpress.client.api.ServiceDocument.ServiceConfigDocument;
-import io.digiexpress.client.api.ServiceDocument.ServiceDefinitionDocument;
-import io.digiexpress.client.api.ServiceDocument.ServiceRevisionDocument;
-import io.digiexpress.client.api.ServiceStore.StoreState;
 import io.digiexpress.client.spi.support.ServiceAssert;
 import io.resys.hdes.client.api.ast.AstBody.AstBodyType;
 import io.resys.hdes.client.api.ast.AstTag;
@@ -35,14 +33,14 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class QueryFactoryImpl implements QueryFactory {
-  public static final String FIXED_ID = ServiceDocument.DocumentType.SERVICE_CONFIG.name();
+  public static final String FIXED_ID = "SERVICE_CONFIG";
   public static final String HEAD_NAME = ServiceAssert.BRANCH_MAIN;
   
   private final String imagePath = "/images";
   private final List<AstBodyType> HDES_ASSETS = Arrays.asList(AstBodyType.DT, AstBodyType.FLOW, AstBodyType.FLOW_TASK);
-  private final ServiceClientConfig config;
+  private final ClientConfig config;
   
-  public static QueryFactoryImpl from(ServiceClientConfig config) {
+  public static QueryFactoryImpl from(ClientConfig config) {
     return new QueryFactoryImpl(config);
   }
   @Override
@@ -50,14 +48,14 @@ public class QueryFactoryImpl implements QueryFactory {
     return config.getStore().query().get();
   }
   @Override
-  public Uni<ServiceConfigDocument> getConfigDoc() {
+  public Uni<Project> getDefaultProject() {
     final var result = config.getStore().query().get(FIXED_ID);
-    return result.onItem().transform(entityState -> config.getMapper().toConfig(entityState));
+    return result.onItem().transform(entityState -> config.getParser().toProject(entityState));
   }
   @Override
-  public Uni<ServiceRevisionDocument> getServiceRevision(String id) {
+  public Uni<Project> getProject(String id) {
     final var result = config.getStore().query().get(id);
-    return result.onItem().transform(entityState -> config.getMapper().toRev(entityState));
+    return result.onItem().transform(entityState -> config.getParser().toProject(entityState));
   }
   @Override
   public Uni<List<Repo>> getRepos() {
@@ -143,9 +141,9 @@ public class QueryFactoryImpl implements QueryFactory {
     });
   }
   @Override
-  public Uni<ServiceDefinitionDocument> getServiceDef(String id) {
+  public Uni<ServiceDefinition> getServiceDef(String id) {
     final var result = config.getStore().query().get(id);
-    return result.onItem().transform(entityState -> config.getMapper().toDef(entityState));
+    return result.onItem().transform(entityState -> config.getParser().toDefinition(entityState));
   }
   @Override
   public Uni<Sites> getStencil(String tagName) {

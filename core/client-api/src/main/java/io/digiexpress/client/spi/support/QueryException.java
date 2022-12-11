@@ -1,7 +1,7 @@
 package io.digiexpress.client.spi.support;
 
 
-import io.digiexpress.client.api.ServiceClient.ServiceClientException;
+import io.digiexpress.client.api.Client.ServiceClientException;
 
 
 

@@ -13,11 +13,11 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.dialob.program.DialobProgram;
-import io.digiexpress.client.api.ServiceClient.ServiceClientConfig;
-import io.digiexpress.client.api.ServiceDocument.ConfigType;
-import io.digiexpress.client.api.ServiceDocument.RefIdValue;
-import io.digiexpress.client.api.ServiceDocument.ServiceDefinitionDocument;
-import io.digiexpress.client.api.ServiceDocument.ServiceReleaseDocument;
+import io.digiexpress.client.api.Client.ClientConfig;
+import io.digiexpress.client.api.ClientEntity.ConfigType;
+import io.digiexpress.client.api.ClientEntity.RefIdValue;
+import io.digiexpress.client.api.ClientEntity.ServiceDefinition;
+import io.digiexpress.client.api.ClientEntity.ServiceRelease;
 
 public interface ServiceEnvir {
   Map<String, ServiceProgramSource> getSources(); //id to source
@@ -46,24 +46,24 @@ public interface ServiceEnvir {
   }
   
   interface ServiceProgramHdes extends ServiceProgram {
-    String getFlowName(String flowId, ServiceClientConfig config);
-    io.resys.hdes.client.api.ast.AstTag getDelegate(ServiceClientConfig config);
-    Optional<io.resys.hdes.client.api.programs.ProgramEnvir> getCompiled(ServiceClientConfig config);
+    String getFlowName(String flowId, ClientConfig config);
+    io.resys.hdes.client.api.ast.AstTag getDelegate(ClientConfig config);
+    Optional<io.resys.hdes.client.api.programs.ProgramEnvir> getCompiled(ClientConfig config);
   }
   interface ServiceProgramDialob extends ServiceProgram {
-    io.dialob.api.form.Form getDelegate(ServiceClientConfig config);
-    Optional<DialobProgram> getCompiled(ServiceClientConfig config);
+    io.dialob.api.form.Form getDelegate(ClientConfig config);
+    Optional<DialobProgram> getCompiled(ClientConfig config);
   }
   interface ServiceProgramStencil extends ServiceProgram {
-    io.thestencil.client.api.MigrationBuilder.Sites getDelegate(ServiceClientConfig config);
+    io.thestencil.client.api.MigrationBuilder.Sites getDelegate(ClientConfig config);
   }
   
   interface ServiceProgramRel extends ServiceProgram {
-    ServiceReleaseDocument getDelegate(ServiceClientConfig config);
+    ServiceRelease getDelegate(ClientConfig config);
   }
   
   interface ServiceProgramDef extends ServiceProgram {
-    ServiceDefinitionDocument getDelegate(ServiceClientConfig config);
+    ServiceDefinition getDelegate(ClientConfig config);
   }
   
   

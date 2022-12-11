@@ -5,8 +5,8 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import io.digiexpress.client.api.ServiceClient.ServiceClientConfig;
-import io.digiexpress.client.api.ServiceDocument.ServiceDefinitionDocument;
+import io.digiexpress.client.api.Client.ClientConfig;
+import io.digiexpress.client.api.ClientEntity.ServiceDefinition;
 import io.digiexpress.client.api.ServiceEnvir.ProgramMessage;
 import io.digiexpress.client.api.ServiceEnvir.ServiceProgramStatus;
 import io.digiexpress.client.api.ServiceEnvir.ServiceProgramDef;
@@ -22,7 +22,7 @@ public class ServiceProgramDefImpl implements ServiceProgramDef {
   private final ServiceProgramSource source;
   private ServiceProgramStatus status = ServiceProgramStatus.CREATED;
   @JsonIgnore
-  private transient ServiceDefinitionDocument delegate;
+  private transient ServiceDefinition delegate;
 
   public ServiceProgramDefImpl(ServiceProgramSource source) {
     super();
@@ -31,9 +31,9 @@ public class ServiceProgramDefImpl implements ServiceProgramDef {
   }
   
   @Override
-  public ServiceDefinitionDocument getDelegate(ServiceClientConfig config) {
+  public ServiceDefinition getDelegate(ClientConfig config) {
     if(this.delegate == null) {
-      final var service = config.getCompression().decompressionService(source.getBody());
+      final var service = config.getArchiver().decompressionService(source.getBody());
       this.delegate = service;
       this.status = ServiceProgramStatus.UP;
     }

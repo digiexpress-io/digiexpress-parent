@@ -21,11 +21,11 @@ import io.dialob.client.spi.store.ImmutableDialobStoreConfig;
 import io.dialob.client.spi.support.OidUtils;
 import io.dialob.rule.parser.function.DefaultFunctions;
 import io.dialob.rule.parser.function.FunctionRegistry;
-import io.digiexpress.client.api.ImmutableServiceClientConfig;
+import io.digiexpress.client.api.Client;
+import io.digiexpress.client.api.ClientCache;
+import io.digiexpress.client.api.ImmutableClientConfig;
 import io.digiexpress.client.api.ProcessState;
 import io.digiexpress.client.api.QueryFactory;
-import io.digiexpress.client.api.ServiceCache;
-import io.digiexpress.client.api.ServiceClient;
 import io.digiexpress.client.api.ServiceEnvir;
 import io.digiexpress.client.spi.envir.ServiceEnvirBuilderImpl;
 import io.digiexpress.client.spi.executors.DialobExecutorImpl;
@@ -33,9 +33,8 @@ import io.digiexpress.client.spi.executors.HdesExecutorImpl;
 import io.digiexpress.client.spi.executors.ProcessExecutorImpl;
 import io.digiexpress.client.spi.executors.StencilExecutorImpl;
 import io.digiexpress.client.spi.query.QueryFactoryImpl;
-import io.digiexpress.client.spi.store.ImmutableServiceStoreConfig;
-import io.digiexpress.client.spi.store.ServiceRepoBuilderImpl;
-import io.digiexpress.client.spi.store.ServiceStorePg;
+import io.digiexpress.client.spi.store.ClientStorePostgreSQL;
+import io.digiexpress.client.spi.store.ImmutableDocDBConfig;
 import io.digiexpress.client.spi.support.ServiceAssert;
 import io.resys.hdes.client.api.HdesClient;
 import io.resys.hdes.client.spi.HdesClientImpl;
@@ -58,19 +57,19 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
-public class ServiceClientImpl implements ServiceClient {
-  private final ServiceClientConfig config;
+public class ClientImpl implements Client {
+  private final ClientConfig config;
   
   @Override
-  public ServiceRepoBuilder repo() {
-    return new ServiceRepoBuilderImpl(config, config.getDocDb());
+  public TenantBuilder repo() {
+    return new TenantBuilderImpl(config, config.getDocDb());
   }
   @Override
   public ServiceEnvirBuilder envir() {
     return new ServiceEnvirBuilderImpl(config);
   }
   @Override
-  public ServiceClientConfig getConfig() {
+  public ClientConfig getConfig() {
     return config;
   }
   @Override
@@ -95,7 +94,7 @@ public class ServiceClientImpl implements ServiceClient {
     protected DocDB doc;
     protected ObjectMapper om;
     protected String headName = HEAD_NAME;
-    protected ServiceCache cache;
+    protected ClientCache cache;
     protected String repoStencil;
     protected String repoHdes;
     protected String repoDialob;
@@ -107,7 +106,7 @@ public class ServiceClientImpl implements ServiceClient {
     protected QuestionnaireEventPublisher dialobEventPub;
     protected FunctionRegistry dialobFr;
     
-    public ServiceClientImpl build() {
+    public ClientImpl build() {
       ServiceAssert.notNull(doc, () -> "doc: DocDB must be defined!");
       ServiceAssert.notNull(om, () -> "om: ObjectMapper must be defined!");
       ServiceAssert.notNull(repoStencil, () -> "repoStencil: string must be defined!");
@@ -126,30 +125,30 @@ public class ServiceClientImpl implements ServiceClient {
       }
       
       if(cache == null) {
-        this.cache = ServiceEhCache.builder().build(repoService);
+        this.cache = ClientEhCache.builder().build(repoService);
       }
 
-      final var mapper = new ServiceMapperImpl(om);
-      final var config = ImmutableServiceClientConfig.builder()
-          .store(new ServiceStorePg(ImmutableServiceStoreConfig.builder()
+      final var parser = new ParserImpl(om);
+      final var config = ImmutableClientConfig.builder()
+          .store(new ClientStorePostgreSQL(ImmutableDocDBConfig.builder()
               .authorProvider(() -> repoAuthor.get())
               .headName(headName).repoName(repoService)
-              .gidProvider((type) -> OidUtils.gen())
-              .deserializer(new io.digiexpress.client.spi.store.BlobDeserializer(om))
+              .gid((type) -> OidUtils.gen())
+              .deserializer(new io.digiexpress.client.spi.store.DocDBDeserializer(om))
               .serializer((entity) -> applyOm((om) -> om.writeValueAsString(io.digiexpress.client.api.ImmutableStoreEntity.builder().from(entity).build())))
               .client(doc)
-              .mapper(mapper)
+              .parser(parser)
               .build()))
           .cache(cache)
-          .compression(new CompressionMapperImpl(mapper))
+          .archiver(new ArchiverImpl(parser))
           .stencil(stencil())
           .dialob(dialob())
           .hdes(hdes())
           .docDb(doc)
-          .mapper(mapper)
+          .parser(parser)
           .build();
       
-      return new ServiceClientImpl(config);
+      return new ClientImpl(config);
     }
     
     protected StencilClient stencil() {

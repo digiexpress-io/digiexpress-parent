@@ -11,11 +11,11 @@ import io.digiexpress.client.api.ImmutableProcessState;
 import io.digiexpress.client.api.ImmutableStep;
 import io.digiexpress.client.api.ProcessState;
 import io.digiexpress.client.api.ProcessState.FlowCompleted;
-import io.digiexpress.client.api.ServiceClient.Execution;
-import io.digiexpress.client.api.ServiceClient.ExecutionHdesBody;
-import io.digiexpress.client.api.ServiceClient.HdesExecutor;
-import io.digiexpress.client.api.ServiceClient.QuestionnaireStore;
-import io.digiexpress.client.api.ServiceClient.ServiceClientConfig;
+import io.digiexpress.client.api.Client.Execution;
+import io.digiexpress.client.api.Client.ExecutionHdesBody;
+import io.digiexpress.client.api.Client.HdesExecutor;
+import io.digiexpress.client.api.Client.QuestionnaireStore;
+import io.digiexpress.client.api.Client.ClientConfig;
 import io.digiexpress.client.api.ServiceEnvir;
 import io.digiexpress.client.api.ServiceEnvir.ServiceProgramHdes;
 import io.digiexpress.client.spi.support.ServiceAssert;
@@ -23,7 +23,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class HdesExecutorImpl implements HdesExecutor {
-  private final ServiceClientConfig config;
+  private final ClientConfig config;
   private final ProcessState state;
   private final ServiceEnvir envir;
   private QuestionnaireStore store;

@@ -9,14 +9,15 @@ import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import io.digiexpress.client.api.ImmutableCreateProcess;
+import io.digiexpress.client.api.ClientEntity.Project;
+import io.digiexpress.client.api.ClientEntity.ServiceRelease;
+import io.digiexpress.client.api.ImmutableCreateProjectRevision;
 import io.digiexpress.client.api.ImmutableCreateRelease;
-import io.digiexpress.client.api.ImmutableCreateServiceRevision;
+import io.digiexpress.client.api.ImmutableCreateServiceDescriptor;
 import io.digiexpress.client.api.ProcessState;
 import io.digiexpress.client.api.ProcessState.ProcessCreated;
 import io.digiexpress.client.api.ProcessState.Step;
-import io.digiexpress.client.api.ServiceDocument.ServiceReleaseDocument;
-import io.digiexpress.client.api.ServiceDocument.ServiceRevisionDocument;
+import io.digiexpress.client.api.ServiceComposerState.ServiceComposerDefinitionState;
 import io.digiexpress.client.api.ServiceEnvir.ServiceProgramDef;
 import io.digiexpress.client.api.ServiceEnvir.ServiceProgramDialob;
 import io.digiexpress.client.api.ServiceEnvir.ServiceProgramHdes;
@@ -42,7 +43,7 @@ public class IntegrationTest extends TestCase {
 
     // create stencil/dialob/wrench/process projects
     final var client = client()
-        .repo().repoService("test-prj-1").create()
+        .repo().repoProject("test-prj-1").create()
         .await().atMost(atMost);
     
     // create new form from file
@@ -57,18 +58,21 @@ public class IntegrationTest extends TestCase {
     hdes(client).create(builder.reader().flow("case_1_flow.txt")).await().atMost(atMost);
 
     // define service 
-    final ServiceRevisionDocument revision = service(client).create().revision(ImmutableCreateServiceRevision.builder()
+    final Project project = service(client).create().revision(ImmutableCreateProjectRevision.builder()
         .name("init")
         .description("first iterator process to handle general message")
         .build()).await().atMost(atMost);
     
-    final var def = service(client).create().process(ImmutableCreateProcess.builder()
+    final ServiceComposerDefinitionState defState = service(client).query().definition(project.getHeadDefId()).await().atMost(atMost);
+    
+    
+    final var def = service(client).create().serviceDescriptor(ImmutableCreateServiceDescriptor.builder()
         .name("process-for-bindig-gen-msg-to-task")
         .desc("process-desc")
         .flowId("case 1 flow")
         .formId("c89b6d0b-51a7-11bc-358d-3094ca98d40b")
-        .serviceRevisionId(revision.getId())
-        .serviceRevisionVersionId(revision.getVersion())
+        .defId(defState.getDefinition().getId())
+        .defVersionId(defState.getDefinition().getVersion())
         .build()).await().atMost(atMost);
     
     final var targetDate = LocalDateTime.of(2022, 11, 5, 11, 07);
@@ -100,7 +104,7 @@ public class IntegrationTest extends TestCase {
     final var stencil = (ServiceProgramStencil) envir.getById("main/STENCIL");
     final var dialob = (ServiceProgramDialob) envir.getById("c89b6d0b-51a7-11bc-358d-3094ca98d40b/DIALOB");
     final var hdes = (ServiceProgramHdes) envir.getById("main/HDES");    
-    final var service = (ServiceProgramDef) envir.getById("main/SERVICE");    
+    final var service = (ServiceProgramDef) envir.getById("main/PROJECT");    
 
     Assertions.assertNotNull(stencil.getDelegate(builder.getClient().getConfig()));
     Assertions.assertNotNull(dialob.getCompiled(builder.getClient().getConfig()));
@@ -144,7 +148,7 @@ public class IntegrationTest extends TestCase {
 //    log.debug(builder.print(client.getConfig().getStore()));
   }
 
-  private String toHashes(ServiceReleaseDocument release) {
+  private String toHashes(ServiceRelease release) {
     final var values = release.getValues().stream()
       .sorted((a, b) -> a.getId().compareTo(b.getId()))
       .map(e -> e.getBodyType() + "/" + e.getBodyHash())

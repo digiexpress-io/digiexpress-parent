@@ -6,22 +6,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import io.digiexpress.client.api.ServiceClient.ServiceClientConfig;
-import io.digiexpress.client.api.ServiceDocument.ConfigType;
-import io.digiexpress.client.api.ServiceDocument.RefIdValue;
+import io.digiexpress.client.api.Client.ClientConfig;
+import io.digiexpress.client.api.ClientEntity.ConfigType;
+import io.digiexpress.client.api.ClientEntity.RefIdValue;
 import io.digiexpress.client.api.ServiceEnvir;
 import io.digiexpress.client.spi.support.EnvirException;
 import io.digiexpress.client.spi.support.ServiceAssert;
 
 public class ServiceEnvirImpl implements ServiceEnvir {
 
-  private final ServiceClientConfig config;
+  private final ClientConfig config;
   private final Map<String, ServiceProgramSource> hash_to_source;
   private final Map<String, ServiceProgramSource> id_to_source;
   private final Map<LocalDateTime, List<String>> active_to_hash;
   
   public ServiceEnvirImpl(
-      ServiceClientConfig config, 
+      ClientConfig config, 
       Map<String, ServiceProgramSource> hash_to_source,
       Map<LocalDateTime, List<String>> active_to_hash) {
     super();
@@ -78,7 +78,7 @@ public class ServiceEnvirImpl implements ServiceEnvir {
     
     final var service = active_to_hash.get(found).stream()
       .map(e -> hash_to_source.get(e))
-      .filter(e -> e.getType() == ConfigType.SERVICE)
+      .filter(e -> e.getType() == ConfigType.PROJECT)
       .map(e -> getById(e.getId()))
       .findFirst().orElse(null);
     ServiceAssert.notNull(service, () -> "Can't resolve service definition for (target date): '" + targetDate + "'!");
@@ -94,7 +94,7 @@ public class ServiceEnvirImpl implements ServiceEnvir {
     final ServiceProgram program;
     switch (source.getType()) {
     case STENCIL: program = new ServiceProgramStencilImpl(source); break;
-    case SERVICE: program = new ServiceProgramDefImpl(source); break;
+    case PROJECT: program = new ServiceProgramDefImpl(source); break;
     case DIALOB: program = new ServiceProgramDialobImpl(source); break;
     case HDES: program = new ServiceProgramHdesImpl(source); break;
     case RELEASE: program = new ServiceProgramRelImpl(source); break;

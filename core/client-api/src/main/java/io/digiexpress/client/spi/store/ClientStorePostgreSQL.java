@@ -10,9 +10,9 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.dialob.client.spi.support.OidUtils;
+import io.digiexpress.client.api.ClientStore;
 import io.digiexpress.client.api.ImmutableStoreEntity;
 import io.digiexpress.client.api.ImmutableStoreExceptionMsg;
-import io.digiexpress.client.api.ServiceStore;
 import io.digiexpress.client.spi.support.ServiceAssert;
 import io.resys.thena.docdb.api.DocDB;
 import io.resys.thena.docdb.api.actions.RepoActions.RepoStatus;
@@ -29,73 +29,69 @@ import lombok.extern.slf4j.Slf4j;
 
 
 
-public class ServiceStorePg extends ServiceStoreTemplate implements ServiceStore {
+public class ClientStorePostgreSQL extends DocDBCommandsSupport implements ClientStore {
 
-  public ServiceStorePg(ServiceStoreConfig config) {
+  public ClientStorePostgreSQL(DocDBConfig config) {
     super(config);
   }
   @Override
-  public QueryBuilder query() {
-    return new ServiceStoreQueryBuilderImpl(config);
+  public StoreQuery query() {
+    return new StoreQueryImpl(config);
   }
   @Override
-  public GidProvider getGid() {
-    return config.getGidProvider();
+  public StoreGid getGid() {
+    return config.getGid();
   }
   @Override
-  public StoreRepoBuilder repo() {
-    return new StoreRepoBuilder() {
+  public StoreRepo repo() {
+    return new StoreRepo() {
       private String repoName;
       private String headName;
-      @Override
-      public StoreRepoBuilder repoName(String repoName) {
-        this.repoName = repoName;
-        return this;
-      }
-      @Override
-      public StoreRepoBuilder headName(String headName) {
-        this.headName = headName;
-        return this;
-      }
-      @Override
-      public Uni<ServiceStore> create() {
-        ServiceAssert.notNull(repoName, () -> "repoName must be defined!");
-        final var client = config.getClient();
-        final var newRepo = client.repo().create().name(repoName).build();
-        return newRepo.onItem().transform((repoResult) -> {
-          if(repoResult.getStatus() != RepoStatus.OK) {
-            throw new StoreException("REPO_CREATE_FAIL", null, 
-                ImmutableStoreExceptionMsg.builder()
-                .id(repoResult.getStatus().toString())
-                .value(repoName)
-                .addAllArgs(repoResult.getMessages().stream().map(message->message.getText()).collect(Collectors.toList()))
-                .build()); 
-          }
-          
-          return build();
-        });
-      }
-      @Override
-      public ServiceStore build() {
-        ServiceAssert.notNull(repoName, () -> "repoName must be defined!");
-        return new ServiceStorePg(ImmutableServiceStoreConfig.builder()
-            .from(config)
-            .repoName(repoName)
-            .headName(headName == null ? config.getHeadName() : headName)
-            .build());
-      }
-      @Override
-      public Uni<Boolean> createIfNot() {
-        final var client = config.getClient();
-        
-        return client.repo().query().id(config.getRepoName()).get().onItem().transformToUni(repo -> {
-          if(repo == null) {
-            return client.repo().create().name(config.getRepoName()).build().onItem().transform(newRepo -> true); 
-          }
-          return Uni.createFrom().item(true);
-        });
-      }
+      @Override public StoreRepo repoName(String repoName) { this.repoName = repoName; return this; }
+      @Override public StoreRepo headName(String headName) { this.headName = headName; return this; }
+      @Override public Uni<ClientStore> create() { return createRepo(repoName, headName); }
+      @Override public ClientStore build() { return createClientStore(repoName, headName); }
+      @Override public Uni<Boolean> createIfNot() { return createRepoOrGetRepo(); }
     };
+  }
+  
+  public Uni<Boolean> createRepoOrGetRepo() {
+    final var client = config.getClient();
+    
+    return client.repo().query().id(config.getRepoName()).get().onItem().transformToUni(repo -> {
+      if(repo == null) {
+        return client.repo().create().name(config.getRepoName()).build().onItem().transform(newRepo -> true); 
+      }
+      return Uni.createFrom().item(true);
+    });
+  }
+  
+  public Uni<ClientStore> createRepo(String repoName, String headName) {
+    ServiceAssert.notNull(repoName, () -> "repoName must be defined!");
+    final var client = config.getClient();
+    final var newRepo = client.repo().create().name(repoName).build();
+    return newRepo.onItem().transform((repoResult) -> {
+      if(repoResult.getStatus() != RepoStatus.OK) {
+        throw new StoreException("REPO_CREATE_FAIL", null, 
+            ImmutableStoreExceptionMsg.builder()
+            .id(repoResult.getStatus().toString())
+            .value(repoName)
+            .addAllArgs(repoResult.getMessages().stream().map(message->message.getText()).collect(Collectors.toList()))
+            .build()); 
+      }
+      
+      return createClientStore(repoName, headName);
+    });
+  }
+  
+  public ClientStore createClientStore(String repoName, String headName) {
+    ServiceAssert.notNull(repoName, () -> "repoName must be defined!");
+    return new ClientStorePostgreSQL(ImmutableDocDBConfig.builder()
+        .from(config)
+        .repoName(repoName)
+        .headName(headName == null ? config.getHeadName() : headName)
+        .build());
+    
   }
   
   public static Builder builder() {
@@ -110,8 +106,8 @@ public class ServiceStorePg extends ServiceStoreTemplate implements ServiceStore
     private String repoName;
     private String headName;
     private ObjectMapper objectMapper;
-    private ServiceStore.GidProvider gidProvider;
-    private ServiceStoreConfig.AuthorProvider authorProvider;
+    private ClientStore.StoreGid gidProvider;
+    private DocDBConfig.DocDBAuthorProvider authorProvider;
     private io.vertx.mutiny.pgclient.PgPool pgPool;
     private String pgHost;
     private String pgDb;
@@ -120,13 +116,13 @@ public class ServiceStorePg extends ServiceStoreTemplate implements ServiceStore
     private String pgPass;
     private Integer pgPoolSize;
     
-    private ServiceStore.GidProvider getGidProvider() {
+    private ClientStore.StoreGid getGidProvider() {
       return this.gidProvider == null ? type -> {
         return OidUtils.gen();
      } : this.gidProvider;
     }
     
-    private ServiceStoreConfig.AuthorProvider getAuthorProvider() {
+    private DocDBConfig.DocDBAuthorProvider getAuthorProvider() {
       return this.authorProvider == null ? ()-> "not-configured" : this.authorProvider;
     } 
     
@@ -142,7 +138,7 @@ public class ServiceStorePg extends ServiceStoreTemplate implements ServiceStore
       return objectMapper;
     }
     
-    public ServiceStorePg build() {
+    public ClientStorePostgreSQL build() {
       ServiceAssert.notNull(repoName, () -> "repoName must be defined!");
     
       final var headName = this.headName == null ? ServiceAssert.BRANCH_MAIN: this.headName;
@@ -193,9 +189,9 @@ public class ServiceStorePg extends ServiceStoreTemplate implements ServiceStore
       }
       
       final ObjectMapper objectMapper = getObjectMapper();
-      final ServiceStoreConfig config = ImmutableServiceStoreConfig.builder()
+      final DocDBConfig config = ImmutableDocDBConfig.builder()
           .client(thena).repoName(repoName).headName(headName)
-          .gidProvider(getGidProvider())
+          .gid(getGidProvider())
           .serializer((entity) -> {
             try {
               return objectMapper.writeValueAsString(ImmutableStoreEntity.builder().from(entity).build());
@@ -203,10 +199,10 @@ public class ServiceStorePg extends ServiceStoreTemplate implements ServiceStore
               throw new RuntimeException(e.getMessage(), e);
             }
           })
-          .deserializer(new BlobDeserializer(objectMapper))
+          .deserializer(new DocDBDeserializer(objectMapper))
           .authorProvider(getAuthorProvider())
           .build();
-      return new ServiceStorePg(config);
+      return new ClientStorePostgreSQL(config);
     }
   }
 }

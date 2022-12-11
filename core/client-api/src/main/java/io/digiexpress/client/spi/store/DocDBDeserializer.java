@@ -2,22 +2,17 @@ package io.digiexpress.client.spi.store;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.digiexpress.client.api.ClientStore.StoreEntity;
 import io.digiexpress.client.api.ImmutableStoreEntity;
-import io.digiexpress.client.api.ServiceStore.StoreEntity;
 import io.resys.thena.docdb.api.models.Objects.Blob;
 
-
-
-public class BlobDeserializer implements ServiceStoreConfig.Deserializer {
-
+public class DocDBDeserializer implements DocDBConfig.DocDBDeserializer {
   private ObjectMapper objectMapper;
   
-  public BlobDeserializer(ObjectMapper objectMapper) {
+  public DocDBDeserializer(ObjectMapper objectMapper) {
     super();
     this.objectMapper = objectMapper;
   }
-
-
   @Override
   public StoreEntity fromString(Blob value) {
     try {

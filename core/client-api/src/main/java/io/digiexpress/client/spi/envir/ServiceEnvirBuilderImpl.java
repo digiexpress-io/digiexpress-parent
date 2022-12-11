@@ -7,13 +7,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.digiexpress.client.api.ImmutableServiceReleaseDocument;
+import io.digiexpress.client.api.Client.ClientConfig;
+import io.digiexpress.client.api.Client.ServiceEnvirBuilder;
+import io.digiexpress.client.api.ClientEntity.ConfigType;
+import io.digiexpress.client.api.ClientEntity.ServiceRelease;
+import io.digiexpress.client.api.ClientEntity.ServiceReleaseValue;
+import io.digiexpress.client.api.ImmutableServiceRelease;
 import io.digiexpress.client.api.ImmutableServiceReleaseValue;
-import io.digiexpress.client.api.ServiceClient.ServiceClientConfig;
-import io.digiexpress.client.api.ServiceClient.ServiceEnvirBuilder;
-import io.digiexpress.client.api.ServiceDocument.ConfigType;
-import io.digiexpress.client.api.ServiceDocument.ServiceReleaseDocument;
-import io.digiexpress.client.api.ServiceDocument.ServiceReleaseValue;
 import io.digiexpress.client.api.ServiceEnvir;
 import io.digiexpress.client.api.ServiceEnvir.ServiceProgramSource;
 import io.digiexpress.client.spi.support.EnvirException;
@@ -23,20 +23,20 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 public class ServiceEnvirBuilderImpl implements ServiceEnvirBuilder {
-  private final ServiceClientConfig config;
+  private final ClientConfig config;
   
   // hash to source
   private final Map<String, ServiceProgramSource> hash_to_source = new HashMap<>();
   private final Map<LocalDateTime, List<String>> active_to_hash = new HashMap<>();
   
   @Override
-  public ServiceEnvirBuilder add(ServiceReleaseDocument release) {
+  public ServiceEnvirBuilder add(ServiceRelease release) {
     if(active_to_hash.containsKey(release.getActiveFrom())) {
       throw EnvirException.isDefined(release, () -> "");
     }
     release.getValues().forEach(value -> addSrc(value, release));
     
-    final var self = config.getCompression().compress(ImmutableServiceReleaseDocument.builder()
+    final var self = config.getArchiver().compress(ImmutableServiceRelease.builder()
         .from(release)
         .values(Collections.emptyList())
         .build());
@@ -56,7 +56,7 @@ public class ServiceEnvirBuilderImpl implements ServiceEnvirBuilder {
     return new ServiceEnvirImpl(config, hash_to_source, active_to_hash);
   }
   
-  private void addSrc(ServiceReleaseValue value, ServiceReleaseDocument release) {
+  private void addSrc(ServiceReleaseValue value, ServiceRelease release) {
     final List<String> active;
     if(active_to_hash.containsKey(release.getActiveFrom())) {
       active = active_to_hash.get(release.getActiveFrom());

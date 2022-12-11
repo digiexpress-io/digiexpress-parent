@@ -25,7 +25,7 @@ public class CreateMigrationFile extends TestCase {
   @Test
   public void test() {
     final var client = client()
-        .repo().repoService("test-prj-1-migration").create()
+        .repo().repoProject("test-prj-1-migration").create()
         .await().atMost(atMost);
   
     // load up the content

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -17,18 +18,20 @@ import io.dialob.client.api.DialobStore.StoreCommand;
 import io.dialob.client.api.ImmutableFormDocument;
 import io.dialob.client.api.ImmutableFormRevisionDocument;
 import io.dialob.client.spi.support.OidUtils;
+import io.digiexpress.client.api.Client;
+import io.digiexpress.client.api.ClientEntity;
+import io.digiexpress.client.api.ClientEntity.ConfigType;
+import io.digiexpress.client.api.ClientEntity.Project;
+import io.digiexpress.client.api.ClientEntity.ServiceDefinition;
+import io.digiexpress.client.api.ClientStore;
+import io.digiexpress.client.api.ClientStore.ClientStoreCommand;
 import io.digiexpress.client.api.ImmutableMigrationState;
+import io.digiexpress.client.api.ImmutableProject;
+import io.digiexpress.client.api.ImmutableProjectRevision;
 import io.digiexpress.client.api.ImmutableRefIdValue;
-import io.digiexpress.client.api.ImmutableServiceDefinitionDocument;
-import io.digiexpress.client.api.ImmutableServiceRevisionDocument;
-import io.digiexpress.client.api.ImmutableServiceRevisionValue;
-import io.digiexpress.client.api.ServiceClient;
+import io.digiexpress.client.api.ImmutableServiceDefinition;
 import io.digiexpress.client.api.ServiceComposerCommand.CreateMigration;
 import io.digiexpress.client.api.ServiceComposerState.MigrationState;
-import io.digiexpress.client.api.ServiceDocument;
-import io.digiexpress.client.api.ServiceDocument.ConfigType;
-import io.digiexpress.client.api.ServiceDocument.ServiceDefinitionDocument;
-import io.digiexpress.client.api.ServiceStore;
 import io.digiexpress.client.spi.support.ServiceAssert;
 import io.digiexpress.client.spi.support.TableLog;
 import io.resys.hdes.client.api.HdesStore;
@@ -36,7 +39,7 @@ import io.resys.hdes.client.api.ImmutableImportStoreEntity;
 import io.resys.hdes.client.api.ast.AstBody.AstBodyType;
 import io.resys.hdes.client.spi.HdesComposerImpl;
 import io.smallrye.mutiny.Uni;
-import io.thestencil.client.api.StencilClient.Entity;
+import io.thestencil.client.api.StencilClient;
 import io.thestencil.client.api.StencilComposer;
 import io.thestencil.client.spi.StencilComposerImpl;
 import lombok.Builder;
@@ -49,7 +52,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CreateMigrationVisitor {
   private final CreateMigration source;
-  private final ServiceClient client;
+  private final Client client;
   private final LocalDateTime now = LocalDateTime.now();
   private final String tagNameMigrated = "migration";
   
@@ -60,7 +63,7 @@ public class CreateMigrationVisitor {
     private StencilComposer.SiteState stencilState;
     private HdesStore.StoreState hdesState;
     private io.resys.hdes.client.api.programs.ProgramEnvir hdesEnvir;
-    private ServiceStore.StoreState serviceState;
+    private ClientStore.StoreState projectState;
   } 
   
   public Uni<MigrationState> visit() {
@@ -68,7 +71,7 @@ public class CreateMigrationVisitor {
     return visitForms(PartialState.builder().build())
         .onItem().transformToUni(this::visitStencil)
         .onItem().transformToUni(this::visitHdes)
-        .onItem().transformToUni(this::visitService)
+        .onItem().transformToUni(partial -> client.getQuery().getDefaultProject().onItem().transformToUni(project -> visitProject(partial, project)))
         .onItem().transform(partial -> {
           visitLog(partial);
           return ImmutableMigrationState.builder().build();
@@ -148,45 +151,47 @@ public class CreateMigrationVisitor {
     });
 
     // service logs
-    partial.getServiceState().getConfigs().values().forEach(wrapper -> {
-      final var config = client.getConfig().getMapper().toConfig(wrapper);
+    partial.getProjectState().getProjects().values().forEach(wrapper -> {
+      final var prj = client.getConfig().getParser().toProject(wrapper);
+      final var config = prj.getConfig();
+      
       summary.addRow(
           wrapper.getBodyType(), 
-          config.getHdes().getType(),
-          config.getHdes().getId(),
+          ClientEntity.ConfigType.HDES,
+          config.getHdes(),
           wrapper.getId());
       summary.addRow(
           wrapper.getBodyType(), 
-          config.getStencil().getType(),
-          config.getStencil().getId(),
+          ClientEntity.ConfigType.STENCIL,
+          config.getStencil(),
           wrapper.getId());
       summary.addRow(
           wrapper.getBodyType(), 
-          config.getDialob().getType(),
-          config.getDialob().getId(),
+          ClientEntity.ConfigType.DIALOB,
+          config.getDialob(),
           wrapper.getId());
       summary.addRow(
           wrapper.getBodyType(), 
-          config.getService().getType(),
-          config.getService().getId(),
+          ClientEntity.ConfigType.PROJECT,
+          prj.getId(),
           wrapper.getId());
     });
 
-    final var visitedDefs = new ArrayList<ServiceDefinitionDocument>();
-    partial.getServiceState().getDefs().values().forEach(wrapper -> {
-      final var def = client.getConfig().getMapper().toDef(wrapper);
+    final var visitedDefs = new ArrayList<ServiceDefinition>();
+    partial.getProjectState().getDefinitions().values().forEach(wrapper -> {
+      final var def = client.getConfig().getParser().toDefinition(wrapper);
       visitedDefs.add(def);
       summary.addRow(
           wrapper.getBodyType(), 
           "Rev: " + wrapper.getId(),
-          "No of processes: " + def.getProcesses().size(),
+          "No of processes: " + def.getDescriptors().size(),
           wrapper.getId());
     });
     
     final var visitedProcessValues = new ArrayList<String>();
     final var workflowsByName = partial.getStencilState().getWorkflows().values().stream().collect(Collectors.toMap(e -> e.getBody().getValue(), e -> e));
     visitedDefs.stream().forEach(def -> {
-      for(final var process : def.getProcesses()) {
+      for(final var process : def.getDescriptors()) {
         final var content = process.toString();
         if(visitedProcessValues.contains(content)) {
           continue;
@@ -206,71 +211,73 @@ public class CreateMigrationVisitor {
     log.info("Migration state: " + summary.toString());    
   }
 
-  private Uni<PartialState> visitService(PartialState partial) {
+  private Uni<PartialState> visitProject(PartialState partial, Project project) {
+    final var config = project.getConfig();
+    final var gid = client.getConfig().getStore().getGid();
     
-    return client.getQuery().getConfigDoc().onItem().transformToUni(configDoc -> {
-      final var defMigrated = ImmutableServiceDefinitionDocument.builder()
-        .created(now)
-        .updated(now)
-        .id(client.getConfig().getStore().getGid().getNextId(ServiceDocument.DocumentType.SERVICE_DEF))
-        .addRefs(ImmutableRefIdValue.builder().repoId(configDoc.getStencil().getId()).tagName(tagNameMigrated).type(ConfigType.STENCIL).build())
-        .addRefs(ImmutableRefIdValue.builder().repoId(configDoc.getHdes().getId()).tagName(tagNameMigrated).type(ConfigType.HDES).build())
-        .processes(source.getServices().getProcesses())
-        .build();
-      
-      final var defMain = ImmutableServiceDefinitionDocument.builder()
-          .created(now)
-          .updated(now)
-          .id(client.getConfig().getStore().getGid().getNextId(ServiceDocument.DocumentType.SERVICE_DEF))
-          .addRefs(ImmutableRefIdValue.builder().repoId(configDoc.getStencil().getId()).tagName(ServiceAssert.BRANCH_MAIN).type(ConfigType.STENCIL).build())
-          .addRefs(ImmutableRefIdValue.builder().repoId(configDoc.getHdes().getId()).tagName(ServiceAssert.BRANCH_MAIN).type(ConfigType.HDES).build())
-          .processes(source.getServices().getProcesses())
-          .build();
+    final var defMigrated = ImmutableServiceDefinition.builder()
+      .projectId(project.getId())
+      .created(now)
+      .updated(now)
+      .id(gid.getNextId(ClientEntity.ClientEntityType.SERVICE_DEF))
+      .addRefs(ImmutableRefIdValue.builder().repoId(config.getStencil()).tagName(tagNameMigrated).type(ConfigType.STENCIL).build())
+      .addRefs(ImmutableRefIdValue.builder().repoId(config.getHdes()).tagName(tagNameMigrated).type(ConfigType.HDES).build())
+      .descriptors(source.getServices().getDescriptors())
+      .build();
     
-      final var rev = ImmutableServiceRevisionDocument.builder()
-          .id(client.getConfig().getStore().getGid().getNextId(ServiceDocument.DocumentType.SERVICE_REV))
-          .created(now)
-          .updated(now)
-          .head(defMain.getId())
-          .name("migrated-service")
-          .addValues(ImmutableServiceRevisionValue.builder()
-              .id(client.getConfig().getStore().getGid().getNextId(ServiceDocument.DocumentType.SERVICE_REV))
-              .created(now)
-              .updated(now)
-              .revisionName(tagNameMigrated)
-              .defId(defMigrated.getId())
-              .build())
-          .build();
+    final var defMain = ImmutableServiceDefinition.builder()
+      .projectId(project.getId())
+      .created(now)
+      .updated(now)
+      .id(gid.getNextId(ClientEntity.ClientEntityType.SERVICE_DEF))
+      .addRefs(ImmutableRefIdValue.builder().repoId(config.getStencil()).tagName(ServiceAssert.BRANCH_MAIN).type(ConfigType.STENCIL).build())
+      .addRefs(ImmutableRefIdValue.builder().repoId(config.getHdes()).tagName(ServiceAssert.BRANCH_MAIN).type(ConfigType.HDES).build())
+      .descriptors(source.getServices().getDescriptors())
+      .build();
 
-      return client.getConfig().getStore().batch(Arrays.asList(
-          io.digiexpress.client.api.ImmutableCreateStoreEntity.builder()
-            .id(rev.getId())
-            .version(rev.getVersion())
-            .bodyType(rev.getType())
-            .body(client.getConfig().getMapper().toBody(rev))
-            .build(),
-          io.digiexpress.client.api.ImmutableCreateStoreEntity.builder()
-            .id(defMain.getId())
-            .version(defMain.getVersion())
-            .bodyType(defMain.getType())
-            .body(client.getConfig().getMapper().toBody(defMain))
-            .build(),
-          io.digiexpress.client.api.ImmutableCreateStoreEntity.builder()
-            .id(defMigrated.getId())
-            .version(defMigrated.getVersion())
-            .bodyType(defMigrated.getType())
-            .body(client.getConfig().getMapper().toBody(defMigrated))
-            .build()
-          ))
-          .onItem().transformToUni(created -> client.getQuery().head())
-          .onItem().transform(state -> partial.toBuilder().serviceState(state).build());
-    });
+    final var rev = ImmutableProject.builder().from(project)
+      .updated(now)
+      .head(defMain.getId())
+      .name("migrated-service")
+      .addRevisions(ImmutableProjectRevision.builder()
+          .id(gid.getNextId(ClientEntity.ClientEntityType.PROJECT))
+          .created(now)
+          .updated(now)
+          .revisionName(tagNameMigrated)
+          .defId(defMigrated.getId())
+          .build())
+      .build();
+
+    final var parser = client.getConfig().getParser();
+    final List<ClientStoreCommand> commands = Arrays.asList(
+        io.digiexpress.client.api.ImmutableCreateStoreEntity.builder()
+        .id(rev.getId())
+        .version(rev.getVersion())
+        .bodyType(rev.getType())
+        .body(parser.toStore(rev))
+        .build(),
+      io.digiexpress.client.api.ImmutableCreateStoreEntity.builder()
+        .id(defMain.getId())
+        .version(defMain.getVersion())
+        .bodyType(defMain.getType())
+        .body(parser.toStore(defMain))
+        .build(),
+      io.digiexpress.client.api.ImmutableCreateStoreEntity.builder()
+        .id(defMigrated.getId())
+        .version(defMigrated.getVersion())
+        .bodyType(defMigrated.getType())
+        .body(parser.toStore(defMigrated))
+        .build()
+      );
+    return client.getConfig().getStore().batch(commands)
+      .onItem().transformToUni(created -> client.getQuery().head())
+      .onItem().transform(state -> partial.toBuilder().projectState(state).build());
   }
   
   private Uni<PartialState> visitStencil(PartialState partial) {
     final var state = source.getStencil();
     final var store = client.getConfig().getStencil().getStore();
-    final var batch = new ArrayList<Entity<?>>();
+    final var batch = new ArrayList<StencilClient.Entity<?>>();
     state.getLocales().values().forEach(batch::add);
     state.getArticles().values().forEach(batch::add);
     state.getPages().values().forEach(batch::add);

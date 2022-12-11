@@ -11,18 +11,18 @@ import org.apache.commons.lang3.StringUtils;
 
 import io.dialob.client.spi.support.OidUtils;
 import io.dialob.client.spi.support.Sha2;
+import io.digiexpress.client.api.ClientEntity.ClientEntityType;
+import io.digiexpress.client.api.ClientStore.CreateStoreEntity;
+import io.digiexpress.client.api.ClientStore.DeleteStoreEntity;
+import io.digiexpress.client.api.ClientStore.ClientStoreCommand;
+import io.digiexpress.client.api.ClientStore.StoreEntity;
+import io.digiexpress.client.api.ClientStore.StoreExceptionMsg;
+import io.digiexpress.client.api.ClientStore.StoreState;
+import io.digiexpress.client.api.ClientStore.UpdateStoreEntity;
 import io.digiexpress.client.api.ImmutableStoreEntity;
 import io.digiexpress.client.api.ImmutableStoreExceptionMsg;
 import io.digiexpress.client.api.ImmutableStoreState;
-import io.digiexpress.client.api.ServiceDocument.DocumentType;
-import io.digiexpress.client.api.ServiceStore.CreateStoreEntity;
-import io.digiexpress.client.api.ServiceStore.DeleteStoreEntity;
-import io.digiexpress.client.api.ServiceStore.StoreCommand;
-import io.digiexpress.client.api.ServiceStore.StoreEntity;
-import io.digiexpress.client.api.ServiceStore.StoreExceptionMsg;
-import io.digiexpress.client.api.ServiceStore.StoreState;
-import io.digiexpress.client.api.ServiceStore.UpdateStoreEntity;
-import io.digiexpress.client.spi.store.ServiceStoreConfig.EntityState;
+import io.digiexpress.client.spi.store.DocDBConfig.StoreEntityState;
 import io.resys.thena.docdb.api.actions.CommitActions.CommitResult;
 import io.resys.thena.docdb.api.actions.CommitActions.CommitStatus;
 import io.resys.thena.docdb.api.actions.ObjectsActions.BlobObject;
@@ -34,11 +34,11 @@ import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class ServiceStoreTemplate implements ServiceStoreConfig.Commands {
-  private static final Comparator<StoreCommand> COMP = (a, b) -> {
+public class DocDBCommandsSupport implements DocDBConfig.DocDBCommands {
+  private static final Comparator<ClientStoreCommand> COMP = (a, b) -> {
     return Sha2.blob(a.toString()).compareTo(Sha2.blob(b.toString()));
   };
-  protected final ServiceStoreConfig config;
+  protected final DocDBConfig config;
 
   public String getRepoName() {
     return config.getRepoName();
@@ -49,10 +49,9 @@ public class ServiceStoreTemplate implements ServiceStoreConfig.Commands {
   }
   
   public Uni<StoreEntity> delete(DeleteStoreEntity deleteType) {
-    final Uni<EntityState> query = getEntityState(deleteType.getId());
+    final Uni<StoreEntityState> query = getState(deleteType.getId());
     return query.onItem().transformToUni(state -> delete(state.getEntity()));
   }
-
 
   public Uni<StoreEntity> create(CreateStoreEntity newType) {
     final var gid = newType.getId() == null ? gid(newType.getBodyType()) : newType.getId();
@@ -66,7 +65,7 @@ public class ServiceStoreTemplate implements ServiceStoreConfig.Commands {
   }
 
   public Uni<StoreEntity> update(UpdateStoreEntity updateType) {
-    final Uni<EntityState> query = getEntityState(updateType.getId());
+    final Uni<StoreEntityState> query = getState(updateType.getId());
     return query.onItem().transformToUni(state -> {
       
       if(!state.getEntity().getVersion().equals(updateType.getVersion())) {
@@ -88,7 +87,7 @@ public class ServiceStoreTemplate implements ServiceStoreConfig.Commands {
     });
   }
 
-  public Uni<List<StoreEntity>> batch(List<StoreCommand> batchType) {
+  public Uni<List<StoreEntity>> batch(List<ClientStoreCommand> batchType) {
 
     final var create = batchType.stream()
         .filter(e -> e instanceof CreateStoreEntity).map(e -> (CreateStoreEntity) e)
@@ -228,17 +227,15 @@ public class ServiceStoreTemplate implements ServiceStoreConfig.Commands {
   }
   
   public StoreEntity getEntityFromState(StoreState state, String id) {
-    var entity = state.getDefs().get(id);
-    if(entity == null) {
-      entity = state.getRevs().get(id);
+    final var def = state.getDefinitions().get(id);
+    if(def != null) {
+      return def;
     }
-    if(entity == null) {
-      entity = state.getReleases().get(id);
+    final var project = state.getProjects().get(id);
+    if(project != null) {
+      return project;
     }
-    if(entity == null) {
-      entity = state.getConfigs().get(id);
-    }    
-    return null;
+    return state.getReleases().get(id);
   }
 
   public Uni<List<Repo>> getRepos() {
@@ -276,10 +273,9 @@ public class ServiceStoreTemplate implements ServiceStoreConfig.Commands {
             final var blob = state.getObjects().getBlobs().get(blobId);
             final var entity = config.getDeserializer().fromString(blob);
             switch(entity.getBodyType()) {
-             case SERVICE_REV: builder.putRevs(entity.getId(), entity); break;
-             case SERVICE_DEF: builder.putDefs(entity.getId(), entity);  break;
+             case PROJECT: builder.putProjects(entity.getId(), entity); break;
+             case SERVICE_DEF: builder.putDefinitions(entity.getId(), entity);  break;
              case SERVICE_RELEASE: builder.putReleases(entity.getId(), entity);  break;
-             case SERVICE_CONFIG: builder.putConfigs(entity.getId(), entity);  break;
              default: throw new RuntimeException("Unknown type: " + entity.getBodyType() + "!");
             }
           }
@@ -289,7 +285,7 @@ public class ServiceStoreTemplate implements ServiceStoreConfig.Commands {
   }
 
   @Override
-  public Uni<EntityState> getEntityState(String id) {
+  public Uni<StoreEntityState> getState(String id) {
     return config.getClient()
         .objects().blobState()
         .repo(config.getRepoName())
@@ -302,7 +298,7 @@ public class ServiceStoreTemplate implements ServiceStoreConfig.Commands {
             throw new StoreException("GET_FAIL", null, convertMessages1(state));
           }
           StoreEntity start = (StoreEntity) config.getDeserializer().fromString(state.getObjects().getBlob());
-          return ImmutableEntityState.builder().src(state).entity(start).build();
+          return ImmutableStoreEntityState.builder().blob(state).entity(start).build();
         });
   }
   @Override
@@ -344,10 +340,10 @@ public class ServiceStoreTemplate implements ServiceStoreConfig.Commands {
         .build();
   }
 
-  protected String gid(DocumentType type) {
-    return config.getGidProvider().getNextId(type);
+  protected String gid(ClientEntityType type) {
+    return config.getGid().getNextId(type);
   }
-  public ServiceStoreConfig getConfig() {
+  public DocDBConfig getConfig() {
     return config;
   }
 }

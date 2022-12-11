@@ -13,10 +13,9 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.dialob.client.api.DialobDocument.FormDocument;
 import io.dialob.client.api.DialobDocument.FormRevisionDocument;
-import io.digiexpress.client.api.ServiceDocument.ServiceConfigDocument;
-import io.digiexpress.client.api.ServiceDocument.ServiceDefinitionDocument;
-import io.digiexpress.client.api.ServiceDocument.ServiceReleaseDocument;
-import io.digiexpress.client.api.ServiceDocument.ServiceRevisionDocument;
+import io.digiexpress.client.api.ClientEntity.Project;
+import io.digiexpress.client.api.ClientEntity.ServiceDefinition;
+import io.digiexpress.client.api.ClientEntity.ServiceRelease;
 import io.resys.hdes.client.api.HdesComposer.ComposerEntity;
 import io.resys.hdes.client.api.ast.AstDecision;
 import io.resys.hdes.client.api.ast.AstFlow;
@@ -33,10 +32,9 @@ public interface ServiceComposerState extends Serializable {
   @Nullable String getCommit();
   @Nullable String getCommitMsg();
   SiteContentType getContentType();
-  Map<String, ServiceRevisionDocument> getRevisions();
-  Map<String, ServiceDefinitionDocument> getDefinitions();
-  Map<String, ServiceReleaseDocument> getReleases();
-  Map<String, ServiceConfigDocument> getConfigs();
+  Map<String, Project> getRevisions();
+  Map<String, ServiceDefinition> getDefinitions();
+  Map<String, ServiceRelease> getReleases();
   List<ComposerMessage> getMessages();
   
   enum SiteContentType { OK, ERRORS, NOT_CREATED  }
@@ -46,7 +44,7 @@ public interface ServiceComposerState extends Serializable {
   @JsonSerialize(as = ImmutableServiceComposerDefinitionState.class)
   @JsonDeserialize(as = ImmutableServiceComposerDefinitionState.class)
   public interface ServiceComposerDefinitionState extends Serializable {
-    ServiceDefinitionDocument getDefinition();
+    ServiceDefinition getDefinition();
     ComposerDialob getDialob();
     ComposerStencil getStencil();
     ComposerHdes getHdes();

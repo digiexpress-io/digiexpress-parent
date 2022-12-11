@@ -1,3 +1,3 @@
 import { RequireProject } from './RequireProject';
 
-export { RequireProject };
+export default RequireProject;

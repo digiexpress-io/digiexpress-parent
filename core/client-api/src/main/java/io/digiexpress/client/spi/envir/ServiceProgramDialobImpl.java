@@ -12,7 +12,7 @@ import io.dialob.api.form.Form;
 import io.dialob.client.api.DialobDocument;
 import io.dialob.client.api.ImmutableFormDocument;
 import io.dialob.program.DialobProgram;
-import io.digiexpress.client.api.ServiceClient.ServiceClientConfig;
+import io.digiexpress.client.api.Client.ClientConfig;
 import io.digiexpress.client.api.ServiceEnvir.ProgramMessage;
 import io.digiexpress.client.api.ServiceEnvir.ServiceProgramStatus;
 import io.digiexpress.client.api.ServiceEnvir.ServiceProgramDialob;
@@ -42,9 +42,9 @@ public class ServiceProgramDialobImpl implements ServiceProgramDialob {
   }
   
   @Override
-  public Form getDelegate(ServiceClientConfig config) {
+  public Form getDelegate(ClientConfig config) {
     if(this.delegate == null) {
-      final var form = config.getCompression().decompressionDialob(source.getBody());
+      final var form = config.getArchiver().decompressionDialob(source.getBody());
       this.delegate = form;
       this.status = ServiceProgramStatus.PARSED;
     }
@@ -52,7 +52,7 @@ public class ServiceProgramDialobImpl implements ServiceProgramDialob {
   }
 
   @Override
-  public Optional<DialobProgram> getCompiled(ServiceClientConfig config) {
+  public Optional<DialobProgram> getCompiled(ClientConfig config) {
     if(this.compiled == null) {
       try {
         final var form = getDelegate(config);

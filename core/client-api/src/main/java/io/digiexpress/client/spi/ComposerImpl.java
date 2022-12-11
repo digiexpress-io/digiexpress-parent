@@ -3,23 +3,23 @@ package io.digiexpress.client.spi;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import io.digiexpress.client.api.Client;
+import io.digiexpress.client.api.ClientEntity.ServiceDefinition;
+import io.digiexpress.client.api.ClientStore.StoreState;
 import io.digiexpress.client.api.ImmutableComposerDialob;
 import io.digiexpress.client.api.ImmutableComposerHdes;
 import io.digiexpress.client.api.ImmutableComposerMessage;
 import io.digiexpress.client.api.ImmutableComposerStencil;
 import io.digiexpress.client.api.ImmutableServiceComposerDefinitionState;
 import io.digiexpress.client.api.ImmutableServiceComposerState;
-import io.digiexpress.client.api.ServiceClient;
-import io.digiexpress.client.api.ServiceComposer;
+import io.digiexpress.client.api.Composer;
 import io.digiexpress.client.api.ServiceComposerState;
 import io.digiexpress.client.api.ServiceComposerState.ComposerDialob;
 import io.digiexpress.client.api.ServiceComposerState.ComposerHdes;
 import io.digiexpress.client.api.ServiceComposerState.ComposerStencil;
 import io.digiexpress.client.api.ServiceComposerState.ServiceComposerDefinitionState;
 import io.digiexpress.client.api.ServiceComposerState.SiteContentType;
-import io.digiexpress.client.api.ServiceDocument.ServiceDefinitionDocument;
-import io.digiexpress.client.api.ServiceStore.StoreState;
-import io.digiexpress.client.spi.composer.ComposerCreateBuilderImpl;
+import io.digiexpress.client.spi.composer.ComposerBuilderImpl;
 import io.digiexpress.client.spi.store.StoreException;
 import io.resys.hdes.client.api.ImmutableComposerState;
 import io.resys.hdes.client.api.ImmutableStoreEntity;
@@ -31,26 +31,26 @@ import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class ServiceComposerImpl implements ServiceComposer {
+public class ComposerImpl implements Composer {
 
-  private final ServiceClient client;
+  private final Client client;
 
   @Override
-  public CreateBuilder create() {
-    return new ComposerCreateBuilderImpl(client);
+  public ComposerBuilder create() {
+    return new ComposerBuilderImpl(client);
   }
 
   @Override
-  public ServiceComposer.QueryBuilder query() {
+  public Composer.ComposerQuery query() {
     final var parent = this;
-    return new ServiceComposer.QueryBuilder() {
+    return new Composer.ComposerQuery() {
       @Override public Uni<ServiceComposerState> release(String releaseId) { return null; }
       @Override public Uni<ServiceComposerState> head() { return client.getQuery().getRepos().onItem().transformToUni(parent::headState); }
       @Override public Uni<ServiceComposerDefinitionState> definition(String definitionId) { return client.getQuery().getServiceDef(definitionId).onItem().transformToUni(parent::defState); }
     };
   }
 
-  private Uni<ServiceComposerDefinitionState> defState(ServiceDefinitionDocument definition) {
+  private Uni<ServiceComposerDefinitionState> defState(ServiceDefinition definition) {
     final var dialob = dialobState(definition);
     final var hdes = hdesState(definition);
     final var stencil = stencilState(definition);
@@ -63,12 +63,12 @@ public class ServiceComposerImpl implements ServiceComposer {
           .build());
   }
 
-  private Uni<ComposerStencil> stencilState(ServiceDefinitionDocument definition) {
+  private Uni<ComposerStencil> stencilState(ServiceDefinition definition) {
     return client.getQuery().getStencil(definition.getStencil().getTagName())
         .onItem().transform(state -> ImmutableComposerStencil.builder().sites(state.getSites()).build());
   }
   
-  private Uni<ComposerHdes> hdesState(ServiceDefinitionDocument definition) {
+  private Uni<ComposerHdes> hdesState(ServiceDefinition definition) {
     return client.getQuery().getHdes(definition.getHdes().getTagName()).onItem()
         .transform((AstTag tag) -> {
           final var envir = client.getConfig().getHdes().envir();
@@ -100,8 +100,8 @@ public class ServiceComposerImpl implements ServiceComposer {
         });
     
   }  
-  private Uni<ComposerDialob> dialobState(ServiceDefinitionDocument definition) {
-    return Multi.createFrom().items(definition.getProcesses().stream()).onItem().transformToUni(process -> {
+  private Uni<ComposerDialob> dialobState(ServiceDefinition definition) {
+    return Multi.createFrom().items(definition.getDescriptors().stream()).onItem().transformToUni(process -> {
       final var formId = process.getFormId();
       return Uni.combine().all().unis(
           client.getQuery().getFormRev(formId).onFailure().recoverWithNull(), 
@@ -139,13 +139,11 @@ public class ServiceComposerImpl implements ServiceComposer {
   }
 
   private ServiceComposerState okState(StoreState store) {
-    final var mapper = client.getConfig().getMapper();
-    final var configs = store.getConfigs().values().stream()
-        .collect(Collectors.toMap(e -> e.getId(), mapper::toConfig));
-    final var revisions = store.getRevs().values().stream()
-        .collect(Collectors.toMap(e -> e.getId(), mapper::toRev));
-    final var definitions = store.getDefs().values().stream()
-        .collect(Collectors.toMap(e -> e.getId(), mapper::toDef));
+    final var mapper = client.getConfig().getParser();
+    final var revisions = store.getProjects().values().stream()
+        .collect(Collectors.toMap(e -> e.getId(), mapper::toProject));
+    final var definitions = store.getDefinitions().values().stream()
+        .collect(Collectors.toMap(e -> e.getId(), mapper::toDefinition));
     
     
     return ImmutableServiceComposerState.builder()
@@ -153,7 +151,6 @@ public class ServiceComposerImpl implements ServiceComposer {
       .contentType(SiteContentType.OK)
       .commit(store.getCommit())
       .commitMsg(store.getCommitMsg())
-      .configs(configs)
       .revisions(revisions)
       .definitions(definitions)
       .build();

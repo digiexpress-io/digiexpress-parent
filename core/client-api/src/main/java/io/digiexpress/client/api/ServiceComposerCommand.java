@@ -11,15 +11,15 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.dialob.client.api.DialobDocument.FormDocument;
 import io.dialob.client.api.DialobDocument.FormRevisionDocument;
-import io.digiexpress.client.api.ServiceDocument.ServiceDefinitionDocument;
+import io.digiexpress.client.api.ClientEntity.ServiceDefinition;
 import io.resys.hdes.client.api.HdesStore.StoreState;
 import io.thestencil.client.api.ImmutableCreateRelease;
 import io.thestencil.client.api.StencilComposer.SiteState;
 
 public interface ServiceComposerCommand extends Serializable {
 
-  @Value.Immutable @JsonSerialize(as = ImmutableCreateServiceRevision.class) @JsonDeserialize(as = ImmutableCreateServiceRevision.class)
-  interface CreateServiceRevision extends ServiceComposerCommand {
+  @Value.Immutable @JsonSerialize(as = ImmutableCreateProjectRevision.class) @JsonDeserialize(as = ImmutableCreateProjectRevision.class)
+  interface CreateProjectRevision extends ServiceComposerCommand {
     String getName();
     String getDescription();
   }
@@ -32,10 +32,10 @@ public interface ServiceComposerCommand extends Serializable {
     LocalDateTime getTargetDate();
   }
   
-  @Value.Immutable @JsonSerialize(as = ImmutableCreateProcess.class) @JsonDeserialize(as = ImmutableCreateProcess.class)
-  interface CreateProcess extends ServiceComposerCommand {
-    String getServiceRevisionId();
-    String getServiceRevisionVersionId();
+  @Value.Immutable @JsonSerialize(as = ImmutableCreateServiceDescriptor.class) @JsonDeserialize(as = ImmutableCreateServiceDescriptor.class)
+  interface CreateServiceDescriptor extends ServiceComposerCommand {
+    String getDefId();
+    String getDefVersionId();
     String getName();
     String getDesc();
     String getFormId();
@@ -46,7 +46,7 @@ public interface ServiceComposerCommand extends Serializable {
   interface CreateMigration extends ServiceComposerCommand {
     List<FormRevisionDocument> getFormRevs();
     List<FormDocument> getForms();
-    ServiceDefinitionDocument getServices();
+    ServiceDefinition getServices();
     StoreState getHdes();
     SiteState getStencil();
   }

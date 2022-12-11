@@ -13,17 +13,17 @@ import java.util.stream.Stream;
 import org.immutables.value.Value;
 
 import io.dialob.api.form.Form;
-import io.digiexpress.client.api.CompressionMapper;
-import io.digiexpress.client.api.ImmutableServiceReleaseDocument;
+import io.digiexpress.client.api.Archiver;
+import io.digiexpress.client.api.Client.ClientConfig;
+import io.digiexpress.client.api.ClientEntity.ConfigType;
+import io.digiexpress.client.api.ClientEntity.RefIdValue;
+import io.digiexpress.client.api.ClientEntity.ServiceDefinition;
+import io.digiexpress.client.api.ClientEntity.ServiceDescriptor;
+import io.digiexpress.client.api.ClientEntity.ServiceRelease;
+import io.digiexpress.client.api.ClientEntity.ServiceReleaseValue;
+import io.digiexpress.client.api.ImmutableServiceRelease;
 import io.digiexpress.client.api.ImmutableServiceReleaseValue;
 import io.digiexpress.client.api.QueryFactory;
-import io.digiexpress.client.api.ServiceClient.ServiceClientConfig;
-import io.digiexpress.client.api.ServiceDocument.ConfigType;
-import io.digiexpress.client.api.ServiceDocument.ProcessValue;
-import io.digiexpress.client.api.ServiceDocument.RefIdValue;
-import io.digiexpress.client.api.ServiceDocument.ServiceDefinitionDocument;
-import io.digiexpress.client.api.ServiceDocument.ServiceReleaseDocument;
-import io.digiexpress.client.api.ServiceDocument.ServiceReleaseValue;
 import io.digiexpress.client.spi.support.ReleaseException;
 import io.digiexpress.client.spi.support.ServiceAssert;
 import io.resys.hdes.client.api.ast.AstBody.AstBodyType;
@@ -45,20 +45,20 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CreateReleaseVisitor {
   
-  private final ServiceClientConfig config;
+  private final ClientConfig config;
   private final QueryFactory query;
   private final LocalDateTime now;
   private final LocalDateTime ZERO_DATE = LocalDateTime.of(1970, 01, 01, 01, 01);
   
   
-  public Uni<ServiceReleaseDocument> visit(final ServiceDefinitionDocument def, final String name, final LocalDateTime activeFrom) {
+  public Uni<ServiceRelease> visit(final ServiceDefinition def, final String name, final LocalDateTime activeFrom) {
     return Multi.createFrom().items(def.getStencil(), def.getHdes())
       .onItem().transformToUni(this::visitRef).concatenate().collect().asList()
       .onItem().transformToUni((refs) -> visitResolvedRef(refs, def, name))
       .onItem().transformToUni((ResolvedAssetEnvir envir) -> {
         
         // resolve forms
-        final Uni<List<ResolvedAsset>> resolvedForms = Multi.createFrom().items(def.getProcesses().stream())
+        final Uni<List<ResolvedAsset>> resolvedForms = Multi.createFrom().items(def.getDescriptors().stream())
             .onItem().transformToUni(process -> query.getForm(process.getFormId())
             .onItem().transform(form -> visitForm(process, form.getData(), envir)))
             .concatenate().collect().asList();
@@ -72,7 +72,7 @@ public class CreateReleaseVisitor {
         
         visitSanity(compressed);
         
-        return ImmutableServiceReleaseDocument.builder()
+        return ImmutableServiceRelease.builder()
             .name(name)
             .desc(visitDesc(def, compressed, name, activeFrom))
             .repoId(config.getStore().getRepoName())
@@ -109,7 +109,7 @@ public class CreateReleaseVisitor {
     
     final var errors = new StringBuilder();
     final var def = service.get().getService();
-    for(final var process : def.getProcesses()) {
+    for(final var process : def.getDescriptors()) {
       if(!flows.containsKey(process.getFlowId())) {
         errors.append(visitMissingFlow(hdes.get().getEnvir(), process, def));
       }
@@ -118,7 +118,7 @@ public class CreateReleaseVisitor {
       }
     }
     
-    final var processes = def.getProcesses().stream().collect(Collectors.toMap(e -> e.getName(), e -> e));
+    final var processes = def.getDescriptors().stream().collect(Collectors.toMap(e -> e.getName(), e -> e));
     for(final var site : stencil.get().getSites().getSites().values()) {
       for(final var link : site.getLinks().values()) {
         if(!link.getWorkflow()) {
@@ -134,20 +134,20 @@ public class CreateReleaseVisitor {
       throw ReleaseException.sanityRuleViolations(() -> errors.toString());
     }
   }
-  private String visitMissingWorkflow(Collection<ProcessValue> processes, TopicLink workflow, LocalizedSite site, ServiceDefinitionDocument def) {
+  private String visitMissingWorkflow(Collection<ServiceDescriptor> processes, TopicLink workflow, LocalizedSite site, ServiceDefinition def) {
     return "  - missing ProcessValue with name: '" + workflow.getValue() + "' for site locale: '"  + site.getLocale()+ "'!" + System.lineSeparator();
   }  
   private String visitMissingFlow(
       io.resys.hdes.client.api.programs.ProgramEnvir hdes, 
-      ProcessValue process, ServiceDefinitionDocument def) {
+      ServiceDescriptor process, ServiceDefinition def) {
     return "  - missing Flow with name: '" + process.getFlowId() + "' for ProcessValue(id/name): '"  + process.getId() + "/" + process.getName() + "'!" + System.lineSeparator();
   }
   
-  private String visitMissingForm(Collection<Form> forms, ProcessValue process, ServiceDefinitionDocument def) {
+  private String visitMissingForm(Collection<Form> forms, ServiceDescriptor process, ServiceDefinition def) {
     return "  - missing Form with id: '" + process.getFormId() + "' for ProcessValue(id/name): '"  + process.getId() + "/" + process.getName() + "'!" + System.lineSeparator();
   }
   
-  protected List<String> visitDesc(ServiceDefinitionDocument def, List<CompressedAsset> compressed, String name, LocalDateTime activeFrom) {
+  protected List<String> visitDesc(ServiceDefinition def, List<CompressedAsset> compressed, String name, LocalDateTime activeFrom) {
     final var compressinsById = new HashMap<String, CompressedAsset>();
     final var forms = new HashMap<String, ResolvedAssetForm>();
     final var flows = new HashMap<String, AstFlow>();
@@ -207,9 +207,9 @@ public class CreateReleaseVisitor {
     
     desc.addAll(Arrays.asList(
       "# Process descriptions",
-      "There are total of: '" + def.getProcesses().size() + "' entries"));
+      "There are total of: '" + def.getDescriptors().size() + "' entries"));
     
-    for(final var process : def.getProcesses()) {
+    for(final var process : def.getDescriptors()) {
       final var form = forms.get(process.getFormId());
       final var flow = flows.get(process.getFlowId());
       
@@ -238,13 +238,13 @@ public class CreateReleaseVisitor {
   protected void visitDecisionTable(AstDecision decision) {
     
   }
-  protected ResolvedAsset visitForm(ProcessValue process, Form form, ResolvedAssetEnvir envir) {
+  protected ResolvedAsset visitForm(ServiceDescriptor process, Form form, ResolvedAssetEnvir envir) {
     return ImmutableResolvedAssetForm.builder().form(form).build();
   }
   protected CompressedAsset visitCompression(ResolvedAsset source) {
-    final var mapper = this.config.getCompression();
+    final var mapper = this.config.getArchiver();
     final var releaseValue = ImmutableServiceReleaseValue.builder();
-    final CompressionMapper.Compressed target;
+    final Archiver.Compressed target;
     if(source instanceof ResolvedAssetHdes) {
       final var tag = ((ResolvedAssetHdes) source).getAstTag();
       target = mapper.compress(tag);
@@ -260,7 +260,7 @@ public class CreateReleaseVisitor {
     } else if(source instanceof ResolvedAssetService) {
       final var service = ((ResolvedAssetService) source).getService();
       target = mapper.compress(service);
-      releaseValue.bodyType(ConfigType.SERVICE).id(((ResolvedAssetService) source).getTagName());
+      releaseValue.bodyType(ConfigType.PROJECT).id(((ResolvedAssetService) source).getTagName());
     } else {
       throw new ReleaseException("Unknown compression asset type: " + source.getClass().getSimpleName());
     }
@@ -315,7 +315,7 @@ public class CreateReleaseVisitor {
     throw new ReleaseException("Unknown ref type: " + value.getType());
   }
   
-  protected Uni<ResolvedAssetEnvir> visitResolvedRef(final List<ResolvedAsset> refs, final ServiceDefinitionDocument def, final String defName) {
+  protected Uni<ResolvedAssetEnvir> visitResolvedRef(final List<ResolvedAsset> refs, final ServiceDefinition def, final String defName) {
     final var stencil = refs.stream()
         .filter(r -> r instanceof ResolvedAssetStencil)
         .map(r -> (ResolvedAssetStencil) r)
@@ -336,7 +336,7 @@ public class CreateReleaseVisitor {
   @Value.Immutable
   public interface ResolvedAssetService extends ResolvedAsset {
     String getTagName();
-    ServiceDefinitionDocument getService();
+    ServiceDefinition getService();
   }
   
   @Value.Immutable
@@ -366,7 +366,7 @@ public class CreateReleaseVisitor {
   @Value.Immutable
   public interface CompressedAsset {
     ResolvedAsset getSource();
-    CompressionMapper.Compressed getTarget();
+    Archiver.Compressed getTarget();
     ServiceReleaseValue getValue();
   }
   

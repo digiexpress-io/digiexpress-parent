@@ -34,18 +34,18 @@ import io.digiexpress.client.api.ProcessState;
 import io.digiexpress.client.api.ProcessState.FillCompleted;
 import io.digiexpress.client.api.ProcessState.FillCreated;
 import io.digiexpress.client.api.ProcessState.FillInProgress;
-import io.digiexpress.client.api.ServiceClient.DialobExecutor;
-import io.digiexpress.client.api.ServiceClient.Execution;
-import io.digiexpress.client.api.ServiceClient.ExecutionDialobBody;
-import io.digiexpress.client.api.ServiceClient.QuestionnaireStore;
-import io.digiexpress.client.api.ServiceClient.ServiceClientConfig;
+import io.digiexpress.client.api.Client.DialobExecutor;
+import io.digiexpress.client.api.Client.Execution;
+import io.digiexpress.client.api.Client.ExecutionDialobBody;
+import io.digiexpress.client.api.Client.QuestionnaireStore;
+import io.digiexpress.client.api.Client.ClientConfig;
 import io.digiexpress.client.api.ServiceEnvir;
 import io.digiexpress.client.spi.support.ServiceAssert;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class DialobExecutorImpl implements DialobExecutor {
-  private final ServiceClientConfig config;
+  private final ClientConfig config;
   private final ProcessState state;
   private final ServiceEnvir envir;
   private QuestionnaireStore questionnaireStore; 

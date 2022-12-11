@@ -24,14 +24,14 @@ import io.dialob.api.questionnaire.Questionnaire;
 import io.dialob.client.api.DialobComposer;
 import io.dialob.client.spi.DialobComposerImpl;
 import io.digiexpress.client.api.ProcessState;
-import io.digiexpress.client.api.ServiceClient;
-import io.digiexpress.client.api.ServiceClient.Execution;
-import io.digiexpress.client.api.ServiceClient.ExecutionDialobBody;
-import io.digiexpress.client.api.ServiceClient.QuestionnaireStore;
-import io.digiexpress.client.api.ServiceComposer;
+import io.digiexpress.client.api.Client;
+import io.digiexpress.client.api.Client.Execution;
+import io.digiexpress.client.api.Client.ExecutionDialobBody;
+import io.digiexpress.client.api.Client.QuestionnaireStore;
+import io.digiexpress.client.api.Composer;
 import io.digiexpress.client.api.ServiceComposerCommand.CreateMigration;
 import io.digiexpress.client.api.ServiceEnvir;
-import io.digiexpress.client.spi.ServiceComposerImpl;
+import io.digiexpress.client.spi.ComposerImpl;
 import io.digiexpress.client.tests.migration.MigrationsDefaults;
 import io.resys.hdes.client.api.HdesComposer;
 import io.resys.hdes.client.spi.HdesComposerImpl;
@@ -77,24 +77,24 @@ public class TestCase {
     return builder.testcases(testcases);
   }
   
-  public ServiceClient client() {
+  public Client client() {
     return builder.getClient();
   }
   
-  public DialobComposer dialob(ServiceClient client) {
+  public DialobComposer dialob(Client client) {
     return new DialobComposerImpl(client.getConfig().getDialob());
   }
   
-  public StencilComposer stencil(ServiceClient client) {
+  public StencilComposer stencil(Client client) {
     return new StencilComposerImpl(client.getConfig().getStencil());
   }
   
-  public HdesComposer hdes(ServiceClient client) {
+  public HdesComposer hdes(Client client) {
     return new HdesComposerImpl(client.getConfig().getHdes());
   }
   
-  public ServiceComposer service(ServiceClient client) {
-    return new ServiceComposerImpl(client);
+  public Composer service(Client client) {
+    return new ComposerImpl(client);
   }
     
   public String toJson(Object v) {
@@ -141,14 +141,14 @@ public class TestCase {
     }
   }
   
-  public FillTestCase fill(ServiceEnvir envir, ServiceClient client, ProcessState state) {
+  public FillTestCase fill(ServiceEnvir envir, Client client, ProcessState state) {
     return new FillTestCase(envir, client, questionnaireStore, in_memory_questionnaire, state, null, null);
   }
   
   @AllArgsConstructor
   public static class FillTestCase {
     private final ServiceEnvir envir;
-    private final ServiceClient client;
+    private final Client client;
     private final QuestionnaireStore store;
     private final Map<String, Questionnaire> mem;
     private ProcessState state;

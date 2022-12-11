@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import io.digiexpress.client.api.ServiceStore.StoreEntity;
-import io.digiexpress.client.api.ServiceStore.StoreExceptionMsg;
+import io.digiexpress.client.api.ClientStore.StoreEntity;
+import io.digiexpress.client.api.ClientStore.StoreExceptionMsg;
 
 
 

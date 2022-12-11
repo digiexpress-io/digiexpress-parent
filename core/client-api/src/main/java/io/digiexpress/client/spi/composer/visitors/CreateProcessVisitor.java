@@ -1,13 +1,13 @@
 package io.digiexpress.client.spi.composer.visitors;
 
-import io.digiexpress.client.api.ServiceClient;
-import io.digiexpress.client.api.ServiceComposerCommand.CreateProcess;
+import io.digiexpress.client.api.Client;
+import io.digiexpress.client.api.ServiceComposerCommand.CreateServiceDescriptor;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class CreateProcessVisitor {
-  private final ServiceClient client;
-  private final CreateProcess init;
+  private final Client client;
+  private final CreateServiceDescriptor init;
   
   
 }

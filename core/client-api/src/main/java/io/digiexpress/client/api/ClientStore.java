@@ -12,38 +12,45 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import io.digiexpress.client.api.ServiceDocument.DocumentType;
+import io.digiexpress.client.api.ClientEntity.ClientEntityType;
 import io.smallrye.mutiny.Uni;
 
-public interface ServiceStore {
+public interface ClientStore {
   Uni<StoreEntity> create(CreateStoreEntity newType);
   Uni<StoreEntity> update(UpdateStoreEntity updateType);
   Uni<StoreEntity> delete(DeleteStoreEntity deleteType);
-  Uni<List<StoreEntity>> batch(List<StoreCommand> batchType);
+  Uni<List<StoreEntity>> batch(List<ClientStoreCommand> batchType);
     
-  QueryBuilder query();
-  StoreRepoBuilder repo();
+  StoreQuery query();
+  StoreRepo repo();
   
   String getRepoName();
   String getHeadName();
 
-  GidProvider getGid();
+  StoreGid getGid();
 
   @FunctionalInterface
-  interface GidProvider {
-    String getNextId(DocumentType entity);
+  interface StoreGid {
+    String getNextId(ClientEntityType entity);
   }
   
+  @FunctionalInterface
+  interface StoreCredsSupplier extends Supplier<StoreCreds> {
+  }
   
-  interface StoreRepoBuilder {
-    StoreRepoBuilder repoName(String repoName);
-    StoreRepoBuilder headName(String headName);
-    Uni<ServiceStore> create();    
-    ServiceStore build();
+  interface ClientStoreCommand extends Serializable {
+    ClientEntityType getBodyType();
+  }
+  
+  interface StoreRepo {
+    StoreRepo repoName(String repoName);
+    StoreRepo headName(String headName);
+    Uni<ClientStore> create();    
+    ClientStore build();
     Uni<Boolean> createIfNot();
   }
   
-  interface QueryBuilder {
+  interface StoreQuery {
     Uni<StoreState> get();
     Uni<StoreEntity> get(String id);
   }
@@ -52,47 +59,41 @@ public interface ServiceStore {
   interface StoreState {
     String getCommit();
     @Nullable String getCommitMsg();
-    Map<String, StoreEntity> getRevs();
-    Map<String, StoreEntity> getDefs();
+    Map<String, StoreEntity> getProjects();
+    Map<String, StoreEntity> getDefinitions();
     Map<String, StoreEntity> getReleases();
-    Map<String, StoreEntity> getConfigs();
   }
   
   @Value.Immutable @JsonSerialize(as = ImmutableStoreEntity.class) @JsonDeserialize(as = ImmutableStoreEntity.class)
   interface StoreEntity extends Serializable {
     String getId();
     String getVersion();
-    ServiceDocument.DocumentType getBodyType();
+    ClientEntityType getBodyType();
     String getBody();
   }
-  
-  
-  interface StoreCommand extends Serializable {
-    ServiceDocument.DocumentType getBodyType();
-  }
 
-  @Value.Immutable @JsonSerialize(as = ImmutableUpdateStoreEntity.class) @JsonDeserialize(as = ImmutableUpdateStoreEntity.class)
-  interface EmptyCommand extends StoreCommand {
+  @Value.Immutable @JsonSerialize(as = ImmutableEmptyStoreCommand.class) @JsonDeserialize(as = ImmutableEmptyStoreCommand.class)
+  interface EmptyStoreCommand extends ClientStoreCommand {
     String getId();
     String getDescription();
   }
   
   @Value.Immutable @JsonSerialize(as = ImmutableUpdateStoreEntity.class) @JsonDeserialize(as = ImmutableUpdateStoreEntity.class)
-  interface UpdateStoreEntity extends StoreCommand {
+  interface UpdateStoreEntity extends ClientStoreCommand {
     String getId();
     String getVersion();
     String getBody();
   }
 
   @Value.Immutable @JsonSerialize(as = ImmutableCreateStoreEntity.class) @JsonDeserialize(as = ImmutableCreateStoreEntity.class)
-  interface CreateStoreEntity extends StoreCommand {
+  interface CreateStoreEntity extends ClientStoreCommand {
     @Nullable String getId(); // in case not provided, auto generated
     @Nullable String getVersion(); // in case not provided, auto generated
     String getBody();
   }
   
   @Value.Immutable @JsonSerialize(as = ImmutableDeleteStoreEntity.class) @JsonDeserialize(as = ImmutableDeleteStoreEntity.class)
-  interface DeleteStoreEntity extends StoreCommand {
+  interface DeleteStoreEntity extends ClientStoreCommand {
     String getId();
     String getVersion();
   }
@@ -104,11 +105,8 @@ public interface ServiceStore {
     List<String> getArgs();
   }
   
-  @FunctionalInterface
-  interface ServiceCredsSupplier extends Supplier<ServiceCreds> {}
-  
   @Value.Immutable
-  interface ServiceCreds {
+  interface StoreCreds {
     String getUser();
     String getEmail();
   } 

@@ -5,9 +5,9 @@ import { FormattedMessage } from 'react-intl';
 
 import Burger from '@the-wrench-io/react-burger';
 import { Composer, Client } from '../context';
-import { ErrorView } from '../styles';
+import Errors from '../Errors';
 
-const MigrationComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+const Migration: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [open, setOpen] = React.useState(true);
   const [file, setFile] = React.useState<string | undefined>();
   const [loading, setLoading] = React.useState<boolean | undefined>();
@@ -43,7 +43,7 @@ const MigrationComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           <Typography variant="h4">
             <FormattedMessage id="project.dialog.requireProject.errorsTitle" />
           </Typography>
-          <ErrorView error={errors} />
+          <Errors error={errors} />
         </Box>) : undefined}
         {loading ? <CircularProgress /> : <Burger.FileField value="" onChange={setFile} label="migrations.dialog.select" />}
       </>
@@ -53,4 +53,4 @@ const MigrationComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   );
 }
 
-export { MigrationComposer };
+export { Migration };
