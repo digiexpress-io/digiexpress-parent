@@ -15,8 +15,9 @@ import {
   ServiceConfigValue,
   SiteMigrate,
   
+  FormDocument, 
   ProcessValue, RefIdValue, ProcessValueId, ServiceDocumentId, 
-
+  LocalizedSite,
 
 } from "./api";
 
@@ -25,6 +26,8 @@ import { DefaultStore, StoreConfig } from './store';
 
 declare namespace DigiexpressClient {
   export type {
+    LocalizedSite,
+    FormDocument,
     ProcessValueId, ServiceDocumentId, 
     AstCommand,
     ProcessValue, RefIdValue,

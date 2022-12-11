@@ -1,7 +1,7 @@
 export type EntityId = string;
 export type ServiceRevisionValueId = string;
 export type ServiceDocumentId = string;
-export type ProcessValueId = string; 
+export type ProcessValueId = string;
 export type ProgramStatus = "UP" | "AST_ERROR" | "PROGRAM_ERROR" | "DEPENDENCY_ERROR";
 export type DocumentType = 'SERVICE_REV' | 'SERVICE_DEF' | 'SERVICE_CONFIG' | 'SERVICE_RELEASE';
 export type ConfigType = 'STENCIL' | 'DIALOB' | 'HDES' | 'SERVICE' | 'RELEASE';
@@ -14,7 +14,7 @@ export interface AstCommand {
 }
 
 export interface SiteMigrate {
-  
+
 }
 
 
@@ -96,11 +96,92 @@ export interface SiteDefinition {
   hdes: ComposerHdes;
 }
 
-export interface ComposerDialob { 
+export interface ComposerDialob {
+  forms: Record<string, FormDocument>;
+  revs: Record<string, FormRevisionDocument>;
 }
-export interface ComposerStencil { 
+export interface FormDocument {
+  id: string;
+  data: {
+    name: string;
+    variables: Variable[];
+  }
 }
-export interface ComposerHdes { 
+export interface Variable {
+  name: string;
+  context: boolean;
+  contextType: string;
+}
+
+export interface FormRevisionDocument {
+
+}
+export interface ComposerStencil {
+  sites: Record<string, LocalizedSite>;
+}
+
+export interface LocalizedSite {
+  topics: Record<string, Topic>;
+  blobs: Record<string, TopicBlob>;
+  links: Record<string, TopicLink>;
+}
+
+
+export interface TopicBlob {
+  id: string;
+  value: string;
+}
+
+export interface Topic {
+  id: string;
+  name: string;
+  links: string[];
+  headings: TopicHeading[];
+  parent?: string;
+  blob?: string;
+}
+
+export interface TopicHeading {
+  id: string;
+  name: string;
+  order: number;
+  level: number;
+}
+
+export interface TopicLink {
+  id: string;
+  path: string;
+  type: string;
+  name: string;
+  value: string;
+  global: boolean;
+  workflow: boolean;
+}
+
+
+export interface ComposerHdes {
+  flows: Record<string, AstFlow>;
+  services: Map<string, AstService>;
+  decisions: Map<string, AstDecision>;
+}
+
+export interface AstFlow {
+  id: string;
+  ast: {
+    name: string;
+  }
+}
+export interface AstService {
+  id: string;
+  ast: {
+    name: string;
+  }
+}
+export interface AstDecision {
+  id: string;
+  ast: {
+    name: string;
+  }
 }
 
 export interface Entity {

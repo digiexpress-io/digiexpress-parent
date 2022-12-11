@@ -11,17 +11,17 @@
     "@mui/material": "^5.0.1",
     "@mui/styles": "^5.0.1",
     "@mui/system": "^5.0.1",
-    "@projectstorm/geometry": "^6.7.4",
-    "@projectstorm/react-canvas-core": "^6.7.4",
-    "@projectstorm/react-diagrams-core": "^6.7.4",
-    "@projectstorm/react-diagrams-defaults": "^6.7.4",
-    "@projectstorm/react-diagrams-routing": "^6.7.4",
+    "@projectstorm/react-diagrams": "^6.7.4",
     "@the-wrench-io/react-burger": "^1.0.39",
+    "dagre": "^0.8.5",
     "notistack": "^2.0.3",
+    "pathfinding": "^0.4.18",
+    "paths-js": "^0.4.11",
     "prop-types": "^15.8.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-intl": "^5.17.2"
+    "react-intl": "^5.17.2",
+    "resize-observer-polyfill": "^1.5.1"
   },
   "devDependencies": {
     "@types/node": "^12.19.9",

@@ -2827,6 +2827,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@projectstorm/react-diagrams@npm:^6.7.4":
+  version: 6.7.4
+  resolution: "@projectstorm/react-diagrams@npm:6.7.4"
+  dependencies:
+    "@projectstorm/react-diagrams-core": ^6.7.4
+    "@projectstorm/react-diagrams-defaults": ^6.7.4
+    "@projectstorm/react-diagrams-routing": ^6.7.4
+  checksum: a65b9225fc32b5fc96f5f866dedc12e8aa11830f8e2406640408ee98b0a31289b8a61adf98205aab7fb59cabce6758aa97930edf905a89ea9bc37c7fdffb24a3
+  languageName: node
+  linkType: hard
+
 "@rollup/plugin-babel@npm:^5.2.0":
   version: 5.3.1
   resolution: "@rollup/plugin-babel@npm:5.3.1"
@@ -5454,6 +5465,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dagre@npm:^0.8.5":
+  version: 0.8.5
+  resolution: "dagre@npm:0.8.5"
+  dependencies:
+    graphlib: ^2.1.8
+    lodash: ^4.17.15
+  checksum: b9fabd425466d7b662381c2e457b1adda996bc4169aa60121d4de50250d83a6bb4b77d559e2f887c9c564caea781c2a377fd4de2a76c15f8f04ec3d086ca95f9
+  languageName: node
+  linkType: hard
+
 "damerau-levenshtein@npm:^1.0.8":
   version: 1.0.8
   resolution: "damerau-levenshtein@npm:1.0.8"
@@ -5670,24 +5691,24 @@ __metadata:
     "@mui/material": ^5.0.1
     "@mui/styles": ^5.0.1
     "@mui/system": ^5.0.1
-    "@projectstorm/geometry": ^6.7.4
-    "@projectstorm/react-canvas-core": ^6.7.4
-    "@projectstorm/react-diagrams-core": ^6.7.4
-    "@projectstorm/react-diagrams-defaults": ^6.7.4
-    "@projectstorm/react-diagrams-routing": ^6.7.4
+    "@projectstorm/react-diagrams": ^6.7.4
     "@the-wrench-io/react-burger": ^1.0.39
     "@types/node": ^12.19.9
     "@types/react": ^17.0.1
     "@types/react-dom": ^17.0.1
     css-loader: ^6.5.1
+    dagre: ^0.8.5
     eslint: ^8.0.0
     eslint-config-react-app: ^7.0.0
     notistack: ^2.0.3
+    pathfinding: ^0.4.18
+    paths-js: ^0.4.11
     prop-types: ^15.8.0
     react: ^17.0.2
     react-dom: ^17.0.2
     react-intl: ^5.17.2
     react-scripts: 5.0.0
+    resize-observer-polyfill: ^1.5.1
     style-loader: ^3.3.1
     ts-node: ^9.1.1
     typescript: ^4.1.3
@@ -7092,6 +7113,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"graphlib@npm:^2.1.8":
+  version: 2.1.8
+  resolution: "graphlib@npm:2.1.8"
+  dependencies:
+    lodash: ^4.17.15
+  checksum: 1e0db4dea1c8187d59103d5582ecf32008845ebe2103959a51d22cb6dae495e81fb9263e22c922bca3aaecb56064a45cd53424e15a4626cfb5a0c52d0aff61a8
+  languageName: node
+  linkType: hard
+
 "gzip-size@npm:^6.0.0":
   version: 6.0.0
   resolution: "gzip-size@npm:6.0.0"
@@ -7183,6 +7213,13 @@ __metadata:
   bin:
     he: bin/he
   checksum: 3d4d6babccccd79c5c5a3f929a68af33360d6445587d628087f39a965079d84f18ce9c3d3f917ee1e3978916fc833bb8b29377c3b403f919426f91bc6965e7a7
+  languageName: node
+  linkType: hard
+
+"heap@npm:0.2.5":
+  version: 0.2.5
+  resolution: "heap@npm:0.2.5"
+  checksum: 1f178a62cef3a29c1dc19783b2a478f4b8f1b85bd2ceb70fa535cf368fdd8fee141f08af0af5c55cd32e1b8a6b1ed200d8d18cd33fa4700ba97476d9c27162d3
   languageName: node
   linkType: hard
 
@@ -8934,7 +8971,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash@npm:^4.17.20, lodash@npm:^4.17.21, lodash@npm:^4.7.0":
+"lodash@npm:^4.17.15, lodash@npm:^4.17.20, lodash@npm:^4.17.21, lodash@npm:^4.7.0":
   version: 4.17.21
   resolution: "lodash@npm:4.17.21"
   checksum: eb835a2e51d381e561e508ce932ea50a8e5a68f4ebdd771ea240d3048244a8d13658acbd502cd4829768c56f2e16bdd4340b9ea141297d472517b83868e677f7
@@ -9842,6 +9879,22 @@ __metadata:
   version: 4.0.0
   resolution: "path-type@npm:4.0.0"
   checksum: 5b1e2daa247062061325b8fdbfd1fb56dde0a448fb1455453276ea18c60685bdad23a445dc148cf87bc216be1573357509b7d4060494a6fd768c7efad833ee45
+  languageName: node
+  linkType: hard
+
+"pathfinding@npm:^0.4.18":
+  version: 0.4.18
+  resolution: "pathfinding@npm:0.4.18"
+  dependencies:
+    heap: 0.2.5
+  checksum: 2d08ee0b28a337d7daa4c5b4fafb2add203d868372a928dd7b81db1ce69de427267bdb12863c9285ac0c92b901350cd407b4dfa943784fe6a0f28279c1aefb43
+  languageName: node
+  linkType: hard
+
+"paths-js@npm:^0.4.11":
+  version: 0.4.11
+  resolution: "paths-js@npm:0.4.11"
+  checksum: a2e968450d4c02a3aed2866c28766e6d386afd9a4ed5f8fe9c4f87e6867ef57d94d0e7a184f8987dfa7c59fed2519e10052320505b5bd1fd7a28dea7bb94995d
   languageName: node
   linkType: hard
 
@@ -11340,6 +11393,13 @@ __metadata:
   version: 1.0.0
   resolution: "requires-port@npm:1.0.0"
   checksum: eee0e303adffb69be55d1a214e415cf42b7441ae858c76dfc5353148644f6fd6e698926fc4643f510d5c126d12a705e7c8ed7e38061113bdf37547ab356797ff
+  languageName: node
+  linkType: hard
+
+"resize-observer-polyfill@npm:^1.5.1":
+  version: 1.5.1
+  resolution: "resize-observer-polyfill@npm:1.5.1"
+  checksum: 57e7f79489867b00ba43c9c051524a5c8f162a61d5547e99333549afc23e15c44fd43f2f318ea0261ea98c0eb3158cca261e6f48d66e1ed1cd1f340a43977094
   languageName: node
   linkType: hard
 

@@ -12,8 +12,21 @@ import { Composer, Client } from '../context';
 import ComposerMenu from './ComposerMenu';
 import ProcessCard from './ProcessCard';
 
+import Diagram from './Diagram';
 
+/**
 
+    <Box sx={{ backgroundColor: 'mainContent.main' }}>
+      <ComposerMenu value={value}/>
+      <Box sx={{ width: '40%', ml: 2, mr: 2 }}>
+        <Stack spacing={2}>
+          <Box></Box>
+          {value.processes.map((proc, key) => <ProcessCard key={key} value={proc} />)}
+        </Stack>
+      </Box>
+    </Box>
+
+ */
 
 const ComposerServices: React.FC<{ value: Client.ServiceDefinitionDocument }> = ({ value }) => {
   const intl = useIntl();
@@ -26,17 +39,15 @@ const ComposerServices: React.FC<{ value: Client.ServiceDefinitionDocument }> = 
     service.definition(id).then(setState);
   }, [id]);
 
-  return (
-    <Box sx={{ backgroundColor: 'mainContent.main' }}>
-      <ComposerMenu value={value}/>
-      <Box sx={{ width: '40%', ml: 2, mr: 2 }}>
-        <Stack spacing={2}>
-          <Box></Box>
-          {value.processes.map((proc, key) => <ProcessCard key={key} value={proc} />)}
-        </Stack>
-      </Box>
-    </Box>
-  );
+
+  const result = React.useMemo(() => {
+    if(!state) {
+      return null;
+    }
+    
+    return <Diagram site={state}/>;
+  }, [state]) 
+  return (<Box sx={{ height: '9000px' }}>{result}</Box>);
 
 }
 
