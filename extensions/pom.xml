@@ -6,15 +6,14 @@
     <groupId>io.digiexpress</groupId>
     <artifactId>digiexpress-build-parent</artifactId>
     <version>999-SNAPSHOT</version>
-    <relativePath>../digiexpress-build-parent/pom.xml</relativePath>
+    <relativePath>../build-parent/pom.xml</relativePath>
   </parent>
 
-  <artifactId>digiexpress-dev</artifactId>
+  <artifactId>digiexpress-extensions</artifactId>
   <packaging>pom</packaging>
 
   <modules>
-    <module>spring-app</module>
+    <module>composer-spring</module>
+    <module>app-spring</module>
   </modules>
-
-
 </project>

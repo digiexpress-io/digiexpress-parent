@@ -83,8 +83,9 @@
     <module>bom</module>
     <module>build-parent</module>
     <module>core</module>
-    <module>composer</module>
-    <module>dev</module>
+    <module>extensions</module>
+    <!-- 
+    <module>composer-ui</module> -->
   </modules>
 
   <profiles>
