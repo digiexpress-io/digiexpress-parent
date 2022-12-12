@@ -19,10 +19,10 @@ import io.digiexpress.client.api.AssetExecutorEntity.ProcessState;
 import io.digiexpress.client.api.AssetExecutorEntity.Step;
 import io.digiexpress.client.api.ClientEntity.Project;
 import io.digiexpress.client.api.ClientEntity.ServiceRelease;
-import io.digiexpress.client.api.ComposerEntity.ServiceComposerDefinitionState;
+import io.digiexpress.client.api.ComposerEntity.DefinitionState;
+import io.digiexpress.client.api.ImmutableCreateDescriptor;
 import io.digiexpress.client.api.ImmutableCreateProjectRevision;
 import io.digiexpress.client.api.ImmutableCreateRelease;
-import io.digiexpress.client.api.ImmutableCreateServiceDescriptor;
 import io.digiexpress.client.spi.support.ServiceAssert;
 import io.digiexpress.client.tests.support.PgProfile;
 import io.digiexpress.client.tests.support.TestCase;
@@ -63,10 +63,10 @@ public class IntegrationTest extends TestCase {
         .description("first iterator process to handle general message")
         .build()).await().atMost(atMost);
     
-    final ServiceComposerDefinitionState defState = service(client).query().definition(project.getHeadDefId()).await().atMost(atMost);
+    final DefinitionState defState = service(client).query().definition(project.getHeadDefId()).await().atMost(atMost);
     
     
-    final var def = service(client).create().serviceDescriptor(ImmutableCreateServiceDescriptor.builder()
+    final var def = service(client).create().serviceDescriptor(ImmutableCreateDescriptor.builder()
         .name("process-for-bindig-gen-msg-to-task")
         .desc("process-desc")
         .flowId("case 1 flow")

@@ -9,7 +9,7 @@ import io.digiexpress.client.api.Composer;
 import io.digiexpress.client.api.ComposerEntity.CreateMigration;
 import io.digiexpress.client.api.ComposerEntity.CreateProjectRevision;
 import io.digiexpress.client.api.ComposerEntity.CreateRelease;
-import io.digiexpress.client.api.ComposerEntity.CreateServiceDescriptor;
+import io.digiexpress.client.api.ComposerEntity.CreateDescriptor;
 import io.digiexpress.client.api.ComposerEntity.MigrationState;
 import io.digiexpress.client.api.ImmutableCreateStoreEntity;
 import io.digiexpress.client.api.ImmutableServiceDefinition;
@@ -27,7 +27,7 @@ public class ComposerBuilderImpl implements Composer.ComposerBuilder {
   private final Client client;
 
   @Override
-  public Uni<ServiceDefinition> serviceDescriptor(CreateServiceDescriptor process) {
+  public Uni<ServiceDefinition> serviceDescriptor(CreateDescriptor process) {
     final var query = client.getQuery();
     
     final var getDef = query.getServiceDef(process.getDefId());

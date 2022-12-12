@@ -37,8 +37,8 @@ import io.digiexpress.client.api.Client;
 import io.digiexpress.client.api.Composer;
 import io.digiexpress.client.api.ComposerEntity.CreateMigration;
 import io.digiexpress.client.api.ComposerEntity.MigrationState;
-import io.digiexpress.client.api.ComposerEntity.ServiceComposerDefinitionState;
-import io.digiexpress.client.api.ComposerEntity.ServiceComposerState;
+import io.digiexpress.client.api.ComposerEntity.DefinitionState;
+import io.digiexpress.client.api.ComposerEntity.HeadState;
 import io.digiexpress.client.spi.ComposerImpl;
 import io.digiexpress.spring.composer.config.UiConfigBean;
 import lombok.Data;
@@ -82,15 +82,15 @@ public class DigiexpressComposerServiceController {
     return composer.create().migrate(entity).await().atMost(Duration.ofMillis(90000));
   }
   @GetMapping(path = "/" + UiConfigBean.API_HEAD, produces = MediaType.APPLICATION_JSON_VALUE)
-  public ServiceComposerState head() {
+  public HeadState head() {
     return composer.query().head().await().atMost(timeout);
   }
   @GetMapping(path = "/" + UiConfigBean.API_DEF + "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ServiceComposerDefinitionState def(@PathVariable String id) {
+  public DefinitionState def(@PathVariable String id) {
     return composer.query().definition(id).await().atMost(timeout);
   }
   @PostMapping(path = "/" + UiConfigBean.API_HEAD, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ServiceComposerState headCreate(HeadCreate create) {
+  public HeadState headCreate(HeadCreate create) {
     return client.tenant().create()
         .onItem().transformToUni((_created) -> composer.query().head())
         .await().atMost(timeout);

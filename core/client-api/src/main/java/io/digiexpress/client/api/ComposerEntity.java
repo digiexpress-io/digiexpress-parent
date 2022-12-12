@@ -21,12 +21,14 @@ import io.resys.hdes.client.api.HdesStore.StoreState;
 import io.resys.hdes.client.api.ast.AstDecision;
 import io.resys.hdes.client.api.ast.AstFlow;
 import io.resys.hdes.client.api.ast.AstService;
+import io.resys.thena.docdb.api.models.ImmutableTree;
 import io.thestencil.client.api.ImmutableCreateRelease;
-import io.thestencil.client.api.MigrationBuilder.LocalizedSite;
 import io.thestencil.client.api.StencilComposer.SiteState;
 
 public interface ComposerEntity extends Serializable {
 
+  enum ComposerContentType { OK, ERRORS, NOT_CREATED  }
+  
   @Value.Immutable @JsonSerialize(as = ImmutableCreateProjectRevision.class) @JsonDeserialize(as = ImmutableCreateProjectRevision.class)
   interface CreateProjectRevision extends ComposerEntity {
     String getName();
@@ -41,8 +43,8 @@ public interface ComposerEntity extends Serializable {
     LocalDateTime getTargetDate();
   }
   
-  @Value.Immutable @JsonSerialize(as = ImmutableCreateServiceDescriptor.class) @JsonDeserialize(as = ImmutableCreateServiceDescriptor.class)
-  interface CreateServiceDescriptor extends ComposerEntity {
+  @Value.Immutable @JsonSerialize(as = ImmutableCreateDescriptor.class) @JsonDeserialize(as = ImmutableCreateDescriptor.class)
+  interface CreateDescriptor extends ComposerEntity {
     String getDefId();
     String getDefVersionId();
     String getName();
@@ -62,32 +64,27 @@ public interface ComposerEntity extends Serializable {
   
   
   @Value.Immutable
-  @JsonSerialize(as = ImmutableServiceComposerState.class)
-  @JsonDeserialize(as = ImmutableServiceComposerState.class)
-  public interface ServiceComposerState extends ComposerEntity {
-
+  @JsonSerialize(as = ImmutableHeadState.class)
+  @JsonDeserialize(as = ImmutableHeadState.class)
+  interface HeadState extends ComposerEntity {
     String getName();
     @Nullable String getCommit();
     @Nullable String getCommitMsg();
-    SiteContentType getContentType();
-    Map<String, Project> getRevisions();
+    ComposerContentType getContentType();
+    Map<String, Project> getProjects();
     Map<String, ServiceDefinition> getDefinitions();
     Map<String, ServiceRelease> getReleases();
     List<ComposerMessage> getMessages();
-    
-    enum SiteContentType { OK, ERRORS, NOT_CREATED  }
   }
   
-
-
   @Value.Immutable
-  @JsonSerialize(as = ImmutableServiceComposerDefinitionState.class)
-  @JsonDeserialize(as = ImmutableServiceComposerDefinitionState.class)
-  public interface ServiceComposerDefinitionState extends ComposerEntity {
+  @JsonSerialize(as = ImmutableDefinitionState.class)
+  @JsonDeserialize(as = ImmutableDefinitionState.class)
+  interface DefinitionState extends ComposerEntity {
     ServiceDefinition getDefinition();
-    ComposerDialob getDialob();
-    ComposerStencil getStencil();
-    ComposerHdes getHdes();
+    DialobTree getDialob();
+    StencilTree getStencil();
+    HdesTree getHdes();
   }
   
   @Value.Immutable @JsonSerialize(as = ImmutableMigrationState.class) @JsonDeserialize(as = ImmutableMigrationState.class)
@@ -96,29 +93,27 @@ public interface ComposerEntity extends Serializable {
   }
 
   @Value.Immutable @JsonSerialize(as = ImmutableComposerMessage.class) @JsonDeserialize(as = ImmutableComposerMessage.class)
-  interface ComposerMessage extends ComposerEntity {
+  interface ComposerMessage extends Serializable {
     String getId();
     String getValue();
     List<String> getArgs();
   }
   
-
-  @Value.Immutable @JsonSerialize(as = ImmutableComposerHdes.class) @JsonDeserialize(as = ImmutableComposerHdes.class)
-  interface ComposerHdes extends ComposerEntity {
+  @Value.Immutable @JsonSerialize(as = ImmutableTree.class) @JsonDeserialize(as = ImmutableHdesTree.class)
+  interface HdesTree extends Serializable {
     Map<String, io.resys.hdes.client.api.HdesComposer.ComposerEntity<AstFlow>> getFlows();
     Map<String, io.resys.hdes.client.api.HdesComposer.ComposerEntity<AstService>> getServices();
     Map<String, io.resys.hdes.client.api.HdesComposer.ComposerEntity<AstDecision>> getDecisions();
   }
   
-  @Value.Immutable @JsonSerialize(as = ImmutableComposerStencil.class) @JsonDeserialize(as = ImmutableComposerStencil.class)
-  interface ComposerStencil extends ComposerEntity {
-    Map<String, LocalizedSite> getSites();
+  @Value.Immutable @JsonSerialize(as = ImmutableStencilTree.class) @JsonDeserialize(as = ImmutableStencilTree.class)
+  interface StencilTree extends Serializable {
+    Map<String, io.thestencil.client.api.MigrationBuilder.LocalizedSite> getSites();
   }
 
-  
-  @Value.Immutable @JsonSerialize(as = ImmutableComposerDialob.class) @JsonDeserialize(as = ImmutableComposerDialob.class)
-  interface ComposerDialob extends ComposerEntity {
-    Map<String, FormDocument> getForms();
-    Map<String, FormRevisionDocument> getRevs();
+  @Value.Immutable @JsonSerialize(as = ImmutableDialobTree.class) @JsonDeserialize(as = ImmutableDialobTree.class)
+  interface DialobTree extends Serializable {
+    Map<String, io.dialob.client.api.DialobDocument.FormDocument> getForms();
+    Map<String, io.dialob.client.api.DialobDocument.FormRevisionDocument> getRevs();
   }
 }
