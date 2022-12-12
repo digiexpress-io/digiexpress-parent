@@ -226,9 +226,7 @@ public class TenantBuilderImpl implements TenantBuilder {
     this.namings = this.namings.toBuilder().repoProject(repoProject).build();
     return this;
   }
-  
-  
-  
+
   @Data @Builder(toBuilder = true) @Accessors(chain = true)
   public static class Namings {
     private final String repoProject;
