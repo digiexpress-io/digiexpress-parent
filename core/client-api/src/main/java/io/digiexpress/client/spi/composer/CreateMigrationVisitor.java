@@ -1,4 +1,4 @@
-package io.digiexpress.client.spi.composer.visitors;
+package io.digiexpress.client.spi.composer;
 
 
 import java.time.LocalDateTime;
@@ -25,13 +25,13 @@ import io.digiexpress.client.api.ClientEntity.Project;
 import io.digiexpress.client.api.ClientEntity.ServiceDefinition;
 import io.digiexpress.client.api.ClientStore;
 import io.digiexpress.client.api.ClientStore.ClientStoreCommand;
+import io.digiexpress.client.api.ComposerEntity.CreateMigration;
+import io.digiexpress.client.api.ComposerEntity.MigrationState;
 import io.digiexpress.client.api.ImmutableMigrationState;
 import io.digiexpress.client.api.ImmutableProject;
 import io.digiexpress.client.api.ImmutableProjectRevision;
 import io.digiexpress.client.api.ImmutableRefIdValue;
 import io.digiexpress.client.api.ImmutableServiceDefinition;
-import io.digiexpress.client.api.ServiceComposerCommand.CreateMigration;
-import io.digiexpress.client.api.ServiceComposerState.MigrationState;
 import io.digiexpress.client.spi.support.ServiceAssert;
 import io.digiexpress.client.spi.support.TableLog;
 import io.resys.hdes.client.api.HdesStore;

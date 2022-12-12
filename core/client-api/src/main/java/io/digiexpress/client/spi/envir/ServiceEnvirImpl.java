@@ -9,11 +9,11 @@ import java.util.stream.Collectors;
 import io.digiexpress.client.api.Client.ClientConfig;
 import io.digiexpress.client.api.ClientEntity.ConfigType;
 import io.digiexpress.client.api.ClientEntity.RefIdValue;
-import io.digiexpress.client.api.ServiceEnvir;
+import io.digiexpress.client.api.AssetEnvir;
 import io.digiexpress.client.spi.support.EnvirException;
 import io.digiexpress.client.spi.support.ServiceAssert;
 
-public class ServiceEnvirImpl implements ServiceEnvir {
+public class ServiceEnvirImpl implements AssetEnvir {
 
   private final ClientConfig config;
   private final Map<String, ServiceProgramSource> hash_to_source;

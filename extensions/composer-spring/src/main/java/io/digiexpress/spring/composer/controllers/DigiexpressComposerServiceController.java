@@ -33,13 +33,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.digiexpress.client.api.ServiceClient;
-import io.digiexpress.client.api.ServiceComposer;
-import io.digiexpress.client.api.ServiceComposerCommand.CreateMigration;
-import io.digiexpress.client.api.ServiceComposerState;
-import io.digiexpress.client.api.ServiceComposerState.MigrationState;
-import io.digiexpress.client.api.ServiceComposerState.ServiceComposerDefinitionState;
-import io.digiexpress.client.spi.ServiceComposerImpl;
+import io.digiexpress.client.api.Client;
+import io.digiexpress.client.api.Composer;
+import io.digiexpress.client.api.ComposerEntity.CreateMigration;
+import io.digiexpress.client.api.ComposerEntity.MigrationState;
+import io.digiexpress.client.api.ComposerEntity.ServiceComposerDefinitionState;
+import io.digiexpress.client.api.ComposerEntity.ServiceComposerState;
+import io.digiexpress.client.spi.ComposerImpl;
 import io.digiexpress.spring.composer.config.UiConfigBean;
 import lombok.Data;
 import lombok.extern.jackson.Jacksonized;
@@ -50,8 +50,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping(UiConfigBean.REST_SPRING_CTX_PATH_EXP)
 public class DigiexpressComposerServiceController {
   
-  private final ServiceClient client;
-  private final ServiceComposer composer;
+  private final Client client;
+  private final Composer composer;
   private static final Duration timeout = Duration.ofMillis(10000);
   
   
@@ -60,10 +60,10 @@ public class DigiexpressComposerServiceController {
     
   }
   
-  public DigiexpressComposerServiceController(ObjectMapper objectMapper, ApplicationContext ctx, ServiceClient client) {
+  public DigiexpressComposerServiceController(ObjectMapper objectMapper, ApplicationContext ctx, Client client) {
     super();
     this.client = client;
-    this.composer = new ServiceComposerImpl(client);
+    this.composer = new ComposerImpl(client);
     
     final var servicePath = ctx.getEnvironment().getProperty(UiConfigBean.REST_SPRING_CTX_PATH);
     final var uiPath = ctx.getEnvironment().getProperty(UiConfigBean.UI_SPRING_CTX_PATH);    
@@ -91,7 +91,7 @@ public class DigiexpressComposerServiceController {
   }
   @PostMapping(path = "/" + UiConfigBean.API_HEAD, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   public ServiceComposerState headCreate(HeadCreate create) {
-    return client.repo().create()
+    return client.tenant().create()
         .onItem().transformToUni((_created) -> composer.query().head())
         .await().atMost(timeout);
   }

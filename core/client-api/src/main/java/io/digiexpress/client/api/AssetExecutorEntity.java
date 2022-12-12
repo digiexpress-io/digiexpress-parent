@@ -15,44 +15,45 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-
-@Value.Immutable @JsonSerialize(as = ImmutableProcessState.class) @JsonDeserialize(as = ImmutableProcessState.class)
-public interface ProcessState extends Serializable {
-  String getId();
-  Integer getVersion();
+public interface AssetExecutorEntity extends Serializable {
+  @Value.Immutable @JsonSerialize(as = ImmutableProcessState.class) @JsonDeserialize(as = ImmutableProcessState.class)
+  interface ProcessState extends Serializable {
+    String getId();
+    Integer getVersion();
+    
+    ServiceRef getDef(); // service definition doc
+    ServiceRel getRel(); // service release doc
+    
+    List<Step<?>> getSteps();
+    
+    @JsonIgnore @SuppressWarnings("unchecked")
+    default Step<ProcessCreated> getStepProcessCreated() {
+      return getStep(StepType.PROCESS_CREATED)
+          .map(e -> (Step<ProcessCreated>) e)
+          .orElseThrow(() -> new IllegalStateException("Step: '" + StepType.PROCESS_CREATED + "' not available at this state!"));
+    }
+    
+    @JsonIgnore @SuppressWarnings("unchecked")
+    default Optional<Step<FillCreated>> getStepFillCreated() {
+      return getStep(StepType.FILL_CREATED).map(e -> (Step<FillCreated>) e);
+    }
   
-  ServiceRef getDef(); // service definition doc
-  ServiceRel getRel(); // service release doc
-  
-  List<Step<?>> getSteps();
-  
-  @JsonIgnore @SuppressWarnings("unchecked")
-  default Step<ProcessCreated> getStepProcessCreated() {
-    return getStep(StepType.PROCESS_CREATED)
-        .map(e -> (Step<ProcessCreated>) e)
-        .orElseThrow(() -> new IllegalStateException("Step: '" + StepType.PROCESS_CREATED + "' not available at this state!"));
-  }
-  
-  @JsonIgnore @SuppressWarnings("unchecked")
-  default Optional<Step<FillCreated>> getStepFillCreated() {
-    return getStep(StepType.FILL_CREATED).map(e -> (Step<FillCreated>) e);
-  }
-
-  @JsonIgnore @SuppressWarnings("unchecked")
-  default Optional<Step<FillInProgress>> getStepFillInProgress() {
-    return getStep(StepType.FILL_IN_PROGRESS).map(e -> (Step<FillInProgress>) e);
-  }
-  @JsonIgnore @SuppressWarnings("unchecked")
-  default Optional<Step<FillCompleted>> getStepFillCompleted() {
-    return getStep(StepType.FILL_COMPLETED).map(e -> (Step<FillCompleted>) e);
-  }
-  
-  @JsonIgnore
-  default Optional<Step<?>> getStep(StepType type) {
-    return getSteps().stream()
-        .sorted((a, b) -> b.getStart().compareTo(b.getStart()))
-        .filter(a -> a.getBody().getType() == type)
-        .findFirst();
+    @JsonIgnore @SuppressWarnings("unchecked")
+    default Optional<Step<FillInProgress>> getStepFillInProgress() {
+      return getStep(StepType.FILL_IN_PROGRESS).map(e -> (Step<FillInProgress>) e);
+    }
+    @JsonIgnore @SuppressWarnings("unchecked")
+    default Optional<Step<FillCompleted>> getStepFillCompleted() {
+      return getStep(StepType.FILL_COMPLETED).map(e -> (Step<FillCompleted>) e);
+    }
+    
+    @JsonIgnore
+    default Optional<Step<?>> getStep(StepType type) {
+      return getSteps().stream()
+          .sorted((a, b) -> b.getStart().compareTo(b.getStart()))
+          .filter(a -> a.getBody().getType() == type)
+          .findFirst();
+    }
   }
 
   @Value.Immutable @JsonSerialize(as = ImmutableStep.class) @JsonDeserialize(as = ImmutableStep.class)
@@ -151,4 +152,5 @@ public interface ProcessState extends Serializable {
 
     PROCESS_COMPLETED
   }
+
 }

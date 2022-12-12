@@ -1,8 +1,8 @@
 package io.digiexpress.client.spi;
 
 
-import static io.digiexpress.client.spi.query.QueryFactoryImpl.FIXED_ID;
-import static io.digiexpress.client.spi.query.QueryFactoryImpl.HEAD_NAME;
+import static io.digiexpress.client.spi.ClientQueryImpl.FIXED_ID;
+import static io.digiexpress.client.spi.ClientQueryImpl.HEAD_NAME;
 
 import java.time.LocalDateTime;
 import java.util.List;

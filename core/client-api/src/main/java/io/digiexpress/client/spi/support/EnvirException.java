@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.function.Supplier;
 
 import io.digiexpress.client.api.ClientEntity.ServiceRelease;
-import io.digiexpress.client.api.ServiceEnvir.ServiceProgramSource;
+import io.digiexpress.client.api.AssetEnvir.ServiceProgramSource;
 
 public class EnvirException extends RuntimeException {
   private static final long serialVersionUID = 7190168525508589141L;

@@ -1,4 +1,4 @@
-package io.digiexpress.client.spi.envir;
+package io.digiexpress.client.spi;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -7,22 +7,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.digiexpress.client.api.AssetEnvir;
+import io.digiexpress.client.api.AssetEnvir.ServiceProgramSource;
+import io.digiexpress.client.api.Client.AssetEnvirBuilder;
 import io.digiexpress.client.api.Client.ClientConfig;
-import io.digiexpress.client.api.Client.ServiceEnvirBuilder;
 import io.digiexpress.client.api.ClientEntity.ConfigType;
 import io.digiexpress.client.api.ClientEntity.ServiceRelease;
 import io.digiexpress.client.api.ClientEntity.ServiceReleaseValue;
 import io.digiexpress.client.api.ImmutableServiceRelease;
 import io.digiexpress.client.api.ImmutableServiceReleaseValue;
-import io.digiexpress.client.api.ServiceEnvir;
-import io.digiexpress.client.api.ServiceEnvir.ServiceProgramSource;
+import io.digiexpress.client.spi.envir.ServiceEnvirImpl;
 import io.digiexpress.client.spi.support.EnvirException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
-public class ServiceEnvirBuilderImpl implements ServiceEnvirBuilder {
+public class AssetEnvirBuilderImpl implements AssetEnvirBuilder {
   private final ClientConfig config;
   
   // hash to source
@@ -30,7 +31,7 @@ public class ServiceEnvirBuilderImpl implements ServiceEnvirBuilder {
   private final Map<LocalDateTime, List<String>> active_to_hash = new HashMap<>();
   
   @Override
-  public ServiceEnvirBuilder add(ServiceRelease release) {
+  public AssetEnvirBuilder add(ServiceRelease release) {
     if(active_to_hash.containsKey(release.getActiveFrom())) {
       throw EnvirException.isDefined(release, () -> "");
     }
@@ -52,7 +53,7 @@ public class ServiceEnvirBuilderImpl implements ServiceEnvirBuilder {
   }
 
   @Override
-  public ServiceEnvir build() {
+  public AssetEnvir build() {
     return new ServiceEnvirImpl(config, hash_to_source, active_to_hash);
   }
   

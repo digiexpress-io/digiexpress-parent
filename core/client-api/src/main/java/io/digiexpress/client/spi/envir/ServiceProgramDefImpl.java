@@ -7,10 +7,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.digiexpress.client.api.Client.ClientConfig;
 import io.digiexpress.client.api.ClientEntity.ServiceDefinition;
-import io.digiexpress.client.api.ServiceEnvir.ProgramMessage;
-import io.digiexpress.client.api.ServiceEnvir.ServiceProgramStatus;
-import io.digiexpress.client.api.ServiceEnvir.ServiceProgramDef;
-import io.digiexpress.client.api.ServiceEnvir.ServiceProgramSource;
+import io.digiexpress.client.api.AssetEnvir.ProgramMessage;
+import io.digiexpress.client.api.AssetEnvir.ServiceProgramStatus;
+import io.digiexpress.client.api.AssetEnvir.ServiceProgramDef;
+import io.digiexpress.client.api.AssetEnvir.ServiceProgramSource;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

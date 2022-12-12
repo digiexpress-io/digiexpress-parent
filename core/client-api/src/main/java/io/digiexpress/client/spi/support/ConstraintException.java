@@ -5,12 +5,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import io.digiexpress.client.api.Client.ServiceClientException;
+import io.digiexpress.client.api.Client.ClientException;
 import io.digiexpress.client.api.ClientEntity;
 
 
 
-public class ConstraintException extends RuntimeException implements ServiceClientException {
+public class ConstraintException extends RuntimeException implements ClientException {
   private static final long serialVersionUID = 7190168525508589141L;
   
   private final List<ClientEntity> entity = new ArrayList<>();

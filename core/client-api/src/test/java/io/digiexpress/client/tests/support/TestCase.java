@@ -23,14 +23,14 @@ import io.dialob.api.proto.ImmutableActions;
 import io.dialob.api.questionnaire.Questionnaire;
 import io.dialob.client.api.DialobComposer;
 import io.dialob.client.spi.DialobComposerImpl;
-import io.digiexpress.client.api.ProcessState;
+import io.digiexpress.client.api.AssetEnvir;
+import io.digiexpress.client.api.AssetExecutor.Execution;
+import io.digiexpress.client.api.AssetExecutor.ExecutionDialobBody;
+import io.digiexpress.client.api.AssetExecutor.QuestionnaireStore;
+import io.digiexpress.client.api.AssetExecutorEntity.ProcessState;
 import io.digiexpress.client.api.Client;
-import io.digiexpress.client.api.Client.Execution;
-import io.digiexpress.client.api.Client.ExecutionDialobBody;
-import io.digiexpress.client.api.Client.QuestionnaireStore;
 import io.digiexpress.client.api.Composer;
-import io.digiexpress.client.api.ServiceComposerCommand.CreateMigration;
-import io.digiexpress.client.api.ServiceEnvir;
+import io.digiexpress.client.api.ComposerEntity.CreateMigration;
 import io.digiexpress.client.spi.ComposerImpl;
 import io.digiexpress.client.tests.migration.MigrationsDefaults;
 import io.resys.hdes.client.api.HdesComposer;
@@ -141,13 +141,13 @@ public class TestCase {
     }
   }
   
-  public FillTestCase fill(ServiceEnvir envir, Client client, ProcessState state) {
+  public FillTestCase fill(AssetEnvir envir, Client client, ProcessState state) {
     return new FillTestCase(envir, client, questionnaireStore, in_memory_questionnaire, state, null, null);
   }
   
   @AllArgsConstructor
   public static class FillTestCase {
-    private final ServiceEnvir envir;
+    private final AssetEnvir envir;
     private final Client client;
     private final QuestionnaireStore store;
     private final Map<String, Questionnaire> mem;

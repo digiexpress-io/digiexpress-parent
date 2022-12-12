@@ -1,4 +1,4 @@
-package io.digiexpress.client.spi.query;
+package io.digiexpress.client.spi;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ import io.digiexpress.client.api.ClientEntity.Project;
 import io.digiexpress.client.api.ClientEntity.ServiceDefinition;
 import io.digiexpress.client.api.ClientStore.StoreState;
 import io.digiexpress.client.api.ImmutableFlowDocument;
-import io.digiexpress.client.api.QueryFactory;
+import io.digiexpress.client.api.ClientQuery;
 import io.digiexpress.client.spi.support.ServiceAssert;
 import io.resys.hdes.client.api.ast.AstBody.AstBodyType;
 import io.resys.hdes.client.api.ast.AstTag;
@@ -32,7 +32,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class QueryFactoryImpl implements QueryFactory {
+public class ClientQueryImpl implements ClientQuery {
   public static final String FIXED_ID = "SERVICE_CONFIG";
   public static final String HEAD_NAME = ServiceAssert.BRANCH_MAIN;
   
@@ -40,8 +40,8 @@ public class QueryFactoryImpl implements QueryFactory {
   private final List<AstBodyType> HDES_ASSETS = Arrays.asList(AstBodyType.DT, AstBodyType.FLOW, AstBodyType.FLOW_TASK);
   private final ClientConfig config;
   
-  public static QueryFactoryImpl from(ClientConfig config) {
-    return new QueryFactoryImpl(config);
+  public static ClientQueryImpl from(ClientConfig config) {
+    return new ClientQueryImpl(config);
   }
   @Override
   public Uni<StoreState> head() {

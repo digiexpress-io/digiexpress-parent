@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Optional;
 
 import io.digiexpress.client.api.ClientEntity.ConfigType;
-import io.digiexpress.client.api.ServiceEnvir.ServiceProgram;
+import io.digiexpress.client.api.AssetEnvir.ServiceProgram;
 
 public interface ClientCache {
 

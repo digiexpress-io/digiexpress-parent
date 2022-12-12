@@ -1,4 +1,4 @@
-package io.digiexpress.client.spi.composer;
+package io.digiexpress.client.spi;
 
 import io.digiexpress.client.api.Client;
 import io.digiexpress.client.api.ClientEntity.ClientEntityType;
@@ -6,19 +6,18 @@ import io.digiexpress.client.api.ClientEntity.Project;
 import io.digiexpress.client.api.ClientEntity.ServiceDefinition;
 import io.digiexpress.client.api.ClientEntity.ServiceRelease;
 import io.digiexpress.client.api.Composer;
+import io.digiexpress.client.api.ComposerEntity.CreateMigration;
+import io.digiexpress.client.api.ComposerEntity.CreateProjectRevision;
+import io.digiexpress.client.api.ComposerEntity.CreateRelease;
+import io.digiexpress.client.api.ComposerEntity.CreateServiceDescriptor;
+import io.digiexpress.client.api.ComposerEntity.MigrationState;
 import io.digiexpress.client.api.ImmutableCreateStoreEntity;
 import io.digiexpress.client.api.ImmutableServiceDefinition;
 import io.digiexpress.client.api.ImmutableServiceDescriptor;
 import io.digiexpress.client.api.ImmutableUpdateStoreEntity;
-import io.digiexpress.client.api.ServiceComposerCommand.CreateMigration;
-import io.digiexpress.client.api.ServiceComposerCommand.CreateProjectRevision;
-import io.digiexpress.client.api.ServiceComposerCommand.CreateRelease;
-import io.digiexpress.client.api.ServiceComposerCommand.CreateServiceDescriptor;
-import io.digiexpress.client.api.ServiceComposerState.MigrationState;
-import io.digiexpress.client.spi.composer.visitors.CreateMigrationVisitor;
-import io.digiexpress.client.spi.composer.visitors.CreateReleaseVisitor;
-import io.digiexpress.client.spi.composer.visitors.CreateRevisionVisitor;
-import io.digiexpress.client.spi.query.QueryFactoryImpl;
+import io.digiexpress.client.spi.composer.CreateMigrationVisitor;
+import io.digiexpress.client.spi.composer.CreateReleaseVisitor;
+import io.digiexpress.client.spi.composer.CreateRevisionVisitor;
 import io.digiexpress.client.spi.support.ServiceAssert;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -70,7 +69,7 @@ public class ComposerBuilderImpl implements Composer.ComposerBuilder {
 
   @Override
   public Uni<Project> revision(CreateProjectRevision init) {
-    final var query = QueryFactoryImpl.from(client.getConfig());
+    final var query = ClientQueryImpl.from(client.getConfig());
     return query.getRepos()
       .onItem().transformToUni(repos -> query.getDefaultProject()
       .onItem().transformToUni(configDoc -> {
@@ -85,7 +84,7 @@ public class ComposerBuilderImpl implements Composer.ComposerBuilder {
 
   @Override
   public Uni<ServiceRelease> release(CreateRelease init) {
-    final var query = QueryFactoryImpl.from(client.getConfig());
+    final var query = ClientQueryImpl.from(client.getConfig());
     return query.getServiceDef(init.getServiceDefinitionId())
       .onItem().transformToUni(def ->  
           new CreateReleaseVisitor(client.getConfig(), query, init.getTargetDate())

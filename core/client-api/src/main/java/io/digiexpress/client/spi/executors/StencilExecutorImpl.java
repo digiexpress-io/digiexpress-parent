@@ -2,12 +2,11 @@ package io.digiexpress.client.spi.executors;
 
 import java.time.LocalDateTime;
 
-import io.digiexpress.client.api.ImmutableExecution;
-import io.digiexpress.client.api.Client.Execution;
+import io.digiexpress.client.api.AssetEnvir;
+import io.digiexpress.client.api.AssetEnvir.ServiceProgramStencil;
+import io.digiexpress.client.api.AssetExecutor.StencilExecutor;
 import io.digiexpress.client.api.Client.ClientConfig;
-import io.digiexpress.client.api.Client.StencilExecutor;
-import io.digiexpress.client.api.ServiceEnvir;
-import io.digiexpress.client.api.ServiceEnvir.ServiceProgramStencil;
+import io.digiexpress.client.api.ImmutableExecution;
 import io.digiexpress.client.spi.support.ExecutorException;
 import io.digiexpress.client.spi.support.ServiceAssert;
 import io.thestencil.client.api.MigrationBuilder.LocalizedSite;
@@ -17,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 public class StencilExecutorImpl implements StencilExecutor {
 
   private final ClientConfig config;
-  private final ServiceEnvir envir;
+  private final AssetEnvir envir;
   private LocalDateTime targetDate;
   private String locale;
   

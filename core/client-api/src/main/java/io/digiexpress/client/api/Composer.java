@@ -1,14 +1,15 @@
 package io.digiexpress.client.api;
 
-import io.digiexpress.client.api.ServiceComposerCommand.CreateMigration;
-import io.digiexpress.client.api.ServiceComposerCommand.CreateServiceDescriptor;
-import io.digiexpress.client.api.ServiceComposerCommand.CreateRelease;
-import io.digiexpress.client.api.ServiceComposerCommand.CreateProjectRevision;
-import io.digiexpress.client.api.ServiceComposerState.MigrationState;
-import io.digiexpress.client.api.ServiceComposerState.ServiceComposerDefinitionState;
+import io.digiexpress.client.api.ClientEntity.Project;
 import io.digiexpress.client.api.ClientEntity.ServiceDefinition;
 import io.digiexpress.client.api.ClientEntity.ServiceRelease;
-import io.digiexpress.client.api.ClientEntity.Project;
+import io.digiexpress.client.api.ComposerEntity.CreateMigration;
+import io.digiexpress.client.api.ComposerEntity.CreateProjectRevision;
+import io.digiexpress.client.api.ComposerEntity.CreateRelease;
+import io.digiexpress.client.api.ComposerEntity.CreateServiceDescriptor;
+import io.digiexpress.client.api.ComposerEntity.MigrationState;
+import io.digiexpress.client.api.ComposerEntity.ServiceComposerDefinitionState;
+import io.digiexpress.client.api.ComposerEntity.ServiceComposerState;
 import io.smallrye.mutiny.Uni;
 
 public interface Composer {

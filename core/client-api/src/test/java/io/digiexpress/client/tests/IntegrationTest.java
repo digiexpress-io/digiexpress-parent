@@ -9,20 +9,20 @@ import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import io.digiexpress.client.api.AssetEnvir.ServiceProgramDef;
+import io.digiexpress.client.api.AssetEnvir.ServiceProgramDialob;
+import io.digiexpress.client.api.AssetEnvir.ServiceProgramHdes;
+import io.digiexpress.client.api.AssetEnvir.ServiceProgramStatus;
+import io.digiexpress.client.api.AssetEnvir.ServiceProgramStencil;
+import io.digiexpress.client.api.AssetExecutorEntity.ProcessCreated;
+import io.digiexpress.client.api.AssetExecutorEntity.ProcessState;
+import io.digiexpress.client.api.AssetExecutorEntity.Step;
 import io.digiexpress.client.api.ClientEntity.Project;
 import io.digiexpress.client.api.ClientEntity.ServiceRelease;
+import io.digiexpress.client.api.ComposerEntity.ServiceComposerDefinitionState;
 import io.digiexpress.client.api.ImmutableCreateProjectRevision;
 import io.digiexpress.client.api.ImmutableCreateRelease;
 import io.digiexpress.client.api.ImmutableCreateServiceDescriptor;
-import io.digiexpress.client.api.ProcessState;
-import io.digiexpress.client.api.ProcessState.ProcessCreated;
-import io.digiexpress.client.api.ProcessState.Step;
-import io.digiexpress.client.api.ServiceComposerState.ServiceComposerDefinitionState;
-import io.digiexpress.client.api.ServiceEnvir.ServiceProgramDef;
-import io.digiexpress.client.api.ServiceEnvir.ServiceProgramDialob;
-import io.digiexpress.client.api.ServiceEnvir.ServiceProgramHdes;
-import io.digiexpress.client.api.ServiceEnvir.ServiceProgramStatus;
-import io.digiexpress.client.api.ServiceEnvir.ServiceProgramStencil;
 import io.digiexpress.client.spi.support.ServiceAssert;
 import io.digiexpress.client.tests.support.PgProfile;
 import io.digiexpress.client.tests.support.TestCase;
@@ -43,7 +43,7 @@ public class IntegrationTest extends TestCase {
 
     // create stencil/dialob/wrench/process projects
     final var client = client()
-        .repo().repoProject("test-prj-1").create()
+        .tenant().repoProject("test-prj-1").create()
         .await().atMost(atMost);
     
     // create new form from file

@@ -18,7 +18,7 @@ import io.resys.thena.docdb.api.models.Repo;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.MigrationBuilder.Sites;
 
-public interface QueryFactory {
+public interface ClientQuery {
   Uni<StoreState> head();
   Uni<List<Repo>> getRepos();
   Uni<Project> getDefaultProject();

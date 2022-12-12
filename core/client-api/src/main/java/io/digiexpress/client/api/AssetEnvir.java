@@ -19,7 +19,7 @@ import io.digiexpress.client.api.ClientEntity.RefIdValue;
 import io.digiexpress.client.api.ClientEntity.ServiceDefinition;
 import io.digiexpress.client.api.ClientEntity.ServiceRelease;
 
-public interface ServiceEnvir {
+public interface AssetEnvir {
   Map<String, ServiceProgramSource> getSources(); //id to source
   ServiceProgram getByHash(String hash);
   ServiceProgram getById(String objectId);

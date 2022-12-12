@@ -10,7 +10,7 @@ import org.ehcache.config.builders.ResourcePoolsBuilder;
 
 import io.digiexpress.client.api.ClientCache;
 import io.digiexpress.client.api.ClientEntity.ConfigType;
-import io.digiexpress.client.api.ServiceEnvir.ServiceProgram;
+import io.digiexpress.client.api.AssetEnvir.ServiceProgram;
 import lombok.extern.slf4j.Slf4j;
 
 

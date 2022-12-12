@@ -4,20 +4,17 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import io.dialob.client.spi.support.OidUtils;
+import io.digiexpress.client.api.AssetEnvir;
+import io.digiexpress.client.api.AssetEnvir.ServiceProgramHdes;
+import io.digiexpress.client.api.AssetExecutor.HdesExecutor;
+import io.digiexpress.client.api.AssetExecutorEntity.FlowCompleted;
+import io.digiexpress.client.api.AssetExecutorEntity.ProcessState;
+import io.digiexpress.client.api.Client.ClientConfig;
 import io.digiexpress.client.api.ImmutableExecution;
 import io.digiexpress.client.api.ImmutableExecutionHdesBody;
 import io.digiexpress.client.api.ImmutableFlowCompleted;
 import io.digiexpress.client.api.ImmutableProcessState;
 import io.digiexpress.client.api.ImmutableStep;
-import io.digiexpress.client.api.ProcessState;
-import io.digiexpress.client.api.ProcessState.FlowCompleted;
-import io.digiexpress.client.api.Client.Execution;
-import io.digiexpress.client.api.Client.ExecutionHdesBody;
-import io.digiexpress.client.api.Client.HdesExecutor;
-import io.digiexpress.client.api.Client.QuestionnaireStore;
-import io.digiexpress.client.api.Client.ClientConfig;
-import io.digiexpress.client.api.ServiceEnvir;
-import io.digiexpress.client.api.ServiceEnvir.ServiceProgramHdes;
 import io.digiexpress.client.spi.support.ServiceAssert;
 import lombok.RequiredArgsConstructor;
 
@@ -25,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 public class HdesExecutorImpl implements HdesExecutor {
   private final ClientConfig config;
   private final ProcessState state;
-  private final ServiceEnvir envir;
+  private final AssetEnvir envir;
   private QuestionnaireStore store;
   private LocalDateTime targetDate;
   

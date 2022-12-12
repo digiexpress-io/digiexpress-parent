@@ -11,10 +11,10 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.digiexpress.client.api.Client.ClientConfig;
-import io.digiexpress.client.api.ServiceEnvir.ProgramMessage;
-import io.digiexpress.client.api.ServiceEnvir.ServiceProgramHdes;
-import io.digiexpress.client.api.ServiceEnvir.ServiceProgramSource;
-import io.digiexpress.client.api.ServiceEnvir.ServiceProgramStatus;
+import io.digiexpress.client.api.AssetEnvir.ProgramMessage;
+import io.digiexpress.client.api.AssetEnvir.ServiceProgramHdes;
+import io.digiexpress.client.api.AssetEnvir.ServiceProgramSource;
+import io.digiexpress.client.api.AssetEnvir.ServiceProgramStatus;
 import io.digiexpress.client.spi.support.ServiceAssert;
 import io.resys.hdes.client.api.ImmutableStoreEntity;
 import io.resys.hdes.client.api.ast.AstBody.AstBodyType;

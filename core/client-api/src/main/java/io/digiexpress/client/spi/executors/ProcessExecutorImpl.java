@@ -5,20 +5,19 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.digiexpress.client.api.AssetEnvir;
+import io.digiexpress.client.api.AssetExecutor.ProcessExecutor;
+import io.digiexpress.client.api.AssetExecutorEntity.ProcessCreated;
+import io.digiexpress.client.api.AssetExecutorEntity.ProcessState;
+import io.digiexpress.client.api.Client.ClientConfig;
+import io.digiexpress.client.api.ClientEntity;
+import io.digiexpress.client.api.ClientEntity.ServiceDescriptor;
 import io.digiexpress.client.api.ImmutableExecution;
 import io.digiexpress.client.api.ImmutableProcessCreated;
 import io.digiexpress.client.api.ImmutableProcessState;
 import io.digiexpress.client.api.ImmutableServiceRef;
 import io.digiexpress.client.api.ImmutableServiceRel;
 import io.digiexpress.client.api.ImmutableStep;
-import io.digiexpress.client.api.ProcessState;
-import io.digiexpress.client.api.ProcessState.ProcessCreated;
-import io.digiexpress.client.api.Client.Execution;
-import io.digiexpress.client.api.Client.ProcessExecutor;
-import io.digiexpress.client.api.Client.ClientConfig;
-import io.digiexpress.client.api.ClientEntity;
-import io.digiexpress.client.api.ClientEntity.ServiceDescriptor;
-import io.digiexpress.client.api.ServiceEnvir;
 import io.digiexpress.client.spi.support.ExecutorException;
 import lombok.RequiredArgsConstructor;
 
@@ -26,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 public class ProcessExecutorImpl implements ProcessExecutor {
   private final ClientConfig config;
   private final String nameOrId;
-  private final ServiceEnvir envir;
+  private final AssetEnvir envir;
   private final Map<String, Serializable> values = new HashMap<>();
   private LocalDateTime targetDate;
 

@@ -1,4 +1,4 @@
-package io.digiexpress.client.spi.composer.visitors;
+package io.digiexpress.client.spi.composer;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -18,7 +18,7 @@ import io.digiexpress.client.api.ImmutableProjectRevision;
 import io.digiexpress.client.api.ImmutableRefIdValue;
 import io.digiexpress.client.api.ImmutableServiceDefinition;
 import io.digiexpress.client.api.ImmutableUpdateStoreEntity;
-import io.digiexpress.client.api.ServiceComposerCommand.CreateProjectRevision;
+import io.digiexpress.client.api.ComposerEntity.CreateProjectRevision;
 import io.digiexpress.client.spi.support.ServiceAssert;
 import io.resys.thena.docdb.api.models.Repo;
 import lombok.AccessLevel;

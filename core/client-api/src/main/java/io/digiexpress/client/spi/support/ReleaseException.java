@@ -2,9 +2,9 @@ package io.digiexpress.client.spi.support;
 
 import java.util.function.Supplier;
 
-import io.digiexpress.client.api.Client.ServiceClientException;
+import io.digiexpress.client.api.Client.ClientException;
 
-public class ReleaseException extends RuntimeException implements ServiceClientException {
+public class ReleaseException extends RuntimeException implements ClientException {
 
   private static final long serialVersionUID = -7154685569622201632L;
 

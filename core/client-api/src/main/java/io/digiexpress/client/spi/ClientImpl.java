@@ -1,6 +1,6 @@
 package io.digiexpress.client.spi;
 
-import static io.digiexpress.client.spi.query.QueryFactoryImpl.HEAD_NAME;
+import static io.digiexpress.client.spi.ClientQueryImpl.HEAD_NAME;
 
 import java.io.IOException;
 import java.util.function.Supplier;
@@ -21,18 +21,20 @@ import io.dialob.client.spi.store.ImmutableDialobStoreConfig;
 import io.dialob.client.spi.support.OidUtils;
 import io.dialob.rule.parser.function.DefaultFunctions;
 import io.dialob.rule.parser.function.FunctionRegistry;
+import io.digiexpress.client.api.AssetEnvir;
+import io.digiexpress.client.api.AssetExecutor.DialobExecutor;
+import io.digiexpress.client.api.AssetExecutor.HdesExecutor;
+import io.digiexpress.client.api.AssetExecutor.ProcessExecutor;
+import io.digiexpress.client.api.AssetExecutor.StencilExecutor;
+import io.digiexpress.client.api.AssetExecutorEntity.ProcessState;
 import io.digiexpress.client.api.Client;
 import io.digiexpress.client.api.ClientCache;
+import io.digiexpress.client.api.ClientQuery;
 import io.digiexpress.client.api.ImmutableClientConfig;
-import io.digiexpress.client.api.ProcessState;
-import io.digiexpress.client.api.QueryFactory;
-import io.digiexpress.client.api.ServiceEnvir;
-import io.digiexpress.client.spi.envir.ServiceEnvirBuilderImpl;
 import io.digiexpress.client.spi.executors.DialobExecutorImpl;
 import io.digiexpress.client.spi.executors.HdesExecutorImpl;
 import io.digiexpress.client.spi.executors.ProcessExecutorImpl;
 import io.digiexpress.client.spi.executors.StencilExecutorImpl;
-import io.digiexpress.client.spi.query.QueryFactoryImpl;
 import io.digiexpress.client.spi.store.ClientStorePostgreSQL;
 import io.digiexpress.client.spi.store.ImmutableDocDBConfig;
 import io.digiexpress.client.spi.support.ServiceAssert;
@@ -61,24 +63,24 @@ public class ClientImpl implements Client {
   private final ClientConfig config;
   
   @Override
-  public TenantBuilder repo() {
+  public TenantBuilder tenant() {
     return new TenantBuilderImpl(config, config.getDocDb());
   }
   @Override
-  public ServiceEnvirBuilder envir() {
-    return new ServiceEnvirBuilderImpl(config);
+  public AssetEnvirBuilder envir() {
+    return new AssetEnvirBuilderImpl(config);
   }
   @Override
   public ClientConfig getConfig() {
     return config;
   }
   @Override
-  public QueryFactory getQuery() {
-    return new QueryFactoryImpl(config);
+  public ClientQuery getQuery() {
+    return new ClientQueryImpl(config);
   }
   @Override
-  public ServiceExecutorBuilder executor(ServiceEnvir envir) {
-    return new ServiceExecutorBuilder() {
+  public AssetExecutorBuilder executor(AssetEnvir envir) {
+    return new AssetExecutorBuilder() {
       @Override public StencilExecutor stencil() { return new StencilExecutorImpl(config, envir); }
       @Override public HdesExecutor hdes(ProcessState state) { return new HdesExecutorImpl(config, state, envir); }
       @Override public DialobExecutor dialob(ProcessState state) { return new DialobExecutorImpl(config, state, envir); }

@@ -18,9 +18,9 @@ import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import io.digiexpress.client.api.ServiceClient;
-import io.digiexpress.client.spi.ServiceClientImpl;
-import io.digiexpress.client.spi.store.ServiceRepoBuilderImpl;
+import io.digiexpress.client.api.Client;
+import io.digiexpress.client.spi.ClientImpl;
+import io.digiexpress.client.spi.TenantBuilderImpl;
 import io.digiexpress.spring.composer.config.FileConfig;
 import io.digiexpress.spring.composer.config.FileConfigBean;
 import io.digiexpress.spring.composer.config.PgConfig;
@@ -68,7 +68,7 @@ public class ComposerAutoConfiguration {
   @ConditionalOnProperty(name = "digiexpress.composer.service.enabled", havingValue = "true")
   @Bean
   public DigiexpressComposerServiceController digiexpressComposerServiceController(
-      ObjectMapper objectMapper, ApplicationContext ctx, ServiceClient client) {
+      ObjectMapper objectMapper, ApplicationContext ctx, Client client) {
     return new DigiexpressComposerServiceController(objectMapper, ctx, client);
   }
   @Bean
@@ -79,7 +79,7 @@ public class ComposerAutoConfiguration {
   
   @Bean
   @ConditionalOnProperty(name = "digiexpress.db.pg.enabled", havingValue = "true", matchIfMissing = false)
-  public ServiceClient digiexpressClient(ObjectMapper om, PgConfigBean config) {
+  public Client digiexpressClient(ObjectMapper om, PgConfigBean config) {
       log.info(new StringBuilder()
         .append(System.lineSeparator())
         .append("Configuring Thena: ").append(System.lineSeparator())
@@ -108,9 +108,9 @@ public class ComposerAutoConfiguration {
         .errorHandler(new PgErrors())
         .build();
     
-    final var namings = ServiceRepoBuilderImpl.Namings.builder().repoService(config.getRepositoryName()).build().withDefaults();
+    final var namings = TenantBuilderImpl.Namings.builder().repoProject(config.getRepositoryName()).build().withDefaults();
     
-    return ServiceClientImpl.builder()
+    return ClientImpl.builder()
         .om(om)
         .defaultDialobEventPub()
         .defaultDialobFr()
@@ -119,7 +119,7 @@ public class ComposerAutoConfiguration {
         .repoStencil(namings.getRepoStencil())
         .repoDialob(namings.getRepoDialob())
         .repoHdes(namings.getRepoHdes())
-        .repoService(namings.getRepoService())
+        .repoService(namings.getRepoProject())
         .doc(doc)
         .build();
   }

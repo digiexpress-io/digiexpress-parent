@@ -1,7 +1,7 @@
-package io.digiexpress.client.spi.composer.visitors;
+package io.digiexpress.client.spi.composer;
 
 import io.digiexpress.client.api.Client;
-import io.digiexpress.client.api.ServiceComposerCommand.CreateServiceDescriptor;
+import io.digiexpress.client.api.ComposerEntity.CreateServiceDescriptor;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

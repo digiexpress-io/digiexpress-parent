@@ -1,5 +1,5 @@
 
-package io.digiexpress.client.spi.composer.visitors;
+package io.digiexpress.client.spi.composer;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ import io.digiexpress.client.api.ClientEntity.ServiceRelease;
 import io.digiexpress.client.api.ClientEntity.ServiceReleaseValue;
 import io.digiexpress.client.api.ImmutableServiceRelease;
 import io.digiexpress.client.api.ImmutableServiceReleaseValue;
-import io.digiexpress.client.api.QueryFactory;
+import io.digiexpress.client.api.ClientQuery;
 import io.digiexpress.client.spi.support.ReleaseException;
 import io.digiexpress.client.spi.support.ServiceAssert;
 import io.resys.hdes.client.api.ast.AstBody.AstBodyType;
@@ -46,7 +46,7 @@ import lombok.RequiredArgsConstructor;
 public class CreateReleaseVisitor {
   
   private final ClientConfig config;
-  private final QueryFactory query;
+  private final ClientQuery query;
   private final LocalDateTime now;
   private final LocalDateTime ZERO_DATE = LocalDateTime.of(1970, 01, 01, 01, 01);
   
