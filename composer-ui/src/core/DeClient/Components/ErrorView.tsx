@@ -1,11 +1,11 @@
 import React from 'react';
 import { Box, Typography, Divider } from '@mui/material';
 
-import { Client } from '../context';
+import { StoreError } from '../error-types';
 
 
 
-const ErrorView: React.FC<{ error: Client.StoreError }> = ({ error }) => {
+const ErrorView: React.FC<{ error: StoreError }> = ({ error }) => {
   
   console.log(error);
   const items: React.ReactNode[] = [];

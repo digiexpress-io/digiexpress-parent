@@ -1,4 +1,12 @@
-import { ServiceErrorMsg, ServiceErrorProps } from './api';
+export interface ServiceErrorMsg {
+  id: string;
+  value: string;
+}
+export interface ServiceErrorProps {
+  text: string;
+  status: number;
+  errors: ServiceErrorMsg[];
+}
 
 const getErrorMsg = (error: any) => {
   if (error.msg) {

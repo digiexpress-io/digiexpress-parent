@@ -6,30 +6,31 @@ import Burger from '@the-wrench-io/react-burger';
 
 import { useSnackbar } from 'notistack';
 
-import { Composer, Client } from '../context';
-import Errors from '../Errors';
+import { useComposer } from '../hooks';
+import { StoreError } from '../error-types';
+import Errors from '../../Errors';
 
 
 const RequireProject: React.FC<{ }> = ({ }) => {
   const { enqueueSnackbar } = useSnackbar();
   
-  const { service, actions, site } = Composer.useComposer();
+  const { client, actions, site } = useComposer();
   const [open, setOpen] = React.useState(true);
   const [apply, setApply] = React.useState(false);
-  const [errors, setErrors] = React.useState<Client.StoreError>();
+  const [errors, setErrors] = React.useState<StoreError>();
 
   const handleCreate = () => {
     setErrors(undefined);
     setApply(true);
 
-    service.create().site()
+    client.create().head()
       .then(async data => {
-        await actions.handleLoadSite(data);
+        await actions.handleLoadHead(data);
         setApply(false);
         setOpen(false);
         enqueueSnackbar(<FormattedMessage id="project.dialog.requireProject.createdMessage" />);
       })
-      .catch((error: Client.StoreError) => {
+      .catch((error: StoreError) => {
         setErrors(error);
         setApply(false);
       });
@@ -63,5 +64,5 @@ const RequireProject: React.FC<{ }> = ({ }) => {
   />);
 }
 
-export { RequireProject };
+export default RequireProject;
 
