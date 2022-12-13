@@ -5,7 +5,7 @@ import { BaseModel } from '@projectstorm/react-canvas-core';
 import { DemoCanvasWidget } from './helpers/DemoCanvasWidget';
 import { DemoButton, DemoWorkspaceWidget } from './helpers/DemoWorkspaceWidget';
 
-import { Composer, Client } from '../context';
+import DeClient from '../DeClient';
 
 /**
  * Tests the drag on/off
@@ -58,13 +58,13 @@ interface ModelConfig {
 type ProcessValue_value = string;
 
 class DefinitionVisitor {
-  private _site: Client.SiteDefinition;
+  private _site: DeClient.DefinitionState;
   private _result: BaseModel[] = [];
   private _stencil_to_dialob_ports: Record<ProcessValue_value, DefaultPortModel[]> = {};
-  private _dialob_models_by_flowId: Record<string, { node: DefaultNodeModel, form: Client.FormDocument }[]> = {};
-  private _processes: Client.ProcessValue[] = [];
+  private _dialob_models_by_flowId: Record<string, { node: DefaultNodeModel, form: DeClient.DialobFormDocument }[]> = {};
+  private _processes: DeClient.ServiceDescriptor[] = [];
 
-  constructor(site: Client.SiteDefinition) {
+  constructor(site: DeClient.DefinitionState) {
     this._site = site;
   }
 
@@ -130,8 +130,8 @@ class DefinitionVisitor {
   }
 
 
-  private visitDialob(localized: Client.LocalizedSite, props: ModelConfig) {
-    const processes = toRecord(this._site.definition.processes, 'name');
+  private visitDialob(localized: DeClient.StencilLocalizedSite, props: ModelConfig) {
+    const processes = toRecord(this._site.definition.descriptors, 'name');
     let locationY = props.start;
     const defHeight = props.boxHight;
     const wkHeight = props.portHight;
@@ -178,7 +178,7 @@ class DefinitionVisitor {
     }
   }
 
-  private visitStencil(localized: Client.LocalizedSite, props: ModelConfig) {
+  private visitStencil(localized: DeClient.StencilLocalizedSite, props: ModelConfig) {
     let locationY = props.start;
     const defHeight = props.boxHight;
     const wkHeight = props.portHight;
@@ -206,7 +206,7 @@ class DefinitionVisitor {
 
 
 
-export default (props: { site: Client.SiteDefinition }) => {
+export default (props: { site: DeClient.DefinitionState }) => {
   //1) setup the diagram engine
   var engine = createEngine();
 

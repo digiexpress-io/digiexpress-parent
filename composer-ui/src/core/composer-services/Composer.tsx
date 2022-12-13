@@ -8,7 +8,7 @@ import {
 import { FormattedMessage, useIntl } from 'react-intl';
 
 
-import { Composer, Client } from '../context';
+import DeClient from '../DeClient';
 import ComposerMenu from './ComposerMenu';
 import ProcessCard from './ProcessCard';
 
@@ -28,11 +28,11 @@ import Diagram from './Diagram';
 
  */
 
-const ComposerServices: React.FC<{ value: Client.ServiceDefinitionDocument }> = ({ value }) => {
+const ComposerServices: React.FC<{ value: DeClient.ServiceDefinition }> = ({ value }) => {
   const intl = useIntl();
-  const nav = Composer.useNav();
-  const service = Composer.useService();
-  const [state, setState] = React.useState<Client.SiteDefinition>();
+  const nav = DeClient.useNav();
+  const service = DeClient.useService();
+  const [state, setState] = React.useState<DeClient.DefinitionState>();
   const { id } = value; 
 
   React.useEffect(() => {

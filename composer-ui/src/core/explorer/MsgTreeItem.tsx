@@ -2,13 +2,12 @@ import React from 'react';
 import { DialogContentText } from '@mui/material';
 
 import Burger from '@the-wrench-io/react-burger';
-import { Client } from '../context';
-
+import DeClient from '../DeClient';
 
 
 const MsgTreeItem: React.FC<{
   nodeId: string;
-  msg: Client.ProgramMessage;
+  msg: DeClient.ProgramMessage;
   error?: boolean;
   children: React.ReactNode
 }> = (props) => {

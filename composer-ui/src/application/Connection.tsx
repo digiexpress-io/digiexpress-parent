@@ -1,21 +1,20 @@
 import React from 'react';
-import { ThemeProvider, StyledEngineProvider, CircularProgress, LinearProgress } from '@mui/material';
-import Client from '../core';
+import DeClient from '../core';
 
 
 function sleep(ms: number) {
     return new Promise( resolve => setTimeout(resolve, ms) );
 }
 
-const LoadingFC: React.FC<{client: Client.Service}> = ({client}) => {
+const LoadingFC: React.FC<{client: DeClient.Client}> = ({client}) => {
   return <>...Loading: {client.config.url}</>
 }
 
-const DownFC: React.FC<{client: Client.Service}> = ({client}) => {
+const DownFC: React.FC<{client: DeClient.Client}> = ({client}) => {
   return <>...Backend is not responding: {client.config.url}</>
 }
 
-const MisconfiguredFC: React.FC<{client: Client.Service}> = ({client}) => {
+const MisconfiguredFC: React.FC<{client: DeClient.Client}> = ({client}) => {
   return <>...Backend is found but getting 404: {client.config.url}</>
 }
 

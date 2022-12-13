@@ -5,9 +5,9 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 
 
-import { Composer } from '../../context';
+import DeClient from '../../DeClient';
+
 import RevisionsValue from './RevisionsValue';
-import ConfigsValue from './ConfigsValue';
 import HeadValue from './HeadValue';
 import ReleasesValue from './ReleasesValue';
 import TreeViewToggle from '../TreeViewToggle';
@@ -15,9 +15,9 @@ import TreeViewToggle from '../TreeViewToggle';
 
 
 const ServicesExplorer: React.FC<{}> = () => {
-  const { session } = Composer.useComposer();
+  const { session } = DeClient.useComposer();
   const [toggle, setToggle] = React.useState(new TreeViewToggle());
-  const revisions = Object.values(session.site.revisions);
+  const revisions = Object.values(session.head.projects);
   
   if (!revisions) {
     console.log("Service explorer:: no revisions in site");
@@ -32,11 +32,10 @@ const ServicesExplorer: React.FC<{}> = () => {
         defaultEndIcon={<div style={{ width: 24 }} />}
         onNodeToggle={(_event: React.SyntheticEvent, nodeIds: string[]) => setToggle(toggle.onNodeToggle(nodeIds))}>
 
-        <HeadValue value={session.site} />
-        <RevisionsValue value={session.site.revisions} />
-        <ReleasesValue value={session.site.releases} />
-        <ConfigsValue value={session.site.configs} />
-                        
+        <HeadValue value={session.head} />
+        <RevisionsValue value={session.head.projects} />
+        <ReleasesValue value={session.head.releases} />
+
       </TreeView>
     </Box>
   );

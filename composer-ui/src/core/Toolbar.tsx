@@ -15,7 +15,7 @@ import FeedbackOutlinedIcon from '@mui/icons-material/FeedbackOutlined';
 import { useSnackbar } from 'notistack';
 
 import Burger from '@the-wrench-io/react-burger';
-import { Composer } from './context';
+import DeClient from './DeClient';
 
 
 const StyledTab = styled(Tab)<TabProps>(({ theme }) => ({
@@ -39,7 +39,7 @@ const StyledTabs = styled(Tabs)<TabsProps>(({ theme }) => ({
 
 
 const Toolbar: React.FC<{}> = () => {
-  const composer = Composer.useComposer();
+  const composer = DeClient.useComposer();
   const drawer = Burger.useDrawer();
   const tabs = Burger.useTabs();
   const secondary = Burger.useSecondary();

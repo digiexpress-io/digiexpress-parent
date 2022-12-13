@@ -8,14 +8,14 @@ import { FormattedMessage } from 'react-intl';
 
 import Burger from '@the-wrench-io/react-burger';
 
-import { Composer, Client } from '../../context';
+import DeClient from '../../DeClient';
 
 
 
 
-const ReleasesValue: React.FC<{ value: Record<Client.ServiceDocumentId, Client.ServiceReleaseDocument> }> = ({ value }) => {
-  const { session } = Composer.useComposer();
-  const nav = Composer.useNav();
+const ReleasesValue: React.FC<{ value: Record<string, DeClient.ServiceRelease> }> = ({ value }) => {
+  const { session } = DeClient.useComposer();
+  const nav = DeClient.useNav();
   const saved = true;
   const ok = true;
 

@@ -8,7 +8,7 @@ import { useSnackbar } from 'notistack';
 
 import { useComposer } from '../hooks';
 import { StoreError } from '../error-types';
-import Errors from '../../Errors';
+import Errors from './ErrorView';
 
 
 const RequireProject: React.FC<{ }> = ({ }) => {

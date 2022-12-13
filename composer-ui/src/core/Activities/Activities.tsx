@@ -5,7 +5,7 @@ import { FormattedMessage } from 'react-intl';
 import Burger from '@the-wrench-io/react-burger';
 
 import { ActivityItem, ActivityData } from './ActivityItem';
-import MigrationComposer from '../migration';
+import MigrationComposer from '../Migration';
 
 interface ActivityType {
   type: "migration";

@@ -4,30 +4,30 @@ import { CircularProgress, Box, Typography } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 
 import Burger from '@the-wrench-io/react-burger';
-import { Composer, Client } from '../context';
-import Errors from '../Errors';
+import DeClient from '../DeClient';
+
 
 const Migration: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [open, setOpen] = React.useState(true);
   const [file, setFile] = React.useState<string | undefined>();
   const [loading, setLoading] = React.useState<boolean | undefined>();
-  const [errors, setErrors] = React.useState<Client.StoreError>();
-  const { service, actions } = Composer.useComposer();
+  const [errors, setErrors] = React.useState<DeClient.StoreError>();
+  const { client, actions } = DeClient.useComposer();
 
   const handleCreate = () => {
     if (!file) {
       return;
     }
     setLoading(true);
-    service.create().migrate(JSON.parse(file))
-      .then(() => actions.handleLoadSite())
+    client.create().migrate(JSON.parse(file))
+      .then(() => actions.handleLoadHead())
       .then(() => {
         setLoading(false);
         setFile(undefined);
         setOpen(false);
         onClose();
       })
-      .catch((error: Client.StoreError) => {
+      .catch((error: DeClient.StoreError) => {
         setErrors(error);
         setLoading(false);
       });;
@@ -43,7 +43,7 @@ const Migration: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           <Typography variant="h4">
             <FormattedMessage id="project.dialog.requireProject.errorsTitle" />
           </Typography>
-          <Errors error={errors} />
+          <DeClient.Error error={errors} />
         </Box>) : undefined}
         {loading ? <CircularProgress /> : <Burger.FileField value="" onChange={setFile} label="migrations.dialog.select" />}
       </>

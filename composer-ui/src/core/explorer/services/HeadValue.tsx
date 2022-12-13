@@ -14,25 +14,21 @@ import { FormattedMessage, useIntl } from 'react-intl';
 
 import Burger from '@the-wrench-io/react-burger';
 
-import { Composer, Client } from '../../context';
+import DeClient from '../../DeClient';
+
 
 
 const ID = 'explorer.services.headItem';
 
 
-const RevisionValue: React.FC<{ value: Client.Site }> = ({ value }) => {
+const RevisionValue: React.FC<{ value: DeClient.HeadState }> = ({ value }) => {
   const intl = useIntl();
-  const nav = Composer.useNav();
+  const nav = DeClient.useNav();
   const saved = true;
   const ok = true;
 
-  const config = Object.values(value.configs).find(() => true);
-    if(!config) {
-    console.log("Service explorer:: no config in site");
-    return null;
-  }
 
-  const revision = Object.values(value.revisions).find(() => true);
+  const revision = Object.values(value.projects).find(() => true);
   if(!revision) {
     console.log("Service explorer:: no revisions in site");
     return null;
@@ -45,7 +41,7 @@ const RevisionValue: React.FC<{ value: Client.Site }> = ({ value }) => {
   
   
 
-  return (<Burger.TreeItem nodeId={ID} labelText={<FormattedMessage id={ID} values={{ name: config.service.id }}/>}
+  return (<Burger.TreeItem nodeId={ID} labelText={<FormattedMessage id={ID} values={{ name: revision.name }}/>}
     labelIcon={AppsIcon}
     labelInfo={<></>}
     labelcolor={saved ? "explorerItem" : "explorerItem.contrastText"}>
@@ -54,14 +50,14 @@ const RevisionValue: React.FC<{ value: Client.Site }> = ({ value }) => {
       color='explorerItem'
       icon={SummarizeIcon}
       onClick={() => {}}
-      labelText={<FormattedMessage id={`${ID}.info1`} values={{items: head.processes.length}}/>}>
+      labelText={<FormattedMessage id={`${ID}.info1`} values={{items: head.descriptors.length}}/>}>
     </Burger.TreeItemOption>
 
 
     <Burger.TreeItemOption nodeId={`${ID}.edit`}
       color='workflow'
       icon={EditIcon}
-      onClick={() => nav.handleInTab({ article: head, name: intl.formatMessage({id: 'tabs.services'}) })}
+      onClick={() => nav.handleInTab({ article: { id: head.id, delegate: head, kind: 'DEF'}, name: intl.formatMessage({id: 'tabs.services'}) })}
       labelText={<FormattedMessage id="buttons.edit"/>}>
     </Burger.TreeItemOption>
 

@@ -1,9 +1,19 @@
+
+import { DialobTree } from './dialob-types';
+import { HdesTree } from './hdes-types';
+import { StencilTree } from './stencil-types';
+
+
 export type ServiceDescriptorId = string;
 export type ServiceDefinitionId = string;
 export type ProjectId = string;
 export type ServiceReleaseId = string;
 export type ConfigType = 'STENCIL' | 'DIALOB' | 'HDES' | 'SERVICE' | 'RELEASE';
 export type ClientEntityType = 'PROJECT' | 'SERVICE_DEF' | 'SERVICE_RELEASE'
+
+export interface ProgramMessage {
+  id: string, msg: string
+}
 
 export interface ClientEntity<T extends string> {
   id: T;
@@ -21,9 +31,9 @@ export interface Project extends ClientEntity<ProjectId> {
 }
 export interface ServiceDefinition extends ClientEntity<ServiceDefinitionId> {
   id: ServiceDefinitionId;
-  refs: RefIdValue; // stencil and wrench
+  refs: RefIdValue[]; // stencil and wrench
   projectId: string;
-  descriptors: ServiceDescriptor[];  
+  descriptors: ServiceDescriptor[];
 }
 export interface ServiceRelease extends ClientEntity<ServiceReleaseId> {
   id: string;
@@ -68,7 +78,10 @@ export interface HeadState {
 }
 
 export interface DefinitionState {
-  
+  definition: ServiceDefinition;
+  dialob: DialobTree;
+  stencil: StencilTree;
+  hdes: HdesTree;
 }
 
 export interface ClientError {

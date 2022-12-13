@@ -14,7 +14,7 @@ import {
 } from '@mui/icons-material';
 import { FormattedMessage, useIntl } from 'react-intl';
 
-import { Composer, Client } from '../context';
+import DeClient from '../DeClient';
 
 
 const Search = styled('div')(({ theme }) => ({
@@ -54,7 +54,7 @@ const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
   },
 }));
 
-const ComposerMenu: React.FC<{ value: Client.ServiceDefinitionDocument }> = ({ value }) => {
+const ComposerMenu: React.FC<{ value: DeClient.ServiceDefinition }> = ({ value }) => {
 
   const stencil = value.refs.find(ref => ref.type === 'STENCIL')?.tagName;
   const hdes = value.refs.find(ref => ref.type === 'HDES')?.tagName;

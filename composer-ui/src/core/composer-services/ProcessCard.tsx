@@ -8,8 +8,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import { FormattedMessage } from 'react-intl';
 
 
-import { Client } from '../context';
-
+import DeClient from '../DeClient';
 
 const SelectCard = styled(Card)<CardProps>(({ theme }) => ({
   cursor: 'pointer',
@@ -21,7 +20,7 @@ const SelectCard = styled(Card)<CardProps>(({ theme }) => ({
 }));
 
 
-const ProcessCard: React.FC<{ value: Client.ProcessValue }> = ({ value }) => {
+const ProcessCard: React.FC<{ value: DeClient.ServiceDescriptor }> = ({ value }) => {
   const ok = true;
   const result = (
     <>
