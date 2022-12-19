@@ -2,11 +2,12 @@ import React from 'react';
 
 import { IntlProvider, useIntl } from 'react-intl';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material';
-import SnackbarProvider from './SnakbarWrapper';
+import { SnackbarProvider } from 'notistack';
 import { useSnackbar } from 'notistack';
 import Burger, { siteTheme } from '@the-wrench-io/react-burger';
-import DeClient, { messages, Main, Secondary, Toolbar } from '../core';
 
+import DeClient from '@declient';
+import AppCore from '../core';
 
 import Connection from './Connection';
 
@@ -42,12 +43,12 @@ const Apps: React.FC<{services: DeClient.HeadState}> = ({services}) => {
   // eslint-disable-next-line 
   const serviceComposer: Burger.App<DeClient.ComposerContextType> = React.useMemo(() => ({
     id: "service-composer",
-    components: { primary: Main, secondary: Secondary, toolbar: Toolbar },
+    components: { primary: AppCore.Main, secondary: AppCore.Secondary, toolbar: AppCore.Toolbar },
     state: [
       (children: React.ReactNode, restorePoint?: Burger.AppState<DeClient.ComposerContextType>) => (<>{children}</>),
       () => ({})
     ]
-  }), [Main, Secondary, Toolbar]);
+  }), [AppCore]);
 
   return (<DeClient.Provider service={backend} head={services}>
     <Burger.Provider children={[serviceComposer]} secondary="toolbar.assets" drawerOpen />
@@ -79,7 +80,7 @@ const LoadApps = React.lazy(async () => {
 
 const locale = 'en';
 const NewApp = (
-  <IntlProvider locale={locale} messages={messages[locale]}>
+  <IntlProvider locale={locale} messages={AppCore.messages[locale]}>
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={siteTheme}>
         <SnackbarProvider>

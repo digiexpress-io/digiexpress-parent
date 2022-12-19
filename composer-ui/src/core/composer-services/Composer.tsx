@@ -8,7 +8,7 @@ import {
 import { FormattedMessage, useIntl } from 'react-intl';
 
 
-import DeClient from '../DeClient';
+import DeClient from '@declient';
 import ComposerMenu from './ComposerMenu';
 import ProcessCard from './ProcessCard';
 

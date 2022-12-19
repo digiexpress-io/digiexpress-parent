@@ -8,7 +8,8 @@ import CheckIcon from '@mui/icons-material/Check';
 import { FormattedMessage } from 'react-intl';
 
 
-import DeClient from '../DeClient';
+import DeClient from '@declient';
+
 
 const SelectCard = styled(Card)<CardProps>(({ theme }) => ({
   cursor: 'pointer',

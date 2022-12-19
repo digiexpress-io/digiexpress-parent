@@ -14,8 +14,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 
 import Burger from '@the-wrench-io/react-burger';
 
-import DeClient from '../../DeClient';
-
+import DeClient from '@declient';
 
 
 const ID = 'explorer.services.headItem';
@@ -50,16 +49,14 @@ const RevisionValue: React.FC<{ value: DeClient.HeadState }> = ({ value }) => {
       color='explorerItem'
       icon={SummarizeIcon}
       onClick={() => {}}
-      labelText={<FormattedMessage id={`${ID}.info1`} values={{items: head.descriptors.length}}/>}>
-    </Burger.TreeItemOption>
+      labelText={<FormattedMessage id={`${ID}.info1`} values={{items: head.descriptors.length}}/>} />
 
 
     <Burger.TreeItemOption nodeId={`${ID}.edit`}
       color='workflow'
       icon={EditIcon}
       onClick={() => nav.handleInTab({ article: { id: head.id, delegate: head, kind: 'DEF'}, name: intl.formatMessage({id: 'tabs.services'}) })}
-      labelText={<FormattedMessage id="buttons.edit"/>}>
-    </Burger.TreeItemOption>
+      labelText={<FormattedMessage id="buttons.edit"/>} />
 
   </Burger.TreeItem>)
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { DialogContentText } from '@mui/material';
 
 import Burger from '@the-wrench-io/react-burger';
-import DeClient from '../DeClient';
+import DeClient from '@declient';
 
 
 const MsgTreeItem: React.FC<{

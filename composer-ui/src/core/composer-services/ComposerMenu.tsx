@@ -14,7 +14,7 @@ import {
 } from '@mui/icons-material';
 import { FormattedMessage, useIntl } from 'react-intl';
 
-import DeClient from '../DeClient';
+import DeClient from '@declient';
 
 
 const Search = styled('div')(({ theme }) => ({

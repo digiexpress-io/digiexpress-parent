@@ -8,7 +8,7 @@ import { FormattedMessage } from 'react-intl';
 
 import Burger from '@the-wrench-io/react-burger';
 
-import DeClient from '../../DeClient';
+import DeClient from '@declient';
 
 
 

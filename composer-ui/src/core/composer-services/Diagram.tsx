@@ -5,7 +5,7 @@ import { BaseModel } from '@projectstorm/react-canvas-core';
 import { DemoCanvasWidget } from './helpers/DemoCanvasWidget';
 import { DemoButton, DemoWorkspaceWidget } from './helpers/DemoWorkspaceWidget';
 
-import DeClient from '../DeClient';
+import DeClient from '@declient';
 
 /**
  * Tests the drag on/off

@@ -15,7 +15,7 @@ import FeedbackOutlinedIcon from '@mui/icons-material/FeedbackOutlined';
 import { useSnackbar } from 'notistack';
 
 import Burger from '@the-wrench-io/react-burger';
-import DeClient from './DeClient';
+import DeClient from '@declient';
 
 
 const StyledTab = styled(Tab)<TabProps>(({ theme }) => ({

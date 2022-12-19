@@ -7,7 +7,7 @@ import Burger from '@the-wrench-io/react-burger';
 import Activities from './Activities';
 
 import ComposerServices from './composer-services';
-import DeClient from './DeClient';
+import DeClient from '@declient';
 
 
 

@@ -5,7 +5,7 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 
 
-import DeClient from '../../DeClient';
+import DeClient from '@declient';
 
 import RevisionsValue from './RevisionsValue';
 import HeadValue from './HeadValue';
