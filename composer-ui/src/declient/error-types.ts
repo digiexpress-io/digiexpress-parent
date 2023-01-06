@@ -33,6 +33,12 @@ const parseErrors = (props: any[]): ServiceErrorMsg[] => {
     return []
   }
 
+  if (!props.map) {
+    return [{
+      id: getErrorId(props),
+      value: getErrorMsg(props)
+    }]
+  }
   const result: ServiceErrorMsg[] = props.map(error => ({
     id: getErrorId(error),
     value: getErrorMsg(error)

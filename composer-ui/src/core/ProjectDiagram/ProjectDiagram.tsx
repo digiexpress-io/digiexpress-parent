@@ -1,6 +1,6 @@
 import React from "react";
 import {
-  Box, Stack
+  Box, Stack, CircularProgress
 } from "@mui/material";
 
 import {
@@ -9,10 +9,8 @@ import { FormattedMessage, useIntl } from 'react-intl';
 
 
 import DeClient from '@declient';
-import ComposerMenu from './ComposerMenu';
-import ProcessCard from './ProcessCard';
 
-import Diagram from './Diagram';
+import DiagramCanvas from './DiagramCanvas';
 
 /**
 
@@ -28,27 +26,39 @@ import Diagram from './Diagram';
 
  */
 
-const ComposerServices: React.FC<{ value: DeClient.ServiceDefinition }> = ({ value }) => {
+const ProjectDiagram: React.FC<{}> = ({ }) => {
+
+  const { head } = DeClient.useSession();
+  const defs = Object.values(head.definitions);
   const intl = useIntl();
   const nav = DeClient.useNav();
   const service = DeClient.useService();
   const [state, setState] = React.useState<DeClient.DefinitionState>();
-  const { id } = value; 
+
+  const def = defs.find(() => true);
 
   React.useEffect(() => {
-    service.definition(id).then(setState);
-  }, [id]);
-
+    if (def) {
+      service.definition(def.id).then(setState);
+    }
+  }, [def]);
 
   const result = React.useMemo(() => {
-    if(!state) {
+    if (!state) {
       return null;
     }
-    
-    return <Diagram site={state}/>;
-  }, [state]) 
+    return <DiagramCanvas site={state} />;
+  }, [state])
+
+
+  if (defs.length === 0) {
+    return <>no project</>;
+  }
+  if (!state) {
+    return (<Box sx={{ display: 'flex' }}><CircularProgress /></Box>);
+  }
   return (<Box sx={{ height: '9000px' }}>{result}</Box>);
 
 }
 
-export default ComposerServices;
+export default ProjectDiagram;

@@ -2,9 +2,10 @@ const en = {
   'buttons.create': "Create",
   'buttons.apply': "Apply",
   'buttons.delete': "Delete",
-  'button.cancel': "Cancel",
+  'buttons.cancel': "Cancel",
   'buttons.copy': "Copy",
   'buttons.edit': "Edit",
+  'buttons.view': "View",
   'buttons.download': "Download",
   
   'init.loaded': 'Loaded repo: {name}',
@@ -22,7 +23,7 @@ const en = {
   'migrations.dialog.title': 'Migrate dialob, stencil, wrench, process data',
   'migrations.dialog.select': 'Select file to upload',
   
-  'explorer.tabs.services': 'Services',
+  'explorer.title': 'DE Engine',
   'explorer.tabs.search': 'Search...',
 
   'explorer.services.headItem': "Project: {name}",
@@ -42,7 +43,6 @@ const en = {
   'processValue.hdes': 'Wrench Flow',
   'processValue.stencil': 'Stencil Articles',
   */
-  
 };
 
 export default en;

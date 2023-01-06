@@ -36,9 +36,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.digiexpress.client.api.Client;
 import io.digiexpress.client.api.Composer;
 import io.digiexpress.client.api.ComposerEntity.CreateMigration;
-import io.digiexpress.client.api.ComposerEntity.MigrationState;
 import io.digiexpress.client.api.ComposerEntity.DefinitionState;
 import io.digiexpress.client.api.ComposerEntity.HeadState;
+import io.digiexpress.client.api.ComposerEntity.MigrationState;
 import io.digiexpress.client.spi.ComposerImpl;
 import io.digiexpress.spring.composer.config.UiConfigBean;
 import lombok.Data;
@@ -52,7 +52,7 @@ public class DigiexpressComposerServiceController {
   
   private final Client client;
   private final Composer composer;
-  private static final Duration timeout = Duration.ofMillis(10000);
+  private static final Duration timeout = Duration.ofMillis(100000);
   
   
   @Data @Jacksonized
@@ -87,7 +87,7 @@ public class DigiexpressComposerServiceController {
   }
   @GetMapping(path = "/" + UiConfigBean.API_DEF + "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   public DefinitionState def(@PathVariable String id) {
-    return composer.query().definition(id).await().atMost(timeout);
+    return composer.query().definition(id).await().indefinitely();
   }
   @PostMapping(path = "/" + UiConfigBean.API_HEAD, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   public HeadState headCreate(HeadCreate create) {

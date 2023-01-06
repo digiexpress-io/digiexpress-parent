@@ -3,11 +3,11 @@ import { Box } from '@mui/material';
 import { SxProps } from '@mui/system';
 
 import Burger from '@the-wrench-io/react-burger';
+import DeClient from '@declient';
 
 import Activities from './Activities';
-
-import ComposerServices from './composer-services';
-import DeClient from '@declient';
+import ProjectDiagram from './ProjectDiagram';
+import Descriptors from './Descriptors';
 
 
 
@@ -34,10 +34,11 @@ const Main: React.FC<{}> = () => {
     if (active.id === 'activities') {
       return (<Box sx={root}><Activities /></Box>);
     } 
-    
-    if(entity && entity.kind === 'DEF') {
-      const value: DeClient.ServiceDefinition = entity.delegate;
-      return <Box sx={root}><ComposerServices value={value}/></Box>      
+    if (active.id === 'project') {
+      return (<Box sx={root}><ProjectDiagram /></Box>);
+    }     
+    if(active.id === 'descriptors') {
+      return <Box sx={root}><Descriptors/></Box>      
     }
     
     if (entity) {

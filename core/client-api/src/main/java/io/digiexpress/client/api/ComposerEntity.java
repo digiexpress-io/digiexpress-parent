@@ -21,7 +21,6 @@ import io.resys.hdes.client.api.HdesStore.StoreState;
 import io.resys.hdes.client.api.ast.AstDecision;
 import io.resys.hdes.client.api.ast.AstFlow;
 import io.resys.hdes.client.api.ast.AstService;
-import io.resys.thena.docdb.api.models.ImmutableTree;
 import io.thestencil.client.api.ImmutableCreateRelease;
 import io.thestencil.client.api.StencilComposer.SiteState;
 
@@ -99,7 +98,7 @@ public interface ComposerEntity extends Serializable {
     List<String> getArgs();
   }
   
-  @Value.Immutable @JsonSerialize(as = ImmutableTree.class) @JsonDeserialize(as = ImmutableHdesTree.class)
+  @Value.Immutable @JsonSerialize(as = ImmutableHdesTree.class) @JsonDeserialize(as = ImmutableHdesTree.class)
   interface HdesTree extends Serializable {
     Map<String, io.resys.hdes.client.api.HdesComposer.ComposerEntity<AstFlow>> getFlows();
     Map<String, io.resys.hdes.client.api.HdesComposer.ComposerEntity<AstService>> getServices();

@@ -2,7 +2,8 @@ import React from 'react';
 import { Tabs, Tab, Box, TabProps, TabsProps, TextField, TextFieldProps, alpha } from '@mui/material';
 import { styled } from "@mui/material/styles";
 import { useIntl } from 'react-intl';
-import { ServicesExplorer } from './explorer';
+
+import Explorer from './Explorer';
 
 
 const TextFieldRoot = styled(TextField)<TextFieldProps>(({ theme }) => ({
@@ -58,14 +59,12 @@ const Secondary: React.FC<{}> = () => {
 
   let component = <></>;
   if (tab === 'tabs.services') {
-    component = (<ServicesExplorer />)
+    component = (<Explorer />)
   }
 
   return (<Box sx={{ backgroundColor: "explorer.main", height: '100%' }}>
     <Box display="flex" >
-      <StyledTabs value={tab} onChange={(_event: any, value: string) => setTab(value)}>
-        <StyledTab label={getLabel("explorer.tabs.services")} value='tabs.services' />
-      </StyledTabs>
+      <StyledTab label={getLabel("explorer.title")} value='tabs.services' />
       
       <Box alignSelf="center" sx={{ m: 1 }}>
         <TextFieldRoot focused placeholder={getLabel("explorer.tabs.search")}
