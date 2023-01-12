@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import io.dialob.api.form.Form;
 import io.dialob.api.form.ImmutableForm;
@@ -18,6 +19,7 @@ import io.dialob.client.api.DialobDocument.FormRevisionEntryDocument;
 import io.dialob.client.api.ImmutableFormDocument;
 import io.dialob.client.api.ImmutableFormRevisionDocument;
 import io.dialob.client.api.ImmutableFormRevisionEntryDocument;
+import io.dialob.client.spi.support.OidUtils;
 import io.digiexpress.client.spi.support.ServiceAssert;
 import io.digiexpress.client.tests.migration.DialobMigration.FormsAndRevs;
 import lombok.Builder;
@@ -155,7 +157,6 @@ public class DialobMigrationVisitor {
     final var summary = MigrationsDefaults.summary("group name", "tag name", "created", "form id", "form status");
     for(final var rev : revisions.values()) {
       final var entries = new ArrayList<FormRevisionEntryDocument>();
-      
       for(final var entry : rev.getEntries()) {
         final var status = forms.containsKey(entry.getFormId()) ? "OK" : "MISSING";
         summary.addRow(rev.getId(), entry.getRevisionName(), entry.getCreated(), entry.getFormId(), status);
@@ -169,9 +170,18 @@ public class DialobMigrationVisitor {
         continue;
       }
       
+      
+      final var finalEntries = entries.stream().map(e -> ImmutableFormRevisionEntryDocument.builder()
+          .from(e)
+          .id(OidUtils.gen())
+          .build()).collect(Collectors.toList());
+      finalEntries.sort((b, a) -> a.getCreated().compareTo(b.getCreated()));
+      
+      
       cleanedRevs.add(ImmutableFormRevisionDocument.builder()
           .from(rev)
-          .entries(entries)
+          .head(finalEntries.iterator().next().getId())
+          .entries(finalEntries)
           .build());
     }
     

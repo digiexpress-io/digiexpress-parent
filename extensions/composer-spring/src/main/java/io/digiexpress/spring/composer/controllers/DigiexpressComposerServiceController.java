@@ -79,7 +79,7 @@ public class DigiexpressComposerServiceController {
   }
   @PostMapping(path = "/" + UiConfigBean.API_MIGRATE, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   public MigrationState migrate(@RequestBody CreateMigration entity) {
-    return composer.create().migrate(entity).await().atMost(Duration.ofMillis(90000));
+    return composer.create().migrate(entity).await().atMost(timeout);
   }
   @GetMapping(path = "/" + UiConfigBean.API_HEAD, produces = MediaType.APPLICATION_JSON_VALUE)
   public HeadState head() {
@@ -87,7 +87,7 @@ public class DigiexpressComposerServiceController {
   }
   @GetMapping(path = "/" + UiConfigBean.API_DEF + "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   public DefinitionState def(@PathVariable String id) {
-    return composer.query().definition(id).await().indefinitely();
+    return composer.query().definition(id).await().atMost(timeout);
   }
   @PostMapping(path = "/" + UiConfigBean.API_HEAD, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   public HeadState headCreate(HeadCreate create) {

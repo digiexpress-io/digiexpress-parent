@@ -10,7 +10,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 
 import DeClient from '@declient';
 import ComposerMenu from './ComposerMenu';
-import DescriptorTable from './DescriptorTable';
+import DescriptorTable from '../DescriptorTable';
 
 
 const ComposerServices: React.FC<{}> = ({ }) => {
@@ -20,8 +20,6 @@ const ComposerServices: React.FC<{}> = ({ }) => {
   const session = DeClient.useSession();
   const [state, setState] = React.useState<DeClient.DefinitionState>();
   const def = Object.values(session.head.definitions).find(() => true);
-
-
 
   React.useEffect(() => {
     if (def) {
@@ -35,7 +33,7 @@ const ComposerServices: React.FC<{}> = ({ }) => {
 
   return (<Box sx={{ backgroundColor: 'mainContent.main' }}>
     <ComposerMenu value={def} />
-    <Box><DescriptorTable def={state.definition} /></Box>
+    <Box><DescriptorTable def={state} /></Box>
   </Box>);
 
 }

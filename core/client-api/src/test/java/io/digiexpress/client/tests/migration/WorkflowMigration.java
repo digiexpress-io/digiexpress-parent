@@ -61,16 +61,18 @@ public class WorkflowMigration {
     final var summary_service = MigrationsDefaults.summary("workflow name", "form id", "flow id", "status");
     final List<ServiceDescriptor> processes = new ArrayList<>();
     for(final var workflow : workflows) {
+      
+      
       try {
-        final var processValue = ImmutableServiceDescriptor.builder()
+        final var descriptor = ImmutableServiceDescriptor.builder()
           .id(workflow.getId())
           .name(workflow.getName())
           .desc("")
           .flowId(hdes.getProgramEnvir().getFlowsByName().get(workflow.getFlowName()).getId())
           .formId(workflow.getFormId())
           .build();
-        processes.add(processValue);
-        summary_service.addRow(processValue.getName(), processValue.getFormId(), processValue.getFlowId(), "OK");
+        processes.add(descriptor);
+        summary_service.addRow(descriptor.getName(), descriptor.getFormId(), descriptor.getFlowId(), "OK");
       } catch(Exception e) {
         final var flowId = hdes.getProgramEnvir().getFlowsByName().containsKey(workflow.getFlowName()) ? "FOUND" : "MISSING";
         final var formId = dialob.getForms().stream().filter(f -> f.getId().equals(workflow.getFormId())).findAny().isPresent() ? "FOUND" : "MISSING";

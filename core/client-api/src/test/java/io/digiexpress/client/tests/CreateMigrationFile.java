@@ -2,6 +2,7 @@ package io.digiexpress.client.tests;
 
 import java.time.Duration;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import io.digiexpress.client.api.ImmutableCreateMigration;
@@ -15,7 +16,7 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
 import lombok.extern.slf4j.Slf4j;
 
-@org.junit.jupiter.api.Disabled
+//@org.junit.jupiter.api.Disabled
 @Slf4j
 @QuarkusTest
 @TestProfile(PgProfile.class)
@@ -46,6 +47,18 @@ public class CreateMigrationFile extends TestCase {
     //test drive the migration
     final var composer = service(client);
     final var result = composer.create().migrate(migration).await().atMost(atMost);
+    final var head = composer.query().head().await().atMost(atMost);
+    final var definitionId = head.getDefinitions().values().iterator().next().getId();
+    final var definitionState = composer.query().definition(definitionId).await().atMost(atMost);;
+    
+    
+    definitionState.getDefinition().getDescriptors().forEach(desc -> {
+      final var formId = desc.getFormId();
+      final var forms = definitionState.getDialob().getForms();
+      Assertions.assertTrue(forms.containsKey(formId), "descriptor has unknown formId");
+      
+      
+    });
     
   }
 }

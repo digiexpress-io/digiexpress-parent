@@ -27,6 +27,7 @@ import {
 import {
   DialobFormDocument,
   DialobFormRevisionDocument,
+  DialobFormRevisionEntryDocument,
   DialobTree,
   DialobVariable
 } from './dialob-types';
@@ -46,6 +47,11 @@ import {
   StoreErrorImpl as StoreErrorImplAs
 } from './error-types';
 
+import {
+  DefStateAssocsImpl as DefStateAssocsImplAs,
+  DefStateAssocs, DefStateDialobAssocs
+} from './def-state-assocs';
+
 
 import ErrorView from './Components/ErrorView';
 import { ClientContextType, ComposerContextType } from './Components/Context';
@@ -62,6 +68,11 @@ declare namespace DeClient {
     ServiceDescriptorId, ServiceDefinitionId, ProjectId, ServiceReleaseId, ConfigType, ClientEntityType,
     ProgramMessage
   }
+  
+  export type {
+    DefStateDialobAssocs, DefStateAssocs
+  }
+
 
   export type {
     DocumentId, Document, DocumentUpdate,
@@ -81,6 +92,7 @@ declare namespace DeClient {
   export type {
     DialobFormDocument,
     DialobFormRevisionDocument,
+    DialobFormRevisionEntryDocument,
     DialobTree,
     DialobVariable
   }
@@ -101,6 +113,7 @@ declare namespace DeClient {
 
 
 namespace DeClient {
+  export const DefStateAssocsImpl = DefStateAssocsImplAs;
   export const ServiceImpl = ServiceImplAs;
   export const DefaultStore = DefaultStoreAs;
   export const StoreErrorImpl = StoreErrorImplAs;

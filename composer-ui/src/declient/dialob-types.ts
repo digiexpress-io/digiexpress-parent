@@ -16,6 +16,17 @@ export interface DialobVariable {
   contextType: string;
 }
 
-export interface DialobFormRevisionDocument {
+export interface DialobFormRevisionEntryDocument {
+  id: string;
+  formId: string;
+  revisionName: string;
+}
 
+export interface DialobFormRevisionDocument {
+  id: string;
+  head: string;
+  name: string;
+  version: string;
+  updated: string;
+  entries: DialobFormRevisionEntryDocument[]
 }
