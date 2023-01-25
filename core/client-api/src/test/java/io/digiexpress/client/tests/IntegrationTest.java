@@ -23,7 +23,7 @@ import io.digiexpress.client.api.ComposerEntity.DefinitionState;
 import io.digiexpress.client.api.ImmutableCreateDescriptor;
 import io.digiexpress.client.api.ImmutableCreateProjectRevision;
 import io.digiexpress.client.api.ImmutableCreateRelease;
-import io.digiexpress.client.spi.support.ServiceAssert;
+import io.digiexpress.client.spi.support.MainBranch;
 import io.digiexpress.client.tests.support.PgProfile;
 import io.digiexpress.client.tests.support.TestCase;
 import io.quarkus.test.junit.QuarkusTest;
@@ -78,7 +78,7 @@ public class IntegrationTest extends TestCase {
     final var targetDate = LocalDateTime.of(2022, 11, 5, 11, 07);
     
     final var release1 = service(client).create().release(ImmutableCreateRelease.builder()
-        .name(ServiceAssert.BRANCH_MAIN).desc("")
+        .name(MainBranch.HEAD_NAME).desc("")
         .serviceDefinitionId(def.getId())
         .activeFrom(targetDate)
         .targetDate(targetDate)

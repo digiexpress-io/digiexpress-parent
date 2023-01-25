@@ -6,9 +6,7 @@ import java.util.function.Supplier;
 import io.digiexpress.client.api.Client.ClientException;
 
 public class ServiceAssert {
-  
-  public static String BRANCH_MAIN = "main";
-  
+
   public static class ServiceAssertException extends IllegalArgumentException implements ClientException {
     private static final long serialVersionUID = 6305063707279384796L;
     public ServiceAssertException(String s) {

@@ -1,6 +1,6 @@
 package io.digiexpress.client.spi;
 
-import static io.digiexpress.client.spi.ClientQueryImpl.HEAD_NAME;
+import static io.digiexpress.client.spi.support.MainBranch.HEAD_NAME;
 
 import java.io.IOException;
 import java.util.function.Supplier;

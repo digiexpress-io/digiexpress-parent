@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -32,7 +33,7 @@ import io.digiexpress.client.api.ImmutableProject;
 import io.digiexpress.client.api.ImmutableProjectRevision;
 import io.digiexpress.client.api.ImmutableRefIdValue;
 import io.digiexpress.client.api.ImmutableServiceDefinition;
-import io.digiexpress.client.spi.support.ServiceAssert;
+import io.digiexpress.client.spi.support.MainBranch;
 import io.digiexpress.client.spi.support.TableLog;
 import io.resys.hdes.client.api.HdesStore;
 import io.resys.hdes.client.api.ImmutableImportStoreEntity;
@@ -67,11 +68,15 @@ public class CreateMigrationVisitor {
   } 
   
   public Uni<MigrationState> visit() {
-  
+    final var projectId = Optional.ofNullable(source.getProjectId()).orElse(client.getQuery().getProjectDefaultId());
+    
     return visitForms(PartialState.builder().build())
         .onItem().transformToUni(this::visitStencil)
         .onItem().transformToUni(this::visitHdes)
-        .onItem().transformToUni(partial -> client.getQuery().getDefaultProject().onItem().transformToUni(project -> visitProject(partial, project)))
+        .onItem().transformToUni(partial -> 
+            client.getQuery().getProject(projectId).onItem()
+              .transformToUni(project -> visitProject(partial, project))
+        )
         .onItem().transform(partial -> {
           visitLog(partial);
           return ImmutableMigrationState.builder().build();
@@ -230,8 +235,8 @@ public class CreateMigrationVisitor {
       .created(now)
       .updated(now)
       .id(gid.getNextId(ClientEntity.ClientEntityType.SERVICE_DEF))
-      .addRefs(ImmutableRefIdValue.builder().repoId(config.getStencil()).tagName(ServiceAssert.BRANCH_MAIN).type(ConfigType.STENCIL).build())
-      .addRefs(ImmutableRefIdValue.builder().repoId(config.getHdes()).tagName(ServiceAssert.BRANCH_MAIN).type(ConfigType.HDES).build())
+      .addRefs(ImmutableRefIdValue.builder().repoId(config.getStencil()).tagName(MainBranch.HEAD_NAME).type(ConfigType.STENCIL).build())
+      .addRefs(ImmutableRefIdValue.builder().repoId(config.getHdes()).tagName(MainBranch.HEAD_NAME).type(ConfigType.HDES).build())
       .descriptors(source.getServices().getDescriptors())
       .build();
 
@@ -270,7 +275,7 @@ public class CreateMigrationVisitor {
         .build()
       );
     return client.getConfig().getStore().batch(commands)
-      .onItem().transformToUni(created -> client.getQuery().head())
+      .onItem().transformToUni(created -> client.getQuery().getProjectHead())
       .onItem().transform(state -> partial.toBuilder().projectState(state).build());
   }
   

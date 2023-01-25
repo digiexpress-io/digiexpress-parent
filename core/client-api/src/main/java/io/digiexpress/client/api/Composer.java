@@ -3,13 +3,14 @@ package io.digiexpress.client.api;
 import io.digiexpress.client.api.ClientEntity.Project;
 import io.digiexpress.client.api.ClientEntity.ServiceDefinition;
 import io.digiexpress.client.api.ClientEntity.ServiceRelease;
+import io.digiexpress.client.api.ComposerEntity.CreateDescriptor;
 import io.digiexpress.client.api.ComposerEntity.CreateMigration;
 import io.digiexpress.client.api.ComposerEntity.CreateProjectRevision;
 import io.digiexpress.client.api.ComposerEntity.CreateRelease;
-import io.digiexpress.client.api.ComposerEntity.CreateDescriptor;
-import io.digiexpress.client.api.ComposerEntity.MigrationState;
 import io.digiexpress.client.api.ComposerEntity.DefinitionState;
 import io.digiexpress.client.api.ComposerEntity.HeadState;
+import io.digiexpress.client.api.ComposerEntity.MigrationState;
+import io.digiexpress.client.api.ComposerEntity.TagState;
 import io.smallrye.mutiny.Uni;
 
 public interface Composer {
@@ -17,6 +18,7 @@ public interface Composer {
   ComposerQuery query();
   
   interface ComposerQuery {
+    Uni<TagState> tags();
     Uni<HeadState> head();
     Uni<DefinitionState> definition(String definitionId);
     Uni<HeadState> release(String releaseId);

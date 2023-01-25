@@ -1,33 +1,9 @@
 import React from 'react';
-import { Tabs, Tab, Box, TabProps, TabsProps, TextField, TextFieldProps, alpha } from '@mui/material';
+import { Tab, Box, TabProps, BoxProps, alpha } from '@mui/material';
 import { styled } from "@mui/material/styles";
-import { useIntl } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 
 import Explorer from './Explorer';
-
-
-const TextFieldRoot = styled(TextField)<TextFieldProps>(({ theme }) => ({
-
-  color: theme.palette.explorerItem.main,
-  backgroundColor: theme.palette.explorer.main,
-  '& .MuiOutlinedInput-input': {
-    color: theme.palette.explorerItem.main,
-  },
-  '& .MuiOutlinedInput-root': {
-    fontSize: '10pt',
-    height: '2rem',
-    '&.Mui-focused fieldset': {
-      borderColor: theme.palette.explorerItem.dark,
-    },
-  },
-  '& .MuiFormLabel-root': {
-    color: theme.palette.explorerItem.main,
-  },
-  '& .MuiFormHelperText-root': {
-    color: theme.palette.explorerItem.main,
-    marginLeft: 1
-  }
-}));
 
 const StyledTab = styled(Tab)<TabProps>(({ theme }) => ({
   "&.MuiButtonBase-root": {
@@ -35,7 +11,7 @@ const StyledTab = styled(Tab)<TabProps>(({ theme }) => ({
     color: theme.palette.explorerItem.main,
     fontSize: '9pt',
     paddingLeft: '.5rem',
-    paddingRight: '.5rem'
+    paddingRight: '.5rem',
   },
   "&.Mui-selected": {
     color: theme.palette.explorerItem.dark,
@@ -43,36 +19,19 @@ const StyledTab = styled(Tab)<TabProps>(({ theme }) => ({
   },
 }));
 
-const StyledTabs = styled(Tabs)<TabsProps>(() => ({
-  "& .MuiTabs-indicator": {
-    backgroundColor: "unset",
-  }
+const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
+  borderBottom: `1px solid ${theme.palette.explorerItem.dark}`,
+  width: '100%',  
 }));
 
 
 const Secondary: React.FC<{}> = () => {
-  const intl = useIntl();
-  const getLabel = (id: string) => intl.formatMessage({ id });
 
-  const [tab, setTab] = React.useState("tabs.services")
-  const [searchString, setSearchString] = React.useState("");
-
-  let component = <></>;
-  if (tab === 'tabs.services') {
-    component = (<Explorer />)
-  }
-
-  return (<Box sx={{ backgroundColor: "explorer.main", height: '100%' }}>
-    <Box display="flex" >
-      <StyledTab label={getLabel("explorer.title")} value='tabs.services' />
-      
-      <Box alignSelf="center" sx={{ m: 1 }}>
-        <TextFieldRoot focused placeholder={getLabel("explorer.tabs.search")}
-          value={searchString}
-          onChange={({ target }) => setSearchString(target.value)} />
-      </Box>
-    </Box>
-    {component}
+  return (<Box sx={{ backgroundColor: "explorer.main", height: '100%', width: '100%' }}>
+    <StyledBox>
+      <StyledTab label={<FormattedMessage id="explorer.title" />} value='label' />
+    </StyledBox>
+    <Explorer />
   </Box>)
 }
 export { Secondary }

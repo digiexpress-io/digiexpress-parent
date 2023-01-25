@@ -59,7 +59,7 @@ public class CreateReleaseVisitor {
         
         // resolve forms
         final Uni<List<ResolvedAsset>> resolvedForms = Multi.createFrom().items(def.getDescriptors().stream())
-            .onItem().transformToUni(process -> query.getForm(process.getFormId())
+            .onItem().transformToUni(process -> query.getDialobForm(process.getFormId())
             .onItem().transform(form -> visitForm(process, form.getData(), envir)))
             .concatenate().collect().asList();
         
@@ -271,7 +271,7 @@ public class CreateReleaseVisitor {
   }
   protected Uni<ResolvedAsset> visitRef(RefIdValue value) {
     if(value.getType() == ConfigType.HDES) {
-      return query.getHdes(value.getTagName()).onItem().transform(ast -> {
+      return query.getHdesTag(value.getTagName()).onItem().transform(ast -> {
         final var envir = config.getHdes().envir();
         
         final var newAst = ast.getValues().stream()
@@ -306,7 +306,7 @@ public class CreateReleaseVisitor {
       });
       
     } else if(value.getType() == ConfigType.STENCIL) {
-      return query.getStencil(value.getTagName()).onItem()
+      return query.getStencilTag(value.getTagName()).onItem()
           .transform(sites -> ImmutableResolvedAssetStencil.builder()
               .tagName(value.getTagName())
               .sites(SitesBean.builder().from(sites).created(0l).build())

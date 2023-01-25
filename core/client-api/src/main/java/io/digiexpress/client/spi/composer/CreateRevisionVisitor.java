@@ -12,13 +12,14 @@ import io.digiexpress.client.api.ClientEntity.Project;
 import io.digiexpress.client.api.ClientStore.ClientStoreCommand;
 import io.digiexpress.client.api.ClientStore.CreateStoreEntity;
 import io.digiexpress.client.api.ClientStore.UpdateStoreEntity;
+import io.digiexpress.client.api.ComposerEntity.CreateProjectRevision;
 import io.digiexpress.client.api.ImmutableCreateStoreEntity;
 import io.digiexpress.client.api.ImmutableProject;
 import io.digiexpress.client.api.ImmutableProjectRevision;
 import io.digiexpress.client.api.ImmutableRefIdValue;
 import io.digiexpress.client.api.ImmutableServiceDefinition;
 import io.digiexpress.client.api.ImmutableUpdateStoreEntity;
-import io.digiexpress.client.api.ComposerEntity.CreateProjectRevision;
+import io.digiexpress.client.spi.support.MainBranch;
 import io.digiexpress.client.spi.support.ServiceAssert;
 import io.resys.thena.docdb.api.models.Repo;
 import lombok.AccessLevel;
@@ -96,7 +97,7 @@ public class CreateRevisionVisitor {
   }
   
   protected ImmutableRefIdValue.Builder visitRef() {
-    return ImmutableRefIdValue.builder().id(nextId(ClientEntityType.SERVICE_DEF)).tagName(ServiceAssert.BRANCH_MAIN);
+    return ImmutableRefIdValue.builder().id(nextId(ClientEntityType.SERVICE_DEF)).tagName(MainBranch.HEAD_NAME);
   }
 
   protected UpdateStoreEntity toUpdateCommand(ClientEntity doc) {

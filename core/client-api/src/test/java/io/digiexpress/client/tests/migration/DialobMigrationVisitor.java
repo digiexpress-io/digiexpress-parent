@@ -20,6 +20,7 @@ import io.dialob.client.api.ImmutableFormDocument;
 import io.dialob.client.api.ImmutableFormRevisionDocument;
 import io.dialob.client.api.ImmutableFormRevisionEntryDocument;
 import io.dialob.client.spi.support.OidUtils;
+import io.digiexpress.client.spi.support.MainBranch;
 import io.digiexpress.client.spi.support.ServiceAssert;
 import io.digiexpress.client.tests.migration.DialobMigration.FormsAndRevs;
 import lombok.Builder;
@@ -90,7 +91,7 @@ public class DialobMigrationVisitor {
         .id(src.getId())
         .name(src.getMetadata().getLabel())
         .description("")
-        .head(ServiceAssert.BRANCH_MAIN)
+        .head(MainBranch.HEAD_NAME)
         .created(toDateTime.apply(created))
         .updated(toDateTime.apply(updated))
         .build();

@@ -39,6 +39,8 @@ import io.digiexpress.client.api.ComposerEntity.CreateMigration;
 import io.digiexpress.client.api.ComposerEntity.DefinitionState;
 import io.digiexpress.client.api.ComposerEntity.HeadState;
 import io.digiexpress.client.api.ComposerEntity.MigrationState;
+import io.digiexpress.client.api.ComposerEntity.TagState;
+import io.digiexpress.client.spi.ComposerEhCache;
 import io.digiexpress.client.spi.ComposerImpl;
 import io.digiexpress.spring.composer.config.UiConfigBean;
 import lombok.Data;
@@ -56,14 +58,12 @@ public class DigiexpressComposerServiceController {
   
   
   @Data @Jacksonized
-  public static class HeadCreate {
-    
-  }
+  public static class HeadCreate { }
   
   public DigiexpressComposerServiceController(ObjectMapper objectMapper, ApplicationContext ctx, Client client) {
     super();
     this.client = client;
-    this.composer = new ComposerImpl(client);
+    this.composer = new ComposerImpl(client, ComposerEhCache.builder().build("DigiexpressComposerServiceController"));
     
     final var servicePath = ctx.getEnvironment().getProperty(UiConfigBean.REST_SPRING_CTX_PATH);
     final var uiPath = ctx.getEnvironment().getProperty(UiConfigBean.UI_SPRING_CTX_PATH);    
@@ -94,5 +94,9 @@ public class DigiexpressComposerServiceController {
     return client.tenant().create()
         .onItem().transformToUni((_created) -> composer.query().head())
         .await().atMost(timeout);
+  }
+  @GetMapping(path = "/" + UiConfigBean.API_TAGS, produces = MediaType.APPLICATION_JSON_VALUE)
+  public TagState tags() {
+    return composer.query().tags().await().atMost(timeout);
   }
 }

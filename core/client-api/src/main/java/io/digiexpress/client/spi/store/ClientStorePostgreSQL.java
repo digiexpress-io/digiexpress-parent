@@ -13,6 +13,7 @@ import io.dialob.client.spi.support.OidUtils;
 import io.digiexpress.client.api.ClientStore;
 import io.digiexpress.client.api.ImmutableStoreEntity;
 import io.digiexpress.client.api.ImmutableStoreExceptionMsg;
+import io.digiexpress.client.spi.support.MainBranch;
 import io.digiexpress.client.spi.support.ServiceAssert;
 import io.resys.thena.docdb.api.DocDB;
 import io.resys.thena.docdb.api.actions.RepoActions.RepoStatus;
@@ -141,7 +142,7 @@ public class ClientStorePostgreSQL extends DocDBCommandsSupport implements Clien
     public ClientStorePostgreSQL build() {
       ServiceAssert.notNull(repoName, () -> "repoName must be defined!");
     
-      final var headName = this.headName == null ? ServiceAssert.BRANCH_MAIN: this.headName;
+      final var headName = this.headName == null ? MainBranch.HEAD_NAME: this.headName;
       if(log.isDebugEnabled()) {
         final var msg = new StringBuilder()
           .append(System.lineSeparator())

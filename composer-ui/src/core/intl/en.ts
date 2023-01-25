@@ -8,6 +8,11 @@ const en = {
   'buttons.view': "View",
   'buttons.download': "Download",
   
+  'descriptorTable.header.name': 'Name',
+  'descriptorTable.header.formId': 'Dialob name / tag',
+  'descriptorTable.header.flowId': 'Service name / tag',
+  'descriptorTable.header.articles': 'Pages name / tag',
+    
   'init.loaded': 'Loaded repo: {name}',
   
   'activities.title': 'Activities',
@@ -23,14 +28,13 @@ const en = {
   'migrations.dialog.title': 'Migrate dialob, stencil, wrench, process data',
   'migrations.dialog.select': 'Select file to upload',
   
-  'explorer.title': 'DE Engine',
-  'explorer.tabs.search': 'Search...',
+  'explorer.title': 'DigiExpress Process Engine',
 
-  'explorer.services.headItem': "Project: {name}",
-  'explorer.services.headItem.info1': "Total services: {items}",
+  'explorer.descriptors': "Descriptors",
+  'explorer.revisions': "History",
+  'explorer.releases': "Releases",
   
-  'tabs.services': 'Services', 
-  
+  'tabs.services': 'Services',   
   'composer.services.processName': 'Process name',
   'composer.services.version': 'stencil: {stencil}, wrench: {hdes}, version: {version}'
 /*  

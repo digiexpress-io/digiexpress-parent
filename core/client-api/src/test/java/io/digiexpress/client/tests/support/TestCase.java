@@ -31,6 +31,7 @@ import io.digiexpress.client.api.AssetExecutorEntity.ProcessState;
 import io.digiexpress.client.api.Client;
 import io.digiexpress.client.api.Composer;
 import io.digiexpress.client.api.ComposerEntity.CreateMigration;
+import io.digiexpress.client.spi.ComposerEhCache;
 import io.digiexpress.client.spi.ComposerImpl;
 import io.digiexpress.client.tests.migration.MigrationsDefaults;
 import io.resys.hdes.client.api.HdesComposer;
@@ -94,7 +95,7 @@ public class TestCase {
   }
   
   public Composer service(Client client) {
-    return new ComposerImpl(client);
+    return new ComposerImpl(client, ComposerEhCache.builder().build("test"));
   }
     
   public String toJson(Object v) {

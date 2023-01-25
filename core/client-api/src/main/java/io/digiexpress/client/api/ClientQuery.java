@@ -19,21 +19,26 @@ import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.MigrationBuilder.Sites;
 
 public interface ClientQuery {
-  Uni<StoreState> head();
   Uni<List<Repo>> getRepos();
-  Uni<Project> getDefaultProject();
-  Uni<FormRevisionDocument> getFormRev(String formId);
-  Uni<FormDocument> getForm(String formId);
+  
+  
+  String getProjectDefaultId();
   Uni<Project> getProject(String id);
-  Uni<ServiceDefinition> getServiceDef(String id);
-  Uni<FlowDocument> getFlow(String tagName, String flowName);
-  Uni<Sites> getStencil(String tagName);
-  Uni<AstTag> getHdes(String tagName);
+  Uni<ProjectTags> getProjectTags();
+  Uni<StoreState> getProjectHead();
+  Uni<ServiceDefinition> getProjectServiceDef(String id);
+
+  Uni<Sites> getStencilTag(String tagName);
+  
+  Uni<AstTag> getHdesTag(String tagName);
+  Uni<FlowDocument> getHdesFlow(String tagName, String flowName);
+  
+  Uni<FormRevisionDocument> getDialobFormRev(String formId);
+  Uni<FormDocument> getDialobForm(String formId);
   
   @Value.Immutable @JsonSerialize(as = ImmutableFlowDocument.class) @JsonDeserialize(as = ImmutableFlowDocument.class)
   interface FlowDocument {
     String getId();
     AstFlow getData();
   }
-  
 }

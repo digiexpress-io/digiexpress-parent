@@ -26,8 +26,6 @@ const StyledTab = styled(Tab)<TabProps>(({ theme }) => ({
     paddingBottom: 'unset',
   },
   "&.Mui-selected": {
-    //color: theme.palette.explorerItem.dark,
-    width: "100%",
     maxWidth: "unset",
     backgroundColor: alpha(theme.palette.explorerItem.dark, 0.2),
   },
@@ -63,14 +61,14 @@ const Explorer: React.FC<{}> = () => {
     setActive(newValue)
   }
 
-  return (<Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', width: "100%", height: "100%", backgroundColor: "explorer.main" }}>
+  return (<Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', width: "100%", backgroundColor: "explorer.main" }}>
     <StyledTabs orientation="vertical" onChange={handleActive} value={active}>
-      <StyledTab value='exporer.descriptors' icon={<AppsIcon />} 
-        label={<FormattedMessage id="exporer.descriptors" />} 
+      <StyledTab value='explorer.descriptors' icon={<AppsIcon />} 
+        label={<FormattedMessage id="explorer.descriptors" />} 
         onClick={() => actions.handleTabAdd({id: 'descriptors', label: "project"})} />
       
-      <StyledTab value='exporer.revisions' icon={<HistoryIcon />} label={<FormattedMessage id="exporer.revisions" />} />
-      <StyledTab value='exporer.releases' icon={<PublishIcon />} label={<FormattedMessage id="exporer.releases" />} />
+      <StyledTab value='explorer.revisions' icon={<HistoryIcon />} label={<FormattedMessage id="explorer.revisions" />} />
+      <StyledTab value='explorer.releases' icon={<PublishIcon />} label={<FormattedMessage id="explorer.releases" />} />
     </StyledTabs>
   </Box>);
 }

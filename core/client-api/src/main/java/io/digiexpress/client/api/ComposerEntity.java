@@ -30,6 +30,7 @@ public interface ComposerEntity extends Serializable {
   
   @Value.Immutable @JsonSerialize(as = ImmutableCreateProjectRevision.class) @JsonDeserialize(as = ImmutableCreateProjectRevision.class)
   interface CreateProjectRevision extends ComposerEntity {
+    @Nullable String getProjectId();
     String getName();
     String getDescription();
   }
@@ -54,6 +55,7 @@ public interface ComposerEntity extends Serializable {
   
   @Value.Immutable @JsonSerialize(as = ImmutableCreateMigration.class) @JsonDeserialize(as = ImmutableCreateMigration.class)
   interface CreateMigration extends ComposerEntity {
+    @Nullable String getProjectId();
     List<FormRevisionDocument> getFormRevs();
     List<FormDocument> getForms();
     ServiceDefinition getServices();
@@ -85,6 +87,14 @@ public interface ComposerEntity extends Serializable {
     StencilTree getStencil();
     HdesTree getHdes();
   }
+  
+
+  @Value.Immutable @JsonSerialize(as = ImmutableTagState.class) @JsonDeserialize(as = ImmutableTagState.class)
+  interface TagState extends ComposerEntity {
+    String getName();
+    ProjectTags getValue();
+  }
+  
   
   @Value.Immutable @JsonSerialize(as = ImmutableMigrationState.class) @JsonDeserialize(as = ImmutableMigrationState.class)
   interface MigrationState extends ComposerEntity {

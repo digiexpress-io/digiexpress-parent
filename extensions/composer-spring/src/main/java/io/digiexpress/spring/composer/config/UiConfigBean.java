@@ -37,11 +37,13 @@ public class UiConfigBean {
   public static final String UI_SPRING_CTX_PATH = "digiexpress.composer.ui.service-path";
   public static final String UI_SPRING_CTX_PATH_EXP = "${" + UI_SPRING_CTX_PATH + ":/ide}";
   public static final String UI_ENABLED = "digiexpress.composer.ui.enabled";
-  
+
+  public final static String API_TAGS = "tags";
   public final static String API_HEAD = "head";
   public final static String API_DEF = "def";
   public final static String API_MIGRATE = "migrate";
   public final static String API_VERSION = "version";
+  public final static String API_RELEASES = "releases";
   
   
   // is the whole component enabled
