@@ -6,12 +6,19 @@ import { FormattedMessage } from 'react-intl';
 import PublishIcon from '@mui/icons-material/Publish';
 import HistoryIcon from '@mui/icons-material/History';
 import AppsIcon from '@mui/icons-material/Apps';
+import LiveTvIcon from '@mui/icons-material/LiveTv';
 
 import Burger from '@the-wrench-io/react-burger';
 
 import DeClient from '@declient';
 import Styles from '@styles';
 
+
+
+const EmptyTab: React.FC<TabProps> = () => {
+
+  return null;
+}
 
 
 
@@ -43,7 +50,7 @@ const StyledTabs = styled(Tabs)<TabsProps>(({ theme }) => ({
     right: 'unset'
   },
   "& .MuiTabs-flexContainerVertical": {
-    "align-items": 'flex-start',
+    "alignItems": 'flex-start',
   }
 }));
 
@@ -53,7 +60,7 @@ const Explorer: React.FC<{}> = () => {
   
   const { actions } = Burger.useTabs();
   const { session } = DeClient.useComposer();
-  const [active, setActive] = React.useState<string>();
+  const [active, setActive] = React.useState<string>('');
 
   const revisions = Object.values(session.head.projects);
 
@@ -63,12 +70,14 @@ const Explorer: React.FC<{}> = () => {
 
   return (<Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', width: "100%", backgroundColor: "explorer.main" }}>
     <StyledTabs orientation="vertical" onChange={handleActive} value={active}>
-      <StyledTab value='explorer.descriptors' icon={<AppsIcon />} 
-        label={<FormattedMessage id="explorer.descriptors" />} 
+      <StyledTab value='explorer.descriptors' icon={<AppsIcon />}  label={<FormattedMessage id="explorer.descriptors" />} 
         onClick={() => actions.handleTabAdd({id: 'descriptors', label: "project"})} />
       
       <StyledTab value='explorer.revisions' icon={<HistoryIcon />} label={<FormattedMessage id="explorer.revisions" />} />
       <StyledTab value='explorer.releases' icon={<PublishIcon />} label={<FormattedMessage id="explorer.releases" />} />
+      
+      <StyledTab value='explorer.deployments' icon={<LiveTvIcon />} label={<FormattedMessage id="explorer.deployments" />}
+        onClick={() => actions.handleTabAdd({id: 'deployments', label: "deployments"})} />
     </StyledTabs>
   </Box>);
 }

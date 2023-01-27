@@ -34,7 +34,7 @@ const DescriptorTableHeader: React.FC<{
     (_event: React.MouseEvent<unknown>) => setContent(prev => prev.withOrderBy(property))
 
   return (
-    <TableRow>
+    <TableRow sx={{ backgroundColor: 'table.dark'}}>
       {headCells.map((headCell) => (
         <TableCell key={headCell.id} align='left' padding='normal' sortDirection={orderBy === headCell.id ? order : false}>
           <TableSortLabel active={orderBy === headCell.id} direction={orderBy === headCell.id ? order : 'asc'} onClick={createSortHandler(headCell.id)}>

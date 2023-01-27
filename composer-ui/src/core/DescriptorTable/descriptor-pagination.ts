@@ -1,7 +1,6 @@
 import DeClient from '@declient';
 
 
-
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   
   let aValue = a[orderBy];
@@ -54,7 +53,7 @@ function stableSort<T>(array: readonly T[], comparator: (a: T, b: T) => number) 
 class DescriptorPagination {
   private _def: DeClient.ServiceDefinition;
   private _page: number = 0;
-  private _rowsPerPage: number = 20;
+  private _rowsPerPage: number = 15;
   private _order: Order = 'asc';
   private _orderBy: keyof DeClient.ServiceDescriptor = 'name';
   private _entries: DeClient.ServiceDescriptor[];
@@ -116,7 +115,7 @@ class DescriptorPagination {
       rowsPerPage, page: 0
     });
   }
-  get rowsPerPageOptions() {return [20, 40, 80, 120] }
+  get rowsPerPageOptions() {return [15, 40, 80, 120] }
   get entries() { return this._entries }
   get def() { return this._def }
   get page() { return this._page }

@@ -1,3 +1,4 @@
+import {AstFlow, AstService, AstDecision} from './hdes-ast-types';
 
 export interface HdesTree {
   flows: Record<string, HdesAstFlow>;
@@ -7,19 +8,14 @@ export interface HdesTree {
 
 export interface HdesAstFlow {
   id: string;
-  ast: {
-    name: string;
-  }
+  ast: AstFlow;
 }
 export interface HdesAstService {
   id: string;
-  ast: {
-    name: string;
-  }
+  ast: AstService;
 }
 export interface HdesAstDecision {
   id: string;
-  ast: {
-    name: string;
-  }
+  ast: AstDecision;
 }
+

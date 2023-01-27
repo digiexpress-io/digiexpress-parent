@@ -49,7 +49,7 @@ import {
 
 import {
   DefStateAssocsImpl as DefStateAssocsImplAs,
-  DefStateAssocs, DefStateDialobAssocs
+  DefStateAssocs, DefStateDialobAssocs, WorkflowAssocsValue, DefStateFlowAssocs
 } from './def-state-assocs';
 
 
@@ -70,7 +70,7 @@ declare namespace DeClient {
   }
   
   export type {
-    DefStateDialobAssocs, DefStateAssocs
+    DefStateDialobAssocs, DefStateAssocs, WorkflowAssocsValue, DefStateFlowAssocs
   }
 
 

@@ -8,6 +8,7 @@ import DeClient from '@declient';
 import Activities from './Activities';
 import ProjectDiagram from './ProjectDiagram';
 import Descriptors from './Descriptors';
+import Deployments from './Deployments';
 
 
 
@@ -39,6 +40,9 @@ const Main: React.FC<{}> = () => {
     }     
     if(active.id === 'descriptors') {
       return <Box sx={root}><Descriptors/></Box>      
+    }
+    if(active.id === 'deployments') {
+      return <Box sx={root}><Deployments/></Box>      
     }
     
     if (entity) {

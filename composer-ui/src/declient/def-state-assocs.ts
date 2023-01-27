@@ -1,6 +1,7 @@
 import { DialobFormDocument, DialobFormRevisionDocument, DialobFormRevisionEntryDocument } from './dialob-types'
 import { HdesAstFlow } from './hdes-types'
 import { DefinitionState } from './client-types'
+import { StencilTopic, StencilTopicLink } from './stencil-types'
 
 
 interface DefStateDialobAssocs {
@@ -13,16 +14,28 @@ interface DefStateFlowAssocs {
   flow: HdesAstFlow;
 }
 
+interface DefStateWorkflowAssocs {
+  locales: string[],
+  values: WorkflowAssocsValue[]
+}
+
+interface WorkflowAssocsValue {
+  topic: StencilTopic,
+  workflow: StencilTopicLink,
+  locale: string,
+}
 
 interface DefStateAssocs {
   getDialob(formId: string): DefStateDialobAssocs | undefined;
   getFlow(flowId: string): DefStateFlowAssocs | undefined;
+  getWorkflow(workflowName: string): DefStateWorkflowAssocs | undefined;
 }
 
 class DefStateAssocsImpl implements DefStateAssocs {
   private _def: DefinitionState;
   private _dialobs_cached: Record<string, DefStateDialobAssocs> = {};
   private _flows_cached: Record<string, DefStateFlowAssocs> = {};
+  private _workflows_cached: Record<string, DefStateWorkflowAssocs> = {};
 
 
   constructor(init: {
@@ -30,6 +43,30 @@ class DefStateAssocsImpl implements DefStateAssocs {
   }) {
     this._def = init.def;
     console.log(init);
+  }
+
+  getWorkflow(workflowName: string): DefStateWorkflowAssocs | undefined {
+    if (this._workflows_cached[workflowName]) {
+      return this._workflows_cached[workflowName];
+    }
+    
+    const locales: string[] = [];
+    const values: WorkflowAssocsValue[] = Object.values(this._def.stencil.sites)
+      .map(({locale, links, topics}) => {
+       
+       const values = Object.values(links)
+          .filter(link => link.value === workflowName)
+          .map(workflow => ({ locale, workflow,  topic: topics[workflow.path] }));
+          
+        if(values.length > 0 && !locales.includes(locale)) {
+          locales.push(locale);
+        }
+        return values;
+      }).flat();
+
+    const result: DefStateWorkflowAssocs = { locales, values } 
+    this._workflows_cached[workflowName] = result;
+    return result;
   }
 
   getFlow(flowId: string): DefStateFlowAssocs | undefined {
@@ -42,7 +79,6 @@ class DefStateAssocsImpl implements DefStateAssocs {
       console.error(flowId)
       return undefined;
     }
-
 
     const result: DefStateFlowAssocs = { flow }
     this._flows_cached[flowId] = result;
@@ -79,7 +115,7 @@ class DefStateAssocsImpl implements DefStateAssocs {
 }
 
 
-export type { DefStateDialobAssocs, DefStateAssocs };
+export type { DefStateDialobAssocs, DefStateAssocs, WorkflowAssocsValue, DefStateFlowAssocs };
 export { DefStateAssocsImpl };
 
 

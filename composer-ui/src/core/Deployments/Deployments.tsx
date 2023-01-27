@@ -2,7 +2,7 @@ import React from "react";
 import {
   Box, CircularProgress, Tabs, Tab,
   Typography, styled, Divider,
-  AppBar, Toolbar, IconButton, Badge, InputBase, BadgeProps,
+  AppBar, Toolbar, IconButton, Badge, InputBase, BadgeProps, 
   useTheme
 } from "@mui/material";
 import SwipeableViews from 'react-swipeable-views';
@@ -15,8 +15,8 @@ import { FormattedMessage, useIntl } from 'react-intl';
 
 import DeClient from '@declient';
 import Styles from '@styles';
-import DescriptorTable from '../DescriptorTable';
 
+import DescriptorTable from '../DescriptorTable';
 
 
 function a11yProps(index: number) {
@@ -28,7 +28,7 @@ function a11yProps(index: number) {
 
 
 
-const Descriptors: React.FC<{}> = ({ }) => {
+const Deployments: React.FC<{}> = ({ }) => {
   const intl = useIntl();
   const nav = DeClient.useNav();
   const theme = useTheme();
@@ -66,21 +66,17 @@ const Descriptors: React.FC<{}> = ({ }) => {
 
   return (<Box sx={{ backgroundColor: 'mainContent.main' }}>
     <AppBar position="sticky" sx={{ backgroundColor: 'mainContent.main', boxShadow: 'unset', color: 'unset' }}>
-      
-      <Box sx={{mt: 2, ml: 3}}>
-        <Typography><FormattedMessage id="descriptors.tabs.desc_1" /></Typography>
-      </Box>
-
       <Toolbar>
         <Tabs indicatorColor="secondary" textColor="inherit" variant="fullWidth"
           value={value}
           onChange={handleChange}>
-
+          
           <Tab label={<FormattedMessage id="descriptors.tabs.overview" />} {...a11yProps(0)} />
           <Tab label={<FormattedMessage id="descriptors.tabs.stencil" />} {...a11yProps(1)} />
           <Tab label={<FormattedMessage id="descriptors.tabs.hdes" />} {...a11yProps(2)} />
           <Tab label={<FormattedMessage id="descriptors.tabs.errors" />} {...a11yProps(2)} />
         </Tabs>
+
       </Toolbar>
     </AppBar>
 
@@ -92,12 +88,12 @@ const Descriptors: React.FC<{}> = ({ }) => {
       <Styles.TabPanel value={value} index={2} dir={theme.direction}>
         Item Three
       </Styles.TabPanel>
-
-
+      
+      
     </SwipeableViews>
 
   </Box>);
 
 }
 
-export default Descriptors;
+export default Deployments;

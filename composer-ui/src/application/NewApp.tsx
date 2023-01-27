@@ -79,7 +79,7 @@ const LoadApps = React.lazy(async () => {
 });
 
 const locale = 'en';
-const NewApp = (
+const NewApp: React.FC<{}> = () => (
   <IntlProvider locale={locale} messages={AppCore.messages[locale]}>
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={siteTheme}>

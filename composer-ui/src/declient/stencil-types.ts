@@ -3,6 +3,7 @@ export interface StencilTree {
 }
 
 export interface StencilLocalizedSite {
+  locale: string;
   topics: Record<string, StencilTopic>;
   blobs: Record<string, StencilTopicBlob>;
   links: Record<string, StencilTopicLink>;
