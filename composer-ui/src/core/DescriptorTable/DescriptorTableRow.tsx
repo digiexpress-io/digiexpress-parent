@@ -10,7 +10,8 @@ const StyledTableCell = styled(TableCell)<TableCellProps>(({ theme }) => ({
   textAlign: 'left',
   fontSize: "13px",
   fontWeight: '400',
-  lineHeight: '20px',
+  lineHeight: '28px',
+  
   paddingLeft: theme.spacing(2),
   paddingRight: theme.spacing(2),
   paddingTop: theme.spacing(0),

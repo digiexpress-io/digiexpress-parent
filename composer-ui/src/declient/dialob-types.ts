@@ -1,3 +1,4 @@
+import { DialobDataType } from './dialob-data-types';
 
 export interface DialobTree {
   forms: Record<string, DialobFormDocument>;
@@ -8,8 +9,10 @@ export interface DialobFormDocument {
   data: {
     name: string;
     variables: DialobVariable[];
+    data: Record<string | 'questionnaire', DialobDataType>
   }
 }
+
 export interface DialobVariable {
   name: string;
   context: boolean;

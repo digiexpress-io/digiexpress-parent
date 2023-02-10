@@ -6,16 +6,12 @@ import * as Hdes from '@hdes-types';
 
 
 class RightAnglePortModel extends DefaultPortModel {
-  createLinkModel(factory?: AbstractModelFactory<LinkModel>) {
+  createLinkModel(_factory?: AbstractModelFactory<LinkModel>) {
     return new RightAngleLinkModel();
   }
 }
 
 type ModelType = 'switch' | 'decisionTable' | 'service' | 'flow' | undefined;
-
-function toRecord<T extends Record<string, any>, K extends keyof T>(array: T[], selector: K): Record<T[K], T> {
-  return array.reduce((acc, item) => ({ ...acc, [item[selector]]: item }), {} as Record<T[K], T>)
-}
 
 function getType(step: Hdes.AstFlowTaskNode): ModelType {
   if (step.decisionTable) {

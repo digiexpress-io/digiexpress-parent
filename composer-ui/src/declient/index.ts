@@ -33,6 +33,24 @@ import {
 } from './dialob-types';
 
 import {
+  DialobDataType,
+  DialobData,
+  DialobDataList,
+  DialobDataRoot,
+  DialobDataRowGroup,
+  DialobDataGroup,
+  DialobDataTime,
+  DialobDataText,
+  DialobDataBoolean,
+  DialobDataDate,
+  DialobDataNote,
+  DialobDataLabelLocale,
+  DialobDataLabelTranslation,
+  DialobDataLabel,
+  
+} from './dialob-data-types';
+
+import {
   HdesAstDecision,
   HdesAstFlow,
   HdesAstService,
@@ -68,7 +86,7 @@ declare namespace DeClient {
     ServiceDescriptorId, ServiceDefinitionId, ProjectId, ServiceReleaseId, ConfigType, ClientEntityType,
     ProgramMessage
   }
-  
+
   export type {
     DefStateDialobAssocs, DefStateAssocs, WorkflowAssocsValue, DefStateFlowAssocs
   }
@@ -94,7 +112,21 @@ declare namespace DeClient {
     DialobFormRevisionDocument,
     DialobFormRevisionEntryDocument,
     DialobTree,
-    DialobVariable
+    DialobVariable,
+    DialobDataType,
+    DialobData,
+    DialobDataList,
+    DialobDataRoot,
+    DialobDataRowGroup,
+    DialobDataGroup,
+    DialobDataTime,
+    DialobDataText,
+    DialobDataBoolean,
+    DialobDataDate,
+    DialobDataNote,
+    DialobDataLabelLocale,
+    DialobDataLabelTranslation,
+    DialobDataLabel,
   }
 
   export type {

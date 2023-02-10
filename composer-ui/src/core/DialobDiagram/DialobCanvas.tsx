@@ -6,17 +6,17 @@ import { DemoWorkspaceWidget } from './helpers/DemoWorkspaceWidget';
 
 
 import DeClient from '@declient';
-import FlowVisitor from './flow-visitor';
+import DialobVisitor from './dialob-visitor';
 
 
 export default (props: {
-  flow: DeClient.DefStateFlowAssocs,
+  dialob: DeClient.DefStateDialobAssocs,
   def: DeClient.DefinitionState,
   canvas: { width: number, height: number }
 }) => {
 
   const model = new DiagramModel();
-  model.addAll(...new FlowVisitor(props).visit())
+  model.addAll(...new DialobVisitor(props).visit())
 
   const engine = createEngine();
   engine.getLinkFactories().registerFactory(new RightAngleLinkFactory());

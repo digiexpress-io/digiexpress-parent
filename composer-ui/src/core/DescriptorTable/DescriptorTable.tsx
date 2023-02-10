@@ -19,23 +19,19 @@ import DescriptorTableHeader from './DescriptorTableHeader';
 import DescriptorTableRow from './DescriptorTableRow';
 
 
+
 const DescriptorTable: React.FC<{ def: DeClient.DefinitionState }> = ({ def }) => {
   const [content, setContent] = React.useState(new DescriptorPagination({ def: def.definition }));
   const assocs = React.useMemo(() => new DeClient.DefStateAssocsImpl({ def }), [def]);
 
-
   return (<Provider>
     <Paper sx={{ width: '100%', mb: 2 }}>
       <TableContainer>
-        <Table size='small' style={{
-          fontSize: "30px",
-          fontWeight: '400',
-          lineHeight: '20px'
-        }}>
+        <Table size='small'>
           <TableHead><DescriptorTableHeader content={content} setContent={setContent} /></TableHead>
           <TableBody>
             {content.entries.map((row) => (<DescriptorTableRow key={row.id} row={row} assocs={assocs} def={def} />))}
-            {content.emptyRows > 0 ? <TableRow style={{ height: (34.5) * content.emptyRows }}><TableCell colSpan={6} /></TableRow> : null}
+            {content.emptyRows > 0 ? <TableRow style={{ height: (28 + 1) * content.emptyRows }}><TableCell colSpan={6} /></TableRow> : null}
           </TableBody>
         </Table>
       </TableContainer>
