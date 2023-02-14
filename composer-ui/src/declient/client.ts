@@ -1,4 +1,5 @@
 import { Client, Store, HeadState, DefinitionState, CreateBuilder, ServiceDefinitionId } from './client-types';
+import { DialobTree } from './dialob-types';
 import {  } from './client-store';
 
 
@@ -24,10 +25,13 @@ import {  } from './client-store';
     create(): CreateBuilder {
       const head = () => this._store.fetch<HeadState>("head", { method: "POST", body: JSON.stringify({ }) });
       const migrate: (init: object) => Promise<HeadState> = (init) => this._store.fetch<HeadState>("migrate", { method: "POST", body: JSON.stringify(init) })
-      
       return { head, migrate };
     }
     definition(id: ServiceDefinitionId): Promise<DefinitionState> {
       return this._store.fetch<DefinitionState>(`def/${id}`); 
+    }
+    
+    dialob(): Promise<DialobTree> {
+      return this._store.fetch<DialobTree>('dialob'); 
     }
   }

@@ -41,6 +41,11 @@ public class UiConfigBean {
   public final static String API_TAGS = "tags";
   public final static String API_HEAD = "head";
   public final static String API_DEF = "def";
+  
+  public final static String API_DIALOB = "dialob";
+  public final static String API_STENCIL = "stencil";
+  public final static String API_HDES = "hdes";
+  
   public final static String API_MIGRATE = "migrate";
   public final static String API_VERSION = "version";
   public final static String API_RELEASES = "releases";

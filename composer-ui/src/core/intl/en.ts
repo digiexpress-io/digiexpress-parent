@@ -17,9 +17,11 @@ const en = {
   'descriptorTable.header.articles': 'Pages tag / locales, pages',
   'descriptorTable.row.articles': 'Locales: {locales}, Pages: {pages}',
   
+  'dialobTable.header.name': 'Dialob Name',
 
   'descriptors.tabs.desc_1': 'Descriptors as a whole are deployable units. Each descriptor links 3 concepts together: Dialob, Wrench, Stencil.',
   'descriptors.tabs.overview': 'Overview',
+  'descriptors.tabs.dialob': 'Dialob',
   'descriptors.tabs.stencil': 'Pages',
   'descriptors.tabs.hdes': 'Services',
   'descriptors.tabs.errors': 'Errors',

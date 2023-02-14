@@ -1,22 +1,15 @@
 import React from "react";
-import {
-  Box, CircularProgress, Tabs, Tab,
-  Typography, styled, Divider,
-  AppBar, Toolbar, IconButton, Badge, InputBase, BadgeProps,
-  useTheme
-} from "@mui/material";
+import { Box, CircularProgress, Tabs, Tab, Typography, AppBar, Toolbar, useTheme } from "@mui/material";
 import SwipeableViews from 'react-swipeable-views';
 
-
-import {
-} from '@mui/icons-material';
+import {} from '@mui/icons-material';
 import { FormattedMessage, useIntl } from 'react-intl';
-
 
 import DeClient from '@declient';
 import Styles from '@styles';
-import DescriptorTable from '../DescriptorTable';
 
+import DescriptorTable from '../DescriptorTable';
+import DialobTable from '../DialobTable';
 
 
 function a11yProps(index: number) {
@@ -77,6 +70,7 @@ const Descriptors: React.FC<{}> = ({ }) => {
           onChange={handleChange}>
 
           <Tab label={<FormattedMessage id="descriptors.tabs.overview" />} {...a11yProps(0)} />
+          <Tab label={<FormattedMessage id="descriptors.tabs.dialob" />} {...a11yProps(1)} />
           <Tab label={<FormattedMessage id="descriptors.tabs.stencil" />} {...a11yProps(1)} />
           <Tab label={<FormattedMessage id="descriptors.tabs.hdes" />} {...a11yProps(2)} />
           <Tab label={<FormattedMessage id="descriptors.tabs.errors" />} {...a11yProps(2)} />
@@ -86,13 +80,13 @@ const Descriptors: React.FC<{}> = ({ }) => {
 
     <SwipeableViews axis='x' index={value} onChangeIndex={handleChangeIndex}>
       <Styles.TabPanel value={value} index={0} dir={theme.direction}><DescriptorTable def={state} /></Styles.TabPanel>
-      <Styles.TabPanel value={value} index={1} dir={theme.direction}>
-        Item Two
-      </Styles.TabPanel>
+      <Styles.TabPanel value={value} index={1} dir={theme.direction}><DialobTable /></Styles.TabPanel>
       <Styles.TabPanel value={value} index={2} dir={theme.direction}>
         Item Three
       </Styles.TabPanel>
-
+      <Styles.TabPanel value={value} index={2} dir={theme.direction}>
+        Item Four
+      </Styles.TabPanel>
 
     </SwipeableViews>
 

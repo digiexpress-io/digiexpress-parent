@@ -1,6 +1,8 @@
 import { ServiceImpl as ServiceImplAs } from './client';
 import { DefaultStore as DefaultStoreAs } from './client-store';
 
+import { TablePagination, TablePagination as TablePaginationAs } from './table-pagination';
+
 import {
   ClientEntity, Project, ServiceDefinition, ServiceRelease, ServiceDescriptor, ProjectConfig, ProjectRevision,
   RefIdValue, HeadState, DefinitionState,
@@ -29,7 +31,8 @@ import {
   DialobFormRevisionDocument,
   DialobFormRevisionEntryDocument,
   DialobTree,
-  DialobVariable
+  DialobVariable,
+  DialobFormReleaseDocument,
 } from './dialob-types';
 
 import {
@@ -47,7 +50,6 @@ import {
   DialobDataLabelLocale,
   DialobDataLabelTranslation,
   DialobDataLabel,
-  
 } from './dialob-data-types';
 
 import {
@@ -78,6 +80,7 @@ import * as Hooks from './hooks';
 
 
 declare namespace DeClient {
+  export type { TablePagination };
   export type { ClientContextType, ComposerContextType };
   export type {
     ClientEntity, Project, ServiceDefinition, ServiceRelease, ServiceDescriptor, ProjectConfig, ProjectRevision,
@@ -111,6 +114,7 @@ declare namespace DeClient {
     DialobFormDocument,
     DialobFormRevisionDocument,
     DialobFormRevisionEntryDocument,
+    DialobFormReleaseDocument, 
     DialobTree,
     DialobVariable,
     DialobDataType,
@@ -145,6 +149,7 @@ declare namespace DeClient {
 
 
 namespace DeClient {
+  export const TablePaginationImpl = TablePaginationAs;
   export const DefStateAssocsImpl = DefStateAssocsImplAs;
   export const ServiceImpl = ServiceImplAs;
   export const DefaultStore = DefaultStoreAs;

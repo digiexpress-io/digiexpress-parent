@@ -13,7 +13,6 @@ import Paper from '@mui/material/Paper';
 
 import DeClient from '@declient';
 
-import { DescriptorPagination } from './descriptor-pagination';
 import { Provider } from './descriptor-table-ctx';
 import DescriptorTableHeader from './DescriptorTableHeader';
 import DescriptorTableRow from './DescriptorTableRow';
@@ -21,7 +20,10 @@ import DescriptorTableRow from './DescriptorTableRow';
 
 
 const DescriptorTable: React.FC<{ def: DeClient.DefinitionState }> = ({ def }) => {
-  const [content, setContent] = React.useState(new DescriptorPagination({ def: def.definition }));
+  const [content, setContent] = React.useState(new DeClient.TablePaginationImpl<DeClient.ServiceDescriptor>({ 
+    src: def.definition.descriptors,
+    orderBy: 'name',
+    sorted: false }));
   const assocs = React.useMemo(() => new DeClient.DefStateAssocsImpl({ def }), [def]);
 
   return (<Provider>

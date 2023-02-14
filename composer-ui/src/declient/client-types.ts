@@ -99,6 +99,7 @@ export interface Client {
   config: StoreConfig;
   create(): CreateBuilder;
   head(): Promise<HeadState>
+  dialob(): Promise<DialobTree>;
   definition(id: ServiceDefinitionId): Promise<DefinitionState>
 }
 export interface StoreConfig {

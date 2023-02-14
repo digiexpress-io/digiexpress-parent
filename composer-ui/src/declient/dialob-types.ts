@@ -3,6 +3,11 @@ import { DialobDataType } from './dialob-data-types';
 export interface DialobTree {
   forms: Record<string, DialobFormDocument>;
   revs: Record<string, DialobFormRevisionDocument>;
+  releases: Record<string, DialobFormReleaseDocument>
+}
+
+export interface DialobFormReleaseDocument {
+  
 }
 export interface DialobFormDocument {
   id: string;

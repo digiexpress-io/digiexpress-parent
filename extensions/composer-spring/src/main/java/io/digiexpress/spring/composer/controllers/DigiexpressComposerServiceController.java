@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.dialob.client.api.DialobComposer;
 import io.digiexpress.client.api.Client;
 import io.digiexpress.client.api.Composer;
 import io.digiexpress.client.api.ComposerEntity.CreateMigration;
@@ -43,8 +44,9 @@ import io.digiexpress.client.api.ComposerEntity.TagState;
 import io.digiexpress.client.spi.ComposerEhCache;
 import io.digiexpress.client.spi.ComposerImpl;
 import io.digiexpress.spring.composer.config.UiConfigBean;
+import io.resys.hdes.client.api.HdesComposer;
+import io.thestencil.client.api.StencilComposer;
 import lombok.Data;
-import lombok.extern.jackson.Jacksonized;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -57,7 +59,7 @@ public class DigiexpressComposerServiceController {
   private static final Duration timeout = Duration.ofMillis(100000);
   
   
-  @Data @Jacksonized
+  @Data
   public static class HeadCreate { }
   
   public DigiexpressComposerServiceController(ObjectMapper objectMapper, ApplicationContext ctx, Client client) {
@@ -98,5 +100,20 @@ public class DigiexpressComposerServiceController {
   @GetMapping(path = "/" + UiConfigBean.API_TAGS, produces = MediaType.APPLICATION_JSON_VALUE)
   public TagState tags() {
     return composer.query().tags().await().atMost(timeout);
+  }
+  
+  
+  
+  @GetMapping(path = "/" + UiConfigBean.API_DIALOB, produces = MediaType.APPLICATION_JSON_VALUE)
+  public DialobComposer.ComposerState findDialob() {
+    return composer.query().dialob().await().atMost(timeout);
+  }
+  @GetMapping(path = "/" + UiConfigBean.API_STENCIL, produces = MediaType.APPLICATION_JSON_VALUE)
+  public StencilComposer.SiteState findStencil() {
+    return composer.query().stencil().await().atMost(timeout);
+  }
+  @GetMapping(path = "/" + UiConfigBean.API_HDES, produces = MediaType.APPLICATION_JSON_VALUE)
+  public HdesComposer.ComposerState findHdes() {
+    return composer.query().hdes().await().atMost(timeout);
   }
 }

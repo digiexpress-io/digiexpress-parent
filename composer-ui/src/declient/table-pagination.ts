@@ -1,5 +1,3 @@
-import DeClient from '@declient';
-
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   
@@ -23,19 +21,18 @@ function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
 
 type Order = 'asc' | 'desc';
 
-function getComparator<Key extends keyof any>(
+function getComparator<T>(
   order: Order,
-  orderBy: Key,
-): (
-    a: { [key in Key]: number | string },
-    b: { [key in Key]: number | string },
-  ) => number {
+  orderBy: keyof T,
+): (a: T, b: T) => number {
+    
   return order === 'desc'
     ? (a, b) => descendingComparator(a, b, orderBy)
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-function stableSort<T>(array: readonly T[], comparator: (a: T, b: T) => number) {
+function stableSort<T>(init: readonly T[], comparator: (a: T, b: T) => number) {
+  const array = [...init];
   const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
   stabilizedThis.sort((a, b) => {
     const aValue = a[0];
@@ -50,23 +47,22 @@ function stableSort<T>(array: readonly T[], comparator: (a: T, b: T) => number) 
   return stabilizedThis.map((el) => el[0]);
 }
 
-class DescriptorPagination {
-  private _def: DeClient.ServiceDefinition;
+class TablePagination<T> {
   private _page: number = 0;
   private _rowsPerPage: number = 15;
   private _order: Order = 'asc';
-  private _orderBy: keyof DeClient.ServiceDescriptor = 'name';
-  private _entries: DeClient.ServiceDescriptor[];
+  private _orderBy: keyof T;
+  private _entries: T[];
   private _emptyRows: number;
 
   constructor(init: {
-    def: DeClient.ServiceDefinition,
+    src: T[],
+    sorted: boolean,
     page?: number,
     rowsPerPage?: number,
     order?: Order;
-    orderBy?: keyof DeClient.ServiceDescriptor;
+    orderBy: keyof T;
   }) {
-    this._def = init.def;
     if (init.page) {
       this._page = init.page;
     }
@@ -76,40 +72,42 @@ class DescriptorPagination {
     if (init.order !== undefined) {
       this._order = init.order;
     }
-    if (init.orderBy) {
-      this._orderBy = init.orderBy;
-    }
-
-    this._entries = stableSort(this._def.descriptors, getComparator(this._order, this._orderBy))
+    this._orderBy = init.orderBy;
+    
+    const comparator: (a: T, b: T) => number = getComparator<T>(this._order, this._orderBy);
+    this._entries = init.sorted ? init.src : stableSort<T>(init.src, comparator)
       .slice(
         this._page * this._rowsPerPage,
         this._page * this._rowsPerPage + this._rowsPerPage);
-    this._emptyRows = this._page > 0 ? Math.max(0, (1 + this._page) * this._rowsPerPage - this._def.descriptors.length) : 0;
+    this._emptyRows = this._page > 0 ? Math.max(0, (1 + this._page) * this._rowsPerPage - init.src.length) : 0;
   }
 
-  withOrderBy(orderBy: keyof DeClient.ServiceDescriptor) {
+  withOrderBy(orderBy: keyof T) {
     const isAsc = orderBy === this._orderBy && this._order === 'asc';
     const order = isAsc ? 'desc' : 'asc';
 
-    return new DescriptorPagination({
+    return new TablePagination({
+      sorted: false,
+      src: this._entries,
       order, orderBy,
-      def: this._def,
       rowsPerPage: this._rowsPerPage,
       page: this._page
     });
   }
   withPage(page: number) {
-    return new DescriptorPagination({
+    return new TablePagination({
       page,
+      sorted: true,
+      src: this._entries,
       order: this._order,
       orderBy: this._orderBy,
-      def: this._def,
       rowsPerPage: this._rowsPerPage
     });
   }
   withRowsPerPage(rowsPerPage: number) {
-    return new DescriptorPagination({
-      def: this._def,
+    return new TablePagination({
+      sorted: true,
+      src: this._entries,
       order: this._order,
       orderBy: this._orderBy,
       rowsPerPage, page: 0
@@ -117,7 +115,6 @@ class DescriptorPagination {
   }
   get rowsPerPageOptions() {return [15, 40, 80, 120] }
   get entries() { return this._entries }
-  get def() { return this._def }
   get page() { return this._page }
   get rowsPerPage() { return this._rowsPerPage }
   get order() { return this._order }
@@ -126,5 +123,5 @@ class DescriptorPagination {
 }
 
 
-export { DescriptorPagination };
+export { TablePagination };
 export type { Order };
