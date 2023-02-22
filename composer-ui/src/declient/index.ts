@@ -23,7 +23,9 @@ import {
   StencilTopicBlob,
   StencilTopicHeading,
   StencilTopicLink,
-  StencilTree
+  StencilTree,
+  StencilTreeArticle,
+  StencilTreeArticleImpl as StencilTreeArticleImplAs
 } from './stencil-types';
 
 import {
@@ -56,9 +58,12 @@ import {
   HdesAstDecision,
   HdesAstFlow,
   HdesAstService,
-  HdesTree
+  HdesEntity,
+  HdesTree,
+  HdesBodyEntity,
+  HdesBodyEntityImpl as HdesBodyEntityImplAs
 } from './hdes-types';
-
+import { AstBody } from './hdes-ast-types';
 
 import {
   ServiceErrorMsg,
@@ -107,7 +112,8 @@ declare namespace DeClient {
     StencilTopicBlob,
     StencilTopicHeading,
     StencilTopicLink,
-    StencilTree
+    StencilTree,
+    StencilTreeArticle
   }
 
   export type {
@@ -137,7 +143,10 @@ declare namespace DeClient {
     HdesAstDecision,
     HdesAstFlow,
     HdesAstService,
-    HdesTree
+    HdesTree,
+    HdesEntity,
+    AstBody,
+    HdesBodyEntity
   }
 
   export type {
@@ -149,6 +158,7 @@ declare namespace DeClient {
 
 
 namespace DeClient {
+  export const StencilTreeArticleImpl = StencilTreeArticleImplAs;
   export const TablePaginationImpl = TablePaginationAs;
   export const DefStateAssocsImpl = DefStateAssocsImplAs;
   export const ServiceImpl = ServiceImplAs;
@@ -162,6 +172,7 @@ namespace DeClient {
   export const useComposer = Hooks.useComposer;
   export const useSession = Hooks.useSession;
   export const useNav = Hooks.useNav;
+  export const HdesBodyEntityImpl = HdesBodyEntityImplAs;
 }
 
 export default DeClient;

@@ -1,12 +1,18 @@
-export interface StencilTree {
-  sites: Record<string, StencilLocalizedSite>;
-}
+import { StencilClient } from '@the-stencil-io/composer';
+
+export type StencilTree = StencilClient.Site;
+
+export type SiteContentType = string;
 
 export interface StencilLocalizedSite {
   locale: string;
   topics: Record<string, StencilTopic>;
   blobs: Record<string, StencilTopicBlob>;
   links: Record<string, StencilTopicLink>;
+}
+
+export interface StencilDef {
+  sites: Record<string, StencilLocalizedSite>;
 }
 
 
@@ -40,3 +46,16 @@ export interface StencilTopicLink {
   global: boolean;
   workflow: boolean;
 }
+
+export interface StencilTreeArticle {
+  
+}
+
+export class StencilTreeArticleImpl implements StencilTreeArticle {
+  
+}
+
+
+
+
+

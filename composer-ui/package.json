@@ -12,6 +12,7 @@
     "@mui/styles": "^5.0.1",
     "@mui/system": "^5.0.1",
     "@projectstorm/react-diagrams": "^6.7.4",
+    "@the-stencil-io/composer": "^1.0.109",
     "@the-wrench-io/react-burger": "^1.0.42",
     "dagre": "^0.8.5",
     "notistack": "^2.0.3",

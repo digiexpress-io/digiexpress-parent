@@ -10,6 +10,8 @@ import Styles from '@styles';
 
 import DescriptorTable from '../DescriptorTable';
 import DialobTable from '../DialobTable';
+import StencilTable from '../StencilTable';
+import HdesTable from '../HdesTable'
 
 
 function a11yProps(index: number) {
@@ -57,6 +59,8 @@ const Descriptors: React.FC<{}> = ({ }) => {
     return (<Box sx={{ display: 'flex' }}><CircularProgress /></Box>);
   }
 
+  console.log();
+
   return (<Box sx={{ backgroundColor: 'mainContent.main' }}>
     <AppBar position="sticky" sx={{ backgroundColor: 'mainContent.main', boxShadow: 'unset', color: 'unset' }}>
       
@@ -81,12 +85,8 @@ const Descriptors: React.FC<{}> = ({ }) => {
     <SwipeableViews axis='x' index={value} onChangeIndex={handleChangeIndex}>
       <Styles.TabPanel value={value} index={0} dir={theme.direction}><DescriptorTable def={state} /></Styles.TabPanel>
       <Styles.TabPanel value={value} index={1} dir={theme.direction}><DialobTable /></Styles.TabPanel>
-      <Styles.TabPanel value={value} index={2} dir={theme.direction}>
-        Item Three
-      </Styles.TabPanel>
-      <Styles.TabPanel value={value} index={2} dir={theme.direction}>
-        Item Four
-      </Styles.TabPanel>
+      <Styles.TabPanel value={value} index={2} dir={theme.direction}><StencilTable /></Styles.TabPanel>
+      <Styles.TabPanel value={value} index={3} dir={theme.direction}><HdesTable /></Styles.TabPanel>
 
     </SwipeableViews>
 

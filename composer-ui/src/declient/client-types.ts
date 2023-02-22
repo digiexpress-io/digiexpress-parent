@@ -1,7 +1,7 @@
 
 import { DialobTree } from './dialob-types';
 import { HdesTree } from './hdes-types';
-import { StencilTree } from './stencil-types';
+import { StencilTree, StencilDef } from './stencil-types';
 
 
 export type ServiceDescriptorId = string;
@@ -80,7 +80,7 @@ export interface HeadState {
 export interface DefinitionState {
   definition: ServiceDefinition;
   dialob: DialobTree;
-  stencil: StencilTree;
+  stencil: StencilDef;
   hdes: HdesTree;
 }
 
@@ -99,7 +99,9 @@ export interface Client {
   config: StoreConfig;
   create(): CreateBuilder;
   head(): Promise<HeadState>
+  hdes(): Promise<HdesTree>;
   dialob(): Promise<DialobTree>;
+  stencil(): Promise<StencilTree>;
   definition(id: ServiceDefinitionId): Promise<DefinitionState>
 }
 export interface StoreConfig {
