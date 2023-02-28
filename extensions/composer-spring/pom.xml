@@ -18,10 +18,12 @@
       <groupId>io.digiexpress</groupId>
       <artifactId>digiexpress-client-api</artifactId>
     </dependency>
+    <!-- 
     <dependency>
       <groupId>io.digiexpress</groupId>
       <artifactId>digiexpress-composer-ui</artifactId>
     </dependency>
+     -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot</artifactId>
