@@ -67,6 +67,7 @@
     <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
     <junit.jupiter.version>5.8.2</junit.jupiter.version>
     <junit.platform.version>1.8.2</junit.platform.version>
+    <jacoco.version>0.8.8</jacoco.version>
   </properties>
 
 
@@ -172,7 +173,7 @@
     </dependency>
 
   </dependencies>
- 
+
   <reporting>
     <plugins>
       <plugin>
@@ -247,8 +248,8 @@
         <artifactId>spring-core</artifactId>
         <version>${spring.version}</version>
       </dependency>
-      
-      
+
+
       <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot</artifactId>
@@ -652,5 +653,40 @@
       </plugins>
     </pluginManagement>
   </build>
+  <profiles>
+  <profile>
+    <id>coverage</id>
+    <build>
+      <plugins>
+        <plugin>
+          <groupId>org.jacoco</groupId>
+          <artifactId>jacoco-maven-plugin</artifactId>
+          <version>${jacoco.version}</version>
+          <executions>
+            <execution>
+              <id>default-prepare-agent</id>
+              <goals>
+                <goal>prepare-agent</goal>
+              </goals>
+              <configuration>
+                <includes>
+                  <include>io.digiexpress.*</include>
+                </includes>
+                <excludes>
+                  <exclClassLoaders>*QuarkusClassLoader</exclClassLoaders>
+                  <exclude>**/*Test.class</exclude>
+                  <append>true</append>
+                  <inclNoLocationClasses>true</inclNoLocationClasses>
+                  <!-- https://stackoverflow.com/questions/68065743/cannot-run-gradle-test-tasks-because-of-java-lang-noclassdeffounderror-jdk-inte -->
+                  <excludes>jdk.internal.*</excludes>
+                </excludes>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+      </plugins>
+    </build>
+  </profile>
+  </profiles>
 </project>
 
