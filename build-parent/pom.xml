@@ -1,6 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright © 2022 ReSys (info@resys.io)
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
   <parent>
@@ -69,7 +86,6 @@
     <junit.platform.version>1.8.2</junit.platform.version>
     <jacoco.version>0.8.8</jacoco.version>
   </properties>
-
 
 
   <dependencies>
@@ -454,33 +470,6 @@
         </configuration>
       </plugin>
 
-      <plugin>
-        <groupId>com.mycila</groupId>
-        <artifactId>license-maven-plugin</artifactId>
-        <configuration>
-          <licenseSets>
-            <licenseSet>
-              <header>com/mycila/maven/plugin/license/templates/APACHE-2.txt</header>
-              <excludes>
-                <exclude>release.version</exclude>
-                <exclude>.m2/**</exclude>
-                <exclude>**/*.g4</exclude>
-                <exclude>**/*.yml</exclude>
-                <exclude>src/test/resources/**</exclude>
-                <exclude>src/main/resources/**</exclude>
-                <exclude>**/ElbJWKSource.java</exclude>
-              </excludes>
-            </licenseSet>
-          </licenseSets>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>format</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
     </plugins>
 
     <pluginManagement>
@@ -654,39 +643,39 @@
     </pluginManagement>
   </build>
   <profiles>
-  <profile>
-    <id>coverage</id>
-    <build>
-      <plugins>
-        <plugin>
-          <groupId>org.jacoco</groupId>
-          <artifactId>jacoco-maven-plugin</artifactId>
-          <version>${jacoco.version}</version>
-          <executions>
-            <execution>
-              <id>default-prepare-agent</id>
-              <goals>
-                <goal>prepare-agent</goal>
-              </goals>
-              <configuration>
-                <includes>
-                  <include>io.digiexpress.*</include>
-                </includes>
-                <excludes>
-                  <exclClassLoaders>*QuarkusClassLoader</exclClassLoaders>
-                  <exclude>**/*Test.class</exclude>
-                  <append>true</append>
-                  <inclNoLocationClasses>true</inclNoLocationClasses>
-                  <!-- https://stackoverflow.com/questions/68065743/cannot-run-gradle-test-tasks-because-of-java-lang-noclassdeffounderror-jdk-inte -->
-                  <excludes>jdk.internal.*</excludes>
-                </excludes>
-              </configuration>
-            </execution>
-          </executions>
-        </plugin>
-      </plugins>
-    </build>
-  </profile>
+    <profile>
+      <id>coverage</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <version>${jacoco.version}</version>
+            <executions>
+              <execution>
+                <id>default-prepare-agent</id>
+                <goals>
+                  <goal>prepare-agent</goal>
+                </goals>
+                <configuration>
+                  <includes>
+                    <include>io.digiexpress.*</include>
+                  </includes>
+                  <excludes>
+                    <exclClassLoaders>*QuarkusClassLoader</exclClassLoaders>
+                    <exclude>**/*Test.class</exclude>
+                    <append>true</append>
+                    <inclNoLocationClasses>true</inclNoLocationClasses>
+                    <!-- https://stackoverflow.com/questions/68065743/cannot-run-gradle-test-tasks-because-of-java-lang-noclassdeffounderror-jdk-inte -->
+                    <excludes>jdk.internal.*</excludes>
+                  </excludes>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
   </profiles>
 </project>
 
