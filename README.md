@@ -1,0 +1,1 @@
+## Build profiles### Test coverage```bashmvn -Pdefault,coverage clean install```### Build composer UI```bashmvn -Pdefault,composer-ui clean install```

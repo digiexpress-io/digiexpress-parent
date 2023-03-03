@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
     Copyright © 2022 ReSys (info@resys.io)
@@ -16,46 +17,49 @@
 
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <artifactId>digiexpress-extensions</artifactId>
     <groupId>io.digiexpress</groupId>
+    <artifactId>digiexpress-build-parent</artifactId>
     <version>999-SNAPSHOT</version>
+    <relativePath>../build-parent/pom.xml</relativePath>
   </parent>
-  <packaging>jar</packaging>
-  <artifactId>digiexpress-composer-spring</artifactId>
+  <artifactId>digiexpress-report-coverage</artifactId>
   <dependencies>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-lang3</artifactId>
-    </dependency>
     <dependency>
       <groupId>io.digiexpress</groupId>
       <artifactId>digiexpress-client-api</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot</artifactId>
+      <groupId>io.digiexpress</groupId>
+      <artifactId>digiexpress-composer-spring</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-autoconfigure</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web</artifactId>
+      <groupId>io.digiexpress</groupId>
+      <artifactId>spring-app</artifactId>
     </dependency>
   </dependencies>
   <profiles>
     <profile>
-      <id>composer-ui</id>
-      <dependencies>
-        <dependency>
-          <groupId>io.digiexpress</groupId>
-          <artifactId>digiexpress-composer-ui</artifactId>
-        </dependency>
-      </dependencies>
+      <id>coverage</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>aggregate</id>
+                <goals>
+                  <goal>report-aggregate</goal>
+                </goals>
+                <phase>package</phase>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
   </profiles>
 </project>
