@@ -1,7 +1,7 @@
 
-# Getting started
+# Getting started for local development
 
-## Build
+## Build application
 
 ```
 mvn install
@@ -9,23 +9,28 @@ mvn install
 
 ## Create database
 
-Ensure that postgres is running. Alternatively you can start postgres container:
+Ensure that postgres is running. Alternatively you can use postgres docker container:
 
 ```
 docker run -d --name digiexpress-postgres -p 5432:5432 -e POSTGRES_PASSWORD=postgres postgres
 ```
 
-Initialize database:
+Initialize database, for this connect to database:
 
 ```
 psql -p 5432 -U postgres -h localhost
+```
+
+In psql execute following commands to setup database:
+
+```
 create database digiexpress encoding 'UTF8' lc_collate='en_US.UTF8' lc_ctype='en_US.UTF8' template template0;
 revoke connect on database digiexpress from public;
 create user digiexpress;
 grant all privileges on database "digiexpress" to digiexpress;
 \password digiexpress
 ```
-Use password `example`.
+Use password `example` for digiexpress user.
 
 
 ## Start backend
@@ -42,3 +47,5 @@ cd composer-ui
 yarn
 yarn start
 ```
+
+UI will be accessible at `http://localhost:3000/portal`.
