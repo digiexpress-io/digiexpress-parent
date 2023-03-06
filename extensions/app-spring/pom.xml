@@ -1,5 +1,22 @@
+<!--
+
+    Copyright © 2022 ReSys (info@resys.io)
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>digiexpress-extensions</artifactId>
@@ -8,7 +25,6 @@
   </parent>
   <packaging>jar</packaging>
   <artifactId>spring-app</artifactId>
-
   <build>
     <plugins>
       <plugin>
@@ -17,7 +33,6 @@
       </plugin>
     </plugins>
   </build>
-
   <dependencies>
     <dependency>
       <groupId>ch.qos.logback</groupId>
@@ -39,7 +54,6 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-thymeleaf</artifactId>
     </dependency>
-    
     <dependency>
       <groupId>io.digiexpress</groupId>
       <artifactId>digiexpress-composer-spring</artifactId>
@@ -47,17 +61,6 @@
         <exclusion>
           <groupId>org.jboss.slf4j</groupId>
           <artifactId>slf4j-jboss-logmanager</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-junit5</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>org.jboss.logmanager</groupId>
-          <artifactId>jboss-logmanager-embedded</artifactId>
         </exclusion>
       </exclusions>
     </dependency>

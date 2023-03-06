@@ -44,8 +44,23 @@ mvn spring-boot:run
 
 ```
 cd composer-ui
-yarn
 yarn start
 ```
 
 UI will be accessible at `http://localhost:3000/portal`.
+
+
+# Building
+## Build profiles
+
+### Test coverage
+
+```bash
+mvn -Pdefault,coverage clean install
+```
+
+### Build composer UI
+
+```bash
+mvn -Pdefault,composer-ui clean install
+```
