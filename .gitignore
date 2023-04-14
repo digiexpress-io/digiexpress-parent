@@ -5,6 +5,7 @@ target/
 build/
 node/
 .bpmn/
+.ijwb
 bower_components/
 node_modules/
 
@@ -51,7 +52,7 @@ Desktop.ini
 ######################
  
 *.pydevproject
-.project
+/**/.project
 .metadata
 bin/**
 tmp/**

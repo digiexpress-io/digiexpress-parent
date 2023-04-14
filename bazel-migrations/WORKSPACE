@@ -1,0 +1,61 @@
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+RULES_JVM_EXTERNAL_TAG = "5.2"
+RULES_JVM_EXTERNAL_SHA ="f86fd42a809e1871ca0aabe89db0d440451219c3ce46c58da240c7dcdc00125f"
+
+http_archive(
+    name = "rules_jvm_external",
+    strip_prefix = "rules_jvm_external-%s" % RULES_JVM_EXTERNAL_TAG,
+    sha256 = RULES_JVM_EXTERNAL_SHA,
+    url = "https://github.com/bazelbuild/rules_jvm_external/releases/download/%s/rules_jvm_external-%s.tar.gz" % (RULES_JVM_EXTERNAL_TAG, RULES_JVM_EXTERNAL_TAG)
+)
+
+load("@rules_jvm_external//:repositories.bzl", "rules_jvm_external_deps")
+
+rules_jvm_external_deps()
+
+load("@rules_jvm_external//:setup.bzl", "rules_jvm_external_setup")
+
+rules_jvm_external_setup()
+
+load("@rules_jvm_external//:defs.bzl", "maven_install")
+
+maven_install(
+    maven_install_json = "//:maven_install.json",
+    artifacts = [
+        "ch.qos.logback:logback-classic:jar:1.2.11",
+        "com.fasterxml.jackson.datatype:jackson-datatype-guava:jar:2.13.4",
+        "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:jar:2.13.0",
+        "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:jar:2.13.0",
+        "com.google.code.findbugs:jsr305:jar:3.0.2",
+        "commons-codec:commons-codec:jar:1.15",
+        "io.dialob:dialob-client-api:jar:3.0.4",
+        "io.dialob:dialob-form-store-pgsql:jar:3.0.4",
+        "io.resys.hdes:hdes-client-api:jar:3.130.59",
+        "io.resys.hdes:hdes-store-thena:jar:3.130.59",
+        "io.resys.hdes:thena-docdb-pgsql:jar:1.1.24",
+        "io.smallrye.reactive:mutiny:jar:1.8.0",
+        "io.thestencil:stencil-client-api:jar:1.148.15",
+        "jakarta.validation:jakarta.validation-api:jar:2.0.2",
+        "org.apache.commons:commons-lang3:jar:3.12.0",
+        "org.ehcache:ehcache:jar:3.8.1",
+        "org.immutables:gson:jar:2.8.8",
+        "org.immutables:value:jar:2.8.8",
+        "org.projectlombok:lombok:jar:1.18.22",
+        "org.slf4j:slf4j-api:jar:1.7.36",
+        "org.springframework.boot:spring-boot-autoconfigure:jar:2.7.0",
+        "org.springframework.boot:spring-boot-starter-actuator:jar:2.7.0",
+        "org.springframework.boot:spring-boot-starter-thymeleaf:jar:2.7.0",
+        "org.springframework.boot:spring-boot-starter-web:jar:2.7.0",
+        "org.springframework.boot:spring-boot:jar:2.7.0",
+        "org.hibernate.validator:hibernate-validator:6.2.5.Final"
+    ],
+    excluded_artifacts = ["org.hibernate:hibernate-validator"],
+    repositories = [
+    	"https://maven.google.com",
+    	"https://repo1.maven.org/maven2",
+    ]
+)
+
+load("@maven//:defs.bzl", "pinned_maven_install")
+pinned_maven_install()
