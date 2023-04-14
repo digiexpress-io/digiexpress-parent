@@ -1,3 +1,4 @@
 # common --enable_bzlmod
+build --javacopt="-source 17 -target 17"
 build --java_language_version=17
 build --nojava_header_compilation

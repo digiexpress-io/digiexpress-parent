@@ -21,7 +21,7 @@ release.properties
 *.war
 *.ear
 *.db
- 
+bazel-*/
 ######################
 # Windows
 ######################
