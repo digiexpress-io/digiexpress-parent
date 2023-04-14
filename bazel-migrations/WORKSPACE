@@ -31,6 +31,8 @@ maven_install(
         "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.0",
         "com.fasterxml.jackson.core:jackson-databind:2.13.0",
         "com.google.code.findbugs:jsr305:3.0.2",
+        "com.google.guava:guava:31.0.1-jre",
+        "com.google.errorprone:error_prone_annotations:2.16",
         "commons-codec:commons-codec:1.15",
         "io.dialob:dialob-client-api:3.0.4",
         "io.dialob:dialob-compiler:3.0.4",

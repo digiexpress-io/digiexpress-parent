@@ -33,7 +33,7 @@ java_library(
 
 java_library(
     name = "digiexpress-client-api",
-    srcs = glob(["src/main/java/io/digiexpress/client/api/*.java"]),
+	srcs = glob(["src/main/java/**/*.java"]),
     resources = glob(["src/main/resources/**"]),
     visibility = ["//visibility:public"],
     deps = [
@@ -69,5 +69,7 @@ java_library(
         "@maven//:io_smallrye_reactive_smallrye_mutiny_vertx_pg_client",
         "@maven//:io_vertx_vertx_pg_client",
         "@maven//:io_vertx_vertx_sql_client",
+        "@maven//:com_google_guava_guava",
+        "@maven//:com_google_errorprone_error_prone_annotations"
     ],
 )

@@ -2,6 +2,9 @@ package io.digiexpress.client.spi.store;
 
 import java.util.Collection;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import io.digiexpress.client.api.ImmutableProcessState;
 import org.immutables.value.Value;
 
 import io.digiexpress.client.api.ClientStore.StoreEntity;
@@ -15,7 +18,7 @@ import io.resys.thena.docdb.api.models.Objects.Blob;
 import io.smallrye.mutiny.Uni;
 
 
-@Value.Immutable
+@Value.Immutable @JsonSerialize(as = ImmutableDocDBConfig.class) @JsonDeserialize(as = ImmutableDocDBConfig.class)
 public interface DocDBConfig {
   DocDB getClient();
   DocDBAuthorProvider getAuthorProvider();
@@ -52,5 +55,5 @@ public interface DocDBConfig {
   interface StoreEntityState {
     ObjectsResult<BlobObject> getBlob();
     StoreEntity getEntity();
-  } 
+  }
 }

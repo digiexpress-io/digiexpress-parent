@@ -36,7 +36,7 @@ public class ServiceProgramRelImpl implements ServiceProgramRel {
     if(this.delegate == null) {
       var service = config.getArchiver().decompressionRelease(source.getBody());
       if(service.getId() == null) {
-        log.warn(String.format("release has no id: '{}', using source id and and hash", service.getName()));
+        log.warn("release has no id: '{}', using source id and and hash", service.getName());
         service = ImmutableServiceRelease.builder().from(service).id(source.getId()).version(source.getHash()).build();
       }
       
