@@ -32,7 +32,7 @@ java_library(
 
 
 java_library(
-    name = "digiexpress-client-api",
+  name = "digiexpress-client-api",
 	srcs = glob(["src/main/java/**/*.java"]),
     resources = glob(["src/main/resources/**"]),
     visibility = ["//visibility:public"],
