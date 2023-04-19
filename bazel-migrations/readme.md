@@ -34,12 +34,14 @@ Projects are identified by placing certain files in the project folder:
 
 * Your every day commands:
   * `bazel query //... --output graph` - tell me how everything is dependent
+  * `bazel query //... --output build` - tell me one big build source
   * `bazel query //...` - tell me all the build targets. https://bazel.build/query/language 
   * `bazel query 'deps(//<folder_name>:<target>)' --noimplicit_deps` - everything that depends on this target
   * `bazel query 'rdeps(//..., //<folder_name>:<target>)'` - what does this target depend on
   * `bazel query 'attr(tags, "blue", <folder_name>/...)'` - query all tags named "blue" from folder. 
   * `bazel build //...` - build everything. 
   * `bazel build <folder_name>:<target>` - build one target
+  * `bazel clean --expunge` - remove all cached assets
   
 * Query parameters:
   * `--output location` append to get the file and the line/col of the target

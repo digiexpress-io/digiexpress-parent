@@ -8,13 +8,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import javax.inject.Inject;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
 
 import com.fasterxml.jackson.core.util.DefaultIndenter;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
+import com.github.dockerjava.api.command.CreateContainerCmd;
+import com.github.dockerjava.api.model.ExposedPort;
+import com.github.dockerjava.api.model.HostConfig;
+import com.github.dockerjava.api.model.PortBinding;
+import com.github.dockerjava.api.model.Ports;
 
 import io.dialob.api.proto.Action;
 import io.dialob.api.proto.Actions;
@@ -38,19 +46,42 @@ import io.resys.hdes.client.api.HdesComposer;
 import io.resys.hdes.client.spi.HdesComposerImpl;
 import io.thestencil.client.api.StencilComposer;
 import io.thestencil.client.spi.StencilComposerImpl;
+import io.vertx.pgclient.PgConnectOptions;
+import io.vertx.sqlclient.PoolOptions;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Testcontainers
 public class TestCase {
-  @Inject io.vertx.mutiny.pgclient.PgPool pgPool;
+  private io.vertx.mutiny.pgclient.PgPool pgPool;
   private TestCaseBuilder builder;
   private QuestionnaireStore questionnaireStore;
   private Map<String, Questionnaire> in_memory_questionnaire = new HashMap<>();
   
+  @Container
+  public GenericContainer postgresql = new PostgreSQLContainer(
+      DockerImageName.parse("docker.io/postgres:14").asCompatibleSubstituteFor("postgres")
+  )
+  .withDatabaseName("test1")
+  .withPassword("test1")
+  .withUsername("test1");
+  
   @BeforeEach
   public void setUp() {
+    
+    //io.vertx.mutiny.pgclient.PgPool.class.getClass().isAssignableFrom(pgPool.getClass());
+    final PgConnectOptions connectOptions = new PgConnectOptions()
+        .setHost(postgresql.getHost())
+        .setPort(postgresql.getMappedPort((int) postgresql.getExposedPorts().iterator().next()) )
+        .setDatabase("test1")
+        .setUser("test1")
+        .setPassword("test1");
+    final PoolOptions pool = new PoolOptions().setMaxSize(5);
+    
+    pgPool = io.vertx.mutiny.pgclient.PgPool.pool(connectOptions, pool);
+
     builder = new TestCaseBuilder(pgPool);
     questionnaireStore = new QuestionnaireStore() {
       @Override

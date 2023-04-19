@@ -1,6 +1,5 @@
 package io.digiexpress.client.spi;
 
-import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.dialob.api.form.Form;

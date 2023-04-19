@@ -227,7 +227,7 @@ public class TenantBuilderImpl implements TenantBuilder {
     return this;
   } 
 
-  @Data @Builder(toBuilder = true) @Accessors(chain = true, fluent = false)
+  @Data @Builder(toBuilder = true) @Accessors(chain = true)
   public static class Namings {
     private final String repoProject;
     private final String repoStencil;

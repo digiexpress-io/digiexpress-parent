@@ -1,288 +1,299 @@
-        
-"ch.qos.logback:logback-classic:1.2.11",
-"ch.qos.logback:logback-core:1.2.11",
-"com.aayushatharva.brotli4j:brotli4j:1.8.0",
-"com.aayushatharva.brotli4j:native-linux-x86_64:1.8.0",
-"com.fasterxml.jackson.core:jackson-annotations:2.13.0",
-"com.fasterxml.jackson.core:jackson-core:2.13.0",
-"com.fasterxml.jackson.core:jackson-databind:2.13.0",
-"com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.13.4",
-"com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.13.4",
-"com.fasterxml.jackson.datatype:jackson-datatype-guava:2.13.4",
-"com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.13.0",
-"com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.0",
-"com.fasterxml:classmate:1.5.1",
-"com.google.code.findbugs:jsr305:3.0.2",
-"com.google.code.gson:gson:2.10",
-"com.google.errorprone:error_prone_annotations:2.16",
-"com.google.guava:failureaccess:1.0.1",
-"com.google.guava:guava:31.0.1-jre",
-"com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava",
-"com.google.inject:guice:no_aop:4.2.2",
-"com.google.j2objc:j2objc-annotations:1.3",
-"com.google.protobuf:protobuf-java:3.19.6",
-"com.ibm.icu:icu4j:61.1",
-"com.ongres.scram:client:2.1",
-"com.ongres.scram:common:2.1",
-"com.ongres.stringprep:saslprep:1.1",
-"com.ongres.stringprep:stringprep:1.1",
-"com.openhtmltopdf:openhtmltopdf-core:1.0.0",
-"com.openhtmltopdf:openhtmltopdf-jsoup-dom-converter:1.0.0",
-"com.openhtmltopdf:openhtmltopdf-pdfbox:1.0.0",
-"com.openhtmltopdf:openhtmltopdf-rtl-support:1.0.0",
-"com.sun.activation:jakarta.activation:1.2.1:runtime
-"com.sun.istack:istack-commons-runtime:3.0.10",
-"com.thoughtworks.xstream:xstream:1.4.19",
-"com.vaadin.external.google:android-json:0.0.20131108.vaadin1",
-"com.vladsch.flexmark:flexmark-all:0.62.2",
-"com.vladsch.flexmark:flexmark-ext-abbreviation:0.62.2",
-"com.vladsch.flexmark:flexmark-ext-admonition:0.62.2",
-"com.vladsch.flexmark:flexmark-ext-anchorlink:0.62.2",
-"com.vladsch.flexmark:flexmark-ext-aside:0.62.2",
-"com.vladsch.flexmark:flexmark-ext-attributes:0.62.2",
-"com.vladsch.flexmark:flexmark-ext-autolink:0.62.2",
-"com.vladsch.flexmark:flexmark-ext-definition:0.62.2",
-"com.vladsch.flexmark:flexmark-ext-emoji:0.62.2",
-"com.vladsch.flexmark:flexmark-ext-enumerated-reference:0.62.2",
-"com.vladsch.flexmark:flexmark-ext-escaped-character:0.62.2",
-"com.vladsch.flexmark:flexmark-ext-footnotes:0.62.2",
-"com.vladsch.flexmark:flexmark-ext-gfm-issues:0.62.2",
-"com.vladsch.flexmark:flexmark-ext-gfm-strikethrough:0.62.2",
-"com.vladsch.flexmark:flexmark-ext-gfm-tasklist:0.62.2",
-"com.vladsch.flexmark:flexmark-ext-gfm-users:0.62.2",
-"com.vladsch.flexmark:flexmark-ext-gitlab:0.62.2",
-"com.vladsch.flexmark:flexmark-ext-ins:0.62.2",
-"com.vladsch.flexmark:flexmark-ext-jekyll-front-matter:0.62.2",
-"com.vladsch.flexmark:flexmark-ext-jekyll-tag:0.62.2",
-"com.vladsch.flexmark:flexmark-ext-macros:0.62.2",
-"com.vladsch.flexmark:flexmark-ext-media-tags:0.62.2",
-"com.vladsch.flexmark:flexmark-ext-superscript:0.62.2",
-"com.vladsch.flexmark:flexmark-ext-tables:0.62.2",
-"com.vladsch.flexmark:flexmark-ext-toc:0.62.2",
-"com.vladsch.flexmark:flexmark-ext-typographic:0.62.2",
-"com.vladsch.flexmark:flexmark-ext-wikilink:0.62.2",
-"com.vladsch.flexmark:flexmark-ext-xwiki-macros:0.62.2",
-"com.vladsch.flexmark:flexmark-ext-yaml-front-matter:0.62.2",
-"com.vladsch.flexmark:flexmark-ext-youtube-embedded:0.62.2",
-"com.vladsch.flexmark:flexmark-html2md-converter:0.62.2",
-"com.vladsch.flexmark:flexmark-jira-converter:0.62.2",
-"com.vladsch.flexmark:flexmark-pdf-converter:0.62.2",
-"com.vladsch.flexmark:flexmark-profile-pegdown:0.62.2",
-"com.vladsch.flexmark:flexmark-util-ast:0.62.2",
-"com.vladsch.flexmark:flexmark-util-builder:0.62.2",
-"com.vladsch.flexmark:flexmark-util-collection:0.62.2",
-"com.vladsch.flexmark:flexmark-util-data:0.62.2",
-"com.vladsch.flexmark:flexmark-util-dependency:0.62.2",
-"com.vladsch.flexmark:flexmark-util-format:0.62.2",
-"com.vladsch.flexmark:flexmark-util-html:0.62.2",
-"com.vladsch.flexmark:flexmark-util-misc:0.62.2",
-"com.vladsch.flexmark:flexmark-util-options:0.62.2",
-"com.vladsch.flexmark:flexmark-util-sequence:0.62.2",
-"com.vladsch.flexmark:flexmark-util-visitor:0.62.2",
-"com.vladsch.flexmark:flexmark-util:0.62.2",
-"com.vladsch.flexmark:flexmark-youtrack-converter:0.62.2",
-"com.vladsch.flexmark:flexmark:0.62.2",
-"commons-beanutils:commons-beanutils:1.9.4",
-"commons-cli:commons-cli:1.4",
-"commons-codec:commons-codec:1.15",
-"commons-collections:commons-collections:3.2.2",
-"commons-digester:commons-digester:2.1",
-"commons-io:commons-io:2.11.0",
-"commons-logging:commons-logging:1.2",
-"commons-validator:commons-validator:1.7",
-"de.rototor.pdfbox:graphics2d:0.24",
-"io.dialob:dialob-api:2.2.3",
-"io.dialob:dialob-client-api:3.0.4",
-"io.dialob:dialob-compiler:3.0.4",
-"io.dialob:dialob-form-store-pgsql:3.0.4",
-"io.dialob:dialob-rule-parser:3.0.4",
-"io.github.crac:org-crac:0.1.1",
-"io.github.x-stream:mxparser:1.2.2",
-"io.netty:netty-buffer:4.1.82.Final",
-"io.netty:netty-codec-dns:4.1.82.Final",
-"io.netty:netty-codec-haproxy:4.1.82.Final",
-"io.netty:netty-codec-http2:4.1.82.Final",
-"io.netty:netty-codec-http:4.1.82.Final",
-"io.netty:netty-codec-socks:4.1.82.Final",
-"io.netty:netty-codec:4.1.82.Final",
-"io.netty:netty-common:4.1.82.Final",
-"io.netty:netty-handler-proxy:4.1.82.Final",
-"io.netty:netty-handler:4.1.82.Final",
-"io.netty:netty-resolver-dns:4.1.82.Final",
-"io.netty:netty-resolver:4.1.82.Final",
-"io.netty:netty-transport-native-unix-common:4.1.82.Final",
-"io.netty:netty-transport:4.1.82.Final",
-"io.quarkus.arc:arc:2.14.1.Final",
-"io.quarkus.gizmo:gizmo:1.4.0.Final",
-"io.quarkus:quarkus-arc:2.14.1.Final",
-"io.quarkus:quarkus-bootstrap-app-model:2.14.1.Final",
-"io.quarkus:quarkus-bootstrap-core:2.14.1.Final",
-"io.quarkus:quarkus-bootstrap-gradle-resolver:2.14.1.Final",
-"io.quarkus:quarkus-bootstrap-maven-resolver:2.14.1.Final",
-"io.quarkus:quarkus-bootstrap-runner:2.14.1.Final",
-"io.quarkus:quarkus-builder:2.14.1.Final",
-"io.quarkus:quarkus-class-change-agent:2.14.1.Final",
-"io.quarkus:quarkus-core-deployment:2.14.1.Final",
-"io.quarkus:quarkus-core:2.14.1.Final",
-"io.quarkus:quarkus-credentials:2.14.1.Final",
-"io.quarkus:quarkus-datasource-common:2.14.1.Final",
-"io.quarkus:quarkus-datasource:2.14.1.Final",
-"io.quarkus:quarkus-development-mode-spi:2.14.1.Final",
-"io.quarkus:quarkus-devtools-utilities:2.14.1.Final",
-"io.quarkus:quarkus-fs-util:0.0.9",
-"io.quarkus:quarkus-ide-launcher:2.14.1.Final",
-"io.quarkus:quarkus-junit5-internal:2.14.1.Final",
-"io.quarkus:quarkus-junit5-properties:2.14.1.Final",
-"io.quarkus:quarkus-junit5:2.14.1.Final",
-"io.quarkus:quarkus-mutiny:2.14.1.Final",
-"io.quarkus:quarkus-netty:2.14.1.Final",
-"io.quarkus:quarkus-reactive-datasource:2.14.1.Final",
-"io.quarkus:quarkus-reactive-pg-client:2.14.1.Final",
-"io.quarkus:quarkus-smallrye-context-propagation:2.14.1.Final",
-"io.quarkus:quarkus-test-common:2.14.1.Final",
-"io.quarkus:quarkus-vertx-latebound-mdc-provider:2.14.1.Final",
-"io.quarkus:quarkus-vertx:2.14.1.Final",
-"io.resys.hdes:hdes-client-api:3.130.59",
-"io.resys.hdes:hdes-store-thena:3.130.59",
-"io.resys.hdes:thena-docdb-api:1.1.24",
-"io.resys.hdes:thena-docdb-pgsql:1.1.24",
-"io.smallrye.common:smallrye-common-annotation:1.13.2",
-"io.smallrye.common:smallrye-common-classloader:1.13.2",
-"io.smallrye.common:smallrye-common-constraint:1.13.2",
-"io.smallrye.common:smallrye-common-expression:1.13.2",
-"io.smallrye.common:smallrye-common-function:1.13.2",
-"io.smallrye.common:smallrye-common-io:1.13.2",
-"io.smallrye.common:smallrye-common-vertx-context:1.13.2",
-"io.smallrye.config:smallrye-config-common:2.12.1",
-"io.smallrye.config:smallrye-config-core:2.12.1",
-"io.smallrye.config:smallrye-config:2.12.1",
-"io.smallrye.reactive:mutiny-smallrye-context-propagation:1.8.0",
-"io.smallrye.reactive:mutiny:1.8.0",
-"io.smallrye.reactive:smallrye-mutiny-vertx-core:2.27.0",
-"io.smallrye.reactive:smallrye-mutiny-vertx-pg-client:2.27.0",
-"io.smallrye.reactive:smallrye-mutiny-vertx-runtime:2.27.0",
-"io.smallrye.reactive:smallrye-mutiny-vertx-sql-client:2.27.0",
-"io.smallrye.reactive:vertx-mutiny-generator:2.27.0",
-"io.smallrye:jandex:3.0.3",
-"io.smallrye:smallrye-context-propagation-api:1.2.2",
-"io.smallrye:smallrye-context-propagation-storage:1.2.2",
-"io.smallrye:smallrye-context-propagation:1.2.2",
-"io.smallrye:smallrye-fault-tolerance-vertx:5.5.0",
-"io.swagger.core.v3:swagger-annotations:2.1.5",
-"io.thestencil:stencil-client-api:1.148.15",
-"io.vertx:vertx-codegen:4.3.4",
-"io.vertx:vertx-core:4.3.4",
-"io.vertx:vertx-pg-client:4.3.4",
-"io.vertx:vertx-sql-client:4.3.4",
-"jakarta.annotation:jakarta.annotation-api:1.3.5",
-"jakarta.el:jakarta.el-api:3.0.3",
-"jakarta.enterprise:jakarta.enterprise.cdi-api:2.0.2",
-"jakarta.inject:jakarta.inject-api:1.0",
-"jakarta.interceptor:jakarta.interceptor-api:1.2.5",
-"jakarta.transaction:jakarta.transaction-api:1.3.3",
-"jakarta.validation:jakarta.validation-api:2.0.2",
-"jakarta.xml.bind:jakarta.xml.bind-api:2.3.3",
-"net.bytebuddy:byte-buddy-agent:1.12.16",
-"net.bytebuddy:byte-buddy:1.12.18",
-"org.abego.treelayout:org.abego.treelayout.core:1.0.3",
-"org.aesh:aesh:2.6",
-"org.aesh:readline:2.2",
-"org.antlr:ST4:4.3",
-"org.antlr:antlr-runtime:3.5.2",
-"org.antlr:antlr4-runtime:4.9.2",
-"org.antlr:antlr4:4.9.2",
-"org.apache.commons:commons-collections4:4.4",
-"org.apache.commons:commons-csv:1.9.0",
-"org.apache.commons:commons-lang3:3.12.0",
-"org.apache.commons:commons-text:1.9",
-"org.apache.httpcomponents:httpclient:4.5.13",
-"org.apache.httpcomponents:httpcore:4.4.15",
-"org.apache.maven.resolver:maven-resolver-api:1.6.3",
-"org.apache.maven.resolver:maven-resolver-connector-basic:1.6.3",
-"org.apache.maven.resolver:maven-resolver-impl:1.6.3",
-"org.apache.maven.resolver:maven-resolver-spi:1.6.3",
-"org.apache.maven.resolver:maven-resolver-transport-wagon:1.6.3",
-"org.apache.maven.resolver:maven-resolver-util:1.6.3",
-"org.apache.maven.shared:maven-shared-utils:3.3.4",
-"org.apache.maven.wagon:wagon-file:3.5.1",
-"org.apache.maven.wagon:wagon-http-shared:3.5.1",
-"org.apache.maven.wagon:wagon-http:3.5.1",
-"org.apache.maven.wagon:wagon-provider-api:3.5.1",
-"org.apache.maven:maven-artifact:3.8.6",
-"org.apache.maven:maven-builder-support:3.8.6",
-"org.apache.maven:maven-core:3.8.6",
-"org.apache.maven:maven-embedder:3.8.6",
-"org.apache.maven:maven-model-builder:3.8.6",
-"org.apache.maven:maven-model:3.8.6",
-"org.apache.maven:maven-plugin-api:3.8.6",
-"org.apache.maven:maven-repository-metadata:3.8.6",
-"org.apache.maven:maven-resolver-provider:3.8.6",
-"org.apache.maven:maven-settings-builder:3.8.6",
-"org.apache.maven:maven-settings:3.8.6",
-"org.apache.pdfbox:fontbox:2.0.16",
-"org.apache.pdfbox:pdfbox:2.0.16",
-"org.apache.pdfbox:xmpbox:2.0.16",
-"org.apiguardian:apiguardian-api:1.1.2",
-"org.awaitility:awaitility:4.2.0",
-"org.checkerframework:checker-qual:3.26.0",
-"org.codehaus.groovy:groovy:3.0.9",
-"org.codehaus.plexus:plexus-cipher:2.0",
-"org.codehaus.plexus:plexus-classworlds:2.6.0",
-"org.codehaus.plexus:plexus-component-annotations:2.1.0",
-"org.codehaus.plexus:plexus-interpolation:1.26",
-"org.codehaus.plexus:plexus-sec-dispatcher:2.0",
-"org.codehaus.plexus:plexus-utils:3.3.0",
-"org.eclipse.microprofile.config:microprofile-config-api:2.0.1",
-"org.eclipse.microprofile.context-propagation:microprofile-context-propagation-api:1.2",
-"org.eclipse.sisu:org.eclipse.sisu.inject:0.3.5",
-"org.eclipse.sisu:org.eclipse.sisu.plexus:0.3.5",
-"org.ehcache:ehcache:3.8.1",
-"org.fusesource.jansi:jansi:1.18",
-"org.glassfish.jaxb:jaxb-runtime:2.3.3-b02",
-"org.glassfish.jaxb:txw2:2.3.3-b02",
-"org.glassfish:jakarta.el:3.0.4",
-"org.glassfish:javax.json:1.0.4",
-"org.graalvm.sdk:graal-sdk:22.3.0",
-"org.hamcrest:hamcrest:2.1",
-"org.hibernate.validator:hibernate-validator:6.2.5.Final",
-"org.immutables:gson:2.8.8",
-"org.immutables:value:2.8.8",
-"org.jboss.logging:commons-logging-jboss-logging:1.0.0.Final",
-"org.jboss.logging:jboss-logging-annotations:2.2.1.Final",
-"org.jboss.logging:jboss-logging:3.5.0.Final",
-"org.jboss.logmanager:jboss-logmanager-embedded:1.0.11",
-"org.jboss.shrinkwrap:shrinkwrap-api:1.2.6",
-"org.jboss.shrinkwrap:shrinkwrap-depchain:pom:1.2.6",
-"org.jboss.shrinkwrap:shrinkwrap-impl-base:1.2.6",
-"org.jboss.shrinkwrap:shrinkwrap-spi:1.2.6",
-"org.jboss.slf4j:slf4j-jboss-logmanager:1.2.0.Final",
-"org.jboss.threads:jboss-threads:3.4.3.Final",
-"org.jetbrains:annotations:19.0.0",
-"org.jsoup:jsoup:1.11.3",
-"org.junit.jupiter:junit-jupiter-api:5.9.1",
-"org.junit.jupiter:junit-jupiter-engine:5.9.1",
-"org.junit.jupiter:junit-jupiter-params:5.9.1",
-"org.junit.jupiter:junit-jupiter:5.9.1",
-"org.junit.platform:junit-platform-commons:1.9.1",
-"org.junit.platform:junit-platform-engine:1.9.1",
-"org.junit.platform:junit-platform-launcher:1.9.1",
-"org.mockito:mockito-core:4.8.1",
-"org.mockito:mockito-junit-jupiter:4.8.1",
-"org.nibor.autolink:autolink:0.6.0",
-"org.objenesis:objenesis:3.2",
-"org.opentest4j:opentest4j:1.2.0",
-"org.ow2.asm:asm-analysis:9.4",
-"org.ow2.asm:asm-commons:9.4",
-"org.ow2.asm:asm-tree:9.4",
-"org.ow2.asm:asm-util:9.4",
-"org.ow2.asm:asm:9.4",
-"org.projectlombok:lombok:1.18.22",
-"org.reactivestreams:reactive-streams:1.0.3",
-"org.skyscreamer:jsonassert:1.5.0",
-"org.slf4j:slf4j-api:1.7.36",
-"org.springframework:spring-core:5.3.18",
-"org.springframework:spring-expression:5.3.18",
-"org.springframework:spring-jcl:5.3.18",
-"org.wildfly.common:wildfly-common:1.5.4.Final-format-001",
-"org.yaml:snakeyaml:1.33",
-"xmlpull:xmlpull:1.1.3.1",
+[INFO]    ch.qos.logback:logback-classic:jar:1.2.11:test
+[INFO]    ch.qos.logback:logback-core:jar:1.2.11:test
+[INFO]    com.aayushatharva.brotli4j:brotli4j:jar:1.8.0:compile
+[INFO]    com.aayushatharva.brotli4j:native-linux-x86_64:jar:1.8.0:compile
+[INFO]    com.fasterxml.jackson.core:jackson-annotations:jar:2.13.0:compile
+[INFO]    com.fasterxml.jackson.core:jackson-core:jar:2.13.0:compile
+[INFO]    com.fasterxml.jackson.core:jackson-databind:jar:2.13.0:compile
+[INFO]    com.fasterxml.jackson.dataformat:jackson-dataformat-csv:jar:2.13.4:compile
+[INFO]    com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:jar:2.13.4:compile
+[INFO]    com.fasterxml.jackson.datatype:jackson-datatype-guava:jar:2.13.4:compile
+[INFO]    com.fasterxml.jackson.datatype:jackson-datatype-jdk8:jar:2.13.0:compile
+[INFO]    com.fasterxml.jackson.datatype:jackson-datatype-jsr310:jar:2.13.0:compile
+[INFO]    com.fasterxml:classmate:jar:1.5.1:compile
+[INFO]    com.github.docker-java:docker-java-api:jar:3.2.13:test
+[INFO]    com.github.docker-java:docker-java-transport-zerodep:jar:3.2.13:test
+[INFO]    com.github.docker-java:docker-java-transport:jar:3.2.13:test
+[INFO]    com.google.code.findbugs:jsr305:jar:3.0.2:provided
+[INFO]    com.google.code.gson:gson:jar:2.10:provided
+[INFO]    com.google.errorprone:error_prone_annotations:jar:2.16:compile
+[INFO]    com.google.guava:failureaccess:jar:1.0.1:compile
+[INFO]    com.google.guava:guava:jar:31.0.1-jre:compile
+[INFO]    com.google.guava:listenablefuture:jar:9999.0-empty-to-avoid-conflict-with-guava:compile
+[INFO]    com.google.inject:guice:jar:no_aop:4.2.2:test
+[INFO]    com.google.j2objc:j2objc-annotations:jar:1.3:compile
+[INFO]    com.google.protobuf:protobuf-java:jar:3.19.6:compile
+[INFO]    com.ibm.icu:icu4j:jar:61.1:compile
+[INFO]    com.ongres.scram:client:jar:2.1:compile
+[INFO]    com.ongres.scram:common:jar:2.1:compile
+[INFO]    com.ongres.stringprep:saslprep:jar:1.1:compile
+[INFO]    com.ongres.stringprep:stringprep:jar:1.1:compile
+[INFO]    com.openhtmltopdf:openhtmltopdf-core:jar:1.0.0:compile
+[INFO]    com.openhtmltopdf:openhtmltopdf-jsoup-dom-converter:jar:1.0.0:compile
+[INFO]    com.openhtmltopdf:openhtmltopdf-pdfbox:jar:1.0.0:compile
+[INFO]    com.openhtmltopdf:openhtmltopdf-rtl-support:jar:1.0.0:compile
+[INFO]    com.sun.activation:jakarta.activation:jar:1.2.1:runtime
+[INFO]    com.sun.istack:istack-commons-runtime:jar:3.0.10:compile
+[INFO]    com.thoughtworks.xstream:xstream:jar:1.4.19:test
+[INFO]    com.vaadin.external.google:android-json:jar:0.0.20131108.vaadin1:test
+[INFO]    com.vladsch.flexmark:flexmark-all:jar:0.62.2:compile
+[INFO]    com.vladsch.flexmark:flexmark-ext-abbreviation:jar:0.62.2:compile
+[INFO]    com.vladsch.flexmark:flexmark-ext-admonition:jar:0.62.2:compile
+[INFO]    com.vladsch.flexmark:flexmark-ext-anchorlink:jar:0.62.2:compile
+[INFO]    com.vladsch.flexmark:flexmark-ext-aside:jar:0.62.2:compile
+[INFO]    com.vladsch.flexmark:flexmark-ext-attributes:jar:0.62.2:compile
+[INFO]    com.vladsch.flexmark:flexmark-ext-autolink:jar:0.62.2:compile
+[INFO]    com.vladsch.flexmark:flexmark-ext-definition:jar:0.62.2:compile
+[INFO]    com.vladsch.flexmark:flexmark-ext-emoji:jar:0.62.2:compile
+[INFO]    com.vladsch.flexmark:flexmark-ext-enumerated-reference:jar:0.62.2:compile
+[INFO]    com.vladsch.flexmark:flexmark-ext-escaped-character:jar:0.62.2:compile
+[INFO]    com.vladsch.flexmark:flexmark-ext-footnotes:jar:0.62.2:compile
+[INFO]    com.vladsch.flexmark:flexmark-ext-gfm-issues:jar:0.62.2:compile
+[INFO]    com.vladsch.flexmark:flexmark-ext-gfm-strikethrough:jar:0.62.2:compile
+[INFO]    com.vladsch.flexmark:flexmark-ext-gfm-tasklist:jar:0.62.2:compile
+[INFO]    com.vladsch.flexmark:flexmark-ext-gfm-users:jar:0.62.2:compile
+[INFO]    com.vladsch.flexmark:flexmark-ext-gitlab:jar:0.62.2:compile
+[INFO]    com.vladsch.flexmark:flexmark-ext-ins:jar:0.62.2:compile
+[INFO]    com.vladsch.flexmark:flexmark-ext-jekyll-front-matter:jar:0.62.2:compile
+[INFO]    com.vladsch.flexmark:flexmark-ext-jekyll-tag:jar:0.62.2:compile
+[INFO]    com.vladsch.flexmark:flexmark-ext-macros:jar:0.62.2:compile
+[INFO]    com.vladsch.flexmark:flexmark-ext-media-tags:jar:0.62.2:compile
+[INFO]    com.vladsch.flexmark:flexmark-ext-superscript:jar:0.62.2:compile
+[INFO]    com.vladsch.flexmark:flexmark-ext-tables:jar:0.62.2:compile
+[INFO]    com.vladsch.flexmark:flexmark-ext-toc:jar:0.62.2:compile
+[INFO]    com.vladsch.flexmark:flexmark-ext-typographic:jar:0.62.2:compile
+[INFO]    com.vladsch.flexmark:flexmark-ext-wikilink:jar:0.62.2:compile
+[INFO]    com.vladsch.flexmark:flexmark-ext-xwiki-macros:jar:0.62.2:compile
+[INFO]    com.vladsch.flexmark:flexmark-ext-yaml-front-matter:jar:0.62.2:compile
+[INFO]    com.vladsch.flexmark:flexmark-ext-youtube-embedded:jar:0.62.2:compile
+[INFO]    com.vladsch.flexmark:flexmark-html2md-converter:jar:0.62.2:compile
+[INFO]    com.vladsch.flexmark:flexmark-jira-converter:jar:0.62.2:compile
+[INFO]    com.vladsch.flexmark:flexmark-pdf-converter:jar:0.62.2:compile
+[INFO]    com.vladsch.flexmark:flexmark-profile-pegdown:jar:0.62.2:compile
+[INFO]    com.vladsch.flexmark:flexmark-util-ast:jar:0.62.2:compile
+[INFO]    com.vladsch.flexmark:flexmark-util-builder:jar:0.62.2:compile
+[INFO]    com.vladsch.flexmark:flexmark-util-collection:jar:0.62.2:compile
+[INFO]    com.vladsch.flexmark:flexmark-util-data:jar:0.62.2:compile
+[INFO]    com.vladsch.flexmark:flexmark-util-dependency:jar:0.62.2:compile
+[INFO]    com.vladsch.flexmark:flexmark-util-format:jar:0.62.2:compile
+[INFO]    com.vladsch.flexmark:flexmark-util-html:jar:0.62.2:compile
+[INFO]    com.vladsch.flexmark:flexmark-util-misc:jar:0.62.2:compile
+[INFO]    com.vladsch.flexmark:flexmark-util-options:jar:0.62.2:compile
+[INFO]    com.vladsch.flexmark:flexmark-util-sequence:jar:0.62.2:compile
+[INFO]    com.vladsch.flexmark:flexmark-util-visitor:jar:0.62.2:compile
+[INFO]    com.vladsch.flexmark:flexmark-util:jar:0.62.2:compile
+[INFO]    com.vladsch.flexmark:flexmark-youtrack-converter:jar:0.62.2:compile
+[INFO]    com.vladsch.flexmark:flexmark:jar:0.62.2:compile
+[INFO]    commons-beanutils:commons-beanutils:jar:1.9.4:compile
+[INFO]    commons-cli:commons-cli:jar:1.4:test
+[INFO]    commons-codec:commons-codec:jar:1.15:compile
+[INFO]    commons-collections:commons-collections:jar:3.2.2:compile
+[INFO]    commons-digester:commons-digester:jar:2.1:compile
+[INFO]    commons-io:commons-io:jar:2.11.0:compile
+[INFO]    commons-logging:commons-logging:jar:1.2:compile
+[INFO]    commons-validator:commons-validator:jar:1.7:compile
+[INFO]    de.rototor.pdfbox:graphics2d:jar:0.24:compile
+[INFO]    io.dialob:dialob-api:jar:2.2.3:compile
+[INFO]    io.dialob:dialob-client-api:jar:3.0.4:compile
+[INFO]    io.dialob:dialob-compiler:jar:3.0.4:compile
+[INFO]    io.dialob:dialob-form-store-pgsql:jar:3.0.4:compile
+[INFO]    io.dialob:dialob-rule-parser:jar:3.0.4:compile
+[INFO]    io.github.crac:org-crac:jar:0.1.1:compile
+[INFO]    io.github.x-stream:mxparser:jar:1.2.2:test
+[INFO]    io.netty:netty-buffer:jar:4.1.82.Final:compile
+[INFO]    io.netty:netty-codec-dns:jar:4.1.82.Final:compile
+[INFO]    io.netty:netty-codec-haproxy:jar:4.1.82.Final:compile
+[INFO]    io.netty:netty-codec-http2:jar:4.1.82.Final:compile
+[INFO]    io.netty:netty-codec-http:jar:4.1.82.Final:compile
+[INFO]    io.netty:netty-codec-socks:jar:4.1.82.Final:compile
+[INFO]    io.netty:netty-codec:jar:4.1.82.Final:compile
+[INFO]    io.netty:netty-common:jar:4.1.82.Final:compile
+[INFO]    io.netty:netty-handler-proxy:jar:4.1.82.Final:compile
+[INFO]    io.netty:netty-handler:jar:4.1.82.Final:compile
+[INFO]    io.netty:netty-resolver-dns:jar:4.1.82.Final:compile
+[INFO]    io.netty:netty-resolver:jar:4.1.82.Final:compile
+[INFO]    io.netty:netty-transport-native-unix-common:jar:4.1.82.Final:compile
+[INFO]    io.netty:netty-transport:jar:4.1.82.Final:compile
+[INFO]    io.quarkus.arc:arc:jar:2.14.1.Final:compile
+[INFO]    io.quarkus.gizmo:gizmo:jar:1.4.0.Final:test
+[INFO]    io.quarkus:quarkus-arc:jar:2.14.1.Final:compile
+[INFO]    io.quarkus:quarkus-bootstrap-app-model:jar:2.14.1.Final:test
+[INFO]    io.quarkus:quarkus-bootstrap-core:jar:2.14.1.Final:test
+[INFO]    io.quarkus:quarkus-bootstrap-gradle-resolver:jar:2.14.1.Final:test
+[INFO]    io.quarkus:quarkus-bootstrap-maven-resolver:jar:2.14.1.Final:test
+[INFO]    io.quarkus:quarkus-bootstrap-runner:jar:2.14.1.Final:compile
+[INFO]    io.quarkus:quarkus-builder:jar:2.14.1.Final:test
+[INFO]    io.quarkus:quarkus-class-change-agent:jar:2.14.1.Final:test
+[INFO]    io.quarkus:quarkus-core-deployment:jar:2.14.1.Final:test
+[INFO]    io.quarkus:quarkus-core:jar:2.14.1.Final:compile
+[INFO]    io.quarkus:quarkus-credentials:jar:2.14.1.Final:compile
+[INFO]    io.quarkus:quarkus-datasource-common:jar:2.14.1.Final:compile
+[INFO]    io.quarkus:quarkus-datasource:jar:2.14.1.Final:compile
+[INFO]    io.quarkus:quarkus-development-mode-spi:jar:2.14.1.Final:compile
+[INFO]    io.quarkus:quarkus-devtools-utilities:jar:2.14.1.Final:test
+[INFO]    io.quarkus:quarkus-fs-util:jar:0.0.9:compile
+[INFO]    io.quarkus:quarkus-ide-launcher:jar:2.14.1.Final:compile
+[INFO]    io.quarkus:quarkus-junit5-internal:jar:2.14.1.Final:test
+[INFO]    io.quarkus:quarkus-junit5-properties:jar:2.14.1.Final:test
+[INFO]    io.quarkus:quarkus-junit5:jar:2.14.1.Final:test
+[INFO]    io.quarkus:quarkus-mutiny:jar:2.14.1.Final:compile
+[INFO]    io.quarkus:quarkus-netty:jar:2.14.1.Final:compile
+[INFO]    io.quarkus:quarkus-reactive-datasource:jar:2.14.1.Final:compile
+[INFO]    io.quarkus:quarkus-reactive-pg-client:jar:2.14.1.Final:compile
+[INFO]    io.quarkus:quarkus-smallrye-context-propagation:jar:2.14.1.Final:compile
+[INFO]    io.quarkus:quarkus-test-common:jar:2.14.1.Final:test
+[INFO]    io.quarkus:quarkus-vertx-latebound-mdc-provider:jar:2.14.1.Final:compile
+[INFO]    io.quarkus:quarkus-vertx:jar:2.14.1.Final:compile
+[INFO]    io.resys.hdes:hdes-client-api:jar:3.130.59:compile
+[INFO]    io.resys.hdes:hdes-store-thena:jar:3.130.59:compile
+[INFO]    io.resys.hdes:thena-docdb-api:jar:1.1.24:compile
+[INFO]    io.resys.hdes:thena-docdb-pgsql:jar:1.1.24:compile
+[INFO]    io.smallrye.common:smallrye-common-annotation:jar:1.13.2:compile
+[INFO]    io.smallrye.common:smallrye-common-classloader:jar:1.13.2:compile
+[INFO]    io.smallrye.common:smallrye-common-constraint:jar:1.13.2:compile
+[INFO]    io.smallrye.common:smallrye-common-expression:jar:1.13.2:compile
+[INFO]    io.smallrye.common:smallrye-common-function:jar:1.13.2:compile
+[INFO]    io.smallrye.common:smallrye-common-io:jar:1.13.2:compile
+[INFO]    io.smallrye.common:smallrye-common-vertx-context:jar:1.13.2:compile
+[INFO]    io.smallrye.config:smallrye-config-common:jar:2.12.1:compile
+[INFO]    io.smallrye.config:smallrye-config-core:jar:2.12.1:compile
+[INFO]    io.smallrye.config:smallrye-config:jar:2.12.1:compile
+[INFO]    io.smallrye.reactive:mutiny-smallrye-context-propagation:jar:1.8.0:compile
+[INFO]    io.smallrye.reactive:mutiny:jar:1.8.0:compile
+[INFO]    io.smallrye.reactive:smallrye-mutiny-vertx-core:jar:2.27.0:compile
+[INFO]    io.smallrye.reactive:smallrye-mutiny-vertx-pg-client:jar:2.27.0:compile
+[INFO]    io.smallrye.reactive:smallrye-mutiny-vertx-runtime:jar:2.27.0:compile
+[INFO]    io.smallrye.reactive:smallrye-mutiny-vertx-sql-client:jar:2.27.0:compile
+[INFO]    io.smallrye.reactive:vertx-mutiny-generator:jar:2.27.0:compile
+[INFO]    io.smallrye:jandex:jar:3.0.3:test
+[INFO]    io.smallrye:smallrye-context-propagation-api:jar:1.2.2:compile
+[INFO]    io.smallrye:smallrye-context-propagation-storage:jar:1.2.2:compile
+[INFO]    io.smallrye:smallrye-context-propagation:jar:1.2.2:compile
+[INFO]    io.smallrye:smallrye-fault-tolerance-vertx:jar:5.5.0:compile
+[INFO]    io.swagger.core.v3:swagger-annotations:jar:2.1.5:compile
+[INFO]    io.thestencil:stencil-client-api:jar:1.148.15:compile
+[INFO]    io.vertx:vertx-codegen:jar:4.3.4:compile
+[INFO]    io.vertx:vertx-core:jar:4.3.4:compile
+[INFO]    io.vertx:vertx-pg-client:jar:4.3.4:compile
+[INFO]    io.vertx:vertx-sql-client:jar:4.3.4:compile
+[INFO]    jakarta.annotation:jakarta.annotation-api:jar:1.3.5:compile
+[INFO]    jakarta.el:jakarta.el-api:jar:3.0.3:compile
+[INFO]    jakarta.enterprise:jakarta.enterprise.cdi-api:jar:2.0.2:compile
+[INFO]    jakarta.inject:jakarta.inject-api:jar:1.0:compile
+[INFO]    jakarta.interceptor:jakarta.interceptor-api:jar:1.2.5:compile
+[INFO]    jakarta.transaction:jakarta.transaction-api:jar:1.3.3:compile
+[INFO]    jakarta.validation:jakarta.validation-api:jar:2.0.2:compile
+[INFO]    jakarta.xml.bind:jakarta.xml.bind-api:jar:2.3.3:compile
+[INFO]    junit:junit:jar:4.13.2:test
+[INFO]    net.bytebuddy:byte-buddy-agent:jar:1.12.16:test
+[INFO]    net.bytebuddy:byte-buddy:jar:1.12.18:test
+[INFO]    net.java.dev.jna:jna:jar:5.8.0:test
+[INFO]    org.abego.treelayout:org.abego.treelayout.core:jar:1.0.3:compile
+[INFO]    org.aesh:aesh:jar:2.6:test
+[INFO]    org.aesh:readline:jar:2.2:test
+[INFO]    org.antlr:ST4:jar:4.3:compile
+[INFO]    org.antlr:antlr-runtime:jar:3.5.2:compile
+[INFO]    org.antlr:antlr4-runtime:jar:4.9.2:compile
+[INFO]    org.antlr:antlr4:jar:4.9.2:compile
+[INFO]    org.apache.commons:commons-collections4:jar:4.4:compile
+[INFO]    org.apache.commons:commons-compress:jar:1.21:test
+[INFO]    org.apache.commons:commons-csv:jar:1.9.0:compile
+[INFO]    org.apache.commons:commons-lang3:jar:3.12.0:compile
+[INFO]    org.apache.commons:commons-text:jar:1.9:compile
+[INFO]    org.apache.httpcomponents:httpclient:jar:4.5.13:test
+[INFO]    org.apache.httpcomponents:httpcore:jar:4.4.15:test
+[INFO]    org.apache.maven.resolver:maven-resolver-api:jar:1.6.3:test
+[INFO]    org.apache.maven.resolver:maven-resolver-connector-basic:jar:1.6.3:test
+[INFO]    org.apache.maven.resolver:maven-resolver-impl:jar:1.6.3:test
+[INFO]    org.apache.maven.resolver:maven-resolver-spi:jar:1.6.3:test
+[INFO]    org.apache.maven.resolver:maven-resolver-transport-wagon:jar:1.6.3:test
+[INFO]    org.apache.maven.resolver:maven-resolver-util:jar:1.6.3:test
+[INFO]    org.apache.maven.shared:maven-shared-utils:jar:3.3.4:test
+[INFO]    org.apache.maven.wagon:wagon-file:jar:3.5.1:test
+[INFO]    org.apache.maven.wagon:wagon-http-shared:jar:3.5.1:test
+[INFO]    org.apache.maven.wagon:wagon-http:jar:3.5.1:test
+[INFO]    org.apache.maven.wagon:wagon-provider-api:jar:3.5.1:test
+[INFO]    org.apache.maven:maven-artifact:jar:3.8.6:test
+[INFO]    org.apache.maven:maven-builder-support:jar:3.8.6:test
+[INFO]    org.apache.maven:maven-core:jar:3.8.6:test
+[INFO]    org.apache.maven:maven-embedder:jar:3.8.6:test
+[INFO]    org.apache.maven:maven-model-builder:jar:3.8.6:test
+[INFO]    org.apache.maven:maven-model:jar:3.8.6:test
+[INFO]    org.apache.maven:maven-plugin-api:jar:3.8.6:test
+[INFO]    org.apache.maven:maven-repository-metadata:jar:3.8.6:test
+[INFO]    org.apache.maven:maven-resolver-provider:jar:3.8.6:test
+[INFO]    org.apache.maven:maven-settings-builder:jar:3.8.6:test
+[INFO]    org.apache.maven:maven-settings:jar:3.8.6:test
+[INFO]    org.apache.pdfbox:fontbox:jar:2.0.16:compile
+[INFO]    org.apache.pdfbox:pdfbox:jar:2.0.16:compile
+[INFO]    org.apache.pdfbox:xmpbox:jar:2.0.16:compile
+[INFO]    org.apiguardian:apiguardian-api:jar:1.1.2:test
+[INFO]    org.awaitility:awaitility:jar:4.2.0:test
+[INFO]    org.checkerframework:checker-qual:jar:3.26.0:compile
+[INFO]    org.codehaus.groovy:groovy:jar:3.0.9:compile
+[INFO]    org.codehaus.plexus:plexus-cipher:jar:2.0:test
+[INFO]    org.codehaus.plexus:plexus-classworlds:jar:2.6.0:test
+[INFO]    org.codehaus.plexus:plexus-component-annotations:jar:2.1.0:test
+[INFO]    org.codehaus.plexus:plexus-interpolation:jar:1.26:test
+[INFO]    org.codehaus.plexus:plexus-sec-dispatcher:jar:2.0:test
+[INFO]    org.codehaus.plexus:plexus-utils:jar:3.3.0:test
+[INFO]    org.eclipse.microprofile.config:microprofile-config-api:jar:2.0.1:compile
+[INFO]    org.eclipse.microprofile.context-propagation:microprofile-context-propagation-api:jar:1.2:compile
+[INFO]    org.eclipse.sisu:org.eclipse.sisu.inject:jar:0.3.5:test
+[INFO]    org.eclipse.sisu:org.eclipse.sisu.plexus:jar:0.3.5:test
+[INFO]    org.ehcache:ehcache:jar:3.8.1:compile
+[INFO]    org.fusesource.jansi:jansi:jar:1.18:test
+[INFO]    org.glassfish.jaxb:jaxb-runtime:jar:2.3.3-b02:compile
+[INFO]    org.glassfish.jaxb:txw2:jar:2.3.3-b02:compile
+[INFO]    org.glassfish:jakarta.el:jar:3.0.4:compile
+[INFO]    org.glassfish:javax.json:jar:1.0.4:compile
+[INFO]    org.graalvm.sdk:graal-sdk:jar:22.3.0:compile
+[INFO]    org.hamcrest:hamcrest:jar:2.1:test
+[INFO]    org.hibernate.validator:hibernate-validator:jar:6.2.5.Final:compile
+[INFO]    org.immutables:gson:jar:2.8.8:provided
+[INFO]    org.immutables:value:jar:2.8.8:provided
+[INFO]    org.jboss.logging:commons-logging-jboss-logging:jar:1.0.0.Final:test
+[INFO]    org.jboss.logging:jboss-logging-annotations:jar:2.2.1.Final:compile
+[INFO]    org.jboss.logging:jboss-logging:jar:3.5.0.Final:compile
+[INFO]    org.jboss.logmanager:jboss-logmanager-embedded:jar:1.0.11:compile
+[INFO]    org.jboss.shrinkwrap:shrinkwrap-api:jar:1.2.6:test
+[INFO]    org.jboss.shrinkwrap:shrinkwrap-depchain:pom:1.2.6:test
+[INFO]    org.jboss.shrinkwrap:shrinkwrap-impl-base:jar:1.2.6:test
+[INFO]    org.jboss.shrinkwrap:shrinkwrap-spi:jar:1.2.6:test
+[INFO]    org.jboss.slf4j:slf4j-jboss-logmanager:jar:1.2.0.Final:compile
+[INFO]    org.jboss.threads:jboss-threads:jar:3.4.3.Final:compile
+[INFO]    org.jetbrains:annotations:jar:19.0.0:compile
+[INFO]    org.jsoup:jsoup:jar:1.11.3:compile
+[INFO]    org.junit.jupiter:junit-jupiter-api:jar:5.9.1:test
+[INFO]    org.junit.jupiter:junit-jupiter-engine:jar:5.9.1:test
+[INFO]    org.junit.jupiter:junit-jupiter-params:jar:5.9.1:test
+[INFO]    org.junit.jupiter:junit-jupiter:jar:5.9.1:test
+[INFO]    org.junit.platform:junit-platform-commons:jar:1.9.1:test
+[INFO]    org.junit.platform:junit-platform-engine:jar:1.9.1:test
+[INFO]    org.junit.platform:junit-platform-launcher:jar:1.9.1:test
+[INFO]    org.mockito:mockito-core:jar:4.8.1:test
+[INFO]    org.mockito:mockito-junit-jupiter:jar:4.8.1:test
+[INFO]    org.nibor.autolink:autolink:jar:0.6.0:compile
+[INFO]    org.objenesis:objenesis:jar:3.2:test
+[INFO]    org.opentest4j:opentest4j:jar:1.2.0:test
+[INFO]    org.ow2.asm:asm-analysis:jar:9.4:test
+[INFO]    org.ow2.asm:asm-commons:jar:9.4:test
+[INFO]    org.ow2.asm:asm-tree:jar:9.4:test
+[INFO]    org.ow2.asm:asm-util:jar:9.4:test
+[INFO]    org.ow2.asm:asm:jar:9.4:test
+[INFO]    org.projectlombok:lombok:jar:1.18.22:provided
+[INFO]    org.reactivestreams:reactive-streams:jar:1.0.3:compile
+[INFO]    org.rnorth.duct-tape:duct-tape:jar:1.0.8:test
+[INFO]    org.skyscreamer:jsonassert:jar:1.5.0:test
+[INFO]    org.slf4j:slf4j-api:jar:1.7.36:compile
+[INFO]    org.springframework:spring-core:jar:5.3.18:compile
+[INFO]    org.springframework:spring-expression:jar:5.3.18:compile
+[INFO]    org.springframework:spring-jcl:jar:5.3.18:compile
+[INFO]    org.testcontainers:database-commons:jar:1.17.5:test
+[INFO]    org.testcontainers:jdbc:jar:1.17.5:test
+[INFO]    org.testcontainers:junit-jupiter:jar:1.17.5:test
+[INFO]    org.testcontainers:postgresql:jar:1.17.5:test
+[INFO]    org.testcontainers:testcontainers:jar:1.17.5:test
+[INFO]    org.wildfly.common:wildfly-common:jar:1.5.4.Final-format-001:compile
+[INFO]    org.yaml:snakeyaml:jar:1.33:compile
+[INFO]    xmlpull:xmlpull:jar:1.1.3.1:test

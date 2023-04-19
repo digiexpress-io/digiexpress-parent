@@ -3,7 +3,6 @@ load("@contrib_rules_jvm//java:defs.bzl", "JUNIT5_DEPS", "java_test_suite")
 package(default_visibility = ["//visibility:public"])
 
 
-
 java_library(
     name = "api_dependencies",
     exports = [
@@ -87,22 +86,25 @@ java_library(
   ],
 )
 
+java_library(
+  name = "digiexpress_unit_tests_resources",
+  srcs = [],
+  resources = glob(["src/test/resources/**/*"]),
+  visibility = ["//visibility:public"],
+)
+
 
 java_test_suite(
     name = "digiexpress_unit_tests",
     srcs = glob(["src/test/java/**/*.java"]),
-    resources = glob(["src/test/resources/**", "pom.xml"]),
-        
-    # test_class = "io.digiexpress.client.tests.IntegrationTest",
-    
     runner = "junit5",
+    data = glob(["pom.xml"]),
     test_suffixes = ["Test.java"],
     runtime_deps = JUNIT5_DEPS,
     deps = [
+        ":digiexpress_unit_tests_resources",
         ":digiexpress-client-api",
         ":bean_processors",
-        ":api_dependencies",
-
 "@maven//:ch_qos_logback_logback_classic",
 "@maven//:ch_qos_logback_logback_core",
 "@maven//:com_aayushatharva_brotli4j_brotli4j",
@@ -117,6 +119,9 @@ java_test_suite(
 "@maven//:com_fasterxml_jackson_datatype_jackson_datatype_jsr310",
 "@maven//:org_junit_platform_junit_platform_reporting",
 "@maven//:com_fasterxml_classmate",
+"@maven//:com_github_docker_java_docker_java_api",
+"@maven//:com_github_docker_java_docker_java_transport_zerodep",
+"@maven//:com_github_docker_java_docker_java_transport",
 "@maven//:com_google_code_findbugs_jsr305",
 "@maven//:com_google_code_gson_gson",
 "@maven//:com_google_errorprone_error_prone_annotations",
@@ -287,8 +292,10 @@ java_test_suite(
 "@maven//:jakarta_transaction_jakarta_transaction_api",
 "@maven//:jakarta_validation_jakarta_validation_api",
 "@maven//:jakarta_xml_bind_jakarta_xml_bind_api",
+"@maven//:junit_junit",
 "@maven//:net_bytebuddy_byte_buddy_agent",
 "@maven//:net_bytebuddy_byte_buddy",
+"@maven//:net_java_dev_jna_jna",
 "@maven//:org_abego_treelayout_org_abego_treelayout_core",
 "@maven//:org_aesh_aesh",
 "@maven//:org_aesh_readline",
@@ -297,6 +304,7 @@ java_test_suite(
 "@maven//:org_antlr_antlr4_runtime",
 "@maven//:org_antlr_antlr4",
 "@maven//:org_apache_commons_commons_collections4",
+"@maven//:org_apache_commons_commons_compress",
 "@maven//:org_apache_commons_commons_csv",
 "@maven//:org_apache_commons_commons_lang3",
 "@maven//:org_apache_commons_commons_text",
@@ -383,11 +391,17 @@ java_test_suite(
 "@maven//:org_ow2_asm_asm",
 "@maven//:org_projectlombok_lombok",
 "@maven//:org_reactivestreams_reactive_streams",
+"@maven//:org_rnorth_duct_tape_duct_tape",
 "@maven//:org_skyscreamer_jsonassert",
 "@maven//:org_slf4j_slf4j_api",
 "@maven//:org_springframework_spring_core",
 "@maven//:org_springframework_spring_expression",
 "@maven//:org_springframework_spring_jcl",
+"@maven//:org_testcontainers_database_commons",
+"@maven//:org_testcontainers_jdbc",
+"@maven//:org_testcontainers_junit_jupiter",
+"@maven//:org_testcontainers_postgresql",
+"@maven//:org_testcontainers_testcontainers",
 "@maven//:org_wildfly_common_wildfly_common",
 "@maven//:org_yaml_snakeyaml",
 "@maven//:xmlpull_xmlpull",

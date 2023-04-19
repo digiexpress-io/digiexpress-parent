@@ -25,7 +25,7 @@ public class ReadDeps {
     for(final var r : result) {
       final var segments = r.split(":");
       System.out.println("\"" + 
-          segments[0] + ":" + segments[1] + ":" + segments[2]
+          segments[0] + ":" + segments[1] + ":" + segments[3]
           + "\",");
     }
     
@@ -39,33 +39,6 @@ public class ReadDeps {
   }
   
   
-  @Test
-  public void list() {
-    final var src = getDeps()
-        .replaceAll("\r\n", "\n")
-        .split("\n");
-    final var result = Arrays.asList(src).stream()
-        .map(r -> r.replaceAll("\\[INFO\\]", "").trim())
-        .filter(r -> !r.isBlank())
-        .sorted()
-        .distinct()
-        .toList();
-
-    System.out.println("TEST");
-    for(final var r : result) {
-      if(r.endsWith(":test")) {
-        System.out.println("\"" + r.substring(0, r.length() - 5) + "\",");
-      }
-    }
-    
-    System.out.println("COMPILE");
-    for(final var r : result) {
-      if(r.endsWith(":test")) {
-        continue;
-      }
-      System.out.println("\"" + r.substring(0, r.length() - 8)+ "\",");
-    }
-  }
   
 
   private String getDeps() {
