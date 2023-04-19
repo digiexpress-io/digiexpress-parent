@@ -1,85 +1,3 @@
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-
-RULES_JVM_EXTERNAL_TAG = "5.2"
-RULES_JVM_EXTERNAL_SHA ="f86fd42a809e1871ca0aabe89db0d440451219c3ce46c58da240c7dcdc00125f"
-http_archive(
-    name = "rules_jvm_external",
-    strip_prefix = "rules_jvm_external-%s" % RULES_JVM_EXTERNAL_TAG,
-    sha256 = RULES_JVM_EXTERNAL_SHA,
-    url = "https://github.com/bazelbuild/rules_jvm_external/releases/download/%s/rules_jvm_external-%s.tar.gz" % (RULES_JVM_EXTERNAL_TAG, RULES_JVM_EXTERNAL_TAG)
-)
-
-load("@rules_jvm_external//:repositories.bzl", "rules_jvm_external_deps")
-
-rules_jvm_external_deps()
-
-load("@rules_jvm_external//:setup.bzl", "rules_jvm_external_setup")
-
-rules_jvm_external_setup()
-
-
-
-CONTRIB_RULES_JVM_VERSION = "0.9.0"
-CONTRIB_RULES_JVM_SHA = "548f0583192ff79c317789b03b882a7be9b1325eb5d3da5d7fdcc4b7ca69d543"
-http_archive(
-    name = "contrib_rules_jvm",
-    sha256 = CONTRIB_RULES_JVM_SHA,
-    strip_prefix = "rules_jvm-%s" % CONTRIB_RULES_JVM_VERSION,
-    url = "https://github.com/bazel-contrib/rules_jvm/archive/refs/tags/v%s.tar.gz" % CONTRIB_RULES_JVM_VERSION,
-)
-
-load("@contrib_rules_jvm//:repositories.bzl", "contrib_rules_jvm_deps")
-contrib_rules_jvm_deps()
-load("@contrib_rules_jvm//:setup.bzl", "contrib_rules_jvm_setup")
-contrib_rules_jvm_setup()
-
-
-
-load("@rules_jvm_external//:defs.bzl", "maven_install")
-
-
-maven_install(
-    maven_install_json = "//:maven_install.json",
-    artifacts = [
-        "ch.qos.logback:logback-classic:1.2.11",
-        "com.fasterxml.jackson.core:jackson-core:2.13.4",
-        "com.fasterxml.jackson.core:jackson-annotations:2.13.4",
-        "com.fasterxml.jackson.datatype:jackson-datatype-guava:2.13.4",
-        "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.13.0",
-        "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.0",
-        "com.fasterxml.jackson.core:jackson-databind:2.13.0",
-        "com.google.code.findbugs:jsr305:3.0.2",
-        "com.google.guava:guava:31.0.1-jre",
-        "com.google.errorprone:error_prone_annotations:2.16",
-        "commons-codec:commons-codec:1.15",
-        "io.dialob:dialob-client-api:3.0.4",
-        "io.dialob:dialob-compiler:3.0.4",
-        "io.dialob:dialob-rule-parser:3.0.4",
-        "io.dialob:dialob-form-store-pgsql:3.0.4",
-        "io.dialob:dialob-api:2.2.3",
-        "io.resys.hdes:hdes-client-api:3.130.59",
-        "io.resys.hdes:hdes-store-thena:3.130.59",
-        "io.resys.hdes:thena-docdb-pgsql:1.1.24",
-        "io.resys.hdes:thena-docdb-api:1.1.24",
-        "io.smallrye.reactive:mutiny:1.8.0",
-        "io.smallrye.reactive:smallrye-mutiny-vertx-pg-client:2.27.0",
-        "io.vertx:vertx-pg-client:4.3.4",
-        "io.vertx:vertx-sql-client:4.3.4",
-        "io.thestencil:stencil-client-api:1.148.15",
-        "jakarta.validation:jakarta.validation-api:2.0.2",
-        "org.apache.commons:commons-lang3:3.12.0",
-        "org.ehcache:ehcache:3.8.1",
-        "org.immutables:gson:2.8.8",
-        "org.immutables:value:2.8.8",
-        "org.projectlombok:lombok:1.18.22",
-        "org.slf4j:slf4j-api:1.7.36",
-        "org.springframework.boot:spring-boot-autoconfigure:2.7.0",
-        "org.springframework.boot:spring-boot-starter-actuator:2.7.0",
-        "org.springframework.boot:spring-boot-starter-thymeleaf:2.7.0",
-        "org.springframework.boot:spring-boot-starter-web:2.7.0",
-        "org.springframework.boot:spring-boot:2.7.0",
-        "org.hibernate.validator:hibernate-validator:6.2.5.Final",
-
         
 "ch.qos.logback:logback-classic:1.2.11",
 "ch.qos.logback:logback-core:1.2.11",
@@ -112,8 +30,7 @@ maven_install(
 "com.openhtmltopdf:openhtmltopdf-jsoup-dom-converter:1.0.0",
 "com.openhtmltopdf:openhtmltopdf-pdfbox:1.0.0",
 "com.openhtmltopdf:openhtmltopdf-rtl-support:1.0.0",
-"com.sun.activation:jakarta.activation:1.2.1",
-
+"com.sun.activation:jakarta.activation:1.2.1:runtime
 "com.sun.istack:istack-commons-runtime:3.0.10",
 "com.thoughtworks.xstream:xstream:1.4.19",
 "com.vaadin.external.google:android-json:0.0.20131108.vaadin1",
@@ -349,8 +266,6 @@ maven_install(
 "org.junit.platform:junit-platform-commons:1.9.1",
 "org.junit.platform:junit-platform-engine:1.9.1",
 "org.junit.platform:junit-platform-launcher:1.9.1",
-"org.junit.platform:junit-platform-reporting:1.9.1",
-
 "org.mockito:mockito-core:4.8.1",
 "org.mockito:mockito-junit-jupiter:4.8.1",
 "org.nibor.autolink:autolink:0.6.0",
@@ -371,18 +286,3 @@ maven_install(
 "org.wildfly.common:wildfly-common:1.5.4.Final-format-001",
 "org.yaml:snakeyaml:1.33",
 "xmlpull:xmlpull:1.1.3.1",
-
-    ],
-    excluded_artifacts = ["org.hibernate:hibernate-validator"],
-    repositories = [
-    	"https://maven.google.com",
-    	"https://repo1.maven.org/maven2",
-    ],
-      fetch_sources = True,
-      version_conflict_policy = 'pinned',
-      strict_visibility = True,
-      generate_compat_repositories = False,
-)
-
-load("@maven//:defs.bzl", "pinned_maven_install")
-pinned_maven_install()

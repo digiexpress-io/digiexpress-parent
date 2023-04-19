@@ -26,6 +26,7 @@ import io.digiexpress.client.api.ImmutableCreateRelease;
 import io.digiexpress.client.spi.support.MainBranch;
 import io.digiexpress.client.tests.support.PgProfile;
 import io.digiexpress.client.tests.support.TestCase;
+import io.quarkus.bootstrap.resolver.maven.options.BootstrapMavenOptions;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 @QuarkusTest
 @TestProfile(PgProfile.class)
 public class IntegrationTest extends TestCase {
+  
   private final Duration atMost = Duration.ofMillis(100000);
   
   @Test
