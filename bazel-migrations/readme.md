@@ -1,3 +1,6 @@
+# baze LTS
+https://blog.bazel.build/2020/11/10/long-term-support-release.html
+
 # installing bazel
 Install bazel always using bazelisk!  
 Bazelisk is a (bazel version) wrapper. You will be able to use multiple bazel versions based on what project you are working with.  
@@ -7,7 +10,8 @@ Bazelisk will resolve the correct version via file called `.bazelversion` in the
 ## installation guide ...
 https://github.com/bazelbuild/bazelisk
 
-## Aster installing
+
+## After installing
 if you choose to install bazelisk directly from GO (language) sources then remember to:
 * add GO to your PATH if not already: `$(go env GOPATH)`
 * add symbolic link otherwise you will wont be able to find command `bazel`: `sudo ln -s $(go env GOPATH)/bin/bazelisk /usr/bin/bazel`

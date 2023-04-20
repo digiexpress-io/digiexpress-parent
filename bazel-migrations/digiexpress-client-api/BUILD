@@ -1,9 +1,7 @@
 load("@contrib_rules_jvm//java:defs.bzl", "JUNIT5_DEPS", "java_test_suite")
 
-package(default_visibility = ["//visibility:public"])
-
-
 java_library(
+    visibility = ["//visibility:private"],
     name = "api_dependencies",
     exports = [
       "@maven//:ch_qos_logback_logback_classic",
@@ -11,7 +9,7 @@ java_library(
       "@maven//:com_fasterxml_jackson_datatype_jackson_datatype_jdk8",
       "@maven//:com_fasterxml_jackson_datatype_jackson_datatype_jsr310",
       "@maven//:com_fasterxml_jackson_core_jackson_core",
-      
+
       "@maven//:com_google_code_findbugs_jsr305",
       "@maven//:commons_codec_commons_codec",
       "@maven//:io_dialob_dialob_client_api",
@@ -39,39 +37,7 @@ java_library(
       "@maven//:io_vertx_vertx_sql_client",
       "@maven//:com_google_guava_guava",
       "@maven//:com_google_errorprone_error_prone_annotations"
-    
     ],
-)
-
-
-java_plugin(
-    name = "immutables_plugin_2",
-    generates_api = True,
-    processor_class = "org.immutables.processor.ProxyProcessor",
-    deps = ["@maven//:org_immutables_value"],
-)
-
-java_plugin(
-    name = "lombok_plugin",
-    generates_api = True,
-    processor_class = "lombok.launch.AnnotationProcessorHider$AnnotationProcessor",
-    deps = ["@maven//:org_projectlombok_lombok"],
-)
-
-
-java_library(
-    name = "bean_processors",
-    exported_plugins = [
-      ":lombok_plugin",
-      ":immutables_plugin_2",
-    ],
-    visibility = ["//visibility:public"],
-    neverlink = 1,
-    exports = [
-      "@maven//:org_projectlombok_lombok",
-      "@maven//:org_immutables_value",
-    ],
-    tags = ["maven:compile_only"]
 )
 
 
@@ -81,16 +47,16 @@ java_library(
   resources = glob(["src/main/resources/**"]),
   visibility = ["//visibility:public"],
   deps = [
-    ":bean_processors",
+    "//tools/maven:bean_processors",
     ":api_dependencies"
   ],
 )
 
 java_library(
+  visibility = ["//visibility:private"],
   name = "digiexpress_unit_tests_resources",
   srcs = [],
   resources = glob(["src/test/resources/**/*"]),
-  visibility = ["//visibility:public"],
 )
 
 
@@ -104,7 +70,7 @@ java_test_suite(
     deps = [
         ":digiexpress_unit_tests_resources",
         ":digiexpress-client-api",
-        ":bean_processors",
+        "//tools/maven:bean_processors",
 "@maven//:ch_qos_logback_logback_classic",
 "@maven//:ch_qos_logback_logback_core",
 "@maven//:com_aayushatharva_brotli4j_brotli4j",
