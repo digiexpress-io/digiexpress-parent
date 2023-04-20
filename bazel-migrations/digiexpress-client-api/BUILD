@@ -1,5 +1,5 @@
+# Load the JUNIT5 for running tests with JUNIT5 runner and based on java file name pattern
 load("@contrib_rules_jvm//java:defs.bzl", "JUNIT5_DEPS", "java_test_suite")
-load("//tools/maven:maven_test_deps.bzl", "MAVEN_TEST_DEPS")
 
 java_library(
     visibility = ["//visibility:private"],
@@ -72,6 +72,7 @@ java_test_suite(
         ":digiexpress_unit_tests_resources",
         ":digiexpress-client-api",
         "//tools/maven:bean_processors",
-    ] + MAVEN_TEST_DEPS,
+        "//tools/maven:junit_deps"
+    ],
 )
 
