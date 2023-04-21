@@ -94,7 +94,7 @@ bazel run //tools/eclipse:project -- -h
 bazel test //digiexpress-client-api:digiexpress_unit_test
 bazel test --java_debug //digiexpress-client-api:digiexpress_unit_tests
 
-
+https://github.com/quarkusio/quarkus/discussions/32772
 https://skia.googlesource.com/buildbot/+/refs/heads/main/BAZEL_CHEATSHEET.md
 
 

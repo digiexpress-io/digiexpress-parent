@@ -1,10 +1,12 @@
-# Load the JUNIT5 for running tests with JUNIT5 runner and based on java file name pattern
-load("@contrib_rules_jvm//java:defs.bzl", "JUNIT5_DEPS", "java_test_suite")
 
+# our main artifact that we are trying to build
 java_library(
-    visibility = ["//visibility:private"],
-    name = "api_dependencies",
-    exports = [
+  name = "digiexpress-client-api",
+	srcs = glob(["src/main/java/**/*.java"]),
+  resources = glob(["src/main/resources/**"]),
+  visibility = ["//visibility:public"],
+  deps = [
+      "//tools/maven:bean_processors",
       "@maven//:ch_qos_logback_logback_classic",
       "@maven//:com_fasterxml_jackson_datatype_jackson_datatype_guava",
       "@maven//:com_fasterxml_jackson_datatype_jackson_datatype_jdk8",
@@ -38,21 +40,10 @@ java_library(
       "@maven//:io_vertx_vertx_sql_client",
       "@maven//:com_google_guava_guava",
       "@maven//:com_google_errorprone_error_prone_annotations"
-    ],
-)
-
-
-java_library(
-  name = "digiexpress-client-api",
-	srcs = glob(["src/main/java/**/*.java"]),
-  resources = glob(["src/main/resources/**"]),
-  visibility = ["//visibility:public"],
-  deps = [
-    "//tools/maven:bean_processors",
-    ":api_dependencies"
   ],
 )
 
+# all of our non java resources that we are using in the tests
 java_library(
   visibility = ["//visibility:private"],
   name = "digiexpress_unit_tests_resources",
@@ -61,11 +52,15 @@ java_library(
 )
 
 
+# Load the JUNIT5 for running tests with JUNIT5 runner and based on java file name pattern
+load("@contrib_rules_jvm//java:defs.bzl", "JUNIT5_DEPS", "java_test_suite")
+
+# run all the junit tests that end with Test.java suffix
 java_test_suite(
     name = "digiexpress_unit_tests",
     srcs = glob(["src/test/java/**/*.java"]),
     runner = "junit5",
-    data = glob(["pom.xml"]),
+#    data = glob(["pom.xml"]),
     test_suffixes = ["Test.java"],
     runtime_deps = JUNIT5_DEPS,
     deps = [
