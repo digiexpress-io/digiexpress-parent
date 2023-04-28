@@ -1,89 +1,15 @@
-# Directories #
-/build/
-bin/
-target/
-build/
-node/
-.bpmn/
-.ijwb
-bower_components/
-node_modules/
+/.yarn/
 
-*.releaseBackup
-release.properties
-*.versionsBackup
-# OS Files #
-.DS_Store
-*.class
- 
-# Package Files #
-*.jar
-*.war
-*.ear
-*.db
-bazel-*/
-######################
-# Windows
-######################
- 
-# Windows image file caches
-Thumbs.db 
- 
-# Folder config file
-Desktop.ini
- 
-######################
-# OSX
-######################
- 
-.DS_Store
-.svn
- 
-# Thumbnails
-._*
- 
-# Files that might appear on external disk
-.Spotlight-V100
-.Trashes
- 
- 
-######################
-# Eclipse
-######################
- 
-*.pydevproject
-/**/.project
-.metadata
-bin/**
-tmp/**
-tmp/**/*
-*.tmp
-*.bak
-*.swp
-*~.nib
-*.log
-local.properties
+
 .classpath
+.factorypath
+.project
 .settings/
-.loadpath
-/src/main/resources/rebel.xml
-# External tool builders
-.externalToolBuilders/
- 
-# Locally stored "Eclipse launch configurations"
-*.launch
- 
-# CDT-specific
-.cproject
- 
-# PDT-specific
-.buildpath
-
-######################
-# IDEA
-######################
 
 *.iml
+.ijwb/
 .idea/
-.factorypath
-/_backup/
+
+build/
+target/
+node_modules/

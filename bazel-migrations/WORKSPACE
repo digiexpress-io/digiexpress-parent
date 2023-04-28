@@ -46,8 +46,8 @@ load("@contrib_rules_jvm//:setup.bzl", "contrib_rules_jvm_setup")
 contrib_rules_jvm_setup()
 
 # Download node rules
-NODEJS_RULES_VERSION = "5.5.3"
-NODEJS_RULES_SHA = "f10a3a12894fc3c9bf578ee5a5691769f6805c4be84359681a785a0c12e8d2b6"
+NODEJS_RULES_VERSION = "5.8.2"
+NODEJS_RULES_SHA = "764a3b3757bb8c3c6a02ba3344731a3d71e558220adcb0cf7e43c9bba2c37ba8"
 http_archive(
     name = "build_bazel_rules_nodejs",
     sha256 = "f10a3a12894fc3c9bf578ee5a5691769f6805c4be84359681a785a0c12e8d2b6",
@@ -59,8 +59,8 @@ load("@build_bazel_rules_nodejs//:repositories.bzl", "build_bazel_rules_nodejs_d
 build_bazel_rules_nodejs_dependencies()
 
 # setup yarn dependencies
-load("//tools/yarn:yarn_setup.bzl", "yarn_setup")
-yarn_setup()
+# load("//tools/yarn:yarn_setup.bzl", "yarn_setup")
+# yarn_setup()
 
 
 # Setup maven dependencies, perform command equivalent to maven install, creates/updates/loads lock file and folder "@maven"
