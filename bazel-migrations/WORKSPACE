@@ -68,8 +68,8 @@ yarn_install(
     package_json = "//:package.json",
     quiet = False,
     yarn_lock = "//:yarn.lock",
-    symlink_node_modules = True,
 )
+
 
 # Setup maven dependencies, perform command equivalent to maven install, creates/updates/loads lock file and folder "@maven"
 load("//tools/maven:maven_setup.bzl", "maven_setup")

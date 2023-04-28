@@ -1,8 +1,6 @@
 load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
 load("@npm//@bazel/rollup:index.bzl", "rollup_bundle")
-load("@npm//@bazel/terser:index.bzl", "terser_minified", "ts_project")
-
-
+load("//tools:index.bzl", "terser_minified", "ts_project")
 
 SRCS = glob(
     ["src/**/*.ts"],

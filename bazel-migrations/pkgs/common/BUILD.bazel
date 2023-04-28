@@ -1,6 +1,12 @@
 load("@build_bazel_rules_nodejs//:index.bzl", "js_library", "pkg_npm")
-load("@npm//@bazel/terser:index.bzl", "terser_minified", "ts_project")
+load("//tools:index.bzl", "jest_test", "ts_project")
 
+jest_test(
+    name = "test",
+    srcs = glob(["src/**/*.ts"]),
+    config_file = "jest.config.js",
+    deps = ["//:tsconfig.json"],
+)
 
 SRCS = glob(
     ["src/**/*.ts"],
@@ -11,7 +17,7 @@ SRCS = glob(
 ts_project(
     name = "src",
     srcs = SRCS,
-    tsconfig = "//:ts-parent/tsconfig.json",
+    tsconfig = "//:tsconfig.json",
 )
 
 # Export library to be consumed

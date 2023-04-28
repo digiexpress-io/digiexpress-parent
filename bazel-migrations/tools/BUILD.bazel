@@ -1,0 +1,4 @@
+exports_files(
+    ["terser_config.json"],
+    visibility = ["//:__subpackages__"],
+)

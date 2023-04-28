@@ -9,7 +9,7 @@
 *.iml
 .ijwb/
 .idea/
-
+dist/
 
 
 build/
