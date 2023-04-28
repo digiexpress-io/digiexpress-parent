@@ -6,9 +6,8 @@
 # Root folder/project definition, optional, just informative
 workspace(
   name = "digiexpress_with_bazel",
-  managed_directories = {
-      "@npm": ["node_modules"],
-  },
+  # Map the @npm bazel workspace to the node_modules directory. This lets Bazel use the same node_modules as other local tooling.
+  managed_directories = {"@npm": ["node_modules"]},
 )
 
 # Import built in `rule` called `http_archive` for downloading extra bazel `rules`
@@ -60,16 +59,9 @@ load("@build_bazel_rules_nodejs//:repositories.bzl", "build_bazel_rules_nodejs_d
 build_bazel_rules_nodejs_dependencies()
 
 # setup yarn dependencies
-load("@build_bazel_rules_nodejs//:index.bzl", "yarn_install")
+load("//tools/yarn:yarn_setup.bzl", "yarn_setup")
+yarn_setup()
 
-
-yarn_install(
-    name = "npm",  # Name this "npm" so that Bazel Label references look like @npm//package
-    package_json = "//ts-parent:package.json",
-    quiet = False,
-    yarn_lock = "//ts-parent:yarn.lock",
-    symlink_node_modules = True,
-)
 
 # Setup maven dependencies, perform command equivalent to maven install, creates/updates/loads lock file and folder "@maven"
 load("//tools/maven:maven_setup.bzl", "maven_setup")
@@ -79,5 +71,3 @@ maven_setup()
 load("@maven//:defs.bzl", "pinned_maven_install")
 # install dependencies from the lock file
 pinned_maven_install()
-
-

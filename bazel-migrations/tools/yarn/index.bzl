@@ -2,8 +2,9 @@
 """
 
 
-load("@npm//@bazel/terser:index.bzl", _ts_project = "ts_project")
-load("@npm//@bazel/terser:index.bzl", _terser_minified = "terser_minified")
+load("@npm//@bazel/terser:index.bzl",
+  _hiddent_ts_project = "ts_project",
+  _hidden_terser_minified = "terser_minified")
 
 def _ts_project(name, srcs, tsconfig, deps = []):
     """A macro around the typescript ts_project rule
@@ -16,7 +17,7 @@ def _ts_project(name, srcs, tsconfig, deps = []):
     all_deps = ["@npm//tslib"]
     all_deps.extend(deps)
 
-    _ts_project(
+    _hiddent_ts_project(
         name = name,
         srcs = srcs,
         declaration = True,
@@ -32,7 +33,7 @@ def _terser_minified(name, src):
         name: name
         src: src
     """
-    _terser_minified(
+    _hidden_terser_minified(
         name = name,
         src = src,
         config_file = "//tools:terser_config.json",

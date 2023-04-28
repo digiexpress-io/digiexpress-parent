@@ -1,0 +1,33 @@
+load("@build_bazel_rules_nodejs//:index.bzl", "js_library", "pkg_npm")
+load("@npm//@bazel/terser:index.bzl", "terser_minified", "ts_project")
+
+
+SRCS = glob(
+    ["src/**/*.ts"],
+    exclude = ["src/**/*.spec.ts"],
+) + ["index.ts"]
+
+# Compile to JS
+ts_project(
+    name = "src",
+    srcs = SRCS,
+    tsconfig = "//:ts-parent/tsconfig.json",
+)
+
+# Export library to be consumed
+js_library(
+    name = "lib",
+    package_name = "@bazelmono/common",
+    srcs = ["package.json"],
+    visibility = ["//:__subpackages__"],
+    deps = [":src"],
+)
+
+# Create NPM Package
+pkg_npm(
+    name = "pkg",
+    package_name = "@bazelmono/common",
+    srcs = ["package.json"],
+    tgz = "bazelmono_common.tgz",
+    deps = [":src"],
+)

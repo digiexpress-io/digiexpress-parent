@@ -8,11 +8,5 @@ def yarn_setup():
         package_json = "//ts-parent:package.json",
         quiet = False,
         yarn_lock = "//ts-parent:yarn.lock",
-        symlink_node_modules = False,
-
-#        data = [
-#            YARN_LABEL,
-#            "//:.yarnrc"
-#        ],
-#        yarn = YARN_LABEL,
+        symlink_node_modules = True,
     )

@@ -1,4 +1,4 @@
-/.yarn/
+.yarn/
 
 
 .classpath
@@ -9,6 +9,8 @@
 *.iml
 .ijwb/
 .idea/
+
+
 
 build/
 target/
