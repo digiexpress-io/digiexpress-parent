@@ -59,8 +59,8 @@ load("@build_bazel_rules_nodejs//:repositories.bzl", "build_bazel_rules_nodejs_d
 build_bazel_rules_nodejs_dependencies()
 
 # setup yarn dependencies
-# load("//tools/yarn:yarn_setup.bzl", "yarn_setup")
-# yarn_setup()
+load("//tools/yarn:yarn_setup.bzl", "yarn_setup")
+yarn_setup()
 
 
 # Setup maven dependencies, perform command equivalent to maven install, creates/updates/loads lock file and folder "@maven"

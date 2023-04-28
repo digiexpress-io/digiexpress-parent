@@ -5,7 +5,7 @@ load("@build_bazel_rules_nodejs//:index.bzl", "yarn_install")
 def yarn_setup():
     yarn_install(
         name = "npm",  # Name this "npm" so that Bazel Label references look like @npm//package
-        package_json = "ts-parent:package.json",
+        package_json = "//ts-parent:package.json",
         quiet = False,
         yarn_lock = "//ts-parent:yarn.lock",
         symlink_node_modules = False,
