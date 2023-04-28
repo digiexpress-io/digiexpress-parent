@@ -469,6 +469,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@bazelmono/common@workspace:ts-parent/common":
+  version: 0.0.0-use.local
+  resolution: "@bazelmono/common@workspace:ts-parent/common"
+  languageName: unknown
+  linkType: soft
+
+"@bazelmono/root@workspace:ts-parent/app":
+  version: 0.0.0-use.local
+  resolution: "@bazelmono/root@workspace:ts-parent/app"
+  languageName: unknown
+  linkType: soft
+
 "@bcoe/v8-coverage@npm:^0.2.3":
   version: 0.2.3
   resolution: "@bcoe/v8-coverage@npm:0.2.3"

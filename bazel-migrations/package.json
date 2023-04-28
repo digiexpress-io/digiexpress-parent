@@ -9,7 +9,7 @@
   },
   "workspaces": {
     "packages": [
-      "./digiexpress-composer-ui"
+      "./ts-parent/*"
     ]
   },
   "devDependencies": {
