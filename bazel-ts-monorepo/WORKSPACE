@@ -49,7 +49,7 @@ yarn_install(
     quiet = False,
     yarn_lock = "//:yarn.lock",
     data = [
-        "//:.yarn/releases/yarn-1.22.17.cjs",
+#        "//:.yarn/releases/yarn-1.22.17.cjs",
         "//:.yarnrc",
     ],
     # Currently disabled due to:
@@ -60,6 +60,6 @@ yarn_install(
     # We prefer to symlink the `node_modules` to only maintain a single install.
     # See https://github.com/angular/dev-infra/pull/446#issuecomment-1059820287 for details.
     symlink_node_modules = True,
-    yarn = "//:.yarn/releases/yarn-1.22.17.cjs",
+#    yarn = "//:.yarn/releases/yarn-1.22.17.cjs",
 )
     
