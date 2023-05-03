@@ -1,0 +1,65 @@
+workspace(
+    # How this workspace would be referenced with absolute labels from another workspace
+    name = "bazel-ts-monorepo",
+    # Map the @npm bazel workspace to the node_modules directory. This lets Bazel use the same node_modules as other local tooling.
+    managed_directories = {"@npm": ["node_modules"]},
+)
+
+
+# The PKG rules are needed to build tar packages for integration tests. The builtin
+# rule in `@bazel_tools` is not Windows compatible and outdated.
+# NOTE: We cannot move past version 0.6.0 as pkg_tar no longer works on directories, which rules_nodejs
+#       relies on for node_modules setup.
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+http_archive(
+    name = "rules_pkg",
+    sha256 = "62eeb544ff1ef41d786e329e1536c1d541bb9bcad27ae984d57f18f314018e66",
+    urls = [
+        "https://mirror.bazel.build/github.com/bazelbuild/rules_pkg/releases/download/0.6.0/rules_pkg-0.6.0.tar.gz",
+        "https://github.com/bazelbuild/rules_pkg/releases/download/0.6.0/rules_pkg-0.6.0.tar.gz",
+    ],
+)
+
+load("//tools:bazel_deps.bzl", "fetch_build_bazel_rules_nodejs")
+
+fetch_build_bazel_rules_nodejs()
+
+load("@build_bazel_rules_nodejs//:repositories.bzl", "build_bazel_rules_nodejs_dependencies")
+
+build_bazel_rules_nodejs_dependencies()
+
+
+
+# Setup the Node.js toolchain.
+load("@rules_nodejs//nodejs:repositories.bzl", "nodejs_register_toolchains")
+
+nodejs_register_toolchains(
+    name = "nodejs",
+    node_version = "16.14.0",
+)
+
+# The yarn_install rule runs yarn anytime the package.json or yarn.lock file changes.
+# It also extracts any Bazel rules distributed in an npm package.
+load("@build_bazel_rules_nodejs//:index.bzl", "yarn_install")
+load("//:npm_package_archives.bzl", "npm_package_archives")
+
+yarn_install(
+    name = "npm",  # Name this "npm" so that Bazel Label references look like @npm//package
+    package_json = "//:package.json",
+    quiet = False,
+    yarn_lock = "//:yarn.lock",
+    data = [
+        "//:.yarn/releases/yarn-1.22.17.cjs",
+        "//:.yarnrc",
+    ],
+    # Currently disabled due to:
+    #  1. Missing Windows support currently.
+    #  2. Incompatibilites with the `ts_library` rule.
+    exports_directories_only = False,
+    manual_build_file_contents = npm_package_archives(),
+    # We prefer to symlink the `node_modules` to only maintain a single install.
+    # See https://github.com/angular/dev-infra/pull/446#issuecomment-1059820287 for details.
+    symlink_node_modules = True,
+    yarn = "//:.yarn/releases/yarn-1.22.17.cjs",
+)
+    
