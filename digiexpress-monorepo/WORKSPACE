@@ -32,6 +32,8 @@ nodejs_register_toolchains(
     name = "nodejs",
     node_version = "16.14.0",
 )
+
+
 yarn_install(
     name = "npm",  # Name this "npm" so that Bazel Label references look like @npm//package
     package_json = "//ts-parent:package.json",
@@ -50,4 +52,3 @@ yarn_install(
     symlink_node_modules = True,
     yarn = "//ts-parent/tools/releases:yarn-3.1.1.cjs",
 )
-

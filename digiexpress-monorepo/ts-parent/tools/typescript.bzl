@@ -1,6 +1,6 @@
 """Wrapper for compiling with typescript
 """
-
+load("@rules_nodejs//nodejs/private:ts_project.bzl", _ts_project_lib = "ts_project")
 load("@npm//@bazel/typescript:index.bzl", _ts_project = "ts_project")
 
 def ts_project(name, srcs, tsconfig, deps = []):
@@ -18,6 +18,8 @@ def ts_project(name, srcs, tsconfig, deps = []):
     _ts_project(
         name = name,
         srcs = srcs,
+
+        allow_js = True,
         declaration = True,
         declaration_map = True,
         tsconfig = tsconfig,

@@ -1,36 +1,46 @@
 {
-    "compilerOptions": {
-        "declaration": true,
-        "declarationMap": true,
-        "downlevelIteration": true,
-        "esModuleInterop": true,
-        "emitDecoratorMetadata": true,
-        "experimentalDecorators": true,
-        "forceConsistentCasingInFileNames": true,
-        "importHelpers": true,
-        "importsNotUsedAsValues": "preserve",
-        "lib": ["DOM", "ESNext"],
-        "isolatedModules": false,
-        "jsx": "react-jsx",
-        "module": "ESNext",
-        "moduleResolution": "Node",
-        "noErrorTruncation": true,
-        "strict": true,
-        "target": "ES5",
+  "compilerOptions": {
+    "declaration": true,
+    "declarationMap": true,
+    "downlevelIteration": true,
+    "esModuleInterop": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "importHelpers": true,
+    "importsNotUsedAsValues": "preserve",
+    "lib": [
+      "es6",
+      "es2017",
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "isolatedModules": false,
+    "jsx": "react-jsx",
 
-        "rootDirs": [
-            "../ts-parent",
-            "../bazel-out/k8-fastbuild/bin/ts-parent",
-            "../bazel-out/host/bin/ts-parent",
-            "../bazel-out/darwin-fastbuild/bin/ts-parent",
-            "../x64_windows-fastbuild/bin/ts-parent",
-            "../bazel-out/darwin-dbg/bin/ts-parent",
-            "../bazel-out/k8-dbg/bin/ts-parent",
-            "../bazel-out/x64_windows-dbg/bin/ts-parent"
-        ]
-    },
-
-    // If building without sandboxing, we need to prevent TypeScript from descending into
-    // Bazel's external folder which contains third-party Bazel dependencies.
-    "exclude": ["../ts-parent/node_modules/*", "external/*"]
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "noErrorTruncation": true,
+    "strict": true,
+    "target": "ES5",
+    "typeRoots": ["../ts-parent/@types", "../ts-parent/node_modules/@types"],
+    "rootDirs": [
+      "../ts-parent",
+      "../bazel-out/k8-fastbuild/bin/ts-parent",
+      "../bazel-out/host/bin/ts-parent",
+      "../bazel-out/darwin-fastbuild/bin/ts-parent",
+      "../x64_windows-fastbuild/bin/ts-parent",
+      "../bazel-out/darwin-dbg/bin/ts-parent",
+      "../bazel-out/k8-dbg/bin/ts-parent",
+      "../bazel-out/x64_windows-dbg/bin/ts-parent"
+    ]
+  },
+  // If building without sandboxing, we need to prevent TypeScript from descending into
+  // Bazel's external folder which contains third-party Bazel dependencies.
+  "exclude": [
+    "../ts-parent/node_modules/*",
+    "external/*"
+  ]
 }

@@ -1,0 +1,4 @@
+exports_files(
+    ["favicon.ico", "index.html", "manifest.json"],
+    visibility = ["//ts-parent:__subpackages__"],
+)
