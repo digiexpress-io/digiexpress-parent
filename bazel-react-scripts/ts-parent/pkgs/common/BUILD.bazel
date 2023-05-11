@@ -1,0 +1,39 @@
+load("@build_bazel_rules_nodejs//:index.bzl", "js_library", "pkg_npm")
+load("//ts-parent/tools:index.bzl", "jest_test", "ts_project")
+
+jest_test(
+    name = "test",
+    srcs = glob(["src/**/*.ts"]),
+    config_file = "jest.config.js",
+    deps = ["//ts-parent:tsconfig.json"],
+)
+
+SRCS = glob(
+    ["src/**/*.ts"],
+    exclude = ["src/**/*.spec.ts"],
+) + ["index.ts"]
+
+# Compile to JS
+ts_project(
+    name = "src-common-compile",
+    srcs = SRCS,
+    tsconfig = "//ts-parent:tsconfig.json",
+)
+
+# Export library to be consumed
+js_library(
+    name = "lib",
+    package_name = "@bazelmono/common",
+    srcs = ["package.json"],
+    visibility = ["//:__subpackages__"],
+    deps = [":src-common-compile"],
+)
+
+# Create NPM Package
+pkg_npm(
+    name = "pkg",
+    package_name = "@bazelmono/common",
+    srcs = ["package.json"],
+    tgz = "bazelmono_common.tgz",
+    deps = [":src"],
+)
