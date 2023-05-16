@@ -1,0 +1,29 @@
+package io.digiexpress;
+
+import io.resys.hdes.client.api.programs.ServiceData;
+import io.resys.hdes.client.api.programs.ServiceData.ServiceRef;
+import io.resys.hdes.client.api.ast.AstBody.AstBodyType;
+import java.io.Serializable;
+
+
+//@ServiceRef(value="newService", type=AstBodyType.DT)
+public class Type1Service {
+
+  public Output execute(Input input) {
+    Output output = new Output();
+    output.fullName = input.first + input.last;
+    return output;
+  }
+  
+  
+  @ServiceData
+  public static class Input implements Serializable {
+    String first;
+    String last;
+  }
+  
+  @ServiceData
+  public static class Output implements Serializable {
+    String fullName;
+  }
+}

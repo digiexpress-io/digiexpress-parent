@@ -1,0 +1,47 @@
+# experimental
+bazel_dep(name = "rules_jvm_external", version = "5.1")
+
+
+maven = use_extension("@rules_jvm_external//:extensions.bzl", "maven")
+
+maven.install(
+    # for initial build comment out lock file, and execute: bazel run @maven//:pin, after  bazel run @unpinned_maven//:pin
+    lock_file = "maven_install.json",
+
+    # from your build.gradle or pom.xml file.
+    artifacts = [
+        "ch.qos.logback:logback-classic:jar:1.2.11",
+        "com.fasterxml.jackson.datatype:jackson-datatype-guava:jar:2.13.4",
+        "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:jar:2.13.0",
+        "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:jar:2.13.0",
+        "com.google.code.findbugs:jsr305:jar:3.0.2",
+        "commons-codec:commons-codec:jar:1.15",
+        "io.dialob:dialob-client-api:jar:3.0.4",
+        "io.dialob:dialob-form-store-pgsql:jar:3.0.4",
+        "io.resys.hdes:hdes-client-api:jar:3.130.59",
+        "io.resys.hdes:hdes-store-thena:jar:3.130.59",
+        "io.resys.hdes:thena-docdb-pgsql:jar:1.1.24",
+        "io.smallrye.reactive:mutiny:jar:1.8.0",
+        "io.thestencil:stencil-client-api:jar:1.148.15",
+        "jakarta.validation:jakarta.validation-api:jar:2.0.2",
+        "org.apache.commons:commons-lang3:jar:3.12.0",
+        "org.ehcache:ehcache:jar:3.8.1",
+        "org.immutables:gson:jar:2.8.8",
+        "org.immutables:value:jar:2.8.8",
+        "org.projectlombok:lombok:jar:1.18.22",
+        "org.slf4j:slf4j-api:jar:1.7.36",
+        "org.springframework.boot:spring-boot-autoconfigure:jar:2.7.0",
+        "org.springframework.boot:spring-boot-starter-actuator:jar:2.7.0",
+        "org.springframework.boot:spring-boot-starter-thymeleaf:jar:2.7.0",
+        "org.springframework.boot:spring-boot-starter-web:jar:2.7.0",
+        "org.springframework.boot:spring-boot:jar:2.7.0",
+        "org.hibernate.validator:hibernate-validator:6.2.5.Final"
+
+    ],
+    
+    exclusions = ["org.hibernate:hibernate-validator"],
+    excluded_artifacts = ["{ \"group\": \"org.hibernate\", \"artifact\": \"hibernate-validator\"}"]
+    
+)
+# for initial build use this instead -> use_repo(maven, "maven")
+use_repo(maven, "maven", "unpinned_maven")

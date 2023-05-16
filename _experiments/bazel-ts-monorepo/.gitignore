@@ -1,0 +1,8 @@
+node_modules
+bazel-out
+dist
+tmp
+coverage
+
+.DS_Store
+yarn-error.log

@@ -1,0 +1,36 @@
+{
+    "compilerOptions": {
+        "declaration": true,
+        "declarationMap": true,
+        "downlevelIteration": true,
+        "esModuleInterop": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "forceConsistentCasingInFileNames": true,
+        "importHelpers": true,
+        "importsNotUsedAsValues": "preserve",
+        "lib": ["DOM", "ESNext"],
+        "isolatedModules": false,
+        "jsx": "react-jsx",
+        "module": "ESNext",
+        "moduleResolution": "Node",
+        "noErrorTruncation": true,
+        "strict": true,
+        "target": "ES5",
+
+        "rootDirs": [
+            ".",
+            "./bazel-out/host/bin",
+            "./bazel-out/darwin-fastbuild/bin",
+            "./bazel-out/k8-fastbuild/bin",
+            "./bazel-out/x64_windows-fastbuild/bin",
+            "./bazel-out/darwin-dbg/bin",
+            "./bazel-out/k8-dbg/bin",
+            "./bazel-out/x64_windows-dbg/bin"
+        ]
+    },
+
+    // If building without sandboxing, we need to prevent TypeScript from descending into
+    // Bazel's external folder which contains third-party Bazel dependencies.
+    "exclude": ["node_modules/*", "external/*"]
+}
