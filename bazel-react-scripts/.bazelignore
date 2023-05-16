@@ -1,4 +1,0 @@
-# NB: semantics here are not the same as .gitignore
-node_modules
-dist
-bazel-out
