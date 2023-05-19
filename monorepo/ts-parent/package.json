@@ -1,7 +1,12 @@
 {
-  "name": "create-react-app",
-  "version": "0.1.0",
-  "private": true,
+  "devDependencies": {
+    "@bazel/ibazel": "0.16.2",
+    "@tsconfig/node16-strictest": "1.0.4",
+    "@types/node": "18.11.9",
+    "@typescript-eslint/eslint-plugin": "5.44.0",
+    "@typescript-eslint/parser": "5.44.0",
+    "typescript": "4.9.3"
+  },
   "dependencies": {
     "eslint-config-react-app": "^7.0.1",
     "react": "18.2.0",
@@ -9,33 +14,8 @@
     "react-scripts": "5.0.1",
     "web-vitals": "3.1.0"
   },
-  "devDependencies": {
-    "@bazel/ibazel": "0.16.2",
-    "@typescript-eslint/eslint-plugin": "5.44.0",
-    "@typescript-eslint/parser": "5.44.0",
-    "typescript": "4.9.3"
-  },
   "scripts": {
-    "start": "ibazel run //ts-parent:start",
-    "build": "bazel build //:build",
-    "test": "ibazel test //src:src_test"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+    "start": "ibazel run //ts-parent/apps/react-cra-example:start"
   },
   "pnpm": {
     "packageExtensions": {

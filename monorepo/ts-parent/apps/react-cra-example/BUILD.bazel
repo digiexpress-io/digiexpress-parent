@@ -1,0 +1,45 @@
+load("@aspect_rules_js//js:defs.bzl", "js_library", "js_run_devserver", "js_test")
+load("@aspect_rules_ts//ts:defs.bzl", "ts_config")
+load("@npm//ts-parent:react-scripts/package_json.bzl", cra_bin = "bin")
+
+
+
+
+CRA_DEPS = [
+    "//ts-parent/apps/react-cra-example/src",
+    "//ts-parent/apps/react-cra-example/public",
+    "//ts-parent/apps/react-cra-example:package.json",
+    
+    "//ts-parent:node_modules/eslint-config-react-app",
+    "//ts-parent:node_modules/react-dom",
+    "//ts-parent:node_modules/react-scripts",
+    "//ts-parent:node_modules/react",
+    "//ts-parent:node_modules/typescript",
+    "//ts-parent:node_modules/web-vitals",
+]
+
+cra_bin.react_scripts(
+    # Note: If you want to change the name make sure you update BUILD_PATH below accordingly
+    # https://create-react-app.dev/docs/advanced-configuration/
+    name = "build",
+    
+    args = ["build/ts-parent"],
+    srcs = CRA_DEPS,
+    env = {"BUILD_PATH": "./build/ts-parent"},
+    out_dirs = ["build/ts-parent"],
+)
+
+
+js_run_devserver(
+    name = "start",
+    args = ["start"],
+    chdir = package_name(),
+    command = "../../node_modules/.bin/react-scripts", # inside chdir -> node modules
+    data = CRA_DEPS,
+)
+
+js_library(
+    name = "package_json",
+    srcs = ["package.json"],
+    visibility = ["//visibility:public"],
+)
