@@ -85,3 +85,7 @@ do
   printf "$git_move_command$file_name\n";
   git mv $file_name $file_name
 done
+
+git commit -am "repo: '$ssh_repo_url', branch: '$ssh_repo_branch' migrated to: '$new_file_location'"
+
+
