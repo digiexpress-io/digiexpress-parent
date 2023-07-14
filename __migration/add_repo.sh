@@ -9,7 +9,7 @@ read ssh_repo_branch
 echo "Project nature: 'mvn' or 'ts'?"
 read repo_nature
 
-if [ "$repo_nature" != 'mvn' ] || [ "$repo_nature" != 'ts' ]; then
+if [ "$repo_nature" != 'mvn' ] && [ "$repo_nature" != 'ts' ]; then
   echo "unsupported option ... $repo_nature"
   exit
 fi
