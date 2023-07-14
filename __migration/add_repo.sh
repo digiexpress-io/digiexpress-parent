@@ -41,10 +41,23 @@ git clone $ssh_repo_url
 git checkout $ssh_repo_branch
 cd "../../"
 
+
+
+new_file_location=""
+if [ "$repo_nature" != 'mvn' ]; then
+  new_file_location='mvn_setup/$ssh_repo_name'
+fi
+if [ "$repo_nature" != 'ts' ]; then
+  new_file_location='ts_setup/$ssh_repo_name'
+fi
+
+mkdir $new_file_location
+
 echo "=============================================="
 echo "Repo added:"
 echo "location: $repo_location"
 echo "currently at: $(pwd)"
+echo "migrating to: $(new_file_location)"
 echo "=============================================="
 echo "Type 'yes' for continue"
 read confirmation
@@ -58,19 +71,8 @@ fi
 
 
 git remote add -f $ssh_repo_name $repo_location
-git merge "$ssh_repo_name/$ssh_repo_branch"  --no-commit --allow-unrelated-histories
-
-
-echo "=============================================="
-new_file_location=""
-if [ "$repo_nature" != 'mvn' ]; then
-  new_file_location='mvn_setup/$ssh_repo_name'
-fi
-if [ "$repo_nature" != 'ts' ]; then
-  new_file_location='ts_setup/$ssh_repo_name'
-fi
-
-mkdir $new_file_location
+git merge "$ssh_repo_name/$ssh_repo_branch" --allow-unrelated-histories
+# --no-commit 
 
 git_move_command="file to be moved: "
 for file_name in $(ls -1a);
