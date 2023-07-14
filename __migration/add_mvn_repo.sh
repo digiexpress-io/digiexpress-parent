@@ -9,6 +9,10 @@ read ssh_repo_branch
 echo "Project nature: 'mvn' or 'ts'?"
 read repo_nature
 
+if [ "$repo_nature" != 'mvn' ] || [ "$repo_nature" != 'ts' ]; then
+  echo "unsupported option ... $repo_nature"
+  exit
+fi
 
 
 ssh_repo_name=$(basename $ssh_repo_url .git)
@@ -24,6 +28,8 @@ echo "Type 'yes' for continue"
 read confirmation
 
 
+
+
 if [ "$confirmation" != 'yes' ]; then
   echo "Cancelling ..."
   exit
@@ -37,7 +43,7 @@ cd "../../"
 
 echo "=============================================="
 echo "Repo added:"
-echo "location: $repo_location",
+echo "location: $repo_location"
 echo "currently at: $(pwd)"
 echo "=============================================="
 echo "Type 'yes' for continue"
@@ -55,6 +61,14 @@ git remote add -f $ssh_repo_name $repo_location
 git merge "$ssh_repo_name/$ssh_repo_branch"  --no-commit --allow-unrelated-histories
 
 
+echo "=============================================="
+new_file_location=""
+if [ "$repo_nature" != 'mvn' ]; then
+  new_file_location='mvn_setup/$ssh_repo_name/'
+fi
+if [ "$repo_nature" != 'ts' ]; then
+  new_file_location='ts_setup/$ssh_repo_name/'
+fi
 
 git_move_command="file to be moved: "
 for file_name in $(ls -1a);
@@ -69,4 +83,5 @@ do
     continue                    
   fi                            
   printf "$git_move_command$file_name\n";
+  git mv $file_name $file_name
 done
