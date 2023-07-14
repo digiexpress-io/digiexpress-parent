@@ -70,7 +70,8 @@ if [ "$repo_nature" != 'ts' ]; then
   new_file_location='ts_setup/$ssh_repo_name'
 fi
 
-mkdir = 
+mkdir $new_file_location
+
 git_move_command="file to be moved: "
 for file_name in $(ls -1a);
 do 	    
