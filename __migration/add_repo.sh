@@ -64,12 +64,13 @@ git merge "$ssh_repo_name/$ssh_repo_branch"  --no-commit --allow-unrelated-histo
 echo "=============================================="
 new_file_location=""
 if [ "$repo_nature" != 'mvn' ]; then
-  new_file_location='mvn_setup/$ssh_repo_name/'
+  new_file_location='mvn_setup/$ssh_repo_name'
 fi
 if [ "$repo_nature" != 'ts' ]; then
-  new_file_location='ts_setup/$ssh_repo_name/'
+  new_file_location='ts_setup/$ssh_repo_name'
 fi
 
+mkdir = 
 git_move_command="file to be moved: "
 for file_name in $(ls -1a);
 do 	    
@@ -83,9 +84,11 @@ do
     continue                    
   fi                            
   printf "$git_move_command$file_name\n";
-  git mv $file_name $file_name
+  new_loc='$new_file_location/$file_name'
+  git mv $file_name $new_loc 
 done
 
+git add $new_file_location
 git commit -am "repo: '$ssh_repo_url', branch: '$ssh_repo_branch' migrated to: '$new_file_location'"
 
 
