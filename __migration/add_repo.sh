@@ -44,20 +44,20 @@ cd "../../"
 
 
 new_file_location=""
-if [ "$repo_nature" != 'mvn' ]; then
-  new_file_location='mvn_setup/$ssh_repo_name'
+if [ "$repo_nature" == 'mvn' ]; then
+  new_file_location="mvn_setup/$ssh_repo_name"
 fi
-if [ "$repo_nature" != 'ts' ]; then
-  new_file_location='ts_setup/$ssh_repo_name'
+if [ "$repo_nature" == 'ts' ]; then
+  new_file_location="ts_setup/$ssh_repo_name"
 fi
 
-mkdir $new_file_location
+mkdir -p "$new_file_location"
 
 echo "=============================================="
 echo "Repo added:"
 echo "location: $repo_location"
 echo "currently at: $(pwd)"
-echo "migrating to: $(new_file_location)"
+echo "migrating to: $new_file_location"
 echo "=============================================="
 echo "Type 'yes' for continue"
 read confirmation
@@ -74,7 +74,7 @@ git remote add -f $ssh_repo_name $repo_location
 git merge "$ssh_repo_name/$ssh_repo_branch" --allow-unrelated-histories
 # --no-commit 
 
-git_move_command="file to be moved: "
+
 for file_name in $(ls -1a);
 do 	    
   if [ "$file_name" == '.git' ] || 
@@ -86,12 +86,17 @@ do
   	 [ "$file_name" == '..' ]; then
     continue                    
   fi                            
-  printf "$git_move_command$file_name\n";
-  new_loc='$new_file_location/$file_name'
+  new_loc="$new_file_location/$file_name"
+  
+  echo "file to be moved: $file_name - $new_loc"
   git mv $file_name $new_loc 
 done
 
+
+
+
 git add $new_file_location
 git commit -am "repo: '$ssh_repo_url', branch: '$ssh_repo_branch' migrated to: '$new_file_location'"
+
 
 
