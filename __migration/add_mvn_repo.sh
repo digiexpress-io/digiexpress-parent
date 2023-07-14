@@ -11,7 +11,7 @@ read repo_nature
 
 
 
-ssh_repo_name=$(basename git@github.com:digiexpress-io/digiexpress-parent.git .git)
+ssh_repo_name=$(basename $ssh_repo_url .git)
 echo "Using migration config:"
 echo "=============================================="
 echo "repository will be cloned: $ssh_repo_url"
