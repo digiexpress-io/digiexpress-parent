@@ -1,0 +1,32 @@
+on:
+  push:
+    branches:
+      - main
+
+name: composer-release
+jobs:
+  build:
+    name: Create Release
+    if: "!startsWith(github.event.head_commit.message, 'release')"
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        ref: main
+        token: ${{ secrets.REPO_TOKEN }}
+
+    - name: Setup node and yarn
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16.13.1'
+        registry-url: 'https://registry.npmjs.org'
+
+    - name: Run release script
+      run: ./.build-scripts/build-hdes-composer-release.sh
+      env:
+        CI: false
+        YARN_NPM_AUTH_TOKEN: ${{ secrets.HDES_BOT_TOKEN }}
+        GIT_EMAIL: olev.mutso@gmail.com 
+        GIT_USER: olev.mutso
+        
