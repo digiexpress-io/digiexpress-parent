@@ -16,13 +16,11 @@ fi
 
 
 ssh_repo_name=$(basename $ssh_repo_url .git)
-repo_location="__migration/cloned_repos/$ssh_repo_name"
 echo "Using migration config:"
 echo "=============================================="
 echo "repository will be cloned: $ssh_repo_url"
 echo "repository branch: $ssh_repo_branch"
 echo "repository basename: $ssh_repo_name"
-echo "repository location: $repo_location"
 echo "=============================================="
 echo "Type 'yes' for continue"
 read confirmation
@@ -47,7 +45,6 @@ mkdir -p "$new_file_location"
 
 echo "=============================================="
 echo "Repo added:"
-echo "location: $repo_location"
 echo "currently at: $(pwd)"
 echo "migrating to: $new_file_location"
 echo "=============================================="
