@@ -35,14 +35,6 @@ if [ "$confirmation" != 'yes' ]; then
   exit
 fi                            
 
-
-cd "cloned_repos"
-git clone $ssh_repo_url
-git checkout $ssh_repo_branch
-cd "../../"
-
-
-
 new_file_location=""
 if [ "$repo_nature" == 'mvn' ]; then
   new_file_location="mvn_setup/$ssh_repo_name"
@@ -70,7 +62,8 @@ fi
 
 
 
-git remote add -f $ssh_repo_name $repo_location
+git remote add $ssh_repo_name $ssh_repo_url
+git fetch $ssh_repo_name
 git merge "$ssh_repo_name/$ssh_repo_branch" --allow-unrelated-histories
 # --no-commit 
 
