@@ -1,0 +1,166 @@
+---
+token:
+  text: "expression{createEntity(10,20,40)}expression{createPerson('sam','vimes').firstName}<EOF>"
+  start:
+    line: 1
+    col: 1
+  end:
+    line: 3
+    col: 1
+values:
+- token:
+    text: "createEntity(10,20,40)"
+    start:
+      line: 1
+      col: 13
+    end:
+      line: 1
+      col: 37
+  id:
+    token:
+      text: "createEntity(10,20,40)"
+      start:
+        line: 1
+        col: 13
+      end:
+        line: 1
+        col: 37
+    value: ""
+  headers:
+    token:
+      text: "createEntity(10,20,40)"
+      start:
+        line: 1
+        col: 13
+      end:
+        line: 1
+        col: 37
+    acceptDefs: []
+    returnDefs: []
+  src: "createEntity(10, 20, 40)"
+  value:
+    token:
+      text: "createEntity(10,20,40)"
+      start:
+        line: 1
+        col: 13
+      end:
+        line: 1
+        col: 37
+    name:
+      token:
+        text: "createEntity"
+        start:
+          line: 1
+          col: 13
+        end:
+          line: 1
+          col: 25
+      value: "createEntity"
+    values:
+    - token:
+        text: "10"
+        start:
+          line: 1
+          col: 26
+        end:
+          line: 1
+          col: 28
+      type: "INTEGER"
+      value: "10"
+    - token:
+        text: "20"
+        start:
+          line: 1
+          col: 30
+        end:
+          line: 1
+          col: 32
+      type: "INTEGER"
+      value: "20"
+    - token:
+        text: "40"
+        start:
+          line: 1
+          col: 34
+        end:
+          line: 1
+          col: 36
+      type: "INTEGER"
+      value: "40"
+    next:
+      empty: true
+      present: false
+- token:
+    text: "createPerson('sam','vimes').firstName"
+    start:
+      line: 2
+      col: 13
+    end:
+      line: 2
+      col: 51
+  id:
+    token:
+      text: "createPerson('sam','vimes').firstName"
+      start:
+        line: 2
+        col: 13
+      end:
+        line: 2
+        col: 51
+    value: ""
+  headers:
+    token:
+      text: "createPerson('sam','vimes').firstName"
+      start:
+        line: 2
+        col: 13
+      end:
+        line: 2
+        col: 51
+    acceptDefs: []
+    returnDefs: []
+  src: "createPerson('sam', 'vimes').firstName"
+  value:
+    token:
+      text: "createPerson('sam','vimes').firstName"
+      start:
+        line: 2
+        col: 13
+      end:
+        line: 2
+        col: 51
+    name:
+      token:
+        text: "createPerson"
+        start:
+          line: 2
+          col: 13
+        end:
+          line: 2
+          col: 25
+      value: "createPerson"
+    values:
+    - token:
+        text: "'sam'"
+        start:
+          line: 2
+          col: 26
+        end:
+          line: 2
+          col: 31
+      type: "STRING"
+      value: "sam"
+    - token:
+        text: "'vimes'"
+        start:
+          line: 2
+          col: 33
+        end:
+          line: 2
+          col: 40
+      type: "STRING"
+      value: "vimes"
+    next:
+      empty: false
+      present: true

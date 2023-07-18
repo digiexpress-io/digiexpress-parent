@@ -1,0 +1,452 @@
+{
+  "bodyType": "TAG",
+  "description": null,
+  "headers": {
+    "acceptDefs": [],
+    "returnDefs": []
+  },
+  "messages": [],
+  "name": "first-tag-desc",
+  "created": [
+    2022,
+    10,
+    31,
+    10,
+    45,
+    28,
+    88191158
+  ],
+  "values": [
+    {
+      "id": "DT-2",
+      "hash": "e7619e6dcb9f1f8d4f1095754aca4a8f",
+      "bodyType": "DT",
+      "commands": [
+        {
+          "id": null,
+          "value": null,
+          "type": "ADD_HEADER_IN"
+        },
+        {
+          "id": "0",
+          "value": "risk",
+          "type": "SET_HEADER_REF"
+        },
+        {
+          "id": "0",
+          "value": null,
+          "type": "SET_HEADER_SCRIPT"
+        },
+        {
+          "id": "0",
+          "value": "STRING",
+          "type": "SET_HEADER_TYPE"
+        },
+        {
+          "id": null,
+          "value": null,
+          "type": "ADD_HEADER_IN"
+        },
+        {
+          "id": "1",
+          "value": "sri",
+          "type": "SET_HEADER_REF"
+        },
+        {
+          "id": "1",
+          "value": null,
+          "type": "SET_HEADER_SCRIPT"
+        },
+        {
+          "id": "1",
+          "value": "INTEGER",
+          "type": "SET_HEADER_TYPE"
+        },
+        {
+          "id": null,
+          "value": null,
+          "type": "ADD_HEADER_IN"
+        },
+        {
+          "id": "2",
+          "value": "sriBoolean",
+          "type": "SET_HEADER_REF"
+        },
+        {
+          "id": "2",
+          "value": null,
+          "type": "SET_HEADER_SCRIPT"
+        },
+        {
+          "id": "2",
+          "value": "BOOLEAN",
+          "type": "SET_HEADER_TYPE"
+        },
+        {
+          "id": null,
+          "value": null,
+          "type": "ADD_HEADER_IN"
+        },
+        {
+          "id": "3",
+          "value": "sriDate",
+          "type": "SET_HEADER_REF"
+        },
+        {
+          "id": "3",
+          "value": null,
+          "type": "SET_HEADER_SCRIPT"
+        },
+        {
+          "id": "3",
+          "value": "DATE",
+          "type": "SET_HEADER_TYPE"
+        },
+        {
+          "id": null,
+          "value": null,
+          "type": "ADD_HEADER_OUT"
+        },
+        {
+          "id": "4",
+          "value": "category",
+          "type": "SET_HEADER_REF"
+        },
+        {
+          "id": "4",
+          "value": null,
+          "type": "SET_HEADER_SCRIPT"
+        },
+        {
+          "id": "4",
+          "value": "STRING",
+          "type": "SET_HEADER_TYPE"
+        },
+        {
+          "id": null,
+          "value": null,
+          "type": "ADD_HEADER_OUT"
+        },
+        {
+          "id": "5",
+          "value": "reason",
+          "type": "SET_HEADER_REF"
+        },
+        {
+          "id": "5",
+          "value": null,
+          "type": "SET_HEADER_SCRIPT"
+        },
+        {
+          "id": "5",
+          "value": "STRING",
+          "type": "SET_HEADER_TYPE"
+        },
+        {
+          "id": null,
+          "value": null,
+          "type": "ADD_HEADER_OUT"
+        },
+        {
+          "id": "6",
+          "value": "reasonBoolean",
+          "type": "SET_HEADER_REF"
+        },
+        {
+          "id": "6",
+          "value": null,
+          "type": "SET_HEADER_SCRIPT"
+        },
+        {
+          "id": "6",
+          "value": "BOOLEAN",
+          "type": "SET_HEADER_TYPE"
+        },
+        {
+          "id": null,
+          "value": null,
+          "type": "ADD_HEADER_OUT"
+        },
+        {
+          "id": "7",
+          "value": "reasonDate",
+          "type": "SET_HEADER_REF"
+        },
+        {
+          "id": "7",
+          "value": null,
+          "type": "SET_HEADER_SCRIPT"
+        },
+        {
+          "id": "7",
+          "value": "DATE",
+          "type": "SET_HEADER_TYPE"
+        },
+        {
+          "id": null,
+          "value": null,
+          "type": "ADD_ROW"
+        },
+        {
+          "id": "9",
+          "value": "in [\"CAREFUL\", \"NOT\"]",
+          "type": "SET_CELL_VALUE"
+        },
+        {
+          "id": "10",
+          "value": "[1..2]",
+          "type": "SET_CELL_VALUE"
+        },
+        {
+          "id": "11",
+          "value": "false",
+          "type": "SET_CELL_VALUE"
+        },
+        {
+          "id": "12",
+          "value": "equals 2017-07-03T00:00:00Z",
+          "type": "SET_CELL_VALUE"
+        },
+        {
+          "id": "13",
+          "value": "GREEN",
+          "type": "SET_CELL_VALUE"
+        },
+        {
+          "id": "14",
+          "value": null,
+          "type": "SET_CELL_VALUE"
+        },
+        {
+          "id": "15",
+          "value": "false",
+          "type": "SET_CELL_VALUE"
+        },
+        {
+          "id": "16",
+          "value": "2017-07-03",
+          "type": "SET_CELL_VALUE"
+        },
+        {
+          "id": null,
+          "value": null,
+          "type": "ADD_ROW"
+        },
+        {
+          "id": "18",
+          "value": "in [\"CAREFUL\"]",
+          "type": "SET_CELL_VALUE"
+        },
+        {
+          "id": "19",
+          "value": ">= 3",
+          "type": "SET_CELL_VALUE"
+        },
+        {
+          "id": "20",
+          "value": "false",
+          "type": "SET_CELL_VALUE"
+        },
+        {
+          "id": "21",
+          "value": null,
+          "type": "SET_CELL_VALUE"
+        },
+        {
+          "id": "22",
+          "value": "GREY",
+          "type": "SET_CELL_VALUE"
+        },
+        {
+          "id": "23",
+          "value": "HIGH_RISK",
+          "type": "SET_CELL_VALUE"
+        },
+        {
+          "id": "24",
+          "value": "false",
+          "type": "SET_CELL_VALUE"
+        },
+        {
+          "id": "25",
+          "value": null,
+          "type": "SET_CELL_VALUE"
+        },
+        {
+          "id": null,
+          "value": null,
+          "type": "ADD_ROW"
+        },
+        {
+          "id": "27",
+          "value": "not in [\"MODERATE\"]",
+          "type": "SET_CELL_VALUE"
+        },
+        {
+          "id": "28",
+          "value": "[1..5]",
+          "type": "SET_CELL_VALUE"
+        },
+        {
+          "id": "29",
+          "value": "false",
+          "type": "SET_CELL_VALUE"
+        },
+        {
+          "id": "30",
+          "value": "equals 2017-07-03T00:00:00Z",
+          "type": "SET_CELL_VALUE"
+        },
+        {
+          "id": "31",
+          "value": "GREEN",
+          "type": "SET_CELL_VALUE"
+        },
+        {
+          "id": "32",
+          "value": null,
+          "type": "SET_CELL_VALUE"
+        },
+        {
+          "id": "33",
+          "value": "false",
+          "type": "SET_CELL_VALUE"
+        },
+        {
+          "id": "34",
+          "value": null,
+          "type": "SET_CELL_VALUE"
+        },
+        {
+          "id": null,
+          "value": null,
+          "type": "ADD_ROW"
+        },
+        {
+          "id": "36",
+          "value": null,
+          "type": "SET_CELL_VALUE"
+        },
+        {
+          "id": "37",
+          "value": "> 6",
+          "type": "SET_CELL_VALUE"
+        },
+        {
+          "id": "38",
+          "value": "false",
+          "type": "SET_CELL_VALUE"
+        },
+        {
+          "id": "39",
+          "value": "equals 2017-07-03T00:00:00Z",
+          "type": "SET_CELL_VALUE"
+        },
+        {
+          "id": "40",
+          "value": "GREY",
+          "type": "SET_CELL_VALUE"
+        },
+        {
+          "id": "41",
+          "value": "HIGH_RISK",
+          "type": "SET_CELL_VALUE"
+        },
+        {
+          "id": "42",
+          "value": "false",
+          "type": "SET_CELL_VALUE"
+        },
+        {
+          "id": "43",
+          "value": null,
+          "type": "SET_CELL_VALUE"
+        },
+        {
+          "id": null,
+          "value": null,
+          "type": "ADD_ROW"
+        },
+        {
+          "id": "45",
+          "value": "in [\"AGGRESSIVE\"]",
+          "type": "SET_CELL_VALUE"
+        },
+        {
+          "id": "46",
+          "value": null,
+          "type": "SET_CELL_VALUE"
+        },
+        {
+          "id": "47",
+          "value": "false",
+          "type": "SET_CELL_VALUE"
+        },
+        {
+          "id": "48",
+          "value": "equals 2017-07-03T00:00:00Z",
+          "type": "SET_CELL_VALUE"
+        },
+        {
+          "id": "49",
+          "value": "GREEN",
+          "type": "SET_CELL_VALUE"
+        },
+        {
+          "id": "50",
+          "value": null,
+          "type": "SET_CELL_VALUE"
+        },
+        {
+          "id": "51",
+          "value": "false",
+          "type": "SET_CELL_VALUE"
+        },
+        {
+          "id": "52",
+          "value": null,
+          "type": "SET_CELL_VALUE"
+        },
+        {
+          "id": null,
+          "value": "ALL",
+          "type": "SET_HIT_POLICY"
+        },
+        {
+          "id": null,
+          "value": "testDecisionTable",
+          "type": "SET_NAME"
+        },
+        {
+          "id": null,
+          "value": null,
+          "type": "SET_DESCRIPTION"
+        }
+      ]
+    },
+    {
+      "id": "FLOW_TASK-3",
+      "hash": "08d24917ddc7896aac8b08d819424bd5",
+      "bodyType": "FLOW_TASK",
+      "commands": [
+        {
+          "id": null,
+          "value": "package io.resys.wrench.assets.bundle.groovy;\n\nimport io.resys.hdes.client.api.programs.ServiceData;\nimport java.io.Serializable;\n\npublic class PgTestService {\n\n  public Output execute(Input input) {\n    Output output = new Output();\n    output.sum = input.a + input.b;\n    return output;\n  }\n  \n  \n  @ServiceData\n  public static class Input implements Serializable {\n    Integer a;\n    Integer b;\n  }\n  \n  @ServiceData\n  public static class Output implements Serializable {\n    Integer sum;\n  }\n}\n",
+          "type": "SET_BODY"
+        }
+      ]
+    },
+    {
+      "id": "FLOW-1",
+      "hash": "565855f5fa5ced32d89fe5afa74c8dec",
+      "bodyType": "FLOW",
+      "commands": [
+        {
+          "id": null,
+          "value": "id: pg=test-flow\n\ninputs:\n  param1:\n    required: true\n    type: INTEGER\n  whitelist:\n    required: true\n    type: BOOLEAN\n  param2:\n    required: false\n    type: STRING\n\ntasks:\n  - Add party to investigation list:\n      id: \"addPartyToInvestigationList\"\n      then: \"resolveAmlViolation\"\n\n  - Resolve aml violation:\n      id: \"resolveAmlViolation\"\n      switch:\n        - add transaction to source whitelist?:\n            when: \"whitelist == true\"\n            then: \"addToWhitelist\"\n        - remove party from investigation list?:\n            when: \"investigationList == true\"\n            then: \"rmInvList\"\n        - wait for fiu decision:\n            when: \"waitFiuDecision == true\"\n            then: \"waitFiuDecision\"\n  \n  - Add transaction to source whitelist:\n      id: \"addToWhitelist\"\n      then: \"rmInvList\"\n\n  - Remove party from investgation list:\n      id: \"rmInvList\"\n      then: \"end\"\n\n  - Wait for fiu deicision:\n      id: \"waitFiuDecision\"\n      switch:\n        - remove party from investigation list?:\n            when: \"rmInvList == true\"\n            then: \"rmInvList\"\n        - default gateway to the end:\n            then: \"end\"\n",
+          "type": "SET_BODY"
+        }
+      ]
+    }
+  ]
+}

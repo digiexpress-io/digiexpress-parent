@@ -1,0 +1,9 @@
+ flow x({ arg1: integer, arg2: integer, x: integer[] }): {} 
+ {
+     firstTask() {
+       map(x).to({ 
+         bestDT({ input: _ })
+       }) 
+       return {}
+     }
+ }

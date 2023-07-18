@@ -1,0 +1,8 @@
+ flow x({ arg1: integer, arg2?: integer, x: integer[] }): { code: integer, summary: { value: integer }[] }
+ {
+   firstTask () { bestDtTask ({}) continue } 
+   nextTask () {
+     DoSmth ({ value : firstTask.key }) 
+     return { code: 5 }
+   }
+ }

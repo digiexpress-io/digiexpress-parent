@@ -1,0 +1,7 @@
+        decision-table Scoring({ arg: INTEGER }) : { score: INTEGER } { 
+               
+          findFirst({
+            when( _ between 1 and 30).add({ 10 }) 
+            when( ? ).add({ 20 })
+          })
+        }

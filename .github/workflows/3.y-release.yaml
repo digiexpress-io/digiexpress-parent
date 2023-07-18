@@ -1,0 +1,39 @@
+on:
+  push:
+    branches:
+      - 3.y
+
+name: 3.y - java 15 - release
+jobs:
+  build:
+    name: release branch 3.y
+    if: "!startsWith(github.event.head_commit.message, 'release')"
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        ref: 3.y
+        token: ${{ secrets.REPO_TOKEN }}
+
+    - uses: joschi/setup-jdk@v2
+      with:
+        java-version: '15'
+    
+    - name: Maven release
+      run: ./hdes-build-parent/release.sh
+      env:
+        CI: false
+        BOT_NAME: ${{ secrets.HDES_BOT_NAME }}
+        BOT_EMAIL: ${{ secrets.HDES_BOT_EMAIL }}  
+        BOT_TOKEN: ${{ secrets.HDES_BOT_TOKEN }}
+        GITHUB_SHA: ${GITHUB_SHA}
+        GITHUB_REF: ${GITHUB_REF}
+        GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+        GPG_KEY_ID: ${{ secrets.HDES_GPG_KEY_ID }}
+        GPG_KEY: ${{ secrets.HDES_GPG_KEY }}
+        GPG_KEY_SEC:  ${{ secrets.HDES_GPG_SEC }}
+        OSSRH_PASS: ${{ secrets.OSSRH_PASS }}
+        OSSRH_USER: ${{ secrets.OSSRH_USER }}
+        
+        

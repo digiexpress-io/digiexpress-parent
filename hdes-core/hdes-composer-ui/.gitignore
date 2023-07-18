@@ -1,0 +1,7 @@
+/_old_app/
+/.yalc/
+/yalc.lock
+/build/
+/.pnp.cjs
+/.pnp.loader.mjs
+/.yarn/

@@ -1,0 +1,3 @@
+        flow EmptyFlow ({ arg1: INTEGER, arg2: INTEGER }) : { }
+        {
+        }

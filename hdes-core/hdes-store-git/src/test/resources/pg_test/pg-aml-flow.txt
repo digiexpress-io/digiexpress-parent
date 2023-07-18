@@ -1,0 +1,47 @@
+id: pg=test-flow
+
+inputs:
+  param1:
+    required: true
+    type: INTEGER
+  whitelist:
+    required: true
+    type: BOOLEAN
+  param2:
+    required: false
+    type: STRING
+
+tasks:
+  - Add party to investigation list:
+      id: "addPartyToInvestigationList"
+      then: "resolveAmlViolation"
+
+  - Resolve aml violation:
+      id: "resolveAmlViolation"
+      switch:
+        - add transaction to source whitelist?:
+            when: "whitelist == true"
+            then: "addToWhitelist"
+        - remove party from investigation list?:
+            when: "investigationList == true"
+            then: "rmInvList"
+        - wait for fiu decision:
+            when: "waitFiuDecision == true"
+            then: "waitFiuDecision"
+  
+  - Add transaction to source whitelist:
+      id: "addToWhitelist"
+      then: "rmInvList"
+
+  - Remove party from investgation list:
+      id: "rmInvList"
+      then: "end"
+
+  - Wait for fiu deicision:
+      id: "waitFiuDecision"
+      switch:
+        - remove party from investigation list?:
+            when: "rmInvList == true"
+            then: "rmInvList"
+        - default gateway to the end:
+            then: "end"

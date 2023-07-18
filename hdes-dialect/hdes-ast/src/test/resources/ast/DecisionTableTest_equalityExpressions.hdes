@@ -1,0 +1,7 @@
+decision-table basic({ value0: INTEGER, value1: INTEGER }): { value: INTEGER } {  
+  findAll({
+    when( _ > 10, _ <= 20 ).add({ 4570 })
+    when( _ > 10, _ <= 20 and _ > 10 ).add({ 4570 })
+    when( _ = 6,  _ != 20 and _ > 10 ).add({ 4570 })
+  })
+}

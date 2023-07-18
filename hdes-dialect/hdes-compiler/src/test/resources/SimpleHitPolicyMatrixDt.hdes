@@ -1,0 +1,9 @@
+decision-table SimpleHitPolicyMatrixDt({ name: STRING, lastName: STRING }) :{ }
+
+{  
+  map(STRING) to(INTEGER) 
+  when( _ = 'BOB', _ = 'SAM', ?)
+    lastName({  10,    20,   30 })
+        name({  20,    50,   60 })
+  
+}

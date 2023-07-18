@@ -1,0 +1,7 @@
+decision-table basic({ name: STRING, lastName: STRING }):{ value: INTEGER, exp: INTEGER = value + 20}
+{
+  findFirst({
+    when(_ != 'bob'  or _ = 'same' or _ = 'professor',  _ = 'woman'  or _ = 'man' ).add({ 4590 })
+    when(_ != 'bob1' or _ = 'same' or _ = 'professor2', _ = 'woman2' or _ = 'man2').add({ 4590 })
+  })
+}

@@ -1,0 +1,32 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>io.resys.hdes</groupId>
+    <artifactId>hdes-dev</artifactId>
+    <version>3.y-SNAPSHOT</version>
+  </parent>
+  <packaging>jar</packaging>
+  <artifactId>hdes-migration</artifactId>
+
+
+
+  <dependencies>
+    <dependency>
+      <groupId>io.resys.hdes</groupId>
+      <artifactId>hdes-spring-composer</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>org.jboss.slf4j</groupId>
+          <artifactId>slf4j-jboss-logmanager</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+</project>

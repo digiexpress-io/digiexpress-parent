@@ -1,0 +1,104 @@
+---
+token:
+  text: "expression{users.map(e->e.firstName)}<EOF>"
+  start:
+    line: 1
+    col: 1
+  end:
+    line: 2
+    col: 1
+values:
+- token:
+    text: "users.map(e->e.firstName)"
+    start:
+      line: 1
+      col: 13
+    end:
+      line: 1
+      col: 40
+  id:
+    token:
+      text: "users.map(e->e.firstName)"
+      start:
+        line: 1
+        col: 13
+      end:
+        line: 1
+        col: 40
+    value: ""
+  headers:
+    token:
+      text: "users.map(e->e.firstName)"
+      start:
+        line: 1
+        col: 13
+      end:
+        line: 1
+        col: 40
+    acceptDefs: []
+    returnDefs: []
+  src: "users.map(e -> e.firstName)"
+  value:
+    token:
+      text: "users.map(e->e.firstName)"
+      start:
+        line: 1
+        col: 13
+      end:
+        line: 1
+        col: 40
+    type:
+      token:
+        text: "users"
+        start:
+          line: 1
+          col: 13
+        end:
+          line: 1
+          col: 18
+      value: "users"
+    param:
+      token:
+        text: "e"
+        start:
+          line: 1
+          col: 23
+        end:
+          line: 1
+          col: 24
+      value: "e"
+    body:
+      token:
+        text: "e.firstName"
+        start:
+          line: 1
+          col: 28
+        end:
+          line: 1
+          col: 39
+      path:
+        token:
+          text: "e"
+          start:
+            line: 1
+            col: 28
+          end:
+            line: 1
+            col: 29
+        value: "e"
+      value:
+        token:
+          text: "firstName"
+          start:
+            line: 1
+            col: 30
+          end:
+            line: 1
+            col: 39
+        value: "firstName"
+    findFirst: false
+    sort: []
+    filter: []
+    next:
+      empty: true
+      present: false

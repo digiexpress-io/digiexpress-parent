@@ -1,0 +1,294 @@
+---
+token:
+  text: "expression{sum(10,20,40)}expression{min(10,20,40)}expression{max(10,20,40)}expression{avg(10,20,40)}<EOF>"
+  start:
+    line: 1
+    col: 1
+  end:
+    line: 5
+    col: 1
+values:
+- token:
+    text: "sum(10,20,40)"
+    start:
+      line: 1
+      col: 13
+    end:
+      line: 1
+      col: 28
+  id:
+    token:
+      text: "sum(10,20,40)"
+      start:
+        line: 1
+        col: 13
+      end:
+        line: 1
+        col: 28
+    value: ""
+  headers:
+    token:
+      text: "sum(10,20,40)"
+      start:
+        line: 1
+        col: 13
+      end:
+        line: 1
+        col: 28
+    acceptDefs: []
+    returnDefs: []
+  src: "sum(10, 20, 40)"
+  value:
+    token:
+      text: "sum(10,20,40)"
+      start:
+        line: 1
+        col: 13
+      end:
+        line: 1
+        col: 28
+    type: "SUM"
+    values:
+    - token:
+        text: "10"
+        start:
+          line: 1
+          col: 17
+        end:
+          line: 1
+          col: 19
+      type: "INTEGER"
+      value: "10"
+    - token:
+        text: "20"
+        start:
+          line: 1
+          col: 21
+        end:
+          line: 1
+          col: 23
+      type: "INTEGER"
+      value: "20"
+    - token:
+        text: "40"
+        start:
+          line: 1
+          col: 25
+        end:
+          line: 1
+          col: 27
+      type: "INTEGER"
+      value: "40"
+- token:
+    text: "min(10,20,40)"
+    start:
+      line: 2
+      col: 13
+    end:
+      line: 2
+      col: 28
+  id:
+    token:
+      text: "min(10,20,40)"
+      start:
+        line: 2
+        col: 13
+      end:
+        line: 2
+        col: 28
+    value: ""
+  headers:
+    token:
+      text: "min(10,20,40)"
+      start:
+        line: 2
+        col: 13
+      end:
+        line: 2
+        col: 28
+    acceptDefs: []
+    returnDefs: []
+  src: "min(10, 20, 40)"
+  value:
+    token:
+      text: "min(10,20,40)"
+      start:
+        line: 2
+        col: 13
+      end:
+        line: 2
+        col: 28
+    type: "MIN"
+    values:
+    - token:
+        text: "10"
+        start:
+          line: 2
+          col: 17
+        end:
+          line: 2
+          col: 19
+      type: "INTEGER"
+      value: "10"
+    - token:
+        text: "20"
+        start:
+          line: 2
+          col: 21
+        end:
+          line: 2
+          col: 23
+      type: "INTEGER"
+      value: "20"
+    - token:
+        text: "40"
+        start:
+          line: 2
+          col: 25
+        end:
+          line: 2
+          col: 27
+      type: "INTEGER"
+      value: "40"
+- token:
+    text: "max(10,20,40)"
+    start:
+      line: 3
+      col: 13
+    end:
+      line: 3
+      col: 28
+  id:
+    token:
+      text: "max(10,20,40)"
+      start:
+        line: 3
+        col: 13
+      end:
+        line: 3
+        col: 28
+    value: ""
+  headers:
+    token:
+      text: "max(10,20,40)"
+      start:
+        line: 3
+        col: 13
+      end:
+        line: 3
+        col: 28
+    acceptDefs: []
+    returnDefs: []
+  src: "max(10, 20, 40)"
+  value:
+    token:
+      text: "max(10,20,40)"
+      start:
+        line: 3
+        col: 13
+      end:
+        line: 3
+        col: 28
+    type: "MAX"
+    values:
+    - token:
+        text: "10"
+        start:
+          line: 3
+          col: 17
+        end:
+          line: 3
+          col: 19
+      type: "INTEGER"
+      value: "10"
+    - token:
+        text: "20"
+        start:
+          line: 3
+          col: 21
+        end:
+          line: 3
+          col: 23
+      type: "INTEGER"
+      value: "20"
+    - token:
+        text: "40"
+        start:
+          line: 3
+          col: 25
+        end:
+          line: 3
+          col: 27
+      type: "INTEGER"
+      value: "40"
+- token:
+    text: "avg(10,20,40)"
+    start:
+      line: 4
+      col: 13
+    end:
+      line: 4
+      col: 28
+  id:
+    token:
+      text: "avg(10,20,40)"
+      start:
+        line: 4
+        col: 13
+      end:
+        line: 4
+        col: 28
+    value: ""
+  headers:
+    token:
+      text: "avg(10,20,40)"
+      start:
+        line: 4
+        col: 13
+      end:
+        line: 4
+        col: 28
+    acceptDefs: []
+    returnDefs: []
+  src: "avg(10, 20, 40)"
+  value:
+    token:
+      text: "avg(10,20,40)"
+      start:
+        line: 4
+        col: 13
+      end:
+        line: 4
+        col: 28
+    type: "AVG"
+    values:
+    - token:
+        text: "10"
+        start:
+          line: 4
+          col: 17
+        end:
+          line: 4
+          col: 19
+      type: "INTEGER"
+      value: "10"
+    - token:
+        text: "20"
+        start:
+          line: 4
+          col: 21
+        end:
+          line: 4
+          col: 23
+      type: "INTEGER"
+      value: "20"
+    - token:
+        text: "40"
+        start:
+          line: 4
+          col: 25
+        end:
+          line: 4
+          col: 27
+      type: "INTEGER"
+      value: "40"

@@ -1,0 +1,212 @@
+---
+token:
+  text: "decision-tablebasic({name,lastName:STRING,value?:INTEGER}):{}{map(STRING)to(INTEGER)when()}<EOF>"
+  start:
+    line: 1
+    col: 3
+  end:
+    line: 5
+    col: 1
+values:
+- token:
+    text: "basic({name,lastName:STRING,value?:INTEGER}):{}{map(STRING)to(INTEGER)when()}"
+    start:
+      line: 1
+      col: 18
+    end:
+      line: 3
+      col: 4
+  id:
+    token:
+      text: "basic"
+      start:
+        line: 1
+        col: 18
+      end:
+        line: 1
+        col: 23
+    value: "basic"
+  headers:
+    token:
+      text: "({name,lastName:STRING,value?:INTEGER}):{}"
+      start:
+        line: 1
+        col: 23
+      end:
+        line: 1
+        col: 74
+    acceptDefs:
+    - token:
+        text: "name,lastName:STRING"
+        start:
+          line: 1
+          col: 26
+        end:
+          line: 1
+          col: 48
+      required: true
+      name: "name"
+      array: false
+      context: "ACCEPTS"
+      debugValue:
+        empty: true
+        present: false
+      formula:
+        empty: true
+        present: false
+      formulaOverAll:
+        empty: true
+        present: false
+      type: "STRING"
+    - token:
+        text: "name,lastName:STRING"
+        start:
+          line: 1
+          col: 26
+        end:
+          line: 1
+          col: 48
+      required: true
+      name: "lastName"
+      array: false
+      context: "ACCEPTS"
+      debugValue:
+        empty: true
+        present: false
+      formula:
+        empty: true
+        present: false
+      formulaOverAll:
+        empty: true
+        present: false
+      type: "STRING"
+    - token:
+        text: "value?:INTEGER"
+        start:
+          line: 1
+          col: 50
+        end:
+          line: 1
+          col: 65
+      required: false
+      name: "value"
+      array: false
+      context: "ACCEPTS"
+      debugValue:
+        empty: true
+        present: false
+      formula:
+        empty: true
+        present: false
+      formulaOverAll:
+        empty: true
+        present: false
+      type: "INTEGER"
+    returnDefs: []
+  hitPolicy:
+    token:
+      text: "map(STRING)to(INTEGER)when()"
+      start:
+        line: 2
+        col: 5
+      end:
+        line: 2
+        col: 35
+    defFrom: "STRING"
+    defTo: "INTEGER"
+    when:
+      token:
+        text: "()"
+        start:
+          line: 2
+          col: 33
+        end:
+          line: 2
+          col: 35
+      values: []
+    mapsTo: []
+  constants:
+    token:
+      text: "({name,lastName:STRING,value?:INTEGER}):{}"
+      start:
+        line: 1
+        col: 23
+      end:
+        line: 1
+        col: 74
+    required: true
+    name: "constants"
+    array: true
+    context: "CONSTANTS"
+    values:
+    - token:
+        text: "({name,lastName:STRING,value?:INTEGER}):{}"
+        start:
+          line: 1
+          col: 23
+        end:
+          line: 1
+          col: 74
+      required: true
+      name: ""
+      array: true
+      context: "CONSTANTS"
+      debugValue:
+        empty: true
+        present: false
+      formula:
+        empty: true
+        present: false
+      formulaOverAll:
+        empty: true
+        present: false
+      type: "INTEGER"
+  matched:
+    token:
+      text: "({name,lastName:STRING,value?:INTEGER}):{}"
+      start:
+        line: 1
+        col: 23
+      end:
+        line: 1
+        col: 74
+    required: true
+    name: "instance"
+    array: false
+    context: "MATCHES"
+    values:
+    - token:
+        text: "({name,lastName:STRING,value?:INTEGER}):{}"
+        start:
+          line: 1
+          col: 23
+        end:
+          line: 1
+          col: 74
+      required: true
+      name: "instance"
+      array: true
+      context: "MATCHES"
+      values:
+      - token:
+          text: "({name,lastName:STRING,value?:INTEGER}):{}"
+          start:
+            line: 1
+            col: 23
+          end:
+            line: 1
+            col: 74
+        required: true
+        name: ""
+        array: true
+        context: "MATCHES"
+        debugValue:
+          empty: true
+          present: false
+        formula:
+          empty: true
+          present: false
+        formulaOverAll:
+          empty: true
+          present: false
+        type: "INTEGER"

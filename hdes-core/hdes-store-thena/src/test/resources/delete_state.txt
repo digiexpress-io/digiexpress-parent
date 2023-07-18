@@ -1,0 +1,28 @@
+
+Repo
+  - id: 1, rev: 2
+    name: basicReadWriteDeleteTest
+
+Refs
+  - 3: main
+
+Tags
+
+Commits
+  - id: 4
+    tree: 5, parent: , message: Save type: 'FLOW', with id: 'FLOW-1'
+  - id: 6
+    tree: 7, parent: 4, message: Save type: 'FLOW', with id: 'FLOW-1'
+  - id: 3
+    tree: 8, parent: 6, message: Delete type: 'FLOW', with id: 'FLOW-1'
+
+Trees
+  - id: 5
+    9: FLOW-1
+  - id: 7
+    10: FLOW-1
+  - id: 8
+
+Blobs
+  - 9: {"id":"FLOW-1","bodyType":"FLOW","hash":"","body":[{"id":null,"value":"id: firstFlow","type":"SET_BODY"}]}
+  - 10: {"id":"FLOW-1","bodyType":"FLOW","hash":"","body":[{"id":null,"value":"id: change flow symbolic id","type":"SET_BODY"}]}

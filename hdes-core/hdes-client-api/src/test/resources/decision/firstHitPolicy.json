@@ -1,0 +1,128 @@
+[
+  {
+    "type": "ADD_HEADER_IN"
+  },
+
+  {
+    "id": "0",
+    "type": "SET_HEADER_NAME"
+  },
+
+  {
+    "id": "0",
+    "value": "inputColumn",
+    "type": "SET_HEADER_REF"
+  },
+
+  {
+    "id": "0",
+    "type": "SET_HEADER_SCRIPT"
+  },
+
+  {
+    "id": "0",
+    "value": "STRING",
+    "type": "SET_HEADER_TYPE"
+  },
+
+  {
+    "type": "ADD_HEADER_OUT"
+  },
+
+  {
+    "id": "1",
+    "type": "SET_HEADER_NAME"
+  },
+
+  {
+    "id": "1",
+    "value": "outputColumn",
+    "type": "SET_HEADER_REF"
+  },
+
+  {
+    "id": "1",
+    "type": "SET_HEADER_SCRIPT"
+  },
+
+  {
+    "id": "1",
+    "value": "STRING",
+    "type": "SET_HEADER_TYPE"
+  },
+
+  {
+    "value": "testRegion",
+    "type": "SET_NAME"
+  },
+
+  {
+    "type": "SET_DESCRIPTION"
+  },
+
+  {
+    "type": "SET_HEADER_NAME",
+    "id": "0",
+    "value": "Region Name"
+  },
+
+  {
+    "type": "SET_HEADER_REF",
+    "id": "0",
+    "value": "regionName"
+  },
+
+  {
+    "type": "SET_HEADER_NAME",
+    "id": "1",
+    "value": "Region Factor"
+  },
+
+  {
+    "type": "SET_HEADER_REF",
+    "id": "1",
+    "value": "regionFactor"
+  },
+
+  {
+    "type": "SET_HEADER_TYPE",
+    "id": "1",
+    "value": "INTEGER"
+  },
+
+  {
+    "type": "ADD_ROW"
+  },
+
+  {
+    "type": "SET_CELL_VALUE",
+    "id": "3",
+    "value": "in[\"FIN\",\"EST\"]"
+  },
+
+  {
+    "type": "SET_CELL_VALUE",
+    "id": "4",
+    "value": "1"
+  },
+
+  {
+    "type": "ADD_ROW"
+  },
+
+  {
+    "type": "SET_CELL_VALUE",
+    "id": "7",
+    "value": "10"
+  },
+
+  {
+    "type": "SET_DESCRIPTION",
+    "value": "this DT is only for test flow"
+  },
+  
+  {
+    "type": "SET_HIT_POLICY",
+    "value": "FIRST"
+  }
+]

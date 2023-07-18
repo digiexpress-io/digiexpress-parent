@@ -1,0 +1,3 @@
+  decision-table mappingDT({}):{}        { map(STRING) to(INTEGER) when() }
+  decision-table matchingFirstDT({}):{}  { findFirst({}) } 
+  decision-table matchingFirstALL({}):{} { findAll({}) }

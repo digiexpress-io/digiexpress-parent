@@ -1,0 +1,8 @@
+decision-table SimpleHitPolicyAllDT ({ name: STRING, lastName: STRING }) : { value: INTEGER } 
+{
+  findAll({
+    when( ?, ? ) add({ 20 })
+    when( _ = 'bob', _ = 'woman') add({ 4570 })
+    when( _ != 'bob' or _ = 'same' or _ = 'professor', _ in('woman', 'man') ) add({ 4570 })
+  })
+}

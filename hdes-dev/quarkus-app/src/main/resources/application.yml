@@ -1,0 +1,34 @@
+quarkus:
+  http:
+    cors: true
+
+  log:
+    level: DEBUG
+    category: 
+      io.resys:
+        level: DEBUG
+
+  hdes-composer-pg:
+    service-path: /q/composer-services
+    frontend-path: /composer-app
+    repo:
+      repo-name: test-repo-1
+
+  datasource:
+    db-kind: postgresql 
+    username: postgres
+    password: example
+    reactive:
+      max-size: 3
+      url: postgresql://localhost:5432/postgres
+
+"%prod":
+  quarkus:
+
+"%dev":
+  quarkus:
+    log:
+      level: DEBUG
+      category: 
+        io.resys:
+          level: DEBUG

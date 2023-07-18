@@ -1,0 +1,22 @@
+id: self ref
+tasks:
+  - Add party to investigation list:
+      id: "addToInvList"
+      then: "addToWhitelist"
+  
+  - Add transaction to source whitelist:
+      id: "addToWhitelist"
+      then: "rmInvList"
+
+  - Remove party from investgation list:
+      id: "rmInvList"
+      then: "waitFiuDecision"
+
+  - Wait for fiu deicision:
+      id: "waitFiuDecision"
+      switch:
+        - restart:
+            when: "restart == true"
+            then: "addToInvList"
+        - default gateway to the end:
+            then: "end"
