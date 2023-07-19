@@ -24,7 +24,7 @@
   <groupId>io.digiexpress</groupId>
   <version>999-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <inceptionYear>2015 - 2021</inceptionYear>
+  <inceptionYear>2015</inceptionYear>
 
   <organization>
     <name>Copyright 2022 ReSys OÜ</name>
