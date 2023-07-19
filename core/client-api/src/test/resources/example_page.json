@@ -1,0 +1,65 @@
+[
+  {
+    "id": "PAGE-6",
+    "type": "PAGE",
+    "body": {
+      "article": "PAGE-6",
+      "locale": "fi",
+      "content": "new content for page1"
+    }
+  },
+  {
+    "id": "L3411",
+    "type": "locale",
+    "body": {
+      "value": "fi",
+      "enabled": "true"
+    }
+  },
+  {
+    "id": "A1056",
+    "type": "article",
+    "body": {
+      "parentId": "Community",
+      "name": "Residence",
+      "order": "300"
+    }
+  },
+  {
+    "id": "R5421",
+    "type": "release",
+    "body": {
+      "name": "v1.0",
+      "created": "11/04/2021",
+      "note": "Init"
+    }
+  },
+  {
+    "id": "W4511",
+    "type": "workflow",
+    "body": {
+      "name": "BasicFlow",
+      "locale": "en",
+      "content": "General information",
+      "articles": [
+        "4533",
+        "3531",
+        "1098"
+      ]
+    }
+  },
+  {
+    "id": "LI332",
+    "type": "link",
+    "body": {
+      "articles": [
+        "4533",
+        "1098"
+      ],
+      "type": "internal",
+      "content": "www.example.com/about-us",
+      "locale": "en",
+      "description": "Read about us"
+    }
+  }
+]

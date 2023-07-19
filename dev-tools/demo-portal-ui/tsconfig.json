@@ -1,0 +1,43 @@
+{
+  "compilerOptions": {
+    "lib": ["es6", "dom"],
+    "outDir": "build",
+    "target": "es5",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "rootDirs": [
+      "src",
+      "stories"
+    ],
+    "noImplicitAny": false,
+    "allowJs": false,
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitThis": true,
+    "strictNullChecks": true,
+    "removeComments": true,
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "declaration": true,
+    "jsx": "react",
+    "typeRoots": [
+      "index.d.ts",
+      "node_modules/@types"
+    ]
+  },
+  "include": [
+    "src",
+    "**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules",
+    "build",
+    "build-scripts",
+    "src/setupTests.ts",
+    "**/*.test.tsx",
+    "**/*.test.ts"
+  ]
+}

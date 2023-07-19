@@ -1,0 +1,125 @@
+
+Repo
+  - id: 1, rev: 2
+    name: test2-customId
+
+Refs
+  - 3: stencil-main
+
+Tags
+
+Commits
+  - id: 4
+    tree: 5, parent: , message: create type: 'TEMPLATE', with id: 'TEMPLATE-1'
+  - id: 6
+    tree: 7, parent: 4, message: create type: 'ARTICLE', with id: 'ARTICLE-2'
+  - id: 8
+    tree: 9, parent: 6, message: create type: 'ARTICLE', with id: 'ARTICLE-3'
+  - id: 10
+    tree: 11, parent: 8, message: create type: 'RELEASE', with id: 'RELEASE-4'
+  - id: 12
+    tree: 13, parent: 10, message: create type: 'RELEASE', with id: 'RELEASE-5'
+  - id: 14
+    tree: 15, parent: 12, message: create type: 'LOCALE', with id: 'LOCALE-6'
+  - id: 16
+    tree: 17, parent: 14, message: create type: 'LOCALE', with id: 'LOCALE-7'
+  - id: 18
+    tree: 19, parent: 16, message: create type: 'PAGE', with id: 'PAGE-8'
+  - id: 20
+    tree: 21, parent: 18, message: create type: 'PAGE', with id: 'PAGE-9'
+  - id: 22
+    tree: 23, parent: 20, message: create type: 'LINK', with id: 'LINK-10'
+  - id: 3
+    tree: 24, parent: 22, message: create type: 'WORKFLOW', with id: 'WORKFLOW-11'
+
+Trees
+  - id: 5
+    25: TEMPLATE-1
+  - id: 7
+    26: ARTICLE-2
+    25: TEMPLATE-1
+  - id: 9
+    26: ARTICLE-2
+    27: ARTICLE-3
+    25: TEMPLATE-1
+  - id: 11
+    26: ARTICLE-2
+    27: ARTICLE-3
+    28: RELEASE-4
+    25: TEMPLATE-1
+  - id: 13
+    26: ARTICLE-2
+    27: ARTICLE-3
+    28: RELEASE-4
+    29: RELEASE-5
+    25: TEMPLATE-1
+  - id: 15
+    26: ARTICLE-2
+    27: ARTICLE-3
+    30: LOCALE-6
+    28: RELEASE-4
+    29: RELEASE-5
+    25: TEMPLATE-1
+  - id: 17
+    26: ARTICLE-2
+    27: ARTICLE-3
+    30: LOCALE-6
+    31: LOCALE-7
+    28: RELEASE-4
+    29: RELEASE-5
+    25: TEMPLATE-1
+  - id: 19
+    26: ARTICLE-2
+    27: ARTICLE-3
+    30: LOCALE-6
+    31: LOCALE-7
+    32: PAGE-8
+    28: RELEASE-4
+    29: RELEASE-5
+    25: TEMPLATE-1
+  - id: 21
+    26: ARTICLE-2
+    27: ARTICLE-3
+    30: LOCALE-6
+    31: LOCALE-7
+    32: PAGE-8
+    33: PAGE-9
+    28: RELEASE-4
+    29: RELEASE-5
+    25: TEMPLATE-1
+  - id: 23
+    26: ARTICLE-2
+    27: ARTICLE-3
+    34: LINK-10
+    30: LOCALE-6
+    31: LOCALE-7
+    32: PAGE-8
+    33: PAGE-9
+    28: RELEASE-4
+    29: RELEASE-5
+    25: TEMPLATE-1
+  - id: 24
+    26: ARTICLE-2
+    27: ARTICLE-3
+    34: LINK-10
+    30: LOCALE-6
+    31: LOCALE-7
+    32: PAGE-8
+    33: PAGE-9
+    28: RELEASE-4
+    29: RELEASE-5
+    25: TEMPLATE-1
+    35: WORKFLOW-11
+
+Blobs
+  - 25: {"id":"TEMPLATE-1","type":"TEMPLATE","body":{"name":"Nice page template","description":"Generic page structure","content":"# Header 1","type":"Page"}}
+  - 26: {"id":"ARTICLE-2","type":"ARTICLE","body":{"parentId":null,"name":"My first article","order":100}}
+  - 27: {"id":"ARTICLE-3","type":"ARTICLE","body":{"parentId":null,"name":"My second article","order":100}}
+  - 28: {"id":"RELEASE-4","type":"RELEASE","body":{"parentCommit":"8","name":"v1.5","note":"test release","created":"","locales":[],"articles":[],"links":[],"workflows":[],"pages":[],"templates":[]}}
+  - 29: {"id":"RELEASE-5","type":"RELEASE","body":{"parentCommit":"10","name":"v2.4","note":"new content","created":"","locales":[],"articles":[],"links":[],"workflows":[],"pages":[],"templates":[]}}
+  - 30: {"id":"LOCALE-6","type":"LOCALE","body":{"value":"en","enabled":true}}
+  - 31: {"id":"LOCALE-7","type":"LOCALE","body":{"value":"fi","enabled":true}}
+  - 32: {"id":"PAGE-8","type":"PAGE","body":{"article":"ARTICLE-2","locale":"LOCALE-6","content":"# English content"}}
+  - 33: {"id":"PAGE-9","type":"PAGE","body":{"article":"ARTICLE-2","locale":"LOCALE-7","content":"# Finnish content"}}
+  - 34: {"id":"LINK-10","type":"LINK","body":{"value":"www.example.com","contentType":"internal","articles":[],"labels":[{"locale":"LOCALE-6","labelValue":"click me"}]}}
+  - 35: {"id":"WORKFLOW-11","type":"WORKFLOW","body":{"value":"Form1","articles":[],"labels":[{"locale":"LOCALE-6","labelValue":"firstForm"}]}}
