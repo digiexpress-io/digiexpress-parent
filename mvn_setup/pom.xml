@@ -70,8 +70,7 @@
     </developer>
   </developers>
   <scm>
-    <connection>
-      scm:git:https://github.com/digiexpress-io/digiexpress-parent.git</connection>
+    <connection>scm:git:https://github.com/digiexpress-io/digiexpress-parent.git</connection>
     <developerConnection>scm:git:https://github.com/digiexpress-io/digiexpress-parent.git</developerConnection>
     <url>http://github.com/digiexpress-io/digiexpress-parent/tree/main</url>
     <tag>HEAD</tag>
@@ -79,8 +78,7 @@
   <distributionManagement>
     <repository>
       <id>oss.sonatype.org</id>
-      <url>
-        https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+      <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
     </repository>
     <snapshotRepository>
       <id>oss.sonatype.org</id>
