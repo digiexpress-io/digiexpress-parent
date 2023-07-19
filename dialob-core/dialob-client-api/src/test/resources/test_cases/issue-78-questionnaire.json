@@ -1,0 +1,22 @@
+{
+  "_id": "75b812d2a9dcc72f59d75a3205002a87",
+  "_rev": "2-cb1ab041a2cf5d24f3e0b45ecd091198",
+  "answers": [
+  ],
+  "context": [
+  ],
+  "errors": [
+  ],
+  "variableValues": [
+  ],
+  "metadata": {
+    "formId": "f3cf3d71617443dcbb2a973aceb466f3",
+    "formRev": "LATEST",
+    "created": "2017-11-01T08:41:41.267+0000",
+    "label": "Variable rule",
+    "status": "NEW",
+    "language": "en",
+    "owner": "unauthenticated",
+    "creator": "unauthenticated"
+  }
+}

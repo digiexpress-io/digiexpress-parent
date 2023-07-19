@@ -1,0 +1,174 @@
+{
+  "_id": "9c811f1521d775219cf33cde34019759",
+  "_rev": "52-33f0fde3c5f620259ef2127314a11b68",
+  "saving": false,
+  "data": {
+    "questionnaire": {
+      "id": "questionnaire",
+      "type": "questionnaire",
+      "label": {
+        "en": "New Form"
+      },
+      "required": null,
+      "readOnly": null,
+      "items": [
+        "page1"
+      ],
+      "className": [],
+      "style": null,
+      "activeWhen": null,
+      "validations": []
+    },
+    "page1": {
+      "id": "page1",
+      "type": "group",
+      "label": {
+        "en": "New Page"
+      },
+      "required": null,
+      "readOnly": null,
+      "items": [
+        "group1"
+      ],
+      "className": [],
+      "style": null,
+      "activeWhen": "",
+      "validations": []
+    },
+    "question3": {
+      "id": "question3",
+      "type": "number",
+      "label": {
+        "en": "Most random number ever?"
+      },
+      "required": "",
+      "readOnly": null,
+      "items": [],
+      "className": [],
+      "style": null,
+      "activeWhen": "question2 = 42",
+      "validations": [
+        {
+          "message": {
+            "en": "Not random enough"
+          },
+          "rule": "answer != 63 + question2"
+        }
+      ]
+    },
+    "question2": {
+      "id": "question2",
+      "type": "number",
+      "label": {
+        "en": "The ultimate answer..."
+      },
+      "required": "true",
+      "readOnly": null,
+      "items": [],
+      "className": [],
+      "style": null,
+      "activeWhen": "question1 = 'right'",
+      "validations": [
+        {
+          "message": {
+            "en": "Too small"
+          },
+          "rule": "answer < 42"
+        },
+        {
+          "message": {
+            "en": "Too large"
+          },
+          "rule": "answer > 42"
+        }
+      ]
+    },
+    "question1": {
+      "id": "question1",
+      "type": "text",
+      "label": {
+        "en": "Answer this question right"
+      },
+      "required": "question2 = 6 + var2",
+      "readOnly": null,
+      "items": [],
+      "className": [],
+      "style": null,
+      "activeWhen": "",
+      "validations": []
+    },
+    "listquestion1": {
+      "id": "listquestion1",
+      "type": "list",
+      "label": {
+        "en": "select please"
+      },
+      "required": "true",
+      "readOnly": null,
+      "items": [],
+      "className": [],
+      "style": null,
+      "activeWhen": "",
+      "validations": [],
+      "valueSetId": "listquestion1"
+    },
+    "group1": {
+      "id": "group1",
+      "type": "group",
+      "label": {
+        "en": "New Group"
+      },
+      "required": null,
+      "readOnly": null,
+      "items": [
+        "question1",
+        "question2",
+        "question3"
+      ],
+      "className": [],
+      "style": null,
+      "activeWhen": "",
+      "validations": []
+    }
+  },
+  "variables": [
+    {
+      "name": "var1",
+      "expression": "question2 + 5"
+    },
+    {
+      "name": "var2",
+      "expression": "var1 + 6"
+    }
+  ],
+  "metadata": {
+    "label": "FFRL test",
+    "created": "2016-02-19T15:13:17.893Z",
+    "lastSaved": "2016-02-19T15:30:22.950Z"
+  },
+  "valueSets": [
+    {
+      "id": "listquestion1",
+      "entries": [
+        {
+          "id": "1",
+          "label": {
+            "en": "first"
+          }
+        },
+        {
+          "id": "2",
+          "label": {
+            "en": "second"
+          }
+        },
+        {
+          "id": "3",
+          "label": {
+            "en": "third"
+          }
+        }
+      ]
+    }
+  ]
+}

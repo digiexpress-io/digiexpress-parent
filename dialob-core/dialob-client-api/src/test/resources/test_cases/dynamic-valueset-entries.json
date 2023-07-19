@@ -1,0 +1,84 @@
+{
+  "_id": "xxx",
+  "name": "multiChoice",
+  "data": {
+    "text1": {
+      "id": "text1",
+      "type": "text",
+      "label": {
+        "en": "Write something"
+      }
+    },
+    "group1": {
+      "id": "group1",
+      "type": "group",
+      "items": [
+        "group2"
+      ]
+    },
+    "group2": {
+      "id": "group2",
+      "type": "group",
+      "items": [
+        "multichoice1",
+        "text1"
+      ]
+    },
+    "multichoice1": {
+      "id": "multichoice1",
+      "type": "multichoice",
+      "label": {
+        "en": "Test"
+      },
+      "valueSetId": "vs1"
+    },
+    "questionnaire": {
+      "id": "questionnaire",
+      "type": "questionnaire",
+      "items": [
+        "group1"
+      ]
+    }
+  },
+  "metadata": {
+    "composer": {
+      "transient": {
+        "lastItem": {
+          "id": "text1",
+          "type": "text"
+        }
+      }
+    },
+    "label": "MultiChoice",
+    "languages": [
+      "en"
+    ]
+  },
+  "valueSets": [
+    {
+      "id": "vs1",
+      "entries": [
+        {
+          "id": "a",
+          "label": {
+            "en": "First"
+          }
+        },
+        {
+          "id": "b",
+          "label": {
+            "en": "Second"
+          },
+          "when": "text1 = 'b is ok'"
+        },
+        {
+          "id": "c",
+          "label": {
+            "en": "Third"
+          },
+          "when": "text1 != 'b is ok'"
+        }
+      ]
+    }
+  ]
+}

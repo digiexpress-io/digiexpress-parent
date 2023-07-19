@@ -1,0 +1,138 @@
+{
+  "_id": "issue-175",
+  "_rev": "224",
+  "name": "Testi_kysely1",
+  "data": {
+    "questionnaire": {
+      "id": "questionnaire",
+      "type": "questionnaire",
+      "items": [
+        "group1"
+      ]
+    },
+    "carBrand": {
+      "id": "carBrand",
+      "type": "text",
+      "label": {
+        "en": "Minkä merkkinen auto sinulla on?"
+      },
+      "required": "carOwner",
+      "activeWhen": "carOwner",
+      "validations": [
+        {
+          "message": {
+            "en": "Omistat auton vaikka et haluaisi?"
+          },
+          "rule": "willToOwnCar = 'No'"
+        }
+      ]
+    },
+    "carOwner": {
+      "id": "carOwner",
+      "type": "boolean",
+      "label": {
+        "en": "Onko sinulla auto?"
+      },
+      "validations": [
+        {
+          "message": {
+            "en": ""
+          }
+        }
+      ]
+    },
+    "number1": {
+      "id": "number1",
+      "type": "number",
+      "label": {
+        "en": "Ika"
+      }
+    },
+    "willToOwnCar": {
+      "id": "willToOwnCar",
+      "type": "list",
+      "label": {
+        "en": "Haluaisitko omistaa auton?"
+      },
+      "valueSetId": "vs1"
+    },
+    "group2": {
+      "id": "group2",
+      "type": "group",
+      "label": {
+        "en": "Auton omistaminen"
+      },
+      "items": [
+        "willToOwnCar",
+        "carOwner",
+        "carBrand",
+        "carModel",
+        "number1"
+      ]
+    },
+    "group1": {
+      "id": "group1",
+      "type": "group",
+      "items": [
+        "group2"
+      ]
+    },
+    "carModel": {
+      "id": "carModel",
+      "type": "text",
+      "label": {
+        "en": "Malli"
+      },
+      "activeWhen": "carOwner "
+    }
+  },
+  "metadata": {
+    "composer": {
+      "transient": {
+        "lastItem": {
+          "id": "number1",
+          "type": "number"
+        }
+      },
+      "contextValues": {
+        "context1": "kkm"
+      }
+    },
+    "tenantId": "10d66fc4-3da6-4474-9bb0-2aa21b34b29c",
+    "created": "2019-03-20T12:37:08.670+0000",
+    "creator": "3a09a7cc-a3b6-49fc-96dc-76d0c242d8d7",
+    "lastSaved": "2019-03-20T12:37:08.612+0000",
+    "label": "Testi1",
+    "languages": [
+      "en"
+    ],
+    "valid": true,
+    "savedBy": "825e9451-8d02-46d3-b5d3-051a9ceb9b74"
+  },
+  "variables": [
+    {
+      "name": "context1",
+      "context": true,
+      "contextType": "boolean"
+    }
+  ],
+  "valueSets": [
+    {
+      "id": "vs1",
+      "entries": [
+        {
+          "id": "Yes",
+          "label": {
+            "en": "Kyllä haluaisin"
+          }
+        },
+        {
+          "id": "No",
+          "label": {
+            "en": "En haluaisi"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "_id": "issue126",
+  "name": "issue126",
+  "data": {
+    "questionnaire": {
+      "id": "questionnaire",
+      "type": "questionnaire",
+      "items": [
+        "group1"
+      ]
+    },
+    "group1": {
+      "id": "group1",
+      "type": "group",
+      "items": [
+        "group2"
+      ]
+    },
+    "group2": {
+      "id": "group2",
+      "type": "group",
+      "items": [
+        "rowgroup1"
+      ]
+    },
+    "rowgroup1": {
+      "id": "rowgroup1",
+      "type": "rowgroup",
+      "items": [
+        "text1",
+        "boolean1",
+        "number1"
+      ]
+    },
+    "text1": {
+      "id": "text1",
+      "type": "text",
+      "label": {
+        "en": "kysy"
+      }
+    },
+    "boolean1": {
+      "id": "boolean1",
+      "type": "boolean",
+      "activeWhen": "",
+      "label": {
+        "en": "vastaus"
+      }
+    },
+    "number1": {
+      "id": "number1",
+      "type": "number",
+      "activeWhen": "text1 is answered"
+    }
+  },
+  "metadata": {
+    "label": "Issue 126: Is answered is not working in multi-row type",
+    "languages": [
+      "en"
+    ]
+  }
+}

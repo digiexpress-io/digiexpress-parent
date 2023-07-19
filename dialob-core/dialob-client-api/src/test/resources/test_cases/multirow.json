@@ -1,0 +1,71 @@
+{
+  "_id": "multirow",
+  "_rev": "1-multirow",
+  "data": {
+    "questionnaire": {
+      "id": "questionnaire",
+      "type": "questionnaire",
+      "label": {
+        "en": "multirow"
+      },
+      "items": [
+        "page1"
+      ]
+    },
+    "page1": {
+      "id": "page1",
+      "type": "group",
+      "items": [
+        "rg1", "group1"
+      ]
+    },
+    "group1": {
+      "id": "group1",
+      "type": "group",
+      "items": [
+        "q1", "q2"
+      ]
+    },
+    "rg1": {
+      "id": "rg1",
+      "type": "rowgroup",
+      "activeWhen": "q1 != 'off'",
+      "label": {
+        "en": "Survey group"
+      },
+      "items": [
+        "rgq1", "rgq2"
+      ],
+      "valueSetId": "vs1"
+    },
+    "q1": {
+      "id": "q1",
+      "type": "text"
+    },
+    "q2": {
+      "id": "q2",
+      "type": "text"
+    },
+    "rgq1": {
+      "id": "rgq1",
+      "type": "text"
+    },
+    "rgq2": {
+      "id": "rgq2",
+      "activeWhen": "rgq1 = 'on'",
+      "type": "text"
+    }
+  },
+  "metadata": {
+    "label": "New Dialog",
+    "created": "2018-05-18T08:11:06.318+0000",
+    "lastSaved": "2018-05-18T08:29:01.589+0000",
+    "valid": true,
+    "creator": "",
+    "tenantId": "itest",
+    "savedBy": "",
+    "languages": [
+      "en"
+    ]
+  }
+}

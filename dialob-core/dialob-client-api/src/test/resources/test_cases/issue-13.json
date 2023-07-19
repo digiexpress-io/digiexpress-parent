@@ -1,0 +1,83 @@
+{
+  "_id": "1753b3af09b1103cc2f31eac4dc609e8",
+  "_rev": "22",
+  "name": "multirow-test",
+  "data": {
+    "list1": {
+      "id": "list1",
+      "type": "list",
+      "required": "requireChoise",
+      "validations": [
+        {
+          "message": {
+            "en": "error1"
+          },
+          "rule": "number1 < 0"
+        }
+      ]
+    },
+    "questionnaire": {
+      "id": "questionnaire",
+      "type": "questionnaire",
+      "items": [
+        "group1"
+      ]
+    },
+    "rowgroup1": {
+      "id": "rowgroup1",
+      "type": "rowgroup",
+      "items": [
+        "text1",
+        "number1",
+        "requireChoise",
+        "note1",
+        "list1"
+      ]
+    },
+    "text1": {
+      "id": "text1",
+      "type": "text"
+    },
+    "requireChoise": {
+      "id": "requireChoise",
+      "type": "boolean"
+    },
+    "number1": {
+      "id": "number1",
+      "type": "number",
+      "validations": [
+        {
+          "message": {
+            "en": "error"
+          },
+          "rule": "answer > 100"
+        }
+      ]
+    },
+    "note1": {
+      "id": "note1",
+      "type": "note"
+    },
+    "group1": {
+      "id": "group1",
+      "type": "group",
+      "items": [
+        "rowgroup1"
+      ]
+    }
+  },
+  "metadata": {
+    "composer": {
+      "transient": {
+        "lastItem": {
+          "id": "list1",
+          "type": "list"
+        }
+      }
+    },
+    "label": "Multirow testing",
+    "languages": [
+      "en"
+    ]
+  }
+}

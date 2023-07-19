@@ -1,0 +1,103 @@
+{
+  "_id": "multichoice-question",
+  "_rev": "1-multichoice-question",
+  "data": {
+    "questionnaire": {
+      "id": "questionnaire",
+      "type": "questionnaire",
+      "label": {
+        "en": "New Form"
+      },
+      "required": null,
+      "readOnly": null,
+      "items": [
+        "page1"
+      ],
+      "className": [],
+      "style": null,
+      "activeWhen": null,
+      "validations": [],
+      "valueSetId": null
+    },
+    "page1": {
+      "id": "page1",
+      "type": "group",
+      "label": {
+        "en": "New Page"
+      },
+      "required": null,
+      "readOnly": null,
+      "items": [
+        "group1"
+      ],
+      "className": [],
+      "style": null,
+      "activeWhen": "",
+      "validations": [],
+      "valueSetId": null
+    },
+    "group1": {
+      "id": "group1",
+      "type": "group",
+      "label": {
+        "en": "New Group"
+      },
+      "required": null,
+      "readOnly": null,
+      "items": [
+        "mcquestion"
+      ],
+      "className": [],
+      "style": null,
+      "activeWhen": "",
+      "validations": [],
+      "valueSetId": null
+    },
+    "mcquestion": {
+      "id": "mcquestion",
+      "type": "multichoice",
+      "label": {
+        "en": "Multichoice"
+      },
+      "required": null,
+      "readOnly": null,
+      "items": [],
+      "className": [],
+      "style": null,
+      "activeWhen": "",
+      "validations": [],
+      "valueSetId": "mcquestion"
+    }
+  },
+  "metadata": {
+    "label": "Multichoise Test",
+    "created": "2016-03-15T08:57:05.290Z",
+    "lastSaved": "2016-03-15T11:36:35.555Z",
+    "valid": true
+  },
+  "valueSets": [
+    {
+      "id": "mcquestion",
+      "entries": [
+        {
+          "id": "A",
+          "label": {
+            "en": "choice A"
+          }
+        },
+        {
+          "id": "B",
+          "label": {
+            "en": "choice B"
+          }
+        },
+        {
+          "id": "C",
+          "label": {
+            "en": "choice C"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "_id": "171",
+  "name": "171",
+  "data": {
+    "questionnaire": {
+      "id": "questionnaire",
+      "type": "questionnaire",
+      "items": [
+        "group1"
+      ]
+    },
+    "date1": {
+      "id": "date1",
+      "type": "date",
+      "label": {
+        "en": "dat1"
+      }
+    },
+    "date2": {
+      "id": "date2",
+      "type": "date",
+      "label": {
+        "en": "date2"
+      }
+    },
+    "group1": {
+      "id": "group1",
+      "type": "group",
+      "items": [
+        "date1",
+        "date2",
+        "text1"
+      ]
+    },
+    "text1": {
+      "id": "text1",
+      "type": "text",
+      "label": {
+        "en": "text1"
+      },
+      "activeWhen": "date1 - date2 > 100"
+    }
+  },
+  "metadata": {
+    "label": "issues/171",
+    "languages": [
+      "en"
+    ]
+  }
+}

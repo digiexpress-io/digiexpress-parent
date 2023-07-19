@@ -1,0 +1,376 @@
+{
+  "_id": "d04a84e2fb125035f0cf97c1b6022a84",
+  "_rev": "462-704440f6b6770d503bdf4a056f1558f8",
+  "saving": false,
+  "data": {
+    "page1": {
+      "id": "page1",
+      "type": "group",
+      "label": {
+        "en": "FIRST PAGE"
+      },
+      "required": null,
+      "readOnly": null,
+      "items": [
+        "group1",
+        "group2",
+        "group3"
+      ],
+      "className": [],
+      "style": null,
+      "activeWhen": "",
+      "validations": [],
+      "valueSetId": null
+    },
+    "questionnaire": {
+      "id": "questionnaire",
+      "type": "questionnaire",
+      "label": {
+        "en": "New Form"
+      },
+      "required": null,
+      "readOnly": null,
+      "items": [
+        "page1",
+        "page2"
+      ],
+      "className": [],
+      "style": null,
+      "activeWhen": null,
+      "validations": [],
+      "valueSetId": null
+    },
+    "page2": {
+      "id": "page2",
+      "type": "group",
+      "label": {
+        "en": "New Page"
+      },
+      "required": null,
+      "readOnly": null,
+      "items": [
+        "group4"
+      ],
+      "className": [],
+      "style": null,
+      "activeWhen": "question6 = \"opt2\"",
+      "validations": [],
+      "valueSetId": null
+    },
+    "question10": {
+      "id": "question10",
+      "type": "number",
+      "label": {
+        "en": "How long you have been working in insurance vertical?"
+      },
+      "required": null,
+      "readOnly": null,
+      "items": [],
+      "className": [],
+      "style": null,
+      "activeWhen": "",
+      "validations": [],
+      "valueSetId": null
+    },
+    "question11": {
+      "id": "question11",
+      "type": "note",
+      "label": {
+        "en": "You are a wealthy couple"
+      },
+      "required": null,
+      "readOnly": null,
+      "items": [],
+      "className": [],
+      "style": null,
+      "activeWhen": "question1 > 34 and\nquestion3 = true and\nIncome >= 120000",
+      "validations": [],
+      "valueSetId": null
+    },
+    "question1": {
+      "id": "question1",
+      "type": "number",
+      "label": {
+        "en": "What is your age?"
+      },
+      "required": "true",
+      "readOnly": null,
+      "items": [],
+      "className": [],
+      "style": null,
+      "activeWhen": "",
+      "validations": [
+        {
+          "message": {
+            "en": "Too young!"
+          },
+          "rule": "answer < 15"
+        },
+        {
+          "message": {
+            "en": "Too old!"
+          },
+          "rule": "answer > 100"
+        }
+      ],
+      "valueSetId": null
+    },
+    "question2": {
+      "id": "question2",
+      "type": "number",
+      "label": {
+        "en": "What is your yearly income?"
+      },
+      "required": null,
+      "readOnly": null,
+      "items": [],
+      "className": [],
+      "style": null,
+      "activeWhen": "question1 > 14 and question1 < 100",
+      "validations": [
+        {
+          "message": {
+            "en": "Income can't be negative"
+          },
+          "rule": "answer < 0"
+        }
+      ],
+      "valueSetId": null
+    },
+    "question3": {
+      "id": "question3",
+      "type": "boolean",
+      "label": {
+        "en": "Are you married?"
+      },
+      "required": "true",
+      "readOnly": null,
+      "items": [],
+      "className": [
+        "radio"
+      ],
+      "style": null,
+      "activeWhen": "",
+      "validations": [],
+      "valueSetId": null
+    },
+    "question4": {
+      "id": "question4",
+      "type": "boolean",
+      "label": {
+        "en": "Is your spouse working?"
+      },
+      "required": null,
+      "readOnly": null,
+      "items": [],
+      "className": [
+        "radio"
+      ],
+      "style": null,
+      "activeWhen": "question3 = true",
+      "validations": [],
+      "valueSetId": null
+    },
+    "question5": {
+      "id": "question5",
+      "type": "number",
+      "label": {
+        "en": "What is your spouse's yearly income?"
+      },
+      "required": null,
+      "readOnly": null,
+      "items": [],
+      "className": [],
+      "style": null,
+      "activeWhen": "question4 = true",
+      "validations": [
+        {
+          "message": {
+            "en": "Income can't be negative!"
+          },
+          "rule": "answer < 0"
+        }
+      ],
+      "valueSetId": null
+    },
+    "question6": {
+      "id": "question6",
+      "type": "list",
+      "label": {
+        "en": "In what line of business is your spouse working?"
+      },
+      "required": null,
+      "readOnly": null,
+      "items": [],
+      "className": [],
+      "style": null,
+      "activeWhen": "question5 > 30000",
+      "validations": [],
+      "valueSetId": "question6"
+    },
+    "question7": {
+      "id": "question7",
+      "type": "note",
+      "label": {
+        "en": "You are a wealthy youngster!"
+      },
+      "required": null,
+      "readOnly": null,
+      "items": [],
+      "className": [],
+      "style": null,
+      "activeWhen": "question1 > 14 and\nquestion1 < 35 and\nquestion2 >= 70000",
+      "validations": [],
+      "valueSetId": null
+    },
+    "question8": {
+      "id": "question8",
+      "type": "note",
+      "label": {
+        "en": "You are a wealthy person!"
+      },
+      "required": null,
+      "readOnly": null,
+      "items": [],
+      "className": [],
+      "style": null,
+      "activeWhen": "question1 > 34 and\nquestion3 = false and\nquestion2 >= 100000",
+      "validations": [],
+      "valueSetId": null
+    },
+    "group1": {
+      "id": "group1",
+      "type": "group",
+      "label": {
+        "en": "Basic questions"
+      },
+      "required": null,
+      "readOnly": null,
+      "items": [
+        "question1",
+        "question2"
+      ],
+      "className": [],
+      "style": null,
+      "activeWhen": "",
+      "validations": [],
+      "valueSetId": null
+    },
+    "question9": {
+      "id": "question9",
+      "type": "note",
+      "label": {
+        "en": "Insurance rocks! Check out the new page!"
+      },
+      "required": null,
+      "readOnly": null,
+      "items": [],
+      "className": [],
+      "style": null,
+      "activeWhen": "question6 = \"opt2\"",
+      "validations": [],
+      "valueSetId": null
+    },
+    "group2": {
+      "id": "group2",
+      "type": "group",
+      "label": {
+        "en": "Marital status"
+      },
+      "required": null,
+      "readOnly": null,
+      "items": [
+        "question3",
+        "question4",
+        "question5",
+        "question6",
+        "question9"
+      ],
+      "className": [],
+      "style": null,
+      "activeWhen": "question1 > 34 and question1 < 100",
+      "validations": [],
+      "valueSetId": null
+    },
+    "group3": {
+      "id": "group3",
+      "type": "group",
+      "label": {
+        "en": "Conclusions"
+      },
+      "required": null,
+      "readOnly": null,
+      "items": [
+        "question7",
+        "question8",
+        "question11"
+      ],
+      "className": [],
+      "style": null,
+      "activeWhen": "",
+      "validations": [],
+      "valueSetId": null
+    },
+    "group4": {
+      "id": "group4",
+      "type": "group",
+      "label": {
+        "en": "Insurance specific questions!"
+      },
+      "required": null,
+      "readOnly": null,
+      "items": [
+        "question10"
+      ],
+      "className": [],
+      "style": null,
+      "activeWhen": "",
+      "validations": [],
+      "valueSetId": null
+    }
+  },
+  "metadata": {
+    "label": "Simple Example, FFRL",
+    "created": "2016-02-23T12:38:41.451Z",
+    "lastSaved": "2016-03-14T08:33:43.204Z",
+    "language": "FFRL",
+    "valid": true
+  },
+  "variables": [
+    {
+      "name": "Income",
+      "expression": "question2 + question5"
+    }
+  ],
+  "valueSets": [
+    {
+      "id": "question6",
+      "entries": [
+        {
+          "id": "opt1",
+          "label": {
+            "en": "Banking"
+          }
+        },
+        {
+          "id": "opt2",
+          "label": {
+            "en": "Insurance"
+          }
+        },
+        {
+          "id": "opt3",
+          "label": {
+            "en": "Goverement"
+          }
+        },
+        {
+          "id": "opt4",
+          "label": {
+            "en": "Software"
+          }
+        }
+      ]
+    }
+  ]
+}

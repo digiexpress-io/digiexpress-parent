@@ -1,0 +1,119 @@
+{
+  "_id": "9ea7888105b8a9bf7777cef8e3005b1d",
+  "_rev": "56-4f40ac96f19b3c4febf706c856f1ca87",
+  "saving": false,
+  "data": {
+    "questionnaire": {
+      "id": "questionnaire",
+      "type": "questionnaire",
+      "label": {
+        "en": "New Form"
+      },
+      "required": null,
+      "readOnly": null,
+      "items": [
+        "page1"
+      ],
+      "className": [],
+      "style": null,
+      "activeWhen": null,
+      "validations": [],
+      "valueSetId": null
+    },
+    "page1": {
+      "id": "page1",
+      "type": "group",
+      "label": {
+        "en": "New Page"
+      },
+      "required": null,
+      "readOnly": null,
+      "items": [
+        "group1"
+      ],
+      "className": [],
+      "style": null,
+      "activeWhen": "",
+      "validations": [],
+      "valueSetId": null
+    },
+    "group1": {
+      "id": "group1",
+      "type": "group",
+      "label": {
+        "en": "New Group"
+      },
+      "required": null,
+      "readOnly": null,
+      "items": [
+        "question1",
+        "question2",
+        "question3"
+      ],
+      "className": [],
+      "style": null,
+      "activeWhen": "",
+      "validations": [],
+      "valueSetId": null
+    },
+    "question1": {
+      "id": "question1",
+      "type": "text",
+      "label": {
+        "en": "This question"
+      },
+      "required": null,
+      "readOnly": null,
+      "items": [],
+      "className": [],
+      "style": null,
+      "activeWhen": "",
+      "validations": [],
+      "valueSetId": null
+    },
+    "question2": {
+      "id": "question2",
+      "type": "number",
+      "label": {
+        "en": "Number"
+      },
+      "required": null,
+      "readOnly": null,
+      "items": [],
+      "className": [],
+      "style": null,
+      "activeWhen": "",
+      "validations": [],
+      "valueSetId": null
+    },
+    "question3": {
+      "id": "question3",
+      "type": "note",
+      "label": {
+        "en": "Answer of first question is {question1} {var}"
+      },
+      "required": null,
+      "readOnly": null,
+      "items": [],
+      "className": [],
+      "style": null,
+      "activeWhen": "",
+      "validations": [],
+      "valueSetId": null
+    }
+  },
+  "rules": {},
+  "metadata": {
+    "label": "Variable Test",
+    "created": "2016-03-15T08:57:05.290Z",
+    "lastSaved": "2016-03-15T11:36:35.555Z",
+    "valid": true
+  },
+  "variables": [
+    {
+      "name": "var",
+      "expression": "question2 + 5"
+    }
+  ],
+  "valueSets": []
+}

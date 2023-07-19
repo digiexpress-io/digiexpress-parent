@@ -1,0 +1,252 @@
+{
+  "_id": "8849d6381cbc474e13347e76490736b5",
+  "_rev": "246-30ba899d4a4c1b4b7f98d1e4917f4712",
+  "data": {
+    "page1": {
+      "id": "page1",
+      "type": "group",
+      "label": {
+        "en": "New Page"
+      },
+      "required": null,
+      "readOnly": null,
+      "items": [
+        "group1",
+        "group2",
+        "group3"
+      ],
+      "className": [],
+      "style": null,
+      "activeWhen": "",
+      "validations": [],
+      "valueSetId": null
+    },
+    "questionnaire": {
+      "id": "questionnaire",
+      "type": "questionnaire",
+      "label": {
+        "en": "New Form"
+      },
+      "required": null,
+      "readOnly": null,
+      "items": [
+        "page1"
+      ],
+      "className": [],
+      "style": null,
+      "activeWhen": null,
+      "validations": [],
+      "valueSetId": null
+    },
+    "selections": {
+      "id": "selections",
+      "type": "multichoice",
+      "label": {
+        "en": "Select"
+      },
+      "required": null,
+      "readOnly": null,
+      "items": [],
+      "className": [],
+      "style": null,
+      "activeWhen": "",
+      "validations": [],
+      "valueSetId": "question1_valueset1"
+    },
+    "newSelectionsxx": {
+      "id": "newSelectionsxx",
+      "type": "multichoice",
+      "label": {
+        "en": "Multi-choise"
+      },
+      "required": null,
+      "readOnly": null,
+      "items": [],
+      "className": [],
+      "style": null,
+      "activeWhen": "",
+      "validations": [],
+      "valueSetId": "question1_valueset2"
+    },
+    "question2": {
+      "id": "question2",
+      "type": "note",
+      "label": {
+        "en": "First has been selected"
+      },
+      "required": null,
+      "readOnly": null,
+      "items": [],
+      "className": [],
+      "style": null,
+      "activeWhen": "\"FIRST\" in selections",
+      "validations": [],
+      "valueSetId": null
+    },
+    "question3": {
+      "id": "question3",
+      "type": "note",
+      "label": {
+        "en": "Second out or is not answered"
+      },
+      "required": null,
+      "readOnly": null,
+      "items": [],
+      "className": [],
+      "style": null,
+      "activeWhen": "selections is not answered or \"SECOND\" not in selections",
+      "validations": [],
+      "valueSetId": null
+    },
+    "question4": {
+      "id": "question4",
+      "type": "note",
+      "label": {
+        "en": "Second and thirds are not selected"
+      },
+      "required": null,
+      "readOnly": null,
+      "items": [],
+      "className": [],
+      "style": null,
+      "activeWhen": "\"SECOND\" not in selections and \"THIRD\" not in selections",
+      "validations": [],
+      "valueSetId": null
+    },
+    "question5": {
+      "id": "question5",
+      "type": "note",
+      "label": {
+        "en": "Third and Insurance are selected"
+      },
+      "required": null,
+      "readOnly": null,
+      "items": [],
+      "className": [],
+      "style": null,
+      "activeWhen": "\"THIRD\" in selections and \"opt2\" in newSelectionsxx",
+      "validations": [],
+      "valueSetId": null
+    },
+    "group1": {
+      "id": "group1",
+      "type": "group",
+      "label": {
+        "en": "Multi-choice first"
+      },
+      "required": null,
+      "readOnly": null,
+      "items": [
+        "selections",
+        "question2",
+        "question4",
+        "question3"
+      ],
+      "className": [],
+      "style": null,
+      "activeWhen": "",
+      "validations": [],
+      "valueSetId": null
+    },
+    "group2": {
+      "id": "group2",
+      "type": "group",
+      "label": {
+        "en": "Multi-choice second"
+      },
+      "required": null,
+      "readOnly": null,
+      "items": [
+        "newSelectionsxx",
+        "question5"
+      ],
+      "className": [],
+      "style": null,
+      "activeWhen": "selections is answered",
+      "validations": [],
+      "valueSetId": null
+    },
+    "group3": {
+      "id": "group3",
+      "type": "rowgroup",
+      "label": {
+        "en": "New Group"
+      },
+      "required": null,
+      "readOnly": null,
+      "items": [],
+      "className": [],
+      "style": null,
+      "activeWhen": "",
+      "validations": [],
+      "valueSetId": null
+    }
+  },
+  "serviceCalls": {},
+  "metadata": {
+    "labels": null,
+    "defaultSubmitUrl": null,
+    "languages": [],
+    "label": "Multi-choice (test)",
+    "created": "2016-10-10T11:52:08.148Z",
+    "creator": "info@dialob.io",
+    "lastSaved": "2017-02-10T14:20:49.525Z",
+    "savedBy": "info@dialob.io",
+    "valid": true
+  },
+  "variables": [],
+  "valueSets": [
+    {
+      "id": "question1_valueset1",
+      "entries": [
+        {
+          "id": "FIRST",
+          "label": {
+            "en": "1"
+          }
+        },
+        {
+          "id": "SECOND",
+          "label": {
+            "en": "2"
+          }
+        },
+        {
+          "id": "THIRD",
+          "label": {
+            "en": "3"
+          }
+        }
+      ]
+    },
+    {
+      "id": "question1_valueset2",
+      "entries": [
+        {
+          "id": "opt1",
+          "label": {
+            "en": "Banking"
+          }
+        },
+        {
+          "id": "opt2",
+          "label": {
+            "en": "Insurance"
+          }
+        },
+        {
+          "id": "opt3",
+          "label": {
+            "en": "Goverment"
+          }
+        },
+        {
+          "id": "opt4",
+          "label": {
+            "en": "Software"
+          }
+        }
+      ]
+    }
+  ]
+}

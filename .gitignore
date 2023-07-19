@@ -1,0 +1,16 @@
+*.iml
+.idea/
+target/
+*~
+.DS_Store
+*.log*
+.classpath
+.project
+.settings/
+node_modules/
+bower_components/
+filedb/
+spring.log
+.vagrant/
+.factorypath
+nohup.out

@@ -1,0 +1,152 @@
+{
+  "_id": "0ccf443e4cc54fe497a6f744950135e3",
+  "_rev": "31",
+  "data": {
+    "group1": {
+      "activeWhen": "",
+      "className": [],
+      "defaultValue": null,
+      "id": "group1",
+      "items": [
+        "value1",
+        "value2",
+        "question1",
+        "cond"
+      ],
+      "label": {
+        "en": "New Group"
+      },
+      "readOnly": null,
+      "required": null,
+      "style": null,
+      "type": "group",
+      "validations": [],
+      "valueSetId": null
+    },
+    "page1": {
+      "activeWhen": "",
+      "className": [],
+      "defaultValue": null,
+      "id": "page1",
+      "items": [
+        "group1"
+      ],
+      "label": {
+        "en": "New Page"
+      },
+      "readOnly": null,
+      "required": null,
+      "style": null,
+      "type": "group",
+      "validations": [],
+      "valueSetId": null
+    },
+    "question1": {
+      "activeWhen": "",
+      "className": [],
+      "defaultValue": null,
+      "id": "question1",
+      "items": [],
+      "label": {
+        "en": "Sum is {var1}"
+      },
+      "readOnly": null,
+      "required": null,
+      "style": null,
+      "type": "note",
+      "validations": [],
+      "valueSetId": null
+    },
+    "questionnaire": {
+      "activeWhen": null,
+      "className": [],
+      "defaultValue": null,
+      "id": "questionnaire",
+      "items": [
+        "page1"
+      ],
+      "label": {
+        "en": "New Dialog"
+      },
+      "readOnly": null,
+      "required": null,
+      "style": null,
+      "type": "questionnaire",
+      "validations": [],
+      "valueSetId": null
+    },
+    "value1": {
+      "activeWhen": "",
+      "className": [],
+      "id": "value1",
+      "items": [],
+      "label": {
+        "en": "New Question"
+      },
+      "readOnly": null,
+      "required": null,
+      "style": null,
+      "type": "number",
+      "defaultValue": 0,
+      "validations": [],
+      "valueSetId": null
+    },
+    "value2": {
+      "activeWhen": "",
+      "className": [],
+      "id": "value2",
+      "items": [],
+      "label": {
+        "en": "New Question"
+      },
+      "readOnly": null,
+      "required": null,
+      "style": null,
+      "type": "number",
+      "defaultValue": 0,
+      "validations": [],
+      "valueSetId": null
+    },
+    "cond": {
+      "activeWhen": "value1 is answered",
+      "className": [],
+      "defaultValue": null,
+      "id": "cond",
+      "items": [],
+      "label": {
+        "en": "value1 is answered"
+      },
+      "readOnly": null,
+      "required": null,
+      "style": null,
+      "type": "note",
+      "validations": [],
+      "valueSetId": null
+    }
+  },
+  "metadata": {
+    "created": "2017-03-30T13:09:03.718Z",
+    "creator": "825e9451-8d02-46d3-b5d3-051a9ceb9b74",
+    "defaultSubmitUrl": null,
+    "label": "New Dialog",
+    "labels": null,
+    "languages": [
+      "en"
+    ],
+    "lastSaved": "2017-04-05T05:04:03.072Z",
+    "savedBy": "825e9451-8d02-46d3-b5d3-051a9ceb9b74",
+    "tenantId": "",
+    "valid": true
+  },
+  "serviceCalls": {},
+  "valueSets": [],
+  "variables": [
+    {
+      "context": null,
+      "contextType": null,
+      "defaultValue": null,
+      "expression": "value1 + value2",
+      "name": "var1"
+    }
+  ]
+}

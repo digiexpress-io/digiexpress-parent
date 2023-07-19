@@ -1,0 +1,93 @@
+{
+  "_id": "26a1eeac86ccbe005c5fe89d5cf219cb",
+  "_rev": "32",
+  "name": "countTEst",
+  "data": {
+    "page1": {
+      "id": "page1",
+      "type": "group",
+      "view": "page",
+      "items": [
+        "group1"
+      ]
+    },
+    "text1": {
+      "id": "text1",
+      "type": "text",
+      "view": "text",
+      "validations": [
+        {
+          "message": {
+            "en": "test"
+          },
+          "rule": "count(multichoice1 ) > 1"
+        }
+      ]
+    },
+    "group1": {
+      "id": "group1",
+      "type": "group",
+      "items": [
+        "multichoice1",
+        "text1"
+      ],
+      "props": {
+        "columns": 1
+      }
+    },
+    "multichoice1": {
+      "id": "multichoice1",
+      "type": "multichoice",
+      "valueSetId": "vs1"
+    },
+    "questionnaire": {
+      "id": "questionnaire",
+      "type": "questionnaire",
+      "items": [
+        "page1"
+      ]
+    }
+  },
+  "metadata": {
+    "composer": {
+      "transient": {
+        "lastItem": {
+          "id": "text1",
+          "type": "text",
+          "view": "text"
+        }
+      }
+    },
+    "tenantId": "64f432ba-d6bc-4b94-bf3a-6cf4bc9a4e27",
+    "created": "2020-10-06T12:28:49.186+00:00",
+    "creator": "3caa74e7-0182-4afa-aadb-8b968984d768",
+    "lastSaved": "2020-10-06T12:29:56.030+00:00",
+    "label": "countTEst",
+    "languages": [
+      "en"
+    ],
+    "valid": false,
+    "savedBy": "3caa74e7-0182-4afa-aadb-8b968984d768"
+  },
+  "valueSets": [
+    {
+      "id": "vs1",
+      "entries": [
+        {
+          "id": "a",
+          "label": {
+            "en": "aa"
+          },
+          "when": ""
+        },
+        {
+          "id": "b",
+          "label": {
+            "en": "bb"
+          },
+          "when": ""
+        }
+      ]
+    }
+  ]
+}

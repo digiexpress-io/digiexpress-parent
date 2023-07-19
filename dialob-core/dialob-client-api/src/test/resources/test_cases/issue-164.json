@@ -1,0 +1,157 @@
+{
+  "_id": "5193df1cbf405a66d906e7842b12bd6a",
+  "_rev": "126",
+  "name": "test2",
+  "data": {
+    "decimal1": {
+      "id": "decimal1",
+      "type": "decimal",
+      "label": {
+        "en": "Give a decimal"
+      },
+      "validations": [
+        {
+          "message": {
+            "en": "Too small number"
+          },
+          "rule": "answer < 0"
+        }
+      ]
+    },
+    "questionnaire": {
+      "id": "questionnaire",
+      "type": "questionnaire",
+      "items": [
+        "group1"
+      ]
+    },
+    "number1": {
+      "id": "number1",
+      "type": "number",
+      "label": {
+        "en": "Give a number"
+      }
+    },
+    "boolean1": {
+      "id": "boolean1",
+      "type": "boolean",
+      "label": {
+        "en": "Yes of No"
+      },
+      "activeWhen": "decimal1 > 3"
+    },
+    "boolean2": {
+      "id": "boolean2",
+      "type": "boolean",
+      "label": {
+        "en": "Yes of No 2"
+      },
+      "activeWhen": "0 < decimal1"
+    },
+    "surveygroup1": {
+      "id": "surveygroup1",
+      "type": "surveygroup",
+      "label": {
+        "en": "Take a survey"
+      },
+      "description": {
+        "en": "Take a survey in here"
+      },
+      "items": [
+        "survey1",
+        "survey2"
+      ],
+      "activeWhen": "number1 > 0",
+      "valueSetId": "vs1"
+    },
+    "group1": {
+      "id": "group1",
+      "type": "group",
+      "items": [
+        "group2",
+        "group3"
+      ]
+    },
+    "group2": {
+      "id": "group2",
+      "type": "group",
+      "items": [
+        "number1",
+        "decimal1",
+        "surveygroup1"
+      ]
+    },
+    "group3": {
+      "id": "group3",
+      "type": "group",
+      "items": [
+        "boolean1",
+        "boolean2"
+      ]
+    },
+    "survey1": {
+      "id": "survey1",
+      "type": "survey",
+      "label": {
+        "en": "Survey item1"
+      }
+    },
+    "survey2": {
+      "id": "survey2",
+      "type": "survey",
+      "label": {
+        "en": "Survey item2"
+      }
+    }
+  },
+  "metadata": {
+    "composer": {
+      "transient": {
+        "lastItem": {
+          "id": "survey2",
+          "type": "survey"
+        }
+      },
+      "contextValues": {
+        "context1": "100"
+      }
+    },
+    "tenantId": "7c0161b5-2956-48c0-8aad-36b5763d560e",
+    "created": "2019-03-09T04:15:52.554+0000",
+    "creator": "c636fae7-9a16-4a43-bd5d-fd79ab5dfe43",
+    "lastSaved": "2019-03-13T08:24:54.382+0000",
+    "label": "Testing all kind of things",
+    "languages": [
+      "en"
+    ],
+    "valid": true,
+    "savedBy": "3caa74e7-0182-4afa-aadb-8b968984d768"
+  },
+  "variables": [
+    {
+      "name": "context1",
+      "defaultValue": "100",
+      "context": true,
+      "contextType": "number"
+    }
+  ],
+  "valueSets": [
+    {
+      "id": "vs1",
+      "entries": [
+        {
+          "id": "first",
+          "label": {
+            "en": "Click me"
+          }
+        },
+        {
+          "id": "second",
+          "label": {
+            "en": "Or click me"
+          }
+        }
+      ]
+    }
+  ]
+}

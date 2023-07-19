@@ -1,0 +1,85 @@
+{
+  "_id": "issue-134",
+  "_rev": "100",
+  "name": "next-test",
+  "data": {
+    "questionnaire": {
+      "id": "questionnaire",
+      "type": "questionnaire",
+      "items": [
+        "group1",
+        "group3",
+        "group4"
+      ]
+    },
+    "text1": {
+      "id": "text1",
+      "type": "text",
+      "validations": [
+        {
+          "message": {
+            "en": "err"
+          },
+          "rule": "enableError"
+        }
+      ]
+    },
+    "page2Error": {
+      "id": "page2Error",
+      "type": "text",
+      "validations": [
+        {
+          "message": {
+            "en": "error"
+          },
+          "rule": "answer = 'error'"
+        }
+      ]
+    },
+    "enableError": {
+      "id": "enableError",
+      "type": "boolean"
+    },
+    "group1": {
+      "id": "group1",
+      "type": "group",
+      "items": [
+        "group2"
+      ]
+    },
+    "group2": {
+      "id": "group2",
+      "type": "group",
+      "items": [
+        "enableError",
+        "text1"
+      ]
+    },
+    "group3": {
+      "id": "group3",
+      "type": "group",
+      "items": [
+        "group5"
+      ]
+    },
+    "group4": {
+      "id": "group4",
+      "type": "group"
+    },
+    "group5": {
+      "id": "group5",
+      "type": "group",
+      "items": [
+        "page2Error"
+      ]
+    }
+  },
+  "metadata": {
+    "tenantId": "64f432ba-d6bc-4b94-bf3a-6cf4bc9a4e27",
+    "created": "2019-05-09T07:17:40.308+0000",
+    "label": "Test NEXT",
+    "languages": [
+      "en"
+    ]
+  }
+}

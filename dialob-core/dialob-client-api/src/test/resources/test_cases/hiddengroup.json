@@ -1,0 +1,152 @@
+{
+  "_id": "4038376954521e22b17bde24a907342e",
+  "_rev": "29-3ae4bf24fe6d4b5179326316f78c771e",
+  "data": {
+    "questionnaire": {
+      "id": "questionnaire",
+      "type": "questionnaire",
+      "label": {
+        "en": "New Form"
+      },
+      "required": null,
+      "readOnly": null,
+      "items": [
+        "page1"
+      ],
+      "className": [],
+      "style": null,
+      "activeWhen": null,
+      "validations": [],
+      "valueSetId": null
+    },
+    "page1": {
+      "id": "page1",
+      "type": "group",
+      "label": {
+        "en": "New Page"
+      },
+      "required": null,
+      "readOnly": null,
+      "items": [
+        "group1",
+        "group2",
+        "group3"
+      ],
+      "className": [],
+      "style": null,
+      "activeWhen": "",
+      "validations": [],
+      "valueSetId": null
+    },
+    "group1": {
+      "id": "group1",
+      "type": "group",
+      "label": {
+        "en": "Show group"
+      },
+      "required": null,
+      "readOnly": null,
+      "items": [
+        "question1"
+      ],
+      "className": [],
+      "style": null,
+      "activeWhen": "",
+      "validations": [],
+      "valueSetId": null
+    },
+    "group2": {
+      "id": "group2",
+      "type": "group",
+      "label": {
+        "en": "Hiding group"
+      },
+      "required": null,
+      "readOnly": null,
+      "items": [
+        "question2"
+      ],
+      "className": [],
+      "style": null,
+      "activeWhen": "question1 = true",
+      "validations": [],
+      "valueSetId": null
+    },
+    "question1": {
+      "id": "question1",
+      "type": "boolean",
+      "label": {
+        "en": "Show group"
+      },
+      "required": null,
+      "readOnly": null,
+      "items": [],
+      "className": [],
+      "style": null,
+      "activeWhen": "",
+      "validations": [],
+      "valueSetId": null
+    },
+    "group3": {
+      "id": "group3",
+      "type": "group",
+      "label": {
+        "en": "Another group"
+      },
+      "required": null,
+      "readOnly": null,
+      "items": [
+        "question3"
+      ],
+      "className": [],
+      "style": null,
+      "activeWhen": "",
+      "validations": [],
+      "valueSetId": null
+    },
+    "question2": {
+      "id": "question2",
+      "type": "boolean",
+      "label": {
+        "en": "Control visibility"
+      },
+      "required": null,
+      "readOnly": null,
+      "items": [],
+      "className": [],
+      "style": null,
+      "activeWhen": "",
+      "validations": [],
+      "valueSetId": null
+    },
+    "question3": {
+      "id": "question3",
+      "type": "note",
+      "label": {
+        "en": "This is controlled"
+      },
+      "required": null,
+      "readOnly": null,
+      "items": [],
+      "className": [],
+      "style": null,
+      "activeWhen": "question2 is answered",
+      "validations": [],
+      "valueSetId": null
+    }
+  },
+  "serviceCalls": {},
+  "metadata": {
+    "labels": null,
+    "defaultSubmitUrl": null,
+    "languages": [],
+    "label": "Group hiding (test)",
+    "created": "2016-10-27T21:29:11.133Z",
+    "creator": "info@dialob.io",
+    "lastSaved": "2016-10-27T21:30:49.843Z",
+    "savedBy": "info@dialob.io",
+    "valid": true
+  },
+  "variables": [],
+  "valueSets": []
+}

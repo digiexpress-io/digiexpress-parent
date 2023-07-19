@@ -1,0 +1,51 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>io.dialob</groupId>
+    <artifactId>dialob-core</artifactId>
+    <version>888-SNAPSHOT</version>
+  </parent>
+  <packaging>jar</packaging>
+  <artifactId>dialob-form-store-pgsql</artifactId>
+
+
+  <dependencies>
+
+    <dependency>
+      <groupId>io.dialob</groupId>
+      <artifactId>dialob-client-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.resys.hdes</groupId>
+      <artifactId>thena-docdb-pgsql</artifactId>
+    </dependency>
+
+    <!-- Test dependencies -->
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-junit5</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-junit5-internal</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.skyscreamer</groupId>
+      <artifactId>jsonassert</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+</project>

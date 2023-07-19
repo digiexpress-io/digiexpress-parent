@@ -1,0 +1,90 @@
+{
+  "_id": "79cabee2daadc17baaff4309f6687070",
+  "name": "inRuleTest",
+  "data": {
+    "list1": {
+      "id": "list1",
+      "type": "list",
+      "valueSetId": "vs1"
+    },
+    "text1": {
+      "id": "text1",
+      "type": "text",
+      "label": {
+        "en": "Whatever"
+      }
+    },
+    "group1": {
+      "id": "group1",
+      "type": "group",
+      "items": [
+        "group2"
+      ]
+    },
+    "group2": {
+      "id": "group2",
+      "type": "group",
+      "items": [
+        "list1",
+        "group3"
+      ]
+    },
+    "group3": {
+      "id": "group3",
+      "type": "group",
+      "label": {
+        "en": "Whatever group"
+      },
+      "items": [
+        "text1"
+      ],
+      "activeWhen": "list1 in ('a', 'b')"
+    },
+    "questionnaire": {
+      "id": "questionnaire",
+      "type": "questionnaire",
+      "items": [
+        "group1"
+      ]
+    }
+  },
+  "metadata": {
+    "composer": {
+      "transient": {
+        "lastItem": {
+          "id": "text1",
+          "type": "text"
+        }
+      }
+    },
+    "label": "in rule test",
+    "languages": [
+      "en"
+    ]
+  },
+  "valueSets": [
+    {
+      "id": "vs1",
+      "entries": [
+        {
+          "id": "a",
+          "label": {
+            "en": "First"
+          }
+        },
+        {
+          "id": "b",
+          "label": {
+            "en": "Second"
+          }
+        },
+        {
+          "id": "c",
+          "label": {
+            "en": "Third"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,177 @@
+{
+  "_id": "inactive-present",
+  "_rev": "51-c713310f9e8bce70c0dadf4388a1da51",
+  "data": {
+    "questionnaire": {
+      "id": "questionnaire",
+      "type": "questionnaire",
+      "label": {
+        "en": "New Form"
+      },
+      "required": null,
+      "readOnly": null,
+      "items": [
+        "page1",
+        "page2"
+      ],
+      "className": [],
+      "style": null,
+      "validations": [
+      ],
+      "valueSetId": null
+    },
+    "page1": {
+      "id": "page1",
+      "type": "group",
+      "label": {
+        "en": "New Page"
+      },
+      "required": null,
+      "readOnly": null,
+      "items": [
+        "group1"
+      ],
+      "className": [
+      ],
+      "style": null,
+      "validations": [
+      ],
+      "valueSetId": null
+    },
+    "page2": {
+      "id": "page2",
+      "type": "group",
+      "label": {
+        "en": "New Page"
+      },
+      "required": null,
+      "readOnly": null,
+      "items": [
+        "group2"
+      ],
+      "className": [
+      ],
+      "style": null,
+      "validations": [
+      ],
+      "valueSetId": null
+    },
+    "group1": {
+      "id": "group1",
+      "type": "group",
+      "label": {
+        "en": "New Group 2"
+      },
+      "required": null,
+      "readOnly": null,
+      "items": [
+        "question1",
+        "question2"
+      ],
+      "className": [
+      ],
+      "style": null,
+      "validations": [
+      ],
+      "valueSetId": null
+    },
+    "group2": {
+      "id": "group2",
+      "type": "group",
+      "label": {
+        "en": "New Group 2"
+      },
+      "required": null,
+      "readOnly": null,
+      "items": [
+        "question3",
+        "question4"
+      ],
+      "className": [
+      ],
+      "style": null,
+      "validations": [
+      ],
+      "valueSetId": null
+    },
+    "question1": {
+      "id": "question1",
+      "type": "text",
+      "label": {
+        "en": "Required one"
+      },
+      "readOnly": null,
+      "items": [
+      ],
+      "className": [
+      ],
+      "style": null,
+      "validations": [
+      ],
+      "valueSetId": null
+    },
+    "question2": {
+      "id": "question2",
+      "type": "text",
+      "label": {
+        "en": "Shown if previous ones are ok"
+      },
+      "required": null,
+      "readOnly": null,
+      "items": [
+      ],
+      "className": [
+      ],
+      "style": null,
+      "validations": [
+      ],
+      "valueSetId": null
+    },
+    "question3": {
+      "id": "question3",
+      "type": "text",
+      "label": {
+        "en": "Validated"
+      },
+      "required": null,
+      "readOnly": null,
+      "items": [
+      ],
+      "className": [
+      ],
+      "style": null,
+      "valueSetId": null
+    },
+    "question4": {
+      "id": "question4",
+      "type": "text",
+      "label": {
+        "en": "question 4"
+      },
+      "activeWhen": "question1 is not answered",
+      "required": null,
+      "readOnly": null,
+      "items": [
+      ],
+      "className": [
+      ],
+      "style": null,
+      "validations": [
+      ],
+      "valueSetId": null
+    }
+  },
+  "serviceCalls": {
+  },
+  "metadata": {
+    "labels": null,
+    "defaultSubmitUrl": null,
+    "languages": [
+    ],
+    "label": "is valid testing",
+    "valid": true,
+    "showDisabled": true
+  },
+  "variables": [],
+  "valueSets": []
+}

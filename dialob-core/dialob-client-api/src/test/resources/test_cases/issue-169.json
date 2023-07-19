@@ -1,0 +1,78 @@
+{
+  "_id": "5193df1cbf405a66d906e7842b12bd6a",
+  "name": "test2",
+  "data": {
+    "decimal1": {
+      "id": "decimal1",
+      "type": "boolean",
+      "label": {
+        "en": "Give a boolean"
+      }
+    },
+    "questionnaire": {
+      "id": "questionnaire",
+      "type": "questionnaire",
+      "items": [
+        "group1"
+      ]
+    },
+    "boolean1": {
+      "id": "boolean1",
+      "type": "boolean",
+      "label": {
+        "en": "Yes of No"
+      },
+      "activeWhen": "survey1 = 'first'"
+    },
+    "surveygroup1": {
+      "id": "surveygroup1",
+      "type": "surveygroup",
+      "label": {
+        "en": "Take a survey"
+      },
+      "description": {
+        "en": "Take a survey in here"
+      },
+      "items": [
+        "survey1"
+      ],
+      "activeWhen": "decimal1",
+      "valueSetId": "vs1"
+    },
+    "group1": {
+      "id": "group1",
+      "type": "group",
+      "items": [
+        "decimal1",
+        "surveygroup1",
+        "boolean1"
+      ]
+    },
+    "survey1": {
+      "id": "survey1",
+      "type": "survey",
+      "label": {
+        "en": "Survey item1"
+      }
+    }
+  },
+  "metadata": {
+    "label": "Testing all kind of things",
+    "languages": [
+      "en"
+    ]
+  },
+  "valueSets": [
+    {
+      "id": "vs1",
+      "entries": [
+        {
+          "id": "first",
+          "label": {
+            "en": "Click me"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,212 @@
+{
+  "_id": "f3cf3d71617443dcbb2a973aceb466f3",
+  "_rev": "63-40f78da97b77fb5c8524f654e5a25aea",
+  "data": {
+    "questionnaire": {
+      "id": "questionnaire",
+      "type": "questionnaire",
+      "label": {
+        "en": "New Dialog"
+      },
+      "description": null,
+      "required": null,
+      "readOnly": null,
+      "items": [
+        "page1"
+      ],
+      "className": [
+      ],
+      "activeWhen": null,
+      "validations": [
+      ],
+      "valueSetId": null,
+      "defaultValue": null
+    },
+    "page1": {
+      "id": "page1",
+      "type": "group",
+      "label": {
+        "en": "New Page"
+      },
+      "description": null,
+      "required": null,
+      "readOnly": null,
+      "items": [
+        "group1"
+      ],
+      "className": [
+      ],
+      "activeWhen": "",
+      "validations": [
+      ],
+      "valueSetId": null,
+      "defaultValue": null
+    },
+    "group1": {
+      "id": "group1",
+      "type": "group",
+      "label": {
+        "en": "The thing..."
+      },
+      "description": null,
+      "required": null,
+      "readOnly": null,
+      "items": [
+        "question1",
+        "question1b",
+        "question3",
+        "question2",
+        "question4",
+        "question5"
+      ],
+      "className": [
+      ],
+      "activeWhen": "",
+      "validations": [
+      ],
+      "valueSetId": null,
+      "defaultValue": null
+    },
+    "question1": {
+      "id": "question1",
+      "type": "number",
+      "label": {
+        "en": "A"
+      },
+      "description": null,
+      "required": "true",
+      "readOnly": null,
+      "items": [
+      ],
+      "className": [
+      ],
+      "activeWhen": "",
+      "validations": [
+      ],
+      "valueSetId": null,
+      "defaultValue": null
+    },
+    "question1b": {
+      "id": "question1b",
+      "type": "number",
+      "label": {
+        "en": "Ab"
+      },
+      "description": null,
+      "required": null,
+      "readOnly": null,
+      "items": [
+      ],
+      "className": [
+      ],
+      "activeWhen": "false",
+      "validations": [
+      ],
+      "valueSetId": null,
+      "defaultValue": "0"
+    },
+    "question2": {
+      "id": "question2",
+      "type": "number",
+      "label": {
+        "en": "B"
+      },
+      "description": null,
+      "required": null,
+      "readOnly": null,
+      "items": [
+      ],
+      "className": [
+      ],
+      "activeWhen": "not question3",
+      "validations": [
+      ],
+      "valueSetId": null,
+      "defaultValue": "0"
+    },
+    "question3": {
+      "id": "question3",
+      "type": "boolean",
+      "label": {
+        "en": "Hide B"
+      },
+      "description": null,
+      "required": null,
+      "readOnly": null,
+      "items": [
+      ],
+      "className": [
+      ],
+      "activeWhen": "",
+      "validations": [
+      ],
+      "valueSetId": null,
+      "defaultValue": null
+    },
+    "question4": {
+      "id": "question4",
+      "type": "note",
+      "label": {
+        "en": "A={question1} B={question2}\n"
+      },
+      "description": null,
+      "required": null,
+      "readOnly": null,
+      "items": [
+      ],
+      "className": [
+      ],
+      "activeWhen": "",
+      "validations": [
+      ],
+      "valueSetId": null,
+      "defaultValue": null
+    },
+    "question5": {
+      "id": "question5",
+      "type": "note",
+      "label": {
+        "en": "sum={sum}"
+      },
+      "description": null,
+      "required": null,
+      "readOnly": null,
+      "items": [
+      ],
+      "className": [
+      ],
+      "activeWhen": "",
+      "validations": [
+      ],
+      "valueSetId": null,
+      "defaultValue": null
+    }
+  },
+  "serviceCalls": {
+  },
+  "metadata": {
+    "labels": null,
+    "defaultSubmitUrl": null,
+    "languages": [
+      "en"
+    ],
+    "label": "Variable rule",
+    "created": "2017-10-31T13:00:06.995Z",
+    "creator": "unauthenticated",
+    "tenantId": "itest",
+    "lastSaved": "2017-11-01T08:40:25.499Z",
+    "savedBy": "unauthenticated",
+    "valid": true
+  },
+  "variables": [
+    {
+      "name": "sum",
+      "expression": "question1b + question2",
+      "defaultValue": "0",
+      "context": null,
+      "contextType": null
+    }
+  ],
+  "valueSets": [
+  ]
+}

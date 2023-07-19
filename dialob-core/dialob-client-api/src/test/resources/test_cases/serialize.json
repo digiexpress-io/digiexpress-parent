@@ -1,0 +1,201 @@
+{
+  "_id": "multirow",
+  "_rev": "1-multirow",
+  "data": {
+    "questionnaire": {
+      "id": "questionnaire",
+      "type": "questionnaire",
+      "label": {
+        "en": "multirow"
+      },
+      "items": [
+        "page1"
+      ]
+    },
+    "page1": {
+      "id": "page1",
+      "type": "group",
+      "items": [
+        "rg1", "group1", "group2"
+      ]
+    },
+    "group1": {
+      "id": "group1",
+      "type": "group",
+      "items": [
+        "q1", "q2"
+      ]
+    },
+    "rg1": {
+      "id": "rg1",
+      "type": "rowgroup",
+      "activeWhen": "q1 != 'off'",
+      "label": {
+        "en": "Survey group"
+      },
+      "items": [
+        "rgq1", "rgq2"
+      ],
+      "valueSetId": "vs1"
+    },
+    "q1": {
+      "id": "q1",
+      "type": "text"
+    },
+    "q2": {
+      "id": "q2",
+      "type": "text"
+    },
+    "rgq1": {
+      "id": "rgq1",
+      "type": "text"
+    },
+    "rgq2": {
+      "id": "rgq2",
+      "activeWhen": "rgq1 = 'on'",
+      "type": "text"
+    },
+    "group2": {
+      "id": "group2",
+      "type": "group",
+      "items": [
+        "text1",
+        "boolean1",
+        "list1",
+        "date1",
+        "date2",
+        "time1",
+        "number1",
+        "decimal1",
+        "multichoice1",
+        "note1",
+        "surveygroup1"
+      ]
+    },
+    "text1": {
+      "id": "text1",
+      "type": "text",
+      "label": {
+        "en": "Text question"
+      }
+    },
+    "boolean1": {
+      "id": "boolean1",
+      "type": "boolean",
+      "label": {
+        "en": "boolean question"
+      }
+    },
+    "list1": {
+      "id": "list1",
+      "type": "list",
+      "label": {
+        "en": "date question"
+      }
+    },
+    "date1": {
+      "id": "date1",
+      "type": "date",
+      "label": {
+        "en": "date question"
+      }
+    },
+    "date2": {
+      "id": "date2",
+      "type": "date",
+      "label": {
+        "en": "date question"
+      }
+    },
+    "time1": {
+      "id": "time1",
+      "type": "time",
+      "label": {
+        "en": "time question"
+      }
+    },
+    "number1": {
+      "id": "number1",
+      "type": "number",
+      "label": {
+        "en": "number question"
+      }
+    },
+    "decimal1": {
+      "id": "decimal1",
+      "type": "decimal",
+      "label": {
+        "en": "decimal question"
+      }
+    },
+    "multichoice1": {
+      "id": "multichoice1",
+      "type": "multichoice",
+      "label": {
+        "en": "multichoice question"
+      }
+    },
+    "note1": {
+      "id": "note1",
+      "type": "note",
+      "label": {
+        "en": "note question"
+      }
+    },
+    "survey1": {
+      "id": "survey1",
+      "type": "survey",
+      "label": {
+        "en": "survey question"
+      }
+    },
+    "surveygroup1": {
+      "id": "surveygroup1",
+      "type": "surveygroup",
+      "items": [
+        "survey1"
+      ],
+      "valueSetId": "vs1",
+      "label": {
+        "en": "surveygroup question"
+      }
+    }
+  },
+  "valueSets": [
+    {
+      "id": "vs1",
+      "entries": [
+        {
+          "id": "a",
+          "label": {
+            "en": "First option"
+          }
+        },
+        {
+          "id": "b",
+          "label": {
+            "en": "Second option"
+          }
+        },
+        {
+          "id": "c",
+          "label": {
+            "en": "Third option"
+          }
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "label": "New Dialog",
+    "created": "2018-05-18T08:11:06.318+0000",
+    "lastSaved": "2018-05-18T08:29:01.589+0000",
+    "valid": true,
+    "creator": "",
+    "tenantId": "itest",
+    "savedBy": "",
+    "languages": [
+      "en"
+    ]
+  }
+}
