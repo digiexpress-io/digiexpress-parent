@@ -9,7 +9,7 @@
   <parent>
     <artifactId>dialob-core</artifactId>
     <groupId>io.dialob</groupId>
-    <version>888-SNAPSHOT</version>
+    <version>999-SNAPSHOT</version>
   </parent>
   <artifactId>dialob-compiler</artifactId>
   <dependencies>

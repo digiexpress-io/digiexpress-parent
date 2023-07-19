@@ -4,7 +4,7 @@
   <parent>
     <groupId>io.resys.hdes</groupId>
     <artifactId>hdes-dev</artifactId>
-    <version>3.y-SNAPSHOT</version>
+    <version>999-SNAPSHOT</version>
   </parent>
   <packaging>jar</packaging>
   <artifactId>spring-app</artifactId>

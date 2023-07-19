@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.resys.hdes</groupId>
   <artifactId>hdes-parent</artifactId>
-  <version>3.y-SNAPSHOT</version>
+  <version>999-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>hdes</name>
 

@@ -4,7 +4,7 @@
   <parent>
     <artifactId>dialob-dev</artifactId>
     <groupId>io.dialob</groupId>
-    <version>888-SNAPSHOT</version>
+    <version>999-SNAPSHOT</version>
   </parent>
   <packaging>jar</packaging>
   <artifactId>spring-app</artifactId>

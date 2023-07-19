@@ -10,7 +10,7 @@
   <parent>
     <groupId>io.dialob</groupId>
     <artifactId>dialob-parent</artifactId>
-    <version>888-SNAPSHOT</version>
+    <version>999-SNAPSHOT</version>
   </parent>
 
   <artifactId>dialob-build-parent</artifactId>
