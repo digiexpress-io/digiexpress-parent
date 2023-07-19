@@ -84,9 +84,9 @@ done
 
 
 
-
+msg="repo: '$ssh_repo_url', branch: '$ssh_repo_branch' migrated to: '$new_file_location'"
 git add $new_file_location
-git commit -am "repo: '$ssh_repo_url', branch: '$ssh_repo_branch' migrated to: '$new_file_location'"
-
+git commit -am "$msg"
+echo "$msg" >> __migration/migrated.txt 
 
 
