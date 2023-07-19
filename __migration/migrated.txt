@@ -2,3 +2,4 @@ repo: 'git@github.com:the-wrench-io/hdes-parent.git', branch: '3.y' migrated to:
 repo: 'git@github.com:the-wrench-io/hdes-composer.git', branch: 'main' migrated to: 'ts_setup/hdes-composer'
 repo: 'git@github.com:the-stencil-io/the-stencil-parent.git', branch: 'main' migrated to: 'mvn_setup/the-stencil-parent'
 repo: 'git@github.com:the-stencil-io/the-stencil-composer.git', branch: 'main' migrated to: 'ts_setup/the-stencil-composer'
+repo: 'git@github.com:the-stencil-io/the-stencil-portal.git', branch: 'main' migrated to: 'ts_setup/the-stencil-portal'
