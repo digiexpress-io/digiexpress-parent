@@ -94,6 +94,7 @@
 	</properties>
 
 	<modules>
+    <module>build-parent</module>
 		<module>dialob-parent</module>
 		<module>hdes-parent</module>
 		<module>stencil-parent</module>
