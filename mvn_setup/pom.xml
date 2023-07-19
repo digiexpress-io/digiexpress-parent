@@ -24,19 +24,23 @@
   <groupId>io.digiexpress</groupId>
   <version>999-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <inceptionYear>2022</inceptionYear>
+  <inceptionYear>2015 - 2021</inceptionYear>
+
   <organization>
     <name>Copyright 2022 ReSys OÜ</name>
   </organization>
+  
   <licenses>
     <license>
       <name>The Apache Software License, Version 2.0</name>
       <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
     </license>
   </licenses>
+  
   <url>https://github.com/digiexpress-io/digiexpress-parent</url>
   <description>DigiExpress</description>
   <name>digiexpress-parent</name>
+  
   <developers>
     <developer>
       <name>Villu Vaimets</name>
