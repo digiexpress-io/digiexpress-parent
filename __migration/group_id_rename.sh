@@ -3,13 +3,7 @@
 echo "Input current group id?"
 read current_group_id
 
-echo "Input group suffix?"
-read suffix_group_id
-
-
-new_group_id="io.digiexpress.$suffix_group_id"
-
-
+new_group_id="io.digiexpress"
 
 for file_name in $(find ./ -name "pom.xml");
 do 	    
