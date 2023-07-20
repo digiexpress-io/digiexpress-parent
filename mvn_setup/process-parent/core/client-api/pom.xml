@@ -29,11 +29,11 @@
   <dependencies>
 
     <dependency>
-      <groupId>io.dialob</groupId>
+      <groupId>io.digiexpress</groupId>
       <artifactId>dialob-client-api</artifactId>
     </dependency>
     <dependency>
-      <groupId>io.dialob</groupId>
+      <groupId>io.digiexpress</groupId>
       <artifactId>dialob-form-store-pgsql</artifactId>
     </dependency>
 

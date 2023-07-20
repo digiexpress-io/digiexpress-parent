@@ -12,7 +12,6 @@
 
   <modelVersion>4.0.0</modelVersion>
   <artifactId>dialob-parent</artifactId>
-  <groupId>io.dialob</groupId>
   <packaging>pom</packaging>
 
 

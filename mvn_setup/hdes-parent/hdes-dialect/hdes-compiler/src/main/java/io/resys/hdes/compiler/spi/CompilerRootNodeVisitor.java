@@ -200,6 +200,17 @@ public class CompilerRootNodeVisitor implements RootNodeVisitor<List<Resource>, 
       file.writeTo(appendable);
       String result = appendable.toString();
       return new Formatter().formatSource(result);
+    } catch(NoSuchFieldError ne) {
+      // Google formatter issue, maybe?...
+      try {
+        StringBuilder appendable = new StringBuilder();
+        JavaFile file = JavaFile.builder(pkg, spec).build();
+        file.writeTo(appendable);
+        String result = appendable.toString();
+        return result;
+      } catch(IOException e1) {
+        throw new UncheckedIOException(e1);
+      }
     } catch (Exception e) {
       
       StringBuilder appendable = new StringBuilder();

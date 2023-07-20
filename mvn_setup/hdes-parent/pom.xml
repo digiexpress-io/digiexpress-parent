@@ -26,8 +26,4 @@
     <module>hdes-dev</module>
   </modules>
 
-  <properties>
-    <maven.compiler.release>11</maven.compiler.release>
-    <jdk.version>11</jdk.version>
-  </properties>
 </project>

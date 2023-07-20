@@ -239,7 +239,7 @@
         <scope>import</scope>
       </dependency>
       <dependency>
-        <groupId>io.dialob</groupId>
+        <groupId>io.digiexpress</groupId>
         <artifactId>dialob-bom</artifactId>
         <version>${dialob.version}</version>
         <type>pom</type>

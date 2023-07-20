@@ -8,7 +8,7 @@
 
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>io.dialob</groupId>
+    <groupId>io.digiexpress</groupId>
     <artifactId>dialob-parent</artifactId>
     <version>999-SNAPSHOT</version>
   </parent>
@@ -259,7 +259,7 @@
       </dependency>
 
       <dependency>
-        <groupId>io.dialob</groupId>
+        <groupId>io.digiexpress</groupId>
         <artifactId>dialob-bom</artifactId>
         <version>${project.version}</version>
         <type>pom</type>

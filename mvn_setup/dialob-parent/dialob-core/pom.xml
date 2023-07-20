@@ -4,7 +4,7 @@
 
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>io.dialob</groupId>
+    <groupId>io.digiexpress</groupId>
     <artifactId>dialob-build-parent</artifactId>
     <version>999-SNAPSHOT</version>
     <relativePath>../dialob-build-parent/pom.xml</relativePath>
