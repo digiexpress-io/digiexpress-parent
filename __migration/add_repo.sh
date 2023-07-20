@@ -73,7 +73,10 @@ do
   	 [ "$file_name" == 'ts_setup' ] ||
   	 [ "$file_name" == 'bazel_setup' ] || 
   	 [ "$file_name" == '.' ] ||
-  	 [ "$file_name" == '..' ]; then
+  	 [ "$file_name" == '..' ] ||
+  	 [ "$file_name" == '.github/workflows/digiexpress-codeql-analysis.yml'] ||
+  	 [ "$file_name" == '.github/workflows/digiexpress-mvn-tag-and-release.yaml']
+  	 ; then
     continue                    
   fi                            
   new_loc="$new_file_location/$file_name"
