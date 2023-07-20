@@ -29,18 +29,18 @@
   <organization>
     <name>Copyright 2022 ReSys OÜ</name>
   </organization>
-  
+
   <licenses>
     <license>
       <name>The Apache Software License, Version 2.0</name>
       <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
     </license>
   </licenses>
-  
+
   <url>https://github.com/digiexpress-io/digiexpress-parent</url>
   <description>DigiExpress</description>
   <name>digiexpress-parent</name>
-  
+
   <developers>
     <developer>
       <name>Villu Vaimets</name>
@@ -75,7 +75,8 @@
   </developers>
   <scm>
     <connection>scm:git:https://github.com/digiexpress-io/digiexpress-parent.git</connection>
-    <developerConnection>scm:git:https://github.com/digiexpress-io/digiexpress-parent.git</developerConnection>
+    <developerConnection>
+      scm:git:https://github.com/digiexpress-io/digiexpress-parent.git</developerConnection>
     <url>http://github.com/digiexpress-io/digiexpress-parent/tree/main</url>
     <tag>HEAD</tag>
   </scm>
@@ -99,6 +100,7 @@
     <module>dialob-parent</module>
     <module>hdes-parent</module>
     <module>stencil-parent</module>
+    <module>process-parent</module>
   </modules>
 
   <build>

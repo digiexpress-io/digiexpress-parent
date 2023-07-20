@@ -22,11 +22,11 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>io.digiexpress</groupId>
-    <artifactId>digiexpress-parent</artifactId>
+    <artifactId>process-parent</artifactId>
     <version>999-SNAPSHOT</version>
   </parent>
 
-  <artifactId>digiexpress-build-parent</artifactId>
+  <artifactId>process-build-parent</artifactId>
   <packaging>pom</packaging>
 
   <properties>
@@ -44,9 +44,9 @@
     <maven-jib-plugin.version>3.2.0</maven-jib-plugin.version>
 
     <thena.version>1.1.24</thena.version>
-    <hdes.version>3.130.59</hdes.version>
-    <stencil.version>1.148.15</stencil.version>
-    <dialob.version>3.0.4</dialob.version>
+    <hdes.version>${project.version}</hdes.version>
+    <stencil.version>${project.version}</stencil.version>
+    <dialob.version>${project.version}</dialob.version>
 
     <quarkus.version>2.14.1.Final</quarkus.version>
     <ehcache.version>3.8.1</ehcache.version>
