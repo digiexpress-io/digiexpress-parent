@@ -1,13 +1,13 @@
 on:
   push:
     branches:
-      - main
+      - dev
 
-name: main branch - java 17 - tag and release
+name: dev branch - mvn release - java 17
 jobs:
   build:
     name: release branch main
-    if: "!startsWith(github.event.head_commit.message, 'release')"
+    if: "startsWith(github.event.head_commit.message, '@ci mvn_dev_release')"
     runs-on: ubuntu-latest
     steps:
     - name: git clone main config step
@@ -22,7 +22,7 @@ jobs:
         java-version: '17'
     
     - name: tag and release step
-      run: ./digiexpress-build-parent/release.sh
+      run: ./mvn_setup/build-parent/release.sh
       env:
         CI: false
         BOT_NAME: olev-mutso
