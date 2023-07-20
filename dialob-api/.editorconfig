@@ -1,0 +1,42 @@
+# This file is for unifying the coding style for different editors and IDEs
+# editorconfig.org
+root = true
+
+[*]
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = false
+insert_final_newline = true
+indent_style = tab
+
+[*.js]
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 2
+
+[*.json]
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 2
+
+[*.yaml]
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 2
+
+[*.java]
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 2
+
+[*.xml]
+indent_style = space
+indent_size = 2
+
+[*.drl]
+indent_style = space
+indent_size = 2
+
+[*.g4]
+indent_style = space
+indent_size = 2

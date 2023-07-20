@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <artifactId>dialob-api-build-parent</artifactId>
+    <groupId>io.dialob</groupId>
+    <version>999-SNAPSHOT</version>
+    <relativePath>../dialob-api-build-parent/pom.xml</relativePath>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+
+  <artifactId>dialob-api-client</artifactId>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>io.swagger.codegen.v3</groupId>
+        <artifactId>swagger-codegen-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+              <inputSpec>${project.basedir}/../dialob-api/src/main/resources/swagger.yaml</inputSpec>
+              <language>java</language>
+              <modelPackage>io.dialob.api.rest</modelPackage>
+              <apiPackage>io.dialob.api.client</apiPackage>
+              <invokerPackage>io.dialob.api.client.okhttp</invokerPackage>
+              <generateApis>true</generateApis>
+              <generateSupportingFiles>true</generateSupportingFiles>
+              <generateModels>false</generateModels>
+
+              <generateApiTests>false</generateApiTests>
+              <generateApiDocumentation>false</generateApiDocumentation>
+              <generateModelTests>false</generateModelTests>
+              <generateModelDocumentation>false</generateModelDocumentation>
+              <configOptions>
+                <sourceFolder>target/generated-sources</sourceFolder>
+                <supportJava6>false</supportJava6>
+                <dateLibrary>jdk8</dateLibrary>
+                <library>feign</library>
+              </configOptions>
+              <importMappings>
+                <importMapping>Errors=io.dialob.api.rest.Errors</importMapping>
+                <importMapping>IdAndRevision=io.dialob.api.rest.IdAndRevision</importMapping>
+                <importMapping>Items=io.dialob.api.rest.Items</importMapping>
+                
+                <importMapping>Form=io.dialob.api.form.Form</importMapping>
+                <importMapping>FormValueSet=io.dialob.api.form.FormValueSet</importMapping>
+                <importMapping>ValueSet=io.dialob.api.proto.ValueSet</importMapping>
+                <importMapping>FormPutResponse=io.dialob.api.form.FormPutResponse</importMapping>
+                <importMapping>FormValidationError=io.dialob.api.form.FormValidationError</importMapping>
+                <importMapping>FormTag=io.dialob.api.form.FormTag</importMapping>
+                <importMapping>Response=io.dialob.api.rest.Response</importMapping>
+                <importMapping>Error=io.dialob.api.questionnaire.Error</importMapping>
+                <importMapping>Answer=io.dialob.api.questionnaire.Answer</importMapping>
+                <importMapping>ActionItem=io.dialob.api.proto.ActionItem</importMapping>
+                <importMapping>Questionnaire=io.dialob.api.questionnaire.Questionnaire</importMapping>
+                <importMapping>QuestionnaireListItem=io.dialob.api.questionnaire.QuestionnaireListItem</importMapping>
+              </importMappings>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+    </plugins>
+  </build>
+
+  <dependencies>
+    <dependency>
+      <groupId>io.dialob</groupId>
+      <artifactId>dialob-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.swagger.core.v3</groupId>
+      <artifactId>swagger-annotations</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.annotation</groupId>
+      <artifactId>jakarta.annotation-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.validation</groupId>
+      <artifactId>jakarta.validation-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-validator</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.glassfish</groupId>
+      <artifactId>jakarta.el</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>io.github.openfeign</groupId>
+      <artifactId>feign-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.github.openfeign</groupId>
+      <artifactId>feign-okhttp</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.github.openfeign</groupId>
+      <artifactId>feign-jackson</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.github.openfeign</groupId>
+      <artifactId>feign-slf4j</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.github.openfeign.form</groupId>
+      <artifactId>feign-form</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.oltu.oauth2</groupId>
+      <artifactId>org.apache.oltu.oauth2.client</artifactId>
+    </dependency>
+    
+  </dependencies>
+</project>

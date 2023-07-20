@@ -1,0 +1,1777 @@
+swagger: '2.0'
+info:
+  version: 1.0.0-SNAPSHOT
+  title: Dialob API
+  contact:
+    name: ReSys
+    url: 'http://www.dialob.io'
+    email: support@dialob.io
+  license:
+    name: ASL v2.0
+    url: 'https://www.apache.org/licenses/LICENSE-2.0'
+host: api.dialob.io
+basePath: /v2
+tags:
+  - name: dialob-form-service
+    description: Dialob Form Service
+  - name: dialob-questionnaire-service
+    description: Dialob Questionnaire Service
+schemes:
+  - https
+paths:
+  /forms:
+    post:
+      tags:
+        - dialob-form-service
+      summary: postForm
+      operationId: postForm
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: form
+          description: New form
+          required: true
+          schema:
+            $ref: '#/definitions/Form'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Form'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Errors'
+        '403':
+          description: Access denied
+          schema:
+            $ref: '#/definitions/Errors'
+        '422':
+          description: Unprocessable entity
+          schema:
+            $ref: '#/definitions/Errors'
+      security:
+        - ApiKey: []
+      deprecated: false
+  '/forms/{formId}':
+    get:
+      tags:
+        - dialob-form-service
+      summary: getForm
+      operationId: getForm
+      produces:
+        - application/json
+      parameters:
+        - name: formId
+          in: path
+          description: formId
+          required: true
+          type: string
+        - name: rev
+          in: query
+          description: rev
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Form'
+        '403':
+          description: Access denied
+          schema:
+            $ref: '#/definitions/Errors'
+        '404':
+          description: Not found
+          schema:
+            $ref: '#/definitions/Errors'
+      security:
+        - ApiKey: []
+      deprecated: false
+    put:
+      tags:
+        - dialob-form-service
+      summary: putForm
+      operationId: putForm
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: force
+          in: query
+          description: Should update ignore revision number check. (forced update)
+          required: false
+          type: boolean
+          default: false
+          allowEmptyValue: false
+        - in: body
+          name: form
+          description: New form data
+          required: true
+          schema:
+            $ref: '#/definitions/Form'
+        - name: formId
+          in: path
+          description: formId
+          required: true
+          type: string
+        - name: newId
+          in: query
+          description: New name for identifier
+          required: false
+          type: string
+          allowEmptyValue: false
+        - name: oldId
+          in: query
+          description: Identifier to rename
+          required: false
+          type: string
+          allowEmptyValue: false
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/FormPutResponse'
+        '209':
+          description: Conflict
+          schema:
+            $ref: '#/definitions/Errors'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Errors'
+        '403':
+          description: Access denied
+          schema:
+            $ref: '#/definitions/Errors'
+        '404':
+          description: Not found
+          schema:
+            $ref: '#/definitions/Errors'
+        '422':
+          description: Unprocessable entity
+          schema:
+            $ref: '#/definitions/Errors'
+      security:
+        - ApiKey: []
+      deprecated: false
+    delete:
+      tags:
+        - dialob-form-service
+      summary: deleteForm
+      operationId: deleteForm
+      produces:
+        - '*/*'
+      parameters:
+        - name: formId
+          in: path
+          description: formId
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Response'
+        '209':
+          description: Conflict
+          schema:
+            $ref: '#/definitions/Errors'
+        '403':
+          description: Access denied
+          schema:
+            $ref: '#/definitions/Errors'
+        '404':
+          description: Not found
+          schema:
+            $ref: '#/definitions/Errors'
+      security:
+        - ApiKey: []
+      deprecated: false
+  '/forms/{formId}/tags':
+    get:
+      tags:
+        - dialob-form-service
+      summary: getFormTags
+      operationId: getFormTags
+      produces:
+        - application/json
+      parameters:
+        - name: formId
+          in: path
+          description: formId
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/FormTag'
+        '403':
+          description: Access denied
+          schema:
+            $ref: '#/definitions/Errors'
+        '404':
+          description: Not found
+          schema:
+            $ref: '#/definitions/Errors'
+      security:
+        - ApiKey: []
+      deprecated: false
+    post:
+      tags:
+        - dialob-form-service
+      summary: postFormTag
+      operationId: postFormTag
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: formId
+          in: path
+          description: formId
+          required: true
+          type: string
+        - name: rev
+          in: query
+          description: rev
+          required: false
+          type: string
+        - name: snapshot
+          in: query
+          description: snapshot
+          required: false
+          type: boolean
+          default: false
+        - in: body
+          name: tag
+          description: New tag
+          required: true
+          schema:
+            $ref: '#/definitions/FormTag'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Response'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Errors'
+        '403':
+          description: Access denied
+          schema:
+            $ref: '#/definitions/Errors'
+        '422':
+          description: Unprocessable entity
+          schema:
+            $ref: '#/definitions/Errors'
+      security:
+        - ApiKey: []
+      deprecated: false
+  '/forms/{formId}/tags/latest':
+    put:
+      tags:
+        - dialob-form-service
+      summary: putFormTagLatest
+      operationId: putFormTagLatest
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: formId
+          in: path
+          description: formId
+          required: true
+          type: string
+        - in: body
+          name: param1
+          description: param1
+          required: true
+          schema:
+            $ref: '#/definitions/FormTag'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Response'
+        '209':
+          description: Conflict
+          schema:
+            $ref: '#/definitions/Errors'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Errors'
+        '403':
+          description: Access denied
+          schema:
+            $ref: '#/definitions/Errors'
+        '404':
+          description: Not found
+          schema:
+            $ref: '#/definitions/Errors'
+        '422':
+          description: Unprocessable entity
+          schema:
+            $ref: '#/definitions/Errors'
+      security:
+        - ApiKey: []
+      deprecated: false
+  '/forms/{formId}/tags/{tagName}':
+    get:
+      tags:
+        - dialob-form-service
+      summary: getFormTag
+      operationId: getFormTag
+      produces:
+        - application/json
+      parameters:
+        - name: formId
+          in: path
+          description: formId
+          required: true
+          type: string
+        - name: tagName
+          in: path
+          description: tagName
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/FormTag'
+        '403':
+          description: Access denied
+          schema:
+            $ref: '#/definitions/Errors'
+        '404':
+          description: Not found
+          schema:
+            $ref: '#/definitions/Errors'
+      security:
+        - ApiKey: []
+      deprecated: false
+  /questionnaires:
+    get:
+      tags:
+        - dialob-questionnaire-service
+      summary: getQuestionnaires
+      operationId: getQuestionnaires
+      produces:
+        - application/json
+      parameters:
+        - name: formId
+          in: query
+          description: formId
+          required: false
+          type: string
+        - name: formName
+          in: query
+          description: Search questionnaires by formName. Should not be used together with formId.
+          required: false
+          type: string
+        - name: formTag
+          in: query
+          description: Search questionnaires by formTag. This is ignored, if formName is not set.
+          required: false
+          type: string
+        - name: owner
+          in: query
+          description: owner
+          required: false
+          type: string
+        - name: status
+          in: query
+          description: status
+          required: false
+          type: string
+          enum:
+            - NEW
+            - OPEN
+            - COMPLETED
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/QuestionnaireListItem'
+        '403':
+          description: Access denied
+          schema:
+            $ref: '#/definitions/Errors'
+        '404':
+          description: Not found
+          schema:
+            $ref: '#/definitions/Errors'
+      security:
+        - ApiKey: []
+      deprecated: false
+    post:
+      tags:
+        - dialob-questionnaire-service
+      summary: postQuestionnaire
+      operationId: postQuestionnaire
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: questionnaire
+          description: New questionnaire object
+          required: true
+          schema:
+            $ref: '#/definitions/Questionnaire'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/IdAndRevision'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Errors'
+        '403':
+          description: Access denied
+          schema:
+            $ref: '#/definitions/Errors'
+        '422':
+          description: Unprocessable entity
+          schema:
+            $ref: '#/definitions/Errors'
+      security:
+        - ApiKey: []
+      deprecated: false
+  '/questionnaires/{questionnaireId}':
+    get:
+      tags:
+        - dialob-questionnaire-service
+      summary: getQuestionnaire
+      operationId: getQuestionnaire
+      produces:
+        - application/json
+      parameters:
+        - name: questionnaireId
+          in: path
+          description: questionnaireId
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Questionnaire'
+        '403':
+          description: Access denied
+          schema:
+            $ref: '#/definitions/Errors'
+        '404':
+          description: Not found
+          schema:
+            $ref: '#/definitions/Errors'
+      security:
+        - ApiKey: []
+      deprecated: false
+    put:
+      tags:
+        - dialob-questionnaire-service
+      summary: putQuestionnaire
+      operationId: putQuestionnaire
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: questionnaire
+          description: Questionnaire object to replace existing state
+          required: true
+          schema:
+            $ref: '#/definitions/Questionnaire'
+        - name: questionnaireId
+          in: path
+          description: questionnaireId
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Questionnaire'
+        '209':
+          description: Conflict
+          schema:
+            $ref: '#/definitions/Errors'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Errors'
+        '403':
+          description: Access denied
+          schema:
+            $ref: '#/definitions/Errors'
+        '404':
+          description: Not found
+          schema:
+            $ref: '#/definitions/Errors'
+        '422':
+          description: Unprocessable entity
+          schema:
+            $ref: '#/definitions/Errors'
+      security:
+        - ApiKey: []
+      deprecated: false
+    delete:
+      tags:
+        - dialob-questionnaire-service
+      summary: deleteQuestionnaire
+      operationId: deleteQuestionnaire
+      produces:
+        - '*/*'
+      parameters:
+        - name: questionnaireId
+          in: path
+          description: questionnaireId
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Response'
+        '209':
+          description: Conflict
+          schema:
+            $ref: '#/definitions/Errors'
+        '403':
+          description: Access denied
+          schema:
+            $ref: '#/definitions/Errors'
+        '404':
+          description: Not found
+          schema:
+            $ref: '#/definitions/Errors'
+      security:
+        - ApiKey: []
+      deprecated: false
+  '/questionnaires/{questionnaireId}/answers':
+    get:
+      tags:
+        - dialob-questionnaire-service
+      summary: getQuestionnaireAnswers
+      operationId: getQuestionnaireAnswers
+      produces:
+        - application/json
+      parameters:
+        - name: questionnaireId
+          in: path
+          description: questionnaireId
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Answer'
+        '403':
+          description: Access denied
+          schema:
+            $ref: '#/definitions/Errors'
+        '404':
+          description: Not found
+          schema:
+            $ref: '#/definitions/Errors'
+      security:
+        - ApiKey: []
+      deprecated: false
+    post:
+      tags:
+        - dialob-questionnaire-service
+      summary: putQuestionnaireAnswers
+      operationId: putQuestionnaireAnswers
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: answers
+          description: New answers for questionnaire
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Answer'
+        - name: questionnaireId
+          in: path
+          description: questionnaireId
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Error'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Errors'
+        '403':
+          description: Access denied
+          schema:
+            $ref: '#/definitions/Errors'
+        '422':
+          description: Unprocessable entity
+          schema:
+            $ref: '#/definitions/Errors'
+      security:
+        - ApiKey: []
+      deprecated: false
+  '/questionnaires/{questionnaireId}/answers/{answerId}':
+    put:
+      tags:
+        - dialob-questionnaire-service
+      summary: putQuestionnaireAnswer
+      operationId: putQuestionnaireAnswer
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: answer
+          description: New answer for single question
+          required: true
+          schema:
+            type: object
+        - name: answerId
+          in: path
+          description: answerId
+          required: true
+          type: string
+        - name: questionnaireId
+          in: path
+          description: questionnaireId
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Error'
+        '209':
+          description: Conflict
+          schema:
+            $ref: '#/definitions/Errors'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Errors'
+        '403':
+          description: Access denied
+          schema:
+            $ref: '#/definitions/Errors'
+        '404':
+          description: Not found
+          schema:
+            $ref: '#/definitions/Errors'
+        '422':
+          description: Unprocessable entity
+          schema:
+            $ref: '#/definitions/Errors'
+      security:
+        - ApiKey: []
+      deprecated: false
+    delete:
+      tags:
+        - dialob-questionnaire-service
+      summary: deleteQuestionnaireAnswer
+      operationId: deleteQuestionnaireAnswer
+      produces:
+        - application/json
+      parameters:
+        - name: answerId
+          in: path
+          description: answerId
+          required: true
+          type: string
+        - name: questionnaireId
+          in: path
+          description: questionnaireId
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Error'
+        '209':
+          description: Conflict
+          schema:
+            $ref: '#/definitions/Errors'
+        '403':
+          description: Access denied
+          schema:
+            $ref: '#/definitions/Errors'
+        '404':
+          description: Not found
+          schema:
+            $ref: '#/definitions/Errors'
+      security:
+        - ApiKey: []
+      deprecated: false
+  '/questionnaires/{questionnaireId}/errors':
+    get:
+      tags:
+        - dialob-questionnaire-service
+      summary: getQuestionnaireErrors
+      operationId: getQuestionnaireErrors
+      produces:
+        - application/json
+      parameters:
+        - name: questionnaireId
+          in: path
+          description: questionnaireId
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Error'
+        '403':
+          description: Access denied
+          schema:
+            $ref: '#/definitions/Errors'
+        '404':
+          description: Not found
+          schema:
+            $ref: '#/definitions/Errors'
+      security:
+        - ApiKey: []
+      deprecated: false
+  '/questionnaires/{questionnaireId}/items':
+    get:
+      tags:
+        - dialob-questionnaire-service
+      summary: getQuestionnaireItems
+      operationId: getQuestionnaireItems
+      produces:
+        - application/json
+      parameters:
+        - name: questionnaireId
+          in: path
+          description: questionnaireId
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ActionItem'
+        '403':
+          description: Access denied
+          schema:
+            $ref: '#/definitions/Errors'
+        '404':
+          description: Not found
+          schema:
+            $ref: '#/definitions/Errors'
+      security:
+        - ApiKey: []
+      deprecated: false
+  '/questionnaires/{questionnaireId}/items/{itemId}':
+    get:
+      tags:
+        - dialob-questionnaire-service
+      summary: getQuestionnaireItem
+      operationId: getQuestionnaireItem
+      produces:
+        - application/json
+      parameters:
+        - name: itemId
+          in: path
+          description: itemId
+          required: true
+          type: string
+        - name: questionnaireId
+          in: path
+          description: questionnaireId
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/ActionItem'
+        '403':
+          description: Access denied
+          schema:
+            $ref: '#/definitions/Errors'
+        '404':
+          description: Not found
+          schema:
+            $ref: '#/definitions/Errors'
+      security:
+        - ApiKey: []
+      deprecated: false
+  '/questionnaires/{questionnaireId}/items/{itemId}/rows':
+    get:
+      tags:
+        - dialob-questionnaire-service
+      summary: getQuestionnaireItemRows
+      operationId: getQuestionnaireItemRows
+      produces:
+        - application/json
+      parameters:
+        - name: itemId
+          in: path
+          description: itemId
+          required: true
+          type: string
+        - name: questionnaireId
+          in: path
+          description: questionnaireId
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              type: string
+        '403':
+          description: Access denied
+          schema:
+            $ref: '#/definitions/Errors'
+        '404':
+          description: Not found
+          schema:
+            $ref: '#/definitions/Errors'
+      security:
+        - ApiKey: []
+      deprecated: false
+    post:
+      tags:
+        - dialob-questionnaire-service
+      summary: postQuestionnaireItemRow
+      operationId: postQuestionnaireItemRow
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: itemId
+          in: path
+          description: itemId
+          required: true
+          type: string
+        - name: questionnaireId
+          in: path
+          description: questionnaireId
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              type: string
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Errors'
+        '403':
+          description: Access denied
+          schema:
+            $ref: '#/definitions/Errors'
+        '422':
+          description: Unprocessable entity
+          schema:
+            $ref: '#/definitions/Errors'
+      security:
+        - ApiKey: []
+      deprecated: false
+  '/questionnaires/{questionnaireId}/items/{itemId}/rows/{rowId}':
+    delete:
+      tags:
+        - dialob-questionnaire-service
+      summary: deleteQuestionnaireItemRow
+      operationId: deleteQuestionnaireItemRow
+      produces:
+        - application/json
+      parameters:
+        - name: itemId
+          in: path
+          description: itemId
+          required: true
+          type: string
+        - name: questionnaireId
+          in: path
+          description: questionnaireId
+          required: true
+          type: string
+        - name: rowId
+          in: path
+          description: rowId
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              type: string
+        '209':
+          description: Conflict
+          schema:
+            $ref: '#/definitions/Errors'
+        '403':
+          description: Access denied
+          schema:
+            $ref: '#/definitions/Errors'
+        '404':
+          description: Not found
+          schema:
+            $ref: '#/definitions/Errors'
+      security:
+        - ApiKey: []
+      deprecated: false
+  '/questionnaires/{questionnaireId}/pages':
+    get:
+      tags:
+        - dialob-questionnaire-service
+      summary: getQuestionnairePages
+      operationId: getQuestionnairePages
+      produces:
+        - application/json
+      parameters:
+        - name: questionnaireId
+          in: path
+          description: questionnaireId
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Items'
+        '403':
+          description: Access denied
+          schema:
+            $ref: '#/definitions/Errors'
+        '404':
+          description: Not found
+          schema:
+            $ref: '#/definitions/Errors'
+      security:
+        - ApiKey: []
+      deprecated: false
+    put:
+      tags:
+        - dialob-questionnaire-service
+      summary: putQuestionnairePages
+      operationId: putQuestionnairePages
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: pages
+          description: Updates questionnaire active page
+          required: true
+          schema:
+            $ref: '#/definitions/Items'
+        - name: questionnaireId
+          in: path
+          description: questionnaireId
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Items'
+        '209':
+          description: Conflict
+          schema:
+            $ref: '#/definitions/Errors'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Errors'
+        '403':
+          description: Access denied
+          schema:
+            $ref: '#/definitions/Errors'
+        '404':
+          description: Not found
+          schema:
+            $ref: '#/definitions/Errors'
+        '422':
+          description: Unprocessable entity
+          schema:
+            $ref: '#/definitions/Errors'
+      security:
+        - ApiKey: []
+      deprecated: false
+  '/questionnaires/{questionnaireId}/status':
+    get:
+      tags:
+        - dialob-questionnaire-service
+      summary: getQuestionnaireStatus
+      operationId: getQuestionnaireStatus
+      produces:
+        - application/json
+      parameters:
+        - name: questionnaireId
+          in: path
+          description: questionnaireId
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+            enum:
+              - NEW
+              - OPEN
+              - COMPLETED
+        '403':
+          description: Access denied
+          schema:
+            $ref: '#/definitions/Errors'
+        '404':
+          description: Not found
+          schema:
+            $ref: '#/definitions/Errors'
+      security:
+        - ApiKey: []
+      deprecated: false
+    put:
+      tags:
+        - dialob-questionnaire-service
+      summary: putQuestionnaireStatus
+      operationId: putQuestionnaireStatus
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: questionnaireId
+          in: path
+          description: questionnaireId
+          required: true
+          type: string
+        - in: body
+          name: status
+          description: A new status for questionnaire
+          required: true
+          schema:
+            type: string
+            enum:
+              - NEW
+              - OPEN
+              - COMPLETED
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+            enum:
+              - NEW
+              - OPEN
+              - COMPLETED
+        '209':
+          description: Conflict
+          schema:
+            $ref: '#/definitions/Errors'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Errors'
+        '403':
+          description: Access denied
+          schema:
+            $ref: '#/definitions/Errors'
+        '404':
+          description: Not found
+          schema:
+            $ref: '#/definitions/Errors'
+        '422':
+          description: Unprocessable entity
+          schema:
+            $ref: '#/definitions/Errors'
+      security:
+        - ApiKey: []
+      deprecated: false
+  '/questionnaires/{questionnaireId}/valueSets':
+    get:
+      tags:
+        - dialob-questionnaire-service
+      summary: getQuestionnaireValueSets
+      operationId: getQuestionnaireValueSets
+      produces:
+        - application/json
+      parameters:
+        - name: questionnaireId
+          in: path
+          description: questionnaireId
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ValueSet'
+        '403':
+          description: Access denied
+          schema:
+            $ref: '#/definitions/Errors'
+        '404':
+          description: Not found
+          schema:
+            $ref: '#/definitions/Errors'
+      security:
+        - ApiKey: []
+      deprecated: false
+  '/questionnaires/{questionnaireId}/valueSets/{valueSetId}':
+    get:
+      tags:
+        - dialob-questionnaire-service
+      summary: getQuestionnaireValueSet
+      operationId: getQuestionnaireValueSet
+      produces:
+        - application/json
+      parameters:
+        - name: questionnaireId
+          in: path
+          description: questionnaireId
+          required: true
+          type: string
+        - name: valueSetId
+          in: path
+          description: valueSetId
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/ValueSet'
+        '403':
+          description: Access denied
+          schema:
+            $ref: '#/definitions/Errors'
+        '404':
+          description: Not found
+          schema:
+            $ref: '#/definitions/Errors'
+      security:
+        - ApiKey: []
+      deprecated: false
+  /tags:
+    get:
+      tags:
+        - dialob-form-service
+      summary: getTags
+      operationId: getTags
+      produces:
+        - application/json
+      parameters:
+        - name: formId
+          in: query
+          description: formId
+          required: false
+          type: string
+        - name: formName
+          in: query
+          description: formName
+          required: false
+          type: string
+        - name: name
+          in: query
+          description: name
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/FormTag'
+        '403':
+          description: Access denied
+          schema:
+            $ref: '#/definitions/Errors'
+        '404':
+          description: Not found
+          schema:
+            $ref: '#/definitions/Errors'
+      security:
+        - ApiKey: []
+      deprecated: false
+securityDefinitions:
+  ApiKey:
+    type: apiKey
+    name: x-api-key
+    in: header
+definitions:
+  ActionItem:
+    type: object
+    properties:
+      activeItem:
+        type: string
+      allowedActions:
+        type: array
+        items:
+          type: string
+          enum:
+            - ANSWER
+            - NEXT
+            - PREVIOUS
+            - GOTO
+            - COMPLETE
+            - ADD_ROW
+            - DELETE_ROW
+            - REMOVE_ANSWERS
+            - RESET
+            - ITEM
+            - REMOVE_ITEMS
+            - ERROR
+            - REMOVE_ERROR
+            - VALUE_SET
+            - REMOVE_VALUE_SETS
+            - NOT_FOUND
+            - SERVER_ERROR
+            - ROWS
+            - SET_VALUE
+            - SET_FAILED
+            - LOCALE
+      answered:
+        type: boolean
+      availableItems:
+        type: array
+        items:
+          type: string
+      className:
+        type: array
+        items:
+          type: string
+      description:
+        type: string
+      disabled:
+        type: boolean
+      id:
+        type: string
+      items:
+        type: array
+        items:
+          type: string
+      label:
+        type: string
+      props:
+        type: object
+      required:
+        type: boolean
+      type:
+        type: string
+      value:
+        type: object
+      valueSetId:
+        type: string
+      view:
+        type: string
+    title: ActionItem
+  Answer:
+    type: object
+    properties:
+      acceptedValue:
+        type: object
+      id:
+        type: string
+      type:
+        type: string
+      updated:
+        type: string
+        format: date-time
+      userId:
+        type: string
+      value:
+        type: object
+    title: Answer
+  ContextValue:
+    type: object
+    required:
+      - id
+    properties:
+      id:
+        type: string
+      value:
+        type: object
+    title: ContextValue
+  Error:
+    type: object
+    properties:
+      code:
+        type: string
+      context:
+        type: string
+      description:
+        type: string
+      error:
+        type: string
+      id:
+        type: string
+      rejectedValue:
+        type: object
+    title: Error
+  Errors:
+    type: object
+    properties:
+      error:
+        type: string
+      errors:
+        type: array
+        items:
+          $ref: '#/definitions/Error'
+      message:
+        type: string
+      path:
+        type: string
+      status:
+        type: integer
+        format: int32
+      timestamp:
+        type: string
+        format: date-time
+      trace:
+        type: string
+    title: Errors
+  Form:
+    type: object
+    required:
+      - data
+      - metadata
+      - namespaces
+      - requiredErrorText
+      - valueSets
+      - variables
+    properties:
+      _id:
+        type: string
+      _rev:
+        type: string
+      data:
+        type: object
+        additionalProperties:
+          $ref: '#/definitions/FormItem'
+      metadata:
+        $ref: '#/definitions/Metadata'
+      name:
+        type: string
+      namespaces:
+        type: object
+        additionalProperties:
+          $ref: '#/definitions/Form'
+      requiredErrorText:
+        type: object
+        additionalProperties:
+          type: string
+      valueSets:
+        type: array
+        items:
+          $ref: '#/definitions/FormValueSet'
+      variables:
+        type: array
+        items:
+          $ref: '#/definitions/Variable'
+    title: Form
+  FormItem:
+    type: object
+    required:
+      - className
+      - description
+      - id
+      - items
+      - label
+      - requiredErrorText
+      - type
+      - validations
+    additionalProperties: true
+    properties:
+      activeWhen:
+        type: string
+      className:
+        type: array
+        items:
+          type: string
+      defaultValue:
+        type: object
+      description:
+        type: object
+        additionalProperties:
+          type: string
+      id:
+        type: string
+      items:
+        type: array
+        items:
+          type: string
+      label:
+        type: object
+        additionalProperties:
+          type: string
+      props:
+        type: object
+      readOnly:
+        type: boolean
+      required:
+        type: string
+      requiredErrorText:
+        type: object
+        additionalProperties:
+          type: string
+      type:
+        type: string
+      validations:
+        type: array
+        items:
+          $ref: '#/definitions/Validation'
+      valueSetId:
+        type: string
+      view:
+        type: string
+    title: FormItem
+  FormPutResponse:
+    type: object
+    properties:
+      error:
+        type: string
+      errors:
+        type: array
+        items:
+          $ref: '#/definitions/FormValidationError'
+      form:
+        $ref: '#/definitions/Form'
+      id:
+        type: string
+      ok:
+        type: boolean
+      reason:
+        type: string
+      rev:
+        type: string
+    title: FormPutResponse
+  FormTag:
+    type: object
+    required:
+      - formName
+      - name
+    properties:
+      created:
+        type: string
+        format: date-time
+      formId:
+        type: string
+      formName:
+        type: string
+      name:
+        type: string
+    title: FormTag
+  FormValidationError:
+    type: object
+    properties:
+      endIndex:
+        type: integer
+      expression:
+        type: string
+      index:
+        type: integer
+      itemId:
+        type: string
+      level:
+        type: string
+        enum:
+          - INFO
+          - WARNING
+          - ERROR
+          - FATAL
+      message:
+        type: string
+      startIndex:
+        type: integer
+      type:
+        type: string
+        enum:
+          - VISIBILITY
+          - VALIDATION
+          - REQUIREMENT
+          - VARIABLE
+          - GENERAL
+          - CLASSNAME
+          - VALUE_ENTRY
+    title: FormValidationError
+  FormValueSet:
+    type: object
+    required:
+      - id
+    additionalProperties: true
+    properties:
+      entries:
+        type: array
+        items:
+          $ref: '#/definitions/FormValueSetEntry'
+      id:
+        type: string
+    title: FormValueSet
+  FormValueSetEntry:
+    type: object
+    required:
+      - id
+    additionalProperties: true
+    properties:
+      id:
+        type: string
+      label:
+        type: object
+        additionalProperties:
+          type: string
+    title: FormValueSetEntry
+  IdAndRevision:
+    type: object
+    required:
+      - _id
+      - _rev
+    properties:
+      _id:
+        type: string
+      _rev:
+        type: string
+    title: IdAndRevision
+  Items:
+    type: object
+    required:
+      - activeItem
+      - availableItems
+      - items
+    properties:
+      activeItem:
+        type: string
+      availableItems:
+        type: array
+        items:
+          type: string
+      items:
+        type: array
+        items:
+          type: string
+    title: Items
+  Metadata:
+    type: object
+    required:
+      - formId
+      - label
+      - labels
+      - languages
+      - status
+    properties:
+      created:
+        type: string
+        format: date-time
+      creator:
+        type: string
+      defaultSubmitUrl:
+        type: string
+      formId:
+        type: string
+      formName:
+        type: string
+      formRev:
+        type: string
+      label:
+        type: string
+      labels:
+        type: array
+        items:
+          type: string
+      language:
+        type: string
+      languages:
+        type: array
+        items:
+          type: string
+      lastAnswer:
+        type: string
+        format: date-time
+      lastSaved:
+        type: string
+        format: date-time
+      owner:
+        type: string
+      reason:
+        type: string
+        enum:
+          - SKIPPED
+          - CANCELLED
+      savedBy:
+        type: string
+      status:
+        type: string
+        enum:
+          - NEW
+          - OPEN
+          - COMPLETED
+      submitUrl:
+        type: string
+      tenantId:
+        type: string
+      valid:
+        type: boolean
+    title: Metadata
+  Questionnaire:
+    type: object
+    required:
+      - answers
+      - context
+      - errors
+      - metadata
+      - valueSets
+      - variableValues
+    properties:
+      _id:
+        type: string
+      _rev:
+        type: string
+      activeItem:
+        type: string
+      answers:
+        type: array
+        items:
+          $ref: '#/definitions/Answer'
+      context:
+        type: array
+        items:
+          $ref: '#/definitions/ContextValue'
+      errors:
+        type: array
+        items:
+          $ref: '#/definitions/Error'
+      metadata:
+        $ref: '#/definitions/Metadata'
+      valueSets:
+        type: array
+        items:
+          $ref: '#/definitions/ValueSet'
+      variableValues:
+        type: array
+        items:
+          $ref: '#/definitions/VariableValue'
+    title: Questionnaire
+  QuestionnaireListItem:
+    type: object
+    properties:
+      id:
+        type: string
+      metadata:
+        $ref: '#/definitions/Metadata'
+    title: QuestionnaireListItem
+  Response:
+    type: object
+    properties:
+      error:
+        type: string
+      ok:
+        type: boolean
+      reason:
+        type: string
+    title: Response
+  Validation:
+    type: object
+    required:
+      - message
+    properties:
+      message:
+        type: object
+        additionalProperties:
+          type: string
+      rule:
+        type: string
+    title: Validation
+  ValueSet:
+    type: object
+    properties:
+      entries:
+        type: array
+        items:
+          $ref: '#/definitions/ValueSetEntry'
+      id:
+        type: string
+    title: ValueSet
+  ValueSetEntry:
+    type: object
+    properties:
+      key:
+        type: string
+      value:
+        type: string
+    title: ValueSetEntry
+  Variable:
+    type: object
+    required:
+      - name
+    properties:
+      confidential:
+        type: boolean
+      context:
+        type: boolean
+      contextType:
+        type: string
+      defaultValue:
+        type: object
+      expression:
+        type: string
+      name:
+        type: string
+    title: Variable
+  VariableValue:
+    type: object
+    required:
+      - id
+    properties:
+      id:
+        type: string
+      value:
+        type: object
+    title: VariableValue
