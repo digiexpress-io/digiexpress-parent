@@ -7,7 +7,7 @@
     <groupId>io.digiexpress</groupId>
     <version>999-SNAPSHOT</version>
   </parent>
-  <artifactId>quarkus-app</artifactId>
+  <artifactId>dialob-quarkus-app</artifactId>
 
   <dependencies>
     <dependency>

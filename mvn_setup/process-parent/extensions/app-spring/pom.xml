@@ -24,7 +24,7 @@
     <version>999-SNAPSHOT</version>
   </parent>
   <packaging>jar</packaging>
-  <artifactId>spring-app</artifactId>
+  <artifactId>digiexpress-spring-app</artifactId>
   <build>
     <plugins>
       <plugin>

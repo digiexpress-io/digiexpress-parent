@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>io.resys.hdes</groupId>
+    <groupId>io.digiexpress</groupId>
     <artifactId>hdes-dialect</artifactId>
     <version>999-SNAPSHOT</version>
   </parent>
@@ -11,11 +11,11 @@
 
   <dependencies>
     <dependency>
-      <groupId>io.resys.hdes</groupId>
+      <groupId>io.digiexpress</groupId>
       <artifactId>hdes-ast</artifactId>
     </dependency>
     <dependency>
-      <groupId>io.resys.hdes</groupId>
+      <groupId>io.digiexpress</groupId>
       <artifactId>hdes-executor</artifactId>
     </dependency>
     <dependency>

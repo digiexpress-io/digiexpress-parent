@@ -30,7 +30,7 @@
     <dependencies>
       <dependency>
         <groupId>io.digiexpress</groupId>
-        <artifactId>spring-app</artifactId>
+        <artifactId>digiexpress-spring-app</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>

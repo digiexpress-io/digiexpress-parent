@@ -4,11 +4,11 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-    <groupId>io.resys.hdes</groupId>
+    <groupId>io.digiexpress</groupId>
     <artifactId>hdes-dev</artifactId>
     <version>999-SNAPSHOT</version>
 	</parent>
-	<artifactId>quarkus-app</artifactId>
+	<artifactId>hdes-quarkus-app</artifactId>
 
 	<dependencies>
 		<dependency>
@@ -37,7 +37,7 @@
 		</dependency>
 
 		<dependency>
-			<groupId>io.resys.hdes</groupId>
+			<groupId>io.digiexpress</groupId>
 			<artifactId>quarkus-composer-pg</artifactId>
 		</dependency>
 

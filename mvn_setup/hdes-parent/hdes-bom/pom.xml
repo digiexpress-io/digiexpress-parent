@@ -2,7 +2,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>io.resys.hdes</groupId>
+    <groupId>io.digiexpress</groupId>
     <artifactId>hdes-parent</artifactId>
     <version>999-SNAPSHOT</version>
   </parent>
@@ -14,66 +14,66 @@
     <dependencies>
       <!-- client -->
       <dependency>
-        <groupId>io.resys.hdes</groupId>
+        <groupId>io.digiexpress</groupId>
         <artifactId>hdes-core</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>io.resys.hdes</groupId>
+        <groupId>io.digiexpress</groupId>
         <artifactId>hdes-client-api</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>io.resys.hdes</groupId>
+        <groupId>io.digiexpress</groupId>
         <artifactId>hdes-client</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>io.resys.hdes</groupId>
+        <groupId>io.digiexpress</groupId>
         <artifactId>hdes-composer-ui</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <!-- store -->
       <dependency>
-        <groupId>io.resys.hdes</groupId>
+        <groupId>io.digiexpress</groupId>
         <artifactId>hdes-store-git</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>io.resys.hdes</groupId>
+        <groupId>io.digiexpress</groupId>
         <artifactId>hdes-store-thena</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <!-- dialect -->
       <dependency>
-        <groupId>io.resys.hdes</groupId>
+        <groupId>io.digiexpress</groupId>
         <artifactId>hdes-ast</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>io.resys.hdes</groupId>
+        <groupId>io.digiexpress</groupId>
         <artifactId>hdes-compiler</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>io.resys.hdes</groupId>
+        <groupId>io.digiexpress</groupId>
         <artifactId>hdes-executor</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>io.resys.hdes</groupId>
+        <groupId>io.digiexpress</groupId>
         <artifactId>hdes-interpreter</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>io.resys.hdes</groupId>
+        <groupId>io.digiexpress</groupId>
         <artifactId>hdes-runtime</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>io.resys.hdes</groupId>
+        <groupId>io.digiexpress</groupId>
         <artifactId>hdes-runtime-test</artifactId>
         <version>${project.version}</version>
         <scope>test</scope>
@@ -81,19 +81,19 @@
 
       <!-- spring -->
       <dependency>
-        <groupId>io.resys.hdes</groupId>
+        <groupId>io.digiexpress</groupId>
         <artifactId>hdes-spring-env</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>io.resys.hdes</groupId>
+        <groupId>io.digiexpress</groupId>
         <artifactId>hdes-spring-composer</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <!-- quarkus -->
       <dependency>
-        <groupId>io.resys.hdes</groupId>
+        <groupId>io.digiexpress</groupId>
         <artifactId>quarkus-composer-pg</artifactId>
         <version>${project.version}</version>
       </dependency>

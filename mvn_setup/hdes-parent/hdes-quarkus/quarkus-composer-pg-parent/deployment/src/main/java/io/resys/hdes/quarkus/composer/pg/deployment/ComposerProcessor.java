@@ -64,7 +64,7 @@ import io.vertx.ext.web.RoutingContext;
 
 
 public class ComposerProcessor {
-  private static final String WEBJAR_GROUP_ID = "io.resys.hdes";
+  private static final String WEBJAR_GROUP_ID = "io.digiexpress";
   private static final String WEBJAR_ARTIFACT_ID = "hdes-composer-ui";
   private static final String WEBJAR_PREFIX = "META-INF/resources/webjars/" + WEBJAR_ARTIFACT_ID + "/";
   
