@@ -13,7 +13,6 @@
 
   <groupId>io.resys.hdes</groupId>
   <artifactId>hdes-parent</artifactId>
-  <version>999-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>hdes</name>
 

@@ -13,7 +13,6 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>dialob-parent</artifactId>
   <groupId>io.dialob</groupId>
-  <version>999-SNAPSHOT</version>
   <packaging>pom</packaging>
 
 

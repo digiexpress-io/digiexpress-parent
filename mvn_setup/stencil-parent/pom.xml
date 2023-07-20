@@ -10,7 +10,6 @@
 
   <groupId>io.thestencil</groupId>
   <artifactId>stencil-parent</artifactId>
-  <version>999-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>the-stencil-parent</name>
 
