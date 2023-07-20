@@ -59,9 +59,9 @@ fi
 
 
 
-# git remote add $ssh_repo_name $ssh_repo_url
-# git fetch $ssh_repo_name
-# git merge "$ssh_repo_name/$ssh_repo_branch" --allow-unrelated-histories
+git remote add $ssh_repo_name $ssh_repo_url
+git fetch $ssh_repo_name
+git merge "$ssh_repo_name/$ssh_repo_branch" --allow-unrelated-histories
 # --no-commit 
 
 
@@ -74,6 +74,7 @@ do
   	 [ "$file_name" == 'bazel_setup' ] || 
   	 [ "$file_name" == '.' ] ||
   	 [ "$file_name" == '..' ] ||
+  	 [ "$file_name" == '.project' ] ||
   	 [ "$file_name" == '.github/workflows/digiexpress-codeql-analysis.yml'] ||
   	 [ "$file_name" == '.github/workflows/digiexpress-mvn-tag-and-release.yaml']; then
     continue                    
