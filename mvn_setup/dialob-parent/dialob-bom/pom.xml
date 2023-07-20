@@ -17,7 +17,7 @@
   <packaging>pom</packaging>
 
   <properties>
-    <dialob-api.version>2.2.3</dialob-api.version>
+
   </properties>
 
   <dependencyManagement>
@@ -38,9 +38,9 @@
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>io.dialob</groupId>
+        <groupId>io.digiexpress</groupId>
         <artifactId>dialob-api</artifactId>
-        <version>${dialob-api.version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>io.digiexpress</groupId>

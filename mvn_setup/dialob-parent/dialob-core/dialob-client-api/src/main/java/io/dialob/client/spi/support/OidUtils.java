@@ -20,13 +20,13 @@ import java.security.SecureRandom;
 import java.util.Arrays;
 
 import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang3.StringUtils;
 
 import io.dialob.client.api.DialobErrorHandler.DocumentNotFoundException;
+import jakarta.validation.constraints.NotNull;
 
 public final class OidUtils {
 

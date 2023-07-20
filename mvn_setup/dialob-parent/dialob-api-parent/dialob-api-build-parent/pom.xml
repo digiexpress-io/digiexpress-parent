@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>dialob-api-parent</artifactId>
-    <groupId>io.dialob</groupId>
+    <groupId>io.digiexpress</groupId>
     <version>999-SNAPSHOT</version>
   </parent>
   <artifactId>dialob-api-build-parent</artifactId>
@@ -13,7 +15,7 @@
     <jackson.version>2.14.2</jackson.version>
     <jackson-annotation.version>2.14.2</jackson-annotation.version>
     <jackson-databind.version>2.14.2</jackson-databind.version>
-    
+
     <spring-data-commons.version>3.0.3</spring-data-commons.version>
     <validation-api.version>3.0.2</validation-api.version>
     <immutables.version>2.9.3</immutables.version>
@@ -23,7 +25,8 @@
     <okhttp.version>4.9.0</okhttp.version>
     <feign.version>11.6</feign.version> <!-- generator not compatible with 11.0 -->
     <feign.form.version>3.8.0</feign.form.version>
-    <apache.oltu.version>1.0.2</apache.oltu.version> <!-- generator not compatible with 1.0.2 -->
+    <apache.oltu.version>1.0.2</apache.oltu.version> <!-- generator not
+    compatible with 1.0.2 -->
   </properties>
 
   <build>
@@ -51,7 +54,7 @@
         </executions>
       </plugin>
     </plugins>
-    
+
     <pluginManagement>
       <plugins>
         <plugin>
@@ -59,7 +62,7 @@
           <artifactId>maven-surefire-plugin</artifactId>
           <version>3.0.0-M5</version>
         </plugin>
-        
+
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
@@ -76,7 +79,7 @@
             </execution>
           </executions>
         </plugin>
-        
+
         <plugin>
           <groupId>io.swagger.codegen.v3</groupId>
           <artifactId>swagger-codegen-maven-plugin</artifactId>
@@ -85,7 +88,7 @@
       </plugins>
     </pluginManagement>
   </build>
-  
+
   <dependencies>
     <dependency>
       <groupId>org.immutables</groupId>
@@ -122,11 +125,11 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-  
+
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>io.dialob</groupId>
+        <groupId>io.digiexpress</groupId>
         <artifactId>dialob-api-bom</artifactId>
         <version>${project.version}</version>
         <type>pom</type>
@@ -162,7 +165,12 @@
       </dependency>
 
       <dependency>
-        <groupId>org.hibernate</groupId>
+        <groupId>org.hibernate.validator</groupId>
+        <artifactId>hibernate-validator-annotation-processor</artifactId>
+        <version>7.0.5.Final</version>
+      </dependency>
+      <dependency>
+        <groupId>org.hibernate.validator</groupId>
         <artifactId>hibernate-validator</artifactId>
         <version>7.0.5.Final</version>
         <scope>test</scope>
@@ -190,7 +198,7 @@
         <artifactId>assertj-core</artifactId>
         <version>${assertj.version}</version>
         <scope>test</scope>
-      </dependency>        
+      </dependency>
       <dependency>
         <groupId>com.squareup.okhttp3</groupId>
         <artifactId>okhttp</artifactId>
