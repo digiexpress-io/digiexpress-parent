@@ -8,7 +8,6 @@
     <relativePath>../build-parent/pom.xml</relativePath>
   </parent>
 
-  <groupId>io.thestencil</groupId>
   <artifactId>stencil-parent</artifactId>
   <packaging>pom</packaging>
   <name>the-stencil-parent</name>

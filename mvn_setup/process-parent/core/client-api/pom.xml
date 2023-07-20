@@ -47,7 +47,7 @@
     </dependency>
 
     <dependency>
-      <groupId>io.thestencil</groupId>
+      <groupId>io.digiexpress</groupId>
       <artifactId>stencil-client-api</artifactId>
     </dependency>
     <dependency>

@@ -4,7 +4,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>io.thestencil</groupId>
+		<groupId>io.digiexpress</groupId>
 		<artifactId>stencil-dev-tools</artifactId>
 		<version>999-SNAPSHOT</version>
 	</parent>
@@ -37,15 +37,15 @@
 		</dependency>
 
 		<dependency>
-			<groupId>io.thestencil</groupId>
+			<groupId>io.digiexpress</groupId>
 			<artifactId>quarkus-stencil-composer</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>io.thestencil</groupId>
+			<groupId>io.digiexpress</groupId>
 			<artifactId>quarkus-stencil-composer-pg</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>io.thestencil</groupId>
+			<groupId>io.digiexpress</groupId>
 			<artifactId>quarkus-stencil-site-pg</artifactId>
 		</dependency>
 

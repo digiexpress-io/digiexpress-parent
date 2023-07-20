@@ -232,7 +232,7 @@
         <scope>import</scope>
       </dependency>
       <dependency>
-        <groupId>io.thestencil</groupId>
+        <groupId>io.digiexpress</groupId>
         <artifactId>stencil-bom</artifactId>
         <version>${stencil.version}</version>
         <type>pom</type>
