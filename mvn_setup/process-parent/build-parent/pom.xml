@@ -52,10 +52,11 @@
     <ehcache.version>3.8.1</ehcache.version>
     <spring.version>5.3.18</spring.version>
     <spring-boot.version>2.7.0</spring-boot.version>
-
+    <glassfish.version>4.0.2</glassfish.version>
+    <glassfishel.version>2.2.6</glassfishel.version>
 
     <guava.version>31.0.1-jre</guava.version>
-    <hibernate-validator.version>6.0.22.Final</hibernate-validator.version>
+    <hibernate-validator.version>7.0.5.Final</hibernate-validator.version>
     <immutables.version>2.8.8</immutables.version>
     <jackson.version>2.13.0</jackson.version>
     <jackson-databind.version>2.13.0</jackson-databind.version>
@@ -63,7 +64,7 @@
     <logback.version>1.2.11</logback.version>
     <logstash-logback-encoder.version>7.0.1</logstash-logback-encoder.version>
     <slf4j.version>1.7.36</slf4j.version>
-    <validation-api.version>2.0.2</validation-api.version>
+    <validation-api.version>3.0.2</validation-api.version>
     <caffeine.version>2.9.2</caffeine.version>
     <lombok.version>1.18.22</lombok.version>
     <commons-lang3.version>3.12.0</commons-lang3.version>
@@ -374,11 +375,22 @@
         <version>${jackson.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.hibernate</groupId>
+        <groupId>org.hibernate.validator</groupId>
         <artifactId>hibernate-validator</artifactId>
         <version>${hibernate-validator.version}</version>
       </dependency>
-
+      
+      
+      <dependency>
+        <groupId>org.glassfish</groupId>
+        <artifactId>jakarta.el</artifactId>
+        <version>${glassfish.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.glassfish.web</groupId>
+        <artifactId>javax.el</artifactId>
+        <version>${glassfishel.version}</version>
+      </dependency>
 
       <dependency>
         <groupId>org.apache.commons</groupId>
@@ -411,13 +423,11 @@
         <artifactId>guava</artifactId>
         <version>${guava.version}</version>
       </dependency>
-
       <dependency>
         <groupId>jakarta.validation</groupId>
         <artifactId>jakarta.validation-api</artifactId>
         <version>${validation-api.version}</version>
       </dependency>
-
       <dependency>
         <groupId>com.github.ben-manes.caffeine</groupId>
         <artifactId>caffeine</artifactId>
