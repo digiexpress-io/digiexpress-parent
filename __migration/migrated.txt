@@ -5,3 +5,4 @@ repo: 'git@github.com:the-stencil-io/the-stencil-composer.git', branch: 'main' m
 repo: 'git@github.com:the-stencil-io/the-stencil-portal.git', branch: 'main' migrated to: 'ts_setup/the-stencil-portal'
 repo: 'git@github.com:dialob/dialob-parent.git', branch: 'digiexpress' migrated to: 'mvn_setup/dialob-parent'
 repo: 'git@github.com:dialob/dialob-api.git', branch: 'dev' migrated to: 'mvn_setup/dialob-api'
+repo: 'git@github.com:the-wrench-io/thena-parent.git', branch: 'dev' migrated to: 'mvn_setup/thena-parent'
