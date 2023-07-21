@@ -101,6 +101,7 @@
     <module>hdes-parent</module>
     <module>stencil-parent</module>
     <module>process-parent</module>
+    <module>thena-parent</module>
   </modules>
 
   <build>

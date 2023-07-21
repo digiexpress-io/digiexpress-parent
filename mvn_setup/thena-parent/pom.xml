@@ -54,7 +54,6 @@
     <module>bom</module>
 		<module>build-parent</module>
 		<module>core</module>
-    <module>extensions</module>
 	</modules>
 
 	<properties>

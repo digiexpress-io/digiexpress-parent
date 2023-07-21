@@ -23,11 +23,6 @@
         <artifactId>thena-docdb-pgsql</artifactId>
         <version>${project.version}</version>
       </dependency>
-      <dependency>
-        <groupId>io.resys.hdes</groupId>
-        <artifactId>thena-tasks-client</artifactId>
-        <version>${project.version}</version>
-      </dependency>
     </dependencies>
   </dependencyManagement>
 </project>
