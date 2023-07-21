@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.digiexpress.client.api.ClientStore.StoreEntity;
 import io.digiexpress.client.api.ImmutableStoreEntity;
-import io.resys.thena.docdb.api.models.Objects.Blob;
+import io.resys.thena.docdb.api.models.ThenaObject.Blob;
 
 public class DocDBDeserializer implements DocDBConfig.DocDBDeserializer {
   private ObjectMapper objectMapper;
@@ -16,7 +16,7 @@ public class DocDBDeserializer implements DocDBConfig.DocDBDeserializer {
   @Override
   public StoreEntity fromString(Blob value) {
     try {
-      final ImmutableStoreEntity src = objectMapper.readValue(value.getValue(), ImmutableStoreEntity.class);
+      final ImmutableStoreEntity src = objectMapper.readValue(value.getValue().toString(), ImmutableStoreEntity.class);
       return src;
     } catch (Exception e) {
       throw new RuntimeException(e.getMessage() + System.lineSeparator() + value, e);

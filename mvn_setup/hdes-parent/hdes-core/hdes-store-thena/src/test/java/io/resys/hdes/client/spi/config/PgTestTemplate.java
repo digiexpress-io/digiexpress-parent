@@ -86,15 +86,15 @@ public class PgTestTemplate {
   }
   
   public void prettyPrint(String repoId) {
-    Repo repo = getThena().repo().query().id(repoId).get()
-        .await().atMost(Duration.ofMinutes(1)); 
+    Repo repo = getThena().project().projectQuery().get()
+        .await().atMost(Duration.ofMinutes(1)).getRepo(); 
     printRepo(repo);
   }
 
   public String toRepoExport(String repoName) {
-    Repo repo = getThena().repo().query().id(repoName).get()
-        .await().atMost(Duration.ofMinutes(1));
-    final String result = new RepositoryToStaticData(createState(repo.getName())).print(repo);
+    final var repo = getThena().project().projectQuery().projectName(repoName).get()
+        .await().atMost(Duration.ofMinutes(1)).getRepo();
+    final String result = new RepositoryToStaticData(createState(repoName)).print(repo);
     return result;
   }
 

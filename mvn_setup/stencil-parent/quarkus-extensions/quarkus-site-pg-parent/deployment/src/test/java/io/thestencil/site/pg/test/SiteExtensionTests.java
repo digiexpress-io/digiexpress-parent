@@ -22,6 +22,7 @@ package io.thestencil.site.pg.test;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 
 import javax.inject.Inject;
 
@@ -67,6 +68,9 @@ public class SiteExtensionTests {
         .client(pgPool)
         .errorHandler(new PgErrors())
         .build();
+    this.client.project().projectBuilder()
+      .name("test-assets")
+      .build().await().atMost(Duration.ofMinutes(1));
   }
   
   

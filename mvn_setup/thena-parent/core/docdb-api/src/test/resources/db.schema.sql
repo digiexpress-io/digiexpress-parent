@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS repos
 CREATE TABLE blobs
 (
   id VARCHAR(40) PRIMARY KEY,
-  value TEXT NOT NULL
+  value jsonb NOT NULL
 );
 
 CREATE TABLE commits

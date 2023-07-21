@@ -16,8 +16,9 @@ import io.dialob.client.spi.store.ImmutableDialobStoreConfig;
 import io.dialob.client.spi.support.DialobAssert;
 import io.dialob.client.spi.support.OidUtils;
 import io.resys.thena.docdb.api.DocDB;
+import io.resys.thena.docdb.spi.pgsql.DocDBFactoryPgSql;
 import io.resys.thena.docdb.spi.pgsql.PgErrors;
-import io.resys.thena.docdb.sql.DocDBFactorySql;
+import io.vertx.core.json.JsonObject;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.sqlclient.PoolOptions;
 import lombok.extern.slf4j.Slf4j;
@@ -164,9 +165,9 @@ public class PgSqlDialobStore extends DialobStoreTemplate implements DialobStore
         
         final io.vertx.mutiny.pgclient.PgPool pgPool = io.vertx.mutiny.pgclient.PgPool.pool(connectOptions, poolOptions);
         
-        thena = DocDBFactorySql.create().client(pgPool).db(repoName).errorHandler(new PgErrors()).build();
+        thena = DocDBFactoryPgSql.create().client(pgPool).db(repoName).errorHandler(new PgErrors()).build();
       } else {
-        thena = DocDBFactorySql.create().client(pgPool).db(repoName).errorHandler(new PgErrors()).build();
+        thena = DocDBFactoryPgSql.create().client(pgPool).db(repoName).errorHandler(new PgErrors()).build();
       }
       
       final ObjectMapper objectMapper = getObjectMapper();
@@ -175,7 +176,7 @@ public class PgSqlDialobStore extends DialobStoreTemplate implements DialobStore
           .gidProvider(getGidProvider())
           .serializer((entity) -> {
             try {
-              return objectMapper.writeValueAsString(ImmutableStoreEntity.builder().from(entity).build());
+              return new JsonObject(objectMapper.writeValueAsString(ImmutableStoreEntity.builder().from(entity).build()));
             } catch (IOException e) {
               throw new RuntimeException(e.getMessage(), e);
             }

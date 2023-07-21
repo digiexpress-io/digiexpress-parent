@@ -27,13 +27,14 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.resys.thena.docdb.api.DocDB;
-import io.resys.thena.docdb.api.actions.ObjectsActions.BlobObject;
-import io.resys.thena.docdb.api.actions.ObjectsActions.ObjectsResult;
+import io.resys.thena.docdb.api.models.QueryEnvelope;
+import io.resys.thena.docdb.api.models.ThenaObjects.PullObject;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.StencilClient.Entity;
 import io.thestencil.client.api.StencilClient.EntityBody;
 import io.thestencil.client.api.StencilClient.EntityType;
 import io.thestencil.client.api.StencilStore.BatchCommand;
+import io.vertx.core.json.JsonObject;
 
 @Value.Immutable
 public interface StencilConfig {
@@ -51,7 +52,7 @@ public interface StencilConfig {
   
   @Value.Immutable
   interface EntityState<T extends EntityBody> {
-    ObjectsResult<BlobObject> getSrc();
+    QueryEnvelope<PullObject> getSrc();
     Entity<T> getEntity();
   }
 
@@ -76,12 +77,12 @@ public interface StencilConfig {
   
   @FunctionalInterface
   interface Serializer {
-    String toString(Entity<?> entity);
+    JsonObject toString(Entity<?> entity);
   }
   
   interface Deserializer {
-    Entity<?> fromString(String value);
-    <T extends EntityBody> Entity<T> fromString(EntityType type, String value);
+    Entity<?> fromString(JsonObject value);
+    <T extends EntityBody> Entity<T> fromString(EntityType type, JsonObject value);
   }
   
 }

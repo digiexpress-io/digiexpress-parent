@@ -1,14 +1,10 @@
 package io.thestencil.client.spi;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 /*-
  * #%L
- * stencil-persistence
+ * stencil-client-api
  * %%
- * Copyright (C) 2021 Copyright 2021 ReSys OÜ
+ * Copyright (C) 2015 - 2023 Copyright 2022 ReSys OÜ
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,8 +20,12 @@ import java.util.List;
  * #L%
  */
 
-import io.resys.thena.docdb.api.actions.CommitActions.CommitStatus;
-import io.resys.thena.docdb.api.actions.ObjectsActions.ObjectsStatus;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import io.resys.thena.docdb.api.actions.CommitActions.CommitResultStatus;
+import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.ImmutableEntityState;
 import io.thestencil.client.api.StencilClient.Entity;
@@ -48,14 +48,14 @@ public abstract class PersistenceCommands implements StencilConfig.Commands {
   
   @Override
   public <T extends EntityBody> Uni<Entity<T>> delete(Entity<T> toBeDeleted) {
-    return config.getClient().commit().head()
+    return config.getClient().commit().commitBuilder()
         .head(config.getRepoName(), config.getHeadName())
         .message("delete type: '" + toBeDeleted.getType() + "', with id: '" + toBeDeleted.getId() + "'")
-        .parentIsLatest()
+        .latestCommit()
         .author(config.getAuthorProvider().getAuthor())
         .remove(toBeDeleted.getId())
         .build().onItem().transform(commit -> {
-          if(commit.getStatus() == CommitStatus.OK) {
+          if(commit.getStatus() == CommitResultStatus.OK) {
             return toBeDeleted;
           }
           throw new DeleteException(toBeDeleted, commit);
@@ -65,13 +65,13 @@ public abstract class PersistenceCommands implements StencilConfig.Commands {
   @Override
   public <T extends EntityBody> Uni<EntityState<T>> get(String blobId, EntityType type) {
     return config.getClient()
-        .objects().blobState()
-        .repo(config.getRepoName())
-        .anyId(config.getHeadName())
-        .blobName(blobId)
+        .pull().pullQuery()
+        .projectName(config.getRepoName())
+        .branchNameOrCommitOrTag(config.getHeadName())
+        .docId(blobId)
         .get().onItem()
         .transform(state -> {
-          if(state.getStatus() != ObjectsStatus.OK) {
+          if(state.getStatus() != QueryEnvelopeStatus.OK) {
             throw new QueryException(blobId, type, state);  
           }
           Entity<T> start = config.getDeserializer()
@@ -86,14 +86,14 @@ public abstract class PersistenceCommands implements StencilConfig.Commands {
   
   @Override
   public <T extends EntityBody> Uni<Entity<T>> save(Entity<T> toBeSaved) {
-    return config.getClient().commit().head()
+    return config.getClient().commit().commitBuilder()
       .head(config.getRepoName(), config.getHeadName())
       .message("update type: '" + toBeSaved.getType() + "', with id: '" + toBeSaved.getId() + "'")
-      .parentIsLatest()
+      .latestCommit()
       .author(config.getAuthorProvider().getAuthor())
       .append(toBeSaved.getId(), config.getSerializer().toString(toBeSaved))
       .build().onItem().transform(commit -> {
-        if(commit.getStatus() == CommitStatus.OK) {
+        if(commit.getStatus() == CommitResultStatus.OK) {
           return toBeSaved;
         }
         throw new SaveException(toBeSaved, commit);
@@ -102,14 +102,14 @@ public abstract class PersistenceCommands implements StencilConfig.Commands {
   
   @Override
   public <T extends EntityBody> Uni<Entity<T>> create(Entity<T> toBeSaved) {
-    return config.getClient().commit().head()
+    return config.getClient().commit().commitBuilder()
       .head(config.getRepoName(), config.getHeadName())
       .message("create type: '" + toBeSaved.getType() + "', with id: '" + toBeSaved.getId() + "'")
-      .parentIsLatest()
+      .latestCommit()
       .author(config.getAuthorProvider().getAuthor())
       .append(toBeSaved.getId(), config.getSerializer().toString(toBeSaved))
       .build().onItem().transform(commit -> {
-        if(commit.getStatus() == CommitStatus.OK) {
+        if(commit.getStatus() == CommitResultStatus.OK) {
           return toBeSaved;
         }
         throw new SaveException(toBeSaved, commit);
@@ -118,7 +118,7 @@ public abstract class PersistenceCommands implements StencilConfig.Commands {
 
   @Override
   public Uni<List<Entity<?>>> saveAll(List<Entity<?>> entities) {
-    final var commitBuilder = config.getClient().commit().head().head(config.getRepoName(), config.getHeadName());
+    final var commitBuilder = config.getClient().commit().commitBuilder().head(config.getRepoName(), config.getHeadName());
     final Entity<?> first = entities.iterator().next();
     
     for(final var target : entities) {
@@ -127,10 +127,10 @@ public abstract class PersistenceCommands implements StencilConfig.Commands {
     
     return commitBuilder
         .message("update type: '" + first.getType() + "', with id: '" + first.getId() + "'")
-        .parentIsLatest()
+        .latestCommit()
         .author(config.getAuthorProvider().getAuthor())
         .build().onItem().transform(commit -> {
-          if(commit.getStatus() == CommitStatus.OK) {
+          if(commit.getStatus() == CommitResultStatus.OK) {
             return entities;
           }
           throw new SaveException(first, commit);
@@ -144,7 +144,7 @@ public abstract class PersistenceCommands implements StencilConfig.Commands {
     }
     
     final List<Entity<?>> all = new ArrayList<Entity<?>>();
-    final var commitBuilder = config.getClient().commit().head().head(config.getRepoName(), config.getHeadName());
+    final var commitBuilder = config.getClient().commit().commitBuilder().head(config.getRepoName(), config.getHeadName());
 
     for(final var target : batch.getToBeDeleted()) {
       commitBuilder.remove(target.getId());
@@ -164,10 +164,10 @@ public abstract class PersistenceCommands implements StencilConfig.Commands {
             " created: '" + batch.getToBeCreated().size() + "',"+
             " updated: '" + batch.getToBeSaved().size() + "',"+
             " deleted: '" + batch.getToBeDeleted().size() + "'")
-        .parentIsLatest()
+        .latestCommit()
         .author(config.getAuthorProvider().getAuthor())
         .build().onItem().transform(commit -> {
-          if(commit.getStatus() == CommitStatus.OK) {
+          if(commit.getStatus() == CommitResultStatus.OK) {
             return Collections.unmodifiableList(all);
           }
           throw new SaveException(all, commit);

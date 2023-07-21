@@ -3,15 +3,17 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>io.resys.hdes</groupId>
-    <artifactId>thena-extensions</artifactId>
+    <groupId>io.digiexpress</groupId>
+    <artifactId>digiexpress-build-parent</artifactId>
     <version>999-SNAPSHOT</version>
+    <relativePath>../build-parent/pom.xml</relativePath>
   </parent>
-
-  <artifactId>thena-tasks-parent</artifactId>
+  
+  <artifactId>tasks-parent</artifactId>
   <packaging>pom</packaging>
 
   <modules>
+    <module>build-parent</module>
     <module>tasks-client</module>
     <module>tasks-ui</module>
     <module>quarkus-dev-app</module>

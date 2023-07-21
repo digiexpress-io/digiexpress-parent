@@ -17,4 +17,4 @@ Trees
     5: FORM-1
 
 Blobs
-  - 5: {"id":"FORM-1","bodyType":"FORM","body":"id: firstFlow"}
+  - 5: {"id":"FORM-1","body":"id: firstFlow","bodyType":"FORM"}

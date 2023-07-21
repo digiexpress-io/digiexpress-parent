@@ -31,8 +31,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-import io.resys.thena.docdb.api.models.Objects.TreeValue;
 import io.resys.thena.docdb.api.models.Repo;
+import io.resys.thena.docdb.api.models.ThenaObject.TreeValue;
 import io.resys.thena.docdb.spi.ClientState;
 
 public class RepositoryToStaticData {
@@ -70,8 +70,7 @@ public class RepositoryToStaticData {
     .append(System.lineSeparator())
     .append("Refs").append(System.lineSeparator());
     
-    ctx.query().refs()
-    .find().onItem()
+    ctx.query().refs().findAll().onItem()
     .transform(item -> {
       result.append("  - ")
       .append(ID.apply(item.getCommit())).append(": ").append(item.getName())
@@ -101,7 +100,7 @@ public class RepositoryToStaticData {
     .append("Commits").append(System.lineSeparator());
     
     ctx.query().commits()
-    .find().onItem()
+    .findAll().onItem()
     .transform(item -> {
       result.append("  - id: ").append(ID.apply(item.getId()))
       .append(System.lineSeparator())
@@ -119,7 +118,7 @@ public class RepositoryToStaticData {
     .append("Trees").append(System.lineSeparator());
     
     ctx.query().trees()
-    .find().onItem()
+    .findAll().onItem()
     .transform(src -> {
       
       final var items = new ArrayList<TreeValue>(src.getValues().values());
@@ -155,10 +154,10 @@ public class RepositoryToStaticData {
     List<String> blobs = new ArrayList<>();
     
     ctx.query().blobs()
-    .find().onItem()
+    .findAll().onItem()
     .transform(item -> {
       final var log = new StringBuilder().append("  - ").append(ID.apply(item.getId())).append(": ")
-        .append(replaceContent(item.getValue(), replacements))
+        .append(replaceContent(item.getValue().toString(), replacements))
         .append(System.lineSeparator());
       
       blobs.add(log.toString());

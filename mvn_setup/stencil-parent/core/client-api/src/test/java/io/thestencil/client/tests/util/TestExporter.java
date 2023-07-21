@@ -35,8 +35,8 @@ import org.apache.commons.io.IOUtils;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 
-import io.resys.thena.docdb.api.models.Objects.TreeValue;
 import io.resys.thena.docdb.api.models.Repo;
+import io.resys.thena.docdb.api.models.ThenaObject.TreeValue;
 import io.resys.thena.docdb.spi.ClientState;
 import io.thestencil.client.api.StencilClient.EntityType;
 
@@ -76,7 +76,7 @@ public class TestExporter {
     .append("Refs").append(System.lineSeparator());
     
     ctx.query().refs()
-    .find().onItem()
+    .findAll().onItem()
     .transform(item -> {
       result.append("  - ")
       .append(ID.apply(item.getCommit())).append(": ").append(item.getName())
@@ -106,7 +106,7 @@ public class TestExporter {
     .append("Commits").append(System.lineSeparator());
     
     ctx.query().commits()
-    .find().onItem()
+    .findAll().onItem()
     .transform(item -> {
       result.append("  - id: ").append(ID.apply(item.getId()))
       .append(System.lineSeparator())
@@ -124,7 +124,7 @@ public class TestExporter {
     .append("Trees").append(System.lineSeparator());
     
     ctx.query().trees()
-    .find().onItem()
+    .findAll().onItem()
     .transform(src -> {
       
       final var items = new ArrayList<TreeValue>(src.getValues().values());
@@ -157,9 +157,9 @@ public class TestExporter {
     .append("Blobs").append(System.lineSeparator());
     
     ctx.query().blobs()
-    .find().onItem()
+    .findAll().onItem()
     .transform(item -> {
-      result.append("  - ").append(ID.apply(item.getId())).append(": ").append(replaceContent(item.getValue(), replacements)).append(System.lineSeparator());
+      result.append("  - ").append(ID.apply(item.getId())).append(": ").append(replaceContent(item.getValue().toString(), replacements)).append(System.lineSeparator());
       return item;
     }).collect().asList().await().indefinitely();
     

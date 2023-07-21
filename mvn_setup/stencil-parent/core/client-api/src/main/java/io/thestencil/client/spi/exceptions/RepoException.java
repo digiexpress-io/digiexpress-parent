@@ -2,9 +2,9 @@ package io.thestencil.client.spi.exceptions;
 
 /*-
  * #%L
- * stencil-persistence
+ * stencil-client-api
  * %%
- * Copyright (C) 2021 Copyright 2021 ReSys OÜ
+ * Copyright (C) 2015 - 2023 Copyright 2022 ReSys OÜ
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ package io.thestencil.client.spi.exceptions;
  * #L%
  */
 
-import io.resys.thena.docdb.api.actions.RepoActions.RepoResult;
+import io.resys.thena.docdb.api.actions.ProjectActions.RepoResult;
 
 public class RepoException extends RuntimeException {
   private static final long serialVersionUID = 7190168525508589141L;

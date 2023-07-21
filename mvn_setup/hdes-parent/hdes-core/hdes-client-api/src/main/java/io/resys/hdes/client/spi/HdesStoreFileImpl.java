@@ -47,6 +47,7 @@ import io.resys.thena.docdb.file.DocDBFactoryFile;
 import io.resys.thena.docdb.file.FileErrors;
 import io.resys.thena.docdb.file.spi.FilePoolImpl;
 import io.resys.thena.docdb.file.tables.Table.FilePool;
+import io.vertx.core.json.JsonObject;
 
 public class HdesStoreFileImpl extends ThenaStoreTemplate implements HdesStore {
   private static final Logger LOGGER = LoggerFactory.getLogger(HdesStoreFileImpl.class);
@@ -159,7 +160,7 @@ public class HdesStoreFileImpl extends ThenaStoreTemplate implements HdesStore {
           .gidProvider(getGidProvider())
           .serializer((entity) -> {
             try {
-              return objectMapper.writeValueAsString(ImmutableStoreEntity.builder().from(entity).build());
+              return new JsonObject(objectMapper.writeValueAsString(ImmutableStoreEntity.builder().from(entity).build()));
             } catch (IOException e) {
               throw new RuntimeException(e.getMessage(), e);
             }

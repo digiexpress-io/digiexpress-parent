@@ -116,10 +116,10 @@ public class ComposerAutoConfiguration {
         .defaultDialobFr()
         .defaultHdesDjc()
         .defaultHdesServiceInit()
-        .repoStencil(namings.getRepoStencil())
-        .repoDialob(namings.getRepoDialob())
-        .repoHdes(namings.getRepoHdes())
-        .repoService(namings.getRepoProject())
+        .repoStencil(namings.repoStencil())
+        .repoDialob(namings.repoDialob())
+        .repoHdes(namings.repoHdes())
+        .repoService(namings.repoProject())
         .doc(doc)
         .build();
   }

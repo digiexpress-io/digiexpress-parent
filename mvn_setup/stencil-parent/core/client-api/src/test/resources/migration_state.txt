@@ -34,21 +34,21 @@ Trees
     22: WORKFLOW-4
 
 Blobs
-  - 13: {"id":"PAGE-12","type":"PAGE","body":{"article":"ARTICLE-2","locale":"LOCALE-11","content":"# Boende\ncontent\n\n#### nested\n"}}
-  - 11: {"id":"LOCALE-11","type":"LOCALE","body":{"value":"sv","enabled":true}}
-  - 19: {"id":"PAGE-3","type":"PAGE","body":{"article":"ARTICLE-2","locale":"LOCALE-1","content":"# Asuminen\ncontent\n\n#### nested\n"}}
-  - 10: {"id":"LOCALE-1","type":"LOCALE","body":{"value":"fi","enabled":true}}
-  - 7: {"id":"ARTICLE-8","type":"ARTICLE","body":{"parentId":null,"name":"democracy","order":200}}
-  - 5: {"id":"ARTICLE-2","type":"ARTICLE","body":{"parentId":null,"name":"residence","order":100}}
-  - 18: {"id":"PAGE-18","type":"PAGE","body":{"article":"ARTICLE-8","locale":"LOCALE-15","content":"# Democracy\ncontent\n\n#### nested\n"}}
-  - 16: {"id":"PAGE-16","type":"PAGE","body":{"article":"ARTICLE-2","locale":"LOCALE-15","content":"# Residence\ncontent\n\n#### nested"}}
-  - 22: {"id":"WORKFLOW-4","type":"WORKFLOW","body":{"value":"General message","articles":["ARTICLE-5","ARTICLE-8","ARTICLE-2"],"labels":[{"locale":"LOCALE-1","labelValue":"workflow LINK IN FI"},{"locale":"LOCALE-11","labelValue":"workflow LINK IN SV"},{"locale":"LOCALE-15","labelValue":"workflow LINK IN EN"}]}}
-  - 6: {"id":"ARTICLE-5","type":"ARTICLE","body":{"parentId":null,"name":"index","order":0}}
-  - 9: {"id":"LINK-7","type":"LINK","body":{"value":"+357 786767","contentType":"phone","articles":["ARTICLE-5"],"labels":[{"locale":"LOCALE-1","labelValue":"TEXT IN FI for INDEX"},{"locale":"LOCALE-11","labelValue":"TEXT IN SV for INDEX"},{"locale":"LOCALE-15","labelValue":"TEXT IN EN for INDEX"}]}}
-  - 21: {"id":"PAGE-9","type":"PAGE","body":{"article":"ARTICLE-8","locale":"LOCALE-1","content":"# Demokratia\ncontent\n\n#### nested\n"}}
-  - 15: {"id":"PAGE-14","type":"PAGE","body":{"article":"ARTICLE-8","locale":"LOCALE-11","content":"# Demokrati\ncontent\n\n#### nested\n"}}
-  - 17: {"id":"PAGE-17","type":"PAGE","body":{"article":"ARTICLE-5","locale":"LOCALE-15","content":"# Welcome \ncontent\n\n#### nested\n"}}
-  - 14: {"id":"PAGE-13","type":"PAGE","body":{"article":"ARTICLE-5","locale":"LOCALE-11","content":"# Välkommen\ncontent\n\n#### nested\n"}}
-  - 20: {"id":"PAGE-6","type":"PAGE","body":{"article":"ARTICLE-5","locale":"LOCALE-1","content":"# Tervetuloa\ncontent\n\n#### nested\n"}}
-  - 12: {"id":"LOCALE-15","type":"LOCALE","body":{"value":"en","enabled":true}}
-  - 8: {"id":"LINK-10","type":"LINK","body":{"value":"https://www.some.site.com/","contentType":"internal","articles":["ARTICLE-8"],"labels":[{"locale":"LOCALE-1","labelValue":"TEXT IN FIN for DEM"},{"locale":"LOCALE-11","labelValue":"TEXT IN SV for DEM"}]}}
+  - 20: {"id":"PAGE-6","body":{"locale":"LOCALE-1","article":"ARTICLE-5","content":"# Tervetuloa\ncontent\n\n#### nested\n"},"type":"PAGE"}
+  - 17: {"id":"PAGE-17","body":{"locale":"LOCALE-15","article":"ARTICLE-5","content":"# Welcome \ncontent\n\n#### nested\n"},"type":"PAGE"}
+  - 21: {"id":"PAGE-9","body":{"locale":"LOCALE-1","article":"ARTICLE-8","content":"# Demokratia\ncontent\n\n#### nested\n"},"type":"PAGE"}
+  - 18: {"id":"PAGE-18","body":{"locale":"LOCALE-15","article":"ARTICLE-8","content":"# Democracy\ncontent\n\n#### nested\n"},"type":"PAGE"}
+  - 16: {"id":"PAGE-16","body":{"locale":"LOCALE-15","article":"ARTICLE-2","content":"# Residence\ncontent\n\n#### nested"},"type":"PAGE"}
+  - 14: {"id":"PAGE-13","body":{"locale":"LOCALE-11","article":"ARTICLE-5","content":"# Välkommen\ncontent\n\n#### nested\n"},"type":"PAGE"}
+  - 15: {"id":"PAGE-14","body":{"locale":"LOCALE-11","article":"ARTICLE-8","content":"# Demokrati\ncontent\n\n#### nested\n"},"type":"PAGE"}
+  - 22: {"id":"WORKFLOW-4","body":{"value":"General message","labels":[{"locale":"LOCALE-1","labelValue":"workflow LINK IN FI"},{"locale":"LOCALE-11","labelValue":"workflow LINK IN SV"},{"locale":"LOCALE-15","labelValue":"workflow LINK IN EN"}],"articles":["ARTICLE-5","ARTICLE-8","ARTICLE-2"]},"type":"WORKFLOW"}
+  - 5: {"id":"ARTICLE-2","body":{"name":"residence","order":100,"parentId":null},"type":"ARTICLE"}
+  - 8: {"id":"LINK-10","body":{"value":"https://www.some.site.com/","labels":[{"locale":"LOCALE-1","labelValue":"TEXT IN FIN for DEM"},{"locale":"LOCALE-11","labelValue":"TEXT IN SV for DEM"}],"articles":["ARTICLE-8"],"contentType":"internal"},"type":"LINK"}
+  - 19: {"id":"PAGE-3","body":{"locale":"LOCALE-1","article":"ARTICLE-2","content":"# Asuminen\ncontent\n\n#### nested\n"},"type":"PAGE"}
+  - 10: {"id":"LOCALE-1","body":{"value":"fi","enabled":true},"type":"LOCALE"}
+  - 6: {"id":"ARTICLE-5","body":{"name":"index","order":0,"parentId":null},"type":"ARTICLE"}
+  - 7: {"id":"ARTICLE-8","body":{"name":"democracy","order":200,"parentId":null},"type":"ARTICLE"}
+  - 13: {"id":"PAGE-12","body":{"locale":"LOCALE-11","article":"ARTICLE-2","content":"# Boende\ncontent\n\n#### nested\n"},"type":"PAGE"}
+  - 11: {"id":"LOCALE-11","body":{"value":"sv","enabled":true},"type":"LOCALE"}
+  - 9: {"id":"LINK-7","body":{"value":"+357 786767","labels":[{"locale":"LOCALE-1","labelValue":"TEXT IN FI for INDEX"},{"locale":"LOCALE-11","labelValue":"TEXT IN SV for INDEX"},{"locale":"LOCALE-15","labelValue":"TEXT IN EN for INDEX"}],"articles":["ARTICLE-5"],"contentType":"phone"},"type":"LINK"}
+  - 12: {"id":"LOCALE-15","body":{"value":"en","enabled":true},"type":"LOCALE"}

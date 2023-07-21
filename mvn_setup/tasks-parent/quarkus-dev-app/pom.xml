@@ -3,14 +3,15 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>io.resys.hdes</groupId>
-    <artifactId>thena-tasks-parent</artifactId>
+    <groupId>io.digiexpress</groupId>
+    <artifactId>tasks-build-parent</artifactId>
     <version>999-SNAPSHOT</version>
+    <relativePath>../build-parent/pom.xml</relativePath>
   </parent>
   <artifactId>thena-quarkus-dev-app</artifactId>
   <dependencies>
     <dependency>
-      <groupId>io.resys.hdes</groupId>
+      <groupId>io.digiexpress</groupId>
       <artifactId>thena-tasks-client</artifactId>
       <version>${project.version}</version>
     </dependency>

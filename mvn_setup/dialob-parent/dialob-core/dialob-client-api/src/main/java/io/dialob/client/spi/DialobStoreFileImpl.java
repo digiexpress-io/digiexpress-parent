@@ -1,7 +1,6 @@
 package io.dialob.client.spi;
 
 import java.io.File;
-import java.io.IOException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
@@ -22,6 +21,7 @@ import io.resys.thena.docdb.file.DocDBFactoryFile;
 import io.resys.thena.docdb.file.FileErrors;
 import io.resys.thena.docdb.file.spi.FilePoolImpl;
 import io.resys.thena.docdb.file.tables.Table.FilePool;
+import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -127,13 +127,7 @@ public class DialobStoreFileImpl extends DialobStoreTemplate implements DialobSt
       final ImmutableDialobStoreConfig config = ImmutableDialobStoreConfig.builder()
           .client(thena).repoName(repoName).headName(headName)
           .gidProvider(getGidProvider())
-          .serializer((entity) -> {
-            try {
-              return objectMapper.writeValueAsString(ImmutableStoreEntity.builder().from(entity).build());
-            } catch (IOException e) {
-              throw new RuntimeException(e.getMessage(), e);
-            }
-          })
+          .serializer((entity) -> JsonObject.mapFrom(ImmutableStoreEntity.builder().from(entity).build()))
           .deserializer(new BlobDeserializer(objectMapper))
           .authorProvider(getAuthorProvider())
           .build();

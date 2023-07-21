@@ -1,5 +1,8 @@
 package io.resys.thena.docdb.sql.statement;
 
+import java.io.Serializable;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.ArrayList;
 
 /*-
@@ -31,6 +34,7 @@ import io.resys.thena.docdb.api.actions.PullActions.MatchCriteria;
 import io.resys.thena.docdb.api.actions.PullActions.MatchCriteriaType;
 import io.resys.thena.docdb.api.models.ThenaObject.Blob;
 import io.resys.thena.docdb.spi.ClientCollections;
+import io.resys.thena.docdb.spi.support.RepoAssert;
 import io.resys.thena.docdb.sql.ImmutableSql;
 import io.resys.thena.docdb.sql.ImmutableSqlTuple;
 import io.resys.thena.docdb.sql.ImmutableSqlTupleList;
@@ -39,6 +43,8 @@ import io.resys.thena.docdb.sql.SqlBuilder.Sql;
 import io.resys.thena.docdb.sql.SqlBuilder.SqlTuple;
 import io.resys.thena.docdb.sql.SqlBuilder.SqlTupleList;
 import io.resys.thena.docdb.sql.support.SqlStatement;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 import io.vertx.mutiny.sqlclient.Tuple;
 import lombok.RequiredArgsConstructor;
 
@@ -121,8 +127,17 @@ public class DefaultBlobSqlBuilder implements BlobSqlBuilder {
     var nameIndex = treeIdPos;
     for(final var name : blobNames) {
       final var pos = ++nameIndex;
-      nameCriteria.append(" AND item.name = $").append(pos);
+      
+      if(!nameCriteria.isEmpty()) {
+        nameCriteria.append(" OR");
+      }
+      nameCriteria.append(" item.name = $").append(pos);
+      
       props.add(name);
+    }
+    
+    if(!nameCriteria.isEmpty()) {
+      nameCriteria.insert(0, " AND (").append(")");
     }
 
     return ImmutableSqlTuple.builder()
@@ -140,32 +155,6 @@ public class DefaultBlobSqlBuilder implements BlobSqlBuilder {
         .props(Tuple.from(props))
         .build();
   }
-  @Override
-  public SqlTuple insertOne(Blob blob) {
-    return ImmutableSqlTuple.builder()
-        .value(new SqlStatement()
-        .append("INSERT INTO ").append(options.getBlobs())
-        .append(" (id, value) VALUES($1, $2)")
-        .append(" ON CONFLICT (id) DO NOTHING")
-        .build())
-        .props(Tuple.of(blob.getId(), blob.getValue().encode()))
-        .build();
-  }
-  @Override
-  public SqlTupleList insertAll(Collection<Blob> blobs) {
-    return ImmutableSqlTupleList.builder()
-        .value(new SqlStatement()
-        .append("INSERT INTO ").append(options.getBlobs())
-        .append(" (id, value) VALUES($1, $2)")
-        .append(" ON CONFLICT (id) DO NOTHING")
-        .build())
-        .props(blobs.stream()
-            .map(v -> Tuple.of(v.getId(), v.getValue().encode()))
-            .collect(Collectors.toList()))
-        .build();
-  }
-  
-  
 /**
 
 WITH RECURSIVE generation AS (
@@ -206,66 +195,11 @@ WHERE blobs.value LIKE $1
 ) WHERE RANK = 1
 
    */
-  @Override
-  public SqlTuple find(String name, boolean latestOnly, List<MatchCriteria> criteria) {
-
-    final String sql;
-    final var conditions = createWhereCriteria(criteria);
-    final var where = new StringBuilder(conditions.getValue());
-    if(!where.isEmpty()) {
-      where.insert(0, "WHERE ");
-    }
-
-    
-    if(latestOnly) {
-      final var fromData = new SqlStatement()
-          .append(createRecursionSelect())
-          .append(where.toString()).ln()
-          .build();
-      sql = new SqlStatement().append(createRecursion()).append(createLatest(fromData)).build();
-    } else {
-      sql = new SqlStatement()
-          .append(createRecursion())
-          .append(createRecursionSelect())
-          .append(where.toString()).ln()
-          .build();      
-    }
-    return ImmutableSqlTuple.builder()
-        .value(sql)
-        .props(Tuple.from(conditions.getProps()))
-        .build();
-  }
-  
   @RequiredArgsConstructor @lombok.Data
   protected static class WhereSqlFragment {
     private final String value;
     private final List<Object> props;
   }
-  
-  protected WhereSqlFragment createWhereCriteria(List<MatchCriteria> criteria) {
-    final var where = new StringBuilder();
-    
-    int paramIndex = 1;
-    final var props = new LinkedList<>();
-    for(final var entry : criteria) {
-      if(paramIndex > 1) {
-        where.append(" AND ");        
-      }
-      where.append("blobs.value LIKE $").append(paramIndex++);
-      var param = new StringBuilder()
-          .append("\"").append(entry.getKey()).append("\"")
-          .append(":");
-      
-      if(entry.getType() == MatchCriteriaType.LIKE) {
-        param.append("\"%").append(entry.getValue()).append("%\"");
-      } else {
-        param.append("\"").append(entry.getValue()).append("\"");
-      }
-      props.add(param.insert(0, "%").append("%").toString());
-    }
-    return new WhereSqlFragment(where.toString(), props);
-  }
-  
 
   protected String createLatest(String fromData) {
     return new SqlStatement()
@@ -308,5 +242,132 @@ WHERE blobs.value LIKE $1
         .append("    FROM ").append(options.getCommits()).append(" as child").ln()
         .append("    JOIN generation g ON g.id = child.parent").ln()
         .append(")").ln().toString();       
+  }
+  
+
+  private static final DateTimeFormatter ISO_LOCAL_DATE_TIME = new DateTimeFormatterBuilder()
+              .parseCaseInsensitive()
+              .append(DateTimeFormatter.ISO_LOCAL_DATE)
+              .appendLiteral(' ')
+              .append(DateTimeFormatter.ISO_LOCAL_TIME)
+              .toFormatter();
+
+  
+  @Override
+  public SqlTuple insertOne(Blob blob) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("INSERT INTO ").append(options.getBlobs())
+        .append(" (id, value) VALUES($1, $2)")
+        .append(" ON CONFLICT (id) DO NOTHING")
+        .build())
+        .props(Tuple.of(blob.getId(), blob.getValue()))
+        .build();
+  }
+  @Override
+  public SqlTupleList insertAll(Collection<Blob> blobs) {
+    return ImmutableSqlTupleList.builder()
+        .value(new SqlStatement()
+        .append("INSERT INTO ").append(options.getBlobs())
+        .append(" (id, value) VALUES($1, $2)")
+        .append(" ON CONFLICT (id) DO NOTHING")
+        .build())
+        .props(blobs.stream()
+            .map(v -> Tuple.of(v.getId(), v.getValue()))
+            .collect(Collectors.toList()))
+        .build();
+  }
+  
+  protected WhereSqlFragment createWhereCriteria(List<MatchCriteria> criteria) {
+    final var props = new LinkedList<>();
+    final var where = new SqlStatement();
+    int paramIndex = 1;
+    for(final var entry : criteria) {
+      if(paramIndex > 1) {
+        where.append(" AND ").ln();
+      }
+      // TODO:: null value props
+      props.add(entry.getKey());
+      if(entry.getType() == MatchCriteriaType.EQUALS) {
+        props.add(getCriteriaValue(entry));
+        where.append("blobs.value -> ")
+          .append(getCriteriaField(entry, paramIndex++))
+          .append(" = $")
+          .append(String.valueOf(paramIndex++)).ln();
+
+      } else if(entry.getType() == MatchCriteriaType.GTE && entry.getTargetDate() != null) {
+        props.add(getCriteriaValue(entry));
+        where.append("blobs.value ->> ")
+          .append(getCriteriaField(entry, paramIndex++))
+          .append(" <= $")
+          .append(String.valueOf(paramIndex++)).append("").ln();
+        
+      } else if(entry.getType() == MatchCriteriaType.LIKE && entry.getValue() != null)  {
+        props.add("%"+ entry.getValue() + "%");
+        where.append("blobs.value ->> $")
+        .append(String.valueOf(paramIndex++))
+        .append(" like $")
+        .append(String.valueOf(paramIndex++)).ln();
+        
+      } else if(entry.getType() == MatchCriteriaType.NOT_NULL)  {
+        where.append("blobs.value ->> $")
+        .append(String.valueOf(paramIndex++))
+        .append(" is not null").ln();
+        
+      } else {
+        throw new RuntimeException("Criteria type: " + JsonArray.of(criteria) + " not supported!");
+      }
+    }
+  
+    return new WhereSqlFragment(where.toString(), props);
+  }
+  
+  
+  private static Serializable getCriteriaValue(MatchCriteria criteria) {
+    RepoAssert.isTrue(criteria.getValue() != null || criteria.getTargetDate() != null, () -> "Criteria must define value! But was: " + JsonObject.mapFrom(criteria));
+    
+    if(criteria.getTargetDate() != null) {
+      return criteria.getTargetDate().format(ISO_LOCAL_DATE_TIME);
+    }
+    return criteria.getValue();
+  }
+  
+  private static String getCriteriaField(MatchCriteria criteria, int fieldIndex) {
+    RepoAssert.isTrue(criteria.getValue() != null || criteria.getTargetDate() != null, () -> "Criteria must define value! But was: " + JsonObject.mapFrom(criteria));
+    
+    if(criteria.getTargetDate() != null) {
+      return "$" + String.valueOf(fieldIndex) + "";
+    }
+    return "$" + String.valueOf(fieldIndex);
+  }
+  
+  @Override
+  public SqlTuple find(String name, boolean latestOnly, List<MatchCriteria> criteria) {
+
+    final String sql;
+    final var conditions = createWhereCriteria(criteria);
+    final var where = new StringBuilder(conditions.getValue());
+    if(!where.isEmpty()) {
+      where.insert(0, "WHERE ");
+    }
+
+    
+    if(latestOnly) {
+      final var fromData = new SqlStatement()
+          .append(createRecursionSelect())
+          .append(where.toString()).ln()
+          .build();
+      sql = new SqlStatement().append(createRecursion()).append(createLatest(fromData)).build();
+    } else {
+      sql = new SqlStatement()
+          .append(createRecursion())
+          .append(createRecursionSelect())
+          .append(where.toString()).ln()
+          .build();      
+    }
+    return ImmutableSqlTuple.builder()
+        .value(sql)
+        .props(Tuple.from(conditions.getProps()))
+        .build();
   }
 }

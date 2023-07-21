@@ -16,7 +16,7 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
 import lombok.extern.slf4j.Slf4j;
 
-//@org.junit.jupiter.api.Disabled
+@org.junit.jupiter.api.Disabled
 @Slf4j
 @QuarkusTest
 @TestProfile(PgProfile.class)

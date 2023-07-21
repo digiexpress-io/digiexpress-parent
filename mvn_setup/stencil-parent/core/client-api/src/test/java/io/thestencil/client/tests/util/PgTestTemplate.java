@@ -35,7 +35,7 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.resys.thena.docdb.api.DocDB;
-import io.resys.thena.docdb.api.actions.RepoActions.RepoResult;
+import io.resys.thena.docdb.api.actions.ProjectActions.RepoResult;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.spi.ClientCollections;
 import io.resys.thena.docdb.spi.ClientState;
@@ -47,6 +47,7 @@ import io.thestencil.client.spi.StencilClientImpl;
 import io.thestencil.client.spi.StencilComposerImpl;
 import io.thestencil.client.spi.StencilStoreImpl;
 import io.thestencil.client.spi.serializers.ZoeDeserializer;
+import io.vertx.core.json.JsonObject;
 
 public class PgTestTemplate {
   private DocDB client;
@@ -67,7 +68,7 @@ public class PgTestTemplate {
         .client(pgPool)
         .errorHandler(new PgErrors())
         .build();
-    this.client.repo().create().name("junit").build();
+    this.client.project().projectBuilder().name("junit").build();
   }
   
   @AfterEach
@@ -89,15 +90,15 @@ public class PgTestTemplate {
   }
   
   public void prettyPrint(String repoId) {
-    Repo repo = getClient().repo().query().id(repoId).get()
-        .await().atMost(Duration.ofMinutes(1));
+    Repo repo = getClient().project().projectQuery().projectName(repoId).get()
+        .await().atMost(Duration.ofMinutes(1)).getRepo();
     
     printRepo(repo);
   }
 
   public String toRepoExport(String repoId) {
-    Repo repo = getClient().repo().query().id(repoId).get()
-        .await().atMost(Duration.ofMinutes(1));
+    Repo repo = getClient().project().projectQuery().projectName(repoId).get()
+        .await().atMost(Duration.ofMinutes(1)).getRepo();
     final String result = new TestExporter(createState()).print(repo);
     return result;
   }
@@ -107,7 +108,7 @@ public class PgTestTemplate {
     final DocDB client = getClient();
     
     // create project
-    RepoResult repo = getClient().repo().create()
+    RepoResult repo = getClient().project().projectBuilder()
         .name(repoId)
         .build()
         .await().atMost(Duration.ofMinutes(1));
@@ -125,7 +126,7 @@ public class PgTestTemplate {
             .objectMapper(PgTestTemplate.objectMapper)
             .serializer((entity) -> {
               try {
-                return PgTestTemplate.objectMapper.writeValueAsString(entity);
+                return new JsonObject(PgTestTemplate.objectMapper.writeValueAsString(entity));
               } catch (IOException e) {
                 throw new RuntimeException(e.getMessage(), e);
               }

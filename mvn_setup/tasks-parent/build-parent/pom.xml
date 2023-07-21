@@ -4,11 +4,11 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>io.digiexpress</groupId>
-    <artifactId>thena-parent</artifactId>
+    <artifactId>tasks-parent</artifactId>
     <version>999-SNAPSHOT</version>
   </parent>
 
-  <artifactId>thena-build-parent</artifactId>
+  <artifactId>tasks-build-parent</artifactId>
   <packaging>pom</packaging>
 
   <properties>

@@ -70,7 +70,6 @@ governing permissions and limitations
     <commons-validator.version>1.7</commons-validator.version>
     <groovy.version>3.0.9</groovy.version>
 
-    <thena.version>1.1.23</thena.version>
     <eirslett.version>1.12.0</eirslett.version>
     <eirslett-node.version>v16.13.1</eirslett-node.version>
     <eirslett-yarn.version>v1.22.5</eirslett-yarn.version>
@@ -291,11 +290,14 @@ governing permissions and limitations
         <scope>import</scope>
       </dependency>
       <dependency>
-        <groupId>io.resys.hdes</groupId>
-        <artifactId>thena-bom</artifactId>
-        <version>${thena.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>thena-docdb-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>thena-docdb-pgsql</artifactId>
+        <version>${project.version}</version>
       </dependency>
 
       <dependency>

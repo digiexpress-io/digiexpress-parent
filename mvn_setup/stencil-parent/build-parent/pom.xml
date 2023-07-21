@@ -42,7 +42,6 @@
 
     <flexmark.version>0.62.2</flexmark.version>
 
-    <thena.version>1.1.26</thena.version>
     <eirslett.version>1.11.0</eirslett.version>
     <yarnVersion>v1.22.5</yarnVersion>
     <nodeVersion>v14.16.1</nodeVersion>
@@ -210,11 +209,14 @@
         <scope>import</scope>
       </dependency>
       <dependency>
-        <groupId>io.resys.hdes</groupId>
-        <artifactId>thena-bom</artifactId>
-        <version>${thena.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>thena-docdb-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>thena-docdb-pgsql</artifactId>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>com.google.code.findbugs</groupId>

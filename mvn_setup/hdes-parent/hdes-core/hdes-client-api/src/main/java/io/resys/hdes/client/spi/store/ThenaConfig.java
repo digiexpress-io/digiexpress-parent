@@ -28,10 +28,11 @@ import io.resys.hdes.client.api.HdesStore.StoreEntity;
 import io.resys.hdes.client.api.HdesStore.StoreState;
 import io.resys.hdes.client.api.ast.AstBody.AstBodyType;
 import io.resys.thena.docdb.api.DocDB;
-import io.resys.thena.docdb.api.actions.ObjectsActions.BlobObject;
-import io.resys.thena.docdb.api.actions.ObjectsActions.ObjectsResult;
-import io.resys.thena.docdb.api.models.Objects.Blob;
+import io.resys.thena.docdb.api.models.QueryEnvelope;
+import io.resys.thena.docdb.api.models.ThenaObject.Blob;
+import io.resys.thena.docdb.api.models.ThenaObjects.PullObject;
 import io.smallrye.mutiny.Uni;
+import io.vertx.core.json.JsonObject;
 
 @Value.Immutable
 public interface ThenaConfig {
@@ -49,7 +50,7 @@ public interface ThenaConfig {
   
   @FunctionalInterface
   interface Serializer {
-    String toString(StoreEntity entity);
+    JsonObject toString(StoreEntity entity);
   }
   
   interface Deserializer {
@@ -65,7 +66,7 @@ public interface ThenaConfig {
   
   @Value.Immutable
   interface EntityState {
-    ObjectsResult<BlobObject> getSrc();
+    QueryEnvelope<PullObject> getSrc();
     StoreEntity getEntity();
   }
   

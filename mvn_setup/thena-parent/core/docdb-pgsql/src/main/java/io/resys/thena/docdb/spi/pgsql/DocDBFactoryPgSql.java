@@ -75,16 +75,6 @@ public class DocDBFactoryPgSql extends DocDBFactorySql implements ClientState {
       super.sqlSchema = Builder::defaultSqlSchema;
       super.sqlQuery = Builder::defaultSqlQuery;
     }
-
-    public static SqlBuilder defaultSqlBuilder(ClientCollections ctx) {
-      return new SqlBuilderPg(ctx);
-    }
-    public static SqlMapper defaultSqlMapper(ClientCollections ctx) {
-      return new SqlMapperPg(ctx);
-    }
-    public static SqlSchema defaultSqlSchema(ClientCollections ctx) {
-      return new SqlSchemaPg(ctx);
-    }
     public static ClientQuery defaultSqlQuery(ClientQuerySqlContext ctx) {
       return new ClientQuerySqlPool(ctx);
     }

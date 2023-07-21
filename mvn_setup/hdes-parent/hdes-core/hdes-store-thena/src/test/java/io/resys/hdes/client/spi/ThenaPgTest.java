@@ -22,6 +22,7 @@ package io.resys.hdes.client.spi;
 
 import java.io.Serializable;
 import java.time.Duration;
+import java.util.Map;
 
 import org.immutables.value.Value;
 import org.junit.jupiter.api.Assertions;
@@ -33,10 +34,10 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
 import io.resys.hdes.client.spi.config.PgProfile;
 import io.resys.hdes.client.spi.config.PgTestTemplate;
-import io.resys.thena.docdb.api.actions.CommitActions.CommitResult;
-import io.resys.thena.docdb.api.actions.CommitActions.CommitStatus;
-import io.resys.thena.docdb.api.actions.RepoActions.RepoResult;
-import io.resys.thena.docdb.api.actions.RepoActions.RepoStatus;
+import io.resys.thena.docdb.api.actions.CommitActions.CommitResultStatus;
+import io.resys.thena.docdb.api.actions.ProjectActions.RepoResult;
+import io.resys.thena.docdb.api.actions.ProjectActions.RepoStatus;
+import io.vertx.core.json.JsonObject;
 
 @QuarkusTest
 @TestProfile(PgProfile.class)
@@ -53,7 +54,7 @@ public class ThenaPgTest extends PgTestTemplate {
   @Test
   public void crateRepoWithOneCommit() {
     // create project
-    RepoResult repo = getThena().repo().create()
+    RepoResult repo = getThena().project().projectBuilder()
         .name("project-x")
         .build()
         .await().atMost(Duration.ofMinutes(1));
@@ -61,11 +62,11 @@ public class ThenaPgTest extends PgTestTemplate {
     Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
     
     // Create head and first commit
-    CommitResult commit_0 = getThena().commit().head()
+    var commit_0 = getThena().commit().commitBuilder()
       .head("project-x", "main")
-      .append("readme.md", "readme content")
-      .append("file1.json", "[{}]")
-      .append("fileFromObject.txt", ImmutableTestContent.builder().id("10").name("sam vimes").build().toString())
+      .append("readme.md", JsonObject.mapFrom(Map.of("content", "readme content")))
+      .append("file1.json", new JsonObject("{}"))
+      .append("fileFromObject.txt", JsonObject.mapFrom(ImmutableTestContent.builder().id("10").name("sam vimes").build()))
       .author("same vimes")
       .head("project-x", "main")
       .message("first commit!")
@@ -73,7 +74,7 @@ public class ThenaPgTest extends PgTestTemplate {
       .await().atMost(Duration.ofMinutes(1));
 
     LOGGER.debug("created commit {}", commit_0);
-    Assertions.assertEquals(CommitStatus.OK, commit_0.getStatus());
+    Assertions.assertEquals(CommitResultStatus.OK, commit_0.getStatus());
     super.printRepo(repo.getRepo());
   }
   
@@ -81,7 +82,7 @@ public class ThenaPgTest extends PgTestTemplate {
   @Test
   public void crateRepoWithTwoCommits() {
     // create project
-    RepoResult repo = getThena().repo().create()
+    RepoResult repo = getThena().project().projectBuilder()
         .name("project-xy")
         .build()
         .await().atMost(Duration.ofMinutes(1));
@@ -89,27 +90,27 @@ public class ThenaPgTest extends PgTestTemplate {
     Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
     
     // Create head and first commit
-    CommitResult commit_0 = getThena().commit().head()
+    var commit_0 = getThena().commit().commitBuilder()
       .head(repo.getRepo().getName(), "main")
-      .append("readme.md", "readme content")
-      .append("file1.json", "[{}]")
-      .append("fileFromObject.txt", ImmutableTestContent.builder().id("10").name("sam vimes").build().toString())
+      .append("readme.md", JsonObject.mapFrom(Map.of("content", "readme content")))
+      .append("file1.json", new JsonObject("{}"))
+      .append("fileFromObject.txt", JsonObject.mapFrom(ImmutableTestContent.builder().id("10").name("sam vimes").build()))
       .author("same vimes")
       .message("first commit!")
       .build()
       .await().atMost(Duration.ofMinutes(1));
 
     LOGGER.debug("created commit 0 {}", commit_0);
-    Assertions.assertEquals(CommitStatus.OK, commit_0.getStatus());
+    Assertions.assertEquals(CommitResultStatus.OK, commit_0.getStatus());
     
     
     // Create head and first commit
-    CommitResult commit_1 = getThena().commit().head()
+    var commit_1 = getThena().commit().commitBuilder()
       .head(repo.getRepo().getName(), "main")
       .parent(commit_0.getCommit().getId())
-      .append("readme.md", "readme content")
-      .append("file1.json", "[{}, {}]")
-      .append("fileFromObject.txt", ImmutableTestContent.builder().id("10").name("sam vimes 1").build().toString())
+      .append("readme.md", JsonObject.mapFrom(Map.of("content", "readme content")))
+      .append("file1.json", new JsonObject("{}"))
+      .append("fileFromObject.txt", JsonObject.mapFrom(ImmutableTestContent.builder().id("10").name("sam vimes 1").build()))
       .author("same vimes")
       .message("second commit!")
       .build()
@@ -119,7 +120,7 @@ public class ThenaPgTest extends PgTestTemplate {
       .await().atMost(Duration.ofMinutes(1));
     
     LOGGER.debug("created commit 1 {}", commit_1);
-    Assertions.assertEquals(CommitStatus.OK, commit_1.getStatus());
+    Assertions.assertEquals(CommitResultStatus.OK, commit_1.getStatus());
     
     super.printRepo(repo.getRepo());
   }

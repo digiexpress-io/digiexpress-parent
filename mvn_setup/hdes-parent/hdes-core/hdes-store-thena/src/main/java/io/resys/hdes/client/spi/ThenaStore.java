@@ -39,8 +39,10 @@ import io.resys.hdes.client.spi.store.ThenaConfig;
 import io.resys.hdes.client.spi.store.ThenaStoreTemplate;
 import io.resys.hdes.client.spi.util.HdesAssert;
 import io.resys.thena.docdb.api.DocDB;
+import io.resys.thena.docdb.spi.pgsql.DocDBFactoryPgSql;
 import io.resys.thena.docdb.spi.pgsql.PgErrors;
 import io.resys.thena.docdb.sql.DocDBFactorySql;
+import io.vertx.core.json.JsonObject;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.sqlclient.PoolOptions;
 
@@ -189,9 +191,9 @@ public class ThenaStore extends ThenaStoreTemplate implements HdesStore {
         
         final io.vertx.mutiny.pgclient.PgPool pgPool = io.vertx.mutiny.pgclient.PgPool.pool(connectOptions, poolOptions);
         
-        thena = DocDBFactorySql.create().client(pgPool).db(repoName).errorHandler(new PgErrors()).build();
+        thena = DocDBFactoryPgSql.create().client(pgPool).db(repoName).errorHandler(new PgErrors()).build();
       } else {
-        thena = DocDBFactorySql.create().client(pgPool).db(repoName).errorHandler(new PgErrors()).build();
+        thena = DocDBFactoryPgSql.create().client(pgPool).db(repoName).errorHandler(new PgErrors()).build();
       }
       
       final ObjectMapper objectMapper = getObjectMapper();
@@ -200,7 +202,7 @@ public class ThenaStore extends ThenaStoreTemplate implements HdesStore {
           .gidProvider(getGidProvider())
           .serializer((entity) -> {
             try {
-              return objectMapper.writeValueAsString(ImmutableStoreEntity.builder().from(entity).hash("").build());
+              return new JsonObject(objectMapper.writeValueAsString(ImmutableStoreEntity.builder().from(entity).hash("").build()));
             } catch (IOException e) {
               throw new RuntimeException(e.getMessage(), e);
             }

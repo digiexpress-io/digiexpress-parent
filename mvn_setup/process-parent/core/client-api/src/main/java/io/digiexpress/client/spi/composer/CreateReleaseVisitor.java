@@ -21,9 +21,9 @@ import io.digiexpress.client.api.ClientEntity.ServiceDefinition;
 import io.digiexpress.client.api.ClientEntity.ServiceDescriptor;
 import io.digiexpress.client.api.ClientEntity.ServiceRelease;
 import io.digiexpress.client.api.ClientEntity.ServiceReleaseValue;
+import io.digiexpress.client.api.ClientQuery;
 import io.digiexpress.client.api.ImmutableServiceRelease;
 import io.digiexpress.client.api.ImmutableServiceReleaseValue;
-import io.digiexpress.client.api.ClientQuery;
 import io.digiexpress.client.spi.support.ReleaseException;
 import io.digiexpress.client.spi.support.ServiceAssert;
 import io.resys.hdes.client.api.ast.AstBody.AstBodyType;
@@ -33,13 +33,13 @@ import io.resys.hdes.client.api.ast.AstService;
 import io.resys.hdes.client.api.ast.AstTag;
 import io.resys.hdes.client.api.ast.ImmutableAstTag;
 import io.resys.hdes.client.api.ast.ImmutableHeaders;
-import io.resys.thena.docdb.spi.commits.Sha2;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.MigrationBuilder.LocalizedSite;
 import io.thestencil.client.api.MigrationBuilder.Sites;
 import io.thestencil.client.api.MigrationBuilder.TopicLink;
 import io.thestencil.client.spi.beans.SitesBean;
+import io.thestencil.client.spi.staticontent.support.Sha2;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

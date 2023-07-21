@@ -86,6 +86,7 @@ public class RepoStateBuilderImpl implements ProjectObjectsQuery {
     return objects.onItem().transform(state -> ImmutableQueryEnvelope
       .<ProjectObjects>builder()
       .objects(state)
+      .repo(repo)
       .status(QueryEnvelopeStatus.OK)
       .build());
   }

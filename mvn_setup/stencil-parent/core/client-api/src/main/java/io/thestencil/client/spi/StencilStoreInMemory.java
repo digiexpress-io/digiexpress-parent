@@ -26,11 +26,12 @@ import java.util.List;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.resys.thena.docdb.api.DocDB;
+import io.resys.thena.docdb.api.actions.BranchActions;
 import io.resys.thena.docdb.api.actions.CommitActions;
 import io.resys.thena.docdb.api.actions.DiffActions;
 import io.resys.thena.docdb.api.actions.HistoryActions;
-import io.resys.thena.docdb.api.actions.ObjectsActions;
-import io.resys.thena.docdb.api.actions.RepoActions;
+import io.resys.thena.docdb.api.actions.ProjectActions;
+import io.resys.thena.docdb.api.actions.PullActions;
 import io.resys.thena.docdb.api.actions.TagActions;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.ImmutableStencilConfig;
@@ -40,6 +41,7 @@ import io.thestencil.client.api.StencilClient.EntityType;
 import io.thestencil.client.api.StencilConfig;
 import io.thestencil.client.api.StencilConfig.EntityState;
 import io.thestencil.client.api.StencilStore;
+import io.vertx.core.json.JsonObject;
 
 public class StencilStoreInMemory implements StencilStore {
   private final StencilConfig config;
@@ -50,7 +52,7 @@ public class StencilStoreInMemory implements StencilStore {
       .authorProvider(() -> "not supported!")
       .serializer((entity) -> {
         try { 
-          return getObjectMapper().writeValueAsString(entity);
+          return new JsonObject(getObjectMapper().writeValueAsString(entity));
         } catch (IOException e) {
           throw new RuntimeException(e.getMessage(), e);
         }
@@ -72,12 +74,12 @@ public class StencilStoreInMemory implements StencilStore {
   private static class DeserializerInMemory implements StencilConfig.Deserializer {
 
     @Override
-    public Entity<?> fromString(String value) {
+    public Entity<?> fromString(JsonObject value) {
       throw new IllegalArgumentException("no read or writes supported!");
     }
 
     @Override
-    public <T extends EntityBody> Entity<T> fromString(EntityType type, String value) {
+    public <T extends EntityBody> Entity<T> fromString(EntityType type, JsonObject value) {
       throw new IllegalArgumentException("no read or writes supported!");
     }
     
@@ -85,7 +87,7 @@ public class StencilStoreInMemory implements StencilStore {
   
   private static class DocDBInMemeory implements DocDB {
     @Override
-    public RepoActions repo() {
+    public ProjectActions project() {
       throw new IllegalArgumentException("no read or writes supported!");
     }
     @Override
@@ -105,7 +107,11 @@ public class StencilStoreInMemory implements StencilStore {
       throw new IllegalArgumentException("no read or writes supported!");
     }
     @Override
-    public ObjectsActions objects() {
+    public PullActions pull() {
+      throw new IllegalArgumentException("no read or writes supported!");
+    }
+    @Override
+    public BranchActions branch() {
       throw new IllegalArgumentException("no read or writes supported!");
     }
     

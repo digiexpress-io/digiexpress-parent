@@ -43,7 +43,7 @@
     <maven-spotbugs-plugin.version>4.5.3.0</maven-spotbugs-plugin.version>
     <maven-jib-plugin.version>3.2.0</maven-jib-plugin.version>
 
-    <thena.version>1.1.24</thena.version>
+    
     <hdes.version>${project.version}</hdes.version>
     <stencil.version>${project.version}</stencil.version>
     <dialob.version>${project.version}</dialob.version>
@@ -66,7 +66,7 @@
     <slf4j.version>1.7.36</slf4j.version>
     <validation-api.version>3.0.2</validation-api.version>
     <caffeine.version>2.9.2</caffeine.version>
-    <lombok.version>1.18.22</lombok.version>
+    <lombok.version>1.18.28</lombok.version>
     <commons-lang3.version>3.12.0</commons-lang3.version>
     <commons-text.version>1.9</commons-text.version>
     <commons-csv.version>1.9.0</commons-csv.version>
@@ -225,13 +225,6 @@
 
   <dependencyManagement>
     <dependencies>
-      <dependency>
-        <groupId>io.resys.hdes</groupId>
-        <artifactId>thena-bom</artifactId>
-        <version>${thena.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
       <dependency>
         <groupId>io.digiexpress</groupId>
         <artifactId>stencil-bom</artifactId>

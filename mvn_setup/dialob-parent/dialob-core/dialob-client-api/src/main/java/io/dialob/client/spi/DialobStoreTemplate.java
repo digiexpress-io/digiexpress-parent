@@ -21,9 +21,10 @@ import io.dialob.client.spi.store.PersistenceCommands;
 import io.dialob.client.spi.support.DialobAssert;
 import io.dialob.client.spi.support.OidUtils;
 import io.dialob.client.spi.support.Sha2;
-import io.resys.thena.docdb.api.actions.CommitActions.CommitStatus;
-import io.resys.thena.docdb.api.actions.ObjectsActions.ObjectsStatus;
-import io.resys.thena.docdb.api.actions.RepoActions.RepoStatus;
+import io.resys.thena.docdb.api.actions.CommitActions.CommitBuilder;
+import io.resys.thena.docdb.api.actions.CommitActions.CommitResultStatus;
+import io.resys.thena.docdb.api.actions.ProjectActions.RepoStatus;
+import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
 import io.smallrye.mutiny.Uni;
 
 public class DialobStoreTemplate extends PersistenceCommands implements DialobStore {
@@ -61,7 +62,7 @@ public class DialobStoreTemplate extends PersistenceCommands implements DialobSt
       public Uni<DialobStore> create() {
         DialobAssert.notNull(repoName, () -> "repoName must be defined!");
         final var client = config.getClient();
-        final var newRepo = client.repo().create().name(repoName).build();
+        final var newRepo = client.project().projectBuilder().name(repoName).build();
         return newRepo.onItem().transform((repoResult) -> {
           if(repoResult.getStatus() != RepoStatus.OK) {
             throw new StoreException("REPO_CREATE_FAIL", null, 
@@ -88,9 +89,9 @@ public class DialobStoreTemplate extends PersistenceCommands implements DialobSt
       public Uni<Boolean> createIfNot() {
         final var client = config.getClient();
         
-        return client.repo().query().id(config.getRepoName()).get().onItem().transformToUni(repo -> {
+        return client.project().projectQuery().projectName(config.getRepoName()).get().onItem().transformToUni(repo -> {
           if(repo == null) {
-            return client.repo().create().name(config.getRepoName()).build().onItem().transform(newRepo -> true); 
+            return client.project().projectBuilder().name(config.getRepoName()).build().onItem().transform(newRepo -> true); 
           }
           return Uni.createFrom().item(true);
         });
@@ -153,14 +154,15 @@ public class DialobStoreTemplate extends PersistenceCommands implements DialobSt
         .sorted(COMP)
         .collect(Collectors.toList());
     
-    final var commitBuilder = config.getClient().commit().head()
+    final CommitBuilder commitBuilder = config.getClient().commit()
+        .commitBuilder()
         .head(config.getRepoName(), config.getHeadName())
         .message(
             "Save batch with new: " + create.size() + 
             " , updated: " + update.size() +
             " and deleted: " + del.size() +
             " entries")
-        .parentIsLatest()
+        .latestCommit()
         .author(config.getAuthorProvider().getAuthor());
     
     
@@ -211,15 +213,15 @@ public class DialobStoreTemplate extends PersistenceCommands implements DialobSt
       }
       
       return commitBuilder.build().onItem().transformToUni(commit -> {
-        if(commit.getStatus() == CommitStatus.OK) {
+        if(commit.getStatus() == CommitResultStatus.OK) {
           return config.getClient()
-              .objects().blobState()
-              .repo(config.getRepoName())
-              .anyId(config.getHeadName())
-              .blobNames(ids)
-              .list().onItem()
+              .pull().pullQuery()
+              .projectName(config.getRepoName())
+              .branchNameOrCommitOrTag(config.getHeadName())
+              .docId(ids)
+              .findAll().onItem()
               .transform(states -> {
-                if(states.getStatus() != ObjectsStatus.OK) {
+                if(states.getStatus() != QueryEnvelopeStatus.OK) {
                   // TODO
                   throw new StoreException("LIST_FAIL", null, convertMessages2(states));
                 }

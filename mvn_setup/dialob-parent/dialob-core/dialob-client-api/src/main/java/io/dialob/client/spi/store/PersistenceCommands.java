@@ -30,12 +30,12 @@ import io.dialob.client.api.ImmutableStoreExceptionMsg;
 import io.dialob.client.api.ImmutableStoreState;
 import io.dialob.client.spi.exceptions.StoreException;
 import io.dialob.client.spi.store.DialobStoreConfig.EntityState;
-import io.resys.thena.docdb.api.actions.CommitActions.CommitResult;
-import io.resys.thena.docdb.api.actions.CommitActions.CommitStatus;
-import io.resys.thena.docdb.api.actions.ObjectsActions.BlobObject;
-import io.resys.thena.docdb.api.actions.ObjectsActions.BlobObjects;
-import io.resys.thena.docdb.api.actions.ObjectsActions.ObjectsResult;
-import io.resys.thena.docdb.api.actions.ObjectsActions.ObjectsStatus;
+import io.resys.thena.docdb.api.actions.CommitActions.CommitResultEnvelope;
+import io.resys.thena.docdb.api.actions.CommitActions.CommitResultStatus;
+import io.resys.thena.docdb.api.models.QueryEnvelope;
+import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
+import io.resys.thena.docdb.api.models.ThenaObjects.PullObject;
+import io.resys.thena.docdb.api.models.ThenaObjects.PullObjects;
 import io.smallrye.mutiny.Uni;
 
 
@@ -50,14 +50,14 @@ public class PersistenceCommands implements DialobStoreConfig.Commands {
   
   @Override
   public Uni<StoreEntity> delete(StoreEntity toBeDeleted) {
-    return config.getClient().commit().head()
+    return config.getClient().commit().commitBuilder()
         .head(config.getRepoName(), config.getHeadName())
         .message("Delete type: '" + toBeDeleted.getBodyType() + "', with id: '" + toBeDeleted.getId() + "'")
-        .parentIsLatest()
+        .latestCommit()
         .author(config.getAuthorProvider().getAuthor())
         .remove(toBeDeleted.getId())
         .build().onItem().transform(commit -> {
-          if(commit.getStatus() == CommitStatus.OK) {
+          if(commit.getStatus() == CommitResultStatus.OK) {
             return toBeDeleted;
           }
           // TODO
@@ -67,14 +67,14 @@ public class PersistenceCommands implements DialobStoreConfig.Commands {
 
   @Override
   public Uni<StoreEntity> save(StoreEntity toBeSaved) {
-    return config.getClient().commit().head()
+    return config.getClient().commit().commitBuilder()
       .head(config.getRepoName(), config.getHeadName())
       .message("Save type: '" + toBeSaved.getBodyType() + "', with id: '" + toBeSaved.getId() + "'")
-      .parentIsLatest()
+      .latestCommit()
       .author(config.getAuthorProvider().getAuthor())
       .append(toBeSaved.getId(), config.getSerializer().toString(toBeSaved))
       .build().onItem().transform(commit -> {
-        if(commit.getStatus() == CommitStatus.OK) {
+        if(commit.getStatus() == CommitResultStatus.OK) {
           return toBeSaved;
         }
         // TODO
@@ -85,7 +85,7 @@ public class PersistenceCommands implements DialobStoreConfig.Commands {
 
   @Override
   public Uni<Collection<StoreEntity>> save(Collection<StoreEntity> entities) {
-    final var commitBuilder = config.getClient().commit().head().head(config.getRepoName(), config.getHeadName());
+    final var commitBuilder = config.getClient().commit().commitBuilder().head(config.getRepoName(), config.getHeadName());
     final StoreEntity first = entities.iterator().next();
     
     for(final var target : entities) {
@@ -94,10 +94,10 @@ public class PersistenceCommands implements DialobStoreConfig.Commands {
     
     return commitBuilder
         .message("Save type: '" + first.getBodyType() + "', with id: '" + first.getId() + "'")
-        .parentIsLatest()
+        .latestCommit()
         .author(config.getAuthorProvider().getAuthor())
         .build().onItem().transform(commit -> {
-          if(commit.getStatus() == CommitStatus.OK) {
+          if(commit.getStatus() == CommitResultStatus.OK) {
             return entities;
           }
           // TODO
@@ -116,13 +116,13 @@ public class PersistenceCommands implements DialobStoreConfig.Commands {
   @Override
   public Uni<StoreState> get() {
     return config.getClient()
-        .objects().refState()
-        .repo(config.getRepoName())
-        .ref(config.getHeadName())
-        .blobs()
-        .build()
+        .branch().branchQuery()
+        .projectName(config.getRepoName())
+        .branchName(config.getHeadName())
+        .docsIncluded()
+        .get()
         .onItem().transform(state -> {
-          if(state.getStatus() != ObjectsStatus.OK) {
+          if(state.getStatus() != QueryEnvelopeStatus.OK) {
             throw new StoreException("GET_REPO_STATE_FAIL", null, ImmutableStoreExceptionMsg.builder()
                 .id(state.getRepo().getName())
                 .value(state.getRepo().getId())
@@ -156,13 +156,13 @@ public class PersistenceCommands implements DialobStoreConfig.Commands {
   @Override
   public Uni<EntityState> getEntityState(String id) {
     return config.getClient()
-        .objects().blobState()
-        .repo(config.getRepoName())
-        .anyId(config.getHeadName())
-        .blobName(id)
+        .pull().pullQuery()
+        .projectName(config.getRepoName())
+        .branchNameOrCommitOrTag(config.getHeadName())
+        .docId(id)
         .get().onItem()
         .transform(state -> {
-          if(state.getStatus() != ObjectsStatus.OK) {
+          if(state.getStatus() != QueryEnvelopeStatus.OK) {
             // TODO
             throw new StoreException("GET_FAIL", null, convertMessages1(state));
           }
@@ -172,7 +172,7 @@ public class PersistenceCommands implements DialobStoreConfig.Commands {
   }
   
   
-  protected StoreExceptionMsg convertMessages(CommitResult commit) {
+  protected StoreExceptionMsg convertMessages(CommitResultEnvelope commit) {
     return ImmutableStoreExceptionMsg.builder()
         .id(commit.getGid())
         .value("") //TODO
@@ -180,14 +180,14 @@ public class PersistenceCommands implements DialobStoreConfig.Commands {
         .build();
   }
 
-  protected StoreExceptionMsg convertMessages1(ObjectsResult<BlobObject> state) {
+  protected StoreExceptionMsg convertMessages1(QueryEnvelope<PullObject> state) {
     return ImmutableStoreExceptionMsg.builder()
         .id("RUNTIME_ERROR")
         .value("") //TODO
         .addAllArgs(state.getMessages().stream().map(message->message.getText()).collect(Collectors.toList()))
         .build();
   }
-  protected StoreExceptionMsg convertMessages2(ObjectsResult<BlobObjects> state) {
+  protected StoreExceptionMsg convertMessages2(QueryEnvelope<PullObjects> state) {
     return ImmutableStoreExceptionMsg.builder()
         .id("RUNTIME_ERROR")
         .value("") //TODO

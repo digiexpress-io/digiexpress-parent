@@ -129,7 +129,7 @@ public class SearchBlobFromHistoryDBTest extends DbTestTemplate {
     
     final var first = history.getObjects().getValues().get(0);
     Assertions.assertEquals("ID-1", first.getTreeValueName());
-    Assertions.assertEquals("{\"type\":\"person\",\"name\":\"sam\",\"lastName\":\"vimes\",\"change id\":\"20 of changes: 20\"}", first.getBlob().getValue().encode());
+    Assertions.assertEquals("{\"name\":\"sam\",\"type\":\"person\",\"lastName\":\"vimes\",\"change id\":\"20 of changes: 20\"}", first.getBlob().getValue().encode());
   }
   
   @Test
@@ -149,7 +149,7 @@ public class SearchBlobFromHistoryDBTest extends DbTestTemplate {
     
     final var first = history.getObjects().getValues().get(0);
     Assertions.assertEquals("ID-1", first.getTreeValueName());
-    Assertions.assertEquals("{\"type\":\"person\",\"name\":\"sam\",\"lastName\":\"vimes\",\"change id\":\"20 of changes: 20\"}", first.getBlob().getValue().encode());
+    Assertions.assertEquals("{\"name\":\"sam\",\"type\":\"person\",\"lastName\":\"vimes\",\"change id\":\"20 of changes: 20\"}", first.getBlob().getValue().encode());
   }
  
   

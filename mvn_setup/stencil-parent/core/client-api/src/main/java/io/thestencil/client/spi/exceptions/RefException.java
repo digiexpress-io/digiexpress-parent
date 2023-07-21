@@ -2,9 +2,9 @@ package io.thestencil.client.spi.exceptions;
 
 /*-
  * #%L
- * stencil-persistence
+ * stencil-client-api
  * %%
- * Copyright (C) 2021 Copyright 2021 ReSys OÜ
+ * Copyright (C) 2015 - 2023 Copyright 2022 ReSys OÜ
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,16 +20,16 @@ package io.thestencil.client.spi.exceptions;
  * #L%
  */
 
-import io.resys.thena.docdb.api.actions.ObjectsActions.ObjectsResult;
-import io.resys.thena.docdb.api.actions.ObjectsActions.RefObjects;
+import io.resys.thena.docdb.api.models.QueryEnvelope;
+import io.resys.thena.docdb.api.models.ThenaObjects.BranchObjects;
 
 public class RefException extends RuntimeException {
   private static final long serialVersionUID = 7190168525508589141L;
   
   private final String entity;
-  private final ObjectsResult<RefObjects> commit;
+  private final QueryEnvelope<BranchObjects> commit;
   
-  public RefException(String entity, ObjectsResult<RefObjects> commit) {
+  public RefException(String entity, QueryEnvelope<BranchObjects> commit) {
     super(msg(entity, commit));
     this.entity = entity;
     this.commit = commit;
@@ -38,11 +38,11 @@ public class RefException extends RuntimeException {
   public String getEntity() {
     return entity;
   }
-  public ObjectsResult<RefObjects> getCommit() {
+  public QueryEnvelope<BranchObjects> getCommit() {
     return commit;
   }
   
-  private static String msg(String entity, ObjectsResult<RefObjects> commit) {
+  private static String msg(String entity, QueryEnvelope<BranchObjects> commit) {
     StringBuilder messages = new StringBuilder();
     for(var msg : commit.getMessages()) {
       messages

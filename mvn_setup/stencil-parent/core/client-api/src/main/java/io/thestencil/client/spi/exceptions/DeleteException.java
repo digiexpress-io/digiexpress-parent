@@ -22,10 +22,10 @@ package io.thestencil.client.spi.exceptions;
 
 import java.util.List;
 
-import io.resys.thena.docdb.api.actions.CommitActions.CommitResult;
-import io.resys.thena.docdb.api.actions.ObjectsActions.BlobObjects;
-import io.resys.thena.docdb.api.actions.ObjectsActions.ObjectsResult;
+import io.resys.thena.docdb.api.actions.CommitActions.CommitResultEnvelope;
 import io.resys.thena.docdb.api.models.Message;
+import io.resys.thena.docdb.api.models.QueryEnvelope;
+import io.resys.thena.docdb.api.models.ThenaObjects.PullObjects;
 import io.thestencil.client.api.StencilClient.Entity;
 import io.thestencil.client.api.StencilClient.EntityType;
 
@@ -36,13 +36,13 @@ public class DeleteException extends RuntimeException {
   private final EntityType type;
   private final List<Message> commit;
   
-  public DeleteException(String entityId, EntityType type, ObjectsResult<BlobObjects> commit) {
+  public DeleteException(String entityId, EntityType type, QueryEnvelope<PullObjects> commit) {
     super(msg(entityId, type, commit.getMessages()));
     this.entityId = entityId;
     this.type = type;
     this.commit = commit.getMessages();
   }
-  public DeleteException(Entity<?> entity, CommitResult commit) {
+  public DeleteException(Entity<?> entity, CommitResultEnvelope commit) {
     super(msg(entity.getId(), entity.getType(), commit.getMessages()));
     this.entityId = entity.getId();
     this.type = entity.getType();

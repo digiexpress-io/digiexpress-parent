@@ -46,20 +46,20 @@ public class TenantBuilderImpl implements TenantBuilder {
   
   @Override
   public Uni<Client> load() {
-    ServiceAssert.notNull(namings.getRepoProject(), () -> "repoProject: string must be defined!");
-    ServiceAssert.isNull(namings.getRepoStencil(), () -> "repoStencil: string must be undefined!");
-    ServiceAssert.isNull(namings.getRepoDialob(), () -> "repoDialob: string must be undefined!");
-    ServiceAssert.isNull(namings.getRepoHdes(), () -> "repoHdes: string must be undefined!");    
+    ServiceAssert.notNull(namings.repoProject(), () -> "repoProject: string must be defined!");
+    ServiceAssert.isNull(namings.repoStencil(), () -> "repoStencil: string must be undefined!");
+    ServiceAssert.isNull(namings.repoDialob(), () -> "repoDialob: string must be undefined!");
+    ServiceAssert.isNull(namings.repoHdes(), () -> "repoHdes: string must be undefined!");    
 
-    return docDb.repo().query().find().collect().asList()
+    return docDb.project().projectsQuery().findAll().collect().asList()
     .onItem().transformToUni(repos -> {
       
-      final var existingServiceRepo = repos.stream().filter(e -> e.getName().equals(namings.getRepoProject())).findFirst();
+      final var existingServiceRepo = repos.stream().filter(e -> e.getName().equals(namings.repoProject())).findFirst();
       final var newStore = config.getStore().repo().repoName(existingServiceRepo.get().getName()).headName(HEAD_NAME).build();
 
       final Uni<Project> doc = newStore.query().get().onItem().transform(state -> {
         final var result = state.getProjects().values().stream().filter(p -> p.getId().equals(FIXED_ID)).findFirst().map(entity -> config.getParser().toProject(entity));
-        ServiceAssert.isTrue(result.isPresent(), () -> "repoProject: string does not exists by name: '" + namings.getRepoProject() + "'!");
+        ServiceAssert.isTrue(result.isPresent(), () -> "repoProject: string does not exists by name: '" + namings.repoProject() + "'!");
         return result.get();
       });
   
@@ -77,7 +77,7 @@ public class TenantBuilderImpl implements TenantBuilder {
   @Override
   public Uni<Client> create() {
     final var namings = this.namings.withDefaults();
-    return docDb.repo().query().find().collect().asList()
+    return docDb.project().projectsQuery().findAll().collect().asList()
     .onItem().transformToUni(repos -> {
       final var doc = getOrCreateDoc(repos, namings);
       return doc.onItem().transformToUni((_doc) -> create(repos, namings));
@@ -88,13 +88,13 @@ public class TenantBuilderImpl implements TenantBuilder {
   public Client build() {
     final var namings = this.namings.withDefaults();
     
-    final var newStore = config.getStore().repo().repoName(namings.getRepoProject()).headName(HEAD_NAME).build();
-    final var newCache = config.getCache().withName(namings.getRepoProject());
+    final var newStore = config.getStore().repo().repoName(namings.repoProject()).headName(HEAD_NAME).build();
+    final var newCache = config.getCache().withName(namings.repoProject());
     final var newConfig = ImmutableClientConfig.builder()
         .from(config)
-        .stencil(config.getStencil().repo().repoName(namings.getRepoStencil()).headName(HEAD_NAME).build())
-        .dialob(config.getDialob().repo().repoName(namings.getRepoDialob()).headName(HEAD_NAME).build())
-        .hdes(config.getHdes().repo().repoName(namings.getRepoHdes()).headName(HEAD_NAME).build())
+        .stencil(config.getStencil().repo().repoName(namings.repoStencil()).headName(HEAD_NAME).build())
+        .dialob(config.getDialob().repo().repoName(namings.repoDialob()).headName(HEAD_NAME).build())
+        .hdes(config.getHdes().repo().repoName(namings.repoHdes()).headName(HEAD_NAME).build())
         .cache(newCache)
         .store(newStore)
         .build();
@@ -102,10 +102,10 @@ public class TenantBuilderImpl implements TenantBuilder {
   }
 
   protected Uni<Project> getOrCreateDoc(final List<Repo> repos, final Namings namings) {
-    final var existingServiceRepo = repos.stream().filter(e -> e.getName().equals(this.namings.getRepoProject())).findFirst();
+    final var existingServiceRepo = repos.stream().filter(e -> e.getName().equals(this.namings.repoProject())).findFirst();
     
     if(existingServiceRepo.isEmpty()) {
-      return config.getStore().repo().repoName(namings.getRepoProject()).headName(HEAD_NAME).create()
+      return config.getStore().repo().repoName(namings.repoProject()).headName(HEAD_NAME).create()
           .onItem().transformToUni(newStore -> createServiceConfig(newStore, namings)); 
     }
     
@@ -118,20 +118,20 @@ public class TenantBuilderImpl implements TenantBuilder {
             final var newConfig = prj.getConfig();
             
             ServiceAssert.isTrue(
-                this.namings.getRepoStencil() == null || newConfig.getStencil().equals(this.namings.getRepoStencil()), 
-                () -> "Incorrect user configuration.repoStencil expected = '" + newConfig.getStencil() + "', actual = '" + this.namings.getRepoStencil() + "'");
+                this.namings.repoStencil() == null || newConfig.getStencil().equals(this.namings.repoStencil()), 
+                () -> "Incorrect user configuration.repoStencil expected = '" + newConfig.getStencil() + "', actual = '" + this.namings.repoStencil() + "'");
 
             ServiceAssert.isTrue(
-                this.namings.getRepoDialob() == null || newConfig.getDialob().equals(this.namings.getRepoDialob()), 
-                () -> "Incorrect user configuration.repoDialob expected = '" + newConfig.getDialob() + "', actual = '" + this.namings.getRepoDialob() + "'");
+                this.namings.repoDialob() == null || newConfig.getDialob().equals(this.namings.repoDialob()), 
+                () -> "Incorrect user configuration.repoDialob expected = '" + newConfig.getDialob() + "', actual = '" + this.namings.repoDialob() + "'");
             
             ServiceAssert.isTrue(
-                this.namings.getRepoHdes() == null || newConfig.getHdes().equals(this.namings.getRepoHdes()), 
-                () -> "Incorrect user configuration.repoHdes expected = '" + newConfig.getHdes() + "', actual = '" + this.namings.getRepoHdes() + "'");
+                this.namings.repoHdes() == null || newConfig.getHdes().equals(this.namings.repoHdes()), 
+                () -> "Incorrect user configuration.repoHdes expected = '" + newConfig.getHdes() + "', actual = '" + this.namings.repoHdes() + "'");
             
             ServiceAssert.isTrue(
-                this.namings.getRepoProject() == null || newConfig.getProject().equals(this.namings.getRepoProject()), 
-                () -> "Incorrect user configuration.repoProject expected = '" + newConfig.getProject() + "', actual = '" + this.namings.getRepoProject() + "'");
+                this.namings.repoProject() == null || newConfig.getProject().equals(this.namings.repoProject()), 
+                () -> "Incorrect user configuration.repoProject expected = '" + newConfig.getProject() + "', actual = '" + this.namings.repoProject() + "'");
             
             return prj;
           });
@@ -139,41 +139,41 @@ public class TenantBuilderImpl implements TenantBuilder {
   
   
   protected Uni<Client> create(final List<Repo> repos, final Namings namings) {
-    final var serviceStore = config.getStore().repo().repoName(namings.getRepoProject()).headName(HEAD_NAME).build();
+    final var serviceStore = config.getStore().repo().repoName(namings.repoProject()).headName(HEAD_NAME).build();
     return Uni.createFrom().item(ImmutableClientConfig.builder()
           .from(config)
-          .cache(config.getCache().withName(namings.getRepoProject()))
+          .cache(config.getCache().withName(namings.repoProject()))
           .store(serviceStore))
         // Stencil config
         .onItem().transformToUni(builder -> {
-          final var existingStencilRepo = repos.stream().filter(e -> e.getName().equals(namings.getRepoStencil())).findFirst();
+          final var existingStencilRepo = repos.stream().filter(e -> e.getName().equals(namings.repoStencil())).findFirst();
           if(existingStencilRepo.isPresent()) {
-            final var stencil = config.getStencil().repo().repoName(namings.getRepoStencil()).headName(HEAD_NAME).build();
+            final var stencil = config.getStencil().repo().repoName(namings.repoStencil()).headName(HEAD_NAME).build();
             return Uni.createFrom().item(builder.stencil(stencil));
           }
-          return config.getStencil().repo().repoName(namings.getRepoStencil()).headName(HEAD_NAME).create()
+          return config.getStencil().repo().repoName(namings.repoStencil()).headName(HEAD_NAME).create()
               .onItem().transform(stencil -> builder.stencil(stencil));
         })
         
         // dialob config
         .onItem().transformToUni(builder -> {
-          final var existingDialobRepo = repos.stream().filter(e -> e.getName().equals(namings.getRepoDialob())).findFirst();
+          final var existingDialobRepo = repos.stream().filter(e -> e.getName().equals(namings.repoDialob())).findFirst();
           if(existingDialobRepo.isPresent()) {
-            final var dialob = config.getDialob().repo().repoName(namings.getRepoDialob()).headName(HEAD_NAME).build();
+            final var dialob = config.getDialob().repo().repoName(namings.repoDialob()).headName(HEAD_NAME).build();
             return Uni.createFrom().item(builder.dialob(dialob));
           }
-          return config.getDialob().repo().repoName(namings.getRepoDialob()).headName(HEAD_NAME).create()
+          return config.getDialob().repo().repoName(namings.repoDialob()).headName(HEAD_NAME).create()
               .onItem().transform(dialob -> builder.dialob(dialob));
         })
         
         // wrench config
         .onItem().transformToUni(builder -> {
-          final var existingHdesRepo = repos.stream().filter(e -> e.getName().equals(namings.getRepoHdes())).findFirst();
+          final var existingHdesRepo = repos.stream().filter(e -> e.getName().equals(namings.repoHdes())).findFirst();
           if(existingHdesRepo.isPresent()) {
-            final var hdes = config.getHdes().repo().repoName(namings.getRepoHdes()).headName(HEAD_NAME).build();
+            final var hdes = config.getHdes().repo().repoName(namings.repoHdes()).headName(HEAD_NAME).build();
             return Uni.createFrom().item(builder.hdes(hdes));
           }
-          return config.getHdes().repo().repoName(namings.getRepoHdes()).headName(HEAD_NAME).create()
+          return config.getHdes().repo().repoName(namings.repoHdes()).headName(HEAD_NAME).create()
               .onItem().transform(hdes -> builder.hdes(hdes));
         })
         
@@ -188,10 +188,10 @@ public class TenantBuilderImpl implements TenantBuilder {
         .updated(LocalDateTime.now())
         .type(ClientEntity.ClientEntityType.PROJECT)
         .config(ImmutableProjectConfig.builder()
-            .dialob(namings.getRepoDialob())
-            .stencil(namings.getRepoStencil())
-            .hdes(namings.getRepoHdes())
-            .project(namings.getRepoProject())
+            .dialob(namings.repoDialob())
+            .stencil(namings.repoStencil())
+            .hdes(namings.repoHdes())
+            .project(namings.repoProject())
             .build())
         .build();
     final var command = ImmutableCreateStoreEntity.builder()

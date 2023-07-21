@@ -24,7 +24,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.resys.hdes.client.api.HdesStore.StoreEntity;
 import io.resys.hdes.client.api.ImmutableStoreEntity;
-import io.resys.thena.docdb.api.models.Objects.Blob;
+import io.resys.thena.docdb.api.models.ThenaObject.Blob;
 
 
 public class BlobDeserializer implements ThenaConfig.Deserializer {
@@ -40,7 +40,7 @@ public class BlobDeserializer implements ThenaConfig.Deserializer {
   @Override
   public StoreEntity fromString(Blob value) {
     try {
-      final ImmutableStoreEntity src = objectMapper.readValue(value.getValue(), ImmutableStoreEntity.class);
+      final ImmutableStoreEntity src = objectMapper.readValue(value.getValue().toString(), ImmutableStoreEntity.class);
       return ImmutableStoreEntity.builder().from(src).hash(value.getId()).build();
     } catch (Exception e) {
       throw new RuntimeException(e.getMessage() + System.lineSeparator() + value, e);

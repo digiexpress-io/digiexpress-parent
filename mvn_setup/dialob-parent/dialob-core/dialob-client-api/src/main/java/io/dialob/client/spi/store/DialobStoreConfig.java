@@ -28,10 +28,11 @@ import io.dialob.client.api.DialobDocument.DocumentType;
 import io.dialob.client.api.DialobStore.StoreEntity;
 import io.dialob.client.api.DialobStore.StoreState;
 import io.resys.thena.docdb.api.DocDB;
-import io.resys.thena.docdb.api.actions.ObjectsActions.BlobObject;
-import io.resys.thena.docdb.api.actions.ObjectsActions.ObjectsResult;
-import io.resys.thena.docdb.api.models.Objects.Blob;
+import io.resys.thena.docdb.api.models.QueryEnvelope;
+import io.resys.thena.docdb.api.models.ThenaObject.Blob;
+import io.resys.thena.docdb.api.models.ThenaObjects.PullObject;
 import io.smallrye.mutiny.Uni;
+import io.vertx.core.json.JsonObject;
 
 @Value.Immutable
 public interface DialobStoreConfig {
@@ -49,7 +50,7 @@ public interface DialobStoreConfig {
   
   @FunctionalInterface
   interface Serializer {
-    String toString(StoreEntity entity);
+    JsonObject toString(StoreEntity entity);
   }
   
   interface Deserializer {
@@ -65,7 +66,7 @@ public interface DialobStoreConfig {
   
   @Value.Immutable
   interface EntityState {
-    ObjectsResult<BlobObject> getSrc();
+    QueryEnvelope<PullObject> getSrc();
     StoreEntity getEntity();
   }
   

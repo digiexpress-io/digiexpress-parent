@@ -20,7 +20,8 @@ package io.thestencil.client.spi.exceptions;
  * #L%
  */
 
-import io.resys.thena.docdb.api.actions.CommitActions.CommitResult;
+
+import io.resys.thena.docdb.api.actions.CommitActions.CommitResultEnvelope;
 import io.thestencil.client.api.MigrationBuilder.Sites;
 import io.thestencil.client.api.StencilComposer.SiteState;
 
@@ -28,14 +29,14 @@ public class ImportException extends RuntimeException {
   private static final long serialVersionUID = 7190168525508589141L;
   
   private final Object entity;
-  private final CommitResult commit;
+  private final CommitResultEnvelope commit;
   
-  public ImportException(Sites entity, CommitResult commit) {
+  public ImportException(Sites entity, CommitResultEnvelope commit) {
     super(msg(entity, commit));
     this.entity = entity;
     this.commit = commit;
   }
-  public ImportException(SiteState entity, CommitResult commit) {
+  public ImportException(SiteState entity, CommitResultEnvelope commit) {
     super(msg(entity, commit));
     this.entity = entity;
     this.commit = commit;
@@ -43,11 +44,11 @@ public class ImportException extends RuntimeException {
   public Object getEntity() {
     return entity;
   }
-  public CommitResult getCommit() {
+  public CommitResultEnvelope getCommit() {
     return commit;
   }
   
-  private static String msg(Object entity, CommitResult commit) {
+  private static String msg(Object entity, CommitResultEnvelope commit) {
     StringBuilder messages = new StringBuilder();
     for(var msg : commit.getMessages()) {
       messages

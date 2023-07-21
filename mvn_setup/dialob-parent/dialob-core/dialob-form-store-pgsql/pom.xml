@@ -25,7 +25,7 @@
       <artifactId>dialob-client-api</artifactId>
     </dependency>
     <dependency>
-      <groupId>io.resys.hdes</groupId>
+      <groupId>io.digiexpress</groupId>
       <artifactId>thena-docdb-pgsql</artifactId>
     </dependency>
     <dependency>
@@ -35,6 +35,10 @@
     <dependency>
       <groupId>org.glassfish.web</groupId>
       <artifactId>javax.el</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-reactive-pg-client</artifactId>
     </dependency>
 
     <!-- Test dependencies -->

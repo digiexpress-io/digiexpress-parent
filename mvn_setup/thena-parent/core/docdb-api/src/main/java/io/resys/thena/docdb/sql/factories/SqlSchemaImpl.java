@@ -45,13 +45,17 @@ public class SqlSchemaImpl implements SqlSchema {
         .append(")").ln()
         .build()).build();
   }
+  
   @Override
   public Sql blobs() {
     return ImmutableSql.builder().value(new SqlStatement().ln()
     .append("CREATE TABLE ").append(options.getBlobs()).ln()
     .append("(").ln()
     .append("  id VARCHAR(40) PRIMARY KEY,").ln()
-    .append("  value TEXT NOT NULL").ln()
+    .append("  value jsonb NOT NULL").ln()
+    
+    // string based -- .append("  value TEXT NOT NULL").ln()
+    
     .append(");").ln()
     .build()).build();
   }

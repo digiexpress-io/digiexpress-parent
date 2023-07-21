@@ -14,6 +14,7 @@ import io.resys.thena.docdb.api.DocDB;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.spi.ClientCollections;
 import io.resys.thena.docdb.spi.ClientState;
+import io.resys.thena.docdb.spi.pgsql.DocDBFactoryPgSql;
 import io.resys.thena.docdb.spi.pgsql.PgErrors;
 import io.resys.thena.docdb.sql.DocDBFactorySql;
 import lombok.extern.slf4j.Slf4j;
@@ -54,16 +55,16 @@ public class TestCaseBuilder {
   }
   
   public String print(ClientStore store) {
-    doc.repo().query().find().collect().asList().await().atMost(Duration.ofMinutes(1))
+    doc.project().projectsQuery().findAll().collect().asList().await().atMost(Duration.ofMinutes(1))
     .forEach(e -> log.info("queried repo: " + e));
     
-    Repo repo = doc.repo().query().id(store.getRepoName()).get()
+    Repo repo = doc.project().projectsQuery().id(store.getRepoName()).get()
         .await().atMost(Duration.ofMinutes(1));
     
     return new RepoPrinter(docState, objectMapper).print(repo);
   }
   private DocDB getClient(io.vertx.mutiny.pgclient.PgPool pgPool, String db) {
-    return DocDBFactorySql.create().client(pgPool).db(db).errorHandler(new PgErrors()).build();
+    return DocDBFactoryPgSql.create().client(pgPool).db(db).errorHandler(new PgErrors()).build();
   }
   public Client getClient() {
     return client;

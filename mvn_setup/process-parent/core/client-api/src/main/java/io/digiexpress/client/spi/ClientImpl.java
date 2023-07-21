@@ -48,6 +48,7 @@ import io.resys.thena.docdb.api.DocDB;
 import io.thestencil.client.api.StencilClient;
 import io.thestencil.client.spi.StencilClientImpl;
 import io.thestencil.client.spi.serializers.ZoeDeserializer;
+import io.vertx.core.json.JsonObject;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
@@ -137,7 +138,7 @@ public class ClientImpl implements Client {
               .headName(headName).repoName(repoService)
               .gid((type) -> OidUtils.gen())
               .deserializer(new io.digiexpress.client.spi.store.DocDBDeserializer(om))
-              .serializer((entity) -> applyOm((om) -> om.writeValueAsString(io.digiexpress.client.api.ImmutableStoreEntity.builder().from(entity).build())))
+              .serializer((entity) -> applyOm((om) -> new JsonObject(om.writeValueAsString(io.digiexpress.client.api.ImmutableStoreEntity.builder().from(entity).build()))))
               .client(doc)
               .parser(parser)
               .build()))
@@ -161,7 +162,7 @@ public class ClientImpl implements Client {
           .client(doc)
           .objectMapper(om)
           .deserializer(new ZoeDeserializer(om))
-          .serializer((entity) -> applyOm((om) -> om.writeValueAsString(entity)))
+          .serializer((entity) -> applyOm((om) -> new JsonObject(om.writeValueAsString(entity))))
           .gidProvider((type) -> OidUtils.gen())
           .authorProvider(() -> repoAuthor.get()))
         .build();  
@@ -172,7 +173,7 @@ public class ClientImpl implements Client {
         .client(doc)
         .repoName(repoHdes).headName(headName)
         .gidProvider((type) -> OidUtils.gen())
-        .serializer((entity) -> applyOm((om) -> om.writeValueAsString(io.resys.hdes.client.api.ImmutableStoreEntity.builder().from(entity).hash("").build())))
+        .serializer((entity) -> applyOm((om) -> new JsonObject(om.writeValueAsString(io.resys.hdes.client.api.ImmutableStoreEntity.builder().from(entity).hash("").build()))))
         .deserializer(new io.resys.hdes.client.spi.store.BlobDeserializer(om))
         .authorProvider(() -> repoAuthor.get())
         .build();
@@ -189,7 +190,7 @@ public class ClientImpl implements Client {
       final var config = ImmutableDialobStoreConfig.builder()
           .client(doc).repoName(repoDialob).headName(headName)
           .gidProvider((type) -> OidUtils.gen())
-          .serializer((entity) -> applyOm((om) -> om.writeValueAsString(io.dialob.client.api.ImmutableStoreEntity.builder().from(entity).build())))
+          .serializer((entity) -> applyOm((om) -> new JsonObject(om.writeValueAsString(io.dialob.client.api.ImmutableStoreEntity.builder().from(entity).build()))))
           .deserializer(new io.dialob.client.spi.store.BlobDeserializer(om))
           .authorProvider(() -> repoAuthor.get())
           .build();

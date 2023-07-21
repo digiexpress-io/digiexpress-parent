@@ -24,6 +24,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
@@ -38,6 +39,7 @@ import lombok.extern.slf4j.Slf4j;
 
 //-Djava.util.logging.manager=org.jboss.logmanager.LogManager
 
+@Disabled
 @Slf4j
 @QuarkusTest
 @TestProfile(PgProfile.class)

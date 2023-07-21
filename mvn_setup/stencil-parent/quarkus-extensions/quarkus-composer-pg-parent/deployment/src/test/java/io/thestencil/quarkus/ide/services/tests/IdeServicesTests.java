@@ -36,9 +36,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import io.quarkus.test.QuarkusUnitTest;
 import io.restassured.RestAssured;
-import io.restassured.common.mapper.TypeRef;
 import io.restassured.response.Response;
-import io.thestencil.client.api.ImmutableArticle;
 import io.thestencil.client.api.ImmutableArticleMutator;
 import io.thestencil.client.api.ImmutableCreateArticle;
 import io.thestencil.client.api.ImmutableCreateLink;
@@ -46,7 +44,6 @@ import io.thestencil.client.api.ImmutableCreateLocale;
 import io.thestencil.client.api.ImmutableCreatePage;
 import io.thestencil.client.api.ImmutableCreateRelease;
 import io.thestencil.client.api.ImmutableCreateWorkflow;
-import io.thestencil.client.api.ImmutableEntity;
 import io.thestencil.client.api.ImmutableLinkMutator;
 import io.thestencil.client.api.ImmutableLocaleLabel;
 import io.thestencil.client.api.ImmutableLocaleMutator;
@@ -81,14 +78,14 @@ public class IdeServicesTests extends PgSqlDbConfig {
   
   @Test
   public void postArticles() {
-
+    RestAssured.given()
+    .when().post("/stencil-ide-services")
+    .then().statusCode(200);
+    
     RestAssured.given()
     .when().get("/stencil-ide-services/")
     .then().statusCode(200);
     
-    RestAssured.given()
-    .when().post("/stencil-ide-services")
-    .then().statusCode(200);
     
     
     String localeId = RestAssured.given()

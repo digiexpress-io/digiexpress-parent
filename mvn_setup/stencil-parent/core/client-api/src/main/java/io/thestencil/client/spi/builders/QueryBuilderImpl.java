@@ -25,12 +25,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import io.resys.thena.docdb.api.actions.ObjectsActions.ObjectsStatus;
-import io.resys.thena.docdb.api.models.Objects.Blob;
-import io.resys.thena.docdb.api.models.Objects.Tree;
+import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
+import io.resys.thena.docdb.api.models.ThenaObject.Blob;
+import io.resys.thena.docdb.api.models.ThenaObject.Tree;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.ImmutableSiteState;
-import io.thestencil.client.api.StencilConfig;
 import io.thestencil.client.api.StencilClient.Article;
 import io.thestencil.client.api.StencilClient.Entity;
 import io.thestencil.client.api.StencilClient.EntityBody;
@@ -43,8 +42,9 @@ import io.thestencil.client.api.StencilClient.Template;
 import io.thestencil.client.api.StencilClient.Workflow;
 import io.thestencil.client.api.StencilComposer.SiteContentType;
 import io.thestencil.client.api.StencilComposer.SiteState;
-import io.thestencil.client.api.StencilStore.QueryBuilder;
+import io.thestencil.client.api.StencilConfig;
 import io.thestencil.client.api.StencilConfig.EntityState;
+import io.thestencil.client.api.StencilStore.QueryBuilder;
 import io.thestencil.client.spi.PersistenceCommands;
 import io.thestencil.client.spi.exceptions.QueryException;
 import io.thestencil.client.spi.exceptions.RefException;
@@ -58,7 +58,7 @@ public class QueryBuilderImpl extends PersistenceCommands implements QueryBuilde
   @Override
   public Uni<SiteState> head() {
     final var siteName = config.getRepoName() + ":" + config.getHeadName();
-    return config.getClient().repo().query().id(config.getRepoName()).get().onItem()
+    return config.getClient().project().projectQuery().projectName(config.getRepoName()).get().onItem()
       .transformToUni(repo -> {
         if(repo == null) {
          return Uni.createFrom().item(ImmutableSiteState.builder()
@@ -68,13 +68,13 @@ public class QueryBuilderImpl extends PersistenceCommands implements QueryBuilde
         }
       
         return config.getClient()
-            .objects().refState()
-            .repo(config.getRepoName())
-            .ref(config.getHeadName())
-            .blobs(true)
-            .build().onItem()
+            .branch().branchQuery()
+            .projectName(config.getRepoName())
+            .branchName(config.getHeadName())
+            .docsIncluded()
+            .get().onItem()
             .transform(state -> {
-              if(state.getStatus() == ObjectsStatus.ERROR) {
+              if(state.getStatus() == QueryEnvelopeStatus.ERROR) {
                 throw new RefException(siteName, state);
               }
 
@@ -144,13 +144,13 @@ public class QueryBuilderImpl extends PersistenceCommands implements QueryBuilde
   }
   
   private Uni<SiteState> getCommitState(EntityState<Release> release) {
-    return config.getClient().objects().commitState()
-    .repo(config.getRepoName())
-    .anyId(release.getEntity().getBody().getParentCommit())
-    .blobs(true)
-    .build().onItem()
+    return config.getClient().commit().commitQuery()
+    .projectName(config.getRepoName())
+    .branchNameOrCommitOrTag(release.getEntity().getBody().getParentCommit())
+    .docsIncluded()
+    .get().onItem()
     .transform(state -> {
-      if(state.getStatus() == ObjectsStatus.ERROR) {
+      if(state.getStatus() == QueryEnvelopeStatus.ERROR) {
         throw new QueryException("Can't find release commit: '" + release.getEntity().getBody().getParentCommit() + "'!", EntityType.RELEASE, state);
       }
       
@@ -165,14 +165,14 @@ public class QueryBuilderImpl extends PersistenceCommands implements QueryBuilde
   @Override
   public <T extends EntityBody> Uni<List<Entity<T>>> head(List<String> ids, EntityType type) {
     return config.getClient()
-    .objects().blobState()
-    .repo(config.getRepoName())
-    .anyId(config.getHeadName())
-    .blobNames(ids)
-    .list().onItem()
+    .pull().pullQuery()
+    .projectName(config.getRepoName())
+    .branchNameOrCommitOrTag(config.getHeadName())
+    .docId(ids)
+    .findAll().onItem()
     .transform(state -> {
       
-      if(state.getStatus() != ObjectsStatus.OK) {
+      if(state.getStatus() != QueryEnvelopeStatus.OK) {
         throw new QueryException(String.join(",", ids), type, state);  
       }
       

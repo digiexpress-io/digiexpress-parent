@@ -22,8 +22,8 @@ package io.thestencil.client.spi.exceptions;
 
 import java.util.List;
 
-import io.resys.thena.docdb.api.actions.ObjectsActions.ObjectsResult;
 import io.resys.thena.docdb.api.models.Message;
+import io.resys.thena.docdb.api.models.QueryEnvelope;
 import io.thestencil.client.api.StencilClient.EntityType;
 
 public class QueryException extends RuntimeException {
@@ -33,7 +33,7 @@ public class QueryException extends RuntimeException {
   private final EntityType type;
   private final List<Message> commit;
   
-  public QueryException(String entityId, EntityType type, ObjectsResult<?> commit) {
+  public QueryException(String entityId, EntityType type, QueryEnvelope<?> commit) {
     super(msg(entityId, type, commit.getMessages()));
     this.entityId = entityId;
     this.type = type;

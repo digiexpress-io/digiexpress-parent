@@ -39,6 +39,7 @@ import io.thestencil.client.api.StencilClient.Page;
 import io.thestencil.client.api.StencilClient.Release;
 import io.thestencil.client.api.StencilClient.Template;
 import io.thestencil.client.api.StencilClient.Workflow;
+import io.vertx.core.json.JsonObject;
 
 public class ZoeDeserializer implements StencilConfig.Deserializer {
 
@@ -51,7 +52,8 @@ public class ZoeDeserializer implements StencilConfig.Deserializer {
 
   @SuppressWarnings("unchecked")
   @Override
-  public <T extends EntityBody> Entity<T> fromString(EntityType entityType, String value) {
+  public <T extends EntityBody> Entity<T> fromString(EntityType entityType, JsonObject json) {
+    final var value = json.toString();
     try {
       switch(entityType) {
         case ARTICLE: {
@@ -71,7 +73,7 @@ public class ZoeDeserializer implements StencilConfig.Deserializer {
             return (Entity<T>) objectMapper.readValue(value, new TypeReference<Entity<Release>>() {});
           } catch(Exception e) {
             // TODO:: remove
-            return (Entity<T>) fromString(value);
+            return (Entity<T>) fromString(json);
           }
         }
         case WORKFLOW: {
@@ -89,9 +91,9 @@ public class ZoeDeserializer implements StencilConfig.Deserializer {
   }
 
   @Override
-  public Entity<?> fromString(String value) {
+  public Entity<?> fromString(JsonObject value) {
     try {
-      ObjectNode node = objectMapper.readValue(value, ObjectNode.class);
+      ObjectNode node = objectMapper.readValue(value.toString(), ObjectNode.class);
       final EntityType type = EntityType.valueOf(node.get("type").textValue());
 
       switch (type) {

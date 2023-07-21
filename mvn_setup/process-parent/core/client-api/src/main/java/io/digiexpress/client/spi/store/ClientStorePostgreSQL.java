@@ -16,10 +16,11 @@ import io.digiexpress.client.api.ImmutableStoreExceptionMsg;
 import io.digiexpress.client.spi.support.MainBranch;
 import io.digiexpress.client.spi.support.ServiceAssert;
 import io.resys.thena.docdb.api.DocDB;
-import io.resys.thena.docdb.api.actions.RepoActions.RepoStatus;
+import io.resys.thena.docdb.api.actions.ProjectActions.RepoStatus;
 import io.resys.thena.docdb.spi.pgsql.PgErrors;
 import io.resys.thena.docdb.sql.DocDBFactorySql;
 import io.smallrye.mutiny.Uni;
+import io.vertx.core.json.JsonObject;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.sqlclient.PoolOptions;
 import lombok.AccessLevel;
@@ -59,9 +60,9 @@ public class ClientStorePostgreSQL extends DocDBCommandsSupport implements Clien
   public Uni<Boolean> createRepoOrGetRepo() {
     final var client = config.getClient();
     
-    return client.repo().query().id(config.getRepoName()).get().onItem().transformToUni(repo -> {
+    return client.project().projectQuery().projectName(config.getRepoName()).get().onItem().transformToUni(repo -> {
       if(repo == null) {
-        return client.repo().create().name(config.getRepoName()).build().onItem().transform(newRepo -> true); 
+        return client.project().projectBuilder().name(config.getRepoName()).build().onItem().transform(newRepo -> true); 
       }
       return Uni.createFrom().item(true);
     });
@@ -70,7 +71,7 @@ public class ClientStorePostgreSQL extends DocDBCommandsSupport implements Clien
   public Uni<ClientStore> createRepo(String repoName, String headName) {
     ServiceAssert.notNull(repoName, () -> "repoName must be defined!");
     final var client = config.getClient();
-    final var newRepo = client.repo().create().name(repoName).build();
+    final var newRepo = client.project().projectBuilder().name(repoName).build();
     return newRepo.onItem().transform((repoResult) -> {
       if(repoResult.getStatus() != RepoStatus.OK) {
         throw new StoreException("REPO_CREATE_FAIL", null, 
@@ -195,7 +196,7 @@ public class ClientStorePostgreSQL extends DocDBCommandsSupport implements Clien
           .gid(getGidProvider())
           .serializer((entity) -> {
             try {
-              return objectMapper.writeValueAsString(ImmutableStoreEntity.builder().from(entity).build());
+              return new JsonObject(objectMapper.writeValueAsString(ImmutableStoreEntity.builder().from(entity).build()));
             } catch (IOException e) {
               throw new RuntimeException(e.getMessage(), e);
             }

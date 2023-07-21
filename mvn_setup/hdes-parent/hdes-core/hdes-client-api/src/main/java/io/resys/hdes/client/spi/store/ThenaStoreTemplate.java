@@ -31,9 +31,9 @@ import io.resys.hdes.client.api.ast.AstBody.AstBodyType;
 import io.resys.hdes.client.api.exceptions.StoreException;
 import io.resys.hdes.client.spi.store.ThenaConfig.EntityState;
 import io.resys.hdes.client.spi.util.HdesAssert;
-import io.resys.thena.docdb.api.actions.CommitActions.CommitStatus;
-import io.resys.thena.docdb.api.actions.ObjectsActions.ObjectsStatus;
-import io.resys.thena.docdb.api.actions.RepoActions.RepoStatus;
+import io.resys.thena.docdb.api.actions.CommitActions.CommitResultStatus;
+import io.resys.thena.docdb.api.actions.ProjectActions.RepoStatus;
+import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
 import io.smallrye.mutiny.Uni;
 
 public abstract class ThenaStoreTemplate extends PersistenceCommands implements HdesStore {
@@ -70,7 +70,7 @@ public abstract class ThenaStoreTemplate extends PersistenceCommands implements 
       public Uni<HdesStore> create() {
         HdesAssert.notNull(repoName, () -> "repoName must be defined!");
         final var client = config.getClient();
-        final var newRepo = client.repo().create().name(repoName).build();
+        final var newRepo = client.project().projectBuilder().name(repoName).build();
         return newRepo.onItem().transform((repoResult) -> {
           if(repoResult.getStatus() != RepoStatus.OK) {
             throw new StoreException("REPO_CREATE_FAIL", null, 
@@ -97,9 +97,9 @@ public abstract class ThenaStoreTemplate extends PersistenceCommands implements 
       public Uni<Boolean> createIfNot() {
         final var client = config.getClient();
         
-        return client.repo().query().id(config.getRepoName()).get().onItem().transformToUni(repo -> {
+        return client.project().projectQuery().projectName(config.getRepoName()).get().onItem().transformToUni(repo -> {
           if(repo == null) {
-            return client.repo().create().name(config.getRepoName()).build().onItem().transform(newRepo -> true); 
+            return client.project().projectBuilder().name(config.getRepoName()).build().onItem().transform(newRepo -> true); 
           }
           return Uni.createFrom().item(false);
         });
@@ -148,10 +148,10 @@ public abstract class ThenaStoreTemplate extends PersistenceCommands implements 
   @Override
   public Uni<List<StoreEntity>> batch(ImportStoreEntity batchType) {
     return get().onItem().transformToUni(currentState -> {
-      final var commitBuilder = config.getClient().commit().head()
+      final var commitBuilder = config.getClient().commit().commitBuilder()
           .head(config.getRepoName(), config.getHeadName())
           .message("Save batch with new: " + batchType.getCreate().size() + " and updated: " + batchType.getUpdate().size() + " entries")
-          .parentIsLatest()
+          .latestCommit()
           .author(config.getAuthorProvider().getAuthor());
       
       final List<String> ids = new ArrayList<>();
@@ -191,15 +191,15 @@ public abstract class ThenaStoreTemplate extends PersistenceCommands implements 
       }    
       
       return commitBuilder.build().onItem().transformToUni(commit -> {
-            if(commit.getStatus() == CommitStatus.OK) {
+            if(commit.getStatus() == CommitResultStatus.OK) {
               return config.getClient()
-                  .objects().blobState()
-                  .repo(config.getRepoName())
-                  .anyId(config.getHeadName())
-                  .blobNames(ids)
-                  .list().onItem()
+                  .pull().pullQuery()
+                  .projectName(config.getRepoName())
+                  .branchNameOrCommitOrTag(config.getHeadName())
+                  .docId(ids)
+                  .findAll().onItem()
                   .transform(states -> {
-                    if(states.getStatus() != ObjectsStatus.OK) {
+                    if(states.getStatus() != QueryEnvelopeStatus.OK) {
                       // TODO
                       throw new StoreException("LIST_FAIL", null, convertMessages2(states));
                     }

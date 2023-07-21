@@ -72,6 +72,12 @@
       <organization>ReSys OÜ</organization>
       <organizationUrl>http://www.resys.io</organizationUrl>
     </developer>
+    <developer>
+      <name>Admir Krilašević</name>
+      <email>admir.krilasevic@resys.io</email>
+      <organization>ReSys OÜ</organization>
+      <organizationUrl>http://www.resys.io</organizationUrl>
+    </developer>
   </developers>
   <scm>
     <connection>scm:git:https://github.com/digiexpress-io/digiexpress-parent.git</connection>
@@ -102,6 +108,7 @@
     <module>stencil-parent</module>
     <module>process-parent</module>
     <module>thena-parent</module>
+    <module>tasks-parent</module>
   </modules>
 
   <build>

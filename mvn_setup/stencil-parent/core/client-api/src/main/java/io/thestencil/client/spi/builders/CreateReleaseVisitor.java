@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import io.resys.thena.docdb.spi.commits.Sha2;
 import io.thestencil.client.api.ImmutableArticleReleaseItem;
 import io.thestencil.client.api.ImmutableLinkReleaseItem;
 import io.thestencil.client.api.ImmutableLocaleReleaseItem;
@@ -41,6 +40,7 @@ import io.thestencil.client.api.StencilClient.Page;
 import io.thestencil.client.api.StencilClient.PageReleaseItem;
 import io.thestencil.client.api.StencilClient.WorkflowReleaseItem;
 import io.thestencil.client.api.StencilComposer.SiteState;
+import io.thestencil.client.spi.staticontent.support.Sha2;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

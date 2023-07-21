@@ -38,6 +38,7 @@ import io.thestencil.client.spi.StencilComposerImpl;
 import io.thestencil.client.spi.StencilStoreImpl;
 import io.thestencil.client.spi.composer.ServicesPathConfig;
 import io.thestencil.client.spi.serializers.ZoeDeserializer;
+import io.vertx.core.json.JsonObject;
 import io.vertx.mutiny.core.Vertx;
 import io.vertx.mutiny.pgclient.PgPool;
 
@@ -105,7 +106,7 @@ public class IDEServicesProducer {
             .deserializer(deserializer)
             .serializer((entity) -> {
               try {
-                return objectMapper.writeValueAsString(entity);
+                return new JsonObject(objectMapper.writeValueAsString(entity));
               } catch (IOException e) {
                 throw new RuntimeException(e.getMessage(), e);
               }
