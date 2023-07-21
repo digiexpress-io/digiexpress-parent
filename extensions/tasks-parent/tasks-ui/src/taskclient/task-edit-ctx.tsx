@@ -1,0 +1,30 @@
+import React from 'react';
+import { TaskEditContextType, TaskEditMutator, TaskEditDispatch, TaskEditMutatorBuilder } from './task-edit-ctx-types';
+import { TaskEditStateBuilder } from './task-edit-ctx-impl';
+import { Task } from './task-types';
+
+const TaskEditContext = React.createContext<TaskEditContextType>({} as TaskEditContextType);
+
+
+const TaskEditProvider: React.FC<{ children: React.ReactNode, task: Task }> = ({ children, task }) => {
+
+  const [state, setState] = React.useState<TaskEditMutatorBuilder>(new TaskEditStateBuilder({task, userId: "jocelyn.mutso", events: []}));
+  const setter: TaskEditDispatch = React.useCallback((mutator: TaskEditMutator) => setState(mutator), [setState]);
+
+  const contextValue: TaskEditContextType = React.useMemo(() => {
+    return { state, setState: setter, loading: false };
+  }, [state, setter]);
+
+  React.useMemo(() => {
+    
+    setState(previous => previous.withTask(task));
+    
+  }, [task, setState]);
+
+
+  return (<TaskEditContext.Provider value={contextValue}>{children}</TaskEditContext.Provider>);
+};
+
+
+export { TaskEditProvider, TaskEditContext };
+

@@ -1,0 +1,37 @@
+quarkus:
+
+  log:
+    level: INFO
+    category: 
+      io.resys:
+        level: DEBUG
+  http:
+    tcp-quick-ack: true
+    tcp-cork: true
+    tcp-fast-open: true
+    enable-compression: true
+    body:
+      preallocate-body-buffer: true
+    limits:
+      max-body-size: 102400K
+      max-header-size: 102400K
+      max-chunk-size: 102400K
+  
+  resteasy-reactive:
+    output-buffer-size: 16384000
+
+  vertx:
+    keep-alive-time: PT10.000S
+    
+tasks:
+  project:
+    id: "myTasksProject"
+  db:
+    pg: 
+      repositoryName: "tasks-repo"
+      pgPort: 32788 
+      pgHost: "localhost"
+      pgDb: "tasks_db"
+      pgUser: "postgres"
+      pgPass: "postgres"
+      pgPoolSize: 5

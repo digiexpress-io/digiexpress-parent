@@ -1,0 +1,19 @@
+version: '3.1'
+
+services:
+
+  thena_tasks_pg_db:
+    image: postgres:14.7
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: tasks_db
+    ports:
+      - 32788:5432
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8091:8080

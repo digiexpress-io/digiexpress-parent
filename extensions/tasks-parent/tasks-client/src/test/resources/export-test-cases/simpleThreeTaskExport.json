@@ -1,0 +1,30 @@
+{
+  "id" : "not implemented yet",
+  "hash" : "not implemented yet",
+  "created" : [ 2023, 1, 2, 2, 1 ],
+  "startDate" : [ 2023, 1, 1 ],
+  "endDate" : [ 2023, 1, 1 ],
+  "name" : "my first export",
+  "events" : [ {
+    "id" : "1",
+    "taskId" : "1_TASK",
+    "eventType" : "TASK_STATUS_SET",
+    "eventDate" : [ 2023, 1, 1 ],
+    "endDate" : null,
+    "taskStatus" : "CREATED"
+  }, {
+    "id" : "1",
+    "taskId" : "3_TASK",
+    "eventType" : "TASK_STATUS_SET",
+    "eventDate" : [ 2023, 1, 1 ],
+    "endDate" : null,
+    "taskStatus" : "CREATED"
+  }, {
+    "id" : "1",
+    "taskId" : "5_TASK",
+    "eventType" : "TASK_STATUS_SET",
+    "eventDate" : [ 2023, 1, 1 ],
+    "endDate" : null,
+    "taskStatus" : "CREATED"
+  } ]
+}
