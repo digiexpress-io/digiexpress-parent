@@ -5,7 +5,7 @@ import { Theme } from '@mui/material';
 import { Alert, AlertTitle } from '@mui/lab';
 import { FormattedMessage, useIntl } from 'react-intl';
 
-import { ConfigContext } from '@dialob/fill-material';
+import { ConfigContext, BreadCrumbs } from '@dialob/fill-material';
 import { Session } from '@dialob/fill-react';
 import DialobFill, { Config, Session as DialobSession, FillError } from '@dialob/fill-api';
 
@@ -38,6 +38,15 @@ const RenderErrors: React.FC<{ errors: FillError[] }> = ({ errors }) => {
 };
 
 
+
+const DIALOB_CONFIG = {
+  errors: (items: FillError[]) => <RenderErrors errors={items} />,
+  description: (text: string) => <FillMarkdown text={text} />,
+  breadCrumbs: (items: string[], canNavigate: boolean, activeItem?: string,) => 
+    <BreadCrumbs items={items} canNavigate={canNavigate} activeItem={activeItem} />
+}
+
+
 const FormFill: React.FC<FormFillProps> = ({ sessionId, sessionUrl, onAttachments }) => {
   const intl = useIntl();
   const classes = useStyles();
@@ -66,8 +75,6 @@ const FormFill: React.FC<FormFillProps> = ({ sessionId, sessionUrl, onAttachment
     setComplete(true);
   }
 
-  const errors = (items: FillError[]) => <RenderErrors errors={items} />;
-  const description = (text: string) => <FillMarkdown text={text} />;
 
   return (
     <>
@@ -79,7 +86,7 @@ const FormFill: React.FC<FormFillProps> = ({ sessionId, sessionUrl, onAttachment
           </Alert>
           :
           session && (
-            <ConfigContext.Provider value={{ errors, description }}>
+            <ConfigContext.Provider value={DIALOB_CONFIG}>
               <Session key={session.id} session={session} locale={intl.locale} {... {
                 children: (<DefaultView onComplete={handleOnComplete}>
                   {items => items.map(id => (<FormItem id={id} key={id} onAttachments={onAttachments} />))}

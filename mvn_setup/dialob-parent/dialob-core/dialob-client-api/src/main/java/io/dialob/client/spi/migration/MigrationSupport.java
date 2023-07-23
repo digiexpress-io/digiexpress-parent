@@ -48,7 +48,7 @@ public class MigrationSupport {
   public MigrationContent read(InputStream input) {
     try {
       var content = new String(input.readAllBytes(), UTF_8);
-      content = content.substring(content.indexOf(BEGIN) + BEGIN.length(), content.indexOf(END)); 
+ 
       final var b64os = new Base64InputStream(new ByteArrayInputStream(content.getBytes(UTF_8)));
       final var gzip = new GZIPInputStream(b64os);
       final var doc = new String(gzip.readAllBytes(), UTF_8);

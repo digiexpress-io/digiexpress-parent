@@ -101,7 +101,7 @@ public class ImportReleasePgTest extends PgTestTemplate {
   
   public FormReleaseDocument getRelease(DialobClient client) {
     try {
-      final var input = new FileInputStream(new File("src/test/resources/migration_dump.txt"));   
+      final var input = new FileInputStream(new File("src/test/resources/migration_dump2.txt"));   
       return new MigrationSupport(client.getConfig().getMapper()).read(input).getRelease();
     } catch(IOException e) {
       throw new RuntimeException(e.getMessage(), e);

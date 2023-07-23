@@ -21,9 +21,10 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>io.digiexpress</groupId>
-    <artifactId>digiexpress-parent</artifactId>
+    <artifactId>process-parent</artifactId>
     <version>999-SNAPSHOT</version>
   </parent>
+
   <artifactId>digiexpress-bom</artifactId>
   <packaging>pom</packaging>
   <dependencyManagement>
