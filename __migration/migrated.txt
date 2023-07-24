@@ -6,3 +6,4 @@ repo: 'git@github.com:the-stencil-io/the-stencil-portal.git', branch: 'main' mig
 repo: 'git@github.com:dialob/dialob-parent.git', branch: 'digiexpress' migrated to: 'mvn_setup/dialob-parent'
 repo: 'git@github.com:dialob/dialob-api.git', branch: 'dev' migrated to: 'mvn_setup/dialob-api'
 repo: 'git@github.com:the-wrench-io/thena-parent.git', branch: 'dev' migrated to: 'mvn_setup/thena-parent'
+repo: 'git@github.com:the-wrench-io/react-burger.git', branch: 'main' migrated to: 'ts_setup/react-burger'
