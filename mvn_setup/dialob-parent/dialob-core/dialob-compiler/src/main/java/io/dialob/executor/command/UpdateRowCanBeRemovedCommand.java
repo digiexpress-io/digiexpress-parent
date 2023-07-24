@@ -25,22 +25,6 @@ import io.dialob.program.EvalContext;
 @Value.Immutable
 public interface UpdateRowCanBeRemovedCommand extends AbstractUpdateBooleanAttributeCommand {
 
-
-//  @NotNull
-//  @Override
-//  default Set<EventMatcher> getEventMatchers() {
-//
-//    Set<EventMatcher> eventMatchers = getExpression().getEvalRequiredConditions();
-//    if (getTargetId().isPartial()) {
-//      return Sets.union(eventMatchers, ImmutableSet.of(
-//        EventMatchers.whenItemAdded(getTargetId()),
-//        EventMatchers.whenItemsChanged(getTargetId().getParent().get())
-//      ));
-//    }
-//    return eventMatchers;
-//
-//  }
-
   @Nonnull
   @Override
   default ItemState update(@Nonnull EvalContext context, @Nonnull ItemState itemState) {
