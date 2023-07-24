@@ -17,7 +17,6 @@ package io.dialob.executor.command;
 
 import static io.dialob.executor.command.EventMatchers.whenValueUpdated;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -45,7 +44,6 @@ public interface InitRowGroupItemsCommand extends AbstractUpdateCommand<ItemId,I
     if (rowNumbers == null) {
       rowNumbers = Collections.emptyList();
     }
-    rowNumbers = new ArrayList<>(rowNumbers);
     List<ItemId> newItems = rowNumbers.stream().map(row -> ImmutableItemIndex.of(row, Optional.of(getTargetId()))).collect(Collectors.toList());
     return itemState.update()
       .setItems(newItems)

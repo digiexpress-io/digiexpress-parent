@@ -27,8 +27,12 @@ import static io.dialob.executor.command.CommandFactory.ItemStatePredicates.ITEM
 import static io.dialob.executor.command.CommandFactory.ItemStatePredicates.ITEM_REQUIRED_CHANGED;
 import static io.dialob.executor.command.CommandFactory.ItemStatePredicates.ITEM_STATE_CHANGED;
 import static io.dialob.executor.command.CommandFactory.ItemStatePredicates.ITEM_STATUS_CHANGED;
+import static io.dialob.executor.command.CommandFactory.ItemStatePredicates.ROWS_CAN_BE_ADDED_CHANGED;
+import static io.dialob.executor.command.CommandFactory.ItemStatePredicates.ROWS_CAN_BE_REMOVED_CHANGED;
 import static io.dialob.executor.command.Triggers.itemsChangedEvent;
 import static io.dialob.executor.command.Triggers.onTarget;
+import static io.dialob.executor.command.Triggers.rowCanBeRemovedUpdatedEvent;
+import static io.dialob.executor.command.Triggers.rowsCanBeAddedUpdatedEvent;
 import static io.dialob.executor.command.Triggers.sessionLocaleUpdatedEvent;
 import static io.dialob.executor.command.Triggers.stateChangedEvent;
 import static io.dialob.executor.command.Triggers.trigger;
@@ -101,6 +105,18 @@ public final class CommandFactory {
       @Override
       public boolean test(ItemState itemState, ItemState updateState) {
         return notSame(itemState, updateState) && (isNewOrRemoved(itemState, updateState) || updateState.isActive() != itemState.isActive());
+      }
+    },
+    ROWS_CAN_BE_ADDED_CHANGED {
+      @Override
+      public boolean test(ItemState itemState, ItemState updateState) {
+        return notSame(itemState, updateState) && (isNewOrRemoved(itemState, updateState) || updateState.isRowsCanBeAdded() != itemState.isRowsCanBeAdded());
+      }
+    },
+    ROWS_CAN_BE_REMOVED_CHANGED {
+      @Override
+      public boolean test(ItemState itemState, ItemState updateState) {
+        return notSame(itemState, updateState) && (isNewOrRemoved(itemState, updateState) || updateState.isRowCanBeRemoved() != itemState.isRowCanBeRemoved());
       }
     },
     ITEM_LABEL_CHANGED {
@@ -249,6 +265,18 @@ public final class CommandFactory {
       Triggers.<ItemState>trigger(Triggers.activityUpdatedEvent(onTarget(targetId))).when(ITEM_ACTIVITY_CHANGED),
       Triggers.<ItemState>trigger(Triggers.validityUpdatedEvent(onTarget(targetId))).when(ITEM_ACTIVITY_CHANGED),
       Triggers.<ItemState>trigger(Triggers.answeredUpdatedEvent(onTarget(targetId))).when(ITEM_ACTIVITY_CHANGED)
+    ));
+  }
+
+  public static UpdateRowsCanBeAddedCommand rowsCanBeAddedUpdate(ItemId targetId, Expression expression) {
+    return ImmutableUpdateRowsCanBeAddedCommand.of(targetId, expression, ImmutableList.of(
+      Triggers.<ItemState>trigger(rowsCanBeAddedUpdatedEvent(onTarget(targetId))).when(ROWS_CAN_BE_ADDED_CHANGED)
+    ));
+  }
+
+  public static UpdateRowCanBeRemovedCommand rowCanBeRemovedUpdate(ItemId targetId, Expression expression) {
+    return ImmutableUpdateRowCanBeRemovedCommand.of(targetId, expression, ImmutableList.of(
+      Triggers.<ItemState>trigger(rowCanBeRemovedUpdatedEvent(onTarget(targetId))).when(ROWS_CAN_BE_REMOVED_CHANGED)
     ));
   }
 

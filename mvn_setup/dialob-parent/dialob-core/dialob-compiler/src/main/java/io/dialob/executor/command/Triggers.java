@@ -40,7 +40,9 @@ import io.dialob.executor.command.event.ImmutableErrorActiveUpdatedEvent;
 import io.dialob.executor.command.event.ImmutableItemsChangedEvent;
 import io.dialob.executor.command.event.ImmutableLabelUpdatedEvent;
 import io.dialob.executor.command.event.ImmutableRequiredUpdatedEvent;
+import io.dialob.executor.command.event.ImmutableRowCanBeRemovedUpdatedEvent;
 import io.dialob.executor.command.event.ImmutableRowGroupItemsInitEvent;
+import io.dialob.executor.command.event.ImmutableRowsCanBeAddedUpdatedEvent;
 import io.dialob.executor.command.event.ImmutableSessionLocaleUpdatedEvent;
 import io.dialob.executor.command.event.ImmutableStatusUpdatedEvent;
 import io.dialob.executor.command.event.ImmutableTargetEvent;
@@ -112,6 +114,14 @@ public class Triggers {
     return ImmutableActiveUpdatedEvent.of(targetEvent);
   }
 
+  public static Event rowsCanBeAddedUpdatedEvent(TargetEvent targetEvent) {
+    return ImmutableRowsCanBeAddedUpdatedEvent.of(targetEvent);
+  }
+
+  public static Event rowCanBeRemovedUpdatedEvent(TargetEvent targetEvent) {
+    return ImmutableRowCanBeRemovedUpdatedEvent.of(targetEvent);
+  }
+
   public static Event labelUpdatedEvent(TargetEvent targetEvent) {
     return ImmutableLabelUpdatedEvent.of(targetEvent);
   }
@@ -151,7 +161,7 @@ public class Triggers {
   }
 
 
-    public static EventsProvider<ItemState> rowGroupItemsInitEvent(ItemId prototypeId) {
+  public static EventsProvider<ItemState> rowGroupItemsInitEvent(ItemId prototypeId) {
     return ImmutableTriggers.RowGroupItemsInitEventsProvider.of(prototypeId);
   }
 

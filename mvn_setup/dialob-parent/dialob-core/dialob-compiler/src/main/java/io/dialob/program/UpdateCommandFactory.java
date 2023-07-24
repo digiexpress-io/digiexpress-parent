@@ -78,6 +78,14 @@ class UpdateCommandFactory {
     return add(activityUpdate(id, expression));
   }
 
+  public UpdateRowsCanBeAddedCommand createUpdateRowsCanBeAddedCommand(@Nonnull ItemId id, @Nonnull Expression expression) {
+    return add(rowsCanBeAddedUpdate(id, expression));
+  }
+
+  public UpdateRowCanBeRemovedCommand createUpdateRowCanBeRemovedCommand(@Nonnull ItemId id, @Nonnull Expression expression) {
+    return add(rowCanBeRemovedUpdate(id, expression));
+  }
+
   public UpdateRequiredCommand createUpdateRequired(@Nonnull ItemId id, @Nonnull Expression expression) {
     return add(requiredUpdate(id, expression));
   }

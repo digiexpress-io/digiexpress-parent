@@ -143,6 +143,8 @@ public class DialobProgramFromFormCompiler {
               .setLabel(formItem.getLabel())
               .setDescription(formItem.getDescription())
               .setActiveWhen(formItem.getActiveWhen())
+              .setCanAddRowWhen(formItem.getCanAddRowWhen())
+              .setCanRemoveRowWhen(formItem.getCanRemoveRowWhen())
               .addItems(formItem.getItems())
               .addClassnames(formItem.getClassName())
               .setValueSet(formItem.getValueSetId())

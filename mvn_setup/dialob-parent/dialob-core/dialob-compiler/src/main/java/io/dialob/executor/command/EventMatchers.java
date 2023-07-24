@@ -33,7 +33,9 @@ import io.dialob.executor.command.event.ItemAddedEvent;
 import io.dialob.executor.command.event.ItemRemovedEvent;
 import io.dialob.executor.command.event.ItemsChangedEvent;
 import io.dialob.executor.command.event.RequiredUpdatedEvent;
+import io.dialob.executor.command.event.RowCanBeRemovedUpdatedEvent;
 import io.dialob.executor.command.event.RowGroupItemsInitEvent;
+import io.dialob.executor.command.event.RowsCanBeAddedUpdatedEvent;
 import io.dialob.executor.command.event.SessionLocaleUpdatedEvent;
 import io.dialob.executor.command.event.TargetEvent;
 import io.dialob.executor.command.event.ValidUpdatedEvent;
@@ -79,6 +81,14 @@ public final class EventMatchers {
 
   public static EventMatcher whenDisabledUpdatedEvent(@Nonnull ItemId itemId) {
     return ImmutableEventMatchers.IsDisabledTargetEventMatcher.of(itemId);
+  }
+
+  public static EventMatcher whenRowsCanBeAddedUpdatedEvent(@Nonnull ItemId itemId) {
+    return ImmutableEventMatchers.RowsCanBeAddedUpdatedEventMatcher.builder().build();
+  }
+
+  public static EventMatcher whenRowCanBeRemovedUpdatedEvent(@Nonnull ItemId itemId) {
+    return ImmutableEventMatchers.RowCanBeRemovedUpdatedEventMatcher.builder().build();
   }
 
   public static EventMatcher whenValidUpdated(@Nonnull ItemId itemId) {
@@ -232,6 +242,24 @@ public final class EventMatchers {
     @Override
     default boolean matches(Event event) {
       return event instanceof RowGroupItemsInitEvent && ((RowGroupItemsInitEvent)event).getPrototypeId().equals(getPrototypeId());
+    }
+  }
+
+  @Value.Immutable
+  interface RowsCanBeAddedUpdatedEventMatcher extends EventMatcher {
+
+    @Override
+    default boolean matches(Event event) {
+      return event instanceof RowsCanBeAddedUpdatedEvent;
+    }
+  }
+
+  @Value.Immutable
+  interface RowCanBeRemovedUpdatedEventMatcher extends EventMatcher {
+
+    @Override
+    default boolean matches(Event event) {
+      return event instanceof RowCanBeRemovedUpdatedEvent;
     }
   }
 

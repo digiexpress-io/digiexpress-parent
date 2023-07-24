@@ -36,26 +36,27 @@ public interface DeleteRow extends AbstractUpdateCommand<ItemId, ItemState>, Ite
   @Override
   @Nonnull
   default ItemState update(@Nonnull EvalContext context, @Nonnull ItemState itemState) {
-    if (itemState.isRowsCanBeRemoved()) {
-      List<Integer> rowNumbers = (List<Integer>) itemState.getValue();
-      if (rowNumbers == null) {
-        rowNumbers = Collections.emptyList();
-      }
-      rowNumbers = new ArrayList<>(rowNumbers);
-
-
-      ItemId toBeRemoved = getToBeRemoved();
-      Integer rowToRemove = null;
-      if (toBeRemoved instanceof ItemIndex) {
-        rowToRemove = ((ItemIndex) toBeRemoved).getIndex();
-      }
-      rowNumbers.remove(rowToRemove);
-      return itemState.update()
-        .setAnswer(rowNumbers)
-        .setValue(rowNumbers)
-        .get();
+    List<Integer> rowNumbers = (List<Integer>) itemState.getValue();
+    if (rowNumbers == null) {
+      rowNumbers = Collections.emptyList();
     }
-    return itemState;
+    rowNumbers = new ArrayList<>(rowNumbers);
+    ItemId toBeRemoved = getToBeRemoved();
+
+    var rowToBeRemoved = context.getItemState(toBeRemoved);
+    if (rowToBeRemoved.isPresent() && !rowToBeRemoved.get().isRowCanBeRemoved()) {
+      return itemState;
+    }
+
+    Integer rowToRemove = null;
+    if (toBeRemoved instanceof ItemIndex) {
+      rowToRemove = ((ItemIndex) toBeRemoved).getIndex();
+    }
+    rowNumbers.remove(rowToRemove);
+    return itemState.update()
+      .setAnswer(rowNumbers)
+      .setValue(rowNumbers)
+      .get();
   }
 
 }

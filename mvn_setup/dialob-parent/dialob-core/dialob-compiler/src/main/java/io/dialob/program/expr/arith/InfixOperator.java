@@ -15,21 +15,33 @@
  */
 package io.dialob.program.expr.arith;
 
+import java.util.Set;
+
+import javax.annotation.Nonnull;
+
+import org.immutables.value.Value;
+
 import com.google.common.collect.ImmutableSet;
 
 import io.dialob.executor.command.EventMatcher;
 import io.dialob.program.model.Expression;
 
-import org.immutables.value.Value;
+/**
+ * Represents operator between two expressions.
 
-import javax.annotation.Nonnull;
-import java.util.Set;
-
+ * @param <T> expressions evaluates value type
+ */
 public interface InfixOperator<T> extends Expression {
 
+  /**
+   * @return left hand side expression of operator
+   */
   @Value.Parameter
   Expression getLhs();
 
+  /**
+   * @return right hand side expression of operator
+   */
   @Value.Parameter
   Expression getRhs();
 

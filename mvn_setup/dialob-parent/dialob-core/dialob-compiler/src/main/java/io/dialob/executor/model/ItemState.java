@@ -78,7 +78,7 @@ public class ItemState implements SessionObject {
   private static final int DISABLED_BIT = 1 << 2;
   private static final int REQUIRED_BIT = 1 << 3;
   private static final int ROWS_CAN_BE_ADDED_BIT = 1 << 4;
-  private static final int ROWS_CAN_BE_REMOVED_BIT = 1 << 5;
+  private static final int ROW_CAN_BE_REMOVED_BIT = 1 << 5;
   private static final int INVALID_ANSWERS_BIT = 1 << 6;
   private static final int HAS_CUSTOM_PROPS_BIT = 1 << 7;
 
@@ -101,7 +101,7 @@ public class ItemState implements SessionObject {
 
   private Object defaultValue;
 
-  private int bits = (ACTIVE_BIT | ROWS_CAN_BE_ADDED_BIT | ROWS_CAN_BE_REMOVED_BIT);
+  private int bits = (ACTIVE_BIT | ROWS_CAN_BE_ADDED_BIT);
 
   private String label;
 
@@ -401,8 +401,8 @@ public class ItemState implements SessionObject {
     return (bits & ROWS_CAN_BE_ADDED_BIT) != 0;
   }
 
-  public boolean isRowsCanBeRemoved() {
-    return (bits & ROWS_CAN_BE_REMOVED_BIT) != 0;
+  public boolean isRowCanBeRemoved() {
+    return (bits & ROW_CAN_BE_REMOVED_BIT) != 0;
   }
 
   public boolean hasCustomProps() {
@@ -513,9 +513,9 @@ public class ItemState implements SessionObject {
       return this;
     }
 
-    public UpdateBuilder setRowsCanBeRemoved(boolean newRowsCanBeRemoved) {
-      if (isBit(ROWS_CAN_BE_REMOVED_BIT) != newRowsCanBeRemoved) {
-        state().setBits(newRowsCanBeRemoved, ROWS_CAN_BE_REMOVED_BIT);
+    public UpdateBuilder setRowCanBeRemoved(boolean newRowsCanBeRemoved) {
+      if (isBit(ROW_CAN_BE_REMOVED_BIT) != newRowsCanBeRemoved) {
+        state().setBits(newRowsCanBeRemoved, ROW_CAN_BE_REMOVED_BIT);
       }
       return this;
     }

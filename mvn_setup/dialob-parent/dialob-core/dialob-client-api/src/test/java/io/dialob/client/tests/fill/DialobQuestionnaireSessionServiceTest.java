@@ -15,8 +15,10 @@
  */
 package io.dialob.client.tests.fill;
 
+import static io.dialob.api.proto.Action.Type.ADD_ROW;
 import static io.dialob.api.proto.Action.Type.ANSWER;
 import static io.dialob.api.proto.Action.Type.COMPLETE;
+import static io.dialob.api.proto.Action.Type.DELETE_ROW;
 import static io.dialob.api.proto.Action.Type.ERROR;
 import static io.dialob.api.proto.Action.Type.ITEM;
 import static io.dialob.api.proto.Action.Type.LOCALE;
@@ -127,126 +129,6 @@ public class DialobQuestionnaireSessionServiceTest {
   }
 
 
-  
-  
-  @Test
-  public void multichoiceQuestionTest() throws Exception {
-    fillForm("test_cases/multichoice-question.json")
-      .answer("mcquestion", Arrays.asList("A", "C"))
-      .assertThat(assertion -> assertion.hasSize(0))
-      .apply();
-  }
-
-
-  @Test
-  public void testMultiChoiceCount() throws Exception {
-    fillForm(ImmutableForm.builder()
-        .id("test")
-        .metadata(ImmutableFormMetadata.builder()
-          .label("test")
-          .build())
-        .putData("questionnaire", ImmutableFormItem.builder()
-          .id("questionnaire")
-          .type("questionnaire")
-          .addItems("g")
-          .build())
-        .putData("g", ImmutableFormItem.builder()
-          .id("g")
-          .type("group")
-          .addItems("mc")
-          .addItems("note1")
-          .addItems("note2")
-          .addItems("text1")
-          .build())
-        .putData("note1", ImmutableFormItem.builder()
-          .id("note1")
-          .type("note")
-          .putLabel("en","{rc}")
-          .build())
-        .putData("note2", ImmutableFormItem.builder()
-          .id("note2")
-          .type("note")
-          .putLabel("en","wohoo")
-          .activeWhen("count(mc) > 0")
-          .build())
-        .putData("text1", ImmutableFormItem.builder()
-          .id("text1")
-          .type("text")
-          .putLabel("en","?")
-          .addValidations(ImmutableValidation.builder()
-            .putMessage("en","err")
-            .rule("count(mc) = 3")
-            .build())
-          .build())
-        .putData("mc", ImmutableFormItem.builder()
-          .id("mc")
-          .type("multichoice")
-          .valueSetId("vs")
-          .build())
-        .addVariables(ImmutableVariable.of("rc", "count(mc)"))
-        .addValueSets(ImmutableFormValueSet.builder()
-          .id("vs")
-          .addEntries(
-            ImmutableFormValueSetEntry.builder()
-              .id("1")
-              .putLabel("en","one")
-              .build(),
-            ImmutableFormValueSetEntry.builder()
-              .id("2")
-              .putLabel("en","two")
-              .build(),
-            ImmutableFormValueSetEntry.builder()
-              .id("3")
-              .putLabel("en","three")
-              .build(),
-            ImmutableFormValueSetEntry.builder()
-              .id("4")
-              .putLabel("en","four")
-              .build()
-          )
-          .build())
-        .build(),
-      ImmutableQuestionnaire.builder()
-        .metadata(ImmutableQuestionnaireMetadata.builder()
-          .formId("test")
-          .build())
-        .build())
-      .assertState(assertion -> {
-        assertion
-          .extracting("type", "ids", "item.id", "item.label").containsExactlyInAnyOrder(
-          tuple(RESET, null, null, null),
-          tuple(LOCALE, null, null, null),
-          tuple(ITEM, null, "questionnaire", "test"),
-          tuple(ITEM, null, "mc", null),
-          tuple(ITEM, null, "g", null),
-          tuple(ITEM, null, "note1", "0"),
-          tuple(ITEM, null, "text1", "?"),
-          tuple(VALUE_SET, null, null, null)
-        );
-      })
-      .answer("mc",Arrays.asList("1"))
-      .assertThat(assertion -> assertion
-        .extracting("type", "ids", "item.id", "item.label").containsExactlyInAnyOrder(
-          tuple(ITEM, null, "note2", "wohoo"),
-          tuple(ITEM, null, "note1", "1")
-        ))
-      .answer("mc",Arrays.asList("1","2","4"))
-      .assertThat(assertion -> assertion
-        .extracting("type", "ids", "item.id", "item.label").containsExactlyInAnyOrder(
-          tuple(ITEM, null, "note1", "3"),
-          tuple(ITEM, null, "questionnaire", "test"),
-          tuple(ERROR, null, null, null)
-        ))
-      .answer("mc",Arrays.asList())
-      .assertThat(assertion -> assertion
-        .extracting("type", "ids", "item.id", "item.label").containsExactlyInAnyOrder(
-          tuple(REMOVE_ERROR, null, null, null),
-          tuple(REMOVE_ITEMS, Arrays.asList("note2"), null, null),
-          tuple(ITEM, null, "questionnaire", "test"),
-          tuple(ITEM, null, "note1", "0")
-        ))
-      .apply();
-  }
 
 
   @Test
@@ -426,6 +308,14 @@ public class DialobQuestionnaireSessionServiceTest {
         .extracting("type", "ids", "item.id", "item.label").containsExactly(
           tuple(ITEM, null, "question3", "Answer of first question is new 7")
         ))
+      .apply();
+  }
+
+  @Test
+  public void multichoiceQuestionTest() throws Exception {
+    fillForm("test_cases/multichoice-question.json")
+      .answer("mcquestion", Arrays.asList("A", "C"))
+      .assertThat(assertion -> assertion.hasSize(0))
       .apply();
   }
 
@@ -1477,6 +1367,117 @@ public class DialobQuestionnaireSessionServiceTest {
 
 
   @Test
+  public void testMultiChoiceCount() throws Exception {
+    fillForm(ImmutableForm.builder()
+        .id("test")
+        .metadata(ImmutableFormMetadata.builder()
+          .label("test")
+          .build())
+        .putData("questionnaire", ImmutableFormItem.builder()
+          .id("questionnaire")
+          .type("questionnaire")
+          .addItems("g")
+          .build())
+        .putData("g", ImmutableFormItem.builder()
+          .id("g")
+          .type("group")
+          .addItems("mc")
+          .addItems("note1")
+          .addItems("note2")
+          .addItems("text1")
+          .build())
+        .putData("note1", ImmutableFormItem.builder()
+          .id("note1")
+          .type("note")
+          .putLabel("en","{rc}")
+          .build())
+        .putData("note2", ImmutableFormItem.builder()
+          .id("note2")
+          .type("note")
+          .putLabel("en","wohoo")
+          .activeWhen("count(mc) > 0")
+          .build())
+        .putData("text1", ImmutableFormItem.builder()
+          .id("text1")
+          .type("text")
+          .putLabel("en","?")
+          .addValidations(ImmutableValidation.builder()
+            .putMessage("en","err")
+            .rule("count(mc) = 3")
+            .build())
+          .build())
+        .putData("mc", ImmutableFormItem.builder()
+          .id("mc")
+          .type("multichoice")
+          .valueSetId("vs")
+          .build())
+        .addVariables(ImmutableVariable.of("rc", "count(mc)"))
+        .addValueSets(ImmutableFormValueSet.builder()
+          .id("vs")
+          .addEntries(
+            ImmutableFormValueSetEntry.builder()
+              .id("1")
+              .putLabel("en","one")
+              .build(),
+            ImmutableFormValueSetEntry.builder()
+              .id("2")
+              .putLabel("en","two")
+              .build(),
+            ImmutableFormValueSetEntry.builder()
+              .id("3")
+              .putLabel("en","three")
+              .build(),
+            ImmutableFormValueSetEntry.builder()
+              .id("4")
+              .putLabel("en","four")
+              .build()
+          )
+          .build())
+        .build(),
+      ImmutableQuestionnaire.builder()
+        .metadata(ImmutableQuestionnaireMetadata.builder()
+          .formId("test")
+          .build())
+        .build())
+      .assertState(assertion -> {
+        assertion
+          .extracting("type", "ids", "item.id", "item.label").containsExactlyInAnyOrder(
+          tuple(RESET, null, null, null),
+          tuple(LOCALE, null, null, null),
+          tuple(ITEM, null, "questionnaire", "test"),
+          tuple(ITEM, null, "mc", null),
+          tuple(ITEM, null, "g", null),
+          tuple(ITEM, null, "note1", "0"),
+          tuple(ITEM, null, "text1", "?"),
+          tuple(VALUE_SET, null, null, null)
+        );
+      })
+      .answer("mc",Arrays.asList("1"))
+      .assertThat(assertion -> assertion
+        .extracting("type", "ids", "item.id", "item.label").containsExactlyInAnyOrder(
+          tuple(ITEM, null, "note2", "wohoo"),
+          tuple(ITEM, null, "note1", "1")
+        ))
+      .answer("mc",Arrays.asList("1","2","4"))
+      .assertThat(assertion -> assertion
+        .extracting("type", "ids", "item.id", "item.label").containsExactlyInAnyOrder(
+          tuple(ITEM, null, "note1", "3"),
+          tuple(ITEM, null, "questionnaire", "test"),
+          tuple(ERROR, null, null, null)
+        ))
+      .answer("mc",Arrays.asList())
+      .assertThat(assertion -> assertion
+        .extracting("type", "ids", "item.id", "item.label").containsExactlyInAnyOrder(
+          tuple(REMOVE_ERROR, null, null, null),
+          tuple(REMOVE_ITEMS, Arrays.asList("note2"), null, null),
+          tuple(ITEM, null, "questionnaire", "test"),
+          tuple(ITEM, null, "note1", "0")
+        ))
+      .apply();
+  }
+
+
+  @Test
   public void issue284() throws Exception {
     fillForm("test_cases/issue-284.json")
       .assertState(assertion -> {
@@ -1603,11 +1604,12 @@ public class DialobQuestionnaireSessionServiceTest {
       .apply();
   }
 
+
   @Test
   @Tag("github-15")
   @Tag("github-17")
   @Tag("BUG")
-  public void ghIssue15and17() throws Exception {
+  public void  ghIssue15and17() throws Exception {
     fillForm("test_cases/gh-issue-15.json")
       .assertState(assertion -> {
         assertion
@@ -1618,16 +1620,16 @@ public class DialobQuestionnaireSessionServiceTest {
             tuple(ITEM, null, "text2", "Dang", null, null),
             tuple(ITEM, null, "questionnaire", "Multirow", null, Set.of(Action.Type.ANSWER)),
             tuple(ITEM, null, "page1", null, null, null),
-            tuple(ITEM, null, "rowgroup1", null, null, null),
+            tuple(ITEM, null, "rowgroup1", null, null, Set.of(ADD_ROW)),
             tuple(ERROR, null, null, null, "text2", null)
           );
       })
       .addRow("rowgroup1")
       .assertThat(assertion -> assertion
         .extracting("type", "ids", "item.id", "item.label", "item.items", "item.allowedActions").containsExactlyInAnyOrder(
-          tuple(ITEM, null, "rowgroup1.0", null, asList("rowgroup1.0.text1"), null),
+          tuple(ITEM, null, "rowgroup1.0", null, asList("rowgroup1.0.text1"), Set.of(DELETE_ROW)),
           tuple(ITEM, null, "rowgroup1.0.text1", "Anna syöte", null, null),
-          tuple(ITEM, null, "rowgroup1", null, asList("rowgroup1.0"), null),
+          tuple(ITEM, null, "rowgroup1", null, asList("rowgroup1.0"), Set.of(ADD_ROW)),
           tuple(ERROR, null, null, null, null, null)
         ))
       .answer("text2", "hello")
@@ -1644,16 +1646,16 @@ public class DialobQuestionnaireSessionServiceTest {
       .addRow("rowgroup1")
       .assertThat(assertion -> assertion
         .extracting("type", "ids", "item.id", "item.label", "item.items", "item.allowedActions", "error.id").containsExactlyInAnyOrder(
-          tuple(ITEM, null, "rowgroup1.1", null, asList("rowgroup1.1.text1"), null, null),
+          tuple(ITEM, null, "rowgroup1.1", null, asList("rowgroup1.1.text1"), Set.of(DELETE_ROW), null),
           tuple(ITEM, null, "rowgroup1.1.text1", "Anna syöte", null, null, null),
-          tuple(ITEM, null, "rowgroup1", null, asList("rowgroup1.0", "rowgroup1.1"), null, null),
+          tuple(ITEM, null, "rowgroup1", null, asList("rowgroup1.0", "rowgroup1.1"), Set.of(ADD_ROW), null),
           tuple(ITEM, null, "questionnaire", "Multirow", asList("page1", "page2"), Set.of(Action.Type.ANSWER), null),
           tuple(ERROR, null, null, null, null, null, "rowgroup1.1.text1")
         ))
       .deleteRow("rowgroup1.1") // issue https://github.com/dialob/dialob-parent/issues/15
       .assertThat(assertion -> assertion
         .extracting("type", "ids", "item.id", "item.label", "item.items", "item.allowedActions", "error.id").containsExactlyInAnyOrder(
-          tuple(ITEM, null, "rowgroup1", null, asList("rowgroup1.0"), null, null),
+          tuple(ITEM, null, "rowgroup1", null, asList("rowgroup1.0"), Set.of(ADD_ROW), null),
           tuple(ITEM, null, "questionnaire", "Multirow", asList("page1", "page2"), Set.of(Action.Type.ANSWER, Action.Type.NEXT, COMPLETE), null),
           tuple(REMOVE_ITEMS, asList("rowgroup1.1.text1", "rowgroup1.1"), null, null, null, null, null),
           tuple(REMOVE_ERROR, null, null, null, null, null, "rowgroup1.1.text1")
@@ -1668,10 +1670,116 @@ public class DialobQuestionnaireSessionServiceTest {
       .assertThat(assertion -> assertion
         .extracting("type", "ids", "item.id", "item.label", "item.items", "item.allowedActions", "error.id").containsExactlyInAnyOrder(
           tuple(ITEM, null, "questionnaire", "Multirow", asList("page1", "page2"), Set.of(Action.Type.ANSWER, Action.Type.NEXT, COMPLETE), null),
-          tuple(ITEM, null, "rowgroup1", null, null, null, null),
+          tuple(ITEM, null, "rowgroup1", null, null, Set.of(ADD_ROW), null),
           tuple(REMOVE_ITEMS, asList("rowgroup1.0", "rowgroup1.0.text1"), null, null, null, null, null),
           tuple(REMOVE_ERROR, null, null, null, null, null, "rowgroup1.0.text1")
         ))
+      .apply();
+  }
+
+  @Test
+  @Tag("github-29")
+  public void  ghIssue29ConditionalsOnRowGroupActions() throws Exception {
+    fillForm(ImmutableForm.builder()
+        .id("test")
+        .metadata(ImmutableFormMetadata.builder()
+          .label("test")
+          .build())
+        .putData("questionnaire", ImmutableFormItem.builder()
+          .id("questionnaire")
+          .type("questionnaire")
+          .addItems("g")
+          .build())
+        .putData("g", ImmutableFormItem.builder()
+          .id("g")
+          .type("group")
+          .addItems("q","q2","rg")
+          .build())
+        .putData("q", ImmutableFormItem.builder()
+          .id("q")
+          .required("false")
+          .type("text")
+          .build())
+        .putData("q2", ImmutableFormItem.builder()
+          .id("q2")
+          .required("false")
+          .type("text")
+          .build())
+        .putData("rg", ImmutableFormItem.builder()
+          .id("rg")
+          .type("rowgroup")
+          .addItems("qq")
+          .canAddRowWhen("q != 'ok'")
+          .canRemoveRowWhen("q2 != 'ok'")
+          .build())
+        .addVariables(ImmutableVariable.of("rc", "count(rg)"))
+        .build(),
+      ImmutableQuestionnaire.builder()
+        .metadata(ImmutableQuestionnaireMetadata.builder()
+          .formId("test")
+          .build())
+        .build())
+      .assertState(assertion -> {
+        assertion
+          .extracting("type", "ids", "item.id", "item.label", "error.id", "item.allowedActions").containsExactlyInAnyOrder(
+            tuple(RESET, null, null, null, null, null),
+            tuple(LOCALE, null, null, null, null, null),
+            tuple(ITEM, null, "questionnaire", "test", null, Set.of(ANSWER, COMPLETE)),
+            tuple(ITEM, null, "rg", null, null, Set.of(ADD_ROW)),
+            tuple(ITEM, null, "g", null, null, null),
+            tuple(ITEM, null, "q", null, null, null),
+            tuple(ITEM, null, "q2", null, null, null)
+          );
+      })
+      .answer("q", "ok")
+      .assertThat(assertion -> assertion
+        .extracting("type", "ids", "item.id", "item.label", "error.id", "item.allowedActions").containsExactlyInAnyOrder(
+          tuple(ITEM, null, "rg", null, null, null)
+        ))
+      .addRow("rg")
+      .assertThat(AbstractIterableAssert::isEmpty)  // No rows added
+      .answer("q", "off")
+      .assertThat(assertion -> assertion
+        .extracting("type", "ids", "item.id", "item.label", "error.id", "item.allowedActions").containsExactlyInAnyOrder(
+          tuple(ITEM, null, "rg", null, null, Set.of(ADD_ROW))
+        ))
+      .addRow("rg")
+      .assertThat(assertion -> assertion
+        .extracting("type", "ids", "item.id", "item.label", "error.id", "item.allowedActions").containsExactlyInAnyOrder(
+          tuple(ITEM, null, "rg.0", null, null, Set.of(DELETE_ROW)),
+          tuple(ITEM, null, "rg", null, null, Set.of(ADD_ROW))
+        ))
+      .answer("q2", "ok")
+      .assertThat(assertion -> assertion
+        .extracting("type", "ids", "item.id", "item.label", "error.id", "item.allowedActions").containsExactlyInAnyOrder(
+          tuple(ITEM, null, "rg.0", null, null, null)
+        ))
+      .deleteRow("rg.0")
+      .assertThat(AbstractIterableAssert::isEmpty)  // No rows deleted
+      .answer("q2", "xx")
+      .assertThat(assertion -> assertion
+        .extracting("type", "ids", "item.id", "item.label", "error.id", "item.allowedActions").containsExactlyInAnyOrder(
+          tuple(ITEM, null, "rg.0", null, null, Set.of(DELETE_ROW))
+        ))
+      .deleteRow("rg.0")
+      .assertThat(assertion -> assertion
+        .extracting("type", "ids", "item.id", "item.label", "error.id", "item.allowedActions").containsExactlyInAnyOrder(
+          tuple(REMOVE_ITEMS, Arrays.asList("rg.0"), null, null, null, null),
+          tuple(ITEM, null, "rg", null, null, Set.of(ADD_ROW))
+        ))
+      .assertState(assertion -> {
+        assertion
+          .extracting("type", "ids", "item.id", "item.label", "error.id", "item.allowedActions").containsExactlyInAnyOrder(
+            tuple(RESET, null, null, null, null, null),
+            tuple(LOCALE, null, null, null, null, null),
+            tuple(ITEM, null, "questionnaire", "test", null, Set.of(ANSWER, COMPLETE)),
+            tuple(ITEM, null, "rg", null, null, Set.of(ADD_ROW)),
+            tuple(ITEM, null, "g", null, null, null),
+            tuple(ITEM, null, "q", null, null, null),
+            tuple(ITEM, null, "q2", null, null, null)
+          );
+      })
+
       .apply();
   }
 
@@ -1681,7 +1789,6 @@ public class DialobQuestionnaireSessionServiceTest {
     return assertion.extracting("item").filteredOn(instance -> instance != null && "questionnaire".equals(((ActionItem) instance).getType()));
   }
 
-  @SuppressWarnings({ "unchecked", "rawtypes" })
   private <T> Set<T> asSet(T... items) {
     HashSet hashSet = new HashSet<T>();
     hashSet.addAll(asList(items));

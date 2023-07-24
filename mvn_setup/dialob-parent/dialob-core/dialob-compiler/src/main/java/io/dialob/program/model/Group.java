@@ -30,4 +30,8 @@ public interface Group extends DisplayItem {
   Optional<Expression> getIsInvalidAnswersExpression();
 
   Optional<Expression> getAllowedActionsExpression();
+  
+  Optional<Expression> getCanAddRowWhenExpression();
+
+  Optional<Expression> getCanRemoveRowWhenExpression();
 }

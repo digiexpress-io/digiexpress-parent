@@ -32,9 +32,10 @@ import io.dialob.api.form.ImmutableFormMetadata;
 import io.dialob.api.form.ImmutableValidation;
 import io.dialob.api.proto.Action;
 import io.dialob.client.tests.steps.support.AbstractWebSocketTests;
-
+import static io.dialob.api.proto.Action.Type.ADD_ROW;
 
 public class QuestionnaireRowGroupTest extends AbstractWebSocketTests {
+
 
 
   @Test
@@ -132,7 +133,7 @@ public class QuestionnaireRowGroupTest extends AbstractWebSocketTests {
             tuple(Action.Type.REMOVE_ITEMS, Arrays.asList("g1.1","g1.1.q2","g1.1.q1"), null, null, null, null, null),
             tuple(Action.Type.REMOVE_ERROR,     null,                                      null, null, "g1.1.q2", "q2_error1", null),
             tuple(Action.Type.ITEM,             null,"questionnaire", asList("p1"), null, null, Set.of(Action.Type.ANSWER, Action.Type.COMPLETE)),
-            tuple(Action.Type.ITEM,         null,                                      "g1", asList("g1.2"), null, null, null)
+            tuple(Action.Type.ITEM,         null,                                      "g1", asList("g1.2"), null, null, Set.of(ADD_ROW))
           );
       }).next()
       .addRow("g1")
@@ -157,5 +158,6 @@ public class QuestionnaireRowGroupTest extends AbstractWebSocketTests {
       .finallyAssert(webSocketMessage -> {
     }).execute();
   }
+
 
 }

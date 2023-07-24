@@ -21,7 +21,6 @@ import static java.util.stream.Collectors.toMap;
 
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Stream;
 
 import javax.annotation.Nonnull;
 
@@ -62,7 +61,7 @@ public interface CreateRowGroupItemsFromPrototypeCommand extends SessionUpdateCo
 
     // add new items states
     newItems.stream()
-      .flatMap(itemId -> context.findPrototype(itemId).map(prototype -> prototype.withId(itemId)).map(Stream::of).orElse(Stream.empty()))
+      .flatMap(itemId -> context.findPrototype(itemId).map(prototype -> prototype.withId(itemId)).stream())
       .forEach(itemState -> builder.putItemStates(itemState.getId(), itemState));
 
     // add error states

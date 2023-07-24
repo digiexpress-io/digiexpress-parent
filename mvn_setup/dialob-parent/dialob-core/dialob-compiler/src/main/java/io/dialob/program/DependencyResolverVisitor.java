@@ -81,7 +81,6 @@ public class DependencyResolverVisitor implements ProgramVisitor {
         ItemId groupId;
         if (isRowgroup(group.getType()) || isRow(group.getType())) {
           groupId = group.getId();
-          group.getAllowedActionsExpression().ifPresent(expression -> updateCommandFactory.createUpdateAllowedActions(groupId, expression));
           if (group.isPrototype()) {
             final Expression itemsExpression = group.getItemsExpression();
             if (itemsExpression instanceof RowItemsExpression) {
@@ -90,8 +89,10 @@ public class DependencyResolverVisitor implements ProgramVisitor {
 
             }
             updateCommandFactory.createUpdateGroupItems(groupId, itemsExpression);
+            group.getCanRemoveRowWhenExpression().ifPresent(expression -> updateCommandFactory.createUpdateRowCanBeRemovedCommand(groupId, expression));
           } else {
             updateCommandFactory.initRowGroupItems(groupId);
+            group.getCanAddRowWhenExpression().ifPresent(expression -> updateCommandFactory.createUpdateRowsCanBeAddedCommand(groupId, expression));
           }
         } else {
           groupId = group.getId();
@@ -198,12 +199,15 @@ public class DependencyResolverVisitor implements ProgramVisitor {
     });
 
     if (LOGGER.isDebugEnabled()) {
+      LOGGER.debug(">>> Command dependencies >>>");
       commandsToCommands.forEach((key, value) -> {
         LOGGER.debug("Command : {}", DebugUtil.commandToString(key));
         value.forEach(command -> LOGGER.debug("  <= {}", DebugUtil.commandToString(command)));
       });
+      LOGGER.debug("<<< Command dependencies <<<");
     }
-    // Uncomment this to get dot dump of form. DebugUtil.dumpDotFile(visitor.getItemCommands());
+    // Uncomment this to get dot dump of form.
+    // DebugUtil.dumpDotFile(getItemCommands());
   }
 
   private <T> Stream<Trigger<T>> findTriggers(Command<T> command) {
