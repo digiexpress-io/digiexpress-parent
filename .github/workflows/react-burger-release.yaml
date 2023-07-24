@@ -1,0 +1,34 @@
+on:
+  push:
+    branches:
+      - main
+
+name: react-burger-release
+jobs:
+  build:
+    name: Create Release
+    if: "!startsWith(github.event.head_commit.message, 'release')"
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Checkout code
+      uses: actions/checkout@main
+      with:
+        ref: main
+        token: ${{ secrets.REPO_TOKEN }}
+
+    - name: Setup node and yarn
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16.13.1'
+        registry-url: 'https://registry.npmjs.org'
+
+    - name: Run release script
+      run: ./.build-scripts/react-burger-main-branch-release.sh
+      env:
+        CI: false
+        NODE_AUTH_TOKEN: ${{ secrets.BOT_TOKEN }}
+        YARN_NPM_AUTH_TOKEN: ${{ secrets.BOT_TOKEN }}
+        GIT_EMAIL: olev.mutso@gmail.com 
+        GIT_USER: olev.mutso
+        
