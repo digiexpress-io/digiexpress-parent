@@ -1,9 +1,26 @@
 import React from 'react';
 import { Box } from '@mui/material';
 import client from '@taskclient';
+import Styles from '@styles';
 import Tools from '../TaskTools';
 import TableHeader from './TasksTableHeader';
-import TableRows from './TasksTableRow';
+import TasksTableRow from './TasksTableRow';
+
+
+
+
+const Rows: React.FC<{
+  content: client.TablePagination<client.TaskDescriptor>,
+  def: client.Group,
+  loading: boolean
+}> = ({ content, def, loading }) => {
+  return (
+    <Styles.TaskTable.TableBody>
+      {content.entries.map((row, rowId) => (<TasksTableRow key={row.id} rowId={rowId} row={row} def={def} />))}
+      <Styles.TaskTable.TableRowEmpty content={content} loading={loading} plusColSpan={5} />
+    </Styles.TaskTable.TableBody>
+  )
+}
 
 
 const TasksTable: React.FC<{ def: client.Group, loading: boolean }> = (props) => {
@@ -15,7 +32,7 @@ const TasksTable: React.FC<{ def: client.Group, loading: boolean }> = (props) =>
       render={{
         ext: props,
         Header: TableHeader,
-        Rows: TableRows
+        Rows: Rows
       }}
     />
   );
@@ -26,14 +43,15 @@ const Tasks: React.FC<{}> = () => {
   const tasks = client.useTasks();
   const { loading } = tasks;
 
-  return (<Tools><>
-    {tasks.state.groups.map((group, index) => (
-      <React.Fragment key={group.id}>
-        {index > 0 ? <Box sx={{ p: 2 }} /> : null}
-        <TasksTable def={group} loading={loading} />
-      </React.Fragment>
+  return (<Tools>
+    <>
+      {tasks.state.groups.map((group, index) => (
+        <React.Fragment key={group.id}>
+          {index > 0 ? <Box sx={{ p: 2 }} /> : null}
+          <TasksTable def={group} loading={loading} />
+        </React.Fragment>
       ))}
-  </>
+    </>
   </Tools>);
 }
 

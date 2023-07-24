@@ -1,7 +1,5 @@
 import React from 'react';
-import { TableRow, SxProps, Box, Button } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
-import { FormattedMessage } from 'react-intl';
+import { TableRow, SxProps, Box } from '@mui/material';
 
 import client from '@taskclient';
 import Styles from '@styles';
@@ -60,26 +58,13 @@ const DescriptorTableRow: React.FC<{
     <Styles.TaskTable.TableCell width="100px" sx={getStatus(def)}><Cells.Status row={row} def={def} /></Styles.TaskTable.TableCell>
     <Styles.TaskTable.TableCell width="35px">
       <Box width="35px" justifyContent='center'> {/* Box is needed to prevent table cell resize on hover */}
-        {hoverItemsActive && <><Cells.Menu row={row} def={def} /><HoverMenu active={hoverItemsActive} /></>}
+        {hoverItemsActive && <><Cells.Menu row={row} def={def} /><HoverMenu /></>}
       </Box>
     </Styles.TaskTable.TableCell>
   </TableRow>);
 }
 
-const Rows: React.FC<{
-  content: client.TablePagination<client.TaskDescriptor>,
-  def: client.Group,
-  loading: boolean
-}> = ({ content, def, loading }) => {
-  return (<>
-    <Styles.TaskTable.TableBody>
-      {content.entries.map((row, rowId) => (<DescriptorTableRow key={row.id} rowId={rowId} row={row} def={def} />))}
-      <Styles.TaskTable.TableRowEmpty content={content} loading={loading} plusColSpan={5} />
-    </Styles.TaskTable.TableBody>
-    <Button startIcon={<AddIcon />} sx={{ color: 'inherit', fontSize: 10 }}><FormattedMessage id='core.teamSpace.task.create' /></Button>
-  </>
-  )
-}
 
-export default Rows;
+
+export default DescriptorTableRow;
 
