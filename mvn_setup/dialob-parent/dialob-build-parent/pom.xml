@@ -24,17 +24,14 @@ governing permissions and limitations
   <packaging>pom</packaging>
 
   <properties>
-    <thirdparty.log.level>INFO</thirdparty.log.level>
-    <maven.compiler.release>11</maven.compiler.release>
-    <maven.compiler.encoding>${project.build.sourceEncoding}</maven.compiler.encoding>
-    <maven.resources.encoding>${project.build.sourceEncoding}</maven.resources.encoding>
-    <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
     <maven-pmd-plugin.version>3.16.0</maven-pmd-plugin.version>
     <maven-javadoc-plugin.version>3.3.2</maven-javadoc-plugin.version>
     <maven-checkstyle-plugin.version>3.1.2</maven-checkstyle-plugin.version>
+    <maven-spotbugs-plugin.version>4.5.3.0</maven-spotbugs-plugin.version>
+    
     <maven-release-plugin.version>3.0.0-M5</maven-release-plugin.version>
     <maven-site-plugin.version>3.11.0</maven-site-plugin.version>
-    <maven-spotbugs-plugin.version>4.5.3.0</maven-spotbugs-plugin.version>
+    
     <maven-jib-plugin.version>3.2.0</maven-jib-plugin.version>
 
 
@@ -75,10 +72,6 @@ governing permissions and limitations
     <eirslett-yarn.version>v1.22.5</eirslett-yarn.version>
 
     <assertj-core.version>3.21.0</assertj-core.version>
-    <cobertura-maven-plugin.version>2.7</cobertura-maven-plugin.version>
-    <cobertura.halt-on-failure>false</cobertura.halt-on-failure>
-    <cobertura.total-branch-rate>1</cobertura.total-branch-rate>
-    <cobertura.total-line-rate>1</cobertura.total-line-rate>
     <jsonassert.version>1.5.0</jsonassert.version>
     <mockito.version>3.7.7</mockito.version>
     <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
@@ -87,138 +80,9 @@ governing permissions and limitations
   </properties>
 
 
-  <dependencies>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-    </dependency>
 
-    <dependency>
-      <groupId>com.google.code.findbugs</groupId>
-      <artifactId>jsr305</artifactId>
-      <version>3.0.2</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.immutables</groupId>
-      <artifactId>value</artifactId>
-      <version>${immutables.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.immutables</groupId>
-      <artifactId>gson</artifactId>
-      <version>${immutables.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId>
-      <version>${lombok.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.skyscreamer</groupId>
-      <artifactId>jsonassert</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-api</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-params</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <!-- Only required to run tests in an IDE that bundles an older version -->
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-engine</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.platform</groupId>
-      <artifactId>junit-platform-commons</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.platform</groupId>
-      <artifactId>junit-platform-engine</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.hamcrest</groupId>
-      <artifactId>hamcrest</artifactId>
-      <version>2.1</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>ch.qos.logback</groupId>
-      <artifactId>logback-classic</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-core</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-junit-jupiter</artifactId>
-      <scope>test</scope>
-    </dependency>
 
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-junit5</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-junit5-internal</artifactId>
-      <scope>test</scope>
-    </dependency>
 
-  </dependencies>
-
-  <reporting>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>${maven-javadoc-plugin.version}</version>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-pmd-plugin</artifactId>
-        <version>${maven-pmd-plugin.version}</version>
-      </plugin>
-      <plugin>
-        <groupId>com.github.spotbugs</groupId>
-        <artifactId>spotbugs-maven-plugin</artifactId>
-        <version>${maven-spotbugs-plugin.version}</version>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-checkstyle-plugin</artifactId>
-        <version>${maven-checkstyle-plugin.version}</version>
-        <reportSets>
-          <reportSet>
-            <reports>
-              <report>checkstyle</report>
-            </reports>
-          </reportSet>
-        </reportSets>
-      </plugin>
-    </plugins>
-  </reporting>
 
   <dependencyManagement>
     <dependencies>
@@ -272,32 +136,6 @@ governing permissions and limitations
         <version>${project.version}</version>
         <type>pom</type>
         <scope>import</scope>
-      </dependency>
-
-      <!-- Quarkus -->
-      <dependency>
-        <groupId>io.quarkus</groupId>
-        <artifactId>quarkus-bom</artifactId>
-        <version>${quarkus.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-      <dependency>
-        <groupId>io.quarkus</groupId>
-        <artifactId>quarkus-bom-test</artifactId>
-        <version>${quarkus.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-      <dependency>
-        <groupId>io.digiexpress</groupId>
-        <artifactId>thena-docdb-api</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.digiexpress</groupId>
-        <artifactId>thena-docdb-pgsql</artifactId>
-        <version>${project.version}</version>
       </dependency>
 
       <dependency>
@@ -368,16 +206,6 @@ governing permissions and limitations
         <artifactId>jackson-datatype-jdk8</artifactId>
         <version>${jackson.version}</version>
       </dependency>
-      <dependency>
-        <groupId>org.hibernate.validator</groupId>
-        <artifactId>hibernate-validator</artifactId>
-        <version>${hibernate-validator.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.hibernate.validator</groupId>
-        <artifactId>hibernate-validator-annotation-processor</artifactId>
-        <version>${hibernate-validator.version}</version>
-      </dependency>
 
       <dependency>
         <groupId>org.apache.commons</groupId>
@@ -431,22 +259,6 @@ governing permissions and limitations
         <artifactId>json-path</artifactId>
         <version>${json-path.version}</version>
       </dependency>
-      <dependency>
-        <groupId>jakarta.validation</groupId>
-        <artifactId>jakarta.validation-api</artifactId>
-        <version>${validation-api.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.glassfish</groupId>
-        <artifactId>jakarta.el</artifactId>
-        <version>${glassfish.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.glassfish.web</groupId>
-        <artifactId>javax.el</artifactId>
-        <version>${glassfishel.version}</version>
-      </dependency>
-
 
       <dependency>
         <groupId>com.github.ben-manes.caffeine</groupId>
@@ -479,211 +291,14 @@ governing permissions and limitations
 
 
   <build>
-    <testResources>
-      <testResource>
-        <directory>src/test/resources</directory>
-      </testResource>
-    </testResources>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-        <version>3.2.1</version>
-        <executions>
-          <execution>
-            <id>attach-sources</id>
-            <goals>
-              <goal>jar-no-fork</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <configuration>
-          <argLine>
-            --illegal-access=permit
-          </argLine>
-          <systemPropertyVariables>
-            <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
-            <quarkus.log.level>INFO</quarkus.log.level>
-            <maven.home>${maven.home}</maven.home>
-          </systemPropertyVariables>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>com.mycila</groupId>
-        <artifactId>license-maven-plugin</artifactId>
-        <configuration>
-          <licenseSets>
-            <licenseSet>
-              <header>com/mycila/maven/plugin/license/templates/APACHE-2.txt</header>
-              <excludes>
-                <exclude>release.version</exclude>
-                <exclude>.m2/**</exclude>
-                <exclude>**/*.g4</exclude>
-                <exclude>**/*.yml</exclude>
-                <exclude>src/test/resources/**</exclude>
-                <exclude>src/main/resources/**</exclude>
-                <exclude>**/ElbJWKSource.java</exclude>
-              </excludes>
-            </licenseSet>
-          </licenseSets>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>format</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-
     <pluginManagement>
       <plugins>
-        <plugin>
-          <groupId>com.github.eirslett</groupId>
-          <artifactId>frontend-maven-plugin</artifactId>
-          <version>${eirslett.version}</version>
-          <configuration>
-            <installDirectory>target</installDirectory>
-            <nodeVersion>${eirslett-node.version}</nodeVersion>
-            <yarnVersion>${eirslett-yarn.version}</yarnVersion>
-          </configuration>
-        </plugin>
-        <plugin>
-          <groupId>io.quarkus</groupId>
-          <artifactId>quarkus-maven-plugin</artifactId>
-          <version>${quarkus.version}</version>
-          <executions>
-            <execution>
-              <goals>
-                <goal>build</goal>
-                <goal>generate-code</goal>
-                <goal>generate-code-tests</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>
-        <plugin>
-          <groupId>io.quarkus</groupId>
-          <artifactId>quarkus-bootstrap-maven-plugin</artifactId>
-          <version>${quarkus.version}</version>
-          <executions>
-            <execution>
-              <id>generate-extension-descriptor</id>
-              <goals>
-                <goal>extension-descriptor</goal>
-              </goals>
-              <phase>process-resources</phase>
-              <configuration>
-                <deployment>
-                  ${project.groupId}:${project.artifactId}-deployment:${project.version}</deployment>
-              </configuration>
-            </execution>
-          </executions>
-        </plugin>
-        <plugin>
-          <artifactId>maven-site-plugin</artifactId>
-          <version>${maven-site-plugin.version}</version>
-          <configuration>
-            <skip>true</skip>
-          </configuration>
-        </plugin>
-        <plugin>
-          <groupId>com.google.cloud.tools</groupId>
-          <artifactId>jib-maven-plugin</artifactId>
-          <version>${maven-jib-plugin.version}</version>
-          <executions>
-            <execution>
-              <id>docker-build</id>
-              <phase>deploy</phase>
-              <goals>
-                <goal>build</goal>
-              </goals>
-              <configuration>
-                <to>
-                  <image>${jib.to.imagePath}/${project.artifactId}</image>
-                </to>
-                <container>
-                  <creationTime>USE_CURRENT_TIMESTAMP</creationTime>
-                </container>
-              </configuration>
-            </execution>
-          </executions>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.8.1</version>
-          <configuration>
-            <forceJavacCompilerUse>true</forceJavacCompilerUse>
-            <annotationProcessorPaths>
-              <path>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <version>${lombok.version}</version>
-              </path>
-              <path>
-                <groupId>org.immutables</groupId>
-                <artifactId>value</artifactId>
-                <version>${immutables.version}</version>
-              </path>
-              <dependency>
-                <groupId>org.immutables</groupId>
-                <artifactId>gson</artifactId>
-                <version>${immutables.version}</version>
-              </dependency>
-              <path>
-                <groupId>io.quarkus</groupId>
-                <artifactId>quarkus-extension-processor</artifactId>
-                <version>${quarkus.version}</version>
-              </path>
-            </annotationProcessorPaths>
-          </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>cobertura-maven-plugin</artifactId>
-          <version>${cobertura-maven-plugin.version}</version>
-          <configuration>
-            <check>
-              <totalBranchRate>${cobertura.total-branch-rate}</totalBranchRate>
-              <totalLineRate>${cobertura.total-line-rate}</totalLineRate>
-              <haltOnFailure>${cobertura.halt-on-failure}</haltOnFailure>
-            </check>
-          </configuration>
-          <executions>
-            <execution>
-              <goals>
-                <goal>clean</goal>
-                <goal>check</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <version>3.0.0-M5</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-assembly-plugin</artifactId>
-          <version>3.3.0</version>
-        </plugin>
         <plugin>
           <groupId>org.springframework.boot</groupId>
           <artifactId>spring-boot-maven-plugin</artifactId>
           <version>${spring-boot.version}</version>
         </plugin>
-        <plugin>
-          <groupId>org.sonarsource.scanner.maven</groupId>
-          <artifactId>sonar-maven-plugin</artifactId>
-          <version>3.7.0.1746</version>
-        </plugin>
+
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
@@ -694,33 +309,7 @@ governing permissions and limitations
           <artifactId>antlr4-maven-plugin</artifactId>
           <version>${antlr4.version}</version>
         </plugin>
-        <plugin>
-          <groupId>pl.project13.maven</groupId>
-          <artifactId>git-commit-id-plugin</artifactId>
-          <version>4.0.0</version>
-        </plugin>
-        <plugin>
-          <groupId>com.mycila</groupId>
-          <artifactId>license-maven-plugin</artifactId>
-          <version>4.1</version>
-          <configuration>
-            <licenseSets>
-              <licenseSet>
-                <header>com/mycila/maven/plugin/license/templates/APACHE-2.txt</header>
-                <excludes>
-                  <exclude>**/*.md</exclude>
-                  <exclude>src/test/resources/**</exclude>
-                  <exclude>src/main/resources/**</exclude>
-                  <exclude>**/ElbJWKSource.java</exclude>
-                </excludes>
-              </licenseSet>
-            </licenseSets>
-            <properties>
-              <owner>ReSys</owner>
-              <email>info@dialob.io</email>
-            </properties>
-          </configuration>
-        </plugin>
+      
       </plugins>
     </pluginManagement>
   </build>

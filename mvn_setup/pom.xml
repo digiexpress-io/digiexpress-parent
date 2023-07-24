@@ -96,9 +96,21 @@
       <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
     </snapshotRepository>
   </distributionManagement>
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+    <maven-pmd-plugin.version>3.16.0</maven-pmd-plugin.version>
+    <maven-javadoc-plugin.version>3.3.2</maven-javadoc-plugin.version>
+    <maven-checkstyle-plugin.version>3.1.2</maven-checkstyle-plugin.version>
+    <maven-spotbugs-plugin.version>4.5.3.0</maven-spotbugs-plugin.version>
+
+    <cobertura-maven-plugin.version>2.7</cobertura-maven-plugin.version>
+    <cobertura.halt-on-failure>false</cobertura.halt-on-failure>
+    <cobertura.total-branch-rate>1</cobertura.total-branch-rate>
+    <cobertura.total-line-rate>1</cobertura.total-line-rate>
+
   </properties>
 
   <modules>
@@ -145,6 +157,72 @@
     </pluginManagement>
   </build>
   <profiles>
+
+    <profile>
+      <id>reporting</id>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-site-plugin</artifactId>
+            <version>${maven-site-plugin.version}</version>
+          </plugin>
+
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>cobertura-maven-plugin</artifactId>
+            <version>${cobertura-maven-plugin.version}</version>
+            <configuration>
+              <check>
+                <totalBranchRate>${cobertura.total-branch-rate}</totalBranchRate>
+                <totalLineRate>${cobertura.total-line-rate}</totalLineRate>
+                <haltOnFailure>${cobertura.halt-on-failure}</haltOnFailure>
+              </check>
+            </configuration>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>clean</goal>
+                  <goal>check</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+      <reporting>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>${maven-javadoc-plugin.version}</version>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-pmd-plugin</artifactId>
+            <version>${maven-pmd-plugin.version}</version>
+          </plugin>
+          <plugin>
+            <groupId>com.github.spotbugs</groupId>
+            <artifactId>spotbugs-maven-plugin</artifactId>
+            <version>${maven-spotbugs-plugin.version}</version>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-checkstyle-plugin</artifactId>
+            <version>${maven-checkstyle-plugin.version}</version>
+            <reportSets>
+              <reportSet>
+                <reports>
+                  <report>checkstyle</report>
+                </reports>
+              </reportSet>
+            </reportSets>
+          </plugin>
+        </plugins>
+      </reporting>
+
+    </profile>
+
     <profile>
       <id>no-snapshots</id>
       <build>

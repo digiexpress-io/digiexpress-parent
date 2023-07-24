@@ -19,8 +19,6 @@
     <spring-data-commons.version>3.0.3</spring-data-commons.version>
     <validation-api.version>3.0.2</validation-api.version>
     <immutables.version>2.9.3</immutables.version>
-    <junit.version>5.9.1</junit.version>
-    <assertj.version>3.23.1</assertj.version>
     <swagger-core.version>2.2.8</swagger-core.version>
     <okhttp.version>4.9.0</okhttp.version>
     <feign.version>11.6</feign.version> <!-- generator not compatible with 11.0 -->
@@ -108,22 +106,6 @@
       <version>${immutables.version}</version>
       <scope>provided</scope>
     </dependency>
-
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-api</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-engine</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.assertj</groupId>
-      <artifactId>assertj-core</artifactId>
-      <scope>test</scope>
-    </dependency>
   </dependencies>
 
   <dependencyManagement>
@@ -179,24 +161,6 @@
         <groupId>org.glassfish</groupId>
         <artifactId>jakarta.el</artifactId>
         <version>4.0.2</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.junit.jupiter</groupId>
-        <artifactId>junit-jupiter-api</artifactId>
-        <version>${junit.version}</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.junit.jupiter</groupId>
-        <artifactId>junit-jupiter-engine</artifactId>
-        <version>${junit.version}</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.assertj</groupId>
-        <artifactId>assertj-core</artifactId>
-        <version>${assertj.version}</version>
         <scope>test</scope>
       </dependency>
       <dependency>
