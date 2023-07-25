@@ -260,7 +260,7 @@ public class ComposerProcessor {
     }
 
     final String hash = Hex.encodeHexString(LocalDateTime.now().toString().getBytes(StandardCharsets.UTF_8), true);    
-    final AppArtifact artifact = WebJarUtil.getAppArtifact(curateOutcomeBuildItem, WEBJAR_GROUP_ID, WEBJAR_ARTIFACT_ID);    
+    final var artifact = WebJarUtil.getAppArtifact(curateOutcomeBuildItem, WEBJAR_GROUP_ID, WEBJAR_ARTIFACT_ID);
     if (launch.getLaunchMode().isDevOrTest()) {
       
       final var tempPath = WebJarUtil

@@ -18,7 +18,7 @@ package io.dialob.test.program;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.time.Clock;
@@ -90,7 +90,7 @@ class DialobSessionEvalContextTest {
     verify(dialobSession).getValueSetStates();
     verify(dialobSession).getItemState(any());
 
-    verifyZeroInteractions(originalState, dialobSession);
+    verifyNoMoreInteractions(originalState, dialobSession);
 
   }
 
@@ -135,7 +135,7 @@ class DialobSessionEvalContextTest {
     verify(dialobSession).getValueSetStates();
     verify(dialobSession).getItemState(any());
 
-    verifyZeroInteractions(dialobSession);
+    verifyNoMoreInteractions(dialobSession);
 
   }
 
@@ -185,7 +185,7 @@ class DialobSessionEvalContextTest {
     verify(dialobSession).getValueSetStates();
     verify(dialobSession).getItemState(any());
 
-    verifyZeroInteractions(originalState, dialobSession);
+    verifyNoMoreInteractions(originalState, dialobSession);
 
   }
 

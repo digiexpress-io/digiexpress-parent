@@ -23,13 +23,11 @@
 
     <googlejavaformat.version>1.9</googlejavaformat.version>
     <javapoet.version>1.12.1</javapoet.version>
-    <antlr.version>4.8-1</antlr.version>
 
     <jackson.version>2.12.6.1</jackson.version>
     <jackson.format.version>2.10.5</jackson.format.version>
 
     <jandex.version>1.0.8</jandex.version>
-    <quarkus.version>2.1.3.Final</quarkus.version>
     <lombok.version>1.18.22</lombok.version>
 
     <hbvalidator.version>6.0.21.Final</hbvalidator.version>
@@ -58,83 +56,6 @@
   </properties>
 
   <build>
-    <testResources>
-      <testResource>
-        <directory>src/test/resources</directory>
-      </testResource>
-    </testResources>
-
-    <plugins>
-      <plugin>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>${surefire.plugin.version}</version>
-        <configuration>
-          <argLine>
-            --add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED
-            --add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED
-            --add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED
-            --add-exports=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED
-            --add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED
-            --add-exports=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED
-            --add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED
-            --add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED
-            --add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED
-            --add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED
-          </argLine>
-          <systemPropertyVariables>
-            <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
-            <quarkus.log.level>INFO</quarkus.log.level>
-            <maven.home>${maven.home}</maven.home>
-          </systemPropertyVariables>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>${compiler.plugin.version}</version>
-        <configuration>
-          <parameters>true</parameters>
-          <annotationProcessorPaths>
-            <path>
-              <groupId>io.quarkus</groupId>
-              <artifactId>quarkus-extension-processor</artifactId>
-              <version>${quarkus.version}</version>
-            </path>
-            <path>
-              <groupId>org.projectlombok</groupId>
-              <artifactId>lombok</artifactId>
-              <version>${lombok.version}</version>
-            </path>
-            <path>
-              <groupId>org.immutables</groupId>
-              <artifactId>value</artifactId>
-              <version>${immutables.version}</version>
-            </path>
-          </annotationProcessorPaths>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>license-maven-plugin</artifactId>
-        <version>1.10</version>
-        <configuration>
-          <licenseName>apache_v2</licenseName>
-          <excludes>
-            <exclude>**/*.json</exclude>
-            <exclude>**/*.yaml</exclude>
-          </excludes>
-        </configuration>
-        <executions>
-          <execution>
-            <id>first</id>
-            <goals>
-              <goal>update-file-header</goal>
-            </goals>
-            <phase>process-sources</phase>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
 
 
     <pluginManagement>
@@ -174,18 +95,6 @@
                 <goal>build</goal>
                 <goal>generate-code</goal>
                 <goal>generate-code-tests</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>
-        <plugin>
-          <groupId>org.antlr</groupId>
-          <artifactId>antlr4-maven-plugin</artifactId>
-          <version>${antlr.version}</version>
-          <executions>
-            <execution>
-              <goals>
-                <goal>antlr4</goal>
               </goals>
             </execution>
           </executions>

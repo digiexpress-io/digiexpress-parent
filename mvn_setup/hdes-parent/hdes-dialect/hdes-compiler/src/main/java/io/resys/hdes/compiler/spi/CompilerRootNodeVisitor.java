@@ -200,7 +200,7 @@ public class CompilerRootNodeVisitor implements RootNodeVisitor<List<Resource>, 
       file.writeTo(appendable);
       String result = appendable.toString();
       return new Formatter().formatSource(result);
-    } catch(NoSuchFieldError ne) {
+    } catch(NoSuchFieldError | IllegalAccessError ne) {
       // Google formatter issue, maybe?...
       try {
         StringBuilder appendable = new StringBuilder();
