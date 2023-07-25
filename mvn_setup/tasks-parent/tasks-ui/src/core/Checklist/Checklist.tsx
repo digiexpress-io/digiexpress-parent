@@ -4,10 +4,11 @@ import { Box, Typography, List, Button } from '@mui/material';
 import ChecklistIcon from '@mui/icons-material/Checklist';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
-import type { ChecklistItem } from './ChecklistItem';
-import ChecklistRow from './ChecklistItem';
+import type { ChecklistItemProps } from './ChecklistItem';
+import ChecklistItem from './ChecklistItem';
 import Styles from '@styles';
 import ChecklistItemDialog from './ChecklistItemDialog';
+import { set } from 'date-fns';
 
 const ChecklistHeader: React.FC = () => {
   return (
@@ -18,7 +19,7 @@ const ChecklistHeader: React.FC = () => {
   );
 }
 
-const demoChecklistItems: ChecklistItem[] = [
+const demoChecklistItems: ChecklistItemProps[] = [
   {
     id: 'CHECK_1',
     text: 'Item 1',
@@ -40,10 +41,10 @@ const demoChecklistItems: ChecklistItem[] = [
 ];
 
 const Checklist: React.FC = () => {
-  const [tempChecklistItems, setTempChecklistItems] = React.useState<ChecklistItem[]>(demoChecklistItems);
+  const [tempChecklistItems, setTempChecklistItems] = React.useState<ChecklistItemProps[]>(demoChecklistItems);
   const [open, setOpen] = React.useState<boolean>(false);
   const [mode, setMode] = React.useState<'add' | 'edit'>('add');
-  const [activeItem, setActiveItem] = React.useState<ChecklistItem | undefined>(undefined);
+  const [activeItem, setActiveItem] = React.useState<ChecklistItemProps | undefined>(undefined);
 
   const calculateProgress = () => {
     const total = tempChecklistItems.length;
@@ -63,19 +64,20 @@ const Checklist: React.FC = () => {
     setTempChecklistItems(newChecklistItems);
   };
 
-  const handleAdd = (item: ChecklistItem) => {
+  const handleAdd = (item: ChecklistItemProps) => {
     const newChecklistItems = [...tempChecklistItems];
     newChecklistItems.push(item);
     setTempChecklistItems(newChecklistItems);
   };
 
-  const handleItemClick = (item: ChecklistItem) => {
+  const handleItemClick = (item: ChecklistItemProps, e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     setActiveItem(item);
     setMode('edit');
     setOpen(true);
+    e.stopPropagation();
   };
 
-  const handleUpdate = (item: ChecklistItem) => {
+  const handleUpdate = (item: ChecklistItemProps) => {
     console.log(item)
     const newChecklistItems = [...tempChecklistItems];
     const index = newChecklistItems.findIndex((i) => i.id === item.id);
@@ -84,15 +86,21 @@ const Checklist: React.FC = () => {
     setTempChecklistItems(newChecklistItems);
   };
 
+  const handleAddClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    setMode('add');
+    setOpen(true);
+    e.stopPropagation();
+  }
+
   return (
     <Box>
       <ChecklistHeader />
       <Styles.ProgressBar progress={calculateProgress()} />
       <List>
-        {tempChecklistItems.map((item, index) => <ChecklistRow key={item.id} item={item} onChecked={() => handleChecked(index)} onDeleteClick={() => handleDeleted(index)} onClick={handleItemClick} />)}
+        {tempChecklistItems.map((item, index) => <ChecklistItem key={item.id} item={item} onChecked={() => handleChecked(index)} onDeleteClick={() => handleDeleted(index)} onClick={handleItemClick} />)}
       </List>
-      <Button variant='outlined' startIcon={<AddCircleOutlineIcon />} sx={{ m: 1, ml: 3 }} onClick={() => setOpen(true)}>Add Item</Button>
-      <ChecklistItemDialog mode={mode} open={open} onClose={() => setOpen(false)} onSave={handleAdd} onUpdate={handleUpdate} item={activeItem} />
+      <Button variant='outlined' startIcon={<AddCircleOutlineIcon />} sx={{ m: 1, ml: 3 }} onClick={(e) => handleAddClick(e)}>Add Item</Button>
+      <ChecklistItemDialog mode={mode} open={open} onSave={handleAdd} onUpdate={handleUpdate} item={activeItem} onClose={() => setOpen(false)} />
     </Box>
   );
 }

@@ -29,6 +29,7 @@ interface DatePickerProps {
   setStartDate?: (value: React.SetStateAction<string | Date | undefined>) => void,
   endDate: Date | string | undefined,
   setEndDate: (value: React.SetStateAction<string | Date | undefined>) => void,
+  onClose?: () => void
 }
 
 const StyledContainer = styled(Box)(({ theme }) => ({
@@ -114,7 +115,7 @@ function handleDateChangeForField(args: DateChangeProps): void {
 }
 
 const DatePicker: React.FC<DatePickerProps> = (props) => {
-  const { startDate, setStartDate, endDate, setEndDate } = props;
+  const { startDate, setStartDate, endDate, setEndDate, onClose } = props;
   const doubleDate = setStartDate !== undefined;
 
   const [startDateError, setStartDateError] = React.useState<string | undefined>();
@@ -165,6 +166,11 @@ const DatePicker: React.FC<DatePickerProps> = (props) => {
     return undefined;
   }
 
+  function handleClose(e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
+    onClose && onClose();
+    e.stopPropagation();
+  }
+
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <StyledContainer>
@@ -210,6 +216,14 @@ const DatePicker: React.FC<DatePickerProps> = (props) => {
             shortcuts: getShortcuts,
           }}
         />
+        {onClose && <Button
+          variant="contained"
+          color="primary"
+          sx={{ m: 1 }}
+          onClick={(e) => handleClose(e)}
+        >
+          Done
+        </Button>}
         <Button
           variant="text"
           color="primary"

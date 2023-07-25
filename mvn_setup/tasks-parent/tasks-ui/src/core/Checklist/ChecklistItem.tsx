@@ -10,7 +10,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import DatePicker from '../DatePicker';
 import AssigneePicker from './AssigneePicker';
 
-interface ChecklistItem {
+interface ChecklistItemProps {
   id: string;
   text: string;
   completed: boolean;
@@ -18,23 +18,66 @@ interface ChecklistItem {
   assignees?: string[];
 }
 
-interface ChecklistItemProps {
-  item: ChecklistItem;
+interface ChecklistItemComponentProps {
+  item: ChecklistItemProps;
   onChecked: () => void;
   onDeleteClick: () => void;
-  onClick: (item: ChecklistItem) => void;
+  onClick: (item: ChecklistItemProps, e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 }
 
 interface ChecklistItemActionProps {
   mode: 'add' | 'edit';
   dueDate: Date | string | undefined;
-  setDueDate: (value: React.SetStateAction<Date | string | undefined>) => void;
   assignees: string[] | [];
-  setAssignees: (value: React.SetStateAction<string[]>) => void;
   onDeleteClick?: () => void;
+  setDatePickerOpen: (value: React.SetStateAction<boolean>) => void;
+  setAssigneePickerOpen: (value: React.SetStateAction<boolean>) => void;
 }
 
-const ChecklistRow: React.FC<ChecklistItemProps> = (props) => {
+const demoAssignees: string[] = ['John Doe', 'Jane Doe', 'John Smith', 'Jane Smith'];
+
+const ChecklistItemActions: React.FC<ChecklistItemActionProps> = (props) => {
+  const { mode, dueDate, assignees, onDeleteClick, setAssigneePickerOpen, setDatePickerOpen } = props;
+
+  const [dueDateTemp, setDueDateTemp] = React.useState<Date | string | undefined>(dueDate);
+  const [assigneesTemp, setAssigneesTemp] = React.useState<string[]>(assignees);
+
+  const dateButtonColor = dueDate ? 'primary' : 'inherit';
+  const assigneesButtonColor = assignees.length ? 'primary' : 'inherit';
+
+  const handleDateClick = (e: React.MouseEvent<HTMLElement>) => {
+    e.stopPropagation();
+    setDatePickerOpen(true);
+  };
+
+  const handleAssigneesClick = (e: React.MouseEvent<HTMLElement>) => {
+    e.stopPropagation();
+    setAssigneePickerOpen(true);
+  };
+
+  const handleDelete = (e: React.MouseEvent<HTMLElement>) => {
+    e.stopPropagation();
+    onDeleteClick && onDeleteClick();
+  };
+
+  return (
+    <>
+      <IconButton onClick={(e) => handleDateClick(e)}>
+        <EventIcon color={dateButtonColor} />
+      </IconButton>
+      {dueDate && <Typography>{new Date(dueDate).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' })}</Typography>}
+      <IconButton onClick={(e) => handleAssigneesClick(e)}>
+        <AccountCircleIcon color={assigneesButtonColor} />
+      </IconButton>
+      {assignees && <Typography>{assigneesTemp.join(', ')}</Typography>}
+      {mode === 'edit' && <IconButton onClick={(e) => handleDelete(e)}>
+        <DeleteIcon color='error' />
+      </IconButton>}
+    </>
+  );
+}
+
+const ChecklistItem: React.FC<ChecklistItemComponentProps> = (props) => {
   const { item, onChecked, onDeleteClick, onClick } = props;
   const { text, completed, dueDate, assignees } = item;
   const [checked, setChecked] = React.useState<boolean>(completed);
@@ -42,6 +85,9 @@ const ChecklistRow: React.FC<ChecklistItemProps> = (props) => {
   const [hovering, setHovering] = React.useState<boolean>(false);
   const [dueDateTemp, setDueDateTemp] = React.useState<Date | string | undefined>(dueDate);
   const [assigneesTemp, setAssigneesTemp] = React.useState<string[]>(assignees || []);
+
+  const [datePickerOpen, setDatePickerOpen] = React.useState<boolean>(false);
+  const [assigneePickerOpen, setAssigneePickerOpen] = React.useState<boolean>(false);
 
   const handleClick = () => {
     setChecked(!checked);
@@ -56,68 +102,39 @@ const ChecklistRow: React.FC<ChecklistItemProps> = (props) => {
     setHovering(false);
   };
 
+  const handleClose = () => {
+    setDatePickerOpen(false);
+    setAssigneePickerOpen(false);
+  };
+
   return (
     <ListItem sx={{ height: '50px' }}>
       <IconButton onClick={handleClick}>
         {checked ? <CheckBoxIcon color='primary' /> : <CheckBoxOutlineBlankIcon />}
       </IconButton>
-      <ListItemButton onMouseOver={handleMouseOver} onMouseOut={handleMouseOut} onClick={() => onClick(item)}>
+      <ListItemButton onMouseOver={handleMouseOver} onMouseOut={handleMouseOut} onClick={(e) => onClick(item, e)}>
         <ListItemText>
           <Typography sx={checkedTextStyle}>{text}</Typography>
         </ListItemText>
-        {hovering && <ChecklistItemActions mode='edit' dueDate={dueDateTemp} setDueDate={setDueDateTemp} assignees={assigneesTemp} setAssignees={setAssigneesTemp} onDeleteClick={onDeleteClick} />}
+        {hovering &&
+          <ChecklistItemActions
+            mode='edit'
+            dueDate={dueDateTemp}
+            assignees={assigneesTemp}
+            onDeleteClick={onDeleteClick}
+            setDatePickerOpen={setDatePickerOpen}
+            setAssigneePickerOpen={setAssigneePickerOpen}
+          />}
       </ListItemButton>
-    </ListItem>
-  );
-}
-
-const demoAssignees: string[] = ['John Doe', 'Jane Doe', 'John Smith', 'Jane Smith'];
-
-const ChecklistItemActions: React.FC<ChecklistItemActionProps> = (props) => {
-  const { mode, dueDate, setDueDate, assignees, setAssignees, onDeleteClick } = props;
-
-  const [datePickerOpen, setDatePickerOpen] = React.useState<boolean>(false);
-  const [assigneePickerOpen, setAssigneePickerOpen] = React.useState<boolean>(false);
-
-  const dateButtonColor = dueDate ? 'primary' : 'inherit';
-  const assigneesButtonColor = assignees.length ? 'primary' : 'inherit';
-
-  const handleDateClick = (e: React.MouseEvent<HTMLElement>) => {
-    setDatePickerOpen(true);
-    e.stopPropagation();
-  };
-
-  const handleAssigneesClick = (e: React.MouseEvent<HTMLElement>) => {
-    setAssigneePickerOpen(true);
-    e.stopPropagation();
-  };
-
-  const handleDelete = (e: React.MouseEvent<HTMLElement>) => {
-    onDeleteClick && onDeleteClick();
-    e.stopPropagation();
-  };
-
-  return (
-    <>
-      <IconButton onClick={handleDateClick}>
-        <EventIcon color={dateButtonColor} />
-      </IconButton>
-      {dueDate && <Typography>{new Date(dueDate).toLocaleDateString()}</Typography>}
-      <IconButton onClick={handleAssigneesClick}>
-        <AccountCircleIcon color={assigneesButtonColor} />
-      </IconButton>
-      {assignees && <Typography>{assignees.join(', ')}</Typography>}
-      {mode === 'edit' && <IconButton onClick={handleDelete}>
-        <DeleteIcon color='error' />
-      </IconButton>}
-      <Dialog open={datePickerOpen} onClose={() => setDatePickerOpen(false)}>
-        <DatePicker endDate={dueDate} setEndDate={setDueDate} />
+      <Dialog open={datePickerOpen} onClose={handleClose}>
+        <DatePicker endDate={dueDateTemp} setEndDate={setDueDateTemp} onClose={handleClose} />
       </Dialog>
-      <AssigneePicker possible={demoAssignees} chosen={assignees} setChosen={setAssignees} open={assigneePickerOpen} onClose={() => setAssigneePickerOpen(false)} />
-    </>
+      <AssigneePicker possible={demoAssignees} chosen={assigneesTemp} setChosen={setAssigneesTemp} open={assigneePickerOpen} onClose={handleClose} />
+    </ListItem>
+
   );
 }
 
-export type { ChecklistItem, ChecklistItemActionProps };
+export type { ChecklistItemProps, ChecklistItemActionProps };
 export { ChecklistItemActions }
-export default ChecklistRow;
+export default ChecklistItem;

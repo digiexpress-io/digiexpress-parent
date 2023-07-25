@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { List, ListItem, ListItemIcon, ListItemText, IconButton, Dialog } from '@mui/material';
+import { List, ListItem, ListItemIcon, ListItemText, IconButton, Dialog, Button } from '@mui/material';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 
@@ -15,14 +15,20 @@ interface AssigneePickerProps {
 const AssigneePicker: React.FC<AssigneePickerProps> = (props) => {
   const { possible, chosen, setChosen, open, onClose } = props;
 
-  const handleAssigneesChange = (assignee: string) => {
+  const handleAssigneesChange = (assignee: string, e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     if (chosen.includes(assignee)) {
       setChosen(chosen.filter((a) => a !== assignee));
     }
     else {
       setChosen([...chosen, assignee]);
     }
+    e.stopPropagation();
   };
+
+  const handleClose = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    onClose();
+    e.stopPropagation();
+  }
 
   return (
     <Dialog open={open} onClose={onClose}>
@@ -30,7 +36,7 @@ const AssigneePicker: React.FC<AssigneePickerProps> = (props) => {
         {possible.map((assignee, index) => (
           <ListItem key={index}>
             <ListItemIcon>
-              <IconButton onClick={() => handleAssigneesChange(assignee)}>
+              <IconButton onClick={(e) => handleAssigneesChange(assignee, e)}>
                 {chosen.includes(assignee) ? <CheckBoxIcon color='primary' /> : <CheckBoxOutlineBlankIcon />}
               </IconButton>
             </ListItemIcon>
@@ -38,6 +44,13 @@ const AssigneePicker: React.FC<AssigneePickerProps> = (props) => {
           </ListItem>
         ))}
       </List>
+      <Button
+        variant='contained'
+        color='primary'
+        onClick={(e) => handleClose(e)}
+      >
+        Done
+      </Button>
     </Dialog>
   );
 }
