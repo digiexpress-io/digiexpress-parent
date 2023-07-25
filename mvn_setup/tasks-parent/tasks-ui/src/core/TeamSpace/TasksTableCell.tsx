@@ -21,6 +21,8 @@ const StyledPopper: React.FC<{ id: string, content: React.ReactNode }> = ({ id, 
 }
 
 const Info: React.FC<{ id: string, content: React.ReactNode }> = ({ id, content }) => {
+
+
   return (<><StyledPopper id={id} content={content} /></>);
 }
 

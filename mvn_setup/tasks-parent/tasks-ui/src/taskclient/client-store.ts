@@ -128,7 +128,6 @@ class DefaultStore implements Store {
       console.log("RESPONSE: ", path, " OK", response);
       return response.json()
       .then(text => {
-        console.log("RESPONSE ", text);
         return text;
       })
     })

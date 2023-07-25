@@ -87,15 +87,19 @@ const theme: Theme = {
 const locale = 'en';
 console.log("theme ", theme);
 
+
+
 const NewApp: React.FC<{}> = () => (
-  <IntlProvider locale={locale} messages={messages[locale]}>
-    <StyledEngineProvider injectFirst>
-      <ThemeProvider theme={theme}>
-        <SnackbarProvider>
-          <React.Suspense fallback={<Connection.Loading client={backend} />}><LoadApps /></React.Suspense>
-        </SnackbarProvider>
-      </ThemeProvider>
-    </StyledEngineProvider>
-  </IntlProvider>);
+  <TaskClient.ScreenProvider>
+    <IntlProvider locale={locale} messages={messages[locale]}>
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={theme}>
+          <SnackbarProvider>
+            <React.Suspense fallback={<Connection.Loading client={backend} />}><LoadApps /></React.Suspense>
+          </SnackbarProvider>
+        </ThemeProvider>
+      </StyledEngineProvider>
+    </IntlProvider>
+  </TaskClient.ScreenProvider>);
 
 export default NewApp;

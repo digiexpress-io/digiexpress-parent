@@ -10,6 +10,8 @@ import { OrgContext } from './org-ctx';
 import { OrgContextType } from './org-ctx-types';
 import { TaskEditContextType } from './task-edit-ctx-types';
 import { TaskEditContext } from './task-edit-ctx'
+import { ScreenContextType } from './screen-ctx-types';
+import { ScreenContext } from './screen-ctx';
 
 
 const isDocumentSaved = (entity: Document, ide: ComposerContextType): boolean => {
@@ -51,6 +53,11 @@ const findTabInLayout = (article: Document, layout: Burger.TabsContextType): Tab
   return undefined;
 }
 
+export const useScreen = () => {
+  const result: ScreenContextType = React.useContext(ScreenContext);
+  
+  return result.state;
+}
 
 export const useTaskEdit = () => {
   const result: TaskEditContextType = React.useContext(TaskEditContext);

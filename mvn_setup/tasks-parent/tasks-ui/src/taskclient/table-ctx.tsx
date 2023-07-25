@@ -95,7 +95,6 @@ function CustomTable<Record extends object, Ext extends {}>(props: TableProps<Re
   }));
 
   React.useEffect(() => {
-    console.log("RECORDS", records);
     setContent((c: TablePaginationImpl<Record>) => c.withSrc(records ?? []));
   }, [records, setContent]);
 

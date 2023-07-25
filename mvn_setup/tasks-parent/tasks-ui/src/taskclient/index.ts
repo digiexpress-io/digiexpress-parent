@@ -76,7 +76,8 @@ import {
 
 import * as taskCtxImpl from './tasks-ctx-impl';
 import * as taskEditCtx from './task-edit-ctx';
-
+import * as screenCtx from './screen-ctx';
+import { ScreenState } from './screen-ctx-types';
 
 import * as Hooks from './hooks';
 
@@ -97,6 +98,10 @@ declare namespace TaskClient {
     DocumentId, Document, DocumentUpdate,
     TabEntity, TabBody, Tab,
     PageUpdate, Session, Actions
+  }
+  
+  export type {
+    ScreenState
   }
 
   export type {
@@ -153,6 +158,8 @@ namespace TaskClient {
   export const useNav = Hooks.useNav;
   export const _nobody_ = taskCtxImpl._nobody_;
   export const Table = CustomTable;
+  export const ScreenProvider = screenCtx.ScreenProvider;
+  export const useScreen = Hooks.useScreen;
 }
 
 export default TaskClient;

@@ -50,7 +50,15 @@ const DescriptorTableHeader: React.FC<{
   setContent: React.Dispatch<React.SetStateAction<client.TablePagination<client.TaskDescriptor>>>,
   def: client.Group
 }> = ({ content, setContent, def }) => {
+  console.log("INFO")
 
+  const screen = window.screen;
+  const width = window.outerWidth;
+  const height = window.outerHeight;
+
+
+
+  React.useEffect(() => {console.log("WIDTH: ", width, "HEIGHT", height)}, [width, height])
 
   return (
     <TableHead>
