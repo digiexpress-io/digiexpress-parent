@@ -1,5 +1,0 @@
-language: java
-env:
-  - process.env.CI=false
-jdk:
-  - openjdk15
