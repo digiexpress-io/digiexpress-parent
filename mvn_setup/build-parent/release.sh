@@ -28,16 +28,18 @@ gpg --batch --import ./private.key
 rm ./private.key
 echo "JAVA_HOME '$JAVA_HOME'"
 
+cd mvn_setup
+
 # Current and next version
-echo "$(cat mvn_setup/build-parent/release.version)"
-LAST_RELEASE_VERSION=$(cat mvn_setup/build-parent/release.version)
+echo "$(cat build-parent/release.version)"
+LAST_RELEASE_VERSION=$(cat build-parent/release.version)
 [[ $LAST_RELEASE_VERSION =~ ([^\\.]*)$ ]]
 MINOR_VERSION=`expr ${BASH_REMATCH[1]}`
 MAJOR_VERSION=${LAST_RELEASE_VERSION:0:`expr ${#LAST_RELEASE_VERSION} - ${#MINOR_VERSION}`}
 NEW_MINOR_VERSION=`expr ${MINOR_VERSION} + 1`
 RELEASE_VERSION=${MAJOR_VERSION}${NEW_MINOR_VERSION}
 
-echo ${RELEASE_VERSION} > mvn_setup/build-parent/release.version
+echo ${RELEASE_VERSION} > build-parent/release.version
 
 PROJECT_VERSION=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
 
@@ -56,7 +58,7 @@ MAVEN_OPTS="--add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/ja
 export MAVEN_OPTS
 
 mvn clean deploy -Pdigiexpress-release \
-  --settings mvn_setup/build-parent/ci-maven-settings.xml \
+  --settings build-parent/ci-maven-settings.xml \
   -B -Dmaven.javadoc.skip=false \
   -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
 
