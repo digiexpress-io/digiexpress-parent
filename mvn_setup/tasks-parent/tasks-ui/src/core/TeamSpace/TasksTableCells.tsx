@@ -56,9 +56,13 @@ const Desc: React.FC<CellProps> = ({ row }) => {
 const DueDate: React.FC<CellProps> = ({ row }) => {
 
   const [datePickerOpen, setDatePickerOpen] = React.useState(false);
+  const [startDate, setStartDate] = React.useState<Date | string | undefined>();
+  const [endDate, setEndDate] = React.useState<Date | string | undefined>();
 
   return (<>
-    <Dialog open={datePickerOpen} onClose={() => setDatePickerOpen(false)}><DatePicker /></Dialog>
+    <Dialog open={datePickerOpen} onClose={() => setDatePickerOpen(false)}>
+      <DatePicker startDate={startDate} setStartDate={setStartDate} endDate={endDate} setEndDate={setEndDate} />
+    </Dialog>
     <TasksTableCell id={row.id + "/DueDate"} name={
       <IconButton onClick={() => setDatePickerOpen(true)} color='inherit'><DateRangeOutlinedIcon sx={{ fontSize: 'small' }} /></IconButton>} />
   </>

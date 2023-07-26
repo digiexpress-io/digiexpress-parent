@@ -20,8 +20,16 @@ interface Shortcuts {
 
 interface DateChangeProps {
   value: string,
-  setDate: (value: React.SetStateAction<string | Date | null>) => void,
-  setError: (value: React.SetStateAction<string | null>) => void
+  setDate: (value: React.SetStateAction<string | Date | undefined>) => void,
+  setError: (value: React.SetStateAction<string | undefined>) => void
+}
+
+interface DatePickerProps {
+  startDate?: Date | string | undefined,
+  setStartDate?: (value: React.SetStateAction<string | Date | undefined>) => void,
+  endDate: Date | string | undefined,
+  setEndDate: (value: React.SetStateAction<string | Date | undefined>) => void,
+  onClose?: () => void
 }
 
 const StyledContainer = styled(Box)(({ theme }) => ({
@@ -36,7 +44,7 @@ const StyledContainer = styled(Box)(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
 }));
 
-function dateFormatCheck(date: string | Date | null): string | TimeRef {
+function dateFormatCheck(date: string | Date | undefined): string | TimeRef {
   if (date instanceof Date) {
     switch (date.getDate()) {
       case new Date().getDate():
@@ -54,7 +62,7 @@ function dateFormatCheck(date: string | Date | null): string | TimeRef {
   return date || '';
 }
 
-function isDateValid(date: string | null): boolean {
+function isDateValid(date: string | undefined): boolean {
   if (date && date.length === 10 && date.match(/^\d{2}\/\d{2}\/\d{4}$/)) {
     return true;
   }
@@ -100,43 +108,45 @@ function handleDateChangeForField(args: DateChangeProps): void {
   const { value, setDate, setError } = args;
   setDate(value);
   if (isDateValid(value)) {
-    setError(null);
+    setError(undefined);
   } else {
     setError('Invalid date');
   }
 }
 
-const DatePicker: React.FC<{}> = () => {
+const DatePicker: React.FC<DatePickerProps> = (props) => {
+  const { startDate, setStartDate, endDate, setEndDate, onClose } = props;
+  const doubleDate = setStartDate !== undefined;
 
-  const [startDate, setStartDate] = React.useState<Date | string | null>(null);
-  const [startDateError, setStartDateError] = React.useState<string | null>(null);
-  const [endDate, setEndDate] = React.useState<Date | string | null>(null);
-  const [endDateError, setEndDateError] = React.useState<string | null>(null);
-  const [activeField, setActiveField] = React.useState<DateType | null>(null);
+  const [startDateError, setStartDateError] = React.useState<string | undefined>();
+  const [endDateError, setEndDateError] = React.useState<string | undefined>();
+  const [activeField, setActiveField] = React.useState<DateType | undefined>('end');
 
-  function handleActiveFieldChange(field: DateType | null): void {
+  function handleActiveFieldChange(field: DateType | undefined): void {
     setActiveField(field);
   }
 
   function handleClear(): void {
-    setStartDate(null);
-    setStartDateError(null);
-    setEndDate(null);
-    setEndDateError(null);
+    doubleDate && setStartDate(undefined);
+    setStartDateError(undefined);
+    setEndDate(undefined);
+    setEndDateError(undefined);
+    setActiveField(undefined);
   }
 
-  function handleDateChangeForPicker(date: Date | null): void {
+  function handleDateChangeForPicker(date: Date | undefined | null): void {
+    date = date || undefined;
     if (activeField === 'start') {
-      setStartDate(date);
-      setStartDateError(null);
+      doubleDate && setStartDate(date);
+      setStartDateError(undefined);
     }
     if (activeField === 'end') {
       setEndDate(date);
-      setEndDateError(null);
+      setEndDateError(undefined);
     }
   }
 
-  function getActiveDateForPicker(): Date | null {
+  function getActiveDateForPicker(): Date | undefined {
     if (activeField === 'start' && startDate) {
       if (startDate instanceof Date) {
         return startDate;
@@ -153,13 +163,18 @@ const DatePicker: React.FC<{}> = () => {
         return new Date(endDate);
       }
     }
-    return null;
+    return undefined;
+  }
+
+  function handleClose(e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
+    onClose && onClose();
+    e.stopPropagation();
   }
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <StyledContainer>
-        <TextField
+        {doubleDate && <TextField
           id="start-date"
           type="text"
           placeholder="Start date"
@@ -171,10 +186,11 @@ const DatePicker: React.FC<{}> = () => {
               <DateRangeIcon color="primary" sx={{ mr: 1 }} />
             )
           }}
+          focused={activeField === 'start'}
           helperText={startDateError}
-          error={startDateError !== null}
+          error={startDateError !== undefined}
           sx={{ mr: 4 }}
-        />
+        />}
         <TextField
           id="end-date"
           type="text"
@@ -187,8 +203,9 @@ const DatePicker: React.FC<{}> = () => {
               <DateRangeIcon color="primary" sx={{ mr: 1 }} />
             )
           }}
+          focused={activeField === 'end'}
           helperText={endDateError}
-          error={endDateError !== null}
+          error={endDateError !== undefined}
         />
         <StaticDatePicker
           displayStaticWrapperAs="desktop"
@@ -199,6 +216,14 @@ const DatePicker: React.FC<{}> = () => {
             shortcuts: getShortcuts,
           }}
         />
+        {onClose && <Button
+          variant="contained"
+          color="primary"
+          sx={{ m: 1 }}
+          onClick={(e) => handleClose(e)}
+        >
+          Done
+        </Button>}
         <Button
           variant="text"
           color="primary"

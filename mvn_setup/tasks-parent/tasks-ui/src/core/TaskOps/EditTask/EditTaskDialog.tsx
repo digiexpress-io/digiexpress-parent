@@ -33,10 +33,14 @@ const Right: React.FC<{}> = () => {
 const Header: React.FC<{}> = () => {
 
   const [datePickerOpen, setDatePickerOpen] = React.useState(false);
+  const [startDate, setStartDate] = React.useState<Date | string | undefined>();
+  const [endDate, setEndDate] = React.useState<Date | string | undefined>();
 
   return (
     <Box display='flex'>
-      <Dialog open={datePickerOpen} onClose={() => setDatePickerOpen(false)}><DatePicker /></Dialog>
+      <Dialog open={datePickerOpen} onClose={() => setDatePickerOpen(false)}>
+        <DatePicker startDate={startDate} setStartDate={setStartDate} endDate={endDate} setEndDate={setEndDate} />
+      </Dialog>
       <Stack spacing={2} direction='row' minWidth={'50%'}>
         <Fields.Status />
         <Fields.Assignee />
