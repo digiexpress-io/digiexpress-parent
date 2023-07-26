@@ -31,8 +31,10 @@ echo "JAVA_HOME '$JAVA_HOME'"
 cd mvn_setup
 
 # Current and next version
-echo "$(cat build-parent/release.version)"
 LAST_RELEASE_VERSION=$(cat build-parent/release.version)
+echo "Last release: $LAST_RELEASE_VERSION"
+
+
 [[ $LAST_RELEASE_VERSION =~ ([^\\.]*)$ ]]
 MINOR_VERSION=`expr ${BASH_REMATCH[1]}`
 MAJOR_VERSION=${LAST_RELEASE_VERSION:0:`expr ${#LAST_RELEASE_VERSION} - ${#MINOR_VERSION}`}
