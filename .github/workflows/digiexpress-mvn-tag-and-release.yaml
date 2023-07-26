@@ -1,0 +1,39 @@
+on:
+  push:
+    branches:
+      - dev
+
+name: dev branch - mvn release - java 17
+jobs:
+  build:
+    name: release branch main
+    if: "startsWith(github.event.head_commit.message, '@ci mvn_dev_release')"
+    runs-on: ubuntu-latest
+    steps:
+    - name: git clone main config step
+      uses: actions/checkout@v3
+      with:
+        ref: main
+        token: ${{ secrets.REPO_TOKEN }}
+
+    - uses: actions/setup-java@v2
+      with:
+        distribution: 'zulu'
+        java-version: '17'
+    
+    - name: tag and release step
+      run: ./mvn_setup/build-parent/release.sh
+      env:
+        CI: false
+        BOT_NAME: olev-mutso
+        BOT_EMAIL: olev.mutso@resys.io  
+        GITHUB_SHA: ${GITHUB_SHA}
+        GITHUB_REF: ${GITHUB_REF}
+        GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+        GPG_KEY_ID: ${{ secrets.GPG_KEY_ID }}
+        GPG_KEY: ${{ secrets.GPG_KEY }}
+        GPG_KEY_SEC:  ${{ secrets.GPG_KEY_SEC }}
+        OSSRH_PASS: ${{ secrets.OSSRH_PASS }}
+        OSSRH_USER: ${{ secrets.OSSRH_USER }}
+        
+        
