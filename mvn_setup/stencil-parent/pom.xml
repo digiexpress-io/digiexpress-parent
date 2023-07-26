@@ -13,8 +13,6 @@
   <name>the-stencil-parent</name>
 
   <modules>
-    <module>build-parent</module>
-    <module>bom</module>
     <module>core</module>
     <module>quarkus-extensions</module>
     <module>dev-tools</module>

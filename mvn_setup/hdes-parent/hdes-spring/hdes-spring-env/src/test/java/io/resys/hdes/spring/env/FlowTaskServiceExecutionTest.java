@@ -3,17 +3,17 @@ package io.resys.hdes.spring.env;
 import java.io.IOException;
 import java.math.BigDecimal;
 
-import org.junit.Assert;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 /*-
  * #%L
@@ -41,9 +41,9 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.resys.hdes.client.api.HdesClient;
 import io.resys.hdes.client.api.programs.ProgramEnvir;
 
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@TestMethodOrder(MethodOrderer.MethodName.class)
 @EnableAutoConfiguration
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {FlowTaskServiceExecutionTest.ServiceTestConfig.class})
 public class FlowTaskServiceExecutionTest {
 
@@ -74,6 +74,6 @@ public class FlowTaskServiceExecutionTest {
     input.put("val2", new BigDecimal("20"));
     
     final var body = client.executor(envir).inputJson(input).flow("sumFlow").andGetTask("SumTask");
-    Assert.assertTrue(((BigDecimal) body.getReturns().get("sum")).compareTo(new BigDecimal("30")) == 0);
+    Assertions.assertTrue(((BigDecimal) body.getReturns().get("sum")).compareTo(new BigDecimal("30")) == 0);
   }
 }

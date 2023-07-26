@@ -1,5 +1,24 @@
 package io.resys.wrench.assets.bundle.spi;
 
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+
+import org.apache.commons.io.IOUtils;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+
 /*-
  * #%L
  * hdes-spring-composer
@@ -24,6 +43,7 @@ package io.resys.wrench.assets.bundle.spi;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import io.resys.hdes.client.api.HdesClient;
 import io.resys.hdes.client.api.HdesStore;
 import io.resys.hdes.client.api.ImmutableDebugRequest;
@@ -34,29 +54,10 @@ import io.resys.hdes.client.api.programs.ServiceProgram;
 import io.resys.hdes.client.spi.HdesInMemoryStore;
 import io.resys.hdes.client.spi.composer.ComposerEntityMapper;
 import io.resys.hdes.client.spi.composer.DebugVisitor;
-import org.apache.commons.io.IOUtils;
-import org.junit.Assert;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.jupiter.api.Assertions;
-import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
 
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.nio.charset.StandardCharsets;
-import java.time.Duration;
-
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@TestMethodOrder(MethodOrderer.MethodName.class)
 @EnableAutoConfiguration
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @TestPropertySource(properties = {"wrench.assets.ide = false"})
 @ContextConfiguration(classes = {FlowTaskServiceExecutionTest.ServiceTestConfig.class})
 public class FlowTaskServiceExecutionTest {
@@ -99,7 +100,7 @@ public class FlowTaskServiceExecutionTest {
     input.put("val2", new BigDecimal("20"));
 
     final var body = client.executor(envir).inputJson(input).flow("sumFlow").andGetTask("SumTask");
-    Assert.assertTrue(((BigDecimal) body.getReturns().get("sum")).compareTo(new BigDecimal("30")) == 0);
+    Assertions.assertTrue(((BigDecimal) body.getReturns().get("sum")).compareTo(new BigDecimal("30")) == 0);
   }
 
   @Test
@@ -114,7 +115,7 @@ public class FlowTaskServiceExecutionTest {
 
     FlowProgram.FlowResult flowResult = (FlowProgram.FlowResult) response.getBody();
 
-    Assert.assertEquals(new BigDecimal("30"), flowResult.getReturns().get("sum"));
+    Assertions.assertEquals(new BigDecimal("30"), flowResult.getReturns().get("sum"));
   }
 
   @Test
@@ -142,7 +143,7 @@ public class FlowTaskServiceExecutionTest {
 
     DecisionProgram.DecisionResult decisionResult = (DecisionProgram.DecisionResult) response.getBody();
 
-    Assert.assertEquals(new BigDecimal("3.4"), decisionResult.getMatches().get(0).getReturns().get(0).getUsedValue());
+    Assertions.assertEquals(new BigDecimal("3.4"), decisionResult.getMatches().get(0).getReturns().get(0).getUsedValue());
   }
 
   @Test
@@ -170,7 +171,7 @@ public class FlowTaskServiceExecutionTest {
 
     ServiceProgram.ServiceResult serviceResult = (ServiceProgram.ServiceResult) response.getBody();
 
-    Assert.assertEquals("{\"sum\":30}", objectMapper.writeValueAsString(serviceResult.getValue()));
+    Assertions.assertEquals("{\"sum\":30}", objectMapper.writeValueAsString(serviceResult.getValue()));
   }
 
   @Test

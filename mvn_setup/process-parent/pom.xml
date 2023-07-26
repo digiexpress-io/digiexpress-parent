@@ -13,8 +13,6 @@
   <name>process-parent</name>
 
   <modules>
-    <module>build-parent</module>
-    <module>bom</module>
     <module>core</module>
     <module>composer-ui</module>
     <module>extensions</module>

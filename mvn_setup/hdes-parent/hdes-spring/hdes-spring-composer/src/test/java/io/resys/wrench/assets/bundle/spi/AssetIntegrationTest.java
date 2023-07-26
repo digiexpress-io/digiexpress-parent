@@ -1,5 +1,24 @@
 package io.resys.wrench.assets.bundle.spi;
 
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.time.Duration;
+
+import org.apache.commons.io.IOUtils;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+
 /*-
  * #%L
  * wrench-component-assets-integrations
@@ -21,35 +40,18 @@ package io.resys.wrench.assets.bundle.spi;
  */
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import io.resys.hdes.client.api.HdesClient;
 import io.resys.hdes.client.api.HdesStore;
 import io.resys.hdes.client.api.programs.ProgramEnvir;
 import io.resys.hdes.client.api.programs.ProgramEnvir.ProgramStatus;
 import io.resys.hdes.client.spi.HdesInMemoryStore;
 import io.resys.hdes.client.spi.composer.ComposerEntityMapper;
-import org.apache.commons.io.IOUtils;
-import org.junit.Assert;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
-
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.time.Duration;
 
 
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@TestMethodOrder(MethodOrderer.MethodName.class)
 @EnableAutoConfiguration
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @TestPropertySource(properties = {"wrench.assets.ide = false"})
 @ContextConfiguration(classes = {AssetIntegrationTest.ServiceTestConfig.class})
 public class AssetIntegrationTest {
@@ -78,28 +80,28 @@ public class AssetIntegrationTest {
   @Test
   public void services() {
     final var services = envir.getValues();
-    Assert.assertEquals(7, services.size());
+    Assertions.assertEquals(7, services.size());
   }
 
   @Test
   public void dt() throws IOException {
     final var dt = envir.getDecisionsByName().get("test decision table");
-    Assert.assertEquals(ProgramStatus.UP, dt.getStatus());
+    Assertions.assertEquals(ProgramStatus.UP, dt.getStatus());
   }
 
   @Test
   public void flow() throws IOException {
     final var flow = envir.getFlowsByName().get("evaluateRating");
-    Assert.assertEquals(ProgramStatus.UP, flow.getStatus());
+    Assertions.assertEquals(ProgramStatus.UP, flow.getStatus());
   }
 
   @Test
   public void flowTasks() {
     var task = envir.getServicesByName().get("RuleGroup1");
-    Assert.assertEquals(ProgramStatus.UP, task.getStatus());
+    Assertions.assertEquals(ProgramStatus.UP, task.getStatus());
 
     task = envir.getServicesByName().get("RuleGroup2");
-    Assert.assertEquals(ProgramStatus.UP, task.getStatus());
+    Assertions.assertEquals(ProgramStatus.UP, task.getStatus());
   }
 
   public String getContent(String location) throws IOException {

@@ -5,9 +5,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>io.digiexpress</groupId>
-		<artifactId>thena-build-parent</artifactId>
+		<artifactId>thena-parent</artifactId>
 		<version>999-SNAPSHOT</version>
-		<relativePath>../build-parent/pom.xml</relativePath>
 	</parent>
 
 	<artifactId>thena-core</artifactId>

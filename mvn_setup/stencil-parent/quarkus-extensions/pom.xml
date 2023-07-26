@@ -4,9 +4,8 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>io.digiexpress</groupId>
-    <artifactId>stencil-build-parent</artifactId>
+    <artifactId>stencil-parent</artifactId>
     <version>999-SNAPSHOT</version>
-    <relativePath>../build-parent/pom.xml</relativePath>
   </parent>
 
   <artifactId>stencil-quarkus-extensions</artifactId>

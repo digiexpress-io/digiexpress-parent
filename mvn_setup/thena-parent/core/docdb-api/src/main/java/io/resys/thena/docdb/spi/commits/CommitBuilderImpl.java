@@ -163,9 +163,9 @@ public class CommitBuilderImpl implements CommitBuilder {
       })
     )
     .onFailure(err -> state.getErrorHandler().isLocked(err)).retry()
-      .withJitter(0.2) // every retry increase time by x 2 
+      .withJitter(0.3) // every retry increase time by x 3
       .withBackOff(Duration.ofMillis(100))
-      .atMost(30);
+      .atMost(100);
    /*
     .onFailure(err -> state.getErrorHandler().isLocked(err)).invoke(error -> {
       error.printStackTrace();

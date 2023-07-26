@@ -13,7 +13,6 @@
   <packaging>pom</packaging>
 
   <modules>
-    <module>build-parent</module>
     <module>tasks-client</module>
     <module>tasks-ui</module>
     <module>quarkus-dev-app</module>

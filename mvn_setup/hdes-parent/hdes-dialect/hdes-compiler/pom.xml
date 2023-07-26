@@ -19,33 +19,14 @@
       <artifactId>hdes-executor</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.google.code.findbugs</groupId>
-      <artifactId>jsr305</artifactId>
-    </dependency>
-    <dependency>
       <groupId>com.squareup</groupId>
       <artifactId>javapoet</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.immutables</groupId>
-      <artifactId>value</artifactId>
-      <scope>provided</scope>
-    </dependency>
+
 		<dependency>
 		  <groupId>com.google.googlejavaformat</groupId>
 		  <artifactId>google-java-format</artifactId>
 		</dependency>
 
-
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-api</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-engine</artifactId>
-      <scope>test</scope>
-    </dependency>
   </dependencies>
 </project>

@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright © 2015 ReSys (info@dialob.io) Licensed under the Apache License,
+Version 2.0 (the "License"); you may not use this file except in compliance
+with
+the License. You may 
+  obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software distributed
+under the License is distributed 
+  on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+express or implied. See the License for the specific language governing
+permissions and limitations under the 
+  License. -->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>io.digiexpress</groupId>
+    <artifactId>digiexpress-parent</artifactId>
+    <version>999-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>digiexpress-bom</artifactId>
+  <packaging>pom</packaging>
+
+
+  <dependencyManagement>
+    <dependencies>
+
+
+
+
+      <!-- HDES -->
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>hdes-core</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>hdes-client-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>hdes-client</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>hdes-composer-ui</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <!-- store -->
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>hdes-store-git</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>hdes-store-thena</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <!-- dialect -->
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>hdes-ast</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>hdes-compiler</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>hdes-executor</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>hdes-interpreter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>hdes-runtime</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>hdes-runtime-test</artifactId>
+        <version>${project.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>hdes-spring-env</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>hdes-spring-composer</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>quarkus-composer-pg</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+
+
+
+      <!-- Process -->
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>digiexpress-client-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>digiexpress-composer</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>digiexpress-composer-ui</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>digiexpress-composer-spring</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+
+      <!-- Stencil -->
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>stencil-composer-integration</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>stencil-client-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>stencil-iam-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>quarkus-stencil-composer</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>quarkus-stencil-composer-pg</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>quarkus-stencil-site-pg</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>quarkus-stencil-sc</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>quarkus-stencil-user-actions</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>quarkus-stencil-iam</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+
+      <!-- Thena -->
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>thena-docdb-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>thena-docdb-pgsql</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <!-- Dialob -->
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>dialob-core</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>dialob-client-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>dialob-compiler</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>dialob-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>dialob-rule-parser</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>dialob-form-store-pgsql</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>dialob-composer</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>dialob-composer-ui</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>dialob-composer-spring</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>dialob-rule-parser</artifactId>
+        <classifier>tests</classifier>
+        <type>test-jar</type>
+        <scope>test</scope>
+        <version>${project.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+</project>

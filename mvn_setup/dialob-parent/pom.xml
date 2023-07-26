@@ -20,8 +20,6 @@
   
   <modules>
     <module>dialob-api-parent</module>
-    <module>dialob-bom</module>
-    <module>dialob-build-parent</module>
     <module>dialob-core</module>
     <module>dialob-dev</module>
     <module>dialob-composer</module>
