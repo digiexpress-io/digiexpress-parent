@@ -6,14 +6,14 @@ on:
 name: dev branch - mvn release - java 17
 jobs:
   build:
-    name: release branch main
+    name: release branch dev
     if: "startsWith(github.event.head_commit.message, '@ci mvn_dev_release')"
     runs-on: ubuntu-latest
     steps:
     - name: git clone main config step
       uses: actions/checkout@v3
       with:
-        ref: main
+        ref: dev
         token: ${{ secrets.REPO_TOKEN }}
 
     - uses: actions/setup-java@v2
