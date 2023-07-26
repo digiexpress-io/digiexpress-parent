@@ -29,8 +29,6 @@ permissions and limitations under the
     <dependencies>
 
 
-
-
       <!-- HDES -->
       <dependency>
         <groupId>io.digiexpress</groupId>
@@ -112,8 +110,6 @@ permissions and limitations under the
         <artifactId>quarkus-composer-pg</artifactId>
         <version>${project.version}</version>
       </dependency>
-
-
 
 
       <!-- Process -->
@@ -200,6 +196,16 @@ permissions and limitations under the
       </dependency>
 
       <!-- Dialob -->
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>dialob-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>dialob-api-client</artifactId>
+        <version>${project.version}</version>
+      </dependency>
       <dependency>
         <groupId>io.digiexpress</groupId>
         <artifactId>dialob-core</artifactId>

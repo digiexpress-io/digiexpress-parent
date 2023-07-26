@@ -19,7 +19,6 @@
   <name>dialob-parent</name>
   
   <modules>
-    <module>dialob-api-parent</module>
     <module>dialob-core</module>
     <module>dialob-dev</module>
     <module>dialob-composer</module>
