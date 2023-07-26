@@ -42,7 +42,7 @@ const DescriptorTableRow: React.FC<{
   row: client.TaskDescriptor,
   def: client.Group
 }> = ({ row, def }) => {
-
+  
   const [hoverItemsActive, setHoverItemsActive] = React.useState(false);
 
   return (<TableRow hover tabIndex={-1} key={row.id} onMouseEnter={() => setHoverItemsActive(true)} onMouseLeave={() => setHoverItemsActive(false)}>

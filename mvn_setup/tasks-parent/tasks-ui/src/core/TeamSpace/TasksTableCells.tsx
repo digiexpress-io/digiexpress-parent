@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Avatar, AvatarGroup, IconButton, Dialog, Stack } from '@mui/material';
+import { Box, Avatar, AvatarGroup, IconButton, Dialog } from '@mui/material';
 import DateRangeOutlinedIcon from '@mui/icons-material/DateRangeOutlined';
 import AssistantPhotoTwoToneIcon from '@mui/icons-material/AssistantPhotoTwoTone';
 import { useIntl } from 'react-intl';
@@ -8,6 +8,8 @@ import { DatePicker } from '../DatePicker/DatePicker';
 import client from '@taskclient';
 
 import { TasksTableCell } from './TasksTableCell';
+import { useTablePopover } from './TablePopover';
+
 
 interface CellProps {
   row: client.TaskDescriptor;
@@ -15,26 +17,42 @@ interface CellProps {
 }
 
 
+
 const AssignPerson: React.FC = () => {
+  const Popover = useTablePopover();
+
+
   return (
-    <Stack direction="row">
-      <Avatar sx={{
-        width: 24,
-        height: 24,
-        fontSize: 10,
-        ':hover': {
-          cursor: 'pointer'
-        }
-      }} />
-    </Stack>
+    <>
+      <Popover.Delegate>
+        <Box display='flex' flexDirection='column'>
+          <Box>'Assignee1'</Box>
+          <Box>'Assignee2'</Box>
+          <Box>'Assignee3'</Box>
+          <Box>'Assignee4'</Box>
+        </Box>
+      </Popover.Delegate>
+
+      <Avatar onClick={Popover.onClick}
+        sx={{
+          width: 24,
+          height: 24,
+          fontSize: 10,
+          ':hover': {
+            cursor: 'pointer'
+          }
+        }} />
+    </>
   );
 }
 
 const Assignees: React.FC<CellProps> = ({ row, def }) => {
   const { state } = client.useTasks();
   const avatars = row.assigneesAvatars.map((entry, index) => {
-    return (
-      <Avatar key={index} sx={{
+
+
+    return (<Avatar key={index}
+      sx={{
         bgcolor: state.pallette.owners[entry.value],
         width: 24,
         height: 24,
@@ -77,7 +95,23 @@ const Status: React.FC<CellProps> = ({ row }) => {
 const Priority: React.FC<CellProps & { color?: string }> = ({ row, color }) => {
   const intl = useIntl();
   const value = intl.formatMessage({ id: `tasktable.header.spotlight.priority.${row.priority}` }).toUpperCase();
-  return (<TasksTableCell id={row.id + "/Priority"} name={<IconButton><AssistantPhotoTwoToneIcon sx={{ fontSize: 'medium', color }} /></IconButton>} />);
+
+  const Popover = useTablePopover();
+
+
+  return (
+    <>
+      <Popover.Delegate>
+        <Box display='flex' flexDirection='column'>
+          <Box>'HIGH'</Box>
+          <Box>'NORMAL'</Box>
+          <Box>'LOW'</Box>
+        </Box>
+      </Popover.Delegate>
+      <TasksTableCell id={row.id + "/Priority"} name={<IconButton onClick={Popover.onClick}><AssistantPhotoTwoToneIcon sx={{ fontSize: 'medium', color }} /></IconButton>} />
+
+    </>
+  );
 }
 
 
