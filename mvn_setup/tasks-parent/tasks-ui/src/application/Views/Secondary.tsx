@@ -8,6 +8,7 @@ import HistoryIcon from '@mui/icons-material/History';
 import PersonIcon from '@mui/icons-material/Person';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import CircleNotificationsIcon from '@mui/icons-material/CircleNotifications';
+import InboxIcon from '@mui/icons-material/Inbox';
 import { FormattedMessage } from 'react-intl';
 import Burger from '@the-wrench-io/react-burger';
 import Taskclient from '@taskclient';
@@ -81,10 +82,11 @@ const Secondary: React.FC<{}> = () => {
   function handleMyHistory() { actions.handleTabAdd({ id: 'myhistory', label: <FormattedMessage id="activities.myhistory.title" /> }) }
   function handleSearch() { actions.handleTabAdd({ id: 'search', label: <FormattedMessage id="activities.search.title" /> }) }
   function handleReporting() { actions.handleTabAdd({ id: 'reporting', label: <FormattedMessage id="activities.reporting.title" /> }) }
+  function handleInbox() { actions.handleTabAdd({ id: 'inbox', label: <FormattedMessage id="activities.inbox.title" /> }) }
 
   function handleDashboard() { actions.handleTabAdd({ id: 'activities', label: <FormattedMessage id="activities.title" /> }) }
-  
-  
+
+
   function handleDev() { actions.handleTabAdd({ id: 'dev', label: <FormattedMessage id="activities.dev.title" /> }) }
 
   return (<Box sx={{ backgroundColor: "explorer.main", height: '100%', width: '100%' }}>
@@ -100,6 +102,7 @@ const Secondary: React.FC<{}> = () => {
         <StyledExplorerTab value='explorer.mytasks' icon={<PersonIcon />} label={<FormattedMessage id="activities.mytasks.title" />} onClick={handleMyTasks} />
         <StyledExplorerTab value='explorer.myhistory' icon={<HistoryIcon />} label={<FormattedMessage id="activities.myhistory.title" />} onClick={handleMyHistory} />
         <StyledExplorerTab value='explorer.reporting' icon={<PieChartIcon />} label={<FormattedMessage id="activities.reporting.title" />} onClick={handleReporting} />
+        <StyledExplorerTab value='explorer.inbox' icon={<InboxIcon />} label={<FormattedMessage id="activities.inbox.title" />} onClick={handleInbox} />
         <StyledExplorerTab value='explorer.dev' icon={<PieChartIcon />} label={<FormattedMessage id="activities.dev.title" />} onClick={handleDev} />
       </StyledTabs>
     </Box>

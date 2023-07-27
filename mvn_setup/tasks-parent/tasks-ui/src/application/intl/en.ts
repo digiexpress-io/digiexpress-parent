@@ -52,6 +52,9 @@ const en = {
   'activities.reporting.title': 'Reporting',
   'activities.reporting.desc': 'Generate json report of data. Allows grouping and filtering.',
 
+  'activities.inbox.title': 'Inbox',
+  'activities.inbox.desc': 'See and manage my correspondence with clients',
+
   'activities.migration.title': 'Migration',
   'activities.migration.desc': 'Migrate project from one to another, or to an entirely new environment using JSON file.',
 

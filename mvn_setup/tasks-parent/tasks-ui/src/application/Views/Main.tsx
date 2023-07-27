@@ -8,7 +8,7 @@ import TaskClient from '@taskclient';
 import Core from '../../core';
 import Activities from '../Activities';
 
-const root: SxProps = { height: '100%', backgroundColor: "mainContent.main",  width: '100%', p: 1  };
+const root: SxProps = { height: '100%', backgroundColor: "mainContent.main", width: '100%', p: 1 };
 
 
 const Main: React.FC<{}> = () => {
@@ -18,7 +18,7 @@ const Main: React.FC<{}> = () => {
   const active = tabs.length ? tabs[layout.session.history.open] : undefined;
   const entity = active ? session.getEntity(active.id) : undefined;
   console.log("Opening Route", active?.id);
-      
+
   //composers which are NOT linked directly with an article
 
   return React.useMemo(() => {
@@ -28,22 +28,25 @@ const Main: React.FC<{}> = () => {
     if (!active) {
       return null;
     }
-    
-            <Box>NEW BOX</Box>
+
+    <Box>NEW BOX</Box>
+
 
     if (active.id === 'activities') {
       return (<Box sx={root}><Activities /></Box>);
     } else if (active.id === 'tasks') {
-      return (<Box sx={root}><Core.Tasks /></Box>);  
+      return (<Box sx={root}><Core.Tasks /></Box>);
     } else if (active.id === 'mytasks') {
-      return (<Box sx={root}><Core.MyWork /></Box>);  
+      return (<Box sx={root}><Core.MyWork /></Box>);
     } else if (active.id === 'dev') {
-      return (<Box sx={root}><Core.Dev /></Box>);  
+      return (<Box sx={root}><Core.Dev /></Box>);
     } else if (active.id === 'teamSpace') {
       return (<Box sx={root}><Core.TeamSpace /></Box>)
+    } else if (active.id === 'inbox') {
+      return (<Box sx={root}><Core.Inbox /></Box>)
     }
-    
-    
+
+
     if (entity) {
       return <Box sx={root}>entity editor: {JSON.stringify(active)}</Box>
     }
