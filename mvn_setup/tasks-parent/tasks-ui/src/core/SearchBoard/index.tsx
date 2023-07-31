@@ -1,3 +1,7 @@
-import TasksTable from './TasksTable';
 
-export default TasksTable;
+const SearchBoard: React.FC<{}> = () => {
+  return (<>Seacrh board</>);
+}
+
+
+export default SearchBoard;

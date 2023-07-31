@@ -5,7 +5,6 @@ import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
 import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
 import AttachFileOutlinedIcon from '@mui/icons-material/AttachFileOutlined';
 import { FormattedMessage } from 'react-intl';
-import EditTaskDialog from '../TaskOps/EditTask';
 
 
 const boxSx: SxProps = { ml: 1, alignItems: 'center', justifyItems: 'center' }
@@ -27,13 +26,10 @@ const StartWorkButton: React.FC<{}> = () => {
 }
 
 const MyWorkHoverOptions: React.FC<{ active: boolean }> = () => {
-  const [editDialogOpen, setEditDialogOpen] = React.useState(false);
-
 
   return (<>
-    <EditTaskDialog onClose={() => setEditDialogOpen(false)} open={editDialogOpen} />
     <Box display='flex' sx={boxSx}>
-      <StartWorkButton />
+      <StartWorkButton  />
     </Box>
   </>
   )

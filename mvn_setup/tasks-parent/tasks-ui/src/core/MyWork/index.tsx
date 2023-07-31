@@ -4,13 +4,12 @@ import { TableHead, TableCell, TableRow } from '@mui/material';
 import Styles from '@styles';
 import client from '@taskclient';
 import TaskTable from '../TaskTable';
-import Tools from '../TaskTools';
+import { MyWorkHoverOptions } from './MyWorkHoverOptions';
 
 
 const Header: React.FC<TaskTable.RenderProps> = ({ content, setContent, group }) => {
 
   const columns: (keyof client.TaskDescriptor)[] = React.useMemo(() => [
-    'assignees',
     'dueDate',
     'priority',
     'status',
@@ -25,11 +24,11 @@ const Header: React.FC<TaskTable.RenderProps> = ({ content, setContent, group })
         </TableCell>
 
         <TaskTable.ColumnHeaders columns={columns} content={content} setContent={setContent} />
-        <TableCell></TableCell>
       </TableRow>
     </TableHead>
   );
 }
+
 
 const Row: React.FC<{
   rowId: number,
@@ -40,8 +39,7 @@ const Row: React.FC<{
   const [hoverItemsActive, setHoverItemsActive] = React.useState(false);
 
   return (<TableRow hover tabIndex={-1} key={props.row.id} onMouseEnter={() => setHoverItemsActive(true)} onMouseLeave={() => setHoverItemsActive(false)}>
-    <TaskTable.CellTitle {...props} children={hoverItemsActive} />
-    <TaskTable.CellAssignees {...props} />
+    <TaskTable.CellTitle {...props} children={hoverItemsActive && <MyWorkHoverOptions active={hoverItemsActive} />} />
     <TaskTable.CellDueDate {...props} />
     <TaskTable.CellPriority {...props} />
     <TaskTable.CellStatus {...props} />
@@ -55,18 +53,18 @@ const Rows: React.FC<TaskTable.RenderProps> = ({ content, group, loading }) => {
     <Styles.TableBody>
       {content.entries.map((row, rowId) => (<Row key={row.id} rowId={rowId} row={row} def={group} />))}
 
-      <Styles.TableFiller content={content} loading={loading} plusColSpan={6} />
+      <Styles.TableFiller content={content} loading={loading} plusColSpan={5} />
     </Styles.TableBody>
   )
 }
 
 
-const AdminBoard: React.FC<{}> = () => {
+const MyWork: React.FC<{}> = () => {
   return (
-    <TaskTable.Groups groupBy={undefined} orderBy='created'>
-      {{ Header, Rows, Tools }}
+    <TaskTable.Groups groupBy='myWorkType' orderBy='created'>
+      {{ Header, Rows, Tools: undefined }}
     </TaskTable.Groups>);
 }
 
 
-export default AdminBoard;
+export default MyWork;

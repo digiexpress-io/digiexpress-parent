@@ -130,6 +130,6 @@ function CustomTable<Record extends object, Ext extends {}>(props: TableProps<Re
 
 
 export { Provider, useTable, CustomTable };
-export type { DescriptorTableStateBuilder, DescriptorTableContextType, DescriptorTableState };
+export type { DescriptorTableStateBuilder, DescriptorTableContextType, DescriptorTableState, TableRenderProps };
 
 

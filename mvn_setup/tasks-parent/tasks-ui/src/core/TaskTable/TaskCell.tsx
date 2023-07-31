@@ -3,7 +3,7 @@ import { Chip, Box, Typography } from '@mui/material';
 import client from '@taskclient';
 
 
-const MyWorkTasksTableCell: React.FC<{
+const Cell: React.FC<{
   id: string,
   name?: React.ReactNode,
   tag?: string,
@@ -29,5 +29,5 @@ const MyWorkTasksTableCell: React.FC<{
       </Box> : name}
     </Box>);
 }
-export { MyWorkTasksTableCell };
+export default Cell;
 

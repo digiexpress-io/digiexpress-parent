@@ -5,7 +5,7 @@ import { TablePagination, TablePagination as TablePaginationAs } from './table-p
 
 
 import {
-  DescriptorTableStateBuilder, DescriptorTableContextType, DescriptorTableState,
+  DescriptorTableStateBuilder, DescriptorTableContextType, DescriptorTableState, TableRenderProps, 
   Provider as TableProviderAs,
   useTable as useTableAs,
   CustomTable
@@ -83,7 +83,7 @@ import * as Hooks from './hooks';
 
 
 declare namespace TaskClient {
-  export type { DescriptorTableStateBuilder, DescriptorTableContextType, DescriptorTableState };
+  export type { DescriptorTableStateBuilder, DescriptorTableContextType, DescriptorTableState, TableRenderProps };
   export type { TablePagination };
   export type { ClientContextType, ComposerContextType };
   export type {
