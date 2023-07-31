@@ -8,7 +8,6 @@ import type { ChecklistItemProps } from './ChecklistItem';
 import ChecklistItem from './ChecklistItem';
 import Styles from '@styles';
 import ChecklistItemDialog from './ChecklistItemDialog';
-import { set } from 'date-fns';
 
 const ChecklistHeader: React.FC = () => {
   return (
