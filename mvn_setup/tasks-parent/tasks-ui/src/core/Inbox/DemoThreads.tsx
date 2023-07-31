@@ -24,7 +24,11 @@ export const demoThreads: Thread[] = [
           {
             id: 'ATT_11',
             name: 'image.png',
-          }
+          },
+          {
+            id: 'ATT_12',
+            name: 'document.pdf',
+          },
         ],
         read: true,
         replyToId: 'MSG_11',
