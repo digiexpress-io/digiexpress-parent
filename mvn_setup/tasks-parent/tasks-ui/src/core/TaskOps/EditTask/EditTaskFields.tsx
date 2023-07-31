@@ -2,6 +2,9 @@ import React from 'react';
 import { TextField, Typography, Stack, Box, IconButton } from '@mui/material';
 import { FormattedMessage, useIntl } from 'react-intl';
 import DateRangeOutlinedIcon from '@mui/icons-material/DateRangeOutlined';
+import MailOutlineIcon from '@mui/icons-material/MailOutline';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
+import CircleNotificationsOutlinedIcon from '@mui/icons-material/CircleNotificationsOutlined';
 import Burger from '@the-wrench-io/react-burger';
 import TaskClient from '@taskclient';
 
@@ -74,6 +77,17 @@ const Options: React.FC<{}> = () => {
   return (<Box>Options</Box>)
 }
 
+const MessageCount: React.FC<{}> = () => {
+  return (<Box display='flex' alignItems='center'><MailOutlineIcon />4</Box>)
+}
+
+const AttachmentCount: React.FC<{}> = () => {
+  return (<Box display='flex' alignItems='center'><AttachFileIcon />2</Box>)
+}
+
+const NewItemNotification: React.FC<{}> = () => {
+  return (<Box display='flex' alignItems='center'><CircleNotificationsOutlinedIcon />3</Box>)
+}
 
 const StartDate: React.FC<{ onClick: () => void }> = ({ onClick }) => {
 
@@ -86,7 +100,7 @@ const StartDate: React.FC<{ onClick: () => void }> = ({ onClick }) => {
 
 const DueDate: React.FC<{ dueDate: string, onClick: () => void }> = ({ dueDate, onClick }) => {
   return (
-    <Box onClick={onClick}>
+    <Box textAlign='center' onClick={onClick}>
       <Typography><FormattedMessage id='core.taskOps.editTask.dueDate' /></Typography>
       <Typography variant='caption'>{dueDate}</Typography>
     </Box>)
@@ -94,5 +108,5 @@ const DueDate: React.FC<{ dueDate: string, onClick: () => void }> = ({ dueDate, 
 
 
 
-const Fields = { Title, Description, Checklist, Status, Assignee, Priority, Options, StartDate, DueDate }
+const Fields = { Title, Description, Checklist, Status, Assignee, Priority, Options, StartDate, DueDate, MessageCount, AttachmentCount, NewItemNotification }
 export default Fields;

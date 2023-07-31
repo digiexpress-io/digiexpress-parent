@@ -4,7 +4,7 @@ import { TableRow, SxProps, Box } from '@mui/material';
 import client from '@taskclient';
 import Styles from '@styles';
 import * as Cells from './MyWorkTasksTableCells';
-import { HoverOptions, HoverMenu } from './HoverOptions';
+import { MyWorkHoverOptions, CRMNotifications, HoverMenu } from './MyWorkHoverOptions';
 
 function getStatus(def: client.Group): SxProps | undefined {
   if (!def.color) {
@@ -29,14 +29,6 @@ function getPriority(def: client.Group): SxProps | undefined {
 }
 
 
-function getAssignees(def: client.Group): SxProps | undefined {
-  if (!def.color) {
-    return undefined;
-  }
-  return undefined;
-}
-
-
 const DescriptorTableRow: React.FC<{
   rowId: number,
   row: client.TaskDescriptor,
@@ -49,10 +41,9 @@ const DescriptorTableRow: React.FC<{
     <Styles.TaskTable.TableCell width="500px">
       <Box width='500px' justifyContent='left' display='flex'>
         <Cells.Subject maxWidth="500px" row={row} def={def} />
-        {hoverItemsActive && <HoverOptions active={hoverItemsActive} />}
+        {hoverItemsActive && <MyWorkHoverOptions active={hoverItemsActive} />}
       </Box>
     </Styles.TaskTable.TableCell>
-    <Styles.TaskTable.TableCell width="150px" sx={getAssignees(def)}><Cells.Assignees row={row} def={def} /></Styles.TaskTable.TableCell>
     <Styles.TaskTable.TableCell width="100px"><Cells.DueDate row={row} def={def} /></Styles.TaskTable.TableCell>
     <Styles.TaskTable.TableCell width="50px" sx={getPriority(def)}><Cells.Priority row={row} def={def} color={def?.color} /></Styles.TaskTable.TableCell>
     <Styles.TaskTable.TableCell width="100px" sx={getStatus(def)}><Cells.Status row={row} def={def} /></Styles.TaskTable.TableCell>

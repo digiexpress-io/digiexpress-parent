@@ -54,6 +54,11 @@ const Header: React.FC<{}> = () => {
           <Fields.StartDate onClick={() => setDatePickerOpen(true)} />
           <Fields.DueDate onClick={() => setDatePickerOpen(true)} dueDate='08/31/2023' />
           <Box flexGrow={1} />
+          <Stack direction='row' spacing={1} alignItems='center'>
+            <Fields.MessageCount />
+            <Fields.AttachmentCount />
+            <Fields.NewItemNotification />
+          </Stack>
           <Button variant='contained' color='warning'>Messages, attachments, form</Button>
         </Stack>
       </Grid>

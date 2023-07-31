@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, TableHead, TableCell, TableRow } from '@mui/material';
 
-import { FormattedMessage, useIntl } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import Styles from '@styles';
 import client from '@taskclient';
 
@@ -10,7 +10,6 @@ interface HeadCell {
 }
 
 const headCells: readonly HeadCell[] = [
-  { id: 'assignees' },
   { id: 'dueDate' },
   { id: 'priority' },
   { id: 'status' },

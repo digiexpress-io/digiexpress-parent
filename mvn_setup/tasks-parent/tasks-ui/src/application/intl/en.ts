@@ -20,12 +20,8 @@ const en = {
 
   'core.teamSpace.taskCount': '{values} Tasks',
   'core.teamSpace.task.create': 'Create new task',
-
-  'core.myWork.todo.button': 'Todo: 5',
-  'core.myWork.assignedComments.button': 'Assigned comments: 3',
-  'core.myWork.assignedChecklistItems.button': 'Assigned checklist items: 3',
-  'core.myWork.mySelectedTask.button': 'My selected task',
-
+  
+  'core.myWork.button.task.start': 'Start work',
   'core.myWork.myWorkTaskTable.header.spotlight.myWorkOverdue': 'Overdue',
   'core.myWork.myWorkTaskTable.header.spotlight.myWorkStartsToday': 'Starts today',
   'core.myWork.myWorkTaskTable.header.spotlight.myWorkAssigned': 'Assigned to me',
