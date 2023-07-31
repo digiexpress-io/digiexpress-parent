@@ -27,11 +27,10 @@ const StartWorkButton: React.FC<{}> = () => {
 
 const MyWorkHoverOptions: React.FC<{ active: boolean }> = () => {
 
-  return (<>
+  return (
     <Box display='flex' sx={boxSx}>
       <StartWorkButton  />
     </Box>
-  </>
   )
 }
 const HoverMenu: React.FC<{}> = () => {

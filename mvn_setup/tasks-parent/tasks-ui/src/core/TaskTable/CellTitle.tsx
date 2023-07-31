@@ -14,12 +14,13 @@ const FormattedCell: React.FC<{
   row: client.TaskDescriptor,
   def: client.Group,
   children: React.ReactNode
-}> = ({ row, def }) => {
+}> = ({ row, children }) => {
 
   return (
     <Styles.TableCell width="500px">
       <Box width='500px' justifyContent='left' display='flex'>
         <TaskCell id={row.id + "/Subject"} name={row.title} maxWidth={"500px"} />
+        {children}
       </Box>
     </Styles.TableCell>
   );
