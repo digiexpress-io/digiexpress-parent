@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Stack, List, Dialog } from '@mui/material';
+import { Box, Stack, List, Dialog, Button, Grid } from '@mui/material';
 
 import TaskClient from '@taskclient';
 import { DatePicker } from '../../DatePicker/DatePicker';
@@ -16,7 +16,6 @@ const Left: React.FC<{}> = () => {
       <Fields.Title />
       <Fields.Description />
       <Fields.Checklist />
-      <Fields.Attachments />
     </>)
 }
 
@@ -35,22 +34,31 @@ const Header: React.FC<{}> = () => {
   const [startDate, setStartDate] = React.useState<Date | string | undefined>();
   const [endDate, setEndDate] = React.useState<Date | string | undefined>();
 
-  return (
-    <Box display='flex'>
-      <Dialog open={datePickerOpen} onClose={() => setDatePickerOpen(false)}>
-        <DatePicker startDate={startDate} setStartDate={setStartDate} endDate={endDate} setEndDate={setEndDate} />
-      </Dialog>
-      <Stack spacing={2} direction='row' minWidth={'50%'}>
-        <Fields.Status />
-        <Fields.Assignee />
-        <Fields.Priority />
-        <Fields.Options />
-      </Stack>
-      <Stack spacing={2} direction='row'>
-        <Fields.StartDate onClick={() => setDatePickerOpen(true)} />
-        <Fields.DueDate onClick={() => setDatePickerOpen(true)} dueDate='08/31/2023' />
-      </Stack>
-    </Box>
+  return (<>
+    <Dialog open={datePickerOpen} onClose={() => setDatePickerOpen(false)}>
+      <DatePicker startDate={startDate} setStartDate={setStartDate} endDate={endDate} setEndDate={setEndDate} />
+    </Dialog>
+
+    <Grid container>
+      <Grid item md={6} lg={6}>
+        <Stack spacing={2} direction='row'>
+          <Fields.Status />
+          <Fields.Assignee />
+          <Fields.Priority />
+          <Fields.Options />
+        </Stack>
+      </Grid>
+
+      <Grid item md={6} lg={6}>
+        <Stack spacing={2} direction='row'>
+          <Fields.StartDate onClick={() => setDatePickerOpen(true)} />
+          <Fields.DueDate onClick={() => setDatePickerOpen(true)} dueDate='08/31/2023' />
+          <Box flexGrow={1} />
+          <Button variant='contained' color='warning'>Messages, attachments, form</Button>
+        </Stack>
+      </Grid>
+    </Grid>
+  </>
   )
 }
 

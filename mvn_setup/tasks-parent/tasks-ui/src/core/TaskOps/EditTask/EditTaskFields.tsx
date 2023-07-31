@@ -58,15 +58,6 @@ const Checklist: React.FC<{}> = () => {
   )
 }
 
-const Attachments: React.FC<{}> = () => {
-
-  return (
-    <Section title='core.taskOps.editTask.attachments' actions={<SectionAddButton />}>
-      attachments content
-    </Section>
-  )
-}
-
 const Status: React.FC<{}> = () => {
   return (<Box>Status</Box>)
 }
@@ -103,5 +94,5 @@ const DueDate: React.FC<{ dueDate: string, onClick: () => void }> = ({ dueDate, 
 
 
 
-const Fields = { Title, Description, Checklist, Attachments, Status, Assignee, Priority, Options, StartDate, DueDate }
+const Fields = { Title, Description, Checklist, Status, Assignee, Priority, Options, StartDate, DueDate }
 export default Fields;
