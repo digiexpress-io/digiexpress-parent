@@ -7,7 +7,7 @@ import { useIntl } from 'react-intl';
 import { DatePicker } from '../DatePicker/DatePicker';
 import client from '@taskclient';
 
-import { TasksTableCell } from './TasksTableCell';
+import { TeamSpaceTasksTableCell } from './TeamSpaceTasksTableCell';
 import { useTablePopover } from './TablePopover';
 
 
@@ -63,13 +63,13 @@ const Assignees: React.FC<CellProps> = ({ row, def }) => {
       }}>{entry.twoletters}</Avatar>
     );
   });
-  return (<TasksTableCell id={row.id + "/Assignees"} name={<Box flexDirection="row" display="flex">
+  return (<TeamSpaceTasksTableCell id={row.id + "/Assignees"} name={<Box flexDirection="row" display="flex">
     {avatars.length ? <AvatarGroup spacing='small'>{avatars}</AvatarGroup> : <AssignPerson />}
   </Box>} />);
 }
 
 const Desc: React.FC<CellProps> = ({ row }) => {
-  return (<TasksTableCell id={row.id + "/Desc"} name={row.description} />);
+  return (<TeamSpaceTasksTableCell id={row.id + "/Desc"} name={row.description} />);
 }
 const DueDate: React.FC<CellProps> = ({ row }) => {
 
@@ -81,7 +81,7 @@ const DueDate: React.FC<CellProps> = ({ row }) => {
     <Dialog open={datePickerOpen} onClose={() => setDatePickerOpen(false)}>
       <DatePicker startDate={startDate} setStartDate={setStartDate} endDate={endDate} setEndDate={setEndDate} />
     </Dialog>
-    <TasksTableCell id={row.id + "/DueDate"} name={
+    <TeamSpaceTasksTableCell id={row.id + "/DueDate"} name={
       <IconButton onClick={() => setDatePickerOpen(true)} color='inherit'><DateRangeOutlinedIcon sx={{ fontSize: 'small' }} /></IconButton>} />
   </>
   );
@@ -89,7 +89,7 @@ const DueDate: React.FC<CellProps> = ({ row }) => {
 const Status: React.FC<CellProps> = ({ row }) => {
   const intl = useIntl();
   const value = intl.formatMessage({ id: `tasktable.header.spotlight.status.${row.status}` }).toUpperCase();
-  return (<TasksTableCell id={row.id + "/Status"} name={value} />);
+  return (<TeamSpaceTasksTableCell id={row.id + "/Status"} name={value} />);
 }
 
 const Priority: React.FC<CellProps & { color?: string }> = ({ row, color }) => {
@@ -108,7 +108,7 @@ const Priority: React.FC<CellProps & { color?: string }> = ({ row, color }) => {
           <Box>'LOW'</Box>
         </Box>
       </Popover.Delegate>
-      <TasksTableCell id={row.id + "/Priority"} name={<IconButton onClick={Popover.onClick}><AssistantPhotoTwoToneIcon sx={{ fontSize: 'medium', color }} /></IconButton>} />
+      <TeamSpaceTasksTableCell id={row.id + "/Priority"} name={<IconButton onClick={Popover.onClick}><AssistantPhotoTwoToneIcon sx={{ fontSize: 'medium', color }} /></IconButton>} />
 
     </>
   );
@@ -116,11 +116,11 @@ const Priority: React.FC<CellProps & { color?: string }> = ({ row, color }) => {
 
 
 const Menu: React.FC<CellProps> = ({ row }) => {
-  return (<TasksTableCell id={row.id + "/Menu"} name={<></>} />);
+  return (<TeamSpaceTasksTableCell id={row.id + "/Menu"} name={<></>} />);
 }
 
 const Subject: React.FC<CellProps & { maxWidth: string }> = ({ row, maxWidth }) => {
-  return (<TasksTableCell id={row.id + "/Subject"} name={row.title} maxWidth={maxWidth} />);
+  return (<TeamSpaceTasksTableCell id={row.id + "/Subject"} name={row.title} maxWidth={maxWidth} />);
 }
 
 export type { CellProps }

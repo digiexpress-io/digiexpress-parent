@@ -1,8 +1,9 @@
 import { Task, TaskPriority, TaskStatus, TaskExtension } from './task-types';
+import { Profile } from './profile-types';
 
 export interface AvatarCode {
-  twoletters: string; 
-  value: string; 
+  twoletters: string;
+  value: string;
 }
 
 export interface TaskDescriptor {
@@ -21,6 +22,7 @@ export interface TaskDescriptor {
   uploads: TaskExtension[];
   rolesAvatars: AvatarCode[];
   assigneesAvatars: AvatarCode[];
+  myWorkType: MyWorkType | undefined;
 }
 
 export interface PalleteType {
@@ -35,9 +37,10 @@ export interface PalleteType {
     'COMPLETED': string,
     'CREATED': string,
   },
-  mywork: {
-    review: string,
-    upload: string
+  myWorkType: {
+    'myWorkOverdue': string,
+    'myWorkAssigned': string,
+    'myWorkStartsToday': string
   },
   colors: { red: string, green: string, yellow: string, blue: string, violet: string }
 }
@@ -55,7 +58,8 @@ export type OwnerUnassigned = "_nobody_";
 export type TasksMutator = (prev: TasksMutatorBuilder) => TasksMutatorBuilder;
 export type TasksDispatch = (mutator: TasksMutator) => void;
 
-export type GroupBy = 'status' | 'owners' | 'roles' | 'priority' | 'none';
+export type MyWorkType = 'myWorkOverdue' | 'myWorkAssigned' | 'myWorkStartsToday';
+export type GroupBy = 'status' | 'owners' | 'roles' | 'priority' | 'none' | 'myWorkType';
 export type FilterByStatus = { type: 'FilterByStatus', status: TaskStatus[], disabled: boolean }
 export type FilterByPriority = { type: 'FilterByPriority', priority: TaskPriority[], disabled: boolean }
 export type FilterByOwners = { type: 'FilterByOwners', owners: string[], disabled: boolean }
@@ -77,6 +81,7 @@ export interface TasksState {
   filterBy: FilterBy[];
   searchString: string | undefined;
   pallette: TasksStatePallette;
+  withGroupBy(groupBy: GroupBy): TasksMutatorBuilder;
 }
 
 export interface TasksStatePallette {
@@ -87,9 +92,9 @@ export interface TasksStatePallette {
 }
 
 export interface TasksMutatorBuilder extends TasksState {
+  withProfile(profile: Profile): TasksMutatorBuilder;
   withTasks(tasks: Task[]): TasksMutatorBuilder;
   withSearchString(searchString: string): TasksMutatorBuilder;
-  withGroupBy(groupBy: GroupBy): TasksMutatorBuilder;
   withFilterByStatus(status: TaskStatus[]): TasksMutatorBuilder;
   withFilterByPriority(priority: TaskPriority[]): TasksMutatorBuilder;
   withFilterByOwner(owners: string[]): TasksMutatorBuilder;

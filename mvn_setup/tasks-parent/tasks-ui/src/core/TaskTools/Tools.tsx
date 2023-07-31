@@ -51,19 +51,18 @@ const Tools: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
   return (<>
     <Sticky>
-
       <Search>
         <SearchIconWrapper><SearchIcon /></SearchIconWrapper>
-        <StyledInputBase placeholder="Search…" onChange={({target}) => {
+        <StyledInputBase placeholder="Search…" onChange={({ target }) => {
           ctx.setState(prev => prev.withSearchString(target.value))
-        }}/>
+        }} />
       </Search>
-      
+
       <GroupBy />
       <FilterNormal />
       <FilterOwners />
       <FilterRoles />
-      
+
     </Sticky>
 
     <Box sx={{ pt: 10 }}></Box>

@@ -26,13 +26,13 @@ export class ServiceImpl implements Client {
     try {
       const init = await this._store.fetch<BackendInit>("init", { notFound: () => null });
       if (init === null) {
-        return { name: "", contentType: "BACKEND_NOT_FOUND" };
+        return { name: "", contentType: "BACKEND_NOT_FOUND", today: new Date(), userId: "carrot ironfoundersson" };
       }
 
-      return { name: "", contentType: "OK" };
+      return { name: "", contentType: "OK", today: new Date(), userId: "carrot ironfoundersson" };
     } catch (error) {
       console.error("PROFILE, failed to fetch", error);
-      return { name: "", contentType: "NO_CONNECTION" };
+      return { name: "", contentType: "NO_CONNECTION", today: new Date(), userId: "carrot ironfoundersson" };
     }
   }
 

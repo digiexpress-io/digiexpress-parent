@@ -3,7 +3,7 @@ import { TableRow, SxProps, Box } from '@mui/material';
 
 import client from '@taskclient';
 import Styles from '@styles';
-import * as Cells from './TasksTableCells';
+import * as Cells from './MyWorkTasksTableCells';
 import { HoverOptions, HoverMenu } from './HoverOptions';
 
 function getStatus(def: client.Group): SxProps | undefined {

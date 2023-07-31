@@ -16,7 +16,6 @@ const Left: React.FC<{}> = () => {
       <Fields.Title />
       <Fields.Description />
       <Fields.Checklist />
-      <Fields.Subtasks />
       <Fields.Attachments />
     </>)
 }

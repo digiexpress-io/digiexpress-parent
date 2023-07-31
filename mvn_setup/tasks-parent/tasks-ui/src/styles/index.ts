@@ -7,7 +7,7 @@ import { StyledProgressBar } from './StyledProgressBar';
 import * as TaskTableStyles from './StyledTaskTable';
 
 import StyledSpotlightLabel from './StyledSpotlightLabel';
-
+import StyledLayout from './StyledLayout';
 
 declare namespace Styles {
   export type { StyledCardsProps, StyledCardItemProps };
@@ -18,6 +18,7 @@ declare namespace Styles {
 namespace Styles {
   export const Cards = StyledCards;
   export const SpotlightLabel = StyledSpotlightLabel;
+  export const Layout = StyledLayout;
   export const TaskTable = { 
     TableCell: TaskTableStyles.StyledTableCell,
     TableBody: TaskTableStyles.StyledTableBody,

@@ -39,7 +39,7 @@ const store: TaskClient.Store = new TaskClient.DefaultStore({
 });
 const backend = new TaskClient.ServiceImpl(store);
 
-const Apps: React.FC<{ services: TaskClient.Profile }> = ({ services }) => {
+const Apps: React.FC<{ profile: TaskClient.Profile }> = ({ profile }) => {
   // eslint-disable-next-line 
   const serviceComposer: Burger.App<TaskClient.ComposerContextType> = React.useMemo(() => ({
     id: "service-composer",
@@ -50,7 +50,7 @@ const Apps: React.FC<{ services: TaskClient.Profile }> = ({ services }) => {
     ]
   }), []);
 
-  return (<TaskClient.Provider service={backend} profile={services}>
+  return (<TaskClient.Provider service={backend} profile={profile}>
     <Burger.Provider children={[serviceComposer]} secondary="toolbar.activities" drawerOpen />
   </TaskClient.Provider>)
 }
@@ -73,7 +73,7 @@ const LoadApps = React.lazy(async () => {
         snackbar.enqueueSnackbar(msg, { variant: 'success' })
       }
     }, [intl, snackbar]);
-    return <Apps services={head} />
+    return <Apps profile={head} />
   };
   return ({ default: Result })
 });
@@ -90,7 +90,6 @@ console.log("theme ", theme);
 
 
 const NewApp: React.FC<{}> = () => (
-  <TaskClient.ScreenProvider>
     <IntlProvider locale={locale} messages={messages[locale]}>
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={theme}>
@@ -99,7 +98,6 @@ const NewApp: React.FC<{}> = () => (
           </SnackbarProvider>
         </ThemeProvider>
       </StyledEngineProvider>
-    </IntlProvider>
-  </TaskClient.ScreenProvider>);
+    </IntlProvider>);
 
 export default NewApp;

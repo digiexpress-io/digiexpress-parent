@@ -2,10 +2,10 @@ import { Task, TaskExtension, TaskPriority, TaskStatus } from './task-types';
 import {
   PalleteType, TasksState, TasksMutatorBuilder, TaskDescriptor, FilterBy, Group, GroupBy,
   RoleUnassigned, OwnerUnassigned, TasksStatePallette,
-  FilterByOwners, FilterByPriority, FilterByRoles, FilterByStatus, AvatarCode
+  FilterByOwners, FilterByPriority, FilterByRoles, FilterByStatus, AvatarCode, MyWorkType
 } from './tasks-ctx-types';
 
-
+import { Profile } from './profile-types';
 
 const _nobody_: RoleUnassigned & OwnerUnassigned = '_nobody_';
 
@@ -28,15 +28,16 @@ const Pallette: PalleteType = {
     'COMPLETED': steelblue,
     'CREATED': ultraviolet,
   },
-  mywork: {
-    review: ultraviolet,
-    upload: bittersweet
+  myWorkType: {
+    myWorkAssigned: ultraviolet,
+    myWorkOverdue: bittersweet,
+    myWorkStartsToday: emerald
   },
   colors: { red: bittersweet, green: emerald, yellow: sunglow, blue: steelblue, violet: ultraviolet }
 };
 
 
-interface ExtendedInit extends TasksState {
+interface ExtendedInit extends Omit<TasksState, "withGroupBy"> {
   filtered: TaskDescriptor[];
   owners: string[];
   roles: string[];
@@ -46,6 +47,7 @@ interface ExtendedInit extends TasksState {
     status: Record<string, string>
     priority: Record<string, string>
   }
+  profile: Profile
 }
 
 class TasksStateBuilder implements TasksMutatorBuilder {
@@ -59,6 +61,7 @@ class TasksStateBuilder implements TasksMutatorBuilder {
   private _owners: string[];
   private _roles: string[];
   private _pallette: TasksStatePallette;
+  private _profile: Profile;
 
   constructor(init: ExtendedInit) {
     this._tasks = init.tasks;
@@ -71,17 +74,19 @@ class TasksStateBuilder implements TasksMutatorBuilder {
     this._owners = init.owners;
     this._roles = init.roles;
     this._pallette = init.pallette;
+    this._profile = init.profile;
   }
-  get pallette(): TasksStatePallette { return this._pallette };
-  get owners(): string[] { return this._owners };
-  get roles(): string[] { return this._roles };
-  get tasks(): TaskDescriptor[] { return this._tasks };
-  get groupBy(): GroupBy { return this._groupBy };
-  get groups(): Group[] { return this._groups };
-  get filterBy(): FilterBy[] { return this._filterBy };
-  get searchString(): string | undefined { return this._searchString };
-  get filtered(): TaskDescriptor[] { return this._filtered };
-  get tasksByOwner(): Record<string, TaskDescriptor[]> { return this._tasksByOwner };
+  get profile(): Profile { return this._profile }
+  get pallette(): TasksStatePallette { return this._pallette }
+  get owners(): string[] { return this._owners }
+  get roles(): string[] { return this._roles }
+  get tasks(): TaskDescriptor[] { return this._tasks }
+  get groupBy(): GroupBy { return this._groupBy }
+  get groups(): Group[] { return this._groups }
+  get filterBy(): FilterBy[] { return this._filterBy }
+  get searchString(): string | undefined { return this._searchString }
+  get filtered(): TaskDescriptor[] { return this._filtered }
+  get tasksByOwner(): Record<string, TaskDescriptor[]> { return this._tasksByOwner }
 
   withTasks(input: Task[]): TasksStateBuilder {
     const tasks: TaskDescriptor[] = [];
@@ -90,7 +95,7 @@ class TasksStateBuilder implements TasksMutatorBuilder {
     const tasksByOwner: Record<string, TaskDescriptor[]> = {};
 
     input.forEach(task => {
-      const item = new TaskDescriptorImpl(task);
+      const item = new TaskDescriptorImpl(task, this._profile);
       tasks.push(item);
 
       task.roles.forEach(role => {
@@ -185,12 +190,16 @@ class TasksStateBuilder implements TasksMutatorBuilder {
   withFilterByRoles(roles: string[]): TasksStateBuilder {
     return this.withFilterBy({ type: 'FilterByRoles', roles, disabled: false });
   }
+  withProfile(profile: Profile): TasksStateBuilder {
+    return new TasksStateBuilder({ ...this.clone(), profile });
+  }
   withoutFilters(): TasksStateBuilder {
     return this.withFilterBy(undefined);
   }
   clone(): ExtendedInit {
     const init = this;
     return {
+      profile: init.profile,
       tasks: init.tasks,
       tasksByOwner: init.tasksByOwner,
       groupBy: init.groupBy,
@@ -333,6 +342,9 @@ class GroupVisitor {
     } else if (init.groupBy === 'status') {
       const values: TaskStatus[] = ['CREATED', 'IN_PROGRESS', 'COMPLETED', 'REJECTED'];
       values.forEach(o => this._groups[o] = { records: [], color: Pallette.status[o], id: o, type: init.groupBy })
+    } else if (init.groupBy === 'myWorkType') {
+      const values: MyWorkType[] = ['myWorkOverdue', 'myWorkAssigned', 'myWorkStartsToday'];
+      values.forEach(o => this._groups[o] = { records: [], color: Pallette.myWorkType[o], id: o, type: init.groupBy })
     }
   }
 
@@ -359,6 +371,12 @@ class GroupVisitor {
       this._groups[task.status].records.push(task);
     } else if (this._groupBy === 'priority') {
       this._groups[task.priority].records.push(task);
+    } else if(this._groupBy === 'myWorkType') {
+      
+      // Include only logged in user tasks 
+      if(task.myWorkType) {
+        this._groups[task.myWorkType].records.push(task);
+      }
     }
   }
 }
@@ -371,17 +389,21 @@ class TaskDescriptorImpl implements TaskDescriptor {
   private _uploads: TaskExtension[];
   private _rolesAvatars: AvatarCode[];
   private _ownersAvatars: AvatarCode[];
+  private _myWorkType: MyWorkType | undefined;
 
-  constructor(entry: Task) {
+  constructor(entry: Task, profile: Profile) {
     this._entry = entry;
     this._created = new Date(entry.created);
     this._dueDate = entry.dueDate ? new Date(entry.dueDate) : undefined;
     this._dialobId = entry.extensions.find(t => t.type === 'dialob')!.body;
     this._uploads = entry.extensions.filter(t => t.type === 'upload');
-    this._rolesAvatars = this.getAvatar(entry.roles);
-    this._ownersAvatars = this.getAvatar(entry.assigneeIds);
-    
+    this._rolesAvatars = getAvatar(entry.roles);
+    this._ownersAvatars = getAvatar(entry.assigneeIds);
+    this._myWorkType = getMyWorkType(entry, profile);
   }
+  
+  
+  get myWorkType() { return this._myWorkType }
   get id() { return this._entry.id }
   get dialobId() { return this._dialobId }
   get entry() { return this._entry }
@@ -396,27 +418,35 @@ class TaskDescriptorImpl implements TaskDescriptor {
   get title() { return this._entry.title }
   get description() { return this._entry.description }
   get uploads() { return this._uploads }
-  get rolesAvatars() {return this._rolesAvatars }
-  get assigneesAvatars() {return this._ownersAvatars }
+  get rolesAvatars() { return this._rolesAvatars }
+  get assigneesAvatars() { return this._ownersAvatars }
+}
 
-  getAvatar(values: string[]): { twoletters: string, value: string }[] {
-    return values.map(role => {
-      const words: string[] = role.replaceAll("-", " ").replaceAll("_", " ").replace(/([A-Z])/g, ' $1').replaceAll("  ", " ").trim().split(" ");
-
-      const result: string[] = [];
-      for (const word of words) {
-        if (result.length >= 2) {
-          break;
-        }
-
-        if (word && word.length) {
-          const firstLetter = word.substring(0, 1);
-          result.push(firstLetter.toUpperCase());
-        }
-      }
-      return { twoletters: result.join(""), value: role };
-    });
+function getMyWorkType(task: Task, profile: Profile): MyWorkType | undefined{
+  if(!task.assigneeIds.includes(profile.userId)) {
+    return undefined;
   }
+  
+  return "myWorkAssigned";
+}
+
+function getAvatar(values: string[]): { twoletters: string, value: string }[] {
+  return values.map(role => {
+    const words: string[] = role.replaceAll("-", " ").replaceAll("_", " ").replace(/([A-Z])/g, ' $1').replaceAll("  ", " ").trim().split(" ");
+
+    const result: string[] = [];
+    for (const word of words) {
+      if (result.length >= 2) {
+        break;
+      }
+
+      if (word && word.length) {
+        const firstLetter = word.substring(0, 1);
+        result.push(firstLetter.toUpperCase());
+      }
+    }
+    return { twoletters: result.join(""), value: role };
+  });
 }
 
 function applyDescFilters(desc: TaskDescriptor, filters: FilterBy[]): boolean {

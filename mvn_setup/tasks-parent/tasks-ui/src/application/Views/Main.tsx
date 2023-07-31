@@ -29,7 +29,8 @@ const Main: React.FC<{}> = () => {
       return null;
     }
     
-    
+            <Box>NEW BOX</Box>
+
     if (active.id === 'activities') {
       return (<Box sx={root}><Activities /></Box>);
     } else if (active.id === 'tasks') {

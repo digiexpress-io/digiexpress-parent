@@ -1,3 +1,3 @@
-import { Tasks } from './Tasks';
+import { TeamSpaceTasks } from './TeamSpaceTasks';
 
-export default Tasks;
+export default TeamSpaceTasks;

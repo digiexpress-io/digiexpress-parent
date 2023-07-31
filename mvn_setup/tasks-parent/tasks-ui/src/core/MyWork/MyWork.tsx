@@ -1,56 +1,62 @@
 import React from 'react';
 
-import { Box, TableContainer, Table, TablePagination } from '@mui/material';
+import { Box, Stack, Divider, Typography, Button } from '@mui/material';
+import { FormattedMessage } from 'react-intl';
+import { MyWorkTasks } from './MyWorkTasks';
 
 import client from '@taskclient';
+import Styles from '@styles';
 
-import TableHeader from './MyWorkTableHeader';
-import TableRows from './MyWorkTableRow';
 
+
+type ContentType = 'MyTasks' | 'MyAssignedComments' | 'MyAssignedChecklistItems';
+
+
+const StyledMyWorkButton: React.FC<{ onClick: () => void, label: string, attentionItem?: React.ReactNode }> = ({ onClick, label, attentionItem }) => {
+
+  return (
+    <Box display='flex' flexDirection='column'>
+      <Button variant='text' onClick={onClick}>
+        <Typography fontWeight='bold'><FormattedMessage id={label} /></Typography>
+      </Button>
+      <Typography sx={{ ml: 1 }} variant='caption'>{attentionItem}</Typography>
+    </Box>)
+}
+
+const MyAssignedComments: React.FC = () => {
+  return (<>Assigned comments</>);
+}
+
+const MyAssignedChecklistItems: React.FC = () => {
+  return (<>Assigned checklist items</>);
+}
 
 const MyWork: React.FC<{}> = () => {
-  const tasks = client.useTasks();
-  const org = client.useOrg();
 
-  const [loading, setLoading] = React.useState(true);
-  const [content, setContent] = React.useState(new client.TablePaginationImpl<client.TaskDescriptor>({
-    src: [],
-    orderBy: 'created',
-    sorted: false
-  }).withRowsPerPage(10));
+  const [contentType, setContentType] = React.useState<ContentType>('MyTasks');
 
-  React.useEffect(() => {
-    const myTasks = tasks.state.tasksByOwner[org.state.iam.userId]?.filter(task => task.status === 'CREATED' || task.status === 'IN_PROGRESS');
-    setContent(c => c.withSrc(myTasks));
-    setLoading(false);
-
-  }, [tasks, setContent, setLoading])
+  let content;
+  if (contentType === 'MyTasks') {
+    content = <MyWorkTasks />
+  } else if (contentType === 'MyAssignedComments') {
+    content = <MyAssignedComments />
+  } else {
+    content = <MyAssignedChecklistItems />
+  }
 
   return (
     <client.TableProvider>
-      <Box sx={{ width: '100%' }}>
-        <TableContainer>
-          <Table size='small'>
-            <TableHeader content={content} setContent={setContent} />
-            <TableRows content={content} loading={loading} />
-          </Table>
-        </TableContainer>
-        <Box display='flex' sx={{ paddingLeft: 1, marginTop: -2 }}>
-          <Box alignSelf="center" flexGrow={1}></Box> {
-            loading ? null :
-              (<TablePagination
-                rowsPerPageOptions={content.rowsPerPageOptions}
-                component="div"
-                count={content.src.length}
-                rowsPerPage={content.rowsPerPage}
-                page={content.page}
-                onPageChange={(_event, newPage) => setContent(state => state.withPage(newPage))}
-                onRowsPerPageChange={(event: React.ChangeEvent<HTMLInputElement>) => setContent(state => state.withRowsPerPage(parseInt(event.target.value, 10)))}
-              />)
-          }
+      <Styles.Layout>
+        <Box display='flex'>
+          <Stack spacing={3} direction='row'>
+            <StyledMyWorkButton onClick={() => setContentType('MyTasks')} label='core.myWork.todo.button' attentionItem={<>Overdue: 3</>} />
+            <StyledMyWorkButton onClick={() => setContentType('MyAssignedComments')} label='core.myWork.assignedComments.button' attentionItem={<>New: 1</>} />
+            <StyledMyWorkButton onClick={() => setContentType('MyAssignedChecklistItems')} label='core.myWork.assignedChecklistItems.button' />
+          </Stack>
         </Box>
-
-      </Box>
+        <Divider sx={{ my: 1 }} />
+        {content}
+      </Styles.Layout>
     </client.TableProvider>);
 }
 

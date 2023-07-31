@@ -4,11 +4,9 @@ import { Box } from '@mui/material';
 import client from '@taskclient';
 import Tools from '../TaskTools';
 
-
-
 import TableHeader from './TasksTableHeader';
 import TableRows from './TasksTableRow';
-
+import Styles from '@styles';
 
 const TasksTable: React.FC<{ def: client.Group, loading: boolean }> = (props) => {
   const { loading } = props;
@@ -31,14 +29,18 @@ const Tasks: React.FC<{}> = () => {
   const tasks = client.useTasks();
   const { loading } = tasks;
 
-  return (<Tools><>
+  return (
+    
+    <Styles.Layout>
+    <Tools><>
     {tasks.state.groups.map((group, index) => (
       <React.Fragment key={group.id}>
         {index > 0 ? <Box sx={{ p: 2 }} /> : null}
         <TasksTable def={group} loading={loading} />
       </React.Fragment>))}
   </>
-  </Tools>);
+  </Tools>
+  </Styles.Layout>);
 }
 
 export { Tasks };

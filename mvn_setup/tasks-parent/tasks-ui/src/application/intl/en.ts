@@ -17,9 +17,19 @@ const en = {
 
   'core.taskOps.editTask.dueDate': 'Due date',
   'core.taskOps.editTask.startDate': 'Start date',
-  
+
   'core.teamSpace.taskCount': '{values} Tasks',
   'core.teamSpace.task.create': 'Create new task',
+
+  'core.myWork.todo.button': 'Todo: 5',
+  'core.myWork.assignedComments.button': 'Assigned comments: 3',
+  'core.myWork.assignedChecklistItems.button': 'Assigned checklist items: 3',
+  'core.myWork.mySelectedTask.button': 'My selected task',
+
+  'core.myWork.myWorkTaskTable.header.spotlight.myWorkOverdue': 'Overdue',
+  'core.myWork.myWorkTaskTable.header.spotlight.myWorkStartsToday': 'Starts today',
+  'core.myWork.myWorkTaskTable.header.spotlight.myWorkAssigned': 'Assigned to me',
+
 
   '_nobody_': 'Unassigned',
 
@@ -51,7 +61,7 @@ const en = {
 
   'activities.archive.title': 'Archive',
   'activities.archive.desc': 'View all tasks that have ever existed which have been deleted',
-  
+
   'activities.dev.title': 'Development',
 
   'mywork.button.review': 'Review Form',

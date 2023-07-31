@@ -9,7 +9,7 @@ import RequireProject from './Components/RequireProject';
 import { TasksProvider } from './tasks-ctx';
 import { OrgProvider } from './org-ctx';
 
-const Provider: React.FC<{ children: React.ReactNode, service: Client, profile: Profile | undefined }> = ({ children, service, profile }) => {
+const Provider: React.FC<{ children: React.ReactNode, service: Client, profile: Profile }> = ({ children, service, profile }) => {
   const [session, dispatch] = React.useState<SessionData>(initSession);
 
   const actions = React.useMemo(() => {
@@ -34,7 +34,7 @@ const Provider: React.FC<{ children: React.ReactNode, service: Client, profile: 
   return (
     <ClientContext.Provider value={service}>
       <ComposerContext.Provider value={contextValue}>
-        <TasksProvider backend={service}>
+        <TasksProvider backend={service} profile={session.profile}>
           <OrgProvider backend={service}>
             {session.profile.contentType === 'NOT_CREATED' ? <RequireProject /> : undefined}
             {children}
