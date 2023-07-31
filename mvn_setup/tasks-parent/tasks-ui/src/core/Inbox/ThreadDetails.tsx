@@ -1,6 +1,10 @@
 import React from "react";
 
-import { Box, Button, Typography, styled, Avatar, IconButton, List, ListItem, Paper } from "@mui/material";
+import {
+  Box, Button, Typography, styled,
+  Avatar, IconButton, List, ListItem, Paper, Dialog,
+  DialogTitle, DialogContent, DialogActions, TextField, TextareaAutosize
+} from "@mui/material";
 import ArchiveIcon from '@mui/icons-material/Archive';
 import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
 import ReplyIcon from '@mui/icons-material/Reply';
@@ -34,6 +38,23 @@ const StyledListItem = styled(ListItem)(({ theme }) => ({
   borderTop: '1px solid',
   borderBottom: '1px solid',
   borderColor: theme.palette.divider,
+}))
+
+const StyledTextArea = styled(TextareaAutosize)(({ theme }) => ({
+  fontFamily: theme.typography.fontFamily,
+  fontSize: theme.typography.fontSize,
+  fontWeight: theme.typography.fontWeightRegular,
+  padding: theme.spacing(1),
+  borderRadius: '12px 12px 0 12px',
+  width: '30vw',
+}))
+
+const StyledDialogActions = styled(DialogActions)(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'space-between',
+  marginLeft: theme.spacing(2),
+  marginRight: theme.spacing(1),
+  marginBottom: theme.spacing(2),
 }))
 
 const ListItemContainer = styled(Box)({
@@ -161,7 +182,13 @@ const AttachmentListItem: React.FC<{ attachment: Attachment }> = ({ attachment }
   )
 }
 
-const MessagesTab: React.FC<{ messages: Message[] }> = ({ messages }) => {
+const MessagesTab: React.FC<{ thread: Thread }> = ({ thread }) => {
+  const { messages, userName, topicName } = thread;
+  const replyTo = userName;
+  const regarding = topicName;
+  const dialogTitle = `Reply to ${replyTo} regarding ${regarding}`;
+  const [open, setOpen] = React.useState(false);
+
   return (
     <>
       <Box>
@@ -170,7 +197,22 @@ const MessagesTab: React.FC<{ messages: Message[] }> = ({ messages }) => {
           .map(message => <ExpandableMessage key={message.id} message={message} />)
         }
       </Box>
-      <Button variant='contained' sx={{ m: 1 }} startIcon={<ReplyIcon />}>Reply</Button>
+      <Button variant='contained' sx={{ mx: 1, my: 2 }} startIcon={<ReplyIcon />} onClick={() => setOpen(true)}>Reply</Button>
+      <Dialog open={open} onClose={() => setOpen(false)}>
+        <DialogTitle>{dialogTitle}</DialogTitle>
+        <DialogContent>
+          <StyledTextArea minRows={10} placeholder='Write your reply here...' />
+        </DialogContent>
+        <StyledDialogActions>
+          <Box>
+            <Button onClick={() => setOpen(false)} variant='contained' sx={{ mr: 1 }}>Send</Button>
+            <Button onClick={() => setOpen(false)}>Cancel</Button>
+          </Box>
+          <IconButton color='inherit'>
+            <AttachFileIcon />
+          </IconButton>
+        </StyledDialogActions>
+      </Dialog>
     </>
   )
 }
@@ -203,7 +245,7 @@ const ThreadDetails: React.FC<{ thread: Thread }> = ({ thread }) => {
         <IconButton color='inherit'><ArchiveIcon /></IconButton>
       </StyledHeader>
       <ThreadDetailsMenu formName={formName} activeTab={activeTab} setActiveTab={setActiveTab} />
-      {activeTab === 'messages' && <MessagesTab messages={thread.messages} />}
+      {activeTab === 'messages' && <MessagesTab thread={thread} />}
       {activeTab === 'attachments' && <AttachmentsTab attachments={allAttachments} />}
       {activeTab === 'form' && <FormTab formName={formName} />}
     </>
