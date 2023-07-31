@@ -24,6 +24,7 @@ interface Attachment {
 
 interface ThreadPreviewProps {
   thread: Thread,
+  active: boolean,
   onClick: (thread: Thread) => void
 }
 

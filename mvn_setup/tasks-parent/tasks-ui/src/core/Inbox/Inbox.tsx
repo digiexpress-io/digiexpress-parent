@@ -34,7 +34,7 @@ const Inbox: React.FC<{}> = () => {
           <ForumIcon sx={{ mr: 1 }} color='primary' />
           <Typography fontWeight='bold'>Threads</Typography>
         </Box>
-        {demoThreads.map(thread => <ThreadPreview key={thread.id} thread={thread} onClick={handleThreadClick} />)}
+        {demoThreads.map(thread => <ThreadPreview key={thread.id} thread={thread} onClick={handleThreadClick} active={thread == activeThread} />)}
       </LeftSideContainer>
       <RightSideContainer>
         <ThreadDetails thread={activeThread} />

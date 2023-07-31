@@ -74,12 +74,13 @@ const AttachmentAndDateTime: React.FC<{ hasAttachments: boolean, date: Date, sx?
 }
 
 const ThreadPreview: React.FC<ThreadPreviewProps> = (props) => {
-  const { thread, onClick } = props;
+  const { thread, active, onClick } = props;
   const { topicName, messages } = thread;
   const lastMessage = messages[messages.length - 1];
   const { userName, text, date, read, representerName } = lastMessage;
   const hasAttachments = messages.some(message => message.attachments.length > 0);
   const newMessageSx = read ? {} : { backgroundColor: '#e4eaf5', '& .MuiTypography-root': { fontWeight: 'bold' } };
+  const activeSx = active ? { borderColor: 'primary.main' } : {};
 
   const [hovering, setHovering] = React.useState(false);
 
@@ -87,7 +88,7 @@ const ThreadPreview: React.FC<ThreadPreviewProps> = (props) => {
   const onMouseOut = () => setHovering(false);
 
   return (
-    <StyledThreadPreviewContainer sx={newMessageSx} onClick={() => onClick(thread)} onMouseOver={onMouseOver} onMouseOut={onMouseOut}>
+    <StyledThreadPreviewContainer sx={{ ...newMessageSx, ...activeSx }} onClick={() => onClick(thread)} onMouseOver={onMouseOver} onMouseOut={onMouseOut}>
       <StyledTableCell width='20%'>
         <Typography display='flex' alignItems='center'>
           {userName}{representerName && <SupervisedUserCircleIcon color='primary' sx={{ ml: 1 }} />}
