@@ -39,6 +39,7 @@
     "labels" : [ ],
     "extensions" : [ ],
     "comments" : [ ],
+    "checklist" : [ ],
     "documentType" : "TASK"
   }, {
     "id" : "1_TASK",
@@ -88,6 +89,7 @@
     "labels" : [ ],
     "extensions" : [ ],
     "comments" : [ ],
+    "checklist" : [ ],
     "documentType" : "TASK"
   }, {
     "id" : "1_TASK",
@@ -146,6 +148,7 @@
     "labels" : [ ],
     "extensions" : [ ],
     "comments" : [ ],
+    "checklist" : [ ],
     "documentType" : "TASK"
   }, {
     "id" : "1_TASK",
@@ -213,6 +216,7 @@
     "labels" : [ ],
     "extensions" : [ ],
     "comments" : [ ],
+    "checklist" : [ ],
     "documentType" : "TASK"
   } ]
 }

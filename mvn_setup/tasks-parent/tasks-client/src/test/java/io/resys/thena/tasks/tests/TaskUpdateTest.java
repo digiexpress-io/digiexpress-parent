@@ -20,10 +20,11 @@ package io.resys.thena.tasks.tests;
  * #L%
  */
 
-import io.resys.thena.tasks.client.api.TaskClient;
+import java.util.List;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
+import io.resys.thena.tasks.client.api.TaskClient;
 import io.resys.thena.tasks.client.api.model.ImmutableArchiveTask;
 import io.resys.thena.tasks.client.api.model.ImmutableAssignTask;
 import io.resys.thena.tasks.client.api.model.ImmutableAssignTaskParent;
@@ -31,21 +32,19 @@ import io.resys.thena.tasks.client.api.model.ImmutableAssignTaskReporter;
 import io.resys.thena.tasks.client.api.model.ImmutableAssignTaskRoles;
 import io.resys.thena.tasks.client.api.model.ImmutableChangeTaskComment;
 import io.resys.thena.tasks.client.api.model.ImmutableChangeTaskDueDate;
-import io.resys.thena.tasks.client.api.model.ImmutableChangeTaskStartDate;
-import io.resys.thena.tasks.client.api.model.ImmutableCreateTaskExtension;
 import io.resys.thena.tasks.client.api.model.ImmutableChangeTaskExtension;
 import io.resys.thena.tasks.client.api.model.ImmutableChangeTaskInfo;
 import io.resys.thena.tasks.client.api.model.ImmutableChangeTaskPriority;
+import io.resys.thena.tasks.client.api.model.ImmutableChangeTaskStartDate;
 import io.resys.thena.tasks.client.api.model.ImmutableChangeTaskStatus;
 import io.resys.thena.tasks.client.api.model.ImmutableCommentOnTask;
 import io.resys.thena.tasks.client.api.model.ImmutableCreateTask;
+import io.resys.thena.tasks.client.api.model.ImmutableCreateTaskExtension;
 import io.resys.thena.tasks.client.api.model.Task;
 import io.resys.thena.tasks.client.api.model.Task.Priority;
 import io.resys.thena.tasks.tests.config.TaskPgProfile;
 import io.resys.thena.tasks.tests.config.TaskTestCase;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.List;
 
 @Slf4j
 @QuarkusTest

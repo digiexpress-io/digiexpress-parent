@@ -48,7 +48,6 @@ public interface Task extends Document {
   List<String> getAssigneeIds();
   String getReporterId();
   
- 
   String getTitle();
   String getDescription();
   Priority getPriority();
@@ -56,6 +55,9 @@ public interface Task extends Document {
   List<String> getLabels();
   List<TaskExtension> getExtensions();
   List<TaskComment> getComments();
+  
+  List<Checklist> getChecklist();
+  
   
   @Value.Default
   default DocumentType getDocumentType() {
@@ -65,8 +67,26 @@ public interface Task extends Document {
   enum Status { CREATED, IN_PROGRESS, COMPLETED, REJECTED }
   enum Priority { LOW, MEDIUM, HIGH }  
   
+  
+  @Value.Immutable @JsonSerialize(as = ImmutableChecklist.class) @JsonDeserialize(as = ImmutableChecklist.class)
+  interface Checklist extends Serializable, TaskItem {
+    String getId();
+    String getTitle();
+    
+    List<ChecklistItem> getItems();
+  }
+  
+  @Value.Immutable @JsonSerialize(as = ImmutableChecklistItem.class) @JsonDeserialize(as = ImmutableChecklistItem.class)
+  interface ChecklistItem extends Serializable, TaskItem {
+    String getId();
+    List<String> getAssigneeIds();
+    @Nullable LocalDate getDueDate();
+    Boolean getCompleted();
+    String getTitle();
+  }
+  
   @Value.Immutable @JsonSerialize(as = ImmutableTaskTransaction.class) @JsonDeserialize(as = ImmutableTaskTransaction.class)
-  interface TaskTransaction extends Serializable {
+  interface TaskTransaction extends Serializable, TaskItem {
     String getId();
     List<TaskCommand> getCommands(); 
   }

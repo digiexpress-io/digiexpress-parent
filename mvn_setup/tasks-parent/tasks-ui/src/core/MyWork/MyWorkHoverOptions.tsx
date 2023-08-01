@@ -25,18 +25,6 @@ const StartWorkButton: React.FC<{}> = () => {
   </Button>)
 }
 
-const MyWorkHoverOptions: React.FC<{ active: boolean }> = () => {
-
-  return (
-    <Box display='flex' sx={boxSx}>
-      <StartWorkButton  />
-    </Box>
-  )
-}
-const HoverMenu: React.FC<{}> = () => {
-  return (<IconButtonWrapper><MoreHorizOutlinedIcon fontSize='small' /></IconButtonWrapper>)
-}
-
 const CRMNotifications: React.FC<{}> = () => {
   return (<Box display='flex' sx={boxSx}>
     <IconButtonWrapper>
@@ -45,5 +33,21 @@ const CRMNotifications: React.FC<{}> = () => {
     </IconButtonWrapper>
   </Box>)
 }
+
+const MyWorkHoverOptions: React.FC<{ active: boolean }> = () => {
+
+  return (
+    <Box display='flex' sx={boxSx} width='100%'>
+      <StartWorkButton />
+      <Box flexGrow={1} />
+      <CRMNotifications />
+    </Box>
+  )
+}
+const HoverMenu: React.FC<{}> = () => {
+  return (<IconButtonWrapper><MoreHorizOutlinedIcon fontSize='small' /></IconButtonWrapper>)
+}
+
+
 
 export { MyWorkHoverOptions, CRMNotifications, HoverMenu, StartWorkButton };

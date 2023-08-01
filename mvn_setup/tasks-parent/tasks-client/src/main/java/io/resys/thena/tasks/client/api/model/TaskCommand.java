@@ -36,6 +36,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import io.resys.thena.tasks.client.api.model.Task.Checklist;
+import io.resys.thena.tasks.client.api.model.Task.ChecklistItem;
 import io.resys.thena.tasks.client.api.model.Task.Priority;
 import io.resys.thena.tasks.client.api.model.Task.Status;
 import io.resys.thena.tasks.client.api.model.Task.TaskComment;
@@ -63,7 +65,15 @@ import io.resys.thena.tasks.client.api.model.Task.TaskExtension;
   @Type(value = ImmutableCreateTaskExtension.class, name = "CreateTaskExtension"),
   @Type(value = ImmutableChangeTaskExtension.class, name = "ChangeTaskExtension"),
   @Type(value = ImmutableAssignTaskParent.class, name = "AssignTaskParent"),
-
+  
+  @Type(value = ImmutableCreateChecklist.class, name = "CreateChecklist"),
+  @Type(value = ImmutableChangeChecklistTitle.class, name = "ChangeChecklistTitle"),
+  @Type(value = ImmutableDeleteChecklist.class, name = "DeleteChecklist"),
+  @Type(value = ImmutableAddChecklistItem.class, name = "AddChecklistItem"),
+  @Type(value = ImmutableDeleteChecklistItem.class, name = "DeleteChecklistItem"),
+  @Type(value = ImmutableChangeChecklistItemAssignees.class, name = "ChangeChecklistItemAssignees"),
+  @Type(value = ImmutableChangeChecklistItemCompleted.class, name = "ChangeChecklistItemCompleted"),
+  @Type(value = ImmutableChangeChecklistItemDueDate.class, name = "ChangeChecklistItemDueDate"),
 })
 public interface TaskCommand extends Serializable {
   String getUserId();
@@ -73,7 +83,9 @@ public interface TaskCommand extends Serializable {
   enum TaskCommandType {
     CreateTask, ChangeTaskStatus, ChangeTaskPriority, AssignTaskReporter, 
     ArchiveTask, CommentOnTask, ChangeTaskComment, AssignTaskRoles, AssignTask, ChangeTaskStartDate,
-    ChangeTaskDueDate, ChangeTaskInfo, CreateTaskExtension, ChangeTaskExtension, AssignTaskParent
+    ChangeTaskDueDate, ChangeTaskInfo, CreateTaskExtension, ChangeTaskExtension, AssignTaskParent,
+    CreateChecklist, ChangeChecklistTitle, DeleteChecklist, AddChecklistItem, DeleteChecklistItem,
+    ChangeChecklistItemAssignees, ChangeChecklistItemCompleted, ChangeChecklistItemDueDate
   }
 
   @Value.Immutable @JsonSerialize(as = ImmutableCreateTask.class) @JsonDeserialize(as = ImmutableCreateTask.class)
@@ -118,10 +130,89 @@ public interface TaskCommand extends Serializable {
     @Type(value = ImmutableCreateTaskExtension.class, name = "CreateTaskExtension"),
     @Type(value = ImmutableChangeTaskExtension.class, name = "ChangeTaskExtension"),
     @Type(value = ImmutableAssignTaskParent.class, name = "AssignTaskParent"),
+    
+    @Type(value = ImmutableCreateChecklist.class, name = "CreateChecklist"),
+    @Type(value = ImmutableChangeChecklistTitle.class, name = "ChangeChecklistTitle"),
+    @Type(value = ImmutableDeleteChecklist.class, name = "DeleteChecklist"),
+    @Type(value = ImmutableAddChecklistItem.class, name = "AddChecklistItem"),
+    @Type(value = ImmutableDeleteChecklistItem.class, name = "DeleteChecklistItem"),
+    @Type(value = ImmutableChangeChecklistItemAssignees.class, name = "ChangeChecklistItemAssignees"),
+    @Type(value = ImmutableChangeChecklistItemCompleted.class, name = "ChangeChecklistItemCompleted"),
+    @Type(value = ImmutableChangeChecklistItemDueDate.class, name = "ChangeChecklistItemDueDate"),
   })
   interface TaskUpdateCommand extends TaskCommand {
     String getTaskId();
   }
+  
+  @Value.Immutable @JsonSerialize(as = ImmutableCreateChecklist.class) @JsonDeserialize(as = ImmutableCreateChecklist.class)
+  interface CreateChecklist extends TaskUpdateCommand {
+    String getTitle();
+    List<ChecklistItem> getChecklist();
+    @Value.Default
+    @Override default TaskCommandType getCommandType() { return TaskCommandType.CreateChecklist; }
+  }
+
+  @Value.Immutable @JsonSerialize(as = ImmutableChangeChecklistTitle.class) @JsonDeserialize(as = ImmutableChangeChecklistTitle.class)
+  interface ChangeChecklistTitle extends TaskUpdateCommand {
+    String getChecklistId();
+    String getTitle();
+    @Value.Default
+    @Override default TaskCommandType getCommandType() { return TaskCommandType.ChangeChecklistTitle; }
+  }
+
+  @Value.Immutable @JsonSerialize(as = ImmutableDeleteChecklist.class) @JsonDeserialize(as = ImmutableDeleteChecklist.class)
+  interface DeleteChecklist extends TaskUpdateCommand {
+    String getChecklistId();
+    @Value.Default
+    @Override default TaskCommandType getCommandType() { return TaskCommandType.DeleteChecklist; }
+  }
+
+  @Value.Immutable @JsonSerialize(as = ImmutableAddChecklistItem.class) @JsonDeserialize(as = ImmutableAddChecklistItem.class)
+  interface AddChecklistItem extends TaskUpdateCommand {
+    String getChecklistId();
+    String getTitle();
+    List<String> getAssigneeIds();
+    LocalDate getDueDate();
+    Boolean getCompleted();
+    @Value.Default
+    @Override default TaskCommandType getCommandType() { return TaskCommandType.AddChecklistItem; }
+  }
+
+  @Value.Immutable @JsonSerialize(as = ImmutableDeleteChecklistItem.class) @JsonDeserialize(as = ImmutableDeleteChecklistItem.class)
+  interface DeleteChecklistItem extends TaskUpdateCommand {
+    String getChecklistId();
+    String getChecklistItemId();
+    @Value.Default
+    @Override default TaskCommandType getCommandType() { return TaskCommandType.DeleteChecklistItem; }
+  }
+  
+  @Value.Immutable @JsonSerialize(as = ImmutableChangeChecklistItemAssignees.class) @JsonDeserialize(as = ImmutableChangeChecklistItemAssignees.class)
+  interface ChangeChecklistItemAssignees extends TaskUpdateCommand {
+    String getChecklistId();
+    String getChecklistItemId();
+    List<String> getAssigneeIds();
+    @Value.Default
+    @Override default TaskCommandType getCommandType() { return TaskCommandType.ChangeChecklistItemAssignees; }
+  }
+
+  @Value.Immutable @JsonSerialize(as = ImmutableChangeChecklistItemCompleted.class) @JsonDeserialize(as = ImmutableChangeChecklistItemCompleted.class)
+  interface ChangeChecklistItemCompleted extends TaskUpdateCommand {
+    String getChecklistId();
+    String getChecklistItemId();
+    Boolean getCompleted();
+    @Value.Default
+    @Override default TaskCommandType getCommandType() { return TaskCommandType.ChangeChecklistItemCompleted; }
+  }
+  
+  @Value.Immutable @JsonSerialize(as = ImmutableChangeChecklistItemDueDate.class) @JsonDeserialize(as = ImmutableChangeChecklistItemDueDate.class)
+  interface ChangeChecklistItemDueDate extends TaskUpdateCommand {
+    String getChecklistId();
+    String getChecklistItemId();
+    LocalDate getDueDate();
+    @Value.Default
+    @Override default TaskCommandType getCommandType() { return TaskCommandType.ChangeChecklistItemDueDate; }
+  }
+
   
   @Value.Immutable @JsonSerialize(as = ImmutableAssignTaskReporter.class) @JsonDeserialize(as = ImmutableAssignTaskReporter.class)
   interface AssignTaskReporter extends TaskUpdateCommand {

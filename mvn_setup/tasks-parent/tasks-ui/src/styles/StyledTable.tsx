@@ -18,7 +18,7 @@ const StyledTableBody = styled(TableBody)`
       border-radius: 0px 0px 8px 8px;
     }
         
-    & tr:last-child td:first-child {
+    & tr:last-child td:first-of-type {
       border-radius: 0px 0px 0px 8px;
     }
     & tr:last-child td:last-child {
