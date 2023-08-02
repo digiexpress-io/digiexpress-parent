@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Box, Typography, List, Button, IconButton } from '@mui/material';
+import { Box, Typography, List, Button, IconButton, styled } from '@mui/material';
 import ChecklistIcon from '@mui/icons-material/Checklist';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
@@ -10,15 +10,24 @@ import ChecklistItemDialog from './ChecklistItemDialog';
 import { Checklist, ChecklistItem } from 'taskclient/task-types';
 import Styles from '@styles';
 
+const ChecklistHeaderContainer = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  marginLeft: theme.spacing(3),
+  marginBottom: theme.spacing(1),
+}));
+
 const ChecklistHeader: React.FC<{ title: string }> = ({ title }) => {
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', ml: 3, mb: 1 }}>
+    <ChecklistHeaderContainer>
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
         <ChecklistIcon color='primary' sx={{ mr: 3 }} />
         <Typography variant="h4" fontWeight='h1.fontWeight'>{title}</Typography>
       </Box>
       <IconButton color='error'><DeleteIcon /></IconButton>
-    </Box>
+    </ChecklistHeaderContainer>
   );
 }
 
@@ -61,11 +70,9 @@ const ChecklistComponent: React.FC<{ checklist: Checklist }> = ({ checklist }) =
   };
 
   const handleUpdate = (item: ChecklistItem) => {
-    console.log(item)
     const newChecklistItems = [...tempChecklistItems];
     const index = newChecklistItems.findIndex((i) => i.id === item.id);
     newChecklistItems[index] = item;
-    console.log(newChecklistItems)
     setTempChecklistItems(newChecklistItems);
   };
 
