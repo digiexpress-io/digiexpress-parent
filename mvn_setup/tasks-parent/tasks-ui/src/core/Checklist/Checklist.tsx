@@ -1,7 +1,8 @@
 import React from 'react';
 
-import { Box, Typography, List, Button } from '@mui/material';
+import { Box, Typography, List, Button, IconButton } from '@mui/material';
 import ChecklistIcon from '@mui/icons-material/Checklist';
+import DeleteIcon from '@mui/icons-material/Delete';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 import ChecklistItemComponent from './ChecklistItem';
@@ -11,9 +12,12 @@ import Styles from '@styles';
 
 const ChecklistHeader: React.FC<{ title: string }> = ({ title }) => {
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center', ml: 3, mb: 1 }}>
-      <ChecklistIcon color='primary' sx={{ mr: 3 }} />
-      <Typography variant="h4" fontWeight='h1.fontWeight'>{title}</Typography>
+    <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', ml: 3, mb: 1 }}>
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <ChecklistIcon color='primary' sx={{ mr: 3 }} />
+        <Typography variant="h4" fontWeight='h1.fontWeight'>{title}</Typography>
+      </Box>
+      <IconButton color='error'><DeleteIcon /></IconButton>
     </Box>
   );
 }
