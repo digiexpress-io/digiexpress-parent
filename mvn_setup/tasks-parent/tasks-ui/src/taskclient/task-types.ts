@@ -104,6 +104,7 @@ export interface CreateTask extends TaskCommand {
   labels: string[];
   extensions: TaskExtension[];
   comments: TaskComment[];
+  checklist: Checklist[];
 }
 
 export interface AssignTaskReporter extends TaskUpdateCommand<'AssignTaskReporter'> {
