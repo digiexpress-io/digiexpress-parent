@@ -104,6 +104,7 @@ public interface TaskCommand extends Serializable {
     List<String> getLabels();
     List<TaskExtension> getExtensions();
     List<TaskComment> getComments();
+    List<Checklist> getChecklist();
     
     @Value.Default
     @Override default TaskCommandType getCommandType() { return TaskCommandType.CreateTask; }

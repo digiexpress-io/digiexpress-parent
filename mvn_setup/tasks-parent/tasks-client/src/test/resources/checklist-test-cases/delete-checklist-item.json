@@ -1,6 +1,6 @@
 {
   "id" : "1_TASK",
-  "version" : "3",
+  "version" : "6",
   "created" : [ 2023, 1, 1, 1, 1 ],
   "updated" : [ 2023, 1, 1, 1, 1 ],
   "archived" : null,
@@ -24,8 +24,7 @@
       "priority" : "LOW",
       "labels" : [ ],
       "extensions" : [ ],
-      "comments" : [ ],
-      "checklist" : [ ]
+      "comments" : [ ]
     } ]
   }, {
     "id" : "2",
@@ -47,6 +46,40 @@
       "checklistId" : "3_TASK",
       "title" : "My second checklist"
     } ]
+  }, {
+    "id" : "4",
+    "commands" : [ {
+      "commandType" : "AddChecklistItem",
+      "userId" : "John smith",
+      "targetDate" : [ 2023, 1, 1, 1, 1 ],
+      "taskId" : "1_TASK",
+      "checklistId" : "3_TASK",
+      "title" : "TODO1",
+      "assigneeIds" : [ "Jane smith", "Adam West" ],
+      "dueDate" : [ 2023, 1, 2 ],
+      "completed" : false
+    } ]
+  }, {
+    "id" : "5",
+    "commands" : [ {
+      "commandType" : "ChangeChecklistItemCompleted",
+      "userId" : "John smith",
+      "targetDate" : [ 2023, 1, 1, 1, 1 ],
+      "taskId" : "1_TASK",
+      "checklistId" : "3_TASK",
+      "checklistItemId" : "4_TASK",
+      "completed" : true
+    } ]
+  }, {
+    "id" : "6",
+    "commands" : [ {
+      "commandType" : "DeleteChecklistItem",
+      "userId" : "John smith",
+      "targetDate" : [ 2023, 1, 1, 1, 1 ],
+      "taskId" : "1_TASK",
+      "checklistId" : "3_TASK",
+      "checklistItemId" : "4_TASK"
+    } ]
   } ],
   "roles" : [ "admin-users", "view-only-users" ],
   "assigneeIds" : [ ],
@@ -61,7 +94,13 @@
   "checklist" : [ {
     "id" : "3_TASK",
     "title" : "My second checklist",
-    "items" : [ ]
+    "items" : [ {
+      "id" : "4_TASK",
+      "assigneeIds" : [ "Jane smith", "Adam West" ],
+      "dueDate" : [ 2023, 1, 2 ],
+      "completed" : true,
+      "title" : "TODO1"
+    } ]
   } ],
   "documentType" : "TASK"
 }

@@ -148,6 +148,7 @@ public class TaskCommandVisitor {
         .labels(command.getLabels().stream().distinct().toList())
         .extensions(command.getExtensions())
         .comments(command.getComments())
+        .checklist(command.getChecklist())
         .title(command.getTitle())
         .description(command.getDescription())
         .priority(command.getPriority())
