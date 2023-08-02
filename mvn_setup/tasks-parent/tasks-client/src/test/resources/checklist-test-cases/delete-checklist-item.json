@@ -24,7 +24,8 @@
       "priority" : "LOW",
       "labels" : [ ],
       "extensions" : [ ],
-      "comments" : [ ]
+      "comments" : [ ],
+      "checklist" : [ ]
     } ]
   }, {
     "id" : "2",
@@ -94,13 +95,7 @@
   "checklist" : [ {
     "id" : "3_TASK",
     "title" : "My second checklist",
-    "items" : [ {
-      "id" : "4_TASK",
-      "assigneeIds" : [ "Jane smith", "Adam West" ],
-      "dueDate" : [ 2023, 1, 2 ],
-      "completed" : true,
-      "title" : "TODO1"
-    } ]
+    "items" : [ ]
   } ],
   "documentType" : "TASK"
 }

@@ -75,29 +75,17 @@ public class TaskCommandChecklistVisitor {
 
   }
   public ImmutableTask visitDeleteChecklist(DeleteChecklist command) { 
-    final var next = replaceItemInList(this.current.getChecklist(), command.getChecklistId(), (previousChecklist) -> {
-      return ImmutableChecklist.builder().from(previousChecklist)
-          .id(command.getChecklistId())
-          .build();
-    });
-    
-    return this.current
-        .withChecklist(next)
-        .withUpdated(requireTargetDate(command));
+    return this.mutator(command).delete(
+        command.getChecklistId())
+       .end();
+
 
   }
   public ImmutableTask visitDeleteChecklistItem(DeleteChecklistItem command) { 
-    final var next = replaceItemInList(this.current.getChecklist(), command.getChecklistId(), (previousChecklist) -> {
-      return ImmutableChecklist.builder().from(previousChecklist)
-          .items(replaceItemInList(previousChecklist.getItems(), command.getChecklistItemId(), (previousItem) -> {
-            return ImmutableChecklistItem.builder().from(previousItem).id(command.getChecklistItemId()).build();
-          }))
-          .build();
-    });
-    
-    return this.current
-        .withChecklist(next)
-        .withUpdated(requireTargetDate(command));
+    return this.mutator(command).delete(
+        command.getChecklistId(), command.getChecklistItemId())
+       .end();
+
   }
  
   private ChecklistMutator mutator(TaskCommand command) {

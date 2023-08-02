@@ -1,6 +1,6 @@
 {
   "id" : "1_TASK",
-  "version" : "6",
+  "version" : "7",
   "created" : [ 2023, 1, 1, 1, 1 ],
   "updated" : [ 2023, 1, 1, 1, 1 ],
   "archived" : null,
@@ -74,6 +74,16 @@
   }, {
     "id" : "6",
     "commands" : [ {
+      "commandType" : "DeleteChecklistItem",
+      "userId" : "John smith",
+      "targetDate" : [ 2023, 1, 1, 1, 1 ],
+      "taskId" : "1_TASK",
+      "checklistId" : "3_TASK",
+      "checklistItemId" : "4_TASK"
+    } ]
+  }, {
+    "id" : "7",
+    "commands" : [ {
       "commandType" : "DeleteChecklist",
       "userId" : "John smith",
       "targetDate" : [ 2023, 1, 1, 1, 1 ],
@@ -91,16 +101,6 @@
   "labels" : [ ],
   "extensions" : [ ],
   "comments" : [ ],
-  "checklist" : [ {
-    "id" : "3_TASK",
-    "title" : "My second checklist",
-    "items" : [ {
-      "id" : "4_TASK",
-      "assigneeIds" : [ "Jane smith", "Adam West" ],
-      "dueDate" : [ 2023, 1, 2 ],
-      "completed" : true,
-      "title" : "TODO1"
-    } ]
-  } ],
+  "checklist" : [ ],
   "documentType" : "TASK"
 }

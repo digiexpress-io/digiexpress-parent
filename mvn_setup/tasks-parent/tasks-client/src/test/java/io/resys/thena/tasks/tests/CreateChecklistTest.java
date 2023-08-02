@@ -94,19 +94,6 @@ public class CreateChecklistTest extends TaskTestCase {
   assertEquals("checklist-test-cases/change-checklist-item-completed.json", changeChecklistItemCompleted);
 
   
-  final var deleteChecklist = client.tasks().updateTask().updateOne(ImmutableDeleteChecklist.builder()
-      .userId("John smith")
-      .taskId(task.getId())
-      .checklistId("3_TASK")
-      .targetDate(getTargetDate())
-      .build())
-  .await().atMost(atMost);
-  
-
-  assertEquals("checklist-test-cases/delete-checklist.json", deleteChecklist);
-
-  /*
-   *  
   final var deleteChecklistItem = client.tasks().updateTask().updateOne(ImmutableDeleteChecklistItem.builder()
       .userId("John smith")
       .taskId(task.getId())
@@ -118,9 +105,20 @@ public class CreateChecklistTest extends TaskTestCase {
   
 
   assertEquals("checklist-test-cases/delete-checklist-item.json", deleteChecklistItem);
-   */
+   
   
+  final var deleteChecklist = client.tasks().updateTask().updateOne(ImmutableDeleteChecklist.builder()
+      .userId("John smith")
+      .taskId(task.getId())
+      .checklistId("3_TASK")
+      .targetDate(getTargetDate())
+      .build())
+  .await().atMost(atMost);
+  
+
+  assertEquals("checklist-test-cases/delete-checklist.json", deleteChecklist);
+
  
-}
+ }
 
 }
