@@ -1,7 +1,8 @@
 import {
   Task, TaskCommand, TaskCommandType, CreateTask, AssignTaskReporter, ArchiveTask, ChangeTaskStatus, ChangeTaskPriority,
   AssignTaskParent, CommentOnTask, ChangeTaskComment, AssignTaskRoles, AssignTask, ChangeTaskDueDate, ChangeTaskInfo,
-  CreateTaskExtension, ChangeTaskExtension, ChangeTaskStartDate
+  CreateTaskExtension, ChangeTaskExtension, ChangeTaskStartDate, CreateChecklist, ChangeChecklistTitle, DeleteChecklist, AddChecklistItem, DeleteChecklistItem,
+  ChangeChecklistItemAssignees, ChangeChecklistItemCompleted, ChangeChecklistItemDueDate, ChangeChecklistItemTitle
 } from './task-types';
 
 
@@ -28,6 +29,15 @@ export interface ChangeTaskDueDateEventBody extends SingleEventBody<"ChangeTaskD
 export interface ChangeTaskInfoEventBody extends SingleEventBody<"ChangeTaskInfo", ChangeTaskInfo> {}
 export interface CreateTaskExtensionEventBody extends SingleEventBody<"CreateTaskExtension", CreateTaskExtension> {}
 export interface ChangeTaskExtensionEventBody extends SingleEventBody<"ChangeTaskExtension", ChangeTaskExtension> {}
+export interface CreateChecklistEventBody extends SingleEventBody<"CreateChecklist", CreateChecklist> {}
+export interface ChangeChecklistTitleEventBody extends SingleEventBody<"ChangeChecklistTitle", ChangeChecklistTitle> {}
+export interface DeleteChecklistEventBody extends SingleEventBody<"DeleteChecklist", DeleteChecklist> {}
+export interface AddChecklistItemEventBody extends SingleEventBody<"AddChecklistItem", AddChecklistItem> {}
+export interface DeleteChecklistItemEventBody extends SingleEventBody<"DeleteChecklistItem", DeleteChecklistItem> {}
+export interface ChangeChecklistItemAssigneesEventBody extends SingleEventBody<"ChangeChecklistItemAssignees", ChangeChecklistItemAssignees> {}
+export interface ChangeChecklistItemCompletedEventBody extends SingleEventBody<"ChangeChecklistItemCompleted", ChangeChecklistItemCompleted> {}
+export interface ChangeChecklistItemDueDateEventBody extends SingleEventBody<"ChangeChecklistItemDueDate", ChangeChecklistItemDueDate> {}
+export interface ChangeChecklistItemTitleEventBody extends SingleEventBody<"ChangeChecklistItemTitle", ChangeChecklistItemTitle> {}
 
 
 
@@ -49,7 +59,16 @@ export interface SingleEvent {
     ChangeTaskDueDateEventBody | 
     ChangeTaskInfoEventBody |
     CreateTaskExtensionEventBody |
-    ChangeTaskExtensionEventBody;
+    ChangeTaskExtensionEventBody |
+    CreateChecklistEventBody |
+    ChangeChecklistTitleEventBody |
+    DeleteChecklistEventBody |
+    AddChecklistItemEventBody |
+    DeleteChecklistItemEventBody |
+    ChangeChecklistItemAssigneesEventBody |
+    ChangeChecklistItemCompletedEventBody |
+    ChangeChecklistItemDueDateEventBody |
+    ChangeChecklistItemTitleEventBody;
 }
 
 export interface CollapsedEvent {
