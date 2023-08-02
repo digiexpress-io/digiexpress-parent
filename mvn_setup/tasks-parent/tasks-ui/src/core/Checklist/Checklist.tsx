@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Box, Typography, List, Button, IconButton, styled } from '@mui/material';
+import { Box, Typography, List, Button, IconButton, styled, Dialog, DialogTitle, DialogContent, TextField, DialogActions } from '@mui/material';
 import ChecklistIcon from '@mui/icons-material/Checklist';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
@@ -19,14 +19,47 @@ const ChecklistHeaderContainer = styled(Box)(({ theme }) => ({
   marginBottom: theme.spacing(1),
 }));
 
+const StyledChecklistTitle = styled(Typography)(({ theme }) => ({
+  fontSize: theme.typography.h4.fontSize,
+  fontWeight: theme.typography.h1.fontWeight,
+  ':hover': {
+    cursor: 'pointer',
+    textShadow: '2px 2px lightgray',
+  },
+}));
+
 const ChecklistHeader: React.FC<{ title: string }> = ({ title }) => {
+  const [open, setOpen] = React.useState<boolean>(false);
+  const [tempTitle, setTempTitle] = React.useState<string>(title);
+
+  const handleCancel = () => {
+    setOpen(false);
+    setTempTitle(title);
+  }
+
+  const handleClose = () => {
+    setOpen(false);
+  }
+
   return (
     <ChecklistHeaderContainer>
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
         <ChecklistIcon color='primary' sx={{ mr: 3 }} />
-        <Typography variant="h4" fontWeight='h1.fontWeight'>{title}</Typography>
+        <StyledChecklistTitle onClick={() => setOpen(true)}>{tempTitle}</StyledChecklistTitle>
       </Box>
       <IconButton color='error'><DeleteIcon /></IconButton>
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>
+          <Typography variant='h4'>Edit checklist title</Typography>
+        </DialogTitle>
+        <DialogContent>
+          <TextField fullWidth value={tempTitle} onChange={(e) => setTempTitle(e.target.value)} />
+        </DialogContent>
+        <DialogActions sx={{ display: 'flex', justifyContent: 'flex-start', pl: 3 }}>
+          <Button variant='contained' onClick={handleClose}>Save</Button>
+          <Button onClick={handleCancel}>Cancel</Button>
+        </DialogActions>
+      </Dialog>
     </ChecklistHeaderContainer>
   );
 }
