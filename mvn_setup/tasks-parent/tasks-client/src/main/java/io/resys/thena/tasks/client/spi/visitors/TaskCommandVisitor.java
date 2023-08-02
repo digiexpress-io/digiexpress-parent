@@ -24,6 +24,7 @@ import io.resys.thena.tasks.client.api.model.TaskCommand.AssignTaskRoles;
 import io.resys.thena.tasks.client.api.model.TaskCommand.ChangeChecklistItemAssignees;
 import io.resys.thena.tasks.client.api.model.TaskCommand.ChangeChecklistItemCompleted;
 import io.resys.thena.tasks.client.api.model.TaskCommand.ChangeChecklistItemDueDate;
+import io.resys.thena.tasks.client.api.model.TaskCommand.ChangeChecklistItemTitle;
 import io.resys.thena.tasks.client.api.model.TaskCommand.ChangeChecklistTitle;
 import io.resys.thena.tasks.client.api.model.TaskCommand.ChangeTaskComment;
 import io.resys.thena.tasks.client.api.model.TaskCommand.ChangeTaskDueDate;
@@ -118,6 +119,9 @@ public class TaskCommandVisitor {
         return this.current;
       case ChangeChecklistItemDueDate:
         this.current = new TaskCommandChecklistVisitor(ctx, current).visitChangeChecklistItemDueDate((ChangeChecklistItemDueDate)command);
+        return this.current;
+      case ChangeChecklistItemTitle:
+        this.current = new TaskCommandChecklistVisitor(ctx, current).visitChangeChecklistItemTitle((ChangeChecklistItemTitle)command);
         return this.current;
       case ChangeChecklistTitle:
         this.current = new TaskCommandChecklistVisitor(ctx, current).visitChangeChecklistTitle((ChangeChecklistTitle)command);

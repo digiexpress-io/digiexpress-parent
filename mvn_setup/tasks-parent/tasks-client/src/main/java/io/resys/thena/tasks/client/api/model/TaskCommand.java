@@ -74,6 +74,7 @@ import io.resys.thena.tasks.client.api.model.Task.TaskExtension;
   @Type(value = ImmutableChangeChecklistItemAssignees.class, name = "ChangeChecklistItemAssignees"),
   @Type(value = ImmutableChangeChecklistItemCompleted.class, name = "ChangeChecklistItemCompleted"),
   @Type(value = ImmutableChangeChecklistItemDueDate.class, name = "ChangeChecklistItemDueDate"),
+  @Type(value = ImmutableChangeChecklistItemTitle.class, name = "ChangeChecklistItemTitle")
 })
 public interface TaskCommand extends Serializable {
   String getUserId();
@@ -85,7 +86,7 @@ public interface TaskCommand extends Serializable {
     ArchiveTask, CommentOnTask, ChangeTaskComment, AssignTaskRoles, AssignTask, ChangeTaskStartDate,
     ChangeTaskDueDate, ChangeTaskInfo, CreateTaskExtension, ChangeTaskExtension, AssignTaskParent,
     CreateChecklist, ChangeChecklistTitle, DeleteChecklist, AddChecklistItem, DeleteChecklistItem,
-    ChangeChecklistItemAssignees, ChangeChecklistItemCompleted, ChangeChecklistItemDueDate
+    ChangeChecklistItemAssignees, ChangeChecklistItemCompleted, ChangeChecklistItemDueDate, ChangeChecklistItemTitle
   }
 
   @Value.Immutable @JsonSerialize(as = ImmutableCreateTask.class) @JsonDeserialize(as = ImmutableCreateTask.class)
@@ -140,6 +141,7 @@ public interface TaskCommand extends Serializable {
     @Type(value = ImmutableChangeChecklistItemAssignees.class, name = "ChangeChecklistItemAssignees"),
     @Type(value = ImmutableChangeChecklistItemCompleted.class, name = "ChangeChecklistItemCompleted"),
     @Type(value = ImmutableChangeChecklistItemDueDate.class, name = "ChangeChecklistItemDueDate"),
+    @Type(value = ImmutableChangeChecklistItemTitle.class, name = "ChangeChecklistItemTitle")
   })
   interface TaskUpdateCommand extends TaskCommand {
     String getTaskId();
@@ -212,6 +214,15 @@ public interface TaskCommand extends Serializable {
     LocalDate getDueDate();
     @Value.Default
     @Override default TaskCommandType getCommandType() { return TaskCommandType.ChangeChecklistItemDueDate; }
+  }
+
+  @Value.Immutable @JsonSerialize(as = ImmutableChangeChecklistItemTitle.class) @JsonDeserialize(as = ImmutableChangeChecklistItemTitle.class)
+  interface ChangeChecklistItemTitle extends TaskUpdateCommand {
+    String getChecklistId();
+    String getChecklistItemId();
+    String getTitle();
+    @Value.Default
+    @Override default TaskCommandType getCommandType() { return TaskCommandType.ChangeChecklistItemTitle; }
   }
 
   
