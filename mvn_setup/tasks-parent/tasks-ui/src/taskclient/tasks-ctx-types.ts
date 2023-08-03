@@ -1,4 +1,4 @@
-import { Task, TaskPriority, TaskStatus, TaskExtension } from './task-types';
+import { Task, TaskPriority, TaskStatus, TaskExtension, TaskTransaction } from './task-types';
 import { Profile } from './profile-types';
 
 export interface AvatarCode {
@@ -19,6 +19,7 @@ export interface TaskDescriptor {
   title: string;
   dialobId: string;
   description: string;
+  transactions: TaskTransaction[];
   uploads: TaskExtension[];
   rolesAvatars: AvatarCode[];
   assigneesAvatars: AvatarCode[];

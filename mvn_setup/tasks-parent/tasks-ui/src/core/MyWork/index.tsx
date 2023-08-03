@@ -22,7 +22,6 @@ const Header: React.FC<TaskTable.RenderProps> = ({ content, setContent, group })
           <TaskTable.Title group={group} />
           <TaskTable.SubTitle values={group.records.length} message='core.teamSpace.taskCount' />
         </TableCell>
-
         <TaskTable.ColumnHeaders columns={columns} content={content} setContent={setContent} />
       </TableRow>
     </TableHead>
@@ -37,13 +36,17 @@ const Row: React.FC<{
 }> = (props) => {
 
   const [hoverItemsActive, setHoverItemsActive] = React.useState(false);
+  function handleEndHover() {
+    console.log("Disable");
+    setHoverItemsActive(false);
+  } 
 
-  return (<TableRow hover tabIndex={-1} key={props.row.id} onMouseEnter={() => setHoverItemsActive(true)} onMouseLeave={() => setHoverItemsActive(false)}>
+  return (<TableRow hover tabIndex={-1} key={props.row.id} onMouseEnter={() => setHoverItemsActive(true)} onMouseLeave={handleEndHover}>
     <TaskTable.CellTitle {...props} children={hoverItemsActive && <MyWorkHoverOptions active={hoverItemsActive} />} />
     <TaskTable.CellDueDate {...props} />
     <TaskTable.CellPriority {...props} />
     <TaskTable.CellStatus {...props} />
-    <TaskTable.CellMenu {...props} active={hoverItemsActive} />
+    <TaskTable.CellMenu {...props} active={hoverItemsActive} setDisabled={handleEndHover}/>
   </TableRow>);
 }
 

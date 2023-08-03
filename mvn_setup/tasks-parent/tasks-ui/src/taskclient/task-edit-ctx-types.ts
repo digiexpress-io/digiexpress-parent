@@ -1,11 +1,11 @@
 import {
-  Task, TaskCommand, TaskCommandType, CreateTask, AssignTaskReporter, ArchiveTask, ChangeTaskStatus, ChangeTaskPriority,
+  TaskCommand, TaskCommandType, CreateTask, AssignTaskReporter, ArchiveTask, ChangeTaskStatus, ChangeTaskPriority,
   AssignTaskParent, CommentOnTask, ChangeTaskComment, AssignTaskRoles, AssignTask, ChangeTaskDueDate, ChangeTaskInfo,
   CreateTaskExtension, ChangeTaskExtension, ChangeTaskStartDate, CreateChecklist, ChangeChecklistTitle, DeleteChecklist, AddChecklistItem, DeleteChecklistItem,
   ChangeChecklistItemAssignees, ChangeChecklistItemCompleted, ChangeChecklistItemDueDate, ChangeChecklistItemTitle
 } from './task-types';
 
-
+import { TaskDescriptor } from './tasks-ctx-types';
 
 
 export interface SingleEventBody<T extends TaskCommandType, C extends TaskCommand> {
@@ -88,13 +88,13 @@ export type TaskEditMutator = (prev: TaskEditMutatorBuilder) => TaskEditMutatorB
 export type TaskEditDispatch = (mutator: TaskEditMutator) => void;
 
 export interface TaskEditState {
-  task: Task;
+  task: TaskDescriptor;
   events: TaskEditEvent[];
 }
 
 
 export interface TaskEditMutatorBuilder extends TaskEditState {
-  withTask(task: Task): TaskEditMutatorBuilder;
+  withTask(task: TaskDescriptor): TaskEditMutatorBuilder;
   withCommands(commandsToBeAdded: TaskCommand | TaskCommand[]): TaskEditMutatorBuilder;
 }
 

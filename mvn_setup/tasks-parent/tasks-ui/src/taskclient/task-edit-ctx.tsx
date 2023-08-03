@@ -1,12 +1,12 @@
 import React from 'react';
 import { TaskEditContextType, TaskEditMutator, TaskEditDispatch, TaskEditMutatorBuilder } from './task-edit-ctx-types';
 import { TaskEditStateBuilder } from './task-edit-ctx-impl';
-import { Task } from './task-types';
+import { TaskDescriptor } from './tasks-ctx-types';
 
 const TaskEditContext = React.createContext<TaskEditContextType>({} as TaskEditContextType);
 
 
-const TaskEditProvider: React.FC<{ children: React.ReactNode, task: Task }> = ({ children, task }) => {
+const TaskEditProvider: React.FC<{ children: React.ReactNode, task: TaskDescriptor }> = ({ children, task }) => {
 
   const [state, setState] = React.useState<TaskEditMutatorBuilder>(new TaskEditStateBuilder({task, userId: "jocelyn.mutso", events: []}));
   const setter: TaskEditDispatch = React.useCallback((mutator: TaskEditMutator) => setState(mutator), [setState]);

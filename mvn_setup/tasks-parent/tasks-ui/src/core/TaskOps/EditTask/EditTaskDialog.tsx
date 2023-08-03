@@ -79,7 +79,7 @@ const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 }
 
 
-const EditTaskDialog: React.FC<{ open: boolean, onClose: () => void, task?: TaskClient.Task }> = (props) => {
+const EditTaskDialog: React.FC<{ open: boolean, onClose: () => void, task?: TaskClient.TaskDescriptor }> = (props) => {
 
   if (!props.open || !props.task) {
     return null;

@@ -88,6 +88,8 @@ const en = {
   'tasktable.header.roles': 'Roles',
   'tasktable.header.dueDate': 'Due Date',
 
+  'tasktable.menu.edit': 'Edit task',
+
   'tasktable.header.spotlight.status.REJECTED': 'Rejected',
   'tasktable.header.spotlight.status.IN_PROGRESS': 'In progress',
   'tasktable.header.spotlight.status.COMPLETED': 'Completed',

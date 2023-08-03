@@ -1,6 +1,6 @@
-import { Task, TaskCommand, TaskTransaction } from './task-types';
+import { TaskCommand, TaskTransaction } from './task-types';
 import { TaskEditState, TaskEditMutatorBuilder, TaskEditEvent, SingleEvent } from './task-edit-ctx-types';
-
+import { TaskDescriptor } from './tasks-ctx-types';
 
 
 
@@ -9,7 +9,7 @@ interface ExtendedInit extends TaskEditState {
 }
 
 class TaskEditStateBuilder implements TaskEditMutatorBuilder {
-  private _task: Task;
+  private _task: TaskDescriptor;
   private _events: TaskEditEvent[];
   private _userId: string;
 
@@ -19,12 +19,12 @@ class TaskEditStateBuilder implements TaskEditMutatorBuilder {
     this._userId = init.userId;
     this._events = new TaskEditEventVisitor({task: init.task, userId: init.userId}).build();
   }
-  get task(): Task { return this._task };
+  get task(): TaskDescriptor { return this._task };
   get userId(): string { return this._userId };
   get events(): TaskEditEvent[] {return this._events }
 
 
-  withTask(input: Task): TaskEditStateBuilder {
+  withTask(input: TaskDescriptor): TaskEditStateBuilder {
    return new TaskEditStateBuilder({...this.clone(), task: input});
   }
   withCommands(input: TaskCommand | TaskCommand[]): TaskEditStateBuilder {
@@ -45,7 +45,7 @@ class TaskEditEventVisitor {
   private _groups: Record<string, SingleEvent[]>;
   
   constructor(init: {
-    task: Task;
+    task: TaskDescriptor;
     userId: string;
   }) {
     this._groups = {};
@@ -61,15 +61,15 @@ class TaskEditEventVisitor {
     });
   }
 
-  private visit(task: Task) {
+  private visit(task: TaskDescriptor) {
     task.transactions.forEach(tx => this.visitTransaction(tx, task));    
   }
   
-  private visitTransaction(tx: TaskTransaction, task: Task) {
+  private visitTransaction(tx: TaskTransaction, task: TaskDescriptor) {
     tx.commands.forEach(command => this.visitCommand(command, tx, task));
   }
   
-  private visitCommand(command: TaskCommand, tx: TaskTransaction, task: Task) {
+  private visitCommand(command: TaskCommand, tx: TaskTransaction, task: TaskDescriptor) {
     let groupId: string = Object.entries(this._groups).length + "";
     if(!this._groups[groupId]) {
       this._groups[groupId] = [];
@@ -78,7 +78,7 @@ class TaskEditEventVisitor {
     this._groups[groupId].push(this.visitEvent(command, tx, task));
   }
   
-  private visitEvent(command: TaskCommand, tx: TaskTransaction, task: Task): SingleEvent {
+  private visitEvent(command: TaskCommand, tx: TaskTransaction, task: TaskDescriptor): SingleEvent {
     return { 
       type: 'SINGLE',
       body: {

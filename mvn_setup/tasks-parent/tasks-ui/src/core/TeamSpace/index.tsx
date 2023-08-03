@@ -38,14 +38,18 @@ const Row: React.FC<{
 }> = (props) => {
 
   const [hoverItemsActive, setHoverItemsActive] = React.useState(false);
+  function handleEndHover() {
+    setHoverItemsActive(false);
+  } 
+  
 
-  return (<TableRow hover tabIndex={-1} key={props.row.id} onMouseEnter={() => setHoverItemsActive(true)} onMouseLeave={() => setHoverItemsActive(false)}>
+  return (<TableRow hover tabIndex={-1} key={props.row.id} onMouseEnter={() => setHoverItemsActive(true)} onMouseLeave={handleEndHover}>
     <TaskTable.CellTitle {...props} children={hoverItemsActive} />
     <TaskTable.CellAssignees {...props} />
     <TaskTable.CellDueDate {...props} />
     <TaskTable.CellPriority {...props} />
     <TaskTable.CellStatus {...props} />
-    <TaskTable.CellMenu {...props} active={hoverItemsActive} />
+    <TaskTable.CellMenu {...props} active={hoverItemsActive} setDisabled={handleEndHover}/>
   </TableRow>);
 }
 

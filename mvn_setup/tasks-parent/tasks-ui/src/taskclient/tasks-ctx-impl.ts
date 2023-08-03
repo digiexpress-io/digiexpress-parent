@@ -402,7 +402,7 @@ class TaskDescriptorImpl implements TaskDescriptor {
     this._myWorkType = getMyWorkType(entry, profile);
   }
   
-  
+  get transactions() { return this._entry.transactions }  
   get myWorkType() { return this._myWorkType }
   get id() { return this._entry.id }
   get dialobId() { return this._dialobId }
