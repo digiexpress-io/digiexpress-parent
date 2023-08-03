@@ -1,49 +1,75 @@
 import React from 'react';
 
-import { Box, Typography, List, Button } from '@mui/material';
+import { Box, Typography, List, Button, IconButton, styled, Dialog, DialogTitle, DialogContent, TextField, DialogActions } from '@mui/material';
 import ChecklistIcon from '@mui/icons-material/Checklist';
+import DeleteIcon from '@mui/icons-material/Delete';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
-import type { ChecklistItemProps } from './ChecklistItem';
-import ChecklistItem from './ChecklistItem';
-import Styles from '@styles';
+import ChecklistItemComponent from './ChecklistItem';
 import ChecklistItemDialog from './ChecklistItemDialog';
+import { Checklist, ChecklistItem } from 'taskclient/task-types';
+import Styles from '@styles';
 
-const ChecklistHeader: React.FC = () => {
+const ChecklistHeaderContainer = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  marginLeft: theme.spacing(3),
+  marginBottom: theme.spacing(1),
+}));
+
+const StyledChecklistTitle = styled(Typography)(({ theme }) => ({
+  fontSize: theme.typography.h4.fontSize,
+  fontWeight: theme.typography.h1.fontWeight,
+  ':hover': {
+    cursor: 'pointer',
+    textShadow: '2px 2px lightgray',
+  },
+}));
+
+const ChecklistHeader: React.FC<{ title: string }> = ({ title }) => {
+  const [open, setOpen] = React.useState<boolean>(false);
+  const [tempTitle, setTempTitle] = React.useState<string>(title);
+
+  const handleCancel = () => {
+    setOpen(false);
+    setTempTitle(title);
+  }
+
+  const handleClose = () => {
+    setOpen(false);
+  }
+
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center', ml: 3, mb: 1 }}>
-      <ChecklistIcon color='primary' sx={{ mr: 3 }} />
-      <Typography variant="h4" fontWeight='h1.fontWeight'>Checklist</Typography>
-    </Box>
+    <ChecklistHeaderContainer>
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <ChecklistIcon color='primary' sx={{ mr: 3 }} />
+        <StyledChecklistTitle onClick={() => setOpen(true)}>{tempTitle}</StyledChecklistTitle>
+      </Box>
+      <IconButton color='error'><DeleteIcon /></IconButton>
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>
+          <Typography variant='h4'>Edit checklist title</Typography>
+        </DialogTitle>
+        <DialogContent>
+          <TextField fullWidth value={tempTitle} onChange={(e) => setTempTitle(e.target.value)} />
+        </DialogContent>
+        <DialogActions sx={{ display: 'flex', justifyContent: 'flex-start', pl: 3 }}>
+          <Button variant='contained' onClick={handleClose}>Save</Button>
+          <Button onClick={handleCancel}>Cancel</Button>
+        </DialogActions>
+      </Dialog>
+    </ChecklistHeaderContainer>
   );
 }
 
-const demoChecklistItems: ChecklistItemProps[] = [
-  {
-    id: 'CHECK_1',
-    text: 'Item 1',
-    completed: true,
-    dueDate: '07/25/2023'
-  },
-  {
-    id: 'CHECK_2',
-    text: 'Item 2',
-    completed: false,
-    dueDate: '07/25/2023',
-    assignees: ['John Doe', 'Jane Doe'],
-  },
-  {
-    id: 'CHECK_3',
-    text: 'Item 3',
-    completed: false,
-  },
-];
-
-const Checklist: React.FC = () => {
-  const [tempChecklistItems, setTempChecklistItems] = React.useState<ChecklistItemProps[]>(demoChecklistItems);
+const ChecklistComponent: React.FC<{ checklist: Checklist }> = ({ checklist }) => {
+  const { title, items } = checklist;
+  const [tempChecklistItems, setTempChecklistItems] = React.useState<ChecklistItem[]>(items);
   const [open, setOpen] = React.useState<boolean>(false);
   const [mode, setMode] = React.useState<'add' | 'edit'>('add');
-  const [activeItem, setActiveItem] = React.useState<ChecklistItemProps | undefined>(undefined);
+  const [activeItem, setActiveItem] = React.useState<ChecklistItem | undefined>(undefined);
 
   const calculateProgress = () => {
     const total = tempChecklistItems.length;
@@ -63,25 +89,23 @@ const Checklist: React.FC = () => {
     setTempChecklistItems(newChecklistItems);
   };
 
-  const handleAdd = (item: ChecklistItemProps) => {
+  const handleAdd = (item: ChecklistItem) => {
     const newChecklistItems = [...tempChecklistItems];
     newChecklistItems.push(item);
     setTempChecklistItems(newChecklistItems);
   };
 
-  const handleItemClick = (item: ChecklistItemProps, e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+  const handleItemClick = (item: ChecklistItem, e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     setActiveItem(item);
     setMode('edit');
     setOpen(true);
     e.stopPropagation();
   };
 
-  const handleUpdate = (item: ChecklistItemProps) => {
-    console.log(item)
+  const handleUpdate = (item: ChecklistItem) => {
     const newChecklistItems = [...tempChecklistItems];
     const index = newChecklistItems.findIndex((i) => i.id === item.id);
     newChecklistItems[index] = item;
-    console.log(newChecklistItems)
     setTempChecklistItems(newChecklistItems);
   };
 
@@ -93,10 +117,10 @@ const Checklist: React.FC = () => {
 
   return (
     <Box>
-      <ChecklistHeader />
+      <ChecklistHeader title={title} />
       <Styles.ProgressBar progress={calculateProgress()} />
       <List>
-        {tempChecklistItems.map((item, index) => <ChecklistItem key={item.id} item={item} onChecked={() => handleChecked(index)} onDeleteClick={() => handleDeleted(index)} onClick={handleItemClick} />)}
+        {tempChecklistItems.map((item, index) => <ChecklistItemComponent key={item.id} item={item} onChecked={() => handleChecked(index)} onDeleteClick={() => handleDeleted(index)} onClick={handleItemClick} />)}
       </List>
       <Button variant='outlined' startIcon={<AddCircleOutlineIcon />} sx={{ m: 1, ml: 3 }} onClick={(e) => handleAddClick(e)}>Add Item</Button>
       <ChecklistItemDialog mode={mode} open={open} onSave={handleAdd} onUpdate={handleUpdate} item={activeItem} onClose={() => setOpen(false)} />
@@ -104,4 +128,4 @@ const Checklist: React.FC = () => {
   );
 }
 
-export { Checklist };
+export { ChecklistComponent };

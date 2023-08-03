@@ -22,6 +22,8 @@ export interface Task {
   readonly extensions: TaskExtension[];
   readonly comments: TaskComment[];
 
+  readonly checklist: Checklist[];
+
   readonly id: TaskId;
   readonly version: string;
   readonly documentType: 'TASK';
@@ -31,6 +33,19 @@ export interface Task {
 export type TaskStatus = 'CREATED' | 'IN_PROGRESS' | 'COMPLETED' | 'REJECTED';
 export type TaskPriority = 'LOW' | 'MEDIUM' | 'HIGH';
 
+export interface Checklist {
+  id: string;
+  title: string;
+  items: ChecklistItem[];
+}
+
+export interface ChecklistItem {
+  id: string;
+  title: string;
+  completed: boolean;
+  assigneeIds: string[];
+  dueDate: string | undefined;
+}
 
 export interface TaskTransaction {
   id: string;
@@ -66,7 +81,9 @@ export interface TaskCommand {
 export type TaskCommandType =
   'CreateTask' | 'ChangeTaskStatus' | 'ChangeTaskPriority' | 'AssignTaskReporter' | 'ArchiveTask' |
   'CommentOnTask' | 'ChangeTaskComment' | 'AssignTaskRoles' | 'AssignTask' | 'ChangeTaskStartDate' | 'ChangeTaskDueDate' | 
-  'AssignTaskParent' | 'ChangeTaskInfo' | 'CreateTaskExtension' | 'ChangeTaskExtension';
+  'AssignTaskParent' | 'ChangeTaskInfo' | 'CreateTaskExtension' | 'ChangeTaskExtension' |
+  'CreateChecklist' | 'ChangeChecklistTitle' | 'DeleteChecklist' | 'AddChecklistItem' | 'DeleteChecklistItem' | 
+  'ChangeChecklistItemAssignees' | 'ChangeChecklistItemCompleted' | 'ChangeChecklistItemDueDate' | 'ChangeChecklistItemTitle';
 
 export interface TaskUpdateCommand<T extends TaskCommandType> extends TaskCommand {
   taskId: TaskId;
@@ -87,6 +104,7 @@ export interface CreateTask extends TaskCommand {
   labels: string[];
   extensions: TaskExtension[];
   comments: TaskComment[];
+  checklist: Checklist[];
 }
 
 export interface AssignTaskReporter extends TaskUpdateCommand<'AssignTaskReporter'> {
@@ -151,6 +169,57 @@ export interface ChangeTaskExtension extends TaskUpdateCommand<'ChangeTaskExtens
   type: string;
   name: string;
   body: string;
+}
+
+export interface CreateChecklist extends TaskUpdateCommand<'CreateChecklist'> {
+  title: string;
+  checklist: ChecklistItem[];
+}
+
+export interface ChangeChecklistTitle extends TaskUpdateCommand<'ChangeChecklistTitle'> {
+  checklistId: string;
+  title: string;
+}
+
+export interface DeleteChecklist extends TaskUpdateCommand<'DeleteChecklist'> {
+  checklistId: string;
+}
+
+export interface AddChecklistItem extends TaskUpdateCommand<'AddChecklistItem'> {
+  checklistId: string;
+  title: string;
+  assigneeIds: string[];
+  dueDate: string | undefined;
+  completed: boolean;
+}
+
+export interface DeleteChecklistItem extends TaskUpdateCommand<'DeleteChecklistItem'> {
+  checklistId: string;
+  checklistItemId: string;
+}
+
+export interface ChangeChecklistItemAssignees extends TaskUpdateCommand<'ChangeChecklistItemAssignees'> {
+  checklistId: string;
+  checklistItemId: string;
+  assigneeIds: string[];
+}
+
+export interface ChangeChecklistItemCompleted extends TaskUpdateCommand<'ChangeChecklistItemCompleted'> {
+  checklistId: string;
+  checklistItemId: string;
+  completed: boolean;
+}
+
+export interface ChangeChecklistItemDueDate extends TaskUpdateCommand<'ChangeChecklistItemDueDate'> {
+  checklistId: string;
+  checklistItemId: string;
+  dueDate: string | undefined;
+}
+
+export interface ChangeChecklistItemTitle extends TaskUpdateCommand<'ChangeChecklistItemTitle'> {
+  checklistId: string;
+  checklistItemId: string;
+  title: string;
 }
 
 export interface TaskPagination {

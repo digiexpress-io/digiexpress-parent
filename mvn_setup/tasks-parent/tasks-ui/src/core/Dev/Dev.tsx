@@ -5,6 +5,7 @@ import TaskOps from '../TaskOps';
 import TestTask from './test_task_1.json';
 import DatePicker from '../DatePicker';
 import Checklist from '../Checklist';
+import { demoChecklist } from '../Checklist/checklist-demo';
 
 const Dev: React.FC = () => {
 
@@ -28,7 +29,7 @@ const Dev: React.FC = () => {
       <DatePicker startDate={startDate} setStartDate={setStartDate} endDate={endDate} setEndDate={setEndDate} />
 
       <Divider sx={{ my: 2 }} />
-      <Checklist />
+      <Checklist checklist={demoChecklist} />
 
     </Box>);
 }

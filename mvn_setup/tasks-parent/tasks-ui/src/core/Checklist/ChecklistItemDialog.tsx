@@ -1,26 +1,18 @@
 import React from 'react';
 
 import { Dialog, Box, TextField, Button, Typography } from '@mui/material';
-import { ChecklistItemActions } from './ChecklistItem';
-import type { ChecklistItemProps } from './ChecklistItem';
-import DatePicker from 'core/DatePicker';
-import AssigneePicker from './AssigneePicker';
 
-interface ChecklistItemDialogProps {
-  mode: 'add' | 'edit';
-  open: boolean;
-  onClose: () => void;
-  item?: ChecklistItemProps;
-  onDeleteClick?: () => void;
-  onSave: (item: ChecklistItemProps) => void;
-  onUpdate: (item: ChecklistItemProps) => void;
-}
+import DatePicker from '../DatePicker';
+import AssigneePicker from './AssigneePicker';
+import { ChecklistItemActions } from './ChecklistItem';
+import { ChecklistItemDialogProps } from './checklist-types';
+import { ChecklistItem } from 'taskclient/task-types';
 
 const demoAssignees: string[] = ['John Doe', 'Jane Doe', 'John Smith', 'Jane Smith'];
 
 const ChecklistItemDialog: React.FC<ChecklistItemDialogProps> = (props) => {
   const { mode, open, onClose, item, onDeleteClick, onSave, onUpdate } = props;
-  const { id, text, completed, dueDate, assignees } = item || {};
+  const { id, title, completed, dueDate, assigneeIds } = item || {};
 
   const [tempText, setTempText] = React.useState<string>('');
   const [tempDueDate, setTempDueDate] = React.useState<Date | string | undefined>();
@@ -31,24 +23,24 @@ const ChecklistItemDialog: React.FC<ChecklistItemDialogProps> = (props) => {
 
   React.useEffect(() => {
     if (mode === 'edit') {
-      setTempText(text || '');
+      setTempText(title || '');
       setTempDueDate(dueDate);
-      setTempAssignees(assignees || []);
+      setTempAssignees(assigneeIds || []);
     }
     if (mode === 'add') {
       setTempText('');
       setTempDueDate(undefined);
       setTempAssignees([]);
     }
-  }, [text, dueDate, assignees, mode]);
+  }, [title, dueDate, assigneeIds, mode]);
 
   const handleSaveClick = () => {
-    const newItem: ChecklistItemProps = {
+    const newItem: ChecklistItem = {
       id: id || Math.random().toString(),
-      text: tempText,
+      title: tempText,
       completed: completed || false,
       dueDate: new Date(tempDueDate || '07/07/2023').toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }),
-      assignees: tempAssignees,
+      assigneeIds: tempAssignees,
     };
     mode === 'add' ? onSave(newItem) : onUpdate(newItem);
     onClose();
@@ -66,7 +58,7 @@ const ChecklistItemDialog: React.FC<ChecklistItemDialogProps> = (props) => {
           <ChecklistItemActions
             mode={mode}
             dueDate={tempDueDate}
-            assignees={tempAssignees}
+            assigneeIds={tempAssignees}
             onDeleteClick={onDeleteClick}
             setDatePickerOpen={setDatePickerOpen}
             setAssigneePickerOpen={setAssigneePickerOpen}

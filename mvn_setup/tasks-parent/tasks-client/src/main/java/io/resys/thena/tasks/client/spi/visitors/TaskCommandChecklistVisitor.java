@@ -12,6 +12,7 @@ import io.resys.thena.tasks.client.api.model.TaskCommand.AddChecklistItem;
 import io.resys.thena.tasks.client.api.model.TaskCommand.ChangeChecklistItemAssignees;
 import io.resys.thena.tasks.client.api.model.TaskCommand.ChangeChecklistItemCompleted;
 import io.resys.thena.tasks.client.api.model.TaskCommand.ChangeChecklistItemDueDate;
+import io.resys.thena.tasks.client.api.model.TaskCommand.ChangeChecklistItemTitle;
 import io.resys.thena.tasks.client.api.model.TaskCommand.ChangeChecklistTitle;
 import io.resys.thena.tasks.client.api.model.TaskCommand.CreateChecklist;
 import io.resys.thena.tasks.client.api.model.TaskCommand.DeleteChecklist;
@@ -47,33 +48,39 @@ public class TaskCommandChecklistVisitor {
       .title(command.getTitle())
       .build();
     return this.mutator(command).add(command.getChecklistId(), item).end();
-
   }
+
   public ImmutableTask visitChangeChecklistItemAssignees(ChangeChecklistItemAssignees command) { 
     return this.mutator(command).change(
         command.getChecklistId(), command.getChecklistItemId(), 
         (builder) -> builder.assigneeIds(command.getAssigneeIds()).build()).end();
-    
-    
   }
+
   public ImmutableTask visitChangeChecklistItemCompleted(ChangeChecklistItemCompleted command) { 
     return this.mutator(command).change(
         command.getChecklistId(), command.getChecklistItemId(), 
         (builder) -> builder.completed(command.getCompleted()).build()).end();
-
   }
+
   public ImmutableTask visitChangeChecklistItemDueDate(ChangeChecklistItemDueDate command) { 
     return this.mutator(command).change(
         command.getChecklistId(), command.getChecklistItemId(), 
         (builder) -> builder.dueDate(command.getDueDate()).build()).end();
-    
   }
+
+  public ImmutableTask visitChangeChecklistItemTitle(ChangeChecklistItemTitle command) {
+    return this.mutator(command).change(
+      command.getChecklistId(), command.getChecklistItemId(),
+      (builder) -> builder.title(command.getTitle()).build()).end();
+  }
+
   public ImmutableTask visitChangeChecklistTitle(ChangeChecklistTitle command) { 
     return this.mutator(command).change(
         command.getChecklistId(), 
         (builder) -> builder.title(command.getTitle()).build()).end();
 
   }
+
   public ImmutableTask visitDeleteChecklist(DeleteChecklist command) { 
     return this.mutator(command).delete(
         command.getChecklistId())
@@ -81,6 +88,7 @@ public class TaskCommandChecklistVisitor {
 
 
   }
+
   public ImmutableTask visitDeleteChecklistItem(DeleteChecklistItem command) { 
     return this.mutator(command).delete(
         command.getChecklistId(), command.getChecklistItemId())
@@ -91,6 +99,5 @@ public class TaskCommandChecklistVisitor {
   private ChecklistMutator mutator(TaskCommand command) {
     return new ChecklistMutator(current, command).start();
   }
-  
 
 }

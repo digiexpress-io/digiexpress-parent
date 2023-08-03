@@ -9,40 +9,15 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 import DatePicker from '../DatePicker';
 import AssigneePicker from './AssigneePicker';
-
-interface ChecklistItemProps {
-  id: string;
-  text: string;
-  completed: boolean;
-  dueDate?: string;
-  assignees?: string[];
-}
-
-interface ChecklistItemComponentProps {
-  item: ChecklistItemProps;
-  onChecked: () => void;
-  onDeleteClick: () => void;
-  onClick: (item: ChecklistItemProps, e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
-}
-
-interface ChecklistItemActionProps {
-  mode: 'add' | 'edit';
-  dueDate: Date | string | undefined;
-  assignees: string[] | [];
-  variant?: 'normal' | 'hover';
-  onDeleteClick?: () => void;
-  setDatePickerOpen: (value: React.SetStateAction<boolean>) => void;
-  setAssigneePickerOpen: (value: React.SetStateAction<boolean>) => void;
-}
-
-const demoAssignees: string[] = ['John Doe', 'Jane Doe', 'John Smith', 'Jane Smith'];
+import { ChecklistItemActionProps, ChecklistItemComponentProps } from './checklist-types';
+import { demoAssignees } from './checklist-demo';
 
 const ChecklistItemActions: React.FC<ChecklistItemActionProps> = (props) => {
-  const { mode, dueDate, assignees, variant, onDeleteClick, setAssigneePickerOpen, setDatePickerOpen } = props;
+  const { mode, dueDate, assigneeIds, variant, onDeleteClick, setAssigneePickerOpen, setDatePickerOpen } = props;
 
   const hoverSx = variant === 'hover' ? { position: 'absolute', zIndex: 1, top: '10%', right: 0, backgroundColor: '#F5F5F5' } : {};
   const dateButtonColor = dueDate ? 'primary' : 'inherit';
-  const assigneesButtonColor = assignees.length ? 'primary' : 'inherit';
+  const assigneesButtonColor = assigneeIds.length ? 'primary' : 'inherit';
 
   const handleDateClick = (e: React.MouseEvent<HTMLElement>) => {
     e.stopPropagation();
@@ -68,7 +43,7 @@ const ChecklistItemActions: React.FC<ChecklistItemActionProps> = (props) => {
       <IconButton onClick={(e) => handleAssigneesClick(e)}>
         <AccountCircleIcon color={assigneesButtonColor} />
       </IconButton>
-      {assignees && <Typography>{assignees.join(', ')}</Typography>}
+      {assigneeIds && <Typography>{assigneeIds.join(', ')}</Typography>}
       {mode === 'edit' && <IconButton onClick={(e) => handleDelete(e)}>
         <DeleteIcon color='error' />
       </IconButton>}
@@ -76,14 +51,14 @@ const ChecklistItemActions: React.FC<ChecklistItemActionProps> = (props) => {
   );
 }
 
-const ChecklistItem: React.FC<ChecklistItemComponentProps> = (props) => {
+const ChecklistItemComponent: React.FC<ChecklistItemComponentProps> = (props) => {
   const { item, onChecked, onDeleteClick, onClick } = props;
-  const { text, completed, dueDate, assignees } = item;
+  const { title, completed, dueDate, assigneeIds } = item;
   const [checked, setChecked] = React.useState<boolean>(completed);
   const checkedTextStyle = checked ? { textDecoration: 'line-through' } : {};
   const [hovering, setHovering] = React.useState<boolean>(false);
   const [dueDateTemp, setDueDateTemp] = React.useState<Date | string | undefined>(dueDate);
-  const [assigneesTemp, setAssigneesTemp] = React.useState<string[]>(assignees || []);
+  const [assigneesTemp, setAssigneesTemp] = React.useState<string[]>(assigneeIds || []);
 
   const [datePickerOpen, setDatePickerOpen] = React.useState<boolean>(false);
   const [assigneePickerOpen, setAssigneePickerOpen] = React.useState<boolean>(false);
@@ -113,13 +88,13 @@ const ChecklistItem: React.FC<ChecklistItemComponentProps> = (props) => {
       </IconButton>
       <ListItemButton onMouseOver={handleMouseOver} onMouseOut={handleMouseOut} onClick={(e) => onClick(item, e)}>
         <ListItemText>
-          <Typography sx={checkedTextStyle}>{text}</Typography>
+          <Typography sx={checkedTextStyle}>{title}</Typography>
         </ListItemText>
         {hovering &&
           <ChecklistItemActions
             mode='edit'
             dueDate={dueDateTemp}
-            assignees={assigneesTemp}
+            assigneeIds={assigneesTemp}
             variant='hover'
             onDeleteClick={onDeleteClick}
             setDatePickerOpen={setDatePickerOpen}
@@ -135,6 +110,5 @@ const ChecklistItem: React.FC<ChecklistItemComponentProps> = (props) => {
   );
 }
 
-export type { ChecklistItemProps, ChecklistItemActionProps };
 export { ChecklistItemActions }
-export default ChecklistItem;
+export default ChecklistItemComponent;
