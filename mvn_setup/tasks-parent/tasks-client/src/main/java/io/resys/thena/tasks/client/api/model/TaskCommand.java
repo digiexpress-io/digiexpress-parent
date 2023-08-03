@@ -175,7 +175,7 @@ public interface TaskCommand extends Serializable {
     String getChecklistId();
     String getTitle();
     List<String> getAssigneeIds();
-    LocalDate getDueDate();
+    @Nullable LocalDate getDueDate();
     Boolean getCompleted();
     @Value.Default
     @Override default TaskCommandType getCommandType() { return TaskCommandType.AddChecklistItem; }
@@ -211,7 +211,7 @@ public interface TaskCommand extends Serializable {
   interface ChangeChecklistItemDueDate extends TaskUpdateCommand {
     String getChecklistId();
     String getChecklistItemId();
-    LocalDate getDueDate();
+    @Nullable LocalDate getDueDate();
     @Value.Default
     @Override default TaskCommandType getCommandType() { return TaskCommandType.ChangeChecklistItemDueDate; }
   }
