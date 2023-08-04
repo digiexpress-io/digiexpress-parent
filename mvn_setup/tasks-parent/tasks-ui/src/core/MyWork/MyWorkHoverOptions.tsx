@@ -1,9 +1,7 @@
 import React from 'react';
-import { SxProps, Box, IconButton, Button, Typography, Badge } from '@mui/material';
+import { SxProps, Box, IconButton, Button, Typography } from '@mui/material';
 import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
 import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
-import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
-import NotificationsIcon from '@mui/icons-material/Notifications';
 import { FormattedMessage } from 'react-intl';
 
 
@@ -22,22 +20,12 @@ const StartWorkButton: React.FC<{}> = () => {
   </Button>)
 }
 
-const CRMNotifications: React.FC<{}> = () => {
-  return (<Box display='flex' sx={boxSx}>
-    <SupervisedUserCircleIcon color='action'/>
-    <Badge variant='dot' color='error' overlap="circular">
-      <NotificationsIcon color='action'/>
-    </Badge>
-  </Box>)
-}
 
 const MyWorkHoverOptions: React.FC<{ active: boolean }> = () => {
 
   return (
     <Box display='flex' sx={boxSx} width='100%'>
       <StartWorkButton />
-      <Box flexGrow={1} />
-      <CRMNotifications />
     </Box>
   )
 }
@@ -47,4 +35,4 @@ const HoverMenu: React.FC<{}> = () => {
 
 
 
-export { MyWorkHoverOptions, CRMNotifications, HoverMenu, StartWorkButton };
+export { MyWorkHoverOptions, HoverMenu, StartWorkButton };

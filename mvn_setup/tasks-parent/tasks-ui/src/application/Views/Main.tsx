@@ -44,6 +44,8 @@ const Main: React.FC<{}> = () => {
       return (<Box sx={root}><Core.TeamSpace /></Box>)
     } else if (active.id === 'inbox') {
       return (<Box sx={root}><Core.Inbox /></Box>)
+    } else if (active.id === 'myoverview') {
+      return (<Box sx={root}><Core.MyOverview /></Box>)
     }
 
 

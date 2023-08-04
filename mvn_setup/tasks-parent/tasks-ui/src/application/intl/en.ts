@@ -45,6 +45,8 @@ const en = {
 
   'activities.myhistory.title': 'My history',
   'activities.myhistory.desc': 'See everything I have ever done',
+  
+  'activities.myoverview.title': 'My overview',
 
   'activities.search.title': 'Search...',
   'activities.search.desc': 'Search from everything ever done',
