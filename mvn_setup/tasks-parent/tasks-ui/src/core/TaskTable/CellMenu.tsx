@@ -77,7 +77,7 @@ const FormattedCell: React.FC<{
 
 
   return (<Styles.TableCell width="35px">
-    <Box width="35px" justifyContent='center'> {/* Box is needed to prevent table cell resize on hover */}
+    <Box width="35px" justifyContent='right'> {/* Box is needed to prevent table cell resize on hover */}
       <TaskOps.EditTaskDialog open={edit} onClose={handleEndEdit} task={row} />
 
       {active && <HoverMenu onEdit={handleStartEdit} />}

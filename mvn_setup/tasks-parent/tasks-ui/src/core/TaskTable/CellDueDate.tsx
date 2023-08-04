@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dialog, IconButton } from '@mui/material';
+import { Dialog, IconButton, Box } from '@mui/material';
 import DateRangeOutlinedIcon from '@mui/icons-material/DateRangeOutlined';
 
 import client from '@taskclient';
@@ -35,7 +35,7 @@ const FormattedCell: React.FC<{
   def: client.Group
 }> = ({ row, def }) => {
 
-  return (<Styles.TableCell><DueDate row={row} def={def}/></Styles.TableCell>);
+  return (<Styles.TableCell width='70px'><Box width='70px'><DueDate row={row} def={def}/></Box></Styles.TableCell>);
 }
 
 export default FormattedCell;

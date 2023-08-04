@@ -18,7 +18,7 @@ const FormattedCell: React.FC<{
 
   return (
     <Styles.TableCell width="500px">
-      <Box width='500px' justifyContent='left' display='flex'>
+      <Box justifyContent='left' display='flex'>
         <TaskCell id={row.id + "/Subject"} name={row.title} maxWidth={"500px"} />
         {children}
       </Box>

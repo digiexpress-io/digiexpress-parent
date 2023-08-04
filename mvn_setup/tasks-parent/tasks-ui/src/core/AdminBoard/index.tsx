@@ -10,11 +10,11 @@ import Tools from '../TaskTools';
 const Header: React.FC<TaskTable.RenderProps> = ({ content, setContent, group }) => {
 
   const columns: (keyof client.TaskDescriptor)[] = React.useMemo(() => [
-    'priority',
-    'status',
     'assignees',
+    'dueDate',
+    'priority',
     'roles',
-    'dueDate'
+    'status'
   ], []);
 
   return (
@@ -41,16 +41,16 @@ const Row: React.FC<{
   const [hoverItemsActive, setHoverItemsActive] = React.useState(false);
   function handleEndHover() {
     setHoverItemsActive(false);
-  } 
-  
+  }
+
   return (<TableRow hover tabIndex={-1} key={props.row.id} onMouseEnter={() => setHoverItemsActive(true)} onMouseLeave={handleEndHover}>
     <TaskTable.CellTitle {...props} children={hoverItemsActive} />
-    <TaskTable.CellPriority {...props} />
-    <TaskTable.CellStatus {...props} />
     <TaskTable.CellAssignees {...props} />
-    <TaskTable.CellRoles {...props} />
     <TaskTable.CellDueDate {...props} />
-    <TaskTable.CellMenu {...props} active={hoverItemsActive} setDisabled={handleEndHover}/>
+    <TaskTable.CellPriority {...props} />
+    <TaskTable.CellRoles {...props} />
+    <TaskTable.CellStatus {...props} />
+    <TaskTable.CellMenu {...props} active={hoverItemsActive} setDisabled={handleEndHover} />
   </TableRow>);
 }
 

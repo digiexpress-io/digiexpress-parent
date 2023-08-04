@@ -1,7 +1,7 @@
 import React from 'react';
-import { TableRow, SxProps, Box, IconButton } from '@mui/material';
+import { SxProps, Box, IconButton, MenuList, MenuItem, ListItemText, Divider } from '@mui/material';
 import AssistantPhotoTwoToneIcon from '@mui/icons-material/AssistantPhotoTwoTone';
-import { useIntl } from 'react-intl';
+import { useIntl, FormattedMessage } from 'react-intl';
 
 import client from '@taskclient';
 import Styles from '@styles';
@@ -32,11 +32,21 @@ const Priority: React.FC<CellProps & { color?: string }> = ({ row, color }) => {
   return (
     <>
       <Popover.Delegate>
-        <Box display='flex' flexDirection='column'>
-          <Box>'HIGH'</Box>
-          <Box>'NORMAL'</Box>
-          <Box>'LOW'</Box>
-        </Box>
+        <MenuList dense>
+          <MenuItem>
+            <ListItemText>High</ListItemText>
+          </MenuItem>
+          <MenuItem>
+            <ListItemText>Normal</ListItemText>
+          </MenuItem>
+          <MenuItem>
+            <ListItemText>Low</ListItemText>
+          </MenuItem>
+          <Divider />
+          <MenuItem>
+            <ListItemText>None</ListItemText>
+          </MenuItem>
+        </MenuList>
       </Popover.Delegate>
       <TaskCell id={row.id + "/Priority"} name={<IconButton onClick={Popover.onClick}><AssistantPhotoTwoToneIcon sx={{ fontSize: 'medium', color }} /></IconButton>} />
 
@@ -50,7 +60,7 @@ const FormattedCell: React.FC<{
   def: client.Group
 }> = ({ row, def }) => {
 
-  return (<Styles.TableCell width="50px" sx={getPriority(def)}><Priority row={row} def={def}/></Styles.TableCell>);
+  return (<Styles.TableCell width="50px" sx={getPriority(def)}><Priority row={row} def={def} /></Styles.TableCell>);
 }
 
 export default FormattedCell;
