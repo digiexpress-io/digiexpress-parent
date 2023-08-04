@@ -1,7 +1,8 @@
 import React from 'react';
-import { Box, Grid, Stack } from '@mui/material';
+import { Box, Grid, Stack, Typography } from '@mui/material';
 import CircleIcon from '@mui/icons-material/Circle';
 import { PieChart, Pie, Cell} from 'recharts';
+import { FormattedMessage } from 'react-intl';
 
 import SampleReport from './reporting-sample';
 import { createReport } from './reporting-types';
@@ -17,6 +18,8 @@ const MyWork: React.FC<{}> = () => {
   return (
     <Grid container>
       <Grid item lg={6}>
+          <Typography variant='h3'><FormattedMessage id='core.myOverview.title'/></Typography>
+
         <PieChart width={250} height={250}>
           <Pie data={data.groups} dataKey="value" cx="50%" cy="50%" outerRadius={60} fill="#82ca9d">
           </Pie>

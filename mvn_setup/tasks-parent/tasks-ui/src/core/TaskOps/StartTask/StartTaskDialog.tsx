@@ -1,11 +1,10 @@
 import React from 'react';
-import { Box, Stack, List, Dialog, Button, Grid } from '@mui/material';
+import { Box, Stack, Dialog, Button, Grid } from '@mui/material';
 
 import TaskClient from '@taskclient';
 import { DatePicker } from '../../DatePicker/DatePicker';
 import { StyledFullScreenDialog } from '../StyledFullScreenDialog';
-import Fields from './EditTaskFields';
-import Events from './TaskEvents';
+import Fields from './StartTaskFields';
 import Burger from '@the-wrench-io/react-burger';
 
 const Left: React.FC<{}> = () => {
@@ -20,10 +19,8 @@ const Left: React.FC<{}> = () => {
 }
 
 const Right: React.FC<{}> = () => {
-  const { state } = TaskClient.useTaskEdit();
-  return (<List>
-    {state.events.map(event => <Events event={event} />)}
-  </List>);
+ 
+  return (<></>);
 
 }
 
@@ -79,7 +76,7 @@ const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 }
 
 
-const EditTaskDialog: React.FC<{ open: boolean, onClose: () => void, task?: TaskClient.TaskDescriptor }> = (props) => {
+const StartTaskDialog: React.FC<{ open: boolean, onClose: () => void, task?: TaskClient.TaskDescriptor }> = (props) => {
 
   if (!props.open || !props.task) {
     return null;
@@ -98,4 +95,4 @@ const EditTaskDialog: React.FC<{ open: boolean, onClose: () => void, task?: Task
     </TaskClient.EditProvider>);
 }
 
-export { EditTaskDialog }
+export { StartTaskDialog }

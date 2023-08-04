@@ -4,11 +4,10 @@ import { TableHead, TableCell, TableRow } from '@mui/material';
 import Styles from '@styles';
 import client from '@taskclient';
 import TaskTable from '../TaskTable';
-import { MyWorkHoverOptions } from './MyWorkHoverOptions';
+
 
 
 const Header: React.FC<TaskTable.RenderProps> = ({ content, setContent, group }) => {
-
   const columns: (keyof client.TaskDescriptor)[] = React.useMemo(() => [
     'dueDate',
     'priority',
@@ -37,17 +36,21 @@ const Row: React.FC<{
 
   const [hoverItemsActive, setHoverItemsActive] = React.useState(false);
   function handleEndHover() {
-    console.log("Disable");
     setHoverItemsActive(false);
-  } 
+  }
+  function handleStartHover() {
+    setHoverItemsActive(true);
+  }
 
-  return (<TableRow hover tabIndex={-1} key={props.row.id} onMouseEnter={() => setHoverItemsActive(true)} onMouseLeave={handleEndHover}>
-    <TaskTable.CellTitle {...props} children={hoverItemsActive && <MyWorkHoverOptions active={hoverItemsActive} />} />
-    <TaskTable.CellDueDate {...props} />
-    <TaskTable.CellPriority {...props} />
-    <TaskTable.CellStatus {...props} />
-    <TaskTable.CellMenu {...props} active={hoverItemsActive} setDisabled={handleEndHover}/>
-  </TableRow>);
+  return (<>
+    <TableRow hover tabIndex={-1} key={props.row.id} onMouseEnter={handleStartHover} onMouseLeave={handleEndHover}>
+      <TaskTable.CellTitleCrm {...props} active={hoverItemsActive} setDisabled={handleEndHover} />
+      <TaskTable.CellDueDate {...props} />
+      <TaskTable.CellPriority {...props} />
+      <TaskTable.CellStatus {...props} />
+      <TaskTable.CellMenu {...props} active={hoverItemsActive} setDisabled={handleEndHover} />
+    </TableRow>
+  </>);
 }
 
 

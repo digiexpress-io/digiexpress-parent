@@ -14,18 +14,18 @@ const IconButtonWrapper: React.FC<{ children: React.ReactNode }> = ({ children }
   </>)
 }
 
-const StartWorkButton: React.FC<{}> = () => {
-  return (<Button variant='outlined' color='inherit' sx={{ pr: 1 }} endIcon={<ArrowForwardIosOutlinedIcon />}>
+const StartWorkButton: React.FC<{ onClick: () => void }> = ({ onClick }) => {
+  return (<Button onClick={onClick} variant='outlined' color='inherit' sx={{ pr: 1 }} endIcon={<ArrowForwardIosOutlinedIcon />}>
     <Typography variant='caption'><FormattedMessage id='core.myWork.button.task.start' /></Typography>
   </Button>)
 }
 
 
-const MyWorkHoverOptions: React.FC<{ active: boolean }> = () => {
-
+const MyWorkHoverOptions: React.FC<{ active: boolean, onClick: () => void }> = ({ onClick }) => {
+  
   return (
     <Box display='flex' sx={boxSx} width='100%'>
-      <StartWorkButton />
+      <StartWorkButton onClick={onClick} />
     </Box>
   )
 }

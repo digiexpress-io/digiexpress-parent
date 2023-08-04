@@ -6,8 +6,10 @@ import SearchIcon from '@mui/icons-material/Search';
 import PieChartIcon from '@mui/icons-material/PieChart';
 import HistoryIcon from '@mui/icons-material/History';
 import PersonIcon from '@mui/icons-material/Person';
-import DashboardIcon from '@mui/icons-material/Dashboard';
 import CircleNotificationsIcon from '@mui/icons-material/CircleNotifications';
+import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
+import WorkOutlineOutlinedIcon from '@mui/icons-material/WorkOutlineOutlined';
+import MailOutlinedIcon from '@mui/icons-material/MailOutlined';
 import InboxIcon from '@mui/icons-material/Inbox';
 import { FormattedMessage } from 'react-intl';
 import Burger from '@the-wrench-io/react-burger';
@@ -42,7 +44,7 @@ const StyledExplorerTab = styled(Tab)<TabProps>(({ theme }) => ({
   "&.MuiButtonBase-root": {
     minWidth: "unset",
     minHeight: theme.spacing(3),
-    fontSize: "12px", 
+    fontSize: "12px",
     color: theme.palette.explorerItem.main,
     flexDirection: 'row',
     alignItems: 'center',
@@ -59,12 +61,12 @@ const StyledExplorerTab = styled(Tab)<TabProps>(({ theme }) => ({
   }
 }));
 const StyledExplorerSubTab = styled(Tab)<TabProps>(({ theme }) => ({
-  
+
   "&.MuiButtonBase-root": {
     paddingLeft: theme.spacing(5),
     minWidth: "unset",
     minHeight: theme.spacing(3),
-    fontSize: "12px", 
+    fontSize: "12px",
     color: theme.palette.explorerItem.main,
     flexDirection: 'row',
     alignItems: 'center',
@@ -110,7 +112,7 @@ const Secondary: React.FC<{}> = () => {
   function handleReporting() { actions.handleTabAdd({ id: 'reporting', label: <FormattedMessage id="activities.reporting.title" /> }) }
   function handleMyoverview() { actions.handleTabAdd({ id: 'myoverview', label: <FormattedMessage id="activities.myoverview.title" /> }) }
   function handleInbox() { actions.handleTabAdd({ id: 'inbox', label: <FormattedMessage id="activities.inbox.title" /> }) }
-
+  function handleSystemNotifications() { actions.handleTabAdd({ id: 'systemNotifications', label: <FormattedMessage id="activities.systemNotifications.title" /> }) }
   function handleDev() { actions.handleTabAdd({ id: 'dev', label: <FormattedMessage id="activities.dev.title" /> }) }
 
   return (<Box sx={{ backgroundColor: "explorer.main", height: '100%', width: '100%' }}>
@@ -119,23 +121,22 @@ const Secondary: React.FC<{}> = () => {
     </StyledBox>
     <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', width: "100%", backgroundColor: "explorer.main" }}>
       <StyledTabs orientation="vertical" onChange={handleActive} value={active}>
-        
+
         {/* material ui workaround for case when no tab is selected */}
         <EmptyTab value='' />
-        
+
         <StyledExplorerTab value='explorer.search' icon={<SearchIcon />} label={<FormattedMessage id="activities.search.title" />} onClick={handleSearch} />
         <StyledExplorerTab value='explorer.tasks' icon={<AppsIcon />} label={<FormattedMessage id="activities.tasks.title" />} onClick={handleTasks} />
         <StyledExplorerTab value='explorer.teamSpace' icon={<CircleNotificationsIcon />} label={<FormattedMessage id="activities.teamSpace.title" />} onClick={handleGroup} />
 
 
         <StyledExplorerTab value='explorer.mytasks-group' icon={<PersonIcon />} label={<FormattedMessage id="activities.mytasks.title" />} />
-                
-        <StyledExplorerSubTab value='explorer.mytasks' icon={<PersonIcon />} label={<FormattedMessage id="activities.mytasks.title" />} onClick={handleMyTasks} />
-        <StyledExplorerSubTab value='explorer.inbox' icon={<InboxIcon />} label={<FormattedMessage id="activities.inbox.title" />} onClick={handleInbox} />
-        <StyledExplorerSubTab value='explorer.myoverview' icon={<PieChartIcon />} label={<FormattedMessage id="activities.myoverview.title" />} onClick={handleMyoverview} />
-        <StyledExplorerSubTab value='explorer.myhistory' icon={<HistoryIcon />} label={<FormattedMessage id="activities.myhistory.title" />} onClick={handleMyHistory} />
-        
-        
+         <StyledExplorerSubTab value='explorer.mytasks' icon={<WorkOutlineOutlinedIcon />} label={<FormattedMessage id="activities.mytaskBoards.title" />} onClick={handleMyTasks} />
+         <StyledExplorerSubTab value='explorer.inbox' icon={<MailOutlinedIcon />} label={<FormattedMessage id="activities.inbox.title" />} onClick={handleInbox} />
+         <StyledExplorerSubTab value='explorer.systemNotifications' icon={<NotificationsNoneOutlinedIcon />} label={<FormattedMessage id="activities.systemNotifications.title" />} onClick={handleSystemNotifications} />
+         <StyledExplorerSubTab value='explorer.myoverview' icon={<PieChartIcon />} label={<FormattedMessage id="activities.myoverview.title" />} onClick={handleMyoverview} />
+         <StyledExplorerSubTab value='explorer.myhistory' icon={<HistoryIcon />} label={<FormattedMessage id="activities.myhistory.title" />} onClick={handleMyHistory} />
+
         <StyledExplorerTab value='explorer.reporting' icon={<PieChartIcon />} label={<FormattedMessage id="activities.reporting.title" />} onClick={handleReporting} />
         <StyledExplorerTab value='explorer.dev' icon={<PieChartIcon />} label={<FormattedMessage id="activities.dev.title" />} onClick={handleDev} />
       </StyledTabs>

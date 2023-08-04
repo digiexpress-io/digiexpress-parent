@@ -1,5 +1,5 @@
 import React from 'react';
-import { IconButton, SxProps, Box, MenuList, MenuItem, ListItemText, Divider } from '@mui/material';
+import { Box, MenuList, MenuItem, ListItemText, Divider } from '@mui/material';
 import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
 
 import { FormattedMessage } from 'react-intl';
@@ -8,10 +8,8 @@ import client from '@taskclient';
 import Styles from '@styles';
 import TaskOps from '../TaskOps';
 import { usePopover } from './CellPopover';
+import CellHoverButton from './CellMenuButton';
 
-
-
-const iconButtonSx: SxProps = { fontSize: 'small', color: 'uiElements.main', p: 0.5 }
 
 const HoverMenu: React.FC<{ onEdit: () => void }> = ({ onEdit }) => {
   const Popover = usePopover();
@@ -45,9 +43,9 @@ const HoverMenu: React.FC<{ onEdit: () => void }> = ({ onEdit }) => {
           </MenuItem>
         </MenuList>
       </Popover.Delegate>
-      <IconButton sx={iconButtonSx} onClick={Popover.onClick}>
+      <CellHoverButton onClick={Popover.onClick}>
         <MoreHorizOutlinedIcon fontSize='small' />
-      </IconButton>
+      </CellHoverButton>
     </>)
 }
 

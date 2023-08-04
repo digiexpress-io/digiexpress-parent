@@ -25,7 +25,8 @@ const en = {
   'core.myWork.myWorkTaskTable.header.spotlight.myWorkOverdue': 'Overdue',
   'core.myWork.myWorkTaskTable.header.spotlight.myWorkStartsToday': 'Starts today',
   'core.myWork.myWorkTaskTable.header.spotlight.myWorkAssigned': 'Assigned to me',
-
+  'core.myOverview.title': 'My daily overview',
+  
 
   '_nobody_': 'Unassigned',
 
@@ -42,11 +43,13 @@ const en = {
 
   'activities.mytasks.title': 'My Work',
   'activities.mytasks.desc': 'All of my tasks that I am working on',
+  'activities.mytaskBoards.title': 'My tasks',
 
   'activities.myhistory.title': 'My history',
   'activities.myhistory.desc': 'See everything I have ever done',
   
   'activities.myoverview.title': 'My overview',
+  'activities.systemNotifications.title': 'Notifications',
 
   'activities.search.title': 'Search...',
   'activities.search.desc': 'Search from everything ever done',
