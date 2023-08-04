@@ -1,5 +1,5 @@
 import React from 'react';
-import { Avatar, AvatarGroup, Box, SxProps } from '@mui/material';
+import { Avatar, AvatarGroup, Box, SxProps, MenuList, MenuItem, ListItemText } from '@mui/material';
 
 import client from '@taskclient';
 import Styles from '@styles';
@@ -42,13 +42,23 @@ const Assignees: React.FC<CellProps> = ({ row, def }) => {
   return (
     <>
       <Popover.Delegate>
-        <Box display='flex' flexDirection='column'>
-          <Box>User 1</Box>
-          <Box>User 2</Box>
-          <Box>User 3</Box>
-          <Box>User 4</Box>
-          <Box>User 5</Box>
-        </Box>
+        <MenuList dense>
+          <MenuItem>
+            <ListItemText>Assignee1</ListItemText>
+          </MenuItem>
+          <MenuItem>
+            <ListItemText>Assignee2</ListItemText>
+          </MenuItem>
+          <MenuItem>
+            <ListItemText>Assignee3</ListItemText>
+          </MenuItem>
+          <MenuItem>
+            <ListItemText>Assignee4</ListItemText>
+          </MenuItem>
+          <MenuItem>
+            <ListItemText>Assignee5</ListItemText>
+          </MenuItem>
+        </MenuList>
       </Popover.Delegate>
       <TaskCell id={row.id + "/Assignees"} name={name} />
     </>);

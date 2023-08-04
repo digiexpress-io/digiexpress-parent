@@ -8,22 +8,16 @@ import client from '@taskclient';
 import Styles from '@styles';
 import TaskOps from '../TaskOps';
 import { usePopover } from './CellPopover';
-import { CellProps } from './task-table-types';
 
 
 
 const iconButtonSx: SxProps = { fontSize: 'small', color: 'uiElements.main', p: 0.5 }
-
-
-
-
 
 const HoverMenu: React.FC<{ onEdit: () => void }> = ({ onEdit }) => {
   const Popover = usePopover();
 
   return (
     <>
-
       <Popover.Delegate>
         <MenuList dense>
           <MenuItem onClick={onEdit}>
@@ -47,7 +41,7 @@ const HoverMenu: React.FC<{ onEdit: () => void }> = ({ onEdit }) => {
           </MenuItem>
           <Divider />
           <MenuItem>
-            <ListItemText>OPTION6</ListItemText>
+            <ListItemText>Archive task</ListItemText>
           </MenuItem>
         </MenuList>
       </Popover.Delegate>

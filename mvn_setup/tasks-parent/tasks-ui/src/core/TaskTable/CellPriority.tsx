@@ -1,7 +1,7 @@
 import React from 'react';
-import { SxProps, Box, IconButton, MenuList, MenuItem, ListItemText, Divider } from '@mui/material';
+import { SxProps, IconButton, MenuList, MenuItem, ListItemText, Divider } from '@mui/material';
 import AssistantPhotoTwoToneIcon from '@mui/icons-material/AssistantPhotoTwoTone';
-import { useIntl, FormattedMessage } from 'react-intl';
+import { useIntl } from 'react-intl';
 
 import client from '@taskclient';
 import Styles from '@styles';

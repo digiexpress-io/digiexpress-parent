@@ -6,7 +6,6 @@ import client from '@taskclient';
 import Styles from '@styles';
 
 import TaskCell from './TaskCell';
-import { usePopover } from './CellPopover';
 import { CellProps } from './task-table-types';
 import DatePicker from '../DatePicker';
 
