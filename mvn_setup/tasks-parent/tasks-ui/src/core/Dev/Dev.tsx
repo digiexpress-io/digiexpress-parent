@@ -12,7 +12,7 @@ const Dev: React.FC = () => {
   const [open, setOpen] = React.useState(false);
 
   const [startDate, setStartDate] = React.useState<Date | string | undefined>();
-  const [endDate, setEndDate] = React.useState<Date | string | undefined>();
+  const [dueDate, setDueDate] = React.useState<Date | string | undefined>();
 
   return (
     <Box sx={{ width: '100%', p: 1 }}>
@@ -26,7 +26,7 @@ const Dev: React.FC = () => {
       <TaskOps.EditTaskDialog onClose={() => setOpen(false)} open={open} task={TestTask as any} />
 
       <Divider sx={{ my: 2 }} />
-      <DatePicker startDate={startDate} setStartDate={setStartDate} endDate={endDate} setEndDate={setEndDate} />
+      <DatePicker startDate={startDate} setStartDate={setStartDate} dueDate={dueDate} setDueDate={setDueDate} />
 
       <Divider sx={{ my: 2 }} />
       <Checklist checklist={demoChecklist} />

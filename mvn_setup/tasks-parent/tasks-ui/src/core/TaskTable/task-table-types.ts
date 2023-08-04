@@ -6,4 +6,4 @@ interface CellProps {
   def: client.Group;
 }
 
-export type {CellProps}
+export type { CellProps }

@@ -15,13 +15,13 @@ const DueDate: React.FC<CellProps> = ({ row }) => {
 
   const [datePickerOpen, setDatePickerOpen] = React.useState(false);
   const [startDate, setStartDate] = React.useState<Date | string | undefined>();
-  const [endDate, setEndDate] = React.useState<Date | string | undefined>();
+  const [dueDate, setDueDate] = React.useState<Date | string | undefined>();
 
   const name = <IconButton onClick={() => setDatePickerOpen(true)} color='inherit'><DateRangeOutlinedIcon sx={{ fontSize: 'small' }} /></IconButton>;
 
   return (<>
     <Dialog open={datePickerOpen} onClose={() => setDatePickerOpen(false)}>
-      <DatePicker startDate={startDate} setStartDate={setStartDate} endDate={endDate} setEndDate={setEndDate} />
+      <DatePicker startDate={startDate} setStartDate={setStartDate} dueDate={dueDate} setDueDate={setDueDate} />
     </Dialog>
     <TaskCell id={row.id + "/DueDate"} name={name} />
   </>

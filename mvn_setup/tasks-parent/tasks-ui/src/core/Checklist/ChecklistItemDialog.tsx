@@ -66,7 +66,7 @@ const ChecklistItemDialog: React.FC<ChecklistItemDialogProps> = (props) => {
         </Box>
       </Box>
       <Dialog open={datePickerOpen} onClose={() => setDatePickerOpen(false)}>
-        <DatePicker endDate={tempDueDate} setEndDate={setTempDueDate} onClose={() => setDatePickerOpen(false)} />
+        <DatePicker dueDate={tempDueDate} setDueDate={setTempDueDate} onClose={() => setDatePickerOpen(false)} />
       </Dialog>
       <AssigneePicker possible={demoAssignees} chosen={tempAssignees} setChosen={setTempAssignees} open={assigneePickerOpen} onClose={() => setAssigneePickerOpen(false)} />
     </Dialog>

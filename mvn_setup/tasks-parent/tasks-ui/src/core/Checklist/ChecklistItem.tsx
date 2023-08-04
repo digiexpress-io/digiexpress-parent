@@ -102,7 +102,7 @@ const ChecklistItemComponent: React.FC<ChecklistItemComponentProps> = (props) =>
           />}
       </ListItemButton>
       <Dialog open={datePickerOpen} onClose={handleClose}>
-        <DatePicker endDate={dueDateTemp} setEndDate={setDueDateTemp} onClose={handleClose} />
+        <DatePicker dueDate={dueDateTemp} setDueDate={setDueDateTemp} onClose={handleClose} />
       </Dialog>
       <AssigneePicker possible={demoAssignees} chosen={assigneesTemp} setChosen={setAssigneesTemp} open={assigneePickerOpen} onClose={handleClose} />
     </ListItem>

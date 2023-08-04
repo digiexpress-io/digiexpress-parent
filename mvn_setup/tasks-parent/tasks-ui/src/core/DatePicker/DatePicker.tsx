@@ -7,7 +7,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 
 type TimeRef = 'Today' | 'Tomorrow' | 'Next week' | 'In 2 weeks';
-type DateType = 'start' | 'end';
+type DateType = 'start' | 'due';
 
 interface ShortcutItem {
   label: string;
@@ -27,8 +27,8 @@ interface DateChangeProps {
 interface DatePickerProps {
   startDate?: Date | string | undefined,
   setStartDate?: (value: React.SetStateAction<string | Date | undefined>) => void,
-  endDate: Date | string | undefined,
-  setEndDate: (value: React.SetStateAction<string | Date | undefined>) => void,
+  dueDate: Date | string | undefined,
+  setDueDate: (value: React.SetStateAction<string | Date | undefined>) => void,
   onClose?: () => void
 }
 
@@ -115,12 +115,12 @@ function handleDateChangeForField(args: DateChangeProps): void {
 }
 
 const DatePicker: React.FC<DatePickerProps> = (props) => {
-  const { startDate, setStartDate, endDate, setEndDate, onClose } = props;
+  const { startDate, setStartDate, dueDate, setDueDate, onClose } = props;
   const doubleDate = setStartDate !== undefined;
 
   const [startDateError, setStartDateError] = React.useState<string | undefined>();
-  const [endDateError, setEndDateError] = React.useState<string | undefined>();
-  const [activeField, setActiveField] = React.useState<DateType | undefined>('end');
+  const [dueDateError, setDueDateError] = React.useState<string | undefined>();
+  const [activeField, setActiveField] = React.useState<DateType | undefined>('due');
 
   function handleActiveFieldChange(field: DateType | undefined): void {
     setActiveField(field);
@@ -129,8 +129,8 @@ const DatePicker: React.FC<DatePickerProps> = (props) => {
   function handleClear(): void {
     doubleDate && setStartDate(undefined);
     setStartDateError(undefined);
-    setEndDate(undefined);
-    setEndDateError(undefined);
+    setDueDate(undefined);
+    setDueDateError(undefined);
     setActiveField(undefined);
   }
 
@@ -140,9 +140,9 @@ const DatePicker: React.FC<DatePickerProps> = (props) => {
       doubleDate && setStartDate(date);
       setStartDateError(undefined);
     }
-    if (activeField === 'end') {
-      setEndDate(date);
-      setEndDateError(undefined);
+    if (activeField === 'due') {
+      setDueDate(date);
+      setDueDateError(undefined);
     }
   }
 
@@ -155,12 +155,12 @@ const DatePicker: React.FC<DatePickerProps> = (props) => {
         return new Date(startDate);
       }
     }
-    if (activeField === 'end' && endDate) {
-      if (endDate instanceof Date) {
-        return endDate;
+    if (activeField === 'due' && dueDate) {
+      if (dueDate instanceof Date) {
+        return dueDate;
       }
-      if (isDateValid(endDate)) {
-        return new Date(endDate);
+      if (isDateValid(dueDate)) {
+        return new Date(dueDate);
       }
     }
     return undefined;
@@ -192,20 +192,20 @@ const DatePicker: React.FC<DatePickerProps> = (props) => {
           sx={{ mr: 4 }}
         />}
         <TextField
-          id="end-date"
+          id="due-date"
           type="text"
-          placeholder="End date"
-          value={dateFormatCheck(endDate)}
-          onChange={(e) => handleDateChangeForField({ value: e.target.value, setDate: setEndDate, setError: setEndDateError })}
-          onFocus={() => handleActiveFieldChange('end')}
+          placeholder="Due date"
+          value={dateFormatCheck(dueDate)}
+          onChange={(e) => handleDateChangeForField({ value: e.target.value, setDate: setDueDate, setError: setDueDateError })}
+          onFocus={() => handleActiveFieldChange('due')}
           InputProps={{
             startAdornment: (
               <DateRangeIcon color="primary" sx={{ mr: 1 }} />
             )
           }}
-          focused={activeField === 'end'}
-          helperText={endDateError}
-          error={endDateError !== undefined}
+          focused={activeField === 'due'}
+          helperText={dueDateError}
+          error={dueDateError !== undefined}
         />
         <StaticDatePicker
           displayStaticWrapperAs="desktop"
