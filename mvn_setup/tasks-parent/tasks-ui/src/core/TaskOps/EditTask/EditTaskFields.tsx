@@ -8,6 +8,7 @@ import CircleNotificationsOutlinedIcon from '@mui/icons-material/CircleNotificat
 import Burger from '@the-wrench-io/react-burger';
 import TaskClient from '@taskclient';
 
+import ChecklistDelegate from 'core/Checklist';
 
 
 const SectionAddButton: React.FC<{}> = () => {
@@ -53,11 +54,14 @@ const Description: React.FC<{}> = () => {
 }
 
 const Checklist: React.FC<{}> = () => {
-
+  const { state } = TaskClient.useTaskEdit();
+  
+  console.log(state);
+  
   return (
-    <Section title='core.taskOps.editTask.checklists' actions={<SectionAddButton />}>
-      checklist content
-    </Section>
+    <>
+      {state.task.checklist.map(item =>(<ChecklistDelegate key={item.id} value={item} />))}
+    </>
   )
 }
 

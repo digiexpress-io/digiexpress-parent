@@ -1,3 +1,5 @@
+import {parseISO, isAfter, isEqual } from 'date-fns';
+
 import { Task, TaskExtension, TaskPriority, TaskStatus } from './task-types';
 import {
   PalleteType, TasksState, TasksMutatorBuilder, TaskDescriptor, FilterBy, Group, GroupBy,
@@ -386,6 +388,7 @@ class TaskDescriptorImpl implements TaskDescriptor {
   private _created: Date;
   private _dialobId: string;
   private _dueDate: Date | undefined;
+  private _startDate: Date | undefined;
   private _uploads: TaskExtension[];
   private _rolesAvatars: AvatarCode[];
   private _ownersAvatars: AvatarCode[];
@@ -394,6 +397,7 @@ class TaskDescriptorImpl implements TaskDescriptor {
   constructor(entry: Task, profile: Profile) {
     this._entry = entry;
     this._created = new Date(entry.created);
+    this._startDate = entry.startDate ? new Date(entry.startDate) : undefined;
     this._dueDate = entry.dueDate ? new Date(entry.dueDate) : undefined;
     this._dialobId = entry.extensions.find(t => t.type === 'dialob')!.body;
     this._uploads = entry.extensions.filter(t => t.type === 'upload');
@@ -409,6 +413,9 @@ class TaskDescriptorImpl implements TaskDescriptor {
   get entry() { return this._entry }
   get created() { return this._created }
   get dueDate() { return this._dueDate }
+  get startDate() { return this._startDate }
+  get checklist() { return this._entry.checklist }
+
 
   get status() { return this._entry.status }
   get priority() { return this._entry.priority }
@@ -422,9 +429,24 @@ class TaskDescriptorImpl implements TaskDescriptor {
   get assigneesAvatars() { return this._ownersAvatars }
 }
 
-function getMyWorkType(task: Task, profile: Profile): MyWorkType | undefined{
+function getMyWorkType(task: Task, profile: Profile): MyWorkType | undefined {
   if(!task.assigneeIds.includes(profile.userId)) {
     return undefined;
+  }
+  
+  const today = new Date(profile.today);
+  today.setHours(0,0,0,0);
+  
+  const {startDate, dueDate} = task;
+
+  if(dueDate && isAfter(today, parseISO(dueDate))) {
+  
+    return "myWorkOverdue";
+  }
+  
+  
+  if(startDate && isEqual(parseISO(startDate), today)) {
+    return "myWorkStartsToday";
   }
   
   return "myWorkAssigned";

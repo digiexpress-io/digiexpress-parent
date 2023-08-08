@@ -1,5 +1,6 @@
 package io.resys.thena.tasks.dev.app;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /*-
@@ -30,12 +31,18 @@ import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
+import io.resys.thena.tasks.client.api.model.ImmutableChecklist;
+import io.resys.thena.tasks.client.api.model.ImmutableChecklistItem;
 import io.resys.thena.tasks.client.api.model.ImmutableTaskComment;
 import io.resys.thena.tasks.client.api.model.ImmutableTaskExtension;
+import io.resys.thena.tasks.client.api.model.Task.Checklist;
+import io.resys.thena.tasks.client.api.model.Task.ChecklistItem;
 import io.resys.thena.tasks.client.api.model.Task.Priority;
 import io.resys.thena.tasks.client.api.model.Task.Status;
 import io.resys.thena.tasks.client.api.model.Task.TaskComment;
 import io.resys.thena.tasks.client.api.model.Task.TaskExtension;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 public class RandomDataProvider {
 
@@ -58,6 +65,19 @@ public class RandomDataProvider {
       4, "file-31.pdf"
       ); 
   
+  private final Map<Integer, String> CHECKLIST_TITLE = Map.of(
+      1, "TODO before submitting to customer",
+      2, "Missing information to find",
+      3, "Confirm the following details",
+      4, "Consult with team"
+      ); 
+  
+  private final Map<Integer, String> CHECKLIST_ITEM_TITLE = Map.of(
+      1, "Get correct email address for customer",
+      2, "Confirm person in charge of this task",
+      3, "Fix incorrect task description",
+      4, "Attach correct document"
+      ); 
   
   private final Map<Integer, String> ASSIGNEES = Map.of(
       1, "sam vimes",
@@ -148,7 +168,6 @@ public class RandomDataProvider {
     
     return Collections.emptyList();    
   }
-  
 
   
   public List<TaskExtension> getExtensions() {
@@ -170,6 +189,77 @@ public class RandomDataProvider {
     return Arrays.asList(dialob);
   }
 
+  
+  public StartDateAndDueDate getStartDateAndDueDate(LocalDate today) {
+    LocalDate startDate = null;
+    LocalDate dueDate = null;
+    
+    switch(getStartDateAndDueDateType()) {
+    case FUTURE: {
+      startDate = today.plusDays(nextInt(5, 10));
+      dueDate = startDate.plusDays(nextInt(5, 10));
+      break;
+    }
+    
+    case OVERDUE: {
+      dueDate = today.minusDays(nextInt(5, 10));
+      startDate = dueDate.minusDays(nextInt(5, 10));
+      break;
+    }  
+    
+    case STARTS_TODAY: {
+      startDate = today;
+      dueDate = today.plusDays(nextInt(5, 10));
+    } 
+    
+    }
+    return new StartDateAndDueDate(startDate, dueDate);
+  }
+  
+  public List<Checklist> getChecklists(LocalDate today) {
+    final var total = nextInt(1, 3) -1;
+    final List<Checklist> result = new ArrayList<>();
+    
+    for(var index = 0; index < total; index++) {
+
+      final var checklist = ImmutableChecklist.builder()
+      .id(UUID.randomUUID().toString())
+      .title(CHECKLIST_TITLE.get(nextInt(1, 4)))
+      .items(getChecklistItems(today))
+      .build();
+    
+      result.add(checklist);
+    }
+    return result;
+  }
+
+  
+  public List<ChecklistItem> getChecklistItems(LocalDate today) {
+    final var total = nextInt(1, 3) -1;
+    final List<ChecklistItem> result = new ArrayList<>();
+    
+    for(var index = 0; index < total; index++) {
+
+      final var checklistItem = ImmutableChecklistItem.builder()
+      .id(UUID.randomUUID().toString())
+      .title(CHECKLIST_ITEM_TITLE.get(nextInt(1, 4)))
+      .addAllAssigneeIds(getAssigneeIds())
+      .dueDate(today.plusDays(nextInt(1, 4)))
+      .completed(nextInt(1, 2) == 2 ? true : false)
+      .build();
+      
+      result.add(checklistItem);
+    }
+    return result;
+  }
+  
+  @Data
+  @RequiredArgsConstructor
+  public static class StartDateAndDueDate {
+    private final LocalDate startDate;
+    private final LocalDate dueDate;
+  }
+  
   public Priority getPriority() {
     final var next = nextInt(1, 3);
     switch (next) {
@@ -188,4 +278,19 @@ public class RandomDataProvider {
     default: return Status.REJECTED;
     }
   }
+  
+  
+  private StartDateAndDueDateType getStartDateAndDueDateType() {
+    final var next = nextInt(1, 3);
+    switch (next) {
+    case 1: return StartDateAndDueDateType.OVERDUE;
+    case 2: return StartDateAndDueDateType.STARTS_TODAY;
+    default: return StartDateAndDueDateType.FUTURE;
+    }
+  }
+  
+  private enum StartDateAndDueDateType {
+    OVERDUE, STARTS_TODAY, FUTURE
+  }
+  
 }

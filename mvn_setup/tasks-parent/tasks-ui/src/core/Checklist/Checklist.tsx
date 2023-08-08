@@ -64,8 +64,8 @@ const ChecklistHeader: React.FC<{ title: string }> = ({ title }) => {
   );
 }
 
-const ChecklistComponent: React.FC<{ checklist: Checklist }> = ({ checklist }) => {
-  const { title, items } = checklist;
+const ChecklistComponent: React.FC<{ value: Checklist}> = ({ value }) => {
+  const { title, items } = value;
   const [tempChecklistItems, setTempChecklistItems] = React.useState<ChecklistItem[]>(items);
   const [open, setOpen] = React.useState<boolean>(false);
   const [mode, setMode] = React.useState<'add' | 'edit'>('add');

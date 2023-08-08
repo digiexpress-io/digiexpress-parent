@@ -157,6 +157,7 @@ public class TaskCommandVisitor {
         .description(command.getDescription())
         .priority(command.getPriority())
         .dueDate(command.getDueDate())
+        .startDate(command.getStartDate())
         .created(targetDate)
         .updated(targetDate)
         .status(command.getStatus() == null ? Status.CREATED : command.getStatus())

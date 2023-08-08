@@ -14,7 +14,7 @@ const Left: React.FC<{}> = () => {
       <Box />
       <Fields.Title />
       <Fields.Description />
-      <Fields.Checklist />
+      <Fields.Checklist  />
     </>)
 }
 
@@ -56,7 +56,7 @@ const Header: React.FC<{}> = () => {
             <Fields.AttachmentCount />
             <Fields.NewItemNotification />
           </Stack>
-          <Button variant='contained' color='warning'>Messages, attachments, form</Button>
+          <Button variant='contained' color='warning'>EDIT TASK</Button>
         </Stack>
       </Grid>
     </Grid>

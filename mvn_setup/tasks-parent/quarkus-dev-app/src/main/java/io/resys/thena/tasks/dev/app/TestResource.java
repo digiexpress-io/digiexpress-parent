@@ -69,8 +69,12 @@ public class TestResource {
     final var targetDate = LocalDateTime.now();
     
     for(int index = 0; index < count; index++) {
+      final var startAndDueDate = provider.getStartDateAndDueDate(targetDate.toLocalDate());
       final var newTask = ImmutableCreateTask.builder()
-      .targetDate(targetDate)
+      .startDate(startAndDueDate.getStartDate())
+      .dueDate(startAndDueDate.getDueDate())
+      .targetDate(targetDate.minusDays(10))
+      .checklist(provider.getChecklists(targetDate.toLocalDate()))
       .title(provider.getTitle())
       .description(provider.getDescription())
       .priority(provider.getPriority())

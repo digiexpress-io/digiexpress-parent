@@ -11,10 +11,9 @@ import DatePicker from '../DatePicker';
 
 
 const DueDate: React.FC<CellProps> = ({ row }) => {
-
   const [datePickerOpen, setDatePickerOpen] = React.useState(false);
-  const [startDate, setStartDate] = React.useState<Date | string | undefined>();
-  const [dueDate, setDueDate] = React.useState<Date | string | undefined>();
+  const [startDate, setStartDate] = React.useState<Date | string | undefined>(row.startDate);
+  const [dueDate, setDueDate] = React.useState<Date | string | undefined>(row.dueDate);
 
   const name = <IconButton onClick={() => setDatePickerOpen(true)} color='inherit'><DateRangeOutlinedIcon sx={{ fontSize: 'small' }} /></IconButton>;
 

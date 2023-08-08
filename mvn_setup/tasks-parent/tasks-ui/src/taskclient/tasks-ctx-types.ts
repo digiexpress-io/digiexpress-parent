@@ -1,4 +1,4 @@
-import { Task, TaskPriority, TaskStatus, TaskExtension, TaskTransaction } from './task-types';
+import { Task, TaskPriority, TaskStatus, TaskExtension, TaskTransaction, Checklist } from './task-types';
 import { Profile } from './profile-types';
 
 export interface AvatarCode {
@@ -12,7 +12,8 @@ export interface TaskDescriptor {
   id: string;
   status: TaskStatus;
   priority: TaskPriority;
-  dueDate?: Date;
+  dueDate: Date | undefined;
+  startDate: Date | undefined;
   roles: string[];
   assignees: string[];
   labels: string[];
@@ -24,6 +25,7 @@ export interface TaskDescriptor {
   rolesAvatars: AvatarCode[];
   assigneesAvatars: AvatarCode[];
   myWorkType: MyWorkType | undefined;
+  checklist: Checklist[];
 }
 
 export interface PalleteType {

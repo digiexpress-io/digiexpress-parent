@@ -36,20 +36,14 @@ const Title: React.FC<{}> = () => {
   const { state } = TaskClient.useTaskEdit();
   const intl = useIntl();
 
-  return (<TextField
-    placeholder={intl.formatMessage({ id: 'core.taskOps.editTask.taskTitle' })}
-    InputProps={{ sx: { fontSize: '20pt' } }}
-    fullWidth
-    value={state.task.title}
-  />);
+  return (<Typography sx={{ fontSize: '20pt' }}>{state.task.title}</Typography>);
 }
 
 const Description: React.FC<{}> = () => {
   const { state } = TaskClient.useTaskEdit();
   const intl = useIntl();
 
-  return (<TextField placeholder={intl.formatMessage({ id: 'core.taskOps.editTask.taskDescription' })} multiline rows={4} maxRows={6} fullWidth
-    value={state.task.description} />);
+  return (<Typography variant='body1'>{state.task.description}</Typography>);
 }
 
 const Checklist: React.FC<{}> = () => {

@@ -29,7 +29,7 @@ const Dev: React.FC = () => {
       <DatePicker startDate={startDate} setStartDate={setStartDate} dueDate={dueDate} setDueDate={setDueDate} />
 
       <Divider sx={{ my: 2 }} />
-      <Checklist checklist={demoChecklist} />
+      <Checklist value={demoChecklist}/>
 
     </Box>);
 }

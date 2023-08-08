@@ -42,12 +42,20 @@ const Row: React.FC<{
     setHoverItemsActive(true);
   }
 
+  const cells = React.useMemo(() => {
+    return (
+      <>
+        <TaskTable.CellDueDate {...props} />
+        <TaskTable.CellPriority {...props} />
+        <TaskTable.CellStatus {...props} />
+      </>
+    );
+  }, [props]);
+
   return (<>
     <TableRow hover tabIndex={-1} key={props.row.id} onMouseEnter={handleStartHover} onMouseLeave={handleEndHover}>
       <TaskTable.CellTitleCrm {...props} active={hoverItemsActive} setDisabled={handleEndHover} />
-      <TaskTable.CellDueDate {...props} />
-      <TaskTable.CellPriority {...props} />
-      <TaskTable.CellStatus {...props} />
+      {cells}
       <TaskTable.CellMenu {...props} active={hoverItemsActive} setDisabled={handleEndHover} />
     </TableRow>
   </>);
