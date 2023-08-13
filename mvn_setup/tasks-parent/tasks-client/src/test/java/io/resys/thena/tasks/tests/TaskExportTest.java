@@ -26,9 +26,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
-import io.resys.thena.tasks.client.api.model.ImmutableAssignTaskReporter;
-import io.resys.thena.tasks.client.api.model.ImmutableChangeTaskPriority;
-import io.resys.thena.tasks.client.api.model.ImmutableChangeTaskStatus;
 import io.resys.thena.tasks.client.api.model.ImmutableCreateTask;
 import io.resys.thena.tasks.client.api.model.Task;
 import io.resys.thena.tasks.client.api.model.Task.Priority;

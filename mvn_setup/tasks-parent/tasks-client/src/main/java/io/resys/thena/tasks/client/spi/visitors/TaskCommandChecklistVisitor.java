@@ -1,8 +1,5 @@
 package io.resys.thena.tasks.client.spi.visitors;
 
-import static io.resys.thena.tasks.client.spi.visitors.VisitorUtil.replaceItemInList;
-import static io.resys.thena.tasks.client.spi.visitors.VisitorUtil.requireTargetDate;
-
 import io.resys.thena.tasks.client.api.model.Document.DocumentType;
 import io.resys.thena.tasks.client.api.model.ImmutableChecklist;
 import io.resys.thena.tasks.client.api.model.ImmutableChecklistItem;

@@ -7,6 +7,8 @@ node/
 .bpmn/
 bower_components/
 node_modules/
+.vscode/
+
 
 *.releaseBackup
 release.properties
