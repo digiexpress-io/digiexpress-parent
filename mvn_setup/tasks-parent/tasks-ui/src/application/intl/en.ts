@@ -9,11 +9,22 @@ const en = {
   'buttons.add': "Add",
   'buttons.download': "Download",
 
+  'task.status.CREATED': "Created",
+  'task.status.IN_PROGRESS': "In progress",
+  'task.status.COMPLETED': "Completed",
+  'task.status.REJECTED': "Rejected",
+
   'core.taskOps.editTask.taskTitle': "Task title",
   'core.taskOps.editTask.taskDescription': "Task description",
   'core.taskOps.editTask.subtasks': "Subtasks",
   'core.taskOps.editTask.checklists': "Checklists",
   'core.taskOps.editTask.attachments': "Attachments",
+
+  'core.taskOps.editTask.status': "Status",
+  'core.taskOps.editTask.status.markAsCompleted': "Mark as completed",
+  'core.taskOps.editTask.priority': "Priority",
+  'core.taskOps.editTask.assignees': "Assignees",
+  'core.taskOps.editTask.options': "Options",
 
   'core.taskOps.editTask.dueDate': 'Due date',
   'core.taskOps.editTask.startDate': 'Start date',
