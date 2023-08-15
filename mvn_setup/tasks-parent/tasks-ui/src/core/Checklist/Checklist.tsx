@@ -15,22 +15,35 @@ const ChecklistHeaderContainer = styled(Box)(({ theme }) => ({
   flexDirection: 'row',
   alignItems: 'center',
   justifyContent: 'space-between',
-  marginLeft: theme.spacing(3),
-  marginBottom: theme.spacing(1),
+  marginTop: theme.spacing(1),
+  position: 'relative',
+  '& .MuiBox-root': {
+    display: 'flex',
+    alignItems: 'center',
+    zIndex: 0,
+  },
+}));
+
+const HoverOption = styled(Box)(({ theme }) => ({
+  position: 'absolute',
+  zIndex: 1,
+  top: 0,
+  right: 0,
+  backgroundColor: theme.palette.background.default,
 }));
 
 const StyledChecklistTitle = styled(Typography)(({ theme }) => ({
   fontSize: theme.typography.h4.fontSize,
-  fontWeight: theme.typography.h1.fontWeight,
+  fontWeight: theme.typography.h4.fontWeight,
   ':hover': {
     cursor: 'pointer',
-    textShadow: '2px 2px lightgray',
   },
 }));
 
 const ChecklistHeader: React.FC<{ title: string }> = ({ title }) => {
   const [open, setOpen] = React.useState<boolean>(false);
   const [tempTitle, setTempTitle] = React.useState<string>(title);
+  const [hovering, setHovering] = React.useState<boolean>(false);
 
   const handleCancel = () => {
     setOpen(false);
@@ -41,13 +54,21 @@ const ChecklistHeader: React.FC<{ title: string }> = ({ title }) => {
     setOpen(false);
   }
 
+  const handleMouseOver = () => {
+    setHovering(true);
+  };
+
+  const handleMouseOut = () => {
+    setHovering(false);
+  };
+
   return (
-    <ChecklistHeaderContainer>
-      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-        <ChecklistIcon color='primary' sx={{ mr: 3 }} />
+    <ChecklistHeaderContainer onMouseOver={handleMouseOver} onMouseOut={handleMouseOut}>
+      <Box>
+        <ChecklistIcon color='primary' sx={{ m: 1, mr: 3 }} />
         <StyledChecklistTitle onClick={() => setOpen(true)}>{tempTitle}</StyledChecklistTitle>
+        {hovering && <HoverOption><IconButton color='error' sx={{ position: 'relative' }}><DeleteIcon /></IconButton></HoverOption>}
       </Box>
-      <IconButton color='error'><DeleteIcon /></IconButton>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>
           <Typography variant='h4'>Edit checklist title</Typography>
@@ -64,7 +85,7 @@ const ChecklistHeader: React.FC<{ title: string }> = ({ title }) => {
   );
 }
 
-const ChecklistComponent: React.FC<{ value: Checklist}> = ({ value }) => {
+const ChecklistComponent: React.FC<{ value: Checklist }> = ({ value }) => {
   const { title, items } = value;
   const [tempChecklistItems, setTempChecklistItems] = React.useState<ChecklistItem[]>(items);
   const [open, setOpen] = React.useState<boolean>(false);
@@ -118,11 +139,11 @@ const ChecklistComponent: React.FC<{ value: Checklist}> = ({ value }) => {
   return (
     <Box>
       <ChecklistHeader title={title} />
-      <Styles.ProgressBar progress={calculateProgress()} />
+      {tempChecklistItems.length ? <Styles.ProgressBar progress={calculateProgress()} /> : <></>}
       <List>
         {tempChecklistItems.map((item, index) => <ChecklistItemComponent key={item.id} item={item} onChecked={() => handleChecked(index)} onDeleteClick={() => handleDeleted(index)} onClick={handleItemClick} />)}
       </List>
-      <Button variant='outlined' startIcon={<AddCircleOutlineIcon />} sx={{ m: 1, ml: 3 }} onClick={(e) => handleAddClick(e)}>Add Item</Button>
+      <Button variant='outlined' startIcon={<AddCircleOutlineIcon />} sx={{ m: 1 }} onClick={(e) => handleAddClick(e)}>Add Item</Button>
       <ChecklistItemDialog mode={mode} open={open} onSave={handleAdd} onUpdate={handleUpdate} item={activeItem} onClose={() => setOpen(false)} />
     </Box>
   );

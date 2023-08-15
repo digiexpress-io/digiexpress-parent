@@ -82,7 +82,7 @@ const ChecklistItemComponent: React.FC<ChecklistItemComponentProps> = (props) =>
   };
 
   return (
-    <ListItem sx={{ position: 'relative' }}>
+    <ListItem sx={{ position: 'relative', p: 0 }}>
       <IconButton onClick={handleClick}>
         {checked ? <CheckBoxIcon color='primary' /> : <CheckBoxOutlineBlankIcon />}
       </IconButton>
