@@ -1,10 +1,11 @@
 import React from 'react';
-import { TextField, Typography, Stack, Box, IconButton, MenuList, MenuItem, ListItemText, Button, styled, SxProps, Checkbox, FormControl, FormControlLabel, Tooltip } from '@mui/material';
 import { FormattedMessage, useIntl } from 'react-intl';
+import { TextField, Typography, Stack, Box, IconButton, MenuList, MenuItem, Button, styled, SxProps, ListItemText } from '@mui/material';
 import DateRangeOutlinedIcon from '@mui/icons-material/DateRangeOutlined';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import CircleNotificationsOutlinedIcon from '@mui/icons-material/CircleNotificationsOutlined';
+import CircleIcon from '@mui/icons-material/Circle';
 import Burger from '@the-wrench-io/react-burger';
 import TaskClient from '@taskclient';
 
@@ -37,9 +38,6 @@ const Section: React.FC<{ children: React.ReactNode, title: string, actions: Rea
       {children}
     </>);
 }
-
-
-
 
 
 const Title: React.FC<{}> = () => {
@@ -78,38 +76,36 @@ const getStatusColorConfig = (status: TaskClient.TaskStatus): SxProps => {
   const statusColors = TaskClient.StatusPallette;
   switch (status) {
     case 'COMPLETED':
-      return { backgroundColor: statusColors.COMPLETED, ':hover': { backgroundColor: statusColors.COMPLETED } };
+      return { color: statusColors.COMPLETED, ':hover': { color: statusColors.COMPLETED } };
     case 'CREATED':
-      return { backgroundColor: statusColors.CREATED, ':hover': { backgroundColor: statusColors.CREATED } };
+      return { color: statusColors.CREATED, ':hover': { color: statusColors.CREATED } };
     case 'IN_PROGRESS':
-      return { backgroundColor: statusColors.IN_PROGRESS, ':hover': { backgroundColor: statusColors.IN_PROGRESS } };
+      return { color: statusColors.IN_PROGRESS, ':hover': { color: statusColors.IN_PROGRESS } };
     case 'REJECTED':
-      return { backgroundColor: statusColors.REJECTED, ':hover': { backgroundColor: statusColors.REJECTED } };
+      return { color: statusColors.REJECTED, ':hover': { color: statusColors.REJECTED } };
   }
 }
 
 const Status: React.FC<{}> = () => {
   const { state } = TaskClient.useTaskEdit();
   const status = state.task.status;
-  const statusColorSx = getStatusColorConfig(status);
   const Popover = usePopover();
   const statusOptions: TaskClient.TaskStatus[] = ['CREATED', 'IN_PROGRESS', 'COMPLETED', 'REJECTED'];
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-      <Typography variant='h4'><FormattedMessage id='core.taskOps.editTask.status' /></Typography>
-      <Box>
-        <Button variant='contained' sx={{ mt: 1, ...statusColorSx }} onClick={Popover.onClick}><FormattedMessage id={'task.status.' + status} /></Button>
-        <Tooltip title={<FormattedMessage id='core.taskOps.editTask.status.markAsCompleted' />}>
-          <Checkbox
-            checked={status === 'COMPLETED'}
-            sx={{ mt: 1, color: TaskClient.StatusPallette.COMPLETED, '&.Mui-checked': { color: TaskClient.StatusPallette.COMPLETED } }}
-          />
-        </Tooltip>
-      </Box>
+    <Box>
+      <Button variant='text' color='inherit' onClick={Popover.onClick} sx={{ textTransform: 'none' }}>
+        <CircleIcon sx={{ mr: 1, ...getStatusColorConfig(status) }} />
+        <Typography><FormattedMessage id={'task.status.' + status} /></Typography>
+      </Button>
       <Popover.Delegate>
         <MenuList dense>
-          {statusOptions.map(option => <StyledMenuItem key={option} sx={getStatusColorConfig(option)}><ListItemText><FormattedMessage id={'task.status.' + option} /></ListItemText></StyledMenuItem>)}
+          {statusOptions.map(option => (
+            <MenuItem key={option}>
+              <CircleIcon sx={{ alignItems: 'center', mr: 1, ...getStatusColorConfig(option) }} />
+              <ListItemText><FormattedMessage id={'task.status.' + option} /></ListItemText>
+            </MenuItem>
+          ))}
         </MenuList>
       </Popover.Delegate>
     </Box>
@@ -156,7 +152,6 @@ const DueDate: React.FC<{ dueDate: string, onClick: () => void }> = ({ dueDate, 
       <Typography variant='caption'>{dueDate}</Typography>
     </Box>)
 }
-
 
 
 const Fields = { Title, Description, Checklist, Status, Assignee, Priority, Options, StartDate, DueDate, MessageCount, AttachmentCount, NewItemNotification }
