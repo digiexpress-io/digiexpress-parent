@@ -9,6 +9,11 @@ const en = {
   'buttons.add': "Add",
   'buttons.download': "Download",
 
+  'task.status.CREATED': "Created",
+  'task.status.IN_PROGRESS': "In progress",
+  'task.status.COMPLETED': "Completed",
+  'task.status.REJECTED': "Rejected",
+
   'core.taskOps.editTask.taskTitle': "Task title",
   'core.taskOps.editTask.taskDescription': "Task description",
   'core.taskOps.editTask.subtasks': "Subtasks",

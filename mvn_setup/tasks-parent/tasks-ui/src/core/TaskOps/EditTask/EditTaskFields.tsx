@@ -1,20 +1,21 @@
 import React from 'react';
-import { TextField, Typography, Stack, Box, IconButton } from '@mui/material';
 import { FormattedMessage, useIntl } from 'react-intl';
+import { TextField, Typography, Stack, Box, IconButton, MenuList, MenuItem, Button, SxProps, ListItemText } from '@mui/material';
 import DateRangeOutlinedIcon from '@mui/icons-material/DateRangeOutlined';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import CircleNotificationsOutlinedIcon from '@mui/icons-material/CircleNotificationsOutlined';
+import CircleIcon from '@mui/icons-material/Circle';
 import Burger from '@the-wrench-io/react-burger';
 import TaskClient from '@taskclient';
 
 import ChecklistDelegate from 'core/Checklist';
+import { usePopover } from 'core/TaskTable/CellPopover';
 
 
 const SectionAddButton: React.FC<{}> = () => {
   return (<Burger.PrimaryButton label={'buttons.add'} onClick={() => { }} />)
 }
-
 
 const Section: React.FC<{ children: React.ReactNode, title: string, actions: React.ReactNode }> = ({ children, title, actions }) => {
   return (
@@ -28,9 +29,6 @@ const Section: React.FC<{ children: React.ReactNode, title: string, actions: Rea
       {children}
     </>);
 }
-
-
-
 
 
 const Title: React.FC<{}> = () => {
@@ -55,18 +53,54 @@ const Description: React.FC<{}> = () => {
 
 const Checklist: React.FC<{}> = () => {
   const { state } = TaskClient.useTaskEdit();
-  
+
   console.log(state);
-  
+
   return (
     <>
-      {state.task.checklist.map(item =>(<ChecklistDelegate key={item.id} value={item} />))}
+      {state.task.checklist.map(item => (<ChecklistDelegate key={item.id} value={item} />))}
     </>
   )
 }
 
+const getStatusColorConfig = (status: TaskClient.TaskStatus): SxProps => {
+  const statusColors = TaskClient.StatusPallette;
+  switch (status) {
+    case 'COMPLETED':
+      return { color: statusColors.COMPLETED, ':hover': { color: statusColors.COMPLETED } };
+    case 'CREATED':
+      return { color: statusColors.CREATED, ':hover': { color: statusColors.CREATED } };
+    case 'IN_PROGRESS':
+      return { color: statusColors.IN_PROGRESS, ':hover': { color: statusColors.IN_PROGRESS } };
+    case 'REJECTED':
+      return { color: statusColors.REJECTED, ':hover': { color: statusColors.REJECTED } };
+  }
+}
+
 const Status: React.FC<{}> = () => {
-  return (<Box>Status</Box>)
+  const { state } = TaskClient.useTaskEdit();
+  const status = state.task.status;
+  const Popover = usePopover();
+  const statusOptions: TaskClient.TaskStatus[] = ['CREATED', 'IN_PROGRESS', 'COMPLETED', 'REJECTED'];
+
+  return (
+    <Box>
+      <Button variant='text' color='inherit' onClick={Popover.onClick} sx={{ textTransform: 'none' }}>
+        <CircleIcon sx={{ mr: 1, ...getStatusColorConfig(status) }} />
+        <Typography><FormattedMessage id={'task.status.' + status} /></Typography>
+      </Button>
+      <Popover.Delegate>
+        <MenuList dense>
+          {statusOptions.map(option => (
+            <MenuItem key={option}>
+              <CircleIcon sx={{ alignItems: 'center', mr: 1, ...getStatusColorConfig(option) }} />
+              <ListItemText><FormattedMessage id={'task.status.' + option} /></ListItemText>
+            </MenuItem>
+          ))}
+        </MenuList>
+      </Popover.Delegate>
+    </Box>
+  )
 }
 
 const Assignee: React.FC<{}> = () => {
@@ -109,7 +143,6 @@ const DueDate: React.FC<{ dueDate: string, onClick: () => void }> = ({ dueDate, 
       <Typography variant='caption'>{dueDate}</Typography>
     </Box>)
 }
-
 
 
 const Fields = { Title, Description, Checklist, Status, Assignee, Priority, Options, StartDate, DueDate, MessageCount, AttachmentCount, NewItemNotification }
