@@ -1,11 +1,12 @@
 import React from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { TextField, Typography, Stack, Box, IconButton, MenuList, MenuItem, Button, SxProps, ListItemText } from '@mui/material';
+import { TextField, Typography, Stack, Box, IconButton, MenuList, MenuItem, Button, SxProps, ListItemText, Avatar, AvatarGroup } from '@mui/material';
 import DateRangeOutlinedIcon from '@mui/icons-material/DateRangeOutlined';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import CircleNotificationsOutlinedIcon from '@mui/icons-material/CircleNotificationsOutlined';
 import CircleIcon from '@mui/icons-material/Circle';
+import EmojiFlagsIcon from '@mui/icons-material/EmojiFlags';
 import Burger from '@the-wrench-io/react-burger';
 import TaskClient from '@taskclient';
 
@@ -77,6 +78,18 @@ const getStatusColorConfig = (status: TaskClient.TaskStatus): SxProps => {
   }
 }
 
+const getPriorityColorConfig = (priority: TaskClient.TaskPriority): SxProps => {
+  const priorityColors = TaskClient.PriorityPalette;
+  switch (priority) {
+    case 'LOW':
+      return { color: priorityColors.LOW, ':hover': { color: priorityColors.LOW } };
+    case 'MEDIUM':
+      return { color: priorityColors.MEDIUM, ':hover': { color: priorityColors.MEDIUM } };
+    case 'HIGH':
+      return { color: priorityColors.HIGH, ':hover': { color: priorityColors.HIGH } };
+  }
+}
+
 const Status: React.FC<{}> = () => {
   const { state } = TaskClient.useTaskEdit();
   const status = state.task.status;
@@ -104,15 +117,37 @@ const Status: React.FC<{}> = () => {
 }
 
 const Assignee: React.FC<{}> = () => {
-  return (<Box>Assignee</Box>)
+  return (<Box><Button variant='text' color='inherit' sx={{ textTransform: 'none' }}><Typography>Assignees</Typography></Button></Box>)
 }
 
 const Priority: React.FC<{}> = () => {
-  return (<Box>Priority</Box>)
+  const { state } = TaskClient.useTaskEdit();
+  const priority = state.task.priority;
+  const Popover = usePopover();
+  const priorityOptions: TaskClient.TaskPriority[] = ['LOW', 'HIGH', 'MEDIUM'];
+
+  return (
+    <Box>
+      <Button variant='text' color='inherit' onClick={Popover.onClick} sx={{ textTransform: 'none' }}>
+        <EmojiFlagsIcon sx={{ mr: 1, ...getPriorityColorConfig(priority) }} />
+        <Typography><FormattedMessage id={'task.priority.' + priority} /></Typography>
+      </Button>
+      <Popover.Delegate>
+        <MenuList dense>
+          {priorityOptions.map(option => (
+            <MenuItem key={option}>
+              <EmojiFlagsIcon sx={{ alignItems: 'center', mr: 1, ...getPriorityColorConfig(option) }} />
+              <ListItemText><FormattedMessage id={'task.priority.' + option} /></ListItemText>
+            </MenuItem>
+          ))}
+        </MenuList>
+      </Popover.Delegate>
+    </Box>
+  )
 }
 
 const Options: React.FC<{}> = () => {
-  return (<Box>Options</Box>)
+  return (<Box><Button variant='text' color='inherit' sx={{ textTransform: 'none' }}><Typography>Options</Typography></Button></Box>)
 }
 
 const MessageCount: React.FC<{}> = () => {

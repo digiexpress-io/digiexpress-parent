@@ -13,6 +13,10 @@ const en = {
   'task.status.IN_PROGRESS': "In progress",
   'task.status.COMPLETED': "Completed",
   'task.status.REJECTED': "Rejected",
+  
+  'task.priority.LOW': "Low",
+  'task.priority.MEDIUM': "Medium",
+  'task.priority.HIGH': "High",
 
   'core.taskOps.editTask.taskTitle': "Task title",
   'core.taskOps.editTask.taskDescription': "Task description",
