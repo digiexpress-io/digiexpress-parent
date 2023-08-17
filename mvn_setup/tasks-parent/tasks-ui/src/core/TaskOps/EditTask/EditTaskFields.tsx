@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { TextField, Typography, Stack, Box, IconButton, MenuList, MenuItem, Button, SxProps, ListItemText, Avatar, AvatarGroup } from '@mui/material';
+import { TextField, Typography, Stack, Box, IconButton, MenuList, MenuItem, Button, SxProps, ListItemText } from '@mui/material';
 import DateRangeOutlinedIcon from '@mui/icons-material/DateRangeOutlined';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
