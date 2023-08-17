@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { TextField, Typography, Stack, Box, IconButton, MenuList, MenuItem, Button, styled, SxProps, ListItemText } from '@mui/material';
+import { TextField, Typography, Stack, Box, IconButton, MenuList, MenuItem, Button, SxProps, ListItemText } from '@mui/material';
 import DateRangeOutlinedIcon from '@mui/icons-material/DateRangeOutlined';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
@@ -12,19 +12,10 @@ import TaskClient from '@taskclient';
 import ChecklistDelegate from 'core/Checklist';
 import { usePopover } from 'core/TaskTable/CellPopover';
 
-const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
-  color: theme.palette.primary.contrastText,
-  borderRadius: theme.shape.borderRadius,
-  marginBottom: theme.spacing(1),
-  ':hover': {
-    color: theme.palette.text.secondary,
-  }
-}));
 
 const SectionAddButton: React.FC<{}> = () => {
   return (<Burger.PrimaryButton label={'buttons.add'} onClick={() => { }} />)
 }
-
 
 const Section: React.FC<{ children: React.ReactNode, title: string, actions: React.ReactNode }> = ({ children, title, actions }) => {
   return (
