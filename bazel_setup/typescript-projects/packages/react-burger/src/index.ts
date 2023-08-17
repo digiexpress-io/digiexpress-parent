@@ -1,3 +1,10 @@
+// https://github.com/microsoft/TypeScript/issues/47663
+import type {} from '@emotion/styled';
+import type {} from '@emotion/react';
+import type {} from '@mui/system';
+import type {} from '@mui/types';
+
+
 import { AppProviderProps, useApps as useAppsAlias, AppProvider } from './context/AppContext';
 import { useDrawer as useDrawerAlias } from './context/drawer/DrawerContext';
 import { useTabs as useTabsAlias } from './context/tabs/TabsContext';
