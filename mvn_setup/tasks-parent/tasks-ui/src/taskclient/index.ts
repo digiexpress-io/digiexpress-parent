@@ -144,6 +144,7 @@ namespace TaskClient {
   export const DefaultStore = DefaultStoreAs;
   export const StoreErrorImpl = StoreErrorImplAs;
   export const StatusPallette = taskCtxImpl.Pallette.status;
+  export const PriorityPalette = taskCtxImpl.Pallette.priority;
   export const Error = ErrorView;
   export const Provider = ProviderImpl;
   export const EditProvider = taskEditCtx.TaskEditProvider;
