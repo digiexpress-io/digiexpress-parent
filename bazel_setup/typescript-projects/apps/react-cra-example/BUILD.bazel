@@ -1,0 +1,47 @@
+load("@aspect_rules_js//js:defs.bzl", "js_library", "js_run_devserver", "js_test")
+load("@aspect_rules_ts//ts:defs.bzl", "ts_config")
+load("@npm//typescript-projects:react-scripts/package_json.bzl", cra_bin = "bin")
+
+
+
+
+CRA_DEPS = [
+# sample of how to include internal deps    "//typescript-projects:node_modules/@digiexpress/first",
+    
+    "//typescript-projects/apps/react-cra-example/src",
+    "//typescript-projects/apps/react-cra-example/public",
+    "//typescript-projects/apps/react-cra-example:package.json",
+    
+    "//typescript-projects:node_modules/eslint-config-react-app",
+    "//typescript-projects:node_modules/react-dom",
+    "//typescript-projects:node_modules/react-scripts",
+    "//typescript-projects:node_modules/react",
+    "//typescript-projects:node_modules/typescript",
+    "//typescript-projects:node_modules/web-vitals",
+]
+
+cra_bin.react_scripts(
+    # Note: If you want to change the name make sure you update BUILD_PATH below accordingly
+    # https://create-react-app.dev/docs/advanced-configuration/
+    name = "build",
+    
+    args = ["build/typescript-projects"],
+    srcs = CRA_DEPS,
+    env = {"BUILD_PATH": "./build/typescript-projects"},
+    out_dirs = ["build/typescript-projects"],
+)
+
+
+js_run_devserver(
+    name = "start",
+    args = ["start"],
+    chdir = package_name(),
+    command = "../../node_modules/.bin/react-scripts", # inside chdir -> node modules
+    data = CRA_DEPS,
+)
+
+js_library(
+    name = "package_json",
+    srcs = ["package.json"],
+    visibility = ["//visibility:public"],
+)

@@ -1,0 +1,31 @@
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
+load("@aspect_rules_js//npm:defs.bzl", "npm_package")
+load("//typescript-projects/tools:ts_deps.bzl", "MUI_DEPS")
+
+
+SRC_PATTERNS = [
+    "src/**/*.tsx",
+    "src/**/*.ts",
+#    "src/index.ts",
+]
+
+ts_project(
+    name="react_burger_ts",
+    srcs=glob(include=SRC_PATTERNS),
+    tsconfig="//typescript-projects:tsconfig",
+    declaration=True,
+    resolve_json_module=True,
+    deps=MUI_DEPS
+)
+
+# make this library available via node_modules
+npm_package(
+    name="react-burger",
+    srcs=[
+        "package.json",
+        ":react_burger_ts",
+    ],
+    # This is a perf improvement; the default will be flipped to False in rules_js 2.0
+    include_runfiles=False,
+    visibility=["//visibility:public"],
+)

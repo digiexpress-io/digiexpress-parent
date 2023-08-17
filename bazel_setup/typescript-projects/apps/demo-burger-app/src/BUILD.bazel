@@ -1,0 +1,54 @@
+load("@aspect_rules_js//js:defs.bzl", "js_library")
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
+load("@npm//:eslint/package_json.bzl", eslint_bin = "bin")
+load("//typescript-projects/tools:ts_deps.bzl", "MUI_DEPS")
+
+
+ASSET_PATTERNS = [
+    "*.svg",
+    "*.css",
+]
+
+SRC_PATTERNS = [
+    "*.tsx",
+    "*.ts",
+    "test_app/**/*.tsx",
+    "test_app/**/*.ts",
+]
+
+js_library(
+    name = "src",
+    srcs = glob(ASSET_PATTERNS),
+    visibility = ["//visibility:public"],
+    deps = [
+        ":src_ts",
+    ],
+)
+
+ts_project(
+    name = "src_ts",
+    srcs = glob(
+        include = SRC_PATTERNS,
+    ),
+    declaration = True,
+    resolve_json_module = True,
+    tsconfig = "//typescript-projects:tsconfig",
+    deps = MUI_DEPS + [
+        "//typescript-projects:node_modules/@digiexpress/react-burger",
+        "//typescript-projects:node_modules/web-vitals",
+    ],
+)
+
+
+eslint_bin.eslint_test(
+    name = "eslint_test",
+    args = ["{}/{}".format(
+        package_name(),
+        p,
+    ) for p in SRC_PATTERNS],
+    data = [
+        "//typescript-projects/apps/demo-burger-app:package_json",
+        "//typescript-projects:node_modules/@digiexpress/react-burger",
+        "//typescript-projects:node_modules/eslint-config-react-app",
+    ] + glob(SRC_PATTERNS),
+)
