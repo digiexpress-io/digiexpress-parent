@@ -165,18 +165,18 @@ const NewItemNotification: React.FC<{}> = () => {
 const StartDate: React.FC<{ onClick: () => void }> = ({ onClick }) => {
 
   return (
-    <Box textAlign='center'>
-      <Typography><FormattedMessage id='core.taskOps.editTask.startDate' /></Typography>
+    <Stack direction='row' alignItems='center'>
+      <Typography variant='body2'><FormattedMessage id='core.taskOps.editTask.startDate' /></Typography>
       <IconButton onClick={onClick} color='secondary'><DateRangeOutlinedIcon /></IconButton>
-    </Box>);
+    </Stack>);
 }
 
 const DueDate: React.FC<{ dueDate: string, onClick: () => void }> = ({ dueDate, onClick }) => {
   return (
-    <Box textAlign='center' onClick={onClick}>
-      <Typography><FormattedMessage id='core.taskOps.editTask.dueDate' /></Typography>
-      <Typography variant='caption'>{dueDate}</Typography>
-    </Box>)
+    <Stack spacing={1} direction='row' onClick={onClick} alignItems='center'>
+      <Typography variant='body2'><FormattedMessage id='core.taskOps.editTask.dueDate' /></Typography>
+      <Typography>{dueDate}</Typography>
+    </Stack>)
 }
 
 

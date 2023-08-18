@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Stack, List, Dialog, Button, Grid } from '@mui/material';
-
+import SecurityIcon from '@mui/icons-material/Security';
+import { FormattedMessage } from 'react-intl';
 import TaskClient from '@taskclient';
 import { DatePicker } from '../../DatePicker/DatePicker';
 import { StyledFullScreenDialog } from '../StyledFullScreenDialog';
@@ -53,13 +54,6 @@ const Header: React.FC<{}> = () => {
         <Stack spacing={2} direction='row'>
           <Fields.StartDate onClick={() => setDatePickerOpen(true)} />
           <Fields.DueDate onClick={() => setDatePickerOpen(true)} dueDate='08/31/2023' />
-          <Box flexGrow={1} />
-          <Stack direction='row' spacing={1} alignItems='center'>
-            <Fields.MessageCount />
-            <Fields.AttachmentCount />
-            <Fields.NewItemNotification />
-          </Stack>
-          <Button variant='contained' color='warning'>Messages, attachments, form</Button>
         </Stack>
       </Grid>
     </Grid>
@@ -73,7 +67,8 @@ const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const { } = TaskClient.useTaskEdit();
   return (
     <>
-      <Burger.PrimaryButton label='buttons.cancel' onClick={onClose} />
+      <Button startIcon={<SecurityIcon />} variant='contained' color='warning'><FormattedMessage id='core.taskOps.editTask.clientData' /></Button>
+      <Burger.PrimaryButton label='buttons.accept' onClick={onClose} />
     </>
   )
 }

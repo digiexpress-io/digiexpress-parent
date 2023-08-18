@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box, Stack, Dialog, Button, Grid } from '@mui/material';
+import { FormattedMessage } from 'react-intl';
 
 import TaskClient from '@taskclient';
 import { DatePicker } from '../../DatePicker/DatePicker';
@@ -14,12 +15,12 @@ const Left: React.FC<{}> = () => {
       <Box />
       <Fields.Title />
       <Fields.Description />
-      <Fields.Checklist  />
+      <Fields.Checklist />
     </>)
 }
 
 const Right: React.FC<{}> = () => {
- 
+
   return (<></>);
 
 }
@@ -50,13 +51,6 @@ const Header: React.FC<{}> = () => {
         <Stack spacing={2} direction='row'>
           <Fields.StartDate onClick={() => setDatePickerOpen(true)} />
           <Fields.DueDate onClick={() => setDatePickerOpen(true)} dueDate='08/31/2023' />
-          <Box flexGrow={1} />
-          <Stack direction='row' spacing={1} alignItems='center'>
-            <Fields.MessageCount />
-            <Fields.AttachmentCount />
-            <Fields.NewItemNotification />
-          </Stack>
-          <Button variant='contained' color='warning'>EDIT TASK</Button>
         </Stack>
       </Grid>
     </Grid>
@@ -70,6 +64,7 @@ const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const { } = TaskClient.useTaskEdit();
   return (
     <>
+      <Button variant='contained' color='warning'><FormattedMessage id='buttons.editTask' /></Button>
       <Burger.PrimaryButton label='buttons.cancel' onClick={onClose} />
     </>
   )
