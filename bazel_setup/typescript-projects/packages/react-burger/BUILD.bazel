@@ -15,7 +15,8 @@ ts_project(
     tsconfig="//typescript-projects:tsconfig",
     declaration=True,
     resolve_json_module=True,
-    deps=MUI_DEPS
+    deps=MUI_DEPS,
+    root_dir="src"
 )
 
 # make this library available via node_modules
