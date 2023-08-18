@@ -1,17 +1,22 @@
 import React from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { TextField, Typography, Stack, Box, IconButton, MenuList, MenuItem, Button, SxProps, ListItemText } from '@mui/material';
+
+import { TextField, Typography, Stack, Box, IconButton, MenuList, MenuItem, Button, SxProps, List, ListItem, ListItemText, Avatar, AvatarGroup, Checkbox, InputAdornment } from '@mui/material';
 import DateRangeOutlinedIcon from '@mui/icons-material/DateRangeOutlined';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import CircleNotificationsOutlinedIcon from '@mui/icons-material/CircleNotificationsOutlined';
 import CircleIcon from '@mui/icons-material/Circle';
 import EmojiFlagsIcon from '@mui/icons-material/EmojiFlags';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import SearchIcon from '@mui/icons-material/Search';
+
 import Burger from '@the-wrench-io/react-burger';
 import TaskClient from '@taskclient';
 
 import ChecklistDelegate from 'core/Checklist';
 import { usePopover } from 'core/TaskTable/CellPopover';
+import { AvatarCode } from 'taskclient/tasks-ctx-types';
 
 
 const SectionAddButton: React.FC<{}> = () => {
@@ -117,7 +122,79 @@ const Status: React.FC<{}> = () => {
 }
 
 const Assignee: React.FC<{}> = () => {
-  return (<Box><Button variant='text' color='inherit' sx={{ textTransform: 'none' }}><Typography>Assignees</Typography></Button></Box>)
+  const tasksContext = TaskClient.useTasks();
+  const { state } = TaskClient.useTaskEdit();
+  const assigneesAvatars = state.task.assigneesAvatars;
+  const Popover = usePopover();
+  const [searchString, setSearchString] = React.useState<string>('');
+
+  const avatars = assigneesAvatars.map((entry, index) => {
+    return (<Avatar key={index}
+      sx={{
+        bgcolor: tasksContext.state.pallette.owners[entry.value],
+        width: 24,
+        height: 24,
+        fontSize: 10,
+      }}>{entry.twoletters}</Avatar>
+    );
+  });
+  avatars.push(<Avatar key='add-icon' sx={{ width: 24, height: 24, fontSize: 10 }}><PersonAddIcon sx={{ fontSize: 15 }} /></Avatar>)
+  const avatarGroup = (avatars.length && <AvatarGroup spacing='medium' onClick={Popover.onClick}>{avatars}</AvatarGroup>);
+
+  const demoUsers = [
+    ['SV', 'sam vimes'],
+    ['CI', 'carrot ironfoundersson'],
+    ['CL', 'cherry littlefoot'],
+    ['LV', 'lord vetinari'],
+    ['NN', 'nobby nobbs'],
+  ];
+  const userAvatarCodes: AvatarCode[] = demoUsers.map(entry => { return { value: entry[1], twoletters: entry[0] } });
+  const filteredUserAvatarCodes = searchString !== '' ? userAvatarCodes.filter(entry => entry.value.toLowerCase().includes(searchString.toLowerCase())) : userAvatarCodes;
+  const userAvatars = filteredUserAvatarCodes.map((entry, index) => {
+    return (
+      <>
+        <ListItem key={index}>
+          <Checkbox checked={assigneesAvatars.find(a => a.value === entry.value) !== undefined} />
+          <Avatar key={index}
+            sx={{
+              bgcolor: tasksContext.state.pallette.owners[entry.value],
+              width: 24,
+              height: 24,
+              fontSize: 10,
+              mr: 1,
+            }}>{entry.twoletters}</Avatar>
+          <ListItemText>{entry.value}</ListItemText>
+        </ListItem>
+      </>
+    );
+  });
+
+  return (
+    <Box>
+      <Button variant='text' color='inherit'>
+        {avatarGroup}
+      </Button>
+      <Popover.Delegate>
+        <TextField
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon color='primary' />
+              </InputAdornment>
+            ),
+          }}
+          fullWidth
+          variant='standard'
+          placeholder='Search'
+          value={searchString}
+          onChange={(e) => setSearchString(e.target.value)}
+        />
+        <List dense>
+          {userAvatars}
+        </List>
+      </Popover.Delegate>
+    </Box>
+  )
 }
 
 const Priority: React.FC<{}> = () => {
