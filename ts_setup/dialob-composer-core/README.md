@@ -18,23 +18,23 @@
 
 ## Types
 
-`ComposerState` - Root type for Dialob form document
-`DialobItemTemplate` - Dialob item (question, group, page etc.) attributes.
-`DialobItem` - Dialob item type (DialobItemTemplate + id)
-`ValidationRule` - Validation rule entry
-`DialobITemType` - Supported dialob item types
-`ValueSet` - Valueset (choice list)
-`ValueSetEntry` - Valueset entry (choice list item)
-`ContextVariable` - Context variable definition
-`ContextVariableType` - Supported context variable types
-`Variable` - Variable definition
-`LocalizedString` - Value type for localized strings
+`ComposerState` - Root type for Dialob form document  
+`DialobItemTemplate` - Dialob item (question, group, page etc.) attributes.  
+`DialobItem` - Dialob item type (DialobItemTemplate + id)  
+`ValidationRule` - Validation rule entry  
+`DialobITemType` - Supported dialob item types  
+`ValueSet` - Valueset (choice list)  
+`ValueSetEntry` - Valueset entry (choice list item)  
+`ContextVariable` - Context variable definition  
+`ContextVariableType` - Supported context variable types  
+`Variable` - Variable definition  
+`LocalizedString` - Value type for localized strings  
 
 ## API
 
 ## React
 
-`ComposerContext` - React context for Dialob form document editing
-`ComposerProvider` - Context provider component for ComposerContext
-`useComposer` - React hook exposing form data and editing operations within ComposerContext
+`ComposerContext` - React context for Dialob form document editing  
+`ComposerProvider` - Context provider component for ComposerContext  
+`useComposer` - React hook exposing form data and editing operations within ComposerContext  
 
