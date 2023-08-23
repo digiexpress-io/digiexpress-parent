@@ -57,7 +57,7 @@ const FormattedCell: React.FC<{
     <Styles.TableCell width="500px">
       <Box justifyContent='left' display='flex'>
         <TaskCell id={row.id + "/Subject"} name={row.title} maxWidth={"500px"} />
-        <TaskOps.StartTaskDialog open={edit} onClose={handleEndEdit} task={row} />
+        <TaskOps.WorkOnTaskDialog open={edit} onClose={handleEndEdit} task={row} />
         {active && <HoverMenu onEdit={handleStartEdit} />}
       </Box>
     </Styles.TableCell>

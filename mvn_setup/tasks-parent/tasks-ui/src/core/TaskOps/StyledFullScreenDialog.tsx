@@ -27,10 +27,10 @@ const dialog_height = "100%";
 interface StyledFullScreenDialogProps {
   header: React.ReactNode;
   footer?: React.ReactElement;
-  
+
   onClose: () => void;
   open: boolean;
-  
+
   left: React.ReactElement;
   right: React.ReactElement;
 }
@@ -47,7 +47,7 @@ const DialogBlock: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 }
 const DialogDivider: React.FC<{}> = () => {
   return (
-    <Box sx={{ pl: dialog_padding, pr: dialog_padding, height: dialog_height }}>
+    <Box sx={{ pl: dialog_padding, pr: dialog_padding, height: '100vh' }}>
       <Divider orientation='vertical' sx={{ borderColor: borderColor }} />
     </Box>
   )
