@@ -140,7 +140,7 @@ const ChecklistComponent: React.FC<{ value: Checklist }> = ({ value }) => {
     <Box>
       <ChecklistHeader title={title} />
       {tempChecklistItems.length ? <Styles.ProgressBar progress={calculateProgress()} /> : <></>}
-      <List>
+      <List sx={{ p: 0 }}>
         {tempChecklistItems.map((item, index) => <ChecklistItemComponent key={item.id} item={item} onChecked={() => handleChecked(index)} onDeleteClick={() => handleDeleted(index)} onClick={handleItemClick} />)}
       </List>
       <Button variant='outlined' startIcon={<AddCircleOutlineIcon />} sx={{ m: 1 }} onClick={(e) => handleAddClick(e)}>Add Item</Button>

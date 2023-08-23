@@ -30,6 +30,22 @@ const en = {
   'core.taskOps.editTask.dueDate': 'Due date',
   'core.taskOps.editTask.startDate': 'Start date',
 
+  'core.taskOps.workOnTask.attachments': 'Attachments',
+  'core.taskOps.workOnTask.attachments.add': 'Add attachment',
+  'core.taskOps.workOnTask.attachments.none': 'No attachments yet',
+
+  'core.taskOps.workOnTask.messages': 'Messages',
+  'core.taskOps.workOnTask.messages.start': 'Start thread',
+  'core.taskOps.workOnTask.messages.none': 'No messages yet',
+
+  'core.taskOps.workOnTask.dueDate': 'Due date',
+  'core.taskOps.workOnTask.startDate': 'Start date',
+
+  'core.taskOps.workOnTask.button.edit': 'Edit',
+  'core.taskOps.workOnTask.button.cancel': 'Cancel',
+  'core.taskOps.workOnTask.button.complete': 'Complete',
+  'core.taskOps.workOnTask.button.reject': 'Reject',
+
   'core.teamSpace.taskCount': '{values} Tasks',
   'core.teamSpace.task.create': 'Create new task',
   

@@ -61,10 +61,16 @@ const ThreadPreviewActions: React.FC<{ read: boolean }> = ({ read }) => {
   )
 }
 
-const AttachmentAndDateTime: React.FC<{ hasAttachments: boolean, date: Date, sx?: SxProps }> = ({ hasAttachments, date, sx }) => {
+const AttachmentAndDateTime: React.FC<{
+  hasAttachments: boolean,
+  date: Date,
+  color?: 'warning' | 'primary' | 'secondary' | 'success' | 'info' | 'error',
+  sx?: SxProps
+}> = ({ hasAttachments, date, color, sx }) => {
+  const colorDefault = color ? color : 'primary';
   return (
     <StyledAttachmentAndDateTimeContainer width='20%'>
-      {hasAttachments && <AttachFileIcon color='primary' sx={{ mr: 1 }} />}
+      {hasAttachments && <AttachFileIcon color={colorDefault} sx={{ mr: 1 }} />}
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
         <Typography>{date.toLocaleDateString('en-US', { day: '2-digit', month: '2-digit', year: '2-digit' })}</Typography>
         <Typography>{date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hourCycle: 'h24' })}</Typography>

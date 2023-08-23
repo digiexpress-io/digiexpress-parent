@@ -4,7 +4,7 @@ import { LinearProgress, Box, Typography } from "@mui/material";
 
 const StyledProgressBar: React.FC<{ progress: number }> = ({ progress }) => {
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+    <Box sx={{ display: 'flex', alignItems: 'center', mx: 1 }}>
       <Box sx={{ width: '100%', mr: 1 }}>
         <LinearProgress variant="determinate" value={progress} />
       </Box>
