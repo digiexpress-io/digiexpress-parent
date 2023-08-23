@@ -31,17 +31,29 @@ const Right: React.FC<{}> = () => {
 
 const Header: React.FC<{}> = () => {
 
+  const { state } = TaskClient.useTaskEdit();
   const [datePickerOpen, setDatePickerOpen] = React.useState(false);
-  const [startDate, setStartDate] = React.useState<Date | string | undefined>();
-  const [dueDate, setDueDate] = React.useState<Date | string | undefined>();
+  const [startDate, setStartDate] = React.useState<Date | string | undefined>(state.task.startDate);
+  const [dueDate, setDueDate] = React.useState<Date | string | undefined>(state.task.dueDate);
+  const [activeDate, setActiveDate] = React.useState<"start" | "due" | undefined>();
+
+  const handleStartDateClick = () => {
+    setActiveDate('start');
+    setDatePickerOpen(true);
+  }
+
+  const handleDueDateClick = () => {
+    setActiveDate('due');
+    setDatePickerOpen(true);
+  }
 
   return (<>
     <Dialog open={datePickerOpen} onClose={() => setDatePickerOpen(false)}>
-      <DatePicker startDate={startDate} setStartDate={setStartDate} dueDate={dueDate} setDueDate={setDueDate} />
+      <DatePicker startDate={startDate} setStartDate={setStartDate} dueDate={dueDate} setDueDate={setDueDate} activeDate={activeDate} />
     </Dialog>
 
     <Grid container>
-      <Grid item md={6} lg={6}>
+      <Grid item md={6} lg={6} alignSelf='center'>
         <Stack spacing={2} direction='row'>
           <Fields.Status />
           <Fields.Assignee />
@@ -50,10 +62,10 @@ const Header: React.FC<{}> = () => {
         </Stack>
       </Grid>
 
-      <Grid item md={6} lg={6}>
+      <Grid item md={6} lg={6} alignSelf='center'>
         <Stack spacing={2} direction='row'>
-          <Fields.StartDate onClick={() => setDatePickerOpen(true)} />
-          <Fields.DueDate onClick={() => setDatePickerOpen(true)} dueDate='08/31/2023' />
+          <Fields.StartDate onClick={handleStartDateClick} />
+          <Fields.DueDate onClick={handleDueDateClick} />
         </Stack>
       </Grid>
     </Grid>

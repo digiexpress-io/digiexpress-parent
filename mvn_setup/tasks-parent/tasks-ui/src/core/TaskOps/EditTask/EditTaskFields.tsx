@@ -1,7 +1,11 @@
 import React from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 
-import { TextField, Typography, Stack, Box, IconButton, MenuList, MenuItem, Button, SxProps, List, ListItem, ListItemText, Avatar, AvatarGroup, Checkbox, InputAdornment } from '@mui/material';
+import {
+  TextField, Typography, Stack, Box, MenuList,
+  MenuItem, Button, SxProps, List, ListItem, ListItemText, Avatar,
+  AvatarGroup, Checkbox, InputAdornment
+} from '@mui/material';
 import DateRangeOutlinedIcon from '@mui/icons-material/DateRangeOutlined';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
@@ -110,7 +114,7 @@ const Status: React.FC<{}> = () => {
       <Popover.Delegate>
         <MenuList dense>
           {statusOptions.map(option => (
-            <MenuItem key={option}>
+            <MenuItem key={option} onClick={Popover.onClose}>
               <CircleIcon sx={{ alignItems: 'center', mr: 1, ...getStatusColorConfig(option) }} />
               <ListItemText><FormattedMessage id={'task.status.' + option} /></ListItemText>
             </MenuItem>
@@ -212,7 +216,7 @@ const Priority: React.FC<{}> = () => {
       <Popover.Delegate>
         <MenuList dense>
           {priorityOptions.map(option => (
-            <MenuItem key={option}>
+            <MenuItem key={option} onClick={Popover.onClose}>
               <EmojiFlagsIcon sx={{ alignItems: 'center', mr: 1, ...getPriorityColorConfig(option) }} />
               <ListItemText><FormattedMessage id={'task.priority.' + option} /></ListItemText>
             </MenuItem>
@@ -240,20 +244,27 @@ const NewItemNotification: React.FC<{}> = () => {
 }
 
 const StartDate: React.FC<{ onClick: () => void }> = ({ onClick }) => {
+  const { state } = TaskClient.useTaskEdit();
+  const startDate = state.task.startDate;
 
   return (
-    <Stack direction='row' alignItems='center'>
-      <Typography variant='body2'><FormattedMessage id='core.taskOps.editTask.startDate' /></Typography>
-      <IconButton onClick={onClick} color='secondary'><DateRangeOutlinedIcon /></IconButton>
-    </Stack>);
+    <Stack spacing={1} direction='row' alignItems='center'>
+      <Typography variant='body2'><FormattedMessage id='core.taskOps.workOnTask.startDate' /></Typography>
+      <Button onClick={onClick}>{startDate ? <Typography>{startDate.toLocaleDateString()}</Typography> : <DateRangeOutlinedIcon />}</Button>
+    </Stack>
+  );
 }
 
-const DueDate: React.FC<{ dueDate: string, onClick: () => void }> = ({ dueDate, onClick }) => {
+const DueDate: React.FC<{ onClick: () => void }> = ({ onClick }) => {
+  const { state } = TaskClient.useTaskEdit();
+  const dueDate = state.task.dueDate;
+
   return (
-    <Stack spacing={1} direction='row' onClick={onClick} alignItems='center'>
-      <Typography variant='body2'><FormattedMessage id='core.taskOps.editTask.dueDate' /></Typography>
-      <Typography>{dueDate}</Typography>
-    </Stack>)
+    <Stack spacing={1} direction='row' alignItems='center'>
+      <Typography variant='body2'><FormattedMessage id='core.taskOps.workOnTask.dueDate' /></Typography>
+      <Button onClick={onClick}>{dueDate ? <Typography>{dueDate.toLocaleDateString()}</Typography> : <DateRangeOutlinedIcon />}</Button>
+    </Stack>
+  );
 }
 
 

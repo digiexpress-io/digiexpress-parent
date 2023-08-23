@@ -29,7 +29,8 @@ interface DatePickerProps {
   setStartDate?: (value: React.SetStateAction<string | Date | undefined>) => void,
   dueDate: Date | string | undefined,
   setDueDate: (value: React.SetStateAction<string | Date | undefined>) => void,
-  onClose?: () => void
+  onClose?: () => void,
+  activeDate?: DateType
 }
 
 const StyledContainer = styled(Box)(({ theme }) => ({
@@ -115,12 +116,12 @@ function handleDateChangeForField(args: DateChangeProps): void {
 }
 
 const DatePicker: React.FC<DatePickerProps> = (props) => {
-  const { startDate, setStartDate, dueDate, setDueDate, onClose } = props;
+  const { startDate, setStartDate, dueDate, setDueDate, onClose, activeDate } = props;
   const doubleDate = setStartDate !== undefined;
 
   const [startDateError, setStartDateError] = React.useState<string | undefined>();
   const [dueDateError, setDueDateError] = React.useState<string | undefined>();
-  const [activeField, setActiveField] = React.useState<DateType | undefined>('due');
+  const [activeField, setActiveField] = React.useState<DateType | undefined>(activeDate || "due");
 
   function handleActiveFieldChange(field: DateType | undefined): void {
     setActiveField(field);
