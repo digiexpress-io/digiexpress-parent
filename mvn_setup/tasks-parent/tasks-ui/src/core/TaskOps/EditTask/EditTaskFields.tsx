@@ -16,30 +16,11 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
 
-import Burger from '@the-wrench-io/react-burger';
 import TaskClient from '@taskclient';
 
 import ChecklistDelegate from 'core/Checklist';
 import { usePopover } from 'core/TaskTable/CellPopover';
 import { AvatarCode } from 'taskclient/tasks-ctx-types';
-
-
-const SectionAddButton: React.FC<{}> = () => {
-  return (<Burger.PrimaryButton label={'buttons.add'} onClick={() => { }} />)
-}
-
-const Section: React.FC<{ children: React.ReactNode, title: string, actions: React.ReactNode }> = ({ children, title, actions }) => {
-  return (
-    <>
-      <Stack direction='row' spacing={1} alignItems='center'>
-        <Box sx={{ minWidth: "50%" }}>
-          <Typography><FormattedMessage id={title} /></Typography>
-        </Box>
-        {actions}
-      </Stack>
-      {children}
-    </>);
-}
 
 
 const Title: React.FC<{}> = () => {

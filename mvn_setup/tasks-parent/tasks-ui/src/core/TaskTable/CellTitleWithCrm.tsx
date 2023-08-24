@@ -1,9 +1,6 @@
 import React from 'react';
-import { Box, Typography } from '@mui/material';
-import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
+import { Box } from '@mui/material';
 import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
-
-import { FormattedMessage } from 'react-intl';
 
 import client from '@taskclient';
 import Styles from '@styles';
@@ -11,6 +8,7 @@ import Styles from '@styles';
 import TaskOps from '../TaskOps';
 import TaskCell from './TaskCell';
 import CellHoverButton from './CellMenuButton';
+import TaskClient from '@taskclient';
 
 const HoverMenu: React.FC<{ onEdit: () => void }> = ({ onEdit }) => {
 
@@ -41,6 +39,7 @@ const FormattedCell: React.FC<{
   setDisabled: () => void
 
 }> = ({ row, setDisabled, active }) => {
+  const { resetTab } = TaskClient.useMenu();
   const [edit, setEdit] = React.useState(false);
 
   function handleStartEdit() {
@@ -50,6 +49,7 @@ const FormattedCell: React.FC<{
 
   function handleEndEdit() {
     setEdit(false);
+    resetTab();
   }
 
 

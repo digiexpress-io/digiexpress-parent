@@ -80,7 +80,6 @@ const Header: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
 
 const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
-  const { } = TaskClient.useTaskEdit();
   return (
     <>
       <Button startIcon={<SecurityIcon />} variant='contained' color='warning'><FormattedMessage id='core.taskOps.editTask.clientData' /></Button>

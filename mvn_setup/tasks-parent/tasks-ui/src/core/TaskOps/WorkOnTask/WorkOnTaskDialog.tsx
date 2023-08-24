@@ -62,7 +62,6 @@ const Header: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
 
 const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
-  const { } = TaskClient.useTaskEdit();
   return (
     <>
       <Burger.PrimaryButton label='core.taskOps.workOnTask.button.reject' onClick={onClose} sx={{ backgroundColor: 'error.main', ':hover': { backgroundColor: 'error.dark' } }} />

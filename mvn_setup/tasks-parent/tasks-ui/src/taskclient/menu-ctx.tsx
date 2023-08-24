@@ -9,9 +9,11 @@ const MenuProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 
   const setter = React.useCallback((tab: MenuTab) => setActiveTab(tab), [setActiveTab]);
 
+  const resetter = React.useCallback(() => setActiveTab('messages'), [setActiveTab]);
+
   const contextValue: MenuContextType = React.useMemo(() => {
-    return { activeTab, withTab: setter };
-  }, [activeTab, setter]);
+    return { activeTab, withTab: setter, resetTab: resetter };
+  }, [activeTab, setter, resetter]);
 
   return (<MenuContext.Provider value={contextValue}>{children}</MenuContext.Provider>);
 };
