@@ -8,6 +8,7 @@ import { ClientContext, ComposerContext } from './client-ctx';
 import RequireProject from './Components/RequireProject';
 import { TasksProvider } from './tasks-ctx';
 import { OrgProvider } from './org-ctx';
+import { MenuProvider } from './menu-ctx';
 
 const Provider: React.FC<{ children: React.ReactNode, service: Client, profile: Profile }> = ({ children, service, profile }) => {
   const [session, dispatch] = React.useState<SessionData>(initSession);
@@ -36,8 +37,10 @@ const Provider: React.FC<{ children: React.ReactNode, service: Client, profile: 
       <ComposerContext.Provider value={contextValue}>
         <TasksProvider backend={service} profile={session.profile}>
           <OrgProvider backend={service}>
-            {session.profile.contentType === 'NOT_CREATED' ? <RequireProject /> : undefined}
-            {children}
+            <MenuProvider>
+              {session.profile.contentType === 'NOT_CREATED' ? <RequireProject /> : undefined}
+              {children}
+            </MenuProvider>
           </OrgProvider>
         </TasksProvider>
       </ComposerContext.Provider>

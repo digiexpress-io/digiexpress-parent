@@ -2,8 +2,8 @@ import React from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import {
-  TextField, Typography, Stack, Box, MenuList,
-  MenuItem, Button, SxProps, List, ListItem, ListItemText, Avatar,
+  TextField, Typography, Stack, Box, IconButton,
+  MenuList, MenuItem, Button, SxProps, List, ListItem, ListItemText, Avatar,
   AvatarGroup, Checkbox, InputAdornment
 } from '@mui/material';
 import DateRangeOutlinedIcon from '@mui/icons-material/DateRangeOutlined';
@@ -14,6 +14,7 @@ import CircleIcon from '@mui/icons-material/Circle';
 import EmojiFlagsIcon from '@mui/icons-material/EmojiFlags';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import SearchIcon from '@mui/icons-material/Search';
+import CloseIcon from '@mui/icons-material/Close';
 
 import Burger from '@the-wrench-io/react-burger';
 import TaskClient from '@taskclient';
@@ -153,7 +154,9 @@ const Assignee: React.FC<{}> = () => {
     ['NN', 'nobby nobbs'],
   ];
   const userAvatarCodes: AvatarCode[] = demoUsers.map(entry => { return { value: entry[1], twoletters: entry[0] } });
-  const filteredUserAvatarCodes = searchString !== '' ? userAvatarCodes.filter(entry => entry.value.toLowerCase().includes(searchString.toLowerCase())) : userAvatarCodes;
+  const filteredUserAvatarCodes = searchString !== '' ?
+    userAvatarCodes.filter(entry => entry.value.toLowerCase().includes(searchString.toLowerCase())) :
+    userAvatarCodes;
   const userAvatars = filteredUserAvatarCodes.map((entry, index) => {
     return (
       <>
@@ -267,6 +270,17 @@ const DueDate: React.FC<{ onClick: () => void }> = ({ onClick }) => {
   );
 }
 
+const CloseDialogButton: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+  return (
+    <IconButton onClick={onClose}>
+      <CloseIcon />
+    </IconButton>
+  )
+}
 
-const Fields = { Title, Description, Checklist, Status, Assignee, Priority, Options, StartDate, DueDate, MessageCount, AttachmentCount, NewItemNotification }
+const Fields = {
+  Title, Description, Checklist, Status, Assignee, Priority,
+  Options, StartDate, DueDate, MessageCount, AttachmentCount,
+  NewItemNotification, CloseDialogButton
+}
 export default Fields;

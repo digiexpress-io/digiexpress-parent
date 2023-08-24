@@ -162,6 +162,7 @@ namespace TaskClient {
   export const Table = CustomTable;
   export const ScreenProvider = screenCtx.ScreenProvider;
   export const useScreen = Hooks.useScreen;
+  export const useMenu = Hooks.useMenu;
 }
 
 export default TaskClient;

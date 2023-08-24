@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import {
   Typography, Stack, Box, IconButton,
   Button, List, ListItem, styled, Alert, Avatar, Dialog,
-  DialogTitle, DialogActions, DialogContent, TextareaAutosize
+  DialogTitle, DialogActions, DialogContent, TextareaAutosize, alpha
 } from '@mui/material';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
@@ -16,8 +16,9 @@ import ForumIcon from '@mui/icons-material/Forum';
 import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
 import ReplyIcon from '@mui/icons-material/Reply';
 import ArchiveIcon from '@mui/icons-material/Archive';
+import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
+import CloseIcon from '@mui/icons-material/Close';
 
-import Burger from '@the-wrench-io/react-burger';
 import TaskClient from '@taskclient';
 
 import ChecklistDelegate from 'core/Checklist';
@@ -61,23 +62,29 @@ const PaddedTypography = styled(Typography)(({ theme }) => ({
   padding: theme.spacing(1),
 }))
 
-const SectionAddButton: React.FC<{}> = () => {
-  return (<Burger.PrimaryButton label={'buttons.add'} onClick={() => { }} />)
-}
+const ExpandableMessageContainer = styled(Box)(({ theme }) => ({
+  borderTop: '1px solid',
+  borderBottom: '1px solid',
+  borderColor: theme.palette.divider,
+  ':hover': {
+    cursor: 'pointer',
+    borderColor: theme.palette.warning.main,
+  }
+}))
 
+const MessageHeaderContainer = styled(Box)({
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  position: 'relative',
+})
 
-const Section: React.FC<{ children: React.ReactNode, title: string, actions: React.ReactNode }> = ({ children, title, actions }) => {
-  return (
-    <>
-      <Stack direction='row' spacing={1} alignItems='center'>
-        <Box sx={{ minWidth: "50%" }}>
-          <Typography><FormattedMessage id={title} /></Typography>
-        </Box>
-        {actions}
-      </Stack>
-      {children}
-    </>);
-}
+const ChecklistAlert = styled(Alert)(({ theme }) => ({
+  backgroundColor: alpha(theme.palette.primary.light, 0.12),
+  '& .MuiSvgIcon-root': {
+    color: theme.palette.primary.main,
+  }
+}))
 
 
 const Title: React.FC<{}> = () => {
@@ -94,10 +101,19 @@ const Description: React.FC<{}> = () => {
 
 const Checklist: React.FC<{}> = () => {
   const { state } = TaskClient.useTaskEdit();
+  const checklist = state.task.checklist;
 
   return (
     <>
-      {state.task.checklist.map(item => (<ChecklistDelegate key={item.id} value={item} />))}
+      {checklist.length ?
+        checklist.map(item => (<ChecklistDelegate key={item.id} value={item} />)) :
+        <Box sx={{ my: 2, mx: 1 }}>
+          <ChecklistAlert severity='info' ><FormattedMessage id='core.taskOps.workOnTask.checklists.none' /></ChecklistAlert>
+          <Button variant='outlined' startIcon={<AddIcon />} sx={{ textTransform: 'none', mt: 1 }}>
+            <Typography><FormattedMessage id='core.taskOps.workOnTask.checklists.add' /></Typography>
+          </Button>
+        </Box>
+      }
     </>
   )
 }
@@ -158,10 +174,6 @@ const Attachments: React.FC<{}> = () => {
   const attachments: TaskExtension[] = state.task.uploads;
   return (
     <Box sx={{ p: 1 }}>
-      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-        <AttachEmailIcon color='info' sx={{ mr: 2 }} />
-        <Typography variant='h4'><FormattedMessage id='core.taskOps.workOnTask.attachments' /></Typography>
-      </Box>
       {attachments.length ? <List>
         {attachments.map(attachment => <AttachmentListItem key={attachment.id} attachment={attachment} />)}
       </List> : <Alert severity='info' sx={{ my: 1 }}><FormattedMessage id='core.taskOps.workOnTask.attachments.none' /></Alert>}
@@ -184,23 +196,6 @@ const Form: React.FC<{}> = () => {
     </Box>
   );
 }
-
-const ExpandableMessageContainer = styled(Box)(({ theme }) => ({
-  borderTop: '1px solid',
-  borderBottom: '1px solid',
-  borderColor: theme.palette.divider,
-  ':hover': {
-    cursor: 'pointer',
-    borderColor: theme.palette.warning.main,
-  }
-}))
-
-const MessageHeaderContainer = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  position: 'relative',
-}))
 
 const UserAvatar: React.FC<{ userName: string, representerName?: string }> = ({ userName, representerName }) => {
   const avatarText = userName.split(' ').map(name => name[0]).join('').toUpperCase();
@@ -304,11 +299,7 @@ const Messages: React.FC<{}> = () => {
   const thread = demoThreads[0];
 
   return (
-    <Box sx={{ p: 1 }}>
-      <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-        <ForumIcon color='warning' sx={{ mr: 2 }} />
-        <Typography variant='h4'><FormattedMessage id='core.taskOps.workOnTask.messages' /></Typography>
-      </Box>
+    <Box sx={{ p: 1, pt: 2.5 }}>
       {thread ?
         <ThreadContainer thread={thread} /> :
         <>
@@ -322,5 +313,35 @@ const Messages: React.FC<{}> = () => {
   )
 }
 
-const Fields = { Title, Description, Checklist, StartDate, DueDate, Attachments, Form, Messages }
+const Menu: React.FC<{}> = () => {
+  const { activeTab, withTab } = TaskClient.useMenu();
+
+  const getVariant = (tab: string) => {
+    return activeTab === tab ? 'contained' : 'outlined';
+  }
+
+  return (
+    <Stack spacing={1} direction='row'>
+      <Button startIcon={<ForumIcon />} color='warning' variant={getVariant('messages')} sx={activeTab === 'messages' ? { color: 'white' } : {}} onClick={() => withTab('messages')}>
+        <Typography sx={{ textTransform: 'none' }}><FormattedMessage id='core.taskOps.workOnTask.menu.messages' /></Typography>
+      </Button>
+      <Button startIcon={<AttachEmailIcon />} color='info' variant={getVariant('attachments')} onClick={() => withTab('attachments')}>
+        <Typography sx={{ textTransform: 'none' }}><FormattedMessage id='core.taskOps.workOnTask.menu.attachments' /></Typography>
+      </Button>
+      <Button startIcon={<AssignmentTurnedInIcon />} variant={getVariant('checklists')} onClick={() => withTab('checklists')}>
+        <Typography sx={{ textTransform: 'none' }}><FormattedMessage id='core.taskOps.workOnTask.menu.checklists' /></Typography>
+      </Button>
+    </Stack>
+  )
+}
+
+const CloseDialogButton: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+  return (
+    <IconButton onClick={onClose}>
+      <CloseIcon />
+    </IconButton>
+  )
+}
+
+const Fields = { Title, Description, Checklist, StartDate, DueDate, Attachments, Form, Messages, Menu, CloseDialogButton }
 export default Fields;

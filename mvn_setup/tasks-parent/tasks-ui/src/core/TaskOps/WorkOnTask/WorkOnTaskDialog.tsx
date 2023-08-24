@@ -15,19 +15,20 @@ const Left: React.FC<{}> = () => {
 }
 
 const Right: React.FC<{}> = () => {
+  const { activeTab } = TaskClient.useMenu();
 
   return (
-    <Stack spacing={2} direction='column'>
-      <Fields.Checklist />
-      <Fields.Attachments />
-      <Fields.Messages />
-    </Stack>
+    <Box>
+      {activeTab === 'messages' && <Fields.Messages />}
+      {activeTab === 'attachments' && <Fields.Attachments />}
+      {activeTab === 'checklists' && <Fields.Checklist />}
+    </Box>
   );
 
 }
 
 
-const Header: React.FC<{}> = () => {
+const Header: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
   return (<>
 
@@ -39,11 +40,19 @@ const Header: React.FC<{}> = () => {
         </Stack>
       </Grid>
 
-      <Grid item md={6} lg={6} alignSelf='center'>
+      <Grid item md={2} lg={2} alignSelf='center'>
         <Stack spacing={1} direction='column'>
           <Fields.StartDate />
           <Fields.DueDate />
         </Stack>
+      </Grid>
+
+      <Grid item md={3} lg={3} alignSelf='center'>
+        <Fields.Menu />
+      </Grid>
+
+      <Grid item md={1} lg={1} sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+        <Fields.CloseDialogButton onClose={onClose} />
       </Grid>
     </Grid >
   </>
@@ -74,7 +83,7 @@ const WorkOnTaskDialog: React.FC<{ open: boolean, onClose: () => void, task?: Ta
   return (
     <TaskClient.EditProvider task={props.task}>
       <StyledFullScreenDialog
-        header={<Header />}
+        header={<Header onClose={props.onClose} />}
         footer={<Footer onClose={props.onClose} />}
         left={<Left />}
         right={<Right />}
