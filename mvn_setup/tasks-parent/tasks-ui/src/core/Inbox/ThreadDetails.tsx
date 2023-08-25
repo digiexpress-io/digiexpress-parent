@@ -3,12 +3,14 @@ import React from "react";
 import {
   Box, Button, Typography, styled,
   Avatar, IconButton, List, ListItem, Paper, Dialog,
-  DialogTitle, DialogContent, DialogActions, TextField, TextareaAutosize
+  DialogTitle, DialogContent, DialogActions, TextareaAutosize, useTheme, alpha
 } from "@mui/material";
 import ArchiveIcon from '@mui/icons-material/Archive';
 import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
 import ReplyIcon from '@mui/icons-material/Reply';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
+import CallMadeIcon from '@mui/icons-material/CallMade';
+import CallReceivedIcon from '@mui/icons-material/CallReceived';
 import DownloadIcon from '@mui/icons-material/Download';
 import DeleteIcon from '@mui/icons-material/Delete';
 
@@ -113,6 +115,7 @@ const ExpandableMessage: React.FC<{ message: Message }> = ({ message }) => {
   const { userName, text, date, representerName, attachments } = message;
   const nameToShow = representerName ? `${userName} (rep. by ${representerName})` : userName;
   const hasAttachments = attachments.length > 0;
+  const unreadSx = message.read ? {} : { borderColor: 'primary.main', ':hover': { borderColor: 'primary.dark' } };
   const attachmentDateTimeSx = {
     display: 'flex',
     flexDirection: 'column',
@@ -124,7 +127,7 @@ const ExpandableMessage: React.FC<{ message: Message }> = ({ message }) => {
   }
 
   return (
-    <ExpandableMessageContainer onClick={() => setExpanded(!expanded)}>
+    <ExpandableMessageContainer onClick={() => setExpanded(!expanded)} sx={unreadSx}>
       <MessageHeaderContainer>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <UserAvatar userName={userName} representerName={representerName} />
@@ -162,11 +165,14 @@ const MessageExpandedSection: React.FC<{ message: Message }> = ({ message }) => 
 
 
 const AttachmentListItem: React.FC<{ attachment: Attachment }> = ({ attachment }) => {
+  const theme = useTheme();
+  const backgroundColor = attachment.id.includes('2') ? theme.palette.background.paper : alpha(theme.palette.primary.main, 0.1);
+  const icon = attachment.id.includes('2') ? <CallMadeIcon color='primary' /> : <CallReceivedIcon color='primary' />;
   return (
-    <StyledListItem>
+    <StyledListItem sx={{ backgroundColor }}>
       <ListItemContainer>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <AttachFileIcon color='primary' />
+          {icon}
           <PaddedTypography>{attachment.name}</PaddedTypography>
         </Box>
         <Box>

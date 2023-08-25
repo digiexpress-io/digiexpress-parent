@@ -29,7 +29,7 @@ const Right: React.FC<{}> = () => {
 }
 
 
-const Header: React.FC<{}> = () => {
+const Header: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
   const { state } = TaskClient.useTaskEdit();
   const [datePickerOpen, setDatePickerOpen] = React.useState(false);
@@ -62,11 +62,15 @@ const Header: React.FC<{}> = () => {
         </Stack>
       </Grid>
 
-      <Grid item md={6} lg={6} alignSelf='center'>
+      <Grid item md={5} lg={5} alignSelf='center'>
         <Stack spacing={2} direction='row'>
           <Fields.StartDate onClick={handleStartDateClick} />
           <Fields.DueDate onClick={handleDueDateClick} />
         </Stack>
+      </Grid>
+
+      <Grid item md={1} lg={1} sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+        <Fields.CloseDialogButton onClose={onClose} />
       </Grid>
     </Grid>
   </>
@@ -76,7 +80,6 @@ const Header: React.FC<{}> = () => {
 
 
 const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
-  const { } = TaskClient.useTaskEdit();
   return (
     <>
       <Button startIcon={<SecurityIcon />} variant='contained' color='warning'><FormattedMessage id='core.taskOps.editTask.clientData' /></Button>
@@ -95,7 +98,7 @@ const EditTaskDialog: React.FC<{ open: boolean, onClose: () => void, task?: Task
   return (
     <TaskClient.EditProvider task={props.task}>
       <StyledFullScreenDialog
-        header={<Header />}
+        header={<Header onClose={props.onClose} />}
         footer={<Footer onClose={props.onClose} />}
         left={<Left />}
         right={<Right />}

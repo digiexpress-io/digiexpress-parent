@@ -27,8 +27,8 @@ const handleInTabInLayout = (props: { article: Document, name?: string, id?: str
   const nav = { value: id };
 
   const tab: Tab = {
-    id, 
-    icon: (<ArticleTabIndicator entity={ props.article } />),
+    id,
+    icon: (<ArticleTabIndicator entity={props.article} />),
     label: props.name ? props.name : props.article.id,
     data: createTab({ nav })
   };
@@ -55,7 +55,6 @@ const findTabInLayout = (article: Document, layout: Burger.TabsContextType): Tab
 
 export const useScreen = () => {
   const result: ScreenContextType = React.useContext(ScreenContext);
-  
   return result.state;
 }
 
@@ -103,9 +102,9 @@ export const useNav = () => {
   const layout: Burger.TabsContextType = Burger.useTabs();
   const findTab = (article: Document): Tab | undefined => {
     return findTabInLayout(article, layout);
-  } 
+  }
   const handleInTab = (props: { article: Document, name?: string, id?: string }) => {
-    return handleInTabInLayout(props, layout); 
+    return handleInTabInLayout(props, layout);
   }
   return { handleInTab, findTab }
 }

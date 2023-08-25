@@ -1,10 +1,11 @@
 import React from 'react';
 import { Box, Stack, Grid } from '@mui/material';
 
-import TaskClient from '@taskclient';
 import { StyledFullScreenDialog } from '../StyledFullScreenDialog';
 import Fields from './WorkOnTaskFields';
+import TaskClient from '@taskclient';
 import Burger from '@the-wrench-io/react-burger';
+import { MenuProvider, useMenu } from './menu-ctx';
 
 const Left: React.FC<{}> = () => {
 
@@ -15,19 +16,20 @@ const Left: React.FC<{}> = () => {
 }
 
 const Right: React.FC<{}> = () => {
+  const { activeTab } = useMenu();
 
   return (
-    <Stack spacing={2} direction='column'>
-      <Fields.Checklist />
-      <Fields.Attachments />
-      <Fields.Messages />
-    </Stack>
+    <Box>
+      {activeTab === 'messages' && <Fields.Messages />}
+      {activeTab === 'attachments' && <Fields.Attachments />}
+      {activeTab === 'checklists' && <Fields.Checklist />}
+    </Box>
   );
 
 }
 
 
-const Header: React.FC<{}> = () => {
+const Header: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
   return (<>
 
@@ -39,11 +41,19 @@ const Header: React.FC<{}> = () => {
         </Stack>
       </Grid>
 
-      <Grid item md={6} lg={6} alignSelf='center'>
+      <Grid item md={2} lg={2} alignSelf='center'>
         <Stack spacing={1} direction='column'>
           <Fields.StartDate />
           <Fields.DueDate />
         </Stack>
+      </Grid>
+
+      <Grid item md={3} lg={3} alignSelf='center'>
+        <Fields.Menu />
+      </Grid>
+
+      <Grid item md={1} lg={1} sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+        <Fields.CloseDialogButton onClose={onClose} />
       </Grid>
     </Grid >
   </>
@@ -53,7 +63,6 @@ const Header: React.FC<{}> = () => {
 
 
 const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
-  const { } = TaskClient.useTaskEdit();
   return (
     <>
       <Burger.PrimaryButton label='core.taskOps.workOnTask.button.reject' onClick={onClose} sx={{ backgroundColor: 'error.main', ':hover': { backgroundColor: 'error.dark' } }} />
@@ -72,16 +81,19 @@ const WorkOnTaskDialog: React.FC<{ open: boolean, onClose: () => void, task?: Ta
   }
 
   return (
-    <TaskClient.EditProvider task={props.task}>
-      <StyledFullScreenDialog
-        header={<Header />}
-        footer={<Footer onClose={props.onClose} />}
-        left={<Left />}
-        right={<Right />}
-        onClose={props.onClose}
-        open={props.open}
-      />
-    </TaskClient.EditProvider>);
+    <MenuProvider>
+      <TaskClient.EditProvider task={props.task}>
+        <StyledFullScreenDialog
+          header={<Header onClose={props.onClose} />}
+          footer={<Footer onClose={props.onClose} />}
+          left={<Left />}
+          right={<Right />}
+          onClose={props.onClose}
+          open={props.open}
+        />
+      </TaskClient.EditProvider>
+    </MenuProvider>
+  );
 }
 
 export { WorkOnTaskDialog }

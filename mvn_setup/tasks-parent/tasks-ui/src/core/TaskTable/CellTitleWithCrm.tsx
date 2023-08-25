@@ -1,9 +1,6 @@
 import React from 'react';
-import { Box, Typography } from '@mui/material';
-import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
+import { Box } from '@mui/material';
 import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
-
-import { FormattedMessage } from 'react-intl';
 
 import client from '@taskclient';
 import Styles from '@styles';
