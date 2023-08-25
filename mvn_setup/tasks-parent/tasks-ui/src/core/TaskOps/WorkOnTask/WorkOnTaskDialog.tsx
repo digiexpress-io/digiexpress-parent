@@ -1,9 +1,9 @@
 import React from 'react';
 import { Box, Stack, Grid } from '@mui/material';
 
-import TaskClient from '@taskclient';
 import { StyledFullScreenDialog } from '../StyledFullScreenDialog';
 import Fields from './WorkOnTaskFields';
+import TaskClient from '@taskclient';
 import Burger from '@the-wrench-io/react-burger';
 
 const Left: React.FC<{}> = () => {
@@ -80,16 +80,19 @@ const WorkOnTaskDialog: React.FC<{ open: boolean, onClose: () => void, task?: Ta
   }
 
   return (
-    <TaskClient.EditProvider task={props.task}>
-      <StyledFullScreenDialog
-        header={<Header onClose={props.onClose} />}
-        footer={<Footer onClose={props.onClose} />}
-        left={<Left />}
-        right={<Right />}
-        onClose={props.onClose}
-        open={props.open}
-      />
-    </TaskClient.EditProvider>);
+    <TaskClient.MenuProvider>
+      <TaskClient.EditProvider task={props.task}>
+        <StyledFullScreenDialog
+          header={<Header onClose={props.onClose} />}
+          footer={<Footer onClose={props.onClose} />}
+          left={<Left />}
+          right={<Right />}
+          onClose={props.onClose}
+          open={props.open}
+        />
+      </TaskClient.EditProvider>
+    </TaskClient.MenuProvider>
+  );
 }
 
 export { WorkOnTaskDialog }
