@@ -5,6 +5,7 @@ import { StyledFullScreenDialog } from '../StyledFullScreenDialog';
 import Fields from './WorkOnTaskFields';
 import TaskClient from '@taskclient';
 import Burger from '@the-wrench-io/react-burger';
+import { MenuProvider, useMenu } from './menu-ctx';
 
 const Left: React.FC<{}> = () => {
 
@@ -15,7 +16,7 @@ const Left: React.FC<{}> = () => {
 }
 
 const Right: React.FC<{}> = () => {
-  const { activeTab } = TaskClient.useMenu();
+  const { activeTab } = useMenu();
 
   return (
     <Box>
@@ -80,7 +81,7 @@ const WorkOnTaskDialog: React.FC<{ open: boolean, onClose: () => void, task?: Ta
   }
 
   return (
-    <TaskClient.MenuProvider>
+    <MenuProvider>
       <TaskClient.EditProvider task={props.task}>
         <StyledFullScreenDialog
           header={<Header onClose={props.onClose} />}
@@ -91,7 +92,7 @@ const WorkOnTaskDialog: React.FC<{ open: boolean, onClose: () => void, task?: Ta
           open={props.open}
         />
       </TaskClient.EditProvider>
-    </TaskClient.MenuProvider>
+    </MenuProvider>
   );
 }
 

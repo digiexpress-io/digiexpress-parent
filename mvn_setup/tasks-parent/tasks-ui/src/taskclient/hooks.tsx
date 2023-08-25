@@ -12,8 +12,6 @@ import { TaskEditContextType } from './task-edit-ctx-types';
 import { TaskEditContext } from './task-edit-ctx'
 import { ScreenContextType } from './screen-ctx-types';
 import { ScreenContext } from './screen-ctx';
-import { MenuContext } from './menu-ctx';
-import { MenuContextType } from './menu-ctx-types';
 
 
 const isDocumentSaved = (entity: Document, ide: ComposerContextType): boolean => {
@@ -99,10 +97,6 @@ export const useComposer = () => {
 export const useSession = () => {
   const result: ComposerContextType = React.useContext(ComposerContext);
   return result.session;
-}
-export const useMenu = () => {
-  const result: MenuContextType = React.useContext(MenuContext);
-  return result;
 }
 export const useNav = () => {
   const layout: Burger.TabsContextType = Burger.useTabs();

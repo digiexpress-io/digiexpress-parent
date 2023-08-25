@@ -3,6 +3,11 @@ import { MenuContextType, MenuTab } from "./menu-ctx-types";
 
 const MenuContext = React.createContext<MenuContextType>({} as MenuContextType);
 
+const useMenu = () => {
+  const result: MenuContextType = React.useContext(MenuContext);
+  return result;
+}
+
 const MenuProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
   const [activeTab, setActiveTab] = React.useState<MenuTab>('messages');
@@ -16,4 +21,4 @@ const MenuProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   return (<MenuContext.Provider value={contextValue}>{children}</MenuContext.Provider>);
 };
 
-export { MenuProvider, MenuContext };
+export { MenuProvider, useMenu };

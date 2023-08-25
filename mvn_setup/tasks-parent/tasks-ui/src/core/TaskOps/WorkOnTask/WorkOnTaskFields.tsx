@@ -28,6 +28,7 @@ import { TaskExtension } from 'taskclient/task-types';
 import { Message, Thread } from 'core/Inbox/thread-types';
 import { AttachmentAndDateTime } from 'core/Inbox/ThreadPreview';
 import { demoThreads } from 'core/Inbox/DemoThreads';
+import { useMenu } from './menu-ctx';
 
 
 const StyledListItem = styled(ListItem)(({ theme }) => ({
@@ -322,7 +323,7 @@ const Messages: React.FC<{}> = () => {
 }
 
 const Menu: React.FC<{}> = () => {
-  const { activeTab, withTab } = TaskClient.useMenu();
+  const { activeTab, withTab } = useMenu();
 
   const getVariant = (tab: string) => {
     return activeTab === tab ? 'contained' : 'outlined';

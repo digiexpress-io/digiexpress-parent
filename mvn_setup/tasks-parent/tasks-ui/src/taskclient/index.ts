@@ -77,7 +77,6 @@ import {
 import * as taskCtxImpl from './tasks-ctx-impl';
 import * as taskEditCtx from './task-edit-ctx';
 import * as screenCtx from './screen-ctx';
-import * as menuCtx from './menu-ctx';
 import { ScreenState } from './screen-ctx-types';
 
 import * as Hooks from './hooks';
@@ -163,8 +162,6 @@ namespace TaskClient {
   export const Table = CustomTable;
   export const ScreenProvider = screenCtx.ScreenProvider;
   export const useScreen = Hooks.useScreen;
-  export const MenuProvider = menuCtx.MenuProvider;
-  export const useMenu = Hooks.useMenu;
 }
 
 export default TaskClient;
