@@ -1,8 +1,8 @@
 import React from 'react';
-import { Box,  Stack, Paper, Grid, } from '@mui/material';
+import { Box, Stack, Paper, Grid, } from '@mui/material';
 
 import Client from '@taskclient';
-import {StyledTaskItem, Header, SummaryTaskNotSelected, SummaryTaskSelected} from './TeamSpaceGroup';
+import { StyledTaskItem, Header, SummaryTaskNotSelected, SummaryTaskSelected, TabHeader } from './TeamSpaceGroup';
 
 
 
@@ -16,9 +16,10 @@ const TeamSpace: React.FC = () => {
   return (
     <Grid container spacing={1}>
       <Grid item md={9} lg={9}>
+
         <Stack spacing={1}>
           {groups.map((group) => (<Paper sx={{ p: 2 }} key={group.id}>
-            <Header group={group} />
+            <TabHeader />
             <Stack>{group.records.map((task) => <StyledTaskItem key={task.id} task={task} onTask={setTask} />)}</Stack>
           </Paper>))}
         </Stack>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Divider, Alert, AlertTitle, IconButton, useTheme, Button, Typography } from '@mui/material';
+import { Box, Divider, Alert, AlertTitle, IconButton, useTheme, Button, Typography, Tabs, Tab } from '@mui/material';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { FormattedMessage, useIntl } from 'react-intl';
@@ -31,8 +31,24 @@ const StyledTaskItem: React.FC<{ task: Client.TaskDescriptor, onTask: (task: Cli
   );
 }
 
-const Header: React.FC<{ group: Client.Group }> = ({ group }) => {
+//testing
+const TabHeader: React.FC = () => {
 
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue);
+  };
+
+  return (
+    <Tabs value={value} onChange={handleChange}>
+      <Tab label={<FormattedMessage id='task.overdue' />} />
+      <Tab label={<FormattedMessage id='task.dueSoon' />} />
+      <Tab label={<FormattedMessage id='task.available' />} />
+    </Tabs>)
+}
+
+const Header: React.FC<{ group: Client.Group }> = ({ group }) => {
 
   let title;
   let titleColor;
@@ -62,13 +78,12 @@ const Header: React.FC<{ group: Client.Group }> = ({ group }) => {
 }
 
 const SummaryTaskSelected: React.FC<{ task: Client.TaskDescriptor }> = ({ task }) => {
-  const intl = useIntl();
   const { assignees, dueDate, status, title, description } = task;
 
   return (<>
     <Typography marginRight={1} fontWeight='bold' variant='h4'>{title}</Typography>
     <Alert severity='error'><AlertTitle><FormattedMessage id='task.overdue.msg' /></AlertTitle>
-    {dueDate?.toUTCString()}</Alert>
+      {dueDate?.toUTCString()}</Alert>
     <Divider sx={{ my: 1 }} />
     <Button variant='contained' color='info' endIcon={<ArrowForwardIosIcon />}><FormattedMessage id='task.start' /></Button>
     <Button variant='contained' color='warning'><FormattedMessage id='task.edit' /></Button>
@@ -87,4 +102,4 @@ const SummaryTaskNotSelected: React.FC<{}> = () => {
 }
 
 
-export { Header, SummaryTaskSelected, SummaryTaskNotSelected, StyledTaskItem };
+export { Header, TabHeader, SummaryTaskSelected, SummaryTaskNotSelected, StyledTaskItem };
