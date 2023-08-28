@@ -1,11 +1,12 @@
 import React from 'react';
 import { Box, TablePagination, TableContainer, Table } from '@mui/material';
-import { TablePagination as TablePaginationImpl } from './table-pagination';
+import Client from '@taskclient';
+
 
 interface TableRenderProps<R> {
   loading: boolean;
-  content: TablePaginationImpl<R>,
-  setContent: React.Dispatch<React.SetStateAction<TablePaginationImpl<R>>>,
+  content: Client.TablePagination<R>,
+  setContent: React.Dispatch<React.SetStateAction<Client.TablePagination<R>>>,
 }
 
 interface TableProps<Record, Ext extends object> {
@@ -88,14 +89,14 @@ function CustomTable<Record extends object, Ext extends {}>(props: TableProps<Re
   const { records, loading, defaultOrderBy } = props.data;
   const { Header, Rows, ext } = props.render;
 
-  const [content, setContent] = React.useState(new TablePaginationImpl<Record>({
+  const [content, setContent] = React.useState(new Client.TablePaginationImpl<Record>({
     src: records ?? [],
     orderBy: defaultOrderBy,
     sorted: false
   }));
 
   React.useEffect(() => {
-    setContent((c: TablePaginationImpl<Record>) => c.withSrc(records ?? []));
+    setContent((c: Client.TablePagination<Record>) => c.withSrc(records ?? []));
   }, [records, setContent]);
 
   return (<Provider>
@@ -117,8 +118,8 @@ function CustomTable<Record extends object, Ext extends {}>(props: TableProps<Re
               count={(records ?? []).length}
               rowsPerPage={content.rowsPerPage}
               page={content.page}
-              onPageChange={(_event, newPage) => setContent((state: TablePaginationImpl<Record>) => state.withPage(newPage))}
-              onRowsPerPageChange={(event: React.ChangeEvent<HTMLInputElement>) => setContent((state: TablePaginationImpl<Record>) => state.withRowsPerPage(parseInt(event.target.value, 10)))}
+              onPageChange={(_event, newPage) => setContent((state: Client.TablePagination<Record>) => state.withPage(newPage))}
+              onRowsPerPageChange={(event: React.ChangeEvent<HTMLInputElement>) => setContent((state: Client.TablePagination<Record>) => state.withRowsPerPage(parseInt(event.target.value, 10)))}
             />)
         }
       </Box>

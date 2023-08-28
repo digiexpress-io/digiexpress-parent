@@ -2,13 +2,14 @@
 import React from 'react';
 import { Box } from '@mui/material';
 import Client from '@taskclient';
+import { TableRenderProps, CustomTable } from './table-ctx';
 
 
 interface TableProps {
   group: Client.Group
 }
 
-interface RenderProps extends Client.TableRenderProps<Client.TaskDescriptor>, TableProps { }
+interface RenderProps extends TableRenderProps<Client.TaskDescriptor>, TableProps { }
 
 
 interface TableGroupsProps {
@@ -43,7 +44,7 @@ const Delegate: React.FC<TableGroupsProps> = ({ groupBy, orderBy, children }) =>
   const result = groups.map((group, index) => (
     <React.Fragment key={group.id}>
       {index > 0 ? <Box sx={{ p: 2 }} /> : null}
-      <Client.Table<Client.TaskDescriptor, TableProps>
+      <CustomTable<Client.TaskDescriptor, TableProps>
         data={{ loading, records: group.records, defaultOrderBy }}
         render={{
           ext: { group },
@@ -58,18 +59,12 @@ const Delegate: React.FC<TableGroupsProps> = ({ groupBy, orderBy, children }) =>
     return (<children.Tools children={result}/>);
   }
 
-
-
   return (<>{result}</>);
 }
 
 
 const TableGroups: React.FC<TableGroupsProps> = (props) => {
-  return (
-    <Client.TableProvider>
-      <Delegate {...props} />
-    </Client.TableProvider>
-  );
+  return (<Delegate {...props} />);
 }
 
 

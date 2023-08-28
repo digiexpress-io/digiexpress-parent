@@ -4,11 +4,13 @@ import { TableHead, TableCell, TableRow } from '@mui/material';
 import Styles from '@styles';
 import client from '@taskclient';
 import TaskTable from '../TaskTable';
-
+import Tools from '../TaskTools';
 
 
 const Header: React.FC<TaskTable.RenderProps> = ({ content, setContent, group }) => {
+
   const columns: (keyof client.TaskDescriptor)[] = React.useMemo(() => [
+    'assignees',
     'dueDate',
     'priority',
     'status',
@@ -21,12 +23,13 @@ const Header: React.FC<TaskTable.RenderProps> = ({ content, setContent, group })
           <TaskTable.Title group={group} />
           <TaskTable.SubTitle values={group.records.length} message='core.teamSpace.taskCount' />
         </TableCell>
+
         <TaskTable.ColumnHeaders columns={columns} content={content} setContent={setContent} />
+        <TableCell></TableCell>
       </TableRow>
     </TableHead>
   );
 }
-
 
 const Row: React.FC<{
   rowId: number,
@@ -37,28 +40,17 @@ const Row: React.FC<{
   const [hoverItemsActive, setHoverItemsActive] = React.useState(false);
   function handleEndHover() {
     setHoverItemsActive(false);
-  }
-  function handleStartHover() {
-    setHoverItemsActive(true);
-  }
+  } 
+  
 
-  const cells = React.useMemo(() => {
-    return (
-      <>
-        <TaskTable.CellDueDate {...props} />
-        <TaskTable.CellPriority {...props} />
-        <TaskTable.CellStatus {...props} />
-      </>
-    );
-  }, [props]);
-
-  return (<>
-    <TableRow hover tabIndex={-1} key={props.row.id} onMouseEnter={handleStartHover} onMouseLeave={handleEndHover}>
-      <TaskTable.CellTitleCrm {...props} active={hoverItemsActive} setDisabled={handleEndHover} />
-      {cells}
-      <TaskTable.CellMenu {...props} active={hoverItemsActive} setDisabled={handleEndHover} />
-    </TableRow>
-  </>);
+  return (<TableRow hover tabIndex={-1} key={props.row.id} onMouseEnter={() => setHoverItemsActive(true)} onMouseLeave={handleEndHover}>
+    <TaskTable.CellTitle {...props} children={hoverItemsActive} />
+    <TaskTable.CellAssignees {...props} />
+    <TaskTable.CellDueDate {...props} />
+    <TaskTable.CellPriority {...props} />
+    <TaskTable.CellStatus {...props} />
+    <TaskTable.CellMenu {...props} active={hoverItemsActive} setDisabled={handleEndHover}/>
+  </TableRow>);
 }
 
 
@@ -67,18 +59,18 @@ const Rows: React.FC<TaskTable.RenderProps> = ({ content, group, loading }) => {
     <Styles.TableBody>
       {content.entries.map((row, rowId) => (<Row key={row.id} rowId={rowId} row={row} def={group} />))}
 
-      <Styles.TableFiller content={content} loading={loading} plusColSpan={5} />
+      <Styles.TableFiller content={content} loading={loading} plusColSpan={6} />
     </Styles.TableBody>
   )
 }
 
 
-const MyWork: React.FC<{}> = () => {
+const AdminBoard: React.FC<{}> = () => {
   return (
-    <TaskTable.Groups groupBy='assignee' orderBy='created'>
-      {{ Header, Rows, Tools: undefined }}
+    <TaskTable.Groups groupBy={undefined} orderBy='created'>
+      {{ Header, Rows, Tools }}
     </TaskTable.Groups>);
 }
 
 
-export default MyWork;
+export default AdminBoard;

@@ -23,16 +23,26 @@ export class ServiceImpl implements Client {
     }
   }
   async getProfile(): Promise<Profile> {
+    const userId = "carrot ironfoundersson"
+    const today = new Date();
+    const roles: string[] = [
+      "admin-role",
+      "water-department",
+      "education-department",
+      "elderly-care-department",
+      "sanitization-department"
+    ];
+
     try {
       const init = await this._store.fetch<BackendInit>("init", { notFound: () => null });
       if (init === null) {
-        return { name: "", contentType: "BACKEND_NOT_FOUND", today: new Date(), userId: "carrot ironfoundersson" };
+        return { name: "", contentType: "BACKEND_NOT_FOUND", today, userId, roles };
       }
 
-      return { name: "", contentType: "OK", today: new Date(), userId: "carrot ironfoundersson" };
+      return { name: "", contentType: "OK", today, userId, roles };
     } catch (error) {
       console.error("PROFILE, failed to fetch", error);
-      return { name: "", contentType: "NO_CONNECTION", today: new Date(), userId: "carrot ironfoundersson" };
+      return { name: "", contentType: "NO_CONNECTION", today, userId, roles };
     }
   }
 

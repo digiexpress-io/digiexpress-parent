@@ -1,4 +1,4 @@
-import { Task, TaskPriority, TaskStatus, TaskExtension, TaskTransaction, Checklist } from './task-types';
+import { Task, TaskPriority, TaskStatus, TaskExtension, TaskTransaction, Checklist,  } from './task-types';
 import { Profile } from './profile-types';
 
 export interface AvatarCode {
@@ -24,7 +24,11 @@ export interface TaskDescriptor {
   uploads: TaskExtension[];
   rolesAvatars: AvatarCode[];
   assigneesAvatars: AvatarCode[];
-  myWorkType: MyWorkType | undefined;
+
+
+  assigneeGroupType: AssigneeGroupType | undefined;
+  teamGroupType: TeamGroupType | undefined;
+
   checklist: Checklist[];
 }
 
@@ -40,11 +44,8 @@ export interface PalleteType {
     'COMPLETED': string,
     'CREATED': string,
   },
-  myWorkType: {
-    'myWorkOverdue': string,
-    'myWorkAssigned': string,
-    'myWorkStartsToday': string
-  },
+  assigneeGroupType: Record<AssigneeGroupType, string>,
+  teamGroupType: Record<TeamGroupType, string>,
   colors: { red: string, green: string, yellow: string, blue: string, violet: string }
 }
 
@@ -61,8 +62,11 @@ export type OwnerUnassigned = "_nobody_";
 export type TasksMutator = (prev: TasksMutatorBuilder) => TasksMutatorBuilder;
 export type TasksDispatch = (mutator: TasksMutator) => void;
 
-export type MyWorkType = 'myWorkOverdue' | 'myWorkAssigned' | 'myWorkStartsToday';
-export type GroupBy = 'status' | 'owners' | 'roles' | 'priority' | 'none' | 'myWorkType';
+export type AssigneeGroupType = 'assigneeOverdue' | 'assigneeStartsToday' | 'assigneeOther';
+export type TeamGroupType = 'groupOverdue' | 'groupAvailable' | 'groupDueSoon';
+
+export type GroupBy = 'status' | 'owners' | 'roles' | 'priority' | 'none' | 'assignee' | 'team';
+
 export type FilterByStatus = { type: 'FilterByStatus', status: TaskStatus[], disabled: boolean }
 export type FilterByPriority = { type: 'FilterByPriority', priority: TaskPriority[], disabled: boolean }
 export type FilterByOwners = { type: 'FilterByOwners', owners: string[], disabled: boolean }

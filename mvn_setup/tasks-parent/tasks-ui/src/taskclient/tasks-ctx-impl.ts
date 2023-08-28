@@ -1,10 +1,10 @@
-import {parseISO, isAfter, isEqual } from 'date-fns';
+import { parseISO, isAfter, isEqual, subDays } from 'date-fns';
 
 import { Task, TaskExtension, TaskPriority, TaskStatus } from './task-types';
 import {
   PalleteType, TasksState, TasksMutatorBuilder, TaskDescriptor, FilterBy, Group, GroupBy,
   RoleUnassigned, OwnerUnassigned, TasksStatePallette,
-  FilterByOwners, FilterByPriority, FilterByRoles, FilterByStatus, AvatarCode, MyWorkType
+  FilterByOwners, FilterByPriority, FilterByRoles, FilterByStatus, AvatarCode, AssigneeGroupType, TeamGroupType
 } from './tasks-ctx-types';
 
 import { Profile } from './profile-types';
@@ -30,10 +30,15 @@ const Pallette: PalleteType = {
     'COMPLETED': steelblue,
     'CREATED': ultraviolet,
   },
-  myWorkType: {
-    myWorkAssigned: ultraviolet,
-    myWorkOverdue: bittersweet,
-    myWorkStartsToday: emerald
+  assigneeGroupType: {
+    assigneeOther: ultraviolet,
+    assigneeOverdue: bittersweet,
+    assigneeStartsToday: emerald
+  },
+  teamGroupType: {
+    groupOverdue: '#d00000',   //red
+    groupAvailable: '#219ebc', //blue
+    groupDueSoon: '#fb8500'    // orange
   },
   colors: { red: bittersweet, green: emerald, yellow: sunglow, blue: steelblue, violet: ultraviolet }
 };
@@ -95,9 +100,11 @@ class TasksStateBuilder implements TasksMutatorBuilder {
     const roles: string[] = [_nobody_];
     const owners: string[] = [_nobody_];
     const tasksByOwner: Record<string, TaskDescriptor[]> = {};
+    const today = new Date(this._profile.today);
+    today.setHours(0, 0, 0, 0);
 
     input.forEach(task => {
-      const item = new TaskDescriptorImpl(task, this._profile);
+      const item = new TaskDescriptorImpl(task, this._profile, today);
       tasks.push(item);
 
       task.roles.forEach(role => {
@@ -344,10 +351,14 @@ class GroupVisitor {
     } else if (init.groupBy === 'status') {
       const values: TaskStatus[] = ['CREATED', 'IN_PROGRESS', 'COMPLETED', 'REJECTED'];
       values.forEach(o => this._groups[o] = { records: [], color: Pallette.status[o], id: o, type: init.groupBy })
-    } else if (init.groupBy === 'myWorkType') {
-      const values: MyWorkType[] = ['myWorkOverdue', 'myWorkAssigned', 'myWorkStartsToday'];
-      values.forEach(o => this._groups[o] = { records: [], color: Pallette.myWorkType[o], id: o, type: init.groupBy })
+    } else if (init.groupBy === 'assignee') {
+      const values: AssigneeGroupType[] = ['assigneeOverdue', 'assigneeOther', 'assigneeStartsToday'];
+      values.forEach(o => this._groups[o] = { records: [], color: Pallette.assigneeGroupType[o], id: o, type: init.groupBy })
+    } else if (init.groupBy === 'team') {
+      const values: TeamGroupType[] = ['groupOverdue', 'groupAvailable', 'groupDueSoon'];
+      values.forEach(o => this._groups[o] = { records: [], color: Pallette.teamGroupType[o], id: o, type: init.groupBy })
     }
+
   }
 
   public build(): Group[] {
@@ -373,11 +384,17 @@ class GroupVisitor {
       this._groups[task.status].records.push(task);
     } else if (this._groupBy === 'priority') {
       this._groups[task.priority].records.push(task);
-    } else if(this._groupBy === 'myWorkType') {
-      
-      // Include only logged in user tasks 
-      if(task.myWorkType) {
-        this._groups[task.myWorkType].records.push(task);
+
+    } else if (this._groupBy === 'assignee') {
+
+      // Include only logged in user tasks
+      if (task.assigneeGroupType) {
+        this._groups[task.assigneeGroupType].records.push(task);
+      }
+    } else if (this._groupBy === 'team') {
+
+      if (task.teamGroupType) {
+        this._groups[task.teamGroupType].records.push(task);
       }
     }
   }
@@ -392,9 +409,10 @@ class TaskDescriptorImpl implements TaskDescriptor {
   private _uploads: TaskExtension[];
   private _rolesAvatars: AvatarCode[];
   private _ownersAvatars: AvatarCode[];
-  private _myWorkType: MyWorkType | undefined;
+  private _myWorkType: AssigneeGroupType | undefined;
+  private _teamspaceType: TeamGroupType | undefined;
 
-  constructor(entry: Task, profile: Profile) {
+  constructor(entry: Task, profile: Profile, today: Date) {
     this._entry = entry;
     this._created = new Date(entry.created);
     this._startDate = entry.startDate ? new Date(entry.startDate) : undefined;
@@ -403,11 +421,13 @@ class TaskDescriptorImpl implements TaskDescriptor {
     this._uploads = entry.extensions.filter(t => t.type === 'upload');
     this._rolesAvatars = getAvatar(entry.roles);
     this._ownersAvatars = getAvatar(entry.assigneeIds);
-    this._myWorkType = getMyWorkType(entry, profile);
+    this._myWorkType = getMyWorkType(entry, profile, today);
+    this._teamspaceType = getTeamspaceType(entry, profile, today);
   }
-  
-  get transactions() { return this._entry.transactions }  
-  get myWorkType() { return this._myWorkType }
+
+  get transactions() { return this._entry.transactions }
+  get assigneeGroupType() { return this._myWorkType }
+  get teamGroupType() { return this._teamspaceType }
   get id() { return this._entry.id }
   get dialobId() { return this._dialobId }
   get entry() { return this._entry }
@@ -429,27 +449,39 @@ class TaskDescriptorImpl implements TaskDescriptor {
   get assigneesAvatars() { return this._ownersAvatars }
 }
 
-function getMyWorkType(task: Task, profile: Profile): MyWorkType | undefined {
-  if(!task.assigneeIds.includes(profile.userId)) {
+function getTeamspaceType(task: Task, profile: Profile, today: Date): TeamGroupType | undefined {
+  if (profile.roles.filter((role) => task.roles.includes(role)).length === 0) {
     return undefined;
   }
-  
-  const today = new Date(profile.today);
-  today.setHours(0,0,0,0);
-  
-  const {startDate, dueDate} = task;
 
-  if(dueDate && isAfter(today, parseISO(dueDate))) {
-  
-    return "myWorkOverdue";
+  const { dueDate } = task;
+
+  if (dueDate && isAfter(today, parseISO(dueDate))) {
+    return "groupOverdue";
   }
   
-  
-  if(startDate && isEqual(parseISO(startDate), today)) {
-    return "myWorkStartsToday";
+  const three_days = 3;
+  if (dueDate && subDays(parseISO(dueDate), three_days)) {
+    return "groupDueSoon";
   }
-  
-  return "myWorkAssigned";
+  return "groupAvailable";
+}
+
+
+function getMyWorkType(task: Task, profile: Profile, today: Date): AssigneeGroupType | undefined {
+  if (!task.assigneeIds.includes(profile.userId)) {
+    return undefined;
+  }
+
+  const { startDate, dueDate } = task;
+
+  if (dueDate && isAfter(today, parseISO(dueDate))) {
+    return "assigneeOverdue";
+  }
+  if (startDate && isEqual(parseISO(startDate), today)) {
+    return "assigneeStartsToday";
+  }
+  return "assigneeOther";
 }
 
 function getAvatar(values: string[]): { twoletters: string, value: string }[] {

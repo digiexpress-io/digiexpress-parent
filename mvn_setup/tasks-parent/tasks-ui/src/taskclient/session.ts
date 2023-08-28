@@ -27,7 +27,7 @@ class SessionData implements Session {
     pages?: Record<DocumentId, PageUpdate>;
     cache?: SiteCache;
   }) {
-    this._profile = props.profile ? props.profile : { name: "", contentType: "OK", today: new Date(), userId: ""};
+    this._profile = props.profile ? props.profile : { name: "", contentType: "OK", today: new Date(), userId: "", roles: []};
     this._pages = props.pages ? props.pages : {};
     this._cache = props.cache ? props.cache : new SiteCache(this._profile);
   }

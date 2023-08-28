@@ -6,16 +6,21 @@ import TestTask from './test_task_1.json';
 import DatePicker from '../DatePicker';
 import Checklist from '../Checklist';
 import { demoChecklist } from '../Checklist/checklist-demo';
+import TeamSpaceDevLayout from '../TeamSpace-dev';
 
 const Dev: React.FC = () => {
 
   const [open, setOpen] = React.useState(false);
-
   const [startDate, setStartDate] = React.useState<Date | string | undefined>();
   const [dueDate, setDueDate] = React.useState<Date | string | undefined>();
 
   return (
     <Box sx={{ width: '100%', p: 1 }}>
+      <Box sx={{ mb: 5 }}>TEAM SPACE</Box>
+      <TeamSpaceDevLayout />
+
+      <Box sx={{ mb: 5 }} />
+
       <Box>COMPONENT 1 create task preview</Box>
       <TaskOps.CreateTaskView />
       <Divider />
@@ -29,7 +34,7 @@ const Dev: React.FC = () => {
       <DatePicker startDate={startDate} setStartDate={setStartDate} dueDate={dueDate} setDueDate={setDueDate} />
 
       <Divider sx={{ my: 2 }} />
-      <Checklist value={demoChecklist}/>
+      <Checklist value={demoChecklist} />
 
     </Box>);
 }

@@ -5,16 +5,6 @@ import { TablePagination, TablePagination as TablePaginationAs } from './table-p
 
 
 import {
-  DescriptorTableStateBuilder, DescriptorTableContextType, DescriptorTableState, TableRenderProps, 
-  Provider as TableProviderAs,
-  useTable as useTableAs,
-  CustomTable
-} from './table-ctx';
-
-//export { Provider, useTable };
-//export type { DescriptorTableStateBuilder, DescriptorTableContextType, DescriptorTableState };
-
-import {
   ClientError, Client, StoreConfig, Store,
   ProgramMessage, Org, User
 } from './client-types';
@@ -83,7 +73,6 @@ import * as Hooks from './hooks';
 
 
 declare namespace TaskClient {
-  export type { DescriptorTableStateBuilder, DescriptorTableContextType, DescriptorTableState, TableRenderProps };
   export type { TablePagination };
   export type { ClientContextType, ComposerContextType };
   export type {
@@ -138,17 +127,16 @@ declare namespace TaskClient {
 
 
 namespace TaskClient {
-  export const TableProvider = TableProviderAs;
   export const TablePaginationImpl = TablePaginationAs;
   export const ServiceImpl = ServiceImplAs;
   export const DefaultStore = DefaultStoreAs;
   export const StoreErrorImpl = StoreErrorImplAs;
   export const StatusPallette = taskCtxImpl.Pallette.status;
   export const PriorityPalette = taskCtxImpl.Pallette.priority;
+  export const TeamGroupPallete = taskCtxImpl.Pallette.teamGroupType;
   export const Error = ErrorView;
   export const Provider = ProviderImpl;
   export const EditProvider = taskEditCtx.TaskEditProvider;
-  export const useTable = useTableAs;
   export const useBackend = Hooks.useBackend;
   export const useTasks = Hooks.useTasks;
   export const useOrg = Hooks.useOrg;
@@ -159,7 +147,6 @@ namespace TaskClient {
   export const useSession = Hooks.useSession;
   export const useNav = Hooks.useNav;
   export const _nobody_ = taskCtxImpl._nobody_;
-  export const Table = CustomTable;
   export const ScreenProvider = screenCtx.ScreenProvider;
   export const useScreen = Hooks.useScreen;
 }

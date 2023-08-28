@@ -16,6 +16,19 @@ const en = {
   'task.status.COMPLETED': 'Completed',
   'task.status.REJECTED': 'Rejected',
   
+  'task.overdue': 'Overdue',
+  'task.overdue.msg': 'This task is overdue!',
+  'task.dueSoon': 'Due soon',
+  'task.available': 'Available',
+  'task.description': 'Description',
+  'task.assignees': 'Assignees',
+  'task.status': 'Status',
+  'task.dueDate': 'Due date',
+  
+  'task.start': 'Start task',
+  'task.edit': 'Edit task',
+  'task.noneSelected': 'No task selected',
+    
   'task.priority.LOW': 'Low',
   'task.priority.MEDIUM': 'Medium',
   'task.priority.HIGH': 'High',

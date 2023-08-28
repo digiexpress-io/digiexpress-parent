@@ -1,6 +1,6 @@
 import React from 'react';
 import { Chip, Box, Typography } from '@mui/material';
-import client from '@taskclient';
+import {useTable} from './table-ctx';
 
 
 const Cell: React.FC<{
@@ -10,7 +10,7 @@ const Cell: React.FC<{
   info?: React.ReactNode,
   maxWidth?: string
 }> = ({ id, name, tag, maxWidth }) => {
-  const { setState } = client.useTable();
+  const { setState } = useTable();
   const handleClick = React.useCallback((event: React.MouseEvent<HTMLElement>) => {
     setState(prev => prev.withPopperOpen(id, !prev.popperOpen, event.currentTarget))
   }, [setState, id]);

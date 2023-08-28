@@ -18,7 +18,7 @@ const TableTitle: React.FC<{ group: Client.Group }> = ({ group }) => {
     return (<Button color="primary" variant="contained" sx={sx}>Contained</Button>);
   }
 
-  if (group.type === 'myWorkType') {
+  if (group.type === 'assignee') {
     const backgroundColor = group.color;
     return (<Button variant="contained" sx={{ ...sx, backgroundColor }}>
       <FormattedMessage id={`core.myWork.myWorkTaskTable.header.spotlight.${group.id}`} />

@@ -23,7 +23,7 @@ const init: TasksMutatorBuilder = new TasksStateBuilder({
     status: Pallette.status,
     priority: Pallette.priority
   },
-  profile: { contentType: "OK", name: "", userId: "", today: new Date() }
+  profile: { contentType: "OK", name: "", userId: "", today: new Date(), roles: []}
 });
 
 const TasksProvider: React.FC<{ children: React.ReactNode, backend: Client, profile: Profile }> = ({ children, backend, profile }) => {
