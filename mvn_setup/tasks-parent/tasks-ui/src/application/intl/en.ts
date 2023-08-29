@@ -95,7 +95,6 @@ const en = {
   'activities.myhistory.desc': 'See everything I have ever done',
   
   'activities.myoverview.title': 'My overview',
-  'activities.systemNotifications.title': 'Notifications',
 
   'activities.search.title': 'Search...',
   'activities.search.desc': 'Search from everything ever done',
