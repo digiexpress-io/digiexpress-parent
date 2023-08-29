@@ -28,7 +28,7 @@ const Title: React.FC<{}> = () => {
   const intl = useIntl();
 
   return (<TextField
-    placeholder={intl.formatMessage({ id: 'core.taskOps.editTask.taskTitle' })}
+    placeholder={intl.formatMessage({ id: 'core.taskEdit.taskTitle' })}
     InputProps={{ sx: { fontSize: '20pt' } }}
     fullWidth
     value={state.task.title}
@@ -39,7 +39,7 @@ const Description: React.FC<{}> = () => {
   const { state } = TaskClient.useTaskEdit();
   const intl = useIntl();
 
-  return (<TextField placeholder={intl.formatMessage({ id: 'core.taskOps.editTask.taskDescription' })} multiline rows={4} maxRows={6} fullWidth
+  return (<TextField placeholder={intl.formatMessage({ id: 'core.taskEdit.taskDescription' })} multiline rows={4} maxRows={6} fullWidth
     value={state.task.description} />);
 }
 
@@ -233,7 +233,7 @@ const StartDate: React.FC<{ onClick: () => void }> = ({ onClick }) => {
 
   return (
     <Stack spacing={1} direction='row' alignItems='center'>
-      <Typography variant='body2'><FormattedMessage id='core.taskOps.workOnTask.startDate' /></Typography>
+      <Typography variant='body2'><FormattedMessage id='core.taskWork.startDate' /></Typography>
       <Button onClick={onClick}>{startDate ? <Typography>{startDate.toLocaleDateString()}</Typography> : <DateRangeOutlinedIcon />}</Button>
     </Stack>
   );
@@ -245,7 +245,7 @@ const DueDate: React.FC<{ onClick: () => void }> = ({ onClick }) => {
 
   return (
     <Stack spacing={1} direction='row' alignItems='center'>
-      <Typography variant='body2'><FormattedMessage id='core.taskOps.workOnTask.dueDate' /></Typography>
+      <Typography variant='body2'><FormattedMessage id='core.taskWork.dueDate' /></Typography>
       <Button onClick={onClick}>{dueDate ? <Typography>{dueDate.toLocaleDateString()}</Typography> : <DateRangeOutlinedIcon />}</Button>
     </Stack>
   );

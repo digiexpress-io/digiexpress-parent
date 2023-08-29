@@ -6,9 +6,9 @@ import { FormattedMessage } from 'react-intl';
 
 import client from '@taskclient';
 import Styles from '@styles';
-import TaskOps from '../TaskOps';
 import { usePopover } from './CellPopover';
 import CellHoverButton from './CellMenuButton';
+import TaskEditDialog from 'core/TaskEdit';
 
 
 const HoverMenu: React.FC<{ onEdit: () => void }> = ({ onEdit }) => {
@@ -70,7 +70,7 @@ const FormattedCell: React.FC<{
 
   return (<Styles.TableCell width="35px">
     <Box width="35px" justifyContent='right'> {/* Box is needed to prevent table cell resize on hover */}
-      <TaskOps.EditTaskDialog open={edit} onClose={handleEndEdit} task={row} />
+      <TaskEditDialog open={edit} onClose={handleEndEdit} task={row} />
 
       {active && <HoverMenu onEdit={handleStartEdit} />}
     </Box>

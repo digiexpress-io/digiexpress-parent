@@ -3,9 +3,9 @@ import { Box, Stack, List, Dialog, Button, Grid } from '@mui/material';
 import SecurityIcon from '@mui/icons-material/Security';
 import { FormattedMessage } from 'react-intl';
 import TaskClient from '@taskclient';
-import { DatePicker } from '../../DatePicker/DatePicker';
-import { StyledFullScreenDialog } from '../StyledFullScreenDialog';
-import Fields from './EditTaskFields';
+import { DatePicker } from '../DatePicker/DatePicker';
+import { StyledFullScreenDialog } from '../Dialogs/StyledFullScreenDialog';
+import Fields from './TaskEditFields';
 import Events from './TaskEvents';
 import Burger from '@the-wrench-io/react-burger';
 
@@ -82,14 +82,14 @@ const Header: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   return (
     <>
-      <Button startIcon={<SecurityIcon />} variant='contained' color='warning'><FormattedMessage id='core.taskOps.editTask.clientData' /></Button>
+      <Button startIcon={<SecurityIcon />} variant='contained' color='warning'><FormattedMessage id='core.taskEdit.clientData' /></Button>
       <Burger.PrimaryButton label='buttons.accept' onClick={onClose} />
     </>
   )
 }
 
 
-const EditTaskDialog: React.FC<{ open: boolean, onClose: () => void, task?: TaskClient.TaskDescriptor }> = (props) => {
+const TaskEditDialog: React.FC<{ open: boolean, onClose: () => void, task?: TaskClient.TaskDescriptor }> = (props) => {
 
   if (!props.open || !props.task) {
     return null;
@@ -108,4 +108,4 @@ const EditTaskDialog: React.FC<{ open: boolean, onClose: () => void, task?: Task
     </TaskClient.EditProvider>);
 }
 
-export { EditTaskDialog }
+export { TaskEditDialog }

@@ -19,14 +19,12 @@ See example:
 
 
 ```typescript
-import TaskOps from '../TaskOps';
 
 const Dev: React.FC = () => {
 
   return (
     <>
        <Box>COMPONENT 1 create task preview</Box>
-       <TaskOps.CreateTaskView />       
     </>);
 }
 ```
