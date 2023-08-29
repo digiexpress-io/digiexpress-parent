@@ -39,7 +39,7 @@ import ProviderImpl from './Provider';
 import {
   TaskDescriptor, TasksContextType, TasksState, TasksMutatorBuilder,
   PalleteType, FilterBy, Group, GroupBy, RoleUnassigned, OwnerUnassigned,
-  TasksStatePallette,
+  TasksStatePallette, TeamGroupType
 } from './tasks-ctx-types';
 
 import {
@@ -58,8 +58,7 @@ import {
   ChangeTaskInfoEventBody,
   CreateTaskExtensionEventBody,
   ChangeTaskExtensionEventBody,
-  SingleEvent, CollapsedEvent
-
+  SingleEvent, CollapsedEvent,
 
 } from './task-edit-ctx-types';
 
@@ -102,7 +101,7 @@ declare namespace TaskClient {
   export type {
     TaskDescriptor, TasksContextType, TasksState, TasksMutatorBuilder,
     PalleteType, FilterBy, Group, GroupBy, RoleUnassigned, OwnerUnassigned,
-    TasksStatePallette
+    TasksStatePallette, TeamGroupType
   }
   export type {
     TaskEditEvent, TaskEditMutatorBuilder, TaskEditState,

@@ -15,7 +15,7 @@ const en = {
   'task.status.IN_PROGRESS': 'In progress',
   'task.status.COMPLETED': 'Completed',
   'task.status.REJECTED': 'Rejected',
-  
+
   'task.overdue': 'Overdue',
   'task.overdue.msg': 'This task is overdue!',
   'task.dueSoon': 'Due soon',
@@ -24,11 +24,11 @@ const en = {
   'task.assignees': 'Assignees',
   'task.status': 'Status',
   'task.dueDate': 'Due date',
-  
+
   'task.start': 'Start task',
   'task.edit': 'Edit task',
   'task.noneSelected': 'No task selected',
-    
+
   'task.priority.LOW': 'Low',
   'task.priority.MEDIUM': 'Medium',
   'task.priority.HIGH': 'High',
@@ -66,13 +66,18 @@ const en = {
 
   'core.teamSpace.taskCount': '{values} Tasks',
   'core.teamSpace.task.create': 'Create new task',
-  
+
+  'core.teamSpace.tab.task.overdue': 'Overdue',
+  'core.teamSpace.tab.task.dueSoon': 'Due soon',
+  'core.teamSpace.tab.task.available': 'Available',
+
+
   'core.myWork.button.task.start': 'Start work',
   'core.myWork.myWorkTaskTable.header.spotlight.myWorkOverdue': 'Overdue',
   'core.myWork.myWorkTaskTable.header.spotlight.myWorkStartsToday': 'Starts today',
   'core.myWork.myWorkTaskTable.header.spotlight.myWorkAssigned': 'Assigned to me',
   'core.myOverview.title': 'My daily overview',
-  
+
 
   '_nobody_': 'Unassigned',
 
@@ -93,7 +98,7 @@ const en = {
 
   'activities.myhistory.title': 'My history',
   'activities.myhistory.desc': 'See everything I have ever done',
-  
+
   'activities.myoverview.title': 'My overview',
 
   'activities.search.title': 'Search...',

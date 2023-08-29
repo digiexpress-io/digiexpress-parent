@@ -50,7 +50,7 @@ const Main: React.FC<{}> = () => {
 
 
     if (entity) {
-      return <Box sx={root}>entity editor: {JSON.stringify(active)}</Box>
+      return <Box sx={root}>no view implemented entity editor: {JSON.stringify(active)}</Box>
     }
     throw new Error("unknown view: " + JSON.stringify(active, null, 2));
 

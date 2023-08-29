@@ -1,9 +1,10 @@
 import React from 'react';
-import { Box, Divider, Alert, AlertTitle, IconButton, useTheme, Button, Typography, Tabs, Tab } from '@mui/material';
+import { Box, Divider, Alert, AlertTitle, IconButton, useTheme, Button, Typography} from '@mui/material';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { FormattedMessage, useIntl } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import Client from '@taskclient';
+
 
 
 const StyledTaskItem: React.FC<{ task: Client.TaskDescriptor, onTask: (task: Client.TaskDescriptor) => void }> = ({ task, onTask }) => {
@@ -31,22 +32,7 @@ const StyledTaskItem: React.FC<{ task: Client.TaskDescriptor, onTask: (task: Cli
   );
 }
 
-//testing
-const TabHeader: React.FC = () => {
 
-  const [value, setValue] = React.useState(0);
-
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
-  };
-
-  return (
-    <Tabs value={value} onChange={handleChange}>
-      <Tab label={<FormattedMessage id='task.overdue' />} />
-      <Tab label={<FormattedMessage id='task.dueSoon' />} />
-      <Tab label={<FormattedMessage id='task.available' />} />
-    </Tabs>)
-}
 
 const Header: React.FC<{ group: Client.Group }> = ({ group }) => {
 
@@ -102,4 +88,4 @@ const SummaryTaskNotSelected: React.FC<{}> = () => {
 }
 
 
-export { Header, TabHeader, SummaryTaskSelected, SummaryTaskNotSelected, StyledTaskItem };
+export { Header, SummaryTaskSelected, SummaryTaskNotSelected, StyledTaskItem };

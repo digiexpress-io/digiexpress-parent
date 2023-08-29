@@ -2,12 +2,13 @@ import React from 'react';
 import { Box, Stack, List, Dialog, Button, Grid } from '@mui/material';
 import SecurityIcon from '@mui/icons-material/Security';
 import { FormattedMessage } from 'react-intl';
-import TaskClient from '@taskclient';
 import DatePicker from '../DatePicker';
 import StyledFullScreenDialog from '../Dialogs';
 import Fields from './TaskEditFields';
 import Events from './TaskEvents';
 import Burger from '@the-wrench-io/react-burger';
+import TaskClient from '@taskclient';
+
 
 const Left: React.FC<{}> = () => {
 
