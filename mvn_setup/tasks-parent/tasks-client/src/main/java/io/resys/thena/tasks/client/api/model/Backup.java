@@ -20,7 +20,7 @@ package io.resys.thena.tasks.client.api.model;
  * #L%
  */
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 import org.immutables.value.Value;
@@ -34,7 +34,7 @@ import io.resys.thena.tasks.client.api.model.Task.TaskHistory;
 public interface Backup {
   String getId();
   String getHash();
-  LocalDateTime getCreated();
+  Instant getCreated();
   String getName();
   String getUserId();
   List<TaskHistory> getEntries();

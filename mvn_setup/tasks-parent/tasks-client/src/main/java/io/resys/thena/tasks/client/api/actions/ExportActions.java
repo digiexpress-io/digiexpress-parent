@@ -1,7 +1,7 @@
 package io.resys.thena.tasks.client.api.actions;
 
+import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 /*-
  * #%L
@@ -35,7 +35,7 @@ public interface ExportActions {
     ExportQuery name(String name);
     ExportQuery startDate(LocalDate startDate); // including startDate
     ExportQuery endDate(LocalDate endDate); // including endDate
-    ExportQuery targetDate(LocalDateTime targetDate); 
+    ExportQuery targetDate(Instant targetDate);
     Uni<Export> build();
   }
 }

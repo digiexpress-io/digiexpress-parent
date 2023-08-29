@@ -20,7 +20,7 @@ package io.resys.thena.tasks.client.spi.visitors;
  * #L%
  */
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -49,7 +49,7 @@ import lombok.RequiredArgsConstructor;
 public class DeleteAllTasksVisitor implements DocPullAndCommitVisitor<Task>{
 
   private final String userId;
-  private final LocalDateTime targetDate;
+  private final Instant targetDate;
   
   private CommitBuilder archiveCommand;
   private CommitBuilder removeCommand;

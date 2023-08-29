@@ -21,7 +21,9 @@ package io.resys.thena.tasks.tests.config;
  */
 
 import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.inject.Inject;
@@ -57,7 +59,7 @@ public class TaskTestCase {
   private TaskClientImpl client;
   private static final String DB = "junit-tasks-"; 
   private static final AtomicInteger DB_ID = new AtomicInteger();
-  private static final LocalDateTime targetDate = LocalDateTime.of(2023, 01, 01, 1, 1);
+  private static final Instant targetDate = LocalDateTime.of(2023, 1, 1, 1, 1).toInstant(ZoneOffset.UTC);
   private final AtomicInteger id_provider = new AtomicInteger();
   
   @BeforeEach
@@ -117,7 +119,7 @@ public class TaskTestCase {
     return client;
   }
 
-  public static LocalDateTime getTargetDate() {
+  public static Instant getTargetDate() {
     return targetDate;
   }
 
@@ -143,13 +145,13 @@ public class TaskTestCase {
   public void assertRepo(TaskClient client, String expectedFileName) {
     final var expected = toExpectedFile(expectedFileName);
     final var actual = toStaticData(client);
-    Assertions.assertEquals(expected, actual);
+    Assertions.assertLinesMatch(expected.lines(), actual.lines());
     
   }
   public void assertEquals(String expectedFileName, Object actual) {
     final var expected = toExpectedFile(expectedFileName);
     final var actualJson = JsonObject.mapFrom(actual).encodePrettily();
-    Assertions.assertEquals(expected, actualJson);
+    Assertions.assertLinesMatch(expected.lines(), actualJson.lines());
     
   }
 }
