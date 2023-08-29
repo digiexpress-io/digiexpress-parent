@@ -11,7 +11,7 @@ import { TeamSpaceState, TeamSpaceTabState, init } from './types';
 
 const TabPanel: React.FC<{ state: TeamSpaceTabState, children: React.ReactNode }> = ({ state, children }) => {
 
-  return (<div hidden={state.disabled} key={state.id}>
+  return (<div hidden={state.disabled}>
 
     {!state.disabled && (
       <Paper sx={{ p: 2 }}><Stack>{children}</Stack></Paper>
@@ -32,24 +32,24 @@ const TeamSpace: React.FC<{ data: TeamSpaceState }> = ({ data }) => {
     setState(prev => prev.withActiveTask(task));
   }
 
-  return (
-    <Grid container spacing={1}>
-      <Grid item md={12} lg={12}>
-        <Box display='flex' position='fixed'>
-          <Paper>
-            <Tabs value={state.activeTab} onChange={handleActiveTab}>
-              {state.tabs.map(tab => (<Tab key={tab.id} label={<Typography sx={{ fontWeight: 'bold', color: tab.color }}><FormattedMessage id={tab.label} /></Typography>} />))}
-            </Tabs>
-          </Paper>
-        </Box>
-      </Grid>
+  return (<>
+    <Box position='fixed'>
+    <Paper>
+      <Tabs value={state.activeTab} onChange={handleActiveTab}>
+        {state.tabs.map(tab => (<Tab key={tab.id} label={<Typography sx={{ fontWeight: 'bold', color: tab.color }}><FormattedMessage id={tab.label} /></Typography>} />))}
+      </Tabs>
+      </Paper>
+    </Box>
 
-      <Box sx={{ mb: 7 }} />
+    <Box sx={{ mt: 7 }} />
+
+    <Grid container spacing={1}>
+
 
       <Grid item md={9} lg={9}>
         <Stack spacing={1}>
           {state.tabs.map(tab => (
-            <TabPanel state={tab}>
+            <TabPanel state={tab} key={tab.id}>
               {tab.group.records.map((task) => <StyledTaskItem key={task.id} task={task} onTask={() => handleActiveTask(task)} />)}
             </TabPanel>
           ))}
@@ -66,6 +66,7 @@ const TeamSpace: React.FC<{ data: TeamSpaceState }> = ({ data }) => {
         </Box>
       </Grid>
     </Grid>
+  </>
   );
 }
 
