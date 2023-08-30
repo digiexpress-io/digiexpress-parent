@@ -44,18 +44,18 @@ public class SqlDbSchemaPrintTest {
     
 
     final var schema = new StringBuilder()
-      .append(sqlSchema.repo().getValue())
-      .append(sqlSchema.blobs().getValue())
-      .append(sqlSchema.commits().getValue())
-      .append(sqlSchema.treeItems().getValue())
-      .append(sqlSchema.trees().getValue())
-      .append(sqlSchema.refs().getValue())
-      .append(sqlSchema.tags().getValue())
+      .append(sqlSchema.createRepo().getValue())
+      .append(sqlSchema.createBlobs().getValue())
+      .append(sqlSchema.createCommits().getValue())
+      .append(sqlSchema.createTreeItems().getValue())
+      .append(sqlSchema.createTrees().getValue())
+      .append(sqlSchema.createRefs().getValue())
+      .append(sqlSchema.createTags().getValue())
       
-      .append(sqlSchema.commitsConstraints().getValue())
-      .append(sqlSchema.refsConstraints().getValue())
-      .append(sqlSchema.tagsConstraints().getValue())
-      .append(sqlSchema.treeItemsConstraints().getValue())
+      .append(sqlSchema.createCommitsConstraints().getValue())
+      .append(sqlSchema.createRefsConstraints().getValue())
+      .append(sqlSchema.createTagsConstraints().getValue())
+      .append(sqlSchema.createTreeItemsConstraints().getValue())
       .toString();
     
     log.debug(schema);

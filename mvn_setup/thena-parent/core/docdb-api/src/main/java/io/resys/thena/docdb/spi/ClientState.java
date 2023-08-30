@@ -43,6 +43,7 @@ public interface ClientState {
     Uni<Repo> getByName(String name);
     Uni<Repo> getByNameOrId(String nameOrId);
     Multi<Repo> findAll();
+    Uni<Repo> delete(Repo newRepo);
     Uni<Repo> insert(Repo newRepo);
   }
   

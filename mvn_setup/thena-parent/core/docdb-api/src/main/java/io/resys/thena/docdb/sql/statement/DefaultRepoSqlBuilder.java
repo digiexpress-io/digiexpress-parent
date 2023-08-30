@@ -88,4 +88,15 @@ public class DefaultRepoSqlBuilder implements RepoSqlBuilder {
         .props(Tuple.of(newRepo.getId(), newRepo.getRev(), newRepo.getPrefix(), newRepo.getName()))
         .build();
   }
+  
+  @Override
+  public SqlTuple deleteOne(Repo newRepo) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("DELETE FROM ").append(options.getRepos())
+        .append(" WHERE id = $1")
+        .build())
+        .props(Tuple.of(newRepo.getId()))
+        .build();
+  }
 }

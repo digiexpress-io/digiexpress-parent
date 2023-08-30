@@ -33,6 +33,7 @@ public interface DocumentStore {
     DocumentRepositoryQuery repoName(String repoName);
     DocumentRepositoryQuery headName(String headName);    
     DocumentStore build();
+    Uni<DocumentStore> delete();
     Uni<DocumentStore> create();
     Uni<DocumentStore> createIfNot();
   } 

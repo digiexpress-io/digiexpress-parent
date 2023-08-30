@@ -27,6 +27,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.resys.thena.docdb.api.DocDB;
 import io.resys.thena.docdb.api.actions.ProjectActions.RepoStatus;
+import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.spi.OidUtils;
 import io.resys.thena.docdb.spi.pgsql.DocDBFactoryPgSql;
@@ -72,6 +73,7 @@ public class DocumentStoreImpl implements DocumentStore {
       @Override public Uni<DocumentStore> create() { return createRepo(repoName, headName); }
       @Override public DocumentStore build() { return createClientStore(repoName, headName); }
       @Override public Uni<DocumentStore> createIfNot() { return createRepoOrGetRepo(repoName, headName); }
+      @Override public Uni<DocumentStore> delete() { return deleteRepo(repoName, headName); }
     };
   }
   
@@ -86,7 +88,31 @@ public class DocumentStoreImpl implements DocumentStore {
           return Uni.createFrom().item(createClientStore(repoName, headName));
     });
   }
-  
+  private Uni<DocumentStore> deleteRepo(String repoName, String headName) {
+    RepoAssert.notNull(repoName, () -> "repoName must be defined!");
+    final var client = config.getClient();
+    final var existingRepo = client.project().projectQuery().projectName(repoName).get();
+    
+    
+    return existingRepo.onItem().transformToUni((repoResult) -> {
+      if(repoResult.getStatus() != QueryEnvelopeStatus.OK) {
+        throw new DocumentStoreException("REPO_GET_FOR_DELETE_FAIL", 
+            ImmutableDocumentExceptionMsg.builder()
+            .id(repoResult.getStatus().toString())
+            .value(repoName)
+            .addAllArgs(repoResult.getMessages().stream().map(message-> message.getText()).collect(Collectors.toList()))
+            .build()); 
+      }
+      
+      final var repoId = repoResult.getRepo().getId();
+      final var rev = repoResult.getRepo().getRev();
+      final var docStore = createClientStore(repoName, headName);
+      
+      return client.project().projectsQuery().id(repoId).rev(rev).delete()
+          .onItem().transform(junk -> docStore);
+    });
+  }
+    
   private Uni<DocumentStore> createRepo(String repoName, String headName) {
     RepoAssert.notNull(repoName, () -> "repoName must be defined!");
     final var client = config.getClient();

@@ -45,6 +45,7 @@ public class RepositoryActionsImpl implements RepositoryActions {
       @Override public Uni<TaskClient> createIfNot() { return repo.createIfNot().onItem().transform(doc -> new TaskClientImpl(doc)); }
       @Override public Uni<TaskClient> create() { return repo.create().onItem().transform(doc -> new TaskClientImpl(doc)); }
       @Override public TaskClient build() { return new TaskClientImpl(repo.build()); }
+      @Override public Uni<TaskClient> delete() { return repo.delete().onItem().transform(doc -> new TaskClientImpl(doc)); }
     };
   }
 }

@@ -33,7 +33,7 @@ public class SqlSchemaImpl implements SqlSchema {
   protected final ClientCollections options;
   
   @Override
-  public Sql repo() {
+  public Sql createRepo() {
     return ImmutableSql.builder().value(new SqlStatement()
         .append("CREATE TABLE IF NOT EXISTS ").append(options.getRepos()).ln()
         .append("(").ln()
@@ -47,7 +47,7 @@ public class SqlSchemaImpl implements SqlSchema {
   }
   
   @Override
-  public Sql blobs() {
+  public Sql createBlobs() {
     return ImmutableSql.builder().value(new SqlStatement().ln()
     .append("CREATE TABLE ").append(options.getBlobs()).ln()
     .append("(").ln()
@@ -62,7 +62,7 @@ public class SqlSchemaImpl implements SqlSchema {
   
   
   @Override
-  public Sql commits() {
+  public Sql createCommits() {
     return ImmutableSql.builder().value(new SqlStatement().ln()
     .append("CREATE TABLE ").append(options.getCommits()).ln()
     .append("(").ln()
@@ -78,7 +78,7 @@ public class SqlSchemaImpl implements SqlSchema {
   }
   
   @Override
-  public Sql commitsConstraints() {
+  public Sql createCommitsConstraints() {
     return ImmutableSql.builder()
         .value(new SqlStatement().ln()
         .append("ALTER TABLE ").append(options.getCommits()).ln()
@@ -102,7 +102,7 @@ public class SqlSchemaImpl implements SqlSchema {
   
 
   @Override
-  public Sql treeItems() {
+  public Sql createTreeItems() {
     return ImmutableSql.builder().value(new SqlStatement().ln()
     .append("CREATE TABLE ").append(options.getTreeItems())
     .append("(")
@@ -114,7 +114,7 @@ public class SqlSchemaImpl implements SqlSchema {
     .build()).build();
   }
   @Override
-  public Sql treeItemsConstraints() {
+  public Sql createTreeItemsConstraints() {
     return ImmutableSql.builder()
         .value(new SqlStatement().ln()
         .append("ALTER TABLE ").append(options.getTreeItems()).ln()
@@ -141,7 +141,7 @@ public class SqlSchemaImpl implements SqlSchema {
   
 
   @Override
-  public Sql trees() {
+  public Sql createTrees() {
     return ImmutableSql.builder().value(new SqlStatement().ln()
     .append("CREATE TABLE ").append(options.getTrees()).ln()
     .append("(").ln()
@@ -151,7 +151,7 @@ public class SqlSchemaImpl implements SqlSchema {
   }
   
   @Override
-  public Sql refs() {
+  public Sql createRefs() {
     return ImmutableSql.builder().value(new SqlStatement().ln()
     .append("CREATE TABLE ").append(options.getRefs()).ln()
     .append("(").ln()
@@ -161,7 +161,7 @@ public class SqlSchemaImpl implements SqlSchema {
     .build()).build();
   }
   @Override
-  public Sql refsConstraints() {
+  public Sql createRefsConstraints() {
     return ImmutableSql.builder()
         .value(new SqlStatement().ln()
         .append("ALTER TABLE ").append(options.getRefs()).ln()
@@ -173,7 +173,7 @@ public class SqlSchemaImpl implements SqlSchema {
   }
   
   @Override
-  public Sql tags() {
+  public Sql createTags() {
     return ImmutableSql.builder().value(new SqlStatement().ln()
     .append("CREATE TABLE ").append(options.getTags()).ln()
     .append("(").ln()
@@ -186,7 +186,7 @@ public class SqlSchemaImpl implements SqlSchema {
     .build()).build();
   }
   @Override
-  public Sql tagsConstraints() {
+  public Sql createTagsConstraints() {
     return ImmutableSql.builder()
         .value(new SqlStatement().ln()
         .append("ALTER TABLE ").append(options.getTags()).ln()
@@ -201,5 +201,45 @@ public class SqlSchemaImpl implements SqlSchema {
   public SqlSchemaImpl withOptions(ClientCollections options) {
     return new SqlSchemaImpl(options);
   }
-  
+
+  @Override
+  public Sql dropRepo() {
+    return dropTableIfNotExists(options.getRepos());
+  }
+  @Override
+  public Sql dropBlobs() {
+    return dropTableIfNotExists(options.getBlobs());
+  }
+
+  @Override
+  public Sql dropCommits() {
+    return dropTableIfNotExists(options.getCommits());
+  }
+
+  @Override
+  public Sql dropTreeItems() {
+    return dropTableIfNotExists(options.getTreeItems());
+  }
+
+  @Override
+  public Sql dropTrees() {
+    return dropTableIfNotExists(options.getTrees());
+  }
+
+  @Override
+  public Sql dropRefs() {
+    return dropTableIfNotExists(options.getRefs());
+  }
+
+  @Override
+  public Sql dropTags() {
+    return dropTableIfNotExists(options.getTags());
+  }
+
+  private Sql dropTableIfNotExists(String tableName) {
+    return ImmutableSql.builder().value(new SqlStatement()
+        .append("DROP TABLE ").append(tableName).append(";").ln()
+        .build()).build();
+  }
+
 }

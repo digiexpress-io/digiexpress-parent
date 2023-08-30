@@ -156,4 +156,9 @@ public class RepoBuilderFilePool implements RepoBuilder {
     .onFailure(e -> errorHandler.notFound(e)).recoverWithCompletion()
     .onFailure().invoke(e -> errorHandler.deadEnd("Can't find 'REPOS'!", e));
   }
+
+  @Override
+  public Uni<Repo> delete(Repo repo) {
+    throw new RuntimeException("Not implemented!!!");
+  }
 }

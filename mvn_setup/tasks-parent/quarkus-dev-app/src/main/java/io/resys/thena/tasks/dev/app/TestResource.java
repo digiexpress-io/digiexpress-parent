@@ -118,6 +118,14 @@ public class TestResource {
     return client.repo().query().repoName(currentProject.getProjectId()).headName(currentProject.getHead()).createIfNot()
         .onItem().transform(created -> HeadState.builder().created(true).build());
   }
+
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("reinit")
+  public Uni<HeadState> reinit() {
+    return client.repo().query().repoName(currentProject.getProjectId()).headName(currentProject.getHead()).delete()
+        .onItem().transformToUni(junk -> init());
+  }
   
   @Compressed
   @GET

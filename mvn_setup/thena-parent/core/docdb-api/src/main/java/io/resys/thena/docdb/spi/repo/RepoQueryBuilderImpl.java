@@ -49,4 +49,9 @@ public class RepoQueryBuilderImpl implements ProjectActions.ProjectsQuery {
     RepoAssert.notEmpty(id, () -> "Define id or name!");
     return state.project().getByNameOrId(id);
   }
+
+  @Override
+  public Uni<Repo> delete() {
+    return get().onItem().transformToUni(repo -> state.project().delete(repo));
+  }
 }

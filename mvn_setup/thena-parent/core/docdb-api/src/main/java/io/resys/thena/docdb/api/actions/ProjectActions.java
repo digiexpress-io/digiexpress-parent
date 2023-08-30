@@ -52,6 +52,7 @@ public interface ProjectActions {
     ProjectsQuery id(String id);
     ProjectsQuery rev(String rev);
     Multi<Repo> findAll();
+    Uni<Repo> delete();
     Uni<Repo> get();
   }
   

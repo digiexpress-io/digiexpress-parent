@@ -27,7 +27,8 @@ public interface RepositoryQuery {
   RepositoryQuery repoName(String repoName);
   RepositoryQuery headName(String headName);
   TaskClient build();
-  
-  Uni<TaskClient> create();    
+
+  Uni<TaskClient> delete();
+  Uni<TaskClient> create();
   Uni<TaskClient> createIfNot();
 } 

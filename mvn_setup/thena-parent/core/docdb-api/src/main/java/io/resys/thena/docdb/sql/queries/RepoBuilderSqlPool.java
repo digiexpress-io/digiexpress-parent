@@ -118,17 +118,17 @@ public class RepoBuilderSqlPool implements RepoBuilder {
     return pool.withTransaction(tx -> {
       final var repoInsert = this.sqlBuilder.withOptions(next).repo().insertOne(newRepo);
       final var tablesCreate = new StringBuilder()
-          .append(sqlSchema.blobs().getValue())
-          .append(sqlSchema.commits().getValue())
-          .append(sqlSchema.treeItems().getValue())
-          .append(sqlSchema.trees().getValue())
-          .append(sqlSchema.refs().getValue())
-          .append(sqlSchema.tags().getValue())
+          .append(sqlSchema.createBlobs().getValue())
+          .append(sqlSchema.createCommits().getValue())
+          .append(sqlSchema.createTreeItems().getValue())
+          .append(sqlSchema.createTrees().getValue())
+          .append(sqlSchema.createRefs().getValue())
+          .append(sqlSchema.createTags().getValue())
           
-          .append(sqlSchema.commitsConstraints().getValue())
-          .append(sqlSchema.refsConstraints().getValue())
-          .append(sqlSchema.tagsConstraints().getValue())
-          .append(sqlSchema.treeItemsConstraints().getValue())
+          .append(sqlSchema.createCommitsConstraints().getValue())
+          .append(sqlSchema.createRefsConstraints().getValue())
+          .append(sqlSchema.createTagsConstraints().getValue())
+          .append(sqlSchema.createTreeItemsConstraints().getValue())
           .toString();
       
       if(log.isDebugEnabled()) {
@@ -138,7 +138,7 @@ public class RepoBuilderSqlPool implements RepoBuilder {
             .toString());
       }
       
-      final Uni<Void> create = getClient().preparedQuery(sqlSchema.repo().getValue()).execute()
+      final Uni<Void> create = getClient().preparedQuery(sqlSchema.createRepo().getValue()).execute()
           .onItem().transformToUni(data -> Uni.createFrom().voidItem())
           .onFailure().invoke(e -> errorHandler.deadEnd("Can't create table 'REPOS'!", e));;
       
@@ -175,5 +175,49 @@ public class RepoBuilderSqlPool implements RepoBuilder {
     .transformToMulti((RowSet<Repo> rowset) -> Multi.createFrom().iterable(rowset))
     .onFailure(e -> errorHandler.notFound(e)).recoverWithCompletion()
     .onFailure().invoke(e -> errorHandler.deadEnd("Can't find 'REPOS'!", e));
+  }
+  
+  
+  @Override
+  public Uni<Repo> delete(final Repo newRepo) {
+    final var next = names.toRepo(newRepo);
+    final var sqlSchema = this.sqlSchema.withOptions(next);
+    
+    return pool.withTransaction(tx -> {
+      final var repoDelete = this.sqlBuilder.withOptions(next).repo().deleteOne(newRepo);
+      final var tablesDrop = new StringBuilder()
+          .append(sqlSchema.dropRefs().getValue())
+          .append(sqlSchema.dropTags().getValue())
+          .append(sqlSchema.dropCommits().getValue())
+          .append(sqlSchema.dropTreeItems().getValue())
+          .append(sqlSchema.dropTrees().getValue())
+          .append(sqlSchema.dropBlobs().getValue())          
+          .toString();
+      
+      if(log.isDebugEnabled()) {
+        log.debug("Delete repo by name query, with props: {} \r\n{}", 
+            repoDelete.getProps().deepToString(), 
+            repoDelete.getValue());
+        
+        
+        log.debug(new StringBuilder("Drop schema: ")
+            .append(System.lineSeparator())
+            .append(tablesDrop.toString())
+            .toString());
+      }
+      
+      
+      final Uni<Void> insert = tx.preparedQuery(repoDelete.getValue()).execute(repoDelete.getProps())
+          .onItem().transformToUni(rowSet -> Uni.createFrom().voidItem())
+          .onFailure().invoke(e -> errorHandler.deadEnd("Can't delete from 'REPO': '" + repoDelete.getValue() + "'!", e));
+      final Uni<Void> nested = tx.query(tablesDrop).execute()
+          .onItem().transformToUni(rowSet -> Uni.createFrom().voidItem())
+          .onFailure().invoke(e -> errorHandler.deadEnd("Can't drop tables: " + tablesDrop, e));;
+      
+      
+      return insert
+          .onItem().transformToUni(junk -> nested)
+          .onItem().transform(junk -> newRepo);
+    });
   }
 }

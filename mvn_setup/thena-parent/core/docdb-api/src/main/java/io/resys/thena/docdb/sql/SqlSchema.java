@@ -26,20 +26,35 @@ import io.resys.thena.docdb.sql.SqlBuilder.Sql;
 public interface SqlSchema extends ClientCollections.WithOptions<SqlSchema>{
   SqlSchema withOptions(ClientCollections options);
   
-  Sql repo();
-  Sql blobs();
+  Sql createRepo();
+  Sql createBlobs();
 
-  Sql commits();
-  Sql commitsConstraints();
+  Sql createCommits();
+  Sql createCommitsConstraints();
   
-  Sql treeItemsConstraints();
-  Sql treeItems();
+  Sql createTreeItemsConstraints();
+  Sql createTreeItems();
 
-  Sql trees();
+  Sql createTrees();
 
-  Sql refs();
-  Sql refsConstraints();
+  Sql createRefs();
+  Sql createRefsConstraints();
 
-  Sql tags();
-  Sql tagsConstraints();
+  Sql createTags();
+  Sql createTagsConstraints();
+  
+  
+  Sql dropRepo();
+  
+  Sql dropBlobs();
+
+  Sql dropCommits();
+
+  Sql dropTreeItems();
+
+  Sql dropTrees();
+
+  Sql dropRefs();
+
+  Sql dropTags();
 }

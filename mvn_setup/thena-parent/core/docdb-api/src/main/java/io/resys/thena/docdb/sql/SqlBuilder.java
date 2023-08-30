@@ -57,6 +57,7 @@ public interface SqlBuilder extends ClientCollections.WithOptions<SqlBuilder> {
     SqlTuple getByName(String name);
     SqlTuple getByNameOrId(String name);
     SqlTuple insertOne(Repo repo);
+    SqlTuple deleteOne(Repo repo);
   }
   
   interface BlobSqlBuilder {
