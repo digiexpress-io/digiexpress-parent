@@ -8,7 +8,7 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import ChecklistItemComponent from './ChecklistItem';
 import ChecklistItemDialog from './ChecklistItemDialog';
 import { Checklist, ChecklistItem } from 'taskclient/task-types';
-import Styles from '@styles';
+import { StyledProgressBar } from './StyledProgressBar';
 
 const ChecklistHeaderContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -139,7 +139,7 @@ const ChecklistComponent: React.FC<{ value: Checklist }> = ({ value }) => {
   return (
     <Box>
       <ChecklistHeader title={title} />
-      {tempChecklistItems.length ? <Styles.ProgressBar progress={calculateProgress()} /> : <></>}
+      {tempChecklistItems.length ? <StyledProgressBar progress={calculateProgress()} /> : <></>}
       <List sx={{ p: 0 }}>
         {tempChecklistItems.map((item, index) => <ChecklistItemComponent key={item.id} item={item} onChecked={() => handleChecked(index)} onDeleteClick={() => handleDeleted(index)} onClick={handleItemClick} />)}
       </List>

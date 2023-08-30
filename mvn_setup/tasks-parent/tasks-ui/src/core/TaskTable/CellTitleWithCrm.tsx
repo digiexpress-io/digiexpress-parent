@@ -3,11 +3,11 @@ import { Box } from '@mui/material';
 import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
 
 import client from '@taskclient';
-import Styles from '@styles';
 
 import TaskCell from './TaskCell';
 import CellHoverButton from './CellMenuButton';
 import TaskWorkDialog from 'core/TaskWork';
+import { StyledTableCell } from './StyledTable';
 
 const HoverMenu: React.FC<{ onEdit: () => void }> = ({ onEdit }) => {
 
@@ -51,13 +51,13 @@ const FormattedCell: React.FC<{
 
 
   return (
-    <Styles.TableCell width="500px">
+    <StyledTableCell width="500px">
       <Box justifyContent='left' display='flex'>
         <TaskCell id={row.id + "/Subject"} name={row.title} maxWidth={"500px"} />
         <TaskWorkDialog open={edit} onClose={handleEndEdit} task={row} />
         {active && <HoverMenu onEdit={handleStartEdit} />}
       </Box>
-    </Styles.TableCell>
+    </StyledTableCell>
   );
 
 }

@@ -19,6 +19,7 @@ import TitleAs from './CellTitle';
 import TitleCrmAs from './CellTitleWithCrm';
 import Priority from './CellPriority';
 import Status from './CellStatus';
+import { StyledFillerRows, StyledTableBody } from './StyledTable';
 
 
 declare namespace TaskTable {
@@ -40,6 +41,8 @@ namespace TaskTable {
   export const CellTitleCrm = TitleCrmAs;
   export const CellPriority = Priority;
   export const CellStatus = Status;
+  export const TableFiller = StyledFillerRows;
+  export const TableBody = StyledTableBody;
 }
 
 export default TaskTable;

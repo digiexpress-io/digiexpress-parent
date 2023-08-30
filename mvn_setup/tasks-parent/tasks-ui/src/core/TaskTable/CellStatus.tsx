@@ -3,10 +3,10 @@ import { SxProps } from '@mui/material';
 import { useIntl } from 'react-intl';
 
 import client from '@taskclient';
-import Styles from '@styles';
 import TaskCell from './TaskCell';
 import { usePopover } from './CellPopover';
 import { CellProps } from './task-table-types';
+import { StyledTableCell } from './StyledTable';
 
 
 
@@ -35,7 +35,7 @@ const FormattedCell: React.FC<{
 }> = ({ row, def }) => {
 
   return (
-    <Styles.TableCell width="100px" sx={getStatus(def)}><Status row={row} def={def} /></Styles.TableCell>
+    <StyledTableCell width="100px" sx={getStatus(def)}><Status row={row} def={def} /></StyledTableCell>
   );
 }
 

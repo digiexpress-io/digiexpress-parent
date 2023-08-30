@@ -5,10 +5,10 @@ import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
 import { FormattedMessage } from 'react-intl';
 
 import client from '@taskclient';
-import Styles from '@styles';
 import { usePopover } from './CellPopover';
 import CellHoverButton from './CellMenuButton';
 import TaskEditDialog from 'core/TaskEdit';
+import { StyledTableCell } from './StyledTable';
 
 
 const HoverMenu: React.FC<{ onEdit: () => void }> = ({ onEdit }) => {
@@ -68,13 +68,13 @@ const FormattedCell: React.FC<{
   }
 
 
-  return (<Styles.TableCell width="35px">
+  return (<StyledTableCell width="35px">
     <Box width="35px" justifyContent='right'> {/* Box is needed to prevent table cell resize on hover */}
       <TaskEditDialog open={edit} onClose={handleEndEdit} task={row} />
 
       {active && <HoverMenu onEdit={handleStartEdit} />}
     </Box>
-  </Styles.TableCell>);
+  </StyledTableCell>);
 }
 
 export default FormattedCell;
