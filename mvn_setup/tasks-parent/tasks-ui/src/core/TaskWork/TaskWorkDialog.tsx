@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Stack, Grid } from '@mui/material';
 
-import { StyledFullScreenDialog } from '../Dialogs/StyledFullScreenDialog';
+import StyledFullScreenDialog from '../Dialogs';
 import Fields from './TaskWorkFields';
 import TaskClient from '@taskclient';
 import Burger from '@the-wrench-io/react-burger';
