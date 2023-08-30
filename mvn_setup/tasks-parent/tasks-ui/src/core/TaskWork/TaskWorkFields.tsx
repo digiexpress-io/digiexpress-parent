@@ -1,10 +1,11 @@
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import {
   Typography, Stack, Box, IconButton,
   Button, List, ListItem, styled, Alert, Avatar, Dialog,
-  DialogTitle, DialogActions, DialogContent, TextareaAutosize, alpha, useTheme
+  DialogTitle, DialogActions, DialogContent, TextareaAutosize, alpha,
+  useTheme, Tabs, Tab, Paper
 } from '@mui/material';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
@@ -29,6 +30,7 @@ import { Message, Thread } from 'core/Inbox/thread-types';
 import { AttachmentAndDateTime } from 'core/Inbox/ThreadPreview';
 import { demoThreads } from 'core/Inbox/DemoThreads';
 import { useMenu } from './menu-ctx';
+import { MenuTab } from './menu-ctx-types';
 
 
 const StyledListItem = styled(ListItem)(({ theme }) => ({
@@ -324,23 +326,33 @@ const Messages: React.FC<{}> = () => {
 
 const Menu: React.FC<{}> = () => {
   const { activeTab, withTab } = useMenu();
+  const intl = useIntl();
 
   const getVariant = (tab: string) => {
     return activeTab === tab ? 'contained' : 'outlined';
   }
 
+  const handleChange = (event: React.SyntheticEvent, newValue: MenuTab) => {
+    withTab(newValue);
+  };
+
   return (
-    <Stack spacing={1} direction='row'>
-      <Button startIcon={<ForumIcon />} color='warning' variant={getVariant('messages')} sx={activeTab === 'messages' ? { color: 'white' } : {}} onClick={() => withTab('messages')}>
-        <Typography sx={{ textTransform: 'none' }}><FormattedMessage id='core.taskWork.menu.messages' /></Typography>
-      </Button>
-      <Button startIcon={<AttachEmailIcon />} color='info' variant={getVariant('attachments')} onClick={() => withTab('attachments')}>
-        <Typography sx={{ textTransform: 'none' }}><FormattedMessage id='core.taskWork.menu.attachments' /></Typography>
-      </Button>
-      <Button startIcon={<AssignmentTurnedInIcon />} variant={getVariant('checklists')} onClick={() => withTab('checklists')}>
-        <Typography sx={{ textTransform: 'none' }}><FormattedMessage id='core.taskWork.menu.checklists' /></Typography>
-      </Button>
-    </Stack>
+    <Paper>
+      <Tabs value={activeTab} onChange={handleChange}>
+        <Tab
+          label={<Typography sx={{ color: 'warning.main' }} variant='subtitle2'><FormattedMessage id='core.taskWork.menu.messages' /></Typography>}
+          value='messages'
+          icon={<ForumIcon color='warning' />} />
+        <Tab
+          label={<Typography sx={{ color: 'info.main' }} variant='subtitle2'><FormattedMessage id='core.taskWork.menu.attachments' /></Typography>}
+          value='attachments'
+          icon={<AttachEmailIcon color='info' />} />
+        <Tab
+          label={<Typography sx={{ color: 'primary.main' }} variant='subtitle2'><FormattedMessage id='core.taskWork.menu.checklists' /></Typography>}
+          value='checklists'
+          icon={<AssignmentTurnedInIcon color='primary' />} />
+      </Tabs>
+    </Paper>
   )
 }
 
