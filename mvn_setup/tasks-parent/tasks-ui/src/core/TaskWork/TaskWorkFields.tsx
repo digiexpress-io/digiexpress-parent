@@ -5,7 +5,7 @@ import {
   Typography, Stack, Box, IconButton,
   Button, List, ListItem, styled, Alert, Avatar, Dialog,
   DialogTitle, DialogActions, DialogContent, TextareaAutosize, alpha,
-  useTheme, Tabs, Tab, Paper
+  useTheme, Tabs, Tab, Paper, Badge
 } from '@mui/material';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
@@ -326,6 +326,11 @@ const Messages: React.FC<{}> = () => {
 
 const Menu: React.FC<{}> = () => {
   const { activeTab, withTab } = useMenu();
+  const { state } = TaskClient.useTaskEdit();
+
+  const unreadMessages = 1; // mocked
+  const noOfAttachments = state.task.uploads.length;
+  const noOfChecklists = state.task.checklist.length;
 
   const handleChange = (event: React.SyntheticEvent, newValue: MenuTab) => {
     withTab(newValue);
@@ -337,17 +342,17 @@ const Menu: React.FC<{}> = () => {
         <Tab
           label={<Typography sx={{ color: 'warning.main' }} variant='subtitle2'><FormattedMessage id='core.taskWork.menu.messages' /></Typography>}
           value='messages'
-          icon={<ForumIcon color='warning' />} />
+          icon={<Badge badgeContent={unreadMessages} color='warning'><ForumIcon color='warning' /></Badge>} />
         <Tab
           label={<Typography sx={{ color: 'info.main' }} variant='subtitle2'><FormattedMessage id='core.taskWork.menu.attachments' /></Typography>}
           value='attachments'
-          icon={<AttachEmailIcon color='info' />} />
+          icon={<Badge badgeContent={noOfAttachments} color='info'><AttachEmailIcon color='info' /></Badge>} />
         <Tab
           label={<Typography sx={{ color: 'primary.main' }} variant='subtitle2'><FormattedMessage id='core.taskWork.menu.checklists' /></Typography>}
           value='checklists'
-          icon={<AssignmentTurnedInIcon color='primary' />} />
+          icon={<Badge badgeContent={noOfChecklists} color='primary'><AssignmentTurnedInIcon color='primary' /></Badge>} />
       </Tabs>
-    </Paper>
+    </Paper >
   )
 }
 
