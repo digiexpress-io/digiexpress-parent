@@ -6,9 +6,10 @@ export interface ProgramMessage {
 }
 
 export interface Org {
-  owners: string[];
+  users: User[];
   roles: string[];
 }
+
 
 export interface User {
   userId: string;

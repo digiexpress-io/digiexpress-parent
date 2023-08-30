@@ -4,6 +4,56 @@ import type { Profile, ProfileStore } from './profile-types';
 import { } from './client-store';
 
 
+const mockRoles: string[] = [
+  "admin-role",
+  "water-department",
+  "education-department",
+  "elderly-care-department",
+  "sanitization-department"
+];
+
+const mockUsers: User[] = [
+  {
+    displayName: "Carrot Ironfoundersson",
+    userId: "carrot ironfoundersson",
+    userRoles: ["admin-role"]
+  },
+  {
+    displayName: "Sam Vimes",
+    userId: "sam vimes",
+    userRoles: ["admin-role"]
+  },
+  {
+    displayName: "Lord Vetinari",
+    userId: "lord vetinari",
+    userRoles: ["admin-role"]
+  },
+  {
+    displayName: "Lady Sybil Vimes",
+    userId: "lady sybil vimes",
+    userRoles: ["admin-role"]
+  },
+  {
+    displayName: "Nobby Nobbs",
+    userId: "nobby nobbs",
+    userRoles: ["admin-role"]
+  },
+]
+
+const mockOrg: {
+  org: Org,
+  user: User,
+  today: Date
+} = {
+  org: {
+    roles: mockRoles,
+    users: mockUsers
+  },
+  user: mockUsers[0],
+  today: new Date(),
+}
+
+
 type BackendInit = { created: boolean } | null
 
 
@@ -23,16 +73,8 @@ export class ServiceImpl implements Client {
     }
   }
   async getProfile(): Promise<Profile> {
-    const userId = "carrot ironfoundersson"
-    const today = new Date();
-    const roles: string[] = [
-      "admin-role",
-      "water-department",
-      "education-department",
-      "elderly-care-department",
-      "sanitization-department"
-    ];
-
+    const { today, user } = mockOrg;
+    const { userId, userRoles: roles } = user;
     try {
       const init = await this._store.fetch<BackendInit>("init", { notFound: () => null });
       if (init === null) {
@@ -69,30 +111,6 @@ export class ServiceImpl implements Client {
     return this._store.fetch<Task>(`tasks/${id}`);
   }
   async org(): Promise<{ org: Org, user: User }> {
-    return {
-      org: {
-        owners: [
-          "sam vimes",
-          "lord vetinari",
-          "lady sybil vimes",
-          "carrot ironfoundersson",
-          "nobby nobbs"
-        ],
-        roles: [
-          "admin-role",
-          "water-department",
-          "education-department",
-          "elderly-care-department",
-          "sanitization-department"
-        ]
-      },
-      user: {
-        displayName: "Sam Vimes",
-        userId: "sam vimes",
-        userRoles: ["admin-role"]
-      }
-    };
+    return mockOrg;
   }
-
-
 }

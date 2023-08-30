@@ -7,9 +7,10 @@ import { Client } from './client-types';
 const OrgContext = React.createContext<OrgContextType>({} as OrgContextType);
 
 
+
 const init: OrgMutatorBuilder = new OrgMutatorBuilderImpl({
   iam: { displayName: "" , userId: "", userRoles: []},
-  org: { owners: [], roles: [] }
+  org: { roles: [], users: []}
 });
 
 const OrgProvider: React.FC<{ children: React.ReactNode, backend: Client }> = ({ children, backend }) => {
@@ -31,7 +32,7 @@ const OrgProvider: React.FC<{ children: React.ReactNode, backend: Client }> = ({
       setState(prev => prev.withIam(data.user).withOrg(data.org))
     });
     
-  }, [loading, setLoading]);
+  }, [loading, setLoading, backend]);
 
   return (<OrgContext.Provider value={contextValue}>{children}</OrgContext.Provider>);
 };
