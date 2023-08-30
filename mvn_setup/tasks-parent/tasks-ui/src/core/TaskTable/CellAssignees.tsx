@@ -2,11 +2,11 @@ import React from 'react';
 import { Avatar, AvatarGroup, Box, SxProps, MenuList, MenuItem, ListItemText } from '@mui/material';
 
 import client from '@taskclient';
-import Styles from '@styles';
 
 import TaskCell from './TaskCell';
 import { usePopover } from './CellPopover';
 import { CellProps } from './task-table-types';
+import { StyledTableCell } from './StyledTable';
 
 
 
@@ -71,7 +71,7 @@ const FormattedCell: React.FC<{
   def: client.Group
 }> = ({ row, def }) => {
 
-  return (<Styles.TableCell width="150px" sx={getAssignees(def)}><Assignees row={row} def={def} /></Styles.TableCell>);
+  return (<StyledTableCell width="150px" sx={getAssignees(def)}><Assignees row={row} def={def} /></StyledTableCell>);
 }
 
 export default FormattedCell;

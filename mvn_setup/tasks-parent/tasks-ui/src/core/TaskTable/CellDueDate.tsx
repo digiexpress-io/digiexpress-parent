@@ -3,11 +3,11 @@ import { Dialog, IconButton, Box } from '@mui/material';
 import DateRangeOutlinedIcon from '@mui/icons-material/DateRangeOutlined';
 
 import client from '@taskclient';
-import Styles from '@styles';
 
 import TaskCell from './TaskCell';
 import { CellProps } from './task-table-types';
 import DatePicker from '../DatePicker';
+import { StyledTableCell } from './StyledTable';
 
 
 const DueDate: React.FC<CellProps> = ({ row }) => {
@@ -33,7 +33,7 @@ const FormattedCell: React.FC<{
   def: client.Group
 }> = ({ row, def }) => {
 
-  return (<Styles.TableCell width='70px'><Box width='70px'><DueDate row={row} def={def}/></Box></Styles.TableCell>);
+  return (<StyledTableCell width='70px'><Box width='70px'><DueDate row={row} def={def}/></Box></StyledTableCell>);
 }
 
 export default FormattedCell;

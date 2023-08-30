@@ -2,10 +2,10 @@ import React from 'react';
 import { Box, Avatar, SxProps } from '@mui/material';
 
 import client from '@taskclient';
-import Styles from '@styles';
 import TaskCell from './TaskCell';
 import { usePopover } from './CellPopover';
 import { CellProps } from './task-table-types';
+import { StyledTableCell } from './StyledTable';
 
 
 function getRoles(def: client.Group): SxProps | undefined {
@@ -39,7 +39,7 @@ const FormattedCell: React.FC<{
 }> = ({ row, def }) => {
 
   return (
-    <Styles.TableCell sx={getRoles(def)}><Roles row={row} def={def}/></Styles.TableCell>
+    <StyledTableCell sx={getRoles(def)}><Roles row={row} def={def}/></StyledTableCell>
   );
 }
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 
 import Burger from '@the-wrench-io/react-burger';
-import Styles from '@styles';
+import { StyledCardItemProps, StyledCards } from './StyledCards';
 
 
 type ActivityId = "tasks";
@@ -11,7 +11,7 @@ type ActivityId = "tasks";
 const createActivities: (props: {
   actions: Burger.TabsActions,
   setOpen: (index: ActivityId) => void
-}) => Styles.StyledCardItemProps[] = ({ actions, setOpen }) => ([
+}) => StyledCardItemProps[] = ({ actions, setOpen }) => ([
 
   {
     id: "tasks",
@@ -132,7 +132,7 @@ const Activities: React.FC<{}> = () => {
   const handleClose = () => setOpen(undefined)
 
 
-  return (<Styles.Cards title="activities.title" desc="activities.desc" items={cards} />);
+  return (<StyledCards title="activities.title" desc="activities.desc" items={cards} />);
 }
 
 export { Activities };

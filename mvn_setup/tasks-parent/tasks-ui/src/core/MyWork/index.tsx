@@ -1,7 +1,6 @@
 import React from 'react';
 import { TableHead, TableCell, TableRow } from '@mui/material';
 
-import Styles from '@styles';
 import client from '@taskclient';
 import TaskTable from '../TaskTable';
 
@@ -64,11 +63,11 @@ const Row: React.FC<{
 
 const Rows: React.FC<TaskTable.RenderProps> = ({ content, group, loading }) => {
   return (
-    <Styles.TableBody>
+    <TaskTable.TableBody>
       {content.entries.map((row, rowId) => (<Row key={row.id} rowId={rowId} row={row} def={group} />))}
 
-      <Styles.TableFiller content={content} loading={loading} plusColSpan={5} />
-    </Styles.TableBody>
+      <TaskTable.TableFiller content={content} loading={loading} plusColSpan={5} />
+    </TaskTable.TableBody>
   )
 }
 

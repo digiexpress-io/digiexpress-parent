@@ -4,10 +4,10 @@ import AssistantPhotoTwoToneIcon from '@mui/icons-material/AssistantPhotoTwoTone
 import { useIntl } from 'react-intl';
 
 import client from '@taskclient';
-import Styles from '@styles';
 import TaskCell from './TaskCell';
 import { usePopover } from './CellPopover';
 import { CellProps } from './task-table-types';
+import { StyledTableCell } from './StyledTable';
 
 
 
@@ -60,7 +60,7 @@ const FormattedCell: React.FC<{
   def: client.Group
 }> = ({ row, def }) => {
 
-  return (<Styles.TableCell width="50px" sx={getPriority(def)}><Priority row={row} def={def} /></Styles.TableCell>);
+  return (<StyledTableCell width="50px" sx={getPriority(def)}><Priority row={row} def={def} /></StyledTableCell>);
 }
 
 export default FormattedCell;
