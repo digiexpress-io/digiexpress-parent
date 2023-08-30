@@ -111,9 +111,9 @@ const Checklist: React.FC<{}> = () => {
       {checklist.length ?
         checklist.map(item => (<ChecklistDelegate key={item.id} value={item} />)) :
         <Box sx={{ my: 2, mx: 1 }}>
-          <ChecklistAlert severity='info' ><FormattedMessage id='core.taskOps.workOnTask.checklists.none' /></ChecklistAlert>
+          <ChecklistAlert severity='info' ><FormattedMessage id='core.taskWork.checklists.none' /></ChecklistAlert>
           <Button variant='outlined' startIcon={<AddIcon />} sx={{ textTransform: 'none', mt: 1 }}>
-            <Typography><FormattedMessage id='core.taskOps.workOnTask.checklists.add' /></Typography>
+            <Typography><FormattedMessage id='core.taskWork.checklists.add' /></Typography>
           </Button>
         </Box>
       }
@@ -130,7 +130,7 @@ const StartDate: React.FC = () => {
 
   return (
     <Stack spacing={1} direction='row' alignItems='center'>
-      <Typography variant='body2'><FormattedMessage id='core.taskOps.workOnTask.startDate' /></Typography>
+      <Typography variant='body2'><FormattedMessage id='core.taskWork.startDate' /></Typography>
       <Typography>{startDate.toLocaleDateString()}</Typography>
     </Stack>
   );
@@ -145,7 +145,7 @@ const DueDate: React.FC = () => {
 
   return (
     <Stack spacing={1} direction='row' alignItems='center' >
-      <Typography variant='body2'><FormattedMessage id='core.taskOps.workOnTask.dueDate' /></Typography>
+      <Typography variant='body2'><FormattedMessage id='core.taskWork.dueDate' /></Typography>
       <Typography>{dueDate.toLocaleDateString()}</Typography>
     </Stack>
   );
@@ -182,9 +182,9 @@ const Attachments: React.FC<{}> = () => {
     <Box sx={{ p: 1 }}>
       {attachments.length ? <List>
         {attachments.map(attachment => <AttachmentListItem key={attachment.id} attachment={attachment} />)}
-      </List> : <Alert severity='info' sx={{ my: 1 }}><FormattedMessage id='core.taskOps.workOnTask.attachments.none' /></Alert>}
+      </List> : <Alert severity='info' sx={{ my: 1 }}><FormattedMessage id='core.taskWork.attachments.none' /></Alert>}
       <Button variant='outlined' color='info' startIcon={<AddIcon />} sx={{ textTransform: 'none' }}>
-        <Typography><FormattedMessage id='core.taskOps.workOnTask.attachments.add' /></Typography>
+        <Typography><FormattedMessage id='core.taskWork.attachments.add' /></Typography>
       </Button>
     </Box>
   );
@@ -312,9 +312,9 @@ const Messages: React.FC<{}> = () => {
       {thread ?
         <ThreadContainer thread={thread} /> :
         <>
-          <Alert severity='info' color='warning' sx={{ my: 1 }}><FormattedMessage id='core.taskOps.workOnTask.messages.none' /></Alert>
+          <Alert severity='info' color='warning' sx={{ my: 1 }}><FormattedMessage id='core.taskWork.messages.none' /></Alert>
           <Button variant='outlined' color='warning' startIcon={<MailOutlineIcon />} sx={{ textTransform: 'none' }}>
-            <Typography><FormattedMessage id='core.taskOps.workOnTask.messages.start' /></Typography>
+            <Typography><FormattedMessage id='core.taskWork.messages.start' /></Typography>
           </Button>
         </>
       }
@@ -332,13 +332,13 @@ const Menu: React.FC<{}> = () => {
   return (
     <Stack spacing={1} direction='row'>
       <Button startIcon={<ForumIcon />} color='warning' variant={getVariant('messages')} sx={activeTab === 'messages' ? { color: 'white' } : {}} onClick={() => withTab('messages')}>
-        <Typography sx={{ textTransform: 'none' }}><FormattedMessage id='core.taskOps.workOnTask.menu.messages' /></Typography>
+        <Typography sx={{ textTransform: 'none' }}><FormattedMessage id='core.taskWork.menu.messages' /></Typography>
       </Button>
       <Button startIcon={<AttachEmailIcon />} color='info' variant={getVariant('attachments')} onClick={() => withTab('attachments')}>
-        <Typography sx={{ textTransform: 'none' }}><FormattedMessage id='core.taskOps.workOnTask.menu.attachments' /></Typography>
+        <Typography sx={{ textTransform: 'none' }}><FormattedMessage id='core.taskWork.menu.attachments' /></Typography>
       </Button>
       <Button startIcon={<AssignmentTurnedInIcon />} variant={getVariant('checklists')} onClick={() => withTab('checklists')}>
-        <Typography sx={{ textTransform: 'none' }}><FormattedMessage id='core.taskOps.workOnTask.menu.checklists' /></Typography>
+        <Typography sx={{ textTransform: 'none' }}><FormattedMessage id='core.taskWork.menu.checklists' /></Typography>
       </Button>
     </Stack>
   )

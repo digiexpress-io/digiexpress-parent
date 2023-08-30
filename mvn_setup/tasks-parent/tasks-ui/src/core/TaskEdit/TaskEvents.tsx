@@ -3,8 +3,6 @@ import { ListItem, ListItemText} from '@mui/material';
 import Client from '@taskclient';
 
 
-
-
 const CollapsedGroup: React.FC<{event: Client.CollapsedEvent }> = () => {
   return (<>19 items collapsed</>)
 }
@@ -12,18 +10,10 @@ const CollapsedGroup: React.FC<{event: Client.CollapsedEvent }> = () => {
 const SingleGroup: React.FC<{event: Client.SingleEvent }> = ({event}) => {
   
   if(event.body.commandType === "CreateTask") {
-      return (<ListItemText primary={event.body.commandType} secondary={event.body.toCommand.targetDate} />)  
+    return (<ListItemText primary={event.body.commandType} secondary={event.body.toCommand.targetDate} />)  
   }
   
-  
-  
   return (<ListItemText primary={event.body.commandType} secondary={event.body.toCommand.targetDate} />)
-}
-
-
-
-const Comment: React.FC = () => {
-  return (<>This is a comment</>)
 }
 
 

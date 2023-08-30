@@ -1,8 +1,8 @@
 import React from 'react';
 import { Box, Stack, Grid } from '@mui/material';
 
-import { StyledFullScreenDialog } from '../StyledFullScreenDialog';
-import Fields from './WorkOnTaskFields';
+import StyledFullScreenDialog from '../Dialogs';
+import Fields from './TaskWorkFields';
 import TaskClient from '@taskclient';
 import Burger from '@the-wrench-io/react-burger';
 import { MenuProvider, useMenu } from './menu-ctx';
@@ -65,16 +65,16 @@ const Header: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   return (
     <>
-      <Burger.PrimaryButton label='core.taskOps.workOnTask.button.reject' onClick={onClose} sx={{ backgroundColor: 'error.main', ':hover': { backgroundColor: 'error.dark' } }} />
-      <Burger.PrimaryButton label='core.taskOps.workOnTask.button.complete' onClick={onClose} sx={{ backgroundColor: 'success.main', ':hover': { backgroundColor: 'success.dark' } }} />
-      <Burger.PrimaryButton label='core.taskOps.workOnTask.button.edit' onClick={onClose} sx={{ backgroundColor: 'warning.main', ':hover': { backgroundColor: 'warning.dark' } }} />
-      <Burger.PrimaryButton label='core.taskOps.workOnTask.button.cancel' onClick={onClose} />
+      <Burger.PrimaryButton label='core.taskWork.button.reject' onClick={onClose} sx={{ backgroundColor: 'error.main', ':hover': { backgroundColor: 'error.dark' } }} />
+      <Burger.PrimaryButton label='core.taskWork.button.complete' onClick={onClose} sx={{ backgroundColor: 'success.main', ':hover': { backgroundColor: 'success.dark' } }} />
+      <Burger.PrimaryButton label='core.taskWork.button.edit' onClick={onClose} sx={{ backgroundColor: 'warning.main', ':hover': { backgroundColor: 'warning.dark' } }} />
+      <Burger.PrimaryButton label='core.taskWork.button.cancel' onClick={onClose} />
     </>
   )
 }
 
 
-const WorkOnTaskDialog: React.FC<{ open: boolean, onClose: () => void, task?: TaskClient.TaskDescriptor }> = (props) => {
+const TaskWorkDialog: React.FC<{ open: boolean, onClose: () => void, task?: TaskClient.TaskDescriptor }> = (props) => {
 
   if (!props.open || !props.task) {
     return null;
@@ -96,4 +96,4 @@ const WorkOnTaskDialog: React.FC<{ open: boolean, onClose: () => void, task?: Ta
   );
 }
 
-export { WorkOnTaskDialog }
+export { TaskWorkDialog }
