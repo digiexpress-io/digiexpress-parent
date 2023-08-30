@@ -59,6 +59,7 @@ const ListItemContainer = styled(Box)({
   flexDirection: 'row',
   justifyContent: 'space-between',
   width: '100%',
+  alignItems: 'center'
 })
 
 const PaddedTypography = styled(Typography)(({ theme }) => ({
@@ -160,7 +161,10 @@ const AttachmentListItem: React.FC<{ attachment: TaskExtension }> = ({ attachmen
       <ListItemContainer>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           {icon}
-          <PaddedTypography>{attachment.name}</PaddedTypography>
+          <Box>
+            <PaddedTypography>{attachment.name}</PaddedTypography>
+            <PaddedTypography>{attachment.created}</PaddedTypography>
+          </Box>
         </Box>
         <Box>
           <IconButton>

@@ -24,10 +24,18 @@ export const demoThreads: Thread[] = [
           {
             id: 'ATT_11',
             name: 'image.png',
+            type: 'image/png',
+            body: 'image',
+            created: '2023-08-01T01:00:00.000Z',
+            updated: '2023-08-01T01:00:00.000Z',
           },
           {
             id: 'ATT_12',
             name: 'document.pdf',
+            type: 'application/pdf',
+            body: 'document',
+            created: '2023-08-10T01:00:00.000Z',
+            updated: '2023-08-10T01:00:00.000Z',
           },
         ],
         read: true,
