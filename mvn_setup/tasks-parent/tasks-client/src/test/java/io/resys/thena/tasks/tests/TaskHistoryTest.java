@@ -76,7 +76,11 @@ public class TaskHistoryTest extends TaskTestCase {
     client.tasks().updateTask().updateOne(ImmutableChangeTaskStatus.builder()
             .userId("tester-bob")
             .taskId(createdTask_1.getId())
-            .targetDate(getTargetDate().plusDays(1).plusHours(1))
+            .targetDate(
+              getTargetDate()
+                .plus(1, java.time.temporal.ChronoUnit.DAYS)
+                .plus(1, java.time.temporal.ChronoUnit.HOURS)
+            )
             .status(Task.Status.IN_PROGRESS)
             .build())
         .await().atMost(atMost);
@@ -84,7 +88,11 @@ public class TaskHistoryTest extends TaskTestCase {
     client.tasks().updateTask().updateOne(ImmutableChangeTaskPriority.builder()
             .userId("tester-bob")
             .taskId(createdTask_1.getId())
-            .targetDate(getTargetDate().plusDays(1).plusHours(1))
+            .targetDate(
+              getTargetDate()
+                .plus(1, java.time.temporal.ChronoUnit.DAYS)
+                .plus(1, java.time.temporal.ChronoUnit.HOURS)
+            )
             .priority(Task.Priority.HIGH)
             .build())
         .await().atMost(atMost);
@@ -92,7 +100,11 @@ public class TaskHistoryTest extends TaskTestCase {
     client.tasks().updateTask().updateOne(ImmutableAssignTaskReporter.builder()
             .userId("tester-bob")
             .taskId(createdTask_1.getId())
-            .targetDate(getTargetDate().plusDays(1).plusHours(1))
+            .targetDate(
+              getTargetDate()
+                .plus(1, java.time.temporal.ChronoUnit.DAYS)
+                .plus(1, java.time.temporal.ChronoUnit.HOURS)
+            )
             .reporterId("citizen jane")
             .build())
         .await().atMost(atMost);

@@ -33,6 +33,10 @@ import io.resys.thena.tasks.tests.config.TaskPgProfile;
 import io.resys.thena.tasks.tests.config.TaskTestCase;
 import lombok.extern.slf4j.Slf4j;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+
 @Slf4j
 @QuarkusTest
 @TestProfile(TaskPgProfile.class)
@@ -78,17 +82,19 @@ public class TaskExportTest extends TaskTestCase {
     .await().atMost(atMost);
     
     final var exported = client.export().export()
-        .targetDate(getTargetDate().plusDays(1).plusHours(1))
+        .targetDate(getTargetDate().plus(1, java.time.temporal.ChronoUnit.DAYS).plus(1, java.time.temporal.ChronoUnit.HOURS))
         .name("my first export")
-        .startDate(getTargetDate().toLocalDate())
-        .endDate(getTargetDate().toLocalDate())
+        .startDate(getLocalDate(getTargetDate()))
+        .endDate(getLocalDate(getTargetDate()))
         .build()
     .await().atMost(atMost);
     
 
-    
-    log.debug(super.printRepo(client));
     assertEquals("export-test-cases/simpleThreeTaskExport.json", exported);
     
+  }
+
+  private LocalDate getLocalDate(Instant instant) {
+    return LocalDate.ofInstant(instant, ZoneId.of("UTC"));
   }
 }

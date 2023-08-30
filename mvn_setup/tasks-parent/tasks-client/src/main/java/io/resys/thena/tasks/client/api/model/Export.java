@@ -1,7 +1,7 @@
 package io.resys.thena.tasks.client.api.model;
 
+import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -37,7 +37,7 @@ public interface Export {
 
   String getId();
   String getHash();
-  LocalDateTime getCreated();
+  Instant getCreated();
   LocalDate getStartDate();
   LocalDate getEndDate();
   String getName();

@@ -20,6 +20,8 @@ package io.resys.thena.tasks.tests;
  * #L%
  */
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 
 import io.quarkus.test.junit.QuarkusTest;
@@ -76,7 +78,11 @@ public class TaskUpdateTest extends TaskTestCase {
     client.tasks().updateTask().updateOne(ImmutableChangeTaskStatus.builder()
         .userId("tester-bob")
         .taskId(task.getId())
-        .targetDate(getTargetDate().plusDays(1).plusHours(1))
+        .targetDate(
+          getTargetDate()
+            .plus(1, java.time.temporal.ChronoUnit.DAYS)
+            .plus(1, java.time.temporal.ChronoUnit.HOURS)
+        )
         .status(Task.Status.IN_PROGRESS)
         .build())
     .await().atMost(atMost);
@@ -93,7 +99,11 @@ public class TaskUpdateTest extends TaskTestCase {
     client.tasks().updateTask().updateOne(ImmutableChangeTaskPriority.builder()
             .userId("tester-bob")
             .taskId(task.getId())
-            .targetDate(getTargetDate().plusDays(1).plusHours(1))
+            .targetDate(
+              getTargetDate()
+                .plus(1, java.time.temporal.ChronoUnit.DAYS)
+                .plus(1, java.time.temporal.ChronoUnit.HOURS)
+            )
             .priority(Priority.HIGH)
             .build())
         .await().atMost(atMost);
@@ -110,7 +120,11 @@ public class TaskUpdateTest extends TaskTestCase {
     client.tasks().updateTask().updateOne(ImmutableAssignTaskReporter.builder()
             .userId("tester-bob")
             .taskId(task.getId())
-            .targetDate(getTargetDate().plusDays(1).plusHours(1))
+            .targetDate(
+              getTargetDate()
+                .plus(1, java.time.temporal.ChronoUnit.DAYS)
+                .plus(1, java.time.temporal.ChronoUnit.HOURS)
+            )
             .reporterId("reporter-bob")
             .build())
         .await().atMost(atMost);
@@ -127,7 +141,11 @@ public class TaskUpdateTest extends TaskTestCase {
     client.tasks().updateTask().updateOne(ImmutableArchiveTask.builder()
             .userId("tester-bob")
             .taskId(task.getId())
-            .targetDate(getTargetDate().plusDays(1).plusHours(1))
+            .targetDate(
+              getTargetDate()
+                .plus(1, java.time.temporal.ChronoUnit.DAYS)
+                .plus(1, java.time.temporal.ChronoUnit.HOURS)
+            )
             .build())
         .await().atMost(atMost);
 
@@ -143,7 +161,11 @@ public class TaskUpdateTest extends TaskTestCase {
     client.tasks().updateTask().updateOne(ImmutableCommentOnTask.builder()
             .userId("tester-bob")
             .taskId(task.getId())
-            .targetDate(getTargetDate().plusDays(1).plusHours(1))
+            .targetDate(
+              getTargetDate()
+                .plus(1, java.time.temporal.ChronoUnit.DAYS)
+                .plus(1, java.time.temporal.ChronoUnit.HOURS)
+            )
             .commentText("comment-1-text")
             .build())
         .await().atMost(atMost);
@@ -151,13 +173,16 @@ public class TaskUpdateTest extends TaskTestCase {
     client.tasks().updateTask().updateOne(ImmutableCommentOnTask.builder()
             .userId("tester-bob")
             .taskId(task.getId())
-            .targetDate(getTargetDate().plusDays(1).plusHours(2))
+            .targetDate(
+              getTargetDate()
+                .plus(1, java.time.temporal.ChronoUnit.DAYS)
+                .plus(2, java.time.temporal.ChronoUnit.HOURS)
+            )
             .commentText("comment-2-text")
             .replyToCommentId("3_TASK")
             .build())
         .await().atMost(atMost);
 
-    log.debug(super.printRepo(client));
     assertRepo(client, "update-test-cases/addComments.txt");
   }
 
@@ -170,7 +195,11 @@ public class TaskUpdateTest extends TaskTestCase {
     client.tasks().updateTask().updateOne(ImmutableCommentOnTask.builder()
             .userId("tester-bob")
             .taskId(task.getId())
-            .targetDate(getTargetDate().plusDays(1).plusHours(1))
+            .targetDate(
+              getTargetDate()
+                .plus(1, java.time.temporal.ChronoUnit.DAYS)
+                .plus(1, java.time.temporal.ChronoUnit.HOURS)
+            )
             .commentText("comment-1-text")
             .build())
         .await().atMost(atMost);
@@ -178,7 +207,11 @@ public class TaskUpdateTest extends TaskTestCase {
     client.tasks().updateTask().updateOne(ImmutableChangeTaskComment.builder()
             .userId("tester-bob")
             .taskId(task.getId())
-            .targetDate(getTargetDate().plusDays(1).plusHours(2))
+            .targetDate(
+              getTargetDate()
+                .plus(1, java.time.temporal.ChronoUnit.DAYS)
+                .plus(2, java.time.temporal.ChronoUnit.HOURS)
+            )
             .commentId("3_TASK")
             .commentText("new-comment-text")
             .build())
@@ -196,7 +229,11 @@ public class TaskUpdateTest extends TaskTestCase {
     client.tasks().updateTask().updateOne(ImmutableAssignTaskRoles.builder()
             .userId("tester-bob")
             .taskId(task.getId())
-            .targetDate(getTargetDate().plusDays(1).plusHours(1))
+            .targetDate(
+              getTargetDate()
+                .plus(1, java.time.temporal.ChronoUnit.DAYS)
+                .plus(1, java.time.temporal.ChronoUnit.HOURS)
+            )
             .roles(List.of("new-role"))
             .build())
         .await().atMost(atMost);
@@ -213,7 +250,11 @@ public class TaskUpdateTest extends TaskTestCase {
     client.tasks().updateTask().updateOne(ImmutableAssignTask.builder()
             .userId("tester-bob")
             .taskId(task.getId())
-            .targetDate(getTargetDate().plusDays(1).plusHours(1))
+            .targetDate(
+              getTargetDate()
+                .plus(1, java.time.temporal.ChronoUnit.DAYS)
+                .plus(1, java.time.temporal.ChronoUnit.HOURS)
+            )
             .assigneeIds(List.of("new-assignee"))
             .build())
         .await().atMost(atMost);
@@ -230,8 +271,18 @@ public class TaskUpdateTest extends TaskTestCase {
     client.tasks().updateTask().updateOne(ImmutableChangeTaskStartDate.builder()
             .userId("tester-bob")
             .taskId(task.getId())
-            .targetDate(getTargetDate().plusDays(1).plusHours(1))
-            .startDate(getTargetDate().plusDays(1).toLocalDate())
+            .targetDate(
+              getTargetDate()
+                .plus(1, java.time.temporal.ChronoUnit.DAYS)
+                .plus(1, java.time.temporal.ChronoUnit.HOURS)
+            )
+            .startDate(
+              LocalDate.ofInstant(
+                getTargetDate()
+                  .plus(1, java.time.temporal.ChronoUnit.DAYS),
+                ZoneId.of("UTC")
+              )
+            )
             .build())
         .await().atMost(atMost);
 
@@ -247,8 +298,18 @@ public class TaskUpdateTest extends TaskTestCase {
     client.tasks().updateTask().updateOne(ImmutableChangeTaskDueDate.builder()
             .userId("tester-bob")
             .taskId(task.getId())
-            .targetDate(getTargetDate().plusDays(1).plusHours(1))
-            .dueDate(getTargetDate().plusDays(5).toLocalDate())
+            .targetDate(
+              getTargetDate()
+                .plus(1, java.time.temporal.ChronoUnit.DAYS)
+                .plus(1, java.time.temporal.ChronoUnit.HOURS)
+            )
+            .dueDate(
+              LocalDate.ofInstant(
+                getTargetDate()
+                  .plus(5, java.time.temporal.ChronoUnit.DAYS),
+                ZoneId.of("UTC")
+              )
+            )
             .build())
         .await().atMost(atMost);
 
@@ -264,7 +325,11 @@ public class TaskUpdateTest extends TaskTestCase {
     client.tasks().updateTask().updateOne(ImmutableChangeTaskInfo.builder()
             .userId("tester-bob")
             .taskId(task.getId())
-            .targetDate(getTargetDate().plusDays(1).plusHours(1))
+            .targetDate(
+              getTargetDate()
+                .plus(1, java.time.temporal.ChronoUnit.DAYS)
+                .plus(1, java.time.temporal.ChronoUnit.HOURS)
+            )
             .title("new-title")
             .description("new-description")
             .build())
@@ -282,7 +347,11 @@ public class TaskUpdateTest extends TaskTestCase {
     client.tasks().updateTask().updateOne(ImmutableCreateTaskExtension.builder()
             .userId("tester-bob")
             .taskId(task.getId())
-            .targetDate(getTargetDate().plusDays(1).plusHours(1))
+            .targetDate(
+              getTargetDate()
+                .plus(1, java.time.temporal.ChronoUnit.DAYS)
+                .plus(1, java.time.temporal.ChronoUnit.HOURS)
+            )
             .type("attachment")
             .name("attachment-1")
             .body("attachment-body")
@@ -301,7 +370,11 @@ public class TaskUpdateTest extends TaskTestCase {
     client.tasks().updateTask().updateOne(ImmutableCreateTaskExtension.builder()
             .userId("tester-bob")
             .taskId(task.getId())
-            .targetDate(getTargetDate().plusDays(1).plusHours(1))
+            .targetDate(
+              getTargetDate()
+                .plus(1, java.time.temporal.ChronoUnit.DAYS)
+                .plus(1, java.time.temporal.ChronoUnit.HOURS)
+            )
             .type("attachment")
             .name("attachment-1")
             .body("attachment-body")
@@ -311,7 +384,11 @@ public class TaskUpdateTest extends TaskTestCase {
     client.tasks().updateTask().updateOne(ImmutableChangeTaskExtension.builder()
             .userId("tester-bob")
             .taskId(task.getId())
-            .targetDate(getTargetDate().plusDays(1).plusHours(1))
+            .targetDate(
+              getTargetDate()
+                .plus(1, java.time.temporal.ChronoUnit.DAYS)
+                .plus(1, java.time.temporal.ChronoUnit.HOURS)
+            )
             .id("3_TASK")
             .type("attachment")
             .name("attachment-1")
@@ -344,7 +421,11 @@ public class TaskUpdateTest extends TaskTestCase {
     client.tasks().updateTask().updateOne(ImmutableAssignTaskParent.builder()
             .userId("tester-bob")
             .taskId(task2.getId())
-            .targetDate(getTargetDate().plusDays(1).plusHours(1))
+            .targetDate(
+              getTargetDate()
+                .plus(1, java.time.temporal.ChronoUnit.DAYS)
+                .plus(1, java.time.temporal.ChronoUnit.HOURS)
+            )
             .parentId(task1.getId())
             .build())
         .await().atMost(atMost);

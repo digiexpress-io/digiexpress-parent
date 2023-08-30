@@ -1,6 +1,8 @@
 package io.resys.thena.tasks.dev.app;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,15 +68,15 @@ public class TestResource {
     
     final var provider =  new RandomDataProvider();
     final var bulk = new ArrayList<CreateTask>();
-    final var targetDate = LocalDateTime.now();
+    final var targetDate = Instant.now();
     
     for(int index = 0; index < count; index++) {
-      final var startAndDueDate = provider.getStartDateAndDueDate(targetDate.toLocalDate());
+      final var startAndDueDate = provider.getStartDateAndDueDate(LocalDate.ofInstant(targetDate, ZoneId.of("UTC")));
       final var newTask = ImmutableCreateTask.builder()
       .startDate(startAndDueDate.getStartDate())
       .dueDate(startAndDueDate.getDueDate())
-      .targetDate(targetDate.minusDays(10))
-      .checklist(provider.getChecklists(targetDate.toLocalDate()))
+      .targetDate(targetDate.minus(10, java.time.temporal.ChronoUnit.DAYS))
+      .checklist(provider.getChecklists(LocalDate.ofInstant(targetDate, ZoneId.of("UTC"))))
       .title(provider.getTitle())
       .description(provider.getDescription())
       .priority(provider.getPriority())
@@ -102,7 +104,7 @@ public class TestResource {
     return client.repo().query().repoName(currentProject.getProjectId()).headName(currentProject.getHead()).createIfNot()
         .onItem().transformToUni(created -> {
           
-            return client.tasks().queryActiveTasks().deleteAll("", LocalDateTime.now())
+            return client.tasks().queryActiveTasks().deleteAll("", Instant.now())
                 .onItem().transform(tasks -> HeadState.builder().created(true).build());
           
         });

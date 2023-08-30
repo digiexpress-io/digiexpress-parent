@@ -20,7 +20,7 @@ package io.resys.thena.tasks.client.spi.actions;
  * #L%
  */
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 
@@ -50,7 +50,7 @@ public class ActiveTasksQueryImpl implements ActiveTasksQuery {
   }
 
   @Override
-  public Uni<List<Task>> deleteAll(String userId, LocalDateTime targetDate) {
+  public Uni<List<Task>> deleteAll(String userId, Instant targetDate) {
     return ctx.getConfig().accept(new DeleteAllTasksVisitor(userId, targetDate));
   }
   

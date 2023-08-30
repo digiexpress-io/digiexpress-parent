@@ -22,7 +22,7 @@ package io.resys.thena.tasks.client.api.model;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -78,7 +78,7 @@ import io.resys.thena.tasks.client.api.model.Task.TaskExtension;
 })
 public interface TaskCommand extends Serializable {
   String getUserId();
-  @Nullable LocalDateTime getTargetDate();
+  @Nullable Instant getTargetDate();
   TaskCommandType getCommandType();
   
   enum TaskCommandType {

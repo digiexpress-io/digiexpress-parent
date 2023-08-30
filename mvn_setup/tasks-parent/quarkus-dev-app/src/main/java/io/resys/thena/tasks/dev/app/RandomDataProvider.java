@@ -1,7 +1,7 @@
 package io.resys.thena.tasks.dev.app;
 
+import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 /*-
  * #%L
@@ -158,7 +158,7 @@ public class RandomDataProvider {
       final var total = nextInt(1, 5);
       for(var index = 0; index < total; index++) {
         result.add(ImmutableTaskComment.builder()
-            .created(LocalDateTime.now())
+            .created(Instant.now())
             .username("random-data-gen")
             .id(UUID.randomUUID().toString())
             .commentText("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.")

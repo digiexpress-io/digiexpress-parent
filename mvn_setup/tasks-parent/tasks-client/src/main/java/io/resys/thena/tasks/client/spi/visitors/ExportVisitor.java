@@ -1,7 +1,7 @@
 package io.resys.thena.tasks.client.spi.visitors;
 
+import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 /*-
  * #%L
@@ -23,12 +23,14 @@ import java.time.LocalDateTime;
  * #L%
  */
 
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import io.resys.thena.docdb.api.actions.BranchActions.BranchObjectsQuery;
 import io.resys.thena.docdb.api.actions.ImmutableMatchCriteria;
@@ -58,7 +60,7 @@ public class ExportVisitor implements DocBranchVisitor<Export>, BlobVisitor<List
   private final String name;
   private final LocalDate startDate;
   private final LocalDate endDate;
-  private final LocalDateTime targetDate;
+  private final Instant targetDate;
   private final Map<String, Integer> ids = new HashMap<>();
   
   @Override
@@ -133,7 +135,7 @@ public class ExportVisitor implements DocBranchVisitor<Export>, BlobVisitor<List
         .id(allocateId(task))
         .taskId(task.getId())
         .eventType(ExportEventType.TASK_UPDATED)
-        .eventDate(command.getTargetDate().toLocalDate())
+        .eventDate(getLocalDate(command.getTargetDate()))
         .build());
     return events;
   }
@@ -144,7 +146,7 @@ public class ExportVisitor implements DocBranchVisitor<Export>, BlobVisitor<List
         .id(allocateId(task))
         .taskId(task.getId())
         .eventType(ExportEventType.TASK_STATUS_SET)
-        .eventDate(command.getTargetDate().toLocalDate())
+        .eventDate(getLocalDate(command.getTargetDate()))
         .taskStatus(command.getStatus())
         .build());
     return events;
@@ -156,7 +158,7 @@ public class ExportVisitor implements DocBranchVisitor<Export>, BlobVisitor<List
         .id(allocateId(task))
         .taskId(task.getId())
         .eventType(ExportEventType.TASK_STATUS_SET)
-        .eventDate(task.getCreated().toLocalDate())
+        .eventDate(getLocalDate(task.getCreated()))
         .taskStatus(Task.Status.CREATED)
         .build());
     return events;
@@ -171,6 +173,13 @@ public class ExportVisitor implements DocBranchVisitor<Export>, BlobVisitor<List
     }
 
     return ids.get(task.getId()) + "";
+  }
+
+  private LocalDate getLocalDate(Instant instant) {
+    if (instant == null) {
+      throw new RuntimeException("targetDate not found");
+    }
+    return LocalDate.ofInstant(instant, ZoneId.of("UTC"));
   }
 
 }

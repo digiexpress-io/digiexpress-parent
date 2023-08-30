@@ -21,24 +21,23 @@ package io.resys.thena.tasks.client.api.model;
  */
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.annotation.Nullable;
 
 import org.immutables.value.Value;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @Value.Immutable @JsonSerialize(as = ImmutableTask.class) @JsonDeserialize(as = ImmutableTask.class)
 public interface Task extends Document {
 
-  LocalDateTime getCreated();
-  LocalDateTime getUpdated();
-  @Nullable LocalDateTime getArchived();
+  Instant getCreated();
+  Instant getUpdated();
+  @Nullable Instant getArchived();
   @Nullable LocalDate getStartDate();
   @Nullable LocalDate getDueDate();
   
@@ -104,8 +103,7 @@ public interface Task extends Document {
   
   @Value.Immutable @JsonSerialize(as = ImmutableTaskComment.class) @JsonDeserialize(as = ImmutableTaskComment.class)
   interface TaskComment extends TaskItem {
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    LocalDateTime getCreated();
+    Instant getCreated();
     @Nullable String getReplyToId();
     String getCommentText();
     String getUsername();

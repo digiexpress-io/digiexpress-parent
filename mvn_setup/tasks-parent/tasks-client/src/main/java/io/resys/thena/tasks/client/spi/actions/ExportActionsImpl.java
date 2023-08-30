@@ -20,8 +20,8 @@ package io.resys.thena.tasks.client.spi.actions;
  * #L%
  */
 
+import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import io.resys.thena.docdb.spi.support.RepoAssert;
 import io.resys.thena.tasks.client.api.actions.ExportActions;
@@ -53,7 +53,7 @@ public class ExportActionsImpl implements ExportActions {
     private String name;
     private LocalDate startDate;
     private LocalDate endDate;
-    private LocalDateTime targetDate;
+    private Instant targetDate;
 
     @Override
     public Uni<Export> build() {

@@ -1,6 +1,6 @@
 package io.resys.thena.tasks.client.spi.visitors;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -31,7 +31,7 @@ public class VisitorUtil {
   }
   
 
-  public static LocalDateTime requireTargetDate(TaskCommand command) {
+  public static Instant requireTargetDate(TaskCommand command) {
     final var targetDate = command.getTargetDate();
     if (targetDate == null) {
       throw new UpdateTaskVisitorException("targetDate not found");

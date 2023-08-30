@@ -18,6 +18,9 @@ import io.resys.thena.tasks.tests.config.TaskPgProfile;
 import io.resys.thena.tasks.tests.config.TaskTestCase;
 import lombok.extern.slf4j.Slf4j;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+
 @Slf4j
 @QuarkusTest
 @TestProfile(TaskPgProfile.class)
@@ -66,59 +69,57 @@ public class CreateChecklistTest extends TaskTestCase {
     assertEquals("checklist-test-cases/change-checklist-title.json", changeChecklistTitle);
   
   
-  final var createChecklistWithItemAndAssignees = client.tasks().updateTask().updateOne(ImmutableAddChecklistItem.builder()
-      .userId("John smith")
-      .taskId(task.getId())
-      .checklistId("3_TASK")
-      .addAssigneeIds("Jane smith", "Adam West")
-      .title("TODO1")
-      .dueDate(getTargetDate().toLocalDate().plusDays(1))
-      .completed(false)
-      .targetDate(getTargetDate())
-      .build())
-  .await().atMost(atMost);
-  
-  assertEquals("checklist-test-cases/create-checklist-item.json", createChecklistWithItemAndAssignees);
+    final var createChecklistWithItemAndAssignees = client.tasks().updateTask().updateOne(ImmutableAddChecklistItem.builder()
+        .userId("John smith")
+        .taskId(task.getId())
+        .checklistId("3_TASK")
+        .addAssigneeIds("Jane smith", "Adam West")
+        .title("TODO1")
+        .dueDate(LocalDate.ofInstant(getTargetDate().plus(1, java.time.temporal.ChronoUnit.DAYS), ZoneId.of("UTC")))
+        .completed(false)
+        .targetDate(getTargetDate())
+        .build())
+    .await().atMost(atMost);
 
-  
-  final var changeChecklistItemCompleted = client.tasks().updateTask().updateOne(ImmutableChangeChecklistItemCompleted.builder()
-      .userId("John smith")
-      .taskId(task.getId())
-      .checklistId("3_TASK")
-      .checklistItemId("4_TASK")
-      .completed(true)
-      .targetDate(getTargetDate())
-      .build())
-  .await().atMost(atMost);
+    assertEquals("checklist-test-cases/create-checklist-item.json", createChecklistWithItemAndAssignees);
 
-  assertEquals("checklist-test-cases/change-checklist-item-completed.json", changeChecklistItemCompleted);
 
-  
-  final var deleteChecklistItem = client.tasks().updateTask().updateOne(ImmutableDeleteChecklistItem.builder()
-      .userId("John smith")
-      .taskId(task.getId())
-      .checklistId("3_TASK")
-      .checklistItemId("4_TASK")
-      .targetDate(getTargetDate())
-      .build())
-  .await().atMost(atMost);
-  
+    final var changeChecklistItemCompleted = client.tasks().updateTask().updateOne(ImmutableChangeChecklistItemCompleted.builder()
+        .userId("John smith")
+        .taskId(task.getId())
+        .checklistId("3_TASK")
+        .checklistItemId("4_TASK")
+        .completed(true)
+        .targetDate(getTargetDate())
+        .build())
+    .await().atMost(atMost);
 
-  assertEquals("checklist-test-cases/delete-checklist-item.json", deleteChecklistItem);
-   
-  
-  final var deleteChecklist = client.tasks().updateTask().updateOne(ImmutableDeleteChecklist.builder()
-      .userId("John smith")
-      .taskId(task.getId())
-      .checklistId("3_TASK")
-      .targetDate(getTargetDate())
-      .build())
-  .await().atMost(atMost);
-  
+    assertEquals("checklist-test-cases/change-checklist-item-completed.json", changeChecklistItemCompleted);
 
-  assertEquals("checklist-test-cases/delete-checklist.json", deleteChecklist);
+    final var deleteChecklistItem = client.tasks().updateTask().updateOne(ImmutableDeleteChecklistItem.builder()
+        .userId("John smith")
+        .taskId(task.getId())
+        .checklistId("3_TASK")
+        .checklistItemId("4_TASK")
+        .targetDate(getTargetDate())
+        .build())
+    .await().atMost(atMost);
 
- 
- }
+
+    assertEquals("checklist-test-cases/delete-checklist-item.json", deleteChecklistItem);
+
+
+    final var deleteChecklist = client.tasks().updateTask().updateOne(ImmutableDeleteChecklist.builder()
+        .userId("John smith")
+        .taskId(task.getId())
+        .checklistId("3_TASK")
+        .targetDate(getTargetDate())
+        .build())
+    .await().atMost(atMost);
+
+
+    assertEquals("checklist-test-cases/delete-checklist.json", deleteChecklist);
+
+  }
 
 }
