@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormattedMessage, useIntl } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 
 import {
   Typography, Stack, Box, IconButton,
@@ -326,11 +326,6 @@ const Messages: React.FC<{}> = () => {
 
 const Menu: React.FC<{}> = () => {
   const { activeTab, withTab } = useMenu();
-  const intl = useIntl();
-
-  const getVariant = (tab: string) => {
-    return activeTab === tab ? 'contained' : 'outlined';
-  }
 
   const handleChange = (event: React.SyntheticEvent, newValue: MenuTab) => {
     withTab(newValue);
