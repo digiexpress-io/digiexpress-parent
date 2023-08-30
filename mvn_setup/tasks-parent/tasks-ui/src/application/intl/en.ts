@@ -71,8 +71,8 @@ const en = {
   'core.teamSpace.tab.task.dueSoon': 'Due soon',
   'core.teamSpace.tab.task.available': 'Available',
 
+  'core.teamSpace.tooltip.startWork': 'Start work', 
 
-  'core.myWork.button.task.start': 'Start work',
   'core.myWork.myWorkTaskTable.header.spotlight.myWorkOverdue': 'Overdue',
   'core.myWork.myWorkTaskTable.header.spotlight.myWorkStartsToday': 'Starts today',
   'core.myWork.myWorkTaskTable.header.spotlight.myWorkAssigned': 'Assigned to me',

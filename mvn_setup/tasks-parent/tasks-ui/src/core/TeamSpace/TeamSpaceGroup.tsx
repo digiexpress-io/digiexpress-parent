@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Divider, Alert, AlertTitle, IconButton, useTheme, Button, Typography} from '@mui/material';
+import { Box, Divider, Alert, AlertTitle, IconButton, useTheme, Button, Typography, Tooltip } from '@mui/material';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { FormattedMessage } from 'react-intl';
@@ -21,12 +21,16 @@ const StyledTaskItem: React.FC<{ task: Client.TaskDescriptor, onTask: (task: Cli
       }}
       onMouseLeave={() => setActive(false)} >
 
+      <Box width='7%' display='flex'>
+        {active && <Tooltip arrow placement='top' title={<FormattedMessage id='core.teamSpace.tooltip.startWork'/>}>
+        <IconButton sx={{ color: 'uiElements.main' }}><ArrowForwardIosIcon /></IconButton>
+        </Tooltip>}
+      </Box>
       <Box width='50%' maxWidth='50%'>
         <Typography fontWeight='bolder' noWrap>{task.title}</Typography>
       </Box>
-      <Box width='20%'>{active && <Button variant='outlined' color='inherit'>Start work</Button>}</Box>
       <Box width='25%' sx={{ textAlign: 'right' }}><Typography>{'due date'}</Typography></Box>
-      <Box width='5%'>{active && <IconButton><MoreHorizIcon /></IconButton>}</Box>
+      <Box display='flex' justifyContent='right'>{active && <IconButton><MoreHorizIcon /></IconButton>}</Box>
 
     </Box>
   );

@@ -1,23 +1,21 @@
 import React from 'react';
-import { Box, Stack, Paper, Grid, Tabs, Tab, Typography, AppBar } from '@mui/material';
+import { Box, Stack, Paper, Grid, Tabs, Tab, Typography } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
-
 import { StyledTaskItem, SummaryTaskNotSelected, SummaryTaskSelected } from './TeamSpaceGroup';
+
 import Client from '@taskclient';
-
-
 import { TeamSpaceState, TeamSpaceTabState, init } from './types';
 
 
 const TabPanel: React.FC<{ state: TeamSpaceTabState, children: React.ReactNode }> = ({ state, children }) => {
 
-  return (<div hidden={state.disabled}>
+  return (
+    <div hidden={state.disabled}>
+      {!state.disabled && (
+        <Paper sx={{ p: 2 }}><Stack>{children}</Stack></Paper>
+      )}
 
-    {!state.disabled && (
-      <Paper sx={{ p: 2 }}><Stack>{children}</Stack></Paper>
-    )}
-
-  </div>);
+    </div>);
 }
 
 
@@ -34,19 +32,17 @@ const TeamSpace: React.FC<{ data: TeamSpaceState }> = ({ data }) => {
 
   return (<>
     <Box position='fixed'>
-    <Paper>
-      <Tabs value={state.activeTab} onChange={handleActiveTab}>
-        {state.tabs.map(tab => (<Tab key={tab.id} label={<Typography sx={{ fontWeight: 'bold', color: tab.color }}><FormattedMessage id={tab.label} /></Typography>} />))}
-      </Tabs>
+      <Paper>
+        <Tabs value={state.activeTab} onChange={handleActiveTab}>
+          {state.tabs.map(tab => (<Tab key={tab.id} label={<Typography sx={{ fontWeight: 'bold', color: tab.color }}><FormattedMessage id={tab.label} /></Typography>} />))}
+        </Tabs>
       </Paper>
     </Box>
 
     <Box sx={{ mt: 7 }} />
 
     <Grid container spacing={1}>
-
-
-      <Grid item md={9} lg={9}>
+      <Grid item md={8} lg={8}>
         <Stack spacing={1}>
           {state.tabs.map(tab => (
             <TabPanel state={tab} key={tab.id}>
@@ -56,7 +52,7 @@ const TeamSpace: React.FC<{ data: TeamSpaceState }> = ({ data }) => {
         </Stack>
       </Grid>
 
-      <Grid item md={3} lg={3}>
+      <Grid item md={4} lg={4}>
         <Box display='flex' height='100%' position='fixed'>
           <Paper sx={{ p: 2 }}>
             <Stack direction='column' spacing={1}>
