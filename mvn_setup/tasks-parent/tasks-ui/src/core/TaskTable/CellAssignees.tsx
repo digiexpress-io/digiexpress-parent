@@ -1,14 +1,20 @@
 import React from 'react';
-import { Avatar, AvatarGroup, Box, SxProps, MenuList, MenuItem, ListItemText } from '@mui/material';
-
+import { Avatar, AvatarGroup, Box, SxProps, ListItemText, ListItem, Checkbox, Button, TextField, InputAdornment, List, ButtonProps } from '@mui/material';
 import client from '@taskclient';
-
-import TaskCell from './TaskCell';
 import { usePopover } from './CellPopover';
 import { CellProps } from './task-table-types';
 import { StyledTableCell } from './StyledTable';
+import Client from '@taskclient';
+import { AvatarCode } from 'taskclient/tasks-ctx-types';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import SearchIcon from '@mui/icons-material/Search';
+import { styled } from "@mui/material/styles";
 
-
+const StyledButton = styled(Button)<ButtonProps>(({ theme }) => ({
+  "&.MuiButtonBase-root": {
+    minWidth: "unset",
+  },
+}));
 
 function getAssignees(def: client.Group): SxProps | undefined {
   if (!def.color) {
@@ -20,48 +26,80 @@ function getAssignees(def: client.Group): SxProps | undefined {
 const Assignees: React.FC<CellProps> = ({ row, def }) => {
   const { state } = client.useTasks();
   const Popover = usePopover();
+  const org = Client.useOrg();
+  const users = org.state.org.users;
+  const assigneesAvatars = row.assigneesAvatars;
+  const [searchString, setSearchString] = React.useState<string>('');
 
-  const avatars = row.assigneesAvatars.map((entry, index) => {
-
+  const avatars = assigneesAvatars.map((entry, index) => {
     return (<Avatar key={index}
       sx={{
-        bgcolor: state.pallette.owners[entry.value],
+        bgcolor: state.pallette.owners[entry.value.toLowerCase()],
         width: 24,
         height: 24,
         fontSize: 10,
-        ':hover': {
-          cursor: 'pointer'
-        }
       }}>{entry.twoletters}</Avatar>
     );
   });
 
-  const avatarGroup = (avatars.length && <AvatarGroup spacing='small' onClick={Popover.onClick}>{avatars}</AvatarGroup>);
-  const name = (<Box flexDirection="row" display="flex">{avatarGroup}</Box>);
+  avatars.push(<Avatar key='add-icon' sx={{ width: 24, height: 24, fontSize: 10 }}><PersonAddIcon sx={{ fontSize: 15 }} /></Avatar>)
+  const avatarGroup = (avatars.length && <AvatarGroup spacing='medium' onClick={Popover.onClick}>{avatars}</AvatarGroup>);
+
+  const userAvatarCodes: AvatarCode[] = users.map(({ displayName }) => ({
+    value: displayName,
+    twoletters: displayName.match(/\b\w/g)!.join(''),
+  }));
+
+  const filteredUserAvatarCodes = searchString !== '' ?
+    userAvatarCodes.filter(entry => entry.value.toLowerCase().includes(searchString.toLowerCase())) :
+    userAvatarCodes;
+
+  const userAvatars = filteredUserAvatarCodes.map((entry, index) => {
+    const value = entry.value.toLowerCase();
+    return (
+      <>
+        <ListItem key={index}>
+          <Checkbox checked={assigneesAvatars.find(a => a.value === value) !== undefined} />
+          <Avatar key={index}
+            sx={{
+              bgcolor: state.pallette.owners[value.toLowerCase()],
+              width: 24,
+              height: 24,
+              fontSize: 10,
+              mr: 1,
+            }}>{entry.twoletters}</Avatar>
+          <ListItemText>{value}</ListItemText>
+        </ListItem>
+      </>
+    );
+  });
 
   return (
-    <>
+    <Box>
+      <StyledButton variant='text' color='inherit'>
+        {avatarGroup}
+      </StyledButton>
       <Popover.Delegate>
-        <MenuList dense>
-          <MenuItem>
-            <ListItemText>Assignee1</ListItemText>
-          </MenuItem>
-          <MenuItem>
-            <ListItemText>Assignee2</ListItemText>
-          </MenuItem>
-          <MenuItem>
-            <ListItemText>Assignee3</ListItemText>
-          </MenuItem>
-          <MenuItem>
-            <ListItemText>Assignee4</ListItemText>
-          </MenuItem>
-          <MenuItem>
-            <ListItemText>Assignee5</ListItemText>
-          </MenuItem>
-        </MenuList>
+        <TextField
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon color='primary' />
+              </InputAdornment>
+            ),
+          }}
+          fullWidth
+          variant='standard'
+          placeholder='Search'
+          value={searchString}
+          onChange={(e) => setSearchString(e.target.value)}
+        />
+        <List dense>
+          {userAvatars}
+        </List>
       </Popover.Delegate>
-      <TaskCell id={row.id + "/Assignees"} name={name} />
-    </>);
+    </Box>
+  )
 }
 
 
