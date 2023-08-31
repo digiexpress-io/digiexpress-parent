@@ -5,7 +5,8 @@ import {
   Typography, Stack, Box, IconButton,
   Button, List, ListItem, styled, Alert, Avatar, Dialog,
   DialogTitle, DialogActions, DialogContent, TextareaAutosize, alpha,
-  useTheme, Tabs, Tab, Paper, Badge
+  useTheme, Tabs, Tab, Paper, Badge, ButtonGroup, Popper, Grow,
+  ClickAwayListener, MenuList, MenuItem
 } from '@mui/material';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
@@ -21,6 +22,11 @@ import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import CloseIcon from '@mui/icons-material/Close';
 import CallMadeIcon from '@mui/icons-material/CallMade';
 import CallReceivedIcon from '@mui/icons-material/CallReceived';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import CancelIcon from '@mui/icons-material/Cancel';
+import CheckIcon from '@mui/icons-material/Check';
+import BlockIcon from '@mui/icons-material/Block';
+import EditIcon from '@mui/icons-material/Edit';
 
 import TaskClient from '@taskclient';
 
@@ -364,5 +370,66 @@ const CloseDialogButton: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   )
 }
 
-const Fields = { Title, Description, Checklist, StartDate, DueDate, Attachments, Form, Messages, Menu, CloseDialogButton }
+const SplitButton: React.FC<{}> = () => {
+  const [open, setOpen] = React.useState(false);
+  const anchorRef = React.useRef<HTMLDivElement>(null);
+
+  const handleToggle = () => {
+    setOpen(!open);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  return (
+    <React.Fragment>
+      <ButtonGroup variant="contained" ref={anchorRef}>
+        <Button startIcon={<CheckIcon />}>
+          <Typography><FormattedMessage id='core.taskWork.button.accept'></FormattedMessage></Typography>
+        </Button>
+        <Button size="small" onClick={handleToggle}>
+          <ArrowDropDownIcon />
+        </Button>
+      </ButtonGroup>
+      <Popper
+        open={open}
+        anchorEl={anchorRef.current}
+        transition
+        disablePortal
+        placement='top-end'
+      >
+        {({ TransitionProps }) => (
+          <Grow
+            {...TransitionProps}
+            style={{
+              transformOrigin: 'center bottom',
+            }}
+          >
+            <Paper>
+              <ClickAwayListener onClickAway={handleClose}>
+                <MenuList autoFocusItem sx={{ textTransform: 'uppercase' }}>
+                  <MenuItem key='reject' onClick={() => handleClose}>
+                    <BlockIcon color='error' sx={{ mr: 1 }} />
+                    <Typography><FormattedMessage id='core.taskWork.button.reject' /></Typography>
+                  </MenuItem>
+                  <MenuItem key='edit' onClick={() => handleClose}>
+                    <EditIcon color='warning' sx={{ mr: 1 }} />
+                    <Typography ><FormattedMessage id='core.taskWork.button.edit' /></Typography>
+                  </MenuItem>
+                  <MenuItem key='cancel' onClick={() => handleClose}>
+                    <CancelIcon color='info' sx={{ mr: 1 }} />
+                    <Typography><FormattedMessage id='core.taskWork.button.cancel' /></Typography>
+                  </MenuItem>
+                </MenuList>
+              </ClickAwayListener>
+            </Paper>
+          </Grow>
+        )}
+      </Popper>
+    </React.Fragment>
+  );
+}
+
+const Fields = { Title, Description, Checklist, StartDate, DueDate, Attachments, Form, Messages, Menu, CloseDialogButton, SplitButton }
 export default Fields;

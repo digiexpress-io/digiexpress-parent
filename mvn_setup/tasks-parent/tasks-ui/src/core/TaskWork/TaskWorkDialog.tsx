@@ -65,10 +65,7 @@ const Header: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   return (
     <>
-      <Burger.PrimaryButton label='core.taskWork.button.reject' onClick={onClose} sx={{ backgroundColor: 'error.main', ':hover': { backgroundColor: 'error.dark' } }} />
-      <Burger.PrimaryButton label='core.taskWork.button.complete' onClick={onClose} sx={{ backgroundColor: 'success.main', ':hover': { backgroundColor: 'success.dark' } }} />
-      <Burger.PrimaryButton label='core.taskWork.button.edit' onClick={onClose} sx={{ backgroundColor: 'warning.main', ':hover': { backgroundColor: 'warning.dark' } }} />
-      <Burger.PrimaryButton label='core.taskWork.button.cancel' onClick={onClose} />
+      <Fields.SplitButton />
     </>
   )
 }
