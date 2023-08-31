@@ -99,6 +99,8 @@ public interface Task extends Document {
     String getType(); //attachment, dialob, etc.
     String getName();
     String getBody();
+    Instant getCreated();
+    Instant getUpdated();
   }
   
   @Value.Immutable @JsonSerialize(as = ImmutableTaskComment.class) @JsonDeserialize(as = ImmutableTaskComment.class)

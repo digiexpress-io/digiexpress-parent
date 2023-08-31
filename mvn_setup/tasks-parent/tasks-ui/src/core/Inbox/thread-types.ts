@@ -1,3 +1,5 @@
+import { TaskExtension } from "taskclient/task-types"
+
 interface Thread {
   id: string
   userName: string
@@ -12,14 +14,9 @@ interface Message {
   representerName?: string
   text: string
   date: Date
-  attachments: Attachment[]
+  attachments: TaskExtension[]
   read: boolean
   replyToId?: string
-}
-
-interface Attachment {
-  id: string
-  name: string
 }
 
 interface ThreadPreviewProps {
@@ -30,4 +27,4 @@ interface ThreadPreviewProps {
 
 type TabType = 'messages' | 'attachments' | 'form'
 
-export type { Thread, Message, Attachment, ThreadPreviewProps, TabType }
+export type { Thread, Message, ThreadPreviewProps, TabType }

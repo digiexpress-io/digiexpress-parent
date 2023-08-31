@@ -176,6 +176,8 @@ public class RandomDataProvider {
       .type("dialob")
       .body("dialob-content")
       .name("dialob-form")
+      .created(Instant.now())
+      .updated(Instant.now())
       .build();
     if(nextInt(1, 2) == 2) {
       final var pdf = ImmutableTaskExtension.builder()
@@ -183,6 +185,8 @@ public class RandomDataProvider {
           .type("upload")
           .body("")
           .name(DOCS.get(nextInt(1, DOCS.size()) -1))
+          .created(Instant.now())
+          .updated(Instant.now())
           .build();
       return Arrays.asList(dialob, pdf);
     }

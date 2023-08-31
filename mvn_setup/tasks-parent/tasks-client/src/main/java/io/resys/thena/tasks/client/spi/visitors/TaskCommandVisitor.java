@@ -271,6 +271,8 @@ public class TaskCommandVisitor {
         .name(command.getName())
         .type(command.getType())
         .body(command.getBody())
+        .created(requireTargetDate(command))
+        .updated(requireTargetDate(command))
         .build());
     this.current = this.current
         .withExtensions(extensions)
@@ -280,11 +282,17 @@ public class TaskCommandVisitor {
 
   private Task visitChangeTaskExtension(ChangeTaskExtension command) {
     final var id = command.getId();
+    final var oldExtension = current.getExtensions().stream()
+        .filter(e -> e.getId().equals(id))
+        .findFirst()
+        .orElseThrow(() -> new UpdateTaskVisitorException(String.format("Extension with id: %s not found!", id)));
     final var newExtension = ImmutableTaskExtension.builder()
         .id(id)
         .name(command.getName())
         .type(command.getType())
         .body(command.getBody())
+        .created(oldExtension.getCreated())
+        .updated(requireTargetDate(command))
         .build();
     final var newExtensionList = replaceItemInList(current.getExtensions(), newExtension);
     this.current = this.current

@@ -387,7 +387,7 @@ public class TaskUpdateTest extends TaskTestCase {
             .targetDate(
               getTargetDate()
                 .plus(1, java.time.temporal.ChronoUnit.DAYS)
-                .plus(1, java.time.temporal.ChronoUnit.HOURS)
+                .plus(2, java.time.temporal.ChronoUnit.HOURS)
             )
             .id("3_TASK")
             .type("attachment")

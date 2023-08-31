@@ -57,6 +57,8 @@ export interface TaskExtension {
   type: 'dialob' | 'upload' | string;
   name: string;
   body: string;
+  created: string;
+  updated: string;
 }
 
 export interface TaskComment {

@@ -14,8 +14,9 @@ import CallReceivedIcon from '@mui/icons-material/CallReceived';
 import DownloadIcon from '@mui/icons-material/Download';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-import { Attachment, Message, TabType, Thread } from "./thread-types"
+import { Message, TabType, Thread } from "./thread-types"
 import { AttachmentAndDateTime } from "./ThreadPreview";
+import { TaskExtension } from "taskclient/task-types";
 
 const PaddedTypography = styled(Typography)(({ theme }) => ({
   padding: theme.spacing(1),
@@ -64,6 +65,7 @@ const ListItemContainer = styled(Box)({
   flexDirection: 'row',
   justifyContent: 'space-between',
   width: '100%',
+  alignItems: 'center'
 })
 
 const ExpandableMessageContainer = styled(Box)(({ theme }) => ({
@@ -164,7 +166,7 @@ const MessageExpandedSection: React.FC<{ message: Message }> = ({ message }) => 
 }
 
 
-const AttachmentListItem: React.FC<{ attachment: Attachment }> = ({ attachment }) => {
+const AttachmentListItem: React.FC<{ attachment: TaskExtension }> = ({ attachment }) => {
   const theme = useTheme();
   const backgroundColor = attachment.id.includes('2') ? theme.palette.background.paper : alpha(theme.palette.primary.main, 0.1);
   const icon = attachment.id.includes('2') ? <CallMadeIcon color='primary' /> : <CallReceivedIcon color='primary' />;
@@ -173,7 +175,10 @@ const AttachmentListItem: React.FC<{ attachment: Attachment }> = ({ attachment }
       <ListItemContainer>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           {icon}
-          <PaddedTypography>{attachment.name}</PaddedTypography>
+          <Box>
+            <PaddedTypography>{attachment.name}</PaddedTypography>
+            <PaddedTypography>{attachment.created}</PaddedTypography>
+          </Box>
         </Box>
         <Box>
           <IconButton>
@@ -223,7 +228,7 @@ const MessagesTab: React.FC<{ thread: Thread }> = ({ thread }) => {
   )
 }
 
-const AttachmentsTab: React.FC<{ attachments: Attachment[] }> = ({ attachments }) => {
+const AttachmentsTab: React.FC<{ attachments: TaskExtension[] }> = ({ attachments }) => {
   return (
     <List sx={{ p: 0 }}>
       {attachments.map(attachment => <AttachmentListItem key={attachment.id} attachment={attachment} />)}
