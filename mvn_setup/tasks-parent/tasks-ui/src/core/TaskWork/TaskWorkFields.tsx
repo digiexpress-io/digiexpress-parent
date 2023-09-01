@@ -343,22 +343,20 @@ const Menu: React.FC<{}> = () => {
   };
 
   return (
-    <Paper>
-      <Tabs value={activeTab} onChange={handleChange}>
-        <Tab
-          label={<Typography sx={{ color: 'warning.main' }} variant='subtitle2'><FormattedMessage id='core.taskWork.menu.messages' /></Typography>}
-          value='messages'
-          icon={<Badge badgeContent={unreadMessages} color='warning'><ForumIcon color='warning' /></Badge>} />
-        <Tab
-          label={<Typography sx={{ color: 'info.main' }} variant='subtitle2'><FormattedMessage id='core.taskWork.menu.attachments' /></Typography>}
-          value='attachments'
-          icon={<Badge badgeContent={noOfAttachments} color='info'><AttachEmailIcon color='info' /></Badge>} />
-        <Tab
-          label={<Typography sx={{ color: 'primary.main' }} variant='subtitle2'><FormattedMessage id='core.taskWork.menu.checklists' /></Typography>}
-          value='checklists'
-          icon={<Badge badgeContent={noOfChecklists} color='primary'><AssignmentTurnedInIcon color='primary' /></Badge>} />
-      </Tabs>
-    </Paper >
+    <Tabs value={activeTab} onChange={handleChange} sx={{ mb: 0, pb: 0 }}>
+      <Tab
+        label={<Typography sx={{ color: 'warning.main' }} variant='subtitle2'><FormattedMessage id='core.taskWork.menu.messages' /></Typography>}
+        value='messages'
+        icon={<Badge badgeContent={unreadMessages} color='warning'><ForumIcon color='warning' /></Badge>} />
+      <Tab
+        label={<Typography sx={{ color: 'info.main' }} variant='subtitle2'><FormattedMessage id='core.taskWork.menu.attachments' /></Typography>}
+        value='attachments'
+        icon={<Badge badgeContent={noOfAttachments} color='info'><AttachEmailIcon color='info' /></Badge>} />
+      <Tab
+        label={<Typography sx={{ color: 'primary.main' }} variant='subtitle2'><FormattedMessage id='core.taskWork.menu.checklists' /></Typography>}
+        value='checklists'
+        icon={<Badge badgeContent={noOfChecklists} color='primary'><AssignmentTurnedInIcon color='primary' /></Badge>} />
+    </Tabs>
   )
 }
 
@@ -431,5 +429,5 @@ const SplitButton: React.FC<{}> = () => {
   );
 }
 
-const Fields = { Title, Description, Checklist, StartDate, DueDate, Attachments, Form, Messages, Menu, CloseDialogButton, SplitButton }
+const Fields = { Title, Description, Checklist, StartDate, DueDate, Attachments, Form, Messages, Menu, CloseDialogButton, SplitButton };
 export default Fields;
