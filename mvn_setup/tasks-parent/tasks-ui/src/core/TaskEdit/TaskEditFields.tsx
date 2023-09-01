@@ -110,6 +110,8 @@ const Status: React.FC<{}> = () => {
 const Assignee: React.FC<{}> = () => {
   const tasksContext = TaskClient.useTasks();
   const { state } = TaskClient.useTaskEdit();
+  const org = TaskClient.useOrg();
+  const users = org.state.org.users;
   const assigneesAvatars = state.task.assigneesAvatars;
   const Popover = usePopover();
   const [searchString, setSearchString] = React.useState<string>('');
@@ -127,25 +129,22 @@ const Assignee: React.FC<{}> = () => {
   avatars.push(<Avatar key='add-icon' sx={{ width: 24, height: 24, fontSize: 10 }}><PersonAddIcon sx={{ fontSize: 15 }} /></Avatar>)
   const avatarGroup = (avatars.length && <AvatarGroup spacing='medium' onClick={Popover.onClick}>{avatars}</AvatarGroup>);
 
-  const demoUsers = [
-    ['SV', 'sam vimes'],
-    ['CI', 'carrot ironfoundersson'],
-    ['CL', 'cherry littlefoot'],
-    ['LV', 'lord vetinari'],
-    ['NN', 'nobby nobbs'],
-  ];
-  const userAvatarCodes: AvatarCode[] = demoUsers.map(entry => { return { value: entry[1], twoletters: entry[0] } });
+  const userAvatarCodes: AvatarCode[] = users.map(({ displayName }) => ({
+    value: displayName,
+    twoletters: displayName.match(/\b\w/g)!.join(''),
+  }));
   const filteredUserAvatarCodes = searchString !== '' ?
     userAvatarCodes.filter(entry => entry.value.toLowerCase().includes(searchString.toLowerCase())) :
     userAvatarCodes;
   const userAvatars = filteredUserAvatarCodes.map((entry, index) => {
+    const value = entry.value.toLowerCase();
     return (
       <>
         <ListItem key={index}>
-          <Checkbox checked={assigneesAvatars.find(a => a.value === entry.value) !== undefined} />
+          <Checkbox checked={assigneesAvatars.find(a => a.value === value) !== undefined} />
           <Avatar key={index}
             sx={{
-              bgcolor: tasksContext.state.pallette.owners[entry.value],
+              bgcolor: tasksContext.state.pallette.owners[value],
               width: 24,
               height: 24,
               fontSize: 10,
