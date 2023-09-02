@@ -5,12 +5,10 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { FormattedMessage } from 'react-intl';
 import Client from '@taskclient';
 
-
-
 const StyledTaskItem: React.FC<{ task: Client.TaskDescriptor, onTask: (task: Client.TaskDescriptor) => void }> = ({ task, onTask }) => {
   const theme = useTheme();
   const [active, setActive] = React.useState(false);
-
+  const taskDueDate = task.dueDate?.toLocaleDateString();
 
   return (
     <Box sx={{ my: 1 }} display='flex' alignItems='center'
@@ -22,16 +20,15 @@ const StyledTaskItem: React.FC<{ task: Client.TaskDescriptor, onTask: (task: Cli
       onMouseLeave={() => setActive(false)} >
 
       <Box width='7%' display='flex'>
-        {active && <Tooltip arrow placement='top' title={<FormattedMessage id='core.teamSpace.tooltip.startWork'/>}>
-        <IconButton sx={{ color: 'uiElements.main' }}><ArrowForwardIosIcon /></IconButton>
+        {active && <Tooltip arrow placement='top' title={<FormattedMessage id='core.teamSpace.tooltip.startWork' />}>
+          <IconButton sx={{ color: 'uiElements.main' }}><ArrowForwardIosIcon /></IconButton>
         </Tooltip>}
       </Box>
       <Box width='50%' maxWidth='50%'>
         <Typography fontWeight='bolder' noWrap>{task.title}</Typography>
       </Box>
-      <Box width='25%' sx={{ textAlign: 'right' }}><Typography>{'due date'}</Typography></Box>
+      <Box width='25%' sx={{ textAlign: 'right' }}><Typography>{taskDueDate}</Typography></Box>
       <Box display='flex' justifyContent='right'>{active && <IconButton><MoreHorizIcon /></IconButton>}</Box>
-
     </Box>
   );
 }

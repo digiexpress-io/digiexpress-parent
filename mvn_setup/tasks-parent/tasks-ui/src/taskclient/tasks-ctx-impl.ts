@@ -1,4 +1,4 @@
-import { parseISO, isAfter, isEqual, subDays } from 'date-fns';
+import { parseISO, isAfter, isEqual, subDays, differenceInCalendarDays } from 'date-fns';
 
 import { Task, TaskExtension, TaskPriority, TaskStatus } from './task-types';
 import {
@@ -455,13 +455,16 @@ function getTeamspaceType(task: Task, profile: Profile, today: Date): TeamGroupT
   }
 
   const { dueDate } = task;
+  if (!dueDate) {
+    return undefined;
+  }
 
-  if (dueDate && isAfter(today, parseISO(dueDate))) {
+  const dueDateClean = parseISO(dueDate);
+
+  if (isAfter(today, dueDateClean)) {
     return "groupOverdue";
   }
-  
-  const three_days = 3;
-  if (dueDate && subDays(parseISO(dueDate), three_days)) {
+  if (dueDateClean && differenceInCalendarDays(dueDateClean, today) <= 5) {
     return "groupDueSoon";
   }
   return "groupAvailable";
