@@ -11,13 +11,24 @@ import TaskEditDialog from 'core/TaskEdit';
 import TaskWorkDialog from 'core/TaskWork';
 import { StyledTableCell } from './StyledTable';
 
-const StyledListItemText = styled(ListItemText)(({ theme }) => ({
+const StyledBox = styled(Box)(({ theme }) => ({
   color: theme.palette.error.main,
-  "&>span":{
-    display: "flex",
-    alignItems: 'center'
-  }
+  display: "flex",
+  alignItems: 'center'
 }));
+
+const CellMenuItem: React.FC<{ 
+  onClick?: () => void, 
+  title: string,
+}> = ({ title, onClick }) => {
+  return (
+    <MenuItem onClick={onClick}>
+      <ListItemText>
+        <FormattedMessage id={title} />
+      </ListItemText>
+    </MenuItem>
+  )
+}
 
 const HoverMenu: React.FC<{ 
   onEdit: () => void, 
@@ -29,27 +40,15 @@ const HoverMenu: React.FC<{
     <>
       <Popover.Delegate>
         <MenuList dense>
-          <MenuItem onClick={onEdit}>
-            <ListItemText>
-              <FormattedMessage id={`tasktable.menu.edit`} />
-            </ListItemText>
-          </MenuItem>
-          <MenuItem onClick={onWork}>
-            <ListItemText>
-              <FormattedMessage id={`tasktable.menu.work`} />
-            </ListItemText>
-          </MenuItem>
-          <MenuItem>
-            <ListItemText>
-              <FormattedMessage id={`tasktable.menu.viewData`} />
-            </ListItemText>
-          </MenuItem>
+          <CellMenuItem onClick={onEdit} title={`tasktable.menu.edit`} />
+          <CellMenuItem onClick={onWork} title={`tasktable.menu.work`} />
+          <CellMenuItem title={`tasktable.menu.viewData`} />
           <Divider />
           <MenuItem>
-            <StyledListItemText>
+            <StyledBox>
               <DeleteIcon />
               <FormattedMessage id={`tasktable.menu.archive`} />
-            </StyledListItemText>
+            </StyledBox>
           </MenuItem>
         </MenuList>
       </Popover.Delegate>
@@ -65,7 +64,7 @@ const FormattedCell: React.FC<{
   def: client.Group,
   active: boolean,
   setDisabled: () => void
-}> = ({ row, def, active, setDisabled }) => {
+}> = ({ row, active, setDisabled }) => {
   const [edit, setEdit] = React.useState(false);
   const [work, setWork] = React.useState(false);
 
@@ -87,17 +86,19 @@ const FormattedCell: React.FC<{
     setWork(false);
   }
 
-  return (<StyledTableCell width="35px">
-    <Box width="35px" justifyContent='right'> {/* Box is needed to prevent table cell resize on hover */}
-      <TaskEditDialog open={edit} onClose={handleEndEdit} task={row} />
-      <TaskWorkDialog open={work} onClose={handleEndWork} task={row} />
-      {active && 
-        <HoverMenu 
-          onEdit={handleStartEdit} 
-          onWork={handleStartWork} 
-        />}
-    </Box>
-  </StyledTableCell>);
+  return (
+    <StyledTableCell width="35px">
+      <Box width="35px" justifyContent='right'> {/* Box is needed to prevent table cell resize on hover */}
+        <TaskEditDialog open={edit} onClose={handleEndEdit} task={row} />
+        <TaskWorkDialog open={work} onClose={handleEndWork} task={row} />
+        {active && 
+          <HoverMenu 
+            onEdit={handleStartEdit} 
+            onWork={handleStartWork} 
+          />}
+      </Box>
+    </StyledTableCell>
+  );
 }
 
 export default FormattedCell;
