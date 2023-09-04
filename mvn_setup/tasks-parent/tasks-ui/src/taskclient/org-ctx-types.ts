@@ -1,4 +1,4 @@
-import { Org, User } from './client-types'; 
+import { Org, User, UserId } from './client-types'; 
 
 export interface OrgContextType {
   setState: OrgDispatch;
@@ -6,14 +6,21 @@ export interface OrgContextType {
   state: OrgState,
 }
 
-export type OrgMutator = (prev: OrgMutatorBuilder) => OrgMutatorBuilder;
+export type OrgMutator = (prev: OrgState) => OrgState;
 export type OrgDispatch = (mutator: OrgMutator) => void;
+
+export interface UserSearchResult {
+  checked: boolean,
+  avatar: { twoletters: string, value: UserId },
+  user: User
+}
+
 export interface OrgState { 
   org: Org; 
   iam: User; 
-}
-
-export interface OrgMutatorBuilder extends OrgState {
-  withOrg(value: Org): OrgMutatorBuilder;
-  withIam(value: User): OrgMutatorBuilder;
+  
+  withOrg(value: Org): OrgState;
+  withIam(value: User): OrgState;
+  
+  findUsers(searchFor: string, checkedUsers: UserId[]): UserSearchResult[];
 }

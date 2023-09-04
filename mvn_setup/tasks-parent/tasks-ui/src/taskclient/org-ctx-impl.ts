@@ -1,18 +1,19 @@
 import {
-  User, Org
+  UserId, User, Org
 } from './client-types';
 
 import {
-  OrgMutatorBuilder, OrgState
+  OrgState, UserSearchResult
 } from './org-ctx-types';
 
 
 
-interface ExtendedInit extends OrgState {
-
+interface ExtendedInit {
+  org: Org; 
+  iam: User;
 }
 
-class OrgMutatorBuilderImpl implements OrgMutatorBuilder {
+class OrgMutatorBuilderImpl implements OrgState {
   private _org: Org; 
   private _iam: User;
 
@@ -23,12 +24,28 @@ class OrgMutatorBuilderImpl implements OrgMutatorBuilder {
   get org(): Org { return this._org };
   get iam(): User { return this._iam };
 
-  withIam(value: User): OrgMutatorBuilder {
+  withIam(value: User): OrgState {
     return new OrgMutatorBuilderImpl({ ...this.clone(), iam: value });
   }
-  withOrg(value: Org): OrgMutatorBuilder {
+  withOrg(value: Org): OrgState {
     return new OrgMutatorBuilderImpl({ ...this.clone(), org: value });
   }
+  
+  findUsers(searchFor: string, checkedUsers: UserId[]): UserSearchResult[] {
+    const criteria = searchFor.toLowerCase();
+    const target = Object.values(this._org.users);
+    
+    const result = criteria ?
+      target.filter(entry => entry.displayName.toLowerCase().includes(criteria)) :
+      target;
+
+    return result.map(user => ({
+      checked: checkedUsers.includes(user.userId),
+      avatar: { twoletters: user.avatar, value: user.userId },
+      user
+    }));
+  }
+  
   clone(): ExtendedInit {
     const init = this;
     return {

@@ -139,6 +139,7 @@ namespace TaskClient {
   export const useBackend = Hooks.useBackend;
   export const useTasks = Hooks.useTasks;
   export const useOrg = Hooks.useOrg;
+  export const useAssignees = Hooks.useAssignees;
   export const useTaskEdit = Hooks.useTaskEdit;
   export const useSite = Hooks.useSite;
   export const useUnsaved = Hooks.useUnsaved;

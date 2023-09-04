@@ -5,7 +5,7 @@ import { Tab, TabEntity, TabBody, Document } from './composer-types';
 import { ComposerContext, ComposerContextType, ClientContextType, ClientContext } from './client-ctx';
 import ArticleTabIndicator from './Components/ArticleTabIndicator';
 import { TasksContext } from './tasks-ctx';
-import { TasksContextType } from './tasks-ctx-types';
+import { TasksContextType, TaskDescriptor } from './tasks-ctx-types';
 import { OrgContext } from './org-ctx';
 import { OrgContextType } from './org-ctx-types';
 import { TaskEditContextType } from './task-edit-ctx-types';
@@ -65,6 +65,12 @@ export const useTaskEdit = () => {
 export const useTasks = () => {
   const result: TasksContextType = React.useContext(TasksContext);
   return result;
+}
+export const useAssignees = (row: TaskDescriptor) => {
+  const org = useOrg();
+  const [searchString, setSearchString] = React.useState<string>('');
+  const searchResults = React.useMemo(() => org.state.findUsers(searchString, row.assignees), [row, searchString, org]);
+  return { searchString, setSearchString, searchResults };
 }
 export const useOrg = () => {
   const result: OrgContextType = React.useContext(OrgContext);
