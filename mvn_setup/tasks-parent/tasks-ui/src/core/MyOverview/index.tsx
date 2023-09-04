@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Grid, Stack, Typography } from '@mui/material';
+import { Box, Grid, Stack, Typography, Table, TableCell, TableRow, TableContainer, Paper, alpha } from '@mui/material';
 import CircleIcon from '@mui/icons-material/Circle';
 import { PieChart, Pie, Cell } from 'recharts';
 import { FormattedMessage } from 'react-intl';
@@ -45,6 +45,37 @@ const MyWork: React.FC<{}> = () => {
           </Stack>
         </Grid>
       </Grid>
+      <Paper sx={{ width: 0.6 }}>
+        <TableContainer>
+          <Table>
+            {data.groups.map((group, index) => (
+              <TableRow key={`group-row-${index}`}>
+                <TableCell variant="head" sx={{ backgroundColor: alpha(group.color, 0.5) }}>
+                  <Typography variant='h5' sx={{ fontWeight: '600' }}><FormattedMessage id={`core.myOverview.${group.name}`} /></Typography>
+                </TableCell>
+                <TableCell>
+                  {group.events.map((event, index) => (
+                    <TableRow key={`event-${index}`} >
+                      <Typography sx={{ color: event.color }}>
+                        <FormattedMessage id={`core.myOverview.${event.type}`} />
+                      </Typography>
+                    </TableRow>
+                  ))}
+                </TableCell>
+                <TableCell>
+                  {group.events.map((event, index) => (
+                    <TableRow key={`value-${index}`} >
+                      <Typography sx={{ color: event.color }}>
+                        {event.value}
+                      </Typography>
+                    </TableRow>
+                  ))}
+                </TableCell>
+              </TableRow>
+            ))}
+          </Table>
+        </TableContainer>
+      </Paper>
     </>
   );
 }
