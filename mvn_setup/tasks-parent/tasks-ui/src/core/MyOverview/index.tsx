@@ -54,8 +54,8 @@ const MyWork: React.FC<{}> = () => {
                   <Typography variant='h5'><FormattedMessage id={`core.myOverview.${group.name}`} /></Typography>
                 </TableCell>
                 <TableCell>
-                  {group.events.map((event, index) => (
-                    <TableRow key={`event-${index}`} >
+                  {group.events.map((event, i) => (
+                    <TableRow key={`event-${i}`} >
                       <Typography>
                         <FormattedMessage id={`core.myOverview.${event.type}`} />
                       </Typography>
@@ -63,8 +63,8 @@ const MyWork: React.FC<{}> = () => {
                   ))}
                 </TableCell>
                 <TableCell>
-                  {group.events.map((event, index) => (
-                    <TableRow key={`value-${index}`} >
+                  {group.events.map((event, key) => (
+                    <TableRow key={`value-${key}`} >
                       <Typography>
                         {event.value}
                       </Typography>
