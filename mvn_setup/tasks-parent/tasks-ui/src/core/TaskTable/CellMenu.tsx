@@ -8,8 +8,8 @@ import client from '@taskclient';
 import { usePopover } from './CellPopover';
 import CellHoverButton from './CellMenuButton';
 import TaskEditDialog from 'core/TaskEdit';
-import { StyledTableCell } from './StyledTable';
 import TaskWorkDialog from 'core/TaskWork';
+import { StyledTableCell } from './StyledTable';
 
 const StyledListItemText = styled(ListItemText)(({ theme }) => ({
   color: theme.palette.error.main,
@@ -22,9 +22,7 @@ const StyledListItemText = styled(ListItemText)(({ theme }) => ({
 const HoverMenu: React.FC<{ 
   onEdit: () => void, 
   onWork: () => void,
-  onViewCustomerData: () => void,
-  onArchive: () => void
-}> = ({ onEdit, onWork, onViewCustomerData, onArchive }) => {
+}> = ({ onEdit, onWork }) => {
   const Popover = usePopover();
 
   return (
@@ -41,13 +39,13 @@ const HoverMenu: React.FC<{
               <FormattedMessage id={`tasktable.menu.work`} />
             </ListItemText>
           </MenuItem>
-          <MenuItem onClick={onViewCustomerData}>
+          <MenuItem>
             <ListItemText>
               <FormattedMessage id={`tasktable.menu.viewData`} />
             </ListItemText>
           </MenuItem>
           <Divider />
-          <MenuItem onClick={onArchive}>
+          <MenuItem>
             <StyledListItemText>
               <DeleteIcon />
               <FormattedMessage id={`tasktable.menu.archive`} />
@@ -89,14 +87,6 @@ const FormattedCell: React.FC<{
     setWork(false);
   }
 
-  function handleArchiveTask() {
-    // TODO
-  }
-  
-  function handleViewCustomerData() {
-    // TODO
-  }
-
   return (<StyledTableCell width="35px">
     <Box width="35px" justifyContent='right'> {/* Box is needed to prevent table cell resize on hover */}
       <TaskEditDialog open={edit} onClose={handleEndEdit} task={row} />
@@ -105,8 +95,6 @@ const FormattedCell: React.FC<{
         <HoverMenu 
           onEdit={handleStartEdit} 
           onWork={handleStartWork} 
-          onArchive={handleArchiveTask}
-          onViewCustomerData={handleViewCustomerData}
         />}
     </Box>
   </StyledTableCell>);
