@@ -51,12 +51,12 @@ const MyWork: React.FC<{}> = () => {
             {data.groups.map((group, index) => (
               <TableRow key={`group-row-${index}`}>
                 <TableCell variant="head" sx={{ backgroundColor: alpha(group.color, 0.5) }}>
-                  <Typography variant='h5' sx={{ fontWeight: '600' }}><FormattedMessage id={`core.myOverview.${group.name}`} /></Typography>
+                  <Typography variant='h5'><FormattedMessage id={`core.myOverview.${group.name}`} /></Typography>
                 </TableCell>
                 <TableCell>
                   {group.events.map((event, index) => (
                     <TableRow key={`event-${index}`} >
-                      <Typography sx={{ color: event.color }}>
+                      <Typography>
                         <FormattedMessage id={`core.myOverview.${event.type}`} />
                       </Typography>
                     </TableRow>
@@ -65,7 +65,7 @@ const MyWork: React.FC<{}> = () => {
                 <TableCell>
                   {group.events.map((event, index) => (
                     <TableRow key={`value-${index}`} >
-                      <Typography sx={{ color: event.color }}>
+                      <Typography>
                         {event.value}
                       </Typography>
                     </TableRow>
