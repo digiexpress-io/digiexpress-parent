@@ -39,6 +39,13 @@ import { useMenu } from './menu-ctx';
 import { MenuTab } from './menu-ctx-types';
 
 
+interface SplitButtonItemProps {
+  key: string,
+  icon: React.ReactNode,
+  buttonText: string,
+  onClick: () => void;
+}
+
 const StyledListItem = styled(ListItem)(({ theme }) => ({
   borderTop: '1px solid',
   borderBottom: '1px solid',
@@ -368,7 +375,18 @@ const CloseDialogButton: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   )
 }
 
-const SplitButton: React.FC<{}> = () => {
+const SplitButtonItem: React.FC<SplitButtonItemProps> = (props) => {
+  const { key, icon, buttonText, onClick } = props;
+
+  return (
+    <MenuItem key={key} onClick={onClick}>
+      {icon}
+      <Typography sx={{ ml: 1 }}><FormattedMessage id={buttonText} /></Typography>
+    </MenuItem>
+  )
+}
+
+const SplitButton: React.FC<{ onClose?: () => void }> = ({ onClose }) => {
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef<HTMLDivElement>(null);
 
@@ -378,12 +396,13 @@ const SplitButton: React.FC<{}> = () => {
 
   const handleClose = () => {
     setOpen(false);
+    onClose && onClose();
   };
 
   return (
     <React.Fragment>
       <ButtonGroup variant="contained" ref={anchorRef}>
-        <Button startIcon={<CheckIcon />}>
+        <Button startIcon={<CheckIcon />} onClick={handleClose}>
           <Typography><FormattedMessage id='core.taskWork.button.accept'></FormattedMessage></Typography>
         </Button>
         <Button size="small" onClick={handleToggle}>
@@ -407,18 +426,9 @@ const SplitButton: React.FC<{}> = () => {
             <Paper>
               <ClickAwayListener onClickAway={handleClose}>
                 <MenuList autoFocusItem sx={{ textTransform: 'uppercase' }}>
-                  <MenuItem key='reject' onClick={() => handleClose}>
-                    <BlockIcon color='error' sx={{ mr: 1 }} />
-                    <Typography><FormattedMessage id='core.taskWork.button.reject' /></Typography>
-                  </MenuItem>
-                  <MenuItem key='edit' onClick={() => handleClose}>
-                    <EditIcon color='warning' sx={{ mr: 1 }} />
-                    <Typography ><FormattedMessage id='core.taskWork.button.edit' /></Typography>
-                  </MenuItem>
-                  <MenuItem key='cancel' onClick={() => handleClose}>
-                    <CancelIcon color='info' sx={{ mr: 1 }} />
-                    <Typography><FormattedMessage id='core.taskWork.button.cancel' /></Typography>
-                  </MenuItem>
+                  <SplitButtonItem key={'reject'} icon={<BlockIcon color='error' />} buttonText='core.taskWork.button.reject' onClick={handleClose} />
+                  <SplitButtonItem key={'edit'} icon={<EditIcon color='warning' />} buttonText='core.taskWork.button.edit' onClick={handleClose} />
+                  <SplitButtonItem key={'cancel'} icon={<CancelIcon color='info' />} buttonText='core.taskWork.button.cancel' onClick={handleClose} />
                 </MenuList>
               </ClickAwayListener>
             </Paper>

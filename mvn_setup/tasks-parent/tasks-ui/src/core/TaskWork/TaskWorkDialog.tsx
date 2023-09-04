@@ -62,7 +62,7 @@ const Header: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   return (
     <>
-      <Fields.SplitButton />
+      <Fields.SplitButton onClose={onClose} />
     </>
   )
 }
