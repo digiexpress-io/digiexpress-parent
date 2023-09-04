@@ -5,16 +5,18 @@ export interface ProgramMessage {
   id: string, msg: string
 }
 
+export type UserId = string;
+
 export interface Org {
-  users: User[];
-  roles: string[];
+users: Record<UserId, User>;
+roles: string[];
 }
 
-
 export interface User {
-  userId: string;
-  userRoles: string[];
-  displayName: string;
+userId: UserId;
+userRoles: string[];
+displayName: string;
+avatar: string;
 }
 
 export interface ClientError {

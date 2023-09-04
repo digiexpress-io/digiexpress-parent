@@ -16,27 +16,32 @@ const mockUsers: User[] = [
   {
     displayName: "Carrot Ironfoundersson",
     userId: "carrot ironfoundersson",
-    userRoles: ["admin-role"]
+    userRoles: ["admin-role"],
+    avatar: "CI"
   },
   {
     displayName: "Sam Vimes",
     userId: "sam vimes",
-    userRoles: ["admin-role"]
+    userRoles: ["admin-role"],
+    avatar: "SV"
   },
   {
     displayName: "Lord Vetinari",
     userId: "lord vetinari",
-    userRoles: ["admin-role"]
+    userRoles: ["admin-role"],
+    avatar: "LV"
   },
   {
     displayName: "Lady Sybil Vimes",
     userId: "lady sybil vimes",
-    userRoles: ["admin-role"]
+    userRoles: ["admin-role"],
+    avatar: "LV"
   },
   {
     displayName: "Nobby Nobbs",
     userId: "nobby nobbs",
-    userRoles: ["admin-role"]
+    userRoles: ["admin-role"],
+    avatar: "NN"
   },
 ]
 
@@ -47,7 +52,7 @@ const mockOrg: {
 } = {
   org: {
     roles: mockRoles,
-    users: mockUsers
+    users: mockUsers.reduce((acc, item) => ({ ...acc, [item.userId]: item }), {})
   },
   user: mockUsers[0],
   today: new Date(),
