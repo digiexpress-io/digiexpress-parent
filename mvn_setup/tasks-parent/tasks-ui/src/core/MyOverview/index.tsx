@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Grid, Stack, Typography, Table, TableCell, TableRow, TableContainer, Paper, alpha } from '@mui/material';
+import { Box, Grid, Stack, Typography, Table, TableBody, TableCell, TableRow, TableContainer, Paper, alpha } from '@mui/material';
 import CircleIcon from '@mui/icons-material/Circle';
 import { PieChart, Pie, Cell } from 'recharts';
 import { FormattedMessage } from 'react-intl';
@@ -48,31 +48,33 @@ const MyWork: React.FC<{}> = () => {
       <Paper sx={{ width: 0.6 }}>
         <TableContainer>
           <Table>
-            {data.groups.map((group, index) => (
-              <TableRow key={`group-row-${index}`}>
-                <TableCell variant="head" sx={{ backgroundColor: alpha(group.color, 0.5) }}>
-                  <Typography variant='h5'><FormattedMessage id={`core.myOverview.${group.name}`} /></Typography>
-                </TableCell>
-                <TableCell>
-                  {group.events.map((event, i) => (
-                    <TableRow key={`event-${i}`} >
-                      <Typography>
-                        <FormattedMessage id={`core.myOverview.${event.type}`} />
-                      </Typography>
-                    </TableRow>
-                  ))}
-                </TableCell>
-                <TableCell>
-                  {group.events.map((event, key) => (
-                    <TableRow key={`value-${key}`} >
-                      <Typography>
-                        {event.value}
-                      </Typography>
-                    </TableRow>
-                  ))}
-                </TableCell>
-              </TableRow>
-            ))}
+            <TableBody>
+              {data.groups.map((group, index) => (
+                <TableRow key={`group-row-${index}`}>
+                  <TableCell variant="head" sx={{ backgroundColor: alpha(group.color, 0.5) }}>
+                    <Typography variant='h5'><FormattedMessage id={`core.myOverview.${group.name}`} /></Typography>
+                  </TableCell>
+                  <TableCell>
+                    {group.events.map((event, i) => (
+                      <TableRow key={`event-${i}`} component='td'>
+                        <Typography>
+                          <FormattedMessage id={`core.myOverview.${event.type}`} />
+                        </Typography>
+                      </TableRow>
+                    ))}
+                  </TableCell>
+                  <TableCell>
+                    {group.events.map((event, key) => (
+                      <TableRow key={`value-${key}`} component='td'>
+                        <Typography>
+                          {event.value}
+                        </Typography>
+                      </TableRow>
+                    ))}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
           </Table>
         </TableContainer>
       </Paper>
