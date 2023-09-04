@@ -35,7 +35,7 @@ const mockUsers: User[] = [
     displayName: "Lady Sybil Vimes",
     userId: "lady sybil vimes",
     userRoles: ["admin-role"],
-    avatar: "LV"
+    avatar: "LS"
   },
   {
     displayName: "Nobby Nobbs",
