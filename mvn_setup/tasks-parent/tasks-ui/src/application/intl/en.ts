@@ -144,6 +144,9 @@ const en = {
   'tasktable.header.dueDate': 'Due Date',
 
   'tasktable.menu.edit': 'Edit task',
+  'tasktable.menu.work': 'Work on task',
+  'tasktable.menu.viewData': 'View customer data',
+  'tasktable.menu.archive': 'Archive task',
 
   'tasktable.header.spotlight.status.REJECTED': 'Rejected',
   'tasktable.header.spotlight.status.IN_PROGRESS': 'In progress',

@@ -1,45 +1,54 @@
 import React from 'react';
-import { Box, MenuList, MenuItem, ListItemText, Divider } from '@mui/material';
+import { Box, MenuList, MenuItem, ListItemText, Divider, styled } from '@mui/material';
 import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
-
+import DeleteIcon from '@mui/icons-material/Delete';
 import { FormattedMessage } from 'react-intl';
 
 import client from '@taskclient';
 import { usePopover } from './CellPopover';
 import CellHoverButton from './CellMenuButton';
 import TaskEditDialog from 'core/TaskEdit';
+import TaskWorkDialog from 'core/TaskWork';
 import { StyledTableCell } from './StyledTable';
 
+const StyledBox = styled(Box)(({ theme }) => ({
+  color: theme.palette.error.main,
+  display: "flex",
+  alignItems: 'center'
+}));
 
-const HoverMenu: React.FC<{ onEdit: () => void }> = ({ onEdit }) => {
+const CellMenuItem: React.FC<{ 
+  onClick?: () => void, 
+  title: string,
+}> = ({ title, onClick }) => {
+  return (
+    <MenuItem onClick={onClick}>
+      <ListItemText>
+        <FormattedMessage id={title} />
+      </ListItemText>
+    </MenuItem>
+  )
+}
+
+const HoverMenu: React.FC<{ 
+  onEdit: () => void, 
+  onWork: () => void,
+}> = ({ onEdit, onWork }) => {
   const Popover = usePopover();
 
   return (
     <>
       <Popover.Delegate>
         <MenuList dense>
-          <MenuItem onClick={onEdit}>
-            <ListItemText>
-              <FormattedMessage id={`tasktable.menu.edit`} />
-            </ListItemText>
-          </MenuItem>
-          <MenuItem>
-            <ListItemText>OPTION2</ListItemText>
-          </MenuItem>
-          <MenuItem>
-            <ListItemText>OPTION With longer text 3</ListItemText>
-          </MenuItem>
-
+          <CellMenuItem onClick={onEdit} title={`tasktable.menu.edit`} />
+          <CellMenuItem onClick={onWork} title={`tasktable.menu.work`} />
+          <CellMenuItem title={`tasktable.menu.viewData`} />
           <Divider />
           <MenuItem>
-            <ListItemText>OPTION4</ListItemText>
-          </MenuItem>
-          <MenuItem>
-            <ListItemText>OPTION5</ListItemText>
-          </MenuItem>
-          <Divider />
-          <MenuItem>
-            <ListItemText>Archive task</ListItemText>
+            <StyledBox>
+              <DeleteIcon />
+              <FormattedMessage id={`tasktable.menu.archive`} />
+            </StyledBox>
           </MenuItem>
         </MenuList>
       </Popover.Delegate>
@@ -55,8 +64,9 @@ const FormattedCell: React.FC<{
   def: client.Group,
   active: boolean,
   setDisabled: () => void
-}> = ({ row, def, active, setDisabled }) => {
+}> = ({ row, active, setDisabled }) => {
   const [edit, setEdit] = React.useState(false);
+  const [work, setWork] = React.useState(false);
 
   function handleStartEdit() {
     setEdit(true);
@@ -67,14 +77,28 @@ const FormattedCell: React.FC<{
     setEdit(false);
   }
 
+  function handleStartWork() {
+    setWork(true);
+    setDisabled();
+  }
 
-  return (<StyledTableCell width="35px">
-    <Box width="35px" justifyContent='right'> {/* Box is needed to prevent table cell resize on hover */}
-      <TaskEditDialog open={edit} onClose={handleEndEdit} task={row} />
+  function handleEndWork() {
+    setWork(false);
+  }
 
-      {active && <HoverMenu onEdit={handleStartEdit} />}
-    </Box>
-  </StyledTableCell>);
+  return (
+    <StyledTableCell width="35px">
+      <Box width="35px" justifyContent='right'> {/* Box is needed to prevent table cell resize on hover */}
+        <TaskEditDialog open={edit} onClose={handleEndEdit} task={row} />
+        <TaskWorkDialog open={work} onClose={handleEndWork} task={row} />
+        {active && 
+          <HoverMenu 
+            onEdit={handleStartEdit} 
+            onWork={handleStartWork} 
+          />}
+      </Box>
+    </StyledTableCell>
+  );
 }
 
 export default FormattedCell;
