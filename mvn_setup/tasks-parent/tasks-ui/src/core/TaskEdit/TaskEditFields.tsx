@@ -129,7 +129,7 @@ const Assignee: React.FC<{}> = () => {
   avatars.push(<Avatar key='add-icon' sx={{ width: 24, height: 24, fontSize: 10 }}><PersonAddIcon sx={{ fontSize: 15 }} /></Avatar>)
   const avatarGroup = (avatars.length && <AvatarGroup spacing='medium' onClick={Popover.onClick}>{avatars}</AvatarGroup>);
 
-  const userAvatarCodes: AvatarCode[] = users.map(({ displayName }) => ({
+  const userAvatarCodes: AvatarCode[] = Object.values(users).map(({ displayName }) => ({
     value: displayName,
     twoletters: displayName.match(/\b\w/g)!.join(''),
   }));
