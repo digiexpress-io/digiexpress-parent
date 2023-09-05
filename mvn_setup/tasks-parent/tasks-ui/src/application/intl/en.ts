@@ -57,7 +57,7 @@ const en = {
 
   'core.taskWork.button.edit': 'Edit',
   'core.taskWork.button.cancel': 'Cancel',
-  'core.taskWork.button.complete': 'Complete',
+  'core.taskWork.button.accept': 'Accept',
   'core.taskWork.button.reject': 'Reject',
 
   'core.taskWork.menu.checklists': 'Checklists',

@@ -4,7 +4,9 @@ import { FormattedMessage } from 'react-intl';
 import {
   Typography, Stack, Box, IconButton,
   Button, List, ListItem, styled, Alert, Avatar, Dialog,
-  DialogTitle, DialogActions, DialogContent, TextareaAutosize, alpha, useTheme
+  DialogTitle, DialogActions, DialogContent, TextareaAutosize, alpha,
+  useTheme, Tabs, Tab, Paper, Badge, ButtonGroup, Popper, Grow,
+  ClickAwayListener, MenuList, MenuItem
 } from '@mui/material';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
@@ -20,6 +22,11 @@ import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import CloseIcon from '@mui/icons-material/Close';
 import CallMadeIcon from '@mui/icons-material/CallMade';
 import CallReceivedIcon from '@mui/icons-material/CallReceived';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import CancelIcon from '@mui/icons-material/Cancel';
+import CheckIcon from '@mui/icons-material/Check';
+import BlockIcon from '@mui/icons-material/Block';
+import EditIcon from '@mui/icons-material/Edit';
 
 import TaskClient from '@taskclient';
 
@@ -29,7 +36,15 @@ import { Message, Thread } from 'core/Inbox/thread-types';
 import { AttachmentAndDateTime } from 'core/Inbox/ThreadPreview';
 import { demoThreads } from 'core/Inbox/DemoThreads';
 import { useMenu } from './menu-ctx';
+import { MenuTab } from './menu-ctx-types';
 
+
+interface SplitButtonItemProps {
+  key: string,
+  icon: React.ReactNode,
+  buttonText: string,
+  onClick: () => void;
+}
 
 const StyledListItem = styled(ListItem)(({ theme }) => ({
   borderTop: '1px solid',
@@ -328,23 +343,31 @@ const Messages: React.FC<{}> = () => {
 
 const Menu: React.FC<{}> = () => {
   const { activeTab, withTab } = useMenu();
+  const { state } = TaskClient.useTaskEdit();
 
-  const getVariant = (tab: string) => {
-    return activeTab === tab ? 'contained' : 'outlined';
-  }
+  const unreadMessages = 1; // mocked
+  const noOfAttachments = state.task.uploads.length;
+  const noOfChecklists = state.task.checklist.length;
+
+  const handleChange = (event: React.SyntheticEvent, newValue: MenuTab) => {
+    withTab(newValue);
+  };
 
   return (
-    <Stack spacing={1} direction='row'>
-      <Button startIcon={<ForumIcon />} color='warning' variant={getVariant('messages')} sx={activeTab === 'messages' ? { color: 'white' } : {}} onClick={() => withTab('messages')}>
-        <Typography sx={{ textTransform: 'none' }}><FormattedMessage id='core.taskWork.menu.messages' /></Typography>
-      </Button>
-      <Button startIcon={<AttachEmailIcon />} color='info' variant={getVariant('attachments')} onClick={() => withTab('attachments')}>
-        <Typography sx={{ textTransform: 'none' }}><FormattedMessage id='core.taskWork.menu.attachments' /></Typography>
-      </Button>
-      <Button startIcon={<AssignmentTurnedInIcon />} variant={getVariant('checklists')} onClick={() => withTab('checklists')}>
-        <Typography sx={{ textTransform: 'none' }}><FormattedMessage id='core.taskWork.menu.checklists' /></Typography>
-      </Button>
-    </Stack>
+    <Tabs value={activeTab} onChange={handleChange} sx={{ mb: 0, pb: 0 }}>
+      <Tab
+        label={<Typography sx={{ color: 'warning.main' }} variant='subtitle2'><FormattedMessage id='core.taskWork.menu.messages' /></Typography>}
+        value='messages'
+        icon={<Badge badgeContent={unreadMessages} color='warning'><ForumIcon color='warning' /></Badge>} />
+      <Tab
+        label={<Typography sx={{ color: 'info.main' }} variant='subtitle2'><FormattedMessage id='core.taskWork.menu.attachments' /></Typography>}
+        value='attachments'
+        icon={<Badge badgeContent={noOfAttachments} color='info'><AttachEmailIcon color='info' /></Badge>} />
+      <Tab
+        label={<Typography sx={{ color: 'primary.main' }} variant='subtitle2'><FormattedMessage id='core.taskWork.menu.checklists' /></Typography>}
+        value='checklists'
+        icon={<Badge badgeContent={noOfChecklists} color='primary'><AssignmentTurnedInIcon color='primary' /></Badge>} />
+    </Tabs>
   )
 }
 
@@ -356,5 +379,69 @@ const CloseDialogButton: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   )
 }
 
-const Fields = { Title, Description, Checklist, StartDate, DueDate, Attachments, Form, Messages, Menu, CloseDialogButton }
+const SplitButtonItem: React.FC<SplitButtonItemProps> = (props) => {
+  const { key, icon, buttonText, onClick } = props;
+
+  return (
+    <MenuItem key={key} onClick={onClick}>
+      {icon}
+      <Typography sx={{ ml: 1 }}><FormattedMessage id={buttonText} /></Typography>
+    </MenuItem>
+  )
+}
+
+const SplitButton: React.FC<{ onClose?: () => void }> = ({ onClose }) => {
+  const [open, setOpen] = React.useState(false);
+  const anchorRef = React.useRef<HTMLDivElement>(null);
+
+  const handleToggle = () => {
+    setOpen(!open);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    onClose && onClose();
+  };
+
+  return (
+    <React.Fragment>
+      <ButtonGroup variant="contained" ref={anchorRef}>
+        <Button startIcon={<CheckIcon />} onClick={handleClose}>
+          <Typography><FormattedMessage id='core.taskWork.button.accept'></FormattedMessage></Typography>
+        </Button>
+        <Button size="small" onClick={handleToggle}>
+          <ArrowDropDownIcon />
+        </Button>
+      </ButtonGroup>
+      <Popper
+        open={open}
+        anchorEl={anchorRef.current}
+        transition
+        disablePortal
+        placement='top-end'
+      >
+        {({ TransitionProps }) => (
+          <Grow
+            {...TransitionProps}
+            style={{
+              transformOrigin: 'center bottom',
+            }}
+          >
+            <Paper>
+              <ClickAwayListener onClickAway={handleClose}>
+                <MenuList autoFocusItem sx={{ textTransform: 'uppercase' }}>
+                  <SplitButtonItem key={'reject'} icon={<BlockIcon color='error' />} buttonText='core.taskWork.button.reject' onClick={handleClose} />
+                  <SplitButtonItem key={'edit'} icon={<EditIcon color='warning' />} buttonText='core.taskWork.button.edit' onClick={handleClose} />
+                  <SplitButtonItem key={'cancel'} icon={<CancelIcon color='info' />} buttonText='core.taskWork.button.cancel' onClick={handleClose} />
+                </MenuList>
+              </ClickAwayListener>
+            </Paper>
+          </Grow>
+        )}
+      </Popper>
+    </React.Fragment>
+  );
+}
+
+const Fields = { Title, Description, Checklist, StartDate, DueDate, Attachments, Form, Messages, Menu, CloseDialogButton, SplitButton };
 export default Fields;
