@@ -6,6 +6,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import Client from '@taskclient';
 import { usePopover } from './CellPopover';
 import { StyledTableCell } from './StyledTable';
+import { useAssignees } from 'taskclient/hooks';
 
 const StyledButton = styled(Button)<ButtonProps>(() => ({
   variant: 'text',
@@ -59,25 +60,7 @@ const FormattedCell: React.FC<{
 }> = ({ row }) => {
 
   const Popover = usePopover();
-  const org = Client.useOrg();
-  const [searchString, setSearchString] = React.useState<string>('');
-  const { users } = org.state.org;
-
-  const foundUsers = React.useMemo(() => {
-
-    const result = searchString ?
-      Object.values(users).filter(entry => entry.displayName.toLowerCase().includes(searchString.toLowerCase())) :
-      Object.values(users);
-
-    return result.map(user => ({
-
-      checked: row.assignees.includes(user.userId),
-      avatar: { twoletters: user.avatar, value: user.userId },
-      user
-    }));
-
-  }, [row, users, searchString]);
-
+  const { setSearchString, searchResults } = useAssignees(row);
 
   return (<StyledTableCell width="150px">
     <Box>
@@ -93,7 +76,7 @@ const FormattedCell: React.FC<{
         <SearchField onChange={setSearchString} />
         <List dense>
           {
-            foundUsers.map(({ avatar, user, checked }) => (
+            searchResults.map(({ avatar, user, checked }) => (
               <ListItem key={user.userId}>
                 <Checkbox checked={checked} />
                 <UserAvatar>{avatar}</UserAvatar>
