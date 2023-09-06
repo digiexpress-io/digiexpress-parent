@@ -1,4 +1,4 @@
-import { darken } from '@mui/material';
+import { darken, lighten } from '@mui/material';
 
 type TaskEventType = 'new-messages' | 'archived-tasks' | 'starts-today-tasks' | 'overdue-tasks' | 'new-tasks' | 'new-checklists-assignment' | 'mentioned-in-comment';
 type TaskEventGroup = {
@@ -80,9 +80,9 @@ class TaskEventVisitor {
 
     const group = this._current[init.name];
     if (group.types.includes(event.type)) {
-      const index = group.types.indexOf(event.type)
+      const index = group.types.indexOf(event.type) + 1;
       
-      const color = index === 0 ? group.color : darken(group.color, index * 0.3);
+      const color = (index % 2 === 0) ? lighten(group.color, 0.15 * index) : darken(group.color, 0.15 * index);
       
       
       group.value = group.value + event.value;

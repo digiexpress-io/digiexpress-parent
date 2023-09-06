@@ -76,7 +76,18 @@ const en = {
   'core.myWork.myWorkTaskTable.header.spotlight.myWorkOverdue': 'Overdue',
   'core.myWork.myWorkTaskTable.header.spotlight.myWorkStartsToday': 'Starts today',
   'core.myWork.myWorkTaskTable.header.spotlight.myWorkAssigned': 'Assigned to me',
+
   'core.myOverview.title': 'My daily overview',
+  'core.myOverview.mentioned-in-comment': 'Mentions in comments',
+  'core.myOverview.new-checklists-assignment': 'New checklists assignments',
+  'core.myOverview.new-messages': 'New messages',
+  'core.myOverview.new-tasks': 'New tasks',
+  'core.myOverview.overdue-tasks': 'Overdue tasks',
+  'core.myOverview.starts-today-tasks': 'Starts today',
+  'core.myOverview.archived-tasks': 'Archived tasks',
+  'core.myOverview.requires-my-attention': 'Requires my attention',
+  'core.myOverview.tasks-starting-today': 'Tasks starting today',
+  'core.myOverview.task-events': 'Task events',
 
 
   '_nobody_': 'Unassigned',
