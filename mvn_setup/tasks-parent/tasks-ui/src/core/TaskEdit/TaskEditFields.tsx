@@ -17,7 +17,7 @@ import TaskClient from '@taskclient';
 
 import ChecklistDelegate from 'core/Checklist';
 import { usePopover } from 'core/TaskTable/CellPopover';
-import Assignee from 'core/Assignee';
+import TaskAssignees from 'core/TaskAssignees';
 
 
 const Title: React.FC<{}> = () => {
@@ -104,11 +104,11 @@ const Status: React.FC<{}> = () => {
   )
 }
 
-const TaskAssignee: React.FC<{}> = () => {
+const Assignee: React.FC<{}> = () => {
   const { state } = TaskClient.useTaskEdit();
 
   return (
-    <Assignee task={state.task}/>
+    <TaskAssignees task={state.task}/>
   )
 }
 
@@ -187,7 +187,7 @@ const CloseDialogButton: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 }
 
 const Fields = {
-  Title, Description, Checklist, Status, TaskAssignee, Priority,
+  Title, Description, Checklist, Status, Assignee, Priority,
   Options, StartDate, DueDate, MessageCount, AttachmentCount,
   NewItemNotification, CloseDialogButton
 }

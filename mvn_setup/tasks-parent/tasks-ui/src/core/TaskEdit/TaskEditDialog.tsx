@@ -56,7 +56,7 @@ const Header: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       <Grid item md={6} lg={6} alignSelf='center'>
         <Stack spacing={2} direction='row'>
           <Fields.Status />
-          <Fields.TaskAssignee />
+          <Fields.Assignee />
           <Fields.Priority />
           <Fields.Options />
         </Stack>

@@ -10,7 +10,7 @@ import { usePopover } from 'core/TaskTable/CellPopover';
 import { useAssignees } from 'taskclient/hooks';
 
 
-export const StyledButton = styled(Button)<ButtonProps>(() => ({
+const StyledButton = styled(Button)<ButtonProps>(() => ({
   variant: 'text',
   color: 'inherit',
   "&.MuiButtonBase-root": {
@@ -18,7 +18,7 @@ export const StyledButton = styled(Button)<ButtonProps>(() => ({
   },
 }));
 
-export const StyledListItemText = styled(ListItemText)<ListItemTextProps>(({theme}) => ({
+const StyledListItemText = styled(ListItemText)<ListItemTextProps>(({theme}) => ({
   marginLeft: theme.spacing(1)
 }));
 
@@ -57,7 +57,7 @@ const UserAvatar: React.FC<{ children?: Client.AvatarCode, onClick?: (event: Rea
   );
 }
   
-const Assignee: React.FC<{ task: TaskDescriptor }> = ({ task }) => {
+const TaskAssignees: React.FC<{ task: TaskDescriptor }> = ({ task }) => {
   const Popover = usePopover();
   const { setSearchString, searchResults } = useAssignees(task);
 
@@ -89,4 +89,4 @@ const Assignee: React.FC<{ task: TaskDescriptor }> = ({ task }) => {
   );
 }
 
-export default Assignee;
+export default TaskAssignees;

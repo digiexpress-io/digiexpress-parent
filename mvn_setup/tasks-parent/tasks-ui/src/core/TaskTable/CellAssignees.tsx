@@ -2,7 +2,7 @@ import React from 'react';
 
 import Client from '@taskclient';
 import { StyledTableCell } from './StyledTable';
-import Assignee from 'core/Assignee';
+import TaskAssignees from 'core/TaskAssignees';
 
 const FormattedCell: React.FC<{
   rowId: number,
@@ -11,7 +11,7 @@ const FormattedCell: React.FC<{
 
   return (
     <StyledTableCell width="150px">
-      <Assignee task={row}/>
+      <TaskAssignees task={row}/>
     </StyledTableCell>
   );
 }
