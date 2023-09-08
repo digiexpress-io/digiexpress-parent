@@ -9,7 +9,6 @@ import Events from './TaskEvents';
 import Burger from '@the-wrench-io/react-burger';
 import TaskClient from '@taskclient';
 
-
 const Left: React.FC<{}> = () => {
 
   return (

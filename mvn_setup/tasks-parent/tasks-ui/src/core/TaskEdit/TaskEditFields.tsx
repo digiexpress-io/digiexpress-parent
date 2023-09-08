@@ -3,8 +3,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 
 import {
   TextField, Typography, Stack, Box, IconButton,
-  MenuList, MenuItem, Button, SxProps, List, ListItem, ListItemText, Avatar,
-  AvatarGroup, Checkbox, InputAdornment
+  MenuList, MenuItem, Button, SxProps, ListItemText
 } from '@mui/material';
 import DateRangeOutlinedIcon from '@mui/icons-material/DateRangeOutlined';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
@@ -12,15 +11,13 @@ import AttachFileIcon from '@mui/icons-material/AttachFile';
 import CircleNotificationsOutlinedIcon from '@mui/icons-material/CircleNotificationsOutlined';
 import CircleIcon from '@mui/icons-material/Circle';
 import EmojiFlagsIcon from '@mui/icons-material/EmojiFlags';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
 
 import TaskClient from '@taskclient';
 
 import ChecklistDelegate from 'core/Checklist';
 import { usePopover } from 'core/TaskTable/CellPopover';
-import { AvatarCode } from 'taskclient/tasks-ctx-types';
+import TaskAssignees from 'core/TaskAssignees';
 
 
 const Title: React.FC<{}> = () => {
@@ -108,79 +105,10 @@ const Status: React.FC<{}> = () => {
 }
 
 const Assignee: React.FC<{}> = () => {
-  const tasksContext = TaskClient.useTasks();
   const { state } = TaskClient.useTaskEdit();
-  const org = TaskClient.useOrg();
-  const users = org.state.org.users;
-  const assigneesAvatars = state.task.assigneesAvatars;
-  const Popover = usePopover();
-  const [searchString, setSearchString] = React.useState<string>('');
-
-  const avatars = assigneesAvatars.map((entry, index) => {
-    return (<Avatar key={index}
-      sx={{
-        bgcolor: tasksContext.state.pallette.owners[entry.value],
-        width: 24,
-        height: 24,
-        fontSize: 10,
-      }}>{entry.twoletters}</Avatar>
-    );
-  });
-  avatars.push(<Avatar key='add-icon' sx={{ width: 24, height: 24, fontSize: 10 }}><PersonAddIcon sx={{ fontSize: 15 }} /></Avatar>)
-  const avatarGroup = (avatars.length && <AvatarGroup spacing='medium' onClick={Popover.onClick}>{avatars}</AvatarGroup>);
-
-  const userAvatarCodes: AvatarCode[] = Object.values(users).map(({ displayName }) => ({
-    value: displayName,
-    twoletters: displayName.match(/\b\w/g)!.join(''),
-  }));
-  const filteredUserAvatarCodes = searchString !== '' ?
-    userAvatarCodes.filter(entry => entry.value.toLowerCase().includes(searchString.toLowerCase())) :
-    userAvatarCodes;
-  const userAvatars = filteredUserAvatarCodes.map((entry, index) => {
-    const value = entry.value.toLowerCase();
-    return (
-      <>
-        <ListItem key={index}>
-          <Checkbox checked={assigneesAvatars.find(a => a.value === value) !== undefined} />
-          <Avatar key={index}
-            sx={{
-              bgcolor: tasksContext.state.pallette.owners[value],
-              width: 24,
-              height: 24,
-              fontSize: 10,
-              mr: 1,
-            }}>{entry.twoletters}</Avatar>
-          <ListItemText>{entry.value}</ListItemText>
-        </ListItem>
-      </>
-    );
-  });
 
   return (
-    <Box>
-      <Button variant='text' color='inherit'>
-        {avatarGroup}
-      </Button>
-      <Popover.Delegate>
-        <TextField
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon color='primary' />
-              </InputAdornment>
-            ),
-          }}
-          fullWidth
-          variant='standard'
-          placeholder='Search'
-          value={searchString}
-          onChange={(e) => setSearchString(e.target.value)}
-        />
-        <List dense>
-          {userAvatars}
-        </List>
-      </Popover.Delegate>
-    </Box>
+    <TaskAssignees task={state.task}/>
   )
 }
 
