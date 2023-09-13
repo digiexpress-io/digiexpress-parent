@@ -133,6 +133,7 @@ namespace TaskClient {
   export const StatusPallette = taskCtxImpl.Pallette.status;
   export const PriorityPalette = taskCtxImpl.Pallette.priority;
   export const TeamGroupPallete = taskCtxImpl.Pallette.teamGroupType;
+  export const AssigneePalette = taskCtxImpl.Pallette.assigneeGroupType;
   export const Error = ErrorView;
   export const Provider = ProviderImpl;
   export const EditProvider = taskEditCtx.TaskEditProvider;

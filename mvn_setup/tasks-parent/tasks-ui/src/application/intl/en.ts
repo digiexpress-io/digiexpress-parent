@@ -76,6 +76,15 @@ const en = {
   'core.myWork.myWorkTaskTable.header.spotlight.myWorkOverdue': 'Overdue',
   'core.myWork.myWorkTaskTable.header.spotlight.myWorkStartsToday': 'Starts today',
   'core.myWork.myWorkTaskTable.header.spotlight.myWorkAssigned': 'Assigned to me',
+  'core.myWork.group.empty.title': "No records available for this group",
+  'core.myWork.recentActivities.title': 'My recent activities',
+  'core.myWork.recentActivities.events.task-completed': 'I completed task',
+  'core.myWork.recentActivities.events.message-sent': 'I sent a message in regard to task',
+  'core.myWork.recentActivities.events.checklist-completed': 'I completed Checklist',
+  'core.myWork.recentActivities.events.checklist-self-assigned': 'I self-assigned the Checklist',
+  'core.myWork.recentActivities.events.comment-finished': 'I finnished the comment',
+  'core.myWork.recentActivities.events.task-blocked': 'I marked this task as "BLOCKED"',
+  'core.myWork.recentActivities.events.attachment-added': 'I added an attachment',
 
   'core.myOverview.title': 'My daily overview',
   'core.myOverview.mentioned-in-comment': 'Mentions in comments',
@@ -88,7 +97,6 @@ const en = {
   'core.myOverview.requires-my-attention': 'Requires my attention',
   'core.myOverview.tasks-starting-today': 'Tasks starting today',
   'core.myOverview.task-events': 'Task events',
-
 
   '_nobody_': 'Unassigned',
 

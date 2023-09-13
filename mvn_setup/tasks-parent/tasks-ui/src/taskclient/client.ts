@@ -17,31 +17,131 @@ const mockUsers: User[] = [
     displayName: "Carrot Ironfoundersson",
     userId: "carrot ironfoundersson",
     userRoles: ["admin-role"],
-    avatar: "CI"
+    avatar: "CI",
+    activity: [
+      {
+        id: "activity1",
+        eventDate: "2023-10-09",
+        eventType: 'task-completed',
+        subjectTitle: "Sewage water disposal"
+      },
+      {
+        id: "activity2",
+        eventDate: "2023-09-09",
+        eventType: 'task-blocked',
+        subjectTitle: "Request for elderly care"
+      },
+      {
+        id: "activity3",
+        eventDate: "2023-04-09",
+        eventType: 'checklist-self-assigned',
+        subjectTitle: "checklist1"
+      }
+    ]
   },
   {
     displayName: "Sam Vimes",
     userId: "sam vimes",
     userRoles: ["admin-role"],
-    avatar: "SV"
+    avatar: "SV",
+    activity: [
+      {
+        id: "activity4",
+        eventDate: "2023-09-09",
+        eventType: 'checklist-completed',
+        subjectTitle: "checklist2"
+      },
+      {
+        id: "activity5",
+        eventDate: "2023-11-09",
+        eventType: 'task-blocked',
+        subjectTitle: "General message"
+      },
+      {
+        id: "activity6",
+        eventDate: "2023-05-09",
+        eventType: 'comment-finished',
+        subjectTitle: "comment1"
+      }
+    ]
   },
   {
     displayName: "Lord Vetinari",
     userId: "lord vetinari",
     userRoles: ["admin-role"],
-    avatar: "LV"
+    avatar: "LV",
+    activity: [
+      {
+        id: "activity7",
+        eventDate: "2023-01-09",
+        eventType: 'attachment-added',
+        subjectTitle: "attachment1 for task: Sewage water disposal"
+      },
+      {
+        id: "activity8",
+        eventDate: "2023-11-09",
+        eventType: 'message-sent',
+        subjectTitle: "message1"
+      },
+      {
+        id: "activity9",
+        eventDate: "2023-02-09",
+        eventType: 'comment-finished',
+        subjectTitle: "comment2"
+      }
+    ]
   },
   {
     displayName: "Lady Sybil Vimes",
     userId: "lady sybil vimes",
     userRoles: ["admin-role"],
-    avatar: "LS"
+    avatar: "LS",
+    activity: [
+      {
+        id: "activity10",
+        eventDate: "2023-11-08",
+        eventType: 'comment-finished',
+        subjectTitle: "comment3"
+      },
+      {
+        id: "activity11",
+        eventDate: "2023-18-08",
+        eventType: 'task-completed',
+        subjectTitle: "General message"
+      },
+      {
+        id: "activity12",
+        eventDate: "2023-05-09",
+        eventType: 'checklist-completed',
+        subjectTitle: "checklist3"
+      }
+    ]
   },
   {
     displayName: "Nobby Nobbs",
     userId: "nobby nobbs",
     userRoles: ["admin-role"],
-    avatar: "NN"
+    avatar: "NN",
+    activity: [
+      {
+        id: "activity13",
+        eventDate: "2023-28-08",
+        eventType: 'checklist-self-assigned' ,
+        subjectTitle: "checklist4"
+      },
+      {
+        id: "activity14",
+        eventDate: "2023-10-09",
+        eventType: 'task-completed',
+        subjectTitle: "Request for elderly care"
+      },
+      {
+        id: "activity15",
+        eventDate: "2023-11-09",
+        eventType: 'checklist-completed',
+        subjectTitle: "checklist5"
+      }
+    ]
   },
 ]
 
