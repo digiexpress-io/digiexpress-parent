@@ -1,83 +1,54 @@
 import React from 'react';
-import { TableHead, TableCell, TableRow } from '@mui/material';
+import { Box, Stack, Paper, Grid, Typography } from '@mui/material';
 
-import client from '@taskclient';
-import TaskTable from '../TaskTable';
+import TaskGroup from './MyWorkGroup';
+import { FormattedMessage } from 'react-intl';
+import MyRecentActivity from './MyRecentActivity';
 
+import Client from '@taskclient';
 
+const MyWork: React.FC<{ groups: Client.Group[] }> = ({ groups }) => {
 
-const Header: React.FC<TaskTable.RenderProps> = ({ content, setContent, group }) => {
-  const columns: (keyof client.TaskDescriptor)[] = React.useMemo(() => [
-    'dueDate',
-    'priority',
-    'status',
-  ], []);
+  return (<>
+    <Box width="100%">
+      <Grid container spacing={1}>
+        <Grid item md={8} lg={8}>
+          <Box display="flex" justifyContent="center">
+            <Paper sx={{display:'flex', position:'fixed', p: 3}} elevation={2}>
+              *************************  TODO FILTERS  **************************
+            </Paper>
+          </Box>
+          <Paper sx={{pt: 7}}>
+            <Stack sx={{p:3}}>
+              {groups.map( group => <TaskGroup key={group.id} group={group} /> )}
+            </Stack>
+          </Paper>
+        </Grid>
 
-  return (
-    <TableHead>
-      <TableRow>
-        <TableCell align='left' padding='none'>
-          <TaskTable.Title group={group} />
-          <TaskTable.SubTitle values={group.records.length} message='core.teamSpace.taskCount' />
-        </TableCell>
-        <TaskTable.ColumnHeaders columns={columns} content={content} setContent={setContent} />
-      </TableRow>
-    </TableHead>
+        <Grid item md={4} lg={4}>
+          <Box sx={{display:'flex', position:'fixed', pr: 3, height: "100%"}}>
+            <Paper sx={{p: 3}}>
+              <Typography variant='h4' fontWeight='bold'><FormattedMessage id={"core.myWork.recentActivities.title"} /></Typography>
+              <MyRecentActivity />
+            </Paper>
+          </Box>
+        </Grid>
+      </Grid>
+    </Box>
+  </>
   );
 }
 
+const MyWorkLoader: React.FC = () => {
+  const tasks = Client.useTasks();  
+  const { loading, state } = tasks;  
+  const groups = React.useMemo(() => state.withGroupBy('assignee').groups, [state]);      
+  
+  if (loading) {    
+    return <>...loading</>  
+  }  
 
-const Row: React.FC<{
-  rowId: number,
-  row: client.TaskDescriptor,
-  def: client.Group
-}> = (props) => {
-
-  const [hoverItemsActive, setHoverItemsActive] = React.useState(false);
-  function handleEndHover() {
-    setHoverItemsActive(false);
-  }
-  function handleStartHover() {
-    setHoverItemsActive(true);
-  }
-
-  const cells = React.useMemo(() => {
-    return (
-      <>
-        <TaskTable.CellDueDate {...props} />
-        <TaskTable.CellPriority {...props} />
-        <TaskTable.CellStatus {...props} />
-      </>
-    );
-  }, [props]);
-
-  return (<>
-    <TableRow hover tabIndex={-1} key={props.row.id} onMouseEnter={handleStartHover} onMouseLeave={handleEndHover}>
-      <TaskTable.CellTitleCrm {...props} active={hoverItemsActive} setDisabled={handleEndHover} />
-      {cells}
-      <TaskTable.CellMenu {...props} active={hoverItemsActive} setDisabled={handleEndHover} />
-    </TableRow>
-  </>);
+  return <MyWork groups={groups} />;
 }
 
-
-const Rows: React.FC<TaskTable.RenderProps> = ({ content, group, loading }) => {
-  return (
-    <TaskTable.TableBody>
-      {content.entries.map((row, rowId) => (<Row key={row.id} rowId={rowId} row={row} def={group} />))}
-
-      <TaskTable.TableFiller content={content} loading={loading} plusColSpan={5} />
-    </TaskTable.TableBody>
-  )
-}
-
-
-const MyWork: React.FC<{}> = () => {
-  return (
-    <TaskTable.Groups groupBy='assignee' orderBy='created'>
-      {{ Header, Rows, Tools: undefined }}
-    </TaskTable.Groups>);
-}
-
-
-export default MyWork;
+export default MyWorkLoader;

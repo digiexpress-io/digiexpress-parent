@@ -9,7 +9,7 @@ const OrgContext = React.createContext<OrgContextType>({} as OrgContextType);
 
 
 const init: OrgState = new OrgMutatorBuilderImpl({
-  iam: { displayName: "" , userId: "", userRoles: [], avatar: ''},
+  iam: { displayName: "" , userId: "", userRoles: [], avatar: '', activity: []},
   org: { roles: [], users: {} }
 });
 

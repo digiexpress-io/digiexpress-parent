@@ -1,6 +1,15 @@
 import { ProfileStore } from './profile-types';
 import { TaskStore } from './task-types';
 
+export type UserEventType = 'task-completed' | 'message-sent' | 'checklist-completed' | 'checklist-self-assigned' | 'comment-finished' | 'task-blocked' | 'attachment-added';
+
+export interface UserActivity{
+  id: string;
+  eventDate: string;
+  eventType: UserEventType;
+  subjectTitle: string;
+}
+
 export interface ProgramMessage {
   id: string, msg: string
 }
@@ -8,15 +17,16 @@ export interface ProgramMessage {
 export type UserId = string;
 
 export interface Org {
-users: Record<UserId, User>;
-roles: string[];
+  users: Record<UserId, User>;
+  roles: string[];
 }
 
 export interface User {
-userId: UserId;
-userRoles: string[];
-displayName: string;
-avatar: string;
+  userId: UserId;
+  userRoles: string[];
+  displayName: string;
+  avatar: string;
+  activity: UserActivity[];
 }
 
 export interface ClientError {
