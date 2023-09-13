@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { Box, useTheme, Typography, IconButton } from '@mui/material';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
@@ -29,11 +29,11 @@ const StyledTaskItem: React.FC<{ task: Client.TaskDescriptor }> = ({ task }) => 
     return date?.toLocaleDateString();
   }
 
-  const taskDate = useMemo(() => (
+  const taskDate = (
     <Typography sx={{color: groupId === 'assigneeOverdue' ? Client.AssigneePalette.assigneeOverdue : undefined}}>
       { groupId === "assigneeStartsToday" ? formatTaskDate(task.startDate) : formatTaskDate(task.dueDate)}
     </Typography>
-  ),[groupId, task.dueDate, task.startDate]);
+  );
 
   return (
     <Box 
@@ -58,11 +58,7 @@ const StyledTaskItem: React.FC<{ task: Client.TaskDescriptor }> = ({ task }) => 
 }
 
 const TaskGroup: React.FC<{ group: Client.Group }> = ({ group }) => {
-  const emptyGroupTitle = useMemo(() => {
-    if(group.records.length === 0)
-      return <Typography><FormattedMessage id={"core.myWork.group.empty.title"} /></Typography>
-    return undefined;
-  }, [group.records.length])     
+  const emptyGroupTitle = group.records.length === 0 && <Typography><FormattedMessage id={"core.myWork.group.empty.title"} /></Typography>;
 
   return (
     <Box>

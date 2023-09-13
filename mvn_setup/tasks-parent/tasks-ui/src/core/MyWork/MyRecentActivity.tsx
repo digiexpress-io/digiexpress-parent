@@ -1,5 +1,4 @@
 import { Box, Typography, Paper } from "@mui/material";
-import { useMemo } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { UserActivity } from "taskclient/client-types";
@@ -7,12 +6,11 @@ import { useOrg } from "taskclient/hooks";
 
 const ActivityItem: React.FC<{activity: UserActivity}> = ({ activity }) => {
   
-  const activityText = useMemo(() => {
-    const { eventDate, eventType, subjectTitle } = activity;
-    return <Typography>
-      <FormattedMessage id={`core.myWork.recentActivities.events.${eventType}`} />{`: ${subjectTitle} on ${eventDate}`}
-    </Typography>
-  },[activity])
+  const { eventDate, eventType, subjectTitle } = activity;
+  
+  const activityText = <Typography>
+    <FormattedMessage id={`core.myWork.recentActivities.events.${eventType}`} />{`: ${subjectTitle} on ${eventDate}`}
+  </Typography>
 
   return (
     <>
