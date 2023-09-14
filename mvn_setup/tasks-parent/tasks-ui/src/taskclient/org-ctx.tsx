@@ -6,11 +6,9 @@ import { Client } from './client-types';
 
 const OrgContext = React.createContext<OrgContextType>({} as OrgContextType);
 
-
-
 const init: OrgState = new OrgMutatorBuilderImpl({
   iam: { displayName: "" , userId: "", userRoles: [], avatar: '', activity: []},
-  org: { roles: [], users: {} }
+  org: { roles: {}, users: {} }
 });
 
 const OrgProvider: React.FC<{ children: React.ReactNode, backend: Client }> = ({ children, backend }) => {

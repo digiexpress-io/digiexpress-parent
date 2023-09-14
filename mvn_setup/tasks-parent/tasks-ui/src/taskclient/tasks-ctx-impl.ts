@@ -1,4 +1,4 @@
-import { parseISO, isAfter, isEqual, subDays, differenceInCalendarDays } from 'date-fns';
+import { parseISO, isAfter, isEqual, differenceInCalendarDays } from 'date-fns';
 
 import { Task, TaskExtension, TaskPriority, TaskStatus } from './task-types';
 import {

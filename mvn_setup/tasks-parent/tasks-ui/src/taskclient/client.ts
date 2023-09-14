@@ -1,16 +1,35 @@
-import { Client, Store, Org, User } from './client-types';
+import { Client, Store, Org, User, Role } from './client-types';
 import type { TaskId, Task, TaskPagination, TaskStore } from './task-types';
 import type { Profile, ProfileStore } from './profile-types';
 import { } from './client-store';
 
-
-const mockRoles: string[] = [
-  "admin-role",
-  "water-department",
-  "education-department",
-  "elderly-care-department",
-  "sanitization-department"
-];
+const mockRoles: Record<string, Role> = {
+  "admin-role": {
+    roleId: "admin-role",
+    avatar: "AR",
+    displayName: "Admin Role"
+  },
+  "water-department": {
+    roleId: "water-department",
+    avatar: "WD",
+    displayName: "Water Department"
+  },
+  "education-department": {
+    roleId: "education-department",
+    avatar: "ED",
+    displayName: "Education Department"
+  },
+  "elderly-care-department": {
+    roleId: "elderly-care-department",
+    avatar: "EC",
+    displayName: "Elderly Care Department"
+  },
+  "sanitization-department": {
+    roleId: "sanitization-department",
+    avatar: "SD",
+    displayName: "Sanitization Department"
+  }
+};
 
 const mockUsers: User[] = [
   {

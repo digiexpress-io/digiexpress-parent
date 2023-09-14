@@ -13,7 +13,6 @@ import { TaskEditContext } from './task-edit-ctx'
 import { ScreenContextType } from './screen-ctx-types';
 import { ScreenContext } from './screen-ctx';
 
-
 const isDocumentSaved = (entity: Document, ide: ComposerContextType): boolean => {
   const unsaved = Object.values(ide.session.pages).filter(p => !p.saved).filter(p => p.origin.id === entity.id);
   return unsaved.length === 0
@@ -62,32 +61,46 @@ export const useTaskEdit = () => {
   const result: TaskEditContextType = React.useContext(TaskEditContext);
   return result;
 }
+
 export const useTasks = () => {
   const result: TasksContextType = React.useContext(TasksContext);
   return result;
 }
+
 export const useAssignees = (row: TaskDescriptor) => {
   const org = useOrg();
   const [searchString, setSearchString] = React.useState<string>('');
   const searchResults = React.useMemo(() => org.state.findUsers(searchString, row.assignees), [row, searchString, org]);
   return { searchString, setSearchString, searchResults };
 }
+
+export const useRoles = (row: TaskDescriptor) => {
+  const org = useOrg();
+  const [searchString, setSearchString] = React.useState<string>('');
+  const searchResults = React.useMemo(() => org.state.findRoles(searchString, row.roles), [row, searchString, org]);
+  return { searchString, setSearchString, searchResults };
+}
+
 export const useOrg = () => {
   const result: OrgContextType = React.useContext(OrgContext);
   return result;
 }
+
 export const useBackend = () => {
   const result: ClientContextType = React.useContext(ClientContext);
   return result;
 }
+
 export const useSite = () => {
   const result: ComposerContextType = React.useContext(ComposerContext);
   return result.session.profile;
 }
+
 export const useUnsaved = (entity: Document) => {
   const ide: ComposerContextType = React.useContext(ComposerContext);
   return !isDocumentSaved(entity, ide);
 }
+
 export const useComposer = () => {
   const client: ClientContextType = React.useContext(ClientContext);
   const result: ComposerContextType = React.useContext(ComposerContext);
@@ -100,10 +113,12 @@ export const useComposer = () => {
     client
   };
 }
+
 export const useSession = () => {
   const result: ComposerContextType = React.useContext(ComposerContext);
   return result.session;
 }
+
 export const useNav = () => {
   const layout: Burger.TabsContextType = Burger.useTabs();
   const findTab = (article: Document): Tab | undefined => {

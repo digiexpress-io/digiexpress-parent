@@ -16,14 +16,22 @@ export interface ProgramMessage {
 
 export type UserId = string;
 
+export type RoleId = string;
+
 export interface Org {
   users: Record<UserId, User>;
-  roles: string[];
+  roles: Record<RoleId, Role>;
+}
+
+export interface Role {
+  roleId: RoleId;
+  avatar: string;
+  displayName: string;
 }
 
 export interface User {
   userId: UserId;
-  userRoles: string[];
+  userRoles: RoleId[];
   displayName: string;
   avatar: string;
   activity: UserActivity[];

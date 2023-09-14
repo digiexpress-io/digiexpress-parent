@@ -1,12 +1,10 @@
 import {
-  UserId, User, Org
+  UserId, User, Org, RoleId
 } from './client-types';
 
 import {
-  OrgState, UserSearchResult
+  OrgState, RoleSearchResult, UserSearchResult
 } from './org-ctx-types';
-
-
 
 interface ExtendedInit {
   org: Org; 
@@ -43,6 +41,21 @@ class OrgMutatorBuilderImpl implements OrgState {
       checked: checkedUsers.includes(user.userId),
       avatar: { twoletters: user.avatar, value: user.userId },
       user
+    }));
+  }
+
+  findRoles(searchFor: string, checkedRoles: RoleId[]): RoleSearchResult[] {
+    const criteria = searchFor.toLowerCase();
+    const target = Object.values(this._org.roles);
+    
+    const result = criteria ?
+      target.filter(entry => entry.displayName.toLowerCase().includes(criteria)) :
+      target;
+
+    return result.map(role => ({
+      checked: checkedRoles.includes(role.roleId),
+      avatar: { twoletters: role.avatar, value: role.roleId },
+      role
     }));
   }
   
