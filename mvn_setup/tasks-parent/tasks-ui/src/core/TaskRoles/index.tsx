@@ -1,12 +1,10 @@
 import React from 'react';
-import { AvatarGroup, Box, ListItemText,AvatarProps, ListItem, Checkbox, Button, Avatar, List, ButtonProps, styled } from '@mui/material';
+import { AvatarGroup, Box, ListItemText,AvatarProps, ListItem, Checkbox, Button, Avatar, ListItemTextProps, List, ButtonProps, styled } from '@mui/material';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 
 import Client from '@taskclient';
 
-import { AvatarCode, TaskDescriptor } from 'taskclient/tasks-ctx-types';
 import { usePopover } from 'core/TaskTable/CellPopover';
-import { useRoles } from 'taskclient/hooks';
 import SearchField from 'core/SearchField';
 
 const StyledButton = styled(Button)<ButtonProps>(() => ({
@@ -18,7 +16,6 @@ const StyledButton = styled(Button)<ButtonProps>(() => ({
 }));
 
 const StyledAvatar = styled(Avatar)<AvatarProps & {bgcolor: string | undefined}>(({ bgcolor, theme }) => ({
-  marginRight: theme.spacing(1),
   backgroundColor: bgcolor,
   width: 24,
   height: 24,
@@ -27,6 +24,10 @@ const StyledAvatar = styled(Avatar)<AvatarProps & {bgcolor: string | undefined}>
 
 const StyledAdminPanelSettingsIcon = styled(AdminPanelSettingsIcon)(() => ({
   fontSize: 15
+}));
+
+const StyledListItemText = styled(ListItemText)<ListItemTextProps>(({theme}) => ({
+  marginLeft: theme.spacing(1)
 }));
 
 const RoleAvatar: React.FC<{ children?: Client.AvatarCode, onClick?: (event: React.MouseEvent<HTMLElement>) => void }> = ({ children, onClick }) => {
@@ -42,13 +43,13 @@ const RoleAvatar: React.FC<{ children?: Client.AvatarCode, onClick?: (event: Rea
   );
 }
   
-const TaskRoles: React.FC<{ task: TaskDescriptor }> = ({ task }) => {
+const TaskRoles: React.FC<{ task: Client.TaskDescriptor }> = ({ task }) => {
   const Popover = usePopover();
-  const { setSearchString, searchResults } = useRoles(task);
+  const { setSearchString, searchResults } = Client.useRoles(task);
 
   const taskRoleAvatars = task.rolesAvatars.length ? 
     <AvatarGroup spacing='medium' onClick={Popover.onClick}>
-      {task.rolesAvatars.map((role: AvatarCode) => (<RoleAvatar key={role.value}>{role}</RoleAvatar>))}
+      {task.rolesAvatars.map((role: Client.AvatarCode) => (<RoleAvatar key={role.value}>{role}</RoleAvatar>))}
     </AvatarGroup> : 
     <RoleAvatar onClick={Popover.onClick}/>;
 
@@ -65,7 +66,7 @@ const TaskRoles: React.FC<{ task: TaskDescriptor }> = ({ task }) => {
               <ListItem key={role.roleId}>
                 <Checkbox checked={checked} />
                 <RoleAvatar>{avatar}</RoleAvatar>
-                <ListItemText>{role.displayName}</ListItemText>
+                <StyledListItemText>{role.displayName}</StyledListItemText>
               </ListItem>
             ))
           }

@@ -4,9 +4,7 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 
 import Client from '@taskclient';
 
-import { AvatarCode, TaskDescriptor } from 'taskclient/tasks-ctx-types';
 import { usePopover } from 'core/TaskTable/CellPopover';
-import { useAssignees } from 'taskclient/hooks';
 import SearchField from 'core/SearchField';
 
 const StyledButton = styled(Button)<ButtonProps>(() => ({
@@ -41,13 +39,13 @@ const UserAvatar: React.FC<{ children?: Client.AvatarCode, onClick?: (event: Rea
   );
 }
   
-const TaskAssignees: React.FC<{ task: TaskDescriptor }> = ({ task }) => {
+const TaskAssignees: React.FC<{ task: Client.TaskDescriptor }> = ({ task }) => {
   const Popover = usePopover();
-  const { setSearchString, searchResults } = useAssignees(task);
+  const { setSearchString, searchResults } = Client.useAssignees(task);
 
   const taskAssigneeAvatars = task.assigneesAvatars.length ? 
     <AvatarGroup spacing='medium' onClick={Popover.onClick}>
-      {task.assigneesAvatars.map((assignee: AvatarCode) => (<UserAvatar key={assignee.value}>{assignee}</UserAvatar>))}
+      {task.assigneesAvatars.map((assignee: Client.AvatarCode) => (<UserAvatar key={assignee.value}>{assignee}</UserAvatar>))}
     </AvatarGroup> : 
     <UserAvatar onClick={Popover.onClick}/>
 

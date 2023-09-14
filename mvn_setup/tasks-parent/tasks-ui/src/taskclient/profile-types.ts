@@ -1,8 +1,8 @@
-import { RoleId } from "./client-types";
+import { RoleId, UserId } from "./client-types";
 
 export interface Profile {
   name: string,
-  userId: string,
+  userId: UserId,
   roles: RoleId[],
   today: Date,
   commit?: string,
