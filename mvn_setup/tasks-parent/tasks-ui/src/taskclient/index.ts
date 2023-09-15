@@ -3,7 +3,6 @@ import { DefaultStore as DefaultStoreAs } from './client-store';
 
 import { TablePagination, TablePagination as TablePaginationAs } from './table-pagination';
 
-
 import {
   ClientError, Client, StoreConfig, Store,
   ProgramMessage, Org, User
@@ -69,7 +68,6 @@ import * as screenCtx from './screen-ctx';
 import { ScreenState } from './screen-ctx-types';
 
 import * as Hooks from './hooks';
-
 
 declare namespace TaskClient {
   export type { TablePagination };
@@ -141,6 +139,7 @@ namespace TaskClient {
   export const useTasks = Hooks.useTasks;
   export const useOrg = Hooks.useOrg;
   export const useAssignees = Hooks.useAssignees;
+  export const useRoles = Hooks.useRoles;
   export const useTaskEdit = Hooks.useTaskEdit;
   export const useSite = Hooks.useSite;
   export const useUnsaved = Hooks.useUnsaved;

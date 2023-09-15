@@ -1,4 +1,4 @@
-import { Org, User, UserId } from './client-types'; 
+import { Org, User, UserId, Role, RoleId } from './client-types'; 
 
 export interface OrgContextType {
   setState: OrgDispatch;
@@ -15,6 +15,12 @@ export interface UserSearchResult {
   user: User
 }
 
+export interface RoleSearchResult {
+  checked: boolean,
+  avatar: { twoletters: string, value: RoleId },
+  role: Role
+}
+
 export interface OrgState { 
   org: Org; 
   iam: User; 
@@ -23,4 +29,5 @@ export interface OrgState {
   withIam(value: User): OrgState;
   
   findUsers(searchFor: string, checkedUsers: UserId[]): UserSearchResult[];
+  findRoles(searchFor: string, checkedRoles: RoleId[]): RoleSearchResult[];
 }
