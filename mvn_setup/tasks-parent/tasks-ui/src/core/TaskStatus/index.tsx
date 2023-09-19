@@ -10,7 +10,7 @@ function getStatusBackgroundColor(status: Client.TaskStatus): string {
   return color;
 }
 
-const TaskStatuses: React.FC<{ task: Client.TaskDescriptor }> = ({ task }) => {
+const TaskStatus: React.FC<{ task: Client.TaskDescriptor }> = ({ task }) => {
   const intl = useIntl();
   const Popover = useMockPopover();
   const statusLabel = intl.formatMessage({ id: `tasktable.header.spotlight.status.${task.status}` }).toUpperCase();
@@ -48,4 +48,4 @@ const TaskStatuses: React.FC<{ task: Client.TaskDescriptor }> = ({ task }) => {
   );
 }
 
-export default TaskStatuses;
+export default TaskStatus;

@@ -17,7 +17,7 @@ import TaskClient from '@taskclient';
 import ChecklistDelegate from 'core/Checklist';
 import { usePopover } from 'core/TaskTable/CellPopover';
 import TaskAssignees from 'core/TaskAssignees';
-import TaskStatuses from 'core/TaskStatuses';
+import TaskStatus from 'core/TaskStatus';
 
 
 const Title: React.FC<{}> = () => {
@@ -68,7 +68,7 @@ const Status: React.FC<{}> = () => {
   const { state } = TaskClient.useTaskEdit();
 
   return (
-    <TaskStatuses task={state.task}/>
+    <TaskStatus task={state.task}/>
   )
 }
 

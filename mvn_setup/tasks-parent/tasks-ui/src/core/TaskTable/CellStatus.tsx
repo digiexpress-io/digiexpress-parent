@@ -3,7 +3,7 @@ import React from 'react';
 import Client from '@taskclient';
 
 import { StyledTableCell } from './StyledTable';
-import TaskStatuses from 'core/TaskStatuses';
+import TaskStatus from 'core/TaskStatus';
 
 const FormattedCell: React.FC<{
   rowId: number,
@@ -12,7 +12,7 @@ const FormattedCell: React.FC<{
 }> = ({ row }) => {
 
   return (
-    <StyledTableCell width="100px" sx={{ pl: 0 }}><TaskStatuses task={row} /></StyledTableCell>
+    <StyledTableCell width="100px" sx={{ pl: 0 }}><TaskStatus task={row} /></StyledTableCell>
   );
 }
 
