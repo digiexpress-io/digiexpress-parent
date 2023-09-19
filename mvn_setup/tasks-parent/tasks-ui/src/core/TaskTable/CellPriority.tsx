@@ -2,7 +2,7 @@ import React from 'react';
 
 import Client from '@taskclient';
 import { StyledTableCell } from './StyledTable';
-import TaskPriorities from 'core/TaskPriorities';
+import TaskPriority from 'core/TaskPriority';
 
 const FormattedCell: React.FC<{
   rowId: number,
@@ -10,7 +10,7 @@ const FormattedCell: React.FC<{
   def: Client.Group
 }> = ({ row }) => {
 
-  return (<StyledTableCell width="50px" ><TaskPriorities task={row} /></StyledTableCell>);
+  return (<StyledTableCell width="50px" ><TaskPriority task={row} /></StyledTableCell>);
 }
 
 export default FormattedCell;

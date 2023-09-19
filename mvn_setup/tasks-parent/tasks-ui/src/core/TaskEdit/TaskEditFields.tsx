@@ -17,7 +17,7 @@ import Client from '@taskclient';
 import ChecklistDelegate from 'core/Checklist';
 import { usePopover } from 'core/TaskTable/CellPopover';
 import TaskAssignees from 'core/TaskAssignees';
-import TaskPriorities from 'core/TaskPriorities';
+import TaskPriority from 'core/TaskPriority';
 
 
 const Title: React.FC<{}> = () => {
@@ -104,7 +104,7 @@ const Priority: React.FC<{}> = () => {
   const { state } = Client.useTaskEdit();
 
   return (
-    <TaskPriorities task={state.task} showPriorityText/>
+    <TaskPriority task={state.task} priorityTextEnabled/>
   )
 }
 

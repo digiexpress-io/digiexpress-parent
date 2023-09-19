@@ -14,7 +14,7 @@ function getPrioritySx(priority: Client.TaskPriority): SxProps{
   return { color, ':hover': { color }, mr: 1 };
 }
 
-const TaskPriorities: React.FC<{ task: Client.TaskDescriptor, showPriorityText?: boolean }> = ({ task, showPriorityText }) => {
+const TaskPriority: React.FC<{ task: Client.TaskDescriptor, priorityTextEnabled?: boolean }> = ({ task, priorityTextEnabled }) => {
   const priority = task.priority;
   const Popover = usePopover();
 
@@ -22,7 +22,7 @@ const TaskPriorities: React.FC<{ task: Client.TaskDescriptor, showPriorityText?:
     <Box>
       <Button variant='text' color='inherit' onClick={Popover.onClick} sx={{ textTransform: 'none' }}>
         <EmojiFlagsIcon sx={getPrioritySx(priority)} />
-        {showPriorityText && <Typography><FormattedMessage id={'task.priority.' + priority} /></Typography>}
+        {priorityTextEnabled && <Typography><FormattedMessage id={'task.priority.' + priority} /></Typography>}
       </Button>
       <Popover.Delegate>
         <MenuList dense>
@@ -38,4 +38,4 @@ const TaskPriorities: React.FC<{ task: Client.TaskDescriptor, showPriorityText?:
   );
 }
 
-export default TaskPriorities;
+export default TaskPriority;
