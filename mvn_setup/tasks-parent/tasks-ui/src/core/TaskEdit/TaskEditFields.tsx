@@ -10,18 +10,18 @@ import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import CircleNotificationsOutlinedIcon from '@mui/icons-material/CircleNotificationsOutlined';
 import CircleIcon from '@mui/icons-material/Circle';
-import EmojiFlagsIcon from '@mui/icons-material/EmojiFlags';
 import CloseIcon from '@mui/icons-material/Close';
 
-import TaskClient from '@taskclient';
+import Client from '@taskclient';
 
 import ChecklistDelegate from 'core/Checklist';
 import { usePopover } from 'core/TaskTable/CellPopover';
 import TaskAssignees from 'core/TaskAssignees';
+import TaskPriority from 'core/TaskPriority';
 
 
 const Title: React.FC<{}> = () => {
-  const { state } = TaskClient.useTaskEdit();
+  const { state } = Client.useTaskEdit();
   const intl = useIntl();
 
   return (<TextField
@@ -33,7 +33,7 @@ const Title: React.FC<{}> = () => {
 }
 
 const Description: React.FC<{}> = () => {
-  const { state } = TaskClient.useTaskEdit();
+  const { state } = Client.useTaskEdit();
   const intl = useIntl();
 
   return (<TextField placeholder={intl.formatMessage({ id: 'core.taskEdit.taskDescription' })} multiline rows={4} maxRows={6} fullWidth
@@ -41,7 +41,7 @@ const Description: React.FC<{}> = () => {
 }
 
 const Checklist: React.FC<{}> = () => {
-  const { state } = TaskClient.useTaskEdit();
+  const { state } = Client.useTaskEdit();
 
   console.log(state);
 
@@ -52,8 +52,8 @@ const Checklist: React.FC<{}> = () => {
   )
 }
 
-const getStatusColorConfig = (status: TaskClient.TaskStatus): SxProps => {
-  const statusColors = TaskClient.StatusPallette;
+const getStatusColorConfig = (status: Client.TaskStatus): SxProps => {
+  const statusColors = Client.StatusPallette;
   switch (status) {
     case 'COMPLETED':
       return { color: statusColors.COMPLETED, ':hover': { color: statusColors.COMPLETED } };
@@ -66,23 +66,11 @@ const getStatusColorConfig = (status: TaskClient.TaskStatus): SxProps => {
   }
 }
 
-const getPriorityColorConfig = (priority: TaskClient.TaskPriority): SxProps => {
-  const priorityColors = TaskClient.PriorityPalette;
-  switch (priority) {
-    case 'LOW':
-      return { color: priorityColors.LOW, ':hover': { color: priorityColors.LOW } };
-    case 'MEDIUM':
-      return { color: priorityColors.MEDIUM, ':hover': { color: priorityColors.MEDIUM } };
-    case 'HIGH':
-      return { color: priorityColors.HIGH, ':hover': { color: priorityColors.HIGH } };
-  }
-}
-
 const Status: React.FC<{}> = () => {
-  const { state } = TaskClient.useTaskEdit();
+  const { state } = Client.useTaskEdit();
   const status = state.task.status;
   const Popover = usePopover();
-  const statusOptions: TaskClient.TaskStatus[] = ['CREATED', 'IN_PROGRESS', 'COMPLETED', 'REJECTED'];
+  const statusOptions: Client.TaskStatus[] = ['CREATED', 'IN_PROGRESS', 'COMPLETED', 'REJECTED'];
 
   return (
     <Box>
@@ -105,7 +93,7 @@ const Status: React.FC<{}> = () => {
 }
 
 const Assignee: React.FC<{}> = () => {
-  const { state } = TaskClient.useTaskEdit();
+  const { state } = Client.useTaskEdit();
 
   return (
     <TaskAssignees task={state.task}/>
@@ -113,28 +101,10 @@ const Assignee: React.FC<{}> = () => {
 }
 
 const Priority: React.FC<{}> = () => {
-  const { state } = TaskClient.useTaskEdit();
-  const priority = state.task.priority;
-  const Popover = usePopover();
-  const priorityOptions: TaskClient.TaskPriority[] = ['LOW', 'HIGH', 'MEDIUM'];
+  const { state } = Client.useTaskEdit();
 
   return (
-    <Box>
-      <Button variant='text' color='inherit' onClick={Popover.onClick} sx={{ textTransform: 'none' }}>
-        <EmojiFlagsIcon sx={{ mr: 1, ...getPriorityColorConfig(priority) }} />
-        <Typography><FormattedMessage id={'task.priority.' + priority} /></Typography>
-      </Button>
-      <Popover.Delegate>
-        <MenuList dense>
-          {priorityOptions.map(option => (
-            <MenuItem key={option} onClick={Popover.onClose}>
-              <EmojiFlagsIcon sx={{ alignItems: 'center', mr: 1, ...getPriorityColorConfig(option) }} />
-              <ListItemText><FormattedMessage id={'task.priority.' + option} /></ListItemText>
-            </MenuItem>
-          ))}
-        </MenuList>
-      </Popover.Delegate>
-    </Box>
+    <TaskPriority task={state.task} priorityTextEnabled/>
   )
 }
 
@@ -155,7 +125,7 @@ const NewItemNotification: React.FC<{}> = () => {
 }
 
 const StartDate: React.FC<{ onClick: () => void }> = ({ onClick }) => {
-  const { state } = TaskClient.useTaskEdit();
+  const { state } = Client.useTaskEdit();
   const startDate = state.task.startDate;
 
   return (
@@ -167,7 +137,7 @@ const StartDate: React.FC<{ onClick: () => void }> = ({ onClick }) => {
 }
 
 const DueDate: React.FC<{ onClick: () => void }> = ({ onClick }) => {
-  const { state } = TaskClient.useTaskEdit();
+  const { state } = Client.useTaskEdit();
   const dueDate = state.task.dueDate;
 
   return (
