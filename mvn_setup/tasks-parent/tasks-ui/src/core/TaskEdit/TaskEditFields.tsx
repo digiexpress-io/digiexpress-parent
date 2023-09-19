@@ -9,7 +9,6 @@ import DateRangeOutlinedIcon from '@mui/icons-material/DateRangeOutlined';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import CircleNotificationsOutlinedIcon from '@mui/icons-material/CircleNotificationsOutlined';
-import CircleIcon from '@mui/icons-material/Circle';
 import EmojiFlagsIcon from '@mui/icons-material/EmojiFlags';
 import CloseIcon from '@mui/icons-material/Close';
 
@@ -18,6 +17,7 @@ import TaskClient from '@taskclient';
 import ChecklistDelegate from 'core/Checklist';
 import { usePopover } from 'core/TaskTable/CellPopover';
 import TaskAssignees from 'core/TaskAssignees';
+import TaskStatuses from 'core/TaskStatuses';
 
 
 const Title: React.FC<{}> = () => {
@@ -52,20 +52,6 @@ const Checklist: React.FC<{}> = () => {
   )
 }
 
-const getStatusColorConfig = (status: TaskClient.TaskStatus): SxProps => {
-  const statusColors = TaskClient.StatusPallette;
-  switch (status) {
-    case 'COMPLETED':
-      return { color: statusColors.COMPLETED, ':hover': { color: statusColors.COMPLETED } };
-    case 'CREATED':
-      return { color: statusColors.CREATED, ':hover': { color: statusColors.CREATED } };
-    case 'IN_PROGRESS':
-      return { color: statusColors.IN_PROGRESS, ':hover': { color: statusColors.IN_PROGRESS } };
-    case 'REJECTED':
-      return { color: statusColors.REJECTED, ':hover': { color: statusColors.REJECTED } };
-  }
-}
-
 const getPriorityColorConfig = (priority: TaskClient.TaskPriority): SxProps => {
   const priorityColors = TaskClient.PriorityPalette;
   switch (priority) {
@@ -80,27 +66,9 @@ const getPriorityColorConfig = (priority: TaskClient.TaskPriority): SxProps => {
 
 const Status: React.FC<{}> = () => {
   const { state } = TaskClient.useTaskEdit();
-  const status = state.task.status;
-  const Popover = usePopover();
-  const statusOptions: TaskClient.TaskStatus[] = ['CREATED', 'IN_PROGRESS', 'COMPLETED', 'REJECTED'];
 
   return (
-    <Box>
-      <Button variant='text' color='inherit' onClick={Popover.onClick} sx={{ textTransform: 'none' }}>
-        <CircleIcon sx={{ mr: 1, ...getStatusColorConfig(status) }} />
-        <Typography><FormattedMessage id={'task.status.' + status} /></Typography>
-      </Button>
-      <Popover.Delegate>
-        <MenuList dense>
-          {statusOptions.map(option => (
-            <MenuItem key={option} onClick={Popover.onClose}>
-              <CircleIcon sx={{ alignItems: 'center', mr: 1, ...getStatusColorConfig(option) }} />
-              <ListItemText><FormattedMessage id={'task.status.' + option} /></ListItemText>
-            </MenuItem>
-          ))}
-        </MenuList>
-      </Popover.Delegate>
-    </Box>
+    <TaskStatuses task={state.task}/>
   )
 }
 
