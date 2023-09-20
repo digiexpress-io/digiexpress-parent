@@ -1,66 +1,16 @@
 import React from 'react';
-import { SxProps, IconButton, MenuList, MenuItem, ListItemText, Divider } from '@mui/material';
-import AssistantPhotoTwoToneIcon from '@mui/icons-material/AssistantPhotoTwoTone';
-import { useIntl } from 'react-intl';
 
-import client from '@taskclient';
-import TaskCell from './TaskCell';
-import { usePopover } from './CellPopover';
-import { CellProps } from './task-table-types';
+import Client from '@taskclient';
 import { StyledTableCell } from './StyledTable';
-
-
-
-function getPriority(def: client.Group): SxProps | undefined {
-  if (!def.color) {
-    return undefined;
-  }
-  if (def.type === 'priority') {
-    const backgroundColor = def.color;
-    return { backgroundColor, borderWidth: 0, color: 'primary.contrastText' }
-  }
-  return undefined;
-}
-
-const Priority: React.FC<CellProps & { color?: string }> = ({ row, color }) => {
-  const intl = useIntl();
-  const value = intl.formatMessage({ id: `tasktable.header.spotlight.priority.${row.priority}` }).toUpperCase();
-
-  const Popover = usePopover();
-
-
-  return (
-    <>
-      <Popover.Delegate>
-        <MenuList dense>
-          <MenuItem>
-            <ListItemText>High</ListItemText>
-          </MenuItem>
-          <MenuItem>
-            <ListItemText>Normal</ListItemText>
-          </MenuItem>
-          <MenuItem>
-            <ListItemText>Low</ListItemText>
-          </MenuItem>
-          <Divider />
-          <MenuItem>
-            <ListItemText>None</ListItemText>
-          </MenuItem>
-        </MenuList>
-      </Popover.Delegate>
-      <TaskCell id={row.id + "/Priority"} name={<IconButton onClick={Popover.onClick}><AssistantPhotoTwoToneIcon sx={{ fontSize: 'medium', color }} /></IconButton>} />
-
-    </>
-  );
-}
+import TaskPriority from 'core/TaskPriority';
 
 const FormattedCell: React.FC<{
   rowId: number,
-  row: client.TaskDescriptor,
-  def: client.Group
-}> = ({ row, def }) => {
+  row: Client.TaskDescriptor,
+  def: Client.Group
+}> = ({ row }) => {
 
-  return (<StyledTableCell width="50px" sx={getPriority(def)}><Priority row={row} def={def} /></StyledTableCell>);
+  return (<StyledTableCell width="50px" ><TaskPriority task={row} /></StyledTableCell>);
 }
 
 export default FormattedCell;
