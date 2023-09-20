@@ -5,8 +5,16 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import Client from '@taskclient';
 import { useMockPopover } from 'core/TaskTable/MockPopover';
 
+const statusOptions: Client.TaskStatus[] = ['CREATED', 'IN_PROGRESS', 'COMPLETED', 'REJECTED'];
+
 function getStatusBackgroundColor(status: Client.TaskStatus): string {
-  const color = Client.StatusPallette[status] || "unset";
+  const color = Client.StatusPallette[status];
+  return color;
+}
+
+function getActiveColor(currentlyShowing: Client.TaskStatus, status: Client.TaskStatus): string {
+  const selectedTaskStatusColor = Client.StatusPallette.IN_PROGRESS;
+  const color = status === currentlyShowing ? selectedTaskStatusColor : "unset";
   return color;
 }
 
@@ -14,12 +22,6 @@ const TaskStatus: React.FC<{ task: Client.TaskDescriptor }> = ({ task }) => {
   const intl = useIntl();
   const Popover = useMockPopover();
   const statusLabel = intl.formatMessage({ id: `tasktable.header.spotlight.status.${task.status}` }).toUpperCase();
-  const statusOptions: Client.TaskStatus[] = ['CREATED', 'IN_PROGRESS', 'COMPLETED', 'REJECTED'];
-
-  function getActiveColor(option: Client.TaskStatus): string {
-    const color = task.status === option ? Client.StatusPallette.IN_PROGRESS : "unset";
-    return color;
-  }
 
   return (
     <Box>
@@ -38,7 +40,7 @@ const TaskStatus: React.FC<{ task: Client.TaskDescriptor }> = ({ task }) => {
           {statusOptions.map((option: Client.TaskStatus) => (
             <MenuItem key={option} onClick={Popover.onClose} sx={{ display: "flex", pl: 0, py: 0 }}>
               <Box sx={{ width: 8, height: 40, backgroundColor: getStatusBackgroundColor(option)}} />
-              <Box sx={{ width: 8, height: 8, borderRadius: "50%", mx: 2, backgroundColor: getActiveColor(option)}} />
+              <Box sx={{ width: 8, height: 8, borderRadius: "50%", mx: 2, backgroundColor: getActiveColor(option, task.status)}} />
               <ListItemText><FormattedMessage id={`task.status.${option}`} /></ListItemText>
             </MenuItem>
           ))}
