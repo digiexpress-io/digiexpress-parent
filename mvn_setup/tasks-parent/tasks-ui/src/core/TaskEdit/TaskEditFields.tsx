@@ -1,22 +1,18 @@
 import React from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 
-import {
-  TextField, Typography, Stack, Box, IconButton,
-  MenuList, MenuItem, Button, SxProps, ListItemText
-} from '@mui/material';
+import { TextField, Typography, Stack, Box, IconButton, Button } from '@mui/material';
 import DateRangeOutlinedIcon from '@mui/icons-material/DateRangeOutlined';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import CircleNotificationsOutlinedIcon from '@mui/icons-material/CircleNotificationsOutlined';
-import CircleIcon from '@mui/icons-material/Circle';
 import CloseIcon from '@mui/icons-material/Close';
 
 import Client from '@taskclient';
 
 import ChecklistDelegate from 'core/Checklist';
-import { usePopover } from 'core/TaskTable/CellPopover';
 import TaskAssignees from 'core/TaskAssignees';
+import TaskStatus from 'core/TaskStatus';
 import TaskPriority from 'core/TaskPriority';
 
 
@@ -43,8 +39,6 @@ const Description: React.FC<{}> = () => {
 const Checklist: React.FC<{}> = () => {
   const { state } = Client.useTaskEdit();
 
-  console.log(state);
-
   return (
     <>
       {state.task.checklist.map(item => (<ChecklistDelegate key={item.id} value={item} />))}
@@ -52,43 +46,11 @@ const Checklist: React.FC<{}> = () => {
   )
 }
 
-const getStatusColorConfig = (status: Client.TaskStatus): SxProps => {
-  const statusColors = Client.StatusPallette;
-  switch (status) {
-    case 'COMPLETED':
-      return { color: statusColors.COMPLETED, ':hover': { color: statusColors.COMPLETED } };
-    case 'CREATED':
-      return { color: statusColors.CREATED, ':hover': { color: statusColors.CREATED } };
-    case 'IN_PROGRESS':
-      return { color: statusColors.IN_PROGRESS, ':hover': { color: statusColors.IN_PROGRESS } };
-    case 'REJECTED':
-      return { color: statusColors.REJECTED, ':hover': { color: statusColors.REJECTED } };
-  }
-}
-
 const Status: React.FC<{}> = () => {
   const { state } = Client.useTaskEdit();
-  const status = state.task.status;
-  const Popover = usePopover();
-  const statusOptions: Client.TaskStatus[] = ['CREATED', 'IN_PROGRESS', 'COMPLETED', 'REJECTED'];
 
   return (
-    <Box>
-      <Button variant='text' color='inherit' onClick={Popover.onClick} sx={{ textTransform: 'none' }}>
-        <CircleIcon sx={{ mr: 1, ...getStatusColorConfig(status) }} />
-        <Typography><FormattedMessage id={'task.status.' + status} /></Typography>
-      </Button>
-      <Popover.Delegate>
-        <MenuList dense>
-          {statusOptions.map(option => (
-            <MenuItem key={option} onClick={Popover.onClose}>
-              <CircleIcon sx={{ alignItems: 'center', mr: 1, ...getStatusColorConfig(option) }} />
-              <ListItemText><FormattedMessage id={'task.status.' + option} /></ListItemText>
-            </MenuItem>
-          ))}
-        </MenuList>
-      </Popover.Delegate>
-    </Box>
+    <TaskStatus task={state.task}/>
   )
 }
 
