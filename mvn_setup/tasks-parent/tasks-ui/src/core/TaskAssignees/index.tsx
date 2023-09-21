@@ -9,14 +9,15 @@ import { useMockPopover } from 'core/TaskTable/MockPopover';
 
 const UserAvatar: React.FC<{ children?: Client.AvatarCode, onClick?: (event: React.MouseEvent<HTMLElement>) => void }> = ({ children, onClick }) => {
   const { state } = Client.useTasks();
-  const bgcolor: string | undefined = children ? state.pallette.owners[children.value] : undefined;
+  const assigneeColors = state.pallette.owners;
+  const bgcolor: string | undefined = children ? assigneeColors[children.value] : undefined;
   const avatar = children ? children.twoletters : <PersonAddIcon sx={{ fontSize: 15 }} />;
 
   return (
     <Avatar 
       onClick={onClick}
       sx={{
-        bgcolor: bgcolor,
+        bgcolor,
         width: 24,
         height: 24,
         fontSize: 10
@@ -30,6 +31,7 @@ const UserAvatar: React.FC<{ children?: Client.AvatarCode, onClick?: (event: Rea
 const TaskAssignees: React.FC<{ task: Client.TaskDescriptor }> = ({ task }) => {
   const Popover = useMockPopover();
   const { state } = Client.useTasks();
+  const assigneeColors = state.pallette.owners;
   const { setSearchString, searchResults } = Client.useAssignees(task);
 
   const taskAssigneeAvatars = task.assigneesAvatars.length ? 
@@ -46,12 +48,12 @@ const TaskAssignees: React.FC<{ task: Client.TaskDescriptor }> = ({ task }) => {
       <Popover.Delegate>
         <SearchField 
           onChange={setSearchString}
-          searchFieldSx={{py: 1, "&.MuiInputBase-root.MuiInput-root": {pb: 1, pl: 2}}}
+          searchFieldSx={{py: 1, "&>div": {pb: 1, pl: 2}}}
         />
         <List dense sx={{ py: 0 }}>
           {searchResults.map(({ user, checked }) => (
             <MenuItem key={user.userId} sx={{ display: "flex", pl: 0, py: 0 }}>
-              <Box sx={{ width: 8, height: 40, backgroundColor: state.pallette.owners[user.userId]}} />
+              <Box sx={{ width: 8, height: 40, backgroundColor: assigneeColors[user.userId]}} />
               <Box ml={1}>
                 <Checkbox checked={checked} sx={{height: "40px"}}/>
               </Box>
