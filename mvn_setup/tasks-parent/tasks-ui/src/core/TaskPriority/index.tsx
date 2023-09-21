@@ -7,7 +7,6 @@ import Client from '@taskclient';
 import { useMockPopover } from 'core/TaskTable/MockPopover';
 
 const priorityColors = Client.PriorityPalette;
-const statusColors = Client.StatusPallette;
 const priorityOptions: Client.TaskPriority[] = ['LOW', 'HIGH', 'MEDIUM'];
 
 function getEmojiFlagSx(priority: Client.TaskPriority): SxProps{
@@ -16,7 +15,7 @@ function getEmojiFlagSx(priority: Client.TaskPriority): SxProps{
 }
 
 function getActiveColor(currentlyShowing: Client.TaskPriority, priority: Client.TaskPriority): string {
-  const selectedItemColor = statusColors.IN_PROGRESS;
+  const selectedItemColor = Client.StatusPallette.IN_PROGRESS;
   const color = priority === currentlyShowing ? selectedItemColor : "unset";
   return color;
 }
