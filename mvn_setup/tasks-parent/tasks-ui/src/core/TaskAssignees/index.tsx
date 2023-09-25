@@ -48,7 +48,6 @@ const TaskAssignees: React.FC<{ task: Client.TaskDescriptor }> = ({ task }) => {
       <Popover.Delegate>
         <SearchField 
           onChange={setSearchString}
-          searchFieldSx={{py: 1, "&>div": {pb: 1, pl: 2}}}
         />
         <List dense sx={{ py: 0 }}>
           {searchResults.map(({ user, checked }) => (
