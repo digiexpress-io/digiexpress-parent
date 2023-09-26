@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Stack, Paper, Grid, Tabs, Tab, Typography } from '@mui/material';
+import { Box, Stack, Grid, Tabs, Tab, Typography, AppBar, Toolbar, useTheme, styled } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 import { StyledTaskItem, SummaryTaskNotSelected, SummaryTaskSelected } from './TeamSpaceGroup';
 
@@ -7,14 +7,23 @@ import Client from '@taskclient';
 import { TeamSpaceState, TeamSpaceTabState, init } from './types';
 
 
+const StyledSummaryContainer = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  height: '100%',
+  position: 'fixed',
+  paddingLeft: theme.spacing(2),
+  paddingRight: theme.spacing(2),
+  backgroundColor: theme.palette.background.paper
+}));
+
+
 const TabPanel: React.FC<{ state: TeamSpaceTabState, children: React.ReactNode }> = ({ state, children }) => {
 
   return (
     <div hidden={state.disabled}>
       {!state.disabled && (
-        <Paper sx={{ p: 2 }}><Stack>{children}</Stack></Paper>
+        <Box sx={{ backgroundColor: 'mainContent.main' }}><Stack>{children}</Stack></Box>
       )}
-
     </div>);
 }
 
@@ -31,19 +40,21 @@ const TeamSpace: React.FC<{ data: TeamSpaceState }> = ({ data }) => {
   }
 
   return (<>
-    <Box position='fixed'>
-      <Paper>
+    <AppBar position="sticky" color='inherit' sx={{ boxShadow: 'unset' }}>
+      <Toolbar>
         <Tabs value={state.activeTab} onChange={handleActiveTab}>
-          {state.tabs.map(tab => (<Tab key={tab.id} label={<Typography sx={{ fontWeight: 'bold', color: tab.color }}><FormattedMessage id={tab.label} /></Typography>} />))}
+          {state.tabs.map(tab => (<Tab key={tab.id}
+            label={<Typography sx={{ fontWeight: 'bold', color: tab.color }}>
+              <FormattedMessage id={tab.label} />
+            </Typography>} />))}
         </Tabs>
-      </Paper>
-    </Box>
-
-    <Box sx={{ mt: 7 }} />
-
-    <Grid container spacing={1}>
+      </Toolbar>
+    </AppBar>
+    <Grid container>
       <Grid item md={8} lg={8}>
         <Stack spacing={1}>
+          <Box sx={{ mt: 1 }} />
+
           {state.tabs.map(tab => (
             <TabPanel state={tab} key={tab.id}>
               {tab.group.records.map((task) => <StyledTaskItem key={task.id} task={task} onTask={() => handleActiveTask(task)} />)}
@@ -53,15 +64,14 @@ const TeamSpace: React.FC<{ data: TeamSpaceState }> = ({ data }) => {
       </Grid>
 
       <Grid item md={4} lg={4}>
-        <Box display='flex' height='100%' position='fixed'>
-          <Paper sx={{ p: 2 }}>
-            <Stack direction='column' spacing={1}>
-              {state.activeTask ? <SummaryTaskSelected task={state.activeTask} /> : <SummaryTaskNotSelected />}
-            </Stack>
-          </Paper>
-        </Box>
+        <StyledSummaryContainer>
+          <Stack direction='column' spacing={1}>
+            {state.activeTask ? <SummaryTaskSelected task={state.activeTask} /> : <SummaryTaskNotSelected />}
+          </Stack>
+        </StyledSummaryContainer>
       </Grid>
     </Grid>
+
   </>
   );
 }

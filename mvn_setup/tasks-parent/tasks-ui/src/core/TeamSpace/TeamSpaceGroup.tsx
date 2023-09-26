@@ -54,13 +54,11 @@ const Header: React.FC<{ group: Client.Group }> = ({ group }) => {
     throw new Error("Unknown group: " + group.id);
   }
 
-  return (<>
+  return (
     <Box display='flex' justifyContent='space-between'>
       <Box width='50%'><Typography variant='h4' fontWeight='bold' sx={{ color: titleColor }}>{title}</Typography></Box>
       <Box marginRight={5}><Typography textAlign='right' fontWeight='bold'><FormattedMessage id='task.dueDate' /></Typography></Box>
     </Box>
-    <Divider sx={{ my: 1 }} flexItem />
-  </>
   )
 }
 
@@ -76,9 +74,9 @@ const SummaryTaskSelected: React.FC<{ task: Client.TaskDescriptor }> = ({ task }
     <Button variant='contained' color='warning'><FormattedMessage id='task.edit' /></Button>
     <Box sx={{ my: 1 }} />
 
-    <><Typography marginRight={1} fontWeight='bolder'><FormattedMessage id='task.description' /></Typography>{description}</>
-    <><Typography marginRight={1} fontWeight='bolder'><FormattedMessage id='task.assignees' /></Typography>{JSON.stringify(assignees)}</>
-    <><Typography marginRight={1} fontWeight='bolder'><FormattedMessage id='task.status' /></Typography>{status}</>
+    <Typography marginRight={1} fontWeight='bolder'><FormattedMessage id='task.description' /></Typography>{description}
+    <Typography marginRight={1} fontWeight='bolder'><FormattedMessage id='task.assignees' /></Typography>{JSON.stringify(assignees)}
+    <Typography marginRight={1} fontWeight='bolder'><FormattedMessage id='task.status' /></Typography>{status}
   </>
   )
 }

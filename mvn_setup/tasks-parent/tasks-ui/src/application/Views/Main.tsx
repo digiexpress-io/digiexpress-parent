@@ -8,7 +8,7 @@ import TaskClient from '@taskclient';
 import Core from '../../core';
 import Activities from '../Activities';
 
-const root: SxProps = { height: '100%', backgroundColor: "mainContent.main", width: '100%', p: 1 };
+const root: SxProps = { height: '100%', backgroundColor: "mainContent.main", width: '100%' };
 
 
 const Main: React.FC<{}> = () => {
