@@ -7,7 +7,8 @@ interface TeamSpaceTabState {
   color: string,
   group: Client.Group,
   type: Client.TeamGroupType,
-  disabled: boolean
+  disabled: boolean,
+  count: number | undefined
 }
 
 
@@ -61,12 +62,14 @@ function getActiveTab(tabs: TeamSpaceTabState[]): number {
   return 0;
 }
 
+
 function getTabs(state: Client.TasksState): TeamSpaceTabState[] {
   const groupBy: Client.Group[] = state.withGroupBy("team").groups;
   const groups = groupsToRecord(groupBy);
   const groupOverdue = groups["groupOverdue"];
   const groupDueSoon = groups["groupDueSoon"];
   const groupAvailable = groups["groupAvailable"];
+
 
   return [
     {
@@ -75,7 +78,8 @@ function getTabs(state: Client.TasksState): TeamSpaceTabState[] {
       color: Client.TeamGroupPallete.groupOverdue,
       group: groupOverdue,
       disabled: true,
-      type: 'groupOverdue'
+      type: 'groupOverdue',
+      count: groupOverdue.records.length
     },
     {
       id: 1,
@@ -83,7 +87,9 @@ function getTabs(state: Client.TasksState): TeamSpaceTabState[] {
       color: Client.TeamGroupPallete.groupDueSoon,
       group: groupDueSoon,
       disabled: true,
-      type: 'groupDueSoon'
+      type: 'groupDueSoon',
+      count: groupDueSoon.records.length
+
     },
     {
       id: 2,
@@ -91,7 +97,8 @@ function getTabs(state: Client.TasksState): TeamSpaceTabState[] {
       color: Client.TeamGroupPallete.groupAvailable,
       group: groupAvailable,
       disabled: true,
-      type: 'groupAvailable'
+      type: 'groupAvailable',
+      count: groupAvailable.records.length
     }
   ]
 }

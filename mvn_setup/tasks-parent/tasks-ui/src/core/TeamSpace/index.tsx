@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Stack, Grid, Tabs, Tab, Typography, AppBar, Toolbar, useTheme, styled } from '@mui/material';
+import { Box, Stack, Grid, Tabs, Tab, Typography, AppBar, Toolbar, styled } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 import { StyledTaskItem, SummaryTaskNotSelected, SummaryTaskSelected } from './TeamSpaceGroup';
 
@@ -44,9 +44,12 @@ const TeamSpace: React.FC<{ data: TeamSpaceState }> = ({ data }) => {
       <Toolbar>
         <Tabs value={state.activeTab} onChange={handleActiveTab}>
           {state.tabs.map(tab => (<Tab key={tab.id}
-            label={<Typography sx={{ fontWeight: 'bold', color: tab.color }}>
-              <FormattedMessage id={tab.label} />
-            </Typography>} />))}
+            label={
+              <Typography sx={{ fontWeight: 'bold', color: tab.color }}>
+                <FormattedMessage id={tab.label} values={{count: tab.count}}/>
+              </Typography>
+            }
+          />))}
         </Tabs>
       </Toolbar>
     </AppBar>
@@ -54,7 +57,6 @@ const TeamSpace: React.FC<{ data: TeamSpaceState }> = ({ data }) => {
       <Grid item md={8} lg={8}>
         <Stack spacing={1}>
           <Box sx={{ mt: 1 }} />
-
           {state.tabs.map(tab => (
             <TabPanel state={tab} key={tab.id}>
               {tab.group.records.map((task) => <StyledTaskItem key={task.id} task={task} onTask={() => handleActiveTask(task)} />)}

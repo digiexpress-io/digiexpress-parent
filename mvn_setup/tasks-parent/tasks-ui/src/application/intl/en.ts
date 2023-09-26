@@ -67,9 +67,9 @@ const en = {
   'core.teamSpace.taskCount': '{values} Tasks',
   'core.teamSpace.task.create': 'Create new task',
 
-  'core.teamSpace.tab.task.overdue': 'Overdue',
-  'core.teamSpace.tab.task.dueSoon': 'Due soon',
-  'core.teamSpace.tab.task.available': 'Available',
+  'core.teamSpace.tab.task.overdue': 'Overdue: {count}',
+  'core.teamSpace.tab.task.dueSoon': 'Due soon: {count}',
+  'core.teamSpace.tab.task.available': 'Available: {count}',
 
   'core.teamSpace.tooltip.startWork': 'Start work', 
 
