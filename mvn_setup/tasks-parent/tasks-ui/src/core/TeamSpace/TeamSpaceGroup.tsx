@@ -8,7 +8,12 @@ import Client from '@taskclient';
 const StyledTaskItem: React.FC<{ task: Client.TaskDescriptor, onTask: (task: Client.TaskDescriptor) => void }> = ({ task, onTask }) => {
   const theme = useTheme();
   const [active, setActive] = React.useState(false);
-  const taskDueDate = task.dueDate?.toLocaleDateString();
+  const taskDueDate = task.dueDate ? task.dueDate.toLocaleDateString() : undefined;
+  const isCompletedOrRejected: boolean = task.status === 'COMPLETED' || task.status === 'REJECTED';
+
+  if (isCompletedOrRejected) {
+    return <></>;
+  }
 
   return (
     <Box sx={{ my: 1 }} display='flex' alignItems='center'
