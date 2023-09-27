@@ -66,6 +66,7 @@ const en = {
 
   'core.teamSpace.taskCount': '{values} Tasks',
   'core.teamSpace.task.create': 'Create new task',
+  'core.teamSpace.summary.noneSelected': 'Nothing selected',
 
   'core.teamSpace.tab.task.overdue': 'Overdue: {count}',
   'core.teamSpace.tab.task.dueSoon': 'Due soon: {count}',

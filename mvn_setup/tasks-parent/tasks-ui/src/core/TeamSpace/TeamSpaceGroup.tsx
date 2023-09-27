@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Divider, Alert, AlertTitle, IconButton, useTheme, Button, Typography, Tooltip } from '@mui/material';
+import { Box, Divider, Alert, AlertTitle, IconButton, useTheme, Button, Typography, Tooltip, Stack } from '@mui/material';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { FormattedMessage } from 'react-intl';
@@ -88,7 +88,7 @@ const SummaryTaskSelected: React.FC<{ task: Client.TaskDescriptor }> = ({ task }
 
 
 const SummaryTaskNotSelected: React.FC<{}> = () => {
-  return (<>empty</>)
+  return (<Alert severity='info'><AlertTitle><FormattedMessage id='core.teamSpace.summary.noneSelected' /></AlertTitle></Alert>)
 }
 
 

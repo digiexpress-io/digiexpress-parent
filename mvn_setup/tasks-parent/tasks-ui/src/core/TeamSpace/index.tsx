@@ -9,8 +9,8 @@ import { TeamSpaceState, TeamSpaceTabState, init } from './types';
 
 
 const StyledSummaryContainer = styled(Box)(({ theme }) => ({
-  display: 'flex',
   height: '100%',
+  width: 'stretch',
   position: 'fixed',
   paddingLeft: theme.spacing(2),
   paddingRight: theme.spacing(2),
@@ -56,7 +56,7 @@ const TeamSpace: React.FC<{ data: TeamSpaceState }> = ({ data }) => {
         <Pagination />
       </Toolbar>
     </AppBar>
-    <Grid container>
+    <Grid container spacing={1}>
       <Grid item md={8} lg={8}>
         <Stack spacing={1}>
           <Box sx={{ mt: 1 }} />
@@ -76,7 +76,6 @@ const TeamSpace: React.FC<{ data: TeamSpaceState }> = ({ data }) => {
         </StyledSummaryContainer>
       </Grid>
     </Grid>
-
   </>
   );
 }
