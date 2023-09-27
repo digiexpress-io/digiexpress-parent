@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Divider, Alert, AlertTitle, IconButton, useTheme, Button, Typography, Tooltip, Stack } from '@mui/material';
+import { Box, Divider, Alert, AlertTitle, IconButton, useTheme, Button, Typography, Tooltip } from '@mui/material';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { FormattedMessage } from 'react-intl';
@@ -67,18 +67,49 @@ const Header: React.FC<{ group: Client.Group }> = ({ group }) => {
   )
 }
 
+const StyledAlert: React.FC<{
+  children?: React.ReactNode,
+  title: string,
+  task: Client.TaskDescriptor,
+  alertSeverity: 'error' | 'success' | 'warning',
+  isDueDate?: boolean
+}> = ({ isDueDate, title, task, alertSeverity }) => {
+
+  const { dueDate } = task;
+
+  return (
+    <Alert severity={alertSeverity}>
+      <AlertTitle><FormattedMessage id={title} /></AlertTitle>
+      {isDueDate ? <Typography variant='body2' fontWeight='bolder'>{dueDate?.toUTCString()}</Typography> : undefined}
+    </Alert>
+  )
+}
+
+
+const SummaryAlert: React.FC<{ task: Client.TaskDescriptor }> = ({ task }) => {
+
+  if (task.teamGroupType === 'groupOverdue') {
+    return <StyledAlert alertSeverity='error' task={task} isDueDate title='core.teamSpace.task.overdue.alert' />
+  }
+  if (task.teamGroupType === 'groupDueSoon') {
+    return <StyledAlert alertSeverity='warning' task={task} isDueDate title='core.teamSpace.task.dueSoon.alert' />
+  }
+  return (<StyledAlert alertSeverity='success' task={task} title='core.teamSpace.task.available.alert' />)
+}
+
+
+
 const SummaryTaskSelected: React.FC<{ task: Client.TaskDescriptor }> = ({ task }) => {
-  const { assignees, dueDate, status, title, description } = task;
+  const { assignees, status, title, description } = task;
 
   return (<>
     <Typography marginRight={1} fontWeight='bold' variant='h4'>{title}</Typography>
-    <Alert severity='error'><AlertTitle><FormattedMessage id='task.overdue.msg' /></AlertTitle>
-      {dueDate?.toUTCString()}</Alert>
+
     <Divider sx={{ my: 1 }} />
     <Button variant='contained' color='info' endIcon={<ArrowForwardIosIcon />}><FormattedMessage id='task.start' /></Button>
     <Button variant='contained' color='warning'><FormattedMessage id='task.edit' /></Button>
     <Box sx={{ my: 1 }} />
-
+    <SummaryAlert task={task} />
     <Typography marginRight={1} fontWeight='bolder'><FormattedMessage id='task.description' /></Typography>{description}
     <Typography marginRight={1} fontWeight='bolder'><FormattedMessage id='task.assignees' /></Typography>{JSON.stringify(assignees)}
     <Typography marginRight={1} fontWeight='bolder'><FormattedMessage id='task.status' /></Typography>{status}
@@ -87,7 +118,7 @@ const SummaryTaskSelected: React.FC<{ task: Client.TaskDescriptor }> = ({ task }
 }
 
 
-const SummaryTaskNotSelected: React.FC<{}> = () => {
+const SummaryTaskNotSelected: React.FC = () => {
   return (<Alert severity='info'><AlertTitle><FormattedMessage id='core.teamSpace.summary.noneSelected' /></AlertTitle></Alert>)
 }
 

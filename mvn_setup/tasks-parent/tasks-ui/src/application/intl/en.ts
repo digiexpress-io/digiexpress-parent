@@ -17,7 +17,6 @@ const en = {
   'task.status.REJECTED': 'Rejected',
 
   'task.overdue': 'Overdue',
-  'task.overdue.msg': 'This task is overdue!',
   'task.dueSoon': 'Due soon',
   'task.available': 'Available',
   'task.description': 'Description',
@@ -71,8 +70,11 @@ const en = {
   'core.teamSpace.tab.task.overdue': 'Overdue: {count}',
   'core.teamSpace.tab.task.dueSoon': 'Due soon: {count}',
   'core.teamSpace.tab.task.available': 'Available: {count}',
+  'core.teamSpace.tooltip.startWork': 'Start work',
 
-  'core.teamSpace.tooltip.startWork': 'Start work', 
+  'core.teamSpace.task.overdue.alert': 'This task is overdue!',
+  'core.teamSpace.task.available.alert': 'This task is available and has no urgent due date considerations',
+  'core.teamSpace.task.dueSoon.alert': 'This task is due soon!',
 
   'core.myWork.myWorkTaskTable.header.spotlight.myWorkOverdue': 'Overdue',
   'core.myWork.myWorkTaskTable.header.spotlight.myWorkStartsToday': 'Starts today',
