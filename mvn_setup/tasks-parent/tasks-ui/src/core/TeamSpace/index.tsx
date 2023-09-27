@@ -1,7 +1,8 @@
 import React from 'react';
-import { Box, Stack, Grid, Tabs, Tab, Typography, AppBar, Toolbar, styled } from '@mui/material';
+import { Box, Stack, Grid, Tabs, Tab, Typography, AppBar, Toolbar, Divider, styled } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 import { StyledTaskItem, SummaryTaskNotSelected, SummaryTaskSelected } from './TeamSpaceGroup';
+import Pagination from './Pagination';
 
 import Client from '@taskclient';
 import { TeamSpaceState, TeamSpaceTabState, init } from './types';
@@ -46,11 +47,13 @@ const TeamSpace: React.FC<{ data: TeamSpaceState }> = ({ data }) => {
           {state.tabs.map(tab => (<Tab key={tab.id}
             label={
               <Typography sx={{ fontWeight: 'bold', color: tab.color }}>
-                <FormattedMessage id={tab.label} values={{count: tab.count}}/>
+                <FormattedMessage id={tab.label} values={{ count: tab.count }} />
               </Typography>
             }
           />))}
         </Tabs>
+        <Divider orientation='vertical' flexItem sx={{mx: 2}}/>
+        <Pagination />
       </Toolbar>
     </AppBar>
     <Grid container>
