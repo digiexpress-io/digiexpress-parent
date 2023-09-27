@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Divider, Alert, AlertTitle, IconButton, useTheme, Button, Typography, Tooltip } from '@mui/material';
+import { Box, Divider, Alert, AlertTitle, IconButton, useTheme, Button, Typography, Tooltip, Chip, Stack } from '@mui/material';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { FormattedMessage } from 'react-intl';
@@ -98,22 +98,50 @@ const SummaryAlert: React.FC<{ task: Client.TaskDescriptor }> = ({ task }) => {
 }
 
 
+const statusColors = Client.StatusPallette;
+const StyledTaskStatus: React.FC<{ task: Client.TaskDescriptor }> = ({ task }) => {
 
-const SummaryTaskSelected: React.FC<{ task: Client.TaskDescriptor }> = ({ task }) => {
-  const { assignees, status, title, description } = task;
+  const { status } = task;
 
   return (<>
-    <Typography marginRight={1} fontWeight='bold' variant='h4'>{title}</Typography>
-
-    <Divider sx={{ my: 1 }} />
-    <Button variant='contained' color='info' endIcon={<ArrowForwardIosIcon />}><FormattedMessage id='task.start' /></Button>
-    <Button variant='contained' color='warning'><FormattedMessage id='task.edit' /></Button>
-    <Box sx={{ my: 1 }} />
-    <SummaryAlert task={task} />
-    <Typography marginRight={1} fontWeight='bolder'><FormattedMessage id='task.description' /></Typography>{description}
-    <Typography marginRight={1} fontWeight='bolder'><FormattedMessage id='task.assignees' /></Typography>{JSON.stringify(assignees)}
-    <Typography marginRight={1} fontWeight='bolder'><FormattedMessage id='task.status' /></Typography>{status}
+    <Typography marginRight={1} fontWeight='bolder'><FormattedMessage id='task.status' /></Typography>
+    <Chip sx={{
+      width: 'fit-content',
+      backgroundColor: statusColors[status],
+      color: 'activeItem.light',
+      fontWeight: 'bold'
+    }}
+      label={<FormattedMessage id={`task.status.${status}`} />} />
   </>
+  )
+}
+
+const StyledAssignees: React.FC<{ task: Client.TaskDescriptor }> = ({ task }) => {
+
+  const { assignees } = task;
+
+
+  return (<Box>
+    <Typography marginRight={1} fontWeight='bolder'><FormattedMessage id='task.assignees' /></Typography>
+    {assignees.map((assignee) => <Typography>{assignee}</Typography>)}
+  </Box>)
+}
+
+const SummaryTaskSelected: React.FC<{ task: Client.TaskDescriptor }> = ({ task }) => {
+  const { title, description } = task;
+
+  return (
+    <>
+      <Typography marginRight={1} fontWeight='bold' variant='h4'>{title}</Typography>
+      <Divider sx={{ my: 1 }} />
+      <Button variant='contained' color='info' endIcon={<ArrowForwardIosIcon />}><FormattedMessage id='task.start' /></Button>
+      <Button variant='contained' color='warning'><FormattedMessage id='task.edit' /></Button>
+      <Box sx={{ my: 1 }} />
+      <SummaryAlert task={task} />
+      <Typography marginRight={1} fontWeight='bolder'><FormattedMessage id='task.description' /></Typography>{description}
+      <StyledAssignees task={task} />
+      <StyledTaskStatus task={task} />
+    </>
   )
 }
 
