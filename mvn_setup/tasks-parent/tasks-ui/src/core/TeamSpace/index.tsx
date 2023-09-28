@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Stack, Grid, Tabs, Tab, Typography, AppBar, Toolbar, Divider, styled } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
-import { StyledTaskItem, SummaryTaskNotSelected, SummaryTaskSelected } from './TeamSpaceGroup';
+import { TaskItem, SummaryTaskNotSelected, SummaryTaskSelected } from './TeamSpaceGroup';
 import Pagination from './Pagination';
 
 import Client from '@taskclient';
@@ -62,7 +62,7 @@ const TeamSpace: React.FC<{ data: TeamSpaceState }> = ({ data }) => {
           <Box sx={{ mt: 1 }} />
           {state.tabs.map(tab => (
             <TabPanel state={tab} key={tab.id}>
-              {tab.group.records.map((task) => <StyledTaskItem key={task.id} task={task} onTask={() => handleActiveTask(task)} />)}
+              {tab.group.records.map((task) => <TaskItem key={task.id} task={task} onTask={() => handleActiveTask(task)} />)}
             </TabPanel>
           ))}
         </Stack>
