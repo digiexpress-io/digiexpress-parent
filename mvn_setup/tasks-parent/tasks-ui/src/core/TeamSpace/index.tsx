@@ -1,11 +1,12 @@
 import React from 'react';
 import { Box, Stack, Grid, Tabs, Tab, Typography, AppBar, Toolbar, Divider, styled } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
-import { TaskItem, SummaryTaskNotSelected, SummaryTaskSelected } from './TeamSpaceGroup';
+import { TaskItem, SummaryTaskSelected } from './TeamSpaceGroup';
 import Pagination from './Pagination';
 
 import Client from '@taskclient';
 import { TeamSpaceState, TeamSpaceTabState, init } from './types';
+import NoTaskSelectedSkeleton from './NoTaskSelectedSkeleton';
 
 
 const StyledSummaryContainer = styled(Box)(({ theme }) => ({
@@ -71,7 +72,7 @@ const TeamSpace: React.FC<{ data: TeamSpaceState }> = ({ data }) => {
       <Grid item md={4} lg={4}>
         <StyledSummaryContainer>
           <Stack direction='column' spacing={1}>
-            {state.activeTask ? <SummaryTaskSelected task={state.activeTask} /> : <SummaryTaskNotSelected />}
+            {state.activeTask ? <SummaryTaskSelected task={state.activeTask} /> : <NoTaskSelectedSkeleton />}
           </Stack>
         </StyledSummaryContainer>
       </Grid>
