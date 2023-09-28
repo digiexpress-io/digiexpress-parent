@@ -1,7 +1,8 @@
 import React from 'react';
-import { Box, Divider, Alert, AlertTitle, IconButton, useTheme, Button, Typography, Tooltip, Chip, Stack } from '@mui/material';
+import { Box, Divider, Alert, AlertTitle, IconButton, useTheme, Button, Typography, Tooltip, Chip } from '@mui/material';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+
 import { FormattedMessage } from 'react-intl';
 import Client from '@taskclient';
 
@@ -116,16 +117,26 @@ const StyledTaskStatus: React.FC<{ task: Client.TaskDescriptor }> = ({ task }) =
   )
 }
 
+
 const StyledAssignees: React.FC<{ task: Client.TaskDescriptor }> = ({ task }) => {
 
   const { assignees } = task;
+  const sectionTitle = <Typography marginRight={1} fontWeight='bolder'><FormattedMessage id='task.assignees' /></Typography>
 
+  if (!assignees.length) {
+    return (<>
+        {sectionTitle}
+        <Typography><FormattedMessage id='task.assignees.none' /></Typography>
+      </>
+    )
+  }
 
-  return (<Box>
-    <Typography marginRight={1} fontWeight='bolder'><FormattedMessage id='task.assignees' /></Typography>
+  return (<>
+    {sectionTitle}
     {assignees.map((assignee) => <Typography>{assignee}</Typography>)}
-  </Box>)
+  </>)
 }
+
 
 const SummaryTaskSelected: React.FC<{ task: Client.TaskDescriptor }> = ({ task }) => {
   const { title, description } = task;

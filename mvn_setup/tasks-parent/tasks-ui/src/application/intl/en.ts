@@ -21,6 +21,7 @@ const en = {
   'task.available': 'Available',
   'task.description': 'Description',
   'task.assignees': 'Assignees',
+  'task.assignees.none': 'No assignees',
   'task.status': 'Status',
   'task.dueDate': 'Due date',
 
