@@ -1,10 +1,34 @@
 import React from 'react';
-import { Box, Divider, Alert, AlertTitle, IconButton, useTheme, Button, Typography, Tooltip } from '@mui/material';
+import { Box, Divider, Alert, AlertTitle, IconButton, useTheme, Button, Typography, Tooltip, darken, styled } from '@mui/material';
+
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { FormattedMessage } from 'react-intl';
 import { StyledAssignees, StyledTaskStatus, StyledSummaryAlert, StyledTaskDescription } from './SummaryStyles';
 import Client from '@taskclient';
+
+
+
+const StyledStartTaskButton = styled(Button)(({ theme }) => ({
+  color: theme.palette.mainContent.main,
+  fontWeight: 'bold',
+  backgroundColor: theme.palette.uiElements.main,
+  '&:hover': {
+    backgroundColor: darken(theme.palette.uiElements.main, 0.3),
+  }
+}));
+
+
+const StyledEditTaskButton = styled(Button)(({ theme }) => ({
+  border: '1px solid',
+  color: theme.palette.uiElements.main,
+  fontWeight: 'bold',
+  borderColor: theme.palette.uiElements.main,
+  '&:hover': {
+    borderColor: darken(theme.palette.uiElements.main, 0.3),
+    color: darken(theme.palette.uiElements.main, 0.3)
+  }
+}));
 
 const TaskItem: React.FC<{ task: Client.TaskDescriptor, onTask: (task: Client.TaskDescriptor) => void }> = ({ task, onTask }) => {
   const theme = useTheme();
@@ -73,11 +97,11 @@ const SummaryTaskSelected: React.FC<{ task: Client.TaskDescriptor }> = ({ task }
     <>
       <Typography marginRight={1} fontWeight='bold' variant='h4'>{task.title}</Typography>
       <Divider sx={{ my: 1 }} />
-      <Button variant='contained' color='info' endIcon={<ArrowForwardIosIcon />}><FormattedMessage id='task.start' /></Button>
-      <Button variant='contained' color='warning'><FormattedMessage id='task.edit' /></Button>
+      <StyledStartTaskButton><FormattedMessage id='task.start' /></StyledStartTaskButton>
+      <StyledEditTaskButton><FormattedMessage id='task.edit' /></StyledEditTaskButton>
       <Box sx={{ my: 1 }} />
       <StyledSummaryAlert task={task} />
-      <StyledTaskDescription task={task}/>
+      <StyledTaskDescription task={task} />
       <StyledAssignees task={task} />
       <StyledTaskStatus task={task} />
     </>

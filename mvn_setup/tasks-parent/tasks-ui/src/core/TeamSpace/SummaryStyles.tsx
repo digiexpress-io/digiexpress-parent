@@ -49,7 +49,7 @@ const StyledAlert: React.FC<{
 }> = ({ isDueDate, title, task, alertSeverity }) => {
 
   return (
-    <Alert severity={alertSeverity}>
+    <Alert severity={alertSeverity} variant='standard'>
       <AlertTitle><FormattedMessage id={title} /></AlertTitle>
       {isDueDate ? <Typography variant='body2' fontWeight='bolder'>{task.dueDate?.toUTCString()}</Typography> : undefined}
     </Alert>
