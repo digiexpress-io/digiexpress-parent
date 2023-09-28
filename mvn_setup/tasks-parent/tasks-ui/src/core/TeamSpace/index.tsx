@@ -1,22 +1,12 @@
 import React from 'react';
-import { Box, Stack, Grid, Tabs, Tab, Typography, AppBar, Toolbar, Divider, styled } from '@mui/material';
+import { Box, Stack, Grid, Tabs, Tab, Typography, AppBar, Toolbar, Divider } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
-import { TaskItem, SummaryTaskSelected } from './TeamSpaceGroup';
+import TaskItemActive from './TaskItemActive';
+import TaskItem from './TaskItem';
 import Pagination from './Pagination';
 
 import Client from '@taskclient';
 import { TeamSpaceState, TeamSpaceTabState, init } from './types';
-import NoTaskSelectedSkeleton from './NoTaskSelectedSkeleton';
-
-
-const StyledSummaryContainer = styled(Box)(({ theme }) => ({
-  height: '100%',
-  width: 'stretch',
-  position: 'fixed',
-  paddingLeft: theme.spacing(2),
-  paddingRight: theme.spacing(2),
-  backgroundColor: theme.palette.background.paper
-}));
 
 
 const TabPanel: React.FC<{ state: TeamSpaceTabState, children: React.ReactNode }> = ({ state, children }) => {
@@ -32,7 +22,6 @@ const TabPanel: React.FC<{ state: TeamSpaceTabState, children: React.ReactNode }
 
 const TeamSpace: React.FC<{ data: TeamSpaceState }> = ({ data }) => {
   const [state, setState] = React.useState<TeamSpaceState>(data);
-
   function handleActiveTab(_event: React.SyntheticEvent, newValue: number) {
     setState(prev => prev.withActiveTab(newValue));
   }
@@ -45,15 +34,19 @@ const TeamSpace: React.FC<{ data: TeamSpaceState }> = ({ data }) => {
     <AppBar position="sticky" color='inherit' sx={{ boxShadow: 'unset' }}>
       <Toolbar>
         <Tabs value={state.activeTab} onChange={handleActiveTab}>
-          {state.tabs.map(tab => (<Tab key={tab.id}
+          {state.tabs.map(tab => (<Tab key={tab.id} sx={{
+            mx: 1, borderRadius: '8px 8px 0px 0px',
+            backgroundColor: state.activeTab === tab.id ? tab.color : undefined,
+            border: state.activeTab === tab.id ? undefined : '1px solid' + tab.color 
+          }}
             label={
-              <Typography sx={{ fontWeight: 'bold', color: tab.color }}>
+              <Typography sx={{ fontWeight: 'bold', fontSize: '10pt', color: state.activeTab === tab.id ? 'mainContent.main' : tab.color }}>
                 <FormattedMessage id={tab.label} values={{ count: tab.count }} />
               </Typography>
             }
           />))}
         </Tabs>
-        <Divider orientation='vertical' flexItem sx={{mx: 2}}/>
+        <Divider orientation='vertical' flexItem sx={{ mx: 2 }} />
         <Pagination />
       </Toolbar>
     </AppBar>
@@ -63,10 +56,10 @@ const TeamSpace: React.FC<{ data: TeamSpaceState }> = ({ data }) => {
           <Box sx={{ mt: 1 }} />
           {state.tabs.map(tab => (
             <TabPanel state={tab} key={tab.id}>
-              {tab.group.records.map((task) => <TaskItem 
-                key={task.id} 
+              {tab.group.records.map((task) => <TaskItem
+                key={task.id}
                 task={task}
-                active={ state.activeTask?.id === task.id } 
+                active={state.activeTask?.id === task.id}
                 onTask={(task) => handleActiveTask(task)} />)}
             </TabPanel>
           ))}
@@ -74,11 +67,7 @@ const TeamSpace: React.FC<{ data: TeamSpaceState }> = ({ data }) => {
       </Grid>
 
       <Grid item md={4} lg={4}>
-        <StyledSummaryContainer>
-          <Stack direction='column' spacing={1}>
-            {state.activeTask ? <SummaryTaskSelected task={state.activeTask} /> : <NoTaskSelectedSkeleton />}
-          </Stack>
-        </StyledSummaryContainer>
+        <TaskItemActive task={state.activeTask}/>
       </Grid>
     </Grid>
   </>
