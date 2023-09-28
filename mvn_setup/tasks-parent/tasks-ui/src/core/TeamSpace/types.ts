@@ -20,7 +20,7 @@ interface TeamSpaceStateInit {
 
 interface TeamSpaceState extends TeamSpaceStateInit {
   withActiveTab(activeTab: number): TeamSpaceState;
-  withActiveTask(activeTask: Client.TaskDescriptor): TeamSpaceState;
+  withActiveTask(activeTask: Client.TaskDescriptor | undefined): TeamSpaceState;
 }
 
 
@@ -47,7 +47,7 @@ class ImmutableTeamSpaceState implements TeamSpaceState {
     return new ImmutableTeamSpaceState({ activeTab, activeTask: this._activeTask, tabs: this._tabs.map((tab) => ({ ...tab, disabled: tab.id !== activeTab })) });
   }
 
-  withActiveTask(activeTask: Client.TaskDescriptor): TeamSpaceState {
+  withActiveTask(activeTask: Client.TaskDescriptor | undefined): TeamSpaceState {
     return new ImmutableTeamSpaceState({ activeTask, activeTab: this._activeTab, tabs: this._tabs })
   }
 }

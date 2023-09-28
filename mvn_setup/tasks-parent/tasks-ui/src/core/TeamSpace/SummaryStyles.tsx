@@ -22,21 +22,17 @@ const StyledTaskStatus: React.FC<{ task: Client.TaskDescriptor }> = ({ task }) =
   )
 }
 
-const assigneesSectionTitle = <Typography marginRight={1} fontWeight='bolder'><FormattedMessage id='task.assignees' /></Typography>
 const StyledAssignees: React.FC<{ task: Client.TaskDescriptor }> = ({ task }) => {
 
-  if (!task.assignees.length) {
-    return (<>
-      {assigneesSectionTitle}
-      <Typography><FormattedMessage id='task.assignees.none' /></Typography>
-    </>
-    )
-  }
+  const assignees = task.assignees.map(assignee => <Typography>{assignee}</Typography>);
+  const noAssignees = <Typography><FormattedMessage id='task.assignees.none' /></Typography>
 
-  return (<>
-    {assigneesSectionTitle}
-    {task.assignees.map((assignee) => <Typography>{assignee}</Typography>)}
-  </>)
+  return (
+    <>
+      <Typography marginRight={1} fontWeight='bolder'><FormattedMessage id='task.assignees' /></Typography>
+      {task.assignees.length ? assignees : noAssignees}
+    </>
+  )
 }
 
 

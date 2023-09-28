@@ -1,8 +1,7 @@
 import React from 'react';
-import { Box, Divider, IconButton, useTheme, Button, Typography, Tooltip, darken, styled } from '@mui/material';
+import { Box, Divider, IconButton, useTheme, Button, Typography, SxProps, darken, styled } from '@mui/material';
 
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { FormattedMessage } from 'react-intl';
 import { StyledAssignees, StyledTaskStatus, StyledSummaryAlert, StyledTaskDescription } from './SummaryStyles';
 import Client from '@taskclient';
@@ -30,9 +29,25 @@ const StyledEditTaskButton = styled(Button)(({ theme }) => ({
   }
 }));
 
-const TaskItem: React.FC<{ task: Client.TaskDescriptor, onTask: (task: Client.TaskDescriptor) => void }> = ({ task, onTask }) => {
+const activeTaskStyles: SxProps = {
+  color: 'mainContent.main',
+  backgroundColor: 'uiElements.main',
+  borderRadius: 1,
+  p: 2,
+  cursor: 'pointer'
+}
+
+const inactiveTaskStyles: SxProps = {
+  p: 2,
+  cursor: 'pointer'
+}
+
+const TaskItem: React.FC<{
+  task: Client.TaskDescriptor,
+  onTask: (task: Client.TaskDescriptor | undefined) => void,
+  active: boolean
+}> = ({ task, onTask, active }) => {
   const theme = useTheme();
-  const [active, setActive] = React.useState(false);
   const taskDueDate = task.dueDate ? task.dueDate.toLocaleDateString() : undefined;
   const isCompletedOrRejected: boolean = task.status === 'COMPLETED' || task.status === 'REJECTED';
 
@@ -40,23 +55,14 @@ const TaskItem: React.FC<{ task: Client.TaskDescriptor, onTask: (task: Client.Ta
     return <></>;
   }
 
-  return (
-    <Box sx={{ my: 1 }} display='flex' alignItems='center'
-      height={theme.typography.body2.fontSize} maxHeight={theme.typography.body2.fontSize}
-      onMouseOver={() => {
-        setActive(true);
-        onTask(task);
-      }}
-      onMouseLeave={() => setActive(false)} >
+  const styles = active ? activeTaskStyles : inactiveTaskStyles;
 
-      <Box width='7%' display='flex'>
-        {active && <Tooltip arrow placement='top' title={<FormattedMessage id='core.teamSpace.tooltip.startWork' />}>
-          <IconButton sx={{ color: 'uiElements.main' }}><ArrowForwardIosIcon /></IconButton>
-        </Tooltip>}
-      </Box>
-      <Box width='50%' maxWidth='50%'>
-        <Typography fontWeight='bolder' noWrap>{task.title}</Typography>
-      </Box>
+  return (
+    <Box sx={styles} display='flex' alignItems='center'
+      height={theme.typography.body2.fontSize} maxHeight={theme.typography.body2.fontSize}
+      onClick={() => onTask(active ? undefined : task)}>
+      <Box sx={{ mx: 2 }} />
+      <Box width='50%' maxWidth='50%'><Typography fontWeight='bolder' noWrap>{task.title}</Typography></Box>
       <Box width='25%' sx={{ textAlign: 'right' }}><Typography>{taskDueDate}</Typography></Box>
       <Box display='flex' justifyContent='right'>{active && <IconButton><MoreHorizIcon /></IconButton>}</Box>
     </Box>

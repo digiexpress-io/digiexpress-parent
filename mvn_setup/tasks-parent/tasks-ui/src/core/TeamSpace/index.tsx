@@ -37,7 +37,7 @@ const TeamSpace: React.FC<{ data: TeamSpaceState }> = ({ data }) => {
     setState(prev => prev.withActiveTab(newValue));
   }
 
-  function handleActiveTask(task: Client.TaskDescriptor) {
+  function handleActiveTask(task: Client.TaskDescriptor | undefined) {
     setState(prev => prev.withActiveTask(task));
   }
 
@@ -63,7 +63,11 @@ const TeamSpace: React.FC<{ data: TeamSpaceState }> = ({ data }) => {
           <Box sx={{ mt: 1 }} />
           {state.tabs.map(tab => (
             <TabPanel state={tab} key={tab.id}>
-              {tab.group.records.map((task) => <TaskItem key={task.id} task={task} onTask={() => handleActiveTask(task)} />)}
+              {tab.group.records.map((task) => <TaskItem 
+                key={task.id} 
+                task={task}
+                active={ state.activeTask?.id === task.id } 
+                onTask={(task) => handleActiveTask(task)} />)}
             </TabPanel>
           ))}
         </Stack>
