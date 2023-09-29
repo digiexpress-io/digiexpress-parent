@@ -40,8 +40,8 @@ const TeamSpace: React.FC<{ data: TeamSpaceState}> = ({ data }) => {
               backgroundColor: state.activeTab === tab.id ? tab.color : undefined,
               border: state.activeTab === tab.id ? undefined : '1px solid' + tab.color
             }}
-            label={
-              <Typography sx={{ fontWeight: 'bold', fontSize: '10pt', color: state.activeTab === tab.id ? 'mainContent.main' : tab.color }}>
+            label={ //TODO standardize fontSize with theme overrides
+              <Typography sx={{ fontSize: '12px', fontWeight: 500, color: state.activeTab === tab.id ? 'mainContent.main' : 'text.primary' }}>
                 <FormattedMessage id={tab.label} values={{ count: tab.count }} />
               </Typography>
             }
