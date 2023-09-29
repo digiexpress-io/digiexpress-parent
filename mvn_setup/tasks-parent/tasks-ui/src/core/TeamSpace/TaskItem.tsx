@@ -37,12 +37,11 @@ const TaskItem: React.FC<{
     <Box sx={styles} display='flex' alignItems='center'
       height={theme.typography.body2.fontSize} maxHeight={theme.typography.body2.fontSize}
       onClick={() => onTask(active ? undefined : task)}>
-      <Box sx={{ mx: 2 }} />
-      <Box width='50%' maxWidth='50%'><Typography fontWeight='bolder' noWrap>{task.title}</Typography></Box>
-      <Box width='50%' sx={{ textAlign: 'right' }}><Typography>{taskDueDate}</Typography></Box>
+      <Box width='50%' maxWidth='50%' sx={{ mx: 1 }}><Typography fontWeight='bolder' noWrap>{task.title}</Typography></Box>
+      <Box width='50%' sx={{ textAlign: 'right', mx: 1 }}><Typography>{taskDueDate}</Typography></Box>
     </Box>
   );
 }
 
-export default TaskItem ;
+export default TaskItem;
 
