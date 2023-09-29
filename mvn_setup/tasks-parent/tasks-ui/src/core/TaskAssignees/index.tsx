@@ -1,46 +1,37 @@
 import React from 'react';
-import { AvatarGroup, Box, ListItemText, ListItem, AvatarProps, Checkbox, Button, Avatar, List, ButtonProps, styled, ListItemTextProps } from '@mui/material';
+import { AvatarGroup, Box, ListItemText, Checkbox, Button, Avatar, List, MenuItem } from '@mui/material';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 
 import Client from '@taskclient';
 
-import { usePopover } from 'core/TaskTable/CellPopover';
 import SearchField from 'core/SearchField';
-
-const StyledButton = styled(Button)<ButtonProps>(() => ({
-  variant: 'text',
-  color: 'inherit',
-  "&.MuiButtonBase-root": {
-    minWidth: "unset",
-  },
-}));
-
-const StyledAvatar = styled(Avatar)<AvatarProps & {bgcolor: string | undefined}>(({ bgcolor }) => ({
-  backgroundColor: bgcolor,
-  width: 24,
-  height: 24,
-  fontSize: 10
-}));
-
-const StyledListItemText = styled(ListItemText)<ListItemTextProps>(({theme}) => ({
-  marginLeft: theme.spacing(1)
-}));
+import { useMockPopover } from 'core/TaskTable/MockPopover';
 
 const UserAvatar: React.FC<{ children?: Client.AvatarCode, onClick?: (event: React.MouseEvent<HTMLElement>) => void }> = ({ children, onClick }) => {
   const { state } = Client.useTasks();
-  const bgcolor: string | undefined = children ? state.pallette.owners[children.value] : undefined;
-
+  const assigneeColors = state.pallette.owners;
+  const bgcolor: string | undefined = children ? assigneeColors[children.value] : undefined;
   const avatar = children ? children.twoletters : <PersonAddIcon sx={{ fontSize: 15 }} />;
 
   return (
-    <StyledAvatar onClick={onClick} bgcolor={bgcolor}>
+    <Avatar 
+      onClick={onClick}
+      sx={{
+        bgcolor,
+        width: 24,
+        height: 24,
+        fontSize: 10
+      }}
+    >
       {avatar}
-    </StyledAvatar>
+    </Avatar>
   );
 }
   
 const TaskAssignees: React.FC<{ task: Client.TaskDescriptor }> = ({ task }) => {
-  const Popover = usePopover();
+  const Popover = useMockPopover();
+  const { state } = Client.useTasks();
+  const assigneeColors = state.pallette.owners;
   const { setSearchString, searchResults } = Client.useAssignees(task);
 
   const taskAssigneeAvatars = task.assigneesAvatars.length ? 
@@ -51,21 +42,23 @@ const TaskAssignees: React.FC<{ task: Client.TaskDescriptor }> = ({ task }) => {
 
   return (
     <Box>
-      <StyledButton>
+      <Button variant='text' color='inherit' sx={{ "&.MuiButtonBase-root": { minWidth: "unset" }}}>
         {taskAssigneeAvatars}
-      </StyledButton>
+      </Button>
       <Popover.Delegate>
-        <SearchField onChange={setSearchString} />
-        <List dense>
-          {
-            searchResults.map(({ avatar, user, checked }) => (
-              <ListItem key={user.userId}>
-                <Checkbox checked={checked} />
-                <UserAvatar>{avatar}</UserAvatar>
-                <StyledListItemText>{user.displayName}</StyledListItemText>
-              </ListItem>
-            ))
-          }
+        <SearchField 
+          onChange={setSearchString}
+        />
+        <List dense sx={{ py: 0 }}>
+          {searchResults.map(({ user, checked }) => (
+            <MenuItem key={user.userId} sx={{ display: "flex", pl: 0, py: 0 }}>
+              <Box sx={{ width: 8, height: 40, backgroundColor: assigneeColors[user.userId]}} />
+              <Box ml={1}>
+                <Checkbox checked={checked} sx={{height: "40px"}}/>
+              </Box>
+              <ListItemText>{user.displayName}</ListItemText>
+            </MenuItem>
+          ))}
         </List>
       </Popover.Delegate>
     </Box>
