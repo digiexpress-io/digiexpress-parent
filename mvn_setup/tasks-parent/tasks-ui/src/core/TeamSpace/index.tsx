@@ -20,7 +20,7 @@ const TabPanel: React.FC<{ state: TeamSpaceTabState, children: React.ReactNode }
 }
 
 
-const TeamSpace: React.FC<{ data: TeamSpaceState }> = ({ data }) => {
+const TeamSpace: React.FC<{ data: TeamSpaceState}> = ({ data }) => {
   const [state, setState] = React.useState<TeamSpaceState>(data);
   function handleActiveTab(_event: React.SyntheticEvent, newValue: number) {
     setState(prev => prev.withActiveTab(newValue));

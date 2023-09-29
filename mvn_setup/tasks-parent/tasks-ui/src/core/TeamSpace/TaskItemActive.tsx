@@ -1,12 +1,11 @@
 import React from 'react';
-import { Box, Stack, Alert, AlertTitle, Typography, Divider, Skeleton, darken, styled, Chip, Button, useTheme, AlertColor } from '@mui/material';
-import CircleIcon from '@mui/icons-material/Circle';
-
+import {
+  Box, Stack, Alert, AlertTitle, Typography, Divider, Skeleton,
+  darken, styled,
+  Chip, Button, useTheme, AlertColor, Avatar
+} from '@mui/material';
 import { FormattedMessage } from 'react-intl';
-
 import Client from '@taskclient';
-
-
 
 const StyledStartTaskButton = styled(Button)(({ theme }) => ({
   color: theme.palette.mainContent.main,
@@ -58,10 +57,37 @@ const StyledStatusChip: React.FC<{ children: Client.TaskStatus }> = ({ children 
     }} />);
 }
 
-const StyledAssignee: React.FC<{ children: string }> = ({ children }) => {
-  return (<Box display='flex' alignItems='center'>
-    <CircleIcon sx={{ mr: 1, height: '5px', width: '5px', color: 'uiElements.main' }} /><Typography>{children}</Typography>
-  </Box>)
+const NoAssignee: React.FC = () => {
+  return (
+    <Box display='flex' alignItems='center'>
+      <Avatar sx={{
+        width: 24,
+        height: 24,
+        fontSize: 10,
+        mr: 1,
+        my: '5px'
+      }} />
+      <Typography><FormattedMessage id='task.assignees.none' /></Typography>
+    </Box>
+  )
+}
+
+const StyledAssignee: React.FC<{ assigneeName: string, avatar: string }> = ({ assigneeName, avatar }) => {
+  const { state } = Client.useTasks();
+  const assigneeColor = state.pallette.owners[assigneeName];
+
+  return (
+    <Box display='flex' alignItems='center'>
+      <Avatar sx={{
+        backgroundColor: assigneeColor,
+        width: 24,
+        height: 24,
+        fontSize: 10,
+        mr: 1,
+        my: '5px'
+      }}>{avatar}</Avatar>
+      <Typography>{assigneeName}</Typography>
+    </Box>)
 }
 
 
@@ -110,9 +136,9 @@ const TaskItemActive: React.FC<{ task: Client.TaskDescriptor | undefined }> = ({
 
       <StyledTitle children='task.assignees' />
       <Stack>
-        {task.assignees.length ?
-          (task.assignees.map(assignee => (<StyledAssignee children={assignee} />))) :
-          (<Typography><FormattedMessage id='task.assignees.none' /></Typography>)
+        {task.assigneesAvatars.length ?
+          (task.assigneesAvatars.map(assignee => (
+            <StyledAssignee assigneeName={assignee.value} avatar={assignee.twoletters} />))) : <NoAssignee />
         }
       </Stack>
 
