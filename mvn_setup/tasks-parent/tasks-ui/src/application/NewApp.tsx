@@ -81,7 +81,16 @@ const LoadApps = React.lazy(async () => {
 const theme: Theme = {
   ...siteTheme,
   components: {
-    // MuiCssBaseline
+    MuiTypography: {
+      styleOverrides: {
+        body1: {
+          fontSize: '14px'
+        },
+        body2: {
+          fontSize: '14px'
+        }
+      }
+    }
   }
 };
 const locale = 'en';
@@ -90,14 +99,14 @@ console.log("theme ", theme);
 
 
 const NewApp: React.FC<{}> = () => (
-    <IntlProvider locale={locale} messages={messages[locale]}>
-      <StyledEngineProvider injectFirst>
-        <ThemeProvider theme={theme}>
-          <SnackbarProvider>
-            <React.Suspense fallback={<Connection.Loading client={backend} />}><LoadApps /></React.Suspense>
-          </SnackbarProvider>
-        </ThemeProvider>
-      </StyledEngineProvider>
-    </IntlProvider>);
+  <IntlProvider locale={locale} messages={messages[locale]}>
+    <StyledEngineProvider injectFirst>
+      <ThemeProvider theme={theme}>
+        <SnackbarProvider>
+          <React.Suspense fallback={<Connection.Loading client={backend} />}><LoadApps /></React.Suspense>
+        </SnackbarProvider>
+      </ThemeProvider>
+    </StyledEngineProvider>
+  </IntlProvider>);
 
 export default NewApp;
