@@ -33,12 +33,13 @@ const TeamSpace: React.FC<{ data: TeamSpaceState }> = ({ data }) => {
   return (<>
     <AppBar position="sticky" color='inherit' sx={{ boxShadow: 'unset' }}>
       <Toolbar>
-        <Tabs value={state.activeTab} onChange={handleActiveTab}>
-          {state.tabs.map(tab => (<Tab key={tab.id} sx={{
-            mx: 1, borderRadius: '8px 8px 0px 0px',
-            backgroundColor: state.activeTab === tab.id ? tab.color : undefined,
-            border: state.activeTab === tab.id ? undefined : '1px solid' + tab.color 
-          }}
+        <Tabs value={state.activeTab} onChange={handleActiveTab} TabIndicatorProps={{ sx: { display: 'none' } }}>
+          {state.tabs.map(tab => (<Tab key={tab.id}
+            sx={{
+              mx: 1, borderRadius: '8px 8px 0px 0px',
+              backgroundColor: state.activeTab === tab.id ? tab.color : undefined,
+              border: state.activeTab === tab.id ? undefined : '1px solid' + tab.color
+            }}
             label={
               <Typography sx={{ fontWeight: 'bold', fontSize: '10pt', color: state.activeTab === tab.id ? 'mainContent.main' : tab.color }}>
                 <FormattedMessage id={tab.label} values={{ count: tab.count }} />
@@ -67,7 +68,7 @@ const TeamSpace: React.FC<{ data: TeamSpaceState }> = ({ data }) => {
       </Grid>
 
       <Grid item md={4} lg={4}>
-        <TaskItemActive task={state.activeTask}/>
+        <TaskItemActive task={state.activeTask} />
       </Grid>
     </Grid>
   </>

@@ -14,7 +14,7 @@ const UserAvatar: React.FC<{ children?: Client.AvatarCode, onClick?: (event: Rea
   const avatar = children ? children.twoletters : <PersonAddIcon sx={{ fontSize: 15 }} />;
 
   return (
-    <Avatar 
+    <Avatar
       onClick={onClick}
       sx={{
         bgcolor,
@@ -27,34 +27,34 @@ const UserAvatar: React.FC<{ children?: Client.AvatarCode, onClick?: (event: Rea
     </Avatar>
   );
 }
-  
+
 const TaskAssignees: React.FC<{ task: Client.TaskDescriptor }> = ({ task }) => {
   const Popover = useMockPopover();
   const { state } = Client.useTasks();
   const assigneeColors = state.pallette.owners;
   const { setSearchString, searchResults } = Client.useAssignees(task);
 
-  const taskAssigneeAvatars = task.assigneesAvatars.length ? 
+  const taskAssigneeAvatars = task.assigneesAvatars.length ?
     <AvatarGroup spacing='medium' onClick={Popover.onClick}>
       {task.assigneesAvatars.map((assignee: Client.AvatarCode) => (<UserAvatar key={assignee.value}>{assignee}</UserAvatar>))}
-    </AvatarGroup> : 
-    <UserAvatar onClick={Popover.onClick}/>
+    </AvatarGroup> :
+    <UserAvatar onClick={Popover.onClick} />
 
   return (
     <Box>
-      <Button variant='text' color='inherit' sx={{ "&.MuiButtonBase-root": { minWidth: "unset" }}}>
+      <Button variant='text' color='inherit' sx={{ "&.MuiButtonBase-root": { minWidth: "unset" } }}>
         {taskAssigneeAvatars}
       </Button>
       <Popover.Delegate>
-        <SearchField 
+        <SearchField
           onChange={setSearchString}
         />
         <List dense sx={{ py: 0 }}>
           {searchResults.map(({ user, checked }) => (
             <MenuItem key={user.userId} sx={{ display: "flex", pl: 0, py: 0 }}>
-              <Box sx={{ width: 8, height: 40, backgroundColor: assigneeColors[user.userId]}} />
+              <Box sx={{ width: 8, height: 40, backgroundColor: assigneeColors[user.userId] }} />
               <Box ml={1}>
-                <Checkbox checked={checked} sx={{height: "40px"}}/>
+                <Checkbox checked={checked} sx={{ height: "40px" }} />
               </Box>
               <ListItemText>{user.displayName}</ListItemText>
             </MenuItem>
