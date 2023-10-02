@@ -34,8 +34,8 @@ const StyledStack: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
   return (<Box sx={{
     height: '100%',
-    width: 'stretch',
     position: 'fixed',
+    width: '23%',
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(2),
     backgroundColor: theme.palette.background.paper
@@ -137,8 +137,8 @@ const TaskItemActive: React.FC<{ task: Client.TaskDescriptor | undefined }> = ({
       <StyledTitle children='task.assignees' />
       <Stack>
         {task.assigneesAvatars.length ?
-          (task.assigneesAvatars.map(assignee => (
-            <StyledAssignee assigneeName={assignee.value} avatar={assignee.twoletters} />))) : <NoAssignee />
+          (task.assigneesAvatars.map((assignee, index) => (
+            <StyledAssignee key={index} assigneeName={assignee.value} avatar={assignee.twoletters} />))) : <NoAssignee />
         }
       </Stack>
 
@@ -146,7 +146,7 @@ const TaskItemActive: React.FC<{ task: Client.TaskDescriptor | undefined }> = ({
       <StyledTitle children='task.status' />
       <StyledStatusChip>{task.status}</StyledStatusChip>
 
-    </StyledStack >);
+    </StyledStack>);
   }
 
   return (<StyledStack>

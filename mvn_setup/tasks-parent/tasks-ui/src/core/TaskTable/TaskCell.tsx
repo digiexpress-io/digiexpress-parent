@@ -25,7 +25,7 @@ const Cell: React.FC<{
         <Chip label={tag} color="primary" variant="outlined" size="small" onClick={handleClick} />
       </Box>}
       {typeof name === 'string' ? <Box alignSelf="center" textOverflow="ellipsis" maxWidth={maxWidth}>
-        <Typography noWrap={true} fontSize="13px" fontWeight="400">{name}</Typography>
+        <Typography noWrap={true} variant='body1' fontWeight="400">{name}</Typography>
       </Box> : name}
     </Box>);
 }

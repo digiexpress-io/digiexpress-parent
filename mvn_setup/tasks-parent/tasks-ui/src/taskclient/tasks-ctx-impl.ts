@@ -436,7 +436,7 @@ class TaskDescriptorImpl implements TaskDescriptor {
   get startDate() { return this._startDate }
   get checklist() { return this._entry.checklist }
 
-
+  get comments() { return this._entry.comments }
   get status() { return this._entry.status }
   get priority() { return this._entry.priority }
   get roles() { return this._entry.roles }

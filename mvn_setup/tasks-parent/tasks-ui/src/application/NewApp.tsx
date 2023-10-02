@@ -84,10 +84,10 @@ const theme: Theme = {
     MuiTypography: {
       styleOverrides: {
         body1: {
-          fontSize: '14px'
+          fontSize: '10pt'
         },
         body2: {
-          fontSize: '14px'
+          fontSize: '12pt'
         }
       }
     }

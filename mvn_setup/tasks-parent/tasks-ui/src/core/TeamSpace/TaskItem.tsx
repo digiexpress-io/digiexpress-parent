@@ -1,5 +1,6 @@
 import React from 'react';
-import { Box, useTheme, Typography, SxProps } from '@mui/material';
+import { Box, useTheme, Typography, SxProps, styled, Badge, BadgeProps } from '@mui/material';
+import ChecklistIcon from '@mui/icons-material/Checklist';
 import Client from '@taskclient';
 
 
@@ -18,6 +19,29 @@ const inactiveTaskStyles: SxProps = {
   cursor: 'pointer'
 }
 
+const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
+  '& .MuiBadge-badge': {
+    right: -5,
+    top: 13,
+    border: `2px solid ${theme.palette.background.paper}`,
+    padding: '0 4px',
+    color: theme.palette.background.paper,
+    backgroundColor: theme.palette.uiElements.main
+  },
+}));
+
+const ChecklistItem: React.FC<{ task: Client.TaskDescriptor }> = ({ task }) => {
+
+  if (!task.checklist.length) {
+    return null;
+  }
+
+  return (
+    <StyledBadge badgeContent={task.checklist.length}>
+      <ChecklistIcon />
+    </StyledBadge>)
+}
+
 const TaskItem: React.FC<{
   task: Client.TaskDescriptor,
   onTask: (task: Client.TaskDescriptor | undefined) => void,
@@ -32,13 +56,15 @@ const TaskItem: React.FC<{
   }
 
   const styles = active ? activeTaskStyles : inactiveTaskStyles;
-
+  console.log(task.comments);
+  
   return (
     <Box sx={styles} display='flex' alignItems='center'
       height={theme.typography.body2.fontSize} maxHeight={theme.typography.body2.fontSize}
       onClick={() => onTask(active ? undefined : task)}>
-      <Box width='50%' maxWidth='50%' sx={{ mx: 1 }}><Typography fontWeight='bolder' noWrap>{task.title}</Typography></Box>
-      <Box width='50%' sx={{ textAlign: 'right', mx: 1 }}><Typography>{taskDueDate}</Typography></Box>
+      <Box width='50%' sx={{ mx: 1 }}><Typography fontWeight='bolder' noWrap>{task.title}</Typography></Box>
+      <Box width='40%' sx={{ mx: 3, textAlign: 'right' }}><ChecklistItem task={task} /></Box>
+      <Box width='10%' sx={{ textAlign: 'right', mx: 1 }}><Typography>{taskDueDate}</Typography></Box>
     </Box>
   );
 }
