@@ -5,6 +5,7 @@ import {
   Chip, Button, useTheme, AlertColor, Avatar
 } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
+
 import Client from '@taskclient';
 
 const StyledStartTaskButton = styled(Button)(({ theme }) => ({
@@ -91,7 +92,6 @@ const StyledAssignee: React.FC<{ assigneeName: string, avatar: string }> = ({ as
 }
 
 
-
 const StyledTitle: React.FC<{ children: string }> = ({ children }) => {
   return (<Typography fontWeight='bold'><FormattedMessage id={children} /></Typography>)
 }
@@ -109,44 +109,48 @@ function getTaskAlert(task: Client.TaskDescriptor): { isDueDate: boolean, title:
 
 const TaskItemActive: React.FC<{ task: Client.TaskDescriptor | undefined }> = ({ task }) => {
 
+
   if (task) {
     const alert = getTaskAlert(task);
 
-    return (<StyledStack>
-      {/* header section */}
-      <Typography fontWeight='bold' variant='h4'>{task.title}</Typography>
-      <Divider sx={{ my: 1 }} />
+    return (<>
+      <StyledStack>
+        {/* header section */}
+        <Typography fontWeight='bold' variant='h4'>{task.title}</Typography>
+        <Divider sx={{ my: 1 }} />
 
-      {/* buttons section */}
-      <StyledStartTaskButton><FormattedMessage id='task.start' /></StyledStartTaskButton>
-      <StyledEditTaskButton><FormattedMessage id='task.edit' /></StyledEditTaskButton>
-      <Box sx={{ my: 1 }} />
+        {/* buttons section */}
+        <StyledStartTaskButton><FormattedMessage id='task.start' /></StyledStartTaskButton>
+        <StyledEditTaskButton><FormattedMessage id='task.edit' /></StyledEditTaskButton>
+        <Box sx={{ my: 1 }} />
 
-      {/* duedate alert section */}
-      <Alert severity={alert.alertSeverity} variant='standard'>
-        <AlertTitle><FormattedMessage id={alert.title} /></AlertTitle>
-        {alert.isDueDate ? <Typography variant='body2' fontWeight='bolder'>{task.dueDate?.toUTCString()}</Typography> : undefined}
-      </Alert>
+        {/* duedate alert section */}
+        <Alert severity={alert.alertSeverity} variant='standard'>
+          <AlertTitle><FormattedMessage id={alert.title} /></AlertTitle>
+          {alert.isDueDate ? <Typography variant='body2' fontWeight='bolder'>{task.dueDate?.toUTCString()}</Typography> : undefined}
+        </Alert>
 
-      {/* description section */}
-      <StyledTitle children='task.description' />
-      <Typography>{task.description}</Typography>
+        {/* description section */}
+        <StyledTitle children='task.description' />
+        <Typography>{task.description}</Typography>
 
-      {/* assignee section */}
+        {/* assignee section */}
 
-      <StyledTitle children='task.assignees' />
-      <Stack>
-        {task.assigneesAvatars.length ?
-          (task.assigneesAvatars.map((assignee, index) => (
-            <StyledAssignee key={index} assigneeName={assignee.value} avatar={assignee.twoletters} />))) : <NoAssignee />
-        }
-      </Stack>
+        <StyledTitle children='task.assignees' />
+        <Stack>
+          {task.assigneesAvatars.length ?
+            (task.assigneesAvatars.map((assignee, index) => (
+              <StyledAssignee key={index} assigneeName={assignee.value} avatar={assignee.twoletters} />))) : <NoAssignee />
+          }
+        </Stack>
 
-      {/* status section */}
-      <StyledTitle children='task.status' />
-      <StyledStatusChip>{task.status}</StyledStatusChip>
+        {/* status section */}
+        <StyledTitle children='task.status' />
+        <StyledStatusChip>{task.status}</StyledStatusChip>
+      </StyledStack>
+    </>
 
-    </StyledStack>);
+    );
   }
 
   return (<StyledStack>

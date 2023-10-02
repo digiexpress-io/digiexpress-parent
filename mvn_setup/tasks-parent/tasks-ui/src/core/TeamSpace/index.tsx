@@ -10,17 +10,20 @@ import { TeamSpaceState, TeamSpaceTabState, init } from './types';
 
 
 const TabPanel: React.FC<{ state: TeamSpaceTabState, children: React.ReactNode }> = ({ state, children }) => {
-
   return (
     <div hidden={state.disabled}>
       {!state.disabled && (
-        <Box sx={{ backgroundColor: 'mainContent.main' }}><Stack>{children}</Stack></Box>
+        <Box sx={{ 
+          backgroundColor: 'mainContent.main'
+        }}>
+          <Stack>{children}</Stack>
+        </Box>
       )}
     </div>);
 }
 
 
-const TeamSpace: React.FC<{ data: TeamSpaceState}> = ({ data }) => {
+const TeamSpace: React.FC<{ data: TeamSpaceState }> = ({ data }) => {
   const [state, setState] = React.useState<TeamSpaceState>(data);
   function handleActiveTab(_event: React.SyntheticEvent, newValue: number) {
     setState(prev => prev.withActiveTab(newValue));
@@ -32,7 +35,7 @@ const TeamSpace: React.FC<{ data: TeamSpaceState}> = ({ data }) => {
 
   return (<>
     <AppBar position="sticky" color='inherit' sx={{ boxShadow: 'unset' }}>
-      <Toolbar>
+      <Toolbar sx={{alignItems: 'end', "&.MuiToolbar-root": { px: 'unset'}}}>
         <Tabs value={state.activeTab} onChange={handleActiveTab} TabIndicatorProps={{ sx: { display: 'none' } }}>
           {state.tabs.map(tab => (<Tab key={tab.id}
             sx={{
@@ -40,14 +43,15 @@ const TeamSpace: React.FC<{ data: TeamSpaceState}> = ({ data }) => {
               backgroundColor: state.activeTab === tab.id ? tab.color : undefined,
               border: state.activeTab === tab.id ? undefined : '1px solid' + tab.color
             }}
-            label={ 
-              <Typography sx={{ fontWeight: 500, color: state.activeTab === tab.id ? 'mainContent.main' : 'text.primary' }}>
+            label={
+              <Typography sx={{ fontWeight: 'bolder', color: state.activeTab === tab.id ? 'mainContent.main' : 'text.primary' }}>
                 <FormattedMessage id={tab.label} values={{ count: tab.count }} />
               </Typography>
             }
           />))}
         </Tabs>
         <Divider orientation='vertical' flexItem sx={{ mx: 2 }} />
+        
         <Pagination />
       </Toolbar>
     </AppBar>

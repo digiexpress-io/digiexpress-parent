@@ -392,6 +392,10 @@ class GroupVisitor {
         this._groups[task.assigneeGroupType].records.push(task);
       }
     } else if (this._groupBy === 'team') {
+      const isCompletedOrRejected: boolean = task.status === 'COMPLETED' || task.status === 'REJECTED';
+      if(isCompletedOrRejected) {
+        return;
+      }
 
       if (task.teamGroupType) {
         this._groups[task.teamGroupType].records.push(task);

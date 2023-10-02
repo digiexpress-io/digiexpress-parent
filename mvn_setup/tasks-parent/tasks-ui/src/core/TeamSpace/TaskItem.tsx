@@ -31,29 +31,6 @@ const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
   },
 }));
 
-const ChecklistItem: React.FC<{ task: Client.TaskDescriptor }> = ({ task }) => {
-
-  if (!task.checklist.length) {
-    return null;
-  }
-
-  return (
-    <StyledBadge badgeContent={task.checklist.length}>
-      <ChecklistIcon />
-    </StyledBadge>)
-}
-
-const CommentItem: React.FC<{ task: Client.TaskDescriptor }> = ({ task }) => {
-
-  if (!task.comments.length) {
-    return null;
-  }
-
-  return (
-    <StyledBadge badgeContent={task.comments.length}>
-      <ChatOutlinedIcon />
-    </StyledBadge>)
-}
 
 const TaskItem: React.FC<{
   task: Client.TaskDescriptor,
@@ -62,25 +39,17 @@ const TaskItem: React.FC<{
 }> = ({ task, onTask, active }) => {
   const theme = useTheme();
   const taskDueDate = task.dueDate ? task.dueDate.toLocaleDateString() : undefined;
-  const isCompletedOrRejected: boolean = task.status === 'COMPLETED' || task.status === 'REJECTED';
-
-  if (isCompletedOrRejected) {
-    return <></>;
-  }
 
   const styles = active ? activeTaskStyles : inactiveTaskStyles;
-  const commentText = task.comments.map((t) => t.commentText);
-  
-  console.log(commentText)
 
   return (
     <Box sx={styles} display='flex' alignItems='center'
       height={theme.typography.body2.fontSize} maxHeight={theme.typography.body2.fontSize}
       onClick={() => onTask(active ? undefined : task)}>
       <Box width='70%' sx={{ mx: 1 }}><Typography fontWeight='bolder' noWrap>{task.title}</Typography></Box>
-      <Box width='10%'><CommentItem task={task} /></Box>
-      <Box width='10%'><ChecklistItem task={task} /></Box>
-      <Box width='10%' sx={{ textAlign: 'right', mx: 1 }}><Typography>{taskDueDate}</Typography></Box>
+      <Box width='10%'>{task.comments.length ? <StyledBadge badgeContent={task.comments.length}><ChatOutlinedIcon /></StyledBadge>: null }</Box>
+      <Box width='10%'>{task.checklist.length ? <StyledBadge badgeContent={task.checklist.length}><ChecklistIcon /></StyledBadge> : null}</Box>
+      <Box width='10%' sx={{ textAlign: 'right', mx: 1 }}><Typography fontWeight='bolder'>{taskDueDate}</Typography></Box>
     </Box>
   );
 }
