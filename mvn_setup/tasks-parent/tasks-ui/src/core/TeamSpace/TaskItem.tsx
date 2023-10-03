@@ -1,10 +1,8 @@
 import React from 'react';
-import { Box, useTheme, Typography, SxProps, styled, lighten, Badge, BadgeProps } from '@mui/material';
+import { Box, useTheme, Typography, SxProps, styled, Badge, BadgeProps } from '@mui/material';
 import ChecklistIcon from '@mui/icons-material/Checklist';
 import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';
 import Client from '@taskclient';
-
-
 
 const activeTaskStyles: SxProps = {
   color: 'mainContent.main',
@@ -24,10 +22,10 @@ const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
   '& .MuiBadge-badge': {
     right: -5,
     top: 15,
-    border: `2px solid ${lighten(theme.palette.uiElements.main, 0.3)}`,
+    border: `2px solid ${theme.palette.uiElements.main}`,
     padding: '0 4px',
     color: theme.palette.text.primary,
-    backgroundColor: lighten(theme.palette.uiElements.main, 0.9)
+    backgroundColor: theme.palette.uiElements.dark
   },
 }));
 

@@ -1,30 +1,24 @@
 import React from 'react';
-import { Box, Stack, Grid, Tabs, Tab, Typography, AppBar, Toolbar, Divider } from '@mui/material';
+import { Stack, Grid, Tabs, Tab, Typography, AppBar, Toolbar, Divider, TablePagination } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 import TaskItemActive from './TaskItemActive';
 import TaskItem from './TaskItem';
-import Pagination from './Pagination';
-
 import Client from '@taskclient';
-import { TeamSpaceState, TeamSpaceTabState, init } from './types';
+import { TeamSpaceState, init } from './types';
 
 
-const TabPanel: React.FC<{ state: TeamSpaceTabState, children: React.ReactNode }> = ({ state, children }) => {
-  return (
-    <div hidden={state.disabled}>
-      {!state.disabled && (
-        <Box sx={{
-          backgroundColor: 'mainContent.main'
-        }}>
-          <Stack>{children}</Stack>
-        </Box>
-      )}
-    </div>);
-}
-
+const initTable = (records: Client.TaskDescriptor[]) => new Client.TablePaginationImpl<Client.TaskDescriptor>({
+  src: records,
+  orderBy: 'dueDate',
+  order: 'asc',
+  sorted: true,
+  rowsPerPage: 15,
+});
 
 const TeamSpace: React.FC<{ data: TeamSpaceState }> = ({ data }) => {
   const [state, setState] = React.useState<TeamSpaceState>(data);
+  const [table, setTable] = React.useState(initTable([]));
+
   function handleActiveTab(_event: React.SyntheticEvent, newValue: number) {
     setState(prev => prev.withActiveTab(newValue));
   }
@@ -33,7 +27,23 @@ const TeamSpace: React.FC<{ data: TeamSpaceState }> = ({ data }) => {
     setState(prev => prev.withActiveTask(task));
   }
 
-  return (<>
+  function handleOnPageChange(_garbageEvent: any, newPage: number) {
+    setTable((state) => state.withPage(newPage));
+  }
+
+  function handleOnRowsPerPageChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setTable((state) => state.withRowsPerPage(parseInt(event.target.value, 10)))
+  }
+
+
+  React.useEffect(() => {
+    const { activeTab } = state;
+    const { records } = state.tabs[activeTab].group;
+    setTable((src) => src.withSrc(records).withPage(0));
+  }, [state, setTable])
+
+
+  return (
     <Grid container spacing={1}>
       <AppBar color='inherit' position='sticky' sx={{ boxShadow: 'unset', px: 1 }}>
         <Toolbar sx={{ alignItems: 'end', "&.MuiToolbar-root": { px: 'unset' } }}>
@@ -53,22 +63,26 @@ const TeamSpace: React.FC<{ data: TeamSpaceState }> = ({ data }) => {
               }
             />))}
           </Tabs>
-          <Pagination />
+
+          <TablePagination
+            rowsPerPageOptions={table.rowsPerPageOptions}
+            component="div"
+            count={table.src.length}
+            rowsPerPage={table.rowsPerPage}
+            page={table.page}
+            onPageChange={handleOnPageChange}
+            onRowsPerPageChange={handleOnRowsPerPageChange}
+          />
         </Toolbar>
         <Divider />
       </AppBar >
       <Grid item md={8} lg={8}>
-        <Stack spacing={1}>
-          <Box sx={{ mt: 1 }} />
-          {state.tabs.map(tab => (
-            <TabPanel state={tab} key={tab.id}>
-              {tab.group.records.map((task) => <TaskItem
-                key={task.id}
-                task={task}
-                active={state.activeTask?.id === task.id}
-                onTask={(task) => handleActiveTask(task)} />)}
-            </TabPanel>
-          ))}
+        <Stack sx={{ backgroundColor: 'mainContent.main' }}>
+          {table.entries.map((task) => <TaskItem
+            key={task.id}
+            task={task}
+            active={state.activeTask?.id === task.id}
+            onTask={(task) => handleActiveTask(task)} />)}
         </Stack>
       </Grid>
 
@@ -76,7 +90,6 @@ const TeamSpace: React.FC<{ data: TeamSpaceState }> = ({ data }) => {
         <TaskItemActive task={state.activeTask} />
       </Grid>
     </Grid>
-  </>
   );
 }
 
