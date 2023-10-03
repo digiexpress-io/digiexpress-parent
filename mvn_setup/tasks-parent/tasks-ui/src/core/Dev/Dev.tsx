@@ -5,7 +5,6 @@ import TestTask from './test_task_1.json';
 import DatePicker from '../DatePicker';
 import Checklist from '../Checklist';
 import { demoChecklist } from '../Checklist/checklist-demo';
-import TeamSpaceDevLayout from '../TeamSpace-dev';
 import TaskEditDialog from 'core/TaskEdit';
 
 const Dev: React.FC = () => {
@@ -16,9 +15,6 @@ const Dev: React.FC = () => {
 
   return (
     <Box sx={{ width: '100%', p: 1 }}>
-      <Box sx={{ mb: 5 }}>TEAM SPACE</Box>
-      <TeamSpaceDevLayout />
-
       <Box sx={{ mb: 5 }} />
 
       <Box>COMPONENT 1 create task preview</Box>
