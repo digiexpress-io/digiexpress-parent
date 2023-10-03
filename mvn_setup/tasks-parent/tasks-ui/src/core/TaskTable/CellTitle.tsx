@@ -3,8 +3,6 @@ import { Box } from '@mui/material';
 
 import client from '@taskclient';
 import TaskCell from './TaskCell';
-import { usePopover } from './CellPopover';
-import { CellProps } from './task-table-types';
 import { StyledTableCell } from './StyledTable';
 
 

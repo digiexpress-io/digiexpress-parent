@@ -12,7 +12,7 @@ const TableSubTitle: React.FC<{ values: number, message: string }> = ({ values, 
 
 
 const TableTitle: React.FC<{ group: Client.Group }> = ({ group }) => {
-  const sx = { borderRadius: '8px 8px 0px 0px', boxShadow: "unset" };
+  const sx = { borderRadius: '8px 8px 0px 0px', boxShadow: "unset", fontWeight: 'bolder' };
   const intl = useIntl();
   if (!group) {
     return (<Button color="primary" variant="contained" sx={sx}>Contained</Button>);

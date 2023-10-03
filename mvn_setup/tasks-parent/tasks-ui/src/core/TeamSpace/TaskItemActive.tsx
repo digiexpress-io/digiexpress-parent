@@ -37,6 +37,8 @@ const StyledStack: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     height: '100%',
     position: 'fixed',
     width: '23%',
+    boxShadow: 5,
+    paddingTop: theme.spacing(2),
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(2),
     backgroundColor: theme.palette.background.paper

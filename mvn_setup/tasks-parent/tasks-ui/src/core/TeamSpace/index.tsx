@@ -13,7 +13,7 @@ const TabPanel: React.FC<{ state: TeamSpaceTabState, children: React.ReactNode }
   return (
     <div hidden={state.disabled}>
       {!state.disabled && (
-        <Box sx={{ 
+        <Box sx={{
           backgroundColor: 'mainContent.main'
         }}>
           <Stack>{children}</Stack>
@@ -34,28 +34,29 @@ const TeamSpace: React.FC<{ data: TeamSpaceState }> = ({ data }) => {
   }
 
   return (<>
-    <AppBar position="sticky" color='inherit' sx={{ boxShadow: 'unset' }}>
-      <Toolbar sx={{alignItems: 'end', "&.MuiToolbar-root": { px: 'unset'}}}>
-        <Tabs value={state.activeTab} onChange={handleActiveTab} TabIndicatorProps={{ sx: { display: 'none' } }}>
-          {state.tabs.map(tab => (<Tab key={tab.id}
-            sx={{
-              mx: 1, borderRadius: '8px 8px 0px 0px',
-              backgroundColor: state.activeTab === tab.id ? tab.color : undefined,
-              border: state.activeTab === tab.id ? undefined : '1px solid' + tab.color
-            }}
-            label={
-              <Typography sx={{ fontWeight: 'bolder', color: state.activeTab === tab.id ? 'mainContent.main' : 'text.primary' }}>
-                <FormattedMessage id={tab.label} values={{ count: tab.count }} />
-              </Typography>
-            }
-          />))}
-        </Tabs>
-        <Divider orientation='vertical' flexItem sx={{ mx: 2 }} />
-        
-        <Pagination />
-      </Toolbar>
-    </AppBar>
     <Grid container spacing={1}>
+      <AppBar color='inherit' position='sticky' sx={{ boxShadow: 'unset', px: 1 }}>
+        <Toolbar sx={{ alignItems: 'end', "&.MuiToolbar-root": { px: 'unset' } }}>
+          <Tabs value={state.activeTab} onChange={handleActiveTab} TabIndicatorProps={{ sx: { display: 'none' } }}>
+            {state.tabs.map(tab => (<Tab key={tab.id}
+              sx={{
+                mx: 1, borderRadius: '8px 8px 0px 0px',
+                backgroundColor: state.activeTab === tab.id ? tab.color : undefined,
+                border: state.activeTab === tab.id ? undefined : '1px solid' + tab.color,
+                borderBottom: 'unset',
+                boxShadow: 4
+              }}
+              label={
+                <Typography sx={{ fontWeight: 'bolder', color: state.activeTab === tab.id ? 'mainContent.main' : tab.color }}>
+                  <FormattedMessage id={tab.label} values={{ count: tab.count }} />
+                </Typography>
+              }
+            />))}
+          </Tabs>
+          <Pagination />
+        </Toolbar>
+        <Divider />
+      </AppBar >
       <Grid item md={8} lg={8}>
         <Stack spacing={1}>
           <Box sx={{ mt: 1 }} />
