@@ -4,6 +4,22 @@ const lineHeight = 28;
 const lineHeightLarge = 60;
 
 
+function getTRBackgroundColor(index: number): string {
+  const isEven = index % 2 === 0;
+  const isOdd = index % 2 === 1;
+
+  if (isOdd) {
+    return 'uiElements.light';
+  }
+  else if (isEven) {
+    return 'background.paper';
+  }
+  else {
+    return 'yellow'
+  }
+}
+
+
 const StyledTableBody = styled(TableBody)`
   ${({ theme }) => `
     box-shadow: ${theme.shadows[1]};
@@ -13,11 +29,10 @@ const StyledTableBody = styled(TableBody)`
     border-bottom: 8px solid transparent;
     border-radius: 0px 0px 8px 8px;
     background-color: ${theme.palette.background.paper};
-
+    
     & tr:last-child {
       border-radius: 0px 0px 8px 8px;
-    }
-        
+    }  
     & tr:last-child td:first-of-type {
       border-radius: 0px 0px 0px 8px;
     }
@@ -69,6 +84,6 @@ const StyledLinearProgress: React.FC<{}> = () => {
 
 
 
-export { StyledTableBody, StyledTableCell, StyledFillerRows, lineHeight, lineHeightLarge };
+export { StyledTableBody, StyledTableCell, StyledFillerRows, lineHeight, lineHeightLarge, getTRBackgroundColor };
 
 

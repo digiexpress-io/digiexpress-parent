@@ -42,7 +42,7 @@ const Row: React.FC<{
     setHoverItemsActive(false);
   }
 
-  return (<TableRow hover tabIndex={-1} key={props.row.id} onMouseEnter={() => setHoverItemsActive(true)} onMouseLeave={handleEndHover}>
+  return (<TableRow sx={{ backgroundColor: TaskTable.rowBackgroundColor(props.rowId)}} hover tabIndex={-1} key={props.row.id} onMouseEnter={() => setHoverItemsActive(true)} onMouseLeave={handleEndHover}>
     <TaskTable.CellTitle {...props} children={hoverItemsActive} />
     <TaskTable.CellAssignees {...props} />
     <TaskTable.CellDueDate {...props} />
