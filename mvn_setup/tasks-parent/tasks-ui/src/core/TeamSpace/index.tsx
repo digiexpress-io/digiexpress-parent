@@ -1,11 +1,36 @@
 import React from 'react';
-import { Stack, Grid, Tabs, Tab, Typography, AppBar, Toolbar, Divider, TablePagination } from '@mui/material';
+import { Stack, Grid, Button, SxProps, lighten, Typography, AppBar, Toolbar, TablePagination } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 import TaskItemActive from './TaskItemActive';
 import TaskItem from './TaskItem';
 import Client from '@taskclient';
 import { TeamSpaceState, init } from './types';
 
+
+
+const Tab: React.FC<{ children: React.ReactNode, active: boolean, color: string, onClick: () => void }> = ({ children, active, color, onClick }) => {
+  const backgroundColor = active ? color : 'unset';
+  const border = active ? undefined : '1px solid' + color;
+  const sx: SxProps = {
+    borderRadius: '8px 8px 0px 0px',
+    boxShadow: "unset",
+    backgroundColor,
+    border,
+    color: active ? 'mainContent.main' : color,
+    borderBottom: 'unset',
+    '&:hover': {
+      backgroundColor: active ? color : lighten(color, 0.2),
+      color: 'mainContent.main'
+    },
+    ml: 1
+  };
+
+  return (<Button variant="contained" sx={sx} onClick={onClick}>
+    <Typography sx={{ fontWeight: 'bolder' }}>
+      {children}
+    </Typography>
+  </Button>);
+}
 
 const initTable = (records: Client.TaskDescriptor[]) => new Client.TablePaginationImpl<Client.TaskDescriptor>({
   src: records,
@@ -19,7 +44,7 @@ const TeamSpace: React.FC<{ data: TeamSpaceState }> = ({ data }) => {
   const [state, setState] = React.useState<TeamSpaceState>(data);
   const [table, setTable] = React.useState(initTable([]));
 
-  function handleActiveTab(_event: React.SyntheticEvent, newValue: number) {
+  function handleActiveTab(newValue: number) {
     setState(prev => prev.withActiveTab(newValue));
   }
 
@@ -45,24 +70,12 @@ const TeamSpace: React.FC<{ data: TeamSpaceState }> = ({ data }) => {
 
   return (
     <Grid container spacing={1}>
-      <AppBar color='inherit' position='sticky' sx={{ boxShadow: 'unset', px: 1 }}>
+      <AppBar color='inherit' position='sticky' sx={{ boxShadow: 'unset', px: 1, borderBottom: '1px solid' + state.tabs[state.activeTab].group.color }}>
         <Toolbar sx={{ alignItems: 'end', "&.MuiToolbar-root": { px: 'unset' } }}>
-          <Tabs value={state.activeTab} onChange={handleActiveTab} TabIndicatorProps={{ sx: { display: 'none' } }}>
-            {state.tabs.map(tab => (<Tab key={tab.id}
-              sx={{
-                mx: 1, borderRadius: '8px 8px 0px 0px',
-                backgroundColor: state.activeTab === tab.id ? tab.color : undefined,
-                border: state.activeTab === tab.id ? undefined : '1px solid' + tab.color,
-                borderBottom: 'unset',
-                boxShadow: 4
-              }}
-              label={
-                <Typography sx={{ fontWeight: 'bolder', color: state.activeTab === tab.id ? 'mainContent.main' : tab.color }}>
-                  <FormattedMessage id={tab.label} values={{ count: tab.count }} />
-                </Typography>
-              }
-            />))}
-          </Tabs>
+
+          {state.tabs.map(tab => (<Tab key={tab.id} active={state.activeTab === tab.id} color={tab.color} onClick={() => handleActiveTab(tab.id)} >
+            <FormattedMessage id={tab.label} values={{ count: tab.count }} />
+          </Tab>))}
 
           <TablePagination
             rowsPerPageOptions={table.rowsPerPageOptions}
@@ -74,11 +87,11 @@ const TeamSpace: React.FC<{ data: TeamSpaceState }> = ({ data }) => {
             onRowsPerPageChange={handleOnRowsPerPageChange}
           />
         </Toolbar>
-        <Divider />
       </AppBar >
       <Grid item md={8} lg={8}>
         <Stack sx={{ backgroundColor: 'mainContent.main' }}>
-          {table.entries.map((task) => <TaskItem
+          {table.entries.map((task, index) => <TaskItem
+            index={index}
             key={task.id}
             task={task}
             active={state.activeTask?.id === task.id}

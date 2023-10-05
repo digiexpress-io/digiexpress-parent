@@ -63,7 +63,7 @@ export type OwnerUnassigned = "_nobody_";
 export type TasksMutator = (prev: TasksMutatorBuilder) => TasksMutatorBuilder;
 export type TasksDispatch = (mutator: TasksMutator) => void;
 
-export type AssigneeGroupType = 'assigneeOverdue' | 'assigneeStartsToday' | 'assigneeOther';
+export type AssigneeGroupType = 'assigneeOverdue' | 'assigneeStartsToday' | 'assigneeOther' | 'assigneeCurrentlyWorking';
 export type TeamGroupType = 'groupOverdue' | 'groupAvailable' | 'groupDueSoon';
 
 export type GroupBy = 'status' | 'owners' | 'roles' | 'priority' | 'none' | 'assignee' | 'team';

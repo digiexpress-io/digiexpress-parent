@@ -17,6 +17,8 @@ const emerald: string = '#26C485';     //green
 const sunglow: string = '#FFCA3A';     //yellow
 const steelblue: string = '#1982C4';   //blue
 const ultraviolet: string = '#6A4C93'; //lillac
+const orange: string = '#fb8500';      //orange
+const red: string = '#d00000';
 
 const Pallette: PalleteType = {
   priority: {
@@ -31,14 +33,15 @@ const Pallette: PalleteType = {
     'CREATED': ultraviolet,
   },
   assigneeGroupType: {
-    assigneeOther: ultraviolet,
-    assigneeOverdue: bittersweet,
-    assigneeStartsToday: emerald
+    assigneeOther: steelblue,
+    assigneeOverdue: red,
+    assigneeStartsToday: orange,
+    assigneeCurrentlyWorking: emerald
   },
   teamGroupType: {
-    groupOverdue: '#d00000',   //red
-    groupAvailable: '#219ebc', //blue
-    groupDueSoon: '#fb8500'    // orange
+    groupOverdue: red,
+    groupAvailable: steelblue,
+    groupDueSoon: orange
   },
   colors: { red: bittersweet, green: emerald, yellow: sunglow, blue: steelblue, violet: ultraviolet }
 };
@@ -352,7 +355,7 @@ class GroupVisitor {
       const values: TaskStatus[] = ['CREATED', 'IN_PROGRESS', 'COMPLETED', 'REJECTED'];
       values.forEach(o => this._groups[o] = { records: [], color: Pallette.status[o], id: o, type: init.groupBy })
     } else if (init.groupBy === 'assignee') {
-      const values: AssigneeGroupType[] = ['assigneeOverdue', 'assigneeOther', 'assigneeStartsToday'];
+      const values: AssigneeGroupType[] = ['assigneeOverdue', 'assigneeOther', 'assigneeStartsToday', 'assigneeCurrentlyWorking'];
       values.forEach(o => this._groups[o] = { records: [], color: Pallette.assigneeGroupType[o], id: o, type: init.groupBy })
     } else if (init.groupBy === 'team') {
       const values: TeamGroupType[] = ['groupOverdue', 'groupAvailable', 'groupDueSoon'];
@@ -386,14 +389,17 @@ class GroupVisitor {
       this._groups[task.priority].records.push(task);
 
     } else if (this._groupBy === 'assignee') {
-
+      const isCompletedOrRejected: boolean = task.status === 'COMPLETED' || task.status === 'REJECTED';
+      if (isCompletedOrRejected) {
+        return;
+      }
       // Include only logged in user tasks
       if (task.assigneeGroupType) {
         this._groups[task.assigneeGroupType].records.push(task);
       }
     } else if (this._groupBy === 'team') {
       const isCompletedOrRejected: boolean = task.status === 'COMPLETED' || task.status === 'REJECTED';
-      if(isCompletedOrRejected) {
+      if (isCompletedOrRejected) {
         return;
       }
 
@@ -487,6 +493,10 @@ function getMyWorkType(task: Task, profile: Profile, today: Date): AssigneeGroup
   }
   if (startDate && isEqual(parseISO(startDate), today)) {
     return "assigneeStartsToday";
+  }
+  if(task.status === 'IN_PROGRESS'){
+    return "assigneeCurrentlyWorking";
+    
   }
   return "assigneeOther";
 }

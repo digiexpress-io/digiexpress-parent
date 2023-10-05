@@ -77,6 +77,12 @@ const en = {
   'core.teamSpace.task.available.alert': 'This task is available and has no urgent due date considerations',
   'core.teamSpace.task.dueSoon.alert': 'This task is due soon!',
 
+  'core.myWork.tab.task.overdue': 'Overdue: {count}',
+  'core.myWork.tab.task.available': 'Available: {count}',
+  'core.myWork.tab.task.startsToday': 'Starts today: {count}',
+  'core.myWork.tab.task.currentlyWorking': 'Current work: {count}',
+
+  'core.myWork.entries.none': 'No items in this group',
   'core.myWork.myWorkTaskTable.header.spotlight.myWorkOverdue': 'Overdue',
   'core.myWork.myWorkTaskTable.header.spotlight.myWorkStartsToday': 'Starts today',
   'core.myWork.myWorkTaskTable.header.spotlight.myWorkAssigned': 'Assigned to me',

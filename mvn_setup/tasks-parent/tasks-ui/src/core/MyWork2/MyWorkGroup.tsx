@@ -34,6 +34,7 @@ const StyledTaskItem: React.FC<{ task: Client.TaskDescriptor }> = ({ task }) => 
       { groupId === "assigneeStartsToday" ? formatTaskDate(task.startDate) : formatTaskDate(task.dueDate)}
     </Typography>
   );
+  
 
   return (
     <Box 
