@@ -3,22 +3,24 @@ import { Box, TablePagination, TableContainer, Table } from '@mui/material';
 import Client from '@taskclient';
 
 
-interface TableRenderProps<R> {
+type TaskPagination = Client.TablePagination<Client.TaskDescriptor>;
+
+interface TableConfigProps {
   loading: boolean;
-  content: Client.TablePagination<R>,
-  setContent: React.Dispatch<React.SetStateAction<Client.TablePagination<R>>>,
+  group: Client.Group 
+  content: TaskPagination,
+  setContent: React.Dispatch<React.SetStateAction<TaskPagination>>,
 }
 
-interface TableProps<Record, Ext extends object> {
-  render: {
-    ext: Ext;
-    Header: React.ElementType<TableRenderProps<Record> & Ext>;
-    Rows: React.ElementType<TableRenderProps<Record> & Ext>;
+interface TableProps {
+  config: {
+    Header: React.ElementType<TableConfigProps>;
+    Rows: React.ElementType<TableConfigProps>;
   },
   data: {
-    defaultOrderBy: keyof Record,
+    group: Client.Group,
+    defaultOrderBy: keyof Client.TaskDescriptor,
     loading: boolean;
-    records: Record[] | undefined
   }
 }
 
@@ -85,28 +87,27 @@ const useTable = () => {
 }
 
 
-function CustomTable<Record extends object, Ext extends {}>(props: TableProps<Record, Ext>) {
-  const { records, loading, defaultOrderBy } = props.data;
-  const { Header, Rows, ext } = props.render;
+function CustomTable(props: TableProps) {
+  const { loading, defaultOrderBy, group } = props.data;
+  const { Header, Rows } = props.config;
+  const { records } = group;
 
-  const [content, setContent] = React.useState(new Client.TablePaginationImpl<Record>({
+  const [content, setContent] = React.useState(new Client.TablePaginationImpl<Client.TaskDescriptor>({
     src: records ?? [],
     orderBy: defaultOrderBy,
     sorted: false
   }));
 
   React.useEffect(() => {
-    setContent((c: Client.TablePagination<Record>) => c.withSrc(records ?? []));
+    setContent((c: TaskPagination) => c.withSrc(records ?? []));
   }, [records, setContent]);
 
   return (<Provider>
     <Box sx={{ width: '100%' }}>
       <TableContainer>
         <Table size='small'>
-          {/** @ts-ignore */}
-          <Header {...ext} content={content} loading={loading} setContent={setContent} />
-          {/** @ts-ignore */}
-          <Rows {...ext} content={content} loading={loading} setContent={setContent} />
+          <Header content={content} loading={loading} setContent={setContent} group={group}/>
+          <Rows content={content} loading={loading} setContent={setContent} group={group}/>
         </Table>
       </TableContainer>
       <Box display='flex' sx={{ paddingLeft: 1, marginTop: -2 }}>
@@ -118,8 +119,8 @@ function CustomTable<Record extends object, Ext extends {}>(props: TableProps<Re
               count={(records ?? []).length}
               rowsPerPage={content.rowsPerPage}
               page={content.page}
-              onPageChange={(_event, newPage) => setContent((state: Client.TablePagination<Record>) => state.withPage(newPage))}
-              onRowsPerPageChange={(event: React.ChangeEvent<HTMLInputElement>) => setContent((state: Client.TablePagination<Record>) => state.withRowsPerPage(parseInt(event.target.value, 10)))}
+              onPageChange={(_event, newPage) => setContent((state: TaskPagination) => state.withPage(newPage))}
+              onRowsPerPageChange={(event: React.ChangeEvent<HTMLInputElement>) => setContent((state: TaskPagination) => state.withRowsPerPage(parseInt(event.target.value, 10)))}
             />)
         }
       </Box>
@@ -131,6 +132,6 @@ function CustomTable<Record extends object, Ext extends {}>(props: TableProps<Re
 
 
 export { Provider, useTable, CustomTable };
-export type { DescriptorTableStateBuilder, DescriptorTableContextType, DescriptorTableState, TableRenderProps };
+export type { DescriptorTableStateBuilder, DescriptorTableContextType, DescriptorTableState, TableConfigProps };
 
 

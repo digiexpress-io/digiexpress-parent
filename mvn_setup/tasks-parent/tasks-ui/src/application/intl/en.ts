@@ -67,6 +67,8 @@ const en = {
   'core.teamSpace.taskCount': '{values} Tasks',
   'core.teamSpace.task.create': 'Create new task',
   'core.teamSpace.summary.noneSelected': 'Nothing selected',
+  'core.teamSpace.alert.entries.none': 'No items available for this group',
+
 
   'core.teamSpace.tab.task.overdue': 'Overdue: {count}',
   'core.teamSpace.tab.task.dueSoon': 'Due soon: {count}',
@@ -76,25 +78,30 @@ const en = {
   'core.teamSpace.task.overdue.alert': 'This task is overdue!',
   'core.teamSpace.task.available.alert': 'This task is available and has no urgent due date considerations',
   'core.teamSpace.task.dueSoon.alert': 'This task is due soon!',
+  'core.teamSpace.task.currentlyWorking.alert': 'I am currently working on this task',
 
   'core.myWork.tab.task.overdue': 'Overdue: {count}',
   'core.myWork.tab.task.available': 'Available: {count}',
   'core.myWork.tab.task.startsToday': 'Starts today: {count}',
   'core.myWork.tab.task.currentlyWorking': 'Current work: {count}',
+  'core.myWork.tab.recentActivities': 'Recent activities',
+  'core.myWork.tab.taskSummary': 'Task summary',
 
-  'core.myWork.entries.none': 'No items in this group',
+
   'core.myWork.myWorkTaskTable.header.spotlight.myWorkOverdue': 'Overdue',
   'core.myWork.myWorkTaskTable.header.spotlight.myWorkStartsToday': 'Starts today',
   'core.myWork.myWorkTaskTable.header.spotlight.myWorkAssigned': 'Assigned to me',
-  'core.myWork.group.empty.title': "No records available for this group",
-  'core.myWork.recentActivities.title': 'My recent activities',
+  'core.myWork.alert.entries.none': "No items available for this group",
+  
   'core.myWork.recentActivities.events.task-completed': 'I completed task',
   'core.myWork.recentActivities.events.message-sent': 'I sent a message in regard to task',
   'core.myWork.recentActivities.events.checklist-completed': 'I completed Checklist',
   'core.myWork.recentActivities.events.checklist-self-assigned': 'I self-assigned the Checklist',
-  'core.myWork.recentActivities.events.comment-finished': 'I finnished the comment',
+  'core.myWork.recentActivities.events.comment-finished': 'I finished the comment',
   'core.myWork.recentActivities.events.task-blocked': 'I marked this task as "BLOCKED"',
   'core.myWork.recentActivities.events.attachment-added': 'I added an attachment',
+  'core.myWork.recentActivities': 'My recent activities',
+  'core.myWork.button.myActivityHistory': 'View my activity history',
 
   'core.myOverview.title': 'My daily overview',
   'core.myOverview.mentioned-in-comment': 'Mentions in comments',

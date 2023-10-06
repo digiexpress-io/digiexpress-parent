@@ -2,14 +2,9 @@
 import React from 'react';
 import { Box } from '@mui/material';
 import Client from '@taskclient';
-import { TableRenderProps, CustomTable } from './table-ctx';
+import { TableConfigProps, CustomTable } from './table-ctx';
 
 
-interface TableProps {
-  group: Client.Group
-}
-
-interface RenderProps extends TableRenderProps<Client.TaskDescriptor>, TableProps { }
 
 
 interface TableGroupsProps {
@@ -17,8 +12,8 @@ interface TableGroupsProps {
   orderBy: keyof Client.TaskDescriptor | undefined,
 
   children: {
-    Header: React.ElementType<RenderProps>;
-    Rows: React.ElementType<RenderProps>;
+    Header: React.ElementType<TableConfigProps>;
+    Rows: React.ElementType<TableConfigProps>;
     Tools: React.ElementType<{ children: React.ReactNode }> | undefined
   }
 }
@@ -44,10 +39,9 @@ const Delegate: React.FC<TableGroupsProps> = ({ groupBy, orderBy, children }) =>
   const result = groups.map((group, index) => (
     <React.Fragment key={group.id}>
       {index > 0 ? <Box sx={{ p: 2 }} /> : null}
-      <CustomTable<Client.TaskDescriptor, TableProps>
-        data={{ loading, records: group.records, defaultOrderBy }}
-        render={{
-          ext: { group },
+      <CustomTable
+        data={{ loading, group, defaultOrderBy }}
+        config={{
           Header: children.Header,
           Rows: children.Rows
         }}
@@ -67,11 +61,6 @@ const TableGroups: React.FC<TableGroupsProps> = (props) => {
   return (<Delegate {...props} />);
 }
 
-
-
-
-
-export type { TableProps, RenderProps }
 export { TableGroups };
 
 

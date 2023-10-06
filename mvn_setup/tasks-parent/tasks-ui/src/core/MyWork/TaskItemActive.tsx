@@ -4,9 +4,13 @@ import {
   darken, styled,
   Chip, Button, useTheme, AlertColor, Avatar
 } from '@mui/material';
+
 import { FormattedMessage } from 'react-intl';
 
+
 import Client from '@taskclient';
+import { TaskListTabState, TaskList, StyledAppBar, StyledTaskListTab } from '../TaskList';
+
 
 const StyledStartTaskButton = styled(Button)(({ theme }) => ({
   color: theme.palette.mainContent.main,
@@ -16,7 +20,6 @@ const StyledStartTaskButton = styled(Button)(({ theme }) => ({
     backgroundColor: darken(theme.palette.uiElements.main, 0.3),
   }
 }));
-
 
 const StyledEditTaskButton = styled(Button)(({ theme }) => ({
   border: '1px solid',
@@ -29,6 +32,16 @@ const StyledEditTaskButton = styled(Button)(({ theme }) => ({
   }
 }));
 
+const StyledViewHistoryButton = styled(Button)(({ theme }) => ({
+  width: '100%',
+  justifySelf: 'center',
+  color: theme.palette.mainContent.main,
+  fontWeight: 'bold',
+  backgroundColor: theme.palette.uiElements.main,
+  '&:hover': {
+    backgroundColor: darken(theme.palette.uiElements.main, 0.3),
+  }
+}));
 
 const StyledStack: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const theme = useTheme();
@@ -36,17 +49,41 @@ const StyledStack: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (<Box sx={{
     height: '100%',
     position: 'fixed',
+    boxShadow: 3,
     width: '23%',
-    boxShadow: 5,
-    paddingTop: theme.spacing(2),
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(2),
+    pt: theme.spacing(2),
+    px: theme.spacing(2),
     backgroundColor: theme.palette.background.paper
   }}>
     <Stack direction='column' spacing={1}>
       {children}
     </Stack>
   </Box>);
+}
+
+const MyRecentActivity: React.FC = () => {
+  const org = Client.useOrg();
+  const myActivities = org.state.iam.activity;
+
+  /*  TODO
+  sort by most recent date first
+  show only the most recent 10 activities
+  */
+  return (
+    <StyledStack>
+      <Typography fontWeight='bold' variant='h4'><FormattedMessage id='core.myWork.recentActivities' /></Typography>
+      <Divider sx={{ my: 1 }} />
+
+      {myActivities.map((activity) => (
+        <Box key={activity.id}>
+          <Typography sx={{ fontWeight: 'bolder' }}>{activity.eventDate}</Typography>
+          <Typography><FormattedMessage id={`core.myWork.recentActivities.events.${activity.eventType}`} />{`: ${activity.subjectTitle}`}</Typography>
+        </Box>
+      ))}
+      <StyledViewHistoryButton><FormattedMessage id='core.myWork.button.myActivityHistory' /></StyledViewHistoryButton>
+
+    </StyledStack>
+  )
 }
 
 const StyledStatusChip: React.FC<{ children: Client.TaskStatus }> = ({ children }) => {
@@ -93,30 +130,32 @@ const StyledAssignee: React.FC<{ assigneeName: string, avatar: string }> = ({ as
     </Box>)
 }
 
-
 const StyledTitle: React.FC<{ children: string }> = ({ children }) => {
   return (<Typography fontWeight='bold'><FormattedMessage id={children} /></Typography>)
 }
 
 function getTaskAlert(task: Client.TaskDescriptor): { isDueDate: boolean, title: string, alertSeverity: AlertColor } {
 
-  if (task.teamGroupType === 'groupOverdue') {
+  if (task.assigneeGroupType === 'assigneeOverdue') {
     return { alertSeverity: 'error', isDueDate: true, title: 'core.teamSpace.task.overdue.alert' };
   }
-  if (task.teamGroupType === 'groupDueSoon') {
+  if (task.assigneeGroupType === 'assigneeStartsToday') {
     return { alertSeverity: 'warning', isDueDate: true, title: 'core.teamSpace.task.dueSoon.alert' }
+  }
+  if (task.assigneeGroupType === 'assigneeCurrentlyWorking') {
+    return { alertSeverity: 'info', isDueDate: true, title: 'core.teamSpace.task.currentlyWorking.alert' }
   }
   return { alertSeverity: 'success', isDueDate: false, title: 'core.teamSpace.task.available.alert' }
 }
 
 const TaskItemActive: React.FC<{ task: Client.TaskDescriptor | undefined }> = ({ task }) => {
 
-
   if (task) {
     const alert = getTaskAlert(task);
 
     return (<>
       <StyledStack>
+
         {/* header section */}
         <Typography fontWeight='bold' variant='h4'>{task.title}</Typography>
         <Divider sx={{ my: 1 }} />
@@ -156,26 +195,50 @@ const TaskItemActive: React.FC<{ task: Client.TaskDescriptor | undefined }> = ({
   }
 
   return (<StyledStack>
-    <Stack spacing={1}>
-      <Skeleton animation={false} variant="rounded" width='100%' height={40} />
-      <Skeleton animation={false} variant="rounded" width='100%' height={40} />
-      <Skeleton animation={false} variant="rounded" width='100%' height={40} />
+    <Skeleton animation={false} variant="rounded" width='100%' height={40} />
+    <Skeleton animation={false} variant="rounded" width='100%' height={40} />
+    <Skeleton animation={false} variant="rounded" width='100%' height={40} />
 
-      <Skeleton animation={false} variant="text" width='100%' height='2rem' />
-      <Skeleton animation={false} variant="rounded" width='100%' height={70} />
+    <Skeleton animation={false} variant="text" width='100%' height='2rem' />
+    <Skeleton animation={false} variant="rounded" width='100%' height={70} />
 
-      <Skeleton animation={false} variant="text" width='100%' height='2rem' />
-      <Skeleton animation={false} variant="text" width='85%' height='1rem' />
-      <Skeleton animation={false} variant="text" width='35%' height='1rem' />
-      <Skeleton animation={false} variant="text" width='60%' height='1rem' />
+    <Skeleton animation={false} variant="text" width='100%' height='2rem' />
+    <Skeleton animation={false} variant="text" width='85%' height='1rem' />
+    <Skeleton animation={false} variant="text" width='35%' height='1rem' />
+    <Skeleton animation={false} variant="text" width='60%' height='1rem' />
 
-      <Skeleton animation={false} variant="text" width='100%' height='2rem' />
-      <Skeleton animation={false} variant="rounded" width='25%' height={30} sx={{ borderRadius: '15px' }} />
-    </Stack>
+    <Skeleton animation={false} variant="text" width='100%' height='2rem' />
+    <Skeleton animation={false} variant="rounded" width='25%' height={30} sx={{ borderRadius: '15px' }} />
   </StyledStack>);
 }
 
 
 
 
-export default TaskItemActive;
+const DelegateTaskItemActive: React.FC<{ task: Client.TaskDescriptor | undefined }> = ({ task }) => {
+
+  // return summaryTab === 'summary' ? 
+  const [summaryTab, setSummaryTab] = React.useState<'TaskItemActive' | 'MyRecentActivity'>('TaskItemActive');
+
+  function handleSummaryTab() {
+    setSummaryTab(summaryTab === 'TaskItemActive' ? 'MyRecentActivity' : 'TaskItemActive');
+  }
+
+  return (<>
+    <StyledAppBar color={undefined}>
+      <StyledTaskListTab active={summaryTab === 'TaskItemActive'} color={'#03256c'}
+        onClick={handleSummaryTab}><FormattedMessage id='core.myWork.tab.taskSummary' />
+      </StyledTaskListTab>
+      <StyledTaskListTab active={summaryTab === 'MyRecentActivity'} color={'#b7245c'}
+        onClick={handleSummaryTab}><FormattedMessage id='core.myWork.tab.recentActivities' />
+      </StyledTaskListTab>
+    </StyledAppBar>
+    { summaryTab === 'MyRecentActivity' ? <MyRecentActivity />: <TaskItemActive task={task} />}
+  </>)
+
+}
+
+
+
+
+export default DelegateTaskItemActive;

@@ -488,7 +488,7 @@ function getMyWorkType(task: Task, profile: Profile, today: Date): AssigneeGroup
 
   const { startDate, dueDate } = task;
 
-  if (dueDate && isAfter(today, parseISO(dueDate))) {
+  if (dueDate && isAfter(today, parseISO(dueDate)) && task.status === 'CREATED') {
     return "assigneeOverdue";
   }
   if (startDate && isEqual(parseISO(startDate), today)) {
@@ -496,7 +496,6 @@ function getMyWorkType(task: Task, profile: Profile, today: Date): AssigneeGroup
   }
   if(task.status === 'IN_PROGRESS'){
     return "assigneeCurrentlyWorking";
-    
   }
   return "assigneeOther";
 }

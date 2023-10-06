@@ -4,20 +4,6 @@ const lineHeight = 28;
 const lineHeightLarge = 60;
 
 
-function getTRBackgroundColor(index: number): string {
-  const isEven = index % 2 === 0;
-  const isOdd = index % 2 === 1;
-
-  if (isOdd) {
-    return 'uiElements.light';
-  }
-  else if (isEven) {
-    return 'background.paper';
-  }
-  else {
-    return 'yellow'
-  }
-}
 
 
 const StyledTableBody = styled(TableBody)`
@@ -84,6 +70,6 @@ const StyledLinearProgress: React.FC<{}> = () => {
 
 
 
-export { StyledTableBody, StyledTableCell, StyledFillerRows, lineHeight, lineHeightLarge, getTRBackgroundColor };
+export { StyledTableBody, StyledTableCell, StyledFillerRows, lineHeight, lineHeightLarge };
 
 

@@ -3,9 +3,7 @@ import {
   TableTitle
 } from './TableTitle';
 
-import {
-  TableGroups, RenderProps, TableProps
-} from './TableGroups';
+import { TableGroups } from './TableGroups';
 
 
 import { SortableHeader, SortableHeaders } from './SortableHeader';
@@ -19,11 +17,11 @@ import TitleAs from './CellTitle';
 import TitleCrmAs from './CellTitleWithCrm';
 import Priority from './CellPriority';
 import Status from './CellStatus';
-import { StyledFillerRows, StyledTableBody, getTRBackgroundColor } from './StyledTable';
-
+import { StyledFillerRows, StyledTableBody } from './StyledTable';
+import {TableConfigProps} from './table-ctx';
 
 declare namespace TaskTable {
-  export type { RenderProps, TableProps };
+  export type { TableConfigProps };
 }
 
 
@@ -43,7 +41,6 @@ namespace TaskTable {
   export const CellStatus = Status;
   export const TableFiller = StyledFillerRows;
   export const TableBody = StyledTableBody;
-  export const rowBackgroundColor = getTRBackgroundColor;
 }
 
 export default TaskTable;

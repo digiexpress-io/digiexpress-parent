@@ -6,7 +6,16 @@ import TaskTable from '../TaskTable';
 import Tools from '../TaskTools';
 
 
-const Header: React.FC<TaskTable.RenderProps> = ({ content, setContent, group }) => {
+function getRowBackgroundColor(index: number): string {
+  const isOdd = index % 2 === 1;
+
+  if (isOdd) {
+    return 'uiElements.light';
+  }
+  return 'background.paper';
+}
+
+const Header: React.FC<TaskTable.TableConfigProps> = ({ content, setContent, group }) => {
 
   const columns: (keyof client.TaskDescriptor)[] = React.useMemo(() => [
     'assignees',
@@ -42,7 +51,7 @@ const Row: React.FC<{
     setHoverItemsActive(false);
   }
 
-  return (<TableRow sx={{ backgroundColor: TaskTable.rowBackgroundColor(props.rowId)}} hover tabIndex={-1} key={props.row.id} onMouseEnter={() => setHoverItemsActive(true)} onMouseLeave={handleEndHover}>
+  return (<TableRow sx={{ backgroundColor: getRowBackgroundColor(props.rowId) }} hover tabIndex={-1} key={props.row.id} onMouseEnter={() => setHoverItemsActive(true)} onMouseLeave={handleEndHover}>
     <TaskTable.CellTitle {...props} children={hoverItemsActive} />
     <TaskTable.CellAssignees {...props} />
     <TaskTable.CellDueDate {...props} />
@@ -54,7 +63,7 @@ const Row: React.FC<{
 }
 
 
-const Rows: React.FC<TaskTable.RenderProps> = ({ content, group, loading }) => {
+const Rows: React.FC<TaskTable.TableConfigProps> = ({ content, group, loading }) => {
   return (
     <TaskTable.TableBody>
       {content.entries.map((row, rowId) => (<Row key={row.id} rowId={rowId} row={row} def={group} />))}
