@@ -6,10 +6,11 @@ import {
 } from '@mui/material';
 
 import { FormattedMessage } from 'react-intl';
-
+import TaskWorkDialog from 'core/TaskWork';
+import TaskEditDialog from 'core/TaskEdit';
 
 import Client from '@taskclient';
-import { TaskListTabState, TaskList, StyledAppBar, StyledTaskListTab } from '../TaskList';
+import { StyledAppBar, StyledTaskListTab } from '../TaskList';
 
 
 const StyledStartTaskButton = styled(Button)(({ theme }) => ({
@@ -49,7 +50,7 @@ const StyledStack: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (<Box sx={{
     height: '100%',
     position: 'fixed',
-    boxShadow: 3,
+    boxShadow: 1,
     width: '23%',
     pt: theme.spacing(2),
     px: theme.spacing(2),
@@ -149,11 +150,24 @@ function getTaskAlert(task: Client.TaskDescriptor): { isDueDate: boolean, title:
 }
 
 const TaskItemActive: React.FC<{ task: Client.TaskDescriptor | undefined }> = ({ task }) => {
+  const [taskWorkOpen, setTaskWorkOpen] = React.useState(false);
+  const [taskEditOpen, setTaskEditOpen] = React.useState(false);
+
+  function handleTaskWork() {
+    setTaskWorkOpen(prev => !prev);
+  }
+
+  function handleTaskEdit() {
+    setTaskEditOpen(prev => !prev);
+  }
 
   if (task) {
     const alert = getTaskAlert(task);
 
     return (<>
+      <TaskWorkDialog open={taskWorkOpen} onClose={handleTaskWork} task={task} />
+      <TaskEditDialog open={taskEditOpen} onClose={handleTaskEdit} task={task} />
+      
       <StyledStack>
 
         {/* header section */}
@@ -161,8 +175,8 @@ const TaskItemActive: React.FC<{ task: Client.TaskDescriptor | undefined }> = ({
         <Divider sx={{ my: 1 }} />
 
         {/* buttons section */}
-        <StyledStartTaskButton><FormattedMessage id='task.start' /></StyledStartTaskButton>
-        <StyledEditTaskButton><FormattedMessage id='task.edit' /></StyledEditTaskButton>
+        <StyledStartTaskButton onClick={handleTaskWork}><FormattedMessage id='task.start' /></StyledStartTaskButton>
+        <StyledEditTaskButton onClick={handleTaskEdit}><FormattedMessage id='task.edit' /></StyledEditTaskButton>
         <Box sx={{ my: 1 }} />
 
         {/* duedate alert section */}
@@ -233,7 +247,7 @@ const DelegateTaskItemActive: React.FC<{ task: Client.TaskDescriptor | undefined
         onClick={handleSummaryTab}><FormattedMessage id='core.myWork.tab.recentActivities' />
       </StyledTaskListTab>
     </StyledAppBar>
-    { summaryTab === 'MyRecentActivity' ? <MyRecentActivity />: <TaskItemActive task={task} />}
+    {summaryTab === 'MyRecentActivity' ? <MyRecentActivity /> : <TaskItemActive task={task} />}
   </>)
 
 }

@@ -59,7 +59,7 @@ const TaskList: React.FC<{
   const { TaskItem, TaskItemActive } = children;
 
   return (
-    <Grid container spacing={1}>
+    <Grid container>
       <Grid item md={8} lg={8}>
         <StyledAppBar color={state.tabs[state.activeTab].group.color}>
           {state.tabs.map(tab => (
