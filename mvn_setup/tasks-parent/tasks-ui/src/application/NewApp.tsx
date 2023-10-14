@@ -28,7 +28,7 @@ const getUrl = () => {
     const url = window._env_.url;
     return url.endsWith("/") ? url.substring(0, url.length - 1) : url;
   }
-  return "http://localhost:8080/q/tasks/api/";
+  return "http://localhost:8080/q/digiexpress/api/";
 }
 
 const store: TaskClient.Store = new TaskClient.DefaultStore({

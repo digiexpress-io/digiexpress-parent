@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.ws.rs.Path;
 
 import io.resys.thena.tasks.client.api.model.ImmutableProject;
 import io.resys.thena.tasks.client.api.model.ImmutableTask;
@@ -33,11 +34,12 @@ import io.resys.thena.tasks.client.api.model.Project;
 import io.resys.thena.tasks.client.api.model.Task;
 import io.resys.thena.tasks.client.api.model.TaskCommand.CreateTask;
 import io.resys.thena.tasks.client.api.model.TaskCommand.TaskUpdateCommand;
-import io.resys.thena.tasks.client.rest.TasksRestApi;
+import io.resys.thena.tasks.client.rest.DigiExpressRestApi;
 import io.smallrye.mutiny.Uni;
 
+@Path("q/digiexpress/api")
 @ApplicationScoped
-public class TestResource implements TasksRestApi {
+public class TestResource implements DigiExpressRestApi {
 
   private final ImmutableTask mockTask = ImmutableTask.builder().id("task1").version("task-version1")
       .archived(TaskTestCase.getTargetDate()).created(TaskTestCase.getTargetDate())

@@ -1,5 +1,5 @@
 import { Client, Store, Org, User, Role } from './client-types';
-import type { TaskId, Task, TaskPagination, TaskStore } from './task-types';
+import type { TaskId, Task, TaskPagination, TaskStore, TaskUpdateCommand } from './task-types';
 import type { Profile, ProfileStore } from './profile-types';
 import { } from './client-store';
 
@@ -191,7 +191,7 @@ const mockOrg: {
     roles: mockRoles,
     users: mockUsers.reduce((acc, item) => ({ ...acc, [item.userId]: item }), {})
   },
-  user: mockUsers[0],
+  user: mockUsers[3],
   today: new Date(),
 }
 
@@ -237,12 +237,20 @@ export class ServiceImpl implements Client {
   get task(): TaskStore {
     return {
       getActiveTasks: () => this.getActiveTasks(),
-      getActiveTask: (id: TaskId) => this.getActiveTask(id)
+      getActiveTask: (id: TaskId) => this.getActiveTask(id),
+      updateActiveTask: (id: TaskId, commands: TaskUpdateCommand<any>[]) => this.updateActiveTask(id, commands)
     };
   }
 
+  async updateActiveTask(id: TaskId, commands: TaskUpdateCommand<any>[]): Promise<Task> {
+    return await this._store.fetch<Task>(`tasks/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(commands)
+    });
+  }
+
   async getActiveTasks(): Promise<TaskPagination> {
-    const tasks = await this._store.fetch<object[]>(`active/tasks`);
+    const tasks = await this._store.fetch<object[]>(`tasks`);
     return {
       page: 1,
       total: { pages: 1, records: tasks.length },

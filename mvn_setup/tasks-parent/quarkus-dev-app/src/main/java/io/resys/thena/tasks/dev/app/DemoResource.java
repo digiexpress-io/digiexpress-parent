@@ -4,7 +4,6 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.List;
 
 /*-
  * #%L
@@ -33,10 +32,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import io.quarkus.vertx.http.Compressed;
 import io.resys.thena.tasks.client.api.TaskClient;
 import io.resys.thena.tasks.client.api.model.ImmutableCreateTask;
-import io.resys.thena.tasks.client.api.model.Task;
 import io.resys.thena.tasks.client.api.model.TaskCommand.CreateTask;
 import io.resys.thena.tasks.dev.app.BeanFactory.CurrentProject;
 import io.smallrye.mutiny.Uni;
@@ -44,11 +41,9 @@ import io.vertx.mutiny.core.Vertx;
 import lombok.Builder;
 import lombok.Data;
 import lombok.extern.jackson.Jacksonized;
-import lombok.extern.slf4j.Slf4j;
 
-@Path("q/tasks/api/")
-@Slf4j
-public class TestResource {
+@Path("q/demo/api/")
+public class DemoResource {
   @Inject Vertx vertx;
   @Inject TaskClient client;
   @Inject CurrentProject currentProject;
@@ -61,7 +56,7 @@ public class TestResource {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @Path("demo/populate/{totalTasks}")
+  @Path("populate/tasks/{totalTasks}")
   public Uni<HeadState> populate(@PathParam("totalTasks") String totalTasks) {
     final int count = totalTasks == null ? 50 : Integer.parseInt(totalTasks);
 
@@ -99,7 +94,7 @@ public class TestResource {
   
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @Path("demo/clear")
+  @Path("clear/tasks")
   public Uni<HeadState> clear() {
     return client.repo().query().repoName(currentProject.getProjectId()).headName(currentProject.getHead()).createIfNot()
         .onItem().transformToUni(created -> {
@@ -110,28 +105,17 @@ public class TestResource {
         });
   }
   
-  
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @Path("init")
-  public Uni<HeadState> init() {
-    return client.repo().query().repoName(currentProject.getProjectId()).headName(currentProject.getHead()).createIfNot()
-        .onItem().transform(created -> HeadState.builder().created(true).build());
-  }
-
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("reinit")
+  @Path("reinit/tasks")
   public Uni<HeadState> reinit() {
     return client.repo().query().repoName(currentProject.getProjectId()).headName(currentProject.getHead()).delete()
         .onItem().transformToUni(junk -> init());
   }
-  
-  @Compressed
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("active/tasks")
-  public Uni<List<Task>> findAllActiveTasks() {
-    return client.tasks().queryActiveTasks().findAll();
+
+  private Uni<HeadState> init() {
+    return client.repo().query().repoName(currentProject.getProjectId()).headName(currentProject.getHead()).createIfNot()
+        .onItem().transform(created -> HeadState.builder().created(true).build());
   }
+
 }

@@ -17,14 +17,34 @@ import TaskPriority from 'core/TaskPriority';
 
 
 const Title: React.FC<{}> = () => {
-  const { state } = Client.useTaskEdit();
+  const { state, setState } = Client.useTaskEdit();
+  const backend = Client.useBackend();
+
   const intl = useIntl();
+  const [title, setTitle] = React.useState(state.task.title);
+
+  function handleTitleChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setTitle(event.target.value);
+  }
+
+  async function handleChange() {
+    const command: Client.ChangeTaskInfo = {
+      commandType: 'ChangeTaskInfo',
+      taskId: state.task.id,
+      description: state.task.description,
+      title,
+    };
+    const updatedTask = await backend.task.updateActiveTask(state.task.id, [command]);
+    setState((current) => current.withTask(updatedTask));
+  }
 
   return (<TextField
     placeholder={intl.formatMessage({ id: 'core.taskEdit.taskTitle' })}
     InputProps={{ sx: { fontSize: '20pt' } }}
     fullWidth
-    value={state.task.title}
+    value={title}
+    onChange={handleTitleChange}
+    onBlur={handleChange}
   />);
 }
 
@@ -47,18 +67,30 @@ const Checklist: React.FC<{}> = () => {
 }
 
 const Status: React.FC<{}> = () => {
-  const { state } = Client.useTaskEdit();
+  const { state, setState } = Client.useTaskEdit();
+  const backend = Client.useBackend();
+
+  async function handleChange(command: Client.ChangeTaskStatus) {
+    const updatedTask = await backend.task.updateActiveTask(state.task.id, [command]);
+    setState((current) => current.withTask(updatedTask));
+  }
 
   return (
-    <TaskStatus task={state.task}/>
+    <TaskStatus task={state.task} onChange={handleChange} />
   )
 }
 
 const Assignee: React.FC<{}> = () => {
-  const { state } = Client.useTaskEdit();
+  const { state, setState } = Client.useTaskEdit();
+  const backend = Client.useBackend();
+
+  async function handleChange(command: Client.AssignTask) {
+    const updatedTask = await backend.task.updateActiveTask(state.task.id, [command]);
+    setState((current) => current.withTask(updatedTask));
+  }
 
   return (
-    <TaskAssignees task={state.task}/>
+    <TaskAssignees task={state.task} onChange={handleChange} />
   )
 }
 
@@ -66,7 +98,7 @@ const Priority: React.FC<{}> = () => {
   const { state } = Client.useTaskEdit();
 
   return (
-    <TaskPriority task={state.task} priorityTextEnabled/>
+    <TaskPriority task={state.task} priorityTextEnabled />
   )
 }
 

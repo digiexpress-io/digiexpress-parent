@@ -80,11 +80,19 @@ public class BeanFactory {
     private final String head = "main";
   }
   
+  @Data @RequiredArgsConstructor
+  public static class CurrentUser {
+    private String userId = "lady sybil vimes";
+  }
+  
   @Produces 
   public CurrentProject currentProject() {
     return new CurrentProject(projectId);
   }
-  
+  @Produces 
+  public CurrentUser currentUser() {
+    return new CurrentUser();
+  }
   
   @Produces
   public TaskClient client(Vertx vertx, ObjectMapper om) {
@@ -118,6 +126,21 @@ public class BeanFactory {
         .objectMapper(om)
         .build();
     return new TaskClientImpl(store);
+  }
+
+  @Produces
+  public ObjectMapper objectMapper() {
+    final var modules = new com.fasterxml.jackson.databind.Module[] {
+        new JavaTimeModule(), 
+        new Jdk8Module(), 
+        new GuavaModule(),
+        new VertxModule(),
+        new VertexExtModule()
+        };
+      DatabindCodec.mapper().registerModules(modules);
+      DatabindCodec.prettyMapper().registerModules(modules);
+      
+    return DatabindCodec.mapper(); 
   }
 
 }

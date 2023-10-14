@@ -31,6 +31,7 @@ export interface TaskDescriptor {
   teamGroupType: TeamGroupType | undefined;
 
   checklist: Checklist[];
+  profile: Profile;
 }
 
 export interface PalleteType {
@@ -52,6 +53,7 @@ export interface PalleteType {
 
 export interface TasksContextType {
   setState: TasksDispatch;
+  reload: () => Promise<void>;
   loading: boolean;
   state: TasksState,
   pallette: PalleteType;

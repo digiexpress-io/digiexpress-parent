@@ -125,7 +125,7 @@ class DefaultStore implements Store {
           });
         });
       }
-      console.log("RESPONSE: ", path, " OK", response);
+      
       return response.json()
       .then(text => {
         return text;

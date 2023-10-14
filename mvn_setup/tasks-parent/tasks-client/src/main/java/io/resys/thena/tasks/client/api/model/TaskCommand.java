@@ -21,8 +21,8 @@ package io.resys.thena.tasks.client.api.model;
  */
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -77,9 +77,13 @@ import io.resys.thena.tasks.client.api.model.Task.TaskExtension;
   @Type(value = ImmutableChangeChecklistItemTitle.class, name = "ChangeChecklistItemTitle")
 })
 public interface TaskCommand extends Serializable {
-  String getUserId();
+  @Nullable String getUserId();
   @Nullable Instant getTargetDate();
   TaskCommandType getCommandType();
+  
+  
+  TaskCommand withUserId(String userId);
+  TaskCommand withTargetDate(Instant targetDate);
   
   enum TaskCommandType {
     CreateTask, ChangeTaskStatus, ChangeTaskPriority, AssignTaskReporter, 
@@ -145,6 +149,8 @@ public interface TaskCommand extends Serializable {
   })
   interface TaskUpdateCommand extends TaskCommand {
     String getTaskId();
+    TaskUpdateCommand withUserId(String userId);
+    TaskUpdateCommand withTargetDate(Instant targetDate);
   }
   
   @Value.Immutable @JsonSerialize(as = ImmutableCreateChecklist.class) @JsonDeserialize(as = ImmutableCreateChecklist.class)

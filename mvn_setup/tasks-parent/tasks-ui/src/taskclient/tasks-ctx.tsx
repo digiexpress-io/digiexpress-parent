@@ -23,30 +23,36 @@ const init: TasksMutatorBuilder = new TasksStateBuilder({
     status: Pallette.status,
     priority: Pallette.priority
   },
-  profile: { contentType: "OK", name: "", userId: "", today: new Date(), roles: []}
+  profile: { contentType: "OK", name: "", userId: "", today: new Date(), roles: [] }
 });
 
 const TasksProvider: React.FC<{ children: React.ReactNode, backend: Client, profile: Profile }> = ({ children, backend, profile }) => {
-  
+
   const [loading, setLoading] = React.useState<boolean>(true);
   const [state, setState] = React.useState<TasksMutatorBuilder>(init.withProfile(profile));
   const setter: TasksDispatch = React.useCallback((mutator: TasksMutator) => setState(mutator), [setState]);
 
   const contextValue: TasksContextType = React.useMemo(() => {
-    return { state, setState: setter, loading, pallette: Pallette };
-  }, [state, setter, loading]);
+    return {
+      state, setState: setter, loading, pallette: Pallette, reload: async () => {
+        backend.task.getActiveTasks().then(data => {
+          setState(prev => prev.withTasks(data.records))
+        });
+      }
+    };
+  }, [state, setter, loading, setLoading]);
 
   React.useEffect(() => {
-    if(!loading) {
+    if (!loading) {
       return;
     }
     backend.task.getActiveTasks().then(data => {
       setLoading(false);
       setState(prev => prev.withProfile(profile).withTasks(data.records))
     });
-    
+
   }, [loading, setLoading, backend, profile]);
-  
+
   return (<TasksContext.Provider value={contextValue}>{children}</TasksContext.Provider>);
 };
 

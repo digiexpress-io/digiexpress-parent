@@ -14,30 +14,38 @@ function getActiveColor(currentlyShowing: Client.TaskStatus, status: Client.Task
   return color;
 }
 
-const TaskStatus: React.FC<{ task: Client.TaskDescriptor }> = ({ task }) => {
+const TaskStatus: React.FC<{ task: Client.TaskDescriptor, onChange: (command: Client.ChangeTaskStatus) => Promise<void> }> = ({ task, onChange }) => {
   const status = task.status;
   const intl = useIntl();
   const Popover = useMockPopover();
   const statusLabel = intl.formatMessage({ id: `tasktable.header.spotlight.status.${status}` }).toUpperCase();
 
+  async function handleStatusChange(newStatus: Client.TaskStatus) {
+    const command: Client.ChangeTaskStatus = {
+      commandType: 'ChangeTaskStatus',
+      status: newStatus,
+      taskId: task.id
+    };
+    onChange(command).then(() => Popover.onClose());
+  }
   return (
     <Box>
-      <Chip 
-        onClick={Popover.onClick} 
+      <Chip
+        onClick={Popover.onClick}
         label={statusLabel}
         sx={{
-          backgroundColor: statusColors[status], 
+          backgroundColor: statusColors[status],
           color: "primary.contrastText",
           ml: 0,
-          ":hover": { backgroundColor: "#404c64"}
-        }} 
+          ":hover": { backgroundColor: "#404c64" }
+        }}
       />
-      <Popover.Delegate>
+      <Popover.Delegate onClose={Popover.onClose}>
         <List dense sx={{ py: 0 }}>
           {statusOptions.map((option: Client.TaskStatus) => (
-            <MenuItem key={option} onClick={Popover.onClose} sx={{ display: "flex", pl: 0, py: 0 }}>
-              <Box sx={{ width: 8, height: 40, backgroundColor: statusColors[option]}} />
-              <Box sx={{ width: 8, height: 8, borderRadius: "50%", mx: 2, backgroundColor: getActiveColor(option, status)}} />
+            <MenuItem key={option} onClick={() => handleStatusChange(option)} sx={{ display: "flex", pl: 0, py: 0 }}>
+              <Box sx={{ width: 8, height: 40, backgroundColor: statusColors[option] }} />
+              <Box sx={{ width: 8, height: 8, borderRadius: "50%", mx: 2, backgroundColor: getActiveColor(option, status) }} />
               <ListItemText><FormattedMessage id={`task.status.${option}`} /></ListItemText>
             </MenuItem>
           ))}

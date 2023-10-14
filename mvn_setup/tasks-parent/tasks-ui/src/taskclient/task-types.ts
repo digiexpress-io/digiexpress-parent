@@ -75,16 +75,16 @@ export interface TaskHistory {
 }
 
 export interface TaskCommand {
-  targetDate: string | undefined;
-  userId: string;
+  targetDate?: string;
+  userId?: string;
   commandType: TaskCommandType;
 }
 
 export type TaskCommandType =
   'CreateTask' | 'ChangeTaskStatus' | 'ChangeTaskPriority' | 'AssignTaskReporter' | 'ArchiveTask' |
-  'CommentOnTask' | 'ChangeTaskComment' | 'AssignTaskRoles' | 'AssignTask' | 'ChangeTaskStartDate' | 'ChangeTaskDueDate' | 
+  'CommentOnTask' | 'ChangeTaskComment' | 'AssignTaskRoles' | 'AssignTask' | 'ChangeTaskStartDate' | 'ChangeTaskDueDate' |
   'AssignTaskParent' | 'ChangeTaskInfo' | 'CreateTaskExtension' | 'ChangeTaskExtension' |
-  'CreateChecklist' | 'ChangeChecklistTitle' | 'DeleteChecklist' | 'AddChecklistItem' | 'DeleteChecklistItem' | 
+  'CreateChecklist' | 'ChangeChecklistTitle' | 'DeleteChecklist' | 'AddChecklistItem' | 'DeleteChecklistItem' |
   'ChangeChecklistItemAssignees' | 'ChangeChecklistItemCompleted' | 'ChangeChecklistItemDueDate' | 'ChangeChecklistItemTitle';
 
 export interface TaskUpdateCommand<T extends TaskCommandType> extends TaskCommand {
@@ -233,5 +233,7 @@ export interface TaskPagination {
 export interface TaskStore {
   getActiveTasks(): Promise<TaskPagination>
   getActiveTask(id: TaskId): Promise<Task>
+
+  updateActiveTask(id: TaskId, commands: TaskUpdateCommand<any>[]): Promise<Task>
 }
 

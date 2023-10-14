@@ -27,9 +27,9 @@ const TaskList: React.FC<{
     TaskItem: React.ElementType<{ task: Client.TaskDescriptor }>;
     TaskItemActive: React.ElementType<{ task: Client.TaskDescriptor | undefined }>;
   }
-}> = ({ state: tabsState, children }) => {
+}> = ({ state: initTabsState, children }) => {
 
-  const [state, setState] = React.useState<TaskListState>(initTabs(tabsState));
+  const [state, setState] = React.useState<TaskListState>(initTabs([]));
   const [table, setTable] = React.useState(initTable([]));
 
   function handleActiveTab(newValue: number) {
@@ -50,11 +50,23 @@ const TaskList: React.FC<{
 
 
   React.useEffect(() => {
+    if (state.tabs.length === 0) {
+      return;
+    }
     const { activeTab } = state;
     const { records } = state.tabs[activeTab].group;
     setTable((src) => src.withSrc(records).withPage(0));
   }, [state, setTable])
 
+  React.useEffect(() => {
+    setState(initTabs(initTabsState))
+  }, [initTabsState]);
+
+
+
+  if (state.tabs.length === 0) {
+    return null;
+  }
 
   const { TaskItem, TaskItemActive } = children;
 

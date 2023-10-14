@@ -3,6 +3,7 @@ import Burger from '@the-wrench-io/react-burger';
 import { ImmutableTabData } from './session';
 import { Tab, TabEntity, TabBody, Document } from './composer-types';
 import { ComposerContext, ComposerContextType, ClientContextType, ClientContext } from './client-ctx';
+import { UserId } from './client-types';
 import ArticleTabIndicator from './Components/ArticleTabIndicator';
 import { TasksContext } from './tasks-ctx';
 import { TasksContextType, TaskDescriptor } from './tasks-ctx-types';
@@ -67,7 +68,7 @@ export const useTasks = () => {
   return result;
 }
 
-export const useAssignees = (row: TaskDescriptor) => {
+export const useAssignees = (row: { assignees: UserId[] }) => {
   const org = useOrg();
   const [searchString, setSearchString] = React.useState<string>('');
   const searchResults = React.useMemo(() => org.state.findUsers(searchString, row.assignees), [row, searchString, org]);

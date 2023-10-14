@@ -1,5 +1,5 @@
 import React from 'react';
-import { SxProps, List,  MenuItem, ListItemText, Box, Button, Typography } from '@mui/material';
+import { SxProps, List, MenuItem, ListItemText, Box, Button, Typography } from '@mui/material';
 import EmojiFlagsIcon from '@mui/icons-material/EmojiFlags';
 import { FormattedMessage } from 'react-intl';
 
@@ -9,7 +9,7 @@ import { useMockPopover } from 'core/TaskTable/MockPopover';
 const priorityColors = Client.PriorityPalette;
 const priorityOptions: Client.TaskPriority[] = ['LOW', 'HIGH', 'MEDIUM'];
 
-function getEmojiFlagSx(priority: Client.TaskPriority): SxProps{
+function getEmojiFlagSx(priority: Client.TaskPriority): SxProps {
   const color = priorityColors[priority];
   return { color, ':hover': { color }, mr: 1 };
 }
@@ -30,12 +30,12 @@ const TaskPriority: React.FC<{ task: Client.TaskDescriptor, priorityTextEnabled?
         <EmojiFlagsIcon sx={getEmojiFlagSx(priority)} />
         {priorityTextEnabled && <Typography><FormattedMessage id={'task.priority.' + priority} /></Typography>}
       </Button>
-      <Popover.Delegate>
+      <Popover.Delegate onClose={Popover.onClose}>
         <List dense sx={{ py: 0 }}>
           {priorityOptions.map((option: Client.TaskPriority) => (
             <MenuItem key={option} onClick={Popover.onClose} sx={{ display: "flex", pl: 0, py: 0 }}>
-              <Box sx={{ width: 8, height: 40, backgroundColor: priorityColors[option]}} />
-              <Box sx={{ width: 8, height: 8, borderRadius: "50%", mx: 2, backgroundColor: getActiveColor(option, priority)}} />
+              <Box sx={{ width: 8, height: 40, backgroundColor: priorityColors[option] }} />
+              <Box sx={{ width: 8, height: 8, borderRadius: "50%", mx: 2, backgroundColor: getActiveColor(option, priority) }} />
               <ListItemText><FormattedMessage id={`task.priority.${option}`} /></ListItemText>
             </MenuItem>
           ))}

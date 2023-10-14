@@ -93,7 +93,7 @@ public class TaskArchiveTest extends TaskTestCase {
     
     log.debug(super.printRepo(client));
 
-    final var archivedTasks = client.tasks().queryArchivedTasks().build(LocalDate.ofInstant(getTargetDate(), ZoneId.of("UTC"))).await().atMost(atMost);
+    final var archivedTasks = client.tasks().queryArchivedTasks().findAll(LocalDate.ofInstant(getTargetDate(), ZoneId.of("UTC"))).await().atMost(atMost);
     Assertions.assertEquals(2, archivedTasks.size());
   }
 }

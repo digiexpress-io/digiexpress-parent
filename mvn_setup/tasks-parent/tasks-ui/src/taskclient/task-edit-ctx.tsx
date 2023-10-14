@@ -2,13 +2,14 @@ import React from 'react';
 import { TaskEditContextType, TaskEditMutator, TaskEditDispatch, TaskEditMutatorBuilder } from './task-edit-ctx-types';
 import { TaskEditStateBuilder } from './task-edit-ctx-impl';
 import { TaskDescriptor } from './tasks-ctx-types';
+import { useTasks } from './hooks';
 
 const TaskEditContext = React.createContext<TaskEditContextType>({} as TaskEditContextType);
 
 
 const TaskEditProvider: React.FC<{ children: React.ReactNode, task: TaskDescriptor }> = ({ children, task }) => {
 
-  const [state, setState] = React.useState<TaskEditMutatorBuilder>(new TaskEditStateBuilder({task, userId: "jocelyn.mutso", events: []}));
+  const [state, setState] = React.useState<TaskEditMutatorBuilder>(new TaskEditStateBuilder({ task, today: new Date(), events: [] }));
   const setter: TaskEditDispatch = React.useCallback((mutator: TaskEditMutator) => setState(mutator), [setState]);
 
   const contextValue: TaskEditContextType = React.useMemo(() => {
@@ -16,9 +17,9 @@ const TaskEditProvider: React.FC<{ children: React.ReactNode, task: TaskDescript
   }, [state, setter]);
 
   React.useMemo(() => {
-    
-    setState(previous => previous.withTask(task));
-    
+
+    setState(previous => previous.withTaskDescriptor(task));
+
   }, [task, setState]);
 
 

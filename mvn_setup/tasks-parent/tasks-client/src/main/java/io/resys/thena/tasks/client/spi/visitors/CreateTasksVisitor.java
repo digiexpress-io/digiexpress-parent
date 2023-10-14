@@ -39,7 +39,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class CreateTasksVisitor implements DocCommitVisitor<Task> {
-  private final List<CreateTask> commands;
+  private final List<? extends CreateTask> commands;
   private final List<Task> createdTasks = new ArrayList<Task>();
   
   @Override

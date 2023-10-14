@@ -11,8 +11,12 @@ const FormattedCell: React.FC<{
   def: Client.Group
 }> = ({ row }) => {
 
+
+
   return (
-    <StyledTableCell width="100px" sx={{ pl: 0 }}><TaskStatus task={row} /></StyledTableCell>
+    <StyledTableCell width="100px" sx={{ pl: 0 }}><TaskStatus task={row} onChange={async (command) => {
+
+    }} /></StyledTableCell>
   );
 }
 

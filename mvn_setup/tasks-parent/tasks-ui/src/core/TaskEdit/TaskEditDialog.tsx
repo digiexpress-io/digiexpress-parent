@@ -90,19 +90,25 @@ const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
 
 const TaskEditDialog: React.FC<{ open: boolean, onClose: () => void, task?: TaskClient.TaskDescriptor }> = (props) => {
+  const tasks = TaskClient.useTasks();
+
 
   if (!props.open || !props.task) {
     return null;
   }
 
+  function handleClose() {
+    tasks.reload().then(() => props.onClose());
+  }
+
   return (
     <TaskClient.EditProvider task={props.task}>
       <StyledFullScreenDialog
-        header={<Header onClose={props.onClose} />}
-        footer={<Footer onClose={props.onClose} />}
+        header={<Header onClose={handleClose} />}
+        footer={<Footer onClose={handleClose} />}
         left={<Left />}
         right={<Right />}
-        onClose={props.onClose}
+        onClose={handleClose}
         open={props.open}
       />
     </TaskClient.EditProvider>);

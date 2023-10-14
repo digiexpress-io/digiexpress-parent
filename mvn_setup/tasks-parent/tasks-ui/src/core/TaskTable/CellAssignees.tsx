@@ -9,9 +9,17 @@ const FormattedCell: React.FC<{
   row: Client.TaskDescriptor,
 }> = ({ row }) => {
 
+  const tasks = Client.useTasks();
+  const backend = Client.useBackend();
+
+  async function handleChange(command: Client.AssignTask) {
+    const updatedTask = await backend.task.updateActiveTask(row.id, [command]);
+    await tasks.reload();
+  }
+
   return (
     <StyledTableCell width="150px">
-      <TaskAssignees task={row}/>
+      <TaskAssignees task={row} onChange={handleChange} />
     </StyledTableCell>
   );
 }

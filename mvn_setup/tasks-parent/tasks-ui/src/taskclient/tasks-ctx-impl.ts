@@ -421,6 +421,7 @@ class TaskDescriptorImpl implements TaskDescriptor {
   private _ownersAvatars: AvatarCode[];
   private _myWorkType: AssigneeGroupType | undefined;
   private _teamspaceType: TeamGroupType | undefined;
+  private _profile: Profile;
 
   constructor(entry: Task, profile: Profile, today: Date) {
     this._entry = entry;
@@ -433,11 +434,13 @@ class TaskDescriptorImpl implements TaskDescriptor {
     this._ownersAvatars = getAvatar(entry.assigneeIds);
     this._myWorkType = getMyWorkType(entry, profile, today);
     this._teamspaceType = getTeamspaceType(entry, profile, today);
+    this._profile = profile;
   }
 
   get transactions() { return this._entry.transactions }
   get assigneeGroupType() { return this._myWorkType }
   get teamGroupType() { return this._teamspaceType }
+  get profile() { return this._profile }
   get id() { return this._entry.id }
   get dialobId() { return this._dialobId }
   get entry() { return this._entry }
@@ -494,7 +497,7 @@ function getMyWorkType(task: Task, profile: Profile, today: Date): AssigneeGroup
   if (startDate && isEqual(parseISO(startDate), today)) {
     return "assigneeStartsToday";
   }
-  if(task.status === 'IN_PROGRESS'){
+  if (task.status === 'IN_PROGRESS') {
     return "assigneeCurrentlyWorking";
   }
   return "assigneeOther";

@@ -35,7 +35,6 @@ import io.resys.thena.tasks.client.api.model.ImmutableCreateTask;
 import io.resys.thena.tasks.client.api.model.Project;
 import io.resys.thena.tasks.client.api.model.Task;
 import io.resys.thena.tasks.client.api.model.Task.Priority;
-import io.resys.thena.tasks.client.api.model.TaskCommand.TaskCommandType;
 import io.resys.thena.tasks.tests.config.TaskTestCase;
 
 
@@ -49,7 +48,7 @@ public class RestApiTest {
   public void projects() throws JsonProcessingException {
 
     final Project[] response = RestAssured.given().when()
-      .get("/q/tasks/api/projects").then()
+      .get("/q/digiexpress/api/projects").then()
       .statusCode(200).contentType("application/json")
       .extract().as(Project[].class);
 
@@ -59,7 +58,7 @@ public class RestApiTest {
   @Test
   public void getTasks() throws JsonProcessingException {
     final Task[] response = RestAssured.given().when()
-      .get("/q/tasks/api/projects/1/tasks/").then()
+      .get("/q/digiexpress/api/tasks").then()
       .statusCode(200)
       .contentType("application/json")
       .extract().as(Task[].class);
@@ -81,7 +80,7 @@ public class RestApiTest {
 
     final Task[] response = RestAssured.given()
       .body(Arrays.asList(body)).accept("application/json").contentType("application/json")
-      .when().post("/q/tasks/api/projects/1/tasks").then()
+      .when().post("/q/digiexpress/api/tasks").then()
       .statusCode(200).contentType("application/json")
       .extract().as(Task[].class);
   
@@ -102,7 +101,7 @@ public class RestApiTest {
 
       final Task[] response = RestAssured.given()
         .body(Arrays.asList(body, body)).accept("application/json").contentType("application/json")
-        .when().post("/q/tasks/api/projects/1/tasks").then()
+        .when().post("/q/digiexpress/api/tasks").then()
         .statusCode(200).contentType("application/json")
         .extract().as(Task[].class);
     
@@ -121,7 +120,7 @@ public class RestApiTest {
 
       final Task[] response = RestAssured.given()
         .body(Arrays.asList(command, command, command, command)).accept("application/json").contentType("application/json")
-        .when().put("/q/tasks/api/projects/1/tasks").then()
+        .when().put("/q/digiexpress/api/tasks").then()
         .statusCode(200).contentType("application/json")
         .extract().as(Task[].class);
     
@@ -141,7 +140,7 @@ public class RestApiTest {
 
       final Task response = RestAssured.given()
         .body(Arrays.asList(command, command, command, command)).accept("application/json").contentType("application/json")
-        .when().put("/q/tasks/api/projects/1/tasks/2").then()
+        .when().put("/q/digiexpress/api/tasks/2").then()
         .statusCode(200).contentType("application/json")
         .extract().as(Task.class);
     
@@ -152,7 +151,7 @@ public class RestApiTest {
   public void findArchivedTasks() throws JsonProcessingException {
 
       final Task[] response = RestAssured.given().when()
-          .get("/q/tasks/api/projects/1/archive/2022-11-09/tasks").then()
+          .get("/q/digiexpress/api/archive/2022-11-09").then()
         .statusCode(200).contentType("application/json")
         .extract().as(Task[].class);
     
@@ -170,7 +169,7 @@ public class RestApiTest {
     
       final Task response = RestAssured.given()
           .body(Arrays.asList(command)).accept("application/json").contentType("application/json")
-          .when().delete("/q/tasks/api/projects/1/tasks/1").then()
+          .when().delete("/q/digiexpress/api/tasks/1").then()
         .statusCode(200).contentType("application/json")
         .extract().as(Task.class);
     
@@ -188,7 +187,7 @@ public class RestApiTest {
     
       final Task[] response = RestAssured.given()
           .body(Arrays.asList(command, command)).accept("application/json").contentType("application/json")
-          .when().delete("/q/tasks/api/projects/1/tasks").then()
+          .when().delete("/q/digiexpress/api/tasks").then()
         .statusCode(200).contentType("application/json")
         .extract().as(Task[].class);
     

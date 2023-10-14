@@ -49,7 +49,7 @@ public class ArchivedTasksQueryImpl implements ArchivedTasksQuery {
   private String reporterId;
 
   @Override
-  public Uni<List<Task>> build(LocalDate fromCreatedOrUpdated) {
+  public Uni<List<Task>> findAll(LocalDate fromCreatedOrUpdated) {
     return ctx.getConfig().accept(new GetArchivedTasksVisitor(title, description, reporterId, fromCreatedOrUpdated));
   }
 

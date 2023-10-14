@@ -24,11 +24,11 @@ const useMockPopover = () => {
   }, [setAnchorEl]);
 
 
-  const Delegate: React.FC<{ children: React.ReactNode }> = React.useCallback(({ children }) => {
-    return (<TablePopover open={open} onClose={handleClose} anchorEl={anchorEl}>
+  const Delegate: React.FC<{ children: React.ReactNode, onClose: () => void }> = React.useCallback(({ children, onClose }) => {
+    return (<TablePopover open={open} anchorEl={anchorEl} onClose={onClose}>
       {children}
     </TablePopover>)
-  }, [open, handleClose, anchorEl])
+  }, [open, anchorEl])
 
   return { Delegate, onClick: handleClick, onClose: handleClose };
 }

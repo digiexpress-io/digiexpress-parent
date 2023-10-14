@@ -61,7 +61,6 @@ const DialogDivider: React.FC<{}> = () => {
 
 
 const StyledFullScreenDialog: React.FC<StyledFullScreenDialogProps> = (props) => {
-
   return (
     <Dialog open={props.open} onClose={props.onClose} fullScreen sx={{ m: 2 }}>
       <StyledDialogTitle sx={props.shortHeader ? shortHeaderSx : {}}>{props.header}</StyledDialogTitle>

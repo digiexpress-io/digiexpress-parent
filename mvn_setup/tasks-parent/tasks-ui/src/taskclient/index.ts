@@ -10,6 +10,32 @@ import {
 
 import {
   TaskId, Task, TaskPriority, TaskStatus,
+
+  CreateTask,
+  ChangeTaskStartDate,
+  AssignTaskReporter,
+  ArchiveTask,
+  ChangeTaskStatus,
+  ChangeTaskPriority,
+  AssignTaskParent,
+  CommentOnTask,
+  ChangeTaskComment,
+  AssignTaskRoles,
+  AssignTask,
+  ChangeTaskDueDate,
+  ChangeTaskInfo,
+  CreateTaskExtension,
+  ChangeTaskExtension,
+  CreateChecklist,
+  ChangeChecklistTitle,
+  DeleteChecklist,
+  AddChecklistItem,
+  DeleteChecklistItem,
+  ChangeChecklistItemAssignees,
+  ChangeChecklistItemCompleted,
+  ChangeChecklistItemDueDate,
+  ChangeChecklistItemTitle
+
 } from './task-types';
 
 import {
@@ -85,7 +111,7 @@ declare namespace TaskClient {
     TabEntity, TabBody, Tab,
     PageUpdate, Session, Actions
   }
-  
+
   export type {
     ScreenState
   }
@@ -118,7 +144,33 @@ declare namespace TaskClient {
     CreateTaskExtensionEventBody,
     ChangeTaskExtensionEventBody,
     SingleEvent, CollapsedEvent
+  }
 
+  export type {
+    CreateTask,
+    ChangeTaskStartDate,
+    AssignTaskReporter,
+    ArchiveTask,
+    ChangeTaskStatus,
+    ChangeTaskPriority,
+    AssignTaskParent,
+    CommentOnTask,
+    ChangeTaskComment,
+    AssignTaskRoles,
+    AssignTask,
+    ChangeTaskDueDate,
+    ChangeTaskInfo,
+    CreateTaskExtension,
+    ChangeTaskExtension,
+    CreateChecklist,
+    ChangeChecklistTitle,
+    DeleteChecklist,
+    AddChecklistItem,
+    DeleteChecklistItem,
+    ChangeChecklistItemAssignees,
+    ChangeChecklistItemCompleted,
+    ChangeChecklistItemDueDate,
+    ChangeChecklistItemTitle
   }
 }
 

@@ -43,7 +43,7 @@ public class CreateTasksImpl implements CreateTasks {
   }
   
   @Override
-  public Uni<List<Task>> createMany(List<CreateTask> commands) {
+  public Uni<List<Task>> createMany(List<? extends CreateTask> commands) {
     return ctx.getConfig().accept(new CreateTasksVisitor(commands));
   }
 

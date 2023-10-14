@@ -43,7 +43,7 @@ public interface TaskActions {
 
   interface CreateTasks {
     Uni<Task> createOne(CreateTask command);
-    Uni<List<Task>> createMany(List<CreateTask> commands);
+    Uni<List<Task>> createMany(List<? extends CreateTask> commands);
   }
 
   interface UpdateTasks {
@@ -65,7 +65,7 @@ public interface TaskActions {
     ArchivedTasksQuery title(String likeTitle); // like == doesn't need to match exactly. If a title contains "bob", then it can be matched by bob
     ArchivedTasksQuery description(String likeDescription);
     ArchivedTasksQuery reporterId(String reporterId);
-    Uni<List<Task>> build(LocalDate fromCreatedOrUpdated);
+    Uni<List<Task>> findAll(LocalDate fromCreatedOrUpdated);
   }
   
   interface TaskHistoryQuery {
