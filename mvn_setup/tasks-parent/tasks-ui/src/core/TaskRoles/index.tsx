@@ -75,7 +75,13 @@ const TaskRoles: React.FC<{ task: Client.TaskDescriptor, onChange: (command: Cli
             <MenuItem key={role.roleId} sx={{ display: "flex", pl: 0, py: 0 }}>
               <Box sx={{ width: 8, height: 40, backgroundColor: roleColors[role.roleId] }} />
               <Box ml={1}>
-                <Checkbox checked={checked} size='small' sx={{ height: "40px" }} onChange={() => handleToggleRole(role, checked)} />
+                <Checkbox checked={checked} size='small' sx={{
+                  height: "40px",
+                  color: 'uiElements.main',
+                  '&.Mui-checked': {
+                    color: 'uiElements.main',
+                  },
+                }} onChange={() => handleToggleRole(role, checked)} />
               </Box>
               <ListItemText>{role.displayName}</ListItemText>
             </MenuItem>

@@ -76,7 +76,14 @@ const TaskAssignees: React.FC<{ task: Client.TaskDescriptor, onChange: (command:
             <MenuItem key={user.userId} sx={{ display: "flex", pl: 0, py: 0 }}>
               <Box sx={{ width: 8, height: 40, backgroundColor: assigneeColors[user.userId] }} />
               <Box ml={1}>
-                <Checkbox checked={checked} size='small' sx={{ height: "40px" }} onChange={() => handleToggleUser(user, checked)} />
+                <Checkbox checked={checked} size='small'
+                  sx={{
+                    height: "40px",
+                    color: 'uiElements.main',
+                    '&.Mui-checked': {
+                      color: 'uiElements.main',
+                    },
+                  }} onChange={() => handleToggleUser(user, checked)} />
               </Box>
               <ListItemText>{user.displayName}</ListItemText>
             </MenuItem>
