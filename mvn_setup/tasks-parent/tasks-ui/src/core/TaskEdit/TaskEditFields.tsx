@@ -95,10 +95,16 @@ const Assignee: React.FC<{}> = () => {
 }
 
 const Priority: React.FC<{}> = () => {
-  const { state } = Client.useTaskEdit();
+  const { state, setState } = Client.useTaskEdit();
+  const backend = Client.useBackend();
+
+  async function handleChange(command: Client.ChangeTaskPriority) {
+    const updatedTask = await backend.task.updateActiveTask(state.task.id, [command]);
+    setState((current) => current.withTask(updatedTask));
+  }
 
   return (
-    <TaskPriority task={state.task} priorityTextEnabled />
+    <TaskPriority task={state.task} priorityTextEnabled onChange={handleChange} />
   )
 }
 

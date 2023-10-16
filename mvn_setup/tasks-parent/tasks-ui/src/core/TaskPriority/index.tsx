@@ -20,9 +20,23 @@ function getActiveColor(currentlyShowing: Client.TaskPriority, priority: Client.
   return color;
 }
 
-const TaskPriority: React.FC<{ task: Client.TaskDescriptor, priorityTextEnabled?: boolean }> = ({ task, priorityTextEnabled }) => {
+const TaskPriority: React.FC<{
+  task: Client.TaskDescriptor,
+  priorityTextEnabled?: boolean,
+  onChange: (command: Client.ChangeTaskPriority) => Promise<void>
+}> = ({ task, priorityTextEnabled, onChange }) => {
   const priority = task.priority;
   const Popover = useMockPopover();
+
+  function handlePriorityChange(newPriority: Client.TaskPriority) {
+    const command: Client.ChangeTaskPriority = {
+      commandType: 'ChangeTaskPriority',
+      priority: newPriority,
+      taskId: task.id
+    }
+    onChange(command).then(() => Popover.onClose());
+  }
+
 
   return (
     <Box>
@@ -33,7 +47,7 @@ const TaskPriority: React.FC<{ task: Client.TaskDescriptor, priorityTextEnabled?
       <Popover.Delegate onClose={Popover.onClose}>
         <List dense sx={{ py: 0 }}>
           {priorityOptions.map((option: Client.TaskPriority) => (
-            <MenuItem key={option} onClick={Popover.onClose} sx={{ display: "flex", pl: 0, py: 0 }}>
+            <MenuItem key={option} onClick={() => handlePriorityChange(option)} sx={{ display: "flex", pl: 0, py: 0 }}>
               <Box sx={{ width: 8, height: 40, backgroundColor: priorityColors[option] }} />
               <Box sx={{ width: 8, height: 8, borderRadius: "50%", mx: 2, backgroundColor: getActiveColor(option, priority) }} />
               <ListItemText><FormattedMessage id={`task.priority.${option}`} /></ListItemText>
