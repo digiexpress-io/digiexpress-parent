@@ -1,74 +1,85 @@
 import React from 'react';
-import { AvatarGroup, Box, ListItemText,AvatarProps, ListItem, Checkbox, Button, Avatar, ListItemTextProps, List, ButtonProps, styled } from '@mui/material';
+import { AvatarGroup, Box, Button, Avatar, List, MenuItem, Checkbox, ListItemText } from '@mui/material';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
-
-import Client from '@taskclient';
-
-import { usePopover } from 'core/TaskTable/CellPopover';
 import SearchField from 'core/SearchField';
-
-const StyledButton = styled(Button)<ButtonProps>(() => ({
-  variant: 'text',
-  color: 'inherit',
-  "&.MuiButtonBase-root": {
-    minWidth: "unset",
-  },
-}));
-
-const StyledAvatar = styled(Avatar)<AvatarProps & {bgcolor: string | undefined}>(({ bgcolor, theme }) => ({
-  backgroundColor: bgcolor,
-  width: 24,
-  height: 24,
-  fontSize: 10
-}));
-
-const StyledAdminPanelSettingsIcon = styled(AdminPanelSettingsIcon)(() => ({
-  fontSize: 15
-}));
-
-const StyledListItemText = styled(ListItemText)<ListItemTextProps>(({theme}) => ({
-  marginLeft: theme.spacing(1)
-}));
+import { useMockPopover } from 'core/TaskTable/MockPopover';
+import Client from '@taskclient';
 
 const RoleAvatar: React.FC<{ children?: Client.AvatarCode, onClick?: (event: React.MouseEvent<HTMLElement>) => void }> = ({ children, onClick }) => {
   const { state } = Client.useTasks();
-  const bgcolor: string | undefined = children ? state.pallette.roles[children.value] : undefined;
-
-  const avatar = children ? children.twoletters : <StyledAdminPanelSettingsIcon />;
+  const roleColors = state.pallette.roles;
+  const bgcolor: string | undefined = children ? roleColors[children.value] : undefined;
+  const avatar = children ? children.twoletters : <AdminPanelSettingsIcon sx={{ fontSize: 15 }} />;
 
   return (
-    <StyledAvatar onClick={onClick} bgcolor={bgcolor}>
+    <Avatar onClick={onClick}
+      sx={{
+        bgcolor,
+        width: 24,
+        height: 24,
+        fontSize: 10
+      }}
+    >
       {avatar}
-    </StyledAvatar>
+    </Avatar>
   );
 }
-  
-const TaskRoles: React.FC<{ task: Client.TaskDescriptor }> = ({ task }) => {
-  const Popover = usePopover();
-  const { setSearchString, searchResults } = Client.useRoles(task);
 
-  const taskRoleAvatars = task.rolesAvatars.length ? 
+const TaskRoles: React.FC<{ task: Client.TaskDescriptor, onChange: (command: Client.AssignTaskRoles) => Promise<void> }> = ({ task, onChange }) => {
+  const { state } = Client.useTasks();
+  const roleColors = state.pallette.roles;
+
+  const [newRoles, setNewRoles] = React.useState(task.roles);
+  const { setSearchString, searchResults } = Client.useRoles({ roles: newRoles });
+  const Popover = useMockPopover();
+
+  function handleToggleRole(role: Client.Role, currentlyChecked: boolean) {
+    setNewRoles(currentListOfRoleIds => {
+      const withoutCurrentRole = [...currentListOfRoleIds.filter((id) => id !== role.roleId)];
+
+      // remove role
+      if (currentlyChecked) {
+        return withoutCurrentRole;
+      }
+      // add role
+      return [...withoutCurrentRole, role.roleId];
+    })
+  }
+
+  const taskRoleAvatars = task.rolesAvatars.length ?
     <AvatarGroup spacing='medium' onClick={Popover.onClick}>
       {task.rolesAvatars.map((role: Client.AvatarCode) => (<RoleAvatar key={role.value}>{role}</RoleAvatar>))}
-    </AvatarGroup> : 
-    <RoleAvatar onClick={Popover.onClick}/>;
+    </AvatarGroup> :
+    <RoleAvatar onClick={Popover.onClick} />;
+
+  function onSubmit() {
+    const isChanges = newRoles.sort().toString() !== task.roles.sort().toString();
+    if (isChanges) {
+      onChange({ roles: newRoles, commandType: 'AssignTaskRoles', taskId: task.id })
+        .then(() => Popover.onClose());
+      return;
+    }
+    Popover.onClose();
+  }
 
   return (
     <Box>
-      <StyledButton>
+      <Button variant='text' color='inherit' sx={{ "&.MuiButtonBase-root": { minWidth: "unset" } }}>
         {taskRoleAvatars}
-      </StyledButton>
-      <Popover.Delegate>
+      </Button>
+
+      <Popover.Delegate onClose={onSubmit}>
         <SearchField onChange={setSearchString} />
-        <List dense>
-          {
-            searchResults.map(({ avatar, role, checked }) => (
-              <ListItem key={role.roleId}>
-                <Checkbox checked={checked} />
-                <RoleAvatar>{avatar}</RoleAvatar>
-                <StyledListItemText>{role.displayName}</StyledListItemText>
-              </ListItem>
-            ))
+        <List dense sx={{ py: 0 }}>
+          {searchResults.map(({ role, checked }) => (
+            <MenuItem key={role.roleId} sx={{ display: "flex", pl: 0, py: 0 }}>
+              <Box sx={{ width: 8, height: 40, backgroundColor: roleColors[role.roleId] }} />
+              <Box ml={1}>
+                <Checkbox checked={checked} size='small' sx={{ height: "40px" }} onChange={() => handleToggleRole(role, checked)} />
+              </Box>
+              <ListItemText>{role.displayName}</ListItemText>
+            </MenuItem>
+          ))
           }
         </List>
       </Popover.Delegate>

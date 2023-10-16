@@ -11,8 +11,16 @@ const FormattedCell: React.FC<{
   def: Client.Group
 }> = ({ row }) => {
 
+  const tasks = Client.useTasks();
+  const backend = Client.useBackend();
+
+  async function handleChange(command: Client.AssignTaskRoles) {
+    await backend.task.updateActiveTask(row.id, [command]);
+    await tasks.reload();
+  }
+
   return (
-    <StyledTableCell><TaskRoles task={row} /></StyledTableCell>
+    <StyledTableCell><TaskRoles task={row} onChange={handleChange} /></StyledTableCell>
   );
 }
 

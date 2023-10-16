@@ -5,7 +5,7 @@ import { TablePagination, TablePagination as TablePaginationAs } from './table-p
 
 import {
   ClientError, Client, StoreConfig, Store,
-  ProgramMessage, Org, User
+  ProgramMessage, Org, User, Role
 } from './client-types';
 
 import {
@@ -102,7 +102,7 @@ declare namespace TaskClient {
     Profile,
     TaskId, Task, TaskPriority, TaskStatus,
     ClientError, Client, StoreConfig, Store,
-    Org, User, AvatarCode,
+    Org, User, Role, AvatarCode,
     ProgramMessage
   }
 

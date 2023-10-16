@@ -1,11 +1,9 @@
 import React from 'react';
 import { AvatarGroup, Box, ListItemText, Checkbox, Button, Avatar, List, MenuItem } from '@mui/material';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
-
-import Client from '@taskclient';
-
 import SearchField from 'core/SearchField';
 import { useMockPopover } from 'core/TaskTable/MockPopover';
+import Client from '@taskclient';
 
 const UserAvatar: React.FC<{ children?: Client.AvatarCode, onClick?: (event: React.MouseEvent<HTMLElement>) => void }> = ({ children, onClick }) => {
   const { state } = Client.useTasks();
@@ -32,6 +30,7 @@ const TaskAssignees: React.FC<{ task: Client.TaskDescriptor, onChange: (command:
   const { state } = Client.useTasks();
   const assigneeColors = state.pallette.owners;
 
+  const Popover = useMockPopover();
   const [newAssignees, setNewAssignees] = React.useState(task.assignees);
   const { setSearchString, searchResults } = Client.useAssignees({ assignees: newAssignees });
 
@@ -47,9 +46,6 @@ const TaskAssignees: React.FC<{ task: Client.TaskDescriptor, onChange: (command:
       return [...withoutCurrentUser, user.userId];
     });
   }
-
-  const Popover = useMockPopover();
-
 
   const taskAssigneeAvatars = task.assigneesAvatars.length ?
     (<AvatarGroup spacing='medium' onClick={Popover.onClick}>
@@ -72,16 +68,15 @@ const TaskAssignees: React.FC<{ task: Client.TaskDescriptor, onChange: (command:
       <Button variant='text' color='inherit' sx={{ "&.MuiButtonBase-root": { minWidth: "unset" } }}>
         {taskAssigneeAvatars}
       </Button>
+
       <Popover.Delegate onClose={onSubmit}>
         <SearchField onChange={setSearchString} />
-
         <List dense sx={{ py: 0 }}>
-
           {searchResults.map(({ user, checked }) => (
             <MenuItem key={user.userId} sx={{ display: "flex", pl: 0, py: 0 }}>
               <Box sx={{ width: 8, height: 40, backgroundColor: assigneeColors[user.userId] }} />
               <Box ml={1}>
-                <Checkbox checked={checked} sx={{ height: "40px" }} onChange={() => handleToggleUser(user, checked)} />
+                <Checkbox checked={checked} size='small' sx={{ height: "40px" }} onChange={() => handleToggleUser(user, checked)} />
               </Box>
               <ListItemText>{user.displayName}</ListItemText>
             </MenuItem>
