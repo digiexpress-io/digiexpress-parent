@@ -21,14 +21,6 @@ const HoverMenu: React.FC<{ onEdit: () => void }> = ({ onEdit }) => {
   )
 }
 
-/*
-const StartWorkButton: React.FC<{ onClick: () => void }> = ({onClick}) => {
-  return (<Button onClick={onClick} variant='outlined' color='inherit' sx={{ pr: 1 }} endIcon={<ArrowForwardIosOutlinedIcon />}>
-      <Typography variant='caption'><FormattedMessage id='core.myWork.button.task.start' /></Typography>
-        </Button>)
-}
-        */
-
 const FormattedCell: React.FC<{
   rowId: number,
   row: client.TaskDescriptor,

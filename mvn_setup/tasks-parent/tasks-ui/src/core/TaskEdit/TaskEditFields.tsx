@@ -52,7 +52,7 @@ const Description: React.FC<{}> = () => {
   const { state } = Client.useTaskEdit();
   const intl = useIntl();
 
-  return (<TextField placeholder={intl.formatMessage({ id: 'core.taskEdit.taskDescription' })} multiline rows={4} maxRows={6} fullWidth
+  return (<TextField placeholder={intl.formatMessage({ id: 'core.taskEdit.taskDescription' })} multiline minRows={4} maxRows={6} fullWidth
     value={state.task.description} />);
 }
 

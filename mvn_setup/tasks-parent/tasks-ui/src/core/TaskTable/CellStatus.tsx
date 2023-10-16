@@ -8,15 +8,19 @@ import TaskStatus from 'core/TaskStatus';
 const FormattedCell: React.FC<{
   rowId: number,
   row: Client.TaskDescriptor,
-  def: Client.Group
+  def: Client.Group,
 }> = ({ row }) => {
+  const tasks = Client.useTasks();
+  const backend = Client.useBackend();
 
+  async function handleChange(command: Client.ChangeTaskStatus) {
+    const updatedTask = await backend.task.updateActiveTask(row.id, [command]);
+    await tasks.reload();
+  }
 
 
   return (
-    <StyledTableCell width="100px" sx={{ pl: 0 }}><TaskStatus task={row} onChange={async (command) => {
-
-    }} /></StyledTableCell>
+    <StyledTableCell width="100px" sx={{ pl: 0 }}><TaskStatus task={row} onChange={handleChange} /></StyledTableCell>
   );
 }
 

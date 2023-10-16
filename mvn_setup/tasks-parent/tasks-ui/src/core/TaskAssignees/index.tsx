@@ -48,7 +48,6 @@ const TaskAssignees: React.FC<{ task: Client.TaskDescriptor, onChange: (command:
     });
   }
 
-
   const Popover = useMockPopover();
 
 
@@ -56,7 +55,7 @@ const TaskAssignees: React.FC<{ task: Client.TaskDescriptor, onChange: (command:
     (<AvatarGroup spacing='medium' onClick={Popover.onClick}>
       {task.assigneesAvatars.map((assignee: Client.AvatarCode) => (<UserAvatar key={assignee.value}>{assignee}</UserAvatar>))}
     </AvatarGroup>) :
-    (<UserAvatar onClick={Popover.onClick} />)
+    (<UserAvatar />)
 
   function onSubmit() {
     const isChanges = newAssignees.sort().toString() !== task.assignees.sort().toString();
