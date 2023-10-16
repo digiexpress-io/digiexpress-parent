@@ -44,7 +44,7 @@ interface StyledFullScreenDialogProps {
 
 const DialogBlock: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
-    <Box sx={{ width: '50%' }}>
+    <Box sx={{ width: '50%' }} overflow='auto'>
       <Stack spacing={dialog_padding}>
         {children}
       </Stack>
@@ -53,7 +53,7 @@ const DialogBlock: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 }
 const DialogDivider: React.FC<{}> = () => {
   return (
-    <Box sx={{ pl: dialog_padding, pr: dialog_padding, height: '100vh' }}>
+    <Box sx={{ pl: dialog_padding, pr: dialog_padding, height: '100%' }}>
       <Divider orientation='vertical' sx={{ borderColor: borderColor }} />
     </Box>
   )
@@ -65,7 +65,7 @@ const StyledFullScreenDialog: React.FC<StyledFullScreenDialogProps> = (props) =>
     <Dialog open={props.open} onClose={props.onClose} fullScreen sx={{ m: 2 }}>
       <StyledDialogTitle sx={props.shortHeader ? shortHeaderSx : {}}>{props.header}</StyledDialogTitle>
       <DialogContent sx={{ px: dialog_padding, py: 0 }}>
-        <Box display='flex' flexDirection='row' height={dialog_height}>
+        <Box display='flex' flexDirection='row' height={dialog_height} >
           <DialogBlock>{props.left}</DialogBlock>
           <DialogDivider />
           <DialogBlock>{props.right}</DialogBlock>
