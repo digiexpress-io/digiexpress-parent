@@ -167,7 +167,7 @@ const TaskItemActive: React.FC<{ task: Client.TaskDescriptor | undefined }> = ({
     return (<>
       <TaskWorkDialog open={taskWorkOpen} onClose={handleTaskWork} task={task} />
       <TaskEditDialog open={taskEditOpen} onClose={handleTaskEdit} task={task} />
-      
+
       <StyledStack>
 
         {/* header section */}
