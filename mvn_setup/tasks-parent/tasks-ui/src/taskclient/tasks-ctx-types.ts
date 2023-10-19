@@ -14,6 +14,7 @@ export interface TaskDescriptor {
   priority: TaskPriority;
   dueDate: Date | undefined;
   startDate: Date | undefined;
+  daysUntilDue: number | undefined; // number in days in which a task is due
   roles: string[];
   assignees: string[];
   labels: string[];

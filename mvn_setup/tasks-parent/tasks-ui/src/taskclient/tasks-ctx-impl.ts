@@ -1,4 +1,4 @@
-import { parseISO, isAfter, isEqual, differenceInCalendarDays } from 'date-fns';
+import { parseISO, isAfter, isEqual, differenceInCalendarDays, differenceInDays } from 'date-fns';
 
 import { Task, TaskExtension, TaskPriority, TaskStatus } from './task-types';
 import {
@@ -416,6 +416,7 @@ class TaskDescriptorImpl implements TaskDescriptor {
   private _dialobId: string;
   private _dueDate: Date | undefined;
   private _startDate: Date | undefined;
+  private _daysUntilDue: number | undefined;
   private _uploads: TaskExtension[];
   private _rolesAvatars: AvatarCode[];
   private _ownersAvatars: AvatarCode[];
@@ -428,6 +429,7 @@ class TaskDescriptorImpl implements TaskDescriptor {
     this._created = new Date(entry.created);
     this._startDate = entry.startDate ? new Date(entry.startDate) : undefined;
     this._dueDate = entry.dueDate ? new Date(entry.dueDate) : undefined;
+    this._daysUntilDue = entry.dueDate ? getDaysUntilDue(entry, today) : undefined;
     this._dialobId = entry.extensions.find(t => t.type === 'dialob')!.body;
     this._uploads = entry.extensions.filter(t => t.type === 'upload');
     this._rolesAvatars = getAvatar(entry.roles);
@@ -448,6 +450,7 @@ class TaskDescriptorImpl implements TaskDescriptor {
   get dueDate() { return this._dueDate }
   get startDate() { return this._startDate }
   get checklist() { return this._entry.checklist }
+  get daysUntilDue() { return this._daysUntilDue }
 
   get comments() { return this._entry.comments }
   get status() { return this._entry.status }
@@ -462,6 +465,19 @@ class TaskDescriptorImpl implements TaskDescriptor {
   get assigneesAvatars() { return this._ownersAvatars }
 }
 
+
+function getDaysUntilDue(task: Task, today: Date) {
+  const { dueDate } = task;
+  if (!dueDate) {
+    return undefined;
+  }
+  const dueDateClean = parseISO(dueDate);
+  const daysUntilDue = differenceInDays(dueDateClean, today);
+
+  return daysUntilDue;
+
+}
+
 function getTeamspaceType(task: Task, profile: Profile, today: Date): TeamGroupType | undefined {
   if (profile.roles.filter((role) => task.roles.includes(role)).length === 0) {
     return undefined;
@@ -474,7 +490,6 @@ function getTeamspaceType(task: Task, profile: Profile, today: Date): TeamGroupT
 
   const dueDateClean = parseISO(dueDate);
   //const dueDateClean = new Date(dueDate);
-  //console.log("raw task due date object", dueDate, dueDateClean)
 
   if (isAfter(today, dueDateClean)) {
     return "groupOverdue";

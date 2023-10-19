@@ -5,15 +5,15 @@ import SearchField from 'core/SearchField';
 import { useMockPopover } from 'core/TaskTable/MockPopover';
 import Client from '@taskclient';
 
-const UserAvatar: React.FC<{ children?: Client.AvatarCode, onClick?: (event: React.MouseEvent<HTMLElement>) => void }> = ({ children, onClick }) => {
+const UserAvatar: React.FC<{ children?: Client.AvatarCode }> = ({ children }) => {
   const { state } = Client.useTasks();
   const assigneeColors = state.pallette.owners;
   const bgcolor: string | undefined = children ? assigneeColors[children.value] : undefined;
   const avatar = children ? children.twoletters : <PersonAddIcon sx={{ fontSize: 15 }} />;
 
+
   return (
     <Avatar
-      onClick={onClick}
       sx={{
         bgcolor,
         width: 24,
@@ -48,7 +48,7 @@ const TaskAssignees: React.FC<{ task: Client.TaskDescriptor, onChange: (command:
   }
 
   const taskAssigneeAvatars = task.assigneesAvatars.length ?
-    (<AvatarGroup spacing='medium' onClick={Popover.onClick}>
+    (<AvatarGroup spacing='medium'>
       {task.assigneesAvatars.map((assignee: Client.AvatarCode) => (<UserAvatar key={assignee.value}>{assignee}</UserAvatar>))}
     </AvatarGroup>) :
     (<UserAvatar />)
@@ -65,7 +65,7 @@ const TaskAssignees: React.FC<{ task: Client.TaskDescriptor, onChange: (command:
 
   return (
     <Box>
-      <Button variant='text' color='inherit' sx={{ "&.MuiButtonBase-root": { minWidth: "unset" } }}>
+      <Button variant='text' color='inherit' sx={{ "&.MuiButtonBase-root": { minWidth: "unset" } }} onClick={Popover.onClick}>
         {taskAssigneeAvatars}
       </Button>
 

@@ -146,7 +146,7 @@ function getTaskAlert(task: Client.TaskDescriptor): { isDueDate: boolean, title:
   if (task.assigneeGroupType === 'assigneeCurrentlyWorking') {
     return { alertSeverity: 'info', isDueDate: true, title: 'core.teamSpace.task.currentlyWorking.alert' }
   }
-  return { alertSeverity: 'success', isDueDate: false, title: 'core.teamSpace.task.available.alert' }
+  return { alertSeverity: 'success', isDueDate: true, title: 'core.teamSpace.task.available.alert' }
 }
 
 const TaskItemActive: React.FC<{ task: Client.TaskDescriptor | undefined }> = ({ task }) => {

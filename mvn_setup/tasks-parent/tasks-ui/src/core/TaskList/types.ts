@@ -20,6 +20,7 @@ interface TaskListStateInit {
 interface TaskListState extends TaskListStateInit {
   withActiveTab(activeTab: number): TaskListState;
   withActiveTask(activeTask: Client.TaskDescriptor | undefined): TaskListState;
+  withTabs(tabs: TaskListTabState[]): TaskListState;
 }
 
 class ImmutableTaskListState implements TaskListState {
@@ -36,6 +37,14 @@ class ImmutableTaskListState implements TaskListState {
   get activeTab() { return this._activeTab };
   get activeTask() { return this._activeTask };
   get tabs() { return this._tabs };
+  
+  withTabs(tabs: TaskListTabState[]): TaskListState {
+    let activeTask: Client.TaskDescriptor | undefined;
+    if(this._activeTask) {
+      activeTask = tabs.flatMap(tab => tab.group.records).find(desc => desc.id === this._activeTask?.id);
+    }
+    return new ImmutableTaskListState({ activeTask, activeTab: this._activeTab, tabs })    
+  }
 
   withActiveTab(activeTab: number): TaskListState {
     return new ImmutableTaskListState({ activeTab, activeTask: this._activeTask, tabs: this._tabs.map((tab) => ({ ...tab, disabled: tab.id !== activeTab })) });
@@ -48,6 +57,7 @@ class ImmutableTaskListState implements TaskListState {
 
 
 function getActiveTab(tabs: TaskListTabState[]): number {
+
   for (const tab of tabs) {
     if (tab.group.records.length) {
       return tab.id;

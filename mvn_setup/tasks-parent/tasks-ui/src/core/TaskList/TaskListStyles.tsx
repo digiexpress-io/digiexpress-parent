@@ -117,7 +117,7 @@ const StyledTaskListTab: React.FC<{ children: React.ReactNode, active: boolean, 
 
 const StyledAppBar: React.FC<{ children: React.ReactNode, color: string | undefined }> = ({ children, color }) => {
   return (<AppBar color='inherit' position='sticky' sx={{ boxShadow: 'unset', px: 1, borderBottom: '1px solid' + color }}>
-    <Toolbar sx={{ alignItems: 'end', "&.MuiToolbar-root": { px: 'unset' } }}>
+    <Toolbar sx={{ alignItems: 'end', "&.MuiToolbar-root": { px: 'unset', minHeight: 50 } }}>
       {children}
     </Toolbar>
   </AppBar >);

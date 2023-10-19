@@ -15,7 +15,7 @@ const RowFiller: React.FC<{ value: Client.TablePagination<Client.TaskDescriptor>
   }
   const result: React.ReactNode[] = []
   for (let index = 0; index < value.emptyRows; index++) {
-    result.push(<StyledStackItem active={false} index={value.entries.length + index} onClick={() => { }} children="" />)
+    result.push(<StyledStackItem active={false} key={index} index={value.entries.length + index} onClick={() => { }} children="" />)
   }
 
   return <>{result}</>
@@ -48,7 +48,6 @@ const TaskList: React.FC<{
     setTable((state) => state.withRowsPerPage(parseInt(event.target.value, 10)))
   }
 
-
   React.useEffect(() => {
     if (state.tabs.length === 0) {
       return;
@@ -59,7 +58,7 @@ const TaskList: React.FC<{
   }, [state, setTable])
 
   React.useEffect(() => {
-    setState(initTabs(initTabsState))
+    setState(prev => prev.withTabs(initTabsState))
   }, [initTabsState]);
 
 

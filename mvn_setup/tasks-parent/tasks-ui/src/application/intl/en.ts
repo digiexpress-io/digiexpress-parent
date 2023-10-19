@@ -25,8 +25,8 @@ const en = {
   'task.status': 'Status',
   'task.dueDate': 'Due date',
 
-  'task.start': 'Start task',
-  'task.edit': 'Edit task',
+  'task.start': 'Start',
+  'task.edit': 'Edit',
   'task.noneSelected': 'No task selected',
 
   'task.priority.LOW': 'Low',
@@ -70,6 +70,7 @@ const en = {
   'core.teamSpace.alert.entries.none': 'No items available for this group',
 
 
+  'core.teamSpace.task.dueDate': 'Due on {dueDate}',
   'core.teamSpace.tab.task.overdue': 'Overdue: {count}',
   'core.teamSpace.tab.task.dueSoon': 'Due soon: {count}',
   'core.teamSpace.tab.task.available': 'Available: {count}',
@@ -79,6 +80,10 @@ const en = {
   'core.teamSpace.task.available.alert': 'This task is available and has no urgent due date considerations',
   'core.teamSpace.task.dueSoon.alert': 'This task is due soon!',
   'core.teamSpace.task.currentlyWorking.alert': 'I am currently working on this task',
+
+  'core.teamSpace.task.daysUntilDue': 'Due in: {count} days',
+  'core.teamSpace.task.daysUntilDue.overdueBy': 'Overdue by: {count} days',
+
 
   'core.myWork.tab.task.overdue': 'Overdue: {count}',
   'core.myWork.tab.task.available': 'Available: {count}',
@@ -92,7 +97,7 @@ const en = {
   'core.myWork.myWorkTaskTable.header.spotlight.myWorkStartsToday': 'Starts today',
   'core.myWork.myWorkTaskTable.header.spotlight.myWorkAssigned': 'Assigned to me',
   'core.myWork.alert.entries.none': "No items available for this group",
-  
+
   'core.myWork.recentActivities.events.task-completed': 'I completed task',
   'core.myWork.recentActivities.events.message-sent': 'I sent a message in regard to task',
   'core.myWork.recentActivities.events.checklist-completed': 'I completed Checklist',
