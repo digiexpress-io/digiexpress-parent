@@ -25,8 +25,8 @@ const TimestampFormatter: React.FC<{
 }> = ({ value, type }) => {
 
   const intl = useIntl();
-  const locale = intl.locale;
-  console.log(locale);
+  //const locale = intl.locale;
+  const locale = 'en-GB';
 
   if (!value) {
     return (<>{"-"}</>);

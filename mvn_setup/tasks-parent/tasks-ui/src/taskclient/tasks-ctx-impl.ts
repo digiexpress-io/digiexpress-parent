@@ -473,11 +473,13 @@ function getTeamspaceType(task: Task, profile: Profile, today: Date): TeamGroupT
   }
 
   const dueDateClean = parseISO(dueDate);
+  //const dueDateClean = new Date(dueDate);
+  //console.log("raw task due date object", dueDate, dueDateClean)
 
   if (isAfter(today, dueDateClean)) {
     return "groupOverdue";
   }
-  if (dueDateClean && differenceInCalendarDays(dueDateClean, today) <= 5) {
+  if (dueDate && differenceInCalendarDays(dueDateClean, today) <= 5) {
     return "groupDueSoon";
   }
   return "groupAvailable";
@@ -490,8 +492,10 @@ function getMyWorkType(task: Task, profile: Profile, today: Date): AssigneeGroup
   }
 
   const { startDate, dueDate } = task;
+  const dueDateClean = dueDate ? parseISO(dueDate) : undefined;
 
-  if (dueDate && isAfter(today, parseISO(dueDate)) && task.status === 'CREATED') {
+
+  if (dueDateClean && isAfter(today, dueDateClean) && task.status === 'CREATED') {
     return "assigneeOverdue";
   }
   if (startDate && isEqual(parseISO(startDate), today)) {

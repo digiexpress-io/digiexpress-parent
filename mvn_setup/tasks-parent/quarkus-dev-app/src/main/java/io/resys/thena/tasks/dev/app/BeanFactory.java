@@ -25,10 +25,12 @@ import javax.enterprise.inject.Produces;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
+import io.quarkus.jackson.ObjectMapperCustomizer;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import io.resys.thena.docdb.spi.jackson.VertexExtModule;
 import io.resys.thena.tasks.client.api.TaskClient;
@@ -37,7 +39,6 @@ import io.resys.thena.tasks.client.api.model.ImmutableTaskComment;
 import io.resys.thena.tasks.client.api.model.ImmutableTaskExtension;
 import io.resys.thena.tasks.client.spi.DocumentStoreImpl;
 import io.resys.thena.tasks.client.spi.TaskClientImpl;
-import io.vertx.core.json.jackson.DatabindCodec;
 import io.vertx.core.json.jackson.VertxModule;
 import io.vertx.mutiny.core.Vertx;
 import io.vertx.pgclient.PgConnectOptions;
@@ -95,18 +96,7 @@ public class BeanFactory {
   }
   
   @Produces
-  public TaskClient client(Vertx vertx, ObjectMapper om) {
-    final var modules = new com.fasterxml.jackson.databind.Module[] {
-      new JavaTimeModule(), 
-      new Jdk8Module(), 
-      new GuavaModule(),
-      new VertxModule(),
-      new VertexExtModule()
-    };
-    DatabindCodec.mapper().registerModules(modules);
-    DatabindCodec.prettyMapper().registerModules(modules);
-    om.registerModules(modules);
-    
+  public TaskClient client(Vertx vertx, ObjectMapper om) {    
     
     final var connectOptions = new PgConnectOptions().setDatabase(pgDb)
         .setHost(pgHost).setPort(pgPort)
@@ -128,6 +118,7 @@ public class BeanFactory {
     return new TaskClientImpl(store);
   }
 
+  /*
   @Produces
   public ObjectMapper objectMapper() {
     final var modules = new com.fasterxml.jackson.databind.Module[] {
@@ -141,6 +132,25 @@ public class BeanFactory {
       DatabindCodec.prettyMapper().registerModules(modules);
       
     return DatabindCodec.mapper(); 
+  }*/
+  
+  @Produces
+  public ObjectMapperCustomizer objectMapperCustomizer() {
+    final var modules = new com.fasterxml.jackson.databind.Module[] {
+      new JavaTimeModule(), 
+      new Jdk8Module(), 
+      new GuavaModule(),
+      new VertxModule(),
+      new VertexExtModule()
+    };
+    
+    return new ObjectMapperCustomizer() {
+      public void customize(ObjectMapper mapper) {
+        mapper.registerModules(modules);
+        // without this, local dates will be serialized as int array
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+      }
+    };
   }
 
 }
