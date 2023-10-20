@@ -121,6 +121,10 @@ const en = {
   'core.myOverview.tasks-starting-today': 'Tasks starting today',
   'core.myOverview.task-events': 'Task events',
 
+  'core.search.searchBar.groupBy': 'Group by {groupBy}',
+  'core.search.searchBar.columns': 'Columns',
+  'core.search.searchBar.filterRoles': 'Roles {count}',
+
   '_nobody_': 'Unassigned',
 
   'init.loaded': 'Loaded repo: {name}',

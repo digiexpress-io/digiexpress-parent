@@ -1,22 +1,15 @@
 import * as React from 'react';
-import { Paper, Button, Menu } from '@mui/material';
-import Divider from '@mui/material/Divider';
-import MenuList from '@mui/material/MenuList';
-import MenuItem from '@mui/material/MenuItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
+import { Button, Menu, Typography, MenuList, MenuItem, ListItemIcon, ListItemText } from '@mui/material';
 import Check from '@mui/icons-material/Check';
+import { FormattedMessage } from 'react-intl';
+import Client from '@taskclient';
 
-import GroupWorkIcon from '@mui/icons-material/GroupWork';
-import client from '@taskclient';
 
-
-const types: client.GroupBy[] = ['none', 'owners', 'roles', 'status', 'priority'];
+const types: Client.GroupBy[] = ['none', 'owners', 'roles', 'status', 'priority'];
 
 
 export default function DenseMenu() {
-  const ctx = client.useTasks();
-  
+  const ctx = Client.useTasks();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -25,10 +18,15 @@ export default function DenseMenu() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+
   return (<>
-    <Button variant="outlined" color="secondary" sx={{ ml: 2 }} onClick={handleClick}>
-      <GroupWorkIcon />
+    <Button variant='outlined' sx={{ borderRadius: 10, borderColor: 'text.primary' }} onClick={handleClick}>
+      <Typography variant='caption' sx={{ color: 'text.primary' }}>
+        <FormattedMessage id='core.search.searchBar.groupBy' values={{ groupBy: ctx.state.groupBy }} />
+      </Typography>
     </Button>
+
     <Menu sx={{ width: 320 }}
       anchorEl={anchorEl}
       open={open}
@@ -47,14 +45,14 @@ export default function DenseMenu() {
           <ListItemText><b>Group by</b></ListItemText>
         </MenuItem>
         {types.map(type => {
-          
-          if(ctx.state.groupBy === type) {
-            return <MenuItem key={type}><ListItemIcon><Check /></ListItemIcon>{type}</MenuItem>  
+
+          if (ctx.state.groupBy === type) {
+            return <MenuItem key={type}><ListItemIcon><Check /></ListItemIcon>{type}</MenuItem>
           }
           return <MenuItem key={type} onClick={() => {
             handleClose();
             ctx.setState(prev => prev.withGroupBy(type));
-            
+
           }}><ListItemText inset>{type}</ListItemText></MenuItem>;
         })}
       </MenuList>

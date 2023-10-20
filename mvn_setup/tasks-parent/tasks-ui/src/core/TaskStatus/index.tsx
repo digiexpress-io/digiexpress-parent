@@ -30,15 +30,9 @@ const TaskStatus: React.FC<{ task: Client.TaskDescriptor, onChange: (command: Cl
   }
   return (
     <Box>
-      <Chip
+      <Chip size='small'
         onClick={Popover.onClick}
         label={statusLabel}
-        sx={{
-          backgroundColor: statusColors[status],
-          color: "primary.contrastText",
-          ml: 0,
-          ":hover": { backgroundColor: "#404c64" }
-        }}
       />
       <Popover.Delegate onClose={Popover.onClose}>
         <List dense sx={{ py: 0 }}>

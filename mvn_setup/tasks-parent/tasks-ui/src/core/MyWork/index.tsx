@@ -19,7 +19,6 @@ function getTabs(state: Client.TasksState): TaskListTabState[] {
   const assigneeStartsToday = groups["assigneeStartsToday"];
   const assigneeCurrentlyWorking = groups["assigneeCurrentlyWorking"];
 
-
   return [
     {
       id: 0,
@@ -52,7 +51,7 @@ function getTabs(state: Client.TasksState): TaskListTabState[] {
       group: assigneeOther,
       disabled: true,
       count: assigneeOther.records.length
-    }
+    },
   ]
 }
 

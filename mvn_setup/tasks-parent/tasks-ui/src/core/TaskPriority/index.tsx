@@ -1,6 +1,6 @@
 import React from 'react';
 import { SxProps, List, MenuItem, ListItemText, Box, Button, Typography } from '@mui/material';
-import EmojiFlagsIcon from '@mui/icons-material/EmojiFlags';
+import FlagIcon from '@mui/icons-material/Flag';
 import { FormattedMessage } from 'react-intl';
 
 import Client from '@taskclient';
@@ -11,7 +11,7 @@ const priorityOptions: Client.TaskPriority[] = ['LOW', 'HIGH', 'MEDIUM'];
 
 function getEmojiFlagSx(priority: Client.TaskPriority): SxProps {
   const color = priorityColors[priority];
-  return { color, ':hover': { color }, mr: 1 };
+  return { color, ':hover': { color } };
 }
 
 function getActiveColor(currentlyShowing: Client.TaskPriority, priority: Client.TaskPriority): string {
@@ -40,8 +40,8 @@ const TaskPriority: React.FC<{
 
   return (
     <Box>
-      <Button variant='text' color='inherit' onClick={Popover.onClick} sx={{ textTransform: 'none' }}>
-        <EmojiFlagsIcon sx={getEmojiFlagSx(priority)} />
+      <Button color='inherit' onClick={Popover.onClick} sx={{ textTransform: 'none' }}>
+        <FlagIcon sx={getEmojiFlagSx(priority)} />
         {priorityTextEnabled && <Typography><FormattedMessage id={'task.priority.' + priority} /></Typography>}
       </Button>
       <Popover.Delegate onClose={Popover.onClose}>

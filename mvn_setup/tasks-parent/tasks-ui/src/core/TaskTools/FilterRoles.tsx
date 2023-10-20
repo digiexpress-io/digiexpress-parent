@@ -1,18 +1,14 @@
 import * as React from 'react';
-import { Paper, Button, Menu } from '@mui/material';
-import Divider from '@mui/material/Divider';
-import MenuList from '@mui/material/MenuList';
-import MenuItem from '@mui/material/MenuItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
+import { Button, Menu, Typography, ListItemText, MenuList, MenuItem, ListItemIcon } from '@mui/material';
+import { FormattedMessage } from 'react-intl';
 import Check from '@mui/icons-material/Check';
-import GroupsIcon from '@mui/icons-material/Groups';
-import client from '@taskclient';
+import Client from '@taskclient';
+
+
 
 
 export default function DenseMenu() {
-  const ctx = client.useTasks();
-
+  const ctx = Client.useTasks();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -23,11 +19,14 @@ export default function DenseMenu() {
   };
 
 
-  return (<>
-    <Button variant="outlined" color="secondary" sx={{ ml: 2 }} onClick={handleClick}>
-      <GroupsIcon />
-    </Button>
+  const filterByRoles = ctx.state.filterBy.find(filter => filter.type === 'FilterByRoles') as Client.FilterByRoles | undefined;
 
+  return (<>
+    <Button variant='outlined' sx={{ borderRadius: 10, borderColor: 'text.primary' }} onClick={handleClick}>
+      <Typography variant='caption' sx={{ color: 'text.primary' }}>
+        <FormattedMessage id='core.search.searchBar.filterRoles' values={{ count: filterByRoles?.roles.length }} />
+      </Typography>
+    </Button>
 
     <Menu sx={{ width: 320 }}
       anchorEl={anchorEl}

@@ -64,7 +64,7 @@ import ProviderImpl from './Provider';
 import {
   TaskDescriptor, TasksContextType, TasksState, TasksMutatorBuilder,
   PalleteType, FilterBy, Group, GroupBy, RoleUnassigned, OwnerUnassigned,
-  TasksStatePallette, TeamGroupType, AssigneeGroupType, AvatarCode
+  TasksStatePallette, TeamGroupType, AssigneeGroupType, AvatarCode, FilterByRoles
 } from './tasks-ctx-types';
 
 import {
@@ -102,7 +102,7 @@ declare namespace TaskClient {
     Profile,
     TaskId, Task, TaskPriority, TaskStatus,
     ClientError, Client, StoreConfig, Store,
-    Org, User, Role, AvatarCode,
+    Org, User, Role, AvatarCode, FilterByRoles,
     ProgramMessage
   }
 

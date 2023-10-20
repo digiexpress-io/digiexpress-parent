@@ -6,6 +6,7 @@ import client from '@taskclient';
 import TaskTable from '../TaskTable';
 import Tools from '../TaskTools';
 
+/*
 const OptionButton: React.FC<{ onClick: (event: React.MouseEvent<HTMLButtonElement>) => void, label: string }> = ({ onClick, label }) => {
   return (
     <Button variant='outlined' sx={{ borderRadius: 10 }} onClick={onClick} >
@@ -53,7 +54,7 @@ const SearchBar: React.FC<{}> = () => {
   );
 }
 
-
+*/
 function getRowBackgroundColor(index: number): string {
   const isOdd = index % 2 === 1;
 
@@ -122,10 +123,9 @@ const Rows: React.FC<TaskTable.TableConfigProps> = ({ content, group, loading })
 }
 
 
-
+//<SearchBar />
 const TaskSearch: React.FC<{}> = () => {
   return (<Box>
-    <SearchBar />
     <TaskTable.Groups groupBy={undefined} orderBy='created'>
       {{ Header, Rows, Tools }}
     </TaskTable.Groups>
