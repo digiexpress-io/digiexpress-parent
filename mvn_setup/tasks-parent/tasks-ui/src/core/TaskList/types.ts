@@ -37,14 +37,6 @@ class ImmutableTaskListState implements TaskListState {
   get activeTab() { return this._activeTab };
   get activeTask() { return this._activeTask };
   get tabs() { return this._tabs };
-  
-  withTabs(tabs: TaskListTabState[]): TaskListState {
-    let activeTask: Client.TaskDescriptor | undefined;
-    if(this._activeTask) {
-      activeTask = tabs.flatMap(tab => tab.group.records).find(desc => desc.id === this._activeTask?.id);
-    }
-    return new ImmutableTaskListState({ activeTask, activeTab: this._activeTab, tabs })    
-  }
 
   withActiveTab(activeTab: number): TaskListState {
     return new ImmutableTaskListState({ activeTab, activeTask: this._activeTask, tabs: this._tabs.map((tab) => ({ ...tab, disabled: tab.id !== activeTab })) });
@@ -53,11 +45,21 @@ class ImmutableTaskListState implements TaskListState {
   withActiveTask(activeTask: Client.TaskDescriptor | undefined): TaskListState {
     return new ImmutableTaskListState({ activeTask, activeTab: this._activeTab, tabs: this._tabs })
   }
+
+  withTabs(tabs: TaskListTabState[]): TaskListState {
+    let activeTask: Client.TaskDescriptor | undefined;
+    // case where we have an active task already
+    if (this._activeTask) {
+    // find the task(descriptor) id that matches the activeTask id 
+      activeTask = tabs.flatMap((tab) => tab.group.records).find((descriptor) => descriptor.id === this._activeTask?.id);
+    }
+    // build a new state which includes current activeTask so that the new state will "begin" with this active task instead of with undefined
+    return new ImmutableTaskListState({ activeTab: this._activeTab, activeTask, tabs });
+  }
 }
 
 
 function getActiveTab(tabs: TaskListTabState[]): number {
-
   for (const tab of tabs) {
     if (tab.group.records.length) {
       return tab.id;

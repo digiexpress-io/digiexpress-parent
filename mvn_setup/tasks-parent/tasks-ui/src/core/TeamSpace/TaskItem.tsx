@@ -28,12 +28,12 @@ const TaskItem: React.FC<{ task: Client.TaskDescriptor }> = ({ task }) => {
 
   return (
     <Box display='flex' width='100%' alignItems='center'>
-      <Box width='60%'><Typography fontWeight='bolder' noWrap>{task.title}</Typography></Box>
-      <Box width='20%' justifyItems='left'>
+      <Box width='50%'><Typography fontWeight='bolder' noWrap>{task.title}</Typography></Box>
+      <Box width='30%' justifyItems='left'>
         <Typography fontWeight='bolder'><FormattedMessage id={id} values={{ count: days.daysUntilDue }} /></Typography>
       </Box>
-      <Box width='10%' display='flex' alignItems='center'>{task.comments.length ? <ChatOutlinedIcon sx={{color: 'uiElements.main'}} /> : null}</Box>
-      <Box width='10%' display='flex' alignItems='center'>{task.checklist.length ? <ChecklistIcon sx={{color: 'uiElements.main'}} /> : null}</Box>
+      <Box width='7%' display='flex' alignItems='center'>{task.comments.length ? <ChatOutlinedIcon sx={{ color: 'uiElements.main' }} /> : null}</Box>
+      <Box width='7%' display='flex' alignItems='center'>{task.checklist.length ? <ChecklistIcon sx={{ color: 'uiElements.main' }} /> : null}</Box>
     </Box>
   );
 }

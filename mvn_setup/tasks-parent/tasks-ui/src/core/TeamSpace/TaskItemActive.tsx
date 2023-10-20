@@ -169,5 +169,25 @@ const TaskItemActive: React.FC<{ task: Client.TaskDescriptor | undefined }> = ({
 
 
 
+const TaskItemActiveWithRefresh: React.FC<{ task: Client.TaskDescriptor | undefined }> = ({ task }) => {
+  const [dismount, setDismount] = React.useState(false);
 
-export default TaskItemActive;
+  React.useEffect(() => {
+    if (dismount) {
+      setDismount(false);
+    }
+  }, [dismount]);
+
+  React.useEffect(() => {
+    setDismount(true);
+  }, [task]);
+
+  if (dismount) {
+    return null;
+  }
+
+  return (<TaskItemActive task={task} />)
+}
+
+
+export default TaskItemActiveWithRefresh;

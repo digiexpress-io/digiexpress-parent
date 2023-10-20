@@ -58,6 +58,7 @@ const TaskList: React.FC<{
   }, [state, setTable])
 
   React.useEffect(() => {
+    //  setState(initTabs(initTabsState))
     setState(prev => prev.withTabs(initTabsState))
   }, [initTabsState]);
 
