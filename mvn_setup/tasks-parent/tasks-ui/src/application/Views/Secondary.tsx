@@ -1,12 +1,11 @@
 import React from 'react';
 import { Tab, Box, TabProps, BoxProps, alpha, Tabs, TabsProps } from '@mui/material';
 import { styled } from "@mui/material/styles";
-import AppsIcon from '@mui/icons-material/Apps';
+import GroupsIcon from '@mui/icons-material/Groups';
 import SearchIcon from '@mui/icons-material/Search';
 import PieChartIcon from '@mui/icons-material/PieChart';
-import HistoryIcon from '@mui/icons-material/History';
+import TimelineIcon from '@mui/icons-material/Timeline';
 import PersonIcon from '@mui/icons-material/Person';
-import CircleNotificationsIcon from '@mui/icons-material/CircleNotifications';
 import WorkOutlineOutlinedIcon from '@mui/icons-material/WorkOutlineOutlined';
 import MailOutlinedIcon from '@mui/icons-material/MailOutlined';
 import { FormattedMessage } from 'react-intl';
@@ -105,7 +104,7 @@ const Secondary: React.FC<{}> = () => {
   function handleMyTasks() { actions.handleTabAdd({ id: 'mytasks', label: <FormattedMessage id="activities.mytasks.title" /> }) }
 
   function handleMyHistory() { actions.handleTabAdd({ id: 'myhistory', label: <FormattedMessage id="activities.myhistory.title" /> }) }
-  function handleSearch() { actions.handleTabAdd({ id: 'tasks', label: <FormattedMessage id="activities.search.title" /> }) }
+  function handleSearch() { actions.handleTabAdd({ id: 'search', label: <FormattedMessage id="activities.search.title" /> }) }
   function handleReporting() { actions.handleTabAdd({ id: 'reporting', label: <FormattedMessage id="activities.reporting.title" /> }) }
   function handleMyoverview() { actions.handleTabAdd({ id: 'myoverview', label: <FormattedMessage id="activities.myoverview.title" /> }) }
   function handleInbox() { actions.handleTabAdd({ id: 'inbox', label: <FormattedMessage id="activities.inbox.title" /> }) }
@@ -122,14 +121,13 @@ const Secondary: React.FC<{}> = () => {
         <EmptyTab value='' />
 
         <StyledExplorerTab value='explorer.search' icon={<SearchIcon />} label={<FormattedMessage id="activities.search.title" />} onClick={handleSearch} />
-        <StyledExplorerTab value='explorer.teamSpace' icon={<CircleNotificationsIcon />} label={<FormattedMessage id="activities.teamSpace.title" />} onClick={handleGroup} />
-
+        <StyledExplorerTab value='explorer.teamSpace' icon={<GroupsIcon />} label={<FormattedMessage id="activities.teamSpace.title" />} onClick={handleGroup} />
 
         <StyledExplorerTab value='explorer.mytasks-group' icon={<PersonIcon />} label={<FormattedMessage id="activities.mytasks.title" />} />
         <StyledExplorerSubTab value='explorer.mytasks' icon={<WorkOutlineOutlinedIcon />} label={<FormattedMessage id="activities.mytaskBoards.title" />} onClick={handleMyTasks} />
         <StyledExplorerSubTab value='explorer.inbox' icon={<MailOutlinedIcon />} label={<FormattedMessage id="activities.inbox.title" />} onClick={handleInbox} />
         <StyledExplorerSubTab value='explorer.myoverview' icon={<PieChartIcon />} label={<FormattedMessage id="activities.myoverview.title" />} onClick={handleMyoverview} />
-        <StyledExplorerSubTab value='explorer.myhistory' icon={<HistoryIcon />} label={<FormattedMessage id="activities.myhistory.title" />} onClick={handleMyHistory} />
+        <StyledExplorerSubTab value='explorer.myhistory' icon={<TimelineIcon />} label={<FormattedMessage id="activities.myhistory.title" />} onClick={handleMyHistory} />
 
         <StyledExplorerTab value='explorer.reporting' icon={<PieChartIcon />} label={<FormattedMessage id="activities.reporting.title" />} onClick={handleReporting} />
         <StyledExplorerTab value='explorer.dev' icon={<PieChartIcon />} label={<FormattedMessage id="activities.dev.title" />} onClick={handleDev} />

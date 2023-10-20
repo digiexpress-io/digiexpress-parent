@@ -74,7 +74,7 @@ const Rows: React.FC<TaskTable.TableConfigProps> = ({ content, group, loading })
 }
 
 
-const AdminBoard: React.FC<{}> = () => {
+const TaskSearch: React.FC<{}> = () => {
   return (
     <TaskTable.Groups groupBy={undefined} orderBy='created'>
       {{ Header, Rows, Tools }}
@@ -82,4 +82,4 @@ const AdminBoard: React.FC<{}> = () => {
 }
 
 
-export default AdminBoard;
+export default TaskSearch;
