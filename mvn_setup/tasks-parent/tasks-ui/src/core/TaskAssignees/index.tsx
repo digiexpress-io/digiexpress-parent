@@ -1,7 +1,7 @@
 import React from 'react';
 import { AvatarGroup, Box, ListItemText, Checkbox, Button, Avatar, List, MenuItem } from '@mui/material';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import SearchField from 'core/SearchField';
+import { SearchFieldPopover } from 'core/SearchField';
 import { useMockPopover } from 'core/TaskTable/MockPopover';
 import Client from '@taskclient';
 
@@ -70,7 +70,7 @@ const TaskAssignees: React.FC<{ task: Client.TaskDescriptor, onChange: (command:
       </Button>
 
       <Popover.Delegate onClose={onSubmit}>
-        <SearchField onChange={setSearchString} />
+        <SearchFieldPopover onChange={setSearchString} />
         <List dense sx={{ py: 0 }}>
           {searchResults.map(({ user, checked }) => (
             <MenuItem key={user.userId} sx={{ display: "flex", pl: 0, py: 0 }}>

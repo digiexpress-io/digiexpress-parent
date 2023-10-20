@@ -1,7 +1,7 @@
 import React from 'react';
 import { AvatarGroup, Box, Button, Avatar, List, MenuItem, Checkbox, ListItemText } from '@mui/material';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
-import SearchField from 'core/SearchField';
+import { SearchFieldPopover } from 'core/SearchField';
 import { useMockPopover } from 'core/TaskTable/MockPopover';
 import Client from '@taskclient';
 
@@ -69,7 +69,7 @@ const TaskRoles: React.FC<{ task: Client.TaskDescriptor, onChange: (command: Cli
       </Button>
 
       <Popover.Delegate onClose={onSubmit}>
-        <SearchField onChange={setSearchString} />
+        <SearchFieldPopover onChange={setSearchString} />
         <List dense sx={{ py: 0 }}>
           {searchResults.map(({ role, checked }) => (
             <MenuItem key={role.roleId} sx={{ display: "flex", pl: 0, py: 0 }}>
