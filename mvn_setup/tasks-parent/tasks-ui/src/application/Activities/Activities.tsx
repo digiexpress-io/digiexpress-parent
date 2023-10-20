@@ -14,18 +14,6 @@ const createActivities: (props: {
 }) => StyledCardItemProps[] = ({ actions, setOpen }) => ([
 
   {
-    id: "tasks",
-    title: "activities.tasks.title",
-    content: {
-      label: "activities.tasks.desc"
-    },
-    primary: {
-      label: "buttons.view",
-      onClick: () => actions.handleTabAdd({ id: 'tasks', label: <FormattedMessage id="activities.tasks.title" /> })
-    }
-  },
-
-  {
     id: "teamSpace",
     title: "activities.teamSpace.title",
     content: {

@@ -34,7 +34,7 @@ const Main: React.FC<{}> = () => {
 
     if (active.id === 'activities') {
       return (<Box sx={root}><Activities /></Box>);
-    } else if (active.id === 'tasks') {
+    } else if (active.id === 'search') {
       return (<Box sx={root}><Core.Tasks /></Box>);
     } else if (active.id === 'mytasks') {
       return (<Box sx={root}><Core.MyWork /></Box>);

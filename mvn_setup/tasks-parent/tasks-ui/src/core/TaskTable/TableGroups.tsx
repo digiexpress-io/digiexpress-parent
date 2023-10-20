@@ -22,8 +22,6 @@ const Delegate: React.FC<TableGroupsProps> = ({ groupBy, orderBy, children }) =>
   const tasks = Client.useTasks();
   const { loading, state } = tasks;
 
-  console.log("tasks state", state.tasks);
-
   const groups = React.useMemo(() => {
     if (groupBy) {
       return state.withGroupBy(groupBy).groups;

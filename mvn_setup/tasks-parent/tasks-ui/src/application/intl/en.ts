@@ -128,9 +128,6 @@ const en = {
   'activities.title': 'Activities',
   'activities.desc': ' ',
 
-  'activities.tasks.title': 'Admin board',
-  'activities.tasks.desc': 'See and manage everything',
-
   'activities.teamSpace.title': 'Team space',
   'activities.teamSpace.desc': 'See and manage all tasks assigned to my group',
 
@@ -143,8 +140,8 @@ const en = {
 
   'activities.myoverview.title': 'My overview',
 
-  'activities.search.title': 'Search...',
-  'activities.search.desc': 'Search from everything ever done',
+  'activities.search.title': 'Search',
+  'activities.search.desc': 'Search for, view, and manage all tasks, users, and roles ',
 
   'activities.reporting.title': 'Reporting',
   'activities.reporting.desc': 'Generate json report of data. Allows grouping and filtering.',

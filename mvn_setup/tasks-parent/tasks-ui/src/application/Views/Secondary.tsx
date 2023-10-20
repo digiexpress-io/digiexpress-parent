@@ -101,12 +101,11 @@ const Secondary: React.FC<{}> = () => {
   const [active, setActive] = React.useState<string>('');
 
   function handleActive(_event: React.SyntheticEvent, newValue: string) { setActive(newValue) }
-  function handleTasks() { actions.handleTabAdd({ id: 'tasks', label: <FormattedMessage id="activities.tasks.title" /> }) }
   function handleGroup() { actions.handleTabAdd({ id: 'teamSpace', label: <FormattedMessage id="activities.teamSpace.title" /> }) }
   function handleMyTasks() { actions.handleTabAdd({ id: 'mytasks', label: <FormattedMessage id="activities.mytasks.title" /> }) }
 
   function handleMyHistory() { actions.handleTabAdd({ id: 'myhistory', label: <FormattedMessage id="activities.myhistory.title" /> }) }
-  function handleSearch() { actions.handleTabAdd({ id: 'search', label: <FormattedMessage id="activities.search.title" /> }) }
+  function handleSearch() { actions.handleTabAdd({ id: 'tasks', label: <FormattedMessage id="activities.search.title" /> }) }
   function handleReporting() { actions.handleTabAdd({ id: 'reporting', label: <FormattedMessage id="activities.reporting.title" /> }) }
   function handleMyoverview() { actions.handleTabAdd({ id: 'myoverview', label: <FormattedMessage id="activities.myoverview.title" /> }) }
   function handleInbox() { actions.handleTabAdd({ id: 'inbox', label: <FormattedMessage id="activities.inbox.title" /> }) }
@@ -123,15 +122,14 @@ const Secondary: React.FC<{}> = () => {
         <EmptyTab value='' />
 
         <StyledExplorerTab value='explorer.search' icon={<SearchIcon />} label={<FormattedMessage id="activities.search.title" />} onClick={handleSearch} />
-        <StyledExplorerTab value='explorer.tasks' icon={<AppsIcon />} label={<FormattedMessage id="activities.tasks.title" />} onClick={handleTasks} />
         <StyledExplorerTab value='explorer.teamSpace' icon={<CircleNotificationsIcon />} label={<FormattedMessage id="activities.teamSpace.title" />} onClick={handleGroup} />
 
 
         <StyledExplorerTab value='explorer.mytasks-group' icon={<PersonIcon />} label={<FormattedMessage id="activities.mytasks.title" />} />
-         <StyledExplorerSubTab value='explorer.mytasks' icon={<WorkOutlineOutlinedIcon />} label={<FormattedMessage id="activities.mytaskBoards.title" />} onClick={handleMyTasks} />
-         <StyledExplorerSubTab value='explorer.inbox' icon={<MailOutlinedIcon />} label={<FormattedMessage id="activities.inbox.title" />} onClick={handleInbox} />
-         <StyledExplorerSubTab value='explorer.myoverview' icon={<PieChartIcon />} label={<FormattedMessage id="activities.myoverview.title" />} onClick={handleMyoverview} />
-         <StyledExplorerSubTab value='explorer.myhistory' icon={<HistoryIcon />} label={<FormattedMessage id="activities.myhistory.title" />} onClick={handleMyHistory} />
+        <StyledExplorerSubTab value='explorer.mytasks' icon={<WorkOutlineOutlinedIcon />} label={<FormattedMessage id="activities.mytaskBoards.title" />} onClick={handleMyTasks} />
+        <StyledExplorerSubTab value='explorer.inbox' icon={<MailOutlinedIcon />} label={<FormattedMessage id="activities.inbox.title" />} onClick={handleInbox} />
+        <StyledExplorerSubTab value='explorer.myoverview' icon={<PieChartIcon />} label={<FormattedMessage id="activities.myoverview.title" />} onClick={handleMyoverview} />
+        <StyledExplorerSubTab value='explorer.myhistory' icon={<HistoryIcon />} label={<FormattedMessage id="activities.myhistory.title" />} onClick={handleMyHistory} />
 
         <StyledExplorerTab value='explorer.reporting' icon={<PieChartIcon />} label={<FormattedMessage id="activities.reporting.title" />} onClick={handleReporting} />
         <StyledExplorerTab value='explorer.dev' icon={<PieChartIcon />} label={<FormattedMessage id="activities.dev.title" />} onClick={handleDev} />
