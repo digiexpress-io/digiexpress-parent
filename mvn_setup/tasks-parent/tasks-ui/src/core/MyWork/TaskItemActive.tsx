@@ -1,11 +1,10 @@
 import React from 'react';
-import {
-  Box, Stack, Alert, AlertTitle, Typography, Divider, Skeleton,
-  darken, styled,
-  Chip, Button, useTheme, AlertColor, Avatar
-} from '@mui/material';
-
+import { Box, Stack, Alert, AlertTitle, Typography, Divider, Skeleton, darken, styled, Button, useTheme, AlertColor } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
+
+import TimestampFormatter from 'core/TimestampFormatter';
+import TaskAssignees from 'core/TaskAssignees';
+import TaskStatus from 'core/TaskStatus';
 import TaskWorkDialog from 'core/TaskWork';
 import TaskEditDialog from 'core/TaskEdit';
 
@@ -14,6 +13,7 @@ import { StyledAppBar, StyledTaskListTab } from '../TaskList';
 
 
 const StyledStartTaskButton = styled(Button)(({ theme }) => ({
+  width: 'stretch',
   color: theme.palette.mainContent.main,
   fontWeight: 'bold',
   backgroundColor: theme.palette.uiElements.main,
@@ -23,6 +23,7 @@ const StyledStartTaskButton = styled(Button)(({ theme }) => ({
 }));
 
 const StyledEditTaskButton = styled(Button)(({ theme }) => ({
+  width: 'stretch',
   border: '1px solid',
   color: theme.palette.uiElements.main,
   fontWeight: 'bold',
@@ -87,71 +88,47 @@ const MyRecentActivity: React.FC = () => {
   )
 }
 
-const StyledStatusChip: React.FC<{ children: Client.TaskStatus }> = ({ children }) => {
-  const backgroundColors = Client.StatusPallette;
-  return (<Chip label={<FormattedMessage id={`task.status.${children}`} />}
-    sx={{
-      width: 'fit-content',
-      backgroundColor: backgroundColors[children],
-      color: 'activeItem.light',
-      fontWeight: 'bold'
-    }} />);
-}
-
-const NoAssignee: React.FC = () => {
-  return (
-    <Box display='flex' alignItems='center'>
-      <Avatar sx={{
-        width: 24,
-        height: 24,
-        fontSize: 10,
-        mr: 1,
-        my: '5px'
-      }} />
-      <Typography><FormattedMessage id='task.assignees.none' /></Typography>
-    </Box>
-  )
-}
-
-const StyledAssignee: React.FC<{ assigneeName: string, avatar: string }> = ({ assigneeName, avatar }) => {
-  const { state } = Client.useTasks();
-  const assigneeColor = state.pallette.owners[assigneeName];
-
-  return (
-    <Box display='flex' alignItems='center'>
-      <Avatar sx={{
-        backgroundColor: assigneeColor,
-        width: 24,
-        height: 24,
-        fontSize: 10,
-        mr: 1,
-        my: '5px'
-      }}>{avatar}</Avatar>
-      <Typography>{assigneeName}</Typography>
-    </Box>)
-}
 
 const StyledTitle: React.FC<{ children: string }> = ({ children }) => {
   return (<Typography fontWeight='bold'><FormattedMessage id={children} /></Typography>)
 }
 
-function getTaskAlert(task: Client.TaskDescriptor): { isDueDate: boolean, title: string, alertSeverity: AlertColor } {
+function getTaskAlert(task: Client.TaskDescriptor): { isDueDate: boolean, title: string, alertSeverity: AlertColor, alertMsg: string } {
 
   if (task.assigneeGroupType === 'assigneeOverdue') {
-    return { alertSeverity: 'error', isDueDate: true, title: 'core.teamSpace.task.overdue.alert' };
+    return { alertSeverity: 'error', isDueDate: true, title: 'core.teamSpace.task.overdue.alert', alertMsg: 'core.myWork.task.dueDate' }
   }
   if (task.assigneeGroupType === 'assigneeStartsToday') {
-    return { alertSeverity: 'warning', isDueDate: true, title: 'core.teamSpace.task.dueSoon.alert' }
+    return { alertSeverity: 'warning', isDueDate: true, title: 'core.teamSpace.task.dueSoon.alert', alertMsg: 'core.myWork.task.dueDate' }
   }
   if (task.assigneeGroupType === 'assigneeCurrentlyWorking') {
-    return { alertSeverity: 'info', isDueDate: true, title: 'core.teamSpace.task.currentlyWorking.alert' }
+    return { alertSeverity: 'info', isDueDate: true, title: 'core.teamSpace.task.currentlyWorking.alert', alertMsg: 'core.myWork.task.dueDate' }
   }
-  return { alertSeverity: 'success', isDueDate: true, title: 'core.teamSpace.task.available.alert' }
+  return { alertSeverity: 'success', isDueDate: true, title: 'core.teamSpace.task.available.alert', alertMsg: 'core.myWork.task.dueDate' }
 }
 
 const TaskItemActive: React.FC<{ task: Client.TaskDescriptor | undefined }> = ({ task }) => {
   const [taskWorkOpen, setTaskWorkOpen] = React.useState(false);
   const [taskEditOpen, setTaskEditOpen] = React.useState(false);
+
+  const tasks = Client.useTasks();
+  const backend = Client.useBackend();
+
+  async function handleStatusChange(command: Client.ChangeTaskStatus) {
+    if (!task) {
+      return;
+    }
+    await backend.task.updateActiveTask(task.id, [command]);
+    await tasks.reload();
+  }
+
+  async function handleAssigneeChange(command: Client.AssignTask) {
+    if (!task) {
+      return;
+    }
+    await backend.task.updateActiveTask(task.id, [command]);
+    await tasks.reload();
+  }
 
   function handleTaskWork() {
     setTaskWorkOpen(prev => !prev);
@@ -160,6 +137,7 @@ const TaskItemActive: React.FC<{ task: Client.TaskDescriptor | undefined }> = ({
   function handleTaskEdit() {
     setTaskEditOpen(prev => !prev);
   }
+
 
   if (task) {
     const alert = getTaskAlert(task);
@@ -175,16 +153,19 @@ const TaskItemActive: React.FC<{ task: Client.TaskDescriptor | undefined }> = ({
         <Divider sx={{ my: 1 }} />
 
         {/* buttons section */}
-        <StyledStartTaskButton onClick={handleTaskWork}><FormattedMessage id='task.start' /></StyledStartTaskButton>
-        <StyledEditTaskButton onClick={handleTaskEdit}><FormattedMessage id='task.edit' /></StyledEditTaskButton>
+        <Stack direction='row' spacing={1}>
+          <StyledStartTaskButton onClick={handleTaskWork}><FormattedMessage id='task.start' /></StyledStartTaskButton>
+          <StyledEditTaskButton onClick={handleTaskEdit}><FormattedMessage id='task.edit' /></StyledEditTaskButton>
+        </Stack>
+
         <Box sx={{ my: 1 }} />
 
         {/* duedate alert section */}
         <Alert severity={alert.alertSeverity} variant='standard'>
           <AlertTitle><FormattedMessage id={alert.title} /></AlertTitle>
-          {alert.isDueDate ? <Typography variant='body2' fontWeight='bolder'>{task.dueDate?.toUTCString()}</Typography> : undefined}
+          {alert.isDueDate ? <Typography variant='body2' fontWeight='bolder'>
+            <FormattedMessage id={alert.alertMsg} values={{ dueDate: <TimestampFormatter type='date' value={task.dueDate} /> }} /></Typography> : undefined}
         </Alert>
-
         {/* description section */}
         <StyledTitle children='task.description' />
         <Typography>{task.description}</Typography>
@@ -192,16 +173,11 @@ const TaskItemActive: React.FC<{ task: Client.TaskDescriptor | undefined }> = ({
         {/* assignee section */}
 
         <StyledTitle children='task.assignees' />
-        <Stack>
-          {task.assigneesAvatars.length ?
-            (task.assigneesAvatars.map((assignee, index) => (
-              <StyledAssignee key={index} assigneeName={assignee.value} avatar={assignee.twoletters} />))) : <NoAssignee />
-          }
-        </Stack>
+        <TaskAssignees onChange={handleAssigneeChange} task={task} />
 
         {/* status section */}
         <StyledTitle children='task.status' />
-        <StyledStatusChip>{task.status}</StyledStatusChip>
+        <TaskStatus onChange={handleStatusChange} task={task} />
       </StyledStack>
     </>
 
@@ -226,9 +202,6 @@ const TaskItemActive: React.FC<{ task: Client.TaskDescriptor | undefined }> = ({
   </StyledStack>);
 }
 
-
-
-
 const DelegateTaskItemActive: React.FC<{ task: Client.TaskDescriptor | undefined }> = ({ task }) => {
 
   // return summaryTab === 'summary' ? 
@@ -249,10 +222,25 @@ const DelegateTaskItemActive: React.FC<{ task: Client.TaskDescriptor | undefined
     </StyledAppBar>
     {summaryTab === 'MyRecentActivity' ? <MyRecentActivity /> : <TaskItemActive task={task} />}
   </>)
-
 }
 
+const TaskItemActiveWithRefresh: React.FC<{ task: Client.TaskDescriptor | undefined }> = ({ task }) => {
+  const [dismount, setDismount] = React.useState(false);
 
+  React.useEffect(() => {
+    if (dismount) {
+      setDismount(false);
+    }
+  }, [dismount]);
 
+  React.useEffect(() => {
+    setDismount(true);
+  }, [task]);
 
-export default DelegateTaskItemActive;
+  if (dismount) {
+    return null;
+  }
+  return (<DelegateTaskItemActive task={task} />)
+}
+
+export default TaskItemActiveWithRefresh;

@@ -89,9 +89,10 @@ const en = {
   'core.myWork.tab.task.available': 'Available: {count}',
   'core.myWork.tab.task.startsToday': 'Starts today: {count}',
   'core.myWork.tab.task.currentlyWorking': 'Current work: {count}',
-  'core.myWork.tab.recentActivities': 'Recent activities',
-  'core.myWork.tab.taskSummary': 'Task summary',
+  'core.myWork.tab.recentActivities': 'Activities',
+  'core.myWork.tab.taskSummary': 'Summary',
 
+  'core.myWork.task.dueDate': 'Due on {dueDate}',
 
   'core.myWork.myWorkTaskTable.header.spotlight.myWorkOverdue': 'Overdue',
   'core.myWork.myWorkTaskTable.header.spotlight.myWorkStartsToday': 'Starts today',

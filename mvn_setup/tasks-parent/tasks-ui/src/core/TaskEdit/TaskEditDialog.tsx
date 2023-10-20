@@ -23,7 +23,7 @@ const Left: React.FC<{}> = () => {
 const Right: React.FC<{}> = () => {
   const { state } = TaskClient.useTaskEdit();
   return (<List>
-    {state.events.map(event => <Events event={event} />)}
+    {state.events.map((event, index) => <Events key={index} event={event} />)}
   </List>);
 
 }
@@ -91,7 +91,6 @@ const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
 const TaskEditDialog: React.FC<{ open: boolean, onClose: () => void, task?: TaskClient.TaskDescriptor }> = (props) => {
   const tasks = TaskClient.useTasks();
-
 
   if (!props.open || !props.task) {
     return null;

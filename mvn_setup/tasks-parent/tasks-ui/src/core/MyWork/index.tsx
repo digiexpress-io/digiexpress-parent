@@ -1,7 +1,5 @@
 import React from 'react';
-
 import Client from '@taskclient';
-
 import { TaskListTabState, TaskList } from '../TaskList';
 import TaskItemActive from './TaskItemActive';
 import TaskItem from './TaskItem';
@@ -61,11 +59,9 @@ function getTabs(state: Client.TasksState): TaskListTabState[] {
 const MyWorkLoader: React.FC = () => {
   const tasks = Client.useTasks();
 
-
   if (tasks.loading) {
     return <>...loading</>
   }
-
 
   return (<TaskList state={getTabs(tasks.state)}>{{ TaskItem, TaskItemActive }}</TaskList>);
 }
