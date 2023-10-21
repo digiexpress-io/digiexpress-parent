@@ -1,17 +1,12 @@
 import * as React from 'react';
-import { Button, Menu } from '@mui/material';
-import MenuList from '@mui/material/MenuList';
-import MenuItem from '@mui/material/MenuItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
+import { Button, Menu, MenuList, MenuItem, ListItemIcon, ListItemText, Typography } from '@mui/material';
 import Check from '@mui/icons-material/Check';
-import PersonIcon from '@mui/icons-material/Person';
-
-import client from '@taskclient';
+import { FormattedMessage } from 'react-intl';
+import Client from '@taskclient';
 
 
 export default function DenseMenu() {
-  const ctx = client.useTasks();
+  const ctx = Client.useTasks();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -23,11 +18,14 @@ export default function DenseMenu() {
   };
 
 
-  return (<>
-    <Button variant="outlined" color="secondary" sx={{ ml: 2 }} onClick={handleClick}>
-      <PersonIcon />
-    </Button>
+  const filterByOwners = ctx.state.filterBy.find(filter => filter.type === 'FilterByOwners') as Client.FilterByOwners | undefined;
 
+  return (<>
+    <Button variant='outlined' sx={{ borderRadius: 10, borderColor: 'text.primary' }} onClick={handleClick}>
+      <Typography variant='caption' sx={{ color: 'text.primary' }}>
+        <FormattedMessage id='core.search.searchBar.filterOwners' values={{ count: filterByOwners?.owners.length }} />
+      </Typography>
+    </Button>
 
     <Menu sx={{ width: 320 }}
       anchorEl={anchorEl}

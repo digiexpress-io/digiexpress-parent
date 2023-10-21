@@ -5,6 +5,7 @@ import { FormattedMessage } from 'react-intl';
 import SearchIcon from '@mui/icons-material/Search';
 
 import FilterNormal from './FilterNormal';
+import FilterStatus from './FilterStatus';
 import FilterOwners from './FilterOwners';
 import FilterRoles from './FilterRoles';
 import GroupBy from './GroupBy';
@@ -62,6 +63,7 @@ const Tools: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           <SearchFieldBar onChange={({ target }) => { ctx.setState(prev => prev.withSearchString(target.value)) }} />
           <Stack direction='row' spacing={1}>
             <GroupBy />
+            <FilterStatus />
             <FilterNormal />
             <FilterOwners />
             <FilterRoles />

@@ -124,6 +124,8 @@ const en = {
   'core.search.searchBar.groupBy': 'Group by {groupBy}',
   'core.search.searchBar.columns': 'Columns',
   'core.search.searchBar.filterRoles': 'Roles {count}',
+  'core.search.searchBar.filterOwners': 'Owners {count}',
+  'core.search.searchBar.filterStatus': 'Status {count}',
 
   '_nobody_': 'Unassigned',
 

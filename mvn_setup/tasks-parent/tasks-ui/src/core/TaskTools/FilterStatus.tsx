@@ -1,21 +1,14 @@
 import * as React from 'react';
-import { Button, Menu } from '@mui/material';
-import Divider from '@mui/material/Divider';
-import MenuList from '@mui/material/MenuList';
-import MenuItem from '@mui/material/MenuItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
+import { Button, Menu, MenuItem, MenuList, ListItemIcon, ListItemText, Typography } from '@mui/material';
 import Check from '@mui/icons-material/Check';
-import FilterAltIcon from '@mui/icons-material/FilterAlt';
-import client from '@taskclient';
+import { FormattedMessage } from 'react-intl';
+import Client from '@taskclient';
 
 
-const statustypes: client.TaskStatus[] = ['CREATED', 'IN_PROGRESS', 'COMPLETED', 'REJECTED'];
-const prioritytypes: client.TaskPriority[] = ['HIGH', 'MEDIUM', 'LOW'];
-
+const statustypes: Client.TaskStatus[] = ['CREATED', 'IN_PROGRESS', 'COMPLETED', 'REJECTED'];
 
 export default function DenseMenu() {
-  const ctx = client.useTasks();
+  const ctx = Client.useTasks();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -25,12 +18,16 @@ export default function DenseMenu() {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
+  const filterByStatus = ctx.state.filterBy.find(filter => filter.type === 'FilterByStatus') as Client.FilterByStatus | undefined;
+  console.log(filterByStatus)
 
   return (<>
-    <Button variant="outlined" color="secondary" sx={{ ml: 2 }} onClick={handleClick}>
-      <FilterAltIcon />
+    <Button variant='outlined' sx={{ borderRadius: 10, borderColor: 'text.primary' }} onClick={handleClick}>
+      <Typography variant='caption' sx={{ color: 'text.primary' }}>
+        <FormattedMessage id='core.search.searchBar.filterStatus' values={{ count: filterByStatus?.status.length }} />
+      </Typography>
     </Button>
+
     <Menu sx={{ width: 320 }}
       anchorEl={anchorEl}
       open={open}
@@ -66,27 +63,6 @@ export default function DenseMenu() {
           </MenuItem>;
         })}
 
-
-        <Divider />
-
-        <MenuItem>
-          <ListItemText><b>Filter by priority</b></ListItemText>
-        </MenuItem>
-        {prioritytypes.map(type => {
-          const found = ctx.state.filterBy.find(filter => filter.type === 'FilterByPriority');
-          const selected = found ? found.type === 'FilterByPriority' && found.priority.includes(type) : false
-
-          if (selected) {
-            return <MenuItem key={type} onClick={() => {
-              handleClose();
-              ctx.setState(prev => prev.withFilterByPriority([type]));
-            }}><ListItemIcon><Check /></ListItemIcon>{type}</MenuItem>
-          }
-          return <MenuItem key={type} onClick={() => {
-            handleClose();
-            ctx.setState(prev => prev.withFilterByPriority([type]));
-          }}><ListItemText inset>{type}</ListItemText></MenuItem>;
-        })}
       </MenuList>
     </Menu>
   </>
