@@ -8,6 +8,7 @@ import FilterStatus from './FilterStatus';
 import FilterOwners from './FilterOwners';
 import FilterRoles from './FilterRoles';
 import FilterPriority from './FilterPriority';
+import FilterColumns from './FilterColumns';
 import GroupBy from './GroupBy';
 import client from '@taskclient';
 
@@ -67,7 +68,7 @@ const Tools: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             <FilterPriority />
             <FilterOwners />
             <FilterRoles />
-            <OptionButton label='core.search.searchBar.columns' onClick={() => console.log("TODO show/hide selected table columns")} />
+            <FilterColumns />
           </Stack>
         </Stack>
       </Toolbar>
