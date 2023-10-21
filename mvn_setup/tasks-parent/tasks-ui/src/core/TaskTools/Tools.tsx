@@ -4,10 +4,10 @@ import { FormattedMessage } from 'react-intl';
 
 import SearchIcon from '@mui/icons-material/Search';
 
-import FilterNormal from './FilterNormal';
 import FilterStatus from './FilterStatus';
 import FilterOwners from './FilterOwners';
 import FilterRoles from './FilterRoles';
+import FilterPriority from './FilterPriority';
 import GroupBy from './GroupBy';
 import client from '@taskclient';
 
@@ -64,7 +64,7 @@ const Tools: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           <Stack direction='row' spacing={1}>
             <GroupBy />
             <FilterStatus />
-            <FilterNormal />
+            <FilterPriority />
             <FilterOwners />
             <FilterRoles />
             <OptionButton label='core.search.searchBar.columns' onClick={() => console.log("TODO show/hide selected table columns")} />

@@ -65,7 +65,7 @@ import {
   TaskDescriptor, TasksContextType, TasksState, TasksMutatorBuilder,
   PalleteType, FilterBy, Group, GroupBy, RoleUnassigned, OwnerUnassigned,
   TasksStatePallette, TeamGroupType, AssigneeGroupType, AvatarCode,
-  FilterByRoles, FilterByOwners, FilterByStatus
+  FilterByRoles, FilterByOwners, FilterByStatus, FilterByPriority
 } from './tasks-ctx-types';
 
 import {
@@ -104,7 +104,7 @@ declare namespace TaskClient {
     TaskId, Task, TaskPriority, TaskStatus,
     ClientError, Client, StoreConfig, Store,
     Org, User, Role, AvatarCode,
-    FilterByRoles, FilterByOwners, FilterByStatus,
+    FilterByRoles, FilterByOwners, FilterByStatus, FilterByPriority,
     ProgramMessage
   }
 

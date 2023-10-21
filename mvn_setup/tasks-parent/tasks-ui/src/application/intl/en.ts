@@ -126,6 +126,7 @@ const en = {
   'core.search.searchBar.filterRoles': 'Roles {count}',
   'core.search.searchBar.filterOwners': 'Owners {count}',
   'core.search.searchBar.filterStatus': 'Status {count}',
+  'core.search.searchBar.filterPriority': 'Priority {count}',
 
   '_nobody_': 'Unassigned',
 
