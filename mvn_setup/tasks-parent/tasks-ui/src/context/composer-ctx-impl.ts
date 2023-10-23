@@ -1,5 +1,7 @@
-import { DocumentId, Document, DocumentUpdate, Session, PageUpdate, TabBody, TabEntity } from './composer-types';
-import type { Profile } from './profile-types';
+import { Dispatch, SetStateAction } from 'react';
+import { DocumentId, Document, DocumentUpdate, Session, PageUpdate, TabBody, TabEntity, Actions } from './composer-ctx-types';
+
+import type { Profile, Backend } from 'taskclient';
 
 class SiteCache {
   private _site: Profile;
@@ -27,7 +29,7 @@ class SessionData implements Session {
     pages?: Record<DocumentId, PageUpdate>;
     cache?: SiteCache;
   }) {
-    this._profile = props.profile ? props.profile : { name: "", contentType: "OK", today: new Date(), userId: "", roles: []};
+    this._profile = props.profile ? props.profile : { name: "", contentType: "OK", today: new Date(), userId: "", roles: [] };
     this._pages = props.pages ? props.pages : {};
     this._cache = props.cache ? props.cache : new SiteCache(this._profile);
   }
@@ -131,6 +133,38 @@ class ImmutableTabData implements TabBody {
 }
 
 
+class ActionsImpl implements Actions {
 
-const initSession = new SessionData({ });
-export { SessionData, ImmutableTabData, initSession };
+  private _sessionDispatch: Dispatch<SetStateAction<SessionData>>;
+  private _service: Backend;
+
+  constructor(session: Dispatch<SetStateAction<SessionData>>, service: Backend) {
+    this._sessionDispatch = session;
+    this._service = service;
+  }
+  async handleLoad(): Promise<void> {
+    const site = await this._service.profile.getProfile();
+    if (site.contentType === "NOT_CREATED") {
+      this._service.profile.createProfile().then(created => this._sessionDispatch((old) => old.withProfile(created)));
+    } else {
+      this._sessionDispatch((old) => old.withProfile(site))
+    }
+  }
+  async handleLoadProfile(site?: Profile): Promise<void> {
+    if (site) {
+      return this._sessionDispatch((old) => old.withProfile(site));
+    }
+    const head = await this._service.profile.getProfile();
+    this._sessionDispatch((old) => old.withProfile(head));
+  }
+  handlePageUpdate(page: DocumentId, value: DocumentUpdate[]): void {
+    this._sessionDispatch((old) => old.withPageValue(page, value));
+  }
+  handlePageUpdateRemove(pages: DocumentId[]): void {
+    this._sessionDispatch((old) => old.withoutPages(pages));
+  }
+}
+
+
+const initSession = new SessionData({});
+export { SessionData, ImmutableTabData, initSession, ActionsImpl };

@@ -1,13 +1,12 @@
 import Burger from '@the-wrench-io/react-burger';
 
-import type { Task } from './task-types';
-import type { Profile } from './profile-types';
+import type { Task, Profile } from 'taskclient';
 
-export type DocumentId = string; 
+export type DocumentId = string;
 
-export type Document = 
- { kind: 'HEAD', id: string, delegate: Profile } | 
- { kind: 'TASK', id: string, delegate: Task };
+export type Document =
+  { kind: 'HEAD', id: string, delegate: Profile } |
+  { kind: 'TASK', id: string, delegate: Task };
 
 export type DocumentUpdate = {};
 

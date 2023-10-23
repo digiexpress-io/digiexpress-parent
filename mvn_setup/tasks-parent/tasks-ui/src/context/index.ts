@@ -37,6 +37,23 @@ import {
   FilterByRoles, FilterByOwners, FilterByStatus, FilterByPriority
 } from './tasks-ctx-types';
 
+
+import {
+  Document
+} from './composer-ctx-types';
+
+
+export type {
+  Document
+}
+export { useComposer } from './hooks';
+
+export {
+  initSession, SessionData, ActionsImpl
+} from './composer-ctx-impl';
+
+
+
 declare namespace Context {
   export type { ClientContextType, ComposerContextType };
   export type {

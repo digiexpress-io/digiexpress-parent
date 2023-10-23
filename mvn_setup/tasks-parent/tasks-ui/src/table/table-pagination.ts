@@ -1,15 +1,15 @@
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
-  
+
   let aValue = a[orderBy];
   let bValue = b[orderBy];
 
-  if( (typeof aValue) === 'string' ) {
+  if ((typeof aValue) === 'string') {
     aValue = (aValue as unknown as string).toLowerCase() as any;
     bValue = (bValue as unknown as string).toLowerCase() as any;
   }
-  
-  
+
+
   if (bValue < aValue) {
     return -1;
   }
@@ -25,7 +25,7 @@ function getComparator<T>(
   order: Order,
   orderBy: keyof T,
 ): (a: T, b: T) => number {
-    
+
   return order === 'desc'
     ? (a, b) => descendingComparator(a, b, orderBy)
     : (a, b) => -descendingComparator(a, b, orderBy);
@@ -37,7 +37,7 @@ function stableSort<T>(init: readonly T[], comparator: (a: T, b: T) => number) {
   stabilizedThis.sort((a, b) => {
     const aValue = a[0];
     const bValue = b[0];
-    
+
     const order = comparator(aValue, bValue);
     if (order !== 0) {
       return order;
@@ -75,15 +75,15 @@ class TablePagination<T> {
     }
     this._src = init.src;
     this._orderBy = init.orderBy;
-    
+
     const start = this._page * this._rowsPerPage;
     const end = this._page * this._rowsPerPage + this._rowsPerPage;
-    
-    if(init.sorted) {
+
+    if (init.sorted) {
       const comparator: (a: T, b: T) => number = getComparator<T>(this._order, this._orderBy);
       const entries = stableSort<T>(init.src, comparator);
       this._src = entries;
-      this._entries = entries.slice(start, end);      
+      this._entries = entries.slice(start, end);
     } else {
       this._entries = init.src.slice(start, end);
     }
@@ -131,7 +131,7 @@ class TablePagination<T> {
       rowsPerPage: this._rowsPerPage
     });
   }
-  get rowsPerPageOptions() {return [5, 15, 40, 80, 120] }
+  get rowsPerPageOptions() { return [5, 15, 40, 80, 120] }
   get entries() { return this._entries }
   get src() { return this._src }
   get page() { return this._page }

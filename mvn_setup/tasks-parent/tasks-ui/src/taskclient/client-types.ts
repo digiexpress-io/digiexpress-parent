@@ -1,54 +1,18 @@
 import { ProfileStore } from './profile-types';
 import { TaskStore } from './task-types';
+import { Org, User } from './org-types';
 
-export type UserEventType = 'task-completed' | 'message-sent' | 'checklist-completed' | 'checklist-self-assigned' | 'comment-finished' | 'task-blocked' | 'attachment-added';
-
-export interface UserActivity{
-  id: string;
-  eventDate: string;
-  eventType: UserEventType;
-  subjectTitle: string;
-}
-
-export interface ProgramMessage {
-  id: string, msg: string
-}
-
-export type UserId = string;
-
-export type RoleId = string;
-
-export interface Org {
-  users: Record<UserId, User>;
-  roles: Record<RoleId, Role>;
-}
-
-export interface Role {
-  roleId: RoleId;
-  avatar: string;
-  displayName: string;
-}
-
-export interface User {
-  userId: UserId;
-  userRoles: RoleId[];
-  displayName: string;
-  avatar: string;
-  activity: UserActivity[];
-}
-
-export interface ClientError {
+export interface BackendError {
   text: string;
   status: number;
   errors: { id: string; value: string; }[];
 }
 
 
-export interface Client {
+export interface Backend {
   config: StoreConfig;
   profile: ProfileStore;
   task: TaskStore;
-
   org(): Promise<{ org: Org, user: User }>;
 }
 

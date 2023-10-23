@@ -1,10 +1,12 @@
 import React from 'react';
 import Burger from '@the-wrench-io/react-burger';
-import { ImmutableTabData } from 'taskclient/session';
-import { Tab, TabEntity, TabBody, Document } from 'taskclient/composer-types';
+import { useTheme } from '@mui/material';
+
+import { Tab, TabEntity, TabBody, Document } from './composer-ctx-types';
+import { ImmutableTabData } from './composer-ctx-impl';
 import { ComposerContext, ComposerContextType, ClientContextType, ClientContext } from './client-ctx';
-import { UserId, RoleId } from 'taskclient/client-types';
-import ArticleTabIndicator from 'taskclient/Components/ArticleTabIndicator';
+import { UserId, RoleId } from 'taskclient';
+
 import { TasksContext } from './tasks-ctx';
 import { TasksContextType } from './tasks-ctx-types';
 import { OrgContext } from './org-ctx';
@@ -13,6 +15,21 @@ import { TaskEditContextType } from './task-edit-ctx-types';
 import { TaskEditContext } from './task-edit-ctx'
 import { ScreenContextType } from './screen-ctx-types';
 import { ScreenContext } from './screen-ctx';
+
+
+const ArticleTabIndicator: React.FC<{ entity: Document }> = ({ entity }) => {
+  const theme = useTheme();
+  const { isDocumentSaved } = useComposer();
+  const saved = isDocumentSaved(entity);
+  return <span style={{
+    paddingLeft: "5px",
+    fontSize: '30px',
+    color: theme.palette.explorerItem.contrastText,
+    display: saved ? "none" : undefined
+  }}>*</span>
+}
+
+
 
 const isDocumentSaved = (entity: Document, ide: ComposerContextType): boolean => {
   const unsaved = Object.values(ide.session.pages).filter(p => !p.saved).filter(p => p.origin.id === entity.id);

@@ -1,4 +1,4 @@
-import { Org, User, UserId, Role, RoleId } from 'taskclient/client-types';
+import { Org, User, UserId, Role, RoleId } from 'taskclient';
 
 export interface OrgContextType {
   setState: OrgDispatch;

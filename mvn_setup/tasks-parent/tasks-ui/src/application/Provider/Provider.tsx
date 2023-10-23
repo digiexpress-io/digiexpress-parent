@@ -1,15 +1,14 @@
 import React from 'react';
 
-import { initSession, SessionData } from './session';
-import ActionsImpl from './actions';
-import { Client } from './client-types';
-import { Profile } from './profile-types';
+import { initSession, SessionData, ActionsImpl } from 'context';
+
+import { Profile, Backend } from 'taskclient';
 import { ClientContext, ComposerContext } from 'context/client-ctx';
-import RequireProject from './Components/RequireProject';
+import RequireProject from './RequireProject';
 import { TasksProvider } from 'context/tasks-ctx';
 import { OrgProvider } from 'context/org-ctx';
 
-const Provider: React.FC<{ children: React.ReactNode, service: Client, profile: Profile }> = ({ children, service, profile }) => {
+const Provider: React.FC<{ children: React.ReactNode, service: Backend, profile: Profile }> = ({ children, service, profile }) => {
   const [session, dispatch] = React.useState<SessionData>(initSession);
 
   const actions = React.useMemo(() => {

@@ -2,7 +2,7 @@ import React from 'react';
 
 import { OrgState, OrgDispatch, OrgMutator, OrgContextType } from './org-ctx-types';
 import { OrgMutatorBuilderImpl, } from './org-ctx-impl';
-import { Client } from 'taskclient/client-types';
+import { Backend } from 'taskclient';
 
 const OrgContext = React.createContext<OrgContextType>({} as OrgContextType);
 
@@ -11,7 +11,7 @@ const init: OrgState = new OrgMutatorBuilderImpl({
   org: { roles: {}, users: {} }
 });
 
-const OrgProvider: React.FC<{ children: React.ReactNode, backend: Client }> = ({ children, backend }) => {
+const OrgProvider: React.FC<{ children: React.ReactNode, backend: Backend }> = ({ children, backend }) => {
 
   const [loading, setLoading] = React.useState<boolean>(true);
   const [state, setState] = React.useState<OrgState>(init);

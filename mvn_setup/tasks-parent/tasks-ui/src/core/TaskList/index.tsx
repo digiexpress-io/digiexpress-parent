@@ -1,13 +1,13 @@
 import React from 'react';
 import { Stack, Grid, Typography, TablePagination, Alert } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
-import Client from '@taskclient';
 import Context from 'context';
+import Pagination from 'table';
 import { TaskListState, initTable, initTabs, TaskListTabState } from './types';
 import { StyledStackItem, StyledTaskListTab, StyledEditTaskButton, StyledStartTaskButton, StyledAppBar } from './TaskListStyles';
 
 
-const RowFiller: React.FC<{ value: Client.TablePagination<Context.TaskDescriptor> }> = ({ value }) => {
+const RowFiller: React.FC<{ value: Pagination.TablePagination<Context.TaskDescriptor> }> = ({ value }) => {
 
   if (value.entries.length === 0) {
     return (<Alert sx={{ m: 2 }} severity='info'>

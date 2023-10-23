@@ -1,4 +1,4 @@
-import { RoleId, UserId } from "./client-types";
+import { RoleId, UserId } from "./org-types";
 
 export interface Profile {
   name: string,

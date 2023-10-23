@@ -1,9 +1,6 @@
-import { Client, Store, Org, User, Role } from './client-types';
-import type { TaskId, Task, TaskPagination, TaskStore, TaskUpdateCommand } from './task-types';
-import type { Profile, ProfileStore } from './profile-types';
-import { } from './client-store';
+import { Org, User, Role } from './org-types';
 
-const mockRoles: Record<string, Role> = {
+export const mockRoles: Record<string, Role> = {
   "admin-role": {
     roleId: "admin-role",
     avatar: "AR",
@@ -31,7 +28,7 @@ const mockRoles: Record<string, Role> = {
   }
 };
 
-const mockUsers: User[] = [
+export const mockUsers: User[] = [
   {
     displayName: "Carrot Ironfoundersson",
     userId: "carrot ironfoundersson",
@@ -182,7 +179,7 @@ const mockUsers: User[] = [
   },
 ]
 
-const mockOrg: {
+export const mockOrg: {
   org: Org,
   user: User,
   today: Date
@@ -193,74 +190,4 @@ const mockOrg: {
   },
   user: mockUsers[3],
   today: new Date(),
-}
-
-
-type BackendInit = { created: boolean } | null
-
-
-export class ServiceImpl implements Client {
-  private _store: Store;
-
-  constructor(store: Store) {
-    this._store = store;
-  }
-
-  get config() { return this._store.config; }
-
-  get profile(): ProfileStore {
-    return {
-      getProfile: () => this.getProfile(),
-      createProfile: () => this.createProfile()
-    }
-  }
-  async getProfile(): Promise<Profile> {
-    const { today, user } = mockOrg;
-    const { userId, userRoles: roles } = user;
-    try {
-      const init = await this._store.fetch<BackendInit>("init", { notFound: () => null });
-      if (init === null) {
-        return { name: "", contentType: "BACKEND_NOT_FOUND", today, userId, roles };
-      }
-
-      return { name: "", contentType: "OK", today, userId, roles };
-    } catch (error) {
-      console.error("PROFILE, failed to fetch", error);
-      return { name: "", contentType: "NO_CONNECTION", today, userId, roles };
-    }
-  }
-
-  createProfile(): Promise<Profile> {
-    return this._store.fetch<Profile>("head", { method: "POST", body: JSON.stringify({}) });
-  }
-
-  get task(): TaskStore {
-    return {
-      getActiveTasks: () => this.getActiveTasks(),
-      getActiveTask: (id: TaskId) => this.getActiveTask(id),
-      updateActiveTask: (id: TaskId, commands: TaskUpdateCommand<any>[]) => this.updateActiveTask(id, commands)
-    };
-  }
-
-  async updateActiveTask(id: TaskId, commands: TaskUpdateCommand<any>[]): Promise<Task> {
-    return await this._store.fetch<Task>(`tasks/${id}`, {
-      method: 'PUT',
-      body: JSON.stringify(commands)
-    });
-  }
-
-  async getActiveTasks(): Promise<TaskPagination> {
-    const tasks = await this._store.fetch<object[]>(`tasks`);
-    return {
-      page: 1,
-      total: { pages: 1, records: tasks.length },
-      records: tasks as any
-    }
-  }
-  getActiveTask(id: TaskId): Promise<Task> {
-    return this._store.fetch<Task>(`tasks/${id}`);
-  }
-  async org(): Promise<{ org: Org, user: User }> {
-    return mockOrg;
-  }
 }

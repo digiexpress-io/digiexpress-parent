@@ -1,5 +1,5 @@
-import Client from '@taskclient';
 import Context from 'context';
+import Table from 'table';
 
 
 interface TaskListTabState {
@@ -66,7 +66,7 @@ function getActiveTab(tabs: TaskListTabState[]): number {
 }
 
 
-const initTable = (records: Context.TaskDescriptor[]) => new Client.TablePaginationImpl<Context.TaskDescriptor>({
+const initTable = (records: Context.TaskDescriptor[]) => new Table.TablePaginationImpl<Context.TaskDescriptor>({
   src: records,
   orderBy: 'dueDate',
   order: 'asc',

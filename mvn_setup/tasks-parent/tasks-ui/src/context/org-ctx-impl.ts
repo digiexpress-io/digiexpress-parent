@@ -1,6 +1,6 @@
 import {
   UserId, User, Org, RoleId
-} from 'taskclient/client-types';
+} from 'taskclient';
 
 import {
   OrgState, RoleSearchResult, UserSearchResult

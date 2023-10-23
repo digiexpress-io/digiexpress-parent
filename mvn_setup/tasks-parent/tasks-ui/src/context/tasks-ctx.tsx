@@ -1,8 +1,7 @@
 import React from 'react';
 import { TasksContextType, TasksMutator, TasksDispatch, TasksMutatorBuilder } from './tasks-ctx-types';
 import { TasksStateBuilder, Pallette } from './tasks-ctx-impl';
-import { Client } from 'taskclient/client-types';
-import { Profile } from 'taskclient/profile-types';
+import { Backend, Profile } from 'taskclient';
 
 const TasksContext = React.createContext<TasksContextType>({} as TasksContextType);
 
@@ -26,7 +25,7 @@ const init: TasksMutatorBuilder = new TasksStateBuilder({
   profile: { contentType: "OK", name: "", userId: "", today: new Date(), roles: [] }
 });
 
-const TasksProvider: React.FC<{ children: React.ReactNode, backend: Client, profile: Profile }> = ({ children, backend, profile }) => {
+const TasksProvider: React.FC<{ children: React.ReactNode, backend: Backend, profile: Profile }> = ({ children, backend, profile }) => {
 
   const [loading, setLoading] = React.useState<boolean>(true);
   const [state, setState] = React.useState<TasksMutatorBuilder>(init.withProfile(profile));

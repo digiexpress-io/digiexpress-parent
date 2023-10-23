@@ -1,12 +1,13 @@
-import { ServiceImpl as ServiceImplAs } from './client';
-import { DefaultStore as DefaultStoreAs } from './client-store';
-
-import { TablePagination, TablePagination as TablePaginationAs } from './table-pagination';
+import { ServiceImpl as ServiceImplAs } from './client-impl';
+import { DefaultStore as DefaultStoreAs } from './store-impl';
 
 import {
-  ClientError, Client, StoreConfig, Store,
-  ProgramMessage, Org, User, Role
+  BackendError, Backend, StoreConfig, Store,
 } from './client-types';
+
+import {
+  Org, User, Role, UserId, RoleId
+} from './org-types';
 
 import {
   TaskId, Task, TaskPriority, TaskStatus,
@@ -34,20 +35,14 @@ import {
   ChangeChecklistItemAssignees,
   ChangeChecklistItemCompleted,
   ChangeChecklistItemDueDate,
-  ChangeChecklistItemTitle
+  ChangeChecklistItemTitle,
+  TaskCommand, TaskTransaction,
 
 } from './task-types';
 
 import {
   Profile
 } from './profile-types';
-
-
-import {
-  DocumentId, Document, DocumentUpdate,
-  TabEntity, TabBody, Tab,
-  PageUpdate, Session, Actions,
-} from './composer-types';
 
 import {
   ServiceErrorMsg,
@@ -57,22 +52,17 @@ import {
 } from './error-types';
 
 
-import ErrorView from './Components/ErrorView';
-import ProviderImpl from './Provider';
+export type {
+  Org, User, UserId, Role, RoleId, Profile, Backend, BackendError, StoreError, Task,
+  TaskCommand, TaskTransaction,
+}
 
 declare namespace TaskClient {
-  export type { TablePagination };
   export type {
     Profile,
     TaskId, Task, TaskPriority, TaskStatus,
-    ClientError, Client, StoreConfig, Store,
-    Org, User, Role, ProgramMessage
-  }
-
-  export type {
-    DocumentId, Document, DocumentUpdate,
-    TabEntity, TabBody, Tab,
-    PageUpdate, Session, Actions
+    BackendError, Backend, StoreConfig, Store,
+    Org, User, Role
   }
 
   export type {
@@ -111,12 +101,8 @@ declare namespace TaskClient {
 
 
 namespace TaskClient {
-  export const TablePaginationImpl = TablePaginationAs;
   export const ServiceImpl = ServiceImplAs;
   export const DefaultStore = DefaultStoreAs;
   export const StoreErrorImpl = StoreErrorImplAs;
-  export const Error = ErrorView;
-  export const Provider = ProviderImpl;
 }
-
 export default TaskClient;

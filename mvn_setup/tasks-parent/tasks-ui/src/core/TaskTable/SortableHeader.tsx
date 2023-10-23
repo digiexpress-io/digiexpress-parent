@@ -3,13 +3,13 @@ import React from 'react';
 import { TableCell, Box, TableSortLabel } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 import { FormattedMessage } from 'react-intl';
-import Client from '@taskclient';
 import Context from 'context';
+import Pagination from 'table';
 
 const SortableHeader: React.FC<{
   id: keyof Context.TaskDescriptor,
-  content: Client.TablePagination<Context.TaskDescriptor>,
-  setContent: React.Dispatch<React.SetStateAction<Client.TablePagination<Context.TaskDescriptor>>>
+  content: Pagination.TablePagination<Context.TaskDescriptor>,
+  setContent: React.Dispatch<React.SetStateAction<Pagination.TablePagination<Context.TaskDescriptor>>>
 }> = ({ id, content, setContent }) => {
 
   const { order, orderBy } = content;
@@ -30,8 +30,8 @@ const SortableHeader: React.FC<{
 
 const SortableHeaders: React.FC<{
   columns: (keyof Context.TaskDescriptor)[],
-  content: Client.TablePagination<Context.TaskDescriptor>,
-  setContent: React.Dispatch<React.SetStateAction<Client.TablePagination<Context.TaskDescriptor>>>
+  content: Pagination.TablePagination<Context.TaskDescriptor>,
+  setContent: React.Dispatch<React.SetStateAction<Pagination.TablePagination<Context.TaskDescriptor>>>
 }> = ({ columns, content, setContent }) => {
 
   return (<>{columns.map((id) => (<SortableHeader key={id} id={id} content={content} setContent={setContent} />))}</>);

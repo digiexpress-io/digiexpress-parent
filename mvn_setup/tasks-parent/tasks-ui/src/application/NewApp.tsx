@@ -6,11 +6,12 @@ import { SnackbarProvider } from 'notistack';
 import { useSnackbar } from 'notistack';
 import Burger, { siteTheme } from '@the-wrench-io/react-burger';
 
-import TaskClient from '@taskclient';
+import TaskClient from 'taskclient';
 import Context from 'context';
 import Connection from './Connection';
 import messages from './intl';
 import Views from './Views';
+import Provider from './Provider';
 
 
 interface Csrf { key: string, value: string }
@@ -51,9 +52,9 @@ const Apps: React.FC<{ profile: TaskClient.Profile }> = ({ profile }) => {
     ]
   }), []);
 
-  return (<TaskClient.Provider service={backend} profile={profile}>
+  return (<Provider service={backend} profile={profile}>
     <Burger.Provider children={[serviceComposer]} secondary="toolbar.activities" drawerOpen />
-  </TaskClient.Provider>)
+  </Provider>)
 }
 
 const LoadApps = React.lazy(async () => {

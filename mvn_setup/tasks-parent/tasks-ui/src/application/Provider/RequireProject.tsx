@@ -6,8 +6,8 @@ import Burger from '@the-wrench-io/react-burger';
 
 import { useSnackbar } from 'notistack';
 
-import { useComposer } from 'context/hooks';
-import { StoreError } from '../error-types';
+import { useComposer } from 'context';
+import { StoreError } from 'taskclient';
 import Errors from './ErrorView';
 
 
