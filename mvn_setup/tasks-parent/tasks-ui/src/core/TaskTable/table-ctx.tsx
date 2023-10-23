@@ -1,13 +1,13 @@
 import React from 'react';
 import { Box, TablePagination, TableContainer, Table } from '@mui/material';
 import Client from '@taskclient';
+import Context from 'context';
 
-
-type TaskPagination = Client.TablePagination<Client.TaskDescriptor>;
+type TaskPagination = Client.TablePagination<Context.TaskDescriptor>;
 
 interface TableConfigProps {
   loading: boolean;
-  group: Client.Group 
+  group: Context.Group
   content: TaskPagination,
   setContent: React.Dispatch<React.SetStateAction<TaskPagination>>,
 }
@@ -18,8 +18,8 @@ interface TableProps {
     Rows: React.ElementType<TableConfigProps>;
   },
   data: {
-    group: Client.Group,
-    defaultOrderBy: keyof Client.TaskDescriptor,
+    group: Context.Group,
+    defaultOrderBy: keyof Context.TaskDescriptor,
     loading: boolean;
   }
 }
@@ -40,7 +40,7 @@ const DescriptorTableContext = React.createContext<DescriptorTableContextType>({
 interface DescriptorTableState {
   popperOpen: boolean;
   popperId?: string;
-  anchorEl?: HTMLElement; 
+  anchorEl?: HTMLElement;
 }
 
 class DescriptorTableStateBuilder implements DescriptorTableState {
@@ -54,13 +54,13 @@ class DescriptorTableStateBuilder implements DescriptorTableState {
     this._popperId = init.popperId;
   }
   withPopperOpen(popperId: string, popperOpen: boolean, anchorEl?: HTMLElement): DescriptorTableStateBuilder {
-    if(popperOpen && !anchorEl) {
+    if (popperOpen && !anchorEl) {
       throw new Error("anchor must be defined when opening popper");
     }
-    if(popperId !== this._popperId && anchorEl) {
-      return new DescriptorTableStateBuilder({ popperId, popperOpen: true, anchorEl });      
+    if (popperId !== this._popperId && anchorEl) {
+      return new DescriptorTableStateBuilder({ popperId, popperOpen: true, anchorEl });
     }
-    
+
     return new DescriptorTableStateBuilder({ popperId, popperOpen, anchorEl });
   }
   get popperId() { return this._popperId }
@@ -76,9 +76,9 @@ const Provider: React.FC<{ children: React.ReactElement }> = ({ children }) => {
   const contextValue: DescriptorTableContextType = React.useMemo(() => {
     return { state, setState: setter };
   }, [state, setter]);
-  
-  
-  return (<DescriptorTableContext.Provider value={contextValue}>{ children }</DescriptorTableContext.Provider>);
+
+
+  return (<DescriptorTableContext.Provider value={contextValue}>{children}</DescriptorTableContext.Provider>);
 };
 
 const useTable = () => {
@@ -92,7 +92,7 @@ function CustomTable(props: TableProps) {
   const { Header, Rows } = props.config;
   const { records } = group;
 
-  const [content, setContent] = React.useState(new Client.TablePaginationImpl<Client.TaskDescriptor>({
+  const [content, setContent] = React.useState(new Client.TablePaginationImpl<Context.TaskDescriptor>({
     src: records ?? [],
     orderBy: defaultOrderBy,
     sorted: false
@@ -106,8 +106,8 @@ function CustomTable(props: TableProps) {
     <Box sx={{ width: '100%' }}>
       <TableContainer>
         <Table size='small'>
-          <Header content={content} loading={loading} setContent={setContent} group={group}/>
-          <Rows content={content} loading={loading} setContent={setContent} group={group}/>
+          <Header content={content} loading={loading} setContent={setContent} group={group} />
+          <Rows content={content} loading={loading} setContent={setContent} group={group} />
         </Table>
       </TableContainer>
       <Box display='flex' sx={{ paddingLeft: 1, marginTop: -2 }}>

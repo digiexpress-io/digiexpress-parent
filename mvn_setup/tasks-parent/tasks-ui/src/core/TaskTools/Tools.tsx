@@ -10,7 +10,7 @@ import FilterRoles from './FilterRoles';
 import FilterPriority from './FilterPriority';
 import FilterColumns from './FilterColumns';
 import GroupBy from './GroupBy';
-import client from '@taskclient';
+import Context from 'context';
 
 
 //general button style for all menu options
@@ -55,7 +55,7 @@ const SearchFieldBar: React.FC<{ onChange: (value: React.ChangeEvent<HTMLInputEl
 
 
 const Tools: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const ctx = client.useTasks();
+  const ctx = Context.useTasks();
 
   return (<>
     <AppBar color='inherit' position='sticky' sx={{ boxShadow: 1 }}>

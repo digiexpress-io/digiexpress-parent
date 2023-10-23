@@ -2,14 +2,15 @@
 import React from 'react';
 import { Box } from '@mui/material';
 import Client from '@taskclient';
+import Context from 'context';
 import { TableConfigProps, CustomTable } from './table-ctx';
 
 
 
 
 interface TableGroupsProps {
-  groupBy: Client.GroupBy | undefined,
-  orderBy: keyof Client.TaskDescriptor | undefined,
+  groupBy: Context.GroupBy | undefined,
+  orderBy: keyof Context.TaskDescriptor | undefined,
 
   children: {
     Header: React.ElementType<TableConfigProps>;
@@ -19,7 +20,7 @@ interface TableGroupsProps {
 }
 
 const Delegate: React.FC<TableGroupsProps> = ({ groupBy, orderBy, children }) => {
-  const tasks = Client.useTasks();
+  const tasks = Context.useTasks();
   const { loading, state } = tasks;
 
   const groups = React.useMemo(() => {

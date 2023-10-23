@@ -9,6 +9,7 @@ import CircleNotificationsOutlinedIcon from '@mui/icons-material/CircleNotificat
 import CloseIcon from '@mui/icons-material/Close';
 
 import Client from '@taskclient';
+import Context from 'context';
 
 import ChecklistDelegate from 'core/Checklist';
 import TaskAssignees from 'core/TaskAssignees';
@@ -17,8 +18,8 @@ import TaskPriority from 'core/TaskPriority';
 
 
 const Title: React.FC<{}> = () => {
-  const { state, setState } = Client.useTaskEdit();
-  const backend = Client.useBackend();
+  const { state, setState } = Context.useTaskEdit();
+  const backend = Context.useBackend();
 
   const intl = useIntl();
   const [title, setTitle] = React.useState(state.task.title);
@@ -49,9 +50,9 @@ const Title: React.FC<{}> = () => {
 }
 
 const Description: React.FC<{}> = () => {
-  const { state, setState } = Client.useTaskEdit();
+  const { state, setState } = Context.useTaskEdit();
   const [description, setDescription] = React.useState(state.task.description);
-  const backend = Client.useBackend();
+  const backend = Context.useBackend();
   const intl = useIntl();
 
   function handleDescriptionChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -79,7 +80,7 @@ const Description: React.FC<{}> = () => {
 }
 
 const Checklist: React.FC<{}> = () => {
-  const { state } = Client.useTaskEdit();
+  const { state } = Context.useTaskEdit();
 
   return (
     <>
@@ -89,8 +90,8 @@ const Checklist: React.FC<{}> = () => {
 }
 
 const Status: React.FC<{}> = () => {
-  const { state, setState } = Client.useTaskEdit();
-  const backend = Client.useBackend();
+  const { state, setState } = Context.useTaskEdit();
+  const backend = Context.useBackend();
 
   async function handleStatusChange(command: Client.ChangeTaskStatus) {
     const updatedTask = await backend.task.updateActiveTask(state.task.id, [command]);
@@ -103,8 +104,8 @@ const Status: React.FC<{}> = () => {
 }
 
 const Assignee: React.FC<{}> = () => {
-  const { state, setState } = Client.useTaskEdit();
-  const backend = Client.useBackend();
+  const { state, setState } = Context.useTaskEdit();
+  const backend = Context.useBackend();
 
   async function handleAssigneeChange(command: Client.AssignTask) {
     const updatedTask = await backend.task.updateActiveTask(state.task.id, [command]);
@@ -117,8 +118,8 @@ const Assignee: React.FC<{}> = () => {
 }
 
 const Priority: React.FC<{}> = () => {
-  const { state, setState } = Client.useTaskEdit();
-  const backend = Client.useBackend();
+  const { state, setState } = Context.useTaskEdit();
+  const backend = Context.useBackend();
 
   async function handlePriorityChange(command: Client.ChangeTaskPriority) {
     const updatedTask = await backend.task.updateActiveTask(state.task.id, [command]);
@@ -147,7 +148,7 @@ const NewItemNotification: React.FC<{}> = () => {
 }
 
 const StartDate: React.FC<{ onClick: () => void }> = ({ onClick }) => {
-  const { state } = Client.useTaskEdit();
+  const { state } = Context.useTaskEdit();
   const startDate = state.task.startDate;
 
   return (
@@ -159,7 +160,7 @@ const StartDate: React.FC<{ onClick: () => void }> = ({ onClick }) => {
 }
 
 const DueDate: React.FC<{ onClick: () => void }> = ({ onClick }) => {
-  const { state } = Client.useTaskEdit();
+  const { state } = Context.useTaskEdit();
   const dueDate = state.task.dueDate;
 
   return (

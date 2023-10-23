@@ -2,8 +2,7 @@
 import React from 'react';
 import { Button, Typography } from '@mui/material';
 import { FormattedMessage, useIntl } from 'react-intl';
-import Client from '@taskclient';
-
+import Context from 'context';
 
 const TableSubTitle: React.FC<{ values: number, message: string }> = ({ values, message }) => {
 
@@ -11,7 +10,7 @@ const TableSubTitle: React.FC<{ values: number, message: string }> = ({ values, 
 }
 
 
-const TableTitle: React.FC<{ group: Client.Group }> = ({ group }) => {
+const TableTitle: React.FC<{ group: Context.Group }> = ({ group }) => {
   const sx = { borderRadius: '8px 8px 0px 0px', boxShadow: "unset", fontWeight: 'bolder' };
   const intl = useIntl();
   if (!group) {
@@ -36,7 +35,7 @@ const TableTitle: React.FC<{ group: Client.Group }> = ({ group }) => {
   } else if (group.type === 'owners' || group.type === 'roles') {
     const backgroundColor = group.color;
     return (<Button variant="contained" sx={{ ...sx, backgroundColor }}>
-      {group.id === Client._nobody_ ? intl.formatMessage({ id: group.id }) : group.id}
+      {group.id === Context._nobody_ ? intl.formatMessage({ id: group.id }) : group.id}
     </Button>);
   }
 
@@ -45,6 +44,6 @@ const TableTitle: React.FC<{ group: Client.Group }> = ({ group }) => {
   </Button>);
 }
 
-export {TableSubTitle, TableTitle};
+export { TableSubTitle, TableTitle };
 
 

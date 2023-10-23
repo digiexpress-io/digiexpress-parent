@@ -1,12 +1,12 @@
 import React from 'react';
 import Burger from '@the-wrench-io/react-burger';
-import { ImmutableTabData } from './session';
-import { Tab, TabEntity, TabBody, Document } from './composer-types';
+import { ImmutableTabData } from 'taskclient/session';
+import { Tab, TabEntity, TabBody, Document } from 'taskclient/composer-types';
 import { ComposerContext, ComposerContextType, ClientContextType, ClientContext } from './client-ctx';
-import { UserId, RoleId } from './client-types';
-import ArticleTabIndicator from './Components/ArticleTabIndicator';
+import { UserId, RoleId } from 'taskclient/client-types';
+import ArticleTabIndicator from 'taskclient/Components/ArticleTabIndicator';
 import { TasksContext } from './tasks-ctx';
-import { TasksContextType, TaskDescriptor } from './tasks-ctx-types';
+import { TasksContextType } from './tasks-ctx-types';
 import { OrgContext } from './org-ctx';
 import { OrgContextType } from './org-ctx-types';
 import { TaskEditContextType } from './task-edit-ctx-types';

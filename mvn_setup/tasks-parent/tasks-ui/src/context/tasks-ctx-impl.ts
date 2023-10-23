@@ -1,13 +1,13 @@
 import { parseISO, isAfter, isEqual, differenceInCalendarDays, differenceInDays } from 'date-fns';
 
-import { Task, TaskExtension, TaskPriority, TaskStatus } from './task-types';
+import { Task, TaskExtension, TaskPriority, TaskStatus } from 'taskclient/task-types';
 import {
   PalleteType, TasksState, TasksMutatorBuilder, TaskDescriptor, FilterBy, Group, GroupBy,
   RoleUnassigned, OwnerUnassigned, TasksStatePallette,
   FilterByOwners, FilterByPriority, FilterByRoles, FilterByStatus, AvatarCode, AssigneeGroupType, TeamGroupType
 } from './tasks-ctx-types';
 
-import { Profile } from './profile-types';
+import { Profile } from 'taskclient/profile-types';
 
 const _nobody_: RoleUnassigned & OwnerUnassigned = '_nobody_';
 

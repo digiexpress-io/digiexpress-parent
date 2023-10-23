@@ -5,8 +5,9 @@ import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';
 
 import DaysUntilDue from 'core/DaysUntilDue';
 import Client from '@taskclient';
+import Context from 'context';
 
-const TaskItem: React.FC<{ task: Client.TaskDescriptor }> = ({ task }) => {
+const TaskItem: React.FC<{ task: Context.TaskDescriptor }> = ({ task }) => {
 
   return (
     <Box display='flex' width='100%' alignItems='center'>

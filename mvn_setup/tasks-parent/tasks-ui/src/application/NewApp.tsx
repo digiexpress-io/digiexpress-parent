@@ -7,6 +7,7 @@ import { useSnackbar } from 'notistack';
 import Burger, { siteTheme } from '@the-wrench-io/react-burger';
 
 import TaskClient from '@taskclient';
+import Context from 'context';
 import Connection from './Connection';
 import messages from './intl';
 import Views from './Views';
@@ -41,11 +42,11 @@ const backend = new TaskClient.ServiceImpl(store);
 
 const Apps: React.FC<{ profile: TaskClient.Profile }> = ({ profile }) => {
   // eslint-disable-next-line 
-  const serviceComposer: Burger.App<TaskClient.ComposerContextType> = React.useMemo(() => ({
+  const serviceComposer: Burger.App<Context.ComposerContextType> = React.useMemo(() => ({
     id: "service-composer",
     components: { primary: Views.Main, secondary: Views.Secondary, toolbar: Views.Toolbar },
     state: [
-      (children: React.ReactNode, _restorePoint?: Burger.AppState<TaskClient.ComposerContextType>) => (<>{children}</>),
+      (children: React.ReactNode, _restorePoint?: Burger.AppState<Context.ComposerContextType>) => (<>{children}</>),
       () => ({})
     ]
   }), []);

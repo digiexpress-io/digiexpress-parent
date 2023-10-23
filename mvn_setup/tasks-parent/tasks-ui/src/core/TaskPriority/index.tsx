@@ -4,9 +4,10 @@ import FlagIcon from '@mui/icons-material/Flag';
 import { FormattedMessage } from 'react-intl';
 
 import Client from '@taskclient';
+import Context from 'context';
 import { useMockPopover } from 'core/TaskTable/MockPopover';
 
-const priorityColors = Client.PriorityPalette;
+const priorityColors = Context.PriorityPalette;
 const priorityOptions: Client.TaskPriority[] = ['LOW', 'HIGH', 'MEDIUM'];
 
 function getEmojiFlagSx(priority: Client.TaskPriority): SxProps {
@@ -15,13 +16,13 @@ function getEmojiFlagSx(priority: Client.TaskPriority): SxProps {
 }
 
 function getActiveColor(currentlyShowing: Client.TaskPriority, priority: Client.TaskPriority): string {
-  const selectedItemColor = Client.StatusPallette.IN_PROGRESS;
+  const selectedItemColor = Context.StatusPallette.IN_PROGRESS;
   const color = priority === currentlyShowing ? selectedItemColor : "unset";
   return color;
 }
 
 const TaskPriority: React.FC<{
-  task: Client.TaskDescriptor,
+  task: Context.TaskDescriptor,
   priorityTextEnabled?: boolean,
   onChange: (command: Client.ChangeTaskPriority) => Promise<void>
 }> = ({ task, priorityTextEnabled, onChange }) => {

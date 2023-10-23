@@ -3,13 +3,14 @@ import { Button, Menu, MenuList, MenuItem, ListItemIcon, ListItemText, Typograph
 import Check from '@mui/icons-material/Check';
 import { FormattedMessage } from 'react-intl';
 import Client from '@taskclient';
+import Context from 'context';
 
 
 const prioritytypes: Client.TaskPriority[] = ['HIGH', 'MEDIUM', 'LOW'];
 
 
 export default function DenseMenu() {
-  const ctx = Client.useTasks();
+  const ctx = Context.useTasks();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -19,7 +20,7 @@ export default function DenseMenu() {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const filterByPriority = ctx.state.filterBy.find(filter => filter.type === 'FilterByPriority') as Client.FilterByPriority | undefined;
+  const filterByPriority = ctx.state.filterBy.find(filter => filter.type === 'FilterByPriority') as Context.FilterByPriority | undefined;
 
   return (<>
     <Button variant='outlined' sx={{ borderRadius: 10, borderColor: 'text.primary' }} onClick={handleClick}>

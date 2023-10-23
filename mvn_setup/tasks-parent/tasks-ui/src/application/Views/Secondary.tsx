@@ -1,6 +1,5 @@
 import React from 'react';
-import { Tab, Box, TabProps, BoxProps, alpha, Tabs, TabsProps } from '@mui/material';
-import { styled } from "@mui/material/styles";
+import { Tab, Box, TabProps, BoxProps, alpha, Tabs, TabsProps, styled } from '@mui/material';
 import GroupsIcon from '@mui/icons-material/Groups';
 import SearchIcon from '@mui/icons-material/Search';
 import PieChartIcon from '@mui/icons-material/PieChart';
@@ -9,8 +8,9 @@ import PersonIcon from '@mui/icons-material/Person';
 import WorkOutlineOutlinedIcon from '@mui/icons-material/WorkOutlineOutlined';
 import MailOutlinedIcon from '@mui/icons-material/MailOutlined';
 import { FormattedMessage } from 'react-intl';
+import Context from 'context';
+
 import Burger from '@the-wrench-io/react-burger';
-import Taskclient from '@taskclient';
 
 
 const StyledTitleTab = styled(Tab)<TabProps>(({ theme }) => ({
@@ -96,7 +96,7 @@ const StyledTabs = styled(Tabs)<TabsProps>(({ theme }) => ({
 const Secondary: React.FC<{}> = () => {
 
   const { actions } = Burger.useTabs();
-  const { session } = Taskclient.useComposer();
+  const { session } = Context.useComposer();
   const [active, setActive] = React.useState<string>('');
 
   function handleActive(_event: React.SyntheticEvent, newValue: string) { setActive(newValue) }

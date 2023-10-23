@@ -2,11 +2,11 @@ import * as React from 'react';
 import { Button, Menu, MenuList, MenuItem, ListItemIcon, ListItemText, Typography } from '@mui/material';
 import Check from '@mui/icons-material/Check';
 import { FormattedMessage } from 'react-intl';
-import Client from '@taskclient';
+import Context from 'context';
 
 
 export default function DenseMenu() {
-  const ctx = Client.useTasks();
+  const ctx = Context.useTasks();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -18,7 +18,7 @@ export default function DenseMenu() {
   };
 
 
-  const filterByOwners = ctx.state.filterBy.find(filter => filter.type === 'FilterByOwners') as Client.FilterByOwners | undefined;
+  const filterByOwners = ctx.state.filterBy.find(filter => filter.type === 'FilterByOwners') as Context.FilterByOwners | undefined;
 
   return (<>
     <Button variant='outlined' sx={{ borderRadius: 10, borderColor: 'text.primary' }} onClick={handleClick}>

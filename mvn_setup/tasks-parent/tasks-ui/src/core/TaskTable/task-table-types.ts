@@ -1,9 +1,8 @@
-import client from '@taskclient';
-
+import Context from 'context';
 
 interface CellProps {
-  row: client.TaskDescriptor;
-  def: client.Group;
+  row: Context.TaskDescriptor;
+  def: Context.Group;
 }
 
 export type { CellProps }

@@ -1,14 +1,13 @@
 import React from 'react';
 
-import { Tabs, Tab, Box, TabProps, TabsProps } from '@mui/material';
-import { styled } from "@mui/material/styles";
-
+import { Tabs, Tab, Box, TabProps, TabsProps, styled } from '@mui/material';
 
 import FlipToFrontOutlinedIcon from '@mui/icons-material/FlipToFrontOutlined';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 import FeedbackOutlinedIcon from '@mui/icons-material/FeedbackOutlined';
 
+import Context from 'context';
 import Burger from '@the-wrench-io/react-burger';
 import DeClient from '@taskclient';
 
@@ -34,15 +33,15 @@ const StyledTabs = styled(Tabs)<TabsProps>(({ theme }) => ({
 
 
 const Toolbar: React.FC<{}> = () => {
-  const composer = DeClient.useComposer();
+  const composer = Context.useComposer();
   const drawer = Burger.useDrawer();
   const tabs = Burger.useTabs();
   const secondary = Burger.useSecondary();
-  
-  const tabActions = tabs.actions;  
+
+  const tabActions = tabs.actions;
   const drawerOpen = drawer.session.drawer;
   React.useEffect(() => tabActions.handleTabAdd({ id: 'activities', label: "Activities" }), [tabActions]);
-  
+
 
   //const articlePagesView = active?.data?.nav?.type === "ARTICLE_PAGES";
   const unsavedPages = Object.values(composer.session.pages).filter(p => !p.saved);
@@ -55,18 +54,18 @@ const Toolbar: React.FC<{}> = () => {
         return;
       }
       const active = tabs.session.tabs.length ? tabs.session.tabs[tabs.session.history.open] : undefined;
-      
+
       const article = active ? composer.session.getEntity(active.id) : undefined;
-      if(!article) {
+      if (!article) {
         return;
       }
       const toBeSaved = unsavedPages.filter(p => !p.saved).filter(p => p.origin.id === article.id);
-      if(toBeSaved.length !== 1) {
+      if (toBeSaved.length !== 1) {
         return;
       }
-      
+
       console.log("TODO SAVE")
-      
+
       /*
       const unsavedArticlePages: Composer.PageUpdate = toBeSaved[0];
       composer.service.update(article.id, unsavedArticlePages.value).then(success => {

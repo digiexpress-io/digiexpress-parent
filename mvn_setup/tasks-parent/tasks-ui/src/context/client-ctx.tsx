@@ -1,19 +1,16 @@
 import React from 'react';
-
-
-import { Client } from './client-types';
-import { Session, Actions } from './composer-types';
+import TaskClient from 'taskclient';
 
 export interface ComposerContextType {
-  session: Session;
-  actions: Actions;
+  session: TaskClient.Session;
+  actions: TaskClient.Actions;
 }
 
-export type ClientContextType = Client;
+export type ClientContextType = TaskClient.Client;
 
 export const ComposerContext = React.createContext<ComposerContextType>({
-  session: {} as Session,
-  actions: {} as Actions,
+  session: {} as TaskClient.Session,
+  actions: {} as TaskClient.Actions,
 });
 export const ClientContext = React.createContext<ClientContextType>({} as ClientContextType);
 

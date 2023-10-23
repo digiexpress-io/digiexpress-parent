@@ -2,11 +2,12 @@ import React from 'react';
 import { Stack, Grid, Typography, TablePagination, Alert } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 import Client from '@taskclient';
+import Context from 'context';
 import { TaskListState, initTable, initTabs, TaskListTabState } from './types';
 import { StyledStackItem, StyledTaskListTab, StyledEditTaskButton, StyledStartTaskButton, StyledAppBar } from './TaskListStyles';
 
 
-const RowFiller: React.FC<{ value: Client.TablePagination<Client.TaskDescriptor> }> = ({ value }) => {
+const RowFiller: React.FC<{ value: Client.TablePagination<Context.TaskDescriptor> }> = ({ value }) => {
 
   if (value.entries.length === 0) {
     return (<Alert sx={{ m: 2 }} severity='info'>
@@ -24,8 +25,8 @@ const RowFiller: React.FC<{ value: Client.TablePagination<Client.TaskDescriptor>
 const TaskList: React.FC<{
   state: TaskListTabState[]
   children: {
-    TaskItem: React.ElementType<{ task: Client.TaskDescriptor }>;
-    TaskItemActive: React.ElementType<{ task: Client.TaskDescriptor | undefined }>;
+    TaskItem: React.ElementType<{ task: Context.TaskDescriptor }>;
+    TaskItemActive: React.ElementType<{ task: Context.TaskDescriptor | undefined }>;
   }
 }> = ({ state: initTabsState, children }) => {
 
@@ -36,7 +37,7 @@ const TaskList: React.FC<{
     setState(prev => prev.withActiveTab(newValue));
   }
 
-  function handleActiveTask(task: Client.TaskDescriptor | undefined) {
+  function handleActiveTask(task: Context.TaskDescriptor | undefined) {
     setState(prev => prev.withActiveTask(task));
   }
 

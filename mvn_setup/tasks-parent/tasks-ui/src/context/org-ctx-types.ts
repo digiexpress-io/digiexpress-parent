@@ -1,4 +1,4 @@
-import { Org, User, UserId, Role, RoleId } from './client-types'; 
+import { Org, User, UserId, Role, RoleId } from 'taskclient/client-types';
 
 export interface OrgContextType {
   setState: OrgDispatch;
@@ -21,13 +21,13 @@ export interface RoleSearchResult {
   role: Role
 }
 
-export interface OrgState { 
-  org: Org; 
-  iam: User; 
-  
+export interface OrgState {
+  org: Org;
+  iam: User;
+
   withOrg(value: Org): OrgState;
   withIam(value: User): OrgState;
-  
+
   findUsers(searchFor: string, checkedUsers: UserId[]): UserSearchResult[];
   findRoles(searchFor: string, checkedRoles: RoleId[]): RoleSearchResult[];
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Chip, Box, Typography } from '@mui/material';
-import {useTable} from './table-ctx';
+import { useTable } from './table-ctx';
 
 
 const Cell: React.FC<{

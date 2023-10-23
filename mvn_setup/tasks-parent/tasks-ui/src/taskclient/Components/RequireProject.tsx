@@ -6,14 +6,14 @@ import Burger from '@the-wrench-io/react-burger';
 
 import { useSnackbar } from 'notistack';
 
-import { useComposer } from '../hooks';
+import { useComposer } from 'context/hooks';
 import { StoreError } from '../error-types';
 import Errors from './ErrorView';
 
 
-const RequireProject: React.FC<{ }> = ({ }) => {
+const RequireProject: React.FC<{}> = ({ }) => {
   const { enqueueSnackbar } = useSnackbar();
-  
+
   const { client, actions, site } = useComposer();
   const [open, setOpen] = React.useState(true);
   const [apply, setApply] = React.useState(false);
@@ -47,7 +47,7 @@ const RequireProject: React.FC<{ }> = ({ }) => {
   } else {
     editor = (<Box>
       <Typography variant="h4">
-        <FormattedMessage id="project.dialog.requireProject.content" values={{ name: site.name }}/>
+        <FormattedMessage id="project.dialog.requireProject.content" values={{ name: site.name }} />
       </Typography>
     </Box>)
   }

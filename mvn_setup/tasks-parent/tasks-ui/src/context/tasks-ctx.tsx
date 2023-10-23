@@ -1,8 +1,8 @@
 import React from 'react';
 import { TasksContextType, TasksMutator, TasksDispatch, TasksMutatorBuilder } from './tasks-ctx-types';
 import { TasksStateBuilder, Pallette } from './tasks-ctx-impl';
-import { Client } from './client-types';
-import { Profile } from './profile-types';
+import { Client } from 'taskclient/client-types';
+import { Profile } from 'taskclient/profile-types';
 
 const TasksContext = React.createContext<TasksContextType>({} as TasksContextType);
 

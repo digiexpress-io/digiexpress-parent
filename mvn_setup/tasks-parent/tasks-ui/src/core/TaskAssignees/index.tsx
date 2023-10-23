@@ -4,9 +4,10 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { SearchFieldPopover } from 'core/SearchField';
 import { useMockPopover } from 'core/TaskTable/MockPopover';
 import Client from '@taskclient';
+import Context from 'context';
 
-const UserAvatar: React.FC<{ children?: Client.AvatarCode }> = ({ children }) => {
-  const { state } = Client.useTasks();
+const UserAvatar: React.FC<{ children?: Context.AvatarCode }> = ({ children }) => {
+  const { state } = Context.useTasks();
   const assigneeColors = state.pallette.owners;
   const bgcolor: string | undefined = children ? assigneeColors[children.value] : undefined;
   const avatar = children ? children.twoletters : <PersonAddIcon sx={{ fontSize: 15 }} />;
@@ -26,13 +27,13 @@ const UserAvatar: React.FC<{ children?: Client.AvatarCode }> = ({ children }) =>
   );
 }
 
-const TaskAssignees: React.FC<{ task: Client.TaskDescriptor, onChange: (command: Client.AssignTask) => Promise<void> }> = ({ task, onChange }) => {
-  const { state } = Client.useTasks();
+const TaskAssignees: React.FC<{ task: Context.TaskDescriptor, onChange: (command: Client.AssignTask) => Promise<void> }> = ({ task, onChange }) => {
+  const { state } = Context.useTasks();
   const assigneeColors = state.pallette.owners;
 
   const Popover = useMockPopover();
   const [newAssignees, setNewAssignees] = React.useState(task.assignees);
-  const { setSearchString, searchResults } = Client.useAssignees({ assignees: newAssignees });
+  const { setSearchString, searchResults } = Context.useAssignees({ assignees: newAssignees });
 
   function handleToggleUser(user: Client.User, currentlyChecked: boolean) {
     setNewAssignees(currentListOfUserIds => {
@@ -49,7 +50,7 @@ const TaskAssignees: React.FC<{ task: Client.TaskDescriptor, onChange: (command:
 
   const taskAssigneeAvatars = task.assigneesAvatars.length ?
     (<AvatarGroup spacing='medium'>
-      {task.assigneesAvatars.map((assignee: Client.AvatarCode) => (<UserAvatar key={assignee.value}>{assignee}</UserAvatar>))}
+      {task.assigneesAvatars.map((assignee: Context.AvatarCode) => (<UserAvatar key={assignee.value}>{assignee}</UserAvatar>))}
     </AvatarGroup>) :
     (<UserAvatar />)
 

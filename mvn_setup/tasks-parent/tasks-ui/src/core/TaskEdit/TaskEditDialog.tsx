@@ -7,7 +7,7 @@ import StyledFullScreenDialog from '../Dialogs';
 import Fields from './TaskEditFields';
 import Events from './TaskEvents';
 import Burger from '@the-wrench-io/react-burger';
-import TaskClient from '@taskclient';
+import Context from 'context';
 
 const Left: React.FC<{}> = () => {
 
@@ -21,7 +21,7 @@ const Left: React.FC<{}> = () => {
 }
 
 const Right: React.FC<{}> = () => {
-  const { state } = TaskClient.useTaskEdit();
+  const { state } = Context.useTaskEdit();
   return (<List>
     {state.events.map((event, index) => <Events key={index} event={event} />)}
   </List>);
@@ -31,7 +31,7 @@ const Right: React.FC<{}> = () => {
 
 const Header: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
-  const { state } = TaskClient.useTaskEdit();
+  const { state } = Context.useTaskEdit();
   const [datePickerOpen, setDatePickerOpen] = React.useState(false);
   const [startDate, setStartDate] = React.useState<Date | string | undefined>(state.task.startDate);
   const [dueDate, setDueDate] = React.useState<Date | string | undefined>(state.task.dueDate);
@@ -89,8 +89,8 @@ const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 }
 
 
-const TaskEditDialog: React.FC<{ open: boolean, onClose: () => void, task?: TaskClient.TaskDescriptor }> = (props) => {
-  const tasks = TaskClient.useTasks();
+const TaskEditDialog: React.FC<{ open: boolean, onClose: () => void, task?: Context.TaskDescriptor }> = (props) => {
+  const tasks = Context.useTasks();
 
   if (!props.open || !props.task) {
     return null;
@@ -101,7 +101,7 @@ const TaskEditDialog: React.FC<{ open: boolean, onClose: () => void, task?: Task
   }
 
   return (
-    <TaskClient.EditProvider task={props.task}>
+    <Context.EditProvider task={props.task}>
       <StyledFullScreenDialog
         header={<Header onClose={handleClose} />}
         footer={<Footer onClose={handleClose} />}
@@ -110,7 +110,7 @@ const TaskEditDialog: React.FC<{ open: boolean, onClose: () => void, task?: Task
         onClose={handleClose}
         open={props.open}
       />
-    </TaskClient.EditProvider>);
+    </Context.EditProvider>);
 }
 
 export { TaskEditDialog }

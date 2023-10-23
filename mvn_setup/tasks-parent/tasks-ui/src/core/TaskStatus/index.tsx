@@ -3,9 +3,10 @@ import { Chip, MenuItem, List, Box, ListItemText } from '@mui/material';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import Client from '@taskclient';
+import Context from 'context';
 import { useMockPopover } from 'core/TaskTable/MockPopover';
 
-const statusColors = Client.StatusPallette;
+const statusColors = Context.StatusPallette;
 const statusOptions: Client.TaskStatus[] = ['CREATED', 'IN_PROGRESS', 'COMPLETED', 'REJECTED'];
 
 function getActiveColor(currentlyShowing: Client.TaskStatus, status: Client.TaskStatus): string {
@@ -14,7 +15,7 @@ function getActiveColor(currentlyShowing: Client.TaskStatus, status: Client.Task
   return color;
 }
 
-const TaskStatus: React.FC<{ task: Client.TaskDescriptor, onChange: (command: Client.ChangeTaskStatus) => Promise<void> }> = ({ task, onChange }) => {
+const TaskStatus: React.FC<{ task: Context.TaskDescriptor, onChange: (command: Client.ChangeTaskStatus) => Promise<void> }> = ({ task, onChange }) => {
   const status = task.status;
   const intl = useIntl();
   const Popover = useMockPopover();

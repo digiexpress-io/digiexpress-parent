@@ -1,18 +1,18 @@
 import React from 'react';
-import Client from '@taskclient';
+import Context from 'context';
 import { TaskListTabState, TaskList } from '../TaskList';
 import TaskItemActive from './TaskItemActive';
 import TaskItem from './TaskItem';
 
 
 
-function groupsToRecord(state: Client.Group[]): Record<Client.AssigneeGroupType, Client.Group> {
-  return state.reduce((acc, item) => ({ ...acc, [item['id']]: item }), {} as Record<Client.AssigneeGroupType, Client.Group>);
+function groupsToRecord(state: Context.Group[]): Record<Context.AssigneeGroupType, Context.Group> {
+  return state.reduce((acc, item) => ({ ...acc, [item['id']]: item }), {} as Record<Context.AssigneeGroupType, Context.Group>);
 }
 
 
-function getTabs(state: Client.TasksState): TaskListTabState[] {
-  const groupBy: Client.Group[] = state.withGroupBy("assignee").groups;
+function getTabs(state: Context.TasksState): TaskListTabState[] {
+  const groupBy: Context.Group[] = state.withGroupBy("assignee").groups;
   const groups = groupsToRecord(groupBy);
   const assigneeOverdue = groups["assigneeOverdue"];
   const assigneeOther = groups["assigneeOther"];
@@ -23,7 +23,7 @@ function getTabs(state: Client.TasksState): TaskListTabState[] {
     {
       id: 0,
       label: 'core.myWork.tab.task.currentlyWorking',
-      color: Client.AssigneePalette.assigneeCurrentlyWorking,
+      color: Context.AssigneePalette.assigneeCurrentlyWorking,
       group: assigneeCurrentlyWorking,
       disabled: true,
       count: assigneeCurrentlyWorking.records.length
@@ -31,7 +31,7 @@ function getTabs(state: Client.TasksState): TaskListTabState[] {
     {
       id: 1,
       label: 'core.myWork.tab.task.overdue',
-      color: Client.AssigneePalette.assigneeOverdue,
+      color: Context.AssigneePalette.assigneeOverdue,
       group: assigneeOverdue,
       disabled: true,
       count: assigneeOverdue.records.length
@@ -39,7 +39,7 @@ function getTabs(state: Client.TasksState): TaskListTabState[] {
     {
       id: 2,
       label: 'core.myWork.tab.task.startsToday',
-      color: Client.AssigneePalette.assigneeStartsToday,
+      color: Context.AssigneePalette.assigneeStartsToday,
       group: assigneeStartsToday,
       disabled: true,
       count: assigneeStartsToday.records.length
@@ -47,7 +47,7 @@ function getTabs(state: Client.TasksState): TaskListTabState[] {
     {
       id: 3,
       label: 'core.myWork.tab.task.available',
-      color: Client.AssigneePalette.assigneeOther,
+      color: Context.AssigneePalette.assigneeOther,
       group: assigneeOther,
       disabled: true,
       count: assigneeOther.records.length
@@ -56,7 +56,7 @@ function getTabs(state: Client.TasksState): TaskListTabState[] {
 }
 
 const MyWorkLoader: React.FC = () => {
-  const tasks = Client.useTasks();
+  const tasks = Context.useTasks();
 
   if (tasks.loading) {
     return <>...loading</>

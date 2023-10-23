@@ -8,6 +8,7 @@ import TaskStatus from 'core/TaskStatus';
 import TaskWorkDialog from 'core/TaskWork';
 import TaskEditDialog from 'core/TaskEdit';
 
+import Context from 'context';
 import Client from '@taskclient';
 import { StyledAppBar, StyledTaskListTab } from '../TaskList';
 
@@ -64,7 +65,7 @@ const StyledStack: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 }
 
 const MyRecentActivity: React.FC = () => {
-  const org = Client.useOrg();
+  const org = Context.useOrg();
   const myActivities = org.state.iam.activity;
 
   /*  TODO
@@ -93,7 +94,7 @@ const StyledTitle: React.FC<{ children: string }> = ({ children }) => {
   return (<Typography fontWeight='bold'><FormattedMessage id={children} /></Typography>)
 }
 
-function getTaskAlert(task: Client.TaskDescriptor): { isDueDate: boolean, title: string, alertSeverity: AlertColor, alertMsg: string } {
+function getTaskAlert(task: Context.TaskDescriptor): { isDueDate: boolean, title: string, alertSeverity: AlertColor, alertMsg: string } {
 
   if (task.assigneeGroupType === 'assigneeOverdue') {
     return { alertSeverity: 'error', isDueDate: true, title: 'core.teamSpace.task.overdue.alert', alertMsg: 'core.myWork.task.dueDate' }
@@ -107,12 +108,12 @@ function getTaskAlert(task: Client.TaskDescriptor): { isDueDate: boolean, title:
   return { alertSeverity: 'success', isDueDate: true, title: 'core.teamSpace.task.available.alert', alertMsg: 'core.myWork.task.dueDate' }
 }
 
-const TaskItemActive: React.FC<{ task: Client.TaskDescriptor | undefined }> = ({ task }) => {
+const TaskItemActive: React.FC<{ task: Context.TaskDescriptor | undefined }> = ({ task }) => {
   const [taskWorkOpen, setTaskWorkOpen] = React.useState(false);
   const [taskEditOpen, setTaskEditOpen] = React.useState(false);
 
-  const tasks = Client.useTasks();
-  const backend = Client.useBackend();
+  const tasks = Context.useTasks();
+  const backend = Context.useBackend();
 
   async function handleStatusChange(command: Client.ChangeTaskStatus) {
     if (!task) {
@@ -202,7 +203,7 @@ const TaskItemActive: React.FC<{ task: Client.TaskDescriptor | undefined }> = ({
   </StyledStack>);
 }
 
-const DelegateTaskItemActive: React.FC<{ task: Client.TaskDescriptor | undefined }> = ({ task }) => {
+const DelegateTaskItemActive: React.FC<{ task: Context.TaskDescriptor | undefined }> = ({ task }) => {
 
   // return summaryTab === 'summary' ? 
   const [summaryTab, setSummaryTab] = React.useState<'TaskItemActive' | 'MyRecentActivity'>('TaskItemActive');
@@ -224,7 +225,7 @@ const DelegateTaskItemActive: React.FC<{ task: Client.TaskDescriptor | undefined
   </>)
 }
 
-const TaskItemActiveWithRefresh: React.FC<{ task: Client.TaskDescriptor | undefined }> = ({ task }) => {
+const TaskItemActiveWithRefresh: React.FC<{ task: Context.TaskDescriptor | undefined }> = ({ task }) => {
   const [dismount, setDismount] = React.useState(false);
 
   React.useEffect(() => {

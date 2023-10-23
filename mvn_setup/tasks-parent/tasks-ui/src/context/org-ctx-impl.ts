@@ -1,18 +1,18 @@
 import {
   UserId, User, Org, RoleId
-} from './client-types';
+} from 'taskclient/client-types';
 
 import {
   OrgState, RoleSearchResult, UserSearchResult
 } from './org-ctx-types';
 
 interface ExtendedInit {
-  org: Org; 
+  org: Org;
   iam: User;
 }
 
 class OrgMutatorBuilderImpl implements OrgState {
-  private _org: Org; 
+  private _org: Org;
   private _iam: User;
 
   constructor(init: ExtendedInit) {
@@ -28,11 +28,11 @@ class OrgMutatorBuilderImpl implements OrgState {
   withOrg(value: Org): OrgState {
     return new OrgMutatorBuilderImpl({ ...this.clone(), org: value });
   }
-  
+
   findUsers(searchFor: string, checkedUsers: UserId[]): UserSearchResult[] {
     const criteria = searchFor.toLowerCase();
     const target = Object.values(this._org.users);
-    
+
     const result = criteria ?
       target.filter(entry => entry.displayName.toLowerCase().includes(criteria)) :
       target;
@@ -47,7 +47,7 @@ class OrgMutatorBuilderImpl implements OrgState {
   findRoles(searchFor: string, checkedRoles: RoleId[]): RoleSearchResult[] {
     const criteria = searchFor.toLowerCase();
     const target = Object.values(this._org.roles);
-    
+
     const result = criteria ?
       target.filter(entry => entry.displayName.toLowerCase().includes(criteria)) :
       target;
@@ -58,7 +58,7 @@ class OrgMutatorBuilderImpl implements OrgState {
       role
     }));
   }
-  
+
   clone(): ExtendedInit {
     const init = this;
     return {

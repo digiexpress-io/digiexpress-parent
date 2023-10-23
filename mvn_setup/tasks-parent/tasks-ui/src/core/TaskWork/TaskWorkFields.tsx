@@ -29,6 +29,7 @@ import BlockIcon from '@mui/icons-material/Block';
 import EditIcon from '@mui/icons-material/Edit';
 
 import TaskClient from '@taskclient';
+import Context from 'context';
 
 import ChecklistDelegate from 'core/Checklist';
 import { TaskExtension } from 'taskclient/task-types';
@@ -107,19 +108,19 @@ const ChecklistAlert = styled(Alert)(({ theme }) => ({
 
 
 const Title: React.FC<{}> = () => {
-  const { state } = TaskClient.useTaskEdit();
+  const { state } = Context.useTaskEdit();
 
   return (<Typography variant='h4'>{state.task.title}</Typography>);
 }
 
 const Description: React.FC<{}> = () => {
-  const { state } = TaskClient.useTaskEdit();
+  const { state } = Context.useTaskEdit();
 
   return (<Typography variant='body1'>{state.task.description}</Typography>);
 }
 
 const Checklist: React.FC<{}> = () => {
-  const { state } = TaskClient.useTaskEdit();
+  const { state } = Context.useTaskEdit();
   const checklist = state.task.checklist;
 
   return (
@@ -138,7 +139,7 @@ const Checklist: React.FC<{}> = () => {
 }
 
 const StartDate: React.FC = () => {
-  const { state } = TaskClient.useTaskEdit();
+  const { state } = Context.useTaskEdit();
   const startDate = state.task.startDate;
   if (!startDate) {
     return <></>;
@@ -153,7 +154,7 @@ const StartDate: React.FC = () => {
 }
 
 const DueDate: React.FC = () => {
-  const { state } = TaskClient.useTaskEdit();
+  const { state } = Context.useTaskEdit();
   const dueDate = state.task.dueDate;
   if (!dueDate) {
     return <></>;
@@ -195,7 +196,7 @@ const AttachmentListItem: React.FC<{ attachment: TaskExtension }> = ({ attachmen
 }
 
 const Attachments: React.FC<{}> = () => {
-  const { state } = TaskClient.useTaskEdit();
+  const { state } = Context.useTaskEdit();
   const attachments: TaskExtension[] = state.task.uploads;
   return (
     <Box sx={{ p: 1 }}>
@@ -210,7 +211,7 @@ const Attachments: React.FC<{}> = () => {
 }
 
 const Form: React.FC<{}> = () => {
-  const { state } = TaskClient.useTaskEdit();
+  const { state } = Context.useTaskEdit();
   const form: TaskExtension = state.task.entry.extensions.filter(extension => extension.type === 'dialob')[0];
   return (
     <Box sx={{ border: 1, borderRadius: 1, py: 20, pl: 1, m: 1, mt: 2 }}>
@@ -343,7 +344,7 @@ const Messages: React.FC<{}> = () => {
 
 const Menu: React.FC<{}> = () => {
   const { activeTab, withTab } = useMenu();
-  const { state } = TaskClient.useTaskEdit();
+  const { state } = Context.useTaskEdit();
 
   const unreadMessages = 1; // mocked
   const noOfAttachments = state.task.uploads.length;

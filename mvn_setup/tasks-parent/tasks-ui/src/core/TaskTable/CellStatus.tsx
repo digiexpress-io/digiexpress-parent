@@ -1,17 +1,18 @@
 import React from 'react';
 
 import Client from '@taskclient';
+import Context from 'context';
 
 import { StyledTableCell } from './StyledTable';
 import TaskStatus from 'core/TaskStatus';
 
 const FormattedCell: React.FC<{
   rowId: number,
-  row: Client.TaskDescriptor,
-  def: Client.Group,
+  row: Context.TaskDescriptor,
+  def: Context.Group,
 }> = ({ row }) => {
-  const tasks = Client.useTasks();
-  const backend = Client.useBackend();
+  const tasks = Context.useTasks();
+  const backend = Context.useBackend();
 
   async function handleChange(command: Client.ChangeTaskStatus) {
     await backend.task.updateActiveTask(row.id, [command]);

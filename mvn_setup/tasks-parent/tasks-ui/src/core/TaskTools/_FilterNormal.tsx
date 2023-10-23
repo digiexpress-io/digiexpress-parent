@@ -7,15 +7,15 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Check from '@mui/icons-material/Check';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
-import client from '@taskclient';
+import Client from '@taskclient';
+import Context from 'context';
 
-
-const statustypes: client.TaskStatus[] = ['CREATED', 'IN_PROGRESS', 'COMPLETED', 'REJECTED'];
-const prioritytypes: client.TaskPriority[] = ['HIGH', 'MEDIUM', 'LOW'];
+const statustypes: Client.TaskStatus[] = ['CREATED', 'IN_PROGRESS', 'COMPLETED', 'REJECTED'];
+const prioritytypes: Client.TaskPriority[] = ['HIGH', 'MEDIUM', 'LOW'];
 
 
 export default function DenseMenu() {
-  const ctx = client.useTasks();
+  const ctx = Context.useTasks();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);

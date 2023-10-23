@@ -4,6 +4,7 @@ import { Box, Stack, Grid } from '@mui/material';
 import StyledFullScreenDialog from '../Dialogs';
 import Fields from './TaskWorkFields';
 import TaskClient from '@taskclient';
+import Context from 'context';
 import { MenuProvider, useMenu } from './menu-ctx';
 
 const Left: React.FC<{}> = () => {
@@ -67,7 +68,7 @@ const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   )
 }
 
-const TaskWorkDialog: React.FC<{ open: boolean, onClose: () => void, task?: TaskClient.TaskDescriptor }> = (props) => {
+const TaskWorkDialog: React.FC<{ open: boolean, onClose: () => void, task?: Context.TaskDescriptor }> = (props) => {
 
   if (!props.open || !props.task) {
     return null;
@@ -75,7 +76,7 @@ const TaskWorkDialog: React.FC<{ open: boolean, onClose: () => void, task?: Task
 
   return (
     <MenuProvider>
-      <TaskClient.EditProvider task={props.task}>
+      <Context.EditProvider task={props.task}>
         <StyledFullScreenDialog
           header={<Header onClose={props.onClose} />}
           footer={<Footer onClose={props.onClose} />}
@@ -85,7 +86,7 @@ const TaskWorkDialog: React.FC<{ open: boolean, onClose: () => void, task?: Task
           open={props.open}
           shortHeader
         />
-      </TaskClient.EditProvider>
+      </Context.EditProvider>
     </MenuProvider>
   );
 }

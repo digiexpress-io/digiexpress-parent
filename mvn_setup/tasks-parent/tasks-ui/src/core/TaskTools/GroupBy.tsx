@@ -2,14 +2,14 @@ import * as React from 'react';
 import { Button, Menu, Typography, MenuList, MenuItem, ListItemIcon, ListItemText } from '@mui/material';
 import Check from '@mui/icons-material/Check';
 import { FormattedMessage } from 'react-intl';
-import Client from '@taskclient';
+import Context from 'context';
 
 
-const types: Client.GroupBy[] = ['none', 'owners', 'roles', 'status', 'priority'];
+const types: Context.GroupBy[] = ['none', 'owners', 'roles', 'status', 'priority'];
 
 
 export default function DenseMenu() {
-  const ctx = Client.useTasks();
+  const ctx = Context.useTasks();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {

@@ -4,7 +4,7 @@ import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { FormattedMessage } from 'react-intl';
 
-import client from '@taskclient';
+import Context from 'context';
 import { usePopover } from './CellPopover';
 import CellHoverButton from './CellMenuButton';
 import TaskEditDialog from 'core/TaskEdit';
@@ -17,8 +17,8 @@ const StyledBox = styled(Box)(({ theme }) => ({
   alignItems: 'center'
 }));
 
-const CellMenuItem: React.FC<{ 
-  onClick?: () => void, 
+const CellMenuItem: React.FC<{
+  onClick?: () => void,
   title: string,
 }> = ({ title, onClick }) => {
   return (
@@ -30,8 +30,8 @@ const CellMenuItem: React.FC<{
   )
 }
 
-const HoverMenu: React.FC<{ 
-  onEdit: () => void, 
+const HoverMenu: React.FC<{
+  onEdit: () => void,
   onWork: () => void,
 }> = ({ onEdit, onWork }) => {
   const Popover = usePopover();
@@ -60,8 +60,8 @@ const HoverMenu: React.FC<{
 
 const FormattedCell: React.FC<{
   rowId: number,
-  row: client.TaskDescriptor,
-  def: client.Group,
+  row: Context.TaskDescriptor,
+  def: Context.Group,
   active: boolean,
   setDisabled: () => void
 }> = ({ row, active, setDisabled }) => {
@@ -91,10 +91,10 @@ const FormattedCell: React.FC<{
       <Box width="35px" justifyContent='right'> {/* Box is needed to prevent table cell resize on hover */}
         <TaskEditDialog open={edit} onClose={handleEndEdit} task={row} />
         <TaskWorkDialog open={work} onClose={handleEndWork} task={row} />
-        {active && 
-          <HoverMenu 
-            onEdit={handleStartEdit} 
-            onWork={handleStartWork} 
+        {active &&
+          <HoverMenu
+            onEdit={handleStartEdit}
+            onWork={handleStartWork}
           />}
       </Box>
     </StyledTableCell>

@@ -3,8 +3,7 @@ import { Box } from '@mui/material';
 import { SxProps } from '@mui/system';
 
 import Burger from '@the-wrench-io/react-burger';
-import TaskClient from '@taskclient';
-
+import Context from 'context';
 import Core from '../../core';
 import Activities from '../Activities';
 
@@ -13,7 +12,7 @@ const root: SxProps = { height: '100%', backgroundColor: "mainContent.main", wid
 
 const Main: React.FC<{}> = () => {
   const layout = Burger.useTabs();
-  const { site, session } = TaskClient.useComposer();
+  const { site, session } = Context.useComposer();
   const tabs = layout.session.tabs;
   const active = tabs.length ? tabs[layout.session.history.open] : undefined;
   const entity = active ? session.getEntity(active.id) : undefined;
