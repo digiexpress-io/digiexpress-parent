@@ -28,7 +28,6 @@ import CheckIcon from '@mui/icons-material/Check';
 import BlockIcon from '@mui/icons-material/Block';
 import EditIcon from '@mui/icons-material/Edit';
 
-import TaskClient from '@taskclient';
 import Context from 'context';
 
 import ChecklistDelegate from 'core/Checklist';

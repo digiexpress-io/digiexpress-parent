@@ -1,17 +1,19 @@
 import * as React from 'react';
-import { Button, Menu, MenuList, MenuItem, ListItemIcon, ListItemText, Typography } from '@mui/material';
+import { Button, Menu, Typography, MenuList, MenuItem, ListItemIcon, ListItemText } from '@mui/material';
 import Check from '@mui/icons-material/Check';
 import { FormattedMessage } from 'react-intl';
-import Client from '@taskclient';
 import Context from 'context';
+import { GroupBy } from 'taskdescriptor';
 
 
-const prioritytypes: Client.TaskPriority[] = ['HIGH', 'MEDIUM', 'LOW'];
+const types: GroupBy[] = ['none', 'owners', 'roles', 'status', 'priority'];
 
 
-export default function DenseMenu() {
+const DenseMenu: React.FC<{
+  onChange: (value: GroupBy) => void;
+  value: GroupBy
+}> = ({ onChange, value }) => {
   const ctx = Context.useTasks();
-
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -20,14 +22,15 @@ export default function DenseMenu() {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const filterByPriority = ctx.state.filterBy.find(filter => filter.type === 'FilterByPriority') as Context.FilterByPriority | undefined;
+
 
   return (<>
     <Button variant='outlined' sx={{ borderRadius: 10, borderColor: 'text.primary' }} onClick={handleClick}>
       <Typography variant='caption' sx={{ color: 'text.primary' }}>
-        <FormattedMessage id='core.search.searchBar.filterPriority' values={{ count: filterByPriority?.priority.length }} />
+        <FormattedMessage id='core.search.searchBar.groupBy' values={{ groupBy: value }} />
       </Typography>
     </Button>
+
     <Menu sx={{ width: 320 }}
       anchorEl={anchorEl}
       open={open}
@@ -43,21 +46,17 @@ export default function DenseMenu() {
     >
       <MenuList dense>
         <MenuItem>
-          <ListItemText><b>Filter by priority</b></ListItemText>
+          <ListItemText><b>Group by</b></ListItemText>
         </MenuItem>
-        {prioritytypes.map(type => {
-          const found = ctx.state.filterBy.find(filter => filter.type === 'FilterByPriority');
-          const selected = found ? found.type === 'FilterByPriority' && found.priority.includes(type) : false
+        {types.map(type => {
 
-          if (selected) {
-            return <MenuItem key={type} onClick={() => {
-              handleClose();
-              ctx.setState(prev => prev.withFilterByPriority([type]));
-            }}><ListItemIcon><Check /></ListItemIcon>{type}</MenuItem>
+          if (value === type) {
+            return <MenuItem key={type}><ListItemIcon><Check /></ListItemIcon>{type}</MenuItem>
           }
           return <MenuItem key={type} onClick={() => {
             handleClose();
-            ctx.setState(prev => prev.withFilterByPriority([type]));
+            onChange(type);
+
           }}><ListItemText inset>{type}</ListItemText></MenuItem>;
         })}
       </MenuList>
@@ -65,3 +64,5 @@ export default function DenseMenu() {
   </>
   );
 }
+
+export default DenseMenu;

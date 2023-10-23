@@ -2,8 +2,7 @@ import React from 'react';
 import { Dialog, IconButton, Box, styled } from '@mui/material';
 import DateRangeOutlinedIcon from '@mui/icons-material/DateRangeOutlined';
 import TimestampFormatter from 'core/TimestampFormatter';
-import Context from 'context';
-
+import { TaskDescriptor, Group } from 'taskdescriptor';
 import TaskCell from './TaskCell';
 import { CellProps } from './task-table-types';
 import DatePicker from '../DatePicker';
@@ -40,8 +39,8 @@ const DueDate: React.FC<CellProps> = ({ row }) => {
 
 const FormattedCell: React.FC<{
   rowId: number,
-  row: Context.TaskDescriptor,
-  def: Context.Group
+  row: TaskDescriptor,
+  def: Group
 }> = ({ row, def }) => {
 
   return (<StyledTableCell width='180px'>

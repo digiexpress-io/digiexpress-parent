@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box } from '@mui/material';
 
-import Context from 'context';
+import { TaskDescriptor, Group } from 'taskdescriptor';
 import TaskCell from './TaskCell';
 import { StyledTableCell } from './StyledTable';
 
@@ -9,8 +9,8 @@ import { StyledTableCell } from './StyledTable';
 
 const FormattedCell: React.FC<{
   rowId: number,
-  row: Context.TaskDescriptor,
-  def: Context.Group,
+  row: TaskDescriptor,
+  def: Group,
   children: React.ReactNode
 }> = ({ row, children }) => {
 

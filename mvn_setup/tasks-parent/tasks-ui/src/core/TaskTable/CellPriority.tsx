@@ -1,14 +1,15 @@
 import React from 'react';
 
 import Context from 'context';
-import Client from '@taskclient';
+import { TaskDescriptor, Group } from 'taskdescriptor';
+import Client from 'taskclient';
 import { StyledTableCell } from './StyledTable';
 import TaskPriority from 'core/TaskPriority';
 
 const FormattedCell: React.FC<{
   rowId: number,
-  row: Context.TaskDescriptor,
-  def: Context.Group
+  row: TaskDescriptor,
+  def: Group
 }> = ({ row }) => {
   const tasks = Context.useTasks();
   const backend = Context.useBackend();

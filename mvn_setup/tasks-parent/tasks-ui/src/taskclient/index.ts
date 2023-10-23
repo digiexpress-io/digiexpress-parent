@@ -10,8 +10,8 @@ import {
 } from './org-types';
 
 import {
-  TaskId, Task, TaskPriority, TaskStatus,
-
+  TaskPriority, TaskStatus,
+  TaskId, Task,
   CreateTask,
   ChangeTaskStartDate,
   AssignTaskReporter,
@@ -36,7 +36,8 @@ import {
   ChangeChecklistItemCompleted,
   ChangeChecklistItemDueDate,
   ChangeChecklistItemTitle,
-  TaskCommand, TaskTransaction,
+  TaskCommand, TaskTransaction, TaskExtension,
+  Checklist, TaskComment
 
 } from './task-types';
 
@@ -52,26 +53,21 @@ import {
 } from './error-types';
 
 
-export type {
-  Org, User, UserId, Role, RoleId, Profile, Backend, BackendError, StoreError, Task,
-  TaskCommand, TaskTransaction,
-}
 
 declare namespace TaskClient {
   export type {
     Profile,
-    TaskId, Task, TaskPriority, TaskStatus,
+    TaskId, Task,
     BackendError, Backend, StoreConfig, Store,
-    Org, User, Role
-  }
-
-  export type {
+    Org, User, Role,
+    UserId, RoleId,
+    TaskCommand, TaskTransaction,
+    TaskExtension,
+    Checklist, TaskComment,
+    TaskPriority, TaskStatus,
     ServiceErrorMsg,
     ServiceErrorProps,
-    StoreError
-  }
-
-  export type {
+    StoreError,
     CreateTask,
     ChangeTaskStartDate,
     AssignTaskReporter,
@@ -99,6 +95,41 @@ declare namespace TaskClient {
   }
 }
 
+export type {
+  Profile,
+  TaskId, Task,
+  BackendError, Backend, StoreConfig, Store, StoreError,
+  Org, User, Role,
+  UserId, RoleId,
+  TaskCommand, TaskTransaction,
+  TaskExtension,
+  Checklist, TaskComment,
+  TaskPriority, TaskStatus,
+  CreateTask,
+  ChangeTaskStartDate,
+  AssignTaskReporter,
+  ArchiveTask,
+  ChangeTaskStatus,
+  ChangeTaskPriority,
+  AssignTaskParent,
+  CommentOnTask,
+  ChangeTaskComment,
+  AssignTaskRoles,
+  AssignTask,
+  ChangeTaskDueDate,
+  ChangeTaskInfo,
+  CreateTaskExtension,
+  ChangeTaskExtension,
+  CreateChecklist,
+  ChangeChecklistTitle,
+  DeleteChecklist,
+  AddChecklistItem,
+  DeleteChecklistItem,
+  ChangeChecklistItemAssignees,
+  ChangeChecklistItemCompleted,
+  ChangeChecklistItemDueDate,
+  ChangeChecklistItemTitle
+}
 
 namespace TaskClient {
   export const ServiceImpl = ServiceImplAs;

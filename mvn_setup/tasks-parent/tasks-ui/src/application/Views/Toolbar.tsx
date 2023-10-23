@@ -9,8 +9,6 @@ import FeedbackOutlinedIcon from '@mui/icons-material/FeedbackOutlined';
 
 import Context from 'context';
 import Burger from '@the-wrench-io/react-burger';
-import DeClient from '@taskclient';
-
 
 const StyledTab = styled(Tab)<TabProps>(({ theme }) => ({
   "&.MuiButtonBase-root": {
@@ -45,9 +43,6 @@ const Toolbar: React.FC<{}> = () => {
 
   //const articlePagesView = active?.data?.nav?.type === "ARTICLE_PAGES";
   const unsavedPages = Object.values(composer.session.pages).filter(p => !p.saved);
-  const saveSx = unsavedPages.length ? { color: "explorerItem.contrastText" } : undefined;
-
-
   const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
     if (newValue === 'toolbar.save' && unsavedPages) {
       if (unsavedPages.length === 0) {

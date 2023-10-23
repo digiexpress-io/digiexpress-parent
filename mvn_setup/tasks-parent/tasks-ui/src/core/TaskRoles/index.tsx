@@ -3,12 +3,13 @@ import { AvatarGroup, Box, Button, Avatar, List, MenuItem, Checkbox, ListItemTex
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import { SearchFieldPopover } from 'core/SearchField';
 import { useMockPopover } from 'core/TaskTable/MockPopover';
-import Client from '@taskclient';
+import { TaskDescriptor, AvatarCode } from 'taskdescriptor';
+import Client from 'taskclient';
 import Context from 'context';
 
-const RoleAvatar: React.FC<{ children?: Context.AvatarCode, onClick?: (event: React.MouseEvent<HTMLElement>) => void }> = ({ children, onClick }) => {
+const RoleAvatar: React.FC<{ children?: AvatarCode, onClick?: (event: React.MouseEvent<HTMLElement>) => void }> = ({ children, onClick }) => {
   const { state } = Context.useTasks();
-  const roleColors = state.pallette.roles;
+  const roleColors = state.palette.roles;
   const bgcolor: string | undefined = children ? roleColors[children.value] : undefined;
   const avatar = children ? children.twoletters : <AdminPanelSettingsIcon sx={{ fontSize: 15 }} />;
 
@@ -26,9 +27,9 @@ const RoleAvatar: React.FC<{ children?: Context.AvatarCode, onClick?: (event: Re
   );
 }
 
-const TaskRoles: React.FC<{ task: Context.TaskDescriptor, onChange: (command: Client.AssignTaskRoles) => Promise<void> }> = ({ task, onChange }) => {
+const TaskRoles: React.FC<{ task: TaskDescriptor, onChange: (command: Client.AssignTaskRoles) => Promise<void> }> = ({ task, onChange }) => {
   const { state } = Context.useTasks();
-  const roleColors = state.pallette.roles;
+  const roleColors = state.palette.roles;
 
   const [newRoles, setNewRoles] = React.useState(task.roles);
   const { setSearchString, searchResults } = Context.useRoles({ roles: newRoles });
@@ -49,7 +50,7 @@ const TaskRoles: React.FC<{ task: Context.TaskDescriptor, onChange: (command: Cl
 
   const taskRoleAvatars = task.rolesAvatars.length ?
     <AvatarGroup spacing='medium' onClick={Popover.onClick}>
-      {task.rolesAvatars.map((role: Context.AvatarCode) => (<RoleAvatar key={role.value}>{role}</RoleAvatar>))}
+      {task.rolesAvatars.map((role: AvatarCode) => (<RoleAvatar key={role.value}>{role}</RoleAvatar>))}
     </AvatarGroup> :
     <RoleAvatar onClick={Popover.onClick} />;
 

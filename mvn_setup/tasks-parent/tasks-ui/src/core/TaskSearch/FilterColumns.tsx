@@ -1,15 +1,16 @@
 import * as React from 'react';
-import { Button, Menu, Typography, MenuList, MenuItem, ListItemIcon, ListItemText } from '@mui/material';
+import { Button, Menu, MenuItem, MenuList, ListItemIcon, ListItemText, Typography } from '@mui/material';
 import Check from '@mui/icons-material/Check';
 import { FormattedMessage } from 'react-intl';
-import Context from 'context';
+import { TaskDescriptor } from 'taskdescriptor';
 
-
-const types: Context.GroupBy[] = ['none', 'owners', 'roles', 'status', 'priority'];
-
-
-export default function DenseMenu() {
-  const ctx = Context.useTasks();
+export default function DenseMenu(
+  props: {
+    onChange: (value: (keyof TaskDescriptor)[]) => void;
+    value: (keyof TaskDescriptor)[];
+    types: (keyof TaskDescriptor)[];
+  }
+) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -17,13 +18,12 @@ export default function DenseMenu() {
   };
   const handleClose = () => {
     setAnchorEl(null);
-  };
-
+  }
 
   return (<>
     <Button variant='outlined' sx={{ borderRadius: 10, borderColor: 'text.primary' }} onClick={handleClick}>
       <Typography variant='caption' sx={{ color: 'text.primary' }}>
-        <FormattedMessage id='core.search.searchBar.groupBy' values={{ groupBy: ctx.state.groupBy }} />
+        <FormattedMessage id='core.search.searchBar.filterColumns' />
       </Typography>
     </Button>
 
@@ -42,21 +42,28 @@ export default function DenseMenu() {
     >
       <MenuList dense>
         <MenuItem>
-          <ListItemText><b>Group by</b></ListItemText>
+          <ListItemText><b>Show/Hide columns</b></ListItemText>
         </MenuItem>
-        {types.map(type => {
+        {props.types.map(type => {
+          const selected = props.value.includes(type)
 
-          if (ctx.state.groupBy === type) {
-            return <MenuItem key={type}><ListItemIcon><Check /></ListItemIcon>{type}</MenuItem>
+          if (selected) {
+            return (<MenuItem key={type} onClick={() => {
+              handleClose();
+              props.onChange(props.value.filter(sel => sel !== type));
+            }
+            }> <ListItemIcon><Check /></ListItemIcon>{type}</MenuItem>);
           }
           return <MenuItem key={type} onClick={() => {
             handleClose();
-            ctx.setState(prev => prev.withGroupBy(type));
-
-          }}><ListItemText inset>{type}</ListItemText></MenuItem>;
+            props.onChange([...props.value, type]);
+          }}>
+            <ListItemText inset>{type}</ListItemText>
+          </MenuItem>;
         })}
+
       </MenuList>
-    </Menu>
+    </Menu >
   </>
   );
 }

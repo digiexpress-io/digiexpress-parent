@@ -2,13 +2,19 @@ import * as React from 'react';
 import { Button, Menu, MenuItem, MenuList, ListItemIcon, ListItemText, Typography } from '@mui/material';
 import Check from '@mui/icons-material/Check';
 import { FormattedMessage } from 'react-intl';
-import Client from '@taskclient';
+import Client from 'taskclient';
 import Context from 'context';
+import { FilterByStatus, FilterBy } from 'taskdescriptor';
 
 
 const statustypes: Client.TaskStatus[] = ['CREATED', 'IN_PROGRESS', 'COMPLETED', 'REJECTED'];
 
-export default function DenseMenu() {
+export default function DenseMenu(
+  props: {
+    onChange: (value: Client.TaskStatus[]) => void;
+    value: FilterBy[]
+  }
+) {
   const ctx = Context.useTasks();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -19,7 +25,7 @@ export default function DenseMenu() {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const filterByStatus = ctx.state.filterBy.find(filter => filter.type === 'FilterByStatus') as Context.FilterByStatus | undefined;
+  const filterByStatus = props.value.find(filter => filter.type === 'FilterByStatus') as FilterByStatus | undefined;
 
   return (<>
     <Button variant='outlined' sx={{ borderRadius: 10, borderColor: 'text.primary' }} onClick={handleClick}>
@@ -46,18 +52,18 @@ export default function DenseMenu() {
           <ListItemText><b>Filter by status</b></ListItemText>
         </MenuItem>
         {statustypes.map(type => {
-          const found = ctx.state.filterBy.find(filter => filter.type === 'FilterByStatus');
+          const found = props.value.find(filter => filter.type === 'FilterByStatus');
           const selected = found ? found.type === 'FilterByStatus' && found.status.includes(type) : false
 
           if (selected) {
             return (<MenuItem key={type} onClick={() => {
               handleClose();
-              ctx.setState(prev => prev.withFilterByStatus([type]));
+              props.onChange([type]);
             }}><ListItemIcon><Check /></ListItemIcon>{type}</MenuItem>);
           }
           return <MenuItem key={type} onClick={() => {
             handleClose();
-            ctx.setState(prev => prev.withFilterByStatus([type]));
+            props.onChange([type]);
           }}>
             <ListItemText inset>{type}</ListItemText>
           </MenuItem>;

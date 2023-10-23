@@ -1,13 +1,14 @@
 import React from 'react';
 
-import Client from '@taskclient';
+import Client from 'taskclient';
 import Context from 'context';
+import { TaskDescriptor } from 'taskdescriptor';
 import { StyledTableCell } from './StyledTable';
 import TaskAssignees from 'core/TaskAssignees';
 
 const FormattedCell: React.FC<{
   rowId: number,
-  row: Context.TaskDescriptor,
+  row: TaskDescriptor,
 }> = ({ row }) => {
 
   const tasks = Context.useTasks();

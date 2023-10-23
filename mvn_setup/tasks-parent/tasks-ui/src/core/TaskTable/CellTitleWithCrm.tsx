@@ -2,7 +2,7 @@ import React from 'react';
 import { Box } from '@mui/material';
 import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
 
-import Context from 'context';
+import { TaskDescriptor, Group } from 'taskdescriptor';
 import TaskCell from './TaskCell';
 import CellHoverButton from './CellMenuButton';
 import TaskWorkDialog from 'core/TaskWork';
@@ -22,8 +22,8 @@ const HoverMenu: React.FC<{ onEdit: () => void }> = ({ onEdit }) => {
 
 const FormattedCell: React.FC<{
   rowId: number,
-  row: Context.TaskDescriptor,
-  def: Context.Group,
+  row: TaskDescriptor,
+  def: Group,
 
   active: boolean,
   setDisabled: () => void

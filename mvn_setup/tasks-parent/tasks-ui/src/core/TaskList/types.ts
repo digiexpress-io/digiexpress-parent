@@ -1,4 +1,4 @@
-import Context from 'context';
+import { TaskDescriptor, Group } from 'taskdescriptor';
 import Table from 'table';
 
 
@@ -6,7 +6,7 @@ interface TaskListTabState {
   id: number,
   label: string,
   color: string,
-  group: Context.Group,
+  group: Group,
   disabled: boolean,
   count: number | undefined
 }
@@ -14,19 +14,19 @@ interface TaskListTabState {
 
 interface TaskListStateInit {
   activeTab: number,
-  activeTask: Context.TaskDescriptor | undefined,
+  activeTask: TaskDescriptor | undefined,
   tabs: TaskListTabState[];
 }
 
 interface TaskListState extends TaskListStateInit {
   withActiveTab(activeTab: number): TaskListState;
-  withActiveTask(activeTask: Context.TaskDescriptor | undefined): TaskListState;
+  withActiveTask(activeTask: TaskDescriptor | undefined): TaskListState;
   withTabs(tabs: TaskListTabState[]): TaskListState;
 }
 
 class ImmutableTaskListState implements TaskListState {
   private _activeTab: number;
-  private _activeTask: Context.TaskDescriptor | undefined;
+  private _activeTask: TaskDescriptor | undefined;
   private _tabs: TaskListTabState[];
 
   constructor(props: TaskListStateInit) {
@@ -42,12 +42,12 @@ class ImmutableTaskListState implements TaskListState {
     return new ImmutableTaskListState({ activeTab, activeTask: this._activeTask, tabs: this._tabs.map((tab) => ({ ...tab, disabled: tab.id !== activeTab })) });
   }
 
-  withActiveTask(activeTask: Context.TaskDescriptor | undefined): TaskListState {
+  withActiveTask(activeTask: TaskDescriptor | undefined): TaskListState {
     return new ImmutableTaskListState({ activeTask, activeTab: this._activeTab, tabs: this._tabs })
   }
 
   withTabs(tabs: TaskListTabState[]): TaskListState {
-    let activeTask: Context.TaskDescriptor | undefined;
+    let activeTask: TaskDescriptor | undefined;
     if (this._activeTask) {
       activeTask = tabs.flatMap((tab) => tab.group.records).find((descriptor) => descriptor.id === this._activeTask?.id);
     }
@@ -66,7 +66,7 @@ function getActiveTab(tabs: TaskListTabState[]): number {
 }
 
 
-const initTable = (records: Context.TaskDescriptor[]) => new Table.TablePaginationImpl<Context.TaskDescriptor>({
+const initTable = (records: TaskDescriptor[]) => new Table.TablePaginationImpl<TaskDescriptor>({
   src: records,
   orderBy: 'dueDate',
   order: 'asc',

@@ -1,14 +1,16 @@
 import * as React from 'react';
-import { Button, Menu, MenuItem, MenuList, ListItemIcon, ListItemText, Typography } from '@mui/material';
+import { Button, Menu, MenuList, MenuItem, ListItemIcon, ListItemText, Typography } from '@mui/material';
 import Check from '@mui/icons-material/Check';
 import { FormattedMessage } from 'react-intl';
-import Client from '@taskclient';
 import Context from 'context';
+import { FilterByOwners, FilterBy } from 'taskdescriptor';
 
-
-const statustypes: Client.TaskStatus[] = ['CREATED', 'IN_PROGRESS', 'COMPLETED', 'REJECTED'];
-
-export default function DenseMenu() {
+export default function DenseMenu(
+  props: {
+    onChange: (value: string[]) => void;
+    value: FilterBy[]
+  }
+) {
   const ctx = Context.useTasks();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -19,12 +21,14 @@ export default function DenseMenu() {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const filterByStatus = ctx.state.filterBy.find(filter => filter.type === 'FilterByStatus') as Context.FilterByStatus | undefined;
+
+
+  const filterByOwners = props.value.find(filter => filter.type === 'FilterByOwners') as FilterByOwners | undefined;
 
   return (<>
     <Button variant='outlined' sx={{ borderRadius: 10, borderColor: 'text.primary' }} onClick={handleClick}>
       <Typography variant='caption' sx={{ color: 'text.primary' }}>
-        <FormattedMessage id='core.search.searchBar.filterColumns' values={{ count: 0 }} />
+        <FormattedMessage id='core.search.searchBar.filterOwners' values={{ count: filterByOwners?.owners.length }} />
       </Typography>
     </Button>
 
@@ -43,28 +47,29 @@ export default function DenseMenu() {
     >
       <MenuList dense>
         <MenuItem>
-          <ListItemText><b>Show/Hide columns</b></ListItemText>
+          <ListItemText><b>Filter by owners</b></ListItemText>
         </MenuItem>
-        {statustypes.map(type => {
-          const found = ctx.state.filterBy.find(filter => filter.type === 'FilterByStatus');
-          const selected = found ? found.type === 'FilterByStatus' && found.status.includes(type) : false
+        {Object.keys(ctx.state.palette.owners).map(type => {
+          const found = props.value.find(filter => filter.type === 'FilterByOwners');
+          const selected = found ? found.type === 'FilterByOwners' && found.owners.includes(type) : false
 
           if (selected) {
             return (<MenuItem key={type} onClick={() => {
               handleClose();
-              ctx.setState(prev => prev.withFilterByStatus([type]));
-            }}><ListItemIcon><Check /></ListItemIcon>{type}</MenuItem>);
+              props.onChange([type]);
+            }
+            }> <ListItemIcon><Check /></ListItemIcon>{type}</MenuItem>);
           }
           return <MenuItem key={type} onClick={() => {
             handleClose();
-            ctx.setState(prev => prev.withFilterByStatus([type]));
+            props.onChange([type]);
           }}>
             <ListItemText inset>{type}</ListItemText>
           </MenuItem>;
         })}
 
       </MenuList>
-    </Menu>
+    </Menu >
   </>
   );
 }

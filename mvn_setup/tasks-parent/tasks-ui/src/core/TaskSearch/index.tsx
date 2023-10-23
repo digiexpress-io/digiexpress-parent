@@ -1,10 +1,19 @@
 import React from 'react';
-import { TableHead, TableCell, TableRow, Box } from '@mui/material';
+import { TableHead, TableCell, TableRow, Box, Stack } from '@mui/material';
 
 import Context from 'context';
-
+import { TaskDescriptor, Group } from 'taskdescriptor';
 import TaskTable from '../TaskTable';
-import Tools from '../TaskTools';
+import ToolsSticky from './ToolsSticky';
+import FilterStatus from './FilterStatus';
+import FilterOwners from './FilterOwners';
+import FilterRoles from './FilterRoles';
+import FilterPriority from './FilterPriority';
+import FilterColumns from './FilterColumns';
+import FilterByString from './FilterByString';
+import GroupBy from './GroupBy';
+
+
 
 function getRowBackgroundColor(index: number): string {
   const isOdd = index % 2 === 1;
@@ -15,26 +24,29 @@ function getRowBackgroundColor(index: number): string {
   return 'background.paper';
 }
 
-const Header: React.FC<TaskTable.TableConfigProps> = ({ content, setContent, group }) => {
+const Header: React.FC<TaskTable.TableConfigProps & { columns: (keyof TaskDescriptor)[] }> = ({ content, setContent, group, columns }) => {
 
-  const columns: (keyof Context.TaskDescriptor)[] = React.useMemo(() => [
-    'assignees',
-    'dueDate',
-    'priority',
-    'roles',
-    'status'
-  ], []);
+  const includesTitle = columns.includes("title");
+
+  const headersToShow = includesTitle ?
+    columns.filter(c => c !== 'title') :
+    columns.slice(1);
 
   return (
     <TableHead>
       <TableRow>
+
+        { /* reserved title column */}
         <TableCell align='left' padding='none'>
           <TaskTable.Title group={group} />
           <TaskTable.SubTitle values={group.records.length} message='core.teamSpace.taskCount' />
         </TableCell>
 
-        <TaskTable.ColumnHeaders columns={columns} content={content} setContent={setContent} />
-        <TableCell></TableCell>
+        { /* without title */}
+        <TaskTable.ColumnHeaders columns={headersToShow} content={content} setContent={setContent} />
+
+        {/* menu column */}
+        {columns.length > 0 && <TableCell></TableCell>}
       </TableRow>
     </TableHead>
   );
@@ -42,46 +54,71 @@ const Header: React.FC<TaskTable.TableConfigProps> = ({ content, setContent, gro
 
 const Row: React.FC<{
   rowId: number,
-  row: Context.TaskDescriptor,
-  def: Context.Group
+  row: TaskDescriptor,
+  def: Group,
+  columns: (keyof TaskDescriptor)[]
 }> = (props) => {
 
   const [hoverItemsActive, setHoverItemsActive] = React.useState(false);
   function handleEndHover() {
     setHoverItemsActive(false);
   }
+  return (<TableRow sx={{ backgroundColor: getRowBackgroundColor(props.rowId) }} hover tabIndex={-1} key={props.row.id}
+    onMouseEnter={() => setHoverItemsActive(true)} onMouseLeave={handleEndHover}>
+    {props.columns.includes("title") && <TaskTable.CellTitle {...props} children={hoverItemsActive} />}
+    {props.columns.includes("assignees") && <TaskTable.CellAssignees {...props} />}
+    {props.columns.includes("dueDate") && <TaskTable.CellDueDate {...props} />}
+    {props.columns.includes("priority") && <TaskTable.CellPriority {...props} />}
+    {props.columns.includes("roles") && <TaskTable.CellRoles {...props} />}
+    {props.columns.includes("status") && <TaskTable.CellStatus {...props} />}
 
-  return (<TableRow sx={{ backgroundColor: getRowBackgroundColor(props.rowId) }} hover tabIndex={-1} key={props.row.id} onMouseEnter={() => setHoverItemsActive(true)} onMouseLeave={handleEndHover}>
-    <TaskTable.CellTitle {...props} children={hoverItemsActive} />
-    <TaskTable.CellAssignees {...props} />
-    <TaskTable.CellDueDate {...props} />
-    <TaskTable.CellPriority {...props} />
-    <TaskTable.CellRoles {...props} />
-    <TaskTable.CellStatus {...props} />
     <TaskTable.CellMenu {...props} active={hoverItemsActive} setDisabled={handleEndHover} />
   </TableRow>);
 }
 
+const columnTypes: (keyof TaskDescriptor)[] = [
+  'title',
+  'assignees',
+  'dueDate',
+  'priority',
+  'roles',
+  'status']
 
-const Rows: React.FC<TaskTable.TableConfigProps> = ({ content, group, loading }) => {
-  return (
-    <TaskTable.TableBody>
-      {content.entries.map((row, rowId) => (<Row key={row.id} rowId={rowId} row={row} def={group} />))}
-
-      <TaskTable.TableFiller content={content} loading={loading} plusColSpan={7} />
-    </TaskTable.TableBody>
-  )
-}
-
-
-//<SearchBar />
 const TaskSearch: React.FC<{}> = () => {
+  const tasks = Context.useTasks();
+  const [state, setState] = React.useState(tasks.state.withDescriptors());
+  const [columns, setColumns] = React.useState([
+    ...columnTypes
+  ]);
+
+  React.useEffect(() => {
+    setState(prev => prev.withTasks(tasks.state))
+  }, [tasks.state]);
+
   return (<Box>
+    <ToolsSticky>
+      <FilterByString onChange={({ target }) => setState(prev => prev.withSearchString(target.value))} />
+      <Stack direction='row' spacing={1}>
+        <GroupBy value={state.groupBy} onChange={(value) => setState(prev => prev.withGroupBy(value))} />
+        <FilterStatus value={state.filterBy} onChange={(value) => setState(prev => prev.withFilterByStatus(value))} />
+        <FilterPriority value={state.filterBy} onChange={(value) => setState(prev => prev.withFilterByPriority(value))} />
+        <FilterOwners value={state.filterBy} onChange={(value) => setState(prev => prev.withFilterByOwner(value))} />
+        <FilterRoles value={state.filterBy} onChange={(value) => setState(prev => prev.withFilterByRoles(value))} />
+        <FilterColumns types={columnTypes} value={columns} onChange={(value) => setColumns(value)} />
+      </Stack>
+    </ToolsSticky>
 
-    <TaskTable.Groups groupBy={undefined} orderBy='created'>
-      {{ Header, Rows, Tools }}
+    <TaskTable.Groups groups={state.groups} orderBy='created'>
+      {{
+        Header: (props) => <Header columns={columns} {...props} />,
+        Rows: ({ content, group, loading }) => (
+          <TaskTable.TableBody>
+            {content.entries.map((row, rowId) => (<Row key={row.id} rowId={rowId} row={row} def={group} columns={columns} />))}
+            <TaskTable.TableFiller content={content} loading={loading} plusColSpan={7} />
+          </TaskTable.TableBody>
+        )
+      }}
     </TaskTable.Groups>
-
   </Box>
   );
 }

@@ -3,7 +3,8 @@ import { SxProps, List, MenuItem, ListItemText, Box, Button, Typography } from '
 import FlagIcon from '@mui/icons-material/Flag';
 import { FormattedMessage } from 'react-intl';
 
-import Client from '@taskclient';
+import Client from 'taskclient';
+import { TaskDescriptor } from 'taskdescriptor';
 import Context from 'context';
 import { useMockPopover } from 'core/TaskTable/MockPopover';
 
@@ -16,13 +17,13 @@ function getEmojiFlagSx(priority: Client.TaskPriority): SxProps {
 }
 
 function getActiveColor(currentlyShowing: Client.TaskPriority, priority: Client.TaskPriority): string {
-  const selectedItemColor = Context.StatusPallette.IN_PROGRESS;
+  const selectedItemColor = Context.StatusPalette.IN_PROGRESS;
   const color = priority === currentlyShowing ? selectedItemColor : "unset";
   return color;
 }
 
 const TaskPriority: React.FC<{
-  task: Context.TaskDescriptor,
+  task: TaskDescriptor,
   priorityTextEnabled?: boolean,
   onChange: (command: Client.ChangeTaskPriority) => Promise<void>
 }> = ({ task, priorityTextEnabled, onChange }) => {

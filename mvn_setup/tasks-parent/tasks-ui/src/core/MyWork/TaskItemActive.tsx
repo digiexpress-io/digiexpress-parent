@@ -9,7 +9,8 @@ import TaskWorkDialog from 'core/TaskWork';
 import TaskEditDialog from 'core/TaskEdit';
 
 import Context from 'context';
-import Client from '@taskclient';
+import Client from 'taskclient';
+import { TaskDescriptor } from 'taskdescriptor';
 import { StyledAppBar, StyledTaskListTab } from '../TaskList';
 
 
@@ -94,7 +95,7 @@ const StyledTitle: React.FC<{ children: string }> = ({ children }) => {
   return (<Typography fontWeight='bold'><FormattedMessage id={children} /></Typography>)
 }
 
-function getTaskAlert(task: Context.TaskDescriptor): { isDueDate: boolean, title: string, alertSeverity: AlertColor, alertMsg: string } {
+function getTaskAlert(task: TaskDescriptor): { isDueDate: boolean, title: string, alertSeverity: AlertColor, alertMsg: string } {
 
   if (task.assigneeGroupType === 'assigneeOverdue') {
     return { alertSeverity: 'error', isDueDate: true, title: 'core.teamSpace.task.overdue.alert', alertMsg: 'core.myWork.task.dueDate' }
@@ -108,7 +109,7 @@ function getTaskAlert(task: Context.TaskDescriptor): { isDueDate: boolean, title
   return { alertSeverity: 'success', isDueDate: true, title: 'core.teamSpace.task.available.alert', alertMsg: 'core.myWork.task.dueDate' }
 }
 
-const TaskItemActive: React.FC<{ task: Context.TaskDescriptor | undefined }> = ({ task }) => {
+const TaskItemActive: React.FC<{ task: TaskDescriptor | undefined }> = ({ task }) => {
   const [taskWorkOpen, setTaskWorkOpen] = React.useState(false);
   const [taskEditOpen, setTaskEditOpen] = React.useState(false);
 
@@ -203,7 +204,7 @@ const TaskItemActive: React.FC<{ task: Context.TaskDescriptor | undefined }> = (
   </StyledStack>);
 }
 
-const DelegateTaskItemActive: React.FC<{ task: Context.TaskDescriptor | undefined }> = ({ task }) => {
+const DelegateTaskItemActive: React.FC<{ task: TaskDescriptor | undefined }> = ({ task }) => {
 
   // return summaryTab === 'summary' ? 
   const [summaryTab, setSummaryTab] = React.useState<'TaskItemActive' | 'MyRecentActivity'>('TaskItemActive');
@@ -225,7 +226,7 @@ const DelegateTaskItemActive: React.FC<{ task: Context.TaskDescriptor | undefine
   </>)
 }
 
-const TaskItemActiveWithRefresh: React.FC<{ task: Context.TaskDescriptor | undefined }> = ({ task }) => {
+const TaskItemActiveWithRefresh: React.FC<{ task: TaskDescriptor | undefined }> = ({ task }) => {
   const [dismount, setDismount] = React.useState(false);
 
   React.useEffect(() => {

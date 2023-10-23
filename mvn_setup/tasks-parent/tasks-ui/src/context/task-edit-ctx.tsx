@@ -1,8 +1,7 @@
 import React from 'react';
 import { TaskEditContextType, TaskEditMutator, TaskEditDispatch, TaskEditMutatorBuilder } from './task-edit-ctx-types';
 import { TaskEditStateBuilder } from './task-edit-ctx-impl';
-import { TaskDescriptor } from './tasks-ctx-types';
-import { useTasks } from './hooks';
+import { TaskDescriptor } from 'taskdescriptor';
 
 const TaskEditContext = React.createContext<TaskEditContextType>({} as TaskEditContextType);
 

@@ -122,7 +122,7 @@ const en = {
   'core.myOverview.task-events': 'Task events',
 
   'core.search.searchBar.groupBy': 'Group by {groupBy}',
-  'core.search.searchBar.filterColumns': 'Columns {showing}/{total}',
+  'core.search.searchBar.filterColumns': 'Columns',
   'core.search.searchBar.filterRoles': 'Roles {count}',
   'core.search.searchBar.filterOwners': 'Owners {count}',
   'core.search.searchBar.filterStatus': 'Status {count}',

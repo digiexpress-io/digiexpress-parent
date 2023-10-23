@@ -1,13 +1,13 @@
 import React from 'react';
 import { Box, TablePagination, TableContainer, Table } from '@mui/material';
-import Context from 'context';
+import { TaskDescriptor, Group } from 'taskdescriptor';
 import Pagination from 'table';
 
-type TaskPagination = Pagination.TablePagination<Context.TaskDescriptor>;
+type TaskPagination = Pagination.TablePagination<TaskDescriptor>;
 
 interface TableConfigProps {
   loading: boolean;
-  group: Context.Group
+  group: Group
   content: TaskPagination,
   setContent: React.Dispatch<React.SetStateAction<TaskPagination>>,
 }
@@ -18,8 +18,8 @@ interface TableProps {
     Rows: React.ElementType<TableConfigProps>;
   },
   data: {
-    group: Context.Group,
-    defaultOrderBy: keyof Context.TaskDescriptor,
+    group: Group,
+    defaultOrderBy: keyof TaskDescriptor,
     loading: boolean;
   }
 }
@@ -92,7 +92,7 @@ function CustomTable(props: TableProps) {
   const { Header, Rows } = props.config;
   const { records } = group;
 
-  const [content, setContent] = React.useState(new Pagination.TablePaginationImpl<Context.TaskDescriptor>({
+  const [content, setContent] = React.useState(new Pagination.TablePaginationImpl<TaskDescriptor>({
     src: records ?? [],
     orderBy: defaultOrderBy,
     sorted: false

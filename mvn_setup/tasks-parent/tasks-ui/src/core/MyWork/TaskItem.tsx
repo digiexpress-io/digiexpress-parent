@@ -4,10 +4,9 @@ import ChecklistIcon from '@mui/icons-material/Checklist';
 import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';
 
 import DaysUntilDue from 'core/DaysUntilDue';
-import Context from 'context';
+import { TaskDescriptor } from 'taskdescriptor';
 
-
-const TaskItem: React.FC<{ task: Context.TaskDescriptor }> = ({ task }) => {
+const TaskItem: React.FC<{ task: TaskDescriptor }> = ({ task }) => {
 
   return (
     <Box display='flex' width='100%' alignItems='center'>

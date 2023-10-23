@@ -1,12 +1,7 @@
 import { ClientContextType, ComposerContextType } from './client-ctx';
-
-import * as taskCtxImpl from './tasks-ctx-impl';
-
 import * as Hooks from './hooks';
-
-import * as screenCtx from './screen-ctx';
-
 import * as taskEditCtx from './task-edit-ctx';
+import * as descCtx from 'taskdescriptor';
 
 import {
   TaskEditEvent, TaskEditMutatorBuilder, TaskEditState,
@@ -28,13 +23,8 @@ import {
 
 } from './task-edit-ctx-types';
 
-import { ScreenState } from './screen-ctx-types';
-
 import {
-  TaskDescriptor, TasksContextType, TasksState, TasksMutatorBuilder,
-  PalleteType, FilterBy, Group, GroupBy, RoleUnassigned, OwnerUnassigned,
-  TasksStatePallette, TeamGroupType, AssigneeGroupType, AvatarCode,
-  FilterByRoles, FilterByOwners, FilterByStatus, FilterByPriority
+  TasksContextType, TasksState
 } from './tasks-ctx-types';
 
 
@@ -43,9 +33,7 @@ import {
 } from './composer-ctx-types';
 
 
-export type {
-  Document
-}
+export type { Document }
 export { useComposer } from './hooks';
 
 export {
@@ -55,17 +43,9 @@ export {
 
 
 declare namespace Context {
-  export type { ClientContextType, ComposerContextType };
   export type {
-    AvatarCode,
-    FilterByRoles, FilterByOwners, FilterByStatus, FilterByPriority
-  };
-  export type {
-    TaskDescriptor, TasksContextType, TasksState, TasksMutatorBuilder,
-    PalleteType, FilterBy, Group, GroupBy, RoleUnassigned, OwnerUnassigned,
-    TasksStatePallette, TeamGroupType, AssigneeGroupType
-  };
-  export type {
+    ClientContextType, ComposerContextType,
+    TasksContextType, TasksState,
     TaskEditEvent, TaskEditMutatorBuilder, TaskEditState,
     CreateTaskEventBody,
     AssignTaskReporterEventBody,
@@ -83,21 +63,19 @@ declare namespace Context {
     ChangeTaskExtensionEventBody,
     SingleEvent, CollapsedEvent
   }
-  export type {
-    ScreenState
-  };
 }
 
 
 
 namespace Context {
-  export const StatusPallette = taskCtxImpl.Pallette.status;
-  export const PriorityPalette = taskCtxImpl.Pallette.priority;
-  export const TeamGroupPallete = taskCtxImpl.Pallette.teamGroupType;
-  export const AssigneePalette = taskCtxImpl.Pallette.assigneeGroupType;
   export const EditProvider = taskEditCtx.TaskEditProvider;
+  export const DescriptorStateImpl = descCtx.DescriptorStateImpl;
+  export const StatusPalette = descCtx.Palette.status;
+  export const PriorityPalette = descCtx.Palette.priority;
+  export const TeamGroupPalette = descCtx.Palette.teamGroupType;
+  export const AssigneePalette = descCtx.Palette.assigneeGroupType;
+  export const _nobody_ = descCtx._nobody_;
 
-  export const _nobody_ = taskCtxImpl._nobody_;
   export const useBackend = Hooks.useBackend;
   export const useTasks = Hooks.useTasks;
   export const useOrg = Hooks.useOrg;
@@ -109,8 +87,6 @@ namespace Context {
   export const useComposer = Hooks.useComposer;
   export const useSession = Hooks.useSession;
   export const useNav = Hooks.useNav;
-  export const ScreenProvider = screenCtx.ScreenProvider;
-  export const useScreen = Hooks.useScreen;
 
 }
 

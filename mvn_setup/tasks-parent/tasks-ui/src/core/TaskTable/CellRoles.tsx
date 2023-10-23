@@ -3,13 +3,13 @@ import React from 'react';
 import { StyledTableCell } from './StyledTable';
 import TaskRoles from 'core/TaskRoles';
 import Context from 'context';
-
-import Client from '@taskclient';
+import { TaskDescriptor, Group } from 'taskdescriptor';
+import Client from 'taskclient';
 
 const FormattedCell: React.FC<{
   rowId: number,
-  row: Context.TaskDescriptor,
-  def: Context.Group
+  row: TaskDescriptor,
+  def: Group
 }> = ({ row }) => {
 
   const tasks = Context.useTasks();

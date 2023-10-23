@@ -8,6 +8,7 @@ import Fields from './TaskEditFields';
 import Events from './TaskEvents';
 import Burger from '@the-wrench-io/react-burger';
 import Context from 'context';
+import { TaskDescriptor } from 'taskdescriptor';
 
 const Left: React.FC<{}> = () => {
 
@@ -89,7 +90,7 @@ const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 }
 
 
-const TaskEditDialog: React.FC<{ open: boolean, onClose: () => void, task?: Context.TaskDescriptor }> = (props) => {
+const TaskEditDialog: React.FC<{ open: boolean, onClose: () => void, task?: TaskDescriptor }> = (props) => {
   const tasks = Context.useTasks();
 
   if (!props.open || !props.task) {

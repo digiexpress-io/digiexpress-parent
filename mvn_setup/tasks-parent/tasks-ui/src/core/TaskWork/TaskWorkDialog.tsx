@@ -3,8 +3,8 @@ import { Box, Stack, Grid } from '@mui/material';
 
 import StyledFullScreenDialog from '../Dialogs';
 import Fields from './TaskWorkFields';
-import TaskClient from '@taskclient';
 import Context from 'context';
+import { TaskDescriptor } from 'taskdescriptor';
 import { MenuProvider, useMenu } from './menu-ctx';
 
 const Left: React.FC<{}> = () => {
@@ -68,7 +68,7 @@ const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   )
 }
 
-const TaskWorkDialog: React.FC<{ open: boolean, onClose: () => void, task?: Context.TaskDescriptor }> = (props) => {
+const TaskWorkDialog: React.FC<{ open: boolean, onClose: () => void, task?: TaskDescriptor }> = (props) => {
 
   if (!props.open || !props.task) {
     return null;

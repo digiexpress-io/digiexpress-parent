@@ -10,8 +10,9 @@ import TaskAssignees from 'core/TaskAssignees';
 import TaskStatus from 'core/TaskStatus';
 import TaskWorkDialog from 'core/TaskWork';
 import TaskEditDialog from 'core/TaskEdit';
-import Client from '@taskclient';
+import Client from 'taskclient';
 import Context from 'context';
+import { TaskDescriptor } from 'taskdescriptor';
 
 const StyledStartTaskButton = styled(Button)(({ theme }) => ({
   width: 'stretch',
@@ -61,7 +62,7 @@ const StyledTitle: React.FC<{ children: string }> = ({ children }) => {
   return (<Typography fontWeight='bold'><FormattedMessage id={children} /></Typography>)
 }
 
-function getTaskAlert(task: Context.TaskDescriptor): { isDueDate: boolean, title: string, alertSeverity: AlertColor, alertMsg: string } {
+function getTaskAlert(task: TaskDescriptor): { isDueDate: boolean, title: string, alertSeverity: AlertColor, alertMsg: string } {
 
   if (task.teamGroupType === 'groupOverdue') {
     return { alertSeverity: 'error', isDueDate: true, title: 'core.teamSpace.task.overdue.alert', alertMsg: 'core.teamSpace.task.dueDate' };
@@ -72,7 +73,7 @@ function getTaskAlert(task: Context.TaskDescriptor): { isDueDate: boolean, title
   return { alertSeverity: 'success', isDueDate: true, title: 'core.teamSpace.task.available.alert', alertMsg: 'core.teamSpace.task.dueDate' }
 }
 
-const TaskItemActive: React.FC<{ task: Context.TaskDescriptor | undefined }> = ({ task }) => {
+const TaskItemActive: React.FC<{ task: TaskDescriptor | undefined }> = ({ task }) => {
   const [taskWorkOpen, setTaskWorkOpen] = React.useState(false);
   const [taskEditOpen, setTaskEditOpen] = React.useState(false);
 
@@ -170,7 +171,7 @@ const TaskItemActive: React.FC<{ task: Context.TaskDescriptor | undefined }> = (
 
 
 
-const TaskItemActiveWithRefresh: React.FC<{ task: Context.TaskDescriptor | undefined }> = ({ task }) => {
+const TaskItemActiveWithRefresh: React.FC<{ task: TaskDescriptor | undefined }> = ({ task }) => {
   const [dismount, setDismount] = React.useState(false);
 
   React.useEffect(() => {

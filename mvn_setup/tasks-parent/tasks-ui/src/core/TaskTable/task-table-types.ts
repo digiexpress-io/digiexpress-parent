@@ -1,8 +1,8 @@
-import Context from 'context';
+import { TaskDescriptor, Group } from 'taskdescriptor';
 
 interface CellProps {
-  row: Context.TaskDescriptor;
-  def: Context.Group;
+  row: TaskDescriptor;
+  def: Group;
 }
 
 export type { CellProps }

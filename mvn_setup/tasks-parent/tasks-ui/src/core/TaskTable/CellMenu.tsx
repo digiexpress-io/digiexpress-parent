@@ -4,7 +4,7 @@ import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { FormattedMessage } from 'react-intl';
 
-import Context from 'context';
+import { TaskDescriptor, Group } from 'taskdescriptor';
 import { usePopover } from './CellPopover';
 import CellHoverButton from './CellMenuButton';
 import TaskEditDialog from 'core/TaskEdit';
@@ -60,8 +60,8 @@ const HoverMenu: React.FC<{
 
 const FormattedCell: React.FC<{
   rowId: number,
-  row: Context.TaskDescriptor,
-  def: Context.Group,
+  row: TaskDescriptor,
+  def: Group,
   active: boolean,
   setDisabled: () => void
 }> = ({ row, active, setDisabled }) => {

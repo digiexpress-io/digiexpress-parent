@@ -8,7 +8,7 @@ import AttachFileIcon from '@mui/icons-material/AttachFile';
 import CircleNotificationsOutlinedIcon from '@mui/icons-material/CircleNotificationsOutlined';
 import CloseIcon from '@mui/icons-material/Close';
 
-import Client from '@taskclient';
+import Client from 'taskclient';
 import Context from 'context';
 
 import ChecklistDelegate from 'core/Checklist';

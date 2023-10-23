@@ -1,34 +1,25 @@
 
 import React from 'react';
 import { Box } from '@mui/material';
-import Client from '@taskclient';
 import Context from 'context';
 import { TableConfigProps, CustomTable } from './table-ctx';
-
+import { Group, TaskDescriptor } from 'taskdescriptor';
 
 
 
 interface TableGroupsProps {
-  groupBy: Context.GroupBy | undefined,
-  orderBy: keyof Context.TaskDescriptor | undefined,
+  groups: Group[];
+  orderBy: keyof TaskDescriptor | undefined,
 
   children: {
     Header: React.ElementType<TableConfigProps>;
     Rows: React.ElementType<TableConfigProps>;
-    Tools: React.ElementType<{ children: React.ReactNode }> | undefined
   }
 }
 
-const Delegate: React.FC<TableGroupsProps> = ({ groupBy, orderBy, children }) => {
+const Delegate: React.FC<TableGroupsProps> = ({ groups, orderBy, children }) => {
   const tasks = Context.useTasks();
-  const { loading, state } = tasks;
-
-  const groups = React.useMemo(() => {
-    if (groupBy) {
-      return state.withGroupBy(groupBy).groups;
-    }
-    return state.groups;
-  }, [state, groupBy]);
+  const { loading } = tasks;
 
   const defaultOrderBy = React.useMemo(() => {
     if (orderBy) {
@@ -49,11 +40,6 @@ const Delegate: React.FC<TableGroupsProps> = ({ groupBy, orderBy, children }) =>
       />
     </React.Fragment>
   ));
-
-  if (children.Tools) {
-    return (<children.Tools children={result} />);
-  }
-
   return (<>{result}</>);
 }
 
