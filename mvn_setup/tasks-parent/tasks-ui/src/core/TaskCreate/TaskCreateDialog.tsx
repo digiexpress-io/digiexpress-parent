@@ -1,14 +1,6 @@
 import React from 'react';
-import {
-  Dialog, DialogContent, DialogTitle, Stack, Box, DialogActions, IconButton, MenuItem, Typography, Button, ButtonGroup,
-  Grow, ClickAwayListener, MenuList, Paper, Popper
-} from '@mui/material';
+import { Dialog, DialogContent, DialogTitle, Stack, Box, DialogActions, IconButton, Typography, useTheme, alpha } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import CancelIcon from '@mui/icons-material/Cancel';
-import CheckIcon from '@mui/icons-material/Check';
-import BlockIcon from '@mui/icons-material/Block';
-import EditIcon from '@mui/icons-material/Edit';
 import { FormattedMessage } from 'react-intl';
 
 import TaskCreateActions from './TaskCreateActions';
@@ -20,8 +12,8 @@ import { TaskDescriptorImpl } from 'taskdescriptor';
 function initTaskProps(userId: string): Task {
   return {
     id: '',
-    title: 'init task thing',
-    description: '',
+    title: 'task title ',
+    description: 'task description',
     status: 'CREATED',
     priority: 'MEDIUM',
 
@@ -47,10 +39,10 @@ function initTaskProps(userId: string): Task {
   }
 }
 
-
 const TaskCreateDialog: React.FC<{ open: boolean, onClose: () => void }> = (props) => {
   const org = Context.useOrg();
   const tasks = Context.useTasks();
+  const theme = useTheme();
 
   if (!props.open) {
     return null;
@@ -60,11 +52,17 @@ const TaskCreateDialog: React.FC<{ open: boolean, onClose: () => void }> = (prop
 
   return (
     <Context.EditProvider task={init}>
-      <Dialog open={true} fullWidth maxWidth='md'>
-        <DialogTitle>
+      <Dialog open={true} fullWidth maxWidth='lg'>
+        <DialogTitle sx={{
+          backgroundColor: theme.palette.mainContent.main,
+          borderBottom: `1px solid ${alpha(theme.palette.mainContent.dark, 0.3)}`,
+          mb: 1,
+        }}>
           <Box display='flex' alignItems='center'>
-            <FormattedMessage id='core.taskCreate.newTask' />
+            <Typography variant='h4' fontWeight='bolder'><FormattedMessage id='core.taskCreate.newTask' /></Typography>
             <Box flexGrow={1} />
+            <Fields.StartDate onClick={() => { }} />
+            <Fields.DueDate onClick={() => { }} />
             <IconButton onClick={props.onClose}>
               <CloseIcon />
             </IconButton>
@@ -72,11 +70,13 @@ const TaskCreateDialog: React.FC<{ open: boolean, onClose: () => void }> = (prop
         </DialogTitle>
 
         <DialogContent>
-          <Stack overflow='auto' spacing={1}>
-            <Fields.Title />
-            <Fields.Description />
+          <Stack overflow='auto' spacing={1} direction='column'>
             <Fields.Status />
             <Fields.Priority />
+            <Fields.Assignees />
+            <Fields.Roles />
+            <Fields.Title />
+            <Fields.Description />
           </Stack>
         </DialogContent>
         <DialogActions>

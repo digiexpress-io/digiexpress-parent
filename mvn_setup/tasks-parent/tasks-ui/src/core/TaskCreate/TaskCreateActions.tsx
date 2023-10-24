@@ -1,53 +1,22 @@
 import React from 'react';
-import {
-  Dialog, DialogContent, DialogTitle, Stack, Box, DialogActions, IconButton, MenuItem, Typography, Button, ButtonGroup,
-  Grow, ClickAwayListener, MenuList, Paper, Popper
-} from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import CancelIcon from '@mui/icons-material/Cancel';
-import CheckIcon from '@mui/icons-material/Check';
-import BlockIcon from '@mui/icons-material/Block';
-import EditIcon from '@mui/icons-material/Edit';
-import { FormattedMessage } from 'react-intl';
-
-import Fields from './TaskCreateFields';
+import { Stack } from '@mui/material';
+import Burger from '@the-wrench-io/react-burger';
 import Context from 'context';
-import { TaskDescriptorImpl } from 'taskdescriptor';
 
 
-const SplitButtonItem: React.FC<{
-  key: string,
-  icon: React.ReactNode,
-  buttonText: string,
-  onClick: () => void
-}> = (props) => {
-  const { key, icon, buttonText, onClick } = props;
 
-  return (
-    <MenuItem key={key} onClick={onClick}>
-      {icon}
-      <Typography sx={{ ml: 1 }}><FormattedMessage id={buttonText} /></Typography>
-    </MenuItem>
-  )
-}
-
-const SplitButton: React.FC<{ onClose?: () => void }> = ({ onClose }) => {
+const TaskCreateActions: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const backend = Context.useBackend();
   const org = Context.useOrg();
   const tasks = Context.useTasks();
-  const { state, setState } = Context.useTaskEdit();
+  const { state } = Context.useTaskEdit();
 
   const [open, setOpen] = React.useState(false);
-  const anchorRef = React.useRef<HTMLDivElement>(null);
 
-  function handleToggle() {
-    setOpen(prev => !prev);
-  }
 
   function handleClose() {
     setOpen(false);
-    onClose && onClose();
+    onClose();
   }
 
   async function handleCreateAndClose() {
@@ -79,44 +48,15 @@ const SplitButton: React.FC<{ onClose?: () => void }> = ({ onClose }) => {
   }
 
   return (
-    <React.Fragment>
-      <ButtonGroup variant="contained" ref={anchorRef}>
-        <Button startIcon={<CheckIcon />} onClick={handleCreateAndClose}>
-          <Typography><FormattedMessage id='core.taskCreate.button.create'></FormattedMessage></Typography>
-        </Button>
-        <Button size="small" onClick={handleToggle}>
-          <ArrowDropDownIcon />
-        </Button>
-      </ButtonGroup>
-      <Popper
-        open={open}
-        anchorEl={anchorRef.current}
-        transition
-        disablePortal
-        placement='top-end'
-      >
-        {({ TransitionProps }) => (
-          <Grow
-            {...TransitionProps}
-            style={{
-              transformOrigin: 'center bottom',
-            }}
-          >
-            <Paper>
-              <ClickAwayListener onClickAway={handleClose}>
-                <MenuList autoFocusItem sx={{ textTransform: 'uppercase' }}>
-                  <SplitButtonItem key='createAndClose' icon={<BlockIcon color='error' />} buttonText='core.taskCreate.button.createAndClose' onClick={handleCreateAndClose} />
-                  <SplitButtonItem key='createAndEdit' icon={<EditIcon color='warning' />} buttonText='core.taskCreate.button.createAndEdit' onClick={handleCreateAndEdit} />
-                  <SplitButtonItem key='cancel' icon={<CancelIcon color='info' />} buttonText='core.taskCreate.button.cancel' onClick={handleClose} />
-                </MenuList>
-              </ClickAwayListener>
-            </Paper>
-          </Grow>
-        )}
-      </Popper>
-    </React.Fragment>
+
+    <Stack direction='row' spacing={1}>
+      <Burger.SecondaryButton onClick={handleClose} label='core.taskCreate.button.cancel' />
+      <Burger.SecondaryButton onClick={handleCreateAndEdit} label='core.taskCreate.button.createAndEdit' />
+      <Burger.PrimaryButton onClick={handleCreateAndClose} label='core.taskCreate.button.createAndClose' />
+    </Stack>
+
   );
 }
 
 
-export default SplitButton;
+export default TaskCreateActions;

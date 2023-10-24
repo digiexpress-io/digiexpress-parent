@@ -1,5 +1,5 @@
 import React from 'react';
-import { TextField, Typography, Stack, Button } from '@mui/material';
+import { TextField, Typography, Stack, Button, Box } from '@mui/material';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import DateRangeOutlinedIcon from '@mui/icons-material/DateRangeOutlined';
@@ -10,27 +10,10 @@ import Context from 'context';
 import TaskAssignees from '../TaskAssignees';
 import TaskStatus from '../TaskStatus';
 import TaskPriority from '../TaskPriority';
+import TaskRoles from '../TaskRoles';
 
-/*
-export interface CreateTask extends TaskCommand {
-  commandType: 'CreateTask';
-  title: string;
-  description: string;
-  roles: string[];
-  assigneeIds: string[];
-  reporterId: string;
-  priority: TaskPriority;
-  labels: string[];
- 
-  extensions: TaskExtension[];
-  comments: TaskComment[];
-  checklist: Checklist[];
- 
-  status: TaskStatus | undefined;
-  startDate: string | undefined;
-  dueDate: string | undefined;
-}
-*/
+
+
 
 const Title: React.FC<{}> = () => {
   const intl = useIntl();
@@ -70,38 +53,55 @@ const Status: React.FC<{}> = () => {
   async function handleStatusChange(command: Client.ChangeTaskStatus) {
     setState((current) => current.withTask({ ...state.task.entry, status: command.status }));
   }
-  return (
+  return (<Box display='flex' alignItems='center'>
+    <Typography><FormattedMessage id='core.taskCreate.fields.status' /></Typography>
     <TaskStatus task={state.task} onChange={handleStatusChange} />
+  </Box>
   )
 }
 
 const Priority: React.FC<{}> = () => {
   const { state, setState } = Context.useTaskEdit();
-  const backend = Context.useBackend();
 
   async function handlePriorityChange(command: Client.ChangeTaskPriority) {
-    const updatedTask = await backend.task.updateActiveTask(state.task.id, [command]);
-    setState((current) => current.withTask(updatedTask));
+    setState((current) => current.withTask({ ...state.task.entry, priority: command.priority }));
   }
 
-  return (
-    <TaskPriority task={state.task} priorityTextEnabled onChange={handlePriorityChange} />
+  return (<Box display='flex' alignItems='center'>
+    <Typography><FormattedMessage id='core.taskCreate.fields.priority' /></Typography>
+    <TaskPriority task={state.task} priorityTextEnabled={true} onChange={handlePriorityChange} />
+  </Box>
   )
 }
 
-const Assignee: React.FC<{}> = () => {
+const Assignees: React.FC<{}> = () => {
   const { state, setState } = Context.useTaskEdit();
-  const backend = Context.useBackend();
 
   async function handleAssigneeChange(command: Client.AssignTask) {
-    const updatedTask = await backend.task.updateActiveTask(state.task.id, [command]);
-    setState((current) => current.withTask(updatedTask));
+    setState((current) => current.withTask({ ...state.task.entry, assigneeIds: command.assigneeIds }));
   }
 
-  return (
+  return (<Box display='flex' alignItems='center'>
+    <Typography><FormattedMessage id='core.taskCreate.fields.assignees' /></Typography>
     <TaskAssignees task={state.task} onChange={handleAssigneeChange} />
+  </Box>
   )
 }
+
+const Roles: React.FC<{}> = () => {
+  const { state, setState } = Context.useTaskEdit();
+
+  async function handleRolesChange(command: Client.AssignTaskRoles) {
+    setState((current) => current.withTask({ ...state.task.entry, roles: command.roles }))
+  }
+
+  return (<Box display='flex' alignItems='center'>
+    <Typography><FormattedMessage id='core.taskCreate.fields.roles' /></Typography>
+    <TaskRoles task={state.task} onChange={handleRolesChange} />
+  </Box>
+  )
+}
+
 
 const StartDate: React.FC<{ onClick: () => void }> = ({ onClick }) => {
   const { state } = Context.useTaskEdit();
@@ -128,5 +128,5 @@ const DueDate: React.FC<{ onClick: () => void }> = ({ onClick }) => {
 }
 
 
-const Fields = { Title, Description, Status, Assignee, Priority, StartDate, DueDate };
+const Fields = { Title, Description, Status, Assignees, Roles, Priority, StartDate, DueDate };
 export default Fields;

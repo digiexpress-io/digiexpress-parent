@@ -86,7 +86,7 @@ const TaskList: React.FC<{
             </StyledTaskListTab>))
           }
           <Box flexGrow={1} />
-          <IconButton sx={{ color: 'uiElements.main' }} onClick={handleTaskCreate}><AddBoxIcon /></IconButton>
+          <IconButton sx={{ color: 'uiElements.main' }} onClick={handleTaskCreate}><AddBoxIcon fontSize='large' /></IconButton>
         </StyledAppBar >
 
 
