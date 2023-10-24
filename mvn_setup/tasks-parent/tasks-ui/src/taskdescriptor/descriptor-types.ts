@@ -18,7 +18,7 @@ export interface TaskDescriptor {
   assignees: string[];
   labels: string[];
   title: string;
-  dialobId: string;
+  dialobId: string | undefined;
   description: string;
   comments: TaskComment[];
   transactions: TaskTransaction[];

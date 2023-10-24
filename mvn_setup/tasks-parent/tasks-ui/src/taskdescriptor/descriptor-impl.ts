@@ -310,7 +310,7 @@ class GroupVisitor {
 class TaskDescriptorImpl implements TaskDescriptor {
   private _entry: Task;
   private _created: Date;
-  private _dialobId: string;
+  private _dialobId: string | undefined;
   private _dueDate: Date | undefined;
   private _startDate: Date | undefined;
   private _daysUntilDue: number | undefined;
@@ -327,7 +327,7 @@ class TaskDescriptorImpl implements TaskDescriptor {
     this._startDate = entry.startDate ? new Date(entry.startDate) : undefined;
     this._dueDate = entry.dueDate ? new Date(entry.dueDate) : undefined;
     this._daysUntilDue = entry.dueDate ? getDaysUntilDue(entry, today) : undefined;
-    this._dialobId = entry.extensions.find(t => t.type === 'dialob')!.body;
+    this._dialobId = entry.extensions.find(t => t.type === 'dialob')?.body;
     this._uploads = entry.extensions.filter(t => t.type === 'upload');
     this._rolesAvatars = getAvatar(entry.roles);
     this._ownersAvatars = getAvatar(entry.assigneeIds);

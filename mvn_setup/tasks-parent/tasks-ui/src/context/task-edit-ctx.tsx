@@ -16,9 +16,7 @@ const TaskEditProvider: React.FC<{ children: React.ReactNode, task: TaskDescript
   }, [state, setter]);
 
   React.useMemo(() => {
-
     setState(previous => previous.withTaskDescriptor(task));
-
   }, [task, setState]);
 
 

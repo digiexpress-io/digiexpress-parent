@@ -98,8 +98,8 @@ export interface CreateTask extends TaskCommand {
   assigneeIds: string[];
   reporterId: string;
   status: TaskStatus | undefined;
-  startDate: string | undefined;
-  dueDate: string | undefined;
+  startDate: Date | undefined;
+  dueDate: Date | undefined;
   title: string;
   description: string;
   priority: TaskPriority;
@@ -233,7 +233,7 @@ export interface TaskPagination {
 export interface TaskStore {
   getActiveTasks(): Promise<TaskPagination>
   getActiveTask(id: TaskId): Promise<Task>
-
+  createTask(command: CreateTask): Promise<Task>
   updateActiveTask(id: TaskId, commands: TaskUpdateCommand<any>[]): Promise<Task>
 }
 

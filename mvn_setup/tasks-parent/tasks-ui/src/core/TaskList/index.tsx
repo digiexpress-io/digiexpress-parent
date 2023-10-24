@@ -1,10 +1,13 @@
 import React from 'react';
-import { Stack, Grid, Typography, TablePagination, Alert } from '@mui/material';
+import { Stack, Grid, Typography, TablePagination, Alert, IconButton, Box } from '@mui/material';
+import AddBoxIcon from '@mui/icons-material/AddBox';
+
 import { FormattedMessage } from 'react-intl';
 import Pagination from 'table';
 import { TaskListState, initTable, initTabs, TaskListTabState } from './types';
 import { StyledStackItem, StyledTaskListTab, StyledEditTaskButton, StyledStartTaskButton, StyledAppBar } from './TaskListStyles';
 import { TaskDescriptor } from 'taskdescriptor';
+import TaskCreateDialog from '../TaskCreate';
 
 const RowFiller: React.FC<{ value: Pagination.TablePagination<TaskDescriptor> }> = ({ value }) => {
 
@@ -31,6 +34,11 @@ const TaskList: React.FC<{
 
   const [state, setState] = React.useState<TaskListState>(initTabs([]));
   const [table, setTable] = React.useState(initTable([]));
+  const [createOpen, setCreateOpen] = React.useState(false);
+
+  function handleTaskCreate() {
+    setCreateOpen(prev => !prev)
+  }
 
   function handleActiveTab(newValue: number) {
     setState(prev => prev.withActiveTab(newValue));
@@ -67,7 +75,8 @@ const TaskList: React.FC<{
 
   const { TaskItem, TaskItemActive } = children;
 
-  return (
+  return (<>
+    <TaskCreateDialog open={createOpen} onClose={handleTaskCreate} />
     <Grid container>
       <Grid item md={8} lg={8}>
         <StyledAppBar color={state.tabs[state.activeTab].group.color}>
@@ -76,6 +85,8 @@ const TaskList: React.FC<{
               <FormattedMessage id={tab.label} values={{ count: tab.count }} />
             </StyledTaskListTab>))
           }
+          <Box flexGrow={1} />
+          <IconButton sx={{ color: 'uiElements.main' }} onClick={handleTaskCreate}><AddBoxIcon /></IconButton>
         </StyledAppBar >
 
 
@@ -103,7 +114,7 @@ const TaskList: React.FC<{
         <TaskItemActive task={state.activeTask} />
       </Grid>
     </Grid>
-
+  </>
   );
 }
 

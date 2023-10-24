@@ -1,5 +1,5 @@
 import { Backend, Store } from './client-types';
-import type { TaskId, Task, TaskPagination, TaskStore, TaskUpdateCommand } from './task-types';
+import type { TaskId, Task, TaskPagination, TaskStore, TaskUpdateCommand, CreateTask } from './task-types';
 import type { Profile, ProfileStore } from './profile-types';
 import type { User, Org } from './org-types';
 import { mockOrg } from './client-mock';
@@ -48,10 +48,16 @@ export class ServiceImpl implements Backend {
     return {
       getActiveTasks: () => this.getActiveTasks(),
       getActiveTask: (id: TaskId) => this.getActiveTask(id),
-      updateActiveTask: (id: TaskId, commands: TaskUpdateCommand<any>[]) => this.updateActiveTask(id, commands)
+      updateActiveTask: (id: TaskId, commands: TaskUpdateCommand<any>[]) => this.updateActiveTask(id, commands),
+      createTask: (commands: CreateTask) => this.createTask(commands),
     };
   }
-
+  async createTask(commands: CreateTask): Promise<Task> {
+    return await this._store.fetch<Task>(`tasks`, {
+      method: 'POST',
+      body: JSON.stringify([commands])
+    });
+  }
   async updateActiveTask(id: TaskId, commands: TaskUpdateCommand<any>[]): Promise<Task> {
     return await this._store.fetch<Task>(`tasks/${id}`, {
       method: 'PUT',

@@ -10,6 +10,7 @@ const en = {
   'buttons.add': 'Add',
   'buttons.accept': 'Accept and close',
   'buttons.download': 'Download',
+  'buttons.task.createNew': 'Create new task',
 
   'task.status.CREATED': 'Created',
   'task.status.IN_PROGRESS': 'In progress',
@@ -32,6 +33,10 @@ const en = {
   'task.priority.LOW': 'Low',
   'task.priority.MEDIUM': 'Medium',
   'task.priority.HIGH': 'High',
+
+  'core.taskCreate.newTask': 'Create new task',
+  'core.taskCreate.taskTitle': 'Task title',
+  'core.taskCreate.taskDescription': 'Task title',
 
   'core.taskEdit.taskTitle': 'Task title',
   'core.taskEdit.taskDescription': 'Task description',
