@@ -61,8 +61,6 @@ const TaskCreateDialog: React.FC<{ open: boolean, onClose: () => void }> = (prop
           <Box display='flex' alignItems='center'>
             <Typography variant='h4' fontWeight='bolder'><FormattedMessage id='core.taskCreate.newTask' /></Typography>
             <Box flexGrow={1} />
-            <Fields.StartDate onClick={() => { }} />
-            <Fields.DueDate onClick={() => { }} />
             <IconButton onClick={props.onClose}>
               <CloseIcon />
             </IconButton>
@@ -71,11 +69,13 @@ const TaskCreateDialog: React.FC<{ open: boolean, onClose: () => void }> = (prop
 
         <DialogContent>
           <Stack overflow='auto' spacing={1} direction='column'>
+            <Fields.Title />
+            <Fields.StartDate onClick={() => { }} />
+            <Fields.DueDate onClick={() => { }} />
             <Fields.Status />
             <Fields.Priority />
             <Fields.Assignees />
             <Fields.Roles />
-            <Fields.Title />
             <Fields.Description />
           </Stack>
         </DialogContent>

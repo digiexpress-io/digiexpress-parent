@@ -3,8 +3,6 @@ import { TextField, InputAdornment } from '@mui/material';
 
 import SearchIcon from '@mui/icons-material/Search';
 
-
-
 const FilterByString: React.FC<{ onChange: (value: React.ChangeEvent<HTMLInputElement>) => void }> = ({ onChange }) => {
   return (
     <TextField
@@ -13,6 +11,12 @@ const FilterByString: React.FC<{ onChange: (value: React.ChangeEvent<HTMLInputEl
           borderRadius: 10,
           width: '40ch',
           height: '2rem',
+          '&.MuiOutlinedInput-notchedOutline': {
+            border: '1px solid rgba(96, 113, 150, 0.5)'
+          },
+          '&.MuiInputBase-root': {
+            border: 'unset'
+          },
           '&.MuiOutlinedInput-root': {
             backgroundColor: 'mainContent.main',
             '&.Mui-focused fieldset': {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { AvatarGroup, Box, Button, Avatar, List, MenuItem, Checkbox, ListItemText } from '@mui/material';
+import { AvatarGroup, Box, Button, Avatar, List, MenuItem, Checkbox, ListItemText, Stack } from '@mui/material';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import { SearchFieldPopover } from 'core/SearchField';
 import { useMockPopover } from 'core/TaskTable/MockPopover';
@@ -27,7 +27,40 @@ const RoleAvatar: React.FC<{ children?: AvatarCode, onClick?: (event: React.Mous
   );
 }
 
-const TaskRoles: React.FC<{ task: TaskDescriptor, onChange: (command: Client.AssignTaskRoles) => Promise<void> }> = ({ task, onChange }) => {
+
+const RoleAvatars: React.FC<{
+  task: TaskDescriptor,
+}> = ({ task }) => {
+
+  return task.rolesAvatars.length ?
+    <AvatarGroup spacing='medium' >
+      {task.rolesAvatars.map((role: AvatarCode) => (<RoleAvatar key={role.value}>{role}</RoleAvatar>))}
+    </AvatarGroup> :
+    <RoleAvatar />
+}
+
+const FullnamesAndAvatars: React.FC<{
+  task: TaskDescriptor,
+}> = ({ task }) => {
+  const org = Context.useOrg();
+
+  return task.rolesAvatars.length ?
+    (<Stack spacing={1}>
+      {task.rolesAvatars.map((role: AvatarCode) => (<Box display='flex' alignItems='center'>
+        <RoleAvatar key={role.value}>{role}</RoleAvatar>
+        <Box pl={1}>{org.state.org.roles[role.value]?.displayName}</Box>
+      </Box>))}
+    </Stack>)
+    :
+    (<RoleAvatar />);
+}
+
+
+const TaskRoles: React.FC<{
+  task: TaskDescriptor,
+  onChange: (command: Client.AssignTaskRoles) => Promise<void>,
+  fullnames?: boolean
+}> = ({ task, onChange, fullnames }) => {
   const { state } = Context.useTasks();
   const roleColors = state.palette.roles;
 
@@ -48,11 +81,6 @@ const TaskRoles: React.FC<{ task: TaskDescriptor, onChange: (command: Client.Ass
     })
   }
 
-  const taskRoleAvatars = task.rolesAvatars.length ?
-    <AvatarGroup spacing='medium' onClick={Popover.onClick}>
-      {task.rolesAvatars.map((role: AvatarCode) => (<RoleAvatar key={role.value}>{role}</RoleAvatar>))}
-    </AvatarGroup> :
-    <RoleAvatar onClick={Popover.onClick} />;
 
   function onSubmit() {
     const isChanges = newRoles.sort().toString() !== task.roles.sort().toString();
@@ -66,24 +94,30 @@ const TaskRoles: React.FC<{ task: TaskDescriptor, onChange: (command: Client.Ass
 
   return (
     <Box>
-      <Button variant='text' color='inherit' sx={{ "&.MuiButtonBase-root": { minWidth: "unset" } }}>
-        {taskRoleAvatars}
-      </Button>
+
+      {fullnames ?
+        (<Box onClick={Popover.onClick}><FullnamesAndAvatars task={task} /></Box>)
+        :
+        (<Button variant='text' color='inherit' sx={{ "&.MuiButtonBase-root": { minWidth: "unset" } }} onClick={Popover.onClick}>
+          <RoleAvatars task={task} />
+        </Button>)
+      }
+
 
       <Popover.Delegate onClose={onSubmit}>
         <SearchFieldPopover onChange={setSearchString} />
         <List dense sx={{ py: 0 }}>
           {searchResults.map(({ role, checked }) => (
-            <MenuItem key={role.roleId} sx={{ display: "flex", pl: 0, py: 0 }}>
+            <MenuItem key={role.roleId} sx={{ display: "flex", pl: 0, py: 0 }} onClick={() => handleToggleRole(role, checked)} >
               <Box sx={{ width: 8, height: 40, backgroundColor: roleColors[role.roleId] }} />
-              <Box ml={1}>
+              <Box ml={1} >
                 <Checkbox checked={checked} size='small' sx={{
                   height: "40px",
                   color: 'uiElements.main',
                   '&.Mui-checked': {
                     color: 'uiElements.main',
                   },
-                }} onChange={() => handleToggleRole(role, checked)} />
+                }} />
               </Box>
               <ListItemText>{role.displayName}</ListItemText>
             </MenuItem>

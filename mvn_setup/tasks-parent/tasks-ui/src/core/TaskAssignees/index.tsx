@@ -1,5 +1,5 @@
 import React from 'react';
-import { AvatarGroup, Box, ListItemText, Checkbox, Button, Avatar, List, MenuItem } from '@mui/material';
+import { AvatarGroup, Box, ListItemText, Checkbox, Button, Avatar, List, MenuItem, Stack } from '@mui/material';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { SearchFieldPopover } from 'core/SearchField';
 import { useMockPopover } from 'core/TaskTable/MockPopover';
@@ -28,7 +28,39 @@ const UserAvatar: React.FC<{ children?: AvatarCode }> = ({ children }) => {
   );
 }
 
-const TaskAssignees: React.FC<{ task: TaskDescriptor, onChange: (command: Client.AssignTask) => Promise<void> }> = ({ task, onChange }) => {
+const AvatarsOnly: React.FC<{
+  task: TaskDescriptor,
+}> = ({ task }) => {
+
+  return task.assigneesAvatars.length ?
+    (<AvatarGroup spacing='medium'>
+      {task.assigneesAvatars.map((assignee: AvatarCode) => (<UserAvatar key={assignee.value}>{assignee}</UserAvatar>))}
+    </AvatarGroup>) :
+    (<UserAvatar />)
+}
+
+const FullnamesAndAvatars: React.FC<{
+  task: TaskDescriptor,
+}> = ({ task }) => {
+  const org = Context.useOrg();
+
+  return task.assigneesAvatars.length ?
+    (<Stack spacing={1}>
+      {task.assigneesAvatars.map((assignee: AvatarCode) => (<Box display='flex' alignItems='center'>
+        <UserAvatar key={assignee.value}>{assignee}</UserAvatar>
+        <Box pl={1}>{org.state.org.users[assignee.value].displayName}</Box>
+      </Box>))}
+    </Stack>)
+    :
+    (<UserAvatar />);
+}
+
+const TaskAssignees: React.FC<{
+  task: TaskDescriptor,
+  onChange: (command: Client.AssignTask) => Promise<void>,
+  fullnames?: boolean
+}> = ({ task, onChange, fullnames }) => {
+
   const { state } = Context.useTasks();
   const assigneeColors = state.palette.owners;
 
@@ -49,11 +81,7 @@ const TaskAssignees: React.FC<{ task: TaskDescriptor, onChange: (command: Client
     });
   }
 
-  const taskAssigneeAvatars = task.assigneesAvatars.length ?
-    (<AvatarGroup spacing='medium'>
-      {task.assigneesAvatars.map((assignee: AvatarCode) => (<UserAvatar key={assignee.value}>{assignee}</UserAvatar>))}
-    </AvatarGroup>) :
-    (<UserAvatar />)
+
 
   function onSubmit() {
     const isChanges = newAssignees.sort().toString() !== task.assignees.sort().toString();
@@ -67,15 +95,21 @@ const TaskAssignees: React.FC<{ task: TaskDescriptor, onChange: (command: Client
 
   return (
     <Box>
-      <Button variant='text' color='inherit' sx={{ "&.MuiButtonBase-root": { minWidth: "unset" } }} onClick={Popover.onClick}>
-        {taskAssigneeAvatars}
-      </Button>
+      {
+        fullnames ?
+          (<Box onClick={Popover.onClick}><FullnamesAndAvatars task={task} /></Box>)
+          :
+          (<Button variant='text' color='inherit' sx={{ "&.MuiButtonBase-root": { minWidth: "unset" } }} onClick={Popover.onClick}>
+            <AvatarsOnly task={task} />
+          </Button>)
+      }
+
 
       <Popover.Delegate onClose={onSubmit}>
         <SearchFieldPopover onChange={setSearchString} />
         <List dense sx={{ py: 0 }}>
           {searchResults.map(({ user, checked }) => (
-            <MenuItem key={user.userId} sx={{ display: "flex", pl: 0, py: 0 }}>
+            <MenuItem key={user.userId} sx={{ display: "flex", pl: 0, py: 0 }} onClick={() => handleToggleUser(user, checked)}>
               <Box sx={{ width: 8, height: 40, backgroundColor: assigneeColors[user.userId] }} />
               <Box ml={1}>
                 <Checkbox checked={checked} size='small'
@@ -85,14 +119,14 @@ const TaskAssignees: React.FC<{ task: TaskDescriptor, onChange: (command: Client
                     '&.Mui-checked': {
                       color: 'uiElements.main',
                     },
-                  }} onChange={() => handleToggleUser(user, checked)} />
+                  }} />
               </Box>
               <ListItemText>{user.displayName}</ListItemText>
             </MenuItem>
           ))}
         </List>
       </Popover.Delegate>
-    </Box>
+    </Box >
   );
 }
 

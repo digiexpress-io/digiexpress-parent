@@ -25,7 +25,6 @@ const Title: React.FC<{}> = () => {
 
   return (<TextField placeholder={intl.formatMessage({ id: 'core.taskCreate.taskTitle' })}
     fullWidth
-    InputProps={{ sx: { fontSize: '20pt' } }}
     value={state.task.title}
     onChange={handleTitleChange}
   />);

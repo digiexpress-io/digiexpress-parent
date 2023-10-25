@@ -28,7 +28,7 @@ export default function DenseMenu(
   const filterByStatus = props.value.find(filter => filter.type === 'FilterByStatus') as FilterByStatus | undefined;
 
   return (<>
-    <Button variant='outlined' sx={{ borderRadius: 10, borderColor: 'text.primary' }} onClick={handleClick}>
+    <Button variant='outlined' sx={{ borderRadius: 10 }} onClick={handleClick}>
       <Typography variant='caption' sx={{ color: 'text.primary' }}>
         <FormattedMessage id='core.search.searchBar.filterStatus' values={{ count: filterByStatus?.status.length }} />
       </Typography>
