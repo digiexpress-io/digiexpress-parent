@@ -14,7 +14,6 @@ import TaskEditDialog from 'core/TaskEdit';
 import Context from 'context';
 import Client from 'taskclient';
 import { TaskDescriptor } from 'taskdescriptor';
-import { StyledAppBar, StyledTaskListTab } from '../TaskList';
 import Section from 'core/Section';
 
 
@@ -213,28 +212,6 @@ const TaskItemActive: React.FC<{ task: TaskDescriptor | undefined }> = ({ task }
   </StyledStack>);
 }
 
-const DelegateTaskItemActive: React.FC<{ task: TaskDescriptor | undefined }> = ({ task }) => {
-
-  // return summaryTab === 'summary' ? 
-  const [summaryTab, setSummaryTab] = React.useState<'TaskItemActive' | 'MyRecentActivity'>('TaskItemActive');
-
-  function handleSummaryTab() {
-    setSummaryTab(summaryTab === 'TaskItemActive' ? 'MyRecentActivity' : 'TaskItemActive');
-  }
-
-  return (<>
-    <StyledAppBar color={undefined}>
-      <StyledTaskListTab active={summaryTab === 'TaskItemActive'} color={'#03256c'}
-        onClick={handleSummaryTab}><FormattedMessage id='core.myWork.tab.taskSummary' />
-      </StyledTaskListTab>
-      <StyledTaskListTab active={summaryTab === 'MyRecentActivity'} color={'#b7245c'}
-        onClick={handleSummaryTab}><FormattedMessage id='core.myWork.tab.recentActivities' />
-      </StyledTaskListTab>
-    </StyledAppBar>
-    {summaryTab === 'MyRecentActivity' ? <MyRecentActivity /> : <TaskItemActive task={task} />}
-  </>)
-}
-
 const TaskItemActiveWithRefresh: React.FC<{ task: TaskDescriptor | undefined }> = ({ task }) => {
   const [dismount, setDismount] = React.useState(false);
 
@@ -251,7 +228,9 @@ const TaskItemActiveWithRefresh: React.FC<{ task: TaskDescriptor | undefined }> 
   if (dismount) {
     return null;
   }
-  return (<DelegateTaskItemActive task={task} />)
+
+  return (<TaskItemActive task={task} />)
 }
+
 
 export default TaskItemActiveWithRefresh;

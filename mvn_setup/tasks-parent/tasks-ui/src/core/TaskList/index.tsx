@@ -4,7 +4,7 @@ import { Stack, Grid, Typography, TablePagination, Alert } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 import Pagination from 'table';
 import { TaskListState, initTable, initTabs, TaskListTabState } from './types';
-import { StyledStackItem, StyledTaskListTab, StyledEditTaskButton, StyledStartTaskButton, StyledAppBar } from './TaskListStyles';
+import { StyledStackItem, StyledEditTaskButton, StyledStartTaskButton } from './TaskListStyles';
 import { TaskDescriptor } from 'taskdescriptor';
 import TaskCreateDialog from '../TaskCreate';
 import { NavigationSticky, NavigationButtonTaskList } from '../NavigationSticky';
@@ -146,7 +146,7 @@ const TaskList: React.FC<{
 }
 
 export type { TaskListTabState };
-export { TaskList, StyledEditTaskButton, StyledStartTaskButton, StyledTaskListTab, StyledAppBar };
+export { TaskList, StyledEditTaskButton, StyledStartTaskButton };
 
 
 

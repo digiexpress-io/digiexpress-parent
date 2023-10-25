@@ -89,39 +89,6 @@ const StyledStackItem: React.FC<{
       {children}
     </Box>);
 }
-//TODO Delete this when no longer needed
-const StyledTaskListTab: React.FC<{ children: React.ReactNode, active: boolean, color: string, onClick: () => void }> = ({ children, active, color, onClick }) => {
-  const backgroundColor = active ? color : 'unset';
-  const border = active ? undefined : '1px solid' + color;
-  const sx: SxProps = {
-    borderRadius: '8px 8px 0px 0px',
-    boxShadow: "unset",
-    backgroundColor,
-    border,
-    color: active ? 'mainContent.main' : color,
-    borderBottom: 'unset',
-    '&:hover': {
-      backgroundColor: active ? color : lighten(color, 0.2),
-      color: 'mainContent.main'
-    },
-    ml: 1
-  };
-
-  return (<Button variant="contained" sx={sx} onClick={onClick}>
-    <Typography sx={{ fontWeight: 'bolder' }}>
-      {children}
-    </Typography>
-  </Button>);
-}
 
 
-const StyledAppBar: React.FC<{ children: React.ReactNode, color: string | undefined }> = ({ children, color }) => {
-  return (<AppBar color='inherit' position='sticky' sx={{ boxShadow: 'unset', px: 1, borderBottom: '1px solid' + color }}>
-    <Toolbar sx={{ alignItems: 'end', "&.MuiToolbar-root": { px: 'unset', minHeight: 50 } }}>
-      {children}
-    </Toolbar>
-  </AppBar >);
-}
-
-
-export { StyledStackItem, StyledTaskListTab, StyledStartTaskButton, StyledEditTaskButton, StyledStack, StyledAppBar }
+export { StyledStackItem, StyledStartTaskButton, StyledEditTaskButton, StyledStack }
