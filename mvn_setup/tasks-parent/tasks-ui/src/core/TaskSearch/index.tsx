@@ -4,7 +4,7 @@ import { TableHead, TableCell, TableRow, Box, Stack } from '@mui/material';
 import Context from 'context';
 import { TaskDescriptor, Group } from 'taskdescriptor';
 import TaskTable from '../TaskTable';
-import ToolsSticky from './ToolsSticky';
+import { NavigationSticky } from '../NavigationSticky';
 import FilterStatus from './FilterStatus';
 import FilterOwners from './FilterOwners';
 import FilterRoles from './FilterRoles';
@@ -96,7 +96,7 @@ const TaskSearch: React.FC<{}> = () => {
   }, [tasks.state]);
 
   return (<Box>
-    <ToolsSticky>
+    <NavigationSticky>
       <FilterByString onChange={({ target }) => setState(prev => prev.withSearchString(target.value))} />
       <Stack direction='row' spacing={1}>
         <GroupBy value={state.groupBy} onChange={(value) => setState(prev => prev.withGroupBy(value))} />
@@ -106,7 +106,7 @@ const TaskSearch: React.FC<{}> = () => {
         <FilterRoles value={state.filterBy} onChange={(value) => setState(prev => prev.withFilterByRoles(value))} />
         <FilterColumns types={columnTypes} value={columns} onChange={(value) => setColumns(value)} />
       </Stack>
-    </ToolsSticky>
+    </NavigationSticky>
 
     <TaskTable.Groups groups={state.groups} orderBy='created'>
       {{

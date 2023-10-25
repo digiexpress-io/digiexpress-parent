@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { Button, Menu, MenuList, MenuItem, ListItemIcon, ListItemText, Typography } from '@mui/material';
+import { Menu, MenuList, MenuItem, ListItemIcon, ListItemText } from '@mui/material';
 import Check from '@mui/icons-material/Check';
-import { FormattedMessage } from 'react-intl';
 import Client from 'taskclient';
 import { FilterByPriority, FilterBy } from 'taskdescriptor';
-
+import { NavigationButton } from '../NavigationSticky';
 
 const prioritytypes: Client.TaskPriority[] = ['HIGH', 'MEDIUM', 'LOW'];
 
@@ -27,11 +26,8 @@ export default function DenseMenu(
   const filterByPriority = props.value.find(filter => filter.type === 'FilterByPriority') as FilterByPriority | undefined;
 
   return (<>
-    <Button variant='outlined' sx={{ borderRadius: 10 }} onClick={handleClick}>
-      <Typography variant='caption' sx={{ color: 'text.primary' }}>
-        <FormattedMessage id='core.search.searchBar.filterPriority' values={{ count: filterByPriority?.priority.length }} />
-      </Typography>
-    </Button>
+    <NavigationButton onClick={handleClick} id='core.search.searchBar.filterPriority' values={{ count: filterByPriority?.priority.length }} />
+
     <Menu sx={{ width: 320 }}
       anchorEl={anchorEl}
       open={open}

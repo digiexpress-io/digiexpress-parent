@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { Button, Menu, MenuItem, MenuList, ListItemIcon, ListItemText, Typography } from '@mui/material';
+import { Menu, MenuItem, MenuList, ListItemIcon, ListItemText } from '@mui/material';
 import Check from '@mui/icons-material/Check';
-import { FormattedMessage } from 'react-intl';
 import Client from 'taskclient';
-import Context from 'context';
 import { FilterByStatus, FilterBy } from 'taskdescriptor';
+import { NavigationButton } from '../NavigationSticky';
 
 
 const statustypes: Client.TaskStatus[] = ['CREATED', 'IN_PROGRESS', 'COMPLETED', 'REJECTED'];
@@ -15,7 +14,6 @@ export default function DenseMenu(
     value: FilterBy[]
   }
 ) {
-  const ctx = Context.useTasks();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -28,11 +26,7 @@ export default function DenseMenu(
   const filterByStatus = props.value.find(filter => filter.type === 'FilterByStatus') as FilterByStatus | undefined;
 
   return (<>
-    <Button variant='outlined' sx={{ borderRadius: 10 }} onClick={handleClick}>
-      <Typography variant='caption' sx={{ color: 'text.primary' }}>
-        <FormattedMessage id='core.search.searchBar.filterStatus' values={{ count: filterByStatus?.status.length }} />
-      </Typography>
-    </Button>
+    <NavigationButton onClick={handleClick} id='core.search.searchBar.filterStatus' values={{ count: filterByStatus?.status.length }} />
 
     <Menu sx={{ width: 320 }}
       anchorEl={anchorEl}

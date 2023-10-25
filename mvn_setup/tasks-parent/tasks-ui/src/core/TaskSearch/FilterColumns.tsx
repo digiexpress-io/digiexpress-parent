@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { Button, Menu, MenuItem, MenuList, ListItemIcon, ListItemText, Typography } from '@mui/material';
+import { Menu, MenuItem, MenuList, ListItemIcon, ListItemText } from '@mui/material';
 import Check from '@mui/icons-material/Check';
-import { FormattedMessage } from 'react-intl';
 import { TaskDescriptor } from 'taskdescriptor';
+import { NavigationButton } from '../NavigationSticky';
 
 export default function DenseMenu(
   props: {
@@ -21,11 +21,7 @@ export default function DenseMenu(
   }
 
   return (<>
-    <Button variant='outlined' sx={{ borderRadius: 10 }} onClick={handleClick}>
-      <Typography variant='caption' sx={{ color: 'text.primary' }}>
-        <FormattedMessage id='core.search.searchBar.filterColumns' />
-      </Typography>
-    </Button>
+    <NavigationButton onClick={handleClick} id='core.search.searchBar.filterColumns' />
 
     <Menu sx={{ width: 320 }}
       anchorEl={anchorEl}

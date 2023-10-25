@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { Button, Menu, Typography, ListItemText, MenuList, MenuItem, ListItemIcon } from '@mui/material';
-import { FormattedMessage } from 'react-intl';
+import { Menu, ListItemText, MenuList, MenuItem, ListItemIcon } from '@mui/material';
 import Check from '@mui/icons-material/Check';
 import Context from 'context';
 import { FilterByRoles, FilterBy } from 'taskdescriptor';
-
+import { NavigationButton } from '../NavigationSticky';
 
 export default function DenseMenu(
   props: {
@@ -25,11 +24,7 @@ export default function DenseMenu(
   const filterByRoles = props.value.find(filter => filter.type === 'FilterByRoles') as FilterByRoles | undefined;
 
   return (<>
-    <Button variant='outlined' sx={{ borderRadius: 10 }} onClick={handleClick}>
-      <Typography variant='caption' sx={{ color: 'text.primary' }}>
-        <FormattedMessage id='core.search.searchBar.filterRoles' values={{ count: filterByRoles?.roles.length }} />
-      </Typography>
-    </Button>
+    <NavigationButton onClick={handleClick} id='core.search.searchBar.filterRoles' values={{ count: filterByRoles?.roles.length }} />
 
     <Menu sx={{ width: 320 }}
       anchorEl={anchorEl}

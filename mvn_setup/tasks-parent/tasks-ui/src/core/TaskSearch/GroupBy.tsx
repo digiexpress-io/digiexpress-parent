@@ -1,10 +1,8 @@
 import * as React from 'react';
-import { Button, Menu, Typography, MenuList, MenuItem, ListItemIcon, ListItemText } from '@mui/material';
+import { Menu, MenuList, MenuItem, ListItemIcon, ListItemText } from '@mui/material';
 import Check from '@mui/icons-material/Check';
-import { FormattedMessage } from 'react-intl';
-import Context from 'context';
 import { GroupBy } from 'taskdescriptor';
-
+import { NavigationButton } from '../NavigationSticky';
 
 const types: GroupBy[] = ['none', 'owners', 'roles', 'status', 'priority'];
 
@@ -13,7 +11,6 @@ const DenseMenu: React.FC<{
   onChange: (value: GroupBy) => void;
   value: GroupBy
 }> = ({ onChange, value }) => {
-  const ctx = Context.useTasks();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -25,11 +22,7 @@ const DenseMenu: React.FC<{
 
 
   return (<>
-    <Button variant='outlined' sx={{ borderRadius: 10 }} onClick={handleClick}>
-      <Typography variant='caption' sx={{ color: 'text.primary' }}>
-        <FormattedMessage id='core.search.searchBar.groupBy' values={{ groupBy: value }} />
-      </Typography>
-    </Button>
+    <NavigationButton onClick={handleClick} id='core.search.searchBar.groupBy' values={{ groupBy: value }} />
 
     <Menu sx={{ width: 320 }}
       anchorEl={anchorEl}
