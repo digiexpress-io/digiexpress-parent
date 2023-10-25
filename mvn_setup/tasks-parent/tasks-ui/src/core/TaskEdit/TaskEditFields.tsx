@@ -15,6 +15,7 @@ import ChecklistDelegate from 'core/Checklist';
 import TaskAssignees from 'core/TaskAssignees';
 import TaskStatus from 'core/TaskStatus';
 import TaskPriority from 'core/TaskPriority';
+import TaskRoles from 'core/TaskRoles';
 
 
 const Title: React.FC<{}> = () => {
@@ -116,6 +117,18 @@ const Assignee: React.FC<{}> = () => {
   )
 }
 
+const Roles: React.FC<{}> = () => {
+  const { state, setState } = Context.useTaskEdit();
+  const backend = Context.useBackend();
+
+  async function handleRolesChange(command: Client.AssignTaskRoles) {
+    const updatedTask = await backend.task.updateActiveTask(state.task.id, [command]);
+    setState((current) => current.withTask(updatedTask))
+  }
+
+  return (<TaskRoles task={state.task} onChange={handleRolesChange} />)
+}
+
 const Priority: React.FC<{}> = () => {
   const { state, setState } = Context.useTaskEdit();
   const backend = Context.useBackend();
@@ -181,6 +194,6 @@ const CloseDialogButton: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 const Fields = {
   Title, Description, Checklist, Status, Assignee, Priority,
   Options, StartDate, DueDate, MessageCount, AttachmentCount,
-  NewItemNotification, CloseDialogButton
+  NewItemNotification, CloseDialogButton, Roles
 }
 export default Fields;

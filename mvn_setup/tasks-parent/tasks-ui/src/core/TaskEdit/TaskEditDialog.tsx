@@ -58,6 +58,7 @@ const Header: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         <Stack spacing={2} direction='row'>
           <Fields.Status />
           <Fields.Assignee />
+          <Fields.Roles />
           <Fields.Priority />
           <Fields.Options />
         </Stack>
