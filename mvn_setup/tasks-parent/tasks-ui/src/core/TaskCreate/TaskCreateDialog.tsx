@@ -8,17 +8,18 @@ import Fields from './TaskCreateFields';
 import { Task } from 'taskclient';
 import Context from 'context';
 import { TaskDescriptorImpl } from 'taskdescriptor';
+import Section from '../Section';
 
 function initTaskProps(userId: string): Task {
   return {
     id: '',
-    title: 'task title ',
-    description: 'task description',
+    title: 'new task title ',
+    description: 'new task description',
     status: 'CREATED',
     priority: 'MEDIUM',
 
     startDate: undefined,
-    dueDate: undefined,
+    dueDate: new Date().toISOString(),
 
     roles: [],
     assigneeIds: [userId],
@@ -52,7 +53,7 @@ const TaskCreateDialog: React.FC<{ open: boolean, onClose: () => void }> = (prop
 
   return (
     <Context.EditProvider task={init}>
-      <Dialog open={true} fullWidth maxWidth='lg'>
+      <Dialog open={true} fullWidth maxWidth='sm'>
         <DialogTitle sx={{
           backgroundColor: theme.palette.mainContent.main,
           borderBottom: `1px solid ${alpha(theme.palette.mainContent.dark, 0.3)}`,
@@ -69,14 +70,46 @@ const TaskCreateDialog: React.FC<{ open: boolean, onClose: () => void }> = (prop
 
         <DialogContent>
           <Stack overflow='auto' spacing={1} direction='column'>
-            <Fields.Title />
-            <Fields.StartDate onClick={() => { }} />
-            <Fields.DueDate onClick={() => { }} />
-            <Fields.Status />
-            <Fields.Priority />
-            <Fields.Assignees />
-            <Fields.Roles />
-            <Fields.Description />
+            <Section>
+              <Typography fontWeight='bold'><FormattedMessage id='core.taskCreate.fields.title' /></Typography>
+              <Fields.Title />
+            </Section>
+
+            <Section>
+              <Typography fontWeight='bold'><FormattedMessage id='core.taskCreate.fields.description' /></Typography>
+              <Fields.Description />
+            </Section>
+
+            <Section>
+              <Typography fontWeight='bold'><FormattedMessage id='core.taskCreate.fields.startDate' /></Typography>
+              <Fields.StartDate onClick={() => { }} />
+            </Section>
+
+            <Section>
+              <Typography fontWeight='bold'><FormattedMessage id='core.taskCreate.fields.dueDate' /></Typography>
+              <Fields.DueDate onClick={() => { }} />
+            </Section>
+
+            <Section>
+              <Typography fontWeight='bold'><FormattedMessage id='core.taskCreate.fields.status' /></Typography>
+              <Fields.Status />
+            </Section>
+
+            <Section>
+              <Typography fontWeight='bold'><FormattedMessage id='core.taskCreate.fields.priority' /></Typography>
+              <Fields.Priority />
+            </Section>
+
+            <Section>
+              <Typography fontWeight='bold'><FormattedMessage id='core.taskCreate.fields.assignees' /></Typography>
+              <Fields.Assignees />
+            </Section>
+
+            <Section>
+              <Typography fontWeight='bold'><FormattedMessage id='core.taskCreate.fields.roles' /></Typography>
+              <Fields.Roles />
+            </Section>
+
           </Stack>
         </DialogContent>
         <DialogActions>

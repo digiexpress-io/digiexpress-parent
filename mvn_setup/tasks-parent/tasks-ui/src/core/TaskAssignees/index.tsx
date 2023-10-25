@@ -81,8 +81,6 @@ const TaskAssignees: React.FC<{
     });
   }
 
-
-
   function onSubmit() {
     const isChanges = newAssignees.sort().toString() !== task.assignees.sort().toString();
     if (isChanges) {

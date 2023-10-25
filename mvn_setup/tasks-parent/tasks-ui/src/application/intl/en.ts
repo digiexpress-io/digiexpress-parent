@@ -32,10 +32,14 @@ const en = {
   'task.edit': 'Edit',
   'task.noneSelected': 'No task selected',
 
-  'core.taskCreate.fields.roles': 'Roles:',
-  'core.taskCreate.fields.assignees': 'Assignees:',
-  'core.taskCreate.fields.priority': 'Priority:',
-  'core.taskCreate.fields.status': 'Status:',
+  'core.taskCreate.fields.roles': 'Roles',
+  'core.taskCreate.fields.assignees': 'Assignees',
+  'core.taskCreate.fields.priority': 'Priority',
+  'core.taskCreate.fields.status': 'Status',
+  'core.taskCreate.fields.title': 'Title',
+  'core.taskCreate.fields.startDate': 'Start date',
+  'core.taskCreate.fields.dueDate': 'Due date',
+  'core.taskCreate.fields.description': 'Description',
 
   'task.priority.LOW': 'Low',
   'task.priority.MEDIUM': 'Medium',
