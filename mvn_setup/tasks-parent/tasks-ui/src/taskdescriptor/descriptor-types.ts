@@ -80,8 +80,6 @@ export interface Group {
   records: TaskDescriptor[];
 }
 
-
-
 export interface Data {
   tasks: TaskDescriptor[];
   tasksByOwner: Record<string, TaskDescriptor[]>;
@@ -90,7 +88,6 @@ export interface Data {
   roles: string[];
   owners: string[];
 }
-
 
 export interface DescriptorState {
   groupBy: GroupBy;

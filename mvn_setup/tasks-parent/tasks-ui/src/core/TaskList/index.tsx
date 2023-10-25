@@ -76,19 +76,6 @@ const TaskList: React.FC<{
 
   const { TaskItem, TaskItemActive } = children;
 
-  /*
-         <StyledAppBar color={state.tabs[state.activeTab].group.color}>
-            {state.tabs.map(tab => (
-              <StyledTaskListTab key={tab.id} active={state.activeTab === tab.id} color={tab.color} onClick={() => handleActiveTab(tab.id)} >
-                <FormattedMessage id={tab.label} values={{ count: tab.count }} />
-              </StyledTaskListTab>))
-            }
-            <Box flexGrow={1} />
-            <IconButton sx={{ color: 'uiElements.main' }} onClick={handleTaskCreate}><AddBoxIcon fontSize='large' /></IconButton>
-          </StyledAppBar >
-  
-  */
-
 
   return (<>
     <TaskCreateDialog open={createOpen} onClose={handleTaskCreate} />

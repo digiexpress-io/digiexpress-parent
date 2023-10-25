@@ -109,7 +109,7 @@ const ChecklistAlert = styled(Alert)(({ theme }) => ({
 const Title: React.FC<{}> = () => {
   const { state } = Context.useTaskEdit();
 
-  return (<Typography variant='h4'>{state.task.title}</Typography>);
+  return (<Typography>{state.task.title}</Typography>);
 }
 
 const Description: React.FC<{}> = () => {
@@ -407,7 +407,7 @@ const SplitButton: React.FC<{ onClose?: () => void }> = ({ onClose }) => {
     <React.Fragment>
       <ButtonGroup variant="contained" ref={anchorRef}>
         <Button startIcon={<CheckIcon />} onClick={handleClose}>
-          <Typography><FormattedMessage id='core.taskWork.button.accept'></FormattedMessage></Typography>
+          <Typography><FormattedMessage id='core.taskWork.button.complete'></FormattedMessage></Typography>
         </Button>
         <Button size="small" onClick={handleToggle}>
           <ArrowDropDownIcon />

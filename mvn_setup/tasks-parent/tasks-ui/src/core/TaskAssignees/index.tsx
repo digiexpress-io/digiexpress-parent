@@ -46,7 +46,7 @@ const FullnamesAndAvatars: React.FC<{
 
   return task.assigneesAvatars.length ?
     (<Stack spacing={1}>
-      {task.assigneesAvatars.map((assignee: AvatarCode) => (<Box display='flex' alignItems='center' sx={{ cursor: 'pointer' }}>
+      {task.assigneesAvatars.map((assignee: AvatarCode) => (<Box key={assignee.value} display='flex' alignItems='center' sx={{ cursor: 'pointer' }}>
         <UserAvatar key={assignee.value}>{assignee}</UserAvatar>
         <Box pl={1}><Typography>{org.state.org.users[assignee.value].displayName}</Typography></Box>
       </Box>))}

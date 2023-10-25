@@ -46,7 +46,7 @@ const FullnamesAndAvatars: React.FC<{
 
   return task.rolesAvatars.length ?
     (<Stack spacing={1}>
-      {task.rolesAvatars.map((role: AvatarCode) => (<Box display='flex' alignItems='center' sx={{ cursor: 'pointer' }}>
+      {task.rolesAvatars.map((role: AvatarCode) => (<Box key={role.value} display='flex' alignItems='center' sx={{ cursor: 'pointer' }}>
         <RoleAvatar key={role.value}>{role}</RoleAvatar>
         <Box pl={1}><Typography>{org.state.org.roles[role.value]?.displayName}</Typography></Box>
       </Box>))}

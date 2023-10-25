@@ -32,8 +32,8 @@ const CellMenuItem: React.FC<{
 
 const HoverMenu: React.FC<{
   onEdit: () => void,
-  onWork: () => void,
-}> = ({ onEdit, onWork }) => {
+  onCRM: () => void,
+}> = ({ onEdit, onCRM }) => {
   const Popover = usePopover();
 
   return (
@@ -41,8 +41,7 @@ const HoverMenu: React.FC<{
       <Popover.Delegate>
         <MenuList dense>
           <CellMenuItem onClick={onEdit} title={`tasktable.menu.edit`} />
-          <CellMenuItem onClick={onWork} title={`tasktable.menu.crm`} />
-          <CellMenuItem title={`tasktable.menu.viewData`} />
+          <CellMenuItem onClick={onCRM} title={`tasktable.menu.viewData`} />
           <Divider />
           <MenuItem>
             <StyledBox>
@@ -66,7 +65,7 @@ const FormattedCell: React.FC<{
   setDisabled: () => void
 }> = ({ row, active, setDisabled }) => {
   const [edit, setEdit] = React.useState(false);
-  const [work, setWork] = React.useState(false);
+  const [crm, setCrm] = React.useState(false);
 
   function handleStartEdit() {
     setEdit(true);
@@ -78,23 +77,23 @@ const FormattedCell: React.FC<{
   }
 
   function handleStartWork() {
-    setWork(true);
+    setCrm(true);
     setDisabled();
   }
 
   function handleCrm() {
-    setWork(false);
+    setCrm(false);
   }
 
   return (
     <StyledTableCell width="35px">
       <Box width="35px" justifyContent='right'> {/* Box is needed to prevent table cell resize on hover */}
         <TaskEditDialog open={edit} onClose={handleEndEdit} task={row} />
-        <CRMDialog open={work} onClose={handleCrm} task={row} />
+        <CRMDialog open={crm} onClose={handleCrm} task={row} />
         {active &&
           <HoverMenu
             onEdit={handleStartEdit}
-            onWork={handleStartWork}
+            onCRM={handleStartWork}
           />}
       </Box>
     </StyledTableCell>

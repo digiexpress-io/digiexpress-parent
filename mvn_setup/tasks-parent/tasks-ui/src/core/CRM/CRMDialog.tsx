@@ -1,18 +1,30 @@
 import React from 'react';
-import { Box, Stack, Grid } from '@mui/material';
-
+import { Box, Stack, Grid, Typography } from '@mui/material';
+import { FormattedMessage } from 'react-intl';
 import StyledFullScreenDialog from '../Dialogs';
 import Fields from './CRMFields';
 import Context from 'context';
 import { TaskDescriptor } from 'taskdescriptor';
 import { MenuProvider, useMenu } from './menu-ctx';
+import Section from '../Section';
 
 const Left: React.FC<{}> = () => {
 
   return (
-    <Box>
+    <Stack spacing={1} direction='column'>
+      <Section>
+        <Typography fontWeight='bold'><FormattedMessage id='task.title' /></Typography>
+        <Fields.Title />
+      </Section>
+
+      <Section>
+        <Typography fontWeight='bold'><FormattedMessage id='task.description' /></Typography>
+        <Fields.Description />
+      </Section>
+
       <Fields.Form />
-    </Box>)
+    </Stack>
+  )
 }
 
 const Right: React.FC<{}> = () => {
@@ -30,14 +42,10 @@ const Right: React.FC<{}> = () => {
 
 const Header: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
-  return (<>
-
+  return (
     <Grid container>
-      <Grid item md={6} lg={6} sx={{ mt: 0.5 }}>
-        <Stack spacing={1} direction='column'>
-          <Fields.Title />
-          <Fields.Description />
-        </Stack>
+      <Grid item md={6} lg={6}>
+        <FormattedMessage id='crmDialog.title' />
       </Grid>
 
       <Grid item md={3} lg={3}>
@@ -56,7 +64,6 @@ const Header: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         <Fields.CloseDialogButton onClose={onClose} />
       </Grid>
     </Grid >
-  </>
   )
 }
 

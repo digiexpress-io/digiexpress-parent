@@ -1,6 +1,4 @@
-import {
-  Stack, SxProps, lighten, Typography, Theme, alpha, Box, darken, styled, Button, useTheme, AppBar, Toolbar
-} from '@mui/material';
+import { Stack, SxProps, Theme, alpha, Box, darken, styled, Button, useTheme } from '@mui/material';
 
 
 const StyledStartTaskButton = styled(Button)(({ theme }) => ({

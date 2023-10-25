@@ -6,13 +6,11 @@ import TaskItemActive from './TaskItemActive';
 import TaskItem from './TaskItem';
 
 
-
 function groupsToRecord(state: Group[]): Record<AssigneeGroupType, Group> {
   return state.reduce((acc, item) => ({ ...acc, [item['id']]: item }), {} as Record<AssigneeGroupType, Group>);
 }
 
-
-function getTabs(state: Context.TasksState): TaskListTabState[] {
+function getTabs(state: Context.TasksState): TaskListTabState[] | any {
   const groupBy: Group[] = state.withDescriptors().withGroupBy("assignee").groups;
   const groups = groupsToRecord(groupBy);
   const assigneeOverdue = groups["assigneeOverdue"];
@@ -60,12 +58,13 @@ function getTabs(state: Context.TasksState): TaskListTabState[] {
       group: assigneeOther,
       disabled: true,
       count: assigneeOther.records.length
-    },
+    }
   ]
 }
 
 const MyWorkLoader: React.FC = () => {
   const tasks = Context.useTasks();
+  console.log(getTabs(tasks.state));
 
   if (tasks.loading) {
     return <>...loading</>

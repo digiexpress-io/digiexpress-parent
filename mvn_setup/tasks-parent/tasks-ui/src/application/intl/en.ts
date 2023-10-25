@@ -77,8 +77,8 @@ const en = {
 
   'core.taskWork.button.edit': 'Edit',
   'core.taskWork.button.cancel': 'Cancel',
-  'core.taskWork.button.accept': 'Accept',
-  'core.taskWork.button.reject': 'Reject',
+  'core.taskWork.button.complete': 'Complete task',
+  'core.taskWork.button.reject': 'Reject task',
 
   'core.taskWork.menu.checklists': 'Checklists',
   'core.taskWork.menu.attachments': 'Attachments',
@@ -148,6 +148,8 @@ const en = {
   'core.search.searchBar.filterStatus': 'Status {count}',
   'core.search.searchBar.filterPriority': 'Priority {count}',
 
+  'crmDialog.title': 'Customer data',
+
   '_nobody_': 'Unassigned',
 
   'init.loaded': 'Loaded repo: {name}',
@@ -210,7 +212,6 @@ const en = {
   'tasktable.header.dueDate': 'Due Date',
 
   'tasktable.menu.edit': 'Edit task',
-  'tasktable.menu.crm': 'CRM data',
   'tasktable.menu.viewData': 'View customer data',
   'tasktable.menu.archive': 'Archive task',
 
