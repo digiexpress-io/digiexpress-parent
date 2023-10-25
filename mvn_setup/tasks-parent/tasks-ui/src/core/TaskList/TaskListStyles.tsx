@@ -89,7 +89,7 @@ const StyledStackItem: React.FC<{
       {children}
     </Box>);
 }
-
+//TODO Delete this when no longer needed
 const StyledTaskListTab: React.FC<{ children: React.ReactNode, active: boolean, color: string, onClick: () => void }> = ({ children, active, color, onClick }) => {
   const backgroundColor = active ? color : 'unset';
   const border = active ? undefined : '1px solid' + color;

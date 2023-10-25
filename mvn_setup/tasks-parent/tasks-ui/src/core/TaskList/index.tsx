@@ -1,6 +1,5 @@
 import React from 'react';
-import { Stack, Grid, Typography, TablePagination, Alert, IconButton, Box } from '@mui/material';
-import AddBoxIcon from '@mui/icons-material/AddBox';
+import { Stack, Grid, Typography, TablePagination, Alert } from '@mui/material';
 
 import { FormattedMessage } from 'react-intl';
 import Pagination from 'table';
@@ -8,6 +7,8 @@ import { TaskListState, initTable, initTabs, TaskListTabState } from './types';
 import { StyledStackItem, StyledTaskListTab, StyledEditTaskButton, StyledStartTaskButton, StyledAppBar } from './TaskListStyles';
 import { TaskDescriptor } from 'taskdescriptor';
 import TaskCreateDialog from '../TaskCreate';
+import { NavigationSticky, NavigationButtonTaskList } from '../NavigationSticky';
+
 
 const RowFiller: React.FC<{ value: Pagination.TablePagination<TaskDescriptor> }> = ({ value }) => {
 
@@ -75,21 +76,47 @@ const TaskList: React.FC<{
 
   const { TaskItem, TaskItemActive } = children;
 
+  /*
+         <StyledAppBar color={state.tabs[state.activeTab].group.color}>
+            {state.tabs.map(tab => (
+              <StyledTaskListTab key={tab.id} active={state.activeTab === tab.id} color={tab.color} onClick={() => handleActiveTab(tab.id)} >
+                <FormattedMessage id={tab.label} values={{ count: tab.count }} />
+              </StyledTaskListTab>))
+            }
+            <Box flexGrow={1} />
+            <IconButton sx={{ color: 'uiElements.main' }} onClick={handleTaskCreate}><AddBoxIcon fontSize='large' /></IconButton>
+          </StyledAppBar >
+  
+  */
+
+
   return (<>
     <TaskCreateDialog open={createOpen} onClose={handleTaskCreate} />
     <Grid container>
-      <Grid item md={8} lg={8}>
-        <StyledAppBar color={state.tabs[state.activeTab].group.color}>
+      <Grid item md={12} lg={12}>
+
+        <NavigationSticky>
           {state.tabs.map(tab => (
-            <StyledTaskListTab key={tab.id} active={state.activeTab === tab.id} color={tab.color} onClick={() => handleActiveTab(tab.id)} >
-              <FormattedMessage id={tab.label} values={{ count: tab.count }} />
-            </StyledTaskListTab>))
+            <NavigationButtonTaskList
+              id={tab.label}
+              values={{ count: tab.count }}
+              key={tab.id}
+              active={state.activeTab === tab.id}
+              color={tab.color}
+              onClick={() => handleActiveTab(tab.id)} />
+          ))
           }
-          <Box flexGrow={1} />
-          <IconButton sx={{ color: 'uiElements.main' }} onClick={handleTaskCreate}><AddBoxIcon fontSize='large' /></IconButton>
-        </StyledAppBar >
+          <NavigationButtonTaskList
+            id='core.taskCreate.newTask'
+            onClick={handleTaskCreate}
+            values={undefined}
+            active={createOpen}
+            color={'rgb(80, 72, 229)'}
+          />
+        </NavigationSticky>
+      </Grid>
 
-
+      <Grid item md={8} lg={8}>
         <Stack sx={{ backgroundColor: 'mainContent.main' }}>
           {table.entries.map((task, index) => (
             <StyledStackItem key={task.id} index={index} active={state.activeTask?.id === task.id} onClick={() => handleActiveTask(task)}>

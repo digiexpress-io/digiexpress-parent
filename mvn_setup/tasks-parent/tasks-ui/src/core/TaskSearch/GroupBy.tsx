@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Menu, MenuList, MenuItem, ListItemIcon, ListItemText } from '@mui/material';
 import Check from '@mui/icons-material/Check';
 import { GroupBy } from 'taskdescriptor';
-import { NavigationButton } from '../NavigationSticky';
+import { NavigationButtonSearch } from '../NavigationSticky';
 
 const types: GroupBy[] = ['none', 'owners', 'roles', 'status', 'priority'];
 
@@ -22,7 +22,7 @@ const DenseMenu: React.FC<{
 
 
   return (<>
-    <NavigationButton onClick={handleClick} id='core.search.searchBar.groupBy' values={{ groupBy: value }} />
+    <NavigationButtonSearch onClick={handleClick} id='core.search.searchBar.groupBy' values={{ groupBy: value }} />
 
     <Menu sx={{ width: 320 }}
       anchorEl={anchorEl}

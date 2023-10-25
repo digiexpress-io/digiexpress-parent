@@ -3,7 +3,7 @@ import { Menu, MenuList, MenuItem, ListItemIcon, ListItemText } from '@mui/mater
 import Check from '@mui/icons-material/Check';
 import Context from 'context';
 import { FilterByOwners, FilterBy } from 'taskdescriptor';
-import { NavigationButton } from '../NavigationSticky';
+import { NavigationButtonSearch } from '../NavigationSticky';
 
 export default function DenseMenu(
   props: {
@@ -26,7 +26,7 @@ export default function DenseMenu(
   const filterByOwners = props.value.find(filter => filter.type === 'FilterByOwners') as FilterByOwners | undefined;
 
   return (<>
-    <NavigationButton onClick={handleClick} id='core.search.searchBar.filterOwners' values={{ count: filterByOwners?.owners.length }} />
+    <NavigationButtonSearch onClick={handleClick} id='core.search.searchBar.filterOwners' values={{ count: filterByOwners?.owners.length }} />
 
     <Menu sx={{ width: 320 }}
       anchorEl={anchorEl}

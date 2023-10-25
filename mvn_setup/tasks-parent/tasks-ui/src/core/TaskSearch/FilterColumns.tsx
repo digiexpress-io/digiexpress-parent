@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Menu, MenuItem, MenuList, ListItemIcon, ListItemText } from '@mui/material';
 import Check from '@mui/icons-material/Check';
 import { TaskDescriptor } from 'taskdescriptor';
-import { NavigationButton } from '../NavigationSticky';
+import { NavigationButtonSearch } from '../NavigationSticky';
 
 export default function DenseMenu(
   props: {
@@ -21,7 +21,7 @@ export default function DenseMenu(
   }
 
   return (<>
-    <NavigationButton onClick={handleClick} id='core.search.searchBar.filterColumns' />
+    <NavigationButtonSearch onClick={handleClick} id='core.search.searchBar.filterColumns' values={undefined} />
 
     <Menu sx={{ width: 320 }}
       anchorEl={anchorEl}

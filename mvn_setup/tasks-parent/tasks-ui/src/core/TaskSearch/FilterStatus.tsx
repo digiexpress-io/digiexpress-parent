@@ -3,7 +3,7 @@ import { Menu, MenuItem, MenuList, ListItemIcon, ListItemText } from '@mui/mater
 import Check from '@mui/icons-material/Check';
 import Client from 'taskclient';
 import { FilterByStatus, FilterBy } from 'taskdescriptor';
-import { NavigationButton } from '../NavigationSticky';
+import { NavigationButtonSearch } from '../NavigationSticky';
 
 
 const statustypes: Client.TaskStatus[] = ['CREATED', 'IN_PROGRESS', 'COMPLETED', 'REJECTED'];
@@ -26,7 +26,7 @@ export default function DenseMenu(
   const filterByStatus = props.value.find(filter => filter.type === 'FilterByStatus') as FilterByStatus | undefined;
 
   return (<>
-    <NavigationButton onClick={handleClick} id='core.search.searchBar.filterStatus' values={{ count: filterByStatus?.status.length }} />
+    <NavigationButtonSearch onClick={handleClick} id='core.search.searchBar.filterStatus' values={{ count: filterByStatus?.status.length }} />
 
     <Menu sx={{ width: 320 }}
       anchorEl={anchorEl}

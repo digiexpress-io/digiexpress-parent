@@ -3,7 +3,7 @@ import { Menu, MenuList, MenuItem, ListItemIcon, ListItemText } from '@mui/mater
 import Check from '@mui/icons-material/Check';
 import Client from 'taskclient';
 import { FilterByPriority, FilterBy } from 'taskdescriptor';
-import { NavigationButton } from '../NavigationSticky';
+import { NavigationButtonSearch } from '../NavigationSticky';
 
 const prioritytypes: Client.TaskPriority[] = ['HIGH', 'MEDIUM', 'LOW'];
 
@@ -26,7 +26,7 @@ export default function DenseMenu(
   const filterByPriority = props.value.find(filter => filter.type === 'FilterByPriority') as FilterByPriority | undefined;
 
   return (<>
-    <NavigationButton onClick={handleClick} id='core.search.searchBar.filterPriority' values={{ count: filterByPriority?.priority.length }} />
+    <NavigationButtonSearch onClick={handleClick} id='core.search.searchBar.filterPriority' values={{ count: filterByPriority?.priority.length }} />
 
     <Menu sx={{ width: 320 }}
       anchorEl={anchorEl}

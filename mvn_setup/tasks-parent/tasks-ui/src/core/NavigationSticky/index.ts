@@ -1,4 +1,4 @@
 import NavigationSticky from './NavigationSticky';
-import NavigationButton from './NavigationButton';
+import { NavigationButtonSearch, NavigationButtonTaskList } from './NavigationButton';
 
-export { NavigationSticky, NavigationButton };
+export { NavigationSticky, NavigationButtonSearch, NavigationButtonTaskList };

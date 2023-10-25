@@ -41,7 +41,7 @@ const en = {
   'task.priority.MEDIUM': 'Medium',
   'task.priority.HIGH': 'High',
 
-  'core.taskCreate.newTask': 'Create new task',
+  'core.taskCreate.newTask': 'Create task',
   'core.taskCreate.taskTitle': 'Task title',
   'core.taskCreate.taskDescription': 'Task title',
   'core.taskCreate.button.create': 'Create',
