@@ -105,7 +105,7 @@ const en = {
   'core.myWork.tab.task.available': 'Available: {count}',
   'core.myWork.tab.task.startsToday': 'Starts today: {count}',
   'core.myWork.tab.task.currentlyWorking': 'Current work: {count}',
-  'core.myWork.tab.recentActivities': 'Activities',
+  'core.myWork.tab.recentActivities': 'My activities',
   'core.myWork.tab.taskSummary': 'Summary',
 
   'core.myWork.task.dueDate': 'Due on {dueDate}',

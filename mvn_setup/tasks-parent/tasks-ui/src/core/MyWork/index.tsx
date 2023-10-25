@@ -53,6 +53,14 @@ function getTabs(state: Context.TasksState): TaskListTabState[] {
       disabled: true,
       count: assigneeOther.records.length
     },
+    {
+      id: 4,
+      label: 'core.myWork.tab.recentActivities',
+      color: '#A1A314',
+      group: assigneeOther,
+      disabled: true,
+      count: assigneeOther.records.length
+    },
   ]
 }
 

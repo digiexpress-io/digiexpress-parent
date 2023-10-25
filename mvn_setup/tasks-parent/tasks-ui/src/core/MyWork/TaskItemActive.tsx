@@ -35,6 +35,9 @@ const StyledStack: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (<Box sx={{
     height: '100%',
     position: 'fixed',
+    //height: 'vh',
+    overflowY: 'scroll',
+    overflowX: 'hidden',
     boxShadow: 1,
     width: '23%',
     pt: theme.spacing(2),
@@ -44,7 +47,7 @@ const StyledStack: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     <Stack direction='column' spacing={1}>
       {children}
     </Stack>
-  </Box>);
+  </Box >);
 }
 
 const MyRecentActivity: React.FC = () => {
