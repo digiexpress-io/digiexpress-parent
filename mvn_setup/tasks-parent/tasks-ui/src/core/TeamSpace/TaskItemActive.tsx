@@ -1,8 +1,5 @@
 import React from 'react';
-import {
-  Box, Stack, Alert, AlertTitle, Typography, Divider, Skeleton,
-  darken, styled, Button, useTheme, AlertColor, IconButton
-} from '@mui/material';
+import { Box, Stack, Alert, AlertTitle, Typography, Skeleton, useTheme, AlertColor, IconButton } from '@mui/material';
 import EditIcon from '@mui/icons-material/ModeEditOutlineOutlined';
 import CrmIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
 
@@ -120,7 +117,7 @@ const TaskItemActive: React.FC<{ task: TaskDescriptor | undefined }> = ({ task }
           </Stack>
         </Section>
 
-
+        {/* title section */}
         <Section>
           <StyledTitle children='task.title' />
           <Typography fontWeight='bold'>{task.title}</Typography>
@@ -135,13 +132,13 @@ const TaskItemActive: React.FC<{ task: TaskDescriptor | undefined }> = ({ task }
         {/* assignee section */}
         <Section>
           <StyledTitle children='task.assignees' />
-          <Box sx={{ cursor: 'pointer' }}><TaskAssignees onChange={handleAssigneeChange} task={task} fullnames /></Box>
+          <TaskAssignees onChange={handleAssigneeChange} task={task} fullnames />
         </Section>
 
         {/* roles section */}
         <Section>
           <StyledTitle children='task.roles' />
-          <Box sx={{ cursor: 'pointer' }}><TaskRoles onChange={handleRoleChange} task={task} fullnames /></Box>
+          <TaskRoles onChange={handleRoleChange} task={task} fullnames />
         </Section>
 
         {/* status section */}

@@ -1,9 +1,12 @@
 import React from 'react';
-import { Box, Stack, Alert, AlertTitle, Typography, Divider, Skeleton, darken, styled, Button, useTheme, AlertColor } from '@mui/material';
+import { Box, Stack, Alert, AlertTitle, Typography, IconButton, Divider, Skeleton, darken, styled, Button, useTheme, AlertColor } from '@mui/material';
+import EditIcon from '@mui/icons-material/ModeEditOutlineOutlined';
+import CrmIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
 import { FormattedMessage } from 'react-intl';
 
 import TimestampFormatter from 'core/TimestampFormatter';
 import TaskAssignees from 'core/TaskAssignees';
+import TaskRoles from 'core/TaskRoles';
 import TaskStatus from 'core/TaskStatus';
 import TaskWorkDialog from 'core/TaskWork';
 import TaskEditDialog from 'core/TaskEdit';
@@ -12,29 +15,8 @@ import Context from 'context';
 import Client from 'taskclient';
 import { TaskDescriptor } from 'taskdescriptor';
 import { StyledAppBar, StyledTaskListTab } from '../TaskList';
+import Section from 'core/Section';
 
-
-const StyledStartTaskButton = styled(Button)(({ theme }) => ({
-  width: 'stretch',
-  color: theme.palette.mainContent.main,
-  fontWeight: 'bold',
-  backgroundColor: theme.palette.uiElements.main,
-  '&:hover': {
-    backgroundColor: darken(theme.palette.uiElements.main, 0.3),
-  }
-}));
-
-const StyledEditTaskButton = styled(Button)(({ theme }) => ({
-  width: 'stretch',
-  border: '1px solid',
-  color: theme.palette.uiElements.main,
-  fontWeight: 'bold',
-  borderColor: theme.palette.uiElements.main,
-  '&:hover': {
-    borderColor: darken(theme.palette.uiElements.main, 0.3),
-    color: darken(theme.palette.uiElements.main, 0.3)
-  }
-}));
 
 const StyledViewHistoryButton = styled(Button)(({ theme }) => ({
   width: '100%',
@@ -132,6 +114,14 @@ const TaskItemActive: React.FC<{ task: TaskDescriptor | undefined }> = ({ task }
     await tasks.reload();
   }
 
+  async function handleRoleChange(command: Client.AssignTaskRoles) {
+    if (!task) {
+      return;
+    }
+    await backend.task.updateActiveTask(task.id, [command]);
+    await tasks.reload();
+  }
+
   function handleTaskWork() {
     setTaskWorkOpen(prev => !prev);
   }
@@ -150,36 +140,52 @@ const TaskItemActive: React.FC<{ task: TaskDescriptor | undefined }> = ({ task }
 
       <StyledStack>
 
-        {/* header section */}
-        <Typography fontWeight='bold' variant='h4'>{task.title}</Typography>
-        <Divider sx={{ my: 1 }} />
-
-        {/* buttons section */}
-        <Stack direction='row' spacing={1}>
-          <StyledStartTaskButton onClick={handleTaskWork}><FormattedMessage id='task.start' /></StyledStartTaskButton>
-          <StyledEditTaskButton onClick={handleTaskEdit}><FormattedMessage id='task.edit' /></StyledEditTaskButton>
-        </Stack>
-
-        <Box sx={{ my: 1 }} />
-
         {/* duedate alert section */}
         <Alert severity={alert.alertSeverity} variant='standard'>
           <AlertTitle><FormattedMessage id={alert.title} /></AlertTitle>
           {alert.isDueDate ? <Typography variant='body2' fontWeight='bolder'>
             <FormattedMessage id={alert.alertMsg} values={{ dueDate: <TimestampFormatter type='date' value={task.dueDate} /> }} /></Typography> : undefined}
         </Alert>
+
+        {/* buttons section */}
+        <Section>
+          <StyledTitle children='task.tools' />
+          <Stack direction='row' spacing={1} justifyContent='center'>
+            <IconButton onClick={handleTaskEdit}><EditIcon sx={{ color: 'uiElements.main' }} /></IconButton>
+            <IconButton onClick={handleTaskWork}><CrmIcon sx={{ color: 'locale.dark' }} /></IconButton>
+          </Stack>
+        </Section>
+
+        {/* title section */}
+        <Section>
+          <StyledTitle children='task.title' />
+          <Typography fontWeight='bold'>{task.title}</Typography>
+        </Section>
+
         {/* description section */}
-        <StyledTitle children='task.description' />
-        <Typography>{task.description}</Typography>
+        <Section>
+          <StyledTitle children='task.description' />
+          <Typography>{task.description}</Typography>
+        </Section>
 
         {/* assignee section */}
+        <Section>
+          <StyledTitle children='task.assignees' />
+          <TaskAssignees onChange={handleAssigneeChange} task={task} fullnames />
+        </Section>
 
-        <StyledTitle children='task.assignees' />
-        <TaskAssignees onChange={handleAssigneeChange} task={task} />
+        {/* roles section */}
+        <Section>
+          <StyledTitle children='task.roles' />
+          <Box sx={{ cursor: 'pointer' }}><TaskRoles onChange={handleRoleChange} task={task} fullnames /></Box>
+        </Section>
 
         {/* status section */}
-        <StyledTitle children='task.status' />
-        <TaskStatus onChange={handleStatusChange} task={task} />
+        <Section>
+          <StyledTitle children='task.status' />
+          <TaskStatus onChange={handleStatusChange} task={task} />
+        </Section>
+
       </StyledStack>
     </>
 
