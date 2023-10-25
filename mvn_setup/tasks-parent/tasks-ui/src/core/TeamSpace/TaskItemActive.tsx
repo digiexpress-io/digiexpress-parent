@@ -114,7 +114,7 @@ const TaskItemActive: React.FC<{ task: TaskDescriptor | undefined }> = ({ task }
         {/* buttons section */}
         <Section>
           <StyledTitle children='task.tools' />
-          <Stack direction='row' spacing={1}>
+          <Stack direction='row' spacing={1} justifyContent='center'>
             <IconButton onClick={handleTaskEdit}><EditIcon sx={{ color: 'uiElements.main' }} /></IconButton>
             <IconButton onClick={handleTaskWork}><CrmIcon sx={{ color: 'locale.dark' }} /></IconButton>
           </Stack>
@@ -135,13 +135,13 @@ const TaskItemActive: React.FC<{ task: TaskDescriptor | undefined }> = ({ task }
         {/* assignee section */}
         <Section>
           <StyledTitle children='task.assignees' />
-          <TaskAssignees onChange={handleAssigneeChange} task={task} fullnames />
+          <Box sx={{ cursor: 'pointer' }}><TaskAssignees onChange={handleAssigneeChange} task={task} fullnames /></Box>
         </Section>
 
         {/* roles section */}
         <Section>
           <StyledTitle children='task.roles' />
-          <TaskRoles onChange={handleRoleChange} task={task} fullnames />
+          <Box sx={{ cursor: 'pointer' }}><TaskRoles onChange={handleRoleChange} task={task} fullnames /></Box>
         </Section>
 
         {/* status section */}
