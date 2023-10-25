@@ -1,5 +1,5 @@
 import React from 'react';
-import { AvatarGroup, Box, Button, Avatar, List, MenuItem, Checkbox, ListItemText, Stack } from '@mui/material';
+import { AvatarGroup, Box, Button, Avatar, List, MenuItem, Checkbox, ListItemText, Stack, Typography } from '@mui/material';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import { SearchFieldPopover } from 'core/SearchField';
 import { useMockPopover } from 'core/TaskTable/MockPopover';
@@ -48,7 +48,7 @@ const FullnamesAndAvatars: React.FC<{
     (<Stack spacing={1}>
       {task.rolesAvatars.map((role: AvatarCode) => (<Box display='flex' alignItems='center'>
         <RoleAvatar key={role.value}>{role}</RoleAvatar>
-        <Box pl={1}>{org.state.org.roles[role.value]?.displayName}</Box>
+        <Box pl={1}><Typography>{org.state.org.roles[role.value]?.displayName}</Typography></Box>
       </Box>))}
     </Stack>)
     :
@@ -119,7 +119,7 @@ const TaskRoles: React.FC<{
                   },
                 }} />
               </Box>
-              <ListItemText>{role.displayName}</ListItemText>
+              <ListItemText><Typography>{role.displayName}</Typography></ListItemText>
             </MenuItem>
           ))
           }

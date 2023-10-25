@@ -1,5 +1,5 @@
 import React from 'react';
-import { AvatarGroup, Box, ListItemText, Checkbox, Button, Avatar, List, MenuItem, Stack } from '@mui/material';
+import { AvatarGroup, Box, ListItemText, Checkbox, Button, Avatar, List, MenuItem, Stack, Typography } from '@mui/material';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { SearchFieldPopover } from 'core/SearchField';
 import { useMockPopover } from 'core/TaskTable/MockPopover';
@@ -48,7 +48,7 @@ const FullnamesAndAvatars: React.FC<{
     (<Stack spacing={1}>
       {task.assigneesAvatars.map((assignee: AvatarCode) => (<Box display='flex' alignItems='center'>
         <UserAvatar key={assignee.value}>{assignee}</UserAvatar>
-        <Box pl={1}>{org.state.org.users[assignee.value].displayName}</Box>
+        <Box pl={1}><Typography>{org.state.org.users[assignee.value].displayName}</Typography></Box>
       </Box>))}
     </Stack>)
     :
@@ -121,7 +121,7 @@ const TaskAssignees: React.FC<{
                     },
                   }} />
               </Box>
-              <ListItemText>{user.displayName}</ListItemText>
+              <ListItemText><Typography>{user.displayName}</Typography></ListItemText>
             </MenuItem>
           ))}
         </List>

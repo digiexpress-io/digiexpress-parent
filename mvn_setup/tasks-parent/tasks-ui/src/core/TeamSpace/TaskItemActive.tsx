@@ -123,7 +123,7 @@ const TaskItemActive: React.FC<{ task: TaskDescriptor | undefined }> = ({ task }
 
         <Section>
           <StyledTitle children='task.title' />
-          <Typography fontWeight='bold' variant='h4'>{task.title}</Typography>
+          <Typography fontWeight='bold'>{task.title}</Typography>
         </Section>
 
         {/* description section */}

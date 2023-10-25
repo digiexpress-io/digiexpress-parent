@@ -41,7 +41,6 @@ const Title: React.FC<{}> = () => {
 
   return (<TextField
     placeholder={intl.formatMessage({ id: 'core.taskEdit.taskTitle' })}
-    InputProps={{ sx: { fontSize: '20pt' } }}
     fullWidth
     value={title}
     onChange={handleTitleChange}
