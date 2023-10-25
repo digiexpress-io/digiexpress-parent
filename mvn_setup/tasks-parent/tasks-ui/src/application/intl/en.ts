@@ -210,7 +210,7 @@ const en = {
   'tasktable.header.dueDate': 'Due Date',
 
   'tasktable.menu.edit': 'Edit task',
-  'tasktable.menu.work': 'Work on task',
+  'tasktable.menu.crm': 'CRM data',
   'tasktable.menu.viewData': 'View customer data',
   'tasktable.menu.archive': 'Archive task',
 

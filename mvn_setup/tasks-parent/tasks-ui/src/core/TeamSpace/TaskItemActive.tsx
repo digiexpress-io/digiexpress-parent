@@ -9,7 +9,7 @@ import TimestampFormatter from 'core/TimestampFormatter';
 import TaskAssignees from 'core/TaskAssignees';
 import TaskRoles from 'core/TaskRoles';
 import TaskStatus from 'core/TaskStatus';
-import TaskWorkDialog from 'core/TaskWork';
+import CRMDialog from 'core/CRM';
 import TaskEditDialog from 'core/TaskEdit';
 import Client from 'taskclient';
 import Context from 'context';
@@ -54,7 +54,7 @@ function getTaskAlert(task: TaskDescriptor): { isDueDate: boolean, title: string
 }
 
 const TaskItemActive: React.FC<{ task: TaskDescriptor | undefined }> = ({ task }) => {
-  const [taskWorkOpen, setTaskWorkOpen] = React.useState(false);
+  const [crmOpen, setCrmkOpen] = React.useState(false);
   const [taskEditOpen, setTaskEditOpen] = React.useState(false);
 
   const tasks = Context.useTasks();
@@ -84,8 +84,8 @@ const TaskItemActive: React.FC<{ task: TaskDescriptor | undefined }> = ({ task }
     await tasks.reload();
   }
 
-  function handleTaskWork() {
-    setTaskWorkOpen(prev => !prev);
+  function handleCrm() {
+    setCrmkOpen(prev => !prev);
   }
 
   function handleTaskEdit() {
@@ -97,7 +97,7 @@ const TaskItemActive: React.FC<{ task: TaskDescriptor | undefined }> = ({ task }
     const alert = getTaskAlert(task);
 
     return (<>
-      <TaskWorkDialog open={taskWorkOpen} onClose={handleTaskWork} task={task} />
+      <CRMDialog open={crmOpen} onClose={handleCrm} task={task} />
       <TaskEditDialog open={taskEditOpen} onClose={handleTaskEdit} task={task} />
       <StyledStack>
 
@@ -113,7 +113,7 @@ const TaskItemActive: React.FC<{ task: TaskDescriptor | undefined }> = ({ task }
           <StyledTitle children='task.tools' />
           <Stack direction='row' spacing={1} justifyContent='center'>
             <IconButton onClick={handleTaskEdit}><EditIcon sx={{ color: 'uiElements.main' }} /></IconButton>
-            <IconButton onClick={handleTaskWork}><CrmIcon sx={{ color: 'locale.dark' }} /></IconButton>
+            <IconButton onClick={handleCrm}><CrmIcon sx={{ color: 'locale.dark' }} /></IconButton>
           </Stack>
         </Section>
 

@@ -8,7 +8,7 @@ import { TaskDescriptor, Group } from 'taskdescriptor';
 import { usePopover } from './CellPopover';
 import CellHoverButton from './CellMenuButton';
 import TaskEditDialog from 'core/TaskEdit';
-import TaskWorkDialog from 'core/TaskWork';
+import CRMDialog from 'core/CRM';
 import { StyledTableCell } from './StyledTable';
 
 const StyledBox = styled(Box)(({ theme }) => ({
@@ -41,7 +41,7 @@ const HoverMenu: React.FC<{
       <Popover.Delegate>
         <MenuList dense>
           <CellMenuItem onClick={onEdit} title={`tasktable.menu.edit`} />
-          <CellMenuItem onClick={onWork} title={`tasktable.menu.work`} />
+          <CellMenuItem onClick={onWork} title={`tasktable.menu.crm`} />
           <CellMenuItem title={`tasktable.menu.viewData`} />
           <Divider />
           <MenuItem>
@@ -82,7 +82,7 @@ const FormattedCell: React.FC<{
     setDisabled();
   }
 
-  function handleEndWork() {
+  function handleCrm() {
     setWork(false);
   }
 
@@ -90,7 +90,7 @@ const FormattedCell: React.FC<{
     <StyledTableCell width="35px">
       <Box width="35px" justifyContent='right'> {/* Box is needed to prevent table cell resize on hover */}
         <TaskEditDialog open={edit} onClose={handleEndEdit} task={row} />
-        <TaskWorkDialog open={work} onClose={handleEndWork} task={row} />
+        <CRMDialog open={work} onClose={handleCrm} task={row} />
         {active &&
           <HoverMenu
             onEdit={handleStartEdit}

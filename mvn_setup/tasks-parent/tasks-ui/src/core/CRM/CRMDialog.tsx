@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Stack, Grid } from '@mui/material';
 
 import StyledFullScreenDialog from '../Dialogs';
-import Fields from './TaskWorkFields';
+import Fields from './CRMFields';
 import Context from 'context';
 import { TaskDescriptor } from 'taskdescriptor';
 import { MenuProvider, useMenu } from './menu-ctx';
@@ -68,7 +68,7 @@ const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   )
 }
 
-const TaskWorkDialog: React.FC<{ open: boolean, onClose: () => void, task?: TaskDescriptor }> = (props) => {
+const CRMDialog: React.FC<{ open: boolean, onClose: () => void, task?: TaskDescriptor }> = (props) => {
 
   if (!props.open || !props.task) {
     return null;
@@ -91,4 +91,4 @@ const TaskWorkDialog: React.FC<{ open: boolean, onClose: () => void, task?: Task
   );
 }
 
-export { TaskWorkDialog };
+export { CRMDialog };
