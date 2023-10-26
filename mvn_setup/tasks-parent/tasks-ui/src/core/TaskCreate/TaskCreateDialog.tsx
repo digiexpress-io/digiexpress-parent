@@ -18,7 +18,7 @@ function initTaskProps(userId: string): Task {
     status: 'CREATED',
     priority: 'MEDIUM',
 
-    startDate: undefined,
+    startDate: new Date().toISOString(),
     dueDate: new Date().toISOString(),
 
     roles: [],
@@ -82,7 +82,7 @@ const TaskCreateDialog: React.FC<{ open: boolean, onClose: () => void }> = (prop
 
             <Section>
               <Typography fontWeight='bold'><FormattedMessage id='core.taskCreate.fields.startDate' /></Typography>
-              <Fields.StartDate onClick={() => { }} />
+              <Fields.StartDate />
             </Section>
 
             <Section>

@@ -148,7 +148,7 @@ export interface AssignTask extends TaskUpdateCommand<'AssignTask'> {
 }
 
 export interface ChangeTaskStartDate extends TaskUpdateCommand<'ChangeTaskStartDate'> {
-  startDate: string;
+  startDate: string | undefined;
 }
 
 export interface ChangeTaskDueDate extends TaskUpdateCommand<'ChangeTaskDueDate'> {

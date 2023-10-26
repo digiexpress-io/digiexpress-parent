@@ -11,7 +11,7 @@ import TaskStatus from '../TaskStatus';
 import TaskPriority from '../TaskPriority';
 import TaskRoles from '../TaskRoles';
 import TimestampFormatter from '../TimestampFormatter';
-
+import TaskStartDate from '../TaskStartDate';
 
 const Title: React.FC<{}> = () => {
   const { state, setState } = Context.useTaskEdit();
@@ -83,7 +83,7 @@ const Roles: React.FC<{}> = () => {
   return (<TaskRoles task={state.task} onChange={handleRolesChange} fullnames />)
 }
 
-
+/*
 const StartDate: React.FC<{ onClick: () => void }> = ({ onClick }) => {
   const { state } = Context.useTaskEdit();
   const startDate = state.task.startDate;
@@ -98,6 +98,23 @@ const StartDate: React.FC<{ onClick: () => void }> = ({ onClick }) => {
     }
   </Button>);
 }
+*/
+
+
+const StartDate: React.FC = () => {
+  const { state, setState } = Context.useTaskEdit();
+
+  // signature I need
+  async function handleDateChange(command: Client.ChangeTaskStartDate) {
+    setState((current) => current.withTask({ ...state.task.entry, startDate: command.startDate }))
+  }
+
+  return (<TaskStartDate onChange={handleDateChange} task={state.task} />);
+
+}
+
+
+
 
 const DueDate: React.FC<{ onClick: () => void }> = ({ onClick }) => {
   const { state } = Context.useTaskEdit();
