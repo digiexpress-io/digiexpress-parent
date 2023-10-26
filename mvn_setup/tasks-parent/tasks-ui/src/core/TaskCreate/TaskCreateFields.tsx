@@ -1,8 +1,5 @@
 import React from 'react';
-import { TextField, Typography, Button } from '@mui/material';
-
-import DateRangeOutlinedIcon from '@mui/icons-material/DateRangeOutlined';
-
+import { TextField } from '@mui/material';
 import Client from 'taskclient';
 import Context from 'context';
 
@@ -10,8 +7,8 @@ import TaskAssignees from '../TaskAssignees';
 import TaskStatus from '../TaskStatus';
 import TaskPriority from '../TaskPriority';
 import TaskRoles from '../TaskRoles';
-import TimestampFormatter from '../TimestampFormatter';
 import TaskStartDate from '../TaskStartDate';
+import TaskDueDate from '../TaskDueDate';
 
 const Title: React.FC<{}> = () => {
   const { state, setState } = Context.useTaskEdit();
@@ -89,25 +86,18 @@ const StartDate: React.FC = () => {
 
   async function handleDateChange(command: Client.ChangeTaskStartDate) {
     setState((current) => current.withTask({ ...state.task.entry, startDate: command.startDate }))
-    console.log("create start date ", command.startDate)
   }
   return (<TaskStartDate onChange={handleDateChange} task={state.task} />);
 }
 
 
-const DueDate: React.FC<{ onClick: () => void }> = ({ onClick }) => {
-  const { state } = Context.useTaskEdit();
-  const dueDate = state.task.dueDate;
+const DueDate: React.FC = () => {
+  const { state, setState } = Context.useTaskEdit();
 
-  return (<Button sx={{ justifyContent: 'left', color: 'inherit' }}
-    onClick={onClick}>{dueDate ? <>
-      <DateRangeOutlinedIcon sx={{ color: 'uiElements.main', fontSize: 'medium', mr: 1 }} />
-      <Typography><TimestampFormatter value={dueDate} type='date' /></Typography>
-    </>
-      :
-      <DateRangeOutlinedIcon sx={{ color: 'uiElements.main', fontSize: 'medium' }} />
-    }
-  </Button >);
+  async function handleDateChange(command: Client.ChangeTaskDueDate) {
+    setState((current) => current.withTask({ ...state.task.entry, dueDate: command.dueDate }))
+  }
+  return (<TaskDueDate onChange={handleDateChange} task={state.task} />);
 }
 
 

@@ -87,7 +87,7 @@ const TaskCreateDialog: React.FC<{ open: boolean, onClose: () => void }> = (prop
 
             <Section>
               <Typography fontWeight='bold'><FormattedMessage id='core.taskCreate.fields.dueDate' /></Typography>
-              <Fields.DueDate onClick={() => { }} />
+              <Fields.DueDate />
             </Section>
 
             <Section>

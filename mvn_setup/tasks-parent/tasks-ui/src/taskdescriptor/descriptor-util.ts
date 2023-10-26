@@ -52,12 +52,13 @@ export function getMyWorkType(task: Task, profile: Profile, today: Date): Assign
   if (dueDateClean && isAfter(today, dueDateClean) && task.status === 'CREATED') {
     return "assigneeOverdue";
   }
-  if (startDate && isEqual(parseISO(startDate), today)) {
+  if (startDate && isEqual(parseISO(startDate), today) && task.status === 'CREATED') {
     return "assigneeStartsToday";
   }
   if (task.status === 'IN_PROGRESS') {
     return "assigneeCurrentlyWorking";
   }
+
   return "assigneeOther";
 }
 
