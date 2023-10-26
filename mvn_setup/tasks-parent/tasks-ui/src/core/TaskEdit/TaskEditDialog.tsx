@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Stack, List, Dialog, Button, Grid } from '@mui/material';
+import { Box, Stack, List, Dialog, Button, Grid, Typography } from '@mui/material';
 import SecurityIcon from '@mui/icons-material/Security';
 import { FormattedMessage } from 'react-intl';
 import DatePicker from '../DatePicker';
@@ -9,14 +9,23 @@ import Events from './TaskEvents';
 import Burger from '@the-wrench-io/react-burger';
 import Context from 'context';
 import { TaskDescriptor } from 'taskdescriptor';
+import Section from '../Section';
 
 const Left: React.FC<{}> = () => {
 
   return (
     <>
       <Box />
-      <Fields.Title />
-      <Fields.Description />
+      <Section>
+        <Typography fontWeight='bold'><FormattedMessage id='task.title' /></Typography>
+        <Fields.Title />
+      </Section>
+
+      <Section>
+        <Typography fontWeight='bold'><FormattedMessage id='task.description' /></Typography>
+        <Fields.Description />
+      </Section>
+
       <Fields.Checklist />
     </>)
 }

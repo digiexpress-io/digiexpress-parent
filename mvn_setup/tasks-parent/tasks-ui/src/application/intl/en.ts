@@ -58,7 +58,7 @@ const en = {
   'core.taskEdit.subtasks': 'Subtasks',
   'core.taskEdit.checklists': 'Checklists',
   'core.taskEdit.attachments': 'Attachments',
-  'core.taskEdit.clientData': 'Client data',
+  'core.taskEdit.clientData': 'Customer data',
 
   'core.taskEdit.dueDate': 'Due date',
   'core.taskEdit.startDate': 'Start date',
@@ -75,7 +75,7 @@ const en = {
   'core.taskWork.dueDate': 'Due date',
   'core.taskWork.startDate': 'Start date',
 
-  'core.taskWork.button.edit': 'Edit',
+  'core.taskWork.button.edit': 'Edit task',
   'core.taskWork.button.cancel': 'Cancel',
   'core.taskWork.button.complete': 'Complete task',
   'core.taskWork.button.reject': 'Reject task',

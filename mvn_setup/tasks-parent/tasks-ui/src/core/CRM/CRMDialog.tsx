@@ -7,6 +7,7 @@ import Context from 'context';
 import { TaskDescriptor } from 'taskdescriptor';
 import { MenuProvider, useMenu } from './menu-ctx';
 import Section from '../Section';
+import Burger from '@the-wrench-io/react-burger';
 
 const Left: React.FC<{}> = () => {
 
@@ -52,7 +53,6 @@ const Header: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         <Fields.Menu />
       </Grid>
 
-
       <Grid item md={2} lg={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', pb: 1 }}>
         <Stack spacing={1} direction='column'>
           <Fields.StartDate />
@@ -67,10 +67,13 @@ const Header: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   )
 }
 
-const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+const Footer: React.FC<{ onClick: () => void }> = ({ onClick }) => {
   return (
     <>
-      <Fields.SplitButton onClose={onClose} />
+      <Burger.SecondaryButton label='core.taskWork.button.cancel' onClick={onClick} />
+      <Burger.SecondaryButton label='core.taskWork.button.edit' onClick={onClick} />
+      <Burger.SecondaryButton label='core.taskWork.button.reject' onClick={onClick} />
+      <Burger.PrimaryButton label='core.taskWork.button.complete' onClick={onClick} />
     </>
   )
 }
@@ -86,7 +89,7 @@ const CRMDialog: React.FC<{ open: boolean, onClose: () => void, task?: TaskDescr
       <Context.EditProvider task={props.task}>
         <StyledFullScreenDialog
           header={<Header onClose={props.onClose} />}
-          footer={<Footer onClose={props.onClose} />}
+          footer={<Footer onClick={props.onClose} />}
           left={<Left />}
           right={<Right />}
           onClose={props.onClose}

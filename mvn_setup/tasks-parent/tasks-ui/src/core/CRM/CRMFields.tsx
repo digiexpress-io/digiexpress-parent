@@ -5,8 +5,7 @@ import {
   Typography, Stack, Box, IconButton,
   Button, List, ListItem, styled, Alert, Avatar, Dialog,
   DialogTitle, DialogActions, DialogContent, TextareaAutosize, alpha,
-  useTheme, Tabs, Tab, Paper, Badge, ButtonGroup, Popper, Grow,
-  ClickAwayListener, MenuList, MenuItem
+  useTheme, Tabs, Tab, Badge
 } from '@mui/material';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
@@ -22,11 +21,6 @@ import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import CloseIcon from '@mui/icons-material/Close';
 import CallMadeIcon from '@mui/icons-material/CallMade';
 import CallReceivedIcon from '@mui/icons-material/CallReceived';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import CancelIcon from '@mui/icons-material/Cancel';
-import CheckIcon from '@mui/icons-material/Check';
-import BlockIcon from '@mui/icons-material/Block';
-import EditIcon from '@mui/icons-material/Edit';
 
 import Context from 'context';
 
@@ -38,13 +32,6 @@ import { demoThreads } from 'core/Inbox/DemoThreads';
 import { useMenu } from './menu-ctx';
 import { MenuTab } from './menu-ctx-types';
 
-
-interface SplitButtonItemProps {
-  key: string,
-  icon: React.ReactNode,
-  buttonText: string,
-  onClick: () => void;
-}
 
 const StyledListItem = styled(ListItem)(({ theme }) => ({
   borderTop: '1px solid',
@@ -108,13 +95,11 @@ const ChecklistAlert = styled(Alert)(({ theme }) => ({
 
 const Title: React.FC<{}> = () => {
   const { state } = Context.useTaskEdit();
-
   return (<Typography>{state.task.title}</Typography>);
 }
 
 const Description: React.FC<{}> = () => {
   const { state } = Context.useTaskEdit();
-
   return (<Typography variant='body1'>{state.task.description}</Typography>);
 }
 
@@ -379,69 +364,6 @@ const CloseDialogButton: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   )
 }
 
-const SplitButtonItem: React.FC<SplitButtonItemProps> = (props) => {
-  const { key, icon, buttonText, onClick } = props;
 
-  return (
-    <MenuItem key={key} onClick={onClick}>
-      {icon}
-      <Typography sx={{ ml: 1 }}><FormattedMessage id={buttonText} /></Typography>
-    </MenuItem>
-  )
-}
-
-const SplitButton: React.FC<{ onClose?: () => void }> = ({ onClose }) => {
-  const [open, setOpen] = React.useState(false);
-  const anchorRef = React.useRef<HTMLDivElement>(null);
-
-  const handleToggle = () => {
-    setOpen(!open);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-    onClose && onClose();
-  };
-
-  return (
-    <React.Fragment>
-      <ButtonGroup variant="contained" ref={anchorRef}>
-        <Button startIcon={<CheckIcon />} onClick={handleClose}>
-          <Typography><FormattedMessage id='core.taskWork.button.complete'></FormattedMessage></Typography>
-        </Button>
-        <Button size="small" onClick={handleToggle}>
-          <ArrowDropDownIcon />
-        </Button>
-      </ButtonGroup>
-      <Popper
-        open={open}
-        anchorEl={anchorRef.current}
-        transition
-        disablePortal
-        placement='top-end'
-      >
-        {({ TransitionProps }) => (
-          <Grow
-            {...TransitionProps}
-            style={{
-              transformOrigin: 'center bottom',
-            }}
-          >
-            <Paper>
-              <ClickAwayListener onClickAway={handleClose}>
-                <MenuList autoFocusItem sx={{ textTransform: 'uppercase' }}>
-                  <SplitButtonItem key={'reject'} icon={<BlockIcon color='error' />} buttonText='core.taskWork.button.reject' onClick={handleClose} />
-                  <SplitButtonItem key={'edit'} icon={<EditIcon color='warning' />} buttonText='core.taskWork.button.edit' onClick={handleClose} />
-                  <SplitButtonItem key={'cancel'} icon={<CancelIcon color='info' />} buttonText='core.taskWork.button.cancel' onClick={handleClose} />
-                </MenuList>
-              </ClickAwayListener>
-            </Paper>
-          </Grow>
-        )}
-      </Popper>
-    </React.Fragment>
-  );
-}
-
-const Fields = { Title, Description, Checklist, StartDate, DueDate, Attachments, Form, Messages, Menu, CloseDialogButton, SplitButton };
+const Fields = { Title, Description, Checklist, StartDate, DueDate, Attachments, Form, Messages, Menu, CloseDialogButton };
 export default Fields;

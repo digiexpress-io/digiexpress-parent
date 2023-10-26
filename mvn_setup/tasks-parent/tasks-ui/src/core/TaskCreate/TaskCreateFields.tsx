@@ -20,8 +20,7 @@ const Title: React.FC<{}> = () => {
     setState((current) => current.withTask({ ...state.task.entry, title: event.target.value }));
   }
 
-  return (<TextField InputProps={{ disableUnderline: true }}
-    variant='standard'
+  return (<TextField InputProps={{ disableUnderline: true }} variant='standard'
     fullWidth
     value={state.task.title}
     onChange={handleTitleChange}

@@ -40,7 +40,7 @@ const Title: React.FC<{}> = () => {
     setState((current) => current.withTask(updatedTask));
   }
 
-  return (<TextField
+  return (<TextField InputProps={{ disableUnderline: true }} variant='standard'
     placeholder={intl.formatMessage({ id: 'core.taskEdit.taskTitle' })}
     fullWidth
     value={title}
@@ -70,9 +70,9 @@ const Description: React.FC<{}> = () => {
     setState((current) => current.withTask(updatedTask));
   }
 
-  return (<TextField
+  return (<TextField InputProps={{ disableUnderline: true }} variant='standard'
     placeholder={intl.formatMessage({ id: 'core.taskEdit.taskDescription' })}
-    fullWidth multiline minRows={4} maxRows={6}
+    fullWidth multiline minRows={2} maxRows={8}
     value={description}
     onChange={handleDescriptionChange}
     onBlur={handleChange}
