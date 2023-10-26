@@ -1,7 +1,7 @@
 import React from 'react';
-import { FormattedMessage, useIntl } from 'react-intl';
+import { useIntl } from 'react-intl';
 
-import { TextField, Typography, Stack, Box, IconButton, Button } from '@mui/material';
+import { TextField, Typography, Box, IconButton, Button } from '@mui/material';
 import DateRangeOutlinedIcon from '@mui/icons-material/DateRangeOutlined';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
@@ -16,7 +16,7 @@ import TaskAssignees from 'core/TaskAssignees';
 import TaskStatus from 'core/TaskStatus';
 import TaskPriority from 'core/TaskPriority';
 import TaskRoles from 'core/TaskRoles';
-
+import TimestampFormatter from '../TimestampFormatter';
 
 const Title: React.FC<{}> = () => {
   const { state, setState } = Context.useTaskEdit();
@@ -113,7 +113,7 @@ const Assignee: React.FC<{}> = () => {
   }
 
   return (
-    <TaskAssignees task={state.task} onChange={handleAssigneeChange} />
+    <TaskAssignees task={state.task} onChange={handleAssigneeChange} fullnames />
   )
 }
 
@@ -126,7 +126,7 @@ const Roles: React.FC<{}> = () => {
     setState((current) => current.withTask(updatedTask))
   }
 
-  return (<TaskRoles task={state.task} onChange={handleRolesChange} />)
+  return (<TaskRoles task={state.task} onChange={handleRolesChange} fullnames />)
 }
 
 const Priority: React.FC<{}> = () => {
@@ -143,8 +143,34 @@ const Priority: React.FC<{}> = () => {
   )
 }
 
-const Options: React.FC<{}> = () => {
-  return (<Box><Button variant='text' color='inherit' sx={{ textTransform: 'none' }}><Typography>Options</Typography></Button></Box>)
+const StartDate: React.FC<{ onClick: () => void }> = ({ onClick }) => {
+  const { state } = Context.useTaskEdit();
+  const startDate = state.task.startDate;
+
+  return (<Button sx={{ justifyContent: 'left', color: 'inherit' }}
+    onClick={onClick}>{startDate ? <>
+      <DateRangeOutlinedIcon sx={{ color: 'uiElements.main', fontSize: 'medium', mr: 1 }} />
+      <Typography><TimestampFormatter value={startDate} type='date' /></Typography>
+    </>
+      :
+      <DateRangeOutlinedIcon sx={{ color: 'uiElements.main', fontSize: 'medium' }} />
+    }
+  </Button>);
+}
+
+const DueDate: React.FC<{ onClick: () => void }> = ({ onClick }) => {
+  const { state } = Context.useTaskEdit();
+  const dueDate = state.task.dueDate;
+
+  return (<Button sx={{ justifyContent: 'left', color: 'inherit' }}
+    onClick={onClick}>{dueDate ? <>
+      <DateRangeOutlinedIcon sx={{ color: 'uiElements.main', fontSize: 'medium', mr: 1 }} />
+      <Typography><TimestampFormatter value={dueDate} type='date' /></Typography>
+    </>
+      :
+      <DateRangeOutlinedIcon sx={{ color: 'uiElements.main', fontSize: 'medium' }} />
+    }
+  </Button >);
 }
 
 const MessageCount: React.FC<{}> = () => {
@@ -159,30 +185,6 @@ const NewItemNotification: React.FC<{}> = () => {
   return (<Box display='flex' alignItems='center'><CircleNotificationsOutlinedIcon />3</Box>)
 }
 
-const StartDate: React.FC<{ onClick: () => void }> = ({ onClick }) => {
-  const { state } = Context.useTaskEdit();
-  const startDate = state.task.startDate;
-
-  return (
-    <Stack spacing={1} direction='row' alignItems='center'>
-      <Typography variant='body2'><FormattedMessage id='core.taskWork.startDate' /></Typography>
-      <Button onClick={onClick}>{startDate ? <Typography>{startDate.toLocaleDateString()}</Typography> : <DateRangeOutlinedIcon />}</Button>
-    </Stack>
-  );
-}
-
-const DueDate: React.FC<{ onClick: () => void }> = ({ onClick }) => {
-  const { state } = Context.useTaskEdit();
-  const dueDate = state.task.dueDate;
-
-  return (
-    <Stack spacing={1} direction='row' alignItems='center'>
-      <Typography variant='body2'><FormattedMessage id='core.taskWork.dueDate' /></Typography>
-      <Button onClick={onClick}>{dueDate ? <Typography>{dueDate.toLocaleDateString()}</Typography> : <DateRangeOutlinedIcon />}</Button>
-    </Stack>
-  );
-}
-
 const CloseDialogButton: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   return (
     <IconButton onClick={onClose}>
@@ -192,8 +194,7 @@ const CloseDialogButton: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 }
 
 const Fields = {
-  Title, Description, Checklist, Status, Assignee, Priority,
-  Options, StartDate, DueDate, MessageCount, AttachmentCount,
+  Title, Description, Checklist, Status, Assignee, Priority, StartDate, DueDate, MessageCount, AttachmentCount,
   NewItemNotification, CloseDialogButton, Roles
 }
 export default Fields;

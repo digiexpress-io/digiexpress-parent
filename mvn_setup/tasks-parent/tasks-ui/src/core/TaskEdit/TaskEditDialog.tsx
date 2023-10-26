@@ -1,8 +1,7 @@
 import React from 'react';
-import { Box, Stack, List, Dialog, Button, Grid, Typography } from '@mui/material';
+import { Box, List, Button, Typography } from '@mui/material';
 import SecurityIcon from '@mui/icons-material/Security';
 import { FormattedMessage } from 'react-intl';
-import DatePicker from '../DatePicker';
 import StyledFullScreenDialog from '../Dialogs';
 import Fields from './TaskEditFields';
 import Events from './TaskEvents';
@@ -12,21 +11,55 @@ import { TaskDescriptor } from 'taskdescriptor';
 import Section from '../Section';
 
 const Left: React.FC<{}> = () => {
+  const { state } = Context.useTaskEdit();
 
   return (
     <>
       <Box />
       <Section>
-        <Typography fontWeight='bold'><FormattedMessage id='task.title' /></Typography>
+        <Typography fontWeight='bold'><FormattedMessage id='core.taskEdit.fields.title' /></Typography>
         <Fields.Title />
       </Section>
 
       <Section>
-        <Typography fontWeight='bold'><FormattedMessage id='task.description' /></Typography>
+        <Typography fontWeight='bold'><FormattedMessage id='core.taskEdit.fields.description' /></Typography>
         <Fields.Description />
       </Section>
 
-      <Fields.Checklist />
+      <Section>
+        <Typography fontWeight='bold'><FormattedMessage id='core.taskEdit.fields.startDate' /></Typography>
+        <Fields.StartDate onClick={() => { }} />
+      </Section>
+
+      <Section>
+        <Typography fontWeight='bold'><FormattedMessage id='core.taskEdit.fields.dueDate' /></Typography>
+        <Fields.DueDate onClick={() => { }} />
+      </Section>
+
+      <Section>
+        <Typography fontWeight='bold'><FormattedMessage id='core.taskEdit.fields.status' /></Typography>
+        <Fields.Status />
+      </Section>
+
+      <Section>
+        <Typography fontWeight='bold'><FormattedMessage id='core.taskEdit.fields.priority' /></Typography>
+        <Fields.Priority />
+      </Section>
+
+      <Section>
+        <Typography fontWeight='bold'><FormattedMessage id='core.taskEdit.fields.assignees' /></Typography>
+        <Fields.Assignee />
+      </Section>
+
+      <Section>
+        <Typography fontWeight='bold'><FormattedMessage id='core.taskEdit.fields.roles' /></Typography>
+        <Fields.Roles />
+      </Section>
+
+      {state.task.checklist.length > 0 && <Section>
+        <Typography fontWeight='bold'><FormattedMessage id='core.taskEdit.fields.checklist' /></Typography>
+        <Fields.Checklist />
+      </Section>}
     </>)
 }
 
@@ -35,60 +68,19 @@ const Right: React.FC<{}> = () => {
   return (<List>
     {state.events.map((event, index) => <Events key={index} event={event} />)}
   </List>);
-
 }
 
 
 const Header: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
-  const { state } = Context.useTaskEdit();
-  const [datePickerOpen, setDatePickerOpen] = React.useState(false);
-  const [startDate, setStartDate] = React.useState<Date | string | undefined>(state.task.startDate);
-  const [dueDate, setDueDate] = React.useState<Date | string | undefined>(state.task.dueDate);
-  const [activeDate, setActiveDate] = React.useState<"start" | "due" | undefined>();
-
-  const handleStartDateClick = () => {
-    setActiveDate('start');
-    setDatePickerOpen(true);
-  }
-
-  const handleDueDateClick = () => {
-    setActiveDate('due');
-    setDatePickerOpen(true);
-  }
-
-  return (<>
-    <Dialog open={datePickerOpen} onClose={() => setDatePickerOpen(false)}>
-      <DatePicker startDate={startDate} setStartDate={setStartDate} dueDate={dueDate} setDueDate={setDueDate} activeDate={activeDate} />
-    </Dialog>
-
-    <Grid container>
-      <Grid item md={6} lg={6} alignSelf='center'>
-        <Stack spacing={2} direction='row'>
-          <Fields.Status />
-          <Fields.Assignee />
-          <Fields.Roles />
-          <Fields.Priority />
-          <Fields.Options />
-        </Stack>
-      </Grid>
-
-      <Grid item md={5} lg={5} alignSelf='center'>
-        <Stack spacing={2} direction='row'>
-          <Fields.StartDate onClick={handleStartDateClick} />
-          <Fields.DueDate onClick={handleDueDateClick} />
-        </Stack>
-      </Grid>
-
-      <Grid item md={1} lg={1} sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-        <Fields.CloseDialogButton onClose={onClose} />
-      </Grid>
-    </Grid>
-  </>
+  return (
+    <Box display='flex' alignItems='center'>
+      <Typography variant='h4'><FormattedMessage id='taskEditDialog.title' /></Typography>
+      <Box flexGrow={1} />
+      <Fields.CloseDialogButton onClose={onClose} />
+    </Box>
   )
 }
-
-
 
 const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   return (
@@ -98,7 +90,6 @@ const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     </>
   )
 }
-
 
 const TaskEditDialog: React.FC<{ open: boolean, onClose: () => void, task?: TaskDescriptor }> = (props) => {
   const tasks = Context.useTasks();

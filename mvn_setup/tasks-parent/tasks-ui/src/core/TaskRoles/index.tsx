@@ -33,7 +33,7 @@ const RoleAvatars: React.FC<{
 }> = ({ task }) => {
 
   return task.rolesAvatars.length ?
-    <AvatarGroup spacing='medium' >
+    <AvatarGroup spacing='medium' sx={{ cursor: 'pointer' }} >
       {task.rolesAvatars.map((role: AvatarCode) => (<RoleAvatar key={role.value}>{role}</RoleAvatar>))}
     </AvatarGroup> :
     <RoleAvatar />

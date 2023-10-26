@@ -60,6 +60,16 @@ const en = {
   'core.taskEdit.attachments': 'Attachments',
   'core.taskEdit.clientData': 'Customer data',
 
+  'core.taskEdit.fields.title': 'Edit task',
+  'core.taskEdit.fields.description': 'Description',
+  'core.taskEdit.fields.status': 'Status',
+  'core.taskEdit.fields.priority': 'Priority',
+  'core.taskEdit.fields.roles': 'Roles',
+  'core.taskEdit.fields.assignees': 'Assignees',
+  'core.taskEdit.fields.startDate': 'Start date',
+  'core.taskEdit.fields.dueDate': 'Due date',
+  'core.taskEdit.fields.checklist': 'Checklist',
+
   'core.taskEdit.dueDate': 'Due date',
   'core.taskEdit.startDate': 'Start date',
 
@@ -149,6 +159,7 @@ const en = {
   'core.search.searchBar.filterPriority': 'Priority {count}',
 
   'crmDialog.title': 'Customer data',
+  'taskEditDialog.title': 'Edit task',
 
   '_nobody_': 'Unassigned',
 
