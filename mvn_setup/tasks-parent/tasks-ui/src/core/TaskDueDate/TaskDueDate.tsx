@@ -14,9 +14,9 @@ import Context from 'context';
 import Client from 'taskclient';
 import { TaskDescriptor } from 'taskdescriptor';
 
-const TaskStartDate: React.FC<{
+const TaskDueDate: React.FC<{
   task: TaskDescriptor,
-  onChange: (command: Client.ChangeTaskStartDate) => Promise<void>
+  onChange: (command: Client.ChangeTaskDueDate) => Promise<void>
 }> = ({ onChange, task }) => {
 
   const { state } = Context.useTaskEdit();
@@ -26,11 +26,11 @@ const TaskStartDate: React.FC<{
     setOpen(prev => !prev);
   }
 
-  function handleStartDateChange(datePicker: any) {
+  function handleDueDateChange(datePicker: any) {
     const newDate: Date = datePicker;
-    const command: Client.ChangeTaskStartDate = {
-      commandType: 'ChangeTaskStartDate',
-      startDate: newDate.toISOString(),
+    const command: Client.ChangeTaskDueDate = {
+      commandType: 'ChangeTaskDueDate',
+      dueDate: newDate.toISOString(),
       taskId: task.id
     };
     onChange(command).then(() => handlePickerDialog());
@@ -39,15 +39,15 @@ const TaskStartDate: React.FC<{
   return (
     <>
       <Button onClick={handlePickerDialog} startIcon={<DateRangeOutlinedIcon sx={{ color: 'uiElements.main', fontSize: 'small' }} />}>
-        <Typography sx={{ color: 'text.primary' }}><TimestampFormatter type='date' value={state.task.startDate} /></Typography>
+        <Typography sx={{ color: 'text.primary' }}><TimestampFormatter type='date' value={state.task.dueDate} /></Typography>
       </Button>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <Dialog open={open} onClose={handlePickerDialog}>
-          <StaticDatePicker onAccept={handleStartDateChange} views={['month', 'day']} defaultValue={state.task.startDate} />
+          <StaticDatePicker onAccept={handleDueDateChange} views={['month', 'day']} defaultValue={state.task.dueDate} />
         </Dialog>
       </LocalizationProvider>
     </>
   );
 }
 
-export default TaskStartDate;
+export default TaskDueDate;

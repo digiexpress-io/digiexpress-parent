@@ -17,6 +17,7 @@ import TaskStatus from 'core/TaskStatus';
 import TaskPriority from 'core/TaskPriority';
 import TaskRoles from 'core/TaskRoles';
 import TaskStartDate from '../TaskStartDate';
+import TaskDueDate from '../TaskDueDate';
 import TimestampFormatter from '../TimestampFormatter';
 
 const Title: React.FC<{}> = () => {
@@ -151,25 +152,21 @@ const StartDate: React.FC = () => {
   async function handleStartDateChange(command: Client.ChangeTaskStartDate) {
     const updatedTask = await backend.task.updateActiveTask(state.task.id, [command]);
     setState((current) => current.withTask(updatedTask));
-    console.log(command)
   }
 
   return (<TaskStartDate task={state.task} onChange={handleStartDateChange} />);
 }
 
-const DueDate: React.FC<{ onClick: () => void }> = ({ onClick }) => {
-  const { state } = Context.useTaskEdit();
-  const dueDate = state.task.dueDate;
+const DueDate: React.FC = () => {
+  const { state, setState } = Context.useTaskEdit();
+  const backend = Context.useBackend();
 
-  return (<Button sx={{ justifyContent: 'left', color: 'inherit' }}
-    onClick={onClick}>{dueDate ? <>
-      <DateRangeOutlinedIcon sx={{ color: 'uiElements.main', fontSize: 'medium', mr: 1 }} />
-      <Typography><TimestampFormatter value={dueDate} type='date' /></Typography>
-    </>
-      :
-      <DateRangeOutlinedIcon sx={{ color: 'uiElements.main', fontSize: 'medium' }} />
-    }
-  </Button >);
+  async function handleDueDateChange(command: Client.ChangeTaskDueDate) {
+    const updatedTask = await backend.task.updateActiveTask(state.task.id, [command]);
+    setState((current) => current.withTask(updatedTask));
+  }
+
+  return (<TaskDueDate task={state.task} onChange={handleDueDateChange} />);
 }
 
 const MessageCount: React.FC<{}> = () => {

@@ -33,7 +33,7 @@ const Left: React.FC<{}> = () => {
 
       <Section>
         <Typography fontWeight='bold'><FormattedMessage id='core.taskEdit.fields.dueDate' /></Typography>
-        <Fields.DueDate onClick={() => { }} />
+        <Fields.DueDate />
       </Section>
 
       <Section>

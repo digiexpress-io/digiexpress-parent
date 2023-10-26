@@ -68,6 +68,13 @@ const SingleGroup: React.FC<{ event: Context.SingleEvent }> = ({ event }) => {
       <TimestampFormatter type='dateTime' value={date} />
     </>)
   }
+  if (event.body.commandType === "ChangeTaskDueDate") {
+    return (<>
+      <Typography><FormattedMessage id='task.history.changeTaskDueDate' /></Typography>
+      <Box flexGrow={1} />
+      <TimestampFormatter type='dateTime' value={date} />
+    </>)
+  }
 
   return (<Box display='flex'><ListItemText primary={event.body.commandType} secondary={event.body.toCommand.targetDate} /></Box>)
 }

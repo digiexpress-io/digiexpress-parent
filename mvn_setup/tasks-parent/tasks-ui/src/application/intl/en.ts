@@ -41,6 +41,7 @@ const en = {
   'task.history.changeTaskPriority': 'Task priority changed',
   'task.history.changeTaskInfo': 'Task information changed',
   'task.history.changeTaskStartDate': 'Task start date changed',
+  'task.history.changeTaskDueDate': 'Task due date changed',
 
 
   'core.taskCreate.fields.roles': 'Roles',

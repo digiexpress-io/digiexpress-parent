@@ -69,21 +69,25 @@ const Header: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   )
 }
 
-const Footer: React.FC<{ onClick: () => void }> = ({ onClick }) => {
+const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   return (
     <>
-      <Burger.SecondaryButton label='core.taskWork.button.cancel' onClick={onClick} />
-      <Burger.SecondaryButton label='core.taskWork.button.edit' onClick={onClick} />
-      <Burger.SecondaryButton label='core.taskWork.button.reject' onClick={onClick} />
-      <Burger.PrimaryButton label='core.taskWork.button.complete' onClick={onClick} />
+      <Burger.SecondaryButton label='core.taskWork.button.cancel' onClick={() => { }} />
+      <Burger.SecondaryButton label='core.taskWork.button.edit' onClick={() => { }} />
+      <Burger.SecondaryButton label='core.taskWork.button.reject' onClick={() => { }} />
+      <Burger.PrimaryButton label='core.taskWork.button.complete' onClick={onClose} />
     </>
   )
 }
 
 const CRMDialog: React.FC<{ open: boolean, onClose: () => void, task?: TaskDescriptor }> = (props) => {
+  const tasks = Context.useTasks();
 
   if (!props.open || !props.task) {
     return null;
+  }
+  function handleClose() {
+    tasks.reload().then(() => props.onClose());
   }
 
   return (
@@ -91,7 +95,7 @@ const CRMDialog: React.FC<{ open: boolean, onClose: () => void, task?: TaskDescr
       <Context.EditProvider task={props.task}>
         <StyledFullScreenDialog
           header={<Header onClose={props.onClose} />}
-          footer={<Footer onClick={props.onClose} />}
+          footer={<Footer onClose={handleClose} />}
           left={<Left />}
           right={<Right />}
           onClose={props.onClose}

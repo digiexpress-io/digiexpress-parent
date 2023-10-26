@@ -2,7 +2,7 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 
 import {
-  Typography, Stack, Box, IconButton,
+  Typography, Box, IconButton,
   Button, List, ListItem, styled, Alert, Avatar, Dialog,
   DialogTitle, DialogActions, DialogContent, TextareaAutosize, alpha,
   useTheme, Tabs, Tab, Badge
@@ -24,6 +24,7 @@ import CallReceivedIcon from '@mui/icons-material/CallReceived';
 
 import Context from 'context';
 import TaskStartDate from '../TaskStartDate';
+import TaskDueDate from '../TaskDueDate';
 
 import ChecklistDelegate from 'core/Checklist';
 import { TaskExtension } from 'taskclient/task-types';
@@ -127,26 +128,25 @@ const Checklist: React.FC<{}> = () => {
 
 const StartDate: React.FC = () => {
   const { state, setState } = Context.useTaskEdit();
+  const backend = Context.useBackend();
 
-  async function handleDateChange(command: Client.ChangeTaskStartDate) {
-    setState((current) => current.withTask({ ...state.task.entry, startDate: command.startDate }))
+  async function handleStartDateChange(command: Client.ChangeTaskStartDate) {
+    const updatedTask = await backend.task.updateActiveTask(state.task.id, [command]);
+    setState((current) => current.withTask(updatedTask));
   }
-  return (<TaskStartDate onChange={handleDateChange} task={state.task} />
-  );
+
+  return (<TaskStartDate task={state.task} onChange={handleStartDateChange} />);
 }
 
 const DueDate: React.FC = () => {
-  const { state } = Context.useTaskEdit();
-  const dueDate = state.task.dueDate;
-  if (!dueDate) {
-    return <></>;
-  }
+  const { state, setState } = Context.useTaskEdit();
+  const backend = Context.useBackend();
 
-  return (
-    <Stack spacing={1} direction='row' alignItems='center' >
-      <Typography variant='body2'><FormattedMessage id='core.taskWork.dueDate' /></Typography>
-      <Typography>{dueDate.toLocaleDateString()}</Typography>
-    </Stack>
+  async function handleDateChange(command: Client.ChangeTaskDueDate) {
+    const updatedTask = await backend.task.updateActiveTask(state.task.id, [command]);
+    setState((current) => current.withTask(updatedTask))
+  }
+  return (<TaskDueDate onChange={handleDateChange} task={state.task} />
   );
 }
 
