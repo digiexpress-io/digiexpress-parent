@@ -23,6 +23,7 @@ import CallMadeIcon from '@mui/icons-material/CallMade';
 import CallReceivedIcon from '@mui/icons-material/CallReceived';
 
 import Context from 'context';
+import TaskStartDate from '../TaskStartDate';
 
 import ChecklistDelegate from 'core/Checklist';
 import { TaskExtension } from 'taskclient/task-types';
@@ -31,6 +32,7 @@ import { AttachmentAndDateTime } from 'core/Inbox/ThreadPreview';
 import { demoThreads } from 'core/Inbox/DemoThreads';
 import { useMenu } from './menu-ctx';
 import { MenuTab } from './menu-ctx-types';
+import Client from 'taskclient';
 
 
 const StyledListItem = styled(ListItem)(({ theme }) => ({
@@ -122,18 +124,14 @@ const Checklist: React.FC<{}> = () => {
   )
 }
 
-const StartDate: React.FC = () => {
-  const { state } = Context.useTaskEdit();
-  const startDate = state.task.startDate;
-  if (!startDate) {
-    return <></>;
-  }
 
-  return (
-    <Stack spacing={1} direction='row' alignItems='center'>
-      <Typography variant='body2'><FormattedMessage id='core.taskWork.startDate' /></Typography>
-      <Typography>{startDate.toLocaleDateString()}</Typography>
-    </Stack>
+const StartDate: React.FC = () => {
+  const { state, setState } = Context.useTaskEdit();
+
+  async function handleDateChange(command: Client.ChangeTaskStartDate) {
+    setState((current) => current.withTask({ ...state.task.entry, startDate: command.startDate }))
+  }
+  return (<TaskStartDate onChange={handleDateChange} task={state.task} />
   );
 }
 

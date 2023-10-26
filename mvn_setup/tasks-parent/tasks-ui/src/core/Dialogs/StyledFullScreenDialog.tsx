@@ -22,11 +22,6 @@ const StyledDialogActions = styled(DialogActions)(({ theme }) => ({
 
 const dialog_padding = 1;
 const dialog_height = "100%";
-const shortHeaderSx: SxProps = {
-  paddingBottom: 0,
-  paddingTop: 1
-}
-
 
 interface StyledFullScreenDialogProps {
   header: React.ReactNode;
@@ -37,8 +32,6 @@ interface StyledFullScreenDialogProps {
 
   left: React.ReactElement;
   right: React.ReactElement;
-
-  shortHeader?: boolean;
 }
 
 
@@ -63,7 +56,7 @@ const DialogDivider: React.FC<{}> = () => {
 const StyledFullScreenDialog: React.FC<StyledFullScreenDialogProps> = (props) => {
   return (
     <Dialog open={props.open} onClose={props.onClose} fullScreen sx={{ m: 2 }}>
-      <StyledDialogTitle sx={props.shortHeader ? shortHeaderSx : {}}>{props.header}</StyledDialogTitle>
+      <StyledDialogTitle>{props.header}</StyledDialogTitle>
       <DialogContent sx={{ px: dialog_padding, py: 0 }}>
         <Box display='flex' flexDirection='row' height={dialog_height} >
           <DialogBlock>{props.left}</DialogBlock>

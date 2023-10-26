@@ -12,7 +12,7 @@ import Burger from '@the-wrench-io/react-burger';
 const Left: React.FC<{}> = () => {
 
   return (
-    <Stack spacing={1} direction='column'>
+    <Stack spacing={1} direction='column' pt={1}>
       <Section>
         <Typography fontWeight='bold'><FormattedMessage id='task.title' /></Typography>
         <Fields.Title />
@@ -21,6 +21,16 @@ const Left: React.FC<{}> = () => {
       <Section>
         <Typography fontWeight='bold'><FormattedMessage id='task.description' /></Typography>
         <Fields.Description />
+      </Section>
+
+      <Section>
+        <Typography fontWeight='bold'><FormattedMessage id='task.startDate' /></Typography>
+        <Fields.StartDate />
+      </Section>
+
+      <Section>
+        <Typography fontWeight='bold'><FormattedMessage id='task.dueDate' /></Typography>
+        <Fields.DueDate />
       </Section>
 
       <Fields.Form />
@@ -48,22 +58,14 @@ const Header: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       <Grid item md={6} lg={6}>
         <FormattedMessage id='crmDialog.title' />
       </Grid>
-
       <Grid item md={3} lg={3}>
         <Fields.Menu />
       </Grid>
-
-      <Grid item md={2} lg={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', pb: 1 }}>
-        <Stack spacing={1} direction='column'>
-          <Fields.StartDate />
-          <Fields.DueDate />
-        </Stack>
-      </Grid>
-
+      <Box flexGrow={1} />
       <Grid item md={1} lg={1} sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', pb: 1 }}>
         <Fields.CloseDialogButton onClose={onClose} />
       </Grid>
-    </Grid >
+    </Grid>
   )
 }
 
@@ -94,7 +96,6 @@ const CRMDialog: React.FC<{ open: boolean, onClose: () => void, task?: TaskDescr
           right={<Right />}
           onClose={props.onClose}
           open={props.open}
-          shortHeader
         />
       </Context.EditProvider>
     </MenuProvider>

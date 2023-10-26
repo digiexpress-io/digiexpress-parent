@@ -83,37 +83,16 @@ const Roles: React.FC<{}> = () => {
   return (<TaskRoles task={state.task} onChange={handleRolesChange} fullnames />)
 }
 
-/*
-const StartDate: React.FC<{ onClick: () => void }> = ({ onClick }) => {
-  const { state } = Context.useTaskEdit();
-  const startDate = state.task.startDate;
-
-  return (<Button sx={{ justifyContent: 'left', color: 'inherit' }}
-    onClick={onClick}>{startDate ? <>
-      <DateRangeOutlinedIcon sx={{ color: 'uiElements.main', fontSize: 'medium', mr: 1 }} />
-      <Typography><TimestampFormatter value={startDate} type='date' /></Typography>
-    </>
-      :
-      <DateRangeOutlinedIcon sx={{ color: 'uiElements.main', fontSize: 'medium' }} />
-    }
-  </Button>);
-}
-*/
-
 
 const StartDate: React.FC = () => {
   const { state, setState } = Context.useTaskEdit();
 
-  // signature I need
   async function handleDateChange(command: Client.ChangeTaskStartDate) {
     setState((current) => current.withTask({ ...state.task.entry, startDate: command.startDate }))
+    console.log("create start date ", command.startDate)
   }
-
   return (<TaskStartDate onChange={handleDateChange} task={state.task} />);
-
 }
-
-
 
 
 const DueDate: React.FC<{ onClick: () => void }> = ({ onClick }) => {

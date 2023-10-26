@@ -60,6 +60,7 @@ import io.resys.thena.tasks.client.api.model.Task.TaskExtension;
   @Type(value = ImmutableAssignTaskRoles.class, name = "AssignTaskRoles"),
   @Type(value = ImmutableAssignTask.class, name = "AssignTask"),
   
+  @Type(value = ImmutableChangeTaskStartDate.class, name = "ChangeTaskStartDate"),
   @Type(value = ImmutableChangeTaskDueDate.class, name = "ChangeTaskDueDate"),
   @Type(value = ImmutableChangeTaskInfo.class, name = "ChangeTaskInfo"),
   @Type(value = ImmutableCreateTaskExtension.class, name = "CreateTaskExtension"),
@@ -130,7 +131,7 @@ public interface TaskCommand extends Serializable {
     @Type(value = ImmutableAssignTaskRoles.class, name = "AssignTaskRoles"),
     @Type(value = ImmutableAssignTask.class, name = "AssignTask"),
 
-    @Type(value = ImmutableChangeTaskStartDate.class, name = "ImmutableChangeTaskStartDate"),
+    @Type(value = ImmutableChangeTaskStartDate.class, name = "ChangeTaskStartDate"),
     @Type(value = ImmutableChangeTaskDueDate.class, name = "ChangeTaskDueDate"),
     @Type(value = ImmutableChangeTaskInfo.class, name = "ChangeTaskInfo"),
     @Type(value = ImmutableCreateTaskExtension.class, name = "CreateTaskExtension"),

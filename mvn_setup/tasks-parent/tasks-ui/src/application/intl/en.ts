@@ -23,6 +23,7 @@ const en = {
   'task.assignees': 'Assignees',
   'task.assignees.none': 'No assignees',
   'task.status': 'Status',
+  'task.startDate': 'Start date',
   'task.dueDate': 'Due date',
   'task.dueDate.none': 'No due date',
   'task.tools': 'Tools',
@@ -39,6 +40,7 @@ const en = {
   'task.history.changeTaskStatus': 'Task status changed',
   'task.history.changeTaskPriority': 'Task priority changed',
   'task.history.changeTaskInfo': 'Task information changed',
+  'task.history.changeTaskStartDate': 'Task start date changed',
 
 
   'core.taskCreate.fields.roles': 'Roles',

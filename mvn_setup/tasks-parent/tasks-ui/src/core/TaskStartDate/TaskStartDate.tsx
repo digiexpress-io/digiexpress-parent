@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Dialog } from '@mui/material';
+import { Button, Dialog, Typography, Box } from '@mui/material';
 import DateRangeOutlinedIcon from '@mui/icons-material/DateRangeOutlined';
 
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
@@ -39,7 +39,7 @@ const TaskStartDate: React.FC<{
   return (
     <>
       <Button onClick={handlePickerDialog} startIcon={<DateRangeOutlinedIcon sx={{ color: 'uiElements.main', fontSize: 'small' }} />}>
-        <TimestampFormatter type='date' value={state.task.startDate} />
+        <Typography sx={{ color: 'text.primary' }}><TimestampFormatter type='date' value={state.task.startDate} /></Typography>
       </Button>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <Dialog open={open} onClose={handlePickerDialog}>

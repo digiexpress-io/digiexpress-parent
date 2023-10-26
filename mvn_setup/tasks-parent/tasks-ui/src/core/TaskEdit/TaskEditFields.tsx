@@ -16,6 +16,7 @@ import TaskAssignees from 'core/TaskAssignees';
 import TaskStatus from 'core/TaskStatus';
 import TaskPriority from 'core/TaskPriority';
 import TaskRoles from 'core/TaskRoles';
+import TaskStartDate from '../TaskStartDate';
 import TimestampFormatter from '../TimestampFormatter';
 
 const Title: React.FC<{}> = () => {
@@ -143,19 +144,17 @@ const Priority: React.FC<{}> = () => {
   )
 }
 
-const StartDate: React.FC<{ onClick: () => void }> = ({ onClick }) => {
-  const { state } = Context.useTaskEdit();
-  const startDate = state.task.startDate;
+const StartDate: React.FC = () => {
+  const { state, setState } = Context.useTaskEdit();
+  const backend = Context.useBackend();
 
-  return (<Button sx={{ justifyContent: 'left', color: 'inherit' }}
-    onClick={onClick}>{startDate ? <>
-      <DateRangeOutlinedIcon sx={{ color: 'uiElements.main', fontSize: 'medium', mr: 1 }} />
-      <Typography><TimestampFormatter value={startDate} type='date' /></Typography>
-    </>
-      :
-      <DateRangeOutlinedIcon sx={{ color: 'uiElements.main', fontSize: 'medium' }} />
-    }
-  </Button>);
+  async function handleStartDateChange(command: Client.ChangeTaskStartDate) {
+    const updatedTask = await backend.task.updateActiveTask(state.task.id, [command]);
+    setState((current) => current.withTask(updatedTask));
+    console.log(command)
+  }
+
+  return (<TaskStartDate task={state.task} onChange={handleStartDateChange} />);
 }
 
 const DueDate: React.FC<{ onClick: () => void }> = ({ onClick }) => {
