@@ -107,7 +107,7 @@ const TaskSearch: React.FC<{}> = () => {
         <FilterColumns types={columnTypes} value={columns} onChange={(value) => setColumns(value)} />
       </Stack>
     </NavigationSticky>
-
+    <Box mt={1} />
     <TaskTable.Groups groups={state.groups} orderBy='created'>
       {{
         Header: (props) => <Header columns={columns} {...props} />,

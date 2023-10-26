@@ -66,7 +66,8 @@ const Left: React.FC<{}> = () => {
 const Right: React.FC<{}> = () => {
   const { state } = Context.useTaskEdit();
   return (<List>
-    {state.events.map((event, index) => <Events key={index} event={event} />)}
+    {state.events
+      .map((event, index) => <Events key={index} event={event} />)}
   </List>);
 }
 

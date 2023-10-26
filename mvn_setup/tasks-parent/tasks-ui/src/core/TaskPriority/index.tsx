@@ -1,5 +1,5 @@
 import React from 'react';
-import { SxProps, List, MenuItem, ListItemText, Box, Button, Typography } from '@mui/material';
+import { SxProps, List, MenuItem, Box, Button, Typography } from '@mui/material';
 import FlagIcon from '@mui/icons-material/Flag';
 import { FormattedMessage } from 'react-intl';
 
@@ -52,7 +52,7 @@ const TaskPriority: React.FC<{
             <MenuItem key={option} onClick={() => handlePriorityChange(option)} sx={{ display: "flex", pl: 0, py: 0 }}>
               <Box sx={{ width: 8, height: 40, backgroundColor: priorityColors[option] }} />
               <Box sx={{ width: 8, height: 8, borderRadius: "50%", mx: 2, backgroundColor: getActiveColor(option, priority) }} />
-              <ListItemText><FormattedMessage id={`task.priority.${option}`} /></ListItemText>
+              <Typography><FormattedMessage id={`task.priority.${option}`} /></Typography>
             </MenuItem>
           ))}
         </List>

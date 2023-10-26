@@ -32,6 +32,14 @@ const en = {
   'task.edit': 'Edit',
   'task.noneSelected': 'No task selected',
 
+  'task.history.createTask': 'Task created',
+  'task.history.assignTask': 'Task assigned to users',
+  'task.history.assignTaskRoles': 'Task assigned to roles',
+  'task.history.changeTaskStatus': 'Task status changed',
+  'task.history.changeTaskPriority': 'Task priority changed',
+  'task.history.changeTaskInfo': 'Task information changed',
+
+
   'core.taskCreate.fields.roles': 'Roles',
   'core.taskCreate.fields.assignees': 'Assignees',
   'core.taskCreate.fields.priority': 'Priority',

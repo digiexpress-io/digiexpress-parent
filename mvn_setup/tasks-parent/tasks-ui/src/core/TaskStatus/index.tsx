@@ -1,5 +1,5 @@
 import React from 'react';
-import { Chip, MenuItem, List, Box, ListItemText } from '@mui/material';
+import { Chip, MenuItem, List, Box, Typography } from '@mui/material';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import Client from 'taskclient';
@@ -42,7 +42,7 @@ const TaskStatus: React.FC<{ task: TaskDescriptor, onChange: (command: Client.Ch
             <MenuItem key={option} onClick={() => handleStatusChange(option)} sx={{ display: "flex", pl: 0, py: 0 }}>
               <Box sx={{ width: 8, height: 40, backgroundColor: statusColors[option] }} />
               <Box sx={{ width: 8, height: 8, borderRadius: "50%", mx: 2, backgroundColor: getActiveColor(option, status) }} />
-              <ListItemText><FormattedMessage id={`task.status.${option}`} /></ListItemText>
+              <Typography><FormattedMessage id={`task.status.${option}`} /></Typography>
             </MenuItem>
           ))}
         </List>

@@ -80,28 +80,26 @@ const TaskList: React.FC<{
   return (<>
     <TaskCreateDialog open={createOpen} onClose={handleTaskCreate} />
     <Grid container>
-      <Grid item md={12} lg={12}>
 
-        <NavigationSticky>
-          {state.tabs.map(tab => (
-            <NavigationButtonTaskList
-              id={tab.label}
-              values={{ count: tab.count }}
-              key={tab.id}
-              active={state.activeTab === tab.id}
-              color={tab.color}
-              onClick={() => handleActiveTab(tab.id)} />
-          ))
-          }
+      <NavigationSticky>
+        {state.tabs.map(tab => (
           <NavigationButtonTaskList
-            id='core.taskCreate.newTask'
-            onClick={handleTaskCreate}
-            values={undefined}
-            active={createOpen}
-            color={'rgb(80, 72, 229)'}
-          />
-        </NavigationSticky>
-      </Grid>
+            id={tab.label}
+            values={{ count: tab.count }}
+            key={tab.id}
+            active={state.activeTab === tab.id}
+            color={tab.color}
+            onClick={() => handleActiveTab(tab.id)} />
+        ))
+        }
+        <NavigationButtonTaskList
+          id='core.taskCreate.newTask'
+          onClick={handleTaskCreate}
+          values={undefined}
+          active={createOpen}
+          color={'rgb(80, 72, 229)'}
+        />
+      </NavigationSticky>
 
       <Grid item md={8} lg={8}>
         <Stack sx={{ backgroundColor: 'mainContent.main' }}>

@@ -53,12 +53,16 @@ class TaskEditEventVisitor {
   }
 
   public build(): TaskEditEvent[] {
-    return Object.values(this._groups).map(events => {
+    return this.sort(Object.values(this._groups).map(events => {
       if (events.length === 1) {
         return events[0];
       }
       return { type: "COLLAPSED", items: events };
-    });
+    }));
+  }
+
+  sort(items: TaskEditEvent[]): TaskEditEvent[] {
+    return items
   }
 
   private visit(task: TaskDescriptor) {
