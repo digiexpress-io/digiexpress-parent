@@ -42,15 +42,15 @@ const StyledTitle: React.FC<{ children: string }> = ({ children }) => {
   return (<Typography fontWeight='bold'><FormattedMessage id={children} /></Typography>)
 }
 
-function getTaskAlert(task: TaskDescriptor): { isDueDate: boolean, title: string, alertSeverity: AlertColor, alertMsg: string } {
+function getTaskAlert(task: TaskDescriptor): { title: string, alertSeverity: AlertColor, alertMsg: string } {
 
   if (task.teamGroupType === 'groupOverdue') {
-    return { alertSeverity: 'error', isDueDate: true, title: 'core.teamSpace.task.overdue.alert', alertMsg: 'core.teamSpace.task.dueDate' };
+    return { alertSeverity: 'error', title: 'core.teamSpace.task.overdue.alert', alertMsg: 'core.teamSpace.task.dueDate' };
   }
   if (task.teamGroupType === 'groupDueSoon') {
-    return { alertSeverity: 'warning', isDueDate: true, title: 'core.teamSpace.task.dueSoon.alert', alertMsg: 'core.teamSpace.task.dueDate' }
+    return { alertSeverity: 'warning', title: 'core.teamSpace.task.dueSoon.alert', alertMsg: 'core.teamSpace.task.dueDate' }
   }
-  return { alertSeverity: 'success', isDueDate: true, title: 'core.teamSpace.task.available.alert', alertMsg: 'core.teamSpace.task.dueDate' }
+  return { alertSeverity: 'success', title: 'core.teamSpace.task.available.alert', alertMsg: 'core.teamSpace.task.dueDate' }
 }
 
 const TaskItemActive: React.FC<{ task: TaskDescriptor | undefined }> = ({ task }) => {
@@ -104,8 +104,11 @@ const TaskItemActive: React.FC<{ task: TaskDescriptor | undefined }> = ({ task }
         {/* duedate alert section */}
         <Alert severity={alert.alertSeverity} variant='standard'>
           <AlertTitle><FormattedMessage id={alert.title} /></AlertTitle>
-          {alert.isDueDate ? <Typography variant='body2' fontWeight='bolder'>
-            <FormattedMessage id={alert.alertMsg} values={{ dueDate: <TimestampFormatter type='date' value={task.dueDate} /> }} /></Typography> : undefined}
+          <Typography variant='body2' fontWeight='bolder'>
+            {task.dueDate ? <FormattedMessage id={alert.alertMsg} values={{ dueDate: <TimestampFormatter type='date' value={task.dueDate} /> }} />
+              :
+              <FormattedMessage id='task.dueDate.none' />}
+          </Typography>
         </Alert>
 
         {/* buttons section */}

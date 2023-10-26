@@ -145,8 +145,11 @@ const TaskItemActive: React.FC<{ task: TaskDescriptor | undefined }> = ({ task }
         {/* duedate alert section */}
         <Alert severity={alert.alertSeverity} variant='standard'>
           <AlertTitle><FormattedMessage id={alert.title} /></AlertTitle>
-          {alert.isDueDate ? <Typography variant='body2' fontWeight='bolder'>
-            <FormattedMessage id={alert.alertMsg} values={{ dueDate: <TimestampFormatter type='date' value={task.dueDate} /> }} /></Typography> : undefined}
+          <Typography variant='body2' fontWeight='bolder'>
+            {task.dueDate ? <FormattedMessage id={alert.alertMsg} values={{ dueDate: <TimestampFormatter type='date' value={task.dueDate} /> }} />
+              :
+              <FormattedMessage id='task.dueDate.none' />}
+          </Typography>
         </Alert>
 
         {/* buttons section */}
@@ -188,7 +191,7 @@ const TaskItemActive: React.FC<{ task: TaskDescriptor | undefined }> = ({ task }
           <TaskStatus onChange={handleStatusChange} task={task} />
         </Section>
 
-      </StyledStack>
+      </StyledStack >
     </>
 
     );

@@ -24,6 +24,7 @@ const en = {
   'task.assignees.none': 'No assignees',
   'task.status': 'Status',
   'task.dueDate': 'Due date',
+  'task.dueDate.none': 'No due date',
   'task.tools': 'Tools',
   'task.title': 'Title',
   'task.roles': 'Roles',
