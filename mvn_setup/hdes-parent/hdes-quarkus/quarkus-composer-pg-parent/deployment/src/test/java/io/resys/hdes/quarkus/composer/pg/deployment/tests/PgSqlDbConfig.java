@@ -22,6 +22,7 @@ package io.resys.hdes.quarkus.composer.pg.deployment.tests;
 
 import javax.inject.Inject;
 
+import io.vertx.mutiny.sqlclient.Pool;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -33,6 +34,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.resys.thena.docdb.api.DocDB;
 import io.resys.thena.docdb.spi.pgsql.PgErrors;
 import io.resys.thena.docdb.sql.DocDBFactorySql;
+
+import java.time.Duration;
 
 public abstract class PgSqlDbConfig {
   @Inject
@@ -57,11 +60,22 @@ public abstract class PgSqlDbConfig {
   }
 
   private void setUp() {
+    waitUntilPostgresqlAcceptsConnections(pgPool);
     this.client = DocDBFactorySql.create()
         .db("junit")
         .client(pgPool)
         .errorHandler(new PgErrors())
         .build();
+  }
+
+  private void waitUntilPostgresqlAcceptsConnections(Pool pool) {
+    // On some platforms there may be some delay before postgresql starts to respond.
+    // Try until postgresql connection is successfully opened.
+    var connection = pool.getConnection()
+      .onFailure()
+      .retry().withBackOff(Duration.ofMillis(10), Duration.ofSeconds(3)).atMost(20)
+      .await().atMost(Duration.ofSeconds(60));
+    connection.closeAndForget();
   }
 
   public DocDB getClient() {

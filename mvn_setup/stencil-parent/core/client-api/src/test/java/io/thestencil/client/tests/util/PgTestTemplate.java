@@ -26,6 +26,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.inject.Inject;
 
+import io.vertx.mutiny.sqlclient.Pool;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -63,6 +64,7 @@ public class PgTestTemplate {
   
   @BeforeEach
   public void setUp() {
+    waitUntilPostgresqlAcceptsConnections(pgPool);
     this.client = DocDBFactorySql.create()
         .db("junit")
         .client(pgPool)
@@ -73,6 +75,16 @@ public class PgTestTemplate {
   
   @AfterEach
   public void tearDown() {
+  }
+
+  private void waitUntilPostgresqlAcceptsConnections(Pool pool) {
+    // On some platforms there may be some delay before postgresql starts to respond.
+    // Try until postgresql connection is successfully opened.
+    var connection = pool.getConnection()
+      .onFailure()
+      .retry().withBackOff(Duration.ofMillis(10), Duration.ofSeconds(3)).atMost(20)
+      .await().atMost(Duration.ofSeconds(60));
+    connection.closeAndForget();
   }
 
   public DocDB getClient() {

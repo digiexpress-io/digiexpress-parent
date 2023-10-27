@@ -26,6 +26,7 @@ import java.util.function.BiConsumer;
 
 import javax.inject.Inject;
 
+import io.vertx.mutiny.sqlclient.Pool;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -43,6 +44,7 @@ import io.resys.thena.docdb.sql.DocDBFactorySql;
 import io.vertx.core.json.jackson.DatabindCodec;
 import io.vertx.core.json.jackson.VertxModule;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.TestInfo;
 
 
 @Slf4j
@@ -62,32 +64,45 @@ public class DbTestTemplate {
     this.callback = callback;
   }  
   
-  
   @BeforeEach
-  public void setUp() {
-    
+  public void setUp(TestInfo testInfo) throws InterruptedException {
+    waitUntilPostgresqlAcceptsConnections(pgPool);
+
     final var modules = new com.fasterxml.jackson.databind.Module[] {
       new JavaTimeModule(), 
       new Jdk8Module(), 
       new GuavaModule(),
       new VertxModule(),
       new VertexExtModule()
-      };
+    };
     DatabindCodec.mapper().registerModules(modules);
-    DatabindCodec.prettyMapper().registerModules(modules);    
-    
-    
+    DatabindCodec.prettyMapper().registerModules(modules);
+
     this.client = DocDBFactorySql.create()
         .db("junit")
         .client(pgPool)
         .errorHandler(new PgTestErrors())
         .build();
-    repo = this.client.project().projectBuilder().name("junit" + index.incrementAndGet()).build().await().atMost(Duration.ofSeconds(10)).getRepo();
+
+    repo = this.client.project().projectBuilder()
+      .name("junit" + index.incrementAndGet())
+      .build()
+      .await().atMost(Duration.ofSeconds(10)).getRepo();
     if(callback != null) {
       callback.accept(client, repo);
     }
   }
-  
+
+  private void waitUntilPostgresqlAcceptsConnections(Pool pool) {
+    // On some platforms there may be some delay before postgresql starts to respond.
+    // Try until postgresql connection is successfully opened.
+    var connection = pool.getConnection()
+      .onFailure()
+      .retry().withBackOff(Duration.ofMillis(10), Duration.ofSeconds(3)).atMost(20)
+      .await().atMost(Duration.ofSeconds(60));
+    connection.closeAndForget();
+  }
+
   @AfterEach
   public void tearDown() {
   }

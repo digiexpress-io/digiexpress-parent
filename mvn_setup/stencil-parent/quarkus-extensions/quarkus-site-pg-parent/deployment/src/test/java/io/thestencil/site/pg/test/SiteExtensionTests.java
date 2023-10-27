@@ -26,6 +26,7 @@ import java.time.Duration;
 
 import javax.inject.Inject;
 
+import io.vertx.mutiny.sqlclient.Pool;
 import org.apache.commons.io.IOUtils;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
@@ -63,6 +64,7 @@ public class SiteExtensionTests {
     this.setUp();
   }
   private void setUp() {
+    waitUntilPostgresqlAcceptsConnections(pgPool);
     this.client = DocDBFactorySql.create()
         .db("junit")
         .client(pgPool)
@@ -72,8 +74,19 @@ public class SiteExtensionTests {
       .name("test-assets")
       .build().await().atMost(Duration.ofMinutes(1));
   }
-  
-  
+
+  private void waitUntilPostgresqlAcceptsConnections(Pool pool) {
+    // On some platforms there may be some delay before postgresql starts to respond.
+    // Try until postgresql connection is successfully opened.
+    var connection = pool.getConnection()
+      .onFailure()
+      .retry().withBackOff(Duration.ofMillis(10), Duration.ofSeconds(3)).atMost(20)
+      .await().atMost(Duration.ofSeconds(60));
+    connection.closeAndForget();
+  }
+
+
+
   @Test
   public void getUIOnRoot() {
     final var defaultLocale = RestAssured.when().get("/portal/site");

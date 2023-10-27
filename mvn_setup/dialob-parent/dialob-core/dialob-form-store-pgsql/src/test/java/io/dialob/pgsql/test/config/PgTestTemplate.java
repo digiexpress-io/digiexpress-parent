@@ -12,9 +12,9 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,6 +25,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.inject.Inject;
 
+import io.vertx.mutiny.sqlclient.Pool;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -52,7 +53,7 @@ public class PgTestTemplate {
   {
     options.setBlockedThreadCheckInterval(1000*60*60);
   }
-  
+
   @Inject
   io.vertx.mutiny.pgclient.PgPool pgPool;
   public static ObjectMapper objectMapper = new ObjectMapper();
@@ -64,34 +65,45 @@ public class PgTestTemplate {
   @BeforeEach
   public void setUp() {
     final AtomicInteger gid = new AtomicInteger(0);
+    waitUntilPostgresqlAcceptsConnections(pgPool);
     this.store = PgSqlDialobStore.builder()
         .repoName("")
         .pgPool(pgPool)
         .objectMapper(objectMapper)
         .gidProvider((type) -> {
-          
+
           return type + "-" + gid.incrementAndGet();
         })
         .build();
   }
-  
+
   @AfterEach
   public void tearDown() {
+  }
+
+  private void waitUntilPostgresqlAcceptsConnections(Pool pool) {
+    // On some platforms there may be some delay before postgresql starts to respond.
+    // Try until postgresql connection is successfully opened.
+    var connection = pool.getConnection()
+      .onFailure()
+      .retry().withBackOff(Duration.ofMillis(10), Duration.ofSeconds(3)).atMost(20)
+      .await().atMost(Duration.ofSeconds(60));
+    connection.closeAndForget();
   }
 
   private ClientState createState(String repoName) {
     final var ctx = ClientCollections.defaults(repoName);
     return DocDBFactorySql.state(ctx, pgPool, new PgErrors());
   }
-  
+
   public void printRepo(Repo repo) {
     final String result = new DocDBPrettyPrinter(createState(repo.getName())).print(repo);
     System.out.println(result);
   }
-  
+
   public void prettyPrint(String repoId) {
     Repo repo = getThena().project().projectsQuery().id(repoId).get()
-        .await().atMost(Duration.ofMinutes(1)); 
+        .await().atMost(Duration.ofMinutes(1));
     printRepo(repo);
   }
 
