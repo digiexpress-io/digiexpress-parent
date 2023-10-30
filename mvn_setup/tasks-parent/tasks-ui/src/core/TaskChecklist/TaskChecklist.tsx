@@ -5,8 +5,8 @@ import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
 import { FormattedMessage } from 'react-intl';
 import Context from 'context';
 import Client from 'taskclient';
-import TimestampFormatter from '../TimestampFormatter';
 import TaskAssignees from '../TaskAssignees';
+import DueDate from '../TaskDueDate';
 import Section from '../Section';
 
 
@@ -14,6 +14,16 @@ import Section from '../Section';
 const TaskChecklist: React.FC<{ onChange: (commands: Client.TaskUpdateCommand<any>[]) => Promise<void> }> = ({ onChange }) => {
   const { state } = Context.useTaskEdit();
 
+  async function handleDueDateChange(dueDate: string | undefined, checklistId: string, checklistItemId: string) {
+    const command: Client.ChangeChecklistItemDueDate = {
+      checklistId,
+      checklistItemId,
+      commandType: 'ChangeChecklistItemDueDate',
+      dueDate,
+      taskId: state.task.id
+    };
+    onChange([command]);
+  }
 
   async function handleAssigneesChange(assigneeIds: string[], checklistId: string, checklistItemId: string) {
     const command: Client.ChangeChecklistItemAssignees = {
@@ -23,7 +33,7 @@ const TaskChecklist: React.FC<{ onChange: (commands: Client.TaskUpdateCommand<an
       commandType: 'ChangeChecklistItemAssignees',
       taskId: state.task.id
     };
-    onChange([command])
+    onChange([command]);
   }
 
   if (!state.task.checklist.length) {
@@ -38,7 +48,8 @@ const TaskChecklist: React.FC<{ onChange: (commands: Client.TaskUpdateCommand<an
   return (<>
     {state.task.checklist.map((checklist) => (<Section key={checklist.id} width='95%'>
       <Box>
-        <TextField defaultValue={checklist.title} fullWidth
+        <TextField defaultValue={checklist.title} onChange={() => { }}
+          fullWidth
           InputProps={{
             endAdornment: (<IconButton><MoreHorizOutlinedIcon sx={{ color: 'uiElements.main' }} /></IconButton>),
             sx: {
@@ -63,7 +74,7 @@ const TaskChecklist: React.FC<{ onChange: (commands: Client.TaskUpdateCommand<an
         {checklist.items.map((item) => (<>
           <Grid container alignItems='center' key={item.id}>
             <Grid item md={2} lg={2}>
-              <Typography fontWeight='bolder'>To-do item</Typography>
+              <Typography fontWeight='bolder'><FormattedMessage id='task.checklist.item.title' /></Typography>
             </Grid>
 
             <Grid item md={10} lg={10}>
@@ -76,12 +87,12 @@ const TaskChecklist: React.FC<{ onChange: (commands: Client.TaskUpdateCommand<an
             </Grid>
           </Grid>
 
-          <Grid container>
+          <Grid container alignItems='center' >
             <Grid item md={2} lg={2}>
-              <Typography fontWeight='bolder'>Due date</Typography>
+              <Typography fontWeight='bolder'><FormattedMessage id='task.checklist.item.dueDate' /></Typography>
             </Grid>
             <Grid item md={10} lg={10}>
-              <Typography><TimestampFormatter type='date' value={item.dueDate ? new Date(item.dueDate) : undefined} /></Typography>
+              <DueDate task={{ dueDate: item.dueDate ? new Date(item.dueDate) : undefined }} onChange={(dueDate) => handleDueDateChange(dueDate, checklist.id, item.id)} />
             </Grid>
           </Grid>
           <Grid container>

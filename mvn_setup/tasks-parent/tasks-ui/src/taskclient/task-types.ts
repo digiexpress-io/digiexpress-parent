@@ -152,7 +152,7 @@ export interface ChangeTaskStartDate extends TaskUpdateCommand<'ChangeTaskStartD
 }
 
 export interface ChangeTaskDueDate extends TaskUpdateCommand<'ChangeTaskDueDate'> {
-  dueDate: string;
+  dueDate: string | undefined;
 }
 
 export interface ChangeTaskInfo extends TaskUpdateCommand<'ChangeTaskInfo'> {

@@ -142,10 +142,16 @@ const DueDate: React.FC = () => {
   const { state, setState } = Context.useTaskEdit();
   const backend = Context.useBackend();
 
-  async function handleDateChange(command: Client.ChangeTaskDueDate) {
+  async function handleDateChange(dueDate: string | undefined) {
+    const command: Client.ChangeTaskDueDate = {
+      commandType: 'ChangeTaskDueDate',
+      dueDate,
+      taskId: state.task.id
+    };
     const updatedTask = await backend.task.updateActiveTask(state.task.id, [command]);
     setState((current) => current.withTask(updatedTask))
   }
+
   return (<TaskDueDate onChange={handleDateChange} task={state.task} />
   );
 }

@@ -31,7 +31,7 @@ const en = {
   'task.roles': 'Roles',
 
   'task.checklist': 'Checklist',
-  'task.checklist.item.title': 'Checklist item',
+  'task.checklist.item.title': 'To-do item',
   'task.checklist.item.dueDate': 'Due date',
   'task.checklist.add': 'Add checklist',
   'task.checklist.delete': 'Delete',
@@ -48,6 +48,8 @@ const en = {
   'task.history.changeTaskInfo': 'Task information changed',
   'task.history.changeTaskStartDate': 'Task start date changed',
   'task.history.changeTaskDueDate': 'Task due date changed',
+  'task.history.changeChecklistItemAssignees': 'Checklist item assignees changed',
+  'task.history.changeChecklistItemDueDate': 'Checklist item due date changed',
 
 
   'core.taskCreate.fields.roles': 'Roles',
