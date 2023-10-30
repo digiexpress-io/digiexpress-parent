@@ -50,18 +50,16 @@ public final class OidUtils {
     SECURE_RANDOM = secureRandom;
   }
 
-  @NotNull
   public static byte[] generateOID() {
     byte[] oid = new byte[16];
     SECURE_RANDOM.nextBytes(oid);
     return oid;
   }
 
-  @NotNull
   public static String toString(@NotNull byte[] oid) {
     return Hex.encodeHexString(oid);
   }
-  
+
   public static String gen() {
     return toString(generateOID());
   }

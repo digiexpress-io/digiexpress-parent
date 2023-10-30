@@ -27,7 +27,10 @@ import io.quarkus.test.junit.QuarkusTestProfile;
 public class PgProfile implements QuarkusTestProfile {
   @Override
   public Map<String, String> getConfigOverrides() {
-    return Map.of("quarkus.datasource.db-kind", "pg");
+    return Map.of(
+      "quarkus.datasource.db-kind", "pg",
+      "quarkus.datasource.reactive.max-size", "20"
+    );
   }
 
   @Override

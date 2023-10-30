@@ -28,6 +28,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.inject.Inject;
 
+import io.vertx.mutiny.sqlclient.Pool;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -64,6 +65,7 @@ public class TaskTestCase {
   
   @BeforeEach
   public void setUp() {
+    waitUntilPostgresqlAcceptsConnections(pgPool);
     final var db = DB + DB_ID.getAndIncrement();
     store = DocumentStoreImpl.builder()
         .repoName(db).pgPool(pgPool).pgDb(db)
@@ -83,7 +85,17 @@ public class TaskTestCase {
     objectMapper();
     
   }
-  
+
+  private void waitUntilPostgresqlAcceptsConnections(Pool pool) {
+    // On some platforms there may be some delay before postgresql starts to respond.
+    // Try until postgresql connection is successfully opened.
+    var connection = pool.getConnection()
+      .onFailure()
+      .retry().withBackOff(Duration.ofMillis(10), Duration.ofSeconds(3)).atMost(20)
+      .await().atMost(Duration.ofSeconds(60));
+    connection.closeAndForget();
+  }
+
   public static ObjectMapper objectMapper() {
     final var modules = new com.fasterxml.jackson.databind.Module[] {
         new JavaTimeModule(), 

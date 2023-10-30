@@ -2,6 +2,7 @@ package io.digiexpress.client.tests.support;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.function.Consumer;
 
 import javax.inject.Inject;
 
+import io.vertx.mutiny.sqlclient.Pool;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -51,6 +53,7 @@ public class TestCase {
   
   @BeforeEach
   public void setUp() {
+    waitUntilPostgresqlAcceptsConnections(pgPool);
     builder = new TestCaseBuilder(pgPool);
     questionnaireStore = new QuestionnaireStore() {
       @Override
@@ -64,7 +67,17 @@ public class TestCase {
   public void tearDown() {
     builder = null;
   }
-  
+
+  private void waitUntilPostgresqlAcceptsConnections(Pool pool) {
+    // On some platforms there may be some delay before postgresql starts to respond.
+    // Try until postgresql connection is successfully opened.
+    var connection = pool.getConnection()
+      .onFailure()
+      .retry().withBackOff(Duration.ofMillis(10), Duration.ofSeconds(3)).atMost(20)
+      .await().atMost(Duration.ofSeconds(60));
+    connection.closeAndForget();
+  }
+
   public AnswersBuilder answers(Execution<ExecutionDialobBody> exec) {
     return new AnswersBuilder(exec.getBody().getActions().getRev());
   }
