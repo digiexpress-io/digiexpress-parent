@@ -30,6 +30,12 @@ const en = {
   'task.title': 'Title',
   'task.roles': 'Roles',
 
+  'task.checklist': 'Checklist',
+  'task.checklist.item.title': 'Checklist item',
+  'task.checklist.item.dueDate': 'Due date',
+  'task.checklist.add': 'Add checklist',
+  'task.checklist.delete': 'Delete',
+
   'task.start': 'Start',
   'task.edit': 'Edit',
   'task.noneSelected': 'No task selected',
@@ -81,6 +87,9 @@ const en = {
   'core.taskEdit.fields.startDate': 'Start date',
   'core.taskEdit.fields.dueDate': 'Due date',
   'core.taskEdit.fields.checklist': 'Checklist',
+  'core.taskEdit.fields.checklistTitle.edit': 'Edit checklist: {title}',
+  'core.taskEdit.fields.checklistItem.tooltip.markCompleted': 'Mark completed',
+  'core.taskEdit.fields.history': 'Task history log',
 
   'core.taskEdit.dueDate': 'Due date',
   'core.taskEdit.startDate': 'Start date',

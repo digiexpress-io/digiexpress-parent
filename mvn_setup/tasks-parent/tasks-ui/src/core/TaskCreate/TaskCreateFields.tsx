@@ -63,7 +63,8 @@ const Priority: React.FC<{}> = () => {
 const Assignees: React.FC<{}> = () => {
   const { state, setState } = Context.useTaskEdit();
 
-  async function handleAssigneeChange(command: Client.AssignTask) {
+  async function handleAssigneeChange(assigneeIds: Client.UserId[]) {
+    const command: Client.AssignTask = { assigneeIds, commandType: 'AssignTask', taskId: state.task.id };
     setState((current) => current.withTask({ ...state.task.entry, assigneeIds: command.assigneeIds }));
   }
 

@@ -5,11 +5,13 @@ import {
   TasksPaletteType, Data
 } from './descriptor-types';
 
-import { Profile } from 'taskclient';
+import { Profile, resolveAvatar } from 'taskclient';
 import { DescriptorState } from './descriptor-types';
 import { _nobody_, Palette } from './descriptor-constants';
 
-import { applyDescFilters, applySearchString, withColors, getDaysUntilDue, getAvatar, getMyWorkType, getTeamspaceType } from './descriptor-util';
+import { applyDescFilters, applySearchString, withColors, getDaysUntilDue, getMyWorkType, getTeamspaceType } from './descriptor-util';
+
+
 
 interface ExtendedInit extends Omit<DescriptorState,
   "withGroupBy" |
@@ -329,8 +331,8 @@ class TaskDescriptorImpl implements TaskDescriptor {
     this._daysUntilDue = entry.dueDate ? getDaysUntilDue(entry, today) : undefined;
     this._dialobId = entry.extensions.find(t => t.type === 'dialob')?.body;
     this._uploads = entry.extensions.filter(t => t.type === 'upload');
-    this._rolesAvatars = getAvatar(entry.roles);
-    this._ownersAvatars = getAvatar(entry.assigneeIds);
+    this._rolesAvatars = resolveAvatar(entry.roles);
+    this._ownersAvatars = resolveAvatar(entry.assigneeIds);
     this._myWorkType = getMyWorkType(entry, profile, today);
     this._teamspaceType = getTeamspaceType(entry, profile, today);
     this._profile = profile;

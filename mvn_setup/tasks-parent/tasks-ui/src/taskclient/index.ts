@@ -6,7 +6,8 @@ import {
 } from './client-types';
 
 import {
-  Org, User, Role, UserId, RoleId
+  Org, User, Role, UserId, RoleId,
+  resolveAvatar as resolveAvatarAs
 } from './org-types';
 
 import {
@@ -131,7 +132,13 @@ export type {
   ChangeChecklistItemTitle
 }
 
+const resolveAvatar = resolveAvatarAs;
+export {
+  resolveAvatar
+}
+
 namespace TaskClient {
+  export const resolveAvatar = resolveAvatarAs;
   export const ServiceImpl = ServiceImplAs;
   export const DefaultStore = DefaultStoreAs;
   export const StoreErrorImpl = StoreErrorImplAs;

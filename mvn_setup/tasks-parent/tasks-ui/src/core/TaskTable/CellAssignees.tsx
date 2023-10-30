@@ -14,7 +14,8 @@ const FormattedCell: React.FC<{
   const tasks = Context.useTasks();
   const backend = Context.useBackend();
 
-  async function handleChange(command: Client.AssignTask) {
+  async function handleChange(assigneeIds: Client.UserId[]) {
+    const command: Client.AssignTask = { assigneeIds, commandType: 'AssignTask', taskId: row.id };
     await backend.task.updateActiveTask(row.id, [command]);
     await tasks.reload();
   }

@@ -30,7 +30,7 @@ const CellMenuItem: React.FC<{
   )
 }
 
-const HoverMenu: React.FC<{
+const CellMenu: React.FC<{
   onEdit: () => void,
   onCRM: () => void,
 }> = ({ onEdit, onCRM }) => {
@@ -91,7 +91,7 @@ const FormattedCell: React.FC<{
         <TaskEditDialog open={edit} onClose={handleEndEdit} task={row} />
         <CRMDialog open={crm} onClose={handleCrm} task={row} />
         {active &&
-          <HoverMenu
+          <CellMenu
             onEdit={handleStartEdit}
             onCRM={handleStartWork}
           />}

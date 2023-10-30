@@ -53,7 +53,7 @@ const TaskCreateDialog: React.FC<{ open: boolean, onClose: () => void }> = (prop
 
   return (
     <Context.EditProvider task={init}>
-      <Dialog open={true} fullWidth maxWidth='sm'>
+      <Dialog open={true} fullWidth maxWidth='md'>
         <DialogTitle sx={{
           backgroundColor: theme.palette.mainContent.main,
           borderBottom: `1px solid ${alpha(theme.palette.mainContent.dark, 0.3)}`,
@@ -80,35 +80,38 @@ const TaskCreateDialog: React.FC<{ open: boolean, onClose: () => void }> = (prop
               <Fields.Description />
             </Section>
 
-            <Section>
-              <Typography fontWeight='bold'><FormattedMessage id='core.taskCreate.fields.startDate' /></Typography>
-              <Fields.StartDate />
-            </Section>
+            <Stack spacing={1} direction='row'>
+              <Section>
+                <Typography fontWeight='bold'><FormattedMessage id='core.taskCreate.fields.startDate' /></Typography>
+                <Fields.StartDate />
+              </Section>
+              <Section>
+                <Typography fontWeight='bold'><FormattedMessage id='core.taskCreate.fields.dueDate' /></Typography>
+                <Fields.DueDate />
+              </Section>
+            </Stack>
 
-            <Section>
-              <Typography fontWeight='bold'><FormattedMessage id='core.taskCreate.fields.dueDate' /></Typography>
-              <Fields.DueDate />
-            </Section>
+            <Stack spacing={1} direction='row'>
+              <Section>
+                <Typography fontWeight='bold'><FormattedMessage id='core.taskCreate.fields.status' /></Typography>
+                <Fields.Status />
+              </Section>
+              <Section>
+                <Typography fontWeight='bold'><FormattedMessage id='core.taskCreate.fields.priority' /></Typography>
+                <Fields.Priority />
+              </Section>
+            </Stack>
 
-            <Section>
-              <Typography fontWeight='bold'><FormattedMessage id='core.taskCreate.fields.status' /></Typography>
-              <Fields.Status />
-            </Section>
-
-            <Section>
-              <Typography fontWeight='bold'><FormattedMessage id='core.taskCreate.fields.priority' /></Typography>
-              <Fields.Priority />
-            </Section>
-
-            <Section>
-              <Typography fontWeight='bold'><FormattedMessage id='core.taskCreate.fields.assignees' /></Typography>
-              <Fields.Assignees />
-            </Section>
-
-            <Section>
-              <Typography fontWeight='bold'><FormattedMessage id='core.taskCreate.fields.roles' /></Typography>
-              <Fields.Roles />
-            </Section>
+            <Stack spacing={1} direction='row'>
+              <Section>
+                <Typography fontWeight='bold'><FormattedMessage id='core.taskCreate.fields.assignees' /></Typography>
+                <Fields.Assignees />
+              </Section>
+              <Section>
+                <Typography fontWeight='bold'><FormattedMessage id='core.taskCreate.fields.roles' /></Typography>
+                <Fields.Roles />
+              </Section>
+            </Stack>
 
           </Stack>
         </DialogContent>

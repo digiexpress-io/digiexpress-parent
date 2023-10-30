@@ -4,7 +4,7 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { SearchFieldPopover } from 'core/SearchField';
 import { useMockPopover } from 'core/TaskTable/MockPopover';
 import Client from 'taskclient';
-import { TaskDescriptor, AvatarCode } from 'taskdescriptor';
+import { AvatarCode } from 'taskdescriptor';
 import Context from 'context';
 
 const UserAvatar: React.FC<{ children?: AvatarCode }> = ({ children }) => {
@@ -29,24 +29,30 @@ const UserAvatar: React.FC<{ children?: AvatarCode }> = ({ children }) => {
 }
 
 const AvatarsOnly: React.FC<{
-  task: TaskDescriptor,
+  task: {
+    assignees: Client.UserId[],
+    assigneesAvatars?: AvatarCode[]
+  },
 }> = ({ task }) => {
 
-  return task.assigneesAvatars.length ?
+  return task.assignees.length ?
     (<AvatarGroup spacing='medium'>
-      {task.assigneesAvatars.map((assignee: AvatarCode) => (<UserAvatar key={assignee.value}>{assignee}</UserAvatar>))}
+      {(task.assigneesAvatars ?? Client.resolveAvatar(task.assignees)).map((assignee: AvatarCode) => (<UserAvatar key={assignee.value}>{assignee}</UserAvatar>))}
     </AvatarGroup>) :
     (<UserAvatar />)
 }
 
 const FullnamesAndAvatars: React.FC<{
-  task: TaskDescriptor,
+  task: {
+    assignees: Client.UserId[],
+    assigneesAvatars?: AvatarCode[]
+  },
 }> = ({ task }) => {
   const org = Context.useOrg();
 
-  return task.assigneesAvatars.length ?
+  return task.assignees.length ?
     (<Stack spacing={1}>
-      {task.assigneesAvatars.map((assignee: AvatarCode) => (<Box key={assignee.value} display='flex' alignItems='center' sx={{ cursor: 'pointer' }}>
+      {(task.assigneesAvatars ?? Client.resolveAvatar(task.assignees)).map((assignee: AvatarCode) => (<Box key={assignee.value} display='flex' alignItems='center' sx={{ cursor: 'pointer' }}>
         <UserAvatar key={assignee.value}>{assignee}</UserAvatar>
         <Box pl={1}><Typography>{org.state.org.users[assignee.value].displayName}</Typography></Box>
       </Box>))}
@@ -56,8 +62,11 @@ const FullnamesAndAvatars: React.FC<{
 }
 
 const TaskAssignees: React.FC<{
-  task: TaskDescriptor,
-  onChange: (command: Client.AssignTask) => Promise<void>,
+  task: {
+    assignees: Client.UserId[],
+    assigneesAvatars?: AvatarCode[]
+  },
+  onChange: (assigneeIds: Client.UserId[]) => Promise<void>,
   fullnames?: boolean
 }> = ({ task, onChange, fullnames }) => {
 
@@ -84,7 +93,7 @@ const TaskAssignees: React.FC<{
   function onSubmit() {
     const isChanges = newAssignees.sort().toString() !== task.assignees.sort().toString();
     if (isChanges) {
-      onChange({ assigneeIds: newAssignees, commandType: 'AssignTask', taskId: task.id })
+      onChange(newAssignees)
         .then(() => Popover.onClose());
       return;
     }
@@ -127,5 +136,4 @@ const TaskAssignees: React.FC<{
     </Box >
   );
 }
-
 export default TaskAssignees;

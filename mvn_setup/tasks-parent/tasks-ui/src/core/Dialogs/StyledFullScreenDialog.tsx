@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Box, Stack, Divider, alpha, Theme, styled, SxProps } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Box, Stack, Divider, alpha, Theme, styled } from '@mui/material';
 
 function borderColor(theme: Theme) {
   return alpha(
@@ -37,7 +37,7 @@ interface StyledFullScreenDialogProps {
 
 const DialogBlock: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
-    <Box sx={{ width: '50%' }} overflow='auto'>
+    <Box sx={{ width: '50%', mt: 1 }} overflow='auto'>
       <Stack spacing={dialog_padding}>
         {children}
       </Stack>
@@ -58,13 +58,12 @@ const StyledFullScreenDialog: React.FC<StyledFullScreenDialogProps> = (props) =>
     <Dialog open={props.open} onClose={props.onClose} fullScreen sx={{ m: 2 }}>
       <StyledDialogTitle>{props.header}</StyledDialogTitle>
       <DialogContent sx={{ px: dialog_padding, py: 0 }}>
-        <Box display='flex' flexDirection='row' height={dialog_height} >
+        <Box display='flex' flexDirection='row' height={dialog_height}>
           <DialogBlock>{props.left}</DialogBlock>
           <DialogDivider />
           <DialogBlock>{props.right}</DialogBlock>
         </Box>
       </DialogContent>
-
       <StyledDialogActions>{props.footer}</StyledDialogActions>
     </Dialog>
   );

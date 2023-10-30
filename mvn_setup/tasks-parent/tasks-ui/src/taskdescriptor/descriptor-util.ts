@@ -62,24 +62,6 @@ export function getMyWorkType(task: Task, profile: Profile, today: Date): Assign
   return "assigneeOther";
 }
 
-export function getAvatar(values: string[]): { twoletters: string, value: string }[] {
-  return values.map(role => {
-    const words: string[] = role.replaceAll("-", " ").replaceAll("_", " ").replace(/([A-Z])/g, ' $1').replaceAll("  ", " ").trim().split(" ");
-
-    const result: string[] = [];
-    for (const word of words) {
-      if (result.length >= 2) {
-        break;
-      }
-
-      if (word && word.length) {
-        const firstLetter = word.substring(0, 1);
-        result.push(firstLetter.toUpperCase());
-      }
-    }
-    return { twoletters: result.join(""), value: role };
-  });
-}
 
 export function applyDescFilters(desc: TaskDescriptor, filters: FilterBy[]): boolean {
   for (const filter of filters) {

@@ -1,8 +1,7 @@
 import React from 'react';
 import { useIntl } from 'react-intl';
 
-import { TextField, Typography, Box, IconButton, Button } from '@mui/material';
-import DateRangeOutlinedIcon from '@mui/icons-material/DateRangeOutlined';
+import { TextField, Box, IconButton, } from '@mui/material';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import CircleNotificationsOutlinedIcon from '@mui/icons-material/CircleNotificationsOutlined';
@@ -11,14 +10,13 @@ import CloseIcon from '@mui/icons-material/Close';
 import Client from 'taskclient';
 import Context from 'context';
 
-import ChecklistDelegate from 'core/Checklist';
+import TaskChecklist from 'core/TaskChecklist';
 import TaskAssignees from 'core/TaskAssignees';
 import TaskStatus from 'core/TaskStatus';
 import TaskPriority from 'core/TaskPriority';
 import TaskRoles from 'core/TaskRoles';
 import TaskStartDate from '../TaskStartDate';
 import TaskDueDate from '../TaskDueDate';
-import TimestampFormatter from '../TimestampFormatter';
 
 const Title: React.FC<{}> = () => {
   const { state, setState } = Context.useTaskEdit();
@@ -83,11 +81,9 @@ const Description: React.FC<{}> = () => {
 
 const Checklist: React.FC<{}> = () => {
   const { state } = Context.useTaskEdit();
+  //      {state.task.checklist.map(item => (<ChecklistDelegate key={item.id} value={item} />))}
 
-  return (
-    <>
-      {state.task.checklist.map(item => (<ChecklistDelegate key={item.id} value={item} />))}
-    </>
+  return (<TaskChecklist />
   )
 }
 
@@ -109,7 +105,8 @@ const Assignee: React.FC<{}> = () => {
   const { state, setState } = Context.useTaskEdit();
   const backend = Context.useBackend();
 
-  async function handleAssigneeChange(command: Client.AssignTask) {
+  async function handleAssigneeChange(assigneeIds: Client.UserId[]) {
+    const command: Client.AssignTask = { assigneeIds, commandType: 'AssignTask', taskId: state.task.id };
     const updatedTask = await backend.task.updateActiveTask(state.task.id, [command]);
     setState((current) => current.withTask(updatedTask));
   }

@@ -20,7 +20,7 @@ const SingleGroup: React.FC<{ event: Context.SingleEvent }> = ({ event }) => {
 
   if (event.body.commandType === "CreateTask") {
     return (<>
-      <Typography><FormattedMessage id='task.history.createTask' /></Typography>
+      <Box /><Typography><FormattedMessage id='task.history.createTask' /></Typography>
       <Box flexGrow={1} />
       <TimestampFormatter type='dateTime' value={date} />
     </>)

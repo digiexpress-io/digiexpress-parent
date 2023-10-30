@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, List, Button, Typography } from '@mui/material';
+import { Box, List, Button, Typography, Stack } from '@mui/material';
 import SecurityIcon from '@mui/icons-material/Security';
 import { FormattedMessage } from 'react-intl';
 import StyledFullScreenDialog from '../Dialogs';
@@ -15,7 +15,6 @@ const Left: React.FC<{}> = () => {
 
   return (
     <>
-      <Box />
       <Section>
         <Typography fontWeight='bold'><FormattedMessage id='core.taskEdit.fields.title' /></Typography>
         <Fields.Title />
@@ -26,49 +25,58 @@ const Left: React.FC<{}> = () => {
         <Fields.Description />
       </Section>
 
-      <Section>
-        <Typography fontWeight='bold'><FormattedMessage id='core.taskEdit.fields.startDate' /></Typography>
-        <Fields.StartDate />
-      </Section>
+      <Stack spacing={1} direction='row'>
+        <Section>
+          <Typography fontWeight='bold'><FormattedMessage id='core.taskEdit.fields.startDate' /></Typography>
+          <Fields.StartDate />
+        </Section>
+        <Section>
+          <Typography fontWeight='bold'><FormattedMessage id='core.taskEdit.fields.dueDate' /></Typography>
+          <Fields.DueDate />
+        </Section>
+      </Stack>
 
-      <Section>
-        <Typography fontWeight='bold'><FormattedMessage id='core.taskEdit.fields.dueDate' /></Typography>
-        <Fields.DueDate />
-      </Section>
 
-      <Section>
-        <Typography fontWeight='bold'><FormattedMessage id='core.taskEdit.fields.status' /></Typography>
-        <Fields.Status />
-      </Section>
+      <Stack spacing={1} direction='row'>
+        <Section>
+          <Typography fontWeight='bold'><FormattedMessage id='core.taskEdit.fields.status' /></Typography>
+          <Fields.Status />
+        </Section>
+        <Section>
+          <Typography fontWeight='bold'><FormattedMessage id='core.taskEdit.fields.priority' /></Typography>
+          <Fields.Priority />
+        </Section>
+      </Stack>
 
-      <Section>
-        <Typography fontWeight='bold'><FormattedMessage id='core.taskEdit.fields.priority' /></Typography>
-        <Fields.Priority />
-      </Section>
-
-      <Section>
-        <Typography fontWeight='bold'><FormattedMessage id='core.taskEdit.fields.assignees' /></Typography>
-        <Fields.Assignee />
-      </Section>
-
-      <Section>
-        <Typography fontWeight='bold'><FormattedMessage id='core.taskEdit.fields.roles' /></Typography>
-        <Fields.Roles />
-      </Section>
-
-      {state.task.checklist.length > 0 && <Section>
-        <Typography fontWeight='bold'><FormattedMessage id='core.taskEdit.fields.checklist' /></Typography>
-        <Fields.Checklist />
-      </Section>}
+      <Stack spacing={1} direction='row'>
+        <Section>
+          <Typography fontWeight='bold'><FormattedMessage id='core.taskEdit.fields.assignees' /></Typography>
+          <Fields.Assignee />
+        </Section>
+        <Section>
+          <Typography fontWeight='bold'><FormattedMessage id='core.taskEdit.fields.roles' /></Typography>
+          <Fields.Roles />
+        </Section>
+      </Stack>
     </>)
 }
 
 const Right: React.FC<{}> = () => {
   const { state } = Context.useTaskEdit();
-  return (<List>
-    {state.events
-      .map((event, index) => <Events key={index} event={event} />)}
-  </List>);
+  return (
+    <>
+
+      <Fields.Checklist />
+
+      <Section>
+        <Typography fontWeight='bold'><FormattedMessage id='core.taskEdit.fields.history' /></Typography>
+        <List>
+          {state.events
+            .map((event, index) => <Events key={index} event={event} />)}
+        </List>
+      </Section>
+    </>
+  );
 }
 
 

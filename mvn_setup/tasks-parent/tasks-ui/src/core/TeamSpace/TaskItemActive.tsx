@@ -68,10 +68,11 @@ const TaskItemActive: React.FC<{ task: TaskDescriptor | undefined }> = ({ task }
     await tasks.reload();
   }
 
-  async function handleAssigneeChange(command: Client.AssignTask) {
+  async function handleAssigneeChange(assigneeIds: Client.UserId[]) {
     if (!task) {
       return;
     }
+    const command = { assigneeIds, commandType: 'AssignTask', taskId: task.id };
     await backend.task.updateActiveTask(task.id, [command]);
     await tasks.reload();
   }
