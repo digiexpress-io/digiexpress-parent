@@ -421,21 +421,6 @@
       </dependency>
 
       <!-- Hibernate validator start -->
-<!--      <dependency>-->
-<!--        <groupId>org.hibernate.validator</groupId>-->
-<!--        <artifactId>hibernate-validator</artifactId>-->
-<!--        <version>${validation-hb.version}</version>-->
-<!--      </dependency>-->
-<!--      <dependency>-->
-<!--        <groupId>org.hibernate.validator</groupId>-->
-<!--        <artifactId>hibernate-validator-annotation-processor</artifactId>-->
-<!--        <version>${validation-hb.version}</version>-->
-<!--      </dependency>-->
-<!--      <dependency>-->
-<!--        <groupId>jakarta.validation</groupId>-->
-<!--        <artifactId>jakarta.validation-api</artifactId>-->
-<!--        <version>${validation-api.version}</version>-->
-<!--      </dependency>-->
       <dependency>
         <groupId>org.apache.tomcat</groupId>
         <artifactId>tomcat-jasper-el</artifactId>
