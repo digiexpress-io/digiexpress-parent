@@ -11,22 +11,20 @@ import Section from '../Section';
 
 
 
-const TaskChecklist: React.FC<{}> = () => {
-  const { state, setState } = Context.useTaskEdit();
-  const backend = Context.useBackend();
+const TaskChecklist: React.FC<{ onChange: (commands: Client.TaskUpdateCommand<any>[]) => Promise<void> }> = ({ onChange }) => {
+  const { state } = Context.useTaskEdit();
 
-  async function handleCheclistItemAssigneeChange(assigneeIds: Client.UserId[]) {
+
+  async function handleAssigneesChange(assigneeIds: string[], checklistId: string, checklistItemId: string) {
     const command: Client.ChangeChecklistItemAssignees = {
       assigneeIds,
-      checklistItemId: state.task.checklist[0].items[0].id,
-      checklistId: state.task.checklist[0].id,
+      checklistId,
+      checklistItemId,
       commandType: 'ChangeChecklistItemAssignees',
       taskId: state.task.id
     };
-    const updatedTask = await backend.task.updateActiveTask(state.task.id, [command]);
-    setState((current) => current.withTask(updatedTask));
+    onChange([command])
   }
-
 
   if (!state.task.checklist.length) {
     return (
@@ -38,7 +36,7 @@ const TaskChecklist: React.FC<{}> = () => {
   }
 
   return (<>
-    {state.task.checklist.map((checklist) => (<Section width='95%'>
+    {state.task.checklist.map((checklist) => (<Section key={checklist.id} width='95%'>
       <Box>
         <TextField defaultValue={checklist.title} fullWidth
           InputProps={{
@@ -90,7 +88,7 @@ const TaskChecklist: React.FC<{}> = () => {
             <Grid item md={2} lg={2} alignSelf='center'>
               <Typography fontWeight='bolder'>Assignees</Typography>
             </Grid>
-            <Grid item md={10} lg={10}><TaskAssignees onChange={handleCheclistItemAssigneeChange} task={state.task} /></Grid>
+            <Grid item md={10} lg={10}><TaskAssignees onChange={(users) => handleAssigneesChange(users, checklist.id, item.id)} task={{ assignees: item.assigneeIds }} /></Grid>
           </Grid>
 
           <Divider />

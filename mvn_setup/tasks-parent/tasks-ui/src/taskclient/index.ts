@@ -38,7 +38,7 @@ import {
   ChangeChecklistItemDueDate,
   ChangeChecklistItemTitle,
   TaskCommand, TaskTransaction, TaskExtension,
-  Checklist, TaskComment
+  Checklist, TaskComment, TaskUpdateCommand
 
 } from './task-types';
 
@@ -92,7 +92,8 @@ declare namespace TaskClient {
     ChangeChecklistItemAssignees,
     ChangeChecklistItemCompleted,
     ChangeChecklistItemDueDate,
-    ChangeChecklistItemTitle
+    ChangeChecklistItemTitle,
+    TaskUpdateCommand
   }
 }
 
@@ -129,7 +130,8 @@ export type {
   ChangeChecklistItemAssignees,
   ChangeChecklistItemCompleted,
   ChangeChecklistItemDueDate,
-  ChangeChecklistItemTitle
+  ChangeChecklistItemTitle,
+  TaskUpdateCommand
 }
 
 const resolveAvatar = resolveAvatarAs;

@@ -80,10 +80,15 @@ const Description: React.FC<{}> = () => {
 }
 
 const Checklist: React.FC<{}> = () => {
-  const { state } = Context.useTaskEdit();
-  //      {state.task.checklist.map(item => (<ChecklistDelegate key={item.id} value={item} />))}
+  const { state, setState } = Context.useTaskEdit();
+  const backend = Context.useBackend();
 
-  return (<TaskChecklist />
+  async function handleChange(commands: Client.TaskUpdateCommand<any>[]) {
+    const updatedTask = await backend.task.updateActiveTask(state.task.id, commands);
+    setState((current) => current.withTask(updatedTask));
+  }
+
+  return (<TaskChecklist onChange={handleChange} />
   )
 }
 
