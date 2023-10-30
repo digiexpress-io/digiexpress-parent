@@ -20,7 +20,7 @@ package io.thestencil.quarkus.ide.services;
  * #L%
  */
 
-import javax.enterprise.inject.spi.CDI;
+import jakarta.enterprise.inject.spi.CDI;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 

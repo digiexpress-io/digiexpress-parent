@@ -22,7 +22,7 @@ package io.thestencil.quarkus.iam;
 
 import java.util.function.Function;
 
-import javax.enterprise.inject.spi.CDI;
+import jakarta.enterprise.inject.spi.CDI;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 

@@ -2,7 +2,7 @@ package io.digiexpress.spring.composer;
 
 import java.util.Optional;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.immutables.value.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;

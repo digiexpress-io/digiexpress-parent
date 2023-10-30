@@ -46,10 +46,10 @@
       <scope>provided</scope>
     </dependency>
 
-    <dependency>
-      <groupId>org.hibernate.validator</groupId>
-      <artifactId>hibernate-validator-annotation-processor</artifactId>
-    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>org.hibernate.validator</groupId>-->
+<!--      <artifactId>hibernate-validator-annotation-processor</artifactId>-->
+<!--    </dependency>-->
 
     <dependency>
       <groupId>org.hibernate.validator</groupId>
@@ -57,8 +57,8 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.glassfish</groupId>
-      <artifactId>jakarta.el</artifactId>
+      <groupId>org.apache.tomcat</groupId>
+      <artifactId>tomcat-jasper-el</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>

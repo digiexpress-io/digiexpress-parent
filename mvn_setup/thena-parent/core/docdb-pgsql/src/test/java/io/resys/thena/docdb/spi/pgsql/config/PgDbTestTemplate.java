@@ -24,7 +24,7 @@ import java.util.function.BiConsumer;
  * #L%
  */
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import io.vertx.mutiny.sqlclient.Pool;
 import org.junit.jupiter.api.AfterEach;

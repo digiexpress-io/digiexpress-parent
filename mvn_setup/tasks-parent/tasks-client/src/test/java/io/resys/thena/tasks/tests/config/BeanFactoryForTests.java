@@ -20,8 +20,8 @@ package io.resys.thena.tasks.tests.config;
  * #L%
  */
 
-import javax.enterprise.context.Dependent;
-import javax.enterprise.inject.Produces;
+import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.inject.Produces;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 

@@ -22,7 +22,7 @@ package io.digiexpress.spring.composer.controllers;
 
 import java.util.Optional;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;

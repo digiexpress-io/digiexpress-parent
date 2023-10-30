@@ -19,8 +19,8 @@ package io.resys.thena.tasks.dev.app;
  * limitations under the License.
  * #L%
  */
-import javax.enterprise.context.Dependent;
-import javax.enterprise.inject.Produces;
+import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.inject.Produces;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 

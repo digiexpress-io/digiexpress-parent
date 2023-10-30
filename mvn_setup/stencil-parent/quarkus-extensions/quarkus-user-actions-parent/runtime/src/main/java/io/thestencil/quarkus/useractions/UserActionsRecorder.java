@@ -24,7 +24,7 @@ package io.thestencil.quarkus.useractions;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import javax.enterprise.inject.spi.CDI;
+import jakarta.enterprise.inject.spi.CDI;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 

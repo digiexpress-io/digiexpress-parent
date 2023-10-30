@@ -11,9 +11,9 @@ import java.time.Duration;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,7 +24,7 @@ import java.time.Duration;
 
 import java.util.Optional;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,16 +41,16 @@ import io.dialob.client.pgsql.PgSqlDialobStore;
 @ConditionalOnProperty(name = "dialob.formdb.pg.enabled", havingValue = "true")
 public class PgConfig {
   private static final Logger LOGGER = LoggerFactory.getLogger(PgConfig.class);
-  
+
   @Bean
   public DialobStore hdesStore(Optional<DialobCredsSupplier> authorProvider, PgConfigBean config, ObjectMapper objectMapper) {
     final DialobCredsSupplier creds;
     if(authorProvider.isEmpty()) {
-      creds = () -> ImmutableDialobCreds.builder().user("assetManager").email("assetManager@resys.io").build();  
+      creds = () -> ImmutableDialobCreds.builder().user("assetManager").email("assetManager@resys.io").build();
     } else {
       creds = authorProvider.get();
     }
-    
+
     return PgSqlDialobStore.builder()
         .pgHost(config.getPgHost())
         .pgPort(config.getPgPort())
@@ -65,13 +65,13 @@ public class PgConfig {
         .objectMapper(objectMapper)
         .build();
   }
-  
+
   @ConditionalOnProperty(name = "dialob.formdb.pg.autoCreate", havingValue = "true")
   @Bean
   public Loader autoCreate(DialobStore store) {
     return new Loader(store);
   }
-  
+
   public static class Loader {
     private final DialobStore store;
     public Loader(DialobStore store) {
@@ -82,6 +82,6 @@ public class PgConfig {
     public void doLoad() {
       final var autCreated = store.repo().createIfNot().await().atMost(Duration.ofMillis(1000));
       LOGGER.debug("REPO auto created: " + autCreated);
-    }  
+    }
   }
 }

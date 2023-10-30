@@ -20,8 +20,8 @@ package io.thestencil.quarkus.useractions;
  * #L%
  */
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Produces;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Produces;
 
 import io.thestencil.iam.api.ImmutableRemoteIntegration;
 import io.thestencil.iam.spi.integrations.UserActionsClientDefault;

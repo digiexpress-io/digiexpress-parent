@@ -20,7 +20,7 @@ package io.resys.thena.tasks.dev.app;
  * #L%
  */
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 import io.quarkus.vertx.web.RouteFilter;
 import io.vertx.ext.web.RoutingContext;

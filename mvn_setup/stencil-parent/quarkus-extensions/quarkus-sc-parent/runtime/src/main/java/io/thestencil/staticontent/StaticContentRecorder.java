@@ -23,7 +23,7 @@ package io.thestencil.staticontent;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import javax.enterprise.inject.spi.CDI;
+import jakarta.enterprise.inject.spi.CDI;
 
 import io.quarkus.arc.runtime.BeanContainerListener;
 import io.quarkus.runtime.annotations.Recorder;

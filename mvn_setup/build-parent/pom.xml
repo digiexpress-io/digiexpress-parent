@@ -47,14 +47,13 @@
     <eirslett-yarn.version>v1.22.5</eirslett-yarn.version>
 
     <!-- HB validation-->
-    <validation-hb.version>7.0.5.Final</validation-hb.version>
-    <validation-api.version>3.0.2</validation-api.version>
-    <validation-gl.version>4.0.2</validation-gl.version>
-    <validation-el.version>2.2.6</validation-el.version>
+<!--      <validation-hb.version>7.0.5.Final</validation-hb.version>-->
+<!--    <validation-api.version>3.0.2</validation-api.version>-->
+    <validation-gl.version>10.1.15</validation-gl.version>
 
     <!-- quarkus -->
-    <quarkus.version>2.16.12.Final</quarkus.version>
-    <quarkus-jandex.version>1.0.8</quarkus-jandex.version>
+    <quarkus.version>3.2.7.Final</quarkus.version>
+    <quarkus-jandex.version>3.1.5</quarkus-jandex.version>
 
 
     <!-- Spring -->
@@ -176,7 +175,7 @@
         <plugin>
           <groupId>io.swagger.codegen.v3</groupId>
           <artifactId>swagger-codegen-maven-plugin</artifactId>
-          <version>3.0.36</version>
+          <version>3.0.50</version>
         </plugin>
 
         <!-- Junit related-->
@@ -230,7 +229,7 @@
 
         <!-- Quarkus related -->
         <plugin>
-          <groupId>org.jboss.jandex</groupId>
+          <groupId>io.smallrye</groupId>
           <artifactId>jandex-maven-plugin</artifactId>
           <version>${quarkus-jandex.version}</version>
         </plugin>
@@ -250,7 +249,7 @@
         </plugin>
         <plugin>
           <groupId>io.quarkus</groupId>
-          <artifactId>quarkus-bootstrap-maven-plugin</artifactId>
+          <artifactId>quarkus-extension-maven-plugin</artifactId>
           <version>${quarkus.version}</version>
           <executions>
             <execution>
@@ -422,30 +421,25 @@
       </dependency>
 
       <!-- Hibernate validator start -->
+<!--      <dependency>-->
+<!--        <groupId>org.hibernate.validator</groupId>-->
+<!--        <artifactId>hibernate-validator</artifactId>-->
+<!--        <version>${validation-hb.version}</version>-->
+<!--      </dependency>-->
+<!--      <dependency>-->
+<!--        <groupId>org.hibernate.validator</groupId>-->
+<!--        <artifactId>hibernate-validator-annotation-processor</artifactId>-->
+<!--        <version>${validation-hb.version}</version>-->
+<!--      </dependency>-->
+<!--      <dependency>-->
+<!--        <groupId>jakarta.validation</groupId>-->
+<!--        <artifactId>jakarta.validation-api</artifactId>-->
+<!--        <version>${validation-api.version}</version>-->
+<!--      </dependency>-->
       <dependency>
-        <groupId>org.hibernate.validator</groupId>
-        <artifactId>hibernate-validator</artifactId>
-        <version>${validation-hb.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.hibernate.validator</groupId>
-        <artifactId>hibernate-validator-annotation-processor</artifactId>
-        <version>${validation-hb.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>jakarta.validation</groupId>
-        <artifactId>jakarta.validation-api</artifactId>
-        <version>${validation-api.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.glassfish</groupId>
-        <artifactId>jakarta.el</artifactId>
+        <groupId>org.apache.tomcat</groupId>
+        <artifactId>tomcat-jasper-el</artifactId>
         <version>${validation-gl.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.glassfish.web</groupId>
-        <artifactId>javax.el</artifactId>
-        <version>${validation-el.version}</version>
       </dependency>
       <!-- Hibernate validator end -->
 
@@ -666,6 +660,10 @@
       <artifactId>slf4j-api</artifactId>
     </dependency>
     <dependency>
+      <groupId>jakarta.inject</groupId>
+      <artifactId>jakarta.inject-api</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.jetbrains</groupId>
       <artifactId>annotations</artifactId>
       <version>24.0.1</version><!--$NO-MVN-MAN-VER$-->
@@ -775,4 +773,3 @@
   </dependencies>
 
 </project>
-
