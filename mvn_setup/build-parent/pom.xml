@@ -47,8 +47,6 @@
     <eirslett-yarn.version>v1.22.5</eirslett-yarn.version>
 
     <!-- HB validation-->
-<!--      <validation-hb.version>7.0.5.Final</validation-hb.version>-->
-<!--    <validation-api.version>3.0.2</validation-api.version>-->
     <validation-gl.version>10.1.15</validation-gl.version>
 
     <!-- quarkus -->
@@ -57,8 +55,8 @@
 
 
     <!-- Spring -->
-    <spring.version>5.3.18</spring.version>
-    <spring-boot.version>2.7.0</spring-boot.version>
+    <spring.version>5.3.30</spring.version>
+    <spring-boot.version>2.7.17</spring-boot.version>
     <spring-data-commons.version>3.0.3</spring-data-commons.version>
 
     <!-- Cache -->
@@ -100,9 +98,6 @@
     <logging-slf4j.version>1.7.36</logging-slf4j.version>
     <logging-logback.version>1.2.11</logging-logback.version>
     <logging-logstash>7.0.1</logging-logstash>
-
-    <!-- Annotations for stats -->
-    <micrometer.version>1.8.1</micrometer.version>
 
     <!-- Programatic json/html/md/java parsing -->
     <json-path.version>2.4.0</json-path.version>
@@ -293,10 +288,8 @@
             </annotationProcessorPaths>
           </configuration>
         </plugin>
-
       </plugins>
     </pluginManagement>
-
   </build>
 
 
@@ -430,20 +423,13 @@
 
 
       <!--- Spring -->
+
       <dependency>
         <groupId>org.springframework</groupId>
-        <artifactId>spring-expression</artifactId>
+        <artifactId>spring-framework-bom</artifactId>
         <version>${spring.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-core</artifactId>
-        <version>${spring.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-webmvc</artifactId>
-        <version>${spring.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
       </dependency>
       <dependency>
         <groupId>org.springframework.data</groupId>
@@ -485,12 +471,6 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-test</artifactId>
         <version>${spring-boot.version}</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-test</artifactId>
-        <version>${spring.version}</version>
         <scope>test</scope>
       </dependency>
 
@@ -600,14 +580,6 @@
         <artifactId>logstash-logback-encoder</artifactId>
         <version>${logging-logstash.version}</version>
       </dependency>
-
-
-      <dependency>
-        <groupId>io.micrometer</groupId>
-        <artifactId>micrometer-core</artifactId>
-        <version>${micrometer.version}</version>
-      </dependency>
-
 
       <!-- Test containers -->
       <dependency>
@@ -748,13 +720,10 @@
       <artifactId>quarkus-junit5-internal</artifactId>
       <scope>test</scope>
     </dependency>
-
     <dependency>
       <groupId>net.java.dev.jna</groupId>
       <artifactId>jna</artifactId>
       <scope>test</scope>
     </dependency>
-
   </dependencies>
-
 </project>

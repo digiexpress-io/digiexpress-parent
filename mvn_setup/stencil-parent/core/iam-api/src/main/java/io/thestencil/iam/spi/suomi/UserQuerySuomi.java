@@ -2,7 +2,7 @@ package io.thestencil.iam.spi.suomi;
 
 import java.util.Map;
 
-import javax.json.JsonString;
+import jakarta.json.JsonString;
 
 /*-
  * #%L
