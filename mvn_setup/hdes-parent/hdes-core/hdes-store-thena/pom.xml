@@ -18,11 +18,16 @@
     </dependency>
     <dependency>
       <groupId>io.digiexpress</groupId>
-      <artifactId>thena-docdb-pgsql</artifactId>
+      <artifactId>thena-docdb-api</artifactId>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-reactive-pg-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.inject</groupId>
+      <artifactId>jakarta.inject-api</artifactId>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 </project>

@@ -22,9 +22,9 @@ package io.thestencil.staticontent;
 
 import java.util.Map;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Produces;
-import javax.inject.Singleton;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Produces;
+import jakarta.inject.Singleton;
 
 import io.quarkus.arc.DefaultBean;
 import io.thestencil.client.api.MigrationBuilder.Sites;

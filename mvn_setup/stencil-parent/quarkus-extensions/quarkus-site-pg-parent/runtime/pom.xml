@@ -16,7 +16,7 @@
     </dependency>
     <dependency>
       <groupId>io.digiexpress</groupId>
-      <artifactId>thena-docdb-pgsql</artifactId>
+      <artifactId>thena-docdb-api</artifactId>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
@@ -57,7 +57,7 @@
     <plugins>
       <plugin>
         <groupId>io.quarkus</groupId>
-        <artifactId>quarkus-bootstrap-maven-plugin</artifactId>
+        <artifactId>quarkus-extension-maven-plugin</artifactId>
       </plugin>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>

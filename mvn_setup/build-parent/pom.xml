@@ -47,19 +47,16 @@
     <eirslett-yarn.version>v1.22.5</eirslett-yarn.version>
 
     <!-- HB validation-->
-    <validation-hb.version>7.0.5.Final</validation-hb.version>
-    <validation-api.version>3.0.2</validation-api.version>
-    <validation-gl.version>4.0.2</validation-gl.version>
-    <validation-el.version>2.2.6</validation-el.version>
+    <validation-gl.version>10.1.15</validation-gl.version>
 
     <!-- quarkus -->
-    <quarkus.version>2.16.12.Final</quarkus.version>
-    <quarkus-jandex.version>1.0.8</quarkus-jandex.version>
+    <quarkus.version>3.2.7.Final</quarkus.version>
+    <quarkus-jandex.version>3.1.5</quarkus-jandex.version>
 
 
     <!-- Spring -->
-    <spring.version>5.3.18</spring.version>
-    <spring-boot.version>2.7.0</spring-boot.version>
+    <spring.version>5.3.30</spring.version>
+    <spring-boot.version>2.7.17</spring-boot.version>
     <spring-data-commons.version>3.0.3</spring-data-commons.version>
 
     <!-- Cache -->
@@ -101,9 +98,6 @@
     <logging-slf4j.version>1.7.36</logging-slf4j.version>
     <logging-logback.version>1.2.11</logging-logback.version>
     <logging-logstash>7.0.1</logging-logstash>
-
-    <!-- Annotations for stats -->
-    <micrometer.version>1.8.1</micrometer.version>
 
     <!-- Programatic json/html/md/java parsing -->
     <json-path.version>2.4.0</json-path.version>
@@ -176,7 +170,7 @@
         <plugin>
           <groupId>io.swagger.codegen.v3</groupId>
           <artifactId>swagger-codegen-maven-plugin</artifactId>
-          <version>3.0.36</version>
+          <version>3.0.50</version>
         </plugin>
 
         <!-- Junit related-->
@@ -230,7 +224,7 @@
 
         <!-- Quarkus related -->
         <plugin>
-          <groupId>org.jboss.jandex</groupId>
+          <groupId>io.smallrye</groupId>
           <artifactId>jandex-maven-plugin</artifactId>
           <version>${quarkus-jandex.version}</version>
         </plugin>
@@ -250,7 +244,7 @@
         </plugin>
         <plugin>
           <groupId>io.quarkus</groupId>
-          <artifactId>quarkus-bootstrap-maven-plugin</artifactId>
+          <artifactId>quarkus-extension-maven-plugin</artifactId>
           <version>${quarkus.version}</version>
           <executions>
             <execution>
@@ -294,10 +288,8 @@
             </annotationProcessorPaths>
           </configuration>
         </plugin>
-
       </plugins>
     </pluginManagement>
-
   </build>
 
 
@@ -423,48 +415,21 @@
 
       <!-- Hibernate validator start -->
       <dependency>
-        <groupId>org.hibernate.validator</groupId>
-        <artifactId>hibernate-validator</artifactId>
-        <version>${validation-hb.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.hibernate.validator</groupId>
-        <artifactId>hibernate-validator-annotation-processor</artifactId>
-        <version>${validation-hb.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>jakarta.validation</groupId>
-        <artifactId>jakarta.validation-api</artifactId>
-        <version>${validation-api.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.glassfish</groupId>
-        <artifactId>jakarta.el</artifactId>
+        <groupId>org.apache.tomcat</groupId>
+        <artifactId>tomcat-jasper-el</artifactId>
         <version>${validation-gl.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.glassfish.web</groupId>
-        <artifactId>javax.el</artifactId>
-        <version>${validation-el.version}</version>
       </dependency>
       <!-- Hibernate validator end -->
 
 
       <!--- Spring -->
+
       <dependency>
         <groupId>org.springframework</groupId>
-        <artifactId>spring-expression</artifactId>
+        <artifactId>spring-framework-bom</artifactId>
         <version>${spring.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-core</artifactId>
-        <version>${spring.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-webmvc</artifactId>
-        <version>${spring.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
       </dependency>
       <dependency>
         <groupId>org.springframework.data</groupId>
@@ -506,12 +471,6 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-test</artifactId>
         <version>${spring-boot.version}</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-test</artifactId>
-        <version>${spring.version}</version>
         <scope>test</scope>
       </dependency>
 
@@ -622,14 +581,6 @@
         <version>${logging-logstash.version}</version>
       </dependency>
 
-
-      <dependency>
-        <groupId>io.micrometer</groupId>
-        <artifactId>micrometer-core</artifactId>
-        <version>${micrometer.version}</version>
-      </dependency>
-
-
       <!-- Test containers -->
       <dependency>
         <groupId>org.testcontainers</groupId>
@@ -664,6 +615,10 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.inject</groupId>
+      <artifactId>jakarta.inject-api</artifactId>
     </dependency>
     <dependency>
       <groupId>org.jetbrains</groupId>
@@ -765,14 +720,10 @@
       <artifactId>quarkus-junit5-internal</artifactId>
       <scope>test</scope>
     </dependency>
-
     <dependency>
       <groupId>net.java.dev.jna</groupId>
       <artifactId>jna</artifactId>
       <scope>test</scope>
     </dependency>
-
   </dependencies>
-
 </project>
-

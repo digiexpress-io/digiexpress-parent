@@ -23,7 +23,7 @@ package io.resys.hdes.quarkus.composer.pg;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import javax.enterprise.inject.spi.CDI;
+import jakarta.enterprise.inject.spi.CDI;
 
 import io.quarkus.arc.runtime.BeanContainerListener;
 import io.quarkus.runtime.annotations.Recorder;

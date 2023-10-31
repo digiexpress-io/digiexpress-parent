@@ -73,12 +73,6 @@
             </execution>
           </executions>
         </plugin>
-
-        <plugin>
-          <groupId>io.swagger.codegen.v3</groupId>
-          <artifactId>swagger-codegen-maven-plugin</artifactId>
-          <version>3.0.36</version>
-        </plugin>
       </plugins>
     </pluginManagement>
   </build>
@@ -131,11 +125,6 @@
       </dependency>
 
       <dependency>
-        <groupId>jakarta.validation</groupId>
-        <artifactId>jakarta.validation-api</artifactId>
-        <version>${validation-api.version}</version>
-      </dependency>
-      <dependency>
         <groupId>org.springframework.data</groupId>
         <artifactId>spring-data-commons</artifactId>
         <version>${spring-data-commons.version}</version>
@@ -154,9 +143,8 @@
         <scope>test</scope>
       </dependency>
       <dependency>
-        <groupId>org.glassfish</groupId>
-        <artifactId>jakarta.el</artifactId>
-        <version>4.0.2</version>
+        <groupId>org.apache.tomcat</groupId>
+        <artifactId>tomcat-jasper-el</artifactId>
         <scope>test</scope>
       </dependency>
       <dependency>

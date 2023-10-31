@@ -11,12 +11,16 @@
   <dependencies>
     <dependency>
       <groupId>io.digiexpress</groupId>
-      <artifactId>thena-docdb-pgsql</artifactId>
+      <artifactId>thena-docdb-api</artifactId>
     </dependency>
 
     <dependency>
       <groupId>io.smallrye.reactive</groupId>
       <artifactId>smallrye-mutiny-vertx-sql-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.annotation</groupId>
+      <artifactId>jakarta.annotation-api</artifactId>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
@@ -36,6 +40,11 @@
     <dependency>
       <groupId>io.rest-assured</groupId>
       <artifactId>rest-assured</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.inject</groupId>
+      <artifactId>jakarta.inject-api</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>

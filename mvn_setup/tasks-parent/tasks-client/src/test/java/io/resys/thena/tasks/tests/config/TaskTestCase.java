@@ -26,7 +26,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import io.vertx.mutiny.sqlclient.Pool;
 import org.junit.jupiter.api.AfterEach;

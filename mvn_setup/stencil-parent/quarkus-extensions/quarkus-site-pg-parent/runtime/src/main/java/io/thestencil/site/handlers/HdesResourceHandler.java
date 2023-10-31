@@ -20,7 +20,7 @@ package io.thestencil.site.handlers;
  * #L%
  */
 
-import javax.enterprise.inject.spi.CDI;
+import jakarta.enterprise.inject.spi.CDI;
 
 import io.quarkus.arc.Arc;
 import io.quarkus.arc.ManagedContext;

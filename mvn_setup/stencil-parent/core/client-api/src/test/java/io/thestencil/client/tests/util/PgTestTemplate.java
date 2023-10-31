@@ -24,7 +24,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * #L%
  */
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import io.vertx.mutiny.sqlclient.Pool;
 import org.junit.jupiter.api.AfterEach;
