@@ -1,4 +1,4 @@
-package io.resys.thena.docdb.spi.pgsql;
+package io.resys.thena.docdb.test;
 
 /*-
  * #%L
@@ -36,14 +36,14 @@ import io.resys.thena.docdb.api.actions.CommitActions.CommitResultEnvelope;
 import io.resys.thena.docdb.api.actions.CommitActions.CommitResultStatus;
 import io.resys.thena.docdb.api.actions.ProjectActions.RepoResult;
 import io.resys.thena.docdb.api.actions.ProjectActions.RepoStatus;
-import io.resys.thena.docdb.spi.pgsql.config.PgDbTestTemplate;
-import io.resys.thena.docdb.spi.pgsql.config.PgProfile;
+import io.resys.thena.docdb.test.config.DbTestTemplate;
+import io.resys.thena.docdb.test.config.PgProfile;
 import io.vertx.core.json.JsonObject;
 
 
 @QuarkusTest
 @TestProfile(PgProfile.class)
-public class SimpleTest extends PgDbTestTemplate {
+public class SimpleTest extends DbTestTemplate {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SimpleTest.class);
   

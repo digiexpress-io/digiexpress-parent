@@ -1,4 +1,4 @@
-package io.resys.thena.docdb.spi.pgsql;
+package io.resys.thena.docdb.test;
 
 /*-
  * #%L
@@ -32,8 +32,8 @@ import io.resys.thena.docdb.api.actions.CommitActions.CommitResultEnvelope;
 import io.resys.thena.docdb.api.actions.CommitActions.CommitResultStatus;
 import io.resys.thena.docdb.api.actions.ProjectActions.RepoResult;
 import io.resys.thena.docdb.api.actions.ProjectActions.RepoStatus;
-import io.resys.thena.docdb.spi.pgsql.config.PgDbTestTemplate;
-import io.resys.thena.docdb.spi.pgsql.config.PgProfile;
+import io.resys.thena.docdb.test.config.DbTestTemplate;
+import io.resys.thena.docdb.test.config.PgProfile;
 import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 
@@ -43,7 +43,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @QuarkusTest
 @TestProfile(PgProfile.class)
-public class MetricsDBtest extends PgDbTestTemplate {
+public class MetricsDBtest extends DbTestTemplate {
 
   //@org.junit.jupiter.api.Test
   public void metrics() {

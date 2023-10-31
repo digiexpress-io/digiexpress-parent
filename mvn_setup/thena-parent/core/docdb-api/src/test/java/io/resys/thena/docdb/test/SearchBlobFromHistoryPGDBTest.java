@@ -1,4 +1,4 @@
-package io.resys.thena.docdb.spi.pgsql;
+package io.resys.thena.docdb.test;
 
 /*-
  * #%L
@@ -32,8 +32,8 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
 import io.resys.thena.docdb.api.actions.ImmutableMatchCriteria;
 import io.resys.thena.docdb.api.actions.PullActions.MatchCriteriaType;
-import io.resys.thena.docdb.spi.pgsql.config.PgDbTestTemplate;
-import io.resys.thena.docdb.spi.pgsql.config.PgProfile;
+import io.resys.thena.docdb.test.config.DbTestTemplate;
+import io.resys.thena.docdb.test.config.PgProfile;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +42,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @QuarkusTest
 @TestProfile(PgProfile.class)
-public class SearchBlobFromHistoryPGDBTest extends PgDbTestTemplate {
+public class SearchBlobFromHistoryPGDBTest extends DbTestTemplate {
 
   
   public SearchBlobFromHistoryPGDBTest() {
