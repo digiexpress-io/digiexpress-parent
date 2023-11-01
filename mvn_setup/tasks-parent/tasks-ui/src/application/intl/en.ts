@@ -35,6 +35,7 @@ const en = {
   'task.checklist.item.dueDate': 'Due date',
   'task.checklist.add': 'Add checklist',
   'task.checklist.delete': 'Delete',
+  'task.checklist.item.assignees': 'Assignees',
 
   'task.start': 'Start',
   'task.edit': 'Edit',
@@ -50,6 +51,10 @@ const en = {
   'task.history.changeTaskDueDate': 'Task due date changed',
   'task.history.changeChecklistItemAssignees': 'Checklist item assignees changed',
   'task.history.changeChecklistItemDueDate': 'Checklist item due date changed',
+  'task.history.changeChecklistTitle': 'Checklist title changed',
+  'task.history.ChangeChecklistItemTitle': 'Checklist item title changed',
+  'task.history.ChangeChecklistItemCompleted': 'Checklist item marked as complete',
+  'task.history.ChangeChecklistItemNotCompleted': 'Checklist item marked as incomplete',
 
 
   'core.taskCreate.fields.roles': 'Roles',

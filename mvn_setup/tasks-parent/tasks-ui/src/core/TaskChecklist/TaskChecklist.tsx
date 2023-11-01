@@ -12,7 +12,44 @@ import Section from '../Section';
 
 
 const TaskChecklist: React.FC<{ onChange: (commands: Client.TaskUpdateCommand<any>[]) => Promise<void> }> = ({ onChange }) => {
-  const { state } = Context.useTaskEdit();
+  const { state, setState } = Context.useTaskEdit();
+  const backend = Context.useBackend();
+
+  async function handleChecklistItemCompleted(checklistId: string, checklistItemId: string, event: React.ChangeEvent<HTMLInputElement>) {
+
+    const command: Client.ChangeChecklistItemCompleted = {
+      commandType: 'ChangeChecklistItemCompleted',
+      checklistId,
+      checklistItemId,
+      taskId: state.task.id,
+      completed: event.target.checked
+    };
+    const updatedTask = await backend.task.updateActiveTask(state.task.id, [command]);
+    setState((current) => current.withTask(updatedTask));
+  }
+
+  async function handleChecklistTitleChange(checklistId: string, checklistTitle: string) {
+    const command: Client.ChangeChecklistTitle = {
+      commandType: 'ChangeChecklistTitle',
+      checklistId,
+      taskId: state.task.id,
+      title: checklistTitle
+    };
+    const updatedTask = await backend.task.updateActiveTask(state.task.id, [command]);
+    setState((current) => current.withTask(updatedTask));
+  }
+
+  async function handleChecklistItemTitleChange(checklistId: string, checklistItemId: string, checklistItemTitle: string) {
+    const command: Client.ChangeChecklistItemTitle = {
+      commandType: 'ChangeChecklistItemTitle',
+      checklistId,
+      checklistItemId,
+      taskId: state.task.id,
+      title: checklistItemTitle
+    };
+    const updatedTask = await backend.task.updateActiveTask(state.task.id, [command]);
+    setState((current) => current.withTask(updatedTask));
+  }
 
   async function handleDueDateChange(dueDate: string | undefined, checklistId: string, checklistItemId: string) {
     const command: Client.ChangeChecklistItemDueDate = {
@@ -48,7 +85,8 @@ const TaskChecklist: React.FC<{ onChange: (commands: Client.TaskUpdateCommand<an
   return (<>
     {state.task.checklist.map((checklist) => (<Section key={checklist.id} width='95%'>
       <Box>
-        <TextField defaultValue={checklist.title} onChange={() => { }}
+        <TextField defaultValue={checklist.title}
+          onBlur={(event) => handleChecklistTitleChange(checklist.id, event.currentTarget.value)}
           fullWidth
           InputProps={{
             endAdornment: (<IconButton><MoreHorizOutlinedIcon sx={{ color: 'uiElements.main' }} /></IconButton>),
@@ -79,9 +117,18 @@ const TaskChecklist: React.FC<{ onChange: (commands: Client.TaskUpdateCommand<an
 
             <Grid item md={10} lg={10}>
               <Box display='flex' alignItems='center'>
-                <TextField value={item.title} fullWidth InputProps={{ sx: { height: '2.5rem' } }} />
+                <TextField
+                  defaultValue={item.title}
+                  disabled={item.completed}
+                  fullWidth
+                  InputProps={{ sx: { height: '2.5rem' } }}
+                  onBlur={(event) => handleChecklistItemTitleChange(checklist.id, item.id, event.currentTarget.value)}
+                />
                 <Tooltip placement='top' arrow title={<FormattedMessage id='core.taskEdit.fields.checklistItem.tooltip.markCompleted' />}>
-                  <Checkbox size='small' sx={{ '& .MuiSvgIcon-root': { color: 'uiElements.main' } }} />
+                  <Checkbox size='small' sx={{ '& .MuiSvgIcon-root': { color: 'uiElements.main' } }}
+                    onChange={(event) => handleChecklistItemCompleted(checklist.id, item.id, event)}
+                    checked={item.completed}
+                  />
                 </Tooltip>
               </Box>
             </Grid>
@@ -97,9 +144,11 @@ const TaskChecklist: React.FC<{ onChange: (commands: Client.TaskUpdateCommand<an
           </Grid>
           <Grid container>
             <Grid item md={2} lg={2} alignSelf='center'>
-              <Typography fontWeight='bolder'>Assignees</Typography>
+              <Typography fontWeight='bolder'><FormattedMessage id='task.checklist.item.assignees' /></Typography>
             </Grid>
-            <Grid item md={10} lg={10}><TaskAssignees onChange={(users) => handleAssigneesChange(users, checklist.id, item.id)} task={{ assignees: item.assigneeIds }} /></Grid>
+            <Grid item md={10} lg={10}>
+              <TaskAssignees onChange={(users) => handleAssigneesChange(users, checklist.id, item.id)} task={{ assignees: item.assigneeIds }} />
+            </Grid>
           </Grid>
 
           <Divider />

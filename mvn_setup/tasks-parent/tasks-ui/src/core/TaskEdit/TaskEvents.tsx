@@ -89,6 +89,31 @@ const SingleGroup: React.FC<{ event: Context.SingleEvent }> = ({ event }) => {
       <TimestampFormatter type='dateTime' value={date} />
     </>)
   }
+  if (event.body.commandType === "ChangeChecklistTitle") {
+    return (<>
+      <Typography><FormattedMessage id='task.history.changeChecklistTitle' /></Typography>
+      <Box flexGrow={1} />
+      <TimestampFormatter type='dateTime' value={date} />
+    </>)
+  }
+  if (event.body.commandType === "ChangeChecklistItemTitle") {
+    return (<>
+      <Typography><FormattedMessage id='task.history.ChangeChecklistItemTitle' /></Typography>
+      <Box flexGrow={1} />
+      <TimestampFormatter type='dateTime' value={date} />
+    </>)
+  }
+  if (event.body.commandType === "ChangeChecklistItemCompleted") {
+    const msg = event.body.toCommand.completed === true ? 'task.history.ChangeChecklistItemCompleted' : 'task.history.ChangeChecklistItemNotCompleted';
+
+    console.log("toCommand ", event.body.toCommand.completed + '.....' + event.body.toCommand.checklistItemId)
+
+    return (<>
+      <Typography><FormattedMessage id={msg} /></Typography>
+      <Box flexGrow={1} />
+      <TimestampFormatter type='dateTime' value={date} />
+    </>)
+  }
 
   return (<Box display='flex'><ListItemText primary={event.body.commandType} secondary={event.body.toCommand.targetDate} /></Box>)
 }
