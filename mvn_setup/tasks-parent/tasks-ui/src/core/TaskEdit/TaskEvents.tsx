@@ -20,7 +20,7 @@ const SingleGroup: React.FC<{ event: Context.SingleEvent }> = ({ event }) => {
 
   if (event.body.commandType === "CreateTask") {
     return (<>
-      <Box /><Typography><FormattedMessage id='task.history.createTask' /></Typography>
+      <Box /><Typography><FormattedMessage id='task.event.createTask' /></Typography>
       <Box flexGrow={1} />
       <TimestampFormatter type='dateTime' value={date} />
     </>)
@@ -28,88 +28,113 @@ const SingleGroup: React.FC<{ event: Context.SingleEvent }> = ({ event }) => {
 
   if (event.body.commandType === "AssignTask") {
     return (<>
-      <Typography><FormattedMessage id='task.history.assignTask' /></Typography>
+      <Typography><FormattedMessage id='task.event.assignTask' /></Typography>
       <Box flexGrow={1} />
       <TimestampFormatter type='dateTime' value={date} />
     </>)
   }
   if (event.body.commandType === "AssignTaskRoles") {
     return (<>
-      <Typography><FormattedMessage id='task.history.assignTaskRoles' /></Typography>
+      <Typography><FormattedMessage id='task.event.assignTaskRoles' /></Typography>
       <Box flexGrow={1} />
       <TimestampFormatter type='dateTime' value={date} />
     </>)
   }
   if (event.body.commandType === "ChangeTaskStatus") {
     return (<>
-      <Typography><FormattedMessage id='task.history.changeTaskStatus' /></Typography>
+      <Typography><FormattedMessage id='task.event.changeTaskStatus' /></Typography>
       <Box flexGrow={1} />
       <TimestampFormatter type='dateTime' value={date} />
     </>)
   }
   if (event.body.commandType === "ChangeTaskPriority") {
     return (<>
-      <Typography><FormattedMessage id='task.history.changeTaskPriority' /></Typography>
+      <Typography><FormattedMessage id='task.event.changeTaskPriority' /></Typography>
       <Box flexGrow={1} />
       <TimestampFormatter type='dateTime' value={date} />
     </>)
   }
   if (event.body.commandType === "ChangeTaskInfo") {
     return (<>
-      <Typography><FormattedMessage id='task.history.changeTaskInfo' /></Typography>
+      <Typography><FormattedMessage id='task.event.changeTaskInfo' /></Typography>
       <Box flexGrow={1} />
       <TimestampFormatter type='dateTime' value={date} />
     </>)
   }
   if (event.body.commandType === "ChangeTaskStartDate") {
     return (<>
-      <Typography><FormattedMessage id='task.history.changeTaskStartDate' /></Typography>
+      <Typography><FormattedMessage id='task.event.changeTaskStartDate' /></Typography>
       <Box flexGrow={1} />
       <TimestampFormatter type='dateTime' value={date} />
     </>)
   }
   if (event.body.commandType === "ChangeTaskDueDate") {
     return (<>
-      <Typography><FormattedMessage id='task.history.changeTaskDueDate' /></Typography>
+      <Typography><FormattedMessage id='task.event.changeTaskDueDate' /></Typography>
       <Box flexGrow={1} />
       <TimestampFormatter type='dateTime' value={date} />
     </>)
   }
   if (event.body.commandType === "ChangeChecklistItemAssignees") {
     return (<>
-      <Typography><FormattedMessage id='task.history.changeChecklistItemAssignees' /></Typography>
+      <Typography><FormattedMessage id='task.event.changeChecklistItemAssignees' /></Typography>
       <Box flexGrow={1} />
       <TimestampFormatter type='dateTime' value={date} />
     </>)
   }
   if (event.body.commandType === "ChangeChecklistItemDueDate") {
     return (<>
-      <Typography><FormattedMessage id='task.history.changeChecklistItemDueDate' /></Typography>
+      <Typography><FormattedMessage id='task.event.changeChecklistItemDueDate' /></Typography>
       <Box flexGrow={1} />
       <TimestampFormatter type='dateTime' value={date} />
     </>)
   }
   if (event.body.commandType === "ChangeChecklistTitle") {
     return (<>
-      <Typography><FormattedMessage id='task.history.changeChecklistTitle' /></Typography>
+      <Typography><FormattedMessage id='task.event.changeChecklistTitle' /></Typography>
       <Box flexGrow={1} />
       <TimestampFormatter type='dateTime' value={date} />
     </>)
   }
   if (event.body.commandType === "ChangeChecklistItemTitle") {
     return (<>
-      <Typography><FormattedMessage id='task.history.ChangeChecklistItemTitle' /></Typography>
+      <Typography><FormattedMessage id='task.event.changeChecklistItemTitle' /></Typography>
       <Box flexGrow={1} />
       <TimestampFormatter type='dateTime' value={date} />
     </>)
   }
   if (event.body.commandType === "ChangeChecklistItemCompleted") {
-    const msg = event.body.toCommand.completed === true ? 'task.history.ChangeChecklistItemCompleted' : 'task.history.ChangeChecklistItemNotCompleted';
-
-    console.log("toCommand ", event.body.toCommand.completed + '.....' + event.body.toCommand.checklistItemId)
-
+    const msg = event.body.toCommand.completed === true ? 'task.event.changeChecklistItemCompleted' : 'task.event.changeChecklistItemNotCompleted';
     return (<>
       <Typography><FormattedMessage id={msg} /></Typography>
+      <Box flexGrow={1} />
+      <TimestampFormatter type='dateTime' value={date} />
+    </>)
+  }
+  if (event.body.commandType === "CreateChecklist") {
+    return (<>
+      <Typography><FormattedMessage id='task.event.createChecklist' /></Typography>
+      <Box flexGrow={1} />
+      <TimestampFormatter type='dateTime' value={date} />
+    </>)
+  }
+  if (event.body.commandType === "DeleteChecklist") {
+    return (<>
+      <Typography><FormattedMessage id='task.event.deleteChecklist' /></Typography>
+      <Box flexGrow={1} />
+      <TimestampFormatter type='dateTime' value={date} />
+    </>)
+  }
+  if (event.body.commandType === "AddChecklistItem") {
+    return (<>
+      <Typography><FormattedMessage id='task.event.addChecklistItem' /></Typography>
+      <Box flexGrow={1} />
+      <TimestampFormatter type='dateTime' value={date} />
+    </>)
+  }
+  if (event.body.commandType === "DeleteChecklistItem") {
+    return (<>
+      <Typography><FormattedMessage id='task.event.deleteChecklistItem' /></Typography>
       <Box flexGrow={1} />
       <TimestampFormatter type='dateTime' value={date} />
     </>)

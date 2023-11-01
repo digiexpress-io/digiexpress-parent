@@ -63,6 +63,7 @@ const Left: React.FC<{}> = () => {
 
 const Right: React.FC<{}> = () => {
   const { state } = Context.useTaskEdit();
+  console.log(state.events);
   return (
     <>
 

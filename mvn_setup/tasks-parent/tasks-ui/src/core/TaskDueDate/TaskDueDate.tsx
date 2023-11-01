@@ -13,7 +13,8 @@ import TimestampFormatter from '../TimestampFormatter';
 const TaskDueDate: React.FC<{
   task: { dueDate: Date | undefined },
   onChange: (dueDate: string | undefined) => Promise<void>
-}> = ({ onChange, task }) => {
+  disabled?: boolean
+}> = ({ onChange, task, disabled }) => {
   const [open, setOpen] = React.useState(false);
 
   function handlePickerDialog() {
@@ -29,15 +30,32 @@ const TaskDueDate: React.FC<{
       onChange(undefined).then(() => handlePickerDialog());
     }
   }
+  if (disabled) {
+    return (
+      <Typography sx={{ color: 'text.primary' }}><TimestampFormatter type='date' value={task.dueDate} /></Typography>
+    )
+  }
 
   return (
     <>
-      <Button onClick={handlePickerDialog} startIcon={<DateRangeOutlinedIcon sx={{ color: 'uiElements.main', fontSize: 'small' }} />}>
+      <Button onClick={handlePickerDialog} disabled={disabled} startIcon={<DateRangeOutlinedIcon sx={{
+        cursor: 'pointer',
+        color: 'uiElements.main',
+        fontSize: 'small'
+      }} />
+      }>
         <Typography sx={{ color: 'text.primary' }}><TimestampFormatter type='date' value={task.dueDate} /></Typography>
       </Button>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <Dialog open={open} onClose={handlePickerDialog}>
-          <StaticDatePicker onAccept={handleDueDateChange} views={['month', 'day']} defaultValue={task.dueDate} />
+          {/* https://mui.com/x/react-date-pickers/custom-components/ */}
+          <StaticDatePicker onAccept={handleDueDateChange} views={['month', 'day']} defaultValue={task.dueDate}
+            slotProps={{
+              actionBar: {
+                actions: ["clear", "cancel", "accept"]
+              }
+            }}
+          />
         </Dialog>
       </LocalizationProvider>
     </>

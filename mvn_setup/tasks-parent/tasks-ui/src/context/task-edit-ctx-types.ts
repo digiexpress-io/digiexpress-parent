@@ -45,6 +45,7 @@ export interface ChangeChecklistItemTitleEventBody extends SingleEventBody<"Chan
 
 export interface SingleEvent {
   type: "SINGLE";
+  targetDate: Date;
   body: CreateTaskEventBody |
   ChangeTaskStartDateEventBody |
   AssignTaskReporterEventBody |
@@ -72,6 +73,7 @@ export interface SingleEvent {
 }
 
 export interface CollapsedEvent {
+  targetDate: Date;
   items: SingleEvent[];
   type: "COLLAPSED";
 }

@@ -67,8 +67,9 @@ const TaskAssignees: React.FC<{
     assigneesAvatars?: AvatarCode[]
   },
   onChange: (assigneeIds: Client.UserId[]) => Promise<void>,
-  fullnames?: boolean
-}> = ({ task, onChange, fullnames }) => {
+  fullnames?: boolean,
+  disabled?: boolean,
+}> = ({ task, onChange, fullnames, disabled }) => {
 
   const { state } = Context.useTasks();
   const assigneeColors = state.palette.owners;
@@ -106,7 +107,7 @@ const TaskAssignees: React.FC<{
         fullnames ?
           (<Box onClick={Popover.onClick}><FullnamesAndAvatars task={task} /></Box>)
           :
-          (<Button variant='text' color='inherit' sx={{ "&.MuiButtonBase-root": { minWidth: "unset" } }} onClick={Popover.onClick}>
+          (<Button disabled={disabled} variant='text' color='inherit' sx={{ "&.MuiButtonBase-root": { minWidth: "unset" } }} onClick={Popover.onClick}>
             <AvatarsOnly task={task} />
           </Button>)
       }

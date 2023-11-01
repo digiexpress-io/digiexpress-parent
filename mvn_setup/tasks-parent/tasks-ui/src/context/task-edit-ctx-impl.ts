@@ -57,12 +57,13 @@ class TaskEditEventVisitor {
       if (events.length === 1) {
         return events[0];
       }
-      return { type: "COLLAPSED", items: events };
+      const targetDate = events[0].targetDate;
+      return { type: "COLLAPSED", items: events, targetDate: targetDate ? new Date(targetDate) : new Date() };
     }));
   }
 
   sort(items: TaskEditEvent[]): TaskEditEvent[] {
-    return items
+    return items.sort((b, a) => a.targetDate.getTime() - b.targetDate.getTime());
   }
 
   private visit(task: TaskDescriptor) {
@@ -85,6 +86,7 @@ class TaskEditEventVisitor {
   private visitEvent(command: TaskCommand, tx: TaskTransaction, task: TaskDescriptor): SingleEvent {
     return {
       type: 'SINGLE',
+      targetDate: command.targetDate ? new Date(command.targetDate) : new Date(),
       body: {
         commandType: command.commandType,
         toCommand: command as any,
