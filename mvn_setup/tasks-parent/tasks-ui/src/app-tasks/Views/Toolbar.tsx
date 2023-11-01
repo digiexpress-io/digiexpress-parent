@@ -6,6 +6,7 @@ import FlipToFrontOutlinedIcon from '@mui/icons-material/FlipToFrontOutlined';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 import FeedbackOutlinedIcon from '@mui/icons-material/FeedbackOutlined';
+import TerminalIcon from '@mui/icons-material/Terminal';
 
 import Context from 'context';
 import Burger from '@the-wrench-io/react-burger';
@@ -34,6 +35,7 @@ const Toolbar: React.FC<{}> = () => {
   const composer = Context.useComposer();
   const drawer = Burger.useDrawer();
   const tabs = Burger.useTabs();
+  const apps = Burger.useApps();
   const secondary = Burger.useSecondary();
 
   const tabActions = tabs.actions;
@@ -86,7 +88,10 @@ const Toolbar: React.FC<{}> = () => {
 
     } else if (newValue === 'toolbar.expand') {
       drawer.actions.handleDrawerOpen(!drawerOpen)
+    } else if (newValue === 'projects') {
+      apps.actions.handleActive('app-projects');
     }
+
   };
 
 
@@ -97,6 +102,8 @@ const Toolbar: React.FC<{}> = () => {
           onChange={handleChange}
           sx={{ borderRight: 1, borderColor: 'explorerItem.dark' }}
           value={secondary.session.secondary}>
+
+          <StyledTab value='projects' icon={<TerminalIcon />} />
 
           <StyledTab value='toolbar.activities' icon={<DashboardIcon />} />
           <StyledTab value='toolbar.help' icon={<HelpOutlineOutlinedIcon />} />

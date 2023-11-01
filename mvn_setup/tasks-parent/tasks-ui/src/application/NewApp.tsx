@@ -10,8 +10,9 @@ import TaskClient from 'taskclient';
 import Context from 'context';
 import Connection from './Connection';
 import messages from './intl';
-import Views from './Views';
 import Provider from './Provider';
+import AppTasks from 'app-tasks';
+import AppProjects from 'app-projects';
 
 
 interface Csrf { key: string, value: string }
@@ -42,18 +43,14 @@ const store: TaskClient.Store = new TaskClient.DefaultStore({
 const backend = new TaskClient.ServiceImpl(store);
 
 const Apps: React.FC<{ profile: TaskClient.Profile }> = ({ profile }) => {
-  // eslint-disable-next-line 
-  const serviceComposer: Burger.App<Context.ComposerContextType> = React.useMemo(() => ({
-    id: "service-composer",
-    components: { primary: Views.Main, secondary: Views.Secondary, toolbar: Views.Toolbar },
-    state: [
-      (children: React.ReactNode, _restorePoint?: Burger.AppState<Context.ComposerContextType>) => (<>{children}</>),
-      () => ({})
-    ]
-  }), []);
+
+  const tasks: Burger.App<Context.ComposerContextType> = React.useMemo(() => AppTasks, []);
+  const projects: Burger.App<Context.ComposerContextType> = React.useMemo(() => AppProjects, []);
+
+  const appId = 'app-projects';
 
   return (<Provider service={backend} profile={profile}>
-    <Burger.Provider children={[serviceComposer]} secondary="toolbar.activities" drawerOpen />
+    <Burger.Provider children={[tasks, projects]} secondary="toolbar.activities" drawerOpen appId={appId} />
   </Provider>)
 }
 
