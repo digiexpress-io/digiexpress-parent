@@ -17,14 +17,14 @@ import io.resys.thena.tasks.client.api.model.Project;
 import io.resys.thena.tasks.client.api.model.Task;
 import io.resys.thena.tasks.client.api.model.TaskCommand.CreateTask;
 import io.resys.thena.tasks.client.api.model.TaskCommand.TaskUpdateCommand;
-import io.resys.thena.tasks.client.rest.DigiExpressRestApi;
+import io.resys.thena.tasks.client.rest.TaskRestApi;
 import io.resys.thena.tasks.dev.app.BeanFactory.CurrentProject;
 import io.resys.thena.tasks.dev.app.BeanFactory.CurrentUser;
 import io.resys.thena.tasks.dev.app.DemoResource.HeadState;
 import io.smallrye.mutiny.Uni;
 
 @Path("q/digiexpress/api")
-public class DigiExpressResource implements DigiExpressRestApi {
+public class DigiExpressResource implements TaskRestApi {
 
   @Inject TaskClient client;
   @Inject CurrentProject currentProject;

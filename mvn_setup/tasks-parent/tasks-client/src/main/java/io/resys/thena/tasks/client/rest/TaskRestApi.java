@@ -41,7 +41,7 @@ import io.resys.thena.tasks.client.api.model.TaskCommand.TaskUpdateCommand;
 import io.smallrye.mutiny.Uni;
 
 
-public interface DigiExpressRestApi {
+public interface TaskRestApi {
   
   public static final String PROJECT_ID = "Project-ID";
   

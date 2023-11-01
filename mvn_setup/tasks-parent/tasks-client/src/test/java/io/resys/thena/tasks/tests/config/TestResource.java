@@ -34,12 +34,12 @@ import io.resys.thena.tasks.client.api.model.Project;
 import io.resys.thena.tasks.client.api.model.Task;
 import io.resys.thena.tasks.client.api.model.TaskCommand.CreateTask;
 import io.resys.thena.tasks.client.api.model.TaskCommand.TaskUpdateCommand;
-import io.resys.thena.tasks.client.rest.DigiExpressRestApi;
+import io.resys.thena.tasks.client.rest.TaskRestApi;
 import io.smallrye.mutiny.Uni;
 
 @Path("q/digiexpress/api")
 @ApplicationScoped
-public class TestResource implements DigiExpressRestApi {
+public class TestResource implements TaskRestApi {
 
   private final ImmutableTask mockTask = ImmutableTask.builder().id("task1").version("task-version1")
       .archived(TaskTestCase.getTargetDate()).created(TaskTestCase.getTargetDate())
