@@ -8,9 +8,11 @@ class DefaultStore implements Store {
   private _updateStarted: boolean = false;
   private _iapSessionRefreshWindow: Window | null = null;
   private _defRef: RequestInit;
+  private _projectId: string | undefined;
 
-  constructor(config: StoreConfig) {
+  constructor(config: StoreConfig, projectId?: string | undefined) {
     this._config = config;
+    this._projectId = projectId;
     this._defRef = {
       method: "GET",
       credentials: 'same-origin',
@@ -27,6 +29,11 @@ class DefaultStore implements Store {
 
     console.log("Composer::init DefaultStore", config);
   }
+  
+  withProjectId(projectId: string): DefaultStore {
+    return new DefaultStore(this._config, projectId);
+  }
+  
   get config() {
     return this._config;
   }

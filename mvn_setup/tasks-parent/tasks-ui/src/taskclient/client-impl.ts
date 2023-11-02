@@ -16,6 +16,10 @@ export class ServiceImpl implements Backend {
     this._store = store;
   }
 
+  withProjectId(projectId: string): ServiceImpl {
+    return new ServiceImpl(this._store.withProjectId(projectId));
+  }
+
   get config() { return this._store.config; }
 
   get profile(): ProfileStore {

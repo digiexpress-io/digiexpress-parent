@@ -24,6 +24,7 @@ export interface StoreConfig {
 }
 export interface Store {
   config: StoreConfig;
+  withProjectId(projectId: string): Store;
   fetch<T>(path: string, init?: RequestInit & { notFound?: () => T }): Promise<T>;
 }
 

@@ -41,6 +41,10 @@ export {
 } from './composer-ctx-impl';
 
 
+export {
+  ProjectIdProvider
+} from './project-id-ctx'
+
 
 declare namespace Context {
   export type {

@@ -7,12 +7,10 @@ export interface ComposerContextType {
   session: Session;
   actions: Actions;
 }
-
-export type ClientContextType = TaskClient.Backend;
-
 export const ComposerContext = React.createContext<ComposerContextType>({
   session: {} as Session,
   actions: {} as Actions,
 });
-export const ClientContext = React.createContext<ClientContextType>({} as ClientContextType);
 
+export type ClientContextType = TaskClient.Backend;
+export const ClientContext = React.createContext<ClientContextType>({} as ClientContextType);

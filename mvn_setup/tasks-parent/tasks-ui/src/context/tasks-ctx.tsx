@@ -35,7 +35,7 @@ const TasksProvider: React.FC<{ children: React.ReactNode, backend: Backend, pro
         });
       }
     };
-  }, [state, setter, loading, setLoading]);
+  }, [state, setter, loading, backend]);
 
   React.useEffect(() => {
     if (!loading) {
