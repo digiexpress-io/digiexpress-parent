@@ -8,7 +8,7 @@ import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 
 import { } from 'date-fns';
 
-import TimestampFormatter from '../TimestampFormatter';
+import TimestampFormatter from 'timestamp';
 
 const TaskDueDate: React.FC<{
   task: { dueDate: Date | undefined },

@@ -2,7 +2,7 @@ import React from 'react';
 import { ListItem, ListItemText, Box, Typography } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 import Context from 'context';
-import TimestampFormatter from '../TimestampFormatter';
+import TimestampFormatter from 'timestamp';
 
 const CollapsedGroup: React.FC<{ event: Context.CollapsedEvent }> = () => {
   return (<>19 items collapsed</>)

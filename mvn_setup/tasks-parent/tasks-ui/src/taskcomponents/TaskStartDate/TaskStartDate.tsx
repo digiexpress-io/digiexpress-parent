@@ -8,7 +8,7 @@ import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 
 import { } from 'date-fns';
 
-import TimestampFormatter from '../TimestampFormatter';
+import TimestampFormatter from 'timestamp';
 
 import Context from 'context';
 import Client from 'client';

@@ -5,13 +5,13 @@ import TimestampFormatter from 'timestamp';
 import { TaskDescriptor, Group } from 'taskdescriptor';
 import TaskCell from './TaskCell';
 import { CellProps } from './task-table-types';
-import DatePicker from '../DatePicker';
 import { StyledTableCell } from './StyledTable';
 
 const StyledDateRangeOutlinedIcon = styled(DateRangeOutlinedIcon)(({ theme }) => ({
   fontSize: 'medium',
   color: theme.palette.uiElements.main
 }));
+//      <DatePicker startDate={startDate} setStartDate={setStartDate} dueDate={dueDate} setDueDate={setDueDate} />
 
 const DueDate: React.FC<CellProps> = ({ row }) => {
 
@@ -29,7 +29,6 @@ const DueDate: React.FC<CellProps> = ({ row }) => {
 
   return (<>
     <Dialog open={datePickerOpen} onClose={() => setDatePickerOpen(false)}>
-      <DatePicker startDate={startDate} setStartDate={setStartDate} dueDate={dueDate} setDueDate={setDueDate} />
     </Dialog>
     <TaskCell id={row.id + "/DueDate"} name={dateField} />
   </>

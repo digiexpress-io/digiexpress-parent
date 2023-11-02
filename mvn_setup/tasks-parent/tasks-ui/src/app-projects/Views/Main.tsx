@@ -4,7 +4,7 @@ import { SxProps } from '@mui/system';
 
 import Burger from '@the-wrench-io/react-burger';
 import Context from 'context';
-import Core from 'taskcomponents';
+import Core from 'projectcomponents';
 import Activities from '../Activities';
 
 const root: SxProps = { height: '100%', backgroundColor: "mainContent.main", width: '100%' };
@@ -34,7 +34,7 @@ const Main: React.FC<{}> = () => {
     if (active.id === 'activities') {
       return (<Box sx={root}><Activities /></Box>);
     } else if (active.id === 'projects') {
-      return (<Box sx={root}><Core.Projects /></Box>);
+      return (<Box sx={root}><Core.ProjectsSearch /></Box>);
     }
 
 

@@ -5,7 +5,7 @@ import CrmIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
 
 import { FormattedMessage } from 'react-intl';
 
-import TimestampFormatter from 'taskcomponents/TimestampFormatter';
+import TimestampFormatter from 'timestamp';
 import TaskAssignees from 'taskcomponents/TaskAssignees';
 import TaskRoles from 'taskcomponents/TaskRoles';
 import TaskStatus from 'taskcomponents/TaskStatus';
