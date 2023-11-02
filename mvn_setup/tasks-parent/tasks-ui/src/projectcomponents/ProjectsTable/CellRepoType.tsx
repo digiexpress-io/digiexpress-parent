@@ -14,13 +14,17 @@ const FormattedCell: React.FC<{
   const tasks = Context.useProjects();
   const backend = Context.useBackend();
 
-  async function handleChange(command: Client.ChangeRepoType) {
+  async function handleChange(newRepoType: Client.RepoType) {
+    const command: Client.ChangeRepoType = {
+      commandType: 'ChangeRepoType',
+      repoType: newRepoType,
+      projectId: row.id
+    }
     await backend.project.updateActiveProject(row.id, [command]);
     await tasks.reload();
   }
 
-
-  return (<StyledTableCell width="50px" ><ProjectRepoType task={row} onChange={handleChange} /></StyledTableCell>);
+  return (<StyledTableCell width="50px" ><ProjectRepoType project={row} onChange={handleChange} /></StyledTableCell>);
 }
 
 export default FormattedCell;

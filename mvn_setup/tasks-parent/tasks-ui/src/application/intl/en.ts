@@ -26,6 +26,8 @@ const en = {
   'project.search.searchBar.filterRepoType': 'Filter by Repo type',
   'project.search.searchBar.filterUsers': 'Filter by users',
   'project.search.projectCount': 'Number of projects: {count}',
+  'project.search.searchBar.newProject': 'New project',
+  'project.search.searchBar.newProject.dialog.title': 'Create a new project',
   'projects.repoType.wrench': 'Wrench',
   'projects.repoType.stencil': 'Stencil',
   'projects.repoType.dialob': 'Dialob',
@@ -222,6 +224,9 @@ const en = {
 
   'activities.title': 'Activities',
   'activities.desc': ' ',
+
+  'activities.projects.title': 'Projects',
+  'activities.projects.desc': 'Manage different repositories for Wrench, Stencil, Tasks, and Dialob',
 
   'activities.teamSpace.title': 'Team space',
   'activities.teamSpace.desc': 'See and manage all tasks assigned to my group',

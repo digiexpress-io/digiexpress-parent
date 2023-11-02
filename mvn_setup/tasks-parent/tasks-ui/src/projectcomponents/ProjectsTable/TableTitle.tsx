@@ -2,7 +2,6 @@
 import React from 'react';
 import { Button, Typography } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
-import Context from 'context';
 import { Group } from 'projectdescriptor';
 
 const TableSubTitle: React.FC<{ values: number, message: string }> = ({ values, message }) => {

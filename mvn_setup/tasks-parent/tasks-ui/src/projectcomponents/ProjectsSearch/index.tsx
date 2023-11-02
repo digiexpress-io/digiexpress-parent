@@ -8,6 +8,7 @@ import { NavigationSticky } from '../NavigationSticky';
 import FilterRepoType from './FilterRepoType';
 import FilterUsers from './FilterUsers';
 import FilterByString from './FilterByString';
+import ProjectCreate from '../ProjectCreate';
 import GroupBy from './GroupBy';
 
 
@@ -96,6 +97,8 @@ const ProjectSearch: React.FC<{}> = () => {
         <GroupBy value={state.groupBy} onChange={(value) => setState(prev => prev.withGroupBy(value))} />
         <FilterRepoType value={state.filterBy} onChange={(value) => setState(prev => prev.withFilterByRepoType(value))} />
         <FilterUsers value={state.filterBy} onChange={(value) => setState(prev => prev.withFilterByUsers(value))} />
+
+        <ProjectCreate />
       </Stack>
     </NavigationSticky>
     <Box mt={1} />
