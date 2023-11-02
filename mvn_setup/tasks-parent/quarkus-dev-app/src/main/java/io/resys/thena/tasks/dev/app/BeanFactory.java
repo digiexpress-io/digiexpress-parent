@@ -1,5 +1,27 @@
 package io.resys.thena.tasks.dev.app;
 
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.guava.GuavaModule;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
+import io.quarkus.jackson.ObjectMapperCustomizer;
+import io.quarkus.runtime.annotations.RegisterForReflection;
+import io.resys.thena.docdb.spi.jackson.VertexExtModule;
+import io.resys.thena.projects.client.api.ProjectsClient;
+import io.resys.thena.projects.client.spi.ProjectsClientImpl;
+import io.resys.thena.tasks.client.api.TaskClient;
+import io.resys.thena.tasks.client.api.model.ImmutableTask;
+import io.resys.thena.tasks.client.api.model.ImmutableTaskComment;
+import io.resys.thena.tasks.client.api.model.ImmutableTaskExtension;
+import io.resys.thena.tasks.client.spi.TaskClientImpl;
+import io.vertx.core.json.jackson.VertxModule;
+import io.vertx.mutiny.core.Vertx;
+import io.vertx.pgclient.PgConnectOptions;
+import io.vertx.sqlclient.PoolOptions;
 /*-
  * #%L
  * thena-quarkus-dev-app
@@ -21,28 +43,6 @@ package io.resys.thena.tasks.dev.app;
  */
 import jakarta.enterprise.context.Dependent;
 import jakarta.enterprise.inject.Produces;
-
-import org.eclipse.microprofile.config.inject.ConfigProperty;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.guava.GuavaModule;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
-import io.quarkus.jackson.ObjectMapperCustomizer;
-import io.quarkus.runtime.annotations.RegisterForReflection;
-import io.resys.thena.docdb.spi.jackson.VertexExtModule;
-import io.resys.thena.tasks.client.api.TaskClient;
-import io.resys.thena.tasks.client.api.model.ImmutableTask;
-import io.resys.thena.tasks.client.api.model.ImmutableTaskComment;
-import io.resys.thena.tasks.client.api.model.ImmutableTaskExtension;
-import io.resys.thena.tasks.client.spi.DocumentStoreImpl;
-import io.resys.thena.tasks.client.spi.TaskClientImpl;
-import io.vertx.core.json.jackson.VertxModule;
-import io.vertx.mutiny.core.Vertx;
-import io.vertx.pgclient.PgConnectOptions;
-import io.vertx.sqlclient.PoolOptions;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
@@ -96,7 +96,7 @@ public class BeanFactory {
   }
   
   @Produces
-  public TaskClient client(Vertx vertx, ObjectMapper om) {    
+  public TaskClient taskClient(Vertx vertx, ObjectMapper om) {    
     
     final var connectOptions = new PgConnectOptions().setDatabase(pgDb)
         .setHost(pgHost).setPort(pgPort)
@@ -104,7 +104,7 @@ public class BeanFactory {
     final var poolOptions = new PoolOptions().setMaxSize(pgPoolSize);
     final var pgPool = io.vertx.mutiny.pgclient.PgPool.pool(vertx, connectOptions, poolOptions);
       
-    final var store = DocumentStoreImpl.builder()
+    final var store = io.resys.thena.tasks.client.spi.DocumentStoreImpl.builder()
         .repoName(projectId)
         .pgPool(pgPool)
         .pgDb(pgDb)
@@ -117,6 +117,30 @@ public class BeanFactory {
         .build();
     return new TaskClientImpl(store);
   }
+  
+  @Produces
+  public ProjectsClient projectClient(Vertx vertx, ObjectMapper om) {    
+    
+    final var connectOptions = new PgConnectOptions().setDatabase(pgDb)
+        .setHost(pgHost).setPort(pgPort)
+        .setUser(pgUser).setPassword(pgPass);
+    final var poolOptions = new PoolOptions().setMaxSize(pgPoolSize);
+    final var pgPool = io.vertx.mutiny.pgclient.PgPool.pool(vertx, connectOptions, poolOptions);
+      
+    final var store = io.resys.thena.projects.client.spi.DocumentStoreImpl.builder()
+        .repoName(projectId)
+        .pgPool(pgPool)
+        .pgDb(pgDb)
+        .pgPoolSize(pgPoolSize)
+        .pgHost(pgHost)
+        .pgPort(pgPort)
+        .pgUser(pgUser)
+        .pgPass(pgPass)
+        .objectMapper(om)
+        .build();
+    return new ProjectsClientImpl(store);
+  }
+
 
   /*
   @Produces

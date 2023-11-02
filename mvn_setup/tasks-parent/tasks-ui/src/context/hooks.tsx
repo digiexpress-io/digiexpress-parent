@@ -126,8 +126,11 @@ export const useBackend = () => {
 }
 
 export const useProjectId = () => {
+  const apps = Burger.useApps();
   const result: ProjectIdContextType = React.useContext(ProjectIdContext);
-  return result;
+  return {...result, 
+    isTasks: apps.session.active === 'app-tasks'  
+  };
 }
 
 

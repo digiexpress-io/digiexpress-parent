@@ -18,15 +18,14 @@ class DefaultStore implements Store {
       credentials: 'same-origin',
       keepalive: true,
       headers: {
-        "Content-Type": "application/json;charset=UTF-8"
+        "Content-Type": "application/json;charset=UTF-8",
+        "Project-Id": projectId ?? ""
       }
     }
-
     if (this._config.csrf) {
       const headers: Record<string, string> = this._defRef.headers as any;
       headers[this._config.csrf.key] = this._config.csrf.value;
     }
-
     console.log("Composer::init DefaultStore", config);
   }
 

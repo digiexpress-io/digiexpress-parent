@@ -3,6 +3,7 @@ import { TasksContextType, TasksMutator, TasksDispatch, TasksState } from './tas
 import { TasksStateBuilder } from './tasks-ctx-impl';
 import { Backend, Profile } from 'client';
 import { Palette } from 'taskdescriptor';
+import { useProjectId } from './hooks';
 
 const TasksContext = React.createContext<TasksContextType>({} as TasksContextType);
 
@@ -22,7 +23,7 @@ const init: TasksState = new TasksStateBuilder({
 });
 
 const TasksProvider: React.FC<{ children: React.ReactNode, backend: Backend, profile: Profile }> = ({ children, backend, profile }) => {
-
+  const { isTasks } = useProjectId();
   const [loading, setLoading] = React.useState<boolean>(true);
   const [state, setState] = React.useState<TasksState>(init.withProfile(profile));
   const setter: TasksDispatch = React.useCallback((mutator: TasksMutator) => setState(mutator), [setState]);
@@ -30,15 +31,18 @@ const TasksProvider: React.FC<{ children: React.ReactNode, backend: Backend, pro
   const contextValue: TasksContextType = React.useMemo(() => {
     return {
       state, setState: setter, loading, palette: Palette, reload: async () => {
+        if(!isTasks) {
+          return;
+        }
         backend.task.getActiveTasks().then(data => {
           setState(prev => prev.withTasks(data.records))
         });
       }
     };
-  }, [state, setter, loading, backend]);
+  }, [state, setter, loading, backend, isTasks]);
 
   React.useEffect(() => {
-    if (!loading) {
+    if (!loading || !isTasks) {
       return;
     }
     backend.task.getActiveTasks().then(data => {
@@ -46,7 +50,7 @@ const TasksProvider: React.FC<{ children: React.ReactNode, backend: Backend, pro
       setState(prev => prev.withProfile(profile).withTasks(data.records))
     });
 
-  }, [loading, setLoading, backend, profile]);
+  }, [loading, setLoading, backend, profile, isTasks]);
 
   return (<TasksContext.Provider value={contextValue}>{children}</TasksContext.Provider>);
 };
