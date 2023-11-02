@@ -1,15 +1,15 @@
 import React from 'react';
 import { Box, TablePagination, TableContainer, Table } from '@mui/material';
-import { TaskDescriptor, Group } from 'taskdescriptor';
+import { ProjectDescriptor, Group } from 'projectdescriptor';
 import Pagination from 'table';
 
-type TaskPagination = Pagination.TablePagination<TaskDescriptor>;
+type ProjectPagination = Pagination.TablePagination<ProjectDescriptor>;
 
 interface TableConfigProps {
   loading: boolean;
   group: Group
-  content: TaskPagination,
-  setContent: React.Dispatch<React.SetStateAction<TaskPagination>>,
+  content: ProjectPagination,
+  setContent: React.Dispatch<React.SetStateAction<ProjectPagination>>,
 }
 
 interface TableProps {
@@ -19,7 +19,7 @@ interface TableProps {
   },
   data: {
     group: Group,
-    defaultOrderBy: keyof TaskDescriptor,
+    defaultOrderBy: keyof ProjectDescriptor,
     loading: boolean;
   }
 }
@@ -92,14 +92,14 @@ function CustomTable(props: TableProps) {
   const { Header, Rows } = props.config;
   const { records } = group;
 
-  const [content, setContent] = React.useState(new Pagination.TablePaginationImpl<TaskDescriptor>({
+  const [content, setContent] = React.useState(new Pagination.TablePaginationImpl<ProjectDescriptor>({
     src: records ?? [],
     orderBy: defaultOrderBy,
     sorted: false
   }));
 
   React.useEffect(() => {
-    setContent((c: TaskPagination) => c.withSrc(records ?? []));
+    setContent((c: ProjectPagination) => c.withSrc(records ?? []));
   }, [records, setContent]);
 
   return (<Provider>
@@ -119,8 +119,8 @@ function CustomTable(props: TableProps) {
               count={(records ?? []).length}
               rowsPerPage={content.rowsPerPage}
               page={content.page}
-              onPageChange={(_event, newPage) => setContent((state: TaskPagination) => state.withPage(newPage))}
-              onRowsPerPageChange={(event: React.ChangeEvent<HTMLInputElement>) => setContent((state: TaskPagination) => state.withRowsPerPage(parseInt(event.target.value, 10)))}
+              onPageChange={(_event, newPage) => setContent((state: ProjectPagination) => state.withPage(newPage))}
+              onRowsPerPageChange={(event: React.ChangeEvent<HTMLInputElement>) => setContent((state: ProjectPagination) => state.withRowsPerPage(parseInt(event.target.value, 10)))}
             />)
         }
       </Box>

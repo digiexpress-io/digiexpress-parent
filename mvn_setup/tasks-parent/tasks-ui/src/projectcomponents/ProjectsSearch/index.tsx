@@ -2,14 +2,11 @@ import React from 'react';
 import { TableHead, TableCell, TableRow, Box, Stack } from '@mui/material';
 
 import Context from 'context';
-import { TaskDescriptor, Group } from 'taskdescriptor';
+import { ProjectDescriptor, Group } from 'projectdescriptor';
 import ProjectsTable from '../ProjectsTable';
 import { NavigationSticky } from '../NavigationSticky';
-import FilterStatus from './FilterStatus';
-import FilterOwners from './FilterOwners';
-import FilterRoles from './FilterRoles';
-import FilterPriority from './FilterPriority';
-import FilterColumns from './FilterColumns';
+import FilterRepoType from './FilterRepoType';
+import FilterUsers from './FilterUsers';
 import FilterByString from './FilterByString';
 import GroupBy from './GroupBy';
 
@@ -24,7 +21,7 @@ function getRowBackgroundColor(index: number): string {
   return 'background.paper';
 }
 
-const Header: React.FC<ProjectsTable.TableConfigProps & { columns: (keyof TaskDescriptor)[] }> = ({ content, setContent, group, columns }) => {
+const Header: React.FC<ProjectsTable.TableConfigProps & { columns: (keyof ProjectDescriptor)[] }> = ({ content, setContent, group, columns }) => {
 
   const includesTitle = columns.includes("title");
 
@@ -39,7 +36,7 @@ const Header: React.FC<ProjectsTable.TableConfigProps & { columns: (keyof TaskDe
         { /* reserved title column */}
         <TableCell align='left' padding='none'>
           <ProjectsTable.Title group={group} />
-          <ProjectsTable.SubTitle values={group.records.length} message='core.teamSpace.taskCount' />
+          <ProjectsTable.SubTitle values={group.records.length} message='project.search.projectCount' />
         </TableCell>
 
         { /* without title */}
@@ -54,9 +51,9 @@ const Header: React.FC<ProjectsTable.TableConfigProps & { columns: (keyof TaskDe
 
 const Row: React.FC<{
   rowId: number,
-  row: TaskDescriptor,
+  row: ProjectDescriptor,
   def: Group,
-  columns: (keyof TaskDescriptor)[]
+  columns: (keyof ProjectDescriptor)[]
 }> = (props) => {
 
   const [hoverItemsActive, setHoverItemsActive] = React.useState(false);
@@ -65,46 +62,40 @@ const Row: React.FC<{
   }
   return (<TableRow sx={{ backgroundColor: getRowBackgroundColor(props.rowId) }} hover tabIndex={-1} key={props.row.id}
     onMouseEnter={() => setHoverItemsActive(true)} onMouseLeave={handleEndHover}>
-    {props.columns.includes("title") && <ProjectsTable.CellTitle {...props} children={hoverItemsActive} />}
-    {props.columns.includes("assignees") && <ProjectsTable.CellAssignees {...props} />}
-    {props.columns.includes("dueDate") && <ProjectsTable.CellDueDate {...props} />}
-    {props.columns.includes("priority") && <ProjectsTable.CellPriority {...props} />}
-    {props.columns.includes("roles") && <ProjectsTable.CellRoles {...props} />}
-    {props.columns.includes("status") && <ProjectsTable.CellStatus {...props} />}
+    {props.columns.includes("title") && <ProjectsTable.CellTitle {...props} />}
+    {props.columns.includes("repoType") && <ProjectsTable.CellRepoType {...props} />}
+    {props.columns.includes("users") && <ProjectsTable.CellUsers {...props} />}
+    {props.columns.includes("created") && <ProjectsTable.CellCreatedDate {...props} />}
 
     <ProjectsTable.CellMenu {...props} active={hoverItemsActive} setDisabled={handleEndHover} />
   </TableRow>);
 }
 
-const columnTypes: (keyof TaskDescriptor)[] = [
+const columnTypes: (keyof ProjectDescriptor)[] = [
   'title',
-  'assignees',
-  'dueDate',
-  'priority',
-  'roles',
-  'status']
+  'repoType',
+  'users',
+  'created',
+]
 
-const TaskSearch: React.FC<{}> = () => {
-  const tasks = Context.useTasks();
-  const [state, setState] = React.useState(tasks.state.withDescriptors());
+const ProjectSearch: React.FC<{}> = () => {
+  const projects = Context.useProjects();
+  const [state, setState] = React.useState(projects.state.withDescriptors());
   const [columns, setColumns] = React.useState([
     ...columnTypes
   ]);
 
   React.useEffect(() => {
-    setState(prev => prev.withTasks(tasks.state))
-  }, [tasks.state]);
+    setState(prev => prev.withProjects(projects.state))
+  }, [projects.state]);
 
   return (<Box>
     <NavigationSticky>
       <FilterByString onChange={({ target }) => setState(prev => prev.withSearchString(target.value))} />
       <Stack direction='row' spacing={1}>
         <GroupBy value={state.groupBy} onChange={(value) => setState(prev => prev.withGroupBy(value))} />
-        <FilterStatus value={state.filterBy} onChange={(value) => setState(prev => prev.withFilterByStatus(value))} />
-        <FilterPriority value={state.filterBy} onChange={(value) => setState(prev => prev.withFilterByPriority(value))} />
-        <FilterOwners value={state.filterBy} onChange={(value) => setState(prev => prev.withFilterByOwner(value))} />
-        <FilterRoles value={state.filterBy} onChange={(value) => setState(prev => prev.withFilterByRoles(value))} />
-        <FilterColumns types={columnTypes} value={columns} onChange={(value) => setColumns(value)} />
+        <FilterRepoType value={state.filterBy} onChange={(value) => setState(prev => prev.withFilterByRepoType(value))} />
+        <FilterUsers value={state.filterBy} onChange={(value) => setState(prev => prev.withFilterByUsers(value))} />
       </Stack>
     </NavigationSticky>
     <Box mt={1} />
@@ -124,4 +115,4 @@ const TaskSearch: React.FC<{}> = () => {
 }
 
 
-export default TaskSearch;
+export default ProjectSearch;

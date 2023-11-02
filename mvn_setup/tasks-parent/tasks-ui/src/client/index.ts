@@ -11,6 +11,15 @@ import {
 } from './org-types';
 
 import {
+  Project, ProjectId, RepoType,
+  ChangeProjectInfo,
+  AssignProjectUsers,
+  CreateProject,
+  ArchiveProject,
+  ChangeRepoType
+} from './project-types';
+
+import {
   TaskPriority, TaskStatus,
   TaskId, Task,
   CreateTask,
@@ -58,6 +67,13 @@ import {
 declare namespace TaskClient {
   export type {
     Profile,
+    Project, ProjectId, RepoType,
+    ChangeProjectInfo,
+    AssignProjectUsers,
+    CreateProject,
+    ArchiveProject,
+    ChangeRepoType,
+
     TaskId, Task,
     BackendError, Backend, StoreConfig, Store,
     Org, User, Role,
@@ -98,6 +114,7 @@ declare namespace TaskClient {
 }
 
 export type {
+  Project, ProjectId, RepoType,
   Profile,
   TaskId, Task,
   BackendError, Backend, StoreConfig, Store, StoreError,
@@ -131,7 +148,13 @@ export type {
   ChangeChecklistItemCompleted,
   ChangeChecklistItemDueDate,
   ChangeChecklistItemTitle,
-  TaskUpdateCommand
+  TaskUpdateCommand,
+
+  ChangeProjectInfo,
+  AssignProjectUsers,
+  CreateProject,
+  ArchiveProject,
+  ChangeRepoType
 }
 
 const resolveAvatar = resolveAvatarAs;

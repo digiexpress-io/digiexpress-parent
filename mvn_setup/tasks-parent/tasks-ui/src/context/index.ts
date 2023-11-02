@@ -2,6 +2,8 @@ import { ClientContextType, ComposerContextType } from './client-ctx';
 import * as Hooks from './hooks';
 import * as taskEditCtx from './task-edit-ctx';
 import * as descCtx from 'taskdescriptor';
+import * as projectCtx from 'projectdescriptor';
+
 
 import {
   TaskEditEvent, TaskEditMutatorBuilder, TaskEditState,
@@ -76,6 +78,7 @@ namespace Context {
   export const DescriptorStateImpl = descCtx.DescriptorStateImpl;
   export const StatusPalette = descCtx.Palette.status;
   export const PriorityPalette = descCtx.Palette.priority;
+  export const RepoTypePalette = projectCtx.Palette.repoType;
   export const TeamGroupPalette = descCtx.Palette.teamGroupType;
   export const AssigneePalette = descCtx.Palette.assigneeGroupType;
   export const _nobody_ = descCtx._nobody_;
@@ -83,6 +86,7 @@ namespace Context {
   export const useProjectId = Hooks.useProjectId;
   export const useBackend = Hooks.useBackend;
   export const useTasks = Hooks.useTasks;
+  export const useProjects = Hooks.useProjects;
   export const useOrg = Hooks.useOrg;
   export const useAssignees = Hooks.useAssignees;
   export const useRoles = Hooks.useRoles;

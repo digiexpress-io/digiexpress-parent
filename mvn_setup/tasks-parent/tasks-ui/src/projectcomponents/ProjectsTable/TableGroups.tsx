@@ -3,13 +3,13 @@ import React from 'react';
 import { Box } from '@mui/material';
 import Context from 'context';
 import { TableConfigProps, CustomTable } from './table-ctx';
-import { Group, TaskDescriptor } from 'taskdescriptor';
+import { Group, ProjectDescriptor } from 'projectdescriptor';
 
 
 
 interface TableGroupsProps {
   groups: Group[];
-  orderBy: keyof TaskDescriptor | undefined,
+  orderBy: keyof ProjectDescriptor | undefined,
 
   children: {
     Header: React.ElementType<TableConfigProps>;
@@ -18,8 +18,8 @@ interface TableGroupsProps {
 }
 
 const Delegate: React.FC<TableGroupsProps> = ({ groups, orderBy, children }) => {
-  const tasks = Context.useTasks();
-  const { loading } = tasks;
+  const projects = Context.useProjects();
+  const { loading } = projects;
 
   const defaultOrderBy = React.useMemo(() => {
     if (orderBy) {

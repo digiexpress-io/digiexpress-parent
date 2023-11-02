@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { Menu, MenuList, MenuItem, ListItemIcon, ListItemText } from '@mui/material';
 import Check from '@mui/icons-material/Check';
-import { GroupBy } from 'taskdescriptor';
+import { GroupBy } from 'projectdescriptor';
 import { NavigationButtonSearch } from '../NavigationSticky';
 
-const types: GroupBy[] = ['none', 'owners', 'roles', 'status', 'priority'];
+const types: GroupBy[] = ['none', 'repoType', 'users'];
 
 
 const DenseMenu: React.FC<{

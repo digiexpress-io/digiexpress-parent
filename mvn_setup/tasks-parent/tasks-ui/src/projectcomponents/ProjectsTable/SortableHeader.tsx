@@ -3,18 +3,18 @@ import React from 'react';
 import { TableCell, Box, TableSortLabel } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 import { FormattedMessage } from 'react-intl';
-import { TaskDescriptor } from 'taskdescriptor';
+import { ProjectDescriptor } from 'projectdescriptor';
 import Pagination from 'table';
 
 const SortableHeader: React.FC<{
-  id: keyof TaskDescriptor,
-  content: Pagination.TablePagination<TaskDescriptor>,
-  setContent: React.Dispatch<React.SetStateAction<Pagination.TablePagination<TaskDescriptor>>>
+  id: keyof ProjectDescriptor,
+  content: Pagination.TablePagination<ProjectDescriptor>,
+  setContent: React.Dispatch<React.SetStateAction<Pagination.TablePagination<ProjectDescriptor>>>
 }> = ({ id, content, setContent }) => {
 
   const { order, orderBy } = content;
 
-  const createSortHandler = (property: keyof TaskDescriptor) =>
+  const createSortHandler = (property: keyof ProjectDescriptor) =>
     (_event: React.MouseEvent<unknown>) => setContent(prev => prev.withOrderBy(property))
 
   return (
@@ -29,9 +29,9 @@ const SortableHeader: React.FC<{
 
 
 const SortableHeaders: React.FC<{
-  columns: (keyof TaskDescriptor)[],
-  content: Pagination.TablePagination<TaskDescriptor>,
-  setContent: React.Dispatch<React.SetStateAction<Pagination.TablePagination<TaskDescriptor>>>
+  columns: (keyof ProjectDescriptor)[],
+  content: Pagination.TablePagination<ProjectDescriptor>,
+  setContent: React.Dispatch<React.SetStateAction<Pagination.TablePagination<ProjectDescriptor>>>
 }> = ({ columns, content, setContent }) => {
 
   return (<>{columns.map((id) => (<SortableHeader key={id} id={id} content={content} setContent={setContent} />))}</>);

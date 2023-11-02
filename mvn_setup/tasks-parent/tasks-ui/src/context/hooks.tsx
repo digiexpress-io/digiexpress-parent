@@ -10,6 +10,10 @@ import { UserId, RoleId } from 'client';
 import { ProjectIdContext, ProjectIdContextType } from './project-id-ctx';
 import { TasksContext } from './tasks-ctx';
 import { TasksContextType } from './tasks-ctx-types';
+
+import { ProjectsContext } from './projects-ctx';
+import { ProjectsContextType } from './projects-ctx-types';
+
 import { OrgContext } from './org-ctx';
 import { OrgContextType } from './org-ctx-types';
 import { TaskEditContextType } from './task-edit-ctx-types';
@@ -83,6 +87,10 @@ export const useTaskEdit = () => {
 
 export const useTasks = () => {
   const result: TasksContextType = React.useContext(TasksContext);
+  return result;
+}
+export const useProjects = () => {
+  const result: ProjectsContextType = React.useContext(ProjectsContext);
   return result;
 }
 

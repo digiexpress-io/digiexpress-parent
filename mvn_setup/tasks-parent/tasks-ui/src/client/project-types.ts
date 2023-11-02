@@ -1,4 +1,4 @@
-type RepoType = 'wrench' | 'stencil' | 'tasks' | 'dialob';
+export type RepoType = 'wrench' | 'stencil' | 'tasks' | 'dialob';
 export type ProjectId = string;
 
 export interface Project {
@@ -23,7 +23,7 @@ export interface ProjectCommand {
   commandType: ProjectCommandType;
 }
 
-export type ProjectCommandType = 'ArchiveProject' | 'CreateProject' | 'AssignProjectUsers' | 'ChangeProjectInfo';
+export type ProjectCommandType = 'ArchiveProject' | 'CreateProject' | 'AssignProjectUsers' | 'ChangeProjectInfo' | 'ChangeRepoType';
 
 
 export interface ProjectUpdateCommand<T extends ProjectCommandType> extends ProjectCommand {
@@ -51,6 +51,10 @@ export interface ChangeProjectInfo extends ProjectUpdateCommand<'ChangeProjectIn
   title: string;
   description: string;
 }
+export interface ChangeRepoType extends ProjectUpdateCommand<'ChangeRepoType'> {
+  repoType: RepoType
+}
+
 
 export interface ProjectPagination {
   page: number; //starts from 1

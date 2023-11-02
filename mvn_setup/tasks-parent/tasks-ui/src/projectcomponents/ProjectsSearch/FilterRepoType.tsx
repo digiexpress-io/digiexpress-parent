@@ -1,17 +1,20 @@
 import * as React from 'react';
-import { Menu, ListItemText, MenuList, MenuItem, ListItemIcon } from '@mui/material';
+import { Menu, MenuItem, MenuList, ListItemIcon, ListItemText } from '@mui/material';
 import Check from '@mui/icons-material/Check';
-import Context from 'context';
-import { FilterByRoles, FilterBy } from 'taskdescriptor';
+import Client from 'client';
+import { FilterByRepoType, FilterBy } from 'projectdescriptor';
 import { NavigationButtonSearch } from '../NavigationSticky';
+
+
+const statustypes: Client.RepoType[] = ['dialob', 'stencil', 'tasks', 'wrench'];
 
 export default function DenseMenu(
   props: {
-    onChange: (value: string[]) => void;
+    onChange: (value: Client.RepoType[]) => void;
     value: FilterBy[]
   }
 ) {
-  const ctx = Context.useTasks();
+
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -19,12 +22,11 @@ export default function DenseMenu(
   };
   const handleClose = () => {
     setAnchorEl(null);
-  }
-
-  const filterByRoles = props.value.find(filter => filter.type === 'FilterByRoles') as FilterByRoles | undefined;
+  };
+  const filterByStatus = props.value.find(filter => filter.type === 'FilterByRepoType') as FilterByRepoType | undefined;
 
   return (<>
-    <NavigationButtonSearch onClick={handleClick} id='core.search.searchBar.filterRoles' values={{ count: filterByRoles?.roles.length }} />
+    <NavigationButtonSearch onClick={handleClick} id='project.search.searchBar.filterRepoType' values={{ count: filterByStatus?.repoType.length }} />
 
     <Menu sx={{ width: 320 }}
       anchorEl={anchorEl}
@@ -41,11 +43,11 @@ export default function DenseMenu(
     >
       <MenuList dense>
         <MenuItem>
-          <ListItemText><b>Filter by roles</b></ListItemText>
+          <ListItemText><b>Filter by status</b></ListItemText>
         </MenuItem>
-        {Object.keys(ctx.state.palette.roles).map(type => {
-          const found = props.value.find(filter => filter.type === 'FilterByRoles');
-          const selected = found ? found.type === 'FilterByRoles' && found.roles.includes(type) : false
+        {statustypes.map(type => {
+          const found = props.value.find(filter => filter.type === 'FilterByRepoType');
+          const selected = found ? found.type === 'FilterByRepoType' && found.repoType.includes(type) : false
 
           if (selected) {
             return (<MenuItem key={type} onClick={() => {

@@ -4,11 +4,9 @@ import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { FormattedMessage } from 'react-intl';
 
-import { TaskDescriptor, Group } from 'taskdescriptor';
+import { ProjectDescriptor, Group } from 'projectdescriptor';
 import { usePopover } from './CellPopover';
 import CellHoverButton from './CellMenuButton';
-import TaskEditDialog from 'taskcomponents/TaskEdit';
-import CRMDialog from 'taskcomponents/CRM';
 import { StyledTableCell } from './StyledTable';
 
 const StyledBox = styled(Box)(({ theme }) => ({
@@ -32,23 +30,14 @@ const CellMenuItem: React.FC<{
 
 const CellMenu: React.FC<{
   onEdit: () => void,
-  onCRM: () => void,
-}> = ({ onEdit, onCRM }) => {
+}> = ({ onEdit }) => {
   const Popover = usePopover();
 
   return (
     <>
       <Popover.Delegate>
         <MenuList dense>
-          <CellMenuItem onClick={onEdit} title={`tasktable.menu.edit`} />
-          <CellMenuItem onClick={onCRM} title={`tasktable.menu.viewData`} />
-          <Divider />
-          <MenuItem>
-            <StyledBox>
-              <DeleteIcon />
-              <FormattedMessage id={`tasktable.menu.archive`} />
-            </StyledBox>
-          </MenuItem>
+          <CellMenuItem onClick={onEdit} title={`projecttable.menu.edit`} />
         </MenuList>
       </Popover.Delegate>
       <CellHoverButton onClick={Popover.onClick}>
@@ -59,42 +48,21 @@ const CellMenu: React.FC<{
 
 const FormattedCell: React.FC<{
   rowId: number,
-  row: TaskDescriptor,
+  row: ProjectDescriptor,
   def: Group,
   active: boolean,
   setDisabled: () => void
 }> = ({ row, active, setDisabled }) => {
-  const [edit, setEdit] = React.useState(false);
-  const [crm, setCrm] = React.useState(false);
+
 
   function handleStartEdit() {
-    setEdit(true);
     setDisabled();
-  }
-
-  function handleEndEdit() {
-    setEdit(false);
-  }
-
-  function handleStartWork() {
-    setCrm(true);
-    setDisabled();
-  }
-
-  function handleCrm() {
-    setCrm(false);
   }
 
   return (
     <StyledTableCell width="35px">
       <Box width="35px" justifyContent='right'> {/* Box is needed to prevent table cell resize on hover */}
-        <TaskEditDialog open={edit} onClose={handleEndEdit} task={row} />
-        <CRMDialog open={crm} onClose={handleCrm} task={row} />
-        {active &&
-          <CellMenu
-            onEdit={handleStartEdit}
-            onCRM={handleStartWork}
-          />}
+        {active && <CellMenu onEdit={handleStartEdit} />}
       </Box>
     </StyledTableCell>
   );

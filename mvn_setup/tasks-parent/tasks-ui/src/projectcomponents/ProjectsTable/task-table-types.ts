@@ -1,7 +1,7 @@
-import { TaskDescriptor, Group } from 'taskdescriptor';
+import { ProjectDescriptor, Group } from 'projectdescriptor';
 
 interface CellProps {
-  row: TaskDescriptor;
+  row: ProjectDescriptor;
   def: Group;
 }
 

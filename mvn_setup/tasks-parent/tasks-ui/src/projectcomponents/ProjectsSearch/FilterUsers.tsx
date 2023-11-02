@@ -1,20 +1,17 @@
 import * as React from 'react';
-import { Menu, MenuItem, MenuList, ListItemIcon, ListItemText } from '@mui/material';
+import { Menu, ListItemText, MenuList, MenuItem, ListItemIcon } from '@mui/material';
 import Check from '@mui/icons-material/Check';
-import Client from 'client';
-import { FilterByStatus, FilterBy } from 'taskdescriptor';
+import Context from 'context';
+import { FilterByUsers, FilterBy } from 'projectdescriptor';
 import { NavigationButtonSearch } from '../NavigationSticky';
-
-
-const statustypes: Client.TaskStatus[] = ['CREATED', 'IN_PROGRESS', 'COMPLETED', 'REJECTED'];
 
 export default function DenseMenu(
   props: {
-    onChange: (value: Client.TaskStatus[]) => void;
+    onChange: (value: string[]) => void;
     value: FilterBy[]
   }
 ) {
-
+  const ctx = Context.useProjects();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -22,11 +19,12 @@ export default function DenseMenu(
   };
   const handleClose = () => {
     setAnchorEl(null);
-  };
-  const filterByStatus = props.value.find(filter => filter.type === 'FilterByStatus') as FilterByStatus | undefined;
+  }
+
+  const filterByRoles = props.value.find(filter => filter.type === 'FilterByUsers') as FilterByUsers | undefined;
 
   return (<>
-    <NavigationButtonSearch onClick={handleClick} id='core.search.searchBar.filterStatus' values={{ count: filterByStatus?.status.length }} />
+    <NavigationButtonSearch onClick={handleClick} id='project.search.searchBar.filterUsers' values={{ count: filterByRoles?.users.length }} />
 
     <Menu sx={{ width: 320 }}
       anchorEl={anchorEl}
@@ -43,11 +41,11 @@ export default function DenseMenu(
     >
       <MenuList dense>
         <MenuItem>
-          <ListItemText><b>Filter by status</b></ListItemText>
+          <ListItemText><b>Filter by users</b></ListItemText>
         </MenuItem>
-        {statustypes.map(type => {
-          const found = props.value.find(filter => filter.type === 'FilterByStatus');
-          const selected = found ? found.type === 'FilterByStatus' && found.status.includes(type) : false
+        {Object.keys(ctx.state.palette.users).map(type => {
+          const found = props.value.find(filter => filter.type === 'FilterByUsers');
+          const selected = found ? found.type === 'FilterByUsers' && found.users.includes(type) : false
 
           if (selected) {
             return (<MenuItem key={type} onClick={() => {

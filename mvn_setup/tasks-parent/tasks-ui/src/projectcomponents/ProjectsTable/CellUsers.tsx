@@ -2,13 +2,13 @@ import React from 'react';
 
 import Client from 'client';
 import Context from 'context';
-import { TaskDescriptor } from 'taskdescriptor';
+import { ProjectDescriptor } from 'projectdescriptor';
 import { StyledTableCell } from './StyledTable';
 import TaskAssignees from 'taskcomponents/TaskAssignees';
 
 const FormattedCell: React.FC<{
   rowId: number,
-  row: TaskDescriptor,
+  row: ProjectDescriptor,
 }> = ({ row }) => {
 
   const tasks = Context.useTasks();
@@ -22,7 +22,7 @@ const FormattedCell: React.FC<{
 
   return (
     <StyledTableCell width="150px">
-      <TaskAssignees task={row} onChange={handleChange} />
+      {/*<TaskAssignees task={row} onChange={handleChange} /> */}
     </StyledTableCell>
   );
 }
