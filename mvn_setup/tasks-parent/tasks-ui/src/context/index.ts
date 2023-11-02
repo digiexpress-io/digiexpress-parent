@@ -89,6 +89,7 @@ namespace Context {
   export const useProjects = Hooks.useProjects;
   export const useOrg = Hooks.useOrg;
   export const useAssignees = Hooks.useAssignees;
+  export const useProjectUsers = Hooks.useProjectUsers;
   export const useRoles = Hooks.useRoles;
   export const useTaskEdit = Hooks.useTaskEdit;
   export const useSite = Hooks.useSite;

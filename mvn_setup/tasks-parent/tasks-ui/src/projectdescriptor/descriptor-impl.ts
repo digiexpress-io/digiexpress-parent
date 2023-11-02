@@ -258,12 +258,20 @@ profile: Profile;
 
 */
 
+const appMapping: Record<RepoType, string> = {
+  dialob: 'app-dialob',
+  stencil: 'app-stencil',
+  tasks: 'app-tasks',
+  wrench: 'app-wrench'
+}
+
 class ProjectDescriptorImpl implements ProjectDescriptor {
   private _entry: Project;
   private _created: Date;
   private _updated: Date;
   private _profile: Profile;
   private _userAvatars: AvatarCode[];
+  private _appId: string;
 
   constructor(entry: Project, profile: Profile, today: Date) {
     this._entry = entry;
@@ -271,11 +279,13 @@ class ProjectDescriptorImpl implements ProjectDescriptor {
     this._updated = new Date(entry.updated);
     this._userAvatars = resolveAvatar(entry.users);
     this._profile = profile;
+    this._appId = appMapping[entry.repoType];
   }
 
   get profile() { return this._profile }
   get id() { return this._entry.id }
   get entry() { return this._entry }
+  get appId() { return this._appId }
   get created() { return this._created }
   get updated() { return this._updated }
   get repoType() { return this._entry.repoType }

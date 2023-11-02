@@ -4,25 +4,25 @@ import Client from 'client';
 import Context from 'context';
 import { ProjectDescriptor } from 'projectdescriptor';
 import { StyledTableCell } from './StyledTable';
-import TaskAssignees from 'taskcomponents/TaskAssignees';
+import ProjectUsers from '../ProjectUsers';
 
 const FormattedCell: React.FC<{
   rowId: number,
   row: ProjectDescriptor,
 }> = ({ row }) => {
 
-  const tasks = Context.useTasks();
+  const projects = Context.useProjects();
   const backend = Context.useBackend();
 
   async function handleChange(assigneeIds: Client.UserId[]) {
-    const command: Client.AssignTask = { assigneeIds, commandType: 'AssignTask', taskId: row.id };
-    await backend.task.updateActiveTask(row.id, [command]);
-    await tasks.reload();
+    const command: Client.AssignProjectUsers = { users: assigneeIds, commandType: 'AssignProjectUsers', projectId: row.id };
+    await backend.project.updateActiveProject(row.id, [command]);
+    await projects.reload();
   }
 
   return (
     <StyledTableCell width="150px">
-      {/*<TaskAssignees task={row} onChange={handleChange} /> */}
+      <ProjectUsers task={row} onChange={handleChange} />
     </StyledTableCell>
   );
 }

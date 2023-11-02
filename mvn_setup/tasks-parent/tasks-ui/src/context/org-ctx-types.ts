@@ -28,6 +28,7 @@ export interface OrgState {
   withOrg(value: Org): OrgState;
   withIam(value: User): OrgState;
 
+  findProjectUsers(searchFor: string, checkedUsers: UserId[]): UserSearchResult[];
   findUsers(searchFor: string, checkedUsers: UserId[]): UserSearchResult[];
   findRoles(searchFor: string, checkedRoles: RoleId[]): RoleSearchResult[];
 }

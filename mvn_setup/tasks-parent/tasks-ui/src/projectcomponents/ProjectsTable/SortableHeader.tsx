@@ -20,7 +20,7 @@ const SortableHeader: React.FC<{
   return (
     <TableCell key={id} align='left' padding='none' sortDirection={orderBy === id ? order : false}>
       <TableSortLabel active={orderBy === id} direction={orderBy === id ? order : 'asc'} onClick={createSortHandler(id)}>
-        <FormattedMessage id={`tasktable.header.${id}`} />
+        <FormattedMessage id={`project.header.${id}`} />
         {orderBy === id ? (<Box component="span" sx={visuallyHidden}>{order === 'desc' ? 'sorted descending' : 'sorted ascending'}</Box>) : null}
       </TableSortLabel>
     </TableCell>

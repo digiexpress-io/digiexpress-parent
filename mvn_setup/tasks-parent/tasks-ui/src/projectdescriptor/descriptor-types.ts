@@ -8,6 +8,7 @@ export interface AvatarCode {
 export interface ProjectDescriptor {
   entry: Project;
   id: string;
+  appId: string;
   repoId: string;
   repoType: RepoType;
   title: string;

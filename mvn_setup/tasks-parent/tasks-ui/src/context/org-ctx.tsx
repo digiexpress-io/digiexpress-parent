@@ -7,7 +7,7 @@ import { Backend } from 'client';
 const OrgContext = React.createContext<OrgContextType>({} as OrgContextType);
 
 const init: OrgState = new OrgMutatorBuilderImpl({
-  iam: { displayName: "", userId: "", userRoles: [], avatar: '', activity: [] },
+  iam: { displayName: "", userId: "", userRoles: [], avatar: '', activity: [], type: "TASK_USER" },
   org: { roles: {}, users: {} }
 });
 

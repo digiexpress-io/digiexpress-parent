@@ -30,10 +30,28 @@ export const mockRoles: Record<string, Role> = {
 
 export const mockUsers: User[] = [
   {
+    displayName: "OP MIFID",
+    userId: "op-mifid",
+    userRoles: ["admin-role"],
+    avatar: "OP",
+    type: 'PROJECT_USER',
+    activity: []
+  },
+  {
+    displayName: "Sippo",
+    userId: "sippo",
+    userRoles: ["admin-role"],
+    avatar: "SO",
+    type: 'PROJECT_USER',
+    activity: []
+  },
+  {
+
     displayName: "Carrot Ironfoundersson",
     userId: "carrot ironfoundersson",
     userRoles: ["admin-role"],
     avatar: "CI",
+    type: 'TASK_USER',
     activity: [
       {
         id: "activity1",
@@ -78,6 +96,7 @@ export const mockUsers: User[] = [
     userId: "sam vimes",
     userRoles: ["admin-role"],
     avatar: "SV",
+    type: 'TASK_USER',
     activity: [
       {
         id: "activity1",
@@ -104,6 +123,7 @@ export const mockUsers: User[] = [
     userId: "lord vetinari",
     userRoles: ["admin-role"],
     avatar: "LV",
+    type: 'TASK_USER',
     activity: [
       {
         id: "activity1",
@@ -130,6 +150,7 @@ export const mockUsers: User[] = [
     userId: "lady sybil vimes",
     userRoles: ["admin-role"],
     avatar: "LS",
+    type: 'TASK_USER',
     activity: [
       {
         id: "activity1",
@@ -156,6 +177,7 @@ export const mockUsers: User[] = [
     userId: "nobby nobbs",
     userRoles: ["admin-role"],
     avatar: "NN",
+    type: 'TASK_USER',
     activity: [
       {
         id: "activity1",

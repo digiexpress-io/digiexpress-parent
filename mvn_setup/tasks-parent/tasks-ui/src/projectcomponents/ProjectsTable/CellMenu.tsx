@@ -1,19 +1,12 @@
 import React from 'react';
-import { Box, MenuList, MenuItem, ListItemText, Divider, styled } from '@mui/material';
+import { Box, MenuList, MenuItem, ListItemText } from '@mui/material';
 import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
-import DeleteIcon from '@mui/icons-material/Delete';
 import { FormattedMessage } from 'react-intl';
 
 import { ProjectDescriptor, Group } from 'projectdescriptor';
 import { usePopover } from './CellPopover';
 import CellHoverButton from './CellMenuButton';
 import { StyledTableCell } from './StyledTable';
-
-const StyledBox = styled(Box)(({ theme }) => ({
-  color: theme.palette.error.main,
-  display: "flex",
-  alignItems: 'center'
-}));
 
 const CellMenuItem: React.FC<{
   onClick?: () => void,

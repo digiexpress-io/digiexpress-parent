@@ -28,6 +28,7 @@ export interface User {
   displayName: string;
   avatar: string;
   activity: UserActivity[];
+  type: 'PROJECT_USER' | 'TASK_USER'
 }
 
 

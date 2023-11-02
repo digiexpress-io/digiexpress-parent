@@ -28,10 +28,24 @@ class OrgMutatorBuilderImpl implements OrgState {
   withOrg(value: Org): OrgState {
     return new OrgMutatorBuilderImpl({ ...this.clone(), org: value });
   }
+  findProjectUsers(searchFor: string, checkedUsers: UserId[]): UserSearchResult[] {
+    const criteria = searchFor.toLowerCase();
+    const target = Object.values(this._org.users).filter(({ type }) => type === 'PROJECT_USER');
+
+    const result = criteria ?
+      target.filter(entry => entry.displayName.toLowerCase().includes(criteria)) :
+      target;
+
+    return result.map(user => ({
+      checked: checkedUsers.includes(user.userId),
+      avatar: { twoletters: user.avatar, value: user.userId },
+      user
+    }));
+  }
 
   findUsers(searchFor: string, checkedUsers: UserId[]): UserSearchResult[] {
     const criteria = searchFor.toLowerCase();
-    const target = Object.values(this._org.users);
+    const target = Object.values(this._org.users).filter(({ type }) => type === 'TASK_USER');;
 
     const result = criteria ?
       target.filter(entry => entry.displayName.toLowerCase().includes(criteria)) :

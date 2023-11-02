@@ -101,6 +101,13 @@ export const useAssignees = (row: { assignees: UserId[] }) => {
   return { searchString, setSearchString, searchResults };
 }
 
+export const useProjectUsers = (row: { assignees: UserId[] }) => {
+  const org = useOrg();
+  const [searchString, setSearchString] = React.useState<string>('');
+  const searchResults = React.useMemo(() => org.state.findProjectUsers(searchString, row.assignees), [row, searchString, org]);
+  return { searchString, setSearchString, searchResults };
+}
+
 export const useRoles = (row: { roles: RoleId[] }) => {
   const org = useOrg();
   const [searchString, setSearchString] = React.useState<string>('');
