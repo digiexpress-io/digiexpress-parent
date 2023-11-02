@@ -27,7 +27,7 @@ const FormattedCell: React.FC<{
 
   return (
     <StyledTableCell width="500px" onClick={handleOpenProject}>
-      <Box justifyContent='left' display='flex'>
+      <Box justifyContent='left' display='flex' sx={{ cursor: 'pointer' }}>
         <TaskCell id={row.id + "/Subject"} name={row.title} maxWidth={"500px"} />
       </Box>
     </StyledTableCell>
