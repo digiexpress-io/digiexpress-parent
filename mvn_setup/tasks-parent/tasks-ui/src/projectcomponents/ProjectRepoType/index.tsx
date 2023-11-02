@@ -7,7 +7,7 @@ import Context from 'context';
 import { useMockPopover } from 'taskcomponents/TaskTable/MockPopover';
 
 const repoColors = Context.RepoTypePalette;
-const repoOptions: Client.RepoType[] = ['dialob', 'stencil', 'tasks', 'wrench'];
+const repoOptions: Client.RepoType[] = ['DIALOB', 'STENCIL', 'TASKS', 'WRENCH'];
 
 function getActiveColor(currentlyShowing: Client.RepoType, priority: Client.RepoType): string {
   const selectedItemColor = Context.StatusPalette.IN_PROGRESS;
@@ -31,7 +31,7 @@ const ProjectRepoType: React.FC<{
   return (
     <Box>
       <Button color='inherit' onClick={Popover.onClick} sx={{ textTransform: 'none' }}>
-        <Typography><FormattedMessage id={'projects.repoType.' + repoType} /></Typography>
+        <Typography><FormattedMessage id={'project.repoType.' + repoType} /></Typography>
       </Button>
       <Popover.Delegate onClose={Popover.onClose}>
         <List dense sx={{ py: 0 }}>
@@ -39,7 +39,7 @@ const ProjectRepoType: React.FC<{
             <MenuItem key={option} onClick={() => handleChangeRepoType(option)} sx={{ display: "flex", pl: 0, py: 0 }}>
               <Box sx={{ width: 8, height: 40, backgroundColor: repoColors[option] }} />
               <Box sx={{ width: 8, height: 8, borderRadius: "50%", mx: 2, backgroundColor: getActiveColor(option, repoType) }} />
-              <Typography><FormattedMessage id={`task.priority.${option}`} /></Typography>
+              <Typography><FormattedMessage id={`project.repoType.${option}`} /></Typography>
             </MenuItem>
           ))}
         </List>

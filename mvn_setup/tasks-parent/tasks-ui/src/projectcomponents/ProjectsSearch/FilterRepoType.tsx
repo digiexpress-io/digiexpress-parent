@@ -6,7 +6,7 @@ import { FilterByRepoType, FilterBy } from 'projectdescriptor';
 import { NavigationButtonSearch } from '../NavigationSticky';
 
 
-const statustypes: Client.RepoType[] = ['dialob', 'stencil', 'tasks', 'wrench'];
+const statustypes: Client.RepoType[] = ['DIALOB', 'STENCIL', 'TASKS', 'WRENCH'];
 
 export default function DenseMenu(
   props: {

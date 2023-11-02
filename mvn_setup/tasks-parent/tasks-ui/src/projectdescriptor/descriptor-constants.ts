@@ -16,10 +16,10 @@ export const red: string = '#d00000';
 
 export const Palette: PaletteType = {
   repoType: {
-    'dialob': bittersweet,
-    'stencil': emerald,
-    'tasks': steelblue,
-    'wrench': ultraviolet,
+    'DIALOB': bittersweet,
+    'STENCIL': emerald,
+    'TASKS': steelblue,
+    'WRENCH': ultraviolet,
   },
   colors: { red: bittersweet, green: emerald, yellow: sunglow, blue: steelblue, violet: ultraviolet }
 }

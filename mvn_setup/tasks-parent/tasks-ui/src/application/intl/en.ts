@@ -19,6 +19,14 @@ const en = {
   'projects.header.groupBy.repoType._nobody_': 'No users',
   'projects.header.groupBy.repoType.sipoo-user': 'Sipoo-user',
 
+  'project.title': 'Project title',
+  'project.repoType': 'Repo type',
+  'project.description': 'Project description',
+  'project.repoType.DIALOB': 'Dialob',
+  'project.repoType.WRENCH': 'Wrench',
+  'project.repoType.STENCIL': 'Stencil',
+  'project.repoType.TASKS': 'Tasks',
+
 
   'project.header.repoType': 'Repo type',
   'project.header.users': 'Project users',

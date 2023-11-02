@@ -14,7 +14,7 @@ import TaskEditDialog from 'taskcomponents/TaskEdit';
 import Client from 'client';
 import Context from 'context';
 import { TaskDescriptor } from 'taskdescriptor';
-import Section from 'taskcomponents/Section';
+import Section from 'section';
 
 
 

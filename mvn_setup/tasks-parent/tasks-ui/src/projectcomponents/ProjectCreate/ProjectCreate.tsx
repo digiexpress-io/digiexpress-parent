@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Typography, TextField, Stack } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Typography, TextField, Stack, Divider } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 import Context from 'context';
 import { NavigationButtonSearch } from '../NavigationSticky';
 import ProjectRepoType from '../ProjectRepoType';
 import Burger from '@the-wrench-io/react-burger';
 import Client from 'client';
+import Section from 'section';
 
 
 const ProjectCreate: React.FC<{
@@ -15,7 +16,7 @@ const ProjectCreate: React.FC<{
   const [open, setOpen] = React.useState(false);
   const [title, setTitle] = React.useState('project title');
   const [description, setDescription] = React.useState('project description');
-  const [repoType, setRepoType] = React.useState<Client.RepoType>('tasks');
+  const [repoType, setRepoType] = React.useState<Client.RepoType>('TASKS');
 
   function handleDialog() {
     setOpen(prev => !prev);
@@ -33,11 +34,34 @@ const ProjectCreate: React.FC<{
       <DialogTitle>
         <Typography variant='body2'><FormattedMessage id='project.search.searchBar.newProject.dialog.title' /></Typography>
       </DialogTitle>
+      <Divider />
+
       <DialogContent>
         <Stack spacing={1}>
-          <TextField value={title} onChange={handleTitleChange} fullWidth />
-          <TextField value={description} onChange={handleDescriptionChange} fullWidth />
-          <ProjectRepoType onChange={async (newType) => setRepoType(newType)} project={{ repoType }} />
+
+          <Section>
+            <Typography fontWeight='bold'><FormattedMessage id='project.title' /></Typography>
+            <TextField InputProps={{ disableUnderline: true }}
+              variant='standard'
+              value={title}
+              onChange={handleTitleChange}
+              fullWidth />
+          </Section>
+
+          <Section>
+            <Typography fontWeight='bold'><FormattedMessage id='project.description' /></Typography>
+            <TextField
+              InputProps={{ disableUnderline: true }}
+              variant='standard'
+              value={description}
+              onChange={handleDescriptionChange}
+              fullWidth />
+          </Section>
+
+          <Section>
+            <Typography fontWeight='bold'><FormattedMessage id='project.repoType' /></Typography>
+            <ProjectRepoType onChange={async (newType) => setRepoType(newType)} project={{ repoType }} />
+          </Section>
         </Stack>
       </DialogContent>
       <DialogActions>

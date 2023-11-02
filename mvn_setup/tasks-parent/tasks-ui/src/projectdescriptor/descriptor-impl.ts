@@ -216,7 +216,7 @@ class GroupVisitor {
     } else if (init.groupBy === 'users') {
       withColors(init.users).forEach(o => this._groups[o.value] = { records: [], color: o.color, id: o.value, type: init.groupBy })
     } else if (init.groupBy === 'repoType') {
-      const values: RepoType[] = ['dialob', 'stencil', 'wrench', 'tasks'];
+      const values: RepoType[] = ['DIALOB', 'STENCIL', 'WRENCH', 'TASKS'];
       values.forEach(o => this._groups[o] = { records: [], color: Palette.repoType[o], id: o, type: init.groupBy })
     }
   }
@@ -259,10 +259,10 @@ profile: Profile;
 */
 
 const appMapping: Record<RepoType, string> = {
-  dialob: 'app-dialob',
-  stencil: 'app-stencil',
-  tasks: 'app-tasks',
-  wrench: 'app-wrench'
+  DIALOB: 'app-dialob',
+  STENCIL: 'app-stencil',
+  TASKS: 'app-tasks',
+  WRENCH: 'app-wrench'
 }
 
 class ProjectDescriptorImpl implements ProjectDescriptor {

@@ -7,7 +7,7 @@ import Context from 'context';
 import Client from 'client';
 import TaskAssignees from '../TaskAssignees';
 import DueDate from '../TaskDueDate';
-import Section from '../Section';
+import Section from 'section';
 
 
 const TaskChecklist: React.FC<{ onChange: (commands: Client.TaskUpdateCommand<any>[]) => Promise<void> }> = ({ onChange }) => {

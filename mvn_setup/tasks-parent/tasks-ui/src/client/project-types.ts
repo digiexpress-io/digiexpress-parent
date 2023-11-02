@@ -1,4 +1,4 @@
-export type RepoType = 'wrench' | 'stencil' | 'tasks' | 'dialob';
+export type RepoType = 'WRENCH' | 'STENCIL' | 'TASKS' | 'DIALOB';
 export type ProjectId = string;
 
 export interface Project {
@@ -71,40 +71,40 @@ export interface ProjectStore {
 
 
 export const mockProjects: Record<RepoType, Project> = {
-  wrench: {
+  WRENCH: {
     id: 'wrench-1',
     repoId: 'repo-1',
-    repoType: 'wrench',
+    repoType: 'WRENCH',
     title: 'wrench-dev',
     description: 'Wrench assets for dev',
     users: ['sipoo-user'],
     created: "2023-11-02T06:36:45.959Z",
     updated: "2023-11-03T06:36:45.959Z",
   },
-  dialob: {
+  DIALOB: {
     id: 'dialob-1',
     repoId: 'repo-1',
-    repoType: 'dialob',
+    repoType: 'DIALOB',
     title: 'dialob-dev',
     description: 'Dialob assets for dev',
     users: ['sipoo-user'],
     created: "2023-11-02T06:36:45.959Z",
     updated: "2023-11-03T06:36:45.959Z",
   },
-  stencil: {
+  STENCIL: {
     id: 'stencil-1',
     repoId: 'repo-1',
-    repoType: 'stencil',
+    repoType: 'STENCIL',
     title: 'stencil-dev',
     description: 'stencil assets for dev',
     users: ['sipoo-user'],
     created: "2023-11-02T06:36:45.959Z",
     updated: "2023-11-03T06:36:45.959Z",
   },
-  tasks: {
+  TASKS: {
     id: 'tasks-1',
     repoId: 'repo-1',
-    repoType: 'tasks',
+    repoType: 'TASKS',
     title: 'tasks-dev',
     description: 'Task assets for dev',
     users: ['sipoo-user'],

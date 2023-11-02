@@ -8,7 +8,7 @@ import Events from './TaskEvents';
 import Burger from '@the-wrench-io/react-burger';
 import Context from 'context';
 import { TaskDescriptor } from 'taskdescriptor';
-import Section from '../Section';
+import Section from 'section';
 
 const Left: React.FC<{}> = () => {
   const { state } = Context.useTaskEdit();

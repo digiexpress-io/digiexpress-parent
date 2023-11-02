@@ -14,7 +14,7 @@ import TaskEditDialog from 'taskcomponents/TaskEdit';
 import Context from 'context';
 import Client from 'client';
 import { TaskDescriptor } from 'taskdescriptor';
-import Section from 'taskcomponents/Section';
+import Section from 'section';
 
 
 const StyledViewHistoryButton = styled(Button)(({ theme }) => ({

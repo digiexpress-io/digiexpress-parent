@@ -8,7 +8,7 @@ import Fields from './TaskCreateFields';
 import { Task } from 'client';
 import Context from 'context';
 import { TaskDescriptorImpl } from 'taskdescriptor';
-import Section from '../Section';
+import Section from 'section';
 
 function initTaskProps(userId: string): Task {
   return {

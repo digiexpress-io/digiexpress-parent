@@ -28,10 +28,10 @@ export interface ProjectPaletteType {
 }
 export interface PaletteType {
   repoType: {
-    'wrench': string,
-    'stencil': string,
-    'tasks': string,
-    'dialob': string
+    'WRENCH': string,
+    'STENCIL': string,
+    'TASKS': string,
+    'DIALOB': string
   },
   colors: { red: string, green: string, yellow: string, blue: string, violet: string }
 }
