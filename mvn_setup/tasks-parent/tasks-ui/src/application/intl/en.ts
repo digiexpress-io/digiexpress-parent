@@ -11,6 +11,27 @@ const en = {
   'buttons.accept': 'Accept and close',
   'buttons.download': 'Download',
 
+  'projects.header.spotlight.no_group': 'All projects',
+  'projects.header.groupBy.repoType.dialob': 'Dialob',
+  'projects.header.groupBy.repoType.wrench': 'Wrench',
+  'projects.header.groupBy.repoType.stencil': 'Stencil',
+  'projects.header.groupBy.repoType.tasks': 'Tasks',
+  'projects.header.groupBy.repoType._nobody_': 'No users',
+  'projects.header.groupBy.repoType.sipoo-user': 'Sipoo-user',
+
+
+  'project.header.repoType': 'Repo type',
+  'project.header.users': 'Project users',
+  'project.header.created': 'Created date',
+  'project.search.searchBar.filterRepoType': 'Filter by Repo type',
+  'project.search.searchBar.filterUsers': 'Filter by users',
+  'project.search.projectCount': 'Number of projects: {count}',
+  'projects.repoType.wrench': 'Wrench',
+  'projects.repoType.stencil': 'Stencil',
+  'projects.repoType.dialob': 'Dialob',
+  'projects.repoType.tasks': 'Tasks',
+
+
   'task.status.CREATED': 'Created',
   'task.status.IN_PROGRESS': 'In progress',
   'task.status.COMPLETED': 'Completed',
