@@ -42,7 +42,8 @@ const store: TaskClient.Store = new TaskClient.DefaultStore({
 });
 const backend = new TaskClient.ServiceImpl(store)
 
-const Apps: React.FC<{ profile: TaskClient.Profile, projectId: string }> = ({ profile, projectId }) => {
+const Apps: React.FC<{ profile: TaskClient.Profile }> = ({ profile }) => {
+  const { projectId } = Context.useProjectId();
 
   const tasks: Burger.App<Context.ComposerContextType> = React.useMemo(() => AppTasks, []);
   const projects: Burger.App<Context.ComposerContextType> = React.useMemo(() => AppProjects, []);

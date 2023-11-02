@@ -80,6 +80,7 @@ namespace Context {
   export const AssigneePalette = descCtx.Palette.assigneeGroupType;
   export const _nobody_ = descCtx._nobody_;
 
+  export const useProjectId = Hooks.useProjectId;
   export const useBackend = Hooks.useBackend;
   export const useTasks = Hooks.useTasks;
   export const useOrg = Hooks.useOrg;

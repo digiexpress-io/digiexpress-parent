@@ -7,6 +7,7 @@ import { ImmutableTabData } from './composer-ctx-impl';
 import { ComposerContext, ComposerContextType, ClientContextType, ClientContext } from './client-ctx';
 import { UserId, RoleId } from 'taskclient';
 
+import { ProjectIdContext, ProjectIdContextType } from './project-id-ctx';
 import { TasksContext } from './tasks-ctx';
 import { TasksContextType } from './tasks-ctx-types';
 import { OrgContext } from './org-ctx';
@@ -108,6 +109,12 @@ export const useBackend = () => {
   const result: ClientContextType = React.useContext(ClientContext);
   return result;
 }
+
+export const useProjectId = () => {
+  const result: ProjectIdContextType = React.useContext(ProjectIdContext);
+  return result;
+}
+
 
 export const useSite = () => {
   const result: ComposerContextType = React.useContext(ComposerContext);
