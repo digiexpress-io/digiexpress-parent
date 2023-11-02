@@ -1,6 +1,6 @@
 import React from 'react';
 import { Session, Actions } from './composer-ctx-types';
-import TaskClient from 'taskclient';
+import TaskClient from 'client';
 
 
 export interface ComposerContextType {

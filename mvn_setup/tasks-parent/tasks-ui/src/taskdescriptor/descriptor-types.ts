@@ -1,4 +1,4 @@
-import { Profile, Task, TaskPriority, TaskStatus, TaskExtension, TaskTransaction, Checklist, TaskComment } from 'taskclient';
+import { Profile, Task, TaskPriority, TaskStatus, TaskExtension, TaskTransaction, Checklist, TaskComment } from 'client';
 
 export interface AvatarCode {
   twoletters: string;

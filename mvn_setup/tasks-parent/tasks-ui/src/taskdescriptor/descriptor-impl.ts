@@ -1,11 +1,11 @@
-import { Task, TaskExtension, TaskPriority, TaskStatus } from 'taskclient/task-types';
+import { Task, TaskExtension, TaskPriority, TaskStatus } from 'client/task-types';
 import {
   TaskDescriptor, FilterBy, Group, GroupBy,
   FilterByOwners, FilterByPriority, FilterByRoles, FilterByStatus, AvatarCode, AssigneeGroupType, TeamGroupType,
   TasksPaletteType, Data
 } from './descriptor-types';
 
-import { Profile, resolveAvatar } from 'taskclient';
+import { Profile, resolveAvatar } from 'client';
 import { DescriptorState } from './descriptor-types';
 import { _nobody_, Palette } from './descriptor-constants';
 

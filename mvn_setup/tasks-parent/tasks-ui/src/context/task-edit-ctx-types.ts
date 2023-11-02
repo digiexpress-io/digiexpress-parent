@@ -4,7 +4,7 @@ import {
   CreateTaskExtension, ChangeTaskExtension, ChangeTaskStartDate, CreateChecklist, ChangeChecklistTitle, DeleteChecklist, AddChecklistItem, DeleteChecklistItem,
   ChangeChecklistItemAssignees, ChangeChecklistItemCompleted, ChangeChecklistItemDueDate, ChangeChecklistItemTitle,
   Task
-} from 'taskclient/task-types';
+} from 'client/task-types';
 
 import { TaskDescriptor } from 'taskdescriptor';
 

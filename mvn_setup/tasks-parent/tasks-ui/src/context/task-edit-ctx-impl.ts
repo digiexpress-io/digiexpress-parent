@@ -1,4 +1,4 @@
-import { TaskCommand, TaskTransaction, Task } from 'taskclient';
+import { TaskCommand, TaskTransaction, Task } from 'client';
 import { TaskEditState, TaskEditMutatorBuilder, TaskEditEvent, SingleEvent } from './task-edit-ctx-types';
 import { TaskDescriptor, TaskDescriptorImpl } from 'taskdescriptor';
 

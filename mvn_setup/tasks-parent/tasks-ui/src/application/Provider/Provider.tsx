@@ -2,7 +2,7 @@ import React from 'react';
 
 import { initSession, SessionData, ActionsImpl } from 'context';
 
-import { Profile, Backend } from 'taskclient';
+import { Profile, Backend } from 'client';
 import { ClientContext, ComposerContext } from 'context/client-ctx';
 import RequireProject from './RequireProject';
 import { TasksProvider } from 'context/tasks-ctx';

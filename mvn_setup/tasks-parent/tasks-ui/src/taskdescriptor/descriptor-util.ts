@@ -1,6 +1,6 @@
 import { parseISO, isAfter, isEqual, differenceInCalendarDays, differenceInDays } from 'date-fns';
 
-import { Task, Profile } from 'taskclient';
+import { Task, Profile } from 'client';
 import { TaskDescriptor, FilterBy, AssigneeGroupType, TeamGroupType } from './descriptor-types';
 import { _nobody_, Palette } from './descriptor-constants'
 

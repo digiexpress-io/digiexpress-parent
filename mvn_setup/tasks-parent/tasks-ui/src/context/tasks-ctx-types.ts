@@ -1,4 +1,4 @@
-import { Profile, Task } from 'taskclient';
+import { Profile, Task } from 'client';
 import { TaskDescriptor, PaletteType, TasksPaletteType, DescriptorState } from 'taskdescriptor';
 
 

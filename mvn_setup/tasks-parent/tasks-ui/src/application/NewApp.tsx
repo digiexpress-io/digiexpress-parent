@@ -6,7 +6,7 @@ import { SnackbarProvider } from 'notistack';
 import { useSnackbar } from 'notistack';
 import Burger, { siteTheme } from '@the-wrench-io/react-burger';
 
-import TaskClient from 'taskclient';
+import TaskClient from 'client';
 import Context, { ProjectIdProvider } from 'context';
 import Connection from './Connection';
 import messages from './intl';

@@ -1,6 +1,6 @@
 import Burger from '@the-wrench-io/react-burger';
 
-import type { Task, Profile } from 'taskclient';
+import type { Task, Profile } from 'client';
 
 export type DocumentId = string;
 

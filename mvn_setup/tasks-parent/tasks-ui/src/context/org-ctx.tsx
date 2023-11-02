@@ -2,7 +2,7 @@ import React from 'react';
 
 import { OrgState, OrgDispatch, OrgMutator, OrgContextType } from './org-ctx-types';
 import { OrgMutatorBuilderImpl, } from './org-ctx-impl';
-import { Backend } from 'taskclient';
+import { Backend } from 'client';
 
 const OrgContext = React.createContext<OrgContextType>({} as OrgContextType);
 

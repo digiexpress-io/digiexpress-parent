@@ -5,7 +5,7 @@ import { useTheme } from '@mui/material';
 import { Tab, TabEntity, TabBody, Document } from './composer-ctx-types';
 import { ImmutableTabData } from './composer-ctx-impl';
 import { ComposerContext, ComposerContextType, ClientContextType, ClientContext } from './client-ctx';
-import { UserId, RoleId } from 'taskclient';
+import { UserId, RoleId } from 'client';
 
 import { ProjectIdContext, ProjectIdContextType } from './project-id-ctx';
 import { TasksContext } from './tasks-ctx';
