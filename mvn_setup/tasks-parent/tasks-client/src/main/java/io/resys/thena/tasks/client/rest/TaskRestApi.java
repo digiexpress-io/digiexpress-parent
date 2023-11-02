@@ -23,6 +23,10 @@ package io.resys.thena.tasks.client.rest;
 import java.time.LocalDate;
 import java.util.List;
 
+import io.resys.thena.tasks.client.api.model.Task;
+import io.resys.thena.tasks.client.api.model.TaskCommand.CreateTask;
+import io.resys.thena.tasks.client.api.model.TaskCommand.TaskUpdateCommand;
+import io.smallrye.mutiny.Uni;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -34,19 +38,10 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 
-import io.resys.thena.tasks.client.api.model.Project;
-import io.resys.thena.tasks.client.api.model.Task;
-import io.resys.thena.tasks.client.api.model.TaskCommand.CreateTask;
-import io.resys.thena.tasks.client.api.model.TaskCommand.TaskUpdateCommand;
-import io.smallrye.mutiny.Uni;
-
 
 public interface TaskRestApi {
   
   public static final String PROJECT_ID = "Project-ID";
-  
-  @GET @Path("projects") @Produces(MediaType.APPLICATION_JSON)
-  Uni<List<Project>> findProjects();
   
   @GET @Path("tasks") @Produces(MediaType.APPLICATION_JSON)
   Uni<List<Task>> findTasks(@HeaderParam(PROJECT_ID) String projectId);

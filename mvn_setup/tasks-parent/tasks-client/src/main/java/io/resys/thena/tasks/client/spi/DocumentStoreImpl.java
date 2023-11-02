@@ -60,6 +60,10 @@ public class DocumentStoreImpl implements DocumentStore {
   
 
   @Override
+  public DocumentStore withRepoId(String repoId) {
+    return new DocumentStoreImpl(ImmutableDocumentConfig.builder().from(config).projectName(repoId).build());
+  }
+  @Override
   public Uni<Repo> getRepo() {
     final var client = config.getClient();
     return client.project().projectsQuery().id(config.getProjectName()).get();
@@ -232,5 +236,4 @@ public class DocumentStoreImpl implements DocumentStore {
       return new DocumentStoreImpl(config);
     }
   }
-
 }

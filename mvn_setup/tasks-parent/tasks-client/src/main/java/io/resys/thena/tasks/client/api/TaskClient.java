@@ -33,5 +33,5 @@ public interface TaskClient {
   StatisticsActions statistics();
   ExportActions export();
   RepositoryActions repo();
-
+  TaskClient withRepoId(String repoId);
 }

@@ -28,6 +28,7 @@ public interface DocumentStore {
   DocumentRepositoryQuery query();
   DocumentConfig getConfig();
   Uni<Repo> getRepo();
+  DocumentStore withRepoId(String repoId);
   
   interface DocumentRepositoryQuery {
     DocumentRepositoryQuery repoName(String repoName);

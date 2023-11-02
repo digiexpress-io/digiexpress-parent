@@ -61,4 +61,8 @@ public class TaskClientImpl implements TaskClient {
   public DocumentStore getCtx() {
     return ctx;
   }
+  @Override
+  public TaskClient withRepoId(String repoId) {
+    return new TaskClientImpl(ctx.withRepoId(repoId));
+  }
 }
