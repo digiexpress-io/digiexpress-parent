@@ -33,9 +33,9 @@ const StyledTabs = styled(Tabs)<TabsProps>(({ theme }) => ({
 
 const Toolbar: React.FC<{}> = () => {
   const composer = Context.useComposer();
+  const app = Context.useApp();
   const drawer = Burger.useDrawer();
   const tabs = Burger.useTabs();
-  const apps = Burger.useApps();
   const secondary = Burger.useSecondary();
 
   const tabActions = tabs.actions;
@@ -89,7 +89,7 @@ const Toolbar: React.FC<{}> = () => {
     } else if (newValue === 'toolbar.expand') {
       drawer.actions.handleDrawerOpen(!drawerOpen)
     } else if (newValue === 'projects') {
-      apps.actions.handleActive('projects-app');
+      app.changeApp('projects');
     }
 
   };

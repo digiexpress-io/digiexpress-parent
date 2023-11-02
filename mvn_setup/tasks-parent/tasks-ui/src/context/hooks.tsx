@@ -126,11 +126,23 @@ export const useBackend = () => {
 }
 
 export const useProjectId = () => {
-  const apps = Burger.useApps();
   const result: ProjectIdContextType = React.useContext(ProjectIdContext);
-  return {...result, 
-    isTasks: apps.session.active === 'app-tasks'  
-  };
+  return result;
+}
+
+export const useApp = () => {
+  const project = useProjectId();
+  const apps = Burger.useApps();
+  
+  function changeApp(input: 'tasks' | 'projects' | 'stencil', projectId?: string) {
+    if(input === 'projects') {
+      project.setProjectId('', 'PROJECT');
+      apps.actions.handleActive('projects-app');
+    }
+  }
+  
+  
+  return { changeApp };
 }
 
 

@@ -54,7 +54,7 @@ const Apps: React.FC<{ profile: TaskClient.Profile }> = ({ profile }) => {
   }, [projectId]);
 
   return (<Provider service={service} profile={profile}>
-    <Burger.Provider children={[tasks, projects]} secondary="toolbar.activities" drawerOpen appId={appId} />
+      <Burger.Provider children={[tasks, projects]} secondary="toolbar.activities" drawerOpen appId={appId} />
   </Provider>)
 }
 

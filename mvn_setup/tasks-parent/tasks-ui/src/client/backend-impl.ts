@@ -98,9 +98,9 @@ export class ServiceImpl implements Backend {
   }
 
   async getActiveProjects(): Promise<ProjectPagination> {
-    // const projects = await this._store.fetch<object[]>(`projects`);
+    const projects = await this._store.fetch<object[]>(`projects`);
 
-    const projects = Object.values(mockProjects);
+    ///const projects = Object.values(mockProjects);
     return {
       page: 1,
       total: { pages: 1, records: projects.length },

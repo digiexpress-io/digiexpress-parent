@@ -6,15 +6,21 @@ import ProjectRepoType from '../ProjectRepoType';
 import Burger from '@the-wrench-io/react-burger';
 import Client from 'client';
 import Section from 'section';
+import Context from 'context';
 
 
-const ProjectCreate: React.FC<{}> = () => {
+
+const ProjectCreate: React.FC<{
+}> = () => {
+  const ctx = Context.useProjects();
+  const backend = Context.useBackend();
+
   const [open, setOpen] = React.useState(false);
   const [title, setTitle] = React.useState('project title');
   const [description, setDescription] = React.useState('project description');
   const [repoType, setRepoType] = React.useState<Client.RepoType>('TASKS');
 
-  function handleDialog() {
+  function handleToggleDialog() {
     setOpen(prev => !prev);
   }
 
@@ -25,8 +31,21 @@ const ProjectCreate: React.FC<{}> = () => {
     setDescription(event.target.value);
   }
 
+  function handleAccept() {
+    const command: Client.CreateProject = {
+        commandType: 'CreateProject',
+        description,
+        repoType: repoType.toUpperCase(),
+        title,
+        repoId: repoType + '-project',
+        users: []
+    } as any;
+    backend.project.createProject(command).then(_data => ctx.reload());    
+  }
+
+
   return (<>
-    <Dialog fullWidth maxWidth='md' open={open} onClose={handleDialog}>
+    <Dialog fullWidth maxWidth='md' open={open} onClose={handleToggleDialog}>
       <DialogTitle>
         <Typography variant='body2'><FormattedMessage id='project.search.searchBar.newProject.dialog.title' /></Typography>
       </DialogTitle>
@@ -61,10 +80,10 @@ const ProjectCreate: React.FC<{}> = () => {
         </Stack>
       </DialogContent>
       <DialogActions>
-        <Burger.PrimaryButton label='buttons.accept' onClick={handleDialog} />
+        <Burger.PrimaryButton label='buttons.accept' onClick={handleAccept} />
       </DialogActions>
     </Dialog>
-    <NavigationButtonSearch onClick={handleDialog} id='project.search.searchBar.newProject' values={undefined} />
+    <NavigationButtonSearch onClick={handleToggleDialog} id='project.search.searchBar.newProject' values={undefined} />
   </>
   );
 }

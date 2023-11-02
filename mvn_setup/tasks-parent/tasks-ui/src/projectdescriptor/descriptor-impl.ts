@@ -258,7 +258,7 @@ profile: Profile;
 
 */
 
-const appMapping: Record<RepoType, string> = {
+const appMapping: Record<RepoType | string, string> = {
   DIALOB: 'app-dialob',
   STENCIL: 'app-stencil',
   TASKS: 'app-tasks',
