@@ -22,10 +22,16 @@ const en = {
   'project.title': 'Project title',
   'project.repoType': 'Repo type',
   'project.description': 'Project description',
+
   'project.repoType.DIALOB': 'Dialob',
   'project.repoType.WRENCH': 'Wrench',
   'project.repoType.STENCIL': 'Stencil',
   'project.repoType.TASKS': 'Tasks',
+
+  'project.repoType.dialob': 'Dialob',
+  'project.repoType.wrench': 'Wrench',
+  'project.repoType.stencil': 'Stencil',
+  'project.repoType.tasks': 'Tasks',
 
 
   'project.header.repoType': 'Repo type',
