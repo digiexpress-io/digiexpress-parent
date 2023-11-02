@@ -31,7 +31,7 @@ const ProjectRepoType: React.FC<{
   return (
     <Box>
       <Button color='inherit' onClick={Popover.onClick} sx={{ textTransform: 'none' }}>
-        <Typography><FormattedMessage id={'project.repoType.' + repoType} /></Typography>
+        <Typography><FormattedMessage id={'project.repoType.' + repoType.toUpperCase()} /></Typography>
       </Button>
       <Popover.Delegate onClose={Popover.onClose}>
         <List dense sx={{ py: 0 }}>

@@ -28,12 +28,6 @@ const en = {
   'project.repoType.STENCIL': 'Stencil',
   'project.repoType.TASKS': 'Tasks',
 
-  'project.repoType.dialob': 'Dialob',
-  'project.repoType.wrench': 'Wrench',
-  'project.repoType.stencil': 'Stencil',
-  'project.repoType.tasks': 'Tasks',
-
-
   'project.header.repoType': 'Repo type',
   'project.header.users': 'Project users',
   'project.header.created': 'Created date',

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Typography, TextField, Stack, Divider } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
-import Context from 'context';
 import { NavigationButtonSearch } from '../NavigationSticky';
 import ProjectRepoType from '../ProjectRepoType';
 import Burger from '@the-wrench-io/react-burger';
@@ -9,10 +8,7 @@ import Client from 'client';
 import Section from 'section';
 
 
-const ProjectCreate: React.FC<{
-}> = () => {
-  const ctx = Context.useProjects();
-
+const ProjectCreate: React.FC<{}> = () => {
   const [open, setOpen] = React.useState(false);
   const [title, setTitle] = React.useState('project title');
   const [description, setDescription] = React.useState('project description');

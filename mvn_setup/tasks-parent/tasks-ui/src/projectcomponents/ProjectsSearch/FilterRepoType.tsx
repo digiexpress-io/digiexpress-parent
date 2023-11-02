@@ -43,7 +43,7 @@ export default function DenseMenu(
     >
       <MenuList dense>
         <MenuItem>
-          <ListItemText><b>Filter by status</b></ListItemText>
+          <ListItemText><b>Filter by Repo type</b></ListItemText>
         </MenuItem>
         {statustypes.map(type => {
           const found = props.value.find(filter => filter.type === 'FilterByRepoType');
