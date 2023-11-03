@@ -14,7 +14,7 @@
   <packaging>pom</packaging>
 
   <modules>
-    <module>core</module>
+    <module>docdb-api</module>
   </modules>
 
 </project>
