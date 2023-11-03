@@ -18,9 +18,6 @@
   <modules>
     <module>hdes-dialect</module>
     <module>hdes-core</module>
-    <module>hdes-spring</module>
-    <module>hdes-quarkus</module>
-    <module>hdes-dev</module>
   </modules>
 
 </project>

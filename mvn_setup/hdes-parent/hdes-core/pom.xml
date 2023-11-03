@@ -15,7 +15,6 @@
     <module>hdes-client</module>
     <module>hdes-store-git</module>
     <module>hdes-store-thena</module>
-    <module>hdes-composer-ui</module>
   </modules>
 
 </project>
