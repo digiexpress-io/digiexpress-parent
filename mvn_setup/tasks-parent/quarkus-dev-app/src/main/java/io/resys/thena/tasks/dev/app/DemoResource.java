@@ -5,6 +5,14 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 
+import io.resys.thena.projects.client.api.ProjectsClient;
+import io.resys.thena.tasks.client.api.TaskClient;
+import io.resys.thena.tasks.client.api.model.ImmutableCreateTask;
+import io.resys.thena.tasks.client.api.model.TaskCommand.CreateTask;
+import io.resys.thena.tasks.dev.app.BeanFactory.CurrentProject;
+import io.smallrye.mutiny.Uni;
+import io.vertx.mutiny.core.Vertx;
+
 /*-
  * #%L
  * thena-quarkus-dev-app
@@ -31,13 +39,6 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
-
-import io.resys.thena.tasks.client.api.TaskClient;
-import io.resys.thena.tasks.client.api.model.ImmutableCreateTask;
-import io.resys.thena.tasks.client.api.model.TaskCommand.CreateTask;
-import io.resys.thena.tasks.dev.app.BeanFactory.CurrentProject;
-import io.smallrye.mutiny.Uni;
-import io.vertx.mutiny.core.Vertx;
 import lombok.Builder;
 import lombok.Data;
 import lombok.extern.jackson.Jacksonized;
@@ -45,7 +46,8 @@ import lombok.extern.jackson.Jacksonized;
 @Path("q/demo/api/")
 public class DemoResource {
   @Inject Vertx vertx;
-  @Inject TaskClient client;
+  @Inject TaskClient taskClient;
+  @Inject ProjectsClient projectsClient;
   @Inject CurrentProject currentProject;
   
   //http://localhost:8080/portal/active/tasks
@@ -56,8 +58,8 @@ public class DemoResource {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @Path("populate/tasks/{totalTasks}")
-  public Uni<HeadState> populate(@PathParam("totalTasks") String totalTasks) {
+  @Path("populate/{repoId}/tasks/{totalTasks}")
+  public Uni<HeadState> populate(@PathParam("repoId") String repoId, @PathParam("totalTasks") String totalTasks) {
     final int count = totalTasks == null ? 50 : Integer.parseInt(totalTasks);
 
     
@@ -86,20 +88,20 @@ public class DemoResource {
       bulk.add(newTask);
     }
     final var response = HeadState.builder().created(true).build();
-    return client.repo().query().repoName(currentProject.getProjectId()).headName(currentProject.getHead()).createIfNot()
+    return taskClient.withRepoId(repoId).repo().query().repoName(repoId).headName(currentProject.getHead()).createIfNot()
         .onItem().transformToUni(created -> {
-          return client.tasks().createTask().createMany(bulk).onItem().transform((data) -> response);
+          return taskClient.withRepoId(repoId).tasks().createTask().createMany(bulk).onItem().transform((data) -> response);
         });
   }
   
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @Path("clear/tasks")
-  public Uni<HeadState> clear() {
-    return client.repo().query().repoName(currentProject.getProjectId()).headName(currentProject.getHead()).createIfNot()
+  @Path("clear/{repoId}/tasks")
+  public Uni<HeadState> clear(@PathParam("repoId") String repoId) {
+    return taskClient.withRepoId(repoId).repo().query().repoName(currentProject.getProjectId()).headName(currentProject.getHead()).createIfNot()
         .onItem().transformToUni(created -> {
           
-            return client.tasks().queryActiveTasks().deleteAll("", Instant.now())
+            return taskClient.tasks().queryActiveTasks().deleteAll("", Instant.now())
                 .onItem().transform(tasks -> HeadState.builder().created(true).build());
           
         });
@@ -107,14 +109,13 @@ public class DemoResource {
   
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @Path("reinit/tasks")
+  @Path("reinit")
   public Uni<HeadState> reinit() {
-    return client.repo().query().repoName(currentProject.getProjectId()).headName(currentProject.getHead()).delete()
+    return projectsClient.repo().query().deleteAll()
         .onItem().transformToUni(junk -> init());
   }
-
   private Uni<HeadState> init() {
-    return client.repo().query().repoName(currentProject.getProjectId()).headName(currentProject.getHead()).createIfNot()
+    return taskClient.repo().query().repoName(currentProject.getProjectId()).headName(currentProject.getHead()).createIfNot()
         .onItem().transform(created -> HeadState.builder().created(true).build());
   }
 

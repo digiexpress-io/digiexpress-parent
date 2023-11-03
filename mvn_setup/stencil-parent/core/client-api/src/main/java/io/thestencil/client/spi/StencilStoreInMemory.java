@@ -177,4 +177,9 @@ public class StencilStoreInMemory implements StencilStore {
     throw new IllegalArgumentException("no read or writes supported!");
   }
 
+  @Override
+  public StencilStore withProjectId(String projectId) {
+    return this;
+  }
+
 }

@@ -8,8 +8,8 @@ import { AvatarCode } from 'projectdescriptor';
 import Context from 'context';
 
 const UserAvatar: React.FC<{ children?: AvatarCode }> = ({ children }) => {
-  const { state } = Context.useTasks();
-  const assigneeColors = state.palette.owners;
+  const { state } = Context.useProjects();
+  const assigneeColors = state.palette.users;
   const bgcolor: string | undefined = children ? assigneeColors[children.value] : undefined;
   const avatar = children ? children.twoletters : <PersonAddIcon sx={{ fontSize: 15 }} />;
 

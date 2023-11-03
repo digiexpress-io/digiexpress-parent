@@ -59,6 +59,10 @@ import lombok.RequiredArgsConstructor;
 public class StencilClientImpl implements StencilClient {
   private final StencilStore store;
 
+  public StencilClientImpl withProjectId(String projectId) {
+    return new StencilClientImpl(store.withProjectId(projectId));
+  }
+  
   @Override
   public MarkdownBuilder markdown() {
     return new MarkdownBuilder() {

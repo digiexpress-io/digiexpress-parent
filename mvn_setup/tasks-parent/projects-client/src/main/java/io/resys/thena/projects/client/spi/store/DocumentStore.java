@@ -36,6 +36,7 @@ public interface DocumentStore {
     Uni<DocumentStore> delete();
     Uni<DocumentStore> create();
     Uni<DocumentStore> createIfNot();
+    Uni<Void> deleteAll();
   } 
   
 

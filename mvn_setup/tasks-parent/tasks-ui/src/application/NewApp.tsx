@@ -13,7 +13,7 @@ import messages from './intl';
 import Provider from './Provider';
 import AppTasks from 'app-tasks';
 import AppProjects from 'app-projects';
-import AppStencil, { Composer as AppStencilComposer, StencilClient } from 'app-stencil';
+import AppStencil from 'app-stencil';
 
 interface Csrf { key: string, value: string }
 declare global {
@@ -40,28 +40,21 @@ const store: TaskClient.Store = new TaskClient.DefaultStore({
   oidc: window._env_?.oidc,
   status: window._env_?.status,
 });
+
 const backend = new TaskClient.ServiceImpl(store)
 
+
+
 const Apps: React.FC<{ profile: TaskClient.Profile }> = ({ profile }) => {
-  const { projectId, projectType } = Context.useProjectId();
-
-  const stencil: Burger.App<AppStencilComposer.ContextType> = React.useMemo(() => AppStencil, []);
-  const tasks: Burger.App<Context.ComposerContextType> = React.useMemo(() => AppTasks, []);
-  const projects: Burger.App<Context.ComposerContextType> = React.useMemo(() => AppProjects, []);
-  const appId = 'app-projects';
-
+  const { projectId } = Context.useProjectId();
   const service = React.useMemo(() => {
-    
     return backend.withProjectId(projectId);
   }, [projectId]);
 
-
-  if(projectType === 'STENCIL') {
-    const service = StencilClient.service({ config: { url: "http://localhost:8080/q/ide-services" }});
-    return (<AppStencilComposer.Provider service={service} >
-      <Burger.Provider children={[tasks, projects, stencil]} secondary="toolbar.activities" drawerOpen appId={appId} />
-    </AppStencilComposer.Provider>);    
-  } 
+  const stencil: Burger.App<{}, any> = React.useMemo(() => AppStencil(service, profile, projectId), [service, profile, projectId]);
+  const tasks: Burger.App<{}, any> = React.useMemo(() => AppTasks(service, profile), [service, profile]);
+  const projects: Burger.App<{}, any> = React.useMemo(() => AppProjects(service, profile), [service, profile]);
+  const appId = 'app-projects';
 
   return (<Provider service={service} profile={profile}>
     <Burger.Provider children={[tasks, projects, stencil]} secondary="toolbar.activities" drawerOpen appId={appId} />

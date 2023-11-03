@@ -105,13 +105,13 @@ public interface StencilRestApi {
   Uni<Entity<Page>> deletePage(@HeaderParam(PROJECT_ID) String projectId, @PathParam("id") String id);
 
   
-  @POST @Path("pages") @Produces(MediaType.APPLICATION_JSON) @Consumes(MediaType.APPLICATION_JSON)
+  @POST @Path("templates") @Produces(MediaType.APPLICATION_JSON) @Consumes(MediaType.APPLICATION_JSON)
   Uni<Entity<Template>> createTemplate(@HeaderParam(PROJECT_ID) String projectId, ImmutableCreateTemplate body);
   
-  @PUT @Path("pages") @Produces(MediaType.APPLICATION_JSON) @Consumes(MediaType.APPLICATION_JSON)
+  @PUT @Path("templates") @Produces(MediaType.APPLICATION_JSON) @Consumes(MediaType.APPLICATION_JSON)
   Uni<Entity<Template>> updateTemplate(@HeaderParam(PROJECT_ID) String projectId, ImmutableTemplateMutator body);
   
-  @DELETE @Path("pages/{id}") @Produces(MediaType.APPLICATION_JSON) @Consumes(MediaType.APPLICATION_JSON)
+  @DELETE @Path("templates/{id}") @Produces(MediaType.APPLICATION_JSON) @Consumes(MediaType.APPLICATION_JSON)
   Uni<Entity<Template>> deleteTemplate(@HeaderParam(PROJECT_ID) String projectId, @PathParam("id") String id);
   
   

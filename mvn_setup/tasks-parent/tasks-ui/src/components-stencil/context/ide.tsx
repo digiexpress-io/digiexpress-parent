@@ -230,7 +230,9 @@ namespace Composer {
     return { handleInTab, findTab };
   }
 
-  export const Provider: React.FC<{ children: React.ReactNode, service: StencilClient.Service }> = ({ children, service }) => {
+  export const Provider: React.FC<{ children: React.ReactNode, init: {service: StencilClient.Service} }> = ({ children, init }) => {
+    const {service} = init;
+    
     const [session, dispatch] = React.useReducer(Reducer, sessionData);
     const actions = React.useMemo(() => {
       console.log("init ide dispatch");
@@ -242,7 +244,10 @@ namespace Composer {
       actions.handleLoad();
     }, [service, actions]);
 
-    return (<ComposerContext.Provider value={{ session, actions, service }}>{children}</ComposerContext.Provider>);
+    return (
+    <ComposerContext.Provider value={{ session, actions, service }}>{children}
+    </ComposerContext.Provider>
+    );
   };
 }
 

@@ -52,6 +52,8 @@ public interface StencilComposer {
   SitesBuilder sites();
   VersionBuilder version();
   
+  StencilComposer withProjectId(String projectId);
+  
 
   @Value.Immutable
   @JsonSerialize(as = ImmutableSiteState.class)

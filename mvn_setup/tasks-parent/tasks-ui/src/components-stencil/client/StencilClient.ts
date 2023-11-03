@@ -287,6 +287,7 @@ declare namespace StencilClient {
   }
   interface StoreConfig {
     url: string;
+    projectId: string;
     oidc?: string;
     status?: string;
     csrf?: { key: string, value: string }

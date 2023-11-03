@@ -1,5 +1,8 @@
 package io.resys.thena.tasks.dev.app;
 
+import java.io.IOException;
+import java.util.UUID;
+
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,6 +14,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.quarkus.jackson.ObjectMapperCustomizer;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import io.resys.thena.docdb.spi.jackson.VertexExtModule;
+import io.resys.thena.docdb.spi.pgsql.PgErrors;
+import io.resys.thena.docdb.sql.DocDBFactorySql;
 import io.resys.thena.projects.client.api.ProjectsClient;
 import io.resys.thena.projects.client.spi.ProjectsClientImpl;
 import io.resys.thena.tasks.client.api.TaskClient;
@@ -18,6 +23,13 @@ import io.resys.thena.tasks.client.api.model.ImmutableTask;
 import io.resys.thena.tasks.client.api.model.ImmutableTaskComment;
 import io.resys.thena.tasks.client.api.model.ImmutableTaskExtension;
 import io.resys.thena.tasks.client.spi.TaskClientImpl;
+import io.thestencil.client.api.ImmutableStencilConfig;
+import io.thestencil.client.api.StencilComposer;
+import io.thestencil.client.spi.StencilClientImpl;
+import io.thestencil.client.spi.StencilComposerImpl;
+import io.thestencil.client.spi.StencilStoreImpl;
+import io.thestencil.client.spi.serializers.ZoeDeserializer;
+import io.vertx.core.json.JsonObject;
 import io.vertx.core.json.jackson.VertxModule;
 import io.vertx.mutiny.core.Vertx;
 import io.vertx.pgclient.PgConnectOptions;
@@ -140,7 +152,40 @@ public class BeanFactory {
         .build();
     return new ProjectsClientImpl(store);
   }
+  
+  @Produces
+  public StencilComposer stencilComposer(Vertx vertx, ObjectMapper om, CurrentProject currentProject) {    
+    
+    final var connectOptions = new PgConnectOptions().setDatabase(pgDb)
+        .setHost(pgHost).setPort(pgPort)
+        .setUser(pgUser).setPassword(pgPass);
+    final var poolOptions = new PoolOptions().setMaxSize(pgPoolSize);
+    final var pgPool = io.vertx.mutiny.pgclient.PgPool.pool(vertx, connectOptions, poolOptions);
 
+    final var docDb = DocDBFactorySql.create().client(pgPool).errorHandler(new PgErrors()).build();
+    final var deserializer = new ZoeDeserializer(om);
+    final var store = StencilStoreImpl.builder()
+        .config((builder) -> builder
+        .client(docDb)
+        .objectMapper(om)
+        .repoName("")
+        .headName(currentProject.getHead())
+        .deserializer(deserializer)
+        .serializer((entity) -> {
+          try {
+            return new JsonObject(om.writeValueAsString(entity));
+          } catch (IOException e) {
+            throw new RuntimeException(e.getMessage(), e);
+          }
+        })
+        .gidProvider(type -> UUID.randomUUID().toString())
+        .authorProvider(() -> "no-author"))
+        .build();
+    
+    
+    final var client = new StencilClientImpl(store);
+    return new StencilComposerImpl(client);
+  }
 
   /*
   @Produces

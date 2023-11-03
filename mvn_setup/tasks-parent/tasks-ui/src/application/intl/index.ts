@@ -1,8 +1,10 @@
 import en from './en';
+import { messages as stencil } from 'components-stencil';
 
-const messages: {[key: string]: any}  = {
-  en,
+
+const result: {[key: string]: any}  = {
+  en: {...en, ...stencil['en']},
 
 };
 
-export default messages;
+export default result;

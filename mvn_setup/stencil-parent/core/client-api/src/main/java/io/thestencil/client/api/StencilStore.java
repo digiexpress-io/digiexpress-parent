@@ -40,6 +40,8 @@ public interface StencilStore {
   Uni<List<Entity<?>>> batch(BatchCommand batch);
   StencilConfig getConfig();
   
+  StencilStore withProjectId(String projectId);
+  
   @Value.Immutable
   @SuppressWarnings("rawtypes")
   interface BatchCommand {

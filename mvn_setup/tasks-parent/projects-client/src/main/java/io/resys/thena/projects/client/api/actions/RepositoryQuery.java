@@ -8,6 +8,7 @@ public interface RepositoryQuery {
   RepositoryQuery headName(String headName);
   ProjectsClient build();
 
+  Uni<ProjectsClient> deleteAll();
   Uni<ProjectsClient> delete();
   Uni<ProjectsClient> create();
   Uni<ProjectsClient> createIfNot();

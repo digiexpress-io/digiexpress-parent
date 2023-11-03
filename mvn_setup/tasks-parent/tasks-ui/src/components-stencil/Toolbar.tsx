@@ -10,9 +10,11 @@ import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
+import TerminalIcon from '@mui/icons-material/Terminal';
 import SaveIcon from '@mui/icons-material/Save';
 import FeedbackOutlinedIcon from '@mui/icons-material/FeedbackOutlined';
 
+import Context from 'context';
 import { Composer, StencilClient } from './context';
 import { LocaleFilter } from './explorer/filter';
 
@@ -39,6 +41,7 @@ const StyledTabs = styled(Tabs)<TabsProps>(({ theme }) => ({
 
 const Toolbar: React.FC<{}> = () => {
   const { enqueueSnackbar } = useSnackbar();
+  const app = Context.useApp();
   const composer = Composer.useComposer();
   const tabsCtx = Burger.useTabs();
   const drawerCtx = Burger.useDrawer();
@@ -87,6 +90,8 @@ const Toolbar: React.FC<{}> = () => {
 
     } else if (newValue === 'toolbar.expand') {
       drawerCtx.actions.handleDrawerOpen(!drawerOpen)
+    } else if (newValue === 'projects') {
+      app.changeApp('projects');
     }
   };
 
@@ -107,6 +112,8 @@ const Toolbar: React.FC<{}> = () => {
           onChange={handleChange}
           sx={{ borderRight: 1, borderColor: 'explorerItem.dark' }}
           value={secondaryCtx.session.secondary}>
+
+          <StyledTab value='projects' icon={<TerminalIcon />} />
 
           <StyledTab value='toolbar.activities' icon={<DashboardIcon />} />
           <StyledTab value='toolbar.save'

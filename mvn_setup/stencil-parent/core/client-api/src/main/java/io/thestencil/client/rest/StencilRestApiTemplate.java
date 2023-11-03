@@ -46,15 +46,15 @@ public class StencilRestApiTemplate implements StencilRestApi {
   
   @Override
   public Uni<Entity<Article>> createArticle(String projectId, ImmutableCreateArticle body) {
-    return client.create().article(body);
+    return client.withProjectId(projectId).create().article(body);
   }
   @Override
   public Uni<Entity<Article>> updateArticle(String projectId, ImmutableArticleMutator body) {
-    return client.update().article(body);
+    return client.withProjectId(projectId).update().article(body);
   }
   @Override
   public Uni<Entity<Article>> deleteArticle(String projectId, String id) {
-    return client.delete().article(id);
+    return client.withProjectId(projectId).delete().article(id);
   }
   @Override
   public Uni<SiteState> createMigration(String projectId, String json) {
@@ -62,37 +62,37 @@ public class StencilRestApiTemplate implements StencilRestApi {
   
     final var sites = parseSites(body);
     if(sites != null) {
-      return client.migration().importData(sites);
+      return client.withProjectId(projectId).migration().importData(sites);
     }
     
     final var release = parseSiteState(body);
     if(release != null) {
-      return client.migration().importData(release);
+      return client.withProjectId(projectId).migration().importData(release);
     }
     return Uni.createFrom().nullItem();
   }
   @Override
   public Uni<SiteState> createSites(String projectId) {
-    return client.create().repo();
+    return client.withProjectId(projectId).create().repo();
   }
   @Override
   public Uni<SiteState> getSites(String projectId) {
-    return client.query().head();
+    return client.withProjectId(projectId).query().head();
   }
   @Override
   public Uni<Entity<Link>> createLink(String projectId, ImmutableCreateLink body) {
-    return client.create().link(body);
+    return client.withProjectId(projectId).create().link(body);
   }
   @Override
   public Uni<Entity<Link>> updateLink(String projectId, ImmutableLinkMutator body) {
-    return client.update().link(body);
+    return client.withProjectId(projectId).update().link(body);
   }
   @Override
   public Uni<Entity<Link>> deleteLink(String projectId, String linkId, String articleId) {
     if(articleId == null || articleId.isEmpty()) {
-      return client.delete().link(linkId);
+      return client.withProjectId(projectId).delete().link(linkId);
     } 
-    return client.delete().linkArticlePage(ImmutableLinkArticlePage.builder()
+    return client.withProjectId(projectId).delete().linkArticlePage(ImmutableLinkArticlePage.builder()
       .articleId(articleId)
       .linkId(linkId)
       .build());  
@@ -100,69 +100,69 @@ public class StencilRestApiTemplate implements StencilRestApi {
   }
   @Override
   public Uni<Entity<Workflow>> createWorkflow(String projectId, ImmutableCreateWorkflow body) {
-    return client.create().workflow(body);
+    return client.withProjectId(projectId).create().workflow(body);
   }
   @Override
   public Uni<Entity<Workflow>> updateWorkflow(String projectId, ImmutableWorkflowMutator body) {
-    return client.update().workflow(body);
+    return client.withProjectId(projectId).update().workflow(body);
   }
   @Override
   public Uni<Entity<Workflow>> deleteWorkflow(String projectId, String linkId, String articleId) {
     if(articleId == null || articleId.isEmpty()) {
-      return client.delete().workflow(linkId);
+      return client.withProjectId(projectId).delete().workflow(linkId);
     } 
-    return client.delete().workflowArticlePage(ImmutableWorkflowArticlePage.builder()
+    return client.withProjectId(projectId).delete().workflowArticlePage(ImmutableWorkflowArticlePage.builder()
       .articleId(articleId)
       .workflowId(linkId)
       .build());  
   }
   @Override
   public Uni<Entity<Locale>> createLocale(String projectId, ImmutableCreateLocale body) {
-    return client.create().locale(body);
+    return client.withProjectId(projectId).create().locale(body);
   }
   @Override
   public Uni<Entity<Locale>> updateLocale(String projectId, ImmutableLocaleMutator body) {
-    return client.update().locale(body);
+    return client.withProjectId(projectId).update().locale(body);
   }
   @Override
   public Uni<Entity<Locale>> deleteLocale(String projectId, String id) {
-    return client.delete().locale(id);
+    return client.withProjectId(projectId).delete().locale(id);
   }
   @Override
   public Uni<Entity<Page>> createPage(String projectId, ImmutableCreatePage body) {
-    return client.create().page(body);
+    return client.withProjectId(projectId).create().page(body);
   }
   @Override
   public Uni<Entity<Page>> updatePage(String projectId, ImmutablePageMutator body) {
-    return client.update().page(body);
+    return client.withProjectId(projectId).update().page(body);
   }
   @Override
   public Uni<Entity<Page>> deletePage(String projectId, String id) {
-    return client.delete().page(id);
+    return client.withProjectId(projectId).delete().page(id);
   }
   @Override
   public Uni<Entity<Template>> createTemplate(String projectId, ImmutableCreateTemplate body) {
-    return client.create().template(body);
+    return client.withProjectId(projectId).create().template(body);
   }
   @Override
   public Uni<Entity<Template>> updateTemplate(String projectId, ImmutableTemplateMutator body) {
-    return client.update().template(body);
+    return client.withProjectId(projectId).update().template(body);
   }
   @Override
   public Uni<Entity<Template>> deleteTemplate(String projectId, String id) {
-    return client.delete().template(id);
+    return client.withProjectId(projectId).delete().template(id);
   }
   @Override
   public Uni<Entity<Release>> createRelease(String projectId, ImmutableCreateRelease body) {
-    return client.create().release(body);
+    return client.withProjectId(projectId).create().release(body);
   }
   @Override
   public Uni<SiteState> getRelease(String projectId, String id) {
-    return client.query().release(id);
+    return client.withProjectId(projectId).query().release(id);
   }
   @Override
   public Uni<Entity<Release>> deleteRelease(String projectId, String id) {
-    return client.delete().release(id);
+    return client.withProjectId(projectId).delete().release(id);
   }
 
   

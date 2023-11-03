@@ -15,7 +15,7 @@ interface StencilComposerProps {
   locked?: boolean;
 };
 
-
+/*
 const StencilComposer: React.FC<StencilComposerProps> = ({ service, locked }) => {
 
   if (locked === true) {
@@ -31,17 +31,16 @@ const StencilComposer: React.FC<StencilComposerProps> = ({ service, locked }) =>
     ]
   };
   return (
-    /* @ts-ignore */
     <SnackbarProvider maxSnack={3}>
       <Composer.Provider service={service} >
         <Burger.Provider children={[composer]} secondary="toolbar.articles" drawerOpen />
       </Composer.Provider>
     </SnackbarProvider>
   );
-}
+} */
 
 export type { StencilComposerProps };
-export { StencilComposer, StencilClient, Toolbar, messages, Composer };
+export { StencilClient, Toolbar, messages, Composer };
 export { SiteCache, SessionData } from './context'
 export * from './client/store';
 export * from './Main';

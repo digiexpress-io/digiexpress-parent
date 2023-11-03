@@ -42,6 +42,14 @@ public class StencilStoreImpl extends PersistenceCommands implements StencilStor
   public StencilConfig getConfig() {
     return super.config;
   }
+
+  @Override
+  public StencilStore withProjectId(String projectId) {
+    return new StencilStoreImpl(ImmutableStencilConfig.builder()
+        .from(config)
+        .repoName(projectId)
+        .build());
+  }
   
   @Override
   public QueryBuilder query() {

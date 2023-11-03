@@ -12,9 +12,9 @@ interface ReducerAction {
 class AppReducerDispatch implements API.AppActions {
 
   private _sessionDispatch: React.Dispatch<ReducerAction>;
-  private _children: API.App<any>[];
+  private _children: API.App<any, any>[];
   
-  constructor(session: React.Dispatch<ReducerAction>, children: API.App<any>[]) {
+  constructor(session: React.Dispatch<ReducerAction>, children: API.App<any, any>[]) {
     console.log("burger: init app dispatch");
     this._sessionDispatch = session;
     this._children = children;

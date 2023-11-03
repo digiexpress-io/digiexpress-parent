@@ -4,13 +4,15 @@ import { TabsSession } from './tabs/TabsAPI';
 
 type AppId = string;
 
-interface App<T extends Object> {
+interface App<T extends Object, ContextInitProps extends Object> {
   id: AppId;
-  state: [ AppStateCreate<T>, AppStateRestore<T> ] 
+  state: [ AppStateCreate<T>, AppStateRestore<T> ]
+  init: ContextInitProps 
   components: {
     toolbar: React.ElementType<ToolbarProps>;
     primary: React.ElementType<PrimaryProps>;
     secondary: React.ElementType<SecondaryProps>;
+    context: React.ElementType<{init: ContextInitProps, children: React.ReactNode}>;
   }
 }
 

@@ -22,7 +22,8 @@ interface AppProviderProps {
   drawerOpen?: boolean;
   secondary?: string;
   appId?: API.AppId;
-  children: API.App<any>[];
+  appContextId?: string | undefined;
+  children: API.App<any, any>[];
 }
 
 
@@ -39,7 +40,7 @@ const getAppId = (props: AppProviderProps): API.AppId => {
 }
 
 
-const getApp = (children: API.App<any>[], session: API.AppSession) => {
+const getApp = (children: API.App<any, any>[], session: API.AppSession) => {
   const appsToUse = children.filter(app => app.id === session.active);
   if (appsToUse.length !== 1) {
     throw new Error(`No application with id: '${session.active}', known apps: '${JSON.stringify(children.map(c => c.id), null, 2)}' !`);
@@ -47,12 +48,12 @@ const getApp = (children: API.App<any>[], session: API.AppSession) => {
   return appsToUse[0];
 }
 
-const CreateContainer: React.FC<{ app: API.App<any> }> = ({ app }) => {
+const CreateContainer: React.FC<{ app: API.App<any, any> }> = ({ app }) => {
+  const Context: React.ElementType = React.useMemo(() => app.components.context, [app]);
   const Main: React.ElementType = React.useMemo(() => app.components.primary, [app]);
   const Secondary: React.ElementType = React.useMemo(() => app.components.secondary, [app]);
   const Toolbar: React.ElementType = React.useMemo(() => app.components.toolbar, [app]);
 
-  console.log(`burger: app container/layout Init: '${app.id}'`);
   // @ts-ignore
   const main = <Main />;
   // @ts-ignore
@@ -60,12 +61,14 @@ const CreateContainer: React.FC<{ app: API.App<any> }> = ({ app }) => {
   // @ts-ignore
   const toobar = <Toolbar />;
   return (
-    <Container main={main} secondary={secondary} toolbar={toobar} />
+    <Context init={app.init}>
+      <Container main={main} secondary={secondary} toolbar={toobar} />
+    </Context>
   );
 }
 
 
-const AppInit: React.FC<{ children: API.App<any>[] }> = ({ children }) => {
+const AppInit: React.FC<{ children: API.App<any, any>[] }> = ({ children }) => {
   const { session } = useApps();
   const app = getApp(children, session);
 
@@ -83,7 +86,6 @@ const AppProvider: React.FC<AppProviderProps> = (props: AppProviderProps) => {
   const [session, dispatch] = React.useReducer(AppReducer, sessionData.withActive(getAppId(props)));
   const actions = React.useMemo(() => new AppReducerDispatch(dispatch, apps), [dispatch, apps]);
 
-  console.log("burger: App Provider Init");
   return (<AppContext.Provider value={{ session, actions }}>
     <DrawerProvider drawerOpen={props.drawerOpen}>
       <TabsProvider appId={session.active}>

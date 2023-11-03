@@ -4,7 +4,7 @@ import { DefaultStore } from './store';
 const createService = (init: { store?: StencilClient.Store, config?: StencilClient.StoreConfig }): StencilClient.Service => {
   const backend: StencilClient.Store = init.config ? new DefaultStore(init.config) : init.store as any;
 
-  const getSite: () => Promise<StencilClient.Site> = async () => backend.fetch("/").then((data) => data as any)
+  const getSite: () => Promise<StencilClient.Site> = async () => backend.fetch("/sites").then((data) => data as any)
     .catch(resp => {
 
       // finish error handling

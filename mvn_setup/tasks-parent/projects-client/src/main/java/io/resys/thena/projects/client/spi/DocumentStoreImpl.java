@@ -74,6 +74,7 @@ public class DocumentStoreImpl implements DocumentStore {
       @Override public DocumentStore build() { return createClientStore(repoName, headName); }
       @Override public Uni<DocumentStore> createIfNot() { return createRepoOrGetRepo(repoName, headName); }
       @Override public Uni<DocumentStore> delete() { return deleteRepo(repoName, headName); }
+      @Override public Uni<Void> deleteAll() { return deleteRepos(); }
     };
   }
   
@@ -88,6 +89,23 @@ public class DocumentStoreImpl implements DocumentStore {
           return Uni.createFrom().item(createClientStore(repoName, headName));
     });
   }
+  
+  private Uni<Void> deleteRepos() {
+    final var client = config.getClient();
+    final var existingRepos = client.project().projectsQuery().findAll();
+    
+    
+    return existingRepos.onItem().transformToUni((repo) -> {
+        
+        final var repoId = repo.getId();
+        final var rev = repo.getRev();
+        
+        return client.project().projectsQuery().id(repoId).rev(rev).delete();
+      })
+      .concatenate().collect().asList()
+      .onItem().transformToUni((junk) -> Uni.createFrom().voidItem());
+  }
+  
   private Uni<DocumentStore> deleteRepo(String repoName, String headName) {
     RepoAssert.notNull(repoName, () -> "repoName must be defined!");
     final var client = config.getClient();

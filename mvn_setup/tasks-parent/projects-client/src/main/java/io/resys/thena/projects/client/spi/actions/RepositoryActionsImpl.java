@@ -46,6 +46,7 @@ public class RepositoryActionsImpl implements RepositoryActions {
       @Override public Uni<ProjectsClient> create() { return repo.create().onItem().transform(doc -> new ProjectsClientImpl(doc)); }
       @Override public ProjectsClient build() { return new ProjectsClientImpl(repo.build()); }
       @Override public Uni<ProjectsClient> delete() { return repo.delete().onItem().transform(doc -> new ProjectsClientImpl(doc)); }
+      @Override public Uni<ProjectsClient> deleteAll() { return repo.deleteAll().onItem().transform(doc -> new ProjectsClientImpl(ctx)); }
     };
   }
 }

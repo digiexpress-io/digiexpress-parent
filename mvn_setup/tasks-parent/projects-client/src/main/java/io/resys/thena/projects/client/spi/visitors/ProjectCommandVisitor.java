@@ -67,13 +67,15 @@ public class ProjectCommandVisitor {
   
   private Project visitCreateProject(CreateProject command) {
     final var gen = ctx.getGid();
+    final var id = gen.getNextId(DocumentType.PROJECT_META);
+    final var repoId = id.substring(0, 7);
     final var targetDate = requireTargetDate(command);
     this.current = ImmutableProject.builder()
-        .id(gen.getNextId(DocumentType.PROJECT_META))
+        .id(id)
         .version(gen.getNextVersion(DocumentType.PROJECT_META))
         .users(command.getUsers().stream().distinct().toList())
         .repoType(command.getRepoType())
-        .repoId(command.getRepoId())        
+        .repoId(repoId)        
         .title(command.getTitle())
         .description(command.getDescription())
         .created(targetDate)

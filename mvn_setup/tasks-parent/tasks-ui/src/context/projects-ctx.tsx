@@ -7,7 +7,7 @@ import { Palette } from 'projectdescriptor';
 const ProjectsContext = React.createContext<ProjectsContextType>({} as ProjectsContextType);
 
 
-const init: ProjectsState = new ProjectsStateBuilder({
+const startStart: ProjectsState = new ProjectsStateBuilder({
   users: [],
   projects: [],
   projectsByUser: {},
@@ -18,10 +18,12 @@ const init: ProjectsState = new ProjectsStateBuilder({
   profile: { contentType: "OK", name: "", userId: "", today: new Date(), roles: [] }
 });
 
-const ProjectsProvider: React.FC<{ children: React.ReactNode, backend: Backend, profile: Profile }> = ({ children, backend, profile }) => {
+const ProjectsProvider: React.FC<{ children: React.ReactNode, init: {backend: Backend, profile: Profile} }> = ({ children, init }) => {
+
+  const { backend, profile } = init;
 
   const [loading, setLoading] = React.useState<boolean>(true);
-  const [state, setState] = React.useState<ProjectsState>(init.withProfile(profile));
+  const [state, setState] = React.useState<ProjectsState>(startStart.withProfile(profile));
   const setter: ProjectsDispatch = React.useCallback((mutator: ProjectsMutator) => setState(mutator), [setState]);
 
   const contextValue: ProjectsContextType = React.useMemo(() => {

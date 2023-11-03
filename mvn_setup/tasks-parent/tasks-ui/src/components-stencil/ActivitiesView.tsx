@@ -182,11 +182,14 @@ const ActivitiesView: React.FC<{}> = () => {
   const [coreVersion, setCoreVersion] = React.useState<string>();
   const [coreVersionDate, setCoreVersionDate] = React.useState<string>();
 
-  service.version().version().then((version) => {
-    console.log(version);
-    setCoreVersion(version.version);
-    setCoreVersionDate(version.built);
-  });
+  React.useEffect(() => {
+    service.version().version().then((version) => {
+      console.log(version);
+      setCoreVersion(version.version);
+      setCoreVersionDate(version.built);
+    });    
+  },  [service])
+
 
   return (
     <>
