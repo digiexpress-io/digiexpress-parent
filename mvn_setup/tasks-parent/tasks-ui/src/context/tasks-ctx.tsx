@@ -21,17 +21,17 @@ const initState: TasksState = new TasksStateBuilder({
   profile: { contentType: "OK", name: "", userId: "", today: new Date(), roles: [] }
 });
 
-const TasksProvider: React.FC<{ children: React.ReactNode, init: {backend: Backend, profile: Profile} }> = ({ children, init }) => {
+const TasksProvider: React.FC<{ children: React.ReactNode, init: { backend: Backend, profile: Profile } }> = ({ children, init }) => {
   const { backend, profile } = init;
   const [loading, setLoading] = React.useState<boolean>(true);
-  
+
   const [state, setState] = React.useState<TasksState>(initState.withProfile(profile));
   const setter: TasksDispatch = React.useCallback((mutator: TasksMutator) => setState(mutator), [setState]);
   const contextValue: TasksContextType = React.useMemo(() => {
     return {
       state, setState: setter, loading, palette: Palette, reload: async () => {
-        backend.task.getActiveTasks().then(data => {
-          setState(prev => prev.withTasks(data.records))
+        return backend.task.getActiveTasks().then(data => {
+          return setState(prev => prev.withTasks(data.records))
         });
       }
     };
