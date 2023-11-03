@@ -2,6 +2,8 @@ package io.thestencil.client.rest;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -133,8 +135,8 @@ public class StencilRestApiTemplate implements StencilRestApi {
     return client.withProjectId(projectId).create().page(body);
   }
   @Override
-  public Uni<Entity<Page>> updatePage(String projectId, ImmutablePageMutator body) {
-    return client.withProjectId(projectId).update().page(body);
+  public Uni<List<Entity<Page>>> updatePage(String projectId, List<ImmutablePageMutator> body) {
+    return client.withProjectId(projectId).update().pages(new ArrayList<>(body));
   }
   @Override
   public Uni<Entity<Page>> deletePage(String projectId, String id) {

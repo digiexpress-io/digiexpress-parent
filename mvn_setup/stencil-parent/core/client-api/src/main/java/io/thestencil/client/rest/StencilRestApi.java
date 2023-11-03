@@ -1,5 +1,7 @@
 package io.thestencil.client.rest;
 
+import java.util.List;
+
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.ImmutableArticleMutator;
 import io.thestencil.client.api.ImmutableCreateArticle;
@@ -99,7 +101,7 @@ public interface StencilRestApi {
   Uni<Entity<Page>> createPage(@HeaderParam(PROJECT_ID) String projectId, ImmutableCreatePage body);
   
   @PUT @Path("pages") @Produces(MediaType.APPLICATION_JSON) @Consumes(MediaType.APPLICATION_JSON)
-  Uni<Entity<Page>> updatePage(@HeaderParam(PROJECT_ID) String projectId, ImmutablePageMutator body);
+  Uni<List<Entity<Page>>> updatePage(@HeaderParam(PROJECT_ID) String projectId, List<ImmutablePageMutator> body);
   
   @DELETE @Path("pages/{id}") @Produces(MediaType.APPLICATION_JSON) @Consumes(MediaType.APPLICATION_JSON)
   Uni<Entity<Page>> deletePage(@HeaderParam(PROJECT_ID) String projectId, @PathParam("id") String id);
