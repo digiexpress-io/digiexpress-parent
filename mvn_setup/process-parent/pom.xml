@@ -13,8 +13,6 @@
   <name>process-parent</name>
 
   <modules>
-    <module>core</module>
-    <module>composer-ui</module>
-    <module>extensions</module>
+    <module>process-client-api</module>
   </modules>
 </project>

@@ -1,0 +1,40 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>io.digiexpress</groupId>
+    <artifactId>dialob-parent</artifactId>
+    <version>999-SNAPSHOT</version>
+  </parent>
+  <packaging>jar</packaging>
+  <artifactId>dialob-form-store-pgsql</artifactId>
+
+  <build>
+    <testResources>
+      <testResource>
+        <directory>src/test/resources</directory>
+      </testResource>
+    </testResources>
+  </build>
+
+  <dependencies>
+
+    <dependency>
+      <groupId>io.digiexpress</groupId>
+      <artifactId>dialob-client-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.digiexpress</groupId>
+      <artifactId>thena-docdb-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.tomcat</groupId>
+      <artifactId>tomcat-jasper-el</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-reactive-pg-client</artifactId>
+    </dependency>
+  </dependencies>
+</project>

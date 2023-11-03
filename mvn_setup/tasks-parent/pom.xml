@@ -15,8 +15,6 @@
   <modules>
     <module>tasks-client</module>
     <module>projects-client</module>    
-    <module>tasks-ui</module>
-    <module>quarkus-dev-app</module>
   </modules>
 
 </project>

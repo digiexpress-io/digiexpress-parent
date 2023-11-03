@@ -13,8 +13,7 @@
   <name>the-stencil-parent</name>
 
   <modules>
-    <module>core</module>
-    <module>quarkus-extensions</module>
-    <module>dev-tools</module>
+    <module>client-api</module>
+    <module>iam-api</module>
   </modules>
 </project>
