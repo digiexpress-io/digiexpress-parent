@@ -63,6 +63,7 @@ const Row: React.FC<{
   }
   return (<TableRow sx={{ backgroundColor: getRowBackgroundColor(props.rowId) }} hover tabIndex={-1} key={props.row.id}
     onMouseEnter={() => setHoverItemsActive(true)} onMouseLeave={handleEndHover}>
+    {props.columns.includes("repoId") && <ProjectsTable.CellRepoId {...props} />}
     {props.columns.includes("title") && <ProjectsTable.CellTitle {...props} />}
     {props.columns.includes("repoType") && <ProjectsTable.CellRepoType {...props} />}
     {props.columns.includes("users") && <ProjectsTable.CellUsers {...props} />}
@@ -73,6 +74,7 @@ const Row: React.FC<{
 }
 
 const columnTypes: (keyof ProjectDescriptor)[] = [
+  'repoId',
   'title',
   'repoType',
   'users',

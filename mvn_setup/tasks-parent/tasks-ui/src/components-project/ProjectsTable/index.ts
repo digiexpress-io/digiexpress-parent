@@ -8,6 +8,7 @@ import Users from './CellUsers';
 import CreatedDate from './CellCreatedDate';
 import Menu from './CellMenu';
 import RepoType from './CellRepoType';
+import RepoId from './CellRepoId';
 import TitleAs from './CellTitle';
 import { StyledFillerRows, StyledTableBody } from './StyledTable';
 import { TableConfigProps } from './table-ctx';
@@ -27,6 +28,7 @@ namespace ProjectsTable {
   export const CellCreatedDate = CreatedDate;
   export const CellMenu = Menu;
   export const CellTitle = TitleAs;
+  export const CellRepoId = RepoId;
   export const CellRepoType = RepoType;
   export const TableFiller = StyledFillerRows;
   export const TableBody = StyledTableBody;
