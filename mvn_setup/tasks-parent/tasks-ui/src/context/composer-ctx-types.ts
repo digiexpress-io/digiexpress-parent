@@ -1,4 +1,4 @@
-import Burger from '@the-wrench-io/react-burger';
+import Burger from 'components-burger';
 
 import type { Task, Profile } from 'client';
 

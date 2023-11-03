@@ -1,11 +1,10 @@
 import React from 'react';
-import Burger from '@the-wrench-io/react-burger';
+import Burger from 'components-burger';
 import { useTheme } from '@mui/material';
-
 import { Tab, TabEntity, TabBody, Document } from './composer-ctx-types';
 import { ImmutableTabData } from './composer-ctx-impl';
 import { ComposerContext, ComposerContextType, ClientContextType, ClientContext } from './client-ctx';
-import { UserId, RoleId } from 'client';
+import { UserId, RoleId, RepoType } from 'client';
 
 import { ProjectIdContext, ProjectIdContextType } from './project-id-ctx';
 import { TasksContext } from './tasks-ctx';
@@ -134,10 +133,23 @@ export const useApp = () => {
   const project = useProjectId();
   const apps = Burger.useApps();
   
-  function changeApp(input: 'tasks' | 'projects' | 'stencil', projectId?: string) {
+  function changeApp(input: 'tasks' | 'projects' | 'stencil' | RepoType , projectId?: string) {
     if(input === 'projects') {
       project.setProjectId('', 'PROJECT');
-      apps.actions.handleActive('projects-app');
+      apps.actions.handleActive('app-projects');
+      return;
+    }
+    
+    if(input === 'tasks' || input === 'TASKS') {
+      project.setProjectId(projectId as string, 'TASKS');
+      apps.actions.handleActive('app-tasks');
+      return;
+    }
+    
+    if(input === 'stencil' || input === 'STENCIL') {
+      project.setProjectId(projectId as string, 'STENCIL');
+      apps.actions.handleActive('app-stencil');
+      return;
     }
   }
   

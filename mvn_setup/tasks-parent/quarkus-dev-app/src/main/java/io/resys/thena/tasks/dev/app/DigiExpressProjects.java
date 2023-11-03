@@ -44,7 +44,7 @@ public class DigiExpressProjects implements ProjectRestApi {
         .onItem().transformToMulti(items -> Multi.createFrom().items(items.stream()))
         .onItem().transformToUni(project -> {
             return projectsClient.repo().query()
-                .repoName(currentProject.getProjectId())
+                .repoName(project.getRepoId())
                 .headName(currentProject.getHead())
                 .createIfNot()
                 .onItem().transform(created ->  project);

@@ -23,23 +23,27 @@ const init: TasksState = new TasksStateBuilder({
 });
 
 const TasksProvider: React.FC<{ children: React.ReactNode, backend: Backend, profile: Profile }> = ({ children, backend, profile }) => {
-  const { projectId } = useProjectId();
+  const { projectType, projectId } = useProjectId();
   const [loading, setLoading] = React.useState<boolean>(true);
+  const [currentlyLoaded, setCurrentlyLoaded] = React.useState<string>(projectId);
+  
   const [state, setState] = React.useState<TasksState>(init.withProfile(profile));
   const setter: TasksDispatch = React.useCallback((mutator: TasksMutator) => setState(mutator), [setState]);
 
-
-  const apps = Burger.useApps();
   
-  const isTasks = false;
-
+  const isTasks = projectType === 'TASKS';
+  
   React.useEffect(() => {
-    if(isTasks) {
-      console.log("SHOULD RELOAD");
+    if(!isTasks) {
+      return;
     }
-    
-  }, [isTasks])
-
+    if(projectId === currentlyLoaded) {
+      return;
+    }
+    setLoading(true);
+    setCurrentlyLoaded(projectId);
+  }, [projectId, currentlyLoaded, isTasks]);
+  
 
   const contextValue: TasksContextType = React.useMemo(() => {
     return {

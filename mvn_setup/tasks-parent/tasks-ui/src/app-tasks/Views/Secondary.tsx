@@ -10,7 +10,7 @@ import MailOutlinedIcon from '@mui/icons-material/MailOutlined';
 import { FormattedMessage } from 'react-intl';
 import Context from 'context';
 
-import Burger from '@the-wrench-io/react-burger';
+import Burger from 'components-burger';
 
 
 const StyledTitleTab = styled(Tab)<TabProps>(({ theme }) => ({

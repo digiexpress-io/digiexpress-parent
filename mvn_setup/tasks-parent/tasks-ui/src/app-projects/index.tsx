@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Burger from '@the-wrench-io/react-burger';
+import Burger from 'components-burger';
 
 import Context from 'context';
 import Views from './Views';

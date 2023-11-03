@@ -9,7 +9,7 @@ import FeedbackOutlinedIcon from '@mui/icons-material/FeedbackOutlined';
 import TerminalIcon from '@mui/icons-material/Terminal';
 
 import Context from 'context';
-import Burger from '@the-wrench-io/react-burger';
+import Burger from 'components-burger';
 
 const StyledTab = styled(Tab)<TabProps>(({ theme }) => ({
   "&.MuiButtonBase-root": {
@@ -35,7 +35,7 @@ const Toolbar: React.FC<{}> = () => {
   const composer = Context.useComposer();
   const drawer = Burger.useDrawer();
   const tabs = Burger.useTabs();
-  const apps = Burger.useApps();
+  const app = Context.useApp();
   const secondary = Burger.useSecondary();
 
   const tabActions = tabs.actions;
@@ -89,7 +89,7 @@ const Toolbar: React.FC<{}> = () => {
     } else if (newValue === 'toolbar.expand') {
       drawer.actions.handleDrawerOpen(!drawerOpen)
     } else if (newValue === 'projects') {
-      apps.actions.handleActive('app-projects');
+      app.changeApp('projects');
     }
 
   };

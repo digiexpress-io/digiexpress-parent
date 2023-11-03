@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 
-import Burger from '@the-wrench-io/react-burger';
+import Burger from 'components-burger';
 import { StyledCardItemProps, StyledCards } from './StyledCards';
 
 

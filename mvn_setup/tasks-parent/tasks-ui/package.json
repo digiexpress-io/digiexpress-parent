@@ -12,8 +12,11 @@
     "@mui/styles": "^5.0.1",
     "@mui/system": "^5.0.1",
     "@mui/x-date-pickers": "^6.10.0",
-    "@the-wrench-io/react-burger": "^1.0.42",
+    "@uiw/react-md-editor": "^3.25.2",
+    "d3": "^7.1.1",
     "date-fns": "^2.30.0",
+    "js-file-download": "^0.4.12",
+    "moment": "^2.29.4",
     "notistack": "^2.0.3",
     "pathfinding": "^0.4.18",
     "paths-js": "^0.4.11",
@@ -28,6 +31,7 @@
     "types": "^0.1.1"
   },
   "devDependencies": {
+    "@types/d3": "^7.1.0",
     "@types/node": "^12.19.9",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",

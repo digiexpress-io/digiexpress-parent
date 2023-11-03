@@ -4,7 +4,7 @@ import { IntlProvider, useIntl } from 'react-intl';
 import { ThemeProvider, StyledEngineProvider, Theme } from '@mui/material';
 import { SnackbarProvider } from 'notistack';
 import { useSnackbar } from 'notistack';
-import Burger, { siteTheme } from '@the-wrench-io/react-burger';
+import Burger, { siteTheme } from 'components-burger';
 
 import TaskClient from 'client';
 import Context, { ProjectIdProvider } from 'context';
@@ -13,7 +13,7 @@ import messages from './intl';
 import Provider from './Provider';
 import AppTasks from 'app-tasks';
 import AppProjects from 'app-projects';
-
+import AppStencil, { Composer as AppStencilComposer, StencilClient } from 'app-stencil';
 
 interface Csrf { key: string, value: string }
 declare global {
@@ -43,18 +43,28 @@ const store: TaskClient.Store = new TaskClient.DefaultStore({
 const backend = new TaskClient.ServiceImpl(store)
 
 const Apps: React.FC<{ profile: TaskClient.Profile }> = ({ profile }) => {
-  const { projectId } = Context.useProjectId();
+  const { projectId, projectType } = Context.useProjectId();
 
+  const stencil: Burger.App<AppStencilComposer.ContextType> = React.useMemo(() => AppStencil, []);
   const tasks: Burger.App<Context.ComposerContextType> = React.useMemo(() => AppTasks, []);
   const projects: Burger.App<Context.ComposerContextType> = React.useMemo(() => AppProjects, []);
   const appId = 'app-projects';
-  
+
   const service = React.useMemo(() => {
+    
     return backend.withProjectId(projectId);
   }, [projectId]);
 
+
+  if(projectType === 'STENCIL') {
+    const service = StencilClient.service({ config: { url: "http://localhost:8080/q/ide-services" }});
+    return (<AppStencilComposer.Provider service={service} >
+      <Burger.Provider children={[tasks, projects, stencil]} secondary="toolbar.activities" drawerOpen appId={appId} />
+    </AppStencilComposer.Provider>);    
+  } 
+
   return (<Provider service={service} profile={profile}>
-      <Burger.Provider children={[tasks, projects]} secondary="toolbar.activities" drawerOpen appId={appId} />
+    <Burger.Provider children={[tasks, projects, stencil]} secondary="toolbar.activities" drawerOpen appId={appId} />
   </Provider>)
 }
 
@@ -77,7 +87,7 @@ const CheckAppConnection = React.lazy(async () => {
         snackbar.enqueueSnackbar(msg, { variant: 'success' })
       }
     }, [intl, snackbar]);
-    return <ProjectIdProvider projectId=""><Apps profile={head}/></ProjectIdProvider>
+    return <ProjectIdProvider projectId=""><Apps profile={head} /></ProjectIdProvider>
   };
   return ({ default: Result })
 });

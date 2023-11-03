@@ -2,9 +2,9 @@ import React from 'react';
 import { Box } from '@mui/material';
 import { SxProps } from '@mui/system';
 
-import Burger from '@the-wrench-io/react-burger';
+import Burger from 'components-burger';
 import Context from 'context';
-import Core from 'taskcomponents';
+import Core from 'components-task';
 import Activities from '../Activities';
 
 const root: SxProps = { height: '100%', backgroundColor: "mainContent.main", width: '100%' };
