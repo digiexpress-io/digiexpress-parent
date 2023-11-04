@@ -33,13 +33,13 @@ import io.resys.thena.docdb.file.tables.RepoTable.RepoTableRow;
 import io.resys.thena.docdb.file.tables.Table;
 import io.resys.thena.docdb.file.tables.Table.FileStatement;
 import io.resys.thena.docdb.file.tables.Table.FileTuple;
-import io.resys.thena.docdb.spi.ClientCollections;
+import io.resys.thena.docdb.spi.DbCollections;
 import io.vertx.mutiny.sqlclient.Tuple;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class RepoFileBuilderImpl implements RepoFileBuilder {
-  private final ClientCollections ctx;
+  private final DbCollections ctx;
 
   @Override
   public FileTuple exists() {

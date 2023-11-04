@@ -24,21 +24,24 @@ import io.resys.thena.docdb.api.DocDB;
 import io.resys.thena.docdb.api.actions.BranchActions;
 import io.resys.thena.docdb.api.actions.CommitActions;
 import io.resys.thena.docdb.api.actions.DiffActions;
+import io.resys.thena.docdb.api.actions.DocAppendActions;
+import io.resys.thena.docdb.api.actions.DocFindActions;
 import io.resys.thena.docdb.api.actions.HistoryActions;
 import io.resys.thena.docdb.api.actions.PullActions;
 import io.resys.thena.docdb.api.actions.RepoActions;
 import io.resys.thena.docdb.api.actions.TagActions;
-import io.resys.thena.docdb.spi.commits.CommitActionsImpl;
-import io.resys.thena.docdb.spi.diff.DiffActionsImpl;
-import io.resys.thena.docdb.spi.history.HistoryActionsDefault;
-import io.resys.thena.docdb.spi.objects.BranchActionsImpl;
-import io.resys.thena.docdb.spi.objects.ObjectsActionsImpl;
+import io.resys.thena.docdb.spi.doc.repo.DocAppendActionsImpl;
+import io.resys.thena.docdb.spi.git.commits.CommitActionsImpl;
+import io.resys.thena.docdb.spi.git.diff.DiffActionsImpl;
+import io.resys.thena.docdb.spi.git.history.HistoryActionsDefault;
+import io.resys.thena.docdb.spi.git.objects.BranchActionsImpl;
+import io.resys.thena.docdb.spi.git.objects.ObjectsActionsImpl;
+import io.resys.thena.docdb.spi.git.repo.RepoStateBuilderImpl;
+import io.resys.thena.docdb.spi.git.tags.TagActionsDefault;
 import io.resys.thena.docdb.spi.repo.ProjectActionsImpl;
-import io.resys.thena.docdb.spi.repo.RepoStateBuilderImpl;
-import io.resys.thena.docdb.spi.tags.TagActionsDefault;
 
 public class DocDBDefault implements DocDB {
-  private final ClientState state;
+  private final DbState state;
   private RepoActions projectActions;
   private CommitActions commitActions;
   private TagActions tagActions;
@@ -46,9 +49,9 @@ public class DocDBDefault implements DocDB {
   private PullActions pullActions;
   private DiffActions diffActions;
   private BranchActions branchActions;
+  private DocAppendActions docAppendActions;
   
-  
-  public DocDBDefault(ClientState state) {
+  public DocDBDefault(DbState state) {
     super();
     this.state = state;
   }
@@ -60,7 +63,7 @@ public class DocDBDefault implements DocDB {
     }
     return projectActions;
   }
-  public ClientState getState() {
+  public DbState getState() {
     return state;
   }
 
@@ -120,7 +123,21 @@ public class DocDBDefault implements DocDB {
 
   @Override
   public DocModel doc() {
-    // TODO Auto-generated method stub
-    return null;
+    return new DocModel() {
+      
+      @Override
+      public DocFindActions find() {
+        // TODO Auto-generated method stub
+        return null;
+      }
+      
+      @Override
+      public DocAppendActions append() {
+        if(docAppendActions == null) {
+          docAppendActions = new DocAppendActionsImpl(state); 
+        }
+        return docAppendActions;
+      }
+    };
   }
 }

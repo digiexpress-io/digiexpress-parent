@@ -14,12 +14,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.ThenaGitObject.TreeValue;
-import io.resys.thena.docdb.spi.ClientState;
+import io.resys.thena.docdb.spi.DbState;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class RepoPrinter {
-  private final ClientState state;
+  private final DbState state;
   private final ObjectMapper objectMapper;
 
   public String print(Repo repo) {
@@ -33,7 +33,7 @@ public class RepoPrinter {
       return next;
     };
 
-    final var ctx = state.withRepo(repo);
+    final var ctx = state.toGitState().withRepo(repo);
     
     StringBuilder result = new StringBuilder();
 

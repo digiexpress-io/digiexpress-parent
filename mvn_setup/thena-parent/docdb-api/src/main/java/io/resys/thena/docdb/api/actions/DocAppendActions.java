@@ -14,22 +14,23 @@ import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 
 public interface DocAppendActions {
-  AppendBuilder appendBuilder();
+  DocAppendBuilder appendBuilder();
   
-  interface AppendBuilder {
-    AppendBuilder head(String projectName); // head GID to what to append
-    AppendBuilder id(@Nullable String headGid); // OPTIONAL head GID to what to append
-    AppendBuilder externalId(@Nullable String headGid); // OPTIONAL head GID to what to append
-    AppendBuilder parent(String versionToModify); // for validations
-    AppendBuilder parentIsLatest();
+  interface DocAppendBuilder {
+    DocAppendBuilder repoId(String repoId);
+    DocAppendBuilder branchName(String branchName);
+    DocAppendBuilder docId(@Nullable String docId); 
+    DocAppendBuilder externalId(@Nullable String externalId); // user given unique id 
+    DocAppendBuilder parent(String versionToModify);
+    DocAppendBuilder parentIsLatest();
 
-    AppendBuilder append(JsonObject doc);
-    AppendBuilder merge(JsonObjectMerge doc);
-    AppendBuilder log(JsonObject doc);
+    DocAppendBuilder append(JsonObject doc);
+    DocAppendBuilder merge(JsonObjectMerge doc);
+    DocAppendBuilder log(JsonObject doc);
     
-    AppendBuilder remove();
-    AppendBuilder author(String author);
-    AppendBuilder message(String message);
+    DocAppendBuilder remove();
+    DocAppendBuilder author(String author);
+    DocAppendBuilder message(String message);
     Uni<AppendResultEnvelope> build();
   }
   

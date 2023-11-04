@@ -33,8 +33,8 @@ import io.resys.thena.docdb.file.tables.Table.FilePreparedQuery;
 import io.resys.thena.docdb.file.tables.Table.FileStatement;
 import io.resys.thena.docdb.file.tables.Table.FileTuple;
 import io.resys.thena.docdb.file.tables.Table.FileTupleList;
-import io.resys.thena.docdb.spi.ClientCollections;
-import io.resys.thena.docdb.spi.ClientState.RepoBuilder;
+import io.resys.thena.docdb.spi.DbCollections;
+import io.resys.thena.docdb.spi.DbState.RepoBuilder;
 import io.resys.thena.docdb.spi.ErrorHandler;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
@@ -44,7 +44,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RepoBuilderFilePool implements RepoBuilder {
   private final FilePool client;
-  private final ClientCollections names;
+  private final DbCollections names;
   private final FileMapper mapper;
   private final FileBuilder builder;
   private final ErrorHandler errorHandler;

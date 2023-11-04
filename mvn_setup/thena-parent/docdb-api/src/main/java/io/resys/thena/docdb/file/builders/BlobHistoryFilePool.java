@@ -37,7 +37,7 @@ import io.resys.thena.docdb.file.FileBuilder;
 import io.resys.thena.docdb.file.tables.Table.FileMapper;
 import io.resys.thena.docdb.file.tables.Table.FilePool;
 import io.resys.thena.docdb.file.tables.TreeItemTable.TreeItemTableRow;
-import io.resys.thena.docdb.spi.ClientQuery.BlobHistoryQuery;
+import io.resys.thena.docdb.spi.GitDbQueries.BlobHistoryQuery;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;

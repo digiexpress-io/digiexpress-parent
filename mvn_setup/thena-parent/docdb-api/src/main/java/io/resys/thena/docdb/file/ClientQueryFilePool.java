@@ -29,12 +29,12 @@ import io.resys.thena.docdb.file.tables.Table.FileMapper;
  * #L%
  */
 
-import io.resys.thena.docdb.spi.ClientQuery;
+import io.resys.thena.docdb.spi.GitDbQueries;
 import io.resys.thena.docdb.spi.ErrorHandler;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class ClientQueryFilePool implements ClientQuery {
+public class ClientQueryFilePool implements GitDbQueries {
   
   private final FileClientWrapper wrapper;
   private final FileMapper mapper;

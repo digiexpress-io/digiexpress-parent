@@ -22,7 +22,7 @@ package io.resys.thena.docdb.spi.repo;
 
 import io.resys.thena.docdb.api.actions.RepoActions;
 import io.resys.thena.docdb.api.models.Repo;
-import io.resys.thena.docdb.spi.ClientState;
+import io.resys.thena.docdb.spi.DbState;
 import io.resys.thena.docdb.spi.support.RepoAssert;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
@@ -34,7 +34,7 @@ import lombok.experimental.Accessors;
 @Data @Accessors(fluent = true)
 public class RepoQueryBuilderImpl implements RepoActions.RepoQuery {
 
-  private final ClientState state;
+  private final DbState state;
   private String id;
   private String rev;
   

@@ -4,6 +4,31 @@ import java.io.IOException;
 import java.time.Duration;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.guava.GuavaModule;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
+import io.resys.thena.docdb.api.DocDB;
+import io.resys.thena.docdb.api.actions.RepoActions.RepoResult;
+import io.resys.thena.docdb.api.models.Repo;
+import io.resys.thena.docdb.api.models.Repo.RepoType;
+import io.resys.thena.docdb.spi.DbCollections;
+import io.resys.thena.docdb.spi.DbState;
+import io.resys.thena.docdb.spi.GitDbPrinter;
+import io.resys.thena.docdb.spi.pgsql.PgErrors;
+import io.resys.thena.docdb.sql.DbStateImpl;
+import io.thestencil.client.api.StencilComposer;
+import io.thestencil.client.spi.StencilClientImpl;
+import io.thestencil.client.spi.StencilComposerImpl;
+import io.thestencil.client.spi.StencilStoreImpl;
+import io.thestencil.client.spi.serializers.ZoeDeserializer;
+import io.vertx.core.json.JsonObject;
+import io.vertx.mutiny.sqlclient.Pool;
+
 /*-
  * #%L
  * thena-docdb-pgsql
@@ -26,31 +51,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import jakarta.inject.Inject;
 
-import io.vertx.mutiny.sqlclient.Pool;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.guava.GuavaModule;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
-import io.resys.thena.docdb.api.DocDB;
-import io.resys.thena.docdb.api.actions.RepoActions.RepoResult;
-import io.resys.thena.docdb.api.models.Repo;
-import io.resys.thena.docdb.api.models.Repo.RepoType;
-import io.resys.thena.docdb.spi.ClientCollections;
-import io.resys.thena.docdb.spi.ClientState;
-import io.resys.thena.docdb.spi.DocDBPrettyPrinter;
-import io.resys.thena.docdb.spi.pgsql.PgErrors;
-import io.resys.thena.docdb.sql.DocDBFactorySql;
-import io.thestencil.client.api.StencilComposer;
-import io.thestencil.client.spi.StencilClientImpl;
-import io.thestencil.client.spi.StencilComposerImpl;
-import io.thestencil.client.spi.StencilStoreImpl;
-import io.thestencil.client.spi.serializers.ZoeDeserializer;
-import io.vertx.core.json.JsonObject;
-
 public class PgTestTemplate {
   private DocDB client;
   @Inject
@@ -66,7 +66,7 @@ public class PgTestTemplate {
   @BeforeEach
   public void setUp() {
     waitUntilPostgresqlAcceptsConnections(pgPool);
-    this.client = DocDBFactorySql.create()
+    this.client = DbStateImpl.create()
         .db("junit")
         .client(pgPool)
         .errorHandler(new PgErrors())
@@ -92,13 +92,13 @@ public class PgTestTemplate {
     return client;
   }
   
-  public ClientState createState() {
-    final var ctx = ClientCollections.defaults("junit");
-    return DocDBFactorySql.state(ctx, pgPool, new PgErrors());
+  public DbState createState() {
+    final var ctx = DbCollections.defaults("junit");
+    return DbStateImpl.state(ctx, pgPool, new PgErrors());
   }
   
   public void printRepo(Repo repo) {
-    final String result = new DocDBPrettyPrinter(createState()).print(repo);
+    final String result = new GitDbPrinter(createState()).print(repo);
     System.out.println(result);
   }
   

@@ -32,9 +32,9 @@ import io.resys.thena.docdb.api.models.ThenaGitObject.TreeValue;
 import io.resys.thena.docdb.file.tables.Table.FileStatement;
 import io.resys.thena.docdb.file.tables.Table.FileTuple;
 import io.resys.thena.docdb.file.tables.Table.FileTupleList;
-import io.resys.thena.docdb.spi.ClientCollections;
+import io.resys.thena.docdb.spi.DbCollections;
 
-public interface FileBuilder extends ClientCollections.WithOptions<FileBuilder>{
+public interface FileBuilder extends DbCollections.WithOptions<FileBuilder>{
 
   RepoFileBuilder repo();
   RefFileBuilder refs();
@@ -43,7 +43,7 @@ public interface FileBuilder extends ClientCollections.WithOptions<FileBuilder>{
   CommitFileBuilder commits();
   TreeFileBuilder trees();
   TreeItemFileBuilder treeItems();
-  FileBuilder withOptions(ClientCollections options);
+  FileBuilder withOptions(DbCollections options);
 
   interface RepoFileBuilder {
     FileTuple exists();

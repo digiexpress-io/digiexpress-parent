@@ -27,7 +27,7 @@ import java.util.List;
 import io.resys.thena.docdb.api.LogConstants;
 import io.resys.thena.docdb.api.actions.PullActions.MatchCriteria;
 import io.resys.thena.docdb.api.models.ThenaGitObject.BlobHistory;
-import io.resys.thena.docdb.spi.ClientQuery.BlobHistoryQuery;
+import io.resys.thena.docdb.spi.GitDbQueries.BlobHistoryQuery;
 import io.resys.thena.docdb.sql.factories.ClientQuerySqlPool.ClientQuerySqlContext;
 import io.smallrye.mutiny.Multi;
 import io.vertx.mutiny.sqlclient.RowSet;

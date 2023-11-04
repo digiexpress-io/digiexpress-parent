@@ -36,7 +36,7 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.resys.thena.docdb.spi.DocDBDefault;
-import io.resys.thena.docdb.spi.DocDBPrettyPrinter;
+import io.resys.thena.docdb.spi.GitDbPrinter;
 import io.resys.thena.docdb.spi.jackson.VertexExtModule;
 import io.resys.thena.projects.client.api.ProjectsClient;
 import io.resys.thena.projects.client.api.model.Document.DocumentType;
@@ -138,7 +138,7 @@ public class ProjectTestCase {
     final var config = ((ProjectsClientImpl) client).getCtx().getConfig();
     final var state = ((DocDBDefault) config.getClient()).getState();
     final var repo = client.repo().getRepo().await().atMost(Duration.ofMinutes(1));
-    final String result = new DocDBPrettyPrinter(state).print(repo);
+    final String result = new GitDbPrinter(state).printWithStaticIds(repo);
     return result;
   }
   

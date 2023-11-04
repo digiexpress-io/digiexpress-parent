@@ -26,9 +26,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import jakarta.inject.Inject;
-
-import io.vertx.mutiny.sqlclient.Pool;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,7 +36,7 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.resys.thena.docdb.spi.DocDBDefault;
-import io.resys.thena.docdb.spi.DocDBPrettyPrinter;
+import io.resys.thena.docdb.spi.GitDbPrinter;
 import io.resys.thena.docdb.spi.jackson.VertexExtModule;
 import io.resys.thena.tasks.client.api.TaskClient;
 import io.resys.thena.tasks.client.api.model.Document.DocumentType;
@@ -49,6 +46,8 @@ import io.resys.thena.tasks.client.spi.store.DocumentConfig.DocumentGidProvider;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.json.jackson.DatabindCodec;
 import io.vertx.core.json.jackson.VertxModule;
+import io.vertx.mutiny.sqlclient.Pool;
+import jakarta.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -139,7 +138,7 @@ public class TaskTestCase {
     final var config = ((TaskClientImpl) client).getCtx().getConfig();
     final var state = ((DocDBDefault) config.getClient()).getState();
     final var repo = client.repo().getRepo().await().atMost(Duration.ofMinutes(1));
-    final String result = new DocDBPrettyPrinter(state).print(repo);
+    final String result = new GitDbPrinter(state).printWithStaticIds(repo);
     return result;
   }
   

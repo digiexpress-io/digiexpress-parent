@@ -21,7 +21,7 @@ package io.resys.thena.docdb.sql.statement;
  */
 
 import io.resys.thena.docdb.api.models.Repo;
-import io.resys.thena.docdb.spi.ClientCollections;
+import io.resys.thena.docdb.spi.DbCollections;
 import io.resys.thena.docdb.sql.ImmutableSql;
 import io.resys.thena.docdb.sql.ImmutableSqlTuple;
 import io.resys.thena.docdb.sql.SqlBuilder.RepoSqlBuilder;
@@ -33,7 +33,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class DefaultRepoSqlBuilder implements RepoSqlBuilder {
-  private final ClientCollections options;
+  private final DbCollections options;
   
 
   @Override

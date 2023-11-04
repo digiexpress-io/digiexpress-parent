@@ -32,13 +32,13 @@ import org.apache.commons.io.IOUtils;
 
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.ThenaGitObject.TreeValue;
-import io.resys.thena.docdb.spi.ClientState;
+import io.resys.thena.docdb.spi.DbState;
 import io.vertx.core.json.JsonObject;
 
 public class RepositoryToStaticData {
-  private final ClientState state;
+  private final DbState state;
 
-  public RepositoryToStaticData(ClientState state) {
+  public RepositoryToStaticData(DbState state) {
     super();
     this.state = state;
   }
@@ -54,7 +54,7 @@ public class RepositoryToStaticData {
       return next;
     };
 
-    final var ctx = state.withRepo(repo);
+    final var ctx = state.toGitState().withRepo(repo);
     
     StringBuilder result = new StringBuilder();
 

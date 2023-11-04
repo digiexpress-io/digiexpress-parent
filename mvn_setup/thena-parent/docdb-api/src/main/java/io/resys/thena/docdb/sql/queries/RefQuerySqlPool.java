@@ -22,7 +22,7 @@ package io.resys.thena.docdb.sql.queries;
 
 import io.resys.thena.docdb.api.LogConstants;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Branch;
-import io.resys.thena.docdb.spi.ClientQuery.RefQuery;
+import io.resys.thena.docdb.spi.GitDbQueries.RefQuery;
 import io.resys.thena.docdb.spi.ErrorHandler;
 import io.resys.thena.docdb.spi.support.RepoAssert;
 import io.resys.thena.docdb.sql.SqlBuilder;

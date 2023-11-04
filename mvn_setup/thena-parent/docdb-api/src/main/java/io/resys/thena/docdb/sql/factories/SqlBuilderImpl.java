@@ -20,7 +20,7 @@ package io.resys.thena.docdb.sql.factories;
  * #L%
  */
 
-import io.resys.thena.docdb.spi.ClientCollections;
+import io.resys.thena.docdb.spi.DbCollections;
 import io.resys.thena.docdb.sql.SqlBuilder;
 import io.resys.thena.docdb.sql.statement.DefaultBlobSqlBuilder;
 import io.resys.thena.docdb.sql.statement.DefaultCommitSqlBuilder;
@@ -33,7 +33,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class SqlBuilderImpl implements SqlBuilder {
-  protected final ClientCollections ctx;
+  protected final DbCollections ctx;
 
   @Override
   public RepoSqlBuilder repo() {
@@ -64,7 +64,7 @@ public class SqlBuilderImpl implements SqlBuilder {
     return new DefaultCommitSqlBuilder(ctx);
   }
   @Override
-  public SqlBuilder withOptions(ClientCollections options) {
+  public SqlBuilder withOptions(DbCollections options) {
     return new SqlBuilderImpl(options);
   }
 }

@@ -3,6 +3,32 @@ package io.resys.hdes.client.spi.config;
 import java.time.Duration;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.TestInfo;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.guava.GuavaModule;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
+import io.resys.hdes.client.api.HdesClient;
+import io.resys.hdes.client.api.HdesComposer;
+import io.resys.hdes.client.spi.HdesClientImpl;
+import io.resys.hdes.client.spi.HdesComposerImpl;
+import io.resys.hdes.client.spi.ThenaStore;
+import io.resys.hdes.client.spi.config.HdesClientConfig.DependencyInjectionContext;
+import io.resys.hdes.client.spi.config.HdesClientConfig.ServiceInit;
+import io.resys.hdes.client.spi.util.RepositoryToStaticData;
+import io.resys.thena.docdb.api.DocDB;
+import io.resys.thena.docdb.api.models.Repo;
+import io.resys.thena.docdb.spi.DbCollections;
+import io.resys.thena.docdb.spi.DbState;
+import io.resys.thena.docdb.spi.GitDbPrinter;
+import io.resys.thena.docdb.spi.pgsql.PgErrors;
+import io.resys.thena.docdb.sql.DbStateImpl;
+import io.vertx.mutiny.sqlclient.Pool;
+
 /*-
  * #%L
  * thena-docdb-pgsql
@@ -24,32 +50,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 
 import jakarta.inject.Inject;
-
-import io.vertx.mutiny.sqlclient.Pool;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.guava.GuavaModule;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
-import io.resys.hdes.client.api.HdesClient;
-import io.resys.hdes.client.api.HdesComposer;
-import io.resys.hdes.client.spi.HdesClientImpl;
-import io.resys.hdes.client.spi.HdesComposerImpl;
-import io.resys.hdes.client.spi.ThenaStore;
-import io.resys.hdes.client.spi.config.HdesClientConfig.DependencyInjectionContext;
-import io.resys.hdes.client.spi.config.HdesClientConfig.ServiceInit;
-import io.resys.hdes.client.spi.util.RepositoryToStaticData;
-import io.resys.thena.docdb.api.DocDB;
-import io.resys.thena.docdb.api.models.Repo;
-import io.resys.thena.docdb.spi.ClientCollections;
-import io.resys.thena.docdb.spi.ClientState;
-import io.resys.thena.docdb.spi.DocDBPrettyPrinter;
-import io.resys.thena.docdb.spi.pgsql.PgErrors;
-import io.resys.thena.docdb.sql.DocDBFactorySql;
-import org.junit.jupiter.api.TestInfo;
 
 public class PgTestTemplate {
   private ThenaStore store;
@@ -88,13 +88,13 @@ public class PgTestTemplate {
     connection.closeAndForget();
   }
 
-  private ClientState createState(String repoName) {
-    final var ctx = ClientCollections.defaults(repoName);
-    return DocDBFactorySql.state(ctx, pgPool, new PgErrors());
+  private DbState createState(String repoName) {
+    final var ctx = DbCollections.defaults(repoName);
+    return DbStateImpl.state(ctx, pgPool, new PgErrors());
   }
   
   public void printRepo(Repo repo) {
-    final String result = new DocDBPrettyPrinter(createState(repo.getName())).print(repo);
+    final String result = new GitDbPrinter(createState(repo.getName())).print(repo);
     System.out.println(result);
   }
   

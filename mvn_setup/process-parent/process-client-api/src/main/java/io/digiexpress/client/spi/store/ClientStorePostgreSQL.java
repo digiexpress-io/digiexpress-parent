@@ -19,7 +19,7 @@ import io.resys.thena.docdb.api.DocDB;
 import io.resys.thena.docdb.api.actions.RepoActions.RepoStatus;
 import io.resys.thena.docdb.api.models.Repo.RepoType;
 import io.resys.thena.docdb.spi.pgsql.PgErrors;
-import io.resys.thena.docdb.sql.DocDBFactorySql;
+import io.resys.thena.docdb.sql.DbStateImpl;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 import io.vertx.pgclient.PgConnectOptions;
@@ -186,9 +186,9 @@ public class ClientStorePostgreSQL extends DocDBCommandsSupport implements Clien
         
         final io.vertx.mutiny.pgclient.PgPool pgPool = io.vertx.mutiny.pgclient.PgPool.pool(connectOptions, poolOptions);
         
-        thena = DocDBFactorySql.create().client(pgPool).db(repoName).errorHandler(new PgErrors()).build();
+        thena = DbStateImpl.create().client(pgPool).db(repoName).errorHandler(new PgErrors()).build();
       } else {
-        thena = DocDBFactorySql.create().client(pgPool).db(repoName).errorHandler(new PgErrors()).build();
+        thena = DbStateImpl.create().client(pgPool).db(repoName).errorHandler(new PgErrors()).build();
       }
       
       final ObjectMapper objectMapper = getObjectMapper();

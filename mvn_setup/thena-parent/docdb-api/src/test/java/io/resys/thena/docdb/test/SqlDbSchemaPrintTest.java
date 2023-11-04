@@ -30,7 +30,7 @@ import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import io.resys.thena.docdb.spi.ClientCollections;
+import io.resys.thena.docdb.spi.DbCollections;
 import io.resys.thena.docdb.sql.factories.SqlSchemaImpl;
 import lombok.extern.slf4j.Slf4j;
 
@@ -40,7 +40,7 @@ public class SqlDbSchemaPrintTest {
   final Charset UTF_8 = StandardCharsets.UTF_8;
   @Test
   public void printSchema() throws IOException {
-    final var sqlSchema = new SqlSchemaImpl(ClientCollections.defaults("public"));
+    final var sqlSchema = new SqlSchemaImpl(DbCollections.defaults("public"));
     
 
     final var schema = new StringBuilder()

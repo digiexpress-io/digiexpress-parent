@@ -37,7 +37,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.resys.thena.docdb.api.LogConstants;
 import io.resys.thena.docdb.file.tables.RepoTable;
 import io.resys.thena.docdb.file.tables.Table;
-import io.resys.thena.docdb.spi.ClientCollections;
+import io.resys.thena.docdb.spi.DbCollections;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j(topic = LogConstants.SHOW_SQL)
@@ -52,7 +52,7 @@ public class FileConnection implements Table.Connection {
   }
 
   @Override
-  public RepoTable getRepoTable(ClientCollections ctx) {
+  public RepoTable getRepoTable(DbCollections ctx) {
     
     if(cache.containsKey(ctx.getDb())) {
       final var cached = cache.get(ctx.getDb());

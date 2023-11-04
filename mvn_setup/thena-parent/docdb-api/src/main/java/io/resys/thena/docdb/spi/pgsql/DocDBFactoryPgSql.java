@@ -23,13 +23,13 @@ import java.util.function.Function;
  */
 
 import io.resys.thena.docdb.api.DocDB;
-import io.resys.thena.docdb.spi.ClientCollections;
-import io.resys.thena.docdb.spi.ClientQuery;
-import io.resys.thena.docdb.spi.ClientState;
+import io.resys.thena.docdb.spi.DbCollections;
+import io.resys.thena.docdb.spi.GitDbQueries;
+import io.resys.thena.docdb.spi.DbState;
 import io.resys.thena.docdb.spi.DocDBDefault;
 import io.resys.thena.docdb.spi.ErrorHandler;
 import io.resys.thena.docdb.spi.support.RepoAssert;
-import io.resys.thena.docdb.sql.DocDBFactorySql;
+import io.resys.thena.docdb.sql.DbStateImpl;
 import io.resys.thena.docdb.sql.SqlBuilder;
 import io.resys.thena.docdb.sql.SqlMapper;
 import io.resys.thena.docdb.sql.SqlSchema;
@@ -38,20 +38,20 @@ import io.resys.thena.docdb.sql.factories.ClientQuerySqlPool.ClientQuerySqlConte
 import io.vertx.mutiny.sqlclient.Pool;
 
 
-public class DocDBFactoryPgSql extends DocDBFactorySql implements ClientState {
+public class DocDBFactoryPgSql extends DbStateImpl implements DbState {
 
 
   public DocDBFactoryPgSql(
-      ClientCollections ctx, Pool client, ErrorHandler handler,
-      Function<ClientCollections, SqlSchema> sqlSchema, 
-      Function<ClientCollections, SqlMapper> sqlMapper,
-      Function<ClientCollections, SqlBuilder> sqlBuilder,
-      Function<ClientQuerySqlContext, ClientQuery> clientQuery) {
+      DbCollections ctx, Pool client, ErrorHandler handler,
+      Function<DbCollections, SqlSchema> sqlSchema, 
+      Function<DbCollections, SqlMapper> sqlMapper,
+      Function<DbCollections, SqlBuilder> sqlBuilder,
+      Function<ClientQuerySqlContext, GitDbQueries> clientQuery) {
     super(ctx, client, handler, sqlSchema, sqlMapper, sqlBuilder, clientQuery);
   }
 
-  public static ClientState state(
-      final ClientCollections ctx,
+  public static DbState state(
+      final DbCollections ctx,
       final io.vertx.mutiny.sqlclient.Pool client, 
       final ErrorHandler handler) {
     
@@ -63,11 +63,11 @@ public class DocDBFactoryPgSql extends DocDBFactorySql implements ClientState {
         Builder::defaultSqlQuery);
   }
   
-  public static DocDBFactorySql.Builder create() {
+  public static DbStateImpl.Builder create() {
     return new Builder();
   }
 
-  public static class Builder extends DocDBFactorySql.Builder {
+  public static class Builder extends DbStateImpl.Builder {
     public Builder() {
       super.errorHandler = new PgErrors();
       super.sqlBuilder = Builder::defaultSqlBuilder;
@@ -75,7 +75,7 @@ public class DocDBFactoryPgSql extends DocDBFactorySql implements ClientState {
       super.sqlSchema = Builder::defaultSqlSchema;
       super.sqlQuery = Builder::defaultSqlQuery;
     }
-    public static ClientQuery defaultSqlQuery(ClientQuerySqlContext ctx) {
+    public static GitDbQueries defaultSqlQuery(ClientQuerySqlContext ctx) {
       return new ClientQuerySqlPool(ctx);
     }
     
@@ -84,7 +84,7 @@ public class DocDBFactoryPgSql extends DocDBFactorySql implements ClientState {
       RepoAssert.notNull(db, () -> "db must be defined!");
       RepoAssert.notNull(errorHandler, () -> "errorHandler must be defined!");
 
-      final var ctx = ClientCollections.defaults(db);
+      final var ctx = DbCollections.defaults(db);
       final var state = new DocDBFactoryPgSql(ctx, client, errorHandler, sqlSchema, sqlMapper, sqlBuilder, sqlQuery);
       return new DocDBDefault(state);
     }

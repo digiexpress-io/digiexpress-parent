@@ -3,6 +3,28 @@ package io.dialob.pgsql.test.config;
 import java.time.Duration;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.guava.GuavaModule;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
+import io.dialob.client.api.DialobStore.StoreRepoBuilder;
+import io.dialob.client.pgsql.PgSqlDialobStore;
+import io.dialob.client.spi.DialobStoreTemplate;
+import io.dialob.client.spi.support.RepositoryToStaticData;
+import io.resys.thena.docdb.api.DocDB;
+import io.resys.thena.docdb.api.models.Repo;
+import io.resys.thena.docdb.spi.DbCollections;
+import io.resys.thena.docdb.spi.DbState;
+import io.resys.thena.docdb.spi.GitDbPrinter;
+import io.resys.thena.docdb.spi.pgsql.PgErrors;
+import io.resys.thena.docdb.sql.DbStateImpl;
+import io.vertx.core.VertxOptions;
+import io.vertx.mutiny.sqlclient.Pool;
+
 /*-
  * #%L
  * thena-docdb-pgsql
@@ -24,28 +46,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 
 import jakarta.inject.Inject;
-
-import io.vertx.mutiny.sqlclient.Pool;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.guava.GuavaModule;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
-import io.dialob.client.api.DialobStore.StoreRepoBuilder;
-import io.dialob.client.pgsql.PgSqlDialobStore;
-import io.dialob.client.spi.DialobStoreTemplate;
-import io.dialob.client.spi.support.RepositoryToStaticData;
-import io.resys.thena.docdb.api.DocDB;
-import io.resys.thena.docdb.api.models.Repo;
-import io.resys.thena.docdb.spi.ClientCollections;
-import io.resys.thena.docdb.spi.ClientState;
-import io.resys.thena.docdb.spi.DocDBPrettyPrinter;
-import io.resys.thena.docdb.spi.pgsql.PgErrors;
-import io.resys.thena.docdb.sql.DocDBFactorySql;
-import io.vertx.core.VertxOptions;
 
 public class PgTestTemplate {
   private DialobStoreTemplate store;
@@ -91,13 +91,13 @@ public class PgTestTemplate {
     connection.closeAndForget();
   }
 
-  private ClientState createState(String repoName) {
-    final var ctx = ClientCollections.defaults(repoName);
-    return DocDBFactorySql.state(ctx, pgPool, new PgErrors());
+  private DbState createState(String repoName) {
+    final var ctx = DbCollections.defaults(repoName);
+    return DbStateImpl.state(ctx, pgPool, new PgErrors());
   }
 
   public void printRepo(Repo repo) {
-    final String result = new DocDBPrettyPrinter(createState(repo.getName())).print(repo);
+    final String result = new GitDbPrinter(createState(repo.getName())).print(repo);
     System.out.println(result);
   }
 

@@ -26,14 +26,14 @@ import java.util.Optional;
 import org.immutables.value.Value;
 
 import io.resys.thena.docdb.api.models.Repo;
-import io.resys.thena.docdb.spi.ClientCollections;
+import io.resys.thena.docdb.spi.DbCollections;
 
 @Value.Immutable
 public interface SqlClientWrapper {
   Repo getRepo();
   io.vertx.mutiny.sqlclient.Pool getPool();
   Optional<io.vertx.mutiny.sqlclient.SqlClient> getTx();
-  ClientCollections getNames();
+  DbCollections getNames();
   
   default io.vertx.mutiny.sqlclient.SqlClient getClient() {
     return getTx().orElse(getPool());

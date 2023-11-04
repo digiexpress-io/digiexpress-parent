@@ -26,8 +26,8 @@ import io.resys.thena.docdb.api.models.ThenaGitObject.Branch;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Commit;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Tag;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Tree;
-import io.resys.thena.docdb.spi.ClientInsertBuilder;
 import io.resys.thena.docdb.spi.ErrorHandler;
+import io.resys.thena.docdb.spi.GitDbInserts;
 import io.resys.thena.docdb.spi.ImmutableBatch;
 import io.resys.thena.docdb.spi.ImmutableInsertResult;
 import io.resys.thena.docdb.spi.ImmutableUpsertResult;
@@ -42,7 +42,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
-public class ClientInsertBuilderSqlPool implements ClientInsertBuilder {
+public class ClientInsertBuilderSqlPool implements GitDbInserts {
   private final SqlClientWrapper wrapper;
   private final SqlMapper sqlMapper;
   private final SqlBuilder sqlBuilder;

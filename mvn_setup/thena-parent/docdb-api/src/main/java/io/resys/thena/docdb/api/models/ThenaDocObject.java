@@ -82,4 +82,17 @@ public interface ThenaDocObject {
     String getDocCommitId();
     @Nullable JsonObject getValue();  // null when json loading is disabled
   }
+  
+  @Value.Immutable  
+  interface DocCommitLock extends ThenaDocObject {
+    DocCommitLockStatus getStatus();
+    Optional<DocBranch> getBranch();
+    Optional<DocCommit> getCommit();
+    Map<String, DocLog> getLogs();
+    Optional<String> getMessage();
+  }
+  
+  enum DocCommitLockStatus {
+    LOCK_TAKEN, NOT_FOUND
+  }
 }

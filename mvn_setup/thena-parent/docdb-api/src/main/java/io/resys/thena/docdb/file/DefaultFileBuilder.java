@@ -27,12 +27,12 @@ import io.resys.thena.docdb.file.spi.RepoFileBuilderImpl;
 import io.resys.thena.docdb.file.spi.TagFileBuilderImpl;
 import io.resys.thena.docdb.file.spi.TreeFileBuilderImpl;
 import io.resys.thena.docdb.file.spi.TreeItemFileBuilderImpl;
-import io.resys.thena.docdb.spi.ClientCollections;
+import io.resys.thena.docdb.spi.DbCollections;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class DefaultFileBuilder implements FileBuilder {
-  private final ClientCollections ctx;
+  private final DbCollections ctx;
 
   @Override
   public RepoFileBuilder repo() {
@@ -70,7 +70,7 @@ public class DefaultFileBuilder implements FileBuilder {
   }
 
   @Override
-  public FileBuilder withOptions(ClientCollections options) {
+  public FileBuilder withOptions(DbCollections options) {
     return new DefaultFileBuilder(options);
   }
 }

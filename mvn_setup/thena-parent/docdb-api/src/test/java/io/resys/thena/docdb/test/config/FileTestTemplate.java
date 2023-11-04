@@ -42,9 +42,9 @@ import io.resys.thena.docdb.api.models.Repo.RepoType;
 import io.resys.thena.docdb.file.DocDBFactoryFile;
 import io.resys.thena.docdb.file.FileErrors;
 import io.resys.thena.docdb.file.spi.FilePoolImpl;
-import io.resys.thena.docdb.spi.ClientCollections;
-import io.resys.thena.docdb.spi.ClientState;
-import io.resys.thena.docdb.spi.DocDBPrettyPrinter;
+import io.resys.thena.docdb.spi.DbCollections;
+import io.resys.thena.docdb.spi.DbState;
+import io.resys.thena.docdb.spi.GitDbPrinter;
 import io.resys.thena.docdb.spi.jackson.VertexExtModule;
 import io.vertx.core.json.jackson.VertxModule;
 import lombok.extern.slf4j.Slf4j;
@@ -81,7 +81,7 @@ public class FileTestTemplate {
   
   @BeforeEach
   public void setUp() {
-    final var ctx = ClientCollections.defaults(db);
+    final var ctx = DbCollections.defaults(db);
     final var file = new File(this.file, ctx.getDb());
     file.mkdir();
 
@@ -124,16 +124,16 @@ public class FileTestTemplate {
     return client;
   }
   
-  public ClientState createState() {
-    final var ctx = ClientCollections.defaults(db);
+  public DbState createState() {
+    final var ctx = DbCollections.defaults(db);
     return DocDBFactoryFile.state(ctx, new FilePoolImpl(file, objectMapper), new FileErrors());
   }
   
   public void printRepo(Repo repo) {
-    final var ctx = ClientCollections.defaults(db);
+    final var ctx = DbCollections.defaults(db);
     final var state = DocDBFactoryFile.state(ctx, new FilePoolImpl(file, objectMapper), new FileErrors());
     
-    final String result = new DocDBPrettyPrinter(state).print(repo);
+    final String result = new GitDbPrinter(state).print(repo);
     log.debug(result);
   }
 

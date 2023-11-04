@@ -20,7 +20,7 @@ package io.resys.thena.docdb.sql.factories;
  * #L%
  */
 
-import io.resys.thena.docdb.spi.ClientCollections;
+import io.resys.thena.docdb.spi.DbCollections;
 import io.resys.thena.docdb.sql.ImmutableSql;
 import io.resys.thena.docdb.sql.SqlBuilder.Sql;
 import io.resys.thena.docdb.sql.SqlSchema;
@@ -30,7 +30,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SqlSchemaImpl implements SqlSchema {
 
-  protected final ClientCollections options;
+  protected final DbCollections options;
   
   @Override
   public Sql createRepo() {
@@ -199,7 +199,7 @@ public class SqlSchemaImpl implements SqlSchema {
   }
   
   @Override
-  public SqlSchemaImpl withOptions(ClientCollections options) {
+  public SqlSchemaImpl withOptions(DbCollections options) {
     return new SqlSchemaImpl(options);
   }
 
@@ -210,7 +210,7 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("(").ln()
     .append("  id VARCHAR(40) PRIMARY KEY,").ln()
     .append("  version VARCHAR(40),").ln()
-    .append("  external_id VARCHAR(40),").ln()
+    .append("  external_id VARCHAR(40) UNIQUE,").ln()
     .append("  value jsonb NOT NULL").ln()
     .append(");").ln()
     

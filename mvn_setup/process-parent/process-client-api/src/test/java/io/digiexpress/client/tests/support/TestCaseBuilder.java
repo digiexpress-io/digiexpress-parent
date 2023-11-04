@@ -12,11 +12,11 @@ import io.digiexpress.client.api.ClientStore;
 import io.digiexpress.client.spi.ClientImpl;
 import io.resys.thena.docdb.api.DocDB;
 import io.resys.thena.docdb.api.models.Repo;
-import io.resys.thena.docdb.spi.ClientCollections;
-import io.resys.thena.docdb.spi.ClientState;
+import io.resys.thena.docdb.spi.DbCollections;
+import io.resys.thena.docdb.spi.DbState;
 import io.resys.thena.docdb.spi.pgsql.DocDBFactoryPgSql;
 import io.resys.thena.docdb.spi.pgsql.PgErrors;
-import io.resys.thena.docdb.sql.DocDBFactorySql;
+import io.resys.thena.docdb.sql.DbStateImpl;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -24,13 +24,13 @@ public class TestCaseBuilder {
   public final ObjectMapper objectMapper;
   private final Client client;
   private final DocDB doc;
-  private final ClientState docState;
+  private final DbState docState;
   private TestCaseReader testCaseReader;
   
   public TestCaseBuilder(io.vertx.mutiny.pgclient.PgPool pgPool) {
     this.objectMapper = new ObjectMapper().registerModules(new JavaTimeModule(), new Jdk8Module(), new GuavaModule());
     this.doc = getClient(pgPool, "junit");
-    this.docState = DocDBFactorySql.state(ClientCollections.defaults("junit"), pgPool, new PgErrors());
+    this.docState = DbStateImpl.state(DbCollections.defaults("junit"), pgPool, new PgErrors());
     this.client = ClientImpl.builder()
         .om(objectMapper)
         .defaultDialobEventPub()

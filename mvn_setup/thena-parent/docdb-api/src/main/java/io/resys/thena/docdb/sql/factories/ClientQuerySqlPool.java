@@ -22,7 +22,7 @@ import org.immutables.value.Value;
  * #L%
  */
 
-import io.resys.thena.docdb.spi.ClientQuery;
+import io.resys.thena.docdb.spi.GitDbQueries;
 import io.resys.thena.docdb.spi.ErrorHandler;
 import io.resys.thena.docdb.sql.SqlBuilder;
 import io.resys.thena.docdb.sql.SqlMapper;
@@ -37,7 +37,7 @@ import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class ClientQuerySqlPool implements ClientQuery {
+public class ClientQuerySqlPool implements GitDbQueries {
   
   protected final ClientQuerySqlContext context;
   

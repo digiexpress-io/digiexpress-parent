@@ -20,11 +20,11 @@ package io.resys.thena.docdb.sql;
  * #L%
  */
 
-import io.resys.thena.docdb.spi.ClientCollections;
+import io.resys.thena.docdb.spi.DbCollections;
 import io.resys.thena.docdb.sql.SqlBuilder.Sql;
 
-public interface SqlSchema extends ClientCollections.WithOptions<SqlSchema>{
-  SqlSchema withOptions(ClientCollections options);
+public interface SqlSchema extends DbCollections.WithOptions<SqlSchema>{
+  SqlSchema withOptions(DbCollections options);
   
   Sql createRepo();
   Sql createBlobs();

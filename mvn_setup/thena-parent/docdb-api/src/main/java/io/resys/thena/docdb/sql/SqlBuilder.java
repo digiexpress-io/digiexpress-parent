@@ -36,11 +36,11 @@ import io.resys.thena.docdb.api.models.ThenaGitObject.Commit;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Tag;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Tree;
 import io.resys.thena.docdb.api.models.ThenaGitObject.TreeValue;
-import io.resys.thena.docdb.spi.ClientCollections;
-import io.resys.thena.docdb.spi.ClientQuery.LockCriteria;
+import io.resys.thena.docdb.spi.DbCollections;
+import io.resys.thena.docdb.spi.GitDbQueries.LockCriteria;
 import io.vertx.mutiny.sqlclient.Tuple;
 
-public interface SqlBuilder extends ClientCollections.WithOptions<SqlBuilder> {
+public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
 
   RepoSqlBuilder repo();
   RefSqlBuilder refs();
@@ -49,7 +49,7 @@ public interface SqlBuilder extends ClientCollections.WithOptions<SqlBuilder> {
   CommitSqlBuilder commits();
   TreeSqlBuilder trees();
   TreeItemSqlBuilder treeItems();
-  SqlBuilder withOptions(ClientCollections options);
+  SqlBuilder withOptions(DbCollections options);
 
   interface RepoSqlBuilder {
     SqlTuple exists();

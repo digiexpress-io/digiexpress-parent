@@ -27,7 +27,7 @@ import org.immutables.value.Value;
 
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.file.tables.Table.Row;
-import io.resys.thena.docdb.spi.ClientCollections;
+import io.resys.thena.docdb.spi.DbCollections;
 import io.resys.thena.docdb.spi.support.DataMapper;
 import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.sqlclient.Tuple;
@@ -53,7 +53,7 @@ public interface Table<T extends Row>  {
   
   interface FileMapper extends DataMapper<Table.Row> { }
   interface Connection {
-    RepoTable getRepoTable(ClientCollections ctx);
+    RepoTable getRepoTable(DbCollections ctx);
   }
   
   interface FilePool {
@@ -71,7 +71,7 @@ public interface Table<T extends Row>  {
   interface FileClientWrapper {
     Repo getRepo();
     FilePool getClient();
-    ClientCollections getNames();    
+    DbCollections getNames();    
   }
   
   interface FileCommand {

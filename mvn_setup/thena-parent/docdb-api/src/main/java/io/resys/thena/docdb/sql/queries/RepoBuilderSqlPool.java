@@ -24,8 +24,8 @@ import io.resys.thena.docdb.api.LogConstants;
 
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.Repo.RepoType;
-import io.resys.thena.docdb.spi.ClientCollections;
-import io.resys.thena.docdb.spi.ClientState.RepoBuilder;
+import io.resys.thena.docdb.spi.DbCollections;
+import io.resys.thena.docdb.spi.DbState.RepoBuilder;
 import io.resys.thena.docdb.spi.ErrorHandler;
 import io.resys.thena.docdb.sql.SqlBuilder;
 import io.resys.thena.docdb.sql.SqlMapper;
@@ -43,7 +43,7 @@ import lombok.extern.slf4j.Slf4j;
 public class RepoBuilderSqlPool implements RepoBuilder {
   private final io.vertx.mutiny.sqlclient.Pool pool;
   private final io.vertx.mutiny.sqlclient.SqlClient client;
-  private final ClientCollections names;
+  private final DbCollections names;
   private final SqlSchema sqlSchema;
   private final SqlMapper sqlMapper;
   private final SqlBuilder sqlBuilder;

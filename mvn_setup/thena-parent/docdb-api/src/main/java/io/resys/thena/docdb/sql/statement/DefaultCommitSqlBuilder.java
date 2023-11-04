@@ -26,8 +26,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import io.resys.thena.docdb.api.models.ThenaGitObject.Commit;
-import io.resys.thena.docdb.spi.ClientCollections;
-import io.resys.thena.docdb.spi.ClientQuery.LockCriteria;
+import io.resys.thena.docdb.spi.DbCollections;
+import io.resys.thena.docdb.spi.GitDbQueries.LockCriteria;
 import io.resys.thena.docdb.sql.ImmutableSql;
 import io.resys.thena.docdb.sql.ImmutableSqlTuple;
 import io.resys.thena.docdb.sql.SqlBuilder.CommitSqlBuilder;
@@ -39,7 +39,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class DefaultCommitSqlBuilder implements CommitSqlBuilder {
-  private final ClientCollections options;
+  private final DbCollections options;
  
   @Override
   public Sql findAll() {

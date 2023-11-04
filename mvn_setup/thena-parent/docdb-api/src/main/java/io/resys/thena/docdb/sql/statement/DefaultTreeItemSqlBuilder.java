@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 
 import io.resys.thena.docdb.api.models.ThenaGitObject.Tree;
 import io.resys.thena.docdb.api.models.ThenaGitObject.TreeValue;
-import io.resys.thena.docdb.spi.ClientCollections;
+import io.resys.thena.docdb.spi.DbCollections;
 import io.resys.thena.docdb.sql.ImmutableSql;
 import io.resys.thena.docdb.sql.ImmutableSqlTuple;
 import io.resys.thena.docdb.sql.ImmutableSqlTupleList;
@@ -38,7 +38,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class DefaultTreeItemSqlBuilder implements TreeItemSqlBuilder {
-  private final ClientCollections options;
+  private final DbCollections options;
   
   @Override
   public Sql findAll() {

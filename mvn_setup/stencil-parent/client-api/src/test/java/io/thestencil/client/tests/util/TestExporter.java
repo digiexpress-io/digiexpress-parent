@@ -37,13 +37,13 @@ import com.fasterxml.jackson.databind.node.TextNode;
 
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.ThenaGitObject.TreeValue;
-import io.resys.thena.docdb.spi.ClientState;
+import io.resys.thena.docdb.spi.DbState;
 import io.thestencil.client.api.StencilClient.EntityType;
 
 public class TestExporter {
-  private final ClientState state;
+  private final DbState state;
 
-  public TestExporter(ClientState state) {
+  public TestExporter(DbState state) {
     super();
     this.state = state;
   }
@@ -59,7 +59,7 @@ public class TestExporter {
       return next;
     };
 
-    final var ctx = state.withRepo(repo);
+    final var ctx = state.toGitState().withRepo(repo);
     
     StringBuilder result = new StringBuilder();
 

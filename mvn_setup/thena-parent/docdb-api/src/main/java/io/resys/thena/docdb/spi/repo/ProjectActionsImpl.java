@@ -21,13 +21,13 @@ package io.resys.thena.docdb.spi.repo;
  */
 
 import io.resys.thena.docdb.api.actions.RepoActions;
-import io.resys.thena.docdb.spi.ClientState;
+import io.resys.thena.docdb.spi.DbState;
 import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
 public class ProjectActionsImpl implements RepoActions {
-  private final ClientState state;
+  private final DbState state;
 
   @Override
   public RepoQuery projectsQuery() {

@@ -27,12 +27,14 @@ import io.resys.thena.docdb.file.builders.RepoBuilderFilePool;
 import io.resys.thena.docdb.file.tables.ImmutableFileClientWrapper;
 import io.resys.thena.docdb.file.tables.Table.FileMapper;
 import io.resys.thena.docdb.file.tables.Table.FilePool;
-import io.resys.thena.docdb.spi.ClientCollections;
-import io.resys.thena.docdb.spi.ClientInsertBuilder;
-import io.resys.thena.docdb.spi.ClientQuery;
-import io.resys.thena.docdb.spi.ClientState;
+import io.resys.thena.docdb.spi.DbCollections;
+import io.resys.thena.docdb.spi.DbState;
 import io.resys.thena.docdb.spi.DocDBDefault;
+import io.resys.thena.docdb.spi.DocDbState;
 import io.resys.thena.docdb.spi.ErrorHandler;
+import io.resys.thena.docdb.spi.GitDbState;
+import io.resys.thena.docdb.spi.GitDbInserts;
+import io.resys.thena.docdb.spi.GitDbQueries;
 import io.resys.thena.docdb.spi.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 
@@ -42,25 +44,14 @@ public class DocDBFactoryFile {
     return new Builder();
   }
 
-  public static ClientState state(ClientCollections ctx, FilePool client, ErrorHandler handler) {
-    return new ClientState() {
-      @Override
-      public <R> Uni<R> withTransaction(String repoId, String headName, TransactionFunction<R> callback) {
-        return project().getByNameOrId(repoId).onItem().transformToUni(repo -> {
-          final ClientRepoState repoState = withRepo(repo);
-          return callback.apply(repoState);
-        });
-      }
-      @Override
-      public Uni<ClientRepoState> withRepo(String repoNameOrId) {
-        return project().getByNameOrId(repoNameOrId).onItem().transform(repo -> withRepo(repo));
-      }
+  public static DbState state(DbCollections ctx, FilePool client, ErrorHandler handler) {
+    return new DbState() {
       @Override
       public ErrorHandler getErrorHandler() {
         return handler;
       }
       @Override
-      public ClientCollections getCollections() {
+      public DbCollections getCollections() {
         return ctx;
       }
       @Override
@@ -68,64 +59,85 @@ public class DocDBFactoryFile {
         return new RepoBuilderFilePool(client, ctx, sqlMapper(ctx), sqlBuilder(ctx), handler);
       }
       @Override
-      public Uni<ClientInsertBuilder> insert(String repoNameOrId) {
-        return project().getByNameOrId(repoNameOrId).onItem().transform(repo -> insert(repo));
-      }
-      @Override
-      public ClientInsertBuilder insert(Repo repo) {
-        final var wrapper = ImmutableFileClientWrapper.builder()
-            .repo(repo)
-            .client(client)
-            .names(ctx.toRepo(repo))
-            .build();
-        return new ClientInsertBuilderFilePool(wrapper.getClient(), sqlMapper(wrapper.getNames()), sqlBuilder(wrapper.getNames()), handler);
-      }
-      @Override
-      public Uni<ClientQuery> query(String repoNameOrId) {
-        return project().getByNameOrId(repoNameOrId).onItem().transform(repo -> query(repo));
-      }
-      @Override
-      public ClientQuery query(Repo repo) {
-        final var wrapper = ImmutableFileClientWrapper.builder()
-            .repo(repo)
-            .client(client)
-            .names(ctx.toRepo(repo))
-            .build();
-        return new ClientQueryFilePool(wrapper, sqlMapper(wrapper.getNames()), sqlBuilder(wrapper.getNames()), handler);
-      }
-      @Override
-      public ClientRepoState withRepo(Repo repo) {
-        final var wrapper = ImmutableFileClientWrapper.builder()
-            .repo(repo)
-            .client(client)
-            .names(ctx.toRepo(repo))
-            .build();
-        return new ClientRepoState() {
+      public GitDbState toGitState() {
+        return new GitDbState() {
           @Override
-          public Repo getRepo() {
-            return wrapper.getRepo();
+          public <R> Uni<R> withTransaction(String repoId, String headName, TransactionFunction<R> callback) {
+            return project().getByNameOrId(repoId).onItem().transformToUni(repo -> {
+              final GitRepo repoState = withRepo(repo);
+              return callback.apply(repoState);
+            });
           }
           @Override
-          public String getRepoName() {
-            return repo.getName();
+          public Uni<GitRepo> withRepo(String repoNameOrId) {
+            return project().getByNameOrId(repoNameOrId).onItem().transform(repo -> withRepo(repo));
           }
           @Override
-          public ClientQuery query() {
+          public Uni<GitDbInserts> insert(String repoNameOrId) {
+            return project().getByNameOrId(repoNameOrId).onItem().transform(repo -> insert(repo));
+          }
+          @Override
+          public GitDbInserts insert(Repo repo) {
+            final var wrapper = ImmutableFileClientWrapper.builder()
+                .repo(repo)
+                .client(client)
+                .names(ctx.toRepo(repo))
+                .build();
+            return new ClientInsertBuilderFilePool(wrapper.getClient(), sqlMapper(wrapper.getNames()), sqlBuilder(wrapper.getNames()), handler);
+          }
+          @Override
+          public Uni<GitDbQueries> query(String repoNameOrId) {
+            return project().getByNameOrId(repoNameOrId).onItem().transform(repo -> query(repo));
+          }
+          @Override
+          public GitDbQueries query(Repo repo) {
+            final var wrapper = ImmutableFileClientWrapper.builder()
+                .repo(repo)
+                .client(client)
+                .names(ctx.toRepo(repo))
+                .build();
             return new ClientQueryFilePool(wrapper, sqlMapper(wrapper.getNames()), sqlBuilder(wrapper.getNames()), handler);
           }
           @Override
-          public ClientInsertBuilder insert() {
-            return new ClientInsertBuilderFilePool(wrapper.getClient(), sqlMapper(wrapper.getNames()), sqlBuilder(wrapper.getNames()), handler);
+          public GitRepo withRepo(Repo repo) {
+            final var wrapper = ImmutableFileClientWrapper.builder()
+                .repo(repo)
+                .client(client)
+                .names(ctx.toRepo(repo))
+                .build();
+            return new GitRepo() {
+              @Override
+              public Repo getRepo() {
+                return wrapper.getRepo();
+              }
+              @Override
+              public String getRepoName() {
+                return repo.getName();
+              }
+              @Override
+              public GitDbQueries query() {
+                return new ClientQueryFilePool(wrapper, sqlMapper(wrapper.getNames()), sqlBuilder(wrapper.getNames()), handler);
+              }
+              @Override
+              public GitDbInserts insert() {
+                return new ClientInsertBuilderFilePool(wrapper.getClient(), sqlMapper(wrapper.getNames()), sqlBuilder(wrapper.getNames()), handler);
+              }
+            };
           }
         };
+      }
+      @Override
+      public DocDbState toDocState() {
+        // TODO Auto-generated method stub
+        throw new RuntimeException("not implemented");
       }
     };
   }
 
-  public static FileBuilder sqlBuilder(ClientCollections ctx) {
+  public static FileBuilder sqlBuilder(DbCollections ctx) {
     return new DefaultFileBuilder(ctx);
   }
-  public static FileMapper sqlMapper(ClientCollections ctx) {
+  public static FileMapper sqlMapper(DbCollections ctx) {
     return new DefaultFileMapper();
   }
   
@@ -151,7 +163,7 @@ public class DocDBFactoryFile {
       RepoAssert.notNull(db, () -> "db must be defined!");
       RepoAssert.notNull(errorHandler, () -> "errorHandler must be defined!");
 
-      final var ctx = ClientCollections.defaults(db);
+      final var ctx = DbCollections.defaults(db);
       return new DocDBDefault(state(ctx, client, errorHandler));
     }
   }

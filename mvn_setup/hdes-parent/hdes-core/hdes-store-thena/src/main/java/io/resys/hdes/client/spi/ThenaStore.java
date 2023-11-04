@@ -41,7 +41,7 @@ import io.resys.hdes.client.spi.util.HdesAssert;
 import io.resys.thena.docdb.api.DocDB;
 import io.resys.thena.docdb.spi.pgsql.DocDBFactoryPgSql;
 import io.resys.thena.docdb.spi.pgsql.PgErrors;
-import io.resys.thena.docdb.sql.DocDBFactorySql;
+import io.resys.thena.docdb.sql.DbStateImpl;
 import io.vertx.core.json.JsonObject;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.sqlclient.PoolOptions;

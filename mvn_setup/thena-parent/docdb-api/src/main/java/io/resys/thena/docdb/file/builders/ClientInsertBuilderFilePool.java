@@ -33,11 +33,11 @@ import io.resys.thena.docdb.file.tables.Table.FileMapper;
 import io.resys.thena.docdb.file.tables.Table.FilePool;
 import io.resys.thena.docdb.file.tables.Table.FileTuple;
 import io.resys.thena.docdb.file.tables.Table.FileTupleList;
-import io.resys.thena.docdb.spi.ClientInsertBuilder;
-import io.resys.thena.docdb.spi.ClientInsertBuilder.BatchStatus;
-import io.resys.thena.docdb.spi.ClientInsertBuilder.InsertResult;
-import io.resys.thena.docdb.spi.ClientInsertBuilder.UpsertResult;
-import io.resys.thena.docdb.spi.ClientInsertBuilder.UpsertStatus;
+import io.resys.thena.docdb.spi.GitDbInserts;
+import io.resys.thena.docdb.spi.GitDbInserts.BatchStatus;
+import io.resys.thena.docdb.spi.GitDbInserts.InsertResult;
+import io.resys.thena.docdb.spi.GitDbInserts.UpsertResult;
+import io.resys.thena.docdb.spi.GitDbInserts.UpsertStatus;
 import io.resys.thena.docdb.spi.ErrorHandler;
 import io.resys.thena.docdb.spi.ImmutableBatch;
 import io.resys.thena.docdb.spi.ImmutableInsertResult;
@@ -48,7 +48,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @RequiredArgsConstructor
 @Slf4j
-public class ClientInsertBuilderFilePool implements ClientInsertBuilder {
+public class ClientInsertBuilderFilePool implements GitDbInserts {
   private final FilePool client;
   private final FileMapper mapper;
   private final FileBuilder sqlBuilder;

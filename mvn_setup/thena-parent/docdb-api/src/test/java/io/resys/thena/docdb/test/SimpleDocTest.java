@@ -22,7 +22,6 @@ package io.resys.thena.docdb.test;
 
 import java.io.Serializable;
 import java.time.Duration;
-import java.util.Map;
 
 import org.immutables.value.Value;
 import org.junit.jupiter.api.Assertions;
@@ -32,8 +31,6 @@ import org.slf4j.LoggerFactory;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
-import io.resys.thena.docdb.api.actions.CommitActions.CommitResultEnvelope;
-import io.resys.thena.docdb.api.actions.CommitActions.CommitResultStatus;
 import io.resys.thena.docdb.api.actions.RepoActions.RepoResult;
 import io.resys.thena.docdb.api.actions.RepoActions.RepoStatus;
 import io.resys.thena.docdb.api.models.Repo.RepoType;
@@ -63,5 +60,16 @@ public class SimpleDocTest extends DbTestTemplate {
         .await().atMost(Duration.ofMinutes(1));
     LOGGER.debug("created repo {}", repo);
     Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
+    
+    getClient().doc().append()
+      .appendBuilder()
+      .repoId(repo.getRepo().getId())
+      .externalId("bobs-ssn-id")
+      .append(JsonObject.of("first_name", "bob", "last_name", "flop"))
+      .message("created first entry")
+      .log(JsonObject.of("some_cool_command", "create_customer"))
+      .author("jane.doe@morgue.com")
+    .build().await().atMost(Duration.ofMinutes(1));
+    
   }
 }

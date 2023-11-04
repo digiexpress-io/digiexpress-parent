@@ -42,7 +42,7 @@ import io.resys.thena.docdb.api.models.ThenaGitObject.CommitTree;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Tag;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Tree;
 import io.resys.thena.docdb.api.models.ThenaGitObject.TreeValue;
-import io.resys.thena.docdb.spi.ClientCollections;
+import io.resys.thena.docdb.spi.DbCollections;
 import io.resys.thena.docdb.sql.SqlMapper;
 import io.vertx.core.json.JsonObject;
 import io.vertx.mutiny.sqlclient.Row;
@@ -51,7 +51,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SqlMapperImpl implements SqlMapper {
 
-  protected final ClientCollections ctx;
+  protected final DbCollections ctx;
  
   @Override
   public Repo repo(Row row) {
