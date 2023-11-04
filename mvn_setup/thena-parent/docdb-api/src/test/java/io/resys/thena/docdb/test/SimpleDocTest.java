@@ -58,7 +58,7 @@ public class SimpleDocTest extends DbTestTemplate {
   public void crateRepoAddAndDeleteFile() {
     // create project
     RepoResult repo = getClient().repo().projectBuilder()
-        .name("crateRepoAddAndDeleteFile", RepoType.doc)
+        .name("SimpleDocTest-1", RepoType.doc)
         .build()
         .await().atMost(Duration.ofMinutes(1));
     LOGGER.debug("created repo {}", repo);

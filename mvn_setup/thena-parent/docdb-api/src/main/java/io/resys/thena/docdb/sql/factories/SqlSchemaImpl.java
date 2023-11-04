@@ -213,6 +213,13 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("  external_id VARCHAR(40),").ln()
     .append("  value jsonb NOT NULL").ln()
     .append(");").ln()
+    
+    .append("CREATE INDEX ").append(options.getDoc()).append("_DOC_EXT_ID_INDEX")
+    .append(" ON ").append(options.getDoc()).append(" (external_id);").ln()
+    
+    .append("CREATE INDEX ").append(options.getDoc()).append("_DOC_ID_VERSION_INDEX")
+    .append(" ON ").append(options.getDoc()).append(" (id, version);").ln()
+    
     .build()).build();
   }
 
@@ -228,6 +235,13 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("  value jsonb NOT NULL,").ln()
     .append("  PRIMARY KEY (id, branch_id)").ln()
     .append(");").ln()
+    
+    .append("CREATE INDEX ").append(options.getDocBranch()).append("_DOC_BRANCH_BRANCH_ID_INDEX")
+    .append(" ON ").append(options.getDocBranch()).append(" (branch_id);").ln()
+    
+    .append("CREATE INDEX ").append(options.getDocBranch()).append("_DOC_BRANCH_VERSION_ORIGIN_INDEX")
+    .append(" ON ").append(options.getDocBranch()).append(" (version_origin);").ln()
+    
     .build()).build();
   }
   
@@ -244,6 +258,14 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("  message VARCHAR(255) NOT NULL,").ln()
     .append("  parent VARCHAR(40)").ln()
     .append(");").ln()
+    
+    .append("CREATE INDEX ").append(options.getDocCommits()).append("_DOC_COMMIT_DOC_ID_INDEX")
+    .append(" ON ").append(options.getDocCommits()).append(" (doc_id);").ln()
+    
+    .append("CREATE INDEX ").append(options.getDocCommits()).append("_DOC_COMMIT_BRANCH_ID_INDEX")
+    .append(" ON ").append(options.getDocCommits()).append(" (branch_id);").ln()
+    
+    
     .build()).build();
   }
   
@@ -256,6 +278,11 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("  commit_id VARCHAR(40) NOT NULL,").ln()
     .append("  value jsonb NOT NULL").ln()
     .append(");").ln()
+    
+
+    .append("CREATE INDEX ").append(options.getDocLog()).append("_DOC_LOG_INDEX")
+    .append(" ON ").append(options.getDocLog()).append(" (commit_id);").ln()
+    
     .build()).build();
   }
 
