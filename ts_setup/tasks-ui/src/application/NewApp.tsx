@@ -14,6 +14,7 @@ import Provider from './Provider';
 import AppTasks from 'app-tasks';
 import AppProjects from 'app-projects';
 import AppStencil from 'app-stencil';
+import AppFrontoffice from 'app-frontoffice';
 
 interface Csrf { key: string, value: string }
 declare global {
@@ -54,10 +55,13 @@ const Apps: React.FC<{ profile: TaskClient.Profile }> = ({ profile }) => {
   const stencil: Burger.App<{}, any> = React.useMemo(() => AppStencil(service, profile, projectId), [service, profile, projectId]);
   const tasks: Burger.App<{}, any> = React.useMemo(() => AppTasks(service, profile), [service, profile]);
   const projects: Burger.App<{}, any> = React.useMemo(() => AppProjects(service, profile), [service, profile]);
-  const appId = 'app-projects';
+  const frontoffice: Burger.App<{}, any> = React.useMemo(() => AppFrontoffice(service, profile), [service, profile]);
+  const appId = 'app-frontoffice';
 
   return (<Provider service={service} profile={profile}>
-    <Burger.Provider children={[tasks, projects, stencil]} secondary="toolbar.activities" drawerOpen appId={appId} />
+    <Burger.Provider children={
+      [tasks, projects, stencil, frontoffice]
+    } secondary="toolbar.activities" drawerOpen appId={appId} />
   </Provider>)
 }
 

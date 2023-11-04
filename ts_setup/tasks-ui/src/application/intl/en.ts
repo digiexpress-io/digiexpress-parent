@@ -265,6 +265,53 @@ const en = {
 
   'activities.dev.title': 'Development',
 
+  // --------------APP-FRONTOFFICE START ----------------
+
+  'activities.deployments.title': 'Deployments',
+
+  'activities.frontoffice.title': 'Front office',
+  'activities.frontoffice.desc': 'Manage CRM data, perform task management, and manage Dialob, Wrench, and Stencil assets',
+
+  'activities.frontoffice.crm.title': 'CRM data',
+  'activities.frontoffice.crm.desc': 'View and manage client data and communications',
+
+  'activities.frontoffice.stencil.title': 'Stencil content',
+  'activities.frontoffice.stencil.desc': 'Create and edit your multilingual content and define forms appearing on your portal site',
+
+  'activities.frontoffice.wrench.title': 'Wrench assets',
+  'activities.frontoffice.wrench.desc': 'Manage your decisions, flows, and processes',
+
+  'activities.frontoffice.tasks.title': 'Task management',
+  'activities.frontoffice.tasks.desc': 'Organise, prioritise, and complete tasks',
+
+  'activities.frontoffice.dialob.title': 'Dialob forms',
+  'activities.frontoffice.dialob.desc': 'Design, edit, translate, and version your forms',
+
+  'activities.frontoffice.reporting.title': 'Reporting',
+  'activities.frontoffice.reporting.desc': 'View reports associated with your stuff',
+
+  'activities.frontoffice.deployments.title': 'Deployments',
+  'activities.frontoffice.deployments.desc': 'View deployed assets by version number',
+
+  'explorer.frontoffice.crm.menuOption': 'CRM data',
+  'explorer.frontoffice.deployments.menuOption': 'Deployments',
+  'explorer.frontoffice.tasks.menuOption': 'Task management',
+  'explorer.frontoffice.stencil.menuOption': 'Stencil content',
+  'explorer.frontoffice.wrench.menuOption': 'Wrench assets',
+  'explorer.frontoffice.dialob.menuOption': 'Dialob forms',
+  'explorer.frontoffice.search.menuOption': 'Task search',
+  'explorer.frontoffice.teamSpace.menuOption': 'Team space',
+  'explorer.frontoffice.mytasks.menuOption': 'My tasks',
+  'explorer.frontoffice.inbox.menuOption': 'My inbox',
+  'explorer.frontoffice.myoverview.menuOption': 'My daily overview',
+  'explorer.frontoffice.myhistory.menuOption': 'My activity history',
+  'explorer.frontoffice.config.menuOption': 'System configuration',
+
+  // --------------- APP-FRONTOFFICE END -----------------
+
+  'explorer.title': 'Digiexpress task managment',
+  'explorer.tasks': 'View and search tasks',
+
   'mywork.button.review': 'Review Form',
 
   'project.dialog.requireProject.createdMessage': 'Project successfully created',
@@ -275,8 +322,7 @@ const en = {
   'migrations.dialog.title': 'Migrate dialob, stencil, wrench, process data',
   'migrations.dialog.select': 'Select file to upload',
 
-  'explorer.title': 'Digiexpress task managment',
-  'explorer.tasks': 'View and search tasks',
+
 
   'mywork.table.header': 'My Work',
   'mywork.table.header.subject': 'Subject',
