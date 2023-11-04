@@ -4,7 +4,7 @@ import { SxProps } from '@mui/system';
 
 import Burger from 'components-burger';
 import Context from 'context';
-import Core from 'components-project';
+import Core from 'components-customer';
 import Activities from '../Activities';
 
 const root: SxProps = { height: '100%', backgroundColor: "mainContent.main", width: '100%' };
@@ -33,8 +33,8 @@ const Main: React.FC<{}> = () => {
 
     if (active.id === 'activities') {
       return (<Box sx={root}><Activities /></Box>);
-    } else if (active.id === 'projects') {
-      return (<Box sx={root}><Core.ProjectsSearch /></Box>);
+    } else if (active.id === 'crmSearch') {
+      return (<Box sx={root}><Core.CustomersSearch /></Box>);
     }
 
 

@@ -62,6 +62,9 @@ import {
   StoreErrorImpl as StoreErrorImplAs
 } from './error-types';
 
+import {
+  Customer, CustomerId, CustomerTask
+} from './customer-types';
 
 
 declare namespace TaskClient {
@@ -73,6 +76,8 @@ declare namespace TaskClient {
     CreateProject,
     ArchiveProject,
     ChangeRepoType,
+
+    Customer, CustomerId, CustomerTask,
 
     TaskId, Task,
     BackendError, Backend, StoreConfig, Store,
@@ -114,6 +119,8 @@ declare namespace TaskClient {
 }
 
 export type {
+  Customer, CustomerId, CustomerTask,
+
   Project, ProjectId, RepoType,
   Profile,
   TaskId, Task,
