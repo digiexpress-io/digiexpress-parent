@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Menu, MenuList, MenuItem, ListItemIcon, ListItemText } from '@mui/material';
 import Check from '@mui/icons-material/Check';
-import { GroupBy } from 'projectdescriptor';
+import { GroupBy } from 'descriptor-project';
 import { NavigationButtonSearch } from '../NavigationSticky';
 
 const types: GroupBy[] = ['none', 'repoType', 'users'];

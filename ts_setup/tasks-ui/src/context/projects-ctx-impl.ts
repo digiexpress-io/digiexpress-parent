@@ -2,7 +2,10 @@
 import { ProjectsState } from './projects-ctx-types';
 
 import { Project, Profile } from 'client';
-import { Palette, ProjectDescriptor, _nobody_, ProjectDescriptorImpl, withColors, ProjectPaletteType, DescriptorState, DescriptorStateImpl } from 'projectdescriptor'
+import {
+  Palette, ProjectDescriptor, _nobody_, ProjectDescriptorImpl, withColors, ProjectPaletteType,
+  DescriptorState, DescriptorStateImpl
+} from 'descriptor-project';
 
 
 interface ExtendedInit extends Omit<ProjectsState, "withProfile" | "withProjects" | "withDescriptors"> {

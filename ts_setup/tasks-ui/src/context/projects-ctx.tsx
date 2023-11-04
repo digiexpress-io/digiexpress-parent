@@ -2,7 +2,7 @@ import React from 'react';
 import { ProjectsContextType, ProjectsMutator, ProjectsDispatch, ProjectsState } from './projects-ctx-types';
 import { ProjectsStateBuilder } from './projects-ctx-impl';
 import { Backend, Profile } from 'client';
-import { Palette } from 'projectdescriptor';
+import { Palette } from 'descriptor-project';
 
 const ProjectsContext = React.createContext<ProjectsContextType>({} as ProjectsContextType);
 
@@ -18,7 +18,7 @@ const startStart: ProjectsState = new ProjectsStateBuilder({
   profile: { contentType: "OK", name: "", userId: "", today: new Date(), roles: [] }
 });
 
-const ProjectsProvider: React.FC<{ children: React.ReactNode, init: {backend: Backend, profile: Profile} }> = ({ children, init }) => {
+const ProjectsProvider: React.FC<{ children: React.ReactNode, init: { backend: Backend, profile: Profile } }> = ({ children, init }) => {
 
   const { backend, profile } = init;
 

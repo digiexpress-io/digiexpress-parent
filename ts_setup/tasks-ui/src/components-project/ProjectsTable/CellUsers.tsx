@@ -2,7 +2,7 @@ import React from 'react';
 
 import Client from 'client';
 import Context from 'context';
-import { ProjectDescriptor } from 'projectdescriptor';
+import { ProjectDescriptor } from 'descriptor-project';
 import { StyledTableCell } from './StyledTable';
 import ProjectUsers from '../ProjectUsers';
 

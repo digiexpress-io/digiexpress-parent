@@ -3,7 +3,7 @@ import { Box, MenuList, MenuItem, ListItemText } from '@mui/material';
 import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
 import { FormattedMessage } from 'react-intl';
 
-import { ProjectDescriptor, Group } from 'projectdescriptor';
+import { ProjectDescriptor, Group } from 'descriptor-project';
 import { usePopover } from './CellPopover';
 import CellHoverButton from './CellMenuButton';
 import { StyledTableCell } from './StyledTable';

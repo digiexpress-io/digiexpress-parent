@@ -3,7 +3,7 @@ import React from 'react';
 import { Box } from '@mui/material';
 import Context from 'context';
 import { TableConfigProps, CustomTable } from './table-ctx';
-import { Group, ProjectDescriptor } from 'projectdescriptor';
+import { Group, ProjectDescriptor } from 'descriptor-project';
 
 
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box } from '@mui/material';
 
-import { ProjectDescriptor, Group } from 'projectdescriptor';
+import { ProjectDescriptor, Group } from 'descriptor-project';
 
 import TaskCell from './TaskCell';
 import { StyledTableCell } from './StyledTable';

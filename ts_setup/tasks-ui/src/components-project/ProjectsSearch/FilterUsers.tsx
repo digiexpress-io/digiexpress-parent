@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Menu, ListItemText, MenuList, MenuItem, ListItemIcon } from '@mui/material';
 import Check from '@mui/icons-material/Check';
 import Context from 'context';
-import { FilterByUsers, FilterBy } from 'projectdescriptor';
+import { FilterByUsers, FilterBy } from 'descriptor-project';
 import { NavigationButtonSearch } from '../NavigationSticky';
 
 export default function DenseMenu(

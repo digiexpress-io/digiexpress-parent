@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box } from '@mui/material';
 
-import { ProjectDescriptor, Group } from 'projectdescriptor';
+import { ProjectDescriptor, Group } from 'descriptor-project';
 import Context from 'context';
 
 import TaskCell from './TaskCell';
@@ -15,7 +15,7 @@ const FormattedCell: React.FC<{
   def: Group,
 }> = ({ row }) => {
 
-  
+
   const apps = Context.useApp();
 
   function handleOpenProject() {

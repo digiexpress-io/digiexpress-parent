@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Context from 'context';
-import { ProjectDescriptor, Group } from 'projectdescriptor';
+import { ProjectDescriptor, Group } from 'descriptor-project';
 import Client from 'client';
 import { StyledTableCell } from './StyledTable';
 import ProjectRepoType from '../ProjectRepoType';

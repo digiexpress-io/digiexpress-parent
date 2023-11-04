@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box } from '@mui/material';
 import TimestampFormatter from 'timestamp';
-import { ProjectDescriptor, Group } from 'projectdescriptor';
+import { ProjectDescriptor, Group } from 'descriptor-project';
 import { StyledTableCell } from './StyledTable';
 
 const FormattedCell: React.FC<{

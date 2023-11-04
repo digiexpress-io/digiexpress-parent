@@ -2,7 +2,7 @@ import { ClientContextType, ComposerContextType } from './client-ctx';
 import * as Hooks from './hooks';
 import * as taskEditCtx from './task-edit-ctx';
 import * as descCtx from 'taskdescriptor';
-import * as projectCtx from 'projectdescriptor';
+import * as projectCtx from 'descriptor-project';
 
 
 import {

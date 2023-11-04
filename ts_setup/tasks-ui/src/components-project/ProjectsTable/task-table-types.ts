@@ -1,4 +1,4 @@
-import { ProjectDescriptor, Group } from 'projectdescriptor';
+import { ProjectDescriptor, Group } from 'descriptor-project';
 
 interface CellProps {
   row: ProjectDescriptor;

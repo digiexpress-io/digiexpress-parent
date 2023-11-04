@@ -4,7 +4,7 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { SearchFieldPopover } from 'components-task/SearchField';
 import { useMockPopover } from 'components-task/TaskTable/MockPopover';
 import Client from 'client';
-import { AvatarCode } from 'projectdescriptor';
+import { AvatarCode } from 'descriptor-project';
 import Context from 'context';
 
 const UserAvatar: React.FC<{ children?: AvatarCode }> = ({ children }) => {

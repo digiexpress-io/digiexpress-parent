@@ -3,7 +3,7 @@ import React from 'react';
 import { TableCell, Box, TableSortLabel } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 import { FormattedMessage } from 'react-intl';
-import { ProjectDescriptor } from 'projectdescriptor';
+import { ProjectDescriptor } from 'descriptor-project';
 import Pagination from 'table';
 
 const SortableHeader: React.FC<{

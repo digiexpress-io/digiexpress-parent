@@ -1,5 +1,5 @@
 import { Profile, Project } from 'client';
-import { ProjectDescriptor, PaletteType, ProjectPaletteType, DescriptorState } from 'projectdescriptor';
+import { ProjectDescriptor, PaletteType, ProjectPaletteType, DescriptorState } from 'descriptor-project';
 
 
 export interface ProjectsContextType {

@@ -2,7 +2,7 @@ import React from 'react';
 import { TableHead, TableCell, TableRow, Box, Stack } from '@mui/material';
 
 import Context from 'context';
-import { ProjectDescriptor, Group } from 'projectdescriptor';
+import { ProjectDescriptor, Group } from 'descriptor-project';
 import ProjectsTable from '../ProjectsTable';
 import { NavigationSticky } from '../NavigationSticky';
 import FilterRepoType from './FilterRepoType';

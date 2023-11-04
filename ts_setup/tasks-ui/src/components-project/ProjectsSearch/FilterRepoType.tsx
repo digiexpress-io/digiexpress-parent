@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Menu, MenuItem, MenuList, ListItemIcon, ListItemText } from '@mui/material';
 import Check from '@mui/icons-material/Check';
 import Client from 'client';
-import { FilterByRepoType, FilterBy } from 'projectdescriptor';
+import { FilterByRepoType, FilterBy } from 'descriptor-project';
 import { NavigationButtonSearch } from '../NavigationSticky';
 
 

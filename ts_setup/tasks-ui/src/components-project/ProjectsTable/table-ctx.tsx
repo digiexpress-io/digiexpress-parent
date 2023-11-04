@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, TablePagination, TableContainer, Table } from '@mui/material';
-import { ProjectDescriptor, Group } from 'projectdescriptor';
+import { ProjectDescriptor, Group } from 'descriptor-project';
 import Pagination from 'table';
 
 type ProjectPagination = Pagination.TablePagination<ProjectDescriptor>;
