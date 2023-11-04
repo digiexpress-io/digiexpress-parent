@@ -99,13 +99,13 @@ public class PgTestTemplate {
   }
   
   public void prettyPrint(String repoId) {
-    Repo repo = getThena().project().projectQuery().get()
+    Repo repo = getThena().git().project().get()
         .await().atMost(Duration.ofMinutes(1)).getRepo(); 
     printRepo(repo);
   }
 
   public String toRepoExport(String repoName) {
-    final var repo = getThena().project().projectQuery().projectName(repoName).get()
+    final var repo = getThena().git().project().projectName(repoName).get()
         .await().atMost(Duration.ofMinutes(1)).getRepo();
     final String result = new RepositoryToStaticData(createState(repoName)).print(repo);
     return result;

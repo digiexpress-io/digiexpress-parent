@@ -26,7 +26,7 @@ import io.resys.thena.docdb.api.actions.CommitActions;
 import io.resys.thena.docdb.api.actions.DiffActions;
 import io.resys.thena.docdb.api.actions.HistoryActions;
 import io.resys.thena.docdb.api.actions.PullActions;
-import io.resys.thena.docdb.api.actions.ProjectActions;
+import io.resys.thena.docdb.api.actions.RepoActions;
 import io.resys.thena.docdb.api.actions.TagActions;
 import io.resys.thena.docdb.spi.commits.CommitActionsImpl;
 import io.resys.thena.docdb.spi.diff.DiffActionsImpl;
@@ -34,11 +34,12 @@ import io.resys.thena.docdb.spi.history.HistoryActionsDefault;
 import io.resys.thena.docdb.spi.objects.BranchActionsImpl;
 import io.resys.thena.docdb.spi.objects.ObjectsActionsImpl;
 import io.resys.thena.docdb.spi.repo.ProjectActionsImpl;
+import io.resys.thena.docdb.spi.repo.RepoStateBuilderImpl;
 import io.resys.thena.docdb.spi.tags.TagActionsDefault;
 
 public class DocDBDefault implements DocDB {
   private final ClientState state;
-  private ProjectActions projectActions;
+  private RepoActions projectActions;
   private CommitActions commitActions;
   private TagActions tagActions;
   private HistoryActions historyActions;
@@ -53,7 +54,7 @@ public class DocDBDefault implements DocDB {
   }
   
   @Override
-  public ProjectActions project() {
+  public RepoActions repo() {
     if(projectActions == null) {
       projectActions = new ProjectActionsImpl(state); 
     }
@@ -66,6 +67,10 @@ public class DocDBDefault implements DocDB {
   @Override
   public GitModel git() {
     return new GitModel() {
+      @Override
+      public GitProjectQuery project() {
+        return new RepoStateBuilderImpl(state);
+      }
       @Override
       public CommitActions commit() {
         if(commitActions == null) {
@@ -99,7 +104,7 @@ public class DocDBDefault implements DocDB {
       @Override
       public DiffActions diff() {
         if(diffActions == null) {
-          diffActions = new DiffActionsImpl(state, pull(), commit(), project()); 
+          diffActions = new DiffActionsImpl(state, pull(), commit(), () -> project()); 
         }
         return diffActions;
       }

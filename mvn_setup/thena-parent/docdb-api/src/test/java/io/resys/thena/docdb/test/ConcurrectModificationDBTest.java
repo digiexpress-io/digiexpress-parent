@@ -38,8 +38,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
 import io.resys.thena.docdb.api.actions.CommitActions.CommitResultEnvelope;
-import io.resys.thena.docdb.api.actions.ProjectActions.RepoResult;
-import io.resys.thena.docdb.api.actions.ProjectActions.RepoStatus;
+import io.resys.thena.docdb.api.actions.RepoActions.RepoResult;
+import io.resys.thena.docdb.api.actions.RepoActions.RepoStatus;
 import io.resys.thena.docdb.api.models.Repo.RepoType;
 import io.resys.thena.docdb.test.config.DbTestTemplate;
 import io.resys.thena.docdb.test.config.PgProfile;
@@ -67,7 +67,7 @@ public class ConcurrectModificationDBTest extends DbTestTemplate {
   @Test
   public void crateRepoWithOneCommit() {
     // create project
-    RepoResult repo = getClient().project().projectBuilder()
+    RepoResult repo = getClient().repo().projectBuilder()
         .name("user-tasks", RepoType.git)
         .build()
         .await().atMost(Duration.ofMinutes(1));

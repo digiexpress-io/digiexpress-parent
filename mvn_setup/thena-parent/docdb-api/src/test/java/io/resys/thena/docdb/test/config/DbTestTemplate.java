@@ -85,7 +85,7 @@ public class DbTestTemplate {
         .errorHandler(new PgTestErrors())
         .build();
 
-    repo = this.client.project().projectBuilder()
+    repo = this.client.repo().projectBuilder()
       .name("junit" + index.incrementAndGet(), RepoType.git)
       .build()
       .await().atMost(Duration.ofSeconds(10)).getRepo();

@@ -20,7 +20,7 @@ package io.resys.thena.docdb.spi.repo;
  * #L%
  */
 
-import io.resys.thena.docdb.api.actions.ProjectActions;
+import io.resys.thena.docdb.api.actions.RepoActions;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.spi.ClientState;
 import io.resys.thena.docdb.spi.support.RepoAssert;
@@ -32,7 +32,7 @@ import lombok.experimental.Accessors;
 
 @RequiredArgsConstructor
 @Data @Accessors(fluent = true)
-public class RepoQueryBuilderImpl implements ProjectActions.ProjectsQuery {
+public class RepoQueryBuilderImpl implements RepoActions.RepoQuery {
 
   private final ClientState state;
   private String id;

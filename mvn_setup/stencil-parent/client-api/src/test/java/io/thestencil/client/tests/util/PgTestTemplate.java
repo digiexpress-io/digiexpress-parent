@@ -36,7 +36,7 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.resys.thena.docdb.api.DocDB;
-import io.resys.thena.docdb.api.actions.ProjectActions.RepoResult;
+import io.resys.thena.docdb.api.actions.RepoActions.RepoResult;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.Repo.RepoType;
 import io.resys.thena.docdb.spi.ClientCollections;
@@ -71,7 +71,7 @@ public class PgTestTemplate {
         .client(pgPool)
         .errorHandler(new PgErrors())
         .build();
-    this.client.project().projectBuilder().name("junit", RepoType.git).build();
+    this.client.repo().projectBuilder().name("junit", RepoType.git).build();
   }
   
   @AfterEach
@@ -103,14 +103,14 @@ public class PgTestTemplate {
   }
   
   public void prettyPrint(String repoId) {
-    Repo repo = getClient().project().projectQuery().projectName(repoId).get()
+    Repo repo = getClient().git().project().projectName(repoId).get()
         .await().atMost(Duration.ofMinutes(1)).getRepo();
     
     printRepo(repo);
   }
 
   public String toRepoExport(String repoId) {
-    Repo repo = getClient().project().projectQuery().projectName(repoId).get()
+    Repo repo = getClient().git().project().projectName(repoId).get()
         .await().atMost(Duration.ofMinutes(1)).getRepo();
     final String result = new TestExporter(createState()).print(repo);
     return result;
@@ -121,7 +121,7 @@ public class PgTestTemplate {
     final DocDB client = getClient();
     
     // create project
-    RepoResult repo = getClient().project().projectBuilder()
+    RepoResult repo = getClient().repo().projectBuilder()
         .name(repoId, RepoType.git)
         .build()
         .await().atMost(Duration.ofMinutes(1));

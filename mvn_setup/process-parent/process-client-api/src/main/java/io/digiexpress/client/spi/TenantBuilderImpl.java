@@ -51,7 +51,7 @@ public class TenantBuilderImpl implements TenantBuilder {
     ServiceAssert.isNull(namings.repoDialob(), () -> "repoDialob: string must be undefined!");
     ServiceAssert.isNull(namings.repoHdes(), () -> "repoHdes: string must be undefined!");    
 
-    return docDb.project().projectsQuery().findAll().collect().asList()
+    return docDb.repo().projectsQuery().findAll().collect().asList()
     .onItem().transformToUni(repos -> {
       
       final var existingServiceRepo = repos.stream().filter(e -> e.getName().equals(namings.repoProject())).findFirst();
@@ -77,7 +77,7 @@ public class TenantBuilderImpl implements TenantBuilder {
   @Override
   public Uni<Client> create() {
     final var namings = this.namings.withDefaults();
-    return docDb.project().projectsQuery().findAll().collect().asList()
+    return docDb.repo().projectsQuery().findAll().collect().asList()
     .onItem().transformToUni(repos -> {
       final var doc = getOrCreateDoc(repos, namings);
       return doc.onItem().transformToUni((_doc) -> create(repos, namings));

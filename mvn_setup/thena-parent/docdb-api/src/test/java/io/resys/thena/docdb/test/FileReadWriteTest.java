@@ -29,8 +29,8 @@ import org.junit.jupiter.api.Test;
 
 import io.resys.thena.docdb.api.actions.CommitActions.CommitResultEnvelope;
 import io.resys.thena.docdb.api.actions.CommitActions.CommitResultStatus;
-import io.resys.thena.docdb.api.actions.ProjectActions.RepoResult;
-import io.resys.thena.docdb.api.actions.ProjectActions.RepoStatus;
+import io.resys.thena.docdb.api.actions.RepoActions.RepoResult;
+import io.resys.thena.docdb.api.actions.RepoActions.RepoStatus;
 import io.resys.thena.docdb.test.config.FileTestTemplate;
 import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;

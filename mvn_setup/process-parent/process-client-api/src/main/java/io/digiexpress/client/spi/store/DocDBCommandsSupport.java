@@ -239,7 +239,7 @@ public class DocDBCommandsSupport implements DocDBConfig.DocDBCommands {
   }
 
   public Uni<List<Repo>> getRepos() {
-    return config.getClient().project().projectsQuery().findAll().collect().asList();
+    return config.getClient().repo().projectsQuery().findAll().collect().asList();
   }
   
   @Override

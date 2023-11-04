@@ -32,7 +32,7 @@ import io.resys.hdes.client.api.exceptions.StoreException;
 import io.resys.hdes.client.spi.store.ThenaConfig.EntityState;
 import io.resys.hdes.client.spi.util.HdesAssert;
 import io.resys.thena.docdb.api.actions.CommitActions.CommitResultStatus;
-import io.resys.thena.docdb.api.actions.ProjectActions.RepoStatus;
+import io.resys.thena.docdb.api.actions.RepoActions.RepoStatus;
 import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.docdb.api.models.Repo.RepoType;
 import io.smallrye.mutiny.Uni;
@@ -71,7 +71,7 @@ public abstract class ThenaStoreTemplate extends PersistenceCommands implements 
       public Uni<HdesStore> create() {
         HdesAssert.notNull(repoName, () -> "repoName must be defined!");
         final var client = config.getClient();
-        final var newRepo = client.project().projectBuilder().name(repoName, RepoType.git).build();
+        final var newRepo = client.repo().projectBuilder().name(repoName, RepoType.git).build();
         return newRepo.onItem().transform((repoResult) -> {
           if(repoResult.getStatus() != RepoStatus.OK) {
             throw new StoreException("REPO_CREATE_FAIL", null, 
@@ -98,9 +98,9 @@ public abstract class ThenaStoreTemplate extends PersistenceCommands implements 
       public Uni<Boolean> createIfNot() {
         final var client = config.getClient();
         
-        return client.project().projectQuery().projectName(config.getRepoName()).get().onItem().transformToUni(repo -> {
+        return client.git().project().projectName(config.getRepoName()).get().onItem().transformToUni(repo -> {
           if(repo == null) {
-            return client.project().projectBuilder().name(config.getRepoName(), RepoType.git).build().onItem().transform(newRepo -> true); 
+            return client.repo().projectBuilder().name(config.getRepoName(), RepoType.git).build().onItem().transform(newRepo -> true); 
           }
           return Uni.createFrom().item(false);
         });

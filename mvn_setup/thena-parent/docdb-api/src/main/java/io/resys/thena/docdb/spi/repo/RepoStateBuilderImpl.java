@@ -22,7 +22,7 @@ package io.resys.thena.docdb.spi.repo;
 
 import java.util.stream.Collectors;
 
-import io.resys.thena.docdb.api.actions.ProjectActions.ProjectObjectsQuery;
+import io.resys.thena.docdb.api.DocDB.GitModel.GitProjectQuery;
 import io.resys.thena.docdb.api.exceptions.RepoException;
 import io.resys.thena.docdb.api.models.ImmutableProjectObjects;
 import io.resys.thena.docdb.api.models.ImmutableQueryEnvelope;
@@ -43,7 +43,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 @Data @Accessors(fluent = true)
-public class RepoStateBuilderImpl implements ProjectObjectsQuery {
+public class RepoStateBuilderImpl implements GitProjectQuery {
   private final ClientState state;
   private String projectName; //repo name
 

@@ -21,14 +21,15 @@ package io.resys.thena.docdb.spi.diff;
  */
 
 import java.util.Arrays;
+import java.util.function.Supplier;
 
+import io.resys.thena.docdb.api.DocDB.GitModel.GitProjectQuery;
 import io.resys.thena.docdb.api.actions.CommitActions;
 import io.resys.thena.docdb.api.actions.DiffActions.DiffQuery;
 import io.resys.thena.docdb.api.actions.DiffActions.DiffResult;
 import io.resys.thena.docdb.api.actions.DiffActions.DiffResultStatus;
 import io.resys.thena.docdb.api.actions.ImmutableDiffResult;
 import io.resys.thena.docdb.api.actions.PullActions;
-import io.resys.thena.docdb.api.actions.ProjectActions;
 import io.resys.thena.docdb.api.models.Diff;
 import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.docdb.api.models.ThenaGitObjects.CommitObjects;
@@ -46,7 +47,7 @@ public class DiffQueryImpl implements DiffQuery {
   private final ClientState state;
   private final PullActions objects;
   private final CommitActions commits;
-  private final ProjectActions repos;
+  private final Supplier<GitProjectQuery> repos;
   
   private String projectName;  //RepoIdOrName;
   private String left;  //HeadOrCommitOrTag;
@@ -59,7 +60,7 @@ public class DiffQueryImpl implements DiffQuery {
     RepoAssert.notEmpty(right, () -> "right is not defined!");
     
     return Uni.combine().all().unis(
-        repos.projectQuery().projectName(projectName).get(),
+        repos.get().projectName(projectName).get(),
         commits.commitQuery().branchNameOrCommitOrTag(left).projectName(projectName).get(), 
         commits.commitQuery().branchNameOrCommitOrTag(right).projectName(projectName).get())
 

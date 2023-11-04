@@ -30,8 +30,8 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
 import io.resys.thena.docdb.api.actions.CommitActions.CommitResultEnvelope;
 import io.resys.thena.docdb.api.actions.CommitActions.CommitResultStatus;
-import io.resys.thena.docdb.api.actions.ProjectActions.RepoResult;
-import io.resys.thena.docdb.api.actions.ProjectActions.RepoStatus;
+import io.resys.thena.docdb.api.actions.RepoActions.RepoResult;
+import io.resys.thena.docdb.api.actions.RepoActions.RepoStatus;
 import io.resys.thena.docdb.api.models.Repo.RepoType;
 import io.resys.thena.docdb.test.config.DbTestTemplate;
 import io.resys.thena.docdb.test.config.PgProfile;
@@ -48,7 +48,7 @@ public class MetricsDBtest extends DbTestTemplate {
 
   //@org.junit.jupiter.api.Test
   public void metrics() {
-    RepoResult repo = getClient().project().projectBuilder()
+    RepoResult repo = getClient().repo().projectBuilder()
         .name("create repo for metrics", RepoType.git)
         .build()
         .await().atMost(Duration.ofMinutes(1));
@@ -70,7 +70,7 @@ public class MetricsDBtest extends DbTestTemplate {
   
   private void select(RepoResult repo) {
     final var start = System.currentTimeMillis();
-    final var repoState = getClient().project().projectsQuery().id(repo.getRepo().getId()).get().await().atMost(Duration.ofMinutes(1));
+    final var repoState = getClient().repo().projectsQuery().id(repo.getRepo().getId()).get().await().atMost(Duration.ofMinutes(1));
     
     final var blobs = getClient().git().branch()
             .branchQuery()

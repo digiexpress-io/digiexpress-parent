@@ -55,10 +55,10 @@ public class TestCaseBuilder {
   }
   
   public String print(ClientStore store) {
-    doc.project().projectsQuery().findAll().collect().asList().await().atMost(Duration.ofMinutes(1))
+    doc.repo().projectsQuery().findAll().collect().asList().await().atMost(Duration.ofMinutes(1))
     .forEach(e -> log.info("queried repo: " + e));
     
-    Repo repo = doc.project().projectsQuery().id(store.getRepoName()).get()
+    Repo repo = doc.repo().projectsQuery().id(store.getRepoName()).get()
         .await().atMost(Duration.ofMinutes(1));
     
     return new RepoPrinter(docState, objectMapper).print(repo);

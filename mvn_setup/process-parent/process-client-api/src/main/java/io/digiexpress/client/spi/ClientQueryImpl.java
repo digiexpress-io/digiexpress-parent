@@ -48,7 +48,7 @@ public class ClientQueryImpl implements ClientQuery {
   }
   @Override
   public Uni<List<Repo>> getRepos() {
-    return config.getDocDb().project().projectsQuery().findAll().collect().asList();
+    return config.getDocDb().repo().projectsQuery().findAll().collect().asList();
   }
   @Override
   public Uni<FormRevisionDocument> getDialobFormRev(String formId) {

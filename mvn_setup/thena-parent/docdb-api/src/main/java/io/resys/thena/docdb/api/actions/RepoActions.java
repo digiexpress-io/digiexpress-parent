@@ -27,38 +27,27 @@ import javax.annotation.Nullable;
 import org.immutables.value.Value;
 
 import io.resys.thena.docdb.api.models.Message;
-import io.resys.thena.docdb.api.models.QueryEnvelope;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.Repo.RepoType;
 import io.resys.thena.docdb.api.models.ThenaEnvelope;
-import io.resys.thena.docdb.api.models.ThenaGitObjects.ProjectObjects;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 
-public interface ProjectActions {
+public interface RepoActions {
 
-  ProjectsQuery projectsQuery();
-  ProjectBuilder projectBuilder();  
-  ProjectObjectsQuery projectQuery();
-  
-  
-  // build world state
-  interface ProjectObjectsQuery {
-    ProjectObjectsQuery projectName(String projectName);
-    Uni<QueryEnvelope<ProjectObjects>> get();
-  }
+  RepoQuery projectsQuery();
+  RepoBuilder projectBuilder();  
 
-
-  interface ProjectsQuery {
-    ProjectsQuery id(String id);
-    ProjectsQuery rev(String rev);
+  interface RepoQuery {
+    RepoQuery id(String id);
+    RepoQuery rev(String rev);
     Multi<Repo> findAll();
     Uni<Repo> delete();
     Uni<Repo> get();
   }
   
-  interface ProjectBuilder {
-    ProjectBuilder name(String name, RepoType type);
+  interface RepoBuilder {
+    RepoBuilder name(String name, RepoType type);
     Uni<RepoResult> build();
   }
   

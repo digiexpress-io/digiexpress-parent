@@ -1,5 +1,8 @@
 package io.resys.thena.docdb.spi.diff;
 
+import java.util.function.Supplier;
+
+import io.resys.thena.docdb.api.DocDB.GitModel.GitProjectQuery;
 import io.resys.thena.docdb.api.actions.CommitActions;
 
 /*-
@@ -23,7 +26,6 @@ import io.resys.thena.docdb.api.actions.CommitActions;
  */
 
 import io.resys.thena.docdb.api.actions.DiffActions;
-import io.resys.thena.docdb.api.actions.ProjectActions;
 import io.resys.thena.docdb.api.actions.PullActions;
 import io.resys.thena.docdb.spi.ClientState;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +35,7 @@ public class DiffActionsImpl implements DiffActions {
   private final ClientState state;
   private final PullActions objects;
   private final CommitActions commits;
-  private final ProjectActions repos;
+  private final Supplier<GitProjectQuery> repos;
   
   @Override
   public DiffQuery diffQuery() {

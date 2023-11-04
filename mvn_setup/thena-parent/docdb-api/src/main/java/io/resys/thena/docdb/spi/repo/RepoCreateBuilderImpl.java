@@ -21,9 +21,9 @@ package io.resys.thena.docdb.spi.repo;
  */
 
 import io.resys.thena.docdb.api.actions.ImmutableRepoResult;
-import io.resys.thena.docdb.api.actions.ProjectActions;
-import io.resys.thena.docdb.api.actions.ProjectActions.RepoResult;
-import io.resys.thena.docdb.api.actions.ProjectActions.RepoStatus;
+import io.resys.thena.docdb.api.actions.RepoActions;
+import io.resys.thena.docdb.api.actions.RepoActions.RepoResult;
+import io.resys.thena.docdb.api.actions.RepoActions.RepoStatus;
 import io.resys.thena.docdb.api.exceptions.RepoException;
 import io.resys.thena.docdb.api.models.ImmutableRepo;
 import io.resys.thena.docdb.api.models.Repo;
@@ -35,7 +35,7 @@ import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class RepoCreateBuilderImpl implements ProjectActions.ProjectBuilder {
+public class RepoCreateBuilderImpl implements RepoActions.RepoBuilder {
 
   private final ClientState state;
   private String name;

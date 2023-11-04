@@ -35,8 +35,8 @@ import io.quarkus.test.junit.TestProfile;
 import io.resys.hdes.client.spi.config.PgProfile;
 import io.resys.hdes.client.spi.config.PgTestTemplate;
 import io.resys.thena.docdb.api.actions.CommitActions.CommitResultStatus;
-import io.resys.thena.docdb.api.actions.ProjectActions.RepoResult;
-import io.resys.thena.docdb.api.actions.ProjectActions.RepoStatus;
+import io.resys.thena.docdb.api.actions.RepoActions.RepoResult;
+import io.resys.thena.docdb.api.actions.RepoActions.RepoStatus;
 import io.resys.thena.docdb.api.models.Repo.RepoType;
 import io.vertx.core.json.JsonObject;
 
@@ -55,7 +55,7 @@ public class ThenaPgTest extends PgTestTemplate {
   @Test
   public void crateRepoWithOneCommit() {
     // create project
-    RepoResult repo = getThena().project().projectBuilder()
+    RepoResult repo = getThena().repo().projectBuilder()
         .name("project-x", RepoType.git)
         .build()
         .await().atMost(Duration.ofMinutes(1));
@@ -83,7 +83,7 @@ public class ThenaPgTest extends PgTestTemplate {
   @Test
   public void crateRepoWithTwoCommits() {
     // create project
-    RepoResult repo = getThena().project().projectBuilder()
+    RepoResult repo = getThena().repo().projectBuilder()
         .name("project-xy", RepoType.git)
         .build()
         .await().atMost(Duration.ofMinutes(1));
