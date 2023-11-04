@@ -1,12 +1,12 @@
 import React from 'react';
 import { Dialog, IconButton, Box, styled } from '@mui/material';
 import DateRangeOutlinedIcon from '@mui/icons-material/DateRangeOutlined';
-import TimestampFormatter from 'timestamp';
 import { TaskDescriptor, Group } from 'descriptor-task';
 import TaskCell from './TaskCell';
 import { CellProps } from './task-table-types';
 import DatePicker from '../DatePicker';
 import { StyledTableCell } from './StyledTable';
+import Burger from 'components-burger';
 
 const StyledDateRangeOutlinedIcon = styled(DateRangeOutlinedIcon)(({ theme }) => ({
   fontSize: 'medium',
@@ -23,7 +23,7 @@ const DueDate: React.FC<CellProps> = ({ row }) => {
     <IconButton onClick={() => setDatePickerOpen(true)} color='inherit'>
       <StyledDateRangeOutlinedIcon />
     </IconButton>
-    <TimestampFormatter value={row.dueDate} type='date' />
+    <Burger.DateTimeFormatter value={row.dueDate} type='date' />
   </Box>
 
 

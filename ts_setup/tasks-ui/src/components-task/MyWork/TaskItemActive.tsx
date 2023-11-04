@@ -4,7 +4,6 @@ import EditIcon from '@mui/icons-material/ModeEditOutlineOutlined';
 import CrmIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
 import { FormattedMessage } from 'react-intl';
 
-import TimestampFormatter from 'timestamp';
 import TaskAssignees from '../TaskAssignees';
 import TaskRoles from '../TaskRoles';
 import TaskStatus from '../TaskStatus';
@@ -146,7 +145,7 @@ const TaskItemActive: React.FC<{ task: TaskDescriptor | undefined }> = ({ task }
         <Alert severity={alert.alertSeverity} variant='standard'>
           <AlertTitle><FormattedMessage id={alert.title} /></AlertTitle>
           <Typography variant='body2' fontWeight='bolder'>
-            {task.dueDate ? <FormattedMessage id={alert.alertMsg} values={{ dueDate: <TimestampFormatter type='date' value={task.dueDate} /> }} />
+            {task.dueDate ? <FormattedMessage id={alert.alertMsg} values={{ dueDate: <Burger.DateTimeFormatter type='date' value={task.dueDate} /> }} />
               :
               <FormattedMessage id='task.dueDate.none' />}
           </Typography>

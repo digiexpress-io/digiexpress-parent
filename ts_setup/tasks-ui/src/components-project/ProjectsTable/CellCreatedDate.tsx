@@ -1,8 +1,8 @@
 import React from 'react';
 import { Box } from '@mui/material';
-import TimestampFormatter from 'timestamp';
 import { ProjectDescriptor, Group } from 'descriptor-project';
 import { StyledTableCell } from './StyledTable';
+import Burger from 'components-burger';
 
 const FormattedCell: React.FC<{
   rowId: number,
@@ -12,7 +12,7 @@ const FormattedCell: React.FC<{
 
   return (<StyledTableCell width='180px'>
     <Box width='180px'>
-      <TimestampFormatter value={row.created} type='date' />
+      <Burger.DateTimeFormatter value={row.created} type='date' />
     </Box>
   </StyledTableCell>);
 }

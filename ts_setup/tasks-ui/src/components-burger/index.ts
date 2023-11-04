@@ -28,8 +28,12 @@ import { StyledCheckbox } from './styles/StyledCheckbox';
 import { StyledSwitch, StyledSwitchProps } from './styles/StyledSwitch';
 import { StyledRadioButton } from './styles/StyledRadioButton';
 
+import {
+  DateTimeFormatter as DateTimeFormatterAs,
+  DateTimeFormatterFixed as DateTimeFormatterFixedAs,
+  DateTimeFormatterProps
+} from './utils';
 
-import { DateTimeFormat, DateTimeFormatProps } from './utils/DateTimeFormatterFixed';
 import { ReleaseTable as ReleaseTableAs, Release, ReleaseTableProps } from './releases/ReleaseTable';
 
 import { Section as SectionAs } from './section';
@@ -42,7 +46,7 @@ declare namespace Burger {
     SecondaryContextType, SecondarySession, SecondaryActions,
   };
   export { StyledDialogProps, StyledSelectProps, StyledInputFieldProps, StyledTreeItemProps, StyledTransferListProps, StyledSwitchProps }
-  export { DateTimeFormatProps }
+  export { DateTimeFormatterProps }
   export { Release, ReleaseTableProps }
 }
 
@@ -54,6 +58,8 @@ namespace Burger {
   export const useSecondary = useSecondaryAlias;
 
   export const Section = SectionAs;
+  export const DateTimeFormatter = DateTimeFormatterAs;
+  export const DateTimeFormatterFixed = DateTimeFormatterFixedAs;
 
   export const Dialog = StyledDialog;
   export const Select = StyledSelect;
@@ -76,7 +82,6 @@ namespace Burger {
   export const Switch = StyledSwitch;
   export const RadioButton = StyledRadioButton;
 
-  export const DateTimeFormatter = DateTimeFormat;
   export const ReleaseTable = ReleaseTableAs;
 
 }

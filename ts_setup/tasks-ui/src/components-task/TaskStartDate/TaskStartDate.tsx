@@ -6,9 +6,7 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 
-import { } from 'date-fns';
-
-import TimestampFormatter from 'timestamp';
+import Burger from 'components-burger';
 
 import Context from 'context';
 import Client from 'client';
@@ -39,7 +37,7 @@ const TaskStartDate: React.FC<{
   return (
     <>
       <Button onClick={handlePickerDialog} startIcon={<DateRangeOutlinedIcon sx={{ color: 'uiElements.main', fontSize: 'small' }} />}>
-        <Typography sx={{ color: 'text.primary' }}><TimestampFormatter type='date' value={state.task.startDate} /></Typography>
+        <Typography sx={{ color: 'text.primary' }}><Burger.DateTimeFormatter type='date' value={state.task.startDate} /></Typography>
       </Button>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <Dialog open={open} onClose={handlePickerDialog}>

@@ -1,19 +1,19 @@
 import moment from 'moment';
 import React from 'react';
 
-interface DateTimeFormatProps {
+interface DateTimeFormatterProps {
     timestamp: string | undefined;
 }
 
 const formatDateTime = (timestamp: string | undefined) => {
     if (timestamp) {
-      const date = new Date(timestamp);
-      return moment.utc(date).local().format('DD/MM/YYYY HH:mm:ss');
+        const date = new Date(timestamp);
+        return moment.utc(date).local().format('DD/MM/YYYY HH:mm:ss');
     }
     return "";
 }
 
-const DateTimeFormat: React.FC<DateTimeFormatProps> = ({ timestamp }) => {
+const DateTimeFormatterFixed: React.FC<DateTimeFormatterProps> = ({ timestamp }) => {
     return (
         <>
             {formatDateTime(timestamp)}
@@ -21,5 +21,5 @@ const DateTimeFormat: React.FC<DateTimeFormatProps> = ({ timestamp }) => {
     )
 }
 
-export type { DateTimeFormatProps }
-export { DateTimeFormat, formatDateTime }
+export type { DateTimeFormatterProps }
+export { DateTimeFormatterFixed, formatDateTime }

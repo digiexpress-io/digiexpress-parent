@@ -6,9 +6,8 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 
-import { } from 'date-fns';
+import Burger from 'components-burger';
 
-import TimestampFormatter from 'timestamp';
 
 const TaskDueDate: React.FC<{
   task: { dueDate: Date | undefined },
@@ -32,7 +31,7 @@ const TaskDueDate: React.FC<{
   }
   if (disabled) {
     return (
-      <Typography sx={{ color: 'text.primary' }}><TimestampFormatter type='date' value={task.dueDate} /></Typography>
+      <Typography sx={{ color: 'text.primary' }}><Burger.DateTimeFormatter type='date' value={task.dueDate} /></Typography>
     )
   }
 
@@ -44,7 +43,7 @@ const TaskDueDate: React.FC<{
         fontSize: 'small'
       }} />
       }>
-        <Typography sx={{ color: 'text.primary' }}><TimestampFormatter type='date' value={task.dueDate} /></Typography>
+        <Typography sx={{ color: 'text.primary' }}><Burger.DateTimeFormatter type='date' value={task.dueDate} /></Typography>
       </Button>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <Dialog open={open} onClose={handlePickerDialog}>
