@@ -1,6 +1,6 @@
 import React from 'react';
 import Context from 'context';
-import { Group, TeamGroupType } from 'taskdescriptor';
+import { Group, TeamGroupType } from 'descriptor-task';
 import { TaskListTabState, TaskList } from '../TaskList';
 
 import TaskItem from './TaskItem';

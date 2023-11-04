@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, TablePagination, TableContainer, Table } from '@mui/material';
-import { TaskDescriptor, Group } from 'taskdescriptor';
+import { TaskDescriptor, Group } from 'descriptor-task';
 import Pagination from 'table';
 
 type TaskPagination = Pagination.TablePagination<TaskDescriptor>;

@@ -5,7 +5,7 @@ import { FormattedMessage } from 'react-intl';
 import Pagination from 'table';
 import { TaskListState, initTable, initTabs, TaskListTabState } from './types';
 import { StyledStackItem, StyledEditTaskButton, StyledStartTaskButton } from './TaskListStyles';
-import { TaskDescriptor } from 'taskdescriptor';
+import { TaskDescriptor } from 'descriptor-task';
 import TaskCreateDialog from '../TaskCreate';
 import { NavigationSticky, NavigationButtonTaskList } from '../NavigationSticky';
 

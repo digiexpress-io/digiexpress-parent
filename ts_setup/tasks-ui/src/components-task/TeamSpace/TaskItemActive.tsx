@@ -13,7 +13,7 @@ import CRMDialog from '../CRM';
 import TaskEditDialog from '../TaskEdit';
 import Client from 'client';
 import Context from 'context';
-import { TaskDescriptor } from 'taskdescriptor';
+import { TaskDescriptor } from 'descriptor-task';
 import Section from 'section';
 
 

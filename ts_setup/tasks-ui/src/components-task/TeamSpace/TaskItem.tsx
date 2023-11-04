@@ -4,7 +4,7 @@ import ChecklistIcon from '@mui/icons-material/Checklist';
 import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';
 
 import DaysUntilDue from '../DaysUntilDue';
-import { TaskDescriptor } from 'taskdescriptor';
+import { TaskDescriptor } from 'descriptor-task';
 
 const TaskItem: React.FC<{ task: TaskDescriptor }> = ({ task }) => {
 

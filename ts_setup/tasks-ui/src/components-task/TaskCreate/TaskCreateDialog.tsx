@@ -7,7 +7,7 @@ import TaskCreateActions from './TaskCreateActions';
 import Fields from './TaskCreateFields';
 import { Task } from 'client';
 import Context from 'context';
-import { TaskDescriptorImpl } from 'taskdescriptor';
+import { TaskDescriptorImpl } from 'descriptor-task';
 import Section from 'section';
 
 function initTaskProps(userId: string): Task {

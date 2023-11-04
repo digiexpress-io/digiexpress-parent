@@ -12,7 +12,7 @@ import TimestampFormatter from 'timestamp';
 
 import Context from 'context';
 import Client from 'client';
-import { TaskDescriptor } from 'taskdescriptor';
+import { TaskDescriptor } from 'descriptor-task';
 
 const TaskStartDate: React.FC<{
   task: TaskDescriptor,

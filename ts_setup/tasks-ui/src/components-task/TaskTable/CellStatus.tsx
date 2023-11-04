@@ -2,7 +2,7 @@ import React from 'react';
 
 import Client from 'client';
 import Context from 'context';
-import { TaskDescriptor, Group } from 'taskdescriptor';
+import { TaskDescriptor, Group } from 'descriptor-task';
 import { StyledTableCell } from './StyledTable';
 import TaskStatus from '../TaskStatus';
 

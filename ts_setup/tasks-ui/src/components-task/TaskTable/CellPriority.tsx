@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Context from 'context';
-import { TaskDescriptor, Group } from 'taskdescriptor';
+import { TaskDescriptor, Group } from 'descriptor-task';
 import Client from 'client';
 import { StyledTableCell } from './StyledTable';
 import TaskPriority from '../TaskPriority';

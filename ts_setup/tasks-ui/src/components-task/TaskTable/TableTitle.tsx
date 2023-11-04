@@ -3,7 +3,7 @@ import React from 'react';
 import { Button, Typography } from '@mui/material';
 import { FormattedMessage, useIntl } from 'react-intl';
 import Context from 'context';
-import { Group } from 'taskdescriptor';
+import { Group } from 'descriptor-task';
 
 const TableSubTitle: React.FC<{ values: number, message: string }> = ({ values, message }) => {
 

@@ -1,4 +1,4 @@
-import { TaskDescriptor, Group } from 'taskdescriptor';
+import { TaskDescriptor, Group } from 'descriptor-task';
 import Table from 'table';
 
 

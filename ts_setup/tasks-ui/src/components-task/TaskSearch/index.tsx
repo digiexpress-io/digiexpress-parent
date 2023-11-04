@@ -2,7 +2,7 @@ import React from 'react';
 import { TableHead, TableCell, TableRow, Box, Stack } from '@mui/material';
 
 import Context from 'context';
-import { TaskDescriptor, Group } from 'taskdescriptor';
+import { TaskDescriptor, Group } from 'descriptor-task';
 import TaskTable from '../TaskTable';
 import { NavigationSticky } from '../NavigationSticky';
 import FilterStatus from './FilterStatus';

@@ -4,7 +4,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 
 import Client from 'client';
 import Context from 'context';
-import { TaskDescriptor } from 'taskdescriptor';
+import { TaskDescriptor } from 'descriptor-task';
 import { useMockPopover } from '../TaskTable/MockPopover';
 
 const statusColors = Context.StatusPalette;

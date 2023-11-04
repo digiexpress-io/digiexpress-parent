@@ -2,7 +2,7 @@ import React from 'react';
 import { Box } from '@mui/material';
 import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
 
-import { TaskDescriptor, Group } from 'taskdescriptor';
+import { TaskDescriptor, Group } from 'descriptor-task';
 import TaskCell from './TaskCell';
 import CellHoverButton from './CellMenuButton';
 import CRMDialog from '../CRM';

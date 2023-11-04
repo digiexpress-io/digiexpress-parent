@@ -3,7 +3,7 @@ import React from 'react';
 import { StyledTableCell } from './StyledTable';
 import TaskRoles from '../TaskRoles';
 import Context from 'context';
-import { TaskDescriptor, Group } from 'taskdescriptor';
+import { TaskDescriptor, Group } from 'descriptor-task';
 import Client from 'client';
 
 const FormattedCell: React.FC<{

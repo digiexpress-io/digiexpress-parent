@@ -7,7 +7,7 @@ import Fields from './TaskEditFields';
 import Events from './TaskEvents';
 import Burger from 'components-burger';
 import Context from 'context';
-import { TaskDescriptor } from 'taskdescriptor';
+import { TaskDescriptor } from 'descriptor-task';
 import Section from 'section';
 
 const Left: React.FC<{}> = () => {

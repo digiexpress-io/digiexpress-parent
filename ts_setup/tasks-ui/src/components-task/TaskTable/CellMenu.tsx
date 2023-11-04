@@ -4,7 +4,7 @@ import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { FormattedMessage } from 'react-intl';
 
-import { TaskDescriptor, Group } from 'taskdescriptor';
+import { TaskDescriptor, Group } from 'descriptor-task';
 import { usePopover } from './CellPopover';
 import CellHoverButton from './CellMenuButton';
 import TaskEditDialog from '../TaskEdit';

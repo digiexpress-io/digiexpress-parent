@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import StyledFullScreenDialog from '../Dialogs';
 import Fields from './CRMFields';
 import Context from 'context';
-import { TaskDescriptor } from 'taskdescriptor';
+import { TaskDescriptor } from 'descriptor-task';
 import { MenuProvider, useMenu } from './menu-ctx';
 import Section from 'section';
 import Burger from 'components-burger';

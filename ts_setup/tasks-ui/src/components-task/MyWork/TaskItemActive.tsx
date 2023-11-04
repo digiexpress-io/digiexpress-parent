@@ -13,7 +13,7 @@ import TaskEditDialog from '../TaskEdit';
 
 import Context from 'context';
 import Client from 'client';
-import { TaskDescriptor } from 'taskdescriptor';
+import { TaskDescriptor } from 'descriptor-task';
 import Section from 'section';
 
 

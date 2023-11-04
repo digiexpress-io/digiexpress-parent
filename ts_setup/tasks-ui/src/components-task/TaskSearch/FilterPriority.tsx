@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Menu, MenuList, MenuItem, ListItemIcon, ListItemText } from '@mui/material';
 import Check from '@mui/icons-material/Check';
 import Client from 'client';
-import { FilterByPriority, FilterBy } from 'taskdescriptor';
+import { FilterByPriority, FilterBy } from 'descriptor-task';
 import { NavigationButtonSearch } from '../NavigationSticky';
 
 const prioritytypes: Client.TaskPriority[] = ['HIGH', 'MEDIUM', 'LOW'];

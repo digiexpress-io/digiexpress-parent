@@ -4,7 +4,7 @@ import FlagIcon from '@mui/icons-material/Flag';
 import { FormattedMessage } from 'react-intl';
 
 import Client from 'client';
-import { TaskDescriptor } from 'taskdescriptor';
+import { TaskDescriptor } from 'descriptor-task';
 import Context from 'context';
 import { useMockPopover } from '../TaskTable/MockPopover';
 

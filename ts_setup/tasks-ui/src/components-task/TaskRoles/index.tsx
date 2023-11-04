@@ -3,7 +3,7 @@ import { AvatarGroup, Box, Button, Avatar, List, MenuItem, Checkbox, ListItemTex
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import { SearchFieldPopover } from '../SearchField';
 import { useMockPopover } from '../TaskTable/MockPopover';
-import { TaskDescriptor, AvatarCode } from 'taskdescriptor';
+import { TaskDescriptor, AvatarCode } from 'descriptor-task';
 import Client from 'client';
 import Context from 'context';
 
