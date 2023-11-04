@@ -8,55 +8,54 @@ import Events from './TaskEvents';
 import Burger from 'components-burger';
 import Context from 'context';
 import { TaskDescriptor } from 'descriptor-task';
-import Section from 'section';
 
 const Left: React.FC<{}> = () => {
   const { state } = Context.useTaskEdit();
 
   return (
     <>
-      <Section>
+      <Burger.Section>
         <Typography fontWeight='bold'><FormattedMessage id='core.taskEdit.fields.title' /></Typography>
         <Fields.Title />
-      </Section>
+      </Burger.Section>
 
-      <Section>
+      <Burger.Section>
         <Typography fontWeight='bold'><FormattedMessage id='core.taskEdit.fields.description' /></Typography>
         <Fields.Description />
-      </Section>
+      </Burger.Section>
 
       <Stack spacing={1} direction='row'>
-        <Section>
+        <Burger.Section>
           <Typography fontWeight='bold'><FormattedMessage id='core.taskEdit.fields.startDate' /></Typography>
           <Fields.StartDate />
-        </Section>
-        <Section>
+        </Burger.Section>
+        <Burger.Section>
           <Typography fontWeight='bold'><FormattedMessage id='core.taskEdit.fields.dueDate' /></Typography>
           <Fields.DueDate />
-        </Section>
+        </Burger.Section>
       </Stack>
 
 
       <Stack spacing={1} direction='row'>
-        <Section>
+        <Burger.Section>
           <Typography fontWeight='bold'><FormattedMessage id='core.taskEdit.fields.status' /></Typography>
           <Fields.Status />
-        </Section>
-        <Section>
+        </Burger.Section>
+        <Burger.Section>
           <Typography fontWeight='bold'><FormattedMessage id='core.taskEdit.fields.priority' /></Typography>
           <Fields.Priority />
-        </Section>
+        </Burger.Section>
       </Stack>
 
       <Stack spacing={1} direction='row'>
-        <Section>
+        <Burger.Section>
           <Typography fontWeight='bold'><FormattedMessage id='core.taskEdit.fields.assignees' /></Typography>
           <Fields.Assignee />
-        </Section>
-        <Section>
+        </Burger.Section>
+        <Burger.Section>
           <Typography fontWeight='bold'><FormattedMessage id='core.taskEdit.fields.roles' /></Typography>
           <Fields.Roles />
-        </Section>
+        </Burger.Section>
       </Stack>
     </>)
 }
@@ -66,16 +65,15 @@ const Right: React.FC<{}> = () => {
   console.log(state.events);
   return (
     <>
-
       <Fields.Checklist />
 
-      <Section>
+      <Burger.Section>
         <Typography fontWeight='bold'><FormattedMessage id='core.taskEdit.fields.history' /></Typography>
         <List>
           {state.events
             .map((event, index) => <Events key={index} event={event} />)}
         </List>
-      </Section>
+      </Burger.Section>
     </>
   );
 }

@@ -14,8 +14,7 @@ import TaskEditDialog from '../TaskEdit';
 import Client from 'client';
 import Context from 'context';
 import { TaskDescriptor } from 'descriptor-task';
-import Section from 'section';
-
+import Burger from 'components-burger';
 
 
 const StyledStack: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -113,43 +112,43 @@ const TaskItemActive: React.FC<{ task: TaskDescriptor | undefined }> = ({ task }
         </Alert>
 
         {/* buttons section */}
-        <Section>
+        <Burger.Section>
           <StyledTitle children='task.tools' />
           <Stack direction='row' spacing={1} justifyContent='center'>
             <IconButton onClick={handleTaskEdit}><EditIcon sx={{ color: 'uiElements.main' }} /></IconButton>
             <IconButton onClick={handleCrm}><CrmIcon sx={{ color: 'locale.dark' }} /></IconButton>
           </Stack>
-        </Section>
+        </Burger.Section>
 
         {/* title section */}
-        <Section>
+        <Burger.Section>
           <StyledTitle children='task.title' />
           <Typography fontWeight='bold'>{task.title}</Typography>
-        </Section>
+        </Burger.Section>
 
         {/* description section */}
-        <Section>
+        <Burger.Section>
           <StyledTitle children='task.description' />
           <Typography>{task.description}</Typography>
-        </Section>
+        </Burger.Section>
 
         {/* assignee section */}
-        <Section>
+        <Burger.Section>
           <StyledTitle children='task.assignees' />
           <TaskAssignees onChange={handleAssigneeChange} task={task} fullnames />
-        </Section>
+        </Burger.Section>
 
         {/* roles section */}
-        <Section>
+        <Burger.Section>
           <StyledTitle children='task.roles' />
           <TaskRoles onChange={handleRoleChange} task={task} fullnames />
-        </Section>
+        </Burger.Section>
 
         {/* status section */}
-        <Section>
+        <Burger.Section>
           <StyledTitle children='task.status' />
           <TaskStatus onChange={handleStatusChange} task={task} />
-        </Section>
+        </Burger.Section>
       </StyledStack>
     </>
 

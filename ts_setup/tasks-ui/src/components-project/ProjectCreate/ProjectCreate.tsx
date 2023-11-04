@@ -5,7 +5,6 @@ import { NavigationButtonSearch } from '../NavigationSticky';
 import ProjectRepoType from '../ProjectRepoType';
 import Burger from 'components-burger';
 import Client from 'client';
-import Section from 'section';
 import Context from 'context';
 
 
@@ -33,17 +32,17 @@ const ProjectCreate: React.FC<{
 
   function handleAccept() {
     const command: Client.CreateProject = {
-        commandType: 'CreateProject',
-        description,
-        repoType: repoType,
-        title,
-        repoId: title + '-' + repoType,
-        users: []
+      commandType: 'CreateProject',
+      description,
+      repoType: repoType,
+      title,
+      repoId: title + '-' + repoType,
+      users: []
     };
     backend.project.createProject(command)
       .then(_data => ctx.reload())
-      .then(() => handleToggleDialog());  
-    ;  
+      .then(() => handleToggleDialog());
+    ;
   }
 
 
@@ -57,16 +56,16 @@ const ProjectCreate: React.FC<{
       <DialogContent>
         <Stack spacing={1}>
 
-          <Section>
+          <Burger.Section>
             <Typography fontWeight='bold'><FormattedMessage id='project.title' /></Typography>
             <TextField InputProps={{ disableUnderline: true }}
               variant='standard'
               value={title}
               onChange={handleTitleChange}
               fullWidth />
-          </Section>
+          </Burger.Section>
 
-          <Section>
+          <Burger.Section>
             <Typography fontWeight='bold'><FormattedMessage id='project.description' /></Typography>
             <TextField
               InputProps={{ disableUnderline: true }}
@@ -74,12 +73,12 @@ const ProjectCreate: React.FC<{
               value={description}
               onChange={handleDescriptionChange}
               fullWidth />
-          </Section>
+          </Burger.Section>
 
-          <Section>
+          <Burger.Section>
             <Typography fontWeight='bold'><FormattedMessage id='project.repoType' /></Typography>
             <ProjectRepoType onChange={async (newType) => setRepoType(newType)} project={{ repoType }} />
-          </Section>
+          </Burger.Section>
         </Stack>
       </DialogContent>
       <DialogActions>

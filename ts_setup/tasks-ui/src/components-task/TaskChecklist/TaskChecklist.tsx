@@ -7,8 +7,7 @@ import Context from 'context';
 import Client from 'client';
 import TaskAssignees from '../TaskAssignees';
 import DueDate from '../TaskDueDate';
-import Section from 'section';
-
+import Burger from 'components-burger';
 
 const TaskChecklist: React.FC<{ onChange: (commands: Client.TaskUpdateCommand<any>[]) => Promise<void> }> = ({ onChange }) => {
   const { state, setState } = Context.useTaskEdit();
@@ -139,7 +138,7 @@ const TaskChecklist: React.FC<{ onChange: (commands: Client.TaskUpdateCommand<an
 
     {/*  checklist section  */}
 
-    {state.task.checklist.map((checklist) => (<Section key={checklist.id} width='95%'>
+    {state.task.checklist.map((checklist) => (<Burger.Section key={checklist.id} width='95%'>
       <Box>
         <TextField defaultValue={checklist.title}
           onBlur={(event) => handleChecklistTitleChange(checklist.id, event.currentTarget.value)}
@@ -243,7 +242,7 @@ const TaskChecklist: React.FC<{ onChange: (commands: Client.TaskUpdateCommand<an
           </Typography>
         </Button>
       </Box>
-    </Section >
+    </Burger.Section >
     ))
     }
   </>)

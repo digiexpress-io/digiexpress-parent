@@ -6,32 +6,31 @@ import Fields from './CRMFields';
 import Context from 'context';
 import { TaskDescriptor } from 'descriptor-task';
 import { MenuProvider, useMenu } from './menu-ctx';
-import Section from 'section';
 import Burger from 'components-burger';
 
 const Left: React.FC<{}> = () => {
 
   return (
     <Stack spacing={1} direction='column' pt={1}>
-      <Section>
+      <Burger.Section>
         <Typography fontWeight='bold'><FormattedMessage id='task.title' /></Typography>
         <Fields.Title />
-      </Section>
+      </Burger.Section>
 
-      <Section>
+      <Burger.Section>
         <Typography fontWeight='bold'><FormattedMessage id='task.description' /></Typography>
         <Fields.Description />
-      </Section>
+      </Burger.Section>
 
-      <Section>
+      <Burger.Section>
         <Typography fontWeight='bold'><FormattedMessage id='task.startDate' /></Typography>
         <Fields.StartDate />
-      </Section>
+      </Burger.Section>
 
-      <Section>
+      <Burger.Section>
         <Typography fontWeight='bold'><FormattedMessage id='task.dueDate' /></Typography>
         <Fields.DueDate />
-      </Section>
+      </Burger.Section>
 
       <Fields.Form />
     </Stack>

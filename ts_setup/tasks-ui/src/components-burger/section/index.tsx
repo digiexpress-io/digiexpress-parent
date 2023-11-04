@@ -25,4 +25,4 @@ const Section: React.FC<{ children: React.ReactNode, width?: string }> = (props)
   )
 }
 
-export default Section;
+export { Section };

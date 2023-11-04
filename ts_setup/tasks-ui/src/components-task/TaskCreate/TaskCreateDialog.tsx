@@ -8,7 +8,7 @@ import Fields from './TaskCreateFields';
 import { Task } from 'client';
 import Context from 'context';
 import { TaskDescriptorImpl } from 'descriptor-task';
-import Section from 'section';
+import Burger from 'components-burger';
 
 function initTaskProps(userId: string): Task {
   return {
@@ -70,47 +70,47 @@ const TaskCreateDialog: React.FC<{ open: boolean, onClose: () => void }> = (prop
 
         <DialogContent>
           <Stack overflow='auto' spacing={1} direction='column'>
-            <Section>
+            <Burger.Section>
               <Typography fontWeight='bold'><FormattedMessage id='core.taskCreate.fields.title' /></Typography>
               <Fields.Title />
-            </Section>
+            </Burger.Section>
 
-            <Section>
+            <Burger.Section>
               <Typography fontWeight='bold'><FormattedMessage id='core.taskCreate.fields.description' /></Typography>
               <Fields.Description />
-            </Section>
+            </Burger.Section>
 
             <Stack spacing={1} direction='row'>
-              <Section>
+              <Burger.Section>
                 <Typography fontWeight='bold'><FormattedMessage id='core.taskCreate.fields.startDate' /></Typography>
                 <Fields.StartDate />
-              </Section>
-              <Section>
+              </Burger.Section>
+              <Burger.Section>
                 <Typography fontWeight='bold'><FormattedMessage id='core.taskCreate.fields.dueDate' /></Typography>
                 <Fields.DueDate />
-              </Section>
+              </Burger.Section>
             </Stack>
 
             <Stack spacing={1} direction='row'>
-              <Section>
+              <Burger.Section>
                 <Typography fontWeight='bold'><FormattedMessage id='core.taskCreate.fields.status' /></Typography>
                 <Fields.Status />
-              </Section>
-              <Section>
+              </Burger.Section>
+              <Burger.Section>
                 <Typography fontWeight='bold'><FormattedMessage id='core.taskCreate.fields.priority' /></Typography>
                 <Fields.Priority />
-              </Section>
+              </Burger.Section>
             </Stack>
 
             <Stack spacing={1} direction='row'>
-              <Section>
+              <Burger.Section>
                 <Typography fontWeight='bold'><FormattedMessage id='core.taskCreate.fields.assignees' /></Typography>
                 <Fields.Assignees />
-              </Section>
-              <Section>
+              </Burger.Section>
+              <Burger.Section>
                 <Typography fontWeight='bold'><FormattedMessage id='core.taskCreate.fields.roles' /></Typography>
                 <Fields.Roles />
-              </Section>
+              </Burger.Section>
             </Stack>
 
           </Stack>
