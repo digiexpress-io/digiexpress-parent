@@ -35,6 +35,17 @@ const createActivities: (props: {
     }
   },
   {
+    id: "crmSearch",
+    title: "activities.frontoffice.crm.search.title",
+    content: {
+      label: "activities.frontoffice.crm.search.desc"
+    },
+    primary: {
+      label: "buttons.view",
+      onClick: () => actions.handleTabAdd({ id: 'crm', label: <FormattedMessage id="activities.frontoffice.crm.search.title" /> })
+    }
+  },
+  {
     id: "tasks",
     title: "activities.frontoffice.tasks.title",
     content: {
@@ -87,6 +98,28 @@ const createActivities: (props: {
     primary: {
       label: "buttons.view",
       onClick: () => actions.handleTabAdd({ id: 'reporting', label: <FormattedMessage id="activities.frontoffice.reporting.title" /> })
+    }
+  },
+  {
+    id: "profile",
+    title: "activities.frontoffice.profile.title",
+    content: {
+      label: "activities.frontoffice.profile.desc"
+    },
+    primary: {
+      label: "buttons.view",
+      onClick: () => actions.handleTabAdd({ id: 'profile', label: <FormattedMessage id="activities.frontoffice.profile.title" /> })
+    }
+  },
+  {
+    id: "org",
+    title: "activities.frontoffice.org.title",
+    content: {
+      label: "activities.frontoffice.org.desc"
+    },
+    primary: {
+      label: "buttons.view",
+      onClick: () => actions.handleTabAdd({ id: 'org', label: <FormattedMessage id="activities.frontoffice.org.title" /> })
     }
   }
 

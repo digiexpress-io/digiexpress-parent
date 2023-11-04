@@ -293,7 +293,20 @@ const en = {
   'activities.frontoffice.deployments.title': 'Deployments',
   'activities.frontoffice.deployments.desc': 'View deployed assets by version number',
 
+  'activities.frontoffice.org.title': 'Organisation',
+  'activities.frontoffice.org.desc': 'Roles and user settings',
+
+  'activities.frontoffice.crm.search.title': 'Client search',
+  'activities.frontoffice.crm.search.desc': 'Search for clients',
+
+  'activities.frontoffice.profile.title': 'My profile',
+  'activities.frontoffice.profile.desc': 'My personal information, settings, preferences, and recent activity',
+  'activities.profile.title': 'My profile',
+  'activities.org.title': 'Organisation',
+
+
   'explorer.frontoffice.crm.menuOption': 'CRM data',
+  'explorer.frontoffice.crm.search.menuOption': 'Client search',
   'explorer.frontoffice.deployments.menuOption': 'Deployments',
   'explorer.frontoffice.tasks.menuOption': 'Task management',
   'explorer.frontoffice.stencil.menuOption': 'Stencil content',
@@ -306,6 +319,9 @@ const en = {
   'explorer.frontoffice.myoverview.menuOption': 'My daily overview',
   'explorer.frontoffice.myhistory.menuOption': 'My activity history',
   'explorer.frontoffice.config.menuOption': 'System configuration',
+  'explorer.frontoffice.profile.menuOption': 'My profile',
+  'explorer.frontoffice.administration.menuOption': 'Administration',
+  'explorer.frontoffice.org.menuOption': 'Organisation',
 
   // --------------- APP-FRONTOFFICE END -----------------
 
