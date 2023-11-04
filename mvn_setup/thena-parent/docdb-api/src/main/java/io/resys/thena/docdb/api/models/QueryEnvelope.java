@@ -26,9 +26,11 @@ import javax.annotation.Nullable;
 
 import org.immutables.value.Value;
 
+import io.resys.thena.docdb.api.models.ThenaEnvelope.ThenaObjects;
+
 
 @Value.Immutable
-public interface QueryEnvelope<T extends ThenaGitObjects> extends ThenaEnvelope {
+public interface QueryEnvelope<T extends ThenaObjects> extends ThenaEnvelope {
   @Nullable
   Repo getRepo();    
   @Nullable

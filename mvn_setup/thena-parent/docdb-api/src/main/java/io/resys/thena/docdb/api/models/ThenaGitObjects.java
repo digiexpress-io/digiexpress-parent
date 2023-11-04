@@ -27,20 +27,21 @@ import java.util.stream.Collectors;
 import org.immutables.value.Value;
 
 import io.resys.thena.docdb.api.models.BlobContainer.BlobVisitor;
+import io.resys.thena.docdb.api.models.ThenaEnvelope.ThenaObjects;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Blob;
 import io.resys.thena.docdb.api.models.ThenaGitObject.BlobHistory;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Branch;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Commit;
-import io.resys.thena.docdb.api.models.ThenaGitObject.IsObject;
+import io.resys.thena.docdb.api.models.ThenaGitObject.IsGitObject;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Tag;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Tree;
 
-public interface ThenaGitObjects { 
+public interface ThenaGitObjects extends ThenaObjects { 
   @Value.Immutable
   public interface ProjectObjects extends ThenaGitObjects {
     Map<String, Branch> getBranches();
     Map<String, Tag> getTags();
-    Map<String, IsObject> getValues();   
+    Map<String, IsGitObject> getValues();   
   }
 
   

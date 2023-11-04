@@ -32,19 +32,19 @@ import io.vertx.core.json.JsonObject;
 
 public interface ThenaGitObject {
 
-  interface IsObject { String getId(); }
-  interface IsName { String getName(); }
+  interface IsGitObject { String getId(); }
+  interface IsGitName { String getName(); }
   
   
   // branch with a name
   @Value.Immutable
-  interface Branch extends IsName, ThenaGitObject {
+  interface Branch extends IsGitName, ThenaGitObject {
     // last commit in the branch
     String getCommit();
   }
 
   @Value.Immutable
-  interface Tag extends IsName, ThenaGitObject {
+  interface Tag extends IsGitName, ThenaGitObject {
     // id of a commit
     String getCommit();
     LocalDateTime getDateTime();
@@ -54,7 +54,7 @@ public interface ThenaGitObject {
   
   // World state 
   @Value.Immutable
-  interface Tree extends IsObject, ThenaGitObject {
+  interface Tree extends IsGitObject, ThenaGitObject {
     // resource name - blob id
     Map<String, TreeValue> getValues();
   }
@@ -69,7 +69,7 @@ public interface ThenaGitObject {
   }
   
   @Value.Immutable
-  interface Commit extends IsObject, ThenaGitObject {
+  interface Commit extends IsGitObject, ThenaGitObject {
     String getAuthor();
     LocalDateTime getDateTime();
     String getMessage();
@@ -85,7 +85,7 @@ public interface ThenaGitObject {
   }
   
   @Value.Immutable
-  interface Blob extends IsObject, ThenaGitObject {
+  interface Blob extends IsGitObject, ThenaGitObject {
     JsonObject getValue();
   }
   

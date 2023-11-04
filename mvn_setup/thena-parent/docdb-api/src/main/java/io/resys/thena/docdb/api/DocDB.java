@@ -27,10 +27,11 @@ import io.resys.thena.docdb.api.actions.DiffActions;
 import io.resys.thena.docdb.api.actions.DocAppendActions;
 import io.resys.thena.docdb.api.actions.DocFindActions;
 import io.resys.thena.docdb.api.actions.HistoryActions;
-import io.resys.thena.docdb.api.actions.RepoActions;
 import io.resys.thena.docdb.api.actions.PullActions;
+import io.resys.thena.docdb.api.actions.RepoActions;
 import io.resys.thena.docdb.api.actions.TagActions;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
+import io.resys.thena.docdb.api.models.ThenaDocObjects.DocProjectObjects;
 import io.resys.thena.docdb.api.models.ThenaGitObjects.ProjectObjects;
 import io.smallrye.mutiny.Uni;
 
@@ -43,6 +44,13 @@ public interface DocDB {
   interface DocModel {
     DocAppendActions append();
     DocFindActions find();
+    
+
+    // build world state
+    interface DocProjectQuery {
+      DocProjectQuery projectName(String projectName);
+      Uni<QueryEnvelope<DocProjectObjects>> get();
+    }
   }
   
   interface GitModel {
