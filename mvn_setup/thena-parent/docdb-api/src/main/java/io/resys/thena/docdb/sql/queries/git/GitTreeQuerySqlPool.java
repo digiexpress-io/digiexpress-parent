@@ -1,4 +1,4 @@
-package io.resys.thena.docdb.sql.queries;
+package io.resys.thena.docdb.sql.queries.git;
 
 import io.resys.thena.docdb.api.LogConstants;
 
@@ -25,7 +25,7 @@ import io.resys.thena.docdb.api.LogConstants;
 import io.resys.thena.docdb.api.models.ImmutableTree;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Tree;
 import io.resys.thena.docdb.api.models.ThenaGitObject.TreeValue;
-import io.resys.thena.docdb.spi.GitDbQueries.TreeQuery;
+import io.resys.thena.docdb.spi.GitDbQueries.GitTreeQuery;
 import io.resys.thena.docdb.spi.ErrorHandler;
 import io.resys.thena.docdb.sql.SqlBuilder;
 import io.resys.thena.docdb.sql.SqlMapper;
@@ -38,7 +38,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j(topic = LogConstants.SHOW_SQL)
 @RequiredArgsConstructor
-public class TreeQuerySqlPool implements TreeQuery {
+public class GitTreeQuerySqlPool implements GitTreeQuery {
 
   private final SqlClientWrapper wrapper;
   private final SqlMapper sqlMapper;
@@ -49,7 +49,7 @@ public class TreeQuerySqlPool implements TreeQuery {
     final var sql = sqlBuilder.treeItems().getByTreeId(tree);
     if(log.isDebugEnabled()) {
       log.debug("Tree: {} getById query, with props: {} \r\n{}",
-          TreeQuerySqlPool.class,
+          GitTreeQuerySqlPool.class,
           sql.getProps().deepToString(),
           sql.getValue());
     }
@@ -73,7 +73,7 @@ public class TreeQuerySqlPool implements TreeQuery {
     final var sql = sqlBuilder.trees().findAll();
     if(log.isDebugEnabled()) {
       log.debug("Tree: {} findAll query, with props: {} \r\n{}", 
-          TreeQuerySqlPool.class,
+          GitTreeQuerySqlPool.class,
           "",
           sql.getValue());
     }

@@ -25,7 +25,7 @@ import io.resys.thena.docdb.api.models.ThenaGitObject.Commit;
 import io.resys.thena.docdb.spi.DbCollections;
 import io.resys.thena.docdb.sql.ImmutableSql;
 import io.resys.thena.docdb.sql.ImmutableSqlTuple;
-import io.resys.thena.docdb.sql.SqlBuilder.RefSqlBuilder;
+import io.resys.thena.docdb.sql.SqlBuilder.GitRefSqlBuilder;
 import io.resys.thena.docdb.sql.SqlBuilder.Sql;
 import io.resys.thena.docdb.sql.SqlBuilder.SqlTuple;
 import io.resys.thena.docdb.sql.support.SqlStatement;
@@ -33,7 +33,7 @@ import io.vertx.mutiny.sqlclient.Tuple;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class DefaultRefSqlBuilder implements RefSqlBuilder {
+public class DefaultRefSqlBuilder implements GitRefSqlBuilder {
   private final DbCollections options;
 
   @Override

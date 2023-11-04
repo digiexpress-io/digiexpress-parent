@@ -26,13 +26,13 @@ import io.resys.thena.docdb.sql.ImmutableSql;
 import io.resys.thena.docdb.sql.ImmutableSqlTuple;
 import io.resys.thena.docdb.sql.SqlBuilder.Sql;
 import io.resys.thena.docdb.sql.SqlBuilder.SqlTuple;
-import io.resys.thena.docdb.sql.SqlBuilder.TagSqlBuilder;
+import io.resys.thena.docdb.sql.SqlBuilder.GitTagSqlBuilder;
 import io.resys.thena.docdb.sql.support.SqlStatement;
 import io.vertx.mutiny.sqlclient.Tuple;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class DefaultTagSqlBuilder implements TagSqlBuilder {
+public class DefaultTagSqlBuilder implements GitTagSqlBuilder {
   
   private final DbCollections options;
   

@@ -1,4 +1,4 @@
-package io.resys.thena.docdb.sql.queries;
+package io.resys.thena.docdb.sql.queries.git;
 
 /*-
  * #%L
@@ -32,7 +32,7 @@ import io.resys.thena.docdb.api.models.ThenaGitObject.Commit;
 import io.resys.thena.docdb.api.models.ThenaGitObject.CommitLock;
 import io.resys.thena.docdb.api.models.ThenaGitObject.CommitLockStatus;
 import io.resys.thena.docdb.api.models.ThenaGitObject.CommitTree;
-import io.resys.thena.docdb.spi.GitDbQueries.CommitQuery;
+import io.resys.thena.docdb.spi.GitDbQueries.GitCommitQuery;
 import io.resys.thena.docdb.spi.GitDbQueries.LockCriteria;
 import io.resys.thena.docdb.spi.ErrorHandler;
 import io.resys.thena.docdb.sql.SqlBuilder;
@@ -47,7 +47,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j(topic = LogConstants.SHOW_SQL)
 @RequiredArgsConstructor
-public class CommitQuerySqlPool implements CommitQuery {
+public class GitCommitQuerySqlPool implements GitCommitQuery {
   private final SqlClientWrapper wrapper;
   private final SqlMapper sqlMapper;
   private final SqlBuilder sqlBuilder;
@@ -95,7 +95,7 @@ public class CommitQuerySqlPool implements CommitQuery {
     final var sql = sqlBuilder.commits().getLock(crit);
     if(log.isDebugEnabled()) {
       log.debug("Commit: {} getLock query, with props: {} \r\n{}",
-          CommitQuerySqlPool.class,
+          GitCommitQuerySqlPool.class,
           sql.getProps().deepToString(),
           sql.getValue());
     }

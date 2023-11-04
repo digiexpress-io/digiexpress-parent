@@ -1,4 +1,4 @@
-package io.resys.thena.docdb.sql.queries;
+package io.resys.thena.docdb.sql.queries.git;
 
 /*-
  * #%L
@@ -27,7 +27,7 @@ import java.util.List;
 import io.resys.thena.docdb.api.LogConstants;
 import io.resys.thena.docdb.api.actions.PullActions.MatchCriteria;
 import io.resys.thena.docdb.api.models.ThenaGitObject.BlobHistory;
-import io.resys.thena.docdb.spi.GitDbQueries.BlobHistoryQuery;
+import io.resys.thena.docdb.spi.GitDbQueries.GitBlobHistoryQuery;
 import io.resys.thena.docdb.sql.factories.ClientQuerySqlPool.ClientQuerySqlContext;
 import io.smallrye.mutiny.Multi;
 import io.vertx.mutiny.sqlclient.RowSet;
@@ -36,17 +36,17 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j(topic = LogConstants.SHOW_SQL)
 @RequiredArgsConstructor
-public class BlobHistoryQuerySqlPool implements BlobHistoryQuery {
+public class GitBlobHistoryQuerySqlPool implements GitBlobHistoryQuery {
 
   private final ClientQuerySqlContext context;
   private boolean latestOnly;
   private String name;
   private List<MatchCriteria> criteria = new ArrayList<>();
 
-  @Override public BlobHistoryQuery latestOnly(boolean latestOnly) { this.latestOnly = latestOnly; return this; }
-  @Override public BlobHistoryQuery blobName(String name) { this.name = name; return this; }
-  @Override public BlobHistoryQuery criteria(List<MatchCriteria> criteria) { this.criteria.addAll(criteria); return this; }
-  @Override public BlobHistoryQuery criteria(MatchCriteria... criteria) { this.criteria.addAll(Arrays.asList(criteria)); return this; }
+  @Override public GitBlobHistoryQuery latestOnly(boolean latestOnly) { this.latestOnly = latestOnly; return this; }
+  @Override public GitBlobHistoryQuery blobName(String name) { this.name = name; return this; }
+  @Override public GitBlobHistoryQuery criteria(List<MatchCriteria> criteria) { this.criteria.addAll(criteria); return this; }
+  @Override public GitBlobHistoryQuery criteria(MatchCriteria... criteria) { this.criteria.addAll(Arrays.asList(criteria)); return this; }
   
   @Override
   public Multi<BlobHistory> find() {

@@ -42,32 +42,32 @@ public class ClientQueryFilePool implements GitDbQueries {
   private final ErrorHandler errorHandler;
   
   @Override
-  public TagQuery tags() {
+  public GitTagQuery tags() {
     return new TagQueryFilePool(wrapper.getClient(), mapper, builder, errorHandler);
   }
 
   @Override
-  public CommitQuery commits() {
+  public GitCommitQuery commits() {
     return new CommitQueryFilePool(wrapper.getClient(), mapper, builder, errorHandler);
   }
 
   @Override
-  public RefQuery refs() {
+  public GitRefQuery refs() {
     return new RefQueryFilePool(wrapper.getClient(), mapper, builder, errorHandler);
   }
 
   @Override
-  public TreeQuery trees() {
+  public GitTreeQuery trees() {
     return new TreeQueryFilePool(wrapper.getClient(), mapper, builder, errorHandler);
   }
 
   @Override
-  public BlobQuery blobs() {
+  public GitBlobQuery blobs() {
     return new BlobQueryFilePool(wrapper.getClient(), mapper, builder, errorHandler);
   }
 
   @Override
-  public BlobHistoryQuery blobHistory() {
+  public GitBlobHistoryQuery blobHistory() {
     return new BlobHistoryFilePool(wrapper.getClient(), mapper, builder);
   }
 }

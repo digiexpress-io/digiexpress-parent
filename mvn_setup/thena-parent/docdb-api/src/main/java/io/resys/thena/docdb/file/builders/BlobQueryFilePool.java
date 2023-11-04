@@ -34,14 +34,14 @@ import io.resys.thena.docdb.api.models.ThenaGitObject.TreeValue;
 import io.resys.thena.docdb.file.FileBuilder;
 import io.resys.thena.docdb.file.tables.Table.FileMapper;
 import io.resys.thena.docdb.file.tables.Table.FilePool;
-import io.resys.thena.docdb.spi.GitDbQueries.BlobQuery;
+import io.resys.thena.docdb.spi.GitDbQueries.GitBlobQuery;
 import io.resys.thena.docdb.spi.ErrorHandler;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class BlobQueryFilePool implements BlobQuery {
+public class BlobQueryFilePool implements GitBlobQuery {
 
   private final FilePool client;
   private final FileMapper mapper;

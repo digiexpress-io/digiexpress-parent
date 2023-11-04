@@ -1,4 +1,4 @@
-package io.resys.thena.docdb.sql.queries;
+package io.resys.thena.docdb.sql.queries.git;
 
 /*-
  * #%L
@@ -42,7 +42,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
-public class ClientInsertBuilderSqlPool implements GitDbInserts {
+public class GitDbInsertsSqlPool implements GitDbInserts {
   private final SqlClientWrapper wrapper;
   private final SqlMapper sqlMapper;
   private final SqlBuilder sqlBuilder;

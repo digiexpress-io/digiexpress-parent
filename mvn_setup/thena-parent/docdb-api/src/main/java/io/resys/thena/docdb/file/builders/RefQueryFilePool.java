@@ -26,7 +26,7 @@ import io.resys.thena.docdb.api.models.ThenaGitObject.Branch;
 import io.resys.thena.docdb.file.FileBuilder;
 import io.resys.thena.docdb.file.tables.Table.FileMapper;
 import io.resys.thena.docdb.file.tables.Table.FilePool;
-import io.resys.thena.docdb.spi.GitDbQueries.RefQuery;
+import io.resys.thena.docdb.spi.GitDbQueries.GitRefQuery;
 import io.resys.thena.docdb.spi.ErrorHandler;
 import io.resys.thena.docdb.spi.support.RepoAssert;
 import io.smallrye.mutiny.Multi;
@@ -35,7 +35,7 @@ import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class RefQueryFilePool implements RefQuery {
+public class RefQueryFilePool implements GitRefQuery {
 
   private final FilePool client;
   private final FileMapper mapper;

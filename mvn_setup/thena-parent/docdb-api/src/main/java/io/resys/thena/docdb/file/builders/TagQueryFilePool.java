@@ -27,7 +27,7 @@ import io.resys.thena.docdb.file.FileBuilder;
 import io.resys.thena.docdb.file.tables.Table.FileMapper;
 import io.resys.thena.docdb.file.tables.Table.FilePool;
 import io.resys.thena.docdb.spi.GitDbQueries.DeleteResult;
-import io.resys.thena.docdb.spi.GitDbQueries.TagQuery;
+import io.resys.thena.docdb.spi.GitDbQueries.GitTagQuery;
 import io.resys.thena.docdb.spi.ErrorHandler;
 import io.resys.thena.docdb.spi.ImmutableDeleteResult;
 import io.smallrye.mutiny.Multi;
@@ -35,7 +35,7 @@ import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class TagQueryFilePool implements TagQuery {
+public class TagQueryFilePool implements GitTagQuery {
   
   private final FilePool client;
   private final FileMapper mapper;
@@ -45,7 +45,7 @@ public class TagQueryFilePool implements TagQuery {
   private String name;
 
   @Override
-  public TagQuery name(String name) {
+  public GitTagQuery name(String name) {
     this.name = name;
     return this;
   }

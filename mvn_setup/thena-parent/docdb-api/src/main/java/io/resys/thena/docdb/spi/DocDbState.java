@@ -49,6 +49,7 @@ public interface DocDbState {
   interface DocLockCriteria {
     @Nullable String getVersionId();
     @Nullable String getDocId();
+    @Nullable String getExternalId();
     @Nullable String getBranchName();
   }  
 }

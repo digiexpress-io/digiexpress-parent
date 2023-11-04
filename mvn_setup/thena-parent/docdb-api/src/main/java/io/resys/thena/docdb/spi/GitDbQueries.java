@@ -38,47 +38,47 @@ import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 
 public interface GitDbQueries {
-  TagQuery tags();
-  CommitQuery commits();
-  RefQuery refs();
-  TreeQuery trees();
-  BlobQuery blobs();
-  BlobHistoryQuery blobHistory();
+  GitTagQuery tags();
+  GitCommitQuery commits();
+  GitRefQuery refs();
+  GitTreeQuery trees();
+  GitBlobQuery blobs();
+  GitBlobHistoryQuery blobHistory();
   
   
-  interface RefQuery {
+  interface GitRefQuery {
     Uni<Branch> name(String name);
     Uni<Branch> nameOrCommit(String refNameOrCommit);
     Uni<Branch> get();
     Multi<Branch> findAll();
   }
   
-  interface BlobHistoryQuery {
-    BlobHistoryQuery latestOnly(boolean latestOnly);
-    BlobHistoryQuery blobName(String name);
-    BlobHistoryQuery criteria(MatchCriteria ... criteria);
-    BlobHistoryQuery criteria(List<MatchCriteria> criteria);
+  interface GitBlobHistoryQuery {
+    GitBlobHistoryQuery latestOnly(boolean latestOnly);
+    GitBlobHistoryQuery blobName(String name);
+    GitBlobHistoryQuery criteria(MatchCriteria ... criteria);
+    GitBlobHistoryQuery criteria(List<MatchCriteria> criteria);
     Multi<BlobHistory> find();
   }
   
-  interface BlobQuery {
+  interface GitBlobQuery {
     Uni<Blob> getById(String blobId);
     
     Multi<Blob> findAll();
     Multi<Blob> findAll(String treeId, List<String> docIds, List<MatchCriteria> matchBy);
     Multi<Blob> findAll(String treeId, List<MatchCriteria> criteria);
   }
-  interface CommitQuery {
+  interface GitCommitQuery {
     Uni<Commit> getById(String commitId);
     Uni<CommitLock> getLock(LockCriteria criteria);
     Multi<Commit> findAll();
   }
-  interface TreeQuery {
+  interface GitTreeQuery {
     Uni<Tree> getById(String treeId);
     Multi<Tree> findAll();
   }
-  interface TagQuery {
-    TagQuery name(String name);
+  interface GitTagQuery {
+    GitTagQuery name(String name);
     Uni<DeleteResult> delete();
     Uni<Tag> getFirst();
     Multi<Tag> find();

@@ -13,8 +13,8 @@ import io.resys.thena.docdb.spi.GitDbInserts;
 import io.resys.thena.docdb.spi.GitDbQueries;
 import io.resys.thena.docdb.sql.factories.ClientQuerySqlPool.ClientQuerySqlContext;
 import io.resys.thena.docdb.sql.factories.ImmutableClientQuerySqlContext;
-import io.resys.thena.docdb.sql.queries.ClientInsertBuilderSqlPool;
 import io.resys.thena.docdb.sql.queries.RepoBuilderSqlPool;
+import io.resys.thena.docdb.sql.queries.git.GitDbInsertsSqlPool;
 import io.resys.thena.docdb.sql.support.ImmutableSqlClientWrapper;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -86,7 +86,7 @@ public class GitDbStateImpl implements GitDbState {
         .tx(Optional.empty())
         .names(ctx.toRepo(repo))
         .build();
-    return new ClientInsertBuilderSqlPool(wrapper, sqlMapper.apply(wrapper.getNames()), sqlBuilder.apply(wrapper.getNames()), handler);
+    return new GitDbInsertsSqlPool(wrapper, sqlMapper.apply(wrapper.getNames()), sqlBuilder.apply(wrapper.getNames()), handler);
   }
   @Override
   public GitDbQueries query(Repo repo) {

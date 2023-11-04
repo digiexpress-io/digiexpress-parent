@@ -32,7 +32,7 @@ import io.resys.thena.docdb.api.models.ThenaGitObject.CommitLockStatus;
 import io.resys.thena.docdb.file.FileBuilder;
 import io.resys.thena.docdb.file.tables.Table.FileMapper;
 import io.resys.thena.docdb.file.tables.Table.FilePool;
-import io.resys.thena.docdb.spi.GitDbQueries.CommitQuery;
+import io.resys.thena.docdb.spi.GitDbQueries.GitCommitQuery;
 import io.resys.thena.docdb.spi.GitDbQueries.LockCriteria;
 import io.resys.thena.docdb.spi.ErrorHandler;
 import io.smallrye.mutiny.Multi;
@@ -40,7 +40,7 @@ import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class CommitQueryFilePool implements CommitQuery {
+public class CommitQueryFilePool implements GitCommitQuery {
   private final FilePool client;
   private final FileMapper mapper;
   private final FileBuilder builder;

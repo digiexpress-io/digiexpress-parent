@@ -26,12 +26,12 @@ import io.resys.thena.docdb.spi.GitDbQueries;
 import io.resys.thena.docdb.spi.ErrorHandler;
 import io.resys.thena.docdb.sql.SqlBuilder;
 import io.resys.thena.docdb.sql.SqlMapper;
-import io.resys.thena.docdb.sql.queries.BlobHistoryQuerySqlPool;
-import io.resys.thena.docdb.sql.queries.BlobQuerySqlPool;
-import io.resys.thena.docdb.sql.queries.CommitQuerySqlPool;
-import io.resys.thena.docdb.sql.queries.RefQuerySqlPool;
-import io.resys.thena.docdb.sql.queries.TagQuerySqlPool;
-import io.resys.thena.docdb.sql.queries.TreeQuerySqlPool;
+import io.resys.thena.docdb.sql.queries.git.GitBlobHistoryQuerySqlPool;
+import io.resys.thena.docdb.sql.queries.git.GitBlobQuerySqlPool;
+import io.resys.thena.docdb.sql.queries.git.GitCommitQuerySqlPool;
+import io.resys.thena.docdb.sql.queries.git.GitRefQuerySqlPool;
+import io.resys.thena.docdb.sql.queries.git.GitTagQuerySqlPool;
+import io.resys.thena.docdb.sql.queries.git.GitTreeQuerySqlPool;
 import io.resys.thena.docdb.sql.support.SqlClientWrapper;
 import lombok.RequiredArgsConstructor;
 
@@ -50,32 +50,32 @@ public class ClientQuerySqlPool implements GitDbQueries {
   }
   
   @Override
-  public TagQuery tags() {
-    return new TagQuerySqlPool(context.getWrapper(), context.getMapper(), context.getBuilder(), context.getErrorHandler());
+  public GitTagQuery tags() {
+    return new GitTagQuerySqlPool(context.getWrapper(), context.getMapper(), context.getBuilder(), context.getErrorHandler());
   }
 
   @Override
-  public CommitQuery commits() {
-    return new CommitQuerySqlPool(context.getWrapper(), context.getMapper(), context.getBuilder(), context.getErrorHandler());
+  public GitCommitQuery commits() {
+    return new GitCommitQuerySqlPool(context.getWrapper(), context.getMapper(), context.getBuilder(), context.getErrorHandler());
   }
 
   @Override
-  public RefQuery refs() {
-    return new RefQuerySqlPool(context.getWrapper(), context.getMapper(), context.getBuilder(), context.getErrorHandler());
+  public GitRefQuery refs() {
+    return new GitRefQuerySqlPool(context.getWrapper(), context.getMapper(), context.getBuilder(), context.getErrorHandler());
   }
 
   @Override
-  public TreeQuery trees() {
-    return new TreeQuerySqlPool(context.getWrapper(), context.getMapper(), context.getBuilder(), context.getErrorHandler());
+  public GitTreeQuery trees() {
+    return new GitTreeQuerySqlPool(context.getWrapper(), context.getMapper(), context.getBuilder(), context.getErrorHandler());
   }
 
   @Override
-  public BlobQuery blobs() {
-    return new BlobQuerySqlPool(context.getWrapper(), context.getMapper(), context.getBuilder(), context.getErrorHandler());
+  public GitBlobQuery blobs() {
+    return new GitBlobQuerySqlPool(context.getWrapper(), context.getMapper(), context.getBuilder(), context.getErrorHandler());
   }
   
   @Override
-  public BlobHistoryQuery blobHistory() {
-    return new BlobHistoryQuerySqlPool(context);
+  public GitBlobHistoryQuery blobHistory() {
+    return new GitBlobHistoryQuerySqlPool(context);
   }
 }

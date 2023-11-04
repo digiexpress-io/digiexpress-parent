@@ -1,7 +1,5 @@
 package io.resys.thena.docdb.spi;
 
-import java.util.List;
-
 import javax.annotation.Nullable;
 
 /*-
@@ -26,50 +24,24 @@ import javax.annotation.Nullable;
 
 import org.immutables.value.Value;
 
-import io.resys.thena.docdb.api.actions.PullActions.MatchCriteria;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocCommit;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocCommitLock;
-import io.resys.thena.docdb.api.models.ThenaGitObject.Blob;
-import io.resys.thena.docdb.api.models.ThenaGitObject.Commit;
-import io.resys.thena.docdb.api.models.ThenaGitObject.Tag;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 
 public interface DocDbQueries {
-  TagQuery tags();
   DocCommitQuery commits();
-  BlobQuery blobs();
   
-
-  interface BlobQuery {
-    Uni<Blob> getById(String blobId);
-    
-    Multi<Blob> findAll();
-    Multi<Blob> findAll(String treeId, List<String> docIds, List<MatchCriteria> matchBy);
-    Multi<Blob> findAll(String treeId, List<MatchCriteria> criteria);
-  }
   interface DocCommitQuery {
     Uni<DocCommit> getById(String commitId);
     Uni<DocCommitLock> getLock(DocLockCriteria criteria);
     Multi<DocCommit> findAll();
   }
 
-  interface TagQuery {
-    TagQuery name(String name);
-    Uni<DocDeleteResult> delete();
-    Uni<Tag> getFirst();
-    Multi<Tag> find();
-  }
-  
   @Value.Immutable
   interface DocLockCriteria {
     @Nullable String getDocId(); 
     @Nullable String getVersionId();
     @Nullable String getBranchName();
-  }
-  
-  @Value.Immutable
-  interface DocDeleteResult {
-    long getDeletedCount();
   }
 }

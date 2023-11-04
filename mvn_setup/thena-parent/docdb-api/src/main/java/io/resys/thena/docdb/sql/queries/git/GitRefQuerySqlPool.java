@@ -1,4 +1,4 @@
-package io.resys.thena.docdb.sql.queries;
+package io.resys.thena.docdb.sql.queries.git;
 
 /*-
  * #%L
@@ -22,7 +22,7 @@ package io.resys.thena.docdb.sql.queries;
 
 import io.resys.thena.docdb.api.LogConstants;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Branch;
-import io.resys.thena.docdb.spi.GitDbQueries.RefQuery;
+import io.resys.thena.docdb.spi.GitDbQueries.GitRefQuery;
 import io.resys.thena.docdb.spi.ErrorHandler;
 import io.resys.thena.docdb.spi.support.RepoAssert;
 import io.resys.thena.docdb.sql.SqlBuilder;
@@ -37,7 +37,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j(topic = LogConstants.SHOW_SQL)
 @RequiredArgsConstructor
-public class RefQuerySqlPool implements RefQuery {
+public class GitRefQuerySqlPool implements GitRefQuery {
 
   private final SqlClientWrapper wrapper;
   private final SqlMapper sqlMapper;

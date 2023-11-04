@@ -37,13 +37,13 @@ import io.resys.thena.docdb.file.FileBuilder;
 import io.resys.thena.docdb.file.tables.Table.FileMapper;
 import io.resys.thena.docdb.file.tables.Table.FilePool;
 import io.resys.thena.docdb.file.tables.TreeItemTable.TreeItemTableRow;
-import io.resys.thena.docdb.spi.GitDbQueries.BlobHistoryQuery;
+import io.resys.thena.docdb.spi.GitDbQueries.GitBlobHistoryQuery;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class BlobHistoryFilePool implements BlobHistoryQuery {
+public class BlobHistoryFilePool implements GitBlobHistoryQuery {
 
   private final FilePool client;
   private final FileMapper mapper;
@@ -53,10 +53,10 @@ public class BlobHistoryFilePool implements BlobHistoryQuery {
   private String name;
 
 
-  @Override public BlobHistoryQuery latestOnly(boolean latestOnly) { this.latestOnly = latestOnly; return this; }
-  @Override public BlobHistoryQuery blobName(String name) { this.name = name; return this; }
-  @Override public BlobHistoryQuery criteria(List<MatchCriteria> criteria) { this.criteria.addAll(criteria); return this; }
-  @Override public BlobHistoryQuery criteria(MatchCriteria... criteria) { this.criteria.addAll(Arrays.asList(criteria)); return this; }
+  @Override public GitBlobHistoryQuery latestOnly(boolean latestOnly) { this.latestOnly = latestOnly; return this; }
+  @Override public GitBlobHistoryQuery blobName(String name) { this.name = name; return this; }
+  @Override public GitBlobHistoryQuery criteria(List<MatchCriteria> criteria) { this.criteria.addAll(criteria); return this; }
+  @Override public GitBlobHistoryQuery criteria(MatchCriteria... criteria) { this.criteria.addAll(Arrays.asList(criteria)); return this; }
   
   @Override
   public Multi<BlobHistory> find() {

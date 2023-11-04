@@ -40,27 +40,27 @@ public class SqlBuilderImpl implements SqlBuilder {
     return new DefaultRepoSqlBuilder(ctx);
   }
   @Override
-  public RefSqlBuilder refs() {
+  public GitRefSqlBuilder refs() {
     return new DefaultRefSqlBuilder(ctx);
   }
   @Override
-  public TagSqlBuilder tags() {
+  public GitTagSqlBuilder tags() {
     return new DefaultTagSqlBuilder(ctx);
   }
   @Override
-  public BlobSqlBuilder blobs() {
+  public GitBlobSqlBuilder blobs() {
     return new DefaultBlobSqlBuilder(ctx);
   }
   @Override
-  public TreeSqlBuilder trees() {
+  public GitTreeSqlBuilder trees() {
     return new DefaultTreeSqlBuilder(ctx);
   }
   @Override
-  public TreeItemSqlBuilder treeItems() {
+  public GitTreeItemSqlBuilder treeItems() {
     return new DefaultTreeItemSqlBuilder(ctx);
   }
   @Override
-  public CommitSqlBuilder commits() {
+  public GitCommitSqlBuilder commits() {
     return new DefaultCommitSqlBuilder(ctx);
   }
   @Override

@@ -43,14 +43,21 @@ import io.vertx.mutiny.sqlclient.Tuple;
 public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
 
   RepoSqlBuilder repo();
-  RefSqlBuilder refs();
-  TagSqlBuilder tags();
-  BlobSqlBuilder blobs();
-  CommitSqlBuilder commits();
-  TreeSqlBuilder trees();
-  TreeItemSqlBuilder treeItems();
+  
+  GitRefSqlBuilder docs();
+  GitRefSqlBuilder docLogs();
+  GitRefSqlBuilder docCommits();
+  GitRefSqlBuilder docBranches();
+  
+  GitRefSqlBuilder refs();
+  GitTagSqlBuilder tags();
+  GitBlobSqlBuilder blobs();
+  GitCommitSqlBuilder commits();
+  GitTreeSqlBuilder trees();
+  GitTreeItemSqlBuilder treeItems();
   SqlBuilder withOptions(DbCollections options);
 
+  
   interface RepoSqlBuilder {
     SqlTuple exists();
     Sql findAll();
@@ -60,7 +67,23 @@ public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
     SqlTuple deleteOne(Repo repo);
   }
   
-  interface BlobSqlBuilder {
+  
+  interface DocSqlBuilder {
+    SqlTuple getById(String blobId);
+    
+    SqlTuple insertOne(Doc blob);
+    SqlTupleList insertAll(Collection<Blob> blobs);
+    
+    SqlTuple find(@Nullable String name, boolean latestOnly, List<MatchCriteria> criteria);
+    SqlTuple findByTree(String treeId, List<MatchCriteria> criteria);
+    SqlTuple findByTree(String treeId, List<String> blobNames, List<MatchCriteria> criteria);
+    SqlTuple findByIds(Collection<String> blobId);
+    Sql findAll();
+  }
+  
+  
+  
+  interface GitBlobSqlBuilder {
     SqlTuple getById(String blobId);
     
     SqlTuple insertOne(Blob blob);
@@ -75,7 +98,7 @@ public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
   
   
   
-  interface RefSqlBuilder {
+  interface GitRefSqlBuilder {
     SqlTuple getByName(String name);
     SqlTuple getByNameOrCommit(String refNameOrCommit);
     Sql getFirst();
@@ -84,7 +107,7 @@ public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
     SqlTuple updateOne(Branch ref, Commit commit);
   }
   
-  interface TagSqlBuilder {
+  interface GitTagSqlBuilder {
     SqlTuple getByName(String name);
     SqlTuple deleteByName(String name);
     Sql findAll();
@@ -92,21 +115,21 @@ public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
     SqlTuple insertOne(Tag tag);
   }
   
-  interface TreeSqlBuilder {
+  interface GitTreeSqlBuilder {
     SqlTuple getById(String id);
     Sql findAll();
     SqlTuple insertOne(Tree tree);
   }
   
   
-  interface CommitSqlBuilder {
+  interface GitCommitSqlBuilder {
     SqlTuple getById(String id);
     SqlTuple getLock(LockCriteria crit);
     Sql findAll();
     SqlTuple insertOne(Commit commit);
   }
   
-  interface TreeItemSqlBuilder {
+  interface GitTreeItemSqlBuilder {
     SqlTuple getByTreeId(String treeId);
     Sql findAll();
     SqlTuple insertOne(Tree tree, TreeValue item);

@@ -1,4 +1,4 @@
-package io.resys.thena.docdb.sql.queries;
+package io.resys.thena.docdb.sql.queries.git;
 
 /*-
  * #%L
@@ -23,7 +23,7 @@ package io.resys.thena.docdb.sql.queries;
 import io.resys.thena.docdb.api.LogConstants;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Tag;
 import io.resys.thena.docdb.spi.GitDbQueries.DeleteResult;
-import io.resys.thena.docdb.spi.GitDbQueries.TagQuery;
+import io.resys.thena.docdb.spi.GitDbQueries.GitTagQuery;
 import io.resys.thena.docdb.spi.ErrorHandler;
 import io.resys.thena.docdb.spi.ImmutableDeleteResult;
 import io.resys.thena.docdb.sql.SqlBuilder;
@@ -37,7 +37,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j(topic = LogConstants.SHOW_SQL)
 @RequiredArgsConstructor
-public class TagQuerySqlPool implements TagQuery {
+public class GitTagQuerySqlPool implements GitTagQuery {
   
   private final SqlClientWrapper wrapper;
   private final SqlMapper sqlMapper;
@@ -47,7 +47,7 @@ public class TagQuerySqlPool implements TagQuery {
   private String name;
 
   @Override
-  public TagQuery name(String name) {
+  public GitTagQuery name(String name) {
     this.name = name;
     return this;
   }

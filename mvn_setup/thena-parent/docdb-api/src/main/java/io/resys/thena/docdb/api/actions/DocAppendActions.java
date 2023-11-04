@@ -6,6 +6,7 @@ import javax.annotation.Nullable;
 
 import org.immutables.value.Value;
 
+import io.resys.thena.docdb.api.actions.CommitActions.CommitResultStatus;
 import io.resys.thena.docdb.api.actions.CommitActions.JsonObjectMerge;
 import io.resys.thena.docdb.api.models.Message;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocCommit;
@@ -37,13 +38,11 @@ public interface DocAppendActions {
   
   @Value.Immutable
   interface AppendResultEnvelope extends ThenaEnvelope {
-    String getGid(); // repo/head
+    String getRepoId();
     @Nullable
     DocCommit getCommit();
-    AppendResultStatus getStatus();
+    CommitResultStatus getStatus();
     List<Message> getMessages();
   }
-  
-  enum AppendResultStatus { OK, ERROR, CONFLICT }
   
 }

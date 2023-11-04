@@ -30,7 +30,7 @@ import io.resys.thena.docdb.spi.DbCollections;
 import io.resys.thena.docdb.spi.GitDbQueries.LockCriteria;
 import io.resys.thena.docdb.sql.ImmutableSql;
 import io.resys.thena.docdb.sql.ImmutableSqlTuple;
-import io.resys.thena.docdb.sql.SqlBuilder.CommitSqlBuilder;
+import io.resys.thena.docdb.sql.SqlBuilder.GitCommitSqlBuilder;
 import io.resys.thena.docdb.sql.SqlBuilder.Sql;
 import io.resys.thena.docdb.sql.SqlBuilder.SqlTuple;
 import io.resys.thena.docdb.sql.support.SqlStatement;
@@ -38,7 +38,7 @@ import io.vertx.mutiny.sqlclient.Tuple;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class DefaultCommitSqlBuilder implements CommitSqlBuilder {
+public class DefaultCommitSqlBuilder implements GitCommitSqlBuilder {
   private final DbCollections options;
  
   @Override

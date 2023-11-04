@@ -1,6 +1,5 @@
 package io.resys.thena.docdb.spi;
 
-import java.util.Collection;
 import java.util.List;
 
 /*-
@@ -27,14 +26,27 @@ import org.immutables.value.Value;
 
 import io.resys.thena.docdb.api.models.Message;
 import io.resys.thena.docdb.api.models.Repo;
-import io.resys.thena.docdb.api.models.ThenaGitObject.Blob;
-import io.resys.thena.docdb.api.models.ThenaGitObject.Branch;
-import io.resys.thena.docdb.api.models.ThenaGitObject.Commit;
-import io.resys.thena.docdb.api.models.ThenaGitObject.Tag;
-import io.resys.thena.docdb.api.models.ThenaGitObject.Tree;
+import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranch;
+import io.resys.thena.docdb.api.models.ThenaDocObject.DocCommit;
+import io.resys.thena.docdb.api.models.ThenaDocObject.DocLog;
+import io.resys.thena.docdb.spi.GitDbInserts.BatchStatus;
 import io.smallrye.mutiny.Uni;
 
 public interface DocDbInserts {
+  
+  @Value.Immutable
+  interface DocBatch {
+    BatchStatus getStatus();
+    Repo getRepo();
+    Message getLog();
+    DocCommit getCommit();
+    Integer getDeleted();
+    Boolean getBranchCreated(); 
+    DocBranch getBranch();
+    DocLog getLogs();
+    List<Message> getMessages();
+  }
+  Uni<DocBatch> batch(DocBatch output);
   
   /*
   Uni<InsertResult> tag(Tag tag);

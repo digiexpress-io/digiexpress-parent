@@ -1,4 +1,4 @@
-package io.resys.thena.docdb.sql.queries;
+package io.resys.thena.docdb.sql.queries.git;
 
 /*-
  * #%L
@@ -26,7 +26,7 @@ import java.util.List;
 import io.resys.thena.docdb.api.LogConstants;
 import io.resys.thena.docdb.api.actions.PullActions.MatchCriteria;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Blob;
-import io.resys.thena.docdb.spi.GitDbQueries.BlobQuery;
+import io.resys.thena.docdb.spi.GitDbQueries.GitBlobQuery;
 import io.resys.thena.docdb.spi.support.RepoAssert;
 import io.resys.thena.docdb.spi.ErrorHandler;
 import io.resys.thena.docdb.sql.SqlBuilder;
@@ -40,7 +40,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j(topic = LogConstants.SHOW_SQL)
 @RequiredArgsConstructor
-public class BlobQuerySqlPool implements BlobQuery {
+public class GitBlobQuerySqlPool implements GitBlobQuery {
 
   private final SqlClientWrapper wrapper;
   private final SqlMapper sqlMapper;
@@ -52,7 +52,7 @@ public class BlobQuerySqlPool implements BlobQuery {
     final var sql = sqlBuilder.blobs().getById(blobId);
     if(log.isDebugEnabled()) {
       log.debug("Blob: {} get byId query, with props: {} \r\n{}",
-          BlobQuerySqlPool.class,
+          GitBlobQuerySqlPool.class,
           sql.getProps().deepToString(), 
           sql.getValue());
     }
@@ -90,7 +90,7 @@ public class BlobQuerySqlPool implements BlobQuery {
     final var sql = sqlBuilder.blobs().findByTree(treeId, criteria);
     if(log.isDebugEnabled()) {
       log.debug("Blob: {} findByTreeId query, with props: {} \r\n{}",
-          BlobQuerySqlPool.class,
+          GitBlobQuerySqlPool.class,
           sql.getProps().deepToString(), 
           sql.getValue());
     }
@@ -108,7 +108,7 @@ public class BlobQuerySqlPool implements BlobQuery {
     final var sql = sqlBuilder.blobs().findByTree(treeId, docIds, criteria);
     if(log.isDebugEnabled()) {
       log.debug("Blob: {} findByTreeId query, with props: {} \r\n{}",
-          BlobQuerySqlPool.class,
+          GitBlobQuerySqlPool.class,
           sql.getProps().deepToString(), 
           sql.getValue());
     }

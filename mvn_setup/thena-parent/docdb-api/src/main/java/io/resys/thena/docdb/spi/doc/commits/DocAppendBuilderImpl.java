@@ -7,7 +7,6 @@ import io.resys.thena.docdb.api.actions.CommitActions.JsonObjectMerge;
 import io.resys.thena.docdb.api.actions.DocAppendActions.AppendResultEnvelope;
 import io.resys.thena.docdb.api.actions.DocAppendActions.DocAppendBuilder;
 import io.resys.thena.docdb.api.actions.ImmutableAppendResultEnvelope;
-import io.resys.thena.docdb.api.actions.ImmutableCommitResultEnvelope;
 import io.resys.thena.docdb.api.models.ImmutableMessage;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocCommitLock;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocCommitLockStatus;
@@ -15,9 +14,7 @@ import io.resys.thena.docdb.spi.DbState;
 import io.resys.thena.docdb.spi.DocDbState.DocRepo;
 import io.resys.thena.docdb.spi.GitDbInserts.BatchStatus;
 import io.resys.thena.docdb.spi.ImmutableDocLockCriteria;
-import io.resys.thena.docdb.spi.git.commits.CommitBatchBuilder.CommitTreeState;
-import io.resys.thena.docdb.spi.git.commits.CommitBatchBuilderImpl;
-import io.resys.thena.docdb.spi.support.Identifiers;
+import io.resys.thena.docdb.spi.doc.commits.DocCommitBatchBuilder.DocCommitTreeState;
 import io.resys.thena.docdb.spi.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
@@ -29,11 +26,14 @@ public class DocAppendBuilderImpl implements DocAppendBuilder {
 
   private final DbState state;
   private JsonObject appendBlobs = null;
+  private JsonObject appendLogs = null;
   private boolean deleteBlobs = false;
   private JsonObjectMerge mergeBlobs = null;
 
   private String repoId;
-  private String headName;
+  private String docId;
+  private String externalId;
+  private String branchName;
   private String author;
   private String message;
   private String parentCommit;
@@ -46,9 +46,9 @@ public class DocAppendBuilderImpl implements DocAppendBuilder {
     return this;
   }
   @Override
-  public DocAppendBuilder branchName(String headName) {
-    RepoAssert.isName(headName, () -> "headName has invalid charecters!");
-    this.headName = headName;
+  public DocAppendBuilder branchName(String branchName) {
+    RepoAssert.isName(branchName, () -> "branchName has invalid charecters!");
+    this.branchName = branchName;
     return this;
   }
   @Override
@@ -98,18 +98,18 @@ public class DocAppendBuilderImpl implements DocAppendBuilder {
   }
   @Override
   public DocAppendBuilder docId(String docId) {
-    // TODO Auto-generated method stub
-    return null;
+    this.docId = docId;
+    return this;
   }
   @Override
   public DocAppendBuilder externalId(String externalId) {
-    // TODO Auto-generated method stub
-    return null;
+    this.externalId = externalId;
+    return this;
   }
   @Override
   public DocAppendBuilder log(JsonObject doc) {
-    // TODO Auto-generated method stub
-    return null;
+    this.appendLogs = doc;
+    return this;
   }
   @Override
   public Uni<AppendResultEnvelope> build() {
@@ -118,9 +118,8 @@ public class DocAppendBuilderImpl implements DocAppendBuilder {
     RepoAssert.notEmpty(message, () -> "message can't be empty!");
     RepoAssert.isTrue(appendBlobs != null || deleteBlobs || mergeBlobs != null, () -> "Nothing to commit, no content!");
         
-    final var crit = ImmutableDocLockCriteria.builder().branchName(headName).versionId(parentCommit).build();
-return null;
-    /*return this.state.toDocState().withTransaction(repoId, tx -> tx.query().commits().getLock(crit)
+    final var crit = ImmutableDocLockCriteria.builder().branchName(branchName).versionId(parentCommit).branchName(branchName).build();
+    return this.state.toDocState().withTransaction(repoId, tx -> tx.query().commits().getLock(crit)
       .onItem().transformToUni(lock -> {
         final var validation = validateRepo(lock, parentCommit);
         if(validation != null) {
@@ -140,30 +139,29 @@ return null;
       System.err.println(error.getMessage());
     });*/    
   }
-  /*
-  private Uni<AppendResultEnvelope> doInLock(DocCommitLock lock, DocRepo tx) {
-    final var gid = Identifiers.toRepoHeadGid(repoId, headName);  
-    final var init = CommitTreeState.builder().ref(lock.getBranch()).refName(headName).gid(gid).repo(tx.getRepo());
+  
+  private Uni<AppendResultEnvelope> doInLock(DocCommitLock lock, DocRepo tx) {  
+    final var init = DocCommitTreeState.builder().repo(tx.getRepo()).docId(docId).branchName(branchName).externalId(externalId);
     
     if(lock.getStatus() == DocCommitLockStatus.NOT_FOUND) {
       // nothing to add
     } else {
-      init.commit(lock.getCommit()).tree(lock.getTree()).blobs(lock.getBlobs());
+      init.commit(lock.getCommit()).branch(lock.getBranch()).doc(lock.getDoc());
     }
     
-    
-    final var batch = new CommitBatchBuilderImpl(init.build())
+    final var batch = new DocCommitBatchBuilderImpl(init.build())
         .commitParent(parentCommit)
         .commitAuthor(author)
         .commitMessage(message)
         .toBeInserted(appendBlobs)
+        .toBeLogged(appendLogs)
         .toBeRemoved(deleteBlobs)
         .toBeMerged(mergeBlobs)
         .build();
     
     return tx.insert().batch(batch)
-        .onItem().transform(rsp -> ImmutableCommitResultEnvelope.builder()
-          .gid(gid)
+        .onItem().transform(rsp -> ImmutableAppendResultEnvelope.builder()
+          .repoId(repoId)
           .commit(rsp.getCommit())
           .addMessages(rsp.getLog())
           .addAllMessages(rsp.getMessages())
@@ -174,12 +172,14 @@ return null;
   private AppendResultEnvelope validateRepo(DocCommitLock state, String commitParent) {
     
     // cant merge on first commit
-    if(state.getCommit().isEmpty() && !mergeBlobs.isEmpty()) {
+    if(state.getCommit().isEmpty() && mergeBlobs != null) {
       return (AppendResultEnvelope) ImmutableAppendResultEnvelope.builder()
-          .gid(gid)
+          .repoId(repoId)
           .addMessages(ImmutableMessage.builder()
               .text(new StringBuilder()
-                  .append("Commit to: '").append(gid).append("'")
+                  .append("Commit to: '").append(repoId).append("'")
+                  .append(", docId: '").append(docId).append("'")
+                  .append(", branchName: '").append(branchName == null ? "main" : branchName).append("'")
                   .append(" is rejected.")
                   .append(" Your trying to merge objects to non existent head!")
                   .toString())
@@ -193,10 +193,10 @@ return null;
     // Unknown parent
     if(state.getCommit().isEmpty() && commitParent != null) {
       return (AppendResultEnvelope) ImmutableAppendResultEnvelope.builder()
-          .gid(gid)
+          .repoId(repoId)
           .addMessages(ImmutableMessage.builder()
               .text(new StringBuilder()
-                  .append("Commit to: '").append(gid).append("'")
+                  .append("Commit to: '").append(repoId).append("'")
                   .append(" is rejected.")
                   .append(" Your head is: '").append(commitParent).append("')")
                   .append(" but remote has no head.").append("'!")
@@ -211,12 +211,14 @@ return null;
     // No parent commit defined for existing head
     if(state.getCommit().isPresent() && commitParent == null && !Boolean.TRUE.equals(parentIsLatest)) {
       return (AppendResultEnvelope) ImmutableAppendResultEnvelope.builder()
-          .gid(gid)
+          .repoId(repoId)
           .addMessages(ImmutableMessage.builder()
               .text(new StringBuilder()
                   .append("Parent commit can only be undefined for the first commit!")
                   .append(" Parent commit for:")
-                  .append(" '").append(gid).append("'")
+                  .append(" '").append(repoId).append("'")
+                  .append(", docId: '").append(docId).append("'")
+                  .append(", branchName: '").append(branchName == null ? "main" : branchName).append("'")
                   .append(" is: '").append(state.getCommit().get().getId()).append("'!")
                   .toString())
               .build())
@@ -230,14 +232,16 @@ return null;
         !Boolean.TRUE.equals(parentIsLatest)) {
       
       final var text = new StringBuilder()
-        .append("Commit to: '").append(gid).append("'")
+        .append("Commit to: '").append(repoId).append("'")
+        .append(", docId: '").append(docId).append("'")
+        .append(", branchName: '").append(branchName == null ? "main" : branchName).append("'")
         .append(" is rejected.")
         .append(" Your head is: '").append(commitParent).append("')")
         .append(" but remote is: '").append(state.getCommit().get().getId()).append("'!")
         .toString();
       
       return ImmutableAppendResultEnvelope.builder()
-          .gid(gid)
+          .repoId(repoId)
           .addMessages(ImmutableMessage.builder().text(text).build())
           .status(CommitResultStatus.ERROR)
           .build();
@@ -252,8 +256,6 @@ return null;
     } else if(src == BatchStatus.CONFLICT) {
       return CommitResultStatus.CONFLICT;
     }
-    return CommitResultStatus.ERROR;
-    
+    return CommitResultStatus.ERROR; 
   }
-*/
 }

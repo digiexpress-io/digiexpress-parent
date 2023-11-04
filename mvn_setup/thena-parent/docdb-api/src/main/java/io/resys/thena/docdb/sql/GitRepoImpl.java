@@ -29,8 +29,8 @@ import io.resys.thena.docdb.spi.GitDbState.GitRepo;
 import io.resys.thena.docdb.spi.GitDbInserts;
 import io.resys.thena.docdb.spi.GitDbQueries;
 import io.resys.thena.docdb.sql.factories.ClientQuerySqlPool.ClientQuerySqlContext;
+import io.resys.thena.docdb.sql.queries.git.GitDbInsertsSqlPool;
 import io.resys.thena.docdb.sql.factories.ImmutableClientQuerySqlContext;
-import io.resys.thena.docdb.sql.queries.ClientInsertBuilderSqlPool;
 import io.resys.thena.docdb.sql.support.ImmutableSqlClientWrapper;
 import lombok.RequiredArgsConstructor;
 
@@ -63,6 +63,6 @@ public class GitRepoImpl implements GitRepo {
   }
   @Override
   public GitDbInserts insert() {
-    return new ClientInsertBuilderSqlPool(wrapper, sqlMapper.apply(wrapper.getNames()), sqlBuilder.apply(wrapper.getNames()), handler);
+    return new GitDbInsertsSqlPool(wrapper, sqlMapper.apply(wrapper.getNames()), sqlBuilder.apply(wrapper.getNames()), handler);
   }
 }

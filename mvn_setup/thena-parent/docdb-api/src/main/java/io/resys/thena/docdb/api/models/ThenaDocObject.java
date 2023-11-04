@@ -21,7 +21,6 @@ package io.resys.thena.docdb.api.models;
  */
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -40,19 +39,15 @@ public interface ThenaDocObject {
     String getId();
     String getVersion();
     String getExternalId();
-    
-    @Nullable JsonObject getValue();  // null when json loading is disabled
-    
-    Optional<DocBranch> getBranch();  // in-case this is branch object
-    List<DocBranch> getBranches();    // in case this is main and has branches 
-    
+    Optional<DocBranch> getBranch();  // in-case this is branch object    
+    @Nullable JsonObject getValue();  // null when json loading is disabled 
   }
   
   @Value.Immutable
   interface DocBranch extends ThenaDocObject, IsDocObject {
     String getId();
     String getVersion();
-    String getBranchId();
+    String getBranchName();
     String getVersionOrigin();
   }
   
@@ -64,8 +59,10 @@ public interface ThenaDocObject {
     String getMessage();
     String getParent();
     
+    
     String getDocId();
     String getDocVersion();
+    Optional<String> getDocBranchName();
   }
    
   @Value.Immutable
@@ -86,9 +83,9 @@ public interface ThenaDocObject {
   @Value.Immutable  
   interface DocCommitLock extends ThenaDocObject {
     DocCommitLockStatus getStatus();
+    Optional<Doc> getDoc();
     Optional<DocBranch> getBranch();
     Optional<DocCommit> getCommit();
-    Map<String, DocLog> getLogs();
     Optional<String> getMessage();
   }
   

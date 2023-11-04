@@ -26,13 +26,13 @@ import io.resys.thena.docdb.sql.ImmutableSql;
 import io.resys.thena.docdb.sql.ImmutableSqlTuple;
 import io.resys.thena.docdb.sql.SqlBuilder.Sql;
 import io.resys.thena.docdb.sql.SqlBuilder.SqlTuple;
-import io.resys.thena.docdb.sql.SqlBuilder.TreeSqlBuilder;
+import io.resys.thena.docdb.sql.SqlBuilder.GitTreeSqlBuilder;
 import io.resys.thena.docdb.sql.support.SqlStatement;
 import io.vertx.mutiny.sqlclient.Tuple;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class DefaultTreeSqlBuilder implements TreeSqlBuilder {
+public class DefaultTreeSqlBuilder implements GitTreeSqlBuilder {
   private final DbCollections options;
   
   @Override

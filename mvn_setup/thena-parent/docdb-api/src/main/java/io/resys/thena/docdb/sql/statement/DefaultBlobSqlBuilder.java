@@ -38,7 +38,7 @@ import io.resys.thena.docdb.spi.support.RepoAssert;
 import io.resys.thena.docdb.sql.ImmutableSql;
 import io.resys.thena.docdb.sql.ImmutableSqlTuple;
 import io.resys.thena.docdb.sql.ImmutableSqlTupleList;
-import io.resys.thena.docdb.sql.SqlBuilder.BlobSqlBuilder;
+import io.resys.thena.docdb.sql.SqlBuilder.GitBlobSqlBuilder;
 import io.resys.thena.docdb.sql.SqlBuilder.Sql;
 import io.resys.thena.docdb.sql.SqlBuilder.SqlTuple;
 import io.resys.thena.docdb.sql.SqlBuilder.SqlTupleList;
@@ -49,7 +49,7 @@ import io.vertx.mutiny.sqlclient.Tuple;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class DefaultBlobSqlBuilder implements BlobSqlBuilder {
+public class DefaultBlobSqlBuilder implements GitBlobSqlBuilder {
   protected final DbCollections options;
   
   @Override
