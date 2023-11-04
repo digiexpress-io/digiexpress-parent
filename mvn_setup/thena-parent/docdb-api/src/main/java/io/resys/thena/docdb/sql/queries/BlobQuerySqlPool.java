@@ -25,7 +25,7 @@ import java.util.List;
 
 import io.resys.thena.docdb.api.LogConstants;
 import io.resys.thena.docdb.api.actions.PullActions.MatchCriteria;
-import io.resys.thena.docdb.api.models.ThenaObject.Blob;
+import io.resys.thena.docdb.api.models.ThenaGitObject.Blob;
 import io.resys.thena.docdb.spi.ClientQuery.BlobQuery;
 import io.resys.thena.docdb.spi.support.RepoAssert;
 import io.resys.thena.docdb.spi.ErrorHandler;

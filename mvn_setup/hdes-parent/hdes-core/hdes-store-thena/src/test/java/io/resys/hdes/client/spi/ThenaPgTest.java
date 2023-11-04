@@ -62,7 +62,7 @@ public class ThenaPgTest extends PgTestTemplate {
     Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
     
     // Create head and first commit
-    var commit_0 = getThena().commit().commitBuilder()
+    var commit_0 = getThena().git().commit().commitBuilder()
       .head("project-x", "main")
       .append("readme.md", JsonObject.mapFrom(Map.of("content", "readme content")))
       .append("file1.json", new JsonObject("{}"))
@@ -90,7 +90,7 @@ public class ThenaPgTest extends PgTestTemplate {
     Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
     
     // Create head and first commit
-    var commit_0 = getThena().commit().commitBuilder()
+    var commit_0 = getThena().git().commit().commitBuilder()
       .head(repo.getRepo().getName(), "main")
       .append("readme.md", JsonObject.mapFrom(Map.of("content", "readme content")))
       .append("file1.json", new JsonObject("{}"))
@@ -105,7 +105,7 @@ public class ThenaPgTest extends PgTestTemplate {
     
     
     // Create head and first commit
-    var commit_1 = getThena().commit().commitBuilder()
+    var commit_1 = getThena().git().commit().commitBuilder()
       .head(repo.getRepo().getName(), "main")
       .parent(commit_0.getCommit().getId())
       .append("readme.md", JsonObject.mapFrom(Map.of("content", "readme content")))

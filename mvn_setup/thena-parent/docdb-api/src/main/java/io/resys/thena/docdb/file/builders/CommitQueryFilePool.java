@@ -26,9 +26,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import io.resys.thena.docdb.api.models.ImmutableCommitLock;
-import io.resys.thena.docdb.api.models.ThenaObject.Commit;
-import io.resys.thena.docdb.api.models.ThenaObject.CommitLock;
-import io.resys.thena.docdb.api.models.ThenaObject.CommitLockStatus;
+import io.resys.thena.docdb.api.models.ThenaGitObject.Commit;
+import io.resys.thena.docdb.api.models.ThenaGitObject.CommitLock;
+import io.resys.thena.docdb.api.models.ThenaGitObject.CommitLockStatus;
 import io.resys.thena.docdb.file.FileBuilder;
 import io.resys.thena.docdb.file.tables.Table.FileMapper;
 import io.resys.thena.docdb.file.tables.Table.FilePool;

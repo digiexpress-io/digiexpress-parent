@@ -77,7 +77,7 @@ public class ThenaParallelTaskMetricTest extends TaskTestCase {
     
     // Assert that there is no data loss from parallel processing
     final var config = getStore().getConfig();
-    final var blobState = config.getClient().branch().branchQuery()
+    final var blobState = config.getClient().git().branch().branchQuery()
         .projectName(repoName)
         .branchName(MainBranch.HEAD_NAME)
         .docsIncluded(true)
@@ -152,7 +152,7 @@ public class ThenaParallelTaskMetricTest extends TaskTestCase {
       }).onItem().transformToUni(junk -> {
         // log commits
         final var config = getStore().getConfig();
-        return config.getClient().commit().findAllCommits(repoName)
+        return config.getClient().git().commit().findAllCommits(repoName)
         .onItem().transformToUni(commits -> {          
           log.debug("Total commits: {}, fails: {}, items: {}", commits.size(), fails.get(), bulk.size());
           return Uni.createFrom().nullItem();
@@ -160,7 +160,7 @@ public class ThenaParallelTaskMetricTest extends TaskTestCase {
       }).onItem().transformToUni(junk -> {
         // log trees
         final var config = getStore().getConfig();
-        return config.getClient().commit().findAllCommitTrees(repoName)
+        return config.getClient().git().commit().findAllCommitTrees(repoName)
         .onItem().transformToUni(trees -> {          
           log.debug("Total Trees: {}", trees.size());
           return Uni.createFrom().nullItem();

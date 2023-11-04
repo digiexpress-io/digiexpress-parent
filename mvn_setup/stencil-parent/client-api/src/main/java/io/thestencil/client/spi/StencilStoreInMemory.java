@@ -90,29 +90,41 @@ public class StencilStoreInMemory implements StencilStore {
     public ProjectActions project() {
       throw new IllegalArgumentException("no read or writes supported!");
     }
+
     @Override
-    public CommitActions commit() {
-      throw new IllegalArgumentException("no read or writes supported!");
+    public GitModel git() {
+      return new GitModel() {
+        
+        @Override
+        public CommitActions commit() {
+          throw new IllegalArgumentException("no read or writes supported!");
+        }
+        @Override
+        public TagActions tag() {
+          throw new IllegalArgumentException("no read or writes supported!");
+        }
+        @Override
+        public DiffActions diff() {
+          throw new IllegalArgumentException("no read or writes supported!");
+        }
+        @Override
+        public HistoryActions history() {
+          throw new IllegalArgumentException("no read or writes supported!");
+        }
+        @Override
+        public PullActions pull() {
+          throw new IllegalArgumentException("no read or writes supported!");
+        }
+        @Override
+        public BranchActions branch() {
+          throw new IllegalArgumentException("no read or writes supported!");
+        }
+      };
     }
     @Override
-    public TagActions tag() {
-      throw new IllegalArgumentException("no read or writes supported!");
-    }
-    @Override
-    public DiffActions diff() {
-      throw new IllegalArgumentException("no read or writes supported!");
-    }
-    @Override
-    public HistoryActions history() {
-      throw new IllegalArgumentException("no read or writes supported!");
-    }
-    @Override
-    public PullActions pull() {
-      throw new IllegalArgumentException("no read or writes supported!");
-    }
-    @Override
-    public BranchActions branch() {
-      throw new IllegalArgumentException("no read or writes supported!");
+    public DocModel doc() {
+      // TODO Auto-generated method stub
+      return null;
     }
     
   }

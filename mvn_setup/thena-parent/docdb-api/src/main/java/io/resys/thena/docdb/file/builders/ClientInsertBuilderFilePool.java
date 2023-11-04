@@ -23,11 +23,11 @@ import java.util.List;
  */
 
 import io.resys.thena.docdb.api.models.ImmutableMessage;
-import io.resys.thena.docdb.api.models.ThenaObject.Blob;
-import io.resys.thena.docdb.api.models.ThenaObject.Branch;
-import io.resys.thena.docdb.api.models.ThenaObject.Commit;
-import io.resys.thena.docdb.api.models.ThenaObject.Tag;
-import io.resys.thena.docdb.api.models.ThenaObject.Tree;
+import io.resys.thena.docdb.api.models.ThenaGitObject.Blob;
+import io.resys.thena.docdb.api.models.ThenaGitObject.Branch;
+import io.resys.thena.docdb.api.models.ThenaGitObject.Commit;
+import io.resys.thena.docdb.api.models.ThenaGitObject.Tag;
+import io.resys.thena.docdb.api.models.ThenaGitObject.Tree;
 import io.resys.thena.docdb.file.FileBuilder;
 import io.resys.thena.docdb.file.tables.Table.FileMapper;
 import io.resys.thena.docdb.file.tables.Table.FilePool;

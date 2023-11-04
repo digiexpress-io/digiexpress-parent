@@ -26,8 +26,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
-import io.resys.thena.docdb.api.models.ThenaObject.Blob;
-import io.resys.thena.docdb.api.models.ThenaObject.Tree;
+import io.resys.thena.docdb.api.models.ThenaGitObject.Blob;
+import io.resys.thena.docdb.api.models.ThenaGitObject.Tree;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.ImmutableSiteState;
 import io.thestencil.client.api.StencilClient.Article;
@@ -67,7 +67,7 @@ public class QueryBuilderImpl extends PersistenceCommands implements QueryBuilde
               .build()); 
         }
       
-        return config.getClient()
+        return config.getClient().git()
             .branch().branchQuery()
             .projectName(config.getRepoName())
             .branchName(config.getHeadName())
@@ -144,7 +144,7 @@ public class QueryBuilderImpl extends PersistenceCommands implements QueryBuilde
   }
   
   private Uni<SiteState> getCommitState(EntityState<Release> release) {
-    return config.getClient().commit().commitQuery()
+    return config.getClient().git().commit().commitQuery()
     .projectName(config.getRepoName())
     .branchNameOrCommitOrTag(release.getEntity().getBody().getParentCommit())
     .docsIncluded()
@@ -164,7 +164,7 @@ public class QueryBuilderImpl extends PersistenceCommands implements QueryBuilde
   @SuppressWarnings("unchecked")
   @Override
   public <T extends EntityBody> Uni<List<Entity<T>>> head(List<String> ids, EntityType type) {
-    return config.getClient()
+    return config.getClient().git()
     .pull().pullQuery()
     .projectName(config.getRepoName())
     .branchNameOrCommitOrTag(config.getHeadName())

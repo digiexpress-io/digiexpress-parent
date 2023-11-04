@@ -64,7 +64,7 @@ public class SimpleTest extends DbTestTemplate {
     Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
     
     // Create head and first commit
-    CommitResultEnvelope commit_0 = getClient().commit().commitBuilder()
+    CommitResultEnvelope commit_0 = getClient().git().commit().commitBuilder()
       .head(repo.getRepo().getName(), "main")
       .append("readme.md", new JsonObject(Map.of(
           "type", "person",
@@ -81,7 +81,7 @@ public class SimpleTest extends DbTestTemplate {
     
     
     // Create head and first commit
-    CommitResultEnvelope commit_1 = getClient().commit().commitBuilder()
+    CommitResultEnvelope commit_1 = getClient().git().commit().commitBuilder()
       .head(repo.getRepo().getName(), "main")
       .parent(commit_0.getCommit().getId())
       .remove("readme.md")
@@ -107,7 +107,7 @@ public class SimpleTest extends DbTestTemplate {
     Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
     
     // Create head and first commit
-    CommitResultEnvelope commit_0 = getClient().commit().commitBuilder()
+    CommitResultEnvelope commit_0 = getClient().git().commit().commitBuilder()
       .head("project-x", "main")
       .append("readme.md", JsonObject.of("doc", "readme content"))
       .append("file1.json", JsonObject.of())
@@ -136,7 +136,7 @@ public class SimpleTest extends DbTestTemplate {
     Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
     
     // Create head and first commit
-    CommitResultEnvelope commit_0 = getClient().commit().commitBuilder()
+    CommitResultEnvelope commit_0 = getClient().git().commit().commitBuilder()
       .head(repo.getRepo().getName(), "main")
       .append("readme.md", JsonObject.of("doc", "readme content"))
       .append("file1.json", JsonObject.of())
@@ -152,7 +152,7 @@ public class SimpleTest extends DbTestTemplate {
     
     
     // Create head and first commit
-    CommitResultEnvelope commit_1 = getClient().commit().commitBuilder()
+    CommitResultEnvelope commit_1 = getClient().git().commit().commitBuilder()
       .head(repo.getRepo().getName(), "main")
       .parent(commit_0.getCommit().getId())
       .append("readme.md", JsonObject.of("doc", "readme content"))

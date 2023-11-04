@@ -102,7 +102,7 @@ public class DocDBCommandsSupport implements DocDBConfig.DocDBCommands {
         .sorted(COMP)
         .collect(Collectors.toList());
     
-    final var commitBuilder = config.getClient().commit().commitBuilder()
+    final var commitBuilder = config.getClient().git().commit().commitBuilder()
         .head(config.getRepoName(), config.getHeadName())
         .message(
             "Save batch with new: " + create.size() + 
@@ -161,7 +161,7 @@ public class DocDBCommandsSupport implements DocDBConfig.DocDBCommands {
       
       return commitBuilder.build().onItem().transformToUni(commit -> {
         if(commit.getStatus() == CommitResultStatus.OK) {
-          return config.getClient()
+          return config.getClient().git()
               .pull().pullQuery()
               .projectName(config.getRepoName())
               .branchNameOrCommitOrTag(config.getHeadName())
@@ -188,7 +188,7 @@ public class DocDBCommandsSupport implements DocDBConfig.DocDBCommands {
 
   @Override
   public Uni<StoreEntity> save(StoreEntity toBeSaved) {
-    return config.getClient().commit().commitBuilder()
+    return config.getClient().git().commit().commitBuilder()
       .head(config.getRepoName(), config.getHeadName())
       .message("Save type: '" + toBeSaved.getBodyType() + "', with id: '" + toBeSaved.getId() + "'")
       .latestCommit()
@@ -206,7 +206,7 @@ public class DocDBCommandsSupport implements DocDBConfig.DocDBCommands {
 
   @Override
   public Uni<Collection<StoreEntity>> save(Collection<StoreEntity> entities) {
-    final var commitBuilder = config.getClient().commit().commitBuilder().head(config.getRepoName(), config.getHeadName());
+    final var commitBuilder = config.getClient().git().commit().commitBuilder().head(config.getRepoName(), config.getHeadName());
     final StoreEntity first = entities.iterator().next();
     
     for(final var target : entities) {
@@ -244,7 +244,7 @@ public class DocDBCommandsSupport implements DocDBConfig.DocDBCommands {
   
   @Override
   public Uni<StoreState> get() {
-    return config.getClient()
+    return config.getClient().git()
         .branch().branchQuery()
         .projectName(config.getRepoName())
         .branchName(config.getHeadName())
@@ -286,7 +286,7 @@ public class DocDBCommandsSupport implements DocDBConfig.DocDBCommands {
 
   @Override
   public Uni<StoreEntityState> getState(String id) {
-    return config.getClient()
+    return config.getClient().git()
         .pull().pullQuery()
         .projectName(config.getRepoName())
         .branchNameOrCommitOrTag(config.getHeadName())
@@ -303,7 +303,7 @@ public class DocDBCommandsSupport implements DocDBConfig.DocDBCommands {
   }
   @Override
   public Uni<StoreEntity> delete(StoreEntity toBeDeleted) {
-    return config.getClient().commit().commitBuilder()
+    return config.getClient().git().commit().commitBuilder()
         .head(config.getRepoName(), config.getHeadName())
         .message("Delete type: '" + toBeDeleted.getBodyType() + "', with id: '" + toBeDeleted.getId() + "'")
         .latestCommit()

@@ -53,7 +53,7 @@ public class FileReadWriteTest extends FileTestTemplate {
     Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
     
     // Create head and first commit
-    CommitResultEnvelope commit_0 = getClient(repo.getRepo()).commit().commitBuilder()
+    CommitResultEnvelope commit_0 = getClient(repo.getRepo()).git().commit().commitBuilder()
       .head(repo.getRepo().getName(), "main")
       .append("readme.md", JsonObject.of("content", "readme content"))
       .author("same vimes")
@@ -67,7 +67,7 @@ public class FileReadWriteTest extends FileTestTemplate {
     
     
     // Create head and first commit
-    CommitResultEnvelope commit_1 = getClient(repo.getRepo()).commit().commitBuilder()
+    CommitResultEnvelope commit_1 = getClient(repo.getRepo()).git().commit().commitBuilder()
       .head(repo.getRepo().getName(), "main")
       .parent(commit_0.getCommit().getId())
       .remove("readme.md")
@@ -89,7 +89,7 @@ public class FileReadWriteTest extends FileTestTemplate {
     Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
     
     // Create head and first commit
-    CommitResultEnvelope commit_0 = getClient(repo.getRepo()).commit().commitBuilder()
+    CommitResultEnvelope commit_0 = getClient(repo.getRepo()).git().commit().commitBuilder()
       .head("project-x", "main")
       .append("readme.md", JsonObject.of("content", "readme content"))
       .append("file1.json", JsonObject.of("content", ""))
@@ -114,7 +114,7 @@ public class FileReadWriteTest extends FileTestTemplate {
     Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
     
     // Create head and first commit
-    CommitResultEnvelope commit_0 = getClient(repo.getRepo()).commit().commitBuilder()
+    CommitResultEnvelope commit_0 = getClient(repo.getRepo()).git().commit().commitBuilder()
       .head(repo.getRepo().getName(), "main")
       .append("readme.md", JsonObject.of("content", "readme content"))
       .append("file1.json", JsonObject.of("content", ""))
@@ -130,7 +130,7 @@ public class FileReadWriteTest extends FileTestTemplate {
     
     
     // Create head and first commit
-    CommitResultEnvelope commit_1 = getClient(repo.getRepo()).commit().commitBuilder()
+    CommitResultEnvelope commit_1 = getClient(repo.getRepo()).git().commit().commitBuilder()
       .head(repo.getRepo().getName(), "main")
       .parent(commit_0.getCommit().getId())
       .append("readme.md", JsonObject.of("content", "readme content"))

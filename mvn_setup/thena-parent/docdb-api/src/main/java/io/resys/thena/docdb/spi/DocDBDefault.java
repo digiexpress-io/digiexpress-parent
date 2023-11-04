@@ -59,51 +59,63 @@ public class DocDBDefault implements DocDB {
     }
     return projectActions;
   }
-  @Override
-  public CommitActions commit() {
-    if(commitActions == null) {
-      commitActions = new CommitActionsImpl(state); 
-    }
-    return commitActions;
-  }
-  @Override
-  public TagActions tag() {
-    if(tagActions == null) {
-      tagActions = new TagActionsDefault(state); 
-    }
-    return tagActions;
-  }
-  @Override
-  public HistoryActions history() {
-    if(historyActions == null) {
-      historyActions = new HistoryActionsDefault(state); 
-    }
-    return historyActions;
-  }
-
-  @Override
-  public PullActions pull() {
-    if(pullActions == null) {
-      pullActions = new ObjectsActionsImpl(state); 
-    }
-    return pullActions;
-  }
-
-  @Override
-  public DiffActions diff() {
-    if(diffActions == null) {
-      diffActions = new DiffActionsImpl(state, pull(), commit(), project()); 
-    }
-    return diffActions;
-  }
-  @Override
-  public BranchActions branch() {
-    if(branchActions == null) {
-      branchActions =  new BranchActionsImpl(state); 
-    }
-    return branchActions;
-  }
   public ClientState getState() {
     return state;
+  }
+
+  @Override
+  public GitModel git() {
+    return new GitModel() {
+      @Override
+      public CommitActions commit() {
+        if(commitActions == null) {
+          commitActions = new CommitActionsImpl(state); 
+        }
+        return commitActions;
+      }
+      @Override
+      public TagActions tag() {
+        if(tagActions == null) {
+          tagActions = new TagActionsDefault(state); 
+        }
+        return tagActions;
+      }
+      @Override
+      public HistoryActions history() {
+        if(historyActions == null) {
+          historyActions = new HistoryActionsDefault(state); 
+        }
+        return historyActions;
+      }
+
+      @Override
+      public PullActions pull() {
+        if(pullActions == null) {
+          pullActions = new ObjectsActionsImpl(state); 
+        }
+        return pullActions;
+      }
+
+      @Override
+      public DiffActions diff() {
+        if(diffActions == null) {
+          diffActions = new DiffActionsImpl(state, pull(), commit(), project()); 
+        }
+        return diffActions;
+      }
+      @Override
+      public BranchActions branch() {
+        if(branchActions == null) {
+          branchActions =  new BranchActionsImpl(state); 
+        }
+        return branchActions;
+      }
+    };
+  }
+
+  @Override
+  public DocModel doc() {
+    // TODO Auto-generated method stub
+    return null;
   }
 }

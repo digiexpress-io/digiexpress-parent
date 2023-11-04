@@ -48,7 +48,7 @@ public class SearchBlobFromHistoryPGDBTest extends DbTestTemplate {
   public SearchBlobFromHistoryPGDBTest() {
     super((client, repo) -> {
       
-      client.commit().commitBuilder()
+      client.git().commit().commitBuilder()
           .head(repo.getName(), "main")
           .append("ID-1", new JsonObject(Map.of(
               "type", "person",
@@ -77,7 +77,7 @@ public class SearchBlobFromHistoryPGDBTest extends DbTestTemplate {
   public void addSamVimesChanges(int changes, String id) {
     final var client = getClient();
     for(int index = 0; index < changes; index++) { 
-      client.commit().commitBuilder()
+      client.git().commit().commitBuilder()
       .head(getRepo().getName(), "main")
       .append(id, JsonObject.of(
         "type", "person",
@@ -96,7 +96,7 @@ public class SearchBlobFromHistoryPGDBTest extends DbTestTemplate {
   public void addCassandraChaseChanges(int changes, String id) {
     final var client = getClient();
     for(int index = 0; index < changes; index++) { 
-      client.commit().commitBuilder()
+      client.git().commit().commitBuilder()
       .head(getRepo().getName(), "main")
       .append(id, JsonObject.of(
         "type", "person",
@@ -118,7 +118,7 @@ public class SearchBlobFromHistoryPGDBTest extends DbTestTemplate {
     addSamVimesChanges(20, "ID-1");
     addCassandraChaseChanges(20, "ID-2");
     
-    final var history = getClient().history().blobQuery()
+    final var history = getClient().git().history().blobQuery()
       .head(getRepo().getName(), "main")
       .matchBy(ImmutableMatchCriteria.builder().type(MatchCriteriaType.EQUALS).key("name").value("sam").build())
       .latestOnly()
@@ -138,7 +138,7 @@ public class SearchBlobFromHistoryPGDBTest extends DbTestTemplate {
     addSamVimesChanges(20, "ID-1");
     addCassandraChaseChanges(20, "ID-2");
     
-    final var history = getClient().history().blobQuery()
+    final var history = getClient().git().history().blobQuery()
       .head(getRepo().getName(), "main")
       .matchBy(ImmutableMatchCriteria.builder().type(MatchCriteriaType.LIKE).key("name").value("sam").build())
       .latestOnly()
@@ -160,7 +160,7 @@ public class SearchBlobFromHistoryPGDBTest extends DbTestTemplate {
     addCassandraChaseChanges(20, "ID-2");
     
     
-    var history = getClient().history().blobQuery()
+    var history = getClient().git().history().blobQuery()
       .head(getRepo().getName(), "main")
       .matchBy(ImmutableMatchCriteria.builder().type(MatchCriteriaType.LIKE).key("name").value("sam").build())
       .latestOnly(false)
@@ -169,7 +169,7 @@ public class SearchBlobFromHistoryPGDBTest extends DbTestTemplate {
     
     Assertions.assertEquals(41, history.getObjects().getValues().size());
     
-    history = getClient().history().blobQuery()
+    history = getClient().git().history().blobQuery()
         .head(getRepo().getName(), "main")
         .matchBy(ImmutableMatchCriteria.builder().type(MatchCriteriaType.EQUALS).key("name").value("sam").build())
         .latestOnly(false)

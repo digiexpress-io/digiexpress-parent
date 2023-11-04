@@ -20,8 +20,8 @@ package io.resys.thena.docdb.sql.statement;
  * #L%
  */
 
-import io.resys.thena.docdb.api.models.ThenaObject.Branch;
-import io.resys.thena.docdb.api.models.ThenaObject.Commit;
+import io.resys.thena.docdb.api.models.ThenaGitObject.Branch;
+import io.resys.thena.docdb.api.models.ThenaGitObject.Commit;
 import io.resys.thena.docdb.spi.ClientCollections;
 import io.resys.thena.docdb.sql.ImmutableSql;
 import io.resys.thena.docdb.sql.ImmutableSqlTuple;

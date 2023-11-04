@@ -29,7 +29,7 @@ import org.immutables.value.Value;
 
 import io.resys.thena.docdb.api.models.Message;
 import io.resys.thena.docdb.api.models.ThenaEnvelope;
-import io.resys.thena.docdb.api.models.ThenaObject.Tag;
+import io.resys.thena.docdb.api.models.ThenaGitObject.Tag;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 

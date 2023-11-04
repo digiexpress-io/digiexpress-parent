@@ -21,14 +21,14 @@ package io.resys.thena.docdb.spi.support;
  */
 
 import io.resys.thena.docdb.api.models.Repo;
-import io.resys.thena.docdb.api.models.ThenaObject.Blob;
-import io.resys.thena.docdb.api.models.ThenaObject.BlobHistory;
-import io.resys.thena.docdb.api.models.ThenaObject.Branch;
-import io.resys.thena.docdb.api.models.ThenaObject.Commit;
-import io.resys.thena.docdb.api.models.ThenaObject.CommitTree;
-import io.resys.thena.docdb.api.models.ThenaObject.Tag;
-import io.resys.thena.docdb.api.models.ThenaObject.Tree;
-import io.resys.thena.docdb.api.models.ThenaObject.TreeValue;
+import io.resys.thena.docdb.api.models.ThenaGitObject.Blob;
+import io.resys.thena.docdb.api.models.ThenaGitObject.BlobHistory;
+import io.resys.thena.docdb.api.models.ThenaGitObject.Branch;
+import io.resys.thena.docdb.api.models.ThenaGitObject.Commit;
+import io.resys.thena.docdb.api.models.ThenaGitObject.CommitTree;
+import io.resys.thena.docdb.api.models.ThenaGitObject.Tag;
+import io.resys.thena.docdb.api.models.ThenaGitObject.Tree;
+import io.resys.thena.docdb.api.models.ThenaGitObject.TreeValue;
 import io.vertx.mutiny.sqlclient.Row;
 
 public interface DataMapper<T> {

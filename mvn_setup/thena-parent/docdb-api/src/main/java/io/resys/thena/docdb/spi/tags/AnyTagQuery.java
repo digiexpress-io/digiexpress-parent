@@ -23,7 +23,7 @@ package io.resys.thena.docdb.spi.tags;
 import java.util.Optional;
 
 import io.resys.thena.docdb.api.actions.TagActions.TagQuery;
-import io.resys.thena.docdb.api.models.ThenaObject.Tag;
+import io.resys.thena.docdb.api.models.ThenaGitObject.Tag;
 import io.resys.thena.docdb.spi.ClientState;
 import io.resys.thena.docdb.spi.support.RepoAssert;
 import io.smallrye.mutiny.Multi;

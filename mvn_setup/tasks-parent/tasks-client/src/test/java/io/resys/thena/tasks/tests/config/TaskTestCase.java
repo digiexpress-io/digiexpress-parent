@@ -113,7 +113,7 @@ public class TaskTestCase {
   public void assertCommits(String repoName) {
     final var config = getStore().getConfig();
     final var state = ((DocDBDefault) config.getClient()).getState();
-    final var commits = config.getClient().commit().findAllCommits(repoName).await().atMost(atMost);
+    final var commits = config.getClient().git().commit().findAllCommits(repoName).await().atMost(atMost);
     log.debug("Total commits: {}", commits.size());
     
   }

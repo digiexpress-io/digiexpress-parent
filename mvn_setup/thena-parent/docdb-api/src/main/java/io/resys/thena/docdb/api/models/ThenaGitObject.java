@@ -30,22 +30,21 @@ import org.immutables.value.Value;
 
 import io.vertx.core.json.JsonObject;
 
-public interface ThenaObject {
+public interface ThenaGitObject {
 
   interface IsObject { String getId(); }
   interface IsName { String getName(); }
-
   
   
   // branch with a name
   @Value.Immutable
-  interface Branch extends IsName, ThenaObject {
+  interface Branch extends IsName, ThenaGitObject {
     // last commit in the branch
     String getCommit();
   }
 
   @Value.Immutable
-  interface Tag extends IsName, ThenaObject {
+  interface Tag extends IsName, ThenaGitObject {
     // id of a commit
     String getCommit();
     LocalDateTime getDateTime();
@@ -55,14 +54,14 @@ public interface ThenaObject {
   
   // World state 
   @Value.Immutable
-  interface Tree extends IsObject, ThenaObject {
+  interface Tree extends IsObject, ThenaGitObject {
     // resource name - blob id
     Map<String, TreeValue> getValues();
   }
   
   // Resource name - blob id(content in blob)
   @Value.Immutable
-  interface TreeValue extends ThenaObject {
+  interface TreeValue extends ThenaGitObject {
     // Name of the resource
     String getName();
     // Id of the blob that holds content
@@ -70,7 +69,7 @@ public interface ThenaObject {
   }
   
   @Value.Immutable
-  interface Commit extends IsObject, ThenaObject {
+  interface Commit extends IsObject, ThenaGitObject {
     String getAuthor();
     LocalDateTime getDateTime();
     String getMessage();
@@ -86,13 +85,13 @@ public interface ThenaObject {
   }
   
   @Value.Immutable
-  interface Blob extends IsObject, ThenaObject {
+  interface Blob extends IsObject, ThenaGitObject {
     JsonObject getValue();
   }
   
   
   @Value.Immutable  
-  interface CommitTree extends ThenaObject {
+  interface CommitTree extends ThenaGitObject {
     String getCommitId();
     
     String getCommitAuthor();
@@ -110,7 +109,7 @@ public interface ThenaObject {
   }
   
   @Value.Immutable  
-  interface CommitLock extends ThenaObject {
+  interface CommitLock extends ThenaGitObject {
     CommitLockStatus getStatus();
     Optional<Branch> getBranch();
     Optional<Commit> getCommit();
@@ -125,7 +124,7 @@ public interface ThenaObject {
   
   
   @Value.Immutable
-  interface BlobHistory extends ThenaObject {
+  interface BlobHistory extends ThenaGitObject {
     String getTreeId();
     String getTreeValueName();
     String getCommit();

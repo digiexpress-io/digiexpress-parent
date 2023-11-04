@@ -28,7 +28,7 @@ import java.util.List;
 import io.resys.thena.docdb.api.actions.CommitActions.CommitBuilder;
 import io.resys.thena.docdb.api.actions.CommitActions.CommitResultEnvelope;
 import io.resys.thena.docdb.api.actions.CommitActions.CommitResultStatus;
-import io.resys.thena.docdb.api.models.ThenaObject.Commit;
+import io.resys.thena.docdb.api.models.ThenaGitObject.Commit;
 import io.resys.thena.projects.client.api.model.Project;
 import io.resys.thena.projects.client.api.model.ProjectCommand.CreateProject;
 import io.resys.thena.projects.client.spi.store.DocumentConfig;

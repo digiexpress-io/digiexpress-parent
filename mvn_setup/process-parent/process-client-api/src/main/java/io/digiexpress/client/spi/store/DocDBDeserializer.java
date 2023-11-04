@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.digiexpress.client.api.ClientStore.StoreEntity;
 import io.digiexpress.client.api.ImmutableStoreEntity;
-import io.resys.thena.docdb.api.models.ThenaObject.Blob;
+import io.resys.thena.docdb.api.models.ThenaGitObject.Blob;
 
 public class DocDBDeserializer implements DocDBConfig.DocDBDeserializer {
   private ObjectMapper objectMapper;

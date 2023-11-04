@@ -44,7 +44,7 @@ public class SearchFileTest extends FileTestTemplate {
   public SearchFileTest() {
     super((client, repo) -> {
       
-      client.commit().commitBuilder()
+      client.git().commit().commitBuilder()
           .head(repo.getName(), "main")
           .append("ID-1", new JsonObject(Map.of(
               "type", "person",
@@ -73,7 +73,7 @@ public class SearchFileTest extends FileTestTemplate {
   public void addSamVimesChanges(int changes, String id) {
     final var client = getClient();
     for(int index = 0; index < changes; index++) { 
-      client.commit().commitBuilder()
+      client.git().commit().commitBuilder()
       .head(getRepo().getName(), "main")
       .append(id, JsonObject.of(
         "type", "person",
@@ -92,7 +92,7 @@ public class SearchFileTest extends FileTestTemplate {
   public void addCassandraChaseChanges(int changes, String id) {
     final var client = getClient();
     for(int index = 0; index < changes; index++) { 
-      client.commit().commitBuilder()
+      client.git().commit().commitBuilder()
       .head(getRepo().getName(), "main")
       .append(id, JsonObject.of(
         "type", "person",
@@ -114,7 +114,7 @@ public class SearchFileTest extends FileTestTemplate {
     addSamVimesChanges(20, "ID-1");
     addCassandraChaseChanges(20, "ID-2");
     
-    final var history = getClient().history().blobQuery()
+    final var history = getClient().git().history().blobQuery()
       .head(getRepo().getName(), "main")
       .matchBy(ImmutableMatchCriteria.builder().type(MatchCriteriaType.EQUALS).key("name").value("sam").build())
       .latestOnly()
@@ -134,7 +134,7 @@ public class SearchFileTest extends FileTestTemplate {
     addSamVimesChanges(20, "ID-1");
     addCassandraChaseChanges(20, "ID-2");
     
-    final var history = getClient().history().blobQuery()
+    final var history = getClient().git().history().blobQuery()
       .head(getRepo().getName(), "main")
       .matchBy(ImmutableMatchCriteria.builder().type(MatchCriteriaType.LIKE).key("name").value("sam").build())
       .latestOnly()
@@ -156,7 +156,7 @@ public class SearchFileTest extends FileTestTemplate {
     addCassandraChaseChanges(20, "ID-2");
     
     
-    var history = getClient().history().blobQuery()
+    var history = getClient().git().history().blobQuery()
       .head(getRepo().getName(), "main")
       .matchBy(ImmutableMatchCriteria.builder().type(MatchCriteriaType.LIKE).key("name").value("sam").build())
       .latestOnly(false)
@@ -165,7 +165,7 @@ public class SearchFileTest extends FileTestTemplate {
     
     Assertions.assertEquals(41, history.getObjects().getValues().size());
     
-    history = getClient().history().blobQuery()
+    history = getClient().git().history().blobQuery()
         .head(getRepo().getName(), "main")
         .matchBy(ImmutableMatchCriteria.builder().type(MatchCriteriaType.EQUALS).key("name").value("sam").build())
         .latestOnly(false)

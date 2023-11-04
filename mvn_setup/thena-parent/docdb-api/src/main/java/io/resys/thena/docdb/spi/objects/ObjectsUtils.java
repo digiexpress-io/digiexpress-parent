@@ -25,9 +25,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import io.resys.thena.docdb.api.actions.PullActions.MatchCriteria;
-import io.resys.thena.docdb.api.models.ThenaObject.Blob;
-import io.resys.thena.docdb.api.models.ThenaObject.Commit;
-import io.resys.thena.docdb.api.models.ThenaObject.Tree;
+import io.resys.thena.docdb.api.models.ThenaGitObject.Blob;
+import io.resys.thena.docdb.api.models.ThenaGitObject.Commit;
+import io.resys.thena.docdb.api.models.ThenaGitObject.Tree;
 import io.resys.thena.docdb.spi.ClientState.ClientRepoState;
 import io.smallrye.mutiny.Uni;
 import lombok.extern.slf4j.Slf4j;

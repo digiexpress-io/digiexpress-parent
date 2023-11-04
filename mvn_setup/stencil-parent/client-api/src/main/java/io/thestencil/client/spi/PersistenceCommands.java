@@ -48,7 +48,7 @@ public abstract class PersistenceCommands implements StencilConfig.Commands {
   
   @Override
   public <T extends EntityBody> Uni<Entity<T>> delete(Entity<T> toBeDeleted) {
-    return config.getClient().commit().commitBuilder()
+    return config.getClient().git().commit().commitBuilder()
         .head(config.getRepoName(), config.getHeadName())
         .message("delete type: '" + toBeDeleted.getType() + "', with id: '" + toBeDeleted.getId() + "'")
         .latestCommit()
@@ -64,7 +64,7 @@ public abstract class PersistenceCommands implements StencilConfig.Commands {
   
   @Override
   public <T extends EntityBody> Uni<EntityState<T>> get(String blobId, EntityType type) {
-    return config.getClient()
+    return config.getClient().git()
         .pull().pullQuery()
         .projectName(config.getRepoName())
         .branchNameOrCommitOrTag(config.getHeadName())
@@ -86,7 +86,7 @@ public abstract class PersistenceCommands implements StencilConfig.Commands {
   
   @Override
   public <T extends EntityBody> Uni<Entity<T>> save(Entity<T> toBeSaved) {
-    return config.getClient().commit().commitBuilder()
+    return config.getClient().git().commit().commitBuilder()
       .head(config.getRepoName(), config.getHeadName())
       .message("update type: '" + toBeSaved.getType() + "', with id: '" + toBeSaved.getId() + "'")
       .latestCommit()
@@ -102,7 +102,7 @@ public abstract class PersistenceCommands implements StencilConfig.Commands {
   
   @Override
   public <T extends EntityBody> Uni<Entity<T>> create(Entity<T> toBeSaved) {
-    return config.getClient().commit().commitBuilder()
+    return config.getClient().git().commit().commitBuilder()
       .head(config.getRepoName(), config.getHeadName())
       .message("create type: '" + toBeSaved.getType() + "', with id: '" + toBeSaved.getId() + "'")
       .latestCommit()
@@ -118,7 +118,7 @@ public abstract class PersistenceCommands implements StencilConfig.Commands {
 
   @Override
   public Uni<List<Entity<?>>> saveAll(List<Entity<?>> entities) {
-    final var commitBuilder = config.getClient().commit().commitBuilder().head(config.getRepoName(), config.getHeadName());
+    final var commitBuilder = config.getClient().git().commit().commitBuilder().head(config.getRepoName(), config.getHeadName());
     final Entity<?> first = entities.iterator().next();
     
     for(final var target : entities) {
@@ -144,7 +144,7 @@ public abstract class PersistenceCommands implements StencilConfig.Commands {
     }
     
     final List<Entity<?>> all = new ArrayList<Entity<?>>();
-    final var commitBuilder = config.getClient().commit().commitBuilder().head(config.getRepoName(), config.getHeadName());
+    final var commitBuilder = config.getClient().git().commit().commitBuilder().head(config.getRepoName(), config.getHeadName());
 
     for(final var target : batch.getToBeDeleted()) {
       commitBuilder.remove(target.getId());

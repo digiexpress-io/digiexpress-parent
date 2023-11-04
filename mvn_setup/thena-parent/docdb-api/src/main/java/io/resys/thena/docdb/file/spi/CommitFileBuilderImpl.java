@@ -23,7 +23,7 @@ package io.resys.thena.docdb.file.spi;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-import io.resys.thena.docdb.api.models.ThenaObject.Commit;
+import io.resys.thena.docdb.api.models.ThenaGitObject.Commit;
 import io.resys.thena.docdb.file.FileBuilder.CommitFileBuilder;
 import io.resys.thena.docdb.file.tables.ImmutableCommitTableRow;
 import io.resys.thena.docdb.file.tables.ImmutableFileStatement;

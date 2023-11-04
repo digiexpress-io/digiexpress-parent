@@ -57,7 +57,7 @@ public class UpdateProjectsVisitor implements DocPullAndCommitVisitor<Project> {
     this.commandsByProjectId = commands.stream()
         .collect(Collectors.groupingBy(ProjectUpdateCommand::getProjectId));
     this.projectIds = new ArrayList<>(commandsByProjectId.keySet());
-    this.commitBuilder = config.getClient().commit().commitBuilder()
+    this.commitBuilder = config.getClient().git().commit().commitBuilder()
         .head(config.getProjectName(), config.getHeadName())
         .message("Update Projects: " + commandsByProjectId.size())
         .latestCommit()

@@ -102,7 +102,7 @@ public class DeleteAllProjectsVisitor implements DocPullAndCommitVisitor<Project
   
   private CommitBuilder visitCommitCommand(DocumentConfig config) {
     final var client = config.getClient();
-    return client.commit().commitBuilder()
+    return client.git().commit().commitBuilder()
       .head(config.getProjectName(), config.getHeadName())
       .latestCommit()
       .author(config.getAuthor().get());

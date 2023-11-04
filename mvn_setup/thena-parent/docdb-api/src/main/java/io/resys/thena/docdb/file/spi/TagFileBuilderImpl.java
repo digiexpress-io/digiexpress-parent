@@ -24,7 +24,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
-import io.resys.thena.docdb.api.models.ThenaObject.Tag;
+import io.resys.thena.docdb.api.models.ThenaGitObject.Tag;
 import io.resys.thena.docdb.file.FileBuilder.TagFileBuilder;
 import io.resys.thena.docdb.file.tables.ImmutableFileStatement;
 import io.resys.thena.docdb.file.tables.ImmutableFileTuple;

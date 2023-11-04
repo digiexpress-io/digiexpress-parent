@@ -23,7 +23,7 @@ package io.resys.thena.docdb.file.spi;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-import io.resys.thena.docdb.api.models.ThenaObject.Tree;
+import io.resys.thena.docdb.api.models.ThenaGitObject.Tree;
 import io.resys.thena.docdb.file.FileBuilder.TreeFileBuilder;
 import io.resys.thena.docdb.file.tables.ImmutableFileStatement;
 import io.resys.thena.docdb.file.tables.ImmutableFileTuple;

@@ -154,7 +154,7 @@ public class DialobStoreTemplate extends PersistenceCommands implements DialobSt
         .sorted(COMP)
         .collect(Collectors.toList());
     
-    final CommitBuilder commitBuilder = config.getClient().commit()
+    final CommitBuilder commitBuilder = config.getClient().git().commit()
         .commitBuilder()
         .head(config.getRepoName(), config.getHeadName())
         .message(
@@ -214,7 +214,7 @@ public class DialobStoreTemplate extends PersistenceCommands implements DialobSt
       
       return commitBuilder.build().onItem().transformToUni(commit -> {
         if(commit.getStatus() == CommitResultStatus.OK) {
-          return config.getClient()
+          return config.getClient().git()
               .pull().pullQuery()
               .projectName(config.getRepoName())
               .branchNameOrCommitOrTag(config.getHeadName())

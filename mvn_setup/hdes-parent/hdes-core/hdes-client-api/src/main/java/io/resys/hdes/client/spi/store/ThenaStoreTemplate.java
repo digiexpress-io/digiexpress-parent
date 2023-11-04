@@ -148,7 +148,7 @@ public abstract class ThenaStoreTemplate extends PersistenceCommands implements 
   @Override
   public Uni<List<StoreEntity>> batch(ImportStoreEntity batchType) {
     return get().onItem().transformToUni(currentState -> {
-      final var commitBuilder = config.getClient().commit().commitBuilder()
+      final var commitBuilder = config.getClient().git().commit().commitBuilder()
           .head(config.getRepoName(), config.getHeadName())
           .message("Save batch with new: " + batchType.getCreate().size() + " and updated: " + batchType.getUpdate().size() + " entries")
           .latestCommit()
@@ -192,7 +192,7 @@ public abstract class ThenaStoreTemplate extends PersistenceCommands implements 
       
       return commitBuilder.build().onItem().transformToUni(commit -> {
             if(commit.getStatus() == CommitResultStatus.OK) {
-              return config.getClient()
+              return config.getClient().git()
                   .pull().pullQuery()
                   .projectName(config.getRepoName())
                   .branchNameOrCommitOrTag(config.getHeadName())

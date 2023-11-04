@@ -71,7 +71,7 @@ public class MetricsDBtest extends DbTestTemplate {
     final var start = System.currentTimeMillis();
     final var repoState = getClient().project().projectsQuery().id(repo.getRepo().getId()).get().await().atMost(Duration.ofMinutes(1));
     
-    final var blobs = getClient().branch()
+    final var blobs = getClient().git().branch()
             .branchQuery()
             .projectName(repo.getRepo().getName())
             .branchName("main")
@@ -87,7 +87,7 @@ public class MetricsDBtest extends DbTestTemplate {
   
   private void runInserts(RepoResult repo, int total) {
     
-    final var builder = getClient().commit().commitBuilder().latestCommit()
+    final var builder = getClient().git().commit().commitBuilder().latestCommit()
       .head(repo.getRepo().getName(), "main")
       .author("same vimes")
       .message("Commiting!");

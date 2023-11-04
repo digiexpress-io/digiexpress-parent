@@ -33,7 +33,7 @@ import io.resys.thena.docdb.api.actions.CommitActions.CommitResultEnvelope;
 import io.resys.thena.docdb.api.actions.HistoryActions.BlobHistoryQuery;
 import io.resys.thena.docdb.api.actions.PullActions.PullObjectsQuery;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
-import io.resys.thena.docdb.api.models.ThenaObject.Commit;
+import io.resys.thena.docdb.api.models.ThenaGitObject.Commit;
 import io.resys.thena.docdb.api.models.ThenaObjects.BranchObjects;
 import io.resys.thena.docdb.api.models.ThenaObjects.HistoryObjects;
 import io.resys.thena.docdb.api.models.ThenaObjects.PullObject;
@@ -101,7 +101,7 @@ public interface DocumentConfig {
   }
 
   default <T> Uni<T> accept(DocBranchVisitor<T> visitor) {
-    final var builder = visitor.start(this, getClient()
+    final var builder = visitor.start(this, getClient().git()
         .branch().branchQuery()
         .projectName(getProjectName())
         .branchName(getHeadName()));
@@ -112,7 +112,7 @@ public interface DocumentConfig {
   }
   
   default <T> Uni<T> accept(DocPullObjectVisitor<T> visitor) {
-    final PullObjectsQuery builder = visitor.start(this, getClient()
+    final PullObjectsQuery builder = visitor.start(this, getClient().git()
         .pull().pullQuery()
         .projectName(getProjectName())
         .branchNameOrCommitOrTag(getHeadName()));
@@ -124,7 +124,7 @@ public interface DocumentConfig {
 
   
   default <T> Uni<List<T>> accept(DocPullObjectsVisitor<T> visitor) {
-    final PullObjectsQuery builder = visitor.start(this, getClient()
+    final PullObjectsQuery builder = visitor.start(this, getClient().git()
         .pull().pullQuery()
         .projectName(getProjectName())
         .branchNameOrCommitOrTag(getHeadName()));
@@ -136,7 +136,7 @@ public interface DocumentConfig {
 
   
   default <T> Uni<List<T>> accept(DocPullAndCommitVisitor<T> visitor) {
-    final var prefilled = getClient()
+    final var prefilled = getClient().git()
         .pull().pullQuery()
         .projectName(getProjectName())
         .branchNameOrCommitOrTag(getHeadName());
@@ -148,7 +148,7 @@ public interface DocumentConfig {
   }
   
   default <T> Uni<List<T>> accept(DocCommitVisitor<T> visitor) {
-    final var prefilled = getClient()
+    final var prefilled = getClient().git()
         .commit().commitBuilder()
         .latestCommit()
         .author(getAuthor().get())
@@ -161,7 +161,7 @@ public interface DocumentConfig {
   }
   
   default <T> Uni<List<T>> accept(DocHistoryVisitor<T> visitor) {
-    final var prefilled = getClient()
+    final var prefilled = getClient().git()
         .history()
         .blobQuery()
         .head(getProjectName(), getHeadName());

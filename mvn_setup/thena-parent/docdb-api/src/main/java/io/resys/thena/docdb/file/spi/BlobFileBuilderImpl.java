@@ -27,7 +27,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import io.resys.thena.docdb.api.models.ThenaObject.Blob;
+import io.resys.thena.docdb.api.models.ThenaGitObject.Blob;
 import io.resys.thena.docdb.file.FileBuilder.BlobFileBuilder;
 import io.resys.thena.docdb.file.tables.BlobTable.BlobTableRow;
 import io.resys.thena.docdb.file.tables.ImmutableBlobTableRow;

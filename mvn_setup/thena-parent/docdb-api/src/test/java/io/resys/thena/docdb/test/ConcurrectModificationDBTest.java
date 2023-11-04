@@ -74,7 +74,7 @@ public class ConcurrectModificationDBTest extends DbTestTemplate {
     Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
     
     // Create head and first commit
-    getClient().commit().commitBuilder()
+    getClient().git().commit().commitBuilder()
         .head(repo.getRepo().getName(), "main")
         .append("user-1", JsonObject.mapFrom(ImmutableUseTasks.builder().id("user-1").userName("sam vimes 1").addTasks(0).build()))
         .author("same vimes")
@@ -86,7 +86,7 @@ public class ConcurrectModificationDBTest extends DbTestTemplate {
     
     runInserts(repo, 100);
     
-    final var state = getClient().branch().branchQuery()
+    final var state = getClient().git().branch().branchQuery()
       .projectName(repo.getRepo().getName()).branchName("main")
       .docsIncluded(true)
       .get().await().atMost(Duration.ofMinutes(1));
@@ -108,7 +108,7 @@ public class ConcurrectModificationDBTest extends DbTestTemplate {
     final var commands = new ArrayList<Uni<CommitResultEnvelope>>();
     for(int index = 0; index < total; index++) {
       // Create head and first commit
-      Uni<CommitResultEnvelope> commit_0 = getClient().commit().commitBuilder()
+      Uni<CommitResultEnvelope> commit_0 = getClient().git().commit().commitBuilder()
         .head(repo.getRepo().getName(), "main")
         .latestCommit()
         .merge("user-1", (previous) -> {

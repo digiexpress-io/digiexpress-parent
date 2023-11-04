@@ -23,7 +23,7 @@ package io.resys.thena.docdb.spi.diff;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import io.resys.thena.docdb.api.models.ThenaObject.Commit;
+import io.resys.thena.docdb.api.models.ThenaGitObject.Commit;
 import io.resys.thena.docdb.api.models.ThenaObjects.ProjectObjects;
 
 public interface CommitHistory {

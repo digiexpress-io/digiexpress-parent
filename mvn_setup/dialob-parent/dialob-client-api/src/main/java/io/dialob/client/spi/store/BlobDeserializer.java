@@ -24,7 +24,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.dialob.client.api.DialobStore.StoreEntity;
 import io.dialob.client.api.ImmutableStoreEntity;
-import io.resys.thena.docdb.api.models.ThenaObject.Blob;
+import io.resys.thena.docdb.api.models.ThenaGitObject.Blob;
 
 
 public class BlobDeserializer implements DialobStoreConfig.Deserializer {

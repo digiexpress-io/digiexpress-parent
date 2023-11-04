@@ -26,8 +26,8 @@ import java.util.UUID;
 
 import java.util.stream.Collectors;
 
-import io.resys.thena.docdb.api.models.ThenaObject.Tree;
-import io.resys.thena.docdb.api.models.ThenaObject.TreeValue;
+import io.resys.thena.docdb.api.models.ThenaGitObject.Tree;
+import io.resys.thena.docdb.api.models.ThenaGitObject.TreeValue;
 import io.resys.thena.docdb.file.FileBuilder.TreeItemFileBuilder;
 import io.resys.thena.docdb.file.tables.ImmutableFileStatement;
 import io.resys.thena.docdb.file.tables.ImmutableFileTuple;

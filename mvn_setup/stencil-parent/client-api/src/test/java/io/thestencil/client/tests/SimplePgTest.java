@@ -61,7 +61,7 @@ public class SimplePgTest extends PgTestTemplate {
     Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
     
     // Create head and first commit
-    final var commit_0 = getClient().commit().commitBuilder()
+    final var commit_0 = getClient().git().commit().commitBuilder()
       .head("project-x", "main")
       .append("fileFromObject.txt", JsonObject.mapFrom(ImmutableTestContent.builder().id("10").name("sam vimes").build()))
       .author("same vimes")
@@ -87,7 +87,7 @@ public class SimplePgTest extends PgTestTemplate {
     Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
     
     // Create head and first commit
-    var commit_0 = getClient().commit().commitBuilder()
+    var commit_0 = getClient().git().commit().commitBuilder()
       .head(repo.getRepo().getName(), "main")
       .append("fileFromObject.txt", JsonObject.mapFrom(ImmutableTestContent.builder().id("10").name("sam vimes").build()))
       .author("same vimes")
@@ -100,7 +100,7 @@ public class SimplePgTest extends PgTestTemplate {
     
     
     // Create head and first commit
-    var commit_1 = getClient().commit().commitBuilder()
+    var commit_1 = getClient().git().commit().commitBuilder()
       .head(repo.getRepo().getName(), "main")
       .parent(commit_0.getCommit().getId())
       .append("fileFromObject.txt", JsonObject.mapFrom(ImmutableTestContent.builder().id("10").name("sam vimes 1").build()))
