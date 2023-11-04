@@ -64,7 +64,8 @@ public class DocDBPrettyPrinter {
     .append("  - id: ").append(repo.getId())
     .append(", rev: ").append(repo.getRev()).append(System.lineSeparator())
     .append("    name: ").append(repo.getName())
-    .append(", prefix: ").append(repo.getPrefix()).append(System.lineSeparator());
+    .append(", prefix: ").append(repo.getPrefix())
+    .append(", type: ").append(repo.getType()).append(System.lineSeparator());
     
     result
     .append(System.lineSeparator())

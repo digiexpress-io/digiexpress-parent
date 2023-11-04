@@ -110,10 +110,11 @@ public class RepoFileBuilderImpl implements RepoFileBuilder {
               .rev(newRepo.getRev())
               .prefix(newRepo.getPrefix())
               .name(newRepo.getName())
+              .type(newRepo.getType())
               .build())
               );
         })
-        .props(Tuple.of(newRepo.getId(), newRepo.getRev(), newRepo.getPrefix(), newRepo.getName()))
+        .props(Tuple.of(newRepo.getId(), newRepo.getRev(), newRepo.getPrefix(), newRepo.getName(), newRepo.getType()))
         .build();
   }
 }

@@ -59,6 +59,7 @@ public class DefaultFileMapper implements FileMapper {
     return ImmutableRepo.builder()
         .id(row.getId())
         .rev(row.getRev())
+        .type(row.getType())
         .name(row.getName())
         .prefix(row.getPrefix())
         .build();

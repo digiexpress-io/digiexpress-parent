@@ -36,6 +36,7 @@ import io.resys.thena.docdb.api.actions.CommitActions.CommitResultEnvelope;
 import io.resys.thena.docdb.api.actions.CommitActions.CommitResultStatus;
 import io.resys.thena.docdb.api.actions.ProjectActions.RepoResult;
 import io.resys.thena.docdb.api.actions.ProjectActions.RepoStatus;
+import io.resys.thena.docdb.api.models.Repo.RepoType;
 import io.resys.thena.docdb.test.config.DbTestTemplate;
 import io.resys.thena.docdb.test.config.PgProfile;
 import io.vertx.core.json.JsonObject;
@@ -43,9 +44,9 @@ import io.vertx.core.json.JsonObject;
 
 @QuarkusTest
 @TestProfile(PgProfile.class)
-public class SimpleTest extends DbTestTemplate {
+public class SimpleGitTest extends DbTestTemplate {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(SimpleTest.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(SimpleGitTest.class);
   
   @Value.Immutable
   public interface TestContent extends Serializable {
@@ -57,7 +58,7 @@ public class SimpleTest extends DbTestTemplate {
   public void crateRepoAddAndDeleteFile() {
     // create project
     RepoResult repo = getClient().project().projectBuilder()
-        .name("crateRepoAddAndDeleteFile")
+        .name("crateRepoAddAndDeleteFile", RepoType.git)
         .build()
         .await().atMost(Duration.ofMinutes(1));
     LOGGER.debug("created repo {}", repo);
@@ -100,7 +101,7 @@ public class SimpleTest extends DbTestTemplate {
   public void crateRepoWithOneCommit() {
     // create project
     RepoResult repo = getClient().project().projectBuilder()
-        .name("project-x")
+        .name("project-x", RepoType.git)
         .build()
         .await().atMost(Duration.ofMinutes(1));
     LOGGER.debug("created repo {}", repo);
@@ -129,7 +130,7 @@ public class SimpleTest extends DbTestTemplate {
   public void createRepoWithTwoCommits() {
     // create project
     RepoResult repo = getClient().project().projectBuilder()
-        .name("project-xy")
+        .name("project-xy", RepoType.git)
         .build()
         .await().atMost(Duration.ofMinutes(1));
     LOGGER.debug("created repo {}", repo);

@@ -40,6 +40,7 @@ import io.quarkus.test.junit.TestProfile;
 import io.resys.thena.docdb.api.actions.CommitActions.CommitResultEnvelope;
 import io.resys.thena.docdb.api.actions.ProjectActions.RepoResult;
 import io.resys.thena.docdb.api.actions.ProjectActions.RepoStatus;
+import io.resys.thena.docdb.api.models.Repo.RepoType;
 import io.resys.thena.docdb.test.config.DbTestTemplate;
 import io.resys.thena.docdb.test.config.PgProfile;
 import io.smallrye.mutiny.Multi;
@@ -67,7 +68,7 @@ public class ConcurrectModificationDBTest extends DbTestTemplate {
   public void crateRepoWithOneCommit() {
     // create project
     RepoResult repo = getClient().project().projectBuilder()
-        .name("user-tasks")
+        .name("user-tasks", RepoType.git)
         .build()
         .await().atMost(Duration.ofMinutes(1));
     LOGGER.debug("created repo {}", repo);

@@ -32,6 +32,7 @@ import io.resys.thena.docdb.api.actions.CommitActions.CommitResultEnvelope;
 import io.resys.thena.docdb.api.actions.CommitActions.CommitResultStatus;
 import io.resys.thena.docdb.api.actions.ProjectActions.RepoResult;
 import io.resys.thena.docdb.api.actions.ProjectActions.RepoStatus;
+import io.resys.thena.docdb.api.models.Repo.RepoType;
 import io.resys.thena.docdb.test.config.DbTestTemplate;
 import io.resys.thena.docdb.test.config.PgProfile;
 import io.vertx.core.json.JsonObject;
@@ -48,7 +49,7 @@ public class MetricsDBtest extends DbTestTemplate {
   //@org.junit.jupiter.api.Test
   public void metrics() {
     RepoResult repo = getClient().project().projectBuilder()
-        .name("create repo for metrics")
+        .name("create repo for metrics", RepoType.git)
         .build()
         .await().atMost(Duration.ofMinutes(1));
     log.debug("created repo {}", repo);

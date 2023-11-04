@@ -33,6 +33,7 @@ import io.resys.thena.docdb.api.models.ImmutableTag;
 import io.resys.thena.docdb.api.models.ImmutableTree;
 import io.resys.thena.docdb.api.models.ImmutableTreeValue;
 import io.resys.thena.docdb.api.models.Repo;
+import io.resys.thena.docdb.api.models.Repo.RepoType;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Blob;
 import io.resys.thena.docdb.api.models.ThenaGitObject.BlobHistory;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Branch;
@@ -58,6 +59,7 @@ public class SqlMapperImpl implements SqlMapper {
         .id(row.getString("id"))
         .rev(row.getString("rev"))
         .name(row.getString("name"))
+        .type(RepoType.valueOf(row.getString("type")))
         .prefix(row.getString("prefix"))
         .build();
   }

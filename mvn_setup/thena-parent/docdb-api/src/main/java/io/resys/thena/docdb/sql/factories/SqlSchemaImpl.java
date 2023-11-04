@@ -40,6 +40,7 @@ public class SqlSchemaImpl implements SqlSchema {
         .append("  id VARCHAR(40) PRIMARY KEY,").ln()
         .append("  rev VARCHAR(40) NOT NULL,").ln()
         .append("  prefix VARCHAR(40) NOT NULL,").ln()
+        .append("  type VARCHAR(3) NOT NULL,").ln()
         .append("  name VARCHAR(255) NOT NULL,").ln()
         .append("  UNIQUE(name), UNIQUE(rev), UNIQUE(prefix)").ln()
         .append(")").ln()
@@ -203,38 +204,117 @@ public class SqlSchemaImpl implements SqlSchema {
   }
 
   @Override
-  public Sql dropRepo() {
-    return dropTableIfNotExists(options.getRepos());
-  }
-  @Override
-  public Sql dropBlobs() {
-    return dropTableIfNotExists(options.getBlobs());
-  }
-
-  @Override
-  public Sql dropCommits() {
-    return dropTableIfNotExists(options.getCommits());
-  }
-
-  @Override
-  public Sql dropTreeItems() {
-    return dropTableIfNotExists(options.getTreeItems());
+  public Sql createDoc() {
+    return ImmutableSql.builder().value(new SqlStatement().ln()
+    .append("CREATE TABLE ").append(options.getDoc()).ln()
+    .append("(").ln()
+    .append("  id VARCHAR(40) PRIMARY KEY,").ln()
+    .append("  version VARCHAR(40),").ln()
+    .append("  external_id VARCHAR(40),").ln()
+    .append("  value jsonb NOT NULL").ln()
+    .append(");").ln()
+    .build()).build();
   }
 
   @Override
-  public Sql dropTrees() {
-    return dropTableIfNotExists(options.getTrees());
+  public Sql createDocBranch() {
+    return ImmutableSql.builder().value(new SqlStatement().ln()
+    .append("CREATE TABLE ").append(options.getDocBranch()).ln()
+    .append("(").ln()
+    .append("  id VARCHAR(40),").ln()
+    .append("  branch_id VARCHAR(40),").ln()
+    .append("  version_origin VARCHAR(40),").ln()
+    .append("  version VARCHAR(40),").ln()
+    .append("  value jsonb NOT NULL,").ln()
+    .append("  PRIMARY KEY (id, branch_id)").ln()
+    .append(");").ln()
+    .build()).build();
+  }
+  
+  @Override
+  public Sql createDocCommits() {
+    return ImmutableSql.builder().value(new SqlStatement().ln()
+    .append("CREATE TABLE ").append(options.getDocCommits()).ln()
+    .append("(").ln()
+    .append("  id VARCHAR(40) PRIMARY KEY,").ln()
+    .append("  doc_id VARCHAR(40) NOT NUL,").ln()
+    .append("  branch_id VARCHAR(40),").ln()
+    .append("  datetime VARCHAR(29) NOT NULL,").ln()
+    .append("  author VARCHAR(40) NOT NULL,").ln()
+    .append("  message VARCHAR(255) NOT NULL,").ln()
+    .append("  parent VARCHAR(40)").ln()
+    .append(");").ln()
+    .build()).build();
+  }
+  
+  @Override
+  public Sql createDocLog() {
+    return ImmutableSql.builder().value(new SqlStatement().ln()
+    .append("CREATE TABLE ").append(options.getDocLog()).ln()
+    .append("(").ln()
+    .append("  id VARCHAR(40) PRIMARY KEY,").ln()
+    .append("  commit_id VARCHAR(40) NOT NULL,").ln()
+    .append("  value jsonb NOT NULL").ln()
+    .append(");").ln()
+    .build()).build();
   }
 
   @Override
-  public Sql dropRefs() {
-    return dropTableIfNotExists(options.getRefs());
+  public Sql createDocCommitsConstraints() {
+    return ImmutableSql.builder()
+        .value(new SqlStatement().ln()
+        .append("ALTER TABLE ").append(options.getDocCommits()).ln()
+        .append("  ADD CONSTRAINT ").append(options.getDocCommits()).append("_DOC_COMMIT_FK").ln()
+        .append("  FOREIGN KEY (doc_id)").ln()
+        .append("  REFERENCES ").append(options.getDoc()).append(" (id);").ln().ln()
+        
+        .append("ALTER TABLE ").append(options.getDocCommits()).ln()
+        .append("  ADD CONSTRAINT ").append(options.getDocCommits()).append("_DOC_COMMIT_BRANCH_FK").ln()
+        .append("  FOREIGN KEY (doc_id, branch_id)").ln()
+        .append("  REFERENCES ").append(options.getDocBranch()).append(" (id, branch_id);").ln()
+        
+        .build())
+        .build();
   }
 
   @Override
-  public Sql dropTags() {
-    return dropTableIfNotExists(options.getTags());
+  public Sql createDocLogConstraints() {
+    return ImmutableSql.builder()
+        .value(new SqlStatement().ln()
+        .append("ALTER TABLE ").append(options.getDocLog()).ln()
+        .append("  ADD CONSTRAINT ").append(options.getDocLog()).append("_DOC_LOG_COMMIT_FK").ln()
+        .append("  FOREIGN KEY (commit_id)").ln()
+        .append("  REFERENCES ").append(options.getDocCommits()).append(" (id);").ln().ln()
+        
+        .build())
+        .build();
   }
+  
+
+  @Override
+  public Sql createDocBranchConstraints() {
+    return ImmutableSql.builder()
+        .value(new SqlStatement().ln()
+        .append("ALTER TABLE ").append(options.getDocBranch()).ln()
+        .append("  ADD CONSTRAINT ").append(options.getDocBranch()).append("_DOC_COMMIT_FK").ln()
+        .append("  FOREIGN KEY (id)").ln()
+        .append("  REFERENCES ").append(options.getDoc()).append(" (id);").ln().ln()
+        .build())
+        .build();
+  }
+
+
+  @Override public Sql dropRepo() { return dropTableIfNotExists(options.getRepos()); }
+  @Override public Sql dropBlobs() { return dropTableIfNotExists(options.getBlobs()); }
+  @Override public Sql dropCommits() { return dropTableIfNotExists(options.getCommits()); }
+  @Override public Sql dropTreeItems() { return dropTableIfNotExists(options.getTreeItems()); }
+  @Override public Sql dropTrees() { return dropTableIfNotExists(options.getTrees()); }
+  @Override public Sql dropRefs() { return dropTableIfNotExists(options.getRefs()); }
+  @Override public Sql dropTags() {return dropTableIfNotExists(options.getTags()); }
+  @Override public Sql dropDoc() { return dropTableIfNotExists(options.getDoc()); }
+  @Override public Sql dropDocBranch() { return dropTableIfNotExists(options.getDocBranch()); }
+  @Override public Sql dropDocCommit() { return dropTableIfNotExists(options.getDocCommits()); }
+  @Override public Sql dropDocLog() { return dropTableIfNotExists(options.getDocLog()); }
 
   private Sql dropTableIfNotExists(String tableName) {
     return ImmutableSql.builder().value(new SqlStatement()

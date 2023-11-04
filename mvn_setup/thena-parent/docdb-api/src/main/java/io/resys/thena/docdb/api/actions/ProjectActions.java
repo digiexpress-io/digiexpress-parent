@@ -29,6 +29,7 @@ import org.immutables.value.Value;
 import io.resys.thena.docdb.api.models.Message;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
 import io.resys.thena.docdb.api.models.Repo;
+import io.resys.thena.docdb.api.models.Repo.RepoType;
 import io.resys.thena.docdb.api.models.ThenaEnvelope;
 import io.resys.thena.docdb.api.models.ThenaObjects.ProjectObjects;
 import io.smallrye.mutiny.Multi;
@@ -57,7 +58,7 @@ public interface ProjectActions {
   }
   
   interface ProjectBuilder {
-    ProjectBuilder name(String name);
+    ProjectBuilder name(String name, RepoType type);
     Uni<RepoResult> build();
   }
   

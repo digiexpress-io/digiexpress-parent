@@ -25,6 +25,7 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import io.resys.thena.docdb.api.models.Repo.RepoType;
 import io.resys.thena.docdb.file.tables.RepoTable.RepoTableRow;
 import io.resys.thena.docdb.spi.ClientCollections;
 
@@ -45,6 +46,7 @@ public interface RepoTable extends Table<RepoTableRow> {
     String getRev();
     String getPrefix();
     String getName();
+    RepoType getType();
   }
   
   RepoTable withContext(ClientCollections ctx);

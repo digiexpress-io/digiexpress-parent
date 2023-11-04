@@ -23,6 +23,7 @@ import io.resys.thena.docdb.api.LogConstants;
  */
 
 import io.resys.thena.docdb.api.models.Repo;
+import io.resys.thena.docdb.api.models.Repo.RepoType;
 import io.resys.thena.docdb.spi.ClientCollections;
 import io.resys.thena.docdb.spi.ClientState.RepoBuilder;
 import io.resys.thena.docdb.spi.ErrorHandler;
@@ -117,8 +118,10 @@ public class RepoBuilderSqlPool implements RepoBuilder {
     
     return pool.withTransaction(tx -> {
       final var repoInsert = this.sqlBuilder.withOptions(next).repo().insertOne(newRepo);
-      final var tablesCreate = new StringBuilder()
-          .append(sqlSchema.createBlobs().getValue())
+      final var tablesCreate = new StringBuilder();
+      
+      if(newRepo.getType() == RepoType.git) {
+        tablesCreate.append(sqlSchema.createBlobs().getValue())
           .append(sqlSchema.createCommits().getValue())
           .append(sqlSchema.createTreeItems().getValue())
           .append(sqlSchema.createTrees().getValue())
@@ -130,6 +133,19 @@ public class RepoBuilderSqlPool implements RepoBuilder {
           .append(sqlSchema.createTagsConstraints().getValue())
           .append(sqlSchema.createTreeItemsConstraints().getValue())
           .toString();
+      } else  {
+        tablesCreate.append(sqlSchema.createBlobs().getValue())
+        .append(sqlSchema.createDoc().getValue())
+        .append(sqlSchema.createDocBranch().getValue())
+        .append(sqlSchema.createDocCommits().getValue())
+        .append(sqlSchema.createDocLog().getValue())
+        .append(sqlSchema.createTags().getValue())
+
+        .append(sqlSchema.createDocBranchConstraints().getValue())
+        .append(sqlSchema.createDocCommitsConstraints().getValue())
+        .append(sqlSchema.createDocLogConstraints().getValue())
+        .toString();
+    }
       
       if(log.isDebugEnabled()) {
         log.debug(new StringBuilder("Creating schema: ")
@@ -140,13 +156,13 @@ public class RepoBuilderSqlPool implements RepoBuilder {
       
       final Uni<Void> create = getClient().preparedQuery(sqlSchema.createRepo().getValue()).execute()
           .onItem().transformToUni(data -> Uni.createFrom().voidItem())
-          .onFailure().invoke(e -> errorHandler.deadEnd("Can't create table 'REPOS'!", e));;
+          .onFailure().invoke(e -> errorHandler.deadEnd("Can't create table 'REPO'!", e));;
       
       
       final Uni<Void> insert = tx.preparedQuery(repoInsert.getValue()).execute(repoInsert.getProps())
           .onItem().transformToUni(rowSet -> Uni.createFrom().voidItem())
           .onFailure().invoke(e -> errorHandler.deadEnd("Can't insert into 'REPO': '" + repoInsert.getValue() + "'!", e));
-      final Uni<Void> nested = tx.query(tablesCreate).execute()
+      final Uni<Void> nested = tx.query(tablesCreate.toString()).execute()
           .onItem().transformToUni(rowSet -> Uni.createFrom().voidItem())
           .onFailure().invoke(e -> errorHandler.deadEnd("Can't create tables: " + tablesCreate, e));;
       

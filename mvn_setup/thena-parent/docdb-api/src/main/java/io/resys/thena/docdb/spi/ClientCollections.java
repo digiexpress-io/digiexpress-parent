@@ -40,6 +40,14 @@ public abstract class ClientCollections {
   public abstract String getTreeItems();
   public abstract String getCommits();
   
+  
+  public abstract String getDocCommits();
+  public abstract String getDocBranch();
+  public abstract String getDocLog();
+  public abstract String getDoc();
+  
+  
+  
   public ClientCollections toRepo(Repo repo) {
     String prefix = repo.getPrefix();
     return ImmutableClientCollections.builder()
@@ -51,6 +59,12 @@ public abstract class ClientCollections {
         .trees(     prefix + this.getTrees())
         .treeItems( prefix + this.getTreeItems())
         .commits(   prefix + this.getCommits())
+        
+        .docCommits(prefix + this.getDocCommits())
+        .docBranch( prefix + this.getDocBranch())
+        .docLog(    prefix + this.getDocLog())
+        .doc(       prefix + this.getDoc())
+        
         .build();
   }
   
@@ -64,6 +78,10 @@ public abstract class ClientCollections {
         .trees("trees")
         .treeItems("treeItems")
         .commits("commits")
+        .docCommits("doc_commits")
+        .docBranch("doc_branch")
+        .docLog("doc_log")
+        .doc("doc")
         .build();
   }
 }

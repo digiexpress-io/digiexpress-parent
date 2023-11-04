@@ -36,6 +36,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.resys.thena.docdb.api.DocDB;
 import io.resys.thena.docdb.api.models.Repo;
+import io.resys.thena.docdb.api.models.Repo.RepoType;
 import io.resys.thena.docdb.spi.ClientCollections;
 import io.resys.thena.docdb.spi.ClientState;
 import io.resys.thena.docdb.spi.DocDBPrettyPrinter;
@@ -85,7 +86,7 @@ public class DbTestTemplate {
         .build();
 
     repo = this.client.project().projectBuilder()
-      .name("junit" + index.incrementAndGet())
+      .name("junit" + index.incrementAndGet(), RepoType.git)
       .build()
       .await().atMost(Duration.ofSeconds(10)).getRepo();
     if(callback != null) {

@@ -44,17 +44,27 @@ public interface SqlSchema extends ClientCollections.WithOptions<SqlSchema>{
   Sql createTagsConstraints();
   
   
-  Sql dropRepo();
+  Sql createDoc();
   
+  Sql createDocBranch();
+  Sql createDocBranchConstraints();
+  
+  Sql createDocCommits();
+  Sql createDocCommitsConstraints();
+  
+  Sql createDocLog();
+  Sql createDocLogConstraints();
+  
+  Sql dropDoc();
+  Sql dropDocBranch();
+  Sql dropDocCommit();
+  Sql dropDocLog();
+  
+  Sql dropRepo();
   Sql dropBlobs();
-
   Sql dropCommits();
-
   Sql dropTreeItems();
-
   Sql dropTrees();
-
   Sql dropRefs();
-
   Sql dropTags();
 }

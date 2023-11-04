@@ -28,7 +28,8 @@ public interface Repo {
   String getRev();
   String getPrefix();
   String getName();
-
+  RepoType getType();
+  
   @Value.Immutable
   public interface RepoHeadState {
     String getGid(); // GID
@@ -38,5 +39,6 @@ public interface Repo {
     HeadStateKind getKind();
   }
 
+  enum RepoType { doc, git }
   enum HeadStateKind { ahead, behind, same }
 }
