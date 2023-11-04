@@ -29,8 +29,8 @@ import javax.annotation.Nullable;
 import org.immutables.value.Value;
 
 import io.resys.thena.docdb.api.models.QueryEnvelope;
-import io.resys.thena.docdb.api.models.ThenaObjects.PullObject;
-import io.resys.thena.docdb.api.models.ThenaObjects.PullObjects;
+import io.resys.thena.docdb.api.models.ThenaGitObjects.PullObject;
+import io.resys.thena.docdb.api.models.ThenaGitObjects.PullObjects;
 import io.smallrye.mutiny.Uni;
 
 public interface PullActions {

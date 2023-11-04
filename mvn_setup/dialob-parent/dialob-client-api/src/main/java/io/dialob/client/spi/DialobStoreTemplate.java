@@ -25,6 +25,7 @@ import io.resys.thena.docdb.api.actions.CommitActions.CommitBuilder;
 import io.resys.thena.docdb.api.actions.CommitActions.CommitResultStatus;
 import io.resys.thena.docdb.api.actions.ProjectActions.RepoStatus;
 import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
+import io.resys.thena.docdb.api.models.Repo.RepoType;
 import io.smallrye.mutiny.Uni;
 
 public class DialobStoreTemplate extends PersistenceCommands implements DialobStore {
@@ -62,7 +63,7 @@ public class DialobStoreTemplate extends PersistenceCommands implements DialobSt
       public Uni<DialobStore> create() {
         DialobAssert.notNull(repoName, () -> "repoName must be defined!");
         final var client = config.getClient();
-        final var newRepo = client.project().projectBuilder().name(repoName).build();
+        final var newRepo = client.project().projectBuilder().name(repoName, RepoType.git).build();
         return newRepo.onItem().transform((repoResult) -> {
           if(repoResult.getStatus() != RepoStatus.OK) {
             throw new StoreException("REPO_CREATE_FAIL", null, 
@@ -91,7 +92,7 @@ public class DialobStoreTemplate extends PersistenceCommands implements DialobSt
         
         return client.project().projectQuery().projectName(config.getRepoName()).get().onItem().transformToUni(repo -> {
           if(repo == null) {
-            return client.project().projectBuilder().name(config.getRepoName()).build().onItem().transform(newRepo -> true); 
+            return client.project().projectBuilder().name(config.getRepoName(), RepoType.git).build().onItem().transform(newRepo -> true); 
           }
           return Uni.createFrom().item(true);
         });

@@ -23,7 +23,7 @@ package io.resys.thena.projects.client.spi.visitors;
 import io.resys.thena.docdb.api.actions.PullActions.PullObjectsQuery;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
 import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
-import io.resys.thena.docdb.api.models.ThenaObjects.PullObject;
+import io.resys.thena.docdb.api.models.ThenaGitObjects.PullObject;
 import io.resys.thena.projects.client.api.model.ImmutableProject;
 import io.resys.thena.projects.client.api.model.Project;
 import io.resys.thena.projects.client.spi.store.DocumentConfig;

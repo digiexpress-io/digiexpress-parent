@@ -237,7 +237,7 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("CREATE TABLE ").append(options.getDocCommits()).ln()
     .append("(").ln()
     .append("  id VARCHAR(40) PRIMARY KEY,").ln()
-    .append("  doc_id VARCHAR(40) NOT NUL,").ln()
+    .append("  doc_id VARCHAR(40) NOT NULL,").ln()
     .append("  branch_id VARCHAR(40),").ln()
     .append("  datetime VARCHAR(29) NOT NULL,").ln()
     .append("  author VARCHAR(40) NOT NULL,").ln()

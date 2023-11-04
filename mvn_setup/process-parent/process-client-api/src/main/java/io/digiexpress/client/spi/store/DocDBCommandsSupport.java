@@ -28,8 +28,8 @@ import io.resys.thena.docdb.api.actions.CommitActions.CommitResultStatus;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
 import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.docdb.api.models.Repo;
-import io.resys.thena.docdb.api.models.ThenaObjects.PullObject;
-import io.resys.thena.docdb.api.models.ThenaObjects.PullObjects;
+import io.resys.thena.docdb.api.models.ThenaGitObjects.PullObject;
+import io.resys.thena.docdb.api.models.ThenaGitObjects.PullObjects;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 

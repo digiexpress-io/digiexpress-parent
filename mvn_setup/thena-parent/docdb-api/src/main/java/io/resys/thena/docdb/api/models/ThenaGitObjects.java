@@ -35,9 +35,9 @@ import io.resys.thena.docdb.api.models.ThenaGitObject.IsObject;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Tag;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Tree;
 
-public interface ThenaObjects { 
+public interface ThenaGitObjects { 
   @Value.Immutable
-  public interface ProjectObjects extends ThenaObjects {
+  public interface ProjectObjects extends ThenaGitObjects {
     Map<String, Branch> getBranches();
     Map<String, Tag> getTags();
     Map<String, IsObject> getValues();   
@@ -45,7 +45,7 @@ public interface ThenaObjects {
 
   
   @Value.Immutable
-  interface CommitObjects extends ThenaObjects, BlobContainer  {
+  interface CommitObjects extends ThenaGitObjects, BlobContainer  {
     Repo getRepo();
     Commit getCommit();
     Tree getTree();
@@ -60,7 +60,7 @@ public interface ThenaObjects {
   }
   
   @Value.Immutable
-  interface PullObject extends ThenaObjects {
+  interface PullObject extends ThenaGitObjects {
     Repo getRepo();
     Commit getCommit();
     //Tree getTree();
@@ -73,7 +73,7 @@ public interface ThenaObjects {
   
 
   @Value.Immutable
-  interface PullObjects extends BlobContainer, ThenaObjects {
+  interface PullObjects extends BlobContainer, ThenaGitObjects {
     Repo getRepo();
     Commit getCommit();
     //Tree getTree();
@@ -86,7 +86,7 @@ public interface ThenaObjects {
     }
   }
   @Value.Immutable
-  interface BranchObjects extends BlobContainer, ThenaObjects {
+  interface BranchObjects extends BlobContainer, ThenaGitObjects {
     Repo getRepo();
     Branch getRef();
     Commit getCommit();
@@ -102,7 +102,7 @@ public interface ThenaObjects {
   }
   
   @Value.Immutable
-  interface HistoryObjects extends BlobContainer, ThenaObjects {
+  interface HistoryObjects extends BlobContainer, ThenaGitObjects {
     List<BlobHistory> getValues();
     
     default <T> List<T> accept(BlobVisitor<T> visitor) {

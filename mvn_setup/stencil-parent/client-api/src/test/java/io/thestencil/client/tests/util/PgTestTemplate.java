@@ -38,6 +38,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.resys.thena.docdb.api.DocDB;
 import io.resys.thena.docdb.api.actions.ProjectActions.RepoResult;
 import io.resys.thena.docdb.api.models.Repo;
+import io.resys.thena.docdb.api.models.Repo.RepoType;
 import io.resys.thena.docdb.spi.ClientCollections;
 import io.resys.thena.docdb.spi.ClientState;
 import io.resys.thena.docdb.spi.DocDBPrettyPrinter;
@@ -70,7 +71,7 @@ public class PgTestTemplate {
         .client(pgPool)
         .errorHandler(new PgErrors())
         .build();
-    this.client.project().projectBuilder().name("junit").build();
+    this.client.project().projectBuilder().name("junit", RepoType.git).build();
   }
   
   @AfterEach
@@ -121,7 +122,7 @@ public class PgTestTemplate {
     
     // create project
     RepoResult repo = getClient().project().projectBuilder()
-        .name(repoId)
+        .name(repoId, RepoType.git)
         .build()
         .await().atMost(Duration.ofMinutes(1));
     

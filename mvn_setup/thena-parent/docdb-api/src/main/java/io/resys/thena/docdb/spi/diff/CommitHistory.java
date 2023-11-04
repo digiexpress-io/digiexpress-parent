@@ -24,7 +24,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 import io.resys.thena.docdb.api.models.ThenaGitObject.Commit;
-import io.resys.thena.docdb.api.models.ThenaObjects.ProjectObjects;
+import io.resys.thena.docdb.api.models.ThenaGitObjects.ProjectObjects;
 
 public interface CommitHistory {
   int getIndex();

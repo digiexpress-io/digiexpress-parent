@@ -25,7 +25,7 @@ import java.util.List;
 import io.resys.thena.docdb.api.actions.CommitActions.CommitResultEnvelope;
 import io.resys.thena.docdb.api.models.Message;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
-import io.resys.thena.docdb.api.models.ThenaObjects.PullObjects;
+import io.resys.thena.docdb.api.models.ThenaGitObjects.PullObjects;
 import io.thestencil.client.api.StencilClient.Entity;
 import io.thestencil.client.api.StencilClient.EntityType;
 

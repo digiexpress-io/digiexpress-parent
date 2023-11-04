@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 import io.resys.thena.docdb.api.actions.PullActions.PullObjectsQuery;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
 import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
-import io.resys.thena.docdb.api.models.ThenaObjects.PullObjects;
+import io.resys.thena.docdb.api.models.ThenaGitObjects.PullObjects;
 import io.resys.thena.tasks.client.api.model.ImmutableTask;
 import io.resys.thena.tasks.client.api.model.Task;
 import io.resys.thena.tasks.client.spi.store.DocumentConfig;

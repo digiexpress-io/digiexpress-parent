@@ -32,7 +32,7 @@ import io.resys.thena.docdb.api.actions.PullActions.MatchCriteria;
 import io.resys.thena.docdb.api.actions.PullActions.PullObjectsQuery;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
 import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
-import io.resys.thena.docdb.api.models.ThenaObjects.PullObjects;
+import io.resys.thena.docdb.api.models.ThenaGitObjects.PullObjects;
 import io.resys.thena.projects.client.api.model.Document;
 import io.resys.thena.projects.client.api.model.ImmutableArchiveProject;
 import io.resys.thena.projects.client.api.model.ImmutableProject;

@@ -32,7 +32,7 @@ import io.resys.thena.docdb.api.models.ImmutableQueryEnvelope;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
 import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.docdb.api.models.Repo;
-import io.resys.thena.docdb.api.models.ThenaObjects.HistoryObjects;
+import io.resys.thena.docdb.api.models.ThenaGitObjects.HistoryObjects;
 import io.resys.thena.docdb.spi.ClientState;
 import io.resys.thena.docdb.spi.support.RepoAssert;
 import io.smallrye.mutiny.Uni;

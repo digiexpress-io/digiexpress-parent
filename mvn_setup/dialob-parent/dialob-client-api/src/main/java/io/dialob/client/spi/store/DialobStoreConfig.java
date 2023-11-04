@@ -30,7 +30,7 @@ import io.dialob.client.api.DialobStore.StoreState;
 import io.resys.thena.docdb.api.DocDB;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Blob;
-import io.resys.thena.docdb.api.models.ThenaObjects.PullObject;
+import io.resys.thena.docdb.api.models.ThenaGitObjects.PullObject;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 

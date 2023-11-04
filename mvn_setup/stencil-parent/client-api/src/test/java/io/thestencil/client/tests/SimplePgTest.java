@@ -34,6 +34,7 @@ import io.quarkus.test.junit.TestProfile;
 import io.resys.thena.docdb.api.actions.CommitActions.CommitResultStatus;
 import io.resys.thena.docdb.api.actions.ProjectActions.RepoResult;
 import io.resys.thena.docdb.api.actions.ProjectActions.RepoStatus;
+import io.resys.thena.docdb.api.models.Repo.RepoType;
 import io.thestencil.client.tests.util.PgProfile;
 import io.thestencil.client.tests.util.PgTestTemplate;
 import io.vertx.core.json.JsonObject;
@@ -54,7 +55,7 @@ public class SimplePgTest extends PgTestTemplate {
   public void crateRepoWithOneCommit() {
     // create project
     RepoResult repo = getClient().project().projectBuilder()
-        .name("project-x")
+        .name("project-x", RepoType.git)
         .build()
         .await().atMost(Duration.ofMinutes(1));
     LOGGER.debug("created repo {}", repo);
@@ -80,7 +81,7 @@ public class SimplePgTest extends PgTestTemplate {
   public void crateRepoWithTwoCommits() {
     // create project
     RepoResult repo = getClient().project().projectBuilder()
-        .name("project-xy")
+        .name("project-xy", RepoType.git)
         .build()
         .await().atMost(Duration.ofMinutes(1));
     LOGGER.debug("created repo {}", repo);

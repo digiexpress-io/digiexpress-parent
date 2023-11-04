@@ -24,7 +24,7 @@ import java.util.List;
 
 import io.resys.thena.docdb.api.actions.PullActions.MatchCriteria;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
-import io.resys.thena.docdb.api.models.ThenaObjects.BranchObjects;
+import io.resys.thena.docdb.api.models.ThenaGitObjects.BranchObjects;
 import io.smallrye.mutiny.Uni;
 
 public interface BranchActions {

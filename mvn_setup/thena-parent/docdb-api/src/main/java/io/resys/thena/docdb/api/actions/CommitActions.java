@@ -32,7 +32,7 @@ import io.resys.thena.docdb.api.models.QueryEnvelope;
 import io.resys.thena.docdb.api.models.ThenaEnvelope;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Commit;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Tree;
-import io.resys.thena.docdb.api.models.ThenaObjects.CommitObjects;
+import io.resys.thena.docdb.api.models.ThenaGitObjects.CommitObjects;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 

@@ -34,10 +34,10 @@ import io.resys.thena.docdb.api.actions.HistoryActions.BlobHistoryQuery;
 import io.resys.thena.docdb.api.actions.PullActions.PullObjectsQuery;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Commit;
-import io.resys.thena.docdb.api.models.ThenaObjects.BranchObjects;
-import io.resys.thena.docdb.api.models.ThenaObjects.HistoryObjects;
-import io.resys.thena.docdb.api.models.ThenaObjects.PullObject;
-import io.resys.thena.docdb.api.models.ThenaObjects.PullObjects;
+import io.resys.thena.docdb.api.models.ThenaGitObjects.BranchObjects;
+import io.resys.thena.docdb.api.models.ThenaGitObjects.HistoryObjects;
+import io.resys.thena.docdb.api.models.ThenaGitObjects.PullObject;
+import io.resys.thena.docdb.api.models.ThenaGitObjects.PullObjects;
 import io.resys.thena.tasks.client.api.model.Document.DocumentType;
 import io.smallrye.mutiny.Uni;
 

@@ -134,7 +134,7 @@ public class RepoBuilderSqlPool implements RepoBuilder {
           .append(sqlSchema.createTreeItemsConstraints().getValue())
           .toString();
       } else  {
-        tablesCreate.append(sqlSchema.createBlobs().getValue())
+        tablesCreate
         .append(sqlSchema.createDoc().getValue())
         .append(sqlSchema.createDocBranch().getValue())
         .append(sqlSchema.createDocCommits().getValue())

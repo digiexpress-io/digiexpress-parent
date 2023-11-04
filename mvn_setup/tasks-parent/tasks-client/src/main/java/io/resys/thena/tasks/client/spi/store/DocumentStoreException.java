@@ -32,8 +32,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.resys.thena.docdb.api.actions.CommitActions.CommitResultEnvelope;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
-import io.resys.thena.docdb.api.models.ThenaObjects.PullObject;
-import io.resys.thena.docdb.api.models.ThenaObjects.PullObjects;
+import io.resys.thena.docdb.api.models.ThenaGitObjects.PullObject;
+import io.resys.thena.docdb.api.models.ThenaGitObjects.PullObjects;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 

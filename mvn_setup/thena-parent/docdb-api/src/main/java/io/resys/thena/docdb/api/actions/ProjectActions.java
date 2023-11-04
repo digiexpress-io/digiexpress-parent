@@ -31,7 +31,7 @@ import io.resys.thena.docdb.api.models.QueryEnvelope;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.Repo.RepoType;
 import io.resys.thena.docdb.api.models.ThenaEnvelope;
-import io.resys.thena.docdb.api.models.ThenaObjects.ProjectObjects;
+import io.resys.thena.docdb.api.models.ThenaGitObjects.ProjectObjects;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 

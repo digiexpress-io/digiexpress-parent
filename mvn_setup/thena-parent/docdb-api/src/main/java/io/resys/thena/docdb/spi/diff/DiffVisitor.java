@@ -34,8 +34,8 @@ import io.resys.thena.docdb.api.models.Diff.DivergenceType;
 import io.resys.thena.docdb.api.models.ImmutableDiff;
 import io.resys.thena.docdb.api.models.ImmutableDivergence;
 import io.resys.thena.docdb.api.models.ImmutableDivergenceRef;
-import io.resys.thena.docdb.api.models.ThenaObjects.CommitObjects;
-import io.resys.thena.docdb.api.models.ThenaObjects.ProjectObjects;
+import io.resys.thena.docdb.api.models.ThenaGitObjects.CommitObjects;
+import io.resys.thena.docdb.api.models.ThenaGitObjects.ProjectObjects;
 
 public class DiffVisitor {
 

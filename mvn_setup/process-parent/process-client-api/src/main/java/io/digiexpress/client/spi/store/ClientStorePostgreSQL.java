@@ -17,6 +17,7 @@ import io.digiexpress.client.spi.support.MainBranch;
 import io.digiexpress.client.spi.support.ServiceAssert;
 import io.resys.thena.docdb.api.DocDB;
 import io.resys.thena.docdb.api.actions.ProjectActions.RepoStatus;
+import io.resys.thena.docdb.api.models.Repo.RepoType;
 import io.resys.thena.docdb.spi.pgsql.PgErrors;
 import io.resys.thena.docdb.sql.DocDBFactorySql;
 import io.smallrye.mutiny.Uni;
@@ -62,7 +63,7 @@ public class ClientStorePostgreSQL extends DocDBCommandsSupport implements Clien
     
     return client.project().projectQuery().projectName(config.getRepoName()).get().onItem().transformToUni(repo -> {
       if(repo == null) {
-        return client.project().projectBuilder().name(config.getRepoName()).build().onItem().transform(newRepo -> true); 
+        return client.project().projectBuilder().name(config.getRepoName(), RepoType.git).build().onItem().transform(newRepo -> true); 
       }
       return Uni.createFrom().item(true);
     });
@@ -71,7 +72,7 @@ public class ClientStorePostgreSQL extends DocDBCommandsSupport implements Clien
   public Uni<ClientStore> createRepo(String repoName, String headName) {
     ServiceAssert.notNull(repoName, () -> "repoName must be defined!");
     final var client = config.getClient();
-    final var newRepo = client.project().projectBuilder().name(repoName).build();
+    final var newRepo = client.project().projectBuilder().name(repoName, RepoType.git).build();
     return newRepo.onItem().transform((repoResult) -> {
       if(repoResult.getStatus() != RepoStatus.OK) {
         throw new StoreException("REPO_CREATE_FAIL", null, 

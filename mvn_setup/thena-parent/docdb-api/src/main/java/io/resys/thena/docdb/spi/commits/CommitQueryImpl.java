@@ -33,7 +33,7 @@ import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Commit;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Tree;
-import io.resys.thena.docdb.api.models.ThenaObjects.CommitObjects;
+import io.resys.thena.docdb.api.models.ThenaGitObjects.CommitObjects;
 import io.resys.thena.docdb.spi.ClientState;
 import io.resys.thena.docdb.spi.ClientState.ClientRepoState;
 import io.resys.thena.docdb.spi.objects.ObjectsUtils;

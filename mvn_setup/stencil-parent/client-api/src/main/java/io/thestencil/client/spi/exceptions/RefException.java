@@ -21,7 +21,7 @@ package io.thestencil.client.spi.exceptions;
  */
 
 import io.resys.thena.docdb.api.models.QueryEnvelope;
-import io.resys.thena.docdb.api.models.ThenaObjects.BranchObjects;
+import io.resys.thena.docdb.api.models.ThenaGitObjects.BranchObjects;
 
 public class RefException extends RuntimeException {
   private static final long serialVersionUID = 7190168525508589141L;
