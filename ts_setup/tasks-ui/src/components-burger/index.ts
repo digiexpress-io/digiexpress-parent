@@ -29,7 +29,7 @@ import { StyledSwitch, StyledSwitchProps } from './styles/StyledSwitch';
 import { StyledRadioButton } from './styles/StyledRadioButton';
 
 
-import { DateTimeFormat, DateTimeFormatProps } from './utils/DateTimeFormatter';
+import { DateTimeFormat, DateTimeFormatProps } from './utils/DateTimeFormatterFixed';
 import { ReleaseTable as ReleaseTableAs, Release, ReleaseTableProps } from './releases/ReleaseTable';
 
 import { Section as SectionAs } from './section';
