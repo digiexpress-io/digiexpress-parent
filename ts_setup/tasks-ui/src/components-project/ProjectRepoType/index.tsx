@@ -5,8 +5,9 @@ import { FormattedMessage } from 'react-intl';
 import Client from 'client';
 import Context from 'context';
 import { useMockPopover } from 'components-task/TaskTable/MockPopover';
+import { RepoTypePalette } from 'descriptor-project';
 
-const repoColors = Context.RepoTypePalette;
+const repoColors = RepoTypePalette;
 const repoOptions: Client.RepoType[] = ['DIALOB', 'STENCIL', 'TASKS', 'WRENCH'];
 
 function getActiveColor(currentlyShowing: Client.RepoType, priority: Client.RepoType): string {

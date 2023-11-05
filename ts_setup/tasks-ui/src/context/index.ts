@@ -2,7 +2,6 @@ import { ClientContextType, ComposerContextType } from './client-ctx';
 import * as Hooks from './hooks';
 import * as taskEditCtx from './task-edit-ctx';
 import * as descCtx from 'descriptor-task';
-import * as projectCtx from 'descriptor-project';
 
 
 import {
@@ -43,11 +42,6 @@ export {
 } from './composer-ctx-impl';
 
 
-export {
-  ProjectIdProvider
-} from './project-id-ctx'
-
-
 declare namespace Context {
   export type {
     ClientContextType, ComposerContextType,
@@ -78,7 +72,7 @@ namespace Context {
   export const DescriptorStateImpl = descCtx.DescriptorStateImpl;
   export const StatusPalette = descCtx.Palette.status;
   export const PriorityPalette = descCtx.Palette.priority;
-  export const RepoTypePalette = projectCtx.Palette.repoType;
+
   export const TeamGroupPalette = descCtx.Palette.teamGroupType;
   export const AssigneePalette = descCtx.Palette.assigneeGroupType;
   export const _nobody_ = descCtx._nobody_;

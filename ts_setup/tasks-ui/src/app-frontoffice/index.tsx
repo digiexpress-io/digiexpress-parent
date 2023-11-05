@@ -3,7 +3,7 @@ import React from 'react';
 import Burger from 'components-burger';
 
 import { Backend, Profile } from 'client';
-import { ProjectsProvider } from 'context/projects-ctx';
+import { ProjectsProvider } from 'descriptor-project';
 import Views from './Views';
 
 

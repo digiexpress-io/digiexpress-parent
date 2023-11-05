@@ -7,7 +7,8 @@ import { useSnackbar } from 'notistack';
 import Burger, { siteTheme } from 'components-burger';
 
 import TaskClient from 'client';
-import Context, { ProjectIdProvider } from 'context';
+import Context from 'context';
+import { ProjectIdProvider } from 'descriptor-project';
 import Connection from './Connection';
 import messages from './intl';
 import Provider from './Provider';
