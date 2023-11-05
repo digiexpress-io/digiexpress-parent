@@ -11,8 +11,7 @@ import { TasksContextType } from './tasks-ctx-types';
 
 import { ProjectIdContext, ProjectsContextType, ProjectsContext, ProjectIdContextType } from 'descriptor-project';
 
-import { OrgContext } from './org-ctx';
-import { OrgContextType } from './org-ctx-types';
+import { OrgContext, OrgContextType } from 'descriptor-organization';
 import { TaskEditContextType } from './task-edit-ctx-types';
 import { TaskEditContext } from './task-edit-ctx'
 

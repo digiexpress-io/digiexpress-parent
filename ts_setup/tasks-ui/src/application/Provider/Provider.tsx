@@ -5,7 +5,7 @@ import { initSession, SessionData, ActionsImpl } from 'context';
 import { Profile, Backend } from 'client';
 import { ClientContext, ComposerContext } from 'context/client-ctx';
 import RequireProject from './RequireProject';
-import { OrgProvider } from 'context/org-ctx';
+import { OrgProvider } from 'descriptor-organization';
 
 
 const Provider: React.FC<{ children: React.ReactNode, service: Backend, profile: Profile }> = ({ children, service, profile }) => {
