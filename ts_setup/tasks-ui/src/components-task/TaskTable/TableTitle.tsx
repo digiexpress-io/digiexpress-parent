@@ -2,8 +2,7 @@
 import React from 'react';
 import { Button, Typography } from '@mui/material';
 import { FormattedMessage, useIntl } from 'react-intl';
-import Context from 'context';
-import { Group } from 'descriptor-task';
+import { Group, Nobody } from 'descriptor-task';
 
 const TableSubTitle: React.FC<{ values: number, message: string }> = ({ values, message }) => {
 
@@ -36,7 +35,7 @@ const TableTitle: React.FC<{ group: Group }> = ({ group }) => {
   } else if (group.type === 'owners' || group.type === 'roles') {
     const backgroundColor = group.color;
     return (<Button variant="contained" sx={{ ...sx, backgroundColor }}>
-      {group.id === Context._nobody_ ? intl.formatMessage({ id: group.id }) : group.id}
+      {group.id === Nobody ? intl.formatMessage({ id: group.id }) : group.id}
     </Button>);
   }
 

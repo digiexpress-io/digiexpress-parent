@@ -1,6 +1,4 @@
-import {
-  PaletteType
-} from './descriptor-types';
+import { PaletteType } from './descriptor-types';
 
 
 export const _nobody_ = '_nobody_';

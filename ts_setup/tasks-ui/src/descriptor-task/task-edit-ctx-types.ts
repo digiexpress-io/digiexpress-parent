@@ -6,7 +6,7 @@ import {
   Task
 } from 'client/task-types';
 
-import { TaskDescriptor } from 'descriptor-task';
+import { TaskDescriptor } from './descriptor-types';
 
 export interface SingleEventBody<T extends TaskCommandType, C extends TaskCommand> {
   fromCommand: C | undefined;

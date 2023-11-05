@@ -3,11 +3,10 @@ import { Chip, MenuItem, List, Box, Typography } from '@mui/material';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import Client from 'client';
-import Context from 'context';
-import { TaskDescriptor } from 'descriptor-task';
+import { TaskDescriptor, StatusPalette } from 'descriptor-task';
 import { useMockPopover } from '../TaskTable/MockPopover';
 
-const statusColors = Context.StatusPalette;
+const statusColors = StatusPalette;
 const statusOptions: Client.TaskStatus[] = ['CREATED', 'IN_PROGRESS', 'COMPLETED', 'REJECTED'];
 
 function getActiveColor(currentlyShowing: Client.TaskStatus, status: Client.TaskStatus): string {

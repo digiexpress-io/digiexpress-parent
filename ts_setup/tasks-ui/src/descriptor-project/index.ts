@@ -9,6 +9,4 @@ export type { ProjectsContextType } from './projects-ctx-types';
 
 
 export const RepoTypePalette = Palette.repoType;
-export { withColors } from './descriptor-util';
-export { Palette, _nobody_ } from './descriptor-constants';
 export { ProjectDescriptorImpl, DescriptorStateImpl } from './descriptor-impl';

@@ -9,6 +9,7 @@ import { Task } from 'client';
 import Context from 'context';
 import { TaskDescriptorImpl } from 'descriptor-task';
 import Burger from 'components-burger';
+import { TaskEditProvider } from 'descriptor-task';
 
 function initTaskProps(userId: string): Task {
   return {
@@ -52,7 +53,7 @@ const TaskCreateDialog: React.FC<{ open: boolean, onClose: () => void }> = (prop
   const init = new TaskDescriptorImpl(initTaskProps(org.state.iam.userId), tasks.state.profile, new Date());
 
   return (
-    <Context.EditProvider task={init}>
+    <TaskEditProvider task={init}>
       <Dialog open={true} fullWidth maxWidth='md'>
         <DialogTitle sx={{
           backgroundColor: theme.palette.mainContent.main,
@@ -119,7 +120,7 @@ const TaskCreateDialog: React.FC<{ open: boolean, onClose: () => void }> = (prop
           <TaskCreateActions onClose={props.onClose} />
         </DialogActions>
       </Dialog>
-    </Context.EditProvider>
+    </TaskEditProvider>
   );
 }
 

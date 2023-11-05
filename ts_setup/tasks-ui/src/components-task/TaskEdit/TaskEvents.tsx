@@ -1,15 +1,14 @@
 import React from 'react';
 import { ListItem, ListItemText, Box, Typography } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
-import Context from 'context';
 import Burger from 'components-burger';
+import { CollapsedEvent, SingleEvent, TaskEditEvent } from 'descriptor-task';
 
-const CollapsedGroup: React.FC<{ event: Context.CollapsedEvent }> = () => {
+const CollapsedGroup: React.FC<{ event: CollapsedEvent }> = () => {
   return (<>19 items collapsed</>)
 }
 
-const SingleGroup: React.FC<{ event: Context.SingleEvent }> = ({ event }) => {
-  const { state } = Context.useTaskEdit();
+const SingleGroup: React.FC<{ event: SingleEvent }> = ({ event }) => {
 
   if (!event.body.toCommand.targetDate) {
     return <></>;
@@ -144,7 +143,7 @@ const SingleGroup: React.FC<{ event: Context.SingleEvent }> = ({ event }) => {
 }
 
 
-const Event: React.FC<{ event: Context.TaskEditEvent }> = ({ event }) => {
+const Event: React.FC<{ event: TaskEditEvent }> = ({ event }) => {
 
   if (event.type === 'SINGLE') {
     return <ListItem><SingleGroup event={event} /></ListItem>

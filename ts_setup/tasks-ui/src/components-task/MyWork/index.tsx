@@ -4,13 +4,14 @@ import { Group, AssigneeGroupType } from 'descriptor-task';
 import { TaskListTabState, TaskList } from '../TaskList';
 import TaskItemActive from './TaskItemActive';
 import TaskItem from './TaskItem';
+import { TasksState, AssigneePalette } from 'descriptor-task';
 
 
 function groupsToRecord(state: Group[]): Record<AssigneeGroupType, Group> {
   return state.reduce((acc, item) => ({ ...acc, [item['id']]: item }), {} as Record<AssigneeGroupType, Group>);
 }
 
-function getTabs(state: Context.TasksState): TaskListTabState[] | any {
+function getTabs(state: TasksState): TaskListTabState[] | any {
   const groupBy: Group[] = state.withDescriptors().withGroupBy("assignee").groups;
   const groups = groupsToRecord(groupBy);
   const assigneeOverdue = groups["assigneeOverdue"];
@@ -22,7 +23,7 @@ function getTabs(state: Context.TasksState): TaskListTabState[] | any {
     {
       id: 0,
       label: 'core.myWork.tab.task.currentlyWorking',
-      color: Context.AssigneePalette.assigneeCurrentlyWorking,
+      color: AssigneePalette.assigneeCurrentlyWorking,
       group: assigneeCurrentlyWorking,
       disabled: true,
       count: assigneeCurrentlyWorking.records.length
@@ -30,7 +31,7 @@ function getTabs(state: Context.TasksState): TaskListTabState[] | any {
     {
       id: 1,
       label: 'core.myWork.tab.task.overdue',
-      color: Context.AssigneePalette.assigneeOverdue,
+      color: AssigneePalette.assigneeOverdue,
       group: assigneeOverdue,
       disabled: true,
       count: assigneeOverdue.records.length
@@ -38,7 +39,7 @@ function getTabs(state: Context.TasksState): TaskListTabState[] | any {
     {
       id: 2,
       label: 'core.myWork.tab.task.startsToday',
-      color: Context.AssigneePalette.assigneeStartsToday,
+      color: AssigneePalette.assigneeStartsToday,
       group: assigneeStartsToday,
       disabled: true,
       count: assigneeStartsToday.records.length
@@ -46,7 +47,7 @@ function getTabs(state: Context.TasksState): TaskListTabState[] | any {
     {
       id: 3,
       label: 'core.myWork.tab.task.available',
-      color: Context.AssigneePalette.assigneeOther,
+      color: AssigneePalette.assigneeOther,
       group: assigneeOther,
       disabled: true,
       count: assigneeOther.records.length

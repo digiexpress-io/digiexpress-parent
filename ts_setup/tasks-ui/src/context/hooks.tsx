@@ -6,15 +6,9 @@ import { ImmutableTabData } from './composer-ctx-impl';
 import { ComposerContext, ComposerContextType, ClientContextType, ClientContext } from './client-ctx';
 import { UserId, RoleId, RepoType } from 'client';
 
-import { TasksContext } from './tasks-ctx';
-import { TasksContextType } from './tasks-ctx-types';
-
 import { ProjectIdContext, ProjectsContextType, ProjectsContext, ProjectIdContextType } from 'descriptor-project';
-
 import { OrgContext, OrgContextType } from 'descriptor-organization';
-import { TaskEditContextType } from './task-edit-ctx-types';
-import { TaskEditContext } from './task-edit-ctx'
-
+import { TasksContext, TasksContextType, TaskEditContext, TaskEditContextType } from 'descriptor-task';
 
 
 const ArticleTabIndicator: React.FC<{ entity: Document }> = ({ entity }) => {

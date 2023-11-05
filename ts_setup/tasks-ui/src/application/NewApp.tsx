@@ -57,7 +57,7 @@ const Apps: React.FC<{ profile: TaskClient.Profile }> = ({ profile }) => {
   const tasks: Burger.App<{}, any> = React.useMemo(() => AppTasks(service, profile), [service, profile]);
   const projects: Burger.App<{}, any> = React.useMemo(() => AppProjects(service, profile), [service, profile]);
   const frontoffice: Burger.App<{}, any> = React.useMemo(() => AppFrontoffice(service, profile), [service, profile]);
-  const appId = 'app-frontoffice';
+  const appId = 'app-projects';
 
   return (<Provider service={service} profile={profile}>
     <Burger.Provider children={

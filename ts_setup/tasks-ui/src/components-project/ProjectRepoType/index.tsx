@@ -3,15 +3,15 @@ import { List, MenuItem, Box, Button, Typography } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 
 import Client from 'client';
-import Context from 'context';
 import { useMockPopover } from 'components-task/TaskTable/MockPopover';
 import { RepoTypePalette } from 'descriptor-project';
+import { StatusPalette } from 'descriptor-task';
 
 const repoColors = RepoTypePalette;
 const repoOptions: Client.RepoType[] = ['DIALOB', 'STENCIL', 'TASKS', 'WRENCH'];
 
 function getActiveColor(currentlyShowing: Client.RepoType, priority: Client.RepoType): string {
-  const selectedItemColor = Context.StatusPalette.IN_PROGRESS;
+  const selectedItemColor = StatusPalette.IN_PROGRESS;
   const color = priority === currentlyShowing ? selectedItemColor : "unset";
   return color;
 }

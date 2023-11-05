@@ -239,24 +239,6 @@ class GroupVisitor {
     }
   }
 }
-/*
-entry: Project;
-id: string;
-created: Date;
-
-
-repoId: string;
-repoType: RepoType;
-title: string;
-description: string;
-users: string[];
-
-updated: Date;
-
-userAvatars: AvatarCode[];
-profile: Profile;
-
-*/
 
 const appMapping: Record<RepoType | string, string> = {
   DIALOB: 'app-dialob',
@@ -296,9 +278,6 @@ class ProjectDescriptorImpl implements ProjectDescriptor {
   get description() { return this._entry.description }
   get userAvatars() { return this._userAvatars }
 }
-
-
-
 
 export { ProjectDescriptorImpl, DescriptorStateImpl };
 export type { ExtendedInit };

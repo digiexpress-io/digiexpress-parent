@@ -1,5 +1,5 @@
 import { Profile, Project } from 'client';
-import { ProjectDescriptor, PaletteType, ProjectPaletteType, DescriptorState } from 'descriptor-project';
+import { ProjectDescriptor, ProjectPaletteType, DescriptorState, PaletteType } from './descriptor-types';
 
 
 export interface ProjectsContextType {
@@ -8,8 +8,6 @@ export interface ProjectsContextType {
   loading: boolean;
   state: ProjectsState,
   palette: PaletteType;
-
-
 }
 
 export type ProjectsMutator = (prev: ProjectsState) => ProjectsState;

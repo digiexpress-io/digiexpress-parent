@@ -7,7 +7,7 @@ import Fields from './TaskEditFields';
 import Events from './TaskEvents';
 import Burger from 'components-burger';
 import Context from 'context';
-import { TaskDescriptor } from 'descriptor-task';
+import { TaskDescriptor, TaskEditProvider } from 'descriptor-task';
 
 const Left: React.FC<{}> = () => {
   const { state } = Context.useTaskEdit();
@@ -111,7 +111,7 @@ const TaskEditDialog: React.FC<{ open: boolean, onClose: () => void, task?: Task
   }
 
   return (
-    <Context.EditProvider task={props.task}>
+    <TaskEditProvider task={props.task}>
       <StyledFullScreenDialog
         header={<Header onClose={handleClose} />}
         footer={<Footer onClose={handleClose} />}
@@ -120,7 +120,7 @@ const TaskEditDialog: React.FC<{ open: boolean, onClose: () => void, task?: Task
         onClose={handleClose}
         open={props.open}
       />
-    </Context.EditProvider>);
+    </TaskEditProvider>);
 }
 
 export { TaskEditDialog }

@@ -1,33 +1,5 @@
 import { ClientContextType, ComposerContextType } from './client-ctx';
 import * as Hooks from './hooks';
-import * as taskEditCtx from './task-edit-ctx';
-import * as descCtx from 'descriptor-task';
-
-
-import {
-  TaskEditEvent, TaskEditMutatorBuilder, TaskEditState,
-  CreateTaskEventBody,
-  AssignTaskReporterEventBody,
-  ArchiveTaskEventBody,
-  ChangeTaskStatusEventBody,
-  ChangeTaskPriorityEventBody,
-  AssignTaskParentEventBody,
-  CommentOnTaskEventBody,
-  ChangeTaskCommentEventBody,
-  AssignTaskRolesEventBody,
-  AssignTaskEventBody,
-  ChangeTaskDueDateEventBody,
-  ChangeTaskInfoEventBody,
-  CreateTaskExtensionEventBody,
-  ChangeTaskExtensionEventBody,
-  SingleEvent, CollapsedEvent,
-
-} from './task-edit-ctx-types';
-
-import {
-  TasksContextType, TasksState
-} from './tasks-ctx-types';
-
 
 import {
   Document
@@ -44,39 +16,13 @@ export {
 
 declare namespace Context {
   export type {
-    ClientContextType, ComposerContextType,
-    TasksContextType, TasksState,
-    TaskEditEvent, TaskEditMutatorBuilder, TaskEditState,
-    CreateTaskEventBody,
-    AssignTaskReporterEventBody,
-    ArchiveTaskEventBody,
-    ChangeTaskStatusEventBody,
-    ChangeTaskPriorityEventBody,
-    AssignTaskParentEventBody,
-    CommentOnTaskEventBody,
-    ChangeTaskCommentEventBody,
-    AssignTaskRolesEventBody,
-    AssignTaskEventBody,
-    ChangeTaskDueDateEventBody,
-    ChangeTaskInfoEventBody,
-    CreateTaskExtensionEventBody,
-    ChangeTaskExtensionEventBody,
-    SingleEvent, CollapsedEvent
+    ClientContextType, ComposerContextType
   }
 }
 
 
 
 namespace Context {
-  export const EditProvider = taskEditCtx.TaskEditProvider;
-  export const DescriptorStateImpl = descCtx.DescriptorStateImpl;
-  export const StatusPalette = descCtx.Palette.status;
-  export const PriorityPalette = descCtx.Palette.priority;
-
-  export const TeamGroupPalette = descCtx.Palette.teamGroupType;
-  export const AssigneePalette = descCtx.Palette.assigneeGroupType;
-  export const _nobody_ = descCtx._nobody_;
-
   export const useProjectId = Hooks.useProjectId;
   export const useBackend = Hooks.useBackend;
   export const useTasks = Hooks.useTasks;

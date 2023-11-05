@@ -7,6 +7,7 @@ import Context from 'context';
 import { TaskDescriptor } from 'descriptor-task';
 import { MenuProvider, useMenu } from './menu-ctx';
 import Burger from 'components-burger';
+import { TaskEditProvider } from 'descriptor-task';
 
 const Left: React.FC<{}> = () => {
 
@@ -91,7 +92,7 @@ const CRMDialog: React.FC<{ open: boolean, onClose: () => void, task?: TaskDescr
 
   return (
     <MenuProvider>
-      <Context.EditProvider task={props.task}>
+      <TaskEditProvider task={props.task}>
         <StyledFullScreenDialog
           header={<Header onClose={props.onClose} />}
           footer={<Footer onClose={handleClose} />}
@@ -100,7 +101,7 @@ const CRMDialog: React.FC<{ open: boolean, onClose: () => void, task?: TaskDescr
           onClose={props.onClose}
           open={props.open}
         />
-      </Context.EditProvider>
+      </TaskEditProvider>
     </MenuProvider>
   );
 }

@@ -1,10 +1,10 @@
 
 import { TasksState } from './tasks-ctx-types';
-
 import { Task, Profile } from 'client';
-import {
-  Palette, TaskDescriptor, _nobody_, TaskDescriptorImpl, withColors, TasksPaletteType, DescriptorState, DescriptorStateImpl
-} from 'descriptor-task';
+import { Palette, _nobody_ } from './descriptor-constants';
+import { DescriptorState, TaskDescriptor, TasksPaletteType, } from './descriptor-types';
+import { TaskDescriptorImpl, DescriptorStateImpl } from './descriptor-impl';
+import { withColors } from './descriptor-util';
 
 
 interface ExtendedInit extends Omit<TasksState, "withProfile" | "withTasks" | "withDescriptors"> {
