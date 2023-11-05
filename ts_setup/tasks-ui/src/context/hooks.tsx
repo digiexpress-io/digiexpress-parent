@@ -15,8 +15,7 @@ import { OrgContext } from './org-ctx';
 import { OrgContextType } from './org-ctx-types';
 import { TaskEditContextType } from './task-edit-ctx-types';
 import { TaskEditContext } from './task-edit-ctx'
-import { ScreenContextType } from './screen-ctx-types';
-import { ScreenContext } from './screen-ctx';
+
 
 
 const ArticleTabIndicator: React.FC<{ entity: Document }> = ({ entity }) => {
@@ -70,11 +69,6 @@ const findTabInLayout = (article: Document, layout: Burger.TabsContextType): Tab
     return tab;
   }
   return undefined;
-}
-
-export const useScreen = () => {
-  const result: ScreenContextType = React.useContext(ScreenContext);
-  return result.state;
 }
 
 export const useTaskEdit = () => {
