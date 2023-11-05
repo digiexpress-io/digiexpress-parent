@@ -21,7 +21,6 @@ package io.resys.thena.docdb.api.models;
  */
 
 import java.time.LocalDateTime;
-import java.util.Map;
 import java.util.Optional;
 
 import javax.annotation.Nullable;
@@ -37,48 +36,38 @@ public interface ThenaDocObject {
   @Value.Immutable
   interface Doc extends ThenaDocObject, IsDocObject {
     String getId();
-    String getVersion();
-    String getExternalId();
-    Optional<DocBranch> getBranch();  // in-case this is branch object    
-    @Nullable JsonObject getValue();  // null when json loading is disabled 
+    String getExternalId(); 
   }
   
   @Value.Immutable
   interface DocBranch extends ThenaDocObject, IsDocObject {
-    String getId();
-    String getVersion();
+    String getCommitId();
     String getBranchName();
-    String getVersionOrigin();
+    String getBranchId();
+    String getDocId();
+    @Nullable JsonObject getValue();  // null when json loading is disabled
   }
   
   @Value.Immutable
   interface DocCommit extends ThenaDocObject, IsDocObject {
     String getId();
+    String getBranchId();
+    String getDocId();
     String getAuthor();
     LocalDateTime getDateTime();
     String getMessage();
-    String getParent();
-    
-    
-    String getDocId();
-    String getDocVersion();
-    Optional<String> getDocBranchName();
+    Optional<String> getParent();    
+
+
   }
    
   @Value.Immutable
   interface DocLog extends ThenaDocObject, IsDocObject {
     String getId();
-    String getDocId();
-    Map<String, DocLogValue> getValues();
+    String getDocCommitId();
+    JsonObject getValue();
   }
   
-  @Value.Immutable
-  interface DocLogValue extends ThenaDocObject, IsDocObject {
-    String getId();
-    String getDocId();
-    String getDocCommitId();
-    @Nullable JsonObject getValue();  // null when json loading is disabled
-  }
   
   @Value.Immutable  
   interface DocCommitLock extends ThenaDocObject {

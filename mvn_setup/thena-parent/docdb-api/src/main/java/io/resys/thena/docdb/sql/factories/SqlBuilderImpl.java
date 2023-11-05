@@ -29,6 +29,10 @@ import io.resys.thena.docdb.sql.statement.DefaultRepoSqlBuilder;
 import io.resys.thena.docdb.sql.statement.DefaultTagSqlBuilder;
 import io.resys.thena.docdb.sql.statement.DefaultTreeItemSqlBuilder;
 import io.resys.thena.docdb.sql.statement.DefaultTreeSqlBuilder;
+import io.resys.thena.docdb.sql.statement.DocBranchSqlBuilderImpl;
+import io.resys.thena.docdb.sql.statement.DocCommitSqlBuilderImpl;
+import io.resys.thena.docdb.sql.statement.DocLogSqlBuilderImpl;
+import io.resys.thena.docdb.sql.statement.DocSqlBuilderImpl;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -66,5 +70,21 @@ public class SqlBuilderImpl implements SqlBuilder {
   @Override
   public SqlBuilder withOptions(DbCollections options) {
     return new SqlBuilderImpl(options);
+  }
+  @Override
+  public DocSqlBuilder docs() {
+    return new DocSqlBuilderImpl(ctx);
+  }
+  @Override
+  public DocLogSqlBuilder docLogs() {
+    return new DocLogSqlBuilderImpl(ctx);
+  }
+  @Override
+  public DocCommitSqlBuilder docCommits() {
+    return new DocCommitSqlBuilderImpl(ctx);
+  }
+  @Override
+  public DocBranchSqlBuilder docBranches() {
+    return new DocBranchSqlBuilderImpl(ctx);
   }
 }

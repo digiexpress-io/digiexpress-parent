@@ -1,6 +1,7 @@
 package io.resys.thena.docdb.spi;
 
 import java.util.List;
+import java.util.Optional;
 
 /*-
  * #%L
@@ -26,6 +27,7 @@ import org.immutables.value.Value;
 
 import io.resys.thena.docdb.api.models.Message;
 import io.resys.thena.docdb.api.models.Repo;
+import io.resys.thena.docdb.api.models.ThenaDocObject.Doc;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranch;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocCommit;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocLog;
@@ -38,12 +40,12 @@ public interface DocDbInserts {
   interface DocBatch {
     BatchStatus getStatus();
     Repo getRepo();
+    Doc getDoc();
+    DocBranch getDocBranch();
+    DocCommit getDocCommit();
+    Optional<DocLog> getDocLogs();
+
     Message getLog();
-    DocCommit getCommit();
-    Integer getDeleted();
-    Boolean getBranchCreated(); 
-    DocBranch getBranch();
-    DocLog getLogs();
     List<Message> getMessages();
   }
   Uni<DocBatch> batch(DocBatch output);

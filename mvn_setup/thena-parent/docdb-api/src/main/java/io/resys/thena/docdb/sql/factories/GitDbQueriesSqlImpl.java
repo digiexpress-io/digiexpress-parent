@@ -37,7 +37,7 @@ import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class ClientQuerySqlPool implements GitDbQueries {
+public class GitDbQueriesSqlImpl implements GitDbQueries {
   
   protected final ClientQuerySqlContext context;
   

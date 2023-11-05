@@ -24,23 +24,23 @@ import java.util.function.Function;
 
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.spi.DbCollections;
+import io.resys.thena.docdb.spi.DocDbInserts;
+import io.resys.thena.docdb.spi.DocDbQueries;
+import io.resys.thena.docdb.spi.DocDbState.DocRepo;
 import io.resys.thena.docdb.spi.ErrorHandler;
-import io.resys.thena.docdb.spi.GitDbState.GitRepo;
-import io.resys.thena.docdb.spi.GitDbInserts;
-import io.resys.thena.docdb.spi.GitDbQueries;
 import io.resys.thena.docdb.sql.factories.GitDbQueriesSqlImpl.ClientQuerySqlContext;
-import io.resys.thena.docdb.sql.queries.git.GitDbInsertsSqlPool;
 import io.resys.thena.docdb.sql.factories.ImmutableClientQuerySqlContext;
+import io.resys.thena.docdb.sql.queries.doc.DocDbInsertsSqlPool;
 import io.resys.thena.docdb.sql.support.ImmutableSqlClientWrapper;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class GitRepoImpl implements GitRepo {
+public class DocRepoImpl implements DocRepo {
   private final ImmutableSqlClientWrapper wrapper;
   private final ErrorHandler handler; 
   private final Function<DbCollections, SqlMapper> sqlMapper;
   private final Function<DbCollections, SqlBuilder> sqlBuilder;
-  private final Function<ClientQuerySqlContext, GitDbQueries> clientQuery;
+  private final Function<ClientQuerySqlContext, DocDbQueries> clientQuery;
   
   @Override
   public String getRepoName() {
@@ -51,7 +51,7 @@ public class GitRepoImpl implements GitRepo {
     return wrapper.getRepo();
   }
   @Override
-  public GitDbQueries query() {
+  public DocDbQueries query() {
     final var ctx = ImmutableClientQuerySqlContext.builder()
         .mapper(sqlMapper.apply(wrapper.getNames()))
         .builder(sqlBuilder.apply(wrapper.getNames()))
@@ -62,7 +62,7 @@ public class GitRepoImpl implements GitRepo {
     return clientQuery.apply(ctx);
   }
   @Override
-  public GitDbInserts insert() {
-    return new GitDbInsertsSqlPool(wrapper, sqlMapper.apply(wrapper.getNames()), sqlBuilder.apply(wrapper.getNames()), handler);
+  public DocDbInserts insert() {
+    return new DocDbInsertsSqlPool(wrapper, sqlMapper.apply(wrapper.getNames()), sqlBuilder.apply(wrapper.getNames()), handler);
   }
 }

@@ -19,6 +19,7 @@ public interface DocAppendActions {
   
   interface DocAppendBuilder {
     DocAppendBuilder repoId(String repoId);
+    DocAppendBuilder branchId(String branchId);
     DocAppendBuilder branchName(String branchName);
     DocAppendBuilder docId(@Nullable String docId); 
     DocAppendBuilder externalId(@Nullable String externalId); // user given unique id 

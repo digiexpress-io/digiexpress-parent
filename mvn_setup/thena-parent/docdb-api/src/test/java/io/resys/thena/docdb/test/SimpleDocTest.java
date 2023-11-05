@@ -65,6 +65,7 @@ public class SimpleDocTest extends DbTestTemplate {
       .appendBuilder()
       .repoId(repo.getRepo().getId())
       .externalId("bobs-ssn-id")
+      .branchName("main")
       .append(JsonObject.of("first_name", "bob", "last_name", "flop"))
       .message("created first entry")
       .log(JsonObject.of("some_cool_command", "create_customer"))

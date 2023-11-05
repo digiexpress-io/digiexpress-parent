@@ -30,6 +30,10 @@ import org.immutables.value.Value;
 
 import io.resys.thena.docdb.api.actions.PullActions.MatchCriteria;
 import io.resys.thena.docdb.api.models.Repo;
+import io.resys.thena.docdb.api.models.ThenaDocObject.Doc;
+import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranch;
+import io.resys.thena.docdb.api.models.ThenaDocObject.DocCommit;
+import io.resys.thena.docdb.api.models.ThenaDocObject.DocLog;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Blob;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Branch;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Commit;
@@ -37,6 +41,7 @@ import io.resys.thena.docdb.api.models.ThenaGitObject.Tag;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Tree;
 import io.resys.thena.docdb.api.models.ThenaGitObject.TreeValue;
 import io.resys.thena.docdb.spi.DbCollections;
+import io.resys.thena.docdb.spi.DocDbQueries.DocLockCriteria;
 import io.resys.thena.docdb.spi.GitDbQueries.LockCriteria;
 import io.vertx.mutiny.sqlclient.Tuple;
 
@@ -44,10 +49,10 @@ public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
 
   RepoSqlBuilder repo();
   
-  GitRefSqlBuilder docs();
-  GitRefSqlBuilder docLogs();
-  GitRefSqlBuilder docCommits();
-  GitRefSqlBuilder docBranches();
+  DocSqlBuilder docs();
+  DocLogSqlBuilder docLogs();
+  DocCommitSqlBuilder docCommits();
+  DocBranchSqlBuilder docBranches();
   
   GitRefSqlBuilder refs();
   GitTagSqlBuilder tags();
@@ -67,17 +72,33 @@ public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
     SqlTuple deleteOne(Repo repo);
   }
   
+  interface DocCommitSqlBuilder {
+    SqlTuple getById(String id);
+    SqlTuple getLock(DocLockCriteria crit);
+    Sql findAll();
+    SqlTuple insertOne(DocCommit commit);
+  }
   
   interface DocSqlBuilder {
-    SqlTuple getById(String blobId);
-    
-    SqlTuple insertOne(Doc blob);
-    SqlTupleList insertAll(Collection<Blob> blobs);
-    
-    SqlTuple find(@Nullable String name, boolean latestOnly, List<MatchCriteria> criteria);
-    SqlTuple findByTree(String treeId, List<MatchCriteria> criteria);
-    SqlTuple findByTree(String treeId, List<String> blobNames, List<MatchCriteria> criteria);
-    SqlTuple findByIds(Collection<String> blobId);
+    SqlTuple getById(String id);
+    SqlTuple deleteById(String id);
+    Sql findAll();
+    SqlTuple insertOne(Doc doc);
+  }
+  
+  interface DocLogSqlBuilder {
+    SqlTuple getById(String id);
+    SqlTuple findByBranchId(String branchId);
+    Sql findAll();
+    SqlTuple insertOne(DocLog doc);
+  }
+  
+  
+  
+  interface DocBranchSqlBuilder {
+    SqlTuple getById(String branchId);
+    SqlTuple updateOne(DocBranch doc);
+    SqlTuple insertOne(DocBranch doc);
     Sql findAll();
   }
   

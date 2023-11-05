@@ -209,16 +209,11 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("CREATE TABLE ").append(options.getDoc()).ln()
     .append("(").ln()
     .append("  id VARCHAR(40) PRIMARY KEY,").ln()
-    .append("  version VARCHAR(40),").ln()
-    .append("  external_id VARCHAR(40) UNIQUE,").ln()
-    .append("  value jsonb NOT NULL").ln()
+    .append("  external_id VARCHAR(40) UNIQUE").ln()
     .append(");").ln()
     
     .append("CREATE INDEX ").append(options.getDoc()).append("_DOC_EXT_ID_INDEX")
     .append(" ON ").append(options.getDoc()).append(" (external_id);").ln()
-    
-    .append("CREATE INDEX ").append(options.getDoc()).append("_DOC_ID_VERSION_INDEX")
-    .append(" ON ").append(options.getDoc()).append(" (id, version);").ln()
     
     .build()).build();
   }
@@ -228,19 +223,22 @@ public class SqlSchemaImpl implements SqlSchema {
     return ImmutableSql.builder().value(new SqlStatement().ln()
     .append("CREATE TABLE ").append(options.getDocBranch()).ln()
     .append("(").ln()
-    .append("  id VARCHAR(40),").ln()
-    .append("  branch_id VARCHAR(40),").ln()
-    .append("  version_origin VARCHAR(40),").ln()
-    .append("  version VARCHAR(40),").ln()
+    .append("  branch_name VARCHAR(255) NOT NULL,").ln()
+    .append("  branch_id VARCHAR(40) NOT NULL,").ln()
+    .append("  commit_id VARCHAR(40) NOT NULL,").ln()
+    .append("  doc_id VARCHAR(40),").ln()
     .append("  value jsonb NOT NULL,").ln()
-    .append("  PRIMARY KEY (id, branch_id)").ln()
+    .append("  PRIMARY KEY (branch_id)").ln()
     .append(");").ln()
     
-    .append("CREATE INDEX ").append(options.getDocBranch()).append("_DOC_BRANCH_BRANCH_ID_INDEX")
-    .append(" ON ").append(options.getDocBranch()).append(" (branch_id);").ln()
+    .append("CREATE INDEX ").append(options.getDocBranch()).append("_DOC_DOC_ID_INDEX")
+    .append(" ON ").append(options.getDocBranch()).append(" (doc_id);").ln()
+
+    .append("CREATE INDEX ").append(options.getDocBranch()).append("_DOC_BRANCH_NAME_INDEX")
+    .append(" ON ").append(options.getDocBranch()).append(" (branch_name);").ln()
     
-    .append("CREATE INDEX ").append(options.getDocBranch()).append("_DOC_BRANCH_VERSION_ORIGIN_INDEX")
-    .append(" ON ").append(options.getDocBranch()).append(" (version_origin);").ln()
+    .append("CREATE INDEX ").append(options.getDocBranch()).append("_DOC_COMMIT_ID_INDEX")
+    .append(" ON ").append(options.getDocBranch()).append(" (commit_id);").ln()
     
     .build()).build();
   }
@@ -251,8 +249,8 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("CREATE TABLE ").append(options.getDocCommits()).ln()
     .append("(").ln()
     .append("  id VARCHAR(40) PRIMARY KEY,").ln()
+    .append("  branch_id VARCHAR(40) NOT NULL,").ln()
     .append("  doc_id VARCHAR(40) NOT NULL,").ln()
-    .append("  branch_id VARCHAR(40),").ln()
     .append("  datetime VARCHAR(29) NOT NULL,").ln()
     .append("  author VARCHAR(40) NOT NULL,").ln()
     .append("  message VARCHAR(255) NOT NULL,").ln()
@@ -262,9 +260,13 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("CREATE INDEX ").append(options.getDocCommits()).append("_DOC_COMMIT_DOC_ID_INDEX")
     .append(" ON ").append(options.getDocCommits()).append(" (doc_id);").ln()
     
+    .append("CREATE INDEX ").append(options.getDocCommits()).append("_DOC_COMMIT_PARENT_INDEX")
+    .append(" ON ").append(options.getDocCommits()).append(" (parent);").ln()
+    
+
     .append("CREATE INDEX ").append(options.getDocCommits()).append("_DOC_COMMIT_BRANCH_ID_INDEX")
     .append(" ON ").append(options.getDocCommits()).append(" (branch_id);").ln()
-    
+
     
     .build()).build();
   }
@@ -280,7 +282,7 @@ public class SqlSchemaImpl implements SqlSchema {
     .append(");").ln()
     
 
-    .append("CREATE INDEX ").append(options.getDocLog()).append("_DOC_LOG_INDEX")
+    .append("CREATE INDEX ").append(options.getDocLog()).append("_DOC_LOG_COMMIT_ID_INDEX")
     .append(" ON ").append(options.getDocLog()).append(" (commit_id);").ln()
     
     .build()).build();
@@ -295,11 +297,11 @@ public class SqlSchemaImpl implements SqlSchema {
         .append("  FOREIGN KEY (doc_id)").ln()
         .append("  REFERENCES ").append(options.getDoc()).append(" (id);").ln().ln()
         
-        .append("ALTER TABLE ").append(options.getDocCommits()).ln()
-        .append("  ADD CONSTRAINT ").append(options.getDocCommits()).append("_DOC_COMMIT_BRANCH_FK").ln()
-        .append("  FOREIGN KEY (doc_id, branch_id)").ln()
-        .append("  REFERENCES ").append(options.getDocBranch()).append(" (id, branch_id);").ln()
-        
+//        .append("ALTER TABLE ").append(options.getDocCommits()).ln()
+//        .append("  ADD CONSTRAINT ").append(options.getDocCommits()).append("_BRANCH_ID_FK").ln()
+//        .append("  FOREIGN KEY (branch_id)").ln()
+//        .append("  REFERENCES ").append(options.getDocBranch()).append(" (branch_id);").ln().ln()
+            
         .build())
         .build();
   }
@@ -323,8 +325,8 @@ public class SqlSchemaImpl implements SqlSchema {
     return ImmutableSql.builder()
         .value(new SqlStatement().ln()
         .append("ALTER TABLE ").append(options.getDocBranch()).ln()
-        .append("  ADD CONSTRAINT ").append(options.getDocBranch()).append("_DOC_COMMIT_FK").ln()
-        .append("  FOREIGN KEY (id)").ln()
+        .append("  ADD CONSTRAINT ").append(options.getDocBranch()).append("_DOC_ID_FK").ln()
+        .append("  FOREIGN KEY (doc_id)").ln()
         .append("  REFERENCES ").append(options.getDoc()).append(" (id);").ln().ln()
         .build())
         .build();

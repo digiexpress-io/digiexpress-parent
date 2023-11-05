@@ -1,6 +1,6 @@
 package io.resys.thena.docdb.spi;
 
-import javax.annotation.Nullable;
+import java.util.Optional;
 
 /*-
  * #%L
@@ -40,8 +40,6 @@ public interface DocDbQueries {
 
   @Value.Immutable
   interface DocLockCriteria {
-    @Nullable String getDocId(); 
-    @Nullable String getVersionId();
-    @Nullable String getBranchName();
+    Optional<String> getBranchId();
   }
 }

@@ -1,6 +1,7 @@
 package io.resys.thena.docdb.spi.doc.commits;
 
 import java.time.Duration;
+import java.util.Optional;
 
 import io.resys.thena.docdb.api.actions.CommitActions.CommitResultStatus;
 import io.resys.thena.docdb.api.actions.CommitActions.JsonObjectMerge;
@@ -14,7 +15,7 @@ import io.resys.thena.docdb.spi.DbState;
 import io.resys.thena.docdb.spi.DocDbState.DocRepo;
 import io.resys.thena.docdb.spi.GitDbInserts.BatchStatus;
 import io.resys.thena.docdb.spi.ImmutableDocLockCriteria;
-import io.resys.thena.docdb.spi.doc.commits.DocCommitBatchBuilder.DocCommitTreeState;
+import io.resys.thena.docdb.spi.doc.commits.DocCommitBatchBuilder.DocCommitState;
 import io.resys.thena.docdb.spi.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
@@ -33,6 +34,7 @@ public class DocAppendBuilderImpl implements DocAppendBuilder {
   private String repoId;
   private String docId;
   private String externalId;
+  private String branchId;
   private String branchName;
   private String author;
   private String message;
@@ -41,8 +43,14 @@ public class DocAppendBuilderImpl implements DocAppendBuilder {
 
   @Override
   public DocAppendBuilder repoId(String repoId) {
-    RepoAssert.isEmpty(repoId, () -> "Can't defined id when head is defined!");
+    RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
     this.repoId = repoId;
+    return this;
+  }
+  @Override
+  public DocAppendBuilder branchId(String branchId) {
+    RepoAssert.notEmpty(branchId, () -> "branchId can't be empty!");
+    this.branchId = branchId;
     return this;
   }
   @Override
@@ -118,15 +126,13 @@ public class DocAppendBuilderImpl implements DocAppendBuilder {
     RepoAssert.notEmpty(message, () -> "message can't be empty!");
     RepoAssert.isTrue(appendBlobs != null || deleteBlobs || mergeBlobs != null, () -> "Nothing to commit, no content!");
         
-    final var crit = ImmutableDocLockCriteria.builder().branchName(branchName).versionId(parentCommit).branchName(branchName).build();
-    return this.state.toDocState().withTransaction(repoId, tx -> tx.query().commits().getLock(crit)
-      .onItem().transformToUni(lock -> {
-        final var validation = validateRepo(lock, parentCommit);
+    final var crit = ImmutableDocLockCriteria.builder().branchId(Optional.ofNullable(branchId)).build();
+    return this.state.toDocState().withTransaction(repoId, tx -> tx.query().commits().getLock(crit).onItem().transformToUni(lock -> {
+        final AppendResultEnvelope validation = validateRepo(lock, parentCommit);
         if(validation != null) {
           return Uni.createFrom().item(validation);
         }
         return doInLock(lock, tx);
-
       })
     )
     .onFailure(err -> state.getErrorHandler().isLocked(err)).retry()
@@ -141,7 +147,7 @@ public class DocAppendBuilderImpl implements DocAppendBuilder {
   }
   
   private Uni<AppendResultEnvelope> doInLock(DocCommitLock lock, DocRepo tx) {  
-    final var init = DocCommitTreeState.builder().repo(tx.getRepo()).docId(docId).branchName(branchName).externalId(externalId);
+    final var init = DocCommitState.builder().repo(tx.getRepo()).docId(docId).branchId(branchId).externalId(externalId).branchName(branchName);
     
     if(lock.getStatus() == DocCommitLockStatus.NOT_FOUND) {
       // nothing to add
@@ -162,7 +168,7 @@ public class DocAppendBuilderImpl implements DocAppendBuilder {
     return tx.insert().batch(batch)
         .onItem().transform(rsp -> ImmutableAppendResultEnvelope.builder()
           .repoId(repoId)
-          .commit(rsp.getCommit())
+          .commit(rsp.getDocCommit())
           .addMessages(rsp.getLog())
           .addAllMessages(rsp.getMessages())
           .status(visitStatus(rsp.getStatus()))
@@ -179,7 +185,7 @@ public class DocAppendBuilderImpl implements DocAppendBuilder {
               .text(new StringBuilder()
                   .append("Commit to: '").append(repoId).append("'")
                   .append(", docId: '").append(docId).append("'")
-                  .append(", branchName: '").append(branchName == null ? "main" : branchName).append("'")
+                  .append(", branchId: '").append(branchId == null ? "main" : branchId).append("'")
                   .append(" is rejected.")
                   .append(" Your trying to merge objects to non existent head!")
                   .toString())
@@ -218,7 +224,7 @@ public class DocAppendBuilderImpl implements DocAppendBuilder {
                   .append(" Parent commit for:")
                   .append(" '").append(repoId).append("'")
                   .append(", docId: '").append(docId).append("'")
-                  .append(", branchName: '").append(branchName == null ? "main" : branchName).append("'")
+                  .append(", branchId: '").append(branchId == null ? "main" : branchId).append("'")
                   .append(" is: '").append(state.getCommit().get().getId()).append("'!")
                   .toString())
               .build())
@@ -234,7 +240,7 @@ public class DocAppendBuilderImpl implements DocAppendBuilder {
       final var text = new StringBuilder()
         .append("Commit to: '").append(repoId).append("'")
         .append(", docId: '").append(docId).append("'")
-        .append(", branchName: '").append(branchName == null ? "main" : branchName).append("'")
+        .append(", branchId: '").append(branchId == null ? "main" : branchId).append("'")
         .append(" is rejected.")
         .append(" Your head is: '").append(commitParent).append("')")
         .append(" but remote is: '").append(state.getCommit().get().getId()).append("'!")

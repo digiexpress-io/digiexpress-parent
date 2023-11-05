@@ -28,12 +28,20 @@ import io.resys.thena.docdb.api.models.ImmutableBlobHistory;
 import io.resys.thena.docdb.api.models.ImmutableBranch;
 import io.resys.thena.docdb.api.models.ImmutableCommit;
 import io.resys.thena.docdb.api.models.ImmutableCommitTree;
+import io.resys.thena.docdb.api.models.ImmutableDoc;
+import io.resys.thena.docdb.api.models.ImmutableDocBranch;
+import io.resys.thena.docdb.api.models.ImmutableDocCommit;
+import io.resys.thena.docdb.api.models.ImmutableDocCommitLock;
 import io.resys.thena.docdb.api.models.ImmutableRepo;
 import io.resys.thena.docdb.api.models.ImmutableTag;
 import io.resys.thena.docdb.api.models.ImmutableTree;
 import io.resys.thena.docdb.api.models.ImmutableTreeValue;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.Repo.RepoType;
+import io.resys.thena.docdb.api.models.ThenaDocObject.Doc;
+import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranch;
+import io.resys.thena.docdb.api.models.ThenaDocObject.DocCommit;
+import io.resys.thena.docdb.api.models.ThenaDocObject.DocCommitLock;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Blob;
 import io.resys.thena.docdb.api.models.ThenaGitObject.BlobHistory;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Branch;
@@ -162,5 +170,28 @@ public class SqlMapperImpl implements SqlMapper {
   public JsonObject jsonObject(Row row, String columnName) {
     // string based - new JsonObject(row.getString(columnName));
     return row.getJsonObject(columnName);
+  }
+  @Override
+  public DocCommit docCommit(Row row) {
+    return ImmutableDocCommit.builder()
+        .id(row.getString("id"))
+        .author(row.getString("author"))
+        .dateTime(LocalDateTime.parse(row.getString("datetime")))
+        .message(row.getString("message"))
+        .parent(Optional.ofNullable(row.getString("parent")))
+        .branchId(row.getString("branch_id"))
+        .docId(row.getString("doc_id"))
+        .build();
+  }
+  @Override
+  public DocCommitLock docCommitLock(Row row) {
+    return ImmutableDocCommitLock.builder()
+        .doc(ImmutableDoc.builder()
+            .build())
+        .branch(ImmutableDocBranch.builder()
+            .build())
+        .commit(ImmutableDocCommit.builder()
+            .build())
+        .build();
   }
 }

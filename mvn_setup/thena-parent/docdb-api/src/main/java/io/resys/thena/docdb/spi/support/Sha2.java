@@ -30,6 +30,7 @@ import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
 
 import io.resys.thena.docdb.api.models.ImmutableBlob;
+import io.resys.thena.docdb.api.models.ThenaDocObject.DocCommit;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Blob;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Commit;
 import io.resys.thena.docdb.api.models.ThenaGitObject.TreeValue;
@@ -71,6 +72,13 @@ public final class Sha2  {
     return id;
   }
 
+  public static String commitId(DocCommit commit) {
+    String id = Hashing
+        .murmur3_128()
+        .hashString(commit.toString(), Charsets.UTF_8)
+        .toString();
+    return id;
+  }
   static class TreeEntryComparator implements Comparator<TreeValue> {
     @Override
     public int compare(TreeValue o1, TreeValue o2) {
