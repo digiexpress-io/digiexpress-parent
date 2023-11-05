@@ -1,6 +1,6 @@
+import { Task, Profile } from 'client';
 
 import { TasksState } from './tasks-ctx-types';
-import { Task, Profile } from 'client';
 import { Palette, _nobody_ } from './descriptor-constants';
 import { DescriptorState, TaskDescriptor, TasksPaletteType, } from './descriptor-types';
 import { TaskDescriptorImpl, DescriptorStateImpl } from './descriptor-impl';

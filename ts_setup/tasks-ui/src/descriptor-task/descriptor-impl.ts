@@ -1,16 +1,12 @@
-import { Task, TaskExtension, TaskPriority, TaskStatus } from 'client/task-types';
+import { Task, TaskExtension, TaskPriority, TaskStatus, Profile, resolveAvatar } from 'client';
+
 import {
   TaskDescriptor, FilterBy, Group, GroupBy,
   FilterByOwners, FilterByPriority, FilterByRoles, FilterByStatus, AvatarCode, AssigneeGroupType, TeamGroupType,
-  TasksPaletteType, Data
+  TasksPaletteType, Data, DescriptorState
 } from './descriptor-types';
-
-import { Profile, resolveAvatar } from 'client';
-import { DescriptorState } from './descriptor-types';
 import { _nobody_, Palette } from './descriptor-constants';
-
 import { applyDescFilters, applySearchString, withColors, getDaysUntilDue, getMyWorkType, getTeamspaceType } from './descriptor-util';
-
 
 
 interface ExtendedInit extends Omit<DescriptorState,

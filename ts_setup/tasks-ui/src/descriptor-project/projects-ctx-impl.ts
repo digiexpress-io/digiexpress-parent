@@ -1,7 +1,7 @@
 
-import { ProjectsState } from './projects-ctx-types';
-
 import { Project, Profile } from 'client';
+
+import { ProjectsState } from './projects-ctx-types';
 import { Palette, _nobody_ } from './descriptor-constants';
 import { DescriptorState, ProjectDescriptor, ProjectPaletteType } from './descriptor-types';
 import { DescriptorStateImpl, ProjectDescriptorImpl } from './descriptor-impl';
@@ -11,10 +11,10 @@ import { withColors } from './descriptor-util';
 interface ExtendedInit extends Omit<ProjectsState, "withProfile" | "withProjects" | "withDescriptors"> {
   users: string[];
   palette: {
-    users: Record<string, string>
-    repoType: Record<string, string>
+    users: Record<string, string>;
+    repoType: Record<string, string>;
   }
-  profile: Profile
+  profile: Profile;
 }
 
 class ProjectsStateBuilder implements ProjectsState {

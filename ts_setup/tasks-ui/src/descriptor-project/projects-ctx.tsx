@@ -1,7 +1,8 @@
 import React from 'react';
+import { Backend, Profile } from 'client';
+
 import { ProjectsContextType, ProjectsMutator, ProjectsDispatch, ProjectsState } from './projects-ctx-types';
 import { ProjectsStateBuilder } from './projects-ctx-impl';
-import { Backend, Profile } from 'client';
 import { Palette } from './descriptor-constants';
 
 const ProjectsContext = React.createContext<ProjectsContextType>({} as ProjectsContextType);

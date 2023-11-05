@@ -1,14 +1,11 @@
-import { Project, RepoType } from 'client';
+import { Project, RepoType, Profile, resolveAvatar } from 'client';
+
 import {
   ProjectDescriptor, FilterBy, Group, GroupBy,
   FilterByRepoType, FilterByUsers, AvatarCode,
-  ProjectPaletteType, Data
+  ProjectPaletteType, Data, DescriptorState
 } from './descriptor-types';
-
-import { Profile, resolveAvatar } from 'client';
-import { DescriptorState } from './descriptor-types';
 import { _nobody_, Palette } from './descriptor-constants';
-
 import { applyDescFilters, applySearchString, withColors } from './descriptor-util';
 
 
