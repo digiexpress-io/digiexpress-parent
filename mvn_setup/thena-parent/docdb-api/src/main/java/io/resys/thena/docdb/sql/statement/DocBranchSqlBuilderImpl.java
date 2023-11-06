@@ -42,7 +42,7 @@ public class DocBranchSqlBuilderImpl implements DocBranchSqlBuilder {
         .append("INSERT INTO ").append(options.getDocBranch())
         .append(" (branch_id, branch_name, commit_id, doc_id, value) VALUES($1, $2, $3, $4, $5)")
         .build())
-        .props(Tuple.of(ref.getBranchId(), ref.getBranchName(), ref.getCommitId(), ref.getDocId(), ref.getValue()))
+        .props(Tuple.of(ref.getId(), ref.getBranchName(), ref.getCommitId(), ref.getDocId(), ref.getValue()))
         .build();
   }
 
@@ -54,7 +54,7 @@ public class DocBranchSqlBuilderImpl implements DocBranchSqlBuilder {
         .append(" SET commit = $1, branch_name = $2, value = $3")
         .append(" WHERE branch_id = $4")
         .build())
-        .props(Tuple.of(ref.getCommitId(), ref.getBranchName(), ref.getValue(), ref.getBranchId()))
+        .props(Tuple.of(ref.getCommitId(), ref.getBranchName(), ref.getValue(), ref.getId()))
         .build();
   }
   

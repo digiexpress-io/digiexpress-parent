@@ -82,8 +82,7 @@ public class DocCommitBatchBuilderImpl implements DocCommitBatchBuilder {
       .branchId(branchId)
       .build();
     final var docBranch = ImmutableDocBranch.builder()
-      .id(OidUtils.gen())
-      .branchId(branchId)
+      .id(branchId)
       .docId(doc.getId())
       .commitId(commit.getId())
       .branchName(this.currentState.getBranch().map(e -> e.getBranchName()).orElse(this.currentState.getBranchName()))
@@ -92,6 +91,8 @@ public class DocCommitBatchBuilderImpl implements DocCommitBatchBuilder {
     
     final var docLogs = Optional.ofNullable(toBeLogged).map((value) -> ImmutableDocLog.builder()
         .id(OidUtils.gen())
+        .docId(doc.getId())
+        .branchId(branchId)
         .docCommitId(commit.getId())
         .value(value)
         .build());

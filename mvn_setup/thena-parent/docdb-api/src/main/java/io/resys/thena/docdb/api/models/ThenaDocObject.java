@@ -36,14 +36,16 @@ public interface ThenaDocObject {
   @Value.Immutable
   interface Doc extends ThenaDocObject, IsDocObject {
     String getId();
-    String getExternalId(); 
+    String getType();
+    String getExternalId();
+    JsonObject getValue();
   }
   
   @Value.Immutable
   interface DocBranch extends ThenaDocObject, IsDocObject {
+    String getId();
     String getCommitId();
     String getBranchName();
-    String getBranchId();
     String getDocId();
     @Nullable JsonObject getValue();  // null when json loading is disabled
   }
@@ -64,6 +66,8 @@ public interface ThenaDocObject {
   @Value.Immutable
   interface DocLog extends ThenaDocObject, IsDocObject {
     String getId();
+    String getBranchId();
+    String getDocId();
     String getDocCommitId();
     JsonObject getValue();
   }

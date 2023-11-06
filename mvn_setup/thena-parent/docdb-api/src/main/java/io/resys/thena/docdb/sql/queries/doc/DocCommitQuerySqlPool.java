@@ -50,7 +50,7 @@ public class DocCommitQuerySqlPool implements DocCommitQuery {
   }
   @Override
   public Multi<DocCommit> findAll() {
-    final var sql = sqlBuilder.commits().findAll();
+    final var sql = sqlBuilder.docCommits().findAll();
     if(log.isDebugEnabled()) {
       log.debug("DocCommit findAll query, with props: {} \r\n{}", 
           "",

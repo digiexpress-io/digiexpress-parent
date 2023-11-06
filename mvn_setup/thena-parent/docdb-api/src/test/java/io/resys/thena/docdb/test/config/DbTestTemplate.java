@@ -17,9 +17,10 @@ import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.Repo.RepoType;
 import io.resys.thena.docdb.spi.DbCollections;
 import io.resys.thena.docdb.spi.DbState;
+import io.resys.thena.docdb.spi.DocDbPrinter;
 import io.resys.thena.docdb.spi.GitDbPrinter;
 import io.resys.thena.docdb.spi.jackson.VertexExtModule;
-import io.resys.thena.docdb.sql.DbStateImpl;
+import io.resys.thena.docdb.sql.DbStateSqlImpl;
 import io.vertx.core.json.jackson.DatabindCodec;
 import io.vertx.core.json.jackson.VertxModule;
 import io.vertx.mutiny.sqlclient.Pool;
@@ -79,7 +80,7 @@ public class DbTestTemplate {
     DatabindCodec.mapper().registerModules(modules);
     DatabindCodec.prettyMapper().registerModules(modules);
 
-    this.client = DbStateImpl.create()
+    this.client = DbStateSqlImpl.create()
         .db("junit")
         .client(pgPool)
         .errorHandler(new PgTestErrors())
@@ -114,12 +115,17 @@ public class DbTestTemplate {
   
   public DbState createState() {
     final var ctx = DbCollections.defaults(db);
-    return DbStateImpl.state(ctx, pgPool, new PgTestErrors());
+    return DbStateSqlImpl.state(ctx, pgPool, new PgTestErrors());
   }
   
   public void printRepo(Repo repo) {
-    final String result = new GitDbPrinter(createState()).print(repo);
-    log.debug(result);
+    if(repo.getType() == RepoType.doc) {
+      final String result = new DocDbPrinter(createState()).print(repo);
+      log.debug(result);
+    } else {
+      final String result = new GitDbPrinter(createState()).print(repo);
+      log.debug(result);
+    }
   }
   public Repo getRepo() {
     return repo;

@@ -1,4 +1,4 @@
-package io.resys.thena.docdb.spi.pgsql;
+package io.resys.thena.docdb.sql;
 
 /*-
  * #%L

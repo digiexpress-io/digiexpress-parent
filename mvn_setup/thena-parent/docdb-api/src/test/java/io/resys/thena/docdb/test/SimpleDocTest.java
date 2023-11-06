@@ -72,5 +72,7 @@ public class SimpleDocTest extends DbTestTemplate {
       .author("jane.doe@morgue.com")
     .build().await().atMost(Duration.ofMinutes(1));
     
+    printRepo(repo.getRepo());
+    
   }
 }

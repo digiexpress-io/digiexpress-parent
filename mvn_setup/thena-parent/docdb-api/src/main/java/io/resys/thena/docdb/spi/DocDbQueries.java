@@ -24,18 +24,40 @@ import java.util.Optional;
 
 import org.immutables.value.Value;
 
+import io.resys.thena.docdb.api.models.ThenaDocObject.Doc;
+import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranch;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocCommit;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocCommitLock;
+import io.resys.thena.docdb.api.models.ThenaDocObject.DocLog;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 
 public interface DocDbQueries {
+  
+  DocQuery docs();
+  DocBranchQuery branches();
   DocCommitQuery commits();
+  DocLogQuery logs();  
+  
+  interface DocQuery {
+    Multi<Doc> findAll();
+    Uni<Doc> getById(String id);
+  }
   
   interface DocCommitQuery {
     Uni<DocCommit> getById(String commitId);
     Uni<DocCommitLock> getLock(DocLockCriteria criteria);
     Multi<DocCommit> findAll();
+  }
+  
+  interface DocBranchQuery {
+    Multi<DocBranch> findAll();
+    Uni<DocBranch> getById(String branchId);
+  }
+
+  interface DocLogQuery {
+    Multi<DocLog> findAll();
+    Uni<DocLog> getById(String logId);
   }
 
   @Value.Immutable

@@ -42,7 +42,7 @@ import io.resys.thena.docdb.sql.queries.RepoBuilderSqlPool;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class DbStateImpl implements DbState {
+public class DbStateSqlImpl implements DbState {
   final DbCollections ctx;
   final io.vertx.mutiny.sqlclient.Pool pool; 
   final ErrorHandler handler;
@@ -73,7 +73,7 @@ public class DbStateImpl implements DbState {
       final io.vertx.mutiny.sqlclient.Pool client, 
       final ErrorHandler handler) {
     
-    return new DbStateImpl(
+    return new DbStateSqlImpl(
         ctx, client, handler, 
         Builder::defaultSqlSchema, 
         Builder::defaultSqlMapper,
@@ -87,14 +87,14 @@ public class DbStateImpl implements DbState {
   }
 
   public static class Builder {
-    protected io.vertx.mutiny.sqlclient.Pool client;
-    protected String db = "docdb";
-    protected ErrorHandler errorHandler;
-    protected Function<DbCollections, SqlSchema> sqlSchema; 
-    protected Function<DbCollections, SqlMapper> sqlMapper;
-    protected Function<DbCollections, SqlBuilder> sqlBuilder;
-    protected Function<ClientQuerySqlContext, GitDbQueries> gitQuery;
-    protected Function<ClientQuerySqlContext, DocDbQueries> docQuery;
+    private io.vertx.mutiny.sqlclient.Pool client;
+    private String db = "docdb";
+    private ErrorHandler errorHandler;
+    private Function<DbCollections, SqlSchema> sqlSchema; 
+    private Function<DbCollections, SqlMapper> sqlMapper;
+    private Function<DbCollections, SqlBuilder> sqlBuilder;
+    private Function<ClientQuerySqlContext, GitDbQueries> gitQuery;
+    private Function<ClientQuerySqlContext, DocDbQueries> docQuery;
     
     public Builder sqlMapper(Function<DbCollections, SqlMapper> sqlMapper) {this.sqlMapper = sqlMapper; return this; }
     public Builder sqlBuilder(Function<DbCollections, SqlBuilder> sqlBuilder) {this.sqlBuilder = sqlBuilder; return this; }
@@ -115,7 +115,8 @@ public class DbStateImpl implements DbState {
     public DocDB build() {
       RepoAssert.notNull(client, () -> "client must be defined!");
       RepoAssert.notNull(db, () -> "db must be defined!");
-      RepoAssert.notNull(errorHandler, () -> "errorHandler must be defined!");
+      
+      this.errorHandler = new PgErrors();
 
       final var ctx = DbCollections.defaults(db);
       final Function<DbCollections, SqlSchema> sqlSchema = this.sqlSchema == null ? Builder::defaultSqlSchema : this.sqlSchema;
@@ -125,7 +126,7 @@ public class DbStateImpl implements DbState {
       final Function<ClientQuerySqlContext, DocDbQueries> docQuery = this.gitQuery == null ? Builder::defaultDocQuery : this.docQuery;
       
       
-      final var state = new DbStateImpl(ctx, client, errorHandler, sqlSchema, sqlMapper, sqlBuilder, gitQuery, docQuery);
+      final var state = new DbStateSqlImpl(ctx, client, errorHandler, sqlSchema, sqlMapper, sqlBuilder, gitQuery, docQuery);
       
       return new DocDBDefault(state);
     }

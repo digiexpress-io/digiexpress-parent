@@ -32,6 +32,7 @@ import io.resys.thena.docdb.api.models.ImmutableDoc;
 import io.resys.thena.docdb.api.models.ImmutableDocBranch;
 import io.resys.thena.docdb.api.models.ImmutableDocCommit;
 import io.resys.thena.docdb.api.models.ImmutableDocCommitLock;
+import io.resys.thena.docdb.api.models.ImmutableDocLog;
 import io.resys.thena.docdb.api.models.ImmutableRepo;
 import io.resys.thena.docdb.api.models.ImmutableTag;
 import io.resys.thena.docdb.api.models.ImmutableTree;
@@ -42,6 +43,7 @@ import io.resys.thena.docdb.api.models.ThenaDocObject.Doc;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranch;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocCommit;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocCommitLock;
+import io.resys.thena.docdb.api.models.ThenaDocObject.DocLog;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Blob;
 import io.resys.thena.docdb.api.models.ThenaGitObject.BlobHistory;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Branch;
@@ -193,5 +195,33 @@ public class SqlMapperImpl implements SqlMapper {
         .commit(ImmutableDocCommit.builder()
             .build())
         .build();
+  }
+  @Override
+  public Doc doc(Row row) {
+    return ImmutableDoc.builder()
+        .id(row.getString("id"))
+        .externalId(row.getString("external_id"))
+        .build();
+  }
+  @Override
+  public DocLog docLog(Row row) {
+    return ImmutableDocLog.builder()
+        .id(row.getString("id"))
+        .docId(row.getString("doc_id"))
+        .branchId(row.getString("branch_id"))
+        .docCommitId(row.getString("commit_id"))
+        .value(jsonObject(row, "value"))
+        .build();
+  }
+  @Override
+  public DocBranch docBranch(Row row) {
+    return ImmutableDocBranch.builder()
+        .id(row.getString("branch_id"))
+        .docId(row.getString("doc_id"))
+        .commitId(row.getString("commit_id"))
+        .branchName(row.getString("branch_name"))
+        .value(jsonObject(row, "value"))
+        .build();
+    
   }
 }

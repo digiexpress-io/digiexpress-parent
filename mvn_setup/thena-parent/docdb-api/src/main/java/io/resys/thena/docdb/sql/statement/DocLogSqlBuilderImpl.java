@@ -19,7 +19,16 @@ public class DocLogSqlBuilderImpl implements DocLogSqlBuilder {
   public Sql findAll() {
     return ImmutableSql.builder()
         .value(new SqlStatement()
-        .append("SELECT * FROM ").append(options.getDocLog())
+        .append("SELECT ").ln()
+        .append("  doc_log.id as id, ").ln()
+        .append("  doc_log.commit_id as commit_id, ").ln()
+        .append("  doc_log.value as value, ").ln()
+        .append("  doc_commit.doc_id as doc_id, ").ln()
+        .append("  doc_commit.branch_id as branch_id ").ln()
+        
+        .append("FROM ").append(options.getDocLog()).append(" AS doc_log").ln()
+        .append("  LEFT JOIN ").append(options.getDocCommits()).append(" AS doc_commit").ln()
+        .append("  ON(doc_log.commit_id = doc_commit.id) ").ln()
         .build())
         .build();
   }
@@ -27,9 +36,16 @@ public class DocLogSqlBuilderImpl implements DocLogSqlBuilder {
   public SqlTuple getById(String id) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
-        .append("SELECT * ").ln()
-        .append("  FROM ").append(options.getDocLog()).ln()
-        .append("  WHERE id = $1").ln()
+        .append("SELECT ").ln()
+        .append("  doc_log.id as id, ").ln()
+        .append("  doc_log.commit_id as commit_id, ").ln()
+        .append("  doc_log.value as value, ").ln()
+        .append("  doc_commit.branch_id as branch_id ").ln()
+        
+        .append("FROM ").append(options.getDocLog()).append(" AS doc_log").ln()
+        .append("  LEFT JOIN ").append(options.getDocCommits()).append(" AS doc_commit").ln()
+        .append("  ON(doc_log.commit_id = doc_commit.id) ").ln()
+        .append("WHERE doc_log.id = $1").ln()
         .build())
         .props(Tuple.of(id, id))
         .build();
@@ -48,11 +64,16 @@ public class DocLogSqlBuilderImpl implements DocLogSqlBuilder {
   public SqlTuple findByBranchId(String branchId) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
-        .append("SELECT doc_log.* ").ln()
-        .append("  FROM ").append(options.getDocLog()).append(" AS doc_log").ln()
+        .append("SELECT").ln()
+        .append("  doc_log.id as id, ").ln()
+        .append("  doc_log.commit_id as commit_id, ").ln()
+        .append("  doc_log.value as value, ").ln()
+        .append("  doc_commit.branch_id as branch_id ").ln()
+        
+        .append("FROM ").append(options.getDocLog()).append(" AS doc_log").ln()
         .append("  LEFT JOIN ").append(options.getDocCommits()).append(" AS doc_commit").ln()
-        .append("  ON(doc_log.commit_id = doc_commit.id)").ln()
-        .append("  WHERE doc_commit.branch_id = $1").ln()
+        .append("  ON(doc_log.commit_id = doc_commit.id) ").ln()
+        .append("WHERE doc_commit.branch_id = $1").ln()
         .build())
         .props(Tuple.of(branchId))
         .build();
