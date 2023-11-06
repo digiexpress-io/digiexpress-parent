@@ -62,6 +62,6 @@ public interface DocDbQueries {
 
   @Value.Immutable
   interface DocLockCriteria {
-    Optional<String> getBranchId();
+    String getBranchId();
   }
 }

@@ -49,15 +49,21 @@ public class DocDbInsertsSqlPool implements DocDbInserts {
     RepoAssert.isTrue(this.wrapper.getTx().isPresent(), () -> "Transaction must be started!");
     final var tx = wrapper.getClient();
     
-    final var docsInsert = sqlBuilder.docs().insertOne(output.getDoc());
+    final var docsInsert = output.getDoc().map(doc -> sqlBuilder.docs().insertOne(doc));
     final var commitsInsert = sqlBuilder.docCommits().insertOne(output.getDocCommit());
     final var branchInsert = sqlBuilder.docBranches().insertOne(output.getDocBranch());
     final var logsInsert = output.getDocLogs().map(log -> sqlBuilder.docLogs().insertOne(log));
     
     
-    final Uni<DocBatch> docsUni = Execute.apply(tx, docsInsert).onItem()
-        .transform(row -> successOutput(output, "Doc saved, number of new entries: " + row.rowCount()))
-        .onFailure().recoverWithItem(e -> failOutput(output, "Failed to create docs", e));
+    final Uni<DocBatch> docsUni;
+    if(docsInsert.isEmpty()) {
+      docsUni = Uni.createFrom().item(successOutput(output, "Doc has no data, skipping doc entry"));    
+    } else {
+      docsUni = Execute.apply(tx, docsInsert.get()).onItem()
+          .transform(row -> successOutput(output, "Doc saved, number of new entries: " + row.rowCount()))
+          .onFailure().recoverWithItem(e -> failOutput(output, "Failed to create docs", e));
+       
+    }
     
     final Uni<DocBatch> commitUni = Execute.apply(tx, commitsInsert).onItem()
       .transform(row -> successOutput(output, "Commit saved, number of new entries: " + row.rowCount()))

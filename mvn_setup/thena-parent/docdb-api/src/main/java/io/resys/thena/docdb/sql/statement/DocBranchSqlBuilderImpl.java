@@ -40,9 +40,9 @@ public class DocBranchSqlBuilderImpl implements DocBranchSqlBuilder {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getDocBranch())
-        .append(" (branch_id, branch_name, commit_id, doc_id, value) VALUES($1, $2, $3, $4, $5)")
+        .append(" (branch_id, branch_name, branch_status, commit_id, doc_id, value) VALUES($1, $2, $3, $4, $5, $6)")
         .build())
-        .props(Tuple.of(ref.getId(), ref.getBranchName(), ref.getCommitId(), ref.getDocId(), ref.getValue()))
+        .props(Tuple.of(ref.getId(), ref.getBranchName(), ref.getStatus().name(), ref.getCommitId(), ref.getDocId(), ref.getValue()))
         .build();
   }
 

@@ -61,8 +61,9 @@ public class SimpleDocTest extends DbTestTemplate {
     LOGGER.debug("created repo {}", repo);
     Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
     
-    getClient().doc().append()
-      .appendBuilder()
+    final var createdDoc = getClient().doc().commit()
+      .createDoc()
+      .docType("customer-data")
       .repoId(repo.getRepo().getId())
       .externalId("bobs-ssn-id")
       .branchName("main")
@@ -71,6 +72,20 @@ public class SimpleDocTest extends DbTestTemplate {
       .log(JsonObject.of("some_cool_command", "create_customer"))
       .author("jane.doe@morgue.com")
     .build().await().atMost(Duration.ofMinutes(1));
+    
+    final var branchDoc = getClient().doc().commit()
+        .branchDoc()
+        .repoId(repo.getRepo().getId())
+        .branchFrom(createdDoc.getBranch().getId())
+        .branchName("dev")
+        .append(JsonObject.of("first_name", "bob", "last_name", "flop-2"))
+        .message("created branch entry")
+        .log(JsonObject.of("created-branch-command", "branch the customer for some reason"))
+        .author("jane.doe@morgue.com")
+      .build().await().atMost(Duration.ofMinutes(1));
+      
+      
+    
     
     printRepo(repo.getRepo());
     

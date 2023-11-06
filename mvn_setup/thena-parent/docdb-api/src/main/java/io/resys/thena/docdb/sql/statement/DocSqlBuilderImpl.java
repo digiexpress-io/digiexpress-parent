@@ -39,9 +39,9 @@ public class DocSqlBuilderImpl implements DocSqlBuilder {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getDoc())
-        .append(" (id, external_id) VALUES($1, $2)").ln()
+        .append(" (id, external_id, doc_type, doc_status, doc_meta) VALUES($1, $2, $3, $4, $5)").ln()
         .build())
-        .props(Tuple.of(doc.getId(), doc.getExternalId()))
+        .props(Tuple.of(doc.getId(), doc.getExternalId(), doc.getType(), doc.getStatus(), doc.getMeta()))
         .build();
   }
   @Override

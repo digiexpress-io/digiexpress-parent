@@ -24,7 +24,7 @@ import io.resys.thena.docdb.api.DocDB;
 import io.resys.thena.docdb.api.actions.BranchActions;
 import io.resys.thena.docdb.api.actions.CommitActions;
 import io.resys.thena.docdb.api.actions.DiffActions;
-import io.resys.thena.docdb.api.actions.DocAppendActions;
+import io.resys.thena.docdb.api.actions.DocCommitActions;
 import io.resys.thena.docdb.api.actions.DocFindActions;
 import io.resys.thena.docdb.api.actions.HistoryActions;
 import io.resys.thena.docdb.api.actions.PullActions;
@@ -49,7 +49,7 @@ public class DocDBDefault implements DocDB {
   private PullActions pullActions;
   private DiffActions diffActions;
   private BranchActions branchActions;
-  private DocAppendActions docAppendActions;
+  private DocCommitActions docAppendActions;
   
   public DocDBDefault(DbState state) {
     super();
@@ -132,7 +132,7 @@ public class DocDBDefault implements DocDB {
       }
       
       @Override
-      public DocAppendActions append() {
+      public DocCommitActions commit() {
         if(docAppendActions == null) {
           docAppendActions = new DocAppendActionsImpl(state); 
         }

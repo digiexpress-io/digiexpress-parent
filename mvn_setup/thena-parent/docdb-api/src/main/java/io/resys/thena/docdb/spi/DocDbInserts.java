@@ -40,9 +40,9 @@ public interface DocDbInserts {
   interface DocBatch {
     BatchStatus getStatus();
     Repo getRepo();
-    Doc getDoc();
     DocBranch getDocBranch();
     DocCommit getDocCommit();
+    Optional<Doc> getDoc();
     Optional<DocLog> getDocLogs();
 
     Message getLog();

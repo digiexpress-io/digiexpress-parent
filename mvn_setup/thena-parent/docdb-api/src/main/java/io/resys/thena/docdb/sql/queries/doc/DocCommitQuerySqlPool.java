@@ -4,7 +4,7 @@ import io.resys.thena.docdb.api.LogConstants;
 import io.resys.thena.docdb.api.models.ImmutableDocCommitLock;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocCommit;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocCommitLock;
-import io.resys.thena.docdb.api.models.ThenaDocObject.DocCommitLockStatus;
+import io.resys.thena.docdb.api.models.ThenaGitObject.CommitLockStatus;
 import io.resys.thena.docdb.spi.DocDbQueries.DocCommitQuery;
 import io.resys.thena.docdb.spi.DocDbQueries.DocLockCriteria;
 import io.resys.thena.docdb.spi.ErrorHandler;
@@ -73,7 +73,7 @@ public class DocCommitQuerySqlPool implements DocCommitQuery {
           sql.getValue());
     }
     if(crit.getBranchId().isEmpty()) {
-      return Uni.createFrom().item(ImmutableDocCommitLock.builder().status(DocCommitLockStatus.NOT_FOUND).build());
+      return Uni.createFrom().item(ImmutableDocCommitLock.builder().status(CommitLockStatus.NOT_FOUND).build());
     }
     
     return wrapper.getClient().preparedQuery(sql.getValue())

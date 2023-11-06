@@ -27,6 +27,7 @@ import javax.annotation.Nullable;
 
 import org.immutables.value.Value;
 
+import io.resys.thena.docdb.api.models.ThenaGitObject.CommitLockStatus;
 import io.vertx.core.json.JsonObject;
 
 public interface ThenaDocObject {
@@ -37,8 +38,9 @@ public interface ThenaDocObject {
   interface Doc extends ThenaDocObject, IsDocObject {
     String getId();
     String getType();
+    DocStatus getStatus();
     String getExternalId();
-    JsonObject getValue();
+    @Nullable JsonObject getMeta();
   }
   
   @Value.Immutable
@@ -47,6 +49,7 @@ public interface ThenaDocObject {
     String getCommitId();
     String getBranchName();
     String getDocId();
+    DocStatus getStatus();
     @Nullable JsonObject getValue();  // null when json loading is disabled
   }
   
@@ -75,14 +78,15 @@ public interface ThenaDocObject {
   
   @Value.Immutable  
   interface DocCommitLock extends ThenaDocObject {
-    DocCommitLockStatus getStatus();
+    CommitLockStatus getStatus();
     Optional<Doc> getDoc();
     Optional<DocBranch> getBranch();
     Optional<DocCommit> getCommit();
     Optional<String> getMessage();
   }
   
-  enum DocCommitLockStatus {
-    LOCK_TAKEN, NOT_FOUND
+  
+  enum DocStatus {
+    IN_FORCE, ARCHIVED
   }
 }

@@ -83,10 +83,16 @@ public class DocCommitSqlBuilderImpl implements DocCommitSqlBuilder {
         .value(new SqlStatement()
         .append("SELECT ")
         .append("  doc.external_id as external_id,").ln()
+        .append("  doc.doc_type as doc_type,").ln()
+        .append("  doc.doc_status as doc_status,").ln()
+        .append("  doc.doc_meta as doc_meta,").ln()
+    
         .append("  branch.doc_id as doc_id,").ln()
         .append("  branch.branch_id as branch_id,").ln()
         .append("  branch.branch_name as branch_name,").ln()
         .append("  branch.commit_id as branch_commit_id,").ln()
+        .append("  branch.branch_status as branch_status,").ln()
+        .append("  branch.value as branch_value,").ln()
         
         .append("  commits.author as author,").ln()
         .append("  commits.datetime as datetime,").ln()
@@ -95,7 +101,7 @@ public class DocCommitSqlBuilderImpl implements DocCommitSqlBuilder {
         .append("  commits.id as commit_id").ln()
         
         .append(" FROM (SELECT * FROM ").append(options.getDocBranch()).append(" WHERE branch_id = $1 FOR UPDATE NOWAIT) as branch").ln()
-        .append(" LEFT JOIN ").append(options.getDocCommits()).append(" as commits ON(commits.branch_id = branch.branch_id)").ln()
+        .append(" JOIN ").append(options.getDocCommits()).append(" as commits ON(commits.branch_id = branch.branch_id)").ln()
         .append(" JOIN ").append(options.getDoc()).append(" as doc ON(doc.id = branch.doc_id)").ln()
         .build())
         .props(Tuple.of(branchId))

@@ -38,6 +38,7 @@ import io.resys.thena.docdb.api.models.ImmutableTag;
 import io.resys.thena.docdb.api.models.ImmutableTree;
 import io.resys.thena.docdb.api.models.ImmutableTreeValue;
 import io.resys.thena.docdb.api.models.Repo;
+import io.resys.thena.docdb.api.models.ThenaDocObject;
 import io.resys.thena.docdb.api.models.Repo.RepoType;
 import io.resys.thena.docdb.api.models.ThenaDocObject.Doc;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranch;
@@ -48,6 +49,7 @@ import io.resys.thena.docdb.api.models.ThenaGitObject.Blob;
 import io.resys.thena.docdb.api.models.ThenaGitObject.BlobHistory;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Branch;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Commit;
+import io.resys.thena.docdb.api.models.ThenaGitObject.CommitLockStatus;
 import io.resys.thena.docdb.api.models.ThenaGitObject.CommitTree;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Tag;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Tree;
@@ -185,14 +187,35 @@ public class SqlMapperImpl implements SqlMapper {
         .docId(row.getString("doc_id"))
         .build();
   }
+  
   @Override
   public DocCommitLock docCommitLock(Row row) {
     return ImmutableDocCommitLock.builder()
+        .status(CommitLockStatus.LOCK_TAKEN)
         .doc(ImmutableDoc.builder()
+            .id(row.getString("doc_id"))
+            .externalId(row.getString("external_id"))
+            .type(row.getString("doc_type"))
+            .status(ThenaDocObject.DocStatus.valueOf(row.getString("doc_status")))
+            .meta(jsonObject(row, "doc_meta"))
             .build())
         .branch(ImmutableDocBranch.builder()
+            .id(row.getString("branch_id"))
+            .docId(row.getString("doc_id"))
+            .status(ThenaDocObject.DocStatus.valueOf(row.getString("branch_status")))
+            .commitId(row.getString("commit_id"))
+            .branchName(row.getString("branch_name"))
+            .value(jsonObject(row, "branch_value"))
+            .status(ThenaDocObject.DocStatus.valueOf(row.getString("branch_status")))
             .build())
         .commit(ImmutableDocCommit.builder()
+            .id(row.getString("commit_id"))
+            .author(row.getString("author"))
+            .dateTime(LocalDateTime.parse(row.getString("datetime")))
+            .message(row.getString("message"))
+            .parent(Optional.ofNullable(row.getString("commit_parent")))
+            .branchId(row.getString("branch_id"))
+            .docId(row.getString("doc_id"))
             .build())
         .build();
   }
@@ -201,6 +224,9 @@ public class SqlMapperImpl implements SqlMapper {
     return ImmutableDoc.builder()
         .id(row.getString("id"))
         .externalId(row.getString("external_id"))
+        .type(row.getString("doc_type"))
+        .status(ThenaDocObject.DocStatus.valueOf(row.getString("doc_status")))
+        .meta(jsonObject(row, "doc_meta"))
         .build();
   }
   @Override
@@ -221,6 +247,7 @@ public class SqlMapperImpl implements SqlMapper {
         .commitId(row.getString("commit_id"))
         .branchName(row.getString("branch_name"))
         .value(jsonObject(row, "value"))
+        .status(ThenaDocObject.DocStatus.valueOf(row.getString("branch_status")))
         .build();
     
   }

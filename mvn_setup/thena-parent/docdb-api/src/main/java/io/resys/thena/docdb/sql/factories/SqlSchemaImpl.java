@@ -209,11 +209,17 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("CREATE TABLE ").append(options.getDoc()).ln()
     .append("(").ln()
     .append("  id VARCHAR(40) PRIMARY KEY,").ln()
-    .append("  external_id VARCHAR(40) UNIQUE").ln()
+    .append("  external_id VARCHAR(40) UNIQUE,").ln()
+    .append("  doc_type VARCHAR(40) NOT NULL,").ln()
+    .append("  doc_status VARCHAR(8) NOT NULL,").ln()
+    .append("  doc_meta jsonb").ln()
     .append(");").ln()
     
     .append("CREATE INDEX ").append(options.getDoc()).append("_DOC_EXT_ID_INDEX")
     .append(" ON ").append(options.getDoc()).append(" (external_id);").ln()
+
+    .append("CREATE INDEX ").append(options.getDoc()).append("_DOC_TYPE_INDEX")
+    .append(" ON ").append(options.getDoc()).append(" (doc_type);").ln()
     
     .build()).build();
   }
@@ -226,6 +232,7 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("  branch_name VARCHAR(255) NOT NULL,").ln()
     .append("  branch_id VARCHAR(40) NOT NULL,").ln()
     .append("  commit_id VARCHAR(40) NOT NULL,").ln()
+    .append("  branch_status VARCHAR(8) NOT NULL,").ln()
     .append("  doc_id VARCHAR(40),").ln()
     .append("  value jsonb NOT NULL,").ln()
     .append("  PRIMARY KEY (branch_id)").ln()
