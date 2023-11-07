@@ -1,6 +1,6 @@
 
-type TenantId = string;
-type FormTechnicalName = string;
+export type TenantId = string;
+export type FormTechnicalName = string;
 type FormTitle = string;
 
 export interface PaletteType {
@@ -11,12 +11,12 @@ export interface TenantPaletteType {
 
 }
 
-interface Tenant {
+export interface Tenant {
   id: TenantId;
   name: string;
 }
 
-export interface TenantFormMetadata {
+export interface TenantEntry {
   id: FormTechnicalName; //technicalName, (resys tenant: MyTenantTestForm)
   metadata: {
     label: FormTitle; //formName, (resys tenant: TenantTestForm)
@@ -27,7 +27,7 @@ export interface TenantFormMetadata {
 }
 
 export interface TenantEntryDescriptor {
-  source: TenantFormMetadata;
+  source: TenantEntry;
   formName: FormTechnicalName;
   formTitle: FormTitle;
   created: Date;
