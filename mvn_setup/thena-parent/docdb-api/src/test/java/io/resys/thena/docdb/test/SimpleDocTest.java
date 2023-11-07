@@ -61,6 +61,7 @@ public class SimpleDocTest extends DbTestTemplate {
     LOGGER.debug("created repo {}", repo);
     Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
     
+    // branch 1
     final var createdDoc = getClient().doc().commit()
       .createDoc()
       .docType("customer-data")
@@ -72,18 +73,20 @@ public class SimpleDocTest extends DbTestTemplate {
       .log(JsonObject.of("some_cool_command", "create_customer"))
       .author("jane.doe@morgue.com")
     .build().await().atMost(Duration.ofMinutes(1));
-    
+
+    // branch 2
     final var branchDoc = getClient().doc().commit()
-        .branchDoc()
-        .repoId(repo.getRepo().getId())
-        .branchFrom(createdDoc.getBranch().getId())
-        .branchName("dev")
-        .append(JsonObject.of("first_name", "bob", "last_name", "flop-2"))
-        .message("created branch entry")
-        .log(JsonObject.of("created-branch-command", "branch the customer for some reason"))
-        .author("jane.doe@morgue.com")
-      .build().await().atMost(Duration.ofMinutes(1));
-      
+      .branchDoc()
+      .repoId(repo.getRepo().getId())
+      .branchFrom(createdDoc.getBranch().getId())
+      .branchName("dev")
+      .append(JsonObject.of("first_name", "bob", "last_name", "flop-2"))
+      .message("created branch entry")
+      .log(JsonObject.of("created-branch-command", "branch the customer for some reason"))
+      .author("jane.doe@morgue.com")
+    .build().await().atMost(Duration.ofMinutes(1));
+    
+    // meta update, 1 commit into each branch
     getClient().doc().commit()
       .appendDoc()
       .repoId(repo.getRepo().getId())
@@ -91,8 +94,18 @@ public class SimpleDocTest extends DbTestTemplate {
       .meta(JsonObject.of("super cool field 1", "cool meta about the document"))
       .author("jane.doe@morgue.com")
       .message("changed meta for doc")
-      .build().await().atMost(Duration.ofMinutes(1));
-      
+    .build().await().atMost(Duration.ofMinutes(1));
+
+    
+    // update dev branch with new data
+    getClient().doc().commit().appendBranch()
+      .branchId(branchDoc.getBranch().getId())
+      .append(JsonObject.of("branch new content", "something in here", "last_name", "used to be -> flop-2"))
+      .repoId(repo.getRepo().getId())
+      .author("jane.doe@morgue.com")
+      .message("edited dev branch")
+    .build().await().atMost(Duration.ofMinutes(1));
+
     
     printRepo(repo.getRepo());
     

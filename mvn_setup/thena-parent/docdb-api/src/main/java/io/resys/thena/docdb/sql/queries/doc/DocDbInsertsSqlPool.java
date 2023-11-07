@@ -79,7 +79,7 @@ public class DocDbInsertsSqlPool implements DocDbInserts {
       .onFailure().recoverWithItem(e -> failOutput(output, "Failed to save commit \r\n" + output.getDocCommit(), e));
 
     final Uni<DocBatch> branchUniInsert = Execute.apply(tx, branchInsert).onItem()
-        .transform(row -> successOutput(output, "Branch saved, number of new entries: " + row.rowCount()))
+        .transform(row -> successOutput(output, "Branch saved, number of new entries: " + (row == null ? 0 : row.rowCount())))
         .onFailure().recoverWithItem(e -> failOutput(output, "Failed to save branch", e));
     
     final Uni<DocBatch> branchUniUpdate = Execute.apply(tx, branchUpdate).onItem()
@@ -88,7 +88,7 @@ public class DocDbInsertsSqlPool implements DocDbInserts {
     
     
     final Uni<DocBatch> logUni = Execute.apply(tx, logsInsert).onItem()
-        .transform(row -> successOutput(output, "Commit log saved, number of new entries: " + row.rowCount()))
+        .transform(row -> successOutput(output, "Commit log saved, number of new entries: "  + (row == null ? 0 : row.rowCount())))
         .onFailure().recoverWithItem(e -> failOutput(output, "Failed to save  commit log", e));
     
     return Uni.combine().all().unis(docsUni, commitUni, branchUniInsert, branchUniUpdate, logUni).asTuple()

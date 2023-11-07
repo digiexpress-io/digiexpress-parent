@@ -8,8 +8,9 @@ import java.util.List;
 import java.util.Optional;
 
 import io.resys.thena.docdb.api.actions.CommitActions.CommitResultStatus;
+import io.resys.thena.docdb.api.actions.CommitActions.JsonObjectMerge;
+import io.resys.thena.docdb.api.actions.DocCommitActions.AppendDocBranch;
 import io.resys.thena.docdb.api.actions.DocCommitActions.AppendResultEnvelope;
-import io.resys.thena.docdb.api.actions.DocCommitActions.CreateDocBranch;
 import io.resys.thena.docdb.api.actions.ImmutableAppendResultEnvelope;
 import io.resys.thena.docdb.api.models.ImmutableDocBranch;
 import io.resys.thena.docdb.api.models.ImmutableDocCommit;
@@ -33,68 +34,87 @@ import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class CreateDocBranchImpl implements CreateDocBranch {
+public class AppendDocBranchImpl implements AppendDocBranch {
 
   private final DbState state;
   private JsonObject appendBlobs = null;
   private JsonObject appendLogs = null;
-
+  private JsonObjectMerge appendMerge = null;
+  private String versionToModify = null;
+  
   private String repoId;
-  private String branchName;
-  private String branchFrom;
+  private String branchId;
   private String author;
   private String message;
+  private boolean remove;
 
   @Override
-  public CreateDocBranchImpl repoId(String repoId) {
+  public AppendDocBranchImpl repoId(String repoId) {
     RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
     this.repoId = repoId;
     return this;
   }
+
   @Override
-  public CreateDocBranchImpl branchName(String branchName) {
-    RepoAssert.isName(branchName, () -> "branchName has invalid charecters!");
-    this.branchName = branchName;
+  public AppendDocBranch parent(String versionToModify) {
+    this.versionToModify = versionToModify;
+    return null;
+  }
+
+  @Override
+  public AppendDocBranch parentIsLatest() {
+    this.versionToModify = null;
     return this;
   }
   @Override
-  public CreateDocBranchImpl append(JsonObject blob) {
+  public AppendDocBranchImpl remove() {
+    this.remove = true;
+    return this;
+  }
+  @Override
+  public AppendDocBranchImpl branchId(String branchId) {
+    RepoAssert.notNull(branchId, () -> "branchId can't be empty!");
+    this.branchId = branchId;
+    return this;
+  }
+  @Override
+  public AppendDocBranchImpl append(JsonObject blob) {
     RepoAssert.notNull(blob, () -> "blob can't be empty!");
     this.appendBlobs = blob;
     return this;
   }
   @Override
-  public CreateDocBranchImpl author(String author) {
+  public AppendDocBranchImpl merge(JsonObjectMerge blob) {
+    RepoAssert.notNull(blob, () -> "blob can't be empty!");
+    this.appendMerge = blob;
+    return this;
+  }
+  @Override
+  public AppendDocBranchImpl author(String author) {
     RepoAssert.notEmpty(author, () -> "author can't be empty!");
     this.author = author;
     return this;
   }
   @Override
-  public CreateDocBranchImpl message(String message) {
+  public AppendDocBranchImpl message(String message) {
     RepoAssert.notEmpty(message, () -> "message can't be empty!");
     this.message = message;
     return this;
   }
   @Override
-  public CreateDocBranchImpl branchFrom(String branchFrom) {
-    this.branchFrom = branchFrom;
-    return this;
-  }
-  @Override
-  public CreateDocBranchImpl log(JsonObject doc) {
+  public AppendDocBranchImpl log(JsonObject doc) {
     this.appendLogs = doc;
     return this;
   }
   @Override
   public Uni<AppendResultEnvelope> build() {
-    RepoAssert.notEmpty(branchName, () -> "branchName can't be empty!");
+    RepoAssert.notEmpty(branchId, () -> "branchId can't be empty!");
     RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
     RepoAssert.notEmpty(author, () -> "author can't be empty!");
-    RepoAssert.notEmpty(branchFrom, () -> "branchFrom can't be empty!");
     RepoAssert.notEmpty(message, () -> "message can't be empty!");
     RepoAssert.isTrue(appendBlobs != null, () -> "Nothing to commit, no content!");
     final var crit = ImmutableDocBranchLockCriteria.builder()
-        .branchId(branchFrom)
+        .branchId(branchId)
         .build();
     
     return this.state.toDocState().withTransaction(repoId, tx -> tx.query().branches().getLock(crit).onItem().transformToUni(lock -> {
@@ -111,6 +131,24 @@ public class CreateDocBranchImpl implements CreateDocBranch {
   }
   
   private AppendResultEnvelope validateRepo(DocBranchLock state) {
+    // Wrong parent commit
+    if(state.getCommit().isPresent() && versionToModify != null && 
+        !versionToModify.equals(state.getCommit().get().getId())) {
+      
+      final var text = new StringBuilder()
+        .append("Commit to: '").append(repoId).append("'")
+        .append(" is rejected.")
+        .append(" Your head is: '").append(versionToModify).append("')")
+        .append(" but remote is: '").append(state.getCommit().get().getId()).append("'!")
+        .toString();
+      
+      return (AppendResultEnvelope) ImmutableAppendResultEnvelope.builder()
+          .repoId(repoId)
+          .addMessages(ImmutableMessage.builder().text(text).build())
+          .status(CommitResultStatus.ERROR)
+          .build();
+    }
+
     
     // cant merge on first commit
     if(state.getBranch().isEmpty()) {
@@ -120,7 +158,7 @@ public class CreateDocBranchImpl implements CreateDocBranch {
               .text(new StringBuilder()
                   .append("Commit to: '").append(repoId).append("'")
                   .append(" is rejected.")
-                  .append(" Unknown branchId: '").append(branchFrom).append("'!")
+                  .append(" Unknown branchId: '").append(branchId).append("'!")
                   .toString())
               .build())
           .status(CommitResultStatus.ERROR)
@@ -132,7 +170,7 @@ public class CreateDocBranchImpl implements CreateDocBranch {
   
   
   private Uni<AppendResultEnvelope> doInLock(DocBranchLock lock, DocRepo tx) {  
-    final var branchId = OidUtils.gen();
+    final var branchId = lock.getBranch().get().getId();
     final var doc = lock.getDoc().get();
     
     final var template = ImmutableDocCommit.builder()
@@ -151,12 +189,11 @@ public class CreateDocBranchImpl implements CreateDocBranch {
       .parent(lock.getCommit().get().getId())
       .build();
     final var docBranch = ImmutableDocBranch.builder()
-      .id(branchId)
-      .docId(doc.getId())
-      .commitId(commit.getId())
-      .branchName(branchName)
+      .from(lock.getBranch().get())
       .value(appendBlobs)
+      .commitId(commit.getId())
       .status(DocStatus.IN_FORCE)
+      .value(appendBlobs == null ? appendMerge.apply(lock.getBranch().get().getValue()): appendBlobs)
       .build();
     
     final List<DocLog> docLogs = appendLogs == null ? Collections.emptyList() : Arrays.asList(
@@ -171,7 +208,7 @@ public class CreateDocBranchImpl implements CreateDocBranch {
 
     final var logger = new CommitLogger();
     logger
-      .append(" | created")
+      .append(" | changed")
       .append(System.lineSeparator())
       .append("  + doc:        ").append(doc.getId())
       .append(System.lineSeparator())
@@ -195,6 +232,7 @@ public class CreateDocBranchImpl implements CreateDocBranch {
       .addDocBranch(docBranch)
       .addDocCommit(commit)
       .addAllDocLogs(docLogs)
+      .addDocLock(lock)
       .log(ImmutableMessage.builder().text(logger.toString()).build())
       .build();
 
@@ -202,7 +240,6 @@ public class CreateDocBranchImpl implements CreateDocBranch {
       .onItem().transform(rsp -> ImmutableAppendResultEnvelope.builder()
         .repoId(repoId)
         .doc(doc)
-        .branch(rsp.getDocBranch().iterator().next())
         .commit(rsp.getDocCommit().iterator().next())
         .addMessages(rsp.getLog())
         .addAllMessages(rsp.getMessages())
