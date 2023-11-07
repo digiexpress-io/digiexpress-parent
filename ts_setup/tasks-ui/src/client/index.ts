@@ -20,6 +20,12 @@ import {
 } from './project-types';
 
 import {
+  FormTechnicalName, FormTitle,
+  Tenant, TenantEntry,
+  TenantId, TenantStore
+} from './tenant-types';
+
+import {
   TaskPriority, TaskStatus,
   TaskId, Task,
   CreateTask,
@@ -114,7 +120,10 @@ declare namespace TaskClient {
     ChangeChecklistItemCompleted,
     ChangeChecklistItemDueDate,
     ChangeChecklistItemTitle,
-    TaskUpdateCommand
+    TaskUpdateCommand,
+    FormTechnicalName, FormTitle,
+    Tenant, TenantEntry,
+    TenantId, TenantStore
   }
 }
 
@@ -161,7 +170,11 @@ export type {
   AssignProjectUsers,
   CreateProject,
   ArchiveProject,
-  ChangeRepoType
+  ChangeRepoType,
+
+  FormTechnicalName, FormTitle,
+  Tenant, TenantEntry,
+  TenantId, TenantStore
 }
 
 const resolveAvatar = resolveAvatarAs;

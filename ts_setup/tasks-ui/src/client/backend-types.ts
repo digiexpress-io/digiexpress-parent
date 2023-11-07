@@ -1,6 +1,7 @@
 import { ProfileStore } from './profile-types';
 import { TaskStore } from './task-types';
 import { ProjectStore } from './project-types';
+import { TenantStore } from './tenant-types';
 import { Org, User } from './org-types';
 
 export interface BackendError {
@@ -15,6 +16,7 @@ export interface Backend {
   profile: ProfileStore;
   task: TaskStore;
   project: ProjectStore;
+  tenant: TenantStore;
   org(): Promise<{ org: Org, user: User }>;
 }
 

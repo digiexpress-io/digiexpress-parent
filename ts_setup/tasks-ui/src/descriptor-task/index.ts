@@ -40,4 +40,5 @@ export type {
 export { TaskDescriptorImpl, DescriptorStateImpl } from './descriptor-impl';
 export const EditProvider = taskEditCtx.TaskEditProvider;
 export * from './descriptor-types';
+export { Palette }
 

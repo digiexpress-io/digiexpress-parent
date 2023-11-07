@@ -1,6 +1,7 @@
 import { Backend, Store } from './backend-types';
 import type { TaskId, Task, TaskPagination, TaskStore, TaskUpdateCommand, CreateTask } from './task-types';
-import { ProjectId, Project, ProjectPagination, ProjectStore, ProjectUpdateCommand, CreateProject, mockProjects } from './project-types';
+import { ProjectId, Project, ProjectPagination, ProjectStore, ProjectUpdateCommand, CreateProject } from './project-types';
+import { Tenant, TenantEntry, TenantStore, TenantEntryPagination } from './tenant-types';
 
 import type { Profile, ProfileStore } from './profile-types';
 import type { User, Org } from './org-types';
@@ -49,7 +50,12 @@ export class ServiceImpl implements Backend {
   createProfile(): Promise<Profile> {
     return this._store.fetch<Profile>("head", { method: "POST", body: JSON.stringify({}) });
   }
-
+  get tenant(): TenantStore {
+    return {
+      getTenantEntries: (tenantId: string) => this.getTenantEntries(tenantId),
+      getTenants: () => this.getTenants()
+    };
+  }
   get task(): TaskStore {
     return {
       getActiveTasks: () => this.getActiveTasks(),
@@ -57,6 +63,26 @@ export class ServiceImpl implements Backend {
       updateActiveTask: (id: TaskId, commands: TaskUpdateCommand<any>[]) => this.updateActiveTask(id, commands),
       createTask: (commands: CreateTask) => this.createTask(commands),
     };
+  }
+  get project(): ProjectStore {
+    return {
+      getActiveProjects: () => this.getActiveProjects(),
+      getActiveProject: (id: ProjectId) => this.getActiveProject(id),
+      updateActiveProject: (id: ProjectId, commands: ProjectUpdateCommand<any>[]) => this.updateActiveProject(id, commands),
+      createProject: (commands: CreateProject) => this.createProject(commands),
+    };
+  }
+
+  getTenants(): Promise<Tenant[]> {
+    return this._store.fetch<Tenant[]>(`api/tenants`);
+  }
+  async getTenantEntries(id: string): Promise<TenantEntryPagination> {
+    const forms = await this._store.fetch<TenantEntry[]>(`api/forms`);
+    return {
+      page: 1,
+      total: { pages: 1, records: forms.length },
+      records: forms as any
+    }
   }
 
   async createTask(commands: CreateTask): Promise<Task> {
@@ -84,17 +110,6 @@ export class ServiceImpl implements Backend {
 
   getActiveTask(id: TaskId): Promise<Task> {
     return this._store.fetch<Task>(`tasks/${id}`);
-  }
-
-
-
-  get project(): ProjectStore {
-    return {
-      getActiveProjects: () => this.getActiveProjects(),
-      getActiveProject: (id: ProjectId) => this.getActiveProject(id),
-      updateActiveProject: (id: ProjectId, commands: ProjectUpdateCommand<any>[]) => this.updateActiveProject(id, commands),
-      createProject: (commands: CreateProject) => this.createProject(commands),
-    };
   }
 
   async getActiveProjects(): Promise<ProjectPagination> {

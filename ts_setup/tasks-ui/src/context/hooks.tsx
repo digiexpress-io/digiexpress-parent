@@ -8,8 +8,8 @@ import { UserId, RoleId, RepoType } from 'client';
 
 import { ProjectIdContext, ProjectsContextType, ProjectsContext, ProjectIdContextType } from 'descriptor-project';
 import { OrgContext, OrgContextType } from 'descriptor-organization';
+import { TenantContext, TenantContextType } from 'descriptor-tenant';
 import { TasksContext, TasksContextType, TaskEditContext, TaskEditContextType } from 'descriptor-task';
-
 
 const ArticleTabIndicator: React.FC<{ entity: Document }> = ({ entity }) => {
   const theme = useTheme();
@@ -75,6 +75,11 @@ export const useTasks = () => {
 }
 export const useProjects = () => {
   const result: ProjectsContextType = React.useContext(ProjectsContext);
+  return result;
+}
+
+export const useTenants = () => {
+  const result: TenantContextType = React.useContext(TenantContext);
   return result;
 }
 

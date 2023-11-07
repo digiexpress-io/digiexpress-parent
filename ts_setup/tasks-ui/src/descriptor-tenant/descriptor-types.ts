@@ -1,30 +1,21 @@
 
-export type TenantId = string;
-export type FormTechnicalName = string;
-type FormTitle = string;
+import { TenantEntry, FormTechnicalName, FormTitle, Tenant, TenantId, Profile } from 'client';
 
 export interface PaletteType {
-
+  colors: { red: string, green: string, yellow: string, blue: string, violet: string }
 }
 
 export interface TenantPaletteType {
 
 }
-
-export interface Tenant {
-  id: TenantId;
-  name: string;
+export type GroupBy = 'tenant' | 'none';
+export interface Group {
+  id: string;
+  type: GroupBy;
+  color?: string;
+  records: TenantEntryDescriptor[];
 }
 
-export interface TenantEntry {
-  id: FormTechnicalName; //technicalName, (resys tenant: MyTenantTestForm)
-  metadata: {
-    label: FormTitle; //formName, (resys tenant: TenantTestForm)
-    created: string;
-    lastSaved: string;
-    tenantId: TenantId;
-  }
-}
 
 export interface TenantEntryDescriptor {
   source: TenantEntry;
@@ -39,6 +30,25 @@ export interface TenantDescriptor {
   entries: TenantEntryDescriptor[];
 }
 
-export interface DescriptorState {
-  withEntries(entries: TenantEntryDescriptor): DescriptorState;
+export interface TenantState {
+  tenantEntries: TenantEntryDescriptor[];
+  tenants: TenantDescriptor[];
+  activeTenant: TenantId | undefined;
+  activeTenantEntry: FormTechnicalName | undefined;
+  groups: Group[];
+  groupBy: GroupBy;
+  palette: TenantPaletteType;
+  profile: Profile;
+  filtered: TenantEntryDescriptor[];
+  searchString: string | undefined;
+
+
+  withSearchString(searchString: string): TenantState;
+  withProfile(profile: Profile): TenantState;
+
+  withActiveTenant(tenantId?: TenantId): TenantState;
+  withActiveTenantEntry(id?: FormTechnicalName): TenantState;
+
+  withTenants(tenants: Tenant[]): TenantState;
+  withTenantEntries(tenantEntries: TenantEntry[]): TenantState;
 }
