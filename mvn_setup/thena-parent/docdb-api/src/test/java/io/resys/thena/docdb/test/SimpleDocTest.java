@@ -84,8 +84,15 @@ public class SimpleDocTest extends DbTestTemplate {
         .author("jane.doe@morgue.com")
       .build().await().atMost(Duration.ofMinutes(1));
       
+    getClient().doc().commit()
+      .appendDoc()
+      .repoId(repo.getRepo().getId())
+      .docId(createdDoc.getDoc().getId())
+      .meta(JsonObject.of("super cool field 1", "cool meta about the document"))
+      .author("jane.doe@morgue.com")
+      .message("changed meta for doc")
+      .build().await().atMost(Duration.ofMinutes(1));
       
-    
     
     printRepo(repo.getRepo());
     

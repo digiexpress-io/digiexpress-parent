@@ -39,10 +39,12 @@ public interface DocCommitActions {
   
   interface AppendDoc {
     AppendDoc repoId(String repoId);
-    AppendDoc docId(String docId);
+    AppendDoc docId(String docIdOrExternalId);
     AppendDoc meta(@Nullable JsonObject docMeta);
-    AppendDoc externalId(@Nullable String externalId); // user given unique id
-    AppendDoc remove();                                // removes the document
+    AppendDoc author(String author);
+    AppendDoc message(String message);
+    AppendDoc log(@Nullable JsonObject doc);
+    AppendDoc remove();                              
     Uni<AppendResultEnvelope> build();
   }
   

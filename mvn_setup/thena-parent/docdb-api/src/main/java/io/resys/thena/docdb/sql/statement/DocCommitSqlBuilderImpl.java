@@ -21,15 +21,18 @@ package io.resys.thena.docdb.sql.statement;
  */
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocCommit;
 import io.resys.thena.docdb.spi.DbCollections;
-import io.resys.thena.docdb.spi.DocDbQueries.DocLockCriteria;
 import io.resys.thena.docdb.sql.ImmutableSql;
 import io.resys.thena.docdb.sql.ImmutableSqlTuple;
+import io.resys.thena.docdb.sql.ImmutableSqlTupleList;
 import io.resys.thena.docdb.sql.SqlBuilder.DocCommitSqlBuilder;
 import io.resys.thena.docdb.sql.SqlBuilder.Sql;
 import io.resys.thena.docdb.sql.SqlBuilder.SqlTuple;
+import io.resys.thena.docdb.sql.SqlBuilder.SqlTupleList;
 import io.resys.thena.docdb.sql.support.SqlStatement;
 import io.vertx.mutiny.sqlclient.Tuple;
 import lombok.RequiredArgsConstructor;
@@ -59,12 +62,7 @@ public class DocCommitSqlBuilderImpl implements DocCommitSqlBuilder {
   }
   @Override
   public SqlTuple insertOne(DocCommit commit) {
-    
-    var message = commit.getMessage();
-    if(commit.getMessage().length() > 254) {
-      message = message.substring(0, 254);
-    }
-    
+    final var message = getMessage(commit);
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getDocCommits())
@@ -75,37 +73,31 @@ public class DocCommitSqlBuilderImpl implements DocCommitSqlBuilder {
             commit.getBranchId(), commit.getDocId(), commit.getParent().orElse(null))))
         .build();
   }
-  @Override
-  public SqlTuple getLock(DocLockCriteria crit) {
-    final var branchId = crit.getBranchId();
-
-    return ImmutableSqlTuple.builder()
-        .value(new SqlStatement()
-        .append("SELECT ")
-        .append("  doc.external_id as external_id,").ln()
-        .append("  doc.doc_type as doc_type,").ln()
-        .append("  doc.doc_status as doc_status,").ln()
-        .append("  doc.doc_meta as doc_meta,").ln()
-    
-        .append("  branch.doc_id as doc_id,").ln()
-        .append("  branch.branch_id as branch_id,").ln()
-        .append("  branch.branch_name as branch_name,").ln()
-        .append("  branch.commit_id as branch_commit_id,").ln()
-        .append("  branch.branch_status as branch_status,").ln()
-        .append("  branch.value as branch_value,").ln()
-        
-        .append("  commits.author as author,").ln()
-        .append("  commits.datetime as datetime,").ln()
-        .append("  commits.message as message,").ln()
-        .append("  commits.parent as commit_parent,").ln()
-        .append("  commits.id as commit_id").ln()
-        
-        .append(" FROM (SELECT * FROM ").append(options.getDocBranch()).append(" WHERE branch_id = $1 FOR UPDATE NOWAIT) as branch").ln()
-        .append(" JOIN ").append(options.getDocCommits()).append(" as commits ON(commits.branch_id = branch.branch_id)").ln()
-        .append(" JOIN ").append(options.getDoc()).append(" as doc ON(doc.id = branch.doc_id)").ln()
-        .build())
-        .props(Tuple.of(branchId))
-        .build();  
-  }  
   
+
+  @Override
+  public SqlTupleList insertAll(Collection<DocCommit> commits) {
+    return ImmutableSqlTupleList.builder()
+        .value(new SqlStatement()
+        .append("INSERT INTO ").append(options.getDocCommits())
+        .append(" (id, datetime, author, message, branch_id, doc_id, parent) VALUES($1, $2, $3, $4, $5, $6, $7)")
+        .build())
+        .props(commits.stream().map(commit -> {
+          final var message = getMessage(commit);
+          return Tuple.from(Arrays.asList(
+              commit.getId(), commit.getDateTime().toString(), commit.getAuthor(), message, 
+              commit.getBranchId(), commit.getDocId(), commit.getParent().orElse(null)));
+          
+        }) .collect(Collectors.toList()))
+        .build();
+  }
+  
+  private String getMessage(DocCommit commit) {
+
+    var message = commit.getMessage();
+    if(commit.getMessage().length() > 254) {
+      message = message.substring(0, 254);
+    }
+    return message;
+  }
 }

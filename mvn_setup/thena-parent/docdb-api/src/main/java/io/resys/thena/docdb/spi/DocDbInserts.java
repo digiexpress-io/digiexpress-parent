@@ -29,6 +29,7 @@ import io.resys.thena.docdb.api.models.Message;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.ThenaDocObject.Doc;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranch;
+import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranchLock;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocCommit;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocLog;
 import io.resys.thena.docdb.spi.GitDbInserts.BatchStatus;
@@ -40,10 +41,12 @@ public interface DocDbInserts {
   interface DocBatch {
     BatchStatus getStatus();
     Repo getRepo();
-    DocBranch getDocBranch();
-    DocCommit getDocCommit();
+    
     Optional<Doc> getDoc();
-    Optional<DocLog> getDocLogs();
+    List<DocBranchLock> getDocLock();
+    List<DocBranch> getDocBranch();
+    List<DocCommit> getDocCommit();
+    List<DocLog> getDocLogs();
 
     Message getLog();
     List<Message> getMessages();

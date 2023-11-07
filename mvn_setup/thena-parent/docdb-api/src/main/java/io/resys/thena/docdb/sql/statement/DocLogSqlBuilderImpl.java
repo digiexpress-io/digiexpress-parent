@@ -1,12 +1,17 @@
 package io.resys.thena.docdb.sql.statement;
 
+import java.util.Collection;
+import java.util.stream.Collectors;
+
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocLog;
 import io.resys.thena.docdb.spi.DbCollections;
 import io.resys.thena.docdb.sql.ImmutableSql;
 import io.resys.thena.docdb.sql.ImmutableSqlTuple;
+import io.resys.thena.docdb.sql.ImmutableSqlTupleList;
 import io.resys.thena.docdb.sql.SqlBuilder.DocLogSqlBuilder;
 import io.resys.thena.docdb.sql.SqlBuilder.Sql;
 import io.resys.thena.docdb.sql.SqlBuilder.SqlTuple;
+import io.resys.thena.docdb.sql.SqlBuilder.SqlTupleList;
 import io.resys.thena.docdb.sql.support.SqlStatement;
 import io.vertx.mutiny.sqlclient.Tuple;
 import lombok.RequiredArgsConstructor;
@@ -76,6 +81,18 @@ public class DocLogSqlBuilderImpl implements DocLogSqlBuilder {
         .append("WHERE doc_commit.branch_id = $1").ln()
         .build())
         .props(Tuple.of(branchId))
+        .build();
+  }
+  @Override
+  public SqlTupleList insertAll(Collection<DocLog> logs) {
+    return ImmutableSqlTupleList.builder()
+        .value(new SqlStatement()
+        .append("INSERT INTO ").append(options.getDocLog())
+        .append(" (id, commit_id, value) VALUES($1, $2, $3)").ln()
+        .build())
+        .props(logs.stream()
+            .map(doc -> Tuple.of(doc.getId(), doc.getDocCommitId(), doc.getValue()))
+            .collect(Collectors.toList()))
         .build();
   }
 

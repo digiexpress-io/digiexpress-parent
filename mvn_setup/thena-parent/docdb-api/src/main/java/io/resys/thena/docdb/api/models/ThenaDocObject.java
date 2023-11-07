@@ -21,6 +21,7 @@ package io.resys.thena.docdb.api.models;
  */
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import javax.annotation.Nullable;
@@ -77,11 +78,19 @@ public interface ThenaDocObject {
   
   
   @Value.Immutable  
-  interface DocCommitLock extends ThenaDocObject {
+  interface DocBranchLock extends ThenaDocObject {
     CommitLockStatus getStatus();
     Optional<Doc> getDoc();
     Optional<DocBranch> getBranch();
     Optional<DocCommit> getCommit();
+    Optional<String> getMessage();
+  }
+  
+  @Value.Immutable  
+  interface DocLock extends ThenaDocObject {
+    CommitLockStatus getStatus();
+    Optional<Doc> getDoc();
+    List<DocBranchLock> getBranches();
     Optional<String> getMessage();
   }
   

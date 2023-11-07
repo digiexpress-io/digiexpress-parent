@@ -54,5 +54,16 @@ public class DocSqlBuilderImpl implements DocSqlBuilder {
         .props(Tuple.of(id, id))
         .build();
   }
+  @Override
+  public SqlTuple updateOne(Doc doc) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("UPDATE ").append(options.getDoc())
+        .append(" SET external_id = $1, doc_type = $2, doc_status = $3, doc_meta = $4")
+        .append(" WHERE id = $5")
+        .build())
+        .props(Tuple.of(doc.getExternalId(), doc.getType(), doc.getStatus(), doc.getMeta(), doc.getId()))
+        .build();
+  }
 
 }

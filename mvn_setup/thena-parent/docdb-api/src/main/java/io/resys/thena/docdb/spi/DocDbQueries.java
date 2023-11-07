@@ -1,7 +1,5 @@
 package io.resys.thena.docdb.spi;
 
-import java.util.Optional;
-
 /*-
  * #%L
  * thena-docdb-api
@@ -26,8 +24,9 @@ import org.immutables.value.Value;
 
 import io.resys.thena.docdb.api.models.ThenaDocObject.Doc;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranch;
+import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranchLock;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocCommit;
-import io.resys.thena.docdb.api.models.ThenaDocObject.DocCommitLock;
+import io.resys.thena.docdb.api.models.ThenaDocObject.DocLock;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocLog;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
@@ -46,12 +45,13 @@ public interface DocDbQueries {
   
   interface DocCommitQuery {
     Uni<DocCommit> getById(String commitId);
-    Uni<DocCommitLock> getLock(DocLockCriteria criteria);
     Multi<DocCommit> findAll();
   }
   
   interface DocBranchQuery {
     Multi<DocBranch> findAll();
+    Uni<DocBranchLock> getLock(DocBranchLockCriteria criteria);
+    Uni<DocLock> getLock(DocLockCriteria criteria);
     Uni<DocBranch> getById(String branchId);
   }
 
@@ -61,7 +61,13 @@ public interface DocDbQueries {
   }
 
   @Value.Immutable
-  interface DocLockCriteria {
+  interface DocBranchLockCriteria {
     String getBranchId();
   }
+  @Value.Immutable
+  interface DocLockCriteria {
+    String getDocId();
+  }
+  
+  
 }

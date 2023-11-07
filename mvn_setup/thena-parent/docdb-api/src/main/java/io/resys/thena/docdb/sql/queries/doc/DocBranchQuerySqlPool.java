@@ -1,8 +1,15 @@
 package io.resys.thena.docdb.sql.queries.doc;
 
 import io.resys.thena.docdb.api.LogConstants;
+import io.resys.thena.docdb.api.models.ImmutableDocBranchLock;
+import io.resys.thena.docdb.api.models.ImmutableDocLock;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranch;
+import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranchLock;
+import io.resys.thena.docdb.api.models.ThenaDocObject.DocLock;
+import io.resys.thena.docdb.api.models.ThenaGitObject.CommitLockStatus;
+import io.resys.thena.docdb.spi.DocDbQueries.DocBranchLockCriteria;
 import io.resys.thena.docdb.spi.DocDbQueries.DocBranchQuery;
+import io.resys.thena.docdb.spi.DocDbQueries.DocLockCriteria;
 import io.resys.thena.docdb.spi.ErrorHandler;
 import io.resys.thena.docdb.sql.SqlBuilder;
 import io.resys.thena.docdb.sql.SqlMapper;
@@ -58,5 +65,65 @@ public class DocBranchQuerySqlPool implements DocBranchQuery {
         .onItem()
         .transformToMulti((RowSet<DocBranch> rowset) -> Multi.createFrom().iterable(rowset))
         .onFailure().invoke(e -> errorHandler.deadEnd("Can't find 'DOC_BRANCH'!", e));
+  }
+  
+  @Override
+  public Uni<DocBranchLock> getLock(DocBranchLockCriteria crit) {
+    final var sql = sqlBuilder.docBranches().getLock(crit);
+    if(log.isDebugEnabled()) {
+      log.debug("DocBranch: {} getLock ONE branch query, with props: {} \r\n{}",
+          DocCommitQuerySqlPool.class,
+          sql.getProps().deepToString(),
+          sql.getValue());
+    }
+    if(crit.getBranchId().isEmpty()) {
+      return Uni.createFrom().item(ImmutableDocBranchLock.builder().status(CommitLockStatus.NOT_FOUND).build());
+    }
+    
+    return wrapper.getClient().preparedQuery(sql.getValue())
+        .mapping(row -> sqlMapper.docBranchLock(row))
+        .execute(sql.getProps())
+        .onItem()
+        .transform((RowSet<DocBranchLock> rowset) -> {
+          final var it = rowset.iterator();
+          if(it.hasNext()) {
+            return it.next();
+          }
+          return null;
+        })
+        .onFailure().invoke(e -> errorHandler.deadEnd("Can't lock branch: '" + crit.getBranchId() + "'!", e));
+  }
+  @Override
+  public Uni<DocLock> getLock(DocLockCriteria crit) {
+    final var sql = sqlBuilder.docBranches().getLock(crit);
+    if(log.isDebugEnabled()) {
+      log.debug("DocBranch: {} getLock ALL branches query, with props: {} \r\n{}",
+          DocCommitQuerySqlPool.class,
+          sql.getProps().deepToString(),
+          sql.getValue());
+    }
+    if(crit.getDocId().isEmpty()) {
+      return Uni.createFrom().item(ImmutableDocLock.builder().status(CommitLockStatus.NOT_FOUND).build());
+    }
+    
+    return wrapper.getClient().preparedQuery(sql.getValue())
+        .mapping(row -> sqlMapper.docBranchLock(row))
+        .execute(sql.getProps())
+        .onItem()
+        .transform((RowSet<DocBranchLock> rowset) -> {
+          final var builder = ImmutableDocLock.builder().status(CommitLockStatus.NOT_FOUND);
+          final var it = rowset.iterator();
+          while(it.hasNext()) {
+            final var branch = it.next();
+            builder
+              .status(CommitLockStatus.LOCK_TAKEN)
+              .doc(branch.getDoc())
+              .addBranches(branch);
+          }
+          
+          final DocLock lock = builder.build();
+          return lock;
+        })
+        .onFailure().invoke(e -> errorHandler.deadEnd("Can't lock branch: '" + crit.getDocId() + "'!", e));
   }
 }

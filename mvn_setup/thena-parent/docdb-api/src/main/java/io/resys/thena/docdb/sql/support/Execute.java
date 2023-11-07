@@ -54,6 +54,13 @@ public class Execute {
         });
   }
   public static Uni<RowSet<Row>> apply(SqlClient client, SqlTupleList sql) {
+    if(sql.getProps().isEmpty()) {
+      LOGGER.info(System.lineSeparator() +
+          "Skipping batch command with no values to update or insert." + System.lineSeparator() +
+          "  sql: " + sql.getValue() + System.lineSeparator());
+      return Uni.createFrom().nullItem();
+    }
+    
     return client.preparedQuery(sql.getValue()).executeBatch(sql.getProps())
         .onFailure().invoke(e -> {
           LOGGER.error(System.lineSeparator() +

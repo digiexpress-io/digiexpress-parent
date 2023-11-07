@@ -1,6 +1,8 @@
 package io.resys.thena.docdb.sql.queries.doc;
 
 
+import java.util.stream.Collectors;
+
 /*-
  * #%L
  * thena-docdb-pgsql
@@ -49,10 +51,18 @@ public class DocDbInsertsSqlPool implements DocDbInserts {
     RepoAssert.isTrue(this.wrapper.getTx().isPresent(), () -> "Transaction must be started!");
     final var tx = wrapper.getClient();
     
-    final var docsInsert = output.getDoc().map(doc -> sqlBuilder.docs().insertOne(doc));
-    final var commitsInsert = sqlBuilder.docCommits().insertOne(output.getDocCommit());
-    final var branchInsert = sqlBuilder.docBranches().insertOne(output.getDocBranch());
-    final var logsInsert = output.getDocLogs().map(log -> sqlBuilder.docLogs().insertOne(log));
+    final var docsInsert = output.getDoc().map(doc -> {
+      if(output.getDocLock().isEmpty()) {
+        return sqlBuilder.docs().insertOne(doc);  
+      }
+      return sqlBuilder.docs().updateOne(doc);
+    });
+    
+    final var lockedBranchIds = output.getDocLock().stream().map(branch -> branch.getBranch().get().getId()).collect(Collectors.toList());
+    final var commitsInsert = sqlBuilder.docCommits().insertAll(output.getDocCommit());
+    final var branchInsert = sqlBuilder.docBranches().insertAll(output.getDocBranch().stream().filter(branch -> !lockedBranchIds.contains(branch.getId())).collect(Collectors.toList()));
+    final var branchUpdate = sqlBuilder.docBranches().updateAll(output.getDocBranch().stream().filter(branch -> lockedBranchIds.contains(branch.getId())).collect(Collectors.toList()));
+    final var logsInsert = sqlBuilder.docLogs().insertAll(output.getDocLogs());
     
     
     final Uni<DocBatch> docsUni;
@@ -62,33 +72,32 @@ public class DocDbInsertsSqlPool implements DocDbInserts {
       docsUni = Execute.apply(tx, docsInsert.get()).onItem()
           .transform(row -> successOutput(output, "Doc saved, number of new entries: " + row.rowCount()))
           .onFailure().recoverWithItem(e -> failOutput(output, "Failed to create docs", e));
-       
     }
     
     final Uni<DocBatch> commitUni = Execute.apply(tx, commitsInsert).onItem()
       .transform(row -> successOutput(output, "Commit saved, number of new entries: " + row.rowCount()))
       .onFailure().recoverWithItem(e -> failOutput(output, "Failed to save commit \r\n" + output.getDocCommit(), e));
 
-    final Uni<DocBatch> branchUni = Execute.apply(tx, branchInsert).onItem()
+    final Uni<DocBatch> branchUniInsert = Execute.apply(tx, branchInsert).onItem()
         .transform(row -> successOutput(output, "Branch saved, number of new entries: " + row.rowCount()))
         .onFailure().recoverWithItem(e -> failOutput(output, "Failed to save branch", e));
     
+    final Uni<DocBatch> branchUniUpdate = Execute.apply(tx, branchUpdate).onItem()
+        .transform(row -> successOutput(output, "Branch saved, number of updates entries: " + (row == null ? 0 : row.rowCount())))
+        .onFailure().recoverWithItem(e -> failOutput(output, "Failed to save branch", e));
     
-    final Uni<DocBatch> logUni;
-    if(logsInsert.isEmpty()) {
-      logUni = Uni.createFrom().item(successOutput(output, "Commit has no log, skipping log entry"));    
-    } else {
-      logUni = Execute.apply(tx, logsInsert.get()).onItem()
-          .transform(row -> successOutput(output, "Commit log saved, number of new entries: " + row.rowCount()))
-          .onFailure().recoverWithItem(e -> failOutput(output, "Failed to save  commit log", e)); 
-    }
     
-    return Uni.combine().all().unis(docsUni, commitUni, branchUni, logUni).asTuple()
+    final Uni<DocBatch> logUni = Execute.apply(tx, logsInsert).onItem()
+        .transform(row -> successOutput(output, "Commit log saved, number of new entries: " + row.rowCount()))
+        .onFailure().recoverWithItem(e -> failOutput(output, "Failed to save  commit log", e));
+    
+    return Uni.combine().all().unis(docsUni, commitUni, branchUniInsert, branchUniUpdate, logUni).asTuple()
         .onItem().transform(tuple -> merge(output, 
             tuple.getItem1(), 
             tuple.getItem2(), 
             tuple.getItem3(), 
-            tuple.getItem4()
+            tuple.getItem4(),
+            tuple.getItem5()
         ));
   }
 
@@ -98,6 +107,10 @@ public class DocDbInsertsSqlPool implements DocDbInserts {
     final var log = new StringBuilder(start.getLog().getText());
     var status = start.getStatus();
     for(DocBatch value : current) {
+      if(value == null) {
+        continue;
+      }
+      
       if(status != BatchStatus.ERROR) {
         status = value.getStatus();
       }

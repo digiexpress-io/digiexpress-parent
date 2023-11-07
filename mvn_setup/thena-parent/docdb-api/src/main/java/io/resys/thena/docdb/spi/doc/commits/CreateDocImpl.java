@@ -1,6 +1,9 @@
 package io.resys.thena.docdb.spi.doc.commits;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import io.resys.thena.docdb.api.actions.CommitActions.CommitResultStatus;
@@ -12,6 +15,7 @@ import io.resys.thena.docdb.api.models.ImmutableDocBranch;
 import io.resys.thena.docdb.api.models.ImmutableDocCommit;
 import io.resys.thena.docdb.api.models.ImmutableDocLog;
 import io.resys.thena.docdb.api.models.ImmutableMessage;
+import io.resys.thena.docdb.api.models.ThenaDocObject.DocLog;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocStatus;
 import io.resys.thena.docdb.spi.DbState;
 import io.resys.thena.docdb.spi.DocDbState.DocRepo;
@@ -144,13 +148,15 @@ public class CreateDocImpl implements CreateDoc {
       .status(DocStatus.IN_FORCE)
       .build();
     
-    final var docLogs = Optional.ofNullable(ImmutableDocLog.builder()
-      .id(OidUtils.gen())
-      .docId(doc.getId())
-      .branchId(branchId)
-      .docCommitId(commit.getId())
-      .value(appendLogs)
-      .build());
+    final List<DocLog> docLogs = appendLogs == null ? Collections.emptyList() : Arrays.asList(
+        ImmutableDocLog.builder()
+          .id(OidUtils.gen())
+          .docId(doc.getId())
+          .branchId(branchId)
+          .docCommitId(commit.getId())
+          .value(appendLogs)
+          .build()
+        );
 
     final var logger = new CommitLogger();
     logger
@@ -165,7 +171,7 @@ public class CreateDocImpl implements CreateDoc {
     
     if(!docLogs.isEmpty()) {
       logger
-      .append("  + doc log:    ").append(docLogs.map(e -> e.getId()).get())
+      .append("  + doc log:    ").append(docLogs.stream().findFirst().get().getId())
       .append(System.lineSeparator());
     }
 
@@ -173,16 +179,17 @@ public class CreateDocImpl implements CreateDoc {
       .repo(tx.getRepo())
       .status(BatchStatus.OK)
       .doc(doc)
-      .docBranch(docBranch)
-      .docCommit(commit)
-      .docLogs(docLogs)
+      .addDocBranch(docBranch)
+      .addDocCommit(commit)
+      .addAllDocLogs(docLogs)
       .log(ImmutableMessage.builder().text(logger.toString()).build())
       .build();
 
     return tx.insert().batch(batch)
       .onItem().transform(rsp -> ImmutableAppendResultEnvelope.builder()
         .repoId(repoId)
-        .commit(rsp.getDocCommit())
+        .doc(doc)
+        .commit(rsp.getDocCommit().iterator().next())
         .branch(docBranch)
         .addMessages(rsp.getLog())
         .addAllMessages(rsp.getMessages())

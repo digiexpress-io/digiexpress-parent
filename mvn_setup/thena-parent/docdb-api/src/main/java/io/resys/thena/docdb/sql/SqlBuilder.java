@@ -41,6 +41,7 @@ import io.resys.thena.docdb.api.models.ThenaGitObject.Tag;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Tree;
 import io.resys.thena.docdb.api.models.ThenaGitObject.TreeValue;
 import io.resys.thena.docdb.spi.DbCollections;
+import io.resys.thena.docdb.spi.DocDbQueries.DocBranchLockCriteria;
 import io.resys.thena.docdb.spi.DocDbQueries.DocLockCriteria;
 import io.resys.thena.docdb.spi.GitDbQueries.LockCriteria;
 import io.vertx.mutiny.sqlclient.Tuple;
@@ -74,9 +75,9 @@ public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
   
   interface DocCommitSqlBuilder {
     SqlTuple getById(String id);
-    SqlTuple getLock(DocLockCriteria crit);
     Sql findAll();
     SqlTuple insertOne(DocCommit commit);
+    SqlTupleList insertAll(Collection<DocCommit> commits);
   }
   
   interface DocSqlBuilder {
@@ -84,6 +85,7 @@ public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
     SqlTuple deleteById(String id);
     Sql findAll();
     SqlTuple insertOne(Doc doc);
+    SqlTuple updateOne(Doc doc);
   }
   
   interface DocLogSqlBuilder {
@@ -91,6 +93,7 @@ public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
     SqlTuple findByBranchId(String branchId);
     Sql findAll();
     SqlTuple insertOne(DocLog doc);
+    SqlTupleList insertAll(Collection<DocLog> logs);
   }
   
   
@@ -99,6 +102,10 @@ public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
     SqlTuple getById(String branchId);
     SqlTuple updateOne(DocBranch doc);
     SqlTuple insertOne(DocBranch doc);
+    SqlTupleList insertAll(Collection<DocBranch> docs);
+    SqlTupleList updateAll(List<DocBranch> doc);
+    SqlTuple getLock(DocBranchLockCriteria crit);
+    SqlTuple getLock(DocLockCriteria crit);
     Sql findAll();
   }
   

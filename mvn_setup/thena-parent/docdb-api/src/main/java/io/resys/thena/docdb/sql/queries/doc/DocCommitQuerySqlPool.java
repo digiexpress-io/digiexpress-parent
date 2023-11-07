@@ -1,12 +1,8 @@
 package io.resys.thena.docdb.sql.queries.doc;
 
 import io.resys.thena.docdb.api.LogConstants;
-import io.resys.thena.docdb.api.models.ImmutableDocCommitLock;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocCommit;
-import io.resys.thena.docdb.api.models.ThenaDocObject.DocCommitLock;
-import io.resys.thena.docdb.api.models.ThenaGitObject.CommitLockStatus;
 import io.resys.thena.docdb.spi.DocDbQueries.DocCommitQuery;
-import io.resys.thena.docdb.spi.DocDbQueries.DocLockCriteria;
 import io.resys.thena.docdb.spi.ErrorHandler;
 import io.resys.thena.docdb.sql.SqlBuilder;
 import io.resys.thena.docdb.sql.SqlMapper;
@@ -63,30 +59,5 @@ public class DocCommitQuerySqlPool implements DocCommitQuery {
         .transformToMulti((RowSet<DocCommit> rowset) -> Multi.createFrom().iterable(rowset))
         .onFailure().invoke(e -> errorHandler.deadEnd("Can't find 'DOC_COMMIT'!", e));
   }
-  @Override
-  public Uni<DocCommitLock> getLock(DocLockCriteria crit) {
-    final var sql = sqlBuilder.docCommits().getLock(crit);
-    if(log.isDebugEnabled()) {
-      log.debug("DocCommit: {} getLock query, with props: {} \r\n{}",
-          DocCommitQuerySqlPool.class,
-          sql.getProps().deepToString(),
-          sql.getValue());
-    }
-    if(crit.getBranchId().isEmpty()) {
-      return Uni.createFrom().item(ImmutableDocCommitLock.builder().status(CommitLockStatus.NOT_FOUND).build());
-    }
-    
-    return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.docCommitLock(row))
-        .execute(sql.getProps())
-        .onItem()
-        .transform((RowSet<DocCommitLock> rowset) -> {
-          final var it = rowset.iterator();
-          if(it.hasNext()) {
-            return it.next();
-          }
-          return null;
-        })
-        .onFailure().invoke(e -> errorHandler.deadEnd("Can't lock commit for branch: '" + crit.getBranchId() + "'!", e));
-  }
+
 }

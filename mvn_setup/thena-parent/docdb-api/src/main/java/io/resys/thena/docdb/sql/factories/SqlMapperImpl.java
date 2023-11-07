@@ -31,19 +31,19 @@ import io.resys.thena.docdb.api.models.ImmutableCommitTree;
 import io.resys.thena.docdb.api.models.ImmutableDoc;
 import io.resys.thena.docdb.api.models.ImmutableDocBranch;
 import io.resys.thena.docdb.api.models.ImmutableDocCommit;
-import io.resys.thena.docdb.api.models.ImmutableDocCommitLock;
+import io.resys.thena.docdb.api.models.ImmutableDocBranchLock;
 import io.resys.thena.docdb.api.models.ImmutableDocLog;
 import io.resys.thena.docdb.api.models.ImmutableRepo;
 import io.resys.thena.docdb.api.models.ImmutableTag;
 import io.resys.thena.docdb.api.models.ImmutableTree;
 import io.resys.thena.docdb.api.models.ImmutableTreeValue;
 import io.resys.thena.docdb.api.models.Repo;
-import io.resys.thena.docdb.api.models.ThenaDocObject;
 import io.resys.thena.docdb.api.models.Repo.RepoType;
+import io.resys.thena.docdb.api.models.ThenaDocObject;
 import io.resys.thena.docdb.api.models.ThenaDocObject.Doc;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranch;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocCommit;
-import io.resys.thena.docdb.api.models.ThenaDocObject.DocCommitLock;
+import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranchLock;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocLog;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Blob;
 import io.resys.thena.docdb.api.models.ThenaGitObject.BlobHistory;
@@ -189,8 +189,8 @@ public class SqlMapperImpl implements SqlMapper {
   }
   
   @Override
-  public DocCommitLock docCommitLock(Row row) {
-    return ImmutableDocCommitLock.builder()
+  public DocBranchLock docBranchLock(Row row) {
+    return ImmutableDocBranchLock.builder()
         .status(CommitLockStatus.LOCK_TAKEN)
         .doc(ImmutableDoc.builder()
             .id(row.getString("doc_id"))
