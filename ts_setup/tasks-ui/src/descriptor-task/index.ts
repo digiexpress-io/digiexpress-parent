@@ -1,6 +1,6 @@
 
-import * as taskEditCtx from './task-edit-ctx';
-import { Palette, _nobody_ } from './descriptor-constants';
+import * as taskEditCtx from './context-task-edit';
+import { Palette, _nobody_ } from './constants';
 
 export const StatusPalette = Palette.status;
 export const PriorityPalette = Palette.priority;
@@ -8,8 +8,8 @@ export const TeamGroupPalette = Palette.teamGroupType;
 export const AssigneePalette = Palette.assigneeGroupType;
 export const Nobody = _nobody_;
 
-export { TaskEditContext, TaskEditProvider } from './task-edit-ctx';
-export { TasksContext, TasksProvider } from './tasks-ctx';
+export { TaskEditContext, TaskEditProvider } from './context-task-edit';
+export { TasksContext, TasksProvider } from './context-tasks';
 
 export type {
   TaskEditEvent, TaskEditMutatorBuilder, TaskEditState,
@@ -30,15 +30,15 @@ export type {
   ChangeTaskExtensionEventBody,
   SingleEvent, CollapsedEvent
 
-} from './task-edit-ctx-types';
+} from './context-task-edit-types';
 
 
 export type {
   TasksContextType, TasksState,
-} from './tasks-ctx-types';
+} from './context-tasks-types';
 
-export { TaskDescriptorImpl, DescriptorStateImpl } from './descriptor-impl';
+export { TaskDescriptorImpl, DescriptorStateImpl } from './types-impl';
 export const EditProvider = taskEditCtx.TaskEditProvider;
-export * from './descriptor-types';
+export * from './types';
 export { Palette }
 

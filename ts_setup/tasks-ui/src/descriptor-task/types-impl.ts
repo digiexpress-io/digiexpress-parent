@@ -4,9 +4,9 @@ import {
   TaskDescriptor, FilterBy, Group, GroupBy,
   FilterByOwners, FilterByPriority, FilterByRoles, FilterByStatus, AvatarCode, AssigneeGroupType, TeamGroupType,
   TasksPaletteType, Data, DescriptorState
-} from './descriptor-types';
-import { _nobody_, Palette } from './descriptor-constants';
-import { applyDescFilters, applySearchString, withColors, getDaysUntilDue, getMyWorkType, getTeamspaceType } from './descriptor-util';
+} from './types';
+import { _nobody_, Palette } from './constants';
+import { applyDescFilters, applySearchString, withColors, getDaysUntilDue, getMyWorkType, getTeamspaceType } from './util';
 
 
 interface ExtendedInit extends Omit<DescriptorState,

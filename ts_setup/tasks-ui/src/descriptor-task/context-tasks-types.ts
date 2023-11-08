@@ -1,5 +1,5 @@
 import { Profile, Task } from 'client';
-import { DescriptorState, TaskDescriptor, TasksPaletteType, PaletteType } from './descriptor-types';
+import { DescriptorState, TaskDescriptor, TasksPaletteType, PaletteType } from './types';
 
 export interface TasksContextType {
   setState: TasksDispatch;

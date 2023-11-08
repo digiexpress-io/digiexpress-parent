@@ -1,7 +1,7 @@
 import { TaskCommand, TaskTransaction, Task } from 'client';
-import { TaskEditState, TaskEditMutatorBuilder, TaskEditEvent, SingleEvent } from './task-edit-ctx-types';
-import { TaskDescriptor } from './descriptor-types';
-import { TaskDescriptorImpl } from './descriptor-impl';
+import { TaskEditState, TaskEditMutatorBuilder, TaskEditEvent, SingleEvent } from './context-task-edit-types';
+import { TaskDescriptor } from './types';
+import { TaskDescriptorImpl } from './types-impl';
 
 interface ExtendedInit extends TaskEditState {
   today: Date;

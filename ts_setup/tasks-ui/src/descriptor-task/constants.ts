@@ -1,7 +1,7 @@
 import {
   PaletteType,
   RoleUnassigned, OwnerUnassigned
-} from './descriptor-types';
+} from './types';
 
 
 export const _nobody_: RoleUnassigned & OwnerUnassigned = '_nobody_';
