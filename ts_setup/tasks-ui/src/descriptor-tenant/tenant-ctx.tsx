@@ -1,14 +1,20 @@
 import React from 'react';
 import { Backend, Profile } from 'client';
-import { TenantContextType, TenantMutator, TenantDispatch, TenantState } from './tenant-ctx-types';
+import { TenantContextType, TenantMutator, TenantDispatch } from './tenant-ctx-types';
+import { TenantState } from './descriptor-types';
 import { TenantStateBuilder } from './tenant-ctx-impl';
 
-const Palette = {};
+const Palette = {
+  colors: { red: '', green: '', yellow: '', blue: '', violet: '' }
+};
 const TenantContext = React.createContext<TenantContextType>({} as TenantContextType);
 
 const initState: TenantState = new TenantStateBuilder({
   activeTenant: undefined,
   activeTenantEntry: undefined,
+  filtered: [],
+  groupBy: 'none',
+  searchString: '',
   tenantEntries: [],
   tenants: [],
   palette: {},

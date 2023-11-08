@@ -74,16 +74,18 @@ class TenantStateBuilder implements TenantState {
   }
 
   withProfile(profile: Profile): TenantStateBuilder {
-    return {} as any;
+    return new TenantStateBuilder({ ...this.clone(), profile })
   }
   withActiveTenant(tenantId?: TenantId): TenantStateBuilder {
-    return {} as any;
+    return new TenantStateBuilder({ ...this.clone(), activeTenant: tenantId });
   }
   withActiveTenantEntry(id?: FormTechnicalName): TenantStateBuilder {
-    return {} as any;
+    return new TenantStateBuilder({ ...this.clone(), activeTenantEntry: id });
   }
-  withTenantEntries(tenantEntries: TenantEntry[]): TenantStateBuilder {
-    return {} as any;
+  withTenantEntries(entries: TenantEntry[]): TenantStateBuilder {
+
+    //TODO TenantEntryDescriptorImpl
+    return new TenantStateBuilder({ ...this.clone(), tenantEntries: [] });
   }
   withSearchString(searchString: string): TenantStateBuilder {
     const cleaned = searchString.toLowerCase();
