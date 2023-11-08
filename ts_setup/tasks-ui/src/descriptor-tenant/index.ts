@@ -1,3 +1,3 @@
-import type { GroupBy, TenantDescriptor, TenantEntryDescriptor, Group, TenantContextType } from './descriptor-types';
-export { TenantContext } from './tenant-ctx';
+import type { GroupBy, TenantDescriptor, TenantEntryDescriptor, Group, TenantContextType } from './types';
+export { TenantContext } from './context';
 export type { GroupBy, TenantContextType, TenantEntryDescriptor, Group, TenantDescriptor };

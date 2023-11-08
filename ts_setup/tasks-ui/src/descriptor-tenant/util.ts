@@ -1,6 +1,6 @@
 
-import { TenantEntryDescriptor } from './descriptor-types';
-import { Palette } from './descriptor-constants';
+import { TenantEntryDescriptor } from './types';
+import { Palette } from './constants';
 
 
 export function applySearchString(desc: TenantEntryDescriptor, searchString: string): boolean {

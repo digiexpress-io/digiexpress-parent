@@ -1,7 +1,7 @@
 import React from 'react';
 import { Backend, Profile } from 'client';
-import { TenantState, TenantContextType, TenantMutator, TenantDispatch } from './descriptor-types';
-import { TenantStateBuilder } from './descriptor-impl';
+import { TenantState, TenantContextType, TenantMutator, TenantDispatch } from './types';
+import { TenantStateBuilder } from './context-state';
 
 const Palette = {
   colors: { red: '', green: '', yellow: '', blue: '', violet: '' }
@@ -37,19 +37,19 @@ const TenantProvider: React.FC<{ children: React.ReactNode, init: { backend: Bac
     };
   }, [state, setter, loading, backend]);
 
-  /*
-    React.useEffect(() => {
-      if (!loading) {
-        return;
-      }
-      backend.tenant.getActiveTenant().then(data => {
-        setLoading(false);
-        setState(prev => prev.withProfile(profile).withTasks(data.records))
-      });
-  
-    }, [loading, setLoading, backend, profile]);
-  
-  */
+
+  React.useEffect(() => {
+    if (!loading) {
+      return;
+    }
+    backend.tenant.getTenants().then(data => {
+      setLoading(false);
+      setState(prev => prev.withProfile(profile).withTenants(data))
+    });
+
+  }, [loading, setLoading, backend, profile]);
+
+
 
   return (<TenantContext.Provider value={contextValue}>{children}</TenantContext.Provider>);
 };
