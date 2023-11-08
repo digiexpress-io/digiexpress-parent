@@ -5,9 +5,7 @@ export interface PaletteType {
   colors: { red: string, green: string, yellow: string, blue: string, violet: string }
 }
 
-export interface TenantPaletteType {
-
-}
+export interface TenantPaletteType { }
 export type GroupBy = 'tenant' | 'none';
 export interface Group {
   id: string;
@@ -26,8 +24,7 @@ export interface TenantEntryDescriptor {
 }
 
 export interface TenantDescriptor {
-  tenant: Tenant;
-  entries: TenantEntryDescriptor[];
+  source: Tenant;
 }
 
 export interface TenantState {
@@ -52,3 +49,15 @@ export interface TenantState {
   withTenants(tenants: Tenant[]): TenantState;
   withTenantEntries(tenantEntries: TenantEntry[]): TenantState;
 }
+
+export interface TenantContextType {
+  setState: TenantDispatch;
+  reload: () => Promise<void>;
+  loading: boolean;
+  state: TenantState,
+  palette: PaletteType;
+}
+
+export type TenantMutator = (prev: TenantState) => TenantState;
+export type TenantDispatch = (mutator: TenantMutator) => void;
+

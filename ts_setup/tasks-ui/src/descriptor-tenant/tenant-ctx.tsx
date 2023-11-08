@@ -1,8 +1,7 @@
 import React from 'react';
 import { Backend, Profile } from 'client';
-import { TenantContextType, TenantMutator, TenantDispatch } from './tenant-ctx-types';
-import { TenantState } from './descriptor-types';
-import { TenantStateBuilder } from './tenant-ctx-impl';
+import { TenantState, TenantContextType, TenantMutator, TenantDispatch } from './descriptor-types';
+import { TenantStateBuilder } from './descriptor-impl';
 
 const Palette = {
   colors: { red: '', green: '', yellow: '', blue: '', violet: '' }
