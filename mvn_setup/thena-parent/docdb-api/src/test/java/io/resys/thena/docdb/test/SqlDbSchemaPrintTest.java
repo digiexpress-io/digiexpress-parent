@@ -31,7 +31,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import io.resys.thena.docdb.spi.DbCollections;
-import io.resys.thena.docdb.sql.factories.SqlSchemaImpl;
+import io.resys.thena.docdb.sql.statement.SqlSchemaImpl;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

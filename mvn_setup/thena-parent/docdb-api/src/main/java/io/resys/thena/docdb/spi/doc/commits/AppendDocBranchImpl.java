@@ -58,7 +58,7 @@ public class AppendDocBranchImpl implements AppendDocBranch {
   @Override
   public AppendDocBranch parent(String versionToModify) {
     this.versionToModify = versionToModify;
-    return null;
+    return this;
   }
 
   @Override

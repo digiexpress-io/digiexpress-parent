@@ -1,4 +1,4 @@
-package io.resys.thena.docdb.sql.factories;
+package io.resys.thena.docdb.sql.statement;
 
 /*-
  * #%L
@@ -22,8 +22,9 @@ package io.resys.thena.docdb.sql.factories;
 
 import io.resys.thena.docdb.spi.DbCollections;
 import io.resys.thena.docdb.sql.ImmutableSql;
-import io.resys.thena.docdb.sql.SqlBuilder.Sql;
+import io.resys.thena.docdb.sql.SqlBuilder;
 import io.resys.thena.docdb.sql.SqlSchema;
+import io.resys.thena.docdb.sql.SqlBuilder.Sql;
 import io.resys.thena.docdb.sql.support.SqlStatement;
 import lombok.RequiredArgsConstructor;
 

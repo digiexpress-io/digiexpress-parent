@@ -36,9 +36,9 @@ import io.resys.thena.docdb.sql.factories.DocDbQueriesSqlImpl;
 import io.resys.thena.docdb.sql.factories.GitDbQueriesSqlImpl;
 import io.resys.thena.docdb.sql.factories.GitDbQueriesSqlImpl.ClientQuerySqlContext;
 import io.resys.thena.docdb.sql.factories.SqlBuilderImpl;
-import io.resys.thena.docdb.sql.factories.SqlMapperImpl;
-import io.resys.thena.docdb.sql.factories.SqlSchemaImpl;
 import io.resys.thena.docdb.sql.queries.RepoBuilderSqlPool;
+import io.resys.thena.docdb.sql.statement.SqlMapperImpl;
+import io.resys.thena.docdb.sql.statement.SqlSchemaImpl;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

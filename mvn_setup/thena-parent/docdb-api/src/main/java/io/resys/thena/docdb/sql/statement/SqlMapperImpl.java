@@ -1,4 +1,4 @@
-package io.resys.thena.docdb.sql.factories;
+package io.resys.thena.docdb.sql.statement;
 
 /*-
  * #%L
