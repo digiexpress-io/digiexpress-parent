@@ -4,9 +4,9 @@ import {
   ProjectDescriptor, FilterBy, Group, GroupBy,
   FilterByRepoType, FilterByUsers, AvatarCode,
   ProjectPaletteType, Data, DescriptorState
-} from './descriptor-types';
-import { _nobody_, Palette } from './descriptor-constants';
-import { applyDescFilters, applySearchString, withColors } from './descriptor-util';
+} from './types';
+import { _nobody_, Palette } from './constants';
+import { applyDescFilters, applySearchString, withColors } from './util';
 
 
 

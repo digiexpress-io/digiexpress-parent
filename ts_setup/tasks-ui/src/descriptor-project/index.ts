@@ -1,12 +1,11 @@
-import { Palette } from './descriptor-constants';
+import { Palette } from './constants';
 
-export * from './descriptor-types';
+const RepoTypePalette = Palette.repoType;
 
-export { ProjectsContext, ProjectsProvider } from './projects-ctx';
-export { ProjectIdProvider, ProjectIdContext } from './project-id-ctx';
-
-export type { ProjectIdContextType } from './project-id-ctx';
-export type { ProjectsContextType } from './projects-ctx-types';
-
-export const RepoTypePalette = Palette.repoType;
-export { ProjectDescriptorImpl, DescriptorStateImpl } from './descriptor-impl';
+export * from './types';
+export type { ProjectIdContextType } from './context-project-id';
+export type { ProjectsContextType } from './context-projects-types';
+export { ProjectsContext, ProjectsProvider } from './context-projects';
+export { ProjectIdProvider, ProjectIdContext } from './context-project-id';
+export { ProjectDescriptorImpl, DescriptorStateImpl } from './types-impl';
+export { RepoTypePalette };

@@ -3,9 +3,9 @@ import { Customer, Profile, Task } from 'client';
 import {
   CustomerCaseDescriptor, FilterBy, Group, GroupBy, FilterByAssignees, FilterByRoles,
   CustomerPaletteType, Data, DescriptorState
-} from './descriptor-types';
-import { _nobody_ } from './descriptor-constants';
-import { applyDescFilters, applySearchString, withColors } from './descriptor-util';
+} from './types';
+import { _nobody_ } from './constants';
+import { applyDescFilters, applySearchString, withColors } from './util';
 
 
 

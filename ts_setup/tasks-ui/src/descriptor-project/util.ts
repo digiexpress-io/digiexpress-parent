@@ -1,6 +1,6 @@
 
-import { ProjectDescriptor, FilterBy } from './descriptor-types';
-import { _nobody_, Palette } from './descriptor-constants'
+import { ProjectDescriptor, FilterBy } from './types';
+import { _nobody_, Palette } from './constants'
 
 
 export function applyDescFilters(desc: ProjectDescriptor, filters: FilterBy[]): boolean {

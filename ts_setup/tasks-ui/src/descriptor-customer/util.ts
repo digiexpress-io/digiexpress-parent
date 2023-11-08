@@ -1,6 +1,6 @@
 
-import { CustomerCaseDescriptor, FilterBy } from './descriptor-types';
-import { _nobody_, Palette } from './descriptor-constants'
+import { CustomerCaseDescriptor, FilterBy } from './types';
+import { _nobody_, Palette } from './constants'
 
 
 export function applyDescFilters(desc: CustomerCaseDescriptor, filters: FilterBy[]): boolean {

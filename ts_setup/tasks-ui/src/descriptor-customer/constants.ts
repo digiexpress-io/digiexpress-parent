@@ -1,4 +1,4 @@
-import { PaletteType } from './descriptor-types';
+import { PaletteType } from './types';
 
 
 export const _nobody_ = '_nobody_';
@@ -13,11 +13,5 @@ export const orange: string = '#fb8500';      //orange
 export const red: string = '#d00000';
 
 export const Palette: PaletteType = {
-  repoType: {
-    'DIALOB': bittersweet,
-    'STENCIL': emerald,
-    'TASKS': steelblue,
-    'WRENCH': ultraviolet,
-  },
   colors: { red: bittersweet, green: emerald, yellow: sunglow, blue: steelblue, violet: ultraviolet }
 }
