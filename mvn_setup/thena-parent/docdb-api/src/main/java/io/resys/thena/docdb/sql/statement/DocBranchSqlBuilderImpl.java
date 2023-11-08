@@ -139,7 +139,7 @@ public class DocBranchSqlBuilderImpl implements DocBranchSqlBuilder {
         .append("  commits.id as commit_id").ln()
         
         .append(" FROM (SELECT * FROM ").append(options.getDocBranch()).append(" WHERE doc_id = $1 FOR UPDATE NOWAIT) as branch").ln()
-        .append(" JOIN ").append(options.getDocCommits()).append(" as commits ON(commits.branch_id = branch.branch_id)").ln()
+        .append(" JOIN ").append(options.getDocCommits()).append(" as commits ON(commits.branch_id = branch.branch_id AND commits.id = branch.commit_id)").ln()
         .append(" JOIN ").append(options.getDoc()).append(" as doc ON(doc.id = branch.doc_id)").ln()
         .build())
         .props(Tuple.of(docId))

@@ -81,6 +81,8 @@ public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
   }
   
   interface DocSqlBuilder {
+    SqlTuple findAllFlattedByAnyId(String docId);
+    Sql findAllFlatted();
     SqlTuple getById(String id);
     SqlTuple deleteById(String id);
     Sql findAll();

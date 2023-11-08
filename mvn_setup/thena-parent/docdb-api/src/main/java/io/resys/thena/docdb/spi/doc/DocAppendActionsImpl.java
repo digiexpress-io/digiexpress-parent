@@ -1,4 +1,4 @@
-package io.resys.thena.docdb.spi.doc.repo;
+package io.resys.thena.docdb.spi.doc;
 
 import io.resys.thena.docdb.api.actions.DocCommitActions;
 import io.resys.thena.docdb.spi.DbState;

@@ -1,0 +1,33 @@
+
+Docs
+  - 1: bobs-ssn-id
+
+Branches
+  - branch name: main/2
+    doc id: 1
+    commit id: 3
+    {"last_name":"flop","first_name":"bob"}
+  - branch name: dev/4
+    doc id: 1
+    commit id: 5
+    {"last_name":"used to be -> flop-2","branch new content":"something in here"}
+
+Commits
+  - id: 6
+    doc id: 1, branch id: 2, parent: 7, message: created first entry, author: jane.doe@morgue.com
+  - id: 8
+    doc id: 1, branch id: 4, parent: 6, message: created branch entry, author: jane.doe@morgue.com
+  - id: 3
+    doc id: 1, branch id: 2, parent: 6, message: changed meta for doc, author: jane.doe@morgue.com
+  - id: 9
+    doc id: 1, branch id: 4, parent: 8, message: changed meta for doc, author: jane.doe@morgue.com
+  - id: 5
+    doc id: 1, branch id: 4, parent: 8, message: edited dev branch, author: jane.doe@morgue.com
+
+Logs
+  - id: 10
+    doc id: 6
+    log value: {"some_cool_command":"create_customer"}
+  - id: 11
+    doc id: 8
+    log value: {"created-branch-command":"branch the customer for some reason"}

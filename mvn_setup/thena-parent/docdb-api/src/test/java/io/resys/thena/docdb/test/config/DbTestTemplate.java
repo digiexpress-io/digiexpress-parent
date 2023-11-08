@@ -1,10 +1,13 @@
 package io.resys.thena.docdb.test.config;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
 
@@ -17,10 +20,12 @@ import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.Repo.RepoType;
 import io.resys.thena.docdb.spi.DbCollections;
 import io.resys.thena.docdb.spi.DbState;
+import io.resys.thena.docdb.spi.DocDBDefault;
 import io.resys.thena.docdb.spi.DocDbPrinter;
 import io.resys.thena.docdb.spi.GitDbPrinter;
 import io.resys.thena.docdb.spi.jackson.VertexExtModule;
 import io.resys.thena.docdb.sql.DbStateSqlImpl;
+import io.vertx.core.json.JsonObject;
 import io.vertx.core.json.jackson.DatabindCodec;
 import io.vertx.core.json.jackson.VertxModule;
 import io.vertx.mutiny.sqlclient.Pool;
@@ -131,4 +136,37 @@ public class DbTestTemplate {
     return repo;
   }
 
+  
+  public static String toExpectedFile(String fileName) {
+    return toString(DbTestTemplate.class, fileName);
+  }
+  
+  public void assertRepo(Repo client, String expectedFileName) {
+    final var expected = toExpectedFile(expectedFileName);
+    final var actual = toStaticData(client);
+    Assertions.assertLinesMatch(expected.lines(), actual.lines(), actual);
+    
+  }
+  public void assertEquals(String expectedFileName, Object actual) {
+    final var expected = toExpectedFile(expectedFileName);
+    final var actualJson = JsonObject.mapFrom(actual).encodePrettily();
+    Assertions.assertLinesMatch(expected.lines(), actualJson.lines());  
+  }
+  
+  public static String toString(Class<?> type, String resource) {
+    try {
+      return new String(type.getClassLoader().getResourceAsStream(resource).readAllBytes(), StandardCharsets.UTF_8);
+    } catch (IOException e) {
+      throw new RuntimeException(e.getMessage(), e);
+    }
+  }
+  
+  public String toStaticData(Repo client) {    
+    if(client.getType() == RepoType.doc) {
+      return new DocDbPrinter(createState()).printWithStaticIds(client);
+      
+    }
+    return new GitDbPrinter(createState()).printWithStaticIds(client);
+  }
+  
 }

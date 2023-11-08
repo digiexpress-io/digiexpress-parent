@@ -2,6 +2,7 @@ package io.resys.thena.docdb.sql.queries.doc;
 
 import io.resys.thena.docdb.api.LogConstants;
 import io.resys.thena.docdb.api.models.ThenaDocObject.Doc;
+import io.resys.thena.docdb.api.models.ThenaDocObject.DocFlatted;
 import io.resys.thena.docdb.spi.DocDbQueries.DocQuery;
 import io.resys.thena.docdb.spi.ErrorHandler;
 import io.resys.thena.docdb.sql.SqlBuilder;
@@ -58,5 +59,35 @@ public class DocQuerySqlPool implements DocQuery {
         .onItem()
         .transformToMulti((RowSet<Doc> rowset) -> Multi.createFrom().iterable(rowset))
         .onFailure().invoke(e -> errorHandler.deadEnd("Can't find 'DOC'!", e));
+  }
+  @Override
+  public Multi<DocFlatted> findAllFlatted() {
+    final var sql = sqlBuilder.docs().findAllFlatted();
+    if(log.isDebugEnabled()) {
+      log.debug("Doc findAllFlatted query, with props: {} \r\n{}", 
+          "",
+          sql.getValue());
+    }
+    return wrapper.getClient().preparedQuery(sql.getValue())
+        .mapping(row -> sqlMapper.docFlatted(row))
+        .execute()
+        .onItem()
+        .transformToMulti((RowSet<DocFlatted> rowset) -> Multi.createFrom().iterable(rowset))
+        .onFailure().invoke(e -> errorHandler.deadEnd("Can't find 'DOC FLATTED'!", e));
+  }
+  @Override
+  public Multi<DocFlatted> findAllFlattedByAnyId(String id) {
+    final var sql = sqlBuilder.docs().findAllFlattedByAnyId(id);
+    if(log.isDebugEnabled()) {
+      log.debug("Doc findAllFlattedByAnyId query, with props: {} \r\n{}", 
+          sql.getProps().deepToString(),
+          sql.getValue());
+    }
+    return wrapper.getClient().preparedQuery(sql.getValue())
+        .mapping(row -> sqlMapper.docFlatted(row))
+        .execute(sql.getProps())
+        .onItem()
+        .transformToMulti((RowSet<DocFlatted> rowset) -> Multi.createFrom().iterable(rowset))
+        .onFailure().invoke(e -> errorHandler.deadEnd("Can't find 'DOC FLATTED' by any id!", e));
   }
 }

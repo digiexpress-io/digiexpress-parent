@@ -25,12 +25,13 @@ import io.resys.thena.docdb.api.actions.BranchActions;
 import io.resys.thena.docdb.api.actions.CommitActions;
 import io.resys.thena.docdb.api.actions.DiffActions;
 import io.resys.thena.docdb.api.actions.DocCommitActions;
-import io.resys.thena.docdb.api.actions.DocFindActions;
+import io.resys.thena.docdb.api.actions.DocQueryActions;
 import io.resys.thena.docdb.api.actions.HistoryActions;
 import io.resys.thena.docdb.api.actions.PullActions;
 import io.resys.thena.docdb.api.actions.RepoActions;
 import io.resys.thena.docdb.api.actions.TagActions;
-import io.resys.thena.docdb.spi.doc.repo.DocAppendActionsImpl;
+import io.resys.thena.docdb.spi.doc.DocAppendActionsImpl;
+import io.resys.thena.docdb.spi.doc.DocQueryActionsImpl;
 import io.resys.thena.docdb.spi.git.commits.CommitActionsImpl;
 import io.resys.thena.docdb.spi.git.diff.DiffActionsImpl;
 import io.resys.thena.docdb.spi.git.history.HistoryActionsDefault;
@@ -50,6 +51,7 @@ public class DocDBDefault implements DocDB {
   private DiffActions diffActions;
   private BranchActions branchActions;
   private DocCommitActions docAppendActions;
+  private DocQueryActions docQueryActions;
   
   public DocDBDefault(DbState state) {
     super();
@@ -126,9 +128,11 @@ public class DocDBDefault implements DocDB {
     return new DocModel() {
       
       @Override
-      public DocFindActions find() {
-        // TODO Auto-generated method stub
-        return null;
+      public DocQueryActions find() {
+        if(docQueryActions == null) {
+          docQueryActions = new DocQueryActionsImpl(state); 
+        }
+        return docQueryActions;
       }
       
       @Override

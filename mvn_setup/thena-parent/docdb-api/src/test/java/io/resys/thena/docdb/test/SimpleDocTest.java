@@ -106,8 +106,24 @@ public class SimpleDocTest extends DbTestTemplate {
       .message("edited dev branch")
     .build().await().atMost(Duration.ofMinutes(1));
 
+    assertRepo(repo.getRepo(), "doc-db-test-cases/crud-test-1.txt");
+    
+    
+    final var findAllDocs = getClient().doc().find().docQuery()
+        .repoId(repo.getRepo().getId())
+        .findAll()
+    .await().atMost(Duration.ofMinutes(1));
+    
+    Assertions.assertEquals(1, findAllDocs.getObjects().getDocs().size());
+    Assertions.assertEquals(2, findAllDocs.getObjects().getCommits().size());
+    
+    // one document, 2 branches
+    Assertions.assertEquals(1, findAllDocs.getObjects().getBranches().size());
+    Assertions.assertEquals(2, findAllDocs.getObjects().getBranches().get(createdDoc.getDoc().getId()).size());
     
     printRepo(repo.getRepo());
+
+    //assertEquals("export-test-cases/simpleThreeTaskExport.json", repo.getRepo());
     
   }
 }

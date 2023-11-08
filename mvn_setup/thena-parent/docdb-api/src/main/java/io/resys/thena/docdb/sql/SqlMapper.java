@@ -23,8 +23,9 @@ package io.resys.thena.docdb.sql;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.ThenaDocObject.Doc;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranch;
-import io.resys.thena.docdb.api.models.ThenaDocObject.DocCommit;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranchLock;
+import io.resys.thena.docdb.api.models.ThenaDocObject.DocCommit;
+import io.resys.thena.docdb.api.models.ThenaDocObject.DocFlatted;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocLog;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Blob;
 import io.resys.thena.docdb.api.models.ThenaGitObject.BlobHistory;
@@ -41,6 +42,7 @@ public interface SqlMapper extends DataMapper<Row>{
   Repo repo(Row row);
 
   Doc doc(Row row);
+  DocFlatted docFlatted(Row row);
   DocLog docLog(Row row);
   DocBranch docBranch(Row row);
   DocCommit docCommit(Row row);

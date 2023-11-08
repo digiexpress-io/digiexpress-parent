@@ -26,6 +26,7 @@ import io.resys.thena.docdb.api.models.ThenaDocObject.Doc;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranch;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranchLock;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocCommit;
+import io.resys.thena.docdb.api.models.ThenaDocObject.DocFlatted;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocLock;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocLog;
 import io.smallrye.mutiny.Multi;
@@ -39,6 +40,8 @@ public interface DocDbQueries {
   DocLogQuery logs();  
   
   interface DocQuery {
+    Multi<DocFlatted> findAllFlattedByAnyId(String id);
+    Multi<DocFlatted> findAllFlatted();
     Multi<Doc> findAll();
     Uni<Doc> getById(String id);
   }

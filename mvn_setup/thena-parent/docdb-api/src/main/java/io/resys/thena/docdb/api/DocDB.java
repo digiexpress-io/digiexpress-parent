@@ -25,7 +25,7 @@ import io.resys.thena.docdb.api.actions.BranchActions;
 import io.resys.thena.docdb.api.actions.CommitActions;
 import io.resys.thena.docdb.api.actions.DiffActions;
 import io.resys.thena.docdb.api.actions.DocCommitActions;
-import io.resys.thena.docdb.api.actions.DocFindActions;
+import io.resys.thena.docdb.api.actions.DocQueryActions;
 import io.resys.thena.docdb.api.actions.HistoryActions;
 import io.resys.thena.docdb.api.actions.PullActions;
 import io.resys.thena.docdb.api.actions.RepoActions;
@@ -43,7 +43,7 @@ public interface DocDB {
   
   interface DocModel {
     DocCommitActions commit();
-    DocFindActions find();
+    DocQueryActions find();
     
 
     // build world state

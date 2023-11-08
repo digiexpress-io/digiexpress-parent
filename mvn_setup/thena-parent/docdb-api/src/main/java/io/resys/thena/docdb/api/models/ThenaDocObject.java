@@ -33,7 +33,31 @@ import io.vertx.core.json.JsonObject;
 
 public interface ThenaDocObject {
   interface IsDocObject { String getId(); }
+  
+  @Value.Immutable
+  interface DocFlatted extends ThenaDocObject {
+    String getExternalId();
+    String getDocId();
+    String getDocType();
+    DocStatus getDocStatus();
+    Optional<JsonObject> getDocMeta();
 
+
+    String getBranchId();
+    String getBranchName();
+    DocStatus getBranchStatus();
+    JsonObject getBranchValue();
+    
+    String getCommitAuthor();
+    LocalDateTime getCommitDateTime();
+    String getCommitMessage();
+    Optional<String> getCommitParent();
+    String getCommitId();
+    
+    Optional<String> getDocLogId();
+    Optional<JsonObject> getDocLogValue();
+  }
+  
   
   @Value.Immutable
   interface Doc extends ThenaDocObject, IsDocObject {

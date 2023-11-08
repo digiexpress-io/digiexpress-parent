@@ -30,8 +30,9 @@ import io.resys.thena.docdb.api.models.ImmutableCommit;
 import io.resys.thena.docdb.api.models.ImmutableCommitTree;
 import io.resys.thena.docdb.api.models.ImmutableDoc;
 import io.resys.thena.docdb.api.models.ImmutableDocBranch;
-import io.resys.thena.docdb.api.models.ImmutableDocCommit;
 import io.resys.thena.docdb.api.models.ImmutableDocBranchLock;
+import io.resys.thena.docdb.api.models.ImmutableDocCommit;
+import io.resys.thena.docdb.api.models.ImmutableDocFlatted;
 import io.resys.thena.docdb.api.models.ImmutableDocLog;
 import io.resys.thena.docdb.api.models.ImmutableRepo;
 import io.resys.thena.docdb.api.models.ImmutableTag;
@@ -42,8 +43,9 @@ import io.resys.thena.docdb.api.models.Repo.RepoType;
 import io.resys.thena.docdb.api.models.ThenaDocObject;
 import io.resys.thena.docdb.api.models.ThenaDocObject.Doc;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranch;
-import io.resys.thena.docdb.api.models.ThenaDocObject.DocCommit;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranchLock;
+import io.resys.thena.docdb.api.models.ThenaDocObject.DocCommit;
+import io.resys.thena.docdb.api.models.ThenaDocObject.DocFlatted;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocLog;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Blob;
 import io.resys.thena.docdb.api.models.ThenaGitObject.BlobHistory;
@@ -250,5 +252,30 @@ public class SqlMapperImpl implements SqlMapper {
         .status(ThenaDocObject.DocStatus.valueOf(row.getString("branch_status")))
         .build();
     
+  }
+  @Override
+  public DocFlatted docFlatted(Row row) {
+    return ImmutableDocFlatted.builder()
+        .externalId(row.getString("external_id"))
+        .docId(row.getString("doc_id"))
+        .docType(row.getString("doc_type"))
+        .docStatus(ThenaDocObject.DocStatus.valueOf(row.getString("doc_status")))
+        .docMeta(Optional.ofNullable(jsonObject(row, "doc_meta")))
+        
+        .branchId(row.getString("branch_id"))
+        .branchName(row.getString("branch_name"))
+        .branchValue(jsonObject(row, "branch_value"))
+        .branchStatus(ThenaDocObject.DocStatus.valueOf(row.getString("branch_status")))
+        
+        .commitId(row.getString("commit_id"))
+        .commitAuthor(row.getString("commit_author"))
+        .commitMessage(row.getString("commit_message"))
+        .commitParent(Optional.ofNullable(row.getString("commit_parent")))
+        .commitDateTime(LocalDateTime.parse(row.getString("commit_datetime")))
+        
+        .docLogId(Optional.ofNullable(row.getString("doc_log_id")))
+        .docLogValue(Optional.ofNullable(jsonObject(row, "doc_log_value")))
+        
+        .build();
   }
 }
