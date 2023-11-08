@@ -122,8 +122,5 @@ public class SimpleDocTest extends DbTestTemplate {
     Assertions.assertEquals(2, findAllDocs.getObjects().getBranches().get(createdDoc.getDoc().getId()).size());
     
     printRepo(repo.getRepo());
-
-    //assertEquals("export-test-cases/simpleThreeTaskExport.json", repo.getRepo());
-    
   }
 }
