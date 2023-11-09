@@ -27,27 +27,39 @@ export interface TenantDescriptor {
   source: Tenant;
 }
 
+
+export interface Data {
+  tenantEntries: TenantEntryDescriptor[];
+  palette: TenantPaletteType;
+  profile: Profile;
+}
+
+export interface TenantGroupsAndFilters {
+  groupBy: GroupBy;
+  groups: Group[];
+  searchString: string | undefined;
+
+  withEntries(entries: TenantEntryDescriptor[]): TenantGroupsAndFilters;
+  withData(entries: Data): TenantGroupsAndFilters;
+  withGroupBy(groupBy: GroupBy): TenantGroupsAndFilters;
+  withSearchString(searchString: string): TenantGroupsAndFilters;
+}
+
+
 export interface TenantState {
   tenantEntries: TenantEntryDescriptor[];
   tenants: TenantDescriptor[];
   activeTenant: TenantId | undefined;
   activeTenantEntry: FormTechnicalName | undefined;
-  groups: Group[];
-  groupBy: GroupBy;
   palette: TenantPaletteType;
   profile: Profile;
-  filtered: TenantEntryDescriptor[];
-  searchString: string | undefined;
 
-
-  withSearchString(searchString: string): TenantState;
   withProfile(profile: Profile): TenantState;
-
   withActiveTenant(tenantId?: TenantId): TenantState;
   withActiveTenantEntry(id?: FormTechnicalName): TenantState;
-
   withTenants(tenants: Tenant[]): TenantState;
   withTenantEntries(tenantEntries: TenantEntry[]): TenantState;
+  toGroupsAndFilters(): TenantGroupsAndFilters;
 }
 
 export interface TenantContextType {

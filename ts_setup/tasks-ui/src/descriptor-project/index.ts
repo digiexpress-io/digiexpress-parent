@@ -4,8 +4,8 @@ const RepoTypePalette = Palette.repoType;
 
 export * from './types';
 export type { ProjectIdContextType } from './context-project-id';
-export type { ProjectsContextType } from './context-projects-types';
+export type { ProjectsContextType } from './types';
 export { ProjectsContext, ProjectsProvider } from './context-projects';
 export { ProjectIdProvider, ProjectIdContext } from './context-project-id';
-export { ProjectDescriptorImpl, DescriptorStateImpl } from './types-impl';
+export { ProjectDescriptorImpl, GroupsAndFiltersImpl } from './types-impl';
 export { RepoTypePalette };

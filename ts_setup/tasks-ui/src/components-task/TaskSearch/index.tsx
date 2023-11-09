@@ -86,7 +86,7 @@ const columnTypes: (keyof TaskDescriptor)[] = [
 
 const TaskSearch: React.FC<{}> = () => {
   const tasks = Context.useTasks();
-  const [state, setState] = React.useState(tasks.state.withDescriptors());
+  const [state, setState] = React.useState(tasks.state.toGroupsAndFilters());
   const [columns, setColumns] = React.useState([
     ...columnTypes
   ]);

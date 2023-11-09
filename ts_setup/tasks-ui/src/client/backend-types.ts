@@ -21,9 +21,10 @@ export interface Backend {
 }
 
 export interface StoreConfig {
-  url: string;
+  urls: { id: string, url: string }[];
   oidc?: string;
   status?: string;
+  performInitCheck: boolean
   csrf?: { key: string, value: string }
 }
 export interface Store {

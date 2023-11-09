@@ -8,7 +8,7 @@ export interface AvatarCode {
 export interface ProjectDescriptor {
   entry: Project;
   id: string;
-  
+
   appId: string;
   repoId: string;
   repoType: RepoType;
@@ -58,15 +58,38 @@ export interface Data {
   users: string[];
 }
 
-export interface DescriptorState {
+export interface GroupsAndFilters {
   groupBy: GroupBy;
   groups: Group[];
   filterBy: FilterBy[];
   searchString: string | undefined;
 
-  withSearchString(searchString: string): DescriptorState;
-  withProjects(projects: Data): DescriptorState;
-  withGroupBy(groupBy: GroupBy): DescriptorState;
-  withFilterByRepoType(repoType: RepoType[]): DescriptorState;
-  withFilterByUsers(users: string[]): DescriptorState;
+  withSearchString(searchString: string): GroupsAndFilters;
+  withProjects(projects: Data): GroupsAndFilters;
+  withGroupBy(groupBy: GroupBy): GroupsAndFilters;
+  withFilterByRepoType(repoType: RepoType[]): GroupsAndFilters;
+  withFilterByUsers(users: string[]): GroupsAndFilters;
+}
+
+export interface ProjectsContextType {
+  setState: ProjectsDispatch;
+  reload: () => Promise<void>;
+  loading: boolean;
+  state: ProjectsState,
+  palette: PaletteType;
+}
+
+export type ProjectsMutator = (prev: ProjectsState) => ProjectsState;
+export type ProjectsDispatch = (mutator: ProjectsMutator) => void;
+
+export interface ProjectsState {
+  projects: ProjectDescriptor[];
+  projectsByUser: Record<string, ProjectDescriptor[]>;
+  palette: ProjectPaletteType;
+  profile: Profile;
+  users: string[];
+
+  withProfile(profile: Profile): ProjectsState;
+  withProjects(projects: Project[]): ProjectsState;
+  toGroupsAndFilters(): GroupsAndFilters;
 }

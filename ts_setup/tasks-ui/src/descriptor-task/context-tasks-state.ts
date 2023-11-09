@@ -1,13 +1,13 @@
 import { Task, Profile } from 'client';
 
-import { TasksState } from './context-tasks-types';
+import { TasksState } from './types';
 import { Palette, _nobody_ } from './constants';
-import { DescriptorState, TaskDescriptor, TasksPaletteType, } from './types';
-import { TaskDescriptorImpl, DescriptorStateImpl } from './types-impl';
+import { TaskDescriptor, TasksPaletteType, } from './types';
+import { TaskDescriptorImpl, TaskGroupsAndFiltersImpl } from './types-impl';
 import { withColors } from './util';
 
 
-interface ExtendedInit extends Omit<TasksState, "withProfile" | "withTasks" | "withDescriptors"> {
+interface ExtendedInit extends Omit<TasksState, "withProfile" | "withTasks" | "toGroupsAndFilters"> {
   owners: string[];
   roles: string[];
   palette: {
@@ -42,8 +42,8 @@ class TasksStateBuilder implements TasksState {
   get tasks(): TaskDescriptor[] { return this._tasks }
   get tasksByOwner(): Record<string, TaskDescriptor[]> { return this._tasksByOwner }
 
-  withDescriptors(): DescriptorState {
-    return new DescriptorStateImpl({
+  toGroupsAndFilters(): TaskGroupsAndFiltersImpl {
+    return new TaskGroupsAndFiltersImpl({
       data: this,
       filtered: this._tasks,
       filterBy: [],

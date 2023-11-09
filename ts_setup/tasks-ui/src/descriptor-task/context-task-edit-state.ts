@@ -1,5 +1,5 @@
 import { TaskCommand, TaskTransaction, Task } from 'client';
-import { TaskEditState, TaskEditMutatorBuilder, TaskEditEvent, SingleEvent } from './context-task-edit-types';
+import { TaskEditState, TaskEditMutatorBuilder, TaskEditEvent, SingleEvent } from './types';
 import { TaskDescriptor } from './types';
 import { TaskDescriptorImpl } from './types-impl';
 

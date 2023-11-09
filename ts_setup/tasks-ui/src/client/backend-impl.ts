@@ -32,6 +32,10 @@ export class ServiceImpl implements Backend {
     }
   }
   async getProfile(): Promise<Profile> {
+    if (!this._store.config.performInitCheck) {
+      return { name: "", contentType: "OK", today: new Date(), userId: '', roles: [] };
+    }
+
     const { today, user } = mockOrg;
     const { userId, userRoles: roles } = user;
     try {

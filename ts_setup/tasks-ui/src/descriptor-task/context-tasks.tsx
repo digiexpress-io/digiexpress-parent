@@ -1,6 +1,6 @@
 import React from 'react';
 import { Backend, Profile } from 'client';
-import { TasksContextType, TasksMutator, TasksDispatch, TasksState } from './context-tasks-types';
+import { TasksContextType, TasksMutator, TasksDispatch, TasksState } from './types';
 import { TasksStateBuilder } from './context-tasks-state';
 import { Palette } from './constants';
 

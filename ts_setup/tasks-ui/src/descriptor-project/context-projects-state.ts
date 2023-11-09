@@ -1,14 +1,14 @@
 
 import { Project, Profile } from 'client';
 
-import { ProjectsState } from './context-projects-types';
+import { ProjectsState } from './types';
 import { Palette, _nobody_ } from './constants';
-import { DescriptorState, ProjectDescriptor, ProjectPaletteType } from './types';
-import { DescriptorStateImpl, ProjectDescriptorImpl } from './types-impl';
+import { ProjectDescriptor, ProjectPaletteType } from './types';
+import { GroupsAndFiltersImpl, ProjectDescriptorImpl } from './types-impl';
 import { withColors } from './util';
 
 
-interface ExtendedInit extends Omit<ProjectsState, "withProfile" | "withProjects" | "withDescriptors"> {
+interface ExtendedInit extends Omit<ProjectsState, "withProfile" | "withProjects" | "toGroupsAndFilters"> {
   users: string[];
   palette: {
     users: Record<string, string>;
@@ -37,8 +37,8 @@ class ProjectsStateBuilder implements ProjectsState {
   get projects(): ProjectDescriptor[] { return this._projects }
   get projectsByUser(): Record<string, ProjectDescriptor[]> { return this._projectsByUser }
 
-  withDescriptors(): DescriptorState {
-    return new DescriptorStateImpl({
+  toGroupsAndFilters(): GroupsAndFiltersImpl {
+    return new GroupsAndFiltersImpl({
       data: this,
       filtered: this._projects,
       filterBy: [],
@@ -47,10 +47,10 @@ class ProjectsStateBuilder implements ProjectsState {
       searchString: undefined,
     });
   }
-  withProfile(profile: Profile): ProjectsStateBuilder {
+  withProfile(profile: Profile): ProjectsState {
     return new ProjectsStateBuilder({ ...this.clone(), profile });
   }
-  withProjects(input: Project[]): ProjectsStateBuilder {
+  withProjects(input: Project[]): ProjectsState {
     const projects: ProjectDescriptor[] = [];
 
     const users: string[] = [_nobody_];

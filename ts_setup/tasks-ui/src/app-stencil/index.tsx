@@ -11,7 +11,7 @@ function appStencil(backend: Backend, profile: Profile, projectId: string): Burg
 
   const service = StencilClient.service({
     config: {
-      url: backend.config.url + "stencil",
+      url: backend.config.urls[0].url + "stencil",
       projectId
     }
   });

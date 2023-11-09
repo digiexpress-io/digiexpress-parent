@@ -3,13 +3,13 @@ import { Task, TaskExtension, TaskPriority, TaskStatus, Profile, resolveAvatar }
 import {
   TaskDescriptor, FilterBy, Group, GroupBy,
   FilterByOwners, FilterByPriority, FilterByRoles, FilterByStatus, AvatarCode, AssigneeGroupType, TeamGroupType,
-  TasksPaletteType, Data, DescriptorState
+  TasksPaletteType, Data, TaskGroupsAndFilters
 } from './types';
 import { _nobody_, Palette } from './constants';
 import { applyDescFilters, applySearchString, withColors, getDaysUntilDue, getMyWorkType, getTeamspaceType } from './util';
 
 
-interface ExtendedInit extends Omit<DescriptorState,
+interface ExtendedInit extends Omit<TaskGroupsAndFilters,
   "withGroupBy" |
   "withTasks" |
   "withGroupBy" |
@@ -24,7 +24,7 @@ interface ExtendedInit extends Omit<DescriptorState,
   data: Data;
 }
 
-class DescriptorStateImpl implements DescriptorState {
+class TaskGroupsAndFiltersImpl implements TaskGroupsAndFilters {
   private _data: Data;
   private _filtered: TaskDescriptor[];
   private _groupBy: GroupBy;
@@ -50,7 +50,7 @@ class DescriptorStateImpl implements DescriptorState {
   get searchString(): string | undefined { return this._searchString }
   get filtered(): TaskDescriptor[] { return this._filtered }
 
-  withTasks(input: Data): DescriptorState {
+  withTasks(input: Data): TaskGroupsAndFiltersImpl {
     const today = new Date(input.profile.today);
     today.setHours(0, 0, 0, 0);
 
@@ -64,7 +64,7 @@ class DescriptorStateImpl implements DescriptorState {
       grouping.visit(value);
     }
 
-    return new DescriptorStateImpl({
+    return new TaskGroupsAndFiltersImpl({
       ...this.clone(),
       data: input,
       groupBy: this._groupBy,
@@ -72,7 +72,7 @@ class DescriptorStateImpl implements DescriptorState {
       groups: grouping.build(),
     });
   }
-  withSearchString(searchString: string): DescriptorState {
+  withSearchString(searchString: string): TaskGroupsAndFiltersImpl {
     const cleaned = searchString.toLowerCase();
     const grouping = new GroupVisitor({ groupBy: this._groupBy, roles: this._data.roles, owners: this._data.owners });
     const filtered: TaskDescriptor[] = [];
@@ -86,26 +86,26 @@ class DescriptorStateImpl implements DescriptorState {
       filtered.push(value);
       grouping.visit(value);
     }
-    return new DescriptorStateImpl({ ...this.clone(), filterBy: this._filterBy, filtered, groups: grouping.build(), searchString: cleaned });
+    return new TaskGroupsAndFiltersImpl({ ...this.clone(), filterBy: this._filterBy, filtered, groups: grouping.build(), searchString: cleaned });
   }
-  withGroupBy(groupBy: GroupBy): DescriptorState {
+  withGroupBy(groupBy: GroupBy): TaskGroupsAndFiltersImpl {
     const grouping = new GroupVisitor({ groupBy, roles: this._data.roles, owners: this._data.owners });
     this._filtered.forEach(value => grouping.visit(value))
-    return new DescriptorStateImpl({ ...this.clone(), groupBy, groups: grouping.build() });
+    return new TaskGroupsAndFiltersImpl({ ...this.clone(), groupBy, groups: grouping.build() });
   }
-  withFilterByStatus(status: TaskStatus[]): DescriptorState {
+  withFilterByStatus(status: TaskStatus[]): TaskGroupsAndFiltersImpl {
     return this.withFilterBy({ type: 'FilterByStatus', status, disabled: false });
   }
-  withFilterByPriority(priority: TaskPriority[]): DescriptorState {
+  withFilterByPriority(priority: TaskPriority[]): TaskGroupsAndFiltersImpl {
     return this.withFilterBy({ type: 'FilterByPriority', priority, disabled: false });
   }
-  withFilterByOwner(owners: string[]): DescriptorState {
+  withFilterByOwner(owners: string[]): TaskGroupsAndFiltersImpl {
     return this.withFilterBy({ type: 'FilterByOwners', owners, disabled: false });
   }
-  withFilterByRoles(roles: string[]): DescriptorState {
+  withFilterByRoles(roles: string[]): TaskGroupsAndFiltersImpl {
     return this.withFilterBy({ type: 'FilterByRoles', roles, disabled: false });
   }
-  withoutFilters(): DescriptorState {
+  withoutFilters(): TaskGroupsAndFiltersImpl {
     return this.withFilterBy(undefined);
   }
   clone(): ExtendedInit {
@@ -121,7 +121,7 @@ class DescriptorStateImpl implements DescriptorState {
   }
 
 
-  private withFilterBy(input: FilterBy | undefined): DescriptorState {
+  private withFilterBy(input: FilterBy | undefined): TaskGroupsAndFiltersImpl {
     const filterBy = this.createFilters(input);
     const grouping = new GroupVisitor({ groupBy: this._groupBy, roles: this._data.roles, owners: this._data.owners });
     const filtered: TaskDescriptor[] = [];
@@ -132,7 +132,7 @@ class DescriptorStateImpl implements DescriptorState {
       filtered.push(value);
       grouping.visit(value);
     }
-    return new DescriptorStateImpl({ ...this.clone(), filterBy, filtered, groups: grouping.build() });
+    return new TaskGroupsAndFiltersImpl({ ...this.clone(), filterBy, filtered, groups: grouping.build() });
   }
 
   private createFilters(input: FilterBy | undefined): FilterBy[] {
@@ -363,5 +363,5 @@ class TaskDescriptorImpl implements TaskDescriptor {
 
 
 
-export { TaskDescriptorImpl, DescriptorStateImpl };
+export { TaskDescriptorImpl, TaskGroupsAndFiltersImpl };
 export type { ExtendedInit };

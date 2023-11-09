@@ -13,6 +13,7 @@ import Connection from './Connection';
 import messages from './intl';
 import Provider from './Provider';
 import AppTasks from 'app-tasks';
+import AppTenant from 'app-tenant';
 import AppProjects from 'app-projects';
 import AppStencil from 'app-stencil';
 import AppFrontoffice from 'app-frontoffice';
@@ -37,14 +38,17 @@ const getUrl = () => {
 }
 
 const store: TaskClient.Store = new TaskClient.DefaultStore({
-  url: getUrl(),
+  urls: [
+    { id: 'generic', url: getUrl() },
+    { id: 'dialob', url: "http://localhost:92/dialob/" },
+  ],
+  performInitCheck: false,
   csrf: window._env_?.csrf,
   oidc: window._env_?.oidc,
   status: window._env_?.status,
 });
 
 const backend = new TaskClient.ServiceImpl(store)
-
 
 
 const Apps: React.FC<{ profile: TaskClient.Profile }> = ({ profile }) => {
@@ -57,11 +61,14 @@ const Apps: React.FC<{ profile: TaskClient.Profile }> = ({ profile }) => {
   const tasks: Burger.App<{}, any> = React.useMemo(() => AppTasks(service, profile), [service, profile]);
   const projects: Burger.App<{}, any> = React.useMemo(() => AppProjects(service, profile), [service, profile]);
   const frontoffice: Burger.App<{}, any> = React.useMemo(() => AppFrontoffice(service, profile), [service, profile]);
-  const appId = 'app-frontoffice';
+  const tenant: Burger.App<{}, any> = React.useMemo(() => AppTenant(service, profile), [service, profile]);
+  const appId = 'app-tenant';
 
   return (<Provider service={service} profile={profile}>
     <Burger.Provider children={
-      [tasks, projects, stencil, frontoffice]
+      [
+        tenant, tasks, projects, stencil, frontoffice,
+      ]
     } secondary="toolbar.activities" drawerOpen appId={appId} />
   </Provider>)
 }
@@ -106,9 +113,6 @@ const theme: Theme = {
   }
 };
 const locale = 'en';
-console.log("theme ", theme);
-
-
 
 const NewApp: React.FC<{}> = () => (
   <IntlProvider locale={locale} messages={messages[locale]}>

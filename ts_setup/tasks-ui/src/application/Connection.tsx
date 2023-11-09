@@ -6,15 +6,15 @@ function sleep(ms: number) {
 }
 
 const LoadingFC: React.FC<{ client: Backend }> = ({ client }) => {
-  return <>...Loading: {client.config.url}</>
+  return <>...Loading: {JSON.stringify(client.config.urls)}</>
 }
 
 const DownFC: React.FC<{ client: Backend }> = ({ client }) => {
-  return <>...Backend is not responding: {client.config.url}</>
+  return <>...Backend is not responding: {JSON.stringify(client.config.urls)}</>
 }
 
 const MisconfiguredFC: React.FC<{ client: Backend }> = ({ client }) => {
-  return <>...Backend is found but getting 404: {client.config.url}</>
+  return <>...Backend is found but getting 404: {JSON.stringify(client.config.urls)}</>
 }
 
 namespace Connection {

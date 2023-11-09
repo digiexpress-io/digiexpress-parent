@@ -70,11 +70,20 @@ const columnTypes: (keyof TenantEntryDescriptor)[] = [
 ]
 
 const TenantEntriesSearch: React.FC<{}> = () => {
+  const backend = Context.useBackend();
   const projects = Context.useTenants();
-  const [state, setState] = React.useState(projects.state);
+  const tenantEntries = projects.state.tenantEntries;
+  const [state, setState] = React.useState(projects.state.toGroupsAndFilters());
+
+
+
   const [columns, setColumns] = React.useState([
     ...columnTypes
   ]);
+
+  React.useEffect(() => {
+    setState(prev => prev.withEntries(tenantEntries));
+  }, [backend, tenantEntries]);
 
   return (<Box>
     <NavigationSticky>

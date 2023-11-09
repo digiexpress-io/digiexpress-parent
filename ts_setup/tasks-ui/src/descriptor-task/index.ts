@@ -28,16 +28,12 @@ export type {
   ChangeTaskInfoEventBody,
   CreateTaskExtensionEventBody,
   ChangeTaskExtensionEventBody,
-  SingleEvent, CollapsedEvent
-
-} from './context-task-edit-types';
-
-
-export type {
+  SingleEvent, CollapsedEvent,
   TasksContextType, TasksState,
-} from './context-tasks-types';
+} from './types';
 
-export { TaskDescriptorImpl, DescriptorStateImpl } from './types-impl';
+
+export { TaskDescriptorImpl, TaskGroupsAndFiltersImpl } from './types-impl';
 export const EditProvider = taskEditCtx.TaskEditProvider;
 export * from './types';
 export { Palette }

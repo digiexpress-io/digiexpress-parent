@@ -1,7 +1,7 @@
 import React from 'react';
 import { Backend, Profile } from 'client';
 
-import { ProjectsContextType, ProjectsMutator, ProjectsDispatch, ProjectsState } from './context-projects-types';
+import { ProjectsContextType, ProjectsMutator, ProjectsDispatch, ProjectsState } from './types';
 import { ProjectsStateBuilder } from './context-projects-state';
 import { Palette } from './constants';
 

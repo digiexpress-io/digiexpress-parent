@@ -12,7 +12,7 @@ function groupsToRecord(state: Group[]): Record<AssigneeGroupType, Group> {
 }
 
 function getTabs(state: TasksState): TaskListTabState[] | any {
-  const groupBy: Group[] = state.withDescriptors().withGroupBy("assignee").groups;
+  const groupBy: Group[] = state.toGroupsAndFilters().withGroupBy("assignee").groups;
   const groups = groupsToRecord(groupBy);
   const assigneeOverdue = groups["assigneeOverdue"];
   const assigneeOther = groups["assigneeOther"];

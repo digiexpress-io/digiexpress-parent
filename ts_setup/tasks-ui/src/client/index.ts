@@ -53,8 +53,8 @@ import {
   ChangeChecklistItemDueDate,
   ChangeChecklistItemTitle,
   TaskCommand, TaskTransaction, TaskExtension,
-  Checklist, TaskComment, TaskUpdateCommand
-
+  Checklist, TaskComment, TaskUpdateCommand,
+  TaskCommandType
 } from './task-types';
 
 import {
@@ -91,7 +91,7 @@ declare namespace TaskClient {
     UserId, RoleId,
     TaskCommand, TaskTransaction,
     TaskExtension,
-    Checklist, TaskComment,
+    Checklist, TaskComment, TaskCommandType,
     TaskPriority, TaskStatus,
     ServiceErrorMsg,
     ServiceErrorProps,
@@ -128,7 +128,7 @@ declare namespace TaskClient {
 }
 
 export type {
-  Customer, CustomerId, CustomerTask,
+  Customer, CustomerId, CustomerTask, TaskCommandType,
 
   Project, ProjectId, RepoType,
   Profile,
@@ -174,7 +174,7 @@ export type {
 
   FormTechnicalName, FormTitle,
   Tenant, TenantEntry,
-  TenantId, TenantStore
+  TenantId, TenantStore,
 }
 
 const resolveAvatar = resolveAvatarAs;

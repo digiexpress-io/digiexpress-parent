@@ -1,5 +1,5 @@
 import React from 'react';
-import { TaskEditContextType, TaskEditMutator, TaskEditDispatch, TaskEditMutatorBuilder } from './context-task-edit-types';
+import { TaskEditContextType, TaskEditMutator, TaskEditDispatch, TaskEditMutatorBuilder } from './types';
 import { TaskEditStateBuilder } from './context-task-edit-state';
 import { TaskDescriptor } from './types';
 

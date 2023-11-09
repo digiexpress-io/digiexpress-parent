@@ -3,14 +3,14 @@ import { Project, RepoType, Profile, resolveAvatar } from 'client';
 import {
   ProjectDescriptor, FilterBy, Group, GroupBy,
   FilterByRepoType, FilterByUsers, AvatarCode,
-  ProjectPaletteType, Data, DescriptorState
+  ProjectPaletteType, Data, GroupsAndFilters
 } from './types';
 import { _nobody_, Palette } from './constants';
 import { applyDescFilters, applySearchString, withColors } from './util';
 
 
 
-interface ExtendedInit extends Omit<DescriptorState,
+interface ExtendedInit extends Omit<GroupsAndFilters,
   "withSearchString" |
   "withProjects" |
   "withGroupBy" |
@@ -22,7 +22,7 @@ interface ExtendedInit extends Omit<DescriptorState,
   data: Data;
 }
 
-class DescriptorStateImpl implements DescriptorState {
+class GroupsAndFiltersImpl implements GroupsAndFilters {
   private _data: Data;
   private _filtered: ProjectDescriptor[];
   private _groupBy: GroupBy;
@@ -48,7 +48,7 @@ class DescriptorStateImpl implements DescriptorState {
   get searchString(): string | undefined { return this._searchString }
   get filtered(): ProjectDescriptor[] { return this._filtered }
 
-  withProjects(input: Data): DescriptorState {
+  withProjects(input: Data): GroupsAndFiltersImpl {
     const today = new Date(input.profile.today);
     today.setHours(0, 0, 0, 0);
 
@@ -62,7 +62,7 @@ class DescriptorStateImpl implements DescriptorState {
       grouping.visit(value);
     }
 
-    return new DescriptorStateImpl({
+    return new GroupsAndFiltersImpl({
       ...this.clone(),
       data: input,
       groupBy: this._groupBy,
@@ -70,7 +70,7 @@ class DescriptorStateImpl implements DescriptorState {
       groups: grouping.build(),
     });
   }
-  withSearchString(searchString: string): DescriptorState {
+  withSearchString(searchString: string): GroupsAndFiltersImpl {
     const cleaned = searchString.toLowerCase();
     const grouping = new GroupVisitor({ groupBy: this._groupBy, users: this._data.users });
     const filtered: ProjectDescriptor[] = [];
@@ -84,20 +84,20 @@ class DescriptorStateImpl implements DescriptorState {
       filtered.push(value);
       grouping.visit(value);
     }
-    return new DescriptorStateImpl({ ...this.clone(), filterBy: this._filterBy, filtered, groups: grouping.build(), searchString: cleaned });
+    return new GroupsAndFiltersImpl({ ...this.clone(), filterBy: this._filterBy, filtered, groups: grouping.build(), searchString: cleaned });
   }
-  withGroupBy(groupBy: GroupBy): DescriptorState {
+  withGroupBy(groupBy: GroupBy): GroupsAndFiltersImpl {
     const grouping = new GroupVisitor({ groupBy, users: this._data.users });
     this._filtered.forEach(value => grouping.visit(value))
-    return new DescriptorStateImpl({ ...this.clone(), groupBy, groups: grouping.build() });
+    return new GroupsAndFiltersImpl({ ...this.clone(), groupBy, groups: grouping.build() });
   }
-  withFilterByRepoType(repoType: RepoType[]): DescriptorState {
+  withFilterByRepoType(repoType: RepoType[]): GroupsAndFiltersImpl {
     return this.withFilterBy({ type: 'FilterByRepoType', repoType, disabled: false });
   }
-  withFilterByUsers(users: string[]): DescriptorState {
+  withFilterByUsers(users: string[]): GroupsAndFiltersImpl {
     return this.withFilterBy({ type: 'FilterByUsers', users, disabled: false });
   }
-  withoutFilters(): DescriptorState {
+  withoutFilters(): GroupsAndFiltersImpl {
     return this.withFilterBy(undefined);
   }
   clone(): ExtendedInit {
@@ -113,7 +113,7 @@ class DescriptorStateImpl implements DescriptorState {
   }
 
 
-  private withFilterBy(input: FilterBy | undefined): DescriptorState {
+  private withFilterBy(input: FilterBy | undefined): GroupsAndFiltersImpl {
     const filterBy = this.createFilters(input);
     const grouping = new GroupVisitor({ groupBy: this._groupBy, users: this._data.users });
     const filtered: ProjectDescriptor[] = [];
@@ -124,7 +124,7 @@ class DescriptorStateImpl implements DescriptorState {
       filtered.push(value);
       grouping.visit(value);
     }
-    return new DescriptorStateImpl({ ...this.clone(), filterBy, filtered, groups: grouping.build() });
+    return new GroupsAndFiltersImpl({ ...this.clone(), filterBy, filtered, groups: grouping.build() });
   }
 
   private createFilters(input: FilterBy | undefined): FilterBy[] {
@@ -276,5 +276,5 @@ class ProjectDescriptorImpl implements ProjectDescriptor {
   get userAvatars() { return this._userAvatars }
 }
 
-export { ProjectDescriptorImpl, DescriptorStateImpl };
+export { ProjectDescriptorImpl, GroupsAndFiltersImpl };
 export type { ExtendedInit };

@@ -83,7 +83,7 @@ const columnTypes: (keyof ProjectDescriptor)[] = [
 
 const ProjectSearch: React.FC<{}> = () => {
   const projects = Context.useProjects();
-  const [state, setState] = React.useState(projects.state.withDescriptors());
+  const [state, setState] = React.useState(projects.state.toGroupsAndFilters());
   const [columns, setColumns] = React.useState([
     ...columnTypes
   ]);

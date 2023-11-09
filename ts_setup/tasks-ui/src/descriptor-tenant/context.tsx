@@ -11,13 +11,9 @@ const TenantContext = React.createContext<TenantContextType>({} as TenantContext
 const initState: TenantState = new TenantStateBuilder({
   activeTenant: undefined,
   activeTenantEntry: undefined,
-  filtered: [],
-  groupBy: 'none',
-  searchString: '',
   tenantEntries: [],
   tenants: [],
   palette: {},
-  groups: [],
   profile: { contentType: "OK", name: "", userId: "", today: new Date(), roles: [] }
 });
 
@@ -44,7 +40,15 @@ const TenantProvider: React.FC<{ children: React.ReactNode, init: { backend: Bac
     }
     backend.tenant.getTenants().then(data => {
       setLoading(false);
-      setState(prev => prev.withProfile(profile).withTenants(data))
+
+      if (data.length === 1) {
+        const [{ id }] = data;
+        backend.tenant.getTenantEntries(id).then(entries => {
+          setState(prev => prev.withProfile(profile).withTenants(data).withTenantEntries(entries.records));
+        });
+      } else {
+        setState(prev => prev.withProfile(profile).withTenants(data))
+      }
     });
 
   }, [loading, setLoading, backend, profile]);
