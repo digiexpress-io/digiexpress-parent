@@ -14,9 +14,8 @@ import io.resys.thena.docdb.api.DocDB;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.spi.DbCollections;
 import io.resys.thena.docdb.spi.DbState;
-import io.resys.thena.docdb.spi.pgsql.DocDBFactoryPgSql;
-import io.resys.thena.docdb.spi.pgsql.PgErrors;
-import io.resys.thena.docdb.sql.DbStateImpl;
+import io.resys.thena.docdb.sql.DbStateSqlImpl;
+import io.resys.thena.docdb.sql.PgErrors;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -30,7 +29,7 @@ public class TestCaseBuilder {
   public TestCaseBuilder(io.vertx.mutiny.pgclient.PgPool pgPool) {
     this.objectMapper = new ObjectMapper().registerModules(new JavaTimeModule(), new Jdk8Module(), new GuavaModule());
     this.doc = getClient(pgPool, "junit");
-    this.docState = DbStateImpl.state(DbCollections.defaults("junit"), pgPool, new PgErrors());
+    this.docState = DbStateSqlImpl.state(DbCollections.defaults("junit"), pgPool, new PgErrors());
     this.client = ClientImpl.builder()
         .om(objectMapper)
         .defaultDialobEventPub()
@@ -64,7 +63,7 @@ public class TestCaseBuilder {
     return new RepoPrinter(docState, objectMapper).print(repo);
   }
   private DocDB getClient(io.vertx.mutiny.pgclient.PgPool pgPool, String db) {
-    return DocDBFactoryPgSql.create().client(pgPool).db(db).errorHandler(new PgErrors()).build();
+    return DbStateSqlImpl.create().client(pgPool).db(db).errorHandler(new PgErrors()).build();
   }
   public Client getClient() {
     return client;

@@ -25,8 +25,8 @@ import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.spi.DbCollections;
 import io.resys.thena.docdb.spi.DbState;
 import io.resys.thena.docdb.spi.GitDbPrinter;
-import io.resys.thena.docdb.spi.pgsql.PgErrors;
-import io.resys.thena.docdb.sql.DbStateImpl;
+import io.resys.thena.docdb.sql.DbStateSqlImpl;
+import io.resys.thena.docdb.sql.PgErrors;
 import io.vertx.mutiny.sqlclient.Pool;
 
 /*-
@@ -90,7 +90,7 @@ public class PgTestTemplate {
 
   private DbState createState(String repoName) {
     final var ctx = DbCollections.defaults(repoName);
-    return DbStateImpl.state(ctx, pgPool, new PgErrors());
+    return DbStateSqlImpl.state(ctx, pgPool, new PgErrors());
   }
   
   public void printRepo(Repo repo) {

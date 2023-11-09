@@ -19,8 +19,8 @@ import io.resys.thena.docdb.api.models.Repo.RepoType;
 import io.resys.thena.docdb.spi.DbCollections;
 import io.resys.thena.docdb.spi.DbState;
 import io.resys.thena.docdb.spi.GitDbPrinter;
-import io.resys.thena.docdb.spi.pgsql.PgErrors;
-import io.resys.thena.docdb.sql.DbStateImpl;
+import io.resys.thena.docdb.sql.DbStateSqlImpl;
+import io.resys.thena.docdb.sql.PgErrors;
 import io.thestencil.client.api.StencilComposer;
 import io.thestencil.client.spi.StencilClientImpl;
 import io.thestencil.client.spi.StencilComposerImpl;
@@ -66,7 +66,7 @@ public class PgTestTemplate {
   @BeforeEach
   public void setUp() {
     waitUntilPostgresqlAcceptsConnections(pgPool);
-    this.client = DbStateImpl.create()
+    this.client = DbStateSqlImpl.create()
         .db("junit")
         .client(pgPool)
         .errorHandler(new PgErrors())
@@ -94,7 +94,7 @@ public class PgTestTemplate {
   
   public DbState createState() {
     final var ctx = DbCollections.defaults("junit");
-    return DbStateImpl.state(ctx, pgPool, new PgErrors());
+    return DbStateSqlImpl.state(ctx, pgPool, new PgErrors());
   }
   
   public void printRepo(Repo repo) {
