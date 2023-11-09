@@ -4,6 +4,7 @@ import io.resys.thena.docdb.api.LogConstants;
 import io.resys.thena.docdb.api.models.ThenaDocObject.Doc;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocFlatted;
 import io.resys.thena.docdb.spi.DocDbQueries.DocQuery;
+import io.resys.thena.docdb.spi.DocDbQueries.FlattedCriteria;
 import io.resys.thena.docdb.spi.ErrorHandler;
 import io.resys.thena.docdb.sql.SqlBuilder;
 import io.resys.thena.docdb.sql.SqlMapper;
@@ -76,8 +77,8 @@ public class DocQuerySqlPool implements DocQuery {
         .onFailure().invoke(e -> errorHandler.deadEnd("Can't find 'DOC FLATTED'!", e));
   }
   @Override
-  public Multi<DocFlatted> findAllFlattedByAnyId(String id) {
-    final var sql = sqlBuilder.docs().findAllFlattedByAnyId(id);
+  public Multi<DocFlatted> findAllFlatted(FlattedCriteria criteria) {
+    final var sql = sqlBuilder.docs().findAllFlatted(criteria);
     if(log.isDebugEnabled()) {
       log.debug("Doc findAllFlattedByAnyId query, with props: {} \r\n{}", 
           sql.getProps().deepToString(),

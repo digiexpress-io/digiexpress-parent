@@ -43,6 +43,7 @@ import io.resys.thena.docdb.api.models.ThenaGitObject.TreeValue;
 import io.resys.thena.docdb.spi.DbCollections;
 import io.resys.thena.docdb.spi.DocDbQueries.DocBranchLockCriteria;
 import io.resys.thena.docdb.spi.DocDbQueries.DocLockCriteria;
+import io.resys.thena.docdb.spi.DocDbQueries.FlattedCriteria;
 import io.resys.thena.docdb.spi.GitDbQueries.LockCriteria;
 import io.vertx.mutiny.sqlclient.Tuple;
 
@@ -81,7 +82,7 @@ public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
   }
   
   interface DocSqlBuilder {
-    SqlTuple findAllFlattedByAnyId(String docId);
+    SqlTuple findAllFlatted(FlattedCriteria criteria);
     Sql findAllFlatted();
     SqlTuple getById(String id);
     SqlTuple deleteById(String id);

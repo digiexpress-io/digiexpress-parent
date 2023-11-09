@@ -121,6 +121,15 @@ public class SimpleDocTest extends DbTestTemplate {
     Assertions.assertEquals(1, findAllDocs.getObjects().getBranches().size());
     Assertions.assertEquals(2, findAllDocs.getObjects().getBranches().get(createdDoc.getDoc().getId()).size());
     
+    final var findAllMainBranchDocs = getClient().doc().find().docQuery()
+        .repoId(repo.getRepo().getId())
+        .branchName("main")
+        .docType("customer-data")
+        .findAll()
+    .await().atMost(Duration.ofMinutes(1));
+    Assertions.assertEquals(1, findAllMainBranchDocs.getObjects().getDocs().size());
+    Assertions.assertEquals(1, findAllMainBranchDocs.getObjects().getBranches().values().stream().flatMap(e -> e.stream()).count());
+    
     printRepo(repo.getRepo());
   }
 }

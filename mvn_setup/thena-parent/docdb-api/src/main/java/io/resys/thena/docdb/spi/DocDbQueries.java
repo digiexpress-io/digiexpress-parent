@@ -1,5 +1,9 @@
 package io.resys.thena.docdb.spi;
 
+import java.util.List;
+
+import javax.annotation.Nullable;
+
 /*-
  * #%L
  * thena-docdb-api
@@ -40,7 +44,7 @@ public interface DocDbQueries {
   DocLogQuery logs();  
   
   interface DocQuery {
-    Multi<DocFlatted> findAllFlattedByAnyId(String id);
+    Multi<DocFlatted> findAllFlatted(FlattedCriteria criteria);
     Multi<DocFlatted> findAllFlatted();
     Multi<Doc> findAll();
     Uni<Doc> getById(String id);
@@ -61,6 +65,14 @@ public interface DocDbQueries {
   interface DocLogQuery {
     Multi<DocLog> findAll();
     Uni<DocLog> getById(String logId);
+  }
+
+  @Value.Immutable
+  interface FlattedCriteria {
+    List<String> getMatchId();
+    @Nullable String getBranchName();
+    @Nullable String getDocType();
+    boolean getOnlyActiveDocs();
   }
 
   @Value.Immutable

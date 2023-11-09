@@ -29,4 +29,19 @@ public class DocAppendActionsImpl implements DocCommitActions {
   public ModifyOneDocBranch modifyOneBranch() {
     return new ModifyOneDocBranchImpl(state);
   }
+  @Override
+  public CreateManyDocs createManyDoc() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+  @Override
+  public ModifyManyDocs modifyManyDocs() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+  @Override
+  public ModifyManyDocBranches modifyManyBranches() {
+    // TODO Auto-generated method stub
+    return null;
+  }
 }

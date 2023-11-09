@@ -1,7 +1,11 @@
 package io.resys.thena.docdb.sql.statement;
 
+import java.util.ArrayList;
+
 import io.resys.thena.docdb.api.models.ThenaDocObject.Doc;
+import io.resys.thena.docdb.api.models.ThenaDocObject.DocStatus;
 import io.resys.thena.docdb.spi.DbCollections;
+import io.resys.thena.docdb.spi.DocDbQueries.FlattedCriteria;
 import io.resys.thena.docdb.sql.ImmutableSql;
 import io.resys.thena.docdb.sql.ImmutableSqlTuple;
 import io.resys.thena.docdb.sql.SqlBuilder.DocSqlBuilder;
@@ -100,7 +104,32 @@ public class DocSqlBuilderImpl implements DocSqlBuilder {
         .build();  
   }
   @Override
-  public SqlTuple findAllFlattedByAnyId(String docId) {
+  public SqlTuple findAllFlatted(FlattedCriteria criteria) {
+    
+    final var props = new ArrayList<Object>();
+    final var additional = new StringBuilder();
+    var index = 0;
+    
+    if(criteria.getDocType() != null) {
+      index++;
+      props.add(criteria.getDocType());
+      additional.append(" AND doc.doc_type = $").append(index);
+    }
+    
+    if(criteria.getBranchName() != null) {
+      index++;
+      props.add(criteria.getBranchName());
+      additional.append(" AND branch.branch_name = $").append(index);
+    }
+    if(!criteria.getMatchId().isEmpty()) {
+      index++;
+      props.add(criteria.getMatchId().toArray(new String[]{}));
+      additional.append(" AND (doc.id = ANY($" + index +  ") OR doc.external_id = ANY($" + index +  ") OR branch.branch_id = ANY($" + index +  "))");
+    }    
+    
+
+    final var status = criteria.getOnlyActiveDocs() ? DocStatus.IN_FORCE.name() : DocStatus.ARCHIVED.name();
+    
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT ")
@@ -129,10 +158,12 @@ public class DocSqlBuilderImpl implements DocSqlBuilder {
         .append(" JOIN ").append(options.getDocCommits()) .append(" as commits ON(commits.branch_id = branch.branch_id AND commits.id = branch.commit_id)").ln()
         .append(" JOIN ").append(options.getDoc())        .append(" as doc ON(doc.id = branch.doc_id)").ln()
         .append(" LEFT JOIN ").append(options.getDocLog()).append(" as doc_log ON(doc_log.commit_id = commits.id)").ln()
-        
-        .append(" WHERE doc.id = $1 OR doc.external_id = $1 OR branch.branch_id = $1").ln()
+        .append(" WHERE ").ln()
+        .append(" doc.doc_status = '").append(status).append("'").ln()    
+        .append(" AND branch.branch_status = '").append(status).append("'").ln()
+        .append(additional.toString()).ln()
         .build())
-        .props(Tuple.of(docId))
+        .props(Tuple.from(props))
         .build();  
   }
 

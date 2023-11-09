@@ -30,6 +30,7 @@ import io.resys.thena.docdb.api.models.ThenaDocObjects.DocObjects;
 import io.resys.thena.docdb.api.models.ThenaEnvelope;
 import io.resys.thena.docdb.spi.DbState;
 import io.resys.thena.docdb.spi.DocDbQueries;
+import io.resys.thena.docdb.spi.ImmutableFlattedCriteria;
 import io.resys.thena.docdb.spi.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +41,12 @@ import lombok.extern.slf4j.Slf4j;
 public class DocObjectsQueryImpl implements DocObjectsQuery {
   private final DbState state;
   private String repoId;
-  private String matchId;
+  private final ImmutableFlattedCriteria.Builder criteria = ImmutableFlattedCriteria.builder().onlyActiveDocs(true);
+  
+  @Override public DocObjectsQuery matchIds(List<String> matchId) { this.criteria.addAllMatchId(matchId); return this; }
+  @Override public DocObjectsQuery branchName(String branchName) { this.criteria.branchName(branchName); return this; }
+  @Override public DocObjectsQuery docType(String docType) { this.criteria.docType(docType); return this; }
+  @Override public DocObjectsQuery active(boolean onlyActiveDocs) { this.criteria.onlyActiveDocs(onlyActiveDocs); return this; }
   
   @Override
   public DocObjectsQuery repoId(String repoId) {
@@ -51,11 +57,13 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
   @Override
   public DocObjectsQuery matchId(String matchId) {
     RepoAssert.notEmpty(repoId, () -> "matchId can't be empty!");
-    this.matchId = matchId;
+    this.criteria.addMatchId(matchId);
     return this;
   }
+  
   @Override
   public Uni<QueryEnvelope<DocObject>> get() {
+    final var criteria = this.criteria.build();
     
     return state.project().getByNameOrId(repoId)
     .onItem().transformToUni((Repo existing) -> {
@@ -63,7 +71,7 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
         return Uni.createFrom().item(repoNotFound());
       }
       return state.toDocState().query(repoId)
-          .onItem().transformToMulti((DocDbQueries repo) -> repo.docs().findAllFlattedByAnyId(matchId))
+          .onItem().transformToMulti((DocDbQueries repo) -> repo.docs().findAllFlatted(criteria))
           .collect().asList()
           .onItem().transform(data -> {
             if(data.isEmpty()) {
@@ -86,13 +94,15 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
 
   @Override
   public Uni<QueryEnvelope<DocObjects>> findAll() {
+    final var criteria = this.criteria.build();
+    
     return state.project().getByNameOrId(repoId)
     .onItem().transformToUni((Repo existing) -> {
       if(existing == null) {
         return Uni.createFrom().item(repoNotFound());
       }
       return state.toDocState().query(repoId)
-          .onItem().transformToMulti((DocDbQueries repo) -> repo.docs().findAllFlatted())
+          .onItem().transformToMulti((DocDbQueries repo) -> repo.docs().findAllFlatted(criteria))
           .collect().asList()
           .onItem().transform(data -> ImmutableQueryEnvelope.<DocObjects>builder()
               .repo(existing)
@@ -241,5 +251,6 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
                 .toString())
             .build())
         .build();
-  }  
+  }
+
 }
