@@ -22,7 +22,8 @@ import {
 import {
   FormTechnicalName, FormTitle,
   Tenant, TenantEntry,
-  TenantId, TenantStore
+  TenantId, TenantStore,
+  DialobTag, DialobForm, DialobVariable
 } from './tenant-types';
 
 import {
@@ -75,6 +76,7 @@ import {
 
 declare namespace TaskClient {
   export type {
+    DialobTag, DialobForm,
     Profile,
     Project, ProjectId, RepoType,
     ChangeProjectInfo,
@@ -175,6 +177,7 @@ export type {
   FormTechnicalName, FormTitle,
   Tenant, TenantEntry,
   TenantId, TenantStore,
+  DialobTag, DialobForm, DialobVariable
 }
 
 const resolveAvatar = resolveAvatarAs;

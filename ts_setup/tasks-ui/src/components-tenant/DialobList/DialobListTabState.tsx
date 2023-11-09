@@ -4,10 +4,9 @@ import { Stack, Grid, Typography, TablePagination, Alert } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 import Pagination from 'table';
 import { initTable, initTabs, DialobListTabState, DialobListState } from './types';
-import { StyledStackItem, StyledEditTaskButton, StyledStartTaskButton } from './DialobListStyles';
+import { StyledStackItem, StyledEditDialobButton, StyledPreviewFIllButton } from './DialobListStyles';
 import { TenantEntryDescriptor } from 'descriptor-tenant';
-import { NavigationSticky, NavigationButtonTaskList } from '../NavigationSticky';
-
+import { NavigationSticky, FilterByString } from '../NavigationSticky';
 
 const RowFiller: React.FC<{ value: Pagination.TablePagination<TenantEntryDescriptor> }> = ({ value }) => {
 
@@ -34,15 +33,6 @@ const DialobList: React.FC<{
 
   const [state, setState] = React.useState<DialobListState>(initTabs([]));
   const [table, setTable] = React.useState(initTable([]));
-  const [createOpen, setCreateOpen] = React.useState(false);
-
-  function handleTaskCreate() {
-    setCreateOpen(prev => !prev)
-  }
-
-  function handleActiveTab(newValue: number) {
-    setState(prev => prev.withActiveTab(newValue));
-  }
 
   function handleActiveTask(task: TenantEntryDescriptor | undefined) {
     setState(prev => prev.withActiveTask(task));
@@ -80,32 +70,18 @@ const DialobList: React.FC<{
     <Grid container>
 
       <NavigationSticky>
-        {state.tabs.map(tab => (
-          <NavigationButtonTaskList
-            id={tab.label}
-            values={{ count: tab.count }}
-            key={tab.id}
-            active={state.activeTab === tab.id}
-            color={tab.color}
-            onClick={() => handleActiveTab(tab.id)} />
-        ))
-        }
-        <NavigationButtonTaskList
-          id='core.taskCreate.newTask'
-          onClick={handleTaskCreate}
-          values={undefined}
-          active={createOpen}
-          color={'rgb(80, 72, 229)'}
-        />
+        <FilterByString onChange={() => { }} />
       </NavigationSticky>
 
       <Grid item md={8} lg={8}>
         <Stack sx={{ backgroundColor: 'mainContent.main' }}>
           {table.entries.map((task, index) => (
-            <StyledStackItem key={task.source.id} index={index} active={state.activeDialob?.source.id === task.source.id} onClick={() => handleActiveTask(task)}>
+            <StyledStackItem key={task.source.id} index={index}
+              active={state.activeDialob?.source.id === task.source.id} onClick={() => handleActiveTask(task)}>
               <DialobItem key={task.source.id} entry={task} />
             </StyledStackItem>)
           )}
+
           <RowFiller value={table} />
         </Stack>
 
@@ -120,7 +96,7 @@ const DialobList: React.FC<{
         />
       </Grid>
 
-      <Grid item md={4} lg={4}>
+      <Grid item md={4} lg={4} >
         <DialobItemActive entry={state.activeDialob} />
       </Grid>
     </Grid>
@@ -129,7 +105,7 @@ const DialobList: React.FC<{
 }
 
 export type { DialobListTabState };
-export { DialobList, StyledEditTaskButton, StyledStartTaskButton };
+export { DialobList, StyledEditDialobButton, StyledPreviewFIllButton };
 
 
 

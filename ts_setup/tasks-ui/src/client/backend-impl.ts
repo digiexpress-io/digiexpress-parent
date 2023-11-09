@@ -1,7 +1,7 @@
 import { Backend, Store } from './backend-types';
 import type { TaskId, Task, TaskPagination, TaskStore, TaskUpdateCommand, CreateTask } from './task-types';
 import { ProjectId, Project, ProjectPagination, ProjectStore, ProjectUpdateCommand, CreateProject } from './project-types';
-import { Tenant, TenantEntry, TenantStore, TenantEntryPagination } from './tenant-types';
+import { Tenant, TenantEntry, TenantStore, TenantEntryPagination, DialobTag, DialobForm } from './tenant-types';
 
 import type { Profile, ProfileStore } from './profile-types';
 import type { User, Org } from './org-types';
@@ -57,7 +57,9 @@ export class ServiceImpl implements Backend {
   get tenant(): TenantStore {
     return {
       getTenantEntries: (tenantId: string) => this.getTenantEntries(tenantId),
-      getTenants: () => this.getTenants()
+      getTenants: () => this.getTenants(),
+      getDialobTags: (dialobFormId: string) => this.getDialobTags(dialobFormId),
+      getDialobForm: (dialobFormId: string) => this.getDialobForm(dialobFormId)
     };
   }
   get task(): TaskStore {
@@ -88,6 +90,14 @@ export class ServiceImpl implements Backend {
       records: forms as any
     }
   }
+
+  async getDialobTags(dialobFormId: string): Promise<DialobTag[]> {
+    return await this._store.fetch<DialobTag[]>(`api/forms/${dialobFormId}/tags`);
+  }
+  async getDialobForm(dialobFormId: string): Promise<DialobForm> {
+    return await this._store.fetch<DialobForm>(`api/forms/${dialobFormId}`);
+  }
+
 
   async createTask(commands: CreateTask): Promise<Task> {
     return await this._store.fetch<Task>(`tasks`, {

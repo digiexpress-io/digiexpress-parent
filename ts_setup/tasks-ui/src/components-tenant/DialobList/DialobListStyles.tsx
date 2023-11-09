@@ -1,7 +1,7 @@
 import { Stack, SxProps, Theme, alpha, Box, darken, styled, Button, useTheme } from '@mui/material';
 
 
-const StyledStartTaskButton = styled(Button)(({ theme }) => ({
+const StyledPreviewFIllButton = styled(Button)(({ theme }) => ({
   color: theme.palette.mainContent.main,
   fontWeight: 'bold',
   backgroundColor: theme.palette.uiElements.main,
@@ -11,7 +11,7 @@ const StyledStartTaskButton = styled(Button)(({ theme }) => ({
 }));
 
 
-const StyledEditTaskButton = styled(Button)(({ theme }) => ({
+const StyledEditDialobButton = styled(Button)(({ theme }) => ({
   border: '1px solid',
   color: theme.palette.uiElements.main,
   fontWeight: 'bold',
@@ -85,8 +85,9 @@ const StyledStackItem: React.FC<{
     <Box sx={getStyles(index, active, theme)} display='flex' alignItems='center'
       height={theme.typography.body2.fontSize} maxHeight={theme.typography.body2.fontSize} onClick={onClick}>
       {children}
-    </Box>);
+    </Box>
+  );
 }
 
 
-export { StyledStackItem, StyledStartTaskButton, StyledEditTaskButton, StyledStack }
+export { StyledStackItem, StyledPreviewFIllButton, StyledEditDialobButton, StyledStack }

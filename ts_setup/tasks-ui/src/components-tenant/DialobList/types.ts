@@ -53,6 +53,7 @@ class ImmutableDialobListState implements DialobListState {
     }
     return new ImmutableDialobListState({ activeTab: this._activeTab, activeDialob, tabs });
   }
+
 }
 
 

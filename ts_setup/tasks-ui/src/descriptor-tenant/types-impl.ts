@@ -132,7 +132,7 @@ class TenantEntryDescriptorImpl implements TenantEntryDescriptor {
 
   }
   get source(): TenantEntry { return this._source }
-  get formName(): string { return this.source.metadata.label } //TODO WHICH IS LABEL AND WHICH IS NAME AND WHICH IS NAME
+  get formName(): string { return this.source.id } //TODO WHICH IS LABEL AND WHICH IS NAME AND WHICH IS NAME
   get formTitle(): string { return this._source.metadata.label }
   get created(): Date { return this._created }
   get lastSaved(): Date { return this._lastSaved }

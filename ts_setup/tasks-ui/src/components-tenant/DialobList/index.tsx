@@ -2,7 +2,7 @@ import React from 'react';
 import Context from 'context';
 import { DialobListTabState, DialobList } from './DialobListTabState';
 import DialobItemActive from './DialobItemActive';
-import DialobItem from './DialobItem';
+import { DialobItem } from './DialobItem';
 import { AssigneePalette } from 'descriptor-task';
 import { TenantState, Group, GroupBy } from 'descriptor-tenant';
 

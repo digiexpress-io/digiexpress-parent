@@ -3,6 +3,7 @@ import { Box, Typography } from '@mui/material';
 import { TenantEntryDescriptor } from 'descriptor-tenant';
 import Burger from 'components-burger';
 
+
 const DialobItem: React.FC<{ entry: TenantEntryDescriptor }> = ({ entry }) => {
 
   return (
@@ -19,5 +20,5 @@ const DialobItem: React.FC<{ entry: TenantEntryDescriptor }> = ({ entry }) => {
   );
 }
 
-export default DialobItem;
+export { DialobItem };
 
