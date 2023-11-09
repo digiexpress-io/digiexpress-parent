@@ -14,8 +14,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.quarkus.jackson.ObjectMapperCustomizer;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import io.resys.thena.docdb.spi.jackson.VertexExtModule;
-import io.resys.thena.docdb.spi.pgsql.PgErrors;
-import io.resys.thena.docdb.sql.DocDBFactorySql;
+import io.resys.thena.docdb.sql.DbStateSqlImpl;
+import io.resys.thena.docdb.sql.PgErrors;
 import io.resys.thena.projects.client.api.ProjectsClient;
 import io.resys.thena.projects.client.spi.ProjectsClientImpl;
 import io.resys.thena.tasks.client.api.TaskClient;
@@ -23,7 +23,6 @@ import io.resys.thena.tasks.client.api.model.ImmutableTask;
 import io.resys.thena.tasks.client.api.model.ImmutableTaskComment;
 import io.resys.thena.tasks.client.api.model.ImmutableTaskExtension;
 import io.resys.thena.tasks.client.spi.TaskClientImpl;
-import io.thestencil.client.api.ImmutableStencilConfig;
 import io.thestencil.client.api.StencilComposer;
 import io.thestencil.client.spi.StencilClientImpl;
 import io.thestencil.client.spi.StencilComposerImpl;
@@ -162,7 +161,7 @@ public class BeanFactory {
     final var poolOptions = new PoolOptions().setMaxSize(pgPoolSize);
     final var pgPool = io.vertx.mutiny.pgclient.PgPool.pool(vertx, connectOptions, poolOptions);
 
-    final var docDb = DocDBFactorySql.create().client(pgPool).errorHandler(new PgErrors()).build();
+    final var docDb = DbStateSqlImpl.create().client(pgPool).errorHandler(new PgErrors()).build();
     final var deserializer = new ZoeDeserializer(om);
     final var store = StencilStoreImpl.builder()
         .config((builder) -> builder
