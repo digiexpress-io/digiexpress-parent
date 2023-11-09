@@ -1,6 +1,6 @@
 import { Profile, TenantId, FormTechnicalName, Tenant, TenantEntry } from 'client';
 
-import { TenantState, TenantDescriptor, TenantEntryDescriptor, TenantPaletteType, Group, GroupBy } from './types';
+import { TenantState, TenantDescriptor, TenantEntryDescriptor, TenantPaletteType } from './types';
 import { TenantEntryDescriptorImpl, TenantDescriptorImpl, TenantGroupsAndFiltersImpl } from './types-impl';
 
 
