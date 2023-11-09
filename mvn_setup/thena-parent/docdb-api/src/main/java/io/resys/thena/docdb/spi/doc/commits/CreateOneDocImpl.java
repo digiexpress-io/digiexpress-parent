@@ -20,7 +20,7 @@ import io.resys.thena.docdb.api.models.ThenaDocObject.DocStatus;
 import io.resys.thena.docdb.spi.DbState;
 import io.resys.thena.docdb.spi.DocDbState.DocRepo;
 import io.resys.thena.docdb.spi.GitDbInserts.BatchStatus;
-import io.resys.thena.docdb.spi.ImmutableDocBatch;
+import io.resys.thena.docdb.spi.ImmutableDocDbBatchForOne;
 import io.resys.thena.docdb.spi.OidUtils;
 import io.resys.thena.docdb.spi.git.commits.CommitLogger;
 import io.resys.thena.docdb.spi.support.RepoAssert;
@@ -60,13 +60,13 @@ public class CreateOneDocImpl implements CreateOneDoc {
   }
   @Override
   public CreateOneDocImpl append(JsonObject blob) {
-    RepoAssert.notNull(blob, () -> "blob can't be empty!");
+    RepoAssert.notNull(blob, () -> "append can't be empty!");
     this.appendBlobs = blob;
     return this;
   }
   @Override
   public CreateOneDocImpl meta(JsonObject blob) {
-    RepoAssert.notNull(blob, () -> "merge can't be null!");
+    RepoAssert.notNull(blob, () -> "meta can't be null!");
     this.appendMeta = blob;
     return this;
   }
@@ -84,21 +84,25 @@ public class CreateOneDocImpl implements CreateOneDoc {
   }
   @Override
   public CreateOneDocImpl docId(String docId) {
+    RepoAssert.notEmpty(author, () -> "author can't be empty!");
     this.docId = docId;
     return this;
   }
   @Override
   public CreateOneDocImpl externalId(String externalId) {
+    RepoAssert.notEmpty(author, () -> "externalId can't be empty!");
     this.externalId = externalId;
     return this;
   }
   @Override
   public CreateOneDocImpl docType(String docType) {
+    RepoAssert.notEmpty(author, () -> "docType can't be empty!");
     this.docType = docType;
     return this;
   }
   @Override
   public CreateOneDocImpl log(JsonObject doc) {
+    RepoAssert.notNull(doc, () -> "log can't be empty!");
     this.appendLogs = doc;
     return this;
   }
@@ -175,7 +179,7 @@ public class CreateOneDocImpl implements CreateOneDoc {
       .append(System.lineSeparator());
     }
 
-    final var batch = ImmutableDocBatch.builder()
+    final var batch = ImmutableDocDbBatchForOne.builder()
       .repo(tx.getRepo())
       .status(BatchStatus.OK)
       .doc(doc)
@@ -185,7 +189,7 @@ public class CreateOneDocImpl implements CreateOneDoc {
       .log(ImmutableMessage.builder().text(logger.toString()).build())
       .build();
 
-    return tx.insert().batch(batch)
+    return tx.insert().batchOne(batch)
       .onItem().transform(rsp -> ImmutableOneDocEnvelope.builder()
         .repoId(repoId)
         .doc(doc)

@@ -38,7 +38,7 @@ import io.smallrye.mutiny.Uni;
 public interface DocDbInserts {
   
   @Value.Immutable
-  interface DocBatch {
+  interface DocDbBatchForOne {
     BatchStatus getStatus();
     Repo getRepo();
     
@@ -51,7 +51,19 @@ public interface DocDbInserts {
     Message getLog();
     List<Message> getMessages();
   }
-  Uni<DocBatch> batch(DocBatch output);
+  Uni<DocDbBatchForOne> batchOne(DocDbBatchForOne output);
+  Uni<DocDbBatchForMany> batchMany(DocDbBatchForMany output);
+  
+  @Value.Immutable
+  interface DocDbBatchForMany {
+    BatchStatus getStatus();
+    Repo getRepo();
+    
+    List<DocDbBatchForOne> getItems();
+
+    Message getLog();
+    List<Message> getMessages();
+  }
   
   /*
   Uni<InsertResult> tag(Tag tag);

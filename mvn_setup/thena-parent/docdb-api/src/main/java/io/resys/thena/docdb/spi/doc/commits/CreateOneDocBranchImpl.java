@@ -21,7 +21,7 @@ import io.resys.thena.docdb.api.models.ThenaDocObject.DocStatus;
 import io.resys.thena.docdb.spi.DbState;
 import io.resys.thena.docdb.spi.DocDbState.DocRepo;
 import io.resys.thena.docdb.spi.GitDbInserts.BatchStatus;
-import io.resys.thena.docdb.spi.ImmutableDocBatch;
+import io.resys.thena.docdb.spi.ImmutableDocDbBatchForOne;
 import io.resys.thena.docdb.spi.ImmutableDocBranchLockCriteria;
 import io.resys.thena.docdb.spi.OidUtils;
 import io.resys.thena.docdb.spi.git.commits.CommitLogger;
@@ -132,7 +132,7 @@ public class CreateOneDocBranchImpl implements CreateOneDocBranch {
   
   
   private Uni<OneDocEnvelope> doInLock(DocBranchLock lock, DocRepo tx) {  
-    final var branchId = OidUtils.gen();
+    final var branchId = Optional.ofNullable(appendBlobs.getString("id")).orElse(OidUtils.gen());
     final var doc = lock.getDoc().get();
     
     final var template = ImmutableDocCommit.builder()
@@ -188,7 +188,7 @@ public class CreateOneDocBranchImpl implements CreateOneDocBranch {
       .append(System.lineSeparator());
     }
 
-    final var batch = ImmutableDocBatch.builder()
+    final var batch = ImmutableDocDbBatchForOne.builder()
       .repo(tx.getRepo())
       .status(BatchStatus.OK)
       .doc(Optional.empty())
@@ -198,7 +198,7 @@ public class CreateOneDocBranchImpl implements CreateOneDocBranch {
       .log(ImmutableMessage.builder().text(logger.toString()).build())
       .build();
 
-    return tx.insert().batch(batch)
+    return tx.insert().batchOne(batch)
       .onItem().transform(rsp -> ImmutableOneDocEnvelope.builder()
         .repoId(repoId)
         .doc(doc)

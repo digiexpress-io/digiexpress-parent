@@ -89,6 +89,9 @@ public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
     Sql findAll();
     SqlTuple insertOne(Doc doc);
     SqlTuple updateOne(Doc doc);
+    
+    SqlTupleList insertMany(List<Doc> docs);
+    SqlTupleList updateMany(List<Doc> docs);
   }
   
   interface DocLogSqlBuilder {

@@ -1,6 +1,8 @@
 package io.resys.thena.docdb.sql.statement;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import io.resys.thena.docdb.api.models.ThenaDocObject.Doc;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocStatus;
@@ -8,9 +10,11 @@ import io.resys.thena.docdb.spi.DbCollections;
 import io.resys.thena.docdb.spi.DocDbQueries.FlattedCriteria;
 import io.resys.thena.docdb.sql.ImmutableSql;
 import io.resys.thena.docdb.sql.ImmutableSqlTuple;
+import io.resys.thena.docdb.sql.ImmutableSqlTupleList;
 import io.resys.thena.docdb.sql.SqlBuilder.DocSqlBuilder;
 import io.resys.thena.docdb.sql.SqlBuilder.Sql;
 import io.resys.thena.docdb.sql.SqlBuilder.SqlTuple;
+import io.resys.thena.docdb.sql.SqlBuilder.SqlTupleList;
 import io.resys.thena.docdb.sql.support.SqlStatement;
 import io.vertx.mutiny.sqlclient.Tuple;
 import lombok.RequiredArgsConstructor;
@@ -70,6 +74,32 @@ public class DocSqlBuilderImpl implements DocSqlBuilder {
         .build();
   }
   
+  @Override
+  public SqlTupleList insertMany(List<Doc> docs) {
+    return ImmutableSqlTupleList.builder()
+        .value(new SqlStatement()
+        .append("INSERT INTO ").append(options.getDoc())
+        .append(" (id, external_id, doc_type, doc_status, doc_meta) VALUES($1, $2, $3, $4, $5)").ln()
+        .build())
+        .props(docs.stream()
+            .map(doc -> Tuple.of(doc.getId(), doc.getExternalId(), doc.getType(), doc.getStatus(), doc.getMeta()))
+            .collect(Collectors.toList()))
+        .build();
+  }
+  @Override
+  public SqlTupleList updateMany(List<Doc> docs) {
+    return ImmutableSqlTupleList.builder()
+        .value(new SqlStatement()
+        .append("UPDATE ").append(options.getDoc())
+        .append(" SET external_id = $1, doc_type = $2, doc_status = $3, doc_meta = $4")
+        .append(" WHERE id = $5")
+        .build())
+        .props(docs.stream()
+            .map(doc ->Tuple.of(doc.getExternalId(), doc.getType(), doc.getStatus(), doc.getMeta(), doc.getId()))
+            .collect(Collectors.toList()))
+        .build();
+  }
+
   @Override
   public Sql findAllFlatted() {
     return ImmutableSql.builder()
@@ -166,5 +196,4 @@ public class DocSqlBuilderImpl implements DocSqlBuilder {
         .props(Tuple.from(props))
         .build();  
   }
-
 }
