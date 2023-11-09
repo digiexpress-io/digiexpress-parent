@@ -2,10 +2,10 @@ package io.resys.thena.docdb.spi.doc;
 
 import io.resys.thena.docdb.api.actions.DocCommitActions;
 import io.resys.thena.docdb.spi.DbState;
-import io.resys.thena.docdb.spi.doc.commits.AppendDocBranchImpl;
-import io.resys.thena.docdb.spi.doc.commits.AppendDocImpl;
-import io.resys.thena.docdb.spi.doc.commits.CreateDocBranchImpl;
-import io.resys.thena.docdb.spi.doc.commits.CreateDocImpl;
+import io.resys.thena.docdb.spi.doc.commits.ModifyOneDocBranchImpl;
+import io.resys.thena.docdb.spi.doc.commits.ModifyOneDocImpl;
+import io.resys.thena.docdb.spi.doc.commits.CreateOneDocBranchImpl;
+import io.resys.thena.docdb.spi.doc.commits.CreateOneDocImpl;
 import lombok.RequiredArgsConstructor;
 
 
@@ -14,19 +14,19 @@ public class DocAppendActionsImpl implements DocCommitActions {
   private final DbState state;
 
   @Override
-  public CreateDoc createDoc() {
-    return new CreateDocImpl(state);
+  public CreateOneDoc createOneDoc() {
+    return new CreateOneDocImpl(state);
   }
   @Override
-  public AppendDoc appendDoc() {
-    return new AppendDocImpl(state);
+  public ModifyOneDoc modifyOneDoc() {
+    return new ModifyOneDocImpl(state);
   }
   @Override
-  public CreateDocBranch branchDoc() {
-    return new CreateDocBranchImpl(state);
+  public CreateOneDocBranch branchOneDoc() {
+    return new CreateOneDocBranchImpl(state);
   }
   @Override
-  public AppendDocBranch appendBranch() {
-    return new AppendDocBranchImpl(state);
+  public ModifyOneDocBranch modifyOneBranch() {
+    return new ModifyOneDocBranchImpl(state);
   }
 }

@@ -25,49 +25,53 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import io.resys.thena.docdb.api.actions.CommitActions.CommitBuilder;
-import io.resys.thena.docdb.api.actions.CommitActions.CommitResultEnvelope;
 import io.resys.thena.docdb.api.actions.CommitActions.CommitResultStatus;
-import io.resys.thena.docdb.api.actions.PullActions.MatchCriteria;
-import io.resys.thena.docdb.api.actions.PullActions.PullObjectsQuery;
+import io.resys.thena.docdb.api.actions.DocCommitActions.ManyDocEnvelope;
+import io.resys.thena.docdb.api.actions.DocCommitActions.ModifyManyDocBranches;
+import io.resys.thena.docdb.api.actions.DocCommitActions.ModifyManyDocs;
+import io.resys.thena.docdb.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
 import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
-import io.resys.thena.docdb.api.models.ThenaGitObjects.PullObjects;
+import io.resys.thena.docdb.api.models.ThenaDocObjects.DocObjects;
 import io.resys.thena.projects.client.api.model.Document;
 import io.resys.thena.projects.client.api.model.ImmutableArchiveProject;
 import io.resys.thena.projects.client.api.model.ImmutableProject;
 import io.resys.thena.projects.client.api.model.ImmutableProjectTransaction;
 import io.resys.thena.projects.client.api.model.Project;
 import io.resys.thena.projects.client.spi.store.DocumentConfig;
-import io.resys.thena.projects.client.spi.store.DocumentConfig.DocPullAndCommitVisitor;
+import io.resys.thena.projects.client.spi.store.DocumentConfig.DocObjectsVisitor;
 import io.resys.thena.projects.client.spi.store.DocumentStoreException;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class DeleteAllProjectsVisitor implements DocPullAndCommitVisitor<Project>{
+public class DeleteAllProjectsVisitor implements DocObjectsVisitor<Uni<List<Project>>>{
 
   private final String userId;
   private final Instant targetDate;
   
-  private CommitBuilder archiveCommand;
-  private CommitBuilder removeCommand;
+  private ModifyManyDocBranches archiveCommand;
+  private ModifyManyDocs removeCommand;
   
   @Override
-  public PullObjectsQuery start(DocumentConfig config, PullObjectsQuery query) {
+  public DocObjectsQuery start(DocumentConfig config, DocObjectsQuery query) {
     // Create two commands: one for making changes by adding archive flag, the other for deleting Project from commit tree
-    this.archiveCommand = visitCommitCommand(config).message("Archive Projects");
-    this.removeCommand = visitCommitCommand(config).message("Delete Projects");
+    this.archiveCommand = config.getClient().doc().commit().modifyManyBranches()
+        .repoId(config.getRepoId())
+        .author(config.getAuthor().get())
+        .message("Archive Projects");
+    this.removeCommand = config.getClient().doc().commit().modifyManyDocs()
+        .repoId(config.getRepoId())
+        .author(config.getAuthor().get())
+        .message("Delete Projects");
     
     // Build the blob criteria for finding all documents of type Project
-    return query.matchBy(
-          MatchCriteria.equalsTo("documentType", Document.DocumentType.PROJECT_META.name())
-    );
+    return query.docType(Document.DocumentType.PROJECT_META.name());
   }
 
   @Override
-  public PullObjects visitEnvelope(DocumentConfig config, QueryEnvelope<PullObjects> envelope) {
+  public DocObjects visitEnvelope(DocumentConfig config, QueryEnvelope<DocObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
       throw DocumentStoreException.builder("FIND_ALL_PROJECTS_FAIL_FOR_DELETE").add(config, envelope).build();
     }
@@ -75,42 +79,34 @@ public class DeleteAllProjectsVisitor implements DocPullAndCommitVisitor<Project
   }
   
   @Override
-  public Uni<List<Project>> end(DocumentConfig config, PullObjects ref) {
+  public Uni<List<Project>> end(DocumentConfig config, DocObjects ref) {
     if(ref == null) {
       return Uni.createFrom().item(Collections.emptyList());
     }
 
-    final var ProjectsRemoved = visitTree(ref);    
+    final var projectsRemoved = visitTree(ref);    
     return archiveCommand.build()
-      .onItem().transform((CommitResultEnvelope commit) -> {
+      .onItem().transform((ManyDocEnvelope commit) -> {
         if(commit.getStatus() == CommitResultStatus.OK) {
           return commit;
         }
         throw new DocumentStoreException("ARCHIVE_FAIL", DocumentStoreException.convertMessages(commit));
       })
       .onItem().transformToUni(archived -> removeCommand.build())
-      .onItem().transform((CommitResultEnvelope commit) -> {
+      .onItem().transform((ManyDocEnvelope commit) -> {
         if(commit.getStatus() == CommitResultStatus.OK) {
           return commit;
         }
         throw new DocumentStoreException("REMOVE_FAIL", DocumentStoreException.convertMessages(commit));
       })
-      .onItem().transform((commit) -> ProjectsRemoved);
+      .onItem().transform((commit) -> projectsRemoved);
   }
 
   
   
-  private CommitBuilder visitCommitCommand(DocumentConfig config) {
-    final var client = config.getClient();
-    return client.git().commit().commitBuilder()
-      .head(config.getProjectName(), config.getHeadName())
-      .latestCommit()
-      .author(config.getAuthor().get());
-  }
   
-  
-  private List<Project> visitTree(PullObjects state) {
-    return state.getBlob().stream()
+  private List<Project> visitTree(DocObjects state) {
+    return state.getBranches().values().stream().flatMap(e -> e.stream())
       .map(blob -> blob.getValue().mapTo(ImmutableProject.class))
       .map(Project -> visitProject(Project))
       .collect(Collectors.toUnmodifiableList());
@@ -131,8 +127,8 @@ public class DeleteAllProjectsVisitor implements DocPullAndCommitVisitor<Project
             .build())
         .build();
     final var json = JsonObject.mapFrom(nextVersion);
-    archiveCommand.append(projectId, json);    
-    removeCommand.remove(projectId);
+    archiveCommand.item().branchId(projectId).append(json).next();
+    removeCommand.item().branchId(projectId).remove();
     return nextVersion;
   }
 

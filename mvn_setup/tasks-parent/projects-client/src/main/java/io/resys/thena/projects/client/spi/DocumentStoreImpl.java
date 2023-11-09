@@ -63,7 +63,7 @@ public class DocumentStoreImpl implements DocumentStore {
   @Override
   public Uni<Repo> getRepo() {
     final var client = config.getClient();
-    return client.repo().projectsQuery().id(config.getProjectName()).get();
+    return client.repo().projectsQuery().id(config.getRepoId()).get();
   }
   @Override public DocumentConfig getConfig() { return config; }
   @Override public DocumentRepositoryQuery query() {
@@ -154,8 +154,8 @@ public class DocumentStoreImpl implements DocumentStore {
     RepoAssert.notNull(repoName, () -> "repoName must be defined!");
     return new DocumentStoreImpl(ImmutableDocumentConfig.builder()
         .from(config)
-        .projectName(repoName)
-        .headName(headName == null ? config.getHeadName() : headName)
+        .repoId(repoName)
+        .branchName(headName == null ? config.getBranchName() : headName)
         .build());
     
   }
@@ -244,7 +244,7 @@ public class DocumentStoreImpl implements DocumentStore {
       }
       
       final DocumentConfig config = ImmutableDocumentConfig.builder()
-          .client(thena).projectName(repoName).headName(headName)
+          .client(thena).repoId(repoName).branchName(headName)
           .gid(getGidProvider())
           .author(getAuthorProvider())
           .build();

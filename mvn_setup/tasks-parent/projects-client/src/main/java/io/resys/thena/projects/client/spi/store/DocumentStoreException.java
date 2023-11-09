@@ -31,6 +31,7 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.resys.thena.docdb.api.actions.CommitActions.CommitResultEnvelope;
+import io.resys.thena.docdb.api.actions.DocCommitActions.ManyDocEnvelope;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
 import io.resys.thena.docdb.api.models.ThenaGitObjects.PullObject;
 import io.resys.thena.docdb.api.models.ThenaGitObjects.PullObjects;
@@ -80,6 +81,15 @@ public class DocumentStoreException extends RuntimeException {
         .build();
   }
 
+  public static DocumentExceptionMsg convertMessages(ManyDocEnvelope envelope) {
+    return ImmutableDocumentExceptionMsg.builder()
+        .id(envelope.getRepoId())
+        .value("") //TODO
+        .addAllArgs(envelope.getMessages().stream().map(message-> message.getText()).collect(Collectors.toList()))
+        .build();
+  }
+  
+  
   public static DocumentExceptionMsg convertMessages1(QueryEnvelope<PullObject> state) {
     return ImmutableDocumentExceptionMsg.builder()
         .id("STATE_FAIL")
@@ -103,7 +113,7 @@ public class DocumentStoreException extends RuntimeException {
     private final ImmutableDocumentExceptionMsg.Builder msg = ImmutableDocumentExceptionMsg.builder();
     
     public Builder add(DocumentConfig config, QueryEnvelope<?> envelope) {
-      msg.id(envelope.getRepo() == null ? config.getProjectName() : envelope.getRepo().getName())
+      msg.id(envelope.getRepo() == null ? config.getRepoId() : envelope.getRepo().getName())
       .value(envelope.getRepo() == null ? "no-repo" : envelope.getRepo().getId())
       .addAllArgs(envelope.getMessages().stream().map(message->message.getText()).collect(Collectors.toList()));
       return this;

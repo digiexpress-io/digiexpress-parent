@@ -25,46 +25,50 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import io.resys.thena.docdb.api.actions.CommitActions.CommitBuilder;
-import io.resys.thena.docdb.api.actions.CommitActions.CommitResultEnvelope;
 import io.resys.thena.docdb.api.actions.CommitActions.CommitResultStatus;
-import io.resys.thena.docdb.api.models.ThenaGitObject.Commit;
+import io.resys.thena.docdb.api.actions.DocCommitActions.CreateManyDocs;
+import io.resys.thena.docdb.api.actions.DocCommitActions.ManyDocEnvelope;
+import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranch;
+import io.resys.thena.projects.client.api.model.Document;
 import io.resys.thena.projects.client.api.model.Project;
 import io.resys.thena.projects.client.api.model.ProjectCommand.CreateProject;
 import io.resys.thena.projects.client.spi.store.DocumentConfig;
-import io.resys.thena.projects.client.spi.store.DocumentConfig.DocCommitVisitor;
+import io.resys.thena.projects.client.spi.store.DocumentConfig.DocCreateVisitor;
 import io.resys.thena.projects.client.spi.store.DocumentStoreException;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class CreateProjectsVisitor implements DocCommitVisitor<Project> {
+public class CreateProjectsVisitor implements DocCreateVisitor<Project> {
   private final List<? extends CreateProject> commands;
   private final List<Project> createdProjects = new ArrayList<Project>();
   
   @Override
-  public CommitBuilder start(DocumentConfig config, CommitBuilder builder) {
+  public CreateManyDocs start(DocumentConfig config, CreateManyDocs builder) {
+    builder
+      .docType(Document.DocumentType.PROJECT_META.name())
+      .author(config.getAuthor().get())
+      .message("creating projects");
     
     for(final var command : commands) {
       final var entity = new ProjectCommandVisitor(config).visitTransaction(Arrays.asList(command));
       final var json = JsonObject.mapFrom(entity);
-      builder.append(entity.getId(), json);
+      builder.item().append(json).docId(entity.getId()).next();
       createdProjects.add(entity);
     }
-    
-    return builder.message("Creating Projects");
+    return builder;
   }
 
   @Override
-  public Commit visitEnvelope(DocumentConfig config, CommitResultEnvelope envelope) {
+  public List<DocBranch> visitEnvelope(DocumentConfig config, ManyDocEnvelope envelope) {
     if(envelope.getStatus() == CommitResultStatus.OK) {
-      return envelope.getCommit();
+      return envelope.getBranch();
     }
     throw new DocumentStoreException("SAVE_FAIL", DocumentStoreException.convertMessages(envelope));
   }
 
   @Override
-  public List<Project> end(DocumentConfig config, Commit commit) {
+  public List<Project> end(DocumentConfig config, List<DocBranch> branches) {
     return Collections.unmodifiableList(createdProjects);
   }
 

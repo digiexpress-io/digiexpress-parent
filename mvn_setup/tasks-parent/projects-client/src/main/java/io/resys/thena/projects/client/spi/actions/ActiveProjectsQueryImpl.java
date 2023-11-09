@@ -51,7 +51,8 @@ public class ActiveProjectsQueryImpl implements ActiveProjectsQuery {
 
   @Override
   public Uni<List<Project>> deleteAll(String userId, Instant targetDate) {
-    return ctx.getConfig().accept(new DeleteAllProjectsVisitor(userId, targetDate));
+    return ctx.getConfig().accept(new DeleteAllProjectsVisitor(userId, targetDate))
+        .onItem().transformToUni(unwrap -> unwrap);
   }
   
   @Override

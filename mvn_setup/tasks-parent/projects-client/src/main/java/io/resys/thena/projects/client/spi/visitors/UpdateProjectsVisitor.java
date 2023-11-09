@@ -26,27 +26,32 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import io.resys.thena.docdb.api.actions.CommitActions.CommitBuilder;
 import io.resys.thena.docdb.api.actions.CommitActions.CommitResultStatus;
-import io.resys.thena.docdb.api.actions.PullActions.PullObjectsQuery;
+import io.resys.thena.docdb.api.actions.DocCommitActions.ModifyManyDocBranches;
+import io.resys.thena.docdb.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
 import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
-import io.resys.thena.docdb.api.models.ThenaGitObjects.PullObjects;
+import io.resys.thena.docdb.api.models.ThenaDocObject.Doc;
+import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranch;
+import io.resys.thena.docdb.api.models.ThenaDocObject.DocCommit;
+import io.resys.thena.docdb.api.models.ThenaDocObject.DocLog;
+import io.resys.thena.docdb.api.models.ThenaDocObjects.DocObjects;
 import io.resys.thena.projects.client.api.model.ImmutableProject;
 import io.resys.thena.projects.client.api.model.Project;
 import io.resys.thena.projects.client.api.model.ProjectCommand.ProjectUpdateCommand;
 import io.resys.thena.projects.client.spi.store.DocumentConfig;
-import io.resys.thena.projects.client.spi.store.DocumentConfig.DocPullAndCommitVisitor;
+import io.resys.thena.projects.client.spi.store.DocumentConfig.DocObjectsVisitor;
 import io.resys.thena.projects.client.spi.store.DocumentStore;
 import io.resys.thena.projects.client.spi.store.DocumentStoreException;
+import io.resys.thena.projects.client.spi.store.MainBranch;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 
 
-public class UpdateProjectsVisitor implements DocPullAndCommitVisitor<Project> {
+public class UpdateProjectsVisitor implements DocObjectsVisitor<Uni<List<Project>>> {
   private final DocumentStore ctx;
   private final List<String> projectIds;
-  private final CommitBuilder commitBuilder;
+  private final ModifyManyDocBranches commitBuilder;
   private final Map<String, List<ProjectUpdateCommand>> commandsByProjectId; 
   
   
@@ -57,20 +62,19 @@ public class UpdateProjectsVisitor implements DocPullAndCommitVisitor<Project> {
     this.commandsByProjectId = commands.stream()
         .collect(Collectors.groupingBy(ProjectUpdateCommand::getProjectId));
     this.projectIds = new ArrayList<>(commandsByProjectId.keySet());
-    this.commitBuilder = config.getClient().git().commit().commitBuilder()
-        .head(config.getProjectName(), config.getHeadName())
+    this.commitBuilder = config.getClient().doc().commit().modifyManyBranches()
+        .repoId(config.getRepoId())
         .message("Update Projects: " + commandsByProjectId.size())
-        .latestCommit()
         .author(config.getAuthor().get());
   }
 
   @Override
-  public PullObjectsQuery start(DocumentConfig config, PullObjectsQuery builder) {
-    return builder.docId(projectIds);
+  public DocObjectsQuery start(DocumentConfig config, DocObjectsQuery builder) {
+    return builder.matchIds(projectIds).active(true).branchName(MainBranch.HEAD_NAME);
   }
 
   @Override
-  public PullObjects visitEnvelope(DocumentConfig config, QueryEnvelope<PullObjects> envelope) {
+  public DocObjects visitEnvelope(DocumentConfig config, QueryEnvelope<DocObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
       throw DocumentStoreException.builder("GET_PROJECTS_BY_IDS_FOR_UPDATE_FAIL")
         .add(config, envelope)
@@ -84,19 +88,21 @@ public class UpdateProjectsVisitor implements DocPullAndCommitVisitor<Project> {
         .add((callback) -> callback.addArgs(projectIds.stream().collect(Collectors.joining(",", "{", "}"))))
         .build();
     }
-    if(projectIds.size() != result.getBlob().size()) {
-      throw new DocumentStoreException("PROJECTS_UPDATE_FAIL_MISSING_ProjectS", JsonObject.of("failedUpdates", projectIds));
+    if(projectIds.size() != result.getDocs().size()) {
+      throw new DocumentStoreException("PROJECTS_UPDATE_FAIL_MISSING_PROJECTS", JsonObject.of("failedUpdates", projectIds));
     }
     return result;
   }
 
   @Override
-  public Uni<List<Project>> end(DocumentConfig config, PullObjects blob) {
-    final var updatedProjects = blob.accept((JsonObject blobValue) -> {
-      final var start = blobValue.mapTo(ImmutableProject.class);
+  public Uni<List<Project>> end(DocumentConfig config, DocObjects blob) {
+    final var updatedProjects = blob.accept((Doc doc, DocBranch docBranch, DocCommit commit, List<DocLog> log) -> {
+      final var start = docBranch.getValue().mapTo(ImmutableProject.class);
       final var commands = commandsByProjectId.get(start.getId());
       final var updated = new ProjectCommandVisitor(start, ctx.getConfig()).visitTransaction(commands);
-      this.commitBuilder.append(updated.getId(), JsonObject.mapFrom(updated));
+      this.commitBuilder.item()
+        .branchId(updated.getId())
+        .append(JsonObject.mapFrom(updated));
       return updated;
     });
     

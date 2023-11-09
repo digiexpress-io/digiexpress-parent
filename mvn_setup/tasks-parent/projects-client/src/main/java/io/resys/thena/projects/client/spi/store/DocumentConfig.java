@@ -27,17 +27,13 @@ import javax.annotation.Nullable;
 import org.immutables.value.Value;
 
 import io.resys.thena.docdb.api.DocDB;
-import io.resys.thena.docdb.api.actions.BranchActions.BranchObjectsQuery;
-import io.resys.thena.docdb.api.actions.CommitActions.CommitBuilder;
-import io.resys.thena.docdb.api.actions.CommitActions.CommitResultEnvelope;
-import io.resys.thena.docdb.api.actions.HistoryActions.BlobHistoryQuery;
-import io.resys.thena.docdb.api.actions.PullActions.PullObjectsQuery;
+import io.resys.thena.docdb.api.actions.DocCommitActions.ManyDocEnvelope;
+import io.resys.thena.docdb.api.actions.DocCommitActions.CreateManyDocs;
+import io.resys.thena.docdb.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
-import io.resys.thena.docdb.api.models.ThenaGitObject.Commit;
-import io.resys.thena.docdb.api.models.ThenaGitObjects.BranchObjects;
-import io.resys.thena.docdb.api.models.ThenaGitObjects.HistoryObjects;
-import io.resys.thena.docdb.api.models.ThenaGitObjects.PullObject;
-import io.resys.thena.docdb.api.models.ThenaGitObjects.PullObjects;
+import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranch;
+import io.resys.thena.docdb.api.models.ThenaDocObjects.DocObject;
+import io.resys.thena.docdb.api.models.ThenaDocObjects.DocObjects;
 import io.resys.thena.projects.client.api.model.Document.DocumentType;
 import io.smallrye.mutiny.Uni;
 
@@ -45,8 +41,8 @@ import io.smallrye.mutiny.Uni;
 @Value.Immutable
 public interface DocumentConfig {
   DocDB getClient();
-  String getProjectName();
-  String getHeadName();
+  String getRepoId();
+  String getBranchName();
   DocumentGidProvider getGid();
   DocumentAuthorProvider getAuthor();
   
@@ -59,117 +55,57 @@ public interface DocumentConfig {
   interface DocumentAuthorProvider {
     String get();
   }
+  interface DocVisitor {}
   
-  interface DocVisitor {
+  interface DocObjectsVisitor<T> extends DocVisitor { 
+    DocObjectsQuery start(DocumentConfig config, DocObjectsQuery builder);
+    @Nullable DocObjects visitEnvelope(DocumentConfig config, QueryEnvelope<DocObjects> envelope);
+    T end(DocumentConfig config, @Nullable DocObjects ref);
+  }
+  
+  interface DocObjectVisitor<T> extends DocVisitor { 
+    DocObjectsQuery start(DocumentConfig config, DocObjectsQuery builder);
+    @Nullable DocObject visitEnvelope(DocumentConfig config, QueryEnvelope<DocObject> envelope);
+    T end(DocumentConfig config, @Nullable DocObject ref);
+  }
+  
+  interface DocCreateVisitor<T> extends DocVisitor { 
+    CreateManyDocs start(DocumentConfig config, CreateManyDocs builder);
+    List<DocBranch> visitEnvelope(DocumentConfig config, ManyDocEnvelope envelope);
+    List<T> end(DocumentConfig config, List<DocBranch> commit);
+  }
+  
+  
+  default <T> Uni<List<T>> accept(DocCreateVisitor<T> visitor) {
+    final var builder = visitor.start(this, getClient().doc()
+        .commit().createManyDoc()
+        .repoId(getRepoId())
+        .branchName(getBranchName()));
     
-  }
-  
-  interface DocBranchVisitor<T> extends DocVisitor { 
-    BranchObjectsQuery start(DocumentConfig config, BranchObjectsQuery builder);
-    @Nullable BranchObjects visitEnvelope(DocumentConfig config, QueryEnvelope<BranchObjects> envelope);
-    T end(DocumentConfig config, @Nullable BranchObjects ref);
-  }
-  
-  interface DocPullObjectVisitor<T> extends DocVisitor { 
-    PullObjectsQuery start(DocumentConfig config, PullObjectsQuery builder);
-    @Nullable PullObject visitEnvelope(DocumentConfig config, QueryEnvelope<PullObject> envelope);
-    T end(DocumentConfig config, @Nullable PullObject blob);
-  }
-  
-  interface DocPullObjectsVisitor<T> extends DocVisitor { 
-    PullObjectsQuery start(DocumentConfig config, PullObjectsQuery builder);
-    @Nullable PullObjects visitEnvelope(DocumentConfig config, QueryEnvelope<PullObjects> envelope);
-    List<T> end(DocumentConfig config, @Nullable PullObjects blobs);
-  }
-  
-  interface DocPullAndCommitVisitor<T> extends DocVisitor { 
-    PullObjectsQuery start(DocumentConfig config, PullObjectsQuery builder);
-    @Nullable PullObjects visitEnvelope(DocumentConfig config, QueryEnvelope<PullObjects> envelope);
-    Uni<List<T>> end(DocumentConfig config, @Nullable PullObjects blobs);
-  }
-  
-  interface DocCommitVisitor<T> extends DocVisitor { 
-    CommitBuilder start(DocumentConfig config, CommitBuilder builder);
-    @Nullable Commit visitEnvelope(DocumentConfig config, CommitResultEnvelope envelope);
-    List<T> end(DocumentConfig config, @Nullable Commit commit);
-  }
-  
-  interface DocHistoryVisitor<T> extends DocVisitor { 
-    BlobHistoryQuery start(DocumentConfig config, BlobHistoryQuery builder);
-    @Nullable HistoryObjects visitEnvelope(DocumentConfig config, QueryEnvelope<HistoryObjects> envelope);
-    List<T> end(DocumentConfig config, @Nullable HistoryObjects values);
-  }
-
-  default <T> Uni<T> accept(DocBranchVisitor<T> visitor) {
-    final var builder = visitor.start(this, getClient().git()
-        .branch().branchQuery()
-        .projectName(getProjectName())
-        .branchName(getHeadName()));
-    
-    return builder.get()
+    return builder.build()
         .onItem().transform(envelope -> visitor.visitEnvelope(this, envelope))
         .onItem().transform(ref -> visitor.end(this, ref));
   }
   
-  default <T> Uni<T> accept(DocPullObjectVisitor<T> visitor) {
-    final PullObjectsQuery builder = visitor.start(this, getClient().git()
-        .pull().pullQuery()
-        .projectName(getProjectName())
-        .branchNameOrCommitOrTag(getHeadName()));
-    
-    return builder.get()
-        .onItem().transform(envelope -> visitor.visitEnvelope(this, envelope))
-        .onItem().transform(ref -> visitor.end(this, ref));
-  }
-
-  
-  default <T> Uni<List<T>> accept(DocPullObjectsVisitor<T> visitor) {
-    final PullObjectsQuery builder = visitor.start(this, getClient().git()
-        .pull().pullQuery()
-        .projectName(getProjectName())
-        .branchNameOrCommitOrTag(getHeadName()));
+  default <T> Uni<T> accept(DocObjectsVisitor<T> visitor) {
+    final var builder = visitor.start(this, getClient().doc()
+        .find().docQuery()
+        .repoId(getRepoId())
+        .branchName(getBranchName()));
     
     return builder.findAll()
         .onItem().transform(envelope -> visitor.visitEnvelope(this, envelope))
         .onItem().transform(ref -> visitor.end(this, ref));
   }
-
   
-  default <T> Uni<List<T>> accept(DocPullAndCommitVisitor<T> visitor) {
-    final var prefilled = getClient().git()
-        .pull().pullQuery()
-        .projectName(getProjectName())
-        .branchNameOrCommitOrTag(getHeadName());
+  default <T> Uni<T> accept(DocObjectVisitor<T> visitor) {
+    final var builder = visitor.start(this, getClient().doc()
+        .find().docQuery()
+        .repoId(getRepoId())
+        .branchName(getBranchName()));
     
-    final Uni<QueryEnvelope<PullObjects>> query = visitor.start(this, prefilled).findAll();
-    return query
-        .onItem().transform(envelope -> visitor.visitEnvelope(this, envelope))
-        .onItem().transformToUni(ref -> visitor.end(this, ref));
-  }
-  
-  default <T> Uni<List<T>> accept(DocCommitVisitor<T> visitor) {
-    final var prefilled = getClient().git()
-        .commit().commitBuilder()
-        .latestCommit()
-        .author(getAuthor().get())
-        .head(getProjectName(),getHeadName());
-    
-    final Uni<CommitResultEnvelope> query = visitor.start(this, prefilled).build();
-    return query
+    return builder.get()
         .onItem().transform(envelope -> visitor.visitEnvelope(this, envelope))
         .onItem().transform(ref -> visitor.end(this, ref));
   }
-  
-  default <T> Uni<List<T>> accept(DocHistoryVisitor<T> visitor) {
-    final var prefilled = getClient().git()
-        .history()
-        .blobQuery()
-        .head(getProjectName(), getHeadName());
-    
-    final Uni<QueryEnvelope<HistoryObjects>> query = visitor.start(this, prefilled).get();
-    return query
-        .onItem().transform(envelope -> visitor.visitEnvelope(this, envelope))
-        .onItem().transform(ref -> visitor.end(this, ref));
-  }
-  
 }

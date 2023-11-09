@@ -63,7 +63,7 @@ public class SimpleDocTest extends DbTestTemplate {
     
     // branch 1
     final var createdDoc = getClient().doc().commit()
-      .createDoc()
+      .createOneDoc()
       .docType("customer-data")
       .repoId(repo.getRepo().getId())
       .externalId("bobs-ssn-id")
@@ -76,7 +76,7 @@ public class SimpleDocTest extends DbTestTemplate {
 
     // branch 2
     final var branchDoc = getClient().doc().commit()
-      .branchDoc()
+      .branchOneDoc()
       .repoId(repo.getRepo().getId())
       .branchFrom(createdDoc.getBranch().getId())
       .branchName("dev")
@@ -88,7 +88,7 @@ public class SimpleDocTest extends DbTestTemplate {
     
     // meta update, 1 commit into each branch
     getClient().doc().commit()
-      .appendDoc()
+      .modifyOneDoc()
       .repoId(repo.getRepo().getId())
       .docId(createdDoc.getDoc().getId())
       .meta(JsonObject.of("super cool field 1", "cool meta about the document"))
@@ -98,7 +98,7 @@ public class SimpleDocTest extends DbTestTemplate {
 
     
     // update dev branch with new data
-    getClient().doc().commit().appendBranch()
+    getClient().doc().commit().modifyOneBranch()
       .branchId(branchDoc.getBranch().getId())
       .append(JsonObject.of("branch new content", "something in here", "last_name", "used to be -> flop-2"))
       .repoId(repo.getRepo().getId())

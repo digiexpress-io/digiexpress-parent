@@ -22,51 +22,64 @@ package io.resys.thena.projects.client.spi.visitors;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import io.resys.thena.docdb.api.actions.PullActions.PullObjectsQuery;
+import io.resys.thena.docdb.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
 import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
-import io.resys.thena.docdb.api.models.ThenaGitObjects.PullObjects;
+import io.resys.thena.docdb.api.models.ThenaDocObject.Doc;
+import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranch;
+import io.resys.thena.docdb.api.models.ThenaDocObject.DocCommit;
+import io.resys.thena.docdb.api.models.ThenaDocObject.DocLog;
+import io.resys.thena.docdb.api.models.ThenaDocObjects.DocObjects;
+import io.resys.thena.projects.client.api.model.Document;
 import io.resys.thena.projects.client.api.model.ImmutableProject;
 import io.resys.thena.projects.client.api.model.Project;
 import io.resys.thena.projects.client.spi.store.DocumentConfig;
-import io.resys.thena.projects.client.spi.store.DocumentConfig.DocPullObjectsVisitor;
+import io.resys.thena.projects.client.spi.store.DocumentConfig.DocObjectsVisitor;
 import io.resys.thena.projects.client.spi.store.DocumentStoreException;
-import io.vertx.core.json.JsonObject;
+import io.resys.thena.projects.client.spi.store.MainBranch;
 import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class GetActiveProjectsByIdsVisitor implements DocPullObjectsVisitor<Project> {
-  private final Collection<String> ProjectIds;
+public class GetActiveProjectsByIdsVisitor implements DocObjectsVisitor<List<Project>> {
+  private final Collection<String> projectIds;
   
   @Override
-  public PullObjectsQuery start(DocumentConfig config, PullObjectsQuery builder) {
-    return builder.docId(new ArrayList<>(ProjectIds));
+  public DocObjectsQuery start(DocumentConfig config, DocObjectsQuery builder) {
+    return builder
+        .docType(Document.DocumentType.PROJECT_META.name())
+        .branchName(MainBranch.HEAD_NAME)
+        .active(true)
+        .matchIds(new ArrayList<>(projectIds));
   }
 
   @Override
-  public PullObjects visitEnvelope(DocumentConfig config, QueryEnvelope<PullObjects> envelope) {
+  public DocObjects visitEnvelope(DocumentConfig config, QueryEnvelope<DocObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
       throw DocumentStoreException.builder("GET_PROJECTS_BY_IDS_FAIL")
         .add(config, envelope)
-        .add((callback) -> callback.addArgs(ProjectIds.stream().collect(Collectors.joining(",", "{", "}"))))
+        .add((callback) -> callback.addArgs(projectIds.stream().collect(Collectors.joining(",", "{", "}"))))
         .build();
     }
     final var result = envelope.getObjects();
     if(result == null) {
       throw DocumentStoreException.builder("GET_PROJECTS_BY_IDS_NOT_FOUND")   
         .add(config, envelope)
-        .add((callback) -> callback.addArgs(ProjectIds.stream().collect(Collectors.joining(",", "{", "}"))))
+        .add((callback) -> callback.addArgs(projectIds.stream().collect(Collectors.joining(",", "{", "}"))))
         .build();
     }
     return result;
   }
 
   @Override
-  public List<Project> end(DocumentConfig config, PullObjects blob) {
-    return blob.accept((JsonObject json) -> json.mapTo(ImmutableProject.class));
+  public List<Project> end(DocumentConfig config, DocObjects ref) {
+    if(ref == null) {
+      return Collections.emptyList();
+    }
+    return ref.accept((Doc doc, DocBranch docBranch, DocCommit commit, List<DocLog> log) -> docBranch.getValue().mapTo(ImmutableProject.class));
   }
 }

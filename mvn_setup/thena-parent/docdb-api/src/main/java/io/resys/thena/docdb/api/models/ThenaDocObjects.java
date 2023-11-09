@@ -1,5 +1,7 @@
 package io.resys.thena.docdb.api.models;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +29,17 @@ public interface ThenaDocObjects extends ThenaObjects {
     Map<String, DocBranch> getBranches();
     Map<String, List<DocLog>> getLogs();        // branch id - latest commit logs 
     Map<String, DocCommit> getCommits();        // branch id - latest commit
+    
+    default <T> List<T> accept(DocObjectsVisitor<T> visitor) {
+      final var result = new ArrayList<T>();
+      final var doc = getDoc();
+      for(final var branch : getBranches().values()) {
+        final T value = visitor.visit(doc, branch, getCommits().get(branch.getCommitId()), getLogs().get(branch.getCommitId()));
+        result.add(value);
+      }
+    
+      return Collections.unmodifiableList(result);
+    }
   }
 
   @Value.Immutable
@@ -34,7 +47,18 @@ public interface ThenaDocObjects extends ThenaObjects {
     List<Doc> getDocs();
     Map<String, List<DocBranch>> getBranches(); // doc id    - list of document branches 
     Map<String, DocCommit> getCommits();        // branch id - latest commit
-    Map<String, List<DocLog>> getLogs();        // branch id - latest commit logs 
+    Map<String, List<DocLog>> getLogs();        // branch id - latest commit logs
+    
+    default <T> List<T> accept(DocObjectsVisitor<T> visitor) {
+      final var result = new ArrayList<T>();
+      for(final var doc : getDocs()) {
+        for(final var branch : getBranches().get(doc.getId())) {
+          final T value = visitor.visit(doc, branch, getCommits().get(branch.getCommitId()), getLogs().get(branch.getCommitId()));
+          result.add(value);
+        }
+      }
+      return Collections.unmodifiableList(result);
+    }
   }
 
   @Value.Immutable
@@ -43,5 +67,9 @@ public interface ThenaDocObjects extends ThenaObjects {
     DocBranch getBranch();
     DocCommit getCommit();
     List<DocLog> getLogs();
+  }
+  
+  interface DocObjectsVisitor<T> {
+    T visit(Doc doc, DocBranch docBranch, DocCommit commit, List<DocLog> log);
   }
 }

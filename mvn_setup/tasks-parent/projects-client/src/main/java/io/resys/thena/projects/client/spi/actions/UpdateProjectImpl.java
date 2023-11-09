@@ -53,6 +53,7 @@ public class UpdateProjectImpl implements UpdateProjectAction {
     RepoAssert.isTrue(uniqueTaskIds.size() == 1, () -> "Task id-s must be same, but got: %s!", uniqueTaskIds);
     
     return ctx.getConfig().accept(new UpdateProjectsVisitor(commands, ctx))
+        .onItem().transformToUni(resp -> resp)
         .onItem().transform(tasks -> tasks.get(0));
   }
 
@@ -61,7 +62,8 @@ public class UpdateProjectImpl implements UpdateProjectAction {
     RepoAssert.notNull(commands, () -> "commands must be defined!");
     RepoAssert.isTrue(commands.size() > 0, () -> "No commands to apply!");
     
-    return ctx.getConfig().accept(new UpdateProjectsVisitor(commands, ctx));
+    return ctx.getConfig().accept(new UpdateProjectsVisitor(commands, ctx)).onItem()
+        .transformToUni(item -> item);
   }
 }
 

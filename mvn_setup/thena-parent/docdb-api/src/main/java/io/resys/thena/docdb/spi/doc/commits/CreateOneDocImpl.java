@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Optional;
 
 import io.resys.thena.docdb.api.actions.CommitActions.CommitResultStatus;
-import io.resys.thena.docdb.api.actions.DocCommitActions.AppendResultEnvelope;
-import io.resys.thena.docdb.api.actions.DocCommitActions.CreateDoc;
-import io.resys.thena.docdb.api.actions.ImmutableAppendResultEnvelope;
+import io.resys.thena.docdb.api.actions.DocCommitActions.CreateOneDoc;
+import io.resys.thena.docdb.api.actions.DocCommitActions.OneDocEnvelope;
+import io.resys.thena.docdb.api.actions.ImmutableOneDocEnvelope;
 import io.resys.thena.docdb.api.models.ImmutableDoc;
 import io.resys.thena.docdb.api.models.ImmutableDocBranch;
 import io.resys.thena.docdb.api.models.ImmutableDocCommit;
@@ -31,7 +31,7 @@ import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class CreateDocImpl implements CreateDoc {
+public class CreateOneDocImpl implements CreateOneDoc {
 
   private final DbState state;
   private JsonObject appendBlobs = null;
@@ -47,63 +47,63 @@ public class CreateDocImpl implements CreateDoc {
   private String message;
 
   @Override
-  public CreateDocImpl repoId(String repoId) {
+  public CreateOneDocImpl repoId(String repoId) {
     RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
     this.repoId = repoId;
     return this;
   }
   @Override
-  public CreateDocImpl branchName(String branchName) {
+  public CreateOneDocImpl branchName(String branchName) {
     RepoAssert.isName(branchName, () -> "branchName has invalid charecters!");
     this.branchName = branchName;
     return this;
   }
   @Override
-  public CreateDocImpl append(JsonObject blob) {
+  public CreateOneDocImpl append(JsonObject blob) {
     RepoAssert.notNull(blob, () -> "blob can't be empty!");
     this.appendBlobs = blob;
     return this;
   }
   @Override
-  public CreateDocImpl meta(JsonObject blob) {
+  public CreateOneDocImpl meta(JsonObject blob) {
     RepoAssert.notNull(blob, () -> "merge can't be null!");
     this.appendMeta = blob;
     return this;
   }
   @Override
-  public CreateDocImpl author(String author) {
+  public CreateOneDocImpl author(String author) {
     RepoAssert.notEmpty(author, () -> "author can't be empty!");
     this.author = author;
     return this;
   }
   @Override
-  public CreateDocImpl message(String message) {
+  public CreateOneDocImpl message(String message) {
     RepoAssert.notEmpty(message, () -> "message can't be empty!");
     this.message = message;
     return this;
   }
   @Override
-  public CreateDocImpl docId(String docId) {
+  public CreateOneDocImpl docId(String docId) {
     this.docId = docId;
     return this;
   }
   @Override
-  public CreateDocImpl externalId(String externalId) {
+  public CreateOneDocImpl externalId(String externalId) {
     this.externalId = externalId;
     return this;
   }
   @Override
-  public CreateDocImpl docType(String docType) {
+  public CreateOneDocImpl docType(String docType) {
     this.docType = docType;
     return this;
   }
   @Override
-  public CreateDocImpl log(JsonObject doc) {
+  public CreateOneDocImpl log(JsonObject doc) {
     this.appendLogs = doc;
     return this;
   }
   @Override
-  public Uni<AppendResultEnvelope> build() {
+  public Uni<OneDocEnvelope> build() {
     RepoAssert.notEmpty(branchName, () -> "branchName can't be empty!");
     RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
     RepoAssert.notEmpty(author, () -> "author can't be empty!");
@@ -114,7 +114,7 @@ public class CreateDocImpl implements CreateDoc {
     return this.state.toDocState().withTransaction(repoId, this::doInTx);
   }
   
-  private Uni<AppendResultEnvelope> doInTx(DocRepo tx) {  
+  private Uni<OneDocEnvelope> doInTx(DocRepo tx) {  
     final var branchId = OidUtils.gen();
     
     final var doc = ImmutableDoc.builder()
@@ -186,7 +186,7 @@ public class CreateDocImpl implements CreateDoc {
       .build();
 
     return tx.insert().batch(batch)
-      .onItem().transform(rsp -> ImmutableAppendResultEnvelope.builder()
+      .onItem().transform(rsp -> ImmutableOneDocEnvelope.builder()
         .repoId(repoId)
         .doc(doc)
         .commit(rsp.getDocCommit().iterator().next())

@@ -5,25 +5,25 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import io.resys.thena.docdb.api.actions.CommitActions.CommitResultStatus;
-import io.resys.thena.docdb.api.actions.CommitActions.JsonObjectMerge;
-import io.resys.thena.docdb.api.actions.DocCommitActions.AppendDocBranch;
-import io.resys.thena.docdb.api.actions.DocCommitActions.AppendResultEnvelope;
-import io.resys.thena.docdb.api.actions.ImmutableAppendResultEnvelope;
+import io.resys.thena.docdb.api.actions.DocCommitActions.ModifyOneDoc;
+import io.resys.thena.docdb.api.actions.DocCommitActions.OneDocEnvelope;
+import io.resys.thena.docdb.api.actions.ImmutableOneDocEnvelope;
+import io.resys.thena.docdb.api.models.ImmutableDoc;
 import io.resys.thena.docdb.api.models.ImmutableDocBranch;
 import io.resys.thena.docdb.api.models.ImmutableDocCommit;
 import io.resys.thena.docdb.api.models.ImmutableDocLog;
 import io.resys.thena.docdb.api.models.ImmutableMessage;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranchLock;
+import io.resys.thena.docdb.api.models.ThenaDocObject.DocLock;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocLog;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocStatus;
 import io.resys.thena.docdb.spi.DbState;
 import io.resys.thena.docdb.spi.DocDbState.DocRepo;
 import io.resys.thena.docdb.spi.GitDbInserts.BatchStatus;
 import io.resys.thena.docdb.spi.ImmutableDocBatch;
-import io.resys.thena.docdb.spi.ImmutableDocBranchLockCriteria;
+import io.resys.thena.docdb.spi.ImmutableDocLockCriteria;
 import io.resys.thena.docdb.spi.OidUtils;
 import io.resys.thena.docdb.spi.git.commits.CommitLogger;
 import io.resys.thena.docdb.spi.support.RepoAssert;
@@ -34,91 +34,68 @@ import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class AppendDocBranchImpl implements AppendDocBranch {
+public class ModifyOneDocImpl implements ModifyOneDoc {
 
   private final DbState state;
-  private JsonObject appendBlobs = null;
   private JsonObject appendLogs = null;
-  private JsonObjectMerge appendMerge = null;
-  private String versionToModify = null;
+  private JsonObject appendMeta = null;
+  private boolean remove;
   
   private String repoId;
-  private String branchId;
+  private String docId;
   private String author;
   private String message;
-  private boolean remove;
 
   @Override
-  public AppendDocBranchImpl repoId(String repoId) {
+  public ModifyOneDocImpl repoId(String repoId) {
     RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
     this.repoId = repoId;
     return this;
   }
 
   @Override
-  public AppendDocBranch parent(String versionToModify) {
-    this.versionToModify = versionToModify;
-    return this;
-  }
-
-  @Override
-  public AppendDocBranch parentIsLatest() {
-    this.versionToModify = null;
-    return this;
-  }
-  @Override
-  public AppendDocBranchImpl remove() {
+  public ModifyOneDocImpl remove() {
     this.remove = true;
     return this;
   }
   @Override
-  public AppendDocBranchImpl branchId(String branchId) {
-    RepoAssert.notNull(branchId, () -> "branchId can't be empty!");
-    this.branchId = branchId;
+  public ModifyOneDocImpl meta(JsonObject blob) {
+    RepoAssert.notNull(blob, () -> "merge can't be null!");
+    this.appendMeta = blob;
     return this;
   }
   @Override
-  public AppendDocBranchImpl append(JsonObject blob) {
-    RepoAssert.notNull(blob, () -> "blob can't be empty!");
-    this.appendBlobs = blob;
+  public ModifyOneDocImpl docId(String docId) {
+    this.docId = docId;
     return this;
   }
+
   @Override
-  public AppendDocBranchImpl merge(JsonObjectMerge blob) {
-    RepoAssert.notNull(blob, () -> "blob can't be empty!");
-    this.appendMerge = blob;
-    return this;
-  }
-  @Override
-  public AppendDocBranchImpl author(String author) {
+  public ModifyOneDocImpl author(String author) {
     RepoAssert.notEmpty(author, () -> "author can't be empty!");
     this.author = author;
     return this;
   }
   @Override
-  public AppendDocBranchImpl message(String message) {
+  public ModifyOneDocImpl message(String message) {
     RepoAssert.notEmpty(message, () -> "message can't be empty!");
     this.message = message;
     return this;
   }
   @Override
-  public AppendDocBranchImpl log(JsonObject doc) {
+  public ModifyOneDocImpl log(JsonObject doc) {
     this.appendLogs = doc;
     return this;
   }
   @Override
-  public Uni<AppendResultEnvelope> build() {
-    RepoAssert.notEmpty(branchId, () -> "branchId can't be empty!");
+  public Uni<OneDocEnvelope> build() {
     RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
     RepoAssert.notEmpty(author, () -> "author can't be empty!");
     RepoAssert.notEmpty(message, () -> "message can't be empty!");
-    RepoAssert.isTrue(appendBlobs != null, () -> "Nothing to commit, no content!");
-    final var crit = ImmutableDocBranchLockCriteria.builder()
-        .branchId(branchId)
-        .build();
-    
+
+    final var crit = ImmutableDocLockCriteria.builder().docId(docId).build();    
     return this.state.toDocState().withTransaction(repoId, tx -> tx.query().branches().getLock(crit).onItem().transformToUni(lock -> {
-      final AppendResultEnvelope validation = validateRepo(lock);
+      final OneDocEnvelope validation = validateRepo(lock);
       if(validation != null) {
         return Uni.createFrom().item(validation);
       }
@@ -130,35 +107,44 @@ public class AppendDocBranchImpl implements AppendDocBranch {
       .atMost(100);
   }
   
-  private AppendResultEnvelope validateRepo(DocBranchLock state) {
-    // Wrong parent commit
-    if(state.getCommit().isPresent() && versionToModify != null && 
-        !versionToModify.equals(state.getCommit().get().getId())) {
-      
-      final var text = new StringBuilder()
-        .append("Commit to: '").append(repoId).append("'")
-        .append(" is rejected.")
-        .append(" Your head is: '").append(versionToModify).append("')")
-        .append(" but remote is: '").append(state.getCommit().get().getId()).append("'!")
-        .toString();
-      
-      return (AppendResultEnvelope) ImmutableAppendResultEnvelope.builder()
-          .repoId(repoId)
-          .addMessages(ImmutableMessage.builder().text(text).build())
-          .status(CommitResultStatus.ERROR)
-          .build();
-    }
+  private Uni<OneDocEnvelope> doInLock(DocLock docLock, DocRepo tx) {
+    final var doc = ImmutableDoc.builder()
+      .from(docLock.getDoc().get())
+      .meta(appendMeta)
+      .build();
+    
+    final var batchBuilder = ImmutableDocBatch.builder()
+      .repo(tx.getRepo())
+      .status(BatchStatus.OK)
+      .doc(doc)
+      .addAllDocLock(docLock.getBranches());
 
+    final var logger = new CommitLogger();
+    docLock.getBranches().forEach(branchLock -> appendToBranch(branchLock, tx, batchBuilder, logger));
+    
+    final var batch = batchBuilder.log(ImmutableMessage.builder().text(logger.toString()).build()).build();
+    
+    return tx.insert().batch(batch)
+    .onItem().transform(rsp -> ImmutableOneDocEnvelope.builder()
+      .repoId(repoId)
+      .doc(doc)
+      .addMessages(rsp.getLog())
+      .addAllMessages(rsp.getMessages())
+      .status(mapStatus(rsp.getStatus()))
+      .build());
+  }
+  
+  private OneDocEnvelope validateRepo(DocLock state) {
     
     // cant merge on first commit
-    if(state.getBranch().isEmpty()) {
-      return (AppendResultEnvelope) ImmutableAppendResultEnvelope.builder()
+    if(state.getDoc().isEmpty()) {
+      return ImmutableOneDocEnvelope.builder()
           .repoId(repoId)
           .addMessages(ImmutableMessage.builder()
               .text(new StringBuilder()
                   .append("Commit to: '").append(repoId).append("'")
                   .append(" is rejected.")
-                  .append(" Unknown branchId: '").append(branchId).append("'!")
+                  .append(" Unknown docId: '").append(docId).append("'!")
                   .toString())
               .build())
           .status(CommitResultStatus.ERROR)
@@ -168,10 +154,13 @@ public class AppendDocBranchImpl implements AppendDocBranch {
     return null;
   }
   
-  
-  private Uni<AppendResultEnvelope> doInLock(DocBranchLock lock, DocRepo tx) {  
+  private void appendToBranch(DocBranchLock lock, DocRepo tx, ImmutableDocBatch.Builder batch, CommitLogger logger) {
     final var branchId = lock.getBranch().get().getId();
-    final var doc = lock.getDoc().get();
+    
+    final var doc = ImmutableDoc.builder()
+        .from(lock.getDoc().get())
+        .meta(appendMeta)
+        .build();
     
     final var template = ImmutableDocCommit.builder()
       .id("commit-template")
@@ -180,20 +169,17 @@ public class AppendDocBranchImpl implements AppendDocBranch {
       .dateTime(LocalDateTime.now())      
       .author(this.author)
       .message(this.message)
-      .parent(Optional.empty())
+      .parent(lock.getBranch().get().getCommitId())
       .build();
     final var commit = ImmutableDocCommit.builder()
       .from(template)
       .id(Sha2.commitId(template))
       .branchId(branchId)
-      .parent(lock.getCommit().get().getId())
       .build();
     final var docBranch = ImmutableDocBranch.builder()
       .from(lock.getBranch().get())
-      .value(appendBlobs)
-      .commitId(commit.getId())
       .status(DocStatus.IN_FORCE)
-      .value(appendBlobs == null ? appendMerge.apply(lock.getBranch().get().getValue()): appendBlobs)
+      .commitId(commit.getId())
       .build();
     
     final List<DocLog> docLogs = appendLogs == null ? Collections.emptyList() : Arrays.asList(
@@ -206,7 +192,6 @@ public class AppendDocBranchImpl implements AppendDocBranch {
           .build()
         );
 
-    final var logger = new CommitLogger();
     logger
       .append(" | changed")
       .append(System.lineSeparator())
@@ -215,8 +200,6 @@ public class AppendDocBranchImpl implements AppendDocBranch {
       .append("  + doc branch: ").append(docBranch.getId())
       .append(System.lineSeparator())
       .append("  + doc commit: ").append(commit.getId())
-      .append(System.lineSeparator())
-      .append("  + doc parent: ").append(commit.getParent().get())
       .append(System.lineSeparator());
     
     if(!docLogs.isEmpty()) {
@@ -225,26 +208,10 @@ public class AppendDocBranchImpl implements AppendDocBranch {
       .append(System.lineSeparator());
     }
 
-    final var batch = ImmutableDocBatch.builder()
-      .repo(tx.getRepo())
-      .status(BatchStatus.OK)
-      .doc(Optional.empty())
-      .addDocBranch(docBranch)
-      .addDocCommit(commit)
-      .addAllDocLogs(docLogs)
-      .addDocLock(lock)
-      .log(ImmutableMessage.builder().text(logger.toString()).build())
-      .build();
+    batch.addDocBranch(docBranch)
+    .addDocCommit(commit)
+    .addAllDocLogs(docLogs);
 
-    return tx.insert().batch(batch)
-      .onItem().transform(rsp -> ImmutableAppendResultEnvelope.builder()
-        .repoId(repoId)
-        .doc(doc)
-        .commit(rsp.getDocCommit().iterator().next())
-        .addMessages(rsp.getLog())
-        .addAllMessages(rsp.getMessages())
-        .status(mapStatus(rsp.getStatus()))
-        .build());
   }
   
   private static CommitResultStatus mapStatus(BatchStatus src) {

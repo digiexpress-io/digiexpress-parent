@@ -1,49 +1,35 @@
 package io.resys.thena.projects.client.spi.visitors;
 
-/*-
- * #%L
- * thena-Projects-client
- * %%
- * Copyright (C) 2021 - 2023 Copyright 2021 ReSys OÜ
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
- */
+import java.util.List;
 
-import io.resys.thena.docdb.api.actions.PullActions.PullObjectsQuery;
+import io.resys.thena.docdb.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
 import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
-import io.resys.thena.docdb.api.models.ThenaGitObjects.PullObject;
+import io.resys.thena.docdb.api.models.ThenaDocObject.Doc;
+import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranch;
+import io.resys.thena.docdb.api.models.ThenaDocObject.DocCommit;
+import io.resys.thena.docdb.api.models.ThenaDocObject.DocLog;
+import io.resys.thena.docdb.api.models.ThenaDocObjects.DocObject;
 import io.resys.thena.projects.client.api.model.ImmutableProject;
 import io.resys.thena.projects.client.api.model.Project;
 import io.resys.thena.projects.client.spi.store.DocumentConfig;
-import io.resys.thena.projects.client.spi.store.DocumentConfig.DocPullObjectVisitor;
+import io.resys.thena.projects.client.spi.store.DocumentConfig.DocObjectVisitor;
 import io.resys.thena.projects.client.spi.store.DocumentStoreException;
-import io.vertx.core.json.JsonObject;
+import io.resys.thena.projects.client.spi.store.MainBranch;
 import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class GetActiveProjectVisitor implements DocPullObjectVisitor<Project> {
+public class GetActiveProjectVisitor implements DocObjectVisitor<Project>{
   private final String id;
   
   @Override
-  public PullObjectsQuery start(DocumentConfig config, PullObjectsQuery query) {
-    return query.docId(id);
+  public DocObjectsQuery start(DocumentConfig config, DocObjectsQuery query) {
+    return query.matchId(id).active(true).branchName(MainBranch.HEAD_NAME);
   }
 
   @Override
-  public PullObject visitEnvelope(DocumentConfig config, QueryEnvelope<PullObject> envelope) {
+  public DocObject visitEnvelope(DocumentConfig config, QueryEnvelope<DocObject> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
       throw DocumentStoreException.builder("GET_PROJECT_BY_ID_FAIL")
         .add(config, envelope)
@@ -61,7 +47,7 @@ public class GetActiveProjectVisitor implements DocPullObjectVisitor<Project> {
   }
 
   @Override
-  public Project end(DocumentConfig config, PullObject blob) {
-    return blob.accept((JsonObject json) -> json.mapTo(ImmutableProject.class));
+  public Project end(DocumentConfig config, DocObject ref) {
+    return ref.accept((Doc doc, DocBranch docBranch, DocCommit commit, List<DocLog> log) -> docBranch.getValue().mapTo(ImmutableProject.class)).iterator().next();
   }
 }
