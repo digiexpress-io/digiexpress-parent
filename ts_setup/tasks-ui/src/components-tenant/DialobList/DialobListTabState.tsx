@@ -3,10 +3,13 @@ import { Stack, Grid, Typography, TablePagination, Alert } from '@mui/material';
 
 import { FormattedMessage } from 'react-intl';
 import Pagination from 'table';
-import { initTable, initTabs, DialobListTabState, DialobListState } from './types';
+import { initTable, initTabs, createTabs, DialobListTabState, DialobListState } from './types';
 import { StyledStackItem, StyledEditDialobButton, StyledPreviewFIllButton } from './DialobListStyles';
 import { TenantEntryDescriptor } from 'descriptor-tenant';
 import { NavigationSticky, FilterByString } from '../NavigationSticky';
+import Context from 'context';
+
+
 
 const RowFiller: React.FC<{ value: Pagination.TablePagination<TenantEntryDescriptor> }> = ({ value }) => {
 
@@ -24,17 +27,17 @@ const RowFiller: React.FC<{ value: Pagination.TablePagination<TenantEntryDescrip
 }
 
 const DialobList: React.FC<{
-  state: DialobListTabState[]
   children: {
     DialobItem: React.ElementType<{ entry: TenantEntryDescriptor }>;
     DialobItemActive: React.ElementType<{ entry: TenantEntryDescriptor | undefined }>;
   }
-}> = ({ state: initTabsState, children }) => {
+}> = ({ children }) => {
 
+  const tenants = Context.useTenants();
   const [state, setState] = React.useState<DialobListState>(initTabs([]));
   const [table, setTable] = React.useState(initTable([]));
 
-  function handleActiveTask(task: TenantEntryDescriptor | undefined) {
+  function handleActiveDialob(task: TenantEntryDescriptor | undefined) {
     setState(prev => prev.withActiveTask(task));
   }
 
@@ -55,9 +58,12 @@ const DialobList: React.FC<{
     setTable((src) => src.withSrc(records).withPage(0));
   }, [state, setTable])
 
+
   React.useEffect(() => {
-    setState(prev => prev.withTabs(initTabsState))
-  }, [initTabsState]);
+    const groupBy = tenants.state.toGroupsAndFilters().withGroupBy("none").groups;
+    setState(prev => prev.withTabs(createTabs(groupBy)))
+  }, [tenants]);
+
 
   if (state.tabs.length === 0) {
     return null;
@@ -65,19 +71,25 @@ const DialobList: React.FC<{
 
   const { DialobItem, DialobItemActive } = children;
 
-
   return (<>
     <Grid container>
 
       <NavigationSticky>
-        <FilterByString onChange={() => { }} />
+        <FilterByString onChange={({ target }) => setState(prev => {
+          const groupBy = tenants.state
+            .toGroupsAndFilters()
+            .withSearchString(target.value)
+            .withGroupBy("none").groups;
+          return prev.withTabs(createTabs(groupBy))
+        })
+        } />
       </NavigationSticky>
 
       <Grid item md={8} lg={8}>
         <Stack sx={{ backgroundColor: 'mainContent.main' }}>
           {table.entries.map((task, index) => (
             <StyledStackItem key={task.source.id} index={index}
-              active={state.activeDialob?.source.id === task.source.id} onClick={() => handleActiveTask(task)}>
+              active={state.activeDialob?.source.id === task.source.id} onClick={() => handleActiveDialob(task)}>
               <DialobItem key={task.source.id} entry={task} />
             </StyledStackItem>)
           )}

@@ -1,5 +1,6 @@
-import { TenantEntryDescriptor, Group } from 'descriptor-tenant';
+import { TenantEntryDescriptor, Group, GroupBy, TenantState } from 'descriptor-tenant';
 import Table from 'table';
+import { AssigneePalette } from 'descriptor-task';
 
 
 interface DialobListTabState {
@@ -22,6 +23,7 @@ interface DialobListState extends DialobListStateInit {
   withActiveTab(activeTab: number): DialobListState;
   withActiveTask(activeTask: TenantEntryDescriptor | undefined): DialobListState;
   withTabs(tabs: DialobListTabState[]): DialobListState;
+
 }
 
 class ImmutableDialobListState implements DialobListState {
@@ -38,6 +40,8 @@ class ImmutableDialobListState implements DialobListState {
   get activeTab() { return this._activeTab };
   get activeDialob() { return this._activeDialob };
   get tabs() { return this._tabs };
+
+
   withActiveTab(activeTab: number): DialobListState {
     return new ImmutableDialobListState({ activeTab, activeDialob: this._activeDialob, tabs: this._tabs.map((tab) => ({ ...tab, disabled: tab.id !== activeTab })) });
   }
@@ -88,6 +92,28 @@ function initTabs(tabs: DialobListTabState[]): DialobListState {
 }
 
 
+function groupsToRecord(state: Group[]): Record<GroupBy, Group> {
+  return state.reduce((acc, item) => ({ ...acc, [item['id']]: item }), {} as Record<GroupBy, Group>);
+}
+
+function createTabs(groupBy: Group[]): DialobListTabState[] | any {
+  const groups = groupsToRecord(groupBy);
+  const none = groups["none"];
+
+  return [
+    {
+      id: 0,
+      label: 'core.myWork.tab.task.currentlyWorking',
+      color: AssigneePalette.assigneeCurrentlyWorking,
+      group: none,
+      disabled: true,
+      count: undefined
+    },
+  ]
+}
+
+
+
 
 export type { DialobListState, DialobListTabState, DialobListStateInit };
-export { initTable, initTabs }
+export { initTable, initTabs, createTabs }
