@@ -166,7 +166,10 @@ public class ModifyManyDocBranchesImpl implements ModifyManyDocBranches {
         i -> i
       ));
     
-    final var many = ImmutableDocDbBatchForMany.builder().status(BatchStatus.OK);
+    final var logs = new ArrayList<String>();
+    final var many = ImmutableDocDbBatchForMany.builder()
+        .repo(tx.getRepo())
+        .status(BatchStatus.OK);
     for(ItemModData item : items) {
       final var lock = lockByName.get(item.getDocId() + "/" + item.getBranchName());
       final var valid = validateRepoLock(lock, item);;
@@ -179,11 +182,17 @@ public class ModifyManyDocBranchesImpl implements ModifyManyDocBranches {
         .merge(item.getAppendMerge())
         .message(item.getMessage())
         .log(item.getAppendLog())
-        .remove(item.getRemove())
+        .remove(item.getRemove() == null ? false : item.getRemove())
         .create();
+      
+      logs.add(batch.getLog().getText());
       many.addItems(batch);
     }
-    final var changes = many.build();
+    final var changes = many
+        .log(ImmutableMessage.builder()
+            .text(String.join("\r\n" + "\r\n", logs))
+            .build())
+        .build();
     if(changes.getStatus() != BatchStatus.OK) {
       return Uni.createFrom().item(mapTo(changes));
     }

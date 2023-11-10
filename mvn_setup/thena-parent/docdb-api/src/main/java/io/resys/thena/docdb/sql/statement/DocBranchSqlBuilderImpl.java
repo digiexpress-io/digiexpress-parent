@@ -165,15 +165,19 @@ public class DocBranchSqlBuilderImpl implements DocBranchSqlBuilder {
   @Override
   public SqlTuple getLocks(List<DocBranchLockCriteria> criteria) {
     final var props = new ArrayList<Object>();
-    var index = 0;
+    var index = 1;
     final var where = new StringBuilder();
     for(final var crit : criteria) {
       props.add(crit.getBranchName());
       props.add(crit.getDocId());
-      if(index > 0) {
-        where.append(" AND ");
+      if(index > 1) {
+        where.append(" OR ");
       }
-      where.append(" branch_name = $").append(++index).append(" AND doc_id = $").append(++index).append(" "); 
+      where
+        .append(" (")
+        .append(" branch_name = $").append(index++)
+        .append(" AND doc_id = $").append(index)
+        .append(") "); 
       index++;
     }
     

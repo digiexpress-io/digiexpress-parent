@@ -41,7 +41,7 @@ public class BatchForOneBranchModify {
   private boolean remove;
 
   public BatchForOneBranchModify remove(boolean remove) { this.remove = remove; return this; }
-  public BatchForOneBranchModify append(JsonObject append) { this.appendBlobs = RepoAssert.notNull(append, () -> "append can't be empty!"); return this; }
+  public BatchForOneBranchModify append(JsonObject append) { this.appendBlobs = append; return this; }
   public BatchForOneBranchModify merge(JsonObjectMerge merge) { this.appendMerge = merge; return this; }
   public BatchForOneBranchModify message(String message) { this.message = RepoAssert.notEmpty(message, () -> "message can't be empty!"); return this; }
   public BatchForOneBranchModify log(JsonObject doc) { this.appendLogs = doc; return this; }
@@ -52,7 +52,7 @@ public class BatchForOneBranchModify {
     RepoAssert.notNull(tx, () -> "repo can't be null!");
     RepoAssert.notEmpty(author, () -> "author can't be empty!");
     RepoAssert.notEmpty(message, () -> "message can't be empty!");
-    RepoAssert.isTrue(appendBlobs != null, () -> "nothing to commit, no content!");
+    RepoAssert.isTrue(appendBlobs != null || appendMerge != null, () -> "nothing to commit, no content!");
     
     final var branchId = lock.getBranch().get().getId();
     final var doc = lock.getDoc().get();

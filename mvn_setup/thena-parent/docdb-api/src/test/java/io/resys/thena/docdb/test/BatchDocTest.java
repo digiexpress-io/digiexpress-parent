@@ -87,6 +87,25 @@ public class BatchDocTest extends DbTestTemplate {
     Assertions.assertEquals(10, findAllDocs.getObjects().getDocs().size());
     Assertions.assertEquals(10, findAllDocs.getObjects().getCommits().size());
     
+    
+    // update branches
+    // update dev branch with new data
+    final var modifyBranch = getClient().doc().commit().modifyManyBranches()
+      .repoId(repo.getRepo().getId())
+      .author("jane.doe@morgue.com")
+      .message("edit dev branch")
+      .branchName("main");
+    
+    for(final var createdBranch : inserted.getBranch()) {
+      modifyBranch.item()
+        .docId(createdBranch.getDocId())
+        .merge(old -> old.copy().put("added new field", "super cool field"))
+        .next();
+    }
+    modifyBranch.build().await().atMost(Duration.ofMinutes(1));
+    
+    
+    
     printRepo(repo.getRepo());
   }
 }

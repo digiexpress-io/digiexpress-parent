@@ -58,7 +58,9 @@ public class PgErrors implements ErrorHandler {
   }
   
   public void deadEnd(String additionalMsg, Throwable e) {
-    log.error(additionalMsg + System.lineSeparator() + e.getMessage(), e);
+    log.error(System.lineSeparator() + 
+        "  - message: " + additionalMsg + System.lineSeparator() +
+        "  - exception: " + e.getMessage(), e);
   }
   
   public void deadEnd(String additionalMsg) {

@@ -7,6 +7,7 @@ import io.resys.thena.docdb.spi.doc.commits.ModifyOneDocImpl;
 import io.resys.thena.docdb.spi.doc.commits.CreateManyDocsImpl;
 import io.resys.thena.docdb.spi.doc.commits.CreateOneDocBranchImpl;
 import io.resys.thena.docdb.spi.doc.commits.CreateOneDocImpl;
+import io.resys.thena.docdb.spi.doc.commits.ModifyManyDocBranchesImpl;
 import lombok.RequiredArgsConstructor;
 
 
@@ -35,12 +36,11 @@ public class DocAppendActionsImpl implements DocCommitActions {
     return new CreateManyDocsImpl(state);
   }
   @Override
-  public ModifyManyDocs modifyManyDocs() {
-    // TODO Auto-generated method stub
-    return null;
+  public ModifyManyDocBranches modifyManyBranches() {
+    return new ModifyManyDocBranchesImpl(state);
   }
   @Override
-  public ModifyManyDocBranches modifyManyBranches() {
+  public ModifyManyDocs modifyManyDocs() {
     // TODO Auto-generated method stub
     return null;
   }
