@@ -20,7 +20,7 @@ const NavigationButtonSearch: React.FC<NavigationSearchType> = ({ onClick, id, v
 }
 
 
-interface NavigationTaskListType {
+interface NavigationDialobListType {
   onClick: () => void,
   id: string,
   values: {} | undefined
@@ -28,7 +28,7 @@ interface NavigationTaskListType {
   active: boolean | undefined
 }
 
-const NavigationButtonTaskList: React.FC<NavigationTaskListType> = ({ active, color, onClick, id, values }) => {
+const NavigationButtonDialobList: React.FC<NavigationDialobListType> = ({ active, color, onClick, id, values }) => {
   const backgroundColor = active ? color : lighten(color, 0.8);
   const sx: SxProps = {
     borderRadius: 10,
@@ -54,4 +54,4 @@ const NavigationButtonTaskList: React.FC<NavigationTaskListType> = ({ active, co
 
 
 
-export { NavigationButtonSearch, NavigationButtonTaskList };
+export { NavigationButtonSearch, NavigationButtonDialobList };

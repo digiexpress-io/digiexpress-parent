@@ -15,8 +15,6 @@ const en = {
   'dialob.form.lastSaved': 'Last saved',
   'dialob.form.title': 'Form title',
   'dialob.form.technicalName': 'Form technical name',
-  'dialob.form.edit': 'Edit',
-  'dialob.form.previewFill': 'Preview',
   'dialob.form.versionTags': 'Version tags',
   'dialob.form.versionTags.latest': 'Latest',
   'dialob.form.languages': 'languages',
@@ -24,6 +22,13 @@ const en = {
   'dialob.form.variable.type.context.type': 'type:',
   'dialob.form.variable.type.context.name': 'name:',
   'dialob.form.variables.none': 'None',
+
+  'dialob.form.delete': 'Delete',
+  'dialob.form.copy': 'Copy',
+  'dialob.form.edit': 'Edit',
+  'dialob.form.preview': 'Preview',
+  'dialob.form.create': 'Create new',
+
 
   'projects.header.spotlight.no_group': 'All projects',
   'projects.header.groupBy.repoType.dialob': 'Dialob',

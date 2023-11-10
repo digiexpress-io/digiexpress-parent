@@ -6,7 +6,7 @@ import Pagination from 'table';
 import { initTable, initTabs, createTabs, DialobListTabState, DialobListState } from './types';
 import { StyledStackItem, StyledEditDialobButton, StyledPreviewFIllButton } from './DialobListStyles';
 import { TenantEntryDescriptor } from 'descriptor-tenant';
-import { NavigationSticky, FilterByString } from '../NavigationSticky';
+import { NavigationSticky, FilterByString, NavigationButtonDialobList } from '../NavigationSticky';
 import Context from 'context';
 
 
@@ -83,6 +83,13 @@ const DialobList: React.FC<{
           return prev.withTabs(createTabs(groupBy))
         })
         } />
+        <NavigationButtonDialobList
+          id='dialob.form.create'
+          onClick={() => { }}
+          values={undefined}
+          active={false}
+          color={'rgb(80, 72, 229)'}
+        />
       </NavigationSticky>
 
       <Grid item md={8} lg={8}>

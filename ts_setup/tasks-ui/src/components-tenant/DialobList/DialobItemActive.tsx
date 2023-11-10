@@ -1,6 +1,9 @@
 import React from 'react';
 import { Box, Stack, Typography, IconButton, Skeleton, useTheme, CircularProgress, Avatar } from '@mui/material';
 import EditIcon from '@mui/icons-material/ModeEditOutlineOutlined';
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import CopyAllIcon from '@mui/icons-material/CopyAll';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { FormattedMessage } from 'react-intl';
 
 import { TenantEntryDescriptor } from 'descriptor-tenant';
@@ -35,8 +38,7 @@ const StyledTitle: React.FC<{ children: string }> = ({ children }) => {
 }
 
 
-
-const DialobListTags: React.FC<{ entry: TenantEntryDescriptor }> = ({ entry }) => {
+const DialobFormTags: React.FC<{ entry: TenantEntryDescriptor }> = ({ entry }) => {
   const backend = Context.useBackend();
   const [loading, setLoading] = React.useState(true);
   const [tags, setTags] = React.useState<DialobTag[]>([]);
@@ -58,7 +60,6 @@ const DialobListTags: React.FC<{ entry: TenantEntryDescriptor }> = ({ entry }) =
 
   return (<>{tags.map((tag) => <Stack direction='row' spacing={1}>
     <Typography>{tag.name}</Typography>
-    <Typography>{tag.formName}</Typography>
   </Stack>)}</>);
 }
 
@@ -152,13 +153,39 @@ const DialobItemActive: React.FC<{ entry: TenantEntryDescriptor | undefined }> =
     return (<>
       <StyledStack >
 
+        {/* buttons section */}
+        <Burger.Section>
+          <StyledTitle children='task.tools' />
+          <Stack direction='row' spacing={1} justifyContent='space-evenly'>
+
+            <Box display='flex' flexDirection='column' alignItems='center'>
+              <IconButton onClick={() => { }}><DeleteForeverIcon sx={{ color: 'error.main' }} /></IconButton>
+              <Typography><FormattedMessage id='dialob.form.delete' /></Typography>
+            </Box>
+
+            <Box display='flex' flexDirection='column' alignItems='center'>
+              <IconButton onClick={() => { }}><CopyAllIcon sx={{ color: 'secondary.light' }} /></IconButton>
+              <Typography><FormattedMessage id='dialob.form.copy' /></Typography>
+            </Box>
+
+            <Box display='flex' flexDirection='column' alignItems='center'>
+              <IconButton onClick={handleTaskEdit}><EditIcon sx={{ color: 'uiElements.main' }} /></IconButton>
+              <Typography><FormattedMessage id='dialob.form.edit' /></Typography>
+            </Box>
+
+            <Box display='flex' flexDirection='column' alignItems='center'>
+              <IconButton onClick={() => { }}><RemoveRedEyeIcon sx={{ color: 'locale.dark' }} /></IconButton>
+              <Typography><FormattedMessage id='dialob.form.preview' /></Typography>
+            </Box>
+          </Stack>
+        </Burger.Section>
+
         {/* title section */}
         <Burger.Section>
           <StyledTitle children='dialob.form.title' />
           <Box display='flex' alignItems='center'>
             <Typography fontWeight='bold'>{entry.formTitle}</Typography>
             <Box flexGrow={1} />
-            <IconButton onClick={handleTaskEdit}><EditIcon sx={{ color: 'uiElements.main' }} /></IconButton>
           </Box>
         </Burger.Section>
 
@@ -189,7 +216,7 @@ const DialobItemActive: React.FC<{ entry: TenantEntryDescriptor | undefined }> =
         {/* version tag section */}
         <Burger.Section>
           <StyledTitle children='dialob.form.versionTags' />
-          <DialobListTags entry={entry} />
+          <DialobFormTags entry={entry} />
         </Burger.Section>
 
         {/* variables section */}

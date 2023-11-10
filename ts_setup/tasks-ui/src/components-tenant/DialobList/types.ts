@@ -1,4 +1,4 @@
-import { TenantEntryDescriptor, Group, GroupBy, TenantState } from 'descriptor-tenant';
+import { TenantEntryDescriptor, Group, GroupBy } from 'descriptor-tenant';
 import Table from 'table';
 import { AssigneePalette } from 'descriptor-task';
 

@@ -59,7 +59,7 @@ export class ServiceImpl implements Backend {
       getTenantEntries: (tenantId: string) => this.getTenantEntries(tenantId),
       getTenants: () => this.getTenants(),
       getDialobTags: (dialobFormId: string) => this.getDialobTags(dialobFormId),
-      getDialobForm: (dialobFormId: string) => this.getDialobForm(dialobFormId)
+      getDialobForm: (dialobFormId: string) => this.getDialobForm(dialobFormId),
     };
   }
   get task(): TaskStore {
@@ -97,6 +97,7 @@ export class ServiceImpl implements Backend {
   async getDialobForm(dialobFormId: string): Promise<DialobForm> {
     return await this._store.fetch<DialobForm>(`api/forms/${dialobFormId}`);
   }
+
 
 
   async createTask(commands: CreateTask): Promise<Task> {
