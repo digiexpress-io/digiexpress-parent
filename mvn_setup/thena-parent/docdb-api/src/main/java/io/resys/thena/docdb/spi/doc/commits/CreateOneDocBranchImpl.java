@@ -45,46 +45,14 @@ public class CreateOneDocBranchImpl implements CreateOneDocBranch {
   private String author;
   private String message;
 
-  @Override
-  public CreateOneDocBranchImpl repoId(String repoId) {
-    RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
-    this.repoId = repoId;
-    return this;
-  }
-  @Override
-  public CreateOneDocBranchImpl branchName(String branchName) {
-    RepoAssert.isName(branchName, () -> "branchName has invalid charecters!");
-    this.branchName = branchName;
-    return this;
-  }
-  @Override
-  public CreateOneDocBranchImpl append(JsonObject blob) {
-    RepoAssert.notNull(blob, () -> "blob can't be empty!");
-    this.appendBlobs = blob;
-    return this;
-  }
-  @Override
-  public CreateOneDocBranchImpl author(String author) {
-    RepoAssert.notEmpty(author, () -> "author can't be empty!");
-    this.author = author;
-    return this;
-  }
-  @Override
-  public CreateOneDocBranchImpl message(String message) {
-    RepoAssert.notEmpty(message, () -> "message can't be empty!");
-    this.message = message;
-    return this;
-  }
-  @Override
-  public CreateOneDocBranchImpl branchFrom(String branchFrom) {
-    this.branchFrom = branchFrom;
-    return this;
-  }
-  @Override
-  public CreateOneDocBranchImpl log(JsonObject doc) {
-    this.appendLogs = doc;
-    return this;
-  }
+  @Override public CreateOneDocBranchImpl repoId(String repoId) { this.repoId = RepoAssert.notEmpty(repoId,               () -> "repoId can't be empty!"); return this; }
+  @Override public CreateOneDocBranchImpl branchName(String branchName) { this.branchName = RepoAssert.isName(branchName, () -> "branchName has invalid charecters!"); return this; }
+  @Override public CreateOneDocBranchImpl append(JsonObject blob) { this.appendBlobs = RepoAssert.notNull(blob,           () -> "blob can't be empty!"); return this; }
+  @Override public CreateOneDocBranchImpl author(String author) { this.author = RepoAssert.notEmpty(author,               () -> "author can't be empty!"); return this; }
+  @Override public CreateOneDocBranchImpl message(String message) { this.message = RepoAssert.notEmpty(message, () -> "message can't be empty!"); return this; }
+  @Override public CreateOneDocBranchImpl branchFrom(String branchFrom) { this.branchFrom = branchFrom; return this; }
+  @Override public CreateOneDocBranchImpl log(JsonObject doc) { this.appendLogs = doc; return this; }
+  
   @Override
   public Uni<OneDocEnvelope> build() {
     RepoAssert.notEmpty(branchName, () -> "branchName can't be empty!");
@@ -189,7 +157,7 @@ public class CreateOneDocBranchImpl implements CreateOneDocBranch {
     }
 
     final var batch = ImmutableDocDbBatchForOne.builder()
-      .repo(tx.getRepo())
+      .repoId(tx.getRepo().getId())
       .status(BatchStatus.OK)
       .doc(Optional.empty())
       .addDocBranch(docBranch)
@@ -206,16 +174,8 @@ public class CreateOneDocBranchImpl implements CreateOneDocBranch {
         .commit(rsp.getDocCommit().iterator().next())
         .addMessages(rsp.getLog())
         .addAllMessages(rsp.getMessages())
-        .status(mapStatus(rsp.getStatus()))
+        .status(CreateDocDbBatchForOne.mapStatus(rsp.getStatus()))
         .build());
   }
-  
-  private static CommitResultStatus mapStatus(BatchStatus src) {
-    if(src == BatchStatus.OK) {
-      return CommitResultStatus.OK;
-    } else if(src == BatchStatus.CONFLICT) {
-      return CommitResultStatus.CONFLICT;
-    }
-    return CommitResultStatus.ERROR; 
-  }
+
 }

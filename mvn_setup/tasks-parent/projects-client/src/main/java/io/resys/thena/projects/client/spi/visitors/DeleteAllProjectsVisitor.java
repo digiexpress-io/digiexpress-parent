@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import io.resys.thena.docdb.api.actions.CommitActions.CommitResultStatus;
-import io.resys.thena.docdb.api.actions.DocCommitActions.ManyDocEnvelope;
+import io.resys.thena.docdb.api.actions.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.docdb.api.actions.DocCommitActions.ModifyManyDocBranches;
 import io.resys.thena.docdb.api.actions.DocCommitActions.ModifyManyDocs;
 import io.resys.thena.docdb.api.actions.DocQueryActions.DocObjectsQuery;
@@ -86,14 +86,14 @@ public class DeleteAllProjectsVisitor implements DocObjectsVisitor<Uni<List<Proj
 
     final var projectsRemoved = visitTree(ref);    
     return archiveCommand.build()
-      .onItem().transform((ManyDocEnvelope commit) -> {
+      .onItem().transform((ManyDocsEnvelope commit) -> {
         if(commit.getStatus() == CommitResultStatus.OK) {
           return commit;
         }
         throw new DocumentStoreException("ARCHIVE_FAIL", DocumentStoreException.convertMessages(commit));
       })
       .onItem().transformToUni(archived -> removeCommand.build())
-      .onItem().transform((ManyDocEnvelope commit) -> {
+      .onItem().transform((ManyDocsEnvelope commit) -> {
         if(commit.getStatus() == CommitResultStatus.OK) {
           return commit;
         }

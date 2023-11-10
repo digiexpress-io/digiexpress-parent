@@ -51,7 +51,7 @@ public interface DocCommitActions {
     CreateManyDocs author(String author);
     CreateManyDocs message(String message);
     AddItemToCreateDoc item();
-    Uni<ManyDocEnvelope> build();
+    Uni<ManyDocsEnvelope> build();
   }
   interface AddItemToCreateDoc {
     AddItemToCreateDoc docId(@Nullable String docId); 
@@ -81,7 +81,7 @@ public interface DocCommitActions {
     ModifyManyDocs author(String author);
     ModifyManyDocs message(String message);
     AddItemToModifyDoc item();
-    Uni<ManyDocEnvelope> build();
+    Uni<ManyDocsEnvelope> build();
   }
   interface AddItemToModifyDoc {
     AddItemToModifyDoc branchId(String branchId);
@@ -126,7 +126,7 @@ public interface DocCommitActions {
     ModifyManyDocBranches author(String author);
     ModifyManyDocBranches message(String message);
     AddItemToModifyDocBranch item();
-    Uni<ManyDocEnvelope> build();
+    Uni<ManyDocsEnvelope> build();
   }
   
   interface AddItemToModifyDocBranch {
@@ -153,7 +153,7 @@ public interface DocCommitActions {
     List<Message> getMessages();
   }
   @Value.Immutable
-  interface ManyDocEnvelope extends ThenaEnvelope {
+  interface ManyDocsEnvelope extends ThenaEnvelope {
     String getRepoId();
     List<Doc> getDoc();
     List<DocBranch> getBranch();

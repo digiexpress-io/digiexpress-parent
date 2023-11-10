@@ -40,7 +40,7 @@ public interface DocDbInserts {
   @Value.Immutable
   interface DocDbBatchForOne {
     BatchStatus getStatus();
-    Repo getRepo();
+    String getRepoId();
     
     Optional<Doc> getDoc();
     List<DocBranchLock> getDocLock();

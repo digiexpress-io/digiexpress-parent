@@ -180,6 +180,8 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
 
   private DocLog toDocLog(DocFlatted entry) {
     return ImmutableDocLog.builder()
+    .id(entry.getDocLogId().get())
+    .docId(entry.getDocId())
     .branchId(entry.getBranchId())
     .docCommitId(entry.getCommitId())
     .value(entry.getDocLogValue().orElse(null))

@@ -27,7 +27,7 @@ import java.util.List;
 
 import io.resys.thena.docdb.api.actions.CommitActions.CommitResultStatus;
 import io.resys.thena.docdb.api.actions.DocCommitActions.CreateManyDocs;
-import io.resys.thena.docdb.api.actions.DocCommitActions.ManyDocEnvelope;
+import io.resys.thena.docdb.api.actions.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranch;
 import io.resys.thena.projects.client.api.model.Document;
 import io.resys.thena.projects.client.api.model.Project;
@@ -60,7 +60,7 @@ public class CreateProjectsVisitor implements DocCreateVisitor<Project> {
   }
 
   @Override
-  public List<DocBranch> visitEnvelope(DocumentConfig config, ManyDocEnvelope envelope) {
+  public List<DocBranch> visitEnvelope(DocumentConfig config, ManyDocsEnvelope envelope) {
     if(envelope.getStatus() == CommitResultStatus.OK) {
       return envelope.getBranch();
     }

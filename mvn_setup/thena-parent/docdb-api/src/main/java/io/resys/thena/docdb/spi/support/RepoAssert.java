@@ -27,31 +27,34 @@ import io.resys.thena.docdb.api.exceptions.RepoException;
 public class RepoAssert {
   private static final String NAME_PATTER = "^([a-zA-Z0-9 +_/-]|\\\\\\\\)+";
   
-  public static void isName(String value, Supplier<String> message) {
+  public static String isName(String value, Supplier<String> message) {
     RepoAssert.isTrue(value.matches(NAME_PATTER), () -> message.get() + " => Valid name pattern: '" + NAME_PATTER + "'!");
+    return value;
   }
-  
-  public static void notEmpty(String object, Supplier<String> message) {
+
+  public static String notEmpty(String object, Supplier<String> message) {
     if (object == null || object.isBlank()) {
       throw new RepoException(getMessage(message));
     }
+    return object;
   }
-  public static void isNull(Object object, Supplier<String> message) {
+  public static <T> T isNull(T object, Supplier<String> message) {
     if (object == null) {
-      return;
+      return object;
     }
     throw new RepoException(getMessage(message));
   }
-  public static void isEmpty(String object, Supplier<String> message) {
+  public static String isEmpty(String object, Supplier<String> message) {
     if (object == null || object.isBlank()) {
-      return;
+      return object;
     }
     throw new RepoException(getMessage(message));
   }
-  public static void notNull(Object object, Supplier<String> message) {
+  public static <T> T notNull(T object, Supplier<String> message) {
     if (object == null) {
       throw new RepoException(getMessage(message));
     }
+    return object;
   }
   public static void isTrue(boolean expression, Supplier<String> message, Object ...args) {
     if (!expression) {

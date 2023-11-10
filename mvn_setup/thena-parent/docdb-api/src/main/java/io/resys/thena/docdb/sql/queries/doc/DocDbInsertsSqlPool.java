@@ -88,15 +88,15 @@ public class DocDbInsertsSqlPool implements DocDbInserts {
     
     
     final Uni<DocDbBatchForMany> docsUni1 = Execute.apply(tx, docInserts).onItem()
-        .transform(row -> successOutput(many, "Doc inserted, number of new entries: " + row.rowCount()))
+        .transform(row -> successOutput(many, "Doc inserted, number of new entries: " + (row == null ? 0 : row.rowCount())))
         .onFailure().recoverWithItem(e -> failOutput(many, "Failed to create docs", e));
 
     final Uni<DocDbBatchForMany> docsUni2 = Execute.apply(tx, docUpdated).onItem()
-        .transform(row -> successOutput(many, "Doc updated, number of new entries: " + row.rowCount()))
+        .transform(row -> successOutput(many, "Doc updated, number of new entries: " + (row == null ? 0 : row.rowCount())))
         .onFailure().recoverWithItem(e -> failOutput(many, "Failed to update docs", e));
         
     final Uni<DocDbBatchForMany> commitUni = Execute.apply(tx, commitsInsert).onItem()
-        .transform(row -> successOutput(many, "Commit saved, number of new entries: " + row.rowCount()))
+        .transform(row -> successOutput(many, "Commit saved, number of new entries: " + (row == null ? 0 : row.rowCount())))
         .onFailure().recoverWithItem(e -> failOutput(many, "Failed to save commit", e));
 
     final Uni<DocDbBatchForMany> branchUniInsert = Execute.apply(tx, branchInsert).onItem()

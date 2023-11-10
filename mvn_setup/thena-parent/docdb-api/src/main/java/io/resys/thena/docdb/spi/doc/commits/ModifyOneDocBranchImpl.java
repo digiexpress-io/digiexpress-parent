@@ -226,7 +226,7 @@ public class ModifyOneDocBranchImpl implements ModifyOneDocBranch {
     }
 
     final var batch = ImmutableDocDbBatchForOne.builder()
-      .repo(tx.getRepo())
+      .repoId(tx.getRepo().getId())
       .status(BatchStatus.OK)
       .doc(Optional.empty())
       .addDocBranch(docBranch)
@@ -243,16 +243,8 @@ public class ModifyOneDocBranchImpl implements ModifyOneDocBranch {
         .commit(rsp.getDocCommit().iterator().next())
         .addMessages(rsp.getLog())
         .addAllMessages(rsp.getMessages())
-        .status(mapStatus(rsp.getStatus()))
+        .status(CreateDocDbBatchForOne.mapStatus(rsp.getStatus()))
         .build());
   }
   
-  private static CommitResultStatus mapStatus(BatchStatus src) {
-    if(src == BatchStatus.OK) {
-      return CommitResultStatus.OK;
-    } else if(src == BatchStatus.CONFLICT) {
-      return CommitResultStatus.CONFLICT;
-    }
-    return CommitResultStatus.ERROR; 
-  }
 }

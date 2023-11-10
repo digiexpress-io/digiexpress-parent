@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
 import org.immutables.value.Value;
 
 import io.resys.thena.docdb.api.DocDB;
-import io.resys.thena.docdb.api.actions.DocCommitActions.ManyDocEnvelope;
+import io.resys.thena.docdb.api.actions.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.docdb.api.actions.DocCommitActions.CreateManyDocs;
 import io.resys.thena.docdb.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
@@ -71,7 +71,7 @@ public interface DocumentConfig {
   
   interface DocCreateVisitor<T> extends DocVisitor { 
     CreateManyDocs start(DocumentConfig config, CreateManyDocs builder);
-    List<DocBranch> visitEnvelope(DocumentConfig config, ManyDocEnvelope envelope);
+    List<DocBranch> visitEnvelope(DocumentConfig config, ManyDocsEnvelope envelope);
     List<T> end(DocumentConfig config, List<DocBranch> commit);
   }
   
