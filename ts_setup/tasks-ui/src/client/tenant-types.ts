@@ -36,6 +36,7 @@ export interface DialobForm {
   metadata: {
     label: string;
     languages: string[];
+    labels?: string[];
   },
   data: Record<string, {
     id: string,

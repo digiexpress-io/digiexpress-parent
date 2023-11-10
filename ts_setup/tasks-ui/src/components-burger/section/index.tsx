@@ -1,10 +1,12 @@
 import React from 'react';
-import { Box } from '@mui/material';
+import { Box, CircularProgress } from '@mui/material';
 
 
 
-const Section: React.FC<{ children: React.ReactNode, width?: string }> = (props) => {
+const Section: React.FC<{ children: React.ReactNode, width?: string, loadingValue?: any }> = (props) => {
   const [label, content] = React.Children.toArray(props.children);
+  const loadingEnabled: boolean = Object.keys(props).includes("loadingValue");
+  const showLoader: boolean = props.loadingValue ? false : true;
 
   return (
     <Box width='100%'>
@@ -20,6 +22,7 @@ const Section: React.FC<{ children: React.ReactNode, width?: string }> = (props)
 
       <Box sx={{ borderRadius: '8px', border: 1, p: 2, borderColor: 'explorerItem.main' }}>
         {content}
+        {loadingEnabled && showLoader && < CircularProgress size='10pt' />}
       </Box>
     </Box>
   )

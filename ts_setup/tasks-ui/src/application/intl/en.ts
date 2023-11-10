@@ -13,8 +13,12 @@ const en = {
 
   'dialob.form.created': 'Created',
   'dialob.form.lastSaved': 'Last saved',
-  'dialob.form.title': 'Form title',
-  'dialob.form.technicalName': 'Form technical name',
+  'dialob.form.info': 'Dialog info',
+  'dialob.form.title': 'Dialog name',
+  'dialob.form.id': 'Id',
+  'dialob.form.labels': 'Labels',
+  'dialob.form.labels.none': 'None',
+  'dialob.form.technicalName': 'Technical name',
   'dialob.form.versionTags': 'Version tags',
   'dialob.form.versionTags.latest': 'Latest',
   'dialob.form.languages': 'languages',
@@ -29,6 +33,12 @@ const en = {
   'dialob.form.preview': 'Preview',
   'dialob.form.create': 'Create new',
 
+  'dialob.form.create.dialog.title': 'Create new dialog',
+  'dialob.form.create.dialog.dialogName': 'Dialog name',
+  'dialob.form.create.dialog.technicalName': 'Technical name',
+  'dialob.form.create.dialog.button.cancel': 'Cancel',
+  'dialob.form.create.dialog.button.createAndEdit': 'Create and edit',
+  'dialob.form.create.dialog.button.createAndClose': 'Create and close',
 
   'projects.header.spotlight.no_group': 'All projects',
   'projects.header.groupBy.repoType.dialob': 'Dialob',

@@ -7,6 +7,7 @@ import { initTable, initTabs, createTabs, DialobListTabState, DialobListState } 
 import { StyledStackItem, StyledEditDialobButton, StyledPreviewFIllButton } from './DialobListStyles';
 import { TenantEntryDescriptor } from 'descriptor-tenant';
 import { NavigationSticky, FilterByString, NavigationButtonDialobList } from '../NavigationSticky';
+import DialobCreateDialog from '../DialobCreate';
 import Context from 'context';
 
 
@@ -36,6 +37,7 @@ const DialobList: React.FC<{
   const tenants = Context.useTenants();
   const [state, setState] = React.useState<DialobListState>(initTabs([]));
   const [table, setTable] = React.useState(initTable([]));
+  const [createOpen, setCreateOpen] = React.useState(false);
 
   function handleActiveDialob(task: TenantEntryDescriptor | undefined) {
     setState(prev => prev.withActiveTask(task));
@@ -47,6 +49,10 @@ const DialobList: React.FC<{
 
   function handleOnRowsPerPageChange(event: React.ChangeEvent<HTMLInputElement>) {
     setTable((state) => state.withRowsPerPage(parseInt(event.target.value, 10)))
+  }
+
+  function handleCreateDialob() {
+    setCreateOpen(prev => !prev);
   }
 
   React.useEffect(() => {
@@ -72,6 +78,7 @@ const DialobList: React.FC<{
   const { DialobItem, DialobItemActive } = children;
 
   return (<>
+    <DialobCreateDialog open={createOpen} onClose={handleCreateDialob} />
     <Grid container>
 
       <NavigationSticky>
@@ -85,7 +92,7 @@ const DialobList: React.FC<{
         } />
         <NavigationButtonDialobList
           id='dialob.form.create'
-          onClick={() => { }}
+          onClick={handleCreateDialob}
           values={undefined}
           active={false}
           color={'rgb(80, 72, 229)'}

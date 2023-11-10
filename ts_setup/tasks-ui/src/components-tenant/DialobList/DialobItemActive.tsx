@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Stack, Typography, IconButton, Skeleton, useTheme, CircularProgress, Avatar } from '@mui/material';
+import { Box, Stack, Typography, IconButton, Skeleton, useTheme, CircularProgress, Avatar, Chip } from '@mui/material';
 import EditIcon from '@mui/icons-material/ModeEditOutlineOutlined';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import CopyAllIcon from '@mui/icons-material/CopyAll';
@@ -70,8 +70,8 @@ const DialobFormLocales: React.FC<{ entry: TenantEntryDescriptor }> = ({ entry }
 
 
   React.useEffect(() => {
-    backend.tenant.getDialobForm(entry.formName).then(locales => {
-      setLocales(locales.metadata.languages);
+    backend.tenant.getDialobForm(entry.formName).then(form => {
+      setLocales(form.metadata.languages);
       setLoading(false);
     });
 
@@ -88,6 +88,31 @@ const DialobFormLocales: React.FC<{ entry: TenantEntryDescriptor }> = ({ entry }
     {locales.length - 1 === index ? locale : locale += ', '}</Typography>)}
   </>);
 }
+
+const DialobFormLabels: React.FC<{ entry: TenantEntryDescriptor }> = ({ entry }) => {
+  const backend = Context.useBackend();
+  const [loading, setLoading] = React.useState(true);
+  const [labels, setLabels] = React.useState<string[] | undefined>();
+
+
+  React.useEffect(() => {
+    backend.tenant.getDialobForm(entry.formName).then(form => {
+      setLabels(form.metadata.labels);
+      setLoading(false);
+    });
+
+  }, [entry]);
+
+
+  if (!labels?.length) {
+    return (<Typography><FormattedMessage id='dialob.form.labels.none' /></Typography>);
+  }
+
+  return (<>{labels.map((label) => <Chip label={label} size="small" variant='outlined' sx={{ mr: 1 }} />)}
+  </>);
+}
+
+
 
 const VariableAvatar: React.FC<{ value: string }> = ({ value }) => {
   return (<Avatar sx={{ width: 15, height: 15, fontSize: '8px', backgroundColor: 'lightblue', color: 'black' }}>{value}</Avatar>)
@@ -134,7 +159,7 @@ const DialobFormVariables: React.FC<{ entry: TenantEntryDescriptor }> = ({ entry
 const DialobItemActive: React.FC<{ entry: TenantEntryDescriptor | undefined }> = ({ entry }) => {
   const [crmOpen, setCrmOpen] = React.useState(false);
   const [dialobEditOpen, setDialobEditOpen] = React.useState(false);
-  const [form, setForm] = React.useState<DialobForm>();
+  const [form, setForm] = React.useState<DialobForm | undefined>();
   const backend = Context.useBackend();
 
 
@@ -143,7 +168,9 @@ const DialobItemActive: React.FC<{ entry: TenantEntryDescriptor | undefined }> =
       backend.tenant.getDialobForm(entry.formName).then(setForm);
     }
   }, [entry]);
+  const x = form?.data;
 
+  console.log(form?.metadata.labels)
 
   function handleTaskEdit() {
     setDialobEditOpen(prev => !prev);
@@ -180,23 +207,39 @@ const DialobItemActive: React.FC<{ entry: TenantEntryDescriptor | undefined }> =
           </Stack>
         </Burger.Section>
 
-        {/* title section */}
-        <Burger.Section>
-          <StyledTitle children='dialob.form.title' />
-          <Box display='flex' alignItems='center'>
-            <Typography fontWeight='bold'>{entry.formTitle}</Typography>
-            <Box flexGrow={1} />
-          </Box>
+        {/* info section */}
+        <Burger.Section loadingValue={form}>
+          <StyledTitle children='dialob.form.info' />
+          <Stack>
+            <Box display='flex'>
+              <Typography fontWeight='bolder'><FormattedMessage id='dialob.form.title' /></Typography>
+              <Box flexGrow={1} />
+              <Typography>{entry.formTitle}</Typography>
+            </Box>
+
+            <Box display='flex'>
+              <Typography fontWeight='bolder'><FormattedMessage id='dialob.form.technicalName' /></Typography>
+              <Box flexGrow={1} />
+              <Typography>{entry.formName}</Typography>
+            </Box>
+
+            <Box display='flex' alignItems='center'>
+              <Typography fontWeight='bolder'><FormattedMessage id='dialob.form.id' /></Typography>
+              <Box flexGrow={1} />
+              <Typography>{form?._id}</Typography>
+            </Box>
+
+          </Stack>
         </Burger.Section>
 
-        {/* technical name section */}
+        {/* labels section */}
         <Burger.Section>
-          <StyledTitle children='dialob.form.technicalName' />
-          <Typography>{entry.formName}</Typography>
+          <StyledTitle children='dialob.form.labels' />
+          <DialobFormLabels entry={entry} />
         </Burger.Section>
 
         {/* language section */}
-        <Burger.Section>
+        <Burger.Section loadingValue={entry}>
           <StyledTitle children='dialob.form.languages' />
           <DialobFormLocales entry={entry} />
         </Burger.Section>
