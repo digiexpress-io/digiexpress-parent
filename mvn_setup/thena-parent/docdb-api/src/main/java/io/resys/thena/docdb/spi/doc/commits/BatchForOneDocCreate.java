@@ -26,7 +26,7 @@ import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class CreateDocDbBatchForOne {
+public class BatchForOneDocCreate {
 
   private final String repoId;
   private final String docType;
@@ -40,11 +40,11 @@ public class CreateDocDbBatchForOne {
   private JsonObject appendLogs;
   private JsonObject appendMeta;
 
-  public CreateDocDbBatchForOne docId(String docId) {           this.docId = docId; return this; }
-  public CreateDocDbBatchForOne externalId(String externalId) { this.externalId = externalId; return this; }
-  public CreateDocDbBatchForOne log(JsonObject log) {           this.appendLogs = log; return this; }
-  public CreateDocDbBatchForOne meta(JsonObject meta) {         this.appendMeta = meta; return this; }
-  public CreateDocDbBatchForOne append(JsonObject blob) {       this.appendBlobs = RepoAssert.notNull(blob, () -> "append can't be empty!"); return this; }
+  public BatchForOneDocCreate docId(String docId) {           this.docId = docId; return this; }
+  public BatchForOneDocCreate externalId(String externalId) { this.externalId = externalId; return this; }
+  public BatchForOneDocCreate log(JsonObject log) {           this.appendLogs = log; return this; }
+  public BatchForOneDocCreate meta(JsonObject meta) {         this.appendMeta = meta; return this; }
+  public BatchForOneDocCreate append(JsonObject blob) {       this.appendBlobs = RepoAssert.notNull(blob, () -> "append can't be empty!"); return this; }
   
   
   public DocDbBatchForOne create() {
@@ -55,11 +55,10 @@ public class CreateDocDbBatchForOne {
     RepoAssert.notEmpty(docType, () -> "docType can't be empty!");
     RepoAssert.notNull(appendBlobs, () -> "Nothing to commit, no content!");
     
-    final var branchId = Optional.ofNullable(appendBlobs.getString("id")).orElseGet(() -> OidUtils.gen()); 
-    
-    
+    final var docId = Optional.ofNullable(appendBlobs.getString("id")).orElseGet(() -> OidUtils.gen());
+    final var branchId = OidUtils.gen(); 
     final var doc = ImmutableDoc.builder()
-        .id(Optional.ofNullable(this.docId == null || this.docId.trim().isEmpty() ? null : this.docId).orElseGet(() -> OidUtils.gen()))
+        .id(docId)
         .externalId(Optional.ofNullable(this.externalId == null || this.externalId.trim().isEmpty() ? null : this.externalId).orElse(OidUtils.gen()))
         .type(docType)
         .status(DocStatus.IN_FORCE)

@@ -130,7 +130,7 @@ public class ModifyOneDocImpl implements ModifyOneDoc {
       .doc(doc)
       .addMessages(rsp.getLog())
       .addAllMessages(rsp.getMessages())
-      .status(CreateDocDbBatchForOne.mapStatus(rsp.getStatus()))
+      .status(BatchForOneDocCreate.mapStatus(rsp.getStatus()))
       .build());
   }
   

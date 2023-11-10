@@ -39,12 +39,14 @@ public class CreateOneDocBranchImpl implements CreateOneDocBranch {
   private JsonObject appendBlobs = null;
   private JsonObject appendLogs = null;
 
+  private String docId;
   private String repoId;
   private String branchName;
   private String branchFrom;
   private String author;
   private String message;
 
+  @Override public CreateOneDocBranchImpl docId(String docId) { this.docId = RepoAssert.notEmpty(docId,               () -> "docId can't be empty!"); return this; }
   @Override public CreateOneDocBranchImpl repoId(String repoId) { this.repoId = RepoAssert.notEmpty(repoId,               () -> "repoId can't be empty!"); return this; }
   @Override public CreateOneDocBranchImpl branchName(String branchName) { this.branchName = RepoAssert.isName(branchName, () -> "branchName has invalid charecters!"); return this; }
   @Override public CreateOneDocBranchImpl append(JsonObject blob) { this.appendBlobs = RepoAssert.notNull(blob,           () -> "blob can't be empty!"); return this; }
@@ -57,12 +59,15 @@ public class CreateOneDocBranchImpl implements CreateOneDocBranch {
   public Uni<OneDocEnvelope> build() {
     RepoAssert.notEmpty(branchName, () -> "branchName can't be empty!");
     RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
+    RepoAssert.notEmpty(docId, () -> "docId can't be empty!");
     RepoAssert.notEmpty(author, () -> "author can't be empty!");
     RepoAssert.notEmpty(branchFrom, () -> "branchFrom can't be empty!");
     RepoAssert.notEmpty(message, () -> "message can't be empty!");
     RepoAssert.isTrue(appendBlobs != null, () -> "Nothing to commit, no content!");
+    
     final var crit = ImmutableDocBranchLockCriteria.builder()
-        .branchId(branchFrom)
+        .branchName(branchFrom)
+        .docId(docId)
         .build();
     
     return this.state.toDocState().withTransaction(repoId, tx -> tx.query().branches().getLock(crit).onItem().transformToUni(lock -> {
@@ -100,7 +105,7 @@ public class CreateOneDocBranchImpl implements CreateOneDocBranch {
   
   
   private Uni<OneDocEnvelope> doInLock(DocBranchLock lock, DocRepo tx) {  
-    final var branchId = Optional.ofNullable(appendBlobs.getString("id")).orElse(OidUtils.gen());
+    final var branchId = OidUtils.gen();
     final var doc = lock.getDoc().get();
     
     final var template = ImmutableDocCommit.builder()
@@ -174,7 +179,7 @@ public class CreateOneDocBranchImpl implements CreateOneDocBranch {
         .commit(rsp.getDocCommit().iterator().next())
         .addMessages(rsp.getLog())
         .addAllMessages(rsp.getMessages())
-        .status(CreateDocDbBatchForOne.mapStatus(rsp.getStatus()))
+        .status(BatchForOneDocCreate.mapStatus(rsp.getStatus()))
         .build());
   }
 

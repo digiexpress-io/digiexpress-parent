@@ -52,7 +52,7 @@ public class CreateOneDocImpl implements CreateOneDoc {
   }
   
   private Uni<OneDocEnvelope> doInTx(DocRepo tx) {  
-    final var batch = new CreateDocDbBatchForOne(tx.getRepo().getId(), docType, author, message, branchName)
+    final var batch = new BatchForOneDocCreate(tx.getRepo().getId(), docType, author, message, branchName)
         .docId(docId)
         .externalId(externalId)
         .log(appendLogs)
@@ -68,7 +68,7 @@ public class CreateOneDocImpl implements CreateOneDoc {
         .branch(batch.getDocBranch().iterator().next())
         .addMessages(rsp.getLog())
         .addAllMessages(rsp.getMessages())
-        .status(CreateDocDbBatchForOne.mapStatus(rsp.getStatus()))
+        .status(BatchForOneDocCreate.mapStatus(rsp.getStatus()))
         .build());
   }
 

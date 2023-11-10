@@ -8,6 +8,7 @@ import org.immutables.value.Value;
 
 import io.resys.thena.docdb.api.actions.CommitActions.CommitResultStatus;
 import io.resys.thena.docdb.api.actions.CommitActions.JsonObjectMerge;
+import io.resys.thena.docdb.api.actions.DocCommitActions.AddItemToModifyDocBranch;
 import io.resys.thena.docdb.api.models.Message;
 import io.resys.thena.docdb.api.models.ThenaDocObject.Doc;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranch;
@@ -95,7 +96,8 @@ public interface DocCommitActions {
   
   interface CreateOneDocBranch {
     CreateOneDocBranch repoId(String repoId);
-    CreateOneDocBranch branchFrom(@Nullable String branchIdFromWhatToCreateABranch);  // document id for what to create a branch
+    CreateOneDocBranch docId(String docId);
+    CreateOneDocBranch branchFrom(@Nullable String branchIdFromWhatToCreateABranch);  // branch name from what to create the branch
     CreateOneDocBranch branchName(String branchName);              // must be provided by the user, new branch
     CreateOneDocBranch append(@Nullable JsonObject doc);           // when empty source branch content
     CreateOneDocBranch author(String author);
@@ -106,7 +108,8 @@ public interface DocCommitActions {
   
   interface ModifyOneDocBranch {
     ModifyOneDocBranch repoId(String repoId);
-    ModifyOneDocBranch branchId(String branchId);
+    ModifyOneDocBranch docId(String docId);
+    ModifyOneDocBranch branchName(String branchName);
     ModifyOneDocBranch parent(String versionToModify);
     ModifyOneDocBranch parentIsLatest();
 
@@ -122,22 +125,23 @@ public interface DocCommitActions {
   
   interface ModifyManyDocBranches {
     ModifyManyDocBranches repoId(String repoId);
-
     ModifyManyDocBranches author(String author);
     ModifyManyDocBranches message(String message);
+    ModifyManyDocBranches branchName(String branchName);
     AddItemToModifyDocBranch item();
     Uni<ManyDocsEnvelope> build();
   }
   
   interface AddItemToModifyDocBranch {
-    AddItemToModifyDocBranch branchId(String branchId);
+    AddItemToModifyDocBranch branchName(String branchName);
     AddItemToModifyDocBranch parent(String versionToModify);
     AddItemToModifyDocBranch parentIsLatest();
-
+    AddItemToModifyDocBranch message(String message);
     AddItemToModifyDocBranch append(JsonObject doc);
     AddItemToModifyDocBranch merge(JsonObjectMerge doc);
     AddItemToModifyDocBranch log(JsonObject doc);
     AddItemToModifyDocBranch remove(); // deletes the branch
+    AddItemToModifyDocBranch docId(String docId);
     
     ModifyManyDocBranches next();
   }

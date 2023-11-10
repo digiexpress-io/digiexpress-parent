@@ -101,7 +101,7 @@ public class UpdateProjectsVisitor implements DocObjectsVisitor<Uni<List<Project
       final var commands = commandsByProjectId.get(start.getId());
       final var updated = new ProjectCommandVisitor(start, ctx.getConfig()).visitTransaction(commands);
       this.commitBuilder.item()
-        .branchId(updated.getId())
+        .branchName(updated.getId())
         .append(JsonObject.mapFrom(updated));
       return updated;
     });

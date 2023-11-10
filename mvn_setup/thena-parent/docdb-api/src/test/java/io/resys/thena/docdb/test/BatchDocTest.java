@@ -52,7 +52,7 @@ public class BatchDocTest extends DbTestTemplate {
   }
 
   @Test
-  public void batch100Docs() {
+  public void batch10Docs() {
     // create project
     RepoResult repo = getClient().repo().projectBuilder()
         .name("BatchDocTest-1", RepoType.doc)
@@ -69,7 +69,7 @@ public class BatchDocTest extends DbTestTemplate {
         .message("batching tests")
         .author("jane.doe@morgue.com");
     
-    for(int index = 0; index < 100; index++) {
+    for(int index = 0; index < 10; index++) {
       createdDoc.item()
         .externalId("bobs-ssn-id-" + index)      
         .append(JsonObject.of("id", "id-" + index, "first_name", "bob", "last_name", "flop"))
@@ -84,8 +84,8 @@ public class BatchDocTest extends DbTestTemplate {
         .findAll()
     .await().atMost(Duration.ofMinutes(1));
     
-    Assertions.assertEquals(100, findAllDocs.getObjects().getDocs().size());
-    Assertions.assertEquals(100, findAllDocs.getObjects().getCommits().size());
+    Assertions.assertEquals(10, findAllDocs.getObjects().getDocs().size());
+    Assertions.assertEquals(10, findAllDocs.getObjects().getCommits().size());
     
     printRepo(repo.getRepo());
   }

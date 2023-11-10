@@ -127,7 +127,7 @@ public class DeleteAllProjectsVisitor implements DocObjectsVisitor<Uni<List<Proj
             .build())
         .build();
     final var json = JsonObject.mapFrom(nextVersion);
-    archiveCommand.item().branchId(projectId).append(json).next();
+    archiveCommand.item().branchName(projectId).append(json).next();
     removeCommand.item().branchId(projectId).remove();
     return nextVersion;
   }

@@ -58,7 +58,9 @@ public interface DocDbQueries {
   interface DocBranchQuery {
     Multi<DocBranch> findAll();
     Uni<DocBranchLock> getLock(DocBranchLockCriteria criteria);
+    Uni<List<DocBranchLock>> getLocks(List<DocBranchLockCriteria> criteria);
     Uni<DocLock> getLock(DocLockCriteria criteria);
+    
     Uni<DocBranch> getById(String branchId);
   }
 
@@ -77,7 +79,8 @@ public interface DocDbQueries {
 
   @Value.Immutable
   interface DocBranchLockCriteria {
-    String getBranchId();
+    String getBranchName();
+    String getDocId();
   }
   @Value.Immutable
   interface DocLockCriteria {

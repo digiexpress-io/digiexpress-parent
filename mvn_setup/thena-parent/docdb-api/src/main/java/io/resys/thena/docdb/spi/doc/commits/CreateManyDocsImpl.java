@@ -44,7 +44,7 @@ public class CreateManyDocsImpl implements CreateManyDocs {
     RepoAssert.isNull(lasItemBuilder, () -> "previous item() method chain left unfinished, next() method must be called to finish item()!");
     
     final var parent = this;
-    final var oneDoc = new CreateDocDbBatchForOne(repoId, docType, author, message, branchName);
+    final var oneDoc = new BatchForOneDocCreate(repoId, docType, author, message, branchName);
     
     lasItemBuilder = new AddItemToCreateDoc() {
       @Override public AddItemToCreateDoc externalId(String externalId) { oneDoc.externalId(externalId); return this;}
@@ -109,7 +109,7 @@ public class CreateManyDocsImpl implements CreateManyDocs {
             .flatMap(i -> i.getMessages().stream())
             .collect(Collectors.toList()))
         
-        .status(CreateDocDbBatchForOne.mapStatus(rsp.getStatus()))
+        .status(BatchForOneDocCreate.mapStatus(rsp.getStatus()))
         .build());
   }
 }

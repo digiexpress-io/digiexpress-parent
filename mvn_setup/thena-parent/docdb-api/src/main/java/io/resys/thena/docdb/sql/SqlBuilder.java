@@ -111,6 +111,7 @@ public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
     SqlTupleList insertAll(Collection<DocBranch> docs);
     SqlTupleList updateAll(List<DocBranch> doc);
     SqlTuple getLock(DocBranchLockCriteria crit);
+    SqlTuple getLocks(List<DocBranchLockCriteria> crit);
     SqlTuple getLock(DocLockCriteria crit);
     Sql findAll();
   }

@@ -77,8 +77,9 @@ public class SimpleDocTest extends DbTestTemplate {
     // branch 2
     final var branchDoc = getClient().doc().commit()
       .branchOneDoc()
+      .docId(createdDoc.getDoc().getId())
       .repoId(repo.getRepo().getId())
-      .branchFrom(createdDoc.getBranch().getId())
+      .branchFrom(createdDoc.getBranch().getBranchName())
       .branchName("dev")
       .append(JsonObject.of("first_name", "bob", "last_name", "flop-2"))
       .message("created branch entry")
@@ -99,7 +100,8 @@ public class SimpleDocTest extends DbTestTemplate {
     
     // update dev branch with new data
     getClient().doc().commit().modifyOneBranch()
-      .branchId(branchDoc.getBranch().getId())
+      .docId(branchDoc.getDoc().getId())
+      .branchName(branchDoc.getBranch().getBranchName())
       .append(JsonObject.of("branch new content", "something in here", "last_name", "used to be -> flop-2"))
       .repoId(repo.getRepo().getId())
       .author("jane.doe@morgue.com")
