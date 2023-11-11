@@ -1,0 +1,228 @@
+
+Docs
+  - 1: bobs-ssn-id-0
+  - 2: bobs-ssn-id-1
+  - 3: bobs-ssn-id-2
+  - 4: bobs-ssn-id-3
+  - 5: bobs-ssn-id-4
+  - 6: bobs-ssn-id-5
+  - 7: bobs-ssn-id-6
+  - 8: bobs-ssn-id-7
+  - 9: bobs-ssn-id-8
+  - 10: bobs-ssn-id-9
+
+Branches
+  - branch name: main/11
+    doc id: 1
+    commit id: 12
+    {"id":"id-0","last_name":"flop","first_name":"bob","added new field":"super cool field"}
+  - branch name: main/13
+    doc id: 2
+    commit id: 14
+    {"id":"id-1","last_name":"flop","first_name":"bob","added new field":"super cool field"}
+  - branch name: main/15
+    doc id: 3
+    commit id: 16
+    {"id":"id-2","last_name":"flop","first_name":"bob","added new field":"super cool field"}
+  - branch name: main/17
+    doc id: 4
+    commit id: 18
+    {"id":"id-3","last_name":"flop","first_name":"bob","added new field":"super cool field"}
+  - branch name: main/19
+    doc id: 5
+    commit id: 20
+    {"id":"id-4","last_name":"flop","first_name":"bob","added new field":"super cool field"}
+  - branch name: main/21
+    doc id: 6
+    commit id: 22
+    {"id":"id-5","last_name":"flop","first_name":"bob","added new field":"super cool field"}
+  - branch name: main/23
+    doc id: 7
+    commit id: 24
+    {"id":"id-6","last_name":"flop","first_name":"bob","added new field":"super cool field"}
+  - branch name: main/25
+    doc id: 8
+    commit id: 26
+    {"id":"id-7","last_name":"flop","first_name":"bob","added new field":"super cool field"}
+  - branch name: main/27
+    doc id: 9
+    commit id: 28
+    {"id":"id-8","last_name":"flop","first_name":"bob","added new field":"super cool field"}
+  - branch name: main/29
+    doc id: 10
+    commit id: 30
+    {"id":"id-9","last_name":"flop","first_name":"bob","added new field":"super cool field"}
+
+Commits
+  - id: 31
+    doc id: 1, branch id: 11, parent: 32, message: batching tests, author: jane.doe@morgue.com
+  - id: 33
+    doc id: 2, branch id: 13, parent: 32, message: batching tests, author: jane.doe@morgue.com
+  - id: 34
+    doc id: 3, branch id: 15, parent: 32, message: batching tests, author: jane.doe@morgue.com
+  - id: 35
+    doc id: 4, branch id: 17, parent: 32, message: batching tests, author: jane.doe@morgue.com
+  - id: 36
+    doc id: 5, branch id: 19, parent: 32, message: batching tests, author: jane.doe@morgue.com
+  - id: 37
+    doc id: 6, branch id: 21, parent: 32, message: batching tests, author: jane.doe@morgue.com
+  - id: 38
+    doc id: 7, branch id: 23, parent: 32, message: batching tests, author: jane.doe@morgue.com
+  - id: 39
+    doc id: 8, branch id: 25, parent: 32, message: batching tests, author: jane.doe@morgue.com
+  - id: 40
+    doc id: 9, branch id: 27, parent: 32, message: batching tests, author: jane.doe@morgue.com
+  - id: 41
+    doc id: 10, branch id: 29, parent: 32, message: batching tests, author: jane.doe@morgue.com
+  - id: 42
+    doc id: 1, branch id: 11, parent: 31, message: edit dev branch, author: jane.doe@morgue.com
+  - id: 43
+    doc id: 2, branch id: 13, parent: 33, message: edit dev branch, author: jane.doe@morgue.com
+  - id: 44
+    doc id: 3, branch id: 15, parent: 34, message: edit dev branch, author: jane.doe@morgue.com
+  - id: 45
+    doc id: 4, branch id: 17, parent: 35, message: edit dev branch, author: jane.doe@morgue.com
+  - id: 46
+    doc id: 5, branch id: 19, parent: 36, message: edit dev branch, author: jane.doe@morgue.com
+  - id: 47
+    doc id: 6, branch id: 21, parent: 37, message: edit dev branch, author: jane.doe@morgue.com
+  - id: 48
+    doc id: 7, branch id: 23, parent: 38, message: edit dev branch, author: jane.doe@morgue.com
+  - id: 49
+    doc id: 8, branch id: 25, parent: 39, message: edit dev branch, author: jane.doe@morgue.com
+  - id: 50
+    doc id: 9, branch id: 27, parent: 40, message: edit dev branch, author: jane.doe@morgue.com
+  - id: 51
+    doc id: 10, branch id: 29, parent: 41, message: edit dev branch, author: jane.doe@morgue.com
+  - id: 52
+    doc id: 1, branch id: 11, parent: 42, message: edit dev branch, author: jane.doe@morgue.com
+  - id: 12
+    doc id: 1, branch id: 11, parent: 31, message: edit dev branch, author: jane.doe@morgue.com
+  - id: 53
+    doc id: 2, branch id: 13, parent: 43, message: edit dev branch, author: jane.doe@morgue.com
+  - id: 14
+    doc id: 2, branch id: 13, parent: 33, message: edit dev branch, author: jane.doe@morgue.com
+  - id: 54
+    doc id: 3, branch id: 15, parent: 44, message: edit dev branch, author: jane.doe@morgue.com
+  - id: 16
+    doc id: 3, branch id: 15, parent: 34, message: edit dev branch, author: jane.doe@morgue.com
+  - id: 55
+    doc id: 4, branch id: 17, parent: 45, message: edit dev branch, author: jane.doe@morgue.com
+  - id: 18
+    doc id: 4, branch id: 17, parent: 35, message: edit dev branch, author: jane.doe@morgue.com
+  - id: 56
+    doc id: 5, branch id: 19, parent: 46, message: edit dev branch, author: jane.doe@morgue.com
+  - id: 20
+    doc id: 5, branch id: 19, parent: 36, message: edit dev branch, author: jane.doe@morgue.com
+  - id: 57
+    doc id: 6, branch id: 21, parent: 47, message: edit dev branch, author: jane.doe@morgue.com
+  - id: 22
+    doc id: 6, branch id: 21, parent: 37, message: edit dev branch, author: jane.doe@morgue.com
+  - id: 58
+    doc id: 7, branch id: 23, parent: 48, message: edit dev branch, author: jane.doe@morgue.com
+  - id: 24
+    doc id: 7, branch id: 23, parent: 38, message: edit dev branch, author: jane.doe@morgue.com
+  - id: 59
+    doc id: 8, branch id: 25, parent: 49, message: edit dev branch, author: jane.doe@morgue.com
+  - id: 26
+    doc id: 8, branch id: 25, parent: 39, message: edit dev branch, author: jane.doe@morgue.com
+  - id: 60
+    doc id: 9, branch id: 27, parent: 50, message: edit dev branch, author: jane.doe@morgue.com
+  - id: 28
+    doc id: 9, branch id: 27, parent: 40, message: edit dev branch, author: jane.doe@morgue.com
+  - id: 61
+    doc id: 10, branch id: 29, parent: 51, message: edit dev branch, author: jane.doe@morgue.com
+  - id: 30
+    doc id: 10, branch id: 29, parent: 41, message: edit dev branch, author: jane.doe@morgue.com
+
+Logs
+  - id: 62
+    doc id: 31
+    log value: {"some_cool_command":"create_customer"}
+  - id: 63
+    doc id: 33
+    log value: {"some_cool_command":"create_customer"}
+  - id: 64
+    doc id: 34
+    log value: {"some_cool_command":"create_customer"}
+  - id: 65
+    doc id: 35
+    log value: {"some_cool_command":"create_customer"}
+  - id: 66
+    doc id: 36
+    log value: {"some_cool_command":"create_customer"}
+  - id: 67
+    doc id: 37
+    log value: {"some_cool_command":"create_customer"}
+  - id: 68
+    doc id: 38
+    log value: {"some_cool_command":"create_customer"}
+  - id: 69
+    doc id: 39
+    log value: {"some_cool_command":"create_customer"}
+  - id: 70
+    doc id: 40
+    log value: {"some_cool_command":"create_customer"}
+  - id: 71
+    doc id: 41
+    log value: {"some_cool_command":"create_customer"}
+  - id: 72
+    doc id: 52
+    log value: {"logging":"added meta"}
+  - id: 73
+    doc id: 12
+    log value: {"logging":"added meta"}
+  - id: 74
+    doc id: 53
+    log value: {"logging":"added meta"}
+  - id: 75
+    doc id: 14
+    log value: {"logging":"added meta"}
+  - id: 76
+    doc id: 54
+    log value: {"logging":"added meta"}
+  - id: 77
+    doc id: 16
+    log value: {"logging":"added meta"}
+  - id: 78
+    doc id: 55
+    log value: {"logging":"added meta"}
+  - id: 79
+    doc id: 18
+    log value: {"logging":"added meta"}
+  - id: 80
+    doc id: 56
+    log value: {"logging":"added meta"}
+  - id: 81
+    doc id: 20
+    log value: {"logging":"added meta"}
+  - id: 82
+    doc id: 57
+    log value: {"logging":"added meta"}
+  - id: 83
+    doc id: 22
+    log value: {"logging":"added meta"}
+  - id: 84
+    doc id: 58
+    log value: {"logging":"added meta"}
+  - id: 85
+    doc id: 24
+    log value: {"logging":"added meta"}
+  - id: 86
+    doc id: 59
+    log value: {"logging":"added meta"}
+  - id: 87
+    doc id: 26
+    log value: {"logging":"added meta"}
+  - id: 88
+    doc id: 60
+    log value: {"logging":"added meta"}
+  - id: 89
+    doc id: 28
+    log value: {"logging":"added meta"}
+  - id: 90
+    doc id: 61
+    log value: {"logging":"added meta"}
+  - id: 91
+    doc id: 30
+    log value: {"logging":"added meta"}

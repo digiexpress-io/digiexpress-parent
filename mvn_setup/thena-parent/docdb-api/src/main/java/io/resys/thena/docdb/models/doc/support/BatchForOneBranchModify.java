@@ -5,8 +5,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import io.resys.thena.docdb.api.actions.ImmutableManyDocsEnvelope;
 import io.resys.thena.docdb.api.actions.CommitActions.JsonObjectMerge;
+import io.resys.thena.docdb.api.actions.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.docdb.api.models.ImmutableDocBranch;
 import io.resys.thena.docdb.api.models.ImmutableDocCommit;
 import io.resys.thena.docdb.api.models.ImmutableDocLog;
@@ -14,6 +17,7 @@ import io.resys.thena.docdb.api.models.ImmutableMessage;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranchLock;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocLog;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocStatus;
+import io.resys.thena.docdb.models.doc.DocInserts.DocBatchForMany;
 import io.resys.thena.docdb.models.doc.DocInserts.DocBatchForOne;
 import io.resys.thena.docdb.models.doc.DocState.DocRepo;
 import io.resys.thena.docdb.models.doc.ImmutableDocBatchForOne;
@@ -121,4 +125,27 @@ public class BatchForOneBranchModify {
       .build();
   }
   
+  public static ManyDocsEnvelope mapTo(DocBatchForMany rsp) {
+    return ImmutableManyDocsEnvelope.builder()
+    .repoId(rsp.getRepo().getId())
+    .doc(rsp.getItems().stream()
+        .filter(i -> i.getDoc().isPresent())
+        .map(i -> i.getDoc().get())
+        .collect(Collectors.toList()))
+    .commit(rsp.getItems().stream()
+        .flatMap(i -> i.getDocCommit().stream())
+        .collect(Collectors.toList()))
+    .branch(rsp.getItems().stream()
+        .flatMap(i -> i.getDocBranch().stream())
+        .collect(Collectors.toList()))
+    .addAllMessages(rsp.getItems().stream()
+        .map(i -> i.getLog())
+        .collect(Collectors.toList()))
+    .addAllMessages(rsp.getItems().stream()
+        .flatMap(i -> i.getMessages().stream())
+        .collect(Collectors.toList()))
+    
+    .status(BatchForOneDocCreate.mapStatus(rsp.getStatus()))
+    .build();
+  }
 }

@@ -84,9 +84,10 @@ public interface DocCommitActions {
     Uni<ManyDocsEnvelope> build();
   }
   interface AddItemToModifyDoc {
-    AddItemToModifyDoc branchId(String branchId);
+    AddItemToModifyDoc docId(String branchId);
     AddItemToModifyDoc meta(@Nullable JsonObject docMeta);
     AddItemToModifyDoc log(@Nullable JsonObject doc);
+    AddItemToModifyDoc message(String message);
     AddItemToModifyDoc remove();
     ModifyManyDocs next();
   }

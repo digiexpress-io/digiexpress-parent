@@ -110,9 +110,10 @@ public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
     SqlTuple insertOne(DocBranch doc);
     SqlTupleList insertAll(Collection<DocBranch> docs);
     SqlTupleList updateAll(List<DocBranch> doc);
-    SqlTuple getLock(DocBranchLockCriteria crit);
-    SqlTuple getLocks(List<DocBranchLockCriteria> crit);
-    SqlTuple getLock(DocLockCriteria crit);
+    SqlTuple getBranchLock(DocBranchLockCriteria crit);
+    SqlTuple getBranchLocks(List<DocBranchLockCriteria> crit);
+    SqlTuple getDocLock(DocLockCriteria crit);
+    SqlTuple getDocLocks(List<DocLockCriteria> crit);
     Sql findAll();
   }
   

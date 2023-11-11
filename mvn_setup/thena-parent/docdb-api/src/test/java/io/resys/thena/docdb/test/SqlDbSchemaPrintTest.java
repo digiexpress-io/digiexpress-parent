@@ -62,7 +62,7 @@ public class SqlDbSchemaPrintTest {
     
     final var actual = IOUtils.readLines(new ByteArrayInputStream(schema.getBytes(UTF_8)), UTF_8);    
     final var expected = IOUtils.readLines(expected_stream, UTF_8);
-    Assertions.assertLinesMatch(expected, actual);
+    Assertions.assertLinesMatch(expected, actual, schema);
     
   }
 }

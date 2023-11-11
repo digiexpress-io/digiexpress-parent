@@ -2,7 +2,9 @@ package io.resys.thena.docdb.models.doc.store.sql.queries;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import io.resys.thena.docdb.api.LogConstants;
 import io.resys.thena.docdb.api.models.ImmutableDocLock;
@@ -71,8 +73,8 @@ public class DocBranchQuerySqlPool implements DocBranchQuery {
   }
   
   @Override
-  public Uni<DocBranchLock> getLock(DocBranchLockCriteria crit) {
-    final var sql = sqlBuilder.docBranches().getLock(crit);
+  public Uni<DocBranchLock> getBranchLock(DocBranchLockCriteria crit) {
+    final var sql = sqlBuilder.docBranches().getBranchLock(crit);
     if(log.isDebugEnabled()) {
       log.debug("DocBranch: {} getLock for ONE branch query, with props: {} \r\n{}",
           DocCommitQuerySqlPool.class,
@@ -94,8 +96,8 @@ public class DocBranchQuerySqlPool implements DocBranchQuery {
         .onFailure().invoke(e -> errorHandler.deadEnd("Can't lock branch: '" + crit.getDocId() + "/" + crit.getBranchName() + "'!", e));
   }
   @Override
-  public Uni<DocLock> getLock(DocLockCriteria crit) {
-    final var sql = sqlBuilder.docBranches().getLock(crit);
+  public Uni<DocLock> getDocLock(DocLockCriteria crit) {
+    final var sql = sqlBuilder.docBranches().getDocLock(crit);
     if(log.isDebugEnabled()) {
       log.debug("DocBranch: {} getLock for ALL doc branches query, with props: {} \r\n{}",
           DocCommitQuerySqlPool.class,
@@ -127,8 +129,8 @@ public class DocBranchQuerySqlPool implements DocBranchQuery {
         .onFailure().invoke(e -> errorHandler.deadEnd("Can't lock branches for doc: '" + crit.getDocId() + "'!", e));
   }
   @Override
-  public Uni<List<DocBranchLock>> getLocks(List<DocBranchLockCriteria> crit) {
-    final var sql = sqlBuilder.docBranches().getLocks(crit);
+  public Uni<List<DocBranchLock>> getBranchLocks(List<DocBranchLockCriteria> crit) {
+    final var sql = sqlBuilder.docBranches().getBranchLocks(crit);
     if(log.isDebugEnabled()) {
       log.debug("DocBranch: {} getLocks for branches query, with props: {} \r\n{}",
           DocCommitQuerySqlPool.class,
@@ -151,6 +153,45 @@ public class DocBranchQuerySqlPool implements DocBranchQuery {
         })
         .onFailure().invoke(e -> {
           final var source = crit.stream().map(i -> i.getDocId() + "/" + i.getBranchName()).toList();
+          errorHandler.deadEnd("Can't lock branch for docs: '" + String.join(", ", source) + "'!", e);
+        });
+  }
+  
+  @Override
+  public Uni<List<DocLock>> getDocLocks(List<DocLockCriteria> crit) {
+    final var sql = sqlBuilder.docBranches().getDocLocks(crit);
+    if(log.isDebugEnabled()) {
+      log.debug("Doc: {} getLocks for ALL branches query, with props: {} \r\n{}",
+          DocCommitQuerySqlPool.class,
+          sql.getProps().deepToString(),
+          sql.getValue());
+    }
+    
+    return wrapper.getClient().preparedQuery(sql.getValue())
+        .mapping(row -> sqlMapper.docBranchLock(row))
+        .execute(sql.getProps())
+        .onItem()
+        .transform((RowSet<DocBranchLock> rowset) -> {
+          final var result = new HashMap<String, ImmutableDocLock.Builder>();
+          final var it = rowset.iterator();
+          while(it.hasNext()) {
+            final var lock = it.next();
+            if(lock.getDoc().isEmpty()) {
+              continue;
+            }
+            final var docId = lock.getDoc().get().getId();
+            if(!result.containsKey(docId)) {
+              result.put(docId, ImmutableDocLock.builder().doc(lock.getDoc()).status(CommitLockStatus.LOCK_TAKEN));
+            }
+            result.get(docId).addBranches(lock);
+          }
+          
+          return result.values().stream()
+              .map(b -> (DocLock) b.build())
+              .collect(Collectors.toList());
+        })
+        .onFailure().invoke(e -> {
+          final var source = crit.stream().map(i -> i.getDocId()).toList();
           errorHandler.deadEnd("Can't lock branch for docs: '" + String.join(", ", source) + "'!", e);
         });
   }

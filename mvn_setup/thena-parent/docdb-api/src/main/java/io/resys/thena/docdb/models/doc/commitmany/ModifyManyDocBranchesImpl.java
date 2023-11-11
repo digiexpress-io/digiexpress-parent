@@ -13,13 +13,11 @@ import io.resys.thena.docdb.api.actions.DocCommitActions.ModifyManyDocBranches;
 import io.resys.thena.docdb.api.actions.ImmutableManyDocsEnvelope;
 import io.resys.thena.docdb.api.models.ImmutableMessage;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranchLock;
-import io.resys.thena.docdb.models.doc.DocInserts.DocBatchForMany;
 import io.resys.thena.docdb.models.doc.DocQueries.DocBranchLockCriteria;
 import io.resys.thena.docdb.models.doc.DocState.DocRepo;
 import io.resys.thena.docdb.models.doc.ImmutableDocBatchForMany;
 import io.resys.thena.docdb.models.doc.ImmutableDocBranchLockCriteria;
 import io.resys.thena.docdb.models.doc.support.BatchForOneBranchModify;
-import io.resys.thena.docdb.models.doc.support.BatchForOneDocCreate;
 import io.resys.thena.docdb.models.git.GitInserts.BatchStatus;
 import io.resys.thena.docdb.spi.DbState;
 import io.resys.thena.docdb.support.RepoAssert;
@@ -105,7 +103,7 @@ public class ModifyManyDocBranchesImpl implements ModifyManyDocBranches {
       .collect(Collectors.toList());
     
     
-    return this.state.toDocState().withTransaction(repoId, tx -> tx.query().branches().getLocks(crit).onItem().transformToUni(locks -> {
+    return this.state.toDocState().withTransaction(repoId, tx -> tx.query().branches().getBranchLocks(crit).onItem().transformToUni(locks -> {
       final ManyDocsEnvelope validation = validateRepo(locks, items);
       if(validation != null) {
         return Uni.createFrom().item(validation);
@@ -204,33 +202,11 @@ public class ModifyManyDocBranchesImpl implements ModifyManyDocBranches {
             .build())
         .build();
     if(changes.getStatus() != BatchStatus.OK) {
-      return Uni.createFrom().item(mapTo(changes));
+      return Uni.createFrom().item(BatchForOneBranchModify.mapTo(changes));
     }
     
-    return tx.insert().batchMany(changes).onItem().transform(this::mapTo);
+    return tx.insert().batchMany(changes).onItem().transform(BatchForOneBranchModify::mapTo);
   }
   
-  private ManyDocsEnvelope mapTo(DocBatchForMany rsp) {
-    return ImmutableManyDocsEnvelope.builder()
-    .repoId(repoId)
-    .doc(rsp.getItems().stream()
-        .filter(i -> i.getDoc().isPresent())
-        .map(i -> i.getDoc().get())
-        .collect(Collectors.toList()))
-    .commit(rsp.getItems().stream()
-        .flatMap(i -> i.getDocCommit().stream())
-        .collect(Collectors.toList()))
-    .branch(rsp.getItems().stream()
-        .flatMap(i -> i.getDocBranch().stream())
-        .collect(Collectors.toList()))
-    .addAllMessages(rsp.getItems().stream()
-        .map(i -> i.getLog())
-        .collect(Collectors.toList()))
-    .addAllMessages(rsp.getItems().stream()
-        .flatMap(i -> i.getMessages().stream())
-        .collect(Collectors.toList()))
-    
-    .status(BatchForOneDocCreate.mapStatus(rsp.getStatus()))
-    .build();
-  }
+
 }

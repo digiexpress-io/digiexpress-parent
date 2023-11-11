@@ -1,37 +1,30 @@
 package io.resys.thena.docdb.models.doc.commitmany;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import io.resys.thena.docdb.api.actions.CommitActions.CommitResultStatus;
+import io.resys.thena.docdb.api.actions.DocCommitActions.AddItemToModifyDoc;
+import io.resys.thena.docdb.api.actions.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.docdb.api.actions.DocCommitActions.ModifyManyDocs;
-import io.resys.thena.docdb.api.actions.DocCommitActions.OneDocEnvelope;
-import io.resys.thena.docdb.api.actions.ImmutableOneDocEnvelope;
-import io.resys.thena.docdb.api.models.ImmutableDoc;
-import io.resys.thena.docdb.api.models.ImmutableDocBranch;
-import io.resys.thena.docdb.api.models.ImmutableDocCommit;
-import io.resys.thena.docdb.api.models.ImmutableDocLog;
+import io.resys.thena.docdb.api.actions.ImmutableManyDocsEnvelope;
 import io.resys.thena.docdb.api.models.ImmutableMessage;
-import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranchLock;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocLock;
-import io.resys.thena.docdb.api.models.ThenaDocObject.DocLog;
-import io.resys.thena.docdb.api.models.ThenaDocObject.DocStatus;
+import io.resys.thena.docdb.models.doc.DocQueries.DocLockCriteria;
 import io.resys.thena.docdb.models.doc.DocState.DocRepo;
-import io.resys.thena.docdb.models.doc.ImmutableDocBatchForOne;
-import io.resys.thena.docdb.models.doc.ImmutableDocDbBatchForOne;
+import io.resys.thena.docdb.models.doc.ImmutableDocBatchForMany;
 import io.resys.thena.docdb.models.doc.ImmutableDocLockCriteria;
-import io.resys.thena.docdb.models.doc.support.BatchForOneDocCreate;
+import io.resys.thena.docdb.models.doc.support.BatchForOneBranchModify;
+import io.resys.thena.docdb.models.doc.support.BatchForOneDocModify;
 import io.resys.thena.docdb.models.git.GitInserts.BatchStatus;
-import io.resys.thena.docdb.models.git.commits.CommitLogger;
 import io.resys.thena.docdb.spi.DbState;
-import io.resys.thena.docdb.support.OidUtils;
 import io.resys.thena.docdb.support.RepoAssert;
-import io.resys.thena.docdb.support.Sha2;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
+import lombok.Builder;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 
@@ -39,53 +32,66 @@ import lombok.RequiredArgsConstructor;
 public class ModifyManyDocsImpl implements ModifyManyDocs {
 
   private final DbState state;
-  private JsonObject appendLogs = null;
-  private JsonObject appendMeta = null;
-  private boolean remove;
-  
   private String repoId;
-  private String docId;
   private String author;
   private String message;
-
+  
+  private final List<ItemModData> items = new ArrayList<ItemModData>();
+  private AddItemToModifyDoc lastItem;
+  
+  @Data @Builder
+  private static class ItemModData {
+    private Boolean remove;
+    private String message;
+    private String docId;
+    private JsonObject appendLog;
+    private JsonObject appendMeta;
+  }
   @Override public ModifyManyDocsImpl repoId(String repoId) { this.repoId = RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!"); return this; }
   @Override public ModifyManyDocsImpl author(String author) { this.author = RepoAssert.notEmpty(author, () -> "author can't be empty!"); return this; }
   @Override public ModifyManyDocsImpl message(String message) { this.message = RepoAssert.notEmpty(message, () -> "message can't be empty!"); return this; }
-  @Override
-  public ModifyManyDocsImpl remove() {
-    this.remove = true;
-    return this;
-  }
-  @Override
-  public ModifyManyDocsImpl meta(JsonObject blob) {
-    RepoAssert.notNull(blob, () -> "merge can't be null!");
-    this.appendMeta = blob;
-    return this;
-  }
-  @Override
-  public ModifyManyDocsImpl docId(String docId) {
-    this.docId = docId;
-    return this;
+  @Override public AddItemToModifyDoc item() {
+    final var parent = this;
+    final var item = ItemModData.builder().message(message);
+    lastItem = new AddItemToModifyDoc() {
+      @Override public AddItemToModifyDoc docId(String docId) { item.docId(docId); return this; }
+      @Override public AddItemToModifyDoc remove() { item.remove(true); return this; }
+      @Override public AddItemToModifyDoc message(String message) { item.message(message); return this; }
+      @Override public AddItemToModifyDoc log(JsonObject log) { item.appendLog(log); return this; }
+      @Override public AddItemToModifyDoc meta(JsonObject meta) { item.appendMeta(meta); return this; }
+      @Override public ModifyManyDocs next() {
+        final var result = item.build();
+        RepoAssert.notEmpty(result.docId, () -> "docId can't be empty!");
+        RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
+        RepoAssert.notEmpty(result.message, () -> "message can't be empty!");
+        
+        lastItem = null;
+        items.add(result);
+        return parent;
+      }
+    };
+    return lastItem;
   }
 
   @Override
-  public ModifyManyDocsImpl log(JsonObject doc) {
-    this.appendLogs = doc;
-    return this;
-  }
-  @Override
-  public Uni<OneDocEnvelope> build() {
+  public Uni<ManyDocsEnvelope> build() {
     RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
     RepoAssert.notEmpty(author, () -> "author can't be empty!");
     RepoAssert.notEmpty(message, () -> "message can't be empty!");
-
-    final var crit = ImmutableDocLockCriteria.builder().docId(docId).build();    
-    return this.state.toDocState().withTransaction(repoId, tx -> tx.query().branches().getLock(crit).onItem().transformToUni(lock -> {
-      final OneDocEnvelope validation = validateRepo(lock);
+  
+    final var crit = this.items.stream()
+        .map(item -> (DocLockCriteria) ImmutableDocLockCriteria.builder()
+            .docId(item.getDocId())
+            .build())
+        .collect(Collectors.toList());
+      
+    
+    return this.state.toDocState().withTransaction(repoId, tx -> tx.query().branches().getDocLocks(crit).onItem().transformToUni(lock -> {
+      final ManyDocsEnvelope validation = validateRepo(lock, items);
       if(validation != null) {
         return Uni.createFrom().item(validation);
       }
-      return doInLock(lock, tx);
+      return doInLock(lock, items, tx);
     }))
     .onFailure(err -> state.getErrorHandler().isLocked(err)).retry()
       .withJitter(0.3) // every retry increase time by x 3
@@ -93,45 +99,66 @@ public class ModifyManyDocsImpl implements ModifyManyDocs {
       .atMost(100);
   }
   
-  private Uni<OneDocEnvelope> doInLock(DocLock docLock, DocRepo tx) {
-    final var doc = ImmutableDoc.builder()
-      .from(docLock.getDoc().get())
-      .meta(appendMeta)
-      .build();
-    
-    final var batchBuilder = ImmutableDocDbBatchForOne.builder()
-      .repoId(tx.getRepo().getId())
-      .status(BatchStatus.OK)
-      .doc(doc)
-      .addAllDocLock(docLock.getBranches());
-
-    final var logger = new CommitLogger();
-    docLock.getBranches().forEach(branchLock -> appendToBranch(branchLock, tx, batchBuilder, logger));
-    
-    final var batch = batchBuilder.log(ImmutableMessage.builder().text(logger.toString()).build()).build();
-    
-    return tx.insert().batchOne(batch)
-    .onItem().transform(rsp -> ImmutableOneDocEnvelope.builder()
-      .repoId(repoId)
-      .doc(doc)
-      .addMessages(rsp.getLog())
-      .addAllMessages(rsp.getMessages())
-      .status(BatchForOneDocCreate.mapStatus(rsp.getStatus()))
-      .build());
+  private Uni<ManyDocsEnvelope> doInLock(List<DocLock> locks, List<ItemModData> items, DocRepo tx) {
+    final var lockById = locks.stream()
+        .collect(Collectors.toMap(
+          i -> i.getDoc().get().getId(),
+          i -> i
+        ));
+      
+      final var logs = new ArrayList<String>();
+      final var many = ImmutableDocBatchForMany.builder()
+          .repo(tx.getRepo())
+          .status(BatchStatus.OK);
+      for(ItemModData item : items) {
+        final var lock = lockById.get(item.getDocId());
+        final var valid = validateDocLock(lock, item);;
+        if(valid != null) {
+          many.status(BatchStatus.ERROR).addAllMessages(valid.getMessages());
+        }
+        
+        final var batch = new BatchForOneDocModify(lock, tx, author)
+          .message(item.getMessage())
+          .log(item.getAppendLog())
+          .meta(item.getAppendMeta())
+          .remove(item.getRemove() == null ? false : item.getRemove())
+          .create();
+        
+        logs.add(batch.getLog().getText());
+        many.addItems(batch);
+      }
+      final var changes = many
+          .log(ImmutableMessage.builder()
+              .text(String.join("\r\n" + "\r\n", logs))
+              .build())
+          .build();
+      if(changes.getStatus() != BatchStatus.OK) {
+        return Uni.createFrom().item(BatchForOneBranchModify.mapTo(changes));
+      }
+      
+      return tx.insert().batchMany(changes).onItem().transform(BatchForOneBranchModify::mapTo);
   }
   
-  private OneDocEnvelope validateRepo(DocLock state) {
+  private ManyDocsEnvelope validateRepo(List<DocLock> state, List<ItemModData> items) {
+    final var found = state.stream()
+        .filter(i -> i.getDoc().isPresent())
+        .map(i -> i.getDoc().get().getId())
+        .toList();
+    final var source = items.stream().map(i -> i.getDocId()).toList();
+    final var notFound = new ArrayList<>(source);
+    notFound.removeAll(found);
     
-    // cant merge on first commit
-    if(state.getDoc().isEmpty()) {
-      return ImmutableOneDocEnvelope.builder()
+    
+    if(!notFound.isEmpty()) {      
+      return ImmutableManyDocsEnvelope.builder()
           .repoId(repoId)
           .addMessages(ImmutableMessage.builder()
               .text(new StringBuilder()
-                  .append("Commit to: '").append(repoId).append("'")
-                  .append(" is rejected.")
-                  .append(" Unknown docId: '").append(docId).append("'!")
-                  .toString())
+                .append("Commit to: '").append(repoId).append("'")
+                .append(" is rejected.")
+                .append(" Could not find all items: expected: '").append(items.size()).append("' but found: '").append(state.size()).append("'!\r\n")
+                .append("  - not found: ").append(String.join(",", notFound))
+                .toString())
               .build())
           .status(CommitResultStatus.ERROR)
           .build();
@@ -139,65 +166,7 @@ public class ModifyManyDocsImpl implements ModifyManyDocs {
     }
     return null;
   }
-  
-  private void appendToBranch(DocBranchLock lock, DocRepo tx, ImmutableDocBatchForOne.Builder batch, CommitLogger logger) {
-    final var branchId = lock.getBranch().get().getId();
-    
-    final var doc = ImmutableDoc.builder()
-        .from(lock.getDoc().get())
-        .meta(appendMeta)
-        .build();
-    
-    final var template = ImmutableDocCommit.builder()
-      .id("commit-template")
-      .docId(doc.getId())
-      .branchId(branchId)
-      .dateTime(LocalDateTime.now())      
-      .author(this.author)
-      .message(this.message)
-      .parent(lock.getBranch().get().getCommitId())
-      .build();
-    final var commit = ImmutableDocCommit.builder()
-      .from(template)
-      .id(Sha2.commitId(template))
-      .branchId(branchId)
-      .build();
-    final var docBranch = ImmutableDocBranch.builder()
-      .from(lock.getBranch().get())
-      .status(DocStatus.IN_FORCE)
-      .commitId(commit.getId())
-      .build();
-    
-    final List<DocLog> docLogs = appendLogs == null ? Collections.emptyList() : Arrays.asList(
-        ImmutableDocLog.builder()
-          .id(OidUtils.gen())
-          .docId(doc.getId())
-          .branchId(branchId)
-          .docCommitId(commit.getId())
-          .value(appendLogs)
-          .build()
-        );
-
-    logger
-      .append(" | changed")
-      .append(System.lineSeparator())
-      .append("  + doc:        ").append(doc.getId())
-      .append(System.lineSeparator())
-      .append("  + doc branch: ").append(docBranch.getId())
-      .append(System.lineSeparator())
-      .append("  + doc commit: ").append(commit.getId())
-      .append(System.lineSeparator());
-    
-    if(!docLogs.isEmpty()) {
-      logger
-      .append("  + doc log:    ").append(docLogs.stream().findFirst().get().getId())
-      .append(System.lineSeparator());
-    }
-
-    batch.addDocBranch(docBranch)
-    .addDocCommit(commit)
-    .addAllDocLogs(docLogs);
-
+  private ManyDocsEnvelope validateDocLock(DocLock state, ItemModData item) {
+    return null;
   }
-  
 }

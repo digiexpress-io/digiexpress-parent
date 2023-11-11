@@ -82,7 +82,7 @@ public class DocBranchSqlBuilderImpl implements DocBranchSqlBuilder {
   }
   
   @Override
-  public SqlTuple getLock(DocBranchLockCriteria crit) {
+  public SqlTuple getBranchLock(DocBranchLockCriteria crit) {
     final var branchName = crit.getBranchName();
     final var docId = crit.getDocId();
 
@@ -116,7 +116,7 @@ public class DocBranchSqlBuilderImpl implements DocBranchSqlBuilder {
   }
   
   @Override
-  public SqlTuple getLock(DocLockCriteria crit) {
+  public SqlTuple getDocLock(DocLockCriteria crit) {
     final var docId = crit.getDocId();
 
     return ImmutableSqlTuple.builder()
@@ -163,7 +163,7 @@ public class DocBranchSqlBuilderImpl implements DocBranchSqlBuilder {
   }
 
   @Override
-  public SqlTuple getLocks(List<DocBranchLockCriteria> criteria) {
+  public SqlTuple getBranchLocks(List<DocBranchLockCriteria> criteria) {
     final var props = new ArrayList<Object>();
     var index = 1;
     final var where = new StringBuilder();
@@ -176,9 +176,8 @@ public class DocBranchSqlBuilderImpl implements DocBranchSqlBuilder {
       where
         .append(" (")
         .append(" branch_name = $").append(index++)
-        .append(" AND doc_id = $").append(index)
+        .append(" AND doc_id = $").append(index++)
         .append(") "); 
-      index++;
     }
     
     return ImmutableSqlTuple.builder()
@@ -209,4 +208,51 @@ public class DocBranchSqlBuilderImpl implements DocBranchSqlBuilder {
         .props(Tuple.from(props))
         .build();  
   }
+  
+  
+  @Override
+  public SqlTuple getDocLocks(List<DocLockCriteria> criteria) {
+    final var props = new ArrayList<Object>();
+    var index = 1;
+    final var where = new StringBuilder();
+    for(final var crit : criteria) {
+      props.add(crit.getDocId());
+      if(index > 1) {
+        where.append(" OR ");
+      }
+      where
+        .append(" (")
+        .append(" doc_id = $").append(index++)
+        .append(") "); 
+    }
+    
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT ")
+        .append("  doc.external_id as external_id,").ln()
+        .append("  doc.doc_type as doc_type,").ln()
+        .append("  doc.doc_status as doc_status,").ln()
+        .append("  doc.doc_meta as doc_meta,").ln()
+    
+        .append("  branch.doc_id as doc_id,").ln()
+        .append("  branch.branch_id as branch_id,").ln()
+        .append("  branch.branch_name as branch_name,").ln()
+        .append("  branch.commit_id as branch_commit_id,").ln()
+        .append("  branch.branch_status as branch_status,").ln()
+        .append("  branch.value as branch_value,").ln()
+        
+        .append("  commits.author as author,").ln()
+        .append("  commits.datetime as datetime,").ln()
+        .append("  commits.message as message,").ln()
+        .append("  commits.parent as commit_parent,").ln()
+        .append("  commits.id as commit_id").ln()
+        
+        .append(" FROM (SELECT * FROM ").append(options.getDocBranch()).append(" WHERE ").append(where.toString()).append(" FOR UPDATE NOWAIT) as branch").ln()
+        .append(" JOIN ").append(options.getDocCommits()).append(" as commits ON(commits.branch_id = branch.branch_id)").ln()
+        .append(" JOIN ").append(options.getDoc()).append(" as doc ON(doc.id = branch.doc_id)").ln()
+        .build())
+        .props(Tuple.from(props))
+        .build();  
+  }
+
 }

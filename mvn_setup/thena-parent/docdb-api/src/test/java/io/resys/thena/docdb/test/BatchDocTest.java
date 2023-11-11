@@ -107,8 +107,22 @@ public class BatchDocTest extends DbTestTemplate {
     
     
     // Modify all doc-s meta data
-    
+    final var modifyManyDocs = getClient().doc().commit().modifyManyDocs()
+        .repoId(repo.getRepo().getId())
+        .author("jane.doe@morgue.com")
+        .message("edit dev branch");
+      
+      for(final var createdBranch : inserted.getBranch()) {
+        modifyManyDocs.item()
+          .docId(createdBranch.getDocId())
+          .meta(JsonObject.of("meta data", "some cool to add to meta"))
+          .log(JsonObject.of("logging", "added meta"))
+          .next();
+      }
+      modifyManyDocs.build().await().atMost(Duration.ofMinutes(1));
     
     printRepo(repo.getRepo());
+    
+    assertRepo(repo.getRepo(), "doc-db-test-cases/batch-crud-test-1.txt");
   }
 }

@@ -71,7 +71,7 @@ public class CreateOneDocBranchImpl implements CreateOneDocBranch {
         .docId(docId)
         .build();
     
-    return this.state.toDocState().withTransaction(repoId, tx -> tx.query().branches().getLock(crit).onItem().transformToUni(lock -> {
+    return this.state.toDocState().withTransaction(repoId, tx -> tx.query().branches().getBranchLock(crit).onItem().transformToUni(lock -> {
       final OneDocEnvelope validation = validateRepo(lock);
       if(validation != null) {
         return Uni.createFrom().item(validation);

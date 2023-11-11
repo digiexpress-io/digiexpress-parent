@@ -3,6 +3,7 @@ package io.resys.thena.docdb.models.doc.actions;
 import io.resys.thena.docdb.api.actions.DocCommitActions;
 import io.resys.thena.docdb.models.doc.commitmany.CreateManyDocsImpl;
 import io.resys.thena.docdb.models.doc.commitmany.ModifyManyDocBranchesImpl;
+import io.resys.thena.docdb.models.doc.commitmany.ModifyManyDocsImpl;
 import io.resys.thena.docdb.models.doc.commitone.CreateOneDocBranchImpl;
 import io.resys.thena.docdb.models.doc.commitone.CreateOneDocImpl;
 import io.resys.thena.docdb.models.doc.commitone.ModifyOneDocBranchImpl;
@@ -41,7 +42,6 @@ public class DocAppendActionsImpl implements DocCommitActions {
   }
   @Override
   public ModifyManyDocs modifyManyDocs() {
-    // TODO Auto-generated method stub
-    return null;
+    return new ModifyManyDocsImpl(state);
   }
 }
