@@ -18,6 +18,7 @@ const en = {
   'dialob.form.id': 'Id',
   'dialob.form.labels': 'Labels',
   'dialob.form.labels.none': 'None',
+  'dialob.form.sessions': 'Sessions',
   'dialob.form.technicalName': 'Technical name',
   'dialob.form.versionTags': 'Version tags',
   'dialob.form.versionTags.latest': 'Latest',
@@ -32,6 +33,15 @@ const en = {
   'dialob.form.edit': 'Edit',
   'dialob.form.preview': 'Preview',
   'dialob.form.create': 'Create new form',
+
+
+  'dialob.form.delete.dialog.title': 'Delete confirmation',
+  'dialob.form.delete.dialog.desc': 'Are you sure you want to delete this dialog?',
+
+  'dialob.form.technicalNameEdit.dialog.title': 'Edit technical name',
+
+  'dialob.form.sessions.dialog.title': 'Questionnaire sessions',
+
 
   'dialob.form.create.dialog.title': 'Create new form',
   'dialob.form.create.dialog.dialogName': 'Form name',

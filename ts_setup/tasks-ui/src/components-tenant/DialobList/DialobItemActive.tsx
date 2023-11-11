@@ -1,16 +1,20 @@
 import React from 'react';
-import { Box, Stack, Typography, IconButton, Skeleton, useTheme, CircularProgress, Avatar, Chip } from '@mui/material';
-import EditIcon from '@mui/icons-material/ModeEditOutlineOutlined';
+import { Box, Stack, Typography, IconButton, Skeleton, useTheme, CircularProgress, Avatar, Chip, Grid } from '@mui/material';
+import EditOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
+import EditIcon from '@mui/icons-material/Edit';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import CopyAllIcon from '@mui/icons-material/CopyAll';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import QuestionAnswerOutlinedIcon from '@mui/icons-material/QuestionAnswerOutlined';
 import { FormattedMessage } from 'react-intl';
 
 import { TenantEntryDescriptor } from 'descriptor-tenant';
 import Burger from 'components-burger';
 import Context from 'context';
 import { DialobTag, DialobForm, DialobVariable } from 'client';
-
+import DialobDeleteDialog from '../DialobDelete';
+import DialobTechnicalNameEditDialog from '../DialobTechnicalNameEdit';
+import DialobSessionsDialog from '../DialobSessions';
 
 const StyledStack: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const theme = useTheme();
@@ -21,7 +25,7 @@ const StyledStack: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     overflowY: 'scroll',
     overflowX: 'hidden',
     boxShadow: 1,
-    width: '23%',
+    width: '23vw',
     pt: theme.spacing(2),
     px: theme.spacing(2),
     backgroundColor: theme.palette.background.paper
@@ -159,9 +163,21 @@ const DialobFormVariables: React.FC<{ entry: TenantEntryDescriptor }> = ({ entry
 const DialobItemActive: React.FC<{ entry: TenantEntryDescriptor | undefined }> = ({ entry }) => {
   const [crmOpen, setCrmOpen] = React.useState(false);
   const [dialobEditOpen, setDialobEditOpen] = React.useState(false);
+  const [dialobDeleteOpen, setDialobDeleteOpen] = React.useState(false);
+  const [technicalNameEdit, setTechnicalNameEdit] = React.useState(false);
+  const [sessionsOpen, setSessionsOpen] = React.useState(false);
   const [form, setForm] = React.useState<DialobForm | undefined>();
   const backend = Context.useBackend();
 
+  function handleDelete() {
+    setDialobDeleteOpen(prev => !prev);
+  }
+  function handleTechnicalNameEdit() {
+    setTechnicalNameEdit(prev => !prev);
+  }
+  function handleSessions() {
+    setSessionsOpen(prev => !prev);
+  }
 
   React.useEffect(() => {
     if (entry?.formName) {
@@ -178,15 +194,18 @@ const DialobItemActive: React.FC<{ entry: TenantEntryDescriptor | undefined }> =
   if (entry) {
 
     return (<>
+      <DialobDeleteDialog open={dialobDeleteOpen} onClose={handleDelete} entry={entry} />
+      <DialobTechnicalNameEditDialog open={technicalNameEdit} onClose={handleTechnicalNameEdit} entry={entry} />
+      <DialobSessionsDialog open={sessionsOpen} onClose={handleSessions} entry={entry} />
       <StyledStack >
 
         {/* buttons section */}
         <Burger.Section>
           <StyledTitle children='task.tools' />
-          <Stack direction='row' spacing={1} justifyContent='space-evenly'>
+          <Stack direction='row' spacing={1} justifyContent='space-evenly' >
 
             <Box display='flex' flexDirection='column' alignItems='center'>
-              <IconButton onClick={() => { }}><DeleteForeverIcon sx={{ color: 'error.main' }} /></IconButton>
+              <IconButton onClick={handleDelete}><DeleteForeverIcon sx={{ color: 'error.main' }} /></IconButton>
               <Typography><FormattedMessage id='dialob.form.delete' /></Typography>
             </Box>
 
@@ -195,8 +214,14 @@ const DialobItemActive: React.FC<{ entry: TenantEntryDescriptor | undefined }> =
               <Typography><FormattedMessage id='dialob.form.copy' /></Typography>
             </Box>
 
+
             <Box display='flex' flexDirection='column' alignItems='center'>
-              <IconButton onClick={handleTaskEdit}><EditIcon sx={{ color: 'uiElements.main' }} /></IconButton>
+              <IconButton onClick={handleSessions}><QuestionAnswerOutlinedIcon sx={{ color: 'secondary.dark' }} /></IconButton>
+              <Typography><FormattedMessage id='dialob.form.sessions' /></Typography>
+            </Box>
+
+            <Box display='flex' flexDirection='column' alignItems='center'>
+              <IconButton onClick={handleTaskEdit}><EditOutlinedIcon sx={{ color: 'uiElements.main' }} /></IconButton>
               <Typography><FormattedMessage id='dialob.form.edit' /></Typography>
             </Box>
 
@@ -210,26 +235,40 @@ const DialobItemActive: React.FC<{ entry: TenantEntryDescriptor | undefined }> =
         {/* info section */}
         <Burger.Section loadingValue={form}>
           <StyledTitle children='dialob.form.info' />
-          <Stack>
-            <Box display='flex'>
+
+          <Grid container alignItems='center'>
+            <Grid item md={4} lg={4} xl={4}>
               <Typography fontWeight='bolder'><FormattedMessage id='dialob.form.title' /></Typography>
-              <Box flexGrow={1} />
+            </Grid>
+            <Grid item md={8} lg={8} xl={8}>
               <Typography>{entry.formTitle}</Typography>
-            </Box>
+            </Grid>
 
-            <Box display='flex'>
+
+            <Grid item md={4} lg={4} xl={4}>
               <Typography fontWeight='bolder'><FormattedMessage id='dialob.form.technicalName' /></Typography>
-              <Box flexGrow={1} />
-              <Typography>{entry.formName}</Typography>
-            </Box>
+            </Grid>
 
-            <Box display='flex' alignItems='center'>
-              <Typography fontWeight='bolder'><FormattedMessage id='dialob.form.id' /></Typography>
-              <Box flexGrow={1} />
-              <Typography>{form?._id}</Typography>
-            </Box>
+            <Grid item md={8} lg={8} xl={8}>
+              <Box display='flex' alignItems='center'>
+                <Typography>{entry.formName}</Typography>
+                <Box flexGrow={1} />
+                <IconButton size='small' onClick={handleTechnicalNameEdit}><EditIcon sx={{ color: 'uiElements.main', fontSize: 'medium' }} /></IconButton>
+              </Box>
+            </Grid>
 
-          </Stack>
+            <Grid item md={1} lg={1} xl={1}>
+              <Box display='flex' alignItems='center'>
+                <Typography fontWeight='bolder'><FormattedMessage id='dialob.form.id' /></Typography>
+              </Box>
+            </Grid>
+
+            <Grid item md={11} lg={11} xl={11}>
+              <Box flexGrow={1} />
+              <Typography sx={{ wordWrap: 'break-word' }}>{form?._id}</Typography>
+            </Grid>
+
+          </Grid>
         </Burger.Section>
 
         {/* labels section */}
