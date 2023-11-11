@@ -17,11 +17,11 @@ import io.dialob.client.spi.DialobStoreTemplate;
 import io.dialob.client.spi.support.RepositoryToStaticData;
 import io.resys.thena.docdb.api.DocDB;
 import io.resys.thena.docdb.api.models.Repo;
+import io.resys.thena.docdb.models.git.GitPrinter;
 import io.resys.thena.docdb.spi.DbCollections;
 import io.resys.thena.docdb.spi.DbState;
-import io.resys.thena.docdb.spi.GitDbPrinter;
-import io.resys.thena.docdb.sql.DbStateSqlImpl;
-import io.resys.thena.docdb.sql.PgErrors;
+import io.resys.thena.docdb.store.sql.DbStateSqlImpl;
+import io.resys.thena.docdb.store.sql.PgErrors;
 import io.vertx.core.VertxOptions;
 import io.vertx.mutiny.sqlclient.Pool;
 
@@ -97,7 +97,7 @@ public class PgTestTemplate {
   }
 
   public void printRepo(Repo repo) {
-    final String result = new GitDbPrinter(createState(repo.getName())).print(repo);
+    final String result = new GitPrinter(createState(repo.getName())).print(repo);
     System.out.println(result);
   }
 

@@ -14,8 +14,8 @@ import io.resys.thena.docdb.api.DocDB;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.spi.DbCollections;
 import io.resys.thena.docdb.spi.DbState;
-import io.resys.thena.docdb.sql.DbStateSqlImpl;
-import io.resys.thena.docdb.sql.PgErrors;
+import io.resys.thena.docdb.store.sql.DbStateSqlImpl;
+import io.resys.thena.docdb.store.sql.PgErrors;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

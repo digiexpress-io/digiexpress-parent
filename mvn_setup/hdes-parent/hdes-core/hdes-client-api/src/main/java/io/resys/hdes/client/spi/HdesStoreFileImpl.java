@@ -43,10 +43,10 @@ import io.resys.hdes.client.spi.store.ThenaConfig.GidProvider;
 import io.resys.hdes.client.spi.store.ThenaStoreTemplate;
 import io.resys.hdes.client.spi.util.HdesAssert;
 import io.resys.thena.docdb.api.DocDB;
-import io.resys.thena.docdb.file.DocDBFactoryFile;
-import io.resys.thena.docdb.file.FileErrors;
-import io.resys.thena.docdb.file.spi.FilePoolImpl;
-import io.resys.thena.docdb.file.tables.Table.FilePool;
+import io.resys.thena.docdb.store.file.DocDBFactoryFile;
+import io.resys.thena.docdb.store.file.FileErrors;
+import io.resys.thena.docdb.store.file.spi.FilePoolImpl;
+import io.resys.thena.docdb.store.file.tables.Table.FilePool;
 import io.vertx.core.json.JsonObject;
 
 public class HdesStoreFileImpl extends ThenaStoreTemplate implements HdesStore {

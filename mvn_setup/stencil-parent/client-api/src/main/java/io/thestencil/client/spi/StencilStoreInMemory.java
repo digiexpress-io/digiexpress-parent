@@ -30,8 +30,8 @@ import io.resys.thena.docdb.api.actions.BranchActions;
 import io.resys.thena.docdb.api.actions.CommitActions;
 import io.resys.thena.docdb.api.actions.DiffActions;
 import io.resys.thena.docdb.api.actions.HistoryActions;
-import io.resys.thena.docdb.api.actions.RepoActions;
 import io.resys.thena.docdb.api.actions.PullActions;
+import io.resys.thena.docdb.api.actions.RepoActions;
 import io.resys.thena.docdb.api.actions.TagActions;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.ImmutableStencilConfig;
@@ -120,7 +120,7 @@ public class StencilStoreInMemory implements StencilStore {
           throw new IllegalArgumentException("no read or writes supported!");
         }
         @Override
-        public GitProjectQuery project() {
+        public GitRepoQuery project() {
           throw new IllegalArgumentException("no read or writes supported!");
         }
       };

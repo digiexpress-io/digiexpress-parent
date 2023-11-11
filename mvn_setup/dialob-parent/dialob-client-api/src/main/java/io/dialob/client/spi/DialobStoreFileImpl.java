@@ -17,10 +17,10 @@ import io.dialob.client.spi.store.ImmutableDialobStoreConfig;
 import io.dialob.client.spi.support.DialobAssert;
 import io.dialob.client.spi.support.OidUtils;
 import io.resys.thena.docdb.api.DocDB;
-import io.resys.thena.docdb.file.DocDBFactoryFile;
-import io.resys.thena.docdb.file.FileErrors;
-import io.resys.thena.docdb.file.spi.FilePoolImpl;
-import io.resys.thena.docdb.file.tables.Table.FilePool;
+import io.resys.thena.docdb.store.file.DocDBFactoryFile;
+import io.resys.thena.docdb.store.file.FileErrors;
+import io.resys.thena.docdb.store.file.spi.FilePoolImpl;
+import io.resys.thena.docdb.store.file.tables.Table.FilePool;
 import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 

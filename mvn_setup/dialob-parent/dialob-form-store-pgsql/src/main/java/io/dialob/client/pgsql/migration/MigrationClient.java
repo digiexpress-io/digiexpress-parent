@@ -22,7 +22,7 @@ import io.dialob.client.api.DialobDocument.FormRevisionDocument;
 import io.dialob.client.spi.DialobTypesMapperImpl;
 import io.dialob.client.spi.migration.MigrationSupport;
 import io.dialob.client.spi.migration.MigrationSupport.Migration;
-import io.resys.thena.docdb.sql.PgErrors;
+import io.resys.thena.docdb.store.sql.PgErrors;
 import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.sqlclient.Tuple;
 import lombok.Builder;
