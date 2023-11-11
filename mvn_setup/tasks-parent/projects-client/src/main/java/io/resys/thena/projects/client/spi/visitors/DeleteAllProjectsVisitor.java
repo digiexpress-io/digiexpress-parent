@@ -41,6 +41,7 @@ import io.resys.thena.projects.client.api.model.Project;
 import io.resys.thena.projects.client.spi.store.DocumentConfig;
 import io.resys.thena.projects.client.spi.store.DocumentConfig.DocObjectsVisitor;
 import io.resys.thena.projects.client.spi.store.DocumentStoreException;
+import io.resys.thena.projects.client.spi.store.MainBranch;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
@@ -127,8 +128,8 @@ public class DeleteAllProjectsVisitor implements DocObjectsVisitor<Uni<List<Proj
             .build())
         .build();
     final var json = JsonObject.mapFrom(nextVersion);
-    archiveCommand.item().branchName(projectId).append(json).next();
-    removeCommand.item().branchId(projectId).remove();
+    archiveCommand.item().docId(projectId).branchName(MainBranch.HEAD_NAME).append(json).next();
+    removeCommand.item().docId(projectId).remove();
     return nextVersion;
   }
 
