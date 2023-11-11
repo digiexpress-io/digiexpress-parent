@@ -166,6 +166,7 @@ const DialobItemActive: React.FC<{ entry: TenantEntryDescriptor | undefined }> =
   const [dialobDeleteOpen, setDialobDeleteOpen] = React.useState(false);
   const [technicalNameEdit, setTechnicalNameEdit] = React.useState(false);
   const [sessionsOpen, setSessionsOpen] = React.useState(false);
+
   const [form, setForm] = React.useState<DialobForm | undefined>();
   const backend = Context.useBackend();
 

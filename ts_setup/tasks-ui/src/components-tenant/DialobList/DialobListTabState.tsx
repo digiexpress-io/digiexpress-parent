@@ -6,7 +6,8 @@ import Pagination from 'table';
 import { initTable, initTabs, createTabs, DialobListTabState, DialobListState } from './types';
 import { StyledStackItem, StyledEditDialobButton, StyledPreviewFIllButton } from './DialobListStyles';
 import { TenantEntryDescriptor } from 'descriptor-tenant';
-import { NavigationSticky, FilterByString, NavigationButtonDialobList } from '../NavigationSticky';
+import { NavigationSticky, NavigationButtonDialobList } from '../NavigationSticky';
+import { FilterByString, GroupBy } from '../TenantsSearch';
 import DialobCreateDialog from '../DialobCreate';
 import Context from 'context';
 
@@ -36,6 +37,7 @@ const DialobList: React.FC<{
 
   const tenants = Context.useTenants();
   const [state, setState] = React.useState<DialobListState>(initTabs([]));
+
   const [table, setTable] = React.useState(initTable([]));
   const [createOpen, setCreateOpen] = React.useState(false);
 
@@ -90,6 +92,8 @@ const DialobList: React.FC<{
           return prev.withTabs(createTabs(groupBy))
         })
         } />
+        <GroupBy onChange={() => { }} value={tenants.state.toGroupsAndFilters().groupBy} />
+
         <NavigationButtonDialobList
           id='dialob.form.create'
           onClick={handleCreateDialob}
