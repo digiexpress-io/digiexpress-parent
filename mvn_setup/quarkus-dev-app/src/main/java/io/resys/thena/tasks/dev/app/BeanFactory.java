@@ -13,9 +13,9 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.quarkus.jackson.ObjectMapperCustomizer;
 import io.quarkus.runtime.annotations.RegisterForReflection;
-import io.resys.thena.docdb.spi.jackson.VertexExtModule;
-import io.resys.thena.docdb.sql.DbStateSqlImpl;
-import io.resys.thena.docdb.sql.PgErrors;
+import io.resys.thena.docdb.jackson.VertexExtModule;
+import io.resys.thena.docdb.store.sql.DbStateSqlImpl;
+import io.resys.thena.docdb.store.sql.PgErrors;
 import io.resys.thena.projects.client.api.ProjectsClient;
 import io.resys.thena.projects.client.spi.ProjectsClientImpl;
 import io.resys.thena.tasks.client.api.TaskClient;

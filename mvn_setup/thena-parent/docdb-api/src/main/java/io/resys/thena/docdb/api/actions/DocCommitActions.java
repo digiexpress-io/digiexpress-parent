@@ -8,7 +8,6 @@ import org.immutables.value.Value;
 
 import io.resys.thena.docdb.api.actions.CommitActions.CommitResultStatus;
 import io.resys.thena.docdb.api.actions.CommitActions.JsonObjectMerge;
-import io.resys.thena.docdb.api.actions.DocCommitActions.AddItemToModifyDocBranch;
 import io.resys.thena.docdb.api.models.Message;
 import io.resys.thena.docdb.api.models.ThenaDocObject.Doc;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranch;
@@ -19,7 +18,7 @@ import io.vertx.core.json.JsonObject;
 
 public interface DocCommitActions {
   CreateOneDoc createOneDoc();
-  CreateManyDocs createManyDoc();
+  CreateManyDocs createManyDocs();
   
   CreateOneDocBranch branchOneDoc();
 

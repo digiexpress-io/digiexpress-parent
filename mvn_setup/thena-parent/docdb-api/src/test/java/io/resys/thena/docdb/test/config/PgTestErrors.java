@@ -26,7 +26,7 @@ import java.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.resys.thena.docdb.spi.ErrorHandler;
+import io.resys.thena.docdb.support.ErrorHandler;
 import io.vertx.pgclient.PgException;
 import lombok.extern.slf4j.Slf4j;
 

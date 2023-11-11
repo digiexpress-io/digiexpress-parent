@@ -25,7 +25,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import io.resys.thena.docdb.spi.support.RepoAssert;
+import io.resys.thena.docdb.support.RepoAssert;
 import io.resys.thena.projects.client.api.actions.ProjectsActions.UpdateProjectAction;
 import io.resys.thena.projects.client.api.model.Project;
 import io.resys.thena.projects.client.api.model.ProjectCommand.ProjectUpdateCommand;

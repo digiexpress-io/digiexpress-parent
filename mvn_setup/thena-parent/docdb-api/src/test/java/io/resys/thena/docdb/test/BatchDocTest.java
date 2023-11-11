@@ -54,6 +54,7 @@ public class BatchDocTest extends DbTestTemplate {
   @Test
   public void batch10Docs() {
     // create project
+    // with main branch, commit log na doc id from json
     RepoResult repo = getClient().repo().projectBuilder()
         .name("BatchDocTest-1", RepoType.doc)
         .build()
@@ -62,7 +63,7 @@ public class BatchDocTest extends DbTestTemplate {
     Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
     
     final var createdDoc = getClient().doc().commit()
-        .createManyDoc()
+        .createManyDocs()
         .branchName("main")
         .repoId(repo.getRepo().getId())
         .docType("customer-data")
@@ -104,6 +105,8 @@ public class BatchDocTest extends DbTestTemplate {
     }
     modifyBranch.build().await().atMost(Duration.ofMinutes(1));
     
+    
+    // Modify all doc-s meta data
     
     
     printRepo(repo.getRepo());

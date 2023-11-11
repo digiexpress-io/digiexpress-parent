@@ -78,7 +78,7 @@ public interface DocumentConfig {
   
   default <T> Uni<List<T>> accept(DocCreateVisitor<T> visitor) {
     final var builder = visitor.start(this, getClient().doc()
-        .commit().createManyDoc()
+        .commit().createManyDocs()
         .repoId(getRepoId())
         .branchName(getBranchName()));
     

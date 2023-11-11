@@ -30,16 +30,16 @@ import io.resys.thena.docdb.api.actions.HistoryActions;
 import io.resys.thena.docdb.api.actions.PullActions;
 import io.resys.thena.docdb.api.actions.RepoActions;
 import io.resys.thena.docdb.api.actions.TagActions;
-import io.resys.thena.docdb.spi.doc.DocAppendActionsImpl;
-import io.resys.thena.docdb.spi.doc.DocQueryActionsImpl;
-import io.resys.thena.docdb.spi.git.commits.CommitActionsImpl;
-import io.resys.thena.docdb.spi.git.diff.DiffActionsImpl;
-import io.resys.thena.docdb.spi.git.history.HistoryActionsDefault;
-import io.resys.thena.docdb.spi.git.objects.BranchActionsImpl;
-import io.resys.thena.docdb.spi.git.objects.ObjectsActionsImpl;
-import io.resys.thena.docdb.spi.git.repo.RepoStateBuilderImpl;
-import io.resys.thena.docdb.spi.git.tags.TagActionsDefault;
-import io.resys.thena.docdb.spi.repo.ProjectActionsImpl;
+import io.resys.thena.docdb.models.RepoActionsImpl;
+import io.resys.thena.docdb.models.doc.DocAppendActionsImpl;
+import io.resys.thena.docdb.models.doc.DocQueryActionsImpl;
+import io.resys.thena.docdb.models.git.GitRepoQueryImpl;
+import io.resys.thena.docdb.models.git.commits.CommitActionsImpl;
+import io.resys.thena.docdb.models.git.diff.DiffActionsImpl;
+import io.resys.thena.docdb.models.git.history.HistoryActionsDefault;
+import io.resys.thena.docdb.models.git.objects.BranchActionsImpl;
+import io.resys.thena.docdb.models.git.objects.ObjectsActionsImpl;
+import io.resys.thena.docdb.models.git.tags.TagActionsDefault;
 
 public class DocDBDefault implements DocDB {
   private final DbState state;
@@ -61,7 +61,7 @@ public class DocDBDefault implements DocDB {
   @Override
   public RepoActions repo() {
     if(projectActions == null) {
-      projectActions = new ProjectActionsImpl(state); 
+      projectActions = new RepoActionsImpl(state); 
     }
     return projectActions;
   }
@@ -73,8 +73,8 @@ public class DocDBDefault implements DocDB {
   public GitModel git() {
     return new GitModel() {
       @Override
-      public GitProjectQuery project() {
-        return new RepoStateBuilderImpl(state);
+      public GitRepoQuery project() {
+        return new GitRepoQueryImpl(state);
       }
       @Override
       public CommitActions commit() {

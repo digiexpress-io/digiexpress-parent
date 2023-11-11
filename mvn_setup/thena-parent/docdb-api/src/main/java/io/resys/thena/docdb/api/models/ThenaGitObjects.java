@@ -38,7 +38,7 @@ import io.resys.thena.docdb.api.models.ThenaGitObject.Tree;
 
 public interface ThenaGitObjects extends ThenaObjects { 
   @Value.Immutable
-  public interface ProjectObjects extends ThenaGitObjects {
+  public interface GitRepoObjects extends ThenaGitObjects {
     Map<String, Branch> getBranches();
     Map<String, Tag> getTags();
     Map<String, IsGitObject> getValues();   
