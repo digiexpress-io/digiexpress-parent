@@ -13,11 +13,4 @@ public class DocQueryActionsImpl implements DocQueryActions {
   public DocObjectsQuery docQuery() {
     return new DocObjectsQueryImpl(state);
   }
-
-  @Override
-  public DocBranchObjectsQuery docBranchQuery() {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
 }
