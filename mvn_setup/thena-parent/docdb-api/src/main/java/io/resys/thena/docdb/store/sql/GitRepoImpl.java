@@ -23,9 +23,9 @@ package io.resys.thena.docdb.store.sql;
 import java.util.function.Function;
 
 import io.resys.thena.docdb.api.models.Repo;
-import io.resys.thena.docdb.models.git.GitDbInserts;
-import io.resys.thena.docdb.models.git.GitDbQueries;
-import io.resys.thena.docdb.models.git.GitDbState.GitRepo;
+import io.resys.thena.docdb.models.git.GitInserts;
+import io.resys.thena.docdb.models.git.GitQueries;
+import io.resys.thena.docdb.models.git.GitState.GitRepo;
 import io.resys.thena.docdb.models.git.store.sql.GitDbInsertsSqlPool;
 import io.resys.thena.docdb.spi.DbCollections;
 import io.resys.thena.docdb.store.sql.factories.GitDbQueriesSqlImpl.ClientQuerySqlContext;
@@ -40,7 +40,7 @@ public class GitRepoImpl implements GitRepo {
   private final ErrorHandler handler; 
   private final Function<DbCollections, SqlMapper> sqlMapper;
   private final Function<DbCollections, SqlBuilder> sqlBuilder;
-  private final Function<ClientQuerySqlContext, GitDbQueries> clientQuery;
+  private final Function<ClientQuerySqlContext, GitQueries> clientQuery;
   
   @Override
   public String getRepoName() {
@@ -51,7 +51,7 @@ public class GitRepoImpl implements GitRepo {
     return wrapper.getRepo();
   }
   @Override
-  public GitDbQueries query() {
+  public GitQueries query() {
     final var ctx = ImmutableClientQuerySqlContext.builder()
         .mapper(sqlMapper.apply(wrapper.getNames()))
         .builder(sqlBuilder.apply(wrapper.getNames()))
@@ -62,7 +62,7 @@ public class GitRepoImpl implements GitRepo {
     return clientQuery.apply(ctx);
   }
   @Override
-  public GitDbInserts insert() {
+  public GitInserts insert() {
     return new GitDbInsertsSqlPool(wrapper, sqlMapper.apply(wrapper.getNames()), sqlBuilder.apply(wrapper.getNames()), handler);
   }
 }

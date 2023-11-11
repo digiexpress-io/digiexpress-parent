@@ -32,13 +32,13 @@ import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranch;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranchLock;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocCommit;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocLog;
-import io.resys.thena.docdb.models.git.GitDbInserts.BatchStatus;
+import io.resys.thena.docdb.models.git.GitInserts.BatchStatus;
 import io.smallrye.mutiny.Uni;
 
-public interface DocDbInserts {
+public interface DocInserts {
   
   @Value.Immutable
-  interface DocDbBatchForOne {
+  interface DocBatchForOne {
     BatchStatus getStatus();
     String getRepoId();
     
@@ -52,63 +52,17 @@ public interface DocDbInserts {
     List<Message> getMessages();
   }
   
-  Uni<DocDbBatchForOne> batchOne(DocDbBatchForOne output);
-  Uni<DocDbBatchForMany> batchMany(DocDbBatchForMany output);
+  Uni<DocBatchForOne> batchOne(DocBatchForOne output);
+  Uni<DocBatchForMany> batchMany(DocBatchForMany output);
   
   @Value.Immutable
-  interface DocDbBatchForMany {
+  interface DocBatchForMany {
     BatchStatus getStatus();
     Repo getRepo();
     
-    List<DocDbBatchForOne> getItems();
+    List<DocBatchForOne> getItems();
 
     Message getLog();
     List<Message> getMessages();
   }
-  
-  /*
-  Uni<InsertResult> tag(Tag tag);
-  Uni<UpsertResult> blob(Blob blob);
-  Uni<UpsertResult> ref(Branch ref, Commit commit);
-  Uni<UpsertResult> tree(Tree tree);
-  Uni<UpsertResult> commit(Commit commit);
-  Uni<Batch> batch(Batch output);
-  
-  enum UpsertStatus { OK, DUPLICATE, ERROR, CONFLICT }
-  enum BatchStatus { OK, EMPTY, ERROR, CONFLICT }
-  
-  @Value.Immutable
-  interface Batch {
-    BatchStatus getStatus();
-    Repo getRepo();
-    Message getLog();
-    BatchRef getRef();
-    Commit getCommit();
-    Tree getTree();
-    Integer getDeleted();
-    Collection<Blob> getBlobs();
-    List<Message> getMessages();
-  }
-  
-  @Value.Immutable
-  interface BatchRef {
-    Boolean getCreated(); 
-    Branch getRef();
-  }
-  
-  
-  @Value.Immutable
-  interface InsertResult {
-    boolean getDuplicate();
-  } 
-  
-  @Value.Immutable
-  interface UpsertResult {
-    String getId();
-    boolean isModified();
-    Message getMessage();
-    Object getTarget();
-    UpsertStatus getStatus();
-  }
-  */
 }

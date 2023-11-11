@@ -1,6 +1,6 @@
 package io.resys.thena.docdb.store.file;
 
-import io.resys.thena.docdb.models.git.GitDbQueries;
+import io.resys.thena.docdb.models.git.GitQueries;
 import io.resys.thena.docdb.models.git.store.file.BlobHistoryFilePool;
 import io.resys.thena.docdb.models.git.store.file.BlobQueryFilePool;
 import io.resys.thena.docdb.models.git.store.file.CommitQueryFilePool;
@@ -13,7 +13,7 @@ import io.resys.thena.docdb.support.ErrorHandler;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class ClientQueryFilePool implements GitDbQueries {
+public class ClientQueryFilePool implements GitQueries {
   
   private final FileClientWrapper wrapper;
   private final FileMapper mapper;

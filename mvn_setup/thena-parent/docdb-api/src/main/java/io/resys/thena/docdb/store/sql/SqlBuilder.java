@@ -40,10 +40,10 @@ import io.resys.thena.docdb.api.models.ThenaGitObject.Commit;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Tag;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Tree;
 import io.resys.thena.docdb.api.models.ThenaGitObject.TreeValue;
-import io.resys.thena.docdb.models.doc.DocDbQueries.DocBranchLockCriteria;
-import io.resys.thena.docdb.models.doc.DocDbQueries.DocLockCriteria;
-import io.resys.thena.docdb.models.doc.DocDbQueries.FlattedCriteria;
-import io.resys.thena.docdb.models.git.GitDbQueries.LockCriteria;
+import io.resys.thena.docdb.models.doc.DocQueries.DocBranchLockCriteria;
+import io.resys.thena.docdb.models.doc.DocQueries.DocLockCriteria;
+import io.resys.thena.docdb.models.doc.DocQueries.FlattedCriteria;
+import io.resys.thena.docdb.models.git.GitQueries.LockCriteria;
 import io.resys.thena.docdb.spi.DbCollections;
 import io.vertx.mutiny.sqlclient.Tuple;
 

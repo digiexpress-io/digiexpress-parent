@@ -28,7 +28,7 @@ import io.resys.thena.docdb.api.actions.PullActions.MatchCriteria;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Blob;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Commit;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Tree;
-import io.resys.thena.docdb.models.git.GitDbState.GitRepo;
+import io.resys.thena.docdb.models.git.GitState.GitRepo;
 import io.smallrye.mutiny.Uni;
 import lombok.extern.slf4j.Slf4j;
 

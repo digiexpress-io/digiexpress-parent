@@ -22,7 +22,7 @@ package io.resys.thena.docdb.models.git.store.sql;
 
 import io.resys.thena.docdb.api.LogConstants;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Branch;
-import io.resys.thena.docdb.models.git.GitDbQueries.GitRefQuery;
+import io.resys.thena.docdb.models.git.GitQueries.GitRefQuery;
 import io.resys.thena.docdb.store.sql.SqlBuilder;
 import io.resys.thena.docdb.store.sql.SqlMapper;
 import io.resys.thena.docdb.store.sql.support.SqlClientWrapper;

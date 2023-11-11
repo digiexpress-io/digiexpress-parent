@@ -22,8 +22,8 @@ package io.resys.thena.docdb.models.git.store.sql;
 
 import io.resys.thena.docdb.api.LogConstants;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Tag;
-import io.resys.thena.docdb.models.git.GitDbQueries.DeleteResult;
-import io.resys.thena.docdb.models.git.GitDbQueries.GitTagQuery;
+import io.resys.thena.docdb.models.git.GitQueries.DeleteResult;
+import io.resys.thena.docdb.models.git.GitQueries.GitTagQuery;
 import io.resys.thena.docdb.models.git.ImmutableDeleteResult;
 import io.resys.thena.docdb.store.sql.SqlBuilder;
 import io.resys.thena.docdb.store.sql.SqlMapper;

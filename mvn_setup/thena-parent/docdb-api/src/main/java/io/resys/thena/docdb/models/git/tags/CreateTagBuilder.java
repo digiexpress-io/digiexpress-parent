@@ -31,7 +31,7 @@ import io.resys.thena.docdb.api.models.ImmutableTag;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Branch;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Commit;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Tag;
-import io.resys.thena.docdb.models.git.GitDbState.GitRepo;
+import io.resys.thena.docdb.models.git.GitState.GitRepo;
 import io.resys.thena.docdb.spi.DbState;
 import io.resys.thena.docdb.support.RepoAssert;
 import io.smallrye.mutiny.Uni;

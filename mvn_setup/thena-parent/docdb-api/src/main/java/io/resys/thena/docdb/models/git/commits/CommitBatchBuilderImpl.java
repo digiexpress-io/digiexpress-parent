@@ -34,12 +34,12 @@ import io.resys.thena.docdb.api.models.ImmutableMessage;
 import io.resys.thena.docdb.api.models.ImmutableTree;
 import io.resys.thena.docdb.api.models.ImmutableTreeValue;
 import io.resys.thena.docdb.api.models.ThenaGitObject.TreeValue;
-import io.resys.thena.docdb.models.git.GitDbInserts.Batch;
-import io.resys.thena.docdb.models.git.GitDbInserts.BatchStatus;
+import io.resys.thena.docdb.models.git.GitInserts.BatchStatus;
+import io.resys.thena.docdb.models.git.GitInserts.GitBatch;
+import io.resys.thena.docdb.models.git.ImmutableBatchRef;
+import io.resys.thena.docdb.models.git.ImmutableGitBatch;
 import io.resys.thena.docdb.support.RepoAssert;
 import io.resys.thena.docdb.support.Sha2;
-import io.resys.thena.docdb.models.git.ImmutableBatch;
-import io.resys.thena.docdb.models.git.ImmutableBatchRef;
 import io.vertx.core.json.JsonObject;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -59,7 +59,7 @@ public class CommitBatchBuilderImpl implements CommitBatchBuilder {
 
   
   @Override
-  public Batch build() {
+  public GitBatch build() {
     final var mutator = new CommitTreeMutator();
     visitTree(commitTree, mutator);
     visitAppend(toBeInserted, toBeMerged, mutator, commitTree);
@@ -88,7 +88,7 @@ public class CommitBatchBuilderImpl implements CommitBatchBuilder {
         .name(this.commitTree.getRef().map(e -> e.getName()).orElse(this.commitTree.getRefName()))
         .build();
     final var log = ImmutableMessage.builder().text(mutator.getLogger().toString()).build();
-    final var batch = ImmutableBatch.builder()
+    final var batch = ImmutableGitBatch.builder()
         .log(log)
         .ref(ImmutableBatchRef.builder().ref(ref).created(this.commitTree.getRef().isPresent()).build())
         .repo(commitTree.getRepo())

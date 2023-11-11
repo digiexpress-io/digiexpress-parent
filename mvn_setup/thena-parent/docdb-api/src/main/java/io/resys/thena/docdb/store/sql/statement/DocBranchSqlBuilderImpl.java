@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranch;
-import io.resys.thena.docdb.models.doc.DocDbQueries.DocBranchLockCriteria;
-import io.resys.thena.docdb.models.doc.DocDbQueries.DocLockCriteria;
+import io.resys.thena.docdb.models.doc.DocQueries.DocBranchLockCriteria;
+import io.resys.thena.docdb.models.doc.DocQueries.DocLockCriteria;
 import io.resys.thena.docdb.spi.DbCollections;
 import io.resys.thena.docdb.store.sql.ImmutableSql;
 import io.resys.thena.docdb.store.sql.ImmutableSqlTuple;

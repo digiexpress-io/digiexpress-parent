@@ -39,7 +39,7 @@ import io.resys.thena.docdb.api.models.ThenaGitObject.Blob;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Commit;
 import io.resys.thena.docdb.api.models.ThenaGitObjects.PullObject;
 import io.resys.thena.docdb.api.models.ThenaGitObjects.PullObjects;
-import io.resys.thena.docdb.models.git.GitDbState.GitRepo;
+import io.resys.thena.docdb.models.git.GitState.GitRepo;
 import io.resys.thena.docdb.spi.DbState;
 import io.resys.thena.docdb.support.RepoAssert;
 import io.smallrye.mutiny.Uni;

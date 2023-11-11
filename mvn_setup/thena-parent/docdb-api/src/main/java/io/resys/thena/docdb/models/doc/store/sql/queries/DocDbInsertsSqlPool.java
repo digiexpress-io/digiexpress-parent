@@ -25,10 +25,10 @@ import java.util.stream.Collectors;
  */
 
 import io.resys.thena.docdb.api.models.ImmutableMessage;
-import io.resys.thena.docdb.models.doc.DocDbInserts;
-import io.resys.thena.docdb.models.doc.ImmutableDocDbBatchForMany;
-import io.resys.thena.docdb.models.doc.ImmutableDocDbBatchForOne;
-import io.resys.thena.docdb.models.git.GitDbInserts.BatchStatus;
+import io.resys.thena.docdb.models.doc.DocInserts;
+import io.resys.thena.docdb.models.doc.ImmutableDocBatchForMany;
+import io.resys.thena.docdb.models.doc.ImmutableDocBatchForOne;
+import io.resys.thena.docdb.models.git.GitInserts.BatchStatus;
 import io.resys.thena.docdb.store.sql.SqlBuilder;
 import io.resys.thena.docdb.store.sql.SqlMapper;
 import io.resys.thena.docdb.store.sql.support.Execute;
@@ -41,15 +41,15 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
-public class DocDbInsertsSqlPool implements DocDbInserts {
+public class DocDbInsertsSqlPool implements DocInserts {
   private final SqlClientWrapper wrapper;
   private final SqlMapper sqlMapper;
   private final SqlBuilder sqlBuilder;
   private final ErrorHandler errorHandler;
 
   @Override
-  public Uni<DocDbBatchForMany> batchMany(DocDbBatchForMany many) {
-    final List<DocDbBatchForOne> output = many.getItems();
+  public Uni<DocBatchForMany> batchMany(DocBatchForMany many) {
+    final List<DocBatchForOne> output = many.getItems();
     RepoAssert.isTrue(this.wrapper.getTx().isPresent(), () -> "Transaction must be started!");
     final var tx = wrapper.getClient();
     
@@ -87,28 +87,28 @@ public class DocDbInsertsSqlPool implements DocDbInserts {
         .collect(Collectors.toList()));
     
     
-    final Uni<DocDbBatchForMany> docsUni1 = Execute.apply(tx, docInserts).onItem()
+    final Uni<DocBatchForMany> docsUni1 = Execute.apply(tx, docInserts).onItem()
         .transform(row -> successOutput(many, "Doc inserted, number of new entries: " + (row == null ? 0 : row.rowCount())))
         .onFailure().recoverWithItem(e -> failOutput(many, "Failed to create docs", e));
 
-    final Uni<DocDbBatchForMany> docsUni2 = Execute.apply(tx, docUpdated).onItem()
+    final Uni<DocBatchForMany> docsUni2 = Execute.apply(tx, docUpdated).onItem()
         .transform(row -> successOutput(many, "Doc updated, number of new entries: " + (row == null ? 0 : row.rowCount())))
         .onFailure().recoverWithItem(e -> failOutput(many, "Failed to update docs", e));
         
-    final Uni<DocDbBatchForMany> commitUni = Execute.apply(tx, commitsInsert).onItem()
+    final Uni<DocBatchForMany> commitUni = Execute.apply(tx, commitsInsert).onItem()
         .transform(row -> successOutput(many, "Commit saved, number of new entries: " + (row == null ? 0 : row.rowCount())))
         .onFailure().recoverWithItem(e -> failOutput(many, "Failed to save commit", e));
 
-    final Uni<DocDbBatchForMany> branchUniInsert = Execute.apply(tx, branchInsert).onItem()
+    final Uni<DocBatchForMany> branchUniInsert = Execute.apply(tx, branchInsert).onItem()
         .transform(row -> successOutput(many, "Branch saved, number of new entries: " + (row == null ? 0 : row.rowCount())))
         .onFailure().recoverWithItem(e -> failOutput(many, "Failed to save branch", e));
     
-    final Uni<DocDbBatchForMany> branchUniUpdate = Execute.apply(tx, branchUpdate).onItem()
+    final Uni<DocBatchForMany> branchUniUpdate = Execute.apply(tx, branchUpdate).onItem()
         .transform(row -> successOutput(many, "Branch saved, number of updates entries: " + (row == null ? 0 : row.rowCount())))
         .onFailure().recoverWithItem(e -> failOutput(many, "Failed to save branch", e));
     
     
-    final Uni<DocDbBatchForMany> logUni = Execute.apply(tx, logsInsert).onItem()
+    final Uni<DocBatchForMany> logUni = Execute.apply(tx, logsInsert).onItem()
         .transform(row -> successOutput(many, "Commit log saved, number of new entries: "  + (row == null ? 0 : row.rowCount())))
         .onFailure().recoverWithItem(e -> failOutput(many, "Failed to save  commit log", e));
     
@@ -125,7 +125,7 @@ public class DocDbInsertsSqlPool implements DocDbInserts {
 
   
   @Override
-  public Uni<DocDbBatchForOne> batchOne(DocDbBatchForOne output) {
+  public Uni<DocBatchForOne> batchOne(DocBatchForOne output) {
     RepoAssert.isTrue(this.wrapper.getTx().isPresent(), () -> "Transaction must be started!");
     final var tx = wrapper.getClient();
     
@@ -143,7 +143,7 @@ public class DocDbInsertsSqlPool implements DocDbInserts {
     final var logsInsert = sqlBuilder.docLogs().insertAll(output.getDocLogs());
     
     
-    final Uni<DocDbBatchForOne> docsUni;
+    final Uni<DocBatchForOne> docsUni;
     if(docsInsert.isEmpty()) {
       docsUni = Uni.createFrom().item(successOutput(output, "Doc has no data, skipping doc entry"));    
     } else {
@@ -152,19 +152,19 @@ public class DocDbInsertsSqlPool implements DocDbInserts {
           .onFailure().recoverWithItem(e -> failOutput(output, "Failed to create docs", e));
     }
     
-    final Uni<DocDbBatchForOne> commitUni = Execute.apply(tx, commitsInsert).onItem()
+    final Uni<DocBatchForOne> commitUni = Execute.apply(tx, commitsInsert).onItem()
       .transform(row -> successOutput(output, "Commit saved, number of new entries: " + row.rowCount()))
       .onFailure().recoverWithItem(e -> failOutput(output, "Failed to save commit \r\n" + output.getDocCommit(), e));
 
-    final Uni<DocDbBatchForOne> branchUniInsert = Execute.apply(tx, branchInsert).onItem()
+    final Uni<DocBatchForOne> branchUniInsert = Execute.apply(tx, branchInsert).onItem()
         .transform(row -> successOutput(output, "Branch saved, number of new entries: " + (row == null ? 0 : row.rowCount())))
         .onFailure().recoverWithItem(e -> failOutput(output, "Failed to save branch", e));
     
-    final Uni<DocDbBatchForOne> branchUniUpdate = Execute.apply(tx, branchUpdate).onItem()
+    final Uni<DocBatchForOne> branchUniUpdate = Execute.apply(tx, branchUpdate).onItem()
         .transform(row -> successOutput(output, "Branch saved, number of updates entries: " + (row == null ? 0 : row.rowCount())))
         .onFailure().recoverWithItem(e -> failOutput(output, "Failed to save branch", e));
     
-    final Uni<DocDbBatchForOne> logUni = Execute.apply(tx, logsInsert).onItem()
+    final Uni<DocBatchForOne> logUni = Execute.apply(tx, logsInsert).onItem()
         .transform(row -> successOutput(output, "Commit log saved, number of new entries: "  + (row == null ? 0 : row.rowCount())))
         .onFailure().recoverWithItem(e -> failOutput(output, "Failed to save  commit log", e));
     
@@ -178,11 +178,11 @@ public class DocDbInsertsSqlPool implements DocDbInserts {
         ));
   }
 
-  private DocDbBatchForMany merge(DocDbBatchForMany start, DocDbBatchForMany ... current) {
-    final var builder = ImmutableDocDbBatchForMany.builder().from(start);
+  private DocBatchForMany merge(DocBatchForMany start, DocBatchForMany ... current) {
+    final var builder = ImmutableDocBatchForMany.builder().from(start);
     final var log = new StringBuilder(start.getLog().getText());
     var status = start.getStatus();
-    for(DocDbBatchForMany value : current) {
+    for(DocBatchForMany value : current) {
       if(value == null) {
         continue;
       }
@@ -198,11 +198,11 @@ public class DocDbInsertsSqlPool implements DocDbInserts {
   }  
   
   
-  private DocDbBatchForOne merge(DocDbBatchForOne start, DocDbBatchForOne ... current) {
-    final var builder = ImmutableDocDbBatchForOne.builder().from(start);
+  private DocBatchForOne merge(DocBatchForOne start, DocBatchForOne ... current) {
+    final var builder = ImmutableDocBatchForOne.builder().from(start);
     final var log = new StringBuilder(start.getLog().getText());
     var status = start.getStatus();
-    for(DocDbBatchForOne value : current) {
+    for(DocBatchForOne value : current) {
       if(value == null) {
         continue;
       }
@@ -216,33 +216,33 @@ public class DocDbInsertsSqlPool implements DocDbInserts {
     
     return builder.status(status).build();
   }
-  private DocDbBatchForMany successOutput(DocDbBatchForMany current, String msg) {
-    return ImmutableDocDbBatchForMany.builder()
+  private DocBatchForMany successOutput(DocBatchForMany current, String msg) {
+    return ImmutableDocBatchForMany.builder()
       .from(current)
       .status(BatchStatus.OK)
       .addMessages(ImmutableMessage.builder().text(msg).build())
       .build();
   }
-  private DocDbBatchForMany failOutput(DocDbBatchForMany current, String msg, Throwable t) {
+  private DocBatchForMany failOutput(DocBatchForMany current, String msg, Throwable t) {
     log.error("Batch failed because of: " + msg, t);
-    return ImmutableDocDbBatchForMany.builder()
+    return ImmutableDocBatchForMany.builder()
         .from(current)
         .status(BatchStatus.ERROR)
         .addMessages(ImmutableMessage.builder().text(msg).build())
         .build(); 
   }
   
-  private DocDbBatchForOne successOutput(DocDbBatchForOne current, String msg) {
-    return ImmutableDocDbBatchForOne.builder()
+  private DocBatchForOne successOutput(DocBatchForOne current, String msg) {
+    return ImmutableDocBatchForOne.builder()
       .from(current)
       .status(BatchStatus.OK)
       .addMessages(ImmutableMessage.builder().text(msg).build())
       .build();
   }
   
-  private DocDbBatchForOne failOutput(DocDbBatchForOne current, String msg, Throwable t) {
+  private DocBatchForOne failOutput(DocBatchForOne current, String msg, Throwable t) {
     log.error("Batch failed because of: " + msg, t);
-    return ImmutableDocDbBatchForOne.builder()
+    return ImmutableDocBatchForOne.builder()
         .from(current)
         .status(BatchStatus.ERROR)
         .addMessages(ImmutableMessage.builder().text(msg).build())

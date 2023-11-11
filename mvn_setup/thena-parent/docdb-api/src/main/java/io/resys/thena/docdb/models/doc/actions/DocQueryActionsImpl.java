@@ -1,4 +1,4 @@
-package io.resys.thena.docdb.models.doc;
+package io.resys.thena.docdb.models.doc.actions;
 
 import io.resys.thena.docdb.api.actions.DocQueryActions;
 import io.resys.thena.docdb.models.doc.queries.DocObjectsQueryImpl;

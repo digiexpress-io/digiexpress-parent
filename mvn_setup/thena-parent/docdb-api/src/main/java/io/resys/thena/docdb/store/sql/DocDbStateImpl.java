@@ -5,9 +5,9 @@ import java.util.function.Function;
 
 import io.resys.thena.docdb.api.exceptions.RepoException;
 import io.resys.thena.docdb.api.models.Repo;
-import io.resys.thena.docdb.models.doc.DocDbInserts;
-import io.resys.thena.docdb.models.doc.DocDbQueries;
-import io.resys.thena.docdb.models.doc.DocDbState;
+import io.resys.thena.docdb.models.doc.DocInserts;
+import io.resys.thena.docdb.models.doc.DocQueries;
+import io.resys.thena.docdb.models.doc.DocState;
 import io.resys.thena.docdb.models.doc.store.sql.queries.DocDbInsertsSqlPool;
 import io.resys.thena.docdb.spi.DbCollections;
 import io.resys.thena.docdb.spi.DbState.RepoBuilder;
@@ -22,14 +22,14 @@ import lombok.extern.slf4j.Slf4j;
 
 @RequiredArgsConstructor
 @Slf4j
-public class DocDbStateImpl implements DocDbState {
+public class DocDbStateImpl implements DocState {
   private final DbCollections ctx;
   private final io.vertx.mutiny.sqlclient.Pool pool; 
   private final ErrorHandler handler;
   private final Function<DbCollections, SqlSchema> sqlSchema; 
   private final Function<DbCollections, SqlMapper> sqlMapper;
   private final Function<DbCollections, SqlBuilder> sqlBuilder;
-  private final Function<ClientQuerySqlContext, DocDbQueries> clientQuery;
+  private final Function<ClientQuerySqlContext, DocQueries> clientQuery;
   
   @Override
   public <R> Uni<R> withTransaction(String repoId, TransactionFunction<R> callback) {
@@ -64,11 +64,11 @@ public class DocDbStateImpl implements DocDbState {
     });
   }
   @Override
-  public Uni<DocDbQueries> query(String repoNameOrId) {
+  public Uni<DocQueries> query(String repoNameOrId) {
     return project().getByNameOrId(repoNameOrId).onItem().transform(repo -> query(repo));
   }
   @Override
-  public Uni<DocDbInserts> insert(String repoNameOrId) {
+  public Uni<DocInserts> insert(String repoNameOrId) {
     return project().getByNameOrId(repoNameOrId).onItem().transform(repo -> insert(repo));
   }
   @Override
@@ -79,7 +79,7 @@ public class DocDbStateImpl implements DocDbState {
     return new RepoBuilderSqlPool(pool, null, ctx, sqlSchema.apply(ctx), sqlMapper.apply(ctx), sqlBuilder.apply(ctx), handler);
   }
   @Override
-  public DocDbInserts insert(Repo repo) {
+  public DocInserts insert(Repo repo) {
     final var wrapper = ImmutableSqlClientWrapper.builder()
         .repo(repo)
         .pool(pool)
@@ -89,7 +89,7 @@ public class DocDbStateImpl implements DocDbState {
     return new DocDbInsertsSqlPool(wrapper, sqlMapper.apply(wrapper.getNames()), sqlBuilder.apply(wrapper.getNames()), handler);
   }
   @Override
-  public DocDbQueries query(Repo repo) {
+  public DocQueries query(Repo repo) {
     final var wrapper = ImmutableSqlClientWrapper.builder()
         .repo(repo)
         .pool(pool)

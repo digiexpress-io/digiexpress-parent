@@ -26,7 +26,7 @@ import java.util.List;
 import io.resys.thena.docdb.api.LogConstants;
 import io.resys.thena.docdb.api.actions.PullActions.MatchCriteria;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Blob;
-import io.resys.thena.docdb.models.git.GitDbQueries.GitBlobQuery;
+import io.resys.thena.docdb.models.git.GitQueries.GitBlobQuery;
 import io.resys.thena.docdb.store.sql.SqlBuilder;
 import io.resys.thena.docdb.store.sql.SqlMapper;
 import io.resys.thena.docdb.store.sql.support.SqlClientWrapper;

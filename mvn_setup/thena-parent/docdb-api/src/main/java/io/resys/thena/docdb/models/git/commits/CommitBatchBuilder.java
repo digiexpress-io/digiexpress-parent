@@ -35,7 +35,7 @@ import io.resys.thena.docdb.api.models.ThenaGitObject.Branch;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Commit;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Tree;
 import io.resys.thena.docdb.api.models.ThenaGitObject.TreeValue;
-import io.resys.thena.docdb.models.git.GitDbInserts.Batch;
+import io.resys.thena.docdb.models.git.GitInserts.GitBatch;
 import io.vertx.core.json.JsonObject;
 import lombok.Builder;
 import lombok.experimental.Accessors;
@@ -46,7 +46,7 @@ public interface CommitBatchBuilder {
   CommitBatchBuilder toBeMerged(Map<String, JsonObjectMerge> toBeMerged);
   CommitBatchBuilder toBeInserted(Map<String, JsonObject> toBeInserted);
   CommitBatchBuilder toBeRemoved(Collection<String> toBeRemoved);
-  Batch build();
+  GitBatch build();
 
   
   @lombok.Data @lombok.Builder(toBuilder = true) @Accessors(fluent = false)

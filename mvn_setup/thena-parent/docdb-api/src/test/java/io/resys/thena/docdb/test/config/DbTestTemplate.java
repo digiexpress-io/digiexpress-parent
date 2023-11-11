@@ -19,7 +19,7 @@ import io.resys.thena.docdb.api.DocDB;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.Repo.RepoType;
 import io.resys.thena.docdb.jackson.VertexExtModule;
-import io.resys.thena.docdb.models.git.GitDbPrinter;
+import io.resys.thena.docdb.models.git.GitPrinter;
 import io.resys.thena.docdb.spi.DbCollections;
 import io.resys.thena.docdb.spi.DbState;
 import io.resys.thena.docdb.spi.DocDBDefault;
@@ -128,7 +128,7 @@ public class DbTestTemplate {
       final String result = new DocDbPrinter(createState()).print(repo);
       log.debug(result);
     } else {
-      final String result = new GitDbPrinter(createState()).print(repo);
+      final String result = new GitPrinter(createState()).print(repo);
       log.debug(result);
     }
   }
@@ -166,7 +166,7 @@ public class DbTestTemplate {
       return new DocDbPrinter(createState()).printWithStaticIds(client);
       
     }
-    return new GitDbPrinter(createState()).printWithStaticIds(client);
+    return new GitPrinter(createState()).printWithStaticIds(client);
   }
   
 }

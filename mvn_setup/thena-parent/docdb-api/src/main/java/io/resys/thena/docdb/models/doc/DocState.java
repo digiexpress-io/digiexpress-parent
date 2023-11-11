@@ -3,24 +3,24 @@ package io.resys.thena.docdb.models.doc;
 import io.resys.thena.docdb.api.models.Repo;
 import io.smallrye.mutiny.Uni;
 
-public interface DocDbState {
+public interface DocState {
 
   <R> Uni<R> withTransaction(String repoId, TransactionFunction<R> callback);
 
-  Uni<DocDbQueries> query(String repoNameOrId);
-  Uni<DocDbInserts> insert(String repoNameOrId);
+  Uni<DocQueries> query(String repoNameOrId);
+  Uni<DocInserts> insert(String repoNameOrId);
   Uni<DocRepo> withRepo(String repoNameOrId);
 
-  DocDbInserts insert(Repo repo);
-  DocDbQueries query(Repo repo);
+  DocInserts insert(Repo repo);
+  DocQueries query(Repo repo);
   DocRepo withRepo(Repo repo);
 
   interface DocRepo {
     String getRepoName();
     Repo getRepo();
     
-    DocDbInserts insert();
-    DocDbQueries query();
+    DocInserts insert();
+    DocQueries query();
   }
   
   @FunctionalInterface

@@ -2,7 +2,7 @@ package io.resys.thena.docdb.store.sql.factories;
 
 import org.immutables.value.Value;
 
-import io.resys.thena.docdb.models.git.GitDbQueries;
+import io.resys.thena.docdb.models.git.GitQueries;
 import io.resys.thena.docdb.models.git.store.sql.GitBlobHistoryQuerySqlPool;
 import io.resys.thena.docdb.models.git.store.sql.GitBlobQuerySqlPool;
 import io.resys.thena.docdb.models.git.store.sql.GitCommitQuerySqlPool;
@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class GitDbQueriesSqlImpl implements GitDbQueries {
+public class GitDbQueriesSqlImpl implements GitQueries {
   
   protected final ClientQuerySqlContext context;
   

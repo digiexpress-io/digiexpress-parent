@@ -2,7 +2,7 @@ package io.resys.thena.docdb.models.doc.commitone;
 
 import io.resys.thena.docdb.api.actions.DocCommitActions.CreateOneDoc;
 import io.resys.thena.docdb.api.actions.DocCommitActions.OneDocEnvelope;
-import io.resys.thena.docdb.models.doc.DocDbState.DocRepo;
+import io.resys.thena.docdb.models.doc.DocState.DocRepo;
 import io.resys.thena.docdb.models.doc.support.BatchForOneDocCreate;
 import io.resys.thena.docdb.api.actions.ImmutableOneDocEnvelope;
 import io.resys.thena.docdb.spi.DbState;

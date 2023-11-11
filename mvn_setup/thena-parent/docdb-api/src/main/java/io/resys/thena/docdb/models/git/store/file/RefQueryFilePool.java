@@ -23,7 +23,7 @@ package io.resys.thena.docdb.models.git.store.file;
 import java.util.Collection;
 
 import io.resys.thena.docdb.api.models.ThenaGitObject.Branch;
-import io.resys.thena.docdb.models.git.GitDbQueries.GitRefQuery;
+import io.resys.thena.docdb.models.git.GitQueries.GitRefQuery;
 import io.resys.thena.docdb.store.file.FileBuilder;
 import io.resys.thena.docdb.store.file.tables.Table.FileMapper;
 import io.resys.thena.docdb.store.file.tables.Table.FilePool;

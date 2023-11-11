@@ -19,11 +19,11 @@ import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranchLock;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocLock;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocLog;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocStatus;
-import io.resys.thena.docdb.models.doc.DocDbState.DocRepo;
-import io.resys.thena.docdb.models.doc.ImmutableDocDbBatchForOne;
+import io.resys.thena.docdb.models.doc.DocState.DocRepo;
+import io.resys.thena.docdb.models.doc.ImmutableDocBatchForOne;
 import io.resys.thena.docdb.models.doc.ImmutableDocLockCriteria;
 import io.resys.thena.docdb.models.doc.support.BatchForOneDocCreate;
-import io.resys.thena.docdb.models.git.GitDbInserts.BatchStatus;
+import io.resys.thena.docdb.models.git.GitInserts.BatchStatus;
 import io.resys.thena.docdb.models.git.commits.CommitLogger;
 import io.resys.thena.docdb.spi.DbState;
 import io.resys.thena.docdb.support.OidUtils;
@@ -114,7 +114,7 @@ public class ModifyOneDocImpl implements ModifyOneDoc {
       .meta(appendMeta)
       .build();
     
-    final var batchBuilder = ImmutableDocDbBatchForOne.builder()
+    final var batchBuilder = ImmutableDocBatchForOne.builder()
       .repoId(tx.getRepo().getId())
       .status(BatchStatus.OK)
       .doc(doc)
@@ -155,7 +155,7 @@ public class ModifyOneDocImpl implements ModifyOneDoc {
     return null;
   }
   
-  private void appendToBranch(DocBranchLock lock, DocRepo tx, ImmutableDocDbBatchForOne.Builder batch, CommitLogger logger) {
+  private void appendToBranch(DocBranchLock lock, DocRepo tx, ImmutableDocBatchForOne.Builder batch, CommitLogger logger) {
     final var branchId = lock.getBranch().get().getId();
     
     final var doc = ImmutableDoc.builder()

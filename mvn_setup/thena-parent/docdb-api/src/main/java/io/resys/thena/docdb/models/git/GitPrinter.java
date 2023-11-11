@@ -28,10 +28,10 @@ import io.resys.thena.docdb.api.models.Diff;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.spi.DbState;
 
-public class GitDbPrinter {
+public class GitPrinter {
   private final DbState state;
 
-  public GitDbPrinter(DbState state) {
+  public GitPrinter(DbState state) {
     super();
     this.state = state;
   }

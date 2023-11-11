@@ -2,7 +2,7 @@ package io.resys.thena.docdb.models.doc.store.sql.queries;
 
 import io.resys.thena.docdb.api.LogConstants;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocLog;
-import io.resys.thena.docdb.models.doc.DocDbQueries.DocLogQuery;
+import io.resys.thena.docdb.models.doc.DocQueries.DocLogQuery;
 import io.resys.thena.docdb.store.sql.SqlBuilder;
 import io.resys.thena.docdb.store.sql.SqlMapper;
 import io.resys.thena.docdb.store.sql.support.SqlClientWrapper;

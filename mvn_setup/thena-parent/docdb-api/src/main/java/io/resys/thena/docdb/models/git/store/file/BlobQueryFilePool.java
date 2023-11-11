@@ -31,7 +31,7 @@ import io.resys.thena.docdb.api.actions.PullActions.MatchCriteriaType;
 import io.resys.thena.docdb.api.models.ImmutableTree;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Blob;
 import io.resys.thena.docdb.api.models.ThenaGitObject.TreeValue;
-import io.resys.thena.docdb.models.git.GitDbQueries.GitBlobQuery;
+import io.resys.thena.docdb.models.git.GitQueries.GitBlobQuery;
 import io.resys.thena.docdb.store.file.FileBuilder;
 import io.resys.thena.docdb.store.file.tables.Table.FileMapper;
 import io.resys.thena.docdb.store.file.tables.Table.FilePool;

@@ -28,7 +28,7 @@ import io.resys.thena.docdb.api.models.ThenaDocObject.DocLog;
 import io.resys.thena.docdb.api.models.ThenaDocObjects.DocObject;
 import io.resys.thena.docdb.api.models.ThenaDocObjects.DocObjects;
 import io.resys.thena.docdb.api.models.ThenaEnvelope;
-import io.resys.thena.docdb.models.doc.DocDbQueries;
+import io.resys.thena.docdb.models.doc.DocQueries;
 import io.resys.thena.docdb.models.doc.ImmutableFlattedCriteria;
 import io.resys.thena.docdb.spi.DbState;
 import io.resys.thena.docdb.support.RepoAssert;
@@ -71,7 +71,7 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
         return Uni.createFrom().item(repoNotFound());
       }
       return state.toDocState().query(repoId)
-          .onItem().transformToMulti((DocDbQueries repo) -> repo.docs().findAllFlatted(criteria))
+          .onItem().transformToMulti((DocQueries repo) -> repo.docs().findAllFlatted(criteria))
           .collect().asList()
           .onItem().transform(data -> {
             if(data.isEmpty()) {
@@ -102,7 +102,7 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
         return Uni.createFrom().item(repoNotFound());
       }
       return state.toDocState().query(repoId)
-          .onItem().transformToMulti((DocDbQueries repo) -> repo.docs().findAllFlatted(criteria))
+          .onItem().transformToMulti((DocQueries repo) -> repo.docs().findAllFlatted(criteria))
           .collect().asList()
           .onItem().transform(data -> ImmutableQueryEnvelope.<DocObjects>builder()
               .repo(existing)

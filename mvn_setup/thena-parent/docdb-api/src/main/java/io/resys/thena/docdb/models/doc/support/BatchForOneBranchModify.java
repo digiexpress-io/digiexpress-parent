@@ -14,10 +14,10 @@ import io.resys.thena.docdb.api.models.ImmutableMessage;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranchLock;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocLog;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocStatus;
-import io.resys.thena.docdb.models.doc.DocDbInserts.DocDbBatchForOne;
-import io.resys.thena.docdb.models.doc.DocDbState.DocRepo;
-import io.resys.thena.docdb.models.doc.ImmutableDocDbBatchForOne;
-import io.resys.thena.docdb.models.git.GitDbInserts.BatchStatus;
+import io.resys.thena.docdb.models.doc.DocInserts.DocBatchForOne;
+import io.resys.thena.docdb.models.doc.DocState.DocRepo;
+import io.resys.thena.docdb.models.doc.ImmutableDocBatchForOne;
+import io.resys.thena.docdb.models.git.GitInserts.BatchStatus;
 import io.resys.thena.docdb.models.git.commits.CommitLogger;
 import io.resys.thena.docdb.support.OidUtils;
 import io.resys.thena.docdb.support.RepoAssert;
@@ -47,7 +47,7 @@ public class BatchForOneBranchModify {
   public BatchForOneBranchModify log(JsonObject doc) { this.appendLogs = doc; return this; }
   
 
-  public DocDbBatchForOne create() {
+  public DocBatchForOne create() {
     RepoAssert.notNull(lock, () -> "lock can't be null!");
     RepoAssert.notNull(tx, () -> "repo can't be null!");
     RepoAssert.notEmpty(author, () -> "author can't be empty!");
@@ -109,7 +109,7 @@ public class BatchForOneBranchModify {
       .append(System.lineSeparator());
     }
 
-    return ImmutableDocDbBatchForOne.builder()
+    return ImmutableDocBatchForOne.builder()
       .repoId(tx.getRepo().getId())
       .status(BatchStatus.OK)
       .doc(doc)

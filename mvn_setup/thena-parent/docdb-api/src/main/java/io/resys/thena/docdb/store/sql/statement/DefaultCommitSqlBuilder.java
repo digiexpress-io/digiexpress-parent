@@ -26,7 +26,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import io.resys.thena.docdb.api.models.ThenaGitObject.Commit;
-import io.resys.thena.docdb.models.git.GitDbQueries.LockCriteria;
+import io.resys.thena.docdb.models.git.GitQueries.LockCriteria;
 import io.resys.thena.docdb.spi.DbCollections;
 import io.resys.thena.docdb.store.sql.ImmutableSql;
 import io.resys.thena.docdb.store.sql.ImmutableSqlTuple;

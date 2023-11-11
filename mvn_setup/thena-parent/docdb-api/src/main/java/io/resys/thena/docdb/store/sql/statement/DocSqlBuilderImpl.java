@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 import io.resys.thena.docdb.api.models.ThenaDocObject.Doc;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocStatus;
-import io.resys.thena.docdb.models.doc.DocDbQueries.FlattedCriteria;
+import io.resys.thena.docdb.models.doc.DocQueries.FlattedCriteria;
 import io.resys.thena.docdb.spi.DbCollections;
 import io.resys.thena.docdb.store.sql.ImmutableSql;
 import io.resys.thena.docdb.store.sql.ImmutableSqlTuple;

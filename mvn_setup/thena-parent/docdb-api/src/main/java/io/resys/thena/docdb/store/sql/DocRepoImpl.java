@@ -23,9 +23,9 @@ package io.resys.thena.docdb.store.sql;
 import java.util.function.Function;
 
 import io.resys.thena.docdb.api.models.Repo;
-import io.resys.thena.docdb.models.doc.DocDbInserts;
-import io.resys.thena.docdb.models.doc.DocDbQueries;
-import io.resys.thena.docdb.models.doc.DocDbState.DocRepo;
+import io.resys.thena.docdb.models.doc.DocInserts;
+import io.resys.thena.docdb.models.doc.DocQueries;
+import io.resys.thena.docdb.models.doc.DocState.DocRepo;
 import io.resys.thena.docdb.models.doc.store.sql.queries.DocDbInsertsSqlPool;
 import io.resys.thena.docdb.spi.DbCollections;
 import io.resys.thena.docdb.store.sql.factories.GitDbQueriesSqlImpl.ClientQuerySqlContext;
@@ -40,7 +40,7 @@ public class DocRepoImpl implements DocRepo {
   private final ErrorHandler handler; 
   private final Function<DbCollections, SqlMapper> sqlMapper;
   private final Function<DbCollections, SqlBuilder> sqlBuilder;
-  private final Function<ClientQuerySqlContext, DocDbQueries> clientQuery;
+  private final Function<ClientQuerySqlContext, DocQueries> clientQuery;
   
   @Override
   public String getRepoName() {
@@ -51,7 +51,7 @@ public class DocRepoImpl implements DocRepo {
     return wrapper.getRepo();
   }
   @Override
-  public DocDbQueries query() {
+  public DocQueries query() {
     final var ctx = ImmutableClientQuerySqlContext.builder()
         .mapper(sqlMapper.apply(wrapper.getNames()))
         .builder(sqlBuilder.apply(wrapper.getNames()))
@@ -62,7 +62,7 @@ public class DocRepoImpl implements DocRepo {
     return clientQuery.apply(ctx);
   }
   @Override
-  public DocDbInserts insert() {
+  public DocInserts insert() {
     return new DocDbInsertsSqlPool(wrapper, sqlMapper.apply(wrapper.getNames()), sqlBuilder.apply(wrapper.getNames()), handler);
   }
 }

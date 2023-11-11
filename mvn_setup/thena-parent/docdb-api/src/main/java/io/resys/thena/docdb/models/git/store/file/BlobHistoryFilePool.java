@@ -33,7 +33,7 @@ import io.resys.thena.docdb.api.models.ThenaGitObject.Blob;
 import io.resys.thena.docdb.api.models.ThenaGitObject.BlobHistory;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Commit;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Tree;
-import io.resys.thena.docdb.models.git.GitDbQueries.GitBlobHistoryQuery;
+import io.resys.thena.docdb.models.git.GitQueries.GitBlobHistoryQuery;
 import io.resys.thena.docdb.store.file.FileBuilder;
 import io.resys.thena.docdb.store.file.tables.Table.FileMapper;
 import io.resys.thena.docdb.store.file.tables.Table.FilePool;

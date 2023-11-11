@@ -14,9 +14,9 @@ import io.resys.thena.docdb.api.models.ImmutableDocLog;
 import io.resys.thena.docdb.api.models.ImmutableMessage;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocLog;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocStatus;
-import io.resys.thena.docdb.models.doc.DocDbInserts.DocDbBatchForOne;
-import io.resys.thena.docdb.models.doc.ImmutableDocDbBatchForOne;
-import io.resys.thena.docdb.models.git.GitDbInserts.BatchStatus;
+import io.resys.thena.docdb.models.doc.DocInserts.DocBatchForOne;
+import io.resys.thena.docdb.models.doc.ImmutableDocBatchForOne;
+import io.resys.thena.docdb.models.git.GitInserts.BatchStatus;
 import io.resys.thena.docdb.models.git.commits.CommitLogger;
 import io.resys.thena.docdb.support.OidUtils;
 import io.resys.thena.docdb.support.RepoAssert;
@@ -47,7 +47,7 @@ public class BatchForOneDocCreate {
   public BatchForOneDocCreate append(JsonObject blob) {       this.appendBlobs = RepoAssert.notNull(blob, () -> "append can't be empty!"); return this; }
   
   
-  public DocDbBatchForOne create() {
+  public DocBatchForOne create() {
     RepoAssert.notEmpty(branchName, () -> "branchName can't be empty!");
     RepoAssert.notNull(repoId, () -> "repoId can't be empty!");
     RepoAssert.notEmpty(author, () -> "author can't be empty!");
@@ -116,7 +116,7 @@ public class BatchForOneDocCreate {
       .append(System.lineSeparator());
     }
 
-    final var batch = ImmutableDocDbBatchForOne.builder()
+    final var batch = ImmutableDocBatchForOne.builder()
       .repoId(repoId)
       .status(BatchStatus.OK)
       .doc(doc)

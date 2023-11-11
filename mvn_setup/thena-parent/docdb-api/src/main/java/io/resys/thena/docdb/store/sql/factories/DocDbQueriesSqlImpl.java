@@ -1,6 +1,6 @@
 package io.resys.thena.docdb.store.sql.factories;
 
-import io.resys.thena.docdb.models.doc.DocDbQueries;
+import io.resys.thena.docdb.models.doc.DocQueries;
 import io.resys.thena.docdb.models.doc.store.sql.queries.DocBranchQuerySqlPool;
 import io.resys.thena.docdb.models.doc.store.sql.queries.DocCommitQuerySqlPool;
 import io.resys.thena.docdb.models.doc.store.sql.queries.DocLogQuerySqlPool;
@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class DocDbQueriesSqlImpl implements DocDbQueries {
+public class DocDbQueriesSqlImpl implements DocQueries {
   
   protected final ClientQuerySqlContext context;
 

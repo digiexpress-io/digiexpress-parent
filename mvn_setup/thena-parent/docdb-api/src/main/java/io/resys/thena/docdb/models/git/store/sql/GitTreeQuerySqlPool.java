@@ -25,7 +25,7 @@ import io.resys.thena.docdb.api.LogConstants;
 import io.resys.thena.docdb.api.models.ImmutableTree;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Tree;
 import io.resys.thena.docdb.api.models.ThenaGitObject.TreeValue;
-import io.resys.thena.docdb.models.git.GitDbQueries.GitTreeQuery;
+import io.resys.thena.docdb.models.git.GitQueries.GitTreeQuery;
 import io.resys.thena.docdb.store.sql.SqlBuilder;
 import io.resys.thena.docdb.store.sql.SqlMapper;
 import io.resys.thena.docdb.store.sql.support.SqlClientWrapper;

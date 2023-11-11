@@ -37,7 +37,7 @@ import io.resys.thena.docdb.api.models.ThenaGitObject.Tree;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 
-public interface GitDbQueries {
+public interface GitQueries {
   GitTagQuery tags();
   GitCommitQuery commits();
   GitRefQuery refs();

@@ -13,14 +13,14 @@ import io.resys.thena.docdb.api.actions.DocCommitActions.ModifyManyDocBranches;
 import io.resys.thena.docdb.api.actions.ImmutableManyDocsEnvelope;
 import io.resys.thena.docdb.api.models.ImmutableMessage;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranchLock;
-import io.resys.thena.docdb.models.doc.DocDbInserts.DocDbBatchForMany;
-import io.resys.thena.docdb.models.doc.DocDbQueries.DocBranchLockCriteria;
-import io.resys.thena.docdb.models.doc.DocDbState.DocRepo;
+import io.resys.thena.docdb.models.doc.DocInserts.DocBatchForMany;
+import io.resys.thena.docdb.models.doc.DocQueries.DocBranchLockCriteria;
+import io.resys.thena.docdb.models.doc.DocState.DocRepo;
+import io.resys.thena.docdb.models.doc.ImmutableDocBatchForMany;
 import io.resys.thena.docdb.models.doc.ImmutableDocBranchLockCriteria;
-import io.resys.thena.docdb.models.doc.ImmutableDocDbBatchForMany;
 import io.resys.thena.docdb.models.doc.support.BatchForOneBranchModify;
 import io.resys.thena.docdb.models.doc.support.BatchForOneDocCreate;
-import io.resys.thena.docdb.models.git.GitDbInserts.BatchStatus;
+import io.resys.thena.docdb.models.git.GitInserts.BatchStatus;
 import io.resys.thena.docdb.spi.DbState;
 import io.resys.thena.docdb.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
@@ -177,7 +177,7 @@ public class ModifyManyDocBranchesImpl implements ModifyManyDocBranches {
       ));
     
     final var logs = new ArrayList<String>();
-    final var many = ImmutableDocDbBatchForMany.builder()
+    final var many = ImmutableDocBatchForMany.builder()
         .repo(tx.getRepo())
         .status(BatchStatus.OK);
     for(ItemModData item : items) {
@@ -210,7 +210,7 @@ public class ModifyManyDocBranchesImpl implements ModifyManyDocBranches {
     return tx.insert().batchMany(changes).onItem().transform(this::mapTo);
   }
   
-  private ManyDocsEnvelope mapTo(DocDbBatchForMany rsp) {
+  private ManyDocsEnvelope mapTo(DocBatchForMany rsp) {
     return ImmutableManyDocsEnvelope.builder()
     .repoId(repoId)
     .doc(rsp.getItems().stream()

@@ -9,7 +9,7 @@ import io.resys.thena.docdb.api.actions.DocCommitActions.OneDocEnvelope;
 import io.resys.thena.docdb.api.actions.ImmutableOneDocEnvelope;
 import io.resys.thena.docdb.api.models.ImmutableMessage;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranchLock;
-import io.resys.thena.docdb.models.doc.DocDbState.DocRepo;
+import io.resys.thena.docdb.models.doc.DocState.DocRepo;
 import io.resys.thena.docdb.models.doc.ImmutableDocBranchLockCriteria;
 import io.resys.thena.docdb.models.doc.support.BatchForOneBranchModify;
 import io.resys.thena.docdb.models.doc.support.BatchForOneDocCreate;

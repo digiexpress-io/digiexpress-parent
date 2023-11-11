@@ -22,10 +22,10 @@ package io.resys.thena.docdb.store.file;
 
 import io.resys.thena.docdb.api.DocDB;
 import io.resys.thena.docdb.api.models.Repo;
-import io.resys.thena.docdb.models.doc.DocDbState;
-import io.resys.thena.docdb.models.git.GitDbInserts;
-import io.resys.thena.docdb.models.git.GitDbQueries;
-import io.resys.thena.docdb.models.git.GitDbState;
+import io.resys.thena.docdb.models.doc.DocState;
+import io.resys.thena.docdb.models.git.GitInserts;
+import io.resys.thena.docdb.models.git.GitQueries;
+import io.resys.thena.docdb.models.git.GitState;
 import io.resys.thena.docdb.models.git.store.file.ClientInsertBuilderFilePool;
 import io.resys.thena.docdb.models.git.store.file.RepoBuilderFilePool;
 import io.resys.thena.docdb.spi.DbCollections;
@@ -59,8 +59,8 @@ public class DocDBFactoryFile {
         return new RepoBuilderFilePool(client, ctx, sqlMapper(ctx), sqlBuilder(ctx), handler);
       }
       @Override
-      public GitDbState toGitState() {
-        return new GitDbState() {
+      public GitState toGitState() {
+        return new GitState() {
           @Override
           public <R> Uni<R> withTransaction(String repoId, String headName, TransactionFunction<R> callback) {
             return project().getByNameOrId(repoId).onItem().transformToUni(repo -> {
@@ -73,11 +73,11 @@ public class DocDBFactoryFile {
             return project().getByNameOrId(repoNameOrId).onItem().transform(repo -> withRepo(repo));
           }
           @Override
-          public Uni<GitDbInserts> insert(String repoNameOrId) {
+          public Uni<GitInserts> insert(String repoNameOrId) {
             return project().getByNameOrId(repoNameOrId).onItem().transform(repo -> insert(repo));
           }
           @Override
-          public GitDbInserts insert(Repo repo) {
+          public GitInserts insert(Repo repo) {
             final var wrapper = ImmutableFileClientWrapper.builder()
                 .repo(repo)
                 .client(client)
@@ -86,11 +86,11 @@ public class DocDBFactoryFile {
             return new ClientInsertBuilderFilePool(wrapper.getClient(), sqlMapper(wrapper.getNames()), sqlBuilder(wrapper.getNames()), handler);
           }
           @Override
-          public Uni<GitDbQueries> query(String repoNameOrId) {
+          public Uni<GitQueries> query(String repoNameOrId) {
             return project().getByNameOrId(repoNameOrId).onItem().transform(repo -> query(repo));
           }
           @Override
-          public GitDbQueries query(Repo repo) {
+          public GitQueries query(Repo repo) {
             final var wrapper = ImmutableFileClientWrapper.builder()
                 .repo(repo)
                 .client(client)
@@ -115,11 +115,11 @@ public class DocDBFactoryFile {
                 return repo.getName();
               }
               @Override
-              public GitDbQueries query() {
+              public GitQueries query() {
                 return new ClientQueryFilePool(wrapper, sqlMapper(wrapper.getNames()), sqlBuilder(wrapper.getNames()), handler);
               }
               @Override
-              public GitDbInserts insert() {
+              public GitInserts insert() {
                 return new ClientInsertBuilderFilePool(wrapper.getClient(), sqlMapper(wrapper.getNames()), sqlBuilder(wrapper.getNames()), handler);
               }
             };
@@ -127,7 +127,7 @@ public class DocDBFactoryFile {
         };
       }
       @Override
-      public DocDbState toDocState() {
+      public DocState toDocState() {
         // TODO Auto-generated method stub
         throw new RuntimeException("not implemented");
       }

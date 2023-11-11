@@ -5,9 +5,9 @@ import java.util.function.Function;
 
 import io.resys.thena.docdb.api.exceptions.RepoException;
 import io.resys.thena.docdb.api.models.Repo;
-import io.resys.thena.docdb.models.git.GitDbInserts;
-import io.resys.thena.docdb.models.git.GitDbQueries;
-import io.resys.thena.docdb.models.git.GitDbState;
+import io.resys.thena.docdb.models.git.GitInserts;
+import io.resys.thena.docdb.models.git.GitQueries;
+import io.resys.thena.docdb.models.git.GitState;
 import io.resys.thena.docdb.models.git.store.sql.GitDbInsertsSqlPool;
 import io.resys.thena.docdb.spi.DbCollections;
 import io.resys.thena.docdb.spi.DbState.RepoBuilder;
@@ -22,14 +22,14 @@ import lombok.extern.slf4j.Slf4j;
 
 @RequiredArgsConstructor
 @Slf4j
-public class GitDbStateImpl implements GitDbState {
+public class GitDbStateImpl implements GitState {
   private final DbCollections ctx;
   private final io.vertx.mutiny.sqlclient.Pool pool; 
   private final ErrorHandler handler;
   private final Function<DbCollections, SqlSchema> sqlSchema; 
   private final Function<DbCollections, SqlMapper> sqlMapper;
   private final Function<DbCollections, SqlBuilder> sqlBuilder;
-  private final Function<ClientQuerySqlContext, GitDbQueries> clientQuery;
+  private final Function<ClientQuerySqlContext, GitQueries> clientQuery;
   
   @Override
   public <R> Uni<R> withTransaction(String repoId, String headName, TransactionFunction<R> callback) {
@@ -64,11 +64,11 @@ public class GitDbStateImpl implements GitDbState {
     });
   }
   @Override
-  public Uni<GitDbQueries> query(String repoNameOrId) {
+  public Uni<GitQueries> query(String repoNameOrId) {
     return project().getByNameOrId(repoNameOrId).onItem().transform(repo -> query(repo));
   }
   @Override
-  public Uni<GitDbInserts> insert(String repoNameOrId) {
+  public Uni<GitInserts> insert(String repoNameOrId) {
     return project().getByNameOrId(repoNameOrId).onItem().transform(repo -> insert(repo));
   }
   @Override
@@ -79,7 +79,7 @@ public class GitDbStateImpl implements GitDbState {
     return new RepoBuilderSqlPool(pool, null, ctx, sqlSchema.apply(ctx), sqlMapper.apply(ctx), sqlBuilder.apply(ctx), handler);
   }
   @Override
-  public GitDbInserts insert(Repo repo) {
+  public GitInserts insert(Repo repo) {
     final var wrapper = ImmutableSqlClientWrapper.builder()
         .repo(repo)
         .pool(pool)
@@ -89,7 +89,7 @@ public class GitDbStateImpl implements GitDbState {
     return new GitDbInsertsSqlPool(wrapper, sqlMapper.apply(wrapper.getNames()), sqlBuilder.apply(wrapper.getNames()), handler);
   }
   @Override
-  public GitDbQueries query(Repo repo) {
+  public GitQueries query(Repo repo) {
     final var wrapper = ImmutableSqlClientWrapper.builder()
         .repo(repo)
         .pool(pool)

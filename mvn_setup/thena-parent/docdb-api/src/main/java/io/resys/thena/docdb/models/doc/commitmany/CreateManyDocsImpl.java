@@ -10,11 +10,11 @@ import io.resys.thena.docdb.api.actions.DocCommitActions.CreateManyDocs;
 import io.resys.thena.docdb.api.actions.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.docdb.api.actions.ImmutableManyDocsEnvelope;
 import io.resys.thena.docdb.api.models.ImmutableMessage;
-import io.resys.thena.docdb.models.doc.DocDbInserts.DocDbBatchForOne;
-import io.resys.thena.docdb.models.doc.DocDbState.DocRepo;
+import io.resys.thena.docdb.models.doc.DocInserts.DocBatchForOne;
+import io.resys.thena.docdb.models.doc.DocState.DocRepo;
+import io.resys.thena.docdb.models.doc.ImmutableDocBatchForMany;
 import io.resys.thena.docdb.models.doc.support.BatchForOneDocCreate;
-import io.resys.thena.docdb.models.doc.ImmutableDocDbBatchForMany;
-import io.resys.thena.docdb.models.git.GitDbInserts.BatchStatus;
+import io.resys.thena.docdb.models.git.GitInserts.BatchStatus;
 import io.resys.thena.docdb.spi.DbState;
 import io.resys.thena.docdb.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CreateManyDocsImpl implements CreateManyDocs {
   private final DbState state;
-  private final List<DocDbBatchForOne> items = new ArrayList<DocDbBatchForOne>();
+  private final List<DocBatchForOne> items = new ArrayList<DocBatchForOne>();
   
   private String repoId;
   private String branchName;
@@ -80,7 +80,7 @@ public class CreateManyDocsImpl implements CreateManyDocs {
   }
   
   private Uni<ManyDocsEnvelope> doInTx(DocRepo tx) {  
-    final var batch = ImmutableDocDbBatchForMany.builder()
+    final var batch = ImmutableDocBatchForMany.builder()
         .repo(tx.getRepo())
         .status(BatchStatus.OK)
         .log(ImmutableMessage.builder()

@@ -28,8 +28,8 @@ import io.resys.thena.docdb.api.models.ThenaGitObject.Branch;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Commit;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Tag;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Tree;
-import io.resys.thena.docdb.models.git.GitDbInserts;
-import io.resys.thena.docdb.models.git.ImmutableBatch;
+import io.resys.thena.docdb.models.git.GitInserts;
+import io.resys.thena.docdb.models.git.ImmutableGitBatch;
 import io.resys.thena.docdb.models.git.ImmutableInsertResult;
 import io.resys.thena.docdb.models.git.ImmutableUpsertResult;
 import io.resys.thena.docdb.store.file.FileBuilder;
@@ -44,7 +44,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @RequiredArgsConstructor
 @Slf4j
-public class ClientInsertBuilderFilePool implements GitDbInserts {
+public class ClientInsertBuilderFilePool implements GitInserts {
   private final FilePool client;
   private final FileMapper mapper;
   private final FileBuilder sqlBuilder;
@@ -271,7 +271,7 @@ public class ClientInsertBuilderFilePool implements GitDbInserts {
  
   
   @Override
-  public Uni<Batch> batch(Batch output) {
+  public Uni<GitBatch> batch(GitBatch output) {
     final var ref = output.getRef().getRef();
     final var blobsInsert = sqlBuilder.blobs().insertAll(output.getBlobs());
     final var treeInsert = sqlBuilder.trees().insertOne(output.getTree());
@@ -279,7 +279,7 @@ public class ClientInsertBuilderFilePool implements GitDbInserts {
     final var commitsInsert = sqlBuilder.commits().insertOne(output.getCommit());
     final var findRefByName = sqlBuilder.refs().getByName(ref.getName());
   
-    final Uni<Batch> start;
+    final Uni<GitBatch> start;
     if(blobsInsert.getProps().isEmpty()) {
       start = Uni.createFrom().item(successOutput(output, "No new blobs provided, nothing to save"));
     } else {
@@ -331,16 +331,16 @@ public class ClientInsertBuilderFilePool implements GitDbInserts {
     });
   }
   
-  private Batch successOutput(Batch current, String msg) {
-    return ImmutableBatch.builder()
+  private GitBatch successOutput(GitBatch current, String msg) {
+    return ImmutableGitBatch.builder()
       .from(current)
       .status(BatchStatus.OK)
       .addMessages(ImmutableMessage.builder().text(msg).build())
       .build();
   }
   
-  private Batch failOutput(Batch current, String msg, Throwable t) {
-    return ImmutableBatch.builder()
+  private GitBatch failOutput(GitBatch current, String msg, Throwable t) {
+    return ImmutableGitBatch.builder()
         .from(current)
         .status(BatchStatus.ERROR)
         .addMessages(ImmutableMessage.builder().text(msg).build())

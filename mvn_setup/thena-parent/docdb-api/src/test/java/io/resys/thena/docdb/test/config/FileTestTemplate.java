@@ -40,7 +40,7 @@ import io.resys.thena.docdb.api.actions.RepoActions.RepoResult;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.Repo.RepoType;
 import io.resys.thena.docdb.jackson.VertexExtModule;
-import io.resys.thena.docdb.models.git.GitDbPrinter;
+import io.resys.thena.docdb.models.git.GitPrinter;
 import io.resys.thena.docdb.spi.DbCollections;
 import io.resys.thena.docdb.spi.DbState;
 import io.resys.thena.docdb.store.file.DocDBFactoryFile;
@@ -133,7 +133,7 @@ public class FileTestTemplate {
     final var ctx = DbCollections.defaults(db);
     final var state = DocDBFactoryFile.state(ctx, new FilePoolImpl(file, objectMapper), new FileErrors());
     
-    final String result = new GitDbPrinter(state).print(repo);
+    final String result = new GitPrinter(state).print(repo);
     log.debug(result);
   }
 

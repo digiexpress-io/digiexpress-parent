@@ -36,7 +36,7 @@ import io.resys.thena.docdb.api.models.ThenaDocObject.DocLog;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 
-public interface DocDbQueries {
+public interface DocQueries {
   
   DocQuery docs();
   DocBranchQuery branches();

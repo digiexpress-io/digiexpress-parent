@@ -34,7 +34,7 @@ import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Branch;
 import io.resys.thena.docdb.api.models.ThenaGitObjects.BranchObjects;
-import io.resys.thena.docdb.models.git.GitDbState.GitRepo;
+import io.resys.thena.docdb.models.git.GitState.GitRepo;
 import io.resys.thena.docdb.spi.DbState;
 import io.resys.thena.docdb.support.RepoAssert;
 import io.smallrye.mutiny.Uni;

@@ -23,12 +23,12 @@ package io.resys.thena.docdb.models.git;
 import io.resys.thena.docdb.api.models.Repo;
 import io.smallrye.mutiny.Uni;
 
-public interface GitDbState {
-  Uni<GitDbInserts> insert(String repoNameOrId);
-  GitDbInserts insert(Repo repo);
+public interface GitState {
+  Uni<GitInserts> insert(String repoNameOrId);
+  GitInserts insert(Repo repo);
   
-  Uni<GitDbQueries> query(String repoNameOrId);
-  GitDbQueries query(Repo repo);
+  Uni<GitQueries> query(String repoNameOrId);
+  GitQueries query(Repo repo);
   
   GitRepo withRepo(Repo repo);
   Uni<GitRepo> withRepo(String repoNameOrId);
@@ -38,8 +38,8 @@ public interface GitDbState {
   interface GitRepo {
     String getRepoName();
     Repo getRepo();
-    GitDbInserts insert();
-    GitDbQueries query();
+    GitInserts insert();
+    GitQueries query();
   }
   
   @FunctionalInterface
