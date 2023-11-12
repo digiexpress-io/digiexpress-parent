@@ -31,6 +31,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import io.resys.thena.docdb.spi.DbCollections;
+import io.resys.thena.docdb.store.sql.SqlBuilder.Sql;
 import io.resys.thena.docdb.store.sql.statement.SqlSchemaImpl;
 import lombok.extern.slf4j.Slf4j;
 
@@ -56,6 +57,17 @@ public class SqlDbSchemaPrintTest {
       .append(sqlSchema.createRefsConstraints().getValue())
       .append(sqlSchema.createTagsConstraints().getValue())
       .append(sqlSchema.createTreeItemsConstraints().getValue())
+      
+      
+      .append(sqlSchema.createDoc().getValue())
+      .append(sqlSchema.createDocBranch().getValue())
+      .append(sqlSchema.createDocBranchConstraints().getValue())
+      .append(sqlSchema.createDocCommits().getValue())
+      .append(sqlSchema.createDocCommitsConstraints().getValue())
+      .append(sqlSchema.createDocLog().getValue())
+      .append(sqlSchema.createDocLogConstraints().getValue())
+      
+      
       .toString();
     
     log.debug(schema);
