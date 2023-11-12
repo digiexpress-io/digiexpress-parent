@@ -120,15 +120,17 @@ class GroupVisitor {
  */
 class TenantEntryDescriptorImpl implements TenantEntryDescriptor {
   private _source: TenantEntry;
+  private _tenantId: string;
   private _profile: Profile;
   private _created: Date;
   private _lastSaved: Date;
 
-  constructor(source: TenantEntry, profile: Profile, today: Date) {
+  constructor(source: TenantEntry, profile: Profile, today: Date, tenantId: string) {
     this._source = source;
     this._profile = profile;
     this._created = new Date(source.metadata.created);
     this._lastSaved = new Date(source.metadata.lastSaved);
+    this._tenantId = tenantId;
 
   }
   get source(): TenantEntry { return this._source }
@@ -137,6 +139,7 @@ class TenantEntryDescriptorImpl implements TenantEntryDescriptor {
   get created(): Date { return this._created }
   get lastSaved(): Date { return this._lastSaved }
   get profile() { return this._profile }
+  get tenantId() { return this._tenantId }
 }
 
 /**

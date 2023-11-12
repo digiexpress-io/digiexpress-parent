@@ -1,12 +1,11 @@
 import { Backend, Store } from './backend-types';
 import type { TaskId, Task, TaskPagination, TaskStore, TaskUpdateCommand, CreateTask } from './task-types';
 import { ProjectId, Project, ProjectPagination, ProjectStore, ProjectUpdateCommand, CreateProject } from './project-types';
-import { Tenant, TenantEntry, TenantStore, TenantEntryPagination, DialobTag, DialobForm } from './tenant-types';
+import { Tenant, TenantEntry, TenantStore, TenantEntryPagination, DialobTag, DialobForm, DialobSession, FormTechnicalName, TenantId, FormId } from './tenant-types';
 
 import type { Profile, ProfileStore } from './profile-types';
 import type { User, Org } from './org-types';
 import { mockOrg } from './client-mock';
-
 
 
 type BackendInit = { created: boolean } | null
@@ -60,6 +59,7 @@ export class ServiceImpl implements Backend {
       getTenants: () => this.getTenants(),
       getDialobTags: (dialobFormId: string) => this.getDialobTags(dialobFormId),
       getDialobForm: (dialobFormId: string) => this.getDialobForm(dialobFormId),
+      getDialobSessions: (props: { formId: FormId, technicalName: FormTechnicalName, tenantId: TenantId }) => this.getDialobSessions(props)
     };
   }
   get task(): TaskStore {
@@ -97,9 +97,15 @@ export class ServiceImpl implements Backend {
   async getDialobForm(dialobFormId: string): Promise<DialobForm> {
     return await this._store.fetch<DialobForm>(`api/forms/${dialobFormId}`);
   }
-
-
-
+  async getDialobSessions(props: { formId: FormId, technicalName: FormTechnicalName, tenantId: TenantId }): Promise<DialobSession[]> {
+    try {
+      return await this._store.fetch<DialobSession[]>(`api/questionnaires/?formName=${props.technicalName}&tenantId=${props.tenantId}`)
+    } catch (e) {
+      console.log("falling back to typescript filtering", props);
+      const result: DialobSession[] = await this._store.fetch<DialobSession[]>(`api/questionnaires`);
+      return result.filter(q => q.metadata.formId === props.formId && q.metadata.tenantId === props.tenantId);
+    }
+  }
   async createTask(commands: CreateTask): Promise<Task> {
     return await this._store.fetch<Task>(`tasks`, {
       method: 'POST',
@@ -130,7 +136,6 @@ export class ServiceImpl implements Backend {
   async getActiveProjects(): Promise<ProjectPagination> {
     const projects = await this._store.fetch<object[]>(`projects`);
 
-    ///const projects = Object.values(mockProjects);
     return {
       page: 1,
       total: { pages: 1, records: projects.length },

@@ -1,26 +1,31 @@
 import React from 'react';
-import { Dialog, DialogContent, DialogTitle, Stack, Box, DialogActions, IconButton, Typography, useTheme, alpha, Grid } from '@mui/material';
+import { Dialog, DialogContent, DialogTitle, Stack, Box, DialogActions, IconButton, Typography, useTheme, alpha, Grid, CircularProgress } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { FormattedMessage } from 'react-intl';
 
 import Burger from 'components-burger';
 import { TenantEntryDescriptor } from 'descriptor-tenant';
-
+import { DialobForm, DialobSession } from 'client'
 
 const DialobSessionsDialog: React.FC<{
-  open: boolean,
   onClose: () => void,
-  entry: TenantEntryDescriptor
+  entry: TenantEntryDescriptor,
+  form: DialobForm | undefined,
+  sessions: DialobSession[] | undefined
 }> = (props) => {
+
+  const { form, entry, sessions } = props;
   const theme = useTheme();
 
-  if (!props.open) {
-    return null;
+
+  if (!form || !sessions) {
+    return (<Dialog open={true} fullWidth maxWidth='md'>
+      <DialogContent>
+        <CircularProgress />
+      </DialogContent>
+    </Dialog>);
   }
-  //session: Status	Created	Last answer	Creator	Owner	Session ID
-
   return (
-
     <Dialog open={true} fullWidth maxWidth='md'>
       <DialogTitle sx={{
         backgroundColor: theme.palette.mainContent.main,
@@ -64,7 +69,8 @@ const DialobSessionsDialog: React.FC<{
               <Typography fontWeight='bold'><FormattedMessage id='dialob.form.sessions' /></Typography>
             </Grid>
             <Grid item md={9} lg={9} xl={9}>
-              <Typography>SESSIONS</Typography>
+              {sessions.map((session) => session.metadata.status)}
+
             </Grid>
           </Grid>
         </Stack>

@@ -30,6 +30,8 @@ class TenantStateBuilder implements TenantState {
     this._profile = init.profile;
     this._palette = init.palette;
     this._tenantEntries = init.tenantEntries;
+    this._activeTenantEntry = init.activeTenantEntry;
+    this._activeTenant = init.activeTenant;
   }
 
 
@@ -81,7 +83,7 @@ class TenantStateBuilder implements TenantState {
   withTenantEntries(entries: TenantEntry[]): TenantStateBuilder {
     const today = new Date(this._profile.today);
     today.setHours(0, 0, 0, 0);
-    return new TenantStateBuilder({ ...this.clone(), tenantEntries: entries.map((entry) => new TenantEntryDescriptorImpl(entry, this._profile, today)) });
+    return new TenantStateBuilder({ ...this.clone(), tenantEntries: entries.map((entry) => new TenantEntryDescriptorImpl(entry, this._profile, today, this._activeTenant!)) });
   }
 
   clone(): ExtendedInit {

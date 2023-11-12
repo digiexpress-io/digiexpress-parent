@@ -40,11 +40,12 @@ const TenantProvider: React.FC<{ children: React.ReactNode, init: { backend: Bac
     }
     backend.tenant.getTenants().then(data => {
       setLoading(false);
+      console.log(data);
 
       if (data.length === 1) {
         const [{ id }] = data;
         backend.tenant.getTenantEntries(id).then(entries => {
-          setState(prev => prev.withProfile(profile).withTenants(data).withTenantEntries(entries.records));
+          setState(prev => prev.withActiveTenant(id).withProfile(profile).withTenants(data).withTenantEntries(entries.records));
         });
       } else {
         setState(prev => prev.withProfile(profile).withTenants(data))

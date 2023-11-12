@@ -1,5 +1,5 @@
 
-import { TenantEntry, FormTechnicalName, FormTitle, Tenant, TenantId, Profile } from 'client';
+import { TenantEntry, FormTechnicalName, FormTitle, Tenant, TenantId, Profile, DialobSession } from 'client';
 
 export interface PaletteType {
   colors: { red: string, green: string, yellow: string, blue: string, violet: string }
@@ -16,11 +16,13 @@ export interface Group {
 
 
 export interface TenantEntryDescriptor {
+  tenantId: string;
   source: TenantEntry;
   formName: FormTechnicalName;
   formTitle: FormTitle;
   created: Date;
   lastSaved: Date;
+  sessions?: DialobSession[];
 }
 
 export interface TenantDescriptor {

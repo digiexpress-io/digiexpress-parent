@@ -39,7 +39,6 @@ const en = {
   'dialob.form.delete.dialog.desc': 'Are you sure you want to delete this dialog?',
 
   'dialob.form.technicalNameEdit.dialog.title': 'Edit technical name',
-
   'dialob.form.sessions.dialog.title': 'Questionnaire sessions',
 
 
@@ -49,6 +48,10 @@ const en = {
   'dialob.form.create.dialog.button.cancel': 'Cancel',
   'dialob.form.create.dialog.button.createAndEdit': 'Create and edit',
   'dialob.form.create.dialog.button.createAndClose': 'Create and close',
+
+  'tenant.select.button': 'Tenants',
+  'tenant.select.menu.title': 'Select tenant',
+
 
   'projects.header.spotlight.no_group': 'All projects',
   'projects.header.groupBy.repoType.dialob': 'Dialob',

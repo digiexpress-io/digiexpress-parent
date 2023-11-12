@@ -11,7 +11,7 @@ import { FormattedMessage } from 'react-intl';
 import { TenantEntryDescriptor } from 'descriptor-tenant';
 import Burger from 'components-burger';
 import Context from 'context';
-import { DialobTag, DialobForm, DialobVariable } from 'client';
+import { DialobTag, DialobForm, DialobVariable, DialobSession } from 'client';
 import DialobDeleteDialog from '../DialobDelete';
 import DialobTechnicalNameEditDialog from '../DialobTechnicalNameEdit';
 import DialobSessionsDialog from '../DialobSessions';
@@ -161,11 +161,12 @@ const DialobFormVariables: React.FC<{ entry: TenantEntryDescriptor }> = ({ entry
 
 
 const DialobItemActive: React.FC<{ entry: TenantEntryDescriptor | undefined }> = ({ entry }) => {
-  const [crmOpen, setCrmOpen] = React.useState(false);
   const [dialobEditOpen, setDialobEditOpen] = React.useState(false);
   const [dialobDeleteOpen, setDialobDeleteOpen] = React.useState(false);
   const [technicalNameEdit, setTechnicalNameEdit] = React.useState(false);
   const [sessionsOpen, setSessionsOpen] = React.useState(false);
+  const [sessions, setSessions] = React.useState<DialobSession[]>();
+
 
   const [form, setForm] = React.useState<DialobForm | undefined>();
   const backend = Context.useBackend();
@@ -182,12 +183,15 @@ const DialobItemActive: React.FC<{ entry: TenantEntryDescriptor | undefined }> =
 
   React.useEffect(() => {
     if (entry?.formName) {
-      backend.tenant.getDialobForm(entry.formName).then(setForm);
+      backend.tenant.getDialobForm(entry.formName).then((form) => {
+        backend.tenant.getDialobSessions({ formId: form._id, technicalName: entry.formName, tenantId: entry.tenantId }).then(sessions => {
+          setSessions(sessions);
+          setForm(form)
+        })
+      });
     }
   }, [entry]);
-  const x = form?.data;
 
-  console.log(form?.metadata.labels)
 
   function handleTaskEdit() {
     setDialobEditOpen(prev => !prev);
@@ -197,7 +201,7 @@ const DialobItemActive: React.FC<{ entry: TenantEntryDescriptor | undefined }> =
     return (<>
       <DialobDeleteDialog open={dialobDeleteOpen} onClose={handleDelete} entry={entry} />
       <DialobTechnicalNameEditDialog open={technicalNameEdit} onClose={handleTechnicalNameEdit} entry={entry} />
-      <DialobSessionsDialog open={sessionsOpen} onClose={handleSessions} entry={entry} />
+      {sessionsOpen && <DialobSessionsDialog onClose={handleSessions} entry={entry} form={form} sessions={sessions} />}
       <StyledStack >
 
         {/* buttons section */}
@@ -257,6 +261,18 @@ const DialobItemActive: React.FC<{ entry: TenantEntryDescriptor | undefined }> =
                 <IconButton size='small' onClick={handleTechnicalNameEdit}><EditIcon sx={{ color: 'uiElements.main', fontSize: 'medium' }} /></IconButton>
               </Box>
             </Grid>
+
+
+            <Grid item md={4} lg={4} xl={4}>
+              <Box display='flex' alignItems='center'>
+                <Typography fontWeight='bolder'><FormattedMessage id='dialob.form.sessions' /></Typography>
+              </Box>
+            </Grid>
+            <Grid item md={8} lg={8} xl={8}>
+              <Box flexGrow={1} />
+              <Typography>{sessions?.length}</Typography>
+            </Grid>
+
 
             <Grid item md={1} lg={1} xl={1}>
               <Box display='flex' alignItems='center'>
