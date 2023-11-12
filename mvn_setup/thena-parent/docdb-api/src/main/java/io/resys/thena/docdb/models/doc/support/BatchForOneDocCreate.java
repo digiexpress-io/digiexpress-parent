@@ -35,11 +35,13 @@ public class BatchForOneDocCreate {
   private final String branchName;
 
   private String docId;
+  private String parentDocId;
   private String externalId;
   private JsonObject appendBlobs;
   private JsonObject appendLogs;
   private JsonObject appendMeta;
 
+  public BatchForOneDocCreate parentDocId(String parentId) {  this.parentDocId = parentId; return this; }
   public BatchForOneDocCreate docId(String docId) {           this.docId = docId; return this; }
   public BatchForOneDocCreate externalId(String externalId) { this.externalId = externalId; return this; }
   public BatchForOneDocCreate log(JsonObject log) {           this.appendLogs = log; return this; }
@@ -60,6 +62,7 @@ public class BatchForOneDocCreate {
     final var branchId = OidUtils.gen(); 
     final var doc = ImmutableDoc.builder()
         .id(docId)
+        .parentId(parentDocId)
         .externalId(Optional.ofNullable(this.externalId == null || this.externalId.trim().isEmpty() ? null : this.externalId).orElse(OidUtils.gen()))
         .type(docType)
         .status(DocStatus.IN_FORCE)

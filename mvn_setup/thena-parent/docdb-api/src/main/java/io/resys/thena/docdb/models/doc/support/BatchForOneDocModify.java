@@ -10,6 +10,7 @@ import io.resys.thena.docdb.api.models.ImmutableDocBranch;
 import io.resys.thena.docdb.api.models.ImmutableDocCommit;
 import io.resys.thena.docdb.api.models.ImmutableDocLog;
 import io.resys.thena.docdb.api.models.ImmutableMessage;
+import io.resys.thena.docdb.api.models.ThenaDocObject.Doc;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranchLock;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocLock;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocLog;
@@ -52,6 +53,9 @@ public class BatchForOneDocModify {
     final var doc = ImmutableDoc.builder()
       .from(docLock.getDoc().get())
       .meta(appendMeta)
+      .status(remove ? DocStatus.ARCHIVED : DocStatus.IN_FORCE)
+      .externalId(remove ?  OidUtils.gen(): docLock.getDoc().get().getExternalId())
+      .externalIdDeleted(remove ? docLock.getDoc().get().getExternalId() : null)
       .build();
     
     final var batchBuilder = ImmutableDocBatchForOne.builder()
@@ -61,19 +65,15 @@ public class BatchForOneDocModify {
       .addAllDocLock(docLock.getBranches());
 
     final var logger = new CommitLogger();
-    docLock.getBranches().forEach(branchLock -> appendToBranch(branchLock, tx, batchBuilder, logger));
+    docLock.getBranches().forEach(branchLock -> appendToBranch(doc, branchLock, tx, batchBuilder, logger));
     
     return batchBuilder.log(ImmutableMessage.builder().text(logger.toString()).build()).build();
   }
   
 
-  private void appendToBranch(DocBranchLock lock, DocRepo tx, ImmutableDocBatchForOne.Builder batch, CommitLogger logger) {
+  private void appendToBranch(Doc doc, DocBranchLock lock, DocRepo tx, ImmutableDocBatchForOne.Builder batch, CommitLogger logger) {
     final var branchId = lock.getBranch().get().getId();
-    
-    final var doc = ImmutableDoc.builder()
-        .from(lock.getDoc().get())
-        .meta(appendMeta)
-        .build();
+
     
     final var template = ImmutableDocCommit.builder()
       .id("commit-template")
@@ -91,7 +91,9 @@ public class BatchForOneDocModify {
       .build();
     final var docBranch = ImmutableDocBranch.builder()
       .from(lock.getBranch().get())
-      .status(DocStatus.IN_FORCE)
+      .status(remove ? DocStatus.ARCHIVED : DocStatus.IN_FORCE)
+      .branchName(remove ? OidUtils.gen(): lock.getBranch().get().getBranchName())
+      .branchNameDeleted(remove ? lock.getBranch().get().getBranchName() : null)
       .commitId(commit.getId())
       .build();
     

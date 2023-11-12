@@ -41,12 +41,12 @@ import lombok.extern.slf4j.Slf4j;
 public class DocObjectsQueryImpl implements DocObjectsQuery {
   private final DbState state;
   private String repoId;
-  private final ImmutableFlattedCriteria.Builder criteria = ImmutableFlattedCriteria.builder().onlyActiveDocs(true);
+  private final ImmutableFlattedCriteria.Builder criteria = ImmutableFlattedCriteria.builder().onlyActiveDocs(true).children(false);
   
   @Override public DocObjectsQuery matchIds(List<String> matchId) { this.criteria.addAllMatchId(matchId); return this; }
   @Override public DocObjectsQuery branchName(String branchName) { this.criteria.branchName(branchName); return this; }
   @Override public DocObjectsQuery docType(String docType) { this.criteria.docType(docType); return this; }
-  @Override public DocObjectsQuery active(boolean onlyActiveDocs) { this.criteria.onlyActiveDocs(onlyActiveDocs); return this; }
+  @Override public DocObjectsQuery children(boolean children) { this.criteria.children(children); return this; }
   
   @Override
   public DocObjectsQuery repoId(String repoId) {

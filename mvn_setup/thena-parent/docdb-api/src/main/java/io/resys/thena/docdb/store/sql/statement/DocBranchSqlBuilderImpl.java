@@ -74,10 +74,10 @@ public class DocBranchSqlBuilderImpl implements DocBranchSqlBuilder {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("UPDATE ").append(options.getDocBranch())
-        .append(" SET commit = $1, branch_name = $2, value = $3")
-        .append(" WHERE branch_id = $4")
+        .append(" SET commit = $1, branch_name = $2, value = $3, branch_name_deleted = $4")
+        .append(" WHERE branch_id = $5")
         .build())
-        .props(Tuple.of(ref.getCommitId(), ref.getBranchName(), ref.getValue(), ref.getId()))
+        .props(Tuple.of(ref.getCommitId(), ref.getBranchName(), ref.getValue(), ref.getBranchNameDeleted(), ref.getId()))
         .build();
   }
   
@@ -99,6 +99,7 @@ public class DocBranchSqlBuilderImpl implements DocBranchSqlBuilder {
         .append("  branch.doc_id as doc_id,").ln()
         .append("  branch.branch_id as branch_id,").ln()
         .append("  branch.branch_name as branch_name,").ln()
+        .append("  branch.branch_name_deleted as branch_name_deleted,").ln()
         .append("  branch.commit_id as branch_commit_id,").ln()
         .append("  branch.branch_status as branch_status,").ln()
         .append("  branch.value as branch_value,").ln()
@@ -134,6 +135,7 @@ public class DocBranchSqlBuilderImpl implements DocBranchSqlBuilder {
         .append("  branch.doc_id as doc_id,").ln()
         .append("  branch.branch_id as branch_id,").ln()
         .append("  branch.branch_name as branch_name,").ln()
+        .append("  branch.branch_name_deleted as branch_name_deleted,").ln()
         .append("  branch.commit_id as branch_commit_id,").ln()
         .append("  branch.branch_status as branch_status,").ln()
         .append("  branch.value as branch_value,").ln()
@@ -157,11 +159,11 @@ public class DocBranchSqlBuilderImpl implements DocBranchSqlBuilder {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("UPDATE ").append(options.getDocBranch())
-        .append(" SET commit_id = $1, branch_name = $2, value = $3")
-        .append(" WHERE branch_id = $4")
+        .append(" SET commit_id = $1, branch_name = $2, value = $3, branch_name_deleted = $4")
+        .append(" WHERE branch_id = $5")
         .build())        
         .props(docs.stream().map(ref -> {
-          return Tuple.of(ref.getCommitId(), ref.getBranchName(), ref.getValue(), ref.getId());
+          return Tuple.of(ref.getCommitId(), ref.getBranchName(), ref.getValue(), ref.getBranchNameDeleted(), ref.getId());
         }) .collect(Collectors.toList()))
         .build();
   }
@@ -197,6 +199,7 @@ public class DocBranchSqlBuilderImpl implements DocBranchSqlBuilder {
         .append("  branch.doc_id as doc_id,").ln()
         .append("  branch.branch_id as branch_id,").ln()
         .append("  branch.branch_name as branch_name,").ln()
+        .append("  branch.branch_name_deleted as branch_name_deleted,").ln()
         .append("  branch.commit_id as branch_commit_id,").ln()
         .append("  branch.branch_status as branch_status,").ln()
         .append("  branch.value as branch_value,").ln()
@@ -245,6 +248,7 @@ public class DocBranchSqlBuilderImpl implements DocBranchSqlBuilder {
         .append("  branch.doc_id as doc_id,").ln()
         .append("  branch.branch_id as branch_id,").ln()
         .append("  branch.branch_name as branch_name,").ln()
+        .append("  branch.branch_name_deleted as branch_name_deleted,").ln()
         .append("  branch.commit_id as branch_commit_id,").ln()
         .append("  branch.branch_status as branch_status,").ln()
         .append("  branch.value as branch_value,").ln()

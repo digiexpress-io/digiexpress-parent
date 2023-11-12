@@ -209,6 +209,7 @@ public class SqlMapperImpl implements SqlMapper {
             .status(ThenaDocObject.DocStatus.valueOf(row.getString("branch_status")))
             .commitId(row.getString("commit_id"))
             .branchName(row.getString("branch_name"))
+            .branchNameDeleted(row.getString("branch_name_deleted"))
             .value(jsonObject(row, "branch_value"))
             .status(ThenaDocObject.DocStatus.valueOf(row.getString("branch_status")))
             .build())
@@ -252,6 +253,7 @@ public class SqlMapperImpl implements SqlMapper {
         .docId(row.getString("doc_id"))
         .commitId(row.getString("commit_id"))
         .branchName(row.getString("branch_name"))
+        .branchNameDeleted(row.getString("branch_name_deleted"))
         .value(jsonObject(row, "value"))
         .status(ThenaDocObject.DocStatus.valueOf(row.getString("branch_status")))
         .build();
@@ -270,6 +272,7 @@ public class SqlMapperImpl implements SqlMapper {
         
         .branchId(row.getString("branch_id"))
         .branchName(row.getString("branch_name"))
+        .branchNameDeleted(Optional.ofNullable(row.getString("branch_name_deleted")))
         .branchValue(jsonObject(row, "branch_value"))
         .branchStatus(ThenaDocObject.DocStatus.valueOf(row.getString("branch_status")))
         

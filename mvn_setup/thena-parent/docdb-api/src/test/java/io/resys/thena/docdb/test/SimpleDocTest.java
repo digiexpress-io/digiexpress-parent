@@ -113,6 +113,7 @@ public class SimpleDocTest extends DbTestTemplate {
     
     final var findAllDocs = getClient().doc().find().docQuery()
         .repoId(repo.getRepo().getId())
+        .children(true)
         .findAll()
     .await().atMost(Duration.ofMinutes(1));
     
@@ -131,6 +132,106 @@ public class SimpleDocTest extends DbTestTemplate {
     .await().atMost(Duration.ofMinutes(1));
     Assertions.assertEquals(1, findAllMainBranchDocs.getObjects().getDocs().size());
     Assertions.assertEquals(1, findAllMainBranchDocs.getObjects().getBranches().values().stream().flatMap(e -> e.stream()).count());
+    
+    printRepo(repo.getRepo());
+  }
+  
+  
+
+  @Test
+  public void parentChild() {
+    // create project
+    RepoResult repo = getClient().repo().projectBuilder()
+        .name("SimpleDocTest-parent-child", RepoType.doc)
+        .build()
+        .await().atMost(Duration.ofMinutes(1));
+    LOGGER.debug("created repo {}", repo);
+    Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
+    
+    // doc 1
+    final var parentDoc = getClient().doc().commit()
+      .createOneDoc()
+      .docType("customer-data")
+      .repoId(repo.getRepo().getId())
+      .externalId("bobs-ssn-id")
+      .branchName("main")
+      .append(JsonObject.of("first_name", "bob", "last_name", "flop"))
+      .message("created first entry")
+      .log(JsonObject.of("some_cool_command", "create_customer"))
+      .author("jane.doe@morgue.com")
+    .build().await().atMost(Duration.ofMinutes(1));
+
+    // doc 1 child
+    final var childDoc = getClient().doc().commit()
+        .createOneDoc()
+        .parentDocId(parentDoc.getDoc().getId())
+        .docType("customer-data")
+        .repoId(repo.getRepo().getId())
+        .externalId("bobs-child-ssn-id")
+        .branchName("main")
+        .append(JsonObject.of("first_name", "bob_child", "last_name", "flop"))
+        .message("created child entry")
+        .log(JsonObject.of("some_cool_command", "create_customer"))
+        .author("jane.doe@morgue.com")
+    .build().await().atMost(Duration.ofMinutes(1));
+    
+
+    final var findAllDocs = getClient().doc().find().docQuery()
+        .repoId(repo.getRepo().getId())
+        .children(true)
+        .findAll()
+    .await().atMost(Duration.ofMinutes(1));
+    
+    Assertions.assertEquals(2, findAllDocs.getObjects().getDocs().size());
+    Assertions.assertEquals(2, findAllDocs.getObjects().getCommits().size());
+    
+    // 1 parent and 1 child document, 2 branches
+    Assertions.assertEquals(2, findAllDocs.getObjects().getBranches().size());
+    
+    
+    // find parent document
+    final var findParent = getClient().doc().find().docQuery()
+        .repoId(repo.getRepo().getId())
+        .branchName("main")
+        .docType("customer-data")
+        .matchId("bobs-ssn-id")
+        .findAll()
+    .await().atMost(Duration.ofMinutes(1));
+    Assertions.assertEquals(1, findParent.getObjects().getDocs().size());
+    Assertions.assertEquals(1, findParent.getObjects().getBranches().values().stream().flatMap(e -> e.stream()).count());
+    
+    
+
+    // find parent with child document
+    final var findParentWithChild = getClient().doc().find().docQuery()
+        .repoId(repo.getRepo().getId())
+        .branchName("main")
+        .docType("customer-data")
+        .matchId("bobs-ssn-id")
+        .children(true)
+        .findAll()
+    .await().atMost(Duration.ofMinutes(1));
+    Assertions.assertEquals(2, findParentWithChild.getObjects().getDocs().size());
+    
+    final var documents = String.join(",", findParentWithChild.getObjects().getDocs().stream().map(d -> d.getExternalId()).sorted().toList());
+    Assertions.assertEquals("bobs-child-ssn-id,bobs-ssn-id", documents);
+    
+    
+    // delete documents
+    getClient().doc().commit().modifyManyDocs()
+      .repoId(repo.getRepo().getId())
+      .message("deleting docs")
+      .author("jane.doe@morgue.com")
+      .item().docId(parentDoc.getDoc().getId()).remove().next()
+      .item().docId(childDoc.getDoc().getId()).remove().next()
+      .build()
+    .await().atMost(Duration.ofMinutes(1));
+    
+    final var findAllDocsAfterDelete = getClient().doc().find().docQuery()
+        .repoId(repo.getRepo().getId()).findAll()
+    .await().atMost(Duration.ofMinutes(1));
+    Assertions.assertEquals(0, findAllDocsAfterDelete.getObjects().getDocs().size());
+    
     
     printRepo(repo.getRepo());
   }

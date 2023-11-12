@@ -70,7 +70,7 @@ public class UpdateProjectsVisitor implements DocObjectsVisitor<Uni<List<Project
 
   @Override
   public DocObjectsQuery start(DocumentConfig config, DocObjectsQuery builder) {
-    return builder.matchIds(projectIds).active(true).branchName(MainBranch.HEAD_NAME);
+    return builder.matchIds(projectIds).branchName(MainBranch.HEAD_NAME);
   }
 
   @Override

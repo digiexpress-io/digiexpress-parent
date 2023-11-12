@@ -53,7 +53,6 @@ public class GetActiveProjectsByIdsVisitor implements DocObjectsVisitor<List<Pro
     return builder
         .docType(Document.DocumentType.PROJECT_META.name())
         .branchName(MainBranch.HEAD_NAME)
-        .active(true)
         .matchIds(new ArrayList<>(projectIds));
   }
 

@@ -80,7 +80,9 @@ public class BatchForOneBranchModify {
       .from(lock.getBranch().get())
       .value(appendBlobs)
       .commitId(commit.getId())
-      .status(DocStatus.IN_FORCE)
+      .status(remove ? DocStatus.ARCHIVED : DocStatus.IN_FORCE)
+      .branchName(remove ? OidUtils.gen(): lock.getBranch().get().getBranchName())
+      .branchNameDeleted(remove ? lock.getBranch().get().getBranchName() : null)
       .value(appendBlobs == null ? appendMerge.apply(lock.getBranch().get().getValue()): appendBlobs)
       .build();
     

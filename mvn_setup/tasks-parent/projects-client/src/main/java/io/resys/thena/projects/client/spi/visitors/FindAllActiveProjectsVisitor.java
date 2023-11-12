@@ -24,8 +24,7 @@ public class FindAllActiveProjectsVisitor implements DocObjectsVisitor<List<Proj
   public DocObjectsQuery start(DocumentConfig config, DocObjectsQuery builder) {
     return builder
         .docType(Document.DocumentType.PROJECT_META.name())
-        .branchName(MainBranch.HEAD_NAME)
-        .active(true);
+        .branchName(MainBranch.HEAD_NAME);
   }
   @Override
   public DocObjects visitEnvelope(DocumentConfig config, QueryEnvelope<DocObjects> envelope) {

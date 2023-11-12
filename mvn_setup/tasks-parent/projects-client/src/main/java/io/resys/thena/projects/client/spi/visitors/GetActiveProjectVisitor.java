@@ -25,7 +25,7 @@ public class GetActiveProjectVisitor implements DocObjectVisitor<Project>{
   
   @Override
   public DocObjectsQuery start(DocumentConfig config, DocObjectsQuery query) {
-    return query.matchId(id).active(true).branchName(MainBranch.HEAD_NAME);
+    return query.matchId(id).branchName(MainBranch.HEAD_NAME);
   }
 
   @Override

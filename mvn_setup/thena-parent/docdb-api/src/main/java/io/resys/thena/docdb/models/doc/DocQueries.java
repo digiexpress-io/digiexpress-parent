@@ -77,6 +77,8 @@ public interface DocQueries {
     List<String> getMatchId();
     @Nullable String getBranchName();
     @Nullable String getDocType();
+    
+    boolean getChildren();
     boolean getOnlyActiveDocs();
   }
 

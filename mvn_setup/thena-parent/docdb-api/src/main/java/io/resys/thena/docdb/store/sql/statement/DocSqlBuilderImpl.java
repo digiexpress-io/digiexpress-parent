@@ -135,6 +135,7 @@ public class DocSqlBuilderImpl implements DocSqlBuilder {
         .append("  branch.doc_id as doc_id,").ln()
         .append("  branch.branch_id as branch_id,").ln()
         .append("  branch.branch_name as branch_name,").ln()
+        .append("  branch.branch_name_deleted as branch_name_deleted,").ln()
         .append("  branch.branch_status as branch_status,").ln()
         .append("  branch.value as branch_value,").ln()
         
@@ -176,9 +177,20 @@ public class DocSqlBuilderImpl implements DocSqlBuilder {
     if(!criteria.getMatchId().isEmpty()) {
       index++;
       props.add(criteria.getMatchId().toArray(new String[]{}));
-      additional.append(" AND (doc.id = ANY($" + index +  ") OR doc.external_id = ANY($" + index +  ") OR branch.branch_id = ANY($" + index +  "))");
+      
+      var value = "doc.id = ANY($" + index +  ") OR doc.external_id = ANY($" + index +  ") OR branch.branch_id = ANY($" + index +  ")";
+      if(criteria.getChildren()) {
+        final var children = new SqlStatement().ln()
+            .append("SELECT inner_branch.doc_id ")
+            .append(" FROM ").append(options.getDocBranch()).append(" as inner_branch").ln()
+            .append(" JOIN ").append(options.getDoc())      .append(" as inner_doc ON(inner_doc.id = inner_branch.doc_id)").ln()
+            .append(" WHERE").ln()
+            .append("   inner_doc.id = ANY($" + index +  ") OR inner_doc.external_id = ANY($" + index +  ") OR inner_branch.branch_id = ANY($" + index +  ")").ln()
+            .ln().build();
+        value += " OR doc.doc_parent_id = (" + children + ")";
+      }
+      additional.append(" AND (" + value + ")");
     }    
-    
 
     final var status = criteria.getOnlyActiveDocs() ? DocStatus.IN_FORCE.name() : DocStatus.ARCHIVED.name();
     
@@ -195,6 +207,7 @@ public class DocSqlBuilderImpl implements DocSqlBuilder {
         .append("  branch.doc_id as doc_id,").ln()
         .append("  branch.branch_id as branch_id,").ln()
         .append("  branch.branch_name as branch_name,").ln()
+        .append("  branch.branch_name_deleted as branch_name_deleted,").ln()
         .append("  branch.branch_status as branch_status,").ln()
         .append("  branch.value as branch_value,").ln()
         

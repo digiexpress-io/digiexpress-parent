@@ -14,10 +14,10 @@ public interface DocQueryActions {
   interface DocObjectsQuery {
     DocObjectsQuery repoId(String repoId);
     DocObjectsQuery matchId(String matchId);          // can be external id/doc id
-    DocObjectsQuery matchIds(List<String> matchId);          // can be external id/doc id
+    DocObjectsQuery matchIds(List<String> matchId);   // can be external id/doc id
     DocObjectsQuery branchName(String branchName);
     DocObjectsQuery docType(String docType);
-    DocObjectsQuery active(boolean onlyActiveDocs);
+    DocObjectsQuery children(boolean includeChildren);
     
     Uni<QueryEnvelope<DocObject>> get();
     Uni<QueryEnvelope<DocObjects>> findAll();

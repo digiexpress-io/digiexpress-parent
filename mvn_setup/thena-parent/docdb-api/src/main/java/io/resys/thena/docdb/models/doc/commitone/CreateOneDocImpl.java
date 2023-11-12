@@ -21,6 +21,7 @@ public class CreateOneDocImpl implements CreateOneDoc {
   private JsonObject appendLogs;
   private JsonObject appendMeta;
 
+  private String parentDocId;
   private String repoId;
   private String docId;
   private String externalId;
@@ -34,11 +35,14 @@ public class CreateOneDocImpl implements CreateOneDoc {
   @Override public CreateOneDocImpl author(String author) {         this.author = RepoAssert.notEmpty(author,           () -> "author can't be empty!"); return this; }
   @Override public CreateOneDocImpl message(String message) {       this.message = RepoAssert.notEmpty(message,         () -> "message can't be empty!"); return this; }
   @Override public CreateOneDocImpl docType(String docType) {       this.docType = RepoAssert.notEmpty(docType,         () -> "docType can't be empty!"); return this;}
-  @Override public CreateOneDocImpl docId(String docId) {           this.docId = RepoAssert.notEmpty(docId,             () -> "docId can't be empty!"); return this; }
-  @Override public CreateOneDocImpl externalId(String externalId) { this.externalId = RepoAssert.notEmpty(externalId,   () -> "externalId can't be empty!"); return this; }
-  @Override public CreateOneDocImpl log(JsonObject doc) {           this.appendLogs = RepoAssert.notNull(doc,           () -> "log can't be empty!"); return this; }
-  @Override public CreateOneDocImpl meta(JsonObject blob) {         this.appendMeta = RepoAssert.notNull(blob,          () -> "meta can't be null!"); return this; }
   @Override public CreateOneDocImpl append(JsonObject blob) {       this.appendBlobs = RepoAssert.notNull(blob,         () -> "append can't be empty!"); return this; }
+
+  @Override public CreateOneDocImpl parentDocId(String parentId) {  this.parentDocId = parentId; return this; }
+  @Override public CreateOneDocImpl docId(String docId) {           this.docId = docId; return this; }
+  @Override public CreateOneDocImpl externalId(String externalId) { this.externalId = externalId; return this; }
+  @Override public CreateOneDocImpl log(JsonObject appendLogs) {    this.appendLogs = appendLogs; return this; }
+  @Override public CreateOneDocImpl meta(JsonObject appendMeta) {   this.appendMeta = appendMeta; return this; }
+  
   
   @Override
   public Uni<OneDocEnvelope> build() {
@@ -56,6 +60,7 @@ public class CreateOneDocImpl implements CreateOneDoc {
     final var batch = new BatchForOneDocCreate(tx.getRepo().getId(), docType, author, message, branchName)
         .docId(docId)
         .externalId(externalId)
+        .parentDocId(parentDocId)
         .log(appendLogs)
         .meta(appendMeta)
         .append(appendBlobs)

@@ -48,6 +48,7 @@ public interface ThenaDocObject {
 
     String getBranchId();
     String getBranchName();
+    Optional<String> getBranchNameDeleted();
     DocStatus getBranchStatus();
     JsonObject getBranchValue();
     
@@ -81,6 +82,7 @@ public interface ThenaDocObject {
     String getDocId();
     DocStatus getStatus();
     @Nullable JsonObject getValue();  // null when json loading is disabled
+    @Nullable String getBranchNameDeleted();
   }
   
   @Value.Immutable

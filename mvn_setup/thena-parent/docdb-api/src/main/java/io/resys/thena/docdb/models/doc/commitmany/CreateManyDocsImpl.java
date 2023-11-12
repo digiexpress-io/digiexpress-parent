@@ -48,6 +48,7 @@ public class CreateManyDocsImpl implements CreateManyDocs {
     final var oneDoc = new BatchForOneDocCreate(repoId, docType, author, message, branchName);
     
     lasItemBuilder = new AddItemToCreateDoc() {
+      @Override public AddItemToCreateDoc parentDocId(String parentId) {  oneDoc.parentDocId(parentId); return this; }
       @Override public AddItemToCreateDoc externalId(String externalId) { oneDoc.externalId(externalId); return this;}
       @Override public AddItemToCreateDoc log(JsonObject log)           { oneDoc.log(log); return this; }
       @Override public AddItemToCreateDoc meta(JsonObject meta)         { oneDoc.meta(meta); return this; }

@@ -102,12 +102,14 @@ ALTER TABLE doc
 CREATE TABLE doc_branch
 (
   branch_name VARCHAR(255) NOT NULL,
+  branch_name_deleted VARCHAR(255),
   branch_id VARCHAR(40) NOT NULL,
   commit_id VARCHAR(40) NOT NULL,
   branch_status VARCHAR(8) NOT NULL,
   doc_id VARCHAR(40),
   value jsonb NOT NULL,
-  PRIMARY KEY (branch_id)
+  PRIMARY KEY (branch_id),
+  UNIQUE (doc_id, branch_name)
 );
 CREATE INDEX doc_branch_DOC_DOC_ID_INDEX ON doc_branch (doc_id);
 CREATE INDEX doc_branch_DOC_BRANCH_NAME_INDEX ON doc_branch (branch_name);
