@@ -210,6 +210,8 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("(").ln()
     .append("  id VARCHAR(40) PRIMARY KEY,").ln()
     .append("  external_id VARCHAR(40) UNIQUE,").ln()
+    .append("  external_id_deleted VARCHAR(40),").ln()
+    .append("  doc_parent_id VARCHAR(40),").ln()
     .append("  doc_type VARCHAR(40) NOT NULL,").ln()
     .append("  doc_status VARCHAR(8) NOT NULL,").ln()
     .append("  doc_meta jsonb").ln()
@@ -218,9 +220,18 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("CREATE INDEX ").append(options.getDoc()).append("_DOC_EXT_ID_INDEX")
     .append(" ON ").append(options.getDoc()).append(" (external_id);").ln()
 
+    .append("CREATE INDEX ").append(options.getDoc()).append("_DOC_PARENT_ID_INDEX")
+    .append(" ON ").append(options.getDoc()).append(" (doc_parent_id);").ln()
+
     .append("CREATE INDEX ").append(options.getDoc()).append("_DOC_TYPE_INDEX")
     .append(" ON ").append(options.getDoc()).append(" (doc_type);").ln()
     
+    // internal foreign key
+    .append("ALTER TABLE ").append(options.getDoc()).ln()
+    .append("  ADD CONSTRAINT ").append(options.getDoc()).append("_DOC_PARENT_FK").ln()
+    .append("  FOREIGN KEY (doc_parent_id)").ln()
+    .append("  REFERENCES ").append(options.getDoc()).append(" (id);").ln().ln()
+      
     .build()).build();
   }
 
@@ -270,10 +281,14 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("CREATE INDEX ").append(options.getDocCommits()).append("_DOC_COMMIT_PARENT_INDEX")
     .append(" ON ").append(options.getDocCommits()).append(" (parent);").ln()
     
-
     .append("CREATE INDEX ").append(options.getDocCommits()).append("_DOC_COMMIT_BRANCH_ID_INDEX")
     .append(" ON ").append(options.getDocCommits()).append(" (branch_id);").ln()
 
+     // internal foreign key
+    .append("ALTER TABLE ").append(options.getDocCommits()).ln()
+    .append("  ADD CONSTRAINT ").append(options.getDocCommits()).append("_DOC_COMMIT_PARENT_FK").ln()
+    .append("  FOREIGN KEY (parent)").ln()
+    .append("  REFERENCES ").append(options.getDocCommits()).append(" (id);").ln().ln()
     
     .build()).build();
   }

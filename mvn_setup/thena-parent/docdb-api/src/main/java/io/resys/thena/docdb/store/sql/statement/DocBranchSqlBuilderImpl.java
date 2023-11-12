@@ -90,10 +90,12 @@ public class DocBranchSqlBuilderImpl implements DocBranchSqlBuilder {
         .value(new SqlStatement()
         .append("SELECT ")
         .append("  doc.external_id as external_id,").ln()
+        .append("  doc.external_id_deleted as external_id_deleted,").ln()
         .append("  doc.doc_type as doc_type,").ln()
         .append("  doc.doc_status as doc_status,").ln()
         .append("  doc.doc_meta as doc_meta,").ln()
-    
+        .append("  doc.doc_parent_id as doc_parent_id,").ln()
+        
         .append("  branch.doc_id as doc_id,").ln()
         .append("  branch.branch_id as branch_id,").ln()
         .append("  branch.branch_name as branch_name,").ln()
@@ -123,10 +125,12 @@ public class DocBranchSqlBuilderImpl implements DocBranchSqlBuilder {
         .value(new SqlStatement()
         .append("SELECT ")
         .append("  doc.external_id as external_id,").ln()
+        .append("  doc.external_id_deleted as external_id_deleted,").ln()
         .append("  doc.doc_type as doc_type,").ln()
         .append("  doc.doc_status as doc_status,").ln()
         .append("  doc.doc_meta as doc_meta,").ln()
-    
+        .append("  doc.doc_parent_id as doc_parent_id,").ln()
+        
         .append("  branch.doc_id as doc_id,").ln()
         .append("  branch.branch_id as branch_id,").ln()
         .append("  branch.branch_name as branch_name,").ln()
@@ -184,9 +188,11 @@ public class DocBranchSqlBuilderImpl implements DocBranchSqlBuilder {
         .value(new SqlStatement()
         .append("SELECT ")
         .append("  doc.external_id as external_id,").ln()
+        .append("  doc.external_id_deleted as external_id_deleted,").ln()
         .append("  doc.doc_type as doc_type,").ln()
         .append("  doc.doc_status as doc_status,").ln()
         .append("  doc.doc_meta as doc_meta,").ln()
+        .append("  doc.doc_parent_id as doc_parent_id,").ln()
     
         .append("  branch.doc_id as doc_id,").ln()
         .append("  branch.branch_id as branch_id,").ln()
@@ -230,10 +236,12 @@ public class DocBranchSqlBuilderImpl implements DocBranchSqlBuilder {
         .value(new SqlStatement()
         .append("SELECT ")
         .append("  doc.external_id as external_id,").ln()
+        .append("  doc.external_id_deleted as external_id_deleted,").ln()
         .append("  doc.doc_type as doc_type,").ln()
         .append("  doc.doc_status as doc_status,").ln()
         .append("  doc.doc_meta as doc_meta,").ln()
-    
+        .append("  doc.doc_parent_id as doc_parent_id,").ln()
+        
         .append("  branch.doc_id as doc_id,").ln()
         .append("  branch.branch_id as branch_id,").ln()
         .append("  branch.branch_name as branch_name,").ln()

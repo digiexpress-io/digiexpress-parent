@@ -37,9 +37,26 @@ public class DocSqlBuilderImpl implements DocSqlBuilder {
         .value(new SqlStatement()
         .append("SELECT * ").ln()
         .append("  FROM ").append(options.getDoc()).ln()
-        .append("  WHERE (id = $1 OR external_id = $2)").ln()
+        .append("  WHERE (id = $1 OR external_id = $1)").ln()
         .build())
-        .props(Tuple.of(id, id))
+        .props(Tuple.of(id))
+        .build();
+  }
+  @Override
+  public SqlTuple findById(String id) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT * ").ln()
+        .append("  FROM ").append(options.getDoc()).ln()
+        .append("  WHERE (id = $1 OR external_id = $1)").ln()
+        .append("UNION ").ln()        
+        .append("SELECT * ").ln()
+        .append("  FROM ").append(options.getDoc()).ln()
+        .append("  WHERE ").ln()
+        .append("    doc_parent_id = (select id from ").append(options.getDoc()).append(" external_id = $1))").ln()
+        .append("    OR doc_parent_id = $1")
+        .build())
+        .props(Tuple.of(id))
         .build();
   }
   @Override
@@ -47,9 +64,9 @@ public class DocSqlBuilderImpl implements DocSqlBuilder {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getDoc())
-        .append(" (id, external_id, doc_type, doc_status, doc_meta) VALUES($1, $2, $3, $4, $5)").ln()
+        .append(" (id, external_id, doc_type, doc_status, doc_meta, doc_parent_id) VALUES($1, $2, $3, $4, $5, $6)").ln()
         .build())
-        .props(Tuple.of(doc.getId(), doc.getExternalId(), doc.getType(), doc.getStatus(), doc.getMeta()))
+        .props(Tuple.of(doc.getId(), doc.getExternalId(), doc.getType(), doc.getStatus(), doc.getMeta(), doc.getParentId()))
         .build();
   }
   @Override
@@ -57,9 +74,12 @@ public class DocSqlBuilderImpl implements DocSqlBuilder {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("DELETE FROM ").append(options.getDoc())
-        .append(" WHERE (id = $1 OR external_id = $2)")
+        .append(" WHERE ").ln()
+        .append(" (id = $1 OR external_id = $1)")
+        .append(" OR doc_parent_id = (select id from ").append(options.getDoc()).append(" external_id = $1))").ln()
+        .append(" OR doc_parent_id = $1")
         .build())
-        .props(Tuple.of(id, id))
+        .props(Tuple.of(id))
         .build();
   }
   @Override
@@ -67,10 +87,10 @@ public class DocSqlBuilderImpl implements DocSqlBuilder {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("UPDATE ").append(options.getDoc())
-        .append(" SET external_id = $1, doc_type = $2, doc_status = $3, doc_meta = $4")
-        .append(" WHERE id = $5")
+        .append(" SET external_id = $1, doc_type = $2, doc_status = $3, doc_meta = $4, external_id_deleted = $5, doc_parent_id = $6")
+        .append(" WHERE id = $7")
         .build())
-        .props(Tuple.of(doc.getExternalId(), doc.getType(), doc.getStatus(), doc.getMeta(), doc.getId()))
+        .props(Tuple.from(new Object[]{doc.getExternalId(), doc.getType(), doc.getStatus(), doc.getMeta(), doc.getExternalIdDeleted(), doc.getParentId(), doc.getId()}))
         .build();
   }
   
@@ -79,10 +99,10 @@ public class DocSqlBuilderImpl implements DocSqlBuilder {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getDoc())
-        .append(" (id, external_id, doc_type, doc_status, doc_meta) VALUES($1, $2, $3, $4, $5)").ln()
+        .append(" (id, external_id, doc_type, doc_status, doc_meta, doc_parent_id) VALUES($1, $2, $3, $4, $5, $6)").ln()
         .build())
         .props(docs.stream()
-            .map(doc -> Tuple.of(doc.getId(), doc.getExternalId(), doc.getType(), doc.getStatus(), doc.getMeta()))
+            .map(doc -> Tuple.of(doc.getId(), doc.getExternalId(), doc.getType(), doc.getStatus(), doc.getMeta(), doc.getParentId()))
             .collect(Collectors.toList()))
         .build();
   }
@@ -106,10 +126,12 @@ public class DocSqlBuilderImpl implements DocSqlBuilder {
         .value(new SqlStatement()
         .append("SELECT ")
         .append("  doc.external_id as external_id,").ln()
+        .append("  doc.external_id_deleted as external_id_deleted,").ln()
         .append("  doc.doc_type as doc_type,").ln()
         .append("  doc.doc_status as doc_status,").ln()
         .append("  doc.doc_meta as doc_meta,").ln()
-    
+        .append("  doc.doc_parent_id as doc_parent_id,").ln()
+        
         .append("  branch.doc_id as doc_id,").ln()
         .append("  branch.branch_id as branch_id,").ln()
         .append("  branch.branch_name as branch_name,").ln()
@@ -164,9 +186,11 @@ public class DocSqlBuilderImpl implements DocSqlBuilder {
         .value(new SqlStatement()
         .append("SELECT ")
         .append("  doc.external_id as external_id,").ln()
+        .append("  doc.external_id_deleted as external_id_deleted,").ln()
         .append("  doc.doc_type as doc_type,").ln()
         .append("  doc.doc_status as doc_status,").ln()
         .append("  doc.doc_meta as doc_meta,").ln()
+        .append("  doc.doc_parent_id as doc_parent_id,").ln()
     
         .append("  branch.doc_id as doc_id,").ln()
         .append("  branch.branch_id as branch_id,").ln()

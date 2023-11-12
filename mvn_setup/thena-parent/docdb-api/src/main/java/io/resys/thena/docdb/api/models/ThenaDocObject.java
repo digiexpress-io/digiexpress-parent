@@ -37,8 +37,11 @@ public interface ThenaDocObject {
   @Value.Immutable
   interface DocFlatted extends ThenaDocObject {
     String getExternalId();
+    Optional<String> getExternalIdDeleted();
+    
     String getDocId();
     String getDocType();
+    Optional<String> getDocParentId();
     DocStatus getDocStatus();
     Optional<JsonObject> getDocMeta();
 
@@ -65,6 +68,8 @@ public interface ThenaDocObject {
     String getType();
     DocStatus getStatus();
     String getExternalId();
+    @Nullable String getExternalIdDeleted();
+    @Nullable String getParentId();
     @Nullable JsonObject getMeta();
   }
   
