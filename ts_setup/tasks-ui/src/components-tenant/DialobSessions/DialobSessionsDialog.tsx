@@ -6,6 +6,7 @@ import { FormattedMessage } from 'react-intl';
 import Burger from 'components-burger';
 import { TenantEntryDescriptor } from 'descriptor-tenant';
 import { DialobForm, DialobSession } from 'client'
+import { SessionItem } from './SessionItem';
 
 const DialobSessionsDialog: React.FC<{
   onClose: () => void,
@@ -26,7 +27,7 @@ const DialobSessionsDialog: React.FC<{
     </Dialog>);
   }
   return (
-    <Dialog open={true} fullWidth maxWidth='md'>
+    <Dialog open={true} fullWidth maxWidth='xl'>
       <DialogTitle sx={{
         backgroundColor: theme.palette.mainContent.main,
         borderBottom: `1px solid ${alpha(theme.palette.mainContent.dark, 0.3)}`,
@@ -65,11 +66,12 @@ const DialobSessionsDialog: React.FC<{
               <Typography><Burger.DateTimeFormatter type='dateTime' value={props.entry.lastSaved} /></Typography>
             </Grid>
 
-            <Grid item md={3} lg={3} xl={3}>
+            <Grid item md={12} lg={12} xl={12}>
               <Typography fontWeight='bold'><FormattedMessage id='dialob.form.sessions' /></Typography>
             </Grid>
-            <Grid item md={9} lg={9} xl={9}>
-              {sessions.map((session) => session.metadata.status)}
+
+            <Grid item md={12} lg={12} xl={12}>
+              {sessions.map((session) => <SessionItem entry={entry} form={form} session={session} />)}
 
             </Grid>
           </Grid>

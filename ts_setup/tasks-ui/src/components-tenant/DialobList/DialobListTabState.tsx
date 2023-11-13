@@ -42,7 +42,7 @@ const DialobList: React.FC<{
   const [createOpen, setCreateOpen] = React.useState(false);
 
   function handleActiveDialob(task: TenantEntryDescriptor | undefined) {
-    setState(prev => prev.withActiveTask(task));
+    setState(prev => prev.withActiveDialob(task));
   }
 
   function handleOnPageChange(_garbageEvent: any, newPage: number) {

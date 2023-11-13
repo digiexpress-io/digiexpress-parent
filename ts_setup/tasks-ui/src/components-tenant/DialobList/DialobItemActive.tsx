@@ -219,7 +219,6 @@ const DialobItemActive: React.FC<{ entry: TenantEntryDescriptor | undefined }> =
               <Typography><FormattedMessage id='dialob.form.copy' /></Typography>
             </Box>
 
-
             <Box display='flex' flexDirection='column' alignItems='center'>
               <IconButton onClick={handleSessions}><QuestionAnswerOutlinedIcon sx={{ color: 'secondary.dark' }} /></IconButton>
               <Typography><FormattedMessage id='dialob.form.sessions' /></Typography>
@@ -249,7 +248,6 @@ const DialobItemActive: React.FC<{ entry: TenantEntryDescriptor | undefined }> =
               <Typography>{entry.formTitle}</Typography>
             </Grid>
 
-
             <Grid item md={4} lg={4} xl={4}>
               <Typography fontWeight='bolder'><FormattedMessage id='dialob.form.technicalName' /></Typography>
             </Grid>
@@ -269,7 +267,6 @@ const DialobItemActive: React.FC<{ entry: TenantEntryDescriptor | undefined }> =
               </Box>
             </Grid>
             <Grid item md={8} lg={8} xl={8}>
-              <Box flexGrow={1} />
               <Typography>{sessions?.length}</Typography>
             </Grid>
 
@@ -281,7 +278,6 @@ const DialobItemActive: React.FC<{ entry: TenantEntryDescriptor | undefined }> =
             </Grid>
 
             <Grid item md={11} lg={11} xl={11}>
-              <Box flexGrow={1} />
               <Typography sx={{ wordWrap: 'break-word' }}>{form?._id}</Typography>
             </Grid>
 

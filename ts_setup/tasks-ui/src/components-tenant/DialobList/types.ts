@@ -21,7 +21,7 @@ interface DialobListStateInit {
 
 interface DialobListState extends DialobListStateInit {
   withActiveTab(activeTab: number): DialobListState;
-  withActiveTask(activeTask: TenantEntryDescriptor | undefined): DialobListState;
+  withActiveDialob(activeTask: TenantEntryDescriptor | undefined): DialobListState;
   withTabs(tabs: DialobListTabState[]): DialobListState;
 
 }
@@ -46,7 +46,7 @@ class ImmutableDialobListState implements DialobListState {
     return new ImmutableDialobListState({ activeTab, activeDialob: this._activeDialob, tabs: this._tabs.map((tab) => ({ ...tab, disabled: tab.id !== activeTab })) });
   }
 
-  withActiveTask(activeDialob: TenantEntryDescriptor | undefined): DialobListState {
+  withActiveDialob(activeDialob: TenantEntryDescriptor | undefined): DialobListState {
     return new ImmutableDialobListState({ activeDialob, activeTab: this._activeTab, tabs: this._tabs })
   }
 
