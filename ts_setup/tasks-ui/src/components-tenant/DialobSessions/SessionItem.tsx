@@ -2,7 +2,6 @@ import React from 'react';
 import { Box, Typography, CircularProgress } from '@mui/material';
 import { DialobForm, DialobSession } from 'client';
 import { TenantEntryDescriptor } from 'descriptor-tenant';
-import Burger from 'components-burger';
 
 
 const SessionItem: React.FC<{
@@ -17,7 +16,6 @@ const SessionItem: React.FC<{
       <CircularProgress />
     );
   }
-  //        <Typography><Burger.DateTimeFormatter type='datetime' value={session.metadata.created} /></Typography>
 
   return (
     <Box display='flex' width='100%' alignItems='center'>

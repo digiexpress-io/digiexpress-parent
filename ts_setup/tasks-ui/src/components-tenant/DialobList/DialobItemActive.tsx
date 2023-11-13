@@ -177,7 +177,7 @@ const DialobItemActive: React.FC<{ entry: TenantEntryDescriptor | undefined }> =
   function handleTechnicalNameEdit() {
     setTechnicalNameEdit(prev => !prev);
   }
-  function handleSessions() {
+  function handleSessionsDialog() {
     setSessionsOpen(prev => !prev);
   }
 
@@ -201,7 +201,7 @@ const DialobItemActive: React.FC<{ entry: TenantEntryDescriptor | undefined }> =
     return (<>
       <DialobDeleteDialog open={dialobDeleteOpen} onClose={handleDelete} entry={entry} />
       <DialobTechnicalNameEditDialog open={technicalNameEdit} onClose={handleTechnicalNameEdit} entry={entry} />
-      {sessionsOpen && <DialobSessionsDialog onClose={handleSessions} entry={entry} form={form} sessions={sessions} />}
+      {sessionsOpen && <DialobSessionsDialog onClose={handleSessionsDialog} entry={entry} form={form} sessions={sessions} />}
       <StyledStack >
 
         {/* buttons section */}
@@ -220,7 +220,7 @@ const DialobItemActive: React.FC<{ entry: TenantEntryDescriptor | undefined }> =
             </Box>
 
             <Box display='flex' flexDirection='column' alignItems='center'>
-              <IconButton onClick={handleSessions}><QuestionAnswerOutlinedIcon sx={{ color: 'secondary.dark' }} /></IconButton>
+              <IconButton onClick={handleSessionsDialog}><QuestionAnswerOutlinedIcon sx={{ color: 'secondary.dark' }} /></IconButton>
               <Typography><FormattedMessage id='dialob.form.sessions' /></Typography>
             </Box>
 

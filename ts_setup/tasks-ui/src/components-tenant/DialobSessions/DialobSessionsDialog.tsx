@@ -6,7 +6,7 @@ import { FormattedMessage } from 'react-intl';
 import Burger from 'components-burger';
 import { TenantEntryDescriptor } from 'descriptor-tenant';
 import { DialobForm, DialobSession } from 'client'
-import { SessionItem } from './SessionItem';
+import { SessionList } from './SessionList';
 
 const DialobSessionsDialog: React.FC<{
   onClose: () => void,
@@ -18,7 +18,6 @@ const DialobSessionsDialog: React.FC<{
   const { form, entry, sessions } = props;
   const theme = useTheme();
 
-
   if (!form || !sessions) {
     return (<Dialog open={true} fullWidth maxWidth='md'>
       <DialogContent>
@@ -26,6 +25,7 @@ const DialobSessionsDialog: React.FC<{
       </DialogContent>
     </Dialog>);
   }
+
   return (
     <Dialog open={true} fullWidth maxWidth='xl'>
       <DialogTitle sx={{
@@ -71,8 +71,7 @@ const DialobSessionsDialog: React.FC<{
             </Grid>
 
             <Grid item md={12} lg={12} xl={12}>
-              {sessions.map((session) => <SessionItem entry={entry} form={form} session={session} />)}
-
+              <SessionList entry={entry} form={form} sessions={sessions} />
             </Grid>
           </Grid>
         </Stack>

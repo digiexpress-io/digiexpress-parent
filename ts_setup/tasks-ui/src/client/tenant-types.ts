@@ -55,7 +55,7 @@ export interface DialobSession {
   id: SessionId,
   metadata: {
     formId: string,
-    status: "OPEN" | "COMPLETED",
+    status: "NEW" | "OPEN" | "COMPLETED",
     tenantId: TenantId,
     created: Date,
     lastAnswer: Date,
