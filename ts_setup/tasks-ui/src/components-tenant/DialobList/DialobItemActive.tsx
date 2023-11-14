@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Stack, Typography, IconButton, Skeleton, useTheme, CircularProgress, Avatar, Chip, Grid } from '@mui/material';
 import EditOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
-import EditIcon from '@mui/icons-material/Edit';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import CopyAllIcon from '@mui/icons-material/CopyAll';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
@@ -13,7 +13,6 @@ import Burger from 'components-burger';
 import Context from 'context';
 import { DialobTag, DialobForm, DialobVariable, DialobSession } from 'client';
 import DialobDeleteDialog from '../DialobDelete';
-import DialobTechnicalNameEditDialog from '../DialobTechnicalNameEdit';
 import DialobSessionsDialog from '../DialobSessions';
 import {DialobEditor} from '../DialobEditor';
 
@@ -204,7 +203,6 @@ const DialobItemActive: React.FC<{ entry: TenantEntryDescriptor | undefined }> =
 
     return (<>
       <DialobDeleteDialog open={dialobDeleteOpen} onClose={handleDelete} entry={entry} />
-      <DialobTechnicalNameEditDialog open={technicalNameEdit} onClose={handleTechnicalNameEdit} entry={entry} />
       {sessionsOpen && <DialobSessionsDialog onClose={handleSessionsDialog} entry={entry} form={form} sessions={sessions} />}
       {editOpen ? <DialobEditor onClose={handleEditToggle} entry={entry} form={form} /> : null}
       <StyledStack >
@@ -261,7 +259,7 @@ const DialobItemActive: React.FC<{ entry: TenantEntryDescriptor | undefined }> =
               <Box display='flex' alignItems='center'>
                 <Typography>{entry.formName}</Typography>
                 <Box flexGrow={1} />
-                <IconButton size='small' onClick={handleTechnicalNameEdit}><EditIcon sx={{ color: 'uiElements.main', fontSize: 'medium' }} /></IconButton>
+                <IconButton size='small' onClick={() => { }}><ContentCopyIcon sx={{ color: 'uiElements.main', fontSize: 'medium' }} /></IconButton>
               </Box>
             </Grid>
 
