@@ -17,21 +17,17 @@ const SessionHeaders: React.FC<{}> = () => {
   return (
     <AppBar color='inherit' position='sticky' sx={{ boxShadow: 1 }}>
       <Toolbar sx={{ backgroundColor: 'table.main', '&.MuiToolbar-root': { p: 1, m: 0 } }}>
-        <Stack direction='row' spacing={1} alignItems='center'>
+        <Stack direction='row' spacing={1} alignItems='center' width={1}>
           <Grid container>
-            <Grid item md={8} lg={8} xl={8} sx={{ px: 2, py: 1 }}>
+            <Grid item md={12} lg={12} xl={12} sx={{ px: 1, py: 1 }}>
               <Box display='flex' >
-                <Box width='38%'><Typography fontWeight='bold'><FormattedMessage id='dialob.form.title' /></Typography></Box>
-                <Box width='38%'><Typography fontWeight='bold'><FormattedMessage id='dialob.form.technicalName' /></Typography></Box>
-                <Box width='12%' display='flex' alignItems='center'>
-                  <Typography fontWeight='bold'><FormattedMessage id='dialob.form.created' /></Typography>
-                </Box>
-                <Box width='12%' display='flex' alignItems='center'>
-                  <Typography fontWeight='bold'><FormattedMessage id='dialob.form.lastSaved' /></Typography>
-                </Box>
+                <Box width='10%'><Typography fontWeight='bold'><FormattedMessage id='dialob.form.sessions.table.status' /></Typography></Box>
+                <Box width='20%'><Typography fontWeight='bold'><FormattedMessage id='dialob.form.sessions.table.created' /></Typography></Box>
+                <Box width='20%'><Typography fontWeight='bold'><FormattedMessage id='dialob.form.sessions.table.lastAnswered' /></Typography></Box>
+                <Box width='25%'><Typography fontWeight='bold'><FormattedMessage id='dialob.form.sessions.table.owner' /></Typography></Box>
+                <Box width='25%'><Typography fontWeight='bold'><FormattedMessage id='dialob.form.sessions.table.sessionId' /></Typography></Box>
               </Box>
             </Grid>
-            <Grid item md={4} lg={4} xl={4} sx={{ px: 2, py: 1 }} />
           </Grid>
         </Stack>
       </Toolbar>
@@ -68,7 +64,7 @@ const SessionList: React.FC<{
   return (<Grid container>
     <SessionHeaders />
 
-    <Grid item md={8} lg={8}>
+    <Grid item md={12} lg={12} width='100%'>
       <Stack sx={{ backgroundColor: 'mainContent.main' }}>
         {table.entries.map((session, index) => (
           <StyledStackItem key={session.id} index={index} onClick={() => { }}>

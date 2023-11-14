@@ -81,6 +81,12 @@ const en = {
   'dialob.form.technicalNameEdit.dialog.title': 'Edit technical name',
   'dialob.form.sessions.dialog.title': 'Questionnaire sessions',
 
+  'dialob.form.sessions.table.status': 'Status',
+  'dialob.form.sessions.table.created': 'Created',
+  'dialob.form.sessions.table.lastAnswered': 'Last answered',
+  'dialob.form.sessions.table.owner': 'Owner',
+  'dialob.form.sessions.table.sessionId': 'Session ID',
+
 
   'dialob.form.create.dialog.title': 'Create new form',
   'dialob.form.create.dialog.dialogName': 'Form name',

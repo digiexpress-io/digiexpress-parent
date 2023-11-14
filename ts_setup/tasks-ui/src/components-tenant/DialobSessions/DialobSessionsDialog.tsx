@@ -43,7 +43,7 @@ const DialobSessionsDialog: React.FC<{
       </DialogTitle>
 
       <DialogContent>
-        <Stack overflow='auto' spacing={1} direction='column'>
+        <Stack spacing={1} direction='column'>
           <Grid container spacing={1} direction='row'>
             <Grid item md={3} lg={3} xl={3}>
               <Typography fontWeight='bold'><FormattedMessage id='dialob.form.title' /></Typography>
