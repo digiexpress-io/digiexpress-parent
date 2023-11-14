@@ -3764,6 +3764,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/hoist-non-react-statics@npm:^3.3.0":
+  version: 3.3.5
+  resolution: "@types/hoist-non-react-statics@npm:3.3.5"
+  dependencies:
+    "@types/react": "*"
+    hoist-non-react-statics: ^3.3.0
+  checksum: b645b062a20cce6ab1245ada8274051d8e2e0b2ee5c6bd58215281d0ec6dae2f26631af4e2e7c8abe238cdcee73fcaededc429eef569e70908f82d0cc0ea31d7
+  languageName: node
+  linkType: hard
+
 "@types/hoist-non-react-statics@npm:^3.3.1":
   version: 3.3.4
   resolution: "@types/hoist-non-react-statics@npm:3.3.4"
@@ -3953,6 +3963,18 @@ __metadata:
   dependencies:
     "@types/react": "*"
   checksum: 8e9631600c21ff561328e38a951d1991b3b3b20f538af4c0efbd1327c883a5573a63f50e1b945c34fa51b114b30e1ca5e62317bd54f21e063d6697b4be843a03
+  languageName: node
+  linkType: hard
+
+"@types/react-redux@npm:^7.1.30":
+  version: 7.1.30
+  resolution: "@types/react-redux@npm:7.1.30"
+  dependencies:
+    "@types/hoist-non-react-statics": ^3.3.0
+    "@types/react": "*"
+    hoist-non-react-statics: ^3.3.0
+    redux: ^4.0.0
+  checksum: df86069aae0b2dd79752a45265b36ad5583f4c87a05731607192a4df6dd4e1ed151e458957cced31df37cbb60c58c41211f7186a783305a8af62d8cd69ae6789
   languageName: node
   linkType: hard
 
@@ -10410,6 +10432,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"jquery@npm:x.*":
+  version: 3.7.1
+  resolution: "jquery@npm:3.7.1"
+  checksum: 4370b8139d6ae82867eb6f7f21d1edccf1d1bdf41c0840920ea80d366c2cd5dbe1ceebb110ee9772aa839b04400faa1572c5c560b507c688ed7b61cea26c0e27
+  languageName: node
+  linkType: hard
+
 "js-file-download@npm:^0.4.12":
   version: 0.4.12
   resolution: "js-file-download@npm:0.4.12"
@@ -14237,7 +14266,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"redux@npm:^4.0.4":
+"redux@npm:^4.0.0, redux@npm:^4.0.4":
   version: 4.2.1
   resolution: "redux@npm:4.2.1"
   dependencies:
@@ -14952,6 +14981,15 @@ __metadata:
     "@types/node-forge": ^1.3.0
     node-forge: ^1
   checksum: 38b91c56f1d7949c0b77f9bbe4545b19518475cae15e7d7f0043f87b1626710b011ce89879a88969651f650a19d213bb15b7d5b4c2877df9eeeff7ba8f8b9bfa
+  languageName: node
+  linkType: hard
+
+"semantic-ui-css@npm:^2.5.0":
+  version: 2.5.0
+  resolution: "semantic-ui-css@npm:2.5.0"
+  dependencies:
+    jquery: x.*
+  checksum: f8f9bea6f06f084a9ab0bd0fa46191586a4fc94194f092fbd78deff49ee559257eb3ba9b732916073143fa7816348a7424684a94e60621e889cb184906a750d6
   languageName: node
   linkType: hard
 
@@ -15822,6 +15860,7 @@ __metadata:
     "@types/node": ^12.19.9
     "@types/react": ^18.0.27
     "@types/react-dom": ^18.2.15
+    "@types/react-redux": ^7.1.30
     "@types/react-swipeable-views": ^0.13.1
     "@types/react-virtualized": ^9.21.27
     "@uiw/react-md-editor": ^3.25.2
@@ -15861,6 +15900,7 @@ __metadata:
     redux: 4.0.5
     remove-markdown: 0.3.0
     resize-observer-polyfill: ^1.5.1
+    semantic-ui-css: ^2.5.0
     semantic-ui-react: 2.1.3
     style-loader: ^3.3.1
     ts-node: ^9.1.1

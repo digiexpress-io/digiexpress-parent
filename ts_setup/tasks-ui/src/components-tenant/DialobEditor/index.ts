@@ -1,0 +1,1 @@
+export { DialobEditor } from './DialobEditor';

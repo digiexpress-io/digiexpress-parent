@@ -22,6 +22,7 @@ function translateFatal(message) {
 class FatalErrorDialog extends Component {
 
   render() {
+    let location = window.location;
     if (this.props.status === Status.STATUS_FATAL) {
       const error = this.props.errors.find(e => e.get('severity') === 'FATAL');
       return (
@@ -34,7 +35,7 @@ class FatalErrorDialog extends Component {
             </Message.Content>
           </Message>
           <Button icon labelPosition='left' disabled={!this.props.formLoaded} onClick={() => this.props.downloadForm()}><Icon name='download' />Download</Button>
-          <Button icon labelPosition='left' onClick={() => location.reload(true)}><Icon name='refresh' />Reload</Button>
+          <Button icon labelPosition='left' onClick={() => location?.reload(true)}><Icon name='refresh' />Reload</Button>
         </Modal>
       );
     } else {

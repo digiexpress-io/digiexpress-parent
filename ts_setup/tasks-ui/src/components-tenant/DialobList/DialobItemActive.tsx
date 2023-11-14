@@ -15,6 +15,8 @@ import { DialobTag, DialobForm, DialobVariable, DialobSession } from 'client';
 import DialobDeleteDialog from '../DialobDelete';
 import DialobTechnicalNameEditDialog from '../DialobTechnicalNameEdit';
 import DialobSessionsDialog from '../DialobSessions';
+import {DialobEditor} from '../DialobEditor';
+
 
 const StyledStack: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const theme = useTheme();
@@ -165,6 +167,7 @@ const DialobItemActive: React.FC<{ entry: TenantEntryDescriptor | undefined }> =
   const [dialobDeleteOpen, setDialobDeleteOpen] = React.useState(false);
   const [technicalNameEdit, setTechnicalNameEdit] = React.useState(false);
   const [sessionsOpen, setSessionsOpen] = React.useState(false);
+  const [editOpen, setEditOpen] = React.useState(false);
   const [sessions, setSessions] = React.useState<DialobSession[]>();
 
 
@@ -181,6 +184,10 @@ const DialobItemActive: React.FC<{ entry: TenantEntryDescriptor | undefined }> =
     setSessionsOpen(prev => !prev);
   }
 
+  function handleEditToggle() {
+    setEditOpen(prev => !prev);
+  }
+
   React.useEffect(() => {
     if (entry?.formName) {
       backend.tenant.getDialobForm(entry.formName).then((form) => {
@@ -193,15 +200,13 @@ const DialobItemActive: React.FC<{ entry: TenantEntryDescriptor | undefined }> =
   }, [entry]);
 
 
-  function handleTaskEdit() {
-    setDialobEditOpen(prev => !prev);
-  }
   if (entry) {
 
     return (<>
       <DialobDeleteDialog open={dialobDeleteOpen} onClose={handleDelete} entry={entry} />
       <DialobTechnicalNameEditDialog open={technicalNameEdit} onClose={handleTechnicalNameEdit} entry={entry} />
       {sessionsOpen && <DialobSessionsDialog onClose={handleSessionsDialog} entry={entry} form={form} sessions={sessions} />}
+      {editOpen && <DialobEditor onClose={handleEditToggle} entry={entry} form={form} />}
       <StyledStack >
 
         {/* buttons section */}
@@ -225,7 +230,7 @@ const DialobItemActive: React.FC<{ entry: TenantEntryDescriptor | undefined }> =
             </Box>
 
             <Box display='flex' flexDirection='column' alignItems='center'>
-              <IconButton onClick={handleTaskEdit}><EditOutlinedIcon sx={{ color: 'uiElements.main' }} /></IconButton>
+              <IconButton onClick={handleEditToggle}><EditOutlinedIcon sx={{ color: 'uiElements.main' }} /></IconButton>
               <Typography><FormattedMessage id='dialob.form.edit' /></Typography>
             </Box>
 
