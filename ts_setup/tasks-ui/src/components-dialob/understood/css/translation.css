@@ -1,0 +1,21 @@
+.editor-container .translation {
+  cursor: pointer;
+}
+
+.editor-container .translation.error {
+  background: #fff6f6;
+}
+
+.editor-container .translation.active {
+  background: #e0e0e0 !important;
+  color: rgba(0,0,0,.87) !important;
+}
+
+.editor-container .translation.warning {
+  background: #fffaf3;
+}
+
+.editor-container .editor-table-row:hover .translation.error {
+  background: #ffe7e7;
+  color: #943634;
+}

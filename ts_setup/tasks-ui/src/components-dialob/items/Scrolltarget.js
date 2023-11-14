@@ -1,5 +1,5 @@
 import React from 'react';
-import {scrollToWhen} from '@resys/react-redux-scroll';
+import {scrollToWhen} from 'react-redux-scroll';
 import * as Actions from '../actions/constants';
 
 const isItemActivated = (action, props) =>

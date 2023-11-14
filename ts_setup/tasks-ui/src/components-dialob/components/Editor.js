@@ -33,7 +33,11 @@ class Editor extends Component {
   }
 
   findValueset(valueSetId) {
-    return (this.props.valueSets && valueSetId) ? data.get('valueSets').find(v => v.get('id') === id) : null;
+
+    return (this.props.valueSets && valueSetId) ?
+      data.get('valueSets').find(v => v.get('id') === id) //eslint-disable-line
+     : null;
+
   }
 
   createChildren(activePage, props, config) {

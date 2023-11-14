@@ -2,7 +2,7 @@ import React, {useRef, useState, useEffect} from 'react';
 import {Modal, Button, Label, Table, Tab, Segment, Dropdown, TextArea} from 'semantic-ui-react';
 import {connect} from 'react-redux';
 import {hideTranslation, updateItem, updateValuesetEntry, updateValidation, addLanguage, setActiveLanguage, deleteLanguage} from '../actions';
-import { Understood } from '@resys/understood';
+import { Understood } from 'components-dialob/understood';
 import * as Defaults from '../defaults';
 import {MarkdownEditor} from './MarkdownEditor';
 import md_strip_tags from 'remove-markdown';

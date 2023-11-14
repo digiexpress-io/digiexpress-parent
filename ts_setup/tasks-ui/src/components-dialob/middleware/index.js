@@ -4,7 +4,7 @@ import {previewMiddleware} from './previewMiddleware';
 import {downloadMiddleware} from './downloadMiddleware';
 import {extensionMiddleware} from './extensionMiddleware';
 import {navigationMiddleware} from './navigationMiddleware';
-import {createScrollMiddleware} from '@resys/react-redux-scroll';
+import {createScrollMiddleware} from 'react-redux-scroll';
 
 const middleware = [
   navigationMiddleware,

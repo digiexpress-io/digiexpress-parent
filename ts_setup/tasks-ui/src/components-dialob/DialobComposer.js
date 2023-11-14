@@ -19,7 +19,7 @@ import VersioningDialog from './components/VersioningDialog';
 import NewTagDialog from './components/NewTagDialog';
 import {connect} from 'react-redux';
 import './del/codemirrorMode';
-import { scrollableArea } from '@resys/react-redux-scroll';
+import { scrollableArea } from 'react-redux-scroll';
 import RuleEditor from './components/RuleEditor';
 
 require('./style.css');

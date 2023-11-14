@@ -17,6 +17,7 @@ import AppTenant from 'app-tenant';
 import AppProjects from 'app-projects';
 import AppStencil from 'app-stencil';
 import AppFrontoffice from 'app-frontoffice';
+import {} from 'components-dialob'
 
 interface Csrf { key: string, value: string }
 declare global {
