@@ -7,7 +7,7 @@ import { initTable, initTabs, createTabs, DialobListTabState, DialobListState } 
 import { StyledStackItem, StyledEditDialobButton, StyledPreviewFIllButton } from './DialobListStyles';
 import { TenantEntryDescriptor } from 'descriptor-tenant';
 import { NavigationSticky, NavigationButtonDialobList } from '../NavigationSticky';
-import { FilterByString, GroupBy, FilterByTenant } from '../TenantsSearch';
+import { FilterByString, FilterByTenant } from '../TenantsSearch';
 import DialobCreateDialog from '../DialobCreate';
 import Context from 'context';
 
@@ -94,8 +94,6 @@ const DialobList: React.FC<{
         } />
 
         <FilterByTenant onChange={() => { }} />
-
-        <GroupBy onChange={() => { }} value={tenants.state.toGroupsAndFilters().groupBy} />
 
         <NavigationButtonDialobList
           id='dialob.form.create'
