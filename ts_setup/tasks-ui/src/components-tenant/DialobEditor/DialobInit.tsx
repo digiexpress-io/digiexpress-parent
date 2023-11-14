@@ -8,7 +8,7 @@ import { Provider } from 'react-redux';
 
 
 import { DEFAULT_ITEM_CONFIG, DEFAULT_ITEMTYPE_CONFIG, DialobComposer, createDialobComposerReducer, createDialobComposerMiddleware } from 'components-dialob';
-
+import './fixes.css'
 
 const DialobInit: React.FC<{
   onClose: () => void,
@@ -39,6 +39,8 @@ const DialobInit: React.FC<{
       onClose();
     }
   };
+  
+  
 
 
   const reducers = {
@@ -46,6 +48,17 @@ const DialobInit: React.FC<{
   };
   const reducer = combineReducers(reducers);
   const store = createStore(reducer, applyMiddleware(...createDialobComposerMiddleware()));
+
+  React.useEffect(() => {
+    const styleElement = document.createElement('link');
+    styleElement.rel = 'stylesheet';
+    styleElement.href = '//cdn.jsdelivr.net/npm/semantic-ui@2.4.0/dist/semantic.min.css';
+    document.head.append(styleElement);
+    return () => styleElement.remove();
+  }, []);
+  
+  //<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/semantic-ui@2.4.0/dist/semantic.min.css">
+
 
   return (<>
     ({/* @ts-ignore */}

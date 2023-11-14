@@ -6,7 +6,10 @@ import Context from 'context';
 import { DialobForm } from 'client';
 
 import { DialobInit } from './DialobInit';
-const DialobCss = React.lazy(() => import('./DialobCss'));
+
+
+
+
 
 const DialobEditor: React.FC<{
   onClose: () => void,
@@ -19,8 +22,6 @@ const DialobEditor: React.FC<{
   const apiUrl: string = backend.config.urls.find(url => url.id === 'dialob')?.url + "api" ?? '';
   const tenantId = entry.tenantId;
   const formId: string = form?._id ?? '';
-  
-
   const Composer = React.useCallback(() => <DialobInit apiUrl={apiUrl} tenantId={tenantId} formId={formId} onClose={onClose}/>, [apiUrl, tenantId, formId, onClose]);
 
   if (!form) {
@@ -29,7 +30,7 @@ const DialobEditor: React.FC<{
 
   return (<Dialog open={true} fullScreen sx={{zIndex: 1300}}>
     <React.Suspense fallback={<>loading composer...</>}>
-      <DialobCss />&& <Composer /> 
+      <Composer /> 
     </React.Suspense>
   </Dialog>);
 }

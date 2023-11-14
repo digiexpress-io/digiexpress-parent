@@ -206,7 +206,7 @@ const DialobItemActive: React.FC<{ entry: TenantEntryDescriptor | undefined }> =
       <DialobDeleteDialog open={dialobDeleteOpen} onClose={handleDelete} entry={entry} />
       <DialobTechnicalNameEditDialog open={technicalNameEdit} onClose={handleTechnicalNameEdit} entry={entry} />
       {sessionsOpen && <DialobSessionsDialog onClose={handleSessionsDialog} entry={entry} form={form} sessions={sessions} />}
-      {editOpen && <DialobEditor onClose={handleEditToggle} entry={entry} form={form} />}
+      {editOpen ? <DialobEditor onClose={handleEditToggle} entry={entry} form={form} /> : null}
       <StyledStack >
 
         {/* buttons section */}
