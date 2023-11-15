@@ -6,24 +6,19 @@ import java.util.stream.Collectors;
 
 import io.resys.thena.projects.client.api.TenantConfigClient;
 import io.resys.thena.projects.client.api.model.ImmutableCreateTenantConfig;
-import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
 import io.resys.thena.projects.client.api.model.TenantConfigCommand.ArchiveTenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfigCommand.CreateTenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfigCommand.TenantConfigUpdateCommand;
 import io.resys.thena.projects.client.rest.TenantConfigRestApi;
 import io.resys.thena.tasks.dev.app.BeanFactory.CurrentTenant;
 import io.resys.thena.tasks.dev.app.BeanFactory.CurrentUser;
-import io.resys.thena.tasks.dev.app.DemoResource.HeadState;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
 
 @Path("q/digiexpress/api")
-public class DigiExpressTenantConfig implements TenantConfigRestApi {
+public class TenantsResource implements TenantConfigRestApi {
 
   @Inject TenantConfigClient tenantConfigClient;
   @Inject CurrentTenant currentTenant;
@@ -80,13 +75,5 @@ public class DigiExpressTenantConfig implements TenantConfigRestApi {
             .withUserId(currentUser.getUserId()))
         .collect(Collectors.toList());
     return tenantConfigClient.tenantConfig().updateTenantConfig().updateOne(modifiedCommands);
-  }
-
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("init")
-  public Uni<HeadState> init() {
-    return tenantConfigClient.repo().query().repoName(currentTenant.getProjectId(), TenantRepoConfigType.TENANT).createIfNot()
-        .onItem().transform(created -> HeadState.builder().created(true).build());
   }
 }

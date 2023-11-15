@@ -139,7 +139,6 @@ public class RepoBuilderSqlPool implements RepoBuilder {
         .append(sqlSchema.createDocBranch().getValue())
         .append(sqlSchema.createDocCommits().getValue())
         .append(sqlSchema.createDocLog().getValue())
-        .append(sqlSchema.createTags().getValue())
 
         .append(sqlSchema.createDocBranchConstraints().getValue())
         .append(sqlSchema.createDocCommitsConstraints().getValue())
@@ -201,14 +200,25 @@ public class RepoBuilderSqlPool implements RepoBuilder {
     
     return pool.withTransaction(tx -> {
       final var repoDelete = this.sqlBuilder.withOptions(next).repo().deleteOne(newRepo);
-      final var tablesDrop = new StringBuilder()
-          .append(sqlSchema.dropRefs().getValue())
-          .append(sqlSchema.dropTags().getValue())
-          .append(sqlSchema.dropCommits().getValue())
-          .append(sqlSchema.dropTreeItems().getValue())
-          .append(sqlSchema.dropTrees().getValue())
-          .append(sqlSchema.dropBlobs().getValue())          
-          .toString();
+      final var tablesDrop = new StringBuilder();
+      
+      if(newRepo.getType() == RepoType.git) {
+        tablesDrop
+        .append(sqlSchema.dropRefs().getValue())
+        .append(sqlSchema.dropTags().getValue())
+        .append(sqlSchema.dropCommits().getValue())
+        .append(sqlSchema.dropTreeItems().getValue())
+        .append(sqlSchema.dropTrees().getValue())
+        .append(sqlSchema.dropBlobs().getValue());
+      } else {
+        tablesDrop
+        .append(sqlSchema.dropDocLog().getValue())
+        .append(sqlSchema.dropDocCommit().getValue())
+        .append(sqlSchema.dropDocBranch().getValue())
+        .append(sqlSchema.dropDoc().getValue());        
+        
+      }
+      
       
       if(log.isDebugEnabled()) {
         log.debug("Delete repo by name query, with props: {} \r\n{}", 
@@ -226,10 +236,9 @@ public class RepoBuilderSqlPool implements RepoBuilder {
       final Uni<Void> insert = tx.preparedQuery(repoDelete.getValue()).execute(repoDelete.getProps())
           .onItem().transformToUni(rowSet -> Uni.createFrom().voidItem())
           .onFailure().invoke(e -> errorHandler.deadEnd("Can't delete from 'REPO': '" + repoDelete.getValue() + "'!", e));
-      final Uni<Void> nested = tx.query(tablesDrop).execute()
+      final Uni<Void> nested = tx.query(tablesDrop.toString()).execute()
           .onItem().transformToUni(rowSet -> Uni.createFrom().voidItem())
           .onFailure().invoke(e -> errorHandler.deadEnd("Can't drop tables: " + tablesDrop, e));;
-      
       
       return insert
           .onItem().transformToUni(junk -> nested)

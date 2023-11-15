@@ -18,6 +18,7 @@ import io.resys.thena.docdb.store.sql.DbStateSqlImpl;
 import io.resys.thena.docdb.store.sql.PgErrors;
 import io.resys.thena.projects.client.api.TenantConfigClient;
 import io.resys.thena.projects.client.spi.ProjectsClientImpl;
+import io.resys.thena.projects.client.spi.store.MainBranch;
 import io.resys.thena.tasks.client.api.TaskClient;
 import io.resys.thena.tasks.client.api.model.ImmutableTask;
 import io.resys.thena.tasks.client.api.model.ImmutableTaskComment;
@@ -65,31 +66,28 @@ import lombok.RequiredArgsConstructor;
 })
 public class BeanFactory {
 
-
-  @ConfigProperty(name = "tasks.db.pg.repositoryName") 
-  String repositoryName;
-  String branchSpecifier = "main";
-  
-  @ConfigProperty(name = "tasks.db.pg.pgPoolSize")
+  @ConfigProperty(name = "tenant.db.pg.repositoryName") 
+  String tenantsStoreId;
+  @ConfigProperty(name = "tenant.db.pg.pgPoolSize")
   Integer pgPoolSize;  
-  @ConfigProperty(name = "tasks.db.pg.pgHost")
+  @ConfigProperty(name = "tenant.db.pg.pgHost")
   String pgHost;
-  @ConfigProperty(name = "tasks.db.pg.pgPort")
+  @ConfigProperty(name = "tenant.db.pg.pgPort")
   Integer pgPort;
-  @ConfigProperty(name = "tasks.db.pg.pgDb")
+  @ConfigProperty(name = "tenant.db.pg.pgDb")
   String pgDb;
-  @ConfigProperty(name = "tasks.db.pg.pgUser")
+  @ConfigProperty(name = "tenant.db.pg.pgUser")
   String pgUser;
-  @ConfigProperty(name = "tasks.db.pg.pgPass")
+  @ConfigProperty(name = "tenant.db.pg.pgPass")
   String pgPass;
 
-  @ConfigProperty(name = "tasks.project.id")
-  String projectId;
+  @ConfigProperty(name = "tenant.currentTenantId")
+  String tenantId;
   
   @Data @RequiredArgsConstructor
   public static class CurrentTenant {
-    private final String projectId;
-    private final String head = "main";
+    private final String tenantId;
+    private final String tenantsStoreId;
   }
   
   @Data @RequiredArgsConstructor
@@ -99,7 +97,7 @@ public class BeanFactory {
   
   @Produces 
   public CurrentTenant currentTenant() {
-    return new CurrentTenant(projectId);
+    return new CurrentTenant(tenantId, tenantsStoreId);
   }
   @Produces 
   public CurrentUser currentUser() {
@@ -116,7 +114,7 @@ public class BeanFactory {
     final var pgPool = io.vertx.mutiny.pgclient.PgPool.pool(vertx, connectOptions, poolOptions);
       
     final var store = io.resys.thena.tasks.client.spi.DocumentStoreImpl.builder()
-        .repoName(projectId)
+        .repoName("")
         .pgPool(pgPool)
         .pgDb(pgDb)
         .pgPoolSize(pgPoolSize)
@@ -130,7 +128,7 @@ public class BeanFactory {
   }
   
   @Produces
-  public TenantConfigClient projectClient(Vertx vertx, ObjectMapper om) {    
+  public TenantConfigClient tenantClient(Vertx vertx, ObjectMapper om) {    
     
     final var connectOptions = new PgConnectOptions().setDatabase(pgDb)
         .setHost(pgHost).setPort(pgPort)
@@ -139,7 +137,7 @@ public class BeanFactory {
     final var pgPool = io.vertx.mutiny.pgclient.PgPool.pool(vertx, connectOptions, poolOptions);
       
     final var store = io.resys.thena.projects.client.spi.DocumentStoreImpl.builder()
-        .repoName(projectId)
+        .repoName(tenantsStoreId)
         .pgPool(pgPool)
         .pgDb(pgDb)
         .pgPoolSize(pgPoolSize)
@@ -168,7 +166,7 @@ public class BeanFactory {
         .client(docDb)
         .objectMapper(om)
         .repoName("")
-        .headName(currentProject.getHead())
+        .headName(MainBranch.HEAD_NAME)
         .deserializer(deserializer)
         .serializer((entity) -> {
           try {
@@ -186,22 +184,6 @@ public class BeanFactory {
     return new StencilComposerImpl(client);
   }
 
-  /*
-  @Produces
-  public ObjectMapper objectMapper() {
-    final var modules = new com.fasterxml.jackson.databind.Module[] {
-        new JavaTimeModule(), 
-        new Jdk8Module(), 
-        new GuavaModule(),
-        new VertxModule(),
-        new VertexExtModule()
-        };
-      DatabindCodec.mapper().registerModules(modules);
-      DatabindCodec.prettyMapper().registerModules(modules);
-      
-    return DatabindCodec.mapper(); 
-  }*/
-  
   @Produces
   public ObjectMapperCustomizer objectMapperCustomizer() {
     final var modules = new com.fasterxml.jackson.databind.Module[] {

@@ -8,9 +8,9 @@ import io.thestencil.client.rest.StencilRestApiTemplate;
 import jakarta.ws.rs.Path;
 
 @Path("q/digiexpress/api/stencil")
-public class DigiExpressStencil extends StencilRestApiTemplate implements StencilRestApi {
+public class StencilResource extends StencilRestApiTemplate implements StencilRestApi {
 
-  public DigiExpressStencil(StencilComposer client, ObjectMapper objectMapper) {
+  public StencilResource(StencilComposer client, ObjectMapper objectMapper) {
     super(client, objectMapper);
   }
 }

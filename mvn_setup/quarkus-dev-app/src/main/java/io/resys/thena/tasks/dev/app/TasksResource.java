@@ -18,7 +18,7 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.Path;
 
 @Path("q/digiexpress/api")
-public class DigiExpressTasks implements TaskRestApi {
+public class TasksResource implements TaskRestApi {
 
   @Inject TaskClient tasks;
   @Inject CurrentTenant currentProject;

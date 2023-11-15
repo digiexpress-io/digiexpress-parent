@@ -6,6 +6,9 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 
 import io.resys.thena.projects.client.api.TenantConfigClient;
+import io.resys.thena.projects.client.api.model.ImmutableCreateTenantConfig;
+import io.resys.thena.projects.client.api.model.TenantConfig;
+import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
 import io.resys.thena.tasks.client.api.TaskClient;
 import io.resys.thena.tasks.client.api.model.ImmutableCreateTask;
 import io.resys.thena.tasks.client.api.model.TaskCommand.CreateTask;
@@ -39,27 +42,19 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
-import lombok.Builder;
-import lombok.Data;
-import lombok.extern.jackson.Jacksonized;
 
 @Path("q/demo/api/")
 public class DemoResource {
   @Inject Vertx vertx;
   @Inject TaskClient taskClient;
-  @Inject TenantConfigClient projectsClient;
-  @Inject CurrentTenant currentProject;
+  @Inject TenantConfigClient tenantClient;
+  @Inject CurrentTenant currentTenant;
   
-  //http://localhost:8080/portal/active/tasks
-  @Jacksonized @Data @Builder
-  public static class HeadState {
-    private Boolean created;
-  }
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @Path("populate/{repoId}/tasks/{totalTasks}")
-  public Uni<HeadState> populate(@PathParam("repoId") String repoId, @PathParam("totalTasks") String totalTasks) {
+  @Path("populate/tasks/{totalTasks}")
+  public Uni<TenantConfig> populate(@PathParam("totalTasks") String totalTasks) {
     final int count = totalTasks == null ? 50 : Integer.parseInt(totalTasks);
 
     
@@ -87,36 +82,50 @@ public class DemoResource {
       .build();
       bulk.add(newTask);
     }
-    final var response = HeadState.builder().created(true).build();
-    return taskClient.withRepoId(repoId).repo().query().repoName(repoId).headName(currentProject.getHead()).createIfNot()
-        .onItem().transformToUni(created -> {
-          return taskClient.withRepoId(repoId).tasks().createTask().createMany(bulk).onItem().transform((data) -> response);
-        });
+
+    
+    return tenantClient.tenantConfig().queryActiveTenantConfig().get(currentTenant.getTenantId())
+    .onItem().transformToUni(config -> {
+      final var taskConfig = config.getRepoConfigs().stream().filter(entry -> entry.getRepoType() == TenantRepoConfigType.TASKS).findFirst().get();
+      return taskClient.withRepoId(taskConfig.getRepoId()).tasks().createTask().createMany(bulk).onItem().transform((data) -> config);
+    });
+    
   }
   
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @Path("clear/{repoId}/tasks")
-  public Uni<HeadState> clear(@PathParam("repoId") String repoId) {
-    return taskClient.withRepoId(repoId).repo().query().repoName(currentProject.getProjectId()).headName(currentProject.getHead()).createIfNot()
-        .onItem().transformToUni(created -> {
-          
-            return taskClient.tasks().queryActiveTasks().deleteAll("", Instant.now())
-                .onItem().transform(tasks -> HeadState.builder().created(true).build());
-          
-        });
+  @Path("clear/tasks")
+  public Uni<TenantConfig> clear() {
+    return tenantClient.tenantConfig().queryActiveTenantConfig().get(currentTenant.getTenantId())
+    .onItem().transformToUni(config -> {
+        final var taskConfig = config.getRepoConfigs().stream().filter(entry -> entry.getRepoType() == TenantRepoConfigType.TASKS).findFirst().get();
+        return taskClient.withRepoId(taskConfig.getRepoId()).tasks().queryActiveTasks().deleteAll("", Instant.now())
+            .onItem().transform(tasks -> config);
+    });
   }
   
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Path("reinit")
-  public Uni<HeadState> reinit() {
-    return projectsClient.repo().query().deleteAll()
+  public Uni<TenantConfig> reinit() {
+    return tenantClient.repo().query().deleteAll()
         .onItem().transformToUni(junk -> init());
   }
-  private Uni<HeadState> init() {
-    return taskClient.repo().query().repoName(currentProject.getProjectId()).headName(currentProject.getHead()).createIfNot()
-        .onItem().transform(created -> HeadState.builder().created(true).build());
+  
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("kill9")
+  public Uni<Void> kill9() {
+    return tenantClient.repo().query().deleteAll()
+        .onItem().transformToUni(junk -> Uni.createFrom().voidItem());
+  }
+  private Uni<TenantConfig> init() {
+    return tenantClient.repo().query().repoName(currentTenant.getTenantsStoreId(), TenantRepoConfigType.TENANT).createIfNot()
+        .onItem().transformToUni(created -> {
+          return tenantClient.tenantConfig().createTenantConfig().createOne(ImmutableCreateTenantConfig.builder()
+              .name(currentTenant.getTenantId())
+              .build());
+        });
   }
 
 }

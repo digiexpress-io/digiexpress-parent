@@ -132,7 +132,7 @@ public class TenantConfigCommandVisitor {
   public static Instant requireTargetDate(TenantConfigCommand command) {
     final var targetDate = command.getTargetDate();
     if (targetDate == null) {
-      throw new UpdateProjectVisitorException("targetDate not found");
+      throw new UpdateProjectVisitorException("targetDate not defined");
     }
     return targetDate;
   }

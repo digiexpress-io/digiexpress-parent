@@ -23,12 +23,11 @@ quarkus:
   vertx:
     keep-alive-time: PT10.000S
     
-tasks:
-  project:
-    id: "myTasksProject"
+tenant:
+  currentTenantId: "local_test_tenant"
   db:
     pg: 
-      repositoryName: "tasks-repo"
+      repositoryName: "tenant_store"
       pgPort: 32788 
       pgHost: "localhost"
       pgDb: "tasks_db"
