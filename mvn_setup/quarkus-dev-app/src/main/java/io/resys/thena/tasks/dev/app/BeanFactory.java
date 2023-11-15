@@ -16,7 +16,7 @@ import io.quarkus.runtime.annotations.RegisterForReflection;
 import io.resys.thena.docdb.jackson.VertexExtModule;
 import io.resys.thena.docdb.store.sql.DbStateSqlImpl;
 import io.resys.thena.docdb.store.sql.PgErrors;
-import io.resys.thena.projects.client.api.ProjectsClient;
+import io.resys.thena.projects.client.api.TenantConfigClient;
 import io.resys.thena.projects.client.spi.ProjectsClientImpl;
 import io.resys.thena.tasks.client.api.TaskClient;
 import io.resys.thena.tasks.client.api.model.ImmutableTask;
@@ -87,7 +87,7 @@ public class BeanFactory {
   String projectId;
   
   @Data @RequiredArgsConstructor
-  public static class CurrentProject {
+  public static class CurrentTenant {
     private final String projectId;
     private final String head = "main";
   }
@@ -98,8 +98,8 @@ public class BeanFactory {
   }
   
   @Produces 
-  public CurrentProject currentProject() {
-    return new CurrentProject(projectId);
+  public CurrentTenant currentTenant() {
+    return new CurrentTenant(projectId);
   }
   @Produces 
   public CurrentUser currentUser() {
@@ -130,7 +130,7 @@ public class BeanFactory {
   }
   
   @Produces
-  public ProjectsClient projectClient(Vertx vertx, ObjectMapper om) {    
+  public TenantConfigClient projectClient(Vertx vertx, ObjectMapper om) {    
     
     final var connectOptions = new PgConnectOptions().setDatabase(pgDb)
         .setHost(pgHost).setPort(pgPort)
@@ -153,7 +153,7 @@ public class BeanFactory {
   }
   
   @Produces
-  public StencilComposer stencilComposer(Vertx vertx, ObjectMapper om, CurrentProject currentProject) {    
+  public StencilComposer stencilComposer(Vertx vertx, ObjectMapper om, CurrentTenant currentProject) {    
     
     final var connectOptions = new PgConnectOptions().setDatabase(pgDb)
         .setHost(pgHost).setPort(pgPort)

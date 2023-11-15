@@ -9,8 +9,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.quarkus.jackson.ObjectMapperCustomizer;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import io.resys.thena.docdb.jackson.VertexExtModule;
-import io.resys.thena.projects.client.api.model.ImmutableCreateProject;
-import io.resys.thena.projects.client.api.model.ImmutableProject;
+import io.resys.thena.projects.client.api.model.ImmutableCreateTenantConfig;
+import io.resys.thena.projects.client.api.model.ImmutableTenantConfig;
 import io.vertx.core.json.jackson.VertxModule;
 /*-
  * #%L
@@ -36,8 +36,8 @@ import jakarta.enterprise.inject.Produces;
 
 @Dependent
 @RegisterForReflection(targets = {
-    ImmutableProject.class,
-    ImmutableCreateProject.class
+    ImmutableTenantConfig.class,
+    ImmutableCreateTenantConfig.class
 })
 public class BeanFactory {
 

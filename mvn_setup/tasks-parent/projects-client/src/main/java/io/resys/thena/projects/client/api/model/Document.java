@@ -27,6 +27,6 @@ public interface Document extends Serializable {
   String getId();
   String getVersion();
   
-  enum DocumentType { PROJECT_META }
+  enum DocumentType { TENANT_CONFIG }
   
 }

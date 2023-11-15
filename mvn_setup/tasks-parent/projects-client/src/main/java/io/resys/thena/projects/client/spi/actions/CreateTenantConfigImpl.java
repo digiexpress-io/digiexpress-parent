@@ -23,28 +23,28 @@ package io.resys.thena.projects.client.spi.actions;
 import java.util.Arrays;
 import java.util.List;
 
-import io.resys.thena.projects.client.api.actions.ProjectsActions.CreateProjectAction;
-import io.resys.thena.projects.client.api.model.Project;
-import io.resys.thena.projects.client.api.model.ProjectCommand.CreateProject;
+import io.resys.thena.projects.client.api.actions.TenantConfigActions.CreateTenantConfigAction;
+import io.resys.thena.projects.client.api.model.TenantConfig;
+import io.resys.thena.projects.client.api.model.TenantConfigCommand.CreateTenantConfig;
 import io.resys.thena.projects.client.spi.store.DocumentStore;
-import io.resys.thena.projects.client.spi.visitors.CreateProjectsVisitor;
+import io.resys.thena.projects.client.spi.visitors.CreateTenantConfigsVisitor;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class CreateProjectImpl implements CreateProjectAction {
+public class CreateTenantConfigImpl implements CreateTenantConfigAction {
   private final DocumentStore ctx;
   
   @Override
-  public Uni<Project> createOne(CreateProject command) {
+  public Uni<TenantConfig> createOne(CreateTenantConfig command) {
     return this.createMany(Arrays.asList(command))
        .onItem().transform(tasks -> tasks.get(0)) ;
   }
   
   @Override
-  public Uni<List<Project>> createMany(List<? extends CreateProject> commands) {
-    return ctx.getConfig().accept(new CreateProjectsVisitor(commands));
+  public Uni<List<TenantConfig>> createMany(List<? extends CreateTenantConfig> commands) {
+    return ctx.getConfig().accept(new CreateTenantConfigsVisitor(commands));
   }
 
 }

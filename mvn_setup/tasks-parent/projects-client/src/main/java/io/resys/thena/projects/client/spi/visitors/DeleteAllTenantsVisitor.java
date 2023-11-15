@@ -34,10 +34,11 @@ import io.resys.thena.docdb.api.models.QueryEnvelope;
 import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.docdb.api.models.ThenaDocObjects.DocObjects;
 import io.resys.thena.projects.client.api.model.Document;
-import io.resys.thena.projects.client.api.model.ImmutableArchiveProject;
+import io.resys.thena.projects.client.api.model.ImmutableArchiveTenantConfig;
 import io.resys.thena.projects.client.api.model.ImmutableProject;
 import io.resys.thena.projects.client.api.model.ImmutableProjectTransaction;
 import io.resys.thena.projects.client.api.model.Project;
+import io.resys.thena.projects.client.api.model.TenantConfig;
 import io.resys.thena.projects.client.spi.store.DocumentConfig;
 import io.resys.thena.projects.client.spi.store.DocumentConfig.DocObjectsVisitor;
 import io.resys.thena.projects.client.spi.store.DocumentStoreException;
@@ -47,7 +48,7 @@ import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class DeleteAllProjectsVisitor implements DocObjectsVisitor<Uni<List<Project>>>{
+public class DeleteAllTenantsVisitor implements DocObjectsVisitor<Uni<List<TenantConfig>>>{
 
   private final String userId;
   private final Instant targetDate;
@@ -80,7 +81,7 @@ public class DeleteAllProjectsVisitor implements DocObjectsVisitor<Uni<List<Proj
   }
   
   @Override
-  public Uni<List<Project>> end(DocumentConfig config, DocObjects ref) {
+  public Uni<List<TenantConfig>> end(DocumentConfig config, DocObjects ref) {
     if(ref == null) {
       return Uni.createFrom().item(Collections.emptyList());
     }
@@ -120,7 +121,7 @@ public class DeleteAllProjectsVisitor implements DocObjectsVisitor<Uni<List<Proj
         .archived(targetDate)
         .addTransactions(ImmutableProjectTransaction.builder()
             .id(String.valueOf(currentVersion.getTransactions().size() +1))
-            .addCommands(ImmutableArchiveProject.builder()
+            .addCommands(ImmutableArchiveTenantConfig.builder()
                 .projectId(projectId)
                 .userId(userId)
                 .targetDate(targetDate)

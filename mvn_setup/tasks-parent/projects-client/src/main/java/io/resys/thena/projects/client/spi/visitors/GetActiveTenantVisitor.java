@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class GetActiveProjectVisitor implements DocObjectVisitor<Project>{
+public class GetActiveTenantVisitor implements DocObjectVisitor<Project>{
   private final String id;
   
   @Override

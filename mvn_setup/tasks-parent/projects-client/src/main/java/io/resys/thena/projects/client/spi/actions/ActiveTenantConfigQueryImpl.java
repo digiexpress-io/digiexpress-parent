@@ -24,39 +24,39 @@ import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 
-import io.resys.thena.projects.client.api.actions.ProjectsActions.ActiveProjectsQuery;
-import io.resys.thena.projects.client.api.model.Project;
+import io.resys.thena.projects.client.api.actions.TenantConfigActions.ActiveTenantConfigQuery;
+import io.resys.thena.projects.client.api.model.TenantConfig;
 import io.resys.thena.projects.client.spi.store.DocumentStore;
-import io.resys.thena.projects.client.spi.visitors.DeleteAllProjectsVisitor;
-import io.resys.thena.projects.client.spi.visitors.FindAllActiveProjectsVisitor;
-import io.resys.thena.projects.client.spi.visitors.GetActiveProjectVisitor;
-import io.resys.thena.projects.client.spi.visitors.GetActiveProjectsByIdsVisitor;
+import io.resys.thena.projects.client.spi.visitors.DeleteAllTenantsVisitor;
+import io.resys.thena.projects.client.spi.visitors.FindAllTenantsVisitor;
+import io.resys.thena.projects.client.spi.visitors.GetActiveTenantVisitor;
+import io.resys.thena.projects.client.spi.visitors.GetTenantsByIdsVisitor;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class ActiveProjectsQueryImpl implements ActiveProjectsQuery {
+public class ActiveTenantConfigQueryImpl implements ActiveTenantConfigQuery {
   private final DocumentStore ctx;
   
   @Override
-  public Uni<Project> get(String id) {
-    return ctx.getConfig().accept(new GetActiveProjectVisitor(id));
+  public Uni<TenantConfig> get(String id) {
+    return ctx.getConfig().accept(new GetActiveTenantVisitor(id));
   }
   
   @Override
-  public Uni<List<Project>> findAll() {
-    return ctx.getConfig().accept(new FindAllActiveProjectsVisitor());
+  public Uni<List<TenantConfig>> findAll() {
+    return ctx.getConfig().accept(new FindAllTenantsVisitor());
   }
 
   @Override
-  public Uni<List<Project>> deleteAll(String userId, Instant targetDate) {
-    return ctx.getConfig().accept(new DeleteAllProjectsVisitor(userId, targetDate))
+  public Uni<List<TenantConfig>> deleteAll(String userId, Instant targetDate) {
+    return ctx.getConfig().accept(new DeleteAllTenantsVisitor(userId, targetDate))
         .onItem().transformToUni(unwrap -> unwrap);
   }
   
   @Override
-  public Uni<List<Project>> findByProjectIds(Collection<String> taskIds) {
-    return ctx.getConfig().accept(new GetActiveProjectsByIdsVisitor(taskIds));
+  public Uni<List<TenantConfig>> findByIds(Collection<String> taskIds) {
+    return ctx.getConfig().accept(new GetTenantsByIdsVisitor(taskIds));
   }
 }

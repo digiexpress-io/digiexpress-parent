@@ -21,7 +21,7 @@ package io.resys.thena.projects.client.spi.actions;
  */
 
 import io.resys.thena.docdb.api.models.Repo;
-import io.resys.thena.projects.client.api.ProjectsClient;
+import io.resys.thena.projects.client.api.TenantConfigClient;
 import io.resys.thena.projects.client.api.actions.RepositoryActions;
 import io.resys.thena.projects.client.api.actions.RepositoryQuery;
 import io.resys.thena.projects.client.spi.ProjectsClientImpl;
@@ -42,11 +42,11 @@ public class RepositoryActionsImpl implements RepositoryActions {
     return new RepositoryQuery() {
       @Override public RepositoryQuery repoName(String repoName) { repo.repoName(repoName); return this; }
       @Override public RepositoryQuery headName(String headName) { repo.headName(headName); return this; }
-      @Override public Uni<ProjectsClient> createIfNot() { return repo.createIfNot().onItem().transform(doc -> new ProjectsClientImpl(doc)); }
-      @Override public Uni<ProjectsClient> create() { return repo.create().onItem().transform(doc -> new ProjectsClientImpl(doc)); }
-      @Override public ProjectsClient build() { return new ProjectsClientImpl(repo.build()); }
-      @Override public Uni<ProjectsClient> delete() { return repo.delete().onItem().transform(doc -> new ProjectsClientImpl(doc)); }
-      @Override public Uni<ProjectsClient> deleteAll() { return repo.deleteAll().onItem().transform(doc -> new ProjectsClientImpl(ctx)); }
+      @Override public Uni<TenantConfigClient> createIfNot() { return repo.createIfNot().onItem().transform(doc -> new ProjectsClientImpl(doc)); }
+      @Override public Uni<TenantConfigClient> create() { return repo.create().onItem().transform(doc -> new ProjectsClientImpl(doc)); }
+      @Override public TenantConfigClient build() { return new ProjectsClientImpl(repo.build()); }
+      @Override public Uni<TenantConfigClient> delete() { return repo.delete().onItem().transform(doc -> new ProjectsClientImpl(doc)); }
+      @Override public Uni<TenantConfigClient> deleteAll() { return repo.deleteAll().onItem().transform(doc -> new ProjectsClientImpl(ctx)); }
     };
   }
 }

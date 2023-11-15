@@ -26,30 +26,30 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import io.resys.thena.docdb.support.RepoAssert;
-import io.resys.thena.projects.client.api.actions.ProjectsActions.UpdateProjectAction;
-import io.resys.thena.projects.client.api.model.Project;
-import io.resys.thena.projects.client.api.model.ProjectCommand.ProjectUpdateCommand;
+import io.resys.thena.projects.client.api.actions.TenantConfigActions.UpdateTenantConfigAction;
+import io.resys.thena.projects.client.api.model.TenantConfig;
+import io.resys.thena.projects.client.api.model.TenantConfigCommand.TenantConfigUpdateCommand;
 import io.resys.thena.projects.client.spi.store.DocumentStore;
 import io.resys.thena.projects.client.spi.visitors.UpdateProjectsVisitor;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class UpdateProjectImpl implements UpdateProjectAction {
+public class UpdateTenantConfigImpl implements UpdateTenantConfigAction {
 
   private final DocumentStore ctx;
 
   @Override
-  public Uni<Project> updateOne(ProjectUpdateCommand command) {        
+  public Uni<TenantConfig> updateOne(TenantConfigUpdateCommand command) {        
     return updateOne(Arrays.asList(command));
   }
 
   @Override
-  public Uni<Project> updateOne(List<ProjectUpdateCommand> commands) {
+  public Uni<TenantConfig> updateOne(List<TenantConfigUpdateCommand> commands) {
     RepoAssert.notNull(commands, () -> "commands must be defined!");
     RepoAssert.isTrue(commands.size() > 0, () -> "No commands to apply!");
     
-    final var uniqueTaskIds = commands.stream().map(command -> command.getProjectId()).distinct().collect(Collectors.toList());
+    final var uniqueTaskIds = commands.stream().map(command -> command.getTenantConfigId()).distinct().collect(Collectors.toList());
     RepoAssert.isTrue(uniqueTaskIds.size() == 1, () -> "Task id-s must be same, but got: %s!", uniqueTaskIds);
     
     return ctx.getConfig().accept(new UpdateProjectsVisitor(commands, ctx))
@@ -58,7 +58,7 @@ public class UpdateProjectImpl implements UpdateProjectAction {
   }
 
   @Override
-  public Uni<List<Project>> updateMany(List<ProjectUpdateCommand> commands) {
+  public Uni<List<TenantConfig>> updateMany(List<TenantConfigUpdateCommand> commands) {
     RepoAssert.notNull(commands, () -> "commands must be defined!");
     RepoAssert.isTrue(commands.size() > 0, () -> "No commands to apply!");
     

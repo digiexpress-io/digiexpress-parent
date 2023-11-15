@@ -38,7 +38,7 @@ import io.resys.thena.docdb.api.models.ThenaDocObject.DocLog;
 import io.resys.thena.docdb.api.models.ThenaDocObjects.DocObjects;
 import io.resys.thena.projects.client.api.model.ImmutableProject;
 import io.resys.thena.projects.client.api.model.Project;
-import io.resys.thena.projects.client.api.model.ProjectCommand.ProjectUpdateCommand;
+import io.resys.thena.projects.client.api.model.TenantConfigCommand.TenantConfigUpdateCommand;
 import io.resys.thena.projects.client.spi.store.DocumentConfig;
 import io.resys.thena.projects.client.spi.store.DocumentConfig.DocObjectsVisitor;
 import io.resys.thena.projects.client.spi.store.DocumentStore;
@@ -52,15 +52,15 @@ public class UpdateProjectsVisitor implements DocObjectsVisitor<Uni<List<Project
   private final DocumentStore ctx;
   private final List<String> projectIds;
   private final ModifyManyDocBranches commitBuilder;
-  private final Map<String, List<ProjectUpdateCommand>> commandsByProjectId; 
+  private final Map<String, List<TenantConfigUpdateCommand>> commandsByProjectId; 
   
   
-  public UpdateProjectsVisitor(List<ProjectUpdateCommand> commands, DocumentStore ctx) {
+  public UpdateProjectsVisitor(List<TenantConfigUpdateCommand> commands, DocumentStore ctx) {
     super();
     this.ctx = ctx;
     final var config = ctx.getConfig();
     this.commandsByProjectId = commands.stream()
-        .collect(Collectors.groupingBy(ProjectUpdateCommand::getProjectId));
+        .collect(Collectors.groupingBy(TenantConfigUpdateCommand::getTenantConfigId));
     this.projectIds = new ArrayList<>(commandsByProjectId.keySet());
     this.commitBuilder = config.getClient().doc().commit().modifyManyBranches()
         .repoId(config.getRepoId())

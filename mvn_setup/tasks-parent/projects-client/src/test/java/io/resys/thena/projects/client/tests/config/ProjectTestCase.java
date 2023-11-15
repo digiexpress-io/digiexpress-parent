@@ -38,7 +38,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.resys.thena.docdb.jackson.VertexExtModule;
 import io.resys.thena.docdb.models.git.GitPrinter;
 import io.resys.thena.docdb.spi.DocDBDefault;
-import io.resys.thena.projects.client.api.ProjectsClient;
+import io.resys.thena.projects.client.api.TenantConfigClient;
 import io.resys.thena.projects.client.api.model.Document.DocumentType;
 import io.resys.thena.projects.client.spi.DocumentStoreImpl;
 import io.resys.thena.projects.client.spi.ProjectsClientImpl;
@@ -134,7 +134,7 @@ public class ProjectTestCase {
     return targetDate;
   }
 
-  public String printRepo(ProjectsClient client) {
+  public String printRepo(TenantConfigClient client) {
     final var config = ((ProjectsClientImpl) client).getCtx().getConfig();
     final var state = ((DocDBDefault) config.getClient()).getState();
     final var repo = client.repo().getRepo().await().atMost(Duration.ofMinutes(1));
@@ -142,7 +142,7 @@ public class ProjectTestCase {
     return result;
   }
   
-  public String toStaticData(ProjectsClient client) {
+  public String toStaticData(TenantConfigClient client) {
     final var config = ((ProjectsClientImpl) client).getCtx().getConfig();
     final var state = ((DocDBDefault) config.getClient()).getState();
     final var repo = client.repo().getRepo().await().atMost(Duration.ofMinutes(1));
@@ -153,7 +153,7 @@ public class ProjectTestCase {
     return RepositoryToStaticData.toString(ProjectTestCase.class, fileName);
   }
   
-  public void assertRepo(ProjectsClient client, String expectedFileName) {
+  public void assertRepo(TenantConfigClient client, String expectedFileName) {
     final var expected = toExpectedFile(expectedFileName);
     final var actual = toStaticData(client);
     Assertions.assertLinesMatch(expected.lines(), actual.lines());

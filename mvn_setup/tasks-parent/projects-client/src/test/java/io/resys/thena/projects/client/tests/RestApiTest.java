@@ -29,12 +29,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.RestAssured;
-import io.resys.thena.projects.client.api.model.ImmutableArchiveProject;
+import io.resys.thena.projects.client.api.model.ImmutableArchiveTenantConfig;
 import io.resys.thena.projects.client.api.model.ImmutableAssignProjectUsers;
-import io.resys.thena.projects.client.api.model.ImmutableChangeProjectInfo;
-import io.resys.thena.projects.client.api.model.ImmutableCreateProject;
+import io.resys.thena.projects.client.api.model.ImmutableChangeTenantConfig;
+import io.resys.thena.projects.client.api.model.ImmutableCreateTenantConfig;
 import io.resys.thena.projects.client.api.model.Project;
-import io.resys.thena.projects.client.api.model.Project.RepoType;
+import io.resys.thena.projects.client.api.model.Project.ProjectType;
 import io.resys.thena.projects.client.tests.config.ProjectTestCase;
 
 
@@ -56,12 +56,12 @@ public class RestApiTest {
   
   @Test
   public void postOneProject() throws JsonProcessingException {
-    final var body = ImmutableCreateProject.builder()
+    final var body = ImmutableCreateTenantConfig.builder()
       //.targetDate(ProjectTestCase.getTargetDate())
       .title("very important title no: init")
       .description("first project ever no: init")
       .repoId("repo-1")
-      .repoType(RepoType.TASKS)
+      .repoType(ProjectType.TASKS)
       .addUsers("admin-users", "view-only-users")
       .userId("user-1")
       .build();
@@ -78,12 +78,12 @@ public class RestApiTest {
   
   @Test
   public void postTwoProjects() throws JsonProcessingException {
-    final var body = ImmutableCreateProject.builder()
+    final var body = ImmutableCreateTenantConfig.builder()
 //        .targetDate(ProjectTestCase.getTargetDate())
         .title("very important title no: init")
         .description("first project ever no: init")
         .repoId("repo-1")
-        .repoType(RepoType.TASKS)
+        .repoType(ProjectType.TASKS)
         .addUsers("admin-users", "view-only-users")
         .userId("user-1")
         .build();
@@ -99,7 +99,7 @@ public class RestApiTest {
   
   @Test
   public void updateFourProjects() throws JsonProcessingException {
-    final var command = ImmutableChangeProjectInfo.builder()
+    final var command = ImmutableChangeTenantConfig.builder()
         .projectId("project1")
         .userId("user1")
         //.targetDate(ProjectTestCase.getTargetDate())
@@ -139,7 +139,7 @@ public class RestApiTest {
   
   @Test
   public void deleteProjects() throws JsonProcessingException {
-    final var command = ImmutableArchiveProject.builder()
+    final var command = ImmutableArchiveTenantConfig.builder()
         .projectId("project1")
         .userId("user1")
         //.targetDate(ProjectTestCase.getTargetDate())

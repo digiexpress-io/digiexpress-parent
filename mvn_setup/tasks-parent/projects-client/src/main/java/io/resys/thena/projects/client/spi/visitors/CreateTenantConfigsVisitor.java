@@ -30,8 +30,8 @@ import io.resys.thena.docdb.api.actions.DocCommitActions.CreateManyDocs;
 import io.resys.thena.docdb.api.actions.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranch;
 import io.resys.thena.projects.client.api.model.Document;
-import io.resys.thena.projects.client.api.model.Project;
-import io.resys.thena.projects.client.api.model.ProjectCommand.CreateProject;
+import io.resys.thena.projects.client.api.model.TenantConfig;
+import io.resys.thena.projects.client.api.model.TenantConfigCommand.CreateTenantConfig;
 import io.resys.thena.projects.client.spi.store.DocumentConfig;
 import io.resys.thena.projects.client.spi.store.DocumentConfig.DocCreateVisitor;
 import io.resys.thena.projects.client.spi.store.DocumentStoreException;
@@ -39,14 +39,14 @@ import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class CreateProjectsVisitor implements DocCreateVisitor<Project> {
-  private final List<? extends CreateProject> commands;
-  private final List<Project> createdProjects = new ArrayList<Project>();
+public class CreateTenantConfigsVisitor implements DocCreateVisitor<TenantConfig> {
+  private final List<? extends CreateTenantConfig> commands;
+  private final List<TenantConfig> createdTenants = new ArrayList<TenantConfig>();
   
   @Override
   public CreateManyDocs start(DocumentConfig config, CreateManyDocs builder) {
     builder
-      .docType(Document.DocumentType.PROJECT_META.name())
+      .docType(Document.DocumentType.TENANT_CONFIG.name())
       .author(config.getAuthor().get())
       .message("creating projects");
     
@@ -54,7 +54,7 @@ public class CreateProjectsVisitor implements DocCreateVisitor<Project> {
       final var entity = new ProjectCommandVisitor(config).visitTransaction(Arrays.asList(command));
       final var json = JsonObject.mapFrom(entity);
       builder.item().append(json).docId(entity.getId()).next();
-      createdProjects.add(entity);
+      createdTenants.add(entity);
     }
     return builder;
   }
@@ -68,8 +68,8 @@ public class CreateProjectsVisitor implements DocCreateVisitor<Project> {
   }
 
   @Override
-  public List<Project> end(DocumentConfig config, List<DocBranch> branches) {
-    return Collections.unmodifiableList(createdProjects);
+  public List<TenantConfig> end(DocumentConfig config, List<DocBranch> branches) {
+    return Collections.unmodifiableList(createdTenants);
   }
 
 }

@@ -1,20 +1,20 @@
 package io.resys.thena.projects.client.spi;
 
-import io.resys.thena.projects.client.api.ProjectsClient;
-import io.resys.thena.projects.client.api.actions.ProjectsActions;
+import io.resys.thena.projects.client.api.TenantConfigClient;
+import io.resys.thena.projects.client.api.actions.TenantConfigActions;
 import io.resys.thena.projects.client.api.actions.RepositoryActions;
-import io.resys.thena.projects.client.spi.actions.ProjectsActionsImpl;
+import io.resys.thena.projects.client.spi.actions.TenantsActionsImpl;
 import io.resys.thena.projects.client.spi.actions.RepositoryActionsImpl;
 import io.resys.thena.projects.client.spi.store.DocumentStore;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class ProjectsClientImpl implements ProjectsClient {
+public class ProjectsClientImpl implements TenantConfigClient {
   private final DocumentStore ctx;
   
   @Override
-  public ProjectsActions projects() {
-    return new ProjectsActionsImpl(ctx);
+  public TenantConfigActions tenantConfig() {
+    return new TenantsActionsImpl(ctx);
   }
   @Override
   public RepositoryActions repo() {

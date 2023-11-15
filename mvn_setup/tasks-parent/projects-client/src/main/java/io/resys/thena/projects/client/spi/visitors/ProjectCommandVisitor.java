@@ -9,18 +9,18 @@ import io.resys.thena.projects.client.api.model.Document.DocumentType;
 import io.resys.thena.projects.client.api.model.ImmutableProject;
 import io.resys.thena.projects.client.api.model.ImmutableProjectTransaction;
 import io.resys.thena.projects.client.api.model.Project;
-import io.resys.thena.projects.client.api.model.ProjectCommand;
-import io.resys.thena.projects.client.api.model.ProjectCommand.ArchiveProject;
-import io.resys.thena.projects.client.api.model.ProjectCommand.AssignProjectUsers;
-import io.resys.thena.projects.client.api.model.ProjectCommand.ChangeProjectInfo;
-import io.resys.thena.projects.client.api.model.ProjectCommand.CreateProject;
+import io.resys.thena.projects.client.api.model.TenantConfigCommand;
+import io.resys.thena.projects.client.api.model.TenantConfigCommand.ArchiveProject;
+import io.resys.thena.projects.client.api.model.TenantConfigCommand.AssignProjectUsers;
+import io.resys.thena.projects.client.api.model.TenantConfigCommand.ChangeProjectInfo;
+import io.resys.thena.projects.client.api.model.TenantConfigCommand.CreateProject;
 import io.resys.thena.projects.client.spi.store.DocumentConfig;
 
 
 public class ProjectCommandVisitor {
   private final DocumentConfig ctx;
   private final Project start;
-  private final List<ProjectCommand> visitedCommands = new ArrayList<>();
+  private final List<TenantConfigCommand> visitedCommands = new ArrayList<>();
   private ImmutableProject current;
   
   public ProjectCommandVisitor(DocumentConfig ctx) {
@@ -35,7 +35,7 @@ public class ProjectCommandVisitor {
     this.ctx = ctx;
   }
   
-  public Project visitTransaction(List<? extends ProjectCommand> commands) {
+  public Project visitTransaction(List<? extends TenantConfigCommand> commands) {
     commands.forEach(this::visitCommand);
     
     final var transactions = new ArrayList<>(start == null ? Collections.emptyList() : start.getTransactions());
@@ -49,7 +49,7 @@ public class ProjectCommandVisitor {
     return this.current;
   }
   
-  private Project visitCommand(ProjectCommand command) {
+  private Project visitCommand(TenantConfigCommand command) {
     visitedCommands.add(command);
     switch (command.getCommandType()) {
       case ChangeProjectInfo:
@@ -109,7 +109,7 @@ public class ProjectCommandVisitor {
   }
   
 
-  public static Instant requireTargetDate(ProjectCommand command) {
+  public static Instant requireTargetDate(TenantConfigCommand command) {
     final var targetDate = command.getTargetDate();
     if (targetDate == null) {
       throw new UpdateProjectVisitorException("targetDate not found");

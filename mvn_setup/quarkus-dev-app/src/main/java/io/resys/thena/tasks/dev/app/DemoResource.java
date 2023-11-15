@@ -5,11 +5,11 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 
-import io.resys.thena.projects.client.api.ProjectsClient;
+import io.resys.thena.projects.client.api.TenantConfigClient;
 import io.resys.thena.tasks.client.api.TaskClient;
 import io.resys.thena.tasks.client.api.model.ImmutableCreateTask;
 import io.resys.thena.tasks.client.api.model.TaskCommand.CreateTask;
-import io.resys.thena.tasks.dev.app.BeanFactory.CurrentProject;
+import io.resys.thena.tasks.dev.app.BeanFactory.CurrentTenant;
 import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.core.Vertx;
 
@@ -47,8 +47,8 @@ import lombok.extern.jackson.Jacksonized;
 public class DemoResource {
   @Inject Vertx vertx;
   @Inject TaskClient taskClient;
-  @Inject ProjectsClient projectsClient;
-  @Inject CurrentProject currentProject;
+  @Inject TenantConfigClient projectsClient;
+  @Inject CurrentTenant currentProject;
   
   //http://localhost:8080/portal/active/tasks
   @Jacksonized @Data @Builder
