@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import io.resys.thena.projects.client.api.TenantConfigClient;
 import io.resys.thena.projects.client.api.model.ImmutableCreateTenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
+import io.resys.thena.projects.client.api.model.TenantConfigCommand.ArchiveTenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfigCommand.CreateTenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfigCommand.TenantConfigUpdateCommand;
 import io.resys.thena.projects.client.rest.TenantConfigRestApi;
@@ -63,7 +64,7 @@ public class DigiExpressTenantConfig implements TenantConfigRestApi {
     return tenantConfigClient.tenantConfig().updateTenantConfig().updateMany(modifiedCommands);
   }
   @Override
-  public Uni<List<io.resys.thena.projects.client.api.model.TenantConfig>> deleteTenantConfigs(List<TenantConfigUpdateCommand> commands) {
+  public Uni<List<io.resys.thena.projects.client.api.model.TenantConfig>> deleteTenantConfigs(List<ArchiveTenantConfig> commands) {
     final var modifiedCommands = commands.stream()
         .map(command -> command
             .withTargetDate(Instant.now())
