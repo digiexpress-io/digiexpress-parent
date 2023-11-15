@@ -61,8 +61,6 @@ public class RestApiTest {
       .commandType(TenantConfigCommandType.CreateTenantConfig)
 
       .repoId("repo-1")
-      .title("very important title no: init")
-      .description("first tenant ever no: init")
       
       .build();
 
@@ -80,8 +78,7 @@ public class RestApiTest {
   public void postTwoTenants() throws JsonProcessingException {
     final var body = ImmutableCreateTenantConfig.builder()
         //.targetDate(ProjectTestCase.getTargetDate())
-        .title("very important title no: init")
-        .description("first tenant ever no: init")
+        .name("very important title no: init")
         .repoId("repo-1")
         .userId("user-1")
         .commandType(TenantConfigCommandType.CreateTenantConfig)
@@ -100,8 +97,7 @@ public class RestApiTest {
   public void updateFourTenants() throws JsonProcessingException {
     final var command = ImmutableChangeTenantConfigInfo.builder()
         //.targetDate(ProjectTestCase.getTargetDate())
-        .title("very important title no: init")
-        .description("first tenant ever no: init")
+        .name("very important title no: init")
         .tenantConfigId("tenant-1")
         .userId("user1")
         .build();

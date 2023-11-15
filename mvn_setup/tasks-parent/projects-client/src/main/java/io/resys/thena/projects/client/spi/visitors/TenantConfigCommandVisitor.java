@@ -73,7 +73,7 @@ public class TenantConfigCommandVisitor {
     
     this.current = ImmutableTenantConfig.builder()
       .id(id)
-      .name(command.getTitle())
+      .name(command.getName())
       .created(targetDate)
       .updated(targetDate)
       .status(TenantStatus.IN_FORCE)
