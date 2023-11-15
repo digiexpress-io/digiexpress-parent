@@ -10,8 +10,8 @@ import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranch;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocCommit;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocLog;
 import io.resys.thena.docdb.api.models.ThenaDocObjects.DocObject;
-import io.resys.thena.projects.client.api.model.ImmutableProject;
-import io.resys.thena.projects.client.api.model.Project;
+import io.resys.thena.projects.client.api.model.ImmutableTenantConfig;
+import io.resys.thena.projects.client.api.model.TenantConfig;
 import io.resys.thena.projects.client.spi.store.DocumentConfig;
 import io.resys.thena.projects.client.spi.store.DocumentConfig.DocObjectVisitor;
 import io.resys.thena.projects.client.spi.store.DocumentStoreException;
@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class GetActiveTenantVisitor implements DocObjectVisitor<Project>{
+public class GetActiveTenantVisitor implements DocObjectVisitor<TenantConfig>{
   private final String id;
   
   @Override
@@ -31,14 +31,14 @@ public class GetActiveTenantVisitor implements DocObjectVisitor<Project>{
   @Override
   public DocObject visitEnvelope(DocumentConfig config, QueryEnvelope<DocObject> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
-      throw DocumentStoreException.builder("GET_PROJECT_BY_ID_FAIL")
+      throw DocumentStoreException.builder("GET_TENANT_CONFIG_BY_ID_FAIL")
         .add(config, envelope)
         .add((callback) -> callback.addArgs(id))
         .build();
     }
     final var result = envelope.getObjects();
     if(result == null) {
-      throw DocumentStoreException.builder("GET_PROJECT_BY_ID_NOT_FOUND")   
+      throw DocumentStoreException.builder("GET_TENANT_CONFIG_BY_ID_NOT_FOUND")   
         .add(config, envelope)
         .add((callback) -> callback.addArgs(id))
         .build();
@@ -47,7 +47,7 @@ public class GetActiveTenantVisitor implements DocObjectVisitor<Project>{
   }
 
   @Override
-  public Project end(DocumentConfig config, DocObject ref) {
-    return ref.accept((Doc doc, DocBranch docBranch, DocCommit commit, List<DocLog> log) -> docBranch.getValue().mapTo(ImmutableProject.class)).iterator().next();
+  public TenantConfig end(DocumentConfig config, DocObject ref) {
+    return ref.accept((Doc doc, DocBranch docBranch, DocCommit commit, List<DocLog> log) -> docBranch.getValue().mapTo(ImmutableTenantConfig.class)).iterator().next();
   }
 }

@@ -41,7 +41,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 @JsonSubTypes({
   @Type(value = ImmutableCreateTenantConfig.class, name = "CreateTenantConfig"),  
   @Type(value = ImmutableArchiveTenantConfig.class, name = "ArchiveTenantConfig"),
-  @Type(value = ImmutableChangeTenantConfig.class, name = "ChangeTenantConfigInfo"),
+  @Type(value = ImmutableChangeTenantConfigInfo.class, name = "ChangeTenantConfigInfo"),
 
 })
 public interface TenantConfigCommand extends Serializable {
@@ -75,7 +75,7 @@ public interface TenantConfigCommand extends Serializable {
   @JsonSubTypes({
     
     @Type(value = ImmutableArchiveTenantConfig.class, name = "ArchiveTenantConfig"),
-    @Type(value = ImmutableChangeTenantConfig.class, name = "ChangeTenantConfigInfo"),
+    @Type(value = ImmutableChangeTenantConfigInfo.class, name = "ChangeTenantConfigInfo"),
     
   })
   interface TenantConfigUpdateCommand extends TenantConfigCommand {
@@ -91,7 +91,7 @@ public interface TenantConfigCommand extends Serializable {
   }
 
   
-  @Value.Immutable @JsonSerialize(as = ImmutableChangeTenantConfig.class) @JsonDeserialize(as = ImmutableChangeTenantConfig.class)
+  @Value.Immutable @JsonSerialize(as = ImmutableChangeTenantConfigInfo.class) @JsonDeserialize(as = ImmutableChangeTenantConfigInfo.class)
   interface ChangeTenantConfigInfo extends TenantConfigUpdateCommand {
     String getTitle();
     String getDescription();
