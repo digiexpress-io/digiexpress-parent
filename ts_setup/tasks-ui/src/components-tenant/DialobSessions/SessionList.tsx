@@ -21,7 +21,6 @@ const SessionHeaders: React.FC<{ entry: TenantEntryDescriptor }> = ({ entry }) =
             <Grid item md={3} lg={3} xl={3} sx={{ pl: 1, pt: 1 }}>
               <Typography fontWeight='bold'><FormattedMessage id='dialob.form.title' /></Typography>
             </Grid>
-
             <Grid item md={9} lg={9} xl={9} sx={{ pl: 1, pt: 1 }}>
               <Typography>{entry.formTitle}</Typography>
             </Grid>
@@ -29,7 +28,6 @@ const SessionHeaders: React.FC<{ entry: TenantEntryDescriptor }> = ({ entry }) =
             <Grid item md={3} lg={3} xl={3} sx={{ pl: 1 }}>
               <Typography fontWeight='bold'><FormattedMessage id='dialob.form.technicalName' /></Typography>
             </Grid>
-
             <Grid item md={9} lg={9} xl={9} sx={{ pl: 1 }}>
               <Typography>{entry.formName}</Typography>
             </Grid>
@@ -37,7 +35,6 @@ const SessionHeaders: React.FC<{ entry: TenantEntryDescriptor }> = ({ entry }) =
             <Grid item md={3} lg={3} xl={3} sx={{ pl: 1 }}>
               <Typography fontWeight='bold'><FormattedMessage id='dialob.form.lastSaved' /></Typography>
             </Grid>
-
             <Grid item md={9} lg={9} xl={9} sx={{ pl: 1 }}>
               <Typography><Burger.DateTimeFormatter type='dateTime' value={entry.lastSaved} /></Typography>
             </Grid>
@@ -49,7 +46,6 @@ const SessionHeaders: React.FC<{ entry: TenantEntryDescriptor }> = ({ entry }) =
             <Grid item md={12} lg={12} xl={12} sx={{ pl: 1 }}>
               <Typography fontWeight='bold'><FormattedMessage id='dialob.form.sessions' /></Typography>
             </Grid>
-
             <Grid item md={12} lg={12} xl={12} sx={{ p: 1 }}>
               <Box display='flex' >
                 <Box width='10%'><Typography fontWeight='bold'><FormattedMessage id='dialob.form.sessions.table.status' /></Typography></Box>

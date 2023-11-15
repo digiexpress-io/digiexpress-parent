@@ -123,12 +123,11 @@ const StyledTextField: React.FC<StyledInputFieldProps<string>> = (props) => {
   const { onChange, onEnter, label, value, required, placeholder, helperText, disabled, errorMessage, error } = props;
   return (
     <>
-      <StyledInputLabel><FormattedMessage id={label} /></StyledInputLabel>
+      <StyledInputLabel><FormattedMessage id={label} />{required && " *"}</StyledInputLabel>
       <TextFieldRoot
         fullWidth
         disabled={disabled}
         variant="outlined"
-        required={required}
         placeholder={placeholder + ""}
         value={value}
         error={error}

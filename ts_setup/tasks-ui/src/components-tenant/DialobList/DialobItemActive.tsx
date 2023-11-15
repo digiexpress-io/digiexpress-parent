@@ -14,8 +14,8 @@ import Context from 'context';
 import { DialobTag, DialobForm, DialobVariable, DialobSession } from 'client';
 import DialobDeleteDialog from '../DialobDelete';
 import DialobSessionsDialog from '../DialobSessions';
-import {DialobEditor} from '../DialobEditor';
-
+import DialobCopyDialog from 'components-tenant/DialobCopy';
+import { DialobEditor } from '../DialobEditor';
 
 const StyledStack: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const theme = useTheme();
@@ -164,6 +164,7 @@ const DialobFormVariables: React.FC<{ entry: TenantEntryDescriptor }> = ({ entry
 const DialobItemActive: React.FC<{ entry: TenantEntryDescriptor | undefined }> = ({ entry }) => {
   const [dialobEditOpen, setDialobEditOpen] = React.useState(false);
   const [dialobDeleteOpen, setDialobDeleteOpen] = React.useState(false);
+  const [dialobCopyOpen, setDialobCopyOpen] = React.useState(false);
   const [technicalNameEdit, setTechnicalNameEdit] = React.useState(false);
   const [sessionsOpen, setSessionsOpen] = React.useState(false);
   const [editOpen, setEditOpen] = React.useState(false);
@@ -175,6 +176,9 @@ const DialobItemActive: React.FC<{ entry: TenantEntryDescriptor | undefined }> =
 
   function handleDelete() {
     setDialobDeleteOpen(prev => !prev);
+  }
+  function handleCopy() {
+    setDialobCopyOpen(prev => !prev);
   }
   function handleTechnicalNameEdit() {
     setTechnicalNameEdit(prev => !prev);
@@ -203,6 +207,7 @@ const DialobItemActive: React.FC<{ entry: TenantEntryDescriptor | undefined }> =
 
     return (<>
       <DialobDeleteDialog open={dialobDeleteOpen} onClose={handleDelete} entry={entry} />
+      <DialobCopyDialog open={dialobCopyOpen} onClose={handleCopy} entry={entry} />
       {sessionsOpen && <DialobSessionsDialog onClose={handleSessionsDialog} entry={entry} form={form} sessions={sessions} />}
       {editOpen ? <DialobEditor onClose={handleEditToggle} entry={entry} form={form} /> : null}
       <StyledStack >
@@ -218,7 +223,7 @@ const DialobItemActive: React.FC<{ entry: TenantEntryDescriptor | undefined }> =
             </Box>
 
             <Box display='flex' flexDirection='column' alignItems='center'>
-              <IconButton onClick={() => { }}><CopyAllIcon sx={{ color: 'secondary.light' }} /></IconButton>
+              <IconButton onClick={handleCopy}><CopyAllIcon sx={{ color: 'secondary.light' }} /></IconButton>
               <Typography><FormattedMessage id='dialob.form.copy' /></Typography>
             </Box>
 

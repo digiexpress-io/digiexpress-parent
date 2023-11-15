@@ -78,6 +78,12 @@ const en = {
   'dialob.form.delete.dialog.title': 'Delete confirmation',
   'dialob.form.delete.dialog.desc': 'Are you sure you want to delete this dialog?',
 
+  'dialob.form.copy.dialog.title': 'Create form copy',
+  'dialob.form.copy.dialog.prefix': 'Copy of ',
+
+  'dialob.form.technicalName.required': 'Form name required',
+  'dialob.form.technicalName.invalid': 'Form name invalid',
+
   'dialob.form.technicalNameEdit.dialog.title': 'Edit technical name',
   'dialob.form.sessions.dialog.title': 'Questionnaire sessions',
 
