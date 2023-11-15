@@ -8,40 +8,45 @@ import java.util.List;
 import io.resys.thena.projects.client.api.model.Document.DocumentType;
 import io.resys.thena.projects.client.api.model.ImmutableProject;
 import io.resys.thena.projects.client.api.model.ImmutableProjectTransaction;
-import io.resys.thena.projects.client.api.model.Project;
+import io.resys.thena.projects.client.api.model.ImmutableTenantConfig;
+import io.resys.thena.projects.client.api.model.ImmutableTenantConfigTransaction;
+import io.resys.thena.projects.client.api.model.TenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfigCommand;
 import io.resys.thena.projects.client.api.model.TenantConfigCommand.ArchiveProject;
+import io.resys.thena.projects.client.api.model.TenantConfigCommand.ArchiveTenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfigCommand.AssignProjectUsers;
 import io.resys.thena.projects.client.api.model.TenantConfigCommand.ChangeProjectInfo;
+import io.resys.thena.projects.client.api.model.TenantConfigCommand.ChangeTenantConfigInfo;
 import io.resys.thena.projects.client.api.model.TenantConfigCommand.CreateProject;
+import io.resys.thena.projects.client.api.model.TenantConfigCommand.CreateTenantConfig;
 import io.resys.thena.projects.client.spi.store.DocumentConfig;
 
 
-public class ProjectCommandVisitor {
+public class TenantConfigCommandVisitor {
   private final DocumentConfig ctx;
-  private final Project start;
+  private final TenantConfig start;
   private final List<TenantConfigCommand> visitedCommands = new ArrayList<>();
-  private ImmutableProject current;
+  private ImmutableTenantConfig current;
   
-  public ProjectCommandVisitor(DocumentConfig ctx) {
+  public TenantConfigCommandVisitor(DocumentConfig ctx) {
     this.start = null;
     this.current = null;
     this.ctx = ctx;
   }
   
-  public ProjectCommandVisitor(Project start, DocumentConfig ctx) {
+  public TenantConfigCommandVisitor(TenantConfig start, DocumentConfig ctx) {
     this.start = start;
-    this.current = ImmutableProject.builder().from(start).build();
+    this.current = ImmutableTenantConfig.builder().from(start).build();
     this.ctx = ctx;
   }
   
-  public Project visitTransaction(List<? extends TenantConfigCommand> commands) {
+  public TenantConfig visitTransaction(List<? extends TenantConfigCommand> commands) {
     commands.forEach(this::visitCommand);
     
     final var transactions = new ArrayList<>(start == null ? Collections.emptyList() : start.getTransactions());
     final var id = String.valueOf(transactions.size() +1);
     transactions
-      .add(ImmutableProjectTransaction.builder()
+      .add(ImmutableTenantConfigTransaction.builder()
         .id(id)
         .commands(visitedCommands)
         .build());
@@ -49,23 +54,21 @@ public class ProjectCommandVisitor {
     return this.current;
   }
   
-  private Project visitCommand(TenantConfigCommand command) {
+  private TenantConfig visitCommand(TenantConfigCommand command) {
     visitedCommands.add(command);
     switch (command.getCommandType()) {
-      case ChangeProjectInfo:
-        return visitChangeProjectInfo((ChangeProjectInfo) command);
-      case AssignProjectUsers:
-        return visitAssignProject((AssignProjectUsers) command);
-      case ArchiveProject:
-        return visitArchiveProject((ArchiveProject) command);
-      case CreateProject:
-        return visitCreateProject((CreateProject)command);
+      case ChangeTenantConfigInfo:
+        return visitChangeTenantConfigInfo((ChangeTenantConfigInfo) command);
+      case ArchiveTenantConfig:
+        return visitArchiveTenantConfig((ArchiveTenantConfig) command);
+      case CreateTenantConfig:
+        return visitCreateTenantConfig((CreateTenantConfig)command);
     }
     throw new UpdateProjectVisitorException(String.format("Unsupported command type: %s, body: %s", command.getClass().getSimpleName(), command.toString()));
   }
   
   
-  private Project visitCreateProject(CreateProject command) {
+  private TenantConfig visitCreateTenantConfig(CreateProject command) {
     final var gen = ctx.getGid();
     final var id = gen.getNextId(DocumentType.PROJECT_META);
     final var repoId = id.substring(0, 7);
@@ -85,7 +88,7 @@ public class ProjectCommandVisitor {
     return this.current;
   }
 
-  private Project visitArchiveProject(ArchiveProject command) {
+  private TenantConfig visitArchiveTenantConfig(ArchiveProject command) {
     final var targetDate = requireTargetDate(command);
     this.current = this.current
         .withArchived(targetDate)
@@ -93,14 +96,14 @@ public class ProjectCommandVisitor {
     return this.current;
   }
 
-  private Project visitAssignProject(AssignProjectUsers command) {
+  private TenantConfig visitAssignProject(AssignProjectUsers command) {
     this.current = this.current
         .withUsers(command.getUsers().stream().distinct().sorted().toList())
         .withUpdated(requireTargetDate(command));
     return this.current;
   }
 
-  private Project visitChangeProjectInfo(ChangeProjectInfo command) {
+  private TenantConfig visitChangeTenantConfigInfo(ChangeProjectInfo command) {
     this.current = this.current
         .withTitle(command.getTitle())
         .withDescription(command.getDescription())

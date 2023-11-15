@@ -35,9 +35,8 @@ import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.docdb.api.models.ThenaDocObjects.DocObjects;
 import io.resys.thena.projects.client.api.model.Document;
 import io.resys.thena.projects.client.api.model.ImmutableArchiveTenantConfig;
-import io.resys.thena.projects.client.api.model.ImmutableProject;
-import io.resys.thena.projects.client.api.model.ImmutableProjectTransaction;
-import io.resys.thena.projects.client.api.model.Project;
+import io.resys.thena.projects.client.api.model.ImmutableTenantConfig;
+import io.resys.thena.projects.client.api.model.ImmutableTenantConfigTransaction;
 import io.resys.thena.projects.client.api.model.TenantConfig;
 import io.resys.thena.projects.client.spi.store.DocumentConfig;
 import io.resys.thena.projects.client.spi.store.DocumentConfig.DocObjectsVisitor;
@@ -69,7 +68,7 @@ public class DeleteAllTenantsVisitor implements DocObjectsVisitor<Uni<List<Tenan
         .message("Delete Projects");
     
     // Build the blob criteria for finding all documents of type Project
-    return query.docType(Document.DocumentType.PROJECT_META.name());
+    return query.docType(Document.DocumentType.TENANT_CONFIG.name());
   }
 
   @Override
@@ -86,7 +85,7 @@ public class DeleteAllTenantsVisitor implements DocObjectsVisitor<Uni<List<Tenan
       return Uni.createFrom().item(Collections.emptyList());
     }
 
-    final var projectsRemoved = visitTree(ref);    
+    final var tenantsRemoved = visitTree(ref);    
     return archiveCommand.build()
       .onItem().transform((ManyDocsEnvelope commit) -> {
         if(commit.getStatus() == CommitResultStatus.OK) {
@@ -101,36 +100,36 @@ public class DeleteAllTenantsVisitor implements DocObjectsVisitor<Uni<List<Tenan
         }
         throw new DocumentStoreException("REMOVE_FAIL", DocumentStoreException.convertMessages(commit));
       })
-      .onItem().transform((commit) -> projectsRemoved);
+      .onItem().transform((commit) -> tenantsRemoved);
   }
 
   
   
   
-  private List<Project> visitTree(DocObjects state) {
+  private List<TenantConfig> visitTree(DocObjects state) {
     return state.getBranches().values().stream().flatMap(e -> e.stream())
-      .map(blob -> blob.getValue().mapTo(ImmutableProject.class))
-      .map(Project -> visitProject(Project))
+      .map(blob -> blob.getValue().mapTo(ImmutableTenantConfig.class))
+      .map(TenantConfig -> visitTenantConfig(TenantConfig))
       .collect(Collectors.toUnmodifiableList());
   }
-  private Project visitProject(Project currentVersion) {
-    final var projectId = currentVersion.getId();
+  private TenantConfig visitTenantConfig(TenantConfig tenantConfig) {
+    final var tenantId = tenantConfig.getId();
     
-    final var nextVersion = ImmutableProject.builder().from(currentVersion)
+    final var nextVersion = ImmutableTenantConfig.builder().from(tenantConfig)
         .version(userId)
         .archived(targetDate)
-        .addTransactions(ImmutableProjectTransaction.builder()
-            .id(String.valueOf(currentVersion.getTransactions().size() +1))
+        .addTransactions(ImmutableTenantConfigTransaction.builder()
+            .id(String.valueOf(tenantConfig.getTransactions().size() +1))
             .addCommands(ImmutableArchiveTenantConfig.builder()
-                .projectId(projectId)
+                .tenantConfigId(tenantId)
                 .userId(userId)
                 .targetDate(targetDate)
                 .build())
             .build())
         .build();
     final var json = JsonObject.mapFrom(nextVersion);
-    archiveCommand.item().docId(projectId).branchName(MainBranch.HEAD_NAME).append(json).next();
-    removeCommand.item().docId(projectId).remove();
+    archiveCommand.item().docId(tenantId).branchName(MainBranch.HEAD_NAME).append(json).next();
+    removeCommand.item().docId(tenantId).remove();
     return nextVersion;
   }
 

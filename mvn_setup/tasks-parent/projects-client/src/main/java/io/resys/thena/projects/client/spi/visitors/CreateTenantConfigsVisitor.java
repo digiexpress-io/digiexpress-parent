@@ -51,7 +51,7 @@ public class CreateTenantConfigsVisitor implements DocCreateVisitor<TenantConfig
       .message("creating projects");
     
     for(final var command : commands) {
-      final var entity = new ProjectCommandVisitor(config).visitTransaction(Arrays.asList(command));
+      final var entity = new TenantConfigCommandVisitor(config).visitTransaction(Arrays.asList(command));
       final var json = JsonObject.mapFrom(entity);
       builder.item().append(json).docId(entity.getId()).next();
       createdTenants.add(entity);

@@ -99,7 +99,7 @@ public class UpdateProjectsVisitor implements DocObjectsVisitor<Uni<List<Project
     final var updatedProjects = blob.accept((Doc doc, DocBranch docBranch, DocCommit commit, List<DocLog> log) -> {
       final var start = docBranch.getValue().mapTo(ImmutableProject.class);
       final var commands = commandsByProjectId.get(start.getId());
-      final var updated = new ProjectCommandVisitor(start, ctx.getConfig()).visitTransaction(commands);
+      final var updated = new TenantConfigCommandVisitor(start, ctx.getConfig()).visitTransaction(commands);
       this.commitBuilder.item()
         .branchName(updated.getId())
         .append(JsonObject.mapFrom(updated));
