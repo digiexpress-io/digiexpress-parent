@@ -21,11 +21,14 @@ package io.resys.thena.projects.client.spi.actions;
  */
 
 import io.resys.thena.docdb.api.models.Repo;
+import io.resys.thena.docdb.api.models.Repo.RepoType;
 import io.resys.thena.projects.client.api.TenantConfigClient;
 import io.resys.thena.projects.client.api.actions.RepositoryActions;
 import io.resys.thena.projects.client.api.actions.RepositoryQuery;
+import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
 import io.resys.thena.projects.client.spi.ProjectsClientImpl;
 import io.resys.thena.projects.client.spi.store.DocumentStore;
+import io.resys.thena.projects.client.spi.store.MainBranch;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
@@ -40,13 +43,26 @@ public class RepositoryActionsImpl implements RepositoryActions {
   public RepositoryQuery query() {
     DocumentStore.DocumentRepositoryQuery repo = ctx.query();
     return new RepositoryQuery() {
-      @Override public RepositoryQuery repoName(String repoName) { repo.repoName(repoName); return this; }
-      @Override public RepositoryQuery headName(String headName) { repo.headName(headName); return this; }
       @Override public Uni<TenantConfigClient> createIfNot() { return repo.createIfNot().onItem().transform(doc -> new ProjectsClientImpl(doc)); }
       @Override public Uni<TenantConfigClient> create() { return repo.create().onItem().transform(doc -> new ProjectsClientImpl(doc)); }
       @Override public TenantConfigClient build() { return new ProjectsClientImpl(repo.build()); }
       @Override public Uni<TenantConfigClient> delete() { return repo.delete().onItem().transform(doc -> new ProjectsClientImpl(doc)); }
       @Override public Uni<TenantConfigClient> deleteAll() { return repo.deleteAll().onItem().transform(doc -> new ProjectsClientImpl(ctx)); }
+      @Override
+      public RepositoryQuery repoName(String repoName, TenantRepoConfigType type) {
+        repo.repoName(repoName).headName(MainBranch.HEAD_NAME);
+        
+        switch (type) {
+        case CRM: { repo.repoType(RepoType.doc); break; }
+        case DIALOB: { repo.repoType(RepoType.doc); break; }
+        case TENANT: { repo.repoType(RepoType.doc); break; }
+
+        case TASKS: { repo.repoType(RepoType.doc); break; }
+        case STENCIL: { repo.repoType(RepoType.git); break; }
+        case WRENCH: { repo.repoType(RepoType.git); break; }
+        }
+        return this;
+      }
     };
   }
 }

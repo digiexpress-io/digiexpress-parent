@@ -69,23 +69,25 @@ public class DocumentStoreImpl implements DocumentStore {
   @Override public DocumentRepositoryQuery query() {
     return new DocumentRepositoryQuery() {
       private String repoName, headName;
+      private RepoType repoType;
       @Override public DocumentRepositoryQuery repoName(String repoName) { this.repoName = repoName; return this; }
       @Override public DocumentRepositoryQuery headName(String headName) { this.headName = headName; return this; }
-      @Override public Uni<DocumentStore> create() { return createRepo(repoName, headName); }
+      @Override public DocumentRepositoryQuery repoType(RepoType repoType) { this.repoType = repoType; return this; }
+      @Override public Uni<DocumentStore> create() { return createRepo(repoName, headName, repoType); }
       @Override public DocumentStore build() { return createClientStore(repoName, headName); }
-      @Override public Uni<DocumentStore> createIfNot() { return createRepoOrGetRepo(repoName, headName); }
+      @Override public Uni<DocumentStore> createIfNot() { return createRepoOrGetRepo(repoName, headName, repoType); }
       @Override public Uni<DocumentStore> delete() { return deleteRepo(repoName, headName); }
       @Override public Uni<Void> deleteAll() { return deleteRepos(); }
     };
   }
   
-  private Uni<DocumentStore> createRepoOrGetRepo(String repoName, String headName) {
+  private Uni<DocumentStore> createRepoOrGetRepo(String repoName, String headName, RepoType type) {
     final var client = config.getClient();
     
     return client.repo().projectsQuery().id(repoName).get()
         .onItem().transformToUni(repo -> {        
           if(repo == null) {
-            return createRepo(repoName, headName); 
+            return createRepo(repoName, headName, type); 
           }
           return Uni.createFrom().item(createClientStore(repoName, headName));
     });
@@ -132,10 +134,12 @@ public class DocumentStoreImpl implements DocumentStore {
     });
   }
     
-  private Uni<DocumentStore> createRepo(String repoName, String headName) {
+  private Uni<DocumentStore> createRepo(String repoName, String headName, RepoType repoType) {
     RepoAssert.notNull(repoName, () -> "repoName must be defined!");
+    RepoAssert.notNull(repoType, () -> "repoType must be defined!");
+    
     final var client = config.getClient();
-    final var newRepo = client.repo().projectBuilder().name(repoName, RepoType.git).build();
+    final var newRepo = client.repo().projectBuilder().name(repoName, repoType).build();
     return newRepo.onItem().transform((repoResult) -> {
       if(repoResult.getStatus() != RepoStatus.OK) {
         throw new DocumentStoreException("REPO_CREATE_FAIL", 
