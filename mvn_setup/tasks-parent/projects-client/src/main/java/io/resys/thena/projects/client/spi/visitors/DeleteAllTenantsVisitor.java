@@ -61,11 +61,11 @@ public class DeleteAllTenantsVisitor implements DocObjectsVisitor<Uni<List<Tenan
     this.archiveCommand = config.getClient().doc().commit().modifyManyBranches()
         .repoId(config.getRepoId())
         .author(config.getAuthor().get())
-        .message("Archive Projects");
+        .message("Archive Tenants");
     this.removeCommand = config.getClient().doc().commit().modifyManyDocs()
         .repoId(config.getRepoId())
         .author(config.getAuthor().get())
-        .message("Delete Projects");
+        .message("Delete Tenants");
     
     // Build the blob criteria for finding all documents of type Project
     return query.docType(Document.DocumentType.TENANT_CONFIG.name());
@@ -74,7 +74,7 @@ public class DeleteAllTenantsVisitor implements DocObjectsVisitor<Uni<List<Tenan
   @Override
   public DocObjects visitEnvelope(DocumentConfig config, QueryEnvelope<DocObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
-      throw DocumentStoreException.builder("FIND_ALL_PROJECTS_FAIL_FOR_DELETE").add(config, envelope).build();
+      throw DocumentStoreException.builder("FIND_ALL_TENANTS_FAIL_FOR_DELETE").add(config, envelope).build();
     }
     return envelope.getObjects();
   }
@@ -91,14 +91,14 @@ public class DeleteAllTenantsVisitor implements DocObjectsVisitor<Uni<List<Tenan
         if(commit.getStatus() == CommitResultStatus.OK) {
           return commit;
         }
-        throw new DocumentStoreException("ARCHIVE_FAIL", DocumentStoreException.convertMessages(commit));
+        throw new DocumentStoreException("TENANT_ARCHIVE_FAIL", DocumentStoreException.convertMessages(commit));
       })
       .onItem().transformToUni(archived -> removeCommand.build())
       .onItem().transform((ManyDocsEnvelope commit) -> {
         if(commit.getStatus() == CommitResultStatus.OK) {
           return commit;
         }
-        throw new DocumentStoreException("REMOVE_FAIL", DocumentStoreException.convertMessages(commit));
+        throw new DocumentStoreException("TENANT_REMOVE_FAIL", DocumentStoreException.convertMessages(commit));
       })
       .onItem().transform((commit) -> tenantsRemoved);
   }

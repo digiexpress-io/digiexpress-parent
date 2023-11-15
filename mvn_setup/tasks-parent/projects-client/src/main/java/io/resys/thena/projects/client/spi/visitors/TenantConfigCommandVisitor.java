@@ -6,18 +6,16 @@ import java.util.Collections;
 import java.util.List;
 
 import io.resys.thena.projects.client.api.model.Document.DocumentType;
-import io.resys.thena.projects.client.api.model.ImmutableProject;
-import io.resys.thena.projects.client.api.model.ImmutableProjectTransaction;
 import io.resys.thena.projects.client.api.model.ImmutableTenantConfig;
 import io.resys.thena.projects.client.api.model.ImmutableTenantConfigTransaction;
+import io.resys.thena.projects.client.api.model.ImmutableTenantPreferences;
+import io.resys.thena.projects.client.api.model.ImmutableTenantRepoConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig;
+import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
+import io.resys.thena.projects.client.api.model.TenantConfig.TenantStatus;
 import io.resys.thena.projects.client.api.model.TenantConfigCommand;
-import io.resys.thena.projects.client.api.model.TenantConfigCommand.ArchiveProject;
 import io.resys.thena.projects.client.api.model.TenantConfigCommand.ArchiveTenantConfig;
-import io.resys.thena.projects.client.api.model.TenantConfigCommand.AssignProjectUsers;
-import io.resys.thena.projects.client.api.model.TenantConfigCommand.ChangeProjectInfo;
 import io.resys.thena.projects.client.api.model.TenantConfigCommand.ChangeTenantConfigInfo;
-import io.resys.thena.projects.client.api.model.TenantConfigCommand.CreateProject;
 import io.resys.thena.projects.client.api.model.TenantConfigCommand.CreateTenantConfig;
 import io.resys.thena.projects.client.spi.store.DocumentConfig;
 
@@ -68,45 +66,64 @@ public class TenantConfigCommandVisitor {
   }
   
   
-  private TenantConfig visitCreateTenantConfig(CreateProject command) {
+  private TenantConfig visitCreateTenantConfig(CreateTenantConfig command) {
     final var gen = ctx.getGid();
-    final var id = gen.getNextId(DocumentType.PROJECT_META);
-    final var repoId = id.substring(0, 7);
+    final var id = gen.getNextId(DocumentType.TENANT_CONFIG);
     final var targetDate = requireTargetDate(command);
-    this.current = ImmutableProject.builder()
-        .id(id)
-        .version(gen.getNextVersion(DocumentType.PROJECT_META))
-        .users(command.getUsers().stream().distinct().toList())
-        .repoType(command.getRepoType())
-        .repoId(repoId)        
-        .title(command.getTitle())
-        .description(command.getDescription())
-        .created(targetDate)
-        .updated(targetDate)
-        .addTransactions(ImmutableProjectTransaction.builder().id(String.valueOf(1)).addCommands(command).build())
-        .build();
+    
+    this.current = ImmutableTenantConfig.builder()
+      .id(id)
+      .name(command.getTitle())
+      .created(targetDate)
+      .updated(targetDate)
+      .status(TenantStatus.IN_FORCE)
+      .preferences(ImmutableTenantPreferences.builder()
+          .landingApp(TenantConfig.APP_BACKOFFICE)
+          .build())
+      .addRepoConfigs(ImmutableTenantRepoConfig.builder()
+          .repoId(nextRepoId())
+          .repoType(TenantRepoConfigType.TASKS)
+          .build())
+      .addRepoConfigs(ImmutableTenantRepoConfig.builder()
+          .repoId(nextRepoId())
+          .repoType(TenantRepoConfigType.CRM)
+          .build())
+      .addRepoConfigs(ImmutableTenantRepoConfig.builder()
+          .repoId(nextRepoId())
+          .repoType(TenantRepoConfigType.STENCIL)
+          .build())
+      .addRepoConfigs(ImmutableTenantRepoConfig.builder()
+          .repoId(nextRepoId())
+          .repoType(TenantRepoConfigType.WRENCH)
+          .build())
+      .addRepoConfigs(ImmutableTenantRepoConfig.builder()
+          .repoId(nextRepoId())
+          .repoType(TenantRepoConfigType.DIALOB)
+          .build())
+      .addTransactions(
+          ImmutableTenantConfigTransaction.builder()
+          .id("1")
+          .addCommands(command)
+          .build())
+      .documentType(DocumentType.TENANT_CONFIG)
+      .build();
+    
     return this.current;
   }
 
-  private TenantConfig visitArchiveTenantConfig(ArchiveProject command) {
+  private TenantConfig visitArchiveTenantConfig(ArchiveTenantConfig command) {
     final var targetDate = requireTargetDate(command);
     this.current = this.current
         .withArchived(targetDate)
-        .withUpdated(targetDate);
+        .withUpdated(targetDate)
+        .withStatus(TenantStatus.ARCHIVED);
     return this.current;
   }
 
-  private TenantConfig visitAssignProject(AssignProjectUsers command) {
-    this.current = this.current
-        .withUsers(command.getUsers().stream().distinct().sorted().toList())
-        .withUpdated(requireTargetDate(command));
-    return this.current;
-  }
 
-  private TenantConfig visitChangeTenantConfigInfo(ChangeProjectInfo command) {
+  private TenantConfig visitChangeTenantConfigInfo(ChangeTenantConfigInfo command) {
     this.current = this.current
-        .withTitle(command.getTitle())
-        .withDescription(command.getDescription())
+        .withName(command.getName())
         .withUpdated(requireTargetDate(command));
     return this.current;
   }
@@ -118,6 +135,13 @@ public class TenantConfigCommandVisitor {
       throw new UpdateProjectVisitorException("targetDate not found");
     }
     return targetDate;
+  }
+  
+  
+  private final String nextRepoId() {
+    final var gen = ctx.getGid();
+    final var id = gen.getNextId(DocumentType.TENANT_CONFIG);
+    return id.substring(0, 7);
   }
   
   

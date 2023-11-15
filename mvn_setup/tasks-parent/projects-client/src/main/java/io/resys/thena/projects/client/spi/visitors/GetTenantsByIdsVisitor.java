@@ -59,14 +59,14 @@ public class GetTenantsByIdsVisitor implements DocObjectsVisitor<List<TenantConf
   @Override
   public DocObjects visitEnvelope(DocumentConfig config, QueryEnvelope<DocObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
-      throw DocumentStoreException.builder("GET_TENANT_CONFIG_BY_ID_FAIL")
+      throw DocumentStoreException.builder("GET_TENANT_BY_ID_FAIL")
         .add(config, envelope)
         .add((callback) -> callback.addArgs(projectIds.stream().collect(Collectors.joining(",", "{", "}"))))
         .build();
     }
     final var result = envelope.getObjects();
     if(result == null) {
-      throw DocumentStoreException.builder("GET_TENANT_CONFIG_BY_ID_NOT_FOUND")   
+      throw DocumentStoreException.builder("GET_TENANT_BY_ID_NOT_FOUND")   
         .add(config, envelope)
         .add((callback) -> callback.addArgs(projectIds.stream().collect(Collectors.joining(",", "{", "}"))))
         .build();
@@ -79,6 +79,9 @@ public class GetTenantsByIdsVisitor implements DocObjectsVisitor<List<TenantConf
     if(ref == null) {
       return Collections.emptyList();
     }
-    return ref.accept((Doc doc, DocBranch docBranch, DocCommit commit, List<DocLog> log) -> docBranch.getValue().mapTo(ImmutableTenantConfig.class));
+    return ref.accept((Doc doc, DocBranch docBranch, DocCommit commit, List<DocLog> log) -> 
+      docBranch.getValue()
+      .mapTo(ImmutableTenantConfig.class).withVersion(commit.getId())
+    );
   }
 }

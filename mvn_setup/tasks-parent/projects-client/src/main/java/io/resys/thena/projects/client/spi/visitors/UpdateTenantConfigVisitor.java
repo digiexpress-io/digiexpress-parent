@@ -1,6 +1,8 @@
 package io.resys.thena.projects.client.spi.visitors;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 
 /*-
  * #%L
@@ -106,12 +108,26 @@ public class UpdateTenantConfigVisitor implements DocObjectsVisitor<Uni<List<Ten
       return updated;
     });
     
-    return commitBuilder.build().onItem().transform(commit -> {
-      if(commit.getStatus() != CommitResultStatus.OK) {
+    return commitBuilder.build().onItem().transform(response -> {
+      if(response.getStatus() != CommitResultStatus.OK) {
         final var failedUpdates = tenantIds.stream().collect(Collectors.joining(",", "{", "}"));
-        throw new DocumentStoreException("TENANTS_UPDATE_FAIL", JsonObject.of("failedUpdates", failedUpdates), DocumentStoreException.convertMessages(commit));
+        throw new DocumentStoreException("TENANTS_UPDATE_FAIL", JsonObject.of("failedUpdates", failedUpdates), DocumentStoreException.convertMessages(response));
       }
-      return updatedTenants;
+      
+      final Map<String, TenantConfig> configsById = new HashMap<>(
+          updatedTenants.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)));
+      
+      
+      response.getCommit().forEach(commit -> {
+        
+        final var next = ImmutableTenantConfig.builder()
+            .from(configsById.get(commit.getDocId()))
+            .version(commit.getId())
+            .build();
+        configsById.put(next.getId(), next);
+      });
+      
+      return Collections.unmodifiableList(new ArrayList<>(configsById.values()));
     });
   }
 }

@@ -23,13 +23,17 @@ package io.resys.thena.projects.client.spi.visitors;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import io.resys.thena.docdb.api.actions.CommitActions.CommitResultStatus;
 import io.resys.thena.docdb.api.actions.DocCommitActions.CreateManyDocs;
 import io.resys.thena.docdb.api.actions.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranch;
 import io.resys.thena.projects.client.api.model.Document;
+import io.resys.thena.projects.client.api.model.ImmutableTenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfigCommand.CreateTenantConfig;
 import io.resys.thena.projects.client.spi.store.DocumentConfig;
@@ -48,7 +52,7 @@ public class CreateTenantConfigsVisitor implements DocCreateVisitor<TenantConfig
     builder
       .docType(Document.DocumentType.TENANT_CONFIG.name())
       .author(config.getAuthor().get())
-      .message("creating projects");
+      .message("creating tenant");
     
     for(final var command : commands) {
       final var entity = new TenantConfigCommandVisitor(config).visitTransaction(Arrays.asList(command));
@@ -64,12 +68,25 @@ public class CreateTenantConfigsVisitor implements DocCreateVisitor<TenantConfig
     if(envelope.getStatus() == CommitResultStatus.OK) {
       return envelope.getBranch();
     }
-    throw new DocumentStoreException("SAVE_FAIL", DocumentStoreException.convertMessages(envelope));
+    throw new DocumentStoreException("TENANT_CREATE_FAIL", DocumentStoreException.convertMessages(envelope));
   }
 
   @Override
   public List<TenantConfig> end(DocumentConfig config, List<DocBranch> branches) {
-    return Collections.unmodifiableList(createdTenants);
+    final Map<String, TenantConfig> configsById = new HashMap<>(
+        this.createdTenants.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)));
+    
+    branches.forEach(branch -> {
+      
+      final var next = ImmutableTenantConfig.builder()
+          .from(configsById.get(branch.getDocId()))
+          .version(branch.getCommitId())
+          .build();
+      
+      configsById.put(next.getId(), next);
+    });
+    
+    return Collections.unmodifiableList(new ArrayList<>(configsById.values()));
   }
 
 }

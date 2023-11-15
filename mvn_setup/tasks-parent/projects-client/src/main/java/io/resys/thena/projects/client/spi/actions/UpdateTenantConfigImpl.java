@@ -50,7 +50,7 @@ public class UpdateTenantConfigImpl implements UpdateTenantConfigAction {
     RepoAssert.isTrue(commands.size() > 0, () -> "No commands to apply!");
     
     final var uniqueTaskIds = commands.stream().map(command -> command.getTenantConfigId()).distinct().collect(Collectors.toList());
-    RepoAssert.isTrue(uniqueTaskIds.size() == 1, () -> "Task id-s must be same, but got: %s!", uniqueTaskIds);
+    RepoAssert.isTrue(uniqueTaskIds.size() == 1, () -> "TenantConfig id-s must be same, but got: %s!", uniqueTaskIds);
     
     return ctx.getConfig().accept(new UpdateTenantConfigVisitor(commands, ctx))
         .onItem().transformToUni(resp -> resp)

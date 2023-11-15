@@ -31,14 +31,14 @@ public class GetActiveTenantVisitor implements DocObjectVisitor<TenantConfig>{
   @Override
   public DocObject visitEnvelope(DocumentConfig config, QueryEnvelope<DocObject> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
-      throw DocumentStoreException.builder("GET_TENANT_CONFIG_BY_ID_FAIL")
+      throw DocumentStoreException.builder("GET_TENANT_BY_ID_FAIL")
         .add(config, envelope)
         .add((callback) -> callback.addArgs(id))
         .build();
     }
     final var result = envelope.getObjects();
     if(result == null) {
-      throw DocumentStoreException.builder("GET_TENANT_CONFIG_BY_ID_NOT_FOUND")   
+      throw DocumentStoreException.builder("GET_TENANT_BY_ID_NOT_FOUND")   
         .add(config, envelope)
         .add((callback) -> callback.addArgs(id))
         .build();
@@ -48,6 +48,9 @@ public class GetActiveTenantVisitor implements DocObjectVisitor<TenantConfig>{
 
   @Override
   public TenantConfig end(DocumentConfig config, DocObject ref) {
-    return ref.accept((Doc doc, DocBranch docBranch, DocCommit commit, List<DocLog> log) -> docBranch.getValue().mapTo(ImmutableTenantConfig.class)).iterator().next();
+    return ref.accept((Doc doc, DocBranch docBranch, DocCommit commit, List<DocLog> log) -> 
+        docBranch.getValue()
+        .mapTo(ImmutableTenantConfig.class).withVersion(commit.getId())
+        ).iterator().next();
   }
 }

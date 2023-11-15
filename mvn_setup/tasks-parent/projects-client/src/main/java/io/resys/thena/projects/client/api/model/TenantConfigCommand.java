@@ -93,8 +93,7 @@ public interface TenantConfigCommand extends Serializable {
   
   @Value.Immutable @JsonSerialize(as = ImmutableChangeTenantConfigInfo.class) @JsonDeserialize(as = ImmutableChangeTenantConfigInfo.class)
   interface ChangeTenantConfigInfo extends TenantConfigUpdateCommand {
-    String getTitle();
-    String getDescription();
+    String getName();
     @Override default TenantConfigCommandType getCommandType() { return TenantConfigCommandType.ChangeTenantConfigInfo; }
   }
 
