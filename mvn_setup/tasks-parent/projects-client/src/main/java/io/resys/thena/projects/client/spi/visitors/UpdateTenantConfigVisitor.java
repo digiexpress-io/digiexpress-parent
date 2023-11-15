@@ -36,8 +36,8 @@ import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranch;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocCommit;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocLog;
 import io.resys.thena.docdb.api.models.ThenaDocObjects.DocObjects;
-import io.resys.thena.projects.client.api.model.ImmutableProject;
-import io.resys.thena.projects.client.api.model.Project;
+import io.resys.thena.projects.client.api.model.ImmutableTenantConfig;
+import io.resys.thena.projects.client.api.model.TenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfigCommand.TenantConfigUpdateCommand;
 import io.resys.thena.projects.client.spi.store.DocumentConfig;
 import io.resys.thena.projects.client.spi.store.DocumentConfig.DocObjectsVisitor;
@@ -48,57 +48,57 @@ import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 
 
-public class UpdateProjectsVisitor implements DocObjectsVisitor<Uni<List<Project>>> {
+public class UpdateTenantConfigVisitor implements DocObjectsVisitor<Uni<List<TenantConfig>>> {
   private final DocumentStore ctx;
-  private final List<String> projectIds;
+  private final List<String> tenantIds;
   private final ModifyManyDocBranches commitBuilder;
-  private final Map<String, List<TenantConfigUpdateCommand>> commandsByProjectId; 
+  private final Map<String, List<TenantConfigUpdateCommand>> commandsByTenantId; 
   
   
-  public UpdateProjectsVisitor(List<TenantConfigUpdateCommand> commands, DocumentStore ctx) {
+  public UpdateTenantConfigVisitor(List<TenantConfigUpdateCommand> commands, DocumentStore ctx) {
     super();
     this.ctx = ctx;
     final var config = ctx.getConfig();
-    this.commandsByProjectId = commands.stream()
+    this.commandsByTenantId = commands.stream()
         .collect(Collectors.groupingBy(TenantConfigUpdateCommand::getTenantConfigId));
-    this.projectIds = new ArrayList<>(commandsByProjectId.keySet());
+    this.tenantIds = new ArrayList<>(commandsByTenantId.keySet());
     this.commitBuilder = config.getClient().doc().commit().modifyManyBranches()
         .repoId(config.getRepoId())
-        .message("Update Projects: " + commandsByProjectId.size())
+        .message("Update Tenants: " + commandsByTenantId.size())
         .author(config.getAuthor().get());
   }
 
   @Override
   public DocObjectsQuery start(DocumentConfig config, DocObjectsQuery builder) {
-    return builder.matchIds(projectIds).branchName(MainBranch.HEAD_NAME);
+    return builder.matchIds(tenantIds).branchName(MainBranch.HEAD_NAME);
   }
 
   @Override
   public DocObjects visitEnvelope(DocumentConfig config, QueryEnvelope<DocObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
-      throw DocumentStoreException.builder("GET_PROJECTS_BY_IDS_FOR_UPDATE_FAIL")
+      throw DocumentStoreException.builder("GET_TENANTS_BY_IDS_FOR_UPDATE_FAIL")
         .add(config, envelope)
-        .add((callback) -> callback.addArgs(projectIds.stream().collect(Collectors.joining(",", "{", "}"))))
+        .add((callback) -> callback.addArgs(tenantIds.stream().collect(Collectors.joining(",", "{", "}"))))
         .build();
     }
     final var result = envelope.getObjects();
     if(result == null) {
-      throw DocumentStoreException.builder("GET_PROJECTS_BY_IDS_FOR_UPDATE_NOT_FOUND")   
+      throw DocumentStoreException.builder("GET_TENANTS_BY_IDS_FOR_UPDATE_NOT_FOUND")   
         .add(config, envelope)
-        .add((callback) -> callback.addArgs(projectIds.stream().collect(Collectors.joining(",", "{", "}"))))
+        .add((callback) -> callback.addArgs(tenantIds.stream().collect(Collectors.joining(",", "{", "}"))))
         .build();
     }
-    if(projectIds.size() != result.getDocs().size()) {
-      throw new DocumentStoreException("PROJECTS_UPDATE_FAIL_MISSING_PROJECTS", JsonObject.of("failedUpdates", projectIds));
+    if(tenantIds.size() != result.getDocs().size()) {
+      throw new DocumentStoreException("TENANTS_UPDATE_FAIL_MISSING_TENANTS", JsonObject.of("failedUpdates", tenantIds));
     }
     return result;
   }
 
   @Override
-  public Uni<List<Project>> end(DocumentConfig config, DocObjects blob) {
-    final var updatedProjects = blob.accept((Doc doc, DocBranch docBranch, DocCommit commit, List<DocLog> log) -> {
-      final var start = docBranch.getValue().mapTo(ImmutableProject.class);
-      final var commands = commandsByProjectId.get(start.getId());
+  public Uni<List<TenantConfig>> end(DocumentConfig config, DocObjects blob) {
+    final var updatedTenants = blob.accept((Doc doc, DocBranch docBranch, DocCommit commit, List<DocLog> log) -> {
+      final var start = docBranch.getValue().mapTo(ImmutableTenantConfig.class);
+      final var commands = commandsByTenantId.get(start.getId());
       final var updated = new TenantConfigCommandVisitor(start, ctx.getConfig()).visitTransaction(commands);
       this.commitBuilder.item()
         .branchName(updated.getId())
@@ -108,10 +108,10 @@ public class UpdateProjectsVisitor implements DocObjectsVisitor<Uni<List<Project
     
     return commitBuilder.build().onItem().transform(commit -> {
       if(commit.getStatus() != CommitResultStatus.OK) {
-        final var failedUpdates = projectIds.stream().collect(Collectors.joining(",", "{", "}"));
-        throw new DocumentStoreException("PROJECTS_UPDATE_FAIL", JsonObject.of("failedUpdates", failedUpdates), DocumentStoreException.convertMessages(commit));
+        final var failedUpdates = tenantIds.stream().collect(Collectors.joining(",", "{", "}"));
+        throw new DocumentStoreException("TENANTS_UPDATE_FAIL", JsonObject.of("failedUpdates", failedUpdates), DocumentStoreException.convertMessages(commit));
       }
-      return updatedProjects;
+      return updatedTenants;
     });
   }
 }

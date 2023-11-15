@@ -30,7 +30,7 @@ import io.resys.thena.projects.client.api.actions.TenantConfigActions.UpdateTena
 import io.resys.thena.projects.client.api.model.TenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfigCommand.TenantConfigUpdateCommand;
 import io.resys.thena.projects.client.spi.store.DocumentStore;
-import io.resys.thena.projects.client.spi.visitors.UpdateProjectsVisitor;
+import io.resys.thena.projects.client.spi.visitors.UpdateTenantConfigVisitor;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
@@ -52,7 +52,7 @@ public class UpdateTenantConfigImpl implements UpdateTenantConfigAction {
     final var uniqueTaskIds = commands.stream().map(command -> command.getTenantConfigId()).distinct().collect(Collectors.toList());
     RepoAssert.isTrue(uniqueTaskIds.size() == 1, () -> "Task id-s must be same, but got: %s!", uniqueTaskIds);
     
-    return ctx.getConfig().accept(new UpdateProjectsVisitor(commands, ctx))
+    return ctx.getConfig().accept(new UpdateTenantConfigVisitor(commands, ctx))
         .onItem().transformToUni(resp -> resp)
         .onItem().transform(tasks -> tasks.get(0));
   }
@@ -62,7 +62,7 @@ public class UpdateTenantConfigImpl implements UpdateTenantConfigAction {
     RepoAssert.notNull(commands, () -> "commands must be defined!");
     RepoAssert.isTrue(commands.size() > 0, () -> "No commands to apply!");
     
-    return ctx.getConfig().accept(new UpdateProjectsVisitor(commands, ctx)).onItem()
+    return ctx.getConfig().accept(new UpdateTenantConfigVisitor(commands, ctx)).onItem()
         .transformToUni(item -> item);
   }
 }
