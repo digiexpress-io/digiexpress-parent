@@ -29,13 +29,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.RestAssured;
+import io.restassured.filter.log.LogDetail;
 import io.resys.thena.projects.client.api.model.ImmutableArchiveTenantConfig;
-import io.resys.thena.projects.client.api.model.ImmutableAssignProjectUsers;
-import io.resys.thena.projects.client.api.model.ImmutableChangeTenantConfig;
+import io.resys.thena.projects.client.api.model.ImmutableChangeTenantConfigInfo;
 import io.resys.thena.projects.client.api.model.ImmutableCreateTenantConfig;
-import io.resys.thena.projects.client.api.model.Project;
-import io.resys.thena.projects.client.api.model.Project.ProjectType;
-import io.resys.thena.projects.client.tests.config.ProjectTestCase;
+import io.resys.thena.projects.client.api.model.TenantConfig;
+import io.resys.thena.projects.client.api.model.TenantConfigCommand.TenantConfigCommandType;
 
 
 //add this to vm args to run in IDE -Djava.util.logging.manager=org.jboss.logmanager.LogManager
@@ -44,113 +43,95 @@ import io.resys.thena.projects.client.tests.config.ProjectTestCase;
 public class RestApiTest {
   
   @Test
-  public void getProjects() throws JsonProcessingException {
-    final Project[] response = RestAssured.given().when()
-      .get("/q/digiexpress/api/projects").then()
+  public void getTenants() throws JsonProcessingException {
+    final TenantConfig[] response = RestAssured.given().when()
+      .get("/q/digiexpress/api/tenants").then()
       .statusCode(200)
       .contentType("application/json")
-      .extract().as(Project[].class);
+      .extract().as(TenantConfig[].class);
   
-    Assertions.assertEquals("project1", response[0].getId());
+    Assertions.assertEquals("tenant-1", response[0].getId());
   }
   
   @Test
-  public void postOneProject() throws JsonProcessingException {
+  public void postOneTenant() throws JsonProcessingException {
     final var body = ImmutableCreateTenantConfig.builder()
-      //.targetDate(ProjectTestCase.getTargetDate())
-      .title("very important title no: init")
-      .description("first project ever no: init")
-      .repoId("repo-1")
-      .repoType(ProjectType.TASKS)
-      .addUsers("admin-users", "view-only-users")
       .userId("user-1")
+      //.targetDate(ProjectTestCase.getTargetDate())
+      .commandType(TenantConfigCommandType.CreateTenantConfig)
+
+      .repoId("repo-1")
+      .title("very important title no: init")
+      .description("first tenant ever no: init")
+      
       .build();
 
-    final Project[] response = RestAssured.given()
+    final TenantConfig[] response = RestAssured.given()
       .body(Arrays.asList(body)).accept("application/json").contentType("application/json")
-      .when().post("/q/digiexpress/api/projects").then()
+      .when().post("/q/digiexpress/api/tenants").then()
       .statusCode(200).contentType("application/json")
       
-      .extract().as(Project[].class);
+      .extract().as(TenantConfig[].class);
   
-    Assertions.assertEquals("project1", response[0].getId());
+    Assertions.assertEquals("tenant-1", response[0].getId());
   }
   
   @Test
-  public void postTwoProjects() throws JsonProcessingException {
+  public void postTwoTenants() throws JsonProcessingException {
     final var body = ImmutableCreateTenantConfig.builder()
-//        .targetDate(ProjectTestCase.getTargetDate())
+        //.targetDate(ProjectTestCase.getTargetDate())
         .title("very important title no: init")
-        .description("first project ever no: init")
+        .description("first tenant ever no: init")
         .repoId("repo-1")
-        .repoType(ProjectType.TASKS)
-        .addUsers("admin-users", "view-only-users")
         .userId("user-1")
+        .commandType(TenantConfigCommandType.CreateTenantConfig)
         .build();
 
-      final Project[] response = RestAssured.given()
+      final TenantConfig[] response = RestAssured.given()
         .body(Arrays.asList(body, body)).accept("application/json").contentType("application/json")
-        .when().post("/q/digiexpress/api/projects").then()
+        .when().post("/q/digiexpress/api/tenants").then()
         .statusCode(200).contentType("application/json")
-        .extract().as(Project[].class);
+        .extract().as(TenantConfig[].class);
     
       Assertions.assertEquals(2, response.length);
   }
   
   @Test
-  public void updateFourProjects() throws JsonProcessingException {
-    final var command = ImmutableChangeTenantConfig.builder()
-        .projectId("project1")
-        .userId("user1")
+  public void updateFourTenants() throws JsonProcessingException {
+    final var command = ImmutableChangeTenantConfigInfo.builder()
         //.targetDate(ProjectTestCase.getTargetDate())
         .title("very important title no: init")
-        .description("first project ever no: init")
+        .description("first tenant ever no: init")
+        .tenantConfigId("tenant-1")
+        .userId("user1")
         .build();
         
 
-      final Project[] response = RestAssured.given()
+      final TenantConfig[] response = RestAssured.given()
         .body(Arrays.asList(command, command, command, command)).accept("application/json").contentType("application/json")
-        .when().put("/q/digiexpress/api/projects").then()
+        .when().put("/q/digiexpress/api/tenants").then()
         .statusCode(200).contentType("application/json")
-        .extract().as(Project[].class);
+        .extract().as(TenantConfig[].class);
     
       Assertions.assertEquals(4, response.length);
   }
   
-  
   @Test
-  public void updateOneProject() throws JsonProcessingException {
-    final var command = ImmutableAssignProjectUsers.builder()
-        .projectId("project1")
-        .userId("user1")
-        //.targetDate(ProjectTestCase.getTargetDate())
-        .addUsers("admin-users", "view-only-users")
-        .build();
-        
-
-      final Project response = RestAssured.given()
-        .body(Arrays.asList(command, command, command, command)).accept("application/json").contentType("application/json")
-        .when().put("/q/digiexpress/api/projects/2").then()
-        .statusCode(200).contentType("application/json")
-        .extract().as(Project.class);
-    
-      Assertions.assertEquals("project1", response.getId());
-  }
-  
-  @Test
-  public void deleteProjects() throws JsonProcessingException {
+  public void deleteTenants() throws JsonProcessingException {
     final var command = ImmutableArchiveTenantConfig.builder()
-        .projectId("project1")
+        .tenantConfigId("tenant-1")
         .userId("user1")
         //.targetDate(ProjectTestCase.getTargetDate())
         .build();
         
     
-      final Project[] response = RestAssured.given()
-          .body(Arrays.asList(command, command)).accept("application/json").contentType("application/json")
-          .when().delete("/q/digiexpress/api/projects").then()
+      final TenantConfig[] response = RestAssured.given()
+        .body(Arrays.asList(command, command)).accept("application/json").contentType("application/json")
+        .when().delete("/q/digiexpress/api/tenants")
+
+        .then().log().ifValidationFails(LogDetail.BODY)
         .statusCode(200).contentType("application/json")
-        .extract().as(Project[].class);
+        .extract().as(TenantConfig[].class);
     
       Assertions.assertEquals(2, response.length);
   }  

@@ -13,6 +13,7 @@ import io.resys.thena.projects.client.api.model.ImmutableTenantRepoConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantStatus;
+import io.resys.thena.projects.client.api.model.TenantConfigCommand.ArchiveTenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfigCommand.CreateTenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfigCommand.TenantConfigCommandType;
 import io.resys.thena.projects.client.api.model.TenantConfigCommand.TenantConfigUpdateCommand;
@@ -28,6 +29,7 @@ public class TenantConfigResource implements TenantConfigRestApi {
   private final ImmutableTenantConfig mockTenantConfig = ImmutableTenantConfig.builder()
       .id("tenant-1")
       .name("abc-company")
+      .version("v1.0")
       .archived(ProjectTestCase.getTargetDate())
       .created(ProjectTestCase.getTargetDate())
       .updated(ProjectTestCase.getTargetDate())
@@ -70,7 +72,7 @@ public class TenantConfigResource implements TenantConfigRestApi {
   }
 
   @Override
-  public Uni<List<TenantConfig>> deleteTenantConfigs(List<TenantConfigUpdateCommand> commands) {
+  public Uni<List<TenantConfig>> deleteTenantConfigs(List<ArchiveTenantConfig> commands) {
     return Uni.createFrom().item(Arrays.asList(mockTenantConfig, mockTenantConfig));
   }
 

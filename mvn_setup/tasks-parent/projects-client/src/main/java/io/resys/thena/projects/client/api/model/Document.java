@@ -22,10 +22,12 @@ package io.resys.thena.projects.client.api.model;
 
 import java.io.Serializable;
 
+import javax.annotation.Nullable;
+
 public interface Document extends Serializable {
   DocumentType getDocumentType();
   String getId();
-  String getVersion();
+  @Nullable String getVersion();
   
   enum DocumentType { TENANT_CONFIG }
   

@@ -1,17 +1,9 @@
 package io.resys.thena.projects.client.tests.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.guava.GuavaModule;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
-import io.quarkus.jackson.ObjectMapperCustomizer;
 import io.quarkus.runtime.annotations.RegisterForReflection;
-import io.resys.thena.docdb.jackson.VertexExtModule;
+import io.resys.thena.projects.client.api.model.ImmutableArchiveTenantConfig;
 import io.resys.thena.projects.client.api.model.ImmutableCreateTenantConfig;
 import io.resys.thena.projects.client.api.model.ImmutableTenantConfig;
-import io.vertx.core.json.jackson.VertxModule;
 /*-
  * #%L
  * thena-quarkus-dev-app
@@ -32,32 +24,15 @@ import io.vertx.core.json.jackson.VertxModule;
  * #L%
  */
 import jakarta.enterprise.context.Dependent;
-import jakarta.enterprise.inject.Produces;
 
 @Dependent
 @RegisterForReflection(targets = {
     ImmutableTenantConfig.class,
-    ImmutableCreateTenantConfig.class
+    ImmutableCreateTenantConfig.class,
+    ImmutableArchiveTenantConfig.class,
+    ImmutableTenantConfig.class,
 })
 public class BeanFactory {
 
-  @Produces
-  public ObjectMapperCustomizer objectMapperCustomizer() {
-    final var modules = new com.fasterxml.jackson.databind.Module[] {
-      new JavaTimeModule(), 
-      new Jdk8Module(), 
-      new GuavaModule(),
-      new VertxModule(),
-      new VertexExtModule()
-    };
-    
-    return new ObjectMapperCustomizer() {
-      public void customize(ObjectMapper mapper) {
-        mapper.registerModules(modules);
-        // without this, local dates will be serialized as int array
-        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-      }
-    };
-  }
 
 }

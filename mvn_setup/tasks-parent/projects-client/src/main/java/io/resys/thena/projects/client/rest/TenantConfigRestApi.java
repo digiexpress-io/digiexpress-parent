@@ -3,6 +3,7 @@ package io.resys.thena.projects.client.rest;
 import java.util.List;
 
 import io.resys.thena.projects.client.api.model.TenantConfig;
+import io.resys.thena.projects.client.api.model.TenantConfigCommand.ArchiveTenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfigCommand.CreateTenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfigCommand.TenantConfigUpdateCommand;
 import io.smallrye.mutiny.Uni;
@@ -29,8 +30,8 @@ public interface TenantConfigRestApi {
   Uni<List<TenantConfig>> updateTenantConfigs(List<TenantConfigUpdateCommand> commands);
   
   @DELETE @Path("tenants") @Produces(MediaType.APPLICATION_JSON) @Consumes(MediaType.APPLICATION_JSON)
-  Uni<List<TenantConfig>> deleteTenantConfigs(List<TenantConfigUpdateCommand> commands);
+  Uni<List<TenantConfig>> deleteTenantConfigs(List<ArchiveTenantConfig> commands);
 
-  @PUT @Path("projects/{tenantConfigId}") @Produces(MediaType.APPLICATION_JSON) @Consumes(MediaType.APPLICATION_JSON)
+  @PUT @Path("tenants/{tenantConfigId}") @Produces(MediaType.APPLICATION_JSON) @Consumes(MediaType.APPLICATION_JSON)
   Uni<TenantConfig> updateOneTenantConfig(@PathParam("tenantConfigId") String tenantConfigId, List<TenantConfigUpdateCommand> commands);
 }

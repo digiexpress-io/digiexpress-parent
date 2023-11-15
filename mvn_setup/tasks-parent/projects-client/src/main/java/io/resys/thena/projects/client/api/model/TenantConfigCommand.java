@@ -60,7 +60,6 @@ public interface TenantConfigCommand extends Serializable {
   @Value.Immutable @JsonSerialize(as = ImmutableCreateTenantConfig.class) @JsonDeserialize(as = ImmutableCreateTenantConfig.class)
   interface CreateTenantConfig extends TenantConfigCommand {
     String getRepoId();
-    
     String getTitle();
     String getDescription();
     
