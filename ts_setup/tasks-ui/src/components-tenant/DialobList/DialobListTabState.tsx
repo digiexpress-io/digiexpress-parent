@@ -93,7 +93,7 @@ const DialobList: React.FC<{
         })
         } />
 
-        <FilterByTenant onChange={() => { }} />
+        <FilterByTenant />
 
         <NavigationButtonDialobList
           id='dialob.form.create'
