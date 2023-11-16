@@ -15,8 +15,10 @@ const DialobDeleteDialog: React.FC<{
 }> = (props) => {
   const theme = useTheme();
   const backend = Context.useBackend();
+  const tenants = Context.useTenants();
   const [sessions, setSessions] = React.useState<DialobSession[]>();
   const [loading, setLoading] = React.useState(false);
+  const [deleting, setDeleting] = React.useState(false);
 
   React.useEffect(() => {
     if (props.entry?.formName) {
@@ -32,6 +34,18 @@ const DialobDeleteDialog: React.FC<{
 
   if (!props.open) {
     return null;
+  }
+
+  const handleDelete = async () => {
+    setDeleting(true);
+    await backend.tenant.getDialobForm(props.entry.formName).then((form) => {
+      backend.tenant.deleteDialobForm(form._id).then((response) => {
+        tenants.reload().then(() => {
+          setDeleting(false);
+          props.onClose();
+        });
+      });
+    });
   }
 
   return (
@@ -88,7 +102,7 @@ const DialobDeleteDialog: React.FC<{
       </DialogContent>
       <DialogActions>
         <Burger.SecondaryButton label='buttons.cancel' onClick={props.onClose} />
-        <Burger.PrimaryButton label='buttons.delete' onClick={props.onClose} />
+        {deleting ? <CircularProgress size='16pt' /> : <Burger.PrimaryButton label='buttons.delete' onClick={handleDelete} />}
       </DialogActions>
     </Dialog>
   );

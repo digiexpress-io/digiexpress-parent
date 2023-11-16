@@ -5,7 +5,6 @@ export type FormTitle = string;
 export type SessionId = string;
 export type FormId = string;
 export type DialobErrorTypes = "CREATE_FORM_ERROR" | "DELETE_FORM_ERROR";
-export type DialobStatus = "OK" | "ERROR";
 
 export interface Tenant {
   id: TenantId;
@@ -103,5 +102,6 @@ export interface TenantStore {
   getDialobSessions(props: { formId: FormId, technicalName: FormTechnicalName, tenantId: TenantId }): Promise<DialobSession[]>;
   createDialobForm(formData: CreateFormRequest): Promise<DialobFormResponse>;
   copyDialobForm(formId: string, formName: string, formTitle: string): Promise<DialobFormResponse>;
+  deleteDialobForm(formId: string): Promise<void>;
 }
 

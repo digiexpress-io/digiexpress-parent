@@ -30,6 +30,7 @@ export class ServiceImpl implements Backend {
       getDialobSessions: (props: { formId: FormId, technicalName: FormTechnicalName, tenantId: TenantId }) => this.getDialobSessions(props),
       createDialobForm: (formData: CreateFormRequest) => this.createDialobForm(formData),
       copyDialobForm: (formId: string, formName: string, formTitle: string) => this.copyDialobForm(formId, formName, formTitle),
+      deleteDialobForm: (formId: string) => this.deleteDialobForm(formId),
     };
   }
   get task(): TaskStore {
@@ -139,12 +140,10 @@ export class ServiceImpl implements Backend {
     .then(form => {
       return { status: 'OK', form };
     })
-    .catch(
-      ex => {
-        console.log("Form create failed", ex);
-        return { status: 'ERROR', error: { message: "dialob.error.already.exists", type: "CREATE_FORM_ERROR" }};
-      }
-    );
+    .catch(ex => {
+      console.log("Form create failed", ex);
+      return { status: 'ERROR', error: { message: "dialob.error.already.exists", type: "CREATE_FORM_ERROR" }};
+    });
   }
   async copyDialobForm(formId: string, formName: string, formTitle: string): Promise<DialobFormResponse> {
     return await this._store.fetch<DialobForm>(`api/forms/${formId}`, { repoType: 'EXT_DIALOB' })
@@ -160,6 +159,19 @@ export class ServiceImpl implements Backend {
         return this.createDialobForm(newForm);
       }
     );
+  }
+  async deleteDialobForm(formId: string): Promise<void> {
+    return await this._store.fetch<any>(`api/forms/${formId}`, {
+      method: 'DELETE'
+    })
+    .then((response) => {
+      if (response.ok) {
+        console.log("Form deleted")
+      } else {
+        console.log("Form delete failed", response);
+      }
+    })
+    .catch(ex => console.log("Form delete failed", ex));
   }
   async getDialobSessions(props: { formId: FormId, technicalName: FormTechnicalName, tenantId: TenantId }): Promise<DialobSession[]> {
     try {
