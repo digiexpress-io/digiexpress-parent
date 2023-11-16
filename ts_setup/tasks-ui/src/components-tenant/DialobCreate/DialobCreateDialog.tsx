@@ -13,10 +13,15 @@ const INIT_FORM: CreateFormRequest = {
   name: "",
   metadata: {
     label: "",
-    languages: [],
+    languages: ['en'],
     labels: []
   },
-  data: {},
+  data: {
+    questionnaire: {
+      id: 'questionnaire',
+      type: 'questionnaire',
+    }
+  },
   variables: []
 };
 
