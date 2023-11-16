@@ -1,38 +1,10 @@
 import React from 'react';
-import { Dialog, DialogContent, DialogTitle, Box, DialogActions, IconButton, Typography, useTheme, alpha, Grid } from '@mui/material';
+import { Dialog, DialogContent, DialogTitle, Box, DialogActions, IconButton, Typography, useTheme, alpha, Stack, Alert } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { TenantEntryDescriptor } from 'descriptor-tenant';
 import Burger from 'components-burger';
-
-const FormNameInput: React.FC<{ value: string, onChange: (value: string) => void }> = ({ value, onChange }) => {
-  const [error, setError] = React.useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = React.useState<string>('');
-
-  React.useEffect(() => {
-    if (!value.length) {
-      setError(true);
-      setErrorMessage('dialob.form.technicalName.required');
-    } else if (!/^[a-zA-Z0-9_-]*$/.test(value)) {
-      setError(true);
-      setErrorMessage('dialob.form.technicalName.invalid');
-    } else {
-      setError(false);
-      setErrorMessage('');
-    }
-  }, [value]);
-
-  return (
-    <Burger.TextField
-      label='dialob.form.technicalName'
-      value={value}
-      onChange={onChange}
-      error={error}
-      errorMessage={errorMessage}
-      required
-    />
-  );
-}
+import Fields from 'components-tenant/DialobCreate/DialobCreateFields';
 
 
 const DialobCopyDialog: React.FC<{
@@ -46,18 +18,14 @@ const DialobCopyDialog: React.FC<{
   const prefix = intl.formatMessage({ id: 'dialob.form.copy.dialog.prefix' });
   const [formTitle, setFormTitle] = React.useState<string>(prefix + props.entry.formTitle);
 
-  const [error, setError] = React.useState<boolean>(false);
   const [errorMessage, setErrorMessage] = React.useState<string>('');
 
   React.useEffect(() => {
     if (!formName.length) {
-      setError(true);
       setErrorMessage('dialob.form.technicalName.required');
     } else if (!/^[a-zA-Z0-9_-]*$/.test(formName)) {
-      setError(true);
       setErrorMessage('dialob.form.technicalName.invalid');
     } else {
-      setError(false);
       setErrorMessage('');
     }
   }, [formName]);
@@ -84,29 +52,33 @@ const DialobCopyDialog: React.FC<{
       </DialogTitle>
 
       <DialogContent>
-        <Grid container spacing={1} direction='row'>
+        <Stack overflow='auto' spacing={1} direction='column'>
 
-          <Grid item md={9} lg={9} xl={9}>
-            <Burger.TextField
-              label='dialob.form.technicalName'
+          <Burger.Section required>
+            <Typography fontWeight='bold'><FormattedMessage id='dialob.form.create.dialog.dialogName' /></Typography>
+            <Fields.TechnicalName
               value={formName}
               onChange={setFormName}
-              error={error}
-              errorMessage={errorMessage}
-              required
             />
-          </Grid>
+          </Burger.Section>
 
-          <Grid item md={9} lg={9} xl={9}>
-            <Burger.TextField value={formTitle} label='dialob.form.title' onChange={setFormTitle} />
-          </Grid>
+          <Burger.Section>
+            <Typography fontWeight='bold'><FormattedMessage id='dialob.form.create.dialog.technicalName' /></Typography>
+            <Fields.DialogName
+              value={formTitle}
+              onChange={setFormTitle}
+            />
+          </Burger.Section>
 
-        </Grid>
+          {errorMessage && <Alert severity='error'>
+            <FormattedMessage id={errorMessage} />
+          </Alert>}
+        </Stack>
       </DialogContent>
 
       <DialogActions>
         <Burger.SecondaryButton label='buttons.cancel' onClick={props.onClose} />
-        <Burger.PrimaryButton label='buttons.create' onClick={props.onClose} disabled={error} />
+        <Burger.PrimaryButton label='buttons.create' onClick={props.onClose} disabled={errorMessage.length > 0} />
       </DialogActions>
     </Dialog>
   );

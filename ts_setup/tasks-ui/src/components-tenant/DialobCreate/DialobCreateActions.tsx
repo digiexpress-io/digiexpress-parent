@@ -1,45 +1,15 @@
 import React from 'react';
 import { Stack } from '@mui/material';
 import Burger from 'components-burger';
-import Context from 'context';
 
 
-
-const TaskCreateActions: React.FC<{ onClose: () => void }> = ({ onClose }) => {
-  const backend = Context.useBackend();
-  const org = Context.useOrg();
-  const tasks = Context.useTasks();
-  const { state } = Context.useTaskEdit();
-
-  const [open, setOpen] = React.useState(false);
-
+const TaskCreateActions: React.FC<{ onClose: () => void, disabled?: boolean }> = ({ onClose, disabled }) => {
 
   function handleClose() {
-    setOpen(false);
     onClose();
   }
 
   async function handleCreateAndClose() {
-    const createdTask = await backend.task.createTask({
-      commandType: 'CreateTask',
-      title: state.task.title,
-      description: state.task.description,
-      status: state.task.status,
-      priority: state.task.priority,
-
-      startDate: state.task.startDate,
-      dueDate: state.task.dueDate,
-
-      roles: state.task.roles,
-      assigneeIds: state.task.assignees,
-      reporterId: org.state.iam.userId,
-
-      labels: state.task.labels,
-      extensions: state.task.entry.extensions,
-      comments: state.task.comments,
-      checklist: state.task.checklist
-    });
-    await tasks.reload()
     handleClose();
   }
 
@@ -51,8 +21,8 @@ const TaskCreateActions: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
     <Stack direction='row' spacing={1}>
       <Burger.SecondaryButton onClick={handleClose} label='dialob.form.create.dialog.button.cancel' />
-      <Burger.SecondaryButton onClick={handleCreateAndClose} label='dialob.form.create.dialog.button.createAndClose' />
-      <Burger.PrimaryButton onClick={handleCreateAndEdit} label='dialob.form.create.dialog.button.createAndEdit' />
+      <Burger.SecondaryButton onClick={handleCreateAndClose} label='dialob.form.create.dialog.button.createAndClose' disabled={disabled} />
+      <Burger.PrimaryButton onClick={handleCreateAndEdit} label='dialob.form.create.dialog.button.createAndEdit' disabled={disabled} />
     </Stack>
 
   );

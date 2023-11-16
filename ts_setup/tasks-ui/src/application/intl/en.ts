@@ -81,8 +81,8 @@ const en = {
   'dialob.form.copy.dialog.title': 'Create form copy',
   'dialob.form.copy.dialog.prefix': 'Copy of ',
 
-  'dialob.form.technicalName.required': 'Form name required',
-  'dialob.form.technicalName.invalid': 'Form name invalid',
+  'dialob.form.name.required': 'Form name is required',
+  'dialob.form.name.invalid': 'Form name is invalid',
 
   'dialob.form.technicalNameEdit.dialog.title': 'Edit technical name',
   'dialob.form.sessions.dialog.title': 'Questionnaire sessions',
@@ -100,6 +100,7 @@ const en = {
   'dialob.form.create.dialog.button.cancel': 'Cancel',
   'dialob.form.create.dialog.button.createAndEdit': 'Create and edit',
   'dialob.form.create.dialog.button.createAndClose': 'Create and close',
+  'dialob.form.create.dialog.initial.title': 'New form',
 
   'tenant.select.button': 'Tenants',
   'tenant.select.menu.title': 'Select tenant',

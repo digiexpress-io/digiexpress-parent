@@ -1,33 +1,27 @@
 import React from 'react';
 import { TextField } from '@mui/material';
 
-const DialogName: React.FC<{}> = () => {
-  const [dialogName, setDialogName] = React.useState('');
+const DialogName: React.FC<{ value: string, onChange: (value: string) => void }> = ({ value, onChange }) => {
 
-  function handleTitleChange(event: React.ChangeEvent<HTMLInputElement>) {
-    setDialogName(event.target.value);
-  }
-
-  return (<TextField InputProps={{ disableUnderline: true }} variant='standard'
-    fullWidth
-    value={dialogName}
-    onChange={handleTitleChange}
-  />);
+  return (
+    <>
+      <TextField InputProps={{ disableUnderline: true }} variant='standard'
+        fullWidth
+        value={value}
+        onChange={({ target }) => onChange(target.value)}
+      />
+    </>
+  );
 }
 
-const TechnicalName: React.FC<{}> = () => {
-  const [technicalName, setTechnicalName] = React.useState('');
-
-  function handleTechnicalNameChange(event: React.ChangeEvent<HTMLInputElement>) {
-    setTechnicalName(event.target.value);
-  }
+const TechnicalName: React.FC<{ value: string, onChange: (value: string) => void }> = ({ value, onChange }) => {
 
   return (<TextField InputProps={{ disableUnderline: true }}
     variant='standard'
     fullWidth
     multiline
-    value={technicalName}
-    onChange={handleTechnicalNameChange}
+    value={value}
+    onChange={({ target }) => onChange(target.value)}
   />);
 }
 
