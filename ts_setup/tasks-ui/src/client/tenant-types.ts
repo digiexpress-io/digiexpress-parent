@@ -32,24 +32,6 @@ export interface DialobVariable {
   name: string
 }
 
-/*
-{ //session
-        "id": "04b76ebca2a317971cccea303f685cb0",
-        "metadata": {
-            "formId": "73b9cf712017bf2dbda638c70122075c",
-            "status": "OPEN",
-            "tenantId": "7c0161b5-2956-48c0-8aad-36b5763d560e",
-            "created": "2023-07-18T07:03:33.886+00:00",
-            "lastAnswer": "2023-07-18T07:04:36.168+00:00",
-            "owner": "3caa74e7-0182-4afa-aadb-8b968984d768"
-        }
-    },
-https://demo.dialob.io/api/questionnaires/?formName=TenantTestForm&tenantId=7c0161b5-2956-48c0-8aad-36b5763d560e
- curl  -H 'accept: application/json' localhost:92/dialob/api/forms/multiRow2 | json_pp  
-
-  curl  -H 'accept: application/json' localhost:92/dialob/api/questionnaires/multiRow2/7c0161b5-2956-48c0-8aad-36b5763d560e | json_pp  
-
-*/
 
 export interface DialobSession {
   id: SessionId,

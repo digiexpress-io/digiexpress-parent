@@ -124,6 +124,8 @@ public class DemoResource {
         .onItem().transformToUni(created -> {
           return tenantClient.tenantConfig().createTenantConfig().createOne(ImmutableCreateTenantConfig.builder()
               .name(currentTenant.getTenantId())
+              .repoId(currentTenant.getTenantsStoreId())
+              .targetDate(Instant.now())
               .build());
         });
   }
