@@ -1,10 +1,11 @@
 import React from 'react';
-import { Dialog, DialogContent, DialogTitle, Box, DialogActions, IconButton, Typography, useTheme, alpha, Stack, Alert } from '@mui/material';
+import { Dialog, DialogContent, DialogTitle, Box, DialogActions, IconButton, Typography, useTheme, alpha, Stack, Alert, CircularProgress } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { TenantEntryDescriptor } from 'descriptor-tenant';
 import Burger from 'components-burger';
 import Fields from 'components-tenant/DialobCreate/DialobCreateFields';
+import Context from 'context';
 
 
 const DialobCopyDialog: React.FC<{
@@ -14,16 +15,18 @@ const DialobCopyDialog: React.FC<{
 }> = (props) => {
   const theme = useTheme();
   const intl = useIntl();
+  const backend = Context.useBackend();
+  const tenants = Context.useTenants();
   const [formName, setFormName] = React.useState<string>('');
   const prefix = intl.formatMessage({ id: 'dialob.form.copy.dialog.prefix' });
   const [formTitle, setFormTitle] = React.useState<string>(prefix + props.entry.formTitle);
-
   const [errorMessage, setErrorMessage] = React.useState<string>('');
+  const [loading, setLoading] = React.useState(false);
 
   React.useEffect(() => {
     if (!formName.length) {
       setErrorMessage('dialob.form.technicalName.required');
-    } else if (!/^[a-zA-Z0-9_-]*$/.test(formName)) {
+    } else if (!/^[_\-a-zA-Z\d]*$/g.test(formName)) {
       setErrorMessage('dialob.form.technicalName.invalid');
     } else {
       setErrorMessage('');
@@ -32,6 +35,24 @@ const DialobCopyDialog: React.FC<{
 
   if (!props.open) {
     return null;
+  }
+
+  const handleCopy = async () => {
+    setLoading(true);
+    await backend.tenant.getDialobForm(props.entry.formName).then((form) => {
+      backend.tenant.copyDialobForm(form._id, formName, formTitle).then((response) => {
+        if (response.status === 'OK') {
+          tenants.reload().then(() => {
+            setErrorMessage('');
+            setLoading(false);
+            props.onClose();
+          });
+        } else {
+          setLoading(false);
+          setErrorMessage(response.error?.message!);
+        }
+      });
+    });
   }
 
   return (
@@ -78,7 +99,7 @@ const DialobCopyDialog: React.FC<{
 
       <DialogActions>
         <Burger.SecondaryButton label='buttons.cancel' onClick={props.onClose} />
-        <Burger.PrimaryButton label='buttons.create' onClick={props.onClose} disabled={errorMessage.length > 0} />
+        {loading ? <CircularProgress size='16pt' /> : <Burger.PrimaryButton label='buttons.create' onClick={handleCopy} disabled={errorMessage.length > 0} />}
       </DialogActions>
     </Dialog>
   );

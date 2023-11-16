@@ -1,7 +1,7 @@
 import { Backend, Store, Health } from './backend-types';
 import type { TaskId, Task, TaskPagination, TaskStore, TaskUpdateCommand, CreateTask } from './task-types';
 import { ProjectId, Project, ProjectPagination, ProjectStore, ProjectUpdateCommand, CreateProject } from './project-types';
-import { Tenant, TenantEntry, TenantStore, TenantEntryPagination, DialobTag, DialobForm, DialobSession, FormTechnicalName, TenantId, FormId } from './tenant-types';
+import { Tenant, TenantEntry, TenantStore, TenantEntryPagination, DialobTag, DialobForm, DialobSession, FormTechnicalName, TenantId, FormId, CreateFormRequest, DialobFormResponse } from './tenant-types';
 import { TenantConfig } from 'client';
 import type { UserProfile } from './profile-types';
 import type { User, Org } from './org-types';
@@ -27,7 +27,9 @@ export class ServiceImpl implements Backend {
       getTenants: () => this.getTenants(),
       getDialobTags: (dialobFormId: string) => this.getDialobTags(dialobFormId),
       getDialobForm: (dialobFormId: string) => this.getDialobForm(dialobFormId),
-      getDialobSessions: (props: { formId: FormId, technicalName: FormTechnicalName, tenantId: TenantId }) => this.getDialobSessions(props)
+      getDialobSessions: (props: { formId: FormId, technicalName: FormTechnicalName, tenantId: TenantId }) => this.getDialobSessions(props),
+      createDialobForm: (formData: CreateFormRequest) => this.createDialobForm(formData),
+      copyDialobForm: (formId: string, formName: string, formTitle: string) => this.copyDialobForm(formId, formName, formTitle),
     };
   }
   get task(): TaskStore {
@@ -127,6 +129,37 @@ export class ServiceImpl implements Backend {
   }
   async getDialobForm(dialobFormId: string): Promise<DialobForm> {
     return await this._store.fetch<DialobForm>(`api/forms/${dialobFormId}`, { repoType: 'EXT_DIALOB' });
+  }
+  async createDialobForm(formData: CreateFormRequest): Promise<DialobFormResponse> {
+    return await this._store.fetch<DialobForm>(`api/forms`, {
+      method: 'POST',
+      body: JSON.stringify(formData),
+      repoType: 'EXT_DIALOB'
+    })
+    .then(form => {
+      return { status: 'OK', form };
+    })
+    .catch(
+      ex => {
+        console.log("Form create failed", ex);
+        return { status: 'ERROR', error: { message: "dialob.error.already.exists", type: "CREATE_FORM_ERROR" }};
+      }
+    );
+  }
+  async copyDialobForm(formId: string, formName: string, formTitle: string): Promise<DialobFormResponse> {
+    return await this._store.fetch<DialobForm>(`api/forms/${formId}`, { repoType: 'EXT_DIALOB' })
+    .then(
+      formData => {
+        const newForm: CreateFormRequest = { ...formData };
+        newForm.name = formName;
+        Object.assign(newForm.metadata, {
+          label: formTitle,
+          lastSaved: null,
+          created: new Date()
+        });
+        return this.createDialobForm(newForm);
+      }
+    );
   }
   async getDialobSessions(props: { formId: FormId, technicalName: FormTechnicalName, tenantId: TenantId }): Promise<DialobSession[]> {
     try {

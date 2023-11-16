@@ -1,32 +1,41 @@
 import React from 'react';
-import { Stack } from '@mui/material';
+import { CircularProgress, Stack } from '@mui/material';
 import Burger from 'components-burger';
 
-
-const TaskCreateActions: React.FC<{ onClose: () => void, disabled?: boolean }> = ({ onClose, disabled }) => {
+const DialobCreateActions: React.FC<{
+  onClose: () => void,
+  onCreate: () => void,
+  disabled?: boolean,
+  loading?: boolean
+}> = ({ onClose, onCreate, disabled, loading }) => {
 
   function handleClose() {
     onClose();
   }
 
   async function handleCreateAndClose() {
-    handleClose();
+    onCreate();
   }
 
   async function handleCreateAndEdit() {
-    handleClose();
+    onCreate();
+    // open editor
   }
 
   return (
 
     <Stack direction='row' spacing={1}>
       <Burger.SecondaryButton onClick={handleClose} label='dialob.form.create.dialog.button.cancel' />
-      <Burger.SecondaryButton onClick={handleCreateAndClose} label='dialob.form.create.dialog.button.createAndClose' disabled={disabled} />
-      <Burger.PrimaryButton onClick={handleCreateAndEdit} label='dialob.form.create.dialog.button.createAndEdit' disabled={disabled} />
+      {loading ? <CircularProgress size='16pt' /> :
+        <>
+          <Burger.SecondaryButton onClick={handleCreateAndClose} label='dialob.form.create.dialog.button.createAndClose' disabled={disabled} />
+          <Burger.PrimaryButton onClick={handleCreateAndEdit} label='dialob.form.create.dialog.button.createAndEdit' disabled={disabled} />
+        </>
+      }
     </Stack>
 
   );
 }
 
 
-export default TaskCreateActions;
+export default DialobCreateActions;

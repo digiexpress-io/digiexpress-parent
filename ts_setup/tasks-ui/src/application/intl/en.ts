@@ -74,6 +74,7 @@ const en = {
   'dialob.form.preview': 'Preview',
   'dialob.form.create': 'Create new form',
 
+  'dialob.error.already.exists': 'Form with this name already exists!',
 
   'dialob.form.delete.dialog.title': 'Delete confirmation',
   'dialob.form.delete.dialog.desc': 'Are you sure you want to delete this dialog?',

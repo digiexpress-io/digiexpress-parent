@@ -6,15 +6,30 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import DialobCreateActions from './DialobCreateActions';
 import Fields from './DialobCreateFields';
 import Burger from 'components-burger';
+import { CreateFormRequest } from 'client/tenant-types';
+import Context from 'context';
 
+const INIT_FORM: CreateFormRequest = {
+  name: "",
+  metadata: {
+    label: "",
+    languages: [],
+    labels: []
+  },
+  data: {},
+  variables: []
+};
 
 const DialobCreateDialog: React.FC<{ open: boolean, onClose: () => void }> = (props) => {
   const theme = useTheme();
   const intl = useIntl();
+  const backend = Context.useBackend();
+  const tenants = Context.useTenants();
   const [formName, setFormName] = React.useState<string>('');
   const initialFormTitle = intl.formatMessage({ id: 'dialob.form.create.dialog.initial.title' });
   const [formTitle, setFormTitle] = React.useState<string>(initialFormTitle);
   const [errorMessage, setErrorMessage] = React.useState<string>('');
+  const [loading, setLoading] = React.useState(false);
 
   React.useEffect(() => {
     if (!formName.length) {
@@ -28,6 +43,30 @@ const DialobCreateDialog: React.FC<{ open: boolean, onClose: () => void }> = (pr
 
   if (!props.open) {
     return null;
+  }
+
+  const handleCreate = async (): Promise<void> => {
+    const request: CreateFormRequest = {
+      ...INIT_FORM,
+      name: formName,
+      metadata: {
+        ...INIT_FORM.metadata,
+        label: formTitle
+      }
+    };
+    setLoading(true);
+    await backend.tenant.createDialobForm(request).then((response) => {
+      if (response.status === 'OK') {
+        tenants.reload().then(() => {
+          setErrorMessage('');
+          setLoading(false);
+          props.onClose();
+        });
+      } else {
+        setLoading(false);
+        setErrorMessage(response.error?.message!);
+      }
+    });
   }
 
   return (
@@ -72,7 +111,7 @@ const DialobCreateDialog: React.FC<{ open: boolean, onClose: () => void }> = (pr
         </Stack>
       </DialogContent>
       <DialogActions>
-        <DialobCreateActions onClose={props.onClose} disabled={errorMessage.length > 0} />
+        <DialobCreateActions onClose={props.onClose} onCreate={handleCreate} disabled={errorMessage.length > 0} loading={loading} />
       </DialogActions>
     </Dialog>
   );
