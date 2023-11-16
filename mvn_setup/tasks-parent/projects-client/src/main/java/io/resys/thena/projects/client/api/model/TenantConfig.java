@@ -43,7 +43,7 @@ public interface TenantConfig extends Document {
     String getLandingApp();
   }
   
-  public static final String APP_BACKOFFICE = "app-backoffice";
+  public static final String APP_BACKOFFICE = "app-frontoffice";
 
   @Value.Immutable @JsonSerialize(as = ImmutableTenantConfigTransaction.class) @JsonDeserialize(as = ImmutableTenantConfigTransaction.class)
   interface TenantConfigTransaction extends Serializable {

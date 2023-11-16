@@ -6,9 +6,9 @@ import { SnackbarProvider } from 'notistack';
 import { useSnackbar } from 'notistack';
 import Burger, { siteTheme } from 'components-burger';
 
-import TaskClient from 'client';
+import TaskClient, { TenantConfig } from 'client';
 import Context from 'context';
-import { ProjectIdProvider } from 'descriptor-project';
+import { TenantConfigProvider } from 'descriptor-tenant-config';
 import Connection from './Connection';
 import messages from './intl';
 import Provider from './Provider';
@@ -36,13 +36,24 @@ const getUrl = () => {
     const url = window._env_.url;
     return url.endsWith("/") ? url.substring(0, url.length - 1) : url;
   }
-  return "http://localhost:8080/q/digiexpress/api/";
+  return "http://localhost:8080";
 }
+
+const baseUrl = getUrl();
 
 const store: TaskClient.Store = new TaskClient.DefaultStore({
   urls: [
-    { id: 'generic', url: getUrl() },
-    { id: 'dialob', url: "http://localhost:92/dialob/" },
+    { id: 'TASKS', url: baseUrl + "/q/digiexpress/api/" },
+    { id: 'TENANT', url: baseUrl + "/q/digiexpress/api/" },
+    { id: 'CRM', url: baseUrl + "/q/digiexpress/api/" },
+    { id: 'STENCIL', url: baseUrl + "/q/digiexpress/api/" },
+    { id: 'USER_PROFILE', url: baseUrl + "/q/digiexpress/api/" },
+    { id: 'WRENCH', url: baseUrl + "/q/digiexpress/api/" },
+    { id: 'CONFIG', url: baseUrl + "/q/digiexpress/api/" },
+    { id: 'HEALTH', url: baseUrl + "/q/digiexpress/api/" },
+
+    { id: 'EXT_DIALOB', url: "http://localhost:92/dialob/" },
+    { id: 'EXT_DIALOB_EDIT', url: "http://localhost:92/dialob/api" },
   ],
   performInitCheck: false,
   csrf: window._env_?.csrf,
@@ -53,18 +64,22 @@ const store: TaskClient.Store = new TaskClient.DefaultStore({
 const backend = new TaskClient.ServiceImpl(store)
 
 
-const Apps: React.FC<{ profile: TaskClient.Profile }> = ({ profile }) => {
-  const { projectId } = Context.useProjectId();
-  const service = React.useMemo(() => {
-    return backend.withProjectId(projectId);
-  }, [projectId]);
+const TenantConfigSetup: React.FC<{ profile: TaskClient.UserProfile }> = ({ profile }) => {
+  const { tenantConfig } = Context.useTenantConfig();
+  if (!tenantConfig) {
+    throw new Error("Tenant must be defined!");
+  }
 
-  const stencil: Burger.App<{}, any> = React.useMemo(() => AppStencil(service, profile, projectId), [service, profile, projectId]);
+  const service = React.useMemo(() => {
+    return backend.withTenantConfig(tenantConfig!);
+  }, [tenantConfig]);
+
+  const stencil: Burger.App<{}, any> = React.useMemo(() => AppStencil(service, profile, tenantConfig!), [service, profile, tenantConfig]);
   const tasks: Burger.App<{}, any> = React.useMemo(() => AppTasks(service, profile), [service, profile]);
   const projects: Burger.App<{}, any> = React.useMemo(() => AppProjects(service, profile), [service, profile]);
   const frontoffice: Burger.App<{}, any> = React.useMemo(() => AppFrontoffice(service, profile), [service, profile]);
   const tenant: Burger.App<{}, any> = React.useMemo(() => AppTenant(service, profile), [service, profile]);
-  const appId = 'app-tenant';
+  const appId = tasks.id; //tenantConfig.preferences.landingApp;
 
   return (<Provider service={service} profile={profile}>
     <Burger.Provider children={
@@ -76,25 +91,89 @@ const Apps: React.FC<{ profile: TaskClient.Profile }> = ({ profile }) => {
 }
 
 
+
+const DialobOnlySetup: React.FC<{}> = () => {
+  const service = React.useMemo(() => {
+    return backend;
+  }, []);
+
+  const profile: TaskClient.UserProfile = React.useMemo(() => {
+    return {
+      name: 'Han Solo',
+      userId: 'han-solo',
+      roles: [],
+      today: new Date(),
+    };
+  }, []);
+
+  const tenantConfig: TenantConfig = React.useMemo(() => {
+    return {
+      id: '',
+      version: '',
+      name: '',
+      created: new Date(),
+      updated: new Date(),
+      archived: undefined,
+      status: 'IN_FORCE',
+      preferences: {
+        landingApp: 'app-tenant'
+      },
+      repoConfigs: [],
+      transactions: [],
+      documentType: "TENANT_CONFIG"
+    };
+  }, []);
+
+  const tenant: Burger.App<{}, any> = React.useMemo(() => AppTenant(service, profile), [service]);
+  const appId = tenantConfig.preferences.landingApp;
+
+  return (
+    <TenantConfigProvider tenantConfig={tenantConfig}>
+      <Provider service={service} profile={profile}>
+        <Burger.Provider children={[tenant]} secondary="toolbar.activities" appId={appId} />
+      </Provider>
+    </TenantConfigProvider>)
+}
+
+
 const CheckAppConnection = React.lazy(async () => {
-  const head = await backend.profile.getProfile();
-  if (head.contentType === 'NO_CONNECTION') {
+  const head = await backend.health();
+
+  if (head.contentType === 'DIALOB_EXT') {
+
+    const Result: React.FC<{}> = () => {
+      const snackbar = useSnackbar();
+      const intl = useIntl();
+      React.useEffect(() => {
+        const msg = intl.formatMessage({ id: 'init.loaded' }, { name: head.contentType });
+        snackbar.enqueueSnackbar(msg, { variant: 'success' })
+      }, [intl, snackbar]);
+
+      return (<DialobOnlySetup />)
+    };
+    return ({ default: Result })
+
+  } else if (head.contentType === 'NO_CONNECTION') {
     const Result: React.FC<{}> = () => <Connection.Down client={backend} />;
     return ({ default: Result })
   } else if (head.contentType === 'BACKEND_NOT_FOUND') {
     const Result: React.FC<{}> = () => <Connection.Misconfigured client={backend} />;
     return ({ default: Result })
   }
+
+  const profile = await backend.currentUserProfile();
+  const tenantConfig = await backend.currentTenant();
+
   const Result: React.FC<{}> = () => {
     const snackbar = useSnackbar();
     const intl = useIntl();
     React.useEffect(() => {
       if (head.contentType === 'OK') {
-        const msg = intl.formatMessage({ id: 'init.loaded' }, { name: head.name });
+        const msg = intl.formatMessage({ id: 'init.loaded' }, { name: tenantConfig.name });
         snackbar.enqueueSnackbar(msg, { variant: 'success' })
       }
     }, [intl, snackbar]);
-    return <ProjectIdProvider projectId=""><Apps profile={head} /></ProjectIdProvider>
+    return (<TenantConfigProvider tenantConfig={tenantConfig}><TenantConfigSetup profile={profile} /></TenantConfigProvider>)
   };
   return ({ default: Result })
 });

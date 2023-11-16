@@ -19,7 +19,7 @@ const FormattedCell: React.FC<{
   const apps = Context.useApp();
 
   function handleOpenProject() {
-    apps.changeApp(row.repoType, row.repoId);
+    apps.changeApp(row.repoType);
   }
 
   return (

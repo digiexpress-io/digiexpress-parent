@@ -1,4 +1,4 @@
-import { Customer, Profile, Task } from 'client';
+import { Customer, UserProfile, Task } from 'client';
 
 import {
   CustomerCaseDescriptor, FilterBy, Group, GroupBy, FilterByAssignees, FilterByRoles,
@@ -38,7 +38,7 @@ class DescriptorStateImpl implements DescriptorState {
     this._searchString = init.searchString;
     this._filtered = init.filtered;
   }
-  get profile(): Profile { return this._data.profile }
+  get profile(): UserProfile { return this._data.profile }
   get palette(): CustomerPaletteType { return this._data.palette }
   get cases(): CustomerCaseDescriptor[] { return this._data.cases }
 
@@ -230,7 +230,7 @@ class GroupVisitor {
 
 
 class CustomerCaseDescriptorImpl implements CustomerCaseDescriptor {
-  private _profile: Profile;
+  private _profile: UserProfile;
   private _entry: Customer;
   private _firstName: string;
   private _lastName: string;
@@ -239,7 +239,7 @@ class CustomerCaseDescriptorImpl implements CustomerCaseDescriptor {
 
 
 
-  constructor(entry: Customer, profile: Profile, today: Date, task: Task) {
+  constructor(entry: Customer, profile: UserProfile, today: Date, task: Task) {
     this._entry = entry;
     this._profile = profile;
     this._firstName = entry.firstName;

@@ -1,4 +1,4 @@
-import { Project, RepoType, Profile, resolveAvatar } from 'client';
+import { Project, RepoType, UserProfile, resolveAvatar } from 'client';
 
 import {
   ProjectDescriptor, FilterBy, Group, GroupBy,
@@ -38,7 +38,7 @@ class GroupsAndFiltersImpl implements GroupsAndFilters {
     this._searchString = init.searchString;
     this._filtered = init.filtered;
   }
-  get profile(): Profile { return this._data.profile }
+  get profile(): UserProfile { return this._data.profile }
   get palette(): ProjectPaletteType { return this._data.palette }
   get tasks(): ProjectDescriptor[] { return this._data.projects }
 
@@ -213,8 +213,10 @@ class GroupVisitor {
     } else if (init.groupBy === 'users') {
       withColors(init.users).forEach(o => this._groups[o.value] = { records: [], color: o.color, id: o.value, type: init.groupBy })
     } else if (init.groupBy === 'repoType') {
-      const values: RepoType[] = ['DIALOB', 'STENCIL', 'WRENCH', 'TASKS'];
-      values.forEach(o => this._groups[o] = { records: [], color: Palette.repoType[o], id: o, type: init.groupBy })
+      const values: RepoType[] = ['DIALOB', 'STENCIL', 'WRENCH', 'TASKS', 'CONFIG', 'CRM', 'USER_PROFILE', 'TENANT'];
+
+      // @ts-ignore
+      values.forEach(o => this._groups[o] = { records: [], color: Palette.repoType[o] ?? 'red', id: o, type: init.groupBy })
     }
   }
 
@@ -248,11 +250,11 @@ class ProjectDescriptorImpl implements ProjectDescriptor {
   private _entry: Project;
   private _created: Date;
   private _updated: Date;
-  private _profile: Profile;
+  private _profile: UserProfile;
   private _userAvatars: AvatarCode[];
   private _appId: string;
 
-  constructor(entry: Project, profile: Profile, today: Date) {
+  constructor(entry: Project, profile: UserProfile, today: Date) {
     this._entry = entry;
     this._created = new Date(entry.created);
     this._updated = new Date(entry.updated);

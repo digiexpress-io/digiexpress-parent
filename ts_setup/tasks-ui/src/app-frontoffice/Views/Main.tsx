@@ -22,9 +22,6 @@ const Main: React.FC<{}> = () => {
   //composers which are NOT linked directly with an article
 
   return React.useMemo(() => {
-    if (site.contentType === "NO_CONNECTION") {
-      return (<Box>{site.contentType}</Box>);
-    }
     if (!active) {
       return null;
     }

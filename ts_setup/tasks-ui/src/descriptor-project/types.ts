@@ -1,4 +1,4 @@
-import { Profile, Project, RepoType } from 'client';
+import { UserProfile, Project, RepoType } from 'client';
 
 export interface AvatarCode {
   twoletters: string;
@@ -19,7 +19,7 @@ export interface ProjectDescriptor {
   updated: Date;
 
   userAvatars: AvatarCode[];
-  profile: Profile;
+  profile: UserProfile;
 }
 
 
@@ -32,7 +32,7 @@ export interface PaletteType {
     'WRENCH': string,
     'STENCIL': string,
     'TASKS': string,
-    'DIALOB': string
+    'DIALOB': string,
   },
   colors: { red: string, green: string, yellow: string, blue: string, violet: string }
 }
@@ -54,7 +54,7 @@ export interface Data {
   projects: ProjectDescriptor[];
   projectsByUser: Record<string, ProjectDescriptor[]>;
   palette: ProjectPaletteType;
-  profile: Profile;
+  profile: UserProfile;
   users: string[];
 }
 
@@ -86,10 +86,10 @@ export interface ProjectsState {
   projects: ProjectDescriptor[];
   projectsByUser: Record<string, ProjectDescriptor[]>;
   palette: ProjectPaletteType;
-  profile: Profile;
+  profile: UserProfile;
   users: string[];
 
-  withProfile(profile: Profile): ProjectsState;
+  withProfile(profile: UserProfile): ProjectsState;
   withProjects(projects: Project[]): ProjectsState;
   toGroupsAndFilters(): GroupsAndFilters;
 }

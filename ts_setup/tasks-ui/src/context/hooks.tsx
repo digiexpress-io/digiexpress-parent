@@ -6,10 +6,11 @@ import { ImmutableTabData } from './composer-ctx-impl';
 import { ComposerContext, ComposerContextType, ClientContextType, ClientContext } from './client-ctx';
 import { UserId, RoleId, RepoType } from 'client';
 
-import { ProjectIdContext, ProjectsContextType, ProjectsContext, ProjectIdContextType } from 'descriptor-project';
+import { ProjectsContextType, ProjectsContext } from 'descriptor-project';
 import { OrgContext, OrgContextType } from 'descriptor-organization';
 import { TenantContext, TenantContextType } from 'descriptor-tenant';
 import { TasksContext, TasksContextType, TaskEditContext, TaskEditContextType } from 'descriptor-task';
+import { TenantConfigContext, TenantConfigContextType } from 'descriptor-tenant-config';
 
 const ArticleTabIndicator: React.FC<{ entity: Document }> = ({ entity }) => {
   const theme = useTheme();
@@ -114,30 +115,26 @@ export const useBackend = () => {
   return result;
 }
 
-export const useProjectId = () => {
-  const result: ProjectIdContextType = React.useContext(ProjectIdContext);
+export const useTenantConfig = () => {
+  const result: TenantConfigContextType = React.useContext(TenantConfigContext);
   return result;
 }
 
 export const useApp = () => {
-  const project = useProjectId();
   const apps = Burger.useApps();
 
-  function changeApp(input: 'tasks' | 'projects' | 'stencil' | RepoType, projectId?: string) {
+  function changeApp(input: 'tasks' | 'projects' | 'stencil' | RepoType) {
     if (input === 'projects') {
-      project.setProjectId('', 'PROJECT');
       apps.actions.handleActive('app-projects');
       return;
     }
 
     if (input === 'tasks' || input === 'TASKS') {
-      project.setProjectId(projectId as string, 'TASKS');
       apps.actions.handleActive('app-tasks');
       return;
     }
 
     if (input === 'stencil' || input === 'STENCIL') {
-      project.setProjectId(projectId as string, 'STENCIL');
       apps.actions.handleActive('app-stencil');
       return;
     }

@@ -1,5 +1,5 @@
 
-import { Project, Profile } from 'client';
+import { Project, UserProfile } from 'client';
 
 import { ProjectsState } from './types';
 import { Palette, _nobody_ } from './constants';
@@ -14,7 +14,7 @@ interface ExtendedInit extends Omit<ProjectsState, "withProfile" | "withProjects
     users: Record<string, string>;
     repoType: Record<string, string>;
   }
-  profile: Profile;
+  profile: UserProfile;
 }
 
 class ProjectsStateBuilder implements ProjectsState {
@@ -22,7 +22,7 @@ class ProjectsStateBuilder implements ProjectsState {
   private _projectsByUser: Record<string, ProjectDescriptor[]>;
   private _users: string[];
   private _palette: ProjectPaletteType;
-  private _profile: Profile;
+  private _profile: UserProfile;
 
   constructor(init: ExtendedInit) {
     this._projects = init.projects;
@@ -31,7 +31,7 @@ class ProjectsStateBuilder implements ProjectsState {
     this._palette = init.palette;
     this._profile = init.profile;
   }
-  get profile(): Profile { return this._profile }
+  get profile(): UserProfile { return this._profile }
   get palette(): ProjectPaletteType { return this._palette }
   get users(): string[] { return this._users }
   get projects(): ProjectDescriptor[] { return this._projects }
@@ -47,7 +47,7 @@ class ProjectsStateBuilder implements ProjectsState {
       searchString: undefined,
     });
   }
-  withProfile(profile: Profile): ProjectsState {
+  withProfile(profile: UserProfile): ProjectsState {
     return new ProjectsStateBuilder({ ...this.clone(), profile });
   }
   withProjects(input: Project[]): ProjectsState {

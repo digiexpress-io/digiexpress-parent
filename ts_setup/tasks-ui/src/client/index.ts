@@ -11,7 +11,7 @@ import {
 } from './org-types';
 
 import {
-  Project, ProjectId, RepoType,
+  Project, ProjectId,
   ChangeProjectInfo,
   AssignProjectUsers,
   CreateProject,
@@ -59,7 +59,7 @@ import {
 } from './task-types';
 
 import {
-  Profile
+  UserProfile
 } from './profile-types';
 
 import {
@@ -73,12 +73,15 @@ import {
   Customer, CustomerId, CustomerTask
 } from './customer-types';
 
+import {
+  RepoType, TenantConfigId, TenantConfig, AppType
+} from './tenant-config-types';
 
 declare namespace TaskClient {
   export type {
     DialobTag, DialobForm,
-    Profile,
-    Project, ProjectId, RepoType,
+    UserProfile,
+    Project, ProjectId,
     ChangeProjectInfo,
     AssignProjectUsers,
     CreateProject,
@@ -126,7 +129,9 @@ declare namespace TaskClient {
     FormTechnicalName, FormTitle,
     Tenant, TenantEntry,
     TenantId, TenantStore,
-    DialobSession
+    DialobSession,
+
+    RepoType, TenantConfigId, TenantConfig, AppType
   }
 }
 
@@ -134,7 +139,7 @@ export type {
   Customer, CustomerId, CustomerTask, TaskCommandType,
 
   Project, ProjectId, RepoType,
-  Profile,
+  UserProfile,
   TaskId, Task,
   BackendError, Backend, StoreConfig, Store, StoreError,
   Org, User, Role,
@@ -178,7 +183,9 @@ export type {
   FormTechnicalName, FormTitle,
   Tenant, TenantEntry,
   TenantId, TenantStore,
-  DialobTag, DialobForm, DialobVariable, DialobSession
+  DialobTag, DialobForm, DialobVariable, DialobSession,
+
+  TenantConfigId, TenantConfig, AppType
 }
 
 const resolveAvatar = resolveAvatarAs;

@@ -2,11 +2,11 @@ import React from 'react';
 
 import Burger from 'components-burger';
 
-import { Backend, Profile } from 'client';
+import { Backend, UserProfile } from 'client';
 import { ProjectsProvider } from 'descriptor-project';
 import Views from './Views';
 
-function appFrontoffice(backend: Backend, profile: Profile): Burger.App<{}, { backend: Backend, profile: Profile }> {
+function appFrontoffice(backend: Backend, profile: UserProfile): Burger.App<{}, { backend: Backend, profile: UserProfile }> {
   return {
     id: "app-frontoffice",
     init: { backend, profile },

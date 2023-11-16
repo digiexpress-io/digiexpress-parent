@@ -1,4 +1,4 @@
-import { Task, CustomerId, Profile } from 'client';
+import { Task, CustomerId, UserProfile } from 'client';
 
 
 export interface CustomerCaseDescriptor {
@@ -9,7 +9,7 @@ export interface CustomerCaseDescriptor {
 
   task: Task;
 
-  profile: Profile;
+  profile: UserProfile;
 }
 
 export interface AvatarCode {
@@ -45,7 +45,7 @@ export interface Data {
   palette: CustomerPaletteType;
   assignees: string[];
   roles: string[];
-  profile: Profile;
+  profile: UserProfile;
 }
 
 export interface DescriptorState {

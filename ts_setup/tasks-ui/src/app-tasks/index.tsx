@@ -1,12 +1,12 @@
 import React from 'react';
 
 import Burger from 'components-burger';
-import { Backend, Profile } from 'client';
+import { Backend, UserProfile } from 'client';
 import { TasksProvider } from 'descriptor-task';
 import Views from './Views';
 
 
-function appTasks(backend: Backend, profile: Profile): Burger.App<{}, { backend: Backend, profile: Profile }> {
+function appTasks(backend: Backend, profile: UserProfile): Burger.App<{}, { backend: Backend, profile: UserProfile }> {
   return {
     id: "app-tasks",
     init: { backend, profile },

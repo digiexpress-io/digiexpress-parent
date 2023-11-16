@@ -1,4 +1,4 @@
-import { Task, Profile } from 'client';
+import { Task, UserProfile } from 'client';
 
 import { parseISO, isAfter, isEqual, differenceInCalendarDays, differenceInDays } from 'date-fns';
 
@@ -18,7 +18,7 @@ export function getDaysUntilDue(task: Task, today: Date) {
 
 }
 
-export function getTeamspaceType(task: Task, profile: Profile, today: Date): TeamGroupType | undefined {
+export function getTeamspaceType(task: Task, profile: UserProfile, today: Date): TeamGroupType | undefined {
   if (profile.roles.filter((role) => task.roles.includes(role)).length === 0) {
     return undefined;
   }
@@ -41,7 +41,7 @@ export function getTeamspaceType(task: Task, profile: Profile, today: Date): Tea
 }
 
 
-export function getMyWorkType(task: Task, profile: Profile, today: Date): AssigneeGroupType | undefined {
+export function getMyWorkType(task: Task, profile: UserProfile, today: Date): AssigneeGroupType | undefined {
   if (!task.assigneeIds.includes(profile.userId)) {
     return undefined;
   }

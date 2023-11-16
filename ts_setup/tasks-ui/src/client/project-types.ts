@@ -1,4 +1,4 @@
-export type RepoType = 'WRENCH' | 'STENCIL' | 'TASKS' | 'DIALOB';
+import { RepoType } from "./tenant-config-types";
 export type ProjectId = string;
 
 export interface Project {
@@ -67,48 +67,4 @@ export interface ProjectStore {
   getActiveProject(id: string): Promise<Project>
   createProject(command: CreateProject): Promise<Project>
   updateActiveProject(id: string, commands: ProjectUpdateCommand<any>[]): Promise<Project>
-}
-
-
-export const mockProjects: Record<RepoType, Project> = {
-  WRENCH: {
-    id: 'wrench-1',
-    repoId: 'repo-1',
-    repoType: 'WRENCH',
-    title: 'wrench-dev',
-    description: 'Wrench assets for dev',
-    users: ['sipoo-user'],
-    created: "2023-11-02T06:36:45.959Z",
-    updated: "2023-11-03T06:36:45.959Z",
-  },
-  DIALOB: {
-    id: 'dialob-1',
-    repoId: 'repo-1',
-    repoType: 'DIALOB',
-    title: 'dialob-dev',
-    description: 'Dialob assets for dev',
-    users: ['sipoo-user'],
-    created: "2023-11-02T06:36:45.959Z",
-    updated: "2023-11-03T06:36:45.959Z",
-  },
-  STENCIL: {
-    id: 'stencil-1',
-    repoId: 'repo-1',
-    repoType: 'STENCIL',
-    title: 'stencil-dev',
-    description: 'stencil assets for dev',
-    users: ['sipoo-user'],
-    created: "2023-11-02T06:36:45.959Z",
-    updated: "2023-11-03T06:36:45.959Z",
-  },
-  TASKS: {
-    id: 'tasks-1',
-    repoId: 'repo-1',
-    repoType: 'TASKS',
-    title: 'tasks-dev',
-    description: 'Task assets for dev',
-    users: ['sipoo-user'],
-    created: "2023-11-02T06:36:45.959Z",
-    updated: "2023-11-03T06:36:45.959Z",
-  }
 }

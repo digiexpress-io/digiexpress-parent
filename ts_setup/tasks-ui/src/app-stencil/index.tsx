@@ -1,14 +1,15 @@
 import React from 'react';
 
 import Burger from 'components-burger';
-import { Backend, Profile } from 'client';
+import { Backend, UserProfile, TenantConfig } from 'client';
 import { Main, Secondary, Toolbar, Composer, StencilClient } from 'components-stencil';
 
 
-function appStencil(backend: Backend, profile: Profile, projectId: string): Burger.App<{}, {
-  service: StencilClient.Service
+function appStencil(backend: Backend, profile: UserProfile, tenantConfig: TenantConfig): Burger.App<{}, {
+  service: StencilClient.Service,
 }> {
 
+  const projectId = tenantConfig.repoConfigs.find(c => c.repoType === 'STENCIL')?.repoId ?? ""
   const service = StencilClient.service({
     config: {
       url: backend.config.urls[0].url + "stencil",

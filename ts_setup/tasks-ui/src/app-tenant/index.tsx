@@ -2,13 +2,13 @@ import React from 'react';
 
 import Burger from 'components-burger';
 
-import { Backend, Profile } from 'client';
+import { Backend, UserProfile } from 'client';
 import { TenantProvider } from 'descriptor-tenant';
 
 import Views from './Views';
 
 
-function appTenant(backend: Backend, profile: Profile): Burger.App<{}, { backend: Backend, profile: Profile }> {
+function appTenant(backend: Backend, profile: UserProfile): Burger.App<{}, { backend: Backend, profile: UserProfile }> {
   return {
     id: "app-tenant",
     init: { backend, profile },

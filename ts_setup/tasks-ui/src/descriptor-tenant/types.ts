@@ -1,5 +1,5 @@
 
-import { TenantEntry, FormTechnicalName, FormTitle, Tenant, TenantId, Profile, DialobSession } from 'client';
+import { TenantEntry, FormTechnicalName, FormTitle, Tenant, TenantId, UserProfile, DialobSession } from 'client';
 
 export interface PaletteType {
   colors: { red: string, green: string, yellow: string, blue: string, violet: string }
@@ -33,7 +33,7 @@ export interface TenantDescriptor {
 export interface Data {
   tenantEntries: TenantEntryDescriptor[];
   palette: TenantPaletteType;
-  profile: Profile;
+  profile: UserProfile;
 }
 
 export interface TenantGroupsAndFilters {
@@ -54,9 +54,9 @@ export interface TenantState {
   activeTenant: TenantId | undefined;
   activeTenantEntry: FormTechnicalName | undefined;
   palette: TenantPaletteType;
-  profile: Profile;
+  profile: UserProfile;
 
-  withProfile(profile: Profile): TenantState;
+  withProfile(profile: UserProfile): TenantState;
   withActiveTenant(tenantId?: TenantId): TenantState;
   withActiveTenantEntry(id?: FormTechnicalName): TenantState;
   withTenants(tenants: Tenant[]): TenantState;

@@ -1,5 +1,5 @@
 import {
-  Profile, TaskPriority, TaskStatus, TaskExtension, TaskTransaction, Checklist, TaskComment, TaskCommand, TaskCommandType, CreateTask, AssignTaskReporter, ArchiveTask, ChangeTaskStatus, ChangeTaskPriority,
+  UserProfile, TaskPriority, TaskStatus, TaskExtension, TaskTransaction, Checklist, TaskComment, TaskCommand, TaskCommandType, CreateTask, AssignTaskReporter, ArchiveTask, ChangeTaskStatus, ChangeTaskPriority,
   AssignTaskParent, CommentOnTask, ChangeTaskComment, AssignTaskRoles, AssignTask, ChangeTaskDueDate, ChangeTaskInfo,
   CreateTaskExtension, ChangeTaskExtension, ChangeTaskStartDate, CreateChecklist, ChangeChecklistTitle, DeleteChecklist, AddChecklistItem, DeleteChecklistItem,
   ChangeChecklistItemAssignees, ChangeChecklistItemCompleted, ChangeChecklistItemDueDate, ChangeChecklistItemTitle,
@@ -108,7 +108,7 @@ export interface TaskDescriptor {
   teamGroupType: TeamGroupType | undefined;
 
   checklist: Checklist[];
-  profile: Profile;
+  profile: UserProfile;
 }
 
 export interface TasksPaletteType {
@@ -161,7 +161,7 @@ export interface Data {
   tasks: TaskDescriptor[];
   tasksByOwner: Record<string, TaskDescriptor[]>;
   palette: TasksPaletteType;
-  profile: Profile;
+  profile: UserProfile;
   roles: string[];
   owners: string[];
 }
@@ -222,11 +222,11 @@ export interface TasksState {
   tasks: TaskDescriptor[];
   tasksByOwner: Record<string, TaskDescriptor[]>;
   palette: TasksPaletteType;
-  profile: Profile;
+  profile: UserProfile;
   roles: string[];
   owners: string[];
 
-  withProfile(profile: Profile): TasksState;
+  withProfile(profile: UserProfile): TasksState;
   withTasks(tasks: Task[]): TasksState;
   toGroupsAndFilters(): TaskGroupsAndFilters;
 }

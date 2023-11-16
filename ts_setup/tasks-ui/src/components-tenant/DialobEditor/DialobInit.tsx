@@ -15,7 +15,8 @@ const DialobInit: React.FC<{
   tenantId: string,
   formId: string,
   apiUrl: string,
-}> = ({ tenantId, formId, apiUrl, onClose }) => {
+  dialobOnly: boolean
+}> = ({ tenantId, formId, apiUrl, dialobOnly, onClose }) => {
 
   const DIALOB_COMPOSER_CONFIG = {
     transport: {
@@ -25,9 +26,10 @@ const DialobInit: React.FC<{
         token: undefined
       },
       */
-      apiUrl: apiUrl ,
+      apiUrl: apiUrl,
       previewUrl: "",
       tenantId: tenantId,
+      credentials: dialobOnly ? 'include' : undefined
     },
     documentationUrl: '',
     itemEditors: DEFAULT_ITEM_CONFIG,
@@ -39,8 +41,8 @@ const DialobInit: React.FC<{
       onClose();
     }
   };
-  
-  
+
+
 
 
   const reducers = {
@@ -56,7 +58,7 @@ const DialobInit: React.FC<{
     document.head.append(styleElement);
     return () => styleElement.remove();
   }, []);
-  
+
   //<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/semantic-ui@2.4.0/dist/semantic.min.css">
 
 

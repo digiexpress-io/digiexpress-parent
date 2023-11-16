@@ -67,13 +67,12 @@ public class TenantConfigCommandVisitor {
   
   
   private TenantConfig visitCreateTenantConfig(CreateTenantConfig command) {
-    final var gen = ctx.getGid();
-    final var id = gen.getNextId(DocumentType.TENANT_CONFIG);
+    final var id = command.getName();
     final var targetDate = requireTargetDate(command);
     
     this.current = ImmutableTenantConfig.builder()
       .id(id)
-      .name(command.getName())
+      .name(id)
       .created(targetDate)
       .updated(targetDate)
       .status(TenantStatus.IN_FORCE)

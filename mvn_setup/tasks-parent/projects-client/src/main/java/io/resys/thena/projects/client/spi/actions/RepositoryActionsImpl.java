@@ -66,7 +66,7 @@ public class RepositoryActionsImpl implements RepositoryActions {
         case DIALOB: { repo.repoType(RepoType.doc); break; }
         case TENANT: { repo.repoType(RepoType.doc); break; }
 
-        case TASKS: { repo.repoType(RepoType.doc); break; }
+        case TASKS: { repo.repoType(RepoType.git); break; }
         case STENCIL: { repo.repoType(RepoType.git); break; }
         case WRENCH: { repo.repoType(RepoType.git); break; }
         }

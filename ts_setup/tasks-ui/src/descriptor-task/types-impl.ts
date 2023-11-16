@@ -1,4 +1,4 @@
-import { Task, TaskExtension, TaskPriority, TaskStatus, Profile, resolveAvatar } from 'client';
+import { Task, TaskExtension, TaskPriority, TaskStatus, UserProfile, resolveAvatar } from 'client';
 
 import {
   TaskDescriptor, FilterBy, Group, GroupBy,
@@ -40,7 +40,7 @@ class TaskGroupsAndFiltersImpl implements TaskGroupsAndFilters {
     this._searchString = init.searchString;
     this._filtered = init.filtered;
   }
-  get profile(): Profile { return this._data.profile }
+  get profile(): UserProfile { return this._data.profile }
   get palette(): TasksPaletteType { return this._data.palette }
   get tasks(): TaskDescriptor[] { return this._data.tasks }
 
@@ -317,9 +317,9 @@ class TaskDescriptorImpl implements TaskDescriptor {
   private _ownersAvatars: AvatarCode[];
   private _myWorkType: AssigneeGroupType | undefined;
   private _teamspaceType: TeamGroupType | undefined;
-  private _profile: Profile;
+  private _profile: UserProfile;
 
-  constructor(entry: Task, profile: Profile, today: Date) {
+  constructor(entry: Task, profile: UserProfile, today: Date) {
     this._entry = entry;
     this._created = new Date(entry.created);
     this._startDate = entry.startDate ? new Date(entry.startDate) : undefined;

@@ -1,14 +1,12 @@
-import { Backend, Store } from './backend-types';
+import { Backend, Store, Health } from './backend-types';
 import type { TaskId, Task, TaskPagination, TaskStore, TaskUpdateCommand, CreateTask } from './task-types';
 import { ProjectId, Project, ProjectPagination, ProjectStore, ProjectUpdateCommand, CreateProject } from './project-types';
 import { Tenant, TenantEntry, TenantStore, TenantEntryPagination, DialobTag, DialobForm, DialobSession, FormTechnicalName, TenantId, FormId } from './tenant-types';
-
-import type { Profile, ProfileStore } from './profile-types';
+import { TenantConfig } from 'client';
+import type { UserProfile } from './profile-types';
 import type { User, Org } from './org-types';
 import { mockOrg } from './client-mock';
 
-
-type BackendInit = { created: boolean } | null
 
 
 export class ServiceImpl implements Backend {
@@ -18,41 +16,12 @@ export class ServiceImpl implements Backend {
     this._store = store;
   }
 
-  withProjectId(projectId: string): ServiceImpl {
-    return new ServiceImpl(this._store.withProjectId(projectId));
+  withTenantConfig(tenant: TenantConfig): ServiceImpl {
+    return new ServiceImpl(this._store.withTenantConfig(tenant));
   }
 
   get config() { return this._store.config; }
 
-  get profile(): ProfileStore {
-    return {
-      getProfile: () => this.getProfile(),
-      createProfile: () => this.createProfile()
-    }
-  }
-  async getProfile(): Promise<Profile> {
-    if (!this._store.config.performInitCheck) {
-      return { name: "", contentType: "OK", today: new Date(), userId: '', roles: [] };
-    }
-
-    const { today, user } = mockOrg;
-    const { userId, userRoles: roles } = user;
-    try {
-      const init = await this._store.fetch<BackendInit>("init", { notFound: () => null });
-      if (init === null) {
-        return { name: "", contentType: "BACKEND_NOT_FOUND", today, userId, roles };
-      }
-
-      return { name: "", contentType: "OK", today, userId, roles };
-    } catch (error) {
-      console.error("PROFILE, failed to fetch", error);
-      return { name: "", contentType: "NO_CONNECTION", today, userId, roles };
-    }
-  }
-
-  createProfile(): Promise<Profile> {
-    return this._store.fetch<Profile>("head", { method: "POST", body: JSON.stringify({}) });
-  }
   get tenant(): TenantStore {
     return {
       getTenantEntries: (tenantId: string) => this.getTenantEntries(tenantId),
@@ -79,49 +48,87 @@ export class ServiceImpl implements Backend {
     };
   }
 
-  getTenants(): Promise<Tenant[]> {
-    return this._store.fetch<Tenant[]>(`api/tenants`);
+  async health(): Promise<Health> {
+    try {
+      await this._store.fetch<{}>('config/health', { repoType: 'HEALTH' });
+      const result: Health = { contentType: 'OK' };
+      return result;
+    } catch (error) {
+      // thats ok, fallback to dialob
+    }
+
+    try {
+      const tenantsUp = this._store.fetch<Tenant[]>(`api/tenants`, { repoType: 'EXT_DIALOB' });
+      const result: Health = { contentType: 'DIALOB_EXT' };
+      return result;
+    } catch (error) {
+      // thats ok, nothing else to check
+    }
+    const result: Health = { contentType: 'BACKEND_NOT_FOUND' };
+    return result;
+  }
+  async currentTenant(): Promise<TenantConfig> {
+    const current = await this._store.fetch<TenantConfig>(`config/current-tenants`, { repoType: 'CONFIG' });
+    const { id, archived, created, documentType, name, preferences, repoConfigs, status, transactions, updated, version } = current;
+
+    return { id, archived, created, documentType, name, preferences, repoConfigs, status, transactions, updated, version };
+  }
+
+  async currentUserProfile(): Promise<UserProfile> {
+    const { today, user } = mockOrg;
+    const { userId, userRoles: roles } = user;
+    try {
+      return { name: "", today, userId, roles };
+    } catch (error) {
+      console.error("PROFILE, failed to fetch", error);
+      throw error;
+    }
+  }
+
+  async getTenants(): Promise<Tenant[]> {
+    return this._store.fetch<Tenant[]>(`api/tenants`, { repoType: 'EXT_DIALOB' });
   }
   async getTenantEntries(id: string): Promise<TenantEntryPagination> {
-    const forms = await this._store.fetch<TenantEntry[]>(`api/forms`);
+    const forms = await this._store.fetch<TenantEntry[]>(`api/forms`, { repoType: 'EXT_DIALOB' });
     return {
       page: 1,
       total: { pages: 1, records: forms.length },
       records: forms as any
     }
   }
-
   async getDialobTags(dialobFormId: string): Promise<DialobTag[]> {
-    return await this._store.fetch<DialobTag[]>(`api/forms/${dialobFormId}/tags`);
+    return await this._store.fetch<DialobTag[]>(`api/forms/${dialobFormId}/tags`, { repoType: 'EXT_DIALOB' });
   }
   async getDialobForm(dialobFormId: string): Promise<DialobForm> {
-    return await this._store.fetch<DialobForm>(`api/forms/${dialobFormId}`);
+    return await this._store.fetch<DialobForm>(`api/forms/${dialobFormId}`, { repoType: 'EXT_DIALOB' });
   }
   async getDialobSessions(props: { formId: FormId, technicalName: FormTechnicalName, tenantId: TenantId }): Promise<DialobSession[]> {
     try {
-      return await this._store.fetch<DialobSession[]>(`api/questionnaires/?formName=${props.technicalName}&tenantId=${props.tenantId}`)
+      return await this._store.fetch<DialobSession[]>(`api/questionnaires/?formName=${props.technicalName}&tenantId=${props.tenantId}`, { repoType: 'EXT_DIALOB' })
     } catch (e) {
       console.log("falling back to typescript filtering", props);
-      const result: DialobSession[] = await this._store.fetch<DialobSession[]>(`api/questionnaires`);
+      const result: DialobSession[] = await this._store.fetch<DialobSession[]>(`api/questionnaires`, { repoType: 'EXT_DIALOB' });
       return result.filter(q => q.metadata.formId === props.formId && q.metadata.tenantId === props.tenantId);
     }
   }
   async createTask(commands: CreateTask): Promise<Task> {
     return await this._store.fetch<Task>(`tasks`, {
       method: 'POST',
-      body: JSON.stringify([commands])
+      body: JSON.stringify([commands]),
+      repoType: 'TASKS'
     });
   }
 
   async updateActiveTask(id: TaskId, commands: TaskUpdateCommand<any>[]): Promise<Task> {
     return await this._store.fetch<Task>(`tasks/${id}`, {
       method: 'PUT',
-      body: JSON.stringify(commands)
+      body: JSON.stringify(commands),
+      repoType: 'TASKS'
     });
   }
 
   async getActiveTasks(): Promise<TaskPagination> {
-    const tasks = await this._store.fetch<object[]>(`tasks`);
+    const tasks = await this._store.fetch<object[]>(`tasks`, { repoType: 'TASKS' });
     return {
       page: 1,
       total: { pages: 1, records: tasks.length },
@@ -130,11 +137,11 @@ export class ServiceImpl implements Backend {
   }
 
   getActiveTask(id: TaskId): Promise<Task> {
-    return this._store.fetch<Task>(`tasks/${id}`);
+    return this._store.fetch<Task>(`tasks/${id}`, { repoType: 'TASKS' });
   }
 
   async getActiveProjects(): Promise<ProjectPagination> {
-    const projects = await this._store.fetch<object[]>(`projects`);
+    const projects = await this._store.fetch<object[]>(`projects`, { repoType: 'TENANT' });
 
     return {
       page: 1,
@@ -144,20 +151,22 @@ export class ServiceImpl implements Backend {
   }
 
   getActiveProject(id: ProjectId): Promise<Project> {
-    return this._store.fetch<Project>(`projects/${id}`);
+    return this._store.fetch<Project>(`projects/${id}`, { repoType: 'TENANT' });
   }
 
   async createProject(commands: CreateProject): Promise<Project> {
     return await this._store.fetch<Project>(`projects`, {
       method: 'POST',
-      body: JSON.stringify([commands])
+      body: JSON.stringify([commands]),
+      repoType: 'TENANT'
     });
   }
 
   async updateActiveProject(id: ProjectId, commands: ProjectUpdateCommand<any>[]): Promise<Project> {
     return await this._store.fetch<Project>(`projects/${id}`, {
       method: 'PUT',
-      body: JSON.stringify(commands)
+      body: JSON.stringify(commands),
+      repoType: 'TENANT'
     });
   }
 

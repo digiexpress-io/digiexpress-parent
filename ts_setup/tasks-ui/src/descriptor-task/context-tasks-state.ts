@@ -1,4 +1,4 @@
-import { Task, Profile } from 'client';
+import { Task, UserProfile } from 'client';
 
 import { TasksState } from './types';
 import { Palette, _nobody_ } from './constants';
@@ -16,7 +16,7 @@ interface ExtendedInit extends Omit<TasksState, "withProfile" | "withTasks" | "t
     status: Record<string, string>
     priority: Record<string, string>
   }
-  profile: Profile
+  profile: UserProfile
 }
 
 class TasksStateBuilder implements TasksState {
@@ -25,7 +25,7 @@ class TasksStateBuilder implements TasksState {
   private _owners: string[];
   private _roles: string[];
   private _palette: TasksPaletteType;
-  private _profile: Profile;
+  private _profile: UserProfile;
 
   constructor(init: ExtendedInit) {
     this._tasks = init.tasks;
@@ -35,7 +35,7 @@ class TasksStateBuilder implements TasksState {
     this._palette = init.palette;
     this._profile = init.profile;
   }
-  get profile(): Profile { return this._profile }
+  get profile(): UserProfile { return this._profile }
   get palette(): TasksPaletteType { return this._palette }
   get owners(): string[] { return this._owners }
   get roles(): string[] { return this._roles }
@@ -52,7 +52,7 @@ class TasksStateBuilder implements TasksState {
       searchString: undefined,
     });
   }
-  withProfile(profile: Profile): TasksStateBuilder {
+  withProfile(profile: UserProfile): TasksStateBuilder {
     return new TasksStateBuilder({ ...this.clone(), profile });
   }
   withTasks(input: Task[]): TasksStateBuilder {

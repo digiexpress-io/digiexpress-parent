@@ -2,13 +2,12 @@ import React from 'react';
 
 import { initSession, SessionData, ActionsImpl } from 'context';
 
-import { Profile, Backend } from 'client';
+import { UserProfile, Backend } from 'client';
 import { ClientContext, ComposerContext } from 'context/client-ctx';
-import RequireProject from './RequireProject';
 import { OrgProvider } from 'descriptor-organization';
 
 
-const Provider: React.FC<{ children: React.ReactNode, service: Backend, profile: Profile }> = ({ children, service, profile }) => {
+const Provider: React.FC<{ children: React.ReactNode, service: Backend, profile: UserProfile }> = ({ children, service, profile }) => {
   const [session, dispatch] = React.useState<SessionData>(initSession);
 
   const actions = React.useMemo(() => {
@@ -34,7 +33,6 @@ const Provider: React.FC<{ children: React.ReactNode, service: Backend, profile:
     <ClientContext.Provider value={service}>
       <ComposerContext.Provider value={contextValue}>
         <OrgProvider backend={service}>
-          {session.profile.contentType === 'NOT_CREATED' ? <RequireProject /> : undefined}
           {children}
         </OrgProvider>
       </ComposerContext.Provider>

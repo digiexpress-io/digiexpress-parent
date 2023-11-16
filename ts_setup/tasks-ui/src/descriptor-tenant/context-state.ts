@@ -1,4 +1,4 @@
-import { Profile, TenantId, FormTechnicalName, Tenant, TenantEntry } from 'client';
+import { UserProfile, TenantId, FormTechnicalName, Tenant, TenantEntry } from 'client';
 
 import { TenantState, TenantDescriptor, TenantEntryDescriptor, TenantPaletteType } from './types';
 import { TenantEntryDescriptorImpl, TenantDescriptorImpl, TenantGroupsAndFiltersImpl } from './types-impl';
@@ -14,7 +14,7 @@ interface ExtendedInit extends Omit<TenantState,
   "toGroupsAndFilters"
 > {
   palette: {};
-  profile: Profile;
+  profile: UserProfile;
 }
 
 class TenantStateBuilder implements TenantState {
@@ -23,7 +23,7 @@ class TenantStateBuilder implements TenantState {
   private _activeTenant: TenantId | undefined;
   private _activeTenantEntry: FormTechnicalName | undefined;
   private _palette: TenantPaletteType;
-  private _profile: Profile;
+  private _profile: UserProfile;
 
   constructor(init: ExtendedInit) {
     this._tenants = init.tenants;
@@ -40,7 +40,7 @@ class TenantStateBuilder implements TenantState {
   get activeTenant(): TenantId | undefined { return this._activeTenant }
   get activeTenantEntry(): FormTechnicalName | undefined { return this._activeTenantEntry }
   get palette(): TenantPaletteType { return this._palette }
-  get profile(): Profile { return this._profile }
+  get profile(): UserProfile { return this._profile }
 
   toGroupsAndFilters(): TenantGroupsAndFiltersImpl {
     return new TenantGroupsAndFiltersImpl({
@@ -71,7 +71,7 @@ class TenantStateBuilder implements TenantState {
     });
   }
 
-  withProfile(profile: Profile): TenantStateBuilder {
+  withProfile(profile: UserProfile): TenantStateBuilder {
     return new TenantStateBuilder({ ...this.clone(), profile })
   }
   withActiveTenant(tenantId?: TenantId): TenantStateBuilder {

@@ -50,7 +50,7 @@ public class GetActiveTenantVisitor implements DocObjectVisitor<TenantConfig>{
   public TenantConfig end(DocumentConfig config, DocObject ref) {
     return ref.accept((Doc doc, DocBranch docBranch, DocCommit commit, List<DocLog> log) -> 
         docBranch.getValue()
-        .mapTo(ImmutableTenantConfig.class).withVersion(commit.getId())
+        .mapTo(ImmutableTenantConfig.class).withVersion(docBranch.getCommitId())
         ).iterator().next();
   }
 }

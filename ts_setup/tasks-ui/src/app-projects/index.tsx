@@ -2,13 +2,13 @@ import React from 'react';
 
 import Burger from 'components-burger';
 
-import { Backend, Profile } from 'client';
+import { Backend, UserProfile } from 'client';
 import { ProjectsProvider } from 'descriptor-project';
 import Views from './Views';
 
 
 
-function appProjects(backend: Backend, profile: Profile): Burger.App<{}, { backend: Backend, profile: Profile }> {
+function appProjects(backend: Backend, profile: UserProfile): Burger.App<{}, { backend: Backend, profile: UserProfile }> {
   return {
     id: "app-projects",
     init: { backend, profile },

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Backend, Profile } from 'client';
+import { Backend, UserProfile } from 'client';
 import { TasksContextType, TasksMutator, TasksDispatch, TasksState } from './types';
 import { TasksStateBuilder } from './context-tasks-state';
 import { Palette } from './constants';
@@ -18,10 +18,10 @@ const initState: TasksState = new TasksStateBuilder({
     status: Palette.status,
     priority: Palette.priority
   },
-  profile: { contentType: "OK", name: "", userId: "", today: new Date(), roles: [] }
+  profile: { name: "", userId: "", today: new Date(), roles: [] }
 });
 
-const TasksProvider: React.FC<{ children: React.ReactNode, init: { backend: Backend, profile: Profile } }> = ({ children, init }) => {
+const TasksProvider: React.FC<{ children: React.ReactNode, init: { backend: Backend, profile: UserProfile } }> = ({ children, init }) => {
   const { backend, profile } = init;
   const [loading, setLoading] = React.useState<boolean>(true);
 

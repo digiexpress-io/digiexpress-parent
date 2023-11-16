@@ -1,11 +1,11 @@
 import { Dispatch, SetStateAction } from 'react';
 import { DocumentId, Document, DocumentUpdate, Session, PageUpdate, TabBody, TabEntity, Actions } from './composer-ctx-types';
 
-import type { Profile, Backend } from 'client';
+import type { UserProfile, Backend } from 'client';
 
 class SiteCache {
-  private _site: Profile;
-  constructor(site: Profile) {
+  private _site: UserProfile;
+  constructor(site: UserProfile) {
     this._site = site;
   }
 
@@ -20,16 +20,16 @@ class SiteCache {
 }
 
 class SessionData implements Session {
-  private _profile: Profile;
+  private _profile: UserProfile;
   private _pages: Record<DocumentId, PageUpdate>;
   private _cache: SiteCache;
 
   constructor(props: {
-    profile?: Profile;
+    profile?: UserProfile;
     pages?: Record<DocumentId, PageUpdate>;
     cache?: SiteCache;
   }) {
-    this._profile = props.profile ? props.profile : { name: "", contentType: "OK", today: new Date(), userId: "", roles: [] };
+    this._profile = props.profile ? props.profile : { name: "", today: new Date(), userId: "", roles: [] };
     this._pages = props.pages ? props.pages : {};
     this._cache = props.cache ? props.cache : new SiteCache(this._profile);
   }
@@ -42,7 +42,7 @@ class SessionData implements Session {
   getEntity(entityId: DocumentId): Document | undefined {
     return this._cache.getEntity(entityId);
   }
-  withProfile(profile: Profile) {
+  withProfile(profile: UserProfile) {
     if (!profile) {
       console.error("Head not defined error", profile);
       return this;
@@ -143,18 +143,14 @@ class ActionsImpl implements Actions {
     this._service = service;
   }
   async handleLoad(): Promise<void> {
-    const site = await this._service.profile.getProfile();
-    if (site.contentType === "NOT_CREATED") {
-      this._service.profile.createProfile().then(created => this._sessionDispatch((old) => old.withProfile(created)));
-    } else {
-      this._sessionDispatch((old) => old.withProfile(site))
-    }
+    const site = await this._service.currentUserProfile();
+    this._sessionDispatch((old) => old.withProfile(site))
   }
-  async handleLoadProfile(site?: Profile): Promise<void> {
+  async handleLoadProfile(site?: UserProfile): Promise<void> {
     if (site) {
       return this._sessionDispatch((old) => old.withProfile(site));
     }
-    const head = await this._service.profile.getProfile();
+    const head = await this._service.currentUserProfile();
     this._sessionDispatch((old) => old.withProfile(head));
   }
   handlePageUpdate(page: DocumentId, value: DocumentUpdate[]): void {

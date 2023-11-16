@@ -1,5 +1,6 @@
 import { StoreErrorImpl } from './error-types';
 import { Store, StoreConfig } from './backend-types';
+import { TenantConfig, RepoConfig, RepoType } from './tenant-config-types';
 
 type Urls = { url: string; }[];
 
@@ -8,15 +9,24 @@ class DefaultStore implements Store {
   private _updateStarted: boolean = false;
   private _iapSessionRefreshWindow: Window | null = null;
   private _defRef: RequestInit;
-  private _projectId: string | undefined;
+  private _tenant: TenantConfig | undefined;
+  private _repos: Record<string, RepoConfig>;
+  private _urls: Record<RepoType, string>;
 
-  constructor(config: StoreConfig, projectId?: string | undefined) {
+  constructor(config: StoreConfig, tenant?: TenantConfig) {
     this._config = config;
-    this._projectId = projectId;
+    this._tenant = tenant;
+    this._repos = tenant ? tenant.repoConfigs.reduce((acc, item) => ({
+      ...acc,
+      // @ts-ignore
+      [item.repoType]: item
+    }), {}) : {};
+
+    // @ts-ignore
+    this._urls = config.urls.reduce((acc, item) => ({ ...acc, [item.id]: item.url }), {});
 
     const headers = {
       "Content-Type": "application/json;charset=UTF-8",
-      "Project-Id": projectId ?? ""
     };
 
     this._defRef = {
@@ -24,7 +34,6 @@ class DefaultStore implements Store {
       credentials: 'same-origin',
       keepalive: true,
       headers
-
     }
     if (this._config.csrf) {
       const headers: Record<string, string> = this._defRef.headers as any;
@@ -33,8 +42,8 @@ class DefaultStore implements Store {
     console.log("Composer::init DefaultStore", config);
   }
 
-  withProjectId(projectId: string): DefaultStore {
-    return new DefaultStore(this._config, projectId);
+  withTenantConfig(config: TenantConfig): DefaultStore {
+    return new DefaultStore(this._config, config);
   }
 
   get config() {
@@ -87,37 +96,52 @@ class DefaultStore implements Store {
     return this.iapRefresh();
   }
 
-  resolveUrl(props: { path: string }): Urls {
-    return this._config.urls;
+  resolveUrl(props: { path: string, repoType: RepoType }): string {
+    if (props.repoType === 'HEALTH') {
+      return this._urls['HEALTH'];
+    }
+    if (props.repoType === 'EXT_DIALOB') {
+      return this._urls['EXT_DIALOB'];
+    }
+
+    return this._urls[props.repoType];
   }
 
-  async fetch<T>(path: string, req?: RequestInit & { notFound?: () => T }): Promise<T> {
+  resolveRequest(repoType: RepoType): RequestInit {
+
+    if (repoType === 'HEALTH') {
+      return this._defRef;
+    }
+    if (repoType === 'EXT_DIALOB') {
+      return this._defRef;
+    }
+
+    if (repoType === 'CONFIG') {
+      return this._defRef;
+    }
+
+
+    const next = { ...this._defRef, headers: { ...this._defRef.headers } };
+
+    console.log(this._repos);
+
+    // @ts-ignore
+    next.headers['Project-ID'] = this._repos[repoType].repoId;
+
+    return next;
+  }
+
+  async fetch<T>(path: string, req: RequestInit & { notFound?: () => T, repoType: RepoType }): Promise<T> {
     if (!path) {
       throw new Error("can't fetch with undefined url")
     }
 
-    const urls: Urls = this.resolveUrl({ path });
-    const finalInit: RequestInit & { notFound?: () => T } = Object.assign({}, this._defRef, req ? req : {});
-
-    let response: Response | undefined = undefined;
-    let url: string;
-    let urlIndex = 0;
-    do {
-      url = urls[urlIndex].url;
-      try {
-        response = await fetch(url + path, finalInit);
-        if (response.status !== 404) {
-          break;
-        }
-      } catch (e) {
-        console.error(`Response error, url: ${url}, path: ${path}`);
-      }
-
-    } while (++urlIndex < urls.length);
-
+    const url: string = this.resolveUrl({ path, repoType: req.repoType });
+    const finalInit: RequestInit & { notFound?: () => T } = Object.assign({}, this.resolveRequest(req.repoType), req ? req : {});
+    const response: Response | undefined = await fetch(url + path, finalInit);
     if (!response) {
       throw new StoreErrorImpl({
-        text: `Response error, urls: ${JSON.stringify(urls)}, path: ${path}`,
+        text: `Response error, urls: ${url}, path: ${path}`,
         status: 500,
         errors: []
       });

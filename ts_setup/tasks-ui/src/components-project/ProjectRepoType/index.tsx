@@ -38,6 +38,7 @@ const ProjectRepoType: React.FC<{
         <List dense sx={{ py: 0 }}>
           {repoOptions.map((option: Client.RepoType) => (
             <MenuItem key={option} onClick={() => handleChangeRepoType(option)} sx={{ display: "flex", pl: 0, py: 0 }}>
+              {/* @ts-ignore */}
               <Box sx={{ width: 8, height: 40, backgroundColor: repoColors[option] }} />
               <Box sx={{ width: 8, height: 8, borderRadius: "50%", mx: 2, backgroundColor: getActiveColor(option, repoType) }} />
               <Typography><FormattedMessage id={`project.repoType.${option}`} /></Typography>

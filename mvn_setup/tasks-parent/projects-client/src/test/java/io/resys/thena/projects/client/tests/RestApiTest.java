@@ -59,7 +59,7 @@ public class RestApiTest {
       .userId("user-1")
       //.targetDate(ProjectTestCase.getTargetDate())
       .commandType(TenantConfigCommandType.CreateTenantConfig)
-
+      .name("name x")
       .repoId("repo-1")
       
       .build();

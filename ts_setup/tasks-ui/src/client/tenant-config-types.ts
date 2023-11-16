@@ -6,16 +6,16 @@ export type TenantConfigStatus = 'IN_FORCE' | 'ARCHIVED';
 export type TenantConfigTransactionId = string;
 
 export type RepoId = string;
-export type RepoName = 'TASKS' | 'CRM' | 'STENCIL' | 'WRENCH' | 'DIALOB';
+export type RepoType = 'TASKS' | 'CRM' | 'STENCIL' | 'WRENCH' | 'DIALOB' | 'CONFIG' | 'HEALTH' | 'USER_PROFILE' | 'EXT_DIALOB' | 'EXT_DIALOB_EDIT' | 'TENANT';
 export type AppType = 'APP_FRONTOFFICE' | "APP_CRM" | "APP_DIALOB" | "APP_STENCIL" | "APP_WRENCH" | "APP_TASKS";
 
 export interface TenantConfigPreferences {
-  landingApp: AppType
+  landingApp: AppType | string
 }
 
 export interface RepoConfig {
   repoId: string,
-  repoType: string
+  repoType: Omit<RepoType, 'CONFIG' | 'HEALTH' | 'EXT_DIALOB' | 'TENANT' | 'EXT_DIALOB_EDIT'>
 }
 
 export interface TenantConfigTransaction {
