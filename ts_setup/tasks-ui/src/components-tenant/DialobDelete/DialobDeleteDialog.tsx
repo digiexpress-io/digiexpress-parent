@@ -38,12 +38,10 @@ const DialobDeleteDialog: React.FC<{
 
   const handleDelete = async () => {
     setDeleting(true);
-    await backend.tenant.getDialobForm(props.entry.formName).then((form) => {
-      backend.tenant.deleteDialobForm(form._id).then((response) => {
-        tenants.reload().then(() => {
-          setDeleting(false);
-          props.onClose();
-        });
+    backend.tenant.deleteDialobForm(props.entry.formName, tenants.state.activeTenant).then((response) => {
+      tenants.reload().then(() => {
+        setDeleting(false);
+        props.onClose();
       });
     });
   }

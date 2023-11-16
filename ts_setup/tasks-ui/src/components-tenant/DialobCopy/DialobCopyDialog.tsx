@@ -39,19 +39,17 @@ const DialobCopyDialog: React.FC<{
 
   const handleCopy = async () => {
     setLoading(true);
-    await backend.tenant.getDialobForm(props.entry.formName).then((form) => {
-      backend.tenant.copyDialobForm(form._id, formName, formTitle).then((response) => {
-        if (response.status === 'OK') {
-          tenants.reload().then(() => {
-            setErrorMessage('');
-            setLoading(false);
-            props.onClose();
-          });
-        } else {
+    await backend.tenant.copyDialobForm(props.entry.formName, formName, formTitle, tenants.state.activeTenant).then((response) => {
+      if (response.status === 'OK') {
+        tenants.reload().then(() => {
+          setErrorMessage('');
           setLoading(false);
-          setErrorMessage(response.error?.message!);
-        }
-      });
+          props.onClose();
+        });
+      } else {
+        setLoading(false);
+        setErrorMessage(response.error?.message!);
+      }
     });
   }
 

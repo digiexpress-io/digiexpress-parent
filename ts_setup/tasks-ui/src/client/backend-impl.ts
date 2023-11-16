@@ -28,9 +28,9 @@ export class ServiceImpl implements Backend {
       getDialobTags: (dialobFormId: string) => this.getDialobTags(dialobFormId),
       getDialobForm: (dialobFormId: string) => this.getDialobForm(dialobFormId),
       getDialobSessions: (props: { formId: FormId, technicalName: FormTechnicalName, tenantId: TenantId }) => this.getDialobSessions(props),
-      createDialobForm: (formData: CreateFormRequest) => this.createDialobForm(formData),
-      copyDialobForm: (formId: string, formName: string, formTitle: string) => this.copyDialobForm(formId, formName, formTitle),
-      deleteDialobForm: (formId: string) => this.deleteDialobForm(formId),
+      createDialobForm: (formData: CreateFormRequest, tenantId?: string) => this.createDialobForm(formData, tenantId),
+      copyDialobForm: (formName: string, newFormName: string, newFormTitle: string, tenantId?: string) => this.copyDialobForm(formName, newFormName, newFormTitle, tenantId),
+      deleteDialobForm: (formName: string, tenantId?: string) => this.deleteDialobForm(formName, tenantId),
     };
   }
   get task(): TaskStore {
@@ -131,8 +131,8 @@ export class ServiceImpl implements Backend {
   async getDialobForm(dialobFormId: string): Promise<DialobForm> {
     return await this._store.fetch<DialobForm>(`api/forms/${dialobFormId}`, { repoType: 'EXT_DIALOB' });
   }
-  async createDialobForm(formData: CreateFormRequest): Promise<DialobFormResponse> {
-    return await this._store.fetch<DialobForm>(`api/forms`, {
+  async createDialobForm(formData: CreateFormRequest, tenantId?: string): Promise<DialobFormResponse> {
+    return await this._store.fetch<DialobForm>(`api/forms?tenantId=${tenantId}`, {
       method: 'POST',
       body: JSON.stringify(formData),
       repoType: 'EXT_DIALOB'
@@ -145,24 +145,27 @@ export class ServiceImpl implements Backend {
       return { status: 'ERROR', error: { message: "dialob.error.already.exists", type: "CREATE_FORM_ERROR" }};
     });
   }
-  async copyDialobForm(formId: string, formName: string, formTitle: string): Promise<DialobFormResponse> {
-    return await this._store.fetch<DialobForm>(`api/forms/${formId}`, { repoType: 'EXT_DIALOB' })
+  async copyDialobForm(formName: string, newFormName: string, newFormTitle: string): Promise<DialobFormResponse> {
+    return await this._store.fetch<DialobForm>(`api/forms/${formName}`, { repoType: 'EXT_DIALOB' })
     .then(
       formData => {
-        const newForm: CreateFormRequest = { ...formData };
-        newForm.name = formName;
+        const newForm = JSON.parse(JSON.stringify(formData));
+        delete newForm._id;
+        delete newForm._rev;
+        newForm.name = newFormName;
         Object.assign(newForm.metadata, {
-          label: formTitle,
+          label: newFormTitle,
           lastSaved: null,
           created: new Date()
         });
-        return this.createDialobForm(newForm);
+        return this.createDialobForm(newForm as CreateFormRequest);
       }
     );
   }
-  async deleteDialobForm(formId: string): Promise<void> {
-    return await this._store.fetch<any>(`api/forms/${formId}`, {
-      method: 'DELETE'
+  async deleteDialobForm(formName: string, tenantId?: string): Promise<void> {
+    return await this._store.fetch<any>(`api/forms/${formName}?tenantId=${tenantId}`, {
+      method: 'DELETE',
+      repoType: 'EXT_DIALOB'
     })
     .then((response) => {
       if (response.ok) {

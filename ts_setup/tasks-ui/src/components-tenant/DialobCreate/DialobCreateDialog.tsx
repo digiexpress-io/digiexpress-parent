@@ -60,7 +60,7 @@ const DialobCreateDialog: React.FC<{ open: boolean, onClose: () => void }> = (pr
       }
     };
     setLoading(true);
-    await backend.tenant.createDialobForm(request).then((response) => {
+    await backend.tenant.createDialobForm(request, tenants.state.activeTenant).then((response) => {
       if (response.status === 'OK') {
         tenants.reload().then(() => {
           setErrorMessage('');

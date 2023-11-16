@@ -100,8 +100,8 @@ export interface TenantStore {
   getDialobTags(dialobFormId: string): Promise<DialobTag[]>;
   getDialobForm(dialobFormId: string): Promise<DialobForm>;
   getDialobSessions(props: { formId: FormId, technicalName: FormTechnicalName, tenantId: TenantId }): Promise<DialobSession[]>;
-  createDialobForm(formData: CreateFormRequest): Promise<DialobFormResponse>;
-  copyDialobForm(formId: string, formName: string, formTitle: string): Promise<DialobFormResponse>;
-  deleteDialobForm(formId: string): Promise<void>;
+  createDialobForm(formData: CreateFormRequest, tenantId?: string): Promise<DialobFormResponse>;
+  copyDialobForm(formName: string, newFormName: string, newFormTitle: string, tenantId?: string): Promise<DialobFormResponse>;
+  deleteDialobForm(formName: string, tenantId?: string): Promise<void>;
 }
 
