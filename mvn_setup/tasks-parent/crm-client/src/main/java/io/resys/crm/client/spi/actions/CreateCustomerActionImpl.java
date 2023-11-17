@@ -23,28 +23,28 @@ package io.resys.crm.client.spi.actions;
 import java.util.Arrays;
 import java.util.List;
 
-import io.resys.crm.client.api.TenantConfigClient.CreateTenantConfigAction;
-import io.resys.crm.client.api.model.TenantConfig;
-import io.resys.crm.client.api.model.TenantConfigCommand.CreateTenantConfig;
+import io.resys.crm.client.api.CrmClient.CreateCustomerAction;
+import io.resys.crm.client.api.model.Customer;
+import io.resys.crm.client.api.model.CustomerCommand.CreateCustomer;
 import io.resys.crm.client.spi.store.DocumentStore;
-import io.resys.crm.client.spi.visitors.CreateTenantConfigsVisitor;
+import io.resys.crm.client.spi.visitors.CreateCustomersVisitor;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class CreateTenantConfigImpl implements CreateTenantConfigAction {
+public class CreateCustomerActionImpl implements CreateCustomerAction {
   private final DocumentStore ctx;
   
   @Override
-  public Uni<TenantConfig> createOne(CreateTenantConfig command) {
+  public Uni<Customer> createOne(CreateCustomer command) {
     return this.createMany(Arrays.asList(command))
        .onItem().transform(tasks -> tasks.get(0)) ;
   }
   
   @Override
-  public Uni<List<TenantConfig>> createMany(List<? extends CreateTenantConfig> commands) {
-    return ctx.getConfig().accept(new CreateTenantConfigsVisitor(commands));
+  public Uni<List<Customer>> createMany(List<? extends CreateCustomer> commands) {
+    return ctx.getConfig().accept(new CreateCustomersVisitor(commands));
   }
 
 }

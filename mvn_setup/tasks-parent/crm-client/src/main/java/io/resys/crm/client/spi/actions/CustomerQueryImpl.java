@@ -24,39 +24,39 @@ import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 
-import io.resys.crm.client.api.TenantConfigClient.ActiveTenantConfigQuery;
-import io.resys.crm.client.api.model.TenantConfig;
+import io.resys.crm.client.api.CrmClient.CustomerQuery;
+import io.resys.crm.client.api.model.Customer;
 import io.resys.crm.client.spi.store.DocumentStore;
-import io.resys.crm.client.spi.visitors.DeleteAllTenantsVisitor;
-import io.resys.crm.client.spi.visitors.FindAllTenantsVisitor;
-import io.resys.crm.client.spi.visitors.GetActiveTenantVisitor;
-import io.resys.crm.client.spi.visitors.GetTenantsByIdsVisitor;
+import io.resys.crm.client.spi.visitors.DeleteAllCustomersVisitor;
+import io.resys.crm.client.spi.visitors.FindAllCustomersVisitor;
+import io.resys.crm.client.spi.visitors.GetActiveCustomerVisitor;
+import io.resys.crm.client.spi.visitors.GetCustomersByIdsVisitor;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class ActiveTenantConfigQueryImpl implements ActiveTenantConfigQuery {
+public class CustomerQueryImpl implements CustomerQuery {
   private final DocumentStore ctx;
   
   @Override
-  public Uni<TenantConfig> get(String id) {
-    return ctx.getConfig().accept(new GetActiveTenantVisitor(id));
+  public Uni<Customer> get(String id) {
+    return ctx.getConfig().accept(new GetActiveCustomerVisitor(id));
   }
   
   @Override
-  public Uni<List<TenantConfig>> findAll() {
-    return ctx.getConfig().accept(new FindAllTenantsVisitor());
+  public Uni<List<Customer>> findAll() {
+    return ctx.getConfig().accept(new FindAllCustomersVisitor());
   }
 
   @Override
-  public Uni<List<TenantConfig>> deleteAll(String userId, Instant targetDate) {
-    return ctx.getConfig().accept(new DeleteAllTenantsVisitor(userId, targetDate))
+  public Uni<List<Customer>> deleteAll(String userId, Instant targetDate) {
+    return ctx.getConfig().accept(new DeleteAllCustomersVisitor(userId, targetDate))
         .onItem().transformToUni(unwrap -> unwrap);
   }
   
   @Override
-  public Uni<List<TenantConfig>> findByIds(Collection<String> taskIds) {
-    return ctx.getConfig().accept(new GetTenantsByIdsVisitor(taskIds));
+  public Uni<List<Customer>> findByIds(Collection<String> customerIds) {
+    return ctx.getConfig().accept(new GetCustomersByIdsVisitor(customerIds));
   }
 }

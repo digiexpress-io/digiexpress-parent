@@ -1,9 +1,9 @@
 package io.resys.crm.client.tests.config;
 
 import io.quarkus.runtime.annotations.RegisterForReflection;
-import io.resys.crm.client.api.model.ImmutableArchiveTenantConfig;
-import io.resys.crm.client.api.model.ImmutableCreateTenantConfig;
-import io.resys.crm.client.api.model.ImmutableTenantConfig;
+import io.resys.crm.client.api.model.ImmutableChangeCustomerInfo;
+import io.resys.crm.client.api.model.ImmutableCreateCustomer;
+import io.resys.crm.client.api.model.ImmutableCustomer;
 /*-
  * #%L
  * thena-quarkus-dev-app
@@ -27,10 +27,9 @@ import jakarta.enterprise.context.Dependent;
 
 @Dependent
 @RegisterForReflection(targets = {
-    ImmutableTenantConfig.class,
-    ImmutableCreateTenantConfig.class,
-    ImmutableArchiveTenantConfig.class,
-    ImmutableTenantConfig.class,
+    ImmutableCustomer.class,
+    ImmutableCreateCustomer.class,
+    ImmutableChangeCustomerInfo.class,
 })
 public class BeanFactory {
 

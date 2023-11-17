@@ -26,13 +26,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import io.resys.crm.client.api.model.Customer;
 import io.resys.crm.client.api.model.Document;
-import io.resys.crm.client.api.model.ImmutableTenantConfig;
-import io.resys.crm.client.api.model.TenantConfig;
+import io.resys.crm.client.api.model.ImmutableCustomer;
 import io.resys.crm.client.spi.store.DocumentConfig;
+import io.resys.crm.client.spi.store.DocumentConfig.DocObjectsVisitor;
 import io.resys.crm.client.spi.store.DocumentStoreException;
 import io.resys.crm.client.spi.store.MainBranch;
-import io.resys.crm.client.spi.store.DocumentConfig.DocObjectsVisitor;
 import io.resys.thena.docdb.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
 import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
@@ -45,13 +45,13 @@ import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class GetTenantsByIdsVisitor implements DocObjectsVisitor<List<TenantConfig>> {
+public class GetCustomersByIdsVisitor implements DocObjectsVisitor<List<Customer>> {
   private final Collection<String> projectIds;
   
   @Override
   public DocObjectsQuery start(DocumentConfig config, DocObjectsQuery builder) {
     return builder
-        .docType(Document.DocumentType.TENANT_CONFIG.name())
+        .docType(Document.DocumentType.CRM.name())
         .branchName(MainBranch.HEAD_NAME)
         .matchIds(new ArrayList<>(projectIds));
   }
@@ -59,14 +59,14 @@ public class GetTenantsByIdsVisitor implements DocObjectsVisitor<List<TenantConf
   @Override
   public DocObjects visitEnvelope(DocumentConfig config, QueryEnvelope<DocObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
-      throw DocumentStoreException.builder("GET_TENANT_BY_ID_FAIL")
+      throw DocumentStoreException.builder("GET_CUSTOMER_BY_ID_FAIL")
         .add(config, envelope)
         .add((callback) -> callback.addArgs(projectIds.stream().collect(Collectors.joining(",", "{", "}"))))
         .build();
     }
     final var result = envelope.getObjects();
     if(result == null) {
-      throw DocumentStoreException.builder("GET_TENANT_BY_ID_NOT_FOUND")   
+      throw DocumentStoreException.builder("GET_CUSTOMER_BY_ID_NOT_FOUND")   
         .add(config, envelope)
         .add((callback) -> callback.addArgs(projectIds.stream().collect(Collectors.joining(",", "{", "}"))))
         .build();
@@ -75,13 +75,13 @@ public class GetTenantsByIdsVisitor implements DocObjectsVisitor<List<TenantConf
   }
 
   @Override
-  public List<TenantConfig> end(DocumentConfig config, DocObjects ref) {
+  public List<Customer> end(DocumentConfig config, DocObjects ref) {
     if(ref == null) {
       return Collections.emptyList();
     }
     return ref.accept((Doc doc, DocBranch docBranch, DocCommit commit, List<DocLog> log) -> 
       docBranch.getValue()
-      .mapTo(ImmutableTenantConfig.class).withVersion(commit.getId())
+      .mapTo(ImmutableCustomer.class).withVersion(commit.getId())
     );
   }
 }

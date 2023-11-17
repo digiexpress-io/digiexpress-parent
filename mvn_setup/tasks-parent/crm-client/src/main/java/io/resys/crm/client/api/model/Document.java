@@ -29,6 +29,6 @@ public interface Document extends Serializable {
   String getId();
   @Nullable String getVersion();
   
-  enum DocumentType { TENANT_CONFIG }
+  enum DocumentType { CRM }
   
 }

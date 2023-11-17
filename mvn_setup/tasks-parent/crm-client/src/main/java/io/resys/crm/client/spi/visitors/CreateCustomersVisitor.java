@@ -28,13 +28,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import io.resys.crm.client.api.model.Customer;
+import io.resys.crm.client.api.model.CustomerCommand.CreateCustomer;
 import io.resys.crm.client.api.model.Document;
-import io.resys.crm.client.api.model.ImmutableTenantConfig;
-import io.resys.crm.client.api.model.TenantConfig;
-import io.resys.crm.client.api.model.TenantConfigCommand.CreateTenantConfig;
+import io.resys.crm.client.api.model.ImmutableCustomer;
 import io.resys.crm.client.spi.store.DocumentConfig;
-import io.resys.crm.client.spi.store.DocumentStoreException;
 import io.resys.crm.client.spi.store.DocumentConfig.DocCreateVisitor;
+import io.resys.crm.client.spi.store.DocumentStoreException;
 import io.resys.thena.docdb.api.actions.CommitActions.CommitResultStatus;
 import io.resys.thena.docdb.api.actions.DocCommitActions.CreateManyDocs;
 import io.resys.thena.docdb.api.actions.DocCommitActions.ManyDocsEnvelope;
@@ -43,19 +43,19 @@ import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class CreateTenantConfigsVisitor implements DocCreateVisitor<TenantConfig> {
-  private final List<? extends CreateTenantConfig> commands;
-  private final List<TenantConfig> createdTenants = new ArrayList<TenantConfig>();
+public class CreateCustomersVisitor implements DocCreateVisitor<Customer> {
+  private final List<? extends CreateCustomer> commands;
+  private final List<Customer> createdTenants = new ArrayList<Customer>();
   
   @Override
   public CreateManyDocs start(DocumentConfig config, CreateManyDocs builder) {
     builder
-      .docType(Document.DocumentType.TENANT_CONFIG.name())
+      .docType(Document.DocumentType.CRM.name())
       .author(config.getAuthor().get())
       .message("creating tenant");
     
     for(final var command : commands) {
-      final var entity = new TenantConfigCommandVisitor(config).visitTransaction(Arrays.asList(command));
+      final var entity = new CustomerCommandVisitor(config).visitTransaction(Arrays.asList(command));
       final var json = JsonObject.mapFrom(entity);
       builder.item().append(json).docId(entity.getId()).next();
       createdTenants.add(entity);
@@ -68,17 +68,17 @@ public class CreateTenantConfigsVisitor implements DocCreateVisitor<TenantConfig
     if(envelope.getStatus() == CommitResultStatus.OK) {
       return envelope.getBranch();
     }
-    throw new DocumentStoreException("TENANT_CREATE_FAIL", DocumentStoreException.convertMessages(envelope));
+    throw new DocumentStoreException("CUSTOMER_CREATE_FAIL", DocumentStoreException.convertMessages(envelope));
   }
 
   @Override
-  public List<TenantConfig> end(DocumentConfig config, List<DocBranch> branches) {
-    final Map<String, TenantConfig> configsById = new HashMap<>(
+  public List<Customer> end(DocumentConfig config, List<DocBranch> branches) {
+    final Map<String, Customer> configsById = new HashMap<>(
         this.createdTenants.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)));
     
     branches.forEach(branch -> {
       
-      final var next = ImmutableTenantConfig.builder()
+      final var next = ImmutableCustomer.builder()
           .from(configsById.get(branch.getDocId()))
           .version(branch.getCommitId())
           .build();

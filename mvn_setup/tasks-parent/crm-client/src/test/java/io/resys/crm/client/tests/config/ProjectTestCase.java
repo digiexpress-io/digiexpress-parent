@@ -35,10 +35,10 @@ import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import io.resys.crm.client.api.TenantConfigClient;
+import io.resys.crm.client.api.CrmClient;
 import io.resys.crm.client.api.model.Document.DocumentType;
+import io.resys.crm.client.spi.CrmClientImpl;
 import io.resys.crm.client.spi.DocumentStoreImpl;
-import io.resys.crm.client.spi.ProjectsClientImpl;
 import io.resys.crm.client.spi.store.DocumentConfig.DocumentGidProvider;
 import io.resys.thena.docdb.jackson.VertexExtModule;
 import io.resys.thena.docdb.models.git.GitPrinter;
@@ -56,7 +56,7 @@ public class ProjectTestCase {
   public final Duration atMost = Duration.ofMinutes(5);
   
   private DocumentStoreImpl store;
-  private ProjectsClientImpl client;
+  private CrmClientImpl client;
   private static final String DB = "junit-tasks-"; 
   private static final AtomicInteger DB_ID = new AtomicInteger();
   private static final Instant targetDate = LocalDateTime.of(2023, 1, 1, 1, 1).toInstant(ZoneOffset.UTC);
@@ -80,7 +80,7 @@ public class ProjectTestCase {
           }
         })
         .build();
-    client = new ProjectsClientImpl(store);
+    client = new CrmClientImpl(store);
     objectMapper();
     
   }
@@ -126,7 +126,7 @@ public class ProjectTestCase {
     return store;
   }
 
-  public ProjectsClientImpl getClient() {
+  public CrmClientImpl getClient() {
     return client;
   }
 
@@ -134,16 +134,16 @@ public class ProjectTestCase {
     return targetDate;
   }
 
-  public String printRepo(TenantConfigClient client) {
-    final var config = ((ProjectsClientImpl) client).getCtx().getConfig();
+  public String printRepo(CrmClient client) {
+    final var config = ((CrmClientImpl) client).getCtx().getConfig();
     final var state = ((DocDBDefault) config.getClient()).getState();
     final var repo = client.getRepo().await().atMost(Duration.ofMinutes(1));
     final String result = new GitPrinter(state).printWithStaticIds(repo);
     return result;
   }
   
-  public String toStaticData(TenantConfigClient client) {
-    final var config = ((ProjectsClientImpl) client).getCtx().getConfig();
+  public String toStaticData(CrmClient client) {
+    final var config = ((CrmClientImpl) client).getCtx().getConfig();
     final var state = ((DocDBDefault) config.getClient()).getState();
     final var repo = client.getRepo().await().atMost(Duration.ofMinutes(1));
     return new RepositoryToStaticData(state).print(repo);
@@ -153,7 +153,7 @@ public class ProjectTestCase {
     return RepositoryToStaticData.toString(ProjectTestCase.class, fileName);
   }
   
-  public void assertRepo(TenantConfigClient client, String expectedFileName) {
+  public void assertRepo(CrmClient client, String expectedFileName) {
     final var expected = toExpectedFile(expectedFileName);
     final var actual = toStaticData(client);
     Assertions.assertLinesMatch(expected.lines(), actual.lines());

@@ -25,44 +25,44 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import io.resys.crm.client.api.TenantConfigClient.UpdateTenantConfigAction;
-import io.resys.crm.client.api.model.TenantConfig;
-import io.resys.crm.client.api.model.TenantConfigCommand.TenantConfigUpdateCommand;
+import io.resys.crm.client.api.CrmClient.UpdateCustomerAction;
+import io.resys.crm.client.api.model.Customer;
+import io.resys.crm.client.api.model.CustomerCommand.CustomerUpdateCommand;
 import io.resys.crm.client.spi.store.DocumentStore;
-import io.resys.crm.client.spi.visitors.UpdateTenantConfigVisitor;
+import io.resys.crm.client.spi.visitors.UpdateCustomerVisitor;
 import io.resys.thena.docdb.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class UpdateTenantConfigImpl implements UpdateTenantConfigAction {
+public class UpdateCustomerActionImpl implements UpdateCustomerAction {
 
   private final DocumentStore ctx;
 
   @Override
-  public Uni<TenantConfig> updateOne(TenantConfigUpdateCommand command) {        
+  public Uni<Customer> updateOne(CustomerUpdateCommand command) {        
     return updateOne(Arrays.asList(command));
   }
 
   @Override
-  public Uni<TenantConfig> updateOne(List<TenantConfigUpdateCommand> commands) {
+  public Uni<Customer> updateOne(List<CustomerUpdateCommand> commands) {
     RepoAssert.notNull(commands, () -> "commands must be defined!");
     RepoAssert.isTrue(commands.size() > 0, () -> "No commands to apply!");
     
-    final var uniqueTaskIds = commands.stream().map(command -> command.getTenantConfigId()).distinct().collect(Collectors.toList());
+    final var uniqueTaskIds = commands.stream().map(command -> command.getCrmId()).distinct().collect(Collectors.toList());
     RepoAssert.isTrue(uniqueTaskIds.size() == 1, () -> "TenantConfig id-s must be same, but got: %s!", uniqueTaskIds);
     
-    return ctx.getConfig().accept(new UpdateTenantConfigVisitor(commands, ctx))
+    return ctx.getConfig().accept(new UpdateCustomerVisitor(commands, ctx))
         .onItem().transformToUni(resp -> resp)
         .onItem().transform(tasks -> tasks.get(0));
   }
 
   @Override
-  public Uni<List<TenantConfig>> updateMany(List<TenantConfigUpdateCommand> commands) {
+  public Uni<List<Customer>> updateMany(List<CustomerUpdateCommand> commands) {
     RepoAssert.notNull(commands, () -> "commands must be defined!");
     RepoAssert.isTrue(commands.size() > 0, () -> "No commands to apply!");
     
-    return ctx.getConfig().accept(new UpdateTenantConfigVisitor(commands, ctx)).onItem()
+    return ctx.getConfig().accept(new UpdateCustomerVisitor(commands, ctx)).onItem()
         .transformToUni(item -> item);
   }
 }
