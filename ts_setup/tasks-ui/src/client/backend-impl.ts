@@ -145,8 +145,8 @@ export class ServiceImpl implements Backend {
       return { status: 'ERROR', error: { message: "dialob.error.already.exists", type: "CREATE_FORM_ERROR" }};
     });
   }
-  async copyDialobForm(formName: string, newFormName: string, newFormTitle: string): Promise<DialobFormResponse> {
-    return await this._store.fetch<DialobForm>(`api/forms/${formName}`, { repoType: 'EXT_DIALOB' })
+  async copyDialobForm(formName: string, newFormName: string, newFormTitle: string, tenantId?: string): Promise<DialobFormResponse> {
+    return await this._store.fetch<DialobForm>(`api/forms/${formName}?tenantId=${tenantId}`, { repoType: 'EXT_DIALOB' })
     .then(
       formData => {
         const newForm = JSON.parse(JSON.stringify(formData));
@@ -158,7 +158,7 @@ export class ServiceImpl implements Backend {
           lastSaved: null,
           created: new Date()
         });
-        return this.createDialobForm(newForm as CreateFormRequest);
+        return this.createDialobForm(newForm as CreateFormRequest, tenantId);
       }
     );
   }
@@ -178,7 +178,9 @@ export class ServiceImpl implements Backend {
   }
   async getDialobSessions(props: { formId: FormId, technicalName: FormTechnicalName, tenantId: TenantId }): Promise<DialobSession[]> {
     try {
-      return await this._store.fetch<DialobSession[]>(`api/questionnaires/?formName=${props.technicalName}&tenantId=${props.tenantId}`, { repoType: 'EXT_DIALOB' })
+      return await this._store.fetch<DialobSession[]>(`api/questionnaires/?formName=${props.technicalName}&tenantId=${props.tenantId}`, { 
+        repoType: 'EXT_DIALOB'
+      })
     } catch (e) {
       console.log("falling back to typescript filtering", props);
       const result: DialobSession[] = await this._store.fetch<DialobSession[]>(`api/questionnaires`, { repoType: 'EXT_DIALOB' });
