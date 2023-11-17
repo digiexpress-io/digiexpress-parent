@@ -84,7 +84,7 @@ public class DemoResource {
     }
 
     
-    return tenantClient.tenantConfig().queryActiveTenantConfig().get(currentTenant.getTenantId())
+    return tenantClient.queryActiveTenantConfig().get(currentTenant.getTenantId())
     .onItem().transformToUni(config -> {
       final var taskConfig = config.getRepoConfigs().stream().filter(entry -> entry.getRepoType() == TenantRepoConfigType.TASKS).findFirst().get();
       return taskClient.withRepoId(taskConfig.getRepoId()).tasks().createTask().createMany(bulk).onItem().transform((data) -> config);
@@ -96,7 +96,7 @@ public class DemoResource {
   @Produces(MediaType.APPLICATION_JSON)
   @Path("clear/tasks")
   public Uni<TenantConfig> clear() {
-    return tenantClient.tenantConfig().queryActiveTenantConfig().get(currentTenant.getTenantId())
+    return tenantClient.queryActiveTenantConfig().get(currentTenant.getTenantId())
     .onItem().transformToUni(config -> {
         final var taskConfig = config.getRepoConfigs().stream().filter(entry -> entry.getRepoType() == TenantRepoConfigType.TASKS).findFirst().get();
         return taskClient.withRepoId(taskConfig.getRepoId()).tasks().queryActiveTasks().deleteAll("", Instant.now())
@@ -108,7 +108,7 @@ public class DemoResource {
   @Produces(MediaType.APPLICATION_JSON)
   @Path("reinit")
   public Uni<TenantConfig> reinit() {
-    return tenantClient.repo().query().deleteAll()
+    return tenantClient.query().deleteAll()
         .onItem().transformToUni(junk -> init());
   }
   
@@ -116,13 +116,13 @@ public class DemoResource {
   @Produces(MediaType.APPLICATION_JSON)
   @Path("kill9")
   public Uni<Void> kill9() {
-    return tenantClient.repo().query().deleteAll()
+    return tenantClient.query().deleteAll()
         .onItem().transformToUni(junk -> Uni.createFrom().voidItem());
   }
   private Uni<TenantConfig> init() {
-    return tenantClient.repo().query().repoName(currentTenant.getTenantsStoreId(), TenantRepoConfigType.TENANT).createIfNot()
+    return tenantClient.query().repoName(currentTenant.getTenantsStoreId(), TenantRepoConfigType.TENANT).createIfNot()
         .onItem().transformToUni(created -> {
-          return tenantClient.tenantConfig().createTenantConfig().createOne(ImmutableCreateTenantConfig.builder()
+          return tenantClient.createTenantConfig().createOne(ImmutableCreateTenantConfig.builder()
               .name(currentTenant.getTenantId())
               .repoId(currentTenant.getTenantsStoreId())
               .targetDate(Instant.now())

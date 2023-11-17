@@ -5,8 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-import io.resys.thena.projects.client.api.actions.RepositoryActions;
-import io.resys.thena.projects.client.api.actions.TenantConfigActions;
+import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.projects.client.api.model.TenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
 import io.resys.thena.projects.client.api.model.TenantConfigCommand.CreateTenantConfig;
@@ -14,8 +13,17 @@ import io.resys.thena.projects.client.api.model.TenantConfigCommand.TenantConfig
 import io.smallrye.mutiny.Uni;
 
 public interface TenantConfigClient {
-  TenantConfigActions tenantConfig();
-  RepositoryActions repo();
+
+  
+  RepositoryQuery query();
+  Uni<Repo> getRepo();
+  
+  CreateTenantConfigAction createTenantConfig();
+  UpdateTenantConfigAction updateTenantConfig();
+  ActiveTenantConfigQuery queryActiveTenantConfig();
+
+  
+  
   
   
   interface CreateTenantConfigAction {

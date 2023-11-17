@@ -26,7 +26,7 @@ public class ConfigResource {
   @Produces(MediaType.APPLICATION_JSON)
   @Path("config/current-tenants")
   public Uni<TenantConfig> currentTenant() {
-    return tenantClient.repo().query().repoName(currentTenant.getTenantsStoreId(), TenantRepoConfigType.TENANT).get(currentTenant.getTenantId())
+    return tenantClient.query().repoName(currentTenant.getTenantsStoreId(), TenantRepoConfigType.TENANT).get(currentTenant.getTenantId())
         .onItem().transformToUni(config -> {
           if(config.isEmpty()) {
             return createTenantConfig().onItem().transformToUni(this::createChildRepos);
@@ -43,9 +43,9 @@ public class ConfigResource {
   } 
   
   public Uni<TenantConfig> createTenantConfig() {
-    return tenantClient.repo().query().repoName(currentTenant.getTenantsStoreId(), TenantRepoConfigType.TENANT).createIfNot()
+    return tenantClient.query().repoName(currentTenant.getTenantsStoreId(), TenantRepoConfigType.TENANT).createIfNot()
         .onItem().transformToUni(created -> {
-          return tenantClient.tenantConfig().createTenantConfig().createOne(ImmutableCreateTenantConfig.builder()
+          return tenantClient.createTenantConfig().createOne(ImmutableCreateTenantConfig.builder()
               .repoId(currentTenant.getTenantsStoreId())
               .name(currentTenant.getTenantId())
               .targetDate(Instant.now())
@@ -61,6 +61,6 @@ public class ConfigResource {
   }
   
   public Uni<TenantConfigClient> createChildRepo(TenantRepoConfig config) {
-    return tenantClient.repo().query().repoName(config.getRepoId(), config.getRepoType()).createIfNot();
+    return tenantClient.query().repoName(config.getRepoId(), config.getRepoType()).createIfNot();
   }
 }

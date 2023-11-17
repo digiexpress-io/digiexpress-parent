@@ -137,7 +137,7 @@ public class ProjectTestCase {
   public String printRepo(TenantConfigClient client) {
     final var config = ((ProjectsClientImpl) client).getCtx().getConfig();
     final var state = ((DocDBDefault) config.getClient()).getState();
-    final var repo = client.repo().getRepo().await().atMost(Duration.ofMinutes(1));
+    final var repo = client.getRepo().await().atMost(Duration.ofMinutes(1));
     final String result = new GitPrinter(state).printWithStaticIds(repo);
     return result;
   }
@@ -145,7 +145,7 @@ public class ProjectTestCase {
   public String toStaticData(TenantConfigClient client) {
     final var config = ((ProjectsClientImpl) client).getCtx().getConfig();
     final var state = ((DocDBDefault) config.getClient()).getState();
-    final var repo = client.repo().getRepo().await().atMost(Duration.ofMinutes(1));
+    final var repo = client.getRepo().await().atMost(Duration.ofMinutes(1));
     return new RepositoryToStaticData(state).print(repo);
   }
   

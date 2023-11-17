@@ -27,7 +27,7 @@ public class TenantsResource implements TenantConfigRestApi {
   
   @Override
   public Uni<List<io.resys.thena.projects.client.api.model.TenantConfig>> findTenantConfigs() {
-    return tenantConfigClient.tenantConfig().queryActiveTenantConfig().findAll();
+    return tenantConfigClient.queryActiveTenantConfig().findAll();
   }
   @Override
   public Uni<List<io.resys.thena.projects.client.api.model.TenantConfig>> createTenantConfigs(List<CreateTenantConfig> commands) {
@@ -37,12 +37,12 @@ public class TenantsResource implements TenantConfigRestApi {
             .userId(currentUser.getUserId())
             .build())
         .collect(Collectors.toList());
-    return tenantConfigClient.tenantConfig().createTenantConfig().createMany(modifiedCommands)
+    return tenantConfigClient.createTenantConfig().createMany(modifiedCommands)
         .onItem().transformToUni(items -> {
           
           // create repo for each configuration item
           return Multi.createFrom().items(items.stream().flatMap(e -> e.getRepoConfigs().stream()))
-              .onItem().transformToUni(config -> tenantConfigClient.repo().query()
+              .onItem().transformToUni(config -> tenantConfigClient.query()
               .repoName(config.getRepoId(), config.getRepoType())
               .createIfNot().onItem().transform(created -> created)  
           )
@@ -56,7 +56,7 @@ public class TenantsResource implements TenantConfigRestApi {
     final var modifiedCommands = commands.stream()
         .map(command -> command.withTargetDate(Instant.now()).withUserId(currentUser.getUserId()))
         .collect(Collectors.toList());
-    return tenantConfigClient.tenantConfig().updateTenantConfig().updateMany(modifiedCommands);
+    return tenantConfigClient.updateTenantConfig().updateMany(modifiedCommands);
   }
   @Override
   public Uni<List<io.resys.thena.projects.client.api.model.TenantConfig>> deleteTenantConfigs(List<ArchiveTenantConfig> commands) {
@@ -65,7 +65,7 @@ public class TenantsResource implements TenantConfigRestApi {
             .withTargetDate(Instant.now())
             .withUserId(currentUser.getUserId()))
         .collect(Collectors.toList());
-    return tenantConfigClient.tenantConfig().updateTenantConfig().updateMany(modifiedCommands);
+    return tenantConfigClient.updateTenantConfig().updateMany(modifiedCommands);
   }
   @Override
   public Uni<io.resys.thena.projects.client.api.model.TenantConfig> updateOneTenantConfig(String projectId, List<TenantConfigUpdateCommand> commands) {
@@ -74,6 +74,6 @@ public class TenantsResource implements TenantConfigRestApi {
             .withTargetDate(Instant.now())
             .withUserId(currentUser.getUserId()))
         .collect(Collectors.toList());
-    return tenantConfigClient.tenantConfig().updateTenantConfig().updateOne(modifiedCommands);
+    return tenantConfigClient.updateTenantConfig().updateOne(modifiedCommands);
   }
 }
