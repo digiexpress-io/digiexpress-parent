@@ -28,6 +28,10 @@ const FilterByTenant: React.FC = () => {
     });
   }
 
+  if (tenantsList.length < 2) {
+    return <></>;
+  }
+
   return (<>
     <NavigationButtonSearch onClick={handleClick} id='tenant.select.button' values={{ count: tenantsList.length }} />
 
