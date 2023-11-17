@@ -21,14 +21,13 @@ const StyledStack: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const theme = useTheme();
 
   return (<Box sx={{
-    height: '100%',
+    height: 'calc(100% - 164px)',
     position: 'fixed',
     overflowY: 'scroll',
     overflowX: 'hidden',
     boxShadow: 1,
     width: '23vw',
-    pt: theme.spacing(2),
-    px: theme.spacing(2),
+    p: theme.spacing(2),
     backgroundColor: theme.palette.background.paper
   }}>
     <Stack direction='column' spacing={1}>
