@@ -36,7 +36,7 @@ import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.sqlclient.PoolOptions;
 /*-
  * #%L
- * thena-quarkus-dev-app
+ * digiexpress-app
  * %%
  * Copyright (C) 2021 - 2023 Copyright 2021 ReSys OÜ
  * %%

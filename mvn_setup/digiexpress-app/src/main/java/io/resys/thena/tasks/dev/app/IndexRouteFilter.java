@@ -2,7 +2,7 @@ package io.resys.thena.tasks.dev.app;
 
 /*-
  * #%L
- * thena-quarkus-dev-app
+ * digiexpress-app
  * %%
  * Copyright (C) 2021 - 2023 Copyright 2021 ReSys OÜ
  * %%

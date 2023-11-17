@@ -10,7 +10,7 @@
     <version>999-SNAPSHOT</version>
     <relativePath>../build-parent/pom.xml</relativePath>
   </parent>
-  <artifactId>thena-quarkus-dev-app</artifactId>
+  <artifactId>digiexpress-app</artifactId>
   <dependencies>
     <dependency>
       <groupId>io.digiexpress</groupId>
