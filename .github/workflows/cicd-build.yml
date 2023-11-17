@@ -1,5 +1,7 @@
 on:
   push:
+    paths:
+      - 'mvn_setup/**'
     branches:
       - dev
 
