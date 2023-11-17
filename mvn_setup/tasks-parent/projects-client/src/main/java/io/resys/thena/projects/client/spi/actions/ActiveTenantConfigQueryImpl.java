@@ -24,7 +24,7 @@ import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 
-import io.resys.thena.projects.client.api.actions.TenantConfigActions.ActiveTenantConfigQuery;
+import io.resys.thena.projects.client.api.TenantConfigClient.ActiveTenantConfigQuery;
 import io.resys.thena.projects.client.api.model.TenantConfig;
 import io.resys.thena.projects.client.spi.store.DocumentStore;
 import io.resys.thena.projects.client.spi.visitors.DeleteAllTenantsVisitor;

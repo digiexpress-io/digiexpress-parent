@@ -1,5 +1,8 @@
 package io.resys.thena.projects.client.spi.actions;
 
+import io.resys.thena.projects.client.api.TenantConfigClient.ActiveTenantConfigQuery;
+import io.resys.thena.projects.client.api.TenantConfigClient.CreateTenantConfigAction;
+import io.resys.thena.projects.client.api.TenantConfigClient.UpdateTenantConfigAction;
 import io.resys.thena.projects.client.api.actions.TenantConfigActions;
 import io.resys.thena.projects.client.spi.store.DocumentStore;
 import lombok.RequiredArgsConstructor;

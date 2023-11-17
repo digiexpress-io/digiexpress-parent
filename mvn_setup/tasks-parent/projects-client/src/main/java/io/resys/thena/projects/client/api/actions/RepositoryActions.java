@@ -21,6 +21,7 @@ package io.resys.thena.projects.client.api.actions;
  */
 
 import io.resys.thena.docdb.api.models.Repo;
+import io.resys.thena.projects.client.api.TenantConfigClient.RepositoryQuery;
 import io.smallrye.mutiny.Uni;
 
 public interface RepositoryActions {

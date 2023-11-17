@@ -23,7 +23,7 @@ package io.resys.thena.projects.client.spi.actions;
 import java.util.Arrays;
 import java.util.List;
 
-import io.resys.thena.projects.client.api.actions.TenantConfigActions.CreateTenantConfigAction;
+import io.resys.thena.projects.client.api.TenantConfigClient.CreateTenantConfigAction;
 import io.resys.thena.projects.client.api.model.TenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfigCommand.CreateTenantConfig;
 import io.resys.thena.projects.client.spi.store.DocumentStore;
