@@ -159,7 +159,9 @@ const DialobFormVariables: React.FC<{ entry: TenantEntryDescriptor }> = ({ entry
   </Stack>)}</>);
 }
 
-
+const copyToClipboard = (text: string) => {
+  navigator.clipboard.writeText(text);
+}
 
 const DialobItemActive: React.FC<{ entry: TenantEntryDescriptor | undefined }> = ({ entry }) => {
   const [dialobEditOpen, setDialobEditOpen] = React.useState(false);
@@ -264,7 +266,7 @@ const DialobItemActive: React.FC<{ entry: TenantEntryDescriptor | undefined }> =
               <Box display='flex' alignItems='center'>
                 <Typography>{entry.formName}</Typography>
                 <Box flexGrow={1} />
-                <IconButton size='small' onClick={() => { }}><ContentCopyIcon sx={{ color: 'uiElements.main', fontSize: 'medium' }} /></IconButton>
+                <IconButton size='small' onClick={() => copyToClipboard(entry.formName)}><ContentCopyIcon sx={{ color: 'uiElements.main', fontSize: 'medium' }} /></IconButton>
               </Box>
             </Grid>
 
