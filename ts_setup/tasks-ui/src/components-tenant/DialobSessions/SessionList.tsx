@@ -48,11 +48,12 @@ const SessionHeaders: React.FC<{ entry: TenantEntryDescriptor }> = ({ entry }) =
             </Grid>
             <Grid item md={12} lg={12} xl={12} sx={{ p: 1 }}>
               <Box display='flex' >
-                <Box width='10%'><Typography fontWeight='bold'><FormattedMessage id='dialob.form.sessions.table.status' /></Typography></Box>
-                <Box width='20%'><Typography fontWeight='bold'><FormattedMessage id='dialob.form.sessions.table.created' /></Typography></Box>
-                <Box width='20%'><Typography fontWeight='bold'><FormattedMessage id='dialob.form.sessions.table.lastAnswered' /></Typography></Box>
+                <Box width='15%'><Typography fontWeight='bold'><FormattedMessage id='dialob.form.sessions.table.status' /></Typography></Box>
+                <Box width='15%'><Typography fontWeight='bold'><FormattedMessage id='dialob.form.sessions.table.created' /></Typography></Box>
+                <Box width='15%'><Typography fontWeight='bold'><FormattedMessage id='dialob.form.sessions.table.lastAnswered' /></Typography></Box>
                 <Box width='25%'><Typography fontWeight='bold'><FormattedMessage id='dialob.form.sessions.table.owner' /></Typography></Box>
                 <Box width='25%'><Typography fontWeight='bold'><FormattedMessage id='dialob.form.sessions.table.sessionId' /></Typography></Box>
+                <Box width='5%' />
               </Box>
             </Grid>
 

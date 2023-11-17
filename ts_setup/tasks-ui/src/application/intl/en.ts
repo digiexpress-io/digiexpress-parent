@@ -11,6 +11,7 @@ const en = {
   'buttons.accept': 'Accept and close',
   'buttons.close': 'Close',
   'buttons.download': 'Download',
+  'buttons.open': 'Open',
 
   'customer.details.dialog.title': 'Customer details',
   'customer.details.view': 'Customer',
