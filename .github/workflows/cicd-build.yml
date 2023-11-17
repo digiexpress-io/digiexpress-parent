@@ -19,7 +19,7 @@ jobs:
     
     - name: Maven build
       run: |
-        cd ./mvn_setup"
+        cd ./mvn_setup
         ./mvnw -B clean build
       env:
         CI: true
