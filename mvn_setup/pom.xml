@@ -122,6 +122,7 @@
     <module>process-parent</module>
     <module>thena-parent</module>
     <module>tasks-parent</module>
+    <module>digiexpress-app</module>
   </modules>
 
   <build>
