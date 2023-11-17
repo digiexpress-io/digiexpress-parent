@@ -20,7 +20,7 @@ jobs:
     - name: Maven build
       run: |
         cd ./mvn_setup
-        ./mvnw -B clean build
+        ./mvnw -B clean install
       env:
         CI: true
         QUARKUS_CONTAINER_IMAGE: 
