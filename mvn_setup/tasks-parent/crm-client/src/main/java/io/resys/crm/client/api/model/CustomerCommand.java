@@ -22,6 +22,7 @@ package io.resys.crm.client.api.model;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.Optional;
 
 import javax.annotation.Nullable;
 
@@ -33,6 +34,9 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import io.resys.crm.client.api.model.Customer.CustomerBodyType;
+import io.resys.crm.client.api.model.Customer.CustomerContact;
+
 
 
 @JsonTypeInfo(
@@ -42,7 +46,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 @JsonSubTypes({
   @Type(value = ImmutableCreateCustomer.class, name = "CreateCustomer"),  
   @Type(value = ImmutableChangeCustomerInfo.class, name = "ChangeCustomerInfo"),
-
 })
 public interface CustomerCommand extends Serializable {
   @Nullable String getUserId();
@@ -54,7 +57,11 @@ public interface CustomerCommand extends Serializable {
   CustomerCommand withTargetDate(Instant targetDate);
   
   enum CustomerCommandType {
-    CreateCustomer, ChangeCustomerInfo
+    CreateCustomer, 
+    UpsertSuomiFiPerson, 
+    UpsertSuomiFiRep, 
+    CreateOrUpdateCustomer, 
+    ChangeCustomerInfo
   }
 
   @Value.Immutable @JsonSerialize(as = ImmutableCreateCustomer.class) @JsonDeserialize(as = ImmutableCreateCustomer.class)
@@ -80,11 +87,41 @@ public interface CustomerCommand extends Serializable {
   }
   
 
-  
   @Value.Immutable @JsonSerialize(as = ImmutableChangeCustomerInfo.class) @JsonDeserialize(as = ImmutableChangeCustomerInfo.class)
   interface ChangeCustomerInfo extends CustomerUpdateCommand {
     String getName();
     @Override default CustomerCommandType getCommandType() { return CustomerCommandType.ChangeCustomerInfo; }
+  }
+  
+  
+  interface UpsertSuomiFiPerson extends CustomerUpdateCommand {
+    String getUserName();
+    String getSsn();
+    String getFirstName();
+    String getLastName();
+    Optional<Boolean> getProtectionOrder();
+    Optional<CustomerContact> getContact();
+    @Override default CustomerCommandType getCommandType() { return CustomerCommandType.UpsertSuomiFiPerson; }
+  }
+  
+  
+  interface UpsertSuomiFiRep extends CustomerUpdateCommand {
+    String getName();
+    String getSsnOrBusinessId();
+    CustomerBodyType getCustomerType();
+    @Override default CustomerCommandType getCommandType() { return CustomerCommandType.UpsertSuomiFiRep; }
+  }
+  
+  
+  // TODO: Break into individual commands
+  interface UpdateCustomerInfo extends CustomerUpdateCommand {
+    CustomerBodyType getBodyType();
+    Optional<String> getFirstName();
+    Optional<String> getLastName();
+    Optional<String> getSsn();
+    Optional<String> getBusinessId();
+    CustomerContact getCustomerContact();
+    @Override default CustomerCommandType getCommandType() { return CustomerCommandType.CreateOrUpdateCustomer; }
   }
 
 }
