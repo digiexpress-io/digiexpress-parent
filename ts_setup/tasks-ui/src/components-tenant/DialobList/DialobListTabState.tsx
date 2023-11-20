@@ -10,6 +10,7 @@ import { NavigationSticky, NavigationButtonDialobList } from '../NavigationStick
 import { FilterByString, FilterByTenant } from '../TenantsSearch';
 import DialobCreateDialog from '../DialobCreate';
 import Context from 'context';
+import { DialobItemActiveProps } from './DialobItemActive';
 
 
 
@@ -31,7 +32,7 @@ const RowFiller: React.FC<{ value: Pagination.TablePagination<TenantEntryDescrip
 const DialobList: React.FC<{
   children: {
     DialobItem: React.ElementType<{ entry: TenantEntryDescriptor }>;
-    DialobItemActive: React.ElementType<{ entry: TenantEntryDescriptor | undefined }>;
+    DialobItemActive: React.ElementType<DialobItemActiveProps>;
   }
 }> = ({ children }) => {
 
@@ -80,7 +81,7 @@ const DialobList: React.FC<{
   const { DialobItem, DialobItemActive } = children;
 
   return (<>
-    <DialobCreateDialog open={createOpen} onClose={handleCreateDialob} />
+    <DialobCreateDialog open={createOpen} onClose={handleCreateDialob} setActiveDialob={handleActiveDialob} />
     <Grid container>
 
       <NavigationSticky>
@@ -128,7 +129,7 @@ const DialobList: React.FC<{
       </Grid>
 
       <Grid item md={4} lg={4} >
-        <DialobItemActive entry={state.activeDialob} />
+        <DialobItemActive entry={state.activeDialob} setActiveDialob={handleActiveDialob} />
       </Grid>
     </Grid>
   </>

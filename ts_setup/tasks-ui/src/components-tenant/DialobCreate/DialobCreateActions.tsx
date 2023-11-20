@@ -4,7 +4,7 @@ import Burger from 'components-burger';
 
 const DialobCreateActions: React.FC<{
   onClose: () => void,
-  onCreate: () => void,
+  onCreate: () => Promise<void>,
   disabled?: boolean,
   loading?: boolean
 }> = ({ onClose, onCreate, disabled, loading }) => {
@@ -14,11 +14,15 @@ const DialobCreateActions: React.FC<{
   }
 
   async function handleCreateAndClose() {
-    onCreate();
+    onCreate().then(() => {
+      onClose();
+    });
   }
 
   async function handleCreateAndEdit() {
-    onCreate();
+    onCreate().then(() => {
+      onClose();
+    });
     // open editor
   }
 

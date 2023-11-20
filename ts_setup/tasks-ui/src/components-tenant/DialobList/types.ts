@@ -47,6 +47,7 @@ class ImmutableDialobListState implements DialobListState {
   }
 
   withActiveDialob(activeDialob: TenantEntryDescriptor | undefined): DialobListState {
+    console.log('withActiveDialob', activeDialob);
     return new ImmutableDialobListState({ activeDialob, activeTab: this._activeTab, tabs: this._tabs })
   }
 

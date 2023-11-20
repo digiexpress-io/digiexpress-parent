@@ -17,6 +17,11 @@ import DialobSessionsDialog from '../DialobSessions';
 import DialobCopyDialog from 'components-tenant/DialobCopy';
 import { DialobEditor } from '../DialobEditor';
 
+export interface DialobItemActiveProps {
+  entry: TenantEntryDescriptor | undefined;
+  setActiveDialob: (entry?: TenantEntryDescriptor) => void;
+}
+
 const StyledStack: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const theme = useTheme();
 
@@ -162,11 +167,9 @@ const copyToClipboard = (text: string) => {
   navigator.clipboard.writeText(text);
 }
 
-const DialobItemActive: React.FC<{ entry: TenantEntryDescriptor | undefined }> = ({ entry }) => {
-  const [dialobEditOpen, setDialobEditOpen] = React.useState(false);
+const DialobItemActive: React.FC<DialobItemActiveProps> = ({ entry, setActiveDialob }) => {
   const [dialobDeleteOpen, setDialobDeleteOpen] = React.useState(false);
   const [dialobCopyOpen, setDialobCopyOpen] = React.useState(false);
-  const [technicalNameEdit, setTechnicalNameEdit] = React.useState(false);
   const [sessionsOpen, setSessionsOpen] = React.useState(false);
   const [editOpen, setEditOpen] = React.useState(false);
   const [sessions, setSessions] = React.useState<DialobSession[]>();
@@ -180,9 +183,6 @@ const DialobItemActive: React.FC<{ entry: TenantEntryDescriptor | undefined }> =
   }
   function handleCopy() {
     setDialobCopyOpen(prev => !prev);
-  }
-  function handleTechnicalNameEdit() {
-    setTechnicalNameEdit(prev => !prev);
   }
   function handleSessionsDialog() {
     setSessionsOpen(prev => !prev);
@@ -208,7 +208,7 @@ const DialobItemActive: React.FC<{ entry: TenantEntryDescriptor | undefined }> =
 
     return (<>
       <DialobDeleteDialog open={dialobDeleteOpen} onClose={handleDelete} entry={entry} />
-      <DialobCopyDialog open={dialobCopyOpen} onClose={handleCopy} entry={entry} />
+      <DialobCopyDialog open={dialobCopyOpen} onClose={handleCopy} setActiveDialob={setActiveDialob} entry={entry} />
       {sessionsOpen && <DialobSessionsDialog onClose={handleSessionsDialog} entry={entry} form={form} sessions={sessions} />}
       {editOpen ? <DialobEditor onClose={handleEditToggle} entry={entry} form={form} /> : null}
       <StyledStack >
@@ -343,7 +343,7 @@ const DialobItemActive: React.FC<{ entry: TenantEntryDescriptor | undefined }> =
   </StyledStack>);
 }
 
-const DialobItemActiveWithRefresh: React.FC<{ entry: TenantEntryDescriptor | undefined }> = ({ entry }) => {
+const DialobItemActiveWithRefresh: React.FC<DialobItemActiveProps> = ({ entry, setActiveDialob }) => {
   const [dismount, setDismount] = React.useState(false);
 
   React.useEffect(() => {
@@ -360,7 +360,7 @@ const DialobItemActiveWithRefresh: React.FC<{ entry: TenantEntryDescriptor | und
     return null;
   }
 
-  return (<DialobItemActive entry={entry} />)
+  return (<DialobItemActive entry={entry} setActiveDialob={setActiveDialob} />)
 }
 
 

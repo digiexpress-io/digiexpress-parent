@@ -8,6 +8,7 @@ import Fields from './DialobCreateFields';
 import Burger from 'components-burger';
 import { CreateFormRequest } from 'client/tenant-types';
 import Context from 'context';
+import { TenantEntryDescriptor } from 'descriptor-tenant';
 
 const INIT_FORM: CreateFormRequest = {
   name: "",
@@ -25,7 +26,7 @@ const INIT_FORM: CreateFormRequest = {
   variables: []
 };
 
-const DialobCreateDialog: React.FC<{ open: boolean, onClose: () => void }> = (props) => {
+const DialobCreateDialog: React.FC<{ open: boolean, onClose: () => void, setActiveDialob: (entry?: TenantEntryDescriptor) => void }> = (props) => {
   const theme = useTheme();
   const intl = useIntl();
   const backend = Context.useBackend();
@@ -65,7 +66,19 @@ const DialobCreateDialog: React.FC<{ open: boolean, onClose: () => void }> = (pr
         tenants.reload().then(() => {
           setErrorMessage('');
           setLoading(false);
-          props.onClose();
+          backend.tenant.getTenantEntries(tenants.state.activeTenant!).then(data => {
+            const found = data.records.find(entry => entry.id === formName);
+            if (found) {
+              props.setActiveDialob({
+                tenantId: tenants.state.activeTenant!,
+                source: found,
+                formName: formName,
+                formTitle: formTitle,
+                created: new Date(),
+                lastSaved: new Date()
+              });
+            }
+          });
         });
       } else {
         setLoading(false);

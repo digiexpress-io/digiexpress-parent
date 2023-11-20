@@ -11,6 +11,7 @@ import Context from 'context';
 const DialobCopyDialog: React.FC<{
   open: boolean,
   onClose: () => void,
+  setActiveDialob: (task?: TenantEntryDescriptor) => void,
   entry: TenantEntryDescriptor
 }> = (props) => {
   const theme = useTheme();
@@ -45,6 +46,19 @@ const DialobCopyDialog: React.FC<{
           setErrorMessage('');
           setLoading(false);
           props.onClose();
+          backend.tenant.getTenantEntries(tenants.state.activeTenant!).then(data => {
+            const found = data.records.find(entry => entry.id === formName);
+            if (found) {
+              props.setActiveDialob({
+                tenantId: tenants.state.activeTenant!,
+                source: found,
+                formName: formName,
+                formTitle: formTitle,
+                created: new Date(),
+                lastSaved: new Date()
+              });
+            }
+          });
         });
       } else {
         setLoading(false);

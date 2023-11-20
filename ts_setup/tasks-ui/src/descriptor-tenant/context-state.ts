@@ -81,6 +81,7 @@ class TenantStateBuilder implements TenantState {
     return new TenantStateBuilder({ ...this.clone(), activeTenantEntry: id });
   }
   withTenantEntries(entries: TenantEntry[]): TenantStateBuilder {
+    console.log('updated entries', entries)
     const today = new Date(this._profile.today);
     today.setHours(0, 0, 0, 0);
     return new TenantStateBuilder({ ...this.clone(), tenantEntries: entries.map((entry) => new TenantEntryDescriptorImpl(entry, this._profile, today, this._activeTenant!)) });
