@@ -22,8 +22,8 @@ import jakarta.ws.rs.Path;
 public class CrmResource implements CrmRestApi {
 
   private final ImmutableCustomer mockCustomer = ImmutableCustomer.builder()
-      .id("crm-1")
-      .name("abc-company")
+      .id("id-1234")
+      .name("John Smith")
       .version("v1.0")
       .created(ProjectTestCase.getTargetDate())
       .updated(ProjectTestCase.getTargetDate())
@@ -34,7 +34,7 @@ public class CrmResource implements CrmRestApi {
               .builder()
               .commandType(CustomerCommandType.CreateCustomer)
               .repoId("repo-1")
-              .name("customer-1")
+              .name("customer-name-x")
               .build())
           .build())
       .documentType(DocumentType.CRM)

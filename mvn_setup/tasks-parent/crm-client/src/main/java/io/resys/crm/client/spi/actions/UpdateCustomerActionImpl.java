@@ -49,7 +49,7 @@ public class UpdateCustomerActionImpl implements UpdateCustomerAction {
     RepoAssert.notNull(commands, () -> "commands must be defined!");
     RepoAssert.isTrue(commands.size() > 0, () -> "No commands to apply!");
     
-    final var uniqueTaskIds = commands.stream().map(command -> command.getCrmId()).distinct().collect(Collectors.toList());
+    final var uniqueTaskIds = commands.stream().map(command -> command.getId()).distinct().collect(Collectors.toList());
     RepoAssert.isTrue(uniqueTaskIds.size() == 1, () -> "TenantConfig id-s must be same, but got: %s!", uniqueTaskIds);
     
     return ctx.getConfig().accept(new UpdateCustomerVisitor(commands, ctx))

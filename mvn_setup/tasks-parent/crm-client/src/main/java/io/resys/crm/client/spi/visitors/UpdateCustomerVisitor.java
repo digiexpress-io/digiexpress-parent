@@ -62,7 +62,7 @@ public class UpdateCustomerVisitor implements DocObjectsVisitor<Uni<List<Custome
     this.ctx = ctx;
     final var config = ctx.getConfig();
     this.commandsByTenantId = commands.stream()
-        .collect(Collectors.groupingBy(CustomerUpdateCommand::getCrmId));
+        .collect(Collectors.groupingBy(CustomerUpdateCommand::getId));
     this.tenantIds = new ArrayList<>(commandsByTenantId.keySet());
     this.commitBuilder = config.getClient().doc().commit().modifyManyBranches()
         .repoId(config.getRepoId())

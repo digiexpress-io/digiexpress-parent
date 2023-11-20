@@ -74,7 +74,7 @@ public interface CustomerCommand extends Serializable {
     @Type(value = ImmutableChangeCustomerInfo.class, name = "ChangeCustomerInfo"),
   })
   interface CustomerUpdateCommand extends CustomerCommand {
-    String getCrmId();
+    String getId();
     CustomerUpdateCommand withUserId(String userId);
     CustomerUpdateCommand withTargetDate(Instant targetDate);
   }

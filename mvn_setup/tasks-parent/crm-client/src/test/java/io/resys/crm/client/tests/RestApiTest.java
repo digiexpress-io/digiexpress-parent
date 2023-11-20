@@ -48,35 +48,33 @@ public class RestApiTest {
       .contentType("application/json")
       .extract().as(Customer[].class);
   
-    Assertions.assertEquals("customer-1", response[0].getId());
+    Assertions.assertEquals("id-1234", response[0].getId());
   }
   
   @Test
   public void postOneCustomer() throws JsonProcessingException {
     final var body = ImmutableCreateCustomer.builder()
+      .name("customer-name")
       .userId("user-1")
+      .repoId("repo-1")
       //.targetDate(ProjectTestCase.getTargetDate())
       .commandType(CustomerCommandType.CreateCustomer)
-      .name("name x")
-      .repoId("repo-1")
-      
       .build();
 
     final Customer[] response = RestAssured.given()
       .body(Arrays.asList(body)).accept("application/json").contentType("application/json")
       .when().post("/q/digiexpress/api/tenants").then()
       .statusCode(200).contentType("application/json")
-      
       .extract().as(Customer[].class);
   
-    Assertions.assertEquals("tenant-1", response[0].getId());
+    Assertions.assertEquals("id-1234", response[0].getId());
   }
   
   @Test
   public void postTwoCustomers() throws JsonProcessingException {
     final var body = ImmutableCreateCustomer.builder()
         //.targetDate(ProjectTestCase.getTargetDate())
-        .name("customer-1")
+        .name("customer-2")
         .repoId("repo-1")
         .userId("user-1")
         .commandType(CustomerCommandType.CreateCustomer)
@@ -95,8 +93,8 @@ public class RestApiTest {
   public void updateFourCustomers() throws JsonProcessingException {
     final var command = ImmutableChangeCustomerInfo.builder()
         //.targetDate(ProjectTestCase.getTargetDate())
-        .name("customer-1")
-        .crmId("crm-1")
+        .name("customer-name")
+        .id("customer-id-1")
         .userId("user1")
         .build();
         
