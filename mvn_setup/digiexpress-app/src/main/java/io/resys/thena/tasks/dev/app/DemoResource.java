@@ -8,11 +8,13 @@ import java.util.ArrayList;
 import io.resys.thena.projects.client.api.TenantConfigClient;
 import io.resys.thena.projects.client.api.model.ImmutableCreateTenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig;
+import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
 import io.resys.thena.tasks.client.api.TaskClient;
 import io.resys.thena.tasks.client.api.model.ImmutableCreateTask;
 import io.resys.thena.tasks.client.api.model.TaskCommand.CreateTask;
 import io.resys.thena.tasks.dev.app.BeanFactory.CurrentTenant;
+import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.core.Vertx;
 
@@ -126,8 +128,20 @@ public class DemoResource {
               .name(currentTenant.getTenantId())
               .repoId(currentTenant.getTenantsStoreId())
               .targetDate(Instant.now())
-              .build());
+              .build())
+              .onItem().transformToUni(this::createNested);
         });
   }
 
+  private Uni<TenantConfig> createNested(TenantConfig tenant) {
+    return Multi.createFrom().items(tenant.getRepoConfigs().stream())
+      .onItem().transformToUni(this::createRepo)
+      .concatenate().collect().asList().onItem().transform(junk -> tenant);
+  }
+  
+  private Uni<TenantRepoConfig> createRepo(TenantRepoConfig config) {
+    return tenantClient.query()
+    .repoName(config.getRepoId(), config.getRepoType())
+    .createIfNot().onItem().transform(created -> config);
+  }
 }
