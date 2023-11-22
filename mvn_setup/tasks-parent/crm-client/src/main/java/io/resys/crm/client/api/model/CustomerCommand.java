@@ -34,6 +34,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import io.resys.crm.client.api.model.Customer.CustomerAddress;
 import io.resys.crm.client.api.model.Customer.CustomerBodyType;
 import io.resys.crm.client.api.model.Customer.CustomerContact;
 
@@ -60,8 +61,13 @@ public interface CustomerCommand extends Serializable {
     CreateCustomer, 
     UpsertSuomiFiPerson, 
     UpsertSuomiFiRep, 
-    CreateOrUpdateCustomer, 
-    ChangeCustomerInfo
+    ChangeCustomerFirstName,
+    ChangeCustomerLastName,
+    ChangeCustomerSsn,
+    ChangeCustomerEmail,
+    ChangeCustomerAddress,
+    ChangeCustomerInfo,
+    ArchiveCustomer
   }
 
   @Value.Immutable @JsonSerialize(as = ImmutableCreateCustomer.class) @JsonDeserialize(as = ImmutableCreateCustomer.class)
@@ -81,19 +87,17 @@ public interface CustomerCommand extends Serializable {
     @Type(value = ImmutableChangeCustomerInfo.class, name = "ChangeCustomerInfo"),
   })
   interface CustomerUpdateCommand extends CustomerCommand {
-    String getId();
     CustomerUpdateCommand withUserId(String userId);
     CustomerUpdateCommand withTargetDate(Instant targetDate);
   }
   
-
   @Value.Immutable @JsonSerialize(as = ImmutableChangeCustomerInfo.class) @JsonDeserialize(as = ImmutableChangeCustomerInfo.class)
   interface ChangeCustomerInfo extends CustomerUpdateCommand {
     String getName();
     @Override default CustomerCommandType getCommandType() { return CustomerCommandType.ChangeCustomerInfo; }
   }
   
-  
+  @Value.Immutable @JsonSerialize(as = ImmutableUpsertSuomiFiPerson.class) @JsonDeserialize(as = ImmutableUpsertSuomiFiPerson.class)
   interface UpsertSuomiFiPerson extends CustomerUpdateCommand {
     String getUserName();
     String getSsn();
@@ -104,7 +108,7 @@ public interface CustomerCommand extends Serializable {
     @Override default CustomerCommandType getCommandType() { return CustomerCommandType.UpsertSuomiFiPerson; }
   }
   
-  
+  @Value.Immutable @JsonSerialize(as = ImmutableUpsertSuomiFiRep.class) @JsonDeserialize(as = ImmutableUpsertSuomiFiRep.class)
   interface UpsertSuomiFiRep extends CustomerUpdateCommand {
     String getName();
     String getSsnOrBusinessId();
@@ -112,16 +116,45 @@ public interface CustomerCommand extends Serializable {
     @Override default CustomerCommandType getCommandType() { return CustomerCommandType.UpsertSuomiFiRep; }
   }
   
+  @Value.Immutable @JsonSerialize(as = ImmutableChangeCustomerFirstName.class) @JsonDeserialize(as = ImmutableChangeCustomerFirstName.class)
+  interface ChangeCustomerFirstName extends CustomerUpdateCommand {
+    String getId();
+    String getFirstName();
+    @Override default CustomerCommandType getCommandType() { return CustomerCommandType.ChangeCustomerFirstName; }
+  }
   
-  // TODO: Break into individual commands
-  interface UpdateCustomerInfo extends CustomerUpdateCommand {
-    CustomerBodyType getBodyType();
-    Optional<String> getFirstName();
-    Optional<String> getLastName();
-    Optional<String> getSsn();
-    Optional<String> getBusinessId();
-    CustomerContact getCustomerContact();
-    @Override default CustomerCommandType getCommandType() { return CustomerCommandType.CreateOrUpdateCustomer; }
+  @Value.Immutable @JsonSerialize(as = ImmutableChangeCustomerLastName.class) @JsonDeserialize(as = ImmutableChangeCustomerLastName.class)
+  interface ChangeCustomerLastName extends CustomerUpdateCommand {
+    String getId();
+    String getLastName();
+    @Override default CustomerCommandType getCommandType() { return CustomerCommandType.ChangeCustomerLastName; }
+  }
+  
+  @Value.Immutable @JsonSerialize(as = ImmutableChangeCustomerSsn.class) @JsonDeserialize(as = ImmutableChangeCustomerSsn.class)
+  interface ChangeCustomerSsn extends CustomerUpdateCommand {
+    String getId();
+    String getNewSsn();
+    @Override default CustomerCommandType getCommandType() { return CustomerCommandType.ChangeCustomerSsn; }
+  }
+  
+  @Value.Immutable @JsonSerialize(as = ImmutableChangeCustomerEmail.class) @JsonDeserialize(as = ImmutableChangeCustomerEmail.class)
+  interface ChangeCustomerEmail extends CustomerUpdateCommand {
+    String getId();
+    String getEmail();
+    @Override default CustomerCommandType getCommandType() { return CustomerCommandType.ChangeCustomerEmail; }
+  }
+  
+  @Value.Immutable @JsonSerialize(as = ImmutableChangeCustomerAddress.class) @JsonDeserialize(as = ImmutableChangeCustomerAddress.class)
+  interface ChangeCustomerAddress extends CustomerUpdateCommand {
+    String getId();
+    CustomerAddress getAddress();
+    @Override default CustomerCommandType getCommandType() { return CustomerCommandType.ChangeCustomerAddress; }
+  }
+  
+  @Value.Immutable @JsonSerialize(as = ImmutableArchiveCustomer.class) @JsonDeserialize(as = ImmutableArchiveCustomer.class)
+  interface ArchiveCustomer extends CustomerUpdateCommand {
+    String getId();
+    @Override default CustomerCommandType getCommandType() { return CustomerCommandType.ArchiveCustomer; }
   }
 
 }
