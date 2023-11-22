@@ -2,6 +2,8 @@ on:
     push:
       paths:
         - 'ts_setup/**'
+        - '.github/workflows/build-ui.yml'
+
       branches:
         - dev
   
