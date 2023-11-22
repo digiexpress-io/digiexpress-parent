@@ -1,15 +1,19 @@
-import { RepoType } from "./tenant-config-types";
+import { RepoConfigType, RepoType } from "./tenant-config-types";
 export type ProjectId = string;
 
 export interface Project {
   id: string;
-  repoId: string;
-  repoType: RepoType;
-  title: string;
-  description: string;
-  users: string[];
+  name: string;
   created: string;
   updated: string;
+  status: string;
+  preferences: {
+    landingApp: "";
+  }
+  repoConfigs: {
+    repoId: string;
+    repoType: RepoConfigType;
+  }[]
 }
 
 export interface ProjectTransaction {
@@ -23,7 +27,7 @@ export interface ProjectCommand {
   commandType: ProjectCommandType;
 }
 
-export type ProjectCommandType = 'ArchiveProject' | 'CreateProject' | 'AssignProjectUsers' | 'ChangeProjectInfo' | 'ChangeRepoType';
+export type ProjectCommandType = 'ArchiveProject' | 'CreateTenantConfig' | 'AssignProjectUsers' | 'ChangeProjectInfo' | 'ChangeRepoType';
 
 
 export interface ProjectUpdateCommand<T extends ProjectCommandType> extends ProjectCommand {
@@ -32,12 +36,9 @@ export interface ProjectUpdateCommand<T extends ProjectCommandType> extends Proj
 }
 
 export interface CreateProject extends ProjectCommand {
-  commandType: 'CreateProject';
+  commandType: 'CreateTenantConfig';
   repoId: string;
-  repoType: RepoType;
-  title: string;
-  description: string
-  users: string[];
+  name: string;
 }
 
 export interface ArchiveProject extends ProjectUpdateCommand<'ArchiveProject'> {

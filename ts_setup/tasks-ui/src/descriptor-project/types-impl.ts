@@ -1,11 +1,11 @@
-import { Project, RepoType, UserProfile, resolveAvatar } from 'client';
+import { Project, RepoType, UserProfile } from 'client';
 
 import {
   ProjectDescriptor, FilterBy, Group, GroupBy,
-  FilterByRepoType, FilterByUsers, AvatarCode,
+  FilterByRepoType, FilterByUsers, 
   ProjectPaletteType, Data, GroupsAndFilters
 } from './types';
-import { _nobody_, Palette } from './constants';
+import { Palette } from './constants';
 import { applyDescFilters, applySearchString, withColors } from './util';
 
 
@@ -227,23 +227,8 @@ class GroupVisitor {
   public visit(task: ProjectDescriptor) {
     if (this._groupBy === 'none') {
       this._groups[this._groupBy].records.push(task);
-    } else if (this._groupBy === 'users') {
-      if (task.users.length) {
-        task.users.forEach(o => this._groups[o].records.push(task));
-      } else {
-        this._groups[_nobody_].records.push(task);
-      }
-    } if (this._groupBy === 'repoType') {
-      this._groups[task.repoType].records.push(task);
     }
   }
-}
-
-const appMapping: Record<RepoType | string, string> = {
-  DIALOB: 'app-dialob',
-  STENCIL: 'app-stencil',
-  TASKS: 'app-tasks',
-  WRENCH: 'app-wrench'
 }
 
 class ProjectDescriptorImpl implements ProjectDescriptor {
@@ -251,31 +236,21 @@ class ProjectDescriptorImpl implements ProjectDescriptor {
   private _created: Date;
   private _updated: Date;
   private _profile: UserProfile;
-  private _userAvatars: AvatarCode[];
-  private _appId: string;
 
   constructor(entry: Project, profile: UserProfile, today: Date) {
     this._entry = entry;
     this._created = new Date(entry.created);
-    this._updated = new Date(entry.updated);
-    this._userAvatars = resolveAvatar(entry.users);
+    this._updated = new Date(entry.updated);;
     this._profile = profile;
-    this._appId = appMapping[entry.repoType];
   }
 
   get profile() { return this._profile }
   get id() { return this._entry.id }
+  get name() { return this._entry.name }
   get entry() { return this._entry }
-  get appId() { return this._appId }
   get created() { return this._created }
   get updated() { return this._updated }
-  get repoType() { return this._entry.repoType }
-  get repoId() { return this._entry.repoId }
 
-  get users() { return this._entry.users }
-  get title() { return this._entry.title }
-  get description() { return this._entry.description }
-  get userAvatars() { return this._userAvatars }
 }
 
 export { ProjectDescriptorImpl, GroupsAndFiltersImpl };

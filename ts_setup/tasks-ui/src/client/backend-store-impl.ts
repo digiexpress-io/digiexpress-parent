@@ -119,8 +119,10 @@ class DefaultStore implements Store {
     if (repoType === 'CONFIG') {
       return this._defRef;
     }
-
-
+    if (repoType === 'TENANT') {
+      return this._defRef;
+    }
+    
     const next = { ...this._defRef, headers: { ...this._defRef.headers } };
 
     console.log(this._repos);

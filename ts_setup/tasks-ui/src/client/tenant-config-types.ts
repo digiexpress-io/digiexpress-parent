@@ -9,13 +9,14 @@ export type RepoId = string;
 export type RepoType = 'TASKS' | 'CRM' | 'STENCIL' | 'WRENCH' | 'DIALOB' | 'CONFIG' | 'HEALTH' | 'USER_PROFILE' | 'EXT_DIALOB' | 'EXT_DIALOB_EDIT' | 'TENANT';
 export type AppType = 'APP_FRONTOFFICE' | "APP_CRM" | "APP_DIALOB" | "APP_STENCIL" | "APP_WRENCH" | "APP_TASKS";
 
+export type RepoConfigType = Omit<RepoType, 'CONFIG' | 'HEALTH' | 'EXT_DIALOB' | 'TENANT' | 'EXT_DIALOB_EDIT'>;
 export interface TenantConfigPreferences {
   landingApp: AppType | string
 }
 
 export interface RepoConfig {
-  repoId: string,
-  repoType: Omit<RepoType, 'CONFIG' | 'HEALTH' | 'EXT_DIALOB' | 'TENANT' | 'EXT_DIALOB_EDIT'>
+  repoId: string;
+  repoType: RepoConfigType;
 }
 
 export interface TenantConfigTransaction {

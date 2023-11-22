@@ -8,17 +8,9 @@ export interface AvatarCode {
 export interface ProjectDescriptor {
   entry: Project;
   id: string;
-
-  appId: string;
-  repoId: string;
-  repoType: RepoType;
-  title: string;
-  description: string;
-  users: string[];
+  name: string
   created: Date;
   updated: Date;
-
-  userAvatars: AvatarCode[];
   profile: UserProfile;
 }
 

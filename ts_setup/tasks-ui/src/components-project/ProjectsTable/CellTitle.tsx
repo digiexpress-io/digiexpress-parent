@@ -19,13 +19,12 @@ const FormattedCell: React.FC<{
   const apps = Context.useApp();
 
   function handleOpenProject() {
-    apps.changeApp(row.repoType);
   }
 
   return (
     <StyledTableCell width="500px" onClick={handleOpenProject}>
       <Box justifyContent='left' display='flex' sx={{ cursor: 'pointer' }}>
-        <TaskCell id={row.id + "/Subject"} name={row.title} maxWidth={"500px"} />
+        <TaskCell id={row.id + "/Subject"} name={row.name} maxWidth={"500px"} />
       </Box>
     </StyledTableCell>
   );

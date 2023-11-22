@@ -1,6 +1,6 @@
 
 import { ProjectDescriptor, FilterBy } from './types';
-import { _nobody_, Palette } from './constants'
+import { Palette } from './constants'
 
 
 export function applyDescFilters(desc: ProjectDescriptor, filters: FilterBy[]): boolean {
@@ -8,39 +8,17 @@ export function applyDescFilters(desc: ProjectDescriptor, filters: FilterBy[]): 
     if (filter.disabled) {
       continue;
     }
-    if (!applyDescFilter(desc, filter)) {
-      return false;
-    }
   }
 
   return true;
 }
 
 export function applySearchString(desc: ProjectDescriptor, searchString: string): boolean {
-  const description: boolean = desc.description?.toLowerCase().indexOf(searchString) > -1;
-  return desc.title.toLowerCase().indexOf(searchString) > -1 || description;
+  const description: boolean = desc.name?.toLowerCase().indexOf(searchString) > -1;
+  return desc.id.toLowerCase().indexOf(searchString) > -1 || description;
 }
 
-export function applyDescFilter(desc: ProjectDescriptor, filter: FilterBy): boolean {
-  switch (filter.type) {
-    case 'FilterByUsers': {
-      for (const owner of filter.users) {
-        if (desc.users.length === 0 && owner === _nobody_) {
-          continue;
-        }
-        if (!desc.users.includes(owner)) {
-          return false;
-        }
-      }
-      return true;
-    }
-    case 'FilterByRepoType': {
-      return filter.repoType.includes(desc.repoType);
-    }
-  }
-  // @ts-ignore
-  throw new Error("unknow filter" + filter)
-}
+
 
 export function withColors<T>(input: T[]): { color: string, value: T }[] {
   const result: { color: string, value: T }[] = [];

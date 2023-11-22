@@ -58,21 +58,9 @@ class ProjectsStateBuilder implements ProjectsState {
     const today = new Date(this._profile.today);
     today.setHours(0, 0, 0, 0);
 
-    input.forEach(task => {
-      const item = new ProjectDescriptorImpl(task, this._profile, today);
+    input.forEach(tenant => {
+      const item = new ProjectDescriptorImpl(tenant, this._profile, today);
       projects.push(item);
-
-      task.users.forEach(owner => {
-        if (!users.includes(owner)) {
-          users.push(owner)
-        }
-
-        if (!projectsByUser[owner]) {
-          projectsByUser[owner] = [];
-        }
-        projectsByUser[owner].push(item);
-
-      });
     });
 
     users.sort();

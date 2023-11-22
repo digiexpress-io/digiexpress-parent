@@ -2,7 +2,6 @@ import * as React from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Typography, TextField, Stack, Divider } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 import { NavigationButtonSearch } from '../NavigationSticky';
-import ProjectRepoType from '../ProjectRepoType';
 import Burger from 'components-burger';
 import Client from 'client';
 import Context from 'context';
@@ -17,7 +16,6 @@ const ProjectCreate: React.FC<{
   const [open, setOpen] = React.useState(false);
   const [title, setTitle] = React.useState('project title');
   const [description, setDescription] = React.useState('project description');
-  const [repoType, setRepoType] = React.useState<Client.RepoType>('TASKS');
 
   function handleToggleDialog() {
     setOpen(prev => !prev);
@@ -32,12 +30,9 @@ const ProjectCreate: React.FC<{
 
   function handleAccept() {
     const command: Client.CreateProject = {
-      commandType: 'CreateProject',
-      description,
-      repoType: repoType,
-      title,
-      repoId: title + '-' + repoType,
-      users: []
+      commandType: 'CreateTenantConfig',
+      name: title,
+      repoId: title
     };
     backend.project.createProject(command)
       .then(_data => ctx.reload())
@@ -75,10 +70,6 @@ const ProjectCreate: React.FC<{
               fullWidth />
           </Burger.Section>
 
-          <Burger.Section>
-            <Typography fontWeight='bold'><FormattedMessage id='project.repoType' /></Typography>
-            <ProjectRepoType onChange={async (newType) => setRepoType(newType)} project={{ repoType }} />
-          </Burger.Section>
         </Stack>
       </DialogContent>
       <DialogActions>

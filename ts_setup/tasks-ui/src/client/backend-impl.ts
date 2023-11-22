@@ -141,7 +141,7 @@ export class ServiceImpl implements Backend {
   }
 
   async getActiveProjects(): Promise<ProjectPagination> {
-    const projects = await this._store.fetch<object[]>(`projects`, { repoType: 'TENANT' });
+    const projects = await this._store.fetch<object[]>(`tenants`, { repoType: 'TENANT' });
 
     return {
       page: 1,
@@ -151,11 +151,11 @@ export class ServiceImpl implements Backend {
   }
 
   getActiveProject(id: ProjectId): Promise<Project> {
-    return this._store.fetch<Project>(`projects/${id}`, { repoType: 'TENANT' });
+    return this._store.fetch<Project>(`tenants/${id}`, { repoType: 'TENANT' });
   }
 
   async createProject(commands: CreateProject): Promise<Project> {
-    return await this._store.fetch<Project>(`projects`, {
+    return await this._store.fetch<Project>(`tenants`, {
       method: 'POST',
       body: JSON.stringify([commands]),
       repoType: 'TENANT'
@@ -163,7 +163,7 @@ export class ServiceImpl implements Backend {
   }
 
   async updateActiveProject(id: ProjectId, commands: ProjectUpdateCommand<any>[]): Promise<Project> {
-    return await this._store.fetch<Project>(`projects/${id}`, {
+    return await this._store.fetch<Project>(`tenants/${id}`, {
       method: 'PUT',
       body: JSON.stringify(commands),
       repoType: 'TENANT'
