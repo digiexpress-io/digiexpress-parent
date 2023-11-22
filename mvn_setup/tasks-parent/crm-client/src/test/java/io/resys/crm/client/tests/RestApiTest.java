@@ -31,8 +31,9 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.RestAssured;
 import io.resys.crm.client.api.model.Customer;
 import io.resys.crm.client.api.model.CustomerCommand.CustomerCommandType;
-import io.resys.crm.client.api.model.ImmutableChangeCustomerInfo;
+import io.resys.crm.client.api.model.ImmutableChangeCustomerFirstName;
 import io.resys.crm.client.api.model.ImmutableCreateCustomer;
+import io.resys.crm.client.api.model.ImmutablePerson;
 
 
 //add this to vm args to run in IDE -Djava.util.logging.manager=org.jboss.logmanager.LogManager
@@ -54,10 +55,11 @@ public class RestApiTest {
   @Test
   public void postOneCustomer() throws JsonProcessingException {
     final var body = ImmutableCreateCustomer.builder()
-      .name("customer-name")
-      .userId("user-1")
-      .repoId("repo-1")
-      //.targetDate(ProjectTestCase.getTargetDate())
+        .body(ImmutablePerson.builder()
+            .firstName("Waldorf")
+            .lastName("SaladsMacgoo")
+            .build())
+        .externalId("ssn")
       .commandType(CustomerCommandType.CreateCustomer)
       .build();
 
@@ -73,10 +75,12 @@ public class RestApiTest {
   @Test
   public void postTwoCustomers() throws JsonProcessingException {
     final var body = ImmutableCreateCustomer.builder()
-        //.targetDate(ProjectTestCase.getTargetDate())
-        .name("customer-2")
-        .repoId("repo-1")
+        .body(ImmutablePerson.builder()
+            .firstName("Waldorf")
+            .lastName("SaladsMacgoo")
+            .build())
         .userId("user-1")
+        .externalId("ssn")
         .commandType(CustomerCommandType.CreateCustomer)
         .build();
 
@@ -91,10 +95,9 @@ public class RestApiTest {
   
   @Test
   public void updateFourCustomers() throws JsonProcessingException {
-    final var command = ImmutableChangeCustomerInfo.builder()
-        //.targetDate(ProjectTestCase.getTargetDate())
-        .name("customer-name")
-        .id("customer-id-1")
+    final var command = ImmutableChangeCustomerFirstName.builder()
+        .firstName("John")
+        .customerId("customer-id-1")
         .userId("user1")
         .build();
         

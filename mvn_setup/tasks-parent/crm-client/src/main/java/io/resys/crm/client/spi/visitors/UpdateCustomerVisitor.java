@@ -36,6 +36,7 @@ import io.resys.crm.client.spi.store.DocumentConfig.DocObjectsVisitor;
 import io.resys.crm.client.spi.store.DocumentStore;
 import io.resys.crm.client.spi.store.DocumentStoreException;
 import io.resys.crm.client.spi.store.MainBranch;
+import io.resys.crm.client.spi.visitors.CustomerCommandVisitor.NoChangesException;
 import io.resys.thena.docdb.api.actions.CommitActions.CommitResultStatus;
 import io.resys.thena.docdb.api.actions.DocCommitActions.ModifyManyDocBranches;
 import io.resys.thena.docdb.api.actions.DocQueryActions.DocObjectsQuery;
@@ -52,46 +53,46 @@ import io.vertx.core.json.JsonObject;
 
 public class UpdateCustomerVisitor implements DocObjectsVisitor<Uni<List<Customer>>> {
   private final DocumentStore ctx;
-  private final List<String> tenantIds;
+  private final List<String> customerIds;
   private final ModifyManyDocBranches commitBuilder;
-  private final Map<String, List<CustomerUpdateCommand>> commandsByTenantId; 
+  private final Map<String, List<CustomerUpdateCommand>> commandsByCustomerId; 
   
   
   public UpdateCustomerVisitor(List<CustomerUpdateCommand> commands, DocumentStore ctx) {
     super();
     this.ctx = ctx;
     final var config = ctx.getConfig();
-    this.commandsByTenantId = commands.stream()
-        .collect(Collectors.groupingBy(CustomerUpdateCommand::getId));
-    this.tenantIds = new ArrayList<>(commandsByTenantId.keySet());
+    this.commandsByCustomerId = commands.stream()
+        .collect(Collectors.groupingBy(CustomerUpdateCommand::getCustomerId));
+    this.customerIds = new ArrayList<>(commandsByCustomerId.keySet());
     this.commitBuilder = config.getClient().doc().commit().modifyManyBranches()
         .repoId(config.getRepoId())
-        .message("Update Tenants: " + commandsByTenantId.size())
+        .message("Update customers: " + commandsByCustomerId.size())
         .author(config.getAuthor().get());
   }
 
   @Override
   public DocObjectsQuery start(DocumentConfig config, DocObjectsQuery builder) {
-    return builder.matchIds(tenantIds).branchName(MainBranch.HEAD_NAME);
+    return builder.matchIds(customerIds).branchName(MainBranch.HEAD_NAME);
   }
 
   @Override
   public DocObjects visitEnvelope(DocumentConfig config, QueryEnvelope<DocObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
-      throw DocumentStoreException.builder("GET_TENANTS_BY_IDS_FOR_UPDATE_FAIL")
+      throw DocumentStoreException.builder("GET_CUSTOMERS_BY_IDS_FOR_UPDATE_FAIL")
         .add(config, envelope)
-        .add((callback) -> callback.addArgs(tenantIds.stream().collect(Collectors.joining(",", "{", "}"))))
+        .add((callback) -> callback.addArgs(customerIds.stream().collect(Collectors.joining(",", "{", "}"))))
         .build();
     }
     final var result = envelope.getObjects();
     if(result == null) {
-      throw DocumentStoreException.builder("GET_TENANTS_BY_IDS_FOR_UPDATE_NOT_FOUND")   
+      throw DocumentStoreException.builder("GET_CUSTOMERS_BY_IDS_FOR_UPDATE_NOT_FOUND")   
         .add(config, envelope)
-        .add((callback) -> callback.addArgs(tenantIds.stream().collect(Collectors.joining(",", "{", "}"))))
+        .add((callback) -> callback.addArgs(customerIds.stream().collect(Collectors.joining(",", "{", "}"))))
         .build();
     }
-    if(tenantIds.size() != result.getDocs().size()) {
-      throw new DocumentStoreException("TENANTS_UPDATE_FAIL_MISSING_TENANTS", JsonObject.of("failedUpdates", tenantIds));
+    if(customerIds.size() != result.getDocs().size()) {
+      throw new DocumentStoreException("CUSTOMERS_UPDATE_FAIL_NOT_ALL_CUSTOMERS_FOUND", JsonObject.of("failedUpdates", customerIds));
     }
     return result;
   }
@@ -99,19 +100,26 @@ public class UpdateCustomerVisitor implements DocObjectsVisitor<Uni<List<Custome
   @Override
   public Uni<List<Customer>> end(DocumentConfig config, DocObjects blob) {
     final var updatedTenants = blob.accept((Doc doc, DocBranch docBranch, DocCommit commit, List<DocLog> log) -> {
+      
       final var start = docBranch.getValue().mapTo(ImmutableCustomer.class);
-      final var commands = commandsByTenantId.get(start.getId());
-      final var updated = new CustomerCommandVisitor(start, ctx.getConfig()).visitTransaction(commands);
-      this.commitBuilder.item()
-        .branchName(updated.getId())
-        .append(JsonObject.mapFrom(updated));
-      return updated;
+      final var commands = commandsByCustomerId.get(start.getId());
+      
+      try {
+        final var updated = new CustomerCommandVisitor(start, ctx.getConfig()).visitTransaction(commands);
+        this.commitBuilder.item()
+          .branchName(updated.getId())
+          .append(JsonObject.mapFrom(updated));
+        
+        return updated;
+      } catch(NoChangesException e) {
+        return start;
+      }
     });
     
     return commitBuilder.build().onItem().transform(response -> {
       if(response.getStatus() != CommitResultStatus.OK) {
-        final var failedUpdates = tenantIds.stream().collect(Collectors.joining(",", "{", "}"));
-        throw new DocumentStoreException("TENANTS_UPDATE_FAIL", JsonObject.of("failedUpdates", failedUpdates), DocumentStoreException.convertMessages(response));
+        final var failedUpdates = customerIds.stream().collect(Collectors.joining(",", "{", "}"));
+        throw new DocumentStoreException("CUSTOMERS_UPDATE_FAIL", JsonObject.of("failedUpdates", failedUpdates), DocumentStoreException.convertMessages(response));
       }
       
       final Map<String, Customer> configsById = new HashMap<>(

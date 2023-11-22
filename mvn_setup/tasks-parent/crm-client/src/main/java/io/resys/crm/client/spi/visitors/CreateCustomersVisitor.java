@@ -35,6 +35,7 @@ import io.resys.crm.client.api.model.ImmutableCustomer;
 import io.resys.crm.client.spi.store.DocumentConfig;
 import io.resys.crm.client.spi.store.DocumentConfig.DocCreateVisitor;
 import io.resys.crm.client.spi.store.DocumentStoreException;
+import io.resys.crm.client.spi.visitors.CustomerCommandVisitor.NoChangesException;
 import io.resys.thena.docdb.api.actions.CommitActions.CommitResultStatus;
 import io.resys.thena.docdb.api.actions.DocCommitActions.CreateManyDocs;
 import io.resys.thena.docdb.api.actions.DocCommitActions.ManyDocsEnvelope;
@@ -45,20 +46,28 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CreateCustomersVisitor implements DocCreateVisitor<Customer> {
   private final List<? extends CreateCustomer> commands;
-  private final List<Customer> createdTenants = new ArrayList<Customer>();
+  private final List<Customer> customers = new ArrayList<Customer>();
   
   @Override
   public CreateManyDocs start(DocumentConfig config, CreateManyDocs builder) {
     builder
-      .docType(Document.DocumentType.CRM.name())
+      .docType(Document.DocumentType.CUSTOMER.name())
       .author(config.getAuthor().get())
       .message("creating tenant");
     
     for(final var command : commands) {
-      final var entity = new CustomerCommandVisitor(config).visitTransaction(Arrays.asList(command));
-      final var json = JsonObject.mapFrom(entity);
-      builder.item().append(json).docId(entity.getId()).next();
-      createdTenants.add(entity);
+      try {
+        final var entity = new CustomerCommandVisitor(config).visitTransaction(Arrays.asList(command));
+        final var json = JsonObject.mapFrom(entity);
+        builder.item()
+          .append(json)
+          .docId(entity.getId())
+          .externalId(entity.getExternalId())
+          .next();
+        customers.add(entity);
+      } catch (NoChangesException e) {
+        throw new RuntimeException(e.getMessage(), e);
+      }
     }
     return builder;
   }
@@ -74,7 +83,7 @@ public class CreateCustomersVisitor implements DocCreateVisitor<Customer> {
   @Override
   public List<Customer> end(DocumentConfig config, List<DocBranch> branches) {
     final Map<String, Customer> configsById = new HashMap<>(
-        this.createdTenants.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)));
+        this.customers.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)));
     
     branches.forEach(branch -> {
       

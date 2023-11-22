@@ -6,12 +6,12 @@ import java.util.stream.Collectors;
 
 import io.resys.crm.client.api.model.Customer;
 import io.resys.crm.client.api.model.CustomerCommand.CreateCustomer;
-import io.resys.crm.client.api.model.CustomerCommand.CustomerCommandType;
 import io.resys.crm.client.api.model.CustomerCommand.CustomerUpdateCommand;
 import io.resys.crm.client.api.model.Document.DocumentType;
 import io.resys.crm.client.api.model.ImmutableCreateCustomer;
 import io.resys.crm.client.api.model.ImmutableCustomer;
 import io.resys.crm.client.api.model.ImmutableCustomerTransaction;
+import io.resys.crm.client.api.model.ImmutablePerson;
 import io.resys.crm.client.rest.CrmRestApi;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -19,25 +19,26 @@ import jakarta.ws.rs.Path;
 
 @Path("q/digiexpress/api")
 @ApplicationScoped
-public class CrmResource implements CrmRestApi {
+public class CustomerResource implements CrmRestApi {
 
   private final ImmutableCustomer mockCustomer = ImmutableCustomer.builder()
       .id("id-1234")
-      .name("John Smith")
+      .externalId("220276-840H")
       .version("v1.0")
-      .created(ProjectTestCase.getTargetDate())
-      .updated(ProjectTestCase.getTargetDate())
+      .created(CustomerTestCase.getTargetDate())
+      .updated(CustomerTestCase.getTargetDate())
       .addTransactions(
           ImmutableCustomerTransaction.builder()
           .id("transation-1")
           .addCommands(ImmutableCreateCustomer
               .builder()
-              .commandType(CustomerCommandType.CreateCustomer)
-              .repoId("repo-1")
-              .name("customer-name-x")
+              .body(ImmutablePerson.builder()
+                  .firstName("Waldorf")
+                  .lastName("SaladsMacgoo")
+                  .build())
               .build())
           .build())
-      .documentType(DocumentType.CRM)
+      .documentType(DocumentType.CUSTOMER)
       .build();
 
   @Override

@@ -23,7 +23,6 @@ import java.util.Arrays;
  */
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import io.resys.crm.client.api.CrmClient.UpdateCustomerAction;
 import io.resys.crm.client.api.model.Customer;
@@ -49,12 +48,10 @@ public class UpdateCustomerActionImpl implements UpdateCustomerAction {
     RepoAssert.notNull(commands, () -> "commands must be defined!");
     RepoAssert.isTrue(commands.size() > 0, () -> "No commands to apply!");
     
-    final var uniqueTaskIds = commands.stream().map(command -> command.getId()).distinct().collect(Collectors.toList());
-    RepoAssert.isTrue(uniqueTaskIds.size() == 1, () -> "TenantConfig id-s must be same, but got: %s!", uniqueTaskIds);
     
     return ctx.getConfig().accept(new UpdateCustomerVisitor(commands, ctx))
         .onItem().transformToUni(resp -> resp)
-        .onItem().transform(tasks -> tasks.get(0));
+        .onItem().transform(customers -> customers.get(0));
   }
 
   @Override

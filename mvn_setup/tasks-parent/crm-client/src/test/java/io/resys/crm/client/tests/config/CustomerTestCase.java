@@ -51,13 +51,13 @@ import jakarta.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class ProjectTestCase {
+public class CustomerTestCase {
   @Inject io.vertx.mutiny.pgclient.PgPool pgPool;
   public final Duration atMost = Duration.ofMinutes(5);
   
   private DocumentStoreImpl store;
   private CrmClientImpl client;
-  private static final String DB = "junit-tasks-"; 
+  private static final String DB = "junit-crm-"; 
   private static final AtomicInteger DB_ID = new AtomicInteger();
   private static final Instant targetDate = LocalDateTime.of(2023, 1, 1, 1, 1).toInstant(ZoneOffset.UTC);
   private final AtomicInteger id_provider = new AtomicInteger();
@@ -150,7 +150,7 @@ public class ProjectTestCase {
   }
   
   public static String toExpectedFile(String fileName) {
-    return RepositoryToStaticData.toString(ProjectTestCase.class, fileName);
+    return RepositoryToStaticData.toString(CustomerTestCase.class, fileName);
   }
   
   public void assertRepo(CrmClient client, String expectedFileName) {

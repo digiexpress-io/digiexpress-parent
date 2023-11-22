@@ -60,7 +60,7 @@ public class DeleteAllCustomersVisitor implements DocObjectsVisitor<Uni<List<Cus
         .message("Delete Tenants");
     
     // Build the blob criteria for finding all documents of type Project
-    return query.docType(Document.DocumentType.CRM.name());
+    return query.docType(Document.DocumentType.CUSTOMER.name());
   }
 
   @Override

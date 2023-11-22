@@ -51,7 +51,7 @@ public class GetCustomersByIdsVisitor implements DocObjectsVisitor<List<Customer
   @Override
   public DocObjectsQuery start(DocumentConfig config, DocObjectsQuery builder) {
     return builder
-        .docType(Document.DocumentType.CRM.name())
+        .docType(Document.DocumentType.CUSTOMER.name())
         .branchName(MainBranch.HEAD_NAME)
         .matchIds(new ArrayList<>(projectIds));
   }

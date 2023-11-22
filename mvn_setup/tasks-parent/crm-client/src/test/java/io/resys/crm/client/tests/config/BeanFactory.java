@@ -1,9 +1,16 @@
 package io.resys.crm.client.tests.config;
 
 import io.quarkus.runtime.annotations.RegisterForReflection;
-import io.resys.crm.client.api.model.ImmutableChangeCustomerInfo;
+import io.resys.crm.client.api.model.ImmutableArchiveCustomer;
+import io.resys.crm.client.api.model.ImmutableChangeCustomerAddress;
+import io.resys.crm.client.api.model.ImmutableChangeCustomerEmail;
+import io.resys.crm.client.api.model.ImmutableChangeCustomerFirstName;
+import io.resys.crm.client.api.model.ImmutableChangeCustomerLastName;
+import io.resys.crm.client.api.model.ImmutableChangeCustomerSsn;
 import io.resys.crm.client.api.model.ImmutableCreateCustomer;
 import io.resys.crm.client.api.model.ImmutableCustomer;
+import io.resys.crm.client.api.model.ImmutableUpsertSuomiFiPerson;
+import io.resys.crm.client.api.model.ImmutableUpsertSuomiFiRep;
 /*-
  * #%L
  * thena-quarkus-dev-app
@@ -29,7 +36,14 @@ import jakarta.enterprise.context.Dependent;
 @RegisterForReflection(targets = {
     ImmutableCustomer.class,
     ImmutableCreateCustomer.class,
-    ImmutableChangeCustomerInfo.class,
+    ImmutableChangeCustomerFirstName.class,
+    ImmutableChangeCustomerLastName.class,
+    ImmutableUpsertSuomiFiPerson.class,
+    ImmutableUpsertSuomiFiRep.class,
+    ImmutableChangeCustomerSsn.class,
+    ImmutableChangeCustomerEmail.class,
+    ImmutableChangeCustomerAddress.class,
+    ImmutableArchiveCustomer.class
 })
 public class BeanFactory {
 

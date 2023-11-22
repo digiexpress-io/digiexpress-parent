@@ -13,8 +13,11 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 @Value.Immutable @JsonSerialize(as = ImmutableCustomer.class) @JsonDeserialize(as = ImmutableCustomer.class)
 public interface Customer extends Document {
   String getId();
+  String getExternalId(); //SSN or Business ID
   Instant getCreated();
   Instant getUpdated();
+  
+  CustomerBody getBody();
   
   enum CustomerBodyType {
     COMPANY, PERSON
@@ -30,7 +33,6 @@ public interface Customer extends Document {
   @Value.Immutable @JsonSerialize(as = ImmutablePerson.class) @JsonDeserialize(as = ImmutablePerson.class)
   interface Person extends CustomerBody {
    @JsonIgnore @Override @Value.Default default CustomerBodyType getType() { return CustomerBodyType.PERSON; }
-   String getSsn();
    String getFirstName();
    String getLastName();
    Optional<Boolean> getProtectionOrder();
@@ -39,7 +41,6 @@ public interface Customer extends Document {
   @Value.Immutable @JsonSerialize(as = ImmutableCompany.class) @JsonDeserialize(as = ImmutableCompany.class)
   interface Company extends CustomerBody {
     @JsonIgnore @Override @Value.Default default CustomerBodyType getType() { return CustomerBodyType.COMPANY; }
-    String getBusinessId();
   }
   
   @Value.Immutable @JsonSerialize(as = ImmutableCustomerContact.class) @JsonDeserialize(as = ImmutableCustomerContact.class)
@@ -58,7 +59,7 @@ public interface Customer extends Document {
   }
     
   List<CustomerTransaction> getTransactions(); 
-  @Value.Default default DocumentType getDocumentType() { return DocumentType.CRM; }
+  @Value.Default default DocumentType getDocumentType() { return DocumentType.CUSTOMER; }
   
   @Value.Immutable @JsonSerialize(as = ImmutableCustomerTransaction.class) @JsonDeserialize(as = ImmutableCustomerTransaction.class)
   interface CustomerTransaction extends Serializable {

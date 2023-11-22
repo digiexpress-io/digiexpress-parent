@@ -29,6 +29,6 @@ public interface Document extends Serializable {
   String getId();
   @Nullable String getVersion();
   
-  enum DocumentType { CRM }
+  enum DocumentType { CUSTOMER }
   
 }
