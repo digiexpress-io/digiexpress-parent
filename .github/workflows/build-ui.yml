@@ -24,6 +24,8 @@ jobs:
               dir_names: 'true'
               dir_names_exclude_current_dir: 'true'
               dir_names_max_depth: '2'
+              files_ignore: |
+                 .github/workflows/build-ui.yml
 
             # NOTE: `since_last_remote_commit: true` is implied by default and falls back to the previous local commit.
 
