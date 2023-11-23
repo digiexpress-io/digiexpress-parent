@@ -1,5 +1,4 @@
 import { DialobSession } from 'client';
-import { TenantEntryDescriptor } from 'descriptor-tenant';
 import Table from 'table';
 
 
