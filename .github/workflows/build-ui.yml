@@ -1,36 +1,45 @@
 on:
     push:
       paths:
-        - 'ts_setup/**'
-        - '.github/workflows/build-ui.yml'
+        - 'ts_setup/tasks-ui/**'
 
       branches:
         - dev
   
-name: Build UI
+name: Build Tasks UI
 jobs:
-    changed_files:
-        runs-on: ubuntu-latest  # windows-latest || macos-latest
-        name: Test changed-files
-        steps:
-          - uses: actions/checkout@v4
-            with:
-                fetch-depth: 0  # OR "2" -> To retrieve the preceding commit.
-
-          - name: Get changed files
-            id: changed-files
-            uses: tj-actions/changed-files@v40
-            with:
-              dir_names: 'true'
-              dir_names_exclude_current_dir: 'true'
-              dir_names_max_depth: '2'
-              files_ignore: |
-                 .github/workflows/build-ui.yml
-
-            # NOTE: `since_last_remote_commit: true` is implied by default and falls back to the previous local commit.
-
-          - name: List all changed files
-            run: |
-                for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
-                  echo "$file was changed"
-                done          
+    build:
+      runs-on: ubuntu-latest  # windows-latest || macos-latest
+      defaults:
+        run:
+          working-directory: ts_setup/tasks-ui
+      env:
+        NODE_ENV: test
+        CI: true
+      name: Build Tasks UI
+      steps:
+        - uses: actions/checkout@v4
+        - uses: actions/setup-node@v4
+          with:
+            node-version: 18
+            cache: 'yarn'
+            cache-dependency-path: ts_setup/tasks-ui/yarn.lock
+        - name: Install dependencies 📦
+          run: yarn install --frozen-lockfile
+        - name: Test
+          run: yarn test --passWithNoTests
+        - name: Build 
+          run: yarn build
+        - name: Configure AWS Credentials
+          uses: aws-actions/configure-aws-credentials@v3
+          with:
+            role-to-assume: ${{ secrets.ASSUME_ROLE }}
+            aws-region: ${{ secrets.AWS_REGION }}
+        - name: Publish assets
+          uses: osiegmar/s3-publisher-action@v1
+          with:
+            bucket: ${{ secrets.CDN_S3_BUCKET }}
+            dir: ts_setup/tasks-ui/build
+            prefix: digiexpress-io/tasks-ui/${{ github.ref_name }}
+            delete-orphaned: true
+    

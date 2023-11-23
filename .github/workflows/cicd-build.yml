@@ -5,11 +5,16 @@ on:
     branches:
       - dev
 
-name: snapshot build
+name: Build backend snapshot 
 jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        platform:
+          - linux/amd64
+          - linux/arm64        
     steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -18,7 +23,7 @@ jobs:
       with:
         distribution: 'temurin'
         java-version: '17'
-    
+        cache: 'maven'
     - name: Maven build
       run: |
         cd ./mvn_setup
