@@ -1,10 +1,11 @@
 on:
-    push:
-      paths:
-        - 'ts_setup/tasks-ui/**'
+  push:
+    paths:
+      - 'ts_setup/tasks-ui/**'
 
-      branches:
-        - dev
+    branches:
+      - dev
+  workflow_dispatch: # Enables manual triggering
   
 name: Build Tasks UI
 jobs:
@@ -30,6 +31,8 @@ jobs:
           run: yarn test --passWithNoTests
         - name: Build 
           run: yarn build
+          env:
+            CI: false # 
         - name: Configure AWS Credentials
           uses: aws-actions/configure-aws-credentials@v3
           with:
