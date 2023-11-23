@@ -8,7 +8,6 @@ const INITIAL_STATE = Immutable.Map();
 function generateItemId(state, type, view) {
   const prefix = view ? camelCase(view) : type;
   let idx = 1;
-  let data = state.get('data') || Immutable.Map();
   let variables = state.get('variables') || Immutable.List();
   while (state && (state.get('data').has(`${prefix}${idx}`) || variables.findIndex(v => v.get('name') === `${prefix}${idx}`) > -1)) {
     idx++;
