@@ -2,7 +2,7 @@ import { UserProfile, Tenant, TenantEntry } from 'client';
 
 
 import { TenantDescriptor, TenantEntryDescriptor, GroupBy, Group, TenantGroupsAndFilters, Data } from './types';
-import { applySearchString, withColors } from './util';
+import { applySearchString } from './util';
 
 interface ExtendedInit extends Omit<TenantGroupsAndFilters,
   "withEntries" |
