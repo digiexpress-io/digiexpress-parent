@@ -1,7 +1,7 @@
 import React from 'react';
 import {itemFactory} from '.';
 import {connect} from 'react-redux';
-import {setActiveItem, addItem, updateItem, deleteItem, showChangeId, setActivePage, setTreeCollapse, showRuleEdit} from '../actions';
+import {setActiveItem, addItem, updateItem, deleteItem, showChangeId, setActivePage, setTreeCollapse} from '../actions';
 import * as Defaults from '../defaults';
 import * as Status from '../helpers/constants';
 import Immutable from 'immutable';

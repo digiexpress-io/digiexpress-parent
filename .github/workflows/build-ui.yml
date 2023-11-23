@@ -43,10 +43,6 @@ jobs:
             role-to-assume: ${{ secrets.ASSUME_ROLE }}
             aws-region: ${{ secrets.AWS_REGION }}
         - name: Publish assets
-          uses: osiegmar/s3-publisher-action@v1
-          with:
-            bucket: ${{ secrets.CDN_S3_BUCKET }}
-            dir: ts_setup/tasks-ui/build
-            prefix: digiexpress-io/tasks-ui/${{ github.ref_name }}/
-            delete-orphaned: true
-    
+          run: |
+            aws s3 sync --exclude '*.html' --delete --cache-control public,max-age=3600 --acl public-read ts_setup/tasks-ui/build/ s3://${{ secrets.CDN_S3_BUCKET }}/digiexpress-io/tasks-ui/${{ github.ref_name }}/
+            aws s3 sync --include '*.html' --cache-control no-cache --acl public-read ts_setup/tasks-ui/build/ s3://${{ secrets.CDN_S3_BUCKET }}/digiexpress-io/tasks-ui/${{ github.ref_name }}/
