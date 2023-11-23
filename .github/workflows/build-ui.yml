@@ -5,8 +5,11 @@ on:
 
     branches:
       - dev
-  workflow_dispatch: # Enables manual triggering
-  
+  workflow_call: # Enables manual triggering
+permissions:
+  contents: read
+  id-token: write
+    
 name: Build Tasks UI
 jobs:
     build:
