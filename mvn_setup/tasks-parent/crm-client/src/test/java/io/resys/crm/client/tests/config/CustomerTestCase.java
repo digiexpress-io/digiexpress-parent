@@ -1,5 +1,8 @@
 package io.resys.crm.client.tests.config;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+
 /*-
  * #%L
  * thena-tasks-client
@@ -26,6 +29,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,8 +45,8 @@ import io.resys.crm.client.spi.CrmClientImpl;
 import io.resys.crm.client.spi.DocumentStoreImpl;
 import io.resys.crm.client.spi.store.DocumentConfig.DocumentGidProvider;
 import io.resys.thena.docdb.jackson.VertexExtModule;
-import io.resys.thena.docdb.models.git.GitPrinter;
 import io.resys.thena.docdb.spi.DocDBDefault;
+import io.resys.thena.docdb.support.DocDbPrinter;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.json.jackson.DatabindCodec;
 import io.vertx.core.json.jackson.VertxModule;
@@ -138,7 +142,7 @@ public class CustomerTestCase {
     final var config = ((CrmClientImpl) client).getCtx().getConfig();
     final var state = ((DocDBDefault) config.getClient()).getState();
     final var repo = client.getRepo().await().atMost(Duration.ofMinutes(1));
-    final String result = new GitPrinter(state).printWithStaticIds(repo);
+    final String result = new DocDbPrinter(state).printWithStaticIds(repo);
     return result;
   }
   
@@ -146,17 +150,17 @@ public class CustomerTestCase {
     final var config = ((CrmClientImpl) client).getCtx().getConfig();
     final var state = ((DocDBDefault) config.getClient()).getState();
     final var repo = client.getRepo().await().atMost(Duration.ofMinutes(1));
-    return new RepositoryToStaticData(state).print(repo);
+    return new DocDbPrinter(state).printWithStaticIds(repo);
   }
   
   public static String toExpectedFile(String fileName) {
-    return RepositoryToStaticData.toString(CustomerTestCase.class, fileName);
+    return toString(CustomerTestCase.class, fileName);
   }
   
   public void assertRepo(CrmClient client, String expectedFileName) {
     final var expected = toExpectedFile(expectedFileName);
     final var actual = toStaticData(client);
-    Assertions.assertLinesMatch(expected.lines(), actual.lines());
+    Assertions.assertLinesMatch(expected.lines(), actual.lines(), actual);
     
   }
   public void assertEquals(String expectedFileName, Object actual) {
@@ -164,5 +168,13 @@ public class CustomerTestCase {
     final var actualJson = JsonObject.mapFrom(actual).encodePrettily();
     Assertions.assertLinesMatch(expected.lines(), actualJson.lines());
     
+  }
+  
+  public static String toString(Class<?> type, String resource) {
+    try {
+      return IOUtils.toString(type.getClassLoader().getResource(resource), StandardCharsets.UTF_8);
+    } catch (IOException e) {
+      throw new RuntimeException(e.getMessage(), e);
+    }
   }
 }

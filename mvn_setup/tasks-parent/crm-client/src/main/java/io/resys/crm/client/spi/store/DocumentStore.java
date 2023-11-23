@@ -1,7 +1,6 @@
 package io.resys.crm.client.spi.store;
 
 import io.resys.thena.docdb.api.models.Repo;
-import io.resys.thena.docdb.api.models.Repo.RepoType;
 
 /*-
  * #%L
@@ -33,7 +32,6 @@ public interface DocumentStore {
   interface DocumentRepositoryQuery {
     DocumentRepositoryQuery repoName(String repoName);
     DocumentRepositoryQuery headName(String headName);
-    DocumentRepositoryQuery repoType(RepoType repoType);
     DocumentStore build();
     Uni<DocumentStore> delete();
     Uni<DocumentStore> create();

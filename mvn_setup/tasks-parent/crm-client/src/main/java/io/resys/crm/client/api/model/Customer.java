@@ -7,6 +7,9 @@ import java.util.Optional;
 import org.immutables.value.Value;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -23,7 +26,14 @@ public interface Customer extends Document {
     COMPANY, PERSON
   }
   
-  @Value.Immutable @JsonSerialize(as = ImmutableCustomerBody.class) @JsonDeserialize(as = ImmutableCustomerBody.class)
+  @JsonTypeInfo(
+      use = JsonTypeInfo.Id.NAME,
+      include = JsonTypeInfo.As.PROPERTY,
+      property = "type")
+  @JsonSubTypes({
+    @Type(value = ImmutableCompany.class, name = "COMPANY"),  
+    @Type(value = ImmutablePerson.class, name = "PERSON"),  
+  })
   interface CustomerBody {
     String getUserName();
     CustomerBodyType getType();

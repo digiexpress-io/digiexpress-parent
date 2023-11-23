@@ -18,7 +18,6 @@ import io.resys.crm.client.api.model.CustomerCommand.UpsertSuomiFiPerson;
 import io.resys.crm.client.api.model.CustomerCommand.UpsertSuomiFiRep;
 import io.resys.crm.client.api.model.Document.DocumentType;
 import io.resys.crm.client.api.model.ImmutableCustomer;
-import io.resys.crm.client.api.model.ImmutableCustomerBody;
 import io.resys.crm.client.api.model.ImmutableCustomerTransaction;
 import io.resys.crm.client.api.model.ImmutablePerson;
 import io.resys.crm.client.spi.store.DocumentConfig;
@@ -92,7 +91,7 @@ public class CustomerCommandVisitor {
     
     this.current = ImmutableCustomer.builder()
       .id(id)
-      .body(ImmutableCustomerBody.builder().from(command.getBody()).build())
+      .body(ImmutablePerson.builder().from(command.getBody()).build())
       .externalId(command.getExternalId())
       .created(targetDate)
       .updated(targetDate)
@@ -168,6 +167,10 @@ public class CustomerCommandVisitor {
   //TODO
   private Customer visitChangeCustomerFirstName(ChangeCustomerFirstName command) {
     this.current = this.current
+        .withBody(ImmutablePerson.builder()
+            .from(this.current.getBody())
+            .firstName(command.getFirstName())
+            .build())
         .withUpdated(requireTargetDate(command));
     visitedCommands.add(command);
     return this.current;

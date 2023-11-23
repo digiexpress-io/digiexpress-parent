@@ -102,13 +102,26 @@ public class UpdateCustomerVisitor implements DocObjectsVisitor<Uni<List<Custome
     final var updatedTenants = blob.accept((Doc doc, DocBranch docBranch, DocCommit commit, List<DocLog> log) -> {
       
       final var start = docBranch.getValue().mapTo(ImmutableCustomer.class);
-      final var commands = commandsByCustomerId.get(start.getId());
+      final List<CustomerUpdateCommand> commands = new ArrayList<>();
+      if(commandsByCustomerId.containsKey(start.getId())) {
+        commands.addAll(commandsByCustomerId.get(start.getId()));
+      } else if(commandsByCustomerId.containsKey(start.getExternalId())) {
+        commands.addAll(commandsByCustomerId.get(start.getExternalId()));
+      }
+      if(commands.isEmpty()) {
+        throw DocumentStoreException.builder("CUSTOMERS_UPDATE_FAIL_COMMANDS_ARE_EMPTY")   
+          .add((callback) -> callback.addArgs(customerIds.stream().collect(Collectors.joining(",", "{", "}"))))
+          .build();
+      }
+      
       
       try {
         final var updated = new CustomerCommandVisitor(start, ctx.getConfig()).visitTransaction(commands);
         this.commitBuilder.item()
-          .branchName(updated.getId())
-          .append(JsonObject.mapFrom(updated));
+          .docId(updated.getId())
+          .branchName(docBranch.getBranchName())
+          .append(JsonObject.mapFrom(updated))
+          .next();
         
         return updated;
       } catch(NoChangesException e) {

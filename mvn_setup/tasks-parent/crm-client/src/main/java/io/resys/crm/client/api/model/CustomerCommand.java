@@ -125,21 +125,18 @@ public interface CustomerCommand extends Serializable {
   
   @Value.Immutable @JsonSerialize(as = ImmutableChangeCustomerFirstName.class) @JsonDeserialize(as = ImmutableChangeCustomerFirstName.class)
   interface ChangeCustomerFirstName extends CustomerUpdateCommand {
-
     String getFirstName();
     @Override default CustomerCommandType getCommandType() { return CustomerCommandType.ChangeCustomerFirstName; }
   }
   
   @Value.Immutable @JsonSerialize(as = ImmutableChangeCustomerLastName.class) @JsonDeserialize(as = ImmutableChangeCustomerLastName.class)
   interface ChangeCustomerLastName extends CustomerUpdateCommand {
-
     String getLastName();
     @Override default CustomerCommandType getCommandType() { return CustomerCommandType.ChangeCustomerLastName; }
   }
   
   @Value.Immutable @JsonSerialize(as = ImmutableChangeCustomerSsn.class) @JsonDeserialize(as = ImmutableChangeCustomerSsn.class)
   interface ChangeCustomerSsn extends CustomerUpdateCommand {
-
     String getNewSsn();
     @Override default CustomerCommandType getCommandType() { return CustomerCommandType.ChangeCustomerSsn; }
   }

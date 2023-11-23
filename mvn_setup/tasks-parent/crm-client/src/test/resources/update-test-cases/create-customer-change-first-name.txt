@@ -1,0 +1,17 @@
+
+Docs
+  - 1: external-id
+
+Branches
+  - branch name: main/2
+    doc id: 1
+    commit id: 3
+    {"id":"1_CUSTOMER","body":{"type":"PERSON","contact":{"email":"ron@gmail.com","address":{"street":"1234 Any street","country":"FI","locality":"Helsinki","postalCode":"12345"},"addressValue":"1234 Any street, Helsinki, FI, 12345"},"lastName":"something last","userName":"Amanda Smith","firstName":"Jack","protectionOrder":null},"created":"2023-01-01T01:01:00Z","updated":"2023-01-01T01:01:00Z","version":"2","externalId":"external-id","documentType":"CUSTOMER","transactions":[{"id":"1","commands":[{"body":{"type":"PERSON","contact":{"email":"ron@gmail.com","address":{"street":"1234 Any street","country":"FI","locality":"Helsinki","postalCode":"12345"},"addressValue":"1234 Any street, Helsinki, FI, 12345"},"lastName":"something last","userName":"Amanda Smith","firstName":"something first","protectionOrder":null},"userId":"tester-bob","externalId":"external-id","targetDate":"2023-01-01T01:01:00Z","commandType":"CreateCustomer"}]},{"id":"2","commands":[{"userId":"jane.doe@morgue.com","firstName":"Jack","customerId":"external-id","targetDate":"2023-01-01T01:01:00Z","commandType":"ChangeCustomerFirstName"}]}]}
+
+Commits
+  - id: 4
+    doc id: 1, branch id: 2, parent: 5, message: creating tenant, author: not-configured
+  - id: 3
+    doc id: 1, branch id: 2, parent: 4, message: Update customers: 1, author: not-configured
+
+Logs
