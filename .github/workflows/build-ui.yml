@@ -44,5 +44,5 @@ jobs:
             aws-region: ${{ secrets.AWS_REGION }}
         - name: Publish assets
           run: |
-            aws s3 sync --exclude '*.html' --delete --cache-control public,max-age=3600 --acl public-read ts_setup/tasks-ui/build/ s3://${{ secrets.CDN_S3_BUCKET }}/digiexpress-io/tasks-ui/${{ github.ref_name }}/
-            aws s3 sync --include '*.html' --cache-control no-cache --acl public-read ts_setup/tasks-ui/build/ s3://${{ secrets.CDN_S3_BUCKET }}/digiexpress-io/tasks-ui/${{ github.ref_name }}/
+            aws s3 sync --exclude '*.html' --delete --cache-control public,max-age=3600 --acl public-read build/ s3://${{ secrets.CDN_S3_BUCKET }}/digiexpress-io/tasks-ui/${{ github.ref_name }}/
+            aws s3 sync --include '*.html' --cache-control no-cache --acl public-read build/ s3://${{ secrets.CDN_S3_BUCKET }}/digiexpress-io/tasks-ui/${{ github.ref_name }}/
