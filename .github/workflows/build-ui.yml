@@ -36,6 +36,7 @@ jobs:
           run: yarn build
           env:
             CI: false # 
+            PUBLIC_URL: //${{ secrets.CDN_S3_BUCKET }}/digiexpress-io/tasks-ui/${{ github.ref_name }}
         - name: Configure AWS Credentials
           uses: aws-actions/configure-aws-credentials@v3
           with:
@@ -46,6 +47,6 @@ jobs:
           with:
             bucket: ${{ secrets.CDN_S3_BUCKET }}
             dir: ts_setup/tasks-ui/build
-            prefix: digiexpress-io/tasks-ui/${{ github.ref_name }}
+            prefix: digiexpress-io/tasks-ui/${{ github.ref_name }}/
             delete-orphaned: true
     
