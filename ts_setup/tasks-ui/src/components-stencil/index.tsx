@@ -1,14 +1,8 @@
 
-import React from 'react';
-import { Main } from './Main';
-import { Secondary } from './Secondary';
 import StencilClient from './client';
 import Toolbar from './Toolbar';
 import { Composer } from './context';
 import messages from './intl';
-
-import { SnackbarProvider } from 'notistack';
-import Burger from 'components-burger';
 
 interface StencilComposerProps {
   service: StencilClient.Service,
