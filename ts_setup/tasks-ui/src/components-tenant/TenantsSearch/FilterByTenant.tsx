@@ -3,7 +3,6 @@ import { Menu, MenuItem, MenuList, ListItemIcon, ListItemText, Typography } from
 import Check from '@mui/icons-material/Check';
 import { FormattedMessage } from 'react-intl';
 import Client from 'client';
-import { FilterByStatus, FilterBy } from 'descriptor-task';
 import { } from 'descriptor-tenant';
 import { NavigationButtonSearch } from '../NavigationSticky';
 
