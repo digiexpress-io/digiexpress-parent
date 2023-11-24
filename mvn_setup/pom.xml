@@ -101,10 +101,11 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-    <maven-pmd-plugin.version>3.16.0</maven-pmd-plugin.version>
-    <maven-javadoc-plugin.version>3.3.2</maven-javadoc-plugin.version>
-    <maven-checkstyle-plugin.version>3.1.2</maven-checkstyle-plugin.version>
-    <maven-spotbugs-plugin.version>4.5.3.0</maven-spotbugs-plugin.version>
+    <maven-pmd-plugin.version>3.21.2</maven-pmd-plugin.version>
+    <maven-javadoc-plugin.version>3.6.2</maven-javadoc-plugin.version>
+    <maven-checkstyle-plugin.version>3.3.1</maven-checkstyle-plugin.version>
+    <maven-spotbugs-plugin.version>4.8.1.0</maven-spotbugs-plugin.version>
+    <surefire.plugin.version>3.2.2</surefire.plugin.version>
 
     <cobertura-maven-plugin.version>2.7</cobertura-maven-plugin.version>
     <cobertura.halt-on-failure>false</cobertura.halt-on-failure>
@@ -234,7 +235,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-enforcer-plugin</artifactId>
-            <version>3.0.0</version>
+            <version>3.4.1</version>
             <executions>
               <execution>
                 <id>enforce-no-snapshots</id>
@@ -262,7 +263,7 @@
           <plugin>
             <groupId>com.mycila</groupId>
             <artifactId>license-maven-plugin</artifactId>
-            <version>4.1</version>
+            <version>4.3</version>
             <executions>
               <execution>
                 <goals>
@@ -300,21 +301,21 @@
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>versions-maven-plugin</artifactId>
-            <version>2.1</version>
+            <version>2.16.2</version>
             <configuration>
               <generateBackupPoms>false</generateBackupPoms>
             </configuration>
           </plugin>
           <plugin>
             <artifactId>maven-deploy-plugin</artifactId>
-            <version>3.0.0-M1</version>
+            <version>3.1.1</version>
             <configuration>
               <skip>true</skip>
             </configuration>
           </plugin>
           <plugin>
             <artifactId>maven-source-plugin</artifactId>
-            <version>3.2.0</version>
+            <version>3.3.0</version>
             <executions>
               <execution>
                 <id>package-sources</id>
@@ -326,7 +327,7 @@
           </plugin>
           <plugin>
             <artifactId>maven-javadoc-plugin</artifactId>
-            <version>3.2.0</version>
+            <version>${maven-javadoc-plugin.version}</version>
             <executions>
               <execution>
                 <id>package-javadoc</id>
@@ -340,7 +341,7 @@
           <plugin>
             <groupId>org.sonatype.plugins</groupId>
             <artifactId>nexus-staging-maven-plugin</artifactId>
-            <version>1.6.8</version>
+            <version>1.6.13</version>
             <extensions>true</extensions>
             <configuration>
               <serverId>oss.sonatype.org</serverId>
