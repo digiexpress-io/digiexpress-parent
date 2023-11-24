@@ -137,6 +137,7 @@ public class CustomerCommandVisitor {
     
     final var nextBody = ImmutablePerson.builder()
         .contact(command.getContact())
+        .userName(command.getUserName())
         .firstName(command.getFirstName())
         .lastName(command.getLastName())
         .protectionOrder(command.getProtectionOrder())
