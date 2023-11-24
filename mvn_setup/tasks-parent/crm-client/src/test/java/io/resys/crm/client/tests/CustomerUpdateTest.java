@@ -25,7 +25,7 @@ public class CustomerUpdateTest extends CustomerTestCase {
       .createOne(ImmutableCreateCustomer.builder()
         .targetDate(getTargetDate())
         .body(ImmutablePerson.builder()
-            .userName("Amanda Smith")
+            .username("Amanda Smith")
             .firstName("Amanda")
             .lastName("Smith")
             .type(CustomerBodyType.PERSON)

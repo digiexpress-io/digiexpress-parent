@@ -35,7 +35,7 @@ public interface Customer extends Document {
     @Type(value = ImmutablePerson.class, name = "PERSON"),  
   })
   interface CustomerBody {
-    String getUserName();
+    String getUsername();
     CustomerBodyType getType();
     Optional<CustomerContact> getContact();
   }
