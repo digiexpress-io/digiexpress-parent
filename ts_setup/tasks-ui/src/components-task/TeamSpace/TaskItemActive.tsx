@@ -7,7 +7,7 @@ import { FormattedMessage } from 'react-intl';
 import TaskAssignees from '../TaskAssignees';
 import TaskRoles from '../TaskRoles';
 import TaskStatus from '../TaskStatus';
-import CRMDialog from '../CRM';
+import CRMDialog from '../../components-customer';
 import TaskEditDialog from '../TaskEdit';
 import Client from 'client';
 import Context from 'context';

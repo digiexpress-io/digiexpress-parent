@@ -14,11 +14,10 @@ import DueDate from './CellDueDate';
 import Menu from './CellMenu';
 import Roles from './CellRoles';
 import TitleAs from './CellTitle';
-import TitleCrmAs from './CellTitleWithCrm';
 import Priority from './CellPriority';
 import Status from './CellStatus';
 import { StyledFillerRows, StyledTableBody } from './StyledTable';
-import {TableConfigProps} from './table-ctx';
+import { TableConfigProps } from './table-ctx';
 
 declare namespace TaskTable {
   export type { TableConfigProps };
@@ -36,7 +35,6 @@ namespace TaskTable {
   export const CellMenu = Menu;
   export const CellRoles = Roles;
   export const CellTitle = TitleAs;
-  export const CellTitleCrm = TitleCrmAs;
   export const CellPriority = Priority;
   export const CellStatus = Status;
   export const TableFiller = StyledFillerRows;

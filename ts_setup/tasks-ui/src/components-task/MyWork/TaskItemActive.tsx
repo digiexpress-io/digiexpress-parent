@@ -7,7 +7,7 @@ import { FormattedMessage } from 'react-intl';
 import TaskAssignees from '../TaskAssignees';
 import TaskRoles from '../TaskRoles';
 import TaskStatus from '../TaskStatus';
-import CRMDialog from '../CRM';
+import CustomerDetailsDialog from '../../components-customer';
 import TaskEditDialog from '../TaskEdit';
 
 import Context from 'context';
@@ -47,30 +47,6 @@ const StyledStack: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   </Box >);
 }
 
-const MyRecentActivity: React.FC = () => {
-  const org = Context.useOrg();
-  const myActivities = org.state.iam.activity;
-
-  /*  TODO
-  sort by most recent date first
-  show only the most recent 10 activities
-  */
-  return (
-    <StyledStack>
-      <Typography fontWeight='bold' variant='h4'><FormattedMessage id='core.myWork.recentActivities' /></Typography>
-      <Divider sx={{ my: 1 }} />
-
-      {myActivities.map((activity) => (
-        <Box key={activity.id}>
-          <Typography sx={{ fontWeight: 'bolder' }}>{activity.eventDate}</Typography>
-          <Typography><FormattedMessage id={`core.myWork.recentActivities.events.${activity.eventType}`} />{`: ${activity.subjectTitle}`}</Typography>
-        </Box>
-      ))}
-      <StyledViewHistoryButton><FormattedMessage id='core.myWork.button.myActivityHistory' /></StyledViewHistoryButton>
-
-    </StyledStack>
-  )
-}
 
 
 const StyledTitle: React.FC<{ children: string }> = ({ children }) => {
@@ -136,7 +112,7 @@ const TaskItemActive: React.FC<{ task: TaskDescriptor | undefined }> = ({ task }
     const alert = getTaskAlert(task);
 
     return (<>
-      <CRMDialog open={crmOpen} onClose={handleCrm} task={task} />
+      <CustomerDetailsDialog open={crmOpen} onClose={handleCrm} task={task} />
       <TaskEditDialog open={taskEditOpen} onClose={handleTaskEdit} task={task} />
 
       <StyledStack>

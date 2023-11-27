@@ -8,7 +8,7 @@ import { TaskDescriptor, Group } from 'descriptor-task';
 import { usePopover } from './CellPopover';
 import CellHoverButton from './CellMenuButton';
 import TaskEditDialog from '../TaskEdit';
-import CRMDialog from '../CRM';
+import CustomerDetailsDialog from '../../components-customer';
 import { StyledTableCell } from './StyledTable';
 
 const StyledBox = styled(Box)(({ theme }) => ({
@@ -89,7 +89,7 @@ const FormattedCell: React.FC<{
     <StyledTableCell width="35px">
       <Box width="35px" justifyContent='right'> {/* Box is needed to prevent table cell resize on hover */}
         <TaskEditDialog open={edit} onClose={handleEndEdit} task={row} />
-        <CRMDialog open={crm} onClose={handleCrm} task={row} />
+        <CustomerDetailsDialog open={crm} onClose={handleCrm} task={row} />
         {active &&
           <CellMenu
             onEdit={handleStartEdit}

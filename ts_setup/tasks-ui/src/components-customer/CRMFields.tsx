@@ -23,14 +23,14 @@ import CallMadeIcon from '@mui/icons-material/CallMade';
 import CallReceivedIcon from '@mui/icons-material/CallReceived';
 
 import Context from 'context';
-import TaskStartDate from '../TaskStartDate';
-import TaskDueDate from '../TaskDueDate';
+import TaskStartDate from '../components-task/TaskStartDate';
+import TaskDueDate from '../components-task/TaskDueDate';
 
-import ChecklistDelegate from '../Checklist';
+import ChecklistDelegate from '../components-task/Checklist';
 import { TaskExtension } from 'client';
-import { Message, Thread } from '../Inbox/thread-types';
-import { AttachmentAndDateTime } from '../Inbox/ThreadPreview';
-import { demoThreads } from '../Inbox/DemoThreads';
+import { Message, Thread } from '../components-task/Inbox/thread-types';
+import { AttachmentAndDateTime } from '../components-task/Inbox/ThreadPreview';
+import { demoThreads } from '../components-task/Inbox/DemoThreads';
 import { useMenu } from './menu-ctx';
 import { MenuTab } from './menu-ctx-types';
 import Client from 'client';

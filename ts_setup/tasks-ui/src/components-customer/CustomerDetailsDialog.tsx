@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Stack, Grid, Typography } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
-import StyledFullScreenDialog from '../Dialogs';
+import StyledFullScreenDialog from '../components-task/Dialogs'; //TODO fullscreen dialog
 import Fields from './CRMFields';
 import Context from 'context';
 import { TaskDescriptor } from 'descriptor-task';
@@ -80,7 +80,7 @@ const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   )
 }
 
-const CRMDialog: React.FC<{ open: boolean, onClose: () => void, task?: TaskDescriptor }> = (props) => {
+const CustomerDetailsDialog: React.FC<{ open: boolean, onClose: () => void, task?: TaskDescriptor }> = (props) => {
   const tasks = Context.useTasks();
 
   if (!props.open || !props.task) {
@@ -106,4 +106,4 @@ const CRMDialog: React.FC<{ open: boolean, onClose: () => void, task?: TaskDescr
   );
 }
 
-export { CRMDialog };
+export { CustomerDetailsDialog };
