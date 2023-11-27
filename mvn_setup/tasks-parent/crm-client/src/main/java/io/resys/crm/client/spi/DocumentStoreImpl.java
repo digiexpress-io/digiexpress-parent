@@ -59,7 +59,11 @@ import lombok.extern.slf4j.Slf4j;
 public class DocumentStoreImpl implements DocumentStore {
   private final DocumentConfig config;
   
-
+  @Override
+  public DocumentStore withRepoId(String repoId) {
+    return new DocumentStoreImpl(ImmutableDocumentConfig.builder().from(config).repoId(repoId).build());
+  }
+  
   @Override
   public Uni<Repo> getRepo() {
     final var client = config.getClient();

@@ -13,6 +13,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.quarkus.jackson.ObjectMapperCustomizer;
 import io.quarkus.runtime.annotations.RegisterForReflection;
+import io.resys.crm.client.api.CrmClient;
+import io.resys.crm.client.spi.CrmClientImpl;
 import io.resys.thena.docdb.jackson.VertexExtModule;
 import io.resys.thena.docdb.store.sql.DbStateSqlImpl;
 import io.resys.thena.docdb.store.sql.PgErrors;
@@ -85,6 +87,11 @@ public class BeanFactory {
   String tenantId;
   
   @Data @RequiredArgsConstructor
+  public static class CurrentPgPool {
+    private final io.vertx.mutiny.pgclient.PgPool pgPool;
+  }  
+  
+  @Data @RequiredArgsConstructor
   public static class CurrentTenant {
     private final String tenantId;
     private final String tenantsStoreId;
@@ -105,61 +112,30 @@ public class BeanFactory {
   }
   
   @Produces
-  public TaskClient taskClient(Vertx vertx, ObjectMapper om) {    
+  public TaskClient taskClient(CurrentPgPool currentPgPool, ObjectMapper om) {    
     
-    final var connectOptions = new PgConnectOptions().setDatabase(pgDb)
-        .setHost(pgHost).setPort(pgPort)
-        .setUser(pgUser).setPassword(pgPass);
-    final var poolOptions = new PoolOptions().setMaxSize(pgPoolSize);
-    final var pgPool = io.vertx.mutiny.pgclient.PgPool.pool(vertx, connectOptions, poolOptions);
-      
     final var store = io.resys.thena.tasks.client.spi.DocumentStoreImpl.builder()
         .repoName("")
-        .pgPool(pgPool)
-        .pgDb(pgDb)
-        .pgPoolSize(pgPoolSize)
-        .pgHost(pgHost)
-        .pgPort(pgPort)
-        .pgUser(pgUser)
-        .pgPass(pgPass)
+        .pgPool(currentPgPool.pgPool)
         .objectMapper(om)
         .build();
     return new TaskClientImpl(store);
   }
   
   @Produces
-  public TenantConfigClient tenantClient(Vertx vertx, ObjectMapper om) {    
-    
-    final var connectOptions = new PgConnectOptions().setDatabase(pgDb)
-        .setHost(pgHost).setPort(pgPort)
-        .setUser(pgUser).setPassword(pgPass);
-    final var poolOptions = new PoolOptions().setMaxSize(pgPoolSize);
-    final var pgPool = io.vertx.mutiny.pgclient.PgPool.pool(vertx, connectOptions, poolOptions);
-      
+  public TenantConfigClient tenantClient(ObjectMapper om, CurrentPgPool currentPgPool) {    
     final var store = io.resys.thena.projects.client.spi.DocumentStoreImpl.builder()
         .repoName(tenantsStoreId)
-        .pgPool(pgPool)
-        .pgDb(pgDb)
-        .pgPoolSize(pgPoolSize)
-        .pgHost(pgHost)
-        .pgPort(pgPort)
-        .pgUser(pgUser)
-        .pgPass(pgPass)
+        .pgPool(currentPgPool.pgPool)
         .objectMapper(om)
         .build();
     return new ProjectsClientImpl(store);
   }
   
   @Produces
-  public StencilComposer stencilComposer(Vertx vertx, ObjectMapper om, CurrentTenant currentProject) {    
-    
-    final var connectOptions = new PgConnectOptions().setDatabase(pgDb)
-        .setHost(pgHost).setPort(pgPort)
-        .setUser(pgUser).setPassword(pgPass);
-    final var poolOptions = new PoolOptions().setMaxSize(pgPoolSize);
-    final var pgPool = io.vertx.mutiny.pgclient.PgPool.pool(vertx, connectOptions, poolOptions);
+  public StencilComposer stencilComposer(Vertx vertx, ObjectMapper om, CurrentTenant currentProject, CurrentPgPool currentPgPool) {    
 
-    final var docDb = DbStateSqlImpl.create().client(pgPool).errorHandler(new PgErrors()).build();
+    final var docDb = DbStateSqlImpl.create().client(currentPgPool.pgPool).errorHandler(new PgErrors()).build();
     final var deserializer = new ZoeDeserializer(om);
     final var store = StencilStoreImpl.builder()
         .config((builder) -> builder
@@ -178,12 +154,32 @@ public class BeanFactory {
         .gidProvider(type -> UUID.randomUUID().toString())
         .authorProvider(() -> "no-author"))
         .build();
-    
-    
     final var client = new StencilClientImpl(store);
     return new StencilComposerImpl(client);
   }
+  
+  @Produces
+  public CrmClient crmClient(CurrentPgPool currentPgPool, ObjectMapper om) {    
+      
+    final var store = io.resys.crm.client.spi.DocumentStoreImpl.builder()
+        .repoName(tenantsStoreId)
+        .pgPool(currentPgPool.pgPool)
+        .objectMapper(om)
+        .build();
+    return new CrmClientImpl(store);
+  }
+  
 
+  @Produces
+  public CurrentPgPool currentPgPool(Vertx vertx) {
+    final var connectOptions = new PgConnectOptions().setDatabase(pgDb)
+        .setHost(pgHost).setPort(pgPort)
+        .setUser(pgUser).setPassword(pgPass);
+    final var poolOptions = new PoolOptions().setMaxSize(pgPoolSize);
+    final var pgPool = io.vertx.mutiny.pgclient.PgPool.pool(vertx, connectOptions, poolOptions);
+    return new CurrentPgPool(pgPool);
+  }
+  
   @Produces
   public ObjectMapperCustomizer objectMapperCustomizer() {
     final var modules = new com.fasterxml.jackson.databind.Module[] {

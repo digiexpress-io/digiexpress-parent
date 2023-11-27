@@ -8,22 +8,25 @@ import java.util.Optional;
 import io.resys.crm.client.api.model.Customer;
 import io.resys.crm.client.api.model.CustomerCommand.CreateCustomer;
 import io.resys.crm.client.api.model.CustomerCommand.CustomerUpdateCommand;
+import io.resys.crm.client.api.model.CustomerCommand.UpsertSuomiFiPerson;
 import io.resys.thena.docdb.api.models.Repo;
 import io.smallrye.mutiny.Uni;
 
 public interface CrmClient {
 
-  
   RepositoryQuery repoQuery();
   Uni<Repo> getRepo();
+  CrmClient withRepoId(String repoId);
   
   CreateCustomerAction createCustomer();
   UpdateCustomerAction updateCustomer();
   CustomerQuery customerQuery();
 
   interface CreateCustomerAction {
+    Uni<Customer> createOne(UpsertSuomiFiPerson command);
     Uni<Customer> createOne(CreateCustomer command);
     Uni<List<Customer>> createMany(List<? extends CreateCustomer> commands);
+    Uni<List<Customer>> upsertMany(List<? extends UpsertSuomiFiPerson> commands);
   }
 
   interface UpdateCustomerAction {

@@ -27,10 +27,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
+import com.github.javafaker.Faker;
+import com.github.mpolla.HetuUtil;
+
+import io.resys.crm.client.api.model.ImmutableCustomerAddress;
+import io.resys.crm.client.api.model.ImmutableCustomerContact;
+import io.resys.crm.client.api.model.ImmutablePerson;
 import io.resys.thena.tasks.client.api.model.ImmutableChecklist;
 import io.resys.thena.tasks.client.api.model.ImmutableChecklistItem;
 import io.resys.thena.tasks.client.api.model.ImmutableTaskComment;
@@ -45,7 +52,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 public class RandomDataProvider {
-
+  private final Faker faker = new Faker(new Locale("fi-FI"));
   private final Random rand = new Random();
   
   private final Map<Integer, String> ROLES = Map.of(
@@ -92,14 +99,14 @@ public class RandomDataProvider {
       3, "Sewage water disposal",
       4, "Water well construction",
       5, "General message"); 
-
+/*
   private final Map<Integer, String> SSN = Map.of(
       1, "Anette Lampen - 121097-676M, anette.lampen@resys.io, Jalonkatu 56, 90120, OULU",
       2, "Piia-Noora Salmelainen - 131274-780A, piia.noora.salmelainen@resys.io, tawastintie 43, 15300, LAHTI",
       3, "Arto Hakola - 170344-6999, arto.hakola@resys.io, Kajaaninkatu 29, 2120, ESPOO",
       4, "Kyllikki Multala - 270698-194T, kyllikki.multala@resys.io, Pohjoisesplanadi 49, 240, HELSINKI",
       5, "Pentti Parviainen - 171064-319U, pentti.parviainen@resys.io, Ilmalankuja 98, 28500, PORI"); 
-  
+*/
   
   
   public int nextInt(final int min, final int max) {
@@ -108,7 +115,7 @@ public class RandomDataProvider {
   }
   
   public String getDescription() {
-    return SSN.get(nextInt(1, SSN.size()));
+    return faker.chuckNorris().fact();
   }
   
   public String getTitle() {
@@ -301,5 +308,49 @@ public class RandomDataProvider {
   private enum StartDateAndDueDateType {
     OVERDUE, STARTS_TODAY, FUTURE
   }
+ 
   
+  public List<Integer> windows(int total) {
+    
+    final var generateWindows = new ArrayList<Integer>();
+    for(int index = 0; index < total; ) {
+      final var windowSize = nextInt(1, 4);
+      index += windowSize;
+      generateWindows.add(windowSize);
+    }
+    return generateWindows;
+  }  
+  
+  public String ssn() {
+    final var ssn = HetuUtil.generateRandom();
+    return ssn;
+  }
+  
+  public ImmutablePerson person() {
+    final var firstName = faker.name().firstName();
+    final var lastName = faker.name().lastName();
+    
+    final var zipCode = faker.address().zipCode();
+    final var city = faker.address().city();
+    final var buildingNumber = faker.address().buildingNumber();
+    final var streetName = faker.address().streetName();
+    
+    return ImmutablePerson.builder()
+        .username(firstName + " " + lastName)
+        .firstName(firstName)
+        .lastName(lastName)
+        .protectionOrder(nextInt(1, 2) == 2 ? true : false)
+        .contact(ImmutableCustomerContact.builder()
+            .email(firstName + "." + lastName + ".demo@resys.io")
+            .addressValue(city + ", " + streetName +  " " + buildingNumber  + ", " + zipCode)
+            .address(ImmutableCustomerAddress.builder()
+                .country("FI")
+                .locality(city)
+                .street(streetName)
+                .postalCode(zipCode)
+                .build())
+            .build())
+        .build();
+    
+  }
 }

@@ -96,12 +96,15 @@ public interface Task extends Document {
   
   @Value.Immutable @JsonSerialize(as = ImmutableTaskExtension.class) @JsonDeserialize(as = ImmutableTaskExtension.class)
   interface TaskExtension extends Serializable, TaskItem {
-    String getType(); //attachment, dialob, etc.
+    String getType(); //DIALOB, CUSTOMER
     String getName();
     String getBody();
     Instant getCreated();
     Instant getUpdated();
   }
+  enum TaskExtensionType {
+    CUSTOMER, DIALOB
+  }; 
   
   @Value.Immutable @JsonSerialize(as = ImmutableTaskComment.class) @JsonDeserialize(as = ImmutableTaskComment.class)
   interface TaskComment extends TaskItem {

@@ -1,6 +1,7 @@
 package io.resys.crm.client.spi.visitors;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 
@@ -29,7 +30,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import io.resys.crm.client.api.model.Customer;
+import io.resys.crm.client.api.model.CustomerCommand.CustomerCommandType;
 import io.resys.crm.client.api.model.CustomerCommand.CustomerUpdateCommand;
+import io.resys.crm.client.api.model.Document;
 import io.resys.crm.client.api.model.ImmutableCustomer;
 import io.resys.crm.client.spi.store.DocumentConfig;
 import io.resys.crm.client.spi.store.DocumentConfig.DocObjectsVisitor;
@@ -38,6 +41,8 @@ import io.resys.crm.client.spi.store.DocumentStoreException;
 import io.resys.crm.client.spi.store.MainBranch;
 import io.resys.crm.client.spi.visitors.CustomerCommandVisitor.NoChangesException;
 import io.resys.thena.docdb.api.actions.CommitActions.CommitResultStatus;
+import io.resys.thena.docdb.api.actions.DocCommitActions.CreateManyDocs;
+import io.resys.thena.docdb.api.actions.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.docdb.api.actions.DocCommitActions.ModifyManyDocBranches;
 import io.resys.thena.docdb.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
@@ -54,9 +59,10 @@ import io.vertx.core.json.JsonObject;
 public class UpdateCustomerVisitor implements DocObjectsVisitor<Uni<List<Customer>>> {
   private final DocumentStore ctx;
   private final List<String> customerIds;
-  private final ModifyManyDocBranches commitBuilder;
+  private final ModifyManyDocBranches updateBuilder;
+  private final CreateManyDocs createBuilder;
   private final Map<String, List<CustomerUpdateCommand>> commandsByCustomerId; 
-  
+  private final List<CustomerCommandType> upserts = Arrays.asList(CustomerCommandType.UpsertSuomiFiPerson, CustomerCommandType.UpsertSuomiFiPerson);
   
   public UpdateCustomerVisitor(List<CustomerUpdateCommand> commands, DocumentStore ctx) {
     super();
@@ -65,10 +71,16 @@ public class UpdateCustomerVisitor implements DocObjectsVisitor<Uni<List<Custome
     this.commandsByCustomerId = commands.stream()
         .collect(Collectors.groupingBy(CustomerUpdateCommand::getCustomerId));
     this.customerIds = new ArrayList<>(commandsByCustomerId.keySet());
-    this.commitBuilder = config.getClient().doc().commit().modifyManyBranches()
+    this.updateBuilder = config.getClient().doc().commit().modifyManyBranches()
         .repoId(config.getRepoId())
         .message("Update customers: " + commandsByCustomerId.size())
         .author(config.getAuthor().get());
+    this.createBuilder = config.getClient().doc().commit().createManyDocs()
+        .repoId(config.getRepoId())
+        .docType(Document.DocumentType.CUSTOMER.name())
+        .message("Upsert customers: " + commandsByCustomerId.size())
+        .author(config.getAuthor().get())
+        .branchName(config.getBranchName());
   }
 
   @Override
@@ -91,7 +103,9 @@ public class UpdateCustomerVisitor implements DocObjectsVisitor<Uni<List<Custome
         .add((callback) -> callback.addArgs(customerIds.stream().collect(Collectors.joining(",", "{", "}"))))
         .build();
     }
-    if(customerIds.size() != result.getDocs().size()) {
+    
+    final var totalUpserts = this.commandsByCustomerId.values().stream().flatMap(e -> e.stream()).filter(e -> upserts.contains(e.getCommandType())).count();
+    if(customerIds.size() < Math.max((result.getDocs().size() - totalUpserts), 0)) {
       throw new DocumentStoreException("CUSTOMERS_UPDATE_FAIL_NOT_ALL_CUSTOMERS_FOUND", JsonObject.of("failedUpdates", customerIds));
     }
     return result;
@@ -99,25 +113,62 @@ public class UpdateCustomerVisitor implements DocObjectsVisitor<Uni<List<Custome
 
   @Override
   public Uni<List<Customer>> end(DocumentConfig config, DocObjects blob) {
-    final var updatedTenants = blob.accept((Doc doc, DocBranch docBranch, DocCommit commit, List<DocLog> log) -> {
-      
+    return applyUpdates(config, blob).onItem()
+      .transformToUni(updated -> applyInserts(config, blob).onItem().transform(inserted -> {
+        final var result = new ArrayList<Customer>();
+        result.addAll(updated);
+        result.addAll(inserted);
+        return Collections.unmodifiableList(result);
+      }));
+  }
+  
+  private Uni<List<Customer>> applyInserts(DocumentConfig config, DocObjects blob) {
+    final var insertedCustomers = new ArrayList<Customer>(); 
+    for(final var entry : commandsByCustomerId.entrySet()) {
+      try {
+        if(!upserts.contains(entry.getValue().get(0).getCommandType())) {
+          continue;
+        }
+        final var inserted = new CustomerCommandVisitor(ctx.getConfig()).visitTransaction(entry.getValue());
+        this.createBuilder.item()
+          .docId(inserted.getId())
+          .externalId(inserted.getExternalId())
+          .append(JsonObject.mapFrom(inserted))
+          .next();
+        insertedCustomers.add(inserted);
+      } catch(NoChangesException e) {
+        // nothing to do
+      }
+    }
+    
+    if(insertedCustomers.isEmpty()) {
+      return Uni.createFrom().item(insertedCustomers);
+    }
+    return createBuilder.build().onItem().transform(envelope -> mapInsertedResponse(envelope, insertedCustomers));
+  }
+
+  private Uni<List<Customer>> applyUpdates(DocumentConfig config, DocObjects blob) {
+    final var updatedCustomers = blob.accept((Doc doc, DocBranch docBranch, DocCommit commit, List<DocLog> log) -> {  
       final var start = docBranch.getValue().mapTo(ImmutableCustomer.class);
+      
       final List<CustomerUpdateCommand> commands = new ArrayList<>();
       if(commandsByCustomerId.containsKey(start.getId())) {
         commands.addAll(commandsByCustomerId.get(start.getId()));
-      } else if(commandsByCustomerId.containsKey(start.getExternalId())) {
-        commands.addAll(commandsByCustomerId.get(start.getExternalId()));
+        commandsByCustomerId.remove(start.getId());
       }
+      if(commandsByCustomerId.containsKey(start.getExternalId())) {
+        commands.addAll(commandsByCustomerId.get(start.getExternalId()));
+        commandsByCustomerId.remove(start.getExternalId());
+      }
+      
       if(commands.isEmpty()) {
         throw DocumentStoreException.builder("CUSTOMERS_UPDATE_FAIL_COMMANDS_ARE_EMPTY")   
           .add((callback) -> callback.addArgs(customerIds.stream().collect(Collectors.joining(",", "{", "}"))))
           .build();
       }
-      
-      
       try {
         final var updated = new CustomerCommandVisitor(start, ctx.getConfig()).visitTransaction(commands);
-        this.commitBuilder.item()
+        this.updateBuilder.item()
           .docId(updated.getId())
           .branchName(docBranch.getBranchName())
           .append(JsonObject.mapFrom(updated))
@@ -129,26 +180,47 @@ public class UpdateCustomerVisitor implements DocObjectsVisitor<Uni<List<Custome
       }
     });
     
-    return commitBuilder.build().onItem().transform(response -> {
-      if(response.getStatus() != CommitResultStatus.OK) {
-        final var failedUpdates = customerIds.stream().collect(Collectors.joining(",", "{", "}"));
-        throw new DocumentStoreException("CUSTOMERS_UPDATE_FAIL", JsonObject.of("failedUpdates", failedUpdates), DocumentStoreException.convertMessages(response));
-      }
+    if(updatedCustomers.isEmpty()) {
+      return Uni.createFrom().item(updatedCustomers);
+    }
+    
+    return updateBuilder.build().onItem().transform(response -> mapUpdateResponse(response, updatedCustomers));
+  }
+  
+  
+  private List<Customer> mapInsertedResponse(ManyDocsEnvelope envelope, List<Customer> insertedCustomers) {
+    if(envelope.getStatus() != CommitResultStatus.OK) {
+      throw new DocumentStoreException("CUSTOMER_CREATE_FAIL", DocumentStoreException.convertMessages(envelope));
+    }
+    
+    final var branches = envelope.getBranch();
+    final Map<String, Customer> createdById = new HashMap<>(insertedCustomers.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)));
+    branches.forEach(branch -> {
+      final var next = ImmutableCustomer.builder()
+          .from(createdById.get(branch.getDocId()))
+          .version(branch.getCommitId())
+          .build();
       
-      final Map<String, Customer> configsById = new HashMap<>(
-          updatedTenants.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)));
-      
-      
-      response.getCommit().forEach(commit -> {
-        
-        final var next = ImmutableCustomer.builder()
-            .from(configsById.get(commit.getDocId()))
-            .version(commit.getId())
-            .build();
-        configsById.put(next.getId(), next);
-      });
-      
-      return Collections.unmodifiableList(new ArrayList<>(configsById.values()));
+      createdById.put(next.getId(), next);
     });
+    return Collections.unmodifiableList(new ArrayList<>(createdById.values()));
+  }
+  
+  private List<Customer> mapUpdateResponse(ManyDocsEnvelope response, List<Customer> updatedCustomers) {
+    if(response.getStatus() != CommitResultStatus.OK) {
+      final var failedUpdates = customerIds.stream().collect(Collectors.joining(",", "{", "}"));
+      throw new DocumentStoreException("CUSTOMERS_UPDATE_FAIL", JsonObject.of("failedUpdates", failedUpdates), DocumentStoreException.convertMessages(response));
+    }
+    final Map<String, Customer> customerById = new HashMap<>(updatedCustomers.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)));
+    response.getCommit().forEach(commit -> {
+      
+      final var next = ImmutableCustomer.builder()
+          .from(customerById.get(commit.getDocId()))
+          .version(commit.getId())
+          .build();
+      customerById.put(next.getId(), next);
+    });
+    
+    return Collections.unmodifiableList(new ArrayList<>(customerById.values()));
   }
 }

@@ -14,7 +14,8 @@
 
   <modules>
     <module>tasks-client</module>
-    <module>projects-client</module>    
+    <module>projects-client</module>
+    <module>crm-client</module>
   </modules>
 
 </project>

@@ -53,7 +53,7 @@ public class CreateCustomersVisitor implements DocCreateVisitor<Customer> {
     builder
       .docType(Document.DocumentType.CUSTOMER.name())
       .author(config.getAuthor().get())
-      .message("creating tenant");
+      .message("creating customer");
     
     for(final var command : commands) {
       try {

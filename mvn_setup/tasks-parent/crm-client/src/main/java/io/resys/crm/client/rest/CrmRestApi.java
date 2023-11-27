@@ -23,6 +23,10 @@ public interface CrmRestApi {
   @GET @Path("customers") @Produces(MediaType.APPLICATION_JSON)
   Uni<List<Customer>> findAllCustomers();
   
+
+  @GET @Path("customers/{customerId}") @Produces(MediaType.APPLICATION_JSON)
+  Uni<Customer> getCustomerById(@PathParam("customerId") String customerId);
+  
   @GET @Path("customers/search") @Produces(MediaType.APPLICATION_JSON) 
   Uni<List<Customer>> findAllCustomersByName(@QueryParam("name") String name);
   

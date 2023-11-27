@@ -17,9 +17,11 @@ import lombok.RequiredArgsConstructor;
 public class CrmClientImpl implements CrmClient {
   private final DocumentStore ctx;
   
-
-  public DocumentStore getCtx() {
-    return ctx;
+  public DocumentStore getCtx() { return ctx; }
+  
+  @Override
+  public CrmClient withRepoId(String repoId) {
+    return new CrmClientImpl(ctx.withRepoId(repoId));
   }
 
   @Override

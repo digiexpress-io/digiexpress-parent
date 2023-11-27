@@ -1,5 +1,7 @@
 package io.resys.crm.client.spi.actions;
 
+import java.util.ArrayList;
+
 /*-
  * #%L
  * thena-tasks-client
@@ -26,8 +28,10 @@ import java.util.List;
 import io.resys.crm.client.api.CrmClient.CreateCustomerAction;
 import io.resys.crm.client.api.model.Customer;
 import io.resys.crm.client.api.model.CustomerCommand.CreateCustomer;
+import io.resys.crm.client.api.model.CustomerCommand.UpsertSuomiFiPerson;
 import io.resys.crm.client.spi.store.DocumentStore;
 import io.resys.crm.client.spi.visitors.CreateCustomersVisitor;
+import io.resys.crm.client.spi.visitors.UpdateCustomerVisitor;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
@@ -45,6 +49,18 @@ public class CreateCustomerActionImpl implements CreateCustomerAction {
   @Override
   public Uni<List<Customer>> createMany(List<? extends CreateCustomer> commands) {
     return ctx.getConfig().accept(new CreateCustomersVisitor(commands));
+  }
+
+  @Override
+  public Uni<Customer> createOne(UpsertSuomiFiPerson command) {
+    return ctx.getConfig().accept(new UpdateCustomerVisitor(Arrays.asList(command), ctx)).onItem()
+        .transformToUni(item -> item).onItem().transform(items -> items.get(0));
+  }
+
+  @Override
+  public Uni<List<Customer>> upsertMany(List<? extends UpsertSuomiFiPerson> commands) {
+    return ctx.getConfig().accept(new UpdateCustomerVisitor(new ArrayList<>(commands), ctx)).onItem()
+        .transformToUni(item -> item).onItem().transform(items -> items);
   }
 
 }

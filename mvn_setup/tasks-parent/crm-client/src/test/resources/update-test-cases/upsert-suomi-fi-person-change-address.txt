@@ -10,7 +10,7 @@ Branches
 
 Commits
   - id: 4
-    doc id: 1, branch id: 2, parent: 5, message: creating tenant, author: not-configured
+    doc id: 1, branch id: 2, parent: 5, message: creating customer, author: not-configured
   - id: 3
     doc id: 1, branch id: 2, parent: 4, message: Update customers: 1, author: not-configured
 

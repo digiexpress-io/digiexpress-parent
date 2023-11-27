@@ -117,6 +117,7 @@ public class CustomerCommandVisitor {
           .id(id)
           .body(ImmutablePerson.builder()
               .contact(command.getContact())
+              .username(command.getUserName())
               .firstName(command.getFirstName())
               .lastName(command.getLastName())
               .protectionOrder(command.getProtectionOrder())

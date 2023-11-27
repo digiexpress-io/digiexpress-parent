@@ -18,7 +18,7 @@ import jakarta.ws.rs.Path;
 
 @Path("q/digiexpress/api")
 @ApplicationScoped
-public class CustomerResource implements CrmRestApi {
+public class CustomerTestResource implements CrmRestApi {
 
   private final ImmutableCustomer mockCustomer = ImmutableCustomer.builder()
       .id("id-1234")
@@ -73,5 +73,10 @@ public class CustomerResource implements CrmRestApi {
   @Override
   public Uni<Customer> deleteCustomer(String customerId, CustomerUpdateCommand command) {
    return Uni.createFrom().item(mockCustomer);
+  }
+
+  @Override
+  public Uni<Customer> getCustomerById(String customerId) {
+    return Uni.createFrom().item(mockCustomer);
   }
 }

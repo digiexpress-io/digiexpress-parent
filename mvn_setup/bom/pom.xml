@@ -246,6 +246,24 @@ permissions and limitations under the
         <artifactId>dialob-composer-spring</artifactId>
         <version>${project.version}</version>
       </dependency>
+      
+      
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>thena-tasks-client</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>thena-projects-client</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>thena-crm-client</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
       <dependency>
         <groupId>io.digiexpress</groupId>
         <artifactId>dialob-rule-parser</artifactId>

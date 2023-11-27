@@ -15,19 +15,37 @@
     <dependency>
       <groupId>io.digiexpress</groupId>
       <artifactId>thena-tasks-client</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>io.digiexpress</groupId>
       <artifactId>thena-projects-client</artifactId>
-      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.digiexpress</groupId>
+      <artifactId>thena-crm-client</artifactId>
     </dependency>
     <dependency>
       <groupId>io.digiexpress</groupId>
       <artifactId>stencil-client-api</artifactId>
     </dependency>
 
-
+    <!-- demo data generator-->
+    <dependency>
+      <groupId>com.github.javafaker</groupId>
+      <artifactId>javafaker</artifactId>
+      <version>1.0.2</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.yaml</groupId>
+          <artifactId>snakeyaml</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>com.github.mpolla</groupId>
+      <artifactId>fin-id-utils</artifactId>
+      <version>0.3</version>
+    </dependency>
 
     <dependency>
       <groupId>io.quarkus</groupId>
