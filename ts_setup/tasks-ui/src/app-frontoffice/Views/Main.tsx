@@ -5,6 +5,7 @@ import { SxProps } from '@mui/system';
 import Burger from 'components-burger';
 import Context from 'context';
 import TenantSearch from 'components-tenant';
+import SysConfig from 'components-sys-config';
 import Activities from '../Activities';
 
 const root: SxProps = { height: '100%', backgroundColor: "mainContent.main", width: '100%' };
@@ -34,7 +35,10 @@ const Main: React.FC<{}> = () => {
       return (<Box sx={root}></Box>);
     } else if (active.id === 'dialob') {
       return (<Box sx={root}><TenantSearch /></Box>);
+    }else if (active.id === 'deployments') {
+      return (<Box sx={root}><SysConfig /></Box>);
     }
+
 
 
     if (entity) {
