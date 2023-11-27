@@ -29,6 +29,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.RestAssured;
+import io.restassured.filter.log.LogDetail;
 import io.resys.crm.client.api.model.Customer;
 import io.resys.crm.client.api.model.CustomerCommand.CustomerCommandType;
 import io.resys.crm.client.api.model.ImmutableChangeCustomerFirstName;
@@ -44,33 +45,14 @@ public class RestApiTest {
   @Test
   public void getCustomers() throws JsonProcessingException {
     final Customer[] response = RestAssured.given().when()
-      .get("/q/digiexpress/api/tenants").then()
+      .get("/q/digiexpress/api/customers").then()
       .statusCode(200)
       .contentType("application/json")
       .extract().as(Customer[].class);
   
     Assertions.assertEquals("id-1234", response[0].getId());
   }
-  
-  @Test
-  public void postOneCustomer() throws JsonProcessingException {
-    final var body = ImmutableCreateCustomer.builder()
-        .body(ImmutablePerson.builder()
-            .firstName("Waldorf")
-            .lastName("SaladsMacgoo")
-            .build())
-        .externalId("ssn")
-      .commandType(CustomerCommandType.CreateCustomer)
-      .build();
 
-    final Customer[] response = RestAssured.given()
-      .body(Arrays.asList(body)).accept("application/json").contentType("application/json")
-      .when().post("/q/digiexpress/api/tenants").then()
-      .statusCode(200).contentType("application/json")
-      .extract().as(Customer[].class);
-  
-    Assertions.assertEquals("id-1234", response[0].getId());
-  }
   
   @Test
   public void postTwoCustomers() throws JsonProcessingException {
@@ -78,19 +60,21 @@ public class RestApiTest {
         .body(ImmutablePerson.builder()
             .firstName("Waldorf")
             .lastName("SaladsMacgoo")
+            .username("Waldorf SaladsMacGoo")
             .build())
         .userId("user-1")
         .externalId("ssn")
         .commandType(CustomerCommandType.CreateCustomer)
         .build();
 
-      final Customer[] response = RestAssured.given()
-        .body(Arrays.asList(body, body)).accept("application/json").contentType("application/json")
-        .when().post("/q/digiexpress/api/tenants").then()
+      final Customer response = RestAssured.given()
+        .body(body).accept("application/json").contentType("application/json")
+        .when().post("/q/digiexpress/api/customers")
+        .then().log().ifValidationFails(LogDetail.ALL)
         .statusCode(200).contentType("application/json")
-        .extract().as(Customer[].class);
+        .extract().as(Customer.class);
     
-      Assertions.assertEquals(2, response.length);
+      Assertions.assertNotNull(response);
   }
   
   @Test
@@ -102,13 +86,14 @@ public class RestApiTest {
         .build();
         
 
-      final Customer[] response = RestAssured.given()
+      final Customer response = RestAssured.given()
         .body(Arrays.asList(command, command, command, command)).accept("application/json").contentType("application/json")
-        .when().put("/q/digiexpress/api/tenants").then()
+        .when().put("/q/digiexpress/api/customers/customer-id-1")
+        .then().log().ifValidationFails(LogDetail.BODY)
         .statusCode(200).contentType("application/json")
-        .extract().as(Customer[].class);
+        .extract().as(Customer.class);
     
-      Assertions.assertEquals(4, response.length);
+      Assertions.assertNotNull(response);
   }
  
 }

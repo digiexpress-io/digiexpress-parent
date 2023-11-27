@@ -2,7 +2,6 @@ package io.resys.crm.client.tests.config;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import io.resys.crm.client.api.model.Customer;
 import io.resys.crm.client.api.model.CustomerCommand.CreateCustomer;
@@ -27,38 +26,52 @@ public class CustomerResource implements CrmRestApi {
       .version("v1.0")
       .created(CustomerTestCase.getTargetDate())
       .updated(CustomerTestCase.getTargetDate())
+      .body(ImmutablePerson.builder()
+          .firstName("Waldorf")
+          .lastName("SaladsMacgoo")
+          .username("Waldorf SaladsMacgoo")
+
+          .build())
       .addTransactions(
           ImmutableCustomerTransaction.builder()
           .id("transation-1")
           .addCommands(ImmutableCreateCustomer
               .builder()
+              .externalId("220276-840H")
               .body(ImmutablePerson.builder()
                   .firstName("Waldorf")
                   .lastName("SaladsMacgoo")
+                  .username("Waldorf SaladsMacgoo")
+
                   .build())
               .build())
           .build())
       .documentType(DocumentType.CUSTOMER)
       .build();
 
+
   @Override
-  public Uni<List<Customer>> findCustomers() {
-    return Uni.createFrom()
-        .item(Arrays.asList(mockCustomer));
+  public Uni<List<Customer>> findAllCustomers() {
+    return Uni.createFrom().item(Arrays.asList(mockCustomer));
   }
 
   @Override
-  public Uni<List<Customer>> updateCustomer(List<CustomerUpdateCommand> commands) {
-    return Uni.createFrom().item(commands.stream().map(e -> mockCustomer).collect(Collectors.toList()));
+  public Uni<List<Customer>> findAllCustomersByName(String name) {
+    return Uni.createFrom().item(Arrays.asList(mockCustomer));
   }
 
   @Override
-  public Uni<Customer> updateOneCustomer(String crmId, List<CustomerUpdateCommand> commands) {
+  public Uni<Customer> createCustomer(CreateCustomer command) {
     return Uni.createFrom().item(mockCustomer);
   }
 
   @Override
-  public Uni<List<Customer>> createCustomer(List<CreateCustomer> commands) {
-    return Uni.createFrom().item(commands.stream().map(e -> mockCustomer).collect(Collectors.toList()));
+  public Uni<Customer> updateCustomer(String customerId, List<CustomerUpdateCommand> commands) {
+    return Uni.createFrom().item(mockCustomer);
+  }
+
+  @Override
+  public Uni<Customer> deleteCustomer(String customerId, CustomerUpdateCommand command) {
+   return Uni.createFrom().item(mockCustomer);
   }
 }
