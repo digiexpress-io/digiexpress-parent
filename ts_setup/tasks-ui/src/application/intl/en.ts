@@ -43,6 +43,13 @@ const en = {
   'customer.created.suomiFi': 'Created via Suomi.fi',
   'customer.notifications.preferences': 'Customer notification preferences',
 
+  'customertable.header.spotlight.searchResults': 'Customer search results',
+  'customertable.header.customerType': 'Type',
+  'customertable.header.created': 'Created',
+  'customertable.header.lastLogin': 'Last login',
+  'customertable.header.tasks': 'Tasks',
+  'customertable.search.customerCount': 'Count',
+
 
   'dialob.form.created': 'Created',
   'dialob.form.lastSaved': 'Last saved',

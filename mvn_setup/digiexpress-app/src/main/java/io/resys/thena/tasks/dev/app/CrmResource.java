@@ -1,11 +1,17 @@
 package io.resys.thena.tasks.dev.app;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
+
 import io.resys.crm.client.api.CrmClient;
 import io.resys.crm.client.api.model.Customer;
+import io.resys.crm.client.api.model.Customer.CustomerBodyType;
+import io.resys.crm.client.api.model.Customer.Person;
 import io.resys.crm.client.api.model.CustomerCommand.CreateCustomer;
 import io.resys.crm.client.api.model.CustomerCommand.CustomerUpdateCommand;
 import io.resys.crm.client.rest.CrmRestApi;
@@ -37,7 +43,52 @@ public class CrmResource implements CrmRestApi {
   }
   @Override
   public Uni<List<Customer>> findAllCustomersByName(String name) {
-    return getCrmConfig().onItem().transformToUni(config -> crmClient.withRepoId(config.getRepoId()).customerQuery().findAll());
+    return getCrmConfig()
+        .onItem().transformToUni(config -> crmClient.withRepoId(config.getRepoId()).customerQuery().findAll())
+        .onItem().transform(customers -> {
+          final var criteria = createNames(name);
+          return customers.stream().filter(customer -> isMatch(criteria, customer)).collect(Collectors.toList());  
+        });
+  }
+  
+  private boolean isMatch(String[] criteria, Customer customer) {
+    final var customerNames = new ArrayList<String>();
+    customerNames.addAll(Arrays.asList(createNames(customer.getBody().getUsername())));
+    
+    if(customer.getBody().getType() == CustomerBodyType.PERSON) {
+      final var person = (Person) customer.getBody();
+      customerNames.addAll(Arrays.asList(createNames(person.getFirstName())));
+      customerNames.addAll(Arrays.asList(createNames(person.getLastName())));
+    }
+    
+
+    boolean isMatch = false;
+    for(final var crit : criteria) {
+      if(crit.equals(customer.getExternalId().toUpperCase())) {
+        return true;
+      }
+
+      boolean isAtLeastOneNameMatch = false;
+      for(final var name : customerNames) {
+        final var diff = StringUtils.getLevenshteinDistance(name, crit);
+        if(diff < 3) {
+          isAtLeastOneNameMatch = true;
+          break;
+        }
+      }
+      
+      if(!isAtLeastOneNameMatch) {
+        isMatch = false;
+        break;
+      }
+      isMatch = true;
+    }
+    
+    return isMatch;
+  }
+  
+  private String[] createNames(String name) {
+    return name.trim().replace("  ", " ").toUpperCase().split(" ");
   }
 
   @Override

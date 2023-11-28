@@ -57,7 +57,7 @@ export class ServiceImpl implements Backend {
     return await this._store.fetch<Customer>(`customers/${id}`, { repoType: 'CRM' });
   }
   async findCustomers(searchString: string): Promise<Customer[]> {
-    return await this._store.fetch<Customer[]>(`customers`, { repoType: 'CRM' });
+    return await this._store.fetch<Customer[]>(`customers/search?name=${encodeURIComponent(searchString)}`, { repoType: 'CRM' });
   }
 
   async health(): Promise<Health> {

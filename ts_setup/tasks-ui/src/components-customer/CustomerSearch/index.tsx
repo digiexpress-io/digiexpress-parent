@@ -42,7 +42,6 @@ const Header: React.FC<TableConfigProps & { columns: (keyof CustomerDescriptor)[
         { /* reserved title column */}
         <TableCell align='left' padding='none'>
           <TableTitle group={group} />
-          <TableSubTitle values={group.records.length} message='core.customerSearch.customerCount' />
         </TableCell>
 
         { /* without title */}
@@ -115,7 +114,7 @@ const CustomerSearch: React.FC<{}> = () => {
         Rows: ({ content, group, loading }) => (
           <TableBody>
             {content.entries.map((row, rowId) => (<Row key={row.id} rowId={rowId} row={row} def={group} columns={columns} />))}
-            <TableFillerRows content={content} loading={loading} plusColSpan={4} />
+            <TableFillerRows content={content} loading={loading} plusColSpan={5} />
           </TableBody>
         )
       }}
