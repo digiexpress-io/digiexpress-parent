@@ -11,7 +11,7 @@ interface TablePopoverProps {
   transformOrigin?: PopoverOrigin
 }
 
-const usePopover = () => {
+const useTableCellPopover = () => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
   const open = Boolean(anchorEl);
 
@@ -53,4 +53,4 @@ const TablePopover: React.FC<TablePopoverProps> = ({ children, anchorEl, open, o
   );
 }
 
-export { usePopover };
+export { useTableCellPopover };

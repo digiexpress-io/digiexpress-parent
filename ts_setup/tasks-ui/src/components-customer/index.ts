@@ -1,5 +1,5 @@
 import { CustomerDetailsDialog as CustomerDetailsDialogAs } from './CustomerDetails';
-import { CustomerSearch as CustomerSearchAs } from './CustomerSearch';
+import CustomerSearchAs from './CustomerSearch';
 
 namespace Customer {
   export const CustomerDetailsDialog = CustomerDetailsDialogAs;

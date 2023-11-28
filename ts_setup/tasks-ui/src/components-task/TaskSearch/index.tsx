@@ -10,7 +10,7 @@ import FilterOwners from './FilterOwners';
 import FilterRoles from './FilterRoles';
 import FilterPriority from './FilterPriority';
 import FilterColumns from './FilterColumns';
-import FilterByString from './FilterByString';
+import { FilterByString } from 'components-generic';
 import GroupBy from './GroupBy';
 
 

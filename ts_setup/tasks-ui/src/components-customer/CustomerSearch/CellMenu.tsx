@@ -4,12 +4,12 @@ import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { FormattedMessage } from 'react-intl';
 
-import { TaskDescriptor, Group } from 'descriptor-task';
-import { useTableCellPopover } from 'components-generic';
+import { CustomerDescriptor } from 'descriptor-customer';
+import { CustomersSearchState, CustomerTable, initCustomersSearchState, TableConfigProps } from './table-ctx';
+
+import { useTableCellPopover, StyledTableCell } from 'components-generic';
 import CellHoverButton from './CellMenuButton';
-import TaskEditDialog from '../TaskEdit';
 import Customer from 'components-customer';
-import { StyledTableCell } from './StyledTable';
 
 const StyledBox = styled(Box)(({ theme }) => ({
   color: theme.palette.error.main,
@@ -59,8 +59,8 @@ const CellMenu: React.FC<{
 
 const FormattedCell: React.FC<{
   rowId: number,
-  row: TaskDescriptor,
-  def: Group,
+  row: CustomerDescriptor,
+  def: CustomersSearchState,
   active: boolean,
   setDisabled: () => void
 }> = ({ row, active, setDisabled }) => {
@@ -88,8 +88,12 @@ const FormattedCell: React.FC<{
   return (
     <StyledTableCell width="35px">
       <Box width="35px" justifyContent='right'> {/* Box is needed to prevent table cell resize on hover */}
+
+        { /*
         <TaskEditDialog open={edit} onClose={handleEndEdit} task={row} />
         <Customer.CustomerDetailsDialog open={crm} onClose={handleCrm} task={row} />
+  */}
+
         {active &&
           <CellMenu
             onEdit={handleStartEdit}

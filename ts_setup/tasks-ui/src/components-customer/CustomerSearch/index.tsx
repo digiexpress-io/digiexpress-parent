@@ -1,12 +1,20 @@
 import React from 'react';
-import { TableHead, TableCell, TableRow, Box, Stack } from '@mui/material';
+import { TableHead, TableCell, TableRow, Box } from '@mui/material';
 
 import Context from 'context';
-import { TaskDescriptor, Group } from 'descriptor-task';
-import TaskTable from '../../components-task/TaskTable';
-import NavigationSticky from './NavigationSticky';
-import FilterByString from './FilterByString';
+import { CustomerDescriptor } from 'descriptor-customer';
+import { NavigationSticky, FilterByString, TableBody, TableFillerRows } from 'components-generic';
 
+import { CustomersSearchState, CustomerTable, initCustomersSearchState, TableConfigProps } from './table-ctx';
+import { TableTitle, TableSubTitle } from './TableTitle';
+import { SortableHeaders } from './TableHeaders';
+
+import CellMenu from './CellMenu';
+import CellDisplayName from './CellDisplayName';
+import CellCustomerType from './CellCustomerType';
+import CellCreated from './CellCreated';
+import CellLastLogin from './CellLastLogin';
+import CellTasks from './CellTasks';
 
 
 
@@ -19,12 +27,12 @@ function getRowBackgroundColor(index: number): string {
   return 'background.paper';
 }
 
-const Header: React.FC<TaskTable.TableConfigProps & { columns: (keyof TaskDescriptor)[] }> = ({ content, setContent, group, columns }) => {
+const Header: React.FC<TableConfigProps & { columns: (keyof CustomerDescriptor)[] }> = ({ content, setContent, group, columns }) => {
 
-  const includesTitle = columns.includes("title");
+  const includesTitle = columns.includes("displayName");
 
   const headersToShow = includesTitle ?
-    columns.filter(c => c !== 'title') :
+    columns.filter(c => c !== 'displayName') :
     columns.slice(1);
 
   return (
@@ -33,12 +41,12 @@ const Header: React.FC<TaskTable.TableConfigProps & { columns: (keyof TaskDescri
 
         { /* reserved title column */}
         <TableCell align='left' padding='none'>
-          <TaskTable.Title group={group} />
-          <TaskTable.SubTitle values={group.records.length} message='core.teamSpace.taskCount' />
+          <TableTitle group={group} />
+          <TableSubTitle values={group.records.length} message='core.customerSearch.customerCount' />
         </TableCell>
 
         { /* without title */}
-        <TaskTable.ColumnHeaders columns={headersToShow} content={content} setContent={setContent} />
+        <SortableHeaders columns={headersToShow} content={content} setContent={setContent} />
 
         {/* menu column */}
         {columns.length > 0 && <TableCell></TableCell>}
@@ -49,9 +57,9 @@ const Header: React.FC<TaskTable.TableConfigProps & { columns: (keyof TaskDescri
 
 const Row: React.FC<{
   rowId: number,
-  row: TaskDescriptor,
-  def: Group,
-  columns: (keyof TaskDescriptor)[]
+  row: CustomerDescriptor,
+  def: CustomersSearchState,
+  columns: (keyof CustomerDescriptor)[]
 }> = (props) => {
 
   const [hoverItemsActive, setHoverItemsActive] = React.useState(false);
@@ -60,57 +68,61 @@ const Row: React.FC<{
   }
   return (<TableRow sx={{ backgroundColor: getRowBackgroundColor(props.rowId) }} hover tabIndex={-1} key={props.row.id}
     onMouseEnter={() => setHoverItemsActive(true)} onMouseLeave={handleEndHover}>
-    {props.columns.includes("title") && <TaskTable.CellTitle {...props} children={hoverItemsActive} />}
-    {props.columns.includes("assignees") && <TaskTable.CellAssignees {...props} />}
-    {props.columns.includes("dueDate") && <TaskTable.CellDueDate {...props} />}
-    {props.columns.includes("priority") && <TaskTable.CellPriority {...props} />}
-    {props.columns.includes("roles") && <TaskTable.CellRoles {...props} />}
-    {props.columns.includes("status") && <TaskTable.CellStatus {...props} />}
+    {props.columns.includes("displayName") && <CellDisplayName {...props} children={hoverItemsActive} />}
+    {props.columns.includes("customerType") && <CellCustomerType {...props} />}
+    {props.columns.includes("created") && <CellCreated {...props} />}
+    {props.columns.includes("lastLogin") && <CellLastLogin {...props} />}
+    {props.columns.includes("tasks") && <CellTasks {...props} />}
 
-    <TaskTable.CellMenu {...props} active={hoverItemsActive} setDisabled={handleEndHover} />
+    <CellMenu {...props} active={hoverItemsActive} setDisabled={handleEndHover} />
   </TableRow>);
 }
 
-const columnTypes: (keyof TaskDescriptor)[] = [
-  'title',
-  'assignees',
-  'dueDate',
-  'priority',
-  'roles',
-  'status']
+const columnTypes: (keyof CustomerDescriptor)[] = [
+  'displayName',
+  'customerType',
+  'created',
+  'lastLogin',
+  'tasks']
 
 const CustomerSearch: React.FC<{}> = () => {
+  const backend = Context.useBackend();
   const tasks = Context.useTasks();
-  const [state, setState] = React.useState(tasks.state.toGroupsAndFilters());
-  const [columns, setColumns] = React.useState([
-    ...columnTypes
-  ]);
+  const profile = tasks.state.profile;
+  const [columns, setColumns] = React.useState([...columnTypes]);
+  const [state, setState] = React.useState<CustomersSearchState>(initCustomersSearchState(profile));
+  const [loading, setLoading] = React.useState<boolean>(false);
+  const { searchString, isSearchStringValid } = state;
 
   React.useEffect(() => {
-    setState(prev => prev.withTasks(tasks.state))
-  }, [tasks.state]);
+    if (isSearchStringValid) {
+      setLoading(true);
+      backend.customer.findCustomers(searchString).then(newRecords => {
+        setState(prev => prev.withRecords(newRecords));
+        setLoading(false);
+      });
+    }
+  }, [searchString, isSearchStringValid]);
 
   return (<Box>
     <NavigationSticky>
       <FilterByString onChange={({ target }) => setState(prev => prev.withSearchString(target.value))} />
-      <Stack direction='row' spacing={1}>
-      </Stack>
     </NavigationSticky>
     <Box mt={1} />
-    <TaskTable.Groups groups={state.groups} orderBy='created'>
+    <CustomerTable group={state} defaultOrderBy='displayName' loading={loading}>
       {{
         Header: (props) => <Header columns={columns} {...props} />,
         Rows: ({ content, group, loading }) => (
-          <TaskTable.TableBody>
+          <TableBody>
             {content.entries.map((row, rowId) => (<Row key={row.id} rowId={rowId} row={row} def={group} columns={columns} />))}
-            <TaskTable.TableFiller content={content} loading={loading} plusColSpan={7} />
-          </TaskTable.TableBody>
+            <TableFillerRows content={content} loading={loading} plusColSpan={4} />
+          </TableBody>
         )
       }}
-    </TaskTable.Groups>
+    </CustomerTable>
   </Box>
   );
 }
 
 
-export { CustomerSearch };
+export default CustomerSearch;
