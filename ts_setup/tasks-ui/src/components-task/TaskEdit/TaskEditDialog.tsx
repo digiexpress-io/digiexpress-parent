@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, List, Button, Typography, Stack } from '@mui/material';
-import SecurityIcon from '@mui/icons-material/Security';
+import CrmIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
 import { FormattedMessage } from 'react-intl';
 import StyledFullScreenDialog from '../Dialogs';
 import Fields from './TaskEditFields';
@@ -93,7 +93,7 @@ const Header: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   return (
     <>
-      <Button startIcon={<SecurityIcon />} variant='contained' color='warning'><FormattedMessage id='core.taskEdit.clientData' /></Button>
+      <Button startIcon={<CrmIcon />} variant='contained' color='warning'><FormattedMessage id='core.taskEdit.clientData' /></Button>
       <Burger.PrimaryButton label='buttons.accept' onClick={onClose} />
     </>
   )

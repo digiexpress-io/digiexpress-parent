@@ -326,6 +326,9 @@ const en = {
   'activities.search.title': 'Search',
   'activities.search.desc': 'Search for, view, and manage all tasks, users, and roles ',
 
+  'activities.searchCustomers.title': 'Search customers',
+  'activities.searchCustomers.desc': 'Search by customer name to find tasks and CRM data for customers',
+
   'activities.reporting.title': 'Reporting',
   'activities.reporting.desc': 'Generate json report of data. Allows grouping and filtering.',
 

@@ -62,6 +62,18 @@ const createActivities: (props: {
   },
 
   {
+    id: "searchCustomers",
+    title: "activities.searchCustomers.title",
+    content: {
+      label: "activities.searchCustomers.desc"
+    },
+    primary: {
+      label: "buttons.view",
+      onClick: () => actions.handleTabAdd({ id: 'searchCustomers', label: <FormattedMessage id="activities.searchCustomers.title" /> })
+    }
+  },
+
+  {
     id: "reporting",
     title: "activities.reporting.title",
     content: {

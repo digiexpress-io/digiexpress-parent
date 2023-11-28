@@ -32,6 +32,8 @@ const Main: React.FC<{}> = () => {
       return (<Box sx={root}><Activities /></Box>);
     } else if (active.id === 'search') {
       return (<Box sx={root}><Core.TaskSearch /></Box>);
+    } else if (active.id === 'searchCustomers') {
+      return (<Box sx={root}><Core.TaskSearch /></Box>);
     } else if (active.id === 'mytasks') {
       return (<Box sx={root}><Core.MyWork /></Box>);
     } else if (active.id === 'dev') {

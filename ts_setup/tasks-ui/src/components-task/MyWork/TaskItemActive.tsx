@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Stack, Alert, AlertTitle, Typography, IconButton, Divider, Skeleton, darken, styled, Button, useTheme, AlertColor } from '@mui/material';
+import { Box, Stack, Alert, AlertTitle, Typography, IconButton, Skeleton, useTheme, AlertColor } from '@mui/material';
 import EditIcon from '@mui/icons-material/ModeEditOutlineOutlined';
 import CrmIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
 import { FormattedMessage } from 'react-intl';
@@ -7,24 +7,15 @@ import { FormattedMessage } from 'react-intl';
 import TaskAssignees from '../TaskAssignees';
 import TaskRoles from '../TaskRoles';
 import TaskStatus from '../TaskStatus';
-import CustomerDetailsDialog from '../../components-customer';
 import TaskEditDialog from '../TaskEdit';
+import CustomerDetailsDialog from '../../components-customer';
 
 import Context from 'context';
 import Client from 'client';
 import { TaskDescriptor } from 'descriptor-task';
 import Burger from 'components-burger';
 
-const StyledViewHistoryButton = styled(Button)(({ theme }) => ({
-  width: '100%',
-  justifySelf: 'center',
-  color: theme.palette.mainContent.main,
-  fontWeight: 'bold',
-  backgroundColor: theme.palette.uiElements.main,
-  '&:hover': {
-    backgroundColor: darken(theme.palette.uiElements.main, 0.3),
-  }
-}));
+
 
 const StyledStack: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const theme = useTheme();
