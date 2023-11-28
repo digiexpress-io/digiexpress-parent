@@ -41,6 +41,7 @@ const en = {
   'customer.formCompleted': 'Form completed',
   'customer.created': 'Customer created',
   'customer.created.suomiFi': 'Created via Suomi.fi',
+  'customer.notifications.preferences': 'Customer notification preferences',
 
 
   'dialob.form.created': 'Created',

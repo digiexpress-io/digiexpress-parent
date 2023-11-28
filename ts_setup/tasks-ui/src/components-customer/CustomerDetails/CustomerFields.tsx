@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, IconButton, Stack, Grid, Divider } from '@mui/material';
+import { Typography, IconButton, Stack, Grid, Divider, List, ListItem, ListItemText } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { FormattedMessage } from 'react-intl';
 import { parseISO } from 'date-fns';
@@ -118,6 +118,14 @@ const CustomerEvents: React.FC<{ customer: CustomerDescriptor }> = ({ customer }
     </Stack>);
 }
 
+const CustomerNotificationPref: React.FC<{}> = () => {
+  return (<List>
+    <Typography>Receive email when task is completed</Typography>
+    <Typography>Receive messages via Suomi.fi messaging when task is completed</Typography>
+    <Typography>Receive paper letter via Suomi.fi when task is completed</Typography>
+  </List>);
+}
+
 
 const CloseDialogButton: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   return (
@@ -128,5 +136,5 @@ const CloseDialogButton: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 }
 
 
-const Fields = { CustomerInfo, CustomerContact, CustomerTask, CustomerEvents, CloseDialogButton };
+const Fields = { CustomerInfo, CustomerContact, CustomerTask, CustomerEvents, CustomerNotificationPref, CloseDialogButton };
 export default Fields;

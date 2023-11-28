@@ -13,7 +13,6 @@ import { CustomerDescriptorImpl, CustomerDescriptor } from 'descriptor-customer'
 const Left: React.FC<{ customer: CustomerDescriptor, task: TaskDescriptor }> = ({ customer, task }) => {
   return (
     <Stack spacing={1} direction='column' pt={1}>
-
       <Burger.Section>
         <Typography fontWeight='bold'><FormattedMessage id='customer.details.customerInfo' /></Typography>
         <Fields.CustomerInfo customer={customer} />
@@ -28,19 +27,24 @@ const Left: React.FC<{ customer: CustomerDescriptor, task: TaskDescriptor }> = (
         <Typography fontWeight='bold'><FormattedMessage id='customer.tasks' /></Typography>
         <Fields.CustomerTask customer={customer} />
       </Burger.Section>
-
     </Stack>
   )
 }
 
 const Right: React.FC<{ customer: CustomerDescriptor }> = ({ customer }) => {
 
-  return (<Box pt={1}>
-    <Burger.Section>
-      <Typography fontWeight='bold'><FormattedMessage id='customer.events' /></Typography>
-      <Fields.CustomerEvents customer={customer} />
-    </Burger.Section>
-  </Box>
+  return (
+    <Stack spacing={1} direction='column' pt={1}>
+      <Burger.Section>
+        <Typography fontWeight='bold'><FormattedMessage id='customer.notifications.preferences' /></Typography>
+        <Fields.CustomerNotificationPref />
+      </Burger.Section>
+
+      <Burger.Section>
+        <Typography fontWeight='bold'><FormattedMessage id='customer.events' /></Typography>
+        <Fields.CustomerEvents customer={customer} />
+      </Burger.Section>
+    </Stack>
   );
 
 }
