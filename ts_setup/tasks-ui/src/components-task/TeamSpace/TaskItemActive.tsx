@@ -7,12 +7,13 @@ import { FormattedMessage } from 'react-intl';
 import TaskAssignees from '../TaskAssignees';
 import TaskRoles from '../TaskRoles';
 import TaskStatus from '../TaskStatus';
-import CRMDialog from '../../components-customer';
+import Customer from 'components-customer';
+import Burger from 'components-burger';
+
 import TaskEditDialog from '../TaskEdit';
 import Client from 'client';
 import Context from 'context';
 import { TaskDescriptor } from 'descriptor-task';
-import Burger from 'components-burger';
 
 
 const StyledStack: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -95,7 +96,7 @@ const TaskItemActive: React.FC<{ task: TaskDescriptor | undefined }> = ({ task }
     const alert = getTaskAlert(task);
 
     return (<>
-      <CRMDialog open={crmOpen} onClose={handleCrm} task={task} />
+      <Customer.CustomerDetailsDialog open={crmOpen} onClose={handleCrm} task={task} />
       <TaskEditDialog open={taskEditOpen} onClose={handleTaskEdit} task={task} />
       <StyledStack>
 

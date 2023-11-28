@@ -8,11 +8,11 @@ import TaskAssignees from '../TaskAssignees';
 import TaskRoles from '../TaskRoles';
 import TaskStatus from '../TaskStatus';
 import TaskEditDialog from '../TaskEdit';
-import CustomerDetailsDialog from '../../components-customer';
 
 import Context from 'context';
 import Client from 'client';
 import { TaskDescriptor } from 'descriptor-task';
+import Customer from 'components-customer';
 import Burger from 'components-burger';
 
 
@@ -103,7 +103,7 @@ const TaskItemActive: React.FC<{ task: TaskDescriptor | undefined }> = ({ task }
     const alert = getTaskAlert(task);
 
     return (<>
-      <CustomerDetailsDialog open={crmOpen} onClose={handleCrm} task={task} />
+      <Customer.CustomerDetailsDialog open={crmOpen} onClose={handleCrm} task={task} />
       <TaskEditDialog open={taskEditOpen} onClose={handleTaskEdit} task={task} />
 
       <StyledStack>
