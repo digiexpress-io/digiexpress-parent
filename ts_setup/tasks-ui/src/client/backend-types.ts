@@ -3,6 +3,7 @@ import { TaskStore } from './task-types';
 import { ProjectStore } from './project-types';
 import { TenantStore } from './tenant-types';
 import { Org, User } from './org-types';
+import { CustomerStore } from './customer-types';
 import { TenantConfig, RepoType } from './tenant-config-types';
 
 
@@ -20,6 +21,7 @@ export interface Backend {
   task: TaskStore;
   project: ProjectStore;
   tenant: TenantStore;
+  customer: CustomerStore;
 
   currentUserProfile(): Promise<UserProfile>;
   currentTenant(): Promise<TenantConfig>;

@@ -79,7 +79,7 @@ const TenantConfigSetup: React.FC<{ profile: TaskClient.UserProfile }> = ({ prof
   const projects: Burger.App<{}, any> = React.useMemo(() => AppProjects(service, profile), [service, profile]);
   const frontoffice: Burger.App<{}, any> = React.useMemo(() => AppFrontoffice(service, profile), [service, profile]);
   const tenant: Burger.App<{}, any> = React.useMemo(() => AppTenant(service, profile), [service, profile]);
-  const appId = tenantConfig.preferences.landingApp;
+  const appId = "app-tasks"//tenantConfig.preferences.landingApp;
 
   return (<Provider service={service} profile={profile}>
     <Burger.Provider children={

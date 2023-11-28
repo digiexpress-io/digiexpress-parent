@@ -3,7 +3,7 @@ import {
   AssignTaskParent, CommentOnTask, ChangeTaskComment, AssignTaskRoles, AssignTask, ChangeTaskDueDate, ChangeTaskInfo,
   CreateTaskExtension, ChangeTaskExtension, ChangeTaskStartDate, CreateChecklist, ChangeChecklistTitle, DeleteChecklist, AddChecklistItem, DeleteChecklistItem,
   ChangeChecklistItemAssignees, ChangeChecklistItemCompleted, ChangeChecklistItemDueDate, ChangeChecklistItemTitle,
-  Task
+  Task, CustomerId
 } from 'client';
 
 export interface SingleEventBody<T extends TaskCommandType, C extends TaskCommand> {
@@ -103,6 +103,7 @@ export interface TaskDescriptor {
   rolesAvatars: AvatarCode[];
   assigneesAvatars: AvatarCode[];
 
+  customerId: CustomerId | undefined;
 
   assigneeGroupType: AssigneeGroupType | undefined;
   teamGroupType: TeamGroupType | undefined;

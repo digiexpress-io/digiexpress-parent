@@ -1,4 +1,4 @@
-import { CustomerDetailsDialog } from './CustomerDetailsDialog';
+import CustomerDetailsDialog from './CustomerDetails';
 
 
 export default CustomerDetailsDialog;

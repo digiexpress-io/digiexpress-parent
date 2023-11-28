@@ -17,9 +17,9 @@ class TaskEditStateBuilder implements TaskEditMutatorBuilder {
     this._today = init.today;
     this._events = new TaskEditEventVisitor({ task: init.task, userId: init.task.profile.userId }).build();
   }
-  get today(): Date { return this._today };
-  get task(): TaskDescriptor { return this._task };
-  get userId(): string { return this._task.profile.userId };
+  get today(): Date { return this._today }
+  get task(): TaskDescriptor { return this._task }
+  get userId(): string { return this._task.profile.userId }
   get events(): TaskEditEvent[] { return this._events }
 
   withTask(input: Task): TaskEditStateBuilder {

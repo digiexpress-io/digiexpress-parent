@@ -1,4 +1,4 @@
-import { Task, TaskExtension, TaskPriority, TaskStatus, UserProfile, resolveAvatar } from 'client';
+import { Task, TaskExtension, TaskPriority, TaskStatus, UserProfile, CustomerId, resolveAvatar } from 'client';
 
 import {
   TaskDescriptor, FilterBy, Group, GroupBy,
@@ -309,6 +309,7 @@ class TaskDescriptorImpl implements TaskDescriptor {
   private _entry: Task;
   private _created: Date;
   private _dialobId: string | undefined;
+  private _customerId: CustomerId | undefined;
   private _dueDate: Date | undefined;
   private _startDate: Date | undefined;
   private _daysUntilDue: number | undefined;
@@ -326,6 +327,7 @@ class TaskDescriptorImpl implements TaskDescriptor {
     this._dueDate = entry.dueDate ? new Date(entry.dueDate) : undefined;
     this._daysUntilDue = entry.dueDate ? getDaysUntilDue(entry, today) : undefined;
     this._dialobId = entry.extensions.find(t => t.type === 'dialob')?.body;
+    this._customerId = entry.extensions.find(t => t.type === 'CUSTOMER')?.body;
     this._uploads = entry.extensions.filter(t => t.type === 'upload');
     this._rolesAvatars = resolveAvatar(entry.roles);
     this._ownersAvatars = resolveAvatar(entry.assigneeIds);
@@ -340,6 +342,7 @@ class TaskDescriptorImpl implements TaskDescriptor {
   get profile() { return this._profile }
   get id() { return this._entry.id }
   get dialobId() { return this._dialobId }
+  get customerId() { return this._customerId }
   get entry() { return this._entry }
   get created() { return this._created }
   get dueDate() { return this._dueDate }

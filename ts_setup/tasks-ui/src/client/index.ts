@@ -59,6 +59,20 @@ import {
 } from './task-types';
 
 import {
+  Customer, CustomerId, CustomerTask, CustomerContact,
+  CustomerCommandType, CustomerCommand, CustomerBodyType,
+  CreateCustomer,
+  UpsertSuomiFiPerson,
+  UpsertSuomiFiRep,
+  ChangeCustomerFirstName,
+  ChangeCustomerLastName,
+  ChangeCustomerSsn,
+  ChangeCustomerEmail,
+  ChangeCustomerAddress,
+  ArchiveCustomer, Person, Company
+} from './customer-types';
+
+import {
   UserProfile
 } from './profile-types';
 
@@ -68,10 +82,6 @@ import {
   StoreError,
   StoreErrorImpl as StoreErrorImplAs
 } from './error-types';
-
-import {
-  Customer, CustomerId, CustomerTask
-} from './customer-types';
 
 import {
   RepoType, TenantConfigId, TenantConfig, AppType
@@ -88,7 +98,18 @@ declare namespace TaskClient {
     ArchiveProject,
     ChangeRepoType,
 
-    Customer, CustomerId, CustomerTask,
+    Person, Company,
+    Customer, CustomerId, CustomerTask, CustomerBodyType,
+    CustomerCommandType, CustomerCommand, CustomerContact,
+    CreateCustomer,
+    UpsertSuomiFiPerson,
+    UpsertSuomiFiRep,
+    ChangeCustomerFirstName,
+    ChangeCustomerLastName,
+    ChangeCustomerSsn,
+    ChangeCustomerEmail,
+    ChangeCustomerAddress,
+    ArchiveCustomer,
 
     TaskId, Task,
     BackendError, Backend, StoreConfig, Store,
@@ -136,8 +157,20 @@ declare namespace TaskClient {
 }
 
 export type {
-  Customer, CustomerId, CustomerTask, TaskCommandType,
+  Customer, CustomerId, CustomerTask, CustomerBodyType,
+  CustomerCommandType, CustomerCommand, CustomerContact,
+  CreateCustomer,
+  UpsertSuomiFiPerson,
+  UpsertSuomiFiRep,
+  ChangeCustomerFirstName,
+  ChangeCustomerLastName,
+  ChangeCustomerSsn,
+  ChangeCustomerEmail,
+  ChangeCustomerAddress,
+  ArchiveCustomer,
 
+  TaskCommandType,
+  Person, Company,
   Project, ProjectId, RepoType,
   UserProfile,
   TaskId, Task,

@@ -3,15 +3,15 @@ export type CustomerId = string;
 export type ExternalId = string; //ssn or business id
 export type CustomerBodyType = 'COMPANY' | 'PERSON';
 
-export interface Person {
+export interface Person extends CustomerBody {
   firstName: string,
   lastName: string,
   protectionOrder?: boolean,
-  type: CustomerBodyType
+  type: 'PERSON'
 }
 
-export interface Company {
-  type: CustomerBodyType
+export interface Company extends CustomerBody {
+  type: 'COMPANY'
 }
 
 export interface CustomerAddress {
@@ -21,8 +21,8 @@ export interface CustomerAddress {
   country: string
 }
 
-interface CustomerBody {
-  username: String,
+export interface CustomerBody {
+  username: string,
   type: CustomerBodyType,
   contact?: CustomerContact,
 }
@@ -40,13 +40,10 @@ export interface CustomerTask {
 export interface Customer {
   id: CustomerId,
   externalId: ExternalId,
-  ssn: string,
-  created: Date,
-  updated: Date,
+  created: string,
+  updated: string,
   body: CustomerBody,
-  firstName: string,
-  lastName: string,
-  tasks: CustomerTask[]
+  transactions: CustomerTransaction[]
 }
 
 export interface CustomerTransaction {
@@ -116,4 +113,9 @@ export interface ChangeCustomerAddress extends CustomerUpdateCommand<'ChangeCust
 }
 
 export interface ArchiveCustomer extends CustomerUpdateCommand<'ArchiveCustomer'> {
+}
+
+export interface CustomerStore {
+  findCustomers(searchString: string): Promise<Customer[]>
+  getCustomer(id: CustomerId): Promise<Customer>
 }

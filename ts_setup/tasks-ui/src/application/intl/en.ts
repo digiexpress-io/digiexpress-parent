@@ -9,7 +9,36 @@ const en = {
   'buttons.view': 'View',
   'buttons.add': 'Add',
   'buttons.accept': 'Accept and close',
+  'buttons.close': 'Close',
   'buttons.download': 'Download',
+
+  'customer.details.dialog.title': 'Customer details',
+  'customer.details.view': 'Customer',
+  'customer.details.customerInfo': 'Customer info',
+  'customer.type': 'Type',
+  'customer.type.PERSON': 'Person',
+  'customer.type.COMPANY': 'Company',
+  'customer.firstName': 'First name',
+  'customer.lastName': 'Last name',
+  'customer.ssn': 'Ssn',
+
+  'customer.contactInfo': 'Contact information',
+  'customer.email': 'Email address',
+  'customer.locality': 'Locality',
+  'customer.country': 'Country',
+  'customer.street': 'Street',
+  'customer.postalCode': 'Postal code',
+  'customer.tasks': 'Tasks',
+  'customer.task.name': 'Task name',
+  'customer.task.dateOpened': 'Date opened',
+  'customer.task.dueDate': 'Due date',
+  'customer.task.assignees': 'Assignees',
+  'customer.task.status': 'Status',
+  'customer.events': 'Customer events',
+  'customer.lastLogin': 'Last login',
+  'customer.formDeleted': 'Form deleted due to inactivity',
+  'customer.formCompleted': 'Form completed',
+
 
   'dialob.form.created': 'Created',
   'dialob.form.lastSaved': 'Last saved',
@@ -265,7 +294,7 @@ const en = {
   'core.search.searchBar.filterStatus': 'Status {count}',
   'core.search.searchBar.filterPriority': 'Priority {count}',
 
-  'crmDialog.title': 'Customer data',
+
   'taskEditDialog.title': 'Edit task',
 
   '_nobody_': 'Unassigned',

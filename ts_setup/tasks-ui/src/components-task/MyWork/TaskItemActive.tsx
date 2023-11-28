@@ -128,11 +128,19 @@ const TaskItemActive: React.FC<{ task: TaskDescriptor | undefined }> = ({ task }
         </Alert>
 
         {/* buttons section */}
+
+
         <Burger.Section>
           <StyledTitle children='task.tools' />
           <Stack direction='row' spacing={1} justifyContent='center'>
-            <IconButton onClick={handleTaskEdit}><EditIcon sx={{ color: 'uiElements.main' }} /></IconButton>
-            <IconButton onClick={handleCrm}><CrmIcon sx={{ color: 'locale.dark' }} /></IconButton>
+            <Box display='flex' flexDirection='column' alignItems='center'>
+              <IconButton onClick={handleTaskEdit}><EditIcon sx={{ color: 'uiElements.main' }} /></IconButton>
+              <Typography><FormattedMessage id='task.edit' /></Typography>
+            </Box>
+            <Box display='flex' flexDirection='column' alignItems='center'>
+              <IconButton onClick={handleCrm}><CrmIcon sx={{ color: 'locale.dark' }} /></IconButton>
+              <Typography><FormattedMessage id='customer.details.view' /></Typography>
+            </Box>
           </Stack>
         </Burger.Section>
 
