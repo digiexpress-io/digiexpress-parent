@@ -10,7 +10,7 @@ import { CustomerDescriptorImpl, CustomerDescriptor } from 'descriptor-customer'
 
 
 
-const Left: React.FC<{ customer: CustomerDescriptor }> = ({ customer }) => {
+const Left: React.FC<{ customer: CustomerDescriptor, task: TaskDescriptor }> = ({ customer, task }) => {
   return (
     <Stack spacing={1} direction='column' pt={1}>
 
@@ -100,7 +100,7 @@ const CustomerDetailsDialog: React.FC<{ open: boolean, onClose: () => void, task
       <StyledFullScreenDialog
         header={<Header onClose={props.onClose} />}
         footer={<Footer onClose={handleClose} />}
-        left={<Left customer={customer} />}
+        left={<Left customer={customer} task={props.task} />}
         right={<Right customer={customer} />}
         onClose={props.onClose}
         open={props.open}

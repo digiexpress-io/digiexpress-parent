@@ -34,10 +34,13 @@ const en = {
   'customer.task.dueDate': 'Due date',
   'customer.task.assignees': 'Assignees',
   'customer.task.status': 'Status',
+  'customer.task.assignees.none': 'No assignees',
   'customer.events': 'Customer events',
   'customer.lastLogin': 'Last login',
   'customer.formDeleted': 'Form deleted due to inactivity',
   'customer.formCompleted': 'Form completed',
+  'customer.created': 'Customer created',
+  'customer.created.suomiFi': 'Created via Suomi.fi',
 
 
   'dialob.form.created': 'Created',

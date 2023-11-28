@@ -1,11 +1,13 @@
 import React from 'react';
-import { Typography, IconButton, Stack, Grid } from '@mui/material';
+import { Typography, IconButton, Stack, Grid, Divider } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { FormattedMessage } from 'react-intl';
+import { parseISO } from 'date-fns';
 import { CustomerDescriptor } from 'descriptor-customer';
+import { TaskDescriptor } from 'descriptor-task';
 
+import Burger from 'components-burger';
 import Context from 'context';
-
 
 const CustomerInfo: React.FC<{ customer: CustomerDescriptor }> = ({ customer }) => {
 
@@ -53,44 +55,53 @@ const CustomerContact: React.FC<{ customer: CustomerDescriptor }> = ({ customer 
     </Stack>);
 }
 
-const CustomerTask: React.FC<{ customer: CustomerDescriptor }> = () => {
+const CustomerTask: React.FC<{ customer: CustomerDescriptor }> = ({ customer }) => {
+  const tasks = Context.useTasks();
+  const tasksByCustomer: TaskDescriptor[] = tasks.state.tasks.filter((task) => task.customerId === customer.entry.id);
 
-  return (
-    <Stack direction='column' spacing={1}>
-      <Grid container alignItems='center'>
-        <Grid item md={3} lg={3}>
-          <Typography fontWeight='bolder'><FormattedMessage id='customer.task.name' /></Typography>
-          <Typography fontWeight='bolder'><FormattedMessage id='customer.task.dateOpened' /></Typography>
-          <Typography fontWeight='bolder'><FormattedMessage id='customer.task.dueDate' /></Typography>
-          <Typography fontWeight='bolder'><FormattedMessage id='customer.task.assignees' /></Typography>
-          <Typography fontWeight='bolder'><FormattedMessage id='customer.task.status' /></Typography>
-        </Grid>
+  return (<>
+    {tasksByCustomer.map((task, index) => (<>
+      <Stack direction='column' spacing={1}>
+        <Grid container alignItems='center'>
+          <Grid item md={3} lg={3}>
+            <Typography fontWeight='bolder'><FormattedMessage id='customer.task.name' /></Typography>
+            <Typography fontWeight='bolder'><FormattedMessage id='customer.task.dateOpened' /></Typography>
+            <Typography fontWeight='bolder'><FormattedMessage id='customer.task.dueDate' /></Typography>
+            <Typography fontWeight='bolder'><FormattedMessage id='customer.task.assignees' /></Typography>
+            <Typography fontWeight='bolder'><FormattedMessage id='customer.task.status' /></Typography>
+          </Grid>
 
-        <Grid item md={9} lg={9} alignItems='center'>
-          <Typography>General message</Typography>
-          <Typography>8/11/2023</Typography>
-          <Typography>21/11/2023</Typography>
-          <Typography>Lord Vetrinary, Lady Sybil Vimes</Typography>
-          <Typography>CREATED</Typography>
+          <Grid item md={9} lg={9} alignItems='center'>
+            <Typography>{task.entry.title}</Typography>
+            <Typography><Burger.DateTimeFormatter type='dateTime' value={parseISO(task.entry.created)} /></Typography>
+            <Typography>{task.entry.dueDate ?
+              <Burger.DateTimeFormatter type='date' value={parseISO(task.entry.dueDate)} /> : <FormattedMessage id='customer.task.dueDate.none' />}
+            </Typography>
+            <Typography>{!task.assignees.length ? <FormattedMessage id='customer.task.assignees.none' /> : task.assignees.join(", ")}</Typography>
+            <Typography>{task.status}</Typography>
+          </Grid>
         </Grid>
-      </Grid>
-    </Stack>);
+      </Stack>
+      {tasksByCustomer.length - 1 === index ? undefined : <Divider sx={{ my: 1 }} />}
+    </>))}
+  </>
+  )
 }
 
-
-
-const CustomerEvents: React.FC<{ customer: CustomerDescriptor }> = () => {
+const CustomerEvents: React.FC<{ customer: CustomerDescriptor }> = ({ customer }) => {
 
   return (
     <Stack direction='column' spacing={1}>
       <Grid container alignItems='center'>
         <Grid item md={4} lg={4}>
+          <Typography fontWeight='bolder'><FormattedMessage id='customer.created' /></Typography>
           <Typography fontWeight='bolder'><FormattedMessage id='customer.lastLogin' /></Typography>
           <Typography fontWeight='bolder'><FormattedMessage id='customer.formDeleted' /></Typography>
           <Typography fontWeight='bolder'><FormattedMessage id='customer.formCompleted' /></Typography>
         </Grid>
 
         <Grid item md={4} lg={4}>
+          <Typography><Burger.DateTimeFormatter type='dateTime' value={parseISO(customer.entry.created)} /></Typography>
           <Typography>09/12/2023, 17:30</Typography>
           <Typography>01/09/2023, 09:12</Typography>
           <Typography>12/12/2023, 11:51</Typography>
@@ -98,6 +109,7 @@ const CustomerEvents: React.FC<{ customer: CustomerDescriptor }> = () => {
 
 
         <Grid item md={4} lg={4} alignItems='center'>
+          <Typography><FormattedMessage id='customer.created.suomiFi' /></Typography>
           <Typography>Logged in to portal</Typography>
           <Typography>General Message</Typography>
           <Typography>Building permit</Typography>
