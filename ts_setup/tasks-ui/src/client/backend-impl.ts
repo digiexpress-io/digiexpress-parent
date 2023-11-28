@@ -86,14 +86,28 @@ export class ServiceImpl implements Backend {
   }
 
   async getTenants(): Promise<Tenant[]> {
-    return this._store.fetch<Tenant[]>(`api/tenants`, { repoType: 'EXT_DIALOB' });
+    try {
+      return await this._store.fetch<Tenant[]>(`api/tenants`, { repoType: 'EXT_DIALOB' });
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
   }
   async getTenantEntries(id: string): Promise<TenantEntryPagination> {
-    const forms = await this._store.fetch<TenantEntry[]>(`api/forms`, { repoType: 'EXT_DIALOB' });
-    return {
-      page: 1,
-      total: { pages: 1, records: forms.length },
-      records: forms as any
+    try {
+      const forms = await this._store.fetch<TenantEntry[]>(`api/forms`, { repoType: 'EXT_DIALOB' });
+      return {
+        page: 1,
+        total: { pages: 1, records: forms.length },
+        records: forms as any
+      }
+    } catch (error) {
+      console.error(error);
+      return {
+        page: 1,
+        total: { pages: 1, records: 0 },
+        records: []
+      }
     }
   }
   async getDialobTags(dialobFormId: string): Promise<DialobTag[]> {
