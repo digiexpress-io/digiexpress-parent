@@ -85,15 +85,9 @@ values:
       name: ""
       array: true
       context: "CONSTANTS"
-      debugValue:
-        empty: true
-        present: false
-      formula:
-        empty: true
-        present: false
-      formulaOverAll:
-        empty: true
-        present: false
+      debugValue: null
+      formula: null
+      formulaOverAll: null
       type: "INTEGER"
   matched:
     token:
@@ -134,15 +128,9 @@ values:
         name: ""
         array: true
         context: "MATCHES"
-        debugValue:
-          empty: true
-          present: false
-        formula:
-          empty: true
-          present: false
-        formulaOverAll:
-          empty: true
-          present: false
+        debugValue: null
+        formula: null
+        formulaOverAll: null
         type: "INTEGER"
 - token:
     text: "matchingFirstDT({}):{}{findFirst({})}"

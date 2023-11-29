@@ -48,15 +48,9 @@ values:
       name: "name"
       array: false
       context: "ACCEPTS"
-      debugValue:
-        empty: true
-        present: false
-      formula:
-        empty: true
-        present: false
-      formulaOverAll:
-        empty: true
-        present: false
+      debugValue: null
+      formula: null
+      formulaOverAll: null
       type: "STRING"
     - token:
         text: "lastName:STRING"
@@ -70,15 +64,9 @@ values:
       name: "lastName"
       array: false
       context: "ACCEPTS"
-      debugValue:
-        empty: true
-        present: false
-      formula:
-        empty: true
-        present: false
-      formulaOverAll:
-        empty: true
-        present: false
+      debugValue: null
+      formula: null
+      formulaOverAll: null
       type: "STRING"
     returnDefs:
     - token:
@@ -93,15 +81,9 @@ values:
       name: "value"
       array: false
       context: "RETURNS"
-      debugValue:
-        empty: true
-        present: false
-      formula:
-        empty: true
-        present: false
-      formulaOverAll:
-        empty: true
-        present: false
+      debugValue: null
+      formula: null
+      formulaOverAll: null
       type: "INTEGER"
     - token:
         text: "exp:INTEGER=value+20"
@@ -115,15 +97,70 @@ values:
       name: "exp"
       array: false
       context: "RETURNS"
-      debugValue:
-        empty: true
-        present: false
+      debugValue: null
       formula:
-        empty: false
-        present: true
-      formulaOverAll:
-        empty: false
-        present: true
+        token:
+          text: "value+20"
+          start:
+            line: 1
+            col: 91
+          end:
+            line: 1
+            col: 101
+        id:
+          token:
+            text: "value+20"
+            start:
+              line: 1
+              col: 91
+            end:
+              line: 1
+              col: 101
+          value: ""
+        headers:
+          token:
+            text: "value+20"
+            start:
+              line: 1
+              col: 91
+            end:
+              line: 1
+              col: 101
+          acceptDefs: []
+          returnDefs: []
+        src: "value + 20"
+        value:
+          token:
+            text: "value+20"
+            start:
+              line: 1
+              col: 91
+            end:
+              line: 1
+              col: 101
+          type: "ADD"
+          left:
+            token:
+              text: "value"
+              start:
+                line: 1
+                col: 91
+              end:
+                line: 1
+                col: 96
+            value: "value"
+          right:
+            token:
+              text: "20"
+              start:
+                line: 1
+                col: 99
+              end:
+                line: 1
+                col: 101
+            type: "INTEGER"
+            value: "20"
+      formulaOverAll: false
       type: "INTEGER"
   hitPolicy:
     token:
@@ -715,15 +752,9 @@ values:
       name: "value"
       array: false
       context: "RETURNS"
-      debugValue:
-        empty: true
-        present: false
-      formula:
-        empty: true
-        present: false
-      formulaOverAll:
-        empty: true
-        present: false
+      debugValue: null
+      formula: null
+      formulaOverAll: null
       type: "INTEGER"
   matched:
     token:
@@ -751,15 +782,9 @@ values:
       name: "value"
       array: false
       context: "RETURNS"
-      debugValue:
-        empty: true
-        present: false
-      formula:
-        empty: true
-        present: false
-      formulaOverAll:
-        empty: true
-        present: false
+      debugValue: null
+      formula: null
+      formulaOverAll: null
       type: "INTEGER"
     - token:
         text: "exp:INTEGER=value+20"
@@ -773,13 +798,68 @@ values:
       name: "exp"
       array: false
       context: "RETURNS"
-      debugValue:
-        empty: true
-        present: false
+      debugValue: null
       formula:
-        empty: false
-        present: true
-      formulaOverAll:
-        empty: false
-        present: true
+        token:
+          text: "value+20"
+          start:
+            line: 1
+            col: 91
+          end:
+            line: 1
+            col: 101
+        id:
+          token:
+            text: "value+20"
+            start:
+              line: 1
+              col: 91
+            end:
+              line: 1
+              col: 101
+          value: ""
+        headers:
+          token:
+            text: "value+20"
+            start:
+              line: 1
+              col: 91
+            end:
+              line: 1
+              col: 101
+          acceptDefs: []
+          returnDefs: []
+        src: "value + 20"
+        value:
+          token:
+            text: "value+20"
+            start:
+              line: 1
+              col: 91
+            end:
+              line: 1
+              col: 101
+          type: "ADD"
+          left:
+            token:
+              text: "value"
+              start:
+                line: 1
+                col: 91
+              end:
+                line: 1
+                col: 96
+            value: "value"
+          right:
+            token:
+              text: "20"
+              start:
+                line: 1
+                col: 99
+              end:
+                line: 1
+                col: 101
+            type: "INTEGER"
+            value: "20"
+      formulaOverAll: false
       type: "INTEGER"

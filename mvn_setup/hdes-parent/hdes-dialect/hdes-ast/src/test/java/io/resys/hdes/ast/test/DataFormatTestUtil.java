@@ -23,13 +23,15 @@ package io.resys.hdes.ast.test;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import org.apache.commons.io.IOUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 public class DataFormatTestUtil {
-  private static final ObjectMapper om = new ObjectMapper(new YAMLFactory());
+  private static final ObjectMapper om = new ObjectMapper(new YAMLFactory())
+    .registerModule(new Jdk8Module());
 
   public static ObjectMapper getMapper() {
     return om;
