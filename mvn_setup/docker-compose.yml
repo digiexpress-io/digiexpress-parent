@@ -15,14 +15,14 @@ services:
     image: docker.io/library/digiexpress-dev-app:1-snapshot
     restart: always
     environment:
-      TASKS_PROJECT_ID: "tasks-repo"
-      TASKS_DB_REPOSITORYNAME: "tasks-repo"
-      TASKS_DB_PG_PGPORT: 5432 
-      TASKS_DB_PG_PGHOST: "db"
-      TASKS_DB_PG_PGDB: "tasks_db"
-      TASKS_DB_PG_PGUSER: "postgres"
-      TASKS_DB_PG_PGPASS: "postgres"
-      TASKS_DB_PG_PGPOOLSIZE: 5
+      TENANT_CURRENT_TENANT_ID: "local_test_tenant"
+      TENANT_DB_PG_PG_REPOSITORY_NAME: "5432"
+      TENANT_DB_PG_PG_PORT: "5432"
+      TENANT_DB_PG_PG_HOST: "localhost"
+      TENANT_DB_PG_PG_DB: "tasks_db"
+      TENANT_DB_PG_PG_USER: "postgres"
+      TENANT_DB_PG_PG_PASS: "postgres"
+      TENANT_DB_PG_PG_POOL_SIZE: "5"
       DIGIEXPRESS_ASSETS_URL: "https://cdn.resys.io/digiexpress-io/tasks-ui/dev/"
     ports:
       - 8080:8080
@@ -36,3 +36,5 @@ services:
       - 8091:8080
     links:
       - db
+
+
