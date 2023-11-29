@@ -15,8 +15,6 @@ services:
     image: docker.io/library/digiexpress-dev-app:1-snapshot
     restart: always
     environment:
-      QUARKUS_DATASOURCE_PASSWORD: "postgres"
-      QUARKUS_DATASOURCE_USERNAME: "postgres"
       TASKS_PROJECT_ID: "tasks-repo"
       TASKS_DB_REPOSITORYNAME: "tasks-repo"
       TASKS_DB_PG_PGPORT: 5432 
