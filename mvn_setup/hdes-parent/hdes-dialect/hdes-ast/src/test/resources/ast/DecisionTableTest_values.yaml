@@ -48,15 +48,9 @@ values:
       name: "firstName"
       array: false
       context: "ACCEPTS"
-      debugValue:
-        empty: true
-        present: false
-      formula:
-        empty: true
-        present: false
-      formulaOverAll:
-        empty: true
-        present: false
+      debugValue: null
+      formula: null
+      formulaOverAll: null
       type: "STRING"
     - token:
         text: "lastName:STRING"
@@ -70,15 +64,9 @@ values:
       name: "lastName"
       array: false
       context: "ACCEPTS"
-      debugValue:
-        empty: true
-        present: false
-      formula:
-        empty: true
-        present: false
-      formulaOverAll:
-        empty: true
-        present: false
+      debugValue: null
+      formula: null
+      formulaOverAll: null
       type: "STRING"
     returnDefs: []
   hitPolicy:
@@ -425,15 +413,9 @@ values:
       name: ""
       array: true
       context: "CONSTANTS"
-      debugValue:
-        empty: true
-        present: false
-      formula:
-        empty: true
-        present: false
-      formulaOverAll:
-        empty: true
-        present: false
+      debugValue: null
+      formula: null
+      formulaOverAll: null
       type: "INTEGER"
     - token:
         text: "({firstName:STRINGlastName:STRING}):{}"
@@ -447,15 +429,9 @@ values:
       name: "firstName"
       array: true
       context: "CONSTANTS"
-      debugValue:
-        empty: true
-        present: false
-      formula:
-        empty: true
-        present: false
-      formulaOverAll:
-        empty: true
-        present: false
+      debugValue: null
+      formula: null
+      formulaOverAll: null
       type: "INTEGER"
     - token:
         text: "({firstName:STRINGlastName:STRING}):{}"
@@ -469,15 +445,9 @@ values:
       name: "lastName"
       array: true
       context: "CONSTANTS"
-      debugValue:
-        empty: true
-        present: false
-      formula:
-        empty: true
-        present: false
-      formulaOverAll:
-        empty: true
-        present: false
+      debugValue: null
+      formula: null
+      formulaOverAll: null
       type: "INTEGER"
   matched:
     token:
@@ -518,15 +488,9 @@ values:
         name: ""
         array: true
         context: "MATCHES"
-        debugValue:
-          empty: true
-          present: false
-        formula:
-          empty: true
-          present: false
-        formulaOverAll:
-          empty: true
-          present: false
+        debugValue: null
+        formula: null
+        formulaOverAll: null
         type: "INTEGER"
     - token:
         text: "({firstName:STRINGlastName:STRING}):{}"
@@ -540,15 +504,9 @@ values:
       name: "firstName"
       array: true
       context: "MATCHES"
-      debugValue:
-        empty: true
-        present: false
-      formula:
-        empty: true
-        present: false
-      formulaOverAll:
-        empty: true
-        present: false
+      debugValue: null
+      formula: null
+      formulaOverAll: null
       type: "INTEGER"
     - token:
         text: "({firstName:STRINGlastName:STRING}):{}"
@@ -562,13 +520,7 @@ values:
       name: "lastName"
       array: true
       context: "MATCHES"
-      debugValue:
-        empty: true
-        present: false
-      formula:
-        empty: true
-        present: false
-      formulaOverAll:
-        empty: true
-        present: false
+      debugValue: null
+      formula: null
+      formulaOverAll: null
       type: "INTEGER"

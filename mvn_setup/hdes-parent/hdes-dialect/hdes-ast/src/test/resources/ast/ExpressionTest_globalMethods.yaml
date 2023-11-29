@@ -88,9 +88,7 @@ values:
           col: 36
       type: "INTEGER"
       value: "40"
-    next:
-      empty: true
-      present: false
+    next: null
 - token:
     text: "createPerson('sam','vimes').firstName"
     start:
@@ -162,5 +160,21 @@ values:
       type: "STRING"
       value: "vimes"
     next:
-      empty: false
-      present: true
+      token:
+        text: "firstName"
+        start:
+          line: 2
+          col: 42
+        end:
+          line: 2
+          col: 51
+      value:
+        token:
+          text: "firstName"
+          start:
+            line: 2
+            col: 42
+          end:
+            line: 2
+            col: 51
+        value: "firstName"

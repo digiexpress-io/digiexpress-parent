@@ -99,6 +99,4 @@ values:
     findFirst: false
     sort: []
     filter: []
-    next:
-      empty: true
-      present: false
+    next: null
