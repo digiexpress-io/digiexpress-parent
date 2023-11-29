@@ -1,9 +1,8 @@
 version: '3.1'
 
 services:
-
-  digiexpress-dev-db:
-    image: postgres:14.7
+  db:
+    image: postgres:15
     restart: always
     environment:
       POSTGRES_USER: postgres
@@ -12,21 +11,28 @@ services:
     ports:
       - 5432:5432
 
-  digiexpress-dev-app:
+  application:
     image: docker.io/library/digiexpress-dev-app:1-snapshot
     restart: always
     environment:
-      QUARKUS_DATASOURCE_PASSWORD: postgres
-      QUARKUS_DATASOURCE_USERNAME: postgres
       TASKS_PROJECT_ID: "tasks-repo"
       TASKS_DB_REPOSITORYNAME: "tasks-repo"
       TASKS_DB_PG_PGPORT: 5432 
-      TASKS_DB_PG_PGHOST: "digiexpress-dev-db"
+      TASKS_DB_PG_PGHOST: "db"
       TASKS_DB_PG_PGDB: "tasks_db"
       TASKS_DB_PG_PGUSER: "postgres"
       TASKS_DB_PG_PGPASS: "postgres"
       TASKS_DB_PG_PGPOOLSIZE: 5
+      DIGIEXPRESS_ASSETS_URL: "https://cdn.resys.io/digiexpress-io/tasks-ui/dev/"
     ports:
       - 8080:8080
     links:
-      - digiexpress-dev-db
+      - db
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8091:8080
+    links:
+      - db

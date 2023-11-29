@@ -28,7 +28,7 @@ tenant:
   db:
     pg: 
       repositoryName: "tenant_store"
-      pgPort: 32788 
+      pgPort: 5432
       pgHost: "localhost"
       pgDb: "tasks_db"
       pgUser: "postgres"
