@@ -105,7 +105,7 @@ const StyledTabs = styled(Tabs)<TabsProps>(({ theme }) => ({
 const Secondary: React.FC<{}> = () => {
 
   const { actions } = Burger.useTabs();
-  const [active, setActive] = React.useState<string>('explorer.search');
+  const [active, setActive] = React.useState<string>('explorer.taskSearch');
 
 
   function handleActive(_event: React.SyntheticEvent, newValue: string) { setActive(newValue) }
@@ -144,7 +144,7 @@ const Secondary: React.FC<{}> = () => {
       <StyledTabs orientation="vertical" onChange={handleActive} value={active}>
 
         {/* material ui workaround for case when no tab is selected */}
-        <EmptyTab value='none' />
+        <EmptyTab value='explorer.taskSearch' />
 
         <StyledExplorerTab value='explorer.crm' label={<FormattedMessage id="explorer.frontoffice.crm.menuOption" />} onClick={handleCRM}
           icon={<AdminPanelSettingsOutlinedIcon fontSize='small' />} />

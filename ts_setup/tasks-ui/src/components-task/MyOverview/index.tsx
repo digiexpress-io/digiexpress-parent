@@ -13,7 +13,7 @@ const MyWork: React.FC<{}> = () => {
   const data = createReport(SampleReport());
 
   return (
-    <>
+    <Box sx={{ px: 1 }}>
       <Typography variant='h3'><FormattedMessage id='core.myOverview.title' /></Typography>
       <Grid container>
         <Grid item lg={4} md={4} sm={12} xs={12}>
@@ -78,7 +78,7 @@ const MyWork: React.FC<{}> = () => {
           </Table>
         </TableContainer>
       </Paper>
-    </>
+    </Box>
   );
 }
 

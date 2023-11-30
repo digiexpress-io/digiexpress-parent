@@ -352,6 +352,26 @@ const en = {
 
   // --------------APP-FRONTOFFICE START ----------------
 
+  'tenantConfig.frontoffice.title': 'Current tenant configuration',
+  'tenantConfig.frontoffice.info': 'Tenant info',
+  'tenantConfig.frontoffice.documentType': 'Document type',
+  'tenantConfig.frontoffice.id': 'Id',
+  'tenantConfig.frontoffice.name': 'Name',
+  'tenantConfig.frontoffice.created': 'Created',
+  'tenantConfig.frontoffice.archived': 'Archived',
+  'tenantConfig.frontoffice.status': 'Status',
+  'tenantConfig.frontoffice.updated': 'Updated',
+  'tenantConfig.frontoffice.version': 'Version',
+  'tenantConfig.frontoffice.preferences': 'Tenant preferences',
+  'tenantConfig.frontoffice.landingApp': 'Landing app',
+  'tenantConfig.frontoffice.repoConfigs': 'Repository configurations',
+  'tenantConfig.frontoffice.noRepos': 'No repositories configured',
+  'tenantConfig.frontoffice.TASKS': 'Tasks',
+  'tenantConfig.frontoffice.CRM': 'CRM',
+  'tenantConfig.frontoffice.STENCIL': 'Stencil',
+  'tenantConfig.frontoffice.WRENCH': 'Wrench',
+  'tenantConfig.frontoffice.DIALOB': 'Dialob',
+
   'activities.deployments.title': 'Deployments',
 
   'activities.frontoffice.title': 'Front office',
