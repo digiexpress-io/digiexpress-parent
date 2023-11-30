@@ -34,3 +34,11 @@ tenant:
       pgUser: "postgres"
       pgPass: "postgres"
       pgPoolSize: 5
+
+"%test":
+  quarkus:
+    log:
+      level: DEBUG
+      category:
+        io.resys:
+          level: DEBUG
