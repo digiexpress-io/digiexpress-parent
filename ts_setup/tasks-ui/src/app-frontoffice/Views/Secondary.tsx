@@ -105,10 +105,13 @@ const StyledTabs = styled(Tabs)<TabsProps>(({ theme }) => ({
 const Secondary: React.FC<{}> = () => {
 
   const { actions } = Burger.useTabs();
-  const [active, setActive] = React.useState<string>('');
+  const [active, setActive] = React.useState<string>('explorer.search');
+
 
   function handleActive(_event: React.SyntheticEvent, newValue: string) { setActive(newValue) }
   function handleCRM() { actions.handleTabAdd({ id: 'crm', label: <FormattedMessage id="activities.frontoffice.crm.title" /> }) }
+  function handleCustomerSearch() { actions.handleTabAdd({ id: 'customerSearch', label: <FormattedMessage id="activities.frontoffice.customerSearch.title" /> }) }
+
   function handleTasks() { actions.handleTabAdd({ id: 'tasks', label: <FormattedMessage id="activities.frontoffice.tasks.title" /> }) }
   function handleStencil() { actions.handleTabAdd({ id: 'stencil', label: <FormattedMessage id="activities.frontoffice.stencil.title" /> }) }
   function handleWrench() { actions.handleTabAdd({ id: 'wrench', label: <FormattedMessage id="activities.frontoffice.wrench.title" /> }) }
@@ -118,14 +121,20 @@ const Secondary: React.FC<{}> = () => {
   function handleMyTasks() { actions.handleTabAdd({ id: 'mytasks', label: <FormattedMessage id="activities.mytasks.title" /> }) }
 
   function handleMyHistory() { actions.handleTabAdd({ id: 'myhistory', label: <FormattedMessage id="activities.myhistory.title" /> }) }
-  function handleSearch() { actions.handleTabAdd({ id: 'search', label: <FormattedMessage id="activities.search.title" /> }) }
+  function handleTaskSearch() { actions.handleTabAdd({ id: 'taskSearch', label: <FormattedMessage id="activities.taskSearch.title" /> }) }
   function handleReporting() { actions.handleTabAdd({ id: 'reporting', label: <FormattedMessage id="activities.reporting.title" /> }) }
   function handleMyoverview() { actions.handleTabAdd({ id: 'myoverview', label: <FormattedMessage id="activities.myoverview.title" /> }) }
   function handleInbox() { actions.handleTabAdd({ id: 'inbox', label: <FormattedMessage id="activities.inbox.title" /> }) }
   function handleDeployments() { actions.handleTabAdd({ id: 'deployments', label: <FormattedMessage id="activities.deployments.title" /> }) }
   function handleProfile() { actions.handleTabAdd({ id: 'profile', label: <FormattedMessage id="activities.profile.title" /> }) }
   function handleOrg() { actions.handleTabAdd({ id: 'org', label: <FormattedMessage id="activities.org.title" /> }) }
-  function handleCRMSearch() { actions.handleTabAdd({ id: 'crmSearch', label: <FormattedMessage id="activities.frontoffice.crm.search.title" /> }) }
+  function handleTenant() { actions.handleTabAdd({ id: 'tenant', label: <FormattedMessage id="activities.frontoffice.crm.tenant.title" /> }) }
+
+
+  React.useEffect(() => {
+    handleTaskSearch();
+  }, []);
+
 
   return (<Box sx={{ backgroundColor: "explorer.main", height: '100%', width: '100%' }}>
     <StyledBox>
@@ -135,16 +144,17 @@ const Secondary: React.FC<{}> = () => {
       <StyledTabs orientation="vertical" onChange={handleActive} value={active}>
 
         {/* material ui workaround for case when no tab is selected */}
-        <EmptyTab value='' />
+        <EmptyTab value='none' />
 
         <StyledExplorerTab value='explorer.crm' label={<FormattedMessage id="explorer.frontoffice.crm.menuOption" />} onClick={handleCRM}
           icon={<AdminPanelSettingsOutlinedIcon fontSize='small' />} />
-        <StyledExplorerSubTab value='explorer.crm.search' label={<FormattedMessage id="explorer.frontoffice.crm.search.menuOption" />} onClick={handleCRMSearch}
-          icon={<SearchIcon fontSize='small' />} />
+
+        <StyledExplorerSubTab value='explorer.customerSearch' label={<FormattedMessage id="explorer.frontoffice.crm.customerSearch.menuOption" />}
+          onClick={handleCustomerSearch} icon={<SearchIcon fontSize='small' />} />
 
         <StyledExplorerTab value='explorer.tasks' label={<FormattedMessage id="explorer.frontoffice.tasks.menuOption" />} onClick={handleTasks}
           icon={<TaskAltIcon fontSize='small' />} />
-        <StyledExplorerSubTab value='explorer.search' label={<FormattedMessage id="explorer.frontoffice.search.menuOption" />} onClick={handleSearch}
+        <StyledExplorerSubTab value='explorer.taskSearch' label={<FormattedMessage id="explorer.frontoffice.taskSearch.menuOption" />} onClick={handleTaskSearch}
           icon={<SearchIcon fontSize='small' />} />
         <StyledExplorerSubTab value='explorer.teamSpace' label={<FormattedMessage id="explorer.frontoffice.teamSpace.menuOption" />} onClick={handleGroup}
           icon={<GroupsIcon fontSize='small' />} />
@@ -174,6 +184,8 @@ const Secondary: React.FC<{}> = () => {
         <StyledExplorerSubTab value='explorer.profile' label={<FormattedMessage id="explorer.frontoffice.profile.menuOption" />} onClick={handleProfile}
           icon={<PersonOutlineOutlinedIcon fontSize='small' />} />
         <StyledExplorerSubTab value='explorer.org' label={<FormattedMessage id="explorer.frontoffice.org.menuOption" />} onClick={handleOrg}
+          icon={<CorporateFareOutlinedIcon fontSize='small' />} />
+        <StyledExplorerSubTab value='explorer.tenant' label={<FormattedMessage id="explorer.frontoffice.tenant.menuOption" />} onClick={handleTenant}
           icon={<CorporateFareOutlinedIcon fontSize='small' />} />
 
         <StyledExplorerTab value='explorer.reporting' label={<FormattedMessage id="activities.reporting.title" />} onClick={handleReporting}

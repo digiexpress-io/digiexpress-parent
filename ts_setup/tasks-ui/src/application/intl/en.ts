@@ -330,8 +330,8 @@ const en = {
 
   'activities.myoverview.title': 'My overview',
 
-  'activities.search.title': 'Search',
-  'activities.search.desc': 'Search for, view, and manage all tasks, users, and roles ',
+  'activities.taskSearch.title': 'Task search',
+  'activities.taskSearch.desc': 'Search for, view, and manage all tasks, users, and roles ',
 
   'activities.searchCustomers.title': 'Search customers',
   'activities.searchCustomers.desc': 'Search by customer name to find tasks and CRM data for customers',
@@ -360,6 +360,9 @@ const en = {
   'activities.frontoffice.crm.title': 'CRM data',
   'activities.frontoffice.crm.desc': 'View and manage client data and communications',
 
+  'activities.frontoffice.customerSearch.title': 'Customer search',
+  'activities.frontoffice.customerSearch.desc': 'Search for customers by name to find associated tasks and assignees',
+
   'activities.frontoffice.stencil.title': 'Stencil content',
   'activities.frontoffice.stencil.desc': 'Create and edit your multilingual content and define forms appearing on your portal site',
 
@@ -381,9 +384,6 @@ const en = {
   'activities.frontoffice.org.title': 'Organisation',
   'activities.frontoffice.org.desc': 'Roles and user settings',
 
-  'activities.frontoffice.crm.search.title': 'Client search',
-  'activities.frontoffice.crm.search.desc': 'Search for clients',
-
   'activities.frontoffice.profile.title': 'My profile',
   'activities.frontoffice.profile.desc': 'My personal information, settings, preferences, and recent activity',
   'activities.profile.title': 'My profile',
@@ -391,13 +391,13 @@ const en = {
 
 
   'explorer.frontoffice.crm.menuOption': 'CRM data',
-  'explorer.frontoffice.crm.search.menuOption': 'Client search',
+  'explorer.frontoffice.crm.customerSearch.menuOption': 'Customer search',
   'explorer.frontoffice.deployments.menuOption': 'Deployments',
   'explorer.frontoffice.tasks.menuOption': 'Task management',
   'explorer.frontoffice.stencil.menuOption': 'Stencil content',
   'explorer.frontoffice.wrench.menuOption': 'Wrench assets',
   'explorer.frontoffice.dialob.menuOption': 'Dialob forms',
-  'explorer.frontoffice.search.menuOption': 'Task search',
+  'explorer.frontoffice.taskSearch.menuOption': 'Task search',
   'explorer.frontoffice.teamSpace.menuOption': 'Team space',
   'explorer.frontoffice.mytasks.menuOption': 'My tasks',
   'explorer.frontoffice.inbox.menuOption': 'My inbox',
@@ -407,6 +407,8 @@ const en = {
   'explorer.frontoffice.profile.menuOption': 'My profile',
   'explorer.frontoffice.administration.menuOption': 'Administration',
   'explorer.frontoffice.org.menuOption': 'Organisation',
+  'explorer.frontoffice.tenant.menuOption': 'Tenant',
+  'activities.frontoffice.crm.tenant.title': 'Current tenant',
 
   // --------------- APP-FRONTOFFICE END -----------------
 

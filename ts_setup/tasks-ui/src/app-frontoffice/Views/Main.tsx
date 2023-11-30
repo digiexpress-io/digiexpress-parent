@@ -5,7 +5,7 @@ import { SxProps } from '@mui/system';
 
 import Burger from 'components-burger';
 import Context from 'context';
-import TenantSearch from 'components-tenant';
+import { CurrentTenant, DialobList } from 'components-tenant';
 import SysConfig from 'components-sys-config';
 import Tasks from 'components-task';
 import Customer from 'components-customer';
@@ -35,7 +35,7 @@ const Main: React.FC<{}> = () => {
 
     if (active.id === 'activities') {
       return (<Box sx={root}><Activities /></Box>);
-    } else if (active.id === 'search') {
+    } else if (active.id === 'taskSearch') {
       return (<Box sx={root}><Tasks.TaskSearch /></Box>);
     } else if (active.id === 'mytasks') {
       return (<Box sx={root}><Tasks.MyWork /></Box>);
@@ -45,14 +45,16 @@ const Main: React.FC<{}> = () => {
       return (<Box sx={root}><Tasks.Inbox /></Box>)
     } else if (active.id === 'myoverview') {
       return (<Box sx={root}><Tasks.MyOverview /></Box>)
-    } else if (active.id === 'crmSearch') {
+    } else if (active.id === 'customerSearch') {
       return (<Box sx={root}><Customer.CustomerSearch /></Box>);
     } else if (active.id === 'dialob') {
-      return (<Box sx={root}><TenantSearch /></Box>);
+      return (<Box sx={root}><DialobList /></Box>);
     } else if (active.id === 'deployments') {
       return (<Box sx={root}><SysConfig /></Box>);
     } else if (active.id === 'dev') {
       return (<Box sx={root}><Tasks.Dev /></Box>);
+    } else if (active.id === 'tenant') {
+      return (<Box sx={root}><CurrentTenant /></Box>)
 
     } else if (active.id === 'reporting') {
 

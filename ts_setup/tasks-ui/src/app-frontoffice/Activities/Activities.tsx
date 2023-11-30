@@ -35,17 +35,6 @@ const createActivities: (props: {
     }
   },
   {
-    id: "crmSearch",
-    title: "activities.frontoffice.crm.search.title",
-    content: {
-      label: "activities.frontoffice.crm.search.desc"
-    },
-    primary: {
-      label: "buttons.view",
-      onClick: () => actions.handleTabAdd({ id: 'crm', label: <FormattedMessage id="activities.frontoffice.crm.search.title" /> })
-    }
-  },
-  {
     id: "tasks",
     title: "activities.frontoffice.tasks.title",
     content: {

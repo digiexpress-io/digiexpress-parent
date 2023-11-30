@@ -7,7 +7,7 @@ import { StyledTableCell } from './StyledTable';
 
 
 
-const FormattedCell: React.FC<{
+const CellTitle: React.FC<{
   rowId: number,
   row: TaskDescriptor,
   def: Group,
@@ -18,12 +18,12 @@ const FormattedCell: React.FC<{
     <StyledTableCell width="500px">
       <Box justifyContent='left' display='flex'>
         <TaskCell id={row.id + "/Subject"} name={row.title} maxWidth={"500px"} />
-        {children}
+        <>{children}</>
       </Box>
     </StyledTableCell>
   );
 
 }
 
-export default FormattedCell;
+export default CellTitle;
 

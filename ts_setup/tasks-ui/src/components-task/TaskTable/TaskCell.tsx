@@ -3,7 +3,7 @@ import { Chip, Box, Typography } from '@mui/material';
 import { useTable } from './table-ctx';
 
 
-const Cell: React.FC<{
+const TaskCell: React.FC<{
   id: string,
   name?: React.ReactNode,
   tag?: string,
@@ -29,5 +29,5 @@ const Cell: React.FC<{
       </Box> : name}
     </Box>);
 }
-export default Cell;
+export default TaskCell;
 
