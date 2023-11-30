@@ -14,7 +14,7 @@ import Context from 'context';
 import { DialobTag, DialobForm, DialobVariable, DialobSession } from 'client';
 import DialobDeleteDialog from '../DialobDelete';
 import DialobSessionsDialog from '../DialobSessions';
-import DialobCopyDialog from 'components-tenant/DialobCopy';
+import DialobCopyDialog from '../DialobCopy';
 import { DialobEditor } from '../DialobEditor';
 
 export interface DialobItemActiveProps {
