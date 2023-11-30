@@ -32,11 +32,13 @@ declare global {
   }
 }
 const getUrl = () => {
-  if (window._env_ && window._env_.url) {
-    const url = window._env_.url;
-    return url.endsWith("/") ? url.substring(0, url.length - 1) : url;
+  try {
+    if (process.env.REACT_APP_LOCAL_DEV_MODE) {
+      return "http://localhost:8080";
+    }
+  } catch (error) {
+    return "";
   }
-  return "http://localhost:8080";
 }
 
 const baseUrl = getUrl();
@@ -194,6 +196,7 @@ const theme: Theme = {
   }
 };
 const locale = 'en';
+
 
 const NewApp: React.FC<{}> = () => (
   <IntlProvider locale={locale} messages={messages[locale]}>

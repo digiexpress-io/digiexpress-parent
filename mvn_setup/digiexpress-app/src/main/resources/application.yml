@@ -35,6 +35,14 @@ tenant:
       pgPass: "postgres"
       pgPoolSize: 5
 
+
+"%dev": 
+  quarkus:
+    log:
+      console:  
+        json:
+          pretty-print: true
+
 "%test":
   quarkus:
     log:

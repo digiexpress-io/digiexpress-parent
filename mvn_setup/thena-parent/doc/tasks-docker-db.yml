@@ -10,7 +10,7 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: tasks_db
     ports:
-      - 32788:5432
+      - 5432:5432
 
   adminer:
     image: adminer
