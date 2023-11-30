@@ -20,48 +20,44 @@ package io.thestencil.client.spi.composer;
  * #L%
  */
 
-import java.nio.charset.Charset;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.commons.codec.binary.Hex;
-import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.json.Json;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+
+@Slf4j
 public class HandlerStatusCodes {
-  private static final Logger LOGGER = LoggerFactory.getLogger(HandlerStatusCodes.class);
   public static void catch404(String id, HttpServerResponse response) {
     
     // Log error
-    String log = new StringBuilder().append("Token not found with id: ").append(id).toString();
-    String hash = exceptionHash(log);
-    LOGGER.error(hash + " - " + log);
+    var message = "Token not found with id: " + id;
+    String hash = exceptionHash(message);
+    HandlerStatusCodes.log.error(hash + " - " + message);
     
-    Map<String, String> msg = new HashMap<>();
+    var msg = new HashMap<String, String>();
     msg.put("appcode", hash);
     
-    response.headers().set(HttpHeaders.CONTENT_TYPE, "application/json; charset=UTF-8");
+    response.headers().set(HttpHeaders.CONTENT_TYPE, "application/json");
     response.setStatusCode(404);
     response.end( Json.encode(msg) );
   }
 
   public static void catch422(String desc, HttpServerResponse response) {
     // Log error
-    String log = desc;
-    String hash = exceptionHash(log);
-    LOGGER.error(hash + " - " + log);
-    
-    Map<String, String> msg = new HashMap<>();
+    String hash = exceptionHash(desc);
+    HandlerStatusCodes.log.error(hash + " - " + desc);
+
+    var msg = new HashMap<String, String>();
     msg.put("appcode", hash);
     
-    response.headers().set(HttpHeaders.CONTENT_TYPE, "application/json; charset=UTF-8");
+    response.headers().set(HttpHeaders.CONTENT_TYPE, "application/json");
     response.setStatusCode(422);
     response.end( Json.encode(msg) );
   }
@@ -71,14 +67,14 @@ public class HandlerStatusCodes {
     String stack = ExceptionUtils.getStackTrace(e);
     
     // Log error
-    String log = new StringBuilder().append(e.getMessage()).append(System.lineSeparator()).append(stack).toString();
-    String hash = exceptionHash(log);
-    LOGGER.error(hash + " - " + log);
-    
-    Map<String, String> msg = new HashMap<>();
+    var message = e.getMessage() + System.lineSeparator() + stack;
+    String hash = exceptionHash(message);
+    HandlerStatusCodes.log.error(hash + " - " + message);
+
+    var msg = new HashMap<String, String>();
     msg.put("appcode", hash);
     
-    response.headers().set(HttpHeaders.CONTENT_TYPE, "application/json; charset=UTF-8");
+    response.headers().set(HttpHeaders.CONTENT_TYPE, "application/json");
     response.setStatusCode(422);
     response.end( Json.encode(msg) );
   }
@@ -87,12 +83,12 @@ public class HandlerStatusCodes {
     try {
       MessageDigest md5 = MessageDigest.getInstance("MD5");
       md5.reset();
-      md5.update(msg.getBytes(Charset.forName("UTF-8")));
+      md5.update(msg.getBytes(StandardCharsets.UTF_8));
       byte[] digest = md5.digest();
       return Hex.encodeHexString(digest);
     } catch (NoSuchAlgorithmException ex) {
       // Fall back to just hex timestamp in this improbable situation
-      LOGGER.warn("MD5 Digester not found, falling back to timestamp hash", ex);
+      log.warn("MD5 Digester not found, falling back to timestamp hash", ex);
       long timestamp = System.currentTimeMillis();
       return Long.toHexString(timestamp);
     }

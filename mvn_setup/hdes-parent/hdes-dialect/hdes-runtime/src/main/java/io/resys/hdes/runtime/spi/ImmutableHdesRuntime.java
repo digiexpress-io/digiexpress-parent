@@ -20,24 +20,6 @@ package io.resys.hdes.runtime.spi;
  * #L%
  */
 
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.tools.Diagnostic;
-import javax.tools.DiagnosticCollector;
-import javax.tools.JavaCompiler;
-import javax.tools.JavaCompiler.CompilationTask;
-import javax.tools.SimpleJavaFileObject;
-import javax.tools.ToolProvider;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import io.resys.hdes.compiler.api.HdesCompiler.Resource;
 import io.resys.hdes.compiler.api.HdesCompiler.ResourceDeclaration;
 import io.resys.hdes.compiler.api.HdesCompiler.ResourceName;
@@ -45,10 +27,16 @@ import io.resys.hdes.runtime.api.HdesRuntime;
 import io.resys.hdes.runtime.spi.tools.HdesJavaFileManager;
 import io.resys.hdes.runtime.spi.tools.HdesJavaFileObject;
 import io.resys.hdes.runtime.spi.tools.ImmutableRuntimeEnvir;
+import lombok.extern.slf4j.Slf4j;
 
+import javax.tools.*;
+import javax.tools.JavaCompiler.CompilationTask;
+import java.io.StringWriter;
+import java.util.*;
+
+@Slf4j
 public class ImmutableHdesRuntime implements HdesRuntime {
-  private static final Logger LOGGER = LoggerFactory.getLogger(ImmutableHdesRuntime.class);
-  
+
   public static Builder builder() {
     return new ImmutableEnvirBuilder();
   }
@@ -108,7 +96,7 @@ public class ImmutableHdesRuntime implements HdesRuntime {
   }
   
   private static void log(ResourceDeclaration type) {
-    if(LOGGER.isDebugEnabled()) {
+    if(log.isDebugEnabled()) {
       
       StringBuilder result = new StringBuilder().append(System.lineSeparator())
           .append("Declaration: '").append(type.getType().getName()).append("'")
@@ -119,7 +107,7 @@ public class ImmutableHdesRuntime implements HdesRuntime {
         result.append(index++).append(":   ").append(value).append(System.lineSeparator());
       }
       
-      LOGGER.debug(result.toString());
+      log.debug(result.toString());
     }
   }
 }

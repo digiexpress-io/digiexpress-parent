@@ -20,5 +20,5 @@
 <configuration>
   <include resource="org/springframework/boot/logging/logback/base.xml"/>
 
-  <logger name="io.resys" level="DEBUG"/>
+  <logger name="io.resys" level="INFO"/>
 </configuration>

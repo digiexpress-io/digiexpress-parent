@@ -20,30 +20,24 @@ package io.thestencil.iam.spi.integrations;
  * #L%
  */
 
+import io.netty.handler.codec.http.HttpHeaderNames;
+import io.smallrye.mutiny.Multi;
+import io.smallrye.mutiny.Uni;
+import io.thestencil.iam.api.ImmutableAttachment;
+import io.thestencil.iam.api.UserActionsClient.*;
+import io.thestencil.iam.spi.support.PortalAssert;
+import io.vertx.core.http.RequestOptions;
+import lombok.extern.slf4j.Slf4j;
+
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import io.netty.handler.codec.http.HttpHeaderNames;
-import io.smallrye.mutiny.Multi;
-import io.smallrye.mutiny.Uni;
-import io.thestencil.iam.api.ImmutableAttachment;
-import io.thestencil.iam.api.UserActionsClient.Attachment;
-import io.thestencil.iam.api.UserActionsClient.AttachmentBuilder;
-import io.thestencil.iam.api.UserActionsClient.UserActionsClientConfig;
-import io.thestencil.iam.api.UserActionsClient.UserAction;
-import io.thestencil.iam.api.UserActionsClient.UserActionQuery;
-import io.thestencil.iam.spi.support.PortalAssert;
-import io.vertx.core.http.RequestOptions;
-
+@Slf4j
 public class AttachmentBuilderDefault extends MessagesQueryBuilderDefault implements AttachmentBuilder {
-  private static final Logger LOGGER = LoggerFactory.getLogger(MarkUserActionBuilderDefault.class);
-  
+
   private final Supplier<UserActionQuery> query;
   
   private String processId;
@@ -111,7 +105,7 @@ public class AttachmentBuilderDefault extends MessagesQueryBuilderDefault implem
           
           if(resp.statusCode() != 200) {
             String error = "USER ACTIONS CREATE ATTACHMENT: Can't create response, uri: " + uri + ", e = " + resp.statusCode() + " | " + resp.statusMessage() + " | ";
-            LOGGER.error(error);
+            log.error(error);
             return (Attachment) ImmutableAttachment.builder()
                 .created(LocalDateTime.now().toString())
                 .size(0L)

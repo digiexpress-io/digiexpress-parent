@@ -20,25 +20,6 @@ package io.resys.hdes.client.spi.git;
  * #L%
  */
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import org.apache.commons.io.IOUtils;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.lib.Constants;
-import org.eclipse.jgit.lib.ObjectId;
-import org.eclipse.jgit.lib.Repository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-
 import io.resys.hdes.client.api.ast.AstBody.AstBodyType;
 import io.resys.hdes.client.spi.GitConfig;
 import io.resys.hdes.client.spi.GitConfig.GitEntry;
@@ -47,9 +28,22 @@ import io.resys.hdes.client.spi.ImmutableGitFile;
 import io.resys.hdes.client.spi.staticresources.Sha2;
 import io.resys.hdes.client.spi.staticresources.StoreEntityLocation;
 import io.resys.hdes.client.spi.util.HdesAssert;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.Constants;
+import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.Repository;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+import java.util.stream.Collectors;
+
+@Slf4j
 public class GitDataSourceLoader implements AutoCloseable {
-  private static final Logger LOGGER = LoggerFactory.getLogger(GitDataSourceLoader.class);
   private final PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
   private final GitConfig conn;
   private final Repository repo;
@@ -69,7 +63,7 @@ public class GitDataSourceLoader implements AutoCloseable {
     try {      
       conn.getClient().pull().setTransportConfigCallback(conn.getCallback()).call();
     } catch (GitAPIException e) {
-      LOGGER.error("Can't pull repository! " + System.lineSeparator() + e.getMessage(), e);
+      log.error("Can't pull repository! " + System.lineSeparator() + e.getMessage(), e);
       throw new RuntimeException(e.getMessage(), e);
     }
     
@@ -91,8 +85,8 @@ public class GitDataSourceLoader implements AutoCloseable {
     final AstBodyType bodyType = src.getKey();
     final String location = src.getValue();
     
-    if(LOGGER.isDebugEnabled()) {
-      LOGGER.debug("Loading assets from: " + location + "!");
+    if(log.isDebugEnabled()) {
+      log.debug("Loading assets from: " + location + "!");
     }
 
     final var files = new ArrayList<GitFile>();
@@ -164,7 +158,7 @@ public class GitDataSourceLoader implements AutoCloseable {
               .build();
           result.add(entry);
         } catch (Exception e) {
-          LOGGER.error("Can't resolve timestamps for tag: " + name + System.lineSeparator() + e.getMessage(), e);
+          log.error("Can't resolve timestamps for tag: " + name + System.lineSeparator() + e.getMessage(), e);
           throw new RuntimeException(e.getMessage(), e);
         } finally {
           revWalk.close();
@@ -173,7 +167,7 @@ public class GitDataSourceLoader implements AutoCloseable {
       
       return result;
     } catch (GitAPIException e) {
-      LOGGER.error("Can't read tags for repository! " + System.lineSeparator() + e.getMessage(), e);
+      log.error("Can't read tags for repository! " + System.lineSeparator() + e.getMessage(), e);
       throw new RuntimeException(e.getMessage(), e);
     }
   }

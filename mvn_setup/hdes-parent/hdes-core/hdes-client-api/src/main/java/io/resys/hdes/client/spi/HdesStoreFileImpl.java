@@ -20,18 +20,10 @@ package io.resys.hdes.client.spi;
  * #L%
  */
 
-import java.io.File;
-import java.io.IOException;
-import java.util.UUID;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
 import groovy.util.logging.Slf4j;
 import io.resys.hdes.client.api.HdesStore;
 import io.resys.hdes.client.api.ImmutableStoreEntity;
@@ -49,8 +41,12 @@ import io.resys.thena.docdb.store.file.spi.FilePoolImpl;
 import io.resys.thena.docdb.store.file.tables.Table.FilePool;
 import io.vertx.core.json.JsonObject;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.UUID;
+
+@lombok.extern.slf4j.Slf4j
 public class HdesStoreFileImpl extends ThenaStoreTemplate implements HdesStore {
-  private static final Logger LOGGER = LoggerFactory.getLogger(HdesStoreFileImpl.class);
 
   public HdesStoreFileImpl(ThenaConfig config) {
     super(config);
@@ -131,7 +127,7 @@ public class HdesStoreFileImpl extends ThenaStoreTemplate implements HdesStore {
       final var objectMapper = getObjectMapper();
       
       final var headName = this.headName == null ? "main": this.headName;
-      if(LOGGER.isDebugEnabled()) {
+      if(log.isDebugEnabled()) {
         final var log = new StringBuilder()
           .append(System.lineSeparator())
           .append("Configuring Thena: ").append(System.lineSeparator())
@@ -142,7 +138,7 @@ public class HdesStoreFileImpl extends ThenaStoreTemplate implements HdesStore {
           .append("  authorProvider: '").append(this.authorProvider == null ? "configuring" : "provided").append("'").append(System.lineSeparator())
           .append("  db: '").append(this.db).append("'").append(System.lineSeparator());
           
-        LOGGER.debug(log.toString());
+        HdesStoreFileImpl.log.debug(log.toString());
       }
       
       final DocDB thena;

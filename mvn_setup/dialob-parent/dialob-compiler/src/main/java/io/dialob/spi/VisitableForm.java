@@ -15,20 +15,14 @@
  */
 package io.dialob.spi;
 
-import java.util.ArrayDeque;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-
 import io.dialob.api.form.Form;
 import io.dialob.api.form.FormItem;
 import io.dialob.api.form.ImmutableFormItem;
 import io.dialob.api.form.Validation;
 import lombok.extern.slf4j.Slf4j;
+
+import javax.annotation.Nonnull;
+import java.util.*;
 
 @Slf4j
 public class VisitableForm {
@@ -62,7 +56,7 @@ public class VisitableForm {
         keys.remove(key);
         FormItem formItem = form.getData().get(key);
         if (formItem == null) {
-          LOGGER.warn("Could not find item: {}", key);
+          log.warn("Could not find item: {}", key);
           continue;
         }
         if (pages.contains(formItem.getId())) {
@@ -111,7 +105,7 @@ public class VisitableForm {
         formItemVisitor.end();
       }
       if (!keys.isEmpty()) {
-        LOGGER.warn("Items without hoisting group: {}", keys);
+        log.warn("Items without hoisting group: {}", keys);
       }
     });
     visitor.endFormItems();

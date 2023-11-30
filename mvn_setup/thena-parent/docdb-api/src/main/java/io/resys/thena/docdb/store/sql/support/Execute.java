@@ -20,9 +20,6 @@ package io.resys.thena.docdb.store.sql.support;
  * #L%
  */
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import io.resys.thena.docdb.store.sql.SqlBuilder.Sql;
 import io.resys.thena.docdb.store.sql.SqlBuilder.SqlTuple;
 import io.resys.thena.docdb.store.sql.SqlBuilder.SqlTupleList;
@@ -30,14 +27,15 @@ import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.sqlclient.Row;
 import io.vertx.mutiny.sqlclient.RowSet;
 import io.vertx.mutiny.sqlclient.SqlClient;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class Execute {
-  private static final Logger LOGGER = LoggerFactory.getLogger(Execute.class);
 
   public static Uni<RowSet<Row>> apply(SqlClient client, Sql sql) {
     return client.preparedQuery(sql.getValue()).execute()
       .onFailure().invoke(e -> {
-      LOGGER.error(System.lineSeparator() +
+      log.error(System.lineSeparator() +
           "Failed to execute command." + System.lineSeparator() +
           "  sql: " + sql.getValue() + System.lineSeparator() +
           "  error:" + e.getMessage(), e);
@@ -47,7 +45,7 @@ public class Execute {
   public static Uni<RowSet<Row>> apply(SqlClient client, SqlTuple sql) {
     return client.preparedQuery(sql.getValue()).execute(sql.getProps())
         .onFailure().invoke(e -> {
-          LOGGER.error(System.lineSeparator() +
+          log.error(System.lineSeparator() +
               "Failed to execute single command." + System.lineSeparator() +
               "  sql: " + sql.getValue() + System.lineSeparator() +
               "  error:" + e.getMessage(), e);
@@ -55,7 +53,7 @@ public class Execute {
   }
   public static Uni<RowSet<Row>> apply(SqlClient client, SqlTupleList sql) {
     if(sql.getProps().isEmpty()) {
-      LOGGER.info(System.lineSeparator() +
+      log.info(System.lineSeparator() +
           "Skipping batch command with no values to update or insert." + System.lineSeparator() +
           "  sql: " + sql.getValue() + System.lineSeparator());
       return Uni.createFrom().nullItem();
@@ -63,7 +61,7 @@ public class Execute {
     
     return client.preparedQuery(sql.getValue()).executeBatch(sql.getProps())
         .onFailure().invoke(e -> {
-          LOGGER.error(System.lineSeparator() +
+          log.error(System.lineSeparator() +
               "Failed to execute batch command." + System.lineSeparator() +
               "  sql: " + sql.getValue() + System.lineSeparator() +
               "  error:" + e.getMessage(), e);

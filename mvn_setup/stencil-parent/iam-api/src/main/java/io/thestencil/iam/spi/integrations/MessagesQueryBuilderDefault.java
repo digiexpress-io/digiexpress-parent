@@ -20,13 +20,6 @@ package io.thestencil.iam.spi.integrations;
  * #L%
  */
 
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import io.smallrye.mutiny.Uni;
 import io.thestencil.iam.api.ImmutableUserMessage;
 import io.thestencil.iam.api.UserActionsClient.UserActionsClientConfig;
@@ -37,11 +30,16 @@ import io.vertx.core.http.RequestOptions;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.mutiny.ext.web.client.HttpResponse;
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 
+@Slf4j
 public class MessagesQueryBuilderDefault extends BuilderTemplate {
-  private static final Logger LOGGER = LoggerFactory.getLogger(MessagesQueryBuilderDefault.class);
   private final UserActionsClientConfig config;
   
   public MessagesQueryBuilderDefault(RequestOptions init, UserActionsClientConfig config) {
@@ -53,7 +51,7 @@ public class MessagesQueryBuilderDefault extends BuilderTemplate {
     final var uri = getUri("/externalTasksUnread");
     var request = super.get(uri).addQueryParam("userId", userId);
     
-    //LOGGER.error("UNREAD TASKS: uri: '" + uri + "'" + JsonObject.mapFrom(request.getDelegate().queryParams()).encode());
+    //log.error("UNREAD TASKS: uri: '" + uri + "'" + JsonObject.mapFrom(request.getDelegate().queryParams()).encode());
     
     return request.send().onItem().transformToUni(resp -> mapToIds(resp, uri));
   }
@@ -78,7 +76,7 @@ public class MessagesQueryBuilderDefault extends BuilderTemplate {
   private static Uni<List<String>> mapToIds(HttpResponse<?> resp, String uri) {
     if (resp.statusCode() != 200) {
       String error = "USER ACTIONS TASK UNREAD COMMENTS: query: '" + uri + "', can't create response, e = " + resp.statusCode() + " | " + resp.statusMessage() + " | " + resp.headers();
-      LOGGER.error(error);
+      log.error(error);
       return Uni.createFrom().item(Collections.emptyList());
     }
     
@@ -89,7 +87,7 @@ public class MessagesQueryBuilderDefault extends BuilderTemplate {
   private static Uni<List<UserMessage>> mapToMessages(HttpResponse<?> resp, String uri, String replyToUri) {
     if (resp.statusCode() != 200) {
       String error = "USER ACTIONS TASK COMMENTS: query: '" + uri + "', can't create response, e = " + resp.statusCode() + " | " + resp.statusMessage() + " | " + resp.headers();
-      LOGGER.error(error);
+      log.error(error);
       return Uni.createFrom().item(Collections.emptyList());
     }
     

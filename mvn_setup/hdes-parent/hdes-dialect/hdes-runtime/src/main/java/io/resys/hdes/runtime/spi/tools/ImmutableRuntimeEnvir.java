@@ -20,16 +20,6 @@ package io.resys.hdes.runtime.spi.tools;
  * #L%
  */
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import javax.tools.Diagnostic;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import io.resys.hdes.compiler.api.HdesCompiler.Resource;
 import io.resys.hdes.compiler.api.HdesCompiler.ResourceName;
 import io.resys.hdes.executor.api.HdesRunnable;
@@ -38,9 +28,16 @@ import io.resys.hdes.executor.api.TraceBody;
 import io.resys.hdes.runtime.api.HdesRuntime.RuntimeEnvir;
 import io.resys.hdes.runtime.api.HdesRuntime.RuntimeTask;
 import io.resys.hdes.runtime.api.ImmutableRuntimeTask;
+import lombok.extern.slf4j.Slf4j;
 
+import javax.tools.Diagnostic;
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+@Slf4j
 public class ImmutableRuntimeEnvir implements RuntimeEnvir {
-  private static final Logger LOGGER = LoggerFactory.getLogger(ImmutableRuntimeEnvir.class);
   private final HdesClassLoader classLoader;
   private final Map<String, ResourceName> executables;
   private final Map<String, Resource> values;
@@ -83,7 +80,7 @@ public class ImmutableRuntimeEnvir implements RuntimeEnvir {
           .value(executable)
           .build();
     } catch (IllegalAccessException | InstantiationException | IllegalArgumentException | InvocationTargetException | SecurityException e) {
-      LOGGER.error(e.getMessage(), e);
+      log.error(e.getMessage(), e);
       throw new RuntimeException(e.getMessage(), e);
     }
   }
@@ -98,7 +95,7 @@ public class ImmutableRuntimeEnvir implements RuntimeEnvir {
         .filter(d -> d.getKind() == Diagnostic.Kind.ERROR)
         .collect(Collectors.toList());
     if (!errors.isEmpty()) {
-      LOGGER.error(errors.toString());
+      log.error(errors.toString());
       System.err.println(errors);
     }
     

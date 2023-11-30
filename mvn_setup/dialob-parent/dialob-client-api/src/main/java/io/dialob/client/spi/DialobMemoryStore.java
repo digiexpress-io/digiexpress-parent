@@ -1,20 +1,7 @@
 package io.dialob.client.spi;
 
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.io.IOUtils;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.core.io.support.ResourcePatternResolver;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import io.dialob.client.api.DialobDocument.DocumentType;
 import io.dialob.client.api.DialobStore;
 import io.dialob.client.api.ImmutableStoreEntity;
@@ -24,14 +11,25 @@ import io.dialob.client.spi.store.StoreEntityLocation;
 import io.dialob.client.spi.support.DialobAssert;
 import io.smallrye.mutiny.Uni;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 public class DialobMemoryStore implements DialobStore {
 
   private final Map<String, StoreEntity> entities;
   private final StoreState state;
-  
-  
+
+
   public DialobMemoryStore(Map<String, StoreEntity> entities) {
     super();
     this.entities = entities;
@@ -72,11 +70,11 @@ public class DialobMemoryStore implements DialobStore {
     };
   }
 
-  
+
   public static Builder builder() {
     return new Builder();
   }
-  
+
   public static class Builder {
     private ObjectMapper objectMapper;
     private String path;
@@ -85,7 +83,7 @@ public class DialobMemoryStore implements DialobStore {
     private List<Resource> list(String location) {
       try {
 
-        LOGGER.info("Loading assets from: " + location + "!");
+        log.info("Loading assets from: " + location + "!");
         List<Resource> files = new ArrayList<>();
         for (Resource resource : resolver.getResources(location)) {
           files.add(resource);
@@ -95,7 +93,7 @@ public class DialobMemoryStore implements DialobStore {
         throw new RuntimeException("Failed to load asset from: " + location + "!" + e.getMessage(), e);
       }
     }
-    
+
     private ImmutableStoreEntity.Builder readStoreEntity(Resource resource) {
       final var content = readContents(resource);
       return ImmutableStoreEntity.builder()
@@ -103,7 +101,7 @@ public class DialobMemoryStore implements DialobStore {
           .version("static_location")
           .body(content);
     }
-    
+
     private String readContents(Resource entry) {
       try {
         return IOUtils.toString(entry.getInputStream(), StandardCharsets.UTF_8);
@@ -118,37 +116,37 @@ public class DialobMemoryStore implements DialobStore {
     public Builder path(String path) {
       this.path = path;
       return this;
-    } 
+    }
 
     public DialobMemoryStore build() {
       DialobAssert.notNull(objectMapper, () -> "objectMapper must be defined!");
       this.location = new StoreEntityLocation(path == null ? "classpath*:assets/" : path);
-      LOGGER.info("Dialob, starting in memory read-only store from: '" + path + "'");
-      
+      log.info("Dialob, starting in memory read-only store from: '" + path + "'");
+
       final var migLog = new StringBuilder();
       final var entities = new HashMap<String, StoreEntity>();
       final var migration = list(location.getMigrationRegex());
       DialobAssert.isTrue(migration.size() < 2, () -> "Only one migration dump can be defined in: '"+ location.getMigrationRegex() + "'!");
-      
+
       migration.stream().forEach(r -> {
-        
+
         migLog.append("Loading assets from migration: " + r.getFilename()).append(System.lineSeparator());
-        
+
         new ReleaseDumpToStoreEntityVisitor(r, objectMapper).visit(entity -> {
           migLog.append("  - ")
           .append(entity.getId()).append("/").append(entity.getBodyType())
           .append(System.lineSeparator());
-          entities.put(entity.getId(), entity);  
+          entities.put(entity.getId(), entity);
         });
-        
-        
+
+
       });
-      
+
       migLog.append(System.lineSeparator());
 
       // form tags
       list(location.getFormTagRegex()).stream().forEach(r -> {
-        final var entity = readStoreEntity(r).bodyType(DocumentType.FORM_REV).build();    
+        final var entity = readStoreEntity(r).bodyType(DocumentType.FORM_REV).build();
         migLog.append("  - ")
           .append(entity.getId()).append("/").append(entity.getBodyType()).append("/")
           .append(System.lineSeparator());
@@ -157,13 +155,13 @@ public class DialobMemoryStore implements DialobStore {
 
       // forms
       list(location.getFormRegex()).stream().forEach(r -> {
-        final var entity = readStoreEntity(r).bodyType(DocumentType.FORM).build();    
+        final var entity = readStoreEntity(r).bodyType(DocumentType.FORM).build();
         migLog.append("  - ")
           .append(entity.getId()).append("/").append(entity.getBodyType()).append("/")
           .append(System.lineSeparator());
         entities.put(entity.getId(), entity);
       });
-      LOGGER.info(migLog.toString());
+      log.info(migLog.toString());
       return new DialobMemoryStore(entities);
     }
   }

@@ -20,25 +20,23 @@ package io.thestencil.iam.spi.integrations;
  * #L%
  */
 
+import io.smallrye.mutiny.Uni;
+import io.thestencil.iam.api.UserActionsClient.MarkUserActionBuilder;
+import io.thestencil.iam.api.UserActionsClient.UserActionQuery;
+import io.thestencil.iam.api.UserActionsClient.UserActionsClientConfig;
+import io.thestencil.iam.api.UserActionsClient.UserMessage;
+import io.thestencil.iam.spi.support.PortalAssert;
+import io.vertx.core.http.RequestOptions;
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import io.smallrye.mutiny.Uni;
-import io.thestencil.iam.api.UserActionsClient.UserActionsClientConfig;
-import io.thestencil.iam.api.UserActionsClient.MarkUserActionBuilder;
-import io.thestencil.iam.api.UserActionsClient.UserActionQuery;
-import io.thestencil.iam.api.UserActionsClient.UserMessage;
-import io.thestencil.iam.spi.support.PortalAssert;
-import io.vertx.core.http.RequestOptions;
-
-
+@Slf4j
 public class MarkUserActionBuilderDefault extends MessagesQueryBuilderDefault implements MarkUserActionBuilder {
-  private static final Logger LOGGER = LoggerFactory.getLogger(MarkUserActionBuilderDefault.class);
   private final Supplier<UserActionQuery> query;
   
   private String userId;
@@ -78,11 +76,11 @@ public class MarkUserActionBuilderDefault extends MessagesQueryBuilderDefault im
           if(action.getTaskId() != null) {
             return super.getTaskCommentsAndMarkThemViewed(action.getTaskId(), userId);
           }
-          LOGGER.error("USER ACTIONS MARK VIEWED: User is trying to associate tasks/messages that do not belong to them: " + processId + "!");
+          log.error("USER ACTIONS MARK VIEWED: User is trying to associate tasks/messages that do not belong to them: " + processId + "!");
         }
-        LOGGER.error("USER ACTIONS MARK VIEWED: There are no messages for the process: " + String.join(";", list.stream().map(e -> e.toString()).collect(Collectors.toList())) + "!");
+        log.error("USER ACTIONS MARK VIEWED: There are no messages for the process: " + String.join(";", list.stream().map(e -> e.toString()).collect(Collectors.toList())) + "!");
         
-        //LOGGER.error("USER ACTIONS MARK VIEWED: There are no messages for the process: " + processId + "!");
+        //log.error("USER ACTIONS MARK VIEWED: There are no messages for the process: " + processId + "!");
         return Uni.createFrom().item(Collections.emptyList());
       });
   }

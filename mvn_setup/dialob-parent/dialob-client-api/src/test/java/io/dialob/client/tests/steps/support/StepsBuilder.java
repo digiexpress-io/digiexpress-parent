@@ -1,23 +1,19 @@
 package io.dialob.client.tests.steps.support;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import io.dialob.api.proto.Action;
-import io.dialob.api.proto.Actions;
-import io.dialob.api.proto.ActionsFactory;
-import io.dialob.api.proto.ImmutableAction;
-import io.dialob.api.proto.ImmutableActions;
+import io.dialob.api.proto.*;
 import io.dialob.client.tests.client.DialobClientTestImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 @RequiredArgsConstructor
 public class StepsBuilder {
   private final Context ctx;
   private WhenMessage whenMessage;
-  
+
 
   public interface Expectation {
     void accept(Actions message) throws Exception;
@@ -28,10 +24,10 @@ public class StepsBuilder {
     void addExpect(String name, Expectation expectConsumer);
     void addAccept(String name, Expectation expectConsumer);
   }
-  
+
 
   public ExpectionBuilder when(WhenMessage whenMessage) {
-    this.whenMessage = whenMessage;    
+    this.whenMessage = whenMessage;
     this.ctx.addStep(this.whenMessage);
     this.whenMessage.setExpectations(new OutOfOrderExpectations());
     return new ExpectionBuilder(this);
@@ -62,7 +58,7 @@ public class StepsBuilder {
       .answer(answer)
       .id(questionId).build());
   }
-  
+
 
   public ExpectionBuilder setLocale(String locale) {
     return when("setLocale(\"" + locale + "\")", ActionsFactory.setLocale(locale));
@@ -133,7 +129,7 @@ public class StepsBuilder {
         }
       }
       if (!assertionErrors.isEmpty()) {
-        LOGGER.error("Assertions failed\n{}", assertionErrors);
+        log.error("Assertions failed\n{}", assertionErrors);
       }
       unexpected.add(DialobClientTestImpl.Builder.MAPPER.writeValueAsString(message));
     }
@@ -172,8 +168,8 @@ public class StepsBuilder {
     return ctx;
   }
 
-  
-  
+
+
   public static abstract class WhenMessage {
 
     private final String name;

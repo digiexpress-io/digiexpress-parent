@@ -15,59 +15,11 @@
  */
 package io.dialob.client.spi.executor.questionnaire;
 
-import static io.dialob.compiler.Utils.isQuestionType;
-import static io.dialob.compiler.Utils.readNullableDate;
-import static io.dialob.compiler.Utils.readNullableString;
-import static io.dialob.compiler.Utils.writeNullableDate;
-import static io.dialob.compiler.Utils.writeNullableString;
-
-import java.io.IOException;
-import java.io.Serializable;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.MDC;
-
 import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.CodedOutputStream;
-
-import io.dialob.api.proto.Action;
-import io.dialob.api.proto.ActionItem;
-import io.dialob.api.proto.ActionsFactory;
-import io.dialob.api.proto.ImmutableAction;
-import io.dialob.api.proto.ImmutableActions;
-import io.dialob.api.proto.ImmutableValueSet;
-import io.dialob.api.proto.ImmutableValueSetEntry;
-import io.dialob.api.proto.ValueSet;
-import io.dialob.api.proto.ValueSetEntry;
-import io.dialob.api.questionnaire.Answer;
-import io.dialob.api.questionnaire.ContextValue;
+import io.dialob.api.proto.*;
 import io.dialob.api.questionnaire.Error;
-import io.dialob.api.questionnaire.ImmutableAnswer;
-import io.dialob.api.questionnaire.ImmutableContextValue;
-import io.dialob.api.questionnaire.ImmutableError;
-import io.dialob.api.questionnaire.ImmutableQuestionnaire;
-import io.dialob.api.questionnaire.ImmutableQuestionnaireMetadata;
-import io.dialob.api.questionnaire.ImmutableVariableValue;
-import io.dialob.api.questionnaire.Questionnaire;
-import io.dialob.api.questionnaire.VariableValue;
+import io.dialob.api.questionnaire.*;
 import io.dialob.client.api.ImmutableQuestionnaireSession;
 import io.dialob.client.api.QuestionnaireSession;
 import io.dialob.client.spi.event.QuestionnaireEventPublisher;
@@ -77,13 +29,7 @@ import io.dialob.client.spi.form.FormActionsUpdatesItemsVisitor;
 import io.dialob.client.spi.function.AsyncFunctionInvoker;
 import io.dialob.compiler.Utils;
 import io.dialob.executor.DialobSessionUpdater;
-import io.dialob.executor.model.DialobSession;
-import io.dialob.executor.model.DialobSessionVisitor;
-import io.dialob.executor.model.IdUtils;
-import io.dialob.executor.model.ItemId;
-import io.dialob.executor.model.ItemState;
-import io.dialob.executor.model.SessionObject;
-import io.dialob.executor.model.ValueSetState;
+import io.dialob.executor.model.*;
 import io.dialob.program.DialobProgram;
 import io.dialob.program.DialobSessionEvalContextFactory;
 import io.dialob.program.EvalContext;
@@ -93,6 +39,23 @@ import io.dialob.spi.Constants;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.MDC;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.io.IOException;
+import java.io.Serializable;
+import java.time.Instant;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+import static io.dialob.compiler.Utils.*;
 
 // DialobQuestionnaireSession
 @Slf4j
@@ -328,7 +291,7 @@ public class QuestionnaireSessionImpl implements QuestionnaireSession, Serializa
   @Override
   public DispatchActionsResult dispatchActions(String revision, @Nonnull Collection<Action> actions) {
     final var questionnaireSession = this;
-    
+
     ImmutableQuestionnaireSession.DispatchActionsResult.Builder result = ImmutableQuestionnaireSession
       .DispatchActionsResult.builder()
       .isDidComplete(false);
@@ -343,7 +306,7 @@ public class QuestionnaireSessionImpl implements QuestionnaireSession, Serializa
     try {
       MDC.put(Constants.QUESTIONNAIRE, getSessionId().orElse("no-session-id"));
       boolean revisionMatch = revision != null && revision.equals(dialobSession.getRevision());
-      LOGGER.debug("revision comparison: {} vs. {} == {}", revision, dialobSession.getRevision(), revisionMatch);
+      log.debug("revision comparison: {} vs. {} == {}", revision, dialobSession.getRevision(), revisionMatch);
       final DialobSessionUpdater sessionUpdater = sessionContextFactory.createSessionUpdater(dialobProgram, dialobSession);
       // broadcast user actions to other nodes
       final List<Action> userActions = actions.stream()

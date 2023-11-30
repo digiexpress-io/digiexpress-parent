@@ -15,35 +15,24 @@
  */
 package io.dialob.compiler;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-
-import org.apache.commons.lang3.BooleanUtils;
-import org.apache.commons.lang3.StringUtils;
-
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-
-import io.dialob.api.form.Form;
-import io.dialob.api.form.FormItem;
-import io.dialob.api.form.FormValidationError;
-import io.dialob.api.form.FormValueSetEntry;
-import io.dialob.api.form.Validation;
+import io.dialob.api.form.*;
 import io.dialob.program.DialobProgram;
 import io.dialob.program.ProgramBuilder;
 import io.dialob.program.QuestionBuilder;
 import io.dialob.program.ValueSetBuilder;
 import io.dialob.program.model.Program;
 import io.dialob.rule.parser.function.FunctionRegistry;
-import io.dialob.spi.FormItemVisitor;
-import io.dialob.spi.FormValueSetVisitor;
-import io.dialob.spi.FormVariableVisitor;
-import io.dialob.spi.FormVisitor;
-import io.dialob.spi.VisitableForm;
+import io.dialob.spi.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
+
+import javax.annotation.Nonnull;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @Slf4j
 public class DialobProgramFromFormCompiler {
@@ -233,8 +222,8 @@ public class DialobProgramFromFormCompiler {
     });
 
     final Program program = builder.build();
-    if (program != null && LOGGER.isDebugEnabled()) {
-      LOGGER.debug(program.toString());
+    if (program != null && log.isDebugEnabled()) {
+      log.debug(program.toString());
     }
     final List<FormValidationError> builderErrors = builder.getErrors();
     if (!builderErrors.isEmpty() || program == null) {

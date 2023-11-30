@@ -2,7 +2,7 @@
   <logger name="io.dialob" level="INFO"/>
   <logger name="io.dialob.session.engine" level="INFO"/>
   <logger name="io.dialob.session.boot.redis" level="INFO"/>
-  <root level="DEBUG">
+  <root level="INFO">
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
       <encoder>
         <charset>default</charset>

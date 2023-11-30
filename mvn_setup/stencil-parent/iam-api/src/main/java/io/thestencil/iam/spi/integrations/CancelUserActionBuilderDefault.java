@@ -20,26 +20,24 @@ package io.thestencil.iam.spi.integrations;
  * #L%
  */
 
-import java.util.function.Supplier;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.iam.api.ImmutableUserAction;
 import io.thestencil.iam.api.UserActionsClient.CancelUserActionBuilder;
-import io.thestencil.iam.api.UserActionsClient.UserActionsClientConfig;
 import io.thestencil.iam.api.UserActionsClient.UserAction;
 import io.thestencil.iam.api.UserActionsClient.UserActionQuery;
+import io.thestencil.iam.api.UserActionsClient.UserActionsClientConfig;
 import io.thestencil.iam.spi.support.BuilderTemplate;
 import io.thestencil.iam.spi.support.PortalAssert;
 import io.vertx.core.http.RequestOptions;
 import io.vertx.mutiny.ext.web.client.HttpResponse;
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.function.Supplier;
 
 
+@Slf4j
 public class CancelUserActionBuilderDefault extends BuilderTemplate implements CancelUserActionBuilder {
-  private static final Logger LOGGER = LoggerFactory.getLogger(CancelUserActionBuilderDefault.class);
   private final UserActionsClientConfig config;
   private final Supplier<UserActionQuery> query;
   private String userId;
@@ -85,7 +83,7 @@ public class CancelUserActionBuilderDefault extends BuilderTemplate implements C
     int code = resp.statusCode();
     if (code < 200 || code >= 300) {
       String error = "USER ACTIONS CANCEL: Can't create response, e = " + resp.statusCode() + " | " + resp.statusMessage() + " | " + resp.headers();
-      LOGGER.error(error);
+      log.error(error);
       return ImmutableUserAction.builder()
           .messagesUri("")
           .id("").name("").status("")

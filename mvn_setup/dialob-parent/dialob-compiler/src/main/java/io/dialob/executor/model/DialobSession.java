@@ -15,46 +15,29 @@
  */
 package io.dialob.executor.model;
 
-import static io.dialob.compiler.Utils.readNullableDate;
-import static io.dialob.compiler.Utils.readNullableString;
-import static io.dialob.compiler.Utils.writeNullableDate;
-import static io.dialob.compiler.Utils.writeNullableString;
-
-import java.io.IOException;
-import java.io.Serializable;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.function.UnaryOperator;
-import java.util.stream.Stream;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.google.common.collect.MapDifference;
 import com.google.common.collect.Maps;
 import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.CodedOutputStream;
-
 import io.dialob.compiler.DebugUtil;
-import io.dialob.executor.command.Command;
-import io.dialob.executor.command.ErrorUpdateCommand;
-import io.dialob.executor.command.ItemUpdateCommand;
-import io.dialob.executor.command.SessionUpdateCommand;
-import io.dialob.executor.command.SetAnswer;
-import io.dialob.executor.command.UpdateValueSetCommand;
+import io.dialob.executor.command.*;
 import io.dialob.program.EvalContext;
 import io.dialob.spi.Constants;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.io.IOException;
+import java.io.Serializable;
+import java.time.Instant;
+import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.UnaryOperator;
+import java.util.stream.Stream;
+
+import static io.dialob.compiler.Utils.*;
 
 @EqualsAndHashCode
 @ToString
@@ -296,8 +279,8 @@ public class DialobSession implements ItemStates, Serializable {
    * @param command object to execute within context
    */
   public void applyUpdate(@Nonnull EvalContext evalContext, @Nonnull Command<?> command) {
-    if (LOGGER.isDebugEnabled()) {
-      LOGGER.debug("applyUpdate({})", DebugUtil.commandToString(command));
+    if (log.isDebugEnabled()) {
+      log.debug("applyUpdate({})", DebugUtil.commandToString(command));
     }
 
     if (command instanceof ItemUpdateCommand) {
@@ -321,7 +304,7 @@ public class DialobSession implements ItemStates, Serializable {
       applySessionUpdateCommand(evalContext, (SessionUpdateCommand) command);
       updated();
     } else {
-      LOGGER.warn("Do not know how to apply command: {}", command);
+      log.warn("Do not know how to apply command: {}", command);
     }
   }
 
@@ -411,7 +394,7 @@ public class DialobSession implements ItemStates, Serializable {
 
   private void applyItemUpdateCommand(EvalContext evalContext, ItemUpdateCommand updateCommand) {
     itemStates.computeIfPresent(updateCommand.getTargetId(), (key,state) -> {
-//      LOGGER.debug("Execute command: {}", updateCommand);
+//      log.debug("Execute command: {}", updateCommand);
       final ItemState updatedState = updateCommand.update(evalContext, state);
       updateCommand.getTriggers().stream()
         .flatMap(trigger -> trigger.apply(state, updatedState))
@@ -433,7 +416,7 @@ public class DialobSession implements ItemStates, Serializable {
       opened = lastUpdate;
     }
     revision = Integer.toString(ThreadLocalRandom.current().nextInt());
-    LOGGER.trace("{} updated to rev {}", getId(), revision);
+    log.trace("{} updated to rev {}", getId(), revision);
   }
 
   public ErrorState findErrorState(ErrorId id) {
@@ -551,9 +534,9 @@ public class DialobSession implements ItemStates, Serializable {
 
   @Nonnull
   public Stream<ItemId> findMatchingItemIds(ItemId partialItemId) {
-    final UnaryOperator<Map.Entry<? extends ItemId, ?>> logger = LOGGER.isDebugEnabled() ?
+    final UnaryOperator<Map.Entry<? extends ItemId, ?>> logger = log.isDebugEnabled() ?
       itemEntry -> {
-        LOGGER.debug("Matched {} -> {}", partialItemId, itemEntry.getKey());
+        log.debug("Matched {} -> {}", partialItemId, itemEntry.getKey());
         return itemEntry;
       } :
       UnaryOperator.identity();

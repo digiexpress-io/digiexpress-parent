@@ -1,36 +1,5 @@
 package io.resys.hdes.client.spi.envir;
 
-import java.util.ArrayList;
-
-/*-
- * #%L
- * hdes-client-api
- * %%
- * Copyright (C) 2020 - 2021 Copyright 2020 ReSys OÜ
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
- */
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import io.resys.hdes.client.api.HdesAstTypes;
 import io.resys.hdes.client.api.HdesCache;
 import io.resys.hdes.client.api.HdesClient.HdesTypesMapper;
@@ -41,25 +10,26 @@ import io.resys.hdes.client.api.ast.AstDecision;
 import io.resys.hdes.client.api.ast.AstFlow;
 import io.resys.hdes.client.api.ast.AstService;
 import io.resys.hdes.client.api.ast.AstTag;
-import io.resys.hdes.client.api.programs.DecisionProgram;
-import io.resys.hdes.client.api.programs.FlowProgram;
-import io.resys.hdes.client.api.programs.ImmutableProgramEnvir;
-import io.resys.hdes.client.api.programs.ImmutableProgramMessage;
-import io.resys.hdes.client.api.programs.ImmutableProgramWrapper;
-import io.resys.hdes.client.api.programs.ProgramEnvir;
+import io.resys.hdes.client.api.programs.*;
 import io.resys.hdes.client.api.programs.ProgramEnvir.ProgramMessage;
 import io.resys.hdes.client.api.programs.ProgramEnvir.ProgramStatus;
 import io.resys.hdes.client.api.programs.ProgramEnvir.ProgramWrapper;
-import io.resys.hdes.client.api.programs.ServiceProgram;
-import io.resys.hdes.client.api.programs.TagProgram;
 import io.resys.hdes.client.spi.config.HdesClientConfig;
 import io.resys.hdes.client.spi.decision.DecisionProgramBuilder;
 import io.resys.hdes.client.spi.flow.FlowProgramBuilder;
 import io.resys.hdes.client.spi.groovy.ServiceProgramBuilder;
 import io.resys.hdes.client.spi.tag.TagProgramBuilder;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+@Slf4j
 public class ProgramEnvirFactory {
-  private static final Logger LOGGER = LoggerFactory.getLogger(ProgramEnvirFactory.class);
   private final HdesClientConfig config;
   private final HdesAstTypes hdesTypes;
   private final HdesTypesMapper hdesFactory;
@@ -121,8 +91,8 @@ public class ProgramEnvirFactory {
       
       }
     });
-    if(LOGGER.isDebugEnabled()) {
-      LOGGER.debug(new StringBuilder()
+    if(log.isDebugEnabled()) {
+      log.debug(new StringBuilder()
           .append("Envir status: " + treelog.length()).append(System.lineSeparator())
           .append(treelog.toString())
           .toString());
@@ -131,7 +101,7 @@ public class ProgramEnvirFactory {
   }
   
   public void visitTreeLog(ProgramWrapper<?, ?> wrapper) {
-    if(LOGGER.isDebugEnabled()) {
+    if(log.isDebugEnabled()) {
       final String name = wrapper.getAst().map(w -> w.getName()).orElseGet(() -> wrapper.getId());
       treelog.append("  - ").append(name).append(": ").append(wrapper.getStatus()).append(System.lineSeparator());
       if(wrapper.getStatus() != ProgramStatus.UP) {
@@ -190,7 +160,7 @@ public class ProgramEnvirFactory {
         builder.status(ProgramStatus.AST_ERROR);
       }
     } catch(Exception e) {
-      LOGGER.error(new StringBuilder()
+      log.error(new StringBuilder()
           .append(e.getMessage()).append(System.lineSeparator())
           .append("  - decision source: ").append(this.hdesFactory.commandsString(src.getCommands()))
           .toString(), e);
@@ -212,7 +182,7 @@ public class ProgramEnvirFactory {
           }
         }
       } catch(Exception e) {
-        LOGGER.error(new StringBuilder()
+        log.error(new StringBuilder()
             .append(e.getMessage()).append(System.lineSeparator())
             .append("  - decision source: ").append(this.hdesFactory.commandsString(src.getCommands()))
             .toString(), e);
@@ -259,7 +229,7 @@ public class ProgramEnvirFactory {
       }
       
     } catch(Exception e) {
-      LOGGER.error(new StringBuilder()
+      log.error(new StringBuilder()
           .append(e.getMessage()).append(System.lineSeparator())
           .append("  - flow source: ").append(this.hdesFactory.commandsString(src.getCommands()))
           .toString(), e);
@@ -281,7 +251,7 @@ public class ProgramEnvirFactory {
           }
         }
       } catch(Exception e) {
-        LOGGER.error(new StringBuilder()
+        log.error(new StringBuilder()
             .append(e.getMessage()).append(System.lineSeparator())
             .append("  - flow source: ").append(this.hdesFactory.commandsString(src.getCommands()))
             .toString(), e);
@@ -320,14 +290,14 @@ public class ProgramEnvirFactory {
           .collect(Collectors.toList());
         builder.addAllErrors(errors);
       if(!errors.isEmpty()) {
-        LOGGER.error(new StringBuilder()
+        log.error(new StringBuilder()
             .append(String.join(System.lineSeparator(), errors.stream().map(e -> e.getMsg()).collect(Collectors.toList())))
             .append("  - tag source: ").append(this.hdesFactory.commandsString(src.getCommands()))
             .toString());
         builder.status(ProgramStatus.AST_ERROR);
       }
     } catch(Exception e) {
-      LOGGER.error(new StringBuilder()
+      log.error(new StringBuilder()
           .append(e.getMessage()).append(System.lineSeparator())
           .append("  - tag source: ").append(this.hdesFactory.commandsString(src.getCommands()))
           .toString(), e);
@@ -349,7 +319,7 @@ public class ProgramEnvirFactory {
           }
         }
       } catch(Exception e) {
-        LOGGER.error(new StringBuilder()
+        log.error(new StringBuilder()
             .append(e.getMessage()).append(System.lineSeparator())
             .append("  - tag source: ").append(this.hdesFactory.commandsString(src.getCommands()))
             .toString(), e);
@@ -390,14 +360,14 @@ public class ProgramEnvirFactory {
           .collect(Collectors.toList());
         builder.addAllErrors(errors);
       if(!errors.isEmpty()) {
-        LOGGER.error(new StringBuilder()
+        log.error(new StringBuilder()
             .append(String.join(System.lineSeparator(), errors.stream().map(e -> e.getMsg()).collect(Collectors.toList())))
             .append("  - service source: ").append(this.hdesFactory.commandsString(src.getCommands()))
             .toString());
         builder.status(ProgramStatus.AST_ERROR);
       }
     } catch(Exception e) {
-      LOGGER.error(new StringBuilder()
+      log.error(new StringBuilder()
           .append(e.getMessage()).append(System.lineSeparator())
           .append("  - service source: ").append(this.hdesFactory.commandsString(src.getCommands()))
           .toString(), e);
@@ -419,7 +389,7 @@ public class ProgramEnvirFactory {
           }
         }
       } catch(Exception e) {
-        LOGGER.error(new StringBuilder()
+        log.error(new StringBuilder()
             .append(e.getMessage()).append(System.lineSeparator())
             .append("  - service source: ").append(this.hdesFactory.commandsString(src.getCommands()))
             .toString(), e);

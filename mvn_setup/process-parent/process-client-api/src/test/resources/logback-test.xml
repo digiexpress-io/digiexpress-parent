@@ -28,11 +28,11 @@
 
   <logger name="io.dialob.client.spi.executor" level="INFO" />
   <logger name="io.dialob.client.spi.DialobProgramEnvirFactory" level="INFO" />
-  <logger name="io.dialob.client.tests" level="DEBUG" />
+  <logger name="io.dialob.client.tests" level="INFO" />
   <logger name="io.resys.hdes.client.spi.groovy" level="OFF" />
   <logger name="io.resys.hdes.client.spi.envir" level="OFF" />
 
-  <logger name="io.digiexpress" level="DEBUG" />
+  <logger name="io.digiexpress" level="INFO" />
 
   <root level="INFO">
     <appender-ref ref="STDOUT" />

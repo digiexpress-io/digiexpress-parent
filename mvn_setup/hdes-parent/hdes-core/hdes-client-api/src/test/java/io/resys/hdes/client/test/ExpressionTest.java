@@ -20,26 +20,23 @@ package io.resys.hdes.client.test;
  * #L%
  */
 
-import java.io.IOException;
-import java.util.List;
-import java.util.function.Supplier;
-
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import io.resys.hdes.client.api.ast.TypeDef.ValueType;
 import io.resys.hdes.client.api.programs.ExpressionProgram;
 import io.resys.hdes.client.spi.expression.ExpressionProgramFactory;
 import io.resys.hdes.client.spi.util.DateParser;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.function.Supplier;
 
 
+@Slf4j
 public class ExpressionTest {
-  private static Logger LOGGER = LoggerFactory.getLogger(ExpressionTest.class);
-  
+
   private Supplier<ExpressionProgramFactory.Builder> expressionBuilder = () -> (ExpressionProgramFactory.builder().objectMapper(new ObjectMapper()));
 
   @Test
@@ -159,7 +156,7 @@ public class ExpressionTest {
     public Object getValue(Object entity) {
       long start = System.nanoTime();
       final var result = delegate.run(entity);
-      LOGGER.debug(delegate.getSrc() + " execution in nano: " + (System.nanoTime() - start));
+      log.debug(delegate.getSrc() + " execution in nano: " + (System.nanoTime() - start));
       return result.getValue();
     }
   }

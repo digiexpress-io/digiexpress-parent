@@ -20,24 +20,8 @@ package io.resys.hdes.client.spi;
  * #L%
  */
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.core.io.support.ResourcePatternResolver;
-
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import io.resys.hdes.client.api.HdesComposer.StoreDump;
 import io.resys.hdes.client.api.HdesStore;
 import io.resys.hdes.client.api.ImmutableStoreEntity;
@@ -51,9 +35,18 @@ import io.resys.hdes.client.spi.staticresources.Sha2;
 import io.resys.hdes.client.spi.staticresources.StoreEntityLocation;
 import io.resys.hdes.client.spi.util.HdesAssert;
 import io.smallrye.mutiny.Uni;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+
+@Slf4j
 public class HdesInMemoryStore implements HdesStore {
-  private static final Logger LOGGER = LoggerFactory.getLogger(HdesInMemoryStore.class);
   private final Map<String, StoreEntity> entities;
   private final StoreState state;
   
@@ -131,7 +124,7 @@ public class HdesInMemoryStore implements HdesStore {
     private List<Resource> list(String location) {
       try {
 
-        LOGGER.debug("Loading assets from: " + location + "!");
+        log.debug("Loading assets from: " + location + "!");
         List<Resource> files = new ArrayList<>();
         for (Resource resource : resolver.getResources(location)) {
           files.add(resource);
@@ -273,7 +266,7 @@ public class HdesInMemoryStore implements HdesStore {
           .append(System.lineSeparator());
         entities.put(entity.getId(), entity);
       });
-      LOGGER.debug(migLog.toString());
+      log.debug(migLog.toString());
       return new HdesInMemoryStore(entities);
     }
   
@@ -311,7 +304,7 @@ public class HdesInMemoryStore implements HdesStore {
         entities.put(id, entity);
       }
       
-      LOGGER.debug(migLog.toString());
+      log.debug(migLog.toString());
       return new HdesInMemoryStore(entities);
     }
   }

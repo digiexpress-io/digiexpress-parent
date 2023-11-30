@@ -4,7 +4,7 @@ quarkus:
     level: INFO
     category: 
       io.resys:
-        level: DEBUG
+        level: INFO
   http:
     tcp-quick-ack: true
     tcp-cork: true

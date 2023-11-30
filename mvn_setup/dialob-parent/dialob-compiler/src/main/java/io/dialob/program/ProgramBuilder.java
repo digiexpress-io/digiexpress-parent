@@ -15,27 +15,6 @@
  */
 package io.dialob.program;
 
-import static org.apache.commons.lang3.StringUtils.isBlank;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
-
-import javax.annotation.Nonnull;
-
-import org.immutables.value.Value;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.common.collect.Lists;
-
 import io.dialob.api.form.FormValidationError;
 import io.dialob.api.form.ImmutableFormValidationError;
 import io.dialob.compiler.DialobProgramBuildException;
@@ -47,12 +26,7 @@ import io.dialob.program.ddrl.DDRLExpressionCompiler;
 import io.dialob.program.ddrl.UnknownValueTypeException;
 import io.dialob.program.expr.DDRLOperatorFactory;
 import io.dialob.program.expr.OperatorFactory;
-import io.dialob.program.model.Expression;
-import io.dialob.program.model.ImmutableProgram;
-import io.dialob.program.model.ImmutableVariableItem;
-import io.dialob.program.model.Item;
-import io.dialob.program.model.Program;
-import io.dialob.program.model.ValueSet;
+import io.dialob.program.model.*;
 import io.dialob.rule.parser.ParserUtil;
 import io.dialob.rule.parser.api.RuleExpressionCompilerError;
 import io.dialob.rule.parser.api.ValueType;
@@ -60,11 +34,21 @@ import io.dialob.rule.parser.api.VariableFinder;
 import io.dialob.rule.parser.api.VariableNotDefinedException;
 import io.dialob.rule.parser.function.FunctionRegistry;
 import io.dialob.spi.Constants;
+import lombok.extern.slf4j.Slf4j;
+import org.immutables.value.Value;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nonnull;
+import java.util.*;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
+
+import static org.apache.commons.lang3.StringUtils.isBlank;
+
+@Slf4j
 @Value.Enclosing
 public class ProgramBuilder implements ExpressionCompiler, BuilderParent, Builder<Program> {
-
-  private static final Logger LOGGER = LoggerFactory.getLogger(ProgramBuilder.class);
 
   private final FunctionRegistry functionRegistry;
 
@@ -78,7 +62,7 @@ public class ProgramBuilder implements ExpressionCompiler, BuilderParent, Builde
 
   private final Map<ItemId,AbstractItemBuilder<?,?>> types = new HashMap<>();
 
-  private List<FormValidationError> errors = Lists.newArrayList();
+  private List<FormValidationError> errors = new ArrayList<>();
 
   private final List<ValueSet> valueSets = new ArrayList<>();
 
@@ -253,7 +237,7 @@ public class ProgramBuilder implements ExpressionCompiler, BuilderParent, Builde
     }
     if (!uncompiledExpressions.isEmpty()) {
       this.errors.addAll(errors);
-      LOGGER.debug("Could not compile all expressions: {}", uncompiledExpressions);
+      log.debug("Could not compile all expressions: {}", uncompiledExpressions);
       return false;
     }
     ddrlExpressionCompiler.getAsyncFunctionVariableExpressions().entrySet().forEach(stringExpressionEntry -> {
@@ -282,7 +266,7 @@ public class ProgramBuilder implements ExpressionCompiler, BuilderParent, Builde
       ProgramVariableFinder variableFinder = new ProgramVariableFinder(compilableExpression.getAliasesProvider().getAliases(), scope);
       return ddrlExpressionCompiler.compile(variableFinder, compilableExpression.getExpression(), errorConsumer);
     } catch (UnknownValueTypeException e) {
-      LOGGER.error("error: {}", e.getMessage());
+      log.error("error: {}", e.getMessage());
     }
     return Optional.empty();
   }

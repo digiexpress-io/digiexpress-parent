@@ -1,22 +1,9 @@
 package io.dialob.pgsql.test;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.time.Duration;
-import java.util.Map;
-
-import jakarta.inject.Inject;
-
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
 import io.dialob.client.api.DialobClient;
 import io.dialob.client.api.DialobDocument.FormReleaseDocument;
 import io.dialob.client.pgsql.PgSqlDialobStore;
@@ -29,7 +16,17 @@ import io.dialob.pgsql.test.config.DialobClientImplForTests;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.QuarkusTestProfile;
 import io.quarkus.test.junit.TestProfile;
+import jakarta.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.time.Duration;
+import java.util.Map;
 
 @Disabled
 @QuarkusTest
@@ -67,14 +64,14 @@ public class CreateMigrationDB {
     final var client = new MigrationClient(pgPool);
 
     final var migration = client.getRelease("");
-    LOGGER.error(migration.getLog());
+    log.error(migration.getLog());
 
     final var file = new File("src/test/resources/migration_dump.txt");
     if(!file.exists()) {
       file.createNewFile();
     }
 
-    LOGGER.error("Created migration dump: " + file.getAbsolutePath());
+    log.error("Created migration dump: " + file.getAbsolutePath());
 
     final var output = new FileOutputStream(file);
     client.write(migration, output);
@@ -90,7 +87,7 @@ public class CreateMigrationDB {
     final var release = client.read(input);
 
     for(final var value : release.getValues())  {
-      LOGGER.error(value.getCommands());
+      log.error(value.getCommands());
     }
     input.close();
   }

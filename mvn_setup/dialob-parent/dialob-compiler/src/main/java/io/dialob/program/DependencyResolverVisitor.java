@@ -15,24 +15,9 @@
  */
 package io.dialob.program;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static java.util.Objects.requireNonNull;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import javax.annotation.Nonnull;
-
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Streams;
-
 import io.dialob.api.form.FormValidationError;
 import io.dialob.api.form.ImmutableFormValidationError;
 import io.dialob.compiler.DebugUtil;
@@ -40,19 +25,18 @@ import io.dialob.executor.command.Command;
 import io.dialob.executor.command.EventMatcher;
 import io.dialob.executor.command.Trigger;
 import io.dialob.executor.command.UpdateCommand;
-import io.dialob.executor.model.ErrorId;
-import io.dialob.executor.model.IdUtils;
-import io.dialob.executor.model.ImmutableErrorId;
-import io.dialob.executor.model.ImmutableValueSetId;
-import io.dialob.executor.model.ItemId;
+import io.dialob.executor.model.*;
 import io.dialob.program.expr.arith.RowItemsExpression;
-import io.dialob.program.model.AbstractItemVisitor;
-import io.dialob.program.model.DisplayItem;
-import io.dialob.program.model.Expression;
-import io.dialob.program.model.Group;
-import io.dialob.program.model.ProgramVisitor;
-import io.dialob.program.model.VariableItem;
+import io.dialob.program.model.*;
 import lombok.extern.slf4j.Slf4j;
+
+import javax.annotation.Nonnull;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static com.google.common.collect.Lists.newArrayList;
+import static java.util.Objects.requireNonNull;
 
 @Slf4j
 public class DependencyResolverVisitor implements ProgramVisitor {
@@ -198,13 +182,13 @@ public class DependencyResolverVisitor implements ProgramVisitor {
       } while (!same);
     });
 
-    if (LOGGER.isDebugEnabled()) {
-      LOGGER.debug(">>> Command dependencies >>>");
+    if (log.isDebugEnabled()) {
+      log.debug(">>> Command dependencies >>>");
       commandsToCommands.forEach((key, value) -> {
-        LOGGER.debug("Command : {}", DebugUtil.commandToString(key));
-        value.forEach(command -> LOGGER.debug("  <= {}", DebugUtil.commandToString(command)));
+        log.debug("Command : {}", DebugUtil.commandToString(key));
+        value.forEach(command -> log.debug("  <= {}", DebugUtil.commandToString(command)));
       });
-      LOGGER.debug("<<< Command dependencies <<<");
+      log.debug("<<< Command dependencies <<<");
     }
     // Uncomment this to get dot dump of form.
     // DebugUtil.dumpDotFile(getItemCommands());

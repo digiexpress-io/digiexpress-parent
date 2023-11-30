@@ -20,25 +20,19 @@ package io.thestencil.iam.spi.integrations;
  * #L%
  */
 
-import java.util.function.Supplier;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import io.smallrye.mutiny.Uni;
 import io.thestencil.iam.api.ImmutableAttachmentDownloadUrl;
-import io.thestencil.iam.api.UserActionsClient.Attachment;
-import io.thestencil.iam.api.UserActionsClient.AttachmentDownloadBuilder;
-import io.thestencil.iam.api.UserActionsClient.AttachmentDownloadUrl;
-import io.thestencil.iam.api.UserActionsClient.UserActionsClientConfig;
-import io.thestencil.iam.api.UserActionsClient.UserActionQuery;
+import io.thestencil.iam.api.UserActionsClient.*;
 import io.thestencil.iam.spi.support.PortalAssert;
 import io.vertx.core.http.RequestOptions;
+import lombok.extern.slf4j.Slf4j;
 
+import java.util.function.Supplier;
+
+@Slf4j
 public class AttachmentDownloadBuilderDefault extends MessagesQueryBuilderDefault implements AttachmentDownloadBuilder {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(AttachmentDownloadBuilderDefault.class);
-  
+
   private final Supplier<UserActionQuery> userAction;
   
   private String processId;
@@ -102,7 +96,7 @@ public class AttachmentDownloadBuilderDefault extends MessagesQueryBuilderDefaul
       fileName = java.net.URLEncoder.encode(attachment.getName(), "UTF-8").replace("+", "%20");
     } catch(Exception e) {
       fileName = attachment.getName() ;
-      LOGGER.error(attachment.getName() + ", failed to encode: " + e.getMessage(), e);
+      log.error(attachment.getName() + ", failed to encode: " + e.getMessage(), e);
     }
     
     if(attachment.getTaskId() == null) {
@@ -114,9 +108,9 @@ public class AttachmentDownloadBuilderDefault extends MessagesQueryBuilderDefaul
     return get(uri).followRedirects(false).send().onItem().transform(resp -> {
       if (resp.statusCode() != 302) {
         String error = "Attachments download query: Can't create response: uri: '" + uri + "', e = " + resp.statusCode() + " | " + resp.statusMessage() + " | " + resp.headers();
-        LOGGER.error(error);
-        LOGGER.error("Error body: " + resp.bodyAsString());
-        LOGGER.error("Error header: " + resp.bodyAsString());
+        log.error(error);
+        log.error("Error body: " + resp.bodyAsString());
+        log.error("Error header: " + resp.bodyAsString());
         return ImmutableAttachmentDownloadUrl.builder()
             .download("not-available")
             .build();

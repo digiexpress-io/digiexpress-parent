@@ -15,6 +15,16 @@
  */
 package io.dialob.client.spi.function;
 
+import com.google.common.collect.ListMultimap;
+import com.google.common.collect.Multimaps;
+import io.dialob.rule.parser.api.ValueType;
+import io.dialob.rule.parser.api.VariableNotDefinedException;
+import io.dialob.rule.parser.function.FunctionRegistry;
+import io.dialob.rule.parser.function.FunctionRegistryException;
+import lombok.extern.slf4j.Slf4j;
+import org.immutables.value.Value;
+
+import javax.annotation.Nonnull;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -22,19 +32,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.Predicate;
-
-import javax.annotation.Nonnull;
-
-import org.immutables.value.Value;
-
-import com.google.common.collect.ListMultimap;
-import com.google.common.collect.Multimaps;
-
-import io.dialob.rule.parser.api.ValueType;
-import io.dialob.rule.parser.api.VariableNotDefinedException;
-import io.dialob.rule.parser.function.FunctionRegistry;
-import io.dialob.rule.parser.function.FunctionRegistryException;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Value.Enclosing
@@ -77,7 +74,7 @@ public class FunctionRegistryImpl implements FunctionRegistry {
         if (method.getName().equals(implementationName) && isPublicAndStatic(method)) {
           final ValueType returnType = ValueType.valueTypeOf(method.getReturnType());
           final List<ValueType> argumentTypes = new ArrayList<>();
-          LOGGER.debug("Try register method {} as {}[]", method, functionName);
+          log.debug("Try register method {} as {}[]", method, functionName);
           Predicate<ValueType[]> argumentMatcher = null;
           for (final Class<?> argType : method.getParameterTypes()) {
             final ValueType valueType;
@@ -86,7 +83,7 @@ public class FunctionRegistryImpl implements FunctionRegistry {
             } else {
               valueType = ValueType.valueTypeOf(argType);
               if (valueType == null) {
-                LOGGER.warn("Failed to map {}", argType);
+                log.warn("Failed to map {}", argType);
               }
               argumentTypes.add(valueType);
             }
@@ -108,7 +105,7 @@ public class FunctionRegistryImpl implements FunctionRegistry {
               .build());
             return;
           } else {
-            LOGGER.warn("Could not map function '{}' argument types to fact types. Registration skipped.", functionName);
+            log.warn("Could not map function '{}' argument types to fact types. Registration skipped.", functionName);
           }
         }
       }
@@ -146,7 +143,7 @@ public class FunctionRegistryImpl implements FunctionRegistry {
       // Exception thrown by function
       failure = e.getTargetException().getMessage();
     } catch (Exception e) {
-      LOGGER.warn("Couldn't invoke function " + functionName, e);
+      log.warn("Couldn't invoke function " + functionName, e);
       failure = e.getMessage();
     }
     callback.failed(failure);

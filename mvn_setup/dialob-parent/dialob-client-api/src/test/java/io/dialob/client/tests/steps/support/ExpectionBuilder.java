@@ -1,18 +1,17 @@
 package io.dialob.client.tests.steps.support;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-
-import java.util.Iterator;
-import java.util.function.Consumer;
-
-import org.junit.jupiter.api.Assertions;
-
 import io.dialob.api.proto.Action;
 import io.dialob.api.proto.Actions;
 import io.dialob.client.tests.steps.support.StepsBuilder.Expectation;
 import io.dialob.client.tests.steps.support.StepsBuilder.WhenMessage;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Assertions;
+
+import java.util.Iterator;
+import java.util.function.Consumer;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 
 @Slf4j
@@ -67,7 +66,7 @@ public class ExpectionBuilder {
       if(actions.getActions() == null || actions.getActions().isEmpty()) {
         return;
       }
-      LOGGER.error("{} do not match with expectUpdateWithoutActions", actions.toString());
+      log.error("{} do not match with expectUpdateWithoutActions", actions.toString());
       Assertions.fail("We didn't expect any actions, but got some.");
     });
   }
@@ -75,7 +74,7 @@ public class ExpectionBuilder {
   public StepsBuilder next() {
     return stepsBuilder;
   }
-  
+
   public ExpectionBuilder finallyAssert(Consumer<String> msg) {
     return this;
   }
