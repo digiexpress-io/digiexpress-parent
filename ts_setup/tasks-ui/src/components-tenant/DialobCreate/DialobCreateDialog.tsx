@@ -4,7 +4,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import DialobCreateActions from './DialobCreateActions';
-import Fields from './DialobCreateFields';
+import Fields from '../DialobFields/DialobTextFields';
 import Burger from 'components-burger';
 import { CreateFormRequest } from 'client/tenant-types';
 import Context from 'context';
@@ -38,13 +38,7 @@ const DialobCreateDialog: React.FC<{ open: boolean, onClose: () => void, setActi
   const [loading, setLoading] = React.useState(false);
 
   React.useEffect(() => {
-    if (!formName.length) {
-      setErrorMessage('dialob.form.name.required');
-    } else if (!/^[a-zA-Z0-9_-]*$/.test(formName)) {
-      setErrorMessage('dialob.form.name.invalid');
-    } else {
-      setErrorMessage('');
-    }
+    Fields.validateTehnicalName(formName, setErrorMessage);
   }, [formName]);
 
   if (!props.open) {

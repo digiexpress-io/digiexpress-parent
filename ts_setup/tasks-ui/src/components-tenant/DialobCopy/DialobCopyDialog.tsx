@@ -4,7 +4,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { TenantEntryDescriptor } from 'descriptor-tenant';
 import Burger from 'components-burger';
-import Fields from 'components-tenant/DialobCreate/DialobCreateFields';
+import Fields from 'components-tenant/DialobFields/DialobTextFields';
 import Context from 'context';
 
 
@@ -25,13 +25,7 @@ const DialobCopyDialog: React.FC<{
   const [loading, setLoading] = React.useState(false);
 
   React.useEffect(() => {
-    if (!formName.length) {
-      setErrorMessage('dialob.form.technicalName.required');
-    } else if (!/^[_\-a-zA-Z\d]*$/g.test(formName)) {
-      setErrorMessage('dialob.form.technicalName.invalid');
-    } else {
-      setErrorMessage('');
-    }
+    Fields.validateTehnicalName(formName, setErrorMessage);
   }, [formName]);
 
   if (!props.open) {

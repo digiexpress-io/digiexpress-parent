@@ -25,6 +25,15 @@ const TechnicalName: React.FC<{ value: string, onChange: (value: string) => void
   />);
 }
 
+const validateTehnicalName = (name: string, setError: (error: string) => void): void => {
+  if (!name.length) {
+    setError('dialob.form.technicalName.required');
+  } else if (!/^[_\-a-zA-Z\d]*$/g.test(name)) {
+    setError('dialob.form.technicalName.invalid');
+  } else {
+    setError('');
+  }
+}
 
-const Fields = { DialogName, TechnicalName };
-export default Fields;
+const TextFields = { DialogName, TechnicalName, validateTehnicalName };
+export default TextFields;
