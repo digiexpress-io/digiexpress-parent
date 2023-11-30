@@ -24,6 +24,7 @@ import java.util.List;
  */
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 import org.springframework.expression.AccessException;
@@ -38,7 +39,6 @@ import org.springframework.expression.spel.ast.PropertyOrFieldReference;
 import org.springframework.expression.spel.standard.SpelExpression;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
-import org.springframework.util.Assert;
 
 import io.resys.hdes.client.api.exceptions.ProgramException;
 
@@ -53,8 +53,7 @@ public class OperationFlowContext {
   
   public static class Builder {
     public Operation<?> build(String src, Consumer<String> constants) {
-      Assert.notNull(src, "expression can't be null!");
-      SpelExpression exp = (SpelExpression) PARSER.parseExpression(src);
+      SpelExpression exp = (SpelExpression) PARSER.parseExpression(Objects.requireNonNull(src, "expression can't be null!"));
       
       List<String> inputs = new ArrayList<>();
       getInputs(exp.getAST(), inputs);

@@ -21,6 +21,7 @@ package io.resys.hdes.client.spi.expression;
  */
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 import org.springframework.expression.AccessException;
@@ -31,7 +32,6 @@ import org.springframework.expression.PropertyAccessor;
 import org.springframework.expression.TypedValue;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
-import org.springframework.util.Assert;
 
 public class OperationMap {
   private final static ExpressionParser PARSER = new SpelExpressionParser();
@@ -42,8 +42,7 @@ public class OperationMap {
   
   public static class Builder {
     public Operation<?> build(String src, Consumer<String> constants) {
-      Assert.notNull(src, "expression can't be null!");
-      Expression exp = PARSER.parseExpression(src);
+      Expression exp = PARSER.parseExpression(Objects.requireNonNull(src, "expression can't be null!"));
       return (Map<String, Object> input) -> {
         StandardEvaluationContext context = createContext(input);
         return exp.getValue(context);
