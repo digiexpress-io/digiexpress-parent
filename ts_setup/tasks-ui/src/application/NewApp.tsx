@@ -36,6 +36,7 @@ const getUrl = () => {
     if (process.env.REACT_APP_LOCAL_DEV_MODE) {
       return "http://localhost:8080";
     }
+    return "";
   } catch (error) {
     return "";
   }
