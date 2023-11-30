@@ -1,41 +1,11 @@
 import React from 'react';
-import { Dialog, IconButton, Box, styled } from '@mui/material';
-import DateRangeOutlinedIcon from '@mui/icons-material/DateRangeOutlined';
+import { Box } from '@mui/material';
 import { TaskDescriptor, Group } from 'descriptor-task';
 import TaskCell from './TaskCell';
-import { CellProps } from './task-table-types';
-import DatePicker from '../DatePicker';
 import { StyledTableCell } from './StyledTable';
-import Burger from 'components-burger';
-
-const StyledDateRangeOutlinedIcon = styled(DateRangeOutlinedIcon)(({ theme }) => ({
-  fontSize: 'medium',
-  color: theme.palette.uiElements.main
-}));
-
-const DueDate: React.FC<CellProps> = ({ row }) => {
-
-  const [datePickerOpen, setDatePickerOpen] = React.useState(false);
-  const [startDate, setStartDate] = React.useState<Date | string | undefined>(row.startDate);
-  const [dueDate, setDueDate] = React.useState<Date | string | undefined>(row.dueDate);
-
-  const dateField = <Box display='flex' alignItems='center'>
-    <IconButton onClick={() => setDatePickerOpen(true)} color='inherit'>
-      <StyledDateRangeOutlinedIcon />
-    </IconButton>
-    <Burger.DateTimeFormatter value={row.dueDate} type='date' />
-  </Box>
-
-
-  return (<>
-    <Dialog open={datePickerOpen} onClose={() => setDatePickerOpen(false)}>
-      <DatePicker startDate={startDate} setStartDate={setStartDate} dueDate={dueDate} setDueDate={setDueDate} />
-    </Dialog>
-    <TaskCell id={row.id + "/DueDate"} name={dateField} />
-  </>
-  );
-}
-
+import TaskDueDate from '../TaskDueDate';
+import Context from 'context';
+import Client from 'client';
 
 const FormattedCell: React.FC<{
   rowId: number,
@@ -43,9 +13,24 @@ const FormattedCell: React.FC<{
   def: Group
 }> = ({ row, def }) => {
 
+  const backend = Context.useBackend();
+  const tasks = Context.useTasks();
+
+  async function handleDueDateChange(dueDate: string | undefined) {
+    const command: Client.ChangeTaskDueDate = {
+      commandType: 'ChangeTaskDueDate',
+      dueDate,
+      taskId: row.id
+    };
+
+    await backend.task.updateActiveTask(row.id, [command]);
+    await tasks.reload();
+  }
+
+
   return (<StyledTableCell width='180px'>
     <Box width='180px'>
-      <DueDate row={row} def={def} />
+      <TaskCell id={row.id + "/DueDate"} name={<TaskDueDate task={row} onChange={handleDueDateChange} />} />
     </Box>
   </StyledTableCell>);
 }
