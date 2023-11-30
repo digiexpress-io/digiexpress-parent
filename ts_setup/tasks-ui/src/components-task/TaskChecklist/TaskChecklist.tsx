@@ -174,7 +174,7 @@ const TaskChecklist: React.FC<{ onChange: (commands: Client.TaskUpdateCommand<an
           </Button>
         </Box>
 
-        {checklist.items.map((item, index) => (<>
+        {checklist.items.map((item, index) => (<Box key={index}>
 
           <Grid container alignItems='center' key={index}>
             <Grid item md={2} lg={2}>
@@ -228,20 +228,23 @@ const TaskChecklist: React.FC<{ onChange: (commands: Client.TaskUpdateCommand<an
           </Grid>
 
           {checklist.items.length - 1 === index ? undefined : <Divider />}
-        </>
+        </Box>
 
         ))}
+
+
+
       </Stack>
 
       {/* Add new checklist item  */}
 
-      <Box display='flex' alignItems='center' justifyContent='flex-end' >
+      < Box display='flex' alignItems='center' justifyContent='flex-end' key={index} >
         <Button startIcon={<AddIcon sx={{ color: 'uiElements.main' }} />} onClick={() => handleChecklistItemCreate(checklist.id)}>
           <Typography sx={{ color: 'text.primary', textTransform: 'capitalize' }}>
             <FormattedMessage id='task.checklistItem.add' />
           </Typography>
         </Button>
-      </Box>
+      </Box >
     </Burger.Section >
     ))
     }
