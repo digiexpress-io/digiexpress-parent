@@ -20,28 +20,26 @@ package io.thestencil.iam.spi.integrations;
  * #L%
  */
 
-import java.util.function.Supplier;
-
-import org.immutables.value.Value;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.iam.api.ImmutableUserMessage;
-import io.thestencil.iam.api.UserActionsClient.UserActionsClientConfig;
 import io.thestencil.iam.api.UserActionsClient.ReplyToBuilder;
 import io.thestencil.iam.api.UserActionsClient.UserActionQuery;
+import io.thestencil.iam.api.UserActionsClient.UserActionsClientConfig;
 import io.thestencil.iam.api.UserActionsClient.UserMessage;
 import io.thestencil.iam.spi.support.BuilderTemplate;
 import io.thestencil.iam.spi.support.PortalAssert;
 import io.vertx.core.http.RequestOptions;
 import io.vertx.core.json.JsonObject;
 import io.vertx.mutiny.ext.web.client.HttpResponse;
+import lombok.extern.slf4j.Slf4j;
+import org.immutables.value.Value;
+
+import java.util.function.Supplier;
 
 
+@Slf4j
 public class ReplyToBuilderDefault extends BuilderTemplate implements ReplyToBuilder {
-  private static final Logger LOGGER = LoggerFactory.getLogger(ReplyToBuilderDefault.class);
   private final UserActionsClientConfig config;
   private final Supplier<UserActionQuery> query;
   
@@ -112,9 +110,9 @@ public class ReplyToBuilderDefault extends BuilderTemplate implements ReplyToBui
             if(replyTo.isPresent()) {
               return createReplyTo(replyTo.get());
             }
-            LOGGER.error("USER ACTIONS CREATE REPLY: User is trying to associate tasks/messages that do not belong to them: " + processId + "!");
+            log.error("USER ACTIONS CREATE REPLY: User is trying to associate tasks/messages that do not belong to them: " + processId + "!");
           }
-          LOGGER.error("USER ACTIONS CREATE REPLY: There are no messages for the process: " + processId + "!");
+          log.error("USER ACTIONS CREATE REPLY: There are no messages for the process: " + processId + "!");
           return Uni.createFrom().item(ImmutableUserMessage.builder().id("").taskId("").created("").userName(userId).replyToId(replyToId).commentText(text).build());
         });
   }
@@ -140,7 +138,7 @@ public class ReplyToBuilderDefault extends BuilderTemplate implements ReplyToBui
     int code = resp.statusCode();
     if (code < 200 || code >= 300) {
       String error = "USER ACTIONS CREATE REPLY: Can't create response, uri: " + uri + ", e = " + resp.statusCode() + " | " + resp.statusMessage() + " | " + resp.headers();
-      LOGGER.error(error);
+      log.error(error);
       return ImmutableUserMessage.builder()
           .id("")
           .taskId("")

@@ -20,15 +20,6 @@ package io.resys.thena.docdb.test;
  * #L%
  */
 
-import java.io.Serializable;
-import java.time.Duration;
-
-import org.immutables.value.Value;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
 import io.resys.thena.docdb.api.actions.RepoActions.RepoResult;
@@ -37,14 +28,20 @@ import io.resys.thena.docdb.api.models.Repo.RepoType;
 import io.resys.thena.docdb.test.config.DbTestTemplate;
 import io.resys.thena.docdb.test.config.PgProfile;
 import io.vertx.core.json.JsonObject;
+import lombok.extern.slf4j.Slf4j;
+import org.immutables.value.Value;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import java.io.Serializable;
+import java.time.Duration;
 
 
 @QuarkusTest
 @TestProfile(PgProfile.class)
+@Slf4j
 public class SimpleDocTest extends DbTestTemplate {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(SimpleDocTest.class);
-  
   @Value.Immutable
   public interface TestContent extends Serializable {
     String getId();
@@ -58,7 +55,7 @@ public class SimpleDocTest extends DbTestTemplate {
         .name("SimpleDocTest-1", RepoType.doc)
         .build()
         .await().atMost(Duration.ofMinutes(1));
-    LOGGER.debug("created repo {}", repo);
+    log.debug("created repo {}", repo);
     Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
     
     // branch 1
@@ -145,7 +142,7 @@ public class SimpleDocTest extends DbTestTemplate {
         .name("SimpleDocTest-parent-child", RepoType.doc)
         .build()
         .await().atMost(Duration.ofMinutes(1));
-    LOGGER.debug("created repo {}", repo);
+    log.debug("created repo {}", repo);
     Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
     
     // doc 1

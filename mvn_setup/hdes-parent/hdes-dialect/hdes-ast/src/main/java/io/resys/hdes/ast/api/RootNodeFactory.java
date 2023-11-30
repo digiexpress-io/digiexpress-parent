@@ -20,19 +20,6 @@ package io.resys.hdes.ast.api;
  * #L%
  */
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.apache.commons.lang3.mutable.MutableInt;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import io.resys.hdes.ast.HdesLexer;
 import io.resys.hdes.ast.HdesParser;
 import io.resys.hdes.ast.api.nodes.BodyNode;
@@ -44,6 +31,13 @@ import io.resys.hdes.ast.spi.antlr.visitors.HdesParserVisitor;
 import io.resys.hdes.ast.spi.antlr.visitors.HdesParserVisitor.ContentNode;
 import io.resys.hdes.ast.spi.antlr.visitors.RootNodeDependencyVisitor;
 import io.resys.hdes.ast.spi.validators.RootNodeValidator;
+import lombok.extern.slf4j.Slf4j;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.apache.commons.lang3.mutable.MutableInt;
+
+import java.util.*;
 
 public interface RootNodeFactory {
   
@@ -59,12 +53,12 @@ public interface RootNodeFactory {
   }
   
 
-  public static Builder builder() {
+  static Builder builder() {
     return new GenericBuilder();
   }
   
-  public static class GenericBuilder implements Builder {
-    private static final Logger LOGGER = LoggerFactory.getLogger(RootNodeFactory.class);
+  @Slf4j
+  class GenericBuilder implements Builder {
     private final Map<String, BodyNode> body = new HashMap<>();
     private final Map<String, List<ErrorNode>> errors = new HashMap<>();
     private final Map<String, String> origin = new HashMap<>();
@@ -85,7 +79,7 @@ public interface RootNodeFactory {
                 Collections.unmodifiableMap(origin),
                 Collections.unmodifiableMap(errors)));
       List<ErrorNode> logicalErrors = new ArrayList<>(new RootNodeValidator().visitBody(result).getErrors());
-      if(LOGGER.isDebugEnabled()) {
+      if(log.isDebugEnabled()) {
         log(this.errors, logicalErrors);
       }
       
@@ -225,7 +219,7 @@ public interface RootNodeFactory {
       }
       String msg = debugger.toString();
       if(!msg.isEmpty()) {
-        LOGGER.debug(msg);
+        log.debug(msg);
       }
     }
   }

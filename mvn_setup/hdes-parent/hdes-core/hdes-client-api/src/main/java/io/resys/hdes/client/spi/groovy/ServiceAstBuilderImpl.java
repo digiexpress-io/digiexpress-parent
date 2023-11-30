@@ -20,28 +20,8 @@ package io.resys.hdes.client.spi.groovy;
  * #L%
  */
 
-import java.io.Serializable;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.Parameter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-
-import javax.annotation.Nullable;
-
-import org.apache.commons.lang3.StringUtils;
-import org.immutables.value.Value;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-
 import groovy.lang.GroovyClassLoader;
 import io.resys.hdes.client.api.HdesAstTypes.DataTypeAstBuilder;
 import io.resys.hdes.client.api.HdesAstTypes.ServiceAstBuilder;
@@ -49,21 +29,9 @@ import io.resys.hdes.client.api.HdesClient.HdesTypesMapper;
 import io.resys.hdes.client.api.ast.AstBody.AstBodyType;
 import io.resys.hdes.client.api.ast.AstBody.CommandMessageType;
 import io.resys.hdes.client.api.ast.AstBody.Headers;
-import io.resys.hdes.client.api.ast.AstCommand;
+import io.resys.hdes.client.api.ast.*;
 import io.resys.hdes.client.api.ast.AstCommand.AstCommandValue;
-import io.resys.hdes.client.api.ast.AstService;
-import io.resys.hdes.client.api.ast.AstService.AstServiceRef;
-import io.resys.hdes.client.api.ast.AstService.AstServiceType;
-import io.resys.hdes.client.api.ast.AstService.ServiceExecutorType;
-import io.resys.hdes.client.api.ast.AstService.ServiceExecutorType0;
-import io.resys.hdes.client.api.ast.AstService.ServiceExecutorType1;
-import io.resys.hdes.client.api.ast.AstService.ServiceExecutorType2;
-import io.resys.hdes.client.api.ast.ImmutableAstCommand;
-import io.resys.hdes.client.api.ast.ImmutableAstCommandMessage;
-import io.resys.hdes.client.api.ast.ImmutableAstService;
-import io.resys.hdes.client.api.ast.ImmutableAstServiceRef;
-import io.resys.hdes.client.api.ast.ImmutableHeaders;
-import io.resys.hdes.client.api.ast.TypeDef;
+import io.resys.hdes.client.api.ast.AstService.*;
 import io.resys.hdes.client.api.ast.TypeDef.Direction;
 import io.resys.hdes.client.api.ast.TypeDef.ValueType;
 import io.resys.hdes.client.api.exceptions.ServiceAstException;
@@ -71,11 +39,22 @@ import io.resys.hdes.client.api.programs.ServiceData;
 import io.resys.hdes.client.api.programs.ServiceData.ServiceRef;
 import io.resys.hdes.client.spi.changeset.AstChangesetFactory;
 import io.resys.hdes.client.spi.util.HdesAssert;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.immutables.value.Value;
+
+import javax.annotation.Nullable;
+import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Parameter;
+import java.util.*;
 
 
+@Slf4j
 public class ServiceAstBuilderImpl implements ServiceAstBuilder {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(ServiceAstBuilderImpl.class);
   private final HdesTypesMapper dataTypeRepository;
   private final List<AstCommand> src = new ArrayList<>();
   private Integer rev;
@@ -189,7 +168,7 @@ public class ServiceAstBuilderImpl implements ServiceAstBuilder {
     } catch (Exception e) {
       final var msg = "Failed to generate groovy service ast from: " + System.lineSeparator() + 
           source + System.lineSeparator() + e.getMessage();
-      LOGGER.error(msg, e);
+      log.error(msg, e);
       
       return ImmutableAstService.builder()
           .bodyType(AstBodyType.FLOW_TASK)

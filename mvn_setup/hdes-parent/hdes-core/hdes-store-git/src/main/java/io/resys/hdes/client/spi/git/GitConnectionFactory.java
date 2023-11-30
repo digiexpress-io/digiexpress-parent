@@ -20,45 +20,10 @@ package io.resys.hdes.client.spi.git;
  * #L%
  */
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.ResetCommand.ResetType;
-import org.eclipse.jgit.api.TransportConfigCallback;
-import org.eclipse.jgit.api.errors.CheckoutConflictException;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.api.errors.InvalidRefNameException;
-import org.eclipse.jgit.api.errors.RefAlreadyExistsException;
-import org.eclipse.jgit.api.errors.RefNotFoundException;
-import org.eclipse.jgit.lib.Constants;
-import org.eclipse.jgit.transport.JschConfigSessionFactory;
-import org.eclipse.jgit.transport.OpenSshConfig.Host;
-import org.eclipse.jgit.transport.SshSessionFactory;
-import org.eclipse.jgit.transport.SshTransport;
-import org.eclipse.jgit.util.FS;
-import org.ehcache.config.builders.CacheConfigurationBuilder;
-import org.ehcache.config.builders.CacheManagerBuilder;
-import org.ehcache.config.builders.ResourcePoolsBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.core.io.support.ResourcePatternResolver;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
-
 import io.resys.hdes.client.api.HdesStore.HdesCredsSupplier;
 import io.resys.hdes.client.spi.GitConfig;
 import io.resys.hdes.client.spi.GitConfig.GitEntry;
@@ -67,12 +32,34 @@ import io.resys.hdes.client.spi.ImmutableGitConfig;
 import io.resys.hdes.client.spi.staticresources.StoreEntityLocation;
 import io.resys.hdes.client.spi.util.FileUtils;
 import io.resys.hdes.client.spi.util.HdesAssert;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.ResetCommand.ResetType;
+import org.eclipse.jgit.api.TransportConfigCallback;
+import org.eclipse.jgit.api.errors.*;
+import org.eclipse.jgit.lib.Constants;
+import org.eclipse.jgit.transport.SshSessionFactory;
+import org.eclipse.jgit.transport.SshTransport;
+import org.eclipse.jgit.transport.ssh.jsch.JschConfigSessionFactory;
+import org.eclipse.jgit.transport.ssh.jsch.OpenSshConfig.Host;
+import org.eclipse.jgit.util.FS;
+import org.ehcache.config.builders.CacheConfigurationBuilder;
+import org.ehcache.config.builders.CacheManagerBuilder;
+import org.ehcache.config.builders.ResourcePoolsBuilder;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
 
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+@Slf4j
 public class GitConnectionFactory {
-  private static final Logger LOGGER = LoggerFactory.getLogger(GitConnectionFactory.class);
 
-  
-  public static GitConfig create(GitInit config, HdesCredsSupplier creds, ObjectMapper objectMapper) throws IOException, 
+  public static GitConfig create(GitInit config, HdesCredsSupplier creds, ObjectMapper objectMapper) throws IOException,
       RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, CheckoutConflictException, GitAPIException {
     
     final var path = StringUtils.isEmpty(config.getRemote()) ? Files.createTempDirectory("git_repo") : new File(config.getStorage()).toPath();
@@ -86,7 +73,7 @@ public class GitConnectionFactory {
     final Git git;
 
     if(clone.exists()) {
-      LOGGER.debug("Checking out branch: {}", config.getBranch());
+      log.debug("Checking out branch: {}", config.getBranch());
       git = Git.open(clone);
       
       if(!git.getRepository().getBranch().equals(config.getBranch())) {
@@ -96,7 +83,7 @@ public class GitConnectionFactory {
       }
 
     } else {
-      LOGGER.debug("Cloning new repository branch: {}", config.getBranch());
+      log.debug("Cloning new repository branch: {}", config.getBranch());
       git = Git.cloneRepository().
           setURI(config.getRemote()).
           setDirectory(new File(path + "/clone")).
@@ -141,11 +128,11 @@ public class GitConnectionFactory {
   
   private static File copyKey(ResourcePatternResolver resolver, Path path, String src, String target, String errorMsg) throws IOException {
     File result = new File(path.toFile(), target);
-    LOGGER.debug("Reading private key from: " + src);
+    log.debug("Reading private key from: " + src);
     Resource resource = resolver.getResource(src);
     HdesAssert.isTrue(resource.exists(), () -> errorMsg + ": " + src);
     InputStream stream = resource.getInputStream();
-    LOGGER.debug("Writing private key to: " + result.getPath());
+    log.debug("Writing private key to: " + result.getPath());
     if(result.exists()) {
       result.delete();
     }

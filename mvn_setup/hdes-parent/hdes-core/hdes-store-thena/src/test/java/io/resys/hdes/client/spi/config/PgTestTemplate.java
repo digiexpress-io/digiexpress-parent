@@ -3,6 +3,7 @@ package io.resys.hdes.client.spi.config;
 import java.time.Duration;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
@@ -51,6 +52,7 @@ import io.vertx.mutiny.sqlclient.Pool;
 
 import jakarta.inject.Inject;
 
+@Slf4j
 public class PgTestTemplate {
   private ThenaStore store;
   
@@ -95,7 +97,7 @@ public class PgTestTemplate {
   
   public void printRepo(Repo repo) {
     final String result = new GitPrinter(createState(repo.getName())).print(repo);
-    System.out.println(result);
+    log.debug(result);
   }
   
   public void prettyPrint(String repoId) {

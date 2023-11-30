@@ -20,16 +20,6 @@ package io.resys.thena.docdb.test;
  * #L%
  */
 
-import java.io.Serializable;
-import java.time.Duration;
-import java.util.Map;
-
-import org.immutables.value.Value;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
 import io.resys.thena.docdb.api.actions.CommitActions.CommitResultEnvelope;
@@ -40,14 +30,22 @@ import io.resys.thena.docdb.api.models.Repo.RepoType;
 import io.resys.thena.docdb.test.config.DbTestTemplate;
 import io.resys.thena.docdb.test.config.PgProfile;
 import io.vertx.core.json.JsonObject;
+import lombok.extern.slf4j.Slf4j;
+import org.immutables.value.Value;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import java.io.Serializable;
+import java.time.Duration;
+import java.util.Map;
 
 
 @QuarkusTest
 @TestProfile(PgProfile.class)
+@Slf4j
 public class SimpleGitTest extends DbTestTemplate {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(SimpleGitTest.class);
-  
+
   @Value.Immutable
   public interface TestContent extends Serializable {
     String getId();
@@ -61,7 +59,7 @@ public class SimpleGitTest extends DbTestTemplate {
         .name("crateRepoAddAndDeleteFile", RepoType.git)
         .build()
         .await().atMost(Duration.ofMinutes(1));
-    LOGGER.debug("created repo {}", repo);
+    log.debug("created repo {}", repo);
     Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
     
     // Create head and first commit
@@ -77,7 +75,7 @@ public class SimpleGitTest extends DbTestTemplate {
       .onFailure().invoke(e -> e.printStackTrace()).onFailure().recoverWithNull()
       .await().atMost(Duration.ofMinutes(1));
 
-    LOGGER.debug("created commit {}", commit_0);
+    log.debug("created commit {}", commit_0);
     Assertions.assertEquals(CommitResultStatus.OK, commit_0.getStatus());
     
     
@@ -92,7 +90,7 @@ public class SimpleGitTest extends DbTestTemplate {
       .onFailure().invoke(e -> e.printStackTrace()).onFailure().recoverWithNull()
       .await().atMost(Duration.ofMinutes(1));
     
-    LOGGER.debug("created commit 1 {}", commit_1);
+    log.debug("created commit 1 {}", commit_1);
     Assertions.assertEquals(CommitResultStatus.OK, commit_1.getStatus());
     super.printRepo(repo.getRepo());
   }
@@ -104,7 +102,7 @@ public class SimpleGitTest extends DbTestTemplate {
         .name("project-x", RepoType.git)
         .build()
         .await().atMost(Duration.ofMinutes(1));
-    LOGGER.debug("created repo {}", repo);
+    log.debug("created repo {}", repo);
     Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
     
     // Create head and first commit
@@ -120,7 +118,7 @@ public class SimpleGitTest extends DbTestTemplate {
       .onFailure().invoke(e -> e.printStackTrace()).onFailure().recoverWithNull()
       .await().atMost(Duration.ofMinutes(1));
 
-    LOGGER.debug("created commit {}", commit_0);
+    log.debug("created commit {}", commit_0);
     Assertions.assertEquals(CommitResultStatus.OK, commit_0.getStatus());
     super.printRepo(repo.getRepo());
   }
@@ -133,7 +131,7 @@ public class SimpleGitTest extends DbTestTemplate {
         .name("project-xy", RepoType.git)
         .build()
         .await().atMost(Duration.ofMinutes(1));
-    LOGGER.debug("created repo {}", repo);
+    log.debug("created repo {}", repo);
     Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
     
     // Create head and first commit
@@ -148,7 +146,7 @@ public class SimpleGitTest extends DbTestTemplate {
       .onFailure().invoke(e -> e.printStackTrace()).onFailure().recoverWithNull()
       .await().atMost(Duration.ofMinutes(1));
 
-    LOGGER.debug("created commit 0 {}", commit_0);
+    log.debug("created commit 0 {}", commit_0);
     Assertions.assertEquals(CommitResultStatus.OK, commit_0.getStatus());
     
     
@@ -165,7 +163,7 @@ public class SimpleGitTest extends DbTestTemplate {
       .onFailure().invoke(e -> e.printStackTrace()).onFailure().recoverWithNull()
       .await().atMost(Duration.ofMinutes(1));
     
-    LOGGER.debug("created commit 1 {}", commit_1);
+    log.debug("created commit 1 {}", commit_1);
     Assertions.assertEquals(CommitResultStatus.OK, commit_1.getStatus());
     
     super.printRepo(repo.getRepo());

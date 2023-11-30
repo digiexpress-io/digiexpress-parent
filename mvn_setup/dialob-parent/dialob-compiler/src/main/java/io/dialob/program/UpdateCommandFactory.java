@@ -16,7 +16,6 @@
 package io.dialob.program;
 
 import com.google.common.collect.Sets;
-
 import io.dialob.compiler.DebugUtil;
 import io.dialob.executor.command.*;
 import io.dialob.executor.model.ErrorId;
@@ -28,12 +27,11 @@ import io.dialob.program.model.ValueSet;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Nonnull;
-
-import static io.dialob.executor.command.CommandFactory.*;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+
+import static io.dialob.executor.command.CommandFactory.*;
 
 @Slf4j
 class UpdateCommandFactory {
@@ -44,8 +42,8 @@ class UpdateCommandFactory {
   private <C extends Command<?>> C add(C command) {
     assert !allCommands.contains(command);
     allCommands.add(command);
-    if(LOGGER.isDebugEnabled()) {
-      LOGGER.debug("Command '{}' created", DebugUtil.commandToString(command));
+    if(log.isDebugEnabled()) {
+      log.debug("Command '{}' created", DebugUtil.commandToString(command));
     }
     return command;
   }

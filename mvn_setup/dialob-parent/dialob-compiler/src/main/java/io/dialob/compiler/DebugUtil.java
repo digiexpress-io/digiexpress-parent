@@ -15,14 +15,13 @@
  */
 package io.dialob.compiler;
 
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.tuple.Pair;
-
 import io.dialob.executor.command.Command;
 import io.dialob.executor.command.UpdateCommand;
 import io.dialob.executor.command.event.Event;
 import io.dialob.executor.model.IdUtils;
 import io.dialob.executor.model.ItemId;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -118,7 +117,7 @@ public class DebugUtil {
       });
       writer.write("}\n");
     } catch (IOException e) {
-      LOGGER.error("dot dump failed.", e);
+      log.error("dot dump failed.", e);
     }
   }
 

@@ -1,40 +1,6 @@
 package io.resys.hdes.client.spi;
 
-import java.io.IOException;
-import java.util.ArrayList;
-
-/*-
- * #%L
- * hdes-client-api
- * %%
- * Copyright (C) 2020 - 2021 Copyright 2020 ReSys OÜ
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
- */
-
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.eclipse.jgit.lib.Constants;
-import org.eclipse.jgit.lib.ObjectId;
-import org.ehcache.Cache;
-import org.immutables.value.Value;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import io.resys.hdes.client.api.HdesStore;
 import io.resys.hdes.client.api.ImmutableStoreEntity;
 import io.resys.hdes.client.api.ImmutableStoreState;
@@ -48,10 +14,20 @@ import io.resys.hdes.client.spi.git.GitDataSourceLoader;
 import io.resys.hdes.client.spi.git.GitFiles;
 import io.resys.hdes.client.spi.util.HdesAssert;
 import io.smallrye.mutiny.Uni;
+import lombok.extern.slf4j.Slf4j;
+import org.eclipse.jgit.lib.Constants;
+import org.eclipse.jgit.lib.ObjectId;
+import org.ehcache.Cache;
+import org.immutables.value.Value;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
+@Slf4j
 public class GitStore implements HdesStore {
-  private static final Logger LOGGER = LoggerFactory.getLogger(GitStore.class);
 
   private final GitConfig conn;
   
@@ -110,7 +86,7 @@ public class GitStore implements HdesStore {
               .build())
             .collect(Collectors.toList());
       } catch(Exception e) {
-        LOGGER.error(new StringBuilder()
+        log.error(new StringBuilder()
             .append("Failed to run batch:").append(System.lineSeparator()) 
             .append("  - because: ").append(e.getMessage()).toString(), e);
         throw new RuntimeException(e.getMessage(), e);
@@ -124,8 +100,8 @@ public class GitStore implements HdesStore {
         final var git = GitFiles.builder().git(conn).build();
         if(newType.getBodyType() == AstBodyType.TAG) {
           final var newTag = git.tag(newType);
-          if(LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Hdes git store, new tag created: '" + newTag.getKey() + "'");
+          if(log.isDebugEnabled()) {
+            log.debug("Hdes git store, new tag created: '" + newTag.getKey() + "'");
           }
         }
         final var file = git.create(newType.getBodyType(), newType.getBody());
@@ -138,7 +114,7 @@ public class GitStore implements HdesStore {
             .bodyType(newType.getBodyType())
             .build();        
       } catch(Exception e) {
-        LOGGER.error(new StringBuilder()
+        log.error(new StringBuilder()
             .append("Failed to create store entity: '").append(newType.getBodyType()).append("'").append(System.lineSeparator())
             .append("  - with commands: ").append(conn.getSerializer().write(newType.getBody())).append(System.lineSeparator()) 
             .append("  - because: ").append(e.getMessage()).toString(), e);
@@ -161,7 +137,7 @@ public class GitStore implements HdesStore {
             .body(updateType.getBody()).bodyType(oldState.getBodyType())
             .build();        
       } catch(Exception e) {
-        LOGGER.error(new StringBuilder()
+        log.error(new StringBuilder()
             .append("Failed to update store entity: '").append(oldState.getBodyType()).append("'").append(System.lineSeparator())
             .append("  - with commands: ").append(conn.getSerializer().write(updateType.getBody())).append(System.lineSeparator()) 
             .append("  - because: ").append(e.getMessage()).toString(), e);
@@ -184,7 +160,7 @@ public class GitStore implements HdesStore {
             .hash(gitFile.getBlobHash())
             .build();        
       } catch(Exception e) {
-        LOGGER.error(new StringBuilder()
+        log.error(new StringBuilder()
             .append("Failed to delete store entity: '").append(gitFile.getBodyType()).append("'").append(System.lineSeparator())
             .append("  - with commands: ").append(gitFile.getBlobValue()).append(System.lineSeparator()) 
             .append("  - because: ").append(e.getMessage()).toString(), e);
@@ -231,8 +207,8 @@ public class GitStore implements HdesStore {
 //        HdesAssert.isTrue(created, () -> "Failed to create new file: " + assetName);
 //      }
 //      
-//      if(LOGGER.isDebugEnabled()) {
-//        LOGGER.debug("Created new file: " + outputFile.getCanonicalPath());
+//      if(log.isDebugEnabled()) {
+//        log.debug("Created new file: " + outputFile.getCanonicalPath());
 //      }
 //  
 //      // copy data to file
@@ -268,7 +244,7 @@ public class GitStore implements HdesStore {
 //      push(gitEntry);
 //      return src;
 //    } catch(Exception e) {
-//      LOGGER.error("Failed to create new asset because:" + e.getMessage(), e);
+//      log.error("Failed to create new asset because:" + e.getMessage(), e);
 //      throw new RuntimeException(e.getMessage(), e);
 //    }
 //  }
@@ -358,7 +334,7 @@ public class GitStore implements HdesStore {
       HdesAssert.notNull(objectMapper, () -> "objectMapper must be defined!");
       HdesAssert.notNull(creds, () -> "creds must be defined!");
       
-      if(LOGGER.isDebugEnabled()) {
+      if(log.isDebugEnabled()) {
         final var log = new StringBuilder()
             .append(System.lineSeparator())
             .append("Configuring GIT: ").append(System.lineSeparator())
@@ -366,7 +342,7 @@ public class GitStore implements HdesStore {
             .append("  branch: '").append(branch).append("'").append(System.lineSeparator())
             .append("  storage: '").append(storage).append("'").append(System.lineSeparator())
             .append("  sshPath: '").append(sshPath).append("'").append(System.lineSeparator());
-        LOGGER.debug(log.toString());
+        GitStore.log.debug(log.toString());
       }
 
       HdesAssert.notEmpty(remote, () -> "remote must be defined! Example of the remote: 'ssh://git@git.resys.io:22222/wrench/wrench-demo-assets.git'");
@@ -383,7 +359,7 @@ public class GitStore implements HdesStore {
       }
       
 
-      if(LOGGER.isDebugEnabled()) {
+      if(log.isDebugEnabled()) {
         final var log = new StringBuilder()
             .append(System.lineSeparator())
             .append("Configured GIT: ").append(System.lineSeparator())
@@ -393,7 +369,7 @@ public class GitStore implements HdesStore {
             .append("  relative assets directory: '").append(conn.getAssetsPath()).append("'").append(System.lineSeparator())
             .append("  cache name: '").append(conn.getCacheName()).append("'").append(System.lineSeparator())
             .append("  cache size/heap: '").append(conn.getCacheHeap()).append("'").append(System.lineSeparator());
-        LOGGER.debug(log.toString());
+        GitStore.log.debug(log.toString());
       }
 
       // load assets

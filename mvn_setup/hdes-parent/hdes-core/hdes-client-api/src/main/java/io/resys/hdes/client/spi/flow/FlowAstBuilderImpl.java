@@ -1,59 +1,17 @@
 package io.resys.hdes.client.spi.flow;
 
-import java.io.IOException;
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.Arrays;
-
-/*-
- * #%L
- * wrench-assets-flow
- * %%
- * Copyright (C) 2016 - 2019 Copyright 2016 ReSys OÜ
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
- */
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-
 import io.resys.hdes.client.api.HdesAstTypes.FlowAstBuilder;
 import io.resys.hdes.client.api.HdesClient.HdesTypesMapper;
 import io.resys.hdes.client.api.ast.AstBody.AstBodyType;
 import io.resys.hdes.client.api.ast.AstBody.AstCommandMessage;
 import io.resys.hdes.client.api.ast.AstBody.CommandMessageType;
-import io.resys.hdes.client.api.ast.AstChangeset;
-import io.resys.hdes.client.api.ast.AstCommand;
+import io.resys.hdes.client.api.ast.*;
 import io.resys.hdes.client.api.ast.AstCommand.AstCommandValue;
-import io.resys.hdes.client.api.ast.AstFlow;
 import io.resys.hdes.client.api.ast.AstFlow.AstFlowInputType;
 import io.resys.hdes.client.api.ast.AstFlow.AstFlowNode;
-import io.resys.hdes.client.api.ast.ImmutableAstCommand;
-import io.resys.hdes.client.api.ast.ImmutableAstCommandMessage;
-import io.resys.hdes.client.api.ast.ImmutableAstFlow;
-import io.resys.hdes.client.api.ast.ImmutableAstFlowInputType;
 import io.resys.hdes.client.api.ast.TypeDef.ValueType;
 import io.resys.hdes.client.api.exceptions.FlowAstException;
 import io.resys.hdes.client.spi.changeset.AstChangesetFactory;
@@ -62,9 +20,14 @@ import io.resys.hdes.client.spi.flow.ast.AstFlowNodesFactory;
 import io.resys.hdes.client.spi.flow.ast.beans.NodeBean;
 import io.resys.hdes.client.spi.flow.ast.beans.NodeFlowBean;
 import io.resys.hdes.client.spi.util.HdesAssert;
+import lombok.extern.slf4j.Slf4j;
 
+import java.io.IOException;
+import java.util.*;
+import java.util.stream.Collectors;
+
+@Slf4j
 public class FlowAstBuilderImpl implements FlowAstBuilder {
-  private static final Logger LOGGER = LoggerFactory.getLogger(FlowAstBuilderImpl.class);
   private final static String LINE_SEPARATOR = System.lineSeparator();
   private final static Collection<AstFlowInputType> inputTypes = Collections.unmodifiableList(    
       Arrays.asList(ValueType.STRING,  ValueType.BOOLEAN, ValueType.INTEGER, ValueType.LONG, ValueType.DECIMAL, ValueType.DATE, ValueType.DATE_TIME).stream()
@@ -136,7 +99,7 @@ public class FlowAstBuilderImpl implements FlowAstBuilder {
     try {
       visitors.stream().forEach(v -> v.visit(flow, ast));
     } catch(Exception e) {
-      LOGGER.error(e.getMessage(), e);
+      log.error(e.getMessage(), e);
       messages.add(
           ImmutableAstCommandMessage.builder()
           .line(0)

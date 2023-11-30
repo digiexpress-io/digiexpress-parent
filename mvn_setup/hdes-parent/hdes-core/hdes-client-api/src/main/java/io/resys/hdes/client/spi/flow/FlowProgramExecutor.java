@@ -20,41 +20,25 @@ package io.resys.hdes.client.spi.flow;
  * #L%
  */
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import io.resys.hdes.client.api.HdesClient.HdesTypesMapper;
 import io.resys.hdes.client.api.exceptions.ProgramException;
-import io.resys.hdes.client.api.programs.FlowProgram;
-import io.resys.hdes.client.api.programs.FlowProgram.FlowExecutionStatus;
-import io.resys.hdes.client.api.programs.FlowProgram.FlowProgramStep;
-import io.resys.hdes.client.api.programs.FlowProgram.FlowProgramStepThenPointer;
-import io.resys.hdes.client.api.programs.FlowProgram.FlowProgramStepWhenThenPointer;
-import io.resys.hdes.client.api.programs.FlowProgram.FlowResult;
-import io.resys.hdes.client.api.programs.FlowProgram.FlowResultErrorLog;
-import io.resys.hdes.client.api.programs.FlowProgram.FlowResultLog;
-import io.resys.hdes.client.api.programs.ImmutableFlowExecutionLog;
-import io.resys.hdes.client.api.programs.ImmutableFlowResult;
-import io.resys.hdes.client.api.programs.ImmutableFlowResultErrorLog;
-import io.resys.hdes.client.api.programs.ImmutableFlowResultLog;
+import io.resys.hdes.client.api.programs.*;
+import io.resys.hdes.client.api.programs.FlowProgram.*;
 import io.resys.hdes.client.api.programs.Program.ProgramContext;
 import io.resys.hdes.client.api.programs.Program.ProgramContextNamedValue;
 import io.resys.hdes.client.spi.ImmutableProgramContext;
 import io.resys.hdes.client.spi.decision.DecisionProgramExecutor;
 import io.resys.hdes.client.spi.expression.OperationFlowContext.FlowTaskExpressionContext;
 import io.resys.hdes.client.spi.groovy.ServiceProgramExecutor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.*;
+
+@Slf4j
 public class FlowProgramExecutor {
-  private static final Logger LOGGER = LoggerFactory.getLogger(FlowProgramExecutor.class);
   private final HdesTypesMapper factory;
   private final FlowProgram program;
   private final ProgramContext context;
@@ -86,7 +70,7 @@ public class FlowProgramExecutor {
     try {
       last = visitStep(program.getStartStepId());
     } catch(StepException e) {
-      LOGGER.error(e.getMessage(), e);
+      log.error(e.getMessage(), e);
       status = FlowExecutionStatus.ERROR;
       last = visitException(e);
     }

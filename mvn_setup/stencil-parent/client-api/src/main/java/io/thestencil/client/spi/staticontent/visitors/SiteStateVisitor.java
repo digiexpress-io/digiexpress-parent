@@ -20,30 +20,24 @@ package io.thestencil.client.spi.staticontent.visitors;
  * #L%
  */
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import io.thestencil.client.api.ImmutableLinkResource;
 import io.thestencil.client.api.ImmutableMarkdown;
 import io.thestencil.client.api.ImmutableMarkdowns;
 import io.thestencil.client.api.Markdowns;
 import io.thestencil.client.api.Markdowns.LinkResource;
 import io.thestencil.client.api.Markdowns.Markdown;
-import io.thestencil.client.api.StencilClient.Article;
-import io.thestencil.client.api.StencilClient.Entity;
-import io.thestencil.client.api.StencilClient.Link;
-import io.thestencil.client.api.StencilClient.Locale;
-import io.thestencil.client.api.StencilClient.Workflow;
+import io.thestencil.client.api.StencilClient.*;
 import io.thestencil.client.api.StencilComposer.SiteState;
+import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+@Slf4j
 public class SiteStateVisitor {
-  private static final Logger LOGGER = LoggerFactory.getLogger(SiteStateVisitor.class);
   public static String LINK_TYPE_WORKFLOW = "workflow";
   private final List<Entity<Locale>> locales = new ArrayList<>();
   private final Map<String, Entity<Locale>> enablesLocales = new HashMap<>();
@@ -225,7 +219,7 @@ public class SiteStateVisitor {
       final var ast = new MarkdownVisitor().visit(content);
       if(ast.getHeadings().stream().filter(entity -> entity.getLevel() == 1).findFirst().isEmpty()) {
         //throw new MarkdownException();
-        LOGGER.error("Failed to parse article '" + article.getBody().getName() + "', markdown must have atleast one h1(line starting with one # my super menu)");
+        log.error("Failed to parse article '" + article.getBody().getName() + "', markdown must have atleast one h1(line starting with one # my super menu)");
       }
       
       result.add(ImmutableMarkdown.builder()
@@ -252,7 +246,7 @@ public class SiteStateVisitor {
       path.insert(0, String.format("%03d", article.getBody().getOrder()) + "_" + article.getBody().getName());
       final var parentId = article.getBody().getParentId();
       if(visited.contains(parentId)) {
-        LOGGER.error("Article broken, infinite loop near: '" + parentId + "'!");
+        log.error("Article broken, infinite loop near: '" + parentId + "'!");
         break;
       }
       visited.add(parentId);

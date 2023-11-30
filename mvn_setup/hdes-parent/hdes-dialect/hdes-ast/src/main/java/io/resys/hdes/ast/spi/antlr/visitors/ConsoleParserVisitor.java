@@ -20,57 +20,15 @@ package io.resys.hdes.ast.spi.antlr.visitors;
  * #L%
  */
 
-import org.antlr.v4.runtime.ParserRuleContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import io.resys.hdes.ast.HdesParser.AdditiveExpressionContext;
-import io.resys.hdes.ast.HdesParser.AndExpressionContext;
-import io.resys.hdes.ast.HdesParser.ArrayTypeContext;
-import io.resys.hdes.ast.HdesParser.ConditionalAndExpressionContext;
-import io.resys.hdes.ast.HdesParser.ConditionalExpressionContext;
-import io.resys.hdes.ast.HdesParser.ConditionalOrExpressionContext;
-import io.resys.hdes.ast.HdesParser.DebugValueContext;
-import io.resys.hdes.ast.HdesParser.DecisionTableUnitContext;
-import io.resys.hdes.ast.HdesParser.EqualityExpressionContext;
-import io.resys.hdes.ast.HdesParser.ExpressionContext;
-import io.resys.hdes.ast.HdesParser.ExpressionUnitContext;
-import io.resys.hdes.ast.HdesParser.FlowUnitContext;
-import io.resys.hdes.ast.HdesParser.FormulaContext;
-import io.resys.hdes.ast.HdesParser.HdesBodyContext;
-import io.resys.hdes.ast.HdesParser.HeadersContext;
-import io.resys.hdes.ast.HdesParser.HitPolicyContext;
-import io.resys.hdes.ast.HdesParser.LambdaBodyContext;
-import io.resys.hdes.ast.HdesParser.LambdaExpressionContext;
-import io.resys.hdes.ast.HdesParser.LambdaParametersContext;
-import io.resys.hdes.ast.HdesParser.LiteralContext;
-import io.resys.hdes.ast.HdesParser.MappingArgContext;
-import io.resys.hdes.ast.HdesParser.MappingContext;
-import io.resys.hdes.ast.HdesParser.MappingValueContext;
-import io.resys.hdes.ast.HdesParser.MethodArgContext;
-import io.resys.hdes.ast.HdesParser.MethodArgsContext;
-import io.resys.hdes.ast.HdesParser.MethodInvocationContext;
-import io.resys.hdes.ast.HdesParser.MethodNameContext;
-import io.resys.hdes.ast.HdesParser.MultiplicativeExpressionContext;
-import io.resys.hdes.ast.HdesParser.ObjectTypeContext;
-import io.resys.hdes.ast.HdesParser.PrimaryContext;
-import io.resys.hdes.ast.HdesParser.RelationalExpressionContext;
-import io.resys.hdes.ast.HdesParser.RuleUndefinedValueContext;
-import io.resys.hdes.ast.HdesParser.ScalarTypeContext;
-import io.resys.hdes.ast.HdesParser.SimpleTypeContext;
-import io.resys.hdes.ast.HdesParser.ThenPointerContext;
-import io.resys.hdes.ast.HdesParser.TypeDefContext;
-import io.resys.hdes.ast.HdesParser.TypeDefsContext;
-import io.resys.hdes.ast.HdesParser.TypeNameContext;
-import io.resys.hdes.ast.HdesParser.UnaryExpressionContext;
-import io.resys.hdes.ast.HdesParser.UnaryExpressionNotPlusMinusContext;
-import io.resys.hdes.ast.HdesParser.WhenThenPointerContext;
+import io.resys.hdes.ast.HdesParser.*;
 import io.resys.hdes.ast.HdesParserBaseVisitor;
 import io.resys.hdes.ast.api.nodes.HdesNode;
+import lombok.extern.slf4j.Slf4j;
+import org.antlr.v4.runtime.ParserRuleContext;
 
+@Slf4j
 public class ConsoleParserVisitor extends HdesParserBaseVisitor<HdesNode> {
-  private static final Logger LOGGER = LoggerFactory.getLogger(ConsoleParserVisitor.class);
-  
+
   @Override
   public HdesNode visitFormula(FormulaContext ctx) {
     log(ctx);
@@ -318,13 +276,13 @@ public class ConsoleParserVisitor extends HdesParserBaseVisitor<HdesNode> {
   }
   
   public static final void log(ParserRuleContext context) {
-    if(LOGGER.isDebugEnabled()) {
+    if(log.isDebugEnabled()) {
       StringBuilder step = new StringBuilder();
       ParserRuleContext parent = context;
       while((parent = parent.getParent()) != null) {
         step.append("  ");
       }
-      LOGGER.debug(step + context.getText());
+      log.debug(step + context.getText());
     }
   }
 }

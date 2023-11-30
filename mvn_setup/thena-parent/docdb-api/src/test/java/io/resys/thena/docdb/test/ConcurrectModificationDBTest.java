@@ -20,21 +20,8 @@ package io.resys.thena.docdb.test;
  * #L%
  */
 
-import java.io.Serializable;
-import java.time.Duration;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import org.immutables.value.Value;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
 import io.resys.thena.docdb.api.actions.CommitActions.CommitResultEnvelope;
@@ -46,14 +33,23 @@ import io.resys.thena.docdb.test.config.PgProfile;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
+import lombok.extern.slf4j.Slf4j;
+import org.immutables.value.Value;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import java.io.Serializable;
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 @QuarkusTest
 @TestProfile(PgProfile.class)
+@Slf4j
 public class ConcurrectModificationDBTest extends DbTestTemplate {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(ConcurrectModificationDBTest.class);
-  
   @JsonSerialize(as = ImmutableUseTasks.class) @JsonDeserialize(as = ImmutableUseTasks.class)
   @Value.Immutable
   public interface UseTasks extends Serializable {
@@ -71,7 +67,7 @@ public class ConcurrectModificationDBTest extends DbTestTemplate {
         .name("user-tasks", RepoType.git)
         .build()
         .await().atMost(Duration.ofMinutes(1));
-    LOGGER.debug("created repo {}", repo);
+    log.debug("created repo {}", repo);
     Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
     
     // Create head and first commit

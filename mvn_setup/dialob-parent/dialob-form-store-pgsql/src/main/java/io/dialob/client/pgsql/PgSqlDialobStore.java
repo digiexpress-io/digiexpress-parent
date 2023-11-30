@@ -1,12 +1,9 @@
 package io.dialob.client.pgsql;
 
-import java.io.IOException;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
 import io.dialob.client.api.DialobStore;
 import io.dialob.client.api.ImmutableStoreEntity;
 import io.dialob.client.spi.DialobStoreTemplate;
@@ -22,6 +19,8 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.sqlclient.PoolOptions;
 import lombok.extern.slf4j.Slf4j;
+
+import java.io.IOException;
 
 @Slf4j
 public class PgSqlDialobStore extends DialobStoreTemplate implements DialobStore {
@@ -47,7 +46,7 @@ public class PgSqlDialobStore extends DialobStoreTemplate implements DialobStore
     private String pgUser;
     private String pgPass;
     private Integer pgPoolSize;
-    
+
     public Builder repoName(String repoName) {
       this.repoName = repoName;
       return this;
@@ -96,36 +95,36 @@ public class PgSqlDialobStore extends DialobStoreTemplate implements DialobStore
       this.pgPoolSize = pgPoolSize;
       return this;
     }
-    
-    
+
+
     private DialobStoreConfig.GidProvider getGidProvider() {
       return this.gidProvider == null ? type -> {
         return OidUtils.gen();
      } : this.gidProvider;
     }
-    
+
     private DialobStoreConfig.AuthorProvider getAuthorProvider() {
       return this.authorProvider == null ? ()-> "not-configured" : this.authorProvider;
-    } 
-    
+    }
+
     private ObjectMapper getObjectMapper() {
       if(this.objectMapper == null) {
         return this.objectMapper;
       }
-      
+
       final ObjectMapper objectMapper = new ObjectMapper();
       objectMapper.registerModule(new GuavaModule());
       objectMapper.registerModule(new JavaTimeModule());
       objectMapper.registerModule(new Jdk8Module());
       return objectMapper;
     }
-    
+
     public PgSqlDialobStore build() {
       DialobAssert.notNull(repoName, () -> "repoName must be defined!");
-    
+
       final var headName = this.headName == null ? "main": this.headName;
-      if(LOGGER.isDebugEnabled()) {
-        final var log = new StringBuilder()
+      if(log.isDebugEnabled()) {
+        log.debug(new StringBuilder()
           .append(System.lineSeparator())
           .append("Configuring Thena: ").append(System.lineSeparator())
           .append("  repoName: '").append(this.repoName).append("'").append(System.lineSeparator())
@@ -133,18 +132,16 @@ public class PgSqlDialobStore extends DialobStoreTemplate implements DialobStore
           .append("  objectMapper: '").append(this.objectMapper == null ? "configuring" : "provided").append("'").append(System.lineSeparator())
           .append("  gidProvider: '").append(this.gidProvider == null ? "configuring" : "provided").append("'").append(System.lineSeparator())
           .append("  authorProvider: '").append(this.authorProvider == null ? "configuring" : "provided").append("'").append(System.lineSeparator())
-          
+
           .append("  pgPool: '").append(this.pgPool == null ? "configuring" : "provided").append("'").append(System.lineSeparator())
           .append("  pgPoolSize: '").append(this.pgPoolSize).append("'").append(System.lineSeparator())
           .append("  pgHost: '").append(this.pgHost).append("'").append(System.lineSeparator())
           .append("  pgPort: '").append(this.pgPort).append("'").append(System.lineSeparator())
           .append("  pgDb: '").append(this.pgDb).append("'").append(System.lineSeparator())
           .append("  pgUser: '").append(this.pgUser == null ? "null" : "***").append("'").append(System.lineSeparator())
-          .append("  pgPass: '").append(this.pgPass == null ? "null" : "***").append("'").append(System.lineSeparator());
-          
-        LOGGER.debug(log.toString());
+          .append("  pgPass: '").append(this.pgPass == null ? "null" : "***").append("'").append(System.lineSeparator()).toString());
       }
-      
+
       final DocDB thena;
       if(pgPool == null) {
         DialobAssert.notNull(pgHost, () -> "pgHost must be defined!");
@@ -153,7 +150,7 @@ public class PgSqlDialobStore extends DialobStoreTemplate implements DialobStore
         DialobAssert.notNull(pgUser, () -> "pgUser must be defined!");
         DialobAssert.notNull(pgPass, () -> "pgPass must be defined!");
         DialobAssert.notNull(pgPoolSize, () -> "pgPoolSize must be defined!");
-        
+
         final PgConnectOptions connectOptions = new PgConnectOptions()
             .setHost(pgHost)
             .setPort(pgPort)
@@ -162,14 +159,14 @@ public class PgSqlDialobStore extends DialobStoreTemplate implements DialobStore
             .setPassword(pgPass);
         final PoolOptions poolOptions = new PoolOptions()
             .setMaxSize(pgPoolSize);
-        
+
         final io.vertx.mutiny.pgclient.PgPool pgPool = io.vertx.mutiny.pgclient.PgPool.pool(connectOptions, poolOptions);
-        
+
         thena = DbStateSqlImpl.create().client(pgPool).db(repoName).errorHandler(new PgErrors()).build();
       } else {
         thena = DbStateSqlImpl.create().client(pgPool).db(repoName).errorHandler(new PgErrors()).build();
       }
-      
+
       final ObjectMapper objectMapper = getObjectMapper();
       final DialobStoreConfig config = ImmutableDialobStoreConfig.builder()
           .client(thena).repoName(repoName).headName(headName)

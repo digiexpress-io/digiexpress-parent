@@ -20,22 +20,20 @@ package io.resys.hdes.client.spi.git;
  * #L%
  */
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.net.URI;
-import java.nio.charset.StandardCharsets;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
-
+import io.resys.hdes.client.api.HdesStore.CreateStoreEntity;
+import io.resys.hdes.client.api.ast.AstBody.AstBodyType;
+import io.resys.hdes.client.api.ast.AstCommand;
+import io.resys.hdes.client.api.ast.AstCommand.AstCommandValue;
+import io.resys.hdes.client.spi.GitConfig;
+import io.resys.hdes.client.spi.GitConfig.GitEntry;
+import io.resys.hdes.client.spi.GitConfig.GitFile;
+import io.resys.hdes.client.spi.GitConfig.GitFileReload;
+import io.resys.hdes.client.spi.ImmutableGitEntry;
+import io.resys.hdes.client.spi.ImmutableGitFile;
+import io.resys.hdes.client.spi.ImmutableGitFileReload;
+import io.resys.hdes.client.spi.staticresources.Sha2;
+import io.resys.hdes.client.spi.util.HdesAssert;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.jgit.api.ResetCommand.ResetType;
 import org.eclipse.jgit.api.errors.CheckoutConflictException;
@@ -54,25 +52,16 @@ import org.eclipse.jgit.treewalk.filter.AndTreeFilter;
 import org.eclipse.jgit.treewalk.filter.PathFilterGroup;
 import org.eclipse.jgit.treewalk.filter.TreeFilter;
 import org.ehcache.Cache;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import io.resys.hdes.client.api.HdesStore.CreateStoreEntity;
-import io.resys.hdes.client.api.ast.AstBody.AstBodyType;
-import io.resys.hdes.client.api.ast.AstCommand;
-import io.resys.hdes.client.api.ast.AstCommand.AstCommandValue;
-import io.resys.hdes.client.spi.GitConfig;
-import io.resys.hdes.client.spi.GitConfig.GitEntry;
-import io.resys.hdes.client.spi.GitConfig.GitFile;
-import io.resys.hdes.client.spi.GitConfig.GitFileReload;
-import io.resys.hdes.client.spi.ImmutableGitEntry;
-import io.resys.hdes.client.spi.ImmutableGitFile;
-import io.resys.hdes.client.spi.ImmutableGitFileReload;
-import io.resys.hdes.client.spi.staticresources.Sha2;
-import io.resys.hdes.client.spi.util.HdesAssert;
+import java.io.*;
+import java.net.URI;
+import java.nio.charset.StandardCharsets;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.*;
 
+@Slf4j
 public class GitFiles {
-  private static final Logger LOGGER = LoggerFactory.getLogger(GitFiles.class);
   private final GitConfig conn;
   
   public GitFiles(GitConfig connection) {
@@ -111,23 +100,23 @@ public class GitFiles {
       git.push().setTransportConfigCallback(callback).call();
       final var end = repo.resolve(Constants.HEAD);
       
-      LOGGER.debug("Pushing changes...");
+      log.debug("Pushing changes...");
       return diff(start, end);
       
     } catch(CheckoutConflictException e) {
-      LOGGER.error("Conflict, resetting... " +  e.getMessage(), e);
+      log.error("Conflict, resetting... " +  e.getMessage(), e);
       try {
         git.reset().setMode(ResetType.HARD).call();
         git.pull().setTransportConfigCallback(callback).call();
       } catch(Exception ex) {
-        LOGGER.error(e.getMessage(), e);
+        log.error(e.getMessage(), e);
         throw new RuntimeException(e.getMessage(), e);
       }
       throw new RuntimeException(e.getMessage(), e);
     } catch(EmptyCommitException e) {
-      LOGGER.debug("nothing to commit");
+      log.debug("nothing to commit");
     } catch(Exception e) {
-      LOGGER.error(e.getMessage(), e);
+      log.error(e.getMessage(), e);
       throw new RuntimeException(e.getMessage(), e);
     }
     
@@ -161,23 +150,23 @@ public class GitFiles {
       git.push().setTransportConfigCallback(callback).call();
       final var end = repo.resolve(Constants.HEAD);
       
-      LOGGER.debug("Pushing changes...");
+      log.debug("Pushing changes...");
       return diff(start, end);
       
     } catch(CheckoutConflictException e) {
-      LOGGER.error("Conflict, resetting... " +  e.getMessage(), e);
+      log.error("Conflict, resetting... " +  e.getMessage(), e);
       try {
         git.reset().setMode(ResetType.HARD).call();
         git.pull().setTransportConfigCallback(callback).call();
       } catch(Exception ex) {
-        LOGGER.error(e.getMessage(), e);
+        log.error(e.getMessage(), e);
         throw new RuntimeException(e.getMessage(), e);
       }
       throw new RuntimeException(e.getMessage(), e);
     } catch(EmptyCommitException e) {
-      LOGGER.debug("nothing to commit");
+      log.debug("nothing to commit");
     } catch(Exception e) {
-      LOGGER.error(e.getMessage(), e);
+      log.error(e.getMessage(), e);
       throw new RuntimeException(e.getMessage(), e);
     }
     
@@ -228,7 +217,7 @@ public class GitFiles {
         created = new Timestamp(revWalk.next().getCommitTime() * 1000L);
 
       } catch(Exception e) {
-        LOGGER.error(
+        log.error(
             "Failed to create asset from file: '" + entry.getTreeValue() + "'" + System.lineSeparator() +
             "because of: " + e.getMessage() + System.lineSeparator() +
             "with content: " + entry.getBlobValue() 
@@ -249,7 +238,7 @@ public class GitFiles {
           .commands(commands)
           .build();
 
-      if(LOGGER.isDebugEnabled()) {
+      if(log.isDebugEnabled()) {
         final var msg = new StringBuilder()
             .append("Loading path: ").append(result.getTreeValue()).append(System.lineSeparator())
             .append("  - blob murmur3_128: ").append(result.getBlobHash()).append(System.lineSeparator())
@@ -257,7 +246,7 @@ public class GitFiles {
             .append("  - created: ").append(result.getCreated()).append(System.lineSeparator())
             .append("  - modified: ").append(result.getModified()).append(System.lineSeparator())
             .append("  - revision: ").append(result.getRevision()).append(System.lineSeparator());
-        LOGGER.debug(msg.toString());
+        log.debug(msg.toString());
       }
       
       return result;
@@ -289,7 +278,7 @@ public class GitFiles {
       result.add(ImmutableGitFileReload.builder().treeValue(ref.getName()).id(name).bodyType(AstBodyType.TAG).build());
       return Map.entry(ref.getObjectId().getName(), result);
     } catch(Exception e) {
-      LOGGER.error(e.getMessage(), e);
+      log.error(e.getMessage(), e);
       throw new RuntimeException(e.getMessage(), e);
     }
   }
@@ -398,8 +387,8 @@ public class GitFiles {
       HdesAssert.isTrue(created, () -> "Failed to create new file: " + assetName);
     }
     
-    if(LOGGER.isDebugEnabled()) {
-      LOGGER.debug("Created new file: " + outputFile.getCanonicalPath());
+    if(log.isDebugEnabled()) {
+      log.debug("Created new file: " + outputFile.getCanonicalPath());
     }
     
     final var blob = conn.getSerializer().write(body);
@@ -488,7 +477,7 @@ public class GitFiles {
               .treeValue(gitFile.getTreeValue()).build()); 
         } else {
           final String msg = "Can't find tag: " + filter + "!";
-          LOGGER.error(msg);
+          log.error(msg);
         }
       }
       
@@ -498,7 +487,7 @@ public class GitFiles {
       final var location = conn.getLocation();
       final var resourceName = location.getAbsolutePath(bodyType, id);
       
-      LOGGER.debug("Removing assets from git: " + resourceName + "");
+      log.debug("Removing assets from git: " + resourceName + "");
       final var file = new File(URI.create("file:" + resourceName));
       
       boolean deleted = file.delete();
@@ -522,7 +511,7 @@ public class GitFiles {
       git.push().setTransportConfigCallback(callback).call();
     
     } catch(Exception e) {
-      LOGGER.error("Failed to delete asset: '" + id + "'!" + System.lineSeparator() + e.getMessage(), e);
+      log.error("Failed to delete asset: '" + id + "'!" + System.lineSeparator() + e.getMessage(), e);
       try {
         git.reset().setMode(ResetType.HARD).call();
       } catch (GitAPIException e1) {

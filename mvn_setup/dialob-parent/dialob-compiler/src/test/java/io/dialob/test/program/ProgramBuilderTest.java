@@ -34,6 +34,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -65,6 +66,7 @@ import io.dialob.rule.parser.api.ValueType;
 import io.dialob.rule.parser.function.FunctionRegistry;
 import io.dialob.test.executor.AbstractDialobProgramTest;
 
+@Slf4j
 public class ProgramBuilderTest extends AbstractDialobProgramTest {
 
   FunctionRegistry functionRegistry = Mockito.mock(FunctionRegistry.class);
@@ -350,7 +352,7 @@ public class ProgramBuilderTest extends AbstractDialobProgramTest {
       .build()
       .build();
     // @formatter:on
-    System.out.println(program);
+    log.debug(program.toString());
 
     DialobProgram dialobProgram = DialobProgram.createDialobProgram(program);
     DialobSession session = dialobProgram.createSession(sessionContextFactory, null, null, "fi", null);

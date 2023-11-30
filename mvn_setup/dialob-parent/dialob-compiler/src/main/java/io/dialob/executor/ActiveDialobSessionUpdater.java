@@ -79,7 +79,7 @@ public class ActiveDialobSessionUpdater implements DialobSessionUpdater {
       });
     }
     updated.clear();
-    LOGGER.debug("Update completed.");
+    log.debug("Update completed.");
     return evalContext::accept;
   }
 
@@ -120,20 +120,20 @@ public class ActiveDialobSessionUpdater implements DialobSessionUpdater {
           }
           break;
         default:
-          LOGGER.debug("Action \"{}\" ignored.", action);
+          log.debug("Action \"{}\" ignored.", action);
       }
     });
   }
 
   private void queueUpdate(@Nonnull Event event) {
-    if (LOGGER.isDebugEnabled()) {
-      LOGGER.debug(" -> event({})", event);
+    if (log.isDebugEnabled()) {
+      log.debug(" -> event({})", event);
     }
     dialobProgram
       .findDependencies(event)
       .forEach(this::queueCommand);
-    if (LOGGER.isDebugEnabled()) {
-      LOGGER.debug("  = {}", StringUtils.join(evalQueue.stream().map(DebugUtil::commandToString).toArray(), " ,"));
+    if (log.isDebugEnabled()) {
+      log.debug("  = {}", StringUtils.join(evalQueue.stream().map(DebugUtil::commandToString).toArray(), " ,"));
     }
   }
 
@@ -159,8 +159,8 @@ public class ActiveDialobSessionUpdater implements DialobSessionUpdater {
     while (i.hasNext()) {
       Command<?> command = i.next();
       if (updateCommand.equals(command)) {
-        if (LOGGER.isDebugEnabled()) {
-          LOGGER.debug("  - skip {} (on queue already)", DebugUtil.commandToString(updateCommand));
+        if (log.isDebugEnabled()) {
+          log.debug("  - skip {} (on queue already)", DebugUtil.commandToString(updateCommand));
         }
         return;
       }
@@ -170,11 +170,11 @@ public class ActiveDialobSessionUpdater implements DialobSessionUpdater {
       }
     }
     i.add(updateCommand);
-    if (LOGGER.isDebugEnabled()) {
-      LOGGER.debug("  + queued {}", DebugUtil.commandToString(updateCommand));
+    if (log.isDebugEnabled()) {
+      log.debug("  + queued {}", DebugUtil.commandToString(updateCommand));
     }
-    if (LOGGER.isWarnEnabled() && updated.contains(updateCommand)) {
-      LOGGER.warn("Target {} already executed. Cyclic dependency?", DebugUtil.commandToString(updateCommand));
+    if (log.isWarnEnabled() && updated.contains(updateCommand)) {
+      log.warn("Target {} already executed. Cyclic dependency?", DebugUtil.commandToString(updateCommand));
     }
   }
 }

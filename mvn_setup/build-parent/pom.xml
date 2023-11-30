@@ -70,8 +70,7 @@
     <commons-collections.version>4.4</commons-collections.version>
 
     <!-- GIT -->
-<!--    <jgit.version>6.7.0.202309050840-r</jgit.version>-->
-    <jgit.version>5.9.0.202009080501-r</jgit.version>
+    <jgit.version>6.7.0.202309050840-r</jgit.version>
 
     <!-- Google -->
     <google-guava.version>32.1.3-jre</google-guava.version>
@@ -87,11 +86,6 @@
     <!-- Annotation processors -->
     <lombok.version>1.18.30</lombok.version>
     <immutables.version>2.10.0</immutables.version>
-
-    <!-- Logging -->
-    <logging-slf4j.version>1.7.36</logging-slf4j.version>
-    <logging-logback.version>1.2.12</logging-logback.version>
-    <logging-logstash>7.0.1</logging-logstash>
 
     <!-- Programatic json/html/md/java parsing -->
     <json-path.version>2.4.0</json-path.version>
@@ -481,29 +475,6 @@
         <groupId>com.google.googlejavaformat</groupId>
         <artifactId>google-java-format</artifactId>
         <version>${google-javaformat.version}</version>
-      </dependency>
-
-
-      <!-- Logging -->
-      <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-api</artifactId>
-        <version>${logging-slf4j.version}</version><!--$NO-MVN-MAN-VER$-->
-      </dependency>
-      <dependency>
-        <groupId>ch.qos.logback</groupId>
-        <artifactId>logback-classic</artifactId>
-        <version>${logging-logback.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>ch.qos.logback</groupId>
-        <artifactId>logback-core</artifactId>
-        <version>${logging-logback.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>net.logstash.logback</groupId>
-        <artifactId>logstash-logback-encoder</artifactId>
-        <version>${logging-logstash.version}</version>
       </dependency>
 
       <!-- Test containers -->

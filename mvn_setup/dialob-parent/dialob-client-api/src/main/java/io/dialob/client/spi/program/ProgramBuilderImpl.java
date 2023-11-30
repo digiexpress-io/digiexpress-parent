@@ -12,11 +12,11 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class ProgramBuilderImpl implements DialobClient.ProgramBuilder {
-  
+
   private final DialobProgramFromFormCompiler compiler;
-  
+
   private FormDocument form;
-  
+
   @Override
   public ProgramBuilder form(FormDocument form) {
     this.form = form;
@@ -26,8 +26,8 @@ public class ProgramBuilderImpl implements DialobClient.ProgramBuilder {
   @Override
   public DialobProgram build() {
     DialobAssert.notNull(form, () -> "form can't be null!");
-   
-    LOGGER.debug("Compiling form document {} rev {}", form.getData().getId(), form.getData().getRev());
+
+    log.debug("Compiling form document {} rev {}", form.getData().getId(), form.getData().getRev());
     return compiler.compileForm(form.getData());
   }
 

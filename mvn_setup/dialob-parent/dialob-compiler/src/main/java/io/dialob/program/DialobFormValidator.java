@@ -15,18 +15,17 @@
  */
 package io.dialob.program;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.annotation.Nonnull;
-
 import io.dialob.api.form.Form;
 import io.dialob.api.form.FormValidationError;
 import io.dialob.compiler.DialobProgramErrorsException;
 import io.dialob.compiler.DialobProgramFromFormCompiler;
 import io.dialob.spi.FormValidator;
 import lombok.extern.slf4j.Slf4j;
+
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class DialobFormValidator implements FormValidator {
@@ -46,11 +45,11 @@ public class DialobFormValidator implements FormValidator {
     } catch (DialobProgramErrorsException e) {
       final List<FormValidationError> errors = e.getErrors();
       result.addAll(errors);
-      if (LOGGER.isDebugEnabled()) {
+      if (log.isDebugEnabled()) {
         StringBuilder sb = new StringBuilder();
         sb.append("Form validation errors for: ").append(form.getId()).append("\n  ")
           .append(errors.stream().map(error -> error.getItemId() + ": " + error.getMessage()).collect(Collectors.joining("\n  ")));
-        LOGGER.debug(sb.toString());
+        log.debug(sb.toString());
       }
     }
     return result;

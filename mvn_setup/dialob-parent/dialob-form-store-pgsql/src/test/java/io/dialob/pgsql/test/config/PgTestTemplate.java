@@ -3,6 +3,7 @@ package io.dialob.pgsql.test.config;
 import java.time.Duration;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -47,21 +48,19 @@ import io.vertx.mutiny.sqlclient.Pool;
 
 import jakarta.inject.Inject;
 
+@Slf4j
 public class PgTestTemplate {
   private DialobStoreTemplate store;
-  public static VertxOptions options = new VertxOptions();
-  {
-    options.setBlockedThreadCheckInterval(1000*60*60);
-  }
+  public static VertxOptions options = new VertxOptions().setBlockedThreadCheckInterval(1000*60*60);
 
   @Inject
   io.vertx.mutiny.pgclient.PgPool pgPool;
-  public static ObjectMapper objectMapper = new ObjectMapper();
-  static {
-    objectMapper.registerModule(new GuavaModule());
-    objectMapper.registerModule(new JavaTimeModule());
-    objectMapper.registerModule(new Jdk8Module());
-  }
+
+  public static final ObjectMapper objectMapper = new ObjectMapper()
+    .registerModule(new GuavaModule())
+    .registerModule(new JavaTimeModule())
+    .registerModule(new Jdk8Module());
+
   @BeforeEach
   public void setUp() {
     final AtomicInteger gid = new AtomicInteger(0);
@@ -70,10 +69,7 @@ public class PgTestTemplate {
         .repoName("")
         .pgPool(pgPool)
         .objectMapper(objectMapper)
-        .gidProvider((type) -> {
-
-          return type + "-" + gid.incrementAndGet();
-        })
+        .gidProvider((type) -> type + "-" + gid.incrementAndGet())
         .build();
   }
 
@@ -98,7 +94,7 @@ public class PgTestTemplate {
 
   public void printRepo(Repo repo) {
     final String result = new GitPrinter(createState(repo.getName())).print(repo);
-    System.out.println(result);
+    log.debug(result);
   }
 
   public void prettyPrint(String repoId) {

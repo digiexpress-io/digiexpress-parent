@@ -15,23 +15,19 @@
  */
 package io.dialob.client.spi.form;
 
-import java.util.Locale;
-
-import javax.annotation.Nonnull;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import io.dialob.api.proto.ActionItem;
 import io.dialob.api.proto.ValueSet;
 import io.dialob.api.questionnaire.Error;
 import io.dialob.client.api.QuestionnaireSession;
-import io.dialob.client.api.QuestionnaireSession.UpdatesCallback;
+import lombok.extern.slf4j.Slf4j;
+
+import javax.annotation.Nonnull;
+import java.util.Locale;
 
 
+@Slf4j
 public class FormActionsUpdatesCallback implements QuestionnaireSession.UpdatesCallback {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(FormActionsUpdatesCallback.class);
 
   private final FormActions formActions;
 
@@ -42,7 +38,7 @@ public class FormActionsUpdatesCallback implements QuestionnaireSession.UpdatesC
   @Nonnull
   @Override
   public FormActionsUpdatesCallback questionAdded(@Nonnull ActionItem question) {
-    LOGGER.debug("newQuestion({})", question);
+    log.debug("newQuestion({})", question);
     formActions.newQuestion(question);
     return this;
   }
@@ -50,7 +46,7 @@ public class FormActionsUpdatesCallback implements QuestionnaireSession.UpdatesC
   @Nonnull
   @Override
   public FormActionsUpdatesCallback questionUpdated(@Nonnull ActionItem question) {
-    LOGGER.debug("updateQuestion({})", question);
+    log.debug("updateQuestion({})", question);
     formActions.updateQuestion(question);
     return this;
   }
@@ -58,7 +54,7 @@ public class FormActionsUpdatesCallback implements QuestionnaireSession.UpdatesC
   @Nonnull
   @Override
   public FormActionsUpdatesCallback questionRemoved(@Nonnull String itemId) {
-    LOGGER.debug("removeQuestion({})", itemId);
+    log.debug("removeQuestion({})", itemId);
     formActions.removeQuestion(itemId);
     return this;
   }
@@ -66,7 +62,7 @@ public class FormActionsUpdatesCallback implements QuestionnaireSession.UpdatesC
   @Nonnull
   @Override
   public FormActionsUpdatesCallback valueSetAdded(@Nonnull ValueSet valueSet) {
-    LOGGER.debug("valueSetAdded({})", valueSet);
+    log.debug("valueSetAdded({})", valueSet);
     formActions.newValueSet(valueSet);
     return this;
   }
@@ -74,7 +70,7 @@ public class FormActionsUpdatesCallback implements QuestionnaireSession.UpdatesC
   @Nonnull
   @Override
   public FormActionsUpdatesCallback valueSetUpdated(@Nonnull ValueSet valueSet) {
-    LOGGER.debug("valueSetUpdated({})", valueSet);
+    log.debug("valueSetUpdated({})", valueSet);
     formActions.updateValueSet(valueSet);
     return this;
   }
@@ -82,7 +78,7 @@ public class FormActionsUpdatesCallback implements QuestionnaireSession.UpdatesC
   @Nonnull
   @Override
   public FormActionsUpdatesCallback valueSetRemoved(@Nonnull String valueSetId) {
-    LOGGER.debug("valueSetRemoved({})", valueSetId);
+    log.debug("valueSetRemoved({})", valueSetId);
     formActions.removeValueSet(valueSetId);
     return this;
   }
@@ -90,7 +86,7 @@ public class FormActionsUpdatesCallback implements QuestionnaireSession.UpdatesC
   @Nonnull
   @Override
   public FormActionsUpdatesCallback errorAdded(@Nonnull Error error) {
-    LOGGER.debug("addError({})", error);
+    log.debug("addError({})", error);
     formActions.addError(error);
     return this;
   }
@@ -98,7 +94,7 @@ public class FormActionsUpdatesCallback implements QuestionnaireSession.UpdatesC
   @Nonnull
   @Override
   public FormActionsUpdatesCallback errorRemoved(@Nonnull Error error) {
-    LOGGER.debug("removeError({})", error);
+    log.debug("removeError({})", error);
     formActions.removeError(error);
     return this;
   }
@@ -106,7 +102,7 @@ public class FormActionsUpdatesCallback implements QuestionnaireSession.UpdatesC
   @Nonnull
   @Override
   public FormActionsUpdatesCallback removeAll() {
-    LOGGER.debug("removeAll()");
+    log.debug("removeAll()");
     formActions.removeAll();
     return this;
   }
@@ -114,7 +110,7 @@ public class FormActionsUpdatesCallback implements QuestionnaireSession.UpdatesC
   @Nonnull
   @Override
   public FormActionsUpdatesCallback locale(Locale locale) {
-    LOGGER.debug("locale({})", locale);
+    log.debug("locale({})", locale);
     formActions.locale(locale);
     return this;
   }
@@ -122,7 +118,7 @@ public class FormActionsUpdatesCallback implements QuestionnaireSession.UpdatesC
   @Nonnull
   @Override
   public FormActionsUpdatesCallback completed() {
-    LOGGER.debug("completed()");
+    log.debug("completed()");
     formActions.complete();
     return this;
   }

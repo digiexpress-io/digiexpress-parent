@@ -20,16 +20,8 @@ package io.thestencil.iam.spi.integrations;
  * #L%
  */
 
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
-
 import io.smallrye.mutiny.Uni;
 import io.thestencil.iam.api.ImmutableAttachment;
 import io.thestencil.iam.api.UserActionsClient.Attachment;
@@ -39,11 +31,16 @@ import io.vertx.core.http.RequestOptions;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.mutiny.ext.web.client.HttpResponse;
+import lombok.extern.slf4j.Slf4j;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Slf4j
 public class AttachmentQueryDefault extends MessagesQueryBuilderDefault implements AttachmentQuery {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(AttachmentQueryDefault.class);
-  
+
   public AttachmentQueryDefault(RequestOptions init, UserActionsClientConfig config) {
     super(init, config);
   }
@@ -66,7 +63,7 @@ public class AttachmentQueryDefault extends MessagesQueryBuilderDefault implemen
   private List<Attachment> mapToElement(HttpResponse<?> resp, String taskId, String processId) {
     if (resp.statusCode() != 200) {
       String error = "Attachments query: Can't create response, e = " + resp.statusCode() + " | " + resp.statusMessage() + " | " + resp.headers();
-      LOGGER.error(error);
+      log.error(error);
       return Collections.emptyList();
     }
     

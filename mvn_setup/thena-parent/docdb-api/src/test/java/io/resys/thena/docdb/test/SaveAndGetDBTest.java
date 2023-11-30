@@ -44,7 +44,7 @@
 //@TestProfile(PgProfile.class)
 //public class SaveAndGetDBTest extends DbTestTemplate {
 //
-//  private static final Logger LOGGER = LoggerFactory.getLogger(SaveAndGetDBTest.class);
+//  private static final Logger log = LoggerFactory.getLogger(SaveAndGetDBTest.class);
 //  
 //  @Value.Immutable
 //  public interface TestContent extends Serializable {
@@ -59,7 +59,7 @@
 //        .name("crateRepoAddAndDeleteFile")
 //        .build()
 //        .await().atMost(Duration.ofMinutes(1));
-//    LOGGER.debug("created repo {}", repo);
+//    log.debug("created repo {}", repo);
 //    Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
 //    
 //    // Create head and first commit
@@ -72,7 +72,7 @@
 //      .onFailure().invoke(e -> e.printStackTrace()).onFailure().recoverWithNull()
 //      .await().atMost(Duration.ofMinutes(1));
 //
-//    LOGGER.debug("created commit {}", commit_0);
+//    log.debug("created commit {}", commit_0);
 //    Assertions.assertEquals(CommitResultStatus.OK, commit_0.getStatus());
 //    
 //    
@@ -87,7 +87,7 @@
 //      .onFailure().invoke(e -> e.printStackTrace()).onFailure().recoverWithNull()
 //      .await().atMost(Duration.ofMinutes(1));
 //    
-//    LOGGER.debug("created commit 1 {}", commit_1);
+//    log.debug("created commit 1 {}", commit_1);
 //    Assertions.assertEquals(CommitResultStatus.OK, commit_1.getStatus());
 //    super.printRepo(repo.getRepo());
 //  }
@@ -99,7 +99,7 @@
 //        .name("project-x")
 //        .build()
 //        .await().atMost(Duration.ofMinutes(1));
-//    LOGGER.debug("created repo {}", repo);
+//    log.debug("created repo {}", repo);
 //    Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
 //    
 //    // Create head and first commit
@@ -115,7 +115,7 @@
 //      .onFailure().invoke(e -> e.printStackTrace()).onFailure().recoverWithNull()
 //      .await().atMost(Duration.ofMinutes(1));
 //
-//    LOGGER.debug("created commit {}", commit_0);
+//    log.debug("created commit {}", commit_0);
 //    Assertions.assertEquals(CommitResultStatus.OK, commit_0.getStatus());
 //    super.printRepo(repo.getRepo());
 //  }
@@ -128,7 +128,7 @@
 //        .name("project-xy")
 //        .build()
 //        .await().atMost(Duration.ofMinutes(1));
-//    LOGGER.debug("created repo {}", repo);
+//    log.debug("created repo {}", repo);
 //    Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
 //    
 //    // Create head and first commit
@@ -143,7 +143,7 @@
 //      .onFailure().invoke(e -> e.printStackTrace()).onFailure().recoverWithNull()
 //      .await().atMost(Duration.ofMinutes(1));
 //
-//    LOGGER.debug("created commit 0 {}", commit_0);
+//    log.debug("created commit 0 {}", commit_0);
 //    Assertions.assertEquals(CommitResultStatus.OK, commit_0.getStatus());
 //    
 //    
@@ -160,7 +160,7 @@
 //      .onFailure().invoke(e -> e.printStackTrace()).onFailure().recoverWithNull()
 //      .await().atMost(Duration.ofMinutes(1));
 //    
-//    LOGGER.debug("created commit 1 {}", commit_1);
+//    log.debug("created commit 1 {}", commit_1);
 //    Assertions.assertEquals(CommitResultStatus.OK, commit_1.getStatus());
 //    
 //    super.printRepo(repo.getRepo());

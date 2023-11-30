@@ -1,36 +1,9 @@
 package io.resys.hdes.client.spi;
 
-import java.io.IOException;
-import java.util.UUID;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
-/*-
- * #%L
- * hdes-client-api
- * %%
- * Copyright (C) 2020 - 2021 Copyright 2020 ReSys OÜ
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
- */
-
 import io.resys.hdes.client.api.HdesStore;
 import io.resys.hdes.client.api.ImmutableStoreEntity;
 import io.resys.hdes.client.spi.store.BlobDeserializer;
@@ -44,9 +17,13 @@ import io.resys.thena.docdb.store.sql.PgErrors;
 import io.vertx.core.json.JsonObject;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.sqlclient.PoolOptions;
+import lombok.extern.slf4j.Slf4j;
 
+import java.io.IOException;
+import java.util.UUID;
+
+@Slf4j
 public class ThenaStore extends ThenaStoreTemplate implements HdesStore {
-  private static final Logger LOGGER = LoggerFactory.getLogger(ThenaStore.class);
 
   public ThenaStore(ThenaConfig config) {
     super(config);
@@ -149,7 +126,7 @@ public class ThenaStore extends ThenaStoreTemplate implements HdesStore {
       HdesAssert.notNull(repoName, () -> "repoName must be defined!");
     
       final var headName = this.headName == null ? "main": this.headName;
-      if(LOGGER.isDebugEnabled()) {
+      if(log.isDebugEnabled()) {
         final var log = new StringBuilder()
           .append(System.lineSeparator())
           .append("Configuring Thena: ").append(System.lineSeparator())
@@ -167,7 +144,7 @@ public class ThenaStore extends ThenaStoreTemplate implements HdesStore {
           .append("  pgUser: '").append(this.pgUser == null ? "null" : "***").append("'").append(System.lineSeparator())
           .append("  pgPass: '").append(this.pgPass == null ? "null" : "***").append("'").append(System.lineSeparator());
           
-        LOGGER.debug(log.toString());
+        ThenaStore.log.debug(log.toString());
       }
       
       final DocDB thena;

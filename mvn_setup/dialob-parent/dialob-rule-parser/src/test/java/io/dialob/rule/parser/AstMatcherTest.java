@@ -18,6 +18,7 @@ package io.dialob.rule.parser;
 import io.dialob.rule.parser.modifier.ModifyingMinifierVisitor;
 import io.dialob.rule.parser.node.ASTBuilder;
 import io.dialob.rule.parser.node.NodeBase;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.AdditionalAnswers;
@@ -27,6 +28,7 @@ import java.util.function.UnaryOperator;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+@Slf4j
 public class AstMatcherTest {
 
     @Test
@@ -105,7 +107,7 @@ public class AstMatcherTest {
         final UnaryOperator<NodeBase> callMatcher2 = mockMatchFunction();
         final UnaryOperator<NodeBase> callMatcher3 = mockMatchFunction();
 
-        System.out.println(expression.getAst());
+        log.debug(expression.getAst().toString());
 
         // when
         final AstMatcher matcher = new AstMatcher() {{
@@ -129,7 +131,7 @@ public class AstMatcherTest {
         final UnaryOperator<NodeBase> callMatcher1 = mockMatchFunction();
         final UnaryOperator<NodeBase> callMatcher2 = mockMatchFunction();
 
-        System.out.println(expression.getAst());
+        log.debug(expression.getAst().toString());
 
         // when
         // Note! predence of matchers. If one of matchers matches, rest of matchers are not evaluated
@@ -153,7 +155,7 @@ public class AstMatcherTest {
         final UnaryOperator<NodeBase> callMatcher2 = mockMatchFunction();
         final UnaryOperator<NodeBase> callMatcher3 = mockMatchFunction();
 
-        System.out.println(expression.getAst());
+        log.debug(expression.getAst().toString());
 
         // when
         AstMatcher matcher = new AstMatcher() {{
@@ -186,7 +188,7 @@ public class AstMatcherTest {
         final UnaryOperator<NodeBase> callMatcher2 = mockMatchFunction();
         final UnaryOperator<NodeBase> callMatcher3 = mockMatchFunction();
 
-        System.out.println(expression.getAst());
+        log.debug(expression.getAst().toString());
 
         // when
         final AstMatcher matcher = new AstMatcher() {{
@@ -212,7 +214,7 @@ public class AstMatcherTest {
         final UnaryOperator<NodeBase> callMatcher1 = mockMatchFunction();
         final UnaryOperator<NodeBase> callMatcher2 = mockMatchFunction();
 
-        System.out.println(expression.getAst());
+        log.debug(expression.getAst().toString());
 
         // when
         final AstMatcher matcher = new AstMatcher() {{
@@ -321,7 +323,7 @@ public class AstMatcherTest {
         // given
         final Expression expression = Expression.createExpression(expressionString);
         final ASTBuilder astBuilder = new ASTBuilder();
-        System.out.println(expression.getAst().toString());
+        log.debug(expression.getAst().toString());
         // when
         final AstMatcher matcher = new ModifyingMinifierVisitor();
         expression.accept(matcher);

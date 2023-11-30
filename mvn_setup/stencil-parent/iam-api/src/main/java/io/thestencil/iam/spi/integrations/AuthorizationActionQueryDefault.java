@@ -20,13 +20,6 @@ package io.thestencil.iam.spi.integrations;
  * #L%
  */
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.iam.api.ImmutableAuthorizationAction;
@@ -37,11 +30,16 @@ import io.thestencil.iam.spi.support.BuilderTemplate;
 import io.vertx.core.http.RequestOptions;
 import io.vertx.core.json.JsonObject;
 import io.vertx.mutiny.ext.web.client.HttpResponse;
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 
 
+@Slf4j
 public class AuthorizationActionQueryDefault extends BuilderTemplate implements AuthorizationActionQuery {
-  private static final Logger LOGGER = LoggerFactory.getLogger(AuthorizationActionQueryDefault.class);
   private final List<String> userRoles = new ArrayList<>();
   
   public AuthorizationActionQueryDefault(
@@ -68,14 +66,14 @@ public class AuthorizationActionQueryDefault extends BuilderTemplate implements 
   private AuthorizationAction map(HttpResponse<?> resp) {
     if (resp.statusCode() != 200) {
       String error = "USER AUTHORIZATION ACTIONS: Can't create response, e = " + resp.statusCode() + " | " + resp.statusMessage() + " | " + resp.headers();
-      LOGGER.error(error);
+      log.error(error);
       return ImmutableAuthorizationAction.builder()
           .addAllUserRoles(userRoles)
           .build();
     }
     final var body = resp.bodyAsJsonObject();
-    if(LOGGER.isDebugEnabled()) {
-      LOGGER.debug("USER AUTHORIZATION ACTIONS query succeeded: {}!", body);
+    if(log.isDebugEnabled()) {
+      log.debug("USER AUTHORIZATION ACTIONS query succeeded: {}!", body);
     }
     ;
     return ImmutableAuthorizationAction.builder()
