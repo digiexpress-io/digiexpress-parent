@@ -138,7 +138,7 @@ const TaskChecklist: React.FC<{ onChange: (commands: Client.TaskUpdateCommand<an
 
     {/*  checklist section  */}
 
-    {state.task.checklist.map((checklist) => (<Burger.Section key={checklist.id} width='95%'>
+    {state.task.checklist.map((checklist, index) => (<Burger.Section key={index} width='95%'>
       <Box>
         <TextField defaultValue={checklist.title}
           onBlur={(event) => handleChecklistTitleChange(checklist.id, event.currentTarget.value)}
@@ -156,7 +156,7 @@ const TaskChecklist: React.FC<{ onChange: (commands: Client.TaskUpdateCommand<an
       </Box>
 
       <Stack spacing={1}>
-        <Grid container key={checklist.id} id={checklist.id} direction='row' alignItems='center'
+        <Grid container key={index} id={checklist.id} direction='row' alignItems='center'
           sx={{
             color: 'text.primary',
             borderRadius: 1,
@@ -176,7 +176,7 @@ const TaskChecklist: React.FC<{ onChange: (commands: Client.TaskUpdateCommand<an
 
         {checklist.items.map((item, index) => (<>
 
-          <Grid container alignItems='center' key={item.id}>
+          <Grid container alignItems='center' key={index}>
             <Grid item md={2} lg={2}>
               <Typography fontWeight='bolder'><FormattedMessage id='task.checklist.item.title' /></Typography>
             </Grid>
