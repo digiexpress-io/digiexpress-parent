@@ -7,7 +7,6 @@ import Burger from 'components-burger';
 
 const SectionLayout: React.FC<{ label: string, value: string | undefined }> = ({ label, value }) => {
 
-
   return (
     <Grid container>
       <Grid item md={4} lg={4}>
@@ -25,8 +24,6 @@ const SectionLayout: React.FC<{ label: string, value: string | undefined }> = ({
 const CurrentTenant: React.FC<{}> = () => {
   const tenant = Context.useTenantConfig();
   const data = tenant.tenantConfig;
-
-  console.log(data?.transactions)
 
   if (!data) {
     return (<>No data</>)
