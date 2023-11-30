@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Test;
 
@@ -31,6 +32,7 @@ import io.resys.hdes.compiler.api.HdesCompiler;
 import io.resys.hdes.compiler.api.HdesCompiler.Resource;
 import io.resys.hdes.compiler.spi.GenericHdesCompiler;
 
+@Slf4j
 public class FlJavaHdesCompilerTest {
   
   private final HdesCompiler compiler = GenericHdesCompiler.config().build();
@@ -57,7 +59,7 @@ public class FlJavaHdesCompilerTest {
   public static void print(List<Resource> resources) {
     for (Resource r : resources) {
       if(r.getName().contains("Flow")) {
-      r.getDeclarations().forEach(d -> System.out.println(d.getValue()));
+      r.getDeclarations().forEach(d -> log.debug(d.getValue()));
       }
     }
   }

@@ -238,6 +238,6 @@ public class TestCase {
 //  
 //  final var res = new ObjectMapper().writeValueAsString(site);
 //  
-//  System.out.println(res);
+//  log.debug(res);
 //}
 }

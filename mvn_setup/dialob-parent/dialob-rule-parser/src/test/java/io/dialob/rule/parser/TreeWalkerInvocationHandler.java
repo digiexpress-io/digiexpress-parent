@@ -15,6 +15,7 @@
  */
 package io.dialob.rule.parser;
 
+import lombok.extern.slf4j.Slf4j;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTree;
 
@@ -22,6 +23,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
+@Slf4j
 public  class TreeWalkerInvocationHandler implements InvocationHandler {
 
     int level = 0;
@@ -76,7 +78,7 @@ public  class TreeWalkerInvocationHandler implements InvocationHandler {
             argstring = "(" + var + ")";
         }
 
-        System.out.println("                         ".substring(0, level) + ruleName + argstring);
+        log.debug("                         ".substring(0, level) + ruleName + argstring);
     }
 
     protected String findOp(ParseTree node) throws IllegalAccessException {

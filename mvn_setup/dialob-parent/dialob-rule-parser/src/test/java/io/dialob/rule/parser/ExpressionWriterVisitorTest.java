@@ -16,11 +16,13 @@
 package io.dialob.rule.parser;
 
 import io.dialob.rule.parser.node.NodeBase;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
+@Slf4j
 public class ExpressionWriterVisitorTest {
     @Test
     public void test() {
@@ -55,7 +57,7 @@ public class ExpressionWriterVisitorTest {
         final Expression expression = Expression.createExpression(original);
         assertFalse(expression.hasErrors());
         ast = expression.getAst();
-        System.out.println(ast);
+        log.debug(ast.toString());
         ast.accept(visitor);
         assertEquals(expected, visitor.toString());
     }

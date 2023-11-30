@@ -87,11 +87,6 @@
     <lombok.version>1.18.30</lombok.version>
     <immutables.version>2.10.0</immutables.version>
 
-    <!-- Logging -->
-    <logging-slf4j.version>1.7.36</logging-slf4j.version>
-    <logging-logback.version>1.2.12</logging-logback.version>
-    <logging-logstash>7.0.1</logging-logstash>
-
     <!-- Programatic json/html/md/java parsing -->
     <json-path.version>2.4.0</json-path.version>
     <jsoup.version>1.14.3</jsoup.version>
@@ -480,29 +475,6 @@
         <groupId>com.google.googlejavaformat</groupId>
         <artifactId>google-java-format</artifactId>
         <version>${google-javaformat.version}</version>
-      </dependency>
-
-
-      <!-- Logging -->
-      <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-api</artifactId>
-        <version>${logging-slf4j.version}</version><!--$NO-MVN-MAN-VER$-->
-      </dependency>
-      <dependency>
-        <groupId>ch.qos.logback</groupId>
-        <artifactId>logback-classic</artifactId>
-        <version>${logging-logback.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>ch.qos.logback</groupId>
-        <artifactId>logback-core</artifactId>
-        <version>${logging-logback.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>net.logstash.logback</groupId>
-        <artifactId>logstash-logback-encoder</artifactId>
-        <version>${logging-logstash.version}</version>
       </dependency>
 
       <!-- Test containers -->

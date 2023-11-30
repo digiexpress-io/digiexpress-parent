@@ -23,6 +23,7 @@ package io.resys.hdes.interpreter.spi;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -34,6 +35,7 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import io.resys.hdes.executor.api.Trace.TraceEnd;
 import io.resys.hdes.interpreter.api.HdesAcceptsSupplier.HdesAcceptsMapSupplier;
 
+@Slf4j
 public class InterpreterTest {
   private static final ObjectMapper om = new ObjectMapper(new YAMLFactory()).registerModule(new Jdk8Module());
 
@@ -51,7 +53,7 @@ public class InterpreterTest {
   
   public void assertExecution(TraceEnd execution, String yaml) {
     String actual = yaml(execution.getBody());
-    //System.out.println(yaml(execution));
+    log.debug(yaml(execution));
     String expected = file(yaml);
     Assertions.assertLinesMatch(expected.lines(), actual.lines());
   }

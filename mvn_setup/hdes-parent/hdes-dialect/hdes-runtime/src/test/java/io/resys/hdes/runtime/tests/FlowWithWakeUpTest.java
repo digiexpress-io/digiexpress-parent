@@ -25,6 +25,7 @@ import static io.resys.hdes.runtime.tests.TestUtil.yaml;
 import java.io.Serializable;
 import java.util.HashMap;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -34,6 +35,7 @@ import io.resys.hdes.executor.api.TraceBody.Suspends;
 import io.resys.hdes.runtime.tests.TestUtil.TestRunner;
 
 
+@Slf4j
 public class FlowWithWakeUpTest {
   
   @Test
@@ -47,7 +49,7 @@ public class FlowWithWakeUpTest {
     Suspends suspends = output.getSuspends();
     Assertions.assertNotNull(suspends);
     Assertions.assertNotNull(suspends.getValues().size() == 1);
-    System.out.println(yaml(suspends));
+    log.debug(yaml(suspends));
 
     Await await = suspends.getValues().iterator().next();
     

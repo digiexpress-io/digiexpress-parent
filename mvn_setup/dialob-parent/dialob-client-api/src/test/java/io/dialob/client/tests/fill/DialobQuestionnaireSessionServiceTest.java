@@ -45,6 +45,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.SerializationUtils;
 import org.assertj.core.api.AbstractAssert;
 import org.assertj.core.api.AbstractIterableAssert;
@@ -78,13 +79,14 @@ import io.dialob.client.tests.client.DialobClientTestImpl;
 import io.dialob.executor.model.DialobSession;
 
 
+@Slf4j
 public class DialobQuestionnaireSessionServiceTest {
 
   public static DialobClientTestImpl get() {
     return DialobClientTestImpl.get();
   }
 
-  
+
   public static FillAssertionBuilder fillForm(String formFile) {
     final var client = get();
     final var envir = client.envir()
@@ -105,12 +107,12 @@ public class DialobQuestionnaireSessionServiceTest {
     final var formDocument = ImmutableFormDocument.builder()
         .name(formFile)
         .id(formFile)
-        
+
         .data(form)
         .created(LocalDateTime.now())
         .updated(LocalDateTime.now())
         .build();
-    
+
     final var questionnaire = client.getConfig().getMapper().readQuestionnaire(Thread.currentThread().getContextClassLoader().getResourceAsStream(questionnaireState));
     return fillForm(formDocument.getData(), questionnaire);
   }
@@ -690,11 +692,11 @@ public class DialobQuestionnaireSessionServiceTest {
         long timeStart = System.nanoTime();
         final DialobSession dialobSession = dialobQuestionnaireSession.getDialobSession();
         byte[] sessionData = SerializationUtils.serialize(dialobSession);
-        System.out.println("session serialize time " + (System.nanoTime() - timeStart) / 1e6 + ", size " + sessionData.length);
+        log.debug("session serialize time " + (System.nanoTime() - timeStart) / 1e6 + ", size " + sessionData.length);
 
         timeStart = System.nanoTime();
         SerializationUtils.deserialize(sessionData);
-        System.out.println("session deserialize time " + (System.nanoTime() - timeStart) / 1e6);
+        log.debug("session deserialize time " + (System.nanoTime() - timeStart) / 1e6);
 
         try {
           final ByteBuffer byteBuffer = ByteBuffer.allocate(65536);
@@ -702,14 +704,14 @@ public class DialobQuestionnaireSessionServiceTest {
           timeStart = System.nanoTime();
           dialobSession.writeTo(codedOutputStream);
           codedOutputStream.flush();
-          System.out.println("protobuf session serialize time " + (System.nanoTime() - timeStart) / 1e6 + ", size " + codedOutputStream.getTotalBytesWritten());
+          log.debug("protobuf session serialize time " + (System.nanoTime() - timeStart) / 1e6 + ", size " + codedOutputStream.getTotalBytesWritten());
           sessionData = byteBuffer.array();
 
 
           CodedInputStream input = CodedInputStream.newInstance(sessionData);
           timeStart = System.nanoTime();
           DialobSession readSession = DialobSession.readFrom(input);
-          System.out.println("protobuf session deserialize time " + (System.nanoTime() - timeStart) / 1e6);
+          log.debug("protobuf session deserialize time " + (System.nanoTime() - timeStart) / 1e6);
           assertNotSame(dialobSession, readSession);
           assertEquals(dialobSession, readSession);
 
