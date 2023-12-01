@@ -1,10 +1,5 @@
 package io.resys.thena.tasks.dev.app;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import io.resys.thena.tasks.client.api.TaskClient;
 import io.resys.thena.tasks.client.api.model.ImmutableCreateTask;
 import io.resys.thena.tasks.client.api.model.Task;
@@ -16,6 +11,11 @@ import io.resys.thena.tasks.dev.app.BeanFactory.CurrentUser;
 import io.smallrye.mutiny.Uni;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Path;
+
+import java.time.Instant;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Path("q/digiexpress/api")
 public class TasksResource implements TaskRestApi {
@@ -34,7 +34,7 @@ public class TasksResource implements TaskRestApi {
     final var modifiedCommands = commands.stream()
         .map(command -> ImmutableCreateTask.builder().from(command)
             .targetDate(Instant.now())
-            .userId(currentUser.getUserId())
+            .userId(currentUser.userId())
             .build())
         .collect(Collectors.toList());
     return tasks.withRepoId(projectId).tasks().createTask().createMany(modifiedCommands);
@@ -42,7 +42,7 @@ public class TasksResource implements TaskRestApi {
   @Override
   public Uni<List<Task>> updateTasks(String projectId, List<TaskUpdateCommand> commands) {
     final var modifiedCommands = commands.stream()
-        .map(command -> command.withTargetDate(Instant.now()).withUserId(currentUser.getUserId()))
+        .map(command -> command.withTargetDate(Instant.now()).withUserId(currentUser.userId()))
         .collect(Collectors.toList());
     return tasks.withRepoId(projectId).tasks().updateTask().updateMany(modifiedCommands);
   }
@@ -51,7 +51,7 @@ public class TasksResource implements TaskRestApi {
     final var modifiedCommands = commands.stream()
         .map(command -> command
             .withTargetDate(Instant.now())
-            .withUserId(currentUser.getUserId()))
+            .withUserId(currentUser.userId()))
         .collect(Collectors.toList());
     return tasks.withRepoId(projectId).tasks().updateTask().updateOne(modifiedCommands);
   }
@@ -60,7 +60,7 @@ public class TasksResource implements TaskRestApi {
     final var modifiedCommands = commands.stream()
         .map(command -> command
             .withTargetDate(Instant.now())
-            .withUserId(currentUser.getUserId()))
+            .withUserId(currentUser.userId()))
         .collect(Collectors.toList());
     return tasks.withRepoId(projectId).tasks().updateTask().updateMany(modifiedCommands);
   }
@@ -73,7 +73,7 @@ public class TasksResource implements TaskRestApi {
     final var modifiedCommands = commands.stream()
         .map(command -> command
             .withTargetDate(Instant.now())
-            .withUserId(currentUser.getUserId()))
+            .withUserId(currentUser.userId()))
         .collect(Collectors.toList());
     return tasks.withRepoId(projectId).tasks().updateTask().updateOne(modifiedCommands);
   }  

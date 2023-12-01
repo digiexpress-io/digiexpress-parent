@@ -1,9 +1,5 @@
 package io.resys.thena.tasks.dev.app;
 
-import java.time.Instant;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import io.resys.thena.projects.client.api.TenantConfigClient;
 import io.resys.thena.projects.client.api.model.ImmutableCreateTenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfigCommand.ArchiveTenantConfig;
@@ -16,6 +12,10 @@ import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Path;
+
+import java.time.Instant;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Path("q/digiexpress/api")
 public class TenantsResource implements TenantConfigRestApi {
@@ -34,7 +34,7 @@ public class TenantsResource implements TenantConfigRestApi {
     final var modifiedCommands = commands.stream()
         .map(command -> ImmutableCreateTenantConfig.builder().from(command)
             .targetDate(Instant.now())
-            .userId(currentUser.getUserId())
+            .userId(currentUser.userId())
             .build())
         .collect(Collectors.toList());
     return tenantConfigClient.createTenantConfig().createMany(modifiedCommands)
@@ -54,7 +54,7 @@ public class TenantsResource implements TenantConfigRestApi {
   @Override
   public Uni<List<io.resys.thena.projects.client.api.model.TenantConfig>> updateTenantConfigs(List<TenantConfigUpdateCommand> commands) {
     final var modifiedCommands = commands.stream()
-        .map(command -> command.withTargetDate(Instant.now()).withUserId(currentUser.getUserId()))
+        .map(command -> command.withTargetDate(Instant.now()).withUserId(currentUser.userId()))
         .collect(Collectors.toList());
     return tenantConfigClient.updateTenantConfig().updateMany(modifiedCommands);
   }
@@ -63,7 +63,7 @@ public class TenantsResource implements TenantConfigRestApi {
     final var modifiedCommands = commands.stream()
         .map(command -> command
             .withTargetDate(Instant.now())
-            .withUserId(currentUser.getUserId()))
+            .withUserId(currentUser.userId()))
         .collect(Collectors.toList());
     return tenantConfigClient.updateTenantConfig().updateMany(modifiedCommands);
   }
@@ -72,7 +72,7 @@ public class TenantsResource implements TenantConfigRestApi {
     final var modifiedCommands = commands.stream()
         .map(command -> command
             .withTargetDate(Instant.now())
-            .withUserId(currentUser.getUserId()))
+            .withUserId(currentUser.userId()))
         .collect(Collectors.toList());
     return tenantConfigClient.updateTenantConfig().updateOne(modifiedCommands);
   }

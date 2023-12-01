@@ -1,12 +1,5 @@
 package io.resys.thena.tasks.dev.app;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import io.resys.crm.client.api.CrmClient;
 import io.resys.crm.client.api.model.Customer;
 import io.resys.crm.client.api.model.CustomerCommand.UpsertSuomiFiPerson;
@@ -25,33 +18,19 @@ import io.resys.thena.tasks.dev.app.BeanFactory.CurrentTenant;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.core.Vertx;
-
-/*-
- * #%L
- * digiexpress-app
- * %%
- * Copyright (C) 2021 - 2023 Copyright 2021 ReSys OÜ
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
- */
-
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
+
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Path("q/demo/api/")
 public class DemoResource {
@@ -69,7 +48,7 @@ public class DemoResource {
     final var provider =  new RandomDataProvider();
     final var windows = provider.windows(totalTasks == null ? 50 : Integer.parseInt(totalTasks));
 
-    return tenantClient.queryActiveTenantConfig().get(currentTenant.getTenantId())
+    return tenantClient.queryActiveTenantConfig().get(currentTenant.tenantId())
     .onItem().transformToUni(config -> {
       final var crmConfig = config.getRepoConfigs().stream().filter(entry -> entry.getRepoType() == TenantRepoConfigType.CRM).findFirst().get();
       final var taskConfig = config.getRepoConfigs().stream().filter(entry -> entry.getRepoType() == TenantRepoConfigType.TASKS).findFirst().get();
@@ -138,7 +117,7 @@ public class DemoResource {
   @Produces(MediaType.APPLICATION_JSON)
   @Path("clear/tasks")
   public Uni<TenantConfig> clear() {
-    return tenantClient.queryActiveTenantConfig().get(currentTenant.getTenantId())
+    return tenantClient.queryActiveTenantConfig().get(currentTenant.tenantId())
     .onItem().transformToUni(config -> {
         final var taskConfig = config.getRepoConfigs().stream().filter(entry -> entry.getRepoType() == TenantRepoConfigType.TASKS).findFirst().get();
         return taskClient.withRepoId(taskConfig.getRepoId()).tasks().queryActiveTasks().deleteAll("", Instant.now())
@@ -162,11 +141,11 @@ public class DemoResource {
         .onItem().transformToUni(junk -> Uni.createFrom().voidItem());
   }
   private Uni<TenantConfig> init() {
-    return tenantClient.query().repoName(currentTenant.getTenantsStoreId(), TenantRepoConfigType.TENANT).createIfNot()
+    return tenantClient.query().repoName(currentTenant.tenantsStoreId(), TenantRepoConfigType.TENANT).createIfNot()
         .onItem().transformToUni(created -> {
           return tenantClient.createTenantConfig().createOne(ImmutableCreateTenantConfig.builder()
-              .name(currentTenant.getTenantId())
-              .repoId(currentTenant.getTenantsStoreId())
+              .name(currentTenant.tenantId())
+              .repoId(currentTenant.tenantsStoreId())
               .targetDate(Instant.now())
               .build())
               .onItem().transformToUni(this::createNested);

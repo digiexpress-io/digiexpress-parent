@@ -21,10 +21,7 @@ package io.resys.thena.projects.client.spi;
  */
 
 
-import java.util.stream.Collectors;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import io.resys.thena.docdb.api.DocDB;
 import io.resys.thena.docdb.api.actions.RepoActions.RepoStatus;
 import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
@@ -35,14 +32,9 @@ import io.resys.thena.docdb.store.sql.PgErrors;
 import io.resys.thena.docdb.support.OidUtils;
 import io.resys.thena.docdb.support.RepoAssert;
 import io.resys.thena.projects.client.api.model.Document.DocumentType;
-import io.resys.thena.projects.client.spi.store.DocumentConfig;
+import io.resys.thena.projects.client.spi.store.*;
 import io.resys.thena.projects.client.spi.store.DocumentConfig.DocumentAuthorProvider;
 import io.resys.thena.projects.client.spi.store.DocumentConfig.DocumentGidProvider;
-import io.resys.thena.projects.client.spi.store.DocumentStore;
-import io.resys.thena.projects.client.spi.store.DocumentStoreException;
-import io.resys.thena.projects.client.spi.store.ImmutableDocumentConfig;
-import io.resys.thena.projects.client.spi.store.ImmutableDocumentExceptionMsg;
-import io.resys.thena.projects.client.spi.store.MainBranch;
 import io.smallrye.mutiny.Uni;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.sqlclient.PoolOptions;
@@ -52,6 +44,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.stream.Collectors;
 
 
 
@@ -202,24 +196,33 @@ public class DocumentStoreImpl implements DocumentStore {
     
       final var headName = this.headName == null ? MainBranch.HEAD_NAME: this.headName;
       if(log.isDebugEnabled()) {
-        final var msg = new StringBuilder()
-          .append(System.lineSeparator())
-          .append("Configuring Thena: ").append(System.lineSeparator())
-          .append("  repoName: '").append(this.repoName).append("'").append(System.lineSeparator())
-          .append("  headName: '").append(headName).append("'").append(System.lineSeparator())
-          .append("  objectMapper: '").append(this.objectMapper == null ? "configuring" : "provided").append("'").append(System.lineSeparator())
-          .append("  gidProvider: '").append(this.gidProvider == null ? "configuring" : "provided").append("'").append(System.lineSeparator())
-          .append("  authorProvider: '").append(this.authorProvider == null ? "configuring" : "provided").append("'").append(System.lineSeparator())
-          
-          .append("  pgPool: '").append(this.pgPool == null ? "configuring" : "provided").append("'").append(System.lineSeparator())
-          .append("  pgPoolSize: '").append(this.pgPoolSize).append("'").append(System.lineSeparator())
-          .append("  pgHost: '").append(this.pgHost).append("'").append(System.lineSeparator())
-          .append("  pgPort: '").append(this.pgPort).append("'").append(System.lineSeparator())
-          .append("  pgDb: '").append(this.pgDb).append("'").append(System.lineSeparator())
-          .append("  pgUser: '").append(this.pgUser == null ? "null" : "***").append("'").append(System.lineSeparator())
-          .append("  pgPass: '").append(this.pgPass == null ? "null" : "***").append("'").append(System.lineSeparator());
-          
-        log.debug(msg.toString());
+        log.debug("""
+          Configuring Thena:
+            repoName: {}
+            headName: {}
+            objectMapper: {}
+            gidProvider: {}
+            authorProvider: {}
+            pgPool: {}
+            pgPoolSize: {}
+            pgHost: {}
+            pgPort: {}
+            pgDb: {}
+            pgUser: {}
+            pgPass: {}
+          """,
+          this.repoName,
+          headName,
+          this.objectMapper == null ? "configuring" : "provided",
+          this.gidProvider == null ? "configuring" : "provided",
+          this.authorProvider == null ? "configuring" : "provided",
+          this.pgPool == null ? "configuring" : "provided",
+          this.pgPoolSize,
+          this.pgHost,
+          this.pgPort,
+          this.pgDb,
+          this.pgUser == null ? "null" : "***",
+          this.pgPass == null ? "null" : "***");
       }
       
       final DocDB thena;

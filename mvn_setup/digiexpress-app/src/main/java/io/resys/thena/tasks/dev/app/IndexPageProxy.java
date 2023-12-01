@@ -4,12 +4,11 @@ import io.quarkus.vertx.web.Route;
 import io.quarkus.vertx.web.RouteBase;
 import io.resys.thena.projects.client.api.TenantConfigClient;
 import io.resys.thena.projects.client.api.model.TenantConfig;
+import io.smallrye.common.annotation.Blocking;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.unchecked.Unchecked;
-import io.vertx.ext.web.RoutingContext;
 import io.vertx.mutiny.core.Vertx;
 import io.vertx.mutiny.core.buffer.Buffer;
-import io.vertx.mutiny.ext.web.client.HttpResponse;
 import io.vertx.mutiny.ext.web.client.WebClient;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -34,10 +33,10 @@ public class IndexPageProxy {
   @Inject
   TenantConfigClient tenantClient;
 
-  @ConfigProperty(name = "digiexpress.assets-url", defaultValue="http://localhost:3000")
+  @ConfigProperty(name = "digiexpress.assets-url", defaultValue = "http://localhost:3000")
   String assetsUrl;
 
-  @ConfigProperty(name = "digiexpress.index-page", defaultValue="/")
+  @ConfigProperty(name = "digiexpress.index-page", defaultValue = "/")
   String indexPage;
 
   @Inject
@@ -53,57 +52,44 @@ public class IndexPageProxy {
       .onItem().transform(config -> StringUtils.trimToNull(config.getPreferences().getLandingApp()))
       .onItem().transform(Unchecked.function(uri -> UriBuilder.fromUri(uri).build().toURL()))
       .onFailure().recoverWithItem(Unchecked.supplier(() -> UriBuilder.fromUri(assetsUrl).build().toURL()));
-
   }
 
   private Uni<TenantConfig> getTenantConfig() {
     return tenantClient
       .queryActiveTenantConfig()
-      .get(currentTenant.getTenantId());
+      .get(currentTenant.tenantId());
   }
 
   // TODO Baking fixed urls into root page would be better option...
   @Route(path = "/static/*", methods = Route.HttpMethod.GET)
   @Route(path = "favicon.*", methods = Route.HttpMethod.GET)
-  Uni<Void> redirectToStaticAssets(RoutingContext rc) {
+  // Needs to be blocking, because redirect terminates response and return type must be void.
+  // But url it fetched asynchronously
+  @Blocking
+  void redirectToStaticAssets(io.vertx.ext.web.RoutingContext rc) {
     io.vertx.mutiny.ext.web.RoutingContext routingContext = new io.vertx.mutiny.ext.web.RoutingContext(rc);
-    return getAssetsBaseUrl()
-      .onItem().transform(redirectUrl -> redirectUrl + routingContext.normalizedPath())
-      .onItem().transformToUni(routingContext::redirect);
+    getAssetsBaseUrl()
+      .map(redirectUrl -> redirectUrl + routingContext.normalizedPath())
+      .map(routingContext::redirectAndForget).await().indefinitely();
   }
 
   @Route(path = "/", methods = Route.HttpMethod.GET, produces = "text/html")  // Overrides default static resource
   @Route(path = "/*", methods = Route.HttpMethod.GET, produces = "text/html", order = Integer.MAX_VALUE - 1)
     // Last..
-  Uni<HttpResponse<Buffer>> index(io.vertx.ext.web.RoutingContext rc) {
-    var routingContext = new io.vertx.mutiny.ext.web.RoutingContext(rc);
-    log.trace("GET index page for {}", routingContext.normalizedPath());
+  Uni<io.vertx.mutiny.core.buffer.Buffer> index(io.vertx.ext.web.RoutingContext rc) {
+    rc.response().putHeader("Cache-Control", "no-cache");
     // proxy page from remote source
-    return getAssetsBaseUrl().onItem().transformToUni(url -> {
-      String uri = StringUtils.appendIfMissing(url.toExternalForm(), indexPage, ".html");
-      return client
-        .getAbs(uri).send()
-        .onItem().call(response -> {
-            int statusCode = response.statusCode();
-            if (statusCode >= 200 && statusCode <= 299) {
-              return routingContext
-                .response()
-                .putHeader("Cache-Control", "no-cache")
-                .putHeader("Content-Type", response.getHeader("Content-Type"))
-                .setStatusCode(response.statusCode())
-                .end(response.bodyAsBuffer());
-            } else {
-              log.error("GET root page failed: {} {}", response.statusCode(), response.statusMessage());
-              return routingContext
-                .response()
-                .setStatusCode(500)
-                .end();
-            }
-          }
-        )
-        .onFailure().invoke(t -> {
-          log.error("GET root page failed", t);
-        });
-    });
+    return getAssetsBaseUrl()
+      .map(url -> StringUtils.appendIfMissing(url.toExternalForm(), indexPage, ".html"))
+      .flatMap(uri -> client.getAbs(uri).send())
+      .map(response -> {
+        int statusCode = response.statusCode();
+        rc.response().setStatusCode(statusCode);
+        rc.response().putHeader("Content-Type", response.headers().get("Content-Type"));
+        if (statusCode >= 200 && statusCode <= 299) {
+          return response.bodyAsBuffer();
+        }
+        return Buffer.buffer();
+      });
   }
 }

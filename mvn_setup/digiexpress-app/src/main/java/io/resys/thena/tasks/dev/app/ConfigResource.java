@@ -1,7 +1,5 @@
 package io.resys.thena.tasks.dev.app;
 
-import java.time.Instant;
-
 import io.resys.thena.projects.client.api.TenantConfigClient;
 import io.resys.thena.projects.client.api.model.ImmutableCreateTenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig;
@@ -16,6 +14,8 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 
+import java.time.Instant;
+
 @Path("q/digiexpress/api")
 public class ConfigResource {
   
@@ -26,7 +26,7 @@ public class ConfigResource {
   @Produces(MediaType.APPLICATION_JSON)
   @Path("config/current-tenants")
   public Uni<TenantConfig> currentTenant() {
-    return tenantClient.query().repoName(currentTenant.getTenantsStoreId(), TenantRepoConfigType.TENANT).get(currentTenant.getTenantId())
+    return tenantClient.query().repoName(currentTenant.tenantsStoreId(), TenantRepoConfigType.TENANT).get(currentTenant.tenantId())
         .onItem().transformToUni(config -> {
           if(config.isEmpty()) {
             return createTenantConfig().onItem().transformToUni(this::createChildRepos);
@@ -43,14 +43,12 @@ public class ConfigResource {
   } 
   
   public Uni<TenantConfig> createTenantConfig() {
-    return tenantClient.query().repoName(currentTenant.getTenantsStoreId(), TenantRepoConfigType.TENANT).createIfNot()
-        .onItem().transformToUni(created -> {
-          return tenantClient.createTenantConfig().createOne(ImmutableCreateTenantConfig.builder()
-              .repoId(currentTenant.getTenantsStoreId())
-              .name(currentTenant.getTenantId())
-              .targetDate(Instant.now())
-              .build());
-        });
+    return tenantClient.query().repoName(currentTenant.tenantsStoreId(), TenantRepoConfigType.TENANT).createIfNot()
+        .onItem().transformToUni(created -> tenantClient.createTenantConfig().createOne(ImmutableCreateTenantConfig.builder()
+            .repoId(currentTenant.tenantsStoreId())
+            .name(currentTenant.tenantId())
+            .targetDate(Instant.now())
+            .build()));
   }
   
   public Uni<TenantConfig> createChildRepos(TenantConfig config) {

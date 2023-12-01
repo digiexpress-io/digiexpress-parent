@@ -1,13 +1,5 @@
 package io.resys.thena.tasks.dev.app;
 
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.StringUtils;
-
 import io.resys.crm.client.api.CrmClient;
 import io.resys.crm.client.api.model.Customer;
 import io.resys.crm.client.api.model.Customer.CustomerBodyType;
@@ -23,6 +15,13 @@ import io.resys.thena.tasks.dev.app.BeanFactory.CurrentUser;
 import io.smallrye.mutiny.Uni;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Path;
+import org.apache.commons.lang3.StringUtils;
+
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Path("q/digiexpress/api")
 public class CrmResource implements CrmRestApi {
@@ -94,13 +93,13 @@ public class CrmResource implements CrmRestApi {
   @Override
   public Uni<Customer> createCustomer(CreateCustomer command) {
     return getCrmConfig().onItem().transformToUni(config -> crmClient.withRepoId(config.getRepoId()).createCustomer()
-        .createOne((CreateCustomer) command.withTargetDate(Instant.now()).withUserId(currentUser.getUserId())));
+        .createOne((CreateCustomer) command.withTargetDate(Instant.now()).withUserId(currentUser.userId())));
   }
 
   @Override
   public Uni<Customer> updateCustomer(String customerId, List<CustomerUpdateCommand> commands) {
     final var modifiedCommands = commands.stream()
-        .map(command -> command.withTargetDate(Instant.now()).withUserId(currentUser.getUserId()))
+        .map(command -> command.withTargetDate(Instant.now()).withUserId(currentUser.userId()))
         .collect(Collectors.toList());
     
     return getCrmConfig().onItem().transformToUni(config -> crmClient.withRepoId(config.getRepoId()).updateCustomer()
@@ -110,11 +109,11 @@ public class CrmResource implements CrmRestApi {
   @Override
   public Uni<Customer> deleteCustomer(String customerId, CustomerUpdateCommand command) {
     return getCrmConfig().onItem().transformToUni(config -> crmClient.withRepoId(config.getRepoId()).updateCustomer()
-        .updateOne(command.withTargetDate(Instant.now()).withUserId(currentUser.getUserId())));
+        .updateOne(command.withTargetDate(Instant.now()).withUserId(currentUser.userId())));
   }
 
   private Uni<TenantRepoConfig> getCrmConfig() {
-    return tenantClient.queryActiveTenantConfig().get(currentTenant.getTenantId())
+    return tenantClient.queryActiveTenantConfig().get(currentTenant.tenantId())
     .onItem().transform(config -> {
       final var crmConfig = config.getRepoConfigs().stream().filter(entry -> entry.getRepoType() == TenantRepoConfigType.CRM).findFirst().get();
       return crmConfig;

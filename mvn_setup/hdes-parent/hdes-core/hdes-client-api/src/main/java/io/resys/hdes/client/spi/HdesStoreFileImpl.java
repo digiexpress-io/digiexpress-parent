@@ -108,18 +108,18 @@ public class HdesStoreFileImpl extends ThenaStoreTemplate implements HdesStore {
     
     private AuthorProvider getAuthorProvider() {
       return this.authorProvider == null ? ()-> "not-configured" : this.authorProvider;
-    } 
-    
+    }
+
     private ObjectMapper getObjectMapper() {
-      if(this.objectMapper == null) {
+      if(this.objectMapper != null) {
         return this.objectMapper;
       }
-      
-      final ObjectMapper objectMapper = new ObjectMapper();
-      objectMapper.registerModule(new GuavaModule());
-      objectMapper.registerModule(new JavaTimeModule());
-      objectMapper.registerModule(new Jdk8Module());
-      return objectMapper;
+      return new ObjectMapper()
+        .registerModules(
+          new GuavaModule(),
+          new JavaTimeModule(),
+          new Jdk8Module()
+        );
     }
     
     public HdesStoreFileImpl build() {
@@ -128,17 +128,21 @@ public class HdesStoreFileImpl extends ThenaStoreTemplate implements HdesStore {
       
       final var headName = this.headName == null ? "main": this.headName;
       if(log.isDebugEnabled()) {
-        final var log = new StringBuilder()
-          .append(System.lineSeparator())
-          .append("Configuring Thena: ").append(System.lineSeparator())
-          .append("  repoName: '").append(this.repoName).append("'").append(System.lineSeparator())
-          .append("  headName: '").append(headName).append("'").append(System.lineSeparator())
-          .append("  objectMapper: '").append(this.objectMapper == null ? "configuring" : "provided").append("'").append(System.lineSeparator())
-          .append("  gidProvider: '").append(this.gidProvider == null ? "configuring" : "provided").append("'").append(System.lineSeparator())
-          .append("  authorProvider: '").append(this.authorProvider == null ? "configuring" : "provided").append("'").append(System.lineSeparator())
-          .append("  db: '").append(this.db).append("'").append(System.lineSeparator());
-          
-        HdesStoreFileImpl.log.debug(log.toString());
+        log.debug("""
+          Configuring Thena:
+            repoName: {}
+            headName: {}
+            objectMapper: {}
+            gidProvider: {}
+            authorProvider: {}
+            db: {}
+          """,
+          this.repoName,
+          headName,
+          this.objectMapper == null ? "configuring" : "provided",
+          this.gidProvider == null ? "configuring" : "provided",
+          this.authorProvider == null ? "configuring" : "provided",
+          this.db);
       }
       
       final DocDB thena;
