@@ -27,6 +27,7 @@ const TenantProvider: React.FC<{ children: React.ReactNode, init: { backend: Bac
     return {
       state, setState: setter, loading, palette: Palette, reload: async () => {
         return backend.tenant.getTenantEntries(state.activeTenant ?? '').then(data => {
+          console.log('reload active tenant', state.activeTenant);
           return setState(prev => prev.withTenantEntries(data.records))
         });
       }

@@ -1,9 +1,11 @@
 import React from 'react';
-import { Dialog, DialogContent, DialogTitle, Box, DialogActions, IconButton, Typography, useTheme, alpha, Grid } from '@mui/material';
+import { Dialog, DialogContent, DialogTitle, Box, DialogActions, IconButton, Typography, useTheme, alpha, Grid, CircularProgress } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { FormattedMessage } from 'react-intl';
 import { TenantEntryDescriptor } from 'descriptor-tenant';
 import Burger from 'components-burger';
+import Context from 'context';
+import { DialobSession } from 'client';
 
 
 const DialobDeleteDialog: React.FC<{
@@ -12,11 +14,37 @@ const DialobDeleteDialog: React.FC<{
   entry: TenantEntryDescriptor
 }> = (props) => {
   const theme = useTheme();
+  const backend = Context.useBackend();
+  const tenants = Context.useTenants();
+  const [sessions, setSessions] = React.useState<DialobSession[]>();
+  const [loading, setLoading] = React.useState(false);
+  const [deleting, setDeleting] = React.useState(false);
+
+  React.useEffect(() => {
+    if (props.entry?.formName) {
+      setLoading(true);
+      backend.tenant.getDialobForm(props.entry.formName).then((form) => {
+        backend.tenant.getDialobSessions({ formId: form._id, technicalName: props.entry.formName, tenantId: props.entry.tenantId }).then(sessions => {
+          setSessions(sessions);
+          setLoading(false);
+        })
+      });
+    }
+  }, [props.entry]);
 
   if (!props.open) {
     return null;
   }
 
+  const handleDelete = async () => {
+    setDeleting(true);
+    backend.tenant.deleteDialobForm(props.entry.formName, tenants.state.activeTenant).then((response) => {
+      tenants.reload().then(() => {
+        setDeleting(false);
+        props.onClose();
+      });
+    });
+  }
 
   return (
 
@@ -64,7 +92,7 @@ const DialobDeleteDialog: React.FC<{
             <Typography fontWeight='bold'><FormattedMessage id='dialob.form.sessions' /></Typography>
           </Grid>
           <Grid item md={9} lg={9} xl={9}>
-            <Typography>SESSIONS</Typography>
+            {loading ? <CircularProgress size='10pt' /> : <Typography>{sessions?.length}</Typography>}
           </Grid>
 
 
@@ -72,7 +100,7 @@ const DialobDeleteDialog: React.FC<{
       </DialogContent>
       <DialogActions>
         <Burger.SecondaryButton label='buttons.cancel' onClick={props.onClose} />
-        <Burger.PrimaryButton label='buttons.delete' onClick={props.onClose} />
+        {deleting ? <CircularProgress size='16pt' /> : <Burger.PrimaryButton label='buttons.delete' onClick={handleDelete} />}
       </DialogActions>
     </Dialog>
   );

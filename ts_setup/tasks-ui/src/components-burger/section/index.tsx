@@ -3,7 +3,7 @@ import { Box, CircularProgress } from '@mui/material';
 
 
 
-const Section: React.FC<{ children: React.ReactNode, width?: string, loadingValue?: any }> = (props) => {
+const Section: React.FC<{ children: React.ReactNode, width?: string, loadingValue?: any, required?: boolean }> = (props) => {
   const [label, content] = React.Children.toArray(props.children);
   const loadingEnabled: boolean = Object.keys(props).includes("loadingValue");
   const showLoader: boolean = props.loadingValue ? false : true;
@@ -13,8 +13,9 @@ const Section: React.FC<{ children: React.ReactNode, width?: string, loadingValu
       <Box sx={{ zIndex: 10, marginBottom: "-11px", position: 'relative' }}>
         <Box display='flex' flexDirection='row'>
           <Box sx={{ pl: 2 }} />
-          <Box sx={{ backgroundColor: 'primary.contrastText', px: 0.5, width: props.width }}>
+          <Box sx={{ backgroundColor: 'primary.contrastText', px: 0.5, width: props.width, display: 'flex' }}>
             {label}
+            {props.required && <span>&nbsp;*</span>}
           </Box>
           <Box flexGrow={1} />
         </Box>
