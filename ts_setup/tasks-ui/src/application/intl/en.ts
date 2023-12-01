@@ -83,8 +83,8 @@ const en = {
   'dialob.form.copy.dialog.title': 'Create form copy',
   'dialob.form.copy.dialog.prefix': 'Copy of ',
 
-  'dialob.form.name.required': 'Form name is required',
-  'dialob.form.name.invalid': 'Form name is invalid',
+  'dialob.form.technicalName.required': 'Form name is required',
+  'dialob.form.technicalName.invalid': 'Form name is invalid',
 
   'dialob.form.technicalNameEdit.dialog.title': 'Edit technical name',
   'dialob.form.sessions.dialog.title': 'Questionnaire sessions',
