@@ -25,10 +25,10 @@ const TaskStartDate: React.FC<{
   }
 
   function handleStartDateChange(datePicker: any) {
-    const newDate: Date = datePicker;
+    const newDate: Date | undefined = datePicker;
     const command: Client.ChangeTaskStartDate = {
       commandType: 'ChangeTaskStartDate',
-      startDate: newDate.toISOString(),
+      startDate: newDate?.toISOString(),
       taskId: task.id
     };
     onChange(command).then(() => handlePickerDialog());
@@ -36,12 +36,18 @@ const TaskStartDate: React.FC<{
 
   return (
     <>
-      <Button onClick={handlePickerDialog} startIcon={<DateRangeOutlinedIcon sx={{ color: 'uiElements.main', fontSize: 'small' }} />}>
+      <Button onClick={handlePickerDialog} sx={{ justifyContent: 'left' }} startIcon={<DateRangeOutlinedIcon sx={{ color: 'uiElements.main', fontSize: 'small' }} />}>
         <Typography sx={{ color: 'text.primary' }}><Burger.DateTimeFormatter type='date' value={state.task.startDate} /></Typography>
       </Button>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <Dialog open={open} onClose={handlePickerDialog}>
-          <StaticDatePicker onAccept={handleStartDateChange} views={['month', 'day']} defaultValue={state.task.startDate} />
+          <StaticDatePicker onAccept={handleStartDateChange} views={['month', 'day']} defaultValue={state.task.startDate}
+            slotProps={{
+              actionBar: {
+                actions: ["clear", "cancel", "accept"]
+              }
+            }}
+          />
         </Dialog>
       </LocalizationProvider>
     </>

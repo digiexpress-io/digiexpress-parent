@@ -37,7 +37,7 @@ const TaskDueDate: React.FC<{
 
   return (
     <>
-      <Button onClick={handlePickerDialog} disabled={disabled} startIcon={<DateRangeOutlinedIcon sx={{
+      <Button onClick={handlePickerDialog} sx={{ justifyContent: 'left' }} disabled={disabled} startIcon={<DateRangeOutlinedIcon sx={{
         cursor: 'pointer',
         color: 'uiElements.main',
         fontSize: 'small'

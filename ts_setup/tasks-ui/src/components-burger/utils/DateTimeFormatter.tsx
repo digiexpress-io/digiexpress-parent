@@ -1,5 +1,4 @@
 import React from 'react';
-import { useIntl } from 'react-intl';
 
 
 function getFormattedDate(value: Date, locale: string) {
@@ -24,7 +23,6 @@ const TimestampFormatter: React.FC<{
   type: 'time' | 'date' | 'dateTime',
 }> = ({ value, type }) => {
 
-  const intl = useIntl();
   //const locale = intl.locale;
   const locale = 'en-GB';
 
