@@ -1,9 +1,8 @@
 import React from 'react';
-import { Dialog, DialogContent, DialogTitle, Stack, Box, DialogActions, IconButton, Typography, useTheme, alpha, Grid, CircularProgress } from '@mui/material';
+import { Dialog, DialogContent, DialogTitle, Box, DialogActions, IconButton, Typography, useTheme, alpha, CircularProgress } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { FormattedMessage } from 'react-intl';
 
-import Burger from 'components-burger';
 import { TenantEntryDescriptor } from 'descriptor-tenant';
 import { DialobForm, DialobSession } from 'client'
 import { SessionList } from './SessionList';
@@ -43,40 +42,9 @@ const DialobSessionsDialog: React.FC<{
       </DialogTitle>
 
       <DialogContent>
-        <Stack overflow='auto' spacing={1} direction='column'>
-          <Grid container spacing={1} direction='row'>
-            <Grid item md={3} lg={3} xl={3}>
-              <Typography fontWeight='bold'><FormattedMessage id='dialob.form.title' /></Typography>
-            </Grid>
-            <Grid item md={9} lg={9} xl={9}>
-              <Typography>{props.entry.formTitle}</Typography>
-            </Grid>
-
-            <Grid item md={3} lg={3} xl={3}>
-              <Typography fontWeight='bold'><FormattedMessage id='dialob.form.technicalName' /></Typography>
-            </Grid>
-            <Grid item md={9} lg={9} xl={9}>
-              <Typography>{props.entry.formName}</Typography>
-            </Grid>
-
-            <Grid item md={3} lg={3} xl={3}>
-              <Typography fontWeight='bold'><FormattedMessage id='dialob.form.lastSaved' /></Typography>
-            </Grid>
-            <Grid item md={9} lg={9} xl={9}>
-              <Typography><Burger.DateTimeFormatter type='dateTime' value={props.entry.lastSaved} /></Typography>
-            </Grid>
-
-            <Grid item md={12} lg={12} xl={12}>
-              <Typography fontWeight='bold'><FormattedMessage id='dialob.form.sessions' /></Typography>
-            </Grid>
-
-            <Grid item md={12} lg={12} xl={12}>
-              <SessionList entry={entry} form={form} sessions={sessions} />
-            </Grid>
-          </Grid>
-        </Stack>
-
+        <SessionList entry={entry} form={form} sessions={sessions} />
       </DialogContent>
+
       <DialogActions>
       </DialogActions>
     </Dialog>

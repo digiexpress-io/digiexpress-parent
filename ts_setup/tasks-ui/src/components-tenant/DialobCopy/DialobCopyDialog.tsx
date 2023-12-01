@@ -1,39 +1,26 @@
 import React from 'react';
-import { Dialog, DialogContent, DialogTitle, Stack, Box, DialogActions, IconButton, Typography, useTheme, alpha, Alert } from '@mui/material';
+import { Dialog, DialogContent, DialogTitle, Box, DialogActions, IconButton, Typography, useTheme, alpha, Stack, Alert, CircularProgress } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { FormattedMessage, useIntl } from 'react-intl';
-
-import DialobCreateActions from './DialobCreateActions';
-import Fields from '../DialobFields/DialobTextFields';
-import Burger from 'components-burger';
-import { CreateFormRequest } from 'client/tenant-types';
-import Context from 'context';
 import { TenantEntryDescriptor } from 'descriptor-tenant';
+import Burger from 'components-burger';
+import Fields from 'components-tenant/DialobFields/DialobTextFields';
+import Context from 'context';
 
-const INIT_FORM: CreateFormRequest = {
-  name: "",
-  metadata: {
-    label: "",
-    languages: ['en'],
-    labels: []
-  },
-  data: {
-    questionnaire: {
-      id: 'questionnaire',
-      type: 'questionnaire',
-    }
-  },
-  variables: []
-};
 
-const DialobCreateDialog: React.FC<{ open: boolean, onClose: () => void, setActiveDialob: (entry?: TenantEntryDescriptor) => void }> = (props) => {
+const DialobCopyDialog: React.FC<{
+  open: boolean,
+  onClose: () => void,
+  setActiveDialob: (task?: TenantEntryDescriptor) => void,
+  entry: TenantEntryDescriptor
+}> = (props) => {
   const theme = useTheme();
   const intl = useIntl();
   const backend = Context.useBackend();
   const tenants = Context.useTenants();
   const [formName, setFormName] = React.useState<string>('');
-  const initialFormTitle = intl.formatMessage({ id: 'dialob.form.create.dialog.initial.title' });
-  const [formTitle, setFormTitle] = React.useState<string>(initialFormTitle);
+  const prefix = intl.formatMessage({ id: 'dialob.form.copy.dialog.prefix' });
+  const [formTitle, setFormTitle] = React.useState<string>(prefix + props.entry.formTitle);
   const [errorMessage, setErrorMessage] = React.useState<string>('');
   const [loading, setLoading] = React.useState(false);
 
@@ -45,21 +32,14 @@ const DialobCreateDialog: React.FC<{ open: boolean, onClose: () => void, setActi
     return null;
   }
 
-  const handleCreate = async (): Promise<void> => {
-    const request: CreateFormRequest = {
-      ...INIT_FORM,
-      name: formName,
-      metadata: {
-        ...INIT_FORM.metadata,
-        label: formTitle
-      }
-    };
+  const handleCopy = async () => {
     setLoading(true);
-    await backend.tenant.createDialobForm(request, tenants.state.activeTenant).then((response) => {
+    await backend.tenant.copyDialobForm(props.entry.formName, formName, formTitle, tenants.state.activeTenant).then((response) => {
       if (response.status === 'OK') {
         tenants.reload().then(() => {
           setErrorMessage('');
           setLoading(false);
+          props.onClose();
           backend.tenant.getTenantEntries(tenants.state.activeTenant!).then(data => {
             const found = data.records.find(entry => entry.id === formName);
             if (found) {
@@ -90,7 +70,7 @@ const DialobCreateDialog: React.FC<{ open: boolean, onClose: () => void, setActi
         mb: 1,
       }}>
         <Box display='flex' alignItems='center'>
-          <Typography variant='h4' fontWeight='bolder'><FormattedMessage id='dialob.form.create.dialog.title' /></Typography>
+          <Typography variant='h4' fontWeight='bolder'><FormattedMessage id='dialob.form.copy.dialog.title' /></Typography>
           <Box flexGrow={1} />
           <IconButton onClick={props.onClose}>
             <CloseIcon />
@@ -122,11 +102,13 @@ const DialobCreateDialog: React.FC<{ open: boolean, onClose: () => void, setActi
           </Alert>}
         </Stack>
       </DialogContent>
+
       <DialogActions>
-        <DialobCreateActions onClose={props.onClose} onCreate={handleCreate} disabled={errorMessage.length > 0} loading={loading} />
+        <Burger.SecondaryButton label='buttons.cancel' onClick={props.onClose} />
+        {loading ? <CircularProgress size='16pt' /> : <Burger.PrimaryButton label='buttons.create' onClick={handleCopy} disabled={errorMessage.length > 0} />}
       </DialogActions>
     </Dialog>
   );
 }
 
-export default DialobCreateDialog;
+export default DialobCopyDialog;

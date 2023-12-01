@@ -11,6 +11,7 @@ const en = {
   'buttons.accept': 'Accept and close',
   'buttons.close': 'Close',
   'buttons.download': 'Download',
+  'buttons.open': 'Open',
 
   'customer.details.dialog.title': 'Customer details',
   'customer.details.view': 'Customer',
@@ -74,12 +75,25 @@ const en = {
   'dialob.form.preview': 'Preview',
   'dialob.form.create': 'Create new form',
 
+  'dialob.error.already.exists': 'Form with this name already exists!',
 
   'dialob.form.delete.dialog.title': 'Delete confirmation',
   'dialob.form.delete.dialog.desc': 'Are you sure you want to delete this dialog?',
 
+  'dialob.form.copy.dialog.title': 'Create form copy',
+  'dialob.form.copy.dialog.prefix': 'Copy of ',
+
+  'dialob.form.name.required': 'Form name is required',
+  'dialob.form.name.invalid': 'Form name is invalid',
+
   'dialob.form.technicalNameEdit.dialog.title': 'Edit technical name',
   'dialob.form.sessions.dialog.title': 'Questionnaire sessions',
+
+  'dialob.form.sessions.table.status': 'Status',
+  'dialob.form.sessions.table.created': 'Created',
+  'dialob.form.sessions.table.lastAnswered': 'Last answered',
+  'dialob.form.sessions.table.owner': 'Owner',
+  'dialob.form.sessions.table.sessionId': 'Session ID',
 
 
   'dialob.form.create.dialog.title': 'Create new form',
@@ -88,6 +102,7 @@ const en = {
   'dialob.form.create.dialog.button.cancel': 'Cancel',
   'dialob.form.create.dialog.button.createAndEdit': 'Create and edit',
   'dialob.form.create.dialog.button.createAndClose': 'Create and close',
+  'dialob.form.create.dialog.initial.title': 'New form',
 
   'tenant.select.button': 'Tenants',
   'tenant.select.menu.title': 'Select tenant',

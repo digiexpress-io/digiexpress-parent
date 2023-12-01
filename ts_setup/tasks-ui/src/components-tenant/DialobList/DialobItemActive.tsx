@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Stack, Typography, IconButton, Skeleton, useTheme, CircularProgress, Avatar, Chip, Grid } from '@mui/material';
 import EditOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
-import EditIcon from '@mui/icons-material/Edit';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import CopyAllIcon from '@mui/icons-material/CopyAll';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
@@ -13,23 +13,26 @@ import Burger from 'components-burger';
 import Context from 'context';
 import { DialobTag, DialobForm, DialobVariable, DialobSession } from 'client';
 import DialobDeleteDialog from '../DialobDelete';
-import DialobTechnicalNameEditDialog from '../DialobTechnicalNameEdit';
 import DialobSessionsDialog from '../DialobSessions';
-import {DialobEditor} from '../DialobEditor';
+import DialobCopyDialog from '../DialobCopy';
+import { DialobEditor } from '../DialobEditor';
 
+export interface DialobItemActiveProps {
+  entry: TenantEntryDescriptor | undefined;
+  setActiveDialob: (entry?: TenantEntryDescriptor) => void;
+}
 
 const StyledStack: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const theme = useTheme();
 
   return (<Box sx={{
-    height: '100%',
+    height: 'calc(100% - 164px)',
     position: 'fixed',
     overflowY: 'scroll',
     overflowX: 'hidden',
     boxShadow: 1,
     width: '23vw',
-    pt: theme.spacing(2),
-    px: theme.spacing(2),
+    p: theme.spacing(2),
     backgroundColor: theme.palette.background.paper
   }}>
     <Stack direction='column' spacing={1}>
@@ -160,12 +163,13 @@ const DialobFormVariables: React.FC<{ entry: TenantEntryDescriptor }> = ({ entry
   </Stack>)}</>);
 }
 
+const copyToClipboard = (text: string) => {
+  navigator.clipboard.writeText(text);
+}
 
-
-const DialobItemActive: React.FC<{ entry: TenantEntryDescriptor | undefined }> = ({ entry }) => {
-  const [dialobEditOpen, setDialobEditOpen] = React.useState(false);
+const DialobItemActive: React.FC<DialobItemActiveProps> = ({ entry, setActiveDialob }) => {
   const [dialobDeleteOpen, setDialobDeleteOpen] = React.useState(false);
-  const [technicalNameEdit, setTechnicalNameEdit] = React.useState(false);
+  const [dialobCopyOpen, setDialobCopyOpen] = React.useState(false);
   const [sessionsOpen, setSessionsOpen] = React.useState(false);
   const [editOpen, setEditOpen] = React.useState(false);
   const [sessions, setSessions] = React.useState<DialobSession[]>();
@@ -177,8 +181,8 @@ const DialobItemActive: React.FC<{ entry: TenantEntryDescriptor | undefined }> =
   function handleDelete() {
     setDialobDeleteOpen(prev => !prev);
   }
-  function handleTechnicalNameEdit() {
-    setTechnicalNameEdit(prev => !prev);
+  function handleCopy() {
+    setDialobCopyOpen(prev => !prev);
   }
   function handleSessionsDialog() {
     setSessionsOpen(prev => !prev);
@@ -204,7 +208,7 @@ const DialobItemActive: React.FC<{ entry: TenantEntryDescriptor | undefined }> =
 
     return (<>
       <DialobDeleteDialog open={dialobDeleteOpen} onClose={handleDelete} entry={entry} />
-      <DialobTechnicalNameEditDialog open={technicalNameEdit} onClose={handleTechnicalNameEdit} entry={entry} />
+      <DialobCopyDialog open={dialobCopyOpen} onClose={handleCopy} setActiveDialob={setActiveDialob} entry={entry} />
       {sessionsOpen && <DialobSessionsDialog onClose={handleSessionsDialog} entry={entry} form={form} sessions={sessions} />}
       {editOpen ? <DialobEditor onClose={handleEditToggle} entry={entry} form={form} /> : null}
       <StyledStack >
@@ -220,7 +224,7 @@ const DialobItemActive: React.FC<{ entry: TenantEntryDescriptor | undefined }> =
             </Box>
 
             <Box display='flex' flexDirection='column' alignItems='center'>
-              <IconButton onClick={() => { }}><CopyAllIcon sx={{ color: 'secondary.light' }} /></IconButton>
+              <IconButton onClick={handleCopy}><CopyAllIcon sx={{ color: 'secondary.light' }} /></IconButton>
               <Typography><FormattedMessage id='dialob.form.copy' /></Typography>
             </Box>
 
@@ -261,7 +265,7 @@ const DialobItemActive: React.FC<{ entry: TenantEntryDescriptor | undefined }> =
               <Box display='flex' alignItems='center'>
                 <Typography>{entry.formName}</Typography>
                 <Box flexGrow={1} />
-                <IconButton size='small' onClick={handleTechnicalNameEdit}><EditIcon sx={{ color: 'uiElements.main', fontSize: 'medium' }} /></IconButton>
+                <IconButton size='small' onClick={() => copyToClipboard(entry.formName)}><ContentCopyIcon sx={{ color: 'uiElements.main', fontSize: 'medium' }} /></IconButton>
               </Box>
             </Grid>
 
@@ -339,7 +343,7 @@ const DialobItemActive: React.FC<{ entry: TenantEntryDescriptor | undefined }> =
   </StyledStack>);
 }
 
-const DialobItemActiveWithRefresh: React.FC<{ entry: TenantEntryDescriptor | undefined }> = ({ entry }) => {
+const DialobItemActiveWithRefresh: React.FC<DialobItemActiveProps> = ({ entry, setActiveDialob }) => {
   const [dismount, setDismount] = React.useState(false);
 
   React.useEffect(() => {
@@ -356,7 +360,7 @@ const DialobItemActiveWithRefresh: React.FC<{ entry: TenantEntryDescriptor | und
     return null;
   }
 
-  return (<DialobItemActive entry={entry} />)
+  return (<DialobItemActive entry={entry} setActiveDialob={setActiveDialob} />)
 }
 
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Stack, Grid, Typography, TablePagination, Alert, Box, AppBar, Toolbar } from '@mui/material';
+import { Stack, Grid, Typography, TablePagination, Alert, Box, AppBar, Toolbar, Divider } from '@mui/material';
 
 import { FormattedMessage } from 'react-intl';
 import Pagination from 'table';
@@ -9,29 +9,54 @@ import { TenantEntryDescriptor } from 'descriptor-tenant';
 
 import { SessionItem } from './SessionItem';
 import { DialobForm, DialobSession } from 'client';
+import Burger from 'components-burger';
 
-
-
-
-const SessionHeaders: React.FC<{}> = () => {
+const SessionHeaders: React.FC<{ entry: TenantEntryDescriptor }> = ({ entry }) => {
   return (
     <AppBar color='inherit' position='sticky' sx={{ boxShadow: 1 }}>
-      <Toolbar sx={{ backgroundColor: 'table.main', '&.MuiToolbar-root': { p: 1, m: 0 } }}>
-        <Stack direction='row' spacing={1} alignItems='center'>
+      <Toolbar sx={{ backgroundColor: 'table.main', '&.MuiToolbar-root': { p: 0, m: 0 } }}>
+        <Stack direction='row' spacing={1} alignItems='center' width={1}>
           <Grid container>
-            <Grid item md={8} lg={8} xl={8} sx={{ px: 2, py: 1 }}>
+
+            <Grid item md={3} lg={3} xl={3} sx={{ pl: 1, pt: 1 }}>
+              <Typography fontWeight='bold'><FormattedMessage id='dialob.form.title' /></Typography>
+            </Grid>
+            <Grid item md={9} lg={9} xl={9} sx={{ pl: 1, pt: 1 }}>
+              <Typography>{entry.formTitle}</Typography>
+            </Grid>
+
+            <Grid item md={3} lg={3} xl={3} sx={{ pl: 1 }}>
+              <Typography fontWeight='bold'><FormattedMessage id='dialob.form.technicalName' /></Typography>
+            </Grid>
+            <Grid item md={9} lg={9} xl={9} sx={{ pl: 1 }}>
+              <Typography>{entry.formName}</Typography>
+            </Grid>
+
+            <Grid item md={3} lg={3} xl={3} sx={{ pl: 1 }}>
+              <Typography fontWeight='bold'><FormattedMessage id='dialob.form.lastSaved' /></Typography>
+            </Grid>
+            <Grid item md={9} lg={9} xl={9} sx={{ pl: 1 }}>
+              <Typography><Burger.DateTimeFormatter type='dateTime' value={entry.lastSaved} /></Typography>
+            </Grid>
+
+            <Grid item md={12} lg={12} xl={12} sx={{ py: 1 }}>
+              <Divider />
+            </Grid>
+
+            <Grid item md={12} lg={12} xl={12} sx={{ pl: 1 }}>
+              <Typography fontWeight='bold'><FormattedMessage id='dialob.form.sessions' /></Typography>
+            </Grid>
+            <Grid item md={12} lg={12} xl={12} sx={{ p: 1 }}>
               <Box display='flex' >
-                <Box width='38%'><Typography fontWeight='bold'><FormattedMessage id='dialob.form.title' /></Typography></Box>
-                <Box width='38%'><Typography fontWeight='bold'><FormattedMessage id='dialob.form.technicalName' /></Typography></Box>
-                <Box width='12%' display='flex' alignItems='center'>
-                  <Typography fontWeight='bold'><FormattedMessage id='dialob.form.created' /></Typography>
-                </Box>
-                <Box width='12%' display='flex' alignItems='center'>
-                  <Typography fontWeight='bold'><FormattedMessage id='dialob.form.lastSaved' /></Typography>
-                </Box>
+                <Box width='15%'><Typography fontWeight='bold'><FormattedMessage id='dialob.form.sessions.table.status' /></Typography></Box>
+                <Box width='15%'><Typography fontWeight='bold'><FormattedMessage id='dialob.form.sessions.table.created' /></Typography></Box>
+                <Box width='15%'><Typography fontWeight='bold'><FormattedMessage id='dialob.form.sessions.table.lastAnswered' /></Typography></Box>
+                <Box width='25%'><Typography fontWeight='bold'><FormattedMessage id='dialob.form.sessions.table.owner' /></Typography></Box>
+                <Box width='25%'><Typography fontWeight='bold'><FormattedMessage id='dialob.form.sessions.table.sessionId' /></Typography></Box>
+                <Box width='5%' />
               </Box>
             </Grid>
-            <Grid item md={4} lg={4} xl={4} sx={{ px: 2, py: 1 }} />
+
           </Grid>
         </Stack>
       </Toolbar>
@@ -66,9 +91,9 @@ const SessionList: React.FC<{
   }
 
   return (<Grid container>
-    <SessionHeaders />
+    <SessionHeaders entry={entry} />
 
-    <Grid item md={8} lg={8}>
+    <Grid item md={12} lg={12} width='100%'>
       <Stack sx={{ backgroundColor: 'mainContent.main' }}>
         {table.entries.map((session, index) => (
           <StyledStackItem key={session.id} index={index} onClick={() => { }}>
@@ -93,6 +118,3 @@ const SessionList: React.FC<{
 }
 
 export { SessionList };
-
-
-

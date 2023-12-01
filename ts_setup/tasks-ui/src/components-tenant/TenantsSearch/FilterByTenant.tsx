@@ -1,22 +1,17 @@
 import * as React from 'react';
-import { Menu, MenuItem, MenuList, ListItemIcon, ListItemText, Typography } from '@mui/material';
+import { Menu, MenuItem, MenuList, ListItemIcon, ListItemText, Typography, CircularProgress, Box } from '@mui/material';
 import Check from '@mui/icons-material/Check';
 import { FormattedMessage } from 'react-intl';
 import Client from 'client';
 import { } from 'descriptor-tenant';
 import { NavigationButtonSearch } from '../NavigationSticky';
+import Context from 'context';
+import Burger from 'components-burger';
 
-
-const tenants: Client.Tenant[] = [
-  { id: '1', name: 'tenant1' },
-  { id: '2', name: 'tenant2' },
-  { id: '3', name: 'tenant3' }
-];
-
-const FilterByTenant: React.FC<{
-  onChange: (value: Client.Tenant[]) => void
-}> = ({ onChange }) => {
-
+const FilterByTenant: React.FC = () => {
+  const tenants = Context.useTenants();
+  const tenantsList: Client.Tenant[] = tenants.state.tenants.map(tenant => tenant.source);
+  const [loading, setLoading] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -25,12 +20,22 @@ const FilterByTenant: React.FC<{
   const handleClose = () => {
     setAnchorEl(null);
   };
-  //const filterByStatus = value.find(filter => filter.type === 'FilterByStatus') as FilterByStatus | undefined;
+  const handleSave = async () => {
+    setLoading(true);
+    tenants.reload().then(() => {
+      setLoading(false)
+      handleClose();
+    });
+  }
+
+  if (tenantsList.length < 2) {
+    return <></>;
+  }
 
   return (<>
-    <NavigationButtonSearch onClick={handleClick} id='tenant.select.button' values={{ count: tenants.length }} />
+    <NavigationButtonSearch onClick={handleClick} id='tenant.select.button' values={{ count: tenantsList.length }} />
 
-    <Menu sx={{ width: 320 }}
+    <Menu
       anchorEl={anchorEl}
       open={open}
       onClose={handleClose}
@@ -44,27 +49,26 @@ const FilterByTenant: React.FC<{
       }}
     >
       <MenuList dense>
-        <MenuItem>
+        <MenuItem disabled sx={{ '&.Mui-disabled': { opacity: '100%' } }}>
           <ListItemText><Typography variant='body2' fontWeight='bolder'><FormattedMessage id='tenant.select.menu.title' /></Typography></ListItemText>
         </MenuItem>
-        {tenants.map(tenant => {
-          // const found = value.find(filter => filter.type === 'FilterByStatus');
-          const selected = '';
+        {tenantsList.map(tenant => {
+          const selected = tenants.state.activeTenant === tenant.id;
 
           if (selected) {
-            return (<MenuItem key={tenant.id} onClick={() => {
-              handleClose();
-              onChange([tenant]);
+            return (<MenuItem key={tenant.id} onClick={async () => {
+              tenants.setState(prev => prev.withActiveTenant());
             }}><ListItemIcon><Check /></ListItemIcon>{tenant.name}</MenuItem>);
           }
-          return <MenuItem key={tenant.id} onClick={() => {
-            handleClose();
-            onChange([tenant]);
+          return <MenuItem key={tenant.id} onClick={async () => {
+            tenants.setState(prev => prev.withActiveTenant(tenant.id));
           }}>
             <ListItemText inset>{tenant.name}</ListItemText>
           </MenuItem>;
         })}
-
+        <Box sx={{ m: 1, display: 'flex', justifyContent: 'flex-end' }}>
+          {loading ? <CircularProgress size='14pt' sx={{ m: 1 }} /> : <Burger.SecondaryButton onClick={handleSave} label='buttons.apply' />}
+        </Box>
       </MenuList>
     </Menu>
   </>

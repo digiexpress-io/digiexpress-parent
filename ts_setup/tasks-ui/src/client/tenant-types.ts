@@ -4,6 +4,7 @@ export type FormTechnicalName = string;
 export type FormTitle = string;
 export type SessionId = string;
 export type FormId = string;
+export type DialobErrorTypes = "CREATE_FORM_ERROR" | "DELETE_FORM_ERROR";
 
 export interface Tenant {
   id: TenantId;
@@ -61,6 +62,31 @@ export interface DialobForm {
   variables?: DialobVariable[];
 }
 
+export interface CreateFormRequest {
+  name: FormTechnicalName;
+  metadata: {
+    label: string;
+    languages: string[];
+    labels?: string[];
+  },
+  data: Record<string, {
+    id: string,
+    type: string,
+    label?: Record<string, string>, // locale-locale label
+  }>,
+  variables?: DialobVariable[];
+}
+
+export interface DialobFormResponse {
+  status: string;
+  error?: DialobError;
+  form?: DialobForm;
+}
+
+export interface DialobError {
+  type: DialobErrorTypes;
+  message: string;
+}
 
 export interface TenantEntryPagination {
   page: number; //starts from 1
@@ -73,6 +99,9 @@ export interface TenantStore {
   getTenants(): Promise<Tenant[]>
   getDialobTags(dialobFormId: string): Promise<DialobTag[]>;
   getDialobForm(dialobFormId: string): Promise<DialobForm>;
-  getDialobSessions(props: { formId: FormId, technicalName: FormTechnicalName, tenantId: TenantId }): Promise<DialobSession[]>
+  getDialobSessions(props: { formId: FormId, technicalName: FormTechnicalName, tenantId: TenantId }): Promise<DialobSession[]>;
+  createDialobForm(formData: CreateFormRequest, tenantId?: string): Promise<DialobFormResponse>;
+  copyDialobForm(formName: string, newFormName: string, newFormTitle: string, tenantId?: string): Promise<DialobFormResponse>;
+  deleteDialobForm(formName: string, tenantId?: string): Promise<void>;
 }
 
