@@ -20,6 +20,7 @@ import io.dialob.client.spi.event.QuestionnaireEventPublisher;
 import io.dialob.client.spi.executor.QuestionnaireExecutorBuilderImpl;
 import io.dialob.client.spi.function.AsyncFunctionInvoker;
 import io.dialob.client.spi.program.ProgramBuilderImpl;
+import io.dialob.client.spi.store.DialobMemoryStore;
 import io.dialob.client.spi.support.DialobAssert;
 import io.dialob.compiler.DialobProgramFromFormCompiler;
 import io.dialob.compiler.DialobSessionUpdateHook;
@@ -124,5 +125,12 @@ public class DialobClientImpl implements DialobClient {
 
       return new DialobClientImpl(config);
     }
+  }
+
+  @Override
+  public DialobClient withRepo(String repoName, String headName) {
+    return new DialobClientImpl(ImmutableDialobClientConfig.builder().from(config)
+        .store(config.getStore().withRepo(repoName, headName))
+        .build());
   }
 }

@@ -40,7 +40,7 @@ public interface StencilStore {
   Uni<List<Entity<?>>> batch(BatchCommand batch);
   StencilConfig getConfig();
   
-  StencilStore withProjectId(String projectId);
+  StencilStore withRepo(String repoId, String headName);
   
   @Value.Immutable
   @SuppressWarnings("rawtypes")

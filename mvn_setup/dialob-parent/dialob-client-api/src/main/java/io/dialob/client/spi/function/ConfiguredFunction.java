@@ -15,13 +15,14 @@
  */
 package io.dialob.client.spi.function;
 
-import io.dialob.rule.parser.api.ValueType;
-import org.apache.commons.lang3.StringUtils;
-import org.immutables.value.Value;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
+
+import org.apache.commons.lang3.StringUtils;
+import org.immutables.value.Value;
+
+import io.dialob.rule.parser.api.ValueType;
 
 @Value.Immutable
 interface ConfiguredFunction {

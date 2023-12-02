@@ -29,6 +29,6 @@ public interface Document extends Serializable {
   String getId();
   @Nullable String getVersion();
   
-  enum DocumentType { SYS_CONFIG_ACTIVE, SYS_CONFIG_RELEASE }
+  enum DocumentType { SYS_CONFIG, SYS_CONFIG_RELEASE, SYS_CONFIG_INSTANCE, SYS_CONFIG_LIVE_VERSION, SYS_CONFIG_DEPLOYMENT }
   
 }

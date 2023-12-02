@@ -7,7 +7,10 @@ import java.util.Optional;
 
 import io.resys.sysconfig.client.api.model.SysConfig;
 import io.resys.sysconfig.client.api.model.SysConfigCommand.CreateSysConfig;
+import io.resys.sysconfig.client.api.model.SysConfigCommand.CreateSysConfigRelease;
 import io.resys.sysconfig.client.api.model.SysConfigCommand.SysConfigUpdateCommand;
+import io.resys.sysconfig.client.api.model.SysConfigDeployment;
+import io.resys.sysconfig.client.api.model.SysConfigDeploymentCommand.CreateSysConfigDeployment;
 import io.resys.sysconfig.client.api.model.SysConfigRelease;
 import io.resys.thena.docdb.api.models.Repo;
 import io.smallrye.mutiny.Uni;
@@ -16,18 +19,31 @@ public interface SysConfigClient {
 
   RepositoryQuery repoQuery();
   Uni<Repo> getRepo();
+  SysConfigClient withRepoId(String repoId);
   
-  CreateCustomerAction createCustomer();
-  UpdateCustomerAction updateCustomer();
+  CreateSysConfigAction createConfig();
+  UpdateSysConfigAction updateConfig();
+  CreateSysConfigReleaseAction createRelease();
+  
+  CreateSysConfigDeploymentAction createDeployment();
+  
+  
   SysConfigReleaseQuery releaseQuery();
-  SysConfigQuery activeQuery();
+  SysConfigQuery configQuery();
   
+  interface CreateSysConfigDeploymentAction {
+    Uni<SysConfigDeployment> createOne(CreateSysConfigDeployment command);
+  }
+  
+  interface CreateSysConfigReleaseAction {
+    Uni<SysConfigRelease> createOne(CreateSysConfigRelease command);    
+  }
 
-  interface CreateCustomerAction {
+  interface CreateSysConfigAction {
     Uni<SysConfig> createOne(CreateSysConfig command);
   }
 
-  interface UpdateCustomerAction {
+  interface UpdateSysConfigAction {
     Uni<SysConfig> updateOne(SysConfigUpdateCommand command);
     Uni<SysConfig> updateOne(List<SysConfigUpdateCommand> commands);
   }
@@ -37,7 +53,7 @@ public interface SysConfigClient {
     Uni<List<SysConfig>> findByIds(Collection<String> ids);
     Uni<SysConfig> get(String id);
     Uni<List<SysConfig>> deleteAll(String userId, Instant targetDate);
-    Uni<List<SysConfig>> deleteOne(String id, String userId, Instant targetDate);    
+    //Uni<List<SysConfig>> deleteOne(String id, String userId, Instant targetDate);    
   }
 
   interface SysConfigReleaseQuery {

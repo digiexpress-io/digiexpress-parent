@@ -41,7 +41,8 @@ public interface StencilClient {
   StencilStore getStore();
   MarkdownBuilder markdown();
   SitesBuilder sites();
-  StencilClient withProjectId(String projectId);
+  StencilClient withRepo(String repoId);
+  StencilClient withRepo(String repoId, String headName);
   
   interface SitesBuilder {
     SitesBuilder imagePath(String imagePath);

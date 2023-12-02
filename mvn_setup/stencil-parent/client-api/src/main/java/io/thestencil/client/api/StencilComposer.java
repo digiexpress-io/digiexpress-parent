@@ -52,7 +52,8 @@ public interface StencilComposer {
   SitesBuilder sites();
   VersionBuilder version();
   
-  StencilComposer withProjectId(String projectId);
+  StencilComposer withRepo(String repoId);
+  StencilComposer withRepo(String repoId, String headName);
   
 
   @Value.Immutable

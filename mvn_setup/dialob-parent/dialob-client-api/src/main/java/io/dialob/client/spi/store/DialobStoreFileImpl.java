@@ -1,4 +1,4 @@
-package io.dialob.client.spi;
+package io.dialob.client.spi.store;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
@@ -6,11 +6,9 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.dialob.client.api.DialobStore;
 import io.dialob.client.api.ImmutableStoreEntity;
-import io.dialob.client.spi.store.BlobDeserializer;
-import io.dialob.client.spi.store.DialobStoreConfig;
+import io.dialob.client.spi.DialobStoreTemplate;
 import io.dialob.client.spi.store.DialobStoreConfig.AuthorProvider;
 import io.dialob.client.spi.store.DialobStoreConfig.GidProvider;
-import io.dialob.client.spi.store.ImmutableDialobStoreConfig;
 import io.dialob.client.spi.support.DialobAssert;
 import io.dialob.client.spi.support.OidUtils;
 import io.resys.thena.docdb.api.DocDB;

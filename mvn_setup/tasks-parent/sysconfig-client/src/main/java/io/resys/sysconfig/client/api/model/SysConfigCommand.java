@@ -22,16 +22,20 @@ package io.resys.sysconfig.client.api.model;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.List;
 
 import javax.annotation.Nullable;
 
 import org.immutables.value.Value;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import io.resys.sysconfig.client.api.model.SysConfig.SysConfigService;
 
 
 
@@ -40,8 +44,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
     include = JsonTypeInfo.As.PROPERTY,
     property = "commandType")
 @JsonSubTypes({
-  @Type(value = ImmutableCreateSysConfig.class, name = "CreateSysConfig"),  
-
+  @Type(value = ImmutableCreateSysConfig.class, name = "CreateSysConfig"),
+  @Type(value = ImmutableCreateSysConfigRelease.class, name = "CreateSysConfigRelease"),
 })
 public interface SysConfigCommand extends Serializable {
   @Nullable String getUserId();
@@ -53,27 +57,38 @@ public interface SysConfigCommand extends Serializable {
   SysConfigCommand withTargetDate(Instant targetDate);
   
   enum SysConfigCommandType {
-    CreateSysConfig
+    CreateSysConfig, CreateSysConfigRelease
   }
 
   @Value.Immutable @JsonSerialize(as = ImmutableCreateSysConfig.class) @JsonDeserialize(as = ImmutableCreateSysConfig.class)
   interface CreateSysConfig extends SysConfigCommand {
+    String getName();
+    String getWrenchHead();
+    String getStencilHead(); 
+    List<SysConfigService> getServices();
     
-    @Value.Default
-    @Override default SysConfigCommandType getCommandType() { return SysConfigCommandType.CreateSysConfig; }
+    @JsonIgnore @Value.Default @Override 
+    default SysConfigCommandType getCommandType() { return SysConfigCommandType.CreateSysConfig; }
   }
-  
+
   @JsonTypeInfo(
       use = JsonTypeInfo.Id.NAME,
       include = JsonTypeInfo.As.PROPERTY,
       property = "commandType")
   @JsonSubTypes({
-    //@Type(value = .class, name = ),
+    @Type(value = ImmutableCreateSysConfigRelease.class, name = "CreateSysConfigRelease"),  
   })
   interface SysConfigUpdateCommand extends SysConfigCommand {
     String getId();
     SysConfigUpdateCommand withUserId(String userId);
     SysConfigUpdateCommand withTargetDate(Instant targetDate);
+  }
+
+  @Value.Immutable @JsonSerialize(as = ImmutableCreateSysConfigRelease.class) @JsonDeserialize(as = ImmutableCreateSysConfigRelease.class)
+  interface CreateSysConfigRelease extends SysConfigUpdateCommand {
+    String getReleaseName();
+    @JsonIgnore @Value.Default @Override 
+    default SysConfigCommandType getCommandType() { return SysConfigCommandType.CreateSysConfigRelease; }
   }
   
 }

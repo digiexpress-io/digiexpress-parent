@@ -329,4 +329,8 @@ public class HdesInMemoryStore implements HdesStore {
   public String getHeadName() {
     return "in-memory";
   }
+  @Override
+  public HdesStore withRepo(String repoName, String headName) {
+    return this;
+  }
 }

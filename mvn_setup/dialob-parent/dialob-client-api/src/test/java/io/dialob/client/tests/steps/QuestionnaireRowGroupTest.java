@@ -15,6 +15,7 @@
  */
 package io.dialob.client.tests.steps;
 
+import static io.dialob.api.proto.Action.Type.ADD_ROW;
 import static java.util.Arrays.asList;
 import static org.assertj.core.groups.Tuple.tuple;
 
@@ -32,7 +33,6 @@ import io.dialob.api.form.ImmutableFormMetadata;
 import io.dialob.api.form.ImmutableValidation;
 import io.dialob.api.proto.Action;
 import io.dialob.client.tests.steps.support.AbstractWebSocketTests;
-import static io.dialob.api.proto.Action.Type.ADD_ROW;
 
 public class QuestionnaireRowGroupTest extends AbstractWebSocketTests {
 

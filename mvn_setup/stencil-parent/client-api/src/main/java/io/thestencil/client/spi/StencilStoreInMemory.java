@@ -193,7 +193,7 @@ public class StencilStoreInMemory implements StencilStore {
   }
 
   @Override
-  public StencilStore withProjectId(String projectId) {
+  public StencilStore withRepo(String repoId, String headName) {
     return this;
   }
 

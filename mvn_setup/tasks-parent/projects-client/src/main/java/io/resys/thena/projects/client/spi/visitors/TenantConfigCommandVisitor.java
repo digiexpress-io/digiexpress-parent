@@ -99,6 +99,10 @@ public class TenantConfigCommandVisitor {
           .repoId(nextRepoId())
           .repoType(TenantRepoConfigType.DIALOB)
           .build())
+      .addRepoConfigs(ImmutableTenantRepoConfig.builder()
+          .repoId(nextRepoId())
+          .repoType(TenantRepoConfigType.SYS_CONFIG)
+          .build())
       .addTransactions(
           ImmutableTenantConfigTransaction.builder()
           .id("1")

@@ -259,4 +259,11 @@ public class DocumentStoreImpl implements DocumentStore {
     }
   }
 
+  @Override
+  public DocumentStore withRepoId(String repoId) {
+    return new DocumentStoreImpl(ImmutableDocumentConfig.builder().from(config)
+        .repoId(repoId)
+        .build());
+  }
+
 }

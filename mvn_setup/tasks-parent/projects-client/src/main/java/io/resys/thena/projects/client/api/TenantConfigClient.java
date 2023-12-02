@@ -14,7 +14,7 @@ import io.smallrye.mutiny.Uni;
 
 public interface TenantConfigClient {
 
-  
+  TenantConfigClient withRepoId(String repoId);
   RepositoryQuery query();
   Uni<Repo> getRepo();
   

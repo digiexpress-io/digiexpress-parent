@@ -30,7 +30,6 @@ import jakarta.enterprise.context.Dependent;
     ImmutableTenantConfig.class,
     ImmutableCreateTenantConfig.class,
     ImmutableArchiveTenantConfig.class,
-    ImmutableTenantConfig.class,
 })
 public class BeanFactory {
 

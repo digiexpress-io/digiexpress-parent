@@ -250,4 +250,8 @@ public class HdesClientImpl implements HdesClient {
       }
     };
   }
+  @Override
+  public HdesClient withRepo(String repoName, String headName) {
+    return new HdesClientImpl(defs, store.withRepo(repoName, headName), ast, config);
+  }
 }

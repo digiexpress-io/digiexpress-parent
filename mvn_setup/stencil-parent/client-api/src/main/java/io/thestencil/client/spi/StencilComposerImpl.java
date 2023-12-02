@@ -64,7 +64,11 @@ public class StencilComposerImpl implements StencilComposer {
     return client.sites();
   }
   @Override
-  public StencilComposer withProjectId(String projectId) {
-    return new StencilComposerImpl(client.withProjectId(projectId));
+  public StencilComposer withRepo(String repoId, String headName) {
+    return new StencilComposerImpl(client.withRepo(repoId, headName));
+  }
+  @Override
+  public StencilComposer withRepo(String repoId) {
+    return new StencilComposerImpl(client.withRepo(repoId));
   }
 }

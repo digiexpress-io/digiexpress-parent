@@ -39,6 +39,7 @@ public interface DialobClient {
   DialobClientConfig getConfig();
   DialobStore store();
   RepoBuilder repo();
+  DialobClient withRepo(String repoName, String headName);
 
   interface QuestionnaireExecutorBuilder {
     QuestionnaireExecutor create(String id, String rev, Consumer<QuestionnaireInit> initWith) throws DocumentNotFoundException ;
@@ -75,7 +76,8 @@ public interface DialobClient {
   @Value.Immutable
   interface ExecutorBody {
     Actions getActions();
-    Questionnaire getQuestionnaire();
+    QuestionnaireSession getSession();
+    default Questionnaire getQuestionnaire() { return getSession().getQuestionnaire(); }
   }
   
   interface ProgramBuilder {

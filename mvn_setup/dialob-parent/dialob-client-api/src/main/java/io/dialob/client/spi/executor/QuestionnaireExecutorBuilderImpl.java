@@ -73,8 +73,6 @@ public class QuestionnaireExecutorBuilderImpl implements DialobClient.Questionna
     DialobAssert.notEmpty(questionnaire.getId(), () -> "questionnaire.id must be defined!");
     DialobAssert.notEmpty(questionnaire.getRev(), () -> "questionnaire.rev must be defined!");
     
-    
-    
     final var formAndProgram = envir.findByFormIdAndRev(questionnaire.getMetadata().getFormId(), questionnaire.getMetadata().getFormRev());
     final var dialobSession = this.createSession(questionnaire, formAndProgram);
     return new QuestionnaireExecutorImpl(questionnaire, formAndProgram, dialobSession, config, false);

@@ -16,6 +16,7 @@ import io.dialob.client.spi.form.FormActions;
 import io.dialob.client.spi.form.FormActionsUpdatesCallback;
 import io.dialob.client.spi.support.DialobAssert;
 import io.dialob.executor.model.DialobSession;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -50,6 +51,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
+@AllArgsConstructor
 public class QuestionnaireExecutorImpl implements DialobClient.QuestionnaireExecutor {
 
   private final Questionnaire questionnaire;
@@ -163,7 +165,7 @@ public class QuestionnaireExecutorImpl implements DialobClient.QuestionnaireExec
 
     if (state.isCompleted()) {
       return ImmutableExecutorBody.builder()
-          .questionnaire(state.getQuestionnaire())
+          .session(state)
           .actions(ImmutableActions.builder().rev(state.getRev()).build())
           .build();
     }
@@ -173,7 +175,7 @@ public class QuestionnaireExecutorImpl implements DialobClient.QuestionnaireExec
       final var formActions = new FormActions();
       state.buildFullForm(new FormActionsUpdatesCallback(formActions));
       return ImmutableExecutorBody.builder()
-          .questionnaire(state.getQuestionnaire())
+          .session(state)
           .actions(ImmutableActions.builder()
               .actions(formActions.getActions())
               .rev(state.getRevision())
@@ -190,7 +192,7 @@ public class QuestionnaireExecutorImpl implements DialobClient.QuestionnaireExec
 
 
     return ImmutableExecutorBody.builder()
-        .questionnaire(state.getQuestionnaire())
+        .session(state)
         .actions(response.getActions())
         .build();
   }

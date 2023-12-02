@@ -34,6 +34,11 @@ public class GitStore implements HdesStore {
   interface FileMarker {
     String getAbsolutePath();
   }
+
+  @Override
+  public HdesStore withRepo(String repoName, String headName) {
+    return this;
+  }
   
   @Value.Immutable
   interface BatchEntry {

@@ -66,9 +66,10 @@ public class ProjectsClientImpl implements TenantConfigClient {
         
         switch (type) {
         case CRM: { repo.repoType(RepoType.doc); break; }
-        case DIALOB: { repo.repoType(RepoType.doc); break; }
         case TENANT: { repo.repoType(RepoType.doc); break; }
+        case SYS_CONFIG: { repo.repoType(RepoType.doc); break; }
 
+        case DIALOB: { repo.repoType(RepoType.git); break; }
         case TASKS: { repo.repoType(RepoType.git); break; }
         case STENCIL: { repo.repoType(RepoType.git); break; }
         case WRENCH: { repo.repoType(RepoType.git); break; }
@@ -96,5 +97,11 @@ public class ProjectsClientImpl implements TenantConfigClient {
         
       }
     };
+  }
+
+
+  @Override
+  public TenantConfigClient withRepoId(String repoId) {
+    return new ProjectsClientImpl(ctx.withRepoId(repoId));
   }
 }

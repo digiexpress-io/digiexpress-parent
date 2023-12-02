@@ -48,6 +48,7 @@ public interface HdesStore {
   String getRepoName();
   String getHeadName();
   StoreRepoBuilder repo();
+  HdesStore withRepo(String repoName, String headName);
   
   interface StoreRepoBuilder {
     StoreRepoBuilder repoName(String repoName);

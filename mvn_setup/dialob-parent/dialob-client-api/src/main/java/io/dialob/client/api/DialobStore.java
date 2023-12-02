@@ -27,6 +27,8 @@ public interface DialobStore {
   String getHeadName();
   StoreRepoBuilder repo();
   
+  DialobStore withRepo(String repoName, String headName);
+  
   
   interface StoreRepoBuilder {
     StoreRepoBuilder repoName(String repoName);

@@ -66,6 +66,9 @@ public interface HdesClient {
   ClientRepoBuilder repo();
   HdesClientConfig config();
   
+  HdesClient withRepo(String repoName, String headName);
+  
+  
   interface ClientRepoBuilder {
     ClientRepoBuilder repoName(String repoName);
     ClientRepoBuilder headName(String headName);

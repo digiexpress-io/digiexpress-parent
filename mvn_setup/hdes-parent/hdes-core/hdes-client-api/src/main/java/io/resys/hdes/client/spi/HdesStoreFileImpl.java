@@ -53,6 +53,10 @@ public class HdesStoreFileImpl extends ThenaStoreTemplate implements HdesStore {
   }
 
   @Override
+  public HdesStore withRepo(String repoName, String headName) {
+    return new HdesStoreFileImpl(ImmutableThenaConfig.builder().from(config).repoName(repoName).headName(headName).build());
+  }
+  @Override
   protected HdesStoreFileImpl createWithNewConfig(ThenaConfig config) {
     return new HdesStoreFileImpl(config);
   }
@@ -171,5 +175,4 @@ public class HdesStoreFileImpl extends ThenaStoreTemplate implements HdesStore {
       return new HdesStoreFileImpl(config);
     }
   }
-  
 }

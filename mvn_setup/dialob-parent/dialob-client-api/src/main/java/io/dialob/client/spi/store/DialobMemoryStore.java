@@ -1,4 +1,4 @@
-package io.dialob.client.spi;
+package io.dialob.client.spi.store;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,7 +7,6 @@ import io.dialob.client.api.DialobStore;
 import io.dialob.client.api.ImmutableStoreEntity;
 import io.dialob.client.api.ImmutableStoreState;
 import io.dialob.client.spi.composer.ReleaseDumpToStoreEntityVisitor;
-import io.dialob.client.spi.store.StoreEntityLocation;
 import io.dialob.client.spi.support.DialobAssert;
 import io.smallrye.mutiny.Uni;
 import lombok.extern.slf4j.Slf4j;
@@ -180,5 +179,10 @@ public class DialobMemoryStore implements DialobStore {
   @Override
   public String getHeadName() {
     return "in-memory";
+  }
+
+  @Override
+  public DialobStore withRepo(String repoName, String headName) {
+    return this;
   }
 }

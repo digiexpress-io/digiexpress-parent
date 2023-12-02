@@ -32,7 +32,10 @@ public class DialobStoreTemplate extends PersistenceCommands implements DialobSt
   private static final Comparator<StoreCommand> COMP = (a, b) -> {
     return Sha2.blob(a.toString()).compareTo(Sha2.blob(b.toString()));
   };
-  
+  @Override
+  public DialobStoreTemplate withRepo(String repoName, String headName) {
+    return new DialobStoreTemplate(ImmutableDialobStoreConfig.builder().from(config).repoName(repoName).headName(headName).build());
+  }
   public DialobStoreTemplate(DialobStoreConfig config) {
     super(config);
   }

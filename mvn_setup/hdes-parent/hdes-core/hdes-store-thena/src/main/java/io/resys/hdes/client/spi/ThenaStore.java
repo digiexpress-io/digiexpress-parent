@@ -28,6 +28,11 @@ public class ThenaStore extends ThenaStoreTemplate implements HdesStore {
   public ThenaStore(ThenaConfig config) {
     super(config);
   }
+
+  @Override
+  public HdesStore withRepo(String repoName, String headName) {
+    return new ThenaStore(ImmutableThenaConfig.builder().from(config).repoName(repoName).headName(headName).build());
+  }
   @Override
   protected HdesStore createWithNewConfig(ThenaConfig config) {
     return new ThenaStore(config);
