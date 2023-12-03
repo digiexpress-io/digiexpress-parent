@@ -211,6 +211,7 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("  id VARCHAR(40) PRIMARY KEY,").ln()
     .append("  external_id VARCHAR(40) UNIQUE,").ln()
     .append("  external_id_deleted VARCHAR(40),").ln()
+    .append("  owner_id VARCHAR(40),").ln()
     .append("  doc_parent_id VARCHAR(40),").ln()
     .append("  doc_type VARCHAR(40) NOT NULL,").ln()
     .append("  doc_status VARCHAR(8) NOT NULL,").ln()
@@ -225,7 +226,10 @@ public class SqlSchemaImpl implements SqlSchema {
 
     .append("CREATE INDEX ").append(options.getDoc()).append("_DOC_TYPE_INDEX")
     .append(" ON ").append(options.getDoc()).append(" (doc_type);").ln()
-    
+
+    .append("CREATE INDEX ").append(options.getDoc()).append("_DOC_OWNER_INDEX")
+    .append(" ON ").append(options.getDoc()).append(" (owner_id);").ln()
+
     // internal foreign key
     .append("ALTER TABLE ").append(options.getDoc()).ln()
     .append("  ADD CONSTRAINT ").append(options.getDoc()).append("_DOC_PARENT_FK").ln()

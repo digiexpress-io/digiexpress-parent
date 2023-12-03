@@ -37,6 +37,7 @@ public class BatchForOneDocCreate {
   private String docId;
   private String parentDocId;
   private String externalId;
+  private String ownerId;
   private JsonObject appendBlobs;
   private JsonObject appendLogs;
   private JsonObject appendMeta;
@@ -44,6 +45,7 @@ public class BatchForOneDocCreate {
   public BatchForOneDocCreate parentDocId(String parentId) {  this.parentDocId = parentId; return this; }
   public BatchForOneDocCreate docId(String docId) {           this.docId = docId; return this; }
   public BatchForOneDocCreate externalId(String externalId) { this.externalId = externalId; return this; }
+  public BatchForOneDocCreate ownerId(String ownerId) {       this.ownerId = ownerId; return this; }
   public BatchForOneDocCreate log(JsonObject log) {           this.appendLogs = log; return this; }
   public BatchForOneDocCreate meta(JsonObject meta) {         this.appendMeta = meta; return this; }
   public BatchForOneDocCreate append(JsonObject blob) {       this.appendBlobs = RepoAssert.notNull(blob, () -> "append can't be empty!"); return this; }
@@ -62,6 +64,7 @@ public class BatchForOneDocCreate {
     final var branchId = OidUtils.gen(); 
     final var doc = ImmutableDoc.builder()
         .id(docId)
+        .ownerId(ownerId)
         .parentId(parentDocId)
         .externalId(Optional.ofNullable(this.externalId == null || this.externalId.trim().isEmpty() ? null : this.externalId).orElse(OidUtils.gen()))
         .type(docType)

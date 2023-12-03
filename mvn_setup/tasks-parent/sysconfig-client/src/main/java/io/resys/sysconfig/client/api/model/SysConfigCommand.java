@@ -62,6 +62,7 @@ public interface SysConfigCommand extends Serializable {
 
   @Value.Immutable @JsonSerialize(as = ImmutableCreateSysConfig.class) @JsonDeserialize(as = ImmutableCreateSysConfig.class)
   interface CreateSysConfig extends SysConfigCommand {
+    String getTenantId();
     String getName();
     String getWrenchHead();
     String getStencilHead(); 

@@ -23,24 +23,20 @@ public interface SysConfigClient {
   
   CreateSysConfigAction createConfig();
   UpdateSysConfigAction updateConfig();
-  CreateSysConfigReleaseAction createRelease();
   
   CreateSysConfigDeploymentAction createDeployment();
-  
   
   SysConfigReleaseQuery releaseQuery();
   SysConfigQuery configQuery();
   
   interface CreateSysConfigDeploymentAction {
-    Uni<SysConfigDeployment> createOne(CreateSysConfigDeployment command);
-  }
-  
-  interface CreateSysConfigReleaseAction {
-    Uni<SysConfigRelease> createOne(CreateSysConfigRelease command);    
+    
   }
 
   interface CreateSysConfigAction {
+    Uni<SysConfigDeployment> createOne(CreateSysConfigDeployment command);
     Uni<SysConfig> createOne(CreateSysConfig command);
+    Uni<SysConfigRelease> createOne(CreateSysConfigRelease command);
   }
 
   interface UpdateSysConfigAction {

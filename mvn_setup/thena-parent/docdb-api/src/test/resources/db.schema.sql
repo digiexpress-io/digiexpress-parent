@@ -85,6 +85,7 @@ CREATE TABLE doc
   id VARCHAR(40) PRIMARY KEY,
   external_id VARCHAR(40) UNIQUE,
   external_id_deleted VARCHAR(40),
+  owner_id VARCHAR(40),
   doc_parent_id VARCHAR(40),
   doc_type VARCHAR(40) NOT NULL,
   doc_status VARCHAR(8) NOT NULL,
@@ -93,6 +94,7 @@ CREATE TABLE doc
 CREATE INDEX doc_DOC_EXT_ID_INDEX ON doc (external_id);
 CREATE INDEX doc_DOC_PARENT_ID_INDEX ON doc (doc_parent_id);
 CREATE INDEX doc_DOC_TYPE_INDEX ON doc (doc_type);
+CREATE INDEX doc_DOC_OWNER_INDEX ON doc (owner_id);
 ALTER TABLE doc
   ADD CONSTRAINT doc_DOC_PARENT_FK
   FOREIGN KEY (doc_parent_id)

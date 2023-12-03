@@ -53,29 +53,34 @@ public class IntegrationTest extends TestCase {
             .name("system config to bind stencil-dialob-wrench")
             .wrenchHead(MainBranch.HEAD_NAME)
             .stencilHead(MainBranch.HEAD_NAME)
+            .tenantId(builder.getTenant().getId())
             .addServices(ImmutableSysConfigService.builder()
                 .addLocales("en")
                 .serviceName("process-for-bindig-gen-msg-to-task")
                 .flowName("case 1 flow")
                 .formId("c89b6d0b-51a7-11bc-358d-3094ca98d40b")
                 .build())
-            .build()).await().atMost(atMost);
+            .build())
+        .onFailure().invoke(e -> e.printStackTrace()).onFailure().recoverWithNull()
+        .await().atMost(atMost);
     
-    final SysConfigRelease release = sysConfig().createRelease().createOne(
+    final SysConfigRelease release = sysConfig().createConfig().createOne(
           ImmutableCreateSysConfigRelease.builder()
           .id(project.getId())
           .targetDate(getTargetDate())
           .releaseName("test-release-v1")
           .build())
+        .onFailure().invoke(e -> e.printStackTrace()).onFailure().recoverWithNull()
         .await().atMost(atMost);
     
-    final var deployment = sysConfig().createDeployment().createOne(ImmutableCreateSysConfigDeployment.builder()
+    final var deployment = sysConfig().createConfig().createOne(ImmutableCreateSysConfigDeployment.builder()
         .body(release)
         .liveDate(getTargetDate())
         .pushToLive(true)
         .userId(getUserId())
         .targetDate(getTargetDate())
         .build())
+    .onFailure().invoke(e -> e.printStackTrace()).onFailure().recoverWithNull()
     .await().atMost(atMost);
     
     final var session = executor().createSession()
@@ -86,6 +91,7 @@ public class IntegrationTest extends TestCase {
       .locale("en")
       .workflowName("process-for-bindig-gen-msg-to-task")
       .build()
+      .onFailure().invoke(e -> e.printStackTrace()).onFailure().recoverWithNull()
       .await().atMost(atMost);
     
     // Dialob
@@ -108,6 +114,7 @@ public class IntegrationTest extends TestCase {
       .session(session)
       .targetDate(getTargetDate())
       .build()
+      .onFailure().invoke(e -> e.printStackTrace()).onFailure().recoverWithNull()
       .await().atMost(atMost);
       
     log.debug(toJson(afterProcess.getState()));

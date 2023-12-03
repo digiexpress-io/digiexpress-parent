@@ -69,6 +69,7 @@ public interface ThenaDocObject {
     String getType();
     DocStatus getStatus();
     String getExternalId();
+    @Nullable String getOwnerId();
     @Nullable String getExternalIdDeleted();
     @Nullable String getParentId();
     @Nullable JsonObject getMeta();

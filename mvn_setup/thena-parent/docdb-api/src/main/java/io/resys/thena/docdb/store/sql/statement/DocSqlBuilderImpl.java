@@ -64,9 +64,9 @@ public class DocSqlBuilderImpl implements DocSqlBuilder {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getDoc())
-        .append(" (id, external_id, doc_type, doc_status, doc_meta, doc_parent_id) VALUES($1, $2, $3, $4, $5, $6)").ln()
+        .append(" (id, external_id, doc_type, doc_status, doc_meta, doc_parent_id, owner_id) VALUES($1, $2, $3, $4, $5, $6, $7)").ln()
         .build())
-        .props(Tuple.of(doc.getId(), doc.getExternalId(), doc.getType(), doc.getStatus(), doc.getMeta(), doc.getParentId()))
+        .props(Tuple.from(new Object[]{ doc.getId(), doc.getExternalId(), doc.getType(), doc.getStatus(), doc.getMeta(), doc.getParentId(), doc.getOwnerId() }))
         .build();
   }
   @Override
@@ -131,6 +131,7 @@ public class DocSqlBuilderImpl implements DocSqlBuilder {
         .append("  doc.doc_status as doc_status,").ln()
         .append("  doc.doc_meta as doc_meta,").ln()
         .append("  doc.doc_parent_id as doc_parent_id,").ln()
+        .append("  doc.owner_id as owner_id,").ln()
         
         .append("  branch.doc_id as doc_id,").ln()
         .append("  branch.branch_id as branch_id,").ln()
@@ -169,6 +170,13 @@ public class DocSqlBuilderImpl implements DocSqlBuilder {
       additional.append(" AND doc.doc_type = $").append(index);
     }
     
+    if(Boolean.TRUE.equals(criteria.getMatchOwners())) {
+      index++;
+      props.add(criteria.getMatchId().toArray(new String[]{}));
+      additional.append("doc.owner_id = ANY($" + index +  ")");
+    }
+    
+    
     if(criteria.getBranchName() != null) {
       index++;
       props.add(criteria.getBranchName());
@@ -203,7 +211,8 @@ public class DocSqlBuilderImpl implements DocSqlBuilder {
         .append("  doc.doc_status as doc_status,").ln()
         .append("  doc.doc_meta as doc_meta,").ln()
         .append("  doc.doc_parent_id as doc_parent_id,").ln()
-    
+        .append("  doc.owner_id as owner_id,").ln()
+        
         .append("  branch.doc_id as doc_id,").ln()
         .append("  branch.branch_id as branch_id,").ln()
         .append("  branch.branch_name as branch_name,").ln()

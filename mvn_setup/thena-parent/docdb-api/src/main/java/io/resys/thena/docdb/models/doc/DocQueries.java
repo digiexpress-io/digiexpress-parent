@@ -78,6 +78,7 @@ public interface DocQueries {
     @Nullable String getBranchName();
     @Nullable String getDocType();
     
+    @Nullable Boolean getMatchOwners();
     boolean getChildren();
     boolean getOnlyActiveDocs();
   }

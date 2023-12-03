@@ -38,6 +38,7 @@ public interface DocCommitActions {
     CreateOneDoc parentDocId(@Nullable String parentDocId); 
     CreateOneDoc externalId(@Nullable String externalId); // user given unique id
     CreateOneDoc docType(String docType);                 // user given classifier
+    CreateOneDoc ownerId(@Nullable String ownerId);       //user given 'grouping' identifier for claiming ownership  
     CreateOneDoc append(JsonObject doc);
     CreateOneDoc author(String author);
     CreateOneDoc message(String message);
@@ -60,6 +61,7 @@ public interface DocCommitActions {
     AddItemToCreateDoc meta(@Nullable JsonObject docMeta);
     AddItemToCreateDoc log(@Nullable JsonObject doc);
     AddItemToCreateDoc externalId(@Nullable String externalId);
+    AddItemToCreateDoc ownerId(@Nullable String ownerId);
     AddItemToCreateDoc append(JsonObject doc);
     CreateManyDocs next();
   }

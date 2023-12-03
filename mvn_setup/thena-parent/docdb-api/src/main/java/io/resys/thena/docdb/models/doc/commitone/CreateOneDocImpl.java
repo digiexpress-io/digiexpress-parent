@@ -29,6 +29,7 @@ public class CreateOneDocImpl implements CreateOneDoc {
   private String branchName;
   private String author;
   private String message;
+  private String ownerId;
 
   @Override public CreateOneDocImpl repoId(String repoId) {         this.repoId = RepoAssert.notEmpty(repoId,           () -> "repoId can't be empty!"); return this; }
   @Override public CreateOneDocImpl branchName(String branchName) { this.branchName = RepoAssert.isName(branchName,     () -> "branchName has invalid charecters!"); return this; }
@@ -40,6 +41,7 @@ public class CreateOneDocImpl implements CreateOneDoc {
   @Override public CreateOneDocImpl parentDocId(String parentId) {  this.parentDocId = parentId; return this; }
   @Override public CreateOneDocImpl docId(String docId) {           this.docId = docId; return this; }
   @Override public CreateOneDocImpl externalId(String externalId) { this.externalId = externalId; return this; }
+  @Override public CreateOneDocImpl ownerId(String ownerId) {       this.ownerId = ownerId; return this; }
   @Override public CreateOneDocImpl log(JsonObject appendLogs) {    this.appendLogs = appendLogs; return this; }
   @Override public CreateOneDocImpl meta(JsonObject appendMeta) {   this.appendMeta = appendMeta; return this; }
   
@@ -59,6 +61,7 @@ public class CreateOneDocImpl implements CreateOneDoc {
   private Uni<OneDocEnvelope> doInTx(DocRepo tx) {  
     final var batch = new BatchForOneDocCreate(tx.getRepo().getId(), docType, author, message, branchName)
         .docId(docId)
+        .ownerId(ownerId)
         .externalId(externalId)
         .parentDocId(parentDocId)
         .log(appendLogs)

@@ -5,17 +5,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import io.resys.crm.client.api.model.ImmutablePerson;
-import io.resys.crm.client.api.model.SysConfigCommand.ArchiveSysConfig;
-import io.resys.crm.client.api.model.SysConfigCommand.ChangeSysConfigAddress;
-import io.resys.crm.client.api.model.SysConfigCommand.ChangeSysConfigEmail;
-import io.resys.crm.client.api.model.SysConfigCommand.ChangeSysConfigFirstName;
-import io.resys.crm.client.api.model.SysConfigCommand.ChangeSysConfigLastName;
-import io.resys.crm.client.api.model.SysConfigCommand.ChangeSysConfigSsn;
-import io.resys.crm.client.api.model.SysConfigCommand.UpsertSuomiFiPerson;
-import io.resys.crm.client.api.model.SysConfigCommand.UpsertSuomiFiRep;
 import io.resys.sysconfig.client.api.model.Document.DocumentType;
 import io.resys.sysconfig.client.api.model.ImmutableSysConfig;
+import io.resys.sysconfig.client.api.model.ImmutableSysConfigService;
 import io.resys.sysconfig.client.api.model.ImmutableSysConfigTransaction;
 import io.resys.sysconfig.client.api.model.SysConfig;
 import io.resys.sysconfig.client.api.model.SysConfigCommand;
@@ -62,149 +54,48 @@ public class SysConfigCommandVisitor {
   
   private SysConfig visitCommand(SysConfigCommand command) {
     switch (command.getCommandType()) {
-    case CreateSysConfig:
-      return visitCreateSysConfig((CreateSysConfig) command);
-    case CreateSysConfigRelease:
-      return visitUpsertSuomiFiPerson((CreateSysConfigRelease) command);
-    
-    throw new UpdateProjectVisitorException(String.format("Unsupported command type: %s, body: %s", command.getClass().getSimpleName(), command.toString())); 
+    case CreateSysConfig: return visitCreateSysConfig((CreateSysConfig) command);
+    case CreateSysConfigRelease: return visitCreateSysConfigRelease((CreateSysConfigRelease) command); 
+    }
+    throw new UpdateProjectVisitorException(String.format("Unsupported command type: %s, body: %s", command.getClass().getSimpleName(), command.toString()));
   }
   
-  
   private SysConfig visitCreateSysConfig(CreateSysConfig command) {
-    final var id = ctx.getGid().getNextId(DocumentType.CUSTOMER);
+    final var id = ctx.getGid().getNextId(DocumentType.SYS_CONFIG);
+    final var version = ctx.getGid().getNextVersion(DocumentType.SYS_CONFIG);
     final var targetDate = requireTargetDate(command);
     
     this.current = ImmutableSysConfig.builder()
       .id(id)
-      .body(ImmutablePerson.builder().from(command.getBody()).build())
-      .externalId(command.getExternalId())
       .created(targetDate)
       .updated(targetDate)
-      
+      .version(version)
+      .tenantId(command.getTenantId())
+      .name(command.getName())
+      .wrenchHead(command.getWrenchHead())
+      .stencilHead(command.getStencilHead())
+      .services(command.getServices().stream()
+          .map(init -> ImmutableSysConfigService.builder().from(init)
+              .id(ctx.getGid().getNextId(DocumentType.SYS_CONFIG))
+              .build())
+          .toList())
       .addTransactions(
           ImmutableSysConfigTransaction.builder()
           .id("1")
           .addCommands(command)
           .build())
-      .documentType(DocumentType.CUSTOMER)
       .build();
     visitedCommands.add(command);
     
     return this.current;
   }
 
-
+  // log the release command
   private SysConfig visitCreateSysConfigRelease(CreateSysConfigRelease command) {
-    final var targetDate = requireTargetDate(command);
-    if(this.current == null) {
-      final var id = ctx.getGid().getNextId(DocumentType.CUSTOMER);
-      this.current = ImmutableSysConfig.builder()
-          .id(id)
-          .body(ImmutablePerson.builder()
-              .contact(command.getContact())
-              .username(command.getUserName())
-              .firstName(command.getFirstName())
-              .lastName(command.getLastName())
-              .protectionOrder(command.getProtectionOrder())
-              .build())
-          .externalId(command.getSysConfigId())
-          .created(targetDate)
-          .updated(targetDate)
-          .addTransactions(
-              ImmutableSysConfigTransaction.builder()
-              .id("1")
-              .addCommands(command)
-              .build())
-          .documentType(DocumentType.CUSTOMER)
-          .build();
-      visitedCommands.add(command);
-      return this.current;
-    }
-    
-    final var nextBody = ImmutablePerson.builder()
-        .contact(command.getContact())
-        .username(command.getUserName())
-        .firstName(command.getFirstName())
-        .lastName(command.getLastName())
-        .protectionOrder(command.getProtectionOrder())
-        .build();
-    
-    final var isBodyUpdated = !nextBody.equals(this.current.getBody());
-    final var isIdUpdated = command.getSysConfigId().equals(this.current.getExternalId());
-    
-    if(!isBodyUpdated && !isIdUpdated) {
-      return this.current;
-    }
-    
-    this.current = this.current
-        .withUpdated(requireTargetDate(command))
-        .withBody(nextBody);
+    this.current = this.current.withUpdated(requireTargetDate(command));
     visitedCommands.add(command);
     return this.current;
   }
-  
-  //TODO
-  private SysConfig visitUpsertSuomiFiRep(UpsertSuomiFiRep command) {
-    this.current = this.current
-        .withUpdated(requireTargetDate(command));
-    visitedCommands.add(command);
-    return this.current;
-  }
-
-  //TODO
-  private SysConfig visitChangeSysConfigFirstName(ChangeSysConfigFirstName command) {
-    this.current = this.current
-        .withBody(ImmutablePerson.builder()
-            .from(this.current.getBody())
-            .firstName(command.getFirstName())
-            .build())
-        .withUpdated(requireTargetDate(command));
-    visitedCommands.add(command);
-    return this.current;
-  }
-  
-  //TODO 
-  private SysConfig visitChangeSysConfigLastName(ChangeSysConfigLastName command) {
-    this.current = this.current
-        .withUpdated(requireTargetDate(command));
-    visitedCommands.add(command);
-    return this.current;
-  }
-
-  //TODO 
-  private SysConfig visitChangeSysConfigSsn(ChangeSysConfigSsn command) {
-    this.current = this.current
-        .withUpdated(requireTargetDate(command));
-    visitedCommands.add(command);
-    return this.current;
-  }
-  
-  //TODO
-  private SysConfig visitChangeSysConfigEmail(ChangeSysConfigEmail command) {
-    this.current = this.current
-        .withUpdated(requireTargetDate(command));
-    visitedCommands.add(command);
-    return this.current;
-  }
-  
-  //TODO
-  private SysConfig visitChangeSysConfigAddress(ChangeSysConfigAddress command) {
-    this.current = this.current
-        .withUpdated(requireTargetDate(command));
-    visitedCommands.add(command);
-    return this.current;
-  }
-  
-  //TODO 
-  private SysConfig visitArchiveSysConfig(ArchiveSysConfig command) {
-    this.current = this.current
-        .withUpdated(requireTargetDate(command));
-    visitedCommands.add(command);
-    return this.current;
-  }
-  
-  
   
   public static Instant requireTargetDate(SysConfigCommand command) {
     final var targetDate = command.getTargetDate();
@@ -216,11 +107,10 @@ public class SysConfigCommandVisitor {
 
   
   public static class NoChangesException extends Exception {
-    
+    private static final long serialVersionUID = -4373837491237504039L;
   }
 
   public static class UpdateProjectVisitorException extends RuntimeException {
-
     private static final long serialVersionUID = -1385190644836838881L;
 
     public UpdateProjectVisitorException(String message, Throwable cause) {

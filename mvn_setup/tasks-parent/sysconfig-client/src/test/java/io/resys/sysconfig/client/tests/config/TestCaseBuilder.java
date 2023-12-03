@@ -25,8 +25,16 @@ import io.resys.hdes.client.spi.config.HdesClientConfig.DependencyInjectionConte
 import io.resys.hdes.client.spi.config.HdesClientConfig.ServiceInit;
 import io.resys.hdes.client.spi.store.ImmutableThenaConfig;
 import io.resys.sysconfig.client.api.AssetClient;
+import io.resys.sysconfig.client.api.ExecutorClient;
 import io.resys.sysconfig.client.api.ImmutableAssetClientConfig;
+import io.resys.sysconfig.client.api.SysConfigClient;
+import io.resys.sysconfig.client.api.model.Document.DocumentType;
+import io.resys.sysconfig.client.api.model.SysConfig;
+import io.resys.sysconfig.client.spi.SysConfigClientImpl;
 import io.resys.sysconfig.client.spi.asset.AssetClientImpl;
+import io.resys.sysconfig.client.spi.executor.ExecutorClientImpl;
+import io.resys.sysconfig.client.spi.store.DocumentConfig.DocumentGidProvider;
+import io.resys.sysconfig.client.spi.store.DocumentStoreImpl;
 import io.resys.thena.docdb.api.DocDB;
 import io.resys.thena.docdb.jackson.VertexExtModule;
 import io.resys.thena.docdb.spi.DbCollections;
@@ -34,7 +42,8 @@ import io.resys.thena.docdb.spi.DbState;
 import io.resys.thena.docdb.store.sql.DbStateSqlImpl;
 import io.resys.thena.docdb.store.sql.PgErrors;
 import io.resys.thena.projects.client.api.TenantConfigClient;
-import io.resys.thena.projects.client.api.model.ImmutableTenantConfigTransaction;
+import io.resys.thena.projects.client.api.model.TenantConfig;
+import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
 import io.resys.thena.projects.client.spi.ProjectsClientImpl;
 import io.resys.thena.projects.client.spi.store.MainBranch;
 import io.smallrye.mutiny.Uni;
@@ -51,6 +60,8 @@ import lombok.extern.slf4j.Slf4j;
 public class TestCaseBuilder {
   public final ObjectMapper objectMapper;
   
+  private SysConfigClient sysConfig;
+  private TenantConfig tenant;
   private AssetClient assetClient;
   private TenantConfigClient tenantClient;
   private final DocDB doc;
@@ -66,6 +77,7 @@ public class TestCaseBuilder {
     this.doc = getClient(pgPool, "junit");
     this.docState = DbStateSqlImpl.state(DbCollections.defaults("junit"), pgPool, new PgErrors());
     this.repoId = repoId;
+    
     final var stencil = createStencilInit(pgPool, objectMapper);
     final var wrench = createWrenchInit(pgPool, objectMapper);
     final var dialob = createDialobInit(pgPool, objectMapper);
@@ -83,10 +95,13 @@ public class TestCaseBuilder {
         .build();
     this.tenantClient = new ProjectsClientImpl(tenantStore);
     this.assetClient = new AssetClientImpl(tenantClient, assetConfig);
+    this.sysConfig = createSysConfigInit(pgPool, objectMapper, assetClient);
   }
   
-  public Uni<TestCaseBuilder> withTenantId(String tenantId) {
-    return this.assetClient.withTenantConfig(tenantId).onItem().transform(newClient -> {
+  public Uni<TestCaseBuilder> withTenant(TenantConfig tenant) {
+    this.tenant = tenant;
+    this.sysConfig = this.sysConfig.withRepoId(tenant.getRepoConfigs().stream().filter(c -> c.getRepoType() == TenantRepoConfigType.SYS_CONFIG).findFirst().get().getRepoId());
+    return this.assetClient.withTenantConfig(tenant.getId()).onItem().transform(newClient -> {
       this.assetClient = newClient;
       return this;
     });
@@ -103,16 +118,43 @@ public class TestCaseBuilder {
   public TestCaseReader reader() {
     return this.testCaseReader;
   }
-  private DocDB getClient(io.vertx.mutiny.pgclient.PgPool pgPool, String db) {
-    return DbStateSqlImpl.create().client(pgPool).db(db).errorHandler(new PgErrors()).build();
-  }
   public AssetClient getClient() {
     return assetClient;
   }
   public TenantConfigClient getTenantClient() {
     return tenantClient;
   }
-
+  public TenantConfig getTenant() {
+    return tenant;
+  }
+  public SysConfigClient getSysConfig() {
+    return this.sysConfig;
+  }
+  
+  public ExecutorClient getExecutor() {
+    return null;
+  }
+  
+  private ExecutorClient createExecutorIni() {
+    return null;
+  }
+  
+  private SysConfigClient createSysConfigInit(io.vertx.mutiny.pgclient.PgPool pgPool, ObjectMapper objectMapper, AssetClient assetClient) {
+    final var store = io.resys.sysconfig.client.spi.store.DocumentStoreImpl.builder()
+        .repoName("").pgPool(pgPool)
+        .gidProvider(new DocumentGidProvider() {
+          @Override
+          public String getNextVersion(DocumentType entity) {
+            return OidUtils.gen();
+          }
+          @Override
+          public String getNextId(DocumentType entity) {
+            return OidUtils.gen();
+          }
+        })
+        .build();
+    return new SysConfigClientImpl(store, assetClient);
+  }
 
   private DialobClient createDialobInit(io.vertx.mutiny.pgclient.PgPool pgPool, ObjectMapper objectMapper) {
     final var dialobFr = defaultDialobFr();
@@ -234,5 +276,7 @@ public class TestCaseBuilder {
     DatabindCodec.prettyMapper().registerModules(modules);
     return DatabindCodec.mapper(); 
   }
-
+  private DocDB getClient(io.vertx.mutiny.pgclient.PgPool pgPool, String db) {
+    return DbStateSqlImpl.create().client(pgPool).db(db).errorHandler(new PgErrors()).build();
+  }
 }

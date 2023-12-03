@@ -4,6 +4,7 @@ import java.util.List;
 
 import io.resys.sysconfig.client.api.AssetClient;
 import io.resys.sysconfig.client.api.ImmutableAssetClientConfig;
+import io.resys.sysconfig.client.spi.asset.builders.AssetQueryImpl;
 import io.resys.sysconfig.client.spi.asset.exceptions.AssetClientException;
 import io.resys.sysconfig.client.spi.support.ErrorMsg;
 import io.resys.thena.projects.client.api.TenantConfigClient;
@@ -22,8 +23,20 @@ public class AssetClientImpl implements AssetClient {
 
   @Override
   public AssetQuery assetQuery() {
-    // TODO Auto-generated method stub
-    return null;
+    if(clientConfig.getTenantConfigId().trim().isEmpty()) {
+      throw new AssetClientException(ErrorMsg.builder()
+          .withCode("TENANT_CONFIG_ID_NOT_CONFIGURED")
+          .withProps(JsonObject.of("tenantConfigId", clientConfig.getTenantConfigId()))
+          .withMessage("Can't get asset configuration because they are not configured or loaded!")
+          .toString());
+    }
+    
+    if(clientConfig.getRepoConfigs().isEmpty()) {
+       final var config = tenantClient.queryActiveTenantConfig().get(clientConfig.getTenantConfigId())
+          .onItem().transform(tenant -> withTenantConfig(clientConfig.getTenantConfigId(), tenant.getRepoConfigs()).getConfig());
+       return new AssetQueryImpl(config);
+    }
+    return new AssetQueryImpl(Uni.createFrom().item(clientConfig));
   }
   @Override
   public AssetClientConfig getConfig() {
@@ -42,7 +55,7 @@ public class AssetClientImpl implements AssetClient {
         .onItem().transform(tenant -> withTenantConfig(tenantConfigId, tenant.getRepoConfigs()));
   }
   @Override
-  public AssetClient withTenantConfig(String tenantConfigId, List<TenantRepoConfig> tenantConfig) {
+  public AssetClientImpl withTenantConfig(String tenantConfigId, List<TenantRepoConfig> tenantConfig) {
     final var dialob = tenantConfig.stream().filter(entry -> entry.getRepoType() == TenantRepoConfigType.DIALOB).findFirst();
     final var wrench = tenantConfig.stream().filter(entry -> entry.getRepoType() == TenantRepoConfigType.WRENCH).findFirst();
     final var stencil = tenantConfig.stream().filter(entry -> entry.getRepoType() == TenantRepoConfigType.STENCIL).findFirst();
@@ -61,6 +74,7 @@ public class AssetClientImpl implements AssetClient {
     
     return new AssetClientImpl(tenantClient, ImmutableAssetClientConfig.builder()
         .from(clientConfig)
+        .tenantConfigId(tenantConfigId)
         .addAllRepoConfigs(tenantConfig)
         .hdes(clientConfig.getHdes().withRepo(wrench.get().getRepoId(), MainBranch.HEAD_NAME))
         .stencil(clientConfig.getStencil().withRepo(stencil.get().getRepoId(), MainBranch.HEAD_NAME))

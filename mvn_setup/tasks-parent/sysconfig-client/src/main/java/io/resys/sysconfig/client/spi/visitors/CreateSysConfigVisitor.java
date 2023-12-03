@@ -28,14 +28,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import io.resys.crm.client.api.model.Customer;
-import io.resys.crm.client.api.model.CustomerCommand.CreateCustomer;
-import io.resys.crm.client.api.model.Document;
-import io.resys.crm.client.api.model.ImmutableCustomer;
-import io.resys.crm.client.spi.store.DocumentConfig;
-import io.resys.crm.client.spi.store.DocumentConfig.DocCreateVisitor;
-import io.resys.crm.client.spi.store.DocumentStoreException;
-import io.resys.crm.client.spi.visitors.CustomerCommandVisitor.NoChangesException;
+import io.resys.sysconfig.client.api.model.Document;
+import io.resys.sysconfig.client.api.model.ImmutableSysConfig;
+import io.resys.sysconfig.client.api.model.SysConfig;
+import io.resys.sysconfig.client.api.model.SysConfigCommand.CreateSysConfig;
+import io.resys.sysconfig.client.spi.store.DocumentConfig;
+import io.resys.sysconfig.client.spi.store.DocumentConfig.DocCreateVisitor;
+import io.resys.sysconfig.client.spi.store.DocumentStoreException;
+import io.resys.sysconfig.client.spi.visitors.SysConfigCommandVisitor.NoChangesException;
 import io.resys.thena.docdb.api.actions.CommitActions.CommitResultStatus;
 import io.resys.thena.docdb.api.actions.DocCommitActions.CreateManyDocs;
 import io.resys.thena.docdb.api.actions.DocCommitActions.ManyDocsEnvelope;
@@ -44,14 +44,14 @@ import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class CreateCustomersVisitor implements DocCreateVisitor<Customer> {
-  private final List<? extends CreateCustomer> commands;
-  private final List<Customer> customers = new ArrayList<Customer>();
+public class CreateSysConfigVisitor implements DocCreateVisitor<SysConfig> {
+  private final List<? extends CreateSysConfig> commands;
+  private final List<SysConfig> customers = new ArrayList<SysConfig>();
   
   @Override
   public CreateManyDocs start(DocumentConfig config, CreateManyDocs builder) {
     builder
-      .docType(Document.DocumentType.CUSTOMER.name())
+      .docType(Document.DocumentType.SYS_CONFIG.name())
       .author(config.getAuthor().get())
       .message("creating customer");
     
@@ -62,7 +62,6 @@ public class CreateCustomersVisitor implements DocCreateVisitor<Customer> {
         builder.item()
           .append(json)
           .docId(entity.getId())
-          .externalId(entity.getExternalId())
           .next();
         customers.add(entity);
       } catch (NoChangesException e) {
@@ -81,13 +80,13 @@ public class CreateCustomersVisitor implements DocCreateVisitor<Customer> {
   }
 
   @Override
-  public List<Customer> end(DocumentConfig config, List<DocBranch> branches) {
-    final Map<String, Customer> configsById = new HashMap<>(
+  public List<SysConfig> end(DocumentConfig config, List<DocBranch> branches) {
+    final Map<String, SysConfig> configsById = new HashMap<>(
         this.customers.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)));
     
     branches.forEach(branch -> {
       
-      final var next = ImmutableCustomer.builder()
+      final var next = ImmutableSysConfig.builder()
           .from(configsById.get(branch.getDocId()))
           .version(branch.getCommitId())
           .build();

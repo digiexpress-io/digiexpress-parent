@@ -21,21 +21,23 @@ import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfig;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.StencilClient;
+import io.vertx.core.json.JsonObject;
 
 public interface AssetClient {
 
   AssetQuery assetQuery();
   AssetClient withRepoId(String repoId);
+  
   Uni<AssetClient> withTenantConfig(String tenantConfigId);
   AssetClient withTenantConfig(String tenantConfigId, List<TenantRepoConfig> tenantConfig);
   
   AssetClientConfig getConfig();
   
   interface AssetQuery {
-    //AssetQuery addWrenchAsset(String releaseId);
-    //AssetQuery addStencilAsset(String releaseId);
-    //AssetQuery addDialobAsset(String formId);
-    //Uni<Asset> get();
+    Uni<Asset> getWrenchAsset(String releaseId);
+    Uni<Asset> getStencilAsset(String releaseId);
+    Uni<List<DialobAsset>> getDialobAssets(List<String> formId);
+
     Multi<Asset> findAll();
   }
   
@@ -63,6 +65,7 @@ public interface AssetClient {
     String getName();
     Instant getCreated();
     AssetType getAssetType();
+    JsonObject getAssetBody();
   }
   
   @Value.Immutable @JsonSerialize(as = ImmutableDialobAsset.class) @JsonDeserialize(as = ImmutableDialobAsset.class)

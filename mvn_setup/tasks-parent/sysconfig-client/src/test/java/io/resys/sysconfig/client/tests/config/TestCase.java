@@ -23,19 +23,14 @@ import io.dialob.api.proto.ImmutableActions;
 import io.dialob.api.questionnaire.Questionnaire;
 import io.dialob.client.api.DialobComposer;
 import io.dialob.client.spi.DialobComposerImpl;
-import io.quarkus.runtime.annotations.RegisterForReflection;
 import io.resys.hdes.client.api.HdesComposer;
 import io.resys.hdes.client.spi.HdesComposerImpl;
 import io.resys.sysconfig.client.api.AssetClient;
 import io.resys.sysconfig.client.api.ExecutorClient;
 import io.resys.sysconfig.client.api.ExecutorClient.SysConfigSession;
 import io.resys.sysconfig.client.api.SysConfigClient;
-import io.resys.sysconfig.client.spi.SysConfigClientImpl;
-import io.resys.sysconfig.client.spi.executor.ExecutorClientImpl;
 import io.resys.thena.projects.client.api.TenantConfigClient;
-import io.resys.thena.projects.client.api.model.ImmutableArchiveTenantConfig;
 import io.resys.thena.projects.client.api.model.ImmutableCreateTenantConfig;
-import io.resys.thena.projects.client.api.model.ImmutableTenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
@@ -44,7 +39,6 @@ import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.StencilComposer;
 import io.thestencil.client.spi.StencilComposerImpl;
 import io.vertx.mutiny.sqlclient.Pool;
-import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -100,8 +94,8 @@ public class TestCase {
     
     return tenantClient.query().deleteAll()
         .onItem().transformToUni(junk -> init(tenantClient, repoId, tenantId))
-        .onItem().transformToUni(config -> this.builder.withTenantId(tenantId))
-        .onItem().transform(resp -> resp.getClient());
+        .onItem().transformToUni(created -> builder.withTenant(created))
+        .onItem().transform(_junk -> builder.getClient());
   }
   
   private Uni<TenantConfig> init(TenantConfigClient tenantClient, String repoId, String tenantId) {
@@ -113,7 +107,7 @@ public class TestCase {
               .targetDate(Instant.now())
               .build())
               .onItem().transformToUni(this::createNested);
-        }).onItem().transformToUni(created -> builder.withTenantId(tenantId).onItem().transform(_junk -> created));
+        });
   }
 
   private Uni<TenantConfig> createNested(TenantConfig tenant) {
@@ -148,11 +142,11 @@ public class TestCase {
   }
   
   public ExecutorClient executor() {
-    return new ExecutorClientImpl();
+    return builder.getExecutor();
   }
   
   public SysConfigClient sysConfig() {
-    return new SysConfigClientImpl();
+    return builder.getSysConfig();
   }
     
   public String toJson(Object v) {
