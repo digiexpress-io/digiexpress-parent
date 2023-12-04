@@ -1,16 +1,16 @@
 import * as React from 'react';
-import { Menu, MenuItem, MenuList, ListItemIcon, ListItemText } from '@mui/material';
+import { Menu, MenuItem, MenuList, ListItemIcon, ListItemText, Typography } from '@mui/material';
 import Check from '@mui/icons-material/Check';
+import { FormattedMessage } from 'react-intl';
 import { TaskDescriptor } from 'descriptor-task';
 import { NavigationButtonSearch } from '../NavigationSticky';
 
-export default function DenseMenu(
-  props: {
-    onChange: (value: (keyof TaskDescriptor)[]) => void;
-    value: (keyof TaskDescriptor)[];
-    types: (keyof TaskDescriptor)[];
-  }
-) {
+const FilterColumns: React.FC<{
+  onChange: (value: (keyof TaskDescriptor)[]) => void;
+  value: (keyof TaskDescriptor)[];
+  types: (keyof TaskDescriptor)[];
+}> = (props) => {
+
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -38,7 +38,7 @@ export default function DenseMenu(
     >
       <MenuList dense>
         <MenuItem>
-          <ListItemText><b>Show/Hide columns</b></ListItemText>
+          <ListItemText><Typography fontWeight='bold'><FormattedMessage id='taskSearch.filter.columns' /></Typography></ListItemText>
         </MenuItem>
         {props.types.map(type => {
           const selected = props.value.includes(type)
@@ -63,3 +63,4 @@ export default function DenseMenu(
   </>
   );
 }
+export { FilterColumns };

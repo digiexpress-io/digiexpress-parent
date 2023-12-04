@@ -318,12 +318,6 @@ const en = {
   'core.myOverview.tasks-starting-today': 'Tasks starting today',
   'core.myOverview.task-events': 'Task events',
 
-  'core.search.searchBar.groupBy': 'Group by {groupBy}',
-  'core.search.searchBar.filterColumns': 'Columns',
-  'core.search.searchBar.filterRoles': 'Roles {count}',
-  'core.search.searchBar.filterOwners': 'Owners {count}',
-  'core.search.searchBar.filterStatus': 'Status {count}',
-  'core.search.searchBar.filterPriority': 'Priority {count}',
 
   'search.results.none': 'No results',
 
@@ -450,6 +444,22 @@ const en = {
   'explorer.frontoffice.org.menuOption': 'Organisation',
   'explorer.frontoffice.tenant.menuOption': 'Tenant',
   'activities.frontoffice.crm.tenant.title': 'Current tenant',
+
+  'taskSearch.filter.columns': 'Show/Hide columns',
+  'taskSearch.filter.assignees': 'Filter by assignees',
+  'taskSearch.filter.roles': 'Filter by roles',
+  'taskSearch.filter.priority': 'Filter by priority',
+  'taskSearch.filter.status': 'Filter by status',
+  'taskSearch.filter.groupBy': 'Group by',
+
+
+  'core.search.searchBar.groupBy': 'Group by {groupBy}',
+  'core.search.searchBar.filterColumns': 'Columns',
+  'core.search.searchBar.filterRoles': 'Roles {count}',
+  'core.search.searchBar.filterAssignees': 'Assignees {count}',
+  'core.search.searchBar.filterStatus': 'Status {count}',
+  'core.search.searchBar.filterPriority': 'Priority {count}',
+
 
   // --------------- APP-FRONTOFFICE END -----------------
 

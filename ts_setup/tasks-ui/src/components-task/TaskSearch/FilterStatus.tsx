@@ -1,6 +1,8 @@
 import * as React from 'react';
-import { Menu, MenuItem, MenuList, ListItemIcon, ListItemText } from '@mui/material';
+import { Menu, MenuItem, MenuList, ListItemIcon, ListItemText, Typography } from '@mui/material';
 import Check from '@mui/icons-material/Check';
+import { FormattedMessage } from 'react-intl';
+
 import Client from 'client';
 import { FilterByStatus, FilterBy } from 'descriptor-task';
 import { NavigationButtonSearch } from '../NavigationSticky';
@@ -8,12 +10,10 @@ import { NavigationButtonSearch } from '../NavigationSticky';
 
 const statustypes: Client.TaskStatus[] = ['CREATED', 'IN_PROGRESS', 'COMPLETED', 'REJECTED'];
 
-export default function DenseMenu(
-  props: {
-    onChange: (value: Client.TaskStatus[]) => void;
-    value: FilterBy[]
-  }
-) {
+const FilterStatus: React.FC<{
+  onChange: (value: Client.TaskStatus[]) => void;
+  value: FilterBy[];
+}> = (props) => {
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -43,7 +43,7 @@ export default function DenseMenu(
     >
       <MenuList dense>
         <MenuItem>
-          <ListItemText><b>Filter by status</b></ListItemText>
+          <ListItemText><Typography fontWeight='bold'><FormattedMessage id='taskSearch.filter.status' /></Typography></ListItemText>
         </MenuItem>
         {statustypes.map(type => {
           const found = props.value.find(filter => filter.type === 'FilterByStatus');
@@ -68,3 +68,5 @@ export default function DenseMenu(
   </>
   );
 }
+
+export { FilterStatus };

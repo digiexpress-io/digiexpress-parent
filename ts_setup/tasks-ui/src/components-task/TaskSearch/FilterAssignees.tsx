@@ -1,16 +1,18 @@
 import * as React from 'react';
-import { Menu, MenuList, MenuItem, ListItemIcon, ListItemText } from '@mui/material';
+import { Menu, MenuList, MenuItem, ListItemIcon, ListItemText, Typography } from '@mui/material';
 import Check from '@mui/icons-material/Check';
+import { FormattedMessage } from 'react-intl';
+
 import Context from 'context';
 import { FilterByOwners, FilterBy } from 'descriptor-task';
 import { NavigationButtonSearch } from '../NavigationSticky';
 
-export default function DenseMenu(
-  props: {
-    onChange: (value: string[]) => void;
-    value: FilterBy[]
-  }
-) {
+
+const FilterAssignees: React.FC<{
+  onChange: (value: string[]) => void;
+  value: FilterBy[];
+}> = (props) => {
+
   const ctx = Context.useTasks();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -26,7 +28,7 @@ export default function DenseMenu(
   const filterByOwners = props.value.find(filter => filter.type === 'FilterByOwners') as FilterByOwners | undefined;
 
   return (<>
-    <NavigationButtonSearch onClick={handleClick} id='core.search.searchBar.filterOwners' values={{ count: filterByOwners?.owners.length }} />
+    <NavigationButtonSearch onClick={handleClick} id='core.search.searchBar.filterAssignees' values={{ count: filterByOwners?.owners.length }} />
 
     <Menu sx={{ width: 320 }}
       anchorEl={anchorEl}
@@ -43,7 +45,7 @@ export default function DenseMenu(
     >
       <MenuList dense>
         <MenuItem>
-          <ListItemText><b>Filter by owners</b></ListItemText>
+          <ListItemText><Typography fontWeight='bold'><FormattedMessage id='taskSearch.filter.assignees' /></Typography></ListItemText>
         </MenuItem>
         {Object.keys(ctx.state.palette.owners).map(type => {
           const found = props.value.find(filter => filter.type === 'FilterByOwners');
@@ -69,3 +71,5 @@ export default function DenseMenu(
   </>
   );
 }
+
+export { FilterAssignees };

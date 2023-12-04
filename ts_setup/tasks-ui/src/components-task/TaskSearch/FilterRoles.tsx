@@ -1,16 +1,16 @@
 import * as React from 'react';
-import { Menu, ListItemText, MenuList, MenuItem, ListItemIcon } from '@mui/material';
+import { Menu, ListItemText, MenuList, MenuItem, ListItemIcon, Typography } from '@mui/material';
 import Check from '@mui/icons-material/Check';
+import { FormattedMessage } from 'react-intl';
+
 import Context from 'context';
 import { FilterByRoles, FilterBy } from 'descriptor-task';
 import { NavigationButtonSearch } from '../NavigationSticky';
 
-export default function DenseMenu(
-  props: {
-    onChange: (value: string[]) => void;
-    value: FilterBy[]
-  }
-) {
+const FilterRoles: React.FC<{
+  onChange: (value: string[]) => void;
+  value: FilterBy[];
+}> = (props) => {
   const ctx = Context.useTasks();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -41,7 +41,7 @@ export default function DenseMenu(
     >
       <MenuList dense>
         <MenuItem>
-          <ListItemText><b>Filter by roles</b></ListItemText>
+          <ListItemText><Typography fontWeight='bold'><FormattedMessage id='taskSearch.filter.roles' /></Typography></ListItemText>
         </MenuItem>
         {Object.keys(ctx.state.palette.roles).map(type => {
           const found = props.value.find(filter => filter.type === 'FilterByRoles');
@@ -66,3 +66,5 @@ export default function DenseMenu(
   </>
   );
 }
+
+export { FilterRoles };

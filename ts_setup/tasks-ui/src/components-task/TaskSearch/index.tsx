@@ -5,13 +5,13 @@ import Context from 'context';
 import { TaskDescriptor, Group } from 'descriptor-task';
 import TaskTable from '../TaskTable';
 import { NavigationSticky } from '../NavigationSticky';
-import FilterStatus from './FilterStatus';
-import FilterOwners from './FilterOwners';
-import FilterRoles from './FilterRoles';
-import FilterPriority from './FilterPriority';
-import FilterColumns from './FilterColumns';
+import { FilterStatus } from './FilterStatus';
+import { FilterAssignees } from './FilterAssignees';
+import { FilterRoles } from './FilterRoles';
+import { FilterPriority } from './FilterPriority';
+import { FilterColumns } from './FilterColumns';
 import { FilterByString } from 'components-generic';
-import GroupBy from './GroupBy';
+import { GroupBySelect } from './GroupBy';
 
 
 
@@ -99,10 +99,10 @@ const TaskSearch: React.FC<{}> = () => {
     <NavigationSticky>
       <FilterByString onChange={({ target }) => setState(prev => prev.withSearchString(target.value))} />
       <Stack direction='row' spacing={1}>
-        <GroupBy value={state.groupBy} onChange={(value) => setState(prev => prev.withGroupBy(value))} />
+        <GroupBySelect value={state.groupBy} onChange={(value) => setState(prev => prev.withGroupBy(value))} />
         <FilterStatus value={state.filterBy} onChange={(value) => setState(prev => prev.withFilterByStatus(value))} />
         <FilterPriority value={state.filterBy} onChange={(value) => setState(prev => prev.withFilterByPriority(value))} />
-        <FilterOwners value={state.filterBy} onChange={(value) => setState(prev => prev.withFilterByOwner(value))} />
+        <FilterAssignees value={state.filterBy} onChange={(value) => setState(prev => prev.withFilterByOwner(value))} />
         <FilterRoles value={state.filterBy} onChange={(value) => setState(prev => prev.withFilterByRoles(value))} />
         <FilterColumns types={columnTypes} value={columns} onChange={(value) => setColumns(value)} />
       </Stack>
