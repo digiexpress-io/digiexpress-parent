@@ -24,17 +24,12 @@ export function getTeamspaceType(task: Task, profile: UserProfile, today: Date):
   }
 
   const { dueDate } = task;
-  if (!dueDate) {
-    return undefined;
-  }
+  const dueDateClean = dueDate ? parseISO(dueDate) : undefined;
 
-  const dueDateClean = parseISO(dueDate);
-  //const dueDateClean = new Date(dueDate);
-
-  if (isAfter(today, dueDateClean)) {
+  if (dueDateClean && isAfter(today, dueDateClean)) {
     return "groupOverdue";
   }
-  if (dueDate && differenceInCalendarDays(dueDateClean, today) <= 5) {
+  if (dueDateClean && differenceInCalendarDays(dueDateClean, today) <= 5) {
     return "groupDueSoon";
   }
   return "groupAvailable";
@@ -48,12 +43,12 @@ export function getMyWorkType(task: Task, profile: UserProfile, today: Date): As
 
   const { startDate, dueDate } = task;
   const dueDateClean = dueDate ? parseISO(dueDate) : undefined;
-
+  const startDateClean = startDate ? parseISO(startDate) : undefined;
 
   if (dueDateClean && isAfter(today, dueDateClean) && task.status === 'CREATED') {
     return "assigneeOverdue";
   }
-  if (startDate && isEqual(parseISO(startDate), today) && task.status === 'CREATED') {
+  if (startDateClean && isEqual(startDateClean, today)) {
     return "assigneeStartsToday";
   }
   if (task.status === 'IN_PROGRESS') {

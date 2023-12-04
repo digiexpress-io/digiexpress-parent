@@ -286,6 +286,11 @@ const en = {
 
   'core.myWork.task.dueDate': 'Due on {dueDate}',
 
+  'core.myWork.task.overdue.alert': 'This task is overdue!',
+  'core.myWork.task.available.alert': 'This task is available',
+  'core.myWork.task.startsToday.alert': 'This task starts today!',
+  'core.myWork.task.currentlyWorking.alert': 'I am currently working on this task',
+
   'core.myWork.myWorkTaskTable.header.spotlight.myWorkOverdue': 'Overdue',
   'core.myWork.myWorkTaskTable.header.spotlight.myWorkStartsToday': 'Starts today',
   'core.myWork.myWorkTaskTable.header.spotlight.myWorkAssigned': 'Assigned to me',

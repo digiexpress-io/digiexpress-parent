@@ -47,15 +47,15 @@ const StyledTitle: React.FC<{ children: string }> = ({ children }) => {
 function getTaskAlert(task: TaskDescriptor): { isDueDate: boolean, title: string, alertSeverity: AlertColor, alertMsg: string } {
 
   if (task.assigneeGroupType === 'assigneeOverdue') {
-    return { alertSeverity: 'error', isDueDate: true, title: 'core.teamSpace.task.overdue.alert', alertMsg: 'core.myWork.task.dueDate' }
+    return { alertSeverity: 'error', isDueDate: true, title: 'core.myWork.task.overdue.alert', alertMsg: 'core.myWork.task.dueDate' }
   }
   if (task.assigneeGroupType === 'assigneeStartsToday') {
-    return { alertSeverity: 'warning', isDueDate: true, title: 'core.teamSpace.task.dueSoon.alert', alertMsg: 'core.myWork.task.dueDate' }
+    return { alertSeverity: 'warning', isDueDate: true, title: 'core.myWork.task.startsToday.alert', alertMsg: 'core.myWork.task.dueDate' }
   }
   if (task.assigneeGroupType === 'assigneeCurrentlyWorking') {
-    return { alertSeverity: 'info', isDueDate: true, title: 'core.teamSpace.task.currentlyWorking.alert', alertMsg: 'core.myWork.task.dueDate' }
+    return { alertSeverity: 'info', isDueDate: true, title: 'core.myWork.task.currentlyWorking.alert', alertMsg: 'core.myWork.task.dueDate' }
   }
-  return { alertSeverity: 'success', isDueDate: true, title: 'core.teamSpace.task.available.alert', alertMsg: 'core.myWork.task.dueDate' }
+  return { alertSeverity: 'success', isDueDate: true, title: 'core.myWork.task.available.alert', alertMsg: 'core.myWork.task.dueDate' }
 }
 
 const TaskItemActive: React.FC<{ task: TaskDescriptor | undefined }> = ({ task }) => {
