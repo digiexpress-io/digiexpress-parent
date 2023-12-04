@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.resys.sysconfig.client.api.model.SysConfig.SysConfigService;
-import io.vertx.core.json.JsonObject;
 
 @Value.Immutable @JsonSerialize(as = ImmutableSysConfigRelease.class) @JsonDeserialize(as = ImmutableSysConfigRelease.class)
 public interface SysConfigRelease extends Document {
@@ -30,7 +29,7 @@ public interface SysConfigRelease extends Document {
     String getName();
     Instant getUpdated();
     
-    JsonObject getBody();
+    String getBody();
     AssetType getBodyType();
   }
   

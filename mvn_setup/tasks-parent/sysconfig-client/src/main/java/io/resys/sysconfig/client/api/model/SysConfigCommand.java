@@ -88,6 +88,7 @@ public interface SysConfigCommand extends Serializable {
   @Value.Immutable @JsonSerialize(as = ImmutableCreateSysConfigRelease.class) @JsonDeserialize(as = ImmutableCreateSysConfigRelease.class)
   interface CreateSysConfigRelease extends SysConfigUpdateCommand {
     String getReleaseName();
+    Instant getScheduledAt();
     @JsonIgnore @Value.Default @Override 
     default SysConfigCommandType getCommandType() { return SysConfigCommandType.CreateSysConfigRelease; }
   }

@@ -67,8 +67,10 @@ public class IntegrationTest extends TestCase {
     final SysConfigRelease release = sysConfig().createConfig().createOne(
           ImmutableCreateSysConfigRelease.builder()
           .id(project.getId())
+          .userId(getUserId())
           .targetDate(getTargetDate())
           .releaseName("test-release-v1")
+          .scheduledAt(getTargetDate())
           .build())
         .onFailure().invoke(e -> e.printStackTrace()).onFailure().recoverWithNull()
         .await().atMost(atMost);

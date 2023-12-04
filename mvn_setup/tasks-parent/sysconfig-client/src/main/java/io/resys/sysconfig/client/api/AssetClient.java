@@ -21,7 +21,6 @@ import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfig;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.StencilClient;
-import io.vertx.core.json.JsonObject;
 
 public interface AssetClient {
 
@@ -34,8 +33,8 @@ public interface AssetClient {
   AssetClientConfig getConfig();
   
   interface AssetQuery {
-    Uni<Asset> getWrenchAsset(String releaseId);
-    Uni<Asset> getStencilAsset(String releaseId);
+    Uni<WrenchAssets> getWrenchAsset(String releaseId);
+    Uni<StencilAssets> getStencilAsset(String releaseId);
     Uni<List<DialobAsset>> getDialobAssets(List<String> formId);
 
     Multi<Asset> findAll();
@@ -65,12 +64,11 @@ public interface AssetClient {
     String getName();
     Instant getCreated();
     AssetType getAssetType();
-    JsonObject getAssetBody();
+    String getAssetBody();
   }
   
   @Value.Immutable @JsonSerialize(as = ImmutableDialobAsset.class) @JsonDeserialize(as = ImmutableDialobAsset.class)
   interface DialobAsset extends Asset {
-    String getFormTechnicalName();
     String getFormTagName();
     List<DialboAssetEntry> getFormTags();
     @JsonIgnore @Value.Default @Override default AssetType getAssetType() { return AssetType.DIALOB; }

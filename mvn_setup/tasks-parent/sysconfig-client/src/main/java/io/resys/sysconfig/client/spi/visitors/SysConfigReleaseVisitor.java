@@ -1,14 +1,19 @@
 package io.resys.sysconfig.client.spi.visitors;
 
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 
 import io.resys.sysconfig.client.api.AssetClient;
 import io.resys.sysconfig.client.api.model.Document;
 import io.resys.sysconfig.client.api.model.ImmutableSysConfig;
+import io.resys.sysconfig.client.api.model.ImmutableSysConfigAsset;
+import io.resys.sysconfig.client.api.model.ImmutableSysConfigRelease;
 import io.resys.sysconfig.client.api.model.SysConfig;
 import io.resys.sysconfig.client.api.model.SysConfigCommand.CreateSysConfigRelease;
 import io.resys.sysconfig.client.api.model.SysConfigRelease;
+import io.resys.sysconfig.client.api.model.SysConfigRelease.AssetType;
+import io.resys.sysconfig.client.api.model.SysConfigRelease.SysConfigAsset;
 import io.resys.sysconfig.client.spi.store.DocumentConfig;
 import io.resys.sysconfig.client.spi.store.DocumentConfig.DocObjectVisitor;
 import io.resys.sysconfig.client.spi.store.DocumentStore;
@@ -23,6 +28,7 @@ import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranch;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocCommit;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocLog;
 import io.resys.thena.docdb.api.models.ThenaDocObjects.DocObject;
+import io.resys.thena.docdb.support.OidUtils;
 import io.resys.thena.projects.client.spi.store.MainBranch;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
@@ -91,9 +97,44 @@ public class SysConfigReleaseVisitor implements DocObjectVisitor<Uni<SysConfigRe
   private Uni<SysConfigRelease> doInAssetClient(AssetClient client, SysConfig config) {
     final var dialobs = config.getServices().stream().map(e -> e.getFormId()).toList();
 
-    return client.assetQuery().getDialobAssets(dialobs).onItem().transform(data -> {
+    return Uni.combine().all().unis(
+        client.assetQuery().getDialobAssets(dialobs),
+        client.assetQuery().getStencilAsset(config.getStencilHead()),
+        client.assetQuery().getWrenchAsset(config.getWrenchHead())
+    ).asTuple().onItem().transform(tuple -> {
       
-      return null;
+      final SysConfigRelease release = ImmutableSysConfigRelease.builder()
+          .id(OidUtils.gen())
+          .name(command.getReleaseName())
+          .author(command.getUserId())
+          .created(command.getTargetDate())
+          .scheduledAt(command.getScheduledAt())
+          .addAllAssets(tuple.getItem1().stream().map(dialob -> ImmutableSysConfigAsset.builder()
+              .bodyType(AssetType.DIALOB)
+              .body(dialob.getAssetBody())
+              .name(dialob.getName())
+              .id(dialob.getId())
+              .updated(Instant.now())
+              .build()).toList()
+          )
+          .addAssets(ImmutableSysConfigAsset.builder()
+              .bodyType(AssetType.STENCIL)
+              .body(tuple.getItem2().getAssetBody())
+              .name(tuple.getItem2().getName())
+              .id(tuple.getItem2().getId())
+              .updated(Instant.now())
+              .build())
+          .addAssets(ImmutableSysConfigAsset.builder()
+              .bodyType(AssetType.WRENCH)
+              .body(tuple.getItem3().getAssetBody())
+              .name(tuple.getItem3().getName())
+              .id(tuple.getItem3().getId())
+              .updated(Instant.now())
+              .build())          
+          .build();
+      
+      return release;
     });
+    
   }
 }
