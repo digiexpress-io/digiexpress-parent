@@ -11,7 +11,7 @@ const FormattedCell: React.FC<{
   rowId: number,
   row: TaskDescriptor,
   def: Group
-}> = ({ row, def }) => {
+}> = ({ row }) => {
 
   const backend = Context.useBackend();
   const tasks = Context.useTasks();

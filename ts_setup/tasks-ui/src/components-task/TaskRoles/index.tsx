@@ -61,6 +61,7 @@ const TaskRoles: React.FC<{
   onChange: (command: Client.AssignTaskRoles) => Promise<void>,
   fullnames?: boolean
 }> = ({ task, onChange, fullnames }) => {
+  const tasks = Context.useTasks();
   const { state } = Context.useTasks();
   const roleColors = state.palette.roles;
 
@@ -86,7 +87,8 @@ const TaskRoles: React.FC<{
     const isChanges = newRoles.sort().toString() !== task.roles.sort().toString();
     if (isChanges) {
       onChange({ roles: newRoles, commandType: 'AssignTaskRoles', taskId: task.id })
-        .then(() => Popover.onClose());
+        .then(() => Popover.onClose())
+        .then(tasks.reload);
       return;
     }
     Popover.onClose();

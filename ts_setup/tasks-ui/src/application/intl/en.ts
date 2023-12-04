@@ -325,6 +325,7 @@ const en = {
   'core.search.searchBar.filterStatus': 'Status {count}',
   'core.search.searchBar.filterPriority': 'Priority {count}',
 
+  'search.results.none': 'No results',
 
   'taskEditDialog.title': 'Edit task',
 

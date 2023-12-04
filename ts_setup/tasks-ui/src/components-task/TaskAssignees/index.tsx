@@ -37,7 +37,8 @@ const AvatarsOnly: React.FC<{
 
   return task.assignees.length ?
     (<AvatarGroup spacing='medium'>
-      {(task.assigneesAvatars ?? Client.resolveAvatar(task.assignees)).map((assignee: AvatarCode) => (<UserAvatar key={assignee.value}>{assignee}</UserAvatar>))}
+      {(task.assigneesAvatars ?? Client.resolveAvatar(task.assignees)).map((assignee: AvatarCode) => (
+        <UserAvatar key={assignee.value}>{assignee}</UserAvatar>))}
     </AvatarGroup>) :
     (<UserAvatar />)
 }
@@ -46,16 +47,16 @@ const FullnamesAndAvatars: React.FC<{
   task: {
     assignees: Client.UserId[],
     assigneesAvatars?: AvatarCode[]
-  },
+  }
 }> = ({ task }) => {
-  const org = Context.useOrg();
 
   return task.assignees.length ?
     (<Stack spacing={1}>
-      {(task.assigneesAvatars ?? Client.resolveAvatar(task.assignees)).map((assignee: AvatarCode) => (<Box key={assignee.value} display='flex' alignItems='center' sx={{ cursor: 'pointer' }}>
-        <UserAvatar key={assignee.value}>{assignee}</UserAvatar>
-        <Box pl={1}><Typography>{org.state.org.users[assignee.value].displayName}</Typography></Box>
-      </Box>))}
+      {(task.assigneesAvatars ?? Client.resolveAvatar(task.assignees)).map((assignee: AvatarCode) => (
+        <Box key={assignee.value} display='flex' alignItems='center' sx={{ cursor: 'pointer' }}>
+          <UserAvatar key={assignee.value}>{assignee}</UserAvatar>
+          <Box pl={1}><Typography>{assignee.value}</Typography></Box>
+        </Box>))}
     </Stack>)
     :
     (<UserAvatar />);
@@ -70,7 +71,7 @@ const TaskAssignees: React.FC<{
   fullnames?: boolean,
   disabled?: boolean,
 }> = ({ task, onChange, fullnames, disabled }) => {
-
+  const tasks = Context.useTasks();
   const { state } = Context.useTasks();
   const assigneeColors = state.palette.owners;
 
@@ -95,7 +96,8 @@ const TaskAssignees: React.FC<{
     const isChanges = newAssignees.sort().toString() !== task.assignees.sort().toString();
     if (isChanges) {
       onChange(newAssignees)
-        .then(() => Popover.onClose());
+        .then(() => Popover.onClose())
+        .then(tasks.reload);
       return;
     }
     Popover.onClose();
@@ -117,6 +119,7 @@ const TaskAssignees: React.FC<{
         <SearchFieldPopover onChange={setSearchString} />
         <List dense sx={{ py: 0 }}>
           {searchResults.map(({ user, checked }) => (
+
             <MenuItem key={user.userId} sx={{ display: "flex", pl: 0, py: 0 }} onClick={() => handleToggleUser(user, checked)}>
               <Box sx={{ width: 8, height: 40, backgroundColor: assigneeColors[user.userId] }} />
               <Box ml={1}>
