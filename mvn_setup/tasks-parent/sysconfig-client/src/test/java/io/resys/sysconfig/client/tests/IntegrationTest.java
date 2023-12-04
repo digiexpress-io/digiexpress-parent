@@ -78,7 +78,6 @@ public class IntegrationTest extends TestCase {
     final var deployment = sysConfig().createConfig().createOne(ImmutableCreateSysConfigDeployment.builder()
         .body(release)
         .liveDate(getTargetDate())
-        .pushToLive(true)
         .userId(getUserId())
         .targetDate(getTargetDate())
         .build())

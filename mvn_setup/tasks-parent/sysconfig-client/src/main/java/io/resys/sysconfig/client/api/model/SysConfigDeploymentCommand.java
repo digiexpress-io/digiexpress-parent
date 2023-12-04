@@ -60,7 +60,7 @@ public interface SysConfigDeploymentCommand extends Serializable {
 
   @Value.Immutable @JsonSerialize(as = ImmutableCreateSysConfigDeployment.class) @JsonDeserialize(as = ImmutableCreateSysConfigDeployment.class)
   interface CreateSysConfigDeployment extends SysConfigDeploymentCommand {
-    Boolean getPushToLive();
+    @Nullable Boolean getDisabled();
     Instant getLiveDate();
     SysConfigRelease getBody();
     
@@ -84,7 +84,7 @@ public interface SysConfigDeploymentCommand extends Serializable {
 
   @Value.Immutable @JsonSerialize(as = ImmutableUpdateSysConfigDeploymentLiveDate.class) @JsonDeserialize(as = ImmutableUpdateSysConfigDeploymentLiveDate.class)
   interface UpdateSysConfigDeploymentLiveDate extends SysConfigDeploymentUpdateCommand {
-    Boolean getDisabled();
+    Instant getLiveDate();
     
     @JsonIgnore @Value.Default @Override 
     default SysConfigDeploymentCommandType getCommandType() { return SysConfigDeploymentCommandType.UpdateDeploymentLiveDate; }

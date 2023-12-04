@@ -57,7 +57,7 @@ public class SysConfigCommandVisitor {
     case CreateSysConfig: return visitCreateSysConfig((CreateSysConfig) command);
     case CreateSysConfigRelease: return visitCreateSysConfigRelease((CreateSysConfigRelease) command); 
     }
-    throw new UpdateProjectVisitorException(String.format("Unsupported command type: %s, body: %s", command.getClass().getSimpleName(), command.toString()));
+    throw new SysConfigVisitorException(String.format("Unsupported command type: %s, body: %s", command.getClass().getSimpleName(), command.toString()));
   }
   
   private SysConfig visitCreateSysConfig(CreateSysConfig command) {
@@ -100,7 +100,7 @@ public class SysConfigCommandVisitor {
   public static Instant requireTargetDate(SysConfigCommand command) {
     final var targetDate = command.getTargetDate();
     if (targetDate == null) {
-      throw new UpdateProjectVisitorException("targetDate not defined");
+      throw new SysConfigVisitorException("targetDate not defined");
     }
     return targetDate;
   }
@@ -110,14 +110,14 @@ public class SysConfigCommandVisitor {
     private static final long serialVersionUID = -4373837491237504039L;
   }
 
-  public static class UpdateProjectVisitorException extends RuntimeException {
+  public static class SysConfigVisitorException extends RuntimeException {
     private static final long serialVersionUID = -1385190644836838881L;
 
-    public UpdateProjectVisitorException(String message, Throwable cause) {
+    public SysConfigVisitorException(String message, Throwable cause) {
       super(message, cause);
     }
 
-    public UpdateProjectVisitorException(String message) {
+    public SysConfigVisitorException(String message) {
       super(message);
     }
   }

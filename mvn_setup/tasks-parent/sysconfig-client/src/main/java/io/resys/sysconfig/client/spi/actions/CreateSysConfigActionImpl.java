@@ -31,6 +31,7 @@ import io.resys.sysconfig.client.api.model.SysConfigDeployment;
 import io.resys.sysconfig.client.api.model.SysConfigDeploymentCommand.CreateSysConfigDeployment;
 import io.resys.sysconfig.client.api.model.SysConfigRelease;
 import io.resys.sysconfig.client.spi.store.DocumentStore;
+import io.resys.sysconfig.client.spi.visitors.CreateSysConfigDeploymentVisitor;
 import io.resys.sysconfig.client.spi.visitors.CreateSysConfigVisitor;
 import io.resys.sysconfig.client.spi.visitors.SysConfigReleaseVisitor;
 import io.smallrye.mutiny.Uni;
@@ -50,8 +51,8 @@ public class CreateSysConfigActionImpl implements CreateSysConfigAction {
 
   @Override
   public Uni<SysConfigDeployment> createOne(CreateSysConfigDeployment command) {
-    // TODO Auto-generated method stub
-    return null;
+    return ctx.getConfig().accept(new CreateSysConfigDeploymentVisitor(Arrays.asList(command)))
+        .onItem().transform(tasks -> tasks.get(0));
   }
 
   @Override

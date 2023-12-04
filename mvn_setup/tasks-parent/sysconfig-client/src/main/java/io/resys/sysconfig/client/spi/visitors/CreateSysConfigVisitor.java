@@ -53,7 +53,7 @@ public class CreateSysConfigVisitor implements DocCreateVisitor<SysConfig> {
     builder
       .docType(Document.DocumentType.SYS_CONFIG.name())
       .author(config.getAuthor().get())
-      .message("creating customer");
+      .message("creating sys config");
     
     for(final var command : commands) {
       try {
@@ -76,7 +76,7 @@ public class CreateSysConfigVisitor implements DocCreateVisitor<SysConfig> {
     if(envelope.getStatus() == CommitResultStatus.OK) {
       return envelope.getBranch();
     }
-    throw new DocumentStoreException("CUSTOMER_CREATE_FAIL", DocumentStoreException.convertMessages(envelope));
+    throw new DocumentStoreException("SYS_CONFIG_CREATE_FAIL", DocumentStoreException.convertMessages(envelope));
   }
 
   @Override
