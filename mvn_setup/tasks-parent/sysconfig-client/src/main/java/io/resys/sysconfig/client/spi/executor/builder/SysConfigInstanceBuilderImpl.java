@@ -12,9 +12,10 @@ import io.dialob.client.api.DialobClient;
 import io.dialob.client.api.DialobClient.ProgramEnvirValue;
 import io.dialob.client.api.DialobClient.ProgramWrapper;
 import io.dialob.client.api.DialobErrorHandler.DocumentNotFoundException;
+import io.resys.sysconfig.client.api.AssetClient;
 import io.resys.sysconfig.client.api.ExecutorClient;
-import io.resys.sysconfig.client.api.ExecutorClient.SysConfigSessionBuilder;
 import io.resys.sysconfig.client.api.ExecutorClient.SysConfigSession;
+import io.resys.sysconfig.client.api.ExecutorClient.SysConfigSessionBuilder;
 import io.resys.sysconfig.client.api.ImmutableSysConfigSession;
 import io.resys.sysconfig.client.api.model.ImmutableFillCreated;
 import io.resys.sysconfig.client.api.model.ImmutableProcessCreated;
@@ -37,13 +38,13 @@ import lombok.RequiredArgsConstructor;
 public class SysConfigInstanceBuilderImpl implements ExecutorClient.SysConfigSessionBuilder {
   
   private final ExecutorStore store;
-  private final DialobClient dialobClient;
+  private final AssetClient assetClient;
   private final Map<String, Serializable> initProps = new HashMap<>();
   private String workflowName;
   private String locale;
   private Instant targetDate;
   private String ownerId;
-  
+
   @Override public SysConfigSessionBuilder ownerId(String ownerId) { this.ownerId = ownerId; return this; }
   @Override public SysConfigSessionBuilder workflowName(String workflowName) { this.workflowName = workflowName; return this; }
   @Override public SysConfigSessionBuilder locale(String locale) { this.locale = locale; return this; }
@@ -64,6 +65,7 @@ public class SysConfigInstanceBuilderImpl implements ExecutorClient.SysConfigSes
   
 
   private SysConfigSession doInForm(SysConfigInstance instance, DialobClient.ProgramWrapper form) {
+    final var dialobClient = this.assetClient.getConfig().getDialob();
     final var questionnaireSessionId = OidUtils.gen();
     final var envir = new DialobProgramEnvirImpl(form);
     final var newExecutor = dialobClient.executor(envir).create(form.getDocument().getData().getId(), (init) -> init.id(questionnaireSessionId).rev("1"));

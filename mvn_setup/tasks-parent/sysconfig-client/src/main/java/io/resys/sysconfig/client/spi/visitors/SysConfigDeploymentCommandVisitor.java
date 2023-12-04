@@ -72,6 +72,7 @@ public class SysConfigDeploymentCommandVisitor {
       .updated(targetDate)
       .liveDate(command.getLiveDate())
       .disabled(Boolean.TRUE.equals(command.getDisabled()))
+      .tenantId(command.getBody().getTenantId())
       .hash("TODO::")
       .version(version)
       .addTransactions(

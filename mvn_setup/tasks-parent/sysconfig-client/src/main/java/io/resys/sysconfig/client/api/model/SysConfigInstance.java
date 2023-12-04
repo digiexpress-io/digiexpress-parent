@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 @Value.Immutable @JsonSerialize(as = ImmutableSysConfigInstance.class) @JsonDeserialize(as = ImmutableSysConfigInstance.class)
 public interface SysConfigInstance extends Document {
   String getId();
+  String getTenantId();
   String getOwnerId();
   List<Step<?>> getSteps();
   

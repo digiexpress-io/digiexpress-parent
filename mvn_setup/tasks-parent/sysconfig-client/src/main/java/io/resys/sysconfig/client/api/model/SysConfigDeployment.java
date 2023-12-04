@@ -19,6 +19,7 @@ public interface SysConfigDeployment extends Document {
   Instant getLiveDate();
   Boolean getDisabled();
   String getHash();
+  String getTenantId();
   List<SysConfigDeploymentTransaction> getTransactions();
   
   @JsonIgnore @Value.Default default DocumentType getDocumentType() { return DocumentType.SYS_CONFIG_DEPLOYMENT; }

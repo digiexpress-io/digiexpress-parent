@@ -16,6 +16,7 @@ public interface SysConfigRelease extends Document {
   Instant getCreated();
   Instant getScheduledAt();
   String getAuthor();
+  String getTenantId();
   
   List<SysConfigAsset> getAssets();
   List<SysConfigService> getServices();

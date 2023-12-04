@@ -27,14 +27,14 @@ import io.resys.hdes.client.spi.store.ImmutableThenaConfig;
 import io.resys.sysconfig.client.api.AssetClient;
 import io.resys.sysconfig.client.api.ExecutorClient;
 import io.resys.sysconfig.client.api.ImmutableAssetClientConfig;
+import io.resys.sysconfig.client.api.ImmutableExecutorClientConfig;
 import io.resys.sysconfig.client.api.SysConfigClient;
 import io.resys.sysconfig.client.api.model.Document.DocumentType;
-import io.resys.sysconfig.client.api.model.SysConfig;
 import io.resys.sysconfig.client.spi.SysConfigClientImpl;
 import io.resys.sysconfig.client.spi.asset.AssetClientImpl;
 import io.resys.sysconfig.client.spi.executor.ExecutorClientImpl;
+import io.resys.sysconfig.client.spi.executor.ExecutorStoreImpl;
 import io.resys.sysconfig.client.spi.store.DocumentConfig.DocumentGidProvider;
-import io.resys.sysconfig.client.spi.store.DocumentStoreImpl;
 import io.resys.thena.docdb.api.DocDB;
 import io.resys.thena.docdb.jackson.VertexExtModule;
 import io.resys.thena.docdb.spi.DbCollections;
@@ -63,6 +63,7 @@ public class TestCaseBuilder {
   private SysConfigClient sysConfig;
   private TenantConfig tenant;
   private AssetClient assetClient;
+  private ExecutorClient executorClient;
   private TenantConfigClient tenantClient;
   private final DocDB doc;
   private final DbState docState;
@@ -96,15 +97,23 @@ public class TestCaseBuilder {
     this.tenantClient = new ProjectsClientImpl(tenantStore);
     this.assetClient = new AssetClientImpl(tenantClient, assetConfig);
     this.sysConfig = createSysConfigInit(pgPool, objectMapper, assetClient);
+    this.executorClient = createExecutorInit(pgPool, objectMapper, assetClient);
   }
   
   public Uni<TestCaseBuilder> withTenant(TenantConfig tenant) {
     this.tenant = tenant;
     this.sysConfig = this.sysConfig.withRepoId(tenant.getRepoConfigs().stream().filter(c -> c.getRepoType() == TenantRepoConfigType.SYS_CONFIG).findFirst().get().getRepoId());
-    return this.assetClient.withTenantConfig(tenant.getId()).onItem().transform(newClient -> {
+    return this.assetClient.withTenantConfig(tenant.getId())
+    .onItem().transform(newClient -> {
       this.assetClient = newClient;
       return this;
-    });
+    })
+    .onItem().transformToUni(_junk -> this.executorClient.withTenantConfig(tenant.getId())
+    .onItem().transform(newClient -> {
+        this.executorClient = newClient;
+        return this;
+      })
+    );
   }
   public String getRepoId() {
     return repoId;
@@ -132,11 +141,14 @@ public class TestCaseBuilder {
   }
   
   public ExecutorClient getExecutor() {
-    return null;
+    return this.executorClient;
   }
   
-  private ExecutorClient createExecutorIni() {
-    return null;
+  private ExecutorClient createExecutorInit(io.vertx.mutiny.pgclient.PgPool pgPool, ObjectMapper objectMapper, AssetClient assetClient) {
+    final var config = ImmutableExecutorClientConfig.builder()
+        .tenantConfigId("")
+        .build();
+    return new ExecutorClientImpl(new ExecutorStoreImpl(tenantClient, config), assetClient);
   }
   
   private SysConfigClient createSysConfigInit(io.vertx.mutiny.pgclient.PgPool pgPool, ObjectMapper objectMapper, AssetClient assetClient) {

@@ -2,6 +2,7 @@ package io.resys.sysconfig.client.api;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.List;
 import java.util.Map;
 
 import org.immutables.value.Value;
@@ -10,18 +11,21 @@ import io.dialob.client.api.DialobClient;
 import io.resys.sysconfig.client.api.SysConfigClient.SysConfigReleaseQuery;
 import io.resys.sysconfig.client.api.model.SysConfigInstance;
 import io.resys.sysconfig.client.api.model.SysConfigRelease;
+import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfig;
 import io.smallrye.mutiny.Uni;
 
 public interface ExecutorClient {
-
+  SysConfigSessionBuilder createSession();
   SysConfigSessionQuery querySession();
   SysConfigReleaseQuery queryReleases();
-  SysConfigSessionBuilder createSession();
   SysConfigFillBuilder fillInstance();
   SysConfigProcesssFillBuilder processFillInstance();
   
   Uni<SysConfigSession> save(SysConfigSession session);
   Uni<SysConfigRelease> save(SysConfigRelease release);
+  
+  Uni<ExecutorClient> withTenantConfig(String tenantConfigId);
+  ExecutorClient withTenantConfig(String tenantConfigId, List<TenantRepoConfig> tenantConfig);
   
   
   interface SysConfigSessionQuery {
@@ -36,6 +40,7 @@ public interface ExecutorClient {
     SysConfigSessionBuilder addAllProps(Map<String, Serializable> initVariables);
     SysConfigSessionBuilder addProp(String variableName, Serializable variableValue);
     Uni<SysConfigSession> build();
+
   }
   
   interface SysConfigFillBuilder {
@@ -62,4 +67,9 @@ public interface ExecutorClient {
   }
   
 
+  @Value.Immutable
+  interface ExecutorClientConfig {
+    String getTenantConfigId();
+    List<TenantRepoConfig> getRepoConfigs();
+  }
 }

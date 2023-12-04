@@ -29,7 +29,6 @@ public interface AssetClient {
   
   Uni<AssetClient> withTenantConfig(String tenantConfigId);
   AssetClient withTenantConfig(String tenantConfigId, List<TenantRepoConfig> tenantConfig);
-  
   AssetClientConfig getConfig();
   
   interface AssetQuery {

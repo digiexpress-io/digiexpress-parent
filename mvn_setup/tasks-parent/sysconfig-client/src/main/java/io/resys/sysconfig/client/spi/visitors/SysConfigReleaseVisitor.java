@@ -109,6 +109,7 @@ public class SysConfigReleaseVisitor implements DocObjectVisitor<Uni<SysConfigRe
           .author(command.getUserId())
           .created(command.getTargetDate())
           .scheduledAt(command.getScheduledAt())
+          .tenantId(config.getTenantId())
           .addAllAssets(tuple.getItem1().stream().map(dialob -> ImmutableSysConfigAsset.builder()
               .bodyType(AssetType.DIALOB)
               .body(dialob.getAssetBody())
