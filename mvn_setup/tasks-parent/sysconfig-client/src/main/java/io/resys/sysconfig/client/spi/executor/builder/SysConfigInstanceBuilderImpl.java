@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import io.dialob.client.api.DialobClient;
 import io.dialob.client.api.DialobClient.ProgramEnvirValue;
@@ -44,7 +43,9 @@ public class SysConfigInstanceBuilderImpl implements ExecutorClient.SysConfigSes
   private String locale;
   private Instant targetDate;
   private String ownerId;
+  private String releaseId;
 
+  @Override public SysConfigSessionBuilder releaseId(String releaseId) { this.releaseId = releaseId; return this; }
   @Override public SysConfigSessionBuilder ownerId(String ownerId) { this.ownerId = ownerId; return this; }
   @Override public SysConfigSessionBuilder workflowName(String workflowName) { this.workflowName = workflowName; return this; }
   @Override public SysConfigSessionBuilder locale(String locale) { this.locale = locale; return this; }
@@ -53,12 +54,13 @@ public class SysConfigInstanceBuilderImpl implements ExecutorClient.SysConfigSes
   @Override public SysConfigSessionBuilder addProp(String variableName, Serializable variableValue) { initProps.put(variableName, variableValue); return this; }
   @Override
   public Uni<SysConfigSession> build() {
+    SysConfigAssert.notEmpty(releaseId, () -> "releaseId can't be empty!");
     SysConfigAssert.notEmpty(ownerId, () -> "ownerId can't be empty!");
     SysConfigAssert.notEmpty(workflowName, () -> "workflowName can't be empty!");
     SysConfigAssert.notEmpty(locale, () -> "locale can't be empty!");
     SysConfigAssert.notNull(targetDate, () -> "targetDate must be defined!");
 
-    return store.queryReleases().get(targetDate)
+    return store.queryReleases().get(releaseId)
         .onItem().transform(this::doInRelease)
         .onItem().transformToUni(instance -> getForm(instance).onItem().transform(form -> doInForm(instance, form)));
   }
@@ -105,8 +107,8 @@ public class SysConfigInstanceBuilderImpl implements ExecutorClient.SysConfigSes
         });
   }
   
-  private SysConfigInstance doInRelease(Optional<SysConfigRelease> release) {
-    if(release.isEmpty()) {
+  private SysConfigInstance doInRelease(SysConfigRelease release) {
+    if(release == null) {
       throw new ExecutorException(ErrorMsg.builder()
           .withCode("SYS_CONFIG_RELEASE_NOT_FOUND")
           .withProps(JsonObject.of("targetDate", targetDate ,"workflowName", workflowName, "locale", locale))
@@ -114,21 +116,21 @@ public class SysConfigInstanceBuilderImpl implements ExecutorClient.SysConfigSes
           .toString());
     }
     
-    final var definition = release.get().getServices().stream()
+    final var definition = release.getServices().stream()
       .filter(service -> service.getServiceName().equals(workflowName))
       .findFirst();
     
     if(definition.isEmpty()) {
       throw new ExecutorException(ErrorMsg.builder()
           .withCode("WK_NOT_FOUND")
-          .withProps(JsonObject.of("workflowName", workflowName, "locale", locale, "release", release.get().getId() + "/" + release.get().getName()))
+          .withProps(JsonObject.of("workflowName", workflowName, "locale", locale, "release", release.getId() + "/" + release.getName()))
           .withMessage("Can't create new instance of a wk, because it does not exist!")
           .toString());
     }
     if(!definition.get().getLocales().contains(this.locale)) {
       throw new ExecutorException(ErrorMsg.builder()
           .withCode("WK_LOCALE_NOT_FOUND")
-          .withProps(JsonObject.of("workflowName", workflowName, "locale", locale, "release", release.get().getId() + "/" + release.get().getName()))
+          .withProps(JsonObject.of("workflowName", workflowName, "locale", locale, "release", release.getId() + "/" + release.getName()))
           .withMessage("Can't create new instance of a wk, because user given locale does not exist!")
           .toString());
     }
@@ -139,8 +141,8 @@ public class SysConfigInstanceBuilderImpl implements ExecutorClient.SysConfigSes
       .body(ImmutableProcessCreated.builder()
           .id(OidUtils.gen())
           .serviceId(definition.get().getId())
-          .releaseId(release.get().getId())
-          .releaseName(release.get().getName())
+          .releaseId(release.getId())
+          .releaseName(release.getName())
           .serviceName(definition.get().getServiceName())
           .flowName(definition.get().getFlowName())
           .formId(definition.get().getFormId())
@@ -151,6 +153,7 @@ public class SysConfigInstanceBuilderImpl implements ExecutorClient.SysConfigSes
     final var state = ImmutableSysConfigInstance.builder()
         .id(OidUtils.gen())
         .ownerId(ownerId)
+        .tenantId(release.getTenantId())
         .version("1")
         .addSteps(step_1)
         .build();

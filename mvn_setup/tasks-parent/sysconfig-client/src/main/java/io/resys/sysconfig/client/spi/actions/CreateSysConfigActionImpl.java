@@ -33,7 +33,7 @@ import io.resys.sysconfig.client.api.model.SysConfigRelease;
 import io.resys.sysconfig.client.spi.store.DocumentStore;
 import io.resys.sysconfig.client.spi.visitors.CreateSysConfigDeploymentVisitor;
 import io.resys.sysconfig.client.spi.visitors.CreateSysConfigVisitor;
-import io.resys.sysconfig.client.spi.visitors.SysConfigReleaseVisitor;
+import io.resys.sysconfig.client.spi.visitors.CreateSysConfigReleaseVisitor;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
@@ -57,7 +57,7 @@ public class CreateSysConfigActionImpl implements CreateSysConfigAction {
 
   @Override
   public Uni<SysConfigRelease> createOne(CreateSysConfigRelease command) {
-    return ctx.getConfig().accept(new SysConfigReleaseVisitor(command, ctx, assetClient))
+    return ctx.getConfig().accept(new CreateSysConfigReleaseVisitor(command, ctx, assetClient))
         .onItem().transformToUni(uni -> uni);
   }
 }

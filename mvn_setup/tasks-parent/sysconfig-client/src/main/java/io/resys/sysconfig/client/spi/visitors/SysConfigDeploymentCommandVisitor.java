@@ -62,8 +62,8 @@ public class SysConfigDeploymentCommandVisitor {
   }
   
   private SysConfigDeployment visitCreateSysConfig(CreateSysConfigDeployment command) {
-    final var id = ctx.getGid().getNextId(DocumentType.SYS_CONFIG);
-    final var version = ctx.getGid().getNextVersion(DocumentType.SYS_CONFIG);
+    final var id = command.getDeploymentId();
+    final var version = ctx.getGid().getNextVersion(DocumentType.SYS_CONFIG_DEPLOYMENT);
     final var targetDate = requireTargetDate(command);
     
     this.current = ImmutableSysConfigDeployment.builder()

@@ -148,7 +148,20 @@ public class TestCaseBuilder {
     final var config = ImmutableExecutorClientConfig.builder()
         .tenantConfigId("")
         .build();
-    return new ExecutorClientImpl(new ExecutorStoreImpl(tenantClient, config), assetClient);
+    final var store = io.resys.sysconfig.client.spi.store.DocumentStoreImpl.builder()
+        .repoName("").pgPool(pgPool)
+        .gidProvider(new DocumentGidProvider() {
+          @Override
+          public String getNextVersion(DocumentType entity) {
+            return OidUtils.gen();
+          }
+          @Override
+          public String getNextId(DocumentType entity) {
+            return OidUtils.gen();
+          }
+        })
+        .build();
+    return new ExecutorClientImpl(new ExecutorStoreImpl(tenantClient, config, store), assetClient);
   }
   
   private SysConfigClient createSysConfigInit(io.vertx.mutiny.pgclient.PgPool pgPool, ObjectMapper objectMapper, AssetClient assetClient) {

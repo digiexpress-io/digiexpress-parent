@@ -34,7 +34,7 @@ public interface ThenaDocObjects extends ThenaObjects {
       final var result = new ArrayList<T>();
       final var doc = getDoc();
       for(final var branch : getBranches().values()) {
-        final T value = visitor.visit(doc, branch, getCommits().get(branch.getCommitId()), getLogs().get(branch.getCommitId()));
+        final T value = visitor.visit(doc, branch, getCommits().get(branch.getId()), getLogs().get(branch.getCommitId()));
         result.add(value);
       }
     

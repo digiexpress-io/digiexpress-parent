@@ -1,6 +1,5 @@
 package io.resys.sysconfig.client.spi.executor;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,6 +11,7 @@ import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfig;
 import io.smallrye.mutiny.Uni;
 
 public interface ExecutorStore {
+  
   SysConfigReleaseQuery queryReleases();
   SysConfigInstanceQuery queryInstances();
   SysConfigSessionQuery querySessions();
@@ -30,7 +30,7 @@ public interface ExecutorStore {
   }
   
   interface SysConfigReleaseQuery {
-    Uni<Optional<SysConfigRelease>> get(Instant targetDate);
+    Uni<SysConfigRelease> get(String releaseId);
   }
 
   interface DialobFormQuery {

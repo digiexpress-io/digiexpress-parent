@@ -33,6 +33,7 @@ public interface ExecutorClient {
   }
   
   interface SysConfigSessionBuilder {
+    SysConfigSessionBuilder releaseId(String releaseId);
     SysConfigSessionBuilder ownerId(String ownerId);
     SysConfigSessionBuilder workflowName(String workflowName);
     SysConfigSessionBuilder locale(String locale);

@@ -34,7 +34,7 @@ public class CreateSysConfigDeploymentVisitor implements DocCreateVisitor<SysCon
     builder
       .docType(Document.DocumentType.SYS_CONFIG_DEPLOYMENT.name())
       .author(config.getAuthor().get())
-      .message("creating sys config deployment");
+      .message("creating sys-config-deployment");
     
     for(final var command : commands) {
       try {

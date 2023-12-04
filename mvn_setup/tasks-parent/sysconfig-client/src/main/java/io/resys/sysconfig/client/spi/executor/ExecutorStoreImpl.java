@@ -5,8 +5,12 @@ import java.util.List;
 import io.resys.sysconfig.client.api.ExecutorClient.ExecutorClientConfig;
 import io.resys.sysconfig.client.api.ExecutorClient.SysConfigSession;
 import io.resys.sysconfig.client.api.ImmutableExecutorClientConfig;
+import io.resys.sysconfig.client.api.model.SysConfigRelease;
+import io.resys.sysconfig.client.spi.store.DocumentStore;
+import io.resys.sysconfig.client.spi.visitors.GetSysConfigReleaseByIdVisitor;
 import io.resys.thena.projects.client.api.TenantConfigClient;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfig;
+import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
@@ -15,11 +19,16 @@ public class ExecutorStoreImpl implements ExecutorStore {
   
   private final TenantConfigClient tenantClient;
   private final ExecutorClientConfig config;
-
+  private final DocumentStore ctx;
+  
   @Override
   public SysConfigReleaseQuery queryReleases() {
-    // TODO Auto-generated method stub
-    return null;
+    return new SysConfigReleaseQuery() {
+      @Override
+      public Uni<SysConfigRelease> get(String releaseId) {
+        return ctx.getConfig().accept(new GetSysConfigReleaseByIdVisitor(releaseId));
+      }
+    };
   }
 
   @Override
@@ -54,8 +63,10 @@ public class ExecutorStoreImpl implements ExecutorStore {
 
   @Override
   public ExecutorStore withTenantConfig(String tenantConfigId, List<TenantRepoConfig> tenantConfig) {
+    final var sysConfig = tenantConfig.stream().filter(entry -> entry.getRepoType() == TenantRepoConfigType.SYS_CONFIG).findFirst();
     final var config = ImmutableExecutorClientConfig.builder().tenantConfigId(tenantConfigId).repoConfigs(tenantConfig).build();
-    return new ExecutorStoreImpl(tenantClient, config);
+    final var ctx = this.ctx.withRepoId(sysConfig.get().getRepoId());
+    return new ExecutorStoreImpl(tenantClient, config, ctx);
   }
 
 }

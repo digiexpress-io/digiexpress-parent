@@ -76,6 +76,7 @@ public class IntegrationTest extends TestCase {
         .await().atMost(atMost);
     
     final var deployment = sysConfig().createConfig().createOne(ImmutableCreateSysConfigDeployment.builder()
+        .deploymentId("live-deploy")
         .body(release)
         .liveDate(getTargetDate())
         .userId(getUserId())
@@ -85,6 +86,7 @@ public class IntegrationTest extends TestCase {
     .await().atMost(atMost);
     
     final var session = executor().createSession()
+      .releaseId(deployment.getBody().getId())
       .ownerId(getUserId())
       .addProp("firstName", "Sam")
       .addProp("lastName", "Vimes")

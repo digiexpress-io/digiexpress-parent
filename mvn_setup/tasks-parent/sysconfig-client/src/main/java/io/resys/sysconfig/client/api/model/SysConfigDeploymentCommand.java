@@ -60,6 +60,7 @@ public interface SysConfigDeploymentCommand extends Serializable {
 
   @Value.Immutable @JsonSerialize(as = ImmutableCreateSysConfigDeployment.class) @JsonDeserialize(as = ImmutableCreateSysConfigDeployment.class)
   interface CreateSysConfigDeployment extends SysConfigDeploymentCommand {
+    String getDeploymentId(); // user given unique id
     @Nullable Boolean getDisabled();
     Instant getLiveDate();
     SysConfigRelease getBody();
