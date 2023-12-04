@@ -4,7 +4,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 
 import Client from 'client';
 import { TaskDescriptor, StatusPalette } from 'descriptor-task';
-import { useMockPopover } from '../TaskTable/MockPopover';
+import { usePopover, TablePopover } from '../TablePopover';
 
 const statusColors = StatusPalette;
 const statusOptions: Client.TaskStatus[] = ['CREATED', 'IN_PROGRESS', 'COMPLETED', 'REJECTED'];
@@ -18,7 +18,7 @@ function getActiveColor(currentlyShowing: Client.TaskStatus, status: Client.Task
 const TaskStatus: React.FC<{ task: TaskDescriptor, onChange: (command: Client.ChangeTaskStatus) => Promise<void> }> = ({ task, onChange }) => {
   const status = task.status;
   const intl = useIntl();
-  const Popover = useMockPopover();
+  const Popover = usePopover();
   const statusLabel = intl.formatMessage({ id: `tasktable.header.spotlight.status.${status}` }).toUpperCase();
 
   async function handleStatusChange(newStatus: Client.TaskStatus) {
@@ -35,7 +35,7 @@ const TaskStatus: React.FC<{ task: TaskDescriptor, onChange: (command: Client.Ch
         onClick={Popover.onClick}
         label={statusLabel}
       />
-      <Popover.Delegate onClose={Popover.onClose}>
+      <TablePopover onClose={Popover.onClose} anchorEl={Popover.anchorEl} open={Popover.open}>
         <List dense sx={{ py: 0 }}>
           {statusOptions.map((option: Client.TaskStatus) => (
             <MenuItem key={option} onClick={() => handleStatusChange(option)} sx={{ display: "flex", pl: 0, py: 0 }}>
@@ -45,7 +45,7 @@ const TaskStatus: React.FC<{ task: TaskDescriptor, onChange: (command: Client.Ch
             </MenuItem>
           ))}
         </List>
-      </Popover.Delegate>
+      </TablePopover>
     </Box>
   );
 }

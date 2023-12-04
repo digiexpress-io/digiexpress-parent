@@ -44,6 +44,7 @@ class TaskEditStateBuilder implements TaskEditMutatorBuilder {
 
 class TaskEditEventVisitor {
   private _groups: Record<string, SingleEvent[]>;
+  private _previousCommand: Record<string, TaskCommand> = {};
 
   constructor(init: {
     task: TaskDescriptor;
@@ -72,26 +73,29 @@ class TaskEditEventVisitor {
   }
 
   private visitTransaction(tx: TaskTransaction, task: TaskDescriptor) {
-    tx.commands.forEach(command => this.visitCommand(command, tx, task));
+    tx.commands.forEach((command) => this.visitCommand(command, tx, task));
   }
 
   private visitCommand(command: TaskCommand, tx: TaskTransaction, task: TaskDescriptor) {
+    const previous = this._previousCommand[command.commandType];
+
     let groupId: string = Object.entries(this._groups).length + "";
     if (!this._groups[groupId]) {
       this._groups[groupId] = [];
     }
 
-    this._groups[groupId].push(this.visitEvent(command, tx, task));
+    this._groups[groupId].push(this.visitEvent(previous, command, tx, task));
+    this._previousCommand[command.commandType] = command;
   }
 
-  private visitEvent(command: TaskCommand, tx: TaskTransaction, task: TaskDescriptor): SingleEvent {
+  private visitEvent(previous: TaskCommand | undefined, command: TaskCommand, tx: TaskTransaction, task: TaskDescriptor): SingleEvent {
     return {
       type: 'SINGLE',
       targetDate: command.targetDate ? new Date(command.targetDate) : new Date(),
       body: {
         commandType: command.commandType,
         toCommand: command as any,
-        fromCommand: undefined
+        fromCommand: previous as any
 
       }
 

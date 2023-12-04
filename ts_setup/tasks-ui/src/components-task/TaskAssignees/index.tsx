@@ -3,10 +3,11 @@ import { AvatarGroup, Box, ListItemText, Checkbox, Button, Avatar, List, MenuIte
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { FormattedMessage } from 'react-intl';
 import { SearchFieldPopover } from '../SearchField';
-import { useMockPopover } from '../TaskTable/MockPopover';
 import Client from 'client';
 import { AvatarCode } from 'descriptor-task';
 import Context from 'context';
+import { TablePopover, usePopover } from '../TablePopover';
+
 
 const UserAvatar: React.FC<{ children?: AvatarCode }> = ({ children }) => {
   const { state } = Context.useTasks();
@@ -63,22 +64,23 @@ const FullnamesAndAvatars: React.FC<{
     (<UserAvatar />);
 }
 
-const TaskAssignees: React.FC<{
+
+const SelectAssignees: React.FC<{
+  anchorEl: HTMLElement | null,
   task: {
     assignees: Client.UserId[],
-    assigneesAvatars?: AvatarCode[]
+    assigneesAvatars?: AvatarCode[],
   },
   onChange: (assigneeIds: Client.UserId[]) => Promise<void>,
-  fullnames?: boolean,
-  disabled?: boolean,
-}> = ({ task, onChange, fullnames, disabled }) => {
-  const tasks = Context.useTasks();
+  onClose: () => void,
+}> = ({ anchorEl, task, onChange, onClose }) => {
+
   const { state } = Context.useTasks();
   const assigneeColors = state.palette.owners;
 
-  const Popover = useMockPopover();
   const [newAssignees, setNewAssignees] = React.useState(task.assignees);
   const { setSearchString, searchResults } = Context.useAssignees({ assignees: newAssignees });
+
 
   function handleToggleUser(user: Client.User, currentlyChecked: boolean) {
     setNewAssignees(currentListOfUserIds => {
@@ -93,56 +95,70 @@ const TaskAssignees: React.FC<{
     });
   }
 
-  function onSubmit() {
+  function handleClose() {
     const isChanges = newAssignees.sort().toString() !== task.assignees.sort().toString();
     if (isChanges) {
-      onChange(newAssignees)
-        .then(() => Popover.onClose())
-        .then(tasks.reload);
+      onChange(newAssignees).then(onClose);
       return;
     }
-    Popover.onClose();
+    onClose();
   }
+
+  return (
+    <TablePopover open={true} anchorEl={anchorEl} onClose={handleClose}>
+      <SearchFieldPopover onChange={setSearchString} />
+      <List dense sx={{ py: 0 }}>
+        {searchResults.length ? searchResults.map(({ user, checked }) => (
+          <MenuItem key={user.userId} sx={{ display: "flex", pl: 0, py: 0 }} onClick={() => handleToggleUser(user, checked)}>
+            <Box sx={{ width: 8, height: 40, backgroundColor: assigneeColors[user.userId] }} />
+            <Box ml={1}>
+              <Checkbox checked={checked} size='small'
+                sx={{
+                  height: "40px",
+                  color: 'uiElements.main',
+                  '&.Mui-checked': {
+                    color: 'uiElements.main',
+                  },
+                }} />
+            </Box>
+            <ListItemText><Typography>{user.displayName}</Typography></ListItemText>
+          </MenuItem>
+        )) : (
+          <Box display='flex'>
+            <Box sx={{ width: 8, backgroundColor: 'primary.main' }} />
+            <Alert severity='info' sx={{ width: '100%' }}><AlertTitle><FormattedMessage id='search.results.none' /></AlertTitle></Alert>
+          </Box>
+        )
+        }
+      </List>
+    </TablePopover>);
+}
+
+
+const TaskAssignees: React.FC<{
+  task: {
+    assignees: Client.UserId[],
+    assigneesAvatars?: AvatarCode[]
+  },
+  onChange: (assigneeIds: Client.UserId[]) => Promise<void>,
+  fullnames?: boolean,
+  disabled?: boolean,
+}> = ({ task, onChange, fullnames, disabled }) => {
+  const { anchorEl, onClick, onClose, open } = usePopover();
+
 
   return (
     <Box>
       {
         fullnames ?
-          (<Box onClick={Popover.onClick}><FullnamesAndAvatars task={task} /></Box>)
+          (<Box onClick={onClick}><FullnamesAndAvatars task={task} /></Box>)
           :
-          (<Button disabled={disabled} variant='text' color='inherit' sx={{ "&.MuiButtonBase-root": { minWidth: "unset" } }} onClick={Popover.onClick}>
+          (<Button disabled={disabled} variant='text' color='inherit' sx={{ "&.MuiButtonBase-root": { minWidth: "unset" } }} onClick={onClick}>
             <AvatarsOnly task={task} />
           </Button>)
       }
 
-
-      <Popover.Delegate onClose={onSubmit}>
-        <SearchFieldPopover onChange={setSearchString} />
-        <List dense sx={{ py: 0 }}>
-          {searchResults.length ? searchResults.map(({ user, checked }) => (
-            <MenuItem key={user.userId} sx={{ display: "flex", pl: 0, py: 0 }} onClick={() => handleToggleUser(user, checked)}>
-              <Box sx={{ width: 8, height: 40, backgroundColor: assigneeColors[user.userId] }} />
-              <Box ml={1}>
-                <Checkbox checked={checked} size='small'
-                  sx={{
-                    height: "40px",
-                    color: 'uiElements.main',
-                    '&.Mui-checked': {
-                      color: 'uiElements.main',
-                    },
-                  }} />
-              </Box>
-              <ListItemText><Typography>{user.displayName}</Typography></ListItemText>
-            </MenuItem>
-          )) : (
-            <Box display='flex'>
-              <Box sx={{ width: 8, backgroundColor: 'primary.main' }} />
-              <Alert severity='info' sx={{ width: '100%' }}><AlertTitle><FormattedMessage id='search.results.none' /></AlertTitle></Alert>
-            </Box>
-          )
-          }
-        </List>
-      </Popover.Delegate>
+      {open && <SelectAssignees anchorEl={anchorEl} onChange={onChange} onClose={onClose} task={task} />}
     </Box >
   );
 }

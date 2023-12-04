@@ -19,7 +19,6 @@ const FormattedCell: React.FC<{
     await backend.task.updateActiveTask(row.id, [command]);
     await tasks.reload();
   }
-
   return (
     <StyledTableCell width="150px">
       <TaskAssignees task={row} onChange={handleChange} />

@@ -4,7 +4,7 @@ import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import { FormattedMessage } from 'react-intl';
 
 import { SearchFieldPopover } from '../SearchField';
-import { useMockPopover } from '../TaskTable/MockPopover';
+import { usePopover, TablePopover } from '../TablePopover';
 import { TaskDescriptor, AvatarCode } from 'descriptor-task';
 import Client from 'client';
 import Context from 'context';
@@ -57,19 +57,18 @@ const FullnamesAndAvatars: React.FC<{
     (<RoleAvatar />);
 }
 
-
-const TaskRoles: React.FC<{
+const SelectRoles: React.FC<{
+  anchorEl: HTMLElement | null,
   task: TaskDescriptor,
   onChange: (command: Client.AssignTaskRoles) => Promise<void>,
-  fullnames?: boolean
-}> = ({ task, onChange, fullnames }) => {
-  const tasks = Context.useTasks();
+  onClose: () => void,
+}> = ({ task, onChange, onClose, anchorEl }) => {
   const { state } = Context.useTasks();
   const roleColors = state.palette.roles;
 
   const [newRoles, setNewRoles] = React.useState(task.roles);
   const { setSearchString, searchResults } = Context.useRoles({ roles: newRoles });
-  const Popover = useMockPopover();
+
 
   function handleToggleRole(role: Client.Role, currentlyChecked: boolean) {
     setNewRoles(currentListOfRoleIds => {
@@ -88,17 +87,54 @@ const TaskRoles: React.FC<{
   function onSubmit() {
     const isChanges = newRoles.sort().toString() !== task.roles.sort().toString();
     if (isChanges) {
-      onChange({ roles: newRoles, commandType: 'AssignTaskRoles', taskId: task.id })
-        .then(() => Popover.onClose())
-        .then(tasks.reload);
+      onChange({ roles: newRoles, commandType: 'AssignTaskRoles', taskId: task.id }).then(onClose);
       return;
     }
-    Popover.onClose();
+    onClose();
   }
 
   return (
-    <Box>
+    <TablePopover onClose={onSubmit} anchorEl={anchorEl} open={true}>
+      <SearchFieldPopover onChange={setSearchString} />
+      <List dense sx={{ py: 0 }}>
+        {searchResults.length ? searchResults.map(({ role, checked }) => (
+          <MenuItem key={role.roleId} sx={{ display: "flex", pl: 0, py: 0 }} onClick={() => handleToggleRole(role, checked)} >
+            <Box sx={{ width: 8, height: 40, backgroundColor: roleColors[role.roleId] }} />
+            <Box ml={1} >
+              <Checkbox checked={checked} size='small' sx={{
+                height: "40px",
+                color: 'uiElements.main',
+                '&.Mui-checked': {
+                  color: 'uiElements.main',
+                },
+              }} />
+            </Box>
+            <ListItemText><Typography>{role.displayName}</Typography></ListItemText>
+          </MenuItem>
+        )) : (
+          <Box display='flex'>
+            <Box sx={{ width: 8, backgroundColor: 'primary.main' }} />
+            <Alert severity='info' sx={{ width: '100%' }}><AlertTitle><FormattedMessage id='search.results.none' /></AlertTitle></Alert>
+          </Box>
+        )
+        }
+      </List>
+    </TablePopover>
+  );
+}
 
+
+
+const TaskRoles: React.FC<{
+  task: TaskDescriptor,
+  onChange: (command: Client.AssignTaskRoles) => Promise<void>,
+  fullnames?: boolean
+}> = ({ task, onChange, fullnames }) => {
+
+  const Popover = usePopover();
+
+  return (
+    <Box>
       {fullnames ?
         (<Box onClick={Popover.onClick}><FullnamesAndAvatars task={task} /></Box>)
         :
@@ -106,33 +142,7 @@ const TaskRoles: React.FC<{
           <RoleAvatars task={task} />
         </Button>)
       }
-
-      <Popover.Delegate onClose={onSubmit}>
-        <SearchFieldPopover onChange={setSearchString} />
-        <List dense sx={{ py: 0 }}>
-          {searchResults.length ? searchResults.map(({ role, checked }) => (
-            <MenuItem key={role.roleId} sx={{ display: "flex", pl: 0, py: 0 }} onClick={() => handleToggleRole(role, checked)} >
-              <Box sx={{ width: 8, height: 40, backgroundColor: roleColors[role.roleId] }} />
-              <Box ml={1} >
-                <Checkbox checked={checked} size='small' sx={{
-                  height: "40px",
-                  color: 'uiElements.main',
-                  '&.Mui-checked': {
-                    color: 'uiElements.main',
-                  },
-                }} />
-              </Box>
-              <ListItemText><Typography>{role.displayName}</Typography></ListItemText>
-            </MenuItem>
-          )) : (
-            <Box display='flex'>
-              <Box sx={{ width: 8, backgroundColor: 'primary.main' }} />
-              <Alert severity='info' sx={{ width: '100%' }}><AlertTitle><FormattedMessage id='search.results.none' /></AlertTitle></Alert>
-            </Box>
-          )
-          }
-        </List>
-      </Popover.Delegate>
+      {Popover.open && <SelectRoles anchorEl={Popover.anchorEl} onChange={onChange} onClose={Popover.onClose} task={task} />}
     </Box>
   );
 }

@@ -5,7 +5,7 @@ import { FormattedMessage } from 'react-intl';
 
 import Client from 'client';
 import { TaskDescriptor, PriorityPalette, StatusPalette } from 'descriptor-task';
-import { useMockPopover } from '../TaskTable/MockPopover';
+import { usePopover, TablePopover } from '../TablePopover';
 
 const priorityColors = PriorityPalette;
 const priorityOptions: Client.TaskPriority[] = ['LOW', 'HIGH', 'MEDIUM'];
@@ -27,7 +27,7 @@ const TaskPriority: React.FC<{
   onChange: (command: Client.ChangeTaskPriority) => Promise<void>
 }> = ({ task, priorityTextEnabled, onChange }) => {
   const priority = task.priority;
-  const Popover = useMockPopover();
+  const Popover = usePopover();
 
   function handlePriorityChange(newPriority: Client.TaskPriority) {
     const command: Client.ChangeTaskPriority = {
@@ -45,7 +45,7 @@ const TaskPriority: React.FC<{
         <FlagIcon sx={getEmojiFlagSx(priority)} />
         {priorityTextEnabled && <Typography><FormattedMessage id={'task.priority.' + priority} /></Typography>}
       </Button>
-      <Popover.Delegate onClose={Popover.onClose}>
+      <TablePopover onClose={Popover.onClose} anchorEl={Popover.anchorEl} open={Popover.open}>
         <List dense sx={{ py: 0 }}>
           {priorityOptions.map((option: Client.TaskPriority) => (
             <MenuItem key={option} onClick={() => handlePriorityChange(option)} sx={{ display: "flex", pl: 0, py: 0 }}>
@@ -55,7 +55,7 @@ const TaskPriority: React.FC<{
             </MenuItem>
           ))}
         </List>
-      </Popover.Delegate>
+      </TablePopover>
     </Box>
   );
 }

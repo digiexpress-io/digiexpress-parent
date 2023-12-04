@@ -86,8 +86,9 @@ export const useTenants = () => {
 
 export const useAssignees = (row: { assignees: UserId[] }) => {
   const org = useOrg();
+  const { assignees } = row;
   const [searchString, setSearchString] = React.useState<string>('');
-  const searchResults = React.useMemo(() => org.state.findUsers(searchString, row.assignees), [row, searchString, org]);
+  const searchResults = React.useMemo(() => org.state.findUsers(searchString, assignees), [assignees, searchString, org]);
   return { searchString, setSearchString, searchResults };
 }
 
