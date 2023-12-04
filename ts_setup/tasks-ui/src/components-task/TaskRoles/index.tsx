@@ -1,6 +1,8 @@
 import React from 'react';
-import { AvatarGroup, Box, Button, Avatar, List, MenuItem, Checkbox, ListItemText, Stack, Typography } from '@mui/material';
+import { AvatarGroup, Box, Button, Avatar, List, MenuItem, Checkbox, ListItemText, Stack, Typography, Alert, AlertTitle } from '@mui/material';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+import { FormattedMessage } from 'react-intl';
+
 import { SearchFieldPopover } from '../SearchField';
 import { useMockPopover } from '../TaskTable/MockPopover';
 import { TaskDescriptor, AvatarCode } from 'descriptor-task';
@@ -105,11 +107,10 @@ const TaskRoles: React.FC<{
         </Button>)
       }
 
-
       <Popover.Delegate onClose={onSubmit}>
         <SearchFieldPopover onChange={setSearchString} />
         <List dense sx={{ py: 0 }}>
-          {searchResults.map(({ role, checked }) => (
+          {searchResults.length ? searchResults.map(({ role, checked }) => (
             <MenuItem key={role.roleId} sx={{ display: "flex", pl: 0, py: 0 }} onClick={() => handleToggleRole(role, checked)} >
               <Box sx={{ width: 8, height: 40, backgroundColor: roleColors[role.roleId] }} />
               <Box ml={1} >
@@ -123,7 +124,12 @@ const TaskRoles: React.FC<{
               </Box>
               <ListItemText><Typography>{role.displayName}</Typography></ListItemText>
             </MenuItem>
-          ))
+          )) : (
+            <Box display='flex'>
+              <Box sx={{ width: 8, backgroundColor: 'primary.main' }} />
+              <Alert severity='info' sx={{ width: '100%' }}><AlertTitle><FormattedMessage id='search.results.none' /></AlertTitle></Alert>
+            </Box>
+          )
           }
         </List>
       </Popover.Delegate>

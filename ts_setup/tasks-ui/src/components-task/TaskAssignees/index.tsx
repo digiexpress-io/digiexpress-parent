@@ -1,6 +1,7 @@
 import React from 'react';
-import { AvatarGroup, Box, ListItemText, Checkbox, Button, Avatar, List, MenuItem, Stack, Typography } from '@mui/material';
+import { AvatarGroup, Box, ListItemText, Checkbox, Button, Avatar, List, MenuItem, Stack, Typography, Alert, AlertTitle } from '@mui/material';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import { FormattedMessage } from 'react-intl';
 import { SearchFieldPopover } from '../SearchField';
 import { useMockPopover } from '../TaskTable/MockPopover';
 import Client from 'client';
@@ -118,8 +119,7 @@ const TaskAssignees: React.FC<{
       <Popover.Delegate onClose={onSubmit}>
         <SearchFieldPopover onChange={setSearchString} />
         <List dense sx={{ py: 0 }}>
-          {searchResults.map(({ user, checked }) => (
-
+          {searchResults.length ? searchResults.map(({ user, checked }) => (
             <MenuItem key={user.userId} sx={{ display: "flex", pl: 0, py: 0 }} onClick={() => handleToggleUser(user, checked)}>
               <Box sx={{ width: 8, height: 40, backgroundColor: assigneeColors[user.userId] }} />
               <Box ml={1}>
@@ -134,7 +134,13 @@ const TaskAssignees: React.FC<{
               </Box>
               <ListItemText><Typography>{user.displayName}</Typography></ListItemText>
             </MenuItem>
-          ))}
+          )) : (
+            <Box display='flex'>
+              <Box sx={{ width: 8, backgroundColor: 'primary.main' }} />
+              <Alert severity='info' sx={{ width: '100%' }}><AlertTitle><FormattedMessage id='search.results.none' /></AlertTitle></Alert>
+            </Box>
+          )
+          }
         </List>
       </Popover.Delegate>
     </Box >

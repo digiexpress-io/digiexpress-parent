@@ -45,7 +45,7 @@ const TablePopover: React.FC<TablePopoverProps> = ({ children, anchorEl, open, o
         vertical: 'top',
         horizontal: 'right',
       }}>
-      <Box sx={{ p: 0 }}>
+      <Box sx={{ p: 0, minHeight: '20vh' }}>
         {children}
       </Box>
 
