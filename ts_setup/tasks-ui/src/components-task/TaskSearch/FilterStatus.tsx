@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Menu, MenuItem, MenuList, ListItemIcon, ListItemText, Typography } from '@mui/material';
+import { Menu, MenuItem, MenuList, ListItemIcon, ListItemText, Typography, Chip } from '@mui/material';
 import Check from '@mui/icons-material/Check';
 import { FormattedMessage } from 'react-intl';
 
@@ -26,7 +26,7 @@ const FilterStatus: React.FC<{
   const filterByStatus = props.value.find(filter => filter.type === 'FilterByStatus') as FilterByStatus | undefined;
 
   return (<>
-    <NavigationButtonSearch onClick={handleClick} id='core.search.searchBar.filterStatus' values={{ count: filterByStatus?.status.length }} />
+    <NavigationButtonSearch onClick={handleClick} id='taskSearch.searchBar.filterStatus' values={{ count: filterByStatus?.status.length }} />
 
     <Menu sx={{ width: 320 }}
       anchorEl={anchorEl}
@@ -53,13 +53,13 @@ const FilterStatus: React.FC<{
             return (<MenuItem key={type} onClick={() => {
               handleClose();
               props.onChange([type]);
-            }}><ListItemIcon><Check /></ListItemIcon>{type}</MenuItem>);
+            }}><ListItemIcon><Check /></ListItemIcon><Chip size='small' label={type} /></MenuItem>);
           }
           return <MenuItem key={type} onClick={() => {
             handleClose();
             props.onChange([type]);
           }}>
-            <ListItemText inset>{type}</ListItemText>
+            <ListItemText inset><Chip label={type} size='small' /></ListItemText>
           </MenuItem>;
         })}
 

@@ -452,13 +452,12 @@ const en = {
   'taskSearch.filter.status': 'Filter by status',
   'taskSearch.filter.groupBy': 'Group by',
 
-
-  'core.search.searchBar.groupBy': 'Group by {groupBy}',
-  'core.search.searchBar.filterColumns': 'Columns',
-  'core.search.searchBar.filterRoles': 'Roles {count}',
-  'core.search.searchBar.filterAssignees': 'Assignees {count}',
-  'core.search.searchBar.filterStatus': 'Status {count}',
-  'core.search.searchBar.filterPriority': 'Priority {count}',
+  'taskSearch.searchBar.groupBy': 'Group by {groupBy}',
+  'taskSearch.searchBar.filterColumns': 'Columns',
+  'taskSearch.searchBar.filterRoles': 'Roles {count}',
+  'taskSearch.searchBar.filterAssignees': 'Assignees {count}',
+  'taskSearch.searchBar.filterStatus': 'Status {count}',
+  'taskSearch.searchBar.filterPriority': 'Priority {count}',
 
 
   // --------------- APP-FRONTOFFICE END -----------------

@@ -21,7 +21,7 @@ const FilterColumns: React.FC<{
   }
 
   return (<>
-    <NavigationButtonSearch onClick={handleClick} id='core.search.searchBar.filterColumns' values={undefined} />
+    <NavigationButtonSearch onClick={handleClick} id='taskSearch.searchBar.filterColumns' values={undefined} />
 
     <Menu sx={{ width: 320 }}
       anchorEl={anchorEl}
@@ -48,13 +48,13 @@ const FilterColumns: React.FC<{
               handleClose();
               props.onChange(props.value.filter(sel => sel !== type));
             }
-            }> <ListItemIcon><Check /></ListItemIcon>{type}</MenuItem>);
+            }> <ListItemIcon><Check /></ListItemIcon><Typography fontWeight='bolder'>{type}</Typography></MenuItem>);
           }
           return <MenuItem key={type} onClick={() => {
             handleClose();
             props.onChange([...props.value, type]);
           }}>
-            <ListItemText inset>{type}</ListItemText>
+            <ListItemText inset><Typography>{type}</Typography></ListItemText>
           </MenuItem>;
         })}
 

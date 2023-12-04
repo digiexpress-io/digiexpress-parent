@@ -24,7 +24,7 @@ const GroupBySelect: React.FC<{
 
 
   return (<>
-    <NavigationButtonSearch onClick={handleClick} id='core.search.searchBar.groupBy' values={{ groupBy: value }} />
+    <NavigationButtonSearch onClick={handleClick} id='taskSearch.searchBar.groupBy' values={{ groupBy: value }} />
 
     <Menu sx={{ width: 320 }}
       anchorEl={anchorEl}
@@ -46,13 +46,13 @@ const GroupBySelect: React.FC<{
         {types.map(type => {
 
           if (value === type) {
-            return <MenuItem key={type}><ListItemIcon><Check /></ListItemIcon>{type}</MenuItem>
+            return <MenuItem key={type}><ListItemIcon><Check /></ListItemIcon><Typography fontWeight='bolder'>{type}</Typography></MenuItem>
           }
           return <MenuItem key={type} onClick={() => {
             handleClose();
             onChange(type);
 
-          }}><ListItemText inset>{type}</ListItemText></MenuItem>;
+          }}><ListItemText inset><Typography>{type}</Typography></ListItemText></MenuItem>;
         })}
       </MenuList>
     </Menu>

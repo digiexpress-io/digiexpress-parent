@@ -24,7 +24,7 @@ const FilterRoles: React.FC<{
   const filterByRoles = props.value.find(filter => filter.type === 'FilterByRoles') as FilterByRoles | undefined;
 
   return (<>
-    <NavigationButtonSearch onClick={handleClick} id='core.search.searchBar.filterRoles' values={{ count: filterByRoles?.roles.length }} />
+    <NavigationButtonSearch onClick={handleClick} id='taskSearch.searchBar.filterRoles' values={{ count: filterByRoles?.roles.length }} />
 
     <Menu sx={{ width: 320 }}
       anchorEl={anchorEl}
@@ -51,13 +51,13 @@ const FilterRoles: React.FC<{
             return (<MenuItem key={type} onClick={() => {
               handleClose();
               props.onChange([type]);
-            }}><ListItemIcon><Check /></ListItemIcon>{type}</MenuItem>);
+            }}><ListItemIcon><Check /></ListItemIcon><Typography fontWeight='bold'>{type}</Typography></MenuItem>);
           }
           return <MenuItem key={type} onClick={() => {
             handleClose();
             props.onChange([type]);
           }}>
-            <ListItemText inset>{type}</ListItemText>
+            <ListItemText inset><Typography>{type}</Typography></ListItemText>
           </MenuItem>;
         })}
 

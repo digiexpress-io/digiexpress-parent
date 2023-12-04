@@ -28,7 +28,7 @@ const FilterAssignees: React.FC<{
   const filterByOwners = props.value.find(filter => filter.type === 'FilterByOwners') as FilterByOwners | undefined;
 
   return (<>
-    <NavigationButtonSearch onClick={handleClick} id='core.search.searchBar.filterAssignees' values={{ count: filterByOwners?.owners.length }} />
+    <NavigationButtonSearch onClick={handleClick} id='taskSearch.searchBar.filterAssignees' values={{ count: filterByOwners?.owners.length }} />
 
     <Menu sx={{ width: 320 }}
       anchorEl={anchorEl}
@@ -49,21 +49,21 @@ const FilterAssignees: React.FC<{
         </MenuItem>
         {Object.keys(ctx.state.palette.owners).map(type => {
           const found = props.value.find(filter => filter.type === 'FilterByOwners');
-          const selected = found ? found.type === 'FilterByOwners' && found.owners.includes(type) : false
+          const selected = found ? found.type === 'FilterByOwners' && found.owners.includes(type) : false;
 
           if (selected) {
             return (<MenuItem key={type} onClick={() => {
               handleClose();
               props.onChange([type]);
             }
-            }> <ListItemIcon><Check /></ListItemIcon>{type}</MenuItem>);
+            }> <ListItemIcon><Check /></ListItemIcon><Typography fontWeight='bolder'>{type}</Typography></MenuItem>);
           }
-          return <MenuItem key={type} onClick={() => {
+          return (<MenuItem key={type} onClick={() => {
             handleClose();
             props.onChange([type]);
           }}>
-            <ListItemText inset>{type}</ListItemText>
-          </MenuItem>;
+            <ListItemText inset><Typography>{type}</Typography></ListItemText>
+          </MenuItem>)
         })}
 
       </MenuList>

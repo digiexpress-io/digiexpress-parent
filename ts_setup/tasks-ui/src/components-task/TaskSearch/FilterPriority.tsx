@@ -26,7 +26,7 @@ const FilterPriority: React.FC<{
   const filterByPriority = props.value.find(filter => filter.type === 'FilterByPriority') as FilterByPriority | undefined;
 
   return (<>
-    <NavigationButtonSearch onClick={handleClick} id='core.search.searchBar.filterPriority' values={{ count: filterByPriority?.priority.length }} />
+    <NavigationButtonSearch onClick={handleClick} id='taskSearch.searchBar.filterPriority' values={{ count: filterByPriority?.priority.length }} />
 
     <Menu sx={{ width: 320 }}
       anchorEl={anchorEl}
@@ -53,12 +53,12 @@ const FilterPriority: React.FC<{
             return <MenuItem key={type} onClick={() => {
               handleClose();
               props.onChange([type]);
-            }}><ListItemIcon><Check /></ListItemIcon>{type}</MenuItem>
+            }}><ListItemIcon><Check /></ListItemIcon><Typography fontWeight='bolder'>{type}</Typography></MenuItem>
           }
           return <MenuItem key={type} onClick={() => {
             handleClose();
             props.onChange([type]);
-          }}><ListItemText inset>{type}</ListItemText></MenuItem>;
+          }}><ListItemText inset><Typography>{type}</Typography></ListItemText></MenuItem>;
         })}
       </MenuList>
     </Menu>
