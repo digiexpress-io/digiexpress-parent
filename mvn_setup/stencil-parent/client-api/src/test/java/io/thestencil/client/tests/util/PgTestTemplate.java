@@ -1,18 +1,5 @@
 package io.thestencil.client.tests.util;
 
-import java.io.IOException;
-import java.time.Duration;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.guava.GuavaModule;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
 import io.resys.thena.docdb.api.DocDB;
 import io.resys.thena.docdb.api.actions.RepoActions.RepoResult;
 import io.resys.thena.docdb.api.models.Repo;
@@ -29,28 +16,14 @@ import io.thestencil.client.spi.StencilStoreImpl;
 import io.thestencil.client.spi.serializers.ZoeDeserializer;
 import io.vertx.core.json.JsonObject;
 import io.vertx.mutiny.sqlclient.Pool;
-
-/*-
- * #%L
- * thena-docdb-pgsql
- * %%
- * Copyright (C) 2021 Copyright 2021 ReSys OÜ
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
- */
-
 import jakarta.inject.Inject;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+
+import java.io.IOException;
+import java.time.Duration;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 public class PgTestTemplate {
@@ -58,13 +31,7 @@ public class PgTestTemplate {
   @Inject
   io.vertx.mutiny.pgclient.PgPool pgPool;
   
-  public static ObjectMapper objectMapper = new ObjectMapper();
-  static {
-    objectMapper.registerModule(new GuavaModule());
-    objectMapper.registerModule(new JavaTimeModule());
-    objectMapper.registerModule(new Jdk8Module());
-  }
-  
+
   @BeforeEach
   public void setUp() {
     waitUntilPostgresqlAcceptsConnections(pgPool);
@@ -130,7 +97,7 @@ public class PgTestTemplate {
     
     final AtomicInteger gid = new AtomicInteger(0);
     
-    ZoeDeserializer deserializer = new ZoeDeserializer(PgTestTemplate.objectMapper);
+    ZoeDeserializer deserializer = new ZoeDeserializer(TestUtils.objectMapper);
     
     final var store = StencilStoreImpl.builder()
         .config((builder) -> builder
@@ -138,10 +105,10 @@ public class PgTestTemplate {
             .repoName(repoId)
             .headName("stencil-main")
             .deserializer(deserializer)
-            .objectMapper(PgTestTemplate.objectMapper)
+            .objectMapper(TestUtils.objectMapper)
             .serializer((entity) -> {
               try {
-                return new JsonObject(PgTestTemplate.objectMapper.writeValueAsString(entity));
+                return new JsonObject(TestUtils.objectMapper.writeValueAsString(entity));
               } catch (IOException e) {
                 throw new RuntimeException(e.getMessage(), e);
               }

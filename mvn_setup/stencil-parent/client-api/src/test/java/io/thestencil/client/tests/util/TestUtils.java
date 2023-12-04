@@ -20,21 +20,30 @@ package io.thestencil.client.tests.util;
  * #L%
  */
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.guava.GuavaModule;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import io.thestencil.client.api.StencilComposer.SiteState;
+import io.thestencil.client.tests.StaticContentSiteTest;
+import org.apache.commons.io.IOUtils;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-import org.apache.commons.io.IOUtils;
-
-import io.thestencil.client.api.StencilComposer.SiteState;
-import io.thestencil.client.tests.StaticContentSiteTest;
-
 public class TestUtils {
 
-  
+  public static final ObjectMapper objectMapper = new ObjectMapper()
+    .registerModules(
+      new GuavaModule(),
+      new JavaTimeModule(),
+      new Jdk8Module()
+    );
+
   public static SiteState getSite(String fileName) {
     try {
       String file = toString(fileName);
-      return PgTestTemplate.objectMapper.readValue(file, SiteState.class);
+      return objectMapper.readValue(file, SiteState.class);
     } catch (IOException e) {
       throw new RuntimeException(e.getMessage(), e);
     }
@@ -43,7 +52,7 @@ public class TestUtils {
 
   public static String prettyPrint(Object value) {
     try {
-      return PgTestTemplate.objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(value);
+      return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(value);
     } catch (IOException e) {
       throw new RuntimeException(e.getMessage(), e);
     }

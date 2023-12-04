@@ -20,14 +20,8 @@ package io.thestencil.client.tests;
  * #L%
  */
 
-import java.time.Duration;
-
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
 import io.thestencil.client.api.StencilComposer.SiteState;
@@ -35,6 +29,11 @@ import io.thestencil.client.spi.beans.SitesBean;
 import io.thestencil.client.tests.util.PgProfile;
 import io.thestencil.client.tests.util.PgTestTemplate;
 import io.thestencil.client.tests.util.TestExporter;
+import io.thestencil.client.tests.util.TestUtils;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import java.time.Duration;
 
 @QuarkusTest
 @TestProfile(PgProfile.class)
@@ -45,7 +44,7 @@ public class MigrationPgTest extends PgTestTemplate {
     final var repo = getPersistence("migration-test");
  
     final var input = TestExporter.toString(getClass(), "migration-input.json");
-    final SitesBean sites = PgTestTemplate.objectMapper.readValue(input, SitesBean.class);
+    final SitesBean sites = TestUtils.objectMapper.readValue(input, SitesBean.class);
     
     
     SiteState imported = repo.migration().importData(sites)

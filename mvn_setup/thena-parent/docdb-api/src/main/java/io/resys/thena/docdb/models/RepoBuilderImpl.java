@@ -33,8 +33,10 @@ import io.resys.thena.docdb.support.Identifiers;
 import io.resys.thena.docdb.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RequiredArgsConstructor
+@Slf4j
 public class RepoBuilderImpl implements RepoActions.RepoBuilder {
 
   private final DbState state;
@@ -49,15 +51,18 @@ public class RepoBuilderImpl implements RepoActions.RepoBuilder {
   
   @Override
   public Uni<RepoResult> build() {
+    log.debug("Creating repository '{}' of type {}.", name, type);
+
     RepoAssert.notEmpty(name, () -> "repo name not defined!");
     RepoAssert.notNull(type, () -> "type name not defined!");
-    RepoAssert.isName(name, () -> "repo name has invalid charecters!");
+    RepoAssert.isName(name, () -> "repo name has invalid characters!");
 
     return state.project().getByName(name)
       .onItem().transformToUni((Repo existing) -> {
       
       final Uni<RepoResult> result;
       if(existing != null) {
+        log.error("Existing repository found with name '{}'", name);
         result = Uni.createFrom().item(ImmutableRepoResult.builder()
             .status(RepoStatus.CONFLICT)
             .addMessages(RepoException.builder().nameNotUnique(existing.getName(), existing.getId()))

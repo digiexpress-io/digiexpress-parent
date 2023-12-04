@@ -1,18 +1,5 @@
 package io.resys.hdes.client.spi.config;
 
-import java.time.Duration;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.TestInfo;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.guava.GuavaModule;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
 import io.resys.hdes.client.api.HdesClient;
 import io.resys.hdes.client.api.HdesComposer;
 import io.resys.hdes.client.spi.HdesClientImpl;
@@ -29,28 +16,14 @@ import io.resys.thena.docdb.spi.DbState;
 import io.resys.thena.docdb.store.sql.DbStateSqlImpl;
 import io.resys.thena.docdb.store.sql.PgErrors;
 import io.vertx.mutiny.sqlclient.Pool;
-
-/*-
- * #%L
- * thena-docdb-pgsql
- * %%
- * Copyright (C) 2021 Copyright 2021 ReSys OÜ
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
- */
-
 import jakarta.inject.Inject;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.TestInfo;
+
+import java.time.Duration;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 public class PgTestTemplate {
@@ -58,12 +31,7 @@ public class PgTestTemplate {
   
   @Inject
   io.vertx.mutiny.pgclient.PgPool pgPool;
-  public static ObjectMapper objectMapper = new ObjectMapper();
-  static {
-    objectMapper.registerModule(new GuavaModule());
-    objectMapper.registerModule(new JavaTimeModule());
-    objectMapper.registerModule(new Jdk8Module());
-  }
+
   @BeforeEach
   public void setUp(TestInfo testInfo) {
     final AtomicInteger gid = new AtomicInteger(0);
@@ -71,7 +39,7 @@ public class PgTestTemplate {
     this.store = ThenaStore.builder()
         .repoName("")
         .pgPool(pgPool)
-        .objectMapper(objectMapper)
+        .objectMapper(TestUtils.objectMapper)
         .gidProvider((type) -> type + "-" + gid.incrementAndGet())
         .build();
   }
@@ -118,7 +86,7 @@ public class PgTestTemplate {
   }
   
   public HdesClient getClient() {
-    return HdesClientImpl.builder().objectMapper(objectMapper).store(store)
+    return HdesClientImpl.builder().objectMapper(TestUtils.objectMapper).store(store)
         .dependencyInjectionContext(new DependencyInjectionContext() {
           @Override
           public <T> T get(Class<T> type) {

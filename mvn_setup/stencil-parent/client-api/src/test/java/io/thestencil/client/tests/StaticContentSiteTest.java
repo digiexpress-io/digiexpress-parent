@@ -20,16 +20,14 @@ package io.thestencil.client.tests;
  * #L%
  */
 
+import io.thestencil.client.api.StencilClient;
+import io.thestencil.client.spi.StencilClientImpl;
+import io.thestencil.client.tests.util.TestUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import io.thestencil.client.api.StencilClient;
-import io.thestencil.client.spi.StencilClientImpl;
-import io.thestencil.client.tests.util.PgTestTemplate;
-import io.thestencil.client.tests.util.TestUtils;
-
 public class StaticContentSiteTest {  
-  final StencilClient client = StencilClientImpl.builder().config(c -> c.objectMapper(PgTestTemplate.objectMapper)).inmemory().build();
+  final StencilClient client = StencilClientImpl.builder().config(c -> c.objectMapper(TestUtils.objectMapper)).inmemory().build();
   
   @Test
   public void buildSiteForProd() {

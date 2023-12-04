@@ -482,7 +482,7 @@
         <groupId>org.testcontainers</groupId>
         <artifactId>testcontainers</artifactId>
         <scope>test</scope>
-        <version>1.19.1</version>
+        <version>1.19.3</version>
         <exclusions>
           <exclusion>
             <groupId>net.java.dev.jna</groupId>
