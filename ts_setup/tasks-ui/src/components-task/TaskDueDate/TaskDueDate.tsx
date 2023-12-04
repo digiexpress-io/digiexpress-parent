@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Dialog, Typography } from '@mui/material';
+import { Button, Dialog, Typography, PaperProps } from '@mui/material';
 import DateRangeOutlinedIcon from '@mui/icons-material/DateRangeOutlined';
 
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'

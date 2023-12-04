@@ -8,15 +8,23 @@ const Section: React.FC<{ children: React.ReactNode, width?: string, loadingValu
   const loadingEnabled: boolean = Object.keys(props).includes("loadingValue");
   const showLoader: boolean = props.loadingValue ? false : true;
 
+  const formattedLabel = props.required ? (
+    <Box sx={{ backgroundColor: 'primary.contrastText', px: 0.5, width: props.width, display: 'flex' }}>
+      {label}
+      {props.required && <span>&nbsp;*</span>}
+    </Box>
+  ) : (
+    <Box sx={{ backgroundColor: 'primary.contrastText', px: 0.5, width: props.width }}>
+      {label}
+    </Box>
+  );
+
   return (
     <Box width='100%'>
       <Box sx={{ zIndex: 10, marginBottom: "-11px", position: 'relative' }}>
         <Box display='flex' flexDirection='row'>
           <Box sx={{ pl: 2 }} />
-          <Box sx={{ backgroundColor: 'primary.contrastText', px: 0.5, width: props.width, display: 'flex' }}>
-            {label}
-            {props.required && <span>&nbsp;*</span>}
-          </Box>
+          {formattedLabel}
           <Box flexGrow={1} />
         </Box>
       </Box>
