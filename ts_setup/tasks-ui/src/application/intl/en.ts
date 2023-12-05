@@ -177,6 +177,7 @@ const en = {
   'task.event.changeTaskStatus': 'Task status changed',
   'task.event.changeTaskPriority': 'Task priority changed',
   'task.event.changeTaskInfo': 'Task information changed',
+  'task.event.changeTaskDescription': 'Task description changed',
   'task.event.changeTaskStartDate': 'Task start date changed',
   'task.event.changeTaskDueDate': 'Task due date changed',
   'task.event.changeChecklistItemAssignees': 'Checklist item assignees changed',
