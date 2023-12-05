@@ -59,5 +59,39 @@ export TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE=/var/run/docker.sock
 export DOCKER_HOST="unix://${HOME}/.colima/default/docker.sock"
 ```
 
+## Local OAuth2 proxy
+
+Install OAuth2-Proxy from [homebrew](https://formulae.brew.sh/formula/oauth2_proxy#default) or [github](https://github.com/oauth2-proxy/oauth2-proxy#installation).
+
+```shell
+oauth2-proxy \
+  --provider=oidc \
+  --cookie-secret=0123456789012348 \
+  --scope="openid profile" \
+  --email-domain="*" \
+  --skip-provider-button=true \
+  --upstream=http://localhost:8080 \
+  --pass-access-token=true \
+  --set-xauthrequest=true \
+  --pass-authorization-header=true \
+  --redirect-url=http://localhost:4180/oauth2/callback \
+  --client-id=<client id> \
+  --client-secret=<client secret> \
+  --oidc-issuer-url=<issuer>
+```
+
+Add `local.env` file
+```shell
+OAUTH2_PROXY_CLIENT_SECRET=...
+OAUTH2_PROXY_CLIENT_ID=...
+OAUTH2_PROXY_OIDC_ISSUER_URL=...
+MP_JWT_VERIFY_ISSUER=...
+MP_JWT_VERIFY_AUDIENCES=...
+MP_JWT_VERIFY_PUBLICKEY_LOCATION=...
+```
+
+Run `docker compose up` and open url http://localhost:4180/q/demo/api/reinit to init database.
+Now ui should open from http://localhost:4180/portal/
+
 
 

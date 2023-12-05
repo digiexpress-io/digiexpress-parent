@@ -88,3 +88,5 @@ local.properties
 .idea/
 .factorypath
 /_backup/
+
+local.env

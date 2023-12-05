@@ -9,7 +9,7 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: tasks_db
     ports:
-      - 5432:5432
+      - "5432:5432"
 
   application:
     image: docker.io/library/digiexpress-dev-app:1-snapshot
@@ -18,17 +18,40 @@ services:
       TENANT_CURRENTTENANTID: "local_test_tenant"
       TENANT_DB_PG_PGREPOSITORYNAME: "5432"
       TENANT_DB_PG_PGPORT: "5432"
-      TENANT_DB_PG_PGHOST: "localhost"
+      TENANT_DB_PG_PGHOST: "db"
       TENANT_DB_PG_PGDB: "tasks_db"
       TENANT_DB_PG_PGUSER: "postgres"
       TENANT_DB_PG_PGPASS: "postgres"
       TENANT_DB_PG_PGPOOLSIZE: "5"
       DIGIEXPRESS_ASSETS_URL: "https://cdn.resys.io/digiexpress-io/tasks-ui/dev/"
       DIGIEXPRESS_INDEX_PAGE: "index.html"
+    env_file:
+      - local.env
     ports:
-      - 8080:8080
+      - "8080:8080"
     links:
       - db
+
+  oauth2-proxy:
+    image: quay.io/oauth2-proxy/oauth2-proxy:v7.5.1
+    command:
+      - "--provider=oidc"
+      - "--cookie-secret=0123456789012348"
+      - "--scope=openid profile"
+      - "--email-domain=*"
+      - "--skip-provider-button=true"
+      - "--upstream=http://application:8080"
+      - "--pass-access-token=true"
+      - "--set-xauthrequest=true"
+      - "--pass-authorization-header=true"
+      - "--redirect-url=http://localhost:4180/oauth2/callback"
+      - "--http-address=0.0.0.0:4180"
+    env_file:
+      - local.env
+    ports:
+      - "4180:4180"
+    links:
+      - application
 
   adminer:
     image: adminer
