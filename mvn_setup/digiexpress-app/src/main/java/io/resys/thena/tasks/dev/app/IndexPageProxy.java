@@ -40,7 +40,7 @@ public class IndexPageProxy {
   String indexPage;
 
   @Inject
-  BeanFactory.CurrentTenant currentTenant;
+  CurrentTenant currentTenant;
 
   @PostConstruct
   void postConstruct() {

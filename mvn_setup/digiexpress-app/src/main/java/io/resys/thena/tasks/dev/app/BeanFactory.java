@@ -31,10 +31,14 @@ import io.vertx.mutiny.core.Vertx;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.sqlclient.PoolOptions;
 import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.enterprise.inject.Produces;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.eclipse.microprofile.jwt.Claim;
+import org.eclipse.microprofile.jwt.Claims;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.UUID;
 
@@ -42,7 +46,9 @@ import java.util.UUID;
 @RegisterForReflection(targets = {
   ImmutableTask.class,
   ImmutableTaskExtension.class,
-  ImmutableTaskComment.class
+  ImmutableTaskComment.class,
+  BeanFactory.CurrentUserRecord.class,
+  BeanFactory.CurrentTenantRecord.class,
 })
 @Slf4j
 public class BeanFactory {
@@ -68,20 +74,30 @@ public class BeanFactory {
   public record CurrentPgPool(io.vertx.mutiny.pgclient.PgPool pgPool) {
   }
 
-  public record CurrentTenant(String tenantId, String tenantsStoreId) {
+  public record CurrentTenantRecord(String tenantId, String tenantsStoreId) implements CurrentTenant {
   }
 
-  public record CurrentUser(String userId) {
+  public record CurrentUserRecord(
+    String userId,
+    @Nullable String givenName,
+    @Nullable String familyName
+  ) implements CurrentUser {
   }
 
   @Produces
+  @RequestScoped
   public CurrentTenant currentTenant() {
-    return new CurrentTenant(tenantId, tenantsStoreId);
+    return new CurrentTenantRecord(tenantId, tenantsStoreId);
   }
 
   @Produces
-  public CurrentUser currentUser() {
-    return new CurrentUser("lady sybil vimes");
+  @RequestScoped
+  public CurrentUser currentUser(
+    @Claim(standard = Claims.sub) String userId,
+    @Claim(standard = Claims.given_name) String givenName,
+    @Claim(standard = Claims.family_name) String familyName)
+  {
+    return new CurrentUserRecord(userId, givenName, familyName);
   }
 
   @Produces

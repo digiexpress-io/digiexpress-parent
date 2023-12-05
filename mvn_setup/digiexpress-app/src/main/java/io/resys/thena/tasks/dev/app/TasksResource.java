@@ -6,8 +6,6 @@ import io.resys.thena.tasks.client.api.model.Task;
 import io.resys.thena.tasks.client.api.model.TaskCommand.CreateTask;
 import io.resys.thena.tasks.client.api.model.TaskCommand.TaskUpdateCommand;
 import io.resys.thena.tasks.client.rest.TaskRestApi;
-import io.resys.thena.tasks.dev.app.BeanFactory.CurrentTenant;
-import io.resys.thena.tasks.dev.app.BeanFactory.CurrentUser;
 import io.smallrye.mutiny.Uni;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Path;

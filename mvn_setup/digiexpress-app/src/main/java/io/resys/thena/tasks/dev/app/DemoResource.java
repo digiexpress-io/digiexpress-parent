@@ -14,7 +14,6 @@ import io.resys.thena.tasks.client.api.model.ImmutableCreateTask;
 import io.resys.thena.tasks.client.api.model.ImmutableTaskExtension;
 import io.resys.thena.tasks.client.api.model.Task.TaskExtensionType;
 import io.resys.thena.tasks.client.api.model.TaskCommand.CreateTask;
-import io.resys.thena.tasks.dev.app.BeanFactory.CurrentTenant;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.core.Vertx;

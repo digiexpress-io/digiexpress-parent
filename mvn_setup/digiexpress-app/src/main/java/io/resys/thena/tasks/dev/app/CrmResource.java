@@ -10,8 +10,6 @@ import io.resys.crm.client.rest.CrmRestApi;
 import io.resys.thena.projects.client.api.TenantConfigClient;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
-import io.resys.thena.tasks.dev.app.BeanFactory.CurrentTenant;
-import io.resys.thena.tasks.dev.app.BeanFactory.CurrentUser;
 import io.smallrye.mutiny.Uni;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Path;
