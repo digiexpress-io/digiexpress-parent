@@ -1,9 +1,9 @@
 import React from 'react';
-import { ListItem, Typography, Box, ListItemText, Stack } from '@mui/material';
-
+import { ListItem, Typography, Box, ListItemText, Grid } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 import Burger from 'components-burger';
 import { CollapsedEvent, SingleEvent, TaskEditEvent } from 'descriptor-task';
+import { TaskEventDiff } from './TaskEventDiff';
 
 
 const CollapsedGroup: React.FC<{ event: CollapsedEvent }> = () => {
@@ -16,136 +16,131 @@ const SingleGroup: React.FC<{ event: SingleEvent }> = ({ event }) => {
   if (!event.body.toCommand.targetDate) {
     return <></>;
   }
-  /*
-  
-      <Stack direction='row'>
-          <Typography>{event.body.fromCommand?.assigneeIds.join(", ")}</Typography>
-          <Typography>{event.body.toCommand.assigneeIds.join(", ")}</Typography>
-        </Stack>
-  */
 
-  const date = new Date(event.body.toCommand.targetDate)
+  const date = new Date(event.body.toCommand.targetDate);
+
+
 
   if (event.body.commandType === "CreateTask") {
-    return (<>
-      <Typography><FormattedMessage id='task.event.createTask' /></Typography>
-      <Box flexGrow={1} />
-      <Typography><Burger.DateTimeFormatter type='dateTime' value={date} /></Typography>
-    </>)
+    return (
+      <Grid container>
+        <Grid item md={9} lg={9}>
+          <Typography fontWeight='bolder'><FormattedMessage id='task.event.createTask' /></Typography>
+        </Grid>
+        <Grid item md={3} lg={3}>
+          <Typography textAlign='right'><Burger.DateTimeFormatter type='dateTime' value={date} /></Typography>
+        </Grid>
+      </Grid>)
   }
 
   if (event.body.commandType === "AssignTask") {
-    return (<>
-      <Typography><FormattedMessage id='task.event.assignTask' /></Typography>
-      <Box flexGrow={1} />
-      <Typography><Burger.DateTimeFormatter type='dateTime' value={date} /></Typography>
-    </>)
+    return (
+      <TaskEventDiff event={event} eventTitle='task.event.assignTask'
+        fromValue={event.body.fromCommand?.assigneeIds} toValue={event.body.toCommand.assigneeIds} />
+    )
   }
   if (event.body.commandType === "AssignTaskRoles") {
-    return (<>
-      <Typography><FormattedMessage id='task.event.assignTaskRoles' /></Typography>
-      <Box flexGrow={1} />
-      <Typography><Burger.DateTimeFormatter type='dateTime' value={date} /></Typography>
-    </>)
+    return (
+      <TaskEventDiff event={event} eventTitle='task.event.assignTaskRoles'
+        fromValue={event.body.fromCommand?.roles} toValue={event.body.toCommand.roles} />
+    )
   }
   if (event.body.commandType === "ChangeTaskStatus") {
-    return (<>
-      <Typography><FormattedMessage id='task.event.changeTaskStatus' /></Typography>
-      <Box flexGrow={1} />
-      <Typography><Burger.DateTimeFormatter type='dateTime' value={date} /></Typography>
-    </>)
+    return (<TaskEventDiff event={event} eventTitle='task.event.assignTask'
+      fromValue={event.body.fromCommand?.status} toValue={event.body.toCommand.status} />
+    )
   }
   if (event.body.commandType === "ChangeTaskPriority") {
-    return (<>
-      <Typography><FormattedMessage id='task.event.changeTaskPriority' /></Typography>
-      <Box flexGrow={1} />
-      <Typography> <Burger.DateTimeFormatter type='dateTime' value={date} /></Typography>
-    </>)
+    return (
+      <TaskEventDiff event={event} eventTitle='task.event.changeTaskPriority'
+        fromValue={event.body.fromCommand?.priority} toValue={event.body.toCommand.priority} />
+    )
   }
+  //TODO clean up changeTaskInfo command
   if (event.body.commandType === "ChangeTaskInfo") {
-    return (<>
-      <Typography><FormattedMessage id='task.event.changeTaskInfo' /></Typography>
-      <Box flexGrow={1} />
-      <Typography><Burger.DateTimeFormatter type='dateTime' value={date} /></Typography>
-    </>)
+    if (event.body.toCommand.title) {
+      <TaskEventDiff event={event} eventTitle='task.event.changeTaskTitle'
+        fromValue={event.body.fromCommand?.title} toValue={event.body.toCommand.title} />
+    }
+    return (
+      <TaskEventDiff event={event} eventTitle='task.event.changeTaskDescription'
+        fromValue={event.body.fromCommand?.description} toValue={event.body.toCommand.description} />
+    )
   }
+  //TODO DateTime formatting
   if (event.body.commandType === "ChangeTaskStartDate") {
-    return (<>
-      <Typography><FormattedMessage id='task.event.changeTaskStartDate' /></Typography>
-      <Box flexGrow={1} />
-      <Typography><Burger.DateTimeFormatter type='dateTime' value={date} /></Typography>
-    </>)
+    return (
+      <TaskEventDiff event={event} eventTitle='task.event.changeTaskStartDate'
+        fromValue={event.body.fromCommand?.startDate} toValue={event.body.toCommand.startDate} />
+    )
   }
+  //TODO DateTime formatting
   if (event.body.commandType === "ChangeTaskDueDate") {
-    return (<>
-      <Typography><FormattedMessage id='task.event.changeTaskDueDate' /></Typography>
-      <Box flexGrow={1} />
-      <Typography><Burger.DateTimeFormatter type='dateTime' value={date} /></Typography>
-    </>)
+    return (
+      <TaskEventDiff event={event} eventTitle='task.event.changeTaskDueDate'
+        fromValue={event.body.fromCommand?.dueDate} toValue={event.body.toCommand.dueDate} />
+    )
   }
   if (event.body.commandType === "ChangeChecklistItemAssignees") {
-    return (<>
-      <Typography><FormattedMessage id='task.event.changeChecklistItemAssignees' /></Typography>
-      <Box flexGrow={1} />
-      <Typography><Burger.DateTimeFormatter type='dateTime' value={date} /></Typography>
-    </>)
+    return (
+      <TaskEventDiff event={event} eventTitle='task.event.changeChecklistItemAssignees'
+        fromValue={event.body.fromCommand?.assigneeIds} toValue={event.body.toCommand.assigneeIds} />
+    )
   }
+  //TODO DateTime formatting
   if (event.body.commandType === "ChangeChecklistItemDueDate") {
-    return (<>
-      <Typography><FormattedMessage id='task.event.changeChecklistItemDueDate' /></Typography>
-      <Box flexGrow={1} />
-      <Typography><Burger.DateTimeFormatter type='dateTime' value={date} /></Typography>
-    </>)
+    return (
+      <TaskEventDiff event={event} eventTitle='task.event.changeChecklistItemDueDate'
+        fromValue={event.body.fromCommand?.dueDate} toValue={event.body.toCommand.dueDate} />
+    )
   }
   if (event.body.commandType === "ChangeChecklistTitle") {
-    return (<>
-      <Typography><FormattedMessage id='task.event.changeChecklistTitle' /></Typography>
-      <Box flexGrow={1} />
-      <Typography><Burger.DateTimeFormatter type='dateTime' value={date} /></Typography>
-    </>)
+    return (
+      <TaskEventDiff event={event} eventTitle='task.event.changeChecklistTitle'
+        fromValue={event.body.fromCommand?.title} toValue={event.body.toCommand.title} />
+    )
   }
   if (event.body.commandType === "ChangeChecklistItemTitle") {
-    return (<>
-      <Typography><FormattedMessage id='task.event.changeChecklistItemTitle' /></Typography>
-      <Box flexGrow={1} />
-      <Typography><Burger.DateTimeFormatter type='dateTime' value={date} /></Typography>
-    </>)
+    return (
+      <TaskEventDiff event={event} eventTitle='task.event.changeChecklistItemTitle'
+        fromValue={event.body.fromCommand?.title} toValue={event.body.toCommand.title} />
+    )
   }
   if (event.body.commandType === "ChangeChecklistItemCompleted") {
     const msg = event.body.toCommand.completed === true ? 'task.event.changeChecklistItemCompleted' : 'task.event.changeChecklistItemNotCompleted';
-    return (<>
-      <Typography><FormattedMessage id={msg} /></Typography>
-      <Box flexGrow={1} />
-      <Typography><Burger.DateTimeFormatter type='dateTime' value={date} /></Typography>
-    </>)
+    return (
+      <TaskEventDiff event={event} eventTitle={msg}
+        fromValue={event.body.fromCommand?.completed.toString()} toValue={event.body.toCommand.completed.toString()} />)
   }
+
   if (event.body.commandType === "CreateChecklist") {
-    return (<>
-      <Typography><FormattedMessage id='task.event.createChecklist' /></Typography>
-      <Box flexGrow={1} />
-      <Typography><Burger.DateTimeFormatter type='dateTime' value={date} /></Typography>
-    </>)
+    return (
+      <TaskEventDiff event={event} eventTitle={'task.event.createChecklist'}
+        fromValue={event.body.fromCommand?.title} toValue={event.body.toCommand.title} />
+    )
   }
+
+  //TODO Checklist title, not ID
   if (event.body.commandType === "DeleteChecklist") {
-    return (<>
-      <Typography><FormattedMessage id='task.event.deleteChecklist' /></Typography>
-      <Box flexGrow={1} />
-      <Typography><Burger.DateTimeFormatter type='dateTime' value={date} /></Typography>
-    </>)
+    return (
+      <TaskEventDiff event={event} eventTitle='task.event.deleteChecklist'
+        fromValue={event.body.fromCommand?.checklistId} toValue={event.body.toCommand.checklistId} />
+    )
   }
+
   if (event.body.commandType === "AddChecklistItem") {
-    return (<>
-      <Typography><FormattedMessage id='task.event.addChecklistItem' /></Typography>
-      <Box flexGrow={1} />
-      <Typography> <Burger.DateTimeFormatter type='dateTime' value={date} /></Typography>
-    </>)
+    return (
+      <TaskEventDiff event={event} eventTitle='task.event.addChecklistItem'
+        fromValue={event.body.fromCommand?.title} toValue={event.body.toCommand.title} />
+    )
   }
+
+  //TODO Checklist item title, not ID
   if (event.body.commandType === "DeleteChecklistItem") {
-    return (<>
-      <Typography><FormattedMessage id='task.event.deleteChecklistItem' /></Typography>
-      <Box flexGrow={1} />
-      <Typography><Burger.DateTimeFormatter type='dateTime' value={date} /></Typography>
-    </>)
+    return (
+      <TaskEventDiff event={event} eventTitle='task.event.deleteChecklistItem'
+        fromValue={event.body.fromCommand?.checklistItemId} toValue={event.body.toCommand.checklistItemId} />
+    )
   }
 
   return (<Box display='flex'><ListItemText primary={event.body.commandType} secondary={event.body.toCommand.targetDate} /></Box>)
@@ -156,7 +151,7 @@ const Event: React.FC<{ event: TaskEditEvent }> = ({ event }) => {
 
 
   if (event.type === 'SINGLE') {
-    return <Box display='flex'><SingleGroup event={event} /></Box>
+    return <Grid container><SingleGroup event={event} /></Grid>
   }
   return <ListItem><CollapsedGroup event={event} /></ListItem>;
 }

@@ -1,7 +1,15 @@
-import { TaskCommand, TaskTransaction, Task } from 'client';
-import { TaskEditState, TaskEditMutatorBuilder, TaskEditEvent, SingleEvent } from './types';
-import { TaskDescriptor } from './types';
+import {
+  TaskCommand, TaskTransaction, Task,
+  UserId
+} from 'client';
+import {
+  TaskEditState, TaskEditMutatorBuilder, TaskEditEvent, SingleEvent,
+  AssignTaskEventBody
+} from './types';
+import { TaskDescriptor, SingleEventDiff } from './types';
 import { TaskDescriptorImpl } from './types-impl';
+
+
 
 interface ExtendedInit extends TaskEditState {
   today: Date;
@@ -88,21 +96,50 @@ class TaskEditEventVisitor {
     this._previousCommand[command.commandType] = command;
   }
 
+
   private visitEvent(previous: TaskCommand | undefined, command: TaskCommand, tx: TaskTransaction, task: TaskDescriptor): SingleEvent {
-    return {
+    const init: SingleEvent = {
       type: 'SINGLE',
       targetDate: command.targetDate ? new Date(command.targetDate) : new Date(),
       body: {
         commandType: command.commandType,
         toCommand: command as any,
-        fromCommand: previous as any
-
+        fromCommand: previous as any,
+        diff: []
       }
-
     }
+
+    const diff = this.visitDiff(init);
+    init.body.diff = diff;
+    return init;
   }
+
+  private visitDiff(init: SingleEvent): SingleEventDiff<any>[] {
+    switch (init.body.commandType) {
+      case 'AssignTask': diffAssignTask(init.body);
+    }
+    return [];
+  }
+
 }
 
+function diffAssignTask(event: AssignTaskEventBody): SingleEventDiff<UserId>[] {
+  const changes = getChanges(event.fromCommand?.assigneeIds, event.toCommand.assigneeIds);
+  const result: SingleEventDiff<UserId>[] = [];
+  changes.added.forEach(added => result.push({ operation: 'ADDED', value: added, type: undefined }));
+  changes.removed.forEach(removed => result.push({ operation: 'REMOVED', value: removed, type: undefined }));
+  return result;
+}
+
+function getChanges<T>(fromValues: T[] | undefined, toValues: T[]): { added: T[], removed: T[] } {
+  const fromArray = Array.isArray(fromValues) ? fromValues : (fromValues ? [fromValues] : []);
+  const toArray = Array.isArray(toValues) ? toValues : (toValues ? [toValues] : []);
+
+  const added = toArray.filter(value => !fromArray.includes(value));
+  const removed = fromArray.filter(value => !toArray.includes(value));
+
+  return { added, removed };
+}
 
 
 export { TaskEditStateBuilder };

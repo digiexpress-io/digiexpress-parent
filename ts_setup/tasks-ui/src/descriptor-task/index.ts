@@ -30,6 +30,7 @@ export type {
   ChangeTaskExtensionEventBody,
   SingleEvent, CollapsedEvent,
   TasksContextType, TasksState,
+  SingleEventDiff
 } from './types';
 
 

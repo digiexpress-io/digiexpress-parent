@@ -1,5 +1,5 @@
 import { createTheme, PaletteOptions, Theme } from "@mui/material/styles";
-import {} from "@mui/styles";
+import { } from "@mui/styles";
 declare module 'react' {
   interface CSSProperties {
     '--tree-view-text-color'?: string;
@@ -224,6 +224,11 @@ const siteTheme = createTheme({
     body2: {
       fontFamily: "'IBM Plex Sans Arabic', sans-serif",
       fontSize: "1rem",
+    },
+    caption: {
+      fontFamily: "'IBM Plex Sans Arabic', sans-serif",
+      fontSize: "0.7rem",
+      fontWeight: 200
     }
   },
 
