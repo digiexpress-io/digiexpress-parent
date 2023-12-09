@@ -161,7 +161,7 @@ public class TestCaseBuilder {
           }
         })
         .build();
-    return new ExecutorClientImpl(new ExecutorStoreImpl(tenantClient, config, store), assetClient);
+    return new ExecutorClientImpl(new ExecutorStoreImpl(tenantClient, assetClient, config, store), assetClient);
   }
   
   private SysConfigClient createSysConfigInit(io.vertx.mutiny.pgclient.PgPool pgPool, ObjectMapper objectMapper, AssetClient assetClient) {

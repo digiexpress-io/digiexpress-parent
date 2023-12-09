@@ -354,16 +354,25 @@ public class HdesTypeDefsFactory implements HdesTypesMapper {
   }
   
   @Override
-  public Object toType(Object value, Class<?> toType) {
+  public <T> T toType(Object value, Class<T> toType) {
     try {
       return objectMapper.convertValue(value, toType);
     } catch (Exception e) {
       throw new HdesJsonException(e.getMessage(), e);
     }
   }
-  
+
+  @Override
+  public <T> T parseJson(String value, Class<T> toType) {
+    try {
+      return objectMapper.readValue(value, toType);
+    } catch (Exception e) {
+      throw new HdesJsonException(e.getMessage(), e);
+    }
+  }
+     
   public HdesClientConfig config() {
     return config;
   }
-   
+
 }

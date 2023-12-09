@@ -1,10 +1,10 @@
 id: case 1 flow
 
 inputs:
-  firstName:
+  FirstNames:
     required: true
     type: STRING
-  lastName:
+  LastName:
     required: true
     type: STRING
 
@@ -16,6 +16,6 @@ tasks:
         ref: Type1Service
         collection: false
         inputs:
-          first: firstName
-          last: lastName
+          first: FirstNames
+          last: LastName
       

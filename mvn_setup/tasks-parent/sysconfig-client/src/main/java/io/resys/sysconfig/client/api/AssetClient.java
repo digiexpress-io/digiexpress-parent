@@ -60,6 +60,7 @@ public interface AssetClient {
   })
   interface Asset {
     String getId();
+    String getVersion();
     String getName();
     Instant getCreated();
     AssetType getAssetType();

@@ -64,7 +64,9 @@ public class SysConfigInstanceBuilderImpl implements ExecutorClient.SysConfigSes
         .onItem().transform(this::doInRelease)
         .onItem().transformToUni(instance -> getForm(instance).onItem().transform(form -> doInForm(instance, form)));
   }
-  
+  private Uni<DialobClient.ProgramWrapper> getForm(SysConfigInstance instance) {
+    return store.queryForms().releaseId(instance.getStepProcessCreated().getBody().getReleaseId()).get(instance.getStepProcessCreated().getBody().getFormId());
+  }
 
   private SysConfigSession doInForm(SysConfigInstance instance, DialobClient.ProgramWrapper form) {
     final var dialobClient = this.assetClient.getConfig().getDialob();
@@ -90,21 +92,6 @@ public class SysConfigInstanceBuilderImpl implements ExecutorClient.SysConfigSes
         .session(dialobExecution.getSession())
         .actions(dialobExecution.getActions())
         .build();
-  }
-  
-  private Uni<DialobClient.ProgramWrapper> getForm(SysConfigInstance instance) {
-    return store.queryForms().get(instance.getStepProcessCreated().getBody().getFormId())
-        .onItem().transform(form -> {
-          if(form.isEmpty()) {
-            final var processCreated = instance.getStepProcessCreated().getBody();
-            throw new ExecutorException(ErrorMsg.builder()
-                .withCode("FORM_NOT_FOUND_FROM_RELEASE")
-                .withProps(JsonObject.of("workflowName", workflowName, "locale", locale, "release", processCreated.getReleaseId() + "/" + processCreated.getReleaseName()))
-                .withMessage("Can't create new instance of a wk, because release for it does not exist!")
-                .toString());
-          }
-          return form.get();
-        });
   }
   
   private SysConfigInstance doInRelease(SysConfigRelease release) {

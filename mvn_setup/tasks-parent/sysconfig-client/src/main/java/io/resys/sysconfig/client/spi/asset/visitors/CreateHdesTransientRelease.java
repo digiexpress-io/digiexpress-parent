@@ -46,6 +46,7 @@ public class CreateHdesTransientRelease {
     
     return ImmutableWrenchAssets.builder()
         .id(OidUtils.gen())
+        .version("")
         .created(Instant.now())
         .name(command.getName())
         .addAllFlows(entries)

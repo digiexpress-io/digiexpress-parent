@@ -1,9 +1,12 @@
 package io.resys.sysconfig.client.spi.executor;
 
 import java.util.List;
-import java.util.Optional;
+
+import org.immutables.value.Value;
 
 import io.dialob.client.api.DialobClient;
+import io.resys.hdes.client.api.programs.FlowProgram;
+import io.resys.hdes.client.api.programs.ProgramEnvir;
 import io.resys.sysconfig.client.api.ExecutorClient.SysConfigSession;
 import io.resys.sysconfig.client.api.model.SysConfigInstance;
 import io.resys.sysconfig.client.api.model.SysConfigRelease;
@@ -16,6 +19,7 @@ public interface ExecutorStore {
   SysConfigInstanceQuery queryInstances();
   SysConfigSessionQuery querySessions();
   DialobFormQuery queryForms();
+  WrenchFlowQuery queryFlows();
   
   Uni<SysConfigSession> save(SysConfigSession session);
   Uni<ExecutorStore> withTenantConfig(String tenantConfigId);
@@ -32,8 +36,18 @@ public interface ExecutorStore {
   interface SysConfigReleaseQuery {
     Uni<SysConfigRelease> get(String releaseId);
   }
-
+  interface WrenchFlowQuery {
+    WrenchFlowQuery releaseId(String releaseId);
+    Uni<WrenchFlow> get(String flowId); 
+  }
   interface DialobFormQuery {
-    Uni<Optional<DialobClient.ProgramWrapper>> get(String formId); 
+    DialobFormQuery releaseId(String releaseId);
+    Uni<DialobClient.ProgramWrapper> get(String formId); 
+  }
+  
+  @Value.Immutable 
+  interface WrenchFlow {
+    FlowProgram getFlow();
+    ProgramEnvir getEnvir();
   }
 }

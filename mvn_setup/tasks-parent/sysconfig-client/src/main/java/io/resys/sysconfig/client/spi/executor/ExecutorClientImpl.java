@@ -6,7 +6,9 @@ import io.resys.sysconfig.client.api.AssetClient;
 import io.resys.sysconfig.client.api.ExecutorClient;
 import io.resys.sysconfig.client.api.SysConfigClient.SysConfigReleaseQuery;
 import io.resys.sysconfig.client.api.model.SysConfigRelease;
+import io.resys.sysconfig.client.spi.executor.builder.SysConfigFillBuilderImpl;
 import io.resys.sysconfig.client.spi.executor.builder.SysConfigInstanceBuilderImpl;
+import io.resys.sysconfig.client.spi.executor.builder.SysConfigProcesssFillBuilderImpl;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfig;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -36,14 +38,12 @@ public class ExecutorClientImpl implements ExecutorClient {
 
   @Override
   public SysConfigFillBuilder fillInstance() {
-    // TODO Auto-generated method stub
-    return null;
+    return new SysConfigFillBuilderImpl(assets.getConfig().getDialob().getConfig());
   }
 
   @Override
   public SysConfigProcesssFillBuilder processFillInstance() {
-    // TODO Auto-generated method stub
-    return null;
+    return new SysConfigProcesssFillBuilderImpl(store, assets);
   }
 
   @Override

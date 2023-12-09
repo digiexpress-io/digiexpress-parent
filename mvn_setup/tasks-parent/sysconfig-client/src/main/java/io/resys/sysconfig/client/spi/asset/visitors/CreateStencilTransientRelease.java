@@ -36,6 +36,7 @@ public class CreateStencilTransientRelease {
     
     return ImmutableStencilAssets.builder()
         .id(OidUtils.gen())
+        .version("")
         .created(Instant.now())
         .name(init.getName())
         .assetBody(assetBody.encode())

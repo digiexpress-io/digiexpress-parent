@@ -11,7 +11,7 @@ public class Type1Service {
 
   public Output execute(Input input) {
     Output output = new Output();
-    output.fullName = input.first + input.last;
+    output.fullName = input.first + " " + input.last;
     return output;
   }
   

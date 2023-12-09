@@ -45,11 +45,6 @@ permissions and limitations under the
         <artifactId>hdes-client</artifactId>
         <version>${project.version}</version>
       </dependency>
-      <dependency>
-        <groupId>io.digiexpress</groupId>
-        <artifactId>hdes-composer-ui</artifactId>
-        <version>${project.version}</version>
-      </dependency>
 
       <!-- store -->
       <dependency>
@@ -121,11 +116,6 @@ permissions and limitations under the
       <dependency>
         <groupId>io.digiexpress</groupId>
         <artifactId>digiexpress-composer</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.digiexpress</groupId>
-        <artifactId>digiexpress-composer-ui</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -263,6 +253,12 @@ permissions and limitations under the
         <artifactId>thena-crm-client</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>thena-sysconfig-client</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
 
       <dependency>
         <groupId>io.digiexpress</groupId>

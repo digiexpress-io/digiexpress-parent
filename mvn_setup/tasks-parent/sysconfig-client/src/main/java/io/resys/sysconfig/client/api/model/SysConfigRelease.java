@@ -28,6 +28,7 @@ public interface SysConfigRelease extends Document {
   interface SysConfigAsset {
     String getId();
     String getName();
+    String getVersion();
     Instant getUpdated();
     
     String getBody();

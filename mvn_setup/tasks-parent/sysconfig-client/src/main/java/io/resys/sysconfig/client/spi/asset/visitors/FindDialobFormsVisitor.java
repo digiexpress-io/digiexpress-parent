@@ -46,6 +46,7 @@ public class FindDialobFormsVisitor {
           .id(found.getId())
           .name(form.getName())
           .assetBody(found.getBody())
+          .version(found.getVersion())
           .build();
       
       return asset;

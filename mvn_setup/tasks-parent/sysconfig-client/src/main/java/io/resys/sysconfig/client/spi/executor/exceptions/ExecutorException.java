@@ -7,5 +7,8 @@ public class ExecutorException extends RuntimeException {
     super(msg);
   }
   
-
+  public ExecutorException(String msg, Exception e) {
+    super(msg, e);
+  }
+  
 }

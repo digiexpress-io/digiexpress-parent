@@ -84,7 +84,8 @@ public interface HdesClient {
     List<AstCommand> commandsList(String commands);
     Map<String, Serializable> toMap(Object entity);
     Map<String, Serializable> toMap(JsonNode entity);
-    Object toType(Object value, Class<?> toType);
+    <T> T toType(Object value, Class<T> toType);
+    <T> T parseJson(String value, Class<T> toType);
     String toJson(Object anyObject);
   }
   

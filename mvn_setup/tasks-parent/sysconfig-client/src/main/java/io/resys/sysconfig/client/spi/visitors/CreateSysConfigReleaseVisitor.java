@@ -130,6 +130,7 @@ public class CreateSysConfigReleaseVisitor implements DocObjectVisitor<Uni<SysCo
               .body(dialob.getAssetBody())
               .name(dialob.getName())
               .id(dialob.getId())
+              .version(dialob.getVersion())
               .updated(Instant.now())
               .build()).toList()
           )
@@ -138,6 +139,7 @@ public class CreateSysConfigReleaseVisitor implements DocObjectVisitor<Uni<SysCo
               .body(tuple.getItem2().getAssetBody())
               .name(tuple.getItem2().getName())
               .id(tuple.getItem2().getId())
+              .version(tuple.getItem2().getVersion())
               .updated(Instant.now())
               .build())
           .addAssets(ImmutableSysConfigAsset.builder()
@@ -145,6 +147,7 @@ public class CreateSysConfigReleaseVisitor implements DocObjectVisitor<Uni<SysCo
               .body(tuple.getItem3().getAssetBody())
               .name(tuple.getItem3().getName())
               .id(tuple.getItem3().getId())
+              .version(tuple.getItem3().getVersion())
               .updated(Instant.now())
               .build())          
           .build();

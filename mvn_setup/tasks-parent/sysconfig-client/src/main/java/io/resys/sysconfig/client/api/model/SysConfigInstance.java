@@ -40,7 +40,10 @@ public interface SysConfigInstance extends Document {
   default Optional<Step<FillCompleted>> getStepFillCompleted() {
     return getStep(StepType.FILL_COMPLETED).map(e -> (Step<FillCompleted>) e);
   }
-  
+  @JsonIgnore @SuppressWarnings("unchecked")
+  default Optional<Step<FlowCompleted>> getStepFlowCompleted() {
+    return getStep(StepType.FLOW_COMPLETED).map(e -> (Step<FlowCompleted>) e);
+  }  
   @JsonIgnore
   default Optional<Step<?>> getStep(StepType type) {
     return getSteps().stream()

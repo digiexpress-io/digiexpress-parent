@@ -29,7 +29,6 @@ public class IntegrationTest extends TestCase {
   
   @Test
   public void init() throws JsonProcessingException {
-    
 
     // create stencil/dialob/wrench/process projects
     final var client = createRepo("test-prj-1", "test_cases/case_1/").await().atMost(atMost);
@@ -112,14 +111,16 @@ public class IntegrationTest extends TestCase {
       Assertions.assertNotNull(fillState.getState().getStepFillCompleted());
     }
 
-    
     final SysConfigSession afterProcess = executor().processFillInstance()
       .session(session)
       .targetDate(getTargetDate())
       .build()
       .onFailure().invoke(e -> e.printStackTrace()).onFailure().recoverWithNull()
       .await().atMost(atMost);
-      
+    
+    Assertions.assertNotNull(afterProcess.getState().getStepFlowCompleted());
+    Assertions.assertEquals("Tero Testi Äyrämö", afterProcess.getState().getStepFlowCompleted().get().getBody().getReturns().get("fullName"));
+    
     log.debug(toJson(afterProcess.getState()));
   }
 }
