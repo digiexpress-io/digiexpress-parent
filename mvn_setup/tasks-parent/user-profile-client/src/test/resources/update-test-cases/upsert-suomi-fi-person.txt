@@ -1,0 +1,17 @@
+
+Docs
+  - 1: external-id
+
+Branches
+  - branch name: main/2
+    doc id: 1
+    commit id: 3
+    {"id":"1_CUSTOMER","body":{"type":"PERSON","contact":{"email":"suomi-fi-customer@gmail.com","address":{"street":"1234 My street","country":"FI","locality":"Helsinki","postalCode":"12345"},"addressValue":"1234 My street, Helsinki, FI, 12345"},"lastName":"Brachus","username":"Jack Brachus","firstName":"Jack","protectionOrder":true},"created":"2023-01-01T01:01:00Z","updated":"2023-01-01T01:01:00Z","version":"2","externalId":"external-id","documentType":"CUSTOMER","transactions":[{"id":"1","commands":[{"body":{"type":"PERSON","contact":{"email":"customer@gmail.com","address":{"street":"56 Main street","country":"SV","locality":"Stockholm","postalCode":"79773"},"addressValue":"1234 Any street, Helsinki, FI, 12345"},"lastName":"Smith","username":"Amanda Smith","firstName":"Amanda","protectionOrder":null},"userId":"tester-bob","externalId":"external-id","targetDate":"2023-01-01T01:01:00Z","commandType":"CreateCustomer"}]},{"id":"2","commands":[{"userId":"tester-bob","contact":{"email":"suomi-fi-customer@gmail.com","address":{"street":"1234 My street","country":"FI","locality":"Helsinki","postalCode":"12345"},"addressValue":"1234 My street, Helsinki, FI, 12345"},"lastName":"Brachus","userName":"Jack Brachus","firstName":"Jack","customerId":"external-id","targetDate":"2023-01-01T01:01:00Z","commandType":"UpsertSuomiFiPerson","protectionOrder":true}]}]}
+
+Commits
+  - id: 4
+    doc id: 1, branch id: 2, parent: 5, message: creating customer, author: not-configured
+  - id: 3
+    doc id: 1, branch id: 2, parent: 4, message: Update customers: 1, author: not-configured
+
+Logs
