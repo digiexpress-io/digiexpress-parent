@@ -6,7 +6,7 @@ import { CustomerDescriptor } from 'descriptor-customer';
 import { NavigationSticky, FilterByString, TableBody, TableFillerRows } from 'components-generic';
 
 import { CustomersSearchState, CustomerTable, initCustomersSearchState, TableConfigProps } from './table-ctx';
-import { TableTitle, TableSubTitle } from './TableTitle';
+import { TableTitle } from './TableTitle';
 import { SortableHeaders } from './TableHeaders';
 
 import CellMenu from './CellMenu';

@@ -5,11 +5,10 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { FormattedMessage } from 'react-intl';
 
 import { CustomerDescriptor } from 'descriptor-customer';
-import { CustomersSearchState, CustomerTable, initCustomersSearchState, TableConfigProps } from './table-ctx';
+import { CustomersSearchState } from './table-ctx';
 
 import { useTableCellPopover, StyledTableCell } from 'components-generic';
 import CellHoverButton from './CellMenuButton';
-import Customer from 'components-customer';
 
 const StyledBox = styled(Box)(({ theme }) => ({
   color: theme.palette.error.main,
