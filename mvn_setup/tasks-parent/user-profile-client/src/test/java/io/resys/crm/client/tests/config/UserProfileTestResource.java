@@ -43,6 +43,7 @@ public class UserProfileTestResource implements UserProfileRestApi {
           .id("transation-1")
           .addCommands(ImmutableCreateUserProfile
               .builder()
+              .id("id-1234")
               .userId("userDonald")
               .details(ImmutableUserDetails.builder()
                   .firstName("Donald")

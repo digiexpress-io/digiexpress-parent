@@ -37,6 +37,7 @@ public class RestApiTest {
   @Test
   public void postTwoUserProfiles() throws JsonProcessingException {
     final var body = ImmutableCreateUserProfile.builder()
+        .id("personid")
         .details(ImmutableUserDetails.builder()
           .firstName("user first name")
           .lastName("user last name")
