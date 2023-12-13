@@ -126,9 +126,10 @@ const Secondary: React.FC<{}> = () => {
   function handleMyoverview() { actions.handleTabAdd({ id: 'myoverview', label: <FormattedMessage id="activities.myoverview.title" /> }) }
   function handleInbox() { actions.handleTabAdd({ id: 'inbox', label: <FormattedMessage id="activities.inbox.title" /> }) }
   function handleDeployments() { actions.handleTabAdd({ id: 'deployments', label: <FormattedMessage id="activities.deployments.title" /> }) }
-  function handleProfile() { actions.handleTabAdd({ id: 'profile', label: <FormattedMessage id="activities.profile.title" /> }) }
   function handleOrg() { actions.handleTabAdd({ id: 'org', label: <FormattedMessage id="activities.org.title" /> }) }
   function handleTenant() { actions.handleTabAdd({ id: 'tenant', label: <FormattedMessage id="activities.frontoffice.crm.tenant.title" /> }) }
+  function handleCurrentUserProfile() { actions.handleTabAdd({ id: 'userProfile', label: <FormattedMessage id="activities.frontoffice.userProfile.title" /> }) }
+  function handleAllUserProfiles() { actions.handleTabAdd({ id: 'allUserProfiles', label: <FormattedMessage id="activities.frontoffice.allUserProfiles.title" /> }) }
 
 
   React.useEffect(() => {
@@ -181,7 +182,9 @@ const Secondary: React.FC<{}> = () => {
 
         <StyledExplorerTab value='explorer.administration' label={<FormattedMessage id="explorer.frontoffice.administration.menuOption" />} onClick={handleTasks}
           icon={<SupervisorAccountOutlinedIcon fontSize='small' />} />
-        <StyledExplorerSubTab value='explorer.profile' label={<FormattedMessage id="explorer.frontoffice.profile.menuOption" />} onClick={handleProfile}
+        <StyledExplorerSubTab value='explorer.userProfile' label={<FormattedMessage id="explorer.frontoffice.userProfile.menuOption" />} onClick={handleCurrentUserProfile}
+          icon={<PersonOutlineOutlinedIcon fontSize='small' />} />
+        <StyledExplorerSubTab value='explorer.allUserProfiles' label={<FormattedMessage id="explorer.frontoffice.allUserProfiles.menuOption" />} onClick={handleAllUserProfiles}
           icon={<PersonOutlineOutlinedIcon fontSize='small' />} />
         <StyledExplorerSubTab value='explorer.org' label={<FormattedMessage id="explorer.frontoffice.org.menuOption" />} onClick={handleOrg}
           icon={<CorporateFareOutlinedIcon fontSize='small' />} />

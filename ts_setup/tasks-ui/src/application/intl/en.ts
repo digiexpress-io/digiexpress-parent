@@ -420,8 +420,12 @@ const en = {
   'activities.frontoffice.org.title': 'Organisation',
   'activities.frontoffice.org.desc': 'Roles and user settings',
 
-  'activities.frontoffice.profile.title': 'My profile',
-  'activities.frontoffice.profile.desc': 'My personal information, settings, preferences, and recent activity',
+  'activities.frontoffice.userProfile.title': 'User profile',
+  'activities.frontoffice.userProfile.desc': 'My personal information, settings, preferences, and recent activity',
+
+  'activities.frontoffice.allUserProfiles.title': 'All user profiles',
+  'activities.frontoffice.allUserProfiles.desc': 'View all registered users',
+
   'activities.profile.title': 'My profile',
   'activities.org.title': 'Organisation',
 
@@ -440,7 +444,8 @@ const en = {
   'explorer.frontoffice.myoverview.menuOption': 'My daily overview',
   'explorer.frontoffice.myhistory.menuOption': 'My activity history',
   'explorer.frontoffice.config.menuOption': 'System configuration',
-  'explorer.frontoffice.profile.menuOption': 'My profile',
+  'explorer.frontoffice.userProfile.menuOption': 'User profile',
+  'explorer.frontoffice.allUserProfiles.menuOption': 'All user profiles',
   'explorer.frontoffice.administration.menuOption': 'Administration',
   'explorer.frontoffice.org.menuOption': 'Organisation',
   'explorer.frontoffice.tenant.menuOption': 'Tenant',
