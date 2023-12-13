@@ -1,5 +1,5 @@
 import React from 'react';
-import { Backend, UserProfile } from 'client';
+import { Backend, UserProfileAndOrg } from 'client';
 import { TenantState, TenantContextType, TenantMutator, TenantDispatch } from './types';
 import { TenantStateBuilder } from './context-state';
 
@@ -14,10 +14,25 @@ const initState: TenantState = new TenantStateBuilder({
   tenantEntries: [],
   tenants: [],
   palette: {},
-  profile: { name: "", userId: "", today: new Date(), roles: [] }
+  profile: {
+    user: {
+      created: new Date(),
+      updated: new Date(),
+      details: {
+        email: '',
+        username: '',
+        firstName: '',
+        lastName: ''
+      },
+      notificationSettings: [{
+        type: '',
+        enabled: true
+      }]
+    }, userId: "", today: new Date(), roles: []
+  }
 });
 
-const TenantProvider: React.FC<{ children: React.ReactNode, init: { backend: Backend, profile: UserProfile } }> = ({ children, init }) => {
+const TenantProvider: React.FC<{ children: React.ReactNode, init: { backend: Backend, profile: UserProfileAndOrg } }> = ({ children, init }) => {
   const { backend, profile } = init;
   const [loading, setLoading] = React.useState<boolean>(true);
 

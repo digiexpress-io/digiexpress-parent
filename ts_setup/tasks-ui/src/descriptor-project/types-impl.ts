@@ -1,8 +1,8 @@
-import { Project, RepoType, UserProfile } from 'client';
+import { Project, RepoType, UserProfileAndOrg } from 'client';
 
 import {
   ProjectDescriptor, FilterBy, Group, GroupBy,
-  FilterByRepoType, FilterByUsers, 
+  FilterByRepoType, FilterByUsers,
   ProjectPaletteType, Data, GroupsAndFilters
 } from './types';
 import { Palette } from './constants';
@@ -38,7 +38,7 @@ class GroupsAndFiltersImpl implements GroupsAndFilters {
     this._searchString = init.searchString;
     this._filtered = init.filtered;
   }
-  get profile(): UserProfile { return this._data.profile }
+  get profile(): UserProfileAndOrg { return this._data.profile }
   get palette(): ProjectPaletteType { return this._data.palette }
   get tasks(): ProjectDescriptor[] { return this._data.projects }
 
@@ -235,9 +235,9 @@ class ProjectDescriptorImpl implements ProjectDescriptor {
   private _entry: Project;
   private _created: Date;
   private _updated: Date;
-  private _profile: UserProfile;
+  private _profile: UserProfileAndOrg;
 
-  constructor(entry: Project, profile: UserProfile, today: Date) {
+  constructor(entry: Project, profile: UserProfileAndOrg, today: Date) {
     this._entry = entry;
     this._created = new Date(entry.created);
     this._updated = new Date(entry.updated);;

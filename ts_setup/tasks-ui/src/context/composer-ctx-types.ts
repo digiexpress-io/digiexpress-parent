@@ -1,11 +1,11 @@
 import Burger from 'components-burger';
 
-import type { Task, UserProfile } from 'client';
+import type { Task, UserProfileAndOrg } from 'client';
 
 export type DocumentId = string;
 
 export type Document =
-  { kind: 'HEAD', id: string, delegate: UserProfile } |
+  { kind: 'HEAD', id: string, delegate: UserProfileAndOrg } |
   { kind: 'TASK', id: string, delegate: Task };
 
 export type DocumentUpdate = {};
@@ -29,7 +29,7 @@ export interface PageUpdate {
 }
 
 export interface Session {
-  profile: UserProfile,
+  profile: UserProfileAndOrg,
   pages: Record<DocumentId, PageUpdate>;
 
   getEntity(id: DocumentId): undefined | Document;
@@ -38,12 +38,12 @@ export interface Session {
   withPageValue(page: DocumentId, value: DocumentUpdate[]): Session;
   withoutPages(pages: DocumentId[]): Session;
 
-  withProfile(site: UserProfile): Session;
+  withProfile(site: UserProfileAndOrg): Session;
 }
 
 export interface Actions {
   handleLoad(): Promise<void>;
-  handleLoadProfile(site?: UserProfile): Promise<void>;
+  handleLoadProfile(site?: UserProfileAndOrg): Promise<void>;
   handlePageUpdate(page: DocumentId, value: DocumentUpdate[]): void;
   handlePageUpdateRemove(pages: DocumentId[]): void;
 }

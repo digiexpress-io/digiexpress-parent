@@ -1,9 +1,9 @@
-import { UserProfile, CustomerId, Customer, Person, CustomerBodyType } from 'client';
+import { UserProfileAndOrg, CustomerId, Customer, Person, CustomerBodyType } from 'client';
 
 export interface CustomerDescriptor {
   id: CustomerId;
   entry: Customer;
-  profile: UserProfile;
+  profile: UserProfileAndOrg;
   avatar: AvatarCode;
 
   displayName: string;

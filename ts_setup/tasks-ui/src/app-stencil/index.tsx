@@ -1,11 +1,11 @@
 import React from 'react';
 
 import Burger from 'components-burger';
-import { Backend, UserProfile, TenantConfig } from 'client';
+import { Backend, UserProfileAndOrg, TenantConfig } from 'client';
 import { Main, Secondary, Toolbar, Composer, StencilClient } from 'components-stencil';
 
 
-function appStencil(backend: Backend, profile: UserProfile, tenantConfig: TenantConfig): Burger.App<{}, {
+function appStencil(backend: Backend, profile: UserProfileAndOrg, tenantConfig: TenantConfig): Burger.App<{}, {
   service: StencilClient.Service,
 }> {
 

@@ -1,4 +1,4 @@
-import { Customer, UserProfile, resolveAvatar, Person } from 'client';
+import { Customer, UserProfileAndOrg, resolveAvatar, Person } from 'client';
 
 import {
   AvatarCode, CustomerDescriptor
@@ -7,7 +7,7 @@ import {
 
 
 class CustomerDescriptorImpl implements CustomerDescriptor {
-  private _profile: UserProfile;
+  private _profile: UserProfileAndOrg;
   private _entry: Customer;
   private _avatar: AvatarCode;
   private _today: Date;
@@ -15,7 +15,7 @@ class CustomerDescriptorImpl implements CustomerDescriptor {
   private _lastLogin: Date;
   private _displayName: string;
 
-  constructor(entry: Customer, profile: UserProfile, today: Date) {
+  constructor(entry: Customer, profile: UserProfileAndOrg, today: Date) {
     this._entry = entry;
     this._profile = profile;
     this._avatar = resolveAvatar([entry.body.username])[0];

@@ -1,4 +1,4 @@
-import { UserProfile } from './profile-types';
+import { UserProfileAndOrg } from './profile-types';
 import { TaskStore } from './task-types';
 import { ProjectStore } from './project-types';
 import { TenantStore } from './tenant-types';
@@ -23,7 +23,7 @@ export interface Backend {
   tenant: TenantStore;
   customer: CustomerStore;
 
-  currentUserProfile(): Promise<UserProfile>;
+  currentUserProfile(): Promise<UserProfileAndOrg>;
   currentTenant(): Promise<TenantConfig>;
   health(): Promise<Health>
   org(): Promise<{ org: Org, user: User }>;

@@ -3,7 +3,7 @@ import type { TaskId, Task, TaskPagination, TaskStore, TaskUpdateCommand, Create
 import { ProjectId, Project, ProjectPagination, ProjectStore, ProjectUpdateCommand, CreateProject } from './project-types';
 import { Tenant, TenantEntry, TenantStore, TenantEntryPagination, DialobTag, DialobForm, DialobSession, FormTechnicalName, TenantId, FormId, CreateFormRequest, DialobFormResponse } from './tenant-types';
 import { TenantConfig } from 'client';
-import type { UserProfile } from './profile-types';
+import type { UserProfileAndOrg } from './profile-types';
 import type { User, Org } from './org-types';
 import { mockOrg } from './client-mock';
 import type { CustomerStore, Customer, CustomerId } from './customer-types';
@@ -89,11 +89,24 @@ export class ServiceImpl implements Backend {
     return { id, archived, created, documentType, name, preferences, repoConfigs, status, transactions, updated, version };
   }
 
-  async currentUserProfile(): Promise<UserProfile> {
+  async currentUserProfile(): Promise<UserProfileAndOrg> {
     const { today, user } = mockOrg;
     const { userId, userRoles: roles } = user;
     try {
-      return { name: "", today, userId, roles };
+      return {
+        user: {
+          created: new Date(), updated: new Date(), details: {
+            email: '',
+            firstName: '',
+            lastName: '',
+            username: '',
+          },
+          notificationSettings: [{
+            type: '',
+            enabled: true
+          }]
+        }, today, userId, roles
+      };
     } catch (error) {
       console.error("PROFILE, failed to fetch", error);
       throw error;

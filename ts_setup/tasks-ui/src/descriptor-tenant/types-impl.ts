@@ -1,4 +1,4 @@
-import { UserProfile, Tenant, TenantEntry } from 'client';
+import { UserProfileAndOrg, Tenant, TenantEntry } from 'client';
 
 
 import { TenantDescriptor, TenantEntryDescriptor, GroupBy, Group, TenantGroupsAndFilters, Data } from './types';
@@ -121,11 +121,11 @@ class GroupVisitor {
 class TenantEntryDescriptorImpl implements TenantEntryDescriptor {
   private _source: TenantEntry;
   private _tenantId: string;
-  private _profile: UserProfile;
+  private _profile: UserProfileAndOrg;
   private _created: Date;
   private _lastSaved: Date;
 
-  constructor(source: TenantEntry, profile: UserProfile, today: Date, tenantId: string) {
+  constructor(source: TenantEntry, profile: UserProfileAndOrg, today: Date, tenantId: string) {
     this._source = source;
     this._profile = profile;
     this._created = new Date(source.metadata.created);
@@ -147,9 +147,9 @@ class TenantEntryDescriptorImpl implements TenantEntryDescriptor {
  */
 class TenantDescriptorImpl implements TenantDescriptor {
   private _source: Tenant;
-  private _profile: UserProfile;
+  private _profile: UserProfileAndOrg;
 
-  constructor(source: Tenant, profile: UserProfile, today: Date) {
+  constructor(source: Tenant, profile: UserProfileAndOrg, today: Date) {
     this._source = source;
     this._profile = profile;
   }

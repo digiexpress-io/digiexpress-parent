@@ -2,12 +2,12 @@ import React from 'react';
 
 import { initSession, SessionData, ActionsImpl } from 'context';
 
-import { UserProfile, Backend } from 'client';
+import { UserProfileAndOrg, Backend } from 'client';
 import { ClientContext, ComposerContext } from 'context/client-ctx';
 import { OrgProvider } from 'descriptor-organization';
 
 
-const Provider: React.FC<{ children: React.ReactNode, service: Backend, profile: UserProfile }> = ({ children, service, profile }) => {
+const Provider: React.FC<{ children: React.ReactNode, service: Backend, profile: UserProfileAndOrg }> = ({ children, service, profile }) => {
   const [session, dispatch] = React.useState<SessionData>(initSession);
 
   const actions = React.useMemo(() => {

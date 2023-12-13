@@ -1,4 +1,4 @@
-import { UserProfile, Project, RepoType } from 'client';
+import { UserProfileAndOrg, Project, RepoType } from 'client';
 
 export interface AvatarCode {
   twoletters: string;
@@ -11,7 +11,7 @@ export interface ProjectDescriptor {
   name: string
   created: Date;
   updated: Date;
-  profile: UserProfile;
+  profile: UserProfileAndOrg;
 }
 
 
@@ -46,7 +46,7 @@ export interface Data {
   projects: ProjectDescriptor[];
   projectsByUser: Record<string, ProjectDescriptor[]>;
   palette: ProjectPaletteType;
-  profile: UserProfile;
+  profile: UserProfileAndOrg;
   users: string[];
 }
 
@@ -78,10 +78,10 @@ export interface ProjectsState {
   projects: ProjectDescriptor[];
   projectsByUser: Record<string, ProjectDescriptor[]>;
   palette: ProjectPaletteType;
-  profile: UserProfile;
+  profile: UserProfileAndOrg;
   users: string[];
 
-  withProfile(profile: UserProfile): ProjectsState;
+  withProfile(profile: UserProfileAndOrg): ProjectsState;
   withProjects(projects: Project[]): ProjectsState;
   toGroupsAndFilters(): GroupsAndFilters;
 }

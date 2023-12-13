@@ -4,14 +4,6 @@ import { RoleId } from "./org-types";
 export type NotificationType = string;
 export type UserId = string;
 
-/*
-export interface UserProfile {
-  name: string,
-  userId: UserId,
-  roles: RoleId[],
-  today: Date,
-*/
-
 export interface UserProfileAndOrg {
   user: UserProfile;
   userId: UserId,

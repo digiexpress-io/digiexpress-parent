@@ -1,11 +1,11 @@
 import { Dispatch, SetStateAction } from 'react';
 import { DocumentId, Document, DocumentUpdate, Session, PageUpdate, TabBody, TabEntity, Actions } from './composer-ctx-types';
 
-import type { UserProfile, Backend } from 'client';
+import type { UserProfileAndOrg, Backend } from 'client';
 
 class SiteCache {
-  private _site: UserProfile;
-  constructor(site: UserProfile) {
+  private _site: UserProfileAndOrg;
+  constructor(site: UserProfileAndOrg) {
     this._site = site;
   }
 
@@ -20,16 +20,32 @@ class SiteCache {
 }
 
 class SessionData implements Session {
-  private _profile: UserProfile;
+  private _profile: UserProfileAndOrg;
   private _pages: Record<DocumentId, PageUpdate>;
   private _cache: SiteCache;
 
   constructor(props: {
-    profile?: UserProfile;
+    profile?: UserProfileAndOrg;
     pages?: Record<DocumentId, PageUpdate>;
     cache?: SiteCache;
   }) {
-    this._profile = props.profile ? props.profile : { name: "", today: new Date(), userId: "", roles: [] };
+    this._profile = props.profile ? props.profile : {
+      user: {
+        created: new Date(),
+        updated: new Date(),
+        details: {
+          firstName: '',
+          lastName: '',
+          username: '',
+          email: ''
+        },
+        notificationSettings: [{
+          type: '',
+          enabled: true
+        }]
+      },
+      today: new Date(), userId: "", roles: []
+    };
     this._pages = props.pages ? props.pages : {};
     this._cache = props.cache ? props.cache : new SiteCache(this._profile);
   }
@@ -42,7 +58,7 @@ class SessionData implements Session {
   getEntity(entityId: DocumentId): Document | undefined {
     return this._cache.getEntity(entityId);
   }
-  withProfile(profile: UserProfile) {
+  withProfile(profile: UserProfileAndOrg) {
     if (!profile) {
       console.error("Head not defined error", profile);
       return this;
@@ -146,7 +162,7 @@ class ActionsImpl implements Actions {
     const site = await this._service.currentUserProfile();
     this._sessionDispatch((old) => old.withProfile(site))
   }
-  async handleLoadProfile(site?: UserProfile): Promise<void> {
+  async handleLoadProfile(site?: UserProfileAndOrg): Promise<void> {
     if (site) {
       return this._sessionDispatch((old) => old.withProfile(site));
     }

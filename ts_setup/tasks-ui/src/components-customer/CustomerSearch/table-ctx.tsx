@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, TablePagination, TableContainer, Table } from '@mui/material';
 import { CustomerDescriptor, CustomerDescriptorImpl } from 'descriptor-customer';
-import { Customer, UserProfile } from 'client';
+import { Customer, UserProfileAndOrg } from 'client';
 import Pagination from 'table';
 
 type CustomerPagination = Pagination.TablePagination<CustomerDescriptor>;
@@ -10,7 +10,7 @@ type CustomersSearchState = {
   records: CustomerDescriptor[];
   searchString: string;
   isSearchStringValid: boolean;
-  profile: UserProfile;
+  profile: UserProfileAndOrg;
   today: Date;
   withSearchString(searchString: string): CustomersSearchState;
   withRecords(searchResult: Customer[]): CustomersSearchState;
@@ -49,7 +49,7 @@ class ImmutableCustomersSearchState implements CustomersSearchState {
   private _records: CustomerDescriptor[];
   private _searchString: string;
   private _isSearchStringValid: boolean;
-  private _profile: UserProfile;
+  private _profile: UserProfileAndOrg;
   private _today: Date;
 
   constructor(init: CustomersSearchStateInit) {
@@ -86,7 +86,7 @@ class ImmutableCustomersSearchState implements CustomersSearchState {
   get isSearchStringValid() { return this._isSearchStringValid }
 }
 
-function initCustomersSearchState(profile: UserProfile): CustomersSearchState {
+function initCustomersSearchState(profile: UserProfileAndOrg): CustomersSearchState {
   return new ImmutableCustomersSearchState({
     searchString: '',
     isSearchStringValid: false,

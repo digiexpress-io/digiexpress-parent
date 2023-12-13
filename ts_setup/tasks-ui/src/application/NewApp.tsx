@@ -67,7 +67,7 @@ const store: TaskClient.Store = new TaskClient.DefaultStore({
 const backend = new TaskClient.ServiceImpl(store)
 
 
-const TenantConfigSetup: React.FC<{ profile: TaskClient.UserProfile }> = ({ profile }) => {
+const TenantConfigSetup: React.FC<{ profile: TaskClient.UserProfileAndOrg }> = ({ profile }) => {
   const { tenantConfig } = Context.useTenantConfig();
   if (!tenantConfig) {
     throw new Error("Tenant must be defined!");
@@ -100,9 +100,22 @@ const DialobOnlySetup: React.FC<{}> = () => {
     return backend;
   }, []);
 
-  const profile: TaskClient.UserProfile = React.useMemo(() => {
+  const profile: TaskClient.UserProfileAndOrg = React.useMemo(() => {
     return {
-      name: 'Han Solo',
+      user: {
+        created: new Date(),
+        updated: new Date(),
+        details: {
+          email: 'han@millenium_falcon@email.com',
+          firstName: 'Han',
+          lastName: 'Solo',
+          username: 'hansolo'
+        },
+        notificationSettings: [{
+          type: '',
+          enabled: true
+        }]
+      },
       userId: 'han-solo',
       roles: [],
       today: new Date(),

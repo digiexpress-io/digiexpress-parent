@@ -1,5 +1,5 @@
 import React from 'react';
-import { Backend, UserProfile } from 'client';
+import { Backend, UserProfileAndOrg } from 'client';
 
 import { ProjectsContextType, ProjectsMutator, ProjectsDispatch, ProjectsState } from './types';
 import { ProjectsStateBuilder } from './context-projects-state';
@@ -16,10 +16,25 @@ const startStart: ProjectsState = new ProjectsStateBuilder({
     users: {},
     repoType: {},
   },
-  profile: { name: "", userId: "", today: new Date(), roles: [] }
+  profile: {
+    user: {
+      created: new Date(),
+      updated: new Date(),
+      details: {
+        email: '',
+        firstName: '',
+        lastName: '',
+        username: '',
+      },
+      notificationSettings: [{
+        type: '',
+        enabled: true
+      }]
+    }, userId: "", today: new Date(), roles: []
+  }
 });
 
-const ProjectsProvider: React.FC<{ children: React.ReactNode, init: { backend: Backend, profile: UserProfile } }> = ({ children, init }) => {
+const ProjectsProvider: React.FC<{ children: React.ReactNode, init: { backend: Backend, profile: UserProfileAndOrg } }> = ({ children, init }) => {
 
   const { backend, profile } = init;
 
