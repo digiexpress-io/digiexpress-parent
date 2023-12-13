@@ -179,7 +179,7 @@ public class UpdateUserProfileVisitor implements DocObjectsVisitor<Uni<List<User
       }
     });
     
-    if(updatedProfiles.isEmpty()) {
+    if(updateBuilder.getItemsAdded() == 0) {
       return Uni.createFrom().item(updatedProfiles);
     }
     

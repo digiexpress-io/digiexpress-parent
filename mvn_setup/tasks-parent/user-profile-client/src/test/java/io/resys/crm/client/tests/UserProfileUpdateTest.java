@@ -10,6 +10,7 @@ import io.resys.userprofile.client.api.UserProfileClient;
 import io.resys.userprofile.client.api.model.ImmutableChangeUserDetailsFirstName;
 import io.resys.userprofile.client.api.model.ImmutableCreateUserProfile;
 import io.resys.userprofile.client.api.model.ImmutableNotificationSetting;
+import io.resys.userprofile.client.api.model.ImmutableUpsertUserProfile;
 import io.resys.userprofile.client.api.model.ImmutableUserDetails;
 import io.resys.userprofile.client.api.model.UserProfile;
 import lombok.extern.slf4j.Slf4j;
@@ -59,66 +60,32 @@ public class UserProfileUpdateTest extends UserProfileTestCase {
     assertRepo(client, "update-test-cases/create-userprofile-change-first-name.txt");
   }
   
-  /*
+  
   @org.junit.jupiter.api.Test
-  public void upsertSuomiFiPerson() {
-    final var repoName = UserProfileUpdateTest.class.getSimpleName() + "UpsertSuomiFiPerson";
+  public void upsertUserProfile() {
+    final var repoName = UserProfileUpdateTest.class.getSimpleName() + "UpsertUserProfile";
     final var client = getClient().repoQuery().repoName(repoName).createIfNot().await().atMost(atMost);
-    final var customer = createUserProfileForUpdating(client);
+    final var userProfile = createUserProfileForUpdating(client);
     
-    client.updateUserProfile().updateOne(ImmutableUpsertSuomiFiPerson.builder()
+    client.createUserProfile().createOne(ImmutableUpsertUserProfile.builder()
         .userId("tester-bob")
-        .userName("Jack Brachus")
-        .customerId(customer.getExternalId())
-        .protectionOrder(true)
-        .firstName("Jack")
-        .lastName("Brachus")
-        .contact(ImmutableCustomerContact.builder()
-            .address(ImmutableCustomerAddress.builder()
-                .country("FI")
-                .locality("Helsinki")
-                .street("1234 My street")
-                .postalCode("12345")
-                .build())
-            .addressValue("1234 My street, Helsinki, FI, 12345")
-            .email("suomi-fi-customer@gmail.com")
-            .build())
         .targetDate(getTargetDate())
+        .id(userProfile.getId())
+        .details(ImmutableUserDetails.builder()
+            .firstName("Mr. Upsert")
+            .lastName("von Buchenheim")
+            .email("mr_g_upsert@email.com")
+            .username("MrUpsert")
+            .build())
+        .notificationSettings(Arrays.asList(ImmutableNotificationSetting.builder()
+          .enabled(false)
+          .type("NEW_ATTACHMENT_RECEIVED")
+          .build()))
         .build())
     .await().atMost(atMost);
 
-    assertRepo(client, "update-test-cases/upsert-suomi-fi-person.txt");
+    assertRepo(client, "update-test-cases/upsert-user-profile.txt");
   }
-
-  @org.junit.jupiter.api.Test
-  public void upsertSuomiFiPersonChangeAddress() {
-    final var repoName = UserProfileUpdateTest.class.getSimpleName() + "UpsertSuomiFiPersonChangeAddress";
-    final var client = getClient().repoQuery().repoName(repoName).createIfNot().await().atMost(atMost);
-    final var customer = createUserProfileForUpdating(client);
-    
-    client.updateUserProfile().updateOne(ImmutableUpsertSuomiFiPerson.builder()
-        .userId("tester-bob")
-        .userName("Jack Brachus")
-        .customerId(customer.getExternalId())
-        .protectionOrder(true)
-        .firstName("Jack")
-        .lastName("Brachus")
-        .contact(ImmutableCustomerContact.builder()
-            .address(ImmutableCustomerAddress.builder()
-                .country("FI")
-                .locality("Sipoo")
-                .street("35 Lake Avenue")
-                .postalCode("85477")
-                .build())
-            .addressValue("35 Lake Avenue, Sipoo, FI, 85477")
-            .email("suomi-fi-customer@gmail.com")
-            .build())
-        .targetDate(getTargetDate())
-        .build())
-    .await().atMost(atMost);
-
-    assertRepo(client, "update-test-cases/upsert-suomi-fi-person-change-address.txt");
-  }
-*/
+  
 
 }

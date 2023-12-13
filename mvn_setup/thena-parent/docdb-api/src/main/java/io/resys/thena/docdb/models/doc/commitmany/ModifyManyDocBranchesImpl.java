@@ -51,7 +51,7 @@ public class ModifyManyDocBranchesImpl implements ModifyManyDocBranches {
     private JsonObject appendLog;
     private JsonObjectMerge appendMerge;
   }
-  
+  @Override public int getItemsAdded() { return items.size();}
   @Override public ModifyManyDocBranchesImpl repoId(String repoId) { this.repoId = RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!"); return this; }
   @Override public ModifyManyDocBranchesImpl branchName(String branchName) { this.branchName = RepoAssert.notEmpty(branchName, () -> "branchName can't be empty!"); return this; }
   @Override public ModifyManyDocBranchesImpl author(String author) { this.author = RepoAssert.notEmpty(author, () -> "author can't be empty!"); return this; }
@@ -206,7 +206,6 @@ public class ModifyManyDocBranchesImpl implements ModifyManyDocBranches {
     }
     
     return tx.insert().batchMany(changes).onItem().transform(BatchForOneBranchModify::mapTo);
-  }
-  
+  }  
 
 }

@@ -128,6 +128,8 @@ public interface DocCommitActions {
   }
   
   interface ModifyManyDocBranches {
+    int getItemsAdded();
+    
     ModifyManyDocBranches repoId(String repoId);
     ModifyManyDocBranches author(String author);
     ModifyManyDocBranches message(String message);
