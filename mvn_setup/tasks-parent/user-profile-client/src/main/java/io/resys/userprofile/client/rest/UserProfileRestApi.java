@@ -14,7 +14,6 @@ import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 
 
@@ -25,9 +24,6 @@ public interface UserProfileRestApi {
   
   @GET @Path("userprofiles/{profileId}") @Produces(MediaType.APPLICATION_JSON)
   Uni<UserProfile> getUserProfileById(@PathParam("profileId") String profileId);
-  
-  @GET @Path("userprofiles/search") @Produces(MediaType.APPLICATION_JSON) 
-  Uni<List<UserProfile>> findAllUserProfilesByName(@QueryParam("name") String name);
   
   @POST @Path("userprofiles") @Produces(MediaType.APPLICATION_JSON) @Consumes(MediaType.APPLICATION_JSON)
   Uni<UserProfile> createUserProfile(CreateUserProfile command);

@@ -9,6 +9,7 @@ import { CurrentTenant, DialobList } from 'components-tenant';
 import SysConfig from 'components-sys-config';
 import Tasks from 'components-task';
 import Customer from 'components-customer';
+import { CurrentUserProfile, UserProfiles } from 'components-user-profile';
 
 import Activities from '../Activities';
 
@@ -55,8 +56,12 @@ const Main: React.FC<{}> = () => {
       return (<Box sx={root}><Tasks.Dev /></Box>);
     } else if (active.id === 'tenant') {
       return (<Box sx={root}><CurrentTenant /></Box>)
-
-    } else if (active.id === 'reporting') {
+    } else if (active.id === 'currentUserProfile') {
+      return (<Box sx={root}><CurrentUserProfile /></Box>)
+    } else if (active.id === 'allUserProfiles') {
+      return (<Box sx={root}><UserProfiles /></Box>)
+    }
+    else if (active.id === 'reporting') {
 
     }
 

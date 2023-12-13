@@ -3,7 +3,7 @@ import type { TaskId, Task, TaskPagination, TaskStore, TaskUpdateCommand, Create
 import { ProjectId, Project, ProjectPagination, ProjectStore, ProjectUpdateCommand, CreateProject } from './project-types';
 import { Tenant, TenantEntry, TenantStore, TenantEntryPagination, DialobTag, DialobForm, DialobSession, FormTechnicalName, TenantId, FormId, CreateFormRequest, DialobFormResponse } from './tenant-types';
 import { TenantConfig } from 'client';
-import type { UserProfileAndOrg } from './profile-types';
+import type { UserProfileAndOrg, UserProfileStore, UserProfile } from './profile-types';
 import type { User, Org } from './org-types';
 import { mockOrg } from './client-mock';
 import type { CustomerStore, Customer, CustomerId } from './customer-types';
@@ -54,6 +54,19 @@ export class ServiceImpl implements Backend {
       getCustomer: (id) => this.getCustomer(id),
       findCustomers: (searchString) => this.findCustomers(searchString)
     };
+  }
+
+  get userProfile(): UserProfileStore {
+    return {
+      getUserProfileById: (id: string) => this.getUserProfile(id),
+      findAllUserProfiles: () => this.findUserProfiles()
+    };
+  }
+  async getUserProfile(id: string): Promise<UserProfile> {
+    return await this._store.fetch<UserProfile>(`userprofiles/${id}`, { repoType: 'USER_PROFILE' });
+  }
+  async findUserProfiles(): Promise<UserProfile[]> {
+    return await this._store.fetch<UserProfile[]>(`userprofiles`, { repoType: 'USER_PROFILE' });
   }
 
   async getCustomer(id: CustomerId): Promise<Customer> {

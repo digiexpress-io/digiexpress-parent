@@ -1,2 +1,3 @@
-export { UserProfileDescriptorImpl } from './descriptor-impl';
+
+export { UserProfileDescriptorImpl } from './types-impl';
 export * from './types';

@@ -4,6 +4,7 @@ import { ProjectStore } from './project-types';
 import { TenantStore } from './tenant-types';
 import { Org, User } from './org-types';
 import { CustomerStore } from './customer-types';
+import { UserProfileStore } from './profile-types';
 import { TenantConfig, RepoType } from './tenant-config-types';
 
 
@@ -22,6 +23,7 @@ export interface Backend {
   project: ProjectStore;
   tenant: TenantStore;
   customer: CustomerStore;
+  userProfile: UserProfileStore;
 
   currentUserProfile(): Promise<UserProfileAndOrg>;
   currentTenant(): Promise<TenantConfig>;

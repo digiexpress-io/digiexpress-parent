@@ -17,6 +17,7 @@
     <module>projects-client</module>
     <module>crm-client</module>
     <module>sysconfig-client</module>
+    <module>user-profile-client</module>
   </modules>
 
 </project>

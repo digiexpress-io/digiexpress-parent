@@ -44,7 +44,7 @@ import io.resys.thena.docdb.spi.DocDBDefault;
 import io.resys.thena.docdb.support.DocDbPrinter;
 import io.resys.userprofile.client.api.UserProfileClient;
 import io.resys.userprofile.client.api.model.Document.DocumentType;
-import io.resys.userprofile.client.spi.CrmClientImpl;
+import io.resys.userprofile.client.spi.UserProfileClientImpl;
 import io.resys.userprofile.client.spi.DocumentStoreImpl;
 import io.resys.userprofile.client.spi.store.DocumentConfig.DocumentGidProvider;
 import io.vertx.core.json.JsonObject;
@@ -60,7 +60,7 @@ public class UserProfileTestCase {
   public final Duration atMost = Duration.ofMinutes(5);
   
   private DocumentStoreImpl store;
-  private CrmClientImpl client;
+  private UserProfileClientImpl client;
   private static final String DB = "junit-crm-"; 
   private static final AtomicInteger DB_ID = new AtomicInteger();
   private static final Instant targetDate = LocalDateTime.of(2023, 1, 1, 1, 1).toInstant(ZoneOffset.UTC);
@@ -84,7 +84,7 @@ public class UserProfileTestCase {
           }
         })
         .build();
-    client = new CrmClientImpl(store);
+    client = new UserProfileClientImpl(store);
     objectMapper();
     
   }
@@ -130,7 +130,7 @@ public class UserProfileTestCase {
     return store;
   }
 
-  public CrmClientImpl getClient() {
+  public UserProfileClientImpl getClient() {
     return client;
   }
 
@@ -139,7 +139,7 @@ public class UserProfileTestCase {
   }
 
   public String printRepo(UserProfileClient client) {
-    final var config = ((CrmClientImpl) client).getCtx().getConfig();
+    final var config = ((UserProfileClientImpl) client).getCtx().getConfig();
     final var state = ((DocDBDefault) config.getClient()).getState();
     final var repo = client.getRepo().await().atMost(Duration.ofMinutes(1));
     final String result = new DocDbPrinter(state).printWithStaticIds(repo);
@@ -147,7 +147,7 @@ public class UserProfileTestCase {
   }
   
   public String toStaticData(UserProfileClient client) {
-    final var config = ((CrmClientImpl) client).getCtx().getConfig();
+    final var config = ((UserProfileClientImpl) client).getCtx().getConfig();
     final var state = ((DocDBDefault) config.getClient()).getState();
     final var repo = client.getRepo().await().atMost(Duration.ofMinutes(1));
     return new DocDbPrinter(state).printWithStaticIds(repo);

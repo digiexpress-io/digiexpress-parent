@@ -61,24 +61,5 @@ public class RestApiTest {
     
       Assertions.assertNotNull(response);
   }
-  /*
-  @Test
-  public void updateFourCustomers() throws JsonProcessingException {
-    final var command = ImmutableChangeCustomerFirstName.builder()
-        .firstName("John")
-        .customerId("customer-id-1")
-        .userId("user1")
-        .build();
-        
-
-      final UserProfile response = RestAssured.given()
-        .body(Arrays.asList(command, command, command, command)).accept("application/json").contentType("application/json")
-        .when().put("/q/digiexpress/api/customers/customer-id-1")
-        .then().log().ifValidationFails(LogDetail.BODY)
-        .statusCode(200).contentType("application/json")
-        .extract().as(UserProfile.class);
-    
-      Assertions.assertNotNull(response);
-  }
- */
+ 
 }

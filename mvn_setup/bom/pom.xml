@@ -255,6 +255,11 @@ permissions and limitations under the
       </dependency>
       <dependency>
         <groupId>io.digiexpress</groupId>
+        <artifactId>thena-userprofile-client</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.digiexpress</groupId>
         <artifactId>thena-sysconfig-client</artifactId>
         <version>${project.version}</version>
       </dependency>

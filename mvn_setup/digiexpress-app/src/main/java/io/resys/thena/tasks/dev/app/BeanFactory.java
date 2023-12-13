@@ -31,6 +31,8 @@ import io.resys.thena.tasks.client.api.model.ImmutableTask;
 import io.resys.thena.tasks.client.api.model.ImmutableTaskComment;
 import io.resys.thena.tasks.client.api.model.ImmutableTaskExtension;
 import io.resys.thena.tasks.client.spi.TaskClientImpl;
+import io.resys.userprofile.client.api.UserProfileClient;
+import io.resys.userprofile.client.spi.UserProfileClientImpl;
 import io.thestencil.client.api.StencilComposer;
 import io.thestencil.client.spi.StencilClientImpl;
 import io.thestencil.client.spi.StencilComposerImpl;
@@ -168,6 +170,17 @@ public class BeanFactory {
     return new CrmClientImpl(store);
   }
 
+  @Produces
+  public UserProfileClient userProfileClient(CurrentPgPool currentPgPool, ObjectMapper om) {
+    final var store = io.resys.userprofile.client.spi.DocumentStoreImpl.builder()
+      .repoName(tenantsStoreId)
+      .pgPool(currentPgPool.pgPool)
+      .objectMapper(om)
+      .build();
+    return new UserProfileClientImpl(store);
+  }
+
+  
   @Produces
   public CurrentPgPool currentPgPool(Vertx vertx) {
     log.debug("PgConnectOptions: pgHost={}, pgPort={}, pgUser={}, pgPass={}, pgDb={}, pgPoolSize={}",

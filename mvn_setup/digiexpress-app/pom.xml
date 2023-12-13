@@ -33,6 +33,10 @@
       <groupId>io.digiexpress</groupId>
       <artifactId>stencil-client-api</artifactId>
     </dependency>
+    <dependency>
+      <groupId>io.digiexpress</groupId>
+      <artifactId>thena-userprofile-client</artifactId>
+    </dependency>
 
     <dependency>
       <groupId>io.quarkus</groupId>

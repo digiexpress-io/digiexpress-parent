@@ -387,6 +387,18 @@ const en = {
   'tenantConfig.frontoffice.STENCIL': 'Stencil',
   'tenantConfig.frontoffice.WRENCH': 'Wrench',
   'tenantConfig.frontoffice.DIALOB': 'Dialob',
+  'tenantConfig.frontoffice.SYS_CONFIG': 'SYS CONFIG',
+
+  'userProfile.frontoffice.title': 'User profile',
+  'userProfile.frontoffice.info': 'Profile info',
+  'userProfile.frontoffice.firstName': 'First name(s)',
+  'userProfile.frontoffice.lastName': 'Last name',
+  'userProfile.frontoffice.email': 'Email address',
+  'userProfile.frontoffice.username': 'Username',
+  'userProfile.frontoffice.created': 'Profile created',
+  'userProfile.frontoffice.updated': 'Profile updated',
+  'userProfile.frontoffice.notificationSettings': 'Notification settings',
+  'userProfile.frontoffice.notificationSettings.desc': 'Toggle the notifications you would like to receive',
 
   'activities.deployments.title': 'Deployments',
 

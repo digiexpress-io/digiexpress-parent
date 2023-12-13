@@ -14,14 +14,14 @@ import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class CrmClientImpl implements UserProfileClient {
+public class UserProfileClientImpl implements UserProfileClient {
   private final DocumentStore ctx;
   
   public DocumentStore getCtx() { return ctx; }
   
   @Override
   public UserProfileClient withRepoId(String repoId) {
-    return new CrmClientImpl(ctx.withRepoId(repoId));
+    return new UserProfileClientImpl(ctx.withRepoId(repoId));
   }
 
   @Override
@@ -50,11 +50,11 @@ public class CrmClientImpl implements UserProfileClient {
     return new RepositoryQuery() {
       private String repoName;
       
-      @Override public Uni<UserProfileClient> createIfNot() { return repo.createIfNot().onItem().transform(doc -> new CrmClientImpl(doc)); }
-      @Override public Uni<UserProfileClient> create() { return repo.create().onItem().transform(doc -> new CrmClientImpl(doc)); }
-      @Override public UserProfileClient build() { return new CrmClientImpl(repo.build()); }
-      @Override public Uni<UserProfileClient> delete() { return repo.delete().onItem().transform(doc -> new CrmClientImpl(doc)); }
-      @Override public Uni<UserProfileClient> deleteAll() { return repo.deleteAll().onItem().transform(doc -> new CrmClientImpl(ctx)); }
+      @Override public Uni<UserProfileClient> createIfNot() { return repo.createIfNot().onItem().transform(doc -> new UserProfileClientImpl(doc)); }
+      @Override public Uni<UserProfileClient> create() { return repo.create().onItem().transform(doc -> new UserProfileClientImpl(doc)); }
+      @Override public UserProfileClient build() { return new UserProfileClientImpl(repo.build()); }
+      @Override public Uni<UserProfileClient> delete() { return repo.delete().onItem().transform(doc -> new UserProfileClientImpl(doc)); }
+      @Override public Uni<UserProfileClient> deleteAll() { return repo.deleteAll().onItem().transform(doc -> new UserProfileClientImpl(ctx)); }
       @Override
       public RepositoryQuery repoName(String repoName) {
         this.repoName = repoName;
@@ -73,7 +73,7 @@ public class CrmClientImpl implements UserProfileClient {
                 final Optional<UserProfileClient> result = Optional.empty();
                 return result;
               }
-              return Optional.of(new CrmClientImpl(repo.build()));
+              return Optional.of(new UserProfileClientImpl(repo.build()));
             });
         
       }

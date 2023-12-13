@@ -128,7 +128,7 @@ const Secondary: React.FC<{}> = () => {
   function handleDeployments() { actions.handleTabAdd({ id: 'deployments', label: <FormattedMessage id="activities.deployments.title" /> }) }
   function handleOrg() { actions.handleTabAdd({ id: 'org', label: <FormattedMessage id="activities.org.title" /> }) }
   function handleTenant() { actions.handleTabAdd({ id: 'tenant', label: <FormattedMessage id="activities.frontoffice.crm.tenant.title" /> }) }
-  function handleCurrentUserProfile() { actions.handleTabAdd({ id: 'userProfile', label: <FormattedMessage id="activities.frontoffice.userProfile.title" /> }) }
+  function handleCurrentUserProfile() { actions.handleTabAdd({ id: 'currentUserProfile', label: <FormattedMessage id="activities.frontoffice.userProfile.title" /> }) }
   function handleAllUserProfiles() { actions.handleTabAdd({ id: 'allUserProfiles', label: <FormattedMessage id="activities.frontoffice.allUserProfiles.title" /> }) }
 
 
@@ -182,7 +182,7 @@ const Secondary: React.FC<{}> = () => {
 
         <StyledExplorerTab value='explorer.administration' label={<FormattedMessage id="explorer.frontoffice.administration.menuOption" />} onClick={handleTasks}
           icon={<SupervisorAccountOutlinedIcon fontSize='small' />} />
-        <StyledExplorerSubTab value='explorer.userProfile' label={<FormattedMessage id="explorer.frontoffice.userProfile.menuOption" />} onClick={handleCurrentUserProfile}
+        <StyledExplorerSubTab value='explorer.currentUserProfile' label={<FormattedMessage id="explorer.frontoffice.userProfile.menuOption" />} onClick={handleCurrentUserProfile}
           icon={<PersonOutlineOutlinedIcon fontSize='small' />} />
         <StyledExplorerSubTab value='explorer.allUserProfiles' label={<FormattedMessage id="explorer.frontoffice.allUserProfiles.menuOption" />} onClick={handleAllUserProfiles}
           icon={<PersonOutlineOutlinedIcon fontSize='small' />} />

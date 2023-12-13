@@ -61,11 +61,6 @@ public class UserProfileTestResource implements UserProfileRestApi {
   }
   
   @Override
-  public Uni<List<UserProfile>> findAllUserProfilesByName(String name) {
-    return Uni.createFrom().item(Arrays.asList(mockUserProfile));
-  }
-
-  @Override
   public Uni<UserProfile> createUserProfile(CreateUserProfile command) {
     return Uni.createFrom().item(mockUserProfile);
   }
