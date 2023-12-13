@@ -15,6 +15,7 @@ import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
+import io.quarkus.arc.profile.IfBuildProfile;
 import io.quarkus.jackson.ObjectMapperCustomizer;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import io.resys.crm.client.api.CrmClient;
@@ -80,7 +81,8 @@ public class BeanFactory {
   public record CurrentUserRecord(
     String userId,
     @Nullable String givenName,
-    @Nullable String familyName
+    @Nullable String familyName,
+    @Nullable String email
   ) implements CurrentUser {
     
   }
@@ -91,15 +93,25 @@ public class BeanFactory {
     return new CurrentTenantRecord(tenantId, tenantsStoreId);
   }
 
+  @IfBuildProfile("prod")
   @Produces
   @RequestScoped
-  public CurrentUser currentUser(
+  public CurrentUser currentUserClaims(
     @Claim(standard = Claims.sub) String userId,
     @Claim(standard = Claims.given_name) String givenName,
-    @Claim(standard = Claims.family_name) String familyName)
+    @Claim(standard = Claims.family_name) String familyName,
+    @Claim(standard = Claims.email) String email)
   {
-    return new CurrentUserRecord(userId, givenName, familyName);
+    return new CurrentUserRecord(userId, givenName, familyName, email);
   }
+  
+  @IfBuildProfile("dev")
+  @Produces
+  @RequestScoped
+  public CurrentUser currentUserDev() {
+    return new CurrentUserRecord("local-tester", "first name", "last-name", "first.last@digiexpress.io");
+  }
+
 
   @Produces
   public TaskClient taskClient(CurrentPgPool currentPgPool, ObjectMapper om) {

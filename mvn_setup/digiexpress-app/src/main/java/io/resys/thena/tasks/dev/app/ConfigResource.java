@@ -26,6 +26,7 @@ public class ConfigResource {
   @Inject JsonWebToken jwt;
   @Inject TenantConfigClient tenantClient;
   @Inject CurrentTenant currentTenant;
+  @Inject CurrentUser currentUser;
   
   @GET
   @Produces(MediaType.APPLICATION_JSON)
@@ -42,14 +43,23 @@ public class ConfigResource {
   
   @GET
   @Produces(MediaType.APPLICATION_JSON)
+  @Path("config/current-user-profile")
+  public Uni<CurrentUser> currentUser() {
+    return Uni.createFrom().item(currentUser);
+  }
+  
+  
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
   @Path("config/health")
   public Uni<CurrentTenant> currentHealth() {
     return Uni.createFrom().item(currentTenant);
-  } 
+  }
+  
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @Path("config/current-user")
-  public Uni<JsonObject> currentUser() {
+  @Path("config/jwt")
+  public Uni<JsonObject> currentJwt() {
     Map<String, Object> result = new HashMap<>();
     jwt.getClaimNames().forEach(claim -> result.put(claim, jwt.getClaim(claim)));
     return Uni.createFrom().item(JsonObject.mapFrom(result));
