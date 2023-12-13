@@ -11,6 +11,10 @@ import {
 } from './org-types';
 
 import {
+  UserProfileAndOrg
+} from './profile-types';
+
+import {
   Project, ProjectId,
   ChangeProjectInfo,
   AssignProjectUsers,
@@ -111,6 +115,8 @@ declare namespace TaskClient {
     ChangeCustomerAddress,
     ArchiveCustomer,
 
+    UserProfileAndOrg,
+
     TaskId, Task,
     BackendError, Backend, StoreConfig, Store,
     Org, User, Role,
@@ -168,6 +174,8 @@ export type {
   ChangeCustomerEmail,
   ChangeCustomerAddress,
   ArchiveCustomer,
+
+  UserProfileAndOrg,
 
   TaskCommandType,
   Person, Company,

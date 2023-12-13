@@ -137,48 +137,48 @@ export class ServiceImpl implements Backend {
       body: JSON.stringify(formData),
       repoType: 'EXT_DIALOB'
     })
-    .then(form => {
-      return { status: 'OK', form };
-    })
-    .catch(ex => {
-      console.log("Form create failed", ex);
-      return { status: 'ERROR', error: { message: "dialob.error.already.exists", type: "CREATE_FORM_ERROR" }};
-    });
+      .then(form => {
+        return { status: 'OK', form };
+      })
+      .catch(ex => {
+        console.log("Form create failed", ex);
+        return { status: 'ERROR', error: { message: "dialob.error.already.exists", type: "CREATE_FORM_ERROR" } };
+      });
   }
   async copyDialobForm(formName: string, newFormName: string, newFormTitle: string, tenantId?: string): Promise<DialobFormResponse> {
     return await this._store.fetch<DialobForm>(`api/forms/${formName}?tenantId=${tenantId}`, { repoType: 'EXT_DIALOB' })
-    .then(
-      formData => {
-        const newForm = JSON.parse(JSON.stringify(formData));
-        delete newForm._id;
-        delete newForm._rev;
-        newForm.name = newFormName;
-        Object.assign(newForm.metadata, {
-          label: newFormTitle,
-          lastSaved: null,
-          created: new Date()
-        });
-        return this.createDialobForm(newForm as CreateFormRequest, tenantId);
-      }
-    );
+      .then(
+        formData => {
+          const newForm = JSON.parse(JSON.stringify(formData));
+          delete newForm._id;
+          delete newForm._rev;
+          newForm.name = newFormName;
+          Object.assign(newForm.metadata, {
+            label: newFormTitle,
+            lastSaved: null,
+            created: new Date()
+          });
+          return this.createDialobForm(newForm as CreateFormRequest, tenantId);
+        }
+      );
   }
   async deleteDialobForm(formName: string, tenantId?: string): Promise<void> {
     return await this._store.fetch<any>(`api/forms/${formName}?tenantId=${tenantId}`, {
       method: 'DELETE',
       repoType: 'EXT_DIALOB'
     })
-    .then((response) => {
-      if (response.ok) {
-        console.log("Form deleted")
-      } else {
-        console.log("Form delete failed", response);
-      }
-    })
-    .catch(ex => console.log("Form delete failed", ex));
+      .then((response) => {
+        if (response.ok) {
+          console.log("Form deleted")
+        } else {
+          console.log("Form delete failed", response);
+        }
+      })
+      .catch(ex => console.log("Form delete failed", ex));
   }
   async getDialobSessions(props: { formId: FormId, technicalName: FormTechnicalName, tenantId: TenantId }): Promise<DialobSession[]> {
     try {
-      return await this._store.fetch<DialobSession[]>(`api/questionnaires/?formName=${props.technicalName}&tenantId=${props.tenantId}`, { 
+      return await this._store.fetch<DialobSession[]>(`api/questionnaires/?formName=${props.technicalName}&tenantId=${props.tenantId}`, {
         repoType: 'EXT_DIALOB'
       })
     } catch (e) {
