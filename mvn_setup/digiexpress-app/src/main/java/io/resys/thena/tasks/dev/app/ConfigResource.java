@@ -1,5 +1,9 @@
 package io.resys.thena.tasks.dev.app;
 
+import java.time.Instant;
+
+import org.eclipse.microprofile.jwt.JsonWebToken;
+
 import io.resys.thena.projects.client.api.TenantConfigClient;
 import io.resys.thena.projects.client.api.model.ImmutableCreateTenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig;
@@ -13,11 +17,10 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 
-import java.time.Instant;
-
 @Path("q/digiexpress/api")
 public class ConfigResource {
   
+  @Inject JsonWebToken jwt;
   @Inject TenantConfigClient tenantClient;
   @Inject CurrentTenant currentTenant;
   
@@ -40,7 +43,13 @@ public class ConfigResource {
   public Uni<CurrentTenant> currentHealth() {
     return Uni.createFrom().item(currentTenant);
   } 
-  
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("config/current-user")
+  public Uni<JsonWebToken> currentUser() {
+    return Uni.createFrom().item(jwt);
+  } 
+    
   public Uni<TenantConfig> createTenantConfig() {
     return tenantClient.query().repoName(currentTenant.tenantsStoreId(), TenantRepoConfigType.TENANT).createIfNot()
         .onItem().transformToUni(created -> tenantClient.createTenantConfig().createOne(ImmutableCreateTenantConfig.builder()

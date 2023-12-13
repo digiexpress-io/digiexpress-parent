@@ -14,6 +14,11 @@
   <dependencies>
     <dependency>
       <groupId>io.digiexpress</groupId>
+      <artifactId>thena-sysconfig-client</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>io.digiexpress</groupId>
       <artifactId>thena-tasks-client</artifactId>
     </dependency>
     <dependency>
@@ -27,6 +32,15 @@
     <dependency>
       <groupId>io.digiexpress</groupId>
       <artifactId>stencil-client-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-smallrye-jwt</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-smallrye-jwt-build</artifactId>
     </dependency>
 
     <!-- demo data generator-->

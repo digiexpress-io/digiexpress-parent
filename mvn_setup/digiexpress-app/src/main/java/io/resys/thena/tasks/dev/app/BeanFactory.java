@@ -1,10 +1,20 @@
 package io.resys.thena.tasks.dev.app;
 
+import java.io.IOException;
+import java.util.UUID;
+
+import javax.annotation.Nullable;
+
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.eclipse.microprofile.jwt.Claim;
+import org.eclipse.microprofile.jwt.Claims;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
 import io.quarkus.jackson.ObjectMapperCustomizer;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import io.resys.crm.client.api.CrmClient;
@@ -34,13 +44,6 @@ import jakarta.enterprise.context.Dependent;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.enterprise.inject.Produces;
 import lombok.extern.slf4j.Slf4j;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
-import org.eclipse.microprofile.jwt.Claim;
-import org.eclipse.microprofile.jwt.Claims;
-
-import javax.annotation.Nullable;
-import java.io.IOException;
-import java.util.UUID;
 
 @Dependent
 @RegisterForReflection(targets = {
@@ -71,17 +74,15 @@ public class BeanFactory {
   @ConfigProperty(name = "tenant.currentTenantId")
   String tenantId;
 
-  public record CurrentPgPool(io.vertx.mutiny.pgclient.PgPool pgPool) {
-  }
-
-  public record CurrentTenantRecord(String tenantId, String tenantsStoreId) implements CurrentTenant {
-  }
+  public record CurrentPgPool(io.vertx.mutiny.pgclient.PgPool pgPool) {}
+  public record CurrentTenantRecord(String tenantId, String tenantsStoreId) implements CurrentTenant { }
 
   public record CurrentUserRecord(
     String userId,
     @Nullable String givenName,
     @Nullable String familyName
   ) implements CurrentUser {
+    
   }
 
   @Produces
@@ -179,5 +180,5 @@ public class BeanFactory {
       // without this, local dates will be serialized as int array
       .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
   }
-
+  
 }
