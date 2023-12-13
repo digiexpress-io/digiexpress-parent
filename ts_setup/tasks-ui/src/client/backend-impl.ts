@@ -95,6 +95,7 @@ export class ServiceImpl implements Backend {
     try {
       return {
         user: {
+          id: '',
           created: new Date(), updated: new Date(), details: {
             email: '',
             firstName: '',

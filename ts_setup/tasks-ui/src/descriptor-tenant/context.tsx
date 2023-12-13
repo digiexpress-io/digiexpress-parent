@@ -16,6 +16,7 @@ const initState: TenantState = new TenantStateBuilder({
   palette: {},
   profile: {
     user: {
+      id: '',
       created: new Date(),
       updated: new Date(),
       details: {

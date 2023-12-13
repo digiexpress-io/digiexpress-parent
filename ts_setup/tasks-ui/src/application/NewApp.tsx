@@ -103,6 +103,7 @@ const DialobOnlySetup: React.FC<{}> = () => {
   const profile: TaskClient.UserProfileAndOrg = React.useMemo(() => {
     return {
       user: {
+        id: '',
         created: new Date(),
         updated: new Date(),
         details: {

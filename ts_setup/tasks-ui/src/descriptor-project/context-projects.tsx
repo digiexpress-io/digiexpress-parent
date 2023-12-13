@@ -18,6 +18,7 @@ const startStart: ProjectsState = new ProjectsStateBuilder({
   },
   profile: {
     user: {
+      id: '',
       created: new Date(),
       updated: new Date(),
       details: {

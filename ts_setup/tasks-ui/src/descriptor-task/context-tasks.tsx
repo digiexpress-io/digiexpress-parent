@@ -20,6 +20,7 @@ const initState: TasksState = new TasksStateBuilder({
   },
   profile: {
     user: {
+      id: '',
       created: new Date(),
       updated: new Date(),
       details: {
