@@ -32,8 +32,8 @@ class SessionData implements Session {
     this._profile = props.profile ? props.profile : {
       user: {
         id: '',
-        created: new Date(),
-        updated: new Date(),
+        created: new Date().toISOString(),
+        updated: new Date().toISOString(),
         details: {
           firstName: '',
           lastName: '',

@@ -203,13 +203,11 @@ export const mockUsers: User[] = [
 
 export const mockOrg: {
   org: Org,
-  user: User,
   today: Date
 } = {
   org: {
     roles: mockRoles,
     users: mockUsers.reduce((acc, item) => ({ ...acc, [item.userId]: item }), {})
   },
-  user: mockUsers[3],
   today: new Date(),
 }

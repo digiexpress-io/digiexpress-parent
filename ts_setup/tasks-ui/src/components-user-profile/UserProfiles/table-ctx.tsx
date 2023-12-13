@@ -89,7 +89,7 @@ class ImmutableUserProfileSearchState implements UserProfileSearchState {
 function initUserProfileSearchState(profile: UserProfileAndOrg): UserProfileSearchState {
   return new ImmutableUserProfileSearchState({
     searchString: '',
-    isSearchStringValid: false,
+    isSearchStringValid: true,
     profile,
     today: new Date(),
     records: []

@@ -11,6 +11,10 @@ import io.resys.thena.projects.client.api.model.ImmutableCreateTenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
+import io.resys.userprofile.client.api.UserProfileClient;
+import io.resys.userprofile.client.api.model.ImmutableUpsertUserProfile;
+import io.resys.userprofile.client.api.model.ImmutableUserDetails;
+import io.resys.userprofile.client.api.model.UserProfile;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
@@ -27,6 +31,7 @@ public class ConfigResource {
   @Inject TenantConfigClient tenantClient;
   @Inject CurrentTenant currentTenant;
   @Inject CurrentUser currentUser;
+  @Inject UserProfileClient userProfileClient;
   
   @GET
   @Produces(MediaType.APPLICATION_JSON)
@@ -44,7 +49,30 @@ public class ConfigResource {
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Path("config/current-user-profile")
+  public Uni<UserProfile> currentUserProfile() {
+    return currentTenant().onItem().transformToUni(config -> {
+      final var userProfileConfig = config.getRepoConfigs().stream().filter(entry -> entry.getRepoType() == TenantRepoConfigType.USER_PROFILE).findFirst().get();
+      return userProfileClient.withRepoId(userProfileConfig.getRepoId()).createUserProfile().createOne(ImmutableUpsertUserProfile.builder()
+        .userId(currentUser.getUserId())
+        .targetDate(Instant.now())
+        .id(currentUser.getUserId())
+        .details(ImmutableUserDetails.builder()
+            .firstName(currentUser.getGivenName())
+            .lastName(currentUser.getFamilyName())
+            .email(currentUser.getEmail())
+            .build())
+        .build());
+      
+    });
+  }
+  
+  
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("config/current-user")
   public Uni<CurrentUser> currentUser() {
+    
+    
     return Uni.createFrom().item(currentUser);
   }
   

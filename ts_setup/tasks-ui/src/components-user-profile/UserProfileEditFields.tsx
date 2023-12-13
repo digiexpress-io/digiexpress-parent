@@ -2,7 +2,7 @@ import React from 'react';
 import { TextField, FormControl, FormControlLabel, FormGroup, Switch, Typography, Stack, Divider } from '@mui/material';
 
 import { useIntl } from 'react-intl';
-
+import { UserProfile } from 'client';
 
 const FirstName: React.FC<{}> = () => {
 
@@ -42,10 +42,10 @@ const LastName: React.FC<{}> = () => {
   />);
 }
 
-const EmailAddress: React.FC<{}> = () => {
+const EmailAddress: React.FC<{ init: UserProfile }> = ({ init }) => {
 
   const intl = useIntl();
-  const [title, setTitle] = React.useState('');
+  const [title, setTitle] = React.useState(init.details.email ?? '');
 
   function handleEmailChange(event: React.ChangeEvent<HTMLInputElement>) {
     setTitle(event.target.value);

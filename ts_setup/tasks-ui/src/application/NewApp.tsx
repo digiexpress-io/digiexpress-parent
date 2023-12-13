@@ -104,8 +104,8 @@ const DialobOnlySetup: React.FC<{}> = () => {
     return {
       user: {
         id: '',
-        created: new Date(),
-        updated: new Date(),
+        created: new Date().toISOString(),
+        updated: new Date().toISOString(),
         details: {
           email: 'han@millenium_falcon@email.com',
           firstName: 'Han',

@@ -3,6 +3,8 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import org.immutables.value.Value;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -18,10 +20,10 @@ public interface UserProfile extends Document {
     
  @Value.Immutable @JsonSerialize(as = ImmutableUserDetails.class) @JsonDeserialize(as = ImmutableUserDetails.class)
   interface UserDetails {
-    String getUsername();
-    String getFirstName();
-    String getLastName();
-    String getEmail();
+    @Nullable String getUsername();
+    @Nullable String getFirstName();
+    @Nullable String getLastName();
+    @Nullable String getEmail();
   }
  
  @Value.Immutable @JsonSerialize(as = ImmutableNotificationSetting.class) @JsonDeserialize(as = ImmutableNotificationSetting.class)

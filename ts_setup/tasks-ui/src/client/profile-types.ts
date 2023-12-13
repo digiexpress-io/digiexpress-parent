@@ -25,8 +25,8 @@ export interface NotificationSetting {
 
 export interface UserProfile {
   id: UserId,
-  created: Date;
-  updated: Date;
+  created: string;
+  updated: string;
   details: UserDetails;
   notificationSettings: NotificationSetting[];
 }

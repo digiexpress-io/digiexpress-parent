@@ -67,22 +67,15 @@ public class UserProfileUpdateTest extends UserProfileTestCase {
     final var client = getClient().repoQuery().repoName(repoName).createIfNot().await().atMost(atMost);
     final var userProfile = createUserProfileForUpdating(client);
     
-    client.createUserProfile().createOne(ImmutableUpsertUserProfile.builder()
+    final var existingUserProfile = client.createUserProfile().createOne(ImmutableUpsertUserProfile.builder()
         .userId("tester-bob")
         .targetDate(getTargetDate())
         .id(userProfile.getId())
-        .details(ImmutableUserDetails.builder()
-            .firstName("Mr. Upsert")
-            .lastName("von Buchenheim")
-            .email("mr_g_upsert@email.com")
-            .username("MrUpsert")
-            .build())
-        .notificationSettings(Arrays.asList(ImmutableNotificationSetting.builder()
-          .enabled(false)
-          .type("NEW_ATTACHMENT_RECEIVED")
-          .build()))
+        .details(ImmutableUserDetails.builder().build())
         .build())
     .await().atMost(atMost);
+    
+    log.debug("existing profile: {}", existingUserProfile);
 
     assertRepo(client, "update-test-cases/upsert-user-profile.txt");
   }

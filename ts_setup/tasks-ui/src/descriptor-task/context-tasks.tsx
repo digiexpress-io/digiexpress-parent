@@ -21,8 +21,8 @@ const initState: TasksState = new TasksStateBuilder({
   profile: {
     user: {
       id: '',
-      created: new Date(),
-      updated: new Date(),
+      created: new Date().toISOString(),
+      updated: new Date().toISOString(),
       details: {
         username: '',
         email: '',

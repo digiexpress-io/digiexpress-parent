@@ -103,23 +103,15 @@ export class ServiceImpl implements Backend {
   }
 
   async currentUserProfile(): Promise<UserProfileAndOrg> {
-    const { today, user } = mockOrg;
-    const { userId, userRoles: roles } = user;
+    const { today, org } = mockOrg;
+
     try {
+      const user = await this._store.fetch<UserProfile>(`config/current-user-profile`, { repoType: 'CONFIG' })
       return {
-        user: {
-          id: '',
-          created: new Date(), updated: new Date(), details: {
-            email: '',
-            firstName: '',
-            lastName: '',
-            username: '',
-          },
-          notificationSettings: [{
-            type: '',
-            enabled: true
-          }]
-        }, today, userId, roles
+        user,
+        userId: user.id,
+        today,
+        roles: Object.keys(org.roles)
       };
     } catch (error) {
       console.error("PROFILE, failed to fetch", error);
@@ -275,6 +267,16 @@ export class ServiceImpl implements Backend {
 
 
   async org(): Promise<{ org: Org, user: User }> {
-    return mockOrg;
+    const user = await this._store.fetch<UserProfile>(`config/current-user-profile`, { repoType: 'CONFIG' })
+    return {
+      org: mockOrg.org, user: {
+        userId: user.id,
+        activity: [],
+        avatar: '',
+        displayName: '',
+        type: 'TASK_USER',
+        userRoles: Object.keys(mockOrg.org.roles)
+      }
+    };
   }
 }
