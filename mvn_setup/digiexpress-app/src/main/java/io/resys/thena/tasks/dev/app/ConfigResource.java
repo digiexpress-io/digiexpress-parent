@@ -1,6 +1,8 @@
 package io.resys.thena.tasks.dev.app;
 
 import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
@@ -11,6 +13,7 @@ import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
+import io.vertx.core.json.JsonObject;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -46,8 +49,10 @@ public class ConfigResource {
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Path("config/current-user")
-  public Uni<JsonWebToken> currentUser() {
-    return Uni.createFrom().item(jwt);
+  public Uni<JsonObject> currentUser() {
+    Map<String, Object> result = new HashMap<>();
+    jwt.getClaimNames().forEach(claim -> result.put(claim, jwt.getClaim(claim)));
+    return Uni.createFrom().item(JsonObject.mapFrom(result));
   } 
     
   public Uni<TenantConfig> createTenantConfig() {
