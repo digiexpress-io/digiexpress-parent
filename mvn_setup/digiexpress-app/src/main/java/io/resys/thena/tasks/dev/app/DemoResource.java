@@ -13,6 +13,7 @@ import io.resys.crm.client.api.CrmClient;
 import io.resys.crm.client.api.model.Customer;
 import io.resys.crm.client.api.model.CustomerCommand.UpsertSuomiFiPerson;
 import io.resys.crm.client.api.model.ImmutableUpsertSuomiFiPerson;
+import io.resys.hdes.client.spi.HdesComposerImpl;
 import io.resys.sysconfig.client.api.SysConfigClient;
 import io.resys.sysconfig.client.mig.MigrationClient;
 import io.resys.thena.projects.client.api.TenantConfigClient;
@@ -151,6 +152,7 @@ public class DemoResource {
     }
     final var stencilAssets = mig.readStencil(init);
     final var dialobAssets = mig.readDialob(init);
+    final var wrenchAssets = mig.readHdes(init);
     
     return tenantClient.queryActiveTenantConfig().get(currentTenant.tenantId())
         .onItem().transform(config -> sysConfigClient.withTenantConfig(config.getId(), config.getRepoConfigs()))
@@ -158,9 +160,14 @@ public class DemoResource {
           
           return new StencilComposerImpl(client.getAssets().getConfig().getStencil()).migration().importData(stencilAssets)
               .onItem().transformToUni(site -> {
-            
+
             return new DialobComposerImpl(client.getAssets().getConfig().getDialob()).create(dialobAssets)
                 .onItem().transform(e -> site);
+          })
+          .onItem().transformToUni(site -> {
+            
+            return new HdesComposerImpl(client.getAssets().getConfig().getHdes()).importTag(wrenchAssets).onItem().transform(data -> site);
+            
           });
         });
   }

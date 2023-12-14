@@ -116,7 +116,7 @@ const Secondary: React.FC<{}> = () => {
   function handleTasks() { actions.handleTabAdd({ id: 'tasks', label: <FormattedMessage id="activities.frontoffice.tasks.title" /> }) }
   function handleStencil() { app.changeApp("stencil") }
   
-  function handleWrench() { actions.handleTabAdd({ id: 'wrench', label: <FormattedMessage id="activities.frontoffice.wrench.title" /> }) }
+  function handleWrench() {  app.changeApp("hdes") }
   function handleDialob() { actions.handleTabAdd({ id: 'dialob', label: <FormattedMessage id="activities.frontoffice.dialob.title" /> }) }
 
   function handleGroup() { actions.handleTabAdd({ id: 'teamSpace', label: <FormattedMessage id="activities.teamSpace.title" /> }) }

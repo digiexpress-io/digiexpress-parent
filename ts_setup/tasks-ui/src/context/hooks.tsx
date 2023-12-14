@@ -124,19 +124,25 @@ export const useTenantConfig = () => {
 export const useApp = () => {
   const apps = Burger.useApps();
 
-  function changeApp(input: 'tasks' | 'frontoffice' | 'stencil' | RepoType) {
+  function changeApp(input: 'tasks' | 'frontoffice' | 'stencil' | 'hdes' | RepoType) {
     if (input === 'frontoffice') {
       apps.actions.handleActive('app-frontoffice');
       return;
     }
 
+/**
     if (input === 'tasks' || input === 'TASKS') {
       apps.actions.handleActive('app-tasks');
       return;
     }
-
+ */
     if (input === 'stencil' || input === 'STENCIL') {
       apps.actions.handleActive('app-stencil');
+      return;
+    }
+    
+    if (input === 'hdes' || input === 'WRENCH') {
+      apps.actions.handleActive('app-hdes');
       return;
     }
   }

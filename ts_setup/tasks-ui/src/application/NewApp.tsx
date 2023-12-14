@@ -16,6 +16,7 @@ import AppTasks from 'app-tasks';
 import AppTenant from 'app-tenant';
 import AppProjects from 'app-projects';
 import AppStencil from 'app-stencil';
+import AppHdes from 'app-hdes';
 import AppFrontoffice from 'app-frontoffice';
 
 
@@ -81,6 +82,7 @@ const TenantConfigSetup: React.FC<{ profile: TaskClient.UserProfileAndOrg }> = (
     return backend.withTenantConfig(tenantConfig!);
   }, [tenantConfig]);
 
+  const hdes: Burger.App<{}, any> = React.useMemo(() => AppHdes(service, profile, tenantConfig!), [service, profile, tenantConfig]);
   const stencil: Burger.App<{}, any> = React.useMemo(() => AppStencil(service, profile, tenantConfig!), [service, profile, tenantConfig]);
   const tasks: Burger.App<{}, any> = React.useMemo(() => AppTasks(service, profile), [service, profile]);
   const projects: Burger.App<{}, any> = React.useMemo(() => AppProjects(service, profile), [service, profile]);
@@ -91,7 +93,7 @@ const TenantConfigSetup: React.FC<{ profile: TaskClient.UserProfileAndOrg }> = (
   return (<Provider service={service} profile={profile}>
     <Burger.Provider children={
       [
-        tenant, tasks, projects, stencil, frontoffice,
+        tenant, tasks, projects, stencil, hdes, frontoffice
       ]
     } secondary="toolbar.activities" drawerOpen appId={appId} />
   </Provider>)
