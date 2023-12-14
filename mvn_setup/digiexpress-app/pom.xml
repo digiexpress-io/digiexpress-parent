@@ -19,6 +19,15 @@
 
     <dependency>
       <groupId>io.digiexpress</groupId>
+      <artifactId>dialob-form-store-pgsql</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.digiexpress</groupId>
+      <artifactId>hdes-store-thena</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>io.digiexpress</groupId>
       <artifactId>thena-tasks-client</artifactId>
     </dependency>
     <dependency>

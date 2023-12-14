@@ -1,4 +1,4 @@
-package io.resys.thena.tasks.dev.app.mig;
+package io.resys.sysconfig.client.mig.visitors;
 
 
 import java.time.Instant;
@@ -20,9 +20,9 @@ import io.dialob.client.api.ImmutableFormDocument;
 import io.dialob.client.api.ImmutableFormRevisionDocument;
 import io.dialob.client.api.ImmutableFormRevisionEntryDocument;
 import io.dialob.client.spi.support.OidUtils;
+import io.resys.sysconfig.client.mig.visitors.DialobMigration.FormsAndRevs;
 import io.resys.sysconfig.client.spi.support.SysConfigAssert;
-import io.resys.thena.tasks.client.spi.store.MainBranch;
-import io.resys.thena.tasks.dev.app.mig.DialobMigration.FormsAndRevs;
+import io.resys.thena.projects.client.spi.store.MainBranch;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;

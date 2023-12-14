@@ -1,4 +1,4 @@
-package io.resys.thena.tasks.dev.app.mig;
+package io.resys.sysconfig.client.mig.visitors;
 
 import java.io.File;
 import java.time.Instant;
@@ -15,21 +15,20 @@ import io.resys.sysconfig.client.api.model.ImmutableCreateSysConfig;
 import io.resys.sysconfig.client.api.model.ImmutableSysConfigService;
 import io.resys.sysconfig.client.api.model.SysConfig.SysConfigService;
 import io.resys.sysconfig.client.api.model.SysConfigCommand.CreateSysConfig;
+import io.resys.sysconfig.client.mig.visitors.DialobMigration.FormsAndRevs;
+import io.resys.sysconfig.client.mig.visitors.HdesMigration.HdesState;
 import io.resys.sysconfig.client.spi.support.SysConfigAssert;
-import io.resys.thena.tasks.client.spi.store.MainBranch;
-import io.resys.thena.tasks.dev.app.mig.DialobMigration.FormsAndRevs;
-import io.resys.thena.tasks.dev.app.mig.HdesMigration.HdesState;
+import io.resys.thena.projects.client.spi.store.MainBranch;
 import io.thestencil.client.api.StencilComposer.SiteState;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@lombok.Builder
+@RequiredArgsConstructor
 public class WorkflowMigration {
-  @lombok.Builder.Default
-  private final String src = MigrationsDefaults.folder + "workflows";
-  @lombok.Builder.Default
-  private final ObjectMapper om = MigrationsDefaults.om;
+  private final String src;
+  private final ObjectMapper om;
   
   @Jacksonized
   @lombok.Data @lombok.Builder
@@ -51,6 +50,8 @@ public class WorkflowMigration {
   }
   
   public CommandData execute(HdesState hdes, FormsAndRevs dialob, SiteState stencil) {
+    final var src = this.src + "workflows";
+    
     final var dir = new File(src);
     SysConfigAssert.isTrue(dir.isDirectory() && dir.canRead() && dir.exists(), () -> src + " must be a directory with *workflows.json-s");
     final var files = dir.listFiles((file, name) -> name.endsWith(".json"));

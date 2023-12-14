@@ -1,4 +1,4 @@
-package io.resys.thena.tasks.dev.app.mig;
+package io.resys.sysconfig.client.mig.visitors;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
@@ -14,15 +14,14 @@ import io.resys.hdes.client.api.ast.AstTag;
 import io.resys.hdes.client.api.programs.ProgramEnvir;
 import io.resys.hdes.client.spi.HdesInMemoryStore;
 import io.resys.sysconfig.client.spi.support.SysConfigAssert;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@lombok.Builder
+@RequiredArgsConstructor
 public class HdesMigration {
-  @lombok.Builder.Default
-  private final String src = MigrationsDefaults.folder + "hdes";
-  @lombok.Builder.Default
-  private final ObjectMapper om = MigrationsDefaults.om;
+  private final String src;
+  private final ObjectMapper om;
   
   @lombok.Data @lombok.Builder
   public static class HdesState {
@@ -32,6 +31,8 @@ public class HdesMigration {
   }
   
   public HdesState execute(HdesClient client) {
+    final var src = this.src + "hdes";
+    
     final var dir = new File(src);
     SysConfigAssert.isTrue(dir.isDirectory() && dir.canRead() && dir.exists(), () -> src + " must be a directory with hdes *AstTag.json-s");
     final var files = dir.listFiles((file, name) -> name.endsWith(".json"));

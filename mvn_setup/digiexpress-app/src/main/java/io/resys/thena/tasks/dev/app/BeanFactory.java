@@ -15,11 +15,31 @@ import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
+import io.dialob.client.api.DialobClient;
+import io.dialob.client.pgsql.PgSqlDialobStore;
+import io.dialob.client.spi.DialobClientImpl;
+import io.dialob.client.spi.event.EventPublisher;
+import io.dialob.client.spi.event.QuestionnaireEventPublisher;
+import io.dialob.client.spi.function.AsyncFunctionInvoker;
+import io.dialob.client.spi.function.FunctionRegistryImpl;
+import io.dialob.client.spi.store.ImmutableDialobStoreConfig;
+import io.dialob.client.spi.support.OidUtils;
+import io.dialob.rule.parser.function.DefaultFunctions;
 import io.quarkus.arc.profile.IfBuildProfile;
 import io.quarkus.jackson.ObjectMapperCustomizer;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import io.resys.crm.client.api.CrmClient;
 import io.resys.crm.client.spi.CrmClientImpl;
+import io.resys.hdes.client.api.HdesClient;
+import io.resys.hdes.client.spi.HdesClientImpl;
+import io.resys.hdes.client.spi.ThenaStore;
+import io.resys.hdes.client.spi.config.HdesClientConfig.DependencyInjectionContext;
+import io.resys.hdes.client.spi.config.HdesClientConfig.ServiceInit;
+import io.resys.hdes.client.spi.store.ImmutableThenaConfig;
+import io.resys.sysconfig.client.api.ImmutableAssetClientConfig;
+import io.resys.sysconfig.client.api.SysConfigClient;
+import io.resys.sysconfig.client.spi.SysConfigClientImpl;
+import io.resys.sysconfig.client.spi.asset.AssetClientImpl;
 import io.resys.thena.docdb.jackson.VertexExtModule;
 import io.resys.thena.docdb.store.sql.DbStateSqlImpl;
 import io.resys.thena.docdb.store.sql.PgErrors;
@@ -33,6 +53,8 @@ import io.resys.thena.tasks.client.api.model.ImmutableTaskExtension;
 import io.resys.thena.tasks.client.spi.TaskClientImpl;
 import io.resys.userprofile.client.api.UserProfileClient;
 import io.resys.userprofile.client.spi.UserProfileClientImpl;
+import io.thestencil.client.api.StencilClient;
+
 import io.thestencil.client.api.StencilComposer;
 import io.thestencil.client.spi.StencilClientImpl;
 import io.thestencil.client.spi.StencilComposerImpl;
@@ -136,7 +158,7 @@ public class BeanFactory {
   }
 
   @Produces
-  public StencilComposer stencilComposer(Vertx vertx, ObjectMapper om, CurrentTenant currentProject, CurrentPgPool currentPgPool) {
+  public StencilClient stencilClient(Vertx vertx, ObjectMapper om, CurrentTenant currentProject, CurrentPgPool currentPgPool) {
     final var docDb = DbStateSqlImpl.create().client(currentPgPool.pgPool).errorHandler(new PgErrors()).build();
     final var deserializer = new ZoeDeserializer(om);
     final var store = StencilStoreImpl.builder()
@@ -156,7 +178,10 @@ public class BeanFactory {
         .gidProvider(type -> UUID.randomUUID().toString())
         .authorProvider(() -> "no-author"))
       .build();
-    final var client = new StencilClientImpl(store);
+    return new StencilClientImpl(store);
+  }
+  @Produces
+  public StencilComposer stencilComposer(StencilClient client) {
     return new StencilComposerImpl(client);
   }
 
@@ -169,6 +194,83 @@ public class BeanFactory {
       .build();
     return new CrmClientImpl(store);
   }
+  
+  @Produces
+  public HdesClient hdesClient(CurrentPgPool currentPgPool, ObjectMapper om) {
+    final var config = ImmutableThenaConfig.builder()
+        .client(DbStateSqlImpl.create().client(currentPgPool.pgPool).db("").errorHandler(new PgErrors()).build())
+        .repoName("")
+        .headName(MainBranch.HEAD_NAME)
+        .gidProvider((type) -> OidUtils.gen())
+        .serializer((entity) -> {
+          try {
+            return new JsonObject(om.writeValueAsString(io.resys.hdes.client.api.ImmutableStoreEntity.builder().from(entity).hash("").build()));
+          } catch(IOException e) {
+            throw new RuntimeException(e.getMessage(), e);
+          }
+        })
+        .deserializer(new io.resys.hdes.client.spi.store.BlobDeserializer(om))
+        .authorProvider(() -> "")
+        .build();
+      return HdesClientImpl.builder()
+        .objectMapper(om)
+        .store(new ThenaStore(config))
+        .dependencyInjectionContext(defaultHdesDjc())
+        .serviceInit(defaultHdesServiceInit())
+        .build();    
+  }
+  
+  @Produces
+  public DialobClient dialobClient(CurrentPgPool currentPgPool, ObjectMapper om) {
+    final var dialobFr = defaultDialobFr();
+    final var asyncFunctionInvoker = new AsyncFunctionInvoker(dialobFr);
+    final var config = ImmutableDialobStoreConfig.builder()
+        .client(DbStateSqlImpl.create().client(currentPgPool.pgPool).db("").errorHandler(new PgErrors()).build())
+        .repoName("")
+        .headName(MainBranch.HEAD_NAME)
+        .gidProvider((type) -> OidUtils.gen())
+        .serializer((entity) -> {
+          try {
+            return new JsonObject(om.writeValueAsString(io.dialob.client.api.ImmutableStoreEntity.builder().from(entity).build()));
+          } catch(IOException e) {
+            throw new RuntimeException(e.getMessage(), e);
+          }
+        })
+        .deserializer(new io.dialob.client.spi.store.BlobDeserializer(om))
+        .authorProvider(() -> "")
+        .build();
+    return DialobClientImpl.builder()
+        .store(new PgSqlDialobStore(config))
+        .objectMapper(om)
+        .eventPublisher(defaultDialobEventPub())
+        .asyncFunctionInvoker(asyncFunctionInvoker)
+        .functionRegistry(dialobFr)
+        .build();
+  }
+  @Produces
+  public SysConfigClient sysConfigClient(
+      CurrentPgPool currentPgPool, ObjectMapper om, 
+      TenantConfigClient tenantClient,
+      StencilClient stencil,
+      HdesClient wrench,
+      DialobClient dialob) {
+    final var store = io.resys.sysconfig.client.spi.store.DocumentStoreImpl.builder()
+      .repoName(tenantsStoreId)
+      .pgPool(currentPgPool.pgPool)
+      .objectMapper(om)
+      .build();
+    
+    final var assetConfig = ImmutableAssetClientConfig.builder()
+        .dialob(dialob)
+        .hdes(wrench)
+        .stencil(stencil)
+        .tenantConfigId("")
+        .build();
+    
+    final var assets = new AssetClientImpl(tenantClient, assetConfig);
+    return new SysConfigClientImpl(store, assets, tenantClient);
+  }
+
 
   @Produces
   public UserProfileClient userProfileClient(CurrentPgPool currentPgPool, ObjectMapper om) {
@@ -205,5 +307,44 @@ public class BeanFactory {
       // without this, local dates will be serialized as int array
       .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
   }
+ 
   
+  
+  
+
+  private QuestionnaireEventPublisher defaultDialobEventPub() {
+    final var  publisher = new EventPublisher() {
+      @Override
+      public void publish(Event event) {
+        log.debug("dialob event publisher: " + event);
+      }
+    };
+    return new QuestionnaireEventPublisher(publisher);
+  }
+  private FunctionRegistryImpl defaultDialobFr() {
+    final var dialobFr = new FunctionRegistryImpl();
+    final var defaultFunctions = new DefaultFunctions(dialobFr);
+    log.debug("dialob default functions: " + defaultFunctions.getClass().getCanonicalName());
+    return dialobFr;
+  }
+  private DependencyInjectionContext defaultHdesDjc() {
+    return new DependencyInjectionContext() {
+      @Override
+      public <T> T get(Class<T> type) {
+        return null;
+      }
+    };
+  }
+  private ServiceInit defaultHdesServiceInit() {
+    return new ServiceInit() {
+      @Override
+      public <T> T get(Class<T> type) {
+        try {
+          return type.getDeclaredConstructor().newInstance();
+        } catch(Exception e) {
+          throw new RuntimeException(e.getMessage(), e);
+        }
+      }
+    };
+  }
 }

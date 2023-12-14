@@ -1,4 +1,4 @@
-package io.resys.thena.tasks.dev.app.mig;
+package io.resys.sysconfig.client.mig.visitors;
 
 import java.io.Serializable;
 import java.util.ArrayList;

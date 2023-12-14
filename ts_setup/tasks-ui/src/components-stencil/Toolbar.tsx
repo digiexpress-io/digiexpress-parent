@@ -91,7 +91,7 @@ const Toolbar: React.FC<{}> = () => {
     } else if (newValue === 'toolbar.expand') {
       drawerCtx.actions.handleDrawerOpen(!drawerOpen)
     } else if (newValue === 'projects') {
-      app.changeApp('projects');
+      app.changeApp('frontoffice');
     }
   };
 

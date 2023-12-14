@@ -43,130 +43,133 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class StencilRestApiTemplate implements StencilRestApi {
   
-  private final StencilComposer client;
+  protected final StencilComposer client;
   private final ObjectMapper objectMapper;
   
   @Override
-  public Uni<Entity<Article>> createArticle(String projectId, ImmutableCreateArticle body) {
-    return client.withRepo(projectId).create().article(body);
+  public Uni<Entity<Article>> createArticle(ImmutableCreateArticle body) {
+    return getClient().onItem().transformToUni(composer -> composer.create().article(body));
   }
   @Override
-  public Uni<Entity<Article>> updateArticle(String projectId, ImmutableArticleMutator body) {
-    return client.withRepo(projectId).update().article(body);
+  public Uni<Entity<Article>> updateArticle(ImmutableArticleMutator body) {
+    return getClient().onItem().transformToUni(composer -> composer.update().article(body));
   }
   @Override
-  public Uni<Entity<Article>> deleteArticle(String projectId, String id) {
-    return client.withRepo(projectId).delete().article(id);
+  public Uni<Entity<Article>> deleteArticle(String id) {
+    return getClient().onItem().transformToUni(composer -> composer.delete().article(id));
   }
   @Override
-  public Uni<SiteState> createMigration(String projectId, String json) {
+  public Uni<SiteState> createMigration(String json) {
     byte[] body = json.getBytes(StandardCharsets.UTF_8);
   
     final var sites = parseSites(body);
     if(sites != null) {
-      return client.withRepo(projectId).migration().importData(sites);
+      return getClient().onItem().transformToUni(composer -> composer.migration().importData(sites));
     }
     
     final var release = parseSiteState(body);
     if(release != null) {
-      return client.withRepo(projectId).migration().importData(release);
+      return getClient().onItem().transformToUni(composer -> composer.migration().importData(release));
     }
     return Uni.createFrom().nullItem();
   }
   @Override
-  public Uni<SiteState> createSites(String projectId) {
-    return client.withRepo(projectId).create().repo();
+  public Uni<SiteState> createSites() {
+    return getClient().onItem().transformToUni(composer -> composer.create().repo());
   }
   @Override
-  public Uni<SiteState> getSites(String projectId) {
-    return client.withRepo(projectId).query().head();
+  public Uni<SiteState> getSites() {
+    return getClient().onItem().transformToUni(composer -> composer.query().head());
   }
   @Override
-  public Uni<Entity<Link>> createLink(String projectId, ImmutableCreateLink body) {
-    return client.withRepo(projectId).create().link(body);
+  public Uni<Entity<Link>> createLink(ImmutableCreateLink body) {
+    return getClient().onItem().transformToUni(composer -> composer.create().link(body));
   }
   @Override
-  public Uni<Entity<Link>> updateLink(String projectId, ImmutableLinkMutator body) {
-    return client.withRepo(projectId).update().link(body);
+  public Uni<Entity<Link>> updateLink(ImmutableLinkMutator body) {
+    return getClient().onItem().transformToUni(composer -> composer.update().link(body));
   }
   @Override
-  public Uni<Entity<Link>> deleteLink(String projectId, String linkId, String articleId) {
+  public Uni<Entity<Link>> deleteLink(String linkId, String articleId) {
     if(articleId == null || articleId.isEmpty()) {
-      return client.withRepo(projectId).delete().link(linkId);
+      return getClient().onItem().transformToUni(composer -> composer.delete().link(linkId));
     } 
-    return client.withRepo(projectId).delete().linkArticlePage(ImmutableLinkArticlePage.builder()
+    return getClient().onItem().transformToUni(composer -> composer.delete().linkArticlePage(ImmutableLinkArticlePage.builder()
       .articleId(articleId)
       .linkId(linkId)
-      .build());  
+      .build()));  
 
   }
   @Override
-  public Uni<Entity<Workflow>> createWorkflow(String projectId, ImmutableCreateWorkflow body) {
-    return client.withRepo(projectId).create().workflow(body);
+  public Uni<Entity<Workflow>> createWorkflow(ImmutableCreateWorkflow body) {
+    return getClient().onItem().transformToUni(composer -> composer.create().workflow(body));
   }
   @Override
-  public Uni<Entity<Workflow>> updateWorkflow(String projectId, ImmutableWorkflowMutator body) {
-    return client.withRepo(projectId).update().workflow(body);
+  public Uni<Entity<Workflow>> updateWorkflow(ImmutableWorkflowMutator body) {
+    return getClient().onItem().transformToUni(composer -> composer.update().workflow(body));
   }
   @Override
-  public Uni<Entity<Workflow>> deleteWorkflow(String projectId, String linkId, String articleId) {
+  public Uni<Entity<Workflow>> deleteWorkflow(String linkId, String articleId) {
     if(articleId == null || articleId.isEmpty()) {
-      return client.withRepo(projectId).delete().workflow(linkId);
+      return getClient().onItem().transformToUni(composer -> composer.delete().workflow(linkId));
     } 
-    return client.withRepo(projectId).delete().workflowArticlePage(ImmutableWorkflowArticlePage.builder()
+    return getClient().onItem().transformToUni(composer -> composer.delete().workflowArticlePage(ImmutableWorkflowArticlePage.builder()
       .articleId(articleId)
       .workflowId(linkId)
-      .build());  
+      .build()));  
   }
   @Override
-  public Uni<Entity<Locale>> createLocale(String projectId, ImmutableCreateLocale body) {
-    return client.withRepo(projectId).create().locale(body);
+  public Uni<Entity<Locale>> createLocale(ImmutableCreateLocale body) {
+    return getClient().onItem().transformToUni(composer -> composer.create().locale(body));
   }
   @Override
-  public Uni<Entity<Locale>> updateLocale(String projectId, ImmutableLocaleMutator body) {
-    return client.withRepo(projectId).update().locale(body);
+  public Uni<Entity<Locale>> updateLocale(ImmutableLocaleMutator body) {
+    return getClient().onItem().transformToUni(composer -> composer.update().locale(body));
   }
   @Override
-  public Uni<Entity<Locale>> deleteLocale(String projectId, String id) {
-    return client.withRepo(projectId).delete().locale(id);
+  public Uni<Entity<Locale>> deleteLocale(String id) {
+    return getClient().onItem().transformToUni(composer -> composer.delete().locale(id));
   }
   @Override
-  public Uni<Entity<Page>> createPage(String projectId, ImmutableCreatePage body) {
-    return client.withRepo(projectId).create().page(body);
+  public Uni<Entity<Page>> createPage(ImmutableCreatePage body) {
+    return getClient().onItem().transformToUni(composer -> composer.create().page(body));
   }
   @Override
-  public Uni<List<Entity<Page>>> updatePage(String projectId, List<ImmutablePageMutator> body) {
-    return client.withRepo(projectId).update().pages(new ArrayList<>(body));
+  public Uni<List<Entity<Page>>> updatePage(List<ImmutablePageMutator> body) {
+    return getClient().onItem().transformToUni(composer -> composer.update().pages(new ArrayList<>(body)));
   }
   @Override
-  public Uni<Entity<Page>> deletePage(String projectId, String id) {
-    return client.withRepo(projectId).delete().page(id);
+  public Uni<Entity<Page>> deletePage(String id) {
+    return getClient().onItem().transformToUni(composer -> composer.delete().page(id));
   }
   @Override
-  public Uni<Entity<Template>> createTemplate(String projectId, ImmutableCreateTemplate body) {
-    return client.withRepo(projectId).create().template(body);
+  public Uni<Entity<Template>> createTemplate(ImmutableCreateTemplate body) {
+    return getClient().onItem().transformToUni(composer -> composer.create().template(body));
   }
   @Override
-  public Uni<Entity<Template>> updateTemplate(String projectId, ImmutableTemplateMutator body) {
-    return client.withRepo(projectId).update().template(body);
+  public Uni<Entity<Template>> updateTemplate(ImmutableTemplateMutator body) {
+    return getClient().onItem().transformToUni(composer -> composer.update().template(body));
   }
   @Override
-  public Uni<Entity<Template>> deleteTemplate(String projectId, String id) {
-    return client.withRepo(projectId).delete().template(id);
+  public Uni<Entity<Template>> deleteTemplate(String id) {
+    return getClient().onItem().transformToUni(composer -> composer.delete().template(id));
   }
   @Override
-  public Uni<Entity<Release>> createRelease(String projectId, ImmutableCreateRelease body) {
-    return client.withRepo(projectId).create().release(body);
+  public Uni<Entity<Release>> createRelease(ImmutableCreateRelease body) {
+    return getClient().onItem().transformToUni(composer -> composer.create().release(body));
   }
   @Override
-  public Uni<SiteState> getRelease(String projectId, String id) {
-    return client.withRepo(projectId).query().release(id);
+  public Uni<SiteState> getRelease(String id) {
+    return getClient().onItem().transformToUni(composer -> composer.query().release(id));
   }
   @Override
-  public Uni<Entity<Release>> deleteRelease(String projectId, String id) {
-    return client.withRepo(projectId).delete().release(id);
+  public Uni<Entity<Release>> deleteRelease(String id) {
+    return getClient().onItem().transformToUni(composer -> composer.delete().release(id));
   }
 
+  protected Uni<StencilComposer> getClient() {
+    return Uni.createFrom().item(this.client);
+  }
   
   private SiteState parseSiteState(byte[] body) {
     try {

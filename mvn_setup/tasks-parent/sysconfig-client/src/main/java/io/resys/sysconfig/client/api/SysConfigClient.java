@@ -13,6 +13,7 @@ import io.resys.sysconfig.client.api.model.SysConfigDeployment;
 import io.resys.sysconfig.client.api.model.SysConfigDeploymentCommand.CreateSysConfigDeployment;
 import io.resys.sysconfig.client.api.model.SysConfigRelease;
 import io.resys.thena.docdb.api.models.Repo;
+import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfig;
 import io.smallrye.mutiny.Uni;
 
 public interface SysConfigClient {
@@ -20,6 +21,11 @@ public interface SysConfigClient {
   RepositoryQuery repoQuery();
   Uni<Repo> getRepo();
   SysConfigClient withRepoId(String repoId);
+  
+  Uni<SysConfigClient> withTenantConfig(String tenantConfigId);
+  SysConfigClient withTenantConfig(String tenantConfigId, List<TenantRepoConfig> tenantConfig);
+  
+  AssetClient getAssets();
   
   CreateSysConfigAction createConfig();
   UpdateSysConfigAction updateConfig();

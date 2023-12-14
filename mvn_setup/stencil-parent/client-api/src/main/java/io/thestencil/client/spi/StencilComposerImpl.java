@@ -71,4 +71,7 @@ public class StencilComposerImpl implements StencilComposer {
   public StencilComposer withRepo(String repoId) {
     return new StencilComposerImpl(client.withRepo(repoId));
   }
+  public StencilClient getClient() {
+    return client;
+  }
 }

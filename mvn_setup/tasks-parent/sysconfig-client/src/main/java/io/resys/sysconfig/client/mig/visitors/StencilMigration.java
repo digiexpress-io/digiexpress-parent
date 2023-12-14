@@ -1,4 +1,4 @@
-package io.resys.thena.tasks.dev.app.mig;
+package io.resys.sysconfig.client.mig.visitors;
 
 import java.io.File;
 
@@ -7,17 +7,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.resys.sysconfig.client.spi.support.SysConfigAssert;
 import io.thestencil.client.api.ImmutableSiteState;
 import io.thestencil.client.api.StencilComposer.SiteState;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@lombok.Builder
+@RequiredArgsConstructor
 public class StencilMigration {
-  @lombok.Builder.Default
-  private final String src = MigrationsDefaults.folder + "stencil";
-  @lombok.Builder.Default
-  private final ObjectMapper om = MigrationsDefaults.om;
+  private final String src;
+  private final ObjectMapper om;
   
   public SiteState execute() {
+    final var src = this.src + "stencil";
     final var dir = new File(src);
     SysConfigAssert.isTrue(dir.isDirectory() && dir.canRead() && dir.exists(), () -> src + " must be a directory with stencil *release.json-s");
     final var files = dir.listFiles((file, name) -> name.endsWith(".json"));

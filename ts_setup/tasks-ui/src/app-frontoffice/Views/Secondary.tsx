@@ -20,6 +20,7 @@ import CorporateFareOutlinedIcon from '@mui/icons-material/CorporateFareOutlined
 
 import { FormattedMessage } from 'react-intl';
 import Burger from 'components-burger';
+import Context from 'context';
 
 
 const StyledTitleTab = styled(Tab)<TabProps>(({ theme }) => ({
@@ -103,7 +104,7 @@ const StyledTabs = styled(Tabs)<TabsProps>(({ theme }) => ({
 
 
 const Secondary: React.FC<{}> = () => {
-
+  const app = Context.useApp();
   const { actions } = Burger.useTabs();
   const [active, setActive] = React.useState<string>('explorer.taskSearch');
 
@@ -113,7 +114,8 @@ const Secondary: React.FC<{}> = () => {
   function handleCustomerSearch() { actions.handleTabAdd({ id: 'customerSearch', label: <FormattedMessage id="activities.frontoffice.customerSearch.title" /> }) }
 
   function handleTasks() { actions.handleTabAdd({ id: 'tasks', label: <FormattedMessage id="activities.frontoffice.tasks.title" /> }) }
-  function handleStencil() { actions.handleTabAdd({ id: 'stencil', label: <FormattedMessage id="activities.frontoffice.stencil.title" /> }) }
+  function handleStencil() { app.changeApp("stencil") }
+  
   function handleWrench() { actions.handleTabAdd({ id: 'wrench', label: <FormattedMessage id="activities.frontoffice.wrench.title" /> }) }
   function handleDialob() { actions.handleTabAdd({ id: 'dialob', label: <FormattedMessage id="activities.frontoffice.dialob.title" /> }) }
 

@@ -124,9 +124,9 @@ export const useTenantConfig = () => {
 export const useApp = () => {
   const apps = Burger.useApps();
 
-  function changeApp(input: 'tasks' | 'projects' | 'stencil' | RepoType) {
-    if (input === 'projects') {
-      apps.actions.handleActive('app-projects');
+  function changeApp(input: 'tasks' | 'frontoffice' | 'stencil' | RepoType) {
+    if (input === 'frontoffice') {
+      apps.actions.handleActive('app-frontoffice');
       return;
     }
 

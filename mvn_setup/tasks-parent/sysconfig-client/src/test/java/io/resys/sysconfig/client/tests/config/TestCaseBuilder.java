@@ -178,7 +178,7 @@ public class TestCaseBuilder {
           }
         })
         .build();
-    return new SysConfigClientImpl(store, assetClient);
+    return new SysConfigClientImpl(store, assetClient, tenantClient);
   }
 
   private DialobClient createDialobInit(io.vertx.mutiny.pgclient.PgPool pgPool, ObjectMapper objectMapper) {

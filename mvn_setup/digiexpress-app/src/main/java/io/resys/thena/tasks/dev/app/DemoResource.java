@@ -1,9 +1,20 @@
 package io.resys.thena.tasks.dev.app;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import io.resys.crm.client.api.CrmClient;
 import io.resys.crm.client.api.model.Customer;
 import io.resys.crm.client.api.model.CustomerCommand.UpsertSuomiFiPerson;
 import io.resys.crm.client.api.model.ImmutableUpsertSuomiFiPerson;
+import io.resys.sysconfig.client.api.SysConfigClient;
+import io.resys.sysconfig.client.mig.MigrationClient;
+import io.resys.sysconfig.client.mig.model.MigrationAssets;
 import io.resys.thena.projects.client.api.TenantConfigClient;
 import io.resys.thena.projects.client.api.model.ImmutableCreateTenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig;
@@ -16,6 +27,8 @@ import io.resys.thena.tasks.client.api.model.Task.TaskExtensionType;
 import io.resys.thena.tasks.client.api.model.TaskCommand.CreateTask;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
+import io.thestencil.client.api.StencilComposer.SiteState;
+import io.thestencil.client.spi.StencilComposerImpl;
 import io.vertx.mutiny.core.Vertx;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
@@ -24,13 +37,6 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Path("q/demo/api/")
 public class DemoResource {
   @Inject Vertx vertx;
@@ -38,6 +44,7 @@ public class DemoResource {
   @Inject CrmClient crmClient;
   @Inject TenantConfigClient tenantClient;
   @Inject CurrentTenant currentTenant;
+  @Inject SysConfigClient sysConfigClient;
   
 
   @GET
@@ -132,6 +139,26 @@ public class DemoResource {
         .onItem().transformToUni(junk -> init());
   }
   
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("reinit-assets")
+  public Uni<SiteState> reinitAssets() {
+    final var mig = new MigrationClient(sysConfigClient.getAssets(), new HashMap<>());
+    final var init = mig.read("asset_sysconfig_flat.json").orElse(null);
+    if(init == null) {
+      return Uni.createFrom().nothing();
+    }
+    
+    final var stencilAssets = mig.readStencil(init);
+    
+    return tenantClient.queryActiveTenantConfig().get(currentTenant.tenantId())
+        .onItem().transform(config -> sysConfigClient.withTenantConfig(config.getId(), config.getRepoConfigs()))
+        .onItem().transformToUni(client -> {
+          
+          final var stencil = new StencilComposerImpl(client.getAssets().getConfig().getStencil()).migration().importData(stencilAssets);
+          return stencil;
+        });
+  }
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Path("kill9")

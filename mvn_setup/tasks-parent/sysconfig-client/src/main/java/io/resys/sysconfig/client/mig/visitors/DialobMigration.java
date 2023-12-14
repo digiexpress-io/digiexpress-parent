@@ -1,4 +1,4 @@
-package io.resys.thena.tasks.dev.app.mig;
+package io.resys.sysconfig.client.mig.visitors;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -11,18 +11,17 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import io.dialob.api.form.Form;
 import io.dialob.client.api.DialobDocument.FormDocument;
 import io.dialob.client.api.DialobDocument.FormRevisionDocument;
+import io.resys.sysconfig.client.mig.visitors.DialobMigrationVisitor.DialobFormMeta;
+import io.resys.sysconfig.client.mig.visitors.DialobMigrationVisitor.DialobFormTag;
 import io.resys.sysconfig.client.spi.support.SysConfigAssert;
-import io.resys.thena.tasks.dev.app.mig.DialobMigrationVisitor.DialobFormMeta;
-import io.resys.thena.tasks.dev.app.mig.DialobMigrationVisitor.DialobFormTag;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@lombok.Builder
+@RequiredArgsConstructor
 public class DialobMigration {
-  @lombok.Builder.Default
-  private final String src = MigrationsDefaults.folder + "dialob";
-  @lombok.Builder.Default
-  private final ObjectMapper om = MigrationsDefaults.om;
+  private final String src;
+  private final ObjectMapper om;
   
   @lombok.Data @lombok.Builder
   public static class FormsAndRevs {
@@ -31,6 +30,7 @@ public class DialobMigration {
   }
   
   public FormsAndRevs execute() {
+    final var src = this.src + "dialob";
     final var dir = new File(src);
     SysConfigAssert.isTrue(dir.isDirectory() && dir.canRead() && dir.exists(), () -> src + " must be a directory with dialob *form.json-s");
     final var files = new File(dir, "forms").listFiles((file, name) -> name.endsWith(".json"));
