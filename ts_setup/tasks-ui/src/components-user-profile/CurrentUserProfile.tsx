@@ -54,6 +54,7 @@ const CurrentUserProfile: React.FC<{}> = () => {
             <SectionLayout label='userProfile.frontoffice.displayName' value={state.displayName} />
             <SectionLayout label='userProfile.frontoffice.created' value={new Date(state.created).toISOString()} />
             <SectionLayout label='userProfile.frontoffice.updated' value={new Date(state.updated).toISOString()} />
+            <SectionLayout label='userProfile.frontoffice.user.roles' value={"TODO"} />
           </>
         </Burger.Section>
         <Burger.Section>
