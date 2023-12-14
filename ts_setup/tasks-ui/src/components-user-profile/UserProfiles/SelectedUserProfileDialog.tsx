@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Stack, Typography, Paper, Dialog } from '@mui/material';
+import { Grid, Stack, Typography } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 import { UserProfileAndOrg } from 'client';
 import Context from 'context';
@@ -12,7 +12,7 @@ const SectionLayout: React.FC<{ label: string, value: string | React.ReactNode |
   return (
     <Grid container>
       <Grid item md={4} lg={4}>
-        <Typography fontWeight='bolder'><FormattedMessage id={label} /></Typography>
+        <Typography fontWeight='400'><FormattedMessage id={label} /></Typography>
       </Grid>
 
       <Grid item md={8} lg={8}>
@@ -40,22 +40,19 @@ const SelectedUserProfileDialog: React.FC<{ open: boolean, onClose: () => void }
     return null;
   }
 
-  return (<Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth >
-    <Paper sx={{ p: 2 }}>
-      <Stack spacing={1}>
-        <Typography variant='h4'><FormattedMessage id='userProfile.frontoffice.title' /></Typography>
-        <Burger.Section>
-          <Typography fontWeight='bold'><FormattedMessage id='userProfile.frontoffice.info' /></Typography>
-          <>
-            <SectionLayout label='userProfile.frontoffice.id' value={state.user.id} />
-            <SectionLayout label='userProfile.frontoffice.username' value={state.user.details.username} />
-            <SectionLayout label='userProfile.frontoffice.created' value={<Burger.DateTimeFormatter type='dateTime' value={new Date(state.user.created)} />} />
-            <SectionLayout label='userProfile.frontoffice.updated' value={<Burger.DateTimeFormatter type='dateTime' value={new Date(state.user.updated)} />} />
-          </>
-        </Burger.Section>
-      </Stack>
-    </Paper>
-  </Dialog>
+  return (<Burger.Dialog open={open} onClose={onClose} title='userProfile.frontoffice.title' backgroundColor='uiElements.main'>
+    <Stack spacing={1}>
+      <Burger.Section>
+        <Typography fontWeight='bold'><FormattedMessage id='userProfile.frontoffice.info' /></Typography>
+        <>
+          <SectionLayout label='userProfile.frontoffice.id' value={state.user.id} />
+          <SectionLayout label='userProfile.frontoffice.username' value={state.user.details.username} />
+          <SectionLayout label='userProfile.frontoffice.created' value={<Burger.DateTimeFormatter type='dateTime' value={new Date(state.user.created)} />} />
+          <SectionLayout label='userProfile.frontoffice.updated' value={<Burger.DateTimeFormatter type='dateTime' value={new Date(state.user.updated)} />} />
+        </>
+      </Burger.Section>
+    </Stack>
+  </Burger.Dialog>
   );
 }
 
