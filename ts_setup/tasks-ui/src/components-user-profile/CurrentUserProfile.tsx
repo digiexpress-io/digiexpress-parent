@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Stack, Typography, Paper } from '@mui/material';
+import { Grid, Stack, Typography, Paper, CircularProgress } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 import { FirstName, LastName, EmailAddress, NotificationSettings } from './UserProfileEditFields';
 import { UserProfileDescriptor, UserProfileDescriptorImpl } from 'descriptor-user-profile';
@@ -40,7 +40,7 @@ const CurrentUserProfile: React.FC<{}> = () => {
   }, []);
 
   if (loading || !state) {
-    return null;
+    return <CircularProgress />;
   }
 
   return (
@@ -51,7 +51,7 @@ const CurrentUserProfile: React.FC<{}> = () => {
           <Typography fontWeight='bold'><FormattedMessage id='userProfile.frontoffice.info' /></Typography>
           <>
             <SectionLayout label='userProfile.frontoffice.id' value={state.id} />
-            <SectionLayout label='userProfile.frontoffice.username' value={state.displayName} />
+            <SectionLayout label='userProfile.frontoffice.displayName' value={state.displayName} />
             <SectionLayout label='userProfile.frontoffice.created' value={new Date(state.created).toISOString()} />
             <SectionLayout label='userProfile.frontoffice.updated' value={new Date(state.updated).toISOString()} />
           </>

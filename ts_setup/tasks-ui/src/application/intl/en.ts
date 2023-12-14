@@ -396,7 +396,7 @@ const en = {
   'userProfile.frontoffice.firstName': 'First name(s)',
   'userProfile.frontoffice.lastName': 'Last name',
   'userProfile.frontoffice.email': 'Email address',
-  'userProfile.frontoffice.username': 'Username',
+  'userProfile.frontoffice.displayName': 'Display name',
   'userProfile.frontoffice.created': 'Profile created',
   'userProfile.frontoffice.updated': 'Profile updated',
   'userProfile.frontoffice.notificationSettings': 'Notification settings',

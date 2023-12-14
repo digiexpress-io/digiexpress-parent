@@ -2,6 +2,7 @@ import React from 'react';
 import { Grid, Stack, Typography } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 import { UserProfileAndOrg } from 'client';
+import { UserProfileDescriptor, UserProfileDescriptorImpl } from 'descriptor-user-profile';
 import Context from 'context';
 
 import Burger from 'components-burger';
@@ -25,12 +26,14 @@ const SectionLayout: React.FC<{ label: string, value: string | React.ReactNode |
 
 const SelectedUserProfileDialog: React.FC<{ open: boolean, onClose: () => void }> = ({ open, onClose }) => {
   const backend = Context.useBackend();
-  const [state, setState] = React.useState<UserProfileAndOrg>();
+  const tasks = Context.useTasks();
+  const profile = tasks.state.profile;
+  const [state, setState] = React.useState<UserProfileDescriptor>();
   const [loading, setLoading] = React.useState<boolean>(true);
 
   React.useEffect(() => {
     backend.currentUserProfile().then(userProfile => {
-      setState(userProfile);
+      setState(new UserProfileDescriptorImpl(userProfile.user, profile, new Date()));
       setLoading(false);
     });
 
@@ -45,11 +48,13 @@ const SelectedUserProfileDialog: React.FC<{ open: boolean, onClose: () => void }
       <Burger.Section>
         <Typography fontWeight='bold'><FormattedMessage id='userProfile.frontoffice.info' /></Typography>
         <>
-          <SectionLayout label='userProfile.frontoffice.id' value={state.user.id} />
-          <SectionLayout label='userProfile.frontoffice.username' value={state.user.details.username} />
-          <SectionLayout label='userProfile.frontoffice.email' value={state.user.details.email} />
-          <SectionLayout label='userProfile.frontoffice.created' value={<Burger.DateTimeFormatter type='dateTime' value={new Date(state.user.created)} />} />
-          <SectionLayout label='userProfile.frontoffice.updated' value={<Burger.DateTimeFormatter type='dateTime' value={new Date(state.user.updated)} />} />
+          <SectionLayout label='userProfile.frontoffice.id' value={state.id} />
+          <SectionLayout label='userProfile.frontoffice.displayName' value={state.displayName} />
+          <SectionLayout label='userProfile.frontoffice.firstName' value={state.entry.details.firstName} />
+          <SectionLayout label='userProfile.frontoffice.lastName' value={state.entry.details.lastName} />
+          <SectionLayout label='userProfile.frontoffice.email' value={state.email} />
+          <SectionLayout label='userProfile.frontoffice.created' value={<Burger.DateTimeFormatter type='dateTime' value={new Date(state.created)} />} />
+          <SectionLayout label='userProfile.frontoffice.updated' value={<Burger.DateTimeFormatter type='dateTime' value={new Date(state.updated)} />} />
         </>
       </Burger.Section>
 
