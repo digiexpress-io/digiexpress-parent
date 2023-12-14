@@ -20,7 +20,7 @@ const FirstName: React.FC<{ init: UserProfileDescriptor }> = ({ init }) => {
     const command: Client.ChangeUserDetailsFirstName = {
       commandType: 'ChangeUserDetailsFirstName',
       id: init.entry.id,
-      firstName,
+      firstName
     };
     await backend.userProfile.updateUserProfile(init.entry.id, [command]);
   }

@@ -23,6 +23,7 @@ import Burger from 'components-burger';
 import Context from 'context';
 
 
+
 const StyledTitleTab = styled(Tab)<TabProps>(({ theme }) => ({
   "&.MuiButtonBase-root": {
     minWidth: "unset",
@@ -108,15 +109,14 @@ const Secondary: React.FC<{}> = () => {
   const { actions } = Burger.useTabs();
   const [active, setActive] = React.useState<string>('explorer.taskSearch');
 
-
   function handleActive(_event: React.SyntheticEvent, newValue: string) { setActive(newValue) }
   function handleCRM() { actions.handleTabAdd({ id: 'crm', label: <FormattedMessage id="activities.frontoffice.crm.title" /> }) }
   function handleCustomerSearch() { actions.handleTabAdd({ id: 'customerSearch', label: <FormattedMessage id="activities.frontoffice.customerSearch.title" /> }) }
 
   function handleTasks() { actions.handleTabAdd({ id: 'tasks', label: <FormattedMessage id="activities.frontoffice.tasks.title" /> }) }
   function handleStencil() { app.changeApp("stencil") }
-  
-  function handleWrench() {  app.changeApp("hdes") }
+
+  function handleWrench() { app.changeApp("hdes") }
   function handleDialob() { actions.handleTabAdd({ id: 'dialob', label: <FormattedMessage id="activities.frontoffice.dialob.title" /> }) }
 
   function handleGroup() { actions.handleTabAdd({ id: 'teamSpace', label: <FormattedMessage id="activities.teamSpace.title" /> }) }
