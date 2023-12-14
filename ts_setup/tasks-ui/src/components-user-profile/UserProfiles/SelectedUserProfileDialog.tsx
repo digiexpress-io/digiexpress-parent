@@ -41,9 +41,9 @@ const SelectedUserProfileDialog: React.FC<{ open: boolean, onClose: () => void }
   }
 
   return (<Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth >
-    <Paper sx={{ p: 1 }}>
+    <Paper sx={{ p: 2 }}>
       <Stack spacing={1}>
-        <Typography variant='h3'><FormattedMessage id='userProfile.frontoffice.title' /></Typography>
+        <Typography variant='h4'><FormattedMessage id='userProfile.frontoffice.title' /></Typography>
         <Burger.Section>
           <Typography fontWeight='bold'><FormattedMessage id='userProfile.frontoffice.info' /></Typography>
           <>
