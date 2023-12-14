@@ -51,7 +51,7 @@ public class MigrationClient {
       final InputStream inputStream = module.getResourceAsStream(fileName);
       
       if(inputStream == null) {
-        final var resource = this.getClass().getClassLoader().getResource(fileName);
+        final var resource = Thread.currentThread().getContextClassLoader().getResource(fileName);
         final File file = new File(resource.getFile());
         return Optional.of(om.readValue(file, MigrationAssets.class));
       } else {
