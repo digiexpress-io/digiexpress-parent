@@ -16,6 +16,7 @@ import io.resys.crm.client.api.model.ImmutableUpsertSuomiFiPerson;
 import io.resys.hdes.client.spi.HdesComposerImpl;
 import io.resys.sysconfig.client.api.SysConfigClient;
 import io.resys.sysconfig.client.mig.MigrationClient;
+import io.resys.sysconfig.client.mig.model.MigrationAssets;
 import io.resys.thena.projects.client.api.TenantConfigClient;
 import io.resys.thena.projects.client.api.model.ImmutableCreateTenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig;
@@ -171,6 +172,20 @@ public class DemoResource {
           });
         });
   }
+  
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("read-assets")
+  public Uni<MigrationAssets> readAssets() {
+    final var mig = new MigrationClient(sysConfigClient.getAssets(), new HashMap<>());
+    final var init = mig.read("asset_sysconfig_flat.json").orElse(null);
+    if(init == null) {
+      return Uni.createFrom().nothing();
+    }
+    
+    return Uni.createFrom().item(init);
+  }
+  
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Path("kill9")

@@ -2,6 +2,8 @@ package io.resys.sysconfig.client.mig;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -44,9 +46,19 @@ public class MigrationClient {
   
   public Optional<MigrationAssets> read(String fileName){
     try {
-      final var resource = this.getClass().getClassLoader().getResource(fileName);
-      final File file = new File(resource.getFile());
-      return Optional.of(om.readValue(file, MigrationAssets.class));
+
+      final Module module = ModuleLayer.boot().findModule("java.base").get();
+      final InputStream inputStream = module.getResourceAsStream(fileName);
+      
+      if(inputStream == null) {
+        final var resource = this.getClass().getClassLoader().getResource(fileName);
+        final File file = new File(resource.getFile());
+        return Optional.of(om.readValue(file, MigrationAssets.class));
+      } else {
+        String text = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+        return Optional.of(om.readValue(text, MigrationAssets.class));       
+      }
+
     } catch(IOException e) {
       throw new RuntimeException(e.getMessage(), e);
     }
