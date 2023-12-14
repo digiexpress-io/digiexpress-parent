@@ -8,7 +8,7 @@ import { UserProfileSearchState } from './table-ctx';
 
 import { useTableCellPopover, StyledTableCell } from 'components-generic';
 import CellHoverButton from './CellMenuButton';
-
+import SelectedUserProfileDialog from './SelectedUserProfileDialog';
 
 const CellMenuItem: React.FC<{
   onClick?: () => void,
@@ -24,15 +24,15 @@ const CellMenuItem: React.FC<{
 }
 
 const CellMenu: React.FC<{
-  onEdit: () => void,
-}> = ({ onEdit }) => {
+  onViewUser: () => void,
+}> = ({ onViewUser }) => {
   const Popover = useTableCellPopover();
 
   return (
     <>
       <Popover.Delegate>
         <MenuList dense>
-          <CellMenuItem onClick={onEdit} title={`userprofileTable.menu.viewUser`} />
+          <CellMenuItem onClick={onViewUser} title={`userprofileTable.menu.viewUser`} />
         </MenuList>
       </Popover.Delegate>
       <CellHoverButton onClick={Popover.onClick}>
@@ -48,25 +48,24 @@ const FormattedCell: React.FC<{
   active: boolean,
   setDisabled: () => void
 }> = ({ row, active, setDisabled }) => {
-  const [edit, setEdit] = React.useState(false);
+  const [userDialogOpen, setUserDialogOpen] = React.useState(false);
 
-  function handleStartEdit() {
-    setEdit(true);
+  function handleUserDialog() {
+    setUserDialogOpen(prev => !prev);
     setDisabled();
   }
 
 
 
 
-  return (
+  return (<>
+    <SelectedUserProfileDialog open={userDialogOpen} onClose={handleUserDialog} />
     <StyledTableCell width="35px">
       <Box width="35px" justifyContent='right'> {/* Box is needed to prevent table cell resize on hover */}
-        {active &&
-          <CellMenu
-            onEdit={handleStartEdit}
-          />}
+        {active && <CellMenu onViewUser={handleUserDialog} />}
       </Box>
     </StyledTableCell>
+  </>
   );
 }
 

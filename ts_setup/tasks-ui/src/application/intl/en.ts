@@ -391,6 +391,7 @@ const en = {
 
   'userProfile.frontoffice.title': 'User profile',
   'userProfile.frontoffice.info': 'Profile info',
+  'userProfile.frontoffice.id': 'User ID',
   'userProfile.frontoffice.firstName': 'First name(s)',
   'userProfile.frontoffice.lastName': 'Last name',
   'userProfile.frontoffice.email': 'Email address',
