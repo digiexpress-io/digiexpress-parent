@@ -77,7 +77,7 @@ import {
 } from './customer-types';
 
 import {
-  UserProfile, NotificationSetting
+  UserProfile, NotificationSetting, ChangeUserDetailsFirstName
 } from './profile-types';
 
 import {
@@ -115,7 +115,7 @@ declare namespace TaskClient {
     ChangeCustomerAddress,
     ArchiveCustomer,
 
-    UserProfileAndOrg, NotificationSetting,
+    UserProfileAndOrg, NotificationSetting, ChangeUserDetailsFirstName,
 
     TaskId, Task,
     BackendError, Backend, StoreConfig, Store,
@@ -175,7 +175,7 @@ export type {
   ChangeCustomerAddress,
   ArchiveCustomer,
 
-  UserProfileAndOrg, NotificationSetting,
+  UserProfileAndOrg, NotificationSetting, ChangeUserDetailsFirstName,
 
   TaskCommandType,
   Person, Company,

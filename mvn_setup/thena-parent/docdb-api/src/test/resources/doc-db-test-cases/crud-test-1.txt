@@ -22,7 +22,7 @@ Commits
   - id: 9
     doc id: 1, branch id: 4, parent: 8, message: changed meta for doc, author: jane.doe@morgue.com
   - id: 5
-    doc id: 1, branch id: 4, parent: 8, message: edited dev branch, author: jane.doe@morgue.com
+    doc id: 1, branch id: 4, parent: 9, message: edited dev branch, author: jane.doe@morgue.com
 
 Logs
   - id: 10

@@ -96,6 +96,7 @@ export interface ArchiveUserProfile extends UserProfileUpdateCommand<'ArchiveUse
 export interface UserProfileStore {
   findAllUserProfiles(): Promise<UserProfile[]>
   getUserProfileById(id: UserId): Promise<UserProfile>
+  updateUserProfile(id: string, commands: UserProfileUpdateCommand<any>[]): Promise<UserProfile>
 }
 
 

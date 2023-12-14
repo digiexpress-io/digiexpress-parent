@@ -49,7 +49,7 @@ public class UserProfileUpdateTest extends UserProfileTestCase {
     final var client = getClient().repoQuery().repoName(repoName).createIfNot().await().atMost(atMost);
     final var userProfile = createUserProfileForUpdating(client);
     
-    client.updateUserProfile().updateOne(ImmutableChangeUserDetailsFirstName.builder()
+    final var updated = client.updateUserProfile().updateOne(ImmutableChangeUserDetailsFirstName.builder()
         .userId("userId1234")
         .id(userProfile.getId())
         .firstName("Jack")

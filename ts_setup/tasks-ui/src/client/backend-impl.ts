@@ -3,7 +3,7 @@ import type { TaskId, Task, TaskPagination, TaskStore, TaskUpdateCommand, Create
 import { ProjectId, Project, ProjectPagination, ProjectStore, ProjectUpdateCommand, CreateProject } from './project-types';
 import { Tenant, TenantEntry, TenantStore, TenantEntryPagination, DialobTag, DialobForm, DialobSession, FormTechnicalName, TenantId, FormId, CreateFormRequest, DialobFormResponse } from './tenant-types';
 import { TenantConfig } from 'client';
-import type { UserProfileAndOrg, UserProfileStore, UserProfile } from './profile-types';
+import type { UserProfileAndOrg, UserProfileStore, UserProfile, UserProfileUpdateCommand } from './profile-types';
 import type { User, Org } from './org-types';
 import { mockOrg } from './client-mock';
 import type { CustomerStore, Customer, CustomerId } from './customer-types';
@@ -59,7 +59,8 @@ export class ServiceImpl implements Backend {
   get userProfile(): UserProfileStore {
     return {
       getUserProfileById: (id: string) => this.getUserProfile(id),
-      findAllUserProfiles: () => this.findUserProfiles()
+      findAllUserProfiles: () => this.findUserProfiles(),
+      updateUserProfile: (profileId: string, commands: UserProfileUpdateCommand<any>[]) => this.updateActiveUserProfile(profileId, commands)
     };
   }
   async getUserProfile(id: string): Promise<UserProfile> {
@@ -233,6 +234,14 @@ export class ServiceImpl implements Backend {
 
   getActiveTask(id: TaskId): Promise<Task> {
     return this._store.fetch<Task>(`tasks/${id}`, { repoType: 'TASKS' });
+  }
+
+  async updateActiveUserProfile(profileId: string, commands: UserProfileUpdateCommand<any>[]): Promise<UserProfile> {
+    return await this._store.fetch<UserProfile>(`userprofiles/${profileId}`, {
+      method: 'PUT',
+      body: JSON.stringify(commands),
+      repoType: 'USER_PROFILE'
+    });
   }
 
   async getActiveProjects(): Promise<ProjectPagination> {

@@ -111,7 +111,7 @@ public class DocBranchSqlBuilderImpl implements DocBranchSqlBuilder {
         .append("  commits.id as commit_id").ln()
         
         .append(" FROM (SELECT * FROM ").append(options.getDocBranch()).append(" WHERE branch_name = $1 AND doc_id = $2 FOR UPDATE NOWAIT) as branch").ln()
-        .append(" JOIN ").append(options.getDocCommits()).append(" as commits ON(commits.branch_id = branch.branch_id)").ln()
+        .append(" JOIN ").append(options.getDocCommits()).append(" as commits ON(commits.branch_id = branch.branch_id and commits.id = branch.commit_id)").ln()
         .append(" JOIN ").append(options.getDoc()).append(" as doc ON(doc.id = branch.doc_id)").ln()
         .build())
         .props(Tuple.of(branchName, docId))
@@ -211,7 +211,7 @@ public class DocBranchSqlBuilderImpl implements DocBranchSqlBuilder {
         .append("  commits.id as commit_id").ln()
         
         .append(" FROM (SELECT * FROM ").append(options.getDocBranch()).append(" WHERE ").append(where.toString()).append(" FOR UPDATE NOWAIT) as branch").ln()
-        .append(" JOIN ").append(options.getDocCommits()).append(" as commits ON(commits.branch_id = branch.branch_id)").ln()
+        .append(" JOIN ").append(options.getDocCommits()).append(" as commits ON(commits.branch_id = branch.branch_id and commits.id = branch.commit_id)").ln()
         .append(" JOIN ").append(options.getDoc()).append(" as doc ON(doc.id = branch.doc_id)").ln()
         .build())
         .props(Tuple.from(props))
@@ -260,7 +260,7 @@ public class DocBranchSqlBuilderImpl implements DocBranchSqlBuilder {
         .append("  commits.id as commit_id").ln()
         
         .append(" FROM (SELECT * FROM ").append(options.getDocBranch()).append(" WHERE ").append(where.toString()).append(" FOR UPDATE NOWAIT) as branch").ln()
-        .append(" JOIN ").append(options.getDocCommits()).append(" as commits ON(commits.branch_id = branch.branch_id)").ln()
+        .append(" JOIN ").append(options.getDocCommits()).append(" as commits ON(commits.branch_id = branch.branch_id and commits.id = branch.commit_id)").ln()
         .append(" JOIN ").append(options.getDoc()).append(" as doc ON(doc.id = branch.doc_id)").ln()
         .build())
         .props(Tuple.from(props))

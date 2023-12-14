@@ -94,135 +94,85 @@ Commits
     doc id: 9, branch id: 27, parent: 40, message: edit dev branch, author: jane.doe@morgue.com
   - id: 51
     doc id: 10, branch id: 29, parent: 41, message: edit dev branch, author: jane.doe@morgue.com
-  - id: 52
-    doc id: 1, branch id: 11, parent: 42, message: edit dev branch, author: jane.doe@morgue.com
   - id: 12
-    doc id: 1, branch id: 11, parent: 31, message: edit dev branch, author: jane.doe@morgue.com
-  - id: 53
-    doc id: 2, branch id: 13, parent: 43, message: edit dev branch, author: jane.doe@morgue.com
+    doc id: 1, branch id: 11, parent: 42, message: edit dev branch, author: jane.doe@morgue.com
   - id: 14
-    doc id: 2, branch id: 13, parent: 33, message: edit dev branch, author: jane.doe@morgue.com
-  - id: 54
-    doc id: 3, branch id: 15, parent: 44, message: edit dev branch, author: jane.doe@morgue.com
+    doc id: 2, branch id: 13, parent: 43, message: edit dev branch, author: jane.doe@morgue.com
   - id: 16
-    doc id: 3, branch id: 15, parent: 34, message: edit dev branch, author: jane.doe@morgue.com
-  - id: 55
-    doc id: 4, branch id: 17, parent: 45, message: edit dev branch, author: jane.doe@morgue.com
+    doc id: 3, branch id: 15, parent: 44, message: edit dev branch, author: jane.doe@morgue.com
   - id: 18
-    doc id: 4, branch id: 17, parent: 35, message: edit dev branch, author: jane.doe@morgue.com
-  - id: 56
-    doc id: 5, branch id: 19, parent: 46, message: edit dev branch, author: jane.doe@morgue.com
+    doc id: 4, branch id: 17, parent: 45, message: edit dev branch, author: jane.doe@morgue.com
   - id: 20
-    doc id: 5, branch id: 19, parent: 36, message: edit dev branch, author: jane.doe@morgue.com
-  - id: 57
-    doc id: 6, branch id: 21, parent: 47, message: edit dev branch, author: jane.doe@morgue.com
+    doc id: 5, branch id: 19, parent: 46, message: edit dev branch, author: jane.doe@morgue.com
   - id: 22
-    doc id: 6, branch id: 21, parent: 37, message: edit dev branch, author: jane.doe@morgue.com
-  - id: 58
-    doc id: 7, branch id: 23, parent: 48, message: edit dev branch, author: jane.doe@morgue.com
+    doc id: 6, branch id: 21, parent: 47, message: edit dev branch, author: jane.doe@morgue.com
   - id: 24
-    doc id: 7, branch id: 23, parent: 38, message: edit dev branch, author: jane.doe@morgue.com
-  - id: 59
-    doc id: 8, branch id: 25, parent: 49, message: edit dev branch, author: jane.doe@morgue.com
+    doc id: 7, branch id: 23, parent: 48, message: edit dev branch, author: jane.doe@morgue.com
   - id: 26
-    doc id: 8, branch id: 25, parent: 39, message: edit dev branch, author: jane.doe@morgue.com
-  - id: 60
-    doc id: 9, branch id: 27, parent: 50, message: edit dev branch, author: jane.doe@morgue.com
+    doc id: 8, branch id: 25, parent: 49, message: edit dev branch, author: jane.doe@morgue.com
   - id: 28
-    doc id: 9, branch id: 27, parent: 40, message: edit dev branch, author: jane.doe@morgue.com
-  - id: 61
-    doc id: 10, branch id: 29, parent: 51, message: edit dev branch, author: jane.doe@morgue.com
+    doc id: 9, branch id: 27, parent: 50, message: edit dev branch, author: jane.doe@morgue.com
   - id: 30
-    doc id: 10, branch id: 29, parent: 41, message: edit dev branch, author: jane.doe@morgue.com
+    doc id: 10, branch id: 29, parent: 51, message: edit dev branch, author: jane.doe@morgue.com
 
 Logs
-  - id: 62
+  - id: 52
     doc id: 31
     log value: {"some_cool_command":"create_customer"}
-  - id: 63
+  - id: 53
     doc id: 33
     log value: {"some_cool_command":"create_customer"}
-  - id: 64
+  - id: 54
     doc id: 34
     log value: {"some_cool_command":"create_customer"}
-  - id: 65
+  - id: 55
     doc id: 35
     log value: {"some_cool_command":"create_customer"}
-  - id: 66
+  - id: 56
     doc id: 36
     log value: {"some_cool_command":"create_customer"}
-  - id: 67
+  - id: 57
     doc id: 37
     log value: {"some_cool_command":"create_customer"}
-  - id: 68
+  - id: 58
     doc id: 38
     log value: {"some_cool_command":"create_customer"}
-  - id: 69
+  - id: 59
     doc id: 39
     log value: {"some_cool_command":"create_customer"}
-  - id: 70
+  - id: 60
     doc id: 40
     log value: {"some_cool_command":"create_customer"}
-  - id: 71
+  - id: 61
     doc id: 41
     log value: {"some_cool_command":"create_customer"}
-  - id: 72
-    doc id: 52
-    log value: {"logging":"added meta"}
-  - id: 73
+  - id: 62
     doc id: 12
     log value: {"logging":"added meta"}
-  - id: 74
-    doc id: 53
-    log value: {"logging":"added meta"}
-  - id: 75
+  - id: 63
     doc id: 14
     log value: {"logging":"added meta"}
-  - id: 76
-    doc id: 54
-    log value: {"logging":"added meta"}
-  - id: 77
+  - id: 64
     doc id: 16
     log value: {"logging":"added meta"}
-  - id: 78
-    doc id: 55
-    log value: {"logging":"added meta"}
-  - id: 79
+  - id: 65
     doc id: 18
     log value: {"logging":"added meta"}
-  - id: 80
-    doc id: 56
-    log value: {"logging":"added meta"}
-  - id: 81
+  - id: 66
     doc id: 20
     log value: {"logging":"added meta"}
-  - id: 82
-    doc id: 57
-    log value: {"logging":"added meta"}
-  - id: 83
+  - id: 67
     doc id: 22
     log value: {"logging":"added meta"}
-  - id: 84
-    doc id: 58
-    log value: {"logging":"added meta"}
-  - id: 85
+  - id: 68
     doc id: 24
     log value: {"logging":"added meta"}
-  - id: 86
-    doc id: 59
-    log value: {"logging":"added meta"}
-  - id: 87
+  - id: 69
     doc id: 26
     log value: {"logging":"added meta"}
-  - id: 88
-    doc id: 60
-    log value: {"logging":"added meta"}
-  - id: 89
+  - id: 70
     doc id: 28
     log value: {"logging":"added meta"}
-  - id: 90
-    doc id: 61
-    log value: {"logging":"added meta"}
-  - id: 91
+  - id: 71
     doc id: 30
     log value: {"logging":"added meta"}

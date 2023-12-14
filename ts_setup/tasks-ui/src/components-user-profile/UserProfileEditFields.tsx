@@ -3,23 +3,34 @@ import { TextField, FormControl, FormControlLabel, FormGroup, Switch, Typography
 
 import { useIntl } from 'react-intl';
 import { UserProfileDescriptor } from 'descriptor-user-profile'
+import Client from 'client';
+import Context from 'context';
 
 const FirstName: React.FC<{ init: UserProfileDescriptor }> = ({ init }) => {
 
   const intl = useIntl();
+  const backend = Context.useBackend();
   const [firstName, setFirstName] = React.useState(init.entry.details.firstName);
 
   function handleFirstNameChange(event: React.ChangeEvent<HTMLInputElement>) {
     setFirstName(event.target.value);
   }
 
+  async function handleChange() {
+    const command: Client.ChangeUserDetailsFirstName = {
+      commandType: 'ChangeUserDetailsFirstName',
+      id: init.entry.id,
+      firstName,
+    };
+    await backend.userProfile.updateUserProfile(init.entry.id, [command]);
+  }
 
   return (<TextField InputProps={{ disableUnderline: true }} variant='standard'
     placeholder={intl.formatMessage({ id: 'userProfile.frontoffice.firstName' })}
     fullWidth
     value={firstName}
     onChange={handleFirstNameChange}
-    onBlur={() => { }}
+    onBlur={handleChange}
   />);
 }
 
