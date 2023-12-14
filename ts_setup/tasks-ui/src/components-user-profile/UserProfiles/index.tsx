@@ -12,6 +12,7 @@ import { SortableHeaders } from './TableHeaders';
 import CellMenu from './CellMenu';
 import CellDisplayName from './CellDisplayName';
 import CellCreated from './CellCreated';
+import CellEmail from './CellEmail';
 
 
 
@@ -65,7 +66,7 @@ const Row: React.FC<{
   return (<TableRow sx={{ backgroundColor: getRowBackgroundColor(props.rowId) }} hover tabIndex={-1} key={props.row.id}
     onMouseEnter={() => setHoverItemsActive(true)} onMouseLeave={handleEndHover}>
     {props.columns.includes("displayName") && <CellDisplayName {...props} children={hoverItemsActive} />}
-    {props.columns.includes("email") && <CellDisplayName {...props} children={hoverItemsActive} />}
+    {props.columns.includes("email") && <CellEmail {...props} />}
     {props.columns.includes("created") && <CellCreated {...props} />}
 
     <CellMenu {...props} active={hoverItemsActive} setDisabled={handleEndHover} />

@@ -400,6 +400,11 @@ const en = {
   'userProfile.frontoffice.notificationSettings': 'Notification settings',
   'userProfile.frontoffice.notificationSettings.desc': 'Toggle the notifications you would like to receive',
 
+  'userprofileTable.header.spotlight.results': 'All users',
+  'userprofileTable.header.email': 'Email',
+  'userprofileTable.header.created': 'Created',
+  'userprofileTable.menu.viewUser': 'View user',
+
   'activities.deployments.title': 'Deployments',
 
   'activities.frontoffice.title': 'Front office',

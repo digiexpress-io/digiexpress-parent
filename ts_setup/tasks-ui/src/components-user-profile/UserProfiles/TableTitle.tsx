@@ -13,7 +13,7 @@ const TableSubTitle: React.FC<{ values: number, message: string }> = ({ values, 
 const TableTitle: React.FC<{ group: UserProfileSearchState }> = ({ group }) => {
   const sx = { borderRadius: '8px 8px 0px 0px', boxShadow: "unset", fontWeight: 'bolder' };
   return (<Button color="primary" variant="contained" sx={sx}>
-    <FormattedMessage id={`customertable.header.spotlight.searchResults`} />
+    <FormattedMessage id={`userprofileTable.header.spotlight.results`} />
   </Button>);
 }
 

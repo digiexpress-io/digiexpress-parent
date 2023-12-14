@@ -1,7 +1,7 @@
 import { TableCell, TableCellProps, TableRow, styled, LinearProgress, Box } from '@mui/material';
 
 
-const lineHeight = 28;
+const lineHeight = 30;
 const lineHeightLarge = 60;
 
 const StyledLinearProgress: React.FC<{}> = () => {
@@ -9,7 +9,7 @@ const StyledLinearProgress: React.FC<{}> = () => {
 }
 
 
-const StyledTableCell = styled(TableCell)<TableCellProps & { rowtype?: 'large' }>(({ rowtype, theme }) => ({
+const StyledTableCell = styled(TableCell)<TableCellProps & { rowtype?: 'large' | 'medium' }>(({ rowtype, theme }) => ({
   textAlign: 'left',
   fontSize: "13px",
   fontWeight: '400',
