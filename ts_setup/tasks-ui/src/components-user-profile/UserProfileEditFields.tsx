@@ -132,7 +132,7 @@ const NotificationSettings: React.FC<{}> = () => {
   return (<Stack direction='column' spacing={2}>
 
     <FormControl component="fieldset" variant="standard">
-      <Typography variant='body1' fontWeight='400'>Select notification channel</Typography>
+      <Typography variant='body1' fontWeight='400'>Channel</Typography>
       <FormGroup>
         <FormControlLabel
           control={<StyledSwitch checked={state.a} onChange={handleChange} name="a" />}
@@ -147,7 +147,7 @@ const NotificationSettings: React.FC<{}> = () => {
 
     <Divider />
     <FormControl component="fieldset" variant="standard">
-      <Typography fontWeight='400'>Fine tune your notification types</Typography>
+      <Typography fontWeight='400'>Notification types</Typography>
 
       <FormGroup>
         <FormControlLabel

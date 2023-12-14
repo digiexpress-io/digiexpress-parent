@@ -1,8 +1,8 @@
 import React from 'react';
 import { Grid, Stack, Typography } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
-import { UserProfileAndOrg } from 'client';
 import { UserProfileDescriptor, UserProfileDescriptorImpl } from 'descriptor-user-profile';
+import { NotificationSettings } from '../UserProfileEditFields';
 import Context from 'context';
 
 import Burger from 'components-burger';
@@ -63,6 +63,10 @@ const SelectedUserProfileDialog: React.FC<{ open: boolean, onClose: () => void }
         <>
           ROLES TODO
         </>
+      </Burger.Section>
+      <Burger.Section>
+        <Typography fontWeight='bold'><FormattedMessage id='userProfile.frontoffice.notificationSettings' /></Typography>
+        <NotificationSettings />
       </Burger.Section>
     </Stack>
   </Burger.Dialog>
