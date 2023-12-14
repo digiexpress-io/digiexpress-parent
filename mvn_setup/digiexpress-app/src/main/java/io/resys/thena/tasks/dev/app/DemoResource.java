@@ -137,8 +137,8 @@ public class DemoResource {
   @Path("reinit")
   public Uni<TenantConfig> reinit() {
     return tenantClient.query().deleteAll()
-        .onItem().transformToUni(junk -> init())
-        .onItem().transformToUni(config -> reinitAssets().onItem().transform(assets -> config));
+        .onItem().transformToUni(junk -> init());
+        //.onItem().transformToUni(config -> reinitAssets().onItem().transform(assets -> config));
   }
   
   @GET
