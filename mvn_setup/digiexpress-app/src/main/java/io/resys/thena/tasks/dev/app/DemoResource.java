@@ -8,13 +8,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import io.dialob.client.spi.DialobComposerImpl;
 import io.resys.crm.client.api.CrmClient;
 import io.resys.crm.client.api.model.Customer;
 import io.resys.crm.client.api.model.CustomerCommand.UpsertSuomiFiPerson;
 import io.resys.crm.client.api.model.ImmutableUpsertSuomiFiPerson;
 import io.resys.sysconfig.client.api.SysConfigClient;
 import io.resys.sysconfig.client.mig.MigrationClient;
-import io.resys.sysconfig.client.mig.model.MigrationAssets;
 import io.resys.thena.projects.client.api.TenantConfigClient;
 import io.resys.thena.projects.client.api.model.ImmutableCreateTenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig;
@@ -136,7 +136,8 @@ public class DemoResource {
   @Path("reinit")
   public Uni<TenantConfig> reinit() {
     return tenantClient.query().deleteAll()
-        .onItem().transformToUni(junk -> init());
+        .onItem().transformToUni(junk -> init())
+        .onItem().transformToUni(config -> reinitAssets().onItem().transform(assets -> config));
   }
   
   @GET
@@ -148,15 +149,19 @@ public class DemoResource {
     if(init == null) {
       return Uni.createFrom().nothing();
     }
-    
     final var stencilAssets = mig.readStencil(init);
+    final var dialobAssets = mig.readDialob(init);
     
     return tenantClient.queryActiveTenantConfig().get(currentTenant.tenantId())
         .onItem().transform(config -> sysConfigClient.withTenantConfig(config.getId(), config.getRepoConfigs()))
         .onItem().transformToUni(client -> {
           
-          final var stencil = new StencilComposerImpl(client.getAssets().getConfig().getStencil()).migration().importData(stencilAssets);
-          return stencil;
+          return new StencilComposerImpl(client.getAssets().getConfig().getStencil()).migration().importData(stencilAssets)
+              .onItem().transformToUni(site -> {
+            
+            return new DialobComposerImpl(client.getAssets().getConfig().getDialob()).create(dialobAssets)
+                .onItem().transform(e -> site);
+          });
         });
   }
   @GET

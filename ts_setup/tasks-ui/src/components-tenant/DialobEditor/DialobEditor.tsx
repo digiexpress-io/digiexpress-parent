@@ -32,7 +32,6 @@ const DialobEditor: React.FC<{
   const backend = Context.useBackend();
   const { tenantConfig } = Context.useTenantConfig();
   const apiUrl = getApiUrl(backend);
-
   const tenantId = entry.tenantId;
   const formId: string = form?._id ?? '';
   const Composer = React.useCallback(() => <DialobInit

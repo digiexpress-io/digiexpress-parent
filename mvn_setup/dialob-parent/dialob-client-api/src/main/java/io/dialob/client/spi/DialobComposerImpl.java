@@ -1,8 +1,12 @@
 package io.dialob.client.spi;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import io.dialob.api.form.FormPutResponse;
+import io.dialob.api.form.FormValidationError;
+import io.dialob.api.form.ImmutableFormPutResponse;
 import io.dialob.client.api.DialobClient;
 import io.dialob.client.api.DialobComposer;
 import io.dialob.client.api.DialobDocument.DocumentType;
@@ -21,6 +25,9 @@ import io.dialob.client.spi.composer.DeleteEntityVisitor;
 import io.dialob.client.spi.composer.GetComposerDocumentState;
 import io.dialob.client.spi.composer.ImportReleaseVisitor;
 import io.dialob.client.spi.support.DialobAssert;
+import io.dialob.program.DialobFormValidator;
+import io.dialob.program.FormValidatorExecutor;
+import io.dialob.program.ValueSetValidator;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
@@ -46,6 +53,18 @@ public class DialobComposerImpl implements DialobComposer {
   public Uni<ComposerDocumentState> create(FormDocument asset) {
     return client.store().query().get().onItem().transform(this::composerState)
         .onItem().transformToUni(state -> client.store().batch(new CreateFormDocumentVisitor(state, asset, client).visit()))
+        .onItem().transform(savedEntity -> this.documentState(savedEntity));
+  }
+
+  @Override
+  public Uni<ComposerDocumentState> create(List<FormDocument> assets) {
+    return client.store().query().get().onItem().transform(this::composerState)
+        .onItem().transformToUni(state -> {
+          final var batch = assets.stream().map(asset -> new CreateFormDocumentVisitor(state, asset, client).visit())
+              .flatMap(e -> e.stream())
+              .toList();
+          return client.store().batch(batch);
+        })
         .onItem().transform(savedEntity -> this.documentState(savedEntity));
   }
 
@@ -133,8 +152,27 @@ public class DialobComposerImpl implements DialobComposer {
 
   @Override
   public Uni<FormPutResponse> validate(FormDocument asset) {
-    // TODO Auto-generated method stub
-    return null;
+    final var validator = getValidator();
+    final var errors = new ArrayList<FormValidationError>();
+    final var updatedForm = asset.getData();
+    final var includeForm = false;
+    
+    final ImmutableFormPutResponse.Builder putResponse = ImmutableFormPutResponse.builder().id(updatedForm.getId()).rev(updatedForm.getRev());
+    
+    errors.addAll(validator.validate(updatedForm));
+    
+    if (!errors.isEmpty()) {
+      putResponse.ok(false);
+      errors.forEach(putResponse::addErrors);
+    } else {
+      putResponse.ok(true);
+    }
+    if (includeForm) {
+      putResponse.form(updatedForm);
+    }
+
+    // Response is still OK even if there are rule building errors as the document is still saved.
+    return Uni.createFrom().item(putResponse.build());
   }
 
   @Override
@@ -168,4 +206,12 @@ public class DialobComposerImpl implements DialobComposer {
     return result;
   }
 
+  
+  private FormValidatorExecutor getValidator() {
+    final FormValidatorExecutor validator = new FormValidatorExecutor(Arrays.asList(
+        new DialobFormValidator(client.getConfig().getCompiler()),
+        new ValueSetValidator()
+        ));
+    return validator;
+  }
 }

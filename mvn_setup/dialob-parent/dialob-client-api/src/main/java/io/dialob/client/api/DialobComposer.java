@@ -25,6 +25,8 @@ public interface DialobComposer {
   Uni<ComposerDocumentState> get(@Nonnull String id, String rev);
   Uni<ComposerState> importRelease(FormReleaseDocument asset);
   Uni<ComposerReleaseState> create(@Nonnull CreateComposerRelease asset);
+  
+  Uni<ComposerDocumentState> create(@Nonnull List<FormDocument> asset);
   Uni<ComposerDocumentState> create(@Nonnull FormDocument asset);
   Uni<ComposerDocumentState> update(@Nonnull FormDocument asset);
   Uni<ComposerDocumentState> update(@Nonnull UpdateFormRevisionEntry asset);

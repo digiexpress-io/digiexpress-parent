@@ -210,7 +210,7 @@ public class BeanFactory {
           }
         })
         .deserializer(new io.resys.hdes.client.spi.store.BlobDeserializer(om))
-        .authorProvider(() -> "")
+        .authorProvider(() -> "no-author")
         .build();
       return HdesClientImpl.builder()
         .objectMapper(om)
@@ -237,7 +237,7 @@ public class BeanFactory {
           }
         })
         .deserializer(new io.dialob.client.spi.store.BlobDeserializer(om))
-        .authorProvider(() -> "")
+        .authorProvider(() -> "no-author")
         .build();
     return DialobClientImpl.builder()
         .store(new PgSqlDialobStore(config))

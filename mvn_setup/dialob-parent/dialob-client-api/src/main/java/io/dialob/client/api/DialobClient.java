@@ -26,6 +26,7 @@ import io.dialob.client.api.DialobDocument.FormRevisionDocument;
 import io.dialob.client.api.DialobErrorHandler.DocumentNotFoundException;
 import io.dialob.client.api.DialobStore.StoreEntity;
 import io.dialob.client.api.DialobStore.StoreState;
+import io.dialob.program.DialobFormValidator;
 import io.dialob.program.DialobProgram;
 import io.smallrye.mutiny.Uni;
 
@@ -40,7 +41,8 @@ public interface DialobClient {
   DialobStore store();
   RepoBuilder repo();
   DialobClient withRepo(String repoName, String headName);
-
+  
+  
   interface QuestionnaireExecutorBuilder {
     QuestionnaireExecutor create(String id, String rev, Consumer<QuestionnaireInit> initWith) throws DocumentNotFoundException ;
     QuestionnaireExecutor create(String id, Consumer<QuestionnaireInit> initWith) throws DocumentNotFoundException ;

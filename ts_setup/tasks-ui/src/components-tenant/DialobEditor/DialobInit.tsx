@@ -29,7 +29,7 @@ const DialobInit: React.FC<{
       apiUrl: apiUrl,
       previewUrl: "",
       tenantId: tenantId,
-      credentials: dialobOnly ? 'include' : undefined
+      credentials: undefined// dialobOnly ? 'include' : undefined
     },
     documentationUrl: '',
     itemEditors: DEFAULT_ITEM_CONFIG,

@@ -54,9 +54,13 @@ const store: TaskClient.Store = new TaskClient.DefaultStore({
     { id: 'WRENCH', url: baseUrl + "/q/digiexpress/api/" },
     { id: 'CONFIG', url: baseUrl + "/q/digiexpress/api/" },
     { id: 'HEALTH', url: baseUrl + "/q/digiexpress/api/" },
+    { id: 'EXT_DIALOB', url: baseUrl + "/q/digiexpress/api/dialob/" },
+    { id: 'EXT_DIALOB_EDIT', url: baseUrl + "/q/digiexpress/api/dialob/api/edit" },
 
+    /*
     { id: 'EXT_DIALOB', url: "http://localhost:92/dialob/" },
     { id: 'EXT_DIALOB_EDIT', url: "http://localhost:92/dialob/api" },
+    */
   ],
   performInitCheck: false,
   csrf: window._env_?.csrf,

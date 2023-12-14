@@ -60,7 +60,26 @@ public class MigrationClient {
     }
   }
   
+  public List<FormDocument> readDialob(MigrationAssets assets){
+    try {
+      final List<FormDocument> result = new ArrayList<>();
+      for(final var form : assets.getForms()) {
+        result.add(om.readValue(form, FormDocument.class));
+      }
+      return result;
+    } catch(IOException e) {
+      throw new RuntimeException(e.getMessage(), e);
+    }
+  }
   
+  public AstTag readHdes(MigrationAssets assets){
+    try {
+      return om.readValue(assets.getHdes(), AstTag.class);
+    } catch(IOException e) {
+      throw new RuntimeException(e.getMessage(), e);
+    }
+  }
+    
   
   public Uni<MigrationAssets> create() throws IOException {
     final var siteState = new StencilMigration(folder, om).execute();
