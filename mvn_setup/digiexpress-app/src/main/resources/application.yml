@@ -22,7 +22,11 @@ quarkus:
 
   vertx:
     keep-alive-time: PT10.000S
-    
+
+  native:
+    resources:
+      includes: asset_sysconfig_flat.json
+
 tenant:
   currentTenantId: "local_test_tenant"
   db:
