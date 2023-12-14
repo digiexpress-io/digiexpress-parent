@@ -26,6 +26,7 @@ class UserProfileDescriptorImpl implements UserProfileDescriptor {
   get created(): Date { return this._created }
   get updated(): Date { return this._updated }
   get email(): string { return this._entry.details.email }
+  get firstName(): string { return this._entry.details.firstName }
   get displayName(): string { return this._entry.details.lastName + " " + this._entry.details.firstName }
 }
 

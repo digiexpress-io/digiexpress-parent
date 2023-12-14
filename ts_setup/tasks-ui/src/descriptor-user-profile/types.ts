@@ -7,6 +7,7 @@ export interface UserProfileDescriptor {
   displayName: string,
   entry: UserProfile,
   created: Date,
+  updated: Date,
   notificationSettings: NotificationSetting[];
 }
 

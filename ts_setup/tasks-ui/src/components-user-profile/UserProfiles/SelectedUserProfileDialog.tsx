@@ -47,8 +47,16 @@ const SelectedUserProfileDialog: React.FC<{ open: boolean, onClose: () => void }
         <>
           <SectionLayout label='userProfile.frontoffice.id' value={state.user.id} />
           <SectionLayout label='userProfile.frontoffice.username' value={state.user.details.username} />
+          <SectionLayout label='userProfile.frontoffice.email' value={state.user.details.email} />
           <SectionLayout label='userProfile.frontoffice.created' value={<Burger.DateTimeFormatter type='dateTime' value={new Date(state.user.created)} />} />
           <SectionLayout label='userProfile.frontoffice.updated' value={<Burger.DateTimeFormatter type='dateTime' value={new Date(state.user.updated)} />} />
+        </>
+      </Burger.Section>
+
+      <Burger.Section>
+        <Typography fontWeight='bold'><FormattedMessage id='userProfile.frontoffice.user.roles' /></Typography>
+        <>
+          ROLES TODO
         </>
       </Burger.Section>
     </Stack>
