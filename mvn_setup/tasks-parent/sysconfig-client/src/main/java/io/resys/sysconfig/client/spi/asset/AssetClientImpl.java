@@ -5,8 +5,9 @@ import java.util.List;
 import io.resys.sysconfig.client.api.AssetClient;
 import io.resys.sysconfig.client.api.ImmutableAssetClientConfig;
 import io.resys.sysconfig.client.spi.asset.builders.AssetQueryImpl;
+import io.resys.sysconfig.client.spi.asset.builders.AssetSourceQueryImpl;
 import io.resys.sysconfig.client.spi.asset.exceptions.AssetClientException;
-import io.resys.sysconfig.client.spi.support.ErrorMsg;
+import io.resys.thena.docdb.support.ErrorMsg;
 import io.resys.thena.projects.client.api.TenantConfigClient;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
@@ -22,13 +23,23 @@ public class AssetClientImpl implements AssetClient {
   private final AssetClientConfig clientConfig;
 
   @Override
+  public AssetSourceQuery assetSourceQuery() {
+    if(clientConfig.getTenantConfigId().trim().isEmpty()) {
+      throw new AssetClientException(notLoaded());
+    }
+  
+    if(clientConfig.getRepoConfigs().isEmpty()) {
+       final var config = tenantClient.queryActiveTenantConfig().get(clientConfig.getTenantConfigId())
+          .onItem().transform(tenant -> withTenantConfig(clientConfig.getTenantConfigId(), tenant.getRepoConfigs()).getConfig());
+       return new AssetSourceQueryImpl(config);
+    }
+    return new AssetSourceQueryImpl(Uni.createFrom().item(clientConfig));
+  }
+  
+  @Override
   public AssetQuery assetQuery() {
     if(clientConfig.getTenantConfigId().trim().isEmpty()) {
-      throw new AssetClientException(ErrorMsg.builder()
-          .withCode("TENANT_CONFIG_ID_NOT_CONFIGURED")
-          .withProps(JsonObject.of("tenantConfigId", clientConfig.getTenantConfigId()))
-          .withMessage("Can't get asset configuration because they are not configured or loaded!")
-          .toString());
+      throw new AssetClientException(notLoaded());
     }
     
     if(clientConfig.getRepoConfigs().isEmpty()) {
@@ -84,5 +95,13 @@ public class AssetClientImpl implements AssetClient {
   @Override
   public AssetClient withRepoId(String repoId) {
     return new AssetClientImpl(tenantClient.withRepoId(repoId), clientConfig);
+  }
+  
+  private String notLoaded() {
+    return ErrorMsg.builder()
+    .withCode("TENANT_CONFIG_ID_NOT_CONFIGURED")
+    .withProps(JsonObject.of("tenantConfigId", clientConfig.getTenantConfigId()))
+    .withMessage("Can't get asset configuration because they are not configured or loaded!")
+    .toString();
   }
 }

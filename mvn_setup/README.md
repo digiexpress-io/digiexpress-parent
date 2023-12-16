@@ -1,5 +1,14 @@
+# Start application locally using maven and postgre db
+
+```shell
+docker-compose -f docker-db-only.yml up -d
+
+cd digiexpress-app
+mvn compile quarkus:dev
+```
+
+
 # Build docker image locally
-TODO
 
 # Run docker image
 ```shell

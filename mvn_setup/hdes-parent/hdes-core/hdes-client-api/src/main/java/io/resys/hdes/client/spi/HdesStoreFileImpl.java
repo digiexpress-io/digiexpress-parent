@@ -1,5 +1,11 @@
 package io.resys.hdes.client.spi;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+
 /*-
  * #%L
  * hdes-client-api
@@ -24,8 +30,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
 import groovy.util.logging.Slf4j;
 import io.resys.hdes.client.api.HdesStore;
+import io.resys.hdes.client.api.ImmutableBranch;
 import io.resys.hdes.client.api.ImmutableStoreEntity;
 import io.resys.hdes.client.spi.store.BlobDeserializer;
 import io.resys.hdes.client.spi.store.ImmutableThenaConfig;
@@ -39,11 +47,8 @@ import io.resys.thena.docdb.store.file.DocDBFactoryFile;
 import io.resys.thena.docdb.store.file.FileErrors;
 import io.resys.thena.docdb.store.file.spi.FilePoolImpl;
 import io.resys.thena.docdb.store.file.tables.Table.FilePool;
+import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.UUID;
 
 @lombok.extern.slf4j.Slf4j
 public class HdesStoreFileImpl extends ThenaStoreTemplate implements HdesStore {
@@ -174,5 +179,16 @@ public class HdesStoreFileImpl extends ThenaStoreTemplate implements HdesStore {
           .build();
       return new HdesStoreFileImpl(config);
     }
+  }
+
+  @Override
+  public BranchQuery queryBranches() {
+    return new BranchQuery() {
+      
+      @Override
+      public Uni<List<Branch>> findAll() {
+        return Uni.createFrom().item(Arrays.asList(ImmutableBranch.builder().name(getHeadName()).commitId("file-system").build()));
+      }
+    };
   }
 }

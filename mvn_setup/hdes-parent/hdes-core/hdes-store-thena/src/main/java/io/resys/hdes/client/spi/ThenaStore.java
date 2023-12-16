@@ -1,26 +1,34 @@
 package io.resys.hdes.client.spi;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
 import io.resys.hdes.client.api.HdesStore;
+import io.resys.hdes.client.api.ImmutableBranch;
 import io.resys.hdes.client.api.ImmutableStoreEntity;
+import io.resys.hdes.client.api.ImmutableStoreExceptionMsg;
+import io.resys.hdes.client.api.exceptions.StoreException;
 import io.resys.hdes.client.spi.store.BlobDeserializer;
 import io.resys.hdes.client.spi.store.ImmutableThenaConfig;
 import io.resys.hdes.client.spi.store.ThenaConfig;
 import io.resys.hdes.client.spi.store.ThenaStoreTemplate;
 import io.resys.hdes.client.spi.util.HdesAssert;
 import io.resys.thena.docdb.api.DocDB;
+import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.docdb.store.sql.DbStateSqlImpl;
 import io.resys.thena.docdb.store.sql.PgErrors;
+import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.sqlclient.PoolOptions;
 import lombok.extern.slf4j.Slf4j;
-
-import java.io.IOException;
-import java.util.UUID;
 
 @Slf4j
 public class ThenaStore extends ThenaStoreTemplate implements HdesStore {
@@ -37,6 +45,34 @@ public class ThenaStore extends ThenaStoreTemplate implements HdesStore {
   protected HdesStore createWithNewConfig(ThenaConfig config) {
     return new ThenaStore(config);
   }
+  @Override
+  public BranchQuery queryBranches() {
+    return new BranchQuery() {
+      @Override
+      public Uni<List<Branch>> findAll() {
+        return getConfig().getClient().git().project().projectName(getRepoName())
+            .get().onItem().transform(objects -> {
+              if(objects.getStatus() != QueryEnvelopeStatus.OK) {
+                throw new StoreException("HDES_BRANCH_QUERY_FAIL", null, 
+                    ImmutableStoreExceptionMsg.builder()
+                    .id(objects.getRepo().getId())
+                    .value(objects.getRepo().getName())
+                    .addAllArgs(objects.getMessages().stream().map(message->message.getText()).collect(Collectors.toList()))
+                    .build()); 
+              }
+              
+              return objects.getObjects().getBranches().values().stream()
+                  .map(branch -> {
+                    final Branch result = ImmutableBranch.builder().commitId(branch.getCommit()).name(branch.getName()).build();
+                    
+                    return result;
+                  })
+                  .toList();
+            });
+      }
+    };
+  }
+  
   public static Builder builder() {
     return new Builder();
   }

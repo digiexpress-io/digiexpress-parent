@@ -397,4 +397,8 @@ public class GitStore implements HdesStore {
   public StoreRepoBuilder repo() {
     throw new RuntimeException("not implemented");
   }
+  @Override
+  public BranchQuery queryBranches() {
+    throw new RuntimeException("not implemented");
+  }
 }

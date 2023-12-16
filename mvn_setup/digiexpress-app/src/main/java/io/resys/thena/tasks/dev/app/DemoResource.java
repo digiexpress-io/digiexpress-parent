@@ -160,15 +160,14 @@ public class DemoResource {
         .onItem().transformToUni(client -> {
           
           return new StencilComposerImpl(client.getAssets().getConfig().getStencil()).migration().importData(stencilAssets)
-              .onItem().transformToUni(site -> {
-
-            return new DialobComposerImpl(client.getAssets().getConfig().getDialob()).create(dialobAssets)
-                .onItem().transform(e -> site);
-          })
-          .onItem().transformToUni(site -> {
-            
+          .onItem().transformToUni(site -> {            
             return new HdesComposerImpl(client.getAssets().getConfig().getHdes()).importTag(wrenchAssets).onItem().transform(data -> site);
-            
+          })
+          .onItem().transformToUni(site -> {            
+            return new DialobComposerImpl(client.getAssets().getConfig().getDialob()).create(dialobAssets).onItem().transform(e -> site);
+          })
+          .onItem().transformToUni(site -> {            
+            return client.createConfig().createOne(init.getCommand()).onItem().transform(e -> site);
           });
         });
   }

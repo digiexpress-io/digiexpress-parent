@@ -24,6 +24,7 @@ import io.thestencil.client.api.StencilClient;
 
 public interface AssetClient {
 
+  AssetSourceQuery assetSourceQuery();
   AssetQuery assetQuery();
   AssetClient withRepoId(String repoId);
   
@@ -31,11 +32,14 @@ public interface AssetClient {
   AssetClient withTenantConfig(String tenantConfigId, List<TenantRepoConfig> tenantConfig);
   AssetClientConfig getConfig();
   
+  interface AssetSourceQuery {
+    Uni<List<AssetSource>> findAll();
+  }
+  
   interface AssetQuery {
     Uni<WrenchAssets> getWrenchAsset(String releaseId);
     Uni<StencilAssets> getStencilAsset(String releaseId);
     Uni<List<DialobAsset>> getDialobAssets(List<String> formId);
-
     Multi<Asset> findAll();
   }
   
@@ -47,6 +51,20 @@ public interface AssetClient {
     DialobClient getDialob();
     HdesClient getHdes();
     StencilClient getStencil();
+  }
+
+  @Value.Immutable @JsonSerialize(as = ImmutableAssetSource.class) @JsonDeserialize(as = ImmutableAssetSource.class)
+  interface AssetSource {
+    String getId();
+    String getAssetName();
+    String getBranchName();
+    String getLabelName();
+    AssetType getAssetType();
+    AssetBranchType getBranchType();
+    
+  }
+  enum AssetBranchType {
+    RELEASE, BRANCH 
   }
   
   @JsonTypeInfo(

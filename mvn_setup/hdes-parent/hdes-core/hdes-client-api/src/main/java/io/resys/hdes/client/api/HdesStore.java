@@ -43,12 +43,17 @@ public interface HdesStore {
   Uni<StoreEntity> delete(DeleteAstType deleteType);
   Uni<List<StoreEntity>> batch(ImportStoreEntity batchType);
   
+  BranchQuery queryBranches();
   QueryBuilder query();
   HistoryQuery history();
   String getRepoName();
   String getHeadName();
   StoreRepoBuilder repo();
   HdesStore withRepo(String repoName, String headName);
+  
+  interface BranchQuery {
+    Uni<List<Branch>> findAll();
+  }
   
   interface StoreRepoBuilder {
     StoreRepoBuilder repoName(String repoName);
@@ -152,6 +157,15 @@ public interface HdesStore {
     String getId();
     String getValue();
     List<String> getArgs();
+  }
+  
+  
+  @JsonSerialize(as = ImmutableBranch.class)
+  @JsonDeserialize(as = ImmutableBranch.class)
+  @Value.Immutable
+  interface Branch {
+    String getCommitId();
+    String getName();
   }
   
 

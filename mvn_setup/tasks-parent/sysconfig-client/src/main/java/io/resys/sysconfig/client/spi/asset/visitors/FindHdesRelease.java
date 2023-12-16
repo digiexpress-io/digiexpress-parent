@@ -7,7 +7,7 @@ import io.resys.hdes.client.api.HdesStore;
 import io.resys.sysconfig.client.api.AssetClient.WrenchAssets;
 import io.resys.sysconfig.client.api.ImmutableWrenchAssets;
 import io.resys.sysconfig.client.spi.asset.exceptions.AssetClientException;
-import io.resys.sysconfig.client.spi.support.ErrorMsg;
+import io.resys.thena.docdb.support.ErrorMsg;
 import io.resys.thena.docdb.support.OidUtils;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;

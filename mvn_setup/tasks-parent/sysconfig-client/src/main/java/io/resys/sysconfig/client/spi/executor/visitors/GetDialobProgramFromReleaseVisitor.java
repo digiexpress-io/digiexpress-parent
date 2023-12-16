@@ -14,7 +14,7 @@ import io.resys.sysconfig.client.api.model.SysConfigRelease;
 import io.resys.sysconfig.client.api.model.SysConfigRelease.AssetType;
 import io.resys.sysconfig.client.api.model.SysConfigRelease.SysConfigAsset;
 import io.resys.sysconfig.client.spi.executor.exceptions.ExecutorException;
-import io.resys.sysconfig.client.spi.support.ErrorMsg;
+import io.resys.thena.docdb.support.ErrorMsg;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 

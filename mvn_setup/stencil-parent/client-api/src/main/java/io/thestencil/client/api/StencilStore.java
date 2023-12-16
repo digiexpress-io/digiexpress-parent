@@ -24,6 +24,9 @@ import java.util.List;
 
 import org.immutables.value.Value;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.StencilClient.Entity;
 import io.thestencil.client.api.StencilClient.EntityBody;
@@ -41,6 +44,12 @@ public interface StencilStore {
   StencilConfig getConfig();
   
   StencilStore withRepo(String repoId, String headName);
+  BranchQuery queryBranches();
+
+  interface BranchQuery {
+    Uni<List<Branch>> findAll();
+  }
+  
   
   @Value.Immutable
   @SuppressWarnings("rawtypes")
@@ -48,6 +57,14 @@ public interface StencilStore {
     List<Entity> getToBeCreated();
     List<Entity> getToBeSaved();
     List<Entity> getToBeDeleted();
+  }
+  
+  @JsonSerialize(as = ImmutableBranch.class)
+  @JsonDeserialize(as = ImmutableBranch.class)
+  @Value.Immutable
+  interface Branch {
+    String getCommitId();
+    String getName();
   }
   
   

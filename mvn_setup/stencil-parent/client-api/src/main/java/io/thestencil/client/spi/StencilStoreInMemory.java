@@ -21,6 +21,7 @@ package io.thestencil.client.spi;
  */
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -34,6 +35,7 @@ import io.resys.thena.docdb.api.actions.PullActions;
 import io.resys.thena.docdb.api.actions.RepoActions;
 import io.resys.thena.docdb.api.actions.TagActions;
 import io.smallrye.mutiny.Uni;
+import io.thestencil.client.api.ImmutableBranch;
 import io.thestencil.client.api.ImmutableStencilConfig;
 import io.thestencil.client.api.StencilClient.Entity;
 import io.thestencil.client.api.StencilClient.EntityBody;
@@ -197,4 +199,14 @@ public class StencilStoreInMemory implements StencilStore {
     return this;
   }
 
+  @Override
+  public BranchQuery queryBranches() {
+    return new BranchQuery() {
+      
+      @Override
+      public Uni<List<Branch>> findAll() {
+        return Uni.createFrom().item(Arrays.asList(ImmutableBranch.builder().name(getHeadName()).commitId("in-memory").build()));
+      }
+    };
+  }
 }

@@ -1,5 +1,7 @@
 package io.thestencil.client.spi;
 
+import java.util.List;
+
 /*-
  * #%L
  * stencil-client-api
@@ -21,16 +23,21 @@ package io.thestencil.client.spi;
  */
 
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import io.resys.thena.docdb.api.actions.RepoActions.RepoStatus;
+import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.docdb.api.models.Repo.RepoType;
 import io.smallrye.mutiny.Uni;
+import io.thestencil.client.api.ImmutableBranch;
 import io.thestencil.client.api.ImmutableStencilConfig;
 import io.thestencil.client.api.StencilClient.EntityType;
 import io.thestencil.client.api.StencilConfig;
 import io.thestencil.client.api.StencilStore;
 import io.thestencil.client.spi.builders.QueryBuilderImpl;
+import io.thestencil.client.spi.exceptions.ImmutableStoreExceptionMsg;
 import io.thestencil.client.spi.exceptions.RepoException;
+import io.thestencil.client.spi.exceptions.StoreException;
 
 
 public class StencilStoreImpl extends PersistenceCommands implements StencilStore {
@@ -52,7 +59,34 @@ public class StencilStoreImpl extends PersistenceCommands implements StencilStor
         .headName(headName)
         .build());
   }
-  
+  @Override
+  public BranchQuery queryBranches() {
+    return new BranchQuery() {
+      @Override
+      public Uni<List<Branch>> findAll() {
+        return getConfig().getClient().git().project().projectName(getRepoName())
+            .get().onItem().transform(objects -> {
+              if(objects.getStatus() != QueryEnvelopeStatus.OK) {
+                throw new StoreException("STENCIL_BRANCH_QUERY_FAIL", null, 
+                    ImmutableStoreExceptionMsg.builder()
+                    .id(objects.getRepo().getId())
+                    .value(objects.getRepo().getName())
+                    .addAllArgs(objects.getMessages().stream().map(message->message.getText()).collect(Collectors.toList()))
+                    .build()); 
+              }
+              
+              return objects.getObjects().getBranches().values().stream()
+                  .map(branch -> {
+                    final Branch result = ImmutableBranch.builder().commitId(branch.getCommit()).name(branch.getName()).build();
+                    
+                    return result;
+                  })
+                  .toList();
+            });
+      }
+    };
+  }
+    
   @Override
   public QueryBuilder query() {
     return new QueryBuilderImpl(config);

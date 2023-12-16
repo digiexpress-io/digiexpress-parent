@@ -8,7 +8,7 @@ import io.dialob.client.api.DialobStore;
 import io.resys.sysconfig.client.api.AssetClient.DialobAsset;
 import io.resys.sysconfig.client.api.ImmutableDialobAsset;
 import io.resys.sysconfig.client.spi.asset.exceptions.AssetClientException;
-import io.resys.sysconfig.client.spi.support.ErrorMsg;
+import io.resys.thena.docdb.support.ErrorMsg;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 

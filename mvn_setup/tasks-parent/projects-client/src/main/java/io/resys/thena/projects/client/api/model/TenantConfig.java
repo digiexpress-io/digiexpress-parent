@@ -7,8 +7,14 @@ import javax.annotation.Nullable;
 
 import org.immutables.value.Value;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import io.resys.thena.docdb.support.ErrorMsg;
+import io.vertx.core.json.JsonObject;
+
+
 
 @Value.Immutable @JsonSerialize(as = ImmutableTenantConfig.class) @JsonDeserialize(as = ImmutableTenantConfig.class)
 public interface TenantConfig extends Document {
@@ -25,6 +31,19 @@ public interface TenantConfig extends Document {
   List<TenantConfigTransaction> getTransactions(); 
   @Value.Default default DocumentType getDocumentType() { return DocumentType.TENANT_CONFIG; }
 
+  
+  @JsonIgnore
+  default TenantRepoConfig getRepoConfig(TenantRepoConfigType type) {
+    final var config = getRepoConfigs().stream().filter(entry -> entry.getRepoType() == type).findFirst();
+    if(config.isEmpty()) {
+      throw new TenantConfigDocumentException(ErrorMsg.builder()
+      .withCode("REPO_CONFIG_NOT_FOUND")
+      .withProps(JsonObject.of("tenantId", getId() , "repoConfigs", getRepoConfigs()))
+      .withMessage("Can't find repo config of type: " + type+ "!")
+      .toString());
+    }
+    return config.get();
+  }
 
 
   enum TenantStatus { IN_FORCE, ARCHIVED }
@@ -49,5 +68,13 @@ public interface TenantConfig extends Document {
   interface TenantConfigTransaction extends Serializable {
     String getId();
     List<TenantConfigCommand> getCommands(); 
+  }
+  
+  
+  class TenantConfigDocumentException extends RuntimeException {
+    private static final long serialVersionUID = 2015078308320434722L;
+    public TenantConfigDocumentException(String code) {
+      super(code);
+    }
   }
 }

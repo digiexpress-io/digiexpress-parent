@@ -23,7 +23,9 @@ package io.resys.hdes.client.spi;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.resys.hdes.client.api.HdesComposer.StoreDump;
+import io.resys.hdes.client.api.HdesStore.Branch;
 import io.resys.hdes.client.api.HdesStore;
+import io.resys.hdes.client.api.ImmutableBranch;
 import io.resys.hdes.client.api.ImmutableStoreEntity;
 import io.resys.hdes.client.api.ImmutableStoreState;
 import io.resys.hdes.client.api.ast.AstBody.AstBodyType;
@@ -332,5 +334,15 @@ public class HdesInMemoryStore implements HdesStore {
   @Override
   public HdesStore withRepo(String repoName, String headName) {
     return this;
+  }
+  @Override
+  public BranchQuery queryBranches() {
+    return new BranchQuery() {
+      
+      @Override
+      public Uni<List<Branch>> findAll() {
+        return Uni.createFrom().item(Arrays.asList(ImmutableBranch.builder().name(getHeadName()).commitId("in-memory").build()));
+      }
+    };
   }
 }

@@ -1,4 +1,4 @@
-package io.resys.sysconfig.client.spi.support;
+package io.resys.thena.docdb.support;
 
 import io.vertx.core.json.JsonObject;
 
@@ -20,7 +20,7 @@ public interface ErrorMsg {
     public Builder withException(Exception e) { this.e = e; return this; }
 
     public String toString() {
-      SysConfigAssert.notEmpty(code, () -> "code must be defined!");
+      RepoAssert.notEmpty(code, () -> "code must be defined!");
       final var result = new StringBuilder();
       result.append("code/").append(code).append("/").append(message);
       if(props != null) {
