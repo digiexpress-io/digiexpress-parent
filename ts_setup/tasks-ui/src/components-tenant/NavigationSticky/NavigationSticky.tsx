@@ -1,7 +1,7 @@
 import React from 'react';
-import { Stack, Toolbar, AppBar, Box, Typography, Grid, Divider } from '@mui/material';
+import { Box, Typography, Grid, Divider } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
-
+import { NavigationSticky } from 'components-generic';
 
 // Box widths must match those defined in DialobItem.tsx to align the columns
 const DialobItemHeaders: React.FC<{}> = () => {
@@ -24,19 +24,19 @@ const DialobItemHeaders: React.FC<{}> = () => {
 }
 
 
-const NavigationSticky: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const ExtendedNavigationSticky: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
   return (
-    <AppBar color='inherit' position='sticky' sx={{ boxShadow: 1 }}>
-      <Toolbar sx={{ backgroundColor: 'table.main', '&.MuiToolbar-root': { p: 1, m: 0 } }}>
-        <Stack direction='row' spacing={1} alignItems='center'>
-          {children}
-        </Stack>
-      </Toolbar>
-      <Divider />
-      <DialobItemHeaders />
-    </AppBar>
+    <NavigationSticky extendedAppBar={(
+      <>
+        <Divider />
+        <DialobItemHeaders />
+      </>)}>
+      {children}
+    </NavigationSticky>
   );
 }
 
-export default NavigationSticky;
+export default ExtendedNavigationSticky;
+
+

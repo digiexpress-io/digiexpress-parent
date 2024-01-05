@@ -5,7 +5,7 @@ import { FormattedMessage } from 'react-intl';
 
 import Context from 'context';
 import { FilterByRoles, FilterBy } from 'descriptor-task';
-import { NavigationButtonSearch } from '../NavigationSticky';
+import { ButtonSearch } from 'components-generic';
 
 const FilterRoles: React.FC<{
   onChange: (value: string[]) => void;
@@ -24,7 +24,7 @@ const FilterRoles: React.FC<{
   const filterByRoles = props.value.find(filter => filter.type === 'FilterByRoles') as FilterByRoles | undefined;
 
   return (<>
-    <NavigationButtonSearch onClick={handleClick} id='taskSearch.searchBar.filterRoles' values={{ count: filterByRoles?.roles.length }} />
+    <ButtonSearch onClick={handleClick} id='taskSearch.searchBar.filterRoles' values={{ count: filterByRoles?.roles.length }} />
 
     <Menu sx={{ width: 320 }}
       anchorEl={anchorEl}

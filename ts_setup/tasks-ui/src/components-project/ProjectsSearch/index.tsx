@@ -3,8 +3,9 @@ import { TableHead, TableCell, TableRow, Box, Stack } from '@mui/material';
 
 import Context from 'context';
 import { ProjectDescriptor, Group } from 'descriptor-project';
+import { NavigationSticky } from 'components-generic';
+
 import ProjectsTable from '../ProjectsTable';
-import { NavigationSticky } from '../NavigationSticky';
 import FilterRepoType from './FilterRepoType';
 import FilterUsers from './FilterUsers';
 import FilterByString from './FilterByString';

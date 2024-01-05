@@ -5,7 +5,7 @@ import { FormattedMessage } from 'react-intl';
 
 import Client from 'client';
 import { FilterByStatus, FilterBy } from 'descriptor-task';
-import { NavigationButtonSearch } from '../NavigationSticky';
+import { ButtonSearch } from 'components-generic';
 
 
 const statustypes: Client.TaskStatus[] = ['CREATED', 'IN_PROGRESS', 'COMPLETED', 'REJECTED'];
@@ -26,7 +26,7 @@ const FilterStatus: React.FC<{
   const filterByStatus = props.value.find(filter => filter.type === 'FilterByStatus') as FilterByStatus | undefined;
 
   return (<>
-    <NavigationButtonSearch onClick={handleClick} id='taskSearch.searchBar.filterStatus' values={{ count: filterByStatus?.status.length }} />
+    <ButtonSearch onClick={handleClick} id='taskSearch.searchBar.filterStatus' values={{ count: filterByStatus?.status.length }} />
 
     <Menu sx={{ width: 320 }}
       anchorEl={anchorEl}

@@ -11,11 +11,14 @@ import DatePicker from '../DatePicker';
 import AssigneePicker from './AssigneePicker';
 import { ChecklistItemActionProps, ChecklistItemComponentProps } from './checklist-types';
 import { demoAssignees } from './checklist-demo';
+import { white_mud } from 'components-colors';
+
+
 
 const ChecklistItemActions: React.FC<ChecklistItemActionProps> = (props) => {
   const { mode, dueDate, assigneeIds, variant, onDeleteClick, setAssigneePickerOpen, setDatePickerOpen } = props;
 
-  const hoverSx = variant === 'hover' ? { position: 'absolute', zIndex: 1, top: '10%', right: 0, backgroundColor: '#F5F5F5' } : {};
+  const hoverSx = variant === 'hover' ? { position: 'absolute', zIndex: 1, top: '10%', right: 0, backgroundColor: white_mud } : {};
   const dateButtonColor = dueDate ? 'primary' : 'inherit';
   const assigneesButtonColor = assigneeIds.length ? 'primary' : 'inherit';
 

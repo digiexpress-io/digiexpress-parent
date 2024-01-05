@@ -7,7 +7,7 @@ interface TaskListTabState {
   label: string,
   color: string,
   group: Group,
-  disabled: boolean,
+  selected: boolean,
   count: number | undefined
 }
 
@@ -39,7 +39,7 @@ class ImmutableTaskListState implements TaskListState {
   get activeTask() { return this._activeTask };
   get tabs() { return this._tabs };
   withActiveTab(activeTab: number): TaskListState {
-    return new ImmutableTaskListState({ activeTab, activeTask: this._activeTask, tabs: this._tabs.map((tab) => ({ ...tab, disabled: tab.id !== activeTab })) });
+    return new ImmutableTaskListState({ activeTab, activeTask: this._activeTask, tabs: this._tabs.map((tab) => ({ ...tab, selected: tab.id === activeTab })) });
   }
 
   withActiveTask(activeTask: TaskDescriptor | undefined): TaskListState {
@@ -56,7 +56,7 @@ class ImmutableTaskListState implements TaskListState {
 }
 
 
-function getActiveTab(tabs: TaskListTabState[]): number {
+function getFirstTabWithData(tabs: TaskListTabState[]): number {
   for (const tab of tabs) {
     if (tab.group.records.length) {
       return tab.id;
@@ -77,7 +77,7 @@ const initTable = (records: TaskDescriptor[]) => new Table.TablePaginationImpl<T
 
 
 function initTabs(tabs: TaskListTabState[]): TaskListState {
-  const activeTab = getActiveTab(tabs);
+  const activeTab = getFirstTabWithData(tabs);
 
   return new ImmutableTaskListState({
     activeTab,

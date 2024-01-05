@@ -1,10 +1,6 @@
 
 import { TenantEntry, FormTechnicalName, FormTitle, Tenant, TenantId, UserProfileAndOrg, DialobSession } from 'client';
 
-export interface PaletteType {
-  colors: { red: string, green: string, yellow: string, blue: string, violet: string }
-}
-
 export interface TenantPaletteType { }
 export type GroupBy = 'tenant' | 'none';
 export interface Group {
@@ -53,7 +49,6 @@ export interface TenantState {
   tenants: TenantDescriptor[];
   activeTenant: TenantId | undefined;
   activeTenantEntry: FormTechnicalName | undefined;
-  palette: TenantPaletteType;
   profile: UserProfileAndOrg;
 
   withProfile(profile: UserProfileAndOrg): TenantState;
@@ -68,8 +63,7 @@ export interface TenantContextType {
   setState: TenantDispatch;
   reload: () => Promise<void>;
   loading: boolean;
-  state: TenantState,
-  palette: PaletteType;
+  state: TenantState;
 }
 
 export type TenantMutator = (prev: TenantState) => TenantState;

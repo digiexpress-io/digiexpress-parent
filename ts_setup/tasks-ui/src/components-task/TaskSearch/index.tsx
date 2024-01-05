@@ -2,15 +2,15 @@ import React from 'react';
 import { TableHead, TableCell, TableRow, Box, Stack } from '@mui/material';
 
 import Context from 'context';
+import { FilterByString, NavigationSticky } from 'components-generic';
 import { TaskDescriptor, Group } from 'descriptor-task';
+
 import TaskTable from '../TaskTable';
-import { NavigationSticky } from '../NavigationSticky';
 import { FilterStatus } from './FilterStatus';
 import { FilterAssignees } from './FilterAssignees';
 import { FilterRoles } from './FilterRoles';
 import { FilterPriority } from './FilterPriority';
 import { FilterColumns } from './FilterColumns';
-import { FilterByString } from 'components-generic';
 import { GroupBySelect } from './GroupBy';
 
 

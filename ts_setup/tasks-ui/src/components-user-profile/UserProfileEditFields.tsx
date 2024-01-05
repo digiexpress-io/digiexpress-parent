@@ -5,6 +5,7 @@ import { useIntl } from 'react-intl';
 import { UserProfileDescriptor } from 'descriptor-user-profile'
 import Client from 'client';
 import Context from 'context';
+import { blue_mud2, grey, purple } from 'components-colors';
 
 const FirstName: React.FC<{ init: UserProfileDescriptor }> = ({ init }) => {
 
@@ -90,7 +91,7 @@ const StyledSwitch = styled((props: SwitchProps) => (
       transform: 'translateX(16px)',
       color: '#fff',
       '& + .MuiSwitch-track': {
-        backgroundColor: 'rgba(80, 72, 229, 0.9)',
+        backgroundColor: purple,
         opacity: 1,
         border: 0,
       },
@@ -115,7 +116,7 @@ const StyledSwitch = styled((props: SwitchProps) => (
   },
   '& .MuiSwitch-track': {
     borderRadius: 26 / 2,
-    backgroundColor: theme.palette.mode === 'light' ? '#E9E9EA' : '#39393D',
+    backgroundColor: theme.palette.mode === 'light' ? blue_mud2 : grey,
     opacity: 1,
     transition: theme.transitions.create(['background-color'], {
       duration: 500,

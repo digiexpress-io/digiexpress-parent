@@ -3,7 +3,7 @@ import { Task, UserProfileAndOrg } from 'client';
 import { parseISO, isAfter, isEqual, differenceInCalendarDays, differenceInDays } from 'date-fns';
 
 import { TaskDescriptor, FilterBy, AssigneeGroupType, TeamGroupType } from './types';
-import { _nobody_, Palette } from './constants';
+import { _nobody_ } from './constants';
 
 
 export function getDaysUntilDue(task: Task, today: Date) {
@@ -110,20 +110,4 @@ export function applyDescFilter(desc: TaskDescriptor, filter: FilterBy): boolean
   }
   // @ts-ignore
   throw new Error("unknow filter" + filter)
-}
-
-export function withColors<T>(input: T[]): { color: string, value: T }[] {
-  const result: { color: string, value: T }[] = [];
-  const colors = Object.values(Palette.colors);
-  let index = 0;
-  for (const value of input) {
-    result.push({ value, color: colors[index] })
-    if (colors.length - 1 === index) {
-      index = 0;
-    } else {
-      index++;
-    }
-  }
-
-  return result;
 }

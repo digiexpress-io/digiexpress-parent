@@ -5,6 +5,7 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import { FormattedMessage } from 'react-intl';
 import { SingleEvent, SingleEventDiff, AssignTaskEventBody } from 'descriptor-task';
 import Burger from 'components-burger';
+import { git_green, git_red } from 'components-colors';
 
 
 const DiffContainer: React.FC<{
@@ -39,14 +40,14 @@ const DiffContainer: React.FC<{
 
 
 const DiffRemoved: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <Box display='flex' alignItems='center' sx={{ backgroundColor: 'rgb(254, 237, 240)' }}>
+  <Box display='flex' alignItems='center' sx={{ backgroundColor: git_red }}>
     <RemoveIcon sx={{ fontSize: '10pt', mr: 1, color: 'red' }} />
     <Typography>{children}</Typography>
   </Box>
 )
 
 const DiffAdded: React.FC<{ children: React.ReactNode | string }> = ({ children }) => (
-  <Box display='flex' alignItems='center' sx={{ backgroundColor: 'rgb(230, 255, 237)' }}>
+  <Box display='flex' alignItems='center' sx={{ backgroundColor: git_green }}>
     <AddIcon sx={{ fontSize: '10pt', mr: 1, color: 'green' }} />
     <Typography>{children}</Typography>
   </Box>

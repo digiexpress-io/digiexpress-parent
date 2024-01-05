@@ -1,9 +1,11 @@
-import * as React from 'react';
+import React from 'react';
 import { Menu, ListItemText, MenuList, MenuItem, ListItemIcon } from '@mui/material';
 import Check from '@mui/icons-material/Check';
+
 import Context from 'context';
 import { FilterByUsers, FilterBy } from 'descriptor-project';
-import { NavigationButtonSearch } from '../NavigationSticky';
+import { ButtonSearch } from 'components-generic';
+
 
 export default function DenseMenu(
   props: {
@@ -24,7 +26,7 @@ export default function DenseMenu(
   const filterByRoles = props.value.find(filter => filter.type === 'FilterByUsers') as FilterByUsers | undefined;
 
   return (<>
-    <NavigationButtonSearch onClick={handleClick} id='project.search.searchBar.filterUsers' values={{ count: filterByRoles?.users.length }} />
+    <ButtonSearch onClick={handleClick} id='project.search.searchBar.filterUsers' values={{ count: filterByRoles?.users.length }} />
 
     <Menu sx={{ width: 320 }}
       anchorEl={anchorEl}

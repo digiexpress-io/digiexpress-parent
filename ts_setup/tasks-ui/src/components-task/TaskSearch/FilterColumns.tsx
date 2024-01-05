@@ -3,7 +3,7 @@ import { Menu, MenuItem, MenuList, ListItemIcon, ListItemText, Typography } from
 import Check from '@mui/icons-material/Check';
 import { FormattedMessage } from 'react-intl';
 import { TaskDescriptor } from 'descriptor-task';
-import { NavigationButtonSearch } from '../NavigationSticky';
+import { ButtonSearch } from 'components-generic';
 
 const FilterColumns: React.FC<{
   onChange: (value: (keyof TaskDescriptor)[]) => void;
@@ -21,7 +21,7 @@ const FilterColumns: React.FC<{
   }
 
   return (<>
-    <NavigationButtonSearch onClick={handleClick} id='taskSearch.searchBar.filterColumns' values={undefined} />
+    <ButtonSearch onClick={handleClick} id='taskSearch.searchBar.filterColumns' values={undefined} />
 
     <Menu sx={{ width: 320 }}
       anchorEl={anchorEl}

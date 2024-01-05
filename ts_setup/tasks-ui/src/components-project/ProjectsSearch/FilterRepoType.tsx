@@ -3,7 +3,8 @@ import { Menu, MenuItem, MenuList, ListItemIcon, ListItemText } from '@mui/mater
 import Check from '@mui/icons-material/Check';
 import Client from 'client';
 import { FilterByRepoType, FilterBy } from 'descriptor-project';
-import { NavigationButtonSearch } from '../NavigationSticky';
+import { ButtonSearch } from 'components-generic';
+
 
 
 const statustypes: Client.RepoType[] = ['DIALOB', 'STENCIL', 'TASKS', 'WRENCH'];
@@ -26,7 +27,7 @@ export default function DenseMenu(
   const filterByStatus = props.value.find(filter => filter.type === 'FilterByRepoType') as FilterByRepoType | undefined;
 
   return (<>
-    <NavigationButtonSearch onClick={handleClick} id='project.search.searchBar.filterRepoType' values={{ count: filterByStatus?.repoType.length }} />
+    <ButtonSearch onClick={handleClick} id='project.search.searchBar.filterRepoType' values={{ count: filterByStatus?.repoType.length }} />
 
     <Menu sx={{ width: 320 }}
       anchorEl={anchorEl}

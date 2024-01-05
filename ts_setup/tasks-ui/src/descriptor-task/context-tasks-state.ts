@@ -4,7 +4,7 @@ import { TasksState } from './types';
 import { Palette, _nobody_ } from './constants';
 import { TaskDescriptor, TasksPaletteType, } from './types';
 import { TaskDescriptorImpl, TaskGroupsAndFiltersImpl } from './types-impl';
-import { withColors } from './util';
+import { withColors } from 'components-colors';
 
 
 interface ExtendedInit extends Omit<TasksState, "withProfile" | "withTasks" | "toGroupsAndFilters"> {

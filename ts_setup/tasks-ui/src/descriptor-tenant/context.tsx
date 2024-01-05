@@ -3,9 +3,6 @@ import { Backend, UserProfileAndOrg } from 'client';
 import { TenantState, TenantContextType, TenantMutator, TenantDispatch } from './types';
 import { TenantStateBuilder } from './context-state';
 
-const Palette = {
-  colors: { red: '', green: '', yellow: '', blue: '', violet: '' }
-};
 const TenantContext = React.createContext<TenantContextType>({} as TenantContextType);
 
 const initState: TenantState = new TenantStateBuilder({
@@ -41,7 +38,7 @@ const TenantProvider: React.FC<{ children: React.ReactNode, init: { backend: Bac
   const setter: TenantDispatch = React.useCallback((mutator: TenantMutator) => setState(mutator), [setState]);
   const contextValue: TenantContextType = React.useMemo(() => {
     return {
-      state, setState: setter, loading, palette: Palette, reload: async () => {
+      state, setState: setter, loading, reload: async () => {
         return backend.tenant.getTenantEntries(state.activeTenant ?? '').then(data => {
           console.log('reload active tenant', state.activeTenant);
           return setState(prev => prev.withTenantEntries(data.records))

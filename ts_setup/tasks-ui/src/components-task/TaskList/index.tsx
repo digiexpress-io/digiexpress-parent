@@ -2,12 +2,16 @@ import React from 'react';
 import { Stack, Grid, Typography, TablePagination, Alert } from '@mui/material';
 
 import { FormattedMessage } from 'react-intl';
+
+import { NavigationSticky, NavigationButton } from 'components-generic';
+import { TaskDescriptor } from 'descriptor-task';
+
 import Pagination from 'table';
 import { TaskListState, initTable, initTabs, TaskListTabState } from './types';
 import { StyledStackItem, StyledEditTaskButton, StyledStartTaskButton } from './TaskListStyles';
-import { TaskDescriptor } from 'descriptor-task';
 import TaskCreateDialog from '../TaskCreate';
-import { NavigationSticky, NavigationButtonTaskList } from '../NavigationSticky';
+import { cyan } from 'components-colors';
+
 
 
 const RowFiller: React.FC<{ value: Pagination.TablePagination<TaskDescriptor> }> = ({ value }) => {
@@ -79,28 +83,27 @@ const TaskList: React.FC<{
 
   return (<>
     <TaskCreateDialog open={createOpen} onClose={handleTaskCreate} />
+    <NavigationSticky>
+      {state.tabs.map(tab => (
+        <NavigationButton
+          id={tab.label}
+          values={{ count: tab.count }}
+          key={tab.id}
+          active={tab.selected}
+          color={tab.color}
+          onClick={() => handleActiveTab(tab.id)} />
+      ))
+      }
+      <NavigationButton
+        id='core.taskCreate.newTask'
+        onClick={handleTaskCreate}
+        values={undefined}
+        active={createOpen}
+        color={cyan}
+      />
+    </NavigationSticky>
+
     <Grid container>
-
-      <NavigationSticky>
-        {state.tabs.map(tab => (
-          <NavigationButtonTaskList
-            id={tab.label}
-            values={{ count: tab.count }}
-            key={tab.id}
-            active={state.activeTab === tab.id}
-            color={tab.color}
-            onClick={() => handleActiveTab(tab.id)} />
-        ))
-        }
-        <NavigationButtonTaskList
-          id='core.taskCreate.newTask'
-          onClick={handleTaskCreate}
-          values={undefined}
-          active={createOpen}
-          color={'rgb(80, 72, 229)'}
-        />
-      </NavigationSticky>
-
       <Grid item md={8} lg={8}>
         <Stack sx={{ backgroundColor: 'mainContent.main' }}>
           {table.entries.map((task, index) => (

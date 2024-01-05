@@ -1,11 +1,11 @@
 import React from 'react';
-import Context from 'context';
-import { Group, TeamGroupType } from 'descriptor-task';
-import { TaskListTabState, TaskList } from '../TaskList';
 
+import Context from 'context';
+import { Group, TeamGroupType, TasksState, TeamGroupPalette } from 'descriptor-task';
+
+import { TaskListTabState, TaskList } from '../TaskList';
 import TaskItem from './TaskItem';
 import TaskItemActive from './TaskItemActive';
-import { TasksState, TeamGroupPalette } from 'descriptor-task';
 
 function groupsToRecord(state: Group[]): Record<TeamGroupType, Group> {
   return state.reduce((acc, item) => ({ ...acc, [item['id']]: item }), {} as Record<TeamGroupType, Group>);
@@ -25,7 +25,7 @@ function getTabs(state: TasksState): TaskListTabState[] {
       label: 'core.teamSpace.tab.task.overdue',
       color: TeamGroupPalette.groupOverdue,
       group: groupOverdue,
-      disabled: true,
+      selected: false,
       count: groupOverdue.records.length
     },
     {
@@ -33,7 +33,7 @@ function getTabs(state: TasksState): TaskListTabState[] {
       label: 'core.teamSpace.tab.task.dueSoon',
       color: TeamGroupPalette.groupDueSoon,
       group: groupDueSoon,
-      disabled: true,
+      selected: false,
       count: groupDueSoon.records.length
 
     },
@@ -42,7 +42,7 @@ function getTabs(state: TasksState): TaskListTabState[] {
       label: 'core.teamSpace.tab.task.available',
       color: TeamGroupPalette.groupAvailable,
       group: groupAvailable,
-      disabled: true,
+      selected: false,
       count: groupAvailable.records.length
     }
   ]

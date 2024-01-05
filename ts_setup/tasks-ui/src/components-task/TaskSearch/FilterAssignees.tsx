@@ -5,7 +5,7 @@ import { FormattedMessage } from 'react-intl';
 
 import Context from 'context';
 import { FilterByOwners, FilterBy } from 'descriptor-task';
-import { NavigationButtonSearch } from '../NavigationSticky';
+import { ButtonSearch } from 'components-generic';
 
 
 const FilterAssignees: React.FC<{
@@ -28,7 +28,7 @@ const FilterAssignees: React.FC<{
   const filterByOwners = props.value.find(filter => filter.type === 'FilterByOwners') as FilterByOwners | undefined;
 
   return (<>
-    <NavigationButtonSearch onClick={handleClick} id='taskSearch.searchBar.filterAssignees' values={{ count: filterByOwners?.owners.length }} />
+    <ButtonSearch onClick={handleClick} id='taskSearch.searchBar.filterAssignees' values={{ count: filterByOwners?.owners.length }} />
 
     <Menu sx={{ width: 320 }}
       anchorEl={anchorEl}

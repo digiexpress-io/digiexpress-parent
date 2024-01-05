@@ -2,6 +2,7 @@ import React from 'react';
 import { TextField, InputAdornment } from '@mui/material';
 
 import SearchIcon from '@mui/icons-material/Search';
+import { blue_mud } from 'components-colors';
 
 const FilterByString: React.FC<{ onChange: (value: React.ChangeEvent<HTMLInputElement>) => void }> = ({ onChange }) => {
   return (
@@ -15,7 +16,7 @@ const FilterByString: React.FC<{ onChange: (value: React.ChangeEvent<HTMLInputEl
           width: '40ch',
           height: '2rem',
           '&.MuiOutlinedInput-notchedOutline': {
-            border: '1px solid rgba(96, 113, 150, 0.5)',
+            border: '1px solid ' + blue_mud,
           },
           '&.MuiInputBase-root': {
             border: 'unset'
@@ -24,10 +25,10 @@ const FilterByString: React.FC<{ onChange: (value: React.ChangeEvent<HTMLInputEl
             backgroundColor: 'mainContent.main',
 
             '&.Mui-focused fieldset': {
-              border: '1px solid rgba(96, 113, 150, 0.5)'
+              border: '1px solid ' + blue_mud
             },
             '&:hover fieldset': {
-              borderColor: 'rgba(96, 113, 150, 0.5)',
+              borderColor: blue_mud,
             },
           }
         },

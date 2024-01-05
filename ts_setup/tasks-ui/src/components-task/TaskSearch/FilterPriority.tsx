@@ -5,7 +5,7 @@ import { FormattedMessage } from 'react-intl';
 
 import Client from 'client';
 import { FilterByPriority, FilterBy } from 'descriptor-task';
-import { NavigationButtonSearch } from '../NavigationSticky';
+import { ButtonSearch } from 'components-generic';
 
 const prioritytypes: Client.TaskPriority[] = ['HIGH', 'MEDIUM', 'LOW'];
 
@@ -26,7 +26,7 @@ const FilterPriority: React.FC<{
   const filterByPriority = props.value.find(filter => filter.type === 'FilterByPriority') as FilterByPriority | undefined;
 
   return (<>
-    <NavigationButtonSearch onClick={handleClick} id='taskSearch.searchBar.filterPriority' values={{ count: filterByPriority?.priority.length }} />
+    <ButtonSearch onClick={handleClick} id='taskSearch.searchBar.filterPriority' values={{ count: filterByPriority?.priority.length }} />
 
     <Menu sx={{ width: 320 }}
       anchorEl={anchorEl}

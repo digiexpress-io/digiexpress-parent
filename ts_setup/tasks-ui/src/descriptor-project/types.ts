@@ -26,7 +26,6 @@ export interface PaletteType {
     'TASKS': string,
     'DIALOB': string,
   },
-  colors: { red: string, green: string, yellow: string, blue: string, violet: string }
 }
 
 export type FilterByRepoType = { type: 'FilterByRepoType', repoType: RepoType[], disabled: boolean }

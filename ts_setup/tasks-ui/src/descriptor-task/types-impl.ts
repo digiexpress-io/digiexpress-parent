@@ -6,7 +6,8 @@ import {
   TasksPaletteType, Data, TaskGroupsAndFilters
 } from './types';
 import { _nobody_, Palette } from './constants';
-import { applyDescFilters, applySearchString, withColors, getDaysUntilDue, getMyWorkType, getTeamspaceType } from './util';
+import { applyDescFilters, applySearchString, getDaysUntilDue, getMyWorkType, getTeamspaceType } from './util';
+import { withColors } from 'components-colors';
 
 
 interface ExtendedInit extends Omit<TaskGroupsAndFilters,

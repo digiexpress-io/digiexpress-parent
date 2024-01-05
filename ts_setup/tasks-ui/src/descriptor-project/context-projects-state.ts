@@ -5,7 +5,7 @@ import { ProjectsState } from './types';
 import { Palette, _nobody_ } from './constants';
 import { ProjectDescriptor, ProjectPaletteType } from './types';
 import { GroupsAndFiltersImpl, ProjectDescriptorImpl } from './types-impl';
-import { withColors } from './util';
+import { withColors } from 'components-colors';
 
 
 interface ExtendedInit extends Omit<ProjectsState, "withProfile" | "withProjects" | "toGroupsAndFilters"> {

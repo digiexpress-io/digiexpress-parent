@@ -1,15 +1,18 @@
 import React from 'react';
 import { Stack, Grid, Typography, TablePagination, Alert } from '@mui/material';
-
 import { FormattedMessage } from 'react-intl';
+
 import Pagination from 'table';
+import Context from 'context';
+import { TenantEntryDescriptor } from 'descriptor-tenant';
+import { NavigationButton } from 'components-generic';
+import { cyan } from 'components-colors';
+
 import { initTable, initTabs, createTabs, DialobListTabState, DialobListState } from './types';
 import { StyledStackItem, StyledEditDialobButton, StyledPreviewFIllButton } from './DialobListStyles';
-import { TenantEntryDescriptor } from 'descriptor-tenant';
-import { NavigationSticky, NavigationButtonDialobList } from '../NavigationSticky';
+import { NavigationSticky } from '../NavigationSticky';
 import { FilterByString, FilterByTenant } from '../TenantsSearch';
 import DialobCreateDialog from '../DialobCreate';
-import Context from 'context';
 import { DialobItemActiveProps } from './DialobItemActive';
 
 
@@ -82,29 +85,29 @@ const DialobList: React.FC<{
 
   return (<>
     <DialobCreateDialog open={createOpen} onClose={handleCreateDialob} setActiveDialob={handleActiveDialob} />
+    <NavigationSticky>
+      <FilterByString onChange={({ target }) => setState(prev => {
+        const groupBy = tenants.state
+          .toGroupsAndFilters()
+          .withSearchString(target.value)
+          .withGroupBy("none").groups;
+        return prev.withTabs(createTabs(groupBy))
+      })
+      } />
+
+      <FilterByTenant />
+
+      <NavigationButton
+        id='dialob.form.create'
+        onClick={handleCreateDialob}
+        values={undefined}
+        active={false}
+        color={cyan}
+      />
+    </NavigationSticky>
+
+
     <Grid container>
-
-      <NavigationSticky>
-        <FilterByString onChange={({ target }) => setState(prev => {
-          const groupBy = tenants.state
-            .toGroupsAndFilters()
-            .withSearchString(target.value)
-            .withGroupBy("none").groups;
-          return prev.withTabs(createTabs(groupBy))
-        })
-        } />
-
-        <FilterByTenant />
-
-        <NavigationButtonDialobList
-          id='dialob.form.create'
-          onClick={handleCreateDialob}
-          values={undefined}
-          active={false}
-          color={'rgb(80, 72, 229)'}
-        />
-      </NavigationSticky>
-
       <Grid item md={8} lg={8}>
         <Stack sx={{ backgroundColor: 'mainContent.main' }}>
           {table.entries.map((task, index) => (

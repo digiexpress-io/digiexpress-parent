@@ -6,7 +6,8 @@ import {
   ProjectPaletteType, Data, GroupsAndFilters
 } from './types';
 import { Palette } from './constants';
-import { applyDescFilters, applySearchString, withColors } from './util';
+import { applyDescFilters, applySearchString } from './util';
+import { withColors } from 'components-colors';
 
 
 

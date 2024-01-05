@@ -5,6 +5,7 @@ import { TaskListTabState, TaskList } from '../TaskList';
 import TaskItemActive from './TaskItemActive';
 import TaskItem from './TaskItem';
 import { TasksState, AssigneePalette } from 'descriptor-task';
+import { moss } from 'components-colors';
 
 
 function groupsToRecord(state: Group[]): Record<AssigneeGroupType, Group> {
@@ -55,7 +56,7 @@ function getTabs(state: TasksState): TaskListTabState[] | any {
     {
       id: 4,
       label: 'core.myWork.tab.recentActivities',
-      color: '#A1A314',
+      color: moss,
       group: assigneeOther,
       disabled: true,
       count: assigneeOther.records.length

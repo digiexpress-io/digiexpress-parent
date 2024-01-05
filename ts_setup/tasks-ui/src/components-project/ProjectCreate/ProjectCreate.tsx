@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Typography, TextField, Stack, Divider } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
-import { NavigationButtonSearch } from '../NavigationSticky';
+
+import { ButtonSearch } from 'components-generic';
 import Burger from 'components-burger';
 import Client from 'client';
 import Context from 'context';
@@ -76,7 +77,7 @@ const ProjectCreate: React.FC<{
         <Burger.PrimaryButton label='buttons.accept' onClick={handleAccept} />
       </DialogActions>
     </Dialog>
-    <NavigationButtonSearch onClick={handleToggleDialog} id='project.search.searchBar.newProject' values={undefined} />
+    <ButtonSearch onClick={handleToggleDialog} id='project.search.searchBar.newProject' values={undefined} />
   </>
   );
 }

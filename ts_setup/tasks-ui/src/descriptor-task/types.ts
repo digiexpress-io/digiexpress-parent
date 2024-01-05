@@ -141,7 +141,6 @@ export interface PaletteType {
     'COMPLETED': string,
     'CREATED': string,
   },
-  colors: { red: string, green: string, yellow: string, blue: string, violet: string }
 }
 
 export type RoleUnassigned = "_nobody_";

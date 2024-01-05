@@ -1,4 +1,5 @@
 import { darken, lighten } from '@mui/material';
+import { aquamarine, blue, saffron, mandarin } from 'components-colors';
 
 type TaskEventType = 'new-messages' | 'archived-tasks' | 'starts-today-tasks' | 'overdue-tasks' | 'new-tasks' | 'new-checklists-assignment' | 'mentioned-in-comment';
 type TaskEventGroup = {
@@ -37,28 +38,28 @@ class TaskEventVisitor {
     return [
       {
         types: ['new-messages', 'mentioned-in-comment', 'new-checklists-assignment'], name: "requires-my-attention",
-        color: '#0088FE',
+        color: blue,
         value: 0,
         events: []
       },
 
       {
         types: ['starts-today-tasks'], name: "tasks-starting-today",
-        color: '#00C49F',
+        color: aquamarine,
         value: 0,
         events: []
       },
 
       {
         types: ['overdue-tasks'], name: "overdue-tasks",
-        color: '#FFBB28',
+        color: saffron,
         value: 0,
         events: []
       },
 
       {
         types: ['archived-tasks', 'new-tasks'], name: "task-events",
-        color: '#FF8042',
+        color: mandarin,
         value: 0,
         events: []
       }

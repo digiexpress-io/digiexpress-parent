@@ -4,7 +4,7 @@ import Check from '@mui/icons-material/Check';
 import { FormattedMessage } from 'react-intl';
 
 import { GroupBy } from 'descriptor-task';
-import { NavigationButtonSearch } from '../NavigationSticky';
+import { ButtonSearch } from 'components-generic';
 
 const types: GroupBy[] = ['none', 'owners', 'roles', 'status', 'priority'];
 
@@ -24,7 +24,7 @@ const GroupBySelect: React.FC<{
 
 
   return (<>
-    <NavigationButtonSearch onClick={handleClick} id='taskSearch.searchBar.groupBy' values={{ groupBy: value }} />
+    <ButtonSearch onClick={handleClick} id='taskSearch.searchBar.groupBy' values={{ groupBy: value }} />
 
     <Menu sx={{ width: 320 }}
       anchorEl={anchorEl}

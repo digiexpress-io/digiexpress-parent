@@ -2,11 +2,12 @@ import * as React from 'react';
 import { Menu, MenuItem, MenuList, ListItemIcon, ListItemText, Typography, CircularProgress, Box } from '@mui/material';
 import Check from '@mui/icons-material/Check';
 import { FormattedMessage } from 'react-intl';
+
 import Client from 'client';
-import { } from 'descriptor-tenant';
-import { NavigationButtonSearch } from '../NavigationSticky';
 import Context from 'context';
 import Burger from 'components-burger';
+import { ButtonSearch } from 'components-generic';
+
 
 const FilterByTenant: React.FC = () => {
   const tenants = Context.useTenants();
@@ -33,7 +34,7 @@ const FilterByTenant: React.FC = () => {
   }
 
   return (<>
-    <NavigationButtonSearch onClick={handleClick} id='tenant.select.button' values={{ count: tenantsList.length }} />
+    <ButtonSearch onClick={handleClick} id='tenant.select.button' values={{ count: tenantsList.length }} />
 
     <Menu
       anchorEl={anchorEl}
