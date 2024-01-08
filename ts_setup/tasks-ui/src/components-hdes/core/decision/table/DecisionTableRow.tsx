@@ -3,6 +3,7 @@ import React from 'react';
 import { TableCell, TableRow } from '@mui/material';
 
 import { Client } from '../../context';
+import { turquoise_topaz } from 'components-colors';
 
 
 const DecisionTableRow: React.FC<{
@@ -22,7 +23,7 @@ const DecisionTableRow: React.FC<{
     <TableCell align="left" sx={{
       position: "sticky",
       left: 0,
-      backgroundColor: "page.main",
+      backgroundColor: turquoise_topaz,
       color: "primary.contrastText",
       borderBottom: "unset"
     }}>

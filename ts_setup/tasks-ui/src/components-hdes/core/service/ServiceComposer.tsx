@@ -65,7 +65,6 @@ const ServiceComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   return (<Burger.Dialog open={true}
     onClose={onClose}
     children={editor}
-    backgroundColor="uiElements.main"
     title='services.composer.title'
     submit={{
       title: "buttons.create",

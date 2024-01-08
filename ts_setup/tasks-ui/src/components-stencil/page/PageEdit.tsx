@@ -30,7 +30,6 @@ const PageEdit: React.FC<{ onClose: () => void, articleId: StencilClient.Article
   const valid = pageId && articleId && newLocale;
   return (
     <Burger.Dialog open={true} onClose={props.onClose}
-      backgroundColor="uiElements.main" 
       title="pages.change"
       submit={{ title: "button.update", onClick: handleUpdate, disabled: !valid }}>
 

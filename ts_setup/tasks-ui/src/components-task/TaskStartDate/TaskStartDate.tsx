@@ -11,6 +11,7 @@ import Burger from 'components-burger';
 import Context from 'context';
 import Client from 'client';
 import { TaskDescriptor } from 'descriptor-task';
+import { cyan } from 'components-colors';
 
 const TaskStartDate: React.FC<{
   task: TaskDescriptor,
@@ -36,7 +37,7 @@ const TaskStartDate: React.FC<{
 
   return (
     <>
-      <Button onClick={handlePickerDialog} sx={{ justifyContent: 'left' }} startIcon={<DateRangeOutlinedIcon sx={{ color: 'uiElements.main', fontSize: 'small' }} />}>
+      <Button onClick={handlePickerDialog} sx={{ justifyContent: 'left' }} startIcon={<DateRangeOutlinedIcon sx={{ color: cyan, fontSize: 'small' }} />}>
         <Typography sx={{ color: 'text.primary' }}><Burger.DateTimeFormatter type='date' value={state.task.startDate} /></Typography>
       </Button>
       <LocalizationProvider dateAdapter={AdapterDateFns}>

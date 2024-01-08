@@ -43,7 +43,6 @@ const NewPage: React.FC<{ onClose: () => void, articleId?: StencilClient.Article
 
   return (
     <Burger.Dialog open={true} onClose={props.onClose}
-      backgroundColor="uiElements.main"
       title="newpage.title"
       //titleArgs={{articleId ? name: articleName : undefined}}
       submit={{ title: "button.create", onClick: handleCreate, disabled: !locale }}>

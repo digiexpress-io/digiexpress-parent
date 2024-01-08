@@ -18,6 +18,7 @@ import Burger from 'components-burger';
 import { Composer, Client } from '../../context';
 import FlowOptions from './FlowOptions';
 import MsgTreeItem from '../MsgTreeItem';
+import { grey_light, saffron, turquoise, turquoise_topaz } from "components-colors";
 
 
 
@@ -33,7 +34,7 @@ function DecisionItem(props: {
       onClick={props.onClick}
       label={
         <Box sx={{ display: "flex", alignItems: "center", p: 0.5, pr: 0 }}>
-          <Box component={AccountTreeOutlinedIcon} color="page.main" sx={{ pl: 1, mr: 1 }} />
+          <Box component={AccountTreeOutlinedIcon} color={turquoise_topaz} sx={{ pl: 1, mr: 1 }} />
           <Typography noWrap={true} maxWidth="300px" variant="body2"
             sx={{ fontWeight: "inherit", flexGrow: 1 }}
           >
@@ -136,7 +137,7 @@ const FlowItem: React.FC<{ flowId: Client.FlowId }> = ({ flowId }) => {
     <Burger.TreeItem nodeId={flow.id}
       labelText={flowName}
       labelIcon={ArticleOutlinedIcon}
-      labelcolor={saved ? "explorerItem" : "explorerItem.contrastText"}
+      labelcolor={saved ? grey_light : saffron}
       labelInfo={flow.status === "UP" ? undefined : <ConstructionIcon color="error" />}>
 
       {/** Flow options */}
@@ -162,7 +163,7 @@ const FlowItem: React.FC<{ flowId: Client.FlowId }> = ({ flowId }) => {
         labelText={<FormattedMessage id="decisions" />}
         labelIcon={FolderOutlinedIcon}
         labelInfo={`${decisions.length}`}
-        labelcolor="page">
+        labelcolor={turquoise}>
 
         {decisions.map(view => (<DecisionItem key={view.ref.ref} nodeId={`${flow.id}-dt-${view.ref.ref}`}
           labelText={view.ref.ref}

@@ -6,27 +6,28 @@ import { useIntl } from 'react-intl';
 
 import { FlowExplorer, ServiceExplorer, DecisionExplorer } from './explorer';
 import { Composer } from './context';
+import { blueberry_whip, green_teal, sambucus } from 'components-colors';
 
 
 const TextFieldRoot = styled(TextField)<TextFieldProps>(({ theme }) => ({
 
-  color: theme.palette.explorerItem.main,
-  backgroundColor: theme.palette.explorer.main,
+  color: blueberry_whip,
+  backgroundColor: sambucus,
   '& .MuiOutlinedInput-input': {
-    color: theme.palette.explorerItem.main,
+    color: blueberry_whip,
   },
   '& .MuiOutlinedInput-root': {
     fontSize: '10pt',
     height: '2rem',
     '&.Mui-focused fieldset': {
-      borderColor: theme.palette.explorerItem.dark,
+      borderColor: sambucus,
     },
   },
   '& .MuiFormLabel-root': {
-    color: theme.palette.explorerItem.main,
+    color: blueberry_whip,
   },
   '& .MuiFormHelperText-root': {
-    color: theme.palette.explorerItem.main,
+    color: blueberry_whip,
     marginLeft: 1
   }
 }));
@@ -34,14 +35,14 @@ const TextFieldRoot = styled(TextField)<TextFieldProps>(({ theme }) => ({
 const StyledTab = styled(Tab)<TabProps>(({ theme }) => ({
   "&.MuiButtonBase-root": {
     minWidth: "unset",
-    color: theme.palette.explorerItem.main,
+    color: blueberry_whip,
     fontSize: '9pt',
     paddingLeft: '.5rem',
     paddingRight: '.5rem'
   },
   "&.Mui-selected": {
-    color: theme.palette.explorerItem.dark,
-    backgroundColor: alpha(theme.palette.explorerItem.dark, .2),
+    color: green_teal,
+    backgroundColor: alpha(green_teal, .2),
   },
 }));
 
@@ -68,7 +69,7 @@ const Secondary: React.FC<{}> = () => {
     component = (<DecisionExplorer />);
   }
 
-  return (<Box sx={{ backgroundColor: "explorer.main", height: '100%' }}>
+  return (<Box sx={{ backgroundColor: sambucus, height: '100%' }}>
     <Box display="flex" >
       <StyledTabs value={tab} onChange={(_event: any, value: string) => setTab(value)}>
         <StyledTab label={getLabel("explorer.tabs.flows")} value='tabs.flows' />

@@ -31,7 +31,6 @@ const InputJSON: React.FC<InputJSONProps> = ({ onSelect, onClose, value }) => {
   const [json, setJson] = React.useState<string>(parseInput(value));
   
   return (<Burger.Dialog title="debug.input.json" open={true} onClose={onClose}
-    backgroundColor="uiElements.main"
     submit={{
       title: "buttons.apply",
       disabled: false,

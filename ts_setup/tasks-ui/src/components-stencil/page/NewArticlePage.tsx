@@ -46,7 +46,6 @@ const NewArticlePage: React.FC<NewArticlePageProps> = ({ article, open, onClose,
 
   return (
     <Burger.Dialog open={open ? true : false} onClose={onClose}
-      backgroundColor="uiElements.main"
       title="newpage.title"
       titleArgs={{ name: articleName }}
       submit={{ title: "button.create", onClick: handleCreate, disabled: false }}>

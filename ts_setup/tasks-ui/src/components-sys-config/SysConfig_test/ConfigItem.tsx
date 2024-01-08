@@ -7,6 +7,7 @@ import Context from 'context';
 import Client from 'client';
 
 import Burger from 'components-burger';
+import { cyan } from 'components-colors';
 
 const data = [
   {
@@ -72,7 +73,7 @@ const ConfigItem: React.FC<{}> = ({ }) => {
           <Typography fontWeight='bolder'>Wrench flow: {checklist.title}</Typography>
 
           <Box display='flex' alignItems='center' justifyContent='flex-end' >
-            <Button startIcon={<AddIcon sx={{ color: 'uiElements.main' }} />} onClick={() => { }}>
+            <Button startIcon={<AddIcon sx={{ color: cyan }} />} onClick={() => { }}>
             </Button>
           </Box>
         </Box>
@@ -139,7 +140,7 @@ const ConfigItem: React.FC<{}> = ({ }) => {
         {/* Add new checklist item  */}
 
         <Box display='flex' alignItems='center' justifyContent='flex-end' >
-          <Button startIcon={<AddIcon sx={{ color: 'uiElements.main' }} />}>
+          <Button startIcon={<AddIcon sx={{ color: cyan }} />}>
             <Typography sx={{ color: 'text.primary', textTransform: 'capitalize' }}>
               <FormattedMessage id='task.checklistItem.add' />
             </Typography>

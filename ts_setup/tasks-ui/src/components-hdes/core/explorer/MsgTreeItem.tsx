@@ -5,7 +5,6 @@ import Burger from 'components-burger';
 import { Client } from '../context';
 
 
-
 const MsgTreeItem: React.FC<{
   nodeId: string;
   msg: Client.ProgramMessage;
@@ -17,7 +16,6 @@ const MsgTreeItem: React.FC<{
   return (
     <>
       {open ? (<Burger.Dialog open={true} onClose={() => setOpen(false)}
-        backgroundColor="uiElements.main"
         title={`programs.${props.error ? "error" : "warning"}.title`}>
         <DialogContentText>
           <b>{props.msg.id}</b><br />

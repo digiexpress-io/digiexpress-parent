@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box, CircularProgress } from '@mui/material';
+import { blueberry_whip } from 'components-colors';
 
 
 
@@ -29,7 +30,7 @@ const Section: React.FC<{ children: React.ReactNode, width?: string, loadingValu
         </Box>
       </Box>
 
-      <Box sx={{ borderRadius: '8px', border: 1, p: 2, borderColor: 'explorerItem.main' }}>
+      <Box sx={{ borderRadius: '8px', border: 1, p: 2, borderColor: blueberry_whip }}>
         {content}
         {loadingEnabled && showLoader && < CircularProgress size='10pt' />}
       </Box>

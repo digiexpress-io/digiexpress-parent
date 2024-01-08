@@ -10,6 +10,7 @@ import { FormattedMessage } from 'react-intl';
 import { TemplateComposer, TemplateDelete, TemplateEdit } from './';
 import { Composer, StencilClient } from '../context';
 import Burger from 'components-burger';
+import { cyan, sambucus } from 'components-colors';
 
 
 
@@ -33,7 +34,7 @@ const TemplatesView: React.FC<{}> = () => {
       <Box sx={{ paddingBottom: 1, m: 2 }}>
         <Box display="flex">
           <Box alignSelf="center">
-            <Typography variant="h3" sx={{ p: 1, mb: 3, fontWeight: "bold", color: "mainContent.dark" }}>
+            <Typography variant="h3" sx={{ p: 1, mb: 3, fontWeight: "bold", color: sambucus }}>
               <FormattedMessage id="templates" />
               <Typography variant="body2" sx={{ pt: 1 }}><FormattedMessage id={"templates.templatesview.description"} /></Typography>
             </Typography>
@@ -64,12 +65,12 @@ const TemplatesView: React.FC<{}> = () => {
                 {templates.map((template, index) => (
                   <TableRow sx={{ p: 1 }} hover>
                     <TableCell align="left" sx={{ fontWeight: 'bold', width: "80px" }}>
-                      <IconButton sx={{ color: 'uiElements.main' }} onClick={() => setTemplateEdit(template.id)}><EditIcon /></IconButton>
+                      <IconButton sx={{ color: cyan }} onClick={() => setTemplateEdit(template.id)}><EditIcon /></IconButton>
                     </TableCell>
                     <TableCell>{template.body.name}</TableCell>
                     <TableCell>{template.body.description}</TableCell>
                     <TableCell align="left" sx={{ fontWeight: 'bold', width: "80px" }}>
-                      <IconButton sx={{ color: 'uiElements.main' }} onClick={() => setTemplateDelete(template.id)}><DeleteOutlineOutlinedIcon /></IconButton>
+                      <IconButton sx={{ color: cyan }} onClick={() => setTemplateDelete(template.id)}><DeleteOutlineOutlinedIcon /></IconButton>
                     </TableCell>
                   </TableRow>))
                 }

@@ -5,6 +5,7 @@ import { ListItemText } from '@mui/material';
 import Burger from 'components-burger';
 import { Client } from '../../context';
 
+
 const hitPolicyOptions = [
   { key: 'ALL', value: 'ALL', text: 'ALL' },
   { key: 'FIRST', value: 'FIRST', text: 'FIRST' }
@@ -21,7 +22,7 @@ const NameDescHitPolicyEdit: React.FC<{
   const [hitpolicy, setHitpolicy] = React.useState<string>(decision.hitPolicy);
 
 
-  return (<Burger.Dialog title="decisions.toolbar.nameAndHitpolicy" open={true} onClose={onClose} backgroundColor="uiElements.main"
+  return (<Burger.Dialog title="decisions.toolbar.nameAndHitpolicy" open={true} onClose={onClose}
     submit={{
       title: "buttons.apply",
       disabled: false,

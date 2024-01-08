@@ -7,6 +7,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 
 import { StyledSecondaryButton, StyledPrimaryButton } from './StyledButton'
 import { StyledSearchField } from './StyledInputField';
+import { cyan } from 'components-colors';
 
 interface StyledTransferListProps {
   title: string;
@@ -102,7 +103,7 @@ const StyledTransferList: React.FC<StyledTransferListProps> = (props) => {
               {selected.map((row, index) => (
                 <TableRow hover key={index}>
                   <TableCell>
-                    <IconButton sx={{ color: 'uiElements.main' }} onClick={() => handleChange(row, "remove")}>
+                    <IconButton sx={{ color: cyan }} onClick={() => handleChange(row, "remove")}>
                       <DeleteOutlineIcon />
                     </IconButton>
                   </TableCell>
@@ -139,7 +140,7 @@ const StyledTransferList: React.FC<StyledTransferListProps> = (props) => {
               {searchItems.map((row, index) => (
                 <TableRow hover key={index}>
                   <TableCell>
-                    <IconButton sx={{ color: 'uiElements.main' }} onClick={() => handleChange(row, "add")} disabled={selected.includes(row)}>
+                    <IconButton sx={{ color: cyan }} onClick={() => handleChange(row, "add")} disabled={selected.includes(row)}>
                       <AddCircleOutlineIcon />
                     </IconButton>
                   </TableCell>

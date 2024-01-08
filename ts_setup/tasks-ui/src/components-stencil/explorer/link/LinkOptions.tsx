@@ -17,21 +17,18 @@ const LinkOptions: React.FC<{ link: StencilClient.Link }> = ({ link }) => {
     <>
       { dialogOpen === 'LinkEdit' ? <LinkEdit linkId={link.id} onClose={handleDialogClose} /> : null}
       { dialogOpen === 'LinkDelete' ? <LinkDelete linkId={link.id} onClose={handleDialogClose} /> : null}
-              {/* @ts-ignore */}
+
       <Burger.TreeItemOption nodeId={link.id + 'link.edit'}
         color='link'
         icon={EditIcon}
         onClick={() => setDialogOpen('LinkEdit')}
-        labelText={<FormattedMessage id="link.edit.title" />}>
-      </Burger.TreeItemOption>
+        labelText={<FormattedMessage id="link.edit.title" />}/>
 
-              {/* @ts-ignore */}
       <Burger.TreeItemOption nodeId={link.id + 'link.delete'}
         color='link'
         icon={DeleteOutlineOutlinedIcon}
         onClick={() => setDialogOpen('LinkDelete')}
-        labelText={<FormattedMessage id="link.delete.title" />}>
-      </Burger.TreeItemOption>
+        labelText={<FormattedMessage id="link.delete.title" />}/>
     </>
   );
 }

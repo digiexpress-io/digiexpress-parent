@@ -6,20 +6,21 @@ import { styled } from "@mui/material/styles";
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 
 import { Composer } from '../../context';
+import { blueberry_whip, green_teal } from 'components-colors';
 
 const StyledTab = styled(Tab)<TabProps>(({ theme }) => ({
   "&.MuiButtonBase-root": {
     minWidth: "unset",
-    color: theme.palette.explorerItem.main,
+    color: blueberry_whip,
   },
   "&.Mui-selected": {
-    color: theme.palette.explorerItem.dark,
+    color: green_teal,
   }
 }));
 
 const StyledTabs = styled(Tabs)<TabsProps>(({ theme }) => ({
   "& .MuiTabs-indicator": {
-    backgroundColor: theme.palette.explorerItem.dark,
+    backgroundColor: green_teal,
     marginRight: "49px"
   }
 }));
@@ -30,7 +31,7 @@ const LocaleFilter: React.FC<{}> = () => {
   const locales = Object.values(site.locales);
   const selected = session.filter.locale ? session.filter.locale : '';
 
-  return (<StyledTabs orientation="vertical" sx={{ borderRight: 1, borderColor: 'explorerItem.dark', maxHeight: '200px' }} value={selected}
+  return (<StyledTabs orientation="vertical" sx={{ borderRight: 1, borderColor: green_teal, maxHeight: '200px' }} value={selected}
     onChange={(_event, newValue) => actions.handleLocaleFilter(newValue)}
     variant="scrollable"
     scrollButtons="auto">{

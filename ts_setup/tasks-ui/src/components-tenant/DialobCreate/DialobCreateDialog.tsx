@@ -9,6 +9,7 @@ import Burger from 'components-burger';
 import { CreateFormRequest } from 'client/tenant-types';
 import Context from 'context';
 import { TenantEntryDescriptor } from 'descriptor-tenant';
+import { sambucus, wash_me } from 'components-colors';
 
 const INIT_FORM: CreateFormRequest = {
   name: "",
@@ -85,8 +86,8 @@ const DialobCreateDialog: React.FC<{ open: boolean, onClose: () => void, setActi
 
     <Dialog open={true} fullWidth maxWidth='md'>
       <DialogTitle sx={{
-        backgroundColor: theme.palette.mainContent.main,
-        borderBottom: `1px solid ${alpha(theme.palette.mainContent.dark, 0.3)}`,
+        backgroundColor: wash_me,
+        borderBottom: `1px solid ${alpha(sambucus, 0.3)}`,
         mb: 1,
       }}>
         <Box display='flex' alignItems='center'>

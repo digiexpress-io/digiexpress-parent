@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Typography, Theme, useTheme } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 
 import LeftEditIcon from "@mui/icons-material/BorderLeft";
 import RightEditIcon from "@mui/icons-material/BorderRight";
@@ -7,14 +7,13 @@ import ConstructionIcon from '@mui/icons-material/Construction';
 
 import Burger from 'components-burger';
 import { Composer } from '../../context';
+import { blueberry_whip, saffron, turquoise_topaz } from "components-colors";
 
 
 
 
 const ArticlePageItem: React.FC<{ article: Composer.ArticleView, page: Composer.PageView, saved?: boolean }> = (props) => {
-
-  const theme = useTheme<Theme>();
-  const localeIconColor = theme.palette.page.main;
+  const localeIconColor = turquoise_topaz;
 
   const { handleInTab, findTab } = Composer.useNav();
   const page = props.page.page;
@@ -54,13 +53,13 @@ const ArticlePageItem: React.FC<{ article: Composer.ArticleView, page: Composer.
       nodeId={nodeId}
       onClick={onLeftEdit}
       style={{
-        "--tree-view-color": theme.palette.explorerItem.main
+        "--tree-view-color": blueberry_whip
       }}
       label={
 
         <Box sx={{ display: "flex", alignItems: "center", p: 0.5, pr: 0 }}>
           <Box component={icon} color={props.saved === false ? 
-            "explorerItem.contrastText": 
+            saffron : 
             (nav?.value === page.body.locale ? localeIconColor : "inherit")} />
           
           <Typography

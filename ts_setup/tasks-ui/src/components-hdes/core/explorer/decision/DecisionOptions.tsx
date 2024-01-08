@@ -11,6 +11,7 @@ import Burger from 'components-burger';
 
 import { Composer, Client } from '../../context';
 import { ErrorView } from '../../styles';
+import { turquoise } from 'components-colors';
 
 
 const DecisionDelete: React.FC<{ decisionId: Client.DecisionId, onClose: () => void }> = ({ decisionId, onClose }) => {
@@ -40,7 +41,6 @@ const DecisionDelete: React.FC<{ decisionId: Client.DecisionId, onClose: () => v
   return (<Burger.Dialog open={true}
     onClose={onClose}
     children={editor}
-    backgroundColor="uiElements.main"
     title='decisions.delete.title'
     submit={{
       title: "buttons.delete",
@@ -117,39 +117,34 @@ const DecisionOptions: React.FC<{ decision: Client.Entity<Client.AstDecision> }>
   return (
     <>
       {dialogOpen === 'DecisionDelete' ? <DecisionDelete decisionId={decision.id} onClose={handleDialogClose} /> : null}
-      {/* @ts-ignore */}
+      
       <Burger.TreeItemOption nodeId={decision.id + 'edit-nested'}
-        color='page'
+        color={turquoise}
         icon={EditIcon}
         onClick={() => nav.handleInTab({ article: decision })}
-        labelText={<FormattedMessage id="decisions.edit.title" />}>
-      </Burger.TreeItemOption>
-      {/* @ts-ignore */}
+        labelText={<FormattedMessage id="decisions.edit.title" />}/>
+      
       <Burger.TreeItemOption nodeId={decision.id + 'simulate-nested'}
-        color='page'
+        color={turquoise}
         icon={ScienceOutlinedIcon}
         onClick={() => handleDebugInit(decision.id)}
-        labelText={<FormattedMessage id="decisions.simulate.title" />}>
-      </Burger.TreeItemOption>
-      {/* @ts-ignore */}
+        labelText={<FormattedMessage id="decisions.simulate.title" />}/>
+      
       <Burger.TreeItemOption nodeId={decision.id + 'delete-nested'}
-        color='page'
+        color={turquoise}
         icon={DeleteOutlineOutlinedIcon}
         onClick={() => setDialogOpen('DecisionDelete')}
-        labelText={<FormattedMessage id="decisions.delete.title" />}>
-      </Burger.TreeItemOption>
-      {/* @ts-ignore */}
+        labelText={<FormattedMessage id="decisions.delete.title" />}/>
+      
       <Burger.TreeItemOption nodeId={decision.id + 'copyas-nested'}
-        color='page'
+        color={turquoise}
         icon={EditIcon}
         onClick={() => setDialogOpen('DecisionCopy')}
-        labelText={<FormattedMessage id="decisions.copyas.title" />}>
-      </Burger.TreeItemOption>
+        labelText={<FormattedMessage id="decisions.copyas.title" />}/>
       {dialogOpen === 'DecisionCopy' ? 
       <Burger.Dialog open={true}
         onClose={handleDialogClose}
         children={editor}
-        backgroundColor="uiElements.main"
         title='decisions.composer.copyTitle'
         submit={{
           title: "buttons.copy",

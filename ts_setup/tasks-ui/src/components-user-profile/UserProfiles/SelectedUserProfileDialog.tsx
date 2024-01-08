@@ -43,7 +43,7 @@ const SelectedUserProfileDialog: React.FC<{ open: boolean, onClose: () => void }
     return null;
   }
 
-  return (<Burger.Dialog open={open} onClose={onClose} title='userProfile.frontoffice.title' backgroundColor='uiElements.main'>
+  return (<Burger.Dialog open={open} onClose={onClose} title='userProfile.frontoffice.title'>
     <Stack spacing={1}>
       <Burger.Section>
         <Typography fontWeight='bold'><FormattedMessage id='userProfile.frontoffice.info' /></Typography>

@@ -21,25 +21,26 @@ import CorporateFareOutlinedIcon from '@mui/icons-material/CorporateFareOutlined
 import { FormattedMessage } from 'react-intl';
 import Burger from 'components-burger';
 import Context from 'context';
+import { blueberry_whip, green_teal, sambucus } from 'components-colors';
 
 
 
 const StyledTitleTab = styled(Tab)<TabProps>(({ theme }) => ({
   "&.MuiButtonBase-root": {
     minWidth: "unset",
-    color: theme.palette.explorerItem.main,
+    color: blueberry_whip,
     fontSize: '9pt',
     paddingLeft: '.5rem',
     paddingRight: '.5rem',
   },
   "&.Mui-selected": {
-    color: theme.palette.explorerItem.dark,
-    backgroundColor: alpha(theme.palette.explorerItem.dark, .2),
+    color: green_teal,
+    backgroundColor: alpha(green_teal, .2),
   },
 }));
 
 const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
-  borderBottom: `1px solid ${theme.palette.explorerItem.dark}`,
+  borderBottom: `1px solid ${green_teal}`,
   width: '100%',
 }));
 
@@ -53,7 +54,7 @@ const StyledExplorerTab = styled(Tab)<TabProps>(({ theme }) => ({
     minWidth: "unset",
     minHeight: theme.spacing(3),
     fontSize: "12px",
-    color: theme.palette.explorerItem.main,
+    color: blueberry_whip,
     flexDirection: 'row',
     alignItems: 'center',
     paddingTop: 'unset',
@@ -61,7 +62,7 @@ const StyledExplorerTab = styled(Tab)<TabProps>(({ theme }) => ({
   },
   "&.Mui-selected": {
     maxWidth: "unset",
-    backgroundColor: alpha(theme.palette.explorerItem.dark, 0.2),
+    backgroundColor: alpha(green_teal, 0.2),
   },
   "& .MuiTab-iconWrapper": {
     marginBottom: 'unset',
@@ -75,7 +76,7 @@ const StyledExplorerSubTab = styled(Tab)<TabProps>(({ theme }) => ({
     minWidth: "unset",
     minHeight: theme.spacing(3),
     fontSize: "12px",
-    color: theme.palette.explorerItem.main,
+    color: blueberry_whip,
     flexDirection: 'row',
     alignItems: 'center',
     paddingTop: 'unset',
@@ -83,7 +84,7 @@ const StyledExplorerSubTab = styled(Tab)<TabProps>(({ theme }) => ({
   },
   "&.Mui-selected": {
     maxWidth: "unset",
-    backgroundColor: alpha(theme.palette.explorerItem.dark, 0.2),
+    backgroundColor: alpha(green_teal, 0.2),
   },
   "& .MuiTab-iconWrapper": {
     marginBottom: 'unset',
@@ -94,7 +95,7 @@ const StyledExplorerSubTab = styled(Tab)<TabProps>(({ theme }) => ({
 const StyledTabs = styled(Tabs)<TabsProps>(({ theme }) => ({
 
   "& .MuiTabs-indicator": {
-    backgroundColor: theme.palette.explorerItem.dark,
+    backgroundColor: green_teal,
     width: '3px',
     right: 'unset'
   },
@@ -139,11 +140,11 @@ const Secondary: React.FC<{}> = () => {
   }, []);
 
 
-  return (<Box sx={{ backgroundColor: "explorer.main", height: '100%', width: '100%' }}>
+  return (<Box sx={{ backgroundColor: sambucus, height: '100%', width: '100%' }}>
     <StyledBox>
       <StyledTitleTab label={<FormattedMessage id="explorer.title" />} value='label' />
     </StyledBox>
-    <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', width: "100%", backgroundColor: "explorer.main" }}>
+    <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', width: "100%", backgroundColor: sambucus }}>
       <StyledTabs orientation="vertical" onChange={handleActive} value={active}>
 
         {/* material ui workaround for case when no tab is selected */}

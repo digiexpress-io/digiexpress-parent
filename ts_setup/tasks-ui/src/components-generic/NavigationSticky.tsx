@@ -1,6 +1,7 @@
 import React from 'react';
 import { Stack, Toolbar, AppBar, Button, Typography, SxProps, lighten, darken  } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
+import { wash_me } from 'components-colors';
 
 
 interface NavigationButtonProps {
@@ -18,10 +19,10 @@ function getButtonStyles(color: string, active: boolean | undefined) {
     boxShadow: "unset",
     backgroundColor,
     border: `1px solid ${darken(color, 0.1)}`,
-    color: active ? 'mainContent.main' : darken(color, 0.5),
+    color: active ? wash_me : darken(color, 0.5),
     '&:hover': {
       backgroundColor: active ? color : lighten(color, 0.2),
-      color: 'mainContent.main',
+      color: wash_me,
       border: `1px solid ${darken(color, 0.1)}`
     },
     ml: 1

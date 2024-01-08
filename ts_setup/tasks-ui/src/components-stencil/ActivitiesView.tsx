@@ -1,7 +1,6 @@
 import React from 'react';
-import { useTheme } from '@mui/styles';
 import {
-  Card, CardHeader, CardActions, CardContent, Theme,
+  Card, CardHeader, CardActions, CardContent,
   Typography, Box, Divider
 } from '@mui/material';
 
@@ -20,6 +19,7 @@ import { TemplateComposer } from './template';
 import { Composer, StencilClient } from './context';
 
 import version from './version';
+import { bullfighters_red, cocktail_green, cyan, purple_zergling, saffron, turquoise_topaz } from 'components-colors';
 
 interface CardData {
   type: CardType;
@@ -36,13 +36,13 @@ interface CardData {
 
 type CardType = "release" | "article" | "page" | "link" | "workflow" | "locale" | "migration" | "templates";
 
-const createCards: (site: StencilClient.Site, theme: Theme, tabs: Burger.TabsActions) => CardData[] = (_site, theme, tabs) => ([
+const createCards: (site: StencilClient.Site, tabs: Burger.TabsActions) => CardData[] = (_site, tabs) => ([
   {
     composer: (handleClose) => (<ArticleComposer onClose={handleClose} />),
     onView: () => tabs.handleTabAdd({ id: 'articles', label: "Articles" }),
     title: "activities.article.title",
     desc: "activities.article.desc",
-    color: theme.palette.article?.main,
+    color: cyan,
     type: "article",
     buttonCreate: "article.create",
     buttonViewAll: undefined
@@ -52,7 +52,7 @@ const createCards: (site: StencilClient.Site, theme: Theme, tabs: Burger.TabsAct
     onView: () => console.log("nothing to see here"),
     title: "activities.page.title",
     desc: "activities.page.desc",
-    color: theme.palette.page?.main,
+    color: turquoise_topaz,
     type: "page",
     buttonCreate: "page.create",
     buttonViewAll: undefined
@@ -62,7 +62,7 @@ const createCards: (site: StencilClient.Site, theme: Theme, tabs: Burger.TabsAct
     onView: () => tabs.handleTabAdd({ id: 'links', label: "Links" }),
     title: "activities.link.title",
     desc: "activities.link.desc",
-    color: theme.palette.link?.main,
+    color: purple_zergling,
     type: "link",
     buttonCreate: "link.create",
     buttonViewAll: undefined
@@ -73,7 +73,7 @@ const createCards: (site: StencilClient.Site, theme: Theme, tabs: Burger.TabsAct
     onView: () => tabs.handleTabAdd({ id: 'workflows', label: "Workflows" }),
     title: "services",
     desc: "services.desc",
-    color: theme.palette.workflow?.main,
+    color: bullfighters_red,
     type: "workflow",
     buttonCreate: "services.create",
     buttonViewAll: undefined
@@ -84,7 +84,7 @@ const createCards: (site: StencilClient.Site, theme: Theme, tabs: Burger.TabsAct
     onView: () => tabs.handleTabAdd({ id: 'locales', label: "Locales" }),
     title: "activities.locale.title",
     desc: "activities.locale.desc",
-    color: theme.palette.locale?.main,
+    color: saffron,
     type: "locale",
     buttonCreate: "locale.create",
     buttonViewAll: "button.view.all.locales"
@@ -95,7 +95,7 @@ const createCards: (site: StencilClient.Site, theme: Theme, tabs: Burger.TabsAct
     onView: () => tabs.handleTabAdd({ id: 'releases', label: "Releases" }),
     title: "activities.release.title",
     desc: "activities.release.desc",
-    color: theme.palette.release?.main,
+    color: cocktail_green,
     type: "release",
     buttonCreate: "release.create",
     buttonViewAll: "button.view.all.releases",
@@ -106,7 +106,7 @@ const createCards: (site: StencilClient.Site, theme: Theme, tabs: Burger.TabsAct
     onView: () => tabs.handleTabAdd({ id: 'templates', label: "Templates" }),
     title: "activities.templates.title",
     desc: "activities.templates.desc",
-    color: theme.palette.release?.main,
+    color: cocktail_green,
     type: "templates",
     buttonCreate: "template.create",
     buttonViewAll: "button.view.all.templates"
@@ -116,7 +116,7 @@ const createCards: (site: StencilClient.Site, theme: Theme, tabs: Burger.TabsAct
     onView: undefined,
     title: "activities.migration.title",
     desc: "activities.migration.desc",
-    color: theme.palette.release?.main,
+    color: cocktail_green,
     type: "migration",
     buttonCreate: "migration.create",
     buttonViewAll: undefined
@@ -157,7 +157,7 @@ const ActivitiesViewItem: React.FC<{ data: CardData, onCreate: () => void }> = (
           {props.data.buttonTertiary && props.data.onView ?
             <Burger.SecondaryButton label="button.releasegraph" onClick={() => tabs.actions.handleTabAdd({ id: 'graph', label: "Release Graph" })}
               sx={{
-                color: "uiElements.main",
+                color: cyan,
                 alignSelf: 'center',
               }} /> : null}
           <Burger.PrimaryButton onClick={props.onCreate} label={props.data.buttonCreate} />
@@ -170,14 +170,13 @@ const ActivitiesViewItem: React.FC<{ data: CardData, onCreate: () => void }> = (
 
 //card view for all CREATE views
 const ActivitiesView: React.FC<{}> = () => {
-  const theme = useTheme();
   const { actions } = Burger.useTabs();
   const { site } = Composer.useComposer();
   const { service } = Composer.useComposer();
 
   const [open, setOpen] = React.useState<number>();
   const handleClose = () => setOpen(undefined);
-  const cards = React.useMemo(() => createCards(site, theme, actions), [site, theme, actions]);
+  const cards = React.useMemo(() => createCards(site, actions), [site, actions]);
 
   const [coreVersion, setCoreVersion] = React.useState<string>();
   const [coreVersionDate, setCoreVersionDate] = React.useState<string>();

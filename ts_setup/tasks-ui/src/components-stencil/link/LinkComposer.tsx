@@ -9,6 +9,7 @@ import { Composer, StencilClient } from '../context';
 import Burger from 'components-burger';
 import { LocaleLabels } from '../locale';
 
+
 const selectSub = { ml: 2, color: "article.dark" }
 
 const LinkComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
@@ -56,7 +57,6 @@ const LinkComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     
   return (
     <Burger.Dialog open={true} onClose={onClose}
-      backgroundColor="uiElements.main"
       title="link.composer.title"
       submit={{ title: "button.create", onClick: handleCreate, disabled: !value || changeInProgress || labels.length < 1 }}>
 

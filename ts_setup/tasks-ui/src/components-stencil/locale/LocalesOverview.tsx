@@ -8,6 +8,7 @@ import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import { FormattedMessage } from 'react-intl';
 
 import { StencilClient } from '../context';
+import { cyan } from 'components-colors';
 
 
 
@@ -53,7 +54,7 @@ const LocalesOverview: React.FC<{site: StencilClient.Site}> = ({ site }) => {
               {locales.map((locale, index) => (
                 <TableCell key={index} sx={{ fontWeight: 'bold' }} align="left">
                   {isLocale(locale, article) && isContent(locale, article) ?
-                    (<span><Tooltip title={<FormattedMessage id="locales.content" />}><CheckCircleOutlineIcon sx={{ color: 'uiElements.main' }} /></Tooltip></span>) :
+                    (<span><Tooltip title={<FormattedMessage id="locales.content" />}><CheckCircleOutlineIcon sx={{ color: cyan }} /></Tooltip></span>) :
                     isLocale(locale, article) === true ?
                       (<span><Tooltip title={<FormattedMessage id="locales.nocontent" />}><CheckCircleOutlineIcon sx={{ color: 'warning.main' }} /></Tooltip></span>) :
                       (<span><Tooltip title={<FormattedMessage id="locales.nopage" />}><ErrorOutlineIcon sx={{ color: 'error.main' }} /></Tooltip></span>)

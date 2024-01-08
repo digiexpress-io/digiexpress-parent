@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Box, Typography, Grid, ListItemText } from '@mui/material';
+import { Box, Typography, Grid } from '@mui/material';
 import { FormattedMessage } from 'react-intl'
 
 import Burger from 'components-burger';
@@ -78,7 +78,6 @@ const InputFORM: React.FC<InputFORMProps> = ({ onSelect, onClose, value, selecte
   const elements = asset?.ast ? asset.ast.headers.acceptDefs : [];
 
   return (<Burger.Dialog title="debug.input.form" open={true} onClose={onClose}
-    backgroundColor="uiElements.main"
     submit={{
       title: "buttons.apply",
       disabled: false,

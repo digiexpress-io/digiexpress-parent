@@ -10,6 +10,7 @@ import { TenantEntryDescriptor } from 'descriptor-tenant';
 import { SessionItem } from './SessionItem';
 import { DialobForm, DialobSession } from 'client';
 import Burger from 'components-burger';
+import { wash_me } from 'components-colors';
 
 const SessionHeaders: React.FC<{ entry: TenantEntryDescriptor }> = ({ entry }) => {
   return (
@@ -94,7 +95,7 @@ const SessionList: React.FC<{
     <SessionHeaders entry={entry} />
 
     <Grid item md={12} lg={12} width='100%'>
-      <Stack sx={{ backgroundColor: 'mainContent.main' }}>
+      <Stack sx={{ backgroundColor: wash_me }}>
         {table.entries.map((session, index) => (
           <StyledStackItem key={session.id} index={index} onClick={() => { }}>
             <SessionItem key={session.id} entry={entry} form={form} session={session} />

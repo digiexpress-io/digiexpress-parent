@@ -10,6 +10,7 @@ import Burger from 'components-burger';
 
 import { Composer, Client } from '../../context';
 import {ErrorView} from '../../styles';
+import { cyan } from 'components-colors';
 
 
 const FlowDelete: React.FC<{ flowId: Client.FlowId, onClose: () => void }> = ({ flowId, onClose }) => {
@@ -39,7 +40,6 @@ const FlowDelete: React.FC<{ flowId: Client.FlowId, onClose: () => void }> = ({ 
   return (<Burger.Dialog open={true}
     onClose={onClose}
     children={editor}
-    backgroundColor="uiElements.main"
     title='flows.delete.title'
     submit={{
       title: "buttons.delete",
@@ -118,40 +118,35 @@ const FlowOptions: React.FC<{ flow: Client.Entity<Client.AstFlow> }> = ({ flow }
   return (
     <>
       {dialogOpen === 'FlowDelete' ? <FlowDelete flowId={flow.id} onClose={handleDialogClose} /> : null}
-{/* @ts-ignore */}
+
       <Burger.TreeItemOption nodeId={flow.id + 'edit-nested'}
-        color='article'
+        color={cyan}
         icon={EditIcon}
         onClick={() => nav.handleInTab({ article: flow })}
-        labelText={<FormattedMessage id="flows.edit.title" />}>
-      </Burger.TreeItemOption>
-{/* @ts-ignore */}
+        labelText={<FormattedMessage id="flows.edit.title" />}/>
+
       <Burger.TreeItemOption nodeId={flow.id + 'simulate-nested'}
-        color='article'
+        color={cyan}
         icon={ScienceOutlinedIcon}
         onClick={() => handleDebugInit(flow.id)}
-        labelText={<FormattedMessage id="flows.simulate.title" />}>
-      </Burger.TreeItemOption>
-{/* @ts-ignore */}
+        labelText={<FormattedMessage id="flows.simulate.title" />}/>
+
       <Burger.TreeItemOption nodeId={flow.id + 'delete-nested'}
-        color='article'
+        color={cyan}
         icon={DeleteOutlineOutlinedIcon}
         onClick={() => setDialogOpen('FlowDelete')}
-        labelText={<FormattedMessage id="flows.delete.title" />}>
-      </Burger.TreeItemOption>
-{/* @ts-ignore */}
+        labelText={<FormattedMessage id="flows.delete.title" />}/>
+
       <Burger.TreeItemOption nodeId={flow.id + 'copyas-nested'}
-        color='article'
+        color={cyan}
         icon={EditIcon}
         onClick={() => setDialogOpen('FlowCopy')}
-        labelText={<FormattedMessage id="flows.copyas.title" />}>
-      </Burger.TreeItemOption>
+        labelText={<FormattedMessage id="flows.copyas.title" />}/>
 
       {dialogOpen === 'FlowCopy' ? 
       <Burger.Dialog open={true}
         onClose={handleDialogClose}
         children={editor}
-        backgroundColor="uiElements.main"
         title='flows.composer.copyTitle'
         submit={{
           title: "buttons.copy",

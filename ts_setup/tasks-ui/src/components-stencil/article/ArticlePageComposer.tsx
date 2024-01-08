@@ -1,10 +1,11 @@
 import React from 'react';
-import { Box, useTheme } from '@mui/material';
+import { Box } from '@mui/material';
 
 import MDEditor, { ICommand, commands, TextState, TextAreaTextApi } from '@uiw/react-md-editor';
 import { Composer, StencilClient } from '../context';
 import { useSnackbar } from 'notistack';
 import { FormattedMessage } from 'react-intl';
+import { ocean_liner, turquoise_topaz } from 'components-colors';
 
 
 const regexp_starts_with = new RegExp('^# .');
@@ -86,7 +87,6 @@ type PageComposerProps = {
 }
 
 const ArticlePageComposer: React.FC<PageComposerProps> = ({ articleId, locale1, locale2 }) => {
-  const theme = useTheme();
   const { actions, session } = Composer.useComposer();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const [errors, setErrors] = React.useState(new Set<StencilClient.PageId>());
@@ -136,7 +136,7 @@ const ArticlePageComposer: React.FC<PageComposerProps> = ({ articleId, locale1, 
     return (
       <div>
         <MDEditor key={1} value={value1} onChange={(value) => handleChange({page: page1, value})} toolbarHeight={40}
-          commands={getMdCommands(session.site.locales[page1.body.locale], theme.palette.page.main, site)}
+          commands={getMdCommands(session.site.locales[page1.body.locale], turquoise_topaz, site)}
           textareaProps={{ placeholder: '# Title' }}
           height={800}
         />
@@ -148,7 +148,7 @@ const ArticlePageComposer: React.FC<PageComposerProps> = ({ articleId, locale1, 
     <Box display="flex" flexDirection="row" flexWrap="wrap">
       <Box flex="1" sx={{ paddingRight: 1 }}>
         <MDEditor key={2} value={value1} onChange={(value) => handleChange({page: page1, value})}
-          commands={getMdCommands(session.site.locales[page1.body.locale], theme.palette.page.main, site)}
+          commands={getMdCommands(session.site.locales[page1.body.locale], turquoise_topaz, site)}
           textareaProps={{ placeholder: '# Title' }}
           height={800}
         />
@@ -156,7 +156,7 @@ const ArticlePageComposer: React.FC<PageComposerProps> = ({ articleId, locale1, 
       </Box>
       <Box flex="1">
         <MDEditor key={3} value={value2} onChange={(value) => handleChange({page: page2, value})}
-          commands={getMdCommands(session.site.locales[page2.body.locale], theme.palette.page.dark, site)}
+          commands={getMdCommands(session.site.locales[page2.body.locale], ocean_liner, site)}
           textareaProps={{ placeholder: '# Title' }}
           height={800}
         />

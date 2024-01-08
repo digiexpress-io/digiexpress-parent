@@ -1,6 +1,5 @@
 import React from 'react';
-import { Box, TableContainer, Table, TableBody, RadioGroup, FormControlLabel, Radio } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { Box, TableContainer, Table, TableBody, RadioGroup, FormControlLabel } from '@mui/material';
 
 import Burger from 'components-burger';
 import { Client, Composer } from '../context';
@@ -42,7 +41,7 @@ const getData = (session: Composer.Session): {
 }
 
 
-const DebugView: React.FC<{}> = ({ }) => {
+const DebugView: React.FC<{}> = () => {
   const { service, session, actions } = Composer.useComposer();
   const nav = Composer.useNav();
   const { ast, debug, entity, debugValues } = getData(session);
@@ -266,7 +265,6 @@ const DebugView: React.FC<{}> = ({ }) => {
 
     { dialogShow && <Burger.Dialog open={true}
       onClose={() => setDialogShow(false)}
-      backgroundColor="uiElements.main"
       children={dialogChildren}
       title='debug.csv.download'
       submit={{

@@ -9,6 +9,7 @@ import StencilOutlinedIcon from '@mui/icons-material/AbcOutlined';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import ConfigItem from './ConfigItem';
+import { wash_me } from 'components-colors';
 
 
 const StyledBreadcrumb = styled(Chip)(({ theme }) => {
@@ -38,7 +39,7 @@ const SysConfig: React.FC<{}> = () => {
   return (
     <Grid container sx={{ mt: 1, ml: 1 }}>
       <Grid item md={8} lg={8}>
-        <Stack sx={{ backgroundColor: 'mainContent.main' }}>
+        <Stack sx={{ backgroundColor: wash_me }}>
 
           <Paper sx={{ width: '100%',  p: 3 }}>
             <Breadcrumbs aria-label="breadcrumb">

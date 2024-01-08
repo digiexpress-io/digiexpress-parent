@@ -3,6 +3,7 @@ import { styled } from "@mui/material/styles";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Box, alpha, useTheme } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 import { StyledSecondaryButton, StyledPrimaryButton } from './StyledButton'
+import { cyan, sambucus } from 'components-colors';
 /*
 const StyledDialogButton = styled(Button)(() => ({
   fontWeight: 'bold',
@@ -31,22 +32,16 @@ interface StyledDialogProps {
   };
   actions?: React.ReactElement;
   open: boolean;
-  backgroundColor: string;
   children: React.ReactElement;
 }
 
 const StyledDialog: React.FC<StyledDialogProps> = (props) => {
-  const theme = useTheme();
-  const colors = props.backgroundColor.split(".")
-  // @ts-ignore
-  const color = theme.palette[colors[0]][colors[1]];
-
-
+  const color = cyan;
   return (
     <Dialog open={props.open} onClose={props.onClose} fullWidth maxWidth="md" >
       <StyledDialogTitle sx={{ mb: 2, backgroundColor: alpha(color, 0.9) }}>
         <FormattedMessage id={props.title} values={props.titleArgs} /></StyledDialogTitle>
-      <DialogContent sx={{ color: "mainContent.dark", fontWeight: '400' }}>{props.children}</DialogContent>
+      <DialogContent sx={{ color: sambucus, fontWeight: '400' }}>{props.children}</DialogContent>
       <DialogActions>
         <Box display="inline-flex">
           {props.actions}

@@ -5,6 +5,7 @@ import { FormattedMessage } from 'react-intl';
 import { Composer, StencilClient } from '../context';
 import Burger from 'components-burger';
 
+
 const LocaleComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const { enqueueSnackbar } = useSnackbar();
   const { service, actions, site } = Composer.useComposer();
@@ -26,7 +27,6 @@ const LocaleComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   
   return (
     <Burger.Dialog open={true} onClose={onClose}
-      backgroundColor="uiElements.main"
       title="locale.composer.title"
       submit={{ title: "button.create", onClick: handleCreate, disabled: !locale || locales.includes(locale) || locale.length !== 2 }}>
 

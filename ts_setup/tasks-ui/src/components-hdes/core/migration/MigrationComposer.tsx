@@ -24,7 +24,6 @@ const MigrationComposer: React.FC<{ onClose: () => void}> = ({onClose}) => {
 
   return (
     <Burger.Dialog open={true} onClose={onClose}
-      backgroundColor="uiElements.main" 
       title="migrations.title"
       submit={{ title: "migrations.create", onClick: handleCreate, disabled: loading || !file }}>
       <>

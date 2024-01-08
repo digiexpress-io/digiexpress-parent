@@ -32,8 +32,7 @@ const MigrationComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
   
   return (
-    <Burger.Dialog open={true} onClose={onClose}
-      backgroundColor="uiElements.main" title="toolbar.import"
+    <Burger.Dialog open={true} onClose={onClose} title="toolbar.import"
       submit={{ title: "imports.import.action", onClick: handleCreate, disabled: loading || !file }}>
       <>
         <div>{file}</div>

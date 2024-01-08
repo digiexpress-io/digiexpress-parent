@@ -13,6 +13,7 @@ import Burger from 'components-burger';
 
 import { Composer, Client } from '../../context';
 import DecisionOptions from './DecisionOptions';
+import { grey_light, saffron } from "components-colors";
 
 
 
@@ -54,7 +55,7 @@ const DecisionItem: React.FC<{ decisionId: Client.DecisionId }> = ({ decisionId 
   const flows: Client.Entity<Client.AstFlow>[] = [];
 
   return (
-    <Burger.TreeItem nodeId={decision.id} labelText={decisionName} labelIcon={ArticleOutlinedIcon} labelcolor={saved ? "explorerItem" : "explorerItem.contrastText"}>
+    <Burger.TreeItem nodeId={decision.id} labelText={decisionName} labelIcon={ArticleOutlinedIcon} labelcolor={saved ? grey_light : saffron}>
 
       {/** Decision options */}
       <Burger.TreeItem nodeId={decision.id + 'options-nested'}

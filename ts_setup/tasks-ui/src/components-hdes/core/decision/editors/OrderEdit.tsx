@@ -215,7 +215,6 @@ const OrderEdit: React.FC<OrderEditProps> = (props) => {
 
 
   return (<Burger.Dialog title="decisions.toolbar.organize.rows.columns" open={true} onClose={props.onClose}
-    backgroundColor="uiElements.main"
     submit={{
       title: "buttons.apply",
       disabled: false,

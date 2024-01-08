@@ -66,7 +66,6 @@ const ReleaseComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   return (<Burger.Dialog open={true}
     onClose={onClose}
     children={editor}
-    backgroundColor="uiElements.main"
     title='releases.composer.title'
     submit={{
       title: "buttons.create",

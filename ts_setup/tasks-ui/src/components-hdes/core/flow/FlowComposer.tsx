@@ -60,7 +60,6 @@ const FlowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   return (<Burger.Dialog open={true}
     onClose={onClose}
     children={editor}
-    backgroundColor="uiElements.main"
     title='flows.composer.title'
     submit={{
       title: "buttons.create",

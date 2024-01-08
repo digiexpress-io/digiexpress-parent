@@ -3,12 +3,13 @@ import { styled } from "@mui/material/styles";
 import { Typography, Box, useTheme} from "@mui/material";
 import TreeItem, { TreeItemProps, treeItemClasses } from "@mui/lab/TreeItem";
 import { SvgIconProps } from "@mui/material/SvgIcon";
+import { blueberry_whip, green_teal, sambucus } from "components-colors";
 
 
 const StyledTreeItemRoot = styled(TreeItem)(({ theme }) => ({
   color: `var(--tree-view-text-color, ${theme.palette.text.secondary})`,
   [`& .${treeItemClasses.content}`]: {
-    color: `var(--tree-view-text-color, ${theme.palette.explorerItem.main})`,
+    color: `var(--tree-view-text-color, ${blueberry_whip})`,
     borderTopRightRadius: theme.spacing(2),
     borderBottomRightRadius: theme.spacing(2),
     paddingRight: theme.spacing(1),
@@ -21,7 +22,7 @@ const StyledTreeItemRoot = styled(TreeItem)(({ theme }) => ({
     },
     "&.Mui-focused, &.Mui-selected, &.Mui-selected.Mui-focused": {
       backgroundColor: `var(--tree-view-bg-color, ${theme.palette.action.selected})`,
-      color: `var(--tree-view-color, ${theme.palette.explorerItem.dark})` //"var(--tree-view-color)"
+      color: `var(--tree-view-color, ${green_teal})` //"var(--tree-view-color)"
     },
     [`& .${treeItemClasses.label}`]: {
       //fontWeight: "inherit",
@@ -76,7 +77,7 @@ const StyledTreeItem: React.FC<StyledTreeItemProps> = (props) => {
 
   return (
     <StyledTreeItemRoot
-      sx={{ backgroundColor: "explorer.main" }}
+      sx={{ backgroundColor: sambucus }}
       label={
         <Box sx={{ display: "flex", alignItems: "center", p: 0.5, pr: 0 }}>
           {labelButton ? labelButton : <Box component={LabelIcon}
@@ -114,7 +115,6 @@ const StyledTreeItemOption: React.FC<{
   icon?: React.ElementType<SvgIconProps>;
   onClick: () => void
 }> = (props) => {
-  const theme = useTheme();
 
   return (
     <StyledTreeItemRoot
@@ -123,8 +123,7 @@ const StyledTreeItemOption: React.FC<{
 
       label={
         <Box sx={{ display: "flex", alignItems: "center", p: 0.2, pr: 0}} > 
-          {/* @ts-ignore */ }
-          <Box component={props.icon}  color={theme.palette[props.color].main} sx={{ pl: 1, mr: 1}} />
+          <Box component={props.icon}  color={props.color} sx={{ pl: 1, mr: 1}} />
           <Typography 
             variant="body2"
             sx={{ fontWeight: "inherit", flexGrow: 1 }}

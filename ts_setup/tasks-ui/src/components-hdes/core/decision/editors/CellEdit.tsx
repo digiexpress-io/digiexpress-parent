@@ -68,7 +68,6 @@ const CellEdit: React.FC<CellEditProps> = (props) => {
   return (<Burger.Dialog open={true}
     onClose={props.onClose}
     children={editor}
-    backgroundColor="uiElements.main"
     title='decisions.cells.dialog.title'
     titleArgs={{
       name: props.dt.name,

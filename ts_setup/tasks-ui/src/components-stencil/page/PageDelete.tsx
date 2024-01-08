@@ -28,7 +28,6 @@ const PageDelete: React.FC<{ onClose: () => void, articleId: StencilClient.Artic
   const articlePages: StencilClient.Page[] = Object.values(site.pages).filter(p => p.body.article === props.articleId);
   return (
     <Burger.Dialog open={true} onClose={props.onClose}
-      backgroundColor="uiElements.main"
       title="pages.delete"
       submit={{ title: "button.delete", onClick: handleDelete, disabled: !pageId }}>
       <>

@@ -4,6 +4,7 @@ import { Card, CardHeader, CardActions, CardContent, Typography, Box, Divider } 
 import { FormattedMessage } from 'react-intl';
 
 import Burger from 'components-burger';
+import { cyan } from 'components-colors';
 
 
 interface ActivityData {
@@ -39,7 +40,7 @@ const ActivityItem: React.FC<{ data: ActivityData, onCreate: () => void }> = (pr
     <CardActions sx={{ alignSelf: "flex-end" }}>
       <Box display="flex">
         {props.data.buttonViewAll && props.data.onView ? <Burger.SecondaryButton onClick={props.data.onView} label={props.data.buttonViewAll} /> : <Box />}
-        {props.data.buttonTertiary && props.data.onTertiary ? <Burger.SecondaryButton label={props.data.buttonTertiary} onClick={props.data.onTertiary} sx={{ color: "uiElements.main", alignSelf: 'center' }} /> : null}
+        {props.data.buttonTertiary && props.data.onTertiary ? <Burger.SecondaryButton label={props.data.buttonTertiary} onClick={props.data.onTertiary} sx={{ color: cyan, alignSelf: 'center' }} /> : null}
         <Burger.PrimaryButton onClick={props.onCreate} label={props.data.buttonCreate} />
       </Box>
     </CardActions>

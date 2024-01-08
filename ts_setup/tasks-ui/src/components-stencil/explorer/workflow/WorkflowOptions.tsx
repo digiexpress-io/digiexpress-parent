@@ -17,21 +17,18 @@ const WorkflowOptions: React.FC<{workflow: StencilClient.Workflow}> = ({ workflo
       { dialogOpen === 'WorkflowEdit' ? <WorkflowEdit workflowId={workflow.id} onClose={handleDialogClose} /> : null}
       { dialogOpen === 'WorkflowDelete' ? <WorkflowDelete workflow={workflow} onClose={handleDialogClose} /> : null}
 
-            {/* @ts-ignore */}
+
       <Burger.TreeItemOption nodeId={workflow.id + 'workflow.edit'}
         icon={EditIcon}
         color='workflow'
         onClick={() => setDialogOpen('WorkflowEdit')}
-        labelText={<FormattedMessage id="services.edit" />}>
-      </Burger.TreeItemOption>
-      
-            {/* @ts-ignore */}      
+        labelText={<FormattedMessage id="services.edit" />}/>
+              
       <Burger.TreeItemOption nodeId={workflow.id + 'workflow.delete'}
         icon={DeleteOutlineOutlinedIcon}
         color='workflow'
         onClick={() => setDialogOpen('WorkflowDelete')}
-        labelText={<FormattedMessage id="services.delete" />}>
-      </Burger.TreeItemOption>
+        labelText={<FormattedMessage id="services.delete" />}/>
     </>
   );
 }

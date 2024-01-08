@@ -2,19 +2,20 @@ import React from 'react';
 import { alpha, styled } from '@mui/material/styles';
 import { Switch, FormControlLabel, FormHelperText } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
+import { cyan } from 'components-colors';
 
 
 
 
-const StyledSwitchRoot = styled(Switch)(({ theme }) => ({
+const StyledSwitchRoot = styled(Switch)(() => ({
   '& .MuiSwitch-switchBase.Mui-checked': {
-    color: theme.palette.uiElements.main,
+    color: cyan,
     '&:hover': {
-      backgroundColor: alpha(theme.palette.uiElements.main, 0.1),
+      backgroundColor: alpha(cyan, 0.1),
     },
   },
   '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-    backgroundColor: alpha(theme.palette.uiElements.main, 0.5),
+    backgroundColor: alpha(cyan, 0.5),
   },
 
 }));

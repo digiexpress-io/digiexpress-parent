@@ -8,6 +8,7 @@ import { usePopover, TablePopover } from '../TablePopover';
 import { TaskDescriptor, AvatarCode } from 'descriptor-task';
 import Client from 'client';
 import Context from 'context';
+import { cyan } from 'components-colors';
 
 const RoleAvatar: React.FC<{ children?: AvatarCode, onClick?: (event: React.MouseEvent<HTMLElement>) => void }> = ({ children, onClick }) => {
   const { state } = Context.useTasks();
@@ -103,9 +104,9 @@ const SelectRoles: React.FC<{
             <Box ml={1} >
               <Checkbox checked={checked} size='small' sx={{
                 height: "40px",
-                color: 'uiElements.main',
+                color: cyan,
                 '&.Mui-checked': {
-                  color: 'uiElements.main',
+                  color: cyan,
                 },
               }} />
             </Box>

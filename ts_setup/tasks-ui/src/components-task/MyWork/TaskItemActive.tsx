@@ -14,6 +14,7 @@ import Client from 'client';
 import { TaskDescriptor } from 'descriptor-task';
 import Customer from 'components-customer';
 import Burger from 'components-burger';
+import { cyan } from 'components-colors';
 
 
 
@@ -125,7 +126,7 @@ const TaskItemActive: React.FC<{ task: TaskDescriptor | undefined }> = ({ task }
           <StyledTitle children='task.tools' />
           <Stack direction='row' spacing={1} justifyContent='center'>
             <Box display='flex' flexDirection='column' alignItems='center'>
-              <IconButton onClick={handleTaskEdit}><EditIcon sx={{ color: 'uiElements.main' }} /></IconButton>
+              <IconButton onClick={handleTaskEdit}><EditIcon sx={{ color: cyan }} /></IconButton>
               <Typography><FormattedMessage id='task.edit' /></Typography>
             </Box>
             <Box display='flex' flexDirection='column' alignItems='center'>

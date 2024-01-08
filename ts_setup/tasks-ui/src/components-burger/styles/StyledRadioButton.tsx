@@ -1,12 +1,11 @@
 import { Radio } from '@mui/material';
 import { styled } from "@mui/material/styles";
+import { cyan } from 'components-colors';
 
 const StyledRadioButton = styled(Radio)(({ theme }) => ({
     marginLeft: theme.spacing(1.5),
-    color: theme.palette.uiElements.main,
-    '&.Mui-checked': {
-        color: theme.palette.uiElements.main,
-    }
+    color: cyan,
+    '&.Mui-checked': { color: cyan }
 }))
 
 export { StyledRadioButton }

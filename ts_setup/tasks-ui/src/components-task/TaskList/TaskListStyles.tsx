@@ -1,24 +1,25 @@
 import { Stack, SxProps, Theme, alpha, Box, darken, styled, Button, useTheme } from '@mui/material';
+import { cyan, wash_me } from 'components-colors';
 
 
-const StyledStartTaskButton = styled(Button)(({ theme }) => ({
-  color: theme.palette.mainContent.main,
+const StyledStartTaskButton = styled(Button)(() => ({
+  color: wash_me,
   fontWeight: 'bold',
-  backgroundColor: theme.palette.uiElements.main,
+  backgroundColor: cyan,
   '&:hover': {
-    backgroundColor: darken(theme.palette.uiElements.main, 0.3),
+    backgroundColor: darken(cyan, 0.3),
   }
 }));
 
 
 const StyledEditTaskButton = styled(Button)(({ theme }) => ({
   border: '1px solid',
-  color: theme.palette.uiElements.main,
+  color: cyan,
   fontWeight: 'bold',
-  borderColor: theme.palette.uiElements.main,
+  borderColor: cyan,
   '&:hover': {
-    borderColor: darken(theme.palette.uiElements.main, 0.3),
-    color: darken(theme.palette.uiElements.main, 0.3)
+    borderColor: darken(cyan, 0.3),
+    color: darken(cyan, 0.3)
   }
 }));
 
@@ -59,7 +60,7 @@ const StyledStackItem: React.FC<{
         p: 2,
         cursor: 'pointer',
         color: 'text.primary',
-        backgroundColor: alpha(theme.palette.uiElements.main, 0.3),
+        backgroundColor: alpha(cyan, 0.3),
         fontWeight: 'bolder',
         borderRadius: 1
       };
@@ -68,14 +69,14 @@ const StyledStackItem: React.FC<{
       return {
         p: 2,
         cursor: 'pointer',
-        backgroundColor: 'uiElements.light',
+        backgroundColor: cyan,
         color: 'text.primary'
       };
     } else {
       return {
         p: 2,
         cursor: 'pointer',
-        backgroundColor: 'mainContent.main',
+        backgroundColor: wash_me,
         color: 'text.primary'
       };
     }

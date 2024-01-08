@@ -35,7 +35,6 @@ const PageEditDevMode: React.FC<{ onClose: () => void, articleId: StencilClient.
     const valid = pageId && articleId;
     return (
       <Burger.Dialog open={true} onClose={props.onClose}
-        backgroundColor="uiElements.main" 
         title="pages.change.devmode"
         submit={{ title: "button.update", onClick: handleUpdate, disabled: !valid }}>
   

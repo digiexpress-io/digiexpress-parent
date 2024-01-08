@@ -16,6 +16,7 @@ import Burger from 'components-burger';
 import MsgTreeItem from '../MsgTreeItem';
 import { Composer, Client } from '../../context';
 import ServiceOptions from './ServiceOptions';
+import { grey_light, saffron, turquoise, turquoise_topaz } from "components-colors";
 
 
 const ErrorItem: React.FC<{
@@ -64,7 +65,7 @@ function DecisionItem(props: {
       onClick={props.onClick}
       label={
         <Box sx={{ display: "flex", alignItems: "center", p: 0.5, pr: 0 }}>
-          <Box component={AccountTreeOutlinedIcon} color="page.main" sx={{ pl: 1, mr: 1 }} />
+          <Box component={AccountTreeOutlinedIcon} color={turquoise_topaz} sx={{ pl: 1, mr: 1 }} />
           <Typography noWrap={true} maxWidth="300px" variant="body2"
             sx={{ fontWeight: "inherit", flexGrow: 1 }}
           >
@@ -134,7 +135,7 @@ const ServiceItem: React.FC<{ serviceId: Client.ServiceId }> = ({ serviceId }) =
     <Burger.TreeItem nodeId={service.id} labelText={serviceName}
       labelIcon={ArticleOutlinedIcon}
       labelInfo={service.status === "UP" ? undefined : <ConstructionIcon color="error" />}
-      labelcolor={saved ? "explorerItem" : "explorerItem.contrastText"}>
+      labelcolor={saved ? grey_light : saffron}>
 
       {/** Service options */}
       <Burger.TreeItem nodeId={service.id + 'options-nested'}
@@ -174,7 +175,7 @@ const ServiceItem: React.FC<{ serviceId: Client.ServiceId }> = ({ serviceId }) =
         labelText={<FormattedMessage id="internal-decisions" />}
         labelIcon={FolderOutlinedIcon}
         labelInfo={`${decisions.length}`}
-        labelcolor="page">
+        labelcolor={turquoise}>
 
         {decisions.map(view => (<DecisionItem key={view.ref.ref} nodeId={`${service.id}-dt-${view.ref.ref}`}
           labelText={view.ref.ref}

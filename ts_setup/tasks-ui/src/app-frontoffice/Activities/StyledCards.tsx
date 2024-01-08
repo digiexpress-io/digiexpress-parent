@@ -3,6 +3,7 @@ import { Typography, Box, SxProps, CardHeader, Card, CardContent, Divider, CardA
 import { FormattedMessage } from 'react-intl';
 
 import Burger from 'components-burger';
+import { cyan } from 'components-colors';
 
 
 interface StyledCardItemProps {
@@ -56,7 +57,7 @@ const StyledCardItem: React.FC<StyledCardItemProps> = (props) => {
     <CardActions sx={{ alignSelf: "flex-end" }}>
       <Box display="flex">
         {props.secondary ? <Burger.SecondaryButton onClick={props.secondary.onClick} label={props.secondary.label} /> : <Box />}
-        {props.tertiary ? <Burger.SecondaryButton onClick={props.tertiary.onClick} label={props.tertiary.label} sx={{ color: "uiElements.main", alignSelf: 'center' }} /> : null}
+        {props.tertiary ? <Burger.SecondaryButton onClick={props.tertiary.onClick} label={props.tertiary.label} sx={{ color: cyan, alignSelf: 'center' }} /> : null}
         <Burger.PrimaryButton onClick={props.primary.onClick} label={props.primary.label} />
       </Box>
     </CardActions>

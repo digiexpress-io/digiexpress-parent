@@ -6,7 +6,6 @@ import { TextareaAutosize } from '@mui/material';
 import Burger from 'components-burger';
 import { Client } from '../../context';
 
-
 interface UploadCSVProps {
   onClose: () => void;
   onChange: (commands: Client.AstCommand[]) => void;
@@ -16,7 +15,6 @@ const UploadCSV: React.FC<UploadCSVProps> = ({ onChange, onClose }) => {
   const [csv, setCsv] = React.useState('');
 
   return (<Burger.Dialog title="decisions.toolbar.csvUpload" open={true} onClose={onClose}
-    backgroundColor="uiElements.main"
     submit={{
       title: "buttons.apply",
       disabled: false,

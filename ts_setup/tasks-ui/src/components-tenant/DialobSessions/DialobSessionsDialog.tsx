@@ -6,6 +6,7 @@ import { FormattedMessage } from 'react-intl';
 import { TenantEntryDescriptor } from 'descriptor-tenant';
 import { DialobForm, DialobSession } from 'client'
 import { SessionList } from './SessionList';
+import { sambucus, wash_me } from 'components-colors';
 
 const DialobSessionsDialog: React.FC<{
   onClose: () => void,
@@ -28,8 +29,8 @@ const DialobSessionsDialog: React.FC<{
   return (
     <Dialog open={true} fullWidth maxWidth='xl'>
       <DialogTitle sx={{
-        backgroundColor: theme.palette.mainContent.main,
-        borderBottom: `1px solid ${alpha(theme.palette.mainContent.dark, 0.3)}`,
+        backgroundColor: wash_me,
+        borderBottom: `1px solid ${alpha(sambucus, 0.3)}`,
         mb: 1,
       }}>
         <Box display='flex' alignItems='center'>

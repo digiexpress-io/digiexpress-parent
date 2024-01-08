@@ -1,11 +1,12 @@
 import React from 'react';
-import { Dialog, DialogContent, DialogTitle, Box, DialogActions, IconButton, Typography, useTheme, alpha, Stack, Alert, CircularProgress } from '@mui/material';
+import { Dialog, DialogContent, DialogTitle, Box, DialogActions, IconButton, Typography, alpha, Stack, Alert, CircularProgress } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { TenantEntryDescriptor } from 'descriptor-tenant';
 import Burger from 'components-burger';
 import Fields from 'components-tenant/DialobFields/DialobTextFields';
 import Context from 'context';
+import { sambucus, wash_me } from 'components-colors';
 
 
 const DialobCopyDialog: React.FC<{
@@ -14,7 +15,6 @@ const DialobCopyDialog: React.FC<{
   setActiveDialob: (task?: TenantEntryDescriptor) => void,
   entry: TenantEntryDescriptor
 }> = (props) => {
-  const theme = useTheme();
   const intl = useIntl();
   const backend = Context.useBackend();
   const tenants = Context.useTenants();
@@ -65,8 +65,8 @@ const DialobCopyDialog: React.FC<{
 
     <Dialog open={true} fullWidth maxWidth='md'>
       <DialogTitle sx={{
-        backgroundColor: theme.palette.mainContent.main,
-        borderBottom: `1px solid ${alpha(theme.palette.mainContent.dark, 0.3)}`,
+        backgroundColor: wash_me,
+        borderBottom: `1px solid ${alpha(sambucus, 0.3)}`,
         mb: 1,
       }}>
         <Box display='flex' alignItems='center'>

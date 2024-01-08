@@ -108,7 +108,6 @@ const HeaderEdit: React.FC<HeaderEditProps> = ({ dt, header, onClose, onChange }
   return (<Burger.Dialog open={true}
     onClose={onClose}
     children={editor}
-    backgroundColor="uiElements.main"
     title='decisions.header.dialog.title'
     titleArgs={{
       name: dt.name,

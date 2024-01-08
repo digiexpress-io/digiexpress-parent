@@ -11,7 +11,7 @@ function getRowBackgroundColor(index: number): string {
   const isOdd = index % 2 === 1;
 
   if (isOdd) {
-    return 'uiElements.light';
+    return cyan;
   }
   return 'background.paper';
 }

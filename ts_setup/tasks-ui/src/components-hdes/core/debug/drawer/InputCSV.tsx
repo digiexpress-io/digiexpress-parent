@@ -6,7 +6,6 @@ import { FormattedMessage } from 'react-intl'
 import Burger from 'components-burger';
 import { Client } from '../../context';
 
-
 interface InputCSVProps {
   value: string;
   selected?: Client.EntityId;
@@ -18,7 +17,6 @@ const InputCSV: React.FC<InputCSVProps> = ({ onSelect, onClose, value }) => {
   const [csv, setCsv] = React.useState(value);
 
   return (<Burger.Dialog title="debug.input.csvUpload" open={true} onClose={onClose}
-    backgroundColor="uiElements.main"
     submit={{
       title: "buttons.apply",
       disabled: false,

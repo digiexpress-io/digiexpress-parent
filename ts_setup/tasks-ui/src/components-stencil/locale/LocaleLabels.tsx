@@ -13,6 +13,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 
 import Burger from 'components-burger';
 import { Composer, StencilClient } from '../context';
+import { cyan, sambucus } from 'components-colors';
 
 
 interface SelectedValue {
@@ -100,13 +101,13 @@ const LocaleLabels: React.FC<LocaleLabelsProps> = (props) => {
     <TableHead sx={{ backgroundColor: "table.main" }}>
       <TableRow sx={{ borderBottom: 0 }}>
         <TableCell colSpan={3} sx={{ borderBottom: 0 }}>
-          <Typography variant="h4" sx={{ fontWeight: 'bold', marginBottom: 1, color: "mainContent.dark" }}>
+          <Typography variant="h4" sx={{ fontWeight: 'bold', marginBottom: 1, color: sambucus }}>
             <FormattedMessage id={"locales.label.table.title"} />
           </Typography>
         </TableCell>
 
         <TableCell sx={{ borderBottom: 0 }} align="right">
-          <IconButton sx={{ color: 'uiElements.main' }}
+          <IconButton sx={{ color: cyan }}
             disabled={(edit ? true : false)}
             onClick={(event) => setAnchorEl(event.currentTarget)}>
             <AddCircleOutlineIcon />
@@ -125,7 +126,7 @@ const LocaleLabels: React.FC<LocaleLabelsProps> = (props) => {
           <Typography variant="h5" sx={{ marginBottom: 1, marginTop: 1 }}><FormattedMessage id="transferlist.noItemsSelected" /></Typography>
           <Box display="flex" alignItems="center">
             <WarningAmberRoundedIcon sx={{ color: 'warning.main' }} />
-            <Typography variant="caption" sx={{ fontWeight: 'bold', color: "uiElements.main" }}>
+            <Typography variant="caption" sx={{ fontWeight: 'bold', color: cyan }}>
               <FormattedMessage id={"locales.label.title.helper"} />
             </Typography>
           </Box>
@@ -135,7 +136,7 @@ const LocaleLabels: React.FC<LocaleLabelsProps> = (props) => {
       {rows.map((row, index) => (
         <TableRow hover key={index} sx={{ height: "85px" }}>
           <TableCell sx={{ width: "40px" }}>
-            <IconButton onClick={() => handleRemoveLabel(row.locale)} sx={{ color: 'uiElements.main' }}>
+            <IconButton onClick={() => handleRemoveLabel(row.locale)} sx={{ color: cyan }}>
               <DeleteOutlineIcon />
             </IconButton>
           </TableCell>
@@ -149,8 +150,8 @@ const LocaleLabels: React.FC<LocaleLabelsProps> = (props) => {
             {edit?.locale === row.locale ? editField : row.value}
           </TableCell>
           <TableCell align="right">
-            <IconButton sx={{ color: 'uiElements.main' }}
-              disabled={(edit && edit.locale !== row.locale || edit && edit.value.length === 0) ? true : false}
+            <IconButton sx={{ color: cyan }}
+              disabled={((edit && edit.locale !== row.locale) || (edit && edit.value.length === 0)) ? true : false}
               onClick={() => {
                 if (edit) {
                   handleEditEnd()
@@ -181,7 +182,7 @@ const LocaleLabels: React.FC<LocaleLabelsProps> = (props) => {
         <List>
           {selection.map((item, index) => (<ListItem disablePadding key={index}>
             <ListItemButton disabled={item.added} onClick={() => handleAddLabel(item.id)}>
-              <ListItemIcon sx={{ color: 'uiElements.main' }}>
+              <ListItemIcon sx={{ color: cyan }}>
                 <AddCircleOutlineIcon />
               </ListItemIcon>
               <ListItemText primary={`${item.value} ${item.added ? " - " + alreadyDefinedLabel : ""}`} />

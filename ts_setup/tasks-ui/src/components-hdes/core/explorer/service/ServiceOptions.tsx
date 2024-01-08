@@ -10,6 +10,7 @@ import Burger from 'components-burger';
 
 import { Composer, Client } from '../../context';
 import { ErrorView } from '../../styles';
+import { purple_zergling } from 'components-colors';
 
 
 const ServiceDelete: React.FC<{ serviceId: Client.ServiceId, onClose: () => void }> = ({ serviceId, onClose }) => {
@@ -38,7 +39,6 @@ const ServiceDelete: React.FC<{ serviceId: Client.ServiceId, onClose: () => void
   return (<Burger.Dialog open={true}
     onClose={onClose}
     children={editor}
-    backgroundColor="uiElements.main"
     title='services.delete.title'
     submit={{
       title: "buttons.delete",
@@ -115,39 +115,35 @@ const ServiceOptions: React.FC<{ service: Client.Entity<Client.AstService> }> = 
   return (
     <>
       {dialogOpen === 'ServiceDelete' ? <ServiceDelete serviceId={service.id} onClose={handleDialogClose} /> : null}
-      {/* @ts-ignore */}
+
       <Burger.TreeItemOption nodeId={service.id + 'edit-nested'}
-        color='link'
+        color={purple_zergling}
         icon={EditIcon}
         onClick={() => nav.handleInTab({ article: service })}
-        labelText={<FormattedMessage id="services.edit.title" />}>
-      </Burger.TreeItemOption>
-      {/* @ts-ignore */}
+        labelText={<FormattedMessage id="services.edit.title" />}/>
+
       <Burger.TreeItemOption nodeId={service.id + 'simulate-nested'}
-        color='link'
+        color={purple_zergling}
         icon={ScienceOutlinedIcon}
         onClick={() => handleDebugInit(service.id)}
-        labelText={<FormattedMessage id="services.simulate.title" />}>
-      </Burger.TreeItemOption>
-      {/* @ts-ignore */}
+        labelText={<FormattedMessage id="services.simulate.title" />}/>
+
       <Burger.TreeItemOption nodeId={service.id + 'delete-nested'}
-        color='link'
+        color={purple_zergling}
         icon={DeleteOutlineOutlinedIcon}
         onClick={() => setDialogOpen('ServiceDelete')}
-        labelText={<FormattedMessage id="services.delete.title" />}>
-      </Burger.TreeItemOption>
-      {/* @ts-ignore */}
+        labelText={<FormattedMessage id="services.delete.title" />}/>
+
       <Burger.TreeItemOption nodeId={service.id + 'copyas-nested'}
-        color='link'
+        color={purple_zergling}
         icon={EditIcon}
         onClick={() => setDialogOpen('ServiceCopy')}
-        labelText={<FormattedMessage id="services.copyas.title" />}>
-      </Burger.TreeItemOption>
+        labelText={<FormattedMessage id="services.copyas.title" />}/>
+        
       {dialogOpen === 'ServiceCopy' ? 
       <Burger.Dialog open={true}
         onClose={handleDialogClose}
         children={editor}
-        backgroundColor="uiElements.main"
         title='services.composer.copyTitle'
         submit={{
           title: "buttons.copy",

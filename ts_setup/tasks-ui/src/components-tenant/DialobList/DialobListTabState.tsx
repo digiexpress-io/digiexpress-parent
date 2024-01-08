@@ -6,7 +6,7 @@ import Pagination from 'table';
 import Context from 'context';
 import { TenantEntryDescriptor } from 'descriptor-tenant';
 import { NavigationButton } from 'components-generic';
-import { cyan } from 'components-colors';
+import { cyan, wash_me } from 'components-colors';
 
 import { initTable, initTabs, createTabs, DialobListTabState, DialobListState } from './types';
 import { StyledStackItem, StyledEditDialobButton, StyledPreviewFIllButton } from './DialobListStyles';
@@ -109,7 +109,7 @@ const DialobList: React.FC<{
 
     <Grid container>
       <Grid item md={8} lg={8}>
-        <Stack sx={{ backgroundColor: 'mainContent.main' }}>
+        <Stack sx={{ backgroundColor: wash_me }}>
           {table.entries.map((task, index) => (
             <StyledStackItem key={task.source.id} index={index}
               active={state.activeDialob?.source.id === task.source.id} onClick={() => handleActiveDialob(task)}>

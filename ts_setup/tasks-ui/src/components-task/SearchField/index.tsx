@@ -1,5 +1,6 @@
 import { InputAdornment, TextField } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
+import { cyan, wash_me } from "components-colors";
 
 
 const SearchFieldBar: React.FC<{ onChange: (value: string) => void }> = ({ onChange }) => {
@@ -13,16 +14,16 @@ const SearchFieldBar: React.FC<{ onChange: (value: string) => void }> = ({ onCha
           width: '50ch',
           height: '2rem',
           '&.MuiOutlinedInput-root': {
-            backgroundColor: 'mainContent.main',
+            backgroundColor: wash_me,
             '&.Mui-focused fieldset': {
-              borderColor: 'uiElements.main',
+              borderColor: cyan,
               borderWidth: '1px'
             }
           }
         },
         startAdornment: (
           <InputAdornment position="start">
-            <SearchIcon sx={{ fontSize: '20px', color: 'uiElements.main' }} />
+            <SearchIcon sx={{ fontSize: '20px', color: cyan }} />
           </InputAdornment>
         )
       }}

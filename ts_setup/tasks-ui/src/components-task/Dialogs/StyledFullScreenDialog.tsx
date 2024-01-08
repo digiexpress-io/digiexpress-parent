@@ -1,22 +1,20 @@
 import React from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Box, Stack, Divider, alpha, Theme, styled } from '@mui/material';
+import { sambucus, wash_me } from 'components-colors';
 
-function borderColor(theme: Theme) {
-  return alpha(
-    theme.palette.mainContent.dark
-    //theme.palette.uiElements.main
-    , 0.3);
+function borderColor(_theme: Theme) {
+  return alpha(sambucus, 0.3);
 }
 
 const StyledDialogTitle = styled(DialogTitle)(({ theme }) => ({
   borderBottom: `1px solid ${borderColor(theme)}`,
-  backgroundColor: theme.palette.mainContent.main
+  backgroundColor: wash_me
 }));
 
 
 const StyledDialogActions = styled(DialogActions)(({ theme }) => ({
   borderTop: `1px solid ${borderColor(theme)}`,
-  backgroundColor: theme.palette.mainContent.main
+  backgroundColor: wash_me
 }));
 
 

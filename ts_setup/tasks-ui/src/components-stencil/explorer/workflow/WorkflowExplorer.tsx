@@ -8,6 +8,7 @@ import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import { Composer, StencilClient } from '../../context';
 import { WorkflowEdit } from '../../workflow/WorkflowEdit';
 import WorkflowItem from './WorkflowItem';
+import { blueberry_whip } from 'components-colors';
 
 const findMainId = (values: string[]) => {
   const result = values.filter(id => !id.endsWith("-nested"));
@@ -38,7 +39,7 @@ const WorkflowExplorer: React.FC<{ searchString: string }> = ({ searchString }) 
         sx={{
           fontVariant: 'all-petite-caps',
           fontWeight: 'bold',
-          color: 'explorerItem.main',
+          color: blueberry_whip,
           ml: 1, mr: 1, mb: 1,
           borderBottom: '1px solid'
         }}>

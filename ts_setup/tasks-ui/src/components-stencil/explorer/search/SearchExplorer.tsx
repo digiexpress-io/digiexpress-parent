@@ -19,28 +19,27 @@ import { WorkflowEdit } from '../../workflow/';
 import { LinkEdit } from '../../link/';
 import Burger from 'components-burger';
 import { Composer, StencilClient } from '../../context';
+import { blueberry_whip, green_teal, saffron, sambucus, turquoise } from 'components-colors';
 
 
-//color: theme.palette.explorerItem.dark,
-//backgroundColor: theme.palette.explorer.main,
 const TextFieldRoot = styled(TextField)<TextFieldProps>(({ theme }) => ({
   marginTop: theme.spacing(1),
   padding: theme.spacing(1),
-  color: theme.palette.explorerItem.dark,
-  backgroundColor: theme.palette.explorer.main,
+  color: green_teal,
+  backgroundColor: sambucus,
   '& .MuiOutlinedInput-input': {
-    color: theme.palette.explorerItem.main,
+    color: blueberry_whip,
   },
   '& .MuiOutlinedInput-root': {
     '&.Mui-focused fieldset': {
-      borderColor: theme.palette.explorerItem.dark,
+      borderColor: green_teal,
     },
   },
   '& .MuiFormLabel-root': {
-    color: theme.palette.explorerItem.main,
+    color: blueberry_whip,
   },
   '& .MuiFormHelperText-root': {
-    color: theme.palette.explorerItem.main,
+    color: blueberry_whip,
     marginLeft: 0
   }
 }));
@@ -60,7 +59,7 @@ const findMatch = (line: string, keyword: string, fallback?: boolean) => {
 
   return (<>
     <span>{fragment_0}</span>
-    <Box component="span" sx={{ color: "explorerItem.contrastText" }}><b>{fragment_1}</b></Box>
+    <Box component="span" sx={{ color: saffron }}><b>{fragment_1}</b></Box>
     <span>{fragment_2}</span>
   </>);
 }
@@ -90,7 +89,7 @@ const LinkItem: React.FC<{ view: Composer.LinkView, searchResult: Composer.Searc
       key={items.length}
       nodeId={`${view.link.id}-${items.length}-nested`}
       labelText={<span>{label.locale.body.value} - {match}</span>}
-      labelcolor="page"
+      labelcolor={turquoise}
     >
     </Burger.TreeItem>);
   }
@@ -126,7 +125,7 @@ const WorkflowItem: React.FC<{ view: Composer.WorkflowView, searchResult: Compos
           key={items.length}
           nodeId={`${view.workflow.id}-${items.length}-nested`}
           labelText={<span>{label.locale.body.value} - {match}</span>}
-          labelcolor="page"
+          labelcolor={turquoise}
         >
         </Burger.TreeItem>
       </>);
@@ -175,7 +174,7 @@ const ArticleItem: React.FC<{ view: Composer.ArticleView, searchResult: Composer
             key={index++}
             nodeId={`${pageView.page.id}-${lineIndex}-nested`}
             labelText={<span>{pageView.locale.body.value}.md ({lineIndex}) - {match}</span>}
-            labelcolor="page"
+            labelcolor={turquoise}
           >
           </Burger.TreeItem>);
         lineIndex++;
@@ -186,13 +185,11 @@ const ArticleItem: React.FC<{ view: Composer.ArticleView, searchResult: Composer
 
 
   if (items.length > 0) {
-              {/* @ts-ignore */}
     const articleEditButton: React.ReactElement = <Burger.TreeItemOption nodeId={article.id + 'edit-nested'}
         color='article'
         icon={EditIcon}
         onClick={() => setArticleEditOpen(true)}
-        labelText={<FormattedMessage id="article.edit.title" />}>
-      </Burger.TreeItemOption>
+        labelText={<FormattedMessage id="article.edit.title" />}/>
 
     items = [articleEditButton, ...items];
   }
@@ -205,7 +202,7 @@ const ArticleItem: React.FC<{ view: Composer.ArticleView, searchResult: Composer
         key={index++}
         nodeId={view.article.id}
         labelText={<span>{findMatch(`${view.article.body.name}`, keyword, true)}</span>}
-        labelcolor="page"
+        labelcolor={turquoise}
         labelIcon={view.article.body.devMode ? ConstructionIcon : ArticleOutlinedIcon}
         onClick={() => {
           if (items.length === 0) {
@@ -252,7 +249,7 @@ const SearchExplorer: React.FC<{}> = () => {
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
-              <SearchIcon sx={{ color: 'explorerItem.dark' }} />
+              <SearchIcon sx={{ color: green_teal }} />
             </InputAdornment>
           ),
         }} />
@@ -261,7 +258,7 @@ const SearchExplorer: React.FC<{}> = () => {
         sx={{
           fontVariant: 'all-petite-caps',
           fontWeight: 'bold',
-          color: 'explorerItem.main',
+          color: blueberry_whip,
           ml: 1, mr: 1, mb: 1,
           borderBottom: '1px solid'
         }}>

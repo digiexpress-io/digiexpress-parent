@@ -7,6 +7,7 @@ import Burger from 'components-burger';
 import { Composer, StencilClient } from '../context';
 import PageviewOutlinedIcon from '@mui/icons-material/PageviewOutlined';
 import { FormattedMessage } from 'react-intl';
+import { cyan } from 'components-colors';
 
 const DUMMY_ID = "none-selected"
 
@@ -28,7 +29,7 @@ const OrderNumberTooltip: React.FC<{}> = () => {
 
   return (<>
     <Tooltip title={<FormattedMessage id="article.order.view" />}>
-      <IconButton sx={{ ml: 2, color: 'uiElements.main' }}  onClick={handlePopover}>
+      <IconButton sx={{ ml: 2, color: cyan }}  onClick={handlePopover}>
         <PageviewOutlinedIcon fontSize="large" />
       </IconButton>
     </Tooltip>
@@ -86,8 +87,7 @@ const ArticleComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const message = <FormattedMessage id="snack.article.createdMessage" values={{ name }} />
 
   return (
-    <Burger.Dialog open={true} onClose={onClose}
-      backgroundColor="uiElements.main" title="article.composer.title"
+    <Burger.Dialog open={true} onClose={onClose} title="article.composer.title"
       submit={{ title: "article.create", onClick: handleCreate, disabled: !name }}>
       <>
 

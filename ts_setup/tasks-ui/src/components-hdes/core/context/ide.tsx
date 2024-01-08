@@ -1,11 +1,11 @@
 import React from 'react';
-import { useTheme } from '@mui/material';
 
 //import { StencilClient, Layout } from '../';
 import HdesClient from '../client';
 import Burger from 'components-burger';
 import { ReducerDispatch, Reducer } from './Reducer';
 import { SessionData, ImmutableTabData } from './SessionData';
+import { saffron } from 'components-colors';
 
 declare namespace Composer {
 
@@ -199,13 +199,12 @@ namespace Composer {
 }
 
 const ArticleTabIndicator: React.FC<{ entity: HdesClient.Entity<any> }> = ({ entity }) => {
-  const theme = useTheme();
   const { isArticleSaved } = Composer.useComposer();
   const saved = isArticleSaved(entity);
   return <span style={{
     paddingLeft: "5px",
     fontSize: '30px',
-    color: theme.palette.explorerItem.contrastText,
+    color: saffron,
     display: saved ? "none" : undefined
   }}>*</span>
 }

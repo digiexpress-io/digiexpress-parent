@@ -3,6 +3,7 @@ import { styled, darken, alpha } from "@mui/material/styles";
 import { SxProps } from '@mui/system';
 import { Button, ButtonProps, Theme } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
+import { cyan } from 'components-colors';
 
 
 
@@ -10,9 +11,9 @@ const StyledButtonRoot = styled(Button)<ButtonProps>(({ theme }) => ({
   borderRadius: theme.spacing(1),
   borderWidth: 0,
   fontWeight: 'bold',
-  color: theme.palette.uiElements.main,
+  color: cyan,
   '&:hover': {
-    backgroundColor: alpha(theme.palette.uiElements.main, 0.1),
+    backgroundColor: alpha(cyan, 0.1),
     border: 'none',
   },
 }));
@@ -21,9 +22,9 @@ const StyledButtonRoot = styled(Button)<ButtonProps>(({ theme }) => ({
 const StyledButtonPrimaryRoot = styled(Button)<ButtonProps>(({ theme }) => ({
   borderRadius: theme.spacing(1),
   fontWeight: 'bold',
-  backgroundColor: theme.palette.uiElements.main,
+  backgroundColor: cyan,
   '&:hover': {
-    backgroundColor: darken(theme.palette.uiElements.main, 0.2),
+    backgroundColor: darken(cyan, 0.2),
   },
 }));
 

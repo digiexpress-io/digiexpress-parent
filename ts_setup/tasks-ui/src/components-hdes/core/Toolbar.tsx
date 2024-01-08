@@ -18,21 +18,22 @@ import { useSnackbar } from 'notistack';
 import Context from 'context';
 import Burger from 'components-burger';
 import { Composer } from './context';
+import { blueberry_whip, green_teal, saffron, sambucus } from 'components-colors';
 
 
 const StyledTab = styled(Tab)<TabProps>(({ theme }) => ({
   "&.MuiButtonBase-root": {
     minWidth: "unset",
-    color: theme.palette.explorerItem.main,
+    color: blueberry_whip,
   },
   "&.Mui-selected": {
-    color: theme.palette.explorerItem.dark,
+    color: green_teal,
   }
 }));
 
 const StyledTabs = styled(Tabs)<TabsProps>(({ theme }) => ({
   "& .MuiTabs-indicator": {
-    backgroundColor: theme.palette.explorerItem.dark,
+    backgroundColor: green_teal,
     marginRight: "49px"
   }
 }));
@@ -55,7 +56,7 @@ const Toolbar: React.FC<{}> = () => {
 
   //const articlePagesView = active?.data?.nav?.type === "ARTICLE_PAGES";
   const unsavedPages = Object.values(composer.session.pages).filter(p => !p.saved);
-  const saveSx = unsavedPages.length ? { color: "explorerItem.contrastText" } : undefined;
+  const saveSx = unsavedPages.length ? { color: saffron } : undefined;
 
 
   const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
@@ -105,10 +106,10 @@ const Toolbar: React.FC<{}> = () => {
 
   return (
     <>
-      <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', width: "100%", height: "100%", backgroundColor: "explorer.main" }}>
+      <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', width: "100%", height: "100%", backgroundColor: sambucus }}>
         <StyledTabs orientation="vertical"
           onChange={handleChange}
-          sx={{ borderRight: 1, borderColor: 'explorerItem.dark' }}
+          sx={{ borderRight: 1, borderColor: green_teal }}
           value={secondary.session.secondary}>
           
                     <StyledTab value='projects' icon={<TerminalIcon />} />
@@ -125,7 +126,7 @@ const Toolbar: React.FC<{}> = () => {
           <StyledTab value='feedback' icon={<FeedbackOutlinedIcon />} />
 
         </StyledTabs>
-        <Box flexGrow={1} sx={{ borderRight: 1, borderColor: 'explorerItem.dark' }} />
+        <Box flexGrow={1} sx={{ borderRight: 1, borderColor: green_teal }} />
 
       </Box>
     </>

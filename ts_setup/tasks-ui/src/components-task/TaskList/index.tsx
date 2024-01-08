@@ -10,7 +10,7 @@ import Pagination from 'table';
 import { TaskListState, initTable, initTabs, TaskListTabState } from './types';
 import { StyledStackItem, StyledEditTaskButton, StyledStartTaskButton } from './TaskListStyles';
 import TaskCreateDialog from '../TaskCreate';
-import { cyan } from 'components-colors';
+import { cyan, wash_me } from 'components-colors';
 
 
 
@@ -105,7 +105,7 @@ const TaskList: React.FC<{
 
     <Grid container>
       <Grid item md={8} lg={8}>
-        <Stack sx={{ backgroundColor: 'mainContent.main' }}>
+        <Stack sx={{ backgroundColor: wash_me }}>
           {table.entries.map((task, index) => (
             <StyledStackItem key={task.id} index={index} active={state.activeTask?.id === task.id} onClick={() => handleActiveTask(task)}>
               <TaskItem key={task.id} task={task} />

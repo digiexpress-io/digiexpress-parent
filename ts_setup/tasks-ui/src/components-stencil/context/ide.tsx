@@ -1,10 +1,10 @@
 import React from 'react';
 
-import { useTheme } from '@mui/material';
 import Burger from 'components-burger';
 import { StencilClient } from '../';
 import { ReducerDispatch, Reducer } from './Reducer';
 import { SessionData, ImmutableTabData } from './SessionData';
+import { saffron } from 'components-colors';
 
 declare namespace Composer {
 
@@ -252,13 +252,12 @@ namespace Composer {
 }
 
 const ArticleTabIndicator: React.FC<{ article: StencilClient.Article, type: Composer.NavType }> = ({ article }) => {
-  const theme = useTheme();
   const { isArticleSaved } = Composer.useComposer();
   const saved = isArticleSaved(article);
   return <span style={{
     paddingLeft: "5px",
     fontSize: '30px',
-    color: theme.palette.explorerItem.contrastText,
+    color: saffron,
     display: saved ? "none" : undefined
   }}>*</span>
 }

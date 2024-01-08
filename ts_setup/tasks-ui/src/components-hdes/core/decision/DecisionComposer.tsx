@@ -61,7 +61,6 @@ const DecisionComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   return (<Burger.Dialog open={true}
     onClose={onClose}
     children={editor}
-    backgroundColor="uiElements.main"
     title='decisions.composer.title'
     submit={{
       title: "buttons.create",

@@ -7,9 +7,10 @@ import {
 } from './';
 
 import { Composer } from './context';
+import { wash_me } from 'components-colors';
 
 
-const root = { height: `100%`, padding: 1, backgroundColor: "mainContent.main" };
+const root = { height: `100%`, padding: 1, backgroundColor: wash_me };
 
 const Main: React.FC<{}> = () => {
   const layout = Burger.useTabs();

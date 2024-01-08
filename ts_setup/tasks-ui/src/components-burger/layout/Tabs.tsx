@@ -5,6 +5,7 @@ import CloseIcon from '@mui/icons-material/Close';
 
 import * as API from '../context/tabs/TabsAPI';
 import { useTabs } from '../context/tabs/TabsContext';
+import { cyan, sambucus } from 'components-colors';
 
 
 const Tabs: React.FC<{}> = () => {
@@ -26,7 +27,7 @@ const Tabs: React.FC<{}> = () => {
     return (<MuiTabs value={active} onChange={handleTabChange} variant="scrollable" scrollButtons="auto"
       sx={{
         "& .MuiTabs-indicator": {
-          backgroundColor: theme.palette.uiElements.main,
+          backgroundColor: cyan,
           marginRight: "49px"
         }
       }
@@ -37,16 +38,16 @@ const Tabs: React.FC<{}> = () => {
           <MuiTab key={index} value={index} wrapped={true}
             label={tab.label}
             iconPosition="end"
-            sx={{ minHeight: 'unset', color: "mainContent.dark", "&:focus": { color: "uiElements.main" } }}
+            sx={{ minHeight: 'unset', color: sambucus, "&:focus": { color: cyan } }}
             icon={(<>
               {tab.icon ? tab.icon : null}
               <CloseIcon color="disabled"
                 onClick={(e) => handleTabClose(e, tab)}
                 sx={{
                   m: 0,
-                  color: "uiElements.main",
+                  color: cyan,
                   "&:hover": {
-                    color: "mainContent.dark"
+                    color: sambucus
                   }
                 }}
               />

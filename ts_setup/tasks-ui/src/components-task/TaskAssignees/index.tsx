@@ -7,6 +7,7 @@ import Client from 'client';
 import { AvatarCode } from 'descriptor-task';
 import Context from 'context';
 import { TablePopover, usePopover } from '../TablePopover';
+import { cyan } from 'components-colors';
 
 
 const UserAvatar: React.FC<{ children?: AvatarCode }> = ({ children }) => {
@@ -115,9 +116,9 @@ const SelectAssignees: React.FC<{
               <Checkbox checked={checked} size='small'
                 sx={{
                   height: "40px",
-                  color: 'uiElements.main',
+                  color: cyan,
                   '&.Mui-checked': {
-                    color: 'uiElements.main',
+                    color: cyan,
                   },
                 }} />
             </Box>

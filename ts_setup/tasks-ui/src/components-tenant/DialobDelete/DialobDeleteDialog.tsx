@@ -1,11 +1,12 @@
 import React from 'react';
-import { Dialog, DialogContent, DialogTitle, Box, DialogActions, IconButton, Typography, useTheme, alpha, Grid, CircularProgress } from '@mui/material';
+import { Dialog, DialogContent, DialogTitle, Box, DialogActions, IconButton, Typography, alpha, Grid, CircularProgress } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { FormattedMessage } from 'react-intl';
 import { TenantEntryDescriptor } from 'descriptor-tenant';
 import Burger from 'components-burger';
 import Context from 'context';
 import { DialobSession } from 'client';
+import { sambucus, wash_me } from 'components-colors';
 
 
 const DialobDeleteDialog: React.FC<{
@@ -13,7 +14,6 @@ const DialobDeleteDialog: React.FC<{
   onClose: () => void,
   entry: TenantEntryDescriptor
 }> = (props) => {
-  const theme = useTheme();
   const backend = Context.useBackend();
   const tenants = Context.useTenants();
   const [sessions, setSessions] = React.useState<DialobSession[]>();
@@ -50,8 +50,8 @@ const DialobDeleteDialog: React.FC<{
 
     <Dialog open={true} fullWidth maxWidth='md'>
       <DialogTitle sx={{
-        backgroundColor: theme.palette.mainContent.main,
-        borderBottom: `1px solid ${alpha(theme.palette.mainContent.dark, 0.3)}`,
+        backgroundColor: wash_me,
+        borderBottom: `1px solid ${alpha(sambucus, 0.3)}`,
         mb: 1,
       }}>
         <Box display='flex' alignItems='center'>

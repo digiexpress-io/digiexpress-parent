@@ -46,7 +46,6 @@ const TemplateEdit: React.FC<TemplateEditProps> = ({ onClose, templateId }) => {
   return (
     <Burger.Dialog open={true} onClose={onClose}
       title={"template.edit"}
-      backgroundColor={"uiElements.main"}
       submit={{ title: "button.update", disabled: !name || !content, onClick: handleUpdate }}
     >
 

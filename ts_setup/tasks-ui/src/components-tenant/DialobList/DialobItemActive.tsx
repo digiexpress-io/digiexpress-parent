@@ -16,6 +16,7 @@ import DialobDeleteDialog from '../DialobDelete';
 import DialobSessionsDialog from '../DialobSessions';
 import DialobCopyDialog from '../DialobCopy';
 import { DialobEditor } from '../DialobEditor';
+import { cyan } from 'components-colors';
 
 export interface DialobItemActiveProps {
   entry: TenantEntryDescriptor | undefined;
@@ -234,7 +235,7 @@ const DialobItemActive: React.FC<DialobItemActiveProps> = ({ entry, setActiveDia
             </Box>
 
             <Box display='flex' flexDirection='column' alignItems='center'>
-              <IconButton onClick={handleEditToggle}><EditOutlinedIcon sx={{ color: 'uiElements.main' }} /></IconButton>
+              <IconButton onClick={handleEditToggle}><EditOutlinedIcon sx={{ color: cyan }} /></IconButton>
               <Typography><FormattedMessage id='dialob.form.edit' /></Typography>
             </Box>
 
@@ -265,7 +266,7 @@ const DialobItemActive: React.FC<DialobItemActiveProps> = ({ entry, setActiveDia
               <Box display='flex' alignItems='center'>
                 <Typography>{entry.formName}</Typography>
                 <Box flexGrow={1} />
-                <IconButton size='small' onClick={() => copyToClipboard(entry.formName)}><ContentCopyIcon sx={{ color: 'uiElements.main', fontSize: 'medium' }} /></IconButton>
+                <IconButton size='small' onClick={() => copyToClipboard(entry.formName)}><ContentCopyIcon sx={{ color: cyan, fontSize: 'medium' }} /></IconButton>
               </Box>
             </Grid>
 

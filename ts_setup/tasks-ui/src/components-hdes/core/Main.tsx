@@ -13,10 +13,11 @@ import { DebugView } from './debug';
 import { ReleasesView } from './release';
 
 import { Client } from './context';
+import { wash_me } from 'components-colors';
 
 
 
-const root: SxProps = { height: `100%`, backgroundColor: "mainContent.main" };
+const root: SxProps = { height: `100%`, backgroundColor: wash_me };
 
 const EntityEditor: React.FC<{ entity: Client.Entity<any> }> = ({ entity }) => {
   if (entity.source.bodyType === 'DT') {

@@ -8,6 +8,7 @@ import Client from 'client';
 import TaskAssignees from '../TaskAssignees';
 import DueDate from '../TaskDueDate';
 import Burger from 'components-burger';
+import { cyan } from 'components-colors';
 
 const TaskChecklist: React.FC<{ onChange: (commands: Client.TaskUpdateCommand<any>[]) => Promise<void> }> = ({ onChange }) => {
   const { state, setState } = Context.useTaskEdit();
@@ -121,7 +122,7 @@ const TaskChecklist: React.FC<{ onChange: (commands: Client.TaskUpdateCommand<an
   if (!state.task.checklist.length) {
     return (
       <Box display='flex' alignItems='center' justifyContent='flex-end' paddingRight={2}>
-        <Button startIcon={<AddIcon sx={{ color: 'uiElements.main' }} />} onClick={handleChecklistCreate}>
+        <Button startIcon={<AddIcon sx={{ color: cyan }} />} onClick={handleChecklistCreate}>
           <Typography sx={{ fontWeight: 'bold', color: 'text.primary', textTransform: 'capitalize' }}><FormattedMessage id='task.checklist.add' /></Typography>
         </Button>
       </Box>
@@ -131,7 +132,7 @@ const TaskChecklist: React.FC<{ onChange: (commands: Client.TaskUpdateCommand<an
   return (<>
     <Box display='flex' alignItems='center' justifyContent='space-between' paddingRight={2} paddingLeft={2.5}>
       <Typography fontWeight='bold'><FormattedMessage id='task.checklist' /></Typography>
-      <Button startIcon={<AddIcon sx={{ color: 'uiElements.main' }} />} onClick={handleChecklistCreate}>
+      <Button startIcon={<AddIcon sx={{ color: cyan }} />} onClick={handleChecklistCreate}>
         <Typography sx={{ fontWeight: 'bold', color: 'text.primary', textTransform: 'capitalize' }}><FormattedMessage id='task.checklist.add' /></Typography>
       </Button>
     </Box>
@@ -149,7 +150,7 @@ const TaskChecklist: React.FC<{ onChange: (commands: Client.TaskUpdateCommand<an
               height: '2.5rem',
               pr: 0,
               fontWeight: 'bold',
-              backgroundColor: 'uiElements.light'
+              backgroundColor: cyan
             }
           }}
         />
@@ -167,7 +168,7 @@ const TaskChecklist: React.FC<{ onChange: (commands: Client.TaskUpdateCommand<an
         {/* checklist items section  */}
 
         <Box display='flex' alignItems='center' justifyContent='flex-end' >
-          <Button startIcon={<AddIcon sx={{ color: 'uiElements.main' }} />} onClick={() => handleChecklistItemCreate(checklist.id)}>
+          <Button startIcon={<AddIcon sx={{ color: cyan }} />} onClick={() => handleChecklistItemCreate(checklist.id)}>
             <Typography sx={{ color: 'text.primary', textTransform: 'capitalize' }}>
               <FormattedMessage id='task.checklistItem.add' />
             </Typography>
@@ -184,7 +185,7 @@ const TaskChecklist: React.FC<{ onChange: (commands: Client.TaskUpdateCommand<an
             <Grid item md={10} lg={10} alignItems='center'>
               <Box display='flex' alignItems='center'>
                 <Tooltip placement='top' arrow title={<FormattedMessage id='core.taskEdit.fields.checklistItem.tooltip.markCompleted' />}>
-                  <Checkbox size='medium' sx={{ p: 0, mr: 1, '& .MuiSvgIcon-root': { color: 'uiElements.main' } }}
+                  <Checkbox size='medium' sx={{ p: 0, mr: 1, '& .MuiSvgIcon-root': { color: cyan } }}
                     onChange={(event) => handleChecklistItemCompleted(checklist.id, item.id, event)}
                     checked={item.completed}
                   />
@@ -239,7 +240,7 @@ const TaskChecklist: React.FC<{ onChange: (commands: Client.TaskUpdateCommand<an
       {/* Add new checklist item  */}
 
       < Box display='flex' alignItems='center' justifyContent='flex-end' key={index} >
-        <Button startIcon={<AddIcon sx={{ color: 'uiElements.main' }} />} onClick={() => handleChecklistItemCreate(checklist.id)}>
+        <Button startIcon={<AddIcon sx={{ color: cyan }} />} onClick={() => handleChecklistItemCreate(checklist.id)}>
           <Typography sx={{ color: 'text.primary', textTransform: 'capitalize' }}>
             <FormattedMessage id='task.checklistItem.add' />
           </Typography>

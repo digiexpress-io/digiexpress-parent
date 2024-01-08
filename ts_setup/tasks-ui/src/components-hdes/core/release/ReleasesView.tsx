@@ -13,6 +13,7 @@ import Burger from 'components-burger';
 import { Composer, Client } from '../context';
 import { ReleaseComposer } from './ReleaseComposer';
 import { ErrorView } from '../styles';
+import { cyan, sambucus } from 'components-colors';
 
 const ReleasesView: React.FC<{}> = () => {
 
@@ -45,7 +46,7 @@ const ReleasesView: React.FC<{}> = () => {
       <Box sx={{ paddingBottom: 1, m: 2 }}>
         <Box display="flex">
           <Box alignSelf="center">
-            <Typography variant="h3" sx={{ p: 1, mb: 3, fontWeight: "bold", color: "mainContent.dark" }}>
+            <Typography variant="h3" sx={{ p: 1, mb: 3, fontWeight: "bold", color: sambucus }}>
               <FormattedMessage id="activities.releases.title" />: {releases.length}
               <Typography variant="body2" sx={{ pt: 1 }}><FormattedMessage id={"activities.releases.desc"} /></Typography>
             </Typography>
@@ -98,7 +99,6 @@ const ReleaseDelete: React.FC<{ release: Burger.Release, onClose: () => void }> 
   return (<Burger.Dialog open={true}
     onClose={onClose}
     children={editor}
-    backgroundColor="uiElements.main"
     title='release.delete.title'
     submit={{
       title: "buttons.delete",
@@ -141,7 +141,7 @@ const Row: React.FC<{ release: Burger.Release }> = ({ release }) => {
         <TableCell align="left"><Burger.DateTimeFormatter timestamp={release.body.created} /></TableCell>
         <TableCell align="left">{release.body.note}</TableCell>
         <TableCell align="center">
-          <IconButton onClick={() => onDownload(release.body.data)} sx={{ color: 'uiElements.main' }}><GetAppIcon /> </IconButton>
+          <IconButton onClick={() => onDownload(release.body.data)} sx={{ color: cyan }}><GetAppIcon /> </IconButton>
         </TableCell>
         <TableCell align="right">
           {dialogOpen ? <ReleaseDelete release={release} onClose={handleDialogClose} /> : null}

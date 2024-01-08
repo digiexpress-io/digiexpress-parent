@@ -29,7 +29,6 @@ const LinkDelete: React.FC<LinkDeleteProps> = ({ linkId, onClose }) => {
 
   return (
     <Burger.Dialog open={true} onClose={onClose}
-      backgroundColor="uiElements.main"
       title="link.delete.title"
       submit={{ title: "link.delete.title", onClick: handleDelete, disabled: false }}>
       <DialogContentText>

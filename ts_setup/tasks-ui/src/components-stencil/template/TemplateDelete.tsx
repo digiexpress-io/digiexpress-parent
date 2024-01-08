@@ -33,7 +33,6 @@ const TemplateDelete: React.FC<TemplateDeleteProps> = ({ templateId, onClose }) 
   return (
     <Burger.Dialog onClose={onClose} open={true}
       title={"template.delete"}
-      backgroundColor="uiElements.main"
       submit={{ title: 'button.delete', disabled: false, onClick: handleDelete, }}
     >
       <>

@@ -14,6 +14,7 @@ import TaskEditDialog from '../TaskEdit';
 import Client from 'client';
 import Context from 'context';
 import { TaskDescriptor } from 'descriptor-task';
+import { cyan } from 'components-colors';
 
 
 const StyledStack: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -115,7 +116,7 @@ const TaskItemActive: React.FC<{ task: TaskDescriptor | undefined }> = ({ task }
           <StyledTitle children='task.tools' />
           <Stack direction='row' spacing={1} justifyContent='center'>
             <Box display='flex' flexDirection='column' alignItems='center'>
-              <IconButton onClick={handleTaskEdit}><EditIcon sx={{ color: 'uiElements.main' }} /></IconButton>
+              <IconButton onClick={handleTaskEdit}><EditIcon sx={{ color:cyan }} /></IconButton>
               <Typography><FormattedMessage id='task.edit' /></Typography>
             </Box>
 

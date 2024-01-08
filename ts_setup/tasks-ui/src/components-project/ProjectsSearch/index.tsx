@@ -11,6 +11,7 @@ import FilterUsers from './FilterUsers';
 import FilterByString from './FilterByString';
 import ProjectCreate from '../ProjectCreate';
 import GroupBy from './GroupBy';
+import { cyan } from 'components-colors';
 
 
 
@@ -18,7 +19,7 @@ function getRowBackgroundColor(index: number): string {
   const isOdd = index % 2 === 1;
 
   if (isOdd) {
-    return 'uiElements.light';
+    return cyan;
   }
   return 'background.paper';
 }

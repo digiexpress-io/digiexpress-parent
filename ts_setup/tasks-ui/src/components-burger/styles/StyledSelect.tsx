@@ -3,24 +3,23 @@ import { SxProps } from '@mui/system';
 import { styled } from "@mui/material/styles";
 import { InputLabel, FormControl, MenuItem, Select, FormControlProps, FormHelperText, Theme } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
+import { cyan } from 'components-colors';
 
 
 
 const StyledFormControl = styled(FormControl)<FormControlProps>(({ theme }) => ({
   marginTop: theme.spacing(2),
-  color: theme.palette.uiElements.main,
+  color: cyan,
   backgroundColor: theme.palette.background.paper,
   '& .MuiOutlinedInput-root': {
-    '&.Mui-focused fieldset': {
-      borderColor: theme.palette.uiElements.main,
-    },
+    '&.Mui-focused fieldset': { borderColor: cyan },
   }
 }));
 
 
 interface StyledSelectProps<T> {
   label: string;
-  items: { id: string, value: string | React.ReactChild, sx?: SxProps<Theme> }[];
+  items: { id: string, value: string | React.ReactNode, sx?: SxProps<Theme> }[];
   selected: T;
   disabled?: boolean;
   helperText?: string;
@@ -51,7 +50,7 @@ const StyledSelect: React.FC<StyledSelectProps<string>> = (props) => {
 const StyledSelectMultiple: React.FC<{
   multiline?: boolean;
   open?: boolean;
-  helpers?: { id: string, value: string | React.ReactChild, sx?: SxProps<Theme> }[];
+  helpers?: { id: string, value: string | React.ReactNode, sx?: SxProps<Theme> }[];
   renderValue?: (values: string[]) => React.ReactNode;
 } & StyledSelectProps<string[]>> = (props) => {
   const title = <FormattedMessage id={props.label} />;

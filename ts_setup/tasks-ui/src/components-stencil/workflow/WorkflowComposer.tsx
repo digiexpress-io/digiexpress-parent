@@ -59,7 +59,6 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
   return (
     <Burger.Dialog open={true} onClose={onClose}
-      backgroundColor="uiElements.main"
       title="services.add"
       submit={{ title: "button.add", onClick: handleCreate, disabled: !technicalname || changeInProgress || labels.length < 1 }}>
       <>

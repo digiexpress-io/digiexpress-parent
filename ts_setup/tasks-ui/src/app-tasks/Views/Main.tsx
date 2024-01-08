@@ -7,8 +7,9 @@ import Context from 'context';
 import Core from 'components-task';
 import Customer from 'components-customer';
 import Activities from '../Activities';
+import { wash_me } from 'components-colors';
 
-const root: SxProps = { height: '100%', backgroundColor: "mainContent.main", width: '100%' };
+const root: SxProps = { height: '100%', backgroundColor: wash_me, width: '100%' };
 
 
 const Main: React.FC<{}> = () => {

@@ -13,13 +13,14 @@ import Burger from 'components-burger';
 import { Composer, StencilClient } from '../../context';
 import { ArticleOptions } from './ArticleOptions';
 import ArticlePageItem from './ArticlePageItem';
+import { bullfighters_red, grey_light, saffron, turquoise } from "components-colors";
 
 
 
 function WorkflowItem(props: {
   labelText: string;
   nodeId: string;
-  children?: React.ReactChild;
+  children?: React.ReactNode;
   devMode?: boolean,
   onClick: () => void;
 }) {
@@ -30,7 +31,7 @@ function WorkflowItem(props: {
       onClick={props.onClick}
       label={
         <Box sx={{ display: "flex", alignItems: "center", p: 0.5, pr: 0 }}>
-          <Box component={props.devMode ? ConstructionIcon : AccountTreeOutlinedIcon} color="workflow.main" sx={{ pl: 1, mr: 1 }} />
+          <Box component={props.devMode ? ConstructionIcon : AccountTreeOutlinedIcon} color={bullfighters_red} sx={{ pl: 1, mr: 1 }} />
           <Typography noWrap={true} maxWidth="300px" variant="body2"
             sx={{ fontWeight: "inherit", flexGrow: 1 }}
           >
@@ -45,7 +46,7 @@ function WorkflowItem(props: {
 interface LinkItemProps {
   labelText: string;
   nodeId: string;
-  children?: React.ReactChild;
+  children?: React.ReactNode;
   onClick: () => void;
   devMode?: boolean;
 }
@@ -98,7 +99,8 @@ const ArticleItem: React.FC<{
   const articleName = session.getArticleName(view.article.id);
   return (
     <>
-      <Burger.TreeItem nodeId={nodeId ? nodeId : article.id} labelText={articleName.name} labelIcon={article.body.devMode ? ConstructionIcon : ArticleOutlinedIcon} labelcolor={saved ? "explorerItem" : "explorerItem.contrastText"}>
+      <Burger.TreeItem nodeId={nodeId ? nodeId : article.id} labelText={articleName.name} labelIcon={article.body.devMode ? ConstructionIcon : ArticleOutlinedIcon} 
+        labelcolor={saved ? grey_light : saffron}>
 
         {/** Article options */
           options ? (<Burger.TreeItem nodeId={article.id + 'article-options-nested'}
@@ -113,7 +115,7 @@ const ArticleItem: React.FC<{
           labelText={<FormattedMessage id="pages" />}
           labelIcon={FolderOutlinedIcon}
           labelInfo={`${pages.length}`}
-          labelcolor={saved ? "page" : "explorerItem.contrastText"}>
+          labelcolor={saved ? turquoise : saffron}>
           {pages.map(pageView => (<ArticlePageItem key={pageView.page.id}
             saved={isPageSaved(pageView)}
             article={view}

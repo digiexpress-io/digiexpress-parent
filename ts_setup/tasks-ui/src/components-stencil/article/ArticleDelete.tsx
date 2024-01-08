@@ -6,7 +6,6 @@ import { useSnackbar } from 'notistack';
 import { Composer, StencilClient } from '../context';
 import Burger from 'components-burger';
 
-
 interface ArticleDeleteProps {
   articleId: StencilClient.ArticleId;
   onClose: () => void;
@@ -27,7 +26,6 @@ const ArticleDelete: React.FC<ArticleDeleteProps> = ({ articleId, onClose }) => 
 
   return (
     <Burger.Dialog open={true} onClose={onClose}
-      backgroundColor="uiElements.main"
       title="article.delete.title"
       submit={{ title: "button.delete", onClick: handleDelete, disabled: false }}>
       <DialogContentText>

@@ -107,7 +107,7 @@ const AutocompleteTask: React.FC<AutocompleteTaskProps> = ({ onClose, cm, guided
     }
   }
 
-  return (<Burger.Dialog title="flows.autocomplete.task" backgroundColor="uiElements.main" open={true} onClose={onClose}
+  return (<Burger.Dialog title="flows.autocomplete.task" open={true} onClose={onClose}
     actions={<Burger.SecondaryButton label="flows.autocomplete.task.create"
       disabled={usedNames.includes(name) || name.trim().length === 0 || apply || link ? true : false }
       onClick={() => handleSave()} />}

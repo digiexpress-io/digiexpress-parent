@@ -12,6 +12,7 @@ import fileDownload from 'js-file-download'
 import Burger from 'components-burger';
 import { Composer } from '../context';
 import { ReleaseComposer, ReleaseDelete } from './';
+import { cyan, sambucus } from 'components-colors';
 
 
 const ReleasesView: React.FC<{}> = () => {
@@ -27,7 +28,7 @@ const ReleasesView: React.FC<{}> = () => {
       <Box sx={{ paddingBottom: 1, m: 2 }}>
         <Box display="flex">
           <Box alignSelf="center">
-            <Typography variant="h3" sx={{ p: 1, mb: 3, fontWeight: "bold", color: "mainContent.dark" }}>
+            <Typography variant="h3" sx={{ p: 1, mb: 3, fontWeight: "bold", color: sambucus }}>
               <FormattedMessage id="releases" />: {releases.length}
               <Typography variant="body2" sx={{ pt: 1 }}><FormattedMessage id={"release.desc"} /></Typography>
             </Typography>
@@ -75,7 +76,7 @@ const Row: React.FC<{ release: Burger.Release }> = ({ release }) => {
         <TableCell align="left"><Burger.DateTimeFormatterFixed timestamp={release.body.created} /></TableCell>
         <TableCell align="left">{release.body.note}</TableCell>
         <TableCell align="center" >
-          <IconButton onClick={() => onDownload(release.id)} sx={{ color: 'uiElements.main' }}><GetAppIcon /> </IconButton>
+          <IconButton onClick={() => onDownload(release.id)} sx={{ color: cyan }}><GetAppIcon /> </IconButton>
         </TableCell>
         <TableCell align="center" >
           <IconButton onClick={() => setReleaseDeleteOpen(true)} sx={{ color: 'error.main' }}><DeleteOutlineIcon /> </IconButton>

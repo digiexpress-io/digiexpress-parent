@@ -18,6 +18,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { Composer, StencilClient } from '../context';
 import { WorkflowDelete } from './WorkflowDelete';
 import { WorkflowEdit } from './WorkflowEdit';
+import { bullfighters_red } from 'components-colors';
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -35,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) =>
     avatar: {
       alignSelf: "center",
       marginLeft: theme.spacing(1),
-      backgroundColor: theme.palette.workflow.main,
+      backgroundColor: bullfighters_red,
       textTransform: 'uppercase'
     }
   }));
@@ -67,9 +68,9 @@ const useRowStyles = makeStyles((theme: Theme) =>
     },
     iconButton: {
       padding: 2,
-      color: theme.palette.workflow.main,
+      color: bullfighters_red,
       "&:hover, &.Mui-focusVisible": {
-        backgroundColor: theme.palette.workflow.main,
+        backgroundColor: bullfighters_red,
         color: theme.palette.background.paper,
         "& .MuiSvgIcon-root": {
           color: theme.palette.background.paper,

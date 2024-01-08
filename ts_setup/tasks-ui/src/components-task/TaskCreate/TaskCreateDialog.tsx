@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dialog, DialogContent, DialogTitle, Stack, Box, DialogActions, IconButton, Typography, useTheme, alpha } from '@mui/material';
+import { Dialog, DialogContent, DialogTitle, Stack, Box, DialogActions, IconButton, Typography, alpha } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { FormattedMessage } from 'react-intl';
 
@@ -10,6 +10,7 @@ import Context from 'context';
 import { TaskDescriptorImpl } from 'descriptor-task';
 import Burger from 'components-burger';
 import { TaskEditProvider } from 'descriptor-task';
+import { sambucus, wash_me } from 'components-colors';
 
 function initTaskProps(userId: string): Task {
   return {
@@ -44,7 +45,6 @@ function initTaskProps(userId: string): Task {
 const TaskCreateDialog: React.FC<{ open: boolean, onClose: () => void }> = (props) => {
   const org = Context.useOrg();
   const tasks = Context.useTasks();
-  const theme = useTheme();
 
   if (!props.open) {
     return null;
@@ -56,8 +56,8 @@ const TaskCreateDialog: React.FC<{ open: boolean, onClose: () => void }> = (prop
     <TaskEditProvider task={init}>
       <Dialog open={true} fullWidth maxWidth='md'>
         <DialogTitle sx={{
-          backgroundColor: theme.palette.mainContent.main,
-          borderBottom: `1px solid ${alpha(theme.palette.mainContent.dark, 0.3)}`,
+          backgroundColor: wash_me,
+          borderBottom: `1px solid ${alpha(sambucus, 0.3)}`,
           mb: 1,
         }}>
           <Box display='flex' alignItems='center'>

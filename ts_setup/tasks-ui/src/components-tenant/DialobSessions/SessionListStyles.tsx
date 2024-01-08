@@ -1,4 +1,5 @@
 import { Stack, SxProps, Box, useTheme } from '@mui/material';
+import { wash_me, cyan } from 'components-colors';
 
 
 
@@ -36,14 +37,14 @@ const StyledStackItem: React.FC<{
       return {
         p: 2,
         cursor: 'pointer',
-        backgroundColor: 'uiElements.light',
+        backgroundColor: cyan,
         color: 'text.primary'
       };
     } else {
       return {
         p: 2,
         cursor: 'pointer',
-        backgroundColor: 'mainContent.main',
+        backgroundColor: wash_me,
         color: 'text.primary'
       };
     }

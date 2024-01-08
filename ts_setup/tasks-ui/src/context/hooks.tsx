@@ -1,6 +1,5 @@
 import React from 'react';
 import Burger from 'components-burger';
-import { useTheme } from '@mui/material';
 import { Tab, TabEntity, TabBody, Document } from './composer-ctx-types';
 import { ImmutableTabData } from './composer-ctx-impl';
 import { ComposerContext, ComposerContextType, ClientContextType, ClientContext } from './client-ctx';
@@ -11,15 +10,15 @@ import { OrgContext, OrgContextType } from 'descriptor-organization';
 import { TenantContext, TenantContextType } from 'descriptor-tenant';
 import { TasksContext, TasksContextType, TaskEditContext, TaskEditContextType } from 'descriptor-task';
 import { TenantConfigContext, TenantConfigContextType } from 'descriptor-tenant-config';
+import { saffron } from 'components-colors';
 
 const ArticleTabIndicator: React.FC<{ entity: Document }> = ({ entity }) => {
-  const theme = useTheme();
   const { isDocumentSaved } = useComposer();
   const saved = isDocumentSaved(entity);
   return <span style={{
     paddingLeft: "5px",
     fontSize: '30px',
-    color: theme.palette.explorerItem.contrastText,
+    color: saffron,
     display: saved ? "none" : undefined
   }}>*</span>
 }

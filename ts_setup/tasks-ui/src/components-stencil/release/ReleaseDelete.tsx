@@ -27,7 +27,6 @@ const ReleaseDelete: React.FC<ReleaseDeleteProps> = ({ id, onClose }) => {
 
   return (
     <Burger.Dialog open={true} onClose={onClose}
-      backgroundColor="uiElements.main"
       title="release.delete.title"
       submit={{ title: "button.delete", onClick: handleDelete, disabled: false }}>
       <DialogContentText>

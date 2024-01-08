@@ -8,6 +8,7 @@ import UploadIcon from '@mui/icons-material/Upload';
 
 import { styled } from "@mui/material/styles";
 import { FormattedMessage } from 'react-intl';
+import { cyan } from 'components-colors';
 
 interface StyledInputFieldProps<T> {
   label: string;
@@ -31,7 +32,7 @@ const TextFieldRoot = styled(TextField)<TextFieldProps>(({ theme }) => ({
   },
   '& .MuiOutlinedInput-root': {
     '&.Mui-focused fieldset': {
-      borderColor: theme.palette.uiElements.main,
+      borderColor: cyan,
     },
   },
 }));
@@ -57,7 +58,7 @@ const StyledBottomText = styled(Typography)(({ theme }) => ({
 const StyledUploadButton = styled(Button)(({ theme }) => ({
   padding: theme.spacing(2),
   color: theme.palette.text.primary,
-  backgroundColor: theme.palette.uiElements.light,
+  backgroundColor: cyan,
   borderRadius: theme.spacing(0.5),
   borderColor: theme.palette.info.contrastText,
   width: 'fit-content',
@@ -260,7 +261,7 @@ const StyledSearchField: React.FC<StyledInputFieldProps<string>> = (props) => {
         } : undefined}
         InputProps={{
           endAdornment: (
-            <SearchIcon sx={{ color: 'uiElements.main' }} />
+            <SearchIcon sx={{ color: cyan }} />
           ),
         }}
       />

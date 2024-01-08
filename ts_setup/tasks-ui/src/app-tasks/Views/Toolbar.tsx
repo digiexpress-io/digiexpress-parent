@@ -10,20 +10,21 @@ import TerminalIcon from '@mui/icons-material/Terminal';
 
 import Context from 'context';
 import Burger from 'components-burger';
+import { blueberry_whip, green_teal, sambucus } from 'components-colors';
 
 const StyledTab = styled(Tab)<TabProps>(({ theme }) => ({
   "&.MuiButtonBase-root": {
     minWidth: "unset",
-    color: theme.palette.explorerItem.main,
+    color: blueberry_whip,
   },
   "&.Mui-selected": {
-    color: theme.palette.explorerItem.dark,
+    color: green_teal,
   }
 }));
 
 const StyledTabs = styled(Tabs)<TabsProps>(({ theme }) => ({
   "& .MuiTabs-indicator": {
-    backgroundColor: theme.palette.explorerItem.dark,
+    backgroundColor: green_teal,
     marginRight: "49px"
   }
 }));
@@ -97,10 +98,10 @@ const Toolbar: React.FC<{}> = () => {
 
   return (
     <>
-      <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', width: "100%", height: "100%", backgroundColor: "explorer.main" }}>
+      <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', width: "100%", height: "100%", backgroundColor: sambucus }}>
         <StyledTabs orientation="vertical"
           onChange={handleChange}
-          sx={{ borderRight: 1, borderColor: 'explorerItem.dark' }}
+          sx={{ borderRight: 1, borderColor: green_teal }}
           value={secondary.session.secondary}>
 
           <StyledTab value='projects' icon={<TerminalIcon />} />
@@ -111,7 +112,7 @@ const Toolbar: React.FC<{}> = () => {
           <StyledTab value='feedback' icon={<FeedbackOutlinedIcon />} />
 
         </StyledTabs>
-        <Box flexGrow={1} sx={{ borderRight: 1, borderColor: 'explorerItem.dark' }} />
+        <Box flexGrow={1} sx={{ borderRight: 1, borderColor: green_teal }} />
 
       </Box>
     </>

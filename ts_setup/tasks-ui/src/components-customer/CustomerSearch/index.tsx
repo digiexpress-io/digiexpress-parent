@@ -15,6 +15,7 @@ import CellCustomerType from './CellCustomerType';
 import CellCreated from './CellCreated';
 import CellLastLogin from './CellLastLogin';
 import CellTasks from './CellTasks';
+import { cyan } from 'components-colors';
 
 
 
@@ -22,7 +23,7 @@ function getRowBackgroundColor(index: number): string {
   const isOdd = index % 2 === 1;
 
   if (isOdd) {
-    return 'uiElements.light';
+    return cyan;
   }
   return 'background.paper';
 }
