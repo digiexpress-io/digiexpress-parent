@@ -12,7 +12,7 @@ interface HeaderEditProps {
   header: Client.TypeDef;
   onClose: () => void;
   onChange: (commands: Client.AstCommand[]) => void
-};
+}
 
 /**
           case 'name': return {type: 'SET_HEADER_REF', id: id, value: change.get('name')}
@@ -27,7 +27,7 @@ const addCommand = (command: Client.AstCommand, commands: Client.AstCommand[]) =
   const result: Client.AstCommand[] = [];
   for (const previous of commands) {
     if (command.type === previous.type) {
-      
+      // nothing to do
     } else {
       result.push(previous);
     }
