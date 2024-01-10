@@ -2,3 +2,4 @@
 .npmrc
 __local_only
 yarn-error.log
+dist/
