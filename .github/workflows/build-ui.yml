@@ -20,18 +20,21 @@ jobs:
       env:
         NODE_ENV: test
         CI: true
-      name: Build Tasks UI
+      name: Build Digiexpress UI
       steps:
         - uses: actions/checkout@v4
+
+        - uses: pnpm/action-setup@v2
+          name: install pnpm
+          with:
+            version: 8
+
         - uses: actions/setup-node@v4
           with:
             node-version: 20
             cache: 'pnpm'
             cache-dependency-path: ts_setup/tasks-ui/pnpm-lock.yaml
-        - uses: pnpm/action-setup@v2
-          name: install pnpm
-          with:
-            version: 8
+
         - name: Install dependencies 📦
           run: pnpm install --frozen-lockfile
         - name: Test
@@ -41,6 +44,7 @@ jobs:
           env:
             CI: false # 
             PUBLIC_URL: //${{ secrets.CDN_S3_BUCKET }}/digiexpress-io/tasks-ui/${{ github.ref_name }}
+
         - name: Configure AWS Credentials
           uses: aws-actions/configure-aws-credentials@v3
           with:
