@@ -26,14 +26,14 @@ jobs:
         - uses: actions/setup-node@v4
           with:
             node-version: 20
-            cache: 'yarn'
+            cache: 'pnpm'
             cache-dependency-path: ts_setup/tasks-ui/pnpm-lock.yaml
         - name: Install dependencies 📦
-          run: pnpm install --frozen-lockfile
+          run: corepack pnpm install --frozen-lockfile
         - name: Test
-          run: pnpm test --passWithNoTests
+          run: corepack pnpm test --passWithNoTests
         - name: Build 
-          run: pnpm build
+          run: corepack pnpm build
           env:
             CI: false # 
             PUBLIC_URL: //${{ secrets.CDN_S3_BUCKET }}/digiexpress-io/tasks-ui/${{ github.ref_name }}
