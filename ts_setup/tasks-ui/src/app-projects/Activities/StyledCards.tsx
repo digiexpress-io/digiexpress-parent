@@ -1,5 +1,6 @@
 import React from 'react';
-import { Typography, Box, SxProps, CardHeader, Card, CardContent, Divider, CardActions } from '@mui/material';
+import { Typography, Box, CardHeader, Card, CardContent, Divider, CardActions } from '@mui/material';
+import { SxProps } from '@mui/system';
 import { FormattedMessage } from 'react-intl';
 
 import Burger from 'components-burger';

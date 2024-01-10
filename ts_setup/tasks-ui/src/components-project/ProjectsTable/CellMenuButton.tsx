@@ -1,5 +1,6 @@
 import React from 'react';
-import { IconButton, SxProps } from '@mui/material';
+import { IconButton } from '@mui/material';
+import { SxProps } from '@mui/system';
 import { cyan } from 'components-colors';
 
 

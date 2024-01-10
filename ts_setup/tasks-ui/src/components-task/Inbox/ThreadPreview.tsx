@@ -1,6 +1,7 @@
 import React from "react";
 
-import { Box, Typography, styled, TableCell, IconButton, SxProps } from "@mui/material";
+import { Box, Typography, styled, TableCell, IconButton } from "@mui/material";
+import { SxProps } from '@mui/system';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import ArchiveIcon from '@mui/icons-material/Archive';
 import MarkAsUnreadIcon from '@mui/icons-material/MarkAsUnread';

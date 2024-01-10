@@ -1,4 +1,5 @@
-import { Stack, SxProps, Theme, alpha, Box, darken, styled, Button, useTheme } from '@mui/material';
+import { Stack, Theme, alpha, Box, darken, styled, Button, useTheme } from '@mui/material';
+import { SxProps } from '@mui/system';
 import { cyan, wash_me } from 'components-colors';
 
 

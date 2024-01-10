@@ -337,10 +337,10 @@ const DialobItemActive: React.FC<DialobItemActiveProps> = ({ entry, setActiveDia
   }
 
   return (<StyledStack>
-    <Skeleton animation={false} variant="rounded" width='100%' height={40} />
-    <Skeleton animation={false} variant="rounded" width='100%' height={40} />
-    <Skeleton animation={false} variant="rounded" width='100%' height={40} />
-    <Skeleton animation={false} variant="rounded" width='100%' height={40} />
+    <Skeleton animation={false} variant="circular" width='100%' height={40} />
+    <Skeleton animation={false} variant="circular" width='100%' height={40} />
+    <Skeleton animation={false} variant="circular" width='100%' height={40} />
+    <Skeleton animation={false} variant="circular" width='100%' height={40} />
   </StyledStack>);
 }
 

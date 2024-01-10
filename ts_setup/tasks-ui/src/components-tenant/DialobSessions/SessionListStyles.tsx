@@ -1,4 +1,5 @@
-import { Stack, SxProps, Box, useTheme } from '@mui/material';
+import { Stack, Box, useTheme } from '@mui/material';
+import { SxProps } from '@mui/system';
 import { wash_me, cyan } from 'components-colors';
 
 

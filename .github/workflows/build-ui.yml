@@ -27,13 +27,13 @@ jobs:
           with:
             node-version: 20
             cache: 'yarn'
-            cache-dependency-path: ts_setup/tasks-ui/yarn.lock
+            cache-dependency-path: ts_setup/tasks-ui/pnpm-lock.yaml
         - name: Install dependencies 📦
-          run: yarn install --frozen-lockfile
+          run: pnpm install --frozen-lockfile
         - name: Test
-          run: yarn test --passWithNoTests
+          run: pnpm test --passWithNoTests
         - name: Build 
-          run: yarn build
+          run: pnpm build
           env:
             CI: false # 
             PUBLIC_URL: //${{ secrets.CDN_S3_BUCKET }}/digiexpress-io/tasks-ui/${{ github.ref_name }}

@@ -1,6 +1,7 @@
 import React from 'react';
 import { TableHead, TableCell, TableRow, Box, Stack } from '@mui/material';
 
+import { cyan } from 'components-colors';
 import Context from 'context';
 import { TenantEntryDescriptor, Group } from 'descriptor-tenant';
 import TenantsTable from '../TenantsTable';

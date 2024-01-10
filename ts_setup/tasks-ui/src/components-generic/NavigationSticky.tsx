@@ -1,5 +1,6 @@
 import React from 'react';
-import { Stack, Toolbar, AppBar, Button, Typography, SxProps, lighten, darken  } from '@mui/material';
+import { Stack, Toolbar, AppBar, Button, Typography, lighten, darken  } from '@mui/material';
+import { SxProps } from '@mui/system';
 import { FormattedMessage } from 'react-intl';
 import { wash_me } from 'components-colors';
 

@@ -1,5 +1,6 @@
 import React from 'react';
-import { SxProps, List, MenuItem, Box, Button, Typography } from '@mui/material';
+import { List, MenuItem, Box, Button, Typography } from '@mui/material';
+import { SxProps } from '@mui/system';
 import FlagIcon from '@mui/icons-material/Flag';
 import { FormattedMessage } from 'react-intl';
 
