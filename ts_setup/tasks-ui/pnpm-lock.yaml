@@ -22,6 +22,9 @@ dependencies:
   '@mui/system':
     specifier: ^5.15.3
     version: 5.15.3(@emotion/react@11.4.1)(@emotion/styled@11.3.0)(@types/react@18.0.27)(react@18.2.0)
+  '@mui/utils':
+    specifier: ^5.15.3
+    version: 5.15.3(@types/react@18.0.27)(react@18.2.0)
   '@mui/x-date-pickers':
     specifier: ^6.10.0
     version: 6.10.0(@emotion/react@11.4.1)(@emotion/styled@11.3.0)(@mui/base@5.0.0-beta.30)(@mui/material@5.15.3)(@mui/system@5.15.3)(@types/react@18.0.27)(date-fns@2.30.0)(moment@2.29.4)(react-dom@18.2.0)(react@18.2.0)
