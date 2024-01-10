@@ -1,4 +1,4 @@
-import produce from 'immer';
+import {produce} from 'immer';
 import React from 'react';
 import { Button, Divider, Flag, Form, Header, Segment, TextArea } from 'semantic-ui-react';
 import { KeyMeta, LangMeta } from '../types';

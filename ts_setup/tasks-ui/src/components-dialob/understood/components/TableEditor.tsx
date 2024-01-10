@@ -1,4 +1,4 @@
-import produce from 'immer';
+import {produce} from 'immer';
 import React, { useCallback, useMemo, useState, useRef } from 'react';
 import { AutoSizer, Column as VirtualizedColumn, Table as VirtualizedTable, TableCellProps } from 'react-virtualized';
 import 'react-virtualized/styles.css';
