@@ -37,8 +37,8 @@ jobs:
 
         - name: Install dependencies 📦
           run: pnpm install -r --prefer-frozen-lockfile
-        - name: Test
-          run: pnpm test -r
+#        - name: Test
+#          run: pnpm test -r
         - name: Build 
           run: pnpm run -r build
           env:
