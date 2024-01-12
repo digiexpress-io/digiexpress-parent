@@ -34,6 +34,7 @@ declare global {
 }
 const getUrl = () => {
   try {
+    console.log(process.env.REACT_APP_LOCAL_DEV_MODE);
     if (process.env.REACT_APP_LOCAL_DEV_MODE) {
       return "http://localhost:8080";
     }
