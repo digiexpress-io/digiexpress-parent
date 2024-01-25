@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Context from 'context';
-import { Group, TeamGroupType, TasksState, TeamGroupPalette } from 'descriptor-task';
+import { Group, TeamGroupType, TeamGroupPalette, TaskDescriptor, toGroupsAndFilters } from 'descriptor-task';
 
 import { TaskListTabState, TaskList } from '../TaskList';
 import TaskItem from './TaskItem';
@@ -11,8 +11,8 @@ function groupsToRecord(state: Group[]): Record<TeamGroupType, Group> {
   return state.reduce((acc, item) => ({ ...acc, [item['id']]: item }), {} as Record<TeamGroupType, Group>);
 }
 
-function getTabs(state: TasksState): TaskListTabState[] {
-  const groupBy: Group[] = state.toGroupsAndFilters().withGroupBy("team").groups;
+function getTabs(tasks: readonly TaskDescriptor[]): TaskListTabState[] {
+  const groupBy: Group[] = toGroupsAndFilters(tasks).withGroupBy("team").groups;
   const groups = groupsToRecord(groupBy);
   const groupOverdue = groups["groupOverdue"];
   const groupDueSoon = groups["groupDueSoon"];
@@ -50,12 +50,12 @@ function getTabs(state: TasksState): TaskListTabState[] {
 
 
 const TeamSpaceLoader: React.FC = () => {
-  const tasks = Context.useTasks();
+  const ctx = Context.useTasks();
 
-  if (tasks.loading) {
+  if (ctx.loading) {
     return <>...loading</>
   }
-  const tabs = getTabs(tasks.state);
+  const tabs = getTabs(ctx.tasks);
   return (<TaskList state={tabs}>{{ TaskItem, TaskItemActive }}</TaskList>);
 }
 

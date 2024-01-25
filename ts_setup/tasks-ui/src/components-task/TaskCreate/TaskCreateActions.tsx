@@ -9,7 +9,7 @@ const TaskCreateActions: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const backend = Context.useBackend();
   const org = Context.useOrg();
   const tasks = Context.useTasks();
-  const { state } = Context.useTaskEdit();
+  const state = Context.useTaskEdit();
 
   const [open, setOpen] = React.useState(false);
 

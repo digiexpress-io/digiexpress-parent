@@ -1,9 +1,10 @@
-import { Org, User, UserId, Role, RoleId } from 'client';
+import { Org, User, UserId, Role, RoleId, UserProfileAndOrg } from 'client';
 
 export interface OrgContextType {
   setState: OrgDispatch;
   loading: boolean;
   state: OrgState,
+  profile: UserProfileAndOrg;
 }
 
 export type OrgMutator = (prev: OrgState) => OrgState;
@@ -11,13 +12,11 @@ export type OrgDispatch = (mutator: OrgMutator) => void;
 
 export interface UserSearchResult {
   checked: boolean,
-  avatar: { twoletters: string, value: UserId },
   user: User
 }
 
 export interface RoleSearchResult {
   checked: boolean,
-  avatar: { twoletters: string, value: RoleId },
   role: Role
 }
 

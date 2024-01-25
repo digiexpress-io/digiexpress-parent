@@ -1,4 +1,4 @@
-import { NotificationSetting, UserProfile, UserProfileAndOrg } from 'client';
+import { NotificationSetting, UserProfile } from 'client';
 
 import { UserProfileDescriptor } from './types';
 
@@ -9,13 +9,9 @@ class UserProfileDescriptorImpl implements UserProfileDescriptor {
   private _created: Date;
   private _updated: Date;
   private _notificationSettings: NotificationSetting[];
-  private _profile: UserProfileAndOrg;
-  private _today: Date;
 
-  constructor(entry: UserProfile, profile: UserProfileAndOrg, today: Date) {
+  constructor(entry: UserProfile) {
     this._entry = entry;
-    this._profile = profile;
-    this._today = today;
     this._created = new Date(this.entry.created);
     this._updated = new Date(this.entry.updated);
     this._notificationSettings = this.entry.notificationSettings;

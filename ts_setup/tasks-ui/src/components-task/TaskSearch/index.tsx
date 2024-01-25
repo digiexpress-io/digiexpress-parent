@@ -3,7 +3,7 @@ import { TableHead, TableCell, TableRow, Box, Stack } from '@mui/material';
 
 import Context from 'context';
 import { FilterByString, NavigationSticky } from 'components-generic';
-import { TaskDescriptor, Group } from 'descriptor-task';
+import { TaskDescriptor, Group, toGroupsAndFilters } from 'descriptor-task';
 
 import TaskTable from '../TaskTable';
 import { FilterStatus } from './FilterStatus';
@@ -86,15 +86,14 @@ const columnTypes: (keyof TaskDescriptor)[] = [
   'status']
 
 const TaskSearch: React.FC<{}> = () => {
-  const tasks = Context.useTasks();
-  const [state, setState] = React.useState(tasks.state.toGroupsAndFilters());
+  const { tasks } = Context.useTasks();
+  
+  const [state, setState] = React.useState(toGroupsAndFilters(tasks));
   const [columns, setColumns] = React.useState([
     ...columnTypes
   ]);
 
-  React.useEffect(() => {
-    setState(prev => prev.withTasks(tasks.state))
-  }, [tasks.state]);
+  React.useEffect(() => setState(prev => prev.withTasks(tasks)), [tasks]);
 
   return (<Box>
     <NavigationSticky>

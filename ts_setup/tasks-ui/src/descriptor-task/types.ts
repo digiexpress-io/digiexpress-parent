@@ -44,10 +44,6 @@ export interface ChangeChecklistItemCompletedEventBody extends SingleEventBody<"
 export interface ChangeChecklistItemDueDateEventBody extends SingleEventBody<"ChangeChecklistItemDueDate", ChangeChecklistItemDueDate, Date> { }
 export interface ChangeChecklistItemTitleEventBody extends SingleEventBody<"ChangeChecklistItemTitle", ChangeChecklistItemTitle, string> { }
 
-
-
-
-
 export interface SingleEvent {
   type: "SINGLE";
   targetDate: Date;
@@ -111,8 +107,6 @@ export interface TaskDescriptor {
 }
 
 export interface TasksPaletteType {
-  roles: Record<string, string>;
-  owners: Record<string, string>;
   status: Record<string, string>;
   priority: Record<string, string>;
 }
@@ -155,22 +149,13 @@ export interface Group {
   records: TaskDescriptor[];
 }
 
-export interface Data {
-  tasks: TaskDescriptor[];
-  tasksByOwner: Record<string, TaskDescriptor[]>;
-  palette: TasksPaletteType;
-  profile: UserProfileAndOrg;
-  roles: string[];
-  owners: string[];
-}
-
 export interface TaskGroupsAndFilters {
   groupBy: GroupBy;
   groups: Group[];
   filterBy: FilterBy[];
   searchString: string | undefined;
 
-  withTasks(tasks: Data): TaskGroupsAndFilters;
+  withTasks(tasks: TaskDescriptor[]): TaskGroupsAndFilters;
   withGroupBy(groupBy: GroupBy): TaskGroupsAndFilters;
   withSearchString(searchString: string): TaskGroupsAndFilters;
   withFilterByStatus(status: TaskStatus[]): TaskGroupsAndFilters;
@@ -185,47 +170,19 @@ export interface TaskGroupsAndFilters {
 export type TaskEditEvent = SingleEvent | CollapsedEvent;
 
 export interface TaskEditContextType {
-  setState: TaskEditDispatch;
   loading: boolean;
-  state: TaskEditState;
-}
-
-export type TaskEditMutator = (prev: TaskEditMutatorBuilder) => TaskEditMutatorBuilder;
-export type TaskEditDispatch = (mutator: TaskEditMutator) => void;
-
-export interface TaskEditState {
   task: TaskDescriptor;
-  events: TaskEditEvent[];
-}
+  events: readonly TaskEditEvent[];
 
-
-export interface TaskEditMutatorBuilder extends TaskEditState {
-  withTask(task: Task): TaskEditMutatorBuilder;
-  withTaskDescriptor(task: TaskDescriptor): TaskEditMutatorBuilder;
-  withCommands(commandsToBeAdded: TaskCommand | TaskCommand[]): TaskEditMutatorBuilder;
+  withTask(task: Task): void;
 }
 
 export interface TasksContextType {
-  setState: TasksDispatch;
-  reload: () => Promise<void>;
   loading: boolean;
-  state: TasksState,
-  palette: PaletteType;
+  tasks: readonly TaskDescriptor[];
+  roles: readonly string[];
+  owners: readonly string[];
+
+  reload: () => Promise<void>;
+  withTasks(tasks: Task[]): void;
 }
-
-export type TasksMutator = (prev: TasksState) => TasksState;
-export type TasksDispatch = (mutator: TasksMutator) => void;
-
-export interface TasksState {
-  tasks: TaskDescriptor[];
-  tasksByOwner: Record<string, TaskDescriptor[]>;
-  palette: TasksPaletteType;
-  profile: UserProfileAndOrg;
-  roles: string[];
-  owners: string[];
-
-  withProfile(profile: UserProfileAndOrg): TasksState;
-  withTasks(tasks: Task[]): TasksState;
-  toGroupsAndFilters(): TaskGroupsAndFilters;
-}
-

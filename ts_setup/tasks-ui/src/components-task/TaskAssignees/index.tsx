@@ -6,7 +6,7 @@ import { FormattedMessage } from 'react-intl';
 import Client from 'client';
 import Context from 'context';
 import { cyan } from 'components-colors';
-import { Avatar, useAvatars } from 'descriptor-avatar';
+import { Avatar, useAvatars, useAvatar } from 'descriptor-avatar';
 
 import { SearchFieldPopover } from '../SearchField';
 import { TablePopover, usePopover } from '../TablePopover';
@@ -32,6 +32,7 @@ const UserAvatar: React.FC<{ children?: Avatar }> = ({ children }) => {
 const AvatarsOnly: React.FC<{
   task: { assignees: Client.UserId[] },
 }> = ({ task }) => {
+  
   const avatars = useAvatars(task.assignees);
   if(!avatars) {
     return null;
@@ -66,6 +67,10 @@ const FullnamesAndAvatars: React.FC<{
     (<UserAvatar />);
 }
 
+const UserBackgroundColor: React.FC<{ userId: string }> = ({userId}) => {
+  const avatar = useAvatar(userId);
+  return (<Box sx={{ width: 8, height: 40, backgroundColor: avatar?.color }} />);
+}
 
 const SelectAssignees: React.FC<{
   anchorEl: HTMLElement | null,
@@ -73,10 +78,6 @@ const SelectAssignees: React.FC<{
   onChange: (assigneeIds: Client.UserId[]) => Promise<void>,
   onClose: () => void,
 }> = ({ anchorEl, task, onChange, onClose }) => {
-
-  const { state } = Context.useTasks();
-  const assigneeColors = state.palette.owners;
-
   const [newAssignees, setNewAssignees] = React.useState(task.assignees);
   const { setSearchString, searchResults } = Context.useAssignees({ assignees: newAssignees });
 
@@ -109,7 +110,7 @@ const SelectAssignees: React.FC<{
       <List dense sx={{ py: 0 }}>
         {searchResults.length ? searchResults.map(({ user, checked }) => (
           <MenuItem key={user.userId} sx={{ display: "flex", pl: 0, py: 0 }} onClick={() => handleToggleUser(user, checked)}>
-            <Box sx={{ width: 8, height: 40, backgroundColor: assigneeColors[user.userId] }} />
+            <UserBackgroundColor userId={user.userId} />
             <Box ml={1}>
               <Checkbox checked={checked} size='small'
                 sx={{

@@ -19,11 +19,11 @@ import TaskStartDate from '../TaskStartDate';
 import TaskDueDate from '../TaskDueDate';
 
 const Title: React.FC<{}> = () => {
-  const { state, setState } = Context.useTaskEdit();
+  const ctx = Context.useTaskEdit();
   const backend = Context.useBackend();
 
   const intl = useIntl();
-  const [title, setTitle] = React.useState(state.task.title);
+  const [title, setTitle] = React.useState(ctx.task.title);
 
   function handleTitleChange(event: React.ChangeEvent<HTMLInputElement>) {
     setTitle(event.target.value);
@@ -32,12 +32,12 @@ const Title: React.FC<{}> = () => {
   async function handleChange() {
     const command: Client.ChangeTaskInfo = {
       commandType: 'ChangeTaskInfo',
-      taskId: state.task.id,
-      description: state.task.description,
+      taskId: ctx.task.id,
+      description: ctx.task.description,
       title
     };
-    const updatedTask = await backend.task.updateActiveTask(state.task.id, [command]);
-    setState((current) => current.withTask(updatedTask));
+    const updatedTask = await backend.task.updateActiveTask(ctx.task.id, [command]);
+    ctx.withTask(updatedTask);
   }
 
   return (<TextField InputProps={{ disableUnderline: true }} variant='standard'
@@ -50,8 +50,8 @@ const Title: React.FC<{}> = () => {
 }
 
 const Description: React.FC<{}> = () => {
-  const { state, setState } = Context.useTaskEdit();
-  const [description, setDescription] = React.useState(state.task.description);
+  const ctx = Context.useTaskEdit();
+  const [description, setDescription] = React.useState(ctx.task.description);
   const backend = Context.useBackend();
   const intl = useIntl();
 
@@ -62,12 +62,12 @@ const Description: React.FC<{}> = () => {
   async function handleChange() {
     const command: Client.ChangeTaskInfo = {
       commandType: 'ChangeTaskInfo',
-      taskId: state.task.id,
-      title: state.task.title,
+      taskId: ctx.task.id,
+      title: ctx.task.title,
       description
     };
-    const updatedTask = await backend.task.updateActiveTask(state.task.id, [command]);
-    setState((current) => current.withTask(updatedTask));
+    const updatedTask = await backend.task.updateActiveTask(ctx.task.id, [command]);
+    ctx.withTask(updatedTask);
   }
 
   return (<TextField InputProps={{ disableUnderline: true }} variant='standard'
@@ -80,12 +80,12 @@ const Description: React.FC<{}> = () => {
 }
 
 const Checklist: React.FC<{}> = () => {
-  const { state, setState } = Context.useTaskEdit();
+  const ctx = Context.useTaskEdit();
   const backend = Context.useBackend();
 
   async function handleChange(commands: Client.TaskUpdateCommand<any>[]) {
-    const updatedTask = await backend.task.updateActiveTask(state.task.id, commands);
-    setState((current) => current.withTask(updatedTask));
+    const updatedTask = await backend.task.updateActiveTask(ctx.task.id, commands);
+    ctx.withTask(updatedTask);
   }
 
   return (<TaskChecklist onChange={handleChange} />
@@ -93,88 +93,88 @@ const Checklist: React.FC<{}> = () => {
 }
 
 const Status: React.FC<{}> = () => {
-  const { state, setState } = Context.useTaskEdit();
+  const ctx = Context.useTaskEdit();
   const backend = Context.useBackend();
 
   async function handleStatusChange(command: Client.ChangeTaskStatus) {
-    const updatedTask = await backend.task.updateActiveTask(state.task.id, [command]);
-    setState((current) => current.withTask(updatedTask));
+    const updatedTask = await backend.task.updateActiveTask(ctx.task.id, [command]);
+    ctx.withTask(updatedTask);
   }
 
   return (
-    <TaskStatus task={state.task} onChange={handleStatusChange} />
+    <TaskStatus task={ctx.task} onChange={handleStatusChange} />
   )
 }
 
 const Assignee: React.FC<{}> = () => {
-  const { state, setState } = Context.useTaskEdit();
+  const ctx = Context.useTaskEdit();
   const backend = Context.useBackend();
 
   async function handleAssigneeChange(assigneeIds: Client.UserId[]) {
-    const command: Client.AssignTask = { assigneeIds, commandType: 'AssignTask', taskId: state.task.id };
-    const updatedTask = await backend.task.updateActiveTask(state.task.id, [command]);
-    setState((current) => current.withTask(updatedTask));
+    const command: Client.AssignTask = { assigneeIds, commandType: 'AssignTask', taskId: ctx.task.id };
+    const updatedTask = await backend.task.updateActiveTask(ctx.task.id, [command]);
+    ctx.withTask(updatedTask);
   }
 
   return (
-    <TaskAssignees task={state.task} onChange={handleAssigneeChange} fullnames />
+    <TaskAssignees task={ctx.task} onChange={handleAssigneeChange} fullnames />
   )
 }
 
 const Roles: React.FC<{}> = () => {
-  const { state, setState } = Context.useTaskEdit();
+  const ctx = Context.useTaskEdit();
   const backend = Context.useBackend();
 
   async function handleRolesChange(command: Client.AssignTaskRoles) {
-    const updatedTask = await backend.task.updateActiveTask(state.task.id, [command]);
-    setState((current) => current.withTask(updatedTask))
+    const updatedTask = await backend.task.updateActiveTask(ctx.task.id, [command]);
+    ctx.withTask(updatedTask);
   }
 
-  return (<TaskRoles task={state.task} onChange={handleRolesChange} fullnames />)
+  return (<TaskRoles task={ctx.task} onChange={handleRolesChange} fullnames />)
 }
 
 const Priority: React.FC<{}> = () => {
-  const { state, setState } = Context.useTaskEdit();
+const ctx = Context.useTaskEdit();
   const backend = Context.useBackend();
 
   async function handlePriorityChange(command: Client.ChangeTaskPriority) {
-    const updatedTask = await backend.task.updateActiveTask(state.task.id, [command]);
-    setState((current) => current.withTask(updatedTask));
+    const updatedTask = await backend.task.updateActiveTask(ctx.task.id, [command]);
+    ctx.withTask(updatedTask);
   }
 
   return (
-    <TaskPriority task={state.task} priorityTextEnabled onChange={handlePriorityChange} />
+    <TaskPriority task={ctx.task} priorityTextEnabled onChange={handlePriorityChange} />
   )
 }
 
 const StartDate: React.FC = () => {
-  const { state, setState } = Context.useTaskEdit();
+const ctx = Context.useTaskEdit();
   const backend = Context.useBackend();
 
   async function handleStartDateChange(command: Client.ChangeTaskStartDate) {
-    const updatedTask = await backend.task.updateActiveTask(state.task.id, [command]);
-    setState((current) => current.withTask(updatedTask));
+    const updatedTask = await backend.task.updateActiveTask(ctx.task.id, [command]);
+    ctx.withTask(updatedTask);
   }
 
-  return (<TaskStartDate task={state.task} onChange={handleStartDateChange} />);
+  return (<TaskStartDate task={ctx.task} onChange={handleStartDateChange} />);
 }
 
 const DueDate: React.FC = () => {
-  const { state, setState } = Context.useTaskEdit();
+const ctx = Context.useTaskEdit();
   const backend = Context.useBackend();
 
   async function handleDueDateChange(dueDate: string | undefined) {
     const command: Client.ChangeTaskDueDate = {
       commandType: 'ChangeTaskDueDate',
       dueDate,
-      taskId: state.task.id
+      taskId: ctx.task.id
     };
 
-    const updatedTask = await backend.task.updateActiveTask(state.task.id, [command]);
-    setState((current) => current.withTask(updatedTask));
+    const updatedTask = await backend.task.updateActiveTask(ctx.task.id, [command]);
+    ctx.withTask(updatedTask);
   }
 
-  return (<TaskDueDate task={state.task} onChange={handleDueDateChange} />);
+  return (<TaskDueDate task={ctx.task} onChange={handleDueDateChange} />);
 }
 
 const MessageCount: React.FC<{}> = () => {

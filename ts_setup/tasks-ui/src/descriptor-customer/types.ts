@@ -3,8 +3,6 @@ import { UserProfileAndOrg, CustomerId, Customer, Person, CustomerBodyType } fro
 export interface CustomerDescriptor {
   id: CustomerId;
   entry: Customer;
-  profile: UserProfileAndOrg;
-
   displayName: string;
   customerType: CustomerBodyType;
   tasks: string[]; // task id-s

@@ -14,7 +14,13 @@ export const AvatarProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const reducer: AvatarReducer = React.useMemo(() => initReducer(avatars, setAvatars), [avatars, setAvatars]);
   const contextValue: AvatarContextType = React.useMemo(() => ({ reducer, avatars }), [avatars, reducer]);
   
-  log.code("Avatar002").trace("reloading");
+  React.useEffect(() => {
+    log.code("AvatarProvider001").trace("reloading");
+  }, [reducer]);
+
+  React.useEffect(() => {
+    log.code("AvatarProvider002").trace("reloading");
+  }, [avatars]);
 
   return (<AvatarContext.Provider value={contextValue}>{children}</AvatarContext.Provider>);
 }
@@ -34,7 +40,20 @@ function getAvatars(ctx: AvatarContextType, entries: string[]): Avatar[] | undef
 
 export function useAvatars(entries: string[]): Avatar[] | undefined {
   const ctx: AvatarContextType = React.useContext(AvatarContext);
-  const [avatars, setAvatars] = React.useState(getAvatars(ctx, entries));
+  const [avatars, setAvatars] = React.useState<Avatar[]>();
+
+  React.useEffect(() => {
+    if(!avatars) {
+      return;
+    }
+    for(const avatar of avatars) {
+      if(!entries.includes(avatar.origin)) {
+        setAvatars(undefined);
+        break;;
+      }
+    }
+  }, [entries, avatars]);
+
 
   React.useEffect(() => {
     if(avatars === undefined) {
@@ -48,6 +67,13 @@ export function useAvatars(entries: string[]): Avatar[] | undefined {
 export function useAvatar(entry: string) {
   const ctx: AvatarContextType = React.useContext(AvatarContext);
   const [avatars, setAvatars] = React.useState(getAvatars(ctx, [entry])?.[0]);
+
+  React.useEffect(() => {
+    if(avatars?.origin !== entry) {
+      setAvatars(undefined);
+    }
+  }, [entry, avatars]);
+
 
   React.useEffect(() => {
     if(avatars === undefined) {

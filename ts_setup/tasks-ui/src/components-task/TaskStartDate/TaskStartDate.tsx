@@ -18,7 +18,7 @@ const TaskStartDate: React.FC<{
   onChange: (command: Client.ChangeTaskStartDate) => Promise<void>
 }> = ({ onChange, task }) => {
 
-  const { state } = Context.useTaskEdit();
+  const ctx = Context.useTaskEdit();
   const [open, setOpen] = React.useState(false);
 
   function handlePickerDialog() {
@@ -38,11 +38,11 @@ const TaskStartDate: React.FC<{
   return (
     <>
       <Button onClick={handlePickerDialog} sx={{ justifyContent: 'left' }} startIcon={<DateRangeOutlinedIcon sx={{ color: cyan, fontSize: 'small' }} />}>
-        <Typography sx={{ color: 'text.primary' }}><Burger.DateTimeFormatter type='date' value={state.task.startDate} /></Typography>
+        <Typography sx={{ color: 'text.primary' }}><Burger.DateTimeFormatter type='date' value={ctx.task.startDate} /></Typography>
       </Button>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <Dialog open={open} onClose={handlePickerDialog}>
-          <StaticDatePicker onAccept={handleStartDateChange} views={['month', 'day']} defaultValue={state.task.startDate}
+          <StaticDatePicker onAccept={handleStartDateChange} views={['month', 'day']} defaultValue={ctx.task.startDate}
             slotProps={{
               actionBar: {
                 actions: ["clear", "cancel", "accept"]

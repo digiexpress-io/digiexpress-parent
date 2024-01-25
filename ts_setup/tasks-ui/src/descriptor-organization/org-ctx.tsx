@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { UserProfileAndOrg } from 'client';
 import { OrgState, OrgDispatch, OrgMutator, OrgContextType } from './org-ctx-types';
 import { OrgMutatorBuilderImpl, } from './org-ctx-impl';
 import { Backend } from 'client';
@@ -11,15 +12,15 @@ const init: OrgState = new OrgMutatorBuilderImpl({
   org: { roles: {}, users: {} }
 });
 
-const OrgProvider: React.FC<{ children: React.ReactNode, backend: Backend }> = ({ children, backend }) => {
+const OrgProvider: React.FC<{ children: React.ReactNode, backend: Backend, profile: UserProfileAndOrg }> = ({ children, backend, profile }) => {
 
   const [loading, setLoading] = React.useState<boolean>(true);
   const [state, setState] = React.useState<OrgState>(init);
   const setter: OrgDispatch = React.useCallback((mutator: OrgMutator) => setState(mutator), [setState]);
 
   const contextValue: OrgContextType = React.useMemo(() => {
-    return { state, setState: setter, loading };
-  }, [state, setter, loading]);
+    return { state, setState: setter, loading, profile };
+  }, [state, setter, loading, profile]);
 
   React.useEffect(() => {
     if (!loading) {

@@ -10,8 +10,6 @@ import Context from 'context';
 import { TaskDescriptor, TaskEditProvider } from 'descriptor-task';
 
 const Left: React.FC<{}> = () => {
-  const { state } = Context.useTaskEdit();
-
   return (
     <>
       <Burger.Section>
@@ -61,7 +59,7 @@ const Left: React.FC<{}> = () => {
 }
 
 const Right: React.FC<{}> = () => {
-  const { state } = Context.useTaskEdit();
+  const { events } = Context.useTaskEdit();
 
   return (
     <>
@@ -70,7 +68,7 @@ const Right: React.FC<{}> = () => {
       <Burger.Section>
         <Typography fontWeight='bold'><FormattedMessage id='core.taskEdit.fields.history' /></Typography>
         <List>
-          {state.events.map((event, index) => <Events key={index} event={event} />)}
+          {events.map((event, index) => <Events key={index} event={event} />)}
         </List>
       </Burger.Section>
     </>
@@ -110,7 +108,7 @@ const TaskEditDialog: React.FC<{ open: boolean, onClose: () => void, task?: Task
   }
 
   return (
-    <TaskEditProvider task={props.task}>
+    <TaskEditProvider task={props.task.entry}>
       <StyledFullScreenDialog
         header={<Header onClose={handleClose} />}
         footer={<Footer onClose={handleClose} />}

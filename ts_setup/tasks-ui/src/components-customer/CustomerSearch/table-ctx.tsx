@@ -64,7 +64,7 @@ class ImmutableCustomersSearchState implements CustomersSearchState {
     return new ImmutableCustomersSearchState({ ...this.clone(), searchString, isSearchStringValid });
   }
   withRecords(searchResult: Customer[]): CustomersSearchState {
-    const records: CustomerDescriptor[] = searchResult.map(customer => new CustomerDescriptorImpl(customer, this._profile, this._today));
+    const records: CustomerDescriptor[] = searchResult.map(customer => new CustomerDescriptorImpl(customer));
     return new ImmutableCustomersSearchState({ ...this.clone(), records });
   }
 

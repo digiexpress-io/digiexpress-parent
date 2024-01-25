@@ -72,8 +72,6 @@ const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
 const CustomerDetailsDialog: React.FC<{ open: boolean, onClose: () => void, task?: TaskDescriptor }> = (props) => {
   const tasks = Context.useTasks();
-  const profile = tasks.state.profile;
-
   const backend = Context.useBackend();
   const [customer, setCustomer] = React.useState<CustomerDescriptor>();
 
@@ -84,8 +82,8 @@ const CustomerDetailsDialog: React.FC<{ open: boolean, onClose: () => void, task
     if (!id) {
       return;
     }
-    backend.customer.getCustomer(id).then(customer => setCustomer(new CustomerDescriptorImpl(customer, profile, new Date())));
-  }, [props.task?.customerId, profile]);
+    backend.customer.getCustomer(id).then(customer => setCustomer(new CustomerDescriptorImpl(customer)));
+  }, [props.task?.customerId]);
 
   if (!props.open || !props.task || !props.task.customerId) {
     return null;
@@ -100,7 +98,7 @@ const CustomerDetailsDialog: React.FC<{ open: boolean, onClose: () => void, task
   }
 
   return (
-    <TaskEditProvider task={props.task}>
+    <TaskEditProvider task={props.task.entry}>
       <StyledFullScreenDialog
         header={<Header onClose={props.onClose} />}
         footer={<Footer onClose={handleClose} />}

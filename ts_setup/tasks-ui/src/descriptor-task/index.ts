@@ -1,6 +1,20 @@
-
-import * as taskEditCtx from './context-task-edit';
 import { Palette, _nobody_ } from './constants';
+import { TaskDescriptor } from './types';
+
+import { TaskGroupsAndFiltersImpl } from './TaskGroupsAndFiltersImpl';
+
+export function toGroupsAndFilters(data: readonly TaskDescriptor[]): TaskGroupsAndFiltersImpl {
+  const next = [...data];
+  return new TaskGroupsAndFiltersImpl({
+    data: next,
+    filtered: next,
+    filterBy: [],
+    groupBy: 'status',
+    groups: [],
+    searchString: undefined,
+  });
+}
+
 
 export const StatusPalette = Palette.status;
 export const PriorityPalette = Palette.priority;
@@ -8,34 +22,12 @@ export const TeamGroupPalette = Palette.teamGroupType;
 export const AssigneePalette = Palette.assigneeGroupType;
 export const Nobody = _nobody_;
 
-export { TaskEditContext, TaskEditProvider } from './context-task-edit';
-export { TasksContext, TasksProvider } from './context-tasks';
-
-export type {
-  TaskEditEvent, TaskEditMutatorBuilder, TaskEditState,
-  TaskEditContextType,
-  CreateTaskEventBody,
-  AssignTaskReporterEventBody,
-  ArchiveTaskEventBody,
-  ChangeTaskStatusEventBody,
-  ChangeTaskPriorityEventBody,
-  AssignTaskParentEventBody,
-  CommentOnTaskEventBody,
-  ChangeTaskCommentEventBody,
-  AssignTaskRolesEventBody,
-  AssignTaskEventBody,
-  ChangeTaskDueDateEventBody,
-  ChangeTaskInfoEventBody,
-  CreateTaskExtensionEventBody,
-  ChangeTaskExtensionEventBody,
-  SingleEvent, CollapsedEvent,
-  TasksContextType, TasksState,
-  SingleEventDiff
-} from './types';
 
 
-export { TaskDescriptorImpl, TaskGroupsAndFiltersImpl } from './types-impl';
-export const EditProvider = taskEditCtx.TaskEditProvider;
+
+export * from './ImmutableTaskDescriptor';
+export * from './TasksContext';
+export * from './TaskEditContext';
 export * from './types';
 export { Palette }
 

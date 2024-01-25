@@ -11,7 +11,7 @@ import Burger from 'components-burger';
 import { cyan, cyan_mud } from 'components-colors';
 
 const TaskChecklist: React.FC<{ onChange: (commands: Client.TaskUpdateCommand<any>[]) => Promise<void> }> = ({ onChange }) => {
-  const { state, setState } = Context.useTaskEdit();
+  const ctx = Context.useTaskEdit();
   const backend = Context.useBackend();
 
   async function handleChecklistItemCompleted(checklistId: string, checklistItemId: string, event: React.ChangeEvent<HTMLInputElement>) {
@@ -20,22 +20,22 @@ const TaskChecklist: React.FC<{ onChange: (commands: Client.TaskUpdateCommand<an
       commandType: 'ChangeChecklistItemCompleted',
       checklistId,
       checklistItemId,
-      taskId: state.task.id,
+      taskId: ctx.task.id,
       completed: event.target.checked
     };
-    const updatedTask = await backend.task.updateActiveTask(state.task.id, [command]);
-    setState((current) => current.withTask(updatedTask));
+    const updatedTask = await backend.task.updateActiveTask(ctx.task.id, [command]);
+    ctx.withTask(updatedTask);
   }
 
   async function handleChecklistTitleChange(checklistId: string, checklistTitle: string) {
     const command: Client.ChangeChecklistTitle = {
       commandType: 'ChangeChecklistTitle',
       checklistId,
-      taskId: state.task.id,
+      taskId: ctx.task.id,
       title: checklistTitle
     };
-    const updatedTask = await backend.task.updateActiveTask(state.task.id, [command]);
-    setState((current) => current.withTask(updatedTask));
+    const updatedTask = await backend.task.updateActiveTask(ctx.task.id, [command]);
+    ctx.withTask(updatedTask);
   }
 
   async function handleChecklistItemTitleChange(checklistId: string, checklistItemId: string, checklistItemTitle: string) {
@@ -43,11 +43,11 @@ const TaskChecklist: React.FC<{ onChange: (commands: Client.TaskUpdateCommand<an
       commandType: 'ChangeChecklistItemTitle',
       checklistId,
       checklistItemId,
-      taskId: state.task.id,
+      taskId: ctx.task.id,
       title: checklistItemTitle
     };
-    const updatedTask = await backend.task.updateActiveTask(state.task.id, [command]);
-    setState((current) => current.withTask(updatedTask));
+    const updatedTask = await backend.task.updateActiveTask(ctx.task.id, [command]);
+    ctx.withTask(updatedTask);
   }
 
   async function handleDueDateChange(dueDate: string | undefined, checklistId: string, checklistItemId: string) {
@@ -56,7 +56,7 @@ const TaskChecklist: React.FC<{ onChange: (commands: Client.TaskUpdateCommand<an
       checklistItemId,
       commandType: 'ChangeChecklistItemDueDate',
       dueDate,
-      taskId: state.task.id
+      taskId: ctx.task.id
     };
     onChange([command]);
   }
@@ -67,7 +67,7 @@ const TaskChecklist: React.FC<{ onChange: (commands: Client.TaskUpdateCommand<an
       checklistId,
       checklistItemId,
       commandType: 'ChangeChecklistItemAssignees',
-      taskId: state.task.id
+      taskId: ctx.task.id
     };
     onChange([command]);
   }
@@ -75,51 +75,51 @@ const TaskChecklist: React.FC<{ onChange: (commands: Client.TaskUpdateCommand<an
   async function handleChecklistCreate() {
     const command: Client.CreateChecklist = {
       commandType: 'CreateChecklist',
-      taskId: state.task.id,
+      taskId: ctx.task.id,
       title: "New checklist title",
       checklist: [{ id: '', assigneeIds: [], completed: false, dueDate: undefined, title: 'new to-do item' }]
     };
-    const updatedTask = await backend.task.updateActiveTask(state.task.id, [command]);
-    setState((current) => current.withTask(updatedTask));
+    const updatedTask = await backend.task.updateActiveTask(ctx.task.id, [command]);
+    ctx.withTask(updatedTask);
   }
 
   async function handleChecklistItemCreate(checklistId: string) {
     const command: Client.AddChecklistItem = {
       commandType: 'AddChecklistItem',
-      taskId: state.task.id,
+      taskId: ctx.task.id,
       checklistId,
       completed: false,
       assigneeIds: [],
       dueDate: undefined,
       title: "New to-do item",
     };
-    const updatedTask = await backend.task.updateActiveTask(state.task.id, [command]);
-    setState((current) => current.withTask(updatedTask));
+    const updatedTask = await backend.task.updateActiveTask(ctx.task.id, [command]);
+    ctx.withTask(updatedTask);
   }
 
 
   async function handleChecklistDelete(checklistId: string) {
     const command: Client.DeleteChecklist = {
       commandType: 'DeleteChecklist',
-      taskId: state.task.id,
+      taskId: ctx.task.id,
       checklistId
     };
-    const updatedTask = await backend.task.updateActiveTask(state.task.id, [command]);
-    setState((current) => current.withTask(updatedTask));
+    const updatedTask = await backend.task.updateActiveTask(ctx.task.id, [command]);
+    ctx.withTask(updatedTask);
   }
 
   async function handleChecklisItemDelete(checklistId: string, checklistItemId: string) {
     const command: Client.DeleteChecklistItem = {
       commandType: 'DeleteChecklistItem',
-      taskId: state.task.id,
+      taskId: ctx.task.id,
       checklistItemId,
       checklistId
     };
-    const updatedTask = await backend.task.updateActiveTask(state.task.id, [command]);
-    setState((current) => current.withTask(updatedTask));
+    const updatedTask = await backend.task.updateActiveTask(ctx.task.id, [command]);
+    ctx.withTask(updatedTask);
   }
 
-  if (!state.task.checklist.length) {
+  if (!ctx.task.checklist.length) {
     return (
       <Box display='flex' alignItems='center' justifyContent='flex-end' paddingRight={2}>
         <Button startIcon={<AddIcon sx={{ color: cyan }} />} onClick={handleChecklistCreate}>
@@ -139,7 +139,7 @@ const TaskChecklist: React.FC<{ onChange: (commands: Client.TaskUpdateCommand<an
 
     {/*  checklist section  */}
 
-    {state.task.checklist.map((checklist, index) => (<Burger.Section key={index} width='95%'>
+    {ctx.task.checklist.map((checklist, index) => (<Burger.Section key={index} width='95%'>
       <Box>
         <TextField defaultValue={checklist.title}
           onBlur={(event) => handleChecklistTitleChange(checklist.id, event.currentTarget.value)}

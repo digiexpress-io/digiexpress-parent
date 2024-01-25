@@ -32,7 +32,7 @@ const Provider: React.FC<{ children: React.ReactNode, service: Backend, profile:
   return (
     <ClientContext.Provider value={service}>
       <ComposerContext.Provider value={contextValue}>
-        <OrgProvider backend={service}>
+        <OrgProvider backend={service} profile={profile}>
           {children}
         </OrgProvider>
       </ComposerContext.Provider>

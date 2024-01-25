@@ -5,9 +5,8 @@ import { FormattedMessage } from 'react-intl';
 
 import TaskCreateActions from './TaskCreateActions';
 import Fields from './TaskCreateFields';
-import { Task } from 'client';
+import { Task, UserProfileAndOrg } from 'client';
 import Context from 'context';
-import { TaskDescriptorImpl } from 'descriptor-task';
 import Burger from 'components-burger';
 import { TaskEditProvider } from 'descriptor-task';
 import { sambucus, wash_me } from 'components-colors';
@@ -44,16 +43,13 @@ function initTaskProps(userId: string): Task {
 
 const TaskCreateDialog: React.FC<{ open: boolean, onClose: () => void }> = (props) => {
   const org = Context.useOrg();
-  const tasks = Context.useTasks();
 
   if (!props.open) {
     return null;
   }
 
-  const init = new TaskDescriptorImpl(initTaskProps(org.state.iam.userId), tasks.state.profile, new Date());
-
   return (
-    <TaskEditProvider task={init}>
+    <TaskEditProvider task={initTaskProps(org.state.iam.userId)}>
       <Dialog open={true} fullWidth maxWidth='md'>
         <DialogTitle sx={{
           backgroundColor: wash_me,

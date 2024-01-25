@@ -82,10 +82,8 @@ const columnTypes: (keyof UserProfileDescriptor)[] = [
 
 const UserProfiles: React.FC<{}> = () => {
   const backend = Context.useBackend();
-  const tasks = Context.useTasks();
-  const profile = tasks.state.profile;
   const [columns, setColumns] = React.useState([...columnTypes]);
-  const [state, setState] = React.useState<UserProfileSearchState>(initUserProfileSearchState(profile));
+  const [state, setState] = React.useState<UserProfileSearchState>(initUserProfileSearchState());
   const [loading, setLoading] = React.useState<boolean>(false);
   const { searchString, isSearchStringValid } = state;
 

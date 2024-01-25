@@ -16,12 +16,16 @@ export function initReducer(
   const result: AvatarReducer = {
     withAvatar: (letters) => {
       const state: ImmutableAvatars = avatars.withAvatar(letters);
-      setAvatars(state);
+      if(state !== avatars) {
+        setAvatars(state);
+      }
       return state.values[letters];
     },
     withAvatars(all) {
       const state: ImmutableAvatars = avatars.withAvatars(all);
-      setAvatars(state);
+      if(state !== avatars) {
+        setAvatars(state);
+      }
       return all.map(letters => state!.values[letters]);
     },
   };

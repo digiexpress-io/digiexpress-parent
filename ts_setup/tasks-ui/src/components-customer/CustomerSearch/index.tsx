@@ -87,8 +87,7 @@ const columnTypes: (keyof CustomerDescriptor)[] = [
 
 const CustomerSearch: React.FC<{}> = () => {
   const backend = Context.useBackend();
-  const tasks = Context.useTasks();
-  const profile = tasks.state.profile;
+  const { profile } = Context.useOrg();
   const [columns, setColumns] = React.useState([...columnTypes]);
   const [state, setState] = React.useState<CustomersSearchState>(initCustomersSearchState(profile));
   const [loading, setLoading] = React.useState<boolean>(false);

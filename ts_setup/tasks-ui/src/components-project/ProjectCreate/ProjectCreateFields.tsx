@@ -5,15 +5,15 @@ import Context from 'context';
 
 
 const Title: React.FC<{}> = () => {
-  const { state, setState } = Context.useTaskEdit();
+  const ctx = Context.useTaskEdit();
 
   function handleTitleChange(event: React.ChangeEvent<HTMLInputElement>) {
-    setState((current) => current.withTask({ ...state.task.entry, title: event.target.value }));
+    ctx.withTask({ ...ctx.task.entry, title: event.target.value });
   }
 
   return (<TextField InputProps={{ disableUnderline: true }} variant='standard'
     fullWidth
-    value={state.task.title}
+    value={ctx.task.title}
     onChange={handleTitleChange}
   />);
 }

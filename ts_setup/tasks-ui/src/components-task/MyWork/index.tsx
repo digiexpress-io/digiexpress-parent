@@ -4,7 +4,7 @@ import { Group, AssigneeGroupType } from 'descriptor-task';
 import { TaskListTabState, TaskList } from '../TaskList';
 import TaskItemActive from './TaskItemActive';
 import TaskItem from './TaskItem';
-import { TasksState, AssigneePalette } from 'descriptor-task';
+import { AssigneePalette, toGroupsAndFilters, TaskDescriptor } from 'descriptor-task';
 import { moss } from 'components-colors';
 
 
@@ -12,8 +12,8 @@ function groupsToRecord(state: Group[]): Record<AssigneeGroupType, Group> {
   return state.reduce((acc, item) => ({ ...acc, [item['id']]: item }), {} as Record<AssigneeGroupType, Group>);
 }
 
-function getTabs(state: TasksState): TaskListTabState[] | any {
-  const groupBy: Group[] = state.toGroupsAndFilters().withGroupBy("assignee").groups;
+function getTabs(state: readonly TaskDescriptor[]): TaskListTabState[] | any {
+  const groupBy: Group[] = toGroupsAndFilters(state).withGroupBy("assignee").groups;
   const groups = groupsToRecord(groupBy);
   const assigneeOverdue = groups["assigneeOverdue"];
   const assigneeOther = groups["assigneeOther"];
@@ -65,13 +65,13 @@ function getTabs(state: TasksState): TaskListTabState[] | any {
 }
 
 const MyWorkLoader: React.FC = () => {
-  const tasks = Context.useTasks();
-  console.log(getTabs(tasks.state));
+  const ctx = Context.useTasks();
 
-  if (tasks.loading) {
+
+  if (ctx.loading) {
     return <>...loading</>
   }
-  return (<TaskList state={getTabs(tasks.state)}>{{ TaskItem, TaskItemActive }}</TaskList>);
+  return (<TaskList state={getTabs(ctx.tasks)}>{{ TaskItem, TaskItemActive }}</TaskList>);
 }
 
 export default MyWorkLoader;

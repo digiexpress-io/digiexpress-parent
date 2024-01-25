@@ -56,8 +56,8 @@ const CustomerContact: React.FC<{ customer: CustomerDescriptor }> = ({ customer 
 }
 
 const CustomerTask: React.FC<{ customer: CustomerDescriptor }> = ({ customer }) => {
-  const tasks = Context.useTasks();
-  const tasksByCustomer: TaskDescriptor[] = tasks.state.tasks.filter((task) => task.customerId === customer.entry.id);
+  const { tasks } = Context.useTasks();
+  const tasksByCustomer: TaskDescriptor[] = tasks.filter((task) => task.customerId === customer.entry.id);
 
   return (<>
     {tasksByCustomer.map((task, index) => (<>

@@ -27,14 +27,12 @@ const SectionLayout: React.FC<{ label: string, value: string | undefined }> = ({
 
 const CurrentUserProfile: React.FC<{}> = () => {
   const backend = Context.useBackend();
-  const tasks = Context.useTasks();
-  const profile = tasks.state.profile;
   const [state, setState] = React.useState<UserProfileDescriptor>();
   const [loading, setLoading] = React.useState<boolean>(true);
 
   React.useEffect(() => {
     backend.currentUserProfile().then(userProfile => {
-      setState(new UserProfileDescriptorImpl(userProfile.user, profile, new Date()));
+      setState(new UserProfileDescriptorImpl(userProfile.user));
       setLoading(false);
     });
   }, []);
