@@ -1,65 +1,66 @@
 import React from 'react';
-import { AvatarGroup, Box, ListItemText, Checkbox, Button, Avatar, List, MenuItem, Stack, Typography, Alert, AlertTitle } from '@mui/material';
+import { AvatarGroup, Box, ListItemText, Checkbox, Button, Avatar as MAvatar, List, MenuItem, Stack, Typography, Alert, AlertTitle } from '@mui/material';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { FormattedMessage } from 'react-intl';
-import { SearchFieldPopover } from '../SearchField';
+
 import Client from 'client';
-import { AvatarCode } from 'descriptor-task';
 import Context from 'context';
-import { TablePopover, usePopover } from '../TablePopover';
 import { cyan } from 'components-colors';
+import { Avatar, useAvatars } from 'descriptor-avatar';
+
+import { SearchFieldPopover } from '../SearchField';
+import { TablePopover, usePopover } from '../TablePopover';
 
 
-const UserAvatar: React.FC<{ children?: AvatarCode }> = ({ children }) => {
-  const { state } = Context.useTasks();
-  const assigneeColors = state.palette.owners;
-  const bgcolor: string | undefined = children ? assigneeColors[children.value] : undefined;
-  const avatar = children ? children.twoletters : <PersonAddIcon sx={{ fontSize: 15 }} />;
 
+const UserAvatar: React.FC<{ children?: Avatar }> = ({ children }) => {
+  const bgcolor: string | undefined = children ? children.color : undefined;
+  const avatar = children ? children.twoLetterCode : <PersonAddIcon sx={{ fontSize: 15 }} />;
 
   return (
-    <Avatar
-      sx={{
-        bgcolor,
-        width: 24,
-        height: 24,
-        fontSize: 10
-      }}
-    >
+    <MAvatar sx={{
+      bgcolor,
+      width: 24,
+      height: 24,
+      fontSize: 10 }}>
+
       {avatar}
-    </Avatar>
+    </MAvatar>
   );
 }
 
 const AvatarsOnly: React.FC<{
-  task: {
-    assignees: Client.UserId[],
-    assigneesAvatars?: AvatarCode[]
-  },
+  task: { assignees: Client.UserId[] },
 }> = ({ task }) => {
+  const avatars = useAvatars(task.assignees);
+  if(!avatars) {
+    return null;
+  }
 
   return task.assignees.length ?
-    (<AvatarGroup spacing='medium'>
-      {(task.assigneesAvatars ?? Client.resolveAvatar(task.assignees)).map((assignee: AvatarCode) => (
-        <UserAvatar key={assignee.value}>{assignee}</UserAvatar>))}
-    </AvatarGroup>) :
-    (<UserAvatar />)
+    (<AvatarGroup spacing='medium'>{avatars.map(assignee => (<UserAvatar key={assignee.origin} children={assignee}/>))}</AvatarGroup>) 
+    :
+    (<UserAvatar />);
 }
 
 const FullnamesAndAvatars: React.FC<{
-  task: {
-    assignees: Client.UserId[],
-    assigneesAvatars?: AvatarCode[]
-  }
+  task: { assignees: Client.UserId[] }
 }> = ({ task }) => {
+
+  const avatars = useAvatars(task.assignees);
+  if(!avatars) {
+    return null;
+  }
+
 
   return task.assignees.length ?
     (<Stack spacing={1}>
-      {(task.assigneesAvatars ?? Client.resolveAvatar(task.assignees)).map((assignee: AvatarCode) => (
-        <Box key={assignee.value} display='flex' alignItems='center' sx={{ cursor: 'pointer' }}>
-          <UserAvatar key={assignee.value}>{assignee}</UserAvatar>
-          <Box pl={1}><Typography>{assignee.value}</Typography></Box>
-        </Box>))}
+      {avatars.map(assignee => (
+        <Box key={assignee.origin} display='flex' alignItems='center' sx={{ cursor: 'pointer' }}>
+          <UserAvatar key={assignee.origin}>{assignee}</UserAvatar>
+          <Box pl={1}><Typography>{assignee.origin}</Typography></Box>
+        </Box>))
+      }
     </Stack>)
     :
     (<UserAvatar />);
@@ -68,10 +69,7 @@ const FullnamesAndAvatars: React.FC<{
 
 const SelectAssignees: React.FC<{
   anchorEl: HTMLElement | null,
-  task: {
-    assignees: Client.UserId[],
-    assigneesAvatars?: AvatarCode[],
-  },
+  task: { assignees: Client.UserId[] },
   onChange: (assigneeIds: Client.UserId[]) => Promise<void>,
   onClose: () => void,
 }> = ({ anchorEl, task, onChange, onClose }) => {
@@ -137,10 +135,7 @@ const SelectAssignees: React.FC<{
 
 
 const TaskAssignees: React.FC<{
-  task: {
-    assignees: Client.UserId[],
-    assigneesAvatars?: AvatarCode[]
-  },
+  task: { assignees: Client.UserId[] },
   onChange: (assigneeIds: Client.UserId[]) => Promise<void>,
   fullnames?: boolean,
   disabled?: boolean,

@@ -10,10 +10,11 @@ const TaskCell: React.FC<{
   info?: React.ReactNode,
   maxWidth?: string
 }> = ({ id, name, tag, maxWidth }) => {
-  const { setState } = useTable();
+  const { withPopperToggle } = useTable();
+
   const handleClick = React.useCallback((event: React.MouseEvent<HTMLElement>) => {
-    setState(prev => prev.withPopperOpen(id, !prev.popperOpen, event.currentTarget))
-  }, [setState, id]);
+    withPopperToggle(id, event.currentTarget);
+  }, [withPopperToggle, id]);
 
   if (!name) {
     return <>-</>

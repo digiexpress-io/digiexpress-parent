@@ -78,7 +78,8 @@
     "style-loader": "^3.3.1",
     "ts-node": "^9.1.1",
     "typescript": "^5.1.6",
-    "vite": "^5.0.8"
+    "vite": "^5.0.8",
+    "vite-plugin-checker": "^0.6.2"
   },
   "scripts": {
     "start": "vite",

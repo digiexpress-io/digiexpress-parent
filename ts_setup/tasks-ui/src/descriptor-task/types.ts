@@ -83,12 +83,6 @@ export interface CollapsedEvent {
   type: "COLLAPSED";
 }
 
-
-export interface AvatarCode {
-  twoletters: string;
-  value: string;
-}
-
 export interface TaskDescriptor {
   entry: Task;
   created: Date;
@@ -107,9 +101,6 @@ export interface TaskDescriptor {
   comments: TaskComment[];
   transactions: TaskTransaction[];
   uploads: TaskExtension[];
-  rolesAvatars: AvatarCode[];
-  assigneesAvatars: AvatarCode[];
-
   customerId: CustomerId | undefined;
 
   assigneeGroupType: AssigneeGroupType | undefined;

@@ -1,6 +1,6 @@
 import { Stack, Theme, alpha, Box, darken, styled, Button, useTheme } from '@mui/material';
 import { SxProps } from '@mui/system';
-import { cyan, wash_me } from 'components-colors';
+import { cyan, wash_me, cyan_mud } from 'components-colors';
 
 
 const StyledStartTaskButton = styled(Button)(() => ({
@@ -70,7 +70,7 @@ const StyledStackItem: React.FC<{
       return {
         p: 2,
         cursor: 'pointer',
-        backgroundColor: cyan,
+        backgroundColor: cyan_mud,
         color: 'text.primary'
       };
     } else {

@@ -12,7 +12,7 @@ import { FilterRoles } from './FilterRoles';
 import { FilterPriority } from './FilterPriority';
 import { FilterColumns } from './FilterColumns';
 import { GroupBySelect } from './GroupBy';
-import { cyan } from 'components-colors';
+import { cyan_mud } from 'components-colors';
 
 
 
@@ -20,7 +20,7 @@ function getRowBackgroundColor(index: number): string {
   const isOdd = index % 2 === 1;
 
   if (isOdd) {
-    return cyan;
+    return cyan_mud;
   }
   return 'background.paper';
 }

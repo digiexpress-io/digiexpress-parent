@@ -1,8 +1,8 @@
-import { Task, TaskExtension, TaskPriority, TaskStatus, UserProfileAndOrg, CustomerId, resolveAvatar } from 'client';
+import { Task, TaskExtension, TaskPriority, TaskStatus, UserProfileAndOrg, CustomerId } from 'client';
 
 import {
   TaskDescriptor, FilterBy, Group, GroupBy,
-  FilterByOwners, FilterByPriority, FilterByRoles, FilterByStatus, AvatarCode, AssigneeGroupType, TeamGroupType,
+  FilterByOwners, FilterByPriority, FilterByRoles, FilterByStatus, AssigneeGroupType, TeamGroupType,
   TasksPaletteType, Data, TaskGroupsAndFilters
 } from './types';
 import { _nobody_, Palette } from './constants';
@@ -315,8 +315,6 @@ class TaskDescriptorImpl implements TaskDescriptor {
   private _startDate: Date | undefined;
   private _daysUntilDue: number | undefined;
   private _uploads: TaskExtension[];
-  private _rolesAvatars: AvatarCode[];
-  private _ownersAvatars: AvatarCode[];
   private _myWorkType: AssigneeGroupType | undefined;
   private _teamspaceType: TeamGroupType | undefined;
   private _profile: UserProfileAndOrg;
@@ -330,8 +328,6 @@ class TaskDescriptorImpl implements TaskDescriptor {
     this._dialobId = entry.extensions.find(t => t.type === 'dialob')?.body;
     this._customerId = entry.extensions.find(t => t.type === 'CUSTOMER')?.body;
     this._uploads = entry.extensions.filter(t => t.type === 'upload');
-    this._rolesAvatars = resolveAvatar(entry.roles);
-    this._ownersAvatars = resolveAvatar(entry.assigneeIds);
     this._myWorkType = getMyWorkType(entry, profile, today);
     this._teamspaceType = getTeamspaceType(entry, profile, today);
     this._profile = profile;
@@ -360,8 +356,6 @@ class TaskDescriptorImpl implements TaskDescriptor {
   get title() { return this._entry.title }
   get description() { return this._entry.description }
   get uploads() { return this._uploads }
-  get rolesAvatars() { return this._rolesAvatars }
-  get assigneesAvatars() { return this._ownersAvatars }
 }
 
 

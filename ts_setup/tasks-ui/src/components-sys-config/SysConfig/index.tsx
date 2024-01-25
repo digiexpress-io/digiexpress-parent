@@ -20,7 +20,7 @@ const SysConfigLoader: React.FC = () => {
 
 
   if (loading) {
-    return <>...loading</>
+    //return <>...loading</>
   }
   return (<Grid container>
 

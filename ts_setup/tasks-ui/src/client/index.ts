@@ -6,8 +6,7 @@ import {
 } from './backend-types';
 
 import {
-  Org, User, Role, UserId, RoleId,
-  resolveAvatar as resolveAvatarAs
+  Org, User, Role, UserId, RoleId
 } from './org-types';
 
 import {
@@ -229,13 +228,7 @@ export type {
   TenantConfigId, TenantConfig, AppType
 }
 
-const resolveAvatar = resolveAvatarAs;
-export {
-  resolveAvatar
-}
-
 namespace TaskClient {
-  export const resolveAvatar = resolveAvatarAs;
   export const ServiceImpl = ServiceImplAs;
   export const DefaultStore = DefaultStoreAs;
   export const StoreErrorImpl = StoreErrorImplAs;

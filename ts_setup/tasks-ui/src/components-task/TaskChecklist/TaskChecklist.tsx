@@ -8,7 +8,7 @@ import Client from 'client';
 import TaskAssignees from '../TaskAssignees';
 import DueDate from '../TaskDueDate';
 import Burger from 'components-burger';
-import { cyan } from 'components-colors';
+import { cyan, cyan_mud } from 'components-colors';
 
 const TaskChecklist: React.FC<{ onChange: (commands: Client.TaskUpdateCommand<any>[]) => Promise<void> }> = ({ onChange }) => {
   const { state, setState } = Context.useTaskEdit();
@@ -150,7 +150,7 @@ const TaskChecklist: React.FC<{ onChange: (commands: Client.TaskUpdateCommand<an
               height: '2.5rem',
               pr: 0,
               fontWeight: 'bold',
-              backgroundColor: cyan
+              backgroundColor: cyan_mud
             }
           }}
         />

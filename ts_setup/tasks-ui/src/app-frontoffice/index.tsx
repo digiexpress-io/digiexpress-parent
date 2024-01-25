@@ -6,6 +6,7 @@ import { Backend, UserProfileAndOrg } from 'client';
 import { ProjectsProvider } from 'descriptor-project';
 import { TasksProvider } from 'descriptor-task';
 import { TenantProvider } from 'descriptor-tenant';
+import { AvatarProvider } from 'descriptor-avatar';
 
 import Views from './Views';
 
@@ -14,7 +15,9 @@ const FrontOfficeProvider: React.FC<{ children: React.ReactNode, init: { backend
   return (<ProjectsProvider init={init}>
     <TasksProvider init={init}>
       <TenantProvider init={init}>
-        {children}
+        <AvatarProvider>
+          {children}
+        </AvatarProvider>
       </TenantProvider>
     </TasksProvider>
   </ProjectsProvider>);

@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, TablePagination, TableContainer, Table } from '@mui/material';
 import { TaskDescriptor, Group } from 'descriptor-task';
 import Pagination from 'table';
+import { PopperProvider, usePopper } from 'descriptor-popper';
 
 type TaskPagination = Pagination.TablePagination<TaskDescriptor>;
 
@@ -24,68 +25,7 @@ interface TableProps {
   }
 }
 
-
-
-interface DescriptorTableContextType {
-  setState: SetState;
-  state: DescriptorTableState,
-}
-
-type Mutator = (prev: DescriptorTableStateBuilder) => DescriptorTableStateBuilder;
-type SetState = (mutator: Mutator) => void;
-
-const DescriptorTableContext = React.createContext<DescriptorTableContextType>({} as DescriptorTableContextType);
-
-
-interface DescriptorTableState {
-  popperOpen: boolean;
-  popperId?: string;
-  anchorEl?: HTMLElement;
-}
-
-class DescriptorTableStateBuilder implements DescriptorTableState {
-  private _popperOpen: boolean;
-  private _popperId?: string;
-  private _anchorEl?: HTMLElement;
-
-  constructor(init: DescriptorTableState) {
-    this._popperOpen = init.popperOpen;
-    this._anchorEl = init.anchorEl;
-    this._popperId = init.popperId;
-  }
-  withPopperOpen(popperId: string, popperOpen: boolean, anchorEl?: HTMLElement): DescriptorTableStateBuilder {
-    if (popperOpen && !anchorEl) {
-      throw new Error("anchor must be defined when opening popper");
-    }
-    if (popperId !== this._popperId && anchorEl) {
-      return new DescriptorTableStateBuilder({ popperId, popperOpen: true, anchorEl });
-    }
-
-    return new DescriptorTableStateBuilder({ popperId, popperOpen, anchorEl });
-  }
-  get popperId() { return this._popperId }
-  get popperOpen() { return this._popperOpen }
-  get anchorEl() { return this._anchorEl }
-}
-
-const initTableState = new DescriptorTableStateBuilder({ popperOpen: false });
-
-const Provider: React.FC<{ children: React.ReactElement }> = ({ children }) => {
-  const [state, setState] = React.useState(initTableState);
-  const setter: SetState = React.useCallback((mutator: Mutator) => setState(mutator), [setState]);
-  const contextValue: DescriptorTableContextType = React.useMemo(() => {
-    return { state, setState: setter };
-  }, [state, setter]);
-
-
-  return (<DescriptorTableContext.Provider value={contextValue}>{children}</DescriptorTableContext.Provider>);
-};
-
-const useTable = () => {
-  const result: DescriptorTableContextType = React.useContext(DescriptorTableContext);
-  return result;
-}
-
+const useTable = usePopper;
 
 function CustomTable(props: TableProps) {
   const { loading, defaultOrderBy, group } = props.data;
@@ -102,7 +42,7 @@ function CustomTable(props: TableProps) {
     setContent((c: TaskPagination) => c.withSrc(records ?? []));
   }, [records, setContent]);
 
-  return (<Provider>
+  return (<PopperProvider>
     <Box sx={{ width: '100%' }}>
       <TableContainer>
         <Table size='small'>
@@ -125,13 +65,13 @@ function CustomTable(props: TableProps) {
         }
       </Box>
     </Box>
-  </Provider>
+  </PopperProvider>
   );
 }
 
 
 
-export { Provider, useTable, CustomTable };
-export type { DescriptorTableStateBuilder, DescriptorTableContextType, DescriptorTableState, TableConfigProps };
+export { useTable, CustomTable };
+export type { TableConfigProps };
 
 

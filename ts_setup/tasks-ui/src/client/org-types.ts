@@ -30,23 +30,3 @@ export interface User {
   activity: UserActivity[];
   type: 'PROJECT_USER' | 'TASK_USER'
 }
-
-
-export function resolveAvatar(values: string[]): { twoletters: string, value: string }[] {
-  return values.map(role => {
-    const words: string[] = role.replaceAll("-", " ").replaceAll("_", " ").replace(/([A-Z])/g, ' $1').replaceAll("  ", " ").trim().split(" ");
-
-    const result: string[] = [];
-    for (const word of words) {
-      if (result.length >= 2) {
-        break;
-      }
-
-      if (word && word.length) {
-        const firstLetter = word.substring(0, 1);
-        result.push(firstLetter.toUpperCase());
-      }
-    }
-    return { twoletters: result.join(""), value: role };
-  });
-}

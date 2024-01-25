@@ -1,23 +1,28 @@
 import React from 'react';
-import { AvatarGroup, Box, Button, Avatar, List, MenuItem, Checkbox, ListItemText, Stack, Typography, Alert, AlertTitle } from '@mui/material';
+import { AvatarGroup, Box, Button, Avatar as MAvatar, List, MenuItem, Checkbox, ListItemText, Stack, Typography, Alert, AlertTitle } from '@mui/material';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import { FormattedMessage } from 'react-intl';
 
-import { SearchFieldPopover } from '../SearchField';
-import { usePopover, TablePopover } from '../TablePopover';
-import { TaskDescriptor, AvatarCode } from 'descriptor-task';
+import { cyan } from 'components-colors';
+import { TaskDescriptor } from 'descriptor-task';
+import { Avatar, useAvatars } from 'descriptor-avatar';
+
+
 import Client from 'client';
 import Context from 'context';
-import { cyan } from 'components-colors';
 
-const RoleAvatar: React.FC<{ children?: AvatarCode, onClick?: (event: React.MouseEvent<HTMLElement>) => void }> = ({ children, onClick }) => {
+import { SearchFieldPopover } from '../SearchField';
+import { usePopover, TablePopover } from '../TablePopover';
+
+
+const RoleAvatar: React.FC<{ children?: Avatar, onClick?: (event: React.MouseEvent<HTMLElement>) => void }> = ({ children, onClick }) => {
   const { state } = Context.useTasks();
   const roleColors = state.palette.roles;
-  const bgcolor: string | undefined = children ? roleColors[children.value] : undefined;
-  const avatar = children ? children.twoletters : <AdminPanelSettingsIcon sx={{ fontSize: 15 }} />;
+  const bgcolor: string | undefined = children ? children.color : undefined;
+  const avatar = children ? children.twoLetterCode : <AdminPanelSettingsIcon sx={{ fontSize: 15 }} />;
 
   return (
-    <Avatar onClick={onClick}
+    <MAvatar onClick={onClick}
       sx={{
         bgcolor,
         width: 24,
@@ -26,7 +31,7 @@ const RoleAvatar: React.FC<{ children?: AvatarCode, onClick?: (event: React.Mous
       }}
     >
       {avatar}
-    </Avatar>
+    </MAvatar>
   );
 }
 
@@ -35,9 +40,15 @@ const RoleAvatars: React.FC<{
   task: TaskDescriptor,
 }> = ({ task }) => {
 
-  return task.rolesAvatars.length ?
+  const avatars = useAvatars(task.roles);
+  if(!avatars) {
+    return null;
+  }
+
+
+  return task.roles.length ?
     <AvatarGroup spacing='medium' sx={{ cursor: 'pointer' }} >
-      {task.rolesAvatars.map((role: AvatarCode) => (<RoleAvatar key={role.value}>{role}</RoleAvatar>))}
+      {avatars.map((role) => (<RoleAvatar key={role.origin}>{role}</RoleAvatar>))}
     </AvatarGroup> :
     <RoleAvatar />
 }
@@ -47,11 +58,16 @@ const FullnamesAndAvatars: React.FC<{
 }> = ({ task }) => {
   const org = Context.useOrg();
 
-  return task.rolesAvatars.length ?
+  const avatars = useAvatars(task.roles);
+  if(!avatars) {
+    return null;
+  }
+
+  return avatars.length ?
     (<Stack spacing={1}>
-      {task.rolesAvatars.map((role: AvatarCode) => (<Box key={role.value} display='flex' alignItems='center' sx={{ cursor: 'pointer' }}>
-        <RoleAvatar key={role.value}>{role}</RoleAvatar>
-        <Box pl={1}><Typography>{org.state.org.roles[role.value]?.displayName}</Typography></Box>
+      {avatars.map((role) => (<Box key={role.origin} display='flex' alignItems='center' sx={{ cursor: 'pointer' }}>
+        <RoleAvatar key={role.origin}>{role}</RoleAvatar>
+        <Box pl={1}><Typography>{org.state.org.roles[role.origin]?.displayName}</Typography></Box>
       </Box>))}
     </Stack>)
     :

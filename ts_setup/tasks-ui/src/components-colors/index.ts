@@ -14,7 +14,11 @@ const steelblue: string = '#1982C4';   //blue
 const orange: string = '#fb8500';      //orange96, 113, 150
 const red: string = '#d00000';
 const cyan: string = '#5048e5'; //rgb(80, 72, 229)';   //blue
+const cyan_mud = 'rgba(80, 72, 229, 0.04)' //blue
+
 const blue_mud = 'rgba(96, 113, 150, 0.5)' //blue
+
+
 const blue = '#0088FE' //blue
 const blue_mud2 = '#E9E9EA'; // blue
 const white_mud = '#F5F5F5'; //white
@@ -44,11 +48,16 @@ const turquoise = '#14B8A6'; //green
 
 
 const PALETTE = { red: bittersweet, green: emerald, yellow: sunglow, blue: steelblue, violet: ultraviolet };
-const PALETTE_COLORS = Object.values(PALETTE);;
-function withColors<T>(input: T[]): { color: string, value: T }[] {
+const PALETTE_COLORS = Object.values(PALETTE);
+
+function withColors<T>(input: T[], colorIndex?: number): { color: string, value: T }[] {
   const result: { color: string, value: T }[] = [];
   
-  let index = 0;
+  let index = colorIndex ?? 0;
+  if(index > PALETTE_COLORS.length - 1) {
+    index = 0;
+  }
+
   for (const value of input) {
     result.push({ value, color: PALETTE_COLORS[index] })
     if (PALETTE_COLORS.length - 1 === index) {
@@ -74,6 +83,7 @@ export {
   sambucus,
   turquoise,
   grey_light,
+  cyan_mud,
   withColors,
   ultraviolet,
   bittersweet,

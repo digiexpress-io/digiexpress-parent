@@ -4,7 +4,6 @@ export interface CustomerDescriptor {
   id: CustomerId;
   entry: Customer;
   profile: UserProfileAndOrg;
-  avatar: AvatarCode;
 
   displayName: string;
   customerType: CustomerBodyType;
@@ -13,11 +12,6 @@ export interface CustomerDescriptor {
   lastLogin: Date;
 
   toPerson(): Person;
-}
-
-export interface AvatarCode {
-  twoletters: string;
-  value: string;
 }
 
 
