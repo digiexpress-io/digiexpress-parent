@@ -41,15 +41,15 @@ export class LoggerFactoryConsole implements LoggerFactory {
         const meta = new Error().stack;
         const stack = meta?.replace("\r\n", "\n").split("\n");
         if(stack) {
-          const lastFrame = stack[stack?.length -1];
-          const index = Math.max(lastFrame.indexOf(".ts"), lastFrame.indexOf(".tsx"));
+          const fileNameStack = stack[stack?.length -1];
+          const dirtyFilename = fileNameStack.substring(fileNameStack.indexOf("src"));
 
-          loggerName = lastFrame.substring(lastFrame.indexOf("src/") + 4, index);
+          loggerName = dirtyFilename.substring(0, dirtyFilename.indexOf("?"));
         } else {
-          loggerName = "unknown";
+          loggerName = "";
         }
       } catch(Error) {
-        loggerName = "unknown";
+        loggerName = "";
       }
     }
     const logger: Logger = new LoggerConsole(loggerName, this._config);

@@ -2,7 +2,9 @@ import { StoreErrorImpl } from './error-types';
 import { Store, StoreConfig } from './backend-types';
 import { TenantConfig, RepoConfig, RepoType } from './tenant-config-types';
 
-type Urls = { url: string; }[];
+import LoggerFactory from 'logger';
+const log = LoggerFactory.getLogger();
+
 
 class DefaultStore implements Store {
   private _config: StoreConfig;
@@ -39,7 +41,7 @@ class DefaultStore implements Store {
       const headers: Record<string, string> = this._defRef.headers as any;
       headers[this._config.csrf.key] = this._config.csrf.value;
     }
-    console.log("Composer::init DefaultStore", config);
+    log.target(config).debug("Composer::init DefaultStore");
   }
 
   withTenantConfig(config: TenantConfig): DefaultStore {

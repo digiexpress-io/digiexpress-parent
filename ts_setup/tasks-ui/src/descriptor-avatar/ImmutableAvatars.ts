@@ -1,10 +1,6 @@
 
 import { withColors } from 'components-colors';
 import { Avatars, Avatar } from './avatar-types';
-import LoggerFactory from 'logger';
-
-const LOGGER = LoggerFactory.getLogger();
-
 
 export interface Init {
   values: Record<string, Avatar>;

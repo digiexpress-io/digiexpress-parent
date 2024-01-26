@@ -1,26 +1,29 @@
 
-export type InfoLogger = (message: string, error?: Error) => void;
-export type WarnLogger = (message: string, error?: Error) => void;
-export type ErrorLogger = (message: string, error?: Error) => void;
-export type TraceLogger = (message: string, error?: Error) => void;
-export type DebugLogger = (message: string, error?: Error) => void;
+export type InfoLogger = (message: string, optionalParams?: any) => void;
+export type WarnLogger = (message: string, optionalParams?: any) => void;
+export type ErrorLogger = (message: string, optionalParams?: any) => void;
+export type TraceLogger = (message: string, optionalParams?: any) => void;
+export type DebugLogger = (message: string, optionalParams?: any) => void;
 
-export type LogLevel = 'TRACE' | 'DEBUG' | 'INFO' | 'ERROR' | 'WARN';
-export type LogObjectId = string | number | object;
-export type Args = Record<string, string|number|boolean|Date|undefined>;
+export type LogLevel = 'OFF' | 'TRACE' | 'DEBUG' | 'INFO' | 'ERROR' | 'WARN';
+
+export type TargetObject = object;
+export type PkgWithSrc = string;
+
 
 export interface LoggingMessage {
   level: LogLevel;
   logger: string; 
-  context: string;
   message: string;
-  error?: Error;
-  args: Args;
+  code: string | undefined;
+  target: TargetObject | undefined;
+  args: any;
 }
 
 export interface LoggerConfig {
-  format: 'JSON' | 'STRING'
+  format: 'STRING'
   level: LogLevel;
+  values: Record<PkgWithSrc, LogLevel>
 }
 
 
@@ -28,13 +31,8 @@ export interface Logger {
   name: string;
   config: LoggerConfig;
 
-  id: (target: LogObjectId) => Logger;
   code: (uniqueMessageCode: string) => Logger;
-  userId: (userId: string) => Logger;
-  args: (args: Args) => Logger;
-
-  objects: (obj: object[]) => Logger;
-  object: (obj: object) => Logger;
+  target: (target: TargetObject) => Logger
 
   trace: TraceLogger;
   info: InfoLogger;

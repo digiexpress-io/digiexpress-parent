@@ -1,5 +1,9 @@
 import * as API from './AppAPI';
 
+import LoggerFactory from 'logger';
+const log = LoggerFactory.getLogger();
+
+
 enum ReducerActionType {
   setActive = "setDrawer",
 }
@@ -15,7 +19,7 @@ class AppReducerDispatch implements API.AppActions {
   private _children: API.App<any, any>[];
   
   constructor(session: React.Dispatch<ReducerAction>, children: API.App<any, any>[]) {
-    console.log("burger: init app dispatch");
+    log.debug("burger: init app dispatch");
     this._sessionDispatch = session;
     this._children = children;
   }

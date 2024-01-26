@@ -1,11 +1,14 @@
 import React from 'react';
 
-//import { StencilClient, Layout } from '../';
 import HdesClient from '../client';
 import Burger from 'components-burger';
 import { ReducerDispatch, Reducer } from './Reducer';
 import { SessionData, ImmutableTabData } from './SessionData';
 import { saffron } from 'components-colors';
+
+import LoggerFactory from 'logger';
+const log = LoggerFactory.getLogger();
+
 
 declare namespace Composer {
 
@@ -183,12 +186,12 @@ namespace Composer {
     
     const [session, dispatch] = React.useReducer(Reducer, sessionData);
     const actions = React.useMemo(() => {
-      console.log("init ide dispatch");
+      log.debug("init ide dispatch");
       return new ReducerDispatch(dispatch, service)
     }, [dispatch, service]);
 
     React.useLayoutEffect(() => {
-      console.log("init ide data");
+      log.debug("init ide data");
       actions.handleLoad();
     }, [service, actions]);
 

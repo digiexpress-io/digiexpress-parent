@@ -18,7 +18,19 @@ import AppProjects from 'app-projects';
 import AppStencil from 'app-stencil';
 import AppHdes from 'app-hdes';
 import AppFrontoffice from 'app-frontoffice';
+import LoggerFactory from 'logger';
+import { getLogProps } from './_log_props_';
 
+window.LOGGER = {
+  config: {
+    format: 'STRING',
+    level: 'ERROR',
+    values: process.env.REACT_APP_LOCAL_DEV_MODE  ? getLogProps() : {}
+  }
+}
+
+
+const log = LoggerFactory.getLogger();
 
 
 interface Csrf { key: string, value: string }
@@ -34,7 +46,7 @@ declare global {
 }
 const getUrl = () => {
   try {
-    console.log(process.env.REACT_APP_LOCAL_DEV_MODE);
+    log.debug(`application mode: ${process.env.REACT_APP_LOCAL_DEV_MODE}`);
     if (process.env.REACT_APP_LOCAL_DEV_MODE) {
       return "http://localhost:8080";
     }

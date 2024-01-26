@@ -2,17 +2,23 @@ import React from 'react';
 import { Box } from '@mui/material';
 import { SxProps } from '@mui/system';
 
-
-import Burger from 'components-burger';
 import Context from 'context';
+import Burger from 'components-burger';
 import { CurrentTenant, DialobList } from 'components-tenant';
 import SysConfig from 'components-sys-config';
 import Tasks from 'components-task';
 import Customer from 'components-customer';
 import { CurrentUserProfile, UserProfiles } from 'components-user-profile';
+import { wash_me } from 'components-colors';
+import LoggerFactory from 'logger';
 
 import Activities from '../Activities';
-import { wash_me } from 'components-colors';
+
+
+const log = LoggerFactory.getLogger();
+
+
+
 
 const root: SxProps = { height: '100%', backgroundColor: wash_me, width: '100%' };
 
@@ -23,7 +29,7 @@ const Main: React.FC<{}> = () => {
   const tabs = layout.session.tabs;
   const active = tabs.length ? tabs[layout.session.history.open] : undefined;
   const entity = active ? session.getEntity(active.id) : undefined;
-  console.log("Opening Route", active?.id);
+  log.debug("front office routing to tab", active?.id);
 
   //composers which are NOT linked directly with an article
 

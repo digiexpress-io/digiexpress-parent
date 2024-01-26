@@ -8,6 +8,7 @@ import type { User, Org } from './org-types';
 import { mockOrg } from './client-mock';
 import type { CustomerStore, Customer, CustomerId } from './customer-types';
 
+
 export class ServiceImpl implements Backend {
   private _store: Store;
 

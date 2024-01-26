@@ -15,11 +15,11 @@ export const AvatarProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const contextValue: AvatarContextType = React.useMemo(() => ({ reducer, avatars }), [avatars, reducer]);
   
   React.useEffect(() => {
-    log.code("AvatarProvider001").trace("reloading");
+    log.debug("reloading reducer");
   }, [reducer]);
 
   React.useEffect(() => {
-    log.code("AvatarProvider002").trace("reloading");
+    log.debug("reloading avatars");
   }, [avatars]);
 
   return (<AvatarContext.Provider value={contextValue}>{children}</AvatarContext.Provider>);

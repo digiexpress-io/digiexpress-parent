@@ -1,65 +1,13 @@
 
-import { LogObjectId, Logger, Args, LoggerConfig, LoggingMessage, LogLevel } from './logger-types';
+import { Logger, LoggerConfig, LoggingMessage, LogLevel } from './logger-types';
 import { isLoggerEnabled } from './isLoggerEnabled';
-import { log } from 'console';
 
 export function createDefaultConfig(): LoggerConfig {
-  return {
-    format: 'STRING',
-    level: 'TRACE'
-  };
+  return { format: 'STRING', level: 'TRACE', values: {} };
 }
 
-export function createContext(logger: LoggerConsole): string {
-  let result = '';
-  if(logger.payload?.code) {
-    result += "/codes/" + logger.payload.code;
-  }
-  if(logger.payload?.userId) {
-    result += "/user_id/" + logger.payload.code;
-  }
-  if(logger.payload?.id) {
-    result += "/object_id/" + JSON.stringify(logger.payload.id);
-  }
-  return result;
-}
+export interface Payload { code?: string; target?: any; }
 
-export function mergePayload(start: Payload | undefined, next: Payload): Payload {
-  if(!start) {
-    return { ...next };
-  }
-
-  return { ...start, ...next }
-}
-
-export function createArgs(logger: LoggerConsole): Args {
-  const start = logger.payload;
-  if(!start) {
-    return { };
-  }
-
-  const extra: Args = {};
-
-  if(start.code) {
-    extra['code'] = start.code;
-  }
-  if(start.userId) {
-    extra['userId'] = start.userId;
-  }
-  if(start.id) {
-    extra['id'] = JSON.stringify(start.id);
-  }
-  return { ...(start.args ?? {}), ...extra };
-}
-
-
-export interface Payload {
-  id?: LogObjectId;
-  code?: string;
-  userId?: string;
-  args?: Args;
-  objects?: object[];
-}
 
 export class LoggerConsole implements Logger {
   private _loggerName: string;
@@ -72,44 +20,66 @@ export class LoggerConsole implements Logger {
     this._payload = payload;
   }
 
-  trace (message: string, error?: Error) { this.withMessage('TRACE',  message, error) }
-  info  (message: string, error?: Error) { this.withMessage('INFO',   message, error) }
-  warn  (message: string, error?: Error) { this.withMessage('WARN',   message, error) }
-  error (message: string, error?: Error) { this.withMessage('ERROR',  message, error) }  
-  debug (message: string, error?: Error) { this.withMessage('DEBUG',  message, error) }
-
   get config() { return this._config }
   get name() { return this._loggerName }
   get payload() { return this._payload }
+  
+  trace (message: string, optionalParams?: any[]) { this.withMessage('TRACE',  message, optionalParams) }
+  info  (message: string, optionalParams?: any[]) { this.withMessage('INFO',   message, optionalParams) }
+  warn  (message: string, optionalParams?: any[]) { this.withMessage('WARN',   message, optionalParams) }
+  error (message: string, optionalParams?: any[]) { this.withMessage('ERROR',  message, optionalParams) }  
+  debug (message: string, optionalParams?: any[]) { this.withMessage('DEBUG',  message, optionalParams) }
 
-  id(target: LogObjectId) { return this.clone({ id: target })}
-  code(uniqueMessageCode: string) { return this.clone({ code: uniqueMessageCode }) }
-  userId(userId: string) { return this.clone({ userId }) }
-  args(args: Args) { return this.clone({ args }) }
-  objects(objects: object[]) { return this.clone({ objects }) }
-  object(object: object) { return this.clone({ objects: [object] }) }
-
+  code(code: string) { return this.clone({ code }) }
+  target(target: any) { return this.clone({ target })}
   clone (payload: Payload): Logger {
-    return new LoggerConsole(this._loggerName, this._config, mergePayload(this._payload, payload))
+    return new LoggerConsole(this._loggerName, this._config, { ...this._payload, ...payload});
   }
 
-  withMessage(level: LogLevel, message: string, error?: Error) {
+  writeMessage(msg: LoggingMessage) {  }
+
+  getColor(level: LogLevel): string {
+    if(level === 'DEBUG') {
+      return "color:green; font-size:10px;";
+    } else if(level === 'ERROR') {
+      return "color:#FF595E; font-size:15px;";
+    }
+    return "";
+  }
+
+  withMessage(level: LogLevel, message: string, args: any[] | undefined) {
     const enabled = isLoggerEnabled(level, this);
     if(!enabled) {
       return;
     }
 
+    const color = this.getColor(level);
+
     const logger = this._loggerName;
-    const args: Args = createArgs(this);
-    const context = createContext(this);
-    const msg: LoggingMessage = {
-      logger, level, message, error, args, context
+    const code = this._payload?.code;
+    const suffix = code ? `code: ${code}` : `logger: ${logger}`;
+    const target = this._payload?.target;
+    const groupName = `%c${message} - ${suffix}`;
+
+    const msg: LoggingMessage = { logger, level, message, code, target, args: args ?? [] };
+    this.writeMessage(msg);
+
+    if(args) {
+      console.groupCollapsed(groupName, color, args);
+      console.log(`message: ${message}`,args);
+    } else {
+      console.groupCollapsed(groupName, color);
+      console.log(`message: ${message}`);
     }
 
-    if(level === 'ERROR') {
-      console.error(msg.logger, msg.context, msg.message, this._payload?.objects);
-    } else {
-      console.log(msg.logger, msg.context, msg.message, this._payload?.objects);
+    if(args) {
+      console.log("args", args) 
     }
+    if(target) {
+      console.log("target", target);
+    }
+
+    console.trace("TRACE");
+    console.groupEnd();
   }
 }

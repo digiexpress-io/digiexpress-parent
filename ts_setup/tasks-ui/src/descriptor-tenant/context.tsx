@@ -3,6 +3,13 @@ import { Backend, UserProfileAndOrg } from 'client';
 import { TenantState, TenantContextType, TenantMutator, TenantDispatch } from './types';
 import { TenantStateBuilder } from './context-state';
 
+import LoggerFactory from 'logger';
+
+
+const log = LoggerFactory.getLogger();
+
+
+
 const TenantContext = React.createContext<TenantContextType>({} as TenantContextType);
 
 const initState: TenantState = new TenantStateBuilder({
@@ -54,7 +61,7 @@ const TenantProvider: React.FC<{ children: React.ReactNode, init: { backend: Bac
     }
     backend.tenant.getTenants().then(data => {
       setLoading(false);
-      console.log(data);
+      log.debug("loaded tenant", data);
 
       if (data.length === 1) {
         const [{ id }] = data;

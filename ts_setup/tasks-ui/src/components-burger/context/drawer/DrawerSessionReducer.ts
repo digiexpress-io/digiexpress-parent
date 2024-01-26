@@ -1,5 +1,9 @@
 import * as API from './DrawerAPI';
 
+import LoggerFactory from 'logger';
+const log = LoggerFactory.getLogger();
+
+
 enum ReducerActionType {
   setDrawer = "setDrawer",
 }
@@ -13,7 +17,7 @@ class DrawerReducerDispatch implements API.DrawerActions {
 
   private _sessionDispatch: React.Dispatch<ReducerAction>;
   constructor(session: React.Dispatch<ReducerAction>) {
-    console.log("burger: init drawer dispatch");
+    log.debug("burger: init drawer dispatch");
     this._sessionDispatch = session;
   }
   handleDrawerOpen(drawerOpen: boolean) {
@@ -25,7 +29,7 @@ const DrawerReducer = (state: API.DrawerSession, action: ReducerAction): API.Dra
   switch (action.type) {
     case ReducerActionType.setDrawer: {
       if (action.setDrawer === undefined) {
-        console.error("Action data error", action);
+        log.error("Action data error", action);
         return state;
       }
       return state.withDrawer(action.setDrawer);

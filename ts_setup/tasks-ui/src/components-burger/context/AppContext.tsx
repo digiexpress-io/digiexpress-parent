@@ -9,6 +9,10 @@ import { TabsProvider } from './tabs/TabsContext';
 import { SecondaryProvider } from './secondary/SecondaryContext';
 import { Container } from '../layout';
 
+import LoggerFactory from 'logger';
+const log = LoggerFactory.getLogger();
+
+
 
 const AppContext = React.createContext<API.AppContextType>({
   session: {} as API.AppSession,
@@ -76,7 +80,7 @@ const AppInit: React.FC<{ children: API.App<any, any>[] }> = ({ children }) => {
   const { restorePoint } = getContext();
   const container = React.useMemo(() => createContext((<CreateContainer app={app} />), restorePoint), [createContext, app, restorePoint]);
 
-  console.log(`burger: app context init: '${app.id}'`);
+  log.debug(`burger: app context init: '${app.id}'`);
   return (<>{container}</>);
 }
 

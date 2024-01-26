@@ -5,23 +5,25 @@ import { initSession, SessionData, ActionsImpl } from 'context';
 import { UserProfileAndOrg, Backend } from 'client';
 import { ClientContext, ComposerContext } from 'context/client-ctx';
 import { OrgProvider } from 'descriptor-organization';
+import LoggerFactory from 'logger';
 
+const log = LoggerFactory.getLogger();
 
 const Provider: React.FC<{ children: React.ReactNode, service: Backend, profile: UserProfileAndOrg }> = ({ children, service, profile }) => {
   const [session, dispatch] = React.useState<SessionData>(initSession);
 
   const actions = React.useMemo(() => {
-    console.log("init ide dispatch");
+    log.debug("init ide dispatch");
     return new ActionsImpl(dispatch, service);
   }, [dispatch, service]);
 
   const contextValue = React.useMemo(() => {
-    console.log("init ide context value");
+    log.debug("init ide context value");
     return { session, actions };
   }, [session, actions]);
 
   React.useLayoutEffect(() => {
-    console.log("init ide data");
+    log.debug("init ide data");
     if (profile) {
       actions.handleLoadProfile(profile);
     } else {

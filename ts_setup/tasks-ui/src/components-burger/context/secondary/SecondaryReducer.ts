@@ -1,5 +1,9 @@
 import * as API from './SecondaryAPI';
 
+import LoggerFactory from 'logger';
+const log = LoggerFactory.getLogger();
+
+
 enum ReducerActionType {
   setSecondary = "setSecondary"
 }
@@ -13,7 +17,7 @@ class SecondaryReducerDispatch implements API.SecondaryActions {
 
   private _sessionDispatch: React.Dispatch<ReducerAction>;
   constructor(session: React.Dispatch<ReducerAction>) {
-    console.log("burger: init secondary dispatch");
+    log.debug("burger: init secondary dispatch");
     this._sessionDispatch = session;
   }
   handleSecondary(newItemId?: string) {

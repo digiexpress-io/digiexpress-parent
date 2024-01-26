@@ -1,5 +1,9 @@
 import * as API from './TabsAPI';
 
+import LoggerFactory from 'logger';
+const log = LoggerFactory.getLogger();
+
+
 enum ReducerActionType {
   addTab = "addTab",
   removeTab = "removeTab",
@@ -21,7 +25,7 @@ class TabsReducerDispatch implements API.TabsActions {
 
   private _sessionDispatch: React.Dispatch<ReducerAction>;
   constructor(session: React.Dispatch<ReducerAction>) {
-    console.log("burger: init tabs dispatch");
+    log.debug("burger: init tabs dispatch");
     this._sessionDispatch = session;
   }
   handleTabAdd(newItem: API.TabSession<any>) {
