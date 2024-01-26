@@ -12,17 +12,13 @@ export interface SelectionOptions {
 export interface Tab<I extends TabId, T extends TabBody> {
   id: I;
   body: T;
-  selected: TabSelection[];
+  selected: readonly TabSelection[];
   active: boolean;
 }
 
-export interface Reducer<I extends TabId, B extends TabBody> {
-  withTabBody: (tabId: I, newBody: B) => void;
-  withTabActivity: (tabId: I, options?: SelectionOptions) => void;
-  withTabSelecion: (tabId: I, item: TabSelection, options?: SelectionOptions) =>  void;
+export interface SingleTabInit<B extends TabBody> {
+  active?: boolean;
+  body: B;
 }
 
-export interface TabbingContextType<I extends TabId, B extends TabBody> {
-  reducer: Reducer<I, B>;
-  tabs: Tab<I, B>[];
-}
+export type TabbingInit<I extends TabId, B extends TabBody> = Record<I, SingleTabInit<B>>;
