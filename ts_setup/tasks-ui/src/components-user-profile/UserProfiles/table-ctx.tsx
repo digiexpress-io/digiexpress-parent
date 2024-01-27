@@ -89,7 +89,7 @@ function CustomerTable(props: TableProps) {
   const { Header, Rows } = props.children;
   const { records } = group;
 
-  const [content, setContent] = React.useState(new Pagination.TablePaginationImpl<UserProfileDescriptor>({
+  const [content, setContent] = React.useState<UserProfilePagination>(new Pagination.TablePaginationImpl<UserProfileDescriptor>({
     src: records ?? [],
     orderBy: defaultOrderBy,
     sorted: false

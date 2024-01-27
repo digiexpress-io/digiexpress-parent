@@ -133,7 +133,8 @@ public class BeanFactory {
   @Produces
   @RequestScoped
   public CurrentUser currentUserDev() {
-    return new CurrentUserRecord("local-tester", "first name", "last-name", "first.last@digiexpress.io");
+    final var vimes = RandomDataProvider.ASSIGNEES.get(1);
+    return new CurrentUserRecord(vimes, "first name", "last-name", "first.last@digiexpress.io");
   }
 
 

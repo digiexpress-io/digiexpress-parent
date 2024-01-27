@@ -134,6 +134,12 @@ export type OwnerUnassigned = "_nobody_";
 export type AssigneeGroupType = 'assigneeOverdue' | 'assigneeStartsToday' | 'assigneeOther' | 'assigneeCurrentlyWorking';
 export type TeamGroupType = 'groupOverdue' | 'groupAvailable' | 'groupDueSoon';
 
+
+
+
+
+
+
 export type GroupBy = 'status' | 'owners' | 'roles' | 'priority' | 'none' | 'assignee' | 'team';
 
 export type FilterByStatus = { type: 'FilterByStatus', status: TaskStatus[], disabled: boolean }
@@ -182,6 +188,8 @@ export interface TasksContextType {
   tasks: readonly TaskDescriptor[];
   roles: readonly string[];
   owners: readonly string[];
+
+  getById(id: string): TaskDescriptor;
 
   reload: () => Promise<void>;
   withTasks(tasks: Task[]): void;

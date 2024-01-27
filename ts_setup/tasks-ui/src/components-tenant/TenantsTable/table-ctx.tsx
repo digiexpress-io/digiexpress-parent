@@ -92,7 +92,7 @@ function CustomTable(props: TableProps) {
   const { Header, Rows } = props.config;
   const { records } = group;
 
-  const [content, setContent] = React.useState(new Pagination.TablePaginationImpl<TenantEntryDescriptor>({
+  const [content, setContent] = React.useState<TenantPagination>(new Pagination.TablePaginationImpl<TenantEntryDescriptor>({
     src: records ?? [],
     orderBy: defaultOrderBy,
     sorted: false

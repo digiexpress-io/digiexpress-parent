@@ -25,6 +25,8 @@ const modules: string[] = [
   'descriptor-tenant-config',
   'descriptor-user-profile',
   'descriptor-avatar',
+  'descriptor-grouping',
+  'descriptor-tabbing',
 
   'descriptor-popper',
 

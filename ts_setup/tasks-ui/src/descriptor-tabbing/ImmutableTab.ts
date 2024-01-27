@@ -30,7 +30,7 @@ export class ImmutableTab<I extends TabId, B extends TabBody> implements Tab<I, 
 
   withSelected(newSelection: TabSelection[], options?: SelectionOptions) {
     const selected: TabSelection[] = [];
-    if(options?.disableOthers) {
+    if(options?.disableOthers === true || options?.disableOthers === undefined) {
       selected.push(...newSelection);
     } else {
       selected.push(...this.selected);

@@ -16,8 +16,8 @@ export interface Group {
 }
 
 export interface GroupReducer<D extends DataType> {
-  withData: (newInput: D[]) => void;
-  withGroupBy: (classifierName: string, definition: ExtractClassifier<D>) => void;
+  withData: (newInput: (D[] | readonly D[])) => void;
+  withGroupBy: (classifierName: string, definition: ExtractClassifier<D>, groupValues: ClassifierType[]) => void;
 }
 
 /**

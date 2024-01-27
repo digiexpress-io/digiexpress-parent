@@ -86,7 +86,7 @@ public class RandomDataProvider {
       4, "Attach correct document"
       ); 
   
-  private final Map<Integer, String> ASSIGNEES = Map.of(
+  public static final Map<Integer, String> ASSIGNEES = Map.of(
       1, "sam vimes",
       2, "lord vetinari",
       3, "lady sybil vimes",

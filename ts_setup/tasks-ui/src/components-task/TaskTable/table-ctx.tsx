@@ -32,7 +32,7 @@ function CustomTable(props: TableProps) {
   const { Header, Rows } = props.config;
   const { records } = group;
 
-  const [content, setContent] = React.useState(new Pagination.TablePaginationImpl<TaskDescriptor>({
+  const [content, setContent] = React.useState<TaskPagination>(new Pagination.TablePaginationImpl<TaskDescriptor>({
     src: records ?? [],
     orderBy: defaultOrderBy,
     sorted: false

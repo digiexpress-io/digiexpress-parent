@@ -10,8 +10,9 @@ import {
 
 export interface TabbingContextType<I extends TabId, B extends TabBody> {
   tabs: readonly Tab<I, B>[];
+  getActiveTab(): Tab<I, B>;
 
-  withTabBody: (tabId: I, newBody: B) => void;
+  withTabBody: (tabId: I, setter: (oldBody: B) => B) => void;
   withTabActivity: (tabId: I, options?: SelectionOptions) => void;
   withTabSelecion: (tabId: I, item: TabSelection, options?: SelectionOptions) =>  void;
 }
@@ -37,14 +38,19 @@ export function getInstance<I extends TabId, B extends TabBody>(): FactoryCreate
   function TabbingProvider(props: TabbingProps<I, B>) {
     const [tabs, setTabs] = React.useState<readonly ImmutableTab<I, B>[]>(initTabs(props.init));
 
-    const withTabBody: WithTabBody<I, B> = React.useCallback((tabId, newBody) => tabBodyReducer(tabId, newBody, setTabs), [setTabs]);
+    const withTabBody: WithTabBody<I, B> = React.useCallback((tabId, setter) => tabBodyReducer(tabId, setter, setTabs), [setTabs]);
     const withTabActivity: WithTabActivity<I> = React.useCallback((tabId, options) => tabActivityReducer(tabId, options, setTabs), [setTabs]);
     const withTabSelecion: WithTabSelecion<I> = React.useCallback((tabId, item, options) => tabSelectionReducer(tabId, item, options, setTabs), [setTabs]);
 
-    const contextValue: TabbingContextType<I, B> = React.useMemo(
-      () => ({ tabs, withTabBody, withTabActivity, withTabSelecion }), 
-      [tabs, withTabBody, withTabActivity, withTabSelecion]
-    );
+    const contextValue: TabbingContextType<I, B> = React.useMemo(() => {
+
+      function getActiveTab() {
+        const found = tabs.find(t => t.active);
+        //console.assert(found, "No tabs are active");
+        return found!;
+      }
+      return { tabs, withTabBody, withTabActivity, withTabSelecion, getActiveTab };
+    },[tabs, withTabBody, withTabActivity, withTabSelecion]);
 
     return (<TabbingContext.Provider value={contextValue}>{props.children}</TabbingContext.Provider>);
   }

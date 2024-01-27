@@ -5,4 +5,7 @@ import { TableFillerRows, StyledTableCell, lineHeight, lineHeightLarge } from '.
 
 export * from './NavigationSticky';
 export * from './ButtonSearch';
+export * from './LayoutList';
+export * from './LayoutListFiller';
+export * from './LayoutListItem';
 export { FilterByString, TableBody, TableFillerRows, StyledTableCell, lineHeight, lineHeightLarge, useTableCellPopover };

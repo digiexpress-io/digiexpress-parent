@@ -1,53 +1,8 @@
-
-function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
-
-  let aValue = a[orderBy];
-  let bValue = b[orderBy];
-
-  if ((typeof aValue) === 'string') {
-    aValue = (aValue as unknown as string).toLowerCase() as any;
-    bValue = (bValue as unknown as string).toLowerCase() as any;
-  }
+import { Order, TablePagination, DataType } from './table-types';
+import { getComparator, stableSort } from './table-comparators';
 
 
-  if (bValue < aValue) {
-    return -1;
-  }
-  if (bValue > aValue) {
-    return 1;
-  }
-  return 0;
-}
-
-type Order = 'asc' | 'desc';
-
-function getComparator<T>(
-  order: Order,
-  orderBy: keyof T,
-): (a: T, b: T) => number {
-
-  return order === 'desc'
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-function stableSort<T>(init: readonly T[], comparator: (a: T, b: T) => number) {
-  const array = [...(init ? init : [])];
-  const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
-  stabilizedThis.sort((a, b) => {
-    const aValue = a[0];
-    const bValue = b[0];
-
-    const order = comparator(aValue, bValue);
-    if (order !== 0) {
-      return order;
-    }
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map((el) => el[0]);
-}
-
-class TablePagination<T> {
+export class ImmutableTablePagination<T extends DataType> implements TablePagination<T> {
   private _page: number = 0;
   private _rowsPerPage: number = 5;
   private _order: Order = 'asc';
@@ -90,11 +45,11 @@ class TablePagination<T> {
     this._emptyRows = this._rowsPerPage - this._entries.length;
   }
 
-  withOrderBy(orderBy: keyof T) {
+  withOrderBy(orderBy: keyof T): ImmutableTablePagination<T> {
     const isAsc = orderBy === this._orderBy && this._order === 'asc';
     const order = isAsc ? 'desc' : 'asc';
 
-    return new TablePagination({
+    return new ImmutableTablePagination({
       sorted: true,
       src: this._src,
       order, orderBy,
@@ -102,8 +57,8 @@ class TablePagination<T> {
       page: this._page
     });
   }
-  withPage(page: number) {
-    return new TablePagination({
+  withPage(page: number): ImmutableTablePagination<T> {
+    return new ImmutableTablePagination({
       page,
       sorted: false,
       src: this._src,
@@ -112,8 +67,8 @@ class TablePagination<T> {
       rowsPerPage: this._rowsPerPage
     });
   }
-  withRowsPerPage(rowsPerPage: number) {
-    return new TablePagination({
+  withRowsPerPage(rowsPerPage: number): ImmutableTablePagination<T> {
+    return new ImmutableTablePagination({
       sorted: false,
       src: this._src,
       order: this._order,
@@ -121,8 +76,8 @@ class TablePagination<T> {
       rowsPerPage, page: 0
     });
   }
-  withSrc(src: T[]) {
-    return new TablePagination({
+  withSrc(src: T[]): ImmutableTablePagination<T> {
+    return new ImmutableTablePagination({
       src,
       page: this._page,
       sorted: true,
@@ -141,6 +96,3 @@ class TablePagination<T> {
   get emptyRows() { return this._emptyRows }
 }
 
-
-export { TablePagination };
-export type { Order };

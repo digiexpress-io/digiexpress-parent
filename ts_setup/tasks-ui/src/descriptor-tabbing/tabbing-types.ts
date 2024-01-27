@@ -6,7 +6,7 @@ export interface TabBody {
 }
 
 export interface SelectionOptions {
-  disableOthers?: true
+  disableOthers?: true | false
 }
 
 export interface Tab<I extends TabId, T extends TabBody> {
