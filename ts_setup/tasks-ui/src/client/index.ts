@@ -76,7 +76,7 @@ import {
 } from './customer-types';
 
 import {
-  UserProfile, NotificationSetting, ChangeUserDetailsFirstName
+  UserProfile, NotificationSetting, ChangeUserDetailsFirstName, UpsertUiSettings, UiSettings
 } from './profile-types';
 
 import {
@@ -162,6 +162,7 @@ declare namespace TaskClient {
 }
 
 export type {
+  UpsertUiSettings, UiSettings,
   Customer, CustomerId, CustomerTask, CustomerBodyType,
   CustomerCommandType, CustomerCommand, CustomerContact,
   CreateCustomer,

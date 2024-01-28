@@ -1,6 +1,8 @@
 import { UserProfile, NotificationSetting, UserId } from 'client';
 
 
+
+
 export interface UserProfileDescriptor {
   id: UserId,
   email: string | undefined,

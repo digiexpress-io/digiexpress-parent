@@ -27,6 +27,7 @@ export function getLogProps(): Record<string, LogLevel> {
 
     'src/descriptor-grouping'      : 'DEBUG',
     'src/descriptor-tabbing'       : 'DEBUG',
+    'src/descriptor-prefs'         : 'DEBUG',
   
     'src/client'    : 'ERROR',
     'src/context'   : 'ERROR',

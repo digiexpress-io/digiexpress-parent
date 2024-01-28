@@ -5,7 +5,6 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { Group, Nobody } from 'descriptor-task';
 
 const TableSubTitle: React.FC<{ values: number, message: string }> = ({ values, message }) => {
-
   return (<Typography sx={{ ml: 1 }} variant='caption'><FormattedMessage id={message} values={{ values }} /></Typography>)
 }
 

@@ -27,6 +27,7 @@ const modules: string[] = [
   'descriptor-avatar',
   'descriptor-grouping',
   'descriptor-tabbing',
+  'descriptor-prefs',
 
   'descriptor-popper',
 

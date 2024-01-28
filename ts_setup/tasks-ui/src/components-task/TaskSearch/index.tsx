@@ -95,11 +95,12 @@ const TaskSearch: React.FC<{}> = () => {
 
   React.useEffect(() => setState(prev => prev.withTasks(tasks)), [tasks]);
 
-  return (<Box>
+  return (<>
     <NavigationSticky>
       <FilterByString onChange={({ target }) => setState(prev => prev.withSearchString(target.value))} />
       <Stack direction='row' spacing={1}>
         <GroupBySelect value={state.groupBy} onChange={(value) => setState(prev => prev.withGroupBy(value))} />
+
         <FilterStatus value={state.filterBy} onChange={(value) => setState(prev => prev.withFilterByStatus(value))} />
         <FilterPriority value={state.filterBy} onChange={(value) => setState(prev => prev.withFilterByPriority(value))} />
         <FilterAssignees value={state.filterBy} onChange={(value) => setState(prev => prev.withFilterByOwner(value))} />
@@ -107,7 +108,10 @@ const TaskSearch: React.FC<{}> = () => {
         <FilterColumns types={columnTypes} value={columns} onChange={(value) => setColumns(value)} />
       </Stack>
     </NavigationSticky>
+
+
     <Box mt={1} />
+
     <TaskTable.Groups groups={state.groups} orderBy='created'>
       {{
         Header: (props) => <Header columns={columns} {...props} />,
@@ -119,7 +123,7 @@ const TaskSearch: React.FC<{}> = () => {
         )
       }}
     </TaskTable.Groups>
-  </Box>
+  </>
   );
 }
 

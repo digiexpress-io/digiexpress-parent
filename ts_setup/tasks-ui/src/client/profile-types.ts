@@ -23,11 +23,30 @@ export interface NotificationSetting {
   type: NotificationType
 }
 
+
+export interface UiSettingForVisibility {
+  dataId: string;
+  enabled: boolean;
+}
+
+export interface UiSettingsForSorting {
+  dataId: string;
+  direction: 'ASC' | 'DESC';
+}
+
+export interface UiSettings {
+  id: string | undefined;
+  settingsId: string;
+  visibility: UiSettingForVisibility[];
+  sorting: UiSettingsForSorting[];
+}
+
 export interface UserProfile {
   id: UserId,
   created: string;
   updated: string;
   details: UserDetails;
+  uiSettings?: UiSettings[];
   notificationSettings: NotificationSetting[];
 }
 
@@ -50,7 +69,8 @@ type UserProfileCommandType =
   'ChangeUserDetailsLastName' |
   'ChangeUserDetailsEmail' |
   'ChangeNotificationSetting' |
-  'ArchiveUserProfile';
+  'ArchiveUserProfile' | 
+  'UpsertUiSettings';
 
 export interface UserProfileUpdateCommand<T extends UserProfileCommandType> extends UserProfileCommand {
   commandType: T;
@@ -60,6 +80,11 @@ export interface CreateUserProfile extends UserProfileCommand {
   commandType: 'CreateUserProfile';
   details: UserDetails;
   notificationSettings: NotificationSetting[];
+}
+
+export interface UpsertUiSettings extends UserProfileUpdateCommand<'UpsertUiSettings'> {
+  commandType: 'UpsertUiSettings';
+  uiSettings: UiSettings;
 }
 
 export interface UpsertUserProfile extends UserProfileUpdateCommand<'UpsertUserProfile'> {
