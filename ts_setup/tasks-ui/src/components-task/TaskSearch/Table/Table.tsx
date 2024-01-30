@@ -21,6 +21,7 @@ import Context from 'context';
 import { TableBody, TableFillerRows } from 'components-generic';
 import { cyan_mud } from 'components-colors';
 
+import { PreferenceContextType } from 'descriptor-prefs';
 import { TaskDescriptor } from 'descriptor-task';
 import { useGrouping, GroupByTypes, useTaskPrefs, ColumnName } from '../TableContext';
 
@@ -35,6 +36,7 @@ import CellRoles from '../TableCells/CellRoles';
 
 
 import LoggerFactory from 'logger';
+
 const _logger = LoggerFactory.getLogger();
 
 
@@ -42,6 +44,14 @@ const _logger = LoggerFactory.getLogger();
 type TaskPagination = Table.TablePagination<TaskDescriptor>;
 type SetTaskPagination = React.Dispatch<React.SetStateAction<TaskPagination>>;
 
+
+
+function getPrefSortGroup(classifierValue: string) {
+  return classifierValue + ".";
+}
+function getPrefSortId(classifierValue: string, column: ColumnName) {
+  return getPrefSortGroup(classifierValue) + column;
+}
 
 function getRowBackgroundColor(index: number): SxProps {
   const isOdd = index % 2 === 1;
@@ -52,11 +62,15 @@ function getRowBackgroundColor(index: number): SxProps {
   return { backgroundColor: 'background.paper' };
 }
 
-function initTable(): TaskPagination {
+function initTable(classifierValue: string, prefCtx: PreferenceContextType): TaskPagination {
+  const prefGroup = getPrefSortGroup(classifierValue);
+  const storedPref = prefCtx.pref.sorting.find(({ dataId }) => dataId.startsWith(prefGroup));
+  const storedPrefCol = storedPref?.dataId.substring(prefGroup.length) as keyof TaskDescriptor;
+
   return new Table.TablePaginationImpl<TaskDescriptor>({
     src: [],
-    orderBy: 'dueDate',
-    order: 'asc',
+    orderBy: storedPrefCol ?? 'dueDate',
+    order: storedPref?.direction ?? 'asc',
     sorted: true,
     rowsPerPage: 5,
   })
@@ -65,7 +79,7 @@ function initTable(): TaskPagination {
 
 
 const Row: React.FC<{ rowId: number, row: TaskDescriptor, columns: ColumnName[] }> = (props) => {
-  const { pref } = useTaskPrefs();;
+  const { pref } = useTaskPrefs();
 
   const [hoverItemsActive, setHoverItemsActive] = React.useState(false);
   function handleEndHover() {
@@ -113,15 +127,15 @@ const TableForGroupByPagination: React.FC<{ state: TaskPagination, setState: Set
 
 export const HeaderCellWithPrefs: React.FC<{ 
   name: ColumnName;
+  classifierValue: string;
   sortable: boolean;
   children: React.ReactNode;
-  setContent: SetTaskPagination,
-  
-}> = ({ name, sortable, children, setContent }) => {
+  setContent: SetTaskPagination;
+  content: TaskPagination;
+}> = ({ name, classifierValue, sortable, children, setContent, content }) => {
 
-  const { pref } = useTaskPrefs();
+  const { pref, withSorting } = useTaskPrefs();
   const vis = pref.getVisibility(name);
-  const orderBy = pref.getSorting(name);
   const hidden = vis?.enabled !== true;
 
   if(hidden) {
@@ -133,16 +147,21 @@ export const HeaderCellWithPrefs: React.FC<{
   }
 
   const createSortHandler = (property: ColumnName) =>
-    (_event: React.MouseEvent<unknown>) => setContent(prev => prev.withOrderBy(property))
+    (_event: React.MouseEvent<unknown>) => setContent(prev => {
+      const dataId = getPrefSortId(classifierValue, name);
+      const next = prev.withOrderBy(property);
+      withSorting({ dataId, direction: next.order });
+      return next;
+    })
 
-  const active = orderBy?.dataId === name;
-  const sortDirection = active ? orderBy.direction : false;
+  const active = content.orderBy === name;
+  const sortDirection = active ? content.order : false;
 
   return (<MTableCell align='left' padding='none' sortDirection={sortDirection}>
-    <TableSortLabel active={active} direction={active ? orderBy.direction : 'asc'} onClick={createSortHandler(name)}>
+    <TableSortLabel active={active} direction={active ? content.order : 'asc'} onClick={createSortHandler(name)}>
       <>
         {children}
-        {active ? (<Box component="span" sx={visuallyHidden}>{orderBy.direction === 'desc' ? 'sorted descending' : 'sorted ascending'}</Box>) : null}
+        {active ? (<Box component="span" sx={visuallyHidden}>{content.order === 'desc' ? 'sorted descending' : 'sorted ascending'}</Box>) : null}
       </>
     </TableSortLabel>
   </MTableCell>);
@@ -150,10 +169,11 @@ export const HeaderCellWithPrefs: React.FC<{
 
 export const TableForGroupBy: React.FC<{ groupByType: GroupByTypes, groupId: string }> = ({ groupByType, groupId }) => {
   const { loading } = Context.useTasks();
-  const { pref } = useTaskPrefs();
+  const prefCtx = useTaskPrefs();
+  const { pref } = prefCtx;
   const grouping = useGrouping();
 
-  const [content, setContent] = React.useState(initTable());
+  const [content, setContent] = React.useState(initTable(groupId, prefCtx));
   const columns: ColumnName[] = pref.visibility.filter(v => v.enabled).map(v => v.dataId as ColumnName);
 
 
@@ -173,13 +193,13 @@ export const TableForGroupBy: React.FC<{ groupByType: GroupByTypes, groupId: str
           <MTableRow>
 
             { /* reserved title column */}
-            <HeaderCellWithPrefs sortable={false} name='title' setContent={setContent}>
+            <HeaderCellWithPrefs sortable={false} name='title' setContent={setContent} content={content} classifierValue={groupId}>
               <Title groupByType={groupByType} classifierValue={groupId} groupCount={content.entries.length}/>
             </HeaderCellWithPrefs>
 
 
             { columns.filter(c => c !== 'title').map((id) => (
-              <HeaderCellWithPrefs key={id} name={id as ColumnName} sortable setContent={setContent}>  
+              <HeaderCellWithPrefs key={id} name={id as ColumnName} sortable setContent={setContent} content={content} classifierValue={groupId}>  
                 <FormattedMessage id={`tasktable.header.${id}`} />
               </HeaderCellWithPrefs>
             ))}
