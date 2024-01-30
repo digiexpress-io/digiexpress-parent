@@ -8,4 +8,8 @@ export * from './ButtonSearch';
 export * from './LayoutList';
 export * from './LayoutListFiller';
 export * from './LayoutListItem';
+export * from './AvatarEmpty';
+export * from './AvatarUser';
+export * from './AvatarIndicator';
+
 export { FilterByString, TableBody, TableFillerRows, StyledTableCell, lineHeight, lineHeightLarge, useTableCellPopover };

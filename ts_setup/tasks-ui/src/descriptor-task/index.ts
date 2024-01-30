@@ -3,6 +3,7 @@ import { TaskDescriptor } from './types';
 
 import { TaskGroupsAndFiltersImpl } from './TaskGroupsAndFiltersImpl';
 
+
 export function toGroupsAndFilters(data: readonly TaskDescriptor[]): TaskGroupsAndFiltersImpl {
   const next = [...data];
   return new TaskGroupsAndFiltersImpl({
@@ -24,7 +25,7 @@ export const Nobody = _nobody_;
 
 
 
-
+export * from './ImmutableTaskSearch';
 export * from './ImmutableTaskDescriptor';
 export * from './TasksContext';
 export * from './TaskEditContext';

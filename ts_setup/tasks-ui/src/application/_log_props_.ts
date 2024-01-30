@@ -11,7 +11,7 @@ export function getLogProps(): Record<string, LogLevel> {
     'src/components-project'      : 'ERROR',
     'src/components-stencil'      : 'ERROR',
     'src/components-sys-config'   : 'ERROR',
-    'src/components-task'         : 'ERROR',
+    'src/components-task'         : 'DEBUG',
     'src/components-tenant'       : 'ERROR',
     'src/components-user-profile' : 'ERROR',
   

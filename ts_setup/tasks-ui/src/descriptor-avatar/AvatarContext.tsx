@@ -2,7 +2,7 @@ import React from 'react';
 
 
 import { AvatarContextType, AvatarReducer, Avatar } from './avatar-types';
-import { initAvatars, initReducer } from './initMethods';
+import { initAvatars } from './initMethods';
 import LoggerFactory from 'logger';
 
 const log = LoggerFactory.getLogger();
@@ -11,76 +11,42 @@ export const AvatarContext = React.createContext<AvatarContextType>({} as any);
 
 export const AvatarProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [avatars, setAvatars] = React.useState(initAvatars());
-  const reducer: AvatarReducer = React.useMemo(() => initReducer(avatars, setAvatars), [avatars, setAvatars]);
-  const contextValue: AvatarContextType = React.useMemo(() => ({ reducer, avatars }), [avatars, reducer]);
-  
-  React.useEffect(() => {
-    log.debug("reloading reducer");
-  }, [reducer]);
 
-  React.useEffect(() => {
-    log.debug("reloading avatars");
-  }, [avatars]);
+  const withAvatar = React.useCallback((value: string) => setAvatars(prev => prev.withAvatar(value)), [setAvatars]);
+  const withAvatars = React.useCallback((all: string[]) => setAvatars(prev => prev.withAvatars(all)), [setAvatars]);
+  
+  const contextValue: AvatarContextType = React.useMemo(() => {
+    const reducer = { withAvatars, withAvatar };
+    return { reducer, avatars } 
+  }, [avatars, withAvatars]);
+  
 
   return (<AvatarContext.Provider value={contextValue}>{children}</AvatarContext.Provider>);
 }
 
-
-function getAvatars(ctx: AvatarContextType, entries: string[]): Avatar[] | undefined {
-  const result: Avatar[] = [];
-  for(const letters of entries) {
-    const avatar = ctx.avatars.values[letters];
-    if(!avatar) {
-      return undefined;
-    }
-    result.push(avatar);
-  }
-  return result;
-}
-
 export function useAvatars(entries: string[]): Avatar[] | undefined {
   const ctx: AvatarContextType = React.useContext(AvatarContext);
-  const [avatars, setAvatars] = React.useState<Avatar[]>();
+  let mapped = entries.map(entry => ctx.avatars.values[entry]).filter(entry => !!entry)
+  const calculated = mapped.length === entries.length ? mapped : undefined;
 
   React.useEffect(() => {
-    if(!avatars) {
-      return;
+    if(calculated === undefined) {
+      ctx.reducer.withAvatars(entries);
     }
-    for(const avatar of avatars) {
-      if(!entries.includes(avatar.origin)) {
-        setAvatars(undefined);
-        break;;
-      }
-    }
-  }, [entries, avatars]);
+  }, [calculated, entries]);
 
-
-  React.useEffect(() => {
-    if(avatars === undefined) {
-      const result = ctx.reducer.withAvatars(entries);
-      setAvatars(result);
-    }
-  }, [avatars]);
-  return avatars;
+  return calculated;
 }
 
-export function useAvatar(entry: string) {
+export function useAvatar(entry: string): Avatar | undefined {
   const ctx: AvatarContextType = React.useContext(AvatarContext);
-  const [avatars, setAvatars] = React.useState(getAvatars(ctx, [entry])?.[0]);
+  const calculated = ctx.avatars.values[entry];
 
   React.useEffect(() => {
-    if(avatars?.origin !== entry) {
-      setAvatars(undefined);
+    if(calculated === undefined) {
+      ctx.reducer.withAvatar(entry);
     }
-  }, [entry, avatars]);
+  }, [calculated, entry]);
 
-
-  React.useEffect(() => {
-    if(avatars === undefined) {
-      const result = ctx.reducer.withAvatar(entry);
-      setAvatars(result);
-    }
-  }, [avatars]);
-  
-  return avatars;
+  return calculated;
 }

@@ -1,75 +1,43 @@
 import React from 'react';
-import { AvatarGroup, Box, ListItemText, Checkbox, Button, Avatar as MAvatar, List, MenuItem, Stack, Typography, Alert, AlertTitle } from '@mui/material';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import { AvatarGroup, Box, ListItemText, Checkbox, Button, List, MenuItem, Stack, Typography, Alert, AlertTitle } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 
 import Client from 'client';
 import Context from 'context';
 import { cyan } from 'components-colors';
-import { Avatar, useAvatars, useAvatar } from 'descriptor-avatar';
+import { AvatarEmpty, AvatarUser, AvatarIndicator } from 'components-generic';
+
 
 import { SearchFieldPopover } from '../SearchField';
 import { TablePopover, usePopover } from '../TablePopover';
 
 
-
-const UserAvatar: React.FC<{ children?: Avatar }> = ({ children }) => {
-  const bgcolor: string | undefined = children ? children.color : undefined;
-  const avatar = children ? children.twoLetterCode : <PersonAddIcon sx={{ fontSize: 15 }} />;
-
-  return (
-    <MAvatar sx={{
-      bgcolor,
-      width: 24,
-      height: 24,
-      fontSize: 10 }}>
-
-      {avatar}
-    </MAvatar>
-  );
-}
-
 const AvatarsOnly: React.FC<{
   task: { assignees: Client.UserId[] },
 }> = ({ task }) => {
-  
-  const avatars = useAvatars(task.assignees);
-  if(!avatars) {
-    return null;
-  }
 
-  return task.assignees.length ?
-    (<AvatarGroup spacing='medium'>{avatars.map(assignee => (<UserAvatar key={assignee.origin} children={assignee}/>))}</AvatarGroup>) 
-    :
-    (<UserAvatar />);
+  if(task.assignees.length > 0) {
+    return (<AvatarGroup spacing='medium'>{task.assignees.map(assignee => (<AvatarUser key={assignee} children={assignee}/>))}</AvatarGroup>) 
+  }
+  return <AvatarEmpty />;
 }
 
 const FullnamesAndAvatars: React.FC<{
   task: { assignees: Client.UserId[] }
 }> = ({ task }) => {
 
-  const avatars = useAvatars(task.assignees);
-  if(!avatars) {
-    return null;
-  }
-
-
-  return task.assignees.length ?
-    (<Stack spacing={1}>
-      {avatars.map(assignee => (
-        <Box key={assignee.origin} display='flex' alignItems='center' sx={{ cursor: 'pointer' }}>
-          <UserAvatar key={assignee.origin}>{assignee}</UserAvatar>
-          <Box pl={1}><Typography>{assignee.origin}</Typography></Box>
+  if(task.assignees.length > 0) {
+    return (<Stack spacing={1}>
+      {task.assignees.map(assignee => (
+        <Box key={assignee} display='flex' alignItems='center' sx={{ cursor: 'pointer' }}>
+          <AvatarUser>{assignee}</AvatarUser>
+          <Box pl={1}><Typography>{assignee}</Typography></Box>
         </Box>))
       }
-    </Stack>)
-    :
-    (<UserAvatar />);
-}
+    </Stack>);
+  }
 
-const UserBackgroundColor: React.FC<{ userId: string }> = ({userId}) => {
-  const avatar = useAvatar(userId);
-  return (<Box sx={{ width: 8, height: 40, backgroundColor: avatar?.color }} />);
+  return <AvatarEmpty />;
 }
 
 const SelectAssignees: React.FC<{
@@ -110,7 +78,9 @@ const SelectAssignees: React.FC<{
       <List dense sx={{ py: 0 }}>
         {searchResults.length ? searchResults.map(({ user, checked }) => (
           <MenuItem key={user.userId} sx={{ display: "flex", pl: 0, py: 0 }} onClick={() => handleToggleUser(user, checked)}>
-            <UserBackgroundColor userId={user.userId} />
+            
+            <AvatarIndicator userId={user.userId} />
+
             <Box ml={1}>
               <Checkbox checked={checked} size='small'
                 sx={{

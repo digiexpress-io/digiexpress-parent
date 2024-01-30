@@ -46,7 +46,14 @@ export class ImmutablePreference implements Preference {
   withVisibility(newValue: VisibilityRule): ImmutablePreference {
     const visibility: Record<DataId, VisibilityRule> = { ...this._visibility };
     visibility[newValue.dataId] = { ...newValue };
-    return new ImmutablePreference(this.clone({}));
+    return new ImmutablePreference(this.clone({ visibility }));
+  }
+  withVisibleFields(newValueFields: DataId[]): ImmutablePreference {
+    const visibility: Record<DataId, VisibilityRule> = { };
+    for(const field of newValueFields) {
+      visibility[field] = { dataId: field, enabled: true };
+    }
+    return new ImmutablePreference(this.clone({ visibility }));
   }
   clone(init: Partial<ImmutablePreferenceInit>): ImmutablePreferenceInit {
     return {

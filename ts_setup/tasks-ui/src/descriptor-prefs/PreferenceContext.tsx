@@ -4,8 +4,8 @@ import { CircularProgress } from '@mui/material';
 import Context from 'context';
 import { UserProfile } from 'client';
 
-import { PreferenceContextType, Preference, PreferenceId, PreferenceInit, VisibilityRule, SortingRule } from './pref-types';
-import { WithSorting, WithVisibility, initPreference, initWithSorting, initWithVisibility } from './initMethods';
+import { PreferenceContextType, PreferenceInit } from './pref-types';
+import { WithSorting, WithVisibility, WithVisibleFields, initPreference, initWithSorting, initWithVisibility, initWithVisibleFields } from './initMethods';
 
 import LoggerFactory from 'logger';
 const _logger = LoggerFactory.getLogger();
@@ -27,10 +27,11 @@ const PreferenceProviderDelegate: React.FC<{
 
   const withSorting: WithSorting = React.useCallback((sorting) => initWithSorting(setState, backend, userId, sorting), [setState, backend, userId]);
   const withVisibility: WithVisibility = React.useCallback((visibility) => initWithVisibility(setState, backend, userId, visibility), [setState, backend, userId]);
+  const withVisibleFields: WithVisibleFields = React.useCallback((visibility) => initWithVisibleFields(setState, backend, userId, visibility), [setState, backend, userId]);
 
   const contextValue: PreferenceContextType = React.useMemo(() => {
-    return { pref: state, withSorting, withVisibility };
-  }, [state, withSorting, withVisibility]);
+    return { pref: state, withSorting, withVisibility, withVisibleFields };
+  }, [state, withSorting, withVisibility, withVisibleFields]);
 
   return (<PreferenceContext.Provider value={contextValue}>{children}</PreferenceContext.Provider>);
 }

@@ -3,13 +3,14 @@
 import { UserProfile, Backend, UpsertUiSettings, UiSettings } from 'client';
 
 
-import { PreferenceInit, VisibilityRule, SortingRule } from './pref-types';
+import { PreferenceInit, VisibilityRule, SortingRule, DataId } from './pref-types';
 import { ImmutablePreference } from './ImmutablePreference';
 
 import LoggerFactory from 'logger';
 const _logger = LoggerFactory.getLogger();
 
 
+export type WithVisibleFields = (visibleFields: DataId[]) => void;
 export type WithSorting = (sorting: Omit<SortingRule, "id">) => void;
 export type WithVisibility = (visibility: Omit<VisibilityRule, "id">) => void;
 
@@ -68,6 +69,20 @@ export function initWithSorting(
 
   setPref(currentState => {
     const nextState = currentState.withSorting(sorting);
+    storeSettings(backend, userId, nextState);
+    return nextState;
+  });
+}
+
+export function initWithVisibleFields(
+  setPref: React.Dispatch<React.SetStateAction<ImmutablePreference>>,
+  backend: Backend, 
+  userId: string, 
+  visibility: DataId[]) {
+
+
+  setPref(currentState => {
+    const nextState = currentState.withVisibleFields(visibility);
     storeSettings(backend, userId, nextState);
     return nextState;
   });

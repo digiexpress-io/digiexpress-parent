@@ -507,6 +507,7 @@ const en = {
   'mywork.table.header.description': 'Description',
   'mywork.table.header.dueDate': 'Due date',
 
+  'tasktable.header.created': 'Created',
   'tasktable.header.subject': 'Subject',
   'tasktable.header.priority': 'Priority',
   'tasktable.header.status': 'Status',

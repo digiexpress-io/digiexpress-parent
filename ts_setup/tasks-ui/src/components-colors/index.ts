@@ -73,6 +73,7 @@ function withColors<T>(input: T[], colorIndex?: number): { color: string, value:
 
 
 export {
+  PALETTE_COLORS,
   cocktail_green,
   purple_zergling,
   ocean_liner,

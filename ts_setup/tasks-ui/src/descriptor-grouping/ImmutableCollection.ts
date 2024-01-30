@@ -12,6 +12,7 @@ interface Init<D extends DataType> {
 
   cache?: Record<ClassifierType, InternalCache<D>>;
   groups?: readonly Group[];
+  updated?: string;
 }
 
 
@@ -42,6 +43,7 @@ export class ImmutableCollection<D extends DataType> implements Collection<D> {
   private _classifierName: string;
   private _definition: ExtractClassifier<D>;
   private _groupValues: string[];
+  private _updated: string;
 
   constructor(raw: Init<D>) {
     _logger.target(raw).debug("loading grouping");
@@ -54,13 +56,16 @@ export class ImmutableCollection<D extends DataType> implements Collection<D> {
       const init = new GroupingVisitor(raw.origin, {}, raw.classifierName, raw.definition, raw.groupValues).visit();
       this._groups = Object.freeze(init.groups ?? []);
       this._cache = Object.freeze(init.cache ?? {});
+      this._updated = new Date().toISOString();
     } else {
       this._groups = Object.freeze(raw.groups ?? []);
       this._cache = Object.freeze(raw.cache ?? {});
+      this._updated = raw.updated ?? new Date().toISOString();
     }
   }
   get origin() { return this._origin }
   get groups() { return this._groups }
+  get updated() { return this._updated }
   get classifierName() { return this._classifierName }
 
   withGroupBy(classifierName: string, definition: ExtractClassifier<D>, groupValues: string[]): ImmutableCollection<D> {
@@ -68,11 +73,13 @@ export class ImmutableCollection<D extends DataType> implements Collection<D> {
       return this;
     }
     const reinit = new GroupingVisitor(this._origin, this._cache, classifierName, definition, groupValues).visit();
+    reinit.updated = this._updated;
     return new ImmutableCollection(reinit);
   }
 
   withOrigin(newOrigin: (D[] | readonly D[])) {
     const reinit = new GroupingVisitor(newOrigin, {}, this._classifierName, this._definition, this._groupValues).visit();
+    reinit.updated = new Date().toISOString();
     return new ImmutableCollection(reinit);
   }
 }
@@ -115,15 +122,18 @@ class GroupingVisitor<D extends DataType> {
     for(const entry of this._origin) {
       runningIndex++;
 
-      const classifier: string | undefined = definition(entry);
+      const classifier: string | string[] | undefined = definition(entry);
       if(classifier === undefined) {
         continue
       }
-      
-      if(!dirty_groups[classifier]) {
-        dirty_groups[classifier] = [];
+
+      const classifiers: string[] = Array.isArray(classifier) ? classifier : [classifier];
+      for(const resolved of classifiers) {
+        if(!dirty_groups[resolved]) {
+          dirty_groups[resolved] = [];
+        }
+        dirty_groups[resolved].push(runningIndex);
       }
-      dirty_groups[classifier].push(runningIndex);
     }
 
     const groups = Object.freeze(Object.entries(dirty_groups).map(([id, value]) => new ImmutableGroup({id, value})));

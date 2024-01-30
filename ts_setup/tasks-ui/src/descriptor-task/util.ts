@@ -59,7 +59,7 @@ export function getMyWorkType(task: Task, profile: UserProfileAndOrg, today: Dat
 }
 
 
-export function applyDescFilters(desc: TaskDescriptor, filters: FilterBy[]): boolean {
+export function applyDescFilters(desc: TaskDescriptor, filters: readonly FilterBy[]): boolean {
   for (const filter of filters) {
     if (filter.disabled) {
       continue;

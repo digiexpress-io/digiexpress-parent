@@ -12,8 +12,8 @@ export interface Avatars {
 }
 
 export interface AvatarReducer {
-  withAvatar: (letters: string) => Avatar;
-  withAvatars: (letters: string[]) => Avatar[];
+  withAvatar: (letters: string) => void;
+  withAvatars: (letters: string[]) => void;
 }
 
 export interface AvatarContextType {

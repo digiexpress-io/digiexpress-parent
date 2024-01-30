@@ -1,7 +1,7 @@
 
-import { AssigneePalette, TaskDescriptor, AssigneeGroupType } from 'descriptor-task';
-import { getInstance as createGroups, ImmutableCollection, Group, GroupingContextType } from 'descriptor-grouping';
-import { getInstance as createTabs, SingleTabInit} from 'descriptor-tabbing';
+import { TaskDescriptor, AssigneeGroupType } from 'descriptor-task';
+import { getInstance as createGroups } from 'descriptor-grouping';
+import { getInstance as createTabs} from 'descriptor-tabbing';
 import Table from 'table';
 
 

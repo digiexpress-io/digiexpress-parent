@@ -1,26 +1,33 @@
-
-import { withColors } from 'components-colors';
 import { Avatars, Avatar } from './avatar-types';
+import { PALETTE_COLORS } from 'components-colors';
+
 
 export interface Init {
   values: Record<string, Avatar>;
   cache?: Record<TwoLetterCode, Origin[]>;
-  index?: number; 
+  cache_colors?: string[]; 
 }
 
 export type Origin = string;
 export type TwoLetterCode = string;
 
+const TOTAL_COLORS = 500;
+function initColor(index: number) {
+  const color = index * (360 / TOTAL_COLORS) % 360;
+  return "hsl( " + color + ", 100%, 50% )";
+}
+
 
 export class ImmutableAvatars implements Avatars {
   private _values: Record<Origin, Avatar>;
   private _cache: Record<TwoLetterCode, Origin[]>;
-  private _index: number;
+  private _cache_colors: readonly string[];
 
   constructor(init: Init) {
     this._values = Object.freeze(init.values);
     this._cache = Object.freeze(init.cache ?? {});
-    this._index = init.index ?? 0;
+    this._cache_colors = Object.freeze(init.cache_colors ?? []);
+    
   }
 
   get values() { return this._values }
@@ -29,27 +36,53 @@ export class ImmutableAvatars implements Avatars {
     return this.withAvatars([origin]);
   }
 
+  getNextColor(cache_colors: string[]): string {
+    // try first polite colors
+    for(let index = cache_colors.length; index < PALETTE_COLORS.length; index++) {
+      const newColor = PALETTE_COLORS[index];
+      if(!cache_colors.includes(newColor)) {
+        return newColor;
+      }
+    }
+
+    // fallback
+    const index = cache_colors.length + 1;
+    const colorIndex = index * 50;
+
+    const newColor = initColor(colorIndex);
+    if(!cache_colors.includes(newColor)) {
+      return newColor;
+    }
+
+    for(let add = 0; add < 1000; add++) {
+      const addColor = initColor(colorIndex+add);
+      if(!cache_colors.includes(addColor)) {
+        return addColor;
+      }
+    }
+    return newColor;
+  }
+
   withAvatars(all: string[]): ImmutableAvatars {
     const newData: Avatar[] = [];
+    const cache_colors = [...this._cache_colors];
 
-    let runningIndex = 0;
     for(const origin of all) {
-
       if(this._values[origin]) {
         continue;
       }
 
       const twoLetterCode: TwoLetterCode = resolveAvatar(origin);
-      const originIndex = this._index + runningIndex;
       const codeIndex = this._cache[twoLetterCode] ? this._cache[twoLetterCode].length + 1 : 0;
-      const colorIndex = originIndex + codeIndex;
-      const color = withColors([twoLetterCode], colorIndex)[0].color;
+      const color = this.getNextColor(cache_colors);
+      
+
       const avatar: Avatar = Object.freeze({ origin, twoLetterCode, color, index: codeIndex });
+      cache_colors.push(color);
       newData.push(avatar);
-      runningIndex++;
     }
   
-    if(runningIndex === 0) {
+    if(all.length === 0) {
       return this;
     }
 
@@ -62,11 +95,10 @@ export class ImmutableAvatars implements Avatars {
       if(!cache[avatar.twoLetterCode]) {
         cache[avatar.twoLetterCode] = [];
       }
-
       cache[avatar.twoLetterCode].push(avatar.origin);
     }
 
-    return new ImmutableAvatars({ values, cache });
+    return new ImmutableAvatars({ values, cache, cache_colors });
   }
 }
 

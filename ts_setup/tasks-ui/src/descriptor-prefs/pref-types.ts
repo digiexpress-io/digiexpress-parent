@@ -9,7 +9,7 @@ export interface VisibilityRule {
 
 export interface SortingRule {
   dataId: DataId;
-  direction: 'ASC' | 'DESC';
+  direction: 'asc' | 'desc';
 }
 
 
@@ -29,6 +29,7 @@ export interface PreferenceContextType {
   
   withSorting(sorting: Omit<SortingRule, "id">): void;
   withVisibility(visibility: Omit<VisibilityRule, "id">): void;
+  withVisibleFields(visibility: DataId[]): void;
 }
 
 

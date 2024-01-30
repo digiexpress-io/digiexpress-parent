@@ -31,7 +31,7 @@ export interface UiSettingForVisibility {
 
 export interface UiSettingsForSorting {
   dataId: string;
-  direction: 'ASC' | 'DESC';
+  direction: 'asc' | 'desc';
 }
 
 export interface UiSettings {
