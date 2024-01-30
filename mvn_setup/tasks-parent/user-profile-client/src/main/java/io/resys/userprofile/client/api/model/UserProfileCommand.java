@@ -35,6 +35,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.resys.userprofile.client.api.model.UserProfile.NotificationSetting;
+import io.resys.userprofile.client.api.model.UserProfile.UiSettings;
 import io.resys.userprofile.client.api.model.UserProfile.UserDetails;
 
 
@@ -50,8 +51,8 @@ import io.resys.userprofile.client.api.model.UserProfile.UserDetails;
   @Type(value = ImmutableChangeUserDetailsLastName.class, name = "ChangeUserDetailsLastName"),  
   @Type(value = ImmutableChangeUserDetailsEmail.class, name = "ChangeUserDetailsEmail"),  
   @Type(value = ImmutableChangeNotificationSetting.class, name = "ChangeNotificationSetting"),
-  @Type(value = ImmutableArchiveUserProfile.class, name = "ArchiveUserProfile")
-  
+  @Type(value = ImmutableArchiveUserProfile.class, name = "ArchiveUserProfile"),
+  @Type(value = ImmutableUpsertUiSettings.class, name = "UpsertUiSettings")
 })
 public interface UserProfileCommand extends Serializable {
   String getId();
@@ -70,7 +71,8 @@ public interface UserProfileCommand extends Serializable {
     ChangeUserDetailsLastName,
     ChangeUserDetailsEmail,
     ChangeNotificationSetting,
-    ArchiveUserProfile
+    ArchiveUserProfile,
+    UpsertUiSettings
   }
 
   @Value.Immutable @JsonSerialize(as = ImmutableCreateUserProfile.class) @JsonDeserialize(as = ImmutableCreateUserProfile.class)
@@ -92,7 +94,8 @@ public interface UserProfileCommand extends Serializable {
     @Type(value = ImmutableChangeUserDetailsLastName.class, name = "ChangeUserDetailsLastName"),  
     @Type(value = ImmutableChangeUserDetailsEmail.class, name = "ChangeUserDetailsEmail"),  
     @Type(value = ImmutableChangeNotificationSetting.class, name = "ChangeNotificationSetting"),
-    @Type(value = ImmutableArchiveUserProfile.class, name = "ArchiveUserProfile")
+    @Type(value = ImmutableArchiveUserProfile.class, name = "ArchiveUserProfile"),
+    @Type(value = ImmutableUpsertUiSettings.class, name = "UpsertUiSettings")
   })
   interface UserProfileUpdateCommand extends UserProfileCommand {
     UserProfileUpdateCommand withUserId(String userId);
@@ -131,6 +134,12 @@ public interface UserProfileCommand extends Serializable {
     Boolean getEnabled();
     @Override default UserProfileCommandType getCommandType() { return UserProfileCommandType.ChangeNotificationSetting; }
   }
+  
+  @Value.Immutable @JsonSerialize(as = ImmutableUpsertUiSettings.class) @JsonDeserialize(as = ImmutableUpsertUiSettings.class)
+  interface UpsertUiSettings extends UserProfileUpdateCommand {
+    UiSettings getUiSettings();
+    @Override default UserProfileCommandType getCommandType() { return UserProfileCommandType.UpsertUiSettings; }
+  }  
 
   @Value.Immutable @JsonSerialize(as = ImmutableArchiveUserProfile.class) @JsonDeserialize(as = ImmutableArchiveUserProfile.class)
   interface ArchiveUserProfile extends UserProfileUpdateCommand {

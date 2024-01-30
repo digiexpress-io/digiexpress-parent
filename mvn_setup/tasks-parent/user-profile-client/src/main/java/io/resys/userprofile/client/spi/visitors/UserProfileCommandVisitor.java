@@ -4,13 +4,16 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import io.resys.userprofile.client.api.model.Document.DocumentType;
 import io.resys.userprofile.client.api.model.ImmutableNotificationSetting;
+import io.resys.userprofile.client.api.model.ImmutableUiSettings;
 import io.resys.userprofile.client.api.model.ImmutableUserDetails;
 import io.resys.userprofile.client.api.model.ImmutableUserProfile;
 import io.resys.userprofile.client.api.model.ImmutableUserProfileTransaction;
 import io.resys.userprofile.client.api.model.UserProfile;
+import io.resys.userprofile.client.api.model.UserProfile.UiSettings;
 import io.resys.userprofile.client.api.model.UserProfileCommand;
 import io.resys.userprofile.client.api.model.UserProfileCommand.ArchiveUserProfile;
 import io.resys.userprofile.client.api.model.UserProfileCommand.ChangeNotificationSetting;
@@ -18,7 +21,9 @@ import io.resys.userprofile.client.api.model.UserProfileCommand.ChangeUserDetail
 import io.resys.userprofile.client.api.model.UserProfileCommand.ChangeUserDetailsFirstName;
 import io.resys.userprofile.client.api.model.UserProfileCommand.ChangeUserDetailsLastName;
 import io.resys.userprofile.client.api.model.UserProfileCommand.CreateUserProfile;
+import io.resys.userprofile.client.api.model.UserProfileCommand.UpsertUiSettings;
 import io.resys.userprofile.client.api.model.UserProfileCommand.UpsertUserProfile;
+import io.resys.userprofile.client.api.model.UserProfileCommand.UserProfileCommandType;
 import io.resys.userprofile.client.spi.store.DocumentConfig;
 
 
@@ -41,24 +46,33 @@ public class UserProfileCommandVisitor {
   }
   
   public UserProfile visitTransaction(List<? extends UserProfileCommand> commands) throws NoChangesException {
-    commands.forEach(this::visitCommand);
+    for(final var command : commands) {
+      visitCommand(command);
+    }
     
     if(visitedCommands.isEmpty()) {
       throw new NoChangesException();
     }
     
+    // don't bother logging ui settings to commands
+    final var loggedCommands = visitedCommands.stream().filter(d -> d.getCommandType() != UserProfileCommandType.UpsertUiSettings).collect(Collectors.toList());
     final var transactions = new ArrayList<>(start == null ? Collections.emptyList() : start.getTransactions());
     final var id = String.valueOf(transactions.size() +1);
+    
+    if(loggedCommands.isEmpty()) {
+      this.current = this.current.withVersion(id);
+      return this.current; 
+    }
     transactions
       .add(ImmutableUserProfileTransaction.builder()
         .id(id)
-        .commands(visitedCommands)
+        .commands(loggedCommands)
         .build());
     this.current = this.current.withVersion(id).withTransactions(transactions);
     return this.current;
   }
   
-  private UserProfile visitCommand(UserProfileCommand command) {
+  private UserProfile visitCommand(UserProfileCommand command) throws NoChangesException {
     switch (command.getCommandType()) {
     case CreateUserProfile:
       return visitCreateUserProfile((CreateUserProfile) command);
@@ -74,11 +88,39 @@ public class UserProfileCommandVisitor {
       return visitChangeNotificationSetting((ChangeNotificationSetting) command);
     case ArchiveUserProfile:
       return visitArchiveUserProfile((ArchiveUserProfile) command);
+    case UpsertUiSettings:
+      return visitUpsertUiSettings((UpsertUiSettings) command);
     }
     
     throw new UpdateUserProfileVisitorException(String.format("Unsupported command type: %s, body: %s", command.getClass().getSimpleName(), command.toString())); 
   }
-  
+  private UserProfile visitUpsertUiSettings(UpsertUiSettings command) throws NoChangesException {
+    final List<UiSettings> next = new ArrayList<>();
+    final List<UiSettings> old = this.current.getUiSettings() != null ? this.current.getUiSettings() : Collections.emptyList();
+    
+    boolean claimed = false;
+    for(final UiSettings entry : old) {
+      if(entry.getSettingsId().equals(command.getUiSettings().getSettingsId())) {
+        final var updated = ImmutableUiSettings.builder().from(command.getUiSettings()).build();
+        if(updated.equals(entry)) {
+          throw new NoChangesException();
+        }
+        
+        next.add(updated);
+        claimed = true;
+      } else {
+        next.add(entry);
+      }
+    }
+    
+    if(!claimed) {
+      next.add(ImmutableUiSettings.builder().from(command.getUiSettings()).build());
+    }
+    
+    this.current = this.current.withUiSettings(next);
+    visitedCommands.add(command);
+    return this.current;
+  }
   
   private UserProfile visitCreateUserProfile(CreateUserProfile command) {
     final var id = command.getId();

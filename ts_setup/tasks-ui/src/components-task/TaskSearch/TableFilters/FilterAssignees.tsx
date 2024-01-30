@@ -34,7 +34,7 @@ const FilterAssignees: React.FC<{
           <ListItemText><Typography fontWeight='bold'><FormattedMessage id='taskSearch.filter.assignees' /></Typography></ListItemText>
         </MenuItem>
 
-        { Object.keys(ctx.owners).map(type => {
+        { ctx.owners.map(type => {
           
           const found = props.value.find(filter => filter.type === 'FilterByOwners');
           const selected = found ? found.type === 'FilterByOwners' && found.owners.includes(type) : false;

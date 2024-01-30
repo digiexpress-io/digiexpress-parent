@@ -22,10 +22,7 @@ import { TableBody, TableFillerRows } from 'components-generic';
 import { cyan_mud } from 'components-colors';
 
 import { TaskDescriptor } from 'descriptor-task';
-import { GroupingContextType } from 'descriptor-grouping'
-
-
-import { useGrouping, GroupByTypes, useTaskPrefs, ColumnName, TaskReloadProvider } from '../TableContext';
+import { useGrouping, GroupByTypes, useTaskPrefs, ColumnName } from '../TableContext';
 
 import { Title } from './TableTitle';
 import CellMenu from '../TableCells/CellMenu';
@@ -105,7 +102,7 @@ const TableForGroupByPagination: React.FC<{ state: TaskPagination, setState: Set
     (<MPagination
       rowsPerPageOptions={state.rowsPerPageOptions}
       component="div"
-      count={state.entries.length}
+      count={state.src.length}
       rowsPerPage={state.rowsPerPage}
       page={state.page}
       onPageChange={(_event, newPage) => setState((state: TaskPagination) => state.withPage(newPage))}

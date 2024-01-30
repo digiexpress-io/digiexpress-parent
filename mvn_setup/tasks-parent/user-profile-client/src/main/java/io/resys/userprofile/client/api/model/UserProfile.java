@@ -16,6 +16,7 @@ public interface UserProfile extends Document {
   Instant getCreated();
   Instant getUpdated();
   UserDetails getDetails();
+  @Nullable List<UiSettings> getUiSettings(); // might not be defined at all
   List<NotificationSetting> getNotificationSettings();
     
  @Value.Immutable @JsonSerialize(as = ImmutableUserDetails.class) @JsonDeserialize(as = ImmutableUserDetails.class)
@@ -39,5 +40,24 @@ public interface UserProfile extends Document {
   interface UserProfileTransaction extends Serializable {
     String getId();
     List<UserProfileCommand> getCommands(); 
+  }
+
+  @Value.Immutable @JsonSerialize(as = ImmutableUiSettings.class) @JsonDeserialize(as = ImmutableUiSettings.class)
+  interface UiSettings extends Serializable {
+    String getSettingsId();
+    List<UiSettingForVisibility> getVisibility();
+    List<UiSettingsForSorting> getSorting();
+  }
+  
+  @Value.Immutable @JsonSerialize(as = ImmutableUiSettingForVisibility.class) @JsonDeserialize(as = ImmutableUiSettingForVisibility.class)
+  interface UiSettingForVisibility extends Serializable {
+    String getDataId();
+    Boolean getEnabled();
+  }
+  
+  @Value.Immutable @JsonSerialize(as = ImmutableUiSettingsForSorting.class) @JsonDeserialize(as = ImmutableUiSettingsForSorting.class)
+  interface UiSettingsForSorting extends Serializable {
+    String getDataId();
+    String getDirection();
   }
 }

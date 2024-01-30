@@ -6,7 +6,7 @@ Branches
   - branch name: main/2
     doc id: 1
     commit id: 3
-    {"id":"jerry-id-1","created":"2023-01-01T01:01:00Z","details":{"email":"jerry@thejerryspringershow.com","lastName":"Springer","username":"jerryspringer","firstName":"Jack"},"updated":"2023-01-01T01:01:00Z","version":"2","documentType":"USER_PROFILE","transactions":[{"id":"1","commands":[{"id":"jerry-id-1","userId":"userId1234","details":{"email":"jerry@thejerryspringershow.com","lastName":"Springer","username":"jerryspringer","firstName":"Jerry"},"targetDate":"2023-01-01T01:01:00Z","commandType":"CreateUserProfile","notificationSettings":[{"type":"TASK_ASSIGNED","enabled":true}]}]},{"id":"2","commands":[{"id":"jerry-id-1","userId":"userId1234","firstName":"Jack","targetDate":"2023-01-01T01:01:00Z","commandType":"ChangeUserDetailsFirstName"}]}],"notificationSettings":[{"type":"TASK_ASSIGNED","enabled":true}]}
+    {"id":"jerry-id-1","created":"2023-01-01T01:01:00Z","details":{"email":"jerry@thejerryspringershow.com","lastName":"Springer","username":"jerryspringer","firstName":"Jack"},"updated":"2023-01-01T01:01:00Z","version":"2","uiSettings":null,"documentType":"USER_PROFILE","transactions":[{"id":"1","commands":[{"id":"jerry-id-1","userId":"userId1234","details":{"email":"jerry@thejerryspringershow.com","lastName":"Springer","username":"jerryspringer","firstName":"Jerry"},"targetDate":"2023-01-01T01:01:00Z","commandType":"CreateUserProfile","notificationSettings":[{"type":"TASK_ASSIGNED","enabled":true}]}]},{"id":"2","commands":[{"id":"jerry-id-1","userId":"userId1234","firstName":"Jack","targetDate":"2023-01-01T01:01:00Z","commandType":"ChangeUserDetailsFirstName"}]}],"notificationSettings":[{"type":"TASK_ASSIGNED","enabled":true}]}
 
 Commits
   - id: 4

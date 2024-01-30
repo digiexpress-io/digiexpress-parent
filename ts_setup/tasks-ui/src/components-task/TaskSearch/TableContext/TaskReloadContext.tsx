@@ -31,20 +31,12 @@ export const ReloadSearchCtx: React.FC = () => {
 
 
 export const ReloadGroupCtx: React.FC = () => {
-  const [loading, setLoading] = React.useState(0);
   const searchCtx = useSearch();
   const groupCtx = useGrouping();
 
   React.useEffect(() => {
-    if (loading <= 1) {
-      return;
-    }
     _logger.debug("reloading task grouping context");
     groupCtx.reducer.withData(searchCtx.state.filtered);
-  }, [searchCtx.state.filtered]);
-
-  React.useEffect(() => {
-    setLoading(prev => prev + 1);
   }, [searchCtx.state.filtered]);
 
   return (null);

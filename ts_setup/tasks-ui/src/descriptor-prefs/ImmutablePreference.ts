@@ -20,8 +20,17 @@ export class ImmutablePreference implements Preference {
   constructor(init: ImmutablePreferenceInit) {
     this._id = init.id;
     this._fields = init.fields;
-    this._visibility = init.visibility;
+    this._visibility = this.initVisibility(init);
     this._sorting = init.sorting;
+  }
+
+  initVisibility(init: ImmutablePreferenceInit): Record<DataId, VisibilityRule> {
+    const result: Record<DataId, VisibilityRule> = {};
+    for(const dataId of init.fields) {
+      const enabled: boolean = init.visibility[dataId]?.enabled ?? true;
+      result[dataId] = { dataId, enabled };
+    }
+    return result;
   }
 
   get id() { return this._id }
@@ -50,8 +59,9 @@ export class ImmutablePreference implements Preference {
   }
   withVisibleFields(newValueFields: DataId[]): ImmutablePreference {
     const visibility: Record<DataId, VisibilityRule> = { };
-    for(const field of newValueFields) {
-      visibility[field] = { dataId: field, enabled: true };
+    for(const dataId of this._fields) {
+      const enabled = newValueFields.includes(dataId);
+      visibility[dataId] = { dataId, enabled };
     }
     return new ImmutablePreference(this.clone({ visibility }));
   }

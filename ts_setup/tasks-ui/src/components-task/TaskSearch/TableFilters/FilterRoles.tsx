@@ -43,7 +43,7 @@ const FilterRoles: React.FC<{
         <MenuItem>
           <ListItemText><Typography fontWeight='bold'><FormattedMessage id='taskSearch.filter.roles' /></Typography></ListItemText>
         </MenuItem>
-        {Object.keys(ctx.roles).map(type => {
+        {ctx.roles.map(type => {
           const found = props.value.find(filter => filter.type === 'FilterByRoles');
           const selected = found ? found.type === 'FilterByRoles' && found.roles.includes(type) : false
 

@@ -43,6 +43,10 @@ tenant:
 "%dev": 
   quarkus:
     log:
+      level: DEBUG
+      category:
+        io.resys:
+          level: DEBUG
       console:  
         json: false
 

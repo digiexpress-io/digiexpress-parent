@@ -46,7 +46,7 @@ export interface UserProfile {
   created: string;
   updated: string;
   details: UserDetails;
-  uiSettings?: UiSettings[];
+  uiSettings?: UiSettings[] | undefined;
   notificationSettings: NotificationSetting[];
 }
 
