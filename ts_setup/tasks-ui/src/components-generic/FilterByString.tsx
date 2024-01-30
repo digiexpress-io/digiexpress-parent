@@ -4,9 +4,10 @@ import { TextField, InputAdornment } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { blue_mud, cyan, wash_me } from 'components-colors';
 
-const FilterByString: React.FC<{ onChange: (value: React.ChangeEvent<HTMLInputElement>) => void }> = ({ onChange }) => {
+const FilterByString: React.FC<{ defaultValue?: string, onChange: (value: React.ChangeEvent<HTMLInputElement>) => void }> = ({ defaultValue, onChange }) => {
   return (
     <TextField
+      defaultValue={defaultValue}
       variant='outlined'
       placeholder='Search'
       onChange={onChange}

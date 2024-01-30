@@ -3,7 +3,7 @@
 import { UserProfile, Backend, UpsertUiSettings, UiSettings } from 'client';
 
 
-import { PreferenceInit, VisibilityRule, SortingRule, DataId } from './pref-types';
+import { PreferenceInit, VisibilityRule, SortingRule, DataId, ConfigRule } from './pref-types';
 import { ImmutablePreference } from './ImmutablePreference';
 
 import LoggerFactory from 'logger';
@@ -13,7 +13,7 @@ const _logger = LoggerFactory.getLogger();
 export type WithVisibleFields = (visibleFields: DataId[]) => void;
 export type WithSorting = (sorting: Omit<SortingRule, "id">) => void;
 export type WithVisibility = (visibility: Omit<VisibilityRule, "id">) => void;
-
+export type WithConfig = (config: ConfigRule | (ConfigRule[])) => void;
 
 
 async function storeSettings(backend: Backend, userId: string, pref: ImmutablePreference): Promise<void> {
@@ -22,6 +22,7 @@ async function storeSettings(backend: Backend, userId: string, pref: ImmutablePr
     settingsId: pref.id,
     sorting: pref.sorting,
     visibility: pref.visibility,
+    config: pref.config
   };
 
   const command: UpsertUiSettings = {
@@ -44,9 +45,8 @@ export function initPreference(
   const fields = Object.freeze(init.fields);
   const sorting: Record<string, SortingRule> = {};
   const visibility: Record<string, VisibilityRule> = {};
-  
+  const config: Record<string, ConfigRule> = {};
   const stored = initProfile.uiSettings?.find((settings) => settings.settingsId);
-
 
   // defaults first
   sorting[init.sorting.dataId] = init.sorting;
@@ -56,8 +56,23 @@ export function initPreference(
   if(stored) {
     stored.sorting.forEach(e => sorting[e.dataId] = e);
     stored.visibility.forEach(e => visibility[e.dataId] = e);
+    stored.config?.forEach(e => config[e.dataId] = e);
   }
-  return new ImmutablePreference({ id, fields, sorting, visibility, backendId: stored?.id });
+  return new ImmutablePreference({ id, fields, sorting, visibility, backendId: stored?.id, config });
+}
+
+export function initWithConfig(
+  setPref: React.Dispatch<React.SetStateAction<ImmutablePreference>>,
+  backend: Backend, 
+  userId: string, 
+  config: ConfigRule | (ConfigRule[])
+) {
+
+  setPref(currentState => {
+    const nextState = currentState.withConfig(config);
+    storeSettings(backend, userId, nextState);
+    return nextState;
+  });
 }
 
 export function initWithSorting(

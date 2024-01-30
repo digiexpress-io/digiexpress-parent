@@ -5,7 +5,7 @@ import Context from 'context';
 import { UserProfile } from 'client';
 
 import { PreferenceContextType, PreferenceInit } from './pref-types';
-import { WithSorting, WithVisibility, WithVisibleFields, initPreference, initWithSorting, initWithVisibility, initWithVisibleFields } from './initMethods';
+import { WithSorting, WithConfig, initWithConfig, WithVisibility, WithVisibleFields, initPreference, initWithSorting, initWithVisibility, initWithVisibleFields } from './initMethods';
 
 import LoggerFactory from 'logger';
 const _logger = LoggerFactory.getLogger();
@@ -25,13 +25,14 @@ const PreferenceProviderDelegate: React.FC<{
   const backend = Context.useBackend();
   const [state, setState] = React.useState(initPreference(init, initProfile));
 
+  const withConfig: WithConfig = React.useCallback((config) => initWithConfig(setState, backend, userId, config), [setState, backend, userId]);
   const withSorting: WithSorting = React.useCallback((sorting) => initWithSorting(setState, backend, userId, sorting), [setState, backend, userId]);
   const withVisibility: WithVisibility = React.useCallback((visibility) => initWithVisibility(setState, backend, userId, visibility), [setState, backend, userId]);
   const withVisibleFields: WithVisibleFields = React.useCallback((visibility) => initWithVisibleFields(setState, backend, userId, visibility), [setState, backend, userId]);
 
   const contextValue: PreferenceContextType = React.useMemo(() => {
-    return { pref: state, withSorting, withVisibility, withVisibleFields };
-  }, [state, withSorting, withVisibility, withVisibleFields]);
+    return { pref: state, withSorting, withVisibility, withVisibleFields, withConfig };
+  }, [state, withSorting, withVisibility, withVisibleFields, withConfig]);
 
   return (<PreferenceContext.Provider value={contextValue}>{children}</PreferenceContext.Provider>);
 }

@@ -5,6 +5,8 @@ import Context from 'context';
 import { TaskDescriptor, TaskSearch, ImmutableTaskSearch } from 'descriptor-task';
 
 import { TaskStatus, TaskPriority } from 'client';
+import { useTaskPrefsInit } from './TaskPrefsContext';
+
 
 export type GroupByTypes = 'none'| 'owners'| 'roles'| 'status'| 'priority';
 export const GroupByOptions: GroupByTypes[] = ['none', 'owners', 'roles', 'status', 'priority'];
@@ -72,10 +74,10 @@ export function useSearch() {
 /**
  *  DELEGATE for loading all the contexts after first task loading...
  */
-const TaskSearchDelegate: React.FC<{children: React.ReactNode}> = ({children}) => {
+const TaskSearchDelegate: React.FC<{ children: React.ReactNode, init: { groupBy: GroupByTypes, searchString: string}}> = ({children, init}) => {
   const ctx = Context.useTasks();
-  const [groupBy, setGroupBy] = React.useState<GroupByTypes>('status');
-  const [state, setState] = React.useState<ImmutableTaskSearch>(new ImmutableTaskSearch({ data: ctx.tasks }));
+  const [groupBy, setGroupBy] = React.useState<GroupByTypes>(init.groupBy);
+  const [state, setState] = React.useState<ImmutableTaskSearch>(new ImmutableTaskSearch({ data: ctx.tasks, searchString: init.searchString }));
 
   const withGrouBy: WithGroupBy = React.useCallback((groupBy) => initWithGroupBy(groupBy, setState, setGroupBy), [setState, setGroupBy]);
 
@@ -110,10 +112,12 @@ const TaskSearchDelegate: React.FC<{children: React.ReactNode}> = ({children}) =
  * Put all the contexts together with initial task loading
  */
 export const TaskSearchProvider: React.FC<{children: React.ReactNode}> = ({children}) => {
-  const ctx = Context.useTasks();
-  if (ctx.loading) {
+  const taskCtx = Context.useTasks();
+  const prefsInit = useTaskPrefsInit();
+
+  if (taskCtx.loading) {
     return <>...loading</>
   }
 
-  return (<TaskSearchDelegate><>{children}</></TaskSearchDelegate>);
+  return (<TaskSearchDelegate init={prefsInit}><>{children}</></TaskSearchDelegate>);
 }

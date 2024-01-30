@@ -42,12 +42,31 @@ export class ImmutableTaskSearch implements TaskSearch, TaskSearchReducers {
     this._data = init.data;
     this._searchString = init.searchString;
     this._filterBy = init.filterBy ?? [];
-    this._filtered = init.filtered ?? [...init.data];
+    this._filtered = init.filtered ?? this.initFiltered(init);
   }
   get data(): readonly TaskDescriptor[] { return this._data }
   get filterBy(): readonly FilterBy[] { return this._filterBy }
   get searchString(): string | undefined { return this._searchString }
   get filtered(): readonly TaskDescriptor[] { return this._filtered }
+
+  initFiltered(init: TaskSearchInit): readonly TaskDescriptor[] {
+    if(!init.searchString) {
+      return init.data;
+    }
+
+    const cleaned = init.searchString.toLowerCase();
+    const filtered: TaskDescriptor[] = [];
+    for (const value of this._data) {
+      if (!applyDescFilters(value, this._filterBy)) {
+        continue;
+      }
+      if (!applySearchString(value, cleaned)) {
+        continue;
+      }
+      filtered.push(value);
+    }
+    return Object.freeze(filtered);
+  }
 
   withData(input: readonly TaskDescriptor[]): ImmutableTaskSearch {
     const today = new Date();

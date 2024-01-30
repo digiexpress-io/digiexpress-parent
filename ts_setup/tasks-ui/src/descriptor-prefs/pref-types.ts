@@ -12,6 +12,10 @@ export interface SortingRule {
   direction: 'asc' | 'desc';
 }
 
+export interface ConfigRule {
+  dataId: DataId;
+  value: string;
+}
 
 export interface Preference {
   id: PreferenceId;
@@ -19,14 +23,17 @@ export interface Preference {
   
   visibility: readonly VisibilityRule[];
   sorting: readonly SortingRule[];
+  config: readonly ConfigRule[];
 
   getVisibility(dataId: DataId): VisibilityRule;
-  getSorting(dataId?: DataId): SortingRule;
+  getConfig(dataId: DataId): ConfigRule | undefined;
+  getSorting(dataId?: DataId): SortingRule | undefined;
 }
 
 export interface PreferenceContextType {
   pref: Preference;
   
+  withConfig(config: ConfigRule): void;
   withSorting(sorting: Omit<SortingRule, "id">): void;
   withVisibility(visibility: Omit<VisibilityRule, "id">): void;
   withVisibleFields(visibility: DataId[]): void;

@@ -8,7 +8,10 @@ import java.util.stream.Collectors;
 
 import io.resys.userprofile.client.api.model.Document.DocumentType;
 import io.resys.userprofile.client.api.model.ImmutableNotificationSetting;
+import io.resys.userprofile.client.api.model.ImmutableUiSettingForConfig;
+import io.resys.userprofile.client.api.model.ImmutableUiSettingForVisibility;
 import io.resys.userprofile.client.api.model.ImmutableUiSettings;
+import io.resys.userprofile.client.api.model.ImmutableUiSettingsForSorting;
 import io.resys.userprofile.client.api.model.ImmutableUserDetails;
 import io.resys.userprofile.client.api.model.ImmutableUserProfile;
 import io.resys.userprofile.client.api.model.ImmutableUserProfileTransaction;
@@ -98,10 +101,18 @@ public class UserProfileCommandVisitor {
     final List<UiSettings> next = new ArrayList<>();
     final List<UiSettings> old = this.current.getUiSettings() != null ? this.current.getUiSettings() : Collections.emptyList();
     
+    // deep copy, just in case of accidental json fields
+    final var newEntity = ImmutableUiSettings.builder()
+        .from(command.getUiSettings())
+        .config(command.getUiSettings().getConfig().stream().map(e -> ImmutableUiSettingForConfig.builder().from(e).build()).toList())
+        .sorting(command.getUiSettings().getSorting().stream().map(e -> ImmutableUiSettingsForSorting.builder().from(e).build()).toList())
+        .visibility(command.getUiSettings().getVisibility().stream().map(e -> ImmutableUiSettingForVisibility.builder().from(e).build()).toList())
+        .build();
+    
     boolean claimed = false;
     for(final UiSettings entry : old) {
       if(entry.getSettingsId().equals(command.getUiSettings().getSettingsId())) {
-        final var updated = ImmutableUiSettings.builder().from(command.getUiSettings()).build();
+        final var updated = newEntity;
         if(updated.equals(entry)) {
           throw new NoChangesException();
         }
@@ -114,7 +125,7 @@ public class UserProfileCommandVisitor {
     }
     
     if(!claimed) {
-      next.add(ImmutableUiSettings.builder().from(command.getUiSettings()).build());
+      next.add(newEntity);
     }
     
     this.current = this.current.withUiSettings(next);

@@ -34,11 +34,18 @@ export interface UiSettingsForSorting {
   direction: 'asc' | 'desc';
 }
 
+
+export interface UiSettingsForConfig {
+  dataId: string;
+  value: string;
+}
+
 export interface UiSettings {
   id: string | undefined;
   settingsId: string;
   visibility: UiSettingForVisibility[];
   sorting: UiSettingsForSorting[];
+  config: UiSettingsForConfig[];
 }
 
 export interface UserProfile {

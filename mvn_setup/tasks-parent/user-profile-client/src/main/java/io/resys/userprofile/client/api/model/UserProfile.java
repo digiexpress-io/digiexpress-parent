@@ -45,14 +45,21 @@ public interface UserProfile extends Document {
   @Value.Immutable @JsonSerialize(as = ImmutableUiSettings.class) @JsonDeserialize(as = ImmutableUiSettings.class)
   interface UiSettings extends Serializable {
     String getSettingsId();
+    List<UiSettingForConfig> getConfig();
     List<UiSettingForVisibility> getVisibility();
     List<UiSettingsForSorting> getSorting();
   }
-  
+
   @Value.Immutable @JsonSerialize(as = ImmutableUiSettingForVisibility.class) @JsonDeserialize(as = ImmutableUiSettingForVisibility.class)
   interface UiSettingForVisibility extends Serializable {
     String getDataId();
     Boolean getEnabled();
+  }
+  
+  @Value.Immutable @JsonSerialize(as = ImmutableUiSettingForConfig.class) @JsonDeserialize(as = ImmutableUiSettingForConfig.class)
+  interface UiSettingForConfig extends Serializable {
+    String getDataId();
+    String getValue();
   }
   
   @Value.Immutable @JsonSerialize(as = ImmutableUiSettingsForSorting.class) @JsonDeserialize(as = ImmutableUiSettingsForSorting.class)
