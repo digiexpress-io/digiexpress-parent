@@ -5,9 +5,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { FormattedMessage } from 'react-intl';
 
 import { CustomerDescriptor } from 'descriptor-customer';
-import { CustomersSearchState } from './table-ctx';
-
 import { useTableCellPopover, StyledTableCell } from 'components-generic';
+
 import CellHoverButton from './CellMenuButton';
 
 const StyledBox = styled(Box)(({ theme }) => ({
@@ -59,7 +58,6 @@ const CellMenu: React.FC<{
 const FormattedCell: React.FC<{
   rowId: number,
   row: CustomerDescriptor,
-  def: CustomersSearchState,
   active: boolean,
   setDisabled: () => void
 }> = ({ row, active, setDisabled }) => {

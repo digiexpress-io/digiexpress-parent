@@ -4,20 +4,20 @@ import { Box } from '@mui/material';
 import { CustomerDescriptor } from 'descriptor-customer';
 import { StyledTableCell } from 'components-generic';
 
-import { CustomersSearchState } from './table-ctx'
 import TableCell from './TableCell';
 
 
 const FormattedCell: React.FC<{
-  rowId: number,
-  row: CustomerDescriptor,
-  def: CustomersSearchState
-}> = ({ row }) => {
+  rowId: number;
+  row: CustomerDescriptor;
+  children: React.ReactNode;
+}> = ({ row, children }) => {
 
   return (
     <StyledTableCell width="500px">
       <Box justifyContent='left' display='flex'>
-        <TableCell id={row.id + "/Tasks"} name={'TODO::'} maxWidth={"500px"} />
+        <TableCell id={row.id + "/DisplayName"} name={row.displayName} maxWidth={"500px"} />
+        {children}
       </Box>
     </StyledTableCell>
   );

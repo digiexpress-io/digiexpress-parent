@@ -4,14 +4,13 @@ import Burger from 'components-burger';
 import { CustomerDescriptor } from 'descriptor-customer';
 import { StyledTableCell } from 'components-generic';
 
-import { CustomersSearchState } from './table-ctx'
+
 import TableCell from './TableCell';
 
 const FormattedCell: React.FC<{
   rowId: number,
-  row: CustomerDescriptor,
-  def: CustomersSearchState
-}> = ({ row, def }) => {
+  row: CustomerDescriptor
+}> = ({ row }) => {
 
   return (<StyledTableCell width='180px'>
     <Box width='180px'>
