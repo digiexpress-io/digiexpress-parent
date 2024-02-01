@@ -4,7 +4,7 @@ import { SxProps } from '@mui/system';
 
 import Burger from 'components-burger';
 import Context from 'context';
-import { DialobList } from 'components-tenant';
+import { DialobList } from 'components-dialob';
 import Activities from '../Activities';
 import { wash_me } from 'components-colors';
 

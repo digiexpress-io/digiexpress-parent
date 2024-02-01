@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box } from '@mui/material';
 
-import { TaskDescriptor, Group } from 'descriptor-task';
+import { TaskDescriptor } from 'descriptor-task';
 import { StyledTableCell } from 'components-generic';
 
 import Context from 'context';

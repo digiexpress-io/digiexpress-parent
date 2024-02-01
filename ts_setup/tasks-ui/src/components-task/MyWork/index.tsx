@@ -4,7 +4,7 @@ import { TablePagination } from '@mui/material';
 
 import { LayoutList, NavigationButton, LayoutListItem, LayoutListFiller  } from 'components-generic';
 import { moss, cyan } from 'components-colors';
-import { AssigneePalette, AssigneeGroupType } from 'descriptor-task';
+import { Palette, AssigneeGroupType } from 'descriptor-task';
 
 import TaskCreateDialog from '../TaskCreate';
 import { MyWorkProvider, useMyWork } from './MyWorkContext';
@@ -40,25 +40,25 @@ const MyWorkNavigation: React.FC = () => {
   return (<>
     <NavigationButton id='core.myWork.tab.task.currentlyWorking' 
       values={getGroupCount('assigneeCurrentlyWorking')} 
-      color={AssigneePalette.assigneeCurrentlyWorking}
+      color={Palette.assigneeGroupType.assigneeCurrentlyWorking}
       active={id === 'assigneeCurrentlyWorking'}
       onClick={() => setActiveTab("assigneeCurrentlyWorking")} />
 
     <NavigationButton id='core.myWork.tab.task.overdue' 
       values={getGroupCount('assigneeOverdue')} 
-      color={AssigneePalette.assigneeOverdue}
+      color={Palette.assigneeGroupType.assigneeOverdue}
       active={id === 'assigneeOverdue'}
       onClick={() => setActiveTab("assigneeOverdue")} />
 
     <NavigationButton id='core.myWork.tab.task.startsToday' 
       values={getGroupCount('assigneeStartsToday')} 
-      color={AssigneePalette.assigneeStartsToday}
+      color={Palette.assigneeGroupType.assigneeStartsToday}
       active={id === 'assigneeStartsToday'}
       onClick={() => setActiveTab("assigneeStartsToday")} />
 
     <NavigationButton id='core.myWork.tab.task.available' 
       values={getGroupCount('assigneeOther')} 
-      color={AssigneePalette.assigneeOther}
+      color={Palette.assigneeGroupType.assigneeOther}
       active={id === 'assigneeOther'}
       onClick={() => setActiveTab("assigneeOther")} />
     

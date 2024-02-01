@@ -6,6 +6,9 @@ import {
   Task, CustomerId, UserId, TaskId, RoleId
 } from 'client';
 
+import { bittersweet, emerald, orange, red, steelblue, ultraviolet } from 'components-colors';
+
+
 export interface SingleEventBody<T extends TaskCommandType, C extends TaskCommand, D> {
   fromCommand: C | undefined;
   toCommand: C;
@@ -111,69 +114,15 @@ export interface TasksPaletteType {
   priority: Record<string, string>;
 }
 
-
-export interface PaletteType {
-  assigneeGroupType: Record<AssigneeGroupType, string>,
-  teamGroupType: Record<TeamGroupType, string>,
-  priority: {
-    'HIGH': string,
-    'LOW': string,
-    'MEDIUM': string
-  },
-  status: {
-    'REJECTED': string,
-    'IN_PROGRESS': string,
-    'COMPLETED': string,
-    'CREATED': string,
-  },
-}
-
+export const _nobody_: RoleUnassigned & OwnerUnassigned = '_nobody_';
 export type RoleUnassigned = "_nobody_";
 export type OwnerUnassigned = "_nobody_";
 
 export type AssigneeGroupType = 'assigneeOverdue' | 'assigneeStartsToday' | 'assigneeOther' | 'assigneeCurrentlyWorking';
 export type TeamGroupType = 'groupOverdue' | 'groupAvailable' | 'groupDueSoon';
-
-
-
-
-
-
-
-export type GroupBy = 'status' | 'owners' | 'roles' | 'priority' | 'none' | 'assignee' | 'team';
-
-export type FilterByStatus = { type: 'FilterByStatus', status: TaskStatus[], disabled: boolean }
-export type FilterByPriority = { type: 'FilterByPriority', priority: TaskPriority[], disabled: boolean }
-export type FilterByOwners = { type: 'FilterByOwners', owners: string[], disabled: boolean }
-export type FilterByRoles = { type: 'FilterByRoles', roles: string[], disabled: boolean }
-export type FilterBy = FilterByStatus | FilterByPriority | FilterByOwners | FilterByRoles;
-
-export interface Group {
-  id: string;
-  type: GroupBy;
-  color?: string;
-  records: TaskDescriptor[];
-}
-
-export interface TaskGroupsAndFilters {
-  groupBy: GroupBy;
-  groups: Group[];
-  filterBy: FilterBy[];
-  searchString: string | undefined;
-
-  withTasks(tasks: TaskDescriptor[]): TaskGroupsAndFilters;
-  withGroupBy(groupBy: GroupBy): TaskGroupsAndFilters;
-  withSearchString(searchString: string): TaskGroupsAndFilters;
-  withFilterByStatus(status: TaskStatus[]): TaskGroupsAndFilters;
-  withFilterByPriority(priority: TaskPriority[]): TaskGroupsAndFilters;
-  withFilterByOwner(owners: string[]): TaskGroupsAndFilters;
-  withFilterByRoles(roles: string[]): TaskGroupsAndFilters;
-}
-
-
-
-
 export type TaskEditEvent = SingleEvent | CollapsedEvent;
+
+
 
 export interface TaskEditContextType {
   loading: boolean;
@@ -193,4 +142,44 @@ export interface TasksContextType {
 
   reload: () => Promise<void>;
   withTasks(tasks: Task[]): void;
+}
+
+export interface PaletteType {
+  assigneeGroupType: Record<AssigneeGroupType, string>,
+  teamGroupType: Record<TeamGroupType, string>,
+  priority: {
+    'HIGH': string,
+    'LOW': string,
+    'MEDIUM': string
+  },
+  status: {
+    'REJECTED': string,
+    'IN_PROGRESS': string,
+    'COMPLETED': string,
+    'CREATED': string,
+  },
+}
+export const Palette: PaletteType = {
+  priority: {
+    'HIGH': bittersweet,
+    'LOW': steelblue,
+    'MEDIUM': emerald
+  },
+  status: {
+    'REJECTED': bittersweet,
+    'IN_PROGRESS': emerald,
+    'COMPLETED': steelblue,
+    'CREATED': ultraviolet,
+  },
+  assigneeGroupType: {
+    assigneeOther: steelblue,
+    assigneeOverdue: red,
+    assigneeStartsToday: orange,
+    assigneeCurrentlyWorking: emerald
+  },
+  teamGroupType: {
+    groupOverdue: red,
+    groupAvailable: steelblue,
+    groupDueSoon: orange
+  },
 }

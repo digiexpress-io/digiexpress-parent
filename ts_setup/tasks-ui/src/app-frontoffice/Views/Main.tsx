@@ -4,7 +4,7 @@ import { SxProps } from '@mui/system';
 
 import Context from 'context';
 import Burger from 'components-burger';
-import { CurrentTenant, DialobList } from 'components-tenant';
+import { CurrentTenant, DialobList } from 'components-dialob';
 import SysConfig from 'components-sys-config';
 import Tasks from 'components-task';
 import Customer from 'components-customer';

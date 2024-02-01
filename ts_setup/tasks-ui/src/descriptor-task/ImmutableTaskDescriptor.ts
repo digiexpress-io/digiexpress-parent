@@ -1,7 +1,6 @@
-import { Task, TaskExtension, TaskPriority, TaskStatus, UserProfileAndOrg, CustomerId } from 'client';
+import { Task, TaskExtension, UserProfileAndOrg, CustomerId } from 'client';
 
 import { TaskDescriptor, AssigneeGroupType, TeamGroupType } from './types';
-import { _nobody_ } from './constants';
 import { getDaysUntilDue, getMyWorkType, getTeamspaceType } from './util';
 
 

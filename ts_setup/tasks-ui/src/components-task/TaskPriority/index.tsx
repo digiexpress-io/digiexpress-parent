@@ -5,10 +5,10 @@ import FlagIcon from '@mui/icons-material/Flag';
 import { FormattedMessage } from 'react-intl';
 
 import Client from 'client';
-import { TaskDescriptor, PriorityPalette, StatusPalette } from 'descriptor-task';
+import { TaskDescriptor, Palette } from 'descriptor-task';
 import { usePopover, TablePopover } from '../TablePopover';
 
-const priorityColors = PriorityPalette;
+const priorityColors = Palette.priority;
 const priorityOptions: Client.TaskPriority[] = ['LOW', 'HIGH', 'MEDIUM'];
 
 function getEmojiFlagSx(priority: Client.TaskPriority): SxProps {
@@ -17,7 +17,7 @@ function getEmojiFlagSx(priority: Client.TaskPriority): SxProps {
 }
 
 function getActiveColor(currentlyShowing: Client.TaskPriority, priority: Client.TaskPriority): string {
-  const selectedItemColor = StatusPalette.IN_PROGRESS;
+  const selectedItemColor = Palette.status.IN_PROGRESS;
   const color = priority === currentlyShowing ? selectedItemColor : "unset";
   return color;
 }

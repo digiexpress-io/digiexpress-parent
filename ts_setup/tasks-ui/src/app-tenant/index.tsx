@@ -3,7 +3,7 @@ import React from 'react';
 import Burger from 'components-burger';
 
 import { Backend, UserProfileAndOrg } from 'client';
-import { TenantProvider } from 'descriptor-tenant';
+import { TenantProvider } from 'descriptor-dialob';
 
 import Views from './Views';
 

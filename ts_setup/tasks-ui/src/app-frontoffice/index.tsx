@@ -5,7 +5,7 @@ import Burger from 'components-burger';
 import { Backend, UserProfileAndOrg } from 'client';
 import { ProjectsProvider } from 'descriptor-project';
 import { TasksProvider } from 'descriptor-task';
-import { TenantProvider } from 'descriptor-tenant';
+import { TenantProvider } from 'descriptor-dialob';
 import { AvatarProvider } from 'descriptor-avatar';
 
 import Views from './Views';

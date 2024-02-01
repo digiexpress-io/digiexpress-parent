@@ -2,7 +2,7 @@
 import React from 'react';
 import { Button, Typography } from '@mui/material';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { Nobody, Palette } from 'descriptor-task';
+import { _nobody_, Palette } from 'descriptor-task';
 import { GroupByTypes } from '../TableContext';
 import { TaskStatus, TaskPriority } from 'client';
 import { useAvatar } from 'descriptor-avatar';
@@ -13,7 +13,7 @@ const TitleButtonOwner: React.FC<{ groupType: GroupByTypes, classifierValue: str
   const backgroundColor = avatar?.color;
 
   return (<Button variant="contained" sx={{ ...sx, backgroundColor }}>
-      {classifierValue === Nobody ? intl.formatMessage({ id: classifierValue }) : classifierValue}
+      {classifierValue === _nobody_ ? intl.formatMessage({ id: classifierValue }) : classifierValue}
   </Button>);
 }
 
@@ -23,7 +23,7 @@ const TitleButtonRole: React.FC<{ groupType: GroupByTypes, classifierValue: stri
   const backgroundColor = avatar?.color;
 
   return (<Button variant="contained" sx={{ ...sx, backgroundColor }}>
-  {classifierValue === Nobody ? intl.formatMessage({ id: classifierValue }) : classifierValue}
+  {classifierValue === _nobody_ ? intl.formatMessage({ id: classifierValue }) : classifierValue}
 </Button>);
 }
 

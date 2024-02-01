@@ -14,7 +14,8 @@ const modules: string[] = [
   'components-stencil',
   'components-sys-config',
   'components-task',
-  'components-tenant',
+  'components-dialob',
+  'components-dialob-composer',
   'components-user-profile',
 
   'descriptor-customer',
@@ -28,6 +29,7 @@ const modules: string[] = [
   'descriptor-grouping',
   'descriptor-tabbing',
   'descriptor-prefs',
+  'descriptor-dialob',
 
   'descriptor-popper',
 

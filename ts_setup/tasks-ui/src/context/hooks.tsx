@@ -7,7 +7,7 @@ import { UserId, RoleId, RepoType } from 'client';
 
 import { ProjectsContextType, ProjectsContext } from 'descriptor-project';
 import { OrgContext, OrgContextType } from 'descriptor-organization';
-import { TenantContext, TenantContextType } from 'descriptor-tenant';
+import { TenantContext, TenantContextType } from 'descriptor-dialob';
 import { TasksContext, TasksContextType, TaskEditContext, TaskEditContextType } from 'descriptor-task';
 import { TenantConfigContext, TenantConfigContextType } from 'descriptor-tenant-config';
 import { saffron } from 'components-colors';
@@ -78,7 +78,7 @@ export const useProjects = () => {
   return result;
 }
 
-export const useTenants = () => {
+export const useDialobTenant = () => {
   const result: TenantContextType = React.useContext(TenantContext);
   return result;
 }

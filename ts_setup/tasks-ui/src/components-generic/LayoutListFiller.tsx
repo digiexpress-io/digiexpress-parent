@@ -2,7 +2,6 @@ import React from 'react';
 import { Typography, Alert } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 
-import Pagination from 'table';
 import { LayoutListItem } from './LayoutListItem';
 
 

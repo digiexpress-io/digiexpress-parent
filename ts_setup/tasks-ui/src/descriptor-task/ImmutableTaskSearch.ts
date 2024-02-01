@@ -1,9 +1,12 @@
 import { TaskPriority, TaskStatus } from 'client';
+import { TaskDescriptor, _nobody_ } from './types';
 
-import { TaskDescriptor, FilterBy, FilterByOwners, FilterByPriority, FilterByRoles, FilterByStatus } from './types';
-import { _nobody_ } from './constants';
-import { applyDescFilters, applySearchString  } from './util';
 
+export type FilterByStatus = { type: 'FilterByStatus', status: TaskStatus[], disabled: boolean }
+export type FilterByPriority = { type: 'FilterByPriority', priority: TaskPriority[], disabled: boolean }
+export type FilterByOwners = { type: 'FilterByOwners', owners: string[], disabled: boolean }
+export type FilterByRoles = { type: 'FilterByRoles', roles: string[], disabled: boolean }
+export type FilterBy = FilterByStatus | FilterByPriority | FilterByOwners | FilterByRoles;
 
 
 export interface TaskSearch {
@@ -223,4 +226,58 @@ function filterItems<T>(previous: T[], next: T[]) {
     }
   }
   return result;
+}
+
+
+function applyDescFilters(desc: TaskDescriptor, filters: readonly FilterBy[]): boolean {
+  for (const filter of filters) {
+    if (filter.disabled) {
+      continue;
+    }
+    if (!applyDescFilter(desc, filter)) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+function applySearchString(desc: TaskDescriptor, searchString: string): boolean {
+  const description: boolean = desc.description?.toLowerCase().indexOf(searchString) > -1;
+  return desc.title.toLowerCase().indexOf(searchString) > -1 || description;
+}
+
+function applyDescFilter(desc: TaskDescriptor, filter: FilterBy): boolean {
+  switch (filter.type) {
+    case 'FilterByOwners': {
+      for (const owner of filter.owners) {
+        if (desc.assignees.length === 0 && owner === _nobody_) {
+          continue;
+        }
+        if (!desc.assignees.includes(owner)) {
+          return false;
+        }
+      }
+      return true;
+    }
+    case 'FilterByRoles': {
+      for (const role of filter.roles) {
+        if (desc.roles.length === 0 && role === _nobody_) {
+          continue;
+        }
+        if (!desc.roles.includes(role)) {
+          return false;
+        }
+      }
+      return true;
+    }
+    case 'FilterByStatus': {
+      return filter.status.includes(desc.status);
+    }
+    case 'FilterByPriority': {
+      return filter.priority.includes(desc.priority);
+    }
+  }
+  // @ts-ignore
+  throw new Error("unknow filter" + filter)
 }

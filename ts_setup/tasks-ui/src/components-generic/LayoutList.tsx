@@ -1,10 +1,7 @@
 import React from 'react';
-import { Stack, Grid, Typography, TablePagination, Alert } from '@mui/material';
+import { Stack, Grid } from '@mui/material';
 
-import { FormattedMessage } from 'react-intl';
-
-import { NavigationSticky, NavigationButton } from 'components-generic';
-import { TaskDescriptor } from 'descriptor-task';
+import { NavigationSticky } from 'components-generic';
 import { wash_me } from 'components-colors';
 
 export const LayoutList: React.FC<{
@@ -19,10 +16,7 @@ export const LayoutList: React.FC<{
   const {navigation, pagination, items, active} = slots;
 
   return (<>
-    <NavigationSticky>
-      {navigation}
-    </NavigationSticky>
-
+    { navigation ? <NavigationSticky>{navigation}</NavigationSticky> : null }
     <Grid container>
       <Grid item md={8} lg={8}>
         <Stack sx={{ backgroundColor: wash_me }}>{items}</Stack>

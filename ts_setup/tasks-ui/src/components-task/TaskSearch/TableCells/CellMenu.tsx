@@ -4,7 +4,7 @@ import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { FormattedMessage } from 'react-intl';
 
-import { TaskDescriptor, Group } from 'descriptor-task';
+import { TaskDescriptor } from 'descriptor-task';
 import { useTableCellPopover, StyledTableCell } from 'components-generic';
 import Customer from 'components-customer';
 
