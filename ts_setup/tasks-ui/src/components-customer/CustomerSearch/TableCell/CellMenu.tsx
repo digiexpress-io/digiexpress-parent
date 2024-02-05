@@ -8,6 +8,7 @@ import { CustomerDescriptor } from 'descriptor-customer';
 import { useTableCellPopover, StyledTableCell } from 'components-generic';
 
 import CellHoverButton from './CellMenuButton';
+import { CustomerDetailsDialog } from '../../CustomerDetails'
 
 const StyledBox = styled(Box)(({ theme }) => ({
   color: theme.palette.error.main,
@@ -85,12 +86,7 @@ const FormattedCell: React.FC<{
   return (
     <StyledTableCell width="35px">
       <Box width="35px" justifyContent='right'> {/* Box is needed to prevent table cell resize on hover */}
-
-        { /*
-        <TaskEditDialog open={edit} onClose={handleEndEdit} task={row} />
-        <Customer.CustomerDetailsDialog open={crm} onClose={handleCrm} task={row} />
-  */}
-
+        <CustomerDetailsDialog open={crm} onClose={handleCrm} customer={row.id} />
         {active &&
           <CellMenu
             onEdit={handleStartEdit}

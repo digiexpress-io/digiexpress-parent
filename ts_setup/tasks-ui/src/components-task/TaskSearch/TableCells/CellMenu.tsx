@@ -89,7 +89,7 @@ const FormattedCell: React.FC<{
     <StyledTableCell width="35px">
       <Box width="35px" justifyContent='right'> {/* Box is needed to prevent table cell resize on hover */}
         <TaskEditDialog open={edit} onClose={handleEndEdit} task={row} />
-        <Customer.CustomerDetailsDialog open={crm} onClose={handleCrm} task={row} />
+        <Customer.CustomerDetailsDialog open={crm} onClose={handleCrm} customer={row.customerId} />
         {active &&
           <CellMenu
             onEdit={handleStartEdit}

@@ -97,7 +97,7 @@ const TaskItemActive: React.FC<{ task: TaskDescriptor | undefined }> = ({ task }
     const alert = getTaskAlert(task);
 
     return (<>
-      <Customer.CustomerDetailsDialog open={crmOpen} onClose={handleCrm} task={task} />
+      <Customer.CustomerDetailsDialog open={crmOpen} onClose={handleCrm} customer={task.customerId} />
       <TaskEditDialog open={taskEditOpen} onClose={handleTaskEdit} task={task} />
       <StyledStack>
 

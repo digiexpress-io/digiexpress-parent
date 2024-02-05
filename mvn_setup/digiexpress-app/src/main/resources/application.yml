@@ -43,7 +43,7 @@ tenant:
 "%dev": 
   quarkus:
     log:
-      level: DEBUG
+      level: ERROR
       category:
         io.resys:
           level: DEBUG
@@ -53,7 +53,7 @@ tenant:
 "%test":
   quarkus:
     log:
-      level: DEBUG
+      level: ERROR
       category:
         io.resys:
           level: DEBUG

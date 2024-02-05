@@ -3,15 +3,16 @@ import { Box, Stack, Grid, Typography, CircularProgress } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 import StyledFullScreenDialog from '../../components-task/Dialogs'; //TODO fullscreen dialog
 
-import Fields from './CustomerFields';
+
 import Context from 'context';
-import { TaskDescriptor, TaskEditProvider } from 'descriptor-task';
 import Burger from 'components-burger';
 import { ImmutableCustomerDescriptor, CustomerDescriptor, ImmutableCustomerStore } from 'descriptor-customer';
 
 
+import Fields from './CustomerFields';
 
-const Left: React.FC<{ customer: CustomerDescriptor, task: TaskDescriptor }> = ({ customer, task }) => {
+
+const Left: React.FC<{ customer: CustomerDescriptor }> = ({ customer }) => {
   return (
     <Stack spacing={1} direction='column' pt={1}>
       <Burger.Section>
@@ -71,22 +72,20 @@ const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   )
 }
 
-const CustomerDetailsDialog: React.FC<{ open: boolean, onClose: () => void, task?: TaskDescriptor }> = (props) => {
+const CustomerDetailsDialog: React.FC<{ open: boolean, onClose: () => void, customer: string | undefined }> = (props) => {
   const tasks = Context.useTasks();
   const backend = Context.useBackend();
   const [customer, setCustomer] = React.useState<CustomerDescriptor>();
 
   React.useEffect(() => {
-    const id = props.task?.customerId;
-    setCustomer(undefined);
-
+    const id = props.customer;
     if (!id) {
       return;
     }
     new ImmutableCustomerStore(backend.store).getCustomer(id).then(customer => setCustomer(new ImmutableCustomerDescriptor(customer)));
-  }, [props.task?.customerId]);
+  }, [props.customer]);
 
-  if (!props.open || !props.task || !props.task.customerId) {
+  if (!props.open) {
     return null;
   }
 
@@ -99,16 +98,14 @@ const CustomerDetailsDialog: React.FC<{ open: boolean, onClose: () => void, task
   }
 
   return (
-    <TaskEditProvider task={props.task.entry}>
       <StyledFullScreenDialog
         header={<Header onClose={props.onClose} />}
         footer={<Footer onClose={handleClose} />}
-        left={<Left customer={customer} task={props.task} />}
+        left={<Left customer={customer}/>}
         right={<Right customer={customer} />}
         onClose={props.onClose}
         open={props.open}
       />
-    </TaskEditProvider>
   );
 }
 
