@@ -1,10 +1,10 @@
 import React from 'react';
 import { Box, TablePagination, TableContainer, Table } from '@mui/material';
 
-import { UserProfile } from 'client';
+
 import Pagination from 'table';
 
-import { UserProfileDescriptor, UserProfileDescriptorImpl } from 'descriptor-user-profile';
+import { UserProfileDescriptor, ImmutableUserProfileDescriptor, UserProfile } from 'descriptor-user-profile';
 import { PopperProvider, usePopper } from 'descriptor-popper';
 
 
@@ -52,7 +52,7 @@ class ImmutableUserProfileSearchState implements UserProfileSearchState {
     return new ImmutableUserProfileSearchState({ ...this.clone(), searchString, isSearchStringValid });
   }
   withRecords(searchResult: UserProfile[]): UserProfileSearchState {
-    const records: UserProfileDescriptor[] = searchResult.map(customer => new UserProfileDescriptorImpl(customer));
+    const records: UserProfileDescriptor[] = searchResult.map(customer => new ImmutableUserProfileDescriptor(customer));
     return new ImmutableUserProfileSearchState({ ...this.clone(), records });
   }
 

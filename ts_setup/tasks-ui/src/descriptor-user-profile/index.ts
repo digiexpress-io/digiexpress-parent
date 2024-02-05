@@ -1,3 +1,4 @@
 
-export { UserProfileDescriptorImpl } from './types-impl';
-export * from './types';
+export * from './ImmutableUserProfileDescriptor';
+export * from './ImmutableUserProfileStore';
+export * from './profile-types';

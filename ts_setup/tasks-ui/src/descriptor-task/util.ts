@@ -1,7 +1,8 @@
-import { UserProfileAndOrg } from 'client';
-import { Task } from './backend-types';
-
 import { parseISO, isAfter, isEqual, differenceInCalendarDays, differenceInDays } from 'date-fns';
+
+import { UserProfileAndOrg } from 'descriptor-user-profile';
+
+import { Task } from './backend-types';
 import { AssigneeGroupType, TeamGroupType, _nobody_ } from './descriptor-types';
 
 export function getDaysUntilDue(task: Task, today: Date) {

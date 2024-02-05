@@ -2,7 +2,7 @@ import React from 'react';
 import { Grid, Stack, Typography, Paper, CircularProgress, Box } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 import { FirstName, LastName, EmailAddress, NotificationSettings } from './UserProfileEditFields';
-import { UserProfileDescriptor, UserProfileDescriptorImpl } from 'descriptor-user-profile';
+import { UserProfileDescriptor, ImmutableUserProfileDescriptor } from 'descriptor-user-profile';
 import { UserAvatar } from './UserAvatar';
 import Context from 'context';
 
@@ -32,7 +32,7 @@ const CurrentUserProfile: React.FC<{}> = () => {
 
   React.useEffect(() => {
     backend.currentUserProfile().then(userProfile => {
-      setState(new UserProfileDescriptorImpl(userProfile.user));
+      setState(new ImmutableUserProfileDescriptor(userProfile.user));
       setLoading(false);
     });
   }, []);

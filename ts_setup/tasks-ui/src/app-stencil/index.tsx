@@ -1,8 +1,9 @@
 import React from 'react';
 
 import Burger from 'components-burger';
-import { Backend, UserProfileAndOrg, TenantConfig } from 'client';
+import { Backend, TenantConfig } from 'client';
 import { Main, Secondary, Toolbar, Composer, StencilClient } from 'components-stencil';
+import { UserProfileAndOrg } from 'descriptor-user-profile';
 
 
 function appStencil(backend: Backend, profile: UserProfileAndOrg, tenantConfig: TenantConfig): Burger.App<{}, {

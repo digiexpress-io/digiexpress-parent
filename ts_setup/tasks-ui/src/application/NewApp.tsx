@@ -9,17 +9,19 @@ import Burger, { siteTheme } from 'components-burger';
 import TaskClient, { TenantConfig } from 'client';
 import Context from 'context';
 import { TenantConfigProvider } from 'descriptor-tenant-config';
-import Connection from './Connection';
-import messages from './intl';
-import Provider from './Provider';
-import AppTasks from 'app-tasks';
+import { UserProfileAndOrg } from 'descriptor-user-profile';
+
 import AppTenant from 'app-tenant';
-import AppProjects from 'app-projects';
 import AppStencil from 'app-stencil';
 import AppHdes from 'app-hdes';
 import AppFrontoffice from 'app-frontoffice';
 import LoggerFactory from 'logger';
+
 import { getLogProps } from './_log_props_';
+import Connection from './Connection';
+import messages from './intl';
+import Provider from './Provider';
+
 
 window.LOGGER = {
   config: {
@@ -85,7 +87,7 @@ const store: TaskClient.Store = new TaskClient.DefaultStore({
 const backend = new TaskClient.ServiceImpl(store)
 
 
-const TenantConfigSetup: React.FC<{ profile: TaskClient.UserProfileAndOrg }> = ({ profile }) => {
+const TenantConfigSetup: React.FC<{ profile: UserProfileAndOrg }> = ({ profile }) => {
   const { tenantConfig } = Context.useTenantConfig();
   if (!tenantConfig) {
     throw new Error("Tenant must be defined!");
@@ -97,16 +99,15 @@ const TenantConfigSetup: React.FC<{ profile: TaskClient.UserProfileAndOrg }> = (
 
   const hdes: Burger.App<{}, any> = React.useMemo(() => AppHdes(service, profile, tenantConfig!), [service, profile, tenantConfig]);
   const stencil: Burger.App<{}, any> = React.useMemo(() => AppStencil(service, profile, tenantConfig!), [service, profile, tenantConfig]);
-  const tasks: Burger.App<{}, any> = React.useMemo(() => AppTasks(service, profile), [service, profile]);
-  const projects: Burger.App<{}, any> = React.useMemo(() => AppProjects(service, profile), [service, profile]);
+  const dialob: Burger.App<{}, any> = React.useMemo(() => AppTenant(service, profile), [service, profile]);
   const frontoffice: Burger.App<{}, any> = React.useMemo(() => AppFrontoffice(service, profile), [service, profile]);
-  const tenant: Burger.App<{}, any> = React.useMemo(() => AppTenant(service, profile), [service, profile]);
+
   const appId = tenantConfig.preferences.landingApp;
 
   return (<Provider service={service} profile={profile}>
     <Burger.Provider children={
       [
-        tenant, tasks, projects, stencil, hdes, frontoffice
+        stencil, hdes, dialob, frontoffice
       ]
     } secondary="toolbar.activities" drawerOpen appId={appId} />
   </Provider>)
@@ -119,7 +120,7 @@ const DialobOnlySetup: React.FC<{}> = () => {
     return backend;
   }, []);
 
-  const profile: TaskClient.UserProfileAndOrg = React.useMemo(() => {
+  const profile: UserProfileAndOrg = React.useMemo(() => {
     return {
       user: {
         id: '',

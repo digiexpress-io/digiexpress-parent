@@ -2,7 +2,7 @@ import React from 'react';
 import { TableHead, TableCell, TableRow, Box } from '@mui/material';
 
 import Context from 'context';
-import { UserProfileDescriptor } from 'descriptor-user-profile';
+import { UserProfileDescriptor, ImmutableUserProfileStore } from 'descriptor-user-profile';
 import { NavigationSticky, FilterByString, TableBody, TableFillerRows } from 'components-generic';
 import { cyan } from 'components-colors';
 
@@ -90,7 +90,7 @@ const UserProfiles: React.FC<{}> = () => {
   React.useEffect(() => {
     if (isSearchStringValid) {
       setLoading(true);
-      backend.userProfile.findAllUserProfiles().then(newRecords => {
+      new ImmutableUserProfileStore(backend.store).findAllUserProfiles().then(newRecords => {
         setState(prev => prev.withRecords(newRecords));
         setLoading(false);
       });

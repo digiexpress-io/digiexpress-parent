@@ -1,6 +1,8 @@
 import React from 'react';
 
-import { TenantEntry, Tenant, TenantId, Backend, UserProfileAndOrg } from 'client';
+import { TenantEntry, Tenant, TenantId, Backend } from 'client';
+import { UserProfileAndOrg } from 'descriptor-user-profile';
+
 
 import { TenantContextType } from './types';
 import { ImmutableTenantState } from './ImmutableTenantState';

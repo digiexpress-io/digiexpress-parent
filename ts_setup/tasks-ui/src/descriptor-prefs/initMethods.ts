@@ -1,6 +1,5 @@
-
-
-import { UserProfile, Backend, UpsertUiSettings, UiSettings } from 'client';
+import { Backend } from 'client';
+import { UserProfile, UpsertUiSettings, UiSettings, ImmutableUserProfileStore } from 'descriptor-user-profile';
 
 
 import { PreferenceInit, VisibilityRule, SortingRule, DataId, ConfigRule } from './pref-types';
@@ -31,7 +30,7 @@ async function storeSettings(backend: Backend, userId: string, pref: ImmutablePr
     uiSettings
   };
   try {
-    await backend.userProfile.updateUserProfile(userId, [command]);
+    await new ImmutableUserProfileStore(backend.store).updateUserProfile(userId, [command]);
     _logger.target(command).debug("stored ui settings");
   } catch(error) {
     _logger.target(command).warn("failed to store ui settings");

@@ -9,18 +9,6 @@ import {
   Org, User, Role, UserId, RoleId
 } from './org-types';
 
-import {
-  UserProfileAndOrg
-} from './profile-types';
-
-import {
-  Project, ProjectId,
-  ChangeProjectInfo,
-  AssignProjectUsers,
-  CreateProject,
-  ArchiveProject,
-  ChangeRepoType
-} from './project-types';
 
 import {
   FormTechnicalName, FormTitle,
@@ -28,10 +16,6 @@ import {
   TenantId, TenantStore,
   DialobTag, DialobForm, DialobVariable, DialobSession
 } from './tenant-types';
-
-import {
-  UserProfile, NotificationSetting, ChangeUserDetailsFirstName, UpsertUiSettings, UiSettings
-} from './profile-types';
 
 import {
   ServiceErrorMsg,
@@ -47,17 +31,6 @@ import {
 declare namespace TaskClient {
   export type {
     DialobTag, DialobForm,
-    UserProfile,
-    Project, ProjectId,
-    ChangeProjectInfo,
-    AssignProjectUsers,
-    CreateProject,
-    ArchiveProject,
-    ChangeRepoType,
-
-    UserProfileAndOrg, NotificationSetting, ChangeUserDetailsFirstName,
-
-
     BackendError, Backend, StoreConfig, Store,
     Org, User, Role,
     UserId, RoleId,
@@ -75,19 +48,10 @@ declare namespace TaskClient {
 }
 
 export type {
-  UpsertUiSettings, UiSettings,
-  UserProfileAndOrg, NotificationSetting, ChangeUserDetailsFirstName,
-  Project, ProjectId, RepoType,
-  UserProfile,
+  RepoType,
   BackendError, Backend, StoreConfig, Store, StoreError,
   Org, User, Role,
   UserId, RoleId,
-
-  ChangeProjectInfo,
-  AssignProjectUsers,
-  CreateProject,
-  ArchiveProject,
-  ChangeRepoType,
 
   FormTechnicalName, FormTitle,
   Tenant, TenantEntry,

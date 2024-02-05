@@ -2,10 +2,13 @@ import React from 'react';
 import { TextField, FormControl, FormControlLabel, FormGroup, Switch, Typography, Stack, Divider, styled, SwitchProps } from '@mui/material';
 
 import { useIntl } from 'react-intl';
-import { UserProfileDescriptor } from 'descriptor-user-profile'
-import Client from 'client';
+
+
 import Context from 'context';
+import { UserProfileDescriptor, ChangeUserDetailsFirstName, ImmutableUserProfileStore } from 'descriptor-user-profile'
 import { blue_mud2, grey, purple } from 'components-colors';
+
+
 
 const FirstName: React.FC<{ init: UserProfileDescriptor }> = ({ init }) => {
 
@@ -18,12 +21,12 @@ const FirstName: React.FC<{ init: UserProfileDescriptor }> = ({ init }) => {
   }
 
   async function handleChange() {
-    const command: Client.ChangeUserDetailsFirstName = {
+    const command: ChangeUserDetailsFirstName = {
       commandType: 'ChangeUserDetailsFirstName',
       id: init.entry.id,
       firstName
     };
-    await backend.userProfile.updateUserProfile(init.entry.id, [command]);
+    await new ImmutableUserProfileStore(backend.store).updateUserProfile(init.entry.id, [command]);
   }
 
   return (<TextField InputProps={{ disableUnderline: true }} variant='standard'

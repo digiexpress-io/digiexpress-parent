@@ -27,7 +27,6 @@ namespace Context {
   export const useTenantConfig = Hooks.useTenantConfig;
   export const useTasks = Hooks.useTasks;
   export const useDialobTenant = Hooks.useDialobTenant;
-  export const useProjects = Hooks.useProjects;
   export const useOrg = Hooks.useOrg;
   export const useAssignees = Hooks.useAssignees;
   export const useProjectUsers = Hooks.useProjectUsers;

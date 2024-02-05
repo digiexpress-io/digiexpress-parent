@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { UserProfileAndOrg } from 'client';
+import { UserProfileAndOrg } from 'descriptor-user-profile';
 import { OrgState, OrgDispatch, OrgMutator, OrgContextType } from './org-ctx-types';
 import { OrgMutatorBuilderImpl, } from './org-ctx-impl';
 import { Backend } from 'client';

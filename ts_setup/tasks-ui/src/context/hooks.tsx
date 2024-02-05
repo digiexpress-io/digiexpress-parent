@@ -5,7 +5,6 @@ import { ImmutableTabData } from './composer-ctx-impl';
 import { ComposerContext, ComposerContextType, ClientContextType, ClientContext } from './client-ctx';
 import { UserId, RoleId, RepoType } from 'client';
 
-import { ProjectsContextType, ProjectsContext } from 'descriptor-project';
 import { OrgContext, OrgContextType } from 'descriptor-organization';
 import { TenantContext, TenantContextType } from 'descriptor-dialob';
 import { TasksContext, TasksContextType, TaskEditContext, TaskEditContextType } from 'descriptor-task';
@@ -71,10 +70,6 @@ export const useTaskEdit = () => {
 
 export const useTasks = () => {
   const result: TasksContextType = React.useContext(TasksContext);
-  return result;
-}
-export const useProjects = () => {
-  const result: ProjectsContextType = React.useContext(ProjectsContext);
   return result;
 }
 

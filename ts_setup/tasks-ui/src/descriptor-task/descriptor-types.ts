@@ -6,9 +6,7 @@ import {
   Task, TaskId, TaskStore, TaskUpdateCommand
 } from './backend-types';
 
-import {
-  UserId, RoleId, UserProfileAndOrg
-} from 'client';
+import { UserId, RoleId, UserProfileAndOrg } from 'descriptor-user-profile';
 
 import { bittersweet, emerald, orange, red, steelblue, ultraviolet } from 'components-colors';
 export type CustomerId = string;

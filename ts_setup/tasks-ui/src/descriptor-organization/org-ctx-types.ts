@@ -1,4 +1,5 @@
-import { Org, User, UserId, Role, RoleId, UserProfileAndOrg } from 'client';
+import { Org, User, UserId, Role, RoleId } from 'client';
+import { UserProfileAndOrg } from 'descriptor-user-profile';
 
 export interface OrgContextType {
   setState: OrgDispatch;

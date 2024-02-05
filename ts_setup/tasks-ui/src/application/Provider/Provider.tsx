@@ -1,11 +1,13 @@
 import React from 'react';
 
 import { initSession, SessionData, ActionsImpl } from 'context';
-
-import { UserProfileAndOrg, Backend } from 'client';
+import { Backend } from 'client';
 import { ClientContext, ComposerContext } from 'context/client-ctx';
+
+import { UserProfileAndOrg } from 'descriptor-user-profile';
 import { OrgProvider } from 'descriptor-organization';
 import LoggerFactory from 'logger';
+
 
 const log = LoggerFactory.getLogger();
 

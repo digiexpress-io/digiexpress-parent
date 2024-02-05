@@ -1,7 +1,8 @@
 import { Dispatch, SetStateAction } from 'react';
 import { DocumentId, Document, DocumentUpdate, Session, PageUpdate, TabBody, TabEntity, Actions } from './composer-ctx-types';
 
-import type { UserProfileAndOrg, Backend } from 'client';
+import type { Backend } from 'client';
+import { UserProfileAndOrg } from 'descriptor-user-profile';
 
 class SiteCache {
   private _site: UserProfileAndOrg;

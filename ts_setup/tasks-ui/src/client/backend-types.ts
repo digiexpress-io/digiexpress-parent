@@ -1,8 +1,6 @@
-import { UserProfileAndOrg } from './profile-types';
-import { ProjectStore } from './project-types';
+import { UserProfileAndOrg } from 'descriptor-user-profile';
 import { TenantStore } from './tenant-types';
 import { Org, User } from './org-types';
-import { UserProfileStore } from './profile-types';
 import { TenantConfig, RepoType } from './tenant-config-types';
 
 
@@ -18,9 +16,7 @@ export type Health = {
 export interface Backend {
   store: Store;
   config: StoreConfig;
-  project: ProjectStore;
   tenant: TenantStore;
-  userProfile: UserProfileStore;
 
   currentUserProfile(): Promise<UserProfileAndOrg>;
   currentTenant(): Promise<TenantConfig>;

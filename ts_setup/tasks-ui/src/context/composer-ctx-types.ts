@@ -1,13 +1,9 @@
 import Burger from 'components-burger';
+import { UserProfileAndOrg } from 'descriptor-user-profile';
 
-import type { UserProfileAndOrg } from 'client';
-import type { Task } from 'descriptor-task';
 
 export type DocumentId = string;
-
-export type Document =
-  { kind: 'HEAD', id: string, delegate: UserProfileAndOrg } |
-  { kind: 'TASK', id: string, delegate: Task };
+export type Document = { kind: 'HEAD', id: string, delegate: UserProfileAndOrg };
 
 export type DocumentUpdate = {};
 

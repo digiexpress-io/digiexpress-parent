@@ -1,8 +1,9 @@
 import React from 'react';
 
 import Burger from 'components-burger';
-import { Backend, UserProfileAndOrg, TenantConfig } from 'client';
+import { Backend, TenantConfig } from 'client';
 import Client, { Main, Secondary, Toolbar, ComposerProvider } from 'components-hdes/core';
+import { UserProfileAndOrg } from 'descriptor-user-profile';
 
 
 function appHdes(backend: Backend, profile: UserProfileAndOrg, tenantConfig: TenantConfig): Burger.App<{}, {

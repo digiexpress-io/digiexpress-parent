@@ -2,7 +2,7 @@ import React from 'react';
 import { CircularProgress } from '@mui/material';
 
 import Context from 'context';
-import { UserProfile } from 'client';
+import { UserProfile } from 'descriptor-user-profile';
 
 import { PreferenceContextType, PreferenceInit } from './pref-types';
 import { WithSorting, WithConfig, initWithConfig, WithVisibility, WithVisibleFields, initPreference, initWithSorting, initWithVisibility, initWithVisibleFields } from './initMethods';

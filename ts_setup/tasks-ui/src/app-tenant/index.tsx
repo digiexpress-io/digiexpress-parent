@@ -2,10 +2,11 @@ import React from 'react';
 
 import Burger from 'components-burger';
 
-import { Backend, UserProfileAndOrg } from 'client';
+import { Backend } from 'client';
 import { TenantProvider } from 'descriptor-dialob';
 
 import Views from './Views';
+import { UserProfileAndOrg } from 'descriptor-user-profile';
 
 
 function appTenant(backend: Backend, profile: UserProfileAndOrg): Burger.App<{}, { backend: Backend, profile: UserProfileAndOrg }> {

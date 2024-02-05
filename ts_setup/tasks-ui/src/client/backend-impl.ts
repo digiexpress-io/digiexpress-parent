@@ -1,8 +1,9 @@
 import { Backend, Store, Health } from './backend-types';
-import { ProjectId, Project, ProjectPagination, ProjectStore, ProjectUpdateCommand, CreateProject } from './project-types';
 import { Tenant, TenantEntry, TenantStore, TenantEntryPagination, DialobTag, DialobForm, DialobSession, FormTechnicalName, TenantId, FormId, CreateFormRequest, DialobFormResponse } from './tenant-types';
 import { TenantConfig } from 'client';
-import type { UserProfileAndOrg, UserProfileStore, UserProfile, UserProfileUpdateCommand } from './profile-types';
+
+import { UserProfile, UserProfileAndOrg} from 'descriptor-user-profile'
+
 import type { User, Org } from './org-types';
 import { mockOrg } from './client-mock';
 
@@ -33,28 +34,6 @@ export class ServiceImpl implements Backend {
       deleteDialobForm: (formName: string, tenantId?: string) => this.deleteDialobForm(formName, tenantId),
     };
   }
-  get project(): ProjectStore {
-    return {
-      getActiveProjects: () => this.getActiveProjects(),
-      getActiveProject: (id: ProjectId) => this.getActiveProject(id),
-      updateActiveProject: (id: ProjectId, commands: ProjectUpdateCommand<any>[]) => this.updateActiveProject(id, commands),
-      createProject: (commands: CreateProject) => this.createProject(commands),
-    };
-  }
-  get userProfile(): UserProfileStore {
-    return {
-      getUserProfileById: (id: string) => this.getUserProfile(id),
-      findAllUserProfiles: () => this.findUserProfiles(),
-      updateUserProfile: (profileId: string, commands: UserProfileUpdateCommand<any>[]) => this.updateActiveUserProfile(profileId, commands)
-    };
-  }
-  async getUserProfile(id: string): Promise<UserProfile> {
-    return await this._store.fetch<UserProfile>(`userprofiles/${id}`, { repoType: 'USER_PROFILE' });
-  }
-  async findUserProfiles(): Promise<UserProfile[]> {
-    return await this._store.fetch<UserProfile[]>(`userprofiles`, { repoType: 'USER_PROFILE' });
-  }
-
   async health(): Promise<Health> {
     try {
       await this._store.fetch<{}>('config/health', { repoType: 'HEALTH' });
@@ -185,46 +164,6 @@ export class ServiceImpl implements Backend {
       return result.filter(q => q.metadata.formId === props.formId && q.metadata.tenantId === props.tenantId);
     }
   }
-
-  async updateActiveUserProfile(profileId: string, commands: UserProfileUpdateCommand<any>[]): Promise<UserProfile> {
-    return await this._store.fetch<UserProfile>(`userprofiles/${profileId}`, {
-      method: 'PUT',
-      body: JSON.stringify(commands),
-      repoType: 'USER_PROFILE'
-    });
-  }
-
-  async getActiveProjects(): Promise<ProjectPagination> {
-    const projects = await this._store.fetch<object[]>(`tenants`, { repoType: 'TENANT' });
-
-    return {
-      page: 1,
-      total: { pages: 1, records: projects.length },
-      records: projects as any
-    }
-  }
-
-  getActiveProject(id: ProjectId): Promise<Project> {
-    return this._store.fetch<Project>(`tenants/${id}`, { repoType: 'TENANT' });
-  }
-
-  async createProject(commands: CreateProject): Promise<Project> {
-    return await this._store.fetch<Project>(`tenants`, {
-      method: 'POST',
-      body: JSON.stringify([commands]),
-      repoType: 'TENANT'
-    });
-  }
-
-  async updateActiveProject(id: ProjectId, commands: ProjectUpdateCommand<any>[]): Promise<Project> {
-    return await this._store.fetch<Project>(`tenants/${id}`, {
-      method: 'PUT',
-      body: JSON.stringify(commands),
-      repoType: 'TENANT'
-    });
-  }
-
-
   async org(): Promise<{ org: Org, user: User }> {
     const user = await this._store.fetch<UserProfile>(`config/current-user-profile`, { repoType: 'CONFIG' })
     return {

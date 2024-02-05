@@ -1,4 +1,4 @@
-import { UserId } from 'client';
+import { UserId } from 'descriptor-user-profile';
 import { TaskEditEvent, SingleEvent, AssignTaskEventBody, TaskDescriptor, SingleEventDiff } from './descriptor-types';
 import { TaskCommand, TaskTransaction } from './backend-types';
 
