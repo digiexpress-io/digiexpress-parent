@@ -4,7 +4,7 @@ import { TableHead, TableCell, TableRow, Box } from '@mui/material';
 import Context from 'context';
 import { UserProfileDescriptor, ImmutableUserProfileStore } from 'descriptor-user-profile';
 import { NavigationSticky, FilterByString, TableBody, TableFillerRows } from 'components-generic';
-import { cyan } from 'components-colors';
+import { wash_me } from 'components-colors';
 
 import { UserProfileSearchState, CustomerTable, initUserProfileSearchState, TableConfigProps } from './table-ctx';
 import { TableTitle } from './TableTitle';
@@ -21,7 +21,7 @@ function getRowBackgroundColor(index: number): string {
   const isOdd = index % 2 === 1;
 
   if (isOdd) {
-    return cyan;
+    return wash_me;
   }
   return 'background.paper';
 }
