@@ -8,10 +8,10 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import QuestionAnswerOutlinedIcon from '@mui/icons-material/QuestionAnswerOutlined';
 import { FormattedMessage } from 'react-intl';
 
-import { TenantEntryDescriptor } from 'descriptor-dialob';
+import { TenantEntryDescriptor, DialobTag, DialobForm, DialobVariable, DialobSession, ImmutableTenantStore } from 'descriptor-dialob';
 import Burger from 'components-burger';
 import Context from 'context';
-import { DialobTag, DialobForm, DialobVariable, DialobSession } from 'client';
+
 import DialobDeleteDialog from '../DialobDelete';
 import DialobSessionsDialog from '../DialobSessions';
 import DialobCopyDialog from '../DialobCopy';
@@ -54,7 +54,7 @@ const DialobFormTags: React.FC<{ entry: TenantEntryDescriptor }> = ({ entry }) =
   const [tags, setTags] = React.useState<DialobTag[]>([]);
 
   React.useEffect(() => {
-    backend.tenant.getDialobTags(entry?.formName).then(tags => {
+    new ImmutableTenantStore(backend.store).getDialobTags(entry?.formName).then(tags => {
       setTags(tags);
       setLoading(false);
     });
@@ -80,7 +80,7 @@ const DialobFormLocales: React.FC<{ entry: TenantEntryDescriptor }> = ({ entry }
 
 
   React.useEffect(() => {
-    backend.tenant.getDialobForm(entry.formName).then(form => {
+    new ImmutableTenantStore(backend.store).getDialobForm(entry.formName).then(form => {
       setLocales(form.metadata.languages);
       setLoading(false);
     });
@@ -106,7 +106,7 @@ const DialobFormLabels: React.FC<{ entry: TenantEntryDescriptor }> = ({ entry })
 
 
   React.useEffect(() => {
-    backend.tenant.getDialobForm(entry.formName).then(form => {
+    new ImmutableTenantStore(backend.store).getDialobForm(entry.formName).then(form => {
       setLabels(form.metadata.labels);
       setLoading(false);
     });
@@ -134,7 +134,7 @@ const DialobFormVariables: React.FC<{ entry: TenantEntryDescriptor }> = ({ entry
   const [variables, setVariables] = React.useState<DialobVariable[] | undefined>(undefined);
 
   React.useEffect(() => {
-    backend.tenant.getDialobForm(entry.formName).then(data => {
+    new ImmutableTenantStore(backend.store).getDialobForm(entry.formName).then(data => {
       setVariables(data.variables);
       setLoading(false);
     });
@@ -195,8 +195,9 @@ const DialobItemActive: React.FC<DialobItemActiveProps> = ({ entry, setActiveDia
 
   React.useEffect(() => {
     if (entry?.formName) {
-      backend.tenant.getDialobForm(entry.formName).then((form) => {
-        backend.tenant.getDialobSessions({ formId: form._id, technicalName: entry.formName, tenantId: entry.tenantId }).then(sessions => {
+      const store = new ImmutableTenantStore(backend.store);
+      store.getDialobForm(entry.formName).then((form) => {
+        store.getDialobSessions({ formId: form._id, technicalName: entry.formName, tenantId: entry.tenantId }).then(sessions => {
           setSessions(sessions);
           setForm(form)
         })

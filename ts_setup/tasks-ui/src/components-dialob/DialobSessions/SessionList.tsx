@@ -3,14 +3,15 @@ import { Stack, Grid, Typography, TablePagination, Alert, Box, AppBar, Toolbar, 
 
 import { FormattedMessage } from 'react-intl';
 import Pagination from 'table';
-import { initTable } from './types';
-import { StyledStackItem } from './SessionListStyles';
-import { TenantEntryDescriptor } from 'descriptor-dialob';
+import { TenantEntryDescriptor, DialobForm, DialobSession } from 'descriptor-dialob';
 
-import { SessionItem } from './SessionItem';
-import { DialobForm, DialobSession } from 'client';
 import Burger from 'components-burger';
 import { wash_me } from 'components-colors';
+
+import { initTable } from './types';
+import { StyledStackItem } from './SessionListStyles';
+import { SessionItem } from './SessionItem';
+
 
 const SessionHeaders: React.FC<{ entry: TenantEntryDescriptor }> = ({ entry }) => {
   return (

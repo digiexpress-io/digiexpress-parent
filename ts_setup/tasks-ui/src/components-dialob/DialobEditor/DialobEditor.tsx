@@ -1,9 +1,9 @@
 import React from 'react';
 import { Dialog } from '@mui/material';
 
-import { TenantEntryDescriptor } from 'descriptor-dialob';
+import { TenantEntryDescriptor, DialobForm } from 'descriptor-dialob';
 import Context from 'context';
-import { DialobForm, Backend } from 'client';
+import { Backend } from 'client';
 
 import { DialobInit } from './DialobInit';
 

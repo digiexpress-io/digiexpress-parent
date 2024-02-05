@@ -1,7 +1,6 @@
 import React from 'react';
 import { Box, Typography, CircularProgress } from '@mui/material';
-import { DialobForm, DialobSession } from 'client';
-import { TenantEntryDescriptor } from 'descriptor-dialob';
+import { TenantEntryDescriptor, DialobForm, DialobSession } from 'descriptor-dialob';
 import Burger from 'components-burger';
 
 

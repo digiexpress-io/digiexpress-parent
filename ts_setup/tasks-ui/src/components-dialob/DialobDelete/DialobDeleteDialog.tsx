@@ -2,10 +2,10 @@ import React from 'react';
 import { Dialog, DialogContent, DialogTitle, Box, DialogActions, IconButton, Typography, alpha, Grid, CircularProgress } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { FormattedMessage } from 'react-intl';
-import { TenantEntryDescriptor } from 'descriptor-dialob';
+
+import { DialobSession, ImmutableTenantStore, TenantEntryDescriptor } from 'descriptor-dialob';
 import Burger from 'components-burger';
 import Context from 'context';
-import { DialobSession } from 'client';
 import { sambucus, wash_me } from 'components-colors';
 
 
@@ -23,8 +23,9 @@ const DialobDeleteDialog: React.FC<{
   React.useEffect(() => {
     if (props.entry?.formName) {
       setLoading(true);
-      backend.tenant.getDialobForm(props.entry.formName).then((form) => {
-        backend.tenant.getDialobSessions({ formId: form._id, technicalName: props.entry.formName, tenantId: props.entry.tenantId }).then(sessions => {
+      const store = new ImmutableTenantStore(backend.store);
+      store.getDialobForm(props.entry.formName).then((form) => {
+        store.getDialobSessions({ formId: form._id, technicalName: props.entry.formName, tenantId: props.entry.tenantId }).then(sessions => {
           setSessions(sessions);
           setLoading(false);
         })
@@ -38,7 +39,7 @@ const DialobDeleteDialog: React.FC<{
 
   const handleDelete = async () => {
     setDeleting(true);
-    backend.tenant.deleteDialobForm(props.entry.formName, tenants.state.activeTenant).then((response) => {
+    new ImmutableTenantStore(backend.store).deleteDialobForm(props.entry.formName, tenants.state.activeTenant).then((response) => {
       tenants.reload().then(() => {
         setDeleting(false);
         props.onClose();

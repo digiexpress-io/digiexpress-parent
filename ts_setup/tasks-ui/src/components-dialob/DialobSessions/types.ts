@@ -1,4 +1,4 @@
-import { DialobSession } from 'client';
+import { DialobSession } from 'descriptor-dialob';
 import Table from 'table';
 
 

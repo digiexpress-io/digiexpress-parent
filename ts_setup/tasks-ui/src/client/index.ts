@@ -11,13 +11,6 @@ import {
 
 
 import {
-  FormTechnicalName, FormTitle,
-  Tenant, TenantEntry,
-  TenantId, TenantStore,
-  DialobTag, DialobForm, DialobVariable, DialobSession
-} from './tenant-types';
-
-import {
   ServiceErrorMsg,
   ServiceErrorProps,
   StoreError,
@@ -30,7 +23,6 @@ import {
 
 declare namespace TaskClient {
   export type {
-    DialobTag, DialobForm,
     BackendError, Backend, StoreConfig, Store,
     Org, User, Role,
     UserId, RoleId,
@@ -38,11 +30,6 @@ declare namespace TaskClient {
     ServiceErrorMsg,
     ServiceErrorProps,
     StoreError,
-    FormTechnicalName, FormTitle,
-    Tenant, TenantEntry,
-    TenantId, TenantStore,
-    DialobSession,
-
     RepoType, TenantConfigId, TenantConfig, AppType
   }
 }
@@ -52,12 +39,6 @@ export type {
   BackendError, Backend, StoreConfig, Store, StoreError,
   Org, User, Role,
   UserId, RoleId,
-
-  FormTechnicalName, FormTitle,
-  Tenant, TenantEntry,
-  TenantId, TenantStore,
-  DialobTag, DialobForm, DialobVariable, DialobSession,
-
   TenantConfigId, TenantConfig, AppType
 }
 

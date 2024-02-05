@@ -3,8 +3,7 @@ import { Dialog, DialogContent, DialogTitle, Box, DialogActions, IconButton, Typ
 import CloseIcon from '@mui/icons-material/Close';
 import { FormattedMessage } from 'react-intl';
 
-import { TenantEntryDescriptor } from 'descriptor-dialob';
-import { DialobForm, DialobSession } from 'client'
+import { TenantEntryDescriptor, DialobForm, DialobSession } from 'descriptor-dialob';
 import { SessionList } from './SessionList';
 import { sambucus, wash_me } from 'components-colors';
 

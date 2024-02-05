@@ -1,11 +1,12 @@
 import React from 'react';
 
-import { TenantEntry, Tenant, TenantId, Backend } from 'client';
+import { Backend } from 'client';
 import { UserProfileAndOrg } from 'descriptor-user-profile';
 
 
-import { TenantContextType } from './types';
+import { TenantContextType, TenantEntry, Tenant, TenantId } from './types';
 import { ImmutableTenantState } from './ImmutableTenantState';
+import { ImmutableTenantStore } from './ImmutableTenantStore';
 
 
 import LoggerFactory from 'logger';
@@ -38,7 +39,7 @@ export const TenantProvider: React.FC<{ children: React.ReactNode,
 
   const contextValue: TenantContextType = React.useMemo(() => {
     async function reload() {
-      return backend.tenant.getTenantEntries(state.activeTenant ?? '').then(data => {
+      return new ImmutableTenantStore(backend.store).getTenantEntries(state.activeTenant ?? '').then(data => {
         log.debug('reload active tenant', state.activeTenant);
         return setState(prev => prev.withTenantEntries(data.records))
       });
@@ -51,13 +52,13 @@ export const TenantProvider: React.FC<{ children: React.ReactNode,
     if (!loading) {
       return;
     }
-    backend.tenant.getTenants().then(data => {
+    new ImmutableTenantStore(backend.store).getTenants().then(data => {
       setLoading(false);
       log.debug("loaded tenant", data);
 
       if (data.length === 1) {
         const [{ id }] = data;
-        backend.tenant.getTenantEntries(id).then(entries => {
+        new ImmutableTenantStore(backend.store).getTenantEntries(id).then(entries => {
           setState(prev => prev.withActiveTenant(id).withTenants(data).withTenantEntries(entries.records));
         });
       }

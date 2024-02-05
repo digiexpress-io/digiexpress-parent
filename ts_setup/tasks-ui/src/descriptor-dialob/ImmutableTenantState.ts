@@ -1,5 +1,4 @@
-import { TenantId, Tenant, TenantEntry } from 'client';
-import { TenantState, TenantDescriptor, TenantEntryDescriptor } from './types';
+import { TenantId, Tenant, TenantEntry, TenantState, TenantDescriptor, TenantEntryDescriptor } from './types';
 
 
 export class ImmutableTenantState implements TenantState {

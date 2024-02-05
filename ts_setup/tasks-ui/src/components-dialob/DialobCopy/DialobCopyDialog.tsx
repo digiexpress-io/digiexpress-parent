@@ -2,9 +2,13 @@ import React from 'react';
 import { Dialog, DialogContent, DialogTitle, Box, DialogActions, IconButton, Typography, alpha, Stack, Alert, CircularProgress } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { TenantEntryDescriptor } from 'descriptor-dialob';
+
+import { ImmutableTenantStore, TenantEntryDescriptor } from 'descriptor-dialob';
 import Burger from 'components-burger';
-import Fields from 'components-dialob/DialobFields/DialobTextFields';
+
+import Fields from '../DialobFields/DialobTextFields';
+
+
 import Context from 'context';
 import { sambucus, wash_me } from 'components-colors';
 
@@ -34,13 +38,15 @@ const DialobCopyDialog: React.FC<{
 
   const handleCopy = async () => {
     setLoading(true);
-    await backend.tenant.copyDialobForm(props.entry.formName, formName, formTitle, tenants.state.activeTenant).then((response) => {
+    const store = new ImmutableTenantStore(backend.store);
+    
+    await store.copyDialobForm(props.entry.formName, formName, formTitle, tenants.state.activeTenant).then((response) => {
       if (response.status === 'OK') {
         tenants.reload().then(() => {
           setErrorMessage('');
           setLoading(false);
           props.onClose();
-          backend.tenant.getTenantEntries(tenants.state.activeTenant!).then(data => {
+          store.getTenantEntries(tenants.state.activeTenant!).then(data => {
             const found = data.records.find(entry => entry.id === formName);
             if (found) {
               props.setActiveDialob({

@@ -5,10 +5,10 @@ import { FormattedMessage, useIntl } from 'react-intl';
 
 import DialobCreateActions from './DialobCreateActions';
 import Fields from '../DialobFields/DialobTextFields';
+
 import Burger from 'components-burger';
-import { CreateFormRequest } from 'client/tenant-types';
 import Context from 'context';
-import { TenantEntryDescriptor } from 'descriptor-dialob';
+import { CreateFormRequest, ImmutableTenantStore, TenantEntryDescriptor } from 'descriptor-dialob';
 import { sambucus, wash_me } from 'components-colors';
 
 const INIT_FORM: CreateFormRequest = {
@@ -28,7 +28,6 @@ const INIT_FORM: CreateFormRequest = {
 };
 
 const DialobCreateDialog: React.FC<{ open: boolean, onClose: () => void, setActiveDialob: (entry?: TenantEntryDescriptor) => void }> = (props) => {
-  const theme = useTheme();
   const intl = useIntl();
   const backend = Context.useBackend();
   const tenants = Context.useDialobTenant();
@@ -56,12 +55,14 @@ const DialobCreateDialog: React.FC<{ open: boolean, onClose: () => void, setActi
       }
     };
     setLoading(true);
-    await backend.tenant.createDialobForm(request, tenants.state.activeTenant).then((response) => {
+    const store = new ImmutableTenantStore(backend.store);
+
+    await store.createDialobForm(request, tenants.state.activeTenant).then((response) => {
       if (response.status === 'OK') {
         tenants.reload().then(() => {
           setErrorMessage('');
           setLoading(false);
-          backend.tenant.getTenantEntries(tenants.state.activeTenant!).then(data => {
+          store.getTenantEntries(tenants.state.activeTenant!).then(data => {
             const found = data.records.find(entry => entry.id === formName);
             if (found) {
               props.setActiveDialob({
