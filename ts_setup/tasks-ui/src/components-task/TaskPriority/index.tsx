@@ -4,34 +4,34 @@ import { SxProps } from '@mui/system';
 import FlagIcon from '@mui/icons-material/Flag';
 import { FormattedMessage } from 'react-intl';
 
-import Client from 'client';
-import { TaskDescriptor, Palette } from 'descriptor-task';
+
+import { TaskDescriptor, Palette, TaskPriority, ChangeTaskPriority } from 'descriptor-task';
 import { usePopover, TablePopover } from '../TablePopover';
 
 const priorityColors = Palette.priority;
-const priorityOptions: Client.TaskPriority[] = ['LOW', 'HIGH', 'MEDIUM'];
+const priorityOptions: TaskPriority[] = ['LOW', 'HIGH', 'MEDIUM'];
 
-function getEmojiFlagSx(priority: Client.TaskPriority): SxProps {
+function getEmojiFlagSx(priority: TaskPriority): SxProps {
   const color = priorityColors[priority];
   return { color, ':hover': { color } };
 }
 
-function getActiveColor(currentlyShowing: Client.TaskPriority, priority: Client.TaskPriority): string {
+function getActiveColor(currentlyShowing: TaskPriority, priority: TaskPriority): string {
   const selectedItemColor = Palette.status.IN_PROGRESS;
   const color = priority === currentlyShowing ? selectedItemColor : "unset";
   return color;
 }
 
-const TaskPriority: React.FC<{
+const TaskPriorityButton: React.FC<{
   task: TaskDescriptor,
   priorityTextEnabled?: boolean,
-  onChange: (command: Client.ChangeTaskPriority) => Promise<void>
+  onChange: (command: ChangeTaskPriority) => Promise<void>
 }> = ({ task, priorityTextEnabled, onChange }) => {
   const priority = task.priority;
   const Popover = usePopover();
 
-  function handlePriorityChange(newPriority: Client.TaskPriority) {
-    const command: Client.ChangeTaskPriority = {
+  function handlePriorityChange(newPriority: TaskPriority) {
+    const command: ChangeTaskPriority = {
       commandType: 'ChangeTaskPriority',
       priority: newPriority,
       taskId: task.id
@@ -48,7 +48,7 @@ const TaskPriority: React.FC<{
       </Button>
       <TablePopover onClose={Popover.onClose} anchorEl={Popover.anchorEl} open={Popover.open}>
         <List dense sx={{ py: 0 }}>
-          {priorityOptions.map((option: Client.TaskPriority) => (
+          {priorityOptions.map((option: TaskPriority) => (
             <MenuItem key={option} onClick={() => handlePriorityChange(option)} sx={{ display: "flex", pl: 0, py: 0 }}>
               <Box sx={{ width: 8, height: 40, backgroundColor: priorityColors[option] }} />
               <Box sx={{ width: 8, height: 8, borderRadius: "50%", mx: 2, backgroundColor: getActiveColor(option, priority) }} />
@@ -61,4 +61,4 @@ const TaskPriority: React.FC<{
   );
 }
 
-export default TaskPriority;
+export default TaskPriorityButton;

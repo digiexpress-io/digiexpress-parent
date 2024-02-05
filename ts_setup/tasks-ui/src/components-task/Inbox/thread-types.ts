@@ -1,4 +1,4 @@
-import { TaskExtension } from "client/task-types"
+import { TaskExtension } from "descriptor-task";
 
 interface Thread {
   id: string

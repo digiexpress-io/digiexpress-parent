@@ -6,7 +6,7 @@ import DatePicker from '../DatePicker';
 import AssigneePicker from './AssigneePicker';
 import { ChecklistItemActions } from './ChecklistItem';
 import { ChecklistItemDialogProps } from './checklist-types';
-import { ChecklistItem } from 'client/task-types';
+import { ChecklistItem } from 'descriptor-task';
 
 const demoAssignees: string[] = ['John Doe', 'Jane Doe', 'John Smith', 'Jane Smith'];
 

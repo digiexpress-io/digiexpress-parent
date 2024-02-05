@@ -1,4 +1,4 @@
-import { ChecklistItem } from "client/task-types";
+import { ChecklistItem } from "descriptor-task";
 
 export interface ChecklistItemComponentProps {
   item: ChecklistItem;

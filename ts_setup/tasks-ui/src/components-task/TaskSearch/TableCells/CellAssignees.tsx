@@ -2,7 +2,8 @@ import React from 'react';
 
 import Client from 'client';
 import Context from 'context';
-import { TaskDescriptor } from 'descriptor-task';
+
+import { TaskDescriptor, AssignTask } from 'descriptor-task';
 import { StyledTableCell } from 'components-generic';
 
 import TaskAssignees from '../../TaskAssignees';
@@ -14,12 +15,10 @@ const FormattedCell: React.FC<{
 }> = ({ row }) => {
 
   const tasks = Context.useTasks();
-  const backend = Context.useBackend();
 
   async function handleChange(assigneeIds: Client.UserId[]) {
-    const command: Client.AssignTask = { assigneeIds, commandType: 'AssignTask', taskId: row.id };
-    await backend.task.updateActiveTask(row.id, [command]);
-    await tasks.reload();
+    const command: AssignTask = { assigneeIds, commandType: 'AssignTask', taskId: row.id };
+    await tasks.updateActiveTask(row.id, [command]);
   }
   return (
     <StyledTableCell width="150px">

@@ -3,6 +3,11 @@ import { TextField } from '@mui/material';
 import Client from 'client';
 import Context from 'context';
 
+import { 
+  ChangeTaskPriority, ChangeTaskStatus, AssignTask, ChangeTaskDueDate,
+  AssignTaskRoles, ChangeTaskStartDate
+} from 'descriptor-task'
+
 import TaskAssignees from '../TaskAssignees';
 import TaskStatus from '../TaskStatus';
 import TaskPriority from '../TaskPriority';
@@ -44,7 +49,7 @@ const Description: React.FC<{}> = () => {
 const Status: React.FC<{}> = () => {
   const ctx = Context.useTaskEdit();
 
-  async function handleStatusChange(command: Client.ChangeTaskStatus) {
+  async function handleStatusChange(command: ChangeTaskStatus) {
     ctx.withTask({ ...ctx.task.entry, status: command.status });
   }
   return (<TaskStatus task={ctx.task} onChange={handleStatusChange} />)
@@ -53,7 +58,7 @@ const Status: React.FC<{}> = () => {
 const Priority: React.FC<{}> = () => {
   const ctx = Context.useTaskEdit();
 
-  async function handlePriorityChange(command: Client.ChangeTaskPriority) {
+  async function handlePriorityChange(command: ChangeTaskPriority) {
     ctx.withTask({ ...ctx.task.entry, priority: command.priority });
   }
 
@@ -64,7 +69,7 @@ const Assignees: React.FC<{}> = () => {
   const ctx = Context.useTaskEdit();
 
   async function handleAssigneeChange(assigneeIds: Client.UserId[]) {
-    const command: Client.AssignTask = { assigneeIds, commandType: 'AssignTask', taskId: ctx.task.id };
+    const command: AssignTask = { assigneeIds, commandType: 'AssignTask', taskId: ctx.task.id };
     ctx.withTask({ ...ctx.task.entry, assigneeIds: command.assigneeIds });
   }
 
@@ -74,7 +79,7 @@ const Assignees: React.FC<{}> = () => {
 const Roles: React.FC<{}> = () => {
   const ctx = Context.useTaskEdit();
 
-  async function handleRolesChange(command: Client.AssignTaskRoles) {
+  async function handleRolesChange(command: AssignTaskRoles) {
     ctx.withTask({ ...ctx.task.entry, roles: command.roles })
   }
 
@@ -85,7 +90,7 @@ const Roles: React.FC<{}> = () => {
 const StartDate: React.FC = () => {
   const ctx = Context.useTaskEdit();
 
-  async function handleDateChange(command: Client.ChangeTaskStartDate) {
+  async function handleDateChange(command: ChangeTaskStartDate) {
     ctx.withTask({ ...ctx.task.entry, startDate: command.startDate })
   }
   return (<TaskStartDate onChange={handleDateChange} task={ctx.task} />);
@@ -96,7 +101,7 @@ const DueDate: React.FC = () => {
   const ctx = Context.useTaskEdit();
 
   async function handleDateChange(dueDate: string | undefined) {
-    const command: Client.ChangeTaskDueDate = {
+    const command: ChangeTaskDueDate = {
       commandType: 'ChangeTaskDueDate',
       dueDate,
       taskId: ctx.task.id

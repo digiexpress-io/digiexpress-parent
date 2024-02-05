@@ -1,8 +1,8 @@
 import React from 'react';
 
 import Context from 'context';
-import { Task } from 'client';
-import { TaskEditContextType } from './types';
+import { Task } from './backend-types';
+import { TaskEditContextType } from './descriptor-types';
 import { ImmutableTaskDescriptor } from './ImmutableTaskDescriptor';
 import { ImmutableTaskEditEvents } from './ImmutableTaskEditEvents';
 

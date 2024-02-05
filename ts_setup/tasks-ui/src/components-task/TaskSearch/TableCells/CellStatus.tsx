@@ -1,9 +1,9 @@
 import React from 'react';
 
-import Client from 'client';
+
 import Context from 'context';
 
-import { TaskDescriptor } from 'descriptor-task';
+import { TaskDescriptor, ChangeTaskStatus } from 'descriptor-task';
 import { StyledTableCell } from 'components-generic';
 
 import TaskStatus from '../../TaskStatus';
@@ -14,11 +14,9 @@ const FormattedCell: React.FC<{
   row: TaskDescriptor
 }> = ({ row }) => {
   const tasks = Context.useTasks();
-  const backend = Context.useBackend();
 
-  async function handleChange(command: Client.ChangeTaskStatus) {
-    await backend.task.updateActiveTask(row.id, [command]);
-    await tasks.reload();
+  async function handleChange(command: ChangeTaskStatus) {
+    await tasks.updateActiveTask(row.id, [command]);
   }
 
 

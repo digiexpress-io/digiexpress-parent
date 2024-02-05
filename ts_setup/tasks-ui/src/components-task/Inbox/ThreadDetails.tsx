@@ -16,7 +16,9 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 import { Message, TabType, Thread } from "./thread-types"
 import { AttachmentAndDateTime } from "./ThreadPreview";
-import { TaskExtension } from "client/task-types";
+import { TaskExtension } from "descriptor-task";
+
+
 
 const PaddedTypography = styled(Typography)(({ theme }) => ({
   padding: theme.spacing(1),

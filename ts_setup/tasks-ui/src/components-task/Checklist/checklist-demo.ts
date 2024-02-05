@@ -1,4 +1,4 @@
-import type { Checklist, ChecklistItem } from "client/task-types";
+import type { Checklist, ChecklistItem } from "descriptor-task";
 
 export const demoAssignees: string[] = ['John Doe', 'Jane Doe', 'John Smith', 'Jane Smith'];
 

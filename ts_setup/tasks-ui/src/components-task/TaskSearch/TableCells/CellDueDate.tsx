@@ -1,11 +1,10 @@
 import React from 'react';
 import { Box } from '@mui/material';
 
-import { TaskDescriptor } from 'descriptor-task';
+import { TaskDescriptor, ChangeTaskDueDate } from 'descriptor-task';
 import { StyledTableCell } from 'components-generic';
 
 import Context from 'context';
-import Client from 'client';
 
 import TaskCell from './TaskCell';
 import TaskDueDate from '../../TaskDueDate';
@@ -16,18 +15,16 @@ const FormattedCell: React.FC<{
   row: TaskDescriptor
 }> = ({ row }) => {
 
-  const backend = Context.useBackend();
   const tasks = Context.useTasks();
 
   async function handleDueDateChange(dueDate: string | undefined) {
-    const command: Client.ChangeTaskDueDate = {
+    const command: ChangeTaskDueDate = {
       commandType: 'ChangeTaskDueDate',
       dueDate,
       taskId: row.id
     };
 
-    await backend.task.updateActiveTask(row.id, [command]);
-    await tasks.reload();
+    await tasks.updateActiveTask(row.id, [command]);
   }
 
 

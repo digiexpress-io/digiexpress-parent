@@ -6,7 +6,6 @@ import Context from 'context';
 
 
 const TaskCreateActions: React.FC<{ onClose: () => void }> = ({ onClose }) => {
-  const backend = Context.useBackend();
   const org = Context.useOrg();
   const tasks = Context.useTasks();
   const state = Context.useTaskEdit();
@@ -20,7 +19,7 @@ const TaskCreateActions: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   }
 
   async function handleCreateAndClose() {
-    const createdTask = await backend.task.createTask({
+    const createdTask = await tasks.createTask({
       commandType: 'CreateTask',
       title: state.task.title,
       description: state.task.description,
@@ -39,7 +38,6 @@ const TaskCreateActions: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       comments: state.task.comments,
       checklist: state.task.checklist
     });
-    await tasks.reload()
     handleClose();
   }
 

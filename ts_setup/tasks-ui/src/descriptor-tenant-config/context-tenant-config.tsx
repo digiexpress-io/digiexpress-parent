@@ -6,7 +6,6 @@ import { TenantConfigId, TenantConfig } from 'client';
 export interface TenantConfigContextType {
   tenantConfigId: TenantConfigId | undefined;
   tenantConfig: TenantConfig | undefined;
-  //setTenantConfigId(tenantConfigId: TenantConfigId): void
 }
 export const TenantConfigContext = React.createContext<TenantConfigContextType>({
   tenantConfigId: '',
@@ -25,7 +24,6 @@ export const TenantConfigContext = React.createContext<TenantConfigContextType>(
     documentType: 'TENANT_CONFIG',
     version: ''
   },
-  //setTenantConfigId(_tenantConfigId: TenantConfigId) {}
 });
 
 

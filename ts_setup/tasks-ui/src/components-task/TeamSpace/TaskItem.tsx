@@ -5,9 +5,11 @@ import { FormattedMessage } from 'react-intl';
 import ChecklistIcon from '@mui/icons-material/Checklist';
 import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';
 
-import DaysUntilDue from '../DaysUntilDue';
 import { TaskDescriptor } from 'descriptor-task';
 import { cyan } from 'components-colors';
+
+import DaysUntilDue from '../DaysUntilDue';
+
 
 const TaskItem: React.FC<{ task: TaskDescriptor }> = ({ task }) => {
 

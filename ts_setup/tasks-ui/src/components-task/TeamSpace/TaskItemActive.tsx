@@ -4,17 +4,21 @@ import EditIcon from '@mui/icons-material/ModeEditOutlineOutlined';
 import CrmIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
 
 import { FormattedMessage } from 'react-intl';
-import TaskAssignees from '../TaskAssignees';
-import TaskRoles from '../TaskRoles';
-import TaskStatus from '../TaskStatus';
+
 import Customer from 'components-customer';
 import Burger from 'components-burger';
 
-import TaskEditDialog from '../TaskEdit';
-import Client from 'client';
+
 import Context from 'context';
-import { TaskDescriptor } from 'descriptor-task';
+import { TaskDescriptor, ChangeTaskStatus, AssignTaskRoles } from 'descriptor-task';
 import { cyan } from 'components-colors';
+
+
+import TaskAssignees from '../TaskAssignees';
+import TaskRoles from '../TaskRoles';
+import TaskStatus from '../TaskStatus';
+import TaskEditDialog from '../TaskEdit';
+
 
 
 const StyledStack: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -55,33 +59,29 @@ function getTaskAlert(task: TaskDescriptor): { title: string, alertSeverity: Ale
 const TaskItemActive: React.FC<{ task: TaskDescriptor | undefined }> = ({ task }) => {
   const [crmOpen, setCrmkOpen] = React.useState(false);
   const [taskEditOpen, setTaskEditOpen] = React.useState(false);
-
   const tasks = Context.useTasks();
-  const backend = Context.useBackend();
 
-  async function handleStatusChange(command: Client.ChangeTaskStatus) {
+  async function handleStatusChange(command: ChangeTaskStatus) {
     if (!task) {
       return;
     }
-    await backend.task.updateActiveTask(task.id, [command]);
-    await tasks.reload();
+    await tasks.updateActiveTask(task.id, [command]);
   }
 
-  async function handleAssigneeChange(assigneeIds: Client.UserId[]) {
+  async function handleAssigneeChange(assigneeIds: string[]) {
     if (!task) {
       return;
     }
     const command = { assigneeIds, commandType: 'AssignTask', taskId: task.id };
-    await backend.task.updateActiveTask(task.id, [command]);
-    await tasks.reload();
+    await tasks.updateActiveTask(task.id, [command]);
   }
 
-  async function handleRoleChange(command: Client.AssignTaskRoles) {
+  async function handleRoleChange(command: AssignTaskRoles) {
     if (!task) {
       return;
     }
-    await backend.task.updateActiveTask(task.id, [command]);
-    await tasks.reload();
+    await tasks.updateActiveTask(task.id, [command]);
+    
   }
 
   function handleCrm() {

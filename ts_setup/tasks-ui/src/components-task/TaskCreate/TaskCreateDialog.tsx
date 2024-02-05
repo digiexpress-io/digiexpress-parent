@@ -3,13 +3,16 @@ import { Dialog, DialogContent, DialogTitle, Stack, Box, DialogActions, IconButt
 import CloseIcon from '@mui/icons-material/Close';
 import { FormattedMessage } from 'react-intl';
 
+import Context from 'context';
+import { TaskEditProvider, Task } from 'descriptor-task';
+
+import Burger from 'components-burger';
+import { sambucus, wash_me } from 'components-colors';
+
+
 import TaskCreateActions from './TaskCreateActions';
 import Fields from './TaskCreateFields';
-import { Task, UserProfileAndOrg } from 'client';
-import Context from 'context';
-import Burger from 'components-burger';
-import { TaskEditProvider } from 'descriptor-task';
-import { sambucus, wash_me } from 'components-colors';
+
 
 function initTaskProps(userId: string): Task {
   return {

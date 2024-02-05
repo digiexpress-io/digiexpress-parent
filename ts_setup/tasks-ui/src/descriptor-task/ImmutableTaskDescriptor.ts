@@ -1,6 +1,6 @@
-import { Task, TaskExtension, UserProfileAndOrg, CustomerId } from 'client';
-
-import { TaskDescriptor, AssigneeGroupType, TeamGroupType } from './types';
+import { UserProfileAndOrg, CustomerId } from 'client';
+import { Task, TaskExtension } from './backend-types';
+import { TaskDescriptor, AssigneeGroupType, TeamGroupType } from './descriptor-types';
 import { getDaysUntilDue, getMyWorkType, getTeamspaceType } from './util';
 
 

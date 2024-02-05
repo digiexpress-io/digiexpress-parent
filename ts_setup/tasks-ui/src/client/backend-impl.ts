@@ -1,5 +1,4 @@
 import { Backend, Store, Health } from './backend-types';
-import type { TaskId, Task, TaskPagination, TaskStore, TaskUpdateCommand, CreateTask } from './task-types';
 import { ProjectId, Project, ProjectPagination, ProjectStore, ProjectUpdateCommand, CreateProject } from './project-types';
 import { Tenant, TenantEntry, TenantStore, TenantEntryPagination, DialobTag, DialobForm, DialobSession, FormTechnicalName, TenantId, FormId, CreateFormRequest, DialobFormResponse } from './tenant-types';
 import { TenantConfig } from 'client';
@@ -20,6 +19,7 @@ export class ServiceImpl implements Backend {
     return new ServiceImpl(this._store.withTenantConfig(tenant));
   }
 
+  get store() { return this._store }
   get config() { return this._store.config; }
 
   get tenant(): TenantStore {
@@ -32,14 +32,6 @@ export class ServiceImpl implements Backend {
       createDialobForm: (formData: CreateFormRequest, tenantId?: string) => this.createDialobForm(formData, tenantId),
       copyDialobForm: (formName: string, newFormName: string, newFormTitle: string, tenantId?: string) => this.copyDialobForm(formName, newFormName, newFormTitle, tenantId),
       deleteDialobForm: (formName: string, tenantId?: string) => this.deleteDialobForm(formName, tenantId),
-    };
-  }
-  get task(): TaskStore {
-    return {
-      getActiveTasks: () => this.getActiveTasks(),
-      getActiveTask: (id: TaskId) => this.getActiveTask(id),
-      updateActiveTask: (id: TaskId, commands: TaskUpdateCommand<any>[]) => this.updateActiveTask(id, commands),
-      createTask: (commands: CreateTask) => this.createTask(commands),
     };
   }
   get project(): ProjectStore {
@@ -207,34 +199,6 @@ export class ServiceImpl implements Backend {
       const result: DialobSession[] = await this._store.fetch<DialobSession[]>(`api/questionnaires`, { repoType: 'EXT_DIALOB' });
       return result.filter(q => q.metadata.formId === props.formId && q.metadata.tenantId === props.tenantId);
     }
-  }
-  async createTask(commands: CreateTask): Promise<Task> {
-    return await this._store.fetch<Task>(`tasks`, {
-      method: 'POST',
-      body: JSON.stringify([commands]),
-      repoType: 'TASKS'
-    });
-  }
-
-  async updateActiveTask(id: TaskId, commands: TaskUpdateCommand<any>[]): Promise<Task> {
-    return await this._store.fetch<Task>(`tasks/${id}`, {
-      method: 'PUT',
-      body: JSON.stringify(commands),
-      repoType: 'TASKS'
-    });
-  }
-
-  async getActiveTasks(): Promise<TaskPagination> {
-    const tasks = await this._store.fetch<object[]>(`tasks`, { repoType: 'TASKS' });
-    return {
-      page: 1,
-      total: { pages: 1, records: tasks.length },
-      records: tasks as any
-    }
-  }
-
-  getActiveTask(id: TaskId): Promise<Task> {
-    return this._store.fetch<Task>(`tasks/${id}`, { repoType: 'TASKS' });
   }
 
   async updateActiveUserProfile(profileId: string, commands: UserProfileUpdateCommand<any>[]): Promise<UserProfile> {

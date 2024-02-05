@@ -2,9 +2,8 @@ import React from 'react';
 
 
 import Context from 'context';
-import { TaskDescriptor, TaskSearch, ImmutableTaskSearch } from 'descriptor-task';
+import { TaskDescriptor, TaskSearch, ImmutableTaskSearch, TaskStatus, TaskPriority } from 'descriptor-task';
 
-import { TaskStatus, TaskPriority } from 'client';
 import { useTaskPrefsInit } from './TaskPrefsContext';
 
 

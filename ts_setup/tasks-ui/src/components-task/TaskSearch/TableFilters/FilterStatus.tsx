@@ -3,15 +3,15 @@ import { Menu, MenuItem, MenuList, ListItemIcon, ListItemText, Typography, Chip 
 import Check from '@mui/icons-material/Check';
 import { FormattedMessage } from 'react-intl';
 
-import Client from 'client';
-import { FilterByStatus, FilterBy } from 'descriptor-task';
+
+import { FilterByStatus, FilterBy, TaskStatus } from 'descriptor-task';
 import { ButtonSearch } from 'components-generic';
 
 
-const statustypes: Client.TaskStatus[] = ['CREATED', 'IN_PROGRESS', 'COMPLETED', 'REJECTED'];
+const statustypes: TaskStatus[] = ['CREATED', 'IN_PROGRESS', 'COMPLETED', 'REJECTED'];
 
 const FilterStatus: React.FC<{
-  onChange: (value: Client.TaskStatus[]) => void;
+  onChange: (value: TaskStatus[]) => void;
   value: readonly FilterBy[];
 }> = (props) => {
 

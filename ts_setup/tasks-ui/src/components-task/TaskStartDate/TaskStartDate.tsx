@@ -6,16 +6,17 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 
-import Burger from 'components-burger';
 
 import Context from 'context';
-import Client from 'client';
-import { TaskDescriptor } from 'descriptor-task';
+import Burger from 'components-burger';
 import { cyan } from 'components-colors';
+import { TaskDescriptor, ChangeTaskStartDate } from 'descriptor-task';
+
+
 
 const TaskStartDate: React.FC<{
   task: TaskDescriptor,
-  onChange: (command: Client.ChangeTaskStartDate) => Promise<void>
+  onChange: (command: ChangeTaskStartDate) => Promise<void>
 }> = ({ onChange, task }) => {
 
   const ctx = Context.useTaskEdit();
@@ -27,7 +28,7 @@ const TaskStartDate: React.FC<{
 
   function handleStartDateChange(datePicker: any) {
     const newDate: Date | undefined = datePicker;
-    const command: Client.ChangeTaskStartDate = {
+    const command: ChangeTaskStartDate = {
       commandType: 'ChangeTaskStartDate',
       startDate: newDate?.toISOString(),
       taskId: task.id

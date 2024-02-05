@@ -1,6 +1,7 @@
 import Burger from 'components-burger';
 
-import type { Task, UserProfileAndOrg } from 'client';
+import type { UserProfileAndOrg } from 'client';
+import type { Task } from 'descriptor-task';
 
 export type DocumentId = string;
 

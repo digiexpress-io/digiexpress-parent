@@ -1,6 +1,4 @@
-import { TaskPriority, TaskStatus } from 'client';
-import { TaskDescriptor, _nobody_ } from './types';
-
+import { TaskPriority, TaskStatus, TaskDescriptor, _nobody_  } from 'descriptor-task';
 
 export type FilterByStatus = { type: 'FilterByStatus', status: TaskStatus[], disabled: boolean }
 export type FilterByPriority = { type: 'FilterByPriority', priority: TaskPriority[], disabled: boolean }

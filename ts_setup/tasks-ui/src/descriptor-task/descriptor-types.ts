@@ -1,10 +1,15 @@
 import {
-  UserProfileAndOrg, TaskPriority, TaskStatus, TaskExtension, TaskTransaction, Checklist, TaskComment, TaskCommand, TaskCommandType, CreateTask, AssignTaskReporter,
+  TaskPriority, TaskStatus, TaskExtension, TaskTransaction, Checklist, TaskComment, TaskCommand, TaskCommandType, CreateTask, AssignTaskReporter,
   ArchiveTask, ChangeTaskStatus, ChangeTaskPriority, AssignTaskParent, CommentOnTask, ChangeTaskComment, AssignTaskRoles, AssignTask, ChangeTaskDueDate,
   ChangeTaskInfo, CreateTaskExtension, ChangeTaskExtension, ChangeTaskStartDate, CreateChecklist, ChangeChecklistTitle, DeleteChecklist,
   AddChecklistItem, DeleteChecklistItem, ChangeChecklistItemAssignees, ChangeChecklistItemCompleted, ChangeChecklistItemDueDate, ChangeChecklistItemTitle,
-  Task, CustomerId, UserId, TaskId, RoleId
+  Task, TaskId, TaskStore, TaskUpdateCommand
+} from './backend-types';
+
+import {
+  CustomerId, UserId, RoleId, UserProfileAndOrg
 } from 'client';
+
 
 import { bittersweet, emerald, orange, red, steelblue, ultraviolet } from 'components-colors';
 
@@ -137,7 +142,10 @@ export interface TasksContextType {
   tasks: readonly TaskDescriptor[];
   roles: readonly string[];
   owners: readonly string[];
+  store: TaskStore;
 
+  createTask(command: CreateTask): Promise<Task>;
+  updateActiveTask(id: TaskId, commands: TaskUpdateCommand<any>[]): Promise<Task>;
   getById(id: string): TaskDescriptor;
 
   reload: () => Promise<void>;

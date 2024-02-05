@@ -1,13 +1,19 @@
 import React from 'react';
 import { Box, List, Button, Typography, Stack } from '@mui/material';
 import CrmIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
+
 import { FormattedMessage } from 'react-intl';
-import StyledFullScreenDialog from '../Dialogs';
-import Fields from './TaskEditFields';
-import Events from './TaskEvents';
+
 import Burger from 'components-burger';
 import Context from 'context';
 import { TaskDescriptor, TaskEditProvider } from 'descriptor-task';
+
+
+import StyledFullScreenDialog from '../Dialogs';
+import Fields from './TaskEditFields';
+import Events from './TaskEvents';
+
+
 
 const Left: React.FC<{}> = () => {
   return (

@@ -11,7 +11,7 @@ import TaskEditDialog from '../TaskEdit';
 
 import Context from 'context';
 import Client from 'client';
-import { TaskDescriptor } from 'descriptor-task';
+import { TaskDescriptor, ChangeTaskStatus, AssignTaskRoles, AssignTask } from 'descriptor-task';
 import Customer from 'components-customer';
 import Burger from 'components-burger';
 import { cyan } from 'components-colors';
@@ -64,31 +64,27 @@ const TaskItemActive: React.FC<{ task: TaskDescriptor | undefined }> = ({ task }
   const [taskEditOpen, setTaskEditOpen] = React.useState(false);
 
   const tasks = Context.useTasks();
-  const backend = Context.useBackend();
 
-  async function handleStatusChange(command: Client.ChangeTaskStatus) {
+  async function handleStatusChange(command: ChangeTaskStatus) {
     if (!task) {
       return;
     }
-    await backend.task.updateActiveTask(task.id, [command]);
-    await tasks.reload();
+    await tasks.updateActiveTask(task.id, [command]);
   }
 
   async function handleAssigneeChange(assigneeIds: Client.UserId[]) {
     if (!task) {
       return;
     }
-    const command: Client.AssignTask = { assigneeIds, commandType: 'AssignTask', taskId: task.id };
-    await backend.task.updateActiveTask(task.id, [command]);
-    await tasks.reload();
+    const command: AssignTask = { assigneeIds, commandType: 'AssignTask', taskId: task.id };
+    await tasks.updateActiveTask(task.id, [command]);
   }
 
-  async function handleRoleChange(command: Client.AssignTaskRoles) {
+  async function handleRoleChange(command: AssignTaskRoles) {
     if (!task) {
       return;
     }
-    await backend.task.updateActiveTask(task.id, [command]);
-    await tasks.reload();
+    await tasks.updateActiveTask(task.id, [command]);
   }
 
   function handleCrm() {

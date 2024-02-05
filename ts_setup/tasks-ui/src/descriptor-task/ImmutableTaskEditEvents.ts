@@ -1,6 +1,7 @@
-import { TaskCommand, TaskTransaction, UserId } from 'client';
-import { TaskEditEvent, SingleEvent, AssignTaskEventBody } from './types';
-import { TaskDescriptor, SingleEventDiff } from './types';
+import { UserId } from 'client';
+import { TaskEditEvent, SingleEvent, AssignTaskEventBody, TaskDescriptor, SingleEventDiff } from './descriptor-types';
+import { TaskCommand, TaskTransaction } from './backend-types';
+
 
 
 export class ImmutableTaskEditEvents {

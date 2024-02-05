@@ -1,5 +1,4 @@
 import { UserProfileAndOrg } from './profile-types';
-import { TaskStore } from './task-types';
 import { ProjectStore } from './project-types';
 import { TenantStore } from './tenant-types';
 import { Org, User } from './org-types';
@@ -18,8 +17,8 @@ export type Health = {
 }
 
 export interface Backend {
+  store: Store;
   config: StoreConfig;
-  task: TaskStore;
   project: ProjectStore;
   tenant: TenantStore;
   customer: CustomerStore;

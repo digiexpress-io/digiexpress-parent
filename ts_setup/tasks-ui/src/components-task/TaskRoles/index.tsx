@@ -3,13 +3,13 @@ import { AvatarGroup, Box, Button, Avatar as MAvatar, List, MenuItem, Checkbox, 
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import { FormattedMessage } from 'react-intl';
 
+
+
 import { cyan } from 'components-colors';
-import { TaskDescriptor } from 'descriptor-task';
+import { TaskDescriptor, AssignTaskRoles } from 'descriptor-task';
 import { Avatar, useAvatars, useAvatar } from 'descriptor-avatar';
-
-
-import Client from 'client';
 import Context from 'context';
+import { Role } from 'client';
 
 import { SearchFieldPopover } from '../SearchField';
 import { usePopover, TablePopover } from '../TablePopover';
@@ -83,7 +83,7 @@ const RoleBackgroundColor: React.FC<{ roleId: string }> = ({roleId}) => {
 const SelectRoles: React.FC<{
   anchorEl: HTMLElement | null,
   task: TaskDescriptor,
-  onChange: (command: Client.AssignTaskRoles) => Promise<void>,
+  onChange: (command: AssignTaskRoles) => Promise<void>,
   onClose: () => void,
 }> = ({ task, onChange, onClose, anchorEl }) => {
 
@@ -91,7 +91,7 @@ const SelectRoles: React.FC<{
   const [newRoles, setNewRoles] = React.useState(task.roles);
   const { setSearchString, searchResults } = Context.useRoles({ roles: newRoles });
 
-  function handleToggleRole(role: Client.Role, currentlyChecked: boolean) {
+  function handleToggleRole(role: Role, currentlyChecked: boolean) {
     setNewRoles(currentListOfRoleIds => {
       const withoutCurrentRole = [...currentListOfRoleIds.filter((id) => id !== role.roleId)];
 
@@ -143,7 +143,7 @@ const SelectRoles: React.FC<{
 
 const TaskRoles: React.FC<{
   task: TaskDescriptor,
-  onChange: (command: Client.AssignTaskRoles) => Promise<void>,
+  onChange: (command: AssignTaskRoles) => Promise<void>,
   fullnames?: boolean
 }> = ({ task, onChange, fullnames }) => {
 

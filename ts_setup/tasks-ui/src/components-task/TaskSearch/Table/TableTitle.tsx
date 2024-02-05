@@ -2,10 +2,12 @@
 import React from 'react';
 import { Button, Typography } from '@mui/material';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { _nobody_, Palette } from 'descriptor-task';
-import { GroupByTypes } from '../TableContext';
-import { TaskStatus, TaskPriority } from 'client';
+
 import { useAvatar } from 'descriptor-avatar';
+import { _nobody_, Palette, TaskStatus, TaskPriority } from 'descriptor-task';
+
+import { GroupByTypes } from '../TableContext';
+
 
 const TitleButtonOwner: React.FC<{ groupType: GroupByTypes, classifierValue: string }> = ({ groupType, classifierValue }) => {
   const intl = useIntl();

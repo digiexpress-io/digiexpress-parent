@@ -5,9 +5,11 @@ import ChecklistIcon from '@mui/icons-material/Checklist';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
+
+import { Checklist, ChecklistItem } from 'descriptor-task';
+
 import ChecklistItemComponent from './ChecklistItem';
 import ChecklistItemDialog from './ChecklistItemDialog';
-import { Checklist, ChecklistItem } from 'client/task-types';
 import { StyledProgressBar } from './StyledProgressBar';
 
 const ChecklistHeaderContainer = styled(Box)(({ theme }) => ({

@@ -3,15 +3,15 @@ import { Menu, MenuList, MenuItem, ListItemIcon, ListItemText, Typography } from
 import Check from '@mui/icons-material/Check';
 import { FormattedMessage } from 'react-intl';
 
-import Client from 'client';
-import { FilterByPriority, FilterBy } from 'descriptor-task';
+
+import { FilterByPriority, FilterBy, TaskPriority } from 'descriptor-task';
 import { ButtonSearch } from 'components-generic';
 
-const prioritytypes: Client.TaskPriority[] = ['HIGH', 'MEDIUM', 'LOW'];
+const prioritytypes: TaskPriority[] = ['HIGH', 'MEDIUM', 'LOW'];
 
 
 const FilterPriority: React.FC<{
-  onChange: (value: Client.TaskPriority[]) => void;
+  onChange: (value: TaskPriority[]) => void;
   value: readonly FilterBy[];
 }> = (props) => {
 
