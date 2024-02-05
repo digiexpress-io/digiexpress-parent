@@ -22,7 +22,7 @@ import { NavigationSticky, FilterByString, TableBody, TableFillerRows } from 'co
 
 
 import { PreferenceContextType } from 'descriptor-prefs';
-import { CustomerDescriptor } from 'descriptor-customer';
+import { CustomerDescriptor, ImmutableCustomerStore } from 'descriptor-customer';
 
 
 import { useCustomerPrefs, ColumnName, ImmutableCustomersSearchState, CustomerTableProvider } from './TableContext';
@@ -178,7 +178,7 @@ const CustomerTableDelegate: React.FC<{}> = () => {
       _logger.debug(`reloading customer table - ${searchString}`);
 
       setLoading(true);
-      backend.customer.findCustomers(searchString).then(newRecords => {
+      new ImmutableCustomerStore(backend.store).findCustomers(searchString).then(newRecords => {
         setState(prev => prev.withRecords(newRecords));
         setLoading(false);
       });

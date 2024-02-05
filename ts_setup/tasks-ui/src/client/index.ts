@@ -29,21 +29,6 @@ import {
   DialobTag, DialobForm, DialobVariable, DialobSession
 } from './tenant-types';
 
-
-import {
-  Customer, CustomerId, CustomerTask, CustomerContact,
-  CustomerCommandType, CustomerCommand, CustomerBodyType,
-  CreateCustomer,
-  UpsertSuomiFiPerson,
-  UpsertSuomiFiRep,
-  ChangeCustomerFirstName,
-  ChangeCustomerLastName,
-  ChangeCustomerSsn,
-  ChangeCustomerEmail,
-  ChangeCustomerAddress,
-  ArchiveCustomer, Person, Company
-} from './customer-types';
-
 import {
   UserProfile, NotificationSetting, ChangeUserDetailsFirstName, UpsertUiSettings, UiSettings
 } from './profile-types';
@@ -70,19 +55,6 @@ declare namespace TaskClient {
     ArchiveProject,
     ChangeRepoType,
 
-    Person, Company,
-    Customer, CustomerId, CustomerTask, CustomerBodyType,
-    CustomerCommandType, CustomerCommand, CustomerContact,
-    CreateCustomer,
-    UpsertSuomiFiPerson,
-    UpsertSuomiFiRep,
-    ChangeCustomerFirstName,
-    ChangeCustomerLastName,
-    ChangeCustomerSsn,
-    ChangeCustomerEmail,
-    ChangeCustomerAddress,
-    ArchiveCustomer,
-
     UserProfileAndOrg, NotificationSetting, ChangeUserDetailsFirstName,
 
 
@@ -104,21 +76,7 @@ declare namespace TaskClient {
 
 export type {
   UpsertUiSettings, UiSettings,
-  Customer, CustomerId, CustomerTask, CustomerBodyType,
-  CustomerCommandType, CustomerCommand, CustomerContact,
-  CreateCustomer,
-  UpsertSuomiFiPerson,
-  UpsertSuomiFiRep,
-  ChangeCustomerFirstName,
-  ChangeCustomerLastName,
-  ChangeCustomerSsn,
-  ChangeCustomerEmail,
-  ChangeCustomerAddress,
-  ArchiveCustomer,
-
   UserProfileAndOrg, NotificationSetting, ChangeUserDetailsFirstName,
-
-  Person, Company,
   Project, ProjectId, RepoType,
   UserProfile,
   BackendError, Backend, StoreConfig, Store, StoreError,

@@ -1,10 +1,8 @@
-import { Customer, Person } from 'client';
 
-import { CustomerDescriptor } from './types';
-
+import { CustomerDescriptor, Customer, Person } from './customer-types';
 
 
-class CustomerDescriptorImpl implements CustomerDescriptor {
+class ImmutableCustomerDescriptor implements CustomerDescriptor {
   private _entry: Customer;
   private _created: Date;
   private _lastLogin: Date;
@@ -31,5 +29,5 @@ class CustomerDescriptorImpl implements CustomerDescriptor {
   }
 }
 
-export { CustomerDescriptorImpl };
+export { ImmutableCustomerDescriptor };
 export type { };

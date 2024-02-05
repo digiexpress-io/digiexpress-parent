@@ -7,12 +7,11 @@ import {
 } from './backend-types';
 
 import {
-  CustomerId, UserId, RoleId, UserProfileAndOrg
+  UserId, RoleId, UserProfileAndOrg
 } from 'client';
 
-
 import { bittersweet, emerald, orange, red, steelblue, ultraviolet } from 'components-colors';
-
+export type CustomerId = string;
 
 export interface SingleEventBody<T extends TaskCommandType, C extends TaskCommand, D> {
   fromCommand: C | undefined;

@@ -1,2 +1,3 @@
-export { CustomerDescriptorImpl } from './descriptor-impl';
-export * from './types';
+export * from './ImmutableCustomerDescriptor';
+export * from './customer-types';
+export * from './ImmutableCustomerStore';

@@ -5,7 +5,6 @@ import { TenantConfig } from 'client';
 import type { UserProfileAndOrg, UserProfileStore, UserProfile, UserProfileUpdateCommand } from './profile-types';
 import type { User, Org } from './org-types';
 import { mockOrg } from './client-mock';
-import type { CustomerStore, Customer, CustomerId } from './customer-types';
 
 
 export class ServiceImpl implements Backend {
@@ -42,13 +41,6 @@ export class ServiceImpl implements Backend {
       createProject: (commands: CreateProject) => this.createProject(commands),
     };
   }
-  get customer(): CustomerStore {
-    return {
-      getCustomer: (id) => this.getCustomer(id),
-      findCustomers: (searchString) => this.findCustomers(searchString)
-    };
-  }
-
   get userProfile(): UserProfileStore {
     return {
       getUserProfileById: (id: string) => this.getUserProfile(id),
@@ -61,13 +53,6 @@ export class ServiceImpl implements Backend {
   }
   async findUserProfiles(): Promise<UserProfile[]> {
     return await this._store.fetch<UserProfile[]>(`userprofiles`, { repoType: 'USER_PROFILE' });
-  }
-
-  async getCustomer(id: CustomerId): Promise<Customer> {
-    return await this._store.fetch<Customer>(`customers/${id}`, { repoType: 'CRM' });
-  }
-  async findCustomers(searchString: string): Promise<Customer[]> {
-    return await this._store.fetch<Customer[]>(`customers/search?name=${encodeURIComponent(searchString)}`, { repoType: 'CRM' });
   }
 
   async health(): Promise<Health> {

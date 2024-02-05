@@ -1,5 +1,4 @@
-import { CustomerDescriptor, CustomerDescriptorImpl } from 'descriptor-customer';
-import { Customer } from 'client';
+import { CustomerDescriptor, ImmutableCustomerDescriptor, Customer } from 'descriptor-customer';
 
 export interface CustomersSearchState {
   records: CustomerDescriptor[];
@@ -28,7 +27,7 @@ export class ImmutableCustomersSearchState implements CustomersSearchState, Cust
     return new ImmutableCustomersSearchState({ ...this.clone(), searchString, isSearchStringValid });
   }
   withRecords(searchResult: Customer[]): ImmutableCustomersSearchState {
-    const records: CustomerDescriptor[] = searchResult.map(customer => new CustomerDescriptorImpl(customer));
+    const records: CustomerDescriptor[] = searchResult.map(customer => new ImmutableCustomerDescriptor(customer));
     return new ImmutableCustomersSearchState({ ...this.clone(), records });
   }
 

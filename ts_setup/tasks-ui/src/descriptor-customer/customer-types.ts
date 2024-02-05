@@ -119,3 +119,17 @@ export interface CustomerStore {
   findCustomers(searchString: string): Promise<Customer[]>
   getCustomer(id: CustomerId): Promise<Customer>
 }
+
+export interface CustomerDescriptor {
+  id: CustomerId;
+  entry: Customer;
+  displayName: string;
+  customerType: CustomerBodyType;
+  tasks: string[]; // task id-s
+  created: Date;
+  lastLogin: Date;
+
+  toPerson(): Person;
+}
+
+

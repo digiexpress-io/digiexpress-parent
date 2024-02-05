@@ -2,11 +2,12 @@ import React from 'react';
 import { Box, Stack, Grid, Typography, CircularProgress } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 import StyledFullScreenDialog from '../../components-task/Dialogs'; //TODO fullscreen dialog
+
 import Fields from './CustomerFields';
 import Context from 'context';
 import { TaskDescriptor, TaskEditProvider } from 'descriptor-task';
 import Burger from 'components-burger';
-import { CustomerDescriptorImpl, CustomerDescriptor } from 'descriptor-customer';
+import { ImmutableCustomerDescriptor, CustomerDescriptor, ImmutableCustomerStore } from 'descriptor-customer';
 
 
 
@@ -82,7 +83,7 @@ const CustomerDetailsDialog: React.FC<{ open: boolean, onClose: () => void, task
     if (!id) {
       return;
     }
-    backend.customer.getCustomer(id).then(customer => setCustomer(new CustomerDescriptorImpl(customer)));
+    new ImmutableCustomerStore(backend.store).getCustomer(id).then(customer => setCustomer(new ImmutableCustomerDescriptor(customer)));
   }, [props.task?.customerId]);
 
   if (!props.open || !props.task || !props.task.customerId) {
