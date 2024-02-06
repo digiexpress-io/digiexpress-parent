@@ -54,3 +54,11 @@ export interface CreateSysConfigRelease extends SysConfigUpdateCommand {
   scheduledAt: Instant;
   commandType: 'CreateSysConfigRelease';
 }
+
+export interface SysConfigStore {
+  findAllSysConfigs(): Promise<SysConfig[]>;
+  getOneSysConfig(sysConfigId: string): Promise<SysConfig>;
+  createOneSysConfig(commands: CreateSysConfig): Promise<SysConfig>;
+  updateOneSysConfig(sysConfigId: string, commands: SysConfigUpdateCommand[]): Promise<SysConfig>;
+  deleteOneSysConfig(sysConfigId: string, commands: SysConfigUpdateCommand[]): Promise<SysConfig>;
+}
