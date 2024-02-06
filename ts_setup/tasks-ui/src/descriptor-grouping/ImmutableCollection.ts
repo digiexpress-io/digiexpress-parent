@@ -58,7 +58,7 @@ export class ImmutableCollection<D extends DataType> implements Collection<D> {
       this._cache = Object.freeze(init.cache ?? {});
       this._updated = new Date().toISOString();
     } else {
-      this._groups = Object.freeze(raw.groups ?? []);
+      this._groups = Object.freeze( [...(raw.groups ?? [])].sort((a, b) => a.id.localeCompare(b.id)));
       this._cache = Object.freeze(raw.cache ?? {});
       this._updated = raw.updated ?? new Date().toISOString();
     }
@@ -136,7 +136,11 @@ class GroupingVisitor<D extends DataType> {
       }
     }
 
-    const groups = Object.freeze(Object.entries(dirty_groups).map(([id, value]) => new ImmutableGroup({id, value})));
+    const groups = Object.freeze(Object
+      .entries(dirty_groups)
+      .map(([id, value]) => new ImmutableGroup({id, value}))
+      .sort((a, b) => a.id.localeCompare(b.id))
+    );
     const cache: Record<string, InternalCache<D>> = {...this._cache};
     cache[classifierName] = { groups, classifierName, definition };
 
@@ -147,9 +151,5 @@ class GroupingVisitor<D extends DataType> {
       groupValues: this._groupValues,
       groups, cache
     };
-  }
-
-  private visitData(data: D) {
-      
   }
 }

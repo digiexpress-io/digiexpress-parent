@@ -10,13 +10,13 @@ export function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
     bValue = (bValue as unknown as string).toLowerCase() as any;
   }
 
-
   if (bValue < aValue) {
     return -1;
   }
   if (bValue > aValue) {
     return 1;
   }
+  
   return 0;
 }
 
@@ -32,16 +32,36 @@ export function getComparator<T>(
 
 export function stableSort<T>(init: readonly T[], comparator: (a: T, b: T) => number) {
   const array = [...(init ? init : [])];
-  const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
-  stabilizedThis.sort((a, b) => {
-    const aValue = a[0];
-    const bValue = b[0];
 
-    const order = comparator(aValue, bValue);
+  // Data, Data Index
+  const dataByIndex = array.map((el, index) => [el, index] as [T, number]);
+  
+
+  dataByIndex.sort((a, b) => {
+    const aData = a[0];
+    const bData = b[0];
+    const order = comparator(aData, bData);
+    
     if (order !== 0) {
       return order;
     }
+
+    // fallback to id if sorting result is same
+    const aId = (aData as any)['id'];
+    const bId = (bData as any)['id'];
+    if(aId && bId) {
+
+      const afId: string = aId + "";
+      const bfId: string = bId + "";
+      const fallback = afId.localeCompare(bfId);
+      if(fallback !== 0) {
+        return fallback;
+      }
+    }
+
     return a[1] - b[1];
   });
-  return stabilizedThis.map((el) => el[0]);
+
+
+  return dataByIndex.map((el) => el[0]);
 }
