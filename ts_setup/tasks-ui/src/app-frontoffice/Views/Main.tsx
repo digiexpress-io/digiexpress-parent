@@ -38,9 +38,6 @@ const Main: React.FC<{}> = () => {
       return null;
     }
 
-    <Box>NEW BOX</Box>
-
-
     if (active.id === 'activities') {
       return (<Box sx={root}><Activities /></Box>);
     } else if (active.id === 'taskSearch') {
@@ -67,11 +64,9 @@ const Main: React.FC<{}> = () => {
       return (<Box sx={root}><CurrentUserProfile /></Box>)
     } else if (active.id === 'allUserProfiles') {
       return (<Box sx={root}><UserProfiles /></Box>)
-    }
-    else if (active.id === 'reporting') {
+    } else if (active.id === 'reporting') {
 
     }
-
 
     if (entity) {
       return <Box sx={root}>no view implemented entity editor: {JSON.stringify(active)}</Box>

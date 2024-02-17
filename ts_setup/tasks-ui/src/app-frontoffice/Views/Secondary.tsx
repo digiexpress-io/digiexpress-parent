@@ -22,6 +22,8 @@ import { FormattedMessage } from 'react-intl';
 import Burger from 'components-burger';
 import Context from 'context';
 import { blueberry_whip, green_teal, sambucus } from 'components-colors';
+import { UserProfileAndOrg } from 'descriptor-user-profile';
+import { Backend } from 'client';
 
 
 
@@ -105,10 +107,11 @@ const StyledTabs = styled(Tabs)<TabsProps>(({ theme }) => ({
 }));
 
 
-const Secondary: React.FC<{}> = () => {
+const Secondary: React.FC<{ init?: { profile: UserProfileAndOrg, backend: Backend } }> = ({init}) => {
   const app = Context.useApp();
   const { actions } = Burger.useTabs();
   const [active, setActive] = React.useState<string>('explorer.taskSearch');
+
 
   function handleActive(_event: React.SyntheticEvent, newValue: string) { setActive(newValue) }
   function handleCRM() { actions.handleTabAdd({ id: 'crm', label: <FormattedMessage id="activities.frontoffice.crm.title" /> }) }
@@ -134,9 +137,10 @@ const Secondary: React.FC<{}> = () => {
   function handleCurrentUserProfile() { actions.handleTabAdd({ id: 'currentUserProfile', label: <FormattedMessage id="activities.frontoffice.userProfile.title" /> }) }
   function handleAllUserProfiles() { actions.handleTabAdd({ id: 'allUserProfiles', label: <FormattedMessage id="activities.frontoffice.allUserProfiles.title" /> }) }
 
-
+  
   React.useEffect(() => {
-    handleTaskSearch();
+    //handleTaskSearch();
+    handleDeployments();
   }, []);
 
 
@@ -144,6 +148,7 @@ const Secondary: React.FC<{}> = () => {
     <StyledBox>
       <StyledTitleTab label={<FormattedMessage id="explorer.title" />} value='label' />
     </StyledBox>
+
     <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', width: "100%", backgroundColor: sambucus }}>
       <StyledTabs orientation="vertical" onChange={handleActive} value={active}>
 
@@ -153,11 +158,17 @@ const Secondary: React.FC<{}> = () => {
         <StyledExplorerTab value='explorer.crm' label={<FormattedMessage id="explorer.frontoffice.crm.menuOption" />} onClick={handleCRM}
           icon={<AdminPanelSettingsOutlinedIcon fontSize='small' />} />
 
-        <StyledExplorerSubTab value='explorer.customerSearch' label={<FormattedMessage id="explorer.frontoffice.crm.customerSearch.menuOption" />}
-          onClick={handleCustomerSearch} icon={<SearchIcon fontSize='small' />} />
+        <StyledExplorerSubTab 
+          value='explorer.customerSearch' 
+          label={<FormattedMessage id="explorer.frontoffice.crm.customerSearch.menuOption" />}
+          onClick={handleCustomerSearch}
+          icon={<SearchIcon fontSize='small' />} />
 
-        <StyledExplorerTab value='explorer.tasks' label={<FormattedMessage id="explorer.frontoffice.tasks.menuOption" />} onClick={handleTasks}
+        <StyledExplorerTab 
+          value='explorer.tasks' label={<FormattedMessage id="explorer.frontoffice.tasks.menuOption" />} 
+          onClick={handleTasks}
           icon={<TaskAltIcon fontSize='small' />} />
+
         <StyledExplorerSubTab value='explorer.taskSearch' label={<FormattedMessage id="explorer.frontoffice.taskSearch.menuOption" />} onClick={handleTaskSearch}
           icon={<SearchIcon fontSize='small' />} />
         <StyledExplorerSubTab value='explorer.teamSpace' label={<FormattedMessage id="explorer.frontoffice.teamSpace.menuOption" />} onClick={handleGroup}

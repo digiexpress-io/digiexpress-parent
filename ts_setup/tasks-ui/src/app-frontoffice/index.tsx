@@ -14,7 +14,6 @@ import Views from './Views';
 
 
 const FrontOfficeProvider: React.FC<{ children: React.ReactNode, init: { backend: Backend, profile: UserProfileAndOrg } }> = ({ children, init }) => {
-
   return (
     <TasksProvider init={init}>
       <TenantProvider init={init}>

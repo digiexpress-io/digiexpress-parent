@@ -191,6 +191,11 @@ const en = {
   'task.event.createChecklist': 'Checklist created',
   'task.event.addChecklistItem': 'Checklist item added',
 
+  'core.sysconfig.hide': 'Hide: {records} forms',
+  'core.sysconfig.show': 'Show: {records} forms',
+  'core.sysconfig.current_config': 'Current config',
+  'core.sysconfig.all_config': 'All config',
+
 
   'core.taskCreate.fields.roles': 'Roles',
   'core.taskCreate.fields.assignees': 'Assignees',

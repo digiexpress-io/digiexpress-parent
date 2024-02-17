@@ -19,7 +19,6 @@ import io.resys.sysconfig.client.api.ImmutableAssetParam;
 import io.resys.sysconfig.client.api.ImmutableWrenchAssetEntry;
 import io.resys.sysconfig.client.api.ImmutableWrenchAssets;
 import io.resys.thena.docdb.support.OidUtils;
-import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -28,7 +27,7 @@ public class CreateHdesTransientRelease {
   private final HdesStore store;
   private final HdesStore.StoreState state;
   
-  public WrenchAssets visit(String releaseId) {
+  public WrenchAssets toWrenchAssets(String releaseId) {
     final var command = ImmutableCreateEntity.builder()
         .name("transient-release: " + releaseId + " at: " + Instant.now().toString())
         .desc("created on the fly")

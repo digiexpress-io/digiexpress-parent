@@ -103,16 +103,18 @@ declare namespace StencilClient {
 
   interface Release {
     id: string,
-    body: {
-      note?: string,
-      name: string,
-      created: string,
-      locales: LocaleReleaseItem[];
-      articles: ArticleReleaseItem[];
-      links: LinkReleaseItem[];
-      workflows: WorkflowReleaseItem[];
-      pages: PageReleaseItem[];
-    }
+    body: ReleaseBody;
+  }
+
+  interface ReleaseBody {
+    note?: string,
+    name: string,
+    created: string,
+    locales: LocaleReleaseItem[];
+    articles: ArticleReleaseItem[];
+    links: LinkReleaseItem[];
+    workflows: WorkflowReleaseItem[];
+    pages: PageReleaseItem[];
   }
 
   interface LinkReleaseItem extends ReleaseItem {

@@ -11,7 +11,7 @@ interface App<T extends Object, ContextInitProps extends Object> {
   components: {
     toolbar: React.ElementType<ToolbarProps>;
     primary: React.ElementType<PrimaryProps>;
-    secondary: React.ElementType<SecondaryProps>;
+    secondary: React.ElementType<SecondaryProps & { init?: ContextInitProps }>;
     context: React.ElementType<{init: ContextInitProps, children: React.ReactNode}>;
   }
 }

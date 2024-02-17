@@ -5,13 +5,9 @@ import Burger from 'components-burger';
 import { StyledCardItemProps, StyledCards } from './StyledCards';
 
 
-type ActivityId = "tasks";
-
-
 const createActivities: (props: {
   actions: Burger.TabsActions,
-  setOpen: (index: ActivityId) => void
-}) => StyledCardItemProps[] = ({ actions, setOpen }) => ([
+}) => StyledCardItemProps[] = ({ actions }) => ([
   {
     id: "deployments",
     title: "activities.frontoffice.deployments.title",
@@ -129,11 +125,8 @@ const createActivities: (props: {
 //card view for all CREATE views
 const Activities: React.FC<{}> = () => {
   const { actions } = Burger.useTabs();
-  const [open, setOpen] = React.useState<ActivityId>();
-  const cards = React.useMemo(() => createActivities({ actions, setOpen }), [actions, setOpen]);
-  const handleClose = () => setOpen(undefined)
-
-
+  const cards = React.useMemo(() => createActivities({ actions }), [actions]);
+  
   return (<StyledCards title="activities.title" desc="activities.desc" items={cards} />);
 }
 

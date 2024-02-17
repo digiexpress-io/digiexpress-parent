@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.dialob.client.api.DialobClient;
 import io.resys.hdes.client.api.HdesClient;
+import io.resys.hdes.client.api.HdesStore;
 import io.resys.sysconfig.client.api.model.SysConfigRelease.AssetType;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfig;
 import io.smallrye.mutiny.Multi;
@@ -38,6 +39,8 @@ public interface AssetClient {
   
   interface AssetQuery {
     Uni<WrenchAssets> getWrenchAsset(String releaseId);
+    Uni<StencilClient.Release> getStencilState(String releaseId);
+    Uni<HdesStore.StoreState> getWrenchState(String releaseId);
     Uni<StencilAssets> getStencilAsset(String releaseId);
     Uni<List<DialobAsset>> getDialobAssets(List<String> formId);
     Multi<Asset> findAll();
@@ -122,6 +125,7 @@ public interface AssetClient {
   @Value.Immutable @JsonSerialize(as = ImmutableStencilAssetEntry.class) @JsonDeserialize(as = ImmutableStencilAssetEntry.class)
   interface StencilAssetEntry {
     String getWorkflowName();
+
     Map<String, String> getLocales();
   }
 

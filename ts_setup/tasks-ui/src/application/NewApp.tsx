@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { IntlProvider, useIntl } from 'react-intl';
-import { ThemeProvider, StyledEngineProvider, Theme } from '@mui/material';
+import { ThemeProvider, StyledEngineProvider } from '@mui/material';
 import { SnackbarProvider } from 'notistack';
 import { useSnackbar } from 'notistack';
 import Burger, { siteTheme } from 'components-burger';
@@ -70,6 +70,7 @@ const store: TaskClient.Store = new TaskClient.DefaultStore({
     { id: 'WRENCH', url: baseUrl + "/q/digiexpress/api/" },
     { id: 'CONFIG', url: baseUrl + "/q/digiexpress/api/" },
     { id: 'HEALTH', url: baseUrl + "/q/digiexpress/api/" },
+    { id: 'SYS_CONFIG', url: baseUrl + "/q/digiexpress/api/" },
     { id: 'EXT_DIALOB', url: baseUrl + "/q/digiexpress/api/dialob/" },
     { id: 'EXT_DIALOB_EDIT', url: baseUrl + "/q/digiexpress/api/dialob/api/edit" },
 
@@ -215,28 +216,13 @@ const CheckAppConnection = React.lazy(async () => {
   return ({ default: Result })
 });
 
-const theme: Theme = {
-  ...siteTheme,
-  components: {
-    MuiTypography: {
-      styleOverrides: {
-        body1: {
-          fontSize: '10pt'
-        },
-        body2: {
-          fontSize: '12pt'
-        }
-      }
-    }
-  }
-};
 const locale = 'en';
 
 
 const NewApp: React.FC<{}> = () => (
   <IntlProvider locale={locale} messages={messages[locale]}>
     <StyledEngineProvider injectFirst>
-      <ThemeProvider theme={theme}>
+      <ThemeProvider theme={siteTheme}>
         <SnackbarProvider>
           <React.Suspense fallback={<Connection.Loading client={backend} />}><CheckAppConnection /></React.Suspense>
         </SnackbarProvider>

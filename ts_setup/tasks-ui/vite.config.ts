@@ -33,6 +33,8 @@ const modules: string[] = [
 
   'descriptor-popper',
 
+  'descriptor-sys-config',
+
   'client',
   'context',
   'table',

@@ -107,6 +107,16 @@ const siteTheme = createTheme({
 
 
   components: {
+    MuiTypography: {
+      styleOverrides: {
+        body1: {
+          fontSize: '10pt'
+        },
+        body2: {
+          fontSize: '12pt'
+        }
+      }
+    },
     MuiCardActions: {
       styleOverrides: {
         root: {
@@ -155,7 +165,7 @@ const siteTheme = createTheme({
         root: {
           fontVariant: 'body2',
           borderRadius: 0,
-          textTransform: 'capitalize',
+          textTransform: "none",
           borderWidth: '2px solid !important',
         }
       },

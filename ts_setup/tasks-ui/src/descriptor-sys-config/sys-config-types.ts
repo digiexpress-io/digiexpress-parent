@@ -1,3 +1,5 @@
+import HdesClient from "components-hdes/core";
+
 type Instant = string;
 
 export interface SysConfig {
@@ -56,8 +58,10 @@ export interface CreateSysConfigRelease extends SysConfigUpdateCommand {
 }
 
 export interface SysConfigStore {
+
   findAllSysConfigs(): Promise<SysConfig[]>;
   getOneSysConfig(sysConfigId: string): Promise<SysConfig>;
+  getHdesSiteFromSysConfig(sysConfigId: string): Promise<HdesClient.Site>;
   createOneSysConfig(commands: CreateSysConfig): Promise<SysConfig>;
   updateOneSysConfig(sysConfigId: string, commands: SysConfigUpdateCommand[]): Promise<SysConfig>;
   deleteOneSysConfig(sysConfigId: string, commands: SysConfigUpdateCommand[]): Promise<SysConfig>;

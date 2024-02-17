@@ -24,8 +24,8 @@ function getApiUrl(backend: Backend) {
 
 const DialobEditor: React.FC<{
   onClose: () => void,
-  entry: TenantEntryDescriptor,
-  form: DialobForm | undefined,
+  entry: { tenantId: string },
+  form: { _id: string } | undefined,
 
 }> = ({ form, entry, onClose }) => {
 

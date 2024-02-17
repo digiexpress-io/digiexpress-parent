@@ -126,7 +126,7 @@ public class HdesComposerImpl implements HdesComposer {
     return client.store().query().get().onItem().transform(state -> new DataDumpVisitor(client).visit(state));
   }
   
-  private ComposerState state(StoreState source) {
+  public ComposerState state(StoreState source) {
     // create envir
     final var envir = ComposerEntityMapper.toEnvir(client.envir(), source).build();
     

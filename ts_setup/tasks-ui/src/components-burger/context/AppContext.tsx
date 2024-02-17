@@ -61,7 +61,7 @@ const CreateContainer: React.FC<{ app: API.App<any, any> }> = ({ app }) => {
   // @ts-ignore
   const main = <Main />;
   // @ts-ignore
-  const secondary = <Secondary />;
+  const secondary = <Secondary init={app.init}/>;
   // @ts-ignore
   const toobar = <Toolbar />;
   return (
