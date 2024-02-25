@@ -161,3 +161,104 @@ ALTER TABLE doc_log
   FOREIGN KEY (commit_id)
   REFERENCES doc_commits (id);
 
+
+CREATE TABLE org_roles
+(
+  id VARCHAR(40) PRIMARY KEY,
+  commit_id VARCHAR(40) NOT NULL,
+  external_id VARCHAR(40),
+  role_name VARCHAR(255) NOT NULL,
+  role_description VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE NOT NULL
+);
+
+CREATE TABLE org_groups
+(
+  id VARCHAR(40) PRIMARY KEY,
+  commit_id VARCHAR(40) NOT NULL,
+  external_id VARCHAR(40),
+  parent_id VARCHAR(40),
+  group_name VARCHAR(255) NOT NULL,
+  group_description VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE NOT NULL
+);
+
+CREATE TABLE org_group_roles
+(
+  id VARCHAR(40) PRIMARY KEY,
+  commit_id VARCHAR(40) NOT NULL,
+  group_id VARCHAR(40) NOT NULL,
+  role_id VARCHAR(40) NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE NOT NULL
+);
+
+CREATE TABLE org_users
+(
+  id VARCHAR(40) PRIMARY KEY,
+  commit_id VARCHAR(40) NOT NULL,
+  external_id VARCHAR(40) NOT NULL,
+  username VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE NOT NULL
+);
+
+CREATE TABLE org_user_roles
+(
+  id VARCHAR(40) PRIMARY KEY,
+  commit_id VARCHAR(40) NOT NULL,
+  user_id VARCHAR(40) NOT NULL,
+  role_id VARCHAR(40) NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE NOT NULL
+);
+
+CREATE TABLE org_user_memberships
+(
+  id VARCHAR(40) PRIMARY KEY,
+  commit_id VARCHAR(40) NOT NULL,
+  user_id VARCHAR(40) NOT NULL,
+  group_id VARCHAR(40) NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE NOT NULL
+);
+
+CREATE TABLE org_actor_status
+(
+  id VARCHAR(40) PRIMARY KEY,
+  commit_id VARCHAR(40) NOT NULL,
+  user_id VARCHAR(40),
+  role_id VARCHAR(40),
+  group_id VARCHAR(40),
+  actor_status VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE org_actor_commit_logs
+(
+  commit_id VARCHAR(40) PRIMARY KEY,
+  user_id VARCHAR(40)[],
+  role_id VARCHAR(40)[],
+  group_id VARCHAR(40)[],
+  actor_data_id VARCHAR(40)[],
+  log_type VARCHAR(255) NOT NULL,
+  value JSONB NOT NULL,
+  commit_author VARCHAR(255) NOT NULL,
+  commit_message VARCHAR(255) NOT NULL,
+  commit_date_time TIMESTAMP WITH TIME ZONE NOT NULL
+);
+
+CREATE TABLE org_actor_data
+(
+  id VARCHAR(40) PRIMARY KEY,
+  commit_id VARCHAR(40) NOT NULL,
+  parent_id VARCHAR(40),
+  user_id VARCHAR(40),
+  role_id VARCHAR(40),
+  group_id VARCHAR(40),
+  data_type VARCHAR(255) NOT NULL,
+  value JSONB NOT NULL,
+  commit_author VARCHAR(255) NOT NULL,
+  commit_message VARCHAR(255) NOT NULL,
+  commit_date_time TIMESTAMP WITH TIME ZONE NOT NULL
+);
+
+
+
+

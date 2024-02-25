@@ -47,6 +47,19 @@ public abstract class DbCollections {
   public abstract String getDoc();
   
   
+  public abstract String getOrgRoles();
+  public abstract String getOrgGroups();
+  public abstract String getOrgGroupRoles();
+  public abstract String getOrgUsers();
+  public abstract String getOrgUserRoles();
+  public abstract String getOrgUserMemberships();
+  public abstract String getOrgActorStatus();
+  public abstract String getOrgActorLogs();
+  public abstract String getOrgActorData();
+  
+  
+  
+  
   
   public DbCollections toRepo(Repo repo) {
     String prefix = repo.getPrefix();
@@ -65,6 +78,16 @@ public abstract class DbCollections {
         .docLog(    prefix + this.getDocLog())
         .doc(       prefix + this.getDoc())
         
+        .orgRoles(          prefix + this.getOrgRoles())
+        .orgGroups(         prefix + this.getOrgGroups())
+        .orgGroupRoles(     prefix + this.getOrgGroupRoles())
+        .orgUsers(          prefix + this.getOrgUsers())
+        .orgUserRoles(      prefix + this.getOrgUserRoles())
+        .orgUserMemberships(prefix + this.getOrgUserMemberships())
+        .orgActorStatus(    prefix + this.getOrgActorStatus())
+        .orgActorLogs(      prefix + this.getOrgActorLogs())
+        .orgActorData(      prefix + this.getOrgActorData())
+        
         .build();
   }
   
@@ -72,16 +95,29 @@ public abstract class DbCollections {
     return ImmutableDbCollections.builder()
         .db(db == null ? "docdb" : db)
         .repos("repos")
+        
         .refs("refs")
         .tags("tags")
         .blobs("blobs")
         .trees("trees")
         .treeItems("treeItems")
         .commits("commits")
+        
         .docCommits("doc_commits")
         .docBranch("doc_branch")
         .docLog("doc_log")
         .doc("doc")
+        
+        .orgRoles("org_roles")
+        .orgGroups("org_groups")
+        .orgGroupRoles("org_group_roles")
+        .orgUsers("org_users")
+        .orgUserRoles("org_user_roles")
+        .orgUserMemberships("org_user_memberships")
+        .orgActorStatus("org_actor_status")
+        .orgActorLogs("org_actor_commit_logs")
+        .orgActorData("org_actor_data")
+        
         .build();
   }
 }

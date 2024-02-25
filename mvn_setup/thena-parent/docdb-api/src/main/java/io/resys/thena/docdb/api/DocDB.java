@@ -37,10 +37,26 @@ import io.smallrye.mutiny.Uni;
 
 public interface DocDB {
   RepoActions repo();
+  
   GitModel git();
   DocModel doc();
   
+
+  interface OrgModel {
+    DocCommitActions commit();
+    DocQueryActions find();
+    
+
+    // build world state
+    interface DocProjectQuery {
+      DocProjectQuery projectName(String projectName);
+      Uni<QueryEnvelope<DocProjectObjects>> get();
+    }
+  }
+
   
+  
+  // single document model
   interface DocModel {
     DocCommitActions commit();
     DocQueryActions find();
@@ -52,7 +68,9 @@ public interface DocDB {
       Uni<QueryEnvelope<DocProjectObjects>> get();
     }
   }
+
   
+  // multi doc model, cropped git replica
   interface GitModel {
     CommitActions commit();
     TagActions tag();

@@ -48,7 +48,7 @@ public class SqlSchemaImpl implements SqlSchema {
   }
   
   @Override
-  public Sql createBlobs() {
+  public Sql createGitBlobs() {
     return ImmutableSql.builder().value(new SqlStatement().ln()
     .append("CREATE TABLE ").append(options.getBlobs()).ln()
     .append("(").ln()
@@ -63,7 +63,7 @@ public class SqlSchemaImpl implements SqlSchema {
   
   
   @Override
-  public Sql createCommits() {
+  public Sql createGitCommits() {
     return ImmutableSql.builder().value(new SqlStatement().ln()
     .append("CREATE TABLE ").append(options.getCommits()).ln()
     .append("(").ln()
@@ -79,7 +79,7 @@ public class SqlSchemaImpl implements SqlSchema {
   }
   
   @Override
-  public Sql createCommitsConstraints() {
+  public Sql createGitCommitsConstraints() {
     return ImmutableSql.builder()
         .value(new SqlStatement().ln()
         .append("ALTER TABLE ").append(options.getCommits()).ln()
@@ -103,7 +103,7 @@ public class SqlSchemaImpl implements SqlSchema {
   
 
   @Override
-  public Sql createTreeItems() {
+  public Sql createGitTreeItems() {
     return ImmutableSql.builder().value(new SqlStatement().ln()
     .append("CREATE TABLE ").append(options.getTreeItems())
     .append("(")
@@ -115,7 +115,7 @@ public class SqlSchemaImpl implements SqlSchema {
     .build()).build();
   }
   @Override
-  public Sql createTreeItemsConstraints() {
+  public Sql createGitTreeItemsConstraints() {
     return ImmutableSql.builder()
         .value(new SqlStatement().ln()
         .append("ALTER TABLE ").append(options.getTreeItems()).ln()
@@ -142,7 +142,7 @@ public class SqlSchemaImpl implements SqlSchema {
   
 
   @Override
-  public Sql createTrees() {
+  public Sql createGitTrees() {
     return ImmutableSql.builder().value(new SqlStatement().ln()
     .append("CREATE TABLE ").append(options.getTrees()).ln()
     .append("(").ln()
@@ -152,7 +152,7 @@ public class SqlSchemaImpl implements SqlSchema {
   }
   
   @Override
-  public Sql createRefs() {
+  public Sql createGitRefs() {
     return ImmutableSql.builder().value(new SqlStatement().ln()
     .append("CREATE TABLE ").append(options.getRefs()).ln()
     .append("(").ln()
@@ -162,7 +162,7 @@ public class SqlSchemaImpl implements SqlSchema {
     .build()).build();
   }
   @Override
-  public Sql createRefsConstraints() {
+  public Sql createGitRefsConstraints() {
     return ImmutableSql.builder()
         .value(new SqlStatement().ln()
         .append("ALTER TABLE ").append(options.getRefs()).ln()
@@ -174,7 +174,7 @@ public class SqlSchemaImpl implements SqlSchema {
   }
   
   @Override
-  public Sql createTags() {
+  public Sql createGitTags() {
     return ImmutableSql.builder().value(new SqlStatement().ln()
     .append("CREATE TABLE ").append(options.getTags()).ln()
     .append("(").ln()
@@ -187,7 +187,7 @@ public class SqlSchemaImpl implements SqlSchema {
     .build()).build();
   }
   @Override
-  public Sql createTagsConstraints() {
+  public Sql createGitTagsConstraints() {
     return ImmutableSql.builder()
         .value(new SqlStatement().ln()
         .append("ALTER TABLE ").append(options.getTags()).ln()
@@ -360,19 +360,249 @@ public class SqlSchemaImpl implements SqlSchema {
         .build();
   }
 
+  @Override
+  public Sql createOrgRoles() {
+    return ImmutableSql.builder().value(new SqlStatement().ln()
+    .append("CREATE TABLE ").append(options.getOrgRoles()).ln()
+    .append("(").ln()
+    .append("  id VARCHAR(40) PRIMARY KEY,").ln()
+    .append("  commit_id VARCHAR(40) NOT NULL,").ln()
+    .append("  external_id VARCHAR(40),").ln()
+    .append("  role_name VARCHAR(255) NOT NULL,").ln()
+    .append("  role_description VARCHAR(255) NOT NULL,").ln()
+    .append("  created_at TIMESTAMP WITH TIME ZONE NOT NULL").ln()
+    .append(");").ln()
+    
 
+    .build()).build();
+  }
+
+  @Override
+  public Sql createOrgGroups() {
+    return ImmutableSql.builder().value(new SqlStatement().ln()
+    .append("CREATE TABLE ").append(options.getOrgGroups()).ln()
+    .append("(").ln()
+    .append("  id VARCHAR(40) PRIMARY KEY,").ln()
+    .append("  commit_id VARCHAR(40) NOT NULL,").ln()
+    .append("  external_id VARCHAR(40),").ln()
+    .append("  parent_id VARCHAR(40),").ln()
+    .append("  group_name VARCHAR(255) NOT NULL,").ln()
+    .append("  group_description VARCHAR(255) NOT NULL,").ln()
+    .append("  created_at TIMESTAMP WITH TIME ZONE NOT NULL").ln()
+    .append(");").ln()
+    
+
+    .build()).build();
+  }
+
+  @Override
+  public Sql createOrgGroupRoles() {
+    return ImmutableSql.builder().value(new SqlStatement().ln()
+    .append("CREATE TABLE ").append(options.getOrgGroupRoles()).ln()
+    .append("(").ln()
+    .append("  id VARCHAR(40) PRIMARY KEY,").ln()
+    .append("  commit_id VARCHAR(40) NOT NULL,").ln()
+    .append("  group_id VARCHAR(40) NOT NULL,").ln()
+    .append("  role_id VARCHAR(40) NOT NULL,").ln()
+    .append("  created_at TIMESTAMP WITH TIME ZONE NOT NULL").ln()
+    .append(");").ln()
+    
+
+    .build()).build();
+  }
+
+  @Override
+  public Sql createOrgUsers() {
+    return ImmutableSql.builder().value(new SqlStatement().ln()
+    .append("CREATE TABLE ").append(options.getOrgUsers()).ln()
+    .append("(").ln()
+    .append("  id VARCHAR(40) PRIMARY KEY,").ln()
+    .append("  commit_id VARCHAR(40) NOT NULL,").ln()
+    .append("  external_id VARCHAR(40) NOT NULL,").ln()
+    .append("  username VARCHAR(255) NOT NULL,").ln()
+    .append("  email VARCHAR(255) NOT NULL,").ln()
+    .append("  created_at TIMESTAMP WITH TIME ZONE NOT NULL").ln()
+    .append(");").ln()
+    
+
+    .build()).build();
+  }
+
+  @Override
+  public Sql createOrgUserRoles() {
+    return ImmutableSql.builder().value(new SqlStatement().ln()
+    .append("CREATE TABLE ").append(options.getOrgUserRoles()).ln()
+    .append("(").ln()
+    .append("  id VARCHAR(40) PRIMARY KEY,").ln()
+    .append("  commit_id VARCHAR(40) NOT NULL,").ln()
+    .append("  user_id VARCHAR(40) NOT NULL,").ln()
+    .append("  role_id VARCHAR(40) NOT NULL,").ln()
+    .append("  created_at TIMESTAMP WITH TIME ZONE NOT NULL").ln()
+    .append(");").ln()
+    
+
+    .build()).build();
+  }
+
+  @Override
+  public Sql createOrgUserMemberships() {
+    return ImmutableSql.builder().value(new SqlStatement().ln()
+    .append("CREATE TABLE ").append(options.getOrgUserMemberships()).ln()
+    .append("(").ln()
+    .append("  id VARCHAR(40) PRIMARY KEY,").ln()
+    .append("  commit_id VARCHAR(40) NOT NULL,").ln()
+    .append("  user_id VARCHAR(40) NOT NULL,").ln()
+    .append("  group_id VARCHAR(40) NOT NULL,").ln()
+    .append("  created_at TIMESTAMP WITH TIME ZONE NOT NULL").ln()
+    .append(");").ln()
+    
+
+    .build()).build();
+  }
+
+  @Override
+  public Sql createOrgActorStatus() {
+    return ImmutableSql.builder().value(new SqlStatement().ln()
+    .append("CREATE TABLE ").append(options.getOrgActorStatus()).ln()
+    .append("(").ln()
+    .append("  id VARCHAR(40) PRIMARY KEY,").ln()
+    .append("  commit_id VARCHAR(40) NOT NULL,").ln()
+    .append("  user_id VARCHAR(40),").ln()
+    .append("  role_id VARCHAR(40),").ln()
+    .append("  group_id VARCHAR(40),").ln()
+    .append("  actor_status VARCHAR(100) NOT NULL").ln() // visibility 
+    .append(");").ln()
+    
+
+    .build()).build();
+  }
+
+  @Override
+  public Sql createOrgActorLogs() {
+    return ImmutableSql.builder().value(new SqlStatement().ln()
+    .append("CREATE TABLE ").append(options.getOrgActorLogs()).ln()
+    .append("(").ln()
+    .append("  commit_id VARCHAR(40) PRIMARY KEY,").ln()
+    
+    .append("  user_id VARCHAR(40)[],").ln()
+    .append("  role_id VARCHAR(40)[],").ln()
+    .append("  group_id VARCHAR(40)[],").ln()
+    .append("  actor_data_id VARCHAR(40)[],").ln()
+    
+    .append("  log_type VARCHAR(255) NOT NULL,").ln()
+    .append("  value JSONB NOT NULL,").ln()
+
+    .append("  commit_author VARCHAR(255) NOT NULL,").ln()
+    .append("  commit_message VARCHAR(255) NOT NULL,").ln()
+    .append("  commit_date_time TIMESTAMP WITH TIME ZONE NOT NULL").ln()
+    .append(");").ln()
+    
+
+    .build()).build();
+  }
+
+  @Override
+  public Sql createOrgActorData() {
+    return ImmutableSql.builder().value(new SqlStatement().ln()
+    .append("CREATE TABLE ").append(options.getOrgActorData()).ln()
+    .append("(").ln()
+    .append("  id VARCHAR(40) PRIMARY KEY,").ln()
+    .append("  commit_id VARCHAR(40) NOT NULL,").ln()
+    .append("  parent_id VARCHAR(40),").ln()
+    .append("  user_id VARCHAR(40),").ln()
+    .append("  role_id VARCHAR(40),").ln()
+    .append("  group_id VARCHAR(40),").ln()
+
+    .append("  data_type VARCHAR(255) NOT NULL,").ln()
+    .append("  value JSONB NOT NULL,").ln()
+
+    .append("  commit_author VARCHAR(255) NOT NULL,").ln()
+    .append("  commit_message VARCHAR(255) NOT NULL,").ln()
+    .append("  commit_date_time TIMESTAMP WITH TIME ZONE NOT NULL").ln()
+    .append(");").ln()
+    
+
+    .build()).build();
+  }
+
+  @Override
+  public Sql createOrgRolesConstraints() {
+    return ImmutableSql.builder()
+        .value(new SqlStatement().ln()
+            /*
+        .append("ALTER TABLE ").append(options.getDocBranch()).ln()
+        .append("  ADD CONSTRAINT ").append(options.getDocBranch()).append("_DOC_ID_FK").ln()
+        .append("  FOREIGN KEY (doc_id)").ln()
+        .append("  REFERENCES ").append(options.getDoc()).append(" (id);").ln().ln()*/
+        .build())
+        .build();
+  }
+
+  @Override
+  public Sql createOrgUserConstraints() {
+    return ImmutableSql.builder()
+        .value(new SqlStatement().ln()
+            /*
+        .append("ALTER TABLE ").append(options.getDocBranch()).ln()
+        .append("  ADD CONSTRAINT ").append(options.getDocBranch()).append("_DOC_ID_FK").ln()
+        .append("  FOREIGN KEY (doc_id)").ln()
+        .append("  REFERENCES ").append(options.getDoc()).append(" (id);").ln().ln()*/
+        .build())
+        .build();
+  }
+
+  @Override
+  public Sql createOrgGroupConstraints() {
+    return ImmutableSql.builder()
+        .value(new SqlStatement().ln()
+            /*
+        .append("ALTER TABLE ").append(options.getDocBranch()).ln()
+        .append("  ADD CONSTRAINT ").append(options.getDocBranch()).append("_DOC_ID_FK").ln()
+        .append("  FOREIGN KEY (doc_id)").ln()
+        .append("  REFERENCES ").append(options.getDoc()).append(" (id);").ln().ln()*/
+        .build())
+        .build();
+  }
+
+  @Override
+  public Sql createOrgActorConstraints() {
+    return ImmutableSql.builder()
+        .value(new SqlStatement().ln()
+            /*
+        .append("ALTER TABLE ").append(options.getDocBranch()).ln()
+        .append("  ADD CONSTRAINT ").append(options.getDocBranch()).append("_DOC_ID_FK").ln()
+        .append("  FOREIGN KEY (doc_id)").ln()
+        .append("  REFERENCES ").append(options.getDoc()).append(" (id);").ln().ln()*/
+        .build())
+        .build();
+  }
+
+  
   @Override public Sql dropRepo() { return dropTableIfNotExists(options.getRepos()); }
-  @Override public Sql dropBlobs() { return dropTableIfNotExists(options.getBlobs()); }
-  @Override public Sql dropCommits() { return dropTableIfNotExists(options.getCommits()); }
-  @Override public Sql dropTreeItems() { return dropTableIfNotExists(options.getTreeItems()); }
-  @Override public Sql dropTrees() { return dropTableIfNotExists(options.getTrees()); }
-  @Override public Sql dropRefs() { return dropTableIfNotExists(options.getRefs()); }
-  @Override public Sql dropTags() {return dropTableIfNotExists(options.getTags()); }
+  @Override public Sql dropGitBlobs() { return dropTableIfNotExists(options.getBlobs()); }
+  @Override public Sql dropGitCommits() { return dropTableIfNotExists(options.getCommits()); }
+  @Override public Sql dropGitTreeItems() { return dropTableIfNotExists(options.getTreeItems()); }
+  @Override public Sql dropGitTrees() { return dropTableIfNotExists(options.getTrees()); }
+  @Override public Sql dropGitRefs() { return dropTableIfNotExists(options.getRefs()); }
+  @Override public Sql dropGitTags() {return dropTableIfNotExists(options.getTags()); }
   @Override public Sql dropDoc() { return dropTableIfNotExists(options.getDoc()); }
   @Override public Sql dropDocBranch() { return dropTableIfNotExists(options.getDocBranch()); }
   @Override public Sql dropDocCommit() { return dropTableIfNotExists(options.getDocCommits()); }
   @Override public Sql dropDocLog() { return dropTableIfNotExists(options.getDocLog()); }
+  
 
+  @Override public Sql dropOrgRoles() { return dropTableIfNotExists(options.getOrgRoles()); }
+  @Override public Sql dropOrgGroups() { return dropTableIfNotExists(options.getOrgGroups()); }
+  @Override public Sql dropOrgGroupRoles() { return dropTableIfNotExists(options.getOrgGroupRoles()); }
+  @Override public Sql dropOrgUsers() { return dropTableIfNotExists(options.getOrgUsers()); }
+  @Override public Sql dropOrgUserRoles() { return dropTableIfNotExists(options.getOrgUserRoles()); }
+  @Override public Sql dropOrgUserMemberships() { return dropTableIfNotExists(options.getOrgUserMemberships()); }
+  @Override public Sql dropOrgActorStatus() { return dropTableIfNotExists(options.getOrgActorStatus()); }
+  @Override public Sql dropOrgActorLogs() { return dropTableIfNotExists(options.getOrgActorLogs()); }
+  @Override public Sql dropOrgActorData() { return dropTableIfNotExists(options.getOrgActorData()); }
+
+  
+  
   private Sql dropTableIfNotExists(String tableName) {
     return ImmutableSql.builder().value(new SqlStatement()
         .append("DROP TABLE ").append(tableName).append(";").ln()

@@ -22,9 +22,9 @@ import io.resys.thena.docdb.jackson.VertexExtModule;
 import io.resys.thena.docdb.models.git.GitPrinter;
 import io.resys.thena.docdb.spi.DbCollections;
 import io.resys.thena.docdb.spi.DbState;
-import io.resys.thena.docdb.spi.DocDBDefault;
 import io.resys.thena.docdb.store.sql.DbStateSqlImpl;
 import io.resys.thena.docdb.support.DocDbPrinter;
+import io.resys.thena.docdb.support.OrgDbPrinter;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.json.jackson.DatabindCodec;
 import io.vertx.core.json.jackson.VertxModule;
@@ -126,6 +126,9 @@ public class DbTestTemplate {
   public void printRepo(Repo repo) {
     if(repo.getType() == RepoType.doc) {
       final String result = new DocDbPrinter(createState()).print(repo);
+      log.debug(result);
+    } else if(repo.getType() == RepoType.org) {
+      final String result = new OrgDbPrinter(createState()).print(repo);
       log.debug(result);
     } else {
       final String result = new GitPrinter(createState()).print(repo);

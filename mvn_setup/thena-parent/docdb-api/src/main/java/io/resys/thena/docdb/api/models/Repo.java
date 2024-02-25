@@ -39,6 +39,6 @@ public interface Repo {
     HeadStateKind getKind();
   }
 
-  enum RepoType { doc, git }
+  enum RepoType { doc, git, org }
   enum HeadStateKind { ahead, behind, same }
 }

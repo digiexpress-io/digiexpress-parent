@@ -45,17 +45,16 @@ public class SqlDbSchemaPrintTest {
 
     final var schema = new StringBuilder()
       .append(sqlSchema.createRepo().getValue())
-      .append(sqlSchema.createBlobs().getValue())
-      .append(sqlSchema.createCommits().getValue())
-      .append(sqlSchema.createTreeItems().getValue())
-      .append(sqlSchema.createTrees().getValue())
-      .append(sqlSchema.createRefs().getValue())
-      .append(sqlSchema.createTags().getValue())
-      
-      .append(sqlSchema.createCommitsConstraints().getValue())
-      .append(sqlSchema.createRefsConstraints().getValue())
-      .append(sqlSchema.createTagsConstraints().getValue())
-      .append(sqlSchema.createTreeItemsConstraints().getValue())
+      .append(sqlSchema.createGitBlobs().getValue())
+      .append(sqlSchema.createGitCommits().getValue())
+      .append(sqlSchema.createGitTreeItems().getValue())
+      .append(sqlSchema.createGitTrees().getValue())
+      .append(sqlSchema.createGitRefs().getValue())
+      .append(sqlSchema.createGitTags().getValue())
+      .append(sqlSchema.createGitCommitsConstraints().getValue())
+      .append(sqlSchema.createGitRefsConstraints().getValue())
+      .append(sqlSchema.createGitTagsConstraints().getValue())
+      .append(sqlSchema.createGitTreeItemsConstraints().getValue())
       
       
       .append(sqlSchema.createDoc().getValue())
@@ -66,6 +65,20 @@ public class SqlDbSchemaPrintTest {
       .append(sqlSchema.createDocLog().getValue())
       .append(sqlSchema.createDocLogConstraints().getValue())
       
+      
+      .append(sqlSchema.createOrgRoles().getValue())
+      .append(sqlSchema.createOrgGroups().getValue())
+      .append(sqlSchema.createOrgGroupRoles().getValue())
+      .append(sqlSchema.createOrgUsers().getValue())
+      .append(sqlSchema.createOrgUserRoles().getValue())
+      .append(sqlSchema.createOrgUserMemberships().getValue())
+      .append(sqlSchema.createOrgActorStatus().getValue())
+      .append(sqlSchema.createOrgActorLogs().getValue())
+      .append(sqlSchema.createOrgActorData().getValue())
+      .append(sqlSchema.createOrgRolesConstraints().getValue())
+      .append(sqlSchema.createOrgUserConstraints().getValue())
+      .append(sqlSchema.createOrgGroupConstraints().getValue())
+      .append(sqlSchema.createOrgActorConstraints().getValue())
       
       .toString();
     

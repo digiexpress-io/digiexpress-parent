@@ -26,24 +26,34 @@ import io.resys.thena.docdb.store.sql.SqlBuilder.Sql;
 public interface SqlSchema extends DbCollections.WithOptions<SqlSchema>{
   SqlSchema withOptions(DbCollections options);
   
-  Sql createRepo();
-  Sql createBlobs();
 
-  Sql createCommits();
-  Sql createCommitsConstraints();
+  // create git like db mdoel
+  Sql createGitBlobs();
+
+  Sql createGitCommits();
+  Sql createGitCommitsConstraints();
   
-  Sql createTreeItemsConstraints();
-  Sql createTreeItems();
+  Sql createGitTreeItemsConstraints();
+  Sql createGitTreeItems();
 
-  Sql createTrees();
+  Sql createGitTrees();
 
-  Sql createRefs();
-  Sql createRefsConstraints();
+  Sql createGitRefs();
+  Sql createGitRefsConstraints();
 
-  Sql createTags();
-  Sql createTagsConstraints();
+  Sql createGitTags();
+  Sql createGitTagsConstraints();
+  
+  Sql dropGitBlobs();
+  Sql dropGitCommits();
+  Sql dropGitTreeItems();
+  Sql dropGitTrees();
+  Sql dropGitRefs();
+  Sql dropGitTags();
   
   
+  
+  // single doc db model
   Sql createDoc();
   
   Sql createDocBranch();
@@ -60,11 +70,44 @@ public interface SqlSchema extends DbCollections.WithOptions<SqlSchema>{
   Sql dropDocCommit();
   Sql dropDocLog();
   
+  
+  
+  // organization model
+  Sql createOrgRoles();
+  Sql createOrgGroups();
+  Sql createOrgGroupRoles();
+  
+  Sql createOrgUsers();
+  Sql createOrgUserRoles();
+  Sql createOrgUserMemberships();
+
+  Sql createOrgActorStatus();
+  Sql createOrgActorLogs();
+  Sql createOrgActorData();
+  
+  Sql createOrgRolesConstraints();
+  Sql createOrgUserConstraints();  
+  Sql createOrgGroupConstraints();  
+  Sql createOrgActorConstraints();  
+  
+
+  Sql dropOrgRoles();
+  Sql dropOrgGroups();
+  Sql dropOrgGroupRoles();
+  
+  Sql dropOrgUsers();
+  Sql dropOrgUserRoles();
+  Sql dropOrgUserMemberships();
+
+  Sql dropOrgActorStatus();
+  Sql dropOrgActorLogs();
+  Sql dropOrgActorData();
+
+  
+  
+  
+  // central tracker for tables
+  Sql createRepo();
   Sql dropRepo();
-  Sql dropBlobs();
-  Sql dropCommits();
-  Sql dropTreeItems();
-  Sql dropTrees();
-  Sql dropRefs();
-  Sql dropTags();
+  
 }

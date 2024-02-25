@@ -121,30 +121,54 @@ public class RepoBuilderSqlPool implements RepoBuilder {
       final var tablesCreate = new StringBuilder();
       
       if(newRepo.getType() == RepoType.git) {
-        tablesCreate.append(sqlSchema.createBlobs().getValue())
-          .append(sqlSchema.createCommits().getValue())
-          .append(sqlSchema.createTreeItems().getValue())
-          .append(sqlSchema.createTrees().getValue())
-          .append(sqlSchema.createRefs().getValue())
-          .append(sqlSchema.createTags().getValue())
+        tablesCreate.append(sqlSchema.createGitBlobs().getValue())
+          .append(sqlSchema.createGitCommits().getValue())
+          .append(sqlSchema.createGitTreeItems().getValue())
+          .append(sqlSchema.createGitTrees().getValue())
+          .append(sqlSchema.createGitRefs().getValue())
+          .append(sqlSchema.createGitTags().getValue())
           
-          .append(sqlSchema.createCommitsConstraints().getValue())
-          .append(sqlSchema.createRefsConstraints().getValue())
-          .append(sqlSchema.createTagsConstraints().getValue())
-          .append(sqlSchema.createTreeItemsConstraints().getValue())
+          .append(sqlSchema.createGitCommitsConstraints().getValue())
+          .append(sqlSchema.createGitRefsConstraints().getValue())
+          .append(sqlSchema.createGitTagsConstraints().getValue())
+          .append(sqlSchema.createGitTreeItemsConstraints().getValue())
           .toString();
+        
+      } else if(newRepo.getType() == RepoType.org) {
+        
+        tablesCreate
+          .append(sqlSchema.createOrgRoles().getValue())
+          .append(sqlSchema.createOrgGroups().getValue())
+          .append(sqlSchema.createOrgGroupRoles().getValue())
+          
+          .append(sqlSchema.createOrgUsers().getValue())
+          .append(sqlSchema.createOrgUserRoles().getValue())
+          .append(sqlSchema.createOrgUserMemberships().getValue())
+          
+
+          .append(sqlSchema.createOrgActorStatus().getValue())
+          .append(sqlSchema.createOrgActorLogs().getValue())
+          .append(sqlSchema.createOrgActorData().getValue())
+          
+          .append(sqlSchema.createOrgRolesConstraints().getValue())
+          .append(sqlSchema.createOrgUserConstraints().getValue())
+          .append(sqlSchema.createOrgGroupConstraints().getValue())
+          .append(sqlSchema.createOrgActorConstraints().getValue())
+          
+          .toString();
+        
       } else  {
         tablesCreate
-        .append(sqlSchema.createDoc().getValue())
-        .append(sqlSchema.createDocBranch().getValue())
-        .append(sqlSchema.createDocCommits().getValue())
-        .append(sqlSchema.createDocLog().getValue())
-
-        .append(sqlSchema.createDocBranchConstraints().getValue())
-        .append(sqlSchema.createDocCommitsConstraints().getValue())
-        .append(sqlSchema.createDocLogConstraints().getValue())
-        .toString();
-    }
+          .append(sqlSchema.createDoc().getValue())
+          .append(sqlSchema.createDocBranch().getValue())
+          .append(sqlSchema.createDocCommits().getValue())
+          .append(sqlSchema.createDocLog().getValue())
+  
+          .append(sqlSchema.createDocBranchConstraints().getValue())
+          .append(sqlSchema.createDocCommitsConstraints().getValue())
+          .append(sqlSchema.createDocLogConstraints().getValue())
+          .toString();
+      }
       
       if(log.isDebugEnabled()) {
         log.debug(new StringBuilder("Creating schema: ")
@@ -204,12 +228,28 @@ public class RepoBuilderSqlPool implements RepoBuilder {
       
       if(newRepo.getType() == RepoType.git) {
         tablesDrop
-        .append(sqlSchema.dropRefs().getValue())
-        .append(sqlSchema.dropTags().getValue())
-        .append(sqlSchema.dropCommits().getValue())
-        .append(sqlSchema.dropTreeItems().getValue())
-        .append(sqlSchema.dropTrees().getValue())
-        .append(sqlSchema.dropBlobs().getValue());
+        .append(sqlSchema.dropGitRefs().getValue())
+        .append(sqlSchema.dropGitTags().getValue())
+        .append(sqlSchema.dropGitCommits().getValue())
+        .append(sqlSchema.dropGitTreeItems().getValue())
+        .append(sqlSchema.dropGitTrees().getValue())
+        .append(sqlSchema.dropGitBlobs().getValue());
+        
+      } else if(newRepo.getType() == RepoType.org) {
+        
+        tablesDrop
+        .append(sqlSchema.dropOrgRoles().getValue())
+        .append(sqlSchema.dropOrgGroups().getValue())
+        .append(sqlSchema.dropOrgGroupRoles().getValue())
+
+        .append(sqlSchema.dropOrgUsers().getValue())
+        .append(sqlSchema.dropOrgUserRoles().getValue())
+        .append(sqlSchema.dropOrgUserMemberships().getValue())
+        
+        .append(sqlSchema.dropOrgActorStatus().getValue())
+        .append(sqlSchema.dropOrgActorLogs().getValue())
+        .append(sqlSchema.dropOrgActorData().getValue());
+        
       } else {
         tablesDrop
         .append(sqlSchema.dropDocLog().getValue())
