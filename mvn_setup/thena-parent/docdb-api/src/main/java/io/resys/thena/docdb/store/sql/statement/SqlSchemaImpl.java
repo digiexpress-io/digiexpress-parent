@@ -470,7 +470,7 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("  user_id VARCHAR(40),").ln()
     .append("  role_id VARCHAR(40),").ln()
     .append("  group_id VARCHAR(40),").ln()
-    .append("  actor_status VARCHAR(100) NOT NULL").ln() // visibility 
+    .append("  actor_status VARCHAR(100) NOT NULL").ln() // visibility: in_force | archived 
     .append(");").ln()
     
 
@@ -483,6 +483,7 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("CREATE TABLE ").append(options.getOrgActorLogs()).ln()
     .append("(").ln()
     .append("  commit_id VARCHAR(40) PRIMARY KEY,").ln()
+    .append("  parent_commit_id VARCHAR(40) PRIMARY KEY,").ln()
     
     .append("  user_id VARCHAR(40)[],").ln()
     .append("  role_id VARCHAR(40)[],").ln()
