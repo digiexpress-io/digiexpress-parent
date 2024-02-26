@@ -27,13 +27,16 @@ import io.resys.thena.docdb.models.doc.DocQueries;
 import io.resys.thena.docdb.models.doc.DocState;
 import io.resys.thena.docdb.models.git.GitQueries;
 import io.resys.thena.docdb.models.git.GitState;
+import io.resys.thena.docdb.models.org.OrgQueries;
+import io.resys.thena.docdb.models.org.OrgState;
 import io.resys.thena.docdb.spi.DbCollections;
 import io.resys.thena.docdb.spi.DbState;
 import io.resys.thena.docdb.spi.DocDBDefault;
 import io.resys.thena.docdb.store.sql.factories.DocDbQueriesSqlImpl;
 import io.resys.thena.docdb.store.sql.factories.GitDbQueriesSqlImpl;
-import io.resys.thena.docdb.store.sql.factories.SqlBuilderImpl;
 import io.resys.thena.docdb.store.sql.factories.GitDbQueriesSqlImpl.ClientQuerySqlContext;
+import io.resys.thena.docdb.store.sql.factories.OrgDbQueriesSqlImpl;
+import io.resys.thena.docdb.store.sql.factories.SqlBuilderImpl;
 import io.resys.thena.docdb.store.sql.queries.RepoBuilderSqlPool;
 import io.resys.thena.docdb.store.sql.statement.SqlMapperImpl;
 import io.resys.thena.docdb.store.sql.statement.SqlSchemaImpl;
@@ -51,6 +54,8 @@ public class DbStateSqlImpl implements DbState {
   final Function<DbCollections, SqlBuilder> sqlBuilder;
   final Function<ClientQuerySqlContext, GitQueries> gitQuery;
   final Function<ClientQuerySqlContext, DocQueries> docQuery;
+  final Function<ClientQuerySqlContext, OrgQueries> orgQuery;
+  
   
   @Override public ErrorHandler getErrorHandler() { return handler; }
   @Override public DbCollections getCollections() { return ctx; }
@@ -63,10 +68,13 @@ public class DbStateSqlImpl implements DbState {
   public GitState toGitState() {
     return new GitDbStateImpl(ctx, pool, handler, sqlSchema, sqlMapper, sqlBuilder, gitQuery);
   }
-  
   @Override
   public DocState toDocState() {
     return new DocDbStateImpl(ctx, pool, handler, sqlSchema, sqlMapper, sqlBuilder, docQuery);
+  }
+  @Override
+  public OrgState toOrgState() {
+    return new OrgDbStateImpl(ctx, pool, handler, sqlSchema, sqlMapper, sqlBuilder, orgQuery);
   }
   public static DbState state(
       final DbCollections ctx,
@@ -74,12 +82,14 @@ public class DbStateSqlImpl implements DbState {
       final ErrorHandler handler) {
     
     return new DbStateSqlImpl(
-        ctx, client, handler, 
-        Builder::defaultSqlSchema, 
-        Builder::defaultSqlMapper,
-        Builder::defaultSqlBuilder,
-        Builder::defaultGitQuery,
-        Builder::defaultDocQuery);
+      ctx, client, handler, 
+      Builder::defaultSqlSchema, 
+      Builder::defaultSqlMapper,
+      Builder::defaultSqlBuilder,
+      Builder::defaultGitQuery,
+      Builder::defaultDocQuery,
+      Builder::defaultOrgQuery        
+    );
   }
   
   public static Builder create() {
@@ -95,12 +105,15 @@ public class DbStateSqlImpl implements DbState {
     private Function<DbCollections, SqlBuilder> sqlBuilder;
     private Function<ClientQuerySqlContext, GitQueries> gitQuery;
     private Function<ClientQuerySqlContext, DocQueries> docQuery;
+    private Function<ClientQuerySqlContext, OrgQueries> orgQuery;
     
     public Builder sqlMapper(Function<DbCollections, SqlMapper> sqlMapper) {this.sqlMapper = sqlMapper; return this; }
     public Builder sqlBuilder(Function<DbCollections, SqlBuilder> sqlBuilder) {this.sqlBuilder = sqlBuilder; return this; }
     public Builder sqlSchema(Function<DbCollections, SqlSchema> sqlSchema) {this.sqlSchema = sqlSchema; return this; }
     public Builder gitQuery(Function<ClientQuerySqlContext, GitQueries> sqlQuery) {this.gitQuery = sqlQuery; return this; }
     public Builder docQuery(Function<ClientQuerySqlContext, DocQueries> docQuery) {this.docQuery = docQuery; return this; }
+    public Builder orgQuery(Function<ClientQuerySqlContext, OrgQueries> orgQuery) {this.orgQuery = orgQuery; return this; }
+    
     
     public Builder errorHandler(ErrorHandler errorHandler) {this.errorHandler = errorHandler; return this; }
     public Builder db(String db) { this.db = db; return this; }
@@ -111,6 +124,7 @@ public class DbStateSqlImpl implements DbState {
     public static SqlSchema defaultSqlSchema(DbCollections ctx) { return new SqlSchemaImpl(ctx); }
     public static GitQueries defaultGitQuery(ClientQuerySqlContext ctx) { return new GitDbQueriesSqlImpl(ctx); }
     public static DocQueries defaultDocQuery(ClientQuerySqlContext ctx) { return new DocDbQueriesSqlImpl(ctx); }
+    public static OrgQueries defaultOrgQuery(ClientQuerySqlContext ctx) { return new OrgDbQueriesSqlImpl(ctx); }
     
     public DocDB build() {
       RepoAssert.notNull(client, () -> "client must be defined!");
@@ -124,9 +138,9 @@ public class DbStateSqlImpl implements DbState {
       final Function<DbCollections, SqlBuilder> sqlBuilder = this.sqlBuilder == null ? Builder::defaultSqlBuilder : this.sqlBuilder;
       final Function<ClientQuerySqlContext, GitQueries> gitQuery = this.gitQuery == null ? Builder::defaultGitQuery : this.gitQuery;
       final Function<ClientQuerySqlContext, DocQueries> docQuery = this.gitQuery == null ? Builder::defaultDocQuery : this.docQuery;
+      final Function<ClientQuerySqlContext, OrgQueries> orgQuery = this.gitQuery == null ? Builder::defaultOrgQuery : this.orgQuery;      
       
-      
-      final var state = new DbStateSqlImpl(ctx, client, errorHandler, sqlSchema, sqlMapper, sqlBuilder, gitQuery, docQuery);
+      final var state = new DbStateSqlImpl(ctx, client, errorHandler, sqlSchema, sqlMapper, sqlBuilder, gitQuery, docQuery, orgQuery);
       
       return new DocDBDefault(state);
     }

@@ -1,7 +1,6 @@
 package io.resys.thena.docdb.models.org;
 
 import io.resys.thena.docdb.api.models.Repo;
-import io.resys.thena.docdb.models.doc.DocState.DocRepo;
 import io.smallrye.mutiny.Uni;
 
 public interface OrgState {
@@ -10,7 +9,7 @@ public interface OrgState {
 
   Uni<OrgQueries> query(String repoNameOrId);
   Uni<OrgInserts> insert(String repoNameOrId);
-  Uni<DocRepo> withRepo(String repoNameOrId);
+  Uni<OrgRepo> withRepo(String repoNameOrId);
 
   OrgInserts insert(Repo repo);
   OrgQueries query(Repo repo);

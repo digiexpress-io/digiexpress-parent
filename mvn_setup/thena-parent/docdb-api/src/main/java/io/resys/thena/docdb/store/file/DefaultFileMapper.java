@@ -31,6 +31,12 @@ import io.resys.thena.docdb.api.models.ImmutableTag;
 import io.resys.thena.docdb.api.models.ImmutableTree;
 import io.resys.thena.docdb.api.models.ImmutableTreeValue;
 import io.resys.thena.docdb.api.models.Repo;
+import io.resys.thena.docdb.api.models.ThenaDocObject.Doc;
+import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranch;
+import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranchLock;
+import io.resys.thena.docdb.api.models.ThenaDocObject.DocCommit;
+import io.resys.thena.docdb.api.models.ThenaDocObject.DocFlatted;
+import io.resys.thena.docdb.api.models.ThenaDocObject.DocLog;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Blob;
 import io.resys.thena.docdb.api.models.ThenaGitObject.BlobHistory;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Branch;
@@ -133,6 +139,30 @@ public class DefaultFileMapper implements FileMapper {
   }
   @Override
   public BlobHistory blobHistory(Row row) {
+    throw new IllegalArgumentException("Not required for filebase impl.");
+  }
+  @Override
+  public Doc doc(Row row) {
+    throw new IllegalArgumentException("Not required for filebase impl.");
+  }
+  @Override
+  public DocFlatted docFlatted(Row row) {
+    throw new IllegalArgumentException("Not required for filebase impl.");
+  }
+  @Override
+  public DocLog docLog(Row row) {
+    throw new IllegalArgumentException("Not required for filebase impl.");
+  }
+  @Override
+  public DocBranch docBranch(Row row) {
+    throw new IllegalArgumentException("Not required for filebase impl.");
+  }
+  @Override
+  public DocCommit docCommit(Row row) {
+    throw new IllegalArgumentException("Not required for filebase impl.");
+  }
+  @Override
+  public DocBranchLock docBranchLock(Row row) {
     throw new IllegalArgumentException("Not required for filebase impl.");
   }
 }

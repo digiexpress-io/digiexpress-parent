@@ -21,6 +21,12 @@ package io.resys.thena.docdb.spi;
  */
 
 import io.resys.thena.docdb.api.models.Repo;
+import io.resys.thena.docdb.api.models.ThenaDocObject.Doc;
+import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranch;
+import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranchLock;
+import io.resys.thena.docdb.api.models.ThenaDocObject.DocCommit;
+import io.resys.thena.docdb.api.models.ThenaDocObject.DocFlatted;
+import io.resys.thena.docdb.api.models.ThenaDocObject.DocLog;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Blob;
 import io.resys.thena.docdb.api.models.ThenaGitObject.BlobHistory;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Branch;
@@ -42,4 +48,11 @@ public interface DataMapper<T> {
   BlobHistory blobHistory(T row);
   CommitTree commitTree(T row);
   CommitTree commitTreeWithBlobs(Row row);
+  
+  Doc doc(T row);
+  DocFlatted docFlatted(T row);
+  DocLog docLog(T row);
+  DocBranch docBranch(T row);
+  DocCommit docCommit(T row);
+  DocBranchLock docBranchLock(T row);
 }

@@ -23,6 +23,7 @@ package io.resys.thena.docdb.spi;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.models.doc.DocState;
 import io.resys.thena.docdb.models.git.GitState;
+import io.resys.thena.docdb.models.org.OrgState;
 import io.resys.thena.docdb.support.ErrorHandler;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
@@ -34,7 +35,7 @@ public interface DbState {
   
   GitState toGitState();
   DocState toDocState();
-  
+  OrgState toOrgState();  
   
   interface RepoBuilder {
     Uni<Repo> getByName(String name);

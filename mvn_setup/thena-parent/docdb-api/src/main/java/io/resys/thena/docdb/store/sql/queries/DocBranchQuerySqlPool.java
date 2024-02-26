@@ -1,4 +1,4 @@
-package io.resys.thena.docdb.models.doc.store.sql.queries;
+package io.resys.thena.docdb.store.sql.queries;
 
 import java.util.ArrayList;
 import java.util.Collections;

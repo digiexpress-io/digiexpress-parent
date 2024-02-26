@@ -1,4 +1,4 @@
-package io.resys.thena.docdb.models.git.store.file;
+package io.resys.thena.docdb.store.file.queries;
 
 /*-
  * #%L

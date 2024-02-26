@@ -26,11 +26,12 @@ import io.resys.thena.docdb.models.doc.DocState;
 import io.resys.thena.docdb.models.git.GitInserts;
 import io.resys.thena.docdb.models.git.GitQueries;
 import io.resys.thena.docdb.models.git.GitState;
-import io.resys.thena.docdb.models.git.store.file.ClientInsertBuilderFilePool;
-import io.resys.thena.docdb.models.git.store.file.RepoBuilderFilePool;
+import io.resys.thena.docdb.models.org.OrgState;
 import io.resys.thena.docdb.spi.DbCollections;
 import io.resys.thena.docdb.spi.DbState;
 import io.resys.thena.docdb.spi.DocDBDefault;
+import io.resys.thena.docdb.store.file.queries.ClientInsertBuilderFilePool;
+import io.resys.thena.docdb.store.file.queries.RepoBuilderFilePool;
 import io.resys.thena.docdb.store.file.tables.ImmutableFileClientWrapper;
 import io.resys.thena.docdb.store.file.tables.Table.FileMapper;
 import io.resys.thena.docdb.store.file.tables.Table.FilePool;
@@ -128,7 +129,10 @@ public class DocDBFactoryFile {
       }
       @Override
       public DocState toDocState() {
-        // TODO Auto-generated method stub
+        throw new RuntimeException("not implemented");
+      }
+      @Override
+      public OrgState toOrgState() {
         throw new RuntimeException("not implemented");
       }
     };

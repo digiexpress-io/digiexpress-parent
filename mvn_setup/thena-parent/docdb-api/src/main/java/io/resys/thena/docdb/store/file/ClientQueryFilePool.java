@@ -1,12 +1,12 @@
 package io.resys.thena.docdb.store.file;
 
 import io.resys.thena.docdb.models.git.GitQueries;
-import io.resys.thena.docdb.models.git.store.file.BlobHistoryFilePool;
-import io.resys.thena.docdb.models.git.store.file.BlobQueryFilePool;
-import io.resys.thena.docdb.models.git.store.file.CommitQueryFilePool;
-import io.resys.thena.docdb.models.git.store.file.RefQueryFilePool;
-import io.resys.thena.docdb.models.git.store.file.TagQueryFilePool;
-import io.resys.thena.docdb.models.git.store.file.TreeQueryFilePool;
+import io.resys.thena.docdb.store.file.queries.BlobHistoryFilePool;
+import io.resys.thena.docdb.store.file.queries.BlobQueryFilePool;
+import io.resys.thena.docdb.store.file.queries.CommitQueryFilePool;
+import io.resys.thena.docdb.store.file.queries.RefQueryFilePool;
+import io.resys.thena.docdb.store.file.queries.TagQueryFilePool;
+import io.resys.thena.docdb.store.file.queries.TreeQueryFilePool;
 import io.resys.thena.docdb.store.file.tables.Table.FileClientWrapper;
 import io.resys.thena.docdb.store.file.tables.Table.FileMapper;
 import io.resys.thena.docdb.support.ErrorHandler;

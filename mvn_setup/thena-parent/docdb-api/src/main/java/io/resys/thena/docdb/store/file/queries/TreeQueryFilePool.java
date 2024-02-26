@@ -1,6 +1,6 @@
-package io.resys.thena.docdb.models.git.store.sql;
+package io.resys.thena.docdb.store.file.queries;
 
-import io.resys.thena.docdb.api.LogConstants;
+import java.util.Collection;
 
 /*-
  * #%L
@@ -26,38 +26,30 @@ import io.resys.thena.docdb.api.models.ImmutableTree;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Tree;
 import io.resys.thena.docdb.api.models.ThenaGitObject.TreeValue;
 import io.resys.thena.docdb.models.git.GitQueries.GitTreeQuery;
-import io.resys.thena.docdb.store.sql.SqlBuilder;
-import io.resys.thena.docdb.store.sql.SqlMapper;
-import io.resys.thena.docdb.store.sql.support.SqlClientWrapper;
+import io.resys.thena.docdb.store.file.FileBuilder;
+import io.resys.thena.docdb.store.file.tables.Table.FileMapper;
+import io.resys.thena.docdb.store.file.tables.Table.FilePool;
 import io.resys.thena.docdb.support.ErrorHandler;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
-import io.vertx.mutiny.sqlclient.RowSet;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j(topic = LogConstants.SHOW_SQL)
 @RequiredArgsConstructor
-public class GitTreeQuerySqlPool implements GitTreeQuery {
+public class TreeQueryFilePool implements GitTreeQuery {
 
-  private final SqlClientWrapper wrapper;
-  private final SqlMapper sqlMapper;
-  private final SqlBuilder sqlBuilder;
+  private final FilePool client;
+  private final FileMapper mapper;
+  private final FileBuilder sqlBuilder;
   private final ErrorHandler errorHandler;
+  
   @Override
   public Uni<Tree> getById(String tree) {
     final var sql = sqlBuilder.treeItems().getByTreeId(tree);
-    if(log.isDebugEnabled()) {
-      log.debug("Tree: {} getById query, with props: {} \r\n{}",
-          GitTreeQuerySqlPool.class,
-          sql.getProps().deepToString(),
-          sql.getValue());
-    }
-    return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.treeItem(row))
-        .execute(sql.getProps())
+    return client.preparedQuery(sql)
+        .mapping(row -> mapper.treeItem(row))
+        .execute()
         .onItem()
-        .transform((RowSet<TreeValue> rowset) -> {
+        .transform((Collection<TreeValue> rowset) -> {
           final var builder = ImmutableTree.builder().id(tree);
           final var it = rowset.iterator();
           while(it.hasNext()) {
@@ -71,17 +63,11 @@ public class GitTreeQuerySqlPool implements GitTreeQuery {
   @Override
   public Multi<Tree> findAll() {
     final var sql = sqlBuilder.trees().findAll();
-    if(log.isDebugEnabled()) {
-      log.debug("Tree: {} findAll query, with props: {} \r\n{}", 
-          GitTreeQuerySqlPool.class,
-          "",
-          sql.getValue());
-    }
-    return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.tree(row))
+    return client.preparedQuery(sql)
+        .mapping(row -> mapper.tree(row))
         .execute()
         .onItem()
-        .transformToMulti((RowSet<Tree> rowset) -> Multi.createFrom().iterable(rowset))
+        .transformToMulti((Collection<Tree> rowset) -> Multi.createFrom().iterable(rowset))
         .onItem().transformToUni((Tree tree) -> getById(tree.getId()))
         .concatenate()
         .onFailure().invoke(e -> errorHandler.deadEnd("Can't find 'TREE'!", e));

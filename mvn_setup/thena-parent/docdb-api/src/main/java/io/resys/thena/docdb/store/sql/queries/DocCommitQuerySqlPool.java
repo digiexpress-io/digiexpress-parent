@@ -1,8 +1,8 @@
-package io.resys.thena.docdb.models.doc.store.sql.queries;
+package io.resys.thena.docdb.store.sql.queries;
 
 import io.resys.thena.docdb.api.LogConstants;
-import io.resys.thena.docdb.api.models.ThenaDocObject.DocLog;
-import io.resys.thena.docdb.models.doc.DocQueries.DocLogQuery;
+import io.resys.thena.docdb.api.models.ThenaDocObject.DocCommit;
+import io.resys.thena.docdb.models.doc.DocQueries.DocCommitQuery;
 import io.resys.thena.docdb.store.sql.SqlBuilder;
 import io.resys.thena.docdb.store.sql.SqlMapper;
 import io.resys.thena.docdb.store.sql.support.SqlClientWrapper;
@@ -16,25 +16,25 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j(topic = LogConstants.SHOW_SQL)
 @RequiredArgsConstructor
-public class DocLogQuerySqlPool implements DocLogQuery {
+public class DocCommitQuerySqlPool implements DocCommitQuery {
   private final SqlClientWrapper wrapper;
   private final SqlMapper sqlMapper;
   private final SqlBuilder sqlBuilder;
   private final ErrorHandler errorHandler;
 
   @Override
-  public Uni<DocLog> getById(String id) {
-    final var sql = sqlBuilder.docLogs().getById(id);
+  public Uni<DocCommit> getById(String commit) {
+    final var sql = sqlBuilder.docCommits().getById(commit);
     if(log.isDebugEnabled()) {
-      log.debug("DocLog byId query, with props: {} \r\n{}", 
+      log.debug("DocCommit byId query, with props: {} \r\n{}", 
           sql.getProps().deepToString(),
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.docLog(row))
+        .mapping(row -> sqlMapper.docCommit(row))
         .execute(sql.getProps())
         .onItem()
-        .transform((RowSet<DocLog> rowset) -> {
+        .transform((RowSet<DocCommit> rowset) -> {
           final var it = rowset.iterator();
           if(it.hasNext()) {
             return it.next();
@@ -42,21 +42,22 @@ public class DocLogQuerySqlPool implements DocLogQuery {
           return null;
         })
         .onFailure(e -> errorHandler.notFound(e)).recoverWithNull()
-        .onFailure().invoke(e -> errorHandler.deadEnd("Can't get 'DOC_LOG' by 'id': '" + id + "'!", e));
+        .onFailure().invoke(e -> errorHandler.deadEnd("Can't get 'DOC_COMMIT' by 'id': '" + commit + "'!", e));
   }
   @Override
-  public Multi<DocLog> findAll() {
-    final var sql = sqlBuilder.docLogs().findAll();
+  public Multi<DocCommit> findAll() {
+    final var sql = sqlBuilder.docCommits().findAll();
     if(log.isDebugEnabled()) {
-      log.debug("DocLog findAll query, with props: {} \r\n{}", 
+      log.debug("DocCommit findAll query, with props: {} \r\n{}", 
           "",
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.docLog(row))
+        .mapping(row -> sqlMapper.docCommit(row))
         .execute()
         .onItem()
-        .transformToMulti((RowSet<DocLog> rowset) -> Multi.createFrom().iterable(rowset))
-        .onFailure().invoke(e -> errorHandler.deadEnd("Can't find 'DOC_LOG'!", e));
+        .transformToMulti((RowSet<DocCommit> rowset) -> Multi.createFrom().iterable(rowset))
+        .onFailure().invoke(e -> errorHandler.deadEnd("Can't find 'DOC_COMMIT'!", e));
   }
+
 }

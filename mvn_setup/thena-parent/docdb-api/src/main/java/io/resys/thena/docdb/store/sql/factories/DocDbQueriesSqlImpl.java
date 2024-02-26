@@ -1,11 +1,11 @@
 package io.resys.thena.docdb.store.sql.factories;
 
 import io.resys.thena.docdb.models.doc.DocQueries;
-import io.resys.thena.docdb.models.doc.store.sql.queries.DocBranchQuerySqlPool;
-import io.resys.thena.docdb.models.doc.store.sql.queries.DocCommitQuerySqlPool;
-import io.resys.thena.docdb.models.doc.store.sql.queries.DocLogQuerySqlPool;
-import io.resys.thena.docdb.models.doc.store.sql.queries.DocQuerySqlPool;
 import io.resys.thena.docdb.store.sql.factories.GitDbQueriesSqlImpl.ClientQuerySqlContext;
+import io.resys.thena.docdb.store.sql.queries.DocBranchQuerySqlPool;
+import io.resys.thena.docdb.store.sql.queries.DocCommitQuerySqlPool;
+import io.resys.thena.docdb.store.sql.queries.DocLogQuerySqlPool;
+import io.resys.thena.docdb.store.sql.queries.DocQuerySqlPool;
 import lombok.RequiredArgsConstructor;
 
 

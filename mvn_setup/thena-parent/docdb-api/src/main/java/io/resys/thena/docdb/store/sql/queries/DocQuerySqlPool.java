@@ -1,4 +1,4 @@
-package io.resys.thena.docdb.models.doc.store.sql.queries;
+package io.resys.thena.docdb.store.sql.queries;
 
 import io.resys.thena.docdb.api.LogConstants;
 import io.resys.thena.docdb.api.models.ThenaDocObject.Doc;

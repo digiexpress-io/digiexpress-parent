@@ -1,4 +1,6 @@
-package io.resys.thena.docdb.models.git.store.sql;
+package io.resys.thena.docdb.store.file.queries;
+
+import java.util.List;
 
 /*-
  * #%L
@@ -30,29 +32,29 @@ import io.resys.thena.docdb.models.git.GitInserts;
 import io.resys.thena.docdb.models.git.ImmutableGitBatch;
 import io.resys.thena.docdb.models.git.ImmutableInsertResult;
 import io.resys.thena.docdb.models.git.ImmutableUpsertResult;
-import io.resys.thena.docdb.store.sql.SqlBuilder;
-import io.resys.thena.docdb.store.sql.SqlMapper;
-import io.resys.thena.docdb.store.sql.support.Execute;
-import io.resys.thena.docdb.store.sql.support.SqlClientWrapper;
+import io.resys.thena.docdb.store.file.FileBuilder;
+import io.resys.thena.docdb.store.file.tables.Table.FileMapper;
+import io.resys.thena.docdb.store.file.tables.Table.FilePool;
+import io.resys.thena.docdb.store.file.tables.Table.FileTuple;
+import io.resys.thena.docdb.store.file.tables.Table.FileTupleList;
 import io.resys.thena.docdb.support.ErrorHandler;
-import io.resys.thena.docdb.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @RequiredArgsConstructor
-public class GitDbInsertsSqlPool implements GitInserts {
-  private final SqlClientWrapper wrapper;
-  private final SqlMapper sqlMapper;
-  private final SqlBuilder sqlBuilder;
+@Slf4j
+public class ClientInsertBuilderFilePool implements GitInserts {
+  private final FilePool client;
+  private final FileMapper mapper;
+  private final FileBuilder sqlBuilder;
   private final ErrorHandler errorHandler;
   
 
   @Override
   public Uni<InsertResult> tag(Tag tag) {
     final var tagInsert = sqlBuilder.tags().insertOne(tag);
-    return wrapper.getClient().preparedQuery(tagInsert.getValue()).execute(tagInsert.getProps())
+    return client.preparedQuery(tagInsert).execute()
         .onItem().transform(inserted -> (InsertResult) ImmutableInsertResult.builder().duplicate(false).build())
         .onFailure(e -> errorHandler.duplicate(e))
         .recoverWithItem(e -> ImmutableInsertResult.builder().duplicate(true).build())
@@ -63,7 +65,7 @@ public class GitDbInsertsSqlPool implements GitInserts {
   public Uni<UpsertResult> blob(Blob blob) {
     final var blobsInsert = sqlBuilder.blobs().insertOne(blob);
     
-    return wrapper.getClient().preparedQuery(blobsInsert.getValue()).execute(blobsInsert.getProps())
+    return client.preparedQuery(blobsInsert).execute()
         .onItem()
         .transform(updateResult -> (UpsertResult) ImmutableUpsertResult.builder()
             .id(blob.getId())
@@ -98,9 +100,9 @@ public class GitDbInsertsSqlPool implements GitInserts {
 
   public Uni<UpsertResult> ref(Branch ref, Commit commit) {
     final var findByName = sqlBuilder.refs().getByName(ref.getName());
-    return wrapper.getClient().preparedQuery(findByName.getValue())
-        .mapping(r -> sqlMapper.ref(r))
-        .execute(findByName.getProps())
+    return client.preparedQuery(findByName)
+        .mapping(r -> mapper.ref(r))
+        .execute()
     .onItem().transformToUni(item -> {
       final var exists = item.iterator();
       if(!exists.hasNext()) {
@@ -114,11 +116,11 @@ public class GitDbInsertsSqlPool implements GitInserts {
   
   public Uni<UpsertResult> updateRef(Branch ref, Commit commit) {
     final var refInsert = sqlBuilder.refs().updateOne(ref, commit);
-    return wrapper.getClient().preparedQuery(refInsert.getValue()).execute(refInsert.getProps())
+    return client.preparedQuery(refInsert).execute()
         .onItem()
         .transform(updateResult -> {
 
-          if(updateResult.rowCount() == 1) {
+          if(updateResult.size() == 1) {
             return (UpsertResult) ImmutableUpsertResult.builder()
                 .id(ref.getName())
                 .isModified(true)
@@ -153,7 +155,7 @@ public class GitDbInsertsSqlPool implements GitInserts {
   
   private Uni<UpsertResult> createRef(Branch ref, Commit commit) {
     final var refsInsert = sqlBuilder.refs().insertOne(ref);
-    return wrapper.getClient().preparedQuery(refsInsert.getValue()).execute(refsInsert.getProps())
+    return client.preparedQuery(refsInsert).execute()
         .onItem()
         .transform(updateResult -> (UpsertResult) ImmutableUpsertResult.builder()
             .id(ref.getName())
@@ -190,13 +192,11 @@ public class GitDbInsertsSqlPool implements GitInserts {
   public Uni<UpsertResult> tree(Tree tree) {
     final var treeInsert = sqlBuilder.trees().insertOne(tree);
     final var treeValueInsert = sqlBuilder.treeItems().insertAll(tree);
-    
-    RepoAssert.isTrue(this.wrapper.getTx().isPresent(), () -> "Transaction must be started!");
-    final var tx = wrapper.getClient();
-    
-    return tx.preparedQuery(treeInsert.getValue()).execute(treeInsert.getProps())
-    .onItem().transformToUni(junk -> tx.preparedQuery(treeValueInsert.getValue()).executeBatch(treeValueInsert.getProps()))
-    .onItem().transform(updateResult -> (UpsertResult) ImmutableUpsertResult.builder()
+
+    return client.preparedQuery(treeInsert).execute()
+    .onItem().transformToUni(junk -> client.preparedQuery(treeValueInsert).execute())
+    .onItem()
+    .transform(updateResult -> (UpsertResult) ImmutableUpsertResult.builder()
         .id(tree.getId())
         .isModified(true)
         .target(tree)
@@ -236,7 +236,7 @@ public class GitDbInsertsSqlPool implements GitInserts {
   @Override
   public Uni<UpsertResult> commit(Commit commit) {
     final var commitsInsert = sqlBuilder.commits().insertOne(commit);
-    return wrapper.getClient().preparedQuery(commitsInsert.getValue()).execute(commitsInsert.getProps())
+    return client.preparedQuery(commitsInsert).execute()
         .onItem()
         .transform(updateResult -> (UpsertResult) ImmutableUpsertResult.builder()
             .id(commit.getId())
@@ -271,87 +271,64 @@ public class GitDbInsertsSqlPool implements GitInserts {
  
   
   @Override
-  public Uni<GitBatch> batch(GitBatch output) {    
+  public Uni<GitBatch> batch(GitBatch output) {
+    final var ref = output.getRef().getRef();
     final var blobsInsert = sqlBuilder.blobs().insertAll(output.getBlobs());
     final var treeInsert = sqlBuilder.trees().insertOne(output.getTree());
     final var treeValueInsert = sqlBuilder.treeItems().insertAll(output.getTree());
     final var commitsInsert = sqlBuilder.commits().insertOne(output.getCommit());
-    
-    RepoAssert.isTrue(this.wrapper.getTx().isPresent(), () -> "Transaction must be started!");
-    final var tx = wrapper.getClient();    
-    
-    if(blobsInsert.getProps().isEmpty() && output.getDeleted() == 0) {
-      return Uni.createFrom().item(successOutput(output, "No new blobs provided or tree values to delete, nothing to save"));
-    } 
-    
-    final Uni<GitBatch> blobUni;
-    if(blobsInsert.getProps().isEmpty()) {
-      blobUni = Uni.createFrom().item(successOutput(output, "Skipping blobs because nothing provided"));
-    } else {
-      blobUni = Execute.apply(tx, blobsInsert).onItem()
-        .transform(row -> successOutput(output, "Blobs saved, number of new entries: " + row.rowCount()))
-        .onFailure().recoverWithItem(e -> failOutput(output, "Failed to create blobs", e));
-    }
-    
-    final var treeUni = Execute.apply(tx, treeInsert).onItem()
-      .transform(row -> successOutput(output, "Tree saved, number of new entries: " + row.rowCount()))
-      .onFailure().recoverWithItem(e -> failOutput(output, "Failed to create tree \r\n" + output.getTree(), e));
-
-    final Uni<GitBatch> treeValueUni;
-    if(treeValueInsert.getProps().isEmpty()) {
-      treeValueUni = Uni.createFrom().item(successOutput(output, "Tree Values saved, number of new entries: 0"));    
-    } else {
-      treeValueUni = Execute.apply(tx, treeValueInsert).onItem()
-          .transform(row -> successOutput(output, "Tree Values saved, number of new entries: " + row.rowCount()))
-          .onFailure().recoverWithItem(e -> failOutput(output, "Failed to create tree values", e)); 
-    }
-    
-    
-    final var commitUni = Execute.apply(tx, commitsInsert).onItem()
-        .transform(row -> successOutput(output, "Commit saved, number of new entries: " + row.rowCount()))
-        .onFailure().recoverWithItem(e -> failOutput(output, "Failed to create commit", e));
-    
-    final var refExists = output.getRef().getCreated();
-    final var ref = output.getRef().getRef();
-    
-    
-    final Uni<GitBatch> refUni;
-    if(refExists) {
-      refUni = Execute.apply(tx, sqlBuilder.refs().updateOne(output.getRef().getRef(), output.getCommit()))
-          .onItem().transform(row -> successOutput(output, "Existing ref: " + ref.getName() + ", updated with commit: " + ref.getCommit()))
-          .onFailure().recoverWithItem(e -> failOutput(output, "Failed to update ref", e));
-    } else {
-      refUni = Execute.apply(tx, sqlBuilder.refs().insertOne(output.getRef().getRef()))
-          .onItem().transform(row -> successOutput(output, "New ref created: " + ref.getName() + ": " + ref.getCommit()))
-          .onFailure().recoverWithItem(e -> failOutput(output, "Failed to create ref", e));
-        
-    }
-
-    
-    return Uni.combine().all().unis(blobUni, treeUni, treeValueUni, commitUni, refUni).asTuple()
-        .onItem().transform(tuple -> merge(output, 
-            tuple.getItem1(), 
-            tuple.getItem2(), 
-            tuple.getItem3(), 
-            tuple.getItem4(), 
-            tuple.getItem5()
-        ));
-  }
-
+    final var findRefByName = sqlBuilder.refs().getByName(ref.getName());
   
-  private GitBatch merge(GitBatch start, GitBatch ... current) {
-    final var builder = ImmutableGitBatch.builder().from(start);
-    final var log = new StringBuilder(start.getLog().getText());
-    var status = start.getStatus();
-    for(GitBatch value : current) {
-      if(status != BatchStatus.ERROR) {
-        status = value.getStatus();
-      }
-      log.append("\r\n\r\n").append(value.getLog());
-      builder.addAllMessages(value.getMessages());
+    final Uni<GitBatch> start;
+    if(blobsInsert.getProps().isEmpty()) {
+      start = Uni.createFrom().item(successOutput(output, "No new blobs provided, nothing to save"));
+    } else {
+      start = apply(client, blobsInsert).onItem()
+      .transform(row -> successOutput(output, "Blobs saved, number of new entries: " + row.size()))
+      .onFailure().recoverWithItem(e -> failOutput(output, "Failed to create blobs", e));
     }
     
-    return builder.status(status).build();
+    return start.chain(next -> {
+      
+      if(next.getStatus() == BatchStatus.OK) {
+        return apply(client, treeInsert).onItem()
+            .transform(row -> successOutput(next, "Tree saved, number of new entries: " + row.size()))
+            .onFailure().recoverWithItem(e -> failOutput(next, "Failed to create tree \r\n" + output.getTree(), e));
+      }
+      return Uni.createFrom().item(next);
+    }).chain(next -> {
+      if(next.getStatus() == BatchStatus.OK) {
+        if(treeValueInsert.getProps().isEmpty()) {
+          return Uni.createFrom().item(successOutput(next, "Tree Values saved, number of new entries: 0"));    
+        }
+        
+        return apply(client, treeValueInsert).onItem()
+            .transform(row -> successOutput(next, "Tree Values saved, number of new entries: " + row.size()))
+            .onFailure().recoverWithItem(e -> failOutput(next, "Failed to create tree values", e));
+      }
+      return Uni.createFrom().item(next);
+    }).chain(next -> {
+      if(next.getStatus() == BatchStatus.OK) {
+        return apply(client, commitsInsert).onItem()
+            .transform(row -> successOutput(next, "Commit saved, number of new entries: " + row.size()))
+            .onFailure().recoverWithItem(e -> failOutput(next, "Failed to create commit", e));
+      }
+      return Uni.createFrom().item(next);
+    }).chain(next -> {
+      if(next.getStatus() == BatchStatus.OK) {
+        return apply(client, findRefByName).onItem().transformToUni(item -> {
+          final var exists = item.iterator();
+          if(!exists.hasNext()) {
+            return apply(client, sqlBuilder.refs().insertOne(ref))
+                .onItem().transform(row -> successOutput(next, "New ref created: " + ref.getName() + ": " + ref.getCommit()));
+          }
+          return apply(client, sqlBuilder.refs().updateOne(ref, next.getCommit()))
+              .onItem().transform(row -> successOutput(next, "Existing ref: " + ref.getName() + ", updated with commit: " + ref.getCommit()));
+        })
+        .onFailure().recoverWithItem(e -> failOutput(output, "Failed to create/update ref", e)); 
+      }
+      return Uni.createFrom().item(next);
+    });
   }
   
   private GitBatch successOutput(GitBatch current, String msg) {
@@ -363,11 +340,31 @@ public class GitDbInsertsSqlPool implements GitInserts {
   }
   
   private GitBatch failOutput(GitBatch current, String msg, Throwable t) {
-    log.error("Batch failed because of: " + msg, t);
     return ImmutableGitBatch.builder()
         .from(current)
         .status(BatchStatus.ERROR)
         .addMessages(ImmutableMessage.builder().text(msg).build())
         .build(); 
+  }
+  
+  public static Uni<List<Object>> apply(FilePool client, FileTupleList sql) {
+    return client.preparedQuery(sql).execute()
+      .onFailure().invoke(e -> {
+      log.error(System.lineSeparator() +
+          "Failed to execute command." + System.lineSeparator() +
+          "  sql: " + sql.getValue() + System.lineSeparator() +
+          "  error:" + e.getMessage(), e);
+    });
+  }
+  
+  
+  public static Uni<List<Object>> apply(FilePool client, FileTuple sql) {
+    return client.preparedQuery(sql).execute()
+      .onFailure().invoke(e -> {
+      log.error(System.lineSeparator() +
+          "Failed to execute command." + System.lineSeparator() +
+          "  sql: " + sql.getValue() + System.lineSeparator() +
+          "  error:" + e.getMessage(), e);
+    });
   }
 }
