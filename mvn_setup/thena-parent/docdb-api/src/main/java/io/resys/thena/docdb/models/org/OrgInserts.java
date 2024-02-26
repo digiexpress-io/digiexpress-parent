@@ -26,8 +26,8 @@ import org.immutables.value.Value;
 
 import io.resys.thena.docdb.api.models.Message;
 import io.resys.thena.docdb.api.models.Repo;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorData;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorCommitLog;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorData;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatus;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroupRole;
@@ -42,23 +42,23 @@ import io.smallrye.mutiny.Uni;
 
 public interface OrgInserts {
   
-  Uni<DocBatchForOne> batchOne(DocBatchForOne output);
+  Uni<OrgBatchForOne> batchOne(DocBatchForOne output);
   Uni<OrgBatchForMany> batchMany(OrgBatchForMany output);
   
   @Value.Immutable
   interface OrgBatchForOne {
     OrgActorCommitLog getCommit();
     
-    
     List<OrgLock> getOrgLock();
-    List<OrgActorStatus> getOrgActorStatus();
     List<OrgActorData> getOrgActorData();
+    List<OrgActorStatus> getOrgActorStatus();
     List<OrgGroup> getOrgGroups();
     List<OrgRole> getOrgRoles();
     List<OrgUser> getOrgUsers();
-    List<OrgUserMembership> getOrgUserMemberships();
     List<OrgGroupRole> getOrgGroupRoles();
     List<OrgUserRole> getOrgUserRoles();
+    List<OrgUserMembership> getOrgUserMemberships(); 
+    
     
     BatchStatus getStatus();
     String getRepoId();

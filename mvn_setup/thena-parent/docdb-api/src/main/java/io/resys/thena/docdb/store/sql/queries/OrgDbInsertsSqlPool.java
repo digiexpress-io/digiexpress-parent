@@ -19,7 +19,7 @@ public class OrgDbInsertsSqlPool implements OrgInserts {
   private final SqlBuilder sqlBuilder;
   private final ErrorHandler errorHandler;
   @Override
-  public Uni<DocBatchForOne> batchOne(DocBatchForOne output) {
+  public Uni<OrgBatchForOne> batchOne(DocBatchForOne output) {
     // TODO Auto-generated method stub
     return null;
   }
@@ -29,5 +29,4 @@ public class OrgDbInsertsSqlPool implements OrgInserts {
     return null;
   }
 
-  
 }
