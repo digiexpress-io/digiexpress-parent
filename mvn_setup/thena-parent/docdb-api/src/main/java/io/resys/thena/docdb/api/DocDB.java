@@ -27,12 +27,16 @@ import io.resys.thena.docdb.api.actions.DiffActions;
 import io.resys.thena.docdb.api.actions.DocCommitActions;
 import io.resys.thena.docdb.api.actions.DocQueryActions;
 import io.resys.thena.docdb.api.actions.HistoryActions;
+import io.resys.thena.docdb.api.actions.OrgCommitActions;
+import io.resys.thena.docdb.api.actions.OrgHistoryActions;
+import io.resys.thena.docdb.api.actions.OrgQueryActions;
 import io.resys.thena.docdb.api.actions.PullActions;
 import io.resys.thena.docdb.api.actions.RepoActions;
 import io.resys.thena.docdb.api.actions.TagActions;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
 import io.resys.thena.docdb.api.models.ThenaDocObjects.DocProjectObjects;
 import io.resys.thena.docdb.api.models.ThenaGitObjects.GitRepoObjects;
+import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgProjectObjects;
 import io.smallrye.mutiny.Uni;
 
 public interface DocDB {
@@ -43,14 +47,14 @@ public interface DocDB {
   
 
   interface OrgModel {
-    DocCommitActions commit();
-    DocQueryActions find();
-    
+    OrgCommitActions commit();
+    OrgQueryActions find();
+    OrgHistoryActions history();
 
     // build world state
-    interface DocProjectQuery {
-      DocProjectQuery projectName(String projectName);
-      Uni<QueryEnvelope<DocProjectObjects>> get();
+    interface OrgProjectQuery {
+      OrgProjectQuery projectName(String projectName);
+      Uni<QueryEnvelope<OrgProjectObjects>> get();
     }
   }
 

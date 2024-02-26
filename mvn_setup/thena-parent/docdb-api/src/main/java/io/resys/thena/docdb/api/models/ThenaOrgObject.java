@@ -1,7 +1,6 @@
 package io.resys.thena.docdb.api.models;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 import javax.annotation.Nullable;
@@ -14,6 +13,7 @@ public interface ThenaOrgObject {
   interface IsOrgObject { String getId(); }
   interface IsOrgVersionObject { String getVersion(); }  
   
+  /*
   @Value.Immutable
   interface OrgUserFlattened extends ThenaOrgObject {
     String getUserId();
@@ -35,7 +35,7 @@ public interface ThenaOrgObject {
     OrgUserRoleOrGroupType getType();
     OrgActorValue getActorStatus();
   }
-  
+  */
   
   @Value.Immutable
   interface OrgGroup extends ThenaOrgObject, IsOrgObject, IsOrgVersionObject {
