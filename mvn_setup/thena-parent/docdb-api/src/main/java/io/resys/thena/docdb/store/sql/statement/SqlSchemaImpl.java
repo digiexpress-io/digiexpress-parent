@@ -373,6 +373,16 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("  created_at TIMESTAMP WITH TIME ZONE NOT NULL").ln()
     .append(");").ln()
     
+    
+    .append("CREATE INDEX ").append(options.getOrgRoles()).append("_NAME_INDEX")
+    .append(" ON ").append(options.getOrgRoles()).append(" (role_name);").ln()
+    
+    .append("CREATE INDEX ").append(options.getOrgRoles()).append("_COMMIT_INDEX")
+    .append(" ON ").append(options.getOrgRoles()).append(" (commit_id);").ln()
+    
+    .append("CREATE INDEX ").append(options.getOrgRoles()).append("_EXTERNAL_INDEX")
+    .append(" ON ").append(options.getOrgRoles()).append(" (external_id);").ln()
+    
 
     .build()).build();
   }
@@ -389,9 +399,25 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("  group_name VARCHAR(255) NOT NULL,").ln()
     .append("  group_description VARCHAR(255) NOT NULL,").ln()
     .append("  created_at TIMESTAMP WITH TIME ZONE NOT NULL").ln()
-    .append(");").ln()
+    .append(");").ln().ln()
     
+    // parent id, references self
+    .append("ALTER TABLE ").append(options.getOrgGroups()).ln()
+    .append("  ADD CONSTRAINT ").append(options.getOrgGroups()).append("_PARENT_FK").ln()
+    .append("  FOREIGN KEY (parent_id)").ln()
+    .append("  REFERENCES ").append(options.getOrgGroups()).append(" (id);").ln()
 
+    
+    .append("CREATE INDEX ").append(options.getOrgGroups()).append("_NAME_INDEX")
+    .append(" ON ").append(options.getOrgGroups()).append(" (group_name);").ln()
+    
+    .append("CREATE INDEX ").append(options.getOrgGroups()).append("_COMMIT_INDEX")
+    .append(" ON ").append(options.getOrgGroups()).append(" (commit_id);").ln()
+
+    .append("CREATE INDEX ").append(options.getOrgGroups()).append("_EXTERNAL_INDEX")
+    .append(" ON ").append(options.getOrgGroups()).append(" (external_id);").ln()
+    
+    
     .build()).build();
   }
 
@@ -407,6 +433,15 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("  created_at TIMESTAMP WITH TIME ZONE NOT NULL").ln()
     .append(");").ln()
     
+    
+    .append("CREATE INDEX ").append(options.getOrgGroupRoles()).append("_COMMIT_INDEX")
+    .append(" ON ").append(options.getOrgGroupRoles()).append(" (commit_id);").ln()
+
+    .append("CREATE INDEX ").append(options.getOrgGroupRoles()).append("_GROUP_INDEX")
+    .append(" ON ").append(options.getOrgGroupRoles()).append(" (group_id);").ln()
+
+    .append("CREATE INDEX ").append(options.getOrgGroupRoles()).append("_ROLE_INDEX")
+    .append(" ON ").append(options.getOrgGroupRoles()).append(" (role_id);").ln()    
 
     .build()).build();
   }
@@ -424,6 +459,15 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("  created_at TIMESTAMP WITH TIME ZONE NOT NULL").ln()
     .append(");").ln()
     
+    
+    .append("CREATE INDEX ").append(options.getOrgUsers()).append("_COMMIT_INDEX")
+    .append(" ON ").append(options.getOrgUsers()).append(" (commit_id);").ln()
+
+    .append("CREATE INDEX ").append(options.getOrgUsers()).append("_EXTERNAL_INDEX")
+    .append(" ON ").append(options.getOrgUsers()).append(" (external_id);").ln()
+
+    .append("CREATE INDEX ").append(options.getOrgUsers()).append("_USER_NAME_INDEX")
+    .append(" ON ").append(options.getOrgUsers()).append(" (username);").ln()
 
     .build()).build();
   }
@@ -440,6 +484,18 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("  created_at TIMESTAMP WITH TIME ZONE NOT NULL").ln()
     .append(");").ln()
     
+    .append("CREATE INDEX ").append(options.getOrgUserRoles()).append("_COMMIT_INDEX")
+    .append(" ON ").append(options.getOrgUserRoles()).append(" (commit_id);").ln()
+    
+    .append("CREATE INDEX ").append(options.getOrgUserRoles()).append("_ROLE_INDEX")
+    .append(" ON ").append(options.getOrgUserRoles()).append(" (role_id);").ln()
+
+    .append("CREATE INDEX ").append(options.getOrgUserRoles()).append("_USER_INDEX")
+    .append(" ON ").append(options.getOrgUserRoles()).append(" (user_id);").ln()
+    
+    .append("CREATE INDEX ").append(options.getOrgUserRoles()).append("_REF_INDEX")
+    .append(" ON ").append(options.getOrgUserRoles()).append(" (role_id, user_id);").ln()    
+
 
     .build()).build();
   }
@@ -456,6 +512,18 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("  created_at TIMESTAMP WITH TIME ZONE NOT NULL").ln()
     .append(");").ln()
     
+    .append("CREATE INDEX ").append(options.getOrgUserMemberships()).append("_COMMIT_INDEX")
+    .append(" ON ").append(options.getOrgUserMemberships()).append(" (commit_id);").ln()
+    
+    .append("CREATE INDEX ").append(options.getOrgUserMemberships()).append("_USER_INDEX")
+    .append(" ON ").append(options.getOrgUserMemberships()).append(" (user_id);").ln()
+    
+    .append("CREATE INDEX ").append(options.getOrgUserMemberships()).append("_GROUP_INDEX")
+    .append(" ON ").append(options.getOrgUserMemberships()).append(" (group_id);").ln()
+    
+    .append("CREATE INDEX ").append(options.getOrgUserMemberships()).append("_REF_INDEX")
+    .append(" ON ").append(options.getOrgUserMemberships()).append(" (group_id, user_id);").ln()    
+
 
     .build()).build();
   }
@@ -473,6 +541,15 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("  actor_status VARCHAR(100) NOT NULL").ln() // visibility: in_force | archived 
     .append(");").ln()
     
+    .append("CREATE INDEX ").append(options.getOrgActorStatus()).append("_COMMIT_INDEX")
+    .append(" ON ").append(options.getOrgActorStatus()).append(" (commit_id);").ln()
+
+    .append("CREATE INDEX ").append(options.getOrgActorStatus()).append("_USER_INDEX")
+    .append(" ON ").append(options.getOrgActorStatus()).append(" (user_id);").ln()
+    
+    .append("CREATE INDEX ").append(options.getOrgActorStatus()).append("_GROUP_INDEX")
+    .append(" ON ").append(options.getOrgActorStatus()).append(" (group_id);").ln()
+    
 
     .build()).build();
   }
@@ -483,7 +560,7 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("CREATE TABLE ").append(options.getOrgActorLogs()).ln()
     .append("(").ln()
     .append("  commit_id VARCHAR(40) PRIMARY KEY,").ln()
-    .append("  parent_commit_id VARCHAR(40) PRIMARY KEY,").ln()
+    .append("  parent_id VARCHAR(40),").ln()
     
     .append("  user_id VARCHAR(40)[],").ln()
     .append("  role_id VARCHAR(40)[],").ln()
@@ -496,8 +573,16 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("  commit_author VARCHAR(255) NOT NULL,").ln()
     .append("  commit_message VARCHAR(255) NOT NULL,").ln()
     .append("  commit_date_time TIMESTAMP WITH TIME ZONE NOT NULL").ln()
-    .append(");").ln()
+    .append(");").ln().ln()
     
+    // parent id, references self
+    .append("ALTER TABLE ").append(options.getOrgActorLogs()).ln()
+    .append("  ADD CONSTRAINT ").append(options.getOrgActorLogs()).append("_PARENT_FK").ln()
+    .append("  FOREIGN KEY (parent_id)").ln()
+    .append("  REFERENCES ").append(options.getOrgActorLogs()).append(" (commit_id);").ln()
+
+    .append("CREATE INDEX ").append(options.getOrgActorLogs()).append("_COMMIT_INDEX")
+    .append(" ON ").append(options.getOrgActorLogs()).append(" (commit_id);").ln()
 
     .build()).build();
   }
@@ -520,64 +605,73 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("  commit_author VARCHAR(255) NOT NULL,").ln()
     .append("  commit_message VARCHAR(255) NOT NULL,").ln()
     .append("  commit_date_time TIMESTAMP WITH TIME ZONE NOT NULL").ln()
-    .append(");").ln()
-    
+    .append(");").ln().ln()
+
+
+    // parent id, references self
+    .append("ALTER TABLE ").append(options.getOrgActorData()).ln()
+    .append("  ADD CONSTRAINT ").append(options.getOrgActorData()).append("_PARENT_FK").ln()
+    .append("  FOREIGN KEY (parent_id)").ln()
+    .append("  REFERENCES ").append(options.getOrgActorData()).append(" (id);").ln()
+
 
     .build()).build();
   }
 
   @Override
-  public Sql createOrgRolesConstraints() {
+  public Sql createOrgCommitConstraints() {
     return ImmutableSql.builder()
-        .value(new SqlStatement().ln()
-            /*
-        .append("ALTER TABLE ").append(options.getDocBranch()).ln()
-        .append("  ADD CONSTRAINT ").append(options.getDocBranch()).append("_DOC_ID_FK").ln()
-        .append("  FOREIGN KEY (doc_id)").ln()
-        .append("  REFERENCES ").append(options.getDoc()).append(" (id);").ln().ln()*/
-        .build())
+        .value(createOrgCommitFk(options.getOrgUserRoles()))
+        .value(createOrgCommitFk(options.getOrgGroupRoles()))        
+        .value(createOrgCommitFk(options.getOrgGroupRoles()))
+        
+        .value(createOrgCommitFk(options.getOrgUsers()))
+        .value(createOrgCommitFk(options.getOrgUserRoles()))
+        
+        .value(createOrgCommitFk(options.getOrgRoles()))
+        .value(createOrgCommitFk(options.getOrgUserMemberships()))
         .build();
   }
 
   @Override
-  public Sql createOrgUserConstraints() {
+  public Sql createOrgRolesConstraints() {
     return ImmutableSql.builder()
-        .value(new SqlStatement().ln()
-            /*
-        .append("ALTER TABLE ").append(options.getDocBranch()).ln()
-        .append("  ADD CONSTRAINT ").append(options.getDocBranch()).append("_DOC_ID_FK").ln()
-        .append("  FOREIGN KEY (doc_id)").ln()
-        .append("  REFERENCES ").append(options.getDoc()).append(" (id);").ln().ln()*/
-        .build())
+        .value(createOrgRoleFk(options.getOrgActorData()))
+        //.value(createOrgRoleFk(options.getOrgActorLogs()))
+        .value(createOrgRoleFk(options.getOrgActorStatus()))
+        
+        .value(createOrgRoleFk(options.getOrgUserRoles()))
+        .value(createOrgRoleFk(options.getOrgGroupRoles()))
         .build();
   }
-
+  
   @Override
   public Sql createOrgGroupConstraints() {
     return ImmutableSql.builder()
-        .value(new SqlStatement().ln()
-            /*
-        .append("ALTER TABLE ").append(options.getDocBranch()).ln()
-        .append("  ADD CONSTRAINT ").append(options.getDocBranch()).append("_DOC_ID_FK").ln()
-        .append("  FOREIGN KEY (doc_id)").ln()
-        .append("  REFERENCES ").append(options.getDoc()).append(" (id);").ln().ln()*/
-        .build())
+        .value(createOrgGroupFk(options.getOrgActorData()))
+        //.value(createOrgGroupFk(options.getOrgActorLogs()))
+        .value(createOrgGroupFk(options.getOrgActorStatus()))
+        
+        .value(createOrgRoleFk(options.getOrgGroupRoles()))
+        .value(createOrgRoleFk(options.getOrgUserMemberships()))
+        
         .build();
   }
 
+  
   @Override
-  public Sql createOrgActorConstraints() {
+  public Sql createOrgUserConstraints() {
     return ImmutableSql.builder()
-        .value(new SqlStatement().ln()
-            /*
-        .append("ALTER TABLE ").append(options.getDocBranch()).ln()
-        .append("  ADD CONSTRAINT ").append(options.getDocBranch()).append("_DOC_ID_FK").ln()
-        .append("  FOREIGN KEY (doc_id)").ln()
-        .append("  REFERENCES ").append(options.getDoc()).append(" (id);").ln().ln()*/
-        .build())
+        .value(createOrgUserFk(options.getOrgUserMemberships()))
+        .value(createOrgUserFk(options.getOrgUserRoles()))
+        
+        .value(createOrgUserFk(options.getOrgActorData()))
+        //.value(createOrgUserFk(options.getOrgActorLogs()))
+        .value(createOrgUserFk(options.getOrgActorStatus()))
+        
         .build();
   }
-
+  
   
   @Override public Sql dropRepo() { return dropTableIfNotExists(options.getRepos()); }
   @Override public Sql dropGitBlobs() { return dropTableIfNotExists(options.getBlobs()); }
@@ -609,5 +703,41 @@ public class SqlSchemaImpl implements SqlSchema {
         .append("DROP TABLE ").append(tableName).append(";").ln()
         .build()).build();
   }
+  
+  private String createOrgCommitFk(String tableNameThatPointToCommits) {
+    return  new SqlStatement().ln()
+        .append("ALTER TABLE ").append(options.getOrgActorData()).ln()
+        .append("  ADD CONSTRAINT ").append(tableNameThatPointToCommits).append("_COMMIT_FK").ln()
+        .append("  FOREIGN KEY (commit_id)").ln()
+        .append("  REFERENCES ").append(options.getOrgActorLogs()).append(" (commit_id);").ln().ln()
+        .build();
+  }
 
+  private String createOrgUserFk(String tableNameThatPointToCommits) {
+    return  new SqlStatement().ln()
+        .append("ALTER TABLE ").append(options.getOrgActorData()).ln()
+        .append("  ADD CONSTRAINT ").append(tableNameThatPointToCommits).append("_USER_FK").ln()
+        .append("  FOREIGN KEY (user_id)").ln()
+        .append("  REFERENCES ").append(options.getOrgUsers()).append(" (id);").ln().ln()
+        .build();
+  }
+
+  private String createOrgGroupFk(String tableNameThatPointToCommits) {
+    return new SqlStatement().ln()
+        .append("ALTER TABLE ").append(options.getOrgActorData()).ln()
+        .append("  ADD CONSTRAINT ").append(tableNameThatPointToCommits).append("_GROUP_FK").ln()
+        .append("  FOREIGN KEY (group_id)").ln()
+        .append("  REFERENCES ").append(options.getOrgGroups()).append(" (id);").ln().ln()
+        .build();
+  }
+  
+
+  private String createOrgRoleFk(String tableNameThatPointToCommits) {
+    return  new SqlStatement().ln()
+        .append("ALTER TABLE ").append(options.getOrgActorData()).ln()
+        .append("  ADD CONSTRAINT ").append(tableNameThatPointToCommits).append("_ROLE_FK").ln()
+        .append("  FOREIGN KEY (role_id)").ln()
+        .append("  REFERENCES ").append(options.getOrgRoles()).append(" (id);").ln().ln()
+        .build();
+  }
 }

@@ -171,6 +171,9 @@ CREATE TABLE org_roles
   role_description VARCHAR(255) NOT NULL,
   created_at TIMESTAMP WITH TIME ZONE NOT NULL
 );
+CREATE INDEX org_roles_NAME_INDEX ON org_roles (role_name);
+CREATE INDEX org_roles_COMMIT_INDEX ON org_roles (commit_id);
+CREATE INDEX org_roles_EXTERNAL_INDEX ON org_roles (external_id);
 
 CREATE TABLE org_groups
 (
@@ -183,6 +186,14 @@ CREATE TABLE org_groups
   created_at TIMESTAMP WITH TIME ZONE NOT NULL
 );
 
+ALTER TABLE org_groups
+  ADD CONSTRAINT org_groups_PARENT_FK
+  FOREIGN KEY (parent_id)
+  REFERENCES org_groups (id);
+CREATE INDEX org_groups_NAME_INDEX ON org_groups (group_name);
+CREATE INDEX org_groups_COMMIT_INDEX ON org_groups (commit_id);
+CREATE INDEX org_groups_EXTERNAL_INDEX ON org_groups (external_id);
+
 CREATE TABLE org_group_roles
 (
   id VARCHAR(40) PRIMARY KEY,
@@ -191,6 +202,9 @@ CREATE TABLE org_group_roles
   role_id VARCHAR(40) NOT NULL,
   created_at TIMESTAMP WITH TIME ZONE NOT NULL
 );
+CREATE INDEX org_group_roles_COMMIT_INDEX ON org_group_roles (commit_id);
+CREATE INDEX org_group_roles_GROUP_INDEX ON org_group_roles (group_id);
+CREATE INDEX org_group_roles_ROLE_INDEX ON org_group_roles (role_id);
 
 CREATE TABLE org_users
 (
@@ -201,6 +215,9 @@ CREATE TABLE org_users
   email VARCHAR(255) NOT NULL,
   created_at TIMESTAMP WITH TIME ZONE NOT NULL
 );
+CREATE INDEX org_users_COMMIT_INDEX ON org_users (commit_id);
+CREATE INDEX org_users_EXTERNAL_INDEX ON org_users (external_id);
+CREATE INDEX org_users_USER_NAME_INDEX ON org_users (username);
 
 CREATE TABLE org_user_roles
 (
@@ -210,6 +227,10 @@ CREATE TABLE org_user_roles
   role_id VARCHAR(40) NOT NULL,
   created_at TIMESTAMP WITH TIME ZONE NOT NULL
 );
+CREATE INDEX org_user_roles_COMMIT_INDEX ON org_user_roles (commit_id);
+CREATE INDEX org_user_roles_ROLE_INDEX ON org_user_roles (role_id);
+CREATE INDEX org_user_roles_USER_INDEX ON org_user_roles (user_id);
+CREATE INDEX org_user_roles_REF_INDEX ON org_user_roles (role_id, user_id);
 
 CREATE TABLE org_user_memberships
 (
@@ -219,6 +240,10 @@ CREATE TABLE org_user_memberships
   group_id VARCHAR(40) NOT NULL,
   created_at TIMESTAMP WITH TIME ZONE NOT NULL
 );
+CREATE INDEX org_user_memberships_COMMIT_INDEX ON org_user_memberships (commit_id);
+CREATE INDEX org_user_memberships_USER_INDEX ON org_user_memberships (user_id);
+CREATE INDEX org_user_memberships_GROUP_INDEX ON org_user_memberships (group_id);
+CREATE INDEX org_user_memberships_REF_INDEX ON org_user_memberships (group_id, user_id);
 
 CREATE TABLE org_actor_status
 (
@@ -229,10 +254,14 @@ CREATE TABLE org_actor_status
   group_id VARCHAR(40),
   actor_status VARCHAR(100) NOT NULL
 );
+CREATE INDEX org_actor_status_COMMIT_INDEX ON org_actor_status (commit_id);
+CREATE INDEX org_actor_status_USER_INDEX ON org_actor_status (user_id);
+CREATE INDEX org_actor_status_GROUP_INDEX ON org_actor_status (group_id);
 
 CREATE TABLE org_actor_commit_logs
 (
   commit_id VARCHAR(40) PRIMARY KEY,
+  parent_id VARCHAR(40),
   user_id VARCHAR(40)[],
   role_id VARCHAR(40)[],
   group_id VARCHAR(40)[],
@@ -243,6 +272,12 @@ CREATE TABLE org_actor_commit_logs
   commit_message VARCHAR(255) NOT NULL,
   commit_date_time TIMESTAMP WITH TIME ZONE NOT NULL
 );
+
+ALTER TABLE org_actor_commit_logs
+  ADD CONSTRAINT org_actor_commit_logs_PARENT_FK
+  FOREIGN KEY (parent_id)
+  REFERENCES org_actor_commit_logs (commit_id);
+CREATE INDEX org_actor_commit_logs_COMMIT_INDEX ON org_actor_commit_logs (commit_id);
 
 CREATE TABLE org_actor_data
 (
@@ -259,6 +294,31 @@ CREATE TABLE org_actor_data
   commit_date_time TIMESTAMP WITH TIME ZONE NOT NULL
 );
 
+ALTER TABLE org_actor_data
+  ADD CONSTRAINT org_actor_data_PARENT_FK
+  FOREIGN KEY (parent_id)
+  REFERENCES org_actor_data (id);
+
+ALTER TABLE org_actor_data
+  ADD CONSTRAINT org_group_roles_ROLE_FK
+  FOREIGN KEY (role_id)
+  REFERENCES org_roles (id);
 
 
+ALTER TABLE org_actor_data
+  ADD CONSTRAINT org_actor_status_USER_FK
+  FOREIGN KEY (user_id)
+  REFERENCES org_users (id);
+
+
+ALTER TABLE org_actor_data
+  ADD CONSTRAINT org_user_memberships_ROLE_FK
+  FOREIGN KEY (role_id)
+  REFERENCES org_roles (id);
+
+
+ALTER TABLE org_actor_data
+  ADD CONSTRAINT org_user_memberships_COMMIT_FK
+  FOREIGN KEY (commit_id)
+  REFERENCES org_actor_commit_logs (commit_id);
 

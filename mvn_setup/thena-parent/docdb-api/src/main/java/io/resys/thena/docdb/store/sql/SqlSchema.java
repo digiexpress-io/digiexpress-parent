@@ -88,7 +88,7 @@ public interface SqlSchema extends DbCollections.WithOptions<SqlSchema>{
   Sql createOrgRolesConstraints();
   Sql createOrgUserConstraints();  
   Sql createOrgGroupConstraints();  
-  Sql createOrgActorConstraints();  
+  Sql createOrgCommitConstraints();
   
 
   Sql dropOrgRoles();
@@ -109,5 +109,7 @@ public interface SqlSchema extends DbCollections.WithOptions<SqlSchema>{
   // central tracker for tables
   Sql createRepo();
   Sql dropRepo();
+
+
   
 }
