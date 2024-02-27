@@ -26,9 +26,9 @@ import org.immutables.value.Value;
 
 import io.resys.thena.docdb.api.models.Message;
 import io.resys.thena.docdb.api.models.Repo;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorCommitLog;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorData;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatus;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgCommit;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroupRole;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgLock;
@@ -36,28 +36,28 @@ import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUser;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserMembership;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserRole;
-import io.resys.thena.docdb.models.doc.DocInserts.DocBatchForOne;
 import io.resys.thena.docdb.models.git.GitInserts.BatchStatus;
 import io.smallrye.mutiny.Uni;
 
 public interface OrgInserts {
   
-  Uni<OrgBatchForOne> batchOne(DocBatchForOne output);
+  Uni<OrgBatchForOne> batchOne(OrgBatchForOne output);
   Uni<OrgBatchForMany> batchMany(OrgBatchForMany output);
   
   @Value.Immutable
   interface OrgBatchForOne {
-    OrgActorCommitLog getCommit();
+    OrgCommit getCommit();
     
-    List<OrgLock> getOrgLock();
-    List<OrgActorData> getOrgActorData();
-    List<OrgActorStatus> getOrgActorStatus();
-    List<OrgGroup> getOrgGroups();
-    List<OrgRole> getOrgRoles();
-    List<OrgUser> getOrgUsers();
-    List<OrgGroupRole> getOrgGroupRoles();
-    List<OrgUserRole> getOrgUserRoles();
-    List<OrgUserMembership> getOrgUserMemberships(); 
+    List<OrgLock> getLock();
+    List<OrgActorData> getActorData();
+    List<OrgActorStatus> getActorStatus();
+    List<OrgGroup> getGroups();
+    List<OrgRole> getRoles();
+    List<OrgUser> getUsers();
+    List<OrgGroupRole> getGroupRoles();
+    List<OrgUserRole> getUserRoles();
+    List<OrgUserMembership> getUserMemberships(); 
+    
     
     
     BatchStatus getStatus();

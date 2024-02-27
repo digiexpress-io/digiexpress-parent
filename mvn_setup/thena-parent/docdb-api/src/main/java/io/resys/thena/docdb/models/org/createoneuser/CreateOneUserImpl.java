@@ -1,13 +1,17 @@
 package io.resys.thena.docdb.models.org.createoneuser;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import io.resys.thena.docdb.api.actions.ImmutableOneUserEnvelope;
 import io.resys.thena.docdb.api.actions.OrgCommitActions.CreateOneUser;
 import io.resys.thena.docdb.api.actions.OrgCommitActions.OneUserEnvelope;
-import io.resys.thena.docdb.models.doc.DocInserts.DocBatchForOne;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
+import io.resys.thena.docdb.models.org.OrgInserts.OrgBatchForOne;
 import io.resys.thena.docdb.models.org.OrgState.OrgRepo;
+import io.resys.thena.docdb.models.org.support.BatchForOneUserCreate;
 import io.resys.thena.docdb.spi.DataMapper;
 import io.resys.thena.docdb.spi.DbState;
 import io.resys.thena.docdb.support.RepoAssert;
@@ -31,7 +35,6 @@ public class CreateOneUserImpl implements CreateOneUser {
   private List<String> addUserToGroups = new ArrayList<>();
   private List<String> addUserToRoles = new ArrayList<>();
 
-  
   @Override public CreateOneUserImpl repoId(String repoId) {         this.repoId = RepoAssert.notEmpty(repoId,           () -> "repoId can't be empty!"); return this; }
   @Override public CreateOneUserImpl author(String author) {         this.author = RepoAssert.notEmpty(author,           () -> "author can't be empty!"); return this; }
   @Override public CreateOneUserImpl message(String message) {       this.message = RepoAssert.notEmpty(message,         () -> "message can't be empty!"); return this; }
@@ -54,15 +57,36 @@ public class CreateOneUserImpl implements CreateOneUser {
   }
   
   private Uni<OneUserEnvelope> doInTx(OrgRepo tx) {
-    final DocBatchForOne batch = null; /*new BatchForOneDocCreate(tx.getRepo().getId(), docType, author, message, branchName)
-        .docId(docId)
-        .ownerId(ownerId)
+    if(!this.addUserToGroups.isEmpty()) {
+      return tx.query().groups().findAll(addUserToGroups).collect().asList()
+        .onItem().transformToUni(groups -> {
+          
+          if(!this.addUserToRoles.isEmpty()) {
+            return tx.query().roles()
+                .findAll(addUserToRoles).collect().asList()
+                .onItem().transformToUni(roles -> createUser(tx, groups, roles));
+          }
+          
+          return createUser(tx, groups, Collections.emptyList());
+        });
+    }
+    if(!this.addUserToRoles.isEmpty()) {
+      return tx.query().roles().findAll(addUserToRoles).collect().asList()
+        .onItem().transformToUni(roles -> createUser(tx, Collections.emptyList(), roles));
+    }
+    
+    return createUser(tx, Collections.emptyList(), Collections.emptyList());
+  }
+
+  
+  private Uni<OneUserEnvelope> createUser(OrgRepo tx, List<OrgGroup> groups, List<OrgRole> roles) {
+    final OrgBatchForOne batch = new BatchForOneUserCreate(tx.getRepo().getId(), author, message)
         .externalId(externalId)
-        .parentDocId(parentDocId)
-        .log(appendLogs)
-        .meta(appendMeta)
-        .append(appendBlobs)
-        .create(); */
+        .email(email)
+        .groups(groups)
+        .roles(roles)
+        .userName(userName)
+        .create(); 
 
     return tx.insert().batchOne(batch)
       .onItem().transform(rsp -> ImmutableOneUserEnvelope.builder()
@@ -71,6 +95,5 @@ public class CreateOneUserImpl implements CreateOneUser {
         .addAllMessages(rsp.getMessages())
         .status(DataMapper.mapStatus(rsp.getStatus()))
         .build());
-  }
-
+  } 
 }

@@ -1,62 +1,49 @@
 package io.resys.thena.docdb.models.org;
 
+import java.util.List;
+
+import javax.annotation.Nullable;
+
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUser;
+import io.smallrye.mutiny.Multi;
+import io.smallrye.mutiny.Uni;
+
 public interface OrgQueries {
   
-  /*
-  DocQuery docs();
-  DocBranchQuery branches();
-  DocCommitQuery commits();
-  DocLogQuery logs();  
+  GroupQuery groups();
+  RoleQuery roles();
+  UserQuery users();
   
-  interface DocQuery {
-    Multi<DocFlatted> findAllFlatted(FlattedCriteria criteria);
-    Multi<DocFlatted> findAllFlatted();
-    Multi<Doc> findAll();
-    Uni<Doc> getById(String id);
-  }
-  
-  interface DocCommitQuery {
-    Uni<DocCommit> getById(String commitId);
-    Multi<DocCommit> findAll();
+  interface UserQuery {
+    Multi<OrgUser> findAllByUserIdOrExternalIdOrEmail(
+     @Nullable String userId, 
+     @Nullable String externalId, 
+     @Nullable String email
+    );
+    Multi<OrgUser> findAll();
+    Uni<OrgUser> getById(String id);
   }
   
-  interface DocBranchQuery {
-    Multi<DocBranch> findAll();
+  interface RoleQuery {
+    Multi<OrgRole> findAllByRoleNameOrExternalId(
+     @Nullable String roleName, 
+     @Nullable String externalId
+    );
     
-    Uni<DocBranchLock> getBranchLock(DocBranchLockCriteria criteria);
-    Uni<List<DocBranchLock>> getBranchLocks(List<DocBranchLockCriteria> criteria);
-    
-    Uni<DocLock> getDocLock(DocLockCriteria criteria);
-    Uni<List<DocLock>> getDocLocks(List<DocLockCriteria> criteria);
-    
-    Uni<DocBranch> getById(String branchId);
+    Multi<OrgRole> findAll();
+    Multi<OrgRole> findAll(List<String> id);
+    Uni<OrgRole> getById(String id);
   }
-
-  interface DocLogQuery {
-    Multi<DocLog> findAll();
-    Uni<DocLog> getById(String logId);
-  }
-
-  @Value.Immutable
-  interface FlattedCriteria {
-    List<String> getMatchId();
-    @Nullable String getBranchName();
-    @Nullable String getDocType();
-    
-    @Nullable Boolean getMatchOwners();
-    boolean getChildren();
-    boolean getOnlyActiveDocs();
-  }
-
-  @Value.Immutable
-  interface DocBranchLockCriteria {
-    String getBranchName();
-    String getDocId();
-  }
-  @Value.Immutable
-  interface DocLockCriteria {
-    String getDocId();
-  }
-  */
   
+  interface GroupQuery {
+    Multi<OrgGroup> findAllByGroupNameOrExternalId(
+      @Nullable String groupName, 
+      @Nullable String externalId
+    );
+    Multi<OrgGroup> findAll();
+    Multi<OrgGroup> findAll(List<String> id);
+    Uni<OrgGroup> getById(String id);
+  }
 }

@@ -7,9 +7,9 @@ import org.immutables.value.Value;
 
 import io.resys.thena.docdb.api.models.ThenaEnvelope.ThenaObjects;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.IsOrgObject;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorCommitLog;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorData;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatus;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgCommit;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroupRole;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
@@ -31,7 +31,7 @@ public interface ThenaOrgObjects extends ThenaObjects {
     Map<String, OrgGroupRole> getGroupRoles();
     Map<String, OrgUserRole> getUserRoles();
     
-    Map<String, OrgActorCommitLog> getActorLogs();
+    Map<String, OrgCommit> getCommits();
     Map<String, OrgActorData> getActorData();
     Map<String, OrgActorStatus> getActorStatus(); 
   }
@@ -40,7 +40,7 @@ public interface ThenaOrgObjects extends ThenaObjects {
   @Value.Immutable
   interface OrgActorObjects extends ThenaOrgObjects { 
     IsOrgObject getTarget();
-    Map<String, OrgActorCommitLog> getActorLogs();
+    Map<String, OrgCommit> getCommits();
     Map<String, OrgActorData> getActorData();
     Map<String, OrgActorStatus> getActorStatus();
   }
@@ -57,7 +57,7 @@ public interface ThenaOrgObjects extends ThenaObjects {
     Map<String, OrgGroupRole> getGroupRoles();
     Map<String, OrgUserRole> getUserRoles();
     
-    Map<String, OrgActorCommitLog> getActorLogs();
+    Map<String, OrgCommit> getCommits();
     Map<String, OrgActorData> getActorData();
     Map<String, OrgActorStatus> getActorStatus(); 
   }
@@ -81,7 +81,7 @@ public interface ThenaOrgObjects extends ThenaObjects {
     Map<String, OrgGroupRole> getGroupRoles();
     Map<String, OrgUserRole> getUserRoles();
     
-    Map<String, OrgActorCommitLog> getActorLogs();
+    Map<String, OrgCommit> getCommits();
     Map<String, OrgActorData> getActorData();
     Map<String, OrgActorStatus> getActorStatus(); 
   }
@@ -91,8 +91,6 @@ public interface ThenaOrgObjects extends ThenaObjects {
   interface OrgGroupObjects extends ThenaOrgObjects {
     List<OrgGroupObject> getGroups();
   }
-  
-  
   
   @Value.Immutable
   interface OrgRoleObject extends ThenaOrgObjects {

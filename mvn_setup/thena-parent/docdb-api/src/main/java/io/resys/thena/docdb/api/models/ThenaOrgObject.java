@@ -1,6 +1,7 @@
 package io.resys.thena.docdb.api.models;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 
 import javax.annotation.Nullable;
@@ -40,34 +41,31 @@ public interface ThenaOrgObject {
   @Value.Immutable
   interface OrgGroup extends ThenaOrgObject, IsOrgObject, IsOrgVersionObject {
     String getId();
-    String getVersion();
+    String getCommitId();
 
     @Nullable String getExternalId();
     @Nullable String getParentId();
     String getGroupName(); 
     String getGroupDescription();
-    LocalDateTime getCreatedAt();
   }
   
   @Value.Immutable
   interface OrgRole extends ThenaOrgObject, IsOrgObject, IsOrgVersionObject {
     String getId();
-    String getVersion();
+    String getCommitId();
     @Nullable String getExternalId();
     String getRoleName();
     String getRoleDescription();
-    LocalDateTime getCreatedAt();
   }
   
 
   @Value.Immutable
   interface OrgUser extends ThenaOrgObject, IsOrgObject, IsOrgVersionObject {
     String getId();
-    String getVersion();
+    String getCommitId();
     String getExternalId();
     String getUserName();
     String getEmail();
-    LocalDateTime getCreatedAt();
   }
   
 
@@ -76,55 +74,68 @@ public interface ThenaOrgObject {
     String getId();
     String getUserId();
     String getGroupId();
-    LocalDateTime getCreatedAt();
+    String getCommitId();
   }
   
   
   @Value.Immutable
   interface OrgGroupRole extends ThenaOrgObject, IsOrgObject {
     String getId();
+    String getCommitId();
     String getGroupId();
     String getRoleId();
-    LocalDateTime getCreatedAt();
   }
   
   @Value.Immutable
   interface OrgUserRole extends ThenaOrgObject, IsOrgObject {
     String getId();
+    String getCommitId();
     String getUserId();
     String getRoleId();
-    LocalDateTime getCreatedAt();
   }
   
   
   @Value.Immutable
   interface OrgActorStatus extends ThenaOrgObject, IsOrgObject, IsOrgVersionObject {
     String getId();
-    String getVersion();
+    String getCommitId();
     @Nullable String getUserId();
     @Nullable String getRoleId();
     @Nullable String getGroupId();
+    
+    @Nullable String getUserMembershipId();
+    @Nullable String getUserRoleId();
+    @Nullable String getGroupRoleId();
     OrgActorValue getValue();
   }
   
   @Value.Immutable
-  interface OrgActorCommitLog extends ThenaOrgObject, IsOrgObject {
+  interface OrgCommit extends ThenaOrgObject, IsOrgObject {
     String getId();
-    @Nullable String getUserId();
-    @Nullable String getRoleId();
-    @Nullable String getGroupId();
     
-    String getLogType();
+    List<OrgCommitTree> getTree();
+    String getAuthor();
+    String getMessage();
+    String getLog();
+    Instant getCreatedAt();
+  }
+  
+  
+  @Value.Immutable
+  interface OrgCommitTree extends ThenaOrgObject, IsOrgObject {
+    String getId();
+    String getCommitId();
+    @Nullable String getParentCommitId();
+    String getActorId();
+    String getActorType();
+    OrgOperationType getOperationType();
     JsonObject getValue();
-    
-    String getCommitAuthor();
-    LocalDateTime getCommitDateTime();
-    String getCommitMessage();
   }
   
   @Value.Immutable
   interface OrgActorData extends ThenaOrgObject, IsOrgObject {
     String getId();
+    String getCommitId();
     @Nullable String getParentId();
     @Nullable String getUserId();
     @Nullable String getRoleId();
@@ -132,10 +143,6 @@ public interface ThenaOrgObject {
     
     String getDataType();
     JsonObject getValue();
-    
-    String getCommitAuthor();
-    LocalDateTime getCommitDateTime();
-    String getCommitMessage();
   }
   
   
@@ -149,6 +156,9 @@ public interface ThenaOrgObject {
     Optional<String> getMessage();
   }
   
+  enum OrgOperationType {
+    ADD, MOD
+  }
   
   enum OrgLockStatus { 
     LOCK_TAKEN, NOT_FOUND

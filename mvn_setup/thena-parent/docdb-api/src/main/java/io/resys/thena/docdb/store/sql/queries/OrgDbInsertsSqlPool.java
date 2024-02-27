@@ -1,7 +1,6 @@
 package io.resys.thena.docdb.store.sql.queries;
 
 
-import io.resys.thena.docdb.models.doc.DocInserts.DocBatchForOne;
 import io.resys.thena.docdb.models.org.OrgInserts;
 import io.resys.thena.docdb.store.sql.SqlBuilder;
 import io.resys.thena.docdb.store.sql.SqlMapper;
@@ -19,7 +18,7 @@ public class OrgDbInsertsSqlPool implements OrgInserts {
   private final SqlBuilder sqlBuilder;
   private final ErrorHandler errorHandler;
   @Override
-  public Uni<OrgBatchForOne> batchOne(DocBatchForOne output) {
+  public Uni<OrgBatchForOne> batchOne(OrgBatchForOne output) {
     // TODO Auto-generated method stub
     return null;
   }
