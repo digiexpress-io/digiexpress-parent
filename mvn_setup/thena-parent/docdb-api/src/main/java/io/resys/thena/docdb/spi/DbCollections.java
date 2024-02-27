@@ -54,7 +54,8 @@ public abstract class DbCollections {
   public abstract String getOrgUserRoles();
   public abstract String getOrgUserMemberships();
   public abstract String getOrgActorStatus();
-  public abstract String getOrgActorLogs();
+  public abstract String getOrgCommits();
+  public abstract String getOrgCommitTrees();
   public abstract String getOrgActorData();
   
   
@@ -85,7 +86,8 @@ public abstract class DbCollections {
         .orgUserRoles(      prefix + this.getOrgUserRoles())
         .orgUserMemberships(prefix + this.getOrgUserMemberships())
         .orgActorStatus(    prefix + this.getOrgActorStatus())
-        .orgActorLogs(      prefix + this.getOrgActorLogs())
+        .orgCommits(        prefix + this.getOrgCommits())
+        .orgCommitTrees(    prefix + this.getOrgCommitTrees())
         .orgActorData(      prefix + this.getOrgActorData())
         
         .build();
@@ -114,8 +116,9 @@ public abstract class DbCollections {
         .orgUsers("org_users")
         .orgUserRoles("org_user_roles")
         .orgUserMemberships("org_user_memberships")
+        .orgCommits("org_commits")
+        .orgCommitTrees("org_commit_trees")
         .orgActorStatus("org_actor_status")
-        .orgActorLogs("org_actor_commit_logs")
         .orgActorData("org_actor_data")
         
         .build();

@@ -82,7 +82,7 @@ public interface SqlSchema extends DbCollections.WithOptions<SqlSchema>{
   Sql createOrgUserMemberships();
 
   Sql createOrgActorStatus();
-  Sql createOrgActorLogs();
+  Sql createOrgCommits();
   Sql createOrgActorData();
   
   Sql createOrgRolesConstraints();

@@ -73,7 +73,7 @@ public class SqlDbSchemaPrintTest {
       .append(sqlSchema.createOrgUserRoles().getValue())
       .append(sqlSchema.createOrgUserMemberships().getValue())
       .append(sqlSchema.createOrgActorStatus().getValue())
-      .append(sqlSchema.createOrgActorLogs().getValue())
+      .append(sqlSchema.createOrgCommits().getValue())
       .append(sqlSchema.createOrgActorData().getValue())
       .append(sqlSchema.createOrgRolesConstraints().getValue())
       .append(sqlSchema.createOrgUserConstraints().getValue())

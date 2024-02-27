@@ -147,7 +147,7 @@ public class RepoBuilderSqlPool implements RepoBuilder {
           
 
           .append(sqlSchema.createOrgActorStatus().getValue())
-          .append(sqlSchema.createOrgActorLogs().getValue())
+          .append(sqlSchema.createOrgCommits().getValue())
           .append(sqlSchema.createOrgActorData().getValue())
           
           .append(sqlSchema.createOrgRolesConstraints().getValue())

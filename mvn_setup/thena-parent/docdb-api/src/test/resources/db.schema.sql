@@ -168,8 +168,7 @@ CREATE TABLE org_roles
   commit_id VARCHAR(40) NOT NULL,
   external_id VARCHAR(40),
   role_name VARCHAR(255) NOT NULL,
-  role_description VARCHAR(255) NOT NULL,
-  created_at TIMESTAMP WITH TIME ZONE NOT NULL
+  role_description VARCHAR(255) NOT NULL
 );
 CREATE INDEX org_roles_NAME_INDEX ON org_roles (role_name);
 CREATE INDEX org_roles_COMMIT_INDEX ON org_roles (commit_id);
@@ -182,8 +181,7 @@ CREATE TABLE org_groups
   external_id VARCHAR(40),
   parent_id VARCHAR(40),
   group_name VARCHAR(255) NOT NULL,
-  group_description VARCHAR(255) NOT NULL,
-  created_at TIMESTAMP WITH TIME ZONE NOT NULL
+  group_description VARCHAR(255) NOT NULL
 );
 
 ALTER TABLE org_groups
@@ -199,8 +197,7 @@ CREATE TABLE org_group_roles
   id VARCHAR(40) PRIMARY KEY,
   commit_id VARCHAR(40) NOT NULL,
   group_id VARCHAR(40) NOT NULL,
-  role_id VARCHAR(40) NOT NULL,
-  created_at TIMESTAMP WITH TIME ZONE NOT NULL
+  role_id VARCHAR(40) NOT NULL
 );
 CREATE INDEX org_group_roles_COMMIT_INDEX ON org_group_roles (commit_id);
 CREATE INDEX org_group_roles_GROUP_INDEX ON org_group_roles (group_id);
@@ -212,8 +209,7 @@ CREATE TABLE org_users
   commit_id VARCHAR(40) NOT NULL,
   external_id VARCHAR(40) NOT NULL,
   username VARCHAR(255) NOT NULL,
-  email VARCHAR(255) NOT NULL,
-  created_at TIMESTAMP WITH TIME ZONE NOT NULL
+  email VARCHAR(255) NOT NULL
 );
 CREATE INDEX org_users_COMMIT_INDEX ON org_users (commit_id);
 CREATE INDEX org_users_EXTERNAL_INDEX ON org_users (external_id);
@@ -224,8 +220,7 @@ CREATE TABLE org_user_roles
   id VARCHAR(40) PRIMARY KEY,
   commit_id VARCHAR(40) NOT NULL,
   user_id VARCHAR(40) NOT NULL,
-  role_id VARCHAR(40) NOT NULL,
-  created_at TIMESTAMP WITH TIME ZONE NOT NULL
+  role_id VARCHAR(40) NOT NULL
 );
 CREATE INDEX org_user_roles_COMMIT_INDEX ON org_user_roles (commit_id);
 CREATE INDEX org_user_roles_ROLE_INDEX ON org_user_roles (role_id);
@@ -237,8 +232,7 @@ CREATE TABLE org_user_memberships
   id VARCHAR(40) PRIMARY KEY,
   commit_id VARCHAR(40) NOT NULL,
   user_id VARCHAR(40) NOT NULL,
-  group_id VARCHAR(40) NOT NULL,
-  created_at TIMESTAMP WITH TIME ZONE NOT NULL
+  group_id VARCHAR(40) NOT NULL
 );
 CREATE INDEX org_user_memberships_COMMIT_INDEX ON org_user_memberships (commit_id);
 CREATE INDEX org_user_memberships_USER_INDEX ON org_user_memberships (user_id);
@@ -258,26 +252,42 @@ CREATE INDEX org_actor_status_COMMIT_INDEX ON org_actor_status (commit_id);
 CREATE INDEX org_actor_status_USER_INDEX ON org_actor_status (user_id);
 CREATE INDEX org_actor_status_GROUP_INDEX ON org_actor_status (group_id);
 
-CREATE TABLE org_actor_commit_logs
+CREATE TABLE org_commits
 (
   commit_id VARCHAR(40) PRIMARY KEY,
   parent_id VARCHAR(40),
-  user_id VARCHAR(40)[],
-  role_id VARCHAR(40)[],
-  group_id VARCHAR(40)[],
-  actor_data_id VARCHAR(40)[],
-  log_type VARCHAR(255) NOT NULL,
-  value JSONB NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE NOT NULL,
+  commit_log TEXT NOT NULL,
   commit_author VARCHAR(255) NOT NULL,
-  commit_message VARCHAR(255) NOT NULL,
-  commit_date_time TIMESTAMP WITH TIME ZONE NOT NULL
+  commit_message VARCHAR(255) NOT NULL
 );
 
-ALTER TABLE org_actor_commit_logs
-  ADD CONSTRAINT org_actor_commit_logs_PARENT_FK
+CREATE TABLE org_commit_trees
+(
+  id VARCHAR(40) PRIMARY KEY,
+  commit_id VARCHAR(40) NOT NULL,
+  parent_commit_id VARCHAR(40),
+  actor_id VARCHAR(40) NOT NULL,
+  actor_type VARCHAR(40) NOT NULL,
+  value JSONB NOT NULL
+);
+
+ALTER TABLE org_commits
+  ADD CONSTRAINT org_commits_PARENT_FK
   FOREIGN KEY (parent_id)
-  REFERENCES org_actor_commit_logs (commit_id);
-CREATE INDEX org_actor_commit_logs_COMMIT_INDEX ON org_actor_commit_logs (commit_id);
+  REFERENCES org_commits (commit_id);
+CREATE INDEX org_commits_PARENT_INDEX ON org_commits (parent_id);
+ALTER TABLE org_commit_trees
+  ADD CONSTRAINT org_commit_trees_COMMIT_FK
+  FOREIGN KEY (commit_id)
+  REFERENCES org_commits (commit_id);
+ALTER TABLE org_commit_trees
+  ADD CONSTRAINT org_commit_trees_PARENT_FK
+  FOREIGN KEY (parent_commit_id)
+  REFERENCES org_commits (commit_id);
+CREATE INDEX org_commit_trees_ACTOR_INDEX ON org_commit_trees (actor_type, actor_id);
+CREATE INDEX org_commit_trees_COMMIT_INDEX ON org_commit_trees (commit_id);
+CREATE INDEX org_commit_trees_PARENT_INDEX ON org_commit_trees (parent_commit_id);
 
 CREATE TABLE org_actor_data
 (
@@ -290,8 +300,7 @@ CREATE TABLE org_actor_data
   data_type VARCHAR(255) NOT NULL,
   value JSONB NOT NULL,
   commit_author VARCHAR(255) NOT NULL,
-  commit_message VARCHAR(255) NOT NULL,
-  commit_date_time TIMESTAMP WITH TIME ZONE NOT NULL
+  commit_message VARCHAR(255) NOT NULL
 );
 
 ALTER TABLE org_actor_data
@@ -320,5 +329,5 @@ ALTER TABLE org_actor_data
 ALTER TABLE org_actor_data
   ADD CONSTRAINT org_user_memberships_COMMIT_FK
   FOREIGN KEY (commit_id)
-  REFERENCES org_actor_commit_logs (commit_id);
+  REFERENCES org_commits (commit_id);
 

@@ -369,8 +369,7 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("  commit_id VARCHAR(40) NOT NULL,").ln()
     .append("  external_id VARCHAR(40),").ln()
     .append("  role_name VARCHAR(255) NOT NULL,").ln()
-    .append("  role_description VARCHAR(255) NOT NULL,").ln()
-    .append("  created_at TIMESTAMP WITH TIME ZONE NOT NULL").ln()
+    .append("  role_description VARCHAR(255) NOT NULL").ln()
     .append(");").ln()
     
     
@@ -397,8 +396,7 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("  external_id VARCHAR(40),").ln()
     .append("  parent_id VARCHAR(40),").ln()
     .append("  group_name VARCHAR(255) NOT NULL,").ln()
-    .append("  group_description VARCHAR(255) NOT NULL,").ln()
-    .append("  created_at TIMESTAMP WITH TIME ZONE NOT NULL").ln()
+    .append("  group_description VARCHAR(255) NOT NULL").ln()
     .append(");").ln().ln()
     
     // parent id, references self
@@ -429,8 +427,7 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("  id VARCHAR(40) PRIMARY KEY,").ln()
     .append("  commit_id VARCHAR(40) NOT NULL,").ln()
     .append("  group_id VARCHAR(40) NOT NULL,").ln()
-    .append("  role_id VARCHAR(40) NOT NULL,").ln()
-    .append("  created_at TIMESTAMP WITH TIME ZONE NOT NULL").ln()
+    .append("  role_id VARCHAR(40) NOT NULL").ln()
     .append(");").ln()
     
     
@@ -455,8 +452,7 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("  commit_id VARCHAR(40) NOT NULL,").ln()
     .append("  external_id VARCHAR(40) NOT NULL,").ln()
     .append("  username VARCHAR(255) NOT NULL,").ln()
-    .append("  email VARCHAR(255) NOT NULL,").ln()
-    .append("  created_at TIMESTAMP WITH TIME ZONE NOT NULL").ln()
+    .append("  email VARCHAR(255) NOT NULL").ln()
     .append(");").ln()
     
     
@@ -480,8 +476,7 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("  id VARCHAR(40) PRIMARY KEY,").ln()
     .append("  commit_id VARCHAR(40) NOT NULL,").ln()
     .append("  user_id VARCHAR(40) NOT NULL,").ln()
-    .append("  role_id VARCHAR(40) NOT NULL,").ln()
-    .append("  created_at TIMESTAMP WITH TIME ZONE NOT NULL").ln()
+    .append("  role_id VARCHAR(40) NOT NULL").ln()
     .append(");").ln()
     
     .append("CREATE INDEX ").append(options.getOrgUserRoles()).append("_COMMIT_INDEX")
@@ -508,8 +503,7 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("  id VARCHAR(40) PRIMARY KEY,").ln()
     .append("  commit_id VARCHAR(40) NOT NULL,").ln()
     .append("  user_id VARCHAR(40) NOT NULL,").ln()
-    .append("  group_id VARCHAR(40) NOT NULL,").ln()
-    .append("  created_at TIMESTAMP WITH TIME ZONE NOT NULL").ln()
+    .append("  group_id VARCHAR(40) NOT NULL").ln()
     .append(");").ln()
     
     .append("CREATE INDEX ").append(options.getOrgUserMemberships()).append("_COMMIT_INDEX")
@@ -555,34 +549,61 @@ public class SqlSchemaImpl implements SqlSchema {
   }
 
   @Override
-  public Sql createOrgActorLogs() {
+  public Sql createOrgCommits() {
     return ImmutableSql.builder().value(new SqlStatement().ln()
-    .append("CREATE TABLE ").append(options.getOrgActorLogs()).ln()
+    .append("CREATE TABLE ").append(options.getOrgCommits()).ln()
     .append("(").ln()
     .append("  commit_id VARCHAR(40) PRIMARY KEY,").ln()
     .append("  parent_id VARCHAR(40),").ln()
+    .append("  created_at TIMESTAMP WITH TIME ZONE NOT NULL,").ln()
+    .append("  commit_log TEXT NOT NULL,").ln()
     
-    .append("  user_id VARCHAR(40)[],").ln()
-    .append("  role_id VARCHAR(40)[],").ln()
-    .append("  group_id VARCHAR(40)[],").ln()
-    .append("  actor_data_id VARCHAR(40)[],").ln()
-    
-    .append("  log_type VARCHAR(255) NOT NULL,").ln()
-    .append("  value JSONB NOT NULL,").ln()
-
     .append("  commit_author VARCHAR(255) NOT NULL,").ln()
-    .append("  commit_message VARCHAR(255) NOT NULL,").ln()
-    .append("  commit_date_time TIMESTAMP WITH TIME ZONE NOT NULL").ln()
+    .append("  commit_message VARCHAR(255) NOT NULL").ln()
     .append(");").ln().ln()
     
-    // parent id, references self
-    .append("ALTER TABLE ").append(options.getOrgActorLogs()).ln()
-    .append("  ADD CONSTRAINT ").append(options.getOrgActorLogs()).append("_PARENT_FK").ln()
-    .append("  FOREIGN KEY (parent_id)").ln()
-    .append("  REFERENCES ").append(options.getOrgActorLogs()).append(" (commit_id);").ln()
+    
+    .append("CREATE TABLE ").append(options.getOrgCommitTrees()).ln()
+    .append("(").ln()
+    .append("  id VARCHAR(40) PRIMARY KEY,").ln()
+    .append("  commit_id VARCHAR(40) NOT NULL,").ln()
+    .append("  parent_commit_id VARCHAR(40),").ln()
+    .append("  actor_id VARCHAR(40) NOT NULL,").ln()
+    .append("  actor_type VARCHAR(40) NOT NULL,").ln()
+    .append("  value JSONB NOT NULL").ln()
+    .append(");").ln().ln()
+    
 
-    .append("CREATE INDEX ").append(options.getOrgActorLogs()).append("_COMMIT_INDEX")
-    .append(" ON ").append(options.getOrgActorLogs()).append(" (commit_id);").ln()
+    // parent id, references self
+    .append("ALTER TABLE ").append(options.getOrgCommits()).ln()
+    .append("  ADD CONSTRAINT ").append(options.getOrgCommits()).append("_PARENT_FK").ln()
+    .append("  FOREIGN KEY (parent_id)").ln()
+    .append("  REFERENCES ").append(options.getOrgCommits()).append(" (commit_id);").ln()
+
+    .append("CREATE INDEX ").append(options.getOrgCommits()).append("_PARENT_INDEX")
+    .append(" ON ").append(options.getOrgCommits()).append(" (parent_id);").ln()
+
+
+    .append("ALTER TABLE ").append(options.getOrgCommitTrees()).ln()
+    .append("  ADD CONSTRAINT ").append(options.getOrgCommitTrees()).append("_COMMIT_FK").ln()
+    .append("  FOREIGN KEY (commit_id)").ln()
+    .append("  REFERENCES ").append(options.getOrgCommits()).append(" (commit_id);").ln()
+
+    .append("ALTER TABLE ").append(options.getOrgCommitTrees()).ln()
+    .append("  ADD CONSTRAINT ").append(options.getOrgCommitTrees()).append("_PARENT_FK").ln()
+    .append("  FOREIGN KEY (parent_commit_id)").ln()
+    .append("  REFERENCES ").append(options.getOrgCommits()).append(" (commit_id);").ln()
+
+    
+    .append("CREATE INDEX ").append(options.getOrgCommitTrees()).append("_ACTOR_INDEX")
+    .append(" ON ").append(options.getOrgCommitTrees()).append(" (actor_type, actor_id);").ln()
+    
+    .append("CREATE INDEX ").append(options.getOrgCommitTrees()).append("_COMMIT_INDEX")
+    .append(" ON ").append(options.getOrgCommitTrees()).append(" (commit_id);").ln()
+    
+    .append("CREATE INDEX ").append(options.getOrgCommitTrees()).append("_PARENT_INDEX")
+    .append(" ON ").append(options.getOrgCommitTrees()).append(" (parent_commit_id);").ln()
+    
 
     .build()).build();
   }
@@ -603,8 +624,7 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("  value JSONB NOT NULL,").ln()
 
     .append("  commit_author VARCHAR(255) NOT NULL,").ln()
-    .append("  commit_message VARCHAR(255) NOT NULL,").ln()
-    .append("  commit_date_time TIMESTAMP WITH TIME ZONE NOT NULL").ln()
+    .append("  commit_message VARCHAR(255) NOT NULL").ln()
     .append(");").ln().ln()
 
 
@@ -693,7 +713,7 @@ public class SqlSchemaImpl implements SqlSchema {
   @Override public Sql dropOrgUserRoles() { return dropTableIfNotExists(options.getOrgUserRoles()); }
   @Override public Sql dropOrgUserMemberships() { return dropTableIfNotExists(options.getOrgUserMemberships()); }
   @Override public Sql dropOrgActorStatus() { return dropTableIfNotExists(options.getOrgActorStatus()); }
-  @Override public Sql dropOrgActorLogs() { return dropTableIfNotExists(options.getOrgActorLogs()); }
+  @Override public Sql dropOrgActorLogs() { return dropTableIfNotExists(options.getOrgCommits()); }
   @Override public Sql dropOrgActorData() { return dropTableIfNotExists(options.getOrgActorData()); }
 
   
@@ -709,7 +729,7 @@ public class SqlSchemaImpl implements SqlSchema {
         .append("ALTER TABLE ").append(options.getOrgActorData()).ln()
         .append("  ADD CONSTRAINT ").append(tableNameThatPointToCommits).append("_COMMIT_FK").ln()
         .append("  FOREIGN KEY (commit_id)").ln()
-        .append("  REFERENCES ").append(options.getOrgActorLogs()).append(" (commit_id);").ln().ln()
+        .append("  REFERENCES ").append(options.getOrgCommits()).append(" (commit_id);").ln().ln()
         .build();
   }
 
