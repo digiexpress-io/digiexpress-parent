@@ -5,13 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import io.resys.thena.docdb.api.actions.CommitActions.CommitResultStatus;
 import io.resys.thena.docdb.api.actions.CommitActions.JsonObjectMerge;
 import io.resys.thena.docdb.api.actions.DocCommitActions.AddItemToModifyDocBranch;
 import io.resys.thena.docdb.api.actions.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.docdb.api.actions.DocCommitActions.ModifyManyDocBranches;
 import io.resys.thena.docdb.api.actions.ImmutableManyDocsEnvelope;
 import io.resys.thena.docdb.api.models.ImmutableMessage;
+import io.resys.thena.docdb.api.models.Repo;
+import io.resys.thena.docdb.api.models.Repo.CommitResultStatus;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranchLock;
 import io.resys.thena.docdb.models.doc.DocQueries.DocBranchLockCriteria;
 import io.resys.thena.docdb.models.doc.DocState.DocRepo;
@@ -138,7 +139,7 @@ public class ModifyManyDocBranchesImpl implements ModifyManyDocBranches {
                 .append("  - not found: ").append(String.join(",", notFound))
                 .toString())
               .build())
-          .status(CommitResultStatus.ERROR)
+          .status(Repo.CommitResultStatus.ERROR)
           .build();
       
     }
@@ -160,7 +161,7 @@ public class ModifyManyDocBranchesImpl implements ModifyManyDocBranches {
       return ImmutableManyDocsEnvelope.builder()
           .repoId(repoId)
           .addMessages(ImmutableMessage.builder().text(text).build())
-          .status(CommitResultStatus.ERROR)
+          .status(Repo.CommitResultStatus.ERROR)
           .build();
     }
     return null;

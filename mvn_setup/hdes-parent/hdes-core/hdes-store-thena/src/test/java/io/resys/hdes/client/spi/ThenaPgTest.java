@@ -1,5 +1,13 @@
 package io.resys.hdes.client.spi;
 
+import java.io.Serializable;
+import java.time.Duration;
+import java.util.Map;
+
+import org.immutables.value.Value;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 /*-
  * #%L
  * stencil-persistence
@@ -24,19 +32,12 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
 import io.resys.hdes.client.spi.config.PgProfile;
 import io.resys.hdes.client.spi.config.PgTestTemplate;
-import io.resys.thena.docdb.api.actions.CommitActions.CommitResultStatus;
 import io.resys.thena.docdb.api.actions.RepoActions.RepoResult;
 import io.resys.thena.docdb.api.actions.RepoActions.RepoStatus;
+import io.resys.thena.docdb.api.models.Repo.CommitResultStatus;
 import io.resys.thena.docdb.api.models.Repo.RepoType;
 import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;
-import org.immutables.value.Value;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
-import java.io.Serializable;
-import java.time.Duration;
-import java.util.Map;
 
 @QuarkusTest
 @TestProfile(PgProfile.class)

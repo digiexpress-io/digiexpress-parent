@@ -27,6 +27,9 @@ import io.resys.thena.docdb.api.actions.DiffActions;
 import io.resys.thena.docdb.api.actions.DocCommitActions;
 import io.resys.thena.docdb.api.actions.DocQueryActions;
 import io.resys.thena.docdb.api.actions.HistoryActions;
+import io.resys.thena.docdb.api.actions.OrgCommitActions;
+import io.resys.thena.docdb.api.actions.OrgHistoryActions;
+import io.resys.thena.docdb.api.actions.OrgQueryActions;
 import io.resys.thena.docdb.api.actions.PullActions;
 import io.resys.thena.docdb.api.actions.RepoActions;
 import io.resys.thena.docdb.api.actions.TagActions;
@@ -40,9 +43,13 @@ import io.resys.thena.docdb.models.git.history.HistoryActionsDefault;
 import io.resys.thena.docdb.models.git.objects.BranchActionsImpl;
 import io.resys.thena.docdb.models.git.objects.ObjectsActionsImpl;
 import io.resys.thena.docdb.models.git.tags.TagActionsDefault;
+import io.resys.thena.docdb.models.org.actions.OrgCommitActionsImpl;
+import io.resys.thena.docdb.models.org.actions.OrgHistoryActionsImpl;
+import io.resys.thena.docdb.models.org.actions.OrgQueryActionsImpl;
 
 public class DocDBDefault implements DocDB {
   private final DbState state;
+  
   private RepoActions projectActions;
   private CommitActions commitActions;
   private TagActions tagActions;
@@ -50,8 +57,13 @@ public class DocDBDefault implements DocDB {
   private PullActions pullActions;
   private DiffActions diffActions;
   private BranchActions branchActions;
+  
   private DocCommitActions docAppendActions;
   private DocQueryActions docQueryActions;
+  
+  private OrgCommitActions orgCommitActions;
+  private OrgQueryActions orgQueryActions;
+  private OrgHistoryActions orgHistoryActions;
   
   public DocDBDefault(DbState state) {
     super();
@@ -141,6 +153,36 @@ public class DocDBDefault implements DocDB {
           docAppendActions = new DocAppendActionsImpl(state); 
         }
         return docAppendActions;
+      }
+    };
+  }
+
+  @Override
+  public OrgModel org() {
+    return new OrgModel() {
+      
+      @Override
+      public OrgHistoryActions history() {
+        if(orgHistoryActions == null) {
+          orgHistoryActions = new OrgHistoryActionsImpl(state); 
+        }
+        return orgHistoryActions;
+      }
+      
+      @Override
+      public OrgQueryActions find() {
+        if(orgQueryActions == null) {
+          orgQueryActions = new OrgQueryActionsImpl(state); 
+        }
+        return orgQueryActions;
+      }
+      
+      @Override
+      public OrgCommitActions commit() {
+        if(orgCommitActions == null) {
+          orgCommitActions = new OrgCommitActionsImpl(state); 
+        }
+        return orgCommitActions;
       }
     };
   }

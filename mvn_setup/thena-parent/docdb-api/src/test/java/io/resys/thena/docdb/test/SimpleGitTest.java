@@ -23,9 +23,10 @@ package io.resys.thena.docdb.test;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
 import io.resys.thena.docdb.api.actions.CommitActions.CommitResultEnvelope;
-import io.resys.thena.docdb.api.actions.CommitActions.CommitResultStatus;
 import io.resys.thena.docdb.api.actions.RepoActions.RepoResult;
 import io.resys.thena.docdb.api.actions.RepoActions.RepoStatus;
+import io.resys.thena.docdb.api.models.Repo;
+import io.resys.thena.docdb.api.models.Repo.CommitResultStatus;
 import io.resys.thena.docdb.api.models.Repo.RepoType;
 import io.resys.thena.docdb.test.config.DbTestTemplate;
 import io.resys.thena.docdb.test.config.PgProfile;
@@ -76,7 +77,7 @@ public class SimpleGitTest extends DbTestTemplate {
       .await().atMost(Duration.ofMinutes(1));
 
     log.debug("created commit {}", commit_0);
-    Assertions.assertEquals(CommitResultStatus.OK, commit_0.getStatus());
+    Assertions.assertEquals(Repo.CommitResultStatus.OK, commit_0.getStatus());
     
     
     // Create head and first commit
@@ -91,7 +92,7 @@ public class SimpleGitTest extends DbTestTemplate {
       .await().atMost(Duration.ofMinutes(1));
     
     log.debug("created commit 1 {}", commit_1);
-    Assertions.assertEquals(CommitResultStatus.OK, commit_1.getStatus());
+    Assertions.assertEquals(Repo.CommitResultStatus.OK, commit_1.getStatus());
     super.printRepo(repo.getRepo());
   }
   
@@ -119,7 +120,7 @@ public class SimpleGitTest extends DbTestTemplate {
       .await().atMost(Duration.ofMinutes(1));
 
     log.debug("created commit {}", commit_0);
-    Assertions.assertEquals(CommitResultStatus.OK, commit_0.getStatus());
+    Assertions.assertEquals(Repo.CommitResultStatus.OK, commit_0.getStatus());
     super.printRepo(repo.getRepo());
   }
   
@@ -147,7 +148,7 @@ public class SimpleGitTest extends DbTestTemplate {
       .await().atMost(Duration.ofMinutes(1));
 
     log.debug("created commit 0 {}", commit_0);
-    Assertions.assertEquals(CommitResultStatus.OK, commit_0.getStatus());
+    Assertions.assertEquals(Repo.CommitResultStatus.OK, commit_0.getStatus());
     
     
     // Create head and first commit
@@ -164,7 +165,7 @@ public class SimpleGitTest extends DbTestTemplate {
       .await().atMost(Duration.ofMinutes(1));
     
     log.debug("created commit 1 {}", commit_1);
-    Assertions.assertEquals(CommitResultStatus.OK, commit_1.getStatus());
+    Assertions.assertEquals(Repo.CommitResultStatus.OK, commit_1.getStatus());
     
     super.printRepo(repo.getRepo());
   }

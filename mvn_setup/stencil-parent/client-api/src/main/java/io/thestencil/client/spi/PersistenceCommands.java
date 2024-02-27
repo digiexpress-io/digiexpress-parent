@@ -24,8 +24,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import io.resys.thena.docdb.api.actions.CommitActions.CommitResultStatus;
 import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
+import io.resys.thena.docdb.api.models.Repo.CommitResultStatus;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.ImmutableEntityState;
 import io.thestencil.client.api.StencilClient.Entity;

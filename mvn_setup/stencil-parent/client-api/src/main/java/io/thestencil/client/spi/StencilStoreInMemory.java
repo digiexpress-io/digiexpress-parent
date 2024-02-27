@@ -131,6 +131,11 @@ public class StencilStoreInMemory implements StencilStore {
     public DocModel doc() {
       throw new IllegalArgumentException("no read or writes supported!");
     }
+
+    @Override
+    public OrgModel org() {
+      throw new IllegalArgumentException("no read or writes supported!");
+    }
     
   }
 

@@ -21,6 +21,7 @@ package io.resys.thena.docdb.spi;
  */
 
 import io.resys.thena.docdb.api.models.Repo;
+import io.resys.thena.docdb.api.models.Repo.CommitResultStatus;
 import io.resys.thena.docdb.api.models.ThenaDocObject.Doc;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranch;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranchLock;
@@ -35,6 +36,7 @@ import io.resys.thena.docdb.api.models.ThenaGitObject.CommitTree;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Tag;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Tree;
 import io.resys.thena.docdb.api.models.ThenaGitObject.TreeValue;
+import io.resys.thena.docdb.models.git.GitInserts.BatchStatus;
 import io.vertx.mutiny.sqlclient.Row;
 
 public interface DataMapper<T> {
@@ -55,4 +57,14 @@ public interface DataMapper<T> {
   DocBranch docBranch(T row);
   DocCommit docCommit(T row);
   DocBranchLock docBranchLock(T row);
+  
+  
+  static Repo.CommitResultStatus mapStatus(BatchStatus src) {
+    if(src == BatchStatus.OK) {
+      return Repo.CommitResultStatus.OK;
+    } else if(src == BatchStatus.CONFLICT) {
+      return Repo.CommitResultStatus.CONFLICT;
+    }
+    return Repo.CommitResultStatus.ERROR; 
+  }
 }

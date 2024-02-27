@@ -22,9 +22,9 @@ import io.dialob.client.spi.support.DialobAssert;
 import io.dialob.client.spi.support.OidUtils;
 import io.dialob.client.spi.support.Sha2;
 import io.resys.thena.docdb.api.actions.CommitActions.CommitBuilder;
-import io.resys.thena.docdb.api.actions.CommitActions.CommitResultStatus;
 import io.resys.thena.docdb.api.actions.RepoActions.RepoStatus;
 import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
+import io.resys.thena.docdb.api.models.Repo.CommitResultStatus;
 import io.resys.thena.docdb.api.models.Repo.RepoType;
 import io.smallrye.mutiny.Uni;
 

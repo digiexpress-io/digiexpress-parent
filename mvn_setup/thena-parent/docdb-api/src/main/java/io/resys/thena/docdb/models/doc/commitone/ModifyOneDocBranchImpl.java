@@ -2,17 +2,18 @@ package io.resys.thena.docdb.models.doc.commitone;
 
 import java.time.Duration;
 
-import io.resys.thena.docdb.api.actions.CommitActions.CommitResultStatus;
 import io.resys.thena.docdb.api.actions.CommitActions.JsonObjectMerge;
 import io.resys.thena.docdb.api.actions.DocCommitActions.ModifyOneDocBranch;
 import io.resys.thena.docdb.api.actions.DocCommitActions.OneDocEnvelope;
 import io.resys.thena.docdb.api.actions.ImmutableOneDocEnvelope;
 import io.resys.thena.docdb.api.models.ImmutableMessage;
+import io.resys.thena.docdb.api.models.Repo;
+import io.resys.thena.docdb.api.models.Repo.CommitResultStatus;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranchLock;
 import io.resys.thena.docdb.models.doc.DocState.DocRepo;
 import io.resys.thena.docdb.models.doc.ImmutableDocBranchLockCriteria;
 import io.resys.thena.docdb.models.doc.support.BatchForOneBranchModify;
-import io.resys.thena.docdb.models.doc.support.BatchForOneDocCreate;
+import io.resys.thena.docdb.spi.DataMapper;
 import io.resys.thena.docdb.spi.DbState;
 import io.resys.thena.docdb.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
@@ -89,7 +90,7 @@ public class ModifyOneDocBranchImpl implements ModifyOneDocBranch {
       return ImmutableOneDocEnvelope.builder()
           .repoId(repoId)
           .addMessages(ImmutableMessage.builder().text(text).build())
-          .status(CommitResultStatus.ERROR)
+          .status(Repo.CommitResultStatus.ERROR)
           .build();
     }
 
@@ -105,7 +106,7 @@ public class ModifyOneDocBranchImpl implements ModifyOneDocBranch {
                 .append(" Unknown branch: '").append(branchName).append("'!")
                 .toString())
               .build())
-          .status(CommitResultStatus.ERROR)
+          .status(Repo.CommitResultStatus.ERROR)
           .build();
       
     }
@@ -128,7 +129,7 @@ public class ModifyOneDocBranchImpl implements ModifyOneDocBranch {
         .commit(rsp.getDocCommit().iterator().next())
         .addMessages(rsp.getLog())
         .addAllMessages(rsp.getMessages())
-        .status(BatchForOneDocCreate.mapStatus(rsp.getStatus()))
+        .status(DataMapper.mapStatus(rsp.getStatus()))
         .build());
   }
   

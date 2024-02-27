@@ -29,10 +29,11 @@ import java.util.Map;
 
 import io.resys.thena.docdb.api.actions.CommitActions.CommitBuilder;
 import io.resys.thena.docdb.api.actions.CommitActions.CommitResultEnvelope;
-import io.resys.thena.docdb.api.actions.CommitActions.CommitResultStatus;
 import io.resys.thena.docdb.api.actions.CommitActions.JsonObjectMerge;
 import io.resys.thena.docdb.api.actions.ImmutableCommitResultEnvelope;
 import io.resys.thena.docdb.api.models.ImmutableMessage;
+import io.resys.thena.docdb.api.models.Repo;
+import io.resys.thena.docdb.api.models.Repo.CommitResultStatus;
 import io.resys.thena.docdb.api.models.ThenaGitObject.CommitLock;
 import io.resys.thena.docdb.api.models.ThenaGitObject.CommitLockStatus;
 import io.resys.thena.docdb.models.git.GitInserts.BatchStatus;
@@ -218,7 +219,7 @@ public class CommitBuilderImpl implements CommitBuilder {
                   .append(" Your trying to merge objects to non existent head!")
                   .toString())
               .build())
-          .status(CommitResultStatus.ERROR)
+          .status(Repo.CommitResultStatus.ERROR)
           .build();
       
     }
@@ -236,7 +237,7 @@ public class CommitBuilderImpl implements CommitBuilder {
                   .append(" but remote has no head.").append("'!")
                   .toString())
               .build())
-          .status(CommitResultStatus.ERROR)
+          .status(Repo.CommitResultStatus.ERROR)
           .build();
       
     }
@@ -254,7 +255,7 @@ public class CommitBuilderImpl implements CommitBuilder {
                   .append(" is: '").append(state.getCommit().get().getId()).append("'!")
                   .toString())
               .build())
-          .status(CommitResultStatus.ERROR)
+          .status(Repo.CommitResultStatus.ERROR)
           .build();
     }
     
@@ -273,20 +274,20 @@ public class CommitBuilderImpl implements CommitBuilder {
       return ImmutableCommitResultEnvelope.builder()
           .gid(gid)
           .addMessages(ImmutableMessage.builder().text(text).build())
-          .status(CommitResultStatus.ERROR)
+          .status(Repo.CommitResultStatus.ERROR)
           .build();
     }
 
     return null;
   }
   
-  private static CommitResultStatus visitStatus(BatchStatus src) {
+  private static Repo.CommitResultStatus visitStatus(BatchStatus src) {
     if(src == BatchStatus.OK) {
-      return CommitResultStatus.OK;
+      return Repo.CommitResultStatus.OK;
     } else if(src == BatchStatus.CONFLICT) {
-      return CommitResultStatus.CONFLICT;
+      return Repo.CommitResultStatus.CONFLICT;
     }
-    return CommitResultStatus.ERROR;
+    return Repo.CommitResultStatus.ERROR;
     
   }
 }

@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import io.resys.thena.docdb.api.actions.CommitActions.CommitResultStatus;
 import io.resys.thena.docdb.api.models.ImmutableDoc;
 import io.resys.thena.docdb.api.models.ImmutableDocBranch;
 import io.resys.thena.docdb.api.models.ImmutableDocCommit;
@@ -132,15 +131,5 @@ public class BatchForOneDocCreate {
       .log(ImmutableMessage.builder().text(logger.toString()).build())
       .build();
     return batch;
-  }
-  
-
-  public static CommitResultStatus mapStatus(BatchStatus src) {
-    if(src == BatchStatus.OK) {
-      return CommitResultStatus.OK;
-    } else if(src == BatchStatus.CONFLICT) {
-      return CommitResultStatus.CONFLICT;
-    }
-    return CommitResultStatus.ERROR; 
   }
 }

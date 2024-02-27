@@ -15,6 +15,7 @@ import io.resys.thena.docdb.models.doc.DocState.DocRepo;
 import io.resys.thena.docdb.models.doc.ImmutableDocBatchForMany;
 import io.resys.thena.docdb.models.doc.support.BatchForOneDocCreate;
 import io.resys.thena.docdb.models.git.GitInserts.BatchStatus;
+import io.resys.thena.docdb.spi.DataMapper;
 import io.resys.thena.docdb.spi.DbState;
 import io.resys.thena.docdb.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
@@ -111,7 +112,7 @@ public class CreateManyDocsImpl implements CreateManyDocs {
             .flatMap(i -> i.getMessages().stream())
             .collect(Collectors.toList()))
         
-        .status(BatchForOneDocCreate.mapStatus(rsp.getStatus()))
+        .status(DataMapper.mapStatus(rsp.getStatus()))
         .build());
   }
 }

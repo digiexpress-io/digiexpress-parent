@@ -23,6 +23,7 @@ import io.resys.thena.docdb.models.doc.DocState.DocRepo;
 import io.resys.thena.docdb.models.doc.ImmutableDocBatchForOne;
 import io.resys.thena.docdb.models.git.GitInserts.BatchStatus;
 import io.resys.thena.docdb.models.git.commits.CommitLogger;
+import io.resys.thena.docdb.spi.DataMapper;
 import io.resys.thena.docdb.support.OidUtils;
 import io.resys.thena.docdb.support.RepoAssert;
 import io.resys.thena.docdb.support.Sha2;
@@ -147,7 +148,7 @@ public class BatchForOneBranchModify {
         .flatMap(i -> i.getMessages().stream())
         .collect(Collectors.toList()))
     
-    .status(BatchForOneDocCreate.mapStatus(rsp.getStatus()))
+    .status(DataMapper.mapStatus(rsp.getStatus()))
     .build();
   }
 }

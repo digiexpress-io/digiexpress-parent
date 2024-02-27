@@ -29,6 +29,7 @@ import org.immutables.value.Value;
 import io.resys.thena.docdb.api.actions.PullActions.MatchCriteria;
 import io.resys.thena.docdb.api.models.Message;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
+import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.ThenaEnvelope;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Commit;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Tree;
@@ -71,14 +72,12 @@ public interface CommitActions {
     JsonObject apply(JsonObject previousState);
   }
   
-  enum CommitResultStatus { OK, ERROR, CONFLICT }
-  
   @Value.Immutable
   interface CommitResultEnvelope extends ThenaEnvelope {
     String getGid(); // repo/head
     @Nullable
     Commit getCommit();
-    CommitResultStatus getStatus();
+    Repo.CommitResultStatus getStatus();
     List<Message> getMessages();
   }
 }

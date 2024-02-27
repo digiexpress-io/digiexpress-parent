@@ -44,6 +44,7 @@ public interface DocDB {
   
   GitModel git();
   DocModel doc();
+  OrgModel org();
   
 
   interface OrgModel {

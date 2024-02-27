@@ -2,16 +2,17 @@ package io.resys.thena.docdb.models.doc.commitone;
 
 import java.time.Duration;
 
-import io.resys.thena.docdb.api.actions.CommitActions.CommitResultStatus;
 import io.resys.thena.docdb.api.actions.DocCommitActions.ModifyOneDoc;
 import io.resys.thena.docdb.api.actions.DocCommitActions.OneDocEnvelope;
 import io.resys.thena.docdb.api.actions.ImmutableOneDocEnvelope;
 import io.resys.thena.docdb.api.models.ImmutableMessage;
+import io.resys.thena.docdb.api.models.Repo;
+import io.resys.thena.docdb.api.models.Repo.CommitResultStatus;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocLock;
 import io.resys.thena.docdb.models.doc.DocState.DocRepo;
 import io.resys.thena.docdb.models.doc.ImmutableDocLockCriteria;
-import io.resys.thena.docdb.models.doc.support.BatchForOneDocCreate;
 import io.resys.thena.docdb.models.doc.support.BatchForOneDocModify;
+import io.resys.thena.docdb.spi.DataMapper;
 import io.resys.thena.docdb.spi.DbState;
 import io.resys.thena.docdb.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
@@ -73,7 +74,7 @@ public class ModifyOneDocImpl implements ModifyOneDoc {
       .doc(batch.getDoc().get())
       .addMessages(rsp.getLog())
       .addAllMessages(rsp.getMessages())
-      .status(BatchForOneDocCreate.mapStatus(rsp.getStatus()))
+      .status(DataMapper.mapStatus(rsp.getStatus()))
       .build());
   }
   
@@ -89,7 +90,7 @@ public class ModifyOneDocImpl implements ModifyOneDoc {
                   .append(" Unknown docId: '").append(docId).append("'!")
                   .toString())
               .build())
-          .status(CommitResultStatus.ERROR)
+          .status(Repo.CommitResultStatus.ERROR)
           .build();
       
     }

@@ -41,4 +41,5 @@ public interface Repo {
 
   enum RepoType { doc, git, org }
   enum HeadStateKind { ahead, behind, same }
+  enum CommitResultStatus { OK, ERROR, CONFLICT }
 }

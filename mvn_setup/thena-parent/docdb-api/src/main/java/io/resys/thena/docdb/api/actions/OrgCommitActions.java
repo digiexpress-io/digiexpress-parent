@@ -6,8 +6,8 @@ import javax.annotation.Nullable;
 
 import org.immutables.value.Value;
 
-import io.resys.thena.docdb.api.actions.CommitActions.CommitResultStatus;
 import io.resys.thena.docdb.api.models.Message;
+import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.ThenaEnvelope;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
@@ -129,7 +129,7 @@ public interface OrgCommitActions {
   @Value.Immutable
   interface OneRoleEnvelope extends ThenaEnvelope {
     String getRepoId();
-    CommitResultStatus getStatus();
+    Repo.CommitResultStatus getStatus();
     List<Message> getMessages();
 
     @Nullable OrgRole getRole();
@@ -139,7 +139,7 @@ public interface OrgCommitActions {
   @Value.Immutable
   interface OneUserEnvelope extends ThenaEnvelope {
     String getRepoId();
-    CommitResultStatus getStatus();
+    Repo.CommitResultStatus getStatus();
     List<Message> getMessages();
     
     @Nullable OrgUser getUser();
@@ -148,7 +148,7 @@ public interface OrgCommitActions {
   @Value.Immutable
   interface OneGroupEnvelope extends ThenaEnvelope {
     String getRepoId();
-    CommitResultStatus getStatus();
+    Repo.CommitResultStatus getStatus();
     List<Message> getMessages();
     
     @Nullable OrgGroup getGroup();
