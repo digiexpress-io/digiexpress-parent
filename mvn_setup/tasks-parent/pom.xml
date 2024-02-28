@@ -18,6 +18,7 @@
     <module>crm-client</module>
     <module>sysconfig-client</module>
     <module>user-profile-client</module>
+    <module>permission-client</module>
   </modules>
 
 </project>
