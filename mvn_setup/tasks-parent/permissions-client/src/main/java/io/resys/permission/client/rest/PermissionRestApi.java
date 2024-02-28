@@ -19,26 +19,6 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 
-/*
- * [x] GET all principals
- * [x] GET one principal
- * [x] PUT one principal
- * [ ] PUT many principals
- * 
- * [x] GET all permissions
- * [x] GET one permission
- * [x] POST one permission
- * [x] PUT one permission
- * [ ] PUT many permissions
- * 
- * [x] GET all roles
- * [x] GET one role
- * [x] POST one role
- * [x] PUT one role
- * [ ] PUT many roles
- * 
- */
-
 
 public interface PermissionRestApi {
   
