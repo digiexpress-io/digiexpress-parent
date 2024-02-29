@@ -1,0 +1,46 @@
+
+Users
+  - 1
+    commitId: 2
+    username: sam vimes
+    email: sam.vimes@digiexpress.io
+    externalId: captain-of-the-guard
+
+Groups
+  - 3
+    commitId: 4
+    parentId: null
+    groupName: captains
+    groupDescription: group for all the captains of the guard
+    externalId: one-man-group
+
+Group Members
+  - 3
+    commitId: 4
+    groupName: captains
+    groupDescription: group for all the captains of the guard
+    externalId: one-man-group
+
+Roles
+  - 5
+    commitId: 6
+    roleName: jailer
+    roleDescription: role for all jailers
+    externalId: role for all the guardsmen
+  - 7
+    commitId: 8
+    roleName: detective
+    roleDescription: role for all the detective doing investigations and things
+    externalId: role for all the detective
+
+User roles
+
+Group roles
+  - 9
+    commitId: 4
+    groupId: 3
+    roleId: 5
+  - 10
+    commitId: 4
+    groupId: 3
+    roleId: 7
