@@ -367,8 +367,8 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("(").ln()
     .append("  id VARCHAR(40) PRIMARY KEY,").ln()
     .append("  commit_id VARCHAR(40) NOT NULL,").ln()
-    .append("  external_id VARCHAR(40),").ln()
-    .append("  role_name VARCHAR(255) NOT NULL,").ln()
+    .append("  external_id VARCHAR(40) UNIQUE,").ln()
+    .append("  role_name VARCHAR(255) UNIQUE NOT NULL,").ln()
     .append("  role_description VARCHAR(255) NOT NULL").ln()
     .append(");").ln()
     
@@ -393,9 +393,9 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("(").ln()
     .append("  id VARCHAR(40) PRIMARY KEY,").ln()
     .append("  commit_id VARCHAR(40) NOT NULL,").ln()
-    .append("  external_id VARCHAR(40),").ln()
+    .append("  external_id VARCHAR(40) UNIQUE,").ln()
     .append("  parent_id VARCHAR(40),").ln()
-    .append("  group_name VARCHAR(255) NOT NULL,").ln()
+    .append("  group_name VARCHAR(255) UNIQUE NOT NULL,").ln()
     .append("  group_description VARCHAR(255) NOT NULL").ln()
     .append(");").ln().ln()
     
@@ -642,7 +642,7 @@ public class SqlSchemaImpl implements SqlSchema {
   public Sql createOrgCommitConstraints() {
     return ImmutableSql.builder()
         .value(createOrgCommitFk(options.getOrgUserRoles()))
-        .value(createOrgCommitFk(options.getOrgGroupRoles()))        
+        .value(createOrgCommitFk(options.getOrgGroupRoles()))
         .value(createOrgCommitFk(options.getOrgGroupRoles()))
         
         .value(createOrgCommitFk(options.getOrgUsers()))

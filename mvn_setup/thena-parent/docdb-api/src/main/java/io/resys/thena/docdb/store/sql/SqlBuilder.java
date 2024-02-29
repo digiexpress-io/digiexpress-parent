@@ -43,8 +43,11 @@ import io.resys.thena.docdb.api.models.ThenaGitObject.TreeValue;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgCommit;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgCommitTree;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroupRole;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUser;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserMembership;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserRole;
 import io.resys.thena.docdb.models.doc.DocQueries.DocBranchLockCriteria;
 import io.resys.thena.docdb.models.doc.DocQueries.DocLockCriteria;
 import io.resys.thena.docdb.models.doc.DocQueries.FlattedCriteria;
@@ -74,6 +77,11 @@ public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
   OrgCommitSqlBuilder orgCommits();
   OrgCommitTreeSqlBuilder orgCommitTrees();
   
+  OrgRoleSqlBuilder orgRoles();
+  OrgUserRoleSqlBuilder orgUserRoles();
+  OrgGroupRoleSqlBuilder orgGroupRoles();
+  
+  
   SqlBuilder withOptions(DbCollections options);
 
   interface RepoSqlBuilder {
@@ -84,7 +92,7 @@ public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
     SqlTuple insertOne(Repo repo);
     SqlTuple deleteOne(Repo repo);
   }
-  
+
   interface OrgUserSqlBuilder {
     SqlTuple getById(String id); //username or id or external_id
     Sql findAll();
@@ -94,6 +102,36 @@ public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
     SqlTuple updateOne(OrgUser user);
     SqlTupleList updateMany(Collection<OrgUser> users);
   }
+  
+  interface OrgRoleSqlBuilder {
+    SqlTuple getById(String id); //role name or id or external_id
+    Sql findAll();
+    SqlTuple findAll(List<String> id);
+    SqlTuple insertOne(OrgRole role);
+    SqlTupleList insertAll(Collection<OrgRole> roles);
+    SqlTuple updateOne(OrgRole role);
+    SqlTupleList updateMany(Collection<OrgRole> roles);
+  }
+  
+  interface OrgUserRoleSqlBuilder {
+    SqlTuple getById(String id); 
+    SqlTuple findByUserId(String userId); 
+    Sql findAll();
+    SqlTuple findAll(List<String> id);
+    SqlTuple insertOne(OrgUserRole role);
+    SqlTupleList insertAll(Collection<OrgUserRole> roles);
+  }
+  
+  interface OrgGroupRoleSqlBuilder {
+    SqlTuple getById(String id); 
+    SqlTuple findByGroupId(String groupId); 
+    Sql findAll();
+    SqlTuple findAll(List<String> id);
+    SqlTuple insertOne(OrgGroupRole role);
+    SqlTupleList insertAll(Collection<OrgGroupRole> roles);
+  }
+  
+  
   
   interface OrgGroupSqlBuilder {
     SqlTuple getById(String id); //group name or id or external_id

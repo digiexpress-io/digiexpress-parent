@@ -53,7 +53,7 @@ public class Execute {
   }
   public static Uni<RowSet<Row>> apply(SqlClient client, SqlTupleList sql) {
     if(sql.getProps().isEmpty()) {
-      log.info(System.lineSeparator() +
+      log.trace(System.lineSeparator() +
           "Skipping batch command with no values to update or insert." + System.lineSeparator() +
           "  sql: " + sql.getValue() + System.lineSeparator());
       return Uni.createFrom().nullItem();

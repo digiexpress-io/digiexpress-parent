@@ -2,6 +2,7 @@ package io.resys.thena.docdb.test;
 
 import java.io.Serializable;
 import java.time.Duration;
+import java.util.Arrays;
 
 import org.immutables.value.Value;
 import org.junit.jupiter.api.Assertions;
@@ -67,10 +68,30 @@ public class SimpleOrgTest extends DbTestTemplate {
     log.debug("created repo {}", repo);
     Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
 
+    
+    final var jailerRole = getClient().org().commit().createOneRole()
+      .repoId(repo.getRepo().getId())
+      .roleName("jailer")
+      .roleDescription("role for all jailers")
+      .author("nobby nobbs")
+      .message("my first role")
+      .externalId("role for all the guardsmen")
+      .build().await().atMost(Duration.ofMinutes(1)).getRole();
+
+    final var detectiveRole = getClient().org().commit().createOneRole()
+      .repoId(repo.getRepo().getId())
+      .roleName("detective")
+      .roleDescription("role for all the detective doing investigations and things")
+      .author("nobby nobbs")
+      .message("my second role")
+      .externalId("role for all the detective")
+      .build().await().atMost(Duration.ofMinutes(1)).getRole();
+        
     final var group = getClient().org().commit().createOneGroup()
       .repoId(repo.getRepo().getId())
       .groupName("captains")
       .groupDescription("group for all the captains of the guard")
+      .addRolesToGroup(Arrays.asList(jailerRole.getId(), detectiveRole.getId()))
       .author("nobby nobbs")
       .message("my first group")
       .externalId("one-man-group")

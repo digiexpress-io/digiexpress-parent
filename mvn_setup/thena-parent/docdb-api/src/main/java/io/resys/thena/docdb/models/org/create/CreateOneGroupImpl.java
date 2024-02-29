@@ -1,4 +1,4 @@
-package io.resys.thena.docdb.models.org.createoneuser;
+package io.resys.thena.docdb.models.org.create;
 
 import java.util.ArrayList;
 import java.util.Collections;

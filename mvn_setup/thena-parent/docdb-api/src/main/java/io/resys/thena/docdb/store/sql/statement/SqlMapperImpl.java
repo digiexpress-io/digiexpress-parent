@@ -35,6 +35,7 @@ import io.resys.thena.docdb.api.models.ImmutableDocCommit;
 import io.resys.thena.docdb.api.models.ImmutableDocFlatted;
 import io.resys.thena.docdb.api.models.ImmutableDocLog;
 import io.resys.thena.docdb.api.models.ImmutableOrgGroup;
+import io.resys.thena.docdb.api.models.ImmutableOrgRole;
 import io.resys.thena.docdb.api.models.ImmutableOrgUser;
 import io.resys.thena.docdb.api.models.ImmutableRepo;
 import io.resys.thena.docdb.api.models.ImmutableTag;
@@ -59,6 +60,7 @@ import io.resys.thena.docdb.api.models.ThenaGitObject.Tag;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Tree;
 import io.resys.thena.docdb.api.models.ThenaGitObject.TreeValue;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUser;
 import io.resys.thena.docdb.spi.DbCollections;
 import io.resys.thena.docdb.store.sql.SqlMapper;
@@ -310,6 +312,16 @@ public class SqlMapperImpl implements SqlMapper {
         .commitId(row.getString("commit_id"))
         .groupName(row.getString("group_name"))
         .groupDescription(row.getString("group_description"))
+        .build();
+	}
+	@Override
+	public OrgRole orgRole(Row row) {
+    return ImmutableOrgRole.builder()
+        .id(row.getString("id"))
+        .externalId(row.getString("external_id"))
+        .roleName(row.getString("role_name"))
+        .roleDescription(row.getString("role_description"))
+        .commitId(row.getString("commit_id"))
         .build();
 	}
 }
