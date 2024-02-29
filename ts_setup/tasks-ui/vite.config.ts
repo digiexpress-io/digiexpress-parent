@@ -13,6 +13,7 @@ const modules: string[] = [
   'components-project',
   'components-stencil',
   'components-sys-config',
+  'components-permissions',
   'components-task',
   'components-dialob',
   'components-dialob-composer',
@@ -54,14 +55,14 @@ const alias: { find: string, replacement: string }[] = modules.map(mod => ({ fin
 
 
 // https://vitejs.dev/config/
-export default defineConfig(({mode}) => {
+export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
-  
+
   let devMode = false;
   try {
-    if(env.REACT_APP_LOCAL_DEV_MODE) {
+    if (env.REACT_APP_LOCAL_DEV_MODE) {
       console.log("running dev");
-      devMode = true;      
+      devMode = true;
     }
   } catch (e) {
     // nothing to do

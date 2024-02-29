@@ -12,6 +12,8 @@ import GroupsIcon from '@mui/icons-material/Groups';
 import TimelineIcon from '@mui/icons-material/Timeline';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import SupervisorAccountOutlinedIcon from '@mui/icons-material/SupervisorAccountOutlined';
+import SecurityIcon from '@mui/icons-material/Security';
+import DnsOutlinedIcon from '@mui/icons-material/DnsOutlined';
 import PieChartIcon from '@mui/icons-material/PieChart';
 import WorkOutlineOutlinedIcon from '@mui/icons-material/WorkOutlineOutlined';
 import MailOutlinedIcon from '@mui/icons-material/MailOutlined';
@@ -107,17 +109,15 @@ const StyledTabs = styled(Tabs)<TabsProps>(({ theme }) => ({
 }));
 
 
-const Secondary: React.FC<{ init?: { profile: UserProfileAndOrg, backend: Backend } }> = ({init}) => {
+const Secondary: React.FC<{ init?: { profile: UserProfileAndOrg, backend: Backend } }> = ({ init }) => {
   const app = Context.useApp();
   const { actions } = Burger.useTabs();
   const [active, setActive] = React.useState<string>('explorer.taskSearch');
 
 
   function handleActive(_event: React.SyntheticEvent, newValue: string) { setActive(newValue) }
-  function handleCRM() { actions.handleTabAdd({ id: 'crm', label: <FormattedMessage id="activities.frontoffice.crm.title" /> }) }
   function handleCustomerSearch() { actions.handleTabAdd({ id: 'customerSearch', label: <FormattedMessage id="activities.frontoffice.customerSearch.title" /> }) }
 
-  function handleTasks() { actions.handleTabAdd({ id: 'tasks', label: <FormattedMessage id="activities.frontoffice.tasks.title" /> }) }
   function handleStencil() { app.changeApp("stencil") }
 
   function handleWrench() { app.changeApp("hdes") }
@@ -132,15 +132,17 @@ const Secondary: React.FC<{ init?: { profile: UserProfileAndOrg, backend: Backen
   function handleMyoverview() { actions.handleTabAdd({ id: 'myoverview', label: <FormattedMessage id="activities.myoverview.title" /> }) }
   function handleInbox() { actions.handleTabAdd({ id: 'inbox', label: <FormattedMessage id="activities.inbox.title" /> }) }
   function handleDeployments() { actions.handleTabAdd({ id: 'deployments', label: <FormattedMessage id="activities.deployments.title" /> }) }
-  function handleOrg() { actions.handleTabAdd({ id: 'org', label: <FormattedMessage id="activities.org.title" /> }) }
+  function handlePermissionsOverview() { actions.handleTabAdd({ id: 'rolesOverview', label: <FormattedMessage id="activities.permissions.roles.title" /> }) }
+
   function handleTenant() { actions.handleTabAdd({ id: 'tenant', label: <FormattedMessage id="activities.frontoffice.crm.tenant.title" /> }) }
   function handleCurrentUserProfile() { actions.handleTabAdd({ id: 'currentUserProfile', label: <FormattedMessage id="activities.frontoffice.userProfile.title" /> }) }
   function handleAllUserProfiles() { actions.handleTabAdd({ id: 'allUserProfiles', label: <FormattedMessage id="activities.frontoffice.allUserProfiles.title" /> }) }
 
-  
+
   React.useEffect(() => {
     //handleTaskSearch();
-    handleDeployments();
+    //handleDeployments();
+    handlePermissionsOverview();
   }, []);
 
 
@@ -155,18 +157,18 @@ const Secondary: React.FC<{ init?: { profile: UserProfileAndOrg, backend: Backen
         {/* material ui workaround for case when no tab is selected */}
         <EmptyTab value='explorer.taskSearch' />
 
-        <StyledExplorerTab value='explorer.crm' label={<FormattedMessage id="explorer.frontoffice.crm.menuOption" />} onClick={handleCRM}
+        <StyledExplorerTab value='explorer.crm' label={<FormattedMessage id="explorer.frontoffice.crm.menuOption" />} onClick={undefined}
           icon={<AdminPanelSettingsOutlinedIcon fontSize='small' />} />
 
-        <StyledExplorerSubTab 
-          value='explorer.customerSearch' 
+        <StyledExplorerSubTab
+          value='explorer.customerSearch'
           label={<FormattedMessage id="explorer.frontoffice.crm.customerSearch.menuOption" />}
           onClick={handleCustomerSearch}
           icon={<SearchIcon fontSize='small' />} />
 
-        <StyledExplorerTab 
-          value='explorer.tasks' label={<FormattedMessage id="explorer.frontoffice.tasks.menuOption" />} 
-          onClick={handleTasks}
+        <StyledExplorerTab
+          value='explorer.tasks' label={<FormattedMessage id="explorer.frontoffice.tasks.menuOption" />}
+          onClick={undefined}
           icon={<TaskAltIcon fontSize='small' />} />
 
         <StyledExplorerSubTab value='explorer.taskSearch' label={<FormattedMessage id="explorer.frontoffice.taskSearch.menuOption" />} onClick={handleTaskSearch}
@@ -182,7 +184,7 @@ const Secondary: React.FC<{ init?: { profile: UserProfileAndOrg, backend: Backen
         <StyledExplorerSubTab value='explorer.myhistory' label={<FormattedMessage id="explorer.frontoffice.myhistory.menuOption" />} onClick={handleMyHistory}
           icon={<TimelineIcon fontSize='small' />} />
 
-        <StyledExplorerTab value='explorer.config' label={<FormattedMessage id="explorer.frontoffice.config.menuOption" />} onClick={handleTasks}
+        <StyledExplorerTab value='explorer.config' label={<FormattedMessage id="explorer.frontoffice.config.menuOption" />} onClick={undefined}
           icon={<SettingsOutlinedIcon fontSize='small' />} />
         <StyledExplorerSubTab value='explorer.stencil' label={<FormattedMessage id="explorer.frontoffice.stencil.menuOption" />} onClick={handleStencil}
           icon={<AbcOutlinedIcon fontSize='small' />} />
@@ -194,17 +196,23 @@ const Secondary: React.FC<{ init?: { profile: UserProfileAndOrg, backend: Backen
         <StyledExplorerSubTab value='explorer.deployments' label={<FormattedMessage id="explorer.frontoffice.deployments.menuOption" />} onClick={handleDeployments}
           icon={<FormatListBulletedOutlinedIcon fontSize='small' />} />
 
-        <StyledExplorerTab value='explorer.administration' label={<FormattedMessage id="explorer.frontoffice.administration.menuOption" />} onClick={handleTasks}
+        <StyledExplorerTab value='explorer.administration' label={<FormattedMessage id="explorer.frontoffice.administration.menuOption" />} onClick={undefined}
           icon={<SupervisorAccountOutlinedIcon fontSize='small' />} />
         <StyledExplorerSubTab value='explorer.currentUserProfile' label={<FormattedMessage id="explorer.frontoffice.userProfile.menuOption" />} onClick={handleCurrentUserProfile}
           icon={<PersonOutlineOutlinedIcon fontSize='small' />} />
         <StyledExplorerSubTab value='explorer.allUserProfiles' label={<FormattedMessage id="explorer.frontoffice.allUserProfiles.menuOption" />} onClick={handleAllUserProfiles}
           icon={<PersonOutlineOutlinedIcon fontSize='small' />} />
-        <StyledExplorerSubTab value='explorer.org' label={<FormattedMessage id="explorer.frontoffice.org.menuOption" />} onClick={handleOrg}
-          icon={<CorporateFareOutlinedIcon fontSize='small' />} />
         <StyledExplorerSubTab value='explorer.tenant' label={<FormattedMessage id="explorer.frontoffice.tenant.menuOption" />} onClick={handleTenant}
           icon={<CorporateFareOutlinedIcon fontSize='small' />} />
 
+        <StyledExplorerTab value='explorer.permissions' label={<FormattedMessage id="explorer.frontoffice.permissions.menuOption" />} onClick={undefined}
+          icon={<SecurityIcon fontSize='small' />} />
+        <StyledExplorerSubTab value='explorer.permissions.roles' label={<FormattedMessage id="explorer.frontoffice.permissions.roles.menuOption" />} onClick={handlePermissionsOverview}
+          icon={<DnsOutlinedIcon fontSize='small' />} />
+        <StyledExplorerSubTab value='explorer.permissions.users' label={<FormattedMessage id="explorer.frontoffice.permissions.users.menuOption" />} onClick={undefined}
+          icon={<AdminPanelSettingsOutlinedIcon fontSize='small' />} />
+        <StyledExplorerSubTab value='explorer.permissions.permissions' label={<FormattedMessage id="explorer.frontoffice.permissions.allPermissions.menuOption" />} onClick={undefined}
+          icon={<AdminPanelSettingsOutlinedIcon fontSize='small' />} />
         <StyledExplorerTab value='explorer.reporting' label={<FormattedMessage id="activities.reporting.title" />} onClick={handleReporting}
           icon={<PieChartIcon fontSize='small' />} />
 

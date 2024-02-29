@@ -108,14 +108,14 @@ const createActivities: (props: {
     }
   },
   {
-    id: "org",
-    title: "activities.frontoffice.org.title",
+    id: "permissions",
+    title: "activities.frontoffice.permissions.title",
     content: {
-      label: "activities.frontoffice.org.desc"
+      label: "activities.frontoffice.permissions.desc"
     },
     primary: {
       label: "buttons.view",
-      onClick: () => actions.handleTabAdd({ id: 'org', label: <FormattedMessage id="activities.frontoffice.org.title" /> })
+      onClick: () => actions.handleTabAdd({ id: 'permissions', label: <FormattedMessage id="activities.frontoffice.permissions.title" /> })
     }
   }
 
@@ -126,7 +126,7 @@ const createActivities: (props: {
 const Activities: React.FC<{}> = () => {
   const { actions } = Burger.useTabs();
   const cards = React.useMemo(() => createActivities({ actions }), [actions]);
-  
+
   return (<StyledCards title="activities.title" desc="activities.desc" items={cards} />);
 }
 

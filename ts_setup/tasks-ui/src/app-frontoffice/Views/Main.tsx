@@ -9,19 +9,15 @@ import SysConfig from 'components-sys-config';
 import Tasks from 'components-task';
 import Customer from 'components-customer';
 import { CurrentUserProfile, UserProfiles } from 'components-user-profile';
+import { RolesOverview } from 'components-permissions';
 import { wash_me } from 'components-colors';
 import LoggerFactory from 'logger';
 
 import Activities from '../Activities';
 
-
 const log = LoggerFactory.getLogger();
 
-
-
-
 const root: SxProps = { height: '100%', backgroundColor: wash_me, width: '100%' };
-
 
 const Main: React.FC<{}> = () => {
   const layout = Burger.useTabs();
@@ -64,8 +60,10 @@ const Main: React.FC<{}> = () => {
       return (<Box sx={root}><CurrentUserProfile /></Box>)
     } else if (active.id === 'allUserProfiles') {
       return (<Box sx={root}><UserProfiles /></Box>)
+    } else if (active.id === 'rolesOverview') {
+      return (<Box sx={root}><RolesOverview /></Box>)
     } else if (active.id === 'reporting') {
-
+      return (<>reporting</>);
     }
 
     if (entity) {

@@ -441,8 +441,8 @@ const en = {
   'activities.frontoffice.deployments.title': 'Deployments',
   'activities.frontoffice.deployments.desc': 'View deployed assets by version number',
 
-  'activities.frontoffice.org.title': 'Organisation',
-  'activities.frontoffice.org.desc': 'Roles and user settings',
+  'activities.frontoffice.permissions.title': 'Permissions',
+  'activities.frontoffice.permissions.desc': 'Roles, permissions, and user access settings',
 
   'activities.frontoffice.userProfile.title': 'User profile',
   'activities.frontoffice.userProfile.desc': 'My personal information, settings, preferences, and recent activity',
@@ -451,8 +451,8 @@ const en = {
   'activities.frontoffice.allUserProfiles.desc': 'View all registered users',
 
   'activities.profile.title': 'My profile',
-  'activities.org.title': 'Organisation',
-
+  'activities.permissions.title': 'Permissions',
+  'activities.permissions.roles.title': 'Roles',
 
   'explorer.frontoffice.crm.menuOption': 'CRM data',
   'explorer.frontoffice.crm.customerSearch.menuOption': 'Customer search',
@@ -471,7 +471,12 @@ const en = {
   'explorer.frontoffice.userProfile.menuOption': 'User profile',
   'explorer.frontoffice.allUserProfiles.menuOption': 'All user profiles',
   'explorer.frontoffice.administration.menuOption': 'Administration',
-  'explorer.frontoffice.org.menuOption': 'Organisation',
+  'explorer.frontoffice.permissions.menuOption': 'Permissions',
+  'explorer.frontoffice.permissions.roles.menuOption': 'Roles overview',
+  'explorer.frontoffice.permissions.users.menuOption': 'All users',
+  'explorer.frontoffice.permissions.allPermissions.menuOption': 'All permissions',
+
+
   'explorer.frontoffice.tenant.menuOption': 'Tenant',
   'activities.frontoffice.crm.tenant.title': 'Current tenant',
 
@@ -534,6 +539,16 @@ const en = {
   'tasktable.header.spotlight.priority.HIGH': 'High',
 
   'tasktable.header.spotlight.no_group': 'All tasks',
+
+  'permissions.roles.overview.tab.details': 'Details',
+  'permissions.roles.overview.tab.permissions': 'Permissions',
+  'permissions.roles.overview.tab.members': 'Members',
+
+  'permissions.navButton.role.create': 'Create roles',
+  'permissions.navButton.permission.create': 'Create permissions',
+
+
+
 };
 
 export default en;
