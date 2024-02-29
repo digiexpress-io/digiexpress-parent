@@ -16,7 +16,7 @@ const TabContent: React.FC<{ selected: number, id: number, children: React.React
   return <>{children}</>;
 }
 
-export const RolesFlow: React.FC = () => {
+export const OneRoleDataTabs: React.FC = () => {
   const [tabValue, setTabValue] = React.useState(0);
 
   function handleTabValue(event: React.SyntheticEvent, newValue: number) {

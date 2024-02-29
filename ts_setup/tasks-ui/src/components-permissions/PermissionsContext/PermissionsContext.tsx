@@ -3,8 +3,10 @@ import React from 'react';
 import Context from 'context';
 import { SingleTabInit } from 'descriptor-tabbing';
 
-import { SysConfig, ImmutableSysConfigStore } from 'descriptor-sys-config';
+import { ImmutableSysConfigStore } from 'descriptor-sys-config';
+import { Role } from 'descriptor-permissions';
 import { TabTypes, Tabbing, PermissionsContextType } from './permissions-context-types';
+import { testRoles } from './permissions-mock-data';
 
 const PermissionsTabbingProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   function initTabs(): Record<TabTypes, SingleTabInit<{}>> {
@@ -23,7 +25,7 @@ const PermissionsTabbingProvider: React.FC<{ children: React.ReactNode }> = ({ c
 export function usePermissions() {
   const tabbing = Tabbing.hooks.useTabbing();
   const activeTab = tabbing.getActiveTab();
-  const { permissions } = React.useContext(PermissionsContext);
+  const { roles } = React.useContext(PermissionsContext);
 
   function setActiveTab(tabId: TabTypes) {
     tabbing.withTabActivity(tabId);
@@ -32,16 +34,17 @@ export function usePermissions() {
   return {
     activeTab,
     setActiveTab,
-    permissions,
+    roles,
   };
 }
+
 
 const PermissionsContext = React.createContext<PermissionsContextType>({} as any);
 
 export const PermissionsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const backend = Context.useBackend();
   const [loading, setLoading] = React.useState(true);
-  const [permissions, setPermissions] = React.useState<SysConfig>();
+  const [roles, setRoles] = React.useState<Role[]>(testRoles);
   const [store] = React.useState(new ImmutableSysConfigStore(backend.store));
 
   async function loadOneConfig(): Promise<void> {
@@ -49,7 +52,7 @@ export const PermissionsProvider: React.FC<{ children: React.ReactNode }> = ({ c
       .findAllSysConfigs().then(allConfigs => {
         setLoading(false);
         if (allConfigs.length === 1) {
-          setPermissions(allConfigs[0]);
+          setRoles(testRoles);
         }
       })
       .catch(() => setLoading(false));
@@ -65,8 +68,8 @@ export const PermissionsProvider: React.FC<{ children: React.ReactNode }> = ({ c
       setLoading(true);
       return loadOneConfig();
     }
-    return { loading, reload, permissions };
-  }, [loading, store, permissions]);
+    return { loading, reload, roles };
+  }, [loading, store, roles]);
 
 
   return (<PermissionsContext.Provider value={contextValue}>

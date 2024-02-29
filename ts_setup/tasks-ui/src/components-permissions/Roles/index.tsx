@@ -6,8 +6,9 @@ import { LayoutList, NavigationButton, FilterByString } from 'components-generic
 
 import { ImmutableCollection } from 'descriptor-grouping';
 import { SysConfigService } from 'descriptor-sys-config';
+import { Role } from 'descriptor-permissions';
 
-import { RolesFlowGroup } from './RolesFlowGroup';
+import { OneRoleData } from './OneRoleData';
 import { PermissionsProvider, TabTypes, usePermissions } from '../PermissionsContext';
 
 
@@ -15,7 +16,7 @@ const color_create_role = colors.cyan;
 const color_create_permission = colors.steelblue;
 
 
-const SysConfigNavigation: React.FC = () => {
+const RoleNavigation: React.FC = () => {
   const { setActiveTab, activeTab } = usePermissions();
   const { id } = activeTab;
 
@@ -46,21 +47,14 @@ const SysConfigNavigation: React.FC = () => {
 
 
 const PermissionsLayout: React.FC = () => {
-  const { permissions } = usePermissions();
-  if (!permissions) {
+  const { roles } = usePermissions();
+  if (!roles) {
     return null;
   }
 
-  const grouping = new ImmutableCollection<SysConfigService>({
-    groupValues: [],
-    classifierName: 'flowName',
-    definition: (entry) => entry.flowName,
-    origin: permissions.services
-  });
-
-  const navigation = <SysConfigNavigation />;
+  const navigation = <RoleNavigation />;
   const pagination = <></>;
-  const items = grouping.groups.map(group => (<RolesFlowGroup group={group} key={group.id} />));
+  const items = roles.map(role => (<OneRoleData role={role} key={role.id} />));
   return (<LayoutList slots={{ navigation, items, pagination }} />)
 }
 

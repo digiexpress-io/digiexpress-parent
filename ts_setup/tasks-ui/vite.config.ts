@@ -13,11 +13,11 @@ const modules: string[] = [
   'components-project',
   'components-stencil',
   'components-sys-config',
-  'components-permissions',
   'components-task',
   'components-dialob',
   'components-dialob-composer',
   'components-user-profile',
+  'components-permissions',
 
   'descriptor-customer',
   'descriptor-organization',
@@ -31,6 +31,7 @@ const modules: string[] = [
   'descriptor-tabbing',
   'descriptor-prefs',
   'descriptor-dialob',
+  'descriptor-permissions',
 
   'descriptor-popper',
 
