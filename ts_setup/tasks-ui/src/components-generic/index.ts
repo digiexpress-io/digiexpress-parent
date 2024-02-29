@@ -11,5 +11,6 @@ export * from './LayoutListItem';
 export * from './AvatarEmpty';
 export * from './AvatarUser';
 export * from './AvatarIndicator';
+export * from './SectionLayout';
 
 export { FilterByString, TableBody, TableFillerRows, StyledTableCell, lineHeight, lineHeightLarge, useTableCellPopover };

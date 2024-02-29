@@ -547,6 +547,15 @@ const en = {
   'permissions.navButton.role.create': 'Create roles',
   'permissions.navButton.permission.create': 'Create permissions',
 
+  'permissions.roles.roleMeta': 'Role metadata',
+  'permissions.roles.description': 'Description',
+  'permissions.roles.status': 'Status',
+  'permissions.roles.numberOfPrincpals': 'Total members',
+  'permissions.roles.numberOfPermissions': 'Total permissions',
+
+  'permissions.permission.name': 'Name',
+  'permissions.permission.description': 'Description',
+  'permissions.permission.status': 'Status'
 
 
 };

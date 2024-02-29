@@ -6,6 +6,8 @@ import { RoleDetails } from './RoleDetails';
 import { RolePermissions } from './RolePermissions';
 import { RoleMembers } from './RoleMembers';
 
+import { Role } from 'descriptor-permissions';
+
 
 const TabContent: React.FC<{ selected: number, id: number, children: React.ReactNode }> = ({ selected, id, children }) => {
 
@@ -16,7 +18,7 @@ const TabContent: React.FC<{ selected: number, id: number, children: React.React
   return <>{children}</>;
 }
 
-export const OneRoleDataTabs: React.FC = () => {
+export const OneRoleDataTabs: React.FC<{ role: Role }> = ({ role }) => {
   const [tabValue, setTabValue] = React.useState(0);
 
   function handleTabValue(event: React.SyntheticEvent, newValue: number) {
@@ -36,13 +38,12 @@ export const OneRoleDataTabs: React.FC = () => {
         <Tab label={<FormattedMessage id='permissions.roles.overview.tab.permissions' />} />
         <Tab label={<FormattedMessage id='permissions.roles.overview.tab.members' />} />
       </Tabs>
-
       <TabContent selected={tabValue} id={0}>
-        <RoleDetails />
+        <RoleDetails role={role} />
       </TabContent>
 
       <TabContent selected={tabValue} id={1}>
-        <RolePermissions />
+        <RolePermissions role={role} />
       </TabContent>
 
       <TabContent selected={tabValue} id={2}>

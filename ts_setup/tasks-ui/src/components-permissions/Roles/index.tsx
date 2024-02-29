@@ -1,12 +1,7 @@
 import React from 'react';
-import { Box } from '@mui/material';
 
 import * as colors from 'components-colors';
 import { LayoutList, NavigationButton, FilterByString } from 'components-generic';
-
-import { ImmutableCollection } from 'descriptor-grouping';
-import { SysConfigService } from 'descriptor-sys-config';
-import { Role } from 'descriptor-permissions';
 
 import { OneRoleData } from './OneRoleData';
 import { PermissionsProvider, TabTypes, usePermissions } from '../PermissionsContext';

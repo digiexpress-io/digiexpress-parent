@@ -15,13 +15,13 @@ export const OneRoleData: React.FC<{ role: Role }> = ({ role }) => {
   return (
     <Box sx={{ paddingTop: 1, paddingLeft: 1 }}>
       <Box>
-        <Box display="flex">
+        <Box display="flex" alignItems='center'>
           <Burger.PrimaryButton sx={sx} label={<>{role.name}</>} onClick={() => { }} />
           <Box flexGrow={1} />
           <IconButton sx={{ color: colors.cyan }}><MoreHorizIcon /></IconButton>
         </Box>
         <Paper sx={{ borderTopLeftRadius: '0px', minHeight: '100px' }}>
-          <OneRoleDataTabs />
+          <OneRoleDataTabs role={role} />
         </Paper>
       </Box>
     </Box >

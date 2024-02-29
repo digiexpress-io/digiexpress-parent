@@ -1,29 +1,14 @@
 import React from 'react';
-import { Grid, Stack, Typography, Paper, CircularProgress, Box } from '@mui/material';
+import { Stack, Typography, Paper, CircularProgress } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 import { FirstName, LastName, EmailAddress, NotificationSettings } from './UserProfileEditFields';
 import { UserProfileDescriptor, ImmutableUserProfileDescriptor } from 'descriptor-user-profile';
 import { UserAvatar } from './UserAvatar';
 import Context from 'context';
 
+import { SectionLayout } from 'components-generic';
 import Burger from 'components-burger';
 
-
-const SectionLayout: React.FC<{ label: string, value: string | undefined }> = ({ label, value }) => {
-
-  return (
-    <Grid container>
-      <Grid item md={4} lg={4}>
-        <Typography fontWeight='bolder'><FormattedMessage id={label} /></Typography>
-      </Grid>
-
-      <Grid item md={8} lg={8}>
-        <Typography>{value}</Typography>
-      </Grid>
-
-    </Grid>
-  )
-}
 
 const CurrentUserProfile: React.FC<{}> = () => {
   const backend = Context.useBackend();
