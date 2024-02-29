@@ -33,7 +33,8 @@ public interface OrgCommitActions {
     CreateOneUser userName(String userName);
     CreateOneUser email(String email);
     CreateOneUser externalId(@Nullable String externalId);
-    
+
+    CreateOneUser addUserToGroups(String ... groupId);
     CreateOneUser addUserToGroups(List<String> groupId);
     CreateOneUser addUserToRoles(List<String> roledId);
     

@@ -23,7 +23,10 @@ package io.resys.thena.docdb.store.sql.support;
 public class SqlStatement {
   
   private final StringBuilder result = new StringBuilder();
-  
+  public SqlStatement append(int value) {
+    result.append(value);
+    return this;
+  }  
   public SqlStatement append(String value) {
     result.append(value);
     return this;

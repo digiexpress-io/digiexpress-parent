@@ -2,8 +2,7 @@ package io.resys.thena.docdb.models.org;
 
 import java.util.List;
 
-import javax.annotation.Nullable;
-
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgCommit;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUser;
@@ -15,33 +14,28 @@ public interface OrgQueries {
   GroupQuery groups();
   RoleQuery roles();
   UserQuery users();
+  CommitQuery commits();
   
-  interface UserQuery {
-    Multi<OrgUser> findAllByUserIdOrExternalIdOrEmail(
-     @Nullable String userId, 
-     @Nullable String externalId, 
-     @Nullable String email
-    );
-    Multi<OrgUser> findAll();
-    Uni<OrgUser> getById(String id);
+  
+  interface CommitQuery {
+    Multi<OrgCommit> findAll();
+    Uni<OrgCommit> getById(String id);
   }
   
-  interface RoleQuery {
-    Multi<OrgRole> findAllByRoleNameOrExternalId(
-     @Nullable String roleName, 
-     @Nullable String externalId
-    );
-    
+  
+  interface UserQuery {
+    Multi<OrgUser> findAll();
+    Multi<OrgUser> findAll(List<String> id);
+    Uni<OrgUser> getById(String id); //user.id or user.email or user.external_id 
+  }
+  
+  interface RoleQuery {    
     Multi<OrgRole> findAll();
     Multi<OrgRole> findAll(List<String> id);
     Uni<OrgRole> getById(String id);
   }
   
   interface GroupQuery {
-    Multi<OrgGroup> findAllByGroupNameOrExternalId(
-      @Nullable String groupName, 
-      @Nullable String externalId
-    );
     Multi<OrgGroup> findAll();
     Multi<OrgGroup> findAll(List<String> id);
     Uni<OrgGroup> getById(String id);

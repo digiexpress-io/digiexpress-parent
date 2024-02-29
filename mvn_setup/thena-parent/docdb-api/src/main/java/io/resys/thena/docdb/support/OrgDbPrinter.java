@@ -26,85 +26,40 @@ public class OrgDbPrinter {
       return next;
     };
   
-    final var ctx = state.toDocState().withRepo(repo);
+    final var ctx = state.toOrgState().withRepo(repo);
     StringBuilder result = new StringBuilder();
     
     result
     .append(System.lineSeparator())
-    .append("Org docs").append(System.lineSeparator());
+    .append("Users").append(System.lineSeparator());
     
-    ctx.query().docs()
+    ctx.query().users()
     .findAll().onItem()
     .transform(item -> {
-      result.append("  - ")
-      .append(ID.apply(item.getId())).append(": ").append(item.getExternalId())
+      
+
+      result
+      .append("    commitId").append(": ").append(ID.apply(item.getCommitId()))
+      .append(System.lineSeparator())
+      
+      .append("    username").append(": ").append(item.getUserName())
+      .append(System.lineSeparator())
+
+      .append("    email").append(": ").append(item.getEmail())
+      .append(System.lineSeparator())
+
+      .append("    externalId").append(": ").append(item.getExternalId())
       .append(System.lineSeparator());
+      
       return item;
     }).collect().asList().await().indefinitely();
 
-    
-    result
-    .append(System.lineSeparator())
-    .append("Branches").append(System.lineSeparator());
-    
-    ctx.query().branches()
-    .findAll().onItem()
-    .transform(item -> {
-      result.append("  - branch name: ").append(item.getBranchName()).append("/").append(ID.apply(item.getId()))
-      .append(System.lineSeparator())
-      .append("    doc id: ").append(ID.apply(item.getDocId()))
-      .append(System.lineSeparator())
-      .append("    commit id: ").append(ID.apply(item.getCommitId()))
-      .append(System.lineSeparator())
-      
-      .append("    ").append(item.getValue().toString())
-      .append(System.lineSeparator());
-      
-      return item;
-    }).collect().asList().await().indefinitely();
-    
-    result
-    .append(System.lineSeparator())
-    .append("Commits").append(System.lineSeparator());
-    
-    ctx.query().commits()
-    .findAll().onItem()
-    .transform(item -> {
-      result.append("  - id: ").append(ID.apply(item.getId()))
-      .append(System.lineSeparator())
-      .append("    doc id: ").append(ID.apply(item.getDocId()))
-      .append(", branch id: ").append(ID.apply(item.getBranchId()))
-      .append(", parent: ").append(ID.apply(item.getParent().orElse("")))
-      .append(", message: ").append(item.getMessage())
-      .append(", author: ").append(item.getAuthor())
-      .append(System.lineSeparator());
-      
-      return item;
-    }).collect().asList().await().indefinitely();
-    
-    
-    result
-    .append(System.lineSeparator())
-    .append("Logs").append(System.lineSeparator());
-    
-    ctx.query().logs()
-    .findAll().onItem()
-    .transform(item -> {
-      result.append("  - id: ").append(ID.apply(item.getId())).append(System.lineSeparator())
-      .append("    doc id: ").append(ID.apply(item.getDocCommitId()))
-      .append(System.lineSeparator())
-      .append("    log value: ").append(item.getValue())
-      .append(System.lineSeparator())
-      ;
-      
-      return item;
-    }).collect().asList().await().indefinitely();
     
     return result.toString();
   }
   
   public String print(Repo repo) {
-   final var ctx = state.toDocState().withRepo(repo);
+   final var ctx = state.toOrgState().withRepo(repo);
     
     StringBuilder result = new StringBuilder();
     result
@@ -116,77 +71,29 @@ public class OrgDbPrinter {
     .append(", prefix: ").append(repo.getPrefix())
     .append(", type: ").append(repo.getType()).append(System.lineSeparator());
     
-    result
-    .append(System.lineSeparator())
-    .append("Docs").append(System.lineSeparator());
     
-    ctx.query().docs()
+    ctx.query().users()
     .findAll().onItem()
     .transform(item -> {
       result.append("  - ")
-      .append(item.getId()).append(": ").append(item.getExternalId())
-      .append(System.lineSeparator());
+        .append(item.getId())
+        .append(System.lineSeparator())
+
+        .append("    commitId").append(": ").append(item.getCommitId())
+        .append(System.lineSeparator())
+        
+        .append("    username").append(": ").append(item.getUserName())
+        .append(System.lineSeparator())
+
+        .append("    email").append(": ").append(item.getEmail())
+        .append(System.lineSeparator())
+
+        .append("    externalId").append(": ").append(item.getExternalId())
+        .append(System.lineSeparator());
+      
       return item;
     }).collect().asList().await().indefinitely();
 
-    
-    result
-    .append(System.lineSeparator())
-    .append("Branches").append(System.lineSeparator());
-    
-    ctx.query().branches()
-    .findAll().onItem()
-    .transform(item -> {
-      result.append("  - branch name: ").append(item.getBranchName()).append("/").append(item.getId())
-      .append(System.lineSeparator())
-      .append("    doc id: ").append(item.getDocId())
-      .append(System.lineSeparator())
-      .append("    commit id: ").append(item.getCommitId())
-      .append(System.lineSeparator())
-      
-      .append("    ").append(item.getValue().toString())
-      .append(System.lineSeparator());
-      
-      return item;
-    }).collect().asList().await().indefinitely();
-    
-    result
-    .append(System.lineSeparator())
-    .append("Commits").append(System.lineSeparator());
-    
-    ctx.query().commits()
-    .findAll().onItem()
-    .transform(item -> {
-      result.append("  - id: ").append(item.getId())
-      .append(System.lineSeparator())
-      .append("    doc id: ").append(item.getDocId())
-      .append(", branch id: ").append(item.getBranchId())
-      .append(", dateTime: ").append(item.getDateTime())
-      .append(", parent: ").append(item.getParent().orElse(""))
-      .append(", message: ").append(item.getMessage())
-      .append(", author: ").append(item.getAuthor())
-      .append(System.lineSeparator());
-      
-      return item;
-    }).collect().asList().await().indefinitely();
-    
-    
-    result
-    .append(System.lineSeparator())
-    .append("Logs").append(System.lineSeparator());
-    
-    ctx.query().logs()
-    .findAll().onItem()
-    .transform(item -> {
-      result.append("  - id: ").append(item.getId()).append(System.lineSeparator())
-      .append("    doc id: ").append(item.getDocCommitId())
-      .append(System.lineSeparator())
-      .append("    log value: ").append(item.getValue())
-      .append(System.lineSeparator())
-      ;
-      
-      return item;
-    }).collect().asList().await().indefinitely();
     
     return result.toString();
   }

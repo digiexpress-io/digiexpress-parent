@@ -34,7 +34,7 @@ public class GitPrinter {
   public GitPrinter(DbState state) {
     super();
     this.state = state;
-  }
+  } 
   
   public String print(Diff diff) {
     final var repo = diff.getRepo();

@@ -2,6 +2,8 @@ package io.resys.thena.docdb.store.sql.factories;
 
 import io.resys.thena.docdb.models.org.OrgQueries;
 import io.resys.thena.docdb.store.sql.factories.GitDbQueriesSqlImpl.ClientQuerySqlContext;
+import io.resys.thena.docdb.store.sql.queries.OrgGroupQuerySqlPool;
+import io.resys.thena.docdb.store.sql.queries.OrgUserQuerySqlPool;
 import lombok.RequiredArgsConstructor;
 
 
@@ -11,22 +13,21 @@ public class OrgDbQueriesSqlImpl implements OrgQueries {
   protected final ClientQuerySqlContext context;
 
   @Override
-  public GroupQuery groups() {
-    // TODO Auto-generated method stub
-    return null;
+  public UserQuery users() {
+    return new OrgUserQuerySqlPool(context.getWrapper(), context.getMapper(), context.getBuilder(), context.getErrorHandler());
   }
-
+  @Override
+  public GroupQuery groups() {
+    return new OrgGroupQuerySqlPool(context.getWrapper(), context.getMapper(), context.getBuilder(), context.getErrorHandler());
+  }
   @Override
   public RoleQuery roles() {
     // TODO Auto-generated method stub
     return null;
   }
-
   @Override
-  public UserQuery users() {
-    // TODO Auto-generated method stub
+  public CommitQuery commits() {
+
     return null;
   }
-
-
 }

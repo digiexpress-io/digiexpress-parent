@@ -30,12 +30,12 @@ import io.smallrye.mutiny.Uni;
 
 public interface DbState {
   DbCollections getCollections();
-  RepoBuilder project();
   ErrorHandler getErrorHandler();
   
+  RepoBuilder project();
   GitState toGitState();
   DocState toDocState();
-  OrgState toOrgState();  
+  OrgState toOrgState();
   
   interface RepoBuilder {
     Uni<Repo> getByName(String name);

@@ -34,6 +34,8 @@ import io.resys.thena.docdb.api.models.ThenaGitObject.Commit;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Tag;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Tree;
 import io.resys.thena.docdb.api.models.ThenaGitObject.TreeValue;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUser;
 import io.resys.thena.docdb.spi.DataMapper;
 import io.vertx.core.json.JsonObject;
 import io.vertx.mutiny.sqlclient.Row;
@@ -55,5 +57,9 @@ public interface SqlMapper extends DataMapper<Row>{
   Branch ref(Row row);
   Blob blob(Row row);
   BlobHistory blobHistory(Row row);
+  
+  OrgUser orgUser(Row row);
+  OrgGroup orgGroup(Row row);
+  
   JsonObject jsonObject(Row row, String columnName);
 }

@@ -29,19 +29,73 @@ public class SimpleOrgTest extends DbTestTemplate {
   }
 
   @Test
-  public void createRepoAddAndDeleteFile() {
+  public void createRepoAndUser() {
     // create project
     RepoResult repo = getClient().repo().projectBuilder()
-        .name("SimpleOrgTest-1", RepoType.org)
+        .name("SimpleOrgTest-1-createRepoAndUser", RepoType.org)
         .build()
         .await().atMost(Duration.ofMinutes(1));
     log.debug("created repo {}", repo);
     Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
     
+    getClient().org().commit().createOneUser()
+      .repoId(repo.getRepo().getId())
+      .userName("sam vimes")
+      .email("sam.vimes@digiexpress.io")
+      .author("nobby nobbs")
+      .message("my first user")
+      .externalId("captain-of-the-guard")
+      .build().await().atMost(Duration.ofMinutes(1));
     
+    final var users = getClient().org().find().userQuery()
+        .repoId(repo.getRepo().getId())
+        .findAll().await().atMost(Duration.ofMinutes(1));
     
-  // printRepo(repo.getRepo()); TODO
+    Assertions.assertEquals(1, users.getObjects().getUsers().size());
+    
+    printRepo(repo.getRepo());
   }
+  
+  
+  @Test
+  public void createRepoAndUserGroups() {
+    // create project
+    RepoResult repo = getClient().repo().projectBuilder()
+        .name("SimpleOrgTest-1-createRepoAndUserGroups", RepoType.org)
+        .build()
+        .await().atMost(Duration.ofMinutes(1));
+    log.debug("created repo {}", repo);
+    Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
+
+    final var group = getClient().org().commit().createOneGroup()
+      .repoId(repo.getRepo().getId())
+      .groupName("captains")
+      .groupDescription("group for all the captains of the guard")
+      .author("nobby nobbs")
+      .message("my first group")
+      .externalId("one-man-group")
+      .build().await().atMost(Duration.ofMinutes(1)).getGroup();
+      
+    
+    getClient().org().commit().createOneUser()
+      .repoId(repo.getRepo().getId())
+      .addUserToGroups(group.getId())
+      .userName("sam vimes")
+      .email("sam.vimes@digiexpress.io")
+      .author("nobby nobbs")
+      .message("my first user")
+      .externalId("captain-of-the-guard")
+      .build().await().atMost(Duration.ofMinutes(1));
+    
+    final var users = getClient().org().find().userQuery()
+        .repoId(repo.getRepo().getId())
+        .findAll().await().atMost(Duration.ofMinutes(1));
+    
+    Assertions.assertEquals(1, users.getObjects().getUsers().size());
+    
+    printRepo(repo.getRepo());
+  }
+  
   
   
 

@@ -33,6 +33,11 @@ import io.resys.thena.docdb.store.sql.statement.DocBranchSqlBuilderImpl;
 import io.resys.thena.docdb.store.sql.statement.DocCommitSqlBuilderImpl;
 import io.resys.thena.docdb.store.sql.statement.DocLogSqlBuilderImpl;
 import io.resys.thena.docdb.store.sql.statement.DocSqlBuilderImpl;
+import io.resys.thena.docdb.store.sql.statement.OrgCommitSqlBuilderImpl;
+import io.resys.thena.docdb.store.sql.statement.OrgCommitTreeSqlBuilderImpl;
+import io.resys.thena.docdb.store.sql.statement.OrgGroupSqlBuilderImpl;
+import io.resys.thena.docdb.store.sql.statement.OrgUserMembershipsSqlBuilderImpl;
+import io.resys.thena.docdb.store.sql.statement.OrgUserSqlBuilderImpl;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -87,4 +92,24 @@ public class SqlBuilderImpl implements SqlBuilder {
   public DocBranchSqlBuilder docBranches() {
     return new DocBranchSqlBuilderImpl(ctx);
   }
+  @Override
+  public OrgUserSqlBuilder orgUsers() {
+    return new OrgUserSqlBuilderImpl(ctx);
+  }
+  @Override
+  public OrgGroupSqlBuilder orgGroups() {
+    return new OrgGroupSqlBuilderImpl(ctx);
+  }
+  @Override
+  public OrgCommitSqlBuilder orgCommits() {
+    return new OrgCommitSqlBuilderImpl(ctx);
+  }
+  @Override
+  public OrgCommitTreeSqlBuilder orgCommitTrees() {
+    return new OrgCommitTreeSqlBuilderImpl(ctx);
+  }
+	@Override
+	public OrgUserMembershipsSqlBuilder orgUserMemberships() {
+		return new OrgUserMembershipsSqlBuilderImpl(ctx);
+	}
 }

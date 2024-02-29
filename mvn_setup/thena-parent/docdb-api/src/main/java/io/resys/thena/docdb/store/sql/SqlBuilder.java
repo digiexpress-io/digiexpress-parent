@@ -40,6 +40,11 @@ import io.resys.thena.docdb.api.models.ThenaGitObject.Commit;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Tag;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Tree;
 import io.resys.thena.docdb.api.models.ThenaGitObject.TreeValue;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgCommit;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgCommitTree;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUser;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserMembership;
 import io.resys.thena.docdb.models.doc.DocQueries.DocBranchLockCriteria;
 import io.resys.thena.docdb.models.doc.DocQueries.DocLockCriteria;
 import io.resys.thena.docdb.models.doc.DocQueries.FlattedCriteria;
@@ -62,9 +67,15 @@ public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
   GitCommitSqlBuilder commits();
   GitTreeSqlBuilder trees();
   GitTreeItemSqlBuilder treeItems();
+  
+  OrgUserSqlBuilder orgUsers();
+  OrgGroupSqlBuilder orgGroups();
+  OrgUserMembershipsSqlBuilder orgUserMemberships();
+  OrgCommitSqlBuilder orgCommits();
+  OrgCommitTreeSqlBuilder orgCommitTrees();
+  
   SqlBuilder withOptions(DbCollections options);
 
-  
   interface RepoSqlBuilder {
     SqlTuple exists();
     Sql findAll();
@@ -72,6 +83,49 @@ public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
     SqlTuple getByNameOrId(String name);
     SqlTuple insertOne(Repo repo);
     SqlTuple deleteOne(Repo repo);
+  }
+  
+  interface OrgUserSqlBuilder {
+    SqlTuple getById(String id); //username or id or external_id
+    Sql findAll();
+    SqlTuple findAll(List<String> id);
+    SqlTuple insertOne(OrgUser user);
+    SqlTupleList insertAll(Collection<OrgUser> users);
+    SqlTuple updateOne(OrgUser user);
+    SqlTupleList updateMany(Collection<OrgUser> users);
+  }
+  
+  interface OrgGroupSqlBuilder {
+    SqlTuple getById(String id); //group name or id or external_id
+    Sql findAll();
+    SqlTuple findAll(List<String> id);
+    SqlTuple insertOne(OrgGroup group);
+    SqlTupleList insertAll(Collection<OrgGroup> OrgGroup);
+    SqlTuple updateOne(OrgGroup group);
+    SqlTupleList updateMany(Collection<OrgGroup> groups);
+  }
+
+  interface OrgUserMembershipsSqlBuilder {
+    Sql findAll();
+    SqlTuple findAll(List<String> id);
+    SqlTuple getById(String id); 
+    SqlTuple findByGroupId(String groupId);
+    SqlTuple findByUserId(String userId);
+    SqlTuple insertOne(OrgUserMembership membership);
+    SqlTupleList insertAll(Collection<OrgUserMembership> memberships);
+  }
+
+  interface OrgCommitSqlBuilder {
+    SqlTuple getById(String id);
+    Sql findAll();
+    SqlTuple insertOne(OrgCommit commit);
+    SqlTupleList insertAll(Collection<OrgCommit> commit);
+  }
+  interface OrgCommitTreeSqlBuilder {
+    SqlTuple getById(String id);
+    SqlTuple findByCommmitId(String commitId);
+    Sql findAll();
+    SqlTupleList insertAll(Collection<OrgCommitTree> tree);
   }
   
   interface DocCommitSqlBuilder {

@@ -450,8 +450,8 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("(").ln()
     .append("  id VARCHAR(40) PRIMARY KEY,").ln()
     .append("  commit_id VARCHAR(40) NOT NULL,").ln()
-    .append("  external_id VARCHAR(40) NOT NULL,").ln()
-    .append("  username VARCHAR(255) NOT NULL,").ln()
+    .append("  external_id VARCHAR(40) UNIQUE NOT NULL,").ln()
+    .append("  username VARCHAR(255) UNIQUE NOT NULL,").ln()
     .append("  email VARCHAR(255) NOT NULL").ln()
     .append(");").ln()
     

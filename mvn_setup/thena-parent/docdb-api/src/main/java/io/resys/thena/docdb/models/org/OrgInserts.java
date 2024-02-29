@@ -59,7 +59,6 @@ public interface OrgInserts {
     List<OrgUserMembership> getUserMemberships(); 
     
     
-    
     BatchStatus getStatus();
     String getRepoId();
 

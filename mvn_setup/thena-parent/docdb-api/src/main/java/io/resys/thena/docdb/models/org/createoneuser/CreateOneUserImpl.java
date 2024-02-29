@@ -1,6 +1,7 @@
 package io.resys.thena.docdb.models.org.createoneuser;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -42,6 +43,7 @@ public class CreateOneUserImpl implements CreateOneUser {
   @Override public CreateOneUserImpl email(String email) {           this.email = RepoAssert.notEmpty(email,             () -> "email can't be empty!"); return this; }
   
   @Override public CreateOneUserImpl externalId(String externalId) { this.externalId = externalId; return this; }
+  @Override public CreateOneUserImpl addUserToGroups(String ... addUserToGroups) { this.addUserToGroups.addAll(Arrays.asList(addUserToGroups)); return this; }
   @Override public CreateOneUserImpl addUserToGroups(List<String> addUserToGroups) { this.addUserToGroups.addAll(RepoAssert.notNull(addUserToGroups, () -> "addUserToGroups can't be empty!")); return this; }
   @Override public CreateOneUserImpl addUserToRoles(List<String> addUserToRoles) { this.addUserToRoles.addAll(RepoAssert.notNull(addUserToRoles, () -> "addUserToRoles can't be empty!")); return this; }
   
@@ -57,25 +59,24 @@ public class CreateOneUserImpl implements CreateOneUser {
   }
   
   private Uni<OneUserEnvelope> doInTx(OrgRepo tx) {
-    if(!this.addUserToGroups.isEmpty()) {
-      return tx.query().groups().findAll(addUserToGroups).collect().asList()
-        .onItem().transformToUni(groups -> {
-          
-          if(!this.addUserToRoles.isEmpty()) {
-            return tx.query().roles()
-                .findAll(addUserToRoles).collect().asList()
-                .onItem().transformToUni(roles -> createUser(tx, groups, roles));
-          }
-          
-          return createUser(tx, groups, Collections.emptyList());
-        });
-    }
-    if(!this.addUserToRoles.isEmpty()) {
-      return tx.query().roles().findAll(addUserToRoles).collect().asList()
-        .onItem().transformToUni(roles -> createUser(tx, Collections.emptyList(), roles));
-    }
-    
-    return createUser(tx, Collections.emptyList(), Collections.emptyList());
+		// find groups
+		final Uni<List<OrgGroup>> groupsUni = this.addUserToGroups.isEmpty() ? 
+			Uni.createFrom().item(Collections.emptyList()) : 
+			tx.query().groups().findAll(addUserToGroups).collect().asList();
+		
+		// roles
+		final Uni<List<OrgRole>> rolesUni = this.addUserToRoles.isEmpty() ? 
+			Uni.createFrom().item(Collections.emptyList()) :
+			tx.query().roles().findAll(addUserToRoles).collect().asList();
+		
+		// join data
+		return Uni.combine().all().unis(groupsUni, rolesUni).asTuple()
+		  .onItem().transformToUni(tuple -> createUser(
+			  tx,
+	      tuple.getItem1(), 
+	      tuple.getItem2()
+		  )
+		);
   }
 
   
@@ -91,6 +92,7 @@ public class CreateOneUserImpl implements CreateOneUser {
     return tx.insert().batchOne(batch)
       .onItem().transform(rsp -> ImmutableOneUserEnvelope.builder()
         .repoId(repoId)
+        .user(rsp.getUsers().isEmpty() ? null : rsp.getUsers().get(0))
         .addMessages(rsp.getLog())
         .addAllMessages(rsp.getMessages())
         .status(DataMapper.mapStatus(rsp.getStatus()))

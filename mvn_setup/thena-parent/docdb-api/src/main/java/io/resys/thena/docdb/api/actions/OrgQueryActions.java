@@ -17,12 +17,10 @@ public interface OrgQueryActions {
   
   interface UserObjectsQuery {
     UserObjectsQuery repoId(String repoId);
-    UserObjectsQuery includeTransitive(boolean includeTransitive); // defaults to false
     UserObjectsQuery includeLog(OrgSelection includeLog); // defaults to none
     UserObjectsQuery includeData(OrgSelection includeData); // defaults to none
-    UserObjectsQuery userId(String userId);
     
-    Uni<QueryEnvelope<OrgUserObject>> get();
+    Uni<QueryEnvelope<OrgUserObject>> get(String userId);
     Uni<QueryEnvelope<OrgUserObjects>> findAll();
   }
   

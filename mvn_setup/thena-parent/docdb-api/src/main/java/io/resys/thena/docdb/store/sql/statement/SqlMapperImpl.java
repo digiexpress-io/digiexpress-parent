@@ -34,6 +34,8 @@ import io.resys.thena.docdb.api.models.ImmutableDocBranchLock;
 import io.resys.thena.docdb.api.models.ImmutableDocCommit;
 import io.resys.thena.docdb.api.models.ImmutableDocFlatted;
 import io.resys.thena.docdb.api.models.ImmutableDocLog;
+import io.resys.thena.docdb.api.models.ImmutableOrgGroup;
+import io.resys.thena.docdb.api.models.ImmutableOrgUser;
 import io.resys.thena.docdb.api.models.ImmutableRepo;
 import io.resys.thena.docdb.api.models.ImmutableTag;
 import io.resys.thena.docdb.api.models.ImmutableTree;
@@ -56,6 +58,8 @@ import io.resys.thena.docdb.api.models.ThenaGitObject.CommitTree;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Tag;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Tree;
 import io.resys.thena.docdb.api.models.ThenaGitObject.TreeValue;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUser;
 import io.resys.thena.docdb.spi.DbCollections;
 import io.resys.thena.docdb.store.sql.SqlMapper;
 import io.vertx.core.json.JsonObject;
@@ -287,4 +291,25 @@ public class SqlMapperImpl implements SqlMapper {
         
         .build();
   }
+  @Override
+  public OrgUser orgUser(Row row) {
+    return ImmutableOrgUser.builder()
+        .id(row.getString("id"))
+        .externalId(row.getString("external_id"))
+        .commitId(row.getString("commit_id"))
+        .userName(row.getString("username"))
+        .email(row.getString("email"))
+        .build();
+  }
+	@Override
+	public OrgGroup orgGroup(Row row) {
+    return ImmutableOrgGroup.builder()
+        .id(row.getString("id"))
+        .externalId(row.getString("external_id"))
+        .parentId(row.getString("parent_id"))
+        .commitId(row.getString("commit_id"))
+        .groupName(row.getString("group_name"))
+        .groupDescription(row.getString("group_description"))
+        .build();
+	}
 }

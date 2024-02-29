@@ -1,6 +1,7 @@
 package io.resys.thena.docdb.models.org.actions;
 
 import io.resys.thena.docdb.api.actions.OrgQueryActions;
+import io.resys.thena.docdb.models.org.queries.OrgUserObjectsQueryImpl;
 import io.resys.thena.docdb.spi.DbState;
 import lombok.RequiredArgsConstructor;
 
@@ -10,8 +11,7 @@ public class OrgQueryActionsImpl implements OrgQueryActions {
 
   @Override
   public UserObjectsQuery userQuery() {
-    // TODO Auto-generated method stub
-    return null;
+    return new OrgUserObjectsQueryImpl(state);
   }
 
   @Override
