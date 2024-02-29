@@ -35,8 +35,11 @@ import io.resys.thena.docdb.api.models.ImmutableDocCommit;
 import io.resys.thena.docdb.api.models.ImmutableDocFlatted;
 import io.resys.thena.docdb.api.models.ImmutableDocLog;
 import io.resys.thena.docdb.api.models.ImmutableOrgGroup;
+import io.resys.thena.docdb.api.models.ImmutableOrgGroupRole;
 import io.resys.thena.docdb.api.models.ImmutableOrgRole;
 import io.resys.thena.docdb.api.models.ImmutableOrgUser;
+import io.resys.thena.docdb.api.models.ImmutableOrgUserMembership;
+import io.resys.thena.docdb.api.models.ImmutableOrgUserRole;
 import io.resys.thena.docdb.api.models.ImmutableRepo;
 import io.resys.thena.docdb.api.models.ImmutableTag;
 import io.resys.thena.docdb.api.models.ImmutableTree;
@@ -60,8 +63,11 @@ import io.resys.thena.docdb.api.models.ThenaGitObject.Tag;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Tree;
 import io.resys.thena.docdb.api.models.ThenaGitObject.TreeValue;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroupRole;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUser;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserMembership;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserRole;
 import io.resys.thena.docdb.spi.DbCollections;
 import io.resys.thena.docdb.store.sql.SqlMapper;
 import io.vertx.core.json.JsonObject;
@@ -322,6 +328,35 @@ public class SqlMapperImpl implements SqlMapper {
         .roleName(row.getString("role_name"))
         .roleDescription(row.getString("role_description"))
         .commitId(row.getString("commit_id"))
+        .build();
+	}
+	@Override
+	public OrgUserMembership orgUserMemberships(Row row) {
+    return ImmutableOrgUserMembership.builder()
+        .id(row.getString("id"))
+        .commitId(row.getString("commit_id"))
+        .userId(row.getString("user_id"))
+        .groupId(row.getString("group_id"))
+        .build();
+	}
+	
+	@Override
+	public OrgGroupRole orgGroupRole(Row row) {
+    return ImmutableOrgGroupRole.builder()
+        .id(row.getString("id"))
+        .commitId(row.getString("commit_id"))
+        .roleId(row.getString("role_id"))
+        .groupId(row.getString("group_id"))
+        .build();
+	}
+	
+	@Override
+	public OrgUserRole orgUserRole(Row row) {
+    return ImmutableOrgUserRole.builder()
+        .id(row.getString("id"))
+        .commitId(row.getString("commit_id"))
+        .roleId(row.getString("role_id"))
+        .userId(row.getString("user_id"))
         .build();
 	}
 }

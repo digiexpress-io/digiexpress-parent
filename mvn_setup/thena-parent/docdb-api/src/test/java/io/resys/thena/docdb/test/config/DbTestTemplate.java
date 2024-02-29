@@ -167,7 +167,8 @@ public class DbTestTemplate {
   public String toStaticData(Repo client) {    
     if(client.getType() == RepoType.doc) {
       return new DocDbPrinter(createState()).printWithStaticIds(client);
-      
+    } else if(client.getType() == RepoType.org) {
+      return new OrgDbPrinter(createState()).printWithStaticIds(client);
     }
     return new GitPrinter(createState()).printWithStaticIds(client);
   }

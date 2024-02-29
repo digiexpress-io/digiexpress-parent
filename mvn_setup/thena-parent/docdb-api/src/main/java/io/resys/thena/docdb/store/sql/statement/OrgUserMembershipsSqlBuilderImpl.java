@@ -65,7 +65,7 @@ public class OrgUserMembershipsSqlBuilderImpl implements OrgUserMembershipsSqlBu
   
 
 	@Override
-	public SqlTuple findByGroupId(String groupId) {
+	public SqlTuple findAllByGroupId(String groupId) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT * ").ln()
@@ -77,7 +77,7 @@ public class OrgUserMembershipsSqlBuilderImpl implements OrgUserMembershipsSqlBu
 	}
 
 	@Override
-	public SqlTuple findByUserId(String userId) {
+	public SqlTuple findAllByUserId(String userId) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT * ").ln()

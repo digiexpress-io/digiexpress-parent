@@ -166,8 +166,8 @@ CREATE TABLE org_roles
 (
   id VARCHAR(40) PRIMARY KEY,
   commit_id VARCHAR(40) NOT NULL,
-  external_id VARCHAR(40),
-  role_name VARCHAR(255) NOT NULL,
+  external_id VARCHAR(40) UNIQUE,
+  role_name VARCHAR(255) UNIQUE NOT NULL,
   role_description VARCHAR(255) NOT NULL
 );
 CREATE INDEX org_roles_NAME_INDEX ON org_roles (role_name);
@@ -178,9 +178,9 @@ CREATE TABLE org_groups
 (
   id VARCHAR(40) PRIMARY KEY,
   commit_id VARCHAR(40) NOT NULL,
-  external_id VARCHAR(40),
+  external_id VARCHAR(40) UNIQUE,
   parent_id VARCHAR(40),
-  group_name VARCHAR(255) NOT NULL,
+  group_name VARCHAR(255) UNIQUE NOT NULL,
   group_description VARCHAR(255) NOT NULL
 );
 
@@ -207,8 +207,8 @@ CREATE TABLE org_users
 (
   id VARCHAR(40) PRIMARY KEY,
   commit_id VARCHAR(40) NOT NULL,
-  external_id VARCHAR(40) NOT NULL,
-  username VARCHAR(255) NOT NULL,
+  external_id VARCHAR(40) UNIQUE NOT NULL,
+  username VARCHAR(255) UNIQUE NOT NULL,
   email VARCHAR(255) NOT NULL
 );
 CREATE INDEX org_users_COMMIT_INDEX ON org_users (commit_id);

@@ -115,7 +115,8 @@ public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
   
   interface OrgUserRoleSqlBuilder {
     SqlTuple getById(String id); 
-    SqlTuple findByUserId(String userId); 
+    SqlTuple findAllByUserId(String userId);
+    SqlTuple findAllByRoleId(String userId);
     Sql findAll();
     SqlTuple findAll(List<String> id);
     SqlTuple insertOne(OrgUserRole role);
@@ -124,9 +125,11 @@ public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
   
   interface OrgGroupRoleSqlBuilder {
     SqlTuple getById(String id); 
-    SqlTuple findByGroupId(String groupId); 
-    Sql findAll();
+    SqlTuple findAllByGroupId(String groupId); 
+    SqlTuple findAllByRoleId(String groupId);
     SqlTuple findAll(List<String> id);
+    Sql findAll();
+    
     SqlTuple insertOne(OrgGroupRole role);
     SqlTupleList insertAll(Collection<OrgGroupRole> roles);
   }
@@ -147,8 +150,8 @@ public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
     Sql findAll();
     SqlTuple findAll(List<String> id);
     SqlTuple getById(String id); 
-    SqlTuple findByGroupId(String groupId);
-    SqlTuple findByUserId(String userId);
+    SqlTuple findAllByGroupId(String groupId);
+    SqlTuple findAllByUserId(String userId);
     SqlTuple insertOne(OrgUserMembership membership);
     SqlTupleList insertAll(Collection<OrgUserMembership> memberships);
   }

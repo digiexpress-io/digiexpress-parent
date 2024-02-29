@@ -115,6 +115,8 @@ public class SimpleOrgTest extends DbTestTemplate {
     Assertions.assertEquals(1, users.getObjects().getUsers().size());
     
     printRepo(repo.getRepo());
+    
+    assertRepo(repo.getRepo(), "org-db-test-cases/org-crud-test-1.txt");
   }
   
   

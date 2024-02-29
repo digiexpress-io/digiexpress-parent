@@ -66,12 +66,23 @@ public class OrgGroupRoleSqlBuilderImpl implements OrgGroupRoleSqlBuilder {
   }
 
 	@Override
-	public SqlTuple findByGroupId(String userId) {
+	public SqlTuple findAllByGroupId(String userId) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT * ").ln()
         .append("  FROM ").append(options.getOrgGroupRoles()).ln()
         .append("  WHERE group_id = $1").ln() 
+        .build())
+        .props(Tuple.of(userId))
+        .build();
+	}
+	@Override
+	public SqlTuple findAllByRoleId(String userId) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT * ").ln()
+        .append("  FROM ").append(options.getOrgGroupRoles()).ln()
+        .append("  WHERE role_id = $1").ln() 
         .build())
         .props(Tuple.of(userId))
         .build();

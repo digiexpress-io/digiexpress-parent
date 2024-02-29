@@ -66,7 +66,7 @@ public class OrgUserRoleSqlBuilderImpl implements OrgUserRoleSqlBuilder {
   }
 
 	@Override
-	public SqlTuple findByUserId(String userId) {
+	public SqlTuple findAllByUserId(String userId) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT * ").ln()
@@ -74,6 +74,17 @@ public class OrgUserRoleSqlBuilderImpl implements OrgUserRoleSqlBuilder {
         .append("  WHERE user_id = $1").ln() 
         .build())
         .props(Tuple.of(userId))
+        .build();
+	}
+	@Override
+	public SqlTuple findAllByRoleId(String roleId) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT * ").ln()
+        .append("  FROM ").append(options.getOrgUserRoles()).ln()
+        .append("  WHERE role_id = $1").ln() 
+        .build())
+        .props(Tuple.of(roleId))
         .build();
 	}
   @Override
