@@ -98,12 +98,17 @@ public class CreateOneGroupImpl implements CreateOneGroup {
         .create();
 
     return tx.insert().batchOne(batch)
-      .onItem().transform(rsp -> ImmutableOneGroupEnvelope.builder()
+      .onItem().transform(rsp -> {
+      	
+      	
+      	return ImmutableOneGroupEnvelope.builder()
         .repoId(repoId)
         .group(rsp.getGroups().isEmpty() ? null : rsp.getGroups().get(0))
         .addMessages(rsp.getLog())
         .addAllMessages(rsp.getMessages())
         .status(DataMapper.mapStatus(rsp.getStatus()))
-        .build());
+        .build();
+      	
+      });
   } 
 }

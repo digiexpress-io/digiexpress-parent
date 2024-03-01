@@ -6,9 +6,9 @@ import java.util.Map;
 import org.immutables.value.Value;
 
 import io.resys.thena.docdb.api.models.ThenaEnvelope.ThenaObjects;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.IsOrgObject;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorData;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatus;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatusType;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgCommit;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroupRole;
@@ -36,20 +36,12 @@ public interface ThenaOrgObjects extends ThenaObjects {
     Map<String, OrgActorStatus> getActorStatus(); 
   }
 
-  
-  @Value.Immutable
-  interface OrgActorObjects extends ThenaOrgObjects { 
-    IsOrgObject getTarget();
-    Map<String, OrgCommit> getCommits();
-    Map<String, OrgActorData> getActorData();
-    Map<String, OrgActorStatus> getActorStatus();
-  }
-  
-  
+
   @Value.Immutable
   interface OrgUserObject extends ThenaOrgObjects { 
     OrgUser getUser();
     
+    /*
     Map<String, OrgGroup> getGroups();
     Map<String, OrgRole> getRoles();
     
@@ -60,6 +52,7 @@ public interface ThenaOrgObjects extends ThenaObjects {
     Map<String, OrgCommit> getCommits();
     Map<String, OrgActorData> getActorData();
     Map<String, OrgActorStatus> getActorStatus(); 
+    */
   }
   
   @Value.Immutable
@@ -69,43 +62,43 @@ public interface ThenaOrgObjects extends ThenaObjects {
   
   
   
+  /*
   @Value.Immutable
-  interface OrgGroupObject extends ThenaOrgObjects { 
-    OrgGroup getGroup();
-    Map<String, OrgUser> getUser();
-    Map<String, OrgRole> getRoles();
+  interface OrgUserRoleOrGroup extends ThenaOrgObject {
+    String getId();
+    String getNames();
+    OrgUserRoleOrGroupType getType();
+    OrgActorValue getActorStatus();
+  }
+  */
+  
+  
+  @Value.Immutable
+  interface OrgUserGroupsAndRolesWithLog extends ThenaOrgObjects {
+  	String getUserId();
+    String getExternalId();
+    String getUserName();
+    String getEmail();
     
-    Map<String, OrgGroup> getTransitiveGroups();
+    List<String> getRoleNames();  // roles that are enabled
+    List<String> getGroupNames(); // groups that are enabled
     
-    Map<String, OrgUserMembership> getUserMembership();
-    Map<String, OrgGroupRole> getGroupRoles();
-    Map<String, OrgUserRole> getUserRoles();
-    
-    Map<String, OrgCommit> getCommits();
-    Map<String, OrgActorData> getActorData();
-    Map<String, OrgActorStatus> getActorStatus(); 
+    List<OrgUserRoleEvalLog> getRoleMeta();
+    List<OrgUserGroupEvalLog> getGroupMeta();
   }
   
-  
   @Value.Immutable
-  interface OrgGroupObjects extends ThenaOrgObjects {
-    List<OrgGroupObject> getGroups();
+  interface OrgUserRoleEvalLog extends ThenaOrgObjects {
+  	String getRoleName();
+  	OrgActorStatusType getStatus();
+  	String getSource();
+  	Boolean getEnabled();
   }
-  
   @Value.Immutable
-  interface OrgRoleObject extends ThenaOrgObjects {
-    OrgRole getRole();
-    Map<String, OrgUser> getUser();
-    Map<String, OrgGroup> getGroups();
-    
-    Map<String, OrgUserMembership> getUserMembership();
-    Map<String, OrgGroupRole> getGroupRoles();
-    Map<String, OrgUserRole> getUserRoles();
-  }
-  
-  
-  @Value.Immutable
-  interface OrgRoleObjects extends ThenaOrgObjects {
-    List<OrgRoleObject> getRoles();
+  interface OrgUserGroupEvalLog extends ThenaOrgObjects {
+  	String getGroupName();
+  	OrgActorStatusType getStatus();
+  	String getSource();
+  	Boolean getEnabled();
   }
 }

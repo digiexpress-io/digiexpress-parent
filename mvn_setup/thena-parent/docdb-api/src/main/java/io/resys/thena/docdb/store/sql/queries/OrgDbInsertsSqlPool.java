@@ -123,7 +123,7 @@ public class OrgDbInsertsSqlPool implements OrgInserts {
     return ImmutableOrgBatchForMany.builder()
         .from(current)
         .status(BatchStatus.ERROR)
-        .addMessages(ImmutableMessage.builder().text(msg).build())
+        .addMessages(ImmutableMessage.builder().text(msg).exception(t).build())
         .build(); 
   }
   
@@ -140,7 +140,7 @@ public class OrgDbInsertsSqlPool implements OrgInserts {
     return ImmutableOrgBatchForOne.builder()
         .from(current)
         .status(BatchStatus.ERROR)
-        .addMessages(ImmutableMessage.builder().text(msg).build())
+        .addMessages(ImmutableMessage.builder().text(msg).exception(t).build())
         .build(); 
   }
 }

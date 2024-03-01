@@ -4,6 +4,7 @@ import java.util.List;
 
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgCommit;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroupAndRoleFlattened;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroupRole;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUser;
@@ -22,13 +23,17 @@ public interface OrgQueries {
   UserRolesQuery userRoles();
   CommitQuery commits();
   
-  
+
   interface UserRolesQuery {
     Uni<OrgUserRole> getById(String id);
     Multi<OrgUserRole> findAll();
     Multi<OrgUserRole> findAll(List<String> id);
     Multi<OrgUserRole> findAllByUserId(String id);
     Multi<OrgUserRole> findAllByRoleId(String id);
+  }
+  
+  interface GroupAndRoleFlattenedQuery {
+    Multi<OrgGroupAndRoleFlattened> findAllByUserId(String userId);
   }
   
   interface GroupRolesQuery {

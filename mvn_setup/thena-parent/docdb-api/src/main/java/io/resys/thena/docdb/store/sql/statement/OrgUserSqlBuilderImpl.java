@@ -112,4 +112,50 @@ public class OrgUserSqlBuilderImpl implements OrgUserSqlBuilder {
             .collect(Collectors.toList()))
         .build();
   }
+
+  /*
+WITH RECURSIVE generation AS (
+    SELECT id, parent, 0 AS order_no
+    FROM nested_10_commits
+    WHERE parent IS NULL
+UNION ALL
+    SELECT child.id, child.parent, order_no+1 AS order_no
+    FROM nested_10_commits as child
+    JOIN generation g ON g.id = child.parent
+)
+   */
+  
+	@Override
+	public SqlTuple findAllUserGroupsAndRolesByUserId(String userId) {
+    final var sql = new SqlStatement()
+        .append("WITH RECURSIVE generation AS (").ln()
+        
+        // select root object
+        .append("  SELECT id, parent_id, 0 AS order_no").ln()
+        .append("  FROM ").append(options.getOrgGroups()).ln()
+        .append("  WHERE parent_id IS NULL ").ln()
+        
+        .append("  UNION ALL ").ln()
+        
+        // select children
+        .append("  SELECT child.id, child.parent_id, order_no+1 AS order_no").ln()
+        .append("  FROM ").append(options.getOrgGroups()).append(" as child").ln()
+        .append("  JOIN generation g ON g.id = child.parent_id ").ln()
+        
+    		.append(")").ln()
+    		
+        .append("SELECT group_name, role_name, actor_status").ln()    		
+    		
+    		;
+    
+    
+    
+    return null;
+    		/*
+    		ImmutableSqlTuple.builder()
+        .value(sql.build())
+        .props(Tuple.from(userId))
+        .build();
+        */
+	}
 }

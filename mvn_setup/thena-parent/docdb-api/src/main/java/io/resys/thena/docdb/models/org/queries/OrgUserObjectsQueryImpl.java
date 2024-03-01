@@ -3,7 +3,6 @@ package io.resys.thena.docdb.models.org.queries;
 import java.util.List;
 import java.util.Set;
 
-import io.resys.thena.docdb.api.actions.OrgQueryActions.OrgSelection;
 import io.resys.thena.docdb.api.actions.OrgQueryActions.UserObjectsQuery;
 import io.resys.thena.docdb.api.exceptions.RepoException;
 import io.resys.thena.docdb.api.models.ImmutableMessage;
@@ -34,16 +33,6 @@ public class OrgUserObjectsQueryImpl implements UserObjectsQuery {
   public UserObjectsQuery repoId(String repoId) {
     RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
     this.repoId = repoId;
-    return this;
-  }
-  @Override
-  public UserObjectsQuery includeLog(OrgSelection includeLog) {
-    // TODO Auto-generated method stub
-    return this;
-  }
-  @Override
-  public UserObjectsQuery includeData(OrgSelection includeData) {
-    // TODO Auto-generated method stub
     return this;
   }
   @Override

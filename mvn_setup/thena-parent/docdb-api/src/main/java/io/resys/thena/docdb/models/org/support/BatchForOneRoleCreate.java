@@ -18,7 +18,6 @@ import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgOperationType;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUser;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserRole;
 import io.resys.thena.docdb.models.git.GitInserts.BatchStatus;
-import io.resys.thena.docdb.models.git.commits.CommitLogger;
 import io.resys.thena.docdb.models.org.ImmutableOrgBatchForOne;
 import io.resys.thena.docdb.support.OidUtils;
 import io.resys.thena.docdb.support.RepoAssert;
@@ -92,17 +91,18 @@ public class BatchForOneRoleCreate {
       userRoles.add(userRole);
     }
     
-    final var logger = new CommitLogger();
+    final var logger = new StringBuilder();
     logger
+    	.append(System.lineSeparator())
       .append(" | created")
       .append(System.lineSeparator())
-      .append("  + commit:        ").append(commitId).append(" tree: ").append(tree.size() + "").append(" entries")
+      .append("  + commit:          ").append(commitId).append(" tree: ").append(tree.size() + "").append(" entries")
       .append(System.lineSeparator())
-      .append("  + role:        ").append(role.getId()).append("::").append(roleName)
+      .append("  + role:            ").append(role.getId()).append("::").append(roleName)
       .append(System.lineSeparator())
       .append("  + added to groups: ").append(String.join(",", groups.stream().map(g -> g.getGroupName() + "::" + g.getId()).toList()))
       .append(System.lineSeparator())
-      .append("  + added to users: ").append(String.join(",", users.stream().map(g -> g.getUserName() + "::" + g.getId()).toList()))
+      .append("  + added to users:  ").append(String.join(",", users.stream().map(g -> g.getUserName() + "::" + g.getId()).toList()))
       .append(System.lineSeparator());
     
     final var commit = ImmutableOrgCommit.builder()

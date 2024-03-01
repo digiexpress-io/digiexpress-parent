@@ -14,16 +14,9 @@ public class OrgQueryActionsImpl implements OrgQueryActions {
     return new OrgUserObjectsQueryImpl(state);
   }
 
-  @Override
-  public GroupObjectsQuery groupQuery() {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public GroupObjectsQuery roleQuery() {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
+	@Override
+	public UserGroupsAndRolesQuery userGroupsAndRolesQuery() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

@@ -1,5 +1,7 @@
 package io.resys.thena.docdb.api.models;
 
+import javax.annotation.Nullable;
+
 /*-
  * #%L
  * thena-docdb-api
@@ -24,6 +26,6 @@ import org.immutables.value.Value;
 
 @Value.Immutable
 public interface Message {
-
   String getText();
+  @Nullable Throwable getException();
 }

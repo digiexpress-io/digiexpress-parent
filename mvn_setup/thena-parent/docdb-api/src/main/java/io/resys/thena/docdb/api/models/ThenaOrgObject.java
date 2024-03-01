@@ -15,30 +15,16 @@ import io.vertx.core.json.JsonObject;
 public interface ThenaOrgObject {
   interface IsOrgObject { String getId(); OrgDocType getDocType(); }
   interface IsOrgVersionObject { String getCommitId(); }  
-  
-  /*
+
   @Value.Immutable
-  interface OrgUserFlattened extends ThenaOrgObject {
-    String getUserId();
-    String getExternalId();
-    String getUserName();
-    String getEmail();
-    OrgActorValue getActorStatus();
-    @Nullable OrgActorData getActorData();
-    Boolean getTransient(); // include roles and groups via parent/child relations of the groups
-    List<OrgUserRoleOrGroup> getRoleNames();
-    List<OrgUserRoleOrGroup> getGroupNames();  
-  }
-  
-  
-  @Value.Immutable
-  interface OrgUserRoleOrGroup extends ThenaOrgObject {
+  interface OrgGroupAndRoleFlattened extends ThenaOrgObject {
     String getId();
-    String getNames();
-    OrgUserRoleOrGroupType getType();
-    OrgActorValue getActorStatus();
+    String getParentGroupName();
+    String getGroupName(); 
+    String getRoleName();
+    OrgActorStatusType getRoleStatus();
+    OrgActorStatusType getGroupStatus();
   }
-  */
   
   @Value.Immutable
   interface OrgGroup extends ThenaOrgObject, IsOrgObject, IsOrgVersionObject {
@@ -69,7 +55,7 @@ public interface ThenaOrgObject {
   interface OrgUser extends ThenaOrgObject, IsOrgObject, IsOrgVersionObject {
     String getId();
     String getCommitId();
-    String getExternalId();
+    @Nullable String getExternalId();
     String getUserName();
     String getEmail();
     
@@ -120,7 +106,7 @@ public interface ThenaOrgObject {
     @Nullable String getUserMembershipId();
     @Nullable String getUserRoleId();
     @Nullable String getGroupRoleId();
-    OrgActorValue getValue();
+    OrgActorStatusType getValue();
     
     @JsonIgnore @Override default public OrgDocType getDocType() { return OrgDocType.OrgActorStatus; };
   }
@@ -184,8 +170,8 @@ public interface ThenaOrgObject {
     LOCK_TAKEN, NOT_FOUND
   }
   
-  enum OrgActorValue {
-    IN_FORCE, ARCHIVED
+  enum OrgActorStatusType {
+    IN_FORCE, DISABLED, DISABLED_WITH_OVERRIDE
   }
   
   enum OrgUserRoleOrGroupType {
