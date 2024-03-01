@@ -36,6 +36,7 @@ import io.resys.thena.docdb.store.file.FileBuilder;
 import io.resys.thena.docdb.store.file.tables.Table.FileMapper;
 import io.resys.thena.docdb.store.file.tables.Table.FilePool;
 import io.resys.thena.docdb.support.ErrorHandler;
+import io.resys.thena.docdb.support.ErrorHandler.SqlSchemaFailed;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -63,7 +64,7 @@ public class BlobQueryFilePool implements GitBlobQuery {
           return null;
         })
         .onFailure(e -> errorHandler.notFound(e)).recoverWithNull()
-        .onFailure().invoke(e -> errorHandler.deadEnd("Can't find 'BLOB' by 'id': '" + blobId + "'!", e));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlSchemaFailed("Can't find 'BLOB' by 'id': '" + blobId + "'!", "", e)));
   }
   @Override
   public Multi<Blob> findAll() {
@@ -73,7 +74,7 @@ public class BlobQueryFilePool implements GitBlobQuery {
         .execute()
         .onItem()
         .transformToMulti((Collection<Blob> rowset) -> Multi.createFrom().iterable(rowset))
-        .onFailure().invoke(e -> errorHandler.deadEnd("Can't find 'BLOB'!", e));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlSchemaFailed("Can't find 'BLOB'!", "", e)));
   }
   @Override
   public Multi<Blob> findAll(String treeId, List<String> blobNames, List<MatchCriteria> blobCriteria) {
@@ -115,7 +116,7 @@ public class BlobQueryFilePool implements GitBlobQuery {
     })
     .onItem()
     .transformToMulti((List<Blob> rowset) -> Multi.createFrom().iterable(rowset))
-    .onFailure().invoke(e -> errorHandler.deadEnd("Can't find 'BLOB' by tree: " + treeId + "!", e));
+    .onFailure().invoke(e -> errorHandler.deadEnd(new SqlSchemaFailed("Can't find 'BLOB' by tree: " + treeId + "!", "", e)));
   }
   @Override
   public Multi<Blob> findAll(String treeId, List<MatchCriteria> criteria) {

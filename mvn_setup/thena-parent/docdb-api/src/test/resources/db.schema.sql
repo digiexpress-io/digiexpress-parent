@@ -207,7 +207,7 @@ CREATE TABLE org_users
 (
   id VARCHAR(40) PRIMARY KEY,
   commit_id VARCHAR(40) NOT NULL,
-  external_id VARCHAR(40) UNIQUE NOT NULL,
+  external_id VARCHAR(40) UNIQUE,
   username VARCHAR(255) UNIQUE NOT NULL,
   email VARCHAR(255) NOT NULL
 );

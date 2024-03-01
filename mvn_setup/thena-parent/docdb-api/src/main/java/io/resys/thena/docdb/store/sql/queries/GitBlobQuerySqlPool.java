@@ -31,6 +31,8 @@ import io.resys.thena.docdb.store.sql.SqlBuilder;
 import io.resys.thena.docdb.store.sql.SqlMapper;
 import io.resys.thena.docdb.store.sql.support.SqlClientWrapper;
 import io.resys.thena.docdb.support.ErrorHandler;
+import io.resys.thena.docdb.support.ErrorHandler.SqlFailed;
+import io.resys.thena.docdb.support.ErrorHandler.SqlTupleFailed;
 import io.resys.thena.docdb.support.RepoAssert;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
@@ -68,7 +70,7 @@ public class GitBlobQuerySqlPool implements GitBlobQuery {
           return null;
         })
         .onFailure(e -> errorHandler.notFound(e)).recoverWithNull()
-        .onFailure().invoke(e -> errorHandler.deadEnd("Can't find 'BLOB' by 'id': '" + blobId + "'!", e));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'BLOB' by 'id': '" + blobId + "'!", sql, e)));
   }
   @Override
   public Multi<Blob> findAll() {
@@ -83,7 +85,7 @@ public class GitBlobQuerySqlPool implements GitBlobQuery {
         .execute()
         .onItem()
         .transformToMulti((RowSet<Blob> rowset) -> Multi.createFrom().iterable(rowset))
-        .onFailure().invoke(e -> errorHandler.deadEnd("Can't find 'BLOB'!", e));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlFailed("Can't find 'BLOB'!", sql, e)));
   }
   @Override
   public Multi<Blob> findAll(String treeId, List<MatchCriteria> criteria) {
@@ -99,7 +101,7 @@ public class GitBlobQuerySqlPool implements GitBlobQuery {
         .execute(sql.getProps())
         .onItem()
         .transformToMulti((RowSet<Blob> rowset) -> Multi.createFrom().iterable(rowset))
-        .onFailure().invoke(e -> errorHandler.deadEnd("Can't find 'BLOB' by tree: " + treeId + "!", e));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'BLOB' by tree: " + treeId + "!", sql, e)));
   }
   @Override
   public Multi<Blob> findAll(String treeId, List<String> docIds, List<MatchCriteria> criteria) {
@@ -117,7 +119,7 @@ public class GitBlobQuerySqlPool implements GitBlobQuery {
         .execute(sql.getProps())
         .onItem()
         .transformToMulti((RowSet<Blob> rowset) -> Multi.createFrom().iterable(rowset))
-        .onFailure().invoke(e -> errorHandler.deadEnd("Can't find 'BLOB' by tree: " + treeId + "!", e)); 
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'BLOB' by tree: " + treeId + "!", sql, e))); 
   }
   
   public Uni<List<Blob>> findById(List<String> blobId) {
@@ -139,6 +141,6 @@ public class GitBlobQuerySqlPool implements GitBlobQuery {
           return result;
         })
         .onFailure(e -> errorHandler.notFound(e)).recoverWithNull()
-        .onFailure().invoke(e -> errorHandler.deadEnd("Can't find 'BLOB' by 'id'-s: '" + String.join(",", blobId) + "'!", e));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'BLOB' by 'id'-s: '" + String.join(",", blobId) + "'!", sql, e)));
   }
 }

@@ -7,6 +7,8 @@ import io.resys.thena.docdb.store.sql.SqlBuilder;
 import io.resys.thena.docdb.store.sql.SqlMapper;
 import io.resys.thena.docdb.store.sql.support.SqlClientWrapper;
 import io.resys.thena.docdb.support.ErrorHandler;
+import io.resys.thena.docdb.support.ErrorHandler.SqlFailed;
+import io.resys.thena.docdb.support.ErrorHandler.SqlTupleFailed;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.sqlclient.RowSet;
@@ -42,7 +44,7 @@ public class DocLogQuerySqlPool implements DocLogQuery {
           return null;
         })
         .onFailure(e -> errorHandler.notFound(e)).recoverWithNull()
-        .onFailure().invoke(e -> errorHandler.deadEnd("Can't get 'DOC_LOG' by 'id': '" + id + "'!", e));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't get 'DOC_LOG' by 'id': '" + id + "'!", sql, e)));
   }
   @Override
   public Multi<DocLog> findAll() {
@@ -57,6 +59,6 @@ public class DocLogQuerySqlPool implements DocLogQuery {
         .execute()
         .onItem()
         .transformToMulti((RowSet<DocLog> rowset) -> Multi.createFrom().iterable(rowset))
-        .onFailure().invoke(e -> errorHandler.deadEnd("Can't find 'DOC_LOG'!", e));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlFailed("Can't find 'DOC_LOG'!", sql, e)));
   }
 }

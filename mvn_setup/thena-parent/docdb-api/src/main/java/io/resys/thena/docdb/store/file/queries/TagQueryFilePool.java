@@ -30,6 +30,7 @@ import io.resys.thena.docdb.store.file.FileBuilder;
 import io.resys.thena.docdb.store.file.tables.Table.FileMapper;
 import io.resys.thena.docdb.store.file.tables.Table.FilePool;
 import io.resys.thena.docdb.support.ErrorHandler;
+import io.resys.thena.docdb.support.ErrorHandler.SqlSchemaFailed;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -56,7 +57,7 @@ public class TagQueryFilePool implements GitTagQuery {
         .execute()
         .onItem()
         .transform(result -> (DeleteResult) ImmutableDeleteResult.builder().deletedCount(1).build())
-        .onFailure().invoke(e -> errorHandler.deadEnd("Can't delete 'TAG' by name: '" + name + "'!", e));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlSchemaFailed("Can't delete 'TAG' by name: '" + name + "'!", "", e)));
   }
   @Override
   public Uni<Tag> getFirst() {
@@ -72,7 +73,7 @@ public class TagQueryFilePool implements GitTagQuery {
           }
           return null;
         })
-        .onFailure().invoke(e -> errorHandler.deadEnd("Can't find 'TAG'!", e));      
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlSchemaFailed("Can't find 'TAG'!", "", e)));      
   }
   @Override
   public Multi<Tag> find() {
@@ -83,7 +84,7 @@ public class TagQueryFilePool implements GitTagQuery {
           .execute()
           .onItem()
           .transformToMulti((Collection<Tag> rowset) -> Multi.createFrom().iterable(rowset))
-          .onFailure().invoke(e -> errorHandler.deadEnd("Can't find 'TAG'!", e));      
+          .onFailure().invoke(e -> errorHandler.deadEnd(new SqlSchemaFailed("Can't find 'TAG'!", "", e)));      
     }
     final var sql = sqlBuilder.tags().getByName(name);
     return client.preparedQuery(sql)
@@ -91,6 +92,6 @@ public class TagQueryFilePool implements GitTagQuery {
         .execute()
         .onItem()
         .transformToMulti((Collection<Tag> rowset) -> Multi.createFrom().iterable(rowset))
-        .onFailure().invoke(e -> errorHandler.deadEnd("Can't find 'TAG' by name: '" + name + "'!", e));   
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlSchemaFailed("Can't find 'TAG' by name: '" + name + "'!", "", e)));   
   }
 }

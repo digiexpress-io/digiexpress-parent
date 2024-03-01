@@ -29,6 +29,8 @@ import io.resys.thena.docdb.store.sql.SqlBuilder;
 import io.resys.thena.docdb.store.sql.SqlMapper;
 import io.resys.thena.docdb.store.sql.support.SqlClientWrapper;
 import io.resys.thena.docdb.support.ErrorHandler;
+import io.resys.thena.docdb.support.ErrorHandler.SqlFailed;
+import io.resys.thena.docdb.support.ErrorHandler.SqlTupleFailed;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.sqlclient.RowSet;
@@ -63,7 +65,7 @@ public class GitTagQuerySqlPool implements GitTagQuery {
         .execute(sql.getProps())
         .onItem()
         .transform(result -> (DeleteResult) ImmutableDeleteResult.builder().deletedCount(1).build())
-        .onFailure().invoke(e -> errorHandler.deadEnd("Can't delete 'TAG' by name: '" + name + "'!", e));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't delete 'TAG' by name: '" + name + "'!", sql, e)));
   }
   @Override
   public Uni<Tag> getFirst() {
@@ -84,7 +86,7 @@ public class GitTagQuerySqlPool implements GitTagQuery {
           }
           return null;
         })
-        .onFailure().invoke(e -> errorHandler.deadEnd("Can't find 'TAG'!", e));      
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlFailed("Can't find 'TAG'!", sql, e)));      
   }
   @Override
   public Multi<Tag> find() {
@@ -100,7 +102,7 @@ public class GitTagQuerySqlPool implements GitTagQuery {
           .execute()
           .onItem()
           .transformToMulti((RowSet<Tag> rowset) -> Multi.createFrom().iterable(rowset))
-          .onFailure().invoke(e -> errorHandler.deadEnd("Can't find 'TAG'!", e));      
+          .onFailure().invoke(e -> errorHandler.deadEnd(new SqlFailed("Can't find 'TAG'!", sql, e)));      
     }
     final var sql = sqlBuilder.tags().getByName(name);
     
@@ -114,6 +116,6 @@ public class GitTagQuerySqlPool implements GitTagQuery {
         .execute(sql.getProps())
         .onItem()
         .transformToMulti((RowSet<Tag> rowset) -> Multi.createFrom().iterable(rowset))
-        .onFailure().invoke(e -> errorHandler.deadEnd("Can't find 'TAG' by name: '" + name + "'!", e));   
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'TAG' by name: '" + name + "'!", sql, e)));   
   }
 }

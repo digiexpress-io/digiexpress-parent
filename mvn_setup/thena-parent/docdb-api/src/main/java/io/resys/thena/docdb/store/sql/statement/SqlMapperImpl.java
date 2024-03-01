@@ -35,6 +35,7 @@ import io.resys.thena.docdb.api.models.ImmutableDocCommit;
 import io.resys.thena.docdb.api.models.ImmutableDocFlatted;
 import io.resys.thena.docdb.api.models.ImmutableDocLog;
 import io.resys.thena.docdb.api.models.ImmutableOrgGroup;
+import io.resys.thena.docdb.api.models.ImmutableOrgGroupAndRoleFlattened;
 import io.resys.thena.docdb.api.models.ImmutableOrgGroupRole;
 import io.resys.thena.docdb.api.models.ImmutableOrgRole;
 import io.resys.thena.docdb.api.models.ImmutableOrgUser;
@@ -62,7 +63,9 @@ import io.resys.thena.docdb.api.models.ThenaGitObject.CommitTree;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Tag;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Tree;
 import io.resys.thena.docdb.api.models.ThenaGitObject.TreeValue;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatusType;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroupAndRoleFlattened;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroupRole;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUser;
@@ -358,5 +361,27 @@ public class SqlMapperImpl implements SqlMapper {
         .roleId(row.getString("role_id"))
         .userId(row.getString("user_id"))
         .build();
+	}
+	@Override
+	public OrgGroupAndRoleFlattened orgGroupAndRoleFlattened(Row row) {
+		final var userStatus = row.getString("user_status");
+		final var groupStatus = row.getString("group_status");
+		
+		return ImmutableOrgGroupAndRoleFlattened.builder()
+		  	.groupId(row.getString("group_id"))
+		  	.groupParentId(row.getString("group_parent_id"))
+		  	.membershipId(row.getString("membership_id"))
+		  	
+		  	.groupStatusId(row.getString("group_status_id"))
+		  	.groupStatus(groupStatus != null ? OrgActorStatusType.valueOf(groupStatus) : null)
+		  	.groupStatusUserId(row.getString("group_status_user_id"))
+		  	.groupStatusGroupId(row.getString("group_status_group_id"))
+		  	.groupStatusRoleId(row.getString("group_status_role_id"))
+		  	
+		  	.userStatusId(row.getString("user_status_id"))
+		  	.userStatus(userStatus != null ? OrgActorStatusType.valueOf(userStatus) : null)
+		  	.userStatusGroupId(row.getString("user_status_group_id"))
+		  	.userStatusRoleId(row.getString("user_status_role_id"))
+				.build();
 	}
 }

@@ -23,6 +23,7 @@ import io.resys.thena.docdb.models.git.GitPrinter;
 import io.resys.thena.docdb.spi.DbCollections;
 import io.resys.thena.docdb.spi.DbState;
 import io.resys.thena.docdb.store.sql.DbStateSqlImpl;
+import io.resys.thena.docdb.store.sql.PgErrors;
 import io.resys.thena.docdb.support.DocDbPrinter;
 import io.resys.thena.docdb.support.OrgDbPrinter;
 import io.vertx.core.json.JsonObject;
@@ -88,7 +89,7 @@ public class DbTestTemplate {
     this.client = DbStateSqlImpl.create()
         .db("junit")
         .client(pgPool)
-        .errorHandler(new PgTestErrors())
+        .errorHandler(new PgErrors())
         .build();
 
     repo = this.client.repo().projectBuilder()
@@ -120,7 +121,7 @@ public class DbTestTemplate {
   
   public DbState createState() {
     final var ctx = DbCollections.defaults(db);
-    return DbStateSqlImpl.state(ctx, pgPool, new PgTestErrors());
+    return DbStateSqlImpl.state(ctx, pgPool, new PgErrors());
   }
   
   public void printRepo(Repo repo) {

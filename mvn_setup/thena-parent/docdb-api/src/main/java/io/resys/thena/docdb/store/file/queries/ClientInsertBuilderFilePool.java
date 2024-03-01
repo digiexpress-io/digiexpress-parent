@@ -38,6 +38,7 @@ import io.resys.thena.docdb.store.file.tables.Table.FilePool;
 import io.resys.thena.docdb.store.file.tables.Table.FileTuple;
 import io.resys.thena.docdb.store.file.tables.Table.FileTupleList;
 import io.resys.thena.docdb.support.ErrorHandler;
+import io.resys.thena.docdb.support.ErrorHandler.SqlSchemaFailed;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -58,7 +59,7 @@ public class ClientInsertBuilderFilePool implements GitInserts {
         .onItem().transform(inserted -> (InsertResult) ImmutableInsertResult.builder().duplicate(false).build())
         .onFailure(e -> errorHandler.duplicate(e))
         .recoverWithItem(e -> ImmutableInsertResult.builder().duplicate(true).build())
-        .onFailure().invoke(e -> errorHandler.deadEnd("Can't insert into 'TAG': '" + tagInsert.getValue() + "'!", e));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlSchemaFailed("Can't insert into 'TAG': '" + tagInsert.getValue() + "'!", "", e)));
   }
 
   @Override
@@ -95,7 +96,7 @@ public class ClientInsertBuilderFilePool implements GitInserts {
                     .toString())
                 .build())
             .build())
-        .onFailure().invoke(e -> errorHandler.deadEnd("Can't insert into 'BLOB': '" + blobsInsert.getValue() + "'!", e));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlSchemaFailed("Can't insert into 'BLOB': '" + blobsInsert.getValue() + "'!", "", e)));
   }
 
   public Uni<UpsertResult> ref(Branch ref, Commit commit) {
@@ -185,7 +186,7 @@ public class ClientInsertBuilderFilePool implements GitInserts {
                   .toString())
               .build())
           .build())
-        .onFailure().invoke(e -> errorHandler.deadEnd("Can't insert into 'REF': '" + refsInsert.getValue() + "'!", e));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlSchemaFailed("Can't insert into 'REF': '" + refsInsert.getValue() + "'!", "", e)));
   }
 
   @Override
@@ -224,13 +225,13 @@ public class ClientInsertBuilderFilePool implements GitInserts {
                 .toString())
             .build())
         .build())
-    .onFailure().invoke(e -> errorHandler.deadEnd("Can't insert into "
+    .onFailure().invoke(e -> errorHandler.deadEnd(new SqlSchemaFailed("Can't insert into "
         +"\r\n"
         + "'TREE': " + treeInsert.getValue() 
         + "\r\n"
         + "  and/or"
         + "\r\n "
-        + "'TREE_VALUE' : '" + treeValueInsert.getValue() + "'!", e));
+        + "'TREE_VALUE' : '" + treeValueInsert.getValue() + "'!", "", e)));
   }
   
   @Override
@@ -266,7 +267,7 @@ public class ClientInsertBuilderFilePool implements GitInserts {
                     .toString())
                 .build())
             .build())
-        .onFailure().invoke(e -> errorHandler.deadEnd("Can't insert into 'COMMIT': '" + commitsInsert.getValue() + "'!", e));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlSchemaFailed("Can't insert into 'COMMIT': '" + commitsInsert.getValue() + "'!", "", e)));
   }
  
   

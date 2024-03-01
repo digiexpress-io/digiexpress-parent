@@ -29,6 +29,7 @@ import io.resys.thena.docdb.store.file.tables.Table.FileMapper;
 import io.resys.thena.docdb.store.file.tables.Table.FilePool;
 import io.resys.thena.docdb.support.ErrorHandler;
 import io.resys.thena.docdb.support.RepoAssert;
+import io.resys.thena.docdb.support.ErrorHandler.SqlSchemaFailed;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -57,7 +58,7 @@ public class RefQueryFilePool implements GitRefQuery {
         }
         return null;
       })
-      .onFailure().invoke(e -> errorHandler.deadEnd("Can't find 'REF' by refNameOrCommit: '" + refNameOrCommit + "'!", e));
+      .onFailure().invoke(e -> errorHandler.deadEnd(new SqlSchemaFailed("Can't find 'REF' by refNameOrCommit: '" + refNameOrCommit + "'!", "", e)));
   }
   @Override
   public Uni<Branch> get() {
@@ -73,7 +74,7 @@ public class RefQueryFilePool implements GitRefQuery {
         }
         return null;
       })
-      .onFailure().invoke(e -> errorHandler.deadEnd("Can't find 'REF'!", e));
+      .onFailure().invoke(e -> errorHandler.deadEnd(new SqlSchemaFailed("Can't find 'REF'!", "", e)));
   }
   @Override
   public Multi<Branch> findAll() {
@@ -83,7 +84,7 @@ public class RefQueryFilePool implements GitRefQuery {
       .execute()
       .onItem()
       .transformToMulti((Collection<Branch> rowset) -> Multi.createFrom().iterable(rowset))
-      .onFailure().invoke(e -> errorHandler.deadEnd("Can't find 'REF'!", e));
+      .onFailure().invoke(e -> errorHandler.deadEnd(new SqlSchemaFailed("Can't find 'REF'!", "", e)));
   }
   @Override
   public Uni<Branch> name(String name) {
@@ -100,6 +101,6 @@ public class RefQueryFilePool implements GitRefQuery {
         }
         return null;
       })
-      .onFailure().invoke(e -> errorHandler.deadEnd("Can't find 'REF' by name: '" + name + "'!", e));
+      .onFailure().invoke(e -> errorHandler.deadEnd(new SqlSchemaFailed("Can't find 'REF' by name: '" + name + "'!", "", e)));
   }
 }

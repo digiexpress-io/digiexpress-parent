@@ -81,7 +81,6 @@ public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
   OrgUserRoleSqlBuilder orgUserRoles();
   OrgGroupRoleSqlBuilder orgGroupRoles();
   
-  
   SqlBuilder withOptions(DbCollections options);
 
   interface RepoSqlBuilder {

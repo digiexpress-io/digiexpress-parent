@@ -23,6 +23,7 @@ package io.resys.thena.docdb.store.sql.support;
 import io.resys.thena.docdb.store.sql.SqlBuilder.Sql;
 import io.resys.thena.docdb.store.sql.SqlBuilder.SqlTuple;
 import io.resys.thena.docdb.store.sql.SqlBuilder.SqlTupleList;
+import io.resys.thena.docdb.support.ErrorHandler.SqlExecutionFailed;
 import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.sqlclient.Row;
 import io.vertx.mutiny.sqlclient.RowSet;
@@ -36,13 +37,6 @@ public class Execute {
 		private static final long serialVersionUID = -6960481243464191887L;
 	}
 
-	public static class SqlExecutionFailed extends RuntimeException {
-		private static final long serialVersionUID = -6960481243464191887L;
-		public SqlExecutionFailed(String message, Throwable cause) {
-			super(message, cause);
-		}
-	}
-	
   public static Uni<RowSet<Row>> apply(SqlClient client, Sql sql) {
   	final var failFrom = new SQLExecutionExceptionForTracingStack();
   	

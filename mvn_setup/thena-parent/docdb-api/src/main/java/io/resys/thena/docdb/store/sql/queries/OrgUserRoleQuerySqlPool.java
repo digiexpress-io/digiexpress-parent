@@ -9,6 +9,8 @@ import io.resys.thena.docdb.store.sql.SqlBuilder;
 import io.resys.thena.docdb.store.sql.SqlMapper;
 import io.resys.thena.docdb.store.sql.support.SqlClientWrapper;
 import io.resys.thena.docdb.support.ErrorHandler;
+import io.resys.thena.docdb.support.ErrorHandler.SqlFailed;
+import io.resys.thena.docdb.support.ErrorHandler.SqlTupleFailed;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.sqlclient.RowSet;
@@ -37,7 +39,7 @@ public class OrgUserRoleQuerySqlPool implements OrgQueries.UserRolesQuery {
         .execute()
         .onItem()
         .transformToMulti((RowSet<OrgUserRole> rowset) -> Multi.createFrom().iterable(rowset))
-        .onFailure().invoke(e -> errorHandler.deadEnd("Can't find 'USER_ROLE'!", e));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlFailed("Can't find 'USER_ROLE'!", sql, e)));
   }
   
   @Override
@@ -53,7 +55,7 @@ public class OrgUserRoleQuerySqlPool implements OrgQueries.UserRolesQuery {
         .execute(sql.getProps())
         .onItem()
         .transformToMulti((RowSet<OrgUserRole> rowset) -> Multi.createFrom().iterable(rowset))
-        .onFailure().invoke(e -> errorHandler.deadEnd("Can't find 'USER_ROLE'!", e));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'USER_ROLE'!", sql, e)));
   }
 
   @Override
@@ -76,7 +78,7 @@ public class OrgUserRoleQuerySqlPool implements OrgQueries.UserRolesQuery {
           return null;
         })
         .onFailure(e -> errorHandler.notFound(e)).recoverWithNull()
-        .onFailure().invoke(e -> errorHandler.deadEnd("Can't get 'USER_ROLE' by 'id': '" + id + "'!", e));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't get 'USER_ROLE' by 'id': '" + id + "'!", sql, e)));
   }
 
 	@Override
@@ -92,7 +94,7 @@ public class OrgUserRoleQuerySqlPool implements OrgQueries.UserRolesQuery {
         .execute(sql.getProps())
         .onItem()
         .transformToMulti((RowSet<OrgUserRole> rowset) -> Multi.createFrom().iterable(rowset))
-        .onFailure().invoke(e -> errorHandler.deadEnd("Can't find 'USER_ROLE'!", e));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'USER_ROLE'!", sql, e)));
 	}
 
 	@Override
@@ -108,6 +110,6 @@ public class OrgUserRoleQuerySqlPool implements OrgQueries.UserRolesQuery {
         .execute(sql.getProps())
         .onItem()
         .transformToMulti((RowSet<OrgUserRole> rowset) -> Multi.createFrom().iterable(rowset))
-        .onFailure().invoke(e -> errorHandler.deadEnd("Can't find 'USER_ROLE'!", e));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'USER_ROLE'!", sql, e)));
 	}
 }

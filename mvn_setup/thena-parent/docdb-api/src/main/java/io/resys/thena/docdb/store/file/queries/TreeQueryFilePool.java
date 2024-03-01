@@ -30,6 +30,7 @@ import io.resys.thena.docdb.store.file.FileBuilder;
 import io.resys.thena.docdb.store.file.tables.Table.FileMapper;
 import io.resys.thena.docdb.store.file.tables.Table.FilePool;
 import io.resys.thena.docdb.support.ErrorHandler;
+import io.resys.thena.docdb.support.ErrorHandler.SqlSchemaFailed;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -58,7 +59,7 @@ public class TreeQueryFilePool implements GitTreeQuery {
           }
           return (Tree) builder.build();
         })
-        .onFailure().invoke(e -> errorHandler.deadEnd("Can't find/load 'TREE': " + tree + "!", e));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlSchemaFailed("Can't find/load 'TREE': " + tree + "!", "", e)));
   }
   @Override
   public Multi<Tree> findAll() {
@@ -70,6 +71,6 @@ public class TreeQueryFilePool implements GitTreeQuery {
         .transformToMulti((Collection<Tree> rowset) -> Multi.createFrom().iterable(rowset))
         .onItem().transformToUni((Tree tree) -> getById(tree.getId()))
         .concatenate()
-        .onFailure().invoke(e -> errorHandler.deadEnd("Can't find 'TREE'!", e));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlSchemaFailed("Can't find 'TREE'!", "", e)));
   }
 }

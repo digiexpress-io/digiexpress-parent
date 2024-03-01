@@ -27,6 +27,8 @@ import io.resys.thena.docdb.store.sql.SqlBuilder;
 import io.resys.thena.docdb.store.sql.SqlMapper;
 import io.resys.thena.docdb.store.sql.support.SqlClientWrapper;
 import io.resys.thena.docdb.support.ErrorHandler;
+import io.resys.thena.docdb.support.ErrorHandler.SqlFailed;
+import io.resys.thena.docdb.support.ErrorHandler.SqlTupleFailed;
 import io.resys.thena.docdb.support.RepoAssert;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
@@ -64,7 +66,7 @@ public class GitRefQuerySqlPool implements GitRefQuery {
         }
         return null;
       })
-      .onFailure().invoke(e -> errorHandler.deadEnd("Can't find 'REF' by refNameOrCommit: '" + refNameOrCommit + "'!", e));
+      .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'REF' by refNameOrCommit: '" + refNameOrCommit + "'!", sql, e)));
   }
   @Override
   public Uni<Branch> get() {
@@ -86,7 +88,7 @@ public class GitRefQuerySqlPool implements GitRefQuery {
         }
         return null;
       })
-      .onFailure().invoke(e -> errorHandler.deadEnd("Can't find 'REF'!", e));
+      .onFailure().invoke(e -> errorHandler.deadEnd(new SqlFailed("Can't find 'REF'!", sql, e)));
   }
   @Override
   public Multi<Branch> findAll() {
@@ -101,7 +103,7 @@ public class GitRefQuerySqlPool implements GitRefQuery {
       .execute()
       .onItem()
       .transformToMulti((RowSet<Branch> rowset) -> Multi.createFrom().iterable(rowset))
-      .onFailure().invoke(e -> errorHandler.deadEnd("Can't find 'REF'!", e));
+      .onFailure().invoke(e -> errorHandler.deadEnd(new SqlFailed("Can't find 'REF'!", sql, e)));
   }
   @Override
   public Uni<Branch> name(String name) {
@@ -124,6 +126,6 @@ public class GitRefQuerySqlPool implements GitRefQuery {
         }
         return null;
       })
-      .onFailure().invoke(e -> errorHandler.deadEnd("Can't find 'REF' by name: '" + name + "'!", e));
+      .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'REF' by name: '" + name + "'!", sql, e)));
   }
 }

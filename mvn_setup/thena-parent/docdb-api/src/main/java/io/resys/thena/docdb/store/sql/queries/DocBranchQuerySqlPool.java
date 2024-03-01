@@ -19,6 +19,8 @@ import io.resys.thena.docdb.store.sql.SqlBuilder;
 import io.resys.thena.docdb.store.sql.SqlMapper;
 import io.resys.thena.docdb.store.sql.support.SqlClientWrapper;
 import io.resys.thena.docdb.support.ErrorHandler;
+import io.resys.thena.docdb.support.ErrorHandler.SqlFailed;
+import io.resys.thena.docdb.support.ErrorHandler.SqlTupleFailed;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.sqlclient.RowSet;
@@ -54,7 +56,7 @@ public class DocBranchQuerySqlPool implements DocBranchQuery {
           return null;
         })
         .onFailure(e -> errorHandler.notFound(e)).recoverWithNull()
-        .onFailure().invoke(e -> errorHandler.deadEnd("Can't get 'DOC_BRANCH' by 'id': '" + id + "'!", e));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't get 'DOC_BRANCH' by 'id': '" + id + "'!", sql, e)));
   }
   @Override
   public Multi<DocBranch> findAll() {
@@ -69,7 +71,7 @@ public class DocBranchQuerySqlPool implements DocBranchQuery {
         .execute()
         .onItem()
         .transformToMulti((RowSet<DocBranch> rowset) -> Multi.createFrom().iterable(rowset))
-        .onFailure().invoke(e -> errorHandler.deadEnd("Can't find 'DOC_BRANCH'!", e));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlFailed("Can't find 'DOC_BRANCH'!", sql, e)));
   }
   
   @Override
@@ -93,7 +95,7 @@ public class DocBranchQuerySqlPool implements DocBranchQuery {
           }
           return null;
         })
-        .onFailure().invoke(e -> errorHandler.deadEnd("Can't lock branch: '" + crit.getDocId() + "/" + crit.getBranchName() + "'!", e));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't lock branch: '" + crit.getDocId() + "/" + crit.getBranchName() + "'!", sql, e)));
   }
   @Override
   public Uni<DocLock> getDocLock(DocLockCriteria crit) {
@@ -126,7 +128,7 @@ public class DocBranchQuerySqlPool implements DocBranchQuery {
           final DocLock lock = builder.build();
           return lock;
         })
-        .onFailure().invoke(e -> errorHandler.deadEnd("Can't lock branches for doc: '" + crit.getDocId() + "'!", e));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't lock branches for doc: '" + crit.getDocId() + "'!", sql, e)));
   }
   @Override
   public Uni<List<DocBranchLock>> getBranchLocks(List<DocBranchLockCriteria> crit) {
@@ -153,7 +155,7 @@ public class DocBranchQuerySqlPool implements DocBranchQuery {
         })
         .onFailure().invoke(e -> {
           final var source = crit.stream().map(i -> i.getDocId() + "/" + i.getBranchName()).toList();
-          errorHandler.deadEnd("Can't lock branch for docs: '" + String.join(", ", source) + "'!", e);
+          errorHandler.deadEnd(new SqlTupleFailed("Can't lock branch for docs: '" + String.join(", ", source) + "'!", sql, e));
         });
   }
   
@@ -192,7 +194,7 @@ public class DocBranchQuerySqlPool implements DocBranchQuery {
         })
         .onFailure().invoke(e -> {
           final var source = crit.stream().map(i -> i.getDocId()).toList();
-          errorHandler.deadEnd("Can't lock branch for docs: '" + String.join(", ", source) + "'!", e);
+          errorHandler.deadEnd(new SqlTupleFailed("Can't lock branch for docs: '" + String.join(", ", source) + "'!", sql, e));
         });
   }
 }

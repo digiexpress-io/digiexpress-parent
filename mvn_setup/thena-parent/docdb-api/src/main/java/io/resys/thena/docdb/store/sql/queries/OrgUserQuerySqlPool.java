@@ -3,12 +3,15 @@ package io.resys.thena.docdb.store.sql.queries;
 import java.util.List;
 
 import io.resys.thena.docdb.api.LogConstants;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroupAndRoleFlattened;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUser;
 import io.resys.thena.docdb.models.org.OrgQueries;
 import io.resys.thena.docdb.store.sql.SqlBuilder;
 import io.resys.thena.docdb.store.sql.SqlMapper;
 import io.resys.thena.docdb.store.sql.support.SqlClientWrapper;
 import io.resys.thena.docdb.support.ErrorHandler;
+import io.resys.thena.docdb.support.ErrorHandler.SqlFailed;
+import io.resys.thena.docdb.support.ErrorHandler.SqlTupleFailed;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.sqlclient.RowSet;
@@ -37,7 +40,7 @@ public class OrgUserQuerySqlPool implements OrgQueries.UserQuery {
         .execute()
         .onItem()
         .transformToMulti((RowSet<OrgUser> rowset) -> Multi.createFrom().iterable(rowset))
-        .onFailure().invoke(e -> errorHandler.deadEnd("Can't find 'USER'!", e));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlFailed("Can't find 'USER'!", sql, e)));
   }
   
   @Override
@@ -53,7 +56,7 @@ public class OrgUserQuerySqlPool implements OrgQueries.UserQuery {
         .execute(sql.getProps())
         .onItem()
         .transformToMulti((RowSet<OrgUser> rowset) -> Multi.createFrom().iterable(rowset))
-        .onFailure().invoke(e -> errorHandler.deadEnd("Can't find 'USER'!", e));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'USER'!", sql, e)));
   }
 
 
@@ -77,6 +80,23 @@ public class OrgUserQuerySqlPool implements OrgQueries.UserQuery {
           return null;
         })
         .onFailure(e -> errorHandler.notFound(e)).recoverWithNull()
-        .onFailure().invoke(e -> errorHandler.deadEnd("Can't get 'USER' by 'id': '" + id + "'!", e));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't get 'USER' by 'id': '" + id + "'!", sql, e)));
   }
+  
+	@Override
+	public Uni<List<OrgGroupAndRoleFlattened>> findAllGroupsAndRolesByUserId(String userId) {
+    final var sql = sqlBuilder.orgUsers().findAllUserGroupsAndRolesByUserId(userId);
+    if(log.isDebugEnabled()) {
+      log.debug("User findAllUserGroupsAndRolesByUserId query, with props: {} \r\n{}", 
+      		sql.getProps().deepToString(),
+          sql.getValue());
+    }
+    return wrapper.getClient().preparedQuery(sql.getValue())
+        .mapping(row -> sqlMapper.orgGroupAndRoleFlattened(row))
+        .execute(sql.getProps())
+        .onItem()
+        .transformToMulti((RowSet<OrgGroupAndRoleFlattened> rowset) -> Multi.createFrom().iterable(rowset))
+        .collect().asList()
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'USER_GROUPS_ROLES'!", sql, e)));
+	}
 }

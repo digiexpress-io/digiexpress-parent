@@ -1,27 +1,6 @@
 package io.resys.thena.docdb.store.sql.queries;
 
 import io.resys.thena.docdb.api.LogConstants;
-
-/*-
- * #%L
- * thena-docdb-pgsql
- * %%
- * Copyright (C) 2021 Copyright 2021 ReSys OÜ
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
- */
-
 import io.resys.thena.docdb.api.models.ImmutableTree;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Tree;
 import io.resys.thena.docdb.api.models.ThenaGitObject.TreeValue;
@@ -30,6 +9,8 @@ import io.resys.thena.docdb.store.sql.SqlBuilder;
 import io.resys.thena.docdb.store.sql.SqlMapper;
 import io.resys.thena.docdb.store.sql.support.SqlClientWrapper;
 import io.resys.thena.docdb.support.ErrorHandler;
+import io.resys.thena.docdb.support.ErrorHandler.SqlFailed;
+import io.resys.thena.docdb.support.ErrorHandler.SqlTupleFailed;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.sqlclient.RowSet;
@@ -66,7 +47,7 @@ public class GitTreeQuerySqlPool implements GitTreeQuery {
           }
           return (Tree) builder.build();
         })
-        .onFailure().invoke(e -> errorHandler.deadEnd("Can't find/load 'TREE': " + tree + "!", e));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find/load 'TREE': " + tree + "!", sql, e)));
   }
   @Override
   public Multi<Tree> findAll() {
@@ -84,6 +65,6 @@ public class GitTreeQuerySqlPool implements GitTreeQuery {
         .transformToMulti((RowSet<Tree> rowset) -> Multi.createFrom().iterable(rowset))
         .onItem().transformToUni((Tree tree) -> getById(tree.getId()))
         .concatenate()
-        .onFailure().invoke(e -> errorHandler.deadEnd("Can't find 'TREE'!", e));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlFailed("Can't find 'TREE'!", sql, e)));
   }
 }

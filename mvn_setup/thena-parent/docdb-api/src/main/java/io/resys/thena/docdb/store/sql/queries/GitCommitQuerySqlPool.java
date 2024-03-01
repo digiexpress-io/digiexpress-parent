@@ -38,6 +38,8 @@ import io.resys.thena.docdb.store.sql.SqlBuilder;
 import io.resys.thena.docdb.store.sql.SqlMapper;
 import io.resys.thena.docdb.store.sql.support.SqlClientWrapper;
 import io.resys.thena.docdb.support.ErrorHandler;
+import io.resys.thena.docdb.support.ErrorHandler.SqlFailed;
+import io.resys.thena.docdb.support.ErrorHandler.SqlTupleFailed;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.sqlclient.RowSet;
@@ -73,7 +75,7 @@ public class GitCommitQuerySqlPool implements GitCommitQuery {
           return null;
         })
         .onFailure(e -> errorHandler.notFound(e)).recoverWithNull()
-        .onFailure().invoke(e -> errorHandler.deadEnd("Can't get 'COMMIT' by 'id': '" + commit + "'!", e));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't get 'COMMIT' by 'id': '" + commit + "'!", sql, e)));
   }
   @Override
   public Multi<Commit> findAll() {
@@ -88,7 +90,7 @@ public class GitCommitQuerySqlPool implements GitCommitQuery {
         .execute()
         .onItem()
         .transformToMulti((RowSet<Commit> rowset) -> Multi.createFrom().iterable(rowset))
-        .onFailure().invoke(e -> errorHandler.deadEnd("Can't find 'COMMIT'!", e));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlFailed("Can't find 'COMMIT'!", sql, e)));
   }
   @Override
   public Uni<CommitLock> getLock(LockCriteria crit) {
@@ -150,6 +152,6 @@ public class GitCommitQuerySqlPool implements GitCommitQuery {
           final CommitLock lock = builder.build();
           return lock;
         })
-        .onFailure().invoke(e -> errorHandler.deadEnd("Can't find 'COMMIT LOCK ON REF' by head/commit: '" + crit.getHeadName() + "/" + crit.getCommitId() + "'!", e));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'COMMIT LOCK ON REF' by head/commit: '" + crit.getHeadName() + "/" + crit.getCommitId() + "'!", sql, e)));
   }
 }

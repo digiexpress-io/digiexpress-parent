@@ -36,6 +36,7 @@ import io.resys.thena.docdb.store.file.tables.Table.FileStatement;
 import io.resys.thena.docdb.store.file.tables.Table.FileTuple;
 import io.resys.thena.docdb.store.file.tables.Table.FileTupleList;
 import io.resys.thena.docdb.support.ErrorHandler;
+import io.resys.thena.docdb.support.ErrorHandler.SqlSchemaFailed;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.groups.UniJoin.JoinAllStrategy;
@@ -68,7 +69,7 @@ public class RepoBuilderFilePool implements RepoBuilder {
         .onFailure().invoke(e -> {
           
           
-          errorHandler.deadEnd("Can't find 'REPOS' by 'name'!", e);
+          errorHandler.deadEnd(new SqlSchemaFailed("Can't find 'REPOS' by 'name'!", "", e));
         });
   }
 
@@ -87,7 +88,7 @@ public class RepoBuilderFilePool implements RepoBuilder {
           return null;
         })
         .onFailure(e -> errorHandler.notFound(e)).recoverWithNull()
-        .onFailure().invoke(e -> errorHandler.deadEnd("Can't find 'REPOS' by 'name' or 'id'!", e));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlSchemaFailed("Can't find 'REPOS' by 'name' or 'id'!", "", e)));
   }
   
   @Override
@@ -112,12 +113,12 @@ public class RepoBuilderFilePool implements RepoBuilder {
     
     final Uni<Void> create = client.preparedQuery(sqlBuilder.repo().create()).execute()
         .onItem().transformToUni(data -> Uni.createFrom().voidItem())
-        .onFailure().invoke(e -> errorHandler.deadEnd("Can't create table 'REPOS'!", e));;
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlSchemaFailed("Can't create table 'REPOS'!", "", e)));
     
     
     final Uni<Void> insert = client.preparedQuery(repoInsert).execute()
         .onItem().transformToUni(rowSet -> Uni.createFrom().voidItem())
-        .onFailure().invoke(e -> errorHandler.deadEnd("Can't insert into 'REPO': '" + repoInsert.getValue() + "'!", e));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlSchemaFailed("Can't insert into 'REPO': '" + repoInsert.getValue() + "'!", "", e)));
     
     
     final List<Uni<Void>> commands = new ArrayList<Uni<Void>>();
@@ -136,7 +137,7 @@ public class RepoBuilderFilePool implements RepoBuilder {
       
       final Uni<Void> nested = query.execute()
           .onItem().transformToUni(rowSet -> Uni.createFrom().voidItem())
-          .onFailure().invoke(e -> errorHandler.deadEnd("Can't create tables: " + tablesCreate, e));
+          .onFailure().invoke(e -> errorHandler.deadEnd(new SqlSchemaFailed("Can't create tables: " + tablesCreate, "", e)));
       commands.add(nested);
     }    
     
@@ -154,7 +155,7 @@ public class RepoBuilderFilePool implements RepoBuilder {
     .onItem()
     .transformToMulti((Collection<Repo> rowset) -> Multi.createFrom().iterable(rowset))
     .onFailure(e -> errorHandler.notFound(e)).recoverWithCompletion()
-    .onFailure().invoke(e -> errorHandler.deadEnd("Can't find 'REPOS'!", e));
+    .onFailure().invoke(e -> errorHandler.deadEnd(new SqlSchemaFailed("Can't find 'REPOS'!", "", e)));
   }
 
   @Override

@@ -113,49 +113,94 @@ public class OrgUserSqlBuilderImpl implements OrgUserSqlBuilder {
         .build();
   }
 
-  /*
-WITH RECURSIVE generation AS (
-    SELECT id, parent, 0 AS order_no
-    FROM nested_10_commits
-    WHERE parent IS NULL
-UNION ALL
-    SELECT child.id, child.parent, order_no+1 AS order_no
-    FROM nested_10_commits as child
-    JOIN generation g ON g.id = child.parent
-)
-   */
+/*
+-- basic recursive query from child to parent
+SELECT * FROM org_group;
+
+WITH RECURSIVE child AS (
+  SELECT 
+    id, 
+    group_name, 
+    parent_id
+  FROM org_group
+  WHERE id = 9 
+
+  UNION 
+
+  SELECT 
+    parent.id, 
+    parent.group_name, 
+    parent.parent_id 
+  FROM org_group as parent 
+  INNER JOIN child on (parent.id = child.parent_id)
+) 
+SELECT * FROM child;
+*/
   
 	@Override
 	public SqlTuple findAllUserGroupsAndRolesByUserId(String userId) {
     final var sql = new SqlStatement()
-        .append("WITH RECURSIVE generation AS (").ln()
+        .append("WITH RECURSIVE child AS (").ln()
         
-        // select root object
-        .append("  SELECT id, parent_id, 0 AS order_no").ln()
+        // starting point
+        .append("  SELECT id, parent_id").ln()
         .append("  FROM ").append(options.getOrgGroups()).ln()
-        .append("  WHERE parent_id IS NULL ").ln()
+        .append("  WHERE id in( ").ln()
+        .append("    SELECT group_id ")
+        .append("    FROM ").append(options.getOrgUserMemberships()).ln()
+        .append("    WHERE user_id = $1")
+        .append("  )")
         
         .append("  UNION ALL ").ln()
         
-        // select children
-        .append("  SELECT child.id, child.parent_id, order_no+1 AS order_no").ln()
-        .append("  FROM ").append(options.getOrgGroups()).append(" as child").ln()
-        .append("  JOIN generation g ON g.id = child.parent_id ").ln()
+        // recursion from bottom to up, join parent to each child until the tip
+        .append("  SELECT parent.id, parent.parent_id").ln()
+        .append("  FROM ").append(options.getOrgGroups()).append(" as parent").ln()
+        .append("  INNER JOIN child on (parent.id = child.parent_id) ").ln()
         
     		.append(")").ln()
     		
-        .append("SELECT group_name, role_name, actor_status").ln()    		
-    		
+        .append("SELECT ").ln()
+        .append("  groups.id 				as group_id, ").ln()
+        .append("  groups.parent_id as group_parent_id, ").ln()
+        
+        .append("  users.id as membership_id, ").ln()
+        
+        .append("  group_status.id           as group_status_id, ").ln()
+        .append("  group_status.actor_status as group_status, ").ln()
+        .append("  group_status.user_id      as group_status_user_id, ").ln()
+        .append("  group_status.group_id     as group_status_group_id, ").ln()
+        .append("  group_status.role_id      as group_status_role_id, ").ln()
+
+        .append("  user_status.id           as user_status_id, ").ln()
+        .append("  user_status.actor_status as user_status, ").ln()
+        //.append("  user_status.user_id      as user_status_user_id, ").ln()
+        .append("  user_status.group_id     as user_status_group_id, ").ln()
+        .append("  user_status.role_id      as user_status_role_id ").ln()
+        
+        .append("FROM ").ln()
+        .append("  (SELECT DISTINCT id, parent_id from child) as groups").ln()
+        
+        .append("  INNER JOIN ").append(options.getOrgUserMemberships()).append(" as users").ln()        
+        .append("  ON(users.group_id = groups.id) ").ln()
+        
+        .append("  LEFT JOIN ").append(options.getOrgActorStatus()).append(" as group_status").ln()
+        .append("  ON(group_status.group_id = groups.id) ").ln()
+        
+        .append("  LEFT JOIN ").append(options.getOrgActorStatus()).append(" as user_status").ln()
+        .append("  ON(user_status.user_id = users.user_id) ").ln()
+        
+        .append("WHERE ").ln()
+        .append("  users.user_id = $1").ln()
+        .append("  AND user_status.user_id = $1").ln()
+        .append("  AND user_status.group_id IS NULL").ln()
     		;
     
     
     
-    return null;
-    		/*
-    		ImmutableSqlTuple.builder()
+    return ImmutableSqlTuple.builder()
         .value(sql.build())
-        .props(Tuple.from(userId))
+        .props(Tuple.of(userId))
         .build();
-        */
 	}
 }

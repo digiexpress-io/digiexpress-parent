@@ -31,11 +31,7 @@ public interface OrgQueries {
     Multi<OrgUserRole> findAllByUserId(String id);
     Multi<OrgUserRole> findAllByRoleId(String id);
   }
-  
-  interface GroupAndRoleFlattenedQuery {
-    Multi<OrgGroupAndRoleFlattened> findAllByUserId(String userId);
-  }
-  
+    
   interface GroupRolesQuery {
     Uni<OrgGroupRole> getById(String id);
     Multi<OrgGroupRole> findAll();
@@ -63,6 +59,7 @@ public interface OrgQueries {
     Multi<OrgUser> findAll();
     Multi<OrgUser> findAll(List<String> id);
     Uni<OrgUser> getById(String id); //user.id or user.email or user.external_id 
+    Uni<List<OrgGroupAndRoleFlattened>> findAllGroupsAndRolesByUserId(String userId);
   }
   
   interface RoleQuery {    

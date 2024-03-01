@@ -35,6 +35,8 @@ import io.resys.thena.docdb.store.sql.SqlMapper;
 import io.resys.thena.docdb.store.sql.support.Execute;
 import io.resys.thena.docdb.store.sql.support.SqlClientWrapper;
 import io.resys.thena.docdb.support.ErrorHandler;
+import io.resys.thena.docdb.support.ErrorHandler.SqlTupleFailed;
+import io.resys.thena.docdb.support.ErrorHandler.SqlTupleListFailed;
 import io.resys.thena.docdb.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -56,7 +58,7 @@ public class GitDbInsertsSqlPool implements GitInserts {
         .onItem().transform(inserted -> (InsertResult) ImmutableInsertResult.builder().duplicate(false).build())
         .onFailure(e -> errorHandler.duplicate(e))
         .recoverWithItem(e -> ImmutableInsertResult.builder().duplicate(true).build())
-        .onFailure().invoke(e -> errorHandler.deadEnd("Can't insert into 'TAG': '" + tagInsert.getValue() + "'!", e));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't insert into 'TAG'!", tagInsert, e)));
   }
 
   @Override
@@ -93,7 +95,7 @@ public class GitDbInsertsSqlPool implements GitInserts {
                     .toString())
                 .build())
             .build())
-        .onFailure().invoke(e -> errorHandler.deadEnd("Can't insert into 'BLOB': '" + blobsInsert.getValue() + "'!", e));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't insert into 'BLOB'!", blobsInsert, e)));
   }
 
   public Uni<UpsertResult> ref(Branch ref, Commit commit) {
@@ -183,7 +185,7 @@ public class GitDbInsertsSqlPool implements GitInserts {
                   .toString())
               .build())
           .build())
-        .onFailure().invoke(e -> errorHandler.deadEnd("Can't insert into 'REF': '" + refsInsert.getValue() + "'!", e));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't insert into 'REF'!", refsInsert, e)));
   }
 
   @Override
@@ -224,13 +226,13 @@ public class GitDbInsertsSqlPool implements GitInserts {
                 .toString())
             .build())
         .build())
-    .onFailure().invoke(e -> errorHandler.deadEnd("Can't insert into "
+    .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleListFailed("Can't insert into "
         +"\r\n"
         + "'TREE': " + treeInsert.getValue() 
         + "\r\n"
         + "  and/or"
         + "\r\n "
-        + "'TREE_VALUE' : '" + treeValueInsert.getValue() + "'!", e));
+        + "'TREE_VALUE'!", treeValueInsert, e)));
   }
   
   @Override
@@ -266,7 +268,7 @@ public class GitDbInsertsSqlPool implements GitInserts {
                     .toString())
                 .build())
             .build())
-        .onFailure().invoke(e -> errorHandler.deadEnd("Can't insert into 'COMMIT': '" + commitsInsert.getValue() + "'!", e));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't insert into 'COMMIT'!", commitsInsert, e)));
   }
  
   

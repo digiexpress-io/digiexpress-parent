@@ -29,6 +29,7 @@ import io.resys.thena.docdb.api.actions.PullActions.MatchCriteria;
 import io.resys.thena.docdb.api.models.ThenaGitObject.BlobHistory;
 import io.resys.thena.docdb.models.git.GitQueries.GitBlobHistoryQuery;
 import io.resys.thena.docdb.store.sql.factories.GitDbQueriesSqlImpl.ClientQuerySqlContext;
+import io.resys.thena.docdb.support.ErrorHandler.SqlTupleFailed;
 import io.smallrye.mutiny.Multi;
 import io.vertx.mutiny.sqlclient.RowSet;
 import lombok.RequiredArgsConstructor;
@@ -64,9 +65,9 @@ public class GitBlobHistoryQuerySqlPool implements GitBlobHistoryQuery {
         .onItem()
         .transformToMulti((RowSet<BlobHistory> rowset) -> Multi.createFrom().iterable(rowset))
         .onFailure().invoke(e -> 
-          context.getErrorHandler().deadEnd(new StringBuilder("Can't find 'BLOB'-s by 'name': '{}',\r\nsql props: {},\r\nsql: \r\n {}").toString(), e, name,  
-              sql.getProps().deepToString(), sql.getValue())
-        );
+          context.getErrorHandler().deadEnd(
+          		new SqlTupleFailed("Can't find 'BLOB'-s by 'name'", sql, e)
+        ));
   }
   
 }

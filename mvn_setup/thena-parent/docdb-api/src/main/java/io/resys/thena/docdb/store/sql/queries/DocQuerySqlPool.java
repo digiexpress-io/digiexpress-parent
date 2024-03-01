@@ -9,6 +9,8 @@ import io.resys.thena.docdb.store.sql.SqlBuilder;
 import io.resys.thena.docdb.store.sql.SqlMapper;
 import io.resys.thena.docdb.store.sql.support.SqlClientWrapper;
 import io.resys.thena.docdb.support.ErrorHandler;
+import io.resys.thena.docdb.support.ErrorHandler.SqlFailed;
+import io.resys.thena.docdb.support.ErrorHandler.SqlTupleFailed;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.sqlclient.RowSet;
@@ -44,7 +46,7 @@ public class DocQuerySqlPool implements DocQuery {
           return null;
         })
         .onFailure(e -> errorHandler.notFound(e)).recoverWithNull()
-        .onFailure().invoke(e -> errorHandler.deadEnd("Can't get 'DOC' by 'id': '" + id + "'!", e));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't get 'DOC' by 'id': '" + id + "'!", sql, e)));
   }
   @Override
   public Multi<Doc> findAll() {
@@ -59,7 +61,7 @@ public class DocQuerySqlPool implements DocQuery {
         .execute()
         .onItem()
         .transformToMulti((RowSet<Doc> rowset) -> Multi.createFrom().iterable(rowset))
-        .onFailure().invoke(e -> errorHandler.deadEnd("Can't find 'DOC'!", e));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlFailed("Can't find 'DOC'!", sql, e)));
   }
   @Override
   public Multi<DocFlatted> findAllFlatted() {
@@ -74,7 +76,7 @@ public class DocQuerySqlPool implements DocQuery {
         .execute()
         .onItem()
         .transformToMulti((RowSet<DocFlatted> rowset) -> Multi.createFrom().iterable(rowset))
-        .onFailure().invoke(e -> errorHandler.deadEnd("Can't find 'DOC FLATTED'!", e));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlFailed("Can't find 'DOC FLATTED'!", sql, e)));
   }
   @Override
   public Multi<DocFlatted> findAllFlatted(FlattedCriteria criteria) {
@@ -89,6 +91,6 @@ public class DocQuerySqlPool implements DocQuery {
         .execute(sql.getProps())
         .onItem()
         .transformToMulti((RowSet<DocFlatted> rowset) -> Multi.createFrom().iterable(rowset))
-        .onFailure().invoke(e -> errorHandler.deadEnd("Can't find 'DOC FLATTED' by any id!", e));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'DOC FLATTED' by any id!", sql, e)));
   }
 }

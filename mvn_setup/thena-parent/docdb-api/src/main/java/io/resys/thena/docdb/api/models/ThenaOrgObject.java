@@ -18,12 +18,21 @@ public interface ThenaOrgObject {
 
   @Value.Immutable
   interface OrgGroupAndRoleFlattened extends ThenaOrgObject {
-    String getId();
-    String getParentGroupName();
-    String getGroupName(); 
-    String getRoleName();
-    OrgActorStatusType getRoleStatus();
-    OrgActorStatusType getGroupStatus();
+    
+  	String getGroupId();
+  	@Nullable String getGroupParentId();
+  	String getMembershipId();
+  	
+  	@Nullable String getGroupStatusId();
+  	@Nullable OrgActorStatusType getGroupStatus();
+  	@Nullable String getGroupStatusUserId();
+  	@Nullable String getGroupStatusGroupId();
+  	@Nullable String getGroupStatusRoleId();
+  	
+  	@Nullable String getUserStatusId();
+  	@Nullable OrgActorStatusType getUserStatus();
+  	@Nullable String getUserStatusGroupId();
+  	@Nullable String getUserStatusRoleId();
   }
   
   @Value.Immutable
