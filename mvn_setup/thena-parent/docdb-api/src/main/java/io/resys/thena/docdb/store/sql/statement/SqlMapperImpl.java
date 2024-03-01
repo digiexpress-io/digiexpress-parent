@@ -369,6 +369,7 @@ public class SqlMapperImpl implements SqlMapper {
 		
 		return ImmutableOrgGroupAndRoleFlattened.builder()
 		  	.groupId(row.getString("group_id"))
+		  	.userId(row.getString("user_id"))
 		  	.groupParentId(row.getString("group_parent_id"))
 		  	.membershipId(row.getString("membership_id"))
 		  	

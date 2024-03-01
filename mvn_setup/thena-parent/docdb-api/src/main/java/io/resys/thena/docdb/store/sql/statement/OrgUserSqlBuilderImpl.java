@@ -146,7 +146,7 @@ SELECT * FROM child;
         .append("  SELECT id, parent_id").ln()
         .append("  FROM ").append(options.getOrgGroups()).ln()
         .append("  WHERE id in( ").ln()
-        .append("    SELECT group_id ")
+        .append("    SELECT DISTINCT group_id ")
         .append("    FROM ").append(options.getOrgUserMemberships()).ln()
         .append("    WHERE user_id = $1")
         .append("  )")
@@ -165,6 +165,7 @@ SELECT * FROM child;
         .append("  groups.parent_id as group_parent_id, ").ln()
         
         .append("  users.id as membership_id, ").ln()
+        .append("  users.user_id as user_id, ").ln()
         
         .append("  group_status.id           as group_status_id, ").ln()
         .append("  group_status.actor_status as group_status, ").ln()
@@ -190,10 +191,9 @@ SELECT * FROM child;
         .append("  LEFT JOIN ").append(options.getOrgActorStatus()).append(" as user_status").ln()
         .append("  ON(user_status.user_id = users.user_id) ").ln()
         
-        .append("WHERE ").ln()
-        .append("  users.user_id = $1").ln()
-        .append("  AND user_status.user_id = $1").ln()
-        .append("  AND user_status.group_id IS NULL").ln()
+        .append("WHERE user_status.group_id IS NULL ").ln()
+        .append("  AND users.user_id = $1").ln()
+        //.append("  AND user_status.user_id = $1").ln()
     		;
     
     

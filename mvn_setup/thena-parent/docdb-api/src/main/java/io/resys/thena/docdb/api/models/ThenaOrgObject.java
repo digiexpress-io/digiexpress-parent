@@ -22,6 +22,7 @@ public interface ThenaOrgObject {
   	String getGroupId();
   	@Nullable String getGroupParentId();
   	String getMembershipId();
+  	String getUserId();
   	
   	@Nullable String getGroupStatusId();
   	@Nullable OrgActorStatusType getGroupStatus();
