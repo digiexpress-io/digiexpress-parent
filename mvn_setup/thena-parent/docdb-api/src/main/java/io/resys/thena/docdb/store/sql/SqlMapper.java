@@ -38,7 +38,9 @@ import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroupAndRoleFlattened;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroupRole;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRoleFlattened;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUser;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserFlattened;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserMembership;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserRole;
 import io.resys.thena.docdb.spi.DataMapper;
@@ -70,6 +72,9 @@ public interface SqlMapper extends DataMapper<Row>{
   OrgGroupRole orgGroupRole(Row row);
   OrgUserMembership orgUserMemberships(Row row);
   OrgGroupAndRoleFlattened orgGroupAndRoleFlattened(Row row);
+  OrgRoleFlattened orgOrgRoleFlattened(Row row);
+  OrgUserFlattened orgUserFlattened(Row row);
+  
   
   JsonObject jsonObject(Row row, String columnName);
 }

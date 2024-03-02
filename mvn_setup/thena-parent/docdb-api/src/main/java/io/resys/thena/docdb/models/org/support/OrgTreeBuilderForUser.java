@@ -12,14 +12,18 @@ import org.barfuin.texttree.api.style.TreeStyles;
 
 import io.resys.thena.docdb.api.models.ImmutableOrgUserGroupsAndRolesWithLog;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroupAndRoleFlattened;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRoleFlattened;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserFlattened;
 import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgUserGroupsAndRolesWithLog;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class OrgTreeBuilderForUser {
 
-  private final Map<String, OrgGroupAndRoleFlattened> byGroupId = new HashMap<>();
-  private final Map<String, List<OrgGroupAndRoleFlattened>> byParentGroupId = new HashMap<>();
+  private final Map<String, OrgGroupAndRoleFlattened> groupsById = new HashMap<>();
+  private final Map<String, List<OrgGroupAndRoleFlattened>> groupsByParentId = new HashMap<>();
+  private final Map<String, OrgRoleFlattened> rolesById = new HashMap<>();
+  
   
   private final Map<String, DefaultNode> membershipNodes = new HashMap<>();
   private final Map<String, DefaultNode> groupNodes = new HashMap<>();
@@ -27,20 +31,27 @@ public class OrgTreeBuilderForUser {
   
   
   private final List<OrgGroupAndRoleFlattened> roots = new ArrayList<>();
+  private final OrgUserFlattened user;
   private final ImmutableOrgUserGroupsAndRolesWithLog.Builder result = ImmutableOrgUserGroupsAndRolesWithLog.builder();
   
   
-  public OrgTreeBuilderForUser(List<OrgGroupAndRoleFlattened> groupData) {
+  public OrgTreeBuilderForUser(OrgUserFlattened user, List<OrgGroupAndRoleFlattened> groupData, List<OrgRoleFlattened> roleData) {
+    this.user = user;
+    
     for(final var entry : groupData) {
-      byGroupId.put(entry.getGroupId(), entry);
+      groupsById.put(entry.getGroupId(), entry);
       if(entry.getGroupParentId() == null) {
         roots.add(entry);
         continue;
       }
-      if(!byParentGroupId.containsKey(entry.getGroupParentId())) {
-        byParentGroupId.put(entry.getGroupParentId(), new ArrayList<>());
+      if(!groupsByParentId.containsKey(entry.getGroupParentId())) {
+        groupsByParentId.put(entry.getGroupParentId(), new ArrayList<>());
       }
-      byParentGroupId.get(entry.getGroupParentId()).add(entry);
+      groupsByParentId.get(entry.getGroupParentId()).add(entry);
+    }
+    
+    for(final var entry : roleData) {
+      rolesById.put(entry.getRoleId(), entry);
     }
   }
   
@@ -55,7 +66,7 @@ public class OrgTreeBuilderForUser {
     if(groupNodes.containsKey(node.getGroupId())) {
       groupNode = groupNodes.get(node.getGroupId());
     } else {
-      groupNode = new DefaultNode(node.getGroupName());       
+      groupNode = new DefaultNode(node.getGroupName());
       groupNodes.put(node.getGroupId(), groupNode);
       
       // connect to parent
@@ -74,7 +85,7 @@ public class OrgTreeBuilderForUser {
         groupNode.addChild(rolesNode);
         groupRoleNodes.put(node.getGroupId(), rolesNode);        
       }
-      rolesNode.addChild(new DefaultNode(node.getRoleId()));
+      rolesNode.addChild(new DefaultNode(node.getRoleName()));
     }
     
     // create membership
@@ -86,7 +97,7 @@ public class OrgTreeBuilderForUser {
   }
   
   private void visitChildren(OrgGroupAndRoleFlattened entry) {
-    final var children = byParentGroupId.get(entry.getGroupId());
+    final var children = groupsByParentId.get(entry.getGroupId());
     if(children == null) {
       return;
     }
@@ -98,19 +109,48 @@ public class OrgTreeBuilderForUser {
   public OrgUserGroupsAndRolesWithLog build() {
     for(final var root : this.roots) {
       visitGroup(root);
-      printTree(root);
     }
+    generateTree();
+    
     return null;
   }
-  
-  private void printTree(OrgGroupAndRoleFlattened entry) {
+
+  private String generateTree() {
+    final var userNode = new DefaultNode(user.getUserName());
+    for(final var root : this.roots) {
+      userNode.addChild(groupNodes.get(root.getGroupId()));
+    }
+
+    final var userRoles = new DefaultNode("roles");
+    userNode.addChild(userRoles);
+    
+    final var directRoles = new DefaultNode("direct");
+    final var inheritedRoles = new DefaultNode("inherited");
+    userRoles.addChild(directRoles);
+    userRoles.addChild(inheritedRoles);
+    
+    
+    for(final var role : rolesById.values()) {
+      directRoles.addChild(new DefaultNode(role.getRoleName()));
+    }
+    
+    for(final var role : groupsById.values()) {
+      if(role.getRoleName() != null) {
+        inheritedRoles.addChild(new DefaultNode(role.getRoleName()));
+      }
+    }
+    
+
     final var options = new TreeOptions();
     options.setStyle(TreeStyles.UNICODE_ROUNDED);
     options.setEnableDefaultColoring(true);
-    final var rendered = TextTree.newInstance(options).render(groupNodes.get(entry.getGroupId()));
-    log.error(System.lineSeparator() +
-        "##############################" + System.lineSeparator() +
-        rendered
-        );
+    final var tree = TextTree.newInstance(options).render(userNode);
+
+    log.error(
+      System.lineSeparator() +
+      "##############################" + System.lineSeparator() +
+      tree
+    );  
+    return tree;
   }
 }

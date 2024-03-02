@@ -3,6 +3,8 @@ package io.resys.thena.docdb.test;
 import java.io.Serializable;
 import java.time.Duration;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import org.immutables.value.Value;
 import org.junit.jupiter.api.Assertions;
@@ -43,9 +45,10 @@ public class HierarchicalOrgTest extends DbTestTemplate {
     log.debug("created repo {}", repo);
     Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
 
-    final var jailer1 = createRole(repo, "failer-1");
-    final var jailer2 = createRole(repo, "failer-2");
-    final var jailer3 = createRole(repo, "failer-3");
+    final var jailer1 = createRole(repo, "jailer-1");
+    final var jailer2 = createRole(repo, "jailer-2");
+    final var jailer3 = createRole(repo, "jailer-3");
+    final var jailer4 = createRole(repo, "jailer-main");
         
     final var root1 = createRootGroup("group-1", repo, jailer1);
     final var child1_1 = createChildGroup("child-1.1", root1.getId(), repo);
@@ -68,8 +71,8 @@ public class HierarchicalOrgTest extends DbTestTemplate {
     final var child3_4 = createChildGroup("child-3.4", root1.getId(), repo);
     
     
-    final var userId1 = createUser("user-1", repo, root1);
-    final var userId2 = createUser("user-2", repo, child1_2_2);
+    final var userId1 = createUser("user-1", repo, Arrays.asList(root1), Collections.emptyList());
+    final var userId2 = createUser("user-2", repo, Arrays.asList(child1_2_2), Arrays.asList(jailer4));
 
     /*
     final var userGroupsAndRoles1 = getClient().org().find().userGroupsAndRolesQuery()
@@ -86,10 +89,11 @@ public class HierarchicalOrgTest extends DbTestTemplate {
   }
 
   
-  private OrgUser createUser(String userName, RepoResult repo, OrgGroup ...groups) {
+  private OrgUser createUser(String userName, RepoResult repo, List<OrgGroup> groups, List<OrgRole> roles) {
     return getClient().org().commit().createOneUser()
         .repoId(repo.getRepo().getId())
-        .addUserToGroups(Arrays.asList(groups).stream().map(group -> group.getId()).toList())
+        .addUserToGroups(groups.stream().map(group -> group.getId()).toList())
+        .addUserToRoles(roles.stream().map(role -> role.getId()).toList())
         .userName(userName)
         .email("em-")
         .author("au-")

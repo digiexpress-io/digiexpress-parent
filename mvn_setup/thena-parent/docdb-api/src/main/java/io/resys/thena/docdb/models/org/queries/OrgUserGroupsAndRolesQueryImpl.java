@@ -11,7 +11,10 @@ import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.ThenaEnvelope;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroupAndRoleFlattened;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRoleFlattened;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserFlattened;
 import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgUserGroupsAndRolesWithLog;
+import io.resys.thena.docdb.models.org.OrgQueries;
 import io.resys.thena.docdb.models.org.support.OrgTreeBuilderForUser;
 import io.resys.thena.docdb.spi.DbState;
 import io.resys.thena.docdb.support.RepoAssert;
@@ -43,22 +46,33 @@ public class OrgUserGroupsAndRolesQueryImpl implements UserGroupsAndRolesQuery {
       }
       
       return state.toOrgState().query(repoId).onItem()
-      		.transformToUni(state -> state.users().findAllGroupsAndRolesByUserId(userId))
-      		.onItem()
-      		.transform(entries -> createResult(entries));
+          .transformToUni(state -> getUser(state, existing, userId));
     });
 	}
+	
+	private Uni<QueryEnvelope<OrgUserGroupsAndRolesWithLog>> getUser(OrgQueries org, Repo existing, String userId) {
+    return org.users().getStatusById(userId).onItem().transformToUni(user -> {
+      if(user == null) {
+        return Uni.createFrom().item(docNotFound(existing));
+      }
+      return Uni.combine().all().unis(
+          org.users().findAllRolesByUserId(user.getId()),
+          org.users().findAllGroupsAndRolesByUserId(user.getId())
+        ).asTuple()
+        .onItem().transform(tuple -> createResult(user, tuple.getItem2(), tuple.getItem1()));
+    });
 
-	private QueryEnvelope<OrgUserGroupsAndRolesWithLog> createResult(List<OrgGroupAndRoleFlattened> entries) {
+	}
+	
+
+	private QueryEnvelope<OrgUserGroupsAndRolesWithLog> createResult(OrgUserFlattened user, List<OrgGroupAndRoleFlattened> groups, List<OrgRoleFlattened> roles) {
     return ImmutableQueryEnvelope
         .<OrgUserGroupsAndRolesWithLog>builder()
         .status(QueryEnvelopeStatus.OK)
-        .objects(new OrgTreeBuilderForUser(entries).build())
+        .objects(new OrgTreeBuilderForUser(user, groups, roles).build())
         .build();
 	}
 	
-	
-
   private <T extends ThenaEnvelope.ThenaObjects> QueryEnvelope<T> repoNotFound() {
     final var ex = RepoException.builder().notRepoWithName(repoId);
     log.warn(ex.getText());

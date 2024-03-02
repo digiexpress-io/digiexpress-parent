@@ -38,7 +38,9 @@ import io.resys.thena.docdb.api.models.ImmutableOrgGroup;
 import io.resys.thena.docdb.api.models.ImmutableOrgGroupAndRoleFlattened;
 import io.resys.thena.docdb.api.models.ImmutableOrgGroupRole;
 import io.resys.thena.docdb.api.models.ImmutableOrgRole;
+import io.resys.thena.docdb.api.models.ImmutableOrgRoleFlattened;
 import io.resys.thena.docdb.api.models.ImmutableOrgUser;
+import io.resys.thena.docdb.api.models.ImmutableOrgUserFlattened;
 import io.resys.thena.docdb.api.models.ImmutableOrgUserMembership;
 import io.resys.thena.docdb.api.models.ImmutableOrgUserRole;
 import io.resys.thena.docdb.api.models.ImmutableRepo;
@@ -68,7 +70,9 @@ import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroupAndRoleFlattened;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroupRole;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRoleFlattened;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUser;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserFlattened;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserMembership;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserRole;
 import io.resys.thena.docdb.spi.DbCollections;
@@ -379,8 +383,36 @@ public class SqlMapperImpl implements SqlMapper {
 		  	.groupStatusUserId(row.getString("status_user_id"))
 		  	
 		  	.roleId(row.getString("role_id"))
+		  	.roleName(row.getString("role_name"))
+        .roleDescription(row.getString("role_description"))
+        
 		  	.roleStatus(roleStatus != null ? OrgActorStatusType.valueOf(roleStatus) : null)
 		  	.roleStatusId(row.getString("role_status_id"))
 				.build();
 	}
+	
+  @Override
+  public OrgRoleFlattened orgOrgRoleFlattened(Row row) {
+    final var roleStatus = row.getString("role_status");
+    return ImmutableOrgRoleFlattened.builder()
+        .roleId(row.getString("role_id"))
+        .roleName(row.getString("role_name"))
+        .roleDescription(row.getString("role_description"))
+        .roleStatus(roleStatus != null ? OrgActorStatusType.valueOf(roleStatus) : null)
+        .roleStatusId(row.getString("role_status_id"))
+        .build();
+  }
+  @Override
+  public OrgUserFlattened orgUserFlattened(Row row) {
+    final var userStatus = row.getString("user_status");
+    return ImmutableOrgUserFlattened.builder()
+        .id(row.getString("id"))
+        .externalId(row.getString("external_id"))
+        .commitId(row.getString("commit_id"))
+        .userName(row.getString("username"))
+        .email(row.getString("email"))
+        .status(userStatus != null ? OrgActorStatusType.valueOf(userStatus) : null)
+        .statusId(row.getString("user_status_id"))
+        .build();
+  }
 }

@@ -172,6 +172,8 @@ SELECT * FROM child;
         .append("  group_status.user_id         as status_user_id, ").ln()
 
         .append("  group_roles.role_id          as role_id, ").ln()
+        .append("  role.role_name               as role_name, ").ln()
+        .append("  role.role_description        as role_description, ").ln()
         .append("  role_status.actor_status     as role_status, ").ln()
         .append("  role_status.id               as role_status_id ").ln()
         
@@ -192,6 +194,9 @@ SELECT * FROM child;
         .append("    and role_status.role_id = group_roles.role_id ").ln()
         .append("    and (role_status.user_id is null or role_status.user_id = $1)").ln()
         .append("  ) ").ln()
+        
+        .append("  LEFT JOIN ").append(options.getOrgRoles()).append(" as role").ln()
+        .append("  ON(role.id = group_roles.role_id)").ln()
         ;
     
         
@@ -200,4 +205,58 @@ SELECT * FROM child;
         .props(Tuple.of(userId))
         .build();
 	}
+
+  @Override
+  public SqlTuple findAllRolesByUserId(String userId) {
+    final var sql = new SqlStatement()
+        
+        .append("SELECT ").ln()
+        .append("  role.id                  as role_id, ").ln()
+        .append("  role_status.actor_status as role_status, ").ln()
+        .append("  role_status.id           as role_status_id, ").ln()
+        .append("  role.role_name           as role_name, ").ln()
+        .append("  role.role_description    as role_description ").ln()
+        
+        .append("FROM ").ln()
+        .append("  ").append(options.getOrgRoles()).append(" as role").ln()
+        .append("RIGHT JOIN ").append(options.getOrgUserRoles()).append(" as user_roles").ln()
+        .append("  ON(").ln()
+        .append("    user_roles.role_id = role.id").ln()
+        .append("    and user_roles.user_id = $1").ln()
+         .append("  ) ").ln()
+        
+        .append("LEFT JOIN ").append(options.getOrgActorStatus()).append(" as role_status").ln()
+        .append("  ON(").ln()
+        .append("    role_status.role_id = role.id").ln()
+        .append("    and role_status.group_id is null").ln()
+        .append("    and (role_status.user_id is null or role_status.user_id = $1)").ln()
+        .append("  ) ").ln();
+
+    return ImmutableSqlTuple.builder()
+        .value(sql.build())
+        .props(Tuple.of(userId))
+        .build();
+  }
+
+  @Override
+  public SqlTuple getStatusByUserId(String userId) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT ").ln()
+        .append("  users.* ,").ln()
+        .append("  user_status.actor_status as user_status,").ln()
+        .append("  user_status.id as user_status_id").ln()
+        .append("FROM ").append(options.getOrgUsers()).append(" as users").ln()
+
+        .append("LEFT JOIN ").append(options.getOrgActorStatus()).append(" as user_status").ln()
+        .append("ON(").ln()
+        .append("  user_status.user_id = users.id").ln()
+        .append("  and user_status.role_id is null").ln()
+        .append("  and user_status.group_id is null").ln()
+        .append(") ").ln()
+        .append("WHERE (users.id = $1 OR users.external_id = $1 OR users.username = $1)").ln()
+        .build())
+        .props(Tuple.of(userId))
+        .build();
+  }
 }

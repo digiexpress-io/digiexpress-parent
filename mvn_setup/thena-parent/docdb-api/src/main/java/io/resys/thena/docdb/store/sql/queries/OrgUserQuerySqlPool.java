@@ -4,7 +4,9 @@ import java.util.List;
 
 import io.resys.thena.docdb.api.LogConstants;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroupAndRoleFlattened;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRoleFlattened;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUser;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserFlattened;
 import io.resys.thena.docdb.models.org.OrgQueries;
 import io.resys.thena.docdb.store.sql.SqlBuilder;
 import io.resys.thena.docdb.store.sql.SqlMapper;
@@ -99,4 +101,43 @@ public class OrgUserQuerySqlPool implements OrgQueries.UserQuery {
         .collect().asList()
         .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'USER_GROUPS_ROLES'!", sql, e)));
 	}
+
+  @Override
+  public Uni<List<OrgRoleFlattened>> findAllRolesByUserId(String userId) {
+    final var sql = sqlBuilder.orgUsers().findAllRolesByUserId(userId);
+    if(log.isDebugEnabled()) {
+      log.debug("User findAllRolesByUserId query, with props: {} \r\n{}", 
+          sql.getProps().deepToString(),
+          sql.getValue());
+    }
+    return wrapper.getClient().preparedQuery(sql.getValue())
+        .mapping(row -> sqlMapper.orgOrgRoleFlattened(row))
+        .execute(sql.getProps())
+        .onItem()
+        .transformToMulti((RowSet<OrgRoleFlattened> rowset) -> Multi.createFrom().iterable(rowset))
+        .collect().asList()
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'USER_DIRECT_ROLES'!", sql, e)));
+  }
+
+  @Override
+  public Uni<OrgUserFlattened> getStatusById(String userId) {
+    final var sql = sqlBuilder.orgUsers().getStatusByUserId(userId);
+    if(log.isDebugEnabled()) {
+      log.debug("User getStatusById query, with props: {} \r\n{}", 
+          sql.getProps().deepToString(),
+          sql.getValue());
+    }
+    return wrapper.getClient().preparedQuery(sql.getValue())
+        .mapping(row -> sqlMapper.orgUserFlattened(row))
+        .execute(sql.getProps())
+        .onItem()
+        .transform((RowSet<OrgUserFlattened> rowset) -> {
+          final var it = rowset.iterator();
+          if(it.hasNext()) {
+            return it.next();
+          }
+          return null;
+        })
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'USER_STATUS'!", sql, e)));
+  }
 }

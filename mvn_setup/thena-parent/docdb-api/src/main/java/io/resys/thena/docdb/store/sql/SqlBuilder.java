@@ -95,6 +95,8 @@ public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
   interface OrgUserSqlBuilder {
     SqlTuple getById(String id); //username or id or external_id
     SqlTuple findAllUserGroupsAndRolesByUserId(String userId);
+    SqlTuple findAllRolesByUserId(String userId);
+    SqlTuple getStatusByUserId(String userId);
     
     Sql findAll();
     SqlTuple findAll(List<String> id);
