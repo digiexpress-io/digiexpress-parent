@@ -1,19 +1,26 @@
 package io.resys.thena.docdb.models.org.queries;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import org.barfuin.texttree.api.DefaultNode;
+import org.barfuin.texttree.api.TextTree;
+import org.barfuin.texttree.api.TreeOptions;
+import org.barfuin.texttree.api.style.TreeStyles;
 
 import io.resys.thena.docdb.api.actions.OrgQueryActions.UserGroupsAndRolesQuery;
-import io.resys.thena.docdb.api.actions.OrgQueryActions.UserObjectsQuery;
 import io.resys.thena.docdb.api.exceptions.RepoException;
 import io.resys.thena.docdb.api.models.ImmutableMessage;
+import io.resys.thena.docdb.api.models.ImmutableOrgUserGroupsAndRolesWithLog;
 import io.resys.thena.docdb.api.models.ImmutableQueryEnvelope;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
+import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.ThenaEnvelope;
-import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroupAndRoleFlattened;
 import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgUserGroupsAndRolesWithLog;
-import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgUserObject;
 import io.resys.thena.docdb.spi.DbState;
 import io.resys.thena.docdb.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
@@ -51,11 +58,14 @@ public class OrgUserGroupsAndRolesQueryImpl implements UserGroupsAndRolesQuery {
 	}
 
 	private QueryEnvelope<OrgUserGroupsAndRolesWithLog> createResult(List<OrgGroupAndRoleFlattened> entries) {
-		if(entries.isEmpty()) {
-			
-		}
-		return null;
+    return ImmutableQueryEnvelope
+        .<OrgUserGroupsAndRolesWithLog>builder()
+        .status(QueryEnvelopeStatus.OK)
+        .objects(new StructureBuilder(entries).build())
+        .build();
 	}
+	
+	
 
   private <T extends ThenaEnvelope.ThenaObjects> QueryEnvelope<T> repoNotFound() {
     final var ex = RepoException.builder().notRepoWithName(repoId);
@@ -80,4 +90,63 @@ public class OrgUserGroupsAndRolesQueryImpl implements UserGroupsAndRolesQuery {
     .build();
   }
   
+  @Slf4j
+  private static class StructureBuilder {
+
+  	private final Map<String, OrgGroupAndRoleFlattened> byGroupId = new HashMap<>();
+  	private final Map<String, List<OrgGroupAndRoleFlattened>> byParentGroupId = new HashMap<>();
+  	private final List<OrgGroupAndRoleFlattened> roots = new ArrayList<>();
+  	private final ImmutableOrgUserGroupsAndRolesWithLog.Builder result = ImmutableOrgUserGroupsAndRolesWithLog.builder();
+  	
+  	
+  	public StructureBuilder(List<OrgGroupAndRoleFlattened> entries) {
+  		
+  		for(final var entry : entries) {
+  			byGroupId.put(entry.getGroupId(), entry);
+  			if(entry.getGroupParentId() == null) {
+  				roots.add(entry);
+  				continue;
+  			}
+				if(!byParentGroupId.containsKey(entry.getGroupParentId())) {
+					byParentGroupId.put(entry.getGroupParentId(), new ArrayList<>());
+				}
+				byParentGroupId.get(entry.getGroupParentId()).add(entry);
+  		}
+  	}
+  	
+  	private void visitRoot(OrgGroupAndRoleFlattened entry) {
+  		final var options = new TreeOptions();
+  		options.setStyle(TreeStyles.UNICODE_ROUNDED);
+  		final var tree = new DefaultNode(entry.getGroupName());
+  		visitChildren(entry, tree);
+  		final var rendered = TextTree.newInstance(options).render(tree);
+  		log.error(System.lineSeparator() +
+  				"##############################" + System.lineSeparator() +
+  				rendered
+  				);
+  	}
+  	
+  	private void visitChild(OrgGroupAndRoleFlattened child, DefaultNode parentNode) {
+  		final var childNode = new DefaultNode(child.getGroupName());
+  		parentNode.addChild(childNode);
+  		visitChildren(child, childNode);
+  	}
+  	
+  	private void visitChildren(OrgGroupAndRoleFlattened parentEntry, DefaultNode parentNode) {
+  		final var children = byParentGroupId.get(parentEntry.getGroupId());
+  		if(children == null) {
+  			return;
+  		}
+  		for(final var child : children) {
+  			visitChild(child, parentNode);
+  		}
+  	}
+  	
+  	private OrgUserGroupsAndRolesWithLog build() {
+  		for(final var root : this.roots) {
+  			visitRoot(root);
+  		}
+  		return null;
+  	}
+  }
 }

@@ -364,25 +364,23 @@ public class SqlMapperImpl implements SqlMapper {
 	}
 	@Override
 	public OrgGroupAndRoleFlattened orgGroupAndRoleFlattened(Row row) {
-		final var userStatus = row.getString("user_status");
-		final var groupStatus = row.getString("group_status");
+		final var roleStatus = row.getString("role_status");
+		final var groupStatus = row.getString("status");
 		
 		return ImmutableOrgGroupAndRoleFlattened.builder()
-		  	.groupId(row.getString("group_id"))
-		  	.userId(row.getString("user_id"))
-		  	.groupParentId(row.getString("group_parent_id"))
+		  	.groupId(row.getString("id"))
+		  	.groupParentId(row.getString("parent_id"))
+		  	.groupName(row.getString("group_name"))
+        .groupDescription(row.getString("group_description"))
 		  	.membershipId(row.getString("membership_id"))
 		  	
-		  	.groupStatusId(row.getString("group_status_id"))
+		  	.groupStatusId(row.getString("status_id"))
 		  	.groupStatus(groupStatus != null ? OrgActorStatusType.valueOf(groupStatus) : null)
-		  	.groupStatusUserId(row.getString("group_status_user_id"))
-		  	.groupStatusGroupId(row.getString("group_status_group_id"))
-		  	.groupStatusRoleId(row.getString("group_status_role_id"))
+		  	.groupStatusUserId(row.getString("status_user_id"))
 		  	
-		  	.userStatusId(row.getString("user_status_id"))
-		  	.userStatus(userStatus != null ? OrgActorStatusType.valueOf(userStatus) : null)
-		  	.userStatusGroupId(row.getString("user_status_group_id"))
-		  	.userStatusRoleId(row.getString("user_status_role_id"))
+		  	.roleId(row.getString("role_id"))
+		  	.roleStatus(roleStatus != null ? OrgActorStatusType.valueOf(roleStatus) : null)
+		  	.roleStatusId(row.getString("role_status_id"))
 				.build();
 	}
 }

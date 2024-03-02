@@ -43,12 +43,15 @@ public class HierarchicalOrgTest extends DbTestTemplate {
     log.debug("created repo {}", repo);
     Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
 
+    final var jailer1 = createRole(repo, "failer-1");
+    final var jailer2 = createRole(repo, "failer-2");
+    final var jailer3 = createRole(repo, "failer-3");
         
-    final var root1 = createRootGroup("group-1", repo);
+    final var root1 = createRootGroup("group-1", repo, jailer1);
     final var child1_1 = createChildGroup("child-1.1", root1.getId(), repo);
     final var child1_2 = createChildGroup("child-1.2", root1.getId(), repo);
     final var child1_2_1 = createChildGroup("child-1.2.1", child1_2.getId(), repo);
-    final var child1_2_2 = createChildGroup("child-1.2.2", child1_2.getId(), repo);
+    final var child1_2_2 = createChildGroup("child-1.2.2", child1_2.getId(), repo, jailer2, jailer3);
     final var child1_3 = createChildGroup("child-1.3", root1.getId(), repo);
     final var child1_4 = createChildGroup("child-1.4", root1.getId(), repo);
     
@@ -68,12 +71,17 @@ public class HierarchicalOrgTest extends DbTestTemplate {
     final var userId1 = createUser("user-1", repo, root1);
     final var userId2 = createUser("user-2", repo, child1_2_2);
 
-    
-    final var userGroupsAndRoles = getClient().org().find().userGroupsAndRolesQuery()
+    /*
+    final var userGroupsAndRoles1 = getClient().org().find().userGroupsAndRolesQuery()
         .repoId(repo.getRepo().getId())
         .get(userId1.getId()).await().atMost(Duration.ofMinutes(1));
+    */
+    final var userGroupsAndRoles2 = getClient().org().find().userGroupsAndRolesQuery()
+        .repoId(repo.getRepo().getId())
+        .get(userId2.getId()).await().atMost(Duration.ofMinutes(1));
     
-    printRepo(repo.getRepo());
+    
+    //printRepo(repo.getRepo());
     
   }
 

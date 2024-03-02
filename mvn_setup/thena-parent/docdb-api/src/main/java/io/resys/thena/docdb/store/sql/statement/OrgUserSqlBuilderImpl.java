@@ -143,7 +143,7 @@ SELECT * FROM child;
         .append("WITH RECURSIVE child AS (").ln()
         
         // starting point
-        .append("  SELECT id, parent_id").ln()
+        .append("  SELECT id, parent_id, group_name, group_description").ln()
         .append("  FROM ").append(options.getOrgGroups()).ln()
         .append("  WHERE id in( ").ln()
         .append("    SELECT DISTINCT group_id ")
@@ -154,50 +154,47 @@ SELECT * FROM child;
         .append("  UNION ALL ").ln()
         
         // recursion from bottom to up, join parent to each child until the tip
-        .append("  SELECT parent.id, parent.parent_id").ln()
+        .append("  SELECT parent.id, parent.parent_id, parent.group_name, parent.group_description").ln()
         .append("  FROM ").append(options.getOrgGroups()).append(" as parent").ln()
         .append("  INNER JOIN child on (parent.id = child.parent_id) ").ln()
         
     		.append(")").ln()
     		
         .append("SELECT ").ln()
-        .append("  groups.id 				as group_id, ").ln()
-        .append("  groups.parent_id as group_parent_id, ").ln()
-        
-        .append("  users.id as membership_id, ").ln()
-        .append("  users.user_id as user_id, ").ln()
-        
-        .append("  group_status.id           as group_status_id, ").ln()
-        .append("  group_status.actor_status as group_status, ").ln()
-        .append("  group_status.user_id      as group_status_user_id, ").ln()
-        .append("  group_status.group_id     as group_status_group_id, ").ln()
-        .append("  group_status.role_id      as group_status_role_id, ").ln()
+        .append("  groups.id                as id, ").ln()
+        .append("  groups.parent_id         as parent_id, ").ln()
+        .append("  groups.group_name        as group_name, ").ln()
+        .append("  groups.group_description as group_description, ").ln()
+        .append("  direct_memberships.id    as membership_id, ").ln()
 
-        .append("  user_status.id           as user_status_id, ").ln()
-        .append("  user_status.actor_status as user_status, ").ln()
-        //.append("  user_status.user_id      as user_status_user_id, ").ln()
-        .append("  user_status.group_id     as user_status_group_id, ").ln()
-        .append("  user_status.role_id      as user_status_role_id ").ln()
+        .append("  group_status.id              as status_id, ").ln()
+        .append("  group_status.actor_status    as status, ").ln()
+        .append("  group_status.user_id         as status_user_id, ").ln()
+
+        .append("  group_roles.role_id          as role_id, ").ln()
+        .append("  role_status.actor_status     as role_status, ").ln()
+        .append("  role_status.id               as role_status_id ").ln()
         
         .append("FROM ").ln()
-        .append("  (SELECT DISTINCT id, parent_id from child) as groups").ln()
+        .append("  (SELECT DISTINCT id, parent_id, group_name, group_description from child) as groups").ln()
         
-        .append("  INNER JOIN ").append(options.getOrgUserMemberships()).append(" as users").ln()        
-        .append("  ON(users.group_id = groups.id) ").ln()
+        .append("  LEFT JOIN ").append(options.getOrgUserMemberships()).append(" as direct_memberships").ln()        
+        .append("  ON(direct_memberships.group_id = groups.id and direct_memberships.user_id = $1) ").ln()
         
         .append("  LEFT JOIN ").append(options.getOrgActorStatus()).append(" as group_status").ln()
-        .append("  ON(group_status.group_id = groups.id) ").ln()
+        .append("  ON(group_status.group_id = groups.id and (group_status.user_id is null or group_status.user_id = $1) and group_status.role_id is null) ").ln()
+    
+        .append("  LEFT JOIN ").append(options.getOrgGroupRoles()).append(" as group_roles").ln()
+        .append("  ON(group_roles.group_id = groups.id) ").ln()
+    
+        .append("  LEFT JOIN ").append(options.getOrgActorStatus()).append(" as role_status").ln()
+        .append("  ON(role_status.group_id = groups.id ").ln()
+        .append("    and role_status.role_id = group_roles.role_id ").ln()
+        .append("    and (role_status.user_id is null or role_status.user_id = $1)").ln()
+        .append("  ) ").ln()
+        ;
+    
         
-        .append("  LEFT JOIN ").append(options.getOrgActorStatus()).append(" as user_status").ln()
-        .append("  ON(user_status.user_id = users.user_id) ").ln()
-        
-        .append("WHERE user_status.group_id IS NULL ").ln()
-        .append("  AND users.user_id = $1").ln()
-        //.append("  AND user_status.user_id = $1").ln()
-    		;
-    
-    
-    
     return ImmutableSqlTuple.builder()
         .value(sql.build())
         .props(Tuple.of(userId))

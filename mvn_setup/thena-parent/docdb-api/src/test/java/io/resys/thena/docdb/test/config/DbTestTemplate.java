@@ -30,6 +30,8 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.core.json.jackson.DatabindCodec;
 import io.vertx.core.json.jackson.VertxModule;
 import io.vertx.mutiny.sqlclient.Pool;
+import io.vertx.pgclient.PgConnectOptions;
+import io.vertx.sqlclient.PoolOptions;
 
 /*-
  * #%L
@@ -57,9 +59,10 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class DbTestTemplate {
+	private boolean STORE_TO_DEBUG_DB = false;
   private DocDB client;
-  @Inject
-  io.vertx.mutiny.pgclient.PgPool pgPool;
+  @Inject io.vertx.mutiny.pgclient.PgPool pgPool;
+  @Inject io.vertx.mutiny.core.Vertx vertx;
   
   private static AtomicInteger index = new AtomicInteger(1);
   private String db;
@@ -72,8 +75,24 @@ public class DbTestTemplate {
     this.callback = callback;
   }  
   
+  private void connectToDebugDb() {
+  	if(!STORE_TO_DEBUG_DB) {
+  		return;
+  	}
+  	
+  	final var connectOptions = new PgConnectOptions()
+  			.setDatabase("debug_org_db")
+        .setHost("localhost")
+        .setPort(5432)
+        .setUser("postgres")
+        .setPassword("postgres");
+    final var poolOptions = new PoolOptions().setMaxSize(6);
+    this.pgPool = io.vertx.mutiny.pgclient.PgPool.pool(vertx, connectOptions, poolOptions);
+  }
+  
   @BeforeEach
   public void setUp(TestInfo testInfo) throws InterruptedException {
+  	connectToDebugDb();
     waitUntilPostgresqlAcceptsConnections(pgPool);
 
     final var modules = new com.fasterxml.jackson.databind.Module[] {
