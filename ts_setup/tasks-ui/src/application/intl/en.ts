@@ -561,6 +561,7 @@ const en = {
   'permissions.role.name.create.placeholder': 'Enter a role name',
   'permissions.role.description': 'Description',
   'permissions.role.description.create.placeholder': 'Enter a description of this role',
+  'permissions.role.parentSelect': 'Role parent',
   'permissions.role.permissionSelect': 'Permissions',
 
   'permissions.permission.name': 'Name',

@@ -22,7 +22,7 @@ const Left: React.FC<{}> = () => {
       </Burger.Section>
 
       <Burger.Section>
-        <Typography fontWeight='bold'><FormattedMessage id='permissions.role.permissionSelect' /></Typography>
+        <Typography fontWeight='bold'><FormattedMessage id='permissions.role.parentSelect' /></Typography>
         <Fields.RoleParent />
       </Burger.Section>
 
