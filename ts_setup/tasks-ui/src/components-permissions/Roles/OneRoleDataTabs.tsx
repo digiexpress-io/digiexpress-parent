@@ -15,7 +15,10 @@ const TabContent: React.FC<{ selected: number, id: number, children: React.React
     return null;
   }
 
-  return <>{children}</>;
+  return (
+    <Box sx={{ p: 2, width: '100%', height: '100%' }}>
+      {children}
+    </Box>);
 }
 
 export const OneRoleDataTabs: React.FC<{ role: Role }> = ({ role }) => {
@@ -47,7 +50,7 @@ export const OneRoleDataTabs: React.FC<{ role: Role }> = ({ role }) => {
       </TabContent>
 
       <TabContent selected={tabValue} id={2}>
-        <RoleMembers />
+        <RoleMembers role={role} />
       </TabContent>
     </Box>
   );

@@ -1,22 +1,28 @@
 import React from 'react';
-import { Box, Stack, Divider } from '@mui/material';
+import { Stack, Divider, Alert } from '@mui/material';
+import { FormattedMessage } from 'react-intl';
+
 import { Role } from 'descriptor-permissions';
 import { SectionLayout } from 'components-generic';
 
 const RolePermissions: React.FC<{ role: Role }> = ({ role }) => {
 
+  if (!role.permissions.length) {
+    return (<Alert severity='info'><FormattedMessage id='permissions.permission.none' /></Alert>)
+  }
+
   return (
-    <Box sx={{ p: 2, width: '100%', height: '100%' }}>
+    <Stack spacing={1}>
       {role.permissions.map((permission, index) => (
-        <Stack spacing={1}>
+        <>
           <SectionLayout label='permissions.permission.name' value={permission.name} />
           <SectionLayout label='permissions.permission.description' value={permission.description} />
           <SectionLayout label='permissions.permission.status' value={permission.status} />
           {role.permissions.length - 1 !== index ? <Divider /> : undefined}
-        </Stack>
+        </>
       ))
       }
-    </Box>
+    </Stack>
   )
 }
 

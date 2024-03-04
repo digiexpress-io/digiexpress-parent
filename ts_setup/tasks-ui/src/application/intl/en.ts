@@ -553,9 +553,13 @@ const en = {
   'permissions.roles.numberOfPrincpals': 'Total members',
   'permissions.roles.numberOfPermissions': 'Total permissions',
 
+  'permissions.role.member.name': 'Username',
+  'permissions.role.member.none': 'No members found',
+
   'permissions.permission.name': 'Name',
   'permissions.permission.description': 'Description',
-  'permissions.permission.status': 'Status'
+  'permissions.permission.status': 'Status',
+  'permissions.permission.none': 'No permissions found',
 
 
 };
