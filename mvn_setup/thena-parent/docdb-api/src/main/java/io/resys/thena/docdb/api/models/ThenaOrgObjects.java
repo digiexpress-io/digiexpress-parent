@@ -3,6 +3,8 @@ package io.resys.thena.docdb.api.models;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Nullable;
+
 import org.immutables.value.Value;
 
 import io.resys.thena.docdb.api.models.ThenaEnvelope.ThenaObjects;
@@ -75,30 +77,19 @@ public interface ThenaOrgObjects extends ThenaObjects {
   
   @Value.Immutable
   interface OrgUserGroupsAndRolesWithLog extends ThenaOrgObjects {
+    String getCommitId();
   	String getUserId();
-    String getExternalId();
+    @Nullable String getExternalId();
     String getUserName();
     String getEmail();
     
+    String getLog();
+    OrgActorStatusType getStatus();
+    
     List<String> getRoleNames();  // roles that are enabled
     List<String> getGroupNames(); // groups that are enabled
-    
-    List<OrgUserRoleEvalLog> getRoleMeta();
-    List<OrgUserGroupEvalLog> getGroupMeta();
-  }
-  
-  @Value.Immutable
-  interface OrgUserRoleEvalLog extends ThenaOrgObjects {
-  	String getRoleName();
-  	OrgActorStatusType getStatus();
-  	String getSource();
-  	Boolean getEnabled();
-  }
-  @Value.Immutable
-  interface OrgUserGroupEvalLog extends ThenaOrgObjects {
-  	String getGroupName();
-  	OrgActorStatusType getStatus();
-  	String getSource();
-  	Boolean getEnabled();
+
+    List<String> getDirectRoleNames();  // roles that are enabled
+    List<String> getDirectGroupNames(); // groups that are enabled
   }
 }

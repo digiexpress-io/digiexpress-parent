@@ -124,6 +124,7 @@ public class OrgDbInsertsSqlPool implements OrgInserts {
         .from(current)
         .status(BatchStatus.ERROR)
         .addMessages(ImmutableMessage.builder().text(msg).exception(t).build())
+        .addMessages(ImmutableMessage.builder().text(t.getMessage()).build())
         .build(); 
   }
   
@@ -141,6 +142,7 @@ public class OrgDbInsertsSqlPool implements OrgInserts {
         .from(current)
         .status(BatchStatus.ERROR)
         .addMessages(ImmutableMessage.builder().text(msg).exception(t).build())
+        .addMessages(ImmutableMessage.builder().text(t.getMessage()).build())
         .build(); 
   }
 }

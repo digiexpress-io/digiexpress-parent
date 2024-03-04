@@ -81,10 +81,33 @@ public class HierarchicalOrgTest extends DbTestTemplate {
     */
     final var userGroupsAndRoles2 = getClient().org().find().userGroupsAndRolesQuery()
         .repoId(repo.getRepo().getId())
-        .get(userId2.getId()).await().atMost(Duration.ofMinutes(1));
+        .get(userId2.getId()).await().atMost(Duration.ofMinutes(1)).getObjects();
     
+    Assertions.assertEquals(userId2.getId(), userGroupsAndRoles2.getUserId());
+    Assertions.assertEquals("[group-1, child-1.2, child-1.2.2]", userGroupsAndRoles2.getGroupNames().toString());
+    Assertions.assertEquals("[jailer-main, jailer-1, jailer-2, jailer-3]", userGroupsAndRoles2.getRoleNames().toString());
     
-    //printRepo(repo.getRepo());
+    Assertions.assertEquals("[child-1.2.2]", userGroupsAndRoles2.getDirectGroupNames().toString());
+    Assertions.assertEquals("[jailer-main, jailer-2]", userGroupsAndRoles2.getDirectRoleNames().toString());
+    
+    Assertions.assertEquals("""
+user-2
++--- group-1
+|    +--- roles
+|    |    `--- jailer-1
+|    `--- child-1.2
+|         `--- child-1.2.2
+|              +--- roles
+|              |    +--- jailer-2
+|              |    `--- jailer-3
+|              `--- direct-membership
+`--- roles
+     +--- direct
+     |    `--- jailer-main
+     `--- inherited
+          +--- jailer-3
+          `--- jailer-1
+        """, userGroupsAndRoles2.getLog());
     
   }
 

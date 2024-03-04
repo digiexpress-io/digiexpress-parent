@@ -369,6 +369,7 @@ public class GitDbInsertsSqlPool implements GitInserts {
     return ImmutableGitBatch.builder()
         .from(current)
         .status(BatchStatus.ERROR)
+        .addMessages(ImmutableMessage.builder().text(t.getMessage()).build())
         .addMessages(ImmutableMessage.builder().text(msg).build())
         .build(); 
   }

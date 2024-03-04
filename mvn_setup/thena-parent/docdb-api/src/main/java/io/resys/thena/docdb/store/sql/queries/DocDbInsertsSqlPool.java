@@ -229,6 +229,7 @@ public class DocDbInsertsSqlPool implements DocInserts {
         .from(current)
         .status(BatchStatus.ERROR)
         .addMessages(ImmutableMessage.builder().text(msg).build())
+        .addMessages(ImmutableMessage.builder().text(t.getMessage()).build())
         .build(); 
   }
   
@@ -246,6 +247,7 @@ public class DocDbInsertsSqlPool implements DocInserts {
         .from(current)
         .status(BatchStatus.ERROR)
         .addMessages(ImmutableMessage.builder().text(msg).build())
+        .addMessages(ImmutableMessage.builder().text(t.getMessage()).build())
         .build(); 
   }
 }

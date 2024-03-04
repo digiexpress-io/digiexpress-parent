@@ -11,7 +11,7 @@ public class PgErrors implements ErrorHandler {
     if(e instanceof PgException) {
       PgException ogre = (PgException) e;
       
-      return "42P01".equals(ogre.getCode());
+      return "42P01".equals(ogre.getSqlState());
     }
     return false;
   }
@@ -20,7 +20,7 @@ public class PgErrors implements ErrorHandler {
     if(e instanceof PgException) {
       PgException ogre = (PgException) e;
       
-      return "23505".equals(ogre.getCode());
+      return "23505".equals(ogre.getSqlState());
     }
     return false;
   }
@@ -29,7 +29,7 @@ public class PgErrors implements ErrorHandler {
   public boolean isLocked(Throwable e) {
     if(e instanceof PgException) {
       PgException ogre = (PgException) e;
-      return "55P03".equals(ogre.getCode());
+      return "55P03".equals(ogre.getSqlState());
     }
     return false;
   }
