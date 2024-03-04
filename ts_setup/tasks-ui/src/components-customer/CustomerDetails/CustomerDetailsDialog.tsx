@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Stack, Grid, Typography, CircularProgress } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
-import StyledFullScreenDialog from '../../components-task/Dialogs'; //TODO fullscreen dialog
+import { StyledFullScreenDialog } from 'components-generic';
 
 
 import Context from 'context';
@@ -98,14 +98,14 @@ const CustomerDetailsDialog: React.FC<{ open: boolean, onClose: () => void, cust
   }
 
   return (
-      <StyledFullScreenDialog
-        header={<Header onClose={props.onClose} />}
-        footer={<Footer onClose={handleClose} />}
-        left={<Left customer={customer}/>}
-        right={<Right customer={customer} />}
-        onClose={props.onClose}
-        open={props.open}
-      />
+    <StyledFullScreenDialog
+      header={<Header onClose={props.onClose} />}
+      footer={<Footer onClose={handleClose} />}
+      left={<Left customer={customer} />}
+      right={<Right customer={customer} />}
+      onClose={props.onClose}
+      open={props.open}
+    />
   );
 }
 

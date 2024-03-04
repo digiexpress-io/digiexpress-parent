@@ -1,7 +1,7 @@
 import React from 'react';
 import { Dialog } from '@mui/material';
 
-import StyledFullScreenDialog from '../../components-task/Dialogs';
+import { StyledFullScreenDialog } from 'components-generic';
 
 
 const RoleCreateDialog: React.FC<{ open: boolean, onClose: () => void }> = ({ open, onClose }) => {

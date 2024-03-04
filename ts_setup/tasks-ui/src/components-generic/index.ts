@@ -12,5 +12,6 @@ export * from './AvatarEmpty';
 export * from './AvatarUser';
 export * from './AvatarIndicator';
 export * from './SectionLayout';
+export * from './StyledFullScreenDialog';
 
 export { FilterByString, TableBody, TableFillerRows, StyledTableCell, lineHeight, lineHeightLarge, useTableCellPopover };

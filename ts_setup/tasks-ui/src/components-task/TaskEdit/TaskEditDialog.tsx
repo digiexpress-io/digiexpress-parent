@@ -9,7 +9,7 @@ import Context from 'context';
 import { TaskDescriptor, TaskEditProvider } from 'descriptor-task';
 
 
-import StyledFullScreenDialog from '../Dialogs';
+import { StyledFullScreenDialog } from 'components-generic';
 import Fields from './TaskEditFields';
 import Events from './TaskEvents';
 
