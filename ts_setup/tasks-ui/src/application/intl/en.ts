@@ -544,8 +544,8 @@ const en = {
   'permissions.roles.overview.tab.permissions': 'Permissions',
   'permissions.roles.overview.tab.members': 'Members',
 
-  'permissions.navButton.role.create': 'Create roles',
-  'permissions.navButton.permission.create': 'Create permissions',
+  'permissions.navButton.role.create': 'Create a role',
+  'permissions.navButton.permission.create': 'Create a permission',
 
   'permissions.roles.roleMeta': 'Role metadata',
   'permissions.roles.description': 'Description',
@@ -555,6 +555,13 @@ const en = {
 
   'permissions.role.member.name': 'Username',
   'permissions.role.member.none': 'No members found',
+  'permissions.role.create': 'Create a role',
+
+  'permissions.role.name': 'Role name',
+  'permissions.role.name.create.placeholder': 'Enter a role name',
+  'permissions.role.description': 'Description',
+  'permissions.role.description.create.placeholder': 'Enter a description of this role',
+  'permissions.role.permissionSelect': 'Permissions',
 
   'permissions.permission.name': 'Name',
   'permissions.permission.description': 'Description',
