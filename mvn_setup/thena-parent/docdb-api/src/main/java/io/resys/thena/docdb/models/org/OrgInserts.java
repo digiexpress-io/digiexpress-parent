@@ -31,7 +31,6 @@ import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatus;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgCommit;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroupRole;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgLock;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUser;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserMembership;
@@ -48,7 +47,6 @@ public interface OrgInserts {
   interface OrgBatchForOne {
     OrgCommit getCommit();
     
-    List<OrgLock> getLock();
     List<OrgActorData> getActorData();
     List<OrgActorStatus> getActorStatus();
     List<OrgGroup> getGroups();
@@ -58,6 +56,7 @@ public interface OrgInserts {
     List<OrgUserRole> getUserRoles();
     List<OrgUserMembership> getUserMemberships(); 
     
+    List<String> getIdentifiersForUpdates();
     
     BatchStatus getStatus();
     String getRepoId();
@@ -70,7 +69,8 @@ public interface OrgInserts {
   interface OrgBatchForMany {
     BatchStatus getStatus();
     Repo getRepo();
-    
+
+    // TODO
     List<OrgBatchForOne> getItems();
 
     Message getLog();

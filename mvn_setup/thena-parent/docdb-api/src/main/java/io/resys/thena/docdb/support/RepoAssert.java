@@ -1,5 +1,8 @@
 package io.resys.thena.docdb.support;
 
+import java.util.List;
+import java.util.Optional;
+
 /*-
  * #%L
  * thena-docdb-api
@@ -31,7 +34,23 @@ public class RepoAssert {
     RepoAssert.isTrue(value.matches(NAME_PATTER), () -> message.get() + " => Valid name pattern: '" + NAME_PATTER + "'!");
     return value;
   }
-
+  public static String notEmptyIfDefined(Optional<String> src, Supplier<String> message) {
+    if(src == null) {
+      return null;
+    }
+    
+    final var object = src.orElseGet(null);
+    if (object == null || object.isBlank()) {
+      throw new RepoException(getMessage(message));
+    }
+    return object;
+  }
+  public static List<String> notEmpty(List<String> object, Supplier<String> message) {
+    if (object == null || object.isEmpty()) {
+      throw new RepoException(getMessage(message));
+    }
+    return object;
+  }
   public static String notEmpty(String object, Supplier<String> message) {
     if (object == null || object.isBlank()) {
       throw new RepoException(getMessage(message));
@@ -65,4 +84,7 @@ public class RepoAssert {
     return (supplier != null ? supplier.get().formatted(args) : null);
   }
 
+  public static <T> T fail(String message) {
+    throw new RepoException(getMessage(() -> message));
+  }
 }

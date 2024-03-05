@@ -37,29 +37,10 @@ public interface ThenaOrgObjects extends ThenaObjects {
     Map<String, OrgActorData> getActorData();
     Map<String, OrgActorStatus> getActorStatus(); 
   }
-
-
-  @Value.Immutable
-  interface OrgUserObject extends ThenaOrgObjects { 
-    OrgUser getUser();
-    
-    /*
-    Map<String, OrgGroup> getGroups();
-    Map<String, OrgRole> getRoles();
-    
-    Map<String, OrgUserMembership> getUserMembership();
-    Map<String, OrgGroupRole> getGroupRoles();
-    Map<String, OrgUserRole> getUserRoles();
-    
-    Map<String, OrgCommit> getCommits();
-    Map<String, OrgActorData> getActorData();
-    Map<String, OrgActorStatus> getActorStatus(); 
-    */
-  }
   
   @Value.Immutable
   interface OrgUserObjects extends ThenaOrgObjects {
-    List<OrgUserObject> getUsers();
+    List<OrgUser> getUsers();
   }
   
   
@@ -91,5 +72,20 @@ public interface ThenaOrgObjects extends ThenaObjects {
 
     List<String> getDirectRoleNames();  // roles that are enabled
     List<String> getDirectGroupNames(); // groups that are enabled
+    
+   List<OrgUserGroupStatus> getUserGroupStatus();
+   List<OrgUserRoleStatus> getUserRoleStatus();
+  }
+  @Value.Immutable
+  interface OrgUserGroupStatus extends ThenaOrgObjects {
+    String getStatusId();
+    String getGroupId();
+    OrgActorStatusType getStatus();
+  }
+  @Value.Immutable
+  interface OrgUserRoleStatus extends ThenaOrgObjects {
+    String getStatusId();
+    String getRoleId();
+    OrgActorStatusType getStatus();
   }
 }

@@ -6,7 +6,6 @@ import java.util.Set;
 import io.resys.thena.docdb.api.actions.OrgQueryActions.UserObjectsQuery;
 import io.resys.thena.docdb.api.exceptions.RepoException;
 import io.resys.thena.docdb.api.models.ImmutableMessage;
-import io.resys.thena.docdb.api.models.ImmutableOrgUserObject;
 import io.resys.thena.docdb.api.models.ImmutableOrgUserObjects;
 import io.resys.thena.docdb.api.models.ImmutableQueryEnvelope;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
@@ -14,7 +13,6 @@ import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.ThenaEnvelope;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUser;
-import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgUserObject;
 import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgUserObjects;
 import io.resys.thena.docdb.models.org.OrgQueries;
 import io.resys.thena.docdb.spi.DbState;
@@ -36,7 +34,7 @@ public class OrgUserObjectsQueryImpl implements UserObjectsQuery {
     return this;
   }
   @Override
-  public Uni<QueryEnvelope<OrgUserObject>> get(String userId) {
+  public Uni<QueryEnvelope<OrgUser>> get(String userId) {
     RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
 
     return state.project().getByNameOrId(repoId)
@@ -69,22 +67,15 @@ public class OrgUserObjectsQueryImpl implements UserObjectsQuery {
     });
   }
   
-  private Uni<QueryEnvelope<OrgUserObject>> getUserObject(Repo existing, OrgUser user) {
-    final var objects = ImmutableOrgUserObject.builder()
-        .user(user)
-        .build();
-    
-    return Uni.createFrom().item(ImmutableQueryEnvelope.<OrgUserObject>builder()
+  private Uni<QueryEnvelope<OrgUser>> getUserObject(Repo existing, OrgUser user) {
+    return Uni.createFrom().item(ImmutableQueryEnvelope.<OrgUser>builder()
         .repo(existing)
         .status(QueryEnvelopeStatus.OK)
-        .objects(objects)
+        .objects(user)
         .build());
   }  
   private Uni<QueryEnvelope<OrgUserObjects>> getUserObjects(Repo existing, List<OrgUser> users) {
-    final var objects = ImmutableOrgUserObjects.builder()
-        .users(
-            users.stream().map(user -> ImmutableOrgUserObject.builder().user(user).build()).toList()
-        ).build();
+    final var objects = ImmutableOrgUserObjects.builder().users(users).build();
     
     return Uni.createFrom().item(ImmutableQueryEnvelope.<OrgUserObjects>builder()
         .repo(existing)

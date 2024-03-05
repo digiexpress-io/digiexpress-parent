@@ -84,8 +84,8 @@ public interface OrgCommitActions {
     ModifyOneUser userName(String userName);
     ModifyOneUser email(String email); 
     
-    ModifyOneUser roles(ModType type, List<String> roles);
-    ModifyOneUser groups(ModType type, List<String> groupId);
+    ModifyOneUser roles(ModType type, List<String> roleIdOrNameOrExternalId); // group.(id OR externalId OR rolename)
+    ModifyOneUser groups(ModType type, List<String> groupIdOrNameOrExternalId);
     
     Uni<OneUserEnvelope> build();
   }
@@ -156,6 +156,6 @@ public interface OrgCommitActions {
   }
   
   enum ModType {
-    ADD, OVERRIDE, REMOVE 
+    ADD, REMOVE 
   }
 }

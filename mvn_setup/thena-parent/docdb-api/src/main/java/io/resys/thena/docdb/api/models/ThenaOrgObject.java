@@ -10,6 +10,7 @@ import org.immutables.value.Value;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import io.resys.thena.docdb.api.models.ThenaEnvelope.ThenaObjects;
 import io.vertx.core.json.JsonObject;
 
 public interface ThenaOrgObject {
@@ -85,7 +86,7 @@ public interface ThenaOrgObject {
   
 
   @Value.Immutable
-  interface OrgUser extends ThenaOrgObject, IsOrgObject, IsOrgVersionObject {
+  interface OrgUser extends ThenaOrgObject, ThenaObjects, IsOrgObject, IsOrgVersionObject {
     String getId();
     String getCommitId();
     @Nullable String getExternalId();
@@ -136,7 +137,7 @@ public interface ThenaOrgObject {
     @Nullable String getRoleId();
     @Nullable String getGroupId();
     
-    @Nullable String getUserMembershipId();
+    //@Nullable String getUserMembershipId();
     @Nullable String getUserRoleId();
     @Nullable String getGroupRoleId();
     OrgActorStatusType getValue();
@@ -204,7 +205,7 @@ public interface ThenaOrgObject {
   }
   
   enum OrgActorStatusType {
-    IN_FORCE, DISABLED, DISABLED_WITH_OVERRIDE
+    IN_FORCE, REMOVED, DISABLED_WITH_OVERRIDE
   }
   
   enum OrgUserRoleOrGroupType {
