@@ -4,7 +4,6 @@ import { FormattedMessage } from 'react-intl';
 
 import { StyledFullScreenDialog } from 'components-generic';
 import Burger from 'components-burger';
-import { Role } from 'descriptor-permissions';
 import Fields from './RoleCreateFields';
 
 
@@ -21,15 +20,13 @@ const Left: React.FC<{}> = () => {
         <Fields.RoleDescription />
       </Burger.Section>
 
-      <Burger.Section>
-        <Typography fontWeight='bold'><FormattedMessage id='permissions.role.parentSelect' /></Typography>
+      <Box sx={{ px: .5 }}>
         <Fields.RoleParent />
-      </Burger.Section>
+      </Box>
 
-      <Burger.Section>
-        <Typography fontWeight='bold'><FormattedMessage id='permissions.role.permissionSelect' /></Typography>
+      <Box sx={{ px: .5 }}>
         <Fields.RolePermissions />
-      </Burger.Section>
+      </Box>
     </>)
 }
 

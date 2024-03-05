@@ -562,6 +562,7 @@ const en = {
   'permissions.role.description': 'Description',
   'permissions.role.description.create.placeholder': 'Enter a description of this role',
   'permissions.role.parentSelect': 'Role parent',
+  'permissions.role.parentSelect.none': 'None',
   'permissions.role.permissionSelect': 'Permissions',
 
   'permissions.permission.name': 'Name',
