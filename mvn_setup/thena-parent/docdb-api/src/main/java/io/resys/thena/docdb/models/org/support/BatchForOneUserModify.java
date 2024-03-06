@@ -17,6 +17,7 @@ import io.resys.thena.docdb.api.models.ImmutableOrgCommit;
 import io.resys.thena.docdb.api.models.ImmutableOrgCommitTree;
 import io.resys.thena.docdb.api.models.ImmutableOrgUser;
 import io.resys.thena.docdb.api.models.ImmutableOrgUserMembership;
+import io.resys.thena.docdb.api.models.ImmutableOrgUserRole;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.IsOrgObject;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatus;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatusType;
@@ -26,6 +27,7 @@ import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgOperationType;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUser;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserMembership;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserRole;
 import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgUserGroupStatus;
 import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgUserGroupsAndRolesWithLog;
 import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgUserRoleStatus;
@@ -47,6 +49,8 @@ public class BatchForOneUserModify {
   private final List<ModRole> roles = new ArrayList<>();
   private final List<OrgCommitTree> tree = new ArrayList<OrgCommitTree>();
   private final List<OrgUserMembership> memberships = new ArrayList<>();
+  private final List<OrgUserRole> userRoles = new ArrayList<>();
+  
   private final List<OrgActorStatus> actorStatus = new ArrayList<>();
   private final List<String> identifiersForUpdates = new ArrayList<>();
   private OrgUserGroupsAndRolesWithLog current;
@@ -161,6 +165,7 @@ public class BatchForOneUserModify {
       .commit(commit)
       .users(user.map(u -> Arrays.asList(u)).orElse(Collections.emptyList()))
       .userMemberships(memberships)
+      .userRoles(userRoles)
       .actorStatus(actorStatus)
       .identifiersForUpdates(identifiersForUpdates)
       .log(ImmutableMessage.builder().text(logger.toString()).build())
@@ -234,13 +239,13 @@ public class BatchForOneUserModify {
   
   private void visitAddUserToRole(OrgRole entry, OrgUserRoleStatus status, String commitId) {
     if(!current.getDirectRoleNames().contains(entry.getRoleName())) {
-      final var membership = ImmutableOrgUserMembership.builder()
+      final var membership = ImmutableOrgUserRole.builder()
           .id(OidUtils.gen())
-          .groupId(entry.getId())
+          .roleId(entry.getId())
           .userId(current.getUserId())
           .commitId(commitId)
           .build();
-      memberships.add(membership);
+      userRoles.add(membership);
       visitChangeTree(commitId, membership, OrgOperationType.ADD);
     }
     

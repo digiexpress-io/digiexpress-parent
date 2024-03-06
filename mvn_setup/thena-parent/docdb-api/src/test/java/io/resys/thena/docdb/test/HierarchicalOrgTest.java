@@ -143,6 +143,7 @@ super-user
 |              `--- direct-membership
 `--- roles
      +--- direct
+     |    +--- baker-main
      |    `--- jailer-main
      `--- inherited
           +--- jailer-3
@@ -172,6 +173,7 @@ super-user
 |    `--- child-1.2
 `--- roles
      +--- direct
+     |    +--- baker-main
      |    `--- jailer-main
      `--- inherited
           `--- jailer-1
