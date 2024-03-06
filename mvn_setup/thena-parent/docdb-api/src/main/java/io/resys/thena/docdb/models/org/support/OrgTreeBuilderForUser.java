@@ -87,11 +87,9 @@ public class OrgTreeBuilderForUser {
   }
   
   private void visitGroup(OrgGroupAndRoleFlattened entry) {
-    if(entry.getGroupStatus() != OrgActorStatusType.REMOVED) {
-      visitTree(entry);
-      visitResult(entry);
-      visitChildren(entry);
-    }
+    visitTree(entry);
+    visitResult(entry);
+    visitChildren(entry);
   }
   
   private void visitTree(OrgGroupAndRoleFlattened node) {

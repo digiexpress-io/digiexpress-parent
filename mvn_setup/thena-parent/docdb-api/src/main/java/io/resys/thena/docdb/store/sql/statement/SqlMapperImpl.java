@@ -34,6 +34,7 @@ import io.resys.thena.docdb.api.models.ImmutableDocBranchLock;
 import io.resys.thena.docdb.api.models.ImmutableDocCommit;
 import io.resys.thena.docdb.api.models.ImmutableDocFlatted;
 import io.resys.thena.docdb.api.models.ImmutableDocLog;
+import io.resys.thena.docdb.api.models.ImmutableOrgActorStatus;
 import io.resys.thena.docdb.api.models.ImmutableOrgGroup;
 import io.resys.thena.docdb.api.models.ImmutableOrgGroupAndRoleFlattened;
 import io.resys.thena.docdb.api.models.ImmutableOrgGroupRole;
@@ -65,6 +66,7 @@ import io.resys.thena.docdb.api.models.ThenaGitObject.CommitTree;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Tag;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Tree;
 import io.resys.thena.docdb.api.models.ThenaGitObject.TreeValue;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatus;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatusType;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroupAndRoleFlattened;
@@ -413,6 +415,18 @@ public class SqlMapperImpl implements SqlMapper {
         .email(row.getString("email"))
         .status(userStatus != null ? OrgActorStatusType.valueOf(userStatus) : null)
         .statusId(row.getString("user_status_id"))
+        .build();
+  }
+  @Override
+  public OrgActorStatus orgActorStatus(Row row) {
+    final var actorStatus = row.getString("actor_status");
+    return ImmutableOrgActorStatus.builder()
+        .id(row.getString("id"))
+        .commitId(row.getString("commit_id"))
+        .userId(row.getString("user_id"))
+        .roleId(row.getString("role_id"))
+        .groupId(row.getString("group_id"))
+        .value(actorStatus != null ? OrgActorStatusType.valueOf(actorStatus) : null)
         .build();
   }
 }

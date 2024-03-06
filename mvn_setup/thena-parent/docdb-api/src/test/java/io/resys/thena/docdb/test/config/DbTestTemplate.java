@@ -111,11 +111,12 @@ public class DbTestTemplate {
         .errorHandler(new PgErrors())
         .build();
 
-    repo = this.client.repo().projectBuilder()
-      .name("junit" + index.incrementAndGet(), RepoType.git)
-      .build()
-      .await().atMost(Duration.ofSeconds(10)).getRepo();
+
     if(callback != null) {
+      repo = this.client.repo().projectBuilder()
+          .name("junit" + index.incrementAndGet(), RepoType.git)
+          .build()
+          .await().atMost(Duration.ofSeconds(10)).getRepo();
       callback.accept(client, repo);
     }
   }

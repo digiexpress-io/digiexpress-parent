@@ -44,3 +44,5 @@ Group roles
     commitId: 4
     groupId: 3
     roleId: 7
+
+Actors status

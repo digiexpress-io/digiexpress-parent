@@ -215,7 +215,7 @@ public class BatchForOneUserModify {
     if(status == null) {
       final var roleStatus = ImmutableOrgActorStatus.builder()
           .id(OidUtils.gen())
-          .groupId(entry.getId())
+          .roleId(entry.getId())
           .userId(current.getUserId())
           .commitId(commitId)
           .value(OrgActorStatusType.REMOVED)
@@ -232,7 +232,7 @@ public class BatchForOneUserModify {
 
     final var roleStatus = ImmutableOrgActorStatus.builder()
         .id(status.getStatusId())
-        .groupId(entry.getId())
+        .roleId(entry.getId())
         .userId(current.getUserId())
         .commitId(commitId)
         .value(OrgActorStatusType.REMOVED)
@@ -257,7 +257,7 @@ public class BatchForOneUserModify {
     if(status != null) {
       final var roleStatus = ImmutableOrgActorStatus.builder()
           .id(status.getStatusId())
-          .groupId(entry.getId())
+          .roleId(entry.getId())
           .userId(current.getUserId())
           .commitId(commitId)
           .value(OrgActorStatusType.IN_FORCE)

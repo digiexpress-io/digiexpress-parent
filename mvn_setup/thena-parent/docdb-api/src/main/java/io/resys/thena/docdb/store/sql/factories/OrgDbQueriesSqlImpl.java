@@ -2,6 +2,7 @@ package io.resys.thena.docdb.store.sql.factories;
 
 import io.resys.thena.docdb.models.org.OrgQueries;
 import io.resys.thena.docdb.store.sql.factories.GitDbQueriesSqlImpl.ClientQuerySqlContext;
+import io.resys.thena.docdb.store.sql.queries.OrgActorStatusQuerySqlPool;
 import io.resys.thena.docdb.store.sql.queries.OrgGroupQuerySqlPool;
 import io.resys.thena.docdb.store.sql.queries.OrgGroupRoleQuerySqlPool;
 import io.resys.thena.docdb.store.sql.queries.OrgRoleQuerySqlPool;
@@ -43,5 +44,9 @@ public class OrgDbQueriesSqlImpl implements OrgQueries {
   @Override
   public CommitQuery commits() {
     return null;
+  }
+  @Override
+  public ActorStatusQuery actorStatus() {
+    return new OrgActorStatusQuerySqlPool(context.getWrapper(), context.getMapper(), context.getBuilder(), context.getErrorHandler());
   }
 }

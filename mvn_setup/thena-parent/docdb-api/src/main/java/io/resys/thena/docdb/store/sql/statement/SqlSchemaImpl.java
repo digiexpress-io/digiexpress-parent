@@ -427,7 +427,8 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("  id VARCHAR(40) PRIMARY KEY,").ln()
     .append("  commit_id VARCHAR(40) NOT NULL,").ln()
     .append("  group_id VARCHAR(40) NOT NULL,").ln()
-    .append("  role_id VARCHAR(40) NOT NULL").ln()
+    .append("  role_id VARCHAR(40) NOT NULL,").ln()
+    .append("  UNIQUE (role_id, group_id)").ln()
     .append(");").ln()
     
     
@@ -476,7 +477,8 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("  id VARCHAR(40) PRIMARY KEY,").ln()
     .append("  commit_id VARCHAR(40) NOT NULL,").ln()
     .append("  user_id VARCHAR(40) NOT NULL,").ln()
-    .append("  role_id VARCHAR(40) NOT NULL").ln()
+    .append("  role_id VARCHAR(40) NOT NULL,").ln()
+    .append("  UNIQUE (user_id, role_id)").ln()
     .append(");").ln()
     
     .append("CREATE INDEX ").append(options.getOrgUserRoles()).append("_COMMIT_INDEX")
@@ -503,7 +505,8 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("  id VARCHAR(40) PRIMARY KEY,").ln()
     .append("  commit_id VARCHAR(40) NOT NULL,").ln()
     .append("  user_id VARCHAR(40) NOT NULL,").ln()
-    .append("  group_id VARCHAR(40) NOT NULL").ln()
+    .append("  group_id VARCHAR(40) NOT NULL,").ln()
+    .append("  UNIQUE (user_id, group_id)").ln()
     .append(");").ln()
     
     .append("CREATE INDEX ").append(options.getOrgUserMemberships()).append("_COMMIT_INDEX")
@@ -533,12 +536,15 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("  role_id VARCHAR(40),").ln()
     .append("  group_id VARCHAR(40),").ln()
     .append("  actor_status VARCHAR(100) NOT NULL,").ln() // visibility: in_force | archived 
-    .append("  UNIQUE (id, user_id, role_id, group_id)").ln()
+    .append("  UNIQUE (user_id, role_id, group_id)").ln()
     .append(");").ln()
     
     .append("CREATE INDEX ").append(options.getOrgActorStatus()).append("_COMMIT_INDEX")
     .append(" ON ").append(options.getOrgActorStatus()).append(" (commit_id);").ln()
 
+    .append("CREATE INDEX ").append(options.getOrgActorStatus()).append("_ROLE_INDEX")
+    .append(" ON ").append(options.getOrgActorStatus()).append(" (role_id);").ln()
+    
     .append("CREATE INDEX ").append(options.getOrgActorStatus()).append("_USER_INDEX")
     .append(" ON ").append(options.getOrgActorStatus()).append(" (user_id);").ln()
     
@@ -657,40 +663,37 @@ public class SqlSchemaImpl implements SqlSchema {
 
   @Override
   public Sql createOrgRolesConstraints() {
-    return ImmutableSql.builder()
-        .value(createOrgRoleFk(options.getOrgActorData()))
-        //.value(createOrgRoleFk(options.getOrgActorLogs()))
-        .value(createOrgRoleFk(options.getOrgActorStatus()))
+    return ImmutableSql.builder().value(new SqlStatement()
+        .append(createOrgRoleFk(options.getOrgActorData())).ln()
+        .append(createOrgRoleFk(options.getOrgActorStatus())).ln()
         
-        .value(createOrgRoleFk(options.getOrgUserRoles()))
-        .value(createOrgRoleFk(options.getOrgGroupRoles()))
+        .append(createOrgRoleFk(options.getOrgUserRoles())).ln()
+        .append(createOrgRoleFk(options.getOrgGroupRoles())).ln()
+        .build())
         .build();
   }
   
   @Override
   public Sql createOrgGroupConstraints() {
-    return ImmutableSql.builder()
-        .value(createOrgGroupFk(options.getOrgActorData()))
-        //.value(createOrgGroupFk(options.getOrgActorLogs()))
-        .value(createOrgGroupFk(options.getOrgActorStatus()))
-        
-        .value(createOrgRoleFk(options.getOrgGroupRoles()))
-        .value(createOrgRoleFk(options.getOrgUserMemberships()))
-        
+    return ImmutableSql.builder().value(new SqlStatement()
+        .append(createOrgGroupFk(options.getOrgActorData())).ln()
+        .append(createOrgGroupFk(options.getOrgActorStatus())).ln()
+        .append(createOrgGroupFk(options.getOrgGroupRoles())).ln()
+        .append(createOrgGroupFk(options.getOrgUserMemberships())).ln()
+        .build())
         .build();
   }
 
   
   @Override
   public Sql createOrgUserConstraints() {
-    return ImmutableSql.builder()
-        .value(createOrgUserFk(options.getOrgUserMemberships()))
-        .value(createOrgUserFk(options.getOrgUserRoles()))
+    return ImmutableSql.builder().value(new SqlStatement()
+        .append(createOrgUserFk(options.getOrgUserMemberships())).ln()
+        .append(createOrgUserFk(options.getOrgUserRoles())).ln()
         
-        .value(createOrgUserFk(options.getOrgActorData()))
-        //.value(createOrgUserFk(options.getOrgActorLogs()))
-        .value(createOrgUserFk(options.getOrgActorStatus()))
-        
+        .append(createOrgUserFk(options.getOrgActorData())).ln()
+        .append(createOrgUserFk(options.getOrgActorStatus())).ln()
+        .build())
         .build();
   }
   
@@ -728,7 +731,7 @@ public class SqlSchemaImpl implements SqlSchema {
   
   private String createOrgCommitFk(String tableNameThatPointToCommits) {
     return  new SqlStatement().ln()
-        .append("ALTER TABLE ").append(options.getOrgActorData()).ln()
+        .append("ALTER TABLE ").append(tableNameThatPointToCommits).ln()
         .append("  ADD CONSTRAINT ").append(tableNameThatPointToCommits).append("_COMMIT_FK").ln()
         .append("  FOREIGN KEY (commit_id)").ln()
         .append("  REFERENCES ").append(options.getOrgCommits()).append(" (commit_id);").ln().ln()
@@ -737,7 +740,7 @@ public class SqlSchemaImpl implements SqlSchema {
 
   private String createOrgUserFk(String tableNameThatPointToCommits) {
     return  new SqlStatement().ln()
-        .append("ALTER TABLE ").append(options.getOrgActorData()).ln()
+        .append("ALTER TABLE ").append(tableNameThatPointToCommits).ln()
         .append("  ADD CONSTRAINT ").append(tableNameThatPointToCommits).append("_USER_FK").ln()
         .append("  FOREIGN KEY (user_id)").ln()
         .append("  REFERENCES ").append(options.getOrgUsers()).append(" (id);").ln().ln()
@@ -746,7 +749,7 @@ public class SqlSchemaImpl implements SqlSchema {
 
   private String createOrgGroupFk(String tableNameThatPointToCommits) {
     return new SqlStatement().ln()
-        .append("ALTER TABLE ").append(options.getOrgActorData()).ln()
+        .append("ALTER TABLE ").append(tableNameThatPointToCommits).ln()
         .append("  ADD CONSTRAINT ").append(tableNameThatPointToCommits).append("_GROUP_FK").ln()
         .append("  FOREIGN KEY (group_id)").ln()
         .append("  REFERENCES ").append(options.getOrgGroups()).append(" (id);").ln().ln()
@@ -756,7 +759,7 @@ public class SqlSchemaImpl implements SqlSchema {
 
   private String createOrgRoleFk(String tableNameThatPointToCommits) {
     return  new SqlStatement().ln()
-        .append("ALTER TABLE ").append(options.getOrgActorData()).ln()
+        .append("ALTER TABLE ").append(tableNameThatPointToCommits).ln()
         .append("  ADD CONSTRAINT ").append(tableNameThatPointToCommits).append("_ROLE_FK").ln()
         .append("  FOREIGN KEY (role_id)").ln()
         .append("  REFERENCES ").append(options.getOrgRoles()).append(" (id);").ln().ln()

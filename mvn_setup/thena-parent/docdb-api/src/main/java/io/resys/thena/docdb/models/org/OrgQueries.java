@@ -2,6 +2,7 @@ package io.resys.thena.docdb.models.org;
 
 import java.util.List;
 
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatus;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgCommit;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroupAndRoleFlattened;
@@ -22,10 +23,15 @@ public interface OrgQueries {
   RoleQuery roles();
   UserQuery users();
   GroupRolesQuery groupRoles();
+  ActorStatusQuery actorStatus();
   UserRolesQuery userRoles();
   CommitQuery commits();
   
+  interface ActorStatusQuery {
+    Uni<OrgActorStatus> getById(String id);
+    Multi<OrgActorStatus> findAll();
 
+  }
   interface UserRolesQuery {
     Uni<OrgUserRole> getById(String id);
     Multi<OrgUserRole> findAll();

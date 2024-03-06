@@ -197,7 +197,8 @@ CREATE TABLE org_group_roles
   id VARCHAR(40) PRIMARY KEY,
   commit_id VARCHAR(40) NOT NULL,
   group_id VARCHAR(40) NOT NULL,
-  role_id VARCHAR(40) NOT NULL
+  role_id VARCHAR(40) NOT NULL,
+  UNIQUE (role_id, group_id)
 );
 CREATE INDEX org_group_roles_COMMIT_INDEX ON org_group_roles (commit_id);
 CREATE INDEX org_group_roles_GROUP_INDEX ON org_group_roles (group_id);
@@ -220,7 +221,8 @@ CREATE TABLE org_user_roles
   id VARCHAR(40) PRIMARY KEY,
   commit_id VARCHAR(40) NOT NULL,
   user_id VARCHAR(40) NOT NULL,
-  role_id VARCHAR(40) NOT NULL
+  role_id VARCHAR(40) NOT NULL,
+  UNIQUE (user_id, role_id)
 );
 CREATE INDEX org_user_roles_COMMIT_INDEX ON org_user_roles (commit_id);
 CREATE INDEX org_user_roles_ROLE_INDEX ON org_user_roles (role_id);
@@ -232,7 +234,8 @@ CREATE TABLE org_user_memberships
   id VARCHAR(40) PRIMARY KEY,
   commit_id VARCHAR(40) NOT NULL,
   user_id VARCHAR(40) NOT NULL,
-  group_id VARCHAR(40) NOT NULL
+  group_id VARCHAR(40) NOT NULL,
+  UNIQUE (user_id, group_id)
 );
 CREATE INDEX org_user_memberships_COMMIT_INDEX ON org_user_memberships (commit_id);
 CREATE INDEX org_user_memberships_USER_INDEX ON org_user_memberships (user_id);
@@ -246,9 +249,11 @@ CREATE TABLE org_actor_status
   user_id VARCHAR(40),
   role_id VARCHAR(40),
   group_id VARCHAR(40),
-  actor_status VARCHAR(100) NOT NULL
+  actor_status VARCHAR(100) NOT NULL,
+  UNIQUE (user_id, role_id, group_id)
 );
 CREATE INDEX org_actor_status_COMMIT_INDEX ON org_actor_status (commit_id);
+CREATE INDEX org_actor_status_ROLE_INDEX ON org_actor_status (role_id);
 CREATE INDEX org_actor_status_USER_INDEX ON org_actor_status (user_id);
 CREATE INDEX org_actor_status_GROUP_INDEX ON org_actor_status (group_id);
 
@@ -294,6 +299,7 @@ CREATE TABLE org_actor_data
   id VARCHAR(40) PRIMARY KEY,
   commit_id VARCHAR(40) NOT NULL,
   parent_id VARCHAR(40),
+  external_id VARCHAR(40) UNIQUE,
   user_id VARCHAR(40),
   role_id VARCHAR(40),
   group_id VARCHAR(40),
@@ -309,24 +315,90 @@ ALTER TABLE org_actor_data
   REFERENCES org_actor_data (id);
 
 ALTER TABLE org_actor_data
+  ADD CONSTRAINT org_actor_data_ROLE_FK
+  FOREIGN KEY (role_id)
+  REFERENCES org_roles (id);
+
+
+
+ALTER TABLE org_actor_status
+  ADD CONSTRAINT org_actor_status_ROLE_FK
+  FOREIGN KEY (role_id)
+  REFERENCES org_roles (id);
+
+
+
+ALTER TABLE org_user_roles
+  ADD CONSTRAINT org_user_roles_ROLE_FK
+  FOREIGN KEY (role_id)
+  REFERENCES org_roles (id);
+
+
+
+ALTER TABLE org_group_roles
   ADD CONSTRAINT org_group_roles_ROLE_FK
   FOREIGN KEY (role_id)
   REFERENCES org_roles (id);
 
 
+
+ALTER TABLE org_user_memberships
+  ADD CONSTRAINT org_user_memberships_USER_FK
+  FOREIGN KEY (user_id)
+  REFERENCES org_users (id);
+
+
+
+ALTER TABLE org_user_roles
+  ADD CONSTRAINT org_user_roles_USER_FK
+  FOREIGN KEY (user_id)
+  REFERENCES org_users (id);
+
+
+
 ALTER TABLE org_actor_data
+  ADD CONSTRAINT org_actor_data_USER_FK
+  FOREIGN KEY (user_id)
+  REFERENCES org_users (id);
+
+
+
+ALTER TABLE org_actor_status
   ADD CONSTRAINT org_actor_status_USER_FK
   FOREIGN KEY (user_id)
   REFERENCES org_users (id);
 
 
-ALTER TABLE org_actor_data
-  ADD CONSTRAINT org_user_memberships_ROLE_FK
-  FOREIGN KEY (role_id)
-  REFERENCES org_roles (id);
-
 
 ALTER TABLE org_actor_data
+  ADD CONSTRAINT org_actor_data_GROUP_FK
+  FOREIGN KEY (group_id)
+  REFERENCES org_groups (id);
+
+
+
+ALTER TABLE org_actor_status
+  ADD CONSTRAINT org_actor_status_GROUP_FK
+  FOREIGN KEY (group_id)
+  REFERENCES org_groups (id);
+
+
+
+ALTER TABLE org_group_roles
+  ADD CONSTRAINT org_group_roles_GROUP_FK
+  FOREIGN KEY (group_id)
+  REFERENCES org_groups (id);
+
+
+
+ALTER TABLE org_user_memberships
+  ADD CONSTRAINT org_user_memberships_GROUP_FK
+  FOREIGN KEY (group_id)
+  REFERENCES org_groups (id);
+
+
+
+ALTER TABLE org_user_memberships
   ADD CONSTRAINT org_user_memberships_COMMIT_FK
   FOREIGN KEY (commit_id)
   REFERENCES org_commits (commit_id);

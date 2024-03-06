@@ -132,11 +132,12 @@ public class OrgDbInsertsSqlPool implements OrgInserts {
     // combine all
     return Uni.combine().all()
     		.unis(
+    		    commitUni,
     		    userInsertUni, userUpdateUni, 
     		    groupsInsertUni, groupsUpdateUni, membershipUni, 
     		    roleInsertUni, roleUpdateUni, groupRolesUni, userRolesUni,
     		    statusInsertUni, statusUpdateUni,
-    		    commitUni, treeUni
+    		    treeUni
     		 )
     		.combinedWith(OrgBatchForOne.class, (List<OrgBatchForOne> items) -> merge(inputBatch, items));
   }

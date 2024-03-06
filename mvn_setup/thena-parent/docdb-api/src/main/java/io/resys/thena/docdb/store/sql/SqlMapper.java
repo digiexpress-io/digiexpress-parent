@@ -34,6 +34,7 @@ import io.resys.thena.docdb.api.models.ThenaGitObject.Commit;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Tag;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Tree;
 import io.resys.thena.docdb.api.models.ThenaGitObject.TreeValue;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatus;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroupAndRoleFlattened;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroupRole;
@@ -74,7 +75,7 @@ public interface SqlMapper extends DataMapper<Row>{
   OrgGroupAndRoleFlattened orgGroupAndRoleFlattened(Row row);
   OrgRoleFlattened orgOrgRoleFlattened(Row row);
   OrgUserFlattened orgUserFlattened(Row row);
-  
+  OrgActorStatus orgActorStatus(Row row); 
   
   JsonObject jsonObject(Row row, String columnName);
 }

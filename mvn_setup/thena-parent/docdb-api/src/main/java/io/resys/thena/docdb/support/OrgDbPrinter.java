@@ -187,6 +187,34 @@ public class OrgDbPrinter {
       return item;
     }).collect().asList().await().indefinitely();
     
+    
+    result
+    .append(System.lineSeparator())
+    .append("Actors status").append(System.lineSeparator());
+    ctx.query().actorStatus()
+    .findAll().onItem()
+    .transform(item -> {
+      result.append("  - ")
+        .append(ID.apply(item.getId()))
+        .append(System.lineSeparator())
+
+        .append("    commitId").append(": ").append(ID.apply(item.getCommitId()))
+        .append(System.lineSeparator())
+        
+        .append("    groupId").append(": ").append(ID.apply(item.getGroupId()))
+        .append(System.lineSeparator())
+
+        .append("    roleId").append(": ").append(ID.apply(item.getRoleId()))
+        .append(System.lineSeparator())
+         
+        .append("    status").append(": ").append(item.getValue())
+        .append(System.lineSeparator())
+        ;
+      
+      return item;
+    }).collect().asList().await().indefinitely();
+    
+    
     return result.toString();
   }
   
@@ -357,7 +385,31 @@ public class OrgDbPrinter {
       return item;
     }).collect().asList().await().indefinitely();
     
-    
+    result
+    .append(System.lineSeparator())
+    .append("Actors status").append(System.lineSeparator());
+    ctx.query().actorStatus()
+    .findAll().onItem()
+    .transform(item -> {
+      result.append("  - ")
+        .append(item.getId())
+        .append(System.lineSeparator())
+
+        .append("    commitId").append(": ").append(item.getCommitId())
+        .append(System.lineSeparator())
+        
+        .append("    groupId").append(": ").append(item.getGroupId())
+        .append(System.lineSeparator())
+
+        .append("    roleId").append(": ").append(item.getRoleId())
+        .append(System.lineSeparator())
+         
+        .append("    status").append(": ").append(item.getValue())
+        .append(System.lineSeparator())
+        ;
+      
+      return item;
+    }).collect().asList().await().indefinitely();
     
     return result.toString();
   }

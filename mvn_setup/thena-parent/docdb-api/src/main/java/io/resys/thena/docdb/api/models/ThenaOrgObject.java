@@ -136,12 +136,7 @@ public interface ThenaOrgObject {
     @Nullable String getUserId();
     @Nullable String getRoleId();
     @Nullable String getGroupId();
-    
-    //@Nullable String getUserMembershipId();
-    @Nullable String getUserRoleId();
-    @Nullable String getGroupRoleId();
     OrgActorStatusType getValue();
-    
     @JsonIgnore @Override default public OrgDocType getDocType() { return OrgDocType.OrgActorStatus; };
   }
   
