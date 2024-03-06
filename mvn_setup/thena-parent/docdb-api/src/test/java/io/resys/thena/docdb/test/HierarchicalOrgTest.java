@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
+import io.resys.thena.docdb.api.actions.OrgCommitActions.ModType;
 import io.resys.thena.docdb.api.actions.RepoActions.RepoResult;
 import io.resys.thena.docdb.api.actions.RepoActions.RepoStatus;
 import io.resys.thena.docdb.api.models.Repo.RepoType;
@@ -49,6 +50,7 @@ public class HierarchicalOrgTest extends DbTestTemplate {
     final var jailer2 = createRole(repo, "jailer-2");
     final var jailer3 = createRole(repo, "jailer-3");
     final var jailer4 = createRole(repo, "jailer-main");
+    final var bakerMain = createRole(repo, "baker-main");
         
     final var root1 = createRootGroup("group-1", repo, jailer1);
     final var child1_1 = createChildGroup("child-1.1", root1.getId(), repo);
@@ -79,7 +81,9 @@ public class HierarchicalOrgTest extends DbTestTemplate {
         .repoId(repo.getRepo().getId())
         .get(userId1.getId()).await().atMost(Duration.ofMinutes(1));
     */
-    final var userGroupsAndRoles2 = getClient().org().find().userGroupsAndRolesQuery()
+    
+    // user 2 sanity
+    var userGroupsAndRoles2 = getClient().org().find().userGroupsAndRolesQuery()
         .repoId(repo.getRepo().getId())
         .get(userId2.getId()).await().atMost(Duration.ofMinutes(1)).getObjects();
     
@@ -89,7 +93,6 @@ public class HierarchicalOrgTest extends DbTestTemplate {
     
     Assertions.assertEquals("[child-1.2.2]", userGroupsAndRoles2.getDirectGroupNames().toString());
     Assertions.assertEquals("[jailer-main, jailer-2]", userGroupsAndRoles2.getDirectRoleNames().toString());
-    
     Assertions.assertEquals("""
 user-2
 +--- group-1
@@ -109,6 +112,70 @@ user-2
           `--- jailer-1
         """, userGroupsAndRoles2.getLog());
     
+    // modify user 2
+    getClient().org().commit().modifyOneUser()
+        .repoId(repo.getRepo().getId())
+        .userId(userGroupsAndRoles2.getUserId())
+        .groups(ModType.ADD, Arrays.asList(root1.getId()))
+        .roles(ModType.ADD, Arrays.asList(bakerMain.getId()))
+        .userName("super-user")
+        .externalId("ext-1")
+        .email("em@mod.com")
+        .author("au")
+        .message("mod for user")
+        .build().await().atMost(Duration.ofMinutes(1))
+        .getUser();
+    
+    userGroupsAndRoles2 = getClient().org().find().userGroupsAndRolesQuery()
+        .repoId(repo.getRepo().getId())
+        .get(userId2.getId()).await().atMost(Duration.ofMinutes(1)).getObjects(); 
+    Assertions.assertEquals("""
+super-user
++--- group-1
+|    +--- roles
+|    |    `--- jailer-1
+|    +--- direct-membership
+|    `--- child-1.2
+|         `--- child-1.2.2
+|              +--- roles
+|              |    +--- jailer-2
+|              |    `--- jailer-3
+|              `--- direct-membership
+`--- roles
+     +--- direct
+     |    `--- jailer-main
+     `--- inherited
+          +--- jailer-3
+          `--- jailer-1
+        """, userGroupsAndRoles2.getLog());
+    
+    
+    // remove user 2 from child-1.2.2 group
+    getClient().org().commit().modifyOneUser()
+        .repoId(repo.getRepo().getId())
+        .userId(userGroupsAndRoles2.getUserId())
+        .groups(ModType.REMOVE, Arrays.asList(child1_2_2.getId()))
+        .author("au")
+        .message("mod for user")
+        .build().await().atMost(Duration.ofMinutes(1))
+        .getUser();
+    
+    userGroupsAndRoles2 = getClient().org().find().userGroupsAndRolesQuery()
+        .repoId(repo.getRepo().getId())
+        .get(userId2.getId()).await().atMost(Duration.ofMinutes(1)).getObjects(); 
+    Assertions.assertEquals("""
+super-user
++--- group-1
+|    +--- roles
+|    |    `--- jailer-1
+|    +--- direct-membership
+|    `--- child-1.2
+`--- roles
+     +--- direct
+     |    `--- jailer-main
+     `--- inherited
+          `--- jailer-1
+        """, userGroupsAndRoles2.getLog());
   }
 
   

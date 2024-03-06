@@ -183,6 +183,7 @@ public class ModifyOneUserImpl implements ModifyOneUser {
     
     // Remove or add roles 
     roles.forEach(role -> {
+      
       if( rolesToAdd.contains(role.getRoleName()) ||
           rolesToAdd.contains(role.getId()) ||
           rolesToAdd.contains(role.getExternalId())

@@ -72,9 +72,11 @@ public class OrgTreeBuilderForUser {
   }
   
   private void visitGroup(OrgGroupAndRoleFlattened entry) {
-    visitTree(entry);
-    visitResult(entry);
-    visitChildren(entry);
+    if(entry.getGroupStatus() != OrgActorStatusType.REMOVED) {
+      visitTree(entry);
+      visitResult(entry);
+      visitChildren(entry);
+    }
   }
   
   private void visitTree(OrgGroupAndRoleFlattened node) {
@@ -89,6 +91,9 @@ public class OrgTreeBuilderForUser {
       // connect to parent
       if(node.getGroupParentId() != null) {
         groupNodes.get(node.getGroupParentId()).addChild(groupNode);
+      }
+      if(node.getGroupStatus() != null) {
+        groupNode.addChild(new DefaultNode(node.getGroupStatus().name()));
       }
     }
 
@@ -167,7 +172,8 @@ public class OrgTreeBuilderForUser {
   private String generateTree() {
     final var userNode = new DefaultNode(user.getUserName());
     for(final var root : this.roots) {
-      userNode.addChild(groupNodes.get(root.getGroupId()));
+      final var rootNode = groupNodes.get(root.getGroupId());
+      userNode.addChild(rootNode);
     }
 
     final var userRoles = new DefaultNode("roles");
@@ -188,6 +194,7 @@ public class OrgTreeBuilderForUser {
     
     for(final var role : groupsById.values().stream()
         .filter(role -> role.getRoleName() != null)
+        .filter(entry -> entry.getGroupStatus() != OrgActorStatusType.REMOVED)
         .sorted((a, b) -> getSortableId(a).compareTo(getSortableId(b)))
         .toList()) {
 

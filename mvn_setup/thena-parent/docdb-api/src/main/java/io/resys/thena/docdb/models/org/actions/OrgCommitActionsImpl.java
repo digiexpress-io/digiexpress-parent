@@ -4,6 +4,7 @@ import io.resys.thena.docdb.api.actions.OrgCommitActions;
 import io.resys.thena.docdb.models.org.create.CreateOneGroupImpl;
 import io.resys.thena.docdb.models.org.create.CreateOneRoleImpl;
 import io.resys.thena.docdb.models.org.create.CreateOneUserImpl;
+import io.resys.thena.docdb.models.org.modify.ModifyOneUserImpl;
 import io.resys.thena.docdb.spi.DbState;
 import lombok.RequiredArgsConstructor;
 
@@ -24,11 +25,9 @@ public class OrgCommitActionsImpl implements OrgCommitActions {
   public CreateOneRole createOneRole() {
   	return new CreateOneRoleImpl(state);
   }
-
   @Override
   public ModifyOneUser modifyOneUser() {
-    // TODO Auto-generated method stub
-    return null;
+    return new ModifyOneUserImpl(state);
   }
 
   @Override

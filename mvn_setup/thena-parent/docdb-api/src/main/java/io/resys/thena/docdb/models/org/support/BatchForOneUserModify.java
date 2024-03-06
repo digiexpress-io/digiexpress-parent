@@ -301,7 +301,7 @@ public class BatchForOneUserModify {
       visitChangeTree(commitId, membership, OrgOperationType.ADD);
     }
     
-    if(status != null) {
+    if(status != null && status.getStatus() != OrgActorStatusType.IN_FORCE) {
       final var groupStatus = ImmutableOrgActorStatus.builder()
           .id(status.getStatusId())
           .groupId(entry.getId())

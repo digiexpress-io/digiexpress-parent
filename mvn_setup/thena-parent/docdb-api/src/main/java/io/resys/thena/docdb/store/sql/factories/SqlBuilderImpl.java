@@ -33,6 +33,7 @@ import io.resys.thena.docdb.store.sql.statement.DocBranchSqlBuilderImpl;
 import io.resys.thena.docdb.store.sql.statement.DocCommitSqlBuilderImpl;
 import io.resys.thena.docdb.store.sql.statement.DocLogSqlBuilderImpl;
 import io.resys.thena.docdb.store.sql.statement.DocSqlBuilderImpl;
+import io.resys.thena.docdb.store.sql.statement.OrgActorStatusSqlBuilderImpl;
 import io.resys.thena.docdb.store.sql.statement.OrgCommitSqlBuilderImpl;
 import io.resys.thena.docdb.store.sql.statement.OrgCommitTreeSqlBuilderImpl;
 import io.resys.thena.docdb.store.sql.statement.OrgGroupRoleSqlBuilderImpl;
@@ -127,4 +128,8 @@ public class SqlBuilderImpl implements SqlBuilder {
 	public OrgGroupRoleSqlBuilder orgGroupRoles() {
 		return new OrgGroupRoleSqlBuilderImpl(ctx);
 	}
+  @Override
+  public OrgActorStatusSqlBuilder orgActorStatus() {
+    return new OrgActorStatusSqlBuilderImpl(ctx);
+  }
 }

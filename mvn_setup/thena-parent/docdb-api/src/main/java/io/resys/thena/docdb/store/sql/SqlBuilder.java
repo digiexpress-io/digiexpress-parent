@@ -40,6 +40,7 @@ import io.resys.thena.docdb.api.models.ThenaGitObject.Commit;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Tag;
 import io.resys.thena.docdb.api.models.ThenaGitObject.Tree;
 import io.resys.thena.docdb.api.models.ThenaGitObject.TreeValue;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatus;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgCommit;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgCommitTree;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
@@ -77,6 +78,8 @@ public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
   OrgCommitSqlBuilder orgCommits();
   OrgCommitTreeSqlBuilder orgCommitTrees();
   
+  OrgActorStatusSqlBuilder orgActorStatus();
+  
   OrgRoleSqlBuilder orgRoles();
   OrgUserRoleSqlBuilder orgUserRoles();
   OrgGroupRoleSqlBuilder orgGroupRoles();
@@ -104,6 +107,17 @@ public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
     SqlTupleList insertAll(Collection<OrgUser> users);
     SqlTuple updateOne(OrgUser user);
     SqlTupleList updateMany(Collection<OrgUser> users);
+  }
+  
+  interface OrgActorStatusSqlBuilder {
+    SqlTuple getById(String id);
+    
+    Sql findAll();
+    SqlTuple findAll(List<String> id);
+    SqlTuple insertOne(OrgActorStatus user);
+    SqlTupleList insertAll(Collection<OrgActorStatus> users);
+    SqlTuple updateOne(OrgActorStatus user);
+    SqlTupleList updateMany(Collection<OrgActorStatus> users);
   }
   
   interface OrgRoleSqlBuilder {
