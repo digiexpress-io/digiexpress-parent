@@ -20,6 +20,7 @@ import io.resys.thena.docdb.models.org.OrgInserts.OrgBatchForOne;
 import io.resys.thena.docdb.models.org.OrgState.OrgRepo;
 import io.resys.thena.docdb.models.org.queries.OrgUserGroupsAndRolesQueryImpl;
 import io.resys.thena.docdb.models.org.support.BatchForOneUserModify;
+import io.resys.thena.docdb.models.org.support.BatchForOneUserModify.NoChangesException;
 import io.resys.thena.docdb.spi.DataMapper;
 import io.resys.thena.docdb.spi.DbState;
 import io.resys.thena.docdb.support.RepoAssert;
@@ -199,15 +200,27 @@ public class ModifyOneUserImpl implements ModifyOneUser {
        }
     });
     
-    final OrgBatchForOne batch = modify.create();
+    
+    try {
+      final OrgBatchForOne batch = modify.create();
+      return tx.insert().batchOne(batch)
+          .onItem().transform(rsp -> ImmutableOneUserEnvelope.builder()
+            .repoId(repoId)
+            .user(rsp.getUsers().isEmpty() ? null : rsp.getUsers().get(0))
+            .addMessages(rsp.getLog())
+            .addAllMessages(rsp.getMessages())
+            .status(DataMapper.mapStatus(rsp.getStatus()))
+            .build());
+    } catch (NoChangesException e) {
+      return Uni.createFrom().item(ImmutableOneUserEnvelope.builder()
+            .repoId(repoId)
+            .addMessages(ImmutableMessage.builder()
+                .exception(e).text("Nothing to commit, data already in the expected state!")
+                .build())
+            .status(CommitResultStatus.NO_CHANGES)
+            .build());
+    }
      
-    return tx.insert().batchOne(batch)
-      .onItem().transform(rsp -> ImmutableOneUserEnvelope.builder()
-        .repoId(repoId)
-        .user(rsp.getUsers().isEmpty() ? null : rsp.getUsers().get(0))
-        .addMessages(rsp.getLog())
-        .addAllMessages(rsp.getMessages())
-        .status(DataMapper.mapStatus(rsp.getStatus()))
-        .build());
+
   }
 }

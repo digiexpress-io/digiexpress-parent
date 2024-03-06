@@ -15,6 +15,7 @@ import io.quarkus.test.junit.TestProfile;
 import io.resys.thena.docdb.api.actions.OrgCommitActions.ModType;
 import io.resys.thena.docdb.api.actions.RepoActions.RepoResult;
 import io.resys.thena.docdb.api.actions.RepoActions.RepoStatus;
+import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.Repo.RepoType;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
@@ -178,6 +179,51 @@ super-user
      `--- inherited
           `--- jailer-1
         """, userGroupsAndRoles2.getLog());
+    
+    Assertions.assertEquals(userId2.getId(), userGroupsAndRoles2.getUserId());
+    Assertions.assertEquals("[group-1, child-1.2]", userGroupsAndRoles2.getGroupNames().toString());
+    Assertions.assertEquals("[jailer-main, baker-main, jailer-1]", userGroupsAndRoles2.getRoleNames().toString());
+    
+    Assertions.assertEquals("[group-1]", userGroupsAndRoles2.getDirectGroupNames().toString());
+    Assertions.assertEquals("[jailer-main, baker-main, jailer-1]", userGroupsAndRoles2.getDirectRoleNames().toString());
+    
+    
+    
+    // Reject changes because there are non
+    final var rejectNoChanges = getClient().org().commit().modifyOneUser()
+      .repoId(repo.getRepo().getId())
+      .userId(userGroupsAndRoles2.getUserId())
+      .groups(ModType.REMOVE, Arrays.asList(child1_2_2.getId()))
+      .author("au")
+      .message("mod for user")
+      .build().await().atMost(Duration.ofMinutes(1))
+      .getStatus();
+    Assertions.assertEquals(Repo.CommitResultStatus.NO_CHANGES, rejectNoChanges);
+    
+    userGroupsAndRoles2 = getClient().org().find().userGroupsAndRolesQuery()
+        .repoId(repo.getRepo().getId())
+        .get(userId2.getId()).await().atMost(Duration.ofMinutes(1)).getObjects(); 
+    Assertions.assertEquals("""
+super-user
++--- group-1
+|    +--- roles
+|    |    `--- jailer-1
+|    +--- direct-membership
+|    `--- child-1.2
+`--- roles
+     +--- direct
+     |    +--- baker-main
+     |    `--- jailer-main
+     `--- inherited
+          `--- jailer-1
+        """, userGroupsAndRoles2.getLog());
+    
+    Assertions.assertEquals(userId2.getId(), userGroupsAndRoles2.getUserId());
+    Assertions.assertEquals("[group-1, child-1.2]", userGroupsAndRoles2.getGroupNames().toString());
+    Assertions.assertEquals("[jailer-main, baker-main, jailer-1]", userGroupsAndRoles2.getRoleNames().toString());
+    
+    Assertions.assertEquals("[group-1]", userGroupsAndRoles2.getDirectGroupNames().toString());
+    Assertions.assertEquals("[jailer-main, baker-main, jailer-1]", userGroupsAndRoles2.getDirectRoleNames().toString());
   }
 
   

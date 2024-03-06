@@ -71,7 +71,7 @@ public class BatchForOneUserModify {
     this.roles.add(new ModRole(type, role)); 
     return this;
   }
-  public ImmutableOrgBatchForOne create() {
+  public ImmutableOrgBatchForOne create() throws NoChangesException {
     RepoAssert.notEmpty(repoId,   () -> "repoId can't be empty!");
     RepoAssert.notEmpty(author,   () -> "author can't be empty!");
     RepoAssert.notEmpty(message,  () -> "message can't be empty!");
@@ -170,6 +170,11 @@ public class BatchForOneUserModify {
       .identifiersForUpdates(identifiersForUpdates)
       .log(ImmutableMessage.builder().text(logger.toString()).build())
       .build();
+    
+    // no changes
+    if(actorStatus.isEmpty() && userRoles.isEmpty() && memberships.isEmpty() && batch.getUsers().isEmpty()) {
+      throw new NoChangesException();
+    }
     return batch;
   }
   
@@ -330,5 +335,10 @@ public class BatchForOneUserModify {
   private static class ModGroup {
     private final ModType type;
     private final OrgGroup group;
+  }
+  
+  public static class NoChangesException extends Exception {
+    private static final long serialVersionUID = 3041890960089273165L;
+    
   }
 }

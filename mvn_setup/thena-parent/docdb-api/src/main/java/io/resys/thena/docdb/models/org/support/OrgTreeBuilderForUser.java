@@ -10,7 +10,9 @@ import org.barfuin.texttree.api.TextTree;
 import org.barfuin.texttree.api.TreeOptions;
 
 import io.resys.thena.docdb.api.LogConstants;
+import io.resys.thena.docdb.api.models.ImmutableOrgUserGroupStatus;
 import io.resys.thena.docdb.api.models.ImmutableOrgUserGroupsAndRolesWithLog;
+import io.resys.thena.docdb.api.models.ImmutableOrgUserRoleStatus;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatusType;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroupAndRoleFlattened;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRoleFlattened;
@@ -40,8 +42,24 @@ public class OrgTreeBuilderForUser {
   
   public OrgTreeBuilderForUser(OrgUserFlattened user, List<OrgGroupAndRoleFlattened> groupData, List<OrgRoleFlattened> roleData) {
     this.user = user;
-    
+    this.result = ImmutableOrgUserGroupsAndRolesWithLog.builder()
+        .userId(user.getId())
+        .userName(user.getUserName())
+        .externalId(user.getExternalId())
+        .email(user.getEmail())
+        .commitId(user.getCommitId())
+        .status(user.getStatus() == null ? OrgActorStatusType.IN_FORCE : user.getStatus());
+      
     for(final var entry : groupData) {
+      if(entry.getGroupStatusId() != null && !groupsById.containsKey(entry.getGroupId())) {
+        result.addUserGroupStatus(ImmutableOrgUserGroupStatus.builder()
+            .groupId(entry.getGroupId())
+            .status(entry.getGroupStatus())
+            .statusId(entry.getGroupStatusId())
+            .build());
+      }
+      
+      
       groupsById.put(entry.getGroupId(), entry);
       if(entry.getGroupParentId() == null) {
         roots.add(entry);
@@ -53,21 +71,18 @@ public class OrgTreeBuilderForUser {
       groupsByParentId.get(entry.getGroupParentId()).add(entry);
     }
     
-    for(final var entry : roleData) {
-      rolesById.put(entry.getRoleId(), entry);
-    }
-    
-    result = ImmutableOrgUserGroupsAndRolesWithLog.builder()
-      .userId(user.getId())
-      .userName(user.getUserName())
-      .externalId(user.getExternalId())
-      .email(user.getEmail())
-      .commitId(user.getCommitId())
-      .status(user.getStatus() == null ? OrgActorStatusType.IN_FORCE : user.getStatus());
-    
     for(final var role : roleData) {
+      rolesById.put(role.getRoleId(), role);
       result.addRoleNames(role.getRoleName());
       result.addDirectRoleNames(role.getRoleName());
+      
+      if(role.getRoleStatusId() != null) {
+        result.addUserRoleStatus(ImmutableOrgUserRoleStatus.builder()
+            .roleId(role.getRoleId())
+            .status(role.getRoleStatus())
+            .statusId(role.getRoleStatusId())
+            .build());
+      }
     }
   }
   

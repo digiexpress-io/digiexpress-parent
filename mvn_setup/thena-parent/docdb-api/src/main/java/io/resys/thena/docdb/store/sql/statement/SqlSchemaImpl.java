@@ -532,7 +532,8 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("  user_id VARCHAR(40),").ln()
     .append("  role_id VARCHAR(40),").ln()
     .append("  group_id VARCHAR(40),").ln()
-    .append("  actor_status VARCHAR(100) NOT NULL").ln() // visibility: in_force | archived 
+    .append("  actor_status VARCHAR(100) NOT NULL,").ln() // visibility: in_force | archived 
+    .append("  UNIQUE (id, user_id, role_id, group_id)").ln()
     .append(");").ln()
     
     .append("CREATE INDEX ").append(options.getOrgActorStatus()).append("_COMMIT_INDEX")
@@ -616,6 +617,7 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("  id VARCHAR(40) PRIMARY KEY,").ln()
     .append("  commit_id VARCHAR(40) NOT NULL,").ln()
     .append("  parent_id VARCHAR(40),").ln()
+    .append("  external_id VARCHAR(40) UNIQUE,").ln()
     .append("  user_id VARCHAR(40),").ln()
     .append("  role_id VARCHAR(40),").ln()
     .append("  group_id VARCHAR(40),").ln()
