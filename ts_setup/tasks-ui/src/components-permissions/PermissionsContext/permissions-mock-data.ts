@@ -7,7 +7,9 @@ export const testRoles: Role[] = [
     id: '7yh4dR', description: 'All office staff -- default user roles', name: 'Tasks user',
     permissions: [
       { id: '77aor77', name: 'frontoffice/tasks/edit', description: 'Update task data', status: 'ENABLED' },
-      { id: 't47luau', name: 'frontoffice/tasks/crm', description: 'View crm data on assigned task', status: 'ENABLED' }
+      { id: 't47luau', name: 'frontoffice/tasks/crm', description: 'View crm data on assigned task', status: 'ENABLED' },
+      { id: '5t3uhua', name: 'stencil/articles/edit', description: 'Edit existing articles in stencil', status: 'ENABLED' },
+      { id: 'y71665d', name: 'wrench/flow/admin', description: 'Create and edit flows in wrench', status: 'ENABLED' }
     ],
     principals: [
       { id: 'user1', name: 'John Smith', email: 'john.smith@gmail.com', roles: [], status: 'ENABLED' },
@@ -26,7 +28,7 @@ export const testRoles: Role[] = [
   {
     id: '2hy2yK', description: 'Training purposes - view only Stencil', name: 'Training - content management',
     permissions: [
-      { id: '77aor77', name: 'frontoffice/stencil/view', description: 'View portal content in Stencil', status: 'ENABLED' },
+      { id: '654uuu', name: 'frontoffice/stencil/view', description: 'View portal content in Stencil', status: 'ENABLED' },
     ],
     principals: [
       { id: 'user3', name: 'Rodger Arrowhead', email: 'forestman@lumberjack.com', roles: [], status: 'ENABLED' }

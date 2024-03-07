@@ -569,7 +569,12 @@ const en = {
   'permissions.permission.description': 'Description',
   'permissions.permission.status': 'Status',
   'permissions.permission.none': 'No permissions found',
+  'permissions.permission.select': 'Permissions',
+  'permissions.permission.select.none': 'None',
 
+  'permissions.createRole.role_parent': 'Parent role',
+  'permissions.createRole.role_permissions': 'Permissions',
+  'permissions.createRole.role_members': 'Role members',
 
 };
 

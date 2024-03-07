@@ -11,8 +11,12 @@ import { testRoles } from './permissions-mock-data';
 const PermissionsTabbingProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   function initTabs(): Record<TabTypes, SingleTabInit<{}>> {
     return {
-      role_create: { body: {}, active: true },
-      permission_create: { body: {}, active: false }
+      role_create: { body: {}, active: false },
+      permission_create: { body: {}, active: false },
+
+      role_parent: { body: {}, active: true },
+      role_permissions: { body: {}, active: false },
+      role_members: { body: {}, active: false },
     };
   }
   return (

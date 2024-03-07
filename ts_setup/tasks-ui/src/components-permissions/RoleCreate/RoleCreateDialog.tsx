@@ -5,6 +5,8 @@ import { FormattedMessage } from 'react-intl';
 import { StyledFullScreenDialog } from 'components-generic';
 import Burger from 'components-burger';
 import Fields from './RoleCreateFields';
+import { usePermissions } from '../PermissionsContext';
+import RoleCreateTabNavLoader from './RoleCreateTabNavigation';
 
 
 const Left: React.FC<{}> = () => {
@@ -21,13 +23,14 @@ const Left: React.FC<{}> = () => {
       </Burger.Section>
 
       <Box sx={{ px: .5 }}>
-        <Fields.RoleParent />
-      </Box>
-
-      <Box sx={{ px: .5 }}>
-        <Fields.RolePermissions />
+        <Fields.ParentRoleAndPermissions />
       </Box>
     </>)
+}
+
+const Right: React.FC<{}> = () => {
+
+  return (<RoleCreateTabNavLoader />)
 }
 
 const Header: React.FC<{ onClose: () => void }> = ({ onClose }) => {
@@ -58,7 +61,7 @@ const RoleCreateDialog: React.FC<{ open: boolean, onClose: () => void }> = ({ op
       header={<Header onClose={onClose} />}
       footer={<Footer onClose={onClose} />}
       left={<Left />}
-      right={<>RIGHT</>}
+      right={<Right />}
     />
   )
 }

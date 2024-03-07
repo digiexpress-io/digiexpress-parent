@@ -1,6 +1,6 @@
-type PrincipalId = string;
-type RoleId = string;
-type PermissionId = string;
+export type PrincipalId = string;
+export type RoleId = string;
+export type PermissionId = string;
 
 type PrincipalName = string;
 type RoleName = string;
