@@ -9,7 +9,7 @@ export const testRoles: Role[] = [
       { id: '77aor77', name: 'frontoffice/tasks/edit', description: 'Update task data', status: 'ENABLED' },
       { id: 't47luau', name: 'frontoffice/tasks/crm', description: 'View crm data on assigned task', status: 'ENABLED' },
       { id: '5t3uhua', name: 'stencil/articles/edit', description: 'Edit existing articles in stencil', status: 'ENABLED' },
-      { id: 'y71665d', name: 'wrench/flow/admin', description: 'Create and edit flows in wrench', status: 'ENABLED' }
+      { id: 'y71665d', name: 'wrench/flow/admin', description: 'Create and edit flows', status: 'ENABLED' }
     ],
     principals: [
       { id: 'user1', name: 'John Smith', email: 'john.smith@gmail.com', roles: [], status: 'ENABLED' },

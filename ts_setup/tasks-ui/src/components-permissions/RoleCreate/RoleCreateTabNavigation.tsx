@@ -1,4 +1,5 @@
 import React from 'react';
+import { Tabs, Tab } from '@mui/material';
 
 import * as colors from 'components-colors';
 import { LayoutList, NavigationButton, FilterByString } from 'components-generic';

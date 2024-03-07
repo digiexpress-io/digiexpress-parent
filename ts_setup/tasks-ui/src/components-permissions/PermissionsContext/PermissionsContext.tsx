@@ -4,7 +4,7 @@ import Context from 'context';
 import { SingleTabInit } from 'descriptor-tabbing';
 
 import { ImmutableSysConfigStore } from 'descriptor-sys-config';
-import { Permission, Role } from 'descriptor-permissions';
+import { Permission, Principal, Role } from 'descriptor-permissions';
 import { TabTypes, Tabbing, PermissionsContextType } from './permissions-context-types';
 import { testRoles } from './permissions-mock-data';
 
@@ -39,7 +39,7 @@ export function usePermissions() {
     activeTab,
     setActiveTab,
     roles,
-    permissions
+    permissions,
   };
 }
 

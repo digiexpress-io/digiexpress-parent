@@ -553,6 +553,8 @@ const en = {
   'permissions.roles.numberOfPrincpals': 'Total members',
   'permissions.roles.numberOfPermissions': 'Total permissions',
 
+  'permissions.principals.select': 'Select members to add',
+
   'permissions.role.member.name': 'Username',
   'permissions.role.member.none': 'No members found',
   'permissions.role.create': 'Create a role',

@@ -7,7 +7,6 @@ export const Tabbing = createTabs<TabTypes, {}>();
 export interface PermissionsContextType {
   roles: Role[] | undefined;
   permissions: Permission[] | undefined;
-
   loading: boolean; // is permissions loading
   reload(): Promise<void>;
 }

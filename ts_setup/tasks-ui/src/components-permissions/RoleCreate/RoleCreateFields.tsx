@@ -2,42 +2,15 @@ import React from 'react';
 import { TextField, IconButton, Alert, AlertTitle } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useIntl } from 'react-intl';
-import { Permission, PermissionId, Principal, PrincipalId, RoleId } from 'descriptor-permissions';
+import { PermissionId, Principal, PrincipalId, RoleId } from 'descriptor-permissions';
 import { permissions_mock_data, usePermissions } from '../PermissionsContext';
 import Burger from 'components-burger';
-
-
-
-
-
-/*
-function getParentRolePermissions(parentId: string, roles: Role[]) {
-  if (parentId === NONE_SELECTED_ID) {
-    return undefined;
-  }
-
-  const selectedParent = roles.find(role => role.id === parentId);
-  if (selectedParent) {
-    return (
-      <Box sx={{ mx: 1, pt: 1 }}>
-        {selectedParent.permissions.map((permission) => (<Box>
-          <Typography key={permission.id}>{permission.name}</Typography>
-        </Box>
-        ))}
-      </Box>
-    );
-  }
-}
-
-*/
-
 
 
 const NONE_SELECTED_ID = 'none';
 
 const RolePermissions: React.FC = () => {
   const { permissions } = usePermissions();
-
   const [permissionIds, setPermissionIds] = React.useState<PermissionId[]>([]);
   const [directPermissions, setDirectPermissions] = React.useState<string[]>([]);
   const permissionsMenuItems = permissions && permissions.map((permission) => ({ id: permission.id, value: permission.name }));
@@ -74,8 +47,6 @@ const RolePrincipals: React.FC = () => {
   const principals: Principal[] = permissions_mock_data.testRoles.flatMap((r) => r.principals);
   const principalsMenuItems = principals.map((principal) => ({ id: principal.id, value: principal.name }));
 
-
-
   function handlePrincipalsChange(selectedIds: string[]) {
     setPrincipalIds(selectedIds);
     if (selectedIds.includes(NONE_SELECTED_ID)) {
@@ -83,7 +54,6 @@ const RolePrincipals: React.FC = () => {
     }
     setSelectedPrincipals(selectedIds.map(principalId => principals.find(p => p.id === principalId)?.name || ''));
   };
-
 
 
   return (<>
@@ -94,7 +64,7 @@ const RolePrincipals: React.FC = () => {
     </Alert>
 
     <Burger.SelectMultiple
-      label='permissions.permission.select'
+      label='permissions.principals.select'
       onChange={handlePrincipalsChange}
       selected={principalIds}
       items={principalsMenuItems}
