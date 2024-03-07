@@ -1,9 +1,9 @@
 import React from 'react';
-import { TextField, Box, IconButton, Typography, Stack } from '@mui/material';
+import { TextField, IconButton, Alert, AlertTitle } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useIntl } from 'react-intl';
-import { Permission, PermissionId, Role, RoleId } from 'descriptor-permissions';
-import { permissions_mock_data } from '../PermissionsContext';
+import { Permission, PermissionId, Principal, PrincipalId, RoleId } from 'descriptor-permissions';
+import { permissions_mock_data, usePermissions } from '../PermissionsContext';
 import Burger from 'components-burger';
 
 
@@ -11,43 +11,6 @@ import Burger from 'components-burger';
 
 
 /*
-interface MenuItemType {
-  id: string;
-  value: string
-}
-
-interface SelectMenuProps {
-  onChange(id: string): void;
-  selectedItemId: string;
-  menuItems: MenuItemType[];
-}
-
-const RolePermissions: React.FC<SelectMenuProps> = ({ onChange, selectedItemId, menuItems }) => {
-
-  return (<Burger.Select
-    label='permissions.permission.select'
-    onChange={onChange}
-    selected={selectedItemId}
-    items={menuItems}
-    empty={{ id: NONE_SELECTED_ID, label: 'permissions.permission.select.none' }}
-  />
-  )
-}
-
-const RoleParent: React.FC<SelectMenuProps> = ({ onChange, selectedItemId, menuItems }) => {
-
-  return (<Burger.Select
-    label='permissions.role.parentSelect'
-    onChange={onChange}
-    selected={selectedItemId}
-    items={menuItems}
-    empty={{ id: NONE_SELECTED_ID, label: 'permissions.role.parentSelect.none' }}
-  />
-  )
-}
-*/
-const NONE_SELECTED_ID = 'none';
-
 function getParentRolePermissions(parentId: string, roles: Role[]) {
   if (parentId === NONE_SELECTED_ID) {
     return undefined;
@@ -66,53 +29,114 @@ function getParentRolePermissions(parentId: string, roles: Role[]) {
   }
 }
 
-const ParentRoleAndPermissions: React.FC<{}> = () => {
-  const [parentId, setParentId] = React.useState<RoleId>('');
+*/
+
+
+
+const NONE_SELECTED_ID = 'none';
+
+const RolePermissions: React.FC = () => {
+  const { permissions } = usePermissions();
+
   const [permissionIds, setPermissionIds] = React.useState<PermissionId[]>([]);
   const [directPermissions, setDirectPermissions] = React.useState<string[]>([]);
+  const permissionsMenuItems = permissions && permissions.map((permission) => ({ id: permission.id, value: permission.name }));
 
-  const roles: Role[] = permissions_mock_data.testRoles;
-  const permissions: Permission[] = permissions_mock_data.testRoles.flatMap((r) => r.permissions);
-  const roleParentMenuItems = roles.map((role) => ({ id: role.id, value: role.name }));
-  const permissionsMenuItems = permissions.map((permission) => ({ id: permission.id, value: permission.name }));
-
-  const inheritedPermissions = getParentRolePermissions(parentId, roles);
-
-  function handlePermissionChange(selectedPermissions: string[]) {
-    setPermissionIds(selectedPermissions);
-    if (selectedPermissions.includes(NONE_SELECTED_ID)) {
+  function handlePermissionChange(selectedIds: string[]) {
+    setPermissionIds(selectedIds);
+    if (selectedIds.includes(NONE_SELECTED_ID)) {
       setPermissionIds([NONE_SELECTED_ID]);
     }
-    setDirectPermissions(selectedPermissions.map(permissionId => permissions.find(p => p.id === permissionId)?.name || ''));
+    setDirectPermissions(selectedIds.map(permissionId => permissions?.find(p => p.id === permissionId)?.name || ''));
   };
+
+  return (<>
+    <Alert severity='info'>
+      <AlertTitle>
+        Permissions are directly assigned as well as inherited from the selected role parent and all of its parents
+      </AlertTitle>
+    </Alert>
+
+    <Burger.SelectMultiple
+      label='permissions.permission.select'
+      onChange={handlePermissionChange}
+      selected={permissionIds}
+      items={permissionsMenuItems ?? []}
+      empty={{ id: NONE_SELECTED_ID, label: 'permissions.select.none' }}
+    />
+  </>
+  )
+}
+
+const RolePrincipals: React.FC = () => {
+  const [principalIds, setPrincipalIds] = React.useState<PrincipalId[]>([]);
+  const [selectedPrincipals, setSelectedPrincipals] = React.useState<string[]>([]);
+  const principals: Principal[] = permissions_mock_data.testRoles.flatMap((r) => r.principals);
+  const principalsMenuItems = principals.map((principal) => ({ id: principal.id, value: principal.name }));
+
+
+
+  function handlePrincipalsChange(selectedIds: string[]) {
+    setPrincipalIds(selectedIds);
+    if (selectedIds.includes(NONE_SELECTED_ID)) {
+      setPrincipalIds([NONE_SELECTED_ID]);
+    }
+    setSelectedPrincipals(selectedIds.map(principalId => principals.find(p => p.id === principalId)?.name || ''));
+  };
+
+
+
+  return (<>
+    <Alert severity='info'>
+      <AlertTitle>
+        Selected members will blah blah
+      </AlertTitle>
+    </Alert>
+
+    <Burger.SelectMultiple
+      label='permissions.permission.select'
+      onChange={handlePrincipalsChange}
+      selected={principalIds}
+      items={principalsMenuItems}
+      empty={{ id: NONE_SELECTED_ID, label: 'permissions.select.none' }}
+    />
+  </>
+  )
+}
+
+const RoleParent: React.FC = () => {
+  const { roles } = usePermissions();
+  const [parentId, setParentId] = React.useState<RoleId>('');
+
+  let roleMenuItems;
+
+  if (!roles?.length) {
+    roleMenuItems = [{ id: '', value: '' }];
+  } else {
+    roleMenuItems = roles.map((role) => ({ id: role.id, value: role.name }))
+  }
 
   function handleParentChange(selectedParent: string) {
     setParentId(selectedParent);
   };
 
 
-  return (
-    <>
-      <Burger.Select
-        label='permissions.role.parentSelect'
-        onChange={handleParentChange}
-        selected={parentId}
-        items={roleParentMenuItems}
-        empty={{ id: NONE_SELECTED_ID, label: 'permissions.role.parentSelect.none' }}
-      />
-      <Burger.SelectMultiple
-        multiline
-        label='permissions.permission.select'
-        onChange={handlePermissionChange}
-        selected={permissionIds}
-        items={permissionsMenuItems}
-        empty={{ id: NONE_SELECTED_ID, label: 'permissions.permission.select.none' }}
-      />
-      <Stack sx={{ mt: 1 }} spacing={1}>
-        <Typography fontWeight='bold'>Direct Permissions: {directPermissions.join(', ')}</Typography>
-        <Typography fontWeight='bold'>Inherited Permissions: {inheritedPermissions}</Typography>
-      </Stack>
-    </>)
+  return (<>
+    <Alert severity='info'>
+      <AlertTitle>
+        Selecting a parent role will inherit all parent permissions until the top-level parent
+      </AlertTitle>
+    </Alert>
+
+    <Burger.Select
+      label='permissions.role.parentSelect'
+      onChange={handleParentChange}
+      selected={parentId}
+      items={roleMenuItems}
+      empty={{ id: NONE_SELECTED_ID, label: 'permissions.select.none' }}
+    />
+  </>
+  )
 }
 
 const RoleName: React.FC<{}> = () => {
@@ -171,5 +195,5 @@ const CloseDialogButton: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
 export { CloseDialogButton };
 
-const Fields = { CloseDialogButton, RoleName, RoleDescription, ParentRoleAndPermissions };
+const Fields = { CloseDialogButton, RoleName, RoleDescription, RoleParent, RolePermissions, RolePrincipals };
 export default Fields;

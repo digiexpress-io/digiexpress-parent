@@ -1,10 +1,10 @@
 import React from 'react';
-import { Box } from '@mui/material';
 
 import * as colors from 'components-colors';
 import { LayoutList, NavigationButton, FilterByString } from 'components-generic';
 
 import { PermissionsProvider, TabTypes, usePermissions } from '../PermissionsContext';
+import Fields from './RoleCreateFields';
 
 const color_role_parent = colors.cyan;
 const color_role_permission = colors.steelblue;
@@ -46,32 +46,14 @@ const RoleCreateTabsNav: React.FC = () => {
 
 
 export const ActiveTabContent: React.FC = () => {
-  const { activeTab, setActiveTab, roles } = usePermissions();
+  const { activeTab, roles } = usePermissions();
 
-  React.useEffect(() => { setActiveTab('role_parent') }, [])
-
-  if (!roles) {
-    return <>no roles</>;
-  }
-
-  if (activeTab.id === 'role_parent') {
-    return (<>
-      {roles && roles.map((role) => (<Box>{role.name}</Box>))}
-    </>
-    )
-  }
+  if (!roles) { return <>no roles</> }
+  if (activeTab.id === 'role_parent') { return (<Fields.RoleParent />) }
+  if (activeTab.id === 'role_permissions') { return (<Fields.RolePermissions />) }
 
   if (activeTab.id === 'role_members') {
-    return (<>
-      {roles && roles.map((role) => (<>{role.principals.map((principal) => <Box>{principal.name}</Box>)}</>))}
-    </>
-    )
-  }
-
-  if (activeTab.id === 'role_permissions') {
-    return (<>
-      {roles && roles.map((role) => (<>{role.permissions.map((permission) => <Box>{permission.name}</Box>)}</>))}
-    </>
+    return (<Fields.RolePrincipals />
     )
   }
   return <>nothing to see here</>

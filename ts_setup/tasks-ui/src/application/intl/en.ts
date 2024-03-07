@@ -562,15 +562,14 @@ const en = {
   'permissions.role.description': 'Description',
   'permissions.role.description.create.placeholder': 'Enter a description of this role',
   'permissions.role.parentSelect': 'Role parent',
-  'permissions.role.parentSelect.none': 'None',
-  'permissions.role.permissionSelect': 'Permissions',
+
+  'permissions.select.none': 'None',
 
   'permissions.permission.name': 'Name',
   'permissions.permission.description': 'Description',
   'permissions.permission.status': 'Status',
   'permissions.permission.none': 'No permissions found',
   'permissions.permission.select': 'Permissions',
-  'permissions.permission.select.none': 'None',
 
   'permissions.createRole.role_parent': 'Parent role',
   'permissions.createRole.role_permissions': 'Permissions',

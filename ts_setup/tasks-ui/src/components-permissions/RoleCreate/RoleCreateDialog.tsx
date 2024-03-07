@@ -5,7 +5,6 @@ import { FormattedMessage } from 'react-intl';
 import { StyledFullScreenDialog } from 'components-generic';
 import Burger from 'components-burger';
 import Fields from './RoleCreateFields';
-import { usePermissions } from '../PermissionsContext';
 import RoleCreateTabNavLoader from './RoleCreateTabNavigation';
 
 
@@ -23,13 +22,11 @@ const Left: React.FC<{}> = () => {
       </Burger.Section>
 
       <Box sx={{ px: .5 }}>
-        <Fields.ParentRoleAndPermissions />
       </Box>
     </>)
 }
 
 const Right: React.FC<{}> = () => {
-
   return (<RoleCreateTabNavLoader />)
 }
 
