@@ -1,64 +1,70 @@
 import React from 'react';
-import { Tabs, Tab } from '@mui/material';
+import { Box, Tabs, Tab, Stack } from '@mui/material';
+import { LayoutList, FilterByString } from 'components-generic';
 
-import * as colors from 'components-colors';
-import { LayoutList, NavigationButton, FilterByString } from 'components-generic';
-
-import { PermissionsProvider, TabTypes, usePermissions } from '../PermissionsContext';
+import { PermissionsProvider, usePermissions } from '../PermissionsContext';
 import Fields from './RoleCreateFields';
+import { FormattedMessage } from 'react-intl';
 
-const color_role_parent = colors.cyan;
-const color_role_permission = colors.steelblue;
-const color_role_members = colors.aquamarine;
+/*
+  <NavigationButton id='permissions.createRole.role_parent'
+        values={getLocale('role_parent')}
+        color={color_role_parent}
+        active={id === 'role_parent'}
+        onClick={() => setActiveTab("role_parent")} />
+
+      <NavigationButton id='permissions.createRole.role_permissions'
+        values={getLocale('role_permissions')}
+        color={color_role_permission}
+        active={id === 'role_permissions'}
+        onClick={() => setActiveTab("role_permissions")} />
+
+      <NavigationButton id='permissions.createRole.role_members'
+        values={getLocale('role_members')}
+        color={color_role_members}
+        active={id === 'role_members'}
+        onClick={() => setActiveTab("role_members")} />
+
+*/
+
+const TabContent: React.FC<{ selected: number, id: number, children: React.ReactNode }> = ({ selected, id, children }) => {
+
+  if (selected !== id) {
+    return null;
+  }
+
+  return (
+    <Box sx={{ p: 2, width: '100%', height: '100%' }}>
+      {children}
+    </Box>);
+}
+
 
 const RoleCreateTabsNav: React.FC = () => {
-  const { setActiveTab, activeTab } = usePermissions();
-  const { id } = activeTab;
-
-  function getLocale(id: TabTypes) {
-    return { count: 0 };
-  }
+  const [tabValue, setTabValue] = React.useState(0);
 
   function handleSearch(value: React.ChangeEvent<HTMLInputElement>) {
 
   }
 
-  return (<>
-    <FilterByString defaultValue={''} onChange={handleSearch} />
-    <NavigationButton id='permissions.createRole.role_parent'
-      values={getLocale('role_parent')}
-      color={color_role_parent}
-      active={id === 'role_parent'}
-      onClick={() => setActiveTab("role_parent")} />
-
-    <NavigationButton id='permissions.createRole.role_permissions'
-      values={getLocale('role_permissions')}
-      color={color_role_permission}
-      active={id === 'role_permissions'}
-      onClick={() => setActiveTab("role_permissions")} />
-
-    <NavigationButton id='permissions.createRole.role_members'
-      values={getLocale('role_members')}
-      color={color_role_members}
-      active={id === 'role_members'}
-      onClick={() => setActiveTab("role_members")} />
-  </>);
-}
-
-
-export const ActiveTabContent: React.FC = () => {
-  const { activeTab, roles } = usePermissions();
-
-  if (!roles) { return <>no roles</> }
-  if (activeTab.id === 'role_parent') { return (<Fields.RoleParent />) }
-  if (activeTab.id === 'role_permissions') { return (<Fields.RolePermissions />) }
-
-  if (activeTab.id === 'role_members') {
-    return (<Fields.RolePrincipals />
-    )
+  function handleTabValue(_event: React.SyntheticEvent, newValue: number) {
+    setTabValue(newValue);
   }
-  return <>nothing to see here</>
+  return (<Stack>
+    <FilterByString defaultValue={''} onChange={handleSearch} />
+    <Tabs value={tabValue} onChange={handleTabValue}>
+      <Tab label={<FormattedMessage id='permissions.createRole.role_parent' />} />
+      <Tab label={<FormattedMessage id='permissions.createRole.role_permissions' />} />
+      <Tab label={<FormattedMessage id='permissions.createRole.role_members' />} />
+    </Tabs>
+    <TabContent id={0} selected={tabValue}><Fields.RoleParent /></TabContent>
+    <TabContent id={1} selected={tabValue}><Fields.RolePermissions /></TabContent>
+    <TabContent id={2} selected={tabValue}><Fields.RolePrincipals /></TabContent>
+  </Stack>
+  );
 }
+
+
 
 const RoleDialogRightLayout: React.FC = () => {
   const { roles } = usePermissions();
@@ -69,7 +75,7 @@ const RoleDialogRightLayout: React.FC = () => {
 
   const navigation = <RoleCreateTabsNav />;
   const pagination = <></>;
-  const items = <ActiveTabContent />;
+  const items = <></>;
   return (<LayoutList slots={{ navigation, items, pagination }} />)
 }
 

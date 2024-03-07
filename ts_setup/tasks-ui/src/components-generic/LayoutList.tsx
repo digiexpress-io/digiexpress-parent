@@ -13,12 +13,12 @@ export const LayoutList: React.FC<{
   }
 }> = ({ slots }) => {
 
-  const {navigation, pagination, items, active} = slots;
+  const { navigation, pagination, items, active } = slots;
 
   const size = active ? 8 : 12;
 
   return (<>
-    { navigation ? <NavigationSticky>{navigation}</NavigationSticky> : null }
+    {navigation ? <NavigationSticky>{navigation}</NavigationSticky> : null}
 
     <Grid container>
       <Grid item md={size} lg={size}>
@@ -26,7 +26,7 @@ export const LayoutList: React.FC<{
         {pagination}
       </Grid>
 
-      { size !== 8 ? null :
+      {size !== 8 ? null :
         (<Grid item md={4} lg={4}>
           {active}
         </Grid>)
