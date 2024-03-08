@@ -21,6 +21,22 @@ const Left: React.FC<{}> = () => {
         <Fields.RoleDescription />
       </Burger.Section>
 
+      <Burger.Section>
+        <Typography fontWeight='bold'><FormattedMessage id='permissions.role.roleParentalOverview' /></Typography>
+        <Fields.RoleParentOverview />
+      </Burger.Section>
+
+      <Burger.Section>
+        <Typography fontWeight='bold'><FormattedMessage id='permissions.role.rolePermissionsOverview' /></Typography>
+        <Fields.RolePermissionsOverview />
+      </Burger.Section>
+
+      <Burger.Section>
+        <Typography fontWeight='bold'><FormattedMessage id='permissions.role.roleMembersOverview' /></Typography>
+        <Fields.RoleMembersOverview />
+      </Burger.Section>
+
+
       <Box sx={{ px: .5 }}>
       </Box>
     </>)

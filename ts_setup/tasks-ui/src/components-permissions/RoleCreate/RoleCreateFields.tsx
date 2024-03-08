@@ -1,10 +1,11 @@
 import React from 'react';
-import { TextField, IconButton, Alert, AlertTitle } from '@mui/material';
+import { TextField, IconButton, Alert, AlertTitle, Box } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useIntl } from 'react-intl';
 import { PermissionId, Principal, PrincipalId, RoleId } from 'descriptor-permissions';
 import { permissions_mock_data, usePermissions } from '../PermissionsContext';
 import Burger from 'components-burger';
+import { SectionLayout } from 'components-generic';
 
 
 const NONE_SELECTED_ID = 'none';
@@ -154,6 +155,34 @@ const RoleDescription: React.FC<{}> = () => {
   />);
 }
 
+const RoleParentOverview: React.FC<{}> = () => {
+  return (<Box>
+    <SectionLayout label='permissions.role.roleParentName' value={'role 1'} />
+    <SectionLayout label='permissions.role.roleParentName' value={'role 2'} />
+    <SectionLayout label='permissions.role.roleParentName' value={'role 3'} />
+    <SectionLayout label='permissions.role.roleParentName' value={'role 4'} />
+  </Box>);
+}
+
+
+const RolePermissionsOverview: React.FC<{}> = () => {
+  return (<Box>
+    <SectionLayout label='permissions.role.permissions.permissionName' value={'permission 1'} />
+    <SectionLayout label='permissions.role.permissions.permissionName' value={'permission 2'} />
+    <SectionLayout label='permissions.role.permissions.permissionName' value={'permission 3'} />
+    <SectionLayout label='permissions.role.permissions.permissionName' value={'permission 4'} />
+  </Box>);
+}
+
+
+const RoleMembersOverview: React.FC<{}> = () => {
+  return (<Box>
+    <SectionLayout label='permissions.role.users.username' value={'member 1'} />
+    <SectionLayout label='permissions.role.users.username' value={'member 2'} />
+    <SectionLayout label='permissions.role.users.username' value={'member 3'} />
+    <SectionLayout label='permissions.role.users.username' value={'member 4'} />
+  </Box>);
+}
 
 const CloseDialogButton: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   return (
@@ -165,5 +194,8 @@ const CloseDialogButton: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
 export { CloseDialogButton };
 
-const Fields = { CloseDialogButton, RoleName, RoleDescription, RoleParent, RolePermissions, RolePrincipals };
+const Fields = {
+  CloseDialogButton, RoleName, RoleDescription, RoleParent, RolePermissions, RolePrincipals,
+  RoleParentOverview, RolePermissionsOverview, RoleMembersOverview
+};
 export default Fields;

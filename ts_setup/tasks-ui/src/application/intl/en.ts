@@ -559,6 +559,15 @@ const en = {
   'permissions.role.member.none': 'No members found',
   'permissions.role.create': 'Create a role',
 
+  'permissions.role.roleParentalOverview': 'Parent roles',
+  'permissions.role.roleParentName': 'Name',
+
+  'permissions.role.rolePermissionsOverview': 'Permissions',
+  'permissions.role.permissions.permissionName': 'Name',
+
+  'permissions.role.roleMembersOverview': 'Role members',
+  'permissions.role.users.username': 'Username',
+
   'permissions.role.name': 'Role name',
   'permissions.role.name.create.placeholder': 'Enter a role name',
   'permissions.role.description': 'Description',
