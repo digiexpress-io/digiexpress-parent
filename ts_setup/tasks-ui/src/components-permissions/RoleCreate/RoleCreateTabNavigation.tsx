@@ -6,29 +6,8 @@ import { PermissionsProvider, usePermissions } from '../PermissionsContext';
 import Fields from './RoleCreateFields';
 import { FormattedMessage } from 'react-intl';
 
-/*
-  <NavigationButton id='permissions.createRole.role_parent'
-        values={getLocale('role_parent')}
-        color={color_role_parent}
-        active={id === 'role_parent'}
-        onClick={() => setActiveTab("role_parent")} />
-
-      <NavigationButton id='permissions.createRole.role_permissions'
-        values={getLocale('role_permissions')}
-        color={color_role_permission}
-        active={id === 'role_permissions'}
-        onClick={() => setActiveTab("role_permissions")} />
-
-      <NavigationButton id='permissions.createRole.role_members'
-        values={getLocale('role_members')}
-        color={color_role_members}
-        active={id === 'role_members'}
-        onClick={() => setActiveTab("role_members")} />
-
-*/
 
 const TabContent: React.FC<{ selected: number, id: number, children: React.ReactNode }> = ({ selected, id, children }) => {
-
   if (selected !== id) {
     return null;
   }
