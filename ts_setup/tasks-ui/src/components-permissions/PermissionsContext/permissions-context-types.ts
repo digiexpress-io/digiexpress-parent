@@ -5,8 +5,8 @@ export type TabTypes = 'role_create' | 'permission_create' | 'role_parent' | 'ro
 export const Tabbing = createTabs<TabTypes, {}>();
 
 export interface PermissionsContextType {
-  roles: Role[] | undefined;
-  permissions: Permission[] | undefined;
+  roles: Role[];
+  permissions: Permission[];
   loading: boolean; // is permissions loading
   reload(): Promise<void>;
 }

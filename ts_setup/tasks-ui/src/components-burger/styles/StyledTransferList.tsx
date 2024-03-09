@@ -64,6 +64,7 @@ const StyledTransferList: React.FC<StyledTransferListProps> = (props) => {
 
   }, [search, rows, setSearch, setSearchResult, filterRow]);
 
+
   return (
     <>
       <Box sx={{ paddingBottom: 1, m: 2 }}>
@@ -79,7 +80,7 @@ const StyledTransferList: React.FC<StyledTransferListProps> = (props) => {
         </Box>
       </Box>
 
-      <Box component={Paper} sx={{ mt: 1, mb: 1, mr: 3, ml: 3 }}>
+      <Box sx={{ mt: 1, mb: 1, mr: 3, ml: 3 }}>
         <TableContainer component={Paper}>
           <Table size="small">
             <TableHead sx={{ backgroundColor: "table.main" }}>

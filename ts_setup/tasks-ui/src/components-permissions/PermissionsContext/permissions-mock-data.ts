@@ -26,7 +26,21 @@ export const testRoles: Role[] = [
   },
 
   {
-    id: '2hy2yK', description: 'Training purposes - view only Stencil', name: 'Training - content management',
+    id: '652hhud', description: 'Developer access -- Wrench configuration', name: 'Developer-Wrench read/write',
+    permissions: [
+      { id: '662hhdd', name: 'frontoffice/wrench/view', description: 'View Wrench assets', status: 'ENABLED' },
+      { id: '34dtara', name: 'frontoffice/wrench/update', description: 'Update Wrench assets', status: 'ENABLED' },
+      { id: '12hhbdd', name: 'frontoffice/wrench/release', description: 'Create new Wrench releases', status: 'ENABLED' },
+    ],
+    principals: [
+      { id: 'user1', name: 'John Smith', email: 'john.smith@gmail.com', roles: [], status: 'ENABLED' },
+      { id: 'user2', name: 'Amy Coolidge', email: 'amy.c.cool@gmail.com', roles: [], status: 'ENABLED' },
+      { id: 'user3', name: 'Rodger Arrowhead', email: 'forestman@lumberjack.com', roles: [], status: 'ENABLED' }
+    ], status: 'ENABLED'
+  },
+
+  {
+    id: '2hy2yK', description: 'Training purposes - view only Stencil', name: 'Content management training',
     permissions: [
       { id: '654uuu', name: 'frontoffice/stencil/view', description: 'View portal content in Stencil', status: 'ENABLED' },
     ],

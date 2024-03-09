@@ -192,10 +192,54 @@ const CloseDialogButton: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   )
 }
 
+const SelectTest: React.FC = () => {
+
+  const { roles } = usePermissions();
+
+  if (!roles) {
+    console.log('nothing to see here')
+  }
+
+  function handleSave() {
+    console.log('click for save!')
+  }
+
+  return (
+    <Burger.TransferList
+      title="permissions.roles.title"
+      titleArgs={{ name: 'fun name' }}
+      searchTitle="permissions.roles.search.title"
+      selectedTitle="permissions.roles.selectedRoles"
+      headers={["permissions.role.name", "permissions.role.description"]}
+      rows={roles
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .map((role) => role.id)}
+      selected={roles.map((r) => r.id)}
+      filterRow={(row, search) => {
+        const role = roles.find(role => role.id === row)?.name;
+        return ((role && role.toLowerCase().indexOf(search) > -1) ? true : false);
+      }}
+      renderCells={(row) => {
+        const { name, description } = roles.find(role => role.id === row)!;
+        return [name, description];
+      }}
+      cancel={{
+        label: 'button.cancel',
+        onClick: () => { }
+      }}
+      submit={{
+        label: "button.apply",
+        disabled: false,
+        onClick: handleSave
+      }}
+    />
+  )
+}
+
 export { CloseDialogButton };
 
 const Fields = {
   CloseDialogButton, RoleName, RoleDescription, RoleParent, RolePermissions, RolePrincipals,
-  RoleParentOverview, RolePermissionsOverview, RoleMembersOverview
+  RoleParentOverview, RolePermissionsOverview, RoleMembersOverview, SelectTest
 };
 export default Fields;

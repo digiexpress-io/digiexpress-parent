@@ -552,7 +552,9 @@ const en = {
   'permissions.roles.status': 'Status',
   'permissions.roles.numberOfPrincpals': 'Total members',
   'permissions.roles.numberOfPermissions': 'Total permissions',
-
+  'permissions.roles.title': 'Roles',
+  'permissions.roles.search.title': 'Search for roles by role name',
+  'permissions.roles.selectedRoles': 'Selected roles',
   'permissions.principals.select': 'Select members to add',
 
   'permissions.role.member.name': 'Username',
@@ -568,11 +570,11 @@ const en = {
   'permissions.role.roleMembersOverview': 'Role members',
   'permissions.role.users.username': 'Username',
 
-  'permissions.role.name': 'Role name',
   'permissions.role.name.create.placeholder': 'Enter a role name',
-  'permissions.role.description': 'Description',
   'permissions.role.description.create.placeholder': 'Enter a description of this role',
   'permissions.role.parentSelect': 'Role parent',
+  'permissions.role.name': 'Role name',
+  'permissions.role.description': 'Role description',
 
   'permissions.select.none': 'None',
 
