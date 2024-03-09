@@ -23,5 +23,5 @@ package io.resys.thena.docdb.api;
 public class LogConstants {
   public static final String SHOW_SQL = "io.resys.thena.show_sql";
   public static final String SHOW_COMMIT = "io.resys.thena.show_commit";
-  public static final String SHOW_ORG = "io.resys.thena.show_org_query";
+  public static final String SHOW_ORG_USER_TREE_CALC = "io.resys.thena.show_org_user_tree_calc";
 }

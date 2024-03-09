@@ -26,7 +26,7 @@ import io.resys.thena.docdb.test.config.PgProfile;
 import lombok.extern.slf4j.Slf4j;
 
 
-@Disabled
+
 @QuarkusTest
 @TestProfile(PgProfile.class)
 @Slf4j
@@ -90,12 +90,13 @@ public class HierarchicalOrgTest extends DbTestTemplate {
         .repoId(repo.getRepo().getId())
         .get(userId2.getId()).await().atMost(Duration.ofMinutes(1)).getObjects();
     
+    
     Assertions.assertEquals(userId2.getId(), userGroupsAndRoles2.getUserId());
-    Assertions.assertEquals("[group-1, child-1.2, child-1.2.2]", userGroupsAndRoles2.getGroupNames().toString());
-    Assertions.assertEquals("[jailer-main, jailer-1, jailer-2, jailer-3]", userGroupsAndRoles2.getRoleNames().toString());
+    Assertions.assertEquals("[child-1.2.2, child-1.2, group-1]", userGroupsAndRoles2.getGroupNames().toString());
+    Assertions.assertEquals("[jailer-2, jailer-3, jailer-1, jailer-main]", userGroupsAndRoles2.getRoleNames().toString());
     
     Assertions.assertEquals("[child-1.2.2]", userGroupsAndRoles2.getDirectGroupNames().toString());
-    Assertions.assertEquals("[jailer-main, jailer-2]", userGroupsAndRoles2.getDirectRoleNames().toString());
+    Assertions.assertEquals("[jailer-2, jailer-3, jailer-main]", userGroupsAndRoles2.getDirectRoleNames().toString());
     Assertions.assertEquals("""
 user-2
 +--- group-1
@@ -174,6 +175,12 @@ super-user
 |    |    `--- jailer-1
 |    +--- direct-membership
 |    `--- child-1.2
+|         `--- child-1.2.2
+|              +--- REMOVED
+|              +--- roles
+|              |    +--- jailer-2
+|              |    `--- jailer-3
+|              `--- direct-membership
 `--- roles
      +--- direct
      |    +--- baker-main
@@ -183,11 +190,11 @@ super-user
         """, userGroupsAndRoles2.getLog());
     
     Assertions.assertEquals(userId2.getId(), userGroupsAndRoles2.getUserId());
-    Assertions.assertEquals("[group-1, child-1.2]", userGroupsAndRoles2.getGroupNames().toString());
-    Assertions.assertEquals("[jailer-main, baker-main, jailer-1]", userGroupsAndRoles2.getRoleNames().toString());
+    Assertions.assertEquals("[group-1]", userGroupsAndRoles2.getGroupNames().toString());
+    Assertions.assertEquals("[jailer-1, jailer-main, baker-main]", userGroupsAndRoles2.getRoleNames().toString());
     
     Assertions.assertEquals("[group-1]", userGroupsAndRoles2.getDirectGroupNames().toString());
-    Assertions.assertEquals("[jailer-main, baker-main, jailer-1]", userGroupsAndRoles2.getDirectRoleNames().toString());
+    Assertions.assertEquals("[jailer-1, jailer-main, baker-main]", userGroupsAndRoles2.getDirectRoleNames().toString());
     
     
     
@@ -212,6 +219,12 @@ super-user
 |    |    `--- jailer-1
 |    +--- direct-membership
 |    `--- child-1.2
+|         `--- child-1.2.2
+|              +--- REMOVED
+|              +--- roles
+|              |    +--- jailer-2
+|              |    `--- jailer-3
+|              `--- direct-membership
 `--- roles
      +--- direct
      |    +--- baker-main
@@ -224,10 +237,10 @@ super-user
     
     Assertions.assertEquals(userId2.getId(), userGroupsAndRoles2.getUserId());
     Assertions.assertEquals("[group-1]", userGroupsAndRoles2.getGroupNames().toString());
-    Assertions.assertEquals("[jailer-main, baker-main, jailer-1]", userGroupsAndRoles2.getRoleNames().toString());
+    Assertions.assertEquals("[jailer-1, jailer-main, baker-main]", userGroupsAndRoles2.getRoleNames().toString());
     
     Assertions.assertEquals("[group-1]", userGroupsAndRoles2.getDirectGroupNames().toString());
-    Assertions.assertEquals("[jailer-main, baker-main, jailer-1]", userGroupsAndRoles2.getDirectRoleNames().toString());
+    Assertions.assertEquals("[jailer-1, jailer-main, baker-main]", userGroupsAndRoles2.getDirectRoleNames().toString());
   }
 
   

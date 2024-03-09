@@ -76,6 +76,7 @@ public interface ThenaOrgObjects extends ThenaObjects {
    List<OrgUserGroupStatus> getUserGroupStatus();
    List<OrgUserRoleStatus> getUserRoleStatus();
   }
+  
   @Value.Immutable
   interface OrgUserGroupStatus extends ThenaOrgObjects {
     String getStatusId();

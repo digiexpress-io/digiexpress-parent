@@ -200,7 +200,7 @@ public interface ThenaOrgObject {
   }
   
   enum OrgActorStatusType {
-    IN_FORCE, REMOVED, DISABLED_WITH_OVERRIDE
+    IN_FORCE, REMOVED, DISABLED
   }
   
   enum OrgUserRoleOrGroupType {

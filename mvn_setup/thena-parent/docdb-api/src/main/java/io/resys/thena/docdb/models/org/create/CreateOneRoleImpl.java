@@ -11,7 +11,6 @@ import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUser;
 import io.resys.thena.docdb.models.org.OrgInserts.OrgBatchForOne;
 import io.resys.thena.docdb.models.org.OrgState.OrgRepo;
-import io.resys.thena.docdb.models.org.support.BatchForOneRoleCreate;
 import io.resys.thena.docdb.spi.DataMapper;
 import io.resys.thena.docdb.spi.DbState;
 import io.resys.thena.docdb.support.RepoAssert;

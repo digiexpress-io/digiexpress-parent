@@ -1,4 +1,4 @@
-package io.resys.thena.docdb.models.org.support;
+package io.resys.thena.docdb.models.org.create;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;

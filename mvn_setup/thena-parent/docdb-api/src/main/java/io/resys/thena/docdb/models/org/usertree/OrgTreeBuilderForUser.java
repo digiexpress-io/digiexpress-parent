@@ -1,4 +1,4 @@
-package io.resys.thena.docdb.models.org.support;
+package io.resys.thena.docdb.models.org.usertree;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,7 +20,7 @@ import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserFlattened;
 import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgUserGroupsAndRolesWithLog;
 import lombok.extern.slf4j.Slf4j;
 
-@Slf4j(topic = LogConstants.SHOW_ORG)
+@Slf4j(topic = LogConstants.SHOW_ORG_USER_TREE_CALC)
 public class OrgTreeBuilderForUser {
 
   private final Map<String, OrgGroupAndRoleFlattened> groupsById = new HashMap<>();
@@ -38,9 +38,16 @@ public class OrgTreeBuilderForUser {
   private final List<OrgGroupAndRoleFlattened> roots = new ArrayList<>();
   private final OrgUserFlattened user;
   private final ImmutableOrgUserGroupsAndRolesWithLog.Builder result;
+  private final OrgUserGroupsAndRolesWithLog res;
   
   
   public OrgTreeBuilderForUser(OrgUserFlattened user, List<OrgGroupAndRoleFlattened> groupData, List<OrgRoleFlattened> roleData) {
+    this.res = new UserTreeBuilder()
+    .user(user)
+    .groupData(groupData)
+    .roleData(roleData)
+    .build();
+    
     this.user = user;
     this.result = ImmutableOrgUserGroupsAndRolesWithLog.builder()
         .userId(user.getId())
@@ -132,6 +139,10 @@ public class OrgTreeBuilderForUser {
   }
   
   private void visitResult(OrgGroupAndRoleFlattened node) {
+    if(node.getGroupStatus() == OrgActorStatusType.REMOVED) {
+      // disable UP - disable DOWN
+    }
+    
     // Add group
     if(!visitedGroupIds.contains(node.getGroupId())) {
       result.addGroupNames(node.getGroupName());
@@ -178,8 +189,15 @@ public class OrgTreeBuilderForUser {
       
       visitGroup(root);
     }
+    
+    
     final var logTree = generateTree();
-    return result.log(logTree).build();
+    return result.log(logTree)
+        .groupNames(res.getGroupNames())
+        .roleNames(res.getRoleNames())
+        .directGroupNames(res.getDirectGroupNames())
+        .directRoleNames(res.getDirectRoleNames())
+        .build();
   }
 
   private String generateTree() {

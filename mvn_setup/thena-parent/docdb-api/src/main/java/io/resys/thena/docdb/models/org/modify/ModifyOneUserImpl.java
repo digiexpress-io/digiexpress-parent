@@ -18,9 +18,8 @@ import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
 import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgUserGroupsAndRolesWithLog;
 import io.resys.thena.docdb.models.org.OrgInserts.OrgBatchForOne;
 import io.resys.thena.docdb.models.org.OrgState.OrgRepo;
+import io.resys.thena.docdb.models.org.modify.BatchForOneUserModify.NoChangesException;
 import io.resys.thena.docdb.models.org.queries.OrgUserGroupsAndRolesQueryImpl;
-import io.resys.thena.docdb.models.org.support.BatchForOneUserModify;
-import io.resys.thena.docdb.models.org.support.BatchForOneUserModify.NoChangesException;
 import io.resys.thena.docdb.spi.DataMapper;
 import io.resys.thena.docdb.spi.DbState;
 import io.resys.thena.docdb.support.RepoAssert;
@@ -192,9 +191,9 @@ public class ModifyOneUserImpl implements ModifyOneUser {
         modify.updateRoles(ModType.ADD, role);
       }
       
-      if( rolesToAdd.contains(role.getRoleName()) ||
-          rolesToAdd.contains(role.getId()) ||
-          rolesToAdd.contains(role.getExternalId())
+      if( rolesToRemove.contains(role.getRoleName()) ||
+          rolesToRemove.contains(role.getId()) ||
+          rolesToRemove.contains(role.getExternalId())
        ) {
          modify.updateRoles(ModType.REMOVE, role);
        }
