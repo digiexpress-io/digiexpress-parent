@@ -33,7 +33,6 @@ import io.resys.thena.docdb.api.actions.OrgQueryActions;
 import io.resys.thena.docdb.api.actions.PullActions;
 import io.resys.thena.docdb.api.actions.RepoActions;
 import io.resys.thena.docdb.api.actions.TagActions;
-import io.resys.thena.docdb.models.RepoActionsImpl;
 import io.resys.thena.docdb.models.doc.actions.DocAppendActionsImpl;
 import io.resys.thena.docdb.models.doc.actions.DocQueryActionsImpl;
 import io.resys.thena.docdb.models.git.GitRepoQueryImpl;

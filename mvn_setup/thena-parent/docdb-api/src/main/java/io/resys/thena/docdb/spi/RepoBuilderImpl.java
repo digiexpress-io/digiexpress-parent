@@ -1,4 +1,4 @@
-package io.resys.thena.docdb.models;
+package io.resys.thena.docdb.spi;
 
 /*-
  * #%L
@@ -28,7 +28,6 @@ import io.resys.thena.docdb.api.exceptions.RepoException;
 import io.resys.thena.docdb.api.models.ImmutableRepo;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.Repo.RepoType;
-import io.resys.thena.docdb.spi.DbState;
 import io.resys.thena.docdb.support.Identifiers;
 import io.resys.thena.docdb.support.RepoAssert;
 import io.smallrye.mutiny.Uni;

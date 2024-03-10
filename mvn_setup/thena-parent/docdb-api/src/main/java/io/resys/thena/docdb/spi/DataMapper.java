@@ -21,7 +21,6 @@ package io.resys.thena.docdb.spi;
  */
 
 import io.resys.thena.docdb.api.models.Repo;
-import io.resys.thena.docdb.api.models.Repo.CommitResultStatus;
 import io.resys.thena.docdb.api.models.ThenaDocObject.Doc;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranch;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranchLock;
