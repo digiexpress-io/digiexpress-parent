@@ -93,27 +93,22 @@ public class HierarchicalOrgTest extends DbTestTemplate {
     
     Assertions.assertEquals(userId2.getId(), userGroupsAndRoles2.getUserId());
     Assertions.assertEquals("[child-1.2.2, child-1.2, group-1]", userGroupsAndRoles2.getGroupNames().toString());
-    Assertions.assertEquals("[jailer-2, jailer-3, jailer-1, jailer-main]", userGroupsAndRoles2.getRoleNames().toString());
+    Assertions.assertEquals("[jailer-main, jailer-2, jailer-3, jailer-1]", userGroupsAndRoles2.getRoleNames().toString());
     
     Assertions.assertEquals("[child-1.2.2]", userGroupsAndRoles2.getDirectGroupNames().toString());
-    Assertions.assertEquals("[jailer-2, jailer-3, jailer-main]", userGroupsAndRoles2.getDirectRoleNames().toString());
+    Assertions.assertEquals("[jailer-main, jailer-2, jailer-3]", userGroupsAndRoles2.getDirectRoleNames().toString());
     Assertions.assertEquals("""
 user-2
 +--- group-1
 |    +--- roles
-|    |    `--- jailer-1
 |    `--- child-1.2
-|         `--- child-1.2.2
-|              +--- roles
-|              |    +--- jailer-2
-|              |    `--- jailer-3
-|              `--- direct-membership
+|         +--- roles
+|         `--- child-1.2.2::DIRECT
+|              `--- roles
+|                   +--- jailer-2
+|                   `--- jailer-3
 `--- roles
-     +--- direct
-     |    `--- jailer-main
-     `--- inherited
-          +--- jailer-3
-          `--- jailer-1
+     `--- jailer-main
         """, userGroupsAndRoles2.getLog());
     
     // modify user 2
@@ -135,23 +130,18 @@ user-2
         .get(userId2.getId()).await().atMost(Duration.ofMinutes(1)).getObjects(); 
     Assertions.assertEquals("""
 super-user
-+--- group-1
++--- group-1::DIRECT
 |    +--- roles
 |    |    `--- jailer-1
-|    +--- direct-membership
 |    `--- child-1.2
-|         `--- child-1.2.2
-|              +--- roles
-|              |    +--- jailer-2
-|              |    `--- jailer-3
-|              `--- direct-membership
+|         +--- roles
+|         `--- child-1.2.2::DIRECT
+|              `--- roles
+|                   +--- jailer-2
+|                   `--- jailer-3
 `--- roles
-     +--- direct
-     |    +--- baker-main
-     |    `--- jailer-main
-     `--- inherited
-          +--- jailer-3
-          `--- jailer-1
+     +--- jailer-main
+     `--- baker-main
         """, userGroupsAndRoles2.getLog());
     
     
@@ -170,31 +160,25 @@ super-user
         .get(userId2.getId()).await().atMost(Duration.ofMinutes(1)).getObjects(); 
     Assertions.assertEquals("""
 super-user
-+--- group-1
-|    +--- roles
-|    |    `--- jailer-1
-|    +--- direct-membership
-|    `--- child-1.2
-|         `--- child-1.2.2
-|              +--- REMOVED
-|              +--- roles
-|              |    +--- jailer-2
-|              |    `--- jailer-3
-|              `--- direct-membership
-`--- roles
-     +--- direct
-     |    +--- baker-main
-     |    `--- jailer-main
-     `--- inherited
-          `--- jailer-1
++--- group-1::DIRECT
+|    `--- roles
+|         `--- jailer-1
++--- roles
+|    +--- jailer-main
+|    `--- baker-main
++--- grey-roles
+|    +--- jailer-2
+|    `--- jailer-3
+`--- grey-groups
+     `--- child-1.2.2
         """, userGroupsAndRoles2.getLog());
     
     Assertions.assertEquals(userId2.getId(), userGroupsAndRoles2.getUserId());
     Assertions.assertEquals("[group-1]", userGroupsAndRoles2.getGroupNames().toString());
-    Assertions.assertEquals("[jailer-1, jailer-main, baker-main]", userGroupsAndRoles2.getRoleNames().toString());
+    Assertions.assertEquals("[jailer-main, baker-main, jailer-1]", userGroupsAndRoles2.getRoleNames().toString());
     
     Assertions.assertEquals("[group-1]", userGroupsAndRoles2.getDirectGroupNames().toString());
-    Assertions.assertEquals("[jailer-1, jailer-main, baker-main]", userGroupsAndRoles2.getDirectRoleNames().toString());
+    Assertions.assertEquals("[jailer-main, baker-main, jailer-1]", userGroupsAndRoles2.getDirectRoleNames().toString());
     
     
     
@@ -214,33 +198,27 @@ super-user
         .get(userId2.getId()).await().atMost(Duration.ofMinutes(1)).getObjects(); 
     Assertions.assertEquals("""
 super-user
-+--- group-1
-|    +--- roles
-|    |    `--- jailer-1
-|    +--- direct-membership
-|    `--- child-1.2
-|         `--- child-1.2.2
-|              +--- REMOVED
-|              +--- roles
-|              |    +--- jailer-2
-|              |    `--- jailer-3
-|              `--- direct-membership
-`--- roles
-     +--- direct
-     |    +--- baker-main
-     |    `--- jailer-main
-     `--- inherited
-          `--- jailer-1
++--- group-1::DIRECT
+|    `--- roles
+|         `--- jailer-1
++--- roles
+|    +--- jailer-main
+|    `--- baker-main
++--- grey-roles
+|    +--- jailer-2
+|    `--- jailer-3
+`--- grey-groups
+     `--- child-1.2.2
         """, userGroupsAndRoles2.getLog());
     
     printRepo(repo.getRepo()); //LOG THE DB
     
     Assertions.assertEquals(userId2.getId(), userGroupsAndRoles2.getUserId());
     Assertions.assertEquals("[group-1]", userGroupsAndRoles2.getGroupNames().toString());
-    Assertions.assertEquals("[jailer-1, jailer-main, baker-main]", userGroupsAndRoles2.getRoleNames().toString());
+    Assertions.assertEquals("[jailer-main, baker-main, jailer-1]", userGroupsAndRoles2.getRoleNames().toString());
     
     Assertions.assertEquals("[group-1]", userGroupsAndRoles2.getDirectGroupNames().toString());
-    Assertions.assertEquals("[jailer-1, jailer-main, baker-main]", userGroupsAndRoles2.getDirectRoleNames().toString());
+    Assertions.assertEquals("[jailer-main, baker-main, jailer-1]", userGroupsAndRoles2.getDirectRoleNames().toString());
   }
 
   

@@ -15,7 +15,7 @@ import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRoleFlattened;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserFlattened;
 import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgUserGroupsAndRolesWithLog;
 import io.resys.thena.docdb.models.org.OrgQueries;
-import io.resys.thena.docdb.models.org.usertree.OrgTreeBuilderForUser;
+import io.resys.thena.docdb.models.org.usertree.UserTreeBuilder;
 import io.resys.thena.docdb.spi.DbState;
 import io.resys.thena.docdb.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
@@ -69,7 +69,7 @@ public class OrgUserGroupsAndRolesQueryImpl implements UserGroupsAndRolesQuery {
     return ImmutableQueryEnvelope
         .<OrgUserGroupsAndRolesWithLog>builder()
         .status(QueryEnvelopeStatus.OK)
-        .objects(new OrgTreeBuilderForUser(user, groups, roles).build())
+        .objects(new UserTreeBuilder().user(user).groupData(groups).roleData(roles).build())
         .build();
 	}
 	

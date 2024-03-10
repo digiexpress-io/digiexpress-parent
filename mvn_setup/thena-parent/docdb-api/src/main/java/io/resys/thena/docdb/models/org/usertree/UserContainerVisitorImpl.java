@@ -13,7 +13,6 @@ import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgUserGroupStatus;
 import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgUserRoleStatus;
 import io.resys.thena.docdb.models.org.usertree.UserContainer.UserContainerChildVisitor;
 import io.resys.thena.docdb.models.org.usertree.UserContainer.UserContainerVisitor;
-import io.resys.thena.docdb.models.org.usertree.UserTreeContainer.BottomUpVisitor;
 import io.resys.thena.docdb.support.RepoAssert;
 
 
@@ -82,16 +81,7 @@ public class UserContainerVisitorImpl implements UserContainerVisitor<UserTreeCo
         .groupStatus(groupStatus.values())
         .build();
     
-    return result.accept(new BottomUpVisitor<UserTreeContainer>() {
-
-      @Override
-      public void visitBottom(UserTree bottom) {
-        // TODO Auto-generated method stub
-        
-      }
-      @Override public void visitParent(UserTree parent) {}
-      @Override public UserTreeContainer close() { return result; }
-    });
+    return result;
   }
    
 }
