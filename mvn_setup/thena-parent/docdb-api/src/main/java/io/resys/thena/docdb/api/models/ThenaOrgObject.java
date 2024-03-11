@@ -191,6 +191,7 @@ public interface ThenaOrgObject {
     Optional<String> getMessage();
   }
   
+  
   enum OrgOperationType {
     ADD, MOD
   }
@@ -200,7 +201,7 @@ public interface ThenaOrgObject {
   }
   
   enum OrgActorStatusType {
-    IN_FORCE, REMOVED, DISABLED
+    IN_FORCE, DISABLED
   }
   
   enum OrgUserRoleOrGroupType {

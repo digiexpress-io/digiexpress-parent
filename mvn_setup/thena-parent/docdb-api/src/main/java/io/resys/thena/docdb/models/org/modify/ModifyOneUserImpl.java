@@ -60,7 +60,7 @@ public class ModifyOneUserImpl implements ModifyOneUser {
     this.allGroups.addAll(RepoAssert.notEmpty(groups, () -> "groups can't be empty!"));
     if(type == ModType.ADD) {
       groupsToAdd.addAll(groups);
-    } else if(type == ModType.REMOVE) {
+    } else if(type == ModType.DISABLED) {
       groupsToRemove.addAll(groups);
     } else {
       RepoAssert.fail("Unknown modification type: " + type + "!");
@@ -72,7 +72,7 @@ public class ModifyOneUserImpl implements ModifyOneUser {
     this.allRoles.addAll(RepoAssert.notEmpty(roles, () -> "roles can't be empty!"));
     if(type == ModType.ADD) {
       rolesToAdd.addAll(roles);
-    } else if(type == ModType.REMOVE) {
+    } else if(type == ModType.DISABLED) {
       rolesToRemove.addAll(roles);
     } else {
       RepoAssert.fail("Unknown modification type: " + type + "!");
@@ -177,7 +177,7 @@ public class ModifyOneUserImpl implements ModifyOneUser {
           groupsToRemove.contains(group.getId()) ||
           groupsToRemove.contains(group.getExternalId())
        ) {
-         modify.updateGroups(ModType.REMOVE, group);
+         modify.updateGroups(ModType.DISABLED, group);
        }
     });
     
@@ -195,7 +195,7 @@ public class ModifyOneUserImpl implements ModifyOneUser {
           rolesToRemove.contains(role.getId()) ||
           rolesToRemove.contains(role.getExternalId())
        ) {
-         modify.updateRoles(ModType.REMOVE, role);
+         modify.updateRoles(ModType.DISABLED, role);
        }
     });
     

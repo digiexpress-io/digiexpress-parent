@@ -156,6 +156,6 @@ public interface OrgCommitActions {
   }
   
   enum ModType {
-    ADD, REMOVE 
+    ADD, DISABLED 
   }
 }

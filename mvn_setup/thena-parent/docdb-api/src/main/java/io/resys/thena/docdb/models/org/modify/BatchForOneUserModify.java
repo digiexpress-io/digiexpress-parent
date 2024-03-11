@@ -94,7 +94,7 @@ public class BatchForOneUserModify {
       final var status = groupStatus.get(entry.getGroup().getId());
       if(entry.getType() == ModType.ADD) {
         this.visitAddUserToGroup(entry.getGroup(), status, commitId);  
-      } else if(entry.getType() == ModType.REMOVE) {
+      } else if(entry.getType() == ModType.DISABLED) {
         this.visitRemoveUserFromGroup(entry.getGroup(), status, commitId);
       } else {
         RepoAssert.fail("Unknown modification type: " + entry.getType() + "!"); 
@@ -107,7 +107,7 @@ public class BatchForOneUserModify {
       final var status = roleStatus.get(entry.getRole().getId());
       if(entry.getType() == ModType.ADD) {
         this.visitAddUserToRole(entry.getRole(), status, commitId);  
-      } else if(entry.getType() == ModType.REMOVE) {
+      } else if(entry.getType() == ModType.DISABLED) {
         this.visitRemoveUserFromRole(entry.getRole(), status, commitId);
       } else {
         RepoAssert.fail("Unknown modification type: " + entry.getType() + "!"); 
@@ -134,7 +134,7 @@ public class BatchForOneUserModify {
       .append(System.lineSeparator())
 
       .append("  + removed from groups: ").append(String.join(",", groups.stream()
-          .filter(g -> g.getType() == ModType.REMOVE)
+          .filter(g -> g.getType() == ModType.DISABLED)
           .map(g -> g.getGroup().getGroupName() + "::" + g.getGroup().getId())
           .toList()))
       .append(System.lineSeparator())
@@ -145,7 +145,7 @@ public class BatchForOneUserModify {
           .toList()))
       
       .append("  + removed from roles:  ").append(String.join(",", roles.stream()
-          .filter(g -> g.getType() == ModType.REMOVE)
+          .filter(g -> g.getType() == ModType.DISABLED)
           .map(g -> g.getRole().getRoleName() + "::" + g.getRole().getId())
           .toList()))
       .append(System.lineSeparator());
@@ -218,7 +218,7 @@ public class BatchForOneUserModify {
           .roleId(entry.getId())
           .userId(current.getUserId())
           .commitId(commitId)
-          .value(OrgActorStatusType.REMOVED)
+          .value(OrgActorStatusType.DISABLED)
           .build();      
       actorStatus.add(roleStatus);
       visitChangeTree(commitId, roleStatus, OrgOperationType.ADD);
@@ -226,7 +226,7 @@ public class BatchForOneUserModify {
     }
     
     // already removed
-    if(status.getStatus() == OrgActorStatusType.REMOVED) {
+    if(status.getStatus() == OrgActorStatusType.DISABLED) {
       return;
     }
 
@@ -235,7 +235,7 @@ public class BatchForOneUserModify {
         .roleId(entry.getId())
         .userId(current.getUserId())
         .commitId(commitId)
-        .value(OrgActorStatusType.REMOVED)
+        .value(OrgActorStatusType.DISABLED)
         .build();
     identifiersForUpdates.add(status.getStatusId());
     actorStatus.add(roleStatus);
@@ -275,7 +275,7 @@ public class BatchForOneUserModify {
           .groupId(entry.getId())
           .userId(current.getUserId())
           .commitId(commitId)
-          .value(OrgActorStatusType.REMOVED)
+          .value(OrgActorStatusType.DISABLED)
           .build();
       actorStatus.add(groupStatus);
       visitChangeTree(commitId, groupStatus, OrgOperationType.ADD);
@@ -283,7 +283,7 @@ public class BatchForOneUserModify {
     }
     
     // already removed
-    if(status.getStatus() == OrgActorStatusType.REMOVED) {
+    if(status.getStatus() == OrgActorStatusType.DISABLED) {
       return;
     }
 
@@ -292,7 +292,7 @@ public class BatchForOneUserModify {
         .groupId(entry.getId())
         .userId(current.getUserId())
         .commitId(commitId)
-        .value(OrgActorStatusType.REMOVED)
+        .value(OrgActorStatusType.DISABLED)
         .build();
     identifiersForUpdates.add(status.getStatusId());
     actorStatus.add(groupStatus);
