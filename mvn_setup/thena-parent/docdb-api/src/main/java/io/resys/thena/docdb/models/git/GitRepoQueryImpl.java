@@ -23,7 +23,6 @@ package io.resys.thena.docdb.models.git;
 import java.util.stream.Collectors;
 
 import io.resys.thena.docdb.api.DocDB.GitModel.GitRepoQuery;
-import io.resys.thena.docdb.api.exceptions.RepoException;
 import io.resys.thena.docdb.api.models.ImmutableGitRepoObjects;
 import io.resys.thena.docdb.api.models.ImmutableQueryEnvelope;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
@@ -54,13 +53,7 @@ public class GitRepoQueryImpl implements GitRepoQuery {
     return state.project().getByNameOrId(projectName).onItem().transformToUni((Repo existing) -> {
           
       if(existing == null) {
-        final var ex = RepoException.builder().notRepoWithName(projectName);
-        log.warn(ex.getText());
-        return Uni.createFrom().item(ImmutableQueryEnvelope
-            .<GitRepoObjects>builder()
-            .status(QueryEnvelopeStatus.ERROR)
-            .addMessages(ex)
-            .build());
+        return Uni.createFrom().item(QueryEnvelope.repoNotFound(projectName, log));
       }
       return getState(existing, state.toGitState().withRepo(existing));
     });

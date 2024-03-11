@@ -1,11 +1,8 @@
 package io.resys.thena.docdb.models.org.queries;
 
 import java.util.List;
-import java.util.Set;
 
 import io.resys.thena.docdb.api.actions.OrgQueryActions.UserObjectsQuery;
-import io.resys.thena.docdb.api.exceptions.RepoException;
-import io.resys.thena.docdb.api.models.ImmutableMessage;
 import io.resys.thena.docdb.api.models.ImmutableOrgUserObjects;
 import io.resys.thena.docdb.api.models.ImmutableQueryEnvelope;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
@@ -40,7 +37,7 @@ public class OrgUserObjectsQueryImpl implements UserObjectsQuery {
     return state.project().getByNameOrId(repoId)
     .onItem().transformToUni((Repo existing) -> {
       if(existing == null) {
-        return Uni.createFrom().item(repoNotFound());
+        return Uni.createFrom().item(QueryEnvelope.repoNotFound(repoId, log));
       }
       return state.toOrgState().query(repoId)
         .onItem().transformToUni((OrgQueries repo) -> repo.users().getById(userId))
@@ -59,7 +56,7 @@ public class OrgUserObjectsQueryImpl implements UserObjectsQuery {
     return state.project().getByNameOrId(repoId)
     .onItem().transformToUni((Repo existing) -> {
       if(existing == null) {
-        return Uni.createFrom().item(repoNotFound());
+        return Uni.createFrom().item(QueryEnvelope.repoNotFound(repoId, log));
       }
       return state.toOrgState().query(repoId)
         .onItem().transformToUni((OrgQueries repo) -> repo.users().findAll().collect().asList())
@@ -84,39 +81,10 @@ public class OrgUserObjectsQueryImpl implements UserObjectsQuery {
         .build());
   }
 
-  private <T extends ThenaEnvelope.ThenaObjects> QueryEnvelope<T> repoNotFound() {
-    final var ex = RepoException.builder().notRepoWithName(repoId);
-    log.warn(ex.getText());
-    return ImmutableQueryEnvelope
-        .<T>builder()
-        .status(QueryEnvelopeStatus.ERROR)
-        .addMessages(ex)
-        .build();
-  }
-  
-  
   private <T extends ThenaEnvelope.ThenaObjects> QueryEnvelope<T> docNotFound(Repo existing) {
-    return ImmutableQueryEnvelope.<T>builder()
-    .repo(existing)
-    .status(QueryEnvelopeStatus.ERROR)
-    .addMessages(ImmutableMessage.builder()
-        .text(new StringBuilder()
-            .append("User not found by given id, from repo: '").append(existing.getId()).append("'!")
-            .toString())
-        .build())
-    .build();
-  }
-  
-  private <T extends ThenaEnvelope.ThenaObjects> QueryEnvelope<T> docUnexpected(Repo existing, Set<String> unexpected) {
-    return ImmutableQueryEnvelope.<T>builder()
-        .repo(existing)
-        .status(QueryEnvelopeStatus.ERROR)
-        .addMessages(ImmutableMessage.builder()
-            .text(new StringBuilder()
-                .append("Expecting: '1' user, but found: '").append(unexpected.size()).append("'")
-                .append(", from repo: '").append(existing.getId()).append("'!")
-                .toString())
-            .build())
-        .build();
+    final var msg = new StringBuilder()
+        .append("User not found by given id, from repo: '").append(existing.getId()).append("'!")
+        .toString();
+    return QueryEnvelope.docNotFound(existing, log, msg);
   }
 }

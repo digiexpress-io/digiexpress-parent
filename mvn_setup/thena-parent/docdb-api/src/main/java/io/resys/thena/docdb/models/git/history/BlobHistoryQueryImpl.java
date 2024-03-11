@@ -26,7 +26,6 @@ import java.util.List;
 
 import io.resys.thena.docdb.api.actions.HistoryActions.BlobHistoryQuery;
 import io.resys.thena.docdb.api.actions.PullActions.MatchCriteria;
-import io.resys.thena.docdb.api.exceptions.RepoException;
 import io.resys.thena.docdb.api.models.ImmutableHistoryObjects;
 import io.resys.thena.docdb.api.models.ImmutableQueryEnvelope;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
@@ -65,13 +64,7 @@ public class BlobHistoryQueryImpl implements BlobHistoryQuery {
     return state.project().getByNameOrId(projectName).onItem()
     .transformToUni((Repo existing) -> {
       if(existing == null) {
-        final var ex = RepoException.builder().notRepoWithName(projectName);
-        log.error(ex.getText());
-        return Uni.createFrom().item(ImmutableQueryEnvelope
-            .<HistoryObjects>builder()
-            .status(QueryEnvelopeStatus.ERROR)
-            .addMessages(ex)
-            .build());
+        return Uni.createFrom().item(QueryEnvelope.repoNotFound(projectName, log));
       }
       final var ctx = state.toGitState().withRepo(existing);
       return ctx.query().blobHistory()

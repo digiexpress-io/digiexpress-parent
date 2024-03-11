@@ -25,7 +25,6 @@ import java.util.List;
 
 import io.resys.thena.docdb.api.actions.CommitActions.CommitQuery;
 import io.resys.thena.docdb.api.actions.PullActions.MatchCriteria;
-import io.resys.thena.docdb.api.exceptions.RepoException;
 import io.resys.thena.docdb.api.models.ImmutableCommitObjects;
 import io.resys.thena.docdb.api.models.ImmutableQueryEnvelope;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
@@ -65,26 +64,14 @@ public class CommitQueryImpl implements CommitQuery {
     return state.project().getByNameOrId(projectName).onItem()
     .transformToUni((Repo existing) -> {
       if(existing == null) {
-        final var error = RepoException.builder().notRepoWithName(projectName);
-        log.error(error.getText());
-        return Uni.createFrom().item(ImmutableQueryEnvelope
-            .<CommitObjects>builder()
-            .status(QueryEnvelopeStatus.ERROR)
-            .addMessages(error)
-            .build());
+        return Uni.createFrom().item(QueryEnvelope.repoNotFound(projectName, log));
       }
       final var ctx = state.toGitState().withRepo(existing);
       
       return ObjectsUtils.findCommit(ctx, branchNameOrCommitOrTag)
         .onItem().transformToUni(commit -> {
           if(commit == null) {
-            final var error = RepoException.builder().noCommit(existing, branchNameOrCommitOrTag);
-            log.error(error.getText());
-            return Uni.createFrom().item(ImmutableQueryEnvelope
-                .<CommitObjects>builder()
-                .status(QueryEnvelopeStatus.ERROR)
-                .addMessages(error)
-                .build()); 
+            return Uni.createFrom().item(QueryEnvelope.repoCommitNotFound(existing, branchNameOrCommitOrTag, log));
           }
           return getState(existing, commit, ctx);
         });

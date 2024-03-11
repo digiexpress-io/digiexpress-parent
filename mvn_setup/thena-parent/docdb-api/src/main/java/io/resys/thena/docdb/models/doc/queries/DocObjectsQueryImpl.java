@@ -8,14 +8,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import io.resys.thena.docdb.api.actions.DocQueryActions.DocObjectsQuery;
-import io.resys.thena.docdb.api.exceptions.RepoException;
 import io.resys.thena.docdb.api.models.ImmutableDoc;
 import io.resys.thena.docdb.api.models.ImmutableDocBranch;
 import io.resys.thena.docdb.api.models.ImmutableDocCommit;
 import io.resys.thena.docdb.api.models.ImmutableDocLog;
 import io.resys.thena.docdb.api.models.ImmutableDocObject;
 import io.resys.thena.docdb.api.models.ImmutableDocObjects;
-import io.resys.thena.docdb.api.models.ImmutableMessage;
 import io.resys.thena.docdb.api.models.ImmutableQueryEnvelope;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
 import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
@@ -68,7 +66,7 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
     return state.project().getByNameOrId(repoId)
     .onItem().transformToUni((Repo existing) -> {
       if(existing == null) {
-        return Uni.createFrom().item(repoNotFound());
+        return Uni.createFrom().item(QueryEnvelope.repoNotFound(repoId, log));
       }
       return state.toDocState().query(repoId)
           .onItem().transformToMulti((DocQueries repo) -> repo.docs().findAllFlatted(criteria))
@@ -99,7 +97,7 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
     return state.project().getByNameOrId(repoId)
     .onItem().transformToUni((Repo existing) -> {
       if(existing == null) {
-        return Uni.createFrom().item(repoNotFound());
+        return Uni.createFrom().item(QueryEnvelope.repoNotFound(repoId, log));
       }
       return state.toDocState().query(repoId)
           .onItem().transformToMulti((DocQueries repo) -> repo.docs().findAllFlatted(criteria))
@@ -220,39 +218,19 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
     .build();
   }
   
-  private <T extends ThenaEnvelope.ThenaObjects> QueryEnvelope<T> repoNotFound() {
-    final var ex = RepoException.builder().notRepoWithName(repoId);
-    log.warn(ex.getText());
-    return ImmutableQueryEnvelope
-        .<T>builder()
-        .status(QueryEnvelopeStatus.ERROR)
-        .addMessages(ex)
-        .build();
-  }
-  
   private <T extends ThenaEnvelope.ThenaObjects> QueryEnvelope<T> docNotFound(Repo existing) {
-    return ImmutableQueryEnvelope.<T>builder()
-    .repo(existing)
-    .status(QueryEnvelopeStatus.ERROR)
-    .addMessages(ImmutableMessage.builder()
-        .text(new StringBuilder()
-            .append("Document not found by given id, from repo: '").append(existing.getId()).append("'!")
-            .toString())
-        .build())
-    .build();
+    final var msg = new StringBuilder()
+      .append("Document not found by given id, from repo: '").append(existing.getId()).append("'!")
+      .toString();
+    return QueryEnvelope.docNotFound(existing, log, msg);
   }
   
   private <T extends ThenaEnvelope.ThenaObjects> QueryEnvelope<T> docUnexpected(Repo existing, Set<String> unexpected) {
-    return ImmutableQueryEnvelope.<T>builder()
-        .repo(existing)
-        .status(QueryEnvelopeStatus.ERROR)
-        .addMessages(ImmutableMessage.builder()
-            .text(new StringBuilder()
-                .append("Expecting: '1' document, but found: '").append(unexpected.size()).append("'")
-                .append(", from repo: '").append(existing.getId()).append("'!")
-                .toString())
-            .build())
-        .build();
+    final var msg = new StringBuilder()
+      .append("Expecting: '1' document, but found: '").append(unexpected.size()).append("'")
+      .append(", from repo: '").append(existing.getId()).append("'!")
+      .toString();
+    return QueryEnvelope.docUnexpected(existing, log, msg);
   }
 
 }

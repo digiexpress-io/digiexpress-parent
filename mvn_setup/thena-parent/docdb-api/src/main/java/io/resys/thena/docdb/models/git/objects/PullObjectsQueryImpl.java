@@ -27,11 +27,9 @@ import org.immutables.value.Value;
 
 import io.resys.thena.docdb.api.actions.PullActions.MatchCriteria;
 import io.resys.thena.docdb.api.actions.PullActions.PullObjectsQuery;
-import io.resys.thena.docdb.api.exceptions.RepoException;
 import io.resys.thena.docdb.api.models.ImmutablePullObject;
 import io.resys.thena.docdb.api.models.ImmutablePullObjects;
 import io.resys.thena.docdb.api.models.ImmutableQueryEnvelope;
-import io.resys.thena.docdb.api.models.Message;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
 import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.docdb.api.models.Repo;
@@ -101,13 +99,12 @@ public class PullObjectsQueryImpl implements PullObjectsQuery {
     return state.project().getByNameOrId(projectName).onItem()
     .transformToUni((Repo existing) -> {
       if(existing == null) {
-        return objectsError(RepoException.builder().notRepoWithName(projectName));
+        return Uni.createFrom().item(QueryEnvelope.repoNotFound(projectName, log));
       }
       final var ctx = state.toGitState().withRepo(existing);
       return ObjectsUtils.findCommit(ctx, branchNameOrCommitOrTag).onItem().transformToUni(commit -> {
         if(commit == null) {
-          final var error = RepoException.builder().noCommit(existing, branchNameOrCommitOrTag);
-          return objectsError(error); 
+          return Uni.createFrom().item(QueryEnvelope.repoCommitNotFound(existing, branchNameOrCommitOrTag, log)); 
         }
         return getListState(existing, commit, ctx);
       });
@@ -123,37 +120,16 @@ public class PullObjectsQueryImpl implements PullObjectsQuery {
     return state.project().getByNameOrId(projectName).onItem()
     .transformToUni((Repo existing) -> {
       if(existing == null) {
-        final var error = RepoException.builder().notRepoWithName(projectName);
-        return objectError(error);
+        return Uni.createFrom().item(QueryEnvelope.repoNotFound(projectName, log));
       }
       final var ctx = state.toGitState().withRepo(existing);
       return ObjectsUtils.findCommit(ctx, branchNameOrCommitOrTag).onItem().transformToUni(commit -> {
           if(commit == null) {
-            final var error = RepoException.builder().noCommit(existing, branchNameOrCommitOrTag);
-            return objectError(error); 
+            return Uni.createFrom().item(QueryEnvelope.repoCommitNotFound(existing, branchNameOrCommitOrTag, log));
           }
           return getState(existing, commit, ctx);
         });
     });
-  }
-
-  private  Uni<QueryEnvelope<PullObject>> objectError(Message error) {
-    log.error(error.getText());
-    return Uni.createFrom().item(ImmutableQueryEnvelope
-        .<PullObject>builder()
-        .status(QueryEnvelopeStatus.ERROR)
-        .addMessages(error)
-        .build());
-  }
-
-
-  private  Uni<QueryEnvelope<PullObjects>> objectsError(Message error) {
-    log.error(error.getText());
-    return Uni.createFrom().item(ImmutableQueryEnvelope
-        .<PullObjects>builder()
-        .status(QueryEnvelopeStatus.ERROR)
-        .addMessages(error)
-        .build());
   }
   
   private Uni<QueryEnvelope<PullObject>> getState(Repo repo, Commit commit, GitRepo ctx) {
@@ -161,9 +137,7 @@ public class PullObjectsQueryImpl implements PullObjectsQuery {
         .transformToUni(blobTree -> {
           
           if(blobTree.getBlob().size() != 1) {
-            final var error = RepoException.builder()
-                .noBlob(repo, commit.getTree(), commit.getId(), docIds.toArray(new String[] {}));
-            return objectError(error); 
+            return Uni.createFrom().item(QueryEnvelope.repoBlobNotFound(repo, blobTree, commit, docIds, log));
           }
           
           return Uni.createFrom().item(ImmutableQueryEnvelope.<PullObject>builder()
@@ -184,9 +158,7 @@ public class PullObjectsQueryImpl implements PullObjectsQuery {
         .transformToUni(blobAndTree -> {
           
           if(blobAndTree.getBlob().isEmpty()) {
-            final var error = RepoException.builder()
-                .noBlob(repo, blobAndTree.getTreeId(), commit.getId(), docIds.toArray(new String[] {}));
-            return objectsError(error); 
+            return Uni.createFrom().item(QueryEnvelope.repoBlobNotFound(repo, blobAndTree, commit, docIds, log));
           }
           return Uni.createFrom().item(ImmutableQueryEnvelope.<PullObjects>builder()
             .repo(repo)

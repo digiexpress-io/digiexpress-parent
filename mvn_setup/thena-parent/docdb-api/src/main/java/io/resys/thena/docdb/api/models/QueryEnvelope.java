@@ -25,8 +25,12 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import org.immutables.value.Value;
+import org.slf4j.Logger;
 
+import io.resys.thena.docdb.api.exceptions.RepoException;
 import io.resys.thena.docdb.api.models.ThenaEnvelope.ThenaObjects;
+import io.resys.thena.docdb.api.models.ThenaGitObject.Commit;
+import io.resys.thena.docdb.models.git.objects.PullObjectsQueryImpl.BlobAndTree;
 
 
 @Value.Immutable
@@ -41,4 +45,55 @@ public interface QueryEnvelope<T extends ThenaObjects> extends ThenaEnvelope {
   
   enum QueryEnvelopeStatus { OK, ERROR }
 
+  
+  public static <T extends ThenaEnvelope.ThenaObjects> QueryEnvelope<T> repoBlobNotFound(
+      Repo repo, 
+      BlobAndTree blobAndTree, 
+      Commit commit,
+      List<String> docIds,
+      Logger logger) {
+    
+    final var error = RepoException.builder()
+        .noBlob(repo, blobAndTree.getTreeId(), commit.getId(), docIds.toArray(new String[] {}));
+    logger.warn(error.getText());
+    return ImmutableQueryEnvelope
+        .<T>builder()
+        .status(QueryEnvelopeStatus.ERROR)
+        .addMessages(error)
+        .build();
+  }
+  public static <T extends ThenaEnvelope.ThenaObjects> QueryEnvelope<T> repoCommitNotFound(Repo repo, String refCriteria, Logger logger) {
+    final var error = RepoException.builder().noCommit(repo, refCriteria);
+    logger.warn(error.getText());
+    return ImmutableQueryEnvelope
+        .<T>builder()
+        .status(QueryEnvelopeStatus.ERROR)
+        .addMessages(error)
+        .build();
+  }
+  public static <T extends ThenaEnvelope.ThenaObjects> QueryEnvelope<T> repoNotFound(String repoId, Logger logger) {
+    final var ex = RepoException.builder().notRepoWithName(repoId);
+    logger.warn(ex.getText());
+    return ImmutableQueryEnvelope
+        .<T>builder()
+        .status(QueryEnvelopeStatus.ERROR)
+        .addMessages(ex)
+        .build();
+  }
+  
+  public static <T extends ThenaEnvelope.ThenaObjects> QueryEnvelope<T> docNotFound(Repo existing, Logger logger, String text) {
+    return ImmutableQueryEnvelope.<T>builder()
+      .repo(existing)
+      .status(QueryEnvelopeStatus.ERROR)
+      .addMessages(ImmutableMessage.builder().text(text).build())
+      .build();
+  }
+  
+  public static <T extends ThenaEnvelope.ThenaObjects> QueryEnvelope<T> docUnexpected(Repo existing, Logger logger, String text) {
+    return ImmutableQueryEnvelope.<T>builder()
+      .repo(existing)
+      .status(QueryEnvelopeStatus.ERROR)
+      .addMessages(ImmutableMessage.builder().text(text).build())
+      .build();
+  }
 }

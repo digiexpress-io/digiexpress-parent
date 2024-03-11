@@ -68,13 +68,7 @@ public class BranchObjectsQueryImpl implements BranchObjectsQuery {
     return state.project().getByNameOrId(projectName).onItem()
     .transformToUni((Repo existing) -> {
       if(existing == null) {
-        final var ex = RepoException.builder().notRepoWithName(projectName);
-        log.warn(ex.getText());
-        return Uni.createFrom().item(ImmutableQueryEnvelope
-            .<BranchObjects>builder()
-            .status(QueryEnvelopeStatus.ERROR)
-            .addMessages(ex)
-            .build());
+        return Uni.createFrom().item(QueryEnvelope.repoNotFound(projectName, log));
       }
       return getRef(existing, branchName, state.toGitState().withRepo(existing));
     });
