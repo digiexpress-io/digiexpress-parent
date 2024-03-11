@@ -219,7 +219,7 @@ SELECT * FROM child;
         
         .append("FROM ").ln()
         .append("  ").append(options.getOrgRoles()).append(" as role").ln()
-        .append("RIGHT JOIN ").append(options.getOrgUserRoles()).append(" as user_roles").ln()
+        .append("INNER JOIN ").append(options.getOrgUserRoles()).append(" as user_roles").ln()
         .append("  ON(").ln()
         .append("    user_roles.role_id = role.id").ln()
         .append("    and user_roles.user_id = $1").ln()

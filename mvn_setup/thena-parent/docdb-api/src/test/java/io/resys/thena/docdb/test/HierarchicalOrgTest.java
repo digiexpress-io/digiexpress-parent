@@ -211,14 +211,22 @@ super-user
      `--- child-1.2.2
         """, userGroupsAndRoles2.getLog());
     
-    printRepo(repo.getRepo()); //LOG THE DB
-    
     Assertions.assertEquals(userId2.getId(), userGroupsAndRoles2.getUserId());
     Assertions.assertEquals("[group-1]", userGroupsAndRoles2.getGroupNames().toString());
     Assertions.assertEquals("[jailer-main, baker-main, jailer-1]", userGroupsAndRoles2.getRoleNames().toString());
     
     Assertions.assertEquals("[group-1]", userGroupsAndRoles2.getDirectGroupNames().toString());
     Assertions.assertEquals("[jailer-main, baker-main, jailer-1]", userGroupsAndRoles2.getDirectRoleNames().toString());
+
+    printRepo(repo.getRepo()); //LOG THE DB 
+    
+    // 
+    final var users = getClient().org().find().userGroupsAndRolesQuery()
+        .repoId(repo.getRepo().getId())
+        .findAll().await().atMost(Duration.ofMinutes(1));
+    Assertions.assertEquals(2, users.getObjects().size());
+    
+
   }
 
   
