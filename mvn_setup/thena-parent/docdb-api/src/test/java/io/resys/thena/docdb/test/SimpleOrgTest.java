@@ -52,7 +52,7 @@ public class SimpleOrgTest extends DbTestTemplate {
         .repoId(repo.getRepo().getId())
         .findAll().await().atMost(Duration.ofMinutes(1));
     
-    Assertions.assertEquals(1, users.getObjects().getUsers().size());
+    Assertions.assertEquals(1, users.getObjects().size());
     
     printRepo(repo.getRepo());
   }
@@ -112,7 +112,7 @@ public class SimpleOrgTest extends DbTestTemplate {
         .repoId(repo.getRepo().getId())
         .findAll().await().atMost(Duration.ofMinutes(1));
     
-    Assertions.assertEquals(1, users.getObjects().getUsers().size());
+    Assertions.assertEquals(1, users.getObjects().size());
     
     printRepo(repo.getRepo());
     

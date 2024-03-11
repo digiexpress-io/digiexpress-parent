@@ -38,13 +38,6 @@ public interface ThenaOrgObjects extends ThenaObjects {
     Map<String, OrgActorStatus> getActorStatus(); 
   }
   
-  
-  @Value.Immutable
-  interface OrgUserObjects extends ThenaOrgObjects {
-    List<OrgUser> getUsers();
-  }
-  
-  
   @Value.Immutable
   interface OrgUserGroupsAndRolesWithLog extends ThenaOrgObjects {
     String getCommitId();

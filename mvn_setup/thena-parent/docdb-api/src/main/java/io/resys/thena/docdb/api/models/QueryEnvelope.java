@@ -80,6 +80,15 @@ public interface QueryEnvelope<T extends ThenaObjects> extends ThenaEnvelope {
         .addMessages(ex)
         .build();
   }
+  public static <T extends ThenaEnvelope.ThenaObjects> QueryEnvelopeList<T> repoNotFoundList(String repoId, Logger logger) {
+    final var ex = RepoException.builder().notRepoWithName(repoId);
+    logger.warn(ex.getText());
+    return ImmutableQueryEnvelopeList
+        .<T>builder()
+        .status(QueryEnvelopeStatus.ERROR)
+        .addMessages(ex)
+        .build();
+  }
   
   public static <T extends ThenaEnvelope.ThenaObjects> QueryEnvelope<T> docNotFound(Repo existing, Logger logger, String text) {
     return ImmutableQueryEnvelope.<T>builder()

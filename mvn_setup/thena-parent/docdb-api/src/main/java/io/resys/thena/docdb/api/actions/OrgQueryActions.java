@@ -4,7 +4,6 @@ import io.resys.thena.docdb.api.models.QueryEnvelope;
 import io.resys.thena.docdb.api.models.QueryEnvelopeList;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUser;
 import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgUserGroupsAndRolesWithLog;
-import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgUserObjects;
 import io.smallrye.mutiny.Uni;
 
 public interface OrgQueryActions {
@@ -16,7 +15,7 @@ public interface OrgQueryActions {
     UserObjectsQuery repoId(String repoId);
     
     Uni<QueryEnvelope<OrgUser>> get(String userId);
-    Uni<QueryEnvelope<OrgUserObjects>> findAll();
+    Uni<QueryEnvelopeList<OrgUser>> findAll();
   }
   
   interface UserGroupsAndRolesQuery {
