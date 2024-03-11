@@ -35,7 +35,11 @@ export const testRoles: Role[] = [
     principals: [
       { id: 'user1', name: 'John Smith', email: 'john.smith@gmail.com', roles: [], status: 'ENABLED' },
       { id: 'user2', name: 'Amy Coolidge', email: 'amy.c.cool@gmail.com', roles: [], status: 'ENABLED' },
-      { id: 'user3', name: 'Rodger Arrowhead', email: 'forestman@lumberjack.com', roles: [], status: 'ENABLED' }
+      { id: 'user3', name: 'Rodger Arrowhead', email: 'forestman@lumberjack.com', roles: [], status: 'ENABLED' },
+      { id: 'user4', name: 'Jerry Springer', email: 'jerry-springer@the-jerry-show.com', roles: [], status: 'ENABLED' },
+      { id: 'user5', name: 'Terry Straights', email: 'terry.straights@gmail.com', roles: [], status: 'ENABLED' },
+
+
     ], status: 'ENABLED'
   },
 

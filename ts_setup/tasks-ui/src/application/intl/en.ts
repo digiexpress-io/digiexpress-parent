@@ -540,6 +540,10 @@ const en = {
 
   'tasktable.header.spotlight.no_group': 'All tasks',
 
+  'permissions.title': 'Permissions',
+  'permissions.selectedPermissions': 'Selected permissions',
+  'permissions.search.title': 'Search available permissions',
+
   'permissions.roles.overview.tab.details': 'Details',
   'permissions.roles.overview.tab.permissions': 'Permissions',
   'permissions.roles.overview.tab.members': 'Members',
@@ -587,6 +591,13 @@ const en = {
   'permissions.createRole.role_parent': 'Parent role',
   'permissions.createRole.role_permissions': 'Permissions',
   'permissions.createRole.role_members': 'Role members',
+
+  'permissions.principals.title': 'Role members',
+  'permissions.principals.selectedPrincipals': 'Selected members',
+  'permissions.principal.name': 'Member name',
+  'permissions.principals.search.title': 'Search available members',
+
+
 
 };
 

@@ -36,7 +36,7 @@ const RoleCreateTabsNav: React.FC = () => {
       <Tab label={<FormattedMessage id='permissions.createRole.role_permissions' />} />
       <Tab label={<FormattedMessage id='permissions.createRole.role_members' />} />
     </Tabs>
-    <TabContent id={0} selected={tabValue}><Fields.SelectTest /></TabContent>
+    <TabContent id={0} selected={tabValue}><Fields.RoleParent /></TabContent>
     <TabContent id={1} selected={tabValue}><Fields.RolePermissions /></TabContent>
     <TabContent id={2} selected={tabValue}><Fields.RolePrincipals /></TabContent>
   </Stack>

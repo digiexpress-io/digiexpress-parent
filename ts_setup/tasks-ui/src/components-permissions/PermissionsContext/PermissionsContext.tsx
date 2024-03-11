@@ -4,7 +4,7 @@ import Context from 'context';
 import { SingleTabInit } from 'descriptor-tabbing';
 
 import { ImmutableSysConfigStore } from 'descriptor-sys-config';
-import { Permission, Role } from 'descriptor-permissions';
+import { Permission, Principal, Role } from 'descriptor-permissions';
 import { TabTypes, Tabbing, PermissionsContextType } from './permissions-context-types';
 import { testRoles } from './permissions-mock-data';
 
@@ -29,7 +29,7 @@ const PermissionsTabbingProvider: React.FC<{ children: React.ReactNode }> = ({ c
 export function usePermissions() {
   const tabbing = Tabbing.hooks.useTabbing();
   const activeTab = tabbing.getActiveTab();
-  const { roles, permissions } = React.useContext(PermissionsContext);
+  const { roles, permissions, principals } = React.useContext(PermissionsContext);
 
   function setActiveTab(tabId: TabTypes) {
     tabbing.withTabActivity(tabId);
@@ -40,6 +40,7 @@ export function usePermissions() {
     setActiveTab,
     roles,
     permissions,
+    principals
   };
 }
 
@@ -50,7 +51,8 @@ export const PermissionsProvider: React.FC<{ children: React.ReactNode }> = ({ c
   const backend = Context.useBackend();
   const [loading, setLoading] = React.useState(true);
   const [roles, setRoles] = React.useState<Role[]>(testRoles);
-  const [permissions, setPermissions] = React.useState<Permission[]>(testRoles);
+  const [permissions, setPermissions] = React.useState<Permission[]>([]);
+  const [principals, setPrincipals] = React.useState<Principal[]>([]);
 
   const [store] = React.useState(new ImmutableSysConfigStore(backend.store));
 
@@ -61,6 +63,7 @@ export const PermissionsProvider: React.FC<{ children: React.ReactNode }> = ({ c
         if (allConfigs.length === 1) {
           setRoles(testRoles);
           setPermissions(testRoles.flatMap((role) => role.permissions));
+          setPrincipals(testRoles.flatMap((role) => role.principals));
         }
       })
       .catch(() => setLoading(false));
@@ -76,8 +79,8 @@ export const PermissionsProvider: React.FC<{ children: React.ReactNode }> = ({ c
       setLoading(true);
       return loadOneConfig();
     }
-    return { loading, reload, roles, permissions };
-  }, [loading, store, roles, permissions]);
+    return { loading, reload, roles, permissions, principals };
+  }, [loading, store, roles, permissions, principals]);
 
 
   return (<PermissionsContext.Provider value={contextValue}>
