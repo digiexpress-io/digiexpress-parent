@@ -19,4 +19,10 @@ public class OrgQueryActionsImpl implements OrgQueryActions {
 	public UserHierarchyQuery userHierarchyQuery() {
 		return new OrgUserHierarchyQueryImpl(state);
 	}
+
+  @Override
+  public GroupHierarchyQuery groupHierarchyQuery() {
+    // TODO Auto-generated method stub
+    return null;
+  }
 }

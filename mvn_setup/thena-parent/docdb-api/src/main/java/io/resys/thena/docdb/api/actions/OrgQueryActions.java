@@ -10,6 +10,7 @@ public interface OrgQueryActions {
 
   UserObjectsQuery userQuery();
   UserHierarchyQuery userHierarchyQuery();
+  GroupHierarchyQuery groupHierarchyQuery();
   
   interface UserObjectsQuery {
     UserObjectsQuery repoId(String repoId);
@@ -22,5 +23,11 @@ public interface OrgQueryActions {
   	UserHierarchyQuery repoId(String repoId);
   	Uni<QueryEnvelope<OrgUserHierarchy>> get(String userId);
   	Uni<QueryEnvelopeList<OrgUserHierarchy>> findAll();
+  }
+  
+  interface GroupHierarchyQuery {
+    GroupHierarchyQuery repoId(String repoId);
+    Uni<QueryEnvelope<OrgUserHierarchy>> get(String userId);
+    Uni<QueryEnvelopeList<OrgUserHierarchy>> findAll();    
   }
 }

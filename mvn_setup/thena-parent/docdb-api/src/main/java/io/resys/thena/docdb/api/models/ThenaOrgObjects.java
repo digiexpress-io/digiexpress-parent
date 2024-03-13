@@ -60,6 +60,29 @@ public interface ThenaOrgObjects extends ThenaObjects {
   }
   
   @Value.Immutable
+  interface OrgGroupHierarchy extends ThenaOrgObjects {
+    String getCommitId();
+    String getGroupId();
+    String getGroupName();
+    
+    @Nullable String getParentGroupId();
+    @Nullable String getExternalId();
+    
+    String getLog();
+    OrgActorStatusType getStatus();
+    
+    List<String> getRoleNames();  // roles that are enabled
+    List<String> getDirectRoleNames();  // roles that are enabled
+    
+    List<String> getDirectUsers();
+    List<OrgUser> getParenUsers();
+    List<OrgUser> getChildUsers();
+    
+    List<OrgGroup> getParentGroups();
+    List<OrgGroup> getChildGroups();
+  }
+  
+  @Value.Immutable
   interface OrgUserGroupStatus extends ThenaOrgObjects {
     String getStatusId();
     String getGroupId();
