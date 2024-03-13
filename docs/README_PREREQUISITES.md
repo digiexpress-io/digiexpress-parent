@@ -1,7 +1,7 @@
 # Prerequisites
 
 ## Contents
-* List of required software
+* List of required/recommended software
 * Installation guides 
 
 //TODO
@@ -11,9 +11,8 @@
 
 ## List of required software
 
-* **Java**: version 17.0.9-zulu
+* **Java**: <JAVA_VERSION>
 * **pnpm** for package management: https://pnpm.io/
-* **Corepack** to manage package manager versions: https://nodejs.org/api/corepack.html
 * **Maven**
 * **Node**
 * **SDKMAN** SDK/JDK manager: https://sdkman.io/usage
@@ -35,22 +34,16 @@ See guide here: https://sdkman.io/usage --> **Env Command** section
 Your .sdkmanrc file should contain these values:
 
 ```
-java=17.0.9-zulu  
-quarkus=3.2.7.Final
+java=<JAVA_VERSION> 
+quarkus=<QUARKUS_VERSION>
 ```
 
 You'll know it's working if the terminal informs of the following when you navigate into the `/mvn_setup` directory.
 
 ```bash
-Using java version 17.0.9-zulu in this shell.
-Using quarkus version 3.2.7.Final in this shell.
+Using java version <JAVA_VERSION> in this shell.
+Using quarkus version <QUARKUS_VERSION> in this shell.
 ```
 
 //TODO  
-
-2. Corepack
-
-3. Configure db
-
-4. Congigure Adminer
 

@@ -14,8 +14,6 @@ DigiExpress is an all-in-one solution that covers a full range of organizational
 
 Data is managed via Thena: a JSON storage framework with GIT-like features on top of a relational database.
 
-[Thena documentation](/README_THENA.md)
-
 ### Project structure: High level overview
 
 * `mvn_setup`: Backend projects built with Maven and released to Maven central repository 
@@ -28,24 +26,23 @@ https://central.sonatype.com/artifact/io.digiexpress/digiexpress-parent
 
 ### Installation and local development
 
-1. [Installing prerequisites](/README_PREREQUISITES.md)
-2. [Installing and running the application](/README_RUNNING_APP.md)
-3. [Common database operations](/README_DB_OPS.md.md)
-4. [Troubleshooting](/README_TROUBLESHOOTING.md)
+1. [Installing prerequisites](/docs/README_PREREQUISITES.md)
+2. [Installing and running the application](/docs/README_RUNNING_APP.md)
+3. [Common database operations](/docs/README_DB_OPS.md.md)
+4. [Troubleshooting](/docs/README_TROUBLESHOOTING.md)
 
 ### DigiExpress child projects
 
-5. TODO [Thena](/README_THENA.md)
-6. TODO Dialob
-7. TODO The Wrench
-8. TODO The Stencil
+5. TODO [Thena](/docs/README_THENA.md)
+6. TODO [Dialob](/docs/README_DIALOB.md)
+7. TODO [The Wrench](/docs/README_WRENCH.md)
+8. TODO [The Stencil](/docs/README_STENCIL.md)
 9. TODO Other
 
 ### Contributing
 
-1. Contribution guidelines
-2. How to write issues and make pull requests
-3. How to report bugs
+1. [Contribution guidelines](/docs/README_CONTRIBUTION_GUIDELINES.md): Branch organisation, creating feature branches, creating issues, making pull requests
+2. How to report bugs
 
 
 ### Licensing 

@@ -25,7 +25,7 @@ mvn clean install -DskipTests=true
 
 ```bash
 cd digiexpress-parent/ts_setup/tasks_ui
-corepack pnpm install
+pnpm install
 ```
 
 # Running the application
@@ -41,7 +41,7 @@ mvn -f mvn_setup/digiexpress-app/pom.xml compile quarkus:dev
 
 ```bash
 cd digiexpress-parent/ 
-corepack pnpm -C ts_setup/tasks-ui start
+pnpm -C ts_setup/tasks-ui start
 ```
 
 ## Ports used
