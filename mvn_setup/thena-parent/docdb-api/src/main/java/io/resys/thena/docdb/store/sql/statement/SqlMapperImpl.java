@@ -36,12 +36,12 @@ import io.resys.thena.docdb.api.models.ImmutableDocFlatted;
 import io.resys.thena.docdb.api.models.ImmutableDocLog;
 import io.resys.thena.docdb.api.models.ImmutableOrgActorStatus;
 import io.resys.thena.docdb.api.models.ImmutableOrgGroup;
-import io.resys.thena.docdb.api.models.ImmutableOrgGroupAndRoleFlattened;
 import io.resys.thena.docdb.api.models.ImmutableOrgGroupRole;
 import io.resys.thena.docdb.api.models.ImmutableOrgRole;
 import io.resys.thena.docdb.api.models.ImmutableOrgRoleFlattened;
 import io.resys.thena.docdb.api.models.ImmutableOrgUser;
 import io.resys.thena.docdb.api.models.ImmutableOrgUserFlattened;
+import io.resys.thena.docdb.api.models.ImmutableOrgUserHierarchyEntry;
 import io.resys.thena.docdb.api.models.ImmutableOrgUserMembership;
 import io.resys.thena.docdb.api.models.ImmutableOrgUserRole;
 import io.resys.thena.docdb.api.models.ImmutableRepo;
@@ -69,12 +69,12 @@ import io.resys.thena.docdb.api.models.ThenaGitObject.TreeValue;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatus;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatusType;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroupAndRoleFlattened;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroupRole;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRoleFlattened;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUser;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserFlattened;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserHierarchyEntry;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserMembership;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserRole;
 import io.resys.thena.docdb.spi.DbCollections;
@@ -369,11 +369,11 @@ public class SqlMapperImpl implements SqlMapper {
         .build();
 	}
 	@Override
-	public OrgGroupAndRoleFlattened orgGroupAndRoleFlattened(Row row) {
+	public OrgUserHierarchyEntry orgUserHierarchyEntry(Row row) {
 		final var roleStatus = row.getString("role_status");
 		final var groupStatus = row.getString("status");
 		
-		return ImmutableOrgGroupAndRoleFlattened.builder()
+		return ImmutableOrgUserHierarchyEntry.builder()
 		  	.groupId(row.getString("id"))
 		  	.groupParentId(row.getString("parent_id"))
 		  	.groupName(row.getString("group_name"))

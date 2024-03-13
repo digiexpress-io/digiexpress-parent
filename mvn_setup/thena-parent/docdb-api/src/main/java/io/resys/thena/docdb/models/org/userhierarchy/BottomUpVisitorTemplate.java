@@ -1,4 +1,4 @@
-package io.resys.thena.docdb.models.org.usertree;
+package io.resys.thena.docdb.models.org.userhierarchy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,9 +9,9 @@ import org.immutables.value.Value;
 import io.resys.thena.docdb.api.models.ImmutableOrgUserGroupStatus;
 import io.resys.thena.docdb.api.models.ImmutableOrgUserRoleStatus;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatusType;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroupAndRoleFlattened;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserHierarchyEntry;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRoleFlattened;
-import io.resys.thena.docdb.models.org.usertree.UserTreeContainer.BottomUpVisitor;
+import io.resys.thena.docdb.models.org.userhierarchy.UserTreeContainer.BottomUpVisitor;
 
 
 public abstract class BottomUpVisitorTemplate<T> implements BottomUpVisitor<T> {
@@ -107,7 +107,7 @@ public abstract class BottomUpVisitorTemplate<T> implements BottomUpVisitor<T> {
     return groupDisabled;
   }
   
-  private void visitGroupStatus(UserTree tree, OrgGroupAndRoleFlattened value) {
+  private void visitGroupStatus(UserTree tree, OrgUserHierarchyEntry value) {
     
     // disabled
     if(!tree.isDirect() && inheritanceDisabledFromBottom.contains(value.getGroupId())) {
@@ -136,7 +136,7 @@ public abstract class BottomUpVisitorTemplate<T> implements BottomUpVisitor<T> {
     }
   }
   
-  private void visitRoleStatus(OrgGroupAndRoleFlattened value) {
+  private void visitRoleStatus(OrgUserHierarchyEntry value) {
     if(value.getRoleStatusId() == null || this.visited.contains(value.getRoleStatusId())) {
       return;
     }

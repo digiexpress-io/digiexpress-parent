@@ -51,6 +51,7 @@ public interface DocDB {
     OrgCommitActions commit();
     OrgQueryActions find();
     OrgHistoryActions history();
+    OrgProjectQuery project();
 
     // build world state
     interface OrgProjectQuery {

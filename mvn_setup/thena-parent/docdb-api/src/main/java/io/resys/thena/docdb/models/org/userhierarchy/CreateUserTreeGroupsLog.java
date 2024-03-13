@@ -1,4 +1,4 @@
-package io.resys.thena.docdb.models.org.usertree;
+package io.resys.thena.docdb.models.org.userhierarchy;
 
 import java.util.ArrayList;
 import java.util.HashMap;

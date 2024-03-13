@@ -1,4 +1,4 @@
-package io.resys.thena.docdb.models.org.usertree;
+package io.resys.thena.docdb.models.org.userhierarchy;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroupAndRoleFlattened;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserHierarchyEntry;
 
 public class UserContainer {
-  private final Map<String, List<OrgGroupAndRoleFlattened>> groupsById = new HashMap<>();
-  private final Map<String, List<OrgGroupAndRoleFlattened>> groupsByParentId = new HashMap<>();
+  private final Map<String, List<OrgUserHierarchyEntry>> groupsById = new HashMap<>();
+  private final Map<String, List<OrgUserHierarchyEntry>> groupsByParentId = new HashMap<>();
   private final Set<String> roots = new LinkedHashSet<>();
   
 
@@ -22,7 +22,7 @@ public class UserContainer {
 
   @FunctionalInterface
   public interface UserContainerChildVisitor {
-    void visitChild(OrgGroupAndRoleFlattened entry);
+    void visitChild(OrgUserHierarchyEntry entry);
   }
   
   public <T> T accept(UserContainerVisitor<T> visitor) {
@@ -37,7 +37,7 @@ public class UserContainer {
     return visitor.close(); 
   }
   
-  public UserContainer(List<OrgGroupAndRoleFlattened> init) {
+  public UserContainer(List<OrgUserHierarchyEntry> init) {
     for(final var entry : init) {
       if(entry.getGroupParentId() == null) {
         roots.add(entry.getGroupId());
@@ -69,7 +69,7 @@ public class UserContainer {
     }
   }
  
-  private static String getSortableId(OrgGroupAndRoleFlattened entry) {
+  private static String getSortableId(OrgUserHierarchyEntry entry) {
     return entry.getGroupName() + entry.getRoleName() + entry.getGroupStatus() + entry.getRoleStatus();
   }
 }

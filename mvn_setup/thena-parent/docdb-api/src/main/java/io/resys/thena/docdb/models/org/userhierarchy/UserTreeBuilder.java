@@ -1,4 +1,4 @@
-package io.resys.thena.docdb.models.org.usertree;
+package io.resys.thena.docdb.models.org.userhierarchy;
 
 import java.util.List;
 
@@ -6,12 +6,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.resys.thena.docdb.api.LogConstants;
-import io.resys.thena.docdb.api.models.ImmutableOrgUserGroupsAndRolesWithLog;
+import io.resys.thena.docdb.api.models.ImmutableOrgUserHierarchy;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatusType;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroupAndRoleFlattened;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserHierarchyEntry;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRoleFlattened;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserFlattened;
-import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgUserGroupsAndRolesWithLog;
+import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgUserHierarchy;
 import io.resys.thena.docdb.support.RepoAssert;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -21,15 +21,15 @@ public class UserTreeBuilder {
   private Logger logger;
   
   private OrgUserFlattened user;
-  private List<OrgGroupAndRoleFlattened> groupData;
+  private List<OrgUserHierarchyEntry> groupData;
   private List<OrgRoleFlattened> roleData;
   
   public UserTreeBuilder user(OrgUserFlattened user) {                         this.user = RepoAssert.notNull(user,            () -> "user can't be empty!"); return this; }
-  public UserTreeBuilder groupData(List<OrgGroupAndRoleFlattened> groupData) { this.groupData = RepoAssert.notNull(groupData,  () -> "groupData can't be empty!"); return this; }
+  public UserTreeBuilder groupData(List<OrgUserHierarchyEntry> groupData) { this.groupData = RepoAssert.notNull(groupData,  () -> "groupData can't be empty!"); return this; }
   public UserTreeBuilder roleData(List<OrgRoleFlattened> roleData) {           this.roleData = RepoAssert.notNull(roleData,    () -> "roleData can't be null!"); return this; }
   
   
-  public OrgUserGroupsAndRolesWithLog build() {
+  public OrgUserHierarchy build() {
     RepoAssert.notNull(user,      () -> "user can't be empty!");
     RepoAssert.notNull(groupData, () -> "groupData can't be empty!");
     RepoAssert.notNull(roleData,  () -> "roleData can't be null!");
@@ -45,7 +45,7 @@ public class UserTreeBuilder {
     final String log = container.accept(new CreateUserTreeGroupsLog(roleData, user));
     
     
-    return ImmutableOrgUserGroupsAndRolesWithLog.builder()
+    return ImmutableOrgUserHierarchy.builder()
       .userId(user.getId())
       .userName(user.getUserName())
       .externalId(user.getExternalId())

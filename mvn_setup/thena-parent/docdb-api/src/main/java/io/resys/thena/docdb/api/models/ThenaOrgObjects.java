@@ -27,9 +27,9 @@ public interface ThenaOrgObjects extends ThenaObjects {
   interface OrgProjectObjects extends ThenaOrgObjects { 
     Map<String, OrgGroup> getGroups();
     Map<String, OrgRole> getRoles();
-    Map<String, OrgUser> getUser();
+    Map<String, OrgUser> getUsers();
     
-    Map<String, OrgUserMembership> getUserMembership();
+    Map<String, OrgUserMembership> getUserMemberships();
     Map<String, OrgGroupRole> getGroupRoles();
     Map<String, OrgUserRole> getUserRoles();
     
@@ -39,7 +39,7 @@ public interface ThenaOrgObjects extends ThenaObjects {
   }
   
   @Value.Immutable
-  interface OrgUserGroupsAndRolesWithLog extends ThenaOrgObjects {
+  interface OrgUserHierarchy extends ThenaOrgObjects {
     String getCommitId();
   	String getUserId();
     @Nullable String getExternalId();

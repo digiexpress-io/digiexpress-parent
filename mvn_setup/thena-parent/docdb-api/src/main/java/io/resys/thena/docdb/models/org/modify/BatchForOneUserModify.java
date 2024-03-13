@@ -29,7 +29,7 @@ import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUser;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserMembership;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserRole;
 import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgUserGroupStatus;
-import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgUserGroupsAndRolesWithLog;
+import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgUserHierarchy;
 import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgUserRoleStatus;
 import io.resys.thena.docdb.models.git.GitInserts.BatchStatus;
 import io.resys.thena.docdb.models.org.ImmutableOrgBatchForOne;
@@ -53,13 +53,13 @@ public class BatchForOneUserModify {
   
   private final List<OrgActorStatus> actorStatus = new ArrayList<>();
   private final List<String> identifiersForUpdates = new ArrayList<>();
-  private OrgUserGroupsAndRolesWithLog current;
+  private OrgUserHierarchy current;
 
   private Optional<String> userName;
   private Optional<String> email;
   private Optional<String> externalId;
 
-  public BatchForOneUserModify current(OrgUserGroupsAndRolesWithLog current) {this.current = current; return this; }
+  public BatchForOneUserModify current(OrgUserHierarchy current) {this.current = current; return this; }
   public BatchForOneUserModify userName(Optional<String> userName) {     this.userName = userName; return this; }
   public BatchForOneUserModify email(Optional<String> email) {           this.email = email; return this; }
   public BatchForOneUserModify externalId(Optional<String> externalId) { this.externalId = externalId; return this; }

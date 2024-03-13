@@ -1,4 +1,4 @@
-package io.resys.thena.docdb.models.org.usertree;
+package io.resys.thena.docdb.models.org.userhierarchy;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,12 +7,12 @@ import java.util.Map;
 
 import io.resys.thena.docdb.api.models.ImmutableOrgUserGroupStatus;
 import io.resys.thena.docdb.api.models.ImmutableOrgUserRoleStatus;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroupAndRoleFlattened;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserHierarchyEntry;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRoleFlattened;
 import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgUserGroupStatus;
 import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgUserRoleStatus;
-import io.resys.thena.docdb.models.org.usertree.UserContainer.UserContainerChildVisitor;
-import io.resys.thena.docdb.models.org.usertree.UserContainer.UserContainerVisitor;
+import io.resys.thena.docdb.models.org.userhierarchy.UserContainer.UserContainerChildVisitor;
+import io.resys.thena.docdb.models.org.userhierarchy.UserContainer.UserContainerVisitor;
 import io.resys.thena.docdb.support.RepoAssert;
 
 
@@ -45,7 +45,7 @@ public class UserContainerVisitorImpl implements UserContainerVisitor<UserTreeCo
     return (entry) -> visitChild(root, entry);
   }
   
-  private void visitChild(UserTree root, OrgGroupAndRoleFlattened next) {
+  private void visitChild(UserTree root, OrgUserHierarchyEntry next) {
     if(!groupStatus.containsKey(next.getGroupStatusId()) && next.getGroupStatusId() != null) {
       groupStatus.put(next.getGroupStatusId(), ImmutableOrgUserGroupStatus.builder()
           .groupId(next.getGroupId())

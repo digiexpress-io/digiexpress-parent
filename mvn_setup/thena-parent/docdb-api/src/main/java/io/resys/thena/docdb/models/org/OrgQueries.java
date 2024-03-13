@@ -5,7 +5,7 @@ import java.util.List;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatus;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgCommit;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroupAndRoleFlattened;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserHierarchyEntry;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroupRole;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRoleFlattened;
@@ -67,7 +67,7 @@ public interface OrgQueries {
     Multi<OrgUser> findAll();
     Multi<OrgUser> findAll(List<String> id);
     Uni<OrgUser> getById(String id); //user.id or user.email or user.external_id 
-    Uni<List<OrgGroupAndRoleFlattened>> findAllGroupsAndRolesByUserId(String userId);
+    Uni<List<OrgUserHierarchyEntry>> findAllUserHierarchyEntries(String userId);
     Uni<List<OrgRoleFlattened>> findAllRolesByUserId(String userId);
     Uni<OrgUserFlattened> getStatusById(String userId);
   }

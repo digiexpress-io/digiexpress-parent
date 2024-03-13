@@ -1,7 +1,7 @@
 package io.resys.thena.docdb.models.org.actions;
 
 import io.resys.thena.docdb.api.actions.OrgQueryActions;
-import io.resys.thena.docdb.models.org.queries.OrgUserGroupsAndRolesQueryImpl;
+import io.resys.thena.docdb.models.org.queries.OrgUserHierarchyQueryImpl;
 import io.resys.thena.docdb.models.org.queries.OrgUserObjectsQueryImpl;
 import io.resys.thena.docdb.spi.DbState;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ public class OrgQueryActionsImpl implements OrgQueryActions {
   }
 
 	@Override
-	public UserGroupsAndRolesQuery userGroupsAndRolesQuery() {
-		return new OrgUserGroupsAndRolesQueryImpl(state);
+	public UserHierarchyQuery userHierarchyQuery() {
+		return new OrgUserHierarchyQueryImpl(state);
 	}
 }

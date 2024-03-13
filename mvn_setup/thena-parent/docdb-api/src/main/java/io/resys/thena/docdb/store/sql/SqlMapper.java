@@ -36,7 +36,7 @@ import io.resys.thena.docdb.api.models.ThenaGitObject.Tree;
 import io.resys.thena.docdb.api.models.ThenaGitObject.TreeValue;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatus;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroupAndRoleFlattened;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserHierarchyEntry;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroupRole;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRoleFlattened;
@@ -72,7 +72,7 @@ public interface SqlMapper extends DataMapper<Row>{
   OrgUserRole orgUserRole(Row row);
   OrgGroupRole orgGroupRole(Row row);
   OrgUserMembership orgUserMemberships(Row row);
-  OrgGroupAndRoleFlattened orgGroupAndRoleFlattened(Row row);
+  OrgUserHierarchyEntry orgUserHierarchyEntry(Row row);
   OrgRoleFlattened orgOrgRoleFlattened(Row row);
   OrgUserFlattened orgUserFlattened(Row row);
   OrgActorStatus orgActorStatus(Row row); 

@@ -3,7 +3,7 @@ package io.resys.thena.docdb.store.sql.queries;
 import java.util.List;
 
 import io.resys.thena.docdb.api.LogConstants;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroupAndRoleFlattened;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserHierarchyEntry;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRoleFlattened;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUser;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserFlattened;
@@ -86,18 +86,18 @@ public class OrgUserQuerySqlPool implements OrgQueries.UserQuery {
   }
   
 	@Override
-	public Uni<List<OrgGroupAndRoleFlattened>> findAllGroupsAndRolesByUserId(String userId) {
+	public Uni<List<OrgUserHierarchyEntry>> findAllUserHierarchyEntries(String userId) {
     final var sql = sqlBuilder.orgUsers().findAllUserGroupsAndRolesByUserId(userId);
     if(log.isDebugEnabled()) {
-      log.debug("User findAllUserGroupsAndRolesByUserId query, with props: {} \r\n{}", 
+      log.debug("User findAllUserHierarchyEntries query, with props: {} \r\n{}", 
       		sql.getProps().deepToString(),
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.orgGroupAndRoleFlattened(row))
+        .mapping(row -> sqlMapper.orgUserHierarchyEntry(row))
         .execute(sql.getProps())
         .onItem()
-        .transformToMulti((RowSet<OrgGroupAndRoleFlattened> rowset) -> Multi.createFrom().iterable(rowset))
+        .transformToMulti((RowSet<OrgUserHierarchyEntry> rowset) -> Multi.createFrom().iterable(rowset))
         .collect().asList()
         .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'USER_GROUPS_ROLES'!", sql, e)));
 	}

@@ -87,7 +87,7 @@ public class AnyTreeContainerContextImpl implements AnyTreeContainerContext {
 
     // group -> group memberships by group id
     final var groupMemberships = new LinkedHashMap<String, List<OrgUserMembership>>();
-    for(final var groupMembership : worldState.getUserMembership().values()) {
+    for(final var groupMembership : worldState.getUserMemberships().values()) {
       if(!groupMemberships.containsKey(groupMembership.getGroupId())) {
         groupMemberships.put(groupMembership.getGroupId(), new ArrayList<>());  
       }
@@ -195,7 +195,7 @@ public class AnyTreeContainerContextImpl implements AnyTreeContainerContext {
   }
   @Override
   public OrgUser getUser(String id) {
-    return worldState.getUser().get(id);
+    return worldState.getUsers().get(id);
   }
   @Override
   public List<OrgUserRole> getUserRoles(String userId) {

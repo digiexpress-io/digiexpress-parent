@@ -15,11 +15,11 @@ import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.docdb.api.models.Repo.CommitResultStatus;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
-import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgUserGroupsAndRolesWithLog;
+import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgUserHierarchy;
 import io.resys.thena.docdb.models.org.OrgInserts.OrgBatchForOne;
 import io.resys.thena.docdb.models.org.OrgState.OrgRepo;
 import io.resys.thena.docdb.models.org.modify.BatchForOneUserModify.NoChangesException;
-import io.resys.thena.docdb.models.org.queries.OrgUserGroupsAndRolesQueryImpl;
+import io.resys.thena.docdb.models.org.queries.OrgUserHierarchyQueryImpl;
 import io.resys.thena.docdb.spi.DataMapper;
 import io.resys.thena.docdb.spi.DbState;
 import io.resys.thena.docdb.support.RepoAssert;
@@ -105,7 +105,7 @@ public class ModifyOneUserImpl implements ModifyOneUser {
 			Uni.createFrom().item(Collections.emptyList()) :
 			tx.query().roles().findAll(allRoles).collect().asList();
 		
-		final Uni<QueryEnvelope<OrgUserGroupsAndRolesWithLog>> userUni = new OrgUserGroupsAndRolesQueryImpl(state).repoId(repoId).get(userId);
+		final Uni<QueryEnvelope<OrgUserHierarchy>> userUni = new OrgUserHierarchyQueryImpl(state).repoId(repoId).get(userId);
 	    
 		
 		// join data
@@ -121,7 +121,7 @@ public class ModifyOneUserImpl implements ModifyOneUser {
 
   private Uni<OneUserEnvelope> modifyUser(
       OrgRepo tx, 
-      QueryEnvelope<OrgUserGroupsAndRolesWithLog> user, 
+      QueryEnvelope<OrgUserHierarchy> user, 
       List<OrgGroup> groups, 
       List<OrgRole> roles) {
     

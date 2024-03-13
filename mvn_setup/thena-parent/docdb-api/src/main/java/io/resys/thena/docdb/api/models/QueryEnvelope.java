@@ -105,4 +105,13 @@ public interface QueryEnvelope<T extends ThenaObjects> extends ThenaEnvelope {
       .addMessages(ImmutableMessage.builder().text(text).build())
       .build();
   }
+  
+  public static <T extends ThenaEnvelope.ThenaObjects> QueryEnvelope<T> fatalError(Repo existing, String msg, Logger logger, Throwable t) {
+    return ImmutableQueryEnvelope.<T>builder()
+      .repo(existing)
+      .status(QueryEnvelopeStatus.ERROR)
+      .addMessages(ImmutableMessage.builder().text(msg).exception(t).build())
+      .addMessages(ImmutableMessage.builder().text(t.getMessage()).build())
+      .build();
+  }
 }

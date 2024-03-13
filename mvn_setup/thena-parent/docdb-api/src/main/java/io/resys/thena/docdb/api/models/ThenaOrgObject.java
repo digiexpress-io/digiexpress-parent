@@ -18,7 +18,7 @@ public interface ThenaOrgObject {
   interface IsOrgVersionObject { String getCommitId(); }  
 
   @Value.Immutable
-  interface OrgGroupAndRoleFlattened extends ThenaOrgObject {
+  interface OrgUserHierarchyEntry extends ThenaOrgObject {
   	String getGroupId();
   	String getGroupName();
   	String getGroupDescription();

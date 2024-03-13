@@ -45,6 +45,7 @@ import io.resys.thena.docdb.models.git.tags.TagActionsDefault;
 import io.resys.thena.docdb.models.org.actions.OrgCommitActionsImpl;
 import io.resys.thena.docdb.models.org.actions.OrgHistoryActionsImpl;
 import io.resys.thena.docdb.models.org.actions.OrgQueryActionsImpl;
+import io.resys.thena.docdb.models.org.queries.OrgProjectQueryImpl;
 
 public class DocDBDefault implements DocDB {
   private final DbState state;
@@ -182,6 +183,11 @@ public class DocDBDefault implements DocDB {
           orgCommitActions = new OrgCommitActionsImpl(state); 
         }
         return orgCommitActions;
+      }
+
+      @Override
+      public OrgProjectQuery project() {
+        return new OrgProjectQueryImpl(state);
       }
     };
   }

@@ -30,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 @QuarkusTest
 @TestProfile(PgProfile.class)
 @Slf4j
-public class HierarchicalOrgTest extends DbTestTemplate {
+public class HierarchicalOrgUserTest extends DbTestTemplate {
 
   @Value.Immutable
   public interface TestContent extends Serializable {
@@ -86,7 +86,7 @@ public class HierarchicalOrgTest extends DbTestTemplate {
     */
     
     // user 2 sanity
-    var userGroupsAndRoles2 = getClient().org().find().userGroupsAndRolesQuery()
+    var userGroupsAndRoles2 = getClient().org().find().userHierarchyQuery()
         .repoId(repo.getRepo().getId())
         .get(userId2.getId()).await().atMost(Duration.ofMinutes(1)).getObjects();
     
@@ -125,7 +125,7 @@ user-2
         .build().await().atMost(Duration.ofMinutes(1))
         .getUser();
     
-    userGroupsAndRoles2 = getClient().org().find().userGroupsAndRolesQuery()
+    userGroupsAndRoles2 = getClient().org().find().userHierarchyQuery()
         .repoId(repo.getRepo().getId())
         .get(userId2.getId()).await().atMost(Duration.ofMinutes(1)).getObjects(); 
     Assertions.assertEquals("""
@@ -155,7 +155,7 @@ super-user
         .build().await().atMost(Duration.ofMinutes(1))
         .getUser();
     
-    userGroupsAndRoles2 = getClient().org().find().userGroupsAndRolesQuery()
+    userGroupsAndRoles2 = getClient().org().find().userHierarchyQuery()
         .repoId(repo.getRepo().getId())
         .get(userId2.getId()).await().atMost(Duration.ofMinutes(1)).getObjects(); 
     Assertions.assertEquals("""
@@ -193,7 +193,7 @@ super-user
       .getStatus();
     Assertions.assertEquals(Repo.CommitResultStatus.NO_CHANGES, rejectNoChanges);
     
-    userGroupsAndRoles2 = getClient().org().find().userGroupsAndRolesQuery()
+    userGroupsAndRoles2 = getClient().org().find().userHierarchyQuery()
         .repoId(repo.getRepo().getId())
         .get(userId2.getId()).await().atMost(Duration.ofMinutes(1)).getObjects(); 
     Assertions.assertEquals("""
@@ -221,7 +221,7 @@ super-user
     printRepo(repo.getRepo()); //LOG THE DB 
     
     // 
-    final var users = getClient().org().find().userGroupsAndRolesQuery()
+    final var users = getClient().org().find().userHierarchyQuery()
         .repoId(repo.getRepo().getId())
         .findAll().await().atMost(Duration.ofMinutes(1));
     Assertions.assertEquals(2, users.getObjects().size());

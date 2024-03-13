@@ -1,4 +1,4 @@
-package io.resys.thena.docdb.models.org.usertree;
+package io.resys.thena.docdb.models.org.userhierarchy;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,7 +10,7 @@ import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatusType;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroupAndRoleFlattened;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserHierarchyEntry;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRoleFlattened;
 
 
@@ -21,7 +21,7 @@ public class UserTree {
   
   // seed data
   private final String groupId;
-  private final List<OrgGroupAndRoleFlattened> groupValues = new ArrayList<>();
+  private final List<OrgUserHierarchyEntry> groupValues = new ArrayList<>();
   private final Map<String, OrgRoleFlattened> roleValues = new HashMap<>();
   
  
@@ -40,7 +40,7 @@ public class UserTree {
   }
   public Map<String, UserTree> getChildren() { return Collections.unmodifiableMap(children); }
   public Map<String, OrgRoleFlattened> getRoleValues() { return Collections.unmodifiableMap(roleValues); }
-  public List<OrgGroupAndRoleFlattened> getGroupValues() { return Collections.unmodifiableList(groupValues); }
+  public List<OrgUserHierarchyEntry> getGroupValues() { return Collections.unmodifiableList(groupValues); }
   
   public String getGroupId() { return this.groupId; }
   public String getGroupName() { return this.groupValues.get(0).getGroupName(); }
@@ -63,7 +63,7 @@ public class UserTree {
     }
     return null;
   }
-  public void addGroupValue(OrgGroupAndRoleFlattened next, OrgRoleFlattened role) {
+  public void addGroupValue(OrgUserHierarchyEntry next, OrgRoleFlattened role) {
     groupValues.add(next); 
     if(role != null) {
       roleValues.put(role.getRoleId(), role);
