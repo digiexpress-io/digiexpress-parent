@@ -28,7 +28,7 @@ https://central.sonatype.com/artifact/io.digiexpress/digiexpress-parent
 
 1. [Installing prerequisites](/docs/README_PREREQUISITES.md)
 2. [Installing and running the application](/docs/README_RUNNING_APP.md)
-3. [Common database operations](/docs/README_DB_OPS.md.md)
+3. [Common database operations](/docs/README_DB_OPS.md)
 4. [Troubleshooting](/docs/README_TROUBLESHOOTING.md)
 
 ### DigiExpress child projects
