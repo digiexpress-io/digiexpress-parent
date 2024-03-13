@@ -1,6 +1,7 @@
 package io.resys.thena.docdb.models.org.actions;
 
 import io.resys.thena.docdb.api.actions.OrgQueryActions;
+import io.resys.thena.docdb.models.org.queries.OrgGroupHierarchyQueryImpl;
 import io.resys.thena.docdb.models.org.queries.OrgUserHierarchyQueryImpl;
 import io.resys.thena.docdb.models.org.queries.OrgUserObjectsQueryImpl;
 import io.resys.thena.docdb.spi.DbState;
@@ -22,7 +23,6 @@ public class OrgQueryActionsImpl implements OrgQueryActions {
 
   @Override
   public GroupHierarchyQuery groupHierarchyQuery() {
-    // TODO Auto-generated method stub
-    return null;
+    return new OrgGroupHierarchyQueryImpl(state);
   }
 }

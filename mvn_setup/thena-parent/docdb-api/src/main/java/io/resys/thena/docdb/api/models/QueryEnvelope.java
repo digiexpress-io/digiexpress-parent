@@ -1,5 +1,8 @@
 package io.resys.thena.docdb.api.models;
 
+import java.util.Arrays;
+import java.util.Collections;
+
 /*-
  * #%L
  * thena-docdb-api
@@ -45,6 +48,33 @@ public interface QueryEnvelope<T extends ThenaObjects> extends ThenaEnvelope {
   
   enum QueryEnvelopeStatus { OK, ERROR }
 
+  public default QueryEnvelopeList<T> toList() {
+    return ImmutableQueryEnvelopeList
+        .<T>builder()
+        .status(getStatus())
+        .addAllMessages(this.getMessages())
+        .repo(this.getRepo())
+        .addAllObjects(this.getObjects() == null ? Collections.emptyList() : Arrays.asList(this.getObjects()))
+        .build();
+  }
+
+  public default <X extends ThenaObjects> QueryEnvelopeList<X> toListOfType() {
+    return ImmutableQueryEnvelopeList
+        .<X>builder()
+        .status(getStatus())
+        .addAllMessages(this.getMessages())
+        .repo(this.getRepo())
+        .build();
+  }
+  public default <X extends ThenaObjects> QueryEnvelope<X> toType() {
+    return ImmutableQueryEnvelope
+        .<X>builder()
+        .status(getStatus())
+        .addAllMessages(this.getMessages())
+        .repo(this.getRepo())
+        .build();
+  }
+  
   
   public static <T extends ThenaEnvelope.ThenaObjects> QueryEnvelope<T> repoBlobNotFound(
       Repo repo, 
@@ -99,6 +129,7 @@ public interface QueryEnvelope<T extends ThenaObjects> extends ThenaEnvelope {
   }
   
   public static <T extends ThenaEnvelope.ThenaObjects> QueryEnvelope<T> docUnexpected(Repo existing, Logger logger, String text) {
+    logger.warn(text);
     return ImmutableQueryEnvelope.<T>builder()
       .repo(existing)
       .status(QueryEnvelopeStatus.ERROR)
@@ -107,6 +138,7 @@ public interface QueryEnvelope<T extends ThenaObjects> extends ThenaEnvelope {
   }
   
   public static <T extends ThenaEnvelope.ThenaObjects> QueryEnvelope<T> fatalError(Repo existing, String msg, Logger logger, Throwable t) {
+    logger.error(msg, t);
     return ImmutableQueryEnvelope.<T>builder()
       .repo(existing)
       .status(QueryEnvelopeStatus.ERROR)

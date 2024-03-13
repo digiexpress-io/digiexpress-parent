@@ -218,7 +218,7 @@ super-user
     Assertions.assertEquals("[group-1]", userGroupsAndRoles2.getDirectGroupNames().toString());
     Assertions.assertEquals("[jailer-main, baker-main, jailer-1]", userGroupsAndRoles2.getDirectRoleNames().toString());
 
-    printRepo(repo.getRepo()); //LOG THE DB 
+    //printRepo(repo.getRepo()); //LOG THE DB 
     
     // 
     final var users = getClient().org().find().userHierarchyQuery()

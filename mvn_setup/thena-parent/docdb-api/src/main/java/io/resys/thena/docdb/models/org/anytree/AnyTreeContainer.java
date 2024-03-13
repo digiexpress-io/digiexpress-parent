@@ -11,8 +11,8 @@ import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUser;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserMembership;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserRole;
 
-public interface AnyTreeContainer {
-  <T> T accept(AnyTreeContainerVisitor<T> visitor);
+public interface AnyTreeContainer<T> {
+  T accept(AnyTreeContainerVisitor<T> visitor);
   
   
   interface AnyTreeContainerVisitor<T> {
@@ -22,6 +22,7 @@ public interface AnyTreeContainer {
   
   interface AnyTreeContainerContext {
     OrgUser getUser(String id);
+    OrgRole getRole(String id);
     List<OrgUserRole> getUserRoles(String id);
     
     // Group related 

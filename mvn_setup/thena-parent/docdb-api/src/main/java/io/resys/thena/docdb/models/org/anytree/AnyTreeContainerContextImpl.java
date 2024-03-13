@@ -139,6 +139,19 @@ public class AnyTreeContainerContextImpl implements AnyTreeContainerContext {
         continue;
       }
     }
+    this.groupTops = Collections.unmodifiableList(groupTops);
+    this.groupBottoms = Collections.unmodifiableList(groupBottoms);
+    this.groupsByParentId = unmodifiableMap(groupsByParentId);
+    this.userRoles = unmodifiableMap(userRoles);
+    this.groupRoles = unmodifiableMap(groupRoles);
+    this.groupMemberships = unmodifiableMap(groupMemberships);
+    
+    this.userStatus = Collections.unmodifiableMap(userStatus);
+    this.groupStatus = Collections.unmodifiableMap(groupStatus);
+    this.roleStatus = Collections.unmodifiableMap(roleStatus);
+    this.groupRoleStatus = Collections.unmodifiableMap(groupRoleStatus);
+    this.userRoleStatus = Collections.unmodifiableMap(userRoleStatus);
+    this.membershipStatus = Collections.unmodifiableMap(membershipStatus);
     
     // inheritance
     final var groupInheritedUsers = new LinkedHashMap<String, List<OrgUserMembership>>();
@@ -155,25 +168,13 @@ public class AnyTreeContainerContextImpl implements AnyTreeContainerContext {
           continue;
         }
         groupInheritedUsers.put(next.getId(), Collections.unmodifiableList(users.stream().distinct().toList()));
-        users.addAll(groupMemberships.get(next.getId()).stream().filter(m -> !isStatusDisabled(getStatus(m))).toList());
+        users.addAll(getGroupMemberships(next.getId()).stream().filter(m -> !isStatusDisabled(getStatus(m))).toList());
         parentId = next.getParentId();
       }
     }
     
     
-    this.groupTops = Collections.unmodifiableList(groupTops);
-    this.groupBottoms = Collections.unmodifiableList(groupBottoms);
-    this.groupsByParentId = unmodifiableMap(groupsByParentId);
-    this.userRoles = unmodifiableMap(userRoles);
-    this.groupRoles = unmodifiableMap(groupRoles);
-    this.groupMemberships = unmodifiableMap(groupMemberships);
     
-    this.userStatus = Collections.unmodifiableMap(userStatus);
-    this.groupStatus = Collections.unmodifiableMap(groupStatus);
-    this.roleStatus = Collections.unmodifiableMap(roleStatus);
-    this.groupRoleStatus = Collections.unmodifiableMap(groupRoleStatus);
-    this.userRoleStatus = Collections.unmodifiableMap(userRoleStatus);
-    this.membershipStatus = Collections.unmodifiableMap(membershipStatus);
     this.groupInheritedUsers = unmodifiableMap(groupInheritedUsers);
   }
 
@@ -245,7 +246,7 @@ public class AnyTreeContainerContextImpl implements AnyTreeContainerContext {
   }
   @Override  
   public boolean isStatusDisabled(Optional<OrgActorStatus> status) {
-    if(status == null) {
+    if(status == null || status.isEmpty()) {
      return false;
     }
     return status.get().getValue() != OrgActorStatusType.IN_FORCE;
@@ -277,5 +278,10 @@ public class AnyTreeContainerContextImpl implements AnyTreeContainerContext {
   }
   private String userRoleStatusId(String userId, String roleId) {
     return "user=" + userId + ";role=" + roleId;
+  }
+
+  @Override
+  public OrgRole getRole(String id) {
+    return worldState.getRoles().get(id);
   }
 }

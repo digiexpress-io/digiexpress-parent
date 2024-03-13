@@ -41,7 +41,7 @@ public class OrgProjectQueryImpl implements OrgProjectQuery {
     });
   }
 
-  public Uni<QueryEnvelope<OrgProjectObjects>> getProjectObjects(OrgQueries org, Repo repo) {
+  private Uni<QueryEnvelope<OrgProjectObjects>> getProjectObjects(OrgQueries org, Repo repo) {
     return Uni.combine().all().unis(
         org.groups().findAll().collect().asList(),
         org.users().findAll().collect().asList(),
