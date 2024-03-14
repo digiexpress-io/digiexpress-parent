@@ -6,18 +6,15 @@
 
 //TODO
 
-
 --------
 
-## List of required software
-
 * **Java**: <JAVA_VERSION>
-* **pnpm** for package management: https://pnpm.io/
+* **pnpm** 
 * **Maven**
 * **Node**
-* **SDKMAN** SDK/JDK manager: https://sdkman.io/usage
-* **PostgreSQL database** running in docker container 
-* **Adminer**: https://www.adminer.org/
+* **SDKMAN** 
+* **PostgreSQL database** 
+* **Adminer**
 
 ---
 

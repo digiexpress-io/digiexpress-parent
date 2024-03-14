@@ -3,7 +3,7 @@
 ## Contents
 
 * Installing backend dependencies
-* Installing frontend dependencies
+* Installing UI dependencies
 * Running the application
 * Ports used
 * Where to view all REST endpoints
@@ -21,7 +21,7 @@ If tests fail, run
 mvn clean install -DskipTests=true
 ```
 
-## Installing frontend dependencies
+## Installing UI dependencies
 
 ```bash
 cd digiexpress-parent/ts_setup/tasks_ui

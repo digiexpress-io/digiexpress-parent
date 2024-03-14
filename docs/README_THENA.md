@@ -32,6 +32,6 @@ Vert.x and SmallRye Mutiny is used for reactive streams and reactive database dr
 There are 2 implementations: generic ANSI SQL and PostgreSQL.
 
 
-## Getting Started
+## Getting Started 
 
 * [Wiki](https://github.com/the-wrench-io/thena-parent/wiki)

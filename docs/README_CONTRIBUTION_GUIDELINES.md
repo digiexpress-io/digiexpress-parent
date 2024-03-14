@@ -2,12 +2,11 @@
 
 ## Contents
 
-1. Branch organisation, Feature branch requirements, pull request requirements
+1. Branch organisation, feature branch requirements, pull request requirements
 2. Writing issues
 3. Making a feature branch
 4. Committing changes
 5. Making a pull request
-
 
 ### Branch Organization
 
@@ -34,30 +33,29 @@ Pull requests will be refused if
 * Screenshots / screen capture is not included (when applicable)
 * The code contains changes unrelated to the issue at hand
 
-
 ---
 
 # Follow these steps from issue creation to pull request
 
 ## Step 1: Write an issue
 
-Issues are written in the following format via the Github issue creation UI.
+Issues are written in the following format:
 
-| field                                   | description                                                                                      |
-|:----------------------------------------|:-------------------------------------------------------------------------------------------------|
-| Issue title                             |  **Path to the folder** in which you are working + **short description** of the work to be done  |
-| Issue description                       |  **Introduction:** Short description of the reasons why this issue is needed.                    |
-|                                         |  **Expected outcome:** A list/description of the final result of this work                       |
-| Assignees                               |  Assign **yourself** upon issue creation                                                         |
-| Labels                                  |  Use Labels whenever applicable                                                                  |
-| Projects                                |  The issue must be assigned to a Project. Confirm project with the team lead.                    |
-| Milestone                               |  -                                                                                               |
-| Development                             |  Use this menu option to link your feature branch to the issue.                                  |
+| field                                   | description                                                                                                 |
+|:----------------------------------------|:------------------------------------------------------------------------------------------------------------|
+| Issue title                             |  **[UI]** + **Path to the folder** in which you are working + **short description** of the work to be done  |
+| Issue description                       |  **Description:** Describe the purpose of this feature                                                      |
+|                                         |  **Expected outcome:** Describe the end result of this work                                                 |
+| Assignees                               |  Assign **yourself** upon issue creation                                                                    |
+| Labels                                  |  Use Labels whenever applicable                                                                             |
+| Projects                                |  Assign issue to a Project. Confirm project with the team lead.                                             |
+| Milestone                               |  -                                                                                                          |
+| Development                             |  Use this option to link your feature branch to the issue.                                                  |
 
 ## Step 2: Make a feature branch 
 
 * The simplest way to make a new feature branch is via the Github UI from the issue itself.
-* From your issue, go to the Development section on the right side of the screen and select "Create a branch".  
+* Go to the Development section on the issue and select "Create a branch".  
 
 ## Step 3: Commit changes and include issue numbers
 
@@ -72,6 +70,7 @@ git commit -am "#3 fixed readme"
 
 * Create a new merge request into `dev` branch only!
 * Mark the merge request as a Draft until it is ready for review.
+* Assign a reviewer
 
 
 

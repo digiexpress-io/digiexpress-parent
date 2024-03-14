@@ -14,7 +14,7 @@ DigiExpress is an all-in-one solution that covers a full range of organizational
 
 Data is managed via Thena: a JSON storage framework with GIT-like features on top of a relational database.
 
-### Project structure: High level overview
+### Project structure: High level
 
 * `mvn_setup`: Backend projects built with Maven and released to Maven central repository 
 https://central.sonatype.com/artifact/io.digiexpress/digiexpress-parent
@@ -42,7 +42,7 @@ https://central.sonatype.com/artifact/io.digiexpress/digiexpress-parent
 ### Contributing
 
 1. [Contribution guidelines](/docs/README_CONTRIBUTION_GUIDELINES.md): Branch organisation, creating feature branches, creating issues, making pull requests
-2. How to report bugs
+2. [How to report bugs](/docs/README_BUG_REPORT.md)
 
 
 ### Licensing 
