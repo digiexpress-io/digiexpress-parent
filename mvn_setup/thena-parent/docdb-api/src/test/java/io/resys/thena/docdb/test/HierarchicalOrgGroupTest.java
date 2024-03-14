@@ -87,19 +87,19 @@ public class HierarchicalOrgGroupTest extends DbTestTemplate {
     
     Assertions.assertEquals("""
 group-1
-+--- users
-|    `--- user-1
 +--- roles
 |    `--- jailer-1
++--- users
+|    `--- user-1
 +--- child-1.1
 +--- child-1.2
 |    +--- child-1.2.1 <= you are here
 |    `--- child-1.2.2
-|         +--- users
-|         |    `--- user-2
-|         `--- roles
-|              +--- jailer-2
-|              `--- jailer-3
+|         +--- roles
+|         |    +--- jailer-2
+|         |    `--- jailer-3
+|         `--- users
+|              `--- user-2
 +--- child-1.3
 `--- child-1.4
         """, groupHierarchy.getLog());
@@ -123,20 +123,20 @@ group-1
         .get(child1_2_2.getId()).await().atMost(Duration.ofMinutes(1)).getObjects(); 
     Assertions.assertEquals("""
 group-1
++--- roles
+|    `--- jailer-1
 +--- users
 |    +--- user-1
 |    `--- super-user
-+--- roles
-|    `--- jailer-1
 +--- child-1.1
 +--- child-1.2
 |    +--- child-1.2.1
 |    `--- child-1.2.2 <= you are here
-|         +--- users
-|         |    `--- super-user
-|         `--- roles
-|              +--- jailer-2
-|              `--- jailer-3
+|         +--- roles
+|         |    +--- jailer-2
+|         |    `--- jailer-3
+|         `--- users
+|              `--- super-user
 +--- child-1.3
 `--- child-1.4
         """, groupHierarchy.getLog());
@@ -157,11 +157,11 @@ group-1
         .get(child1_2_2.getId()).await().atMost(Duration.ofMinutes(1)).getObjects(); 
     Assertions.assertEquals("""
 group-1
++--- roles
+|    `--- jailer-1
 +--- users
 |    +--- user-1
 |    `--- super-user
-+--- roles
-|    `--- jailer-1
 +--- child-1.1
 +--- child-1.2
 |    +--- child-1.2.1
