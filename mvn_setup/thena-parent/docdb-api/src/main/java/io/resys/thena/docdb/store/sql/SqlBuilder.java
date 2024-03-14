@@ -293,6 +293,28 @@ public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
   interface SqlTuple {
     String getValue();
     Tuple getProps();
+    
+    default String getPropsDeepString() {
+      StringBuilder sb = new StringBuilder();
+      sb.append("[");
+      final int size = getProps().size();
+      for (int i = 0; i < size; i++) {
+        final var value = getProps().getValue(i);
+        if(value instanceof String[]) {
+          final var unwrapped = (String[]) value;
+          sb.append("[")
+          .append(String.join(",", unwrapped))
+          .append("]");   
+        } else {
+          sb.append(value);
+        }
+
+        if (i + 1 < size)
+          sb.append(",");
+      }
+      sb.append("]");
+      return sb.toString();
+    }
   }
   @Value.Immutable
   interface SqlTupleList {

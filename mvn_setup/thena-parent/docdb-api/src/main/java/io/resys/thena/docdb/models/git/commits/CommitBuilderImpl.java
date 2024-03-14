@@ -33,7 +33,6 @@ import io.resys.thena.docdb.api.actions.CommitActions.JsonObjectMerge;
 import io.resys.thena.docdb.api.actions.ImmutableCommitResultEnvelope;
 import io.resys.thena.docdb.api.models.ImmutableMessage;
 import io.resys.thena.docdb.api.models.Repo;
-import io.resys.thena.docdb.api.models.Repo.CommitResultStatus;
 import io.resys.thena.docdb.api.models.ThenaGitObject.CommitLock;
 import io.resys.thena.docdb.api.models.ThenaGitObject.CommitLockStatus;
 import io.resys.thena.docdb.models.git.GitInserts.BatchStatus;
@@ -46,8 +45,10 @@ import io.resys.thena.docdb.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 
+@Slf4j
 @RequiredArgsConstructor
 public class CommitBuilderImpl implements CommitBuilder {
 
@@ -163,15 +164,21 @@ public class CommitBuilderImpl implements CommitBuilder {
 
       })
     )
-    .onFailure(err -> state.getErrorHandler().isLocked(err)).retry()
+    .onFailure(err -> state.getErrorHandler().isLocked(err))
+    .retry()
       .withJitter(0.3) // every retry increase time by x 3
-      .withBackOff(Duration.ofMillis(500))
-      .atMost(100);
-   /*
-    .onFailure(err -> state.getErrorHandler().isLocked(err)).invoke(error -> {
-      error.printStackTrace();
-      System.err.println(error.getMessage());
-    });*/
+      .withBackOff(Duration.ofMillis(100))
+      .atMost(100)
+    .onFailure().invoke(err -> {
+      
+      if(state.getErrorHandler().isLocked(err)) {
+        // giving up
+        log.error("Could not get the lock for commits, because it is busy after 100 retries, msg: {}", err.getMessage(), err);
+      } else {
+        log.error("Failed to commit because of internal error: {}", err.getMessage(), err);
+      }
+      
+    });
     
   }
   

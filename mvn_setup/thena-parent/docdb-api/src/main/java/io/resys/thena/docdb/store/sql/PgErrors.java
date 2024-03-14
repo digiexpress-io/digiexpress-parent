@@ -49,7 +49,7 @@ public class PgErrors implements ErrorHandler {
 		final var sql = e.getSql();
   	final var msg = System.lineSeparator() +
         "Failed to execute SQL query." + System.lineSeparator() +
-        "  message: " + e.getMessage() +
+        "  message: " + e.getMessage() + System.lineSeparator() +
         "  sql: " + sql.getValue() + System.lineSeparator() +
         "  props:" + sql.getProps().deepToString() + System.lineSeparator();
     log.error(msg, e);

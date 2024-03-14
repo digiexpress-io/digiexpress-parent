@@ -28,6 +28,7 @@ public interface ErrorHandler {
   boolean notFound(Throwable e);
   boolean duplicate(Throwable e);
   boolean isLocked(Throwable e);
+  
   void deadEnd(SqlSchemaFailed e);
   void deadEnd(SqlFailed e);
   void deadEnd(SqlTupleFailed e);

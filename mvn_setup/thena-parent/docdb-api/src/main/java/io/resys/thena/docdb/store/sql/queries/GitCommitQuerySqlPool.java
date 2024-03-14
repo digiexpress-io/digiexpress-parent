@@ -96,9 +96,9 @@ public class GitCommitQuerySqlPool implements GitCommitQuery {
   public Uni<CommitLock> getLock(LockCriteria crit) {
     final var sql = sqlBuilder.commits().getLock(crit);
     if(log.isDebugEnabled()) {
-      log.debug("Commit: {} getLock query, with props: {} \r\n{}",
+      log.debug("Commit: {} getLock query, with props: {} \r\n {}",
           GitCommitQuerySqlPool.class,
-          sql.getProps().deepToString(),
+          sql.getPropsDeepString(),
           sql.getValue());
     }
     final Function<io.vertx.mutiny.sqlclient.Row, CommitTree> mapper;
@@ -152,6 +152,7 @@ public class GitCommitQuerySqlPool implements GitCommitQuery {
           final CommitLock lock = builder.build();
           return lock;
         })
-        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'COMMIT LOCK ON REF' by head/commit: '" + crit.getHeadName() + "/" + crit.getCommitId() + "'!", sql, e)));
+        //.onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'COMMIT LOCK ON REF' by head/commit: '" + crit.getHeadName() + "/" + crit.getCommitId() + "'!", sql, e)))
+        ;
   }
 }

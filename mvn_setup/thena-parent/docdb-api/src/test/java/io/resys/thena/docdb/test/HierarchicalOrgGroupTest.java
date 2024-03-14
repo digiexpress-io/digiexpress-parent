@@ -8,7 +8,6 @@ import java.util.List;
 
 import org.immutables.value.Value;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.junit.QuarkusTest;
@@ -39,6 +38,7 @@ public class HierarchicalOrgGroupTest extends DbTestTemplate {
   }
 
   
+  @SuppressWarnings("unused")
   @Test
   public void createRepoAndUserGroups() {
     // create project
@@ -85,13 +85,6 @@ public class HierarchicalOrgGroupTest extends DbTestTemplate {
         .repoId(repo.getRepo().getId())
         .get(child1_2_1.getId()).await().atMost(Duration.ofMinutes(1)).getObjects();
     
-    
-//    Assertions.assertEquals(userId2.getId(), groupHierarchy.getUserId());
-//    Assertions.assertEquals("[child-1.2.2, child-1.2, group-1]", groupHierarchy.getGroupNames().toString());
-//    Assertions.assertEquals("[jailer-main, jailer-2, jailer-3, jailer-1]", groupHierarchy.getRoleNames().toString());
-//    
-//    Assertions.assertEquals("[child-1.2.2]", groupHierarchy.getDirectGroupNames().toString());
-//    Assertions.assertEquals("[jailer-main, jailer-2, jailer-3]", groupHierarchy.getDirectRoleNames().toString());
     Assertions.assertEquals("""
 group-1
 +--- users
@@ -180,14 +173,6 @@ group-1
 `--- child-1.4
         """, groupHierarchy.getLog());
     
-//    Assertions.assertEquals(userId2.getId(), groupHierarchy.getUserId());
-//    Assertions.assertEquals("[group-1]", groupHierarchy.getGroupNames().toString());
-//    Assertions.assertEquals("[jailer-main, baker-main, jailer-1]", groupHierarchy.getRoleNames().toString());
-//    
-//    Assertions.assertEquals("[group-1]", groupHierarchy.getDirectGroupNames().toString());
-//    Assertions.assertEquals("[jailer-main, baker-main, jailer-1]", groupHierarchy.getDirectRoleNames().toString());
-//    
-    
     
     // Reject changes because there are non
     final var rejectNoChanges = getClient().org().commit().modifyOneUser()
@@ -210,14 +195,6 @@ group-2 <= you are here
 +--- child-2.3
 `--- child-2.4
         """, groupHierarchy.getLog());
-    
-//    Assertions.assertEquals(userId2.getId(), groupHierarchy.getUserId());
-//    Assertions.assertEquals("[group-1]", groupHierarchy.getGroupNames().toString());
-//    Assertions.assertEquals("[jailer-main, baker-main, jailer-1]", groupHierarchy.getRoleNames().toString());
-//    
-//    Assertions.assertEquals("[group-1]", groupHierarchy.getDirectGroupNames().toString());
-//    Assertions.assertEquals("[jailer-main, baker-main, jailer-1]", groupHierarchy.getDirectRoleNames().toString());
-
     //printRepo(repo.getRepo()); //LOG THE DB 
   }
 
