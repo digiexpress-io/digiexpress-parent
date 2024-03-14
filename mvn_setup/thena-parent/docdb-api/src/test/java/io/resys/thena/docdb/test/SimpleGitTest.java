@@ -1,5 +1,13 @@
 package io.resys.thena.docdb.test;
 
+import java.io.Serializable;
+import java.time.Duration;
+import java.util.Map;
+
+import org.immutables.value.Value;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 /*-
  * #%L
  * thena-docdb-mongo
@@ -26,19 +34,11 @@ import io.resys.thena.docdb.api.actions.CommitActions.CommitResultEnvelope;
 import io.resys.thena.docdb.api.actions.RepoActions.RepoResult;
 import io.resys.thena.docdb.api.actions.RepoActions.RepoStatus;
 import io.resys.thena.docdb.api.models.Repo;
-import io.resys.thena.docdb.api.models.Repo.CommitResultStatus;
 import io.resys.thena.docdb.api.models.Repo.RepoType;
 import io.resys.thena.docdb.test.config.DbTestTemplate;
 import io.resys.thena.docdb.test.config.PgProfile;
 import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;
-import org.immutables.value.Value;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
-import java.io.Serializable;
-import java.time.Duration;
-import java.util.Map;
 
 
 @QuarkusTest

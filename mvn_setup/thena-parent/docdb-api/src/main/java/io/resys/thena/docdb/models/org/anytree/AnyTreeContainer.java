@@ -1,5 +1,6 @@
 package io.resys.thena.docdb.models.org.anytree;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +24,7 @@ public interface AnyTreeContainer<T> {
   interface AnyTreeContainerContext {
     OrgUser getUser(String id);
     OrgRole getRole(String id);
+    Collection<OrgRole> getRoles();
     List<OrgUserRole> getUserRoles(String id);
     
     // Group related 

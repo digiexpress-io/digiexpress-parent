@@ -4,6 +4,7 @@ import io.resys.thena.docdb.api.models.QueryEnvelope;
 import io.resys.thena.docdb.api.models.QueryEnvelopeList;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUser;
 import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgGroupHierarchy;
+import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgRoleHierarchy;
 import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgUserHierarchy;
 import io.smallrye.mutiny.Uni;
 
@@ -12,6 +13,8 @@ public interface OrgQueryActions {
   UserObjectsQuery userQuery();
   UserHierarchyQuery userHierarchyQuery();
   GroupHierarchyQuery groupHierarchyQuery();
+  RoleHierarchyQuery roleHierarchyQuery();
+  //OrphanedUserQuery orphanedUserQuery();
   
   interface UserObjectsQuery {
     UserObjectsQuery repoId(String repoId);
@@ -19,6 +22,13 @@ public interface OrgQueryActions {
     Uni<QueryEnvelope<OrgUser>> get(String userId);
     Uni<QueryEnvelopeList<OrgUser>> findAll();
   }
+
+  interface RoleHierarchyQuery {
+    RoleHierarchyQuery repoId(String repoId);
+    Uni<QueryEnvelope<OrgRoleHierarchy>> get(String roleIdOrNameOrExternalId);
+    Uni<QueryEnvelopeList<OrgRoleHierarchy>> findAll();
+  }
+
   
   interface UserHierarchyQuery {
   	UserHierarchyQuery repoId(String repoId);

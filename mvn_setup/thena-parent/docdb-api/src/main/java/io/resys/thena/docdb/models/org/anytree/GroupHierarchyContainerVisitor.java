@@ -18,12 +18,12 @@ import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserMembership;
 import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgGroupHierarchy;
 import io.resys.thena.docdb.models.org.anytree.AnyTreeContainer.AnyTreeContainerContext;
 import io.resys.thena.docdb.models.org.anytree.AnyTreeContainer.AnyTreeContainerVisitor;
-import io.resys.thena.docdb.models.org.anytree.AnyTreeContainerVisitorForGroup.GroupVisitor;
+import io.resys.thena.docdb.models.org.anytree.AnyTreeContainerVisitorImpl.GroupVisitor;
 import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class GroupHierarchyContainerVisitor extends AnyTreeContainerVisitorForGroup<OrgGroupHierarchy> 
+public class GroupHierarchyContainerVisitor extends AnyTreeContainerVisitorImpl<OrgGroupHierarchy> 
   implements AnyTreeContainerVisitor<OrgGroupHierarchy>, GroupVisitor {
   
   private final String groupIdOrNameOrExternalId;
@@ -76,7 +76,7 @@ public class GroupHierarchyContainerVisitor extends AnyTreeContainerVisitorForGr
     if(!isDirectGroup(group)) {
       return;
     }
-    builder.addDirectUsers(user.getId());
+    builder.addDirectUsers(user);
   }
   @Override
   public void visitRole(OrgGroup group, OrgGroupRole groupRole, OrgRole role, boolean isDisabled) {
@@ -94,7 +94,7 @@ public class GroupHierarchyContainerVisitor extends AnyTreeContainerVisitorForGr
     if(foundGroupId == null) {
       return;
     }
-    builder.addDirectRoleNames(role.getRoleName());    
+    builder.addDirectRoleNames(role);    
   }
   @Override
   public void visitChild(OrgGroup group, boolean isDisabled) {
@@ -137,7 +137,7 @@ public class GroupHierarchyContainerVisitor extends AnyTreeContainerVisitorForGr
     }
   }
   @Override
-  public void end(OrgGroup group) {
+  public void end(OrgGroup group, List<OrgGroup> parents, boolean isDisabled) {
     if(group.getId().equals(foundGroupId)) {
       foundGroupId = null;
     }
