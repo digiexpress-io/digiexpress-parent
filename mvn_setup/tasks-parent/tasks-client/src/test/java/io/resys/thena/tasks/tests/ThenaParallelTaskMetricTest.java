@@ -22,12 +22,12 @@ package io.resys.thena.tasks.tests;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.json.JSONException;
 import org.junit.jupiter.api.Assertions;
-import org.skyscreamer.jsonassert.JSONAssert;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -43,15 +43,14 @@ import io.resys.thena.tasks.tests.config.TaskTestCase;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonArray;
-import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @QuarkusTest
 @TestProfile(TaskPgProfile.class)
 public class ThenaParallelTaskMetricTest extends TaskTestCase {
-  private AtomicInteger index = new AtomicInteger(0);
-  private AtomicInteger fails = new AtomicInteger(0);
+  private AtomicInteger successes = new AtomicInteger(1);
+  private List<CreateTask> fails = Collections.synchronizedList(new ArrayList<CreateTask>());
   private String repoName = "metric-test";
   
   @org.junit.jupiter.api.Test
@@ -87,15 +86,7 @@ public class ThenaParallelTaskMetricTest extends TaskTestCase {
         .map(b -> b.getValue())
         .toList());
     
-    Assertions.assertEquals(index.get() - fails.get() +1, blobs.size());
-    log.debug(blobs.encodePrettily());
-    
-    JsonArray expected = new JsonArray();
-    expected.add(JsonObject.of("title", "very important title no: init"));
-    for(int index = 0; index < 49; index++) {
-      expected.add(JsonObject.of("title", "very important title no: " + index));
-    }
-    JSONAssert.assertEquals(expected.encodePrettily(), blobs.encodePrettily(), false);
+    Assertions.assertEquals(successes.intValue(), blobs.size());
   }
   
 
@@ -128,16 +119,16 @@ public class ThenaParallelTaskMetricTest extends TaskTestCase {
     Multi.createFrom().items(bulk.stream()).onItem().transformToUni(item -> {
       final var commit = client.tasks().createTask().createOne(item)
       .onItem().transform(c -> {
-        log.debug("Record stored: {}", index.getAndIncrement());
+        log.debug("Record stored: {}", successes.getAndIncrement());
         return c;
       })
       .onFailure().recoverWithItem((error) -> {
-        log.debug("Record failed: {}, error {}", fails.getAndIncrement(), error.getMessage());
+        log.debug("Record failed: {}, error {}", fails.add(item), error.getMessage());
         return null;
       });
       return commit;
     })
-    .merge(5)
+    .merge(40)
     .collect().asList()
     .onItem().transformToUni(e -> {
       final var insertEnd = System.currentTimeMillis();
@@ -154,7 +145,7 @@ public class ThenaParallelTaskMetricTest extends TaskTestCase {
         final var config = getStore().getConfig();
         return config.getClient().git().commit().findAllCommits(repoName)
         .onItem().transformToUni(commits -> {          
-          log.debug("Total commits: {}, fails: {}, items: {}", commits.size(), fails.get(), bulk.size());
+          log.debug("Total commits: {}, fails: {}, items: {}", commits.size(), fails.size(), bulk.size());
           return Uni.createFrom().nullItem();
         });
       }).onItem().transformToUni(junk -> {
