@@ -34,7 +34,6 @@ public class GroupHierarchyContainerVisitor extends AnyTreeContainerVisitorForGr
   private final Map<String, DefaultNode> nodesGroupRoles = new HashMap<>();
   private final Map<String, DefaultNode> nodesGroupMembers = new HashMap<>();
   
-  private OrgGroup foundGroup;
   private String foundGroupId;
   private DefaultNode nodeToLog;
   
@@ -123,7 +122,6 @@ public class GroupHierarchyContainerVisitor extends AnyTreeContainerVisitorForGr
       
       nodeToLog = parents.isEmpty() ? groupNode : nodesGroup.get(parents.iterator().next().getId());
       foundGroupId = group.getId();
-      foundGroup = group;
       builder
         .groupId(group.getId())
         .groupName(group.getGroupName())
