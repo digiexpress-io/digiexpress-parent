@@ -24,7 +24,7 @@ public abstract class BottomUpVisitorTemplate<T> implements BottomUpVisitor<T> {
   private boolean initDone;
   
   public BottomUpVisitorTemplate(List<OrgRoleFlattened> globalRoles) {
-    this.globalRoles = globalRoles;
+    this.globalRoles = globalRoles.stream().sorted((a, b) -> b.getRoleName().compareTo(a.getRoleName())).toList();
     this.initDone = false;
   }
 
