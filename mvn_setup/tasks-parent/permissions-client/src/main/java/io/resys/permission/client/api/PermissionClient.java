@@ -12,6 +12,7 @@ import io.resys.permission.client.api.model.Principal.Role;
 import io.resys.permission.client.api.model.PrincipalCommand.PrincipalUpdateCommand;
 import io.resys.permission.client.api.model.RoleCommand.CreateRole;
 import io.resys.permission.client.api.model.RoleCommand.RoleUpdateCommand;
+import io.resys.permission.client.api.model.RoleHierarchyContainer;
 import io.resys.thena.docdb.api.models.Repo;
 import io.smallrye.mutiny.Uni;
 
@@ -31,6 +32,7 @@ public interface PermissionClient {
   PermissionQuery permissionQuery();
   RoleQuery roleQuery();
   PrincipalQuery principalQuery();
+  RoleHierarchyQuery roleHierarchyQuery();
   
   
   interface CreatePermissionAction {
@@ -77,6 +79,10 @@ public interface PermissionClient {
     Uni<Principal> get(String principalId);  
     Uni<List<Principal>> findAllPrincipals();
     Uni<List<Principal>> findPrincipalsByIds(Collection<String> principalIds);
+  }
+  
+  interface RoleHierarchyQuery {
+    Uni<RoleHierarchyContainer> getRoleHierarchy();
   }
   
   public interface RepositoryQuery {
