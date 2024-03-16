@@ -66,7 +66,7 @@ public class GitRepoQueryImpl implements GitRepoQuery {
         getBlobs(repo, ctx),
         getTrees(repo, ctx),
         getCommits(repo, ctx)
-    ).combinedWith(raw -> {
+    ).with(raw -> {
       final var builder = ImmutableGitRepoObjects.builder();
       raw.stream().map(r -> (GitRepoObjects) r).forEach(r -> builder
           .putAllBranches(r.getBranches())

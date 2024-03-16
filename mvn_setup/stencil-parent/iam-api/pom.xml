@@ -8,7 +8,6 @@
     <version>999-SNAPSHOT</version>
   </parent>
   <artifactId>stencil-iam-api</artifactId>
-
   <dependencies>
     <dependency>
       <groupId>com.google.guava</groupId>
@@ -26,12 +25,14 @@
       <groupId>io.smallrye.reactive</groupId>
       <artifactId>smallrye-mutiny-vertx-web-client</artifactId>
     </dependency>
-
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+    </dependency>
     <dependency>
       <groupId>io.rest-assured</groupId>
       <artifactId>rest-assured</artifactId>
       <scope>test</scope>
     </dependency>
-
   </dependencies>
 </project>
