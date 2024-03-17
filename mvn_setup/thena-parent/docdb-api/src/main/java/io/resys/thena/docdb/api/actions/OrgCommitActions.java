@@ -37,6 +37,8 @@ public interface OrgCommitActions {
     CreateOneUser addUserToGroups(String ... groupId);
     CreateOneUser addUserToGroups(List<String> groupId);
     CreateOneUser addUserToRoles(List<String> roledId);
+
+    CreateOneUser addUserToGroupRoles(String groupId, List<String> roledId);
     
     Uni<OneUserEnvelope> build();
   }
@@ -156,6 +158,6 @@ public interface OrgCommitActions {
   }
   
   enum ModType {
-    ADD, DISABLED, DELETE
+    ADD, DISABLED // not implemented yet TODO::, DELETE
   }
 }

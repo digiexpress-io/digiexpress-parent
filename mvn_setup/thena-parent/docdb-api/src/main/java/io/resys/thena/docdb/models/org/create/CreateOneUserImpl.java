@@ -2,12 +2,19 @@ package io.resys.thena.docdb.models.org.create;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 
 import io.resys.thena.docdb.api.actions.ImmutableOneUserEnvelope;
 import io.resys.thena.docdb.api.actions.OrgCommitActions.CreateOneUser;
 import io.resys.thena.docdb.api.actions.OrgCommitActions.OneUserEnvelope;
+import io.resys.thena.docdb.api.models.ImmutableMessage;
+import io.resys.thena.docdb.api.models.Repo.CommitResultStatus;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
 import io.resys.thena.docdb.models.org.OrgInserts.OrgBatchForOne;
@@ -32,9 +39,11 @@ public class CreateOneUserImpl implements CreateOneUser {
   private String email;
   private String externalId;
 
-  private List<String> addUserToGroups = new ArrayList<>();
-  private List<String> addUserToRoles = new ArrayList<>();
+  private Collection<String> addUserToGroups = new LinkedHashSet<>();
+  private Collection<String> addUserToRoles = new LinkedHashSet<>();
+  private Map<String, List<String>> addUserToGroupRoles = new LinkedHashMap<>();
 
+  
   @Override public CreateOneUserImpl repoId(String repoId) {         this.repoId = RepoAssert.notEmpty(repoId,           () -> "repoId can't be empty!"); return this; }
   @Override public CreateOneUserImpl author(String author) {         this.author = RepoAssert.notEmpty(author,           () -> "author can't be empty!"); return this; }
   @Override public CreateOneUserImpl message(String message) {       this.message = RepoAssert.notEmpty(message,         () -> "message can't be empty!"); return this; }
@@ -45,6 +54,13 @@ public class CreateOneUserImpl implements CreateOneUser {
   @Override public CreateOneUserImpl addUserToGroups(String ... addUserToGroups) { this.addUserToGroups.addAll(Arrays.asList(addUserToGroups)); return this; }
   @Override public CreateOneUserImpl addUserToGroups(List<String> addUserToGroups) { this.addUserToGroups.addAll(RepoAssert.notNull(addUserToGroups, () -> "addUserToGroups can't be empty!")); return this; }
   @Override public CreateOneUserImpl addUserToRoles(List<String> addUserToRoles) { this.addUserToRoles.addAll(RepoAssert.notNull(addUserToRoles, () -> "addUserToRoles can't be empty!")); return this; }
+  @Override public CreateOneUser addUserToGroupRoles(String groupId, List<String> roledId) {
+    RepoAssert.notEmpty(groupId, () -> "groupId can't be empty!");
+    RepoAssert.notEmpty(roledId, () -> "roledId can't be empty!");
+    RepoAssert.isTrue(!addUserToGroupRoles.containsKey(groupId), () -> "groupId already defined!");
+    addUserToGroupRoles.put(groupId, roledId);
+    return this;
+  } 
   
   @Override
   public Uni<OneUserEnvelope> build() {
@@ -58,15 +74,23 @@ public class CreateOneUserImpl implements CreateOneUser {
   }
   
   private Uni<OneUserEnvelope> doInTx(OrgRepo tx) {
+    final List<String> groupIds = new ArrayList<>();
+    groupIds.addAll(addUserToGroups);
+    groupIds.addAll(addUserToGroupRoles.keySet());
+    
+    final List<String> roleIds = new ArrayList<>();
+    roleIds.addAll(addUserToRoles);
+    roleIds.addAll(addUserToGroupRoles.values().stream().flatMap(e -> e.stream()).toList());
+    
 		// find groups
-		final Uni<List<OrgGroup>> groupsUni = this.addUserToGroups.isEmpty() ? 
+		final Uni<List<OrgGroup>> groupsUni = groupIds.isEmpty() ? 
 			Uni.createFrom().item(Collections.emptyList()) : 
-			tx.query().groups().findAll(addUserToGroups).collect().asList();
+			tx.query().groups().findAll(groupIds.stream().distinct().toList()).collect().asList();
 		
 		// roles
-		final Uni<List<OrgRole>> rolesUni = this.addUserToRoles.isEmpty() ? 
+		final Uni<List<OrgRole>> rolesUni = roleIds.isEmpty() ? 
 			Uni.createFrom().item(Collections.emptyList()) :
-			tx.query().roles().findAll(addUserToRoles).collect().asList();
+			tx.query().roles().findAll(roleIds.stream().distinct().toList()).collect().asList();
 		
 		// join data
 		return Uni.combine().all().unis(groupsUni, rolesUni).asTuple()
@@ -79,12 +103,102 @@ public class CreateOneUserImpl implements CreateOneUser {
   }
 
   
-  private Uni<OneUserEnvelope> createUser(OrgRepo tx, List<OrgGroup> groups, List<OrgRole> roles) {
+  private Uni<OneUserEnvelope> createUser(
+      OrgRepo tx, 
+      List<OrgGroup> allGroups, List<OrgRole> allRoles) {
+    
+    final List<OrgGroup> addToGroups = new ArrayList<>();
+    final List<OrgRole> addToRoles = new ArrayList<>();
+    final Map<OrgGroup, List<OrgRole>> groups = new HashMap<>();
+    final Map<String, List<OrgRole>> groupsBy = new HashMap<>();
+    final Map<String, String> groupMapping = new HashMap<>();
+    
+    
+    for(final var group : allGroups) {
+      if(this.addUserToGroups.stream().filter(c -> group.isMatch(c)).findFirst().isPresent()) {
+        addToGroups.add(group);
+      }
+      
+      final var addToGroupRole = this.addUserToGroupRoles.keySet().stream().filter(c -> group.isMatch(c)).findFirst();
+      if(addToGroupRole.isPresent()) {
+        final var roles = new ArrayList<OrgRole>();
+        groupsBy.put(group.getId(), roles);
+        groups.put(group, roles);
+        groupMapping.put(addToGroupRole.get(), group.getId());
+      }
+    }
+    
+    // assert groups
+    if(addToGroups.size() != this.addUserToGroups.size()) {
+      final var found = String.join(", ", addToGroups.stream().map(e -> e.getGroupName()).toList());
+      final var expected = String.join(", ", this.addUserToGroups);
+      return Uni.createFrom().item(ImmutableOneUserEnvelope.builder()
+          .repoId(repoId)
+          .status(CommitResultStatus.ERROR)
+          .addMessages(ImmutableMessage.builder()
+              .text("Could not find all groups(for membership): \r\n found: \r\n" + found + " \r\n but requested: \r\n" + expected + "!")
+              .build())
+          .build());
+    }    
+    if(groups.size() != this.addUserToGroupRoles.size()) {
+      final var found = String.join(", ", groups.keySet().stream().map(e -> e.getGroupName()).toList());
+      final var expected = String.join(", ", this.addUserToGroupRoles.keySet());
+      return Uni.createFrom().item(ImmutableOneUserEnvelope.builder()
+          .repoId(repoId)
+          .status(CommitResultStatus.ERROR)
+          .addMessages(ImmutableMessage.builder()
+              .text("Could not find all groups(for direct role): \r\n found: \r\n" + found + " \r\n but requested: \r\n" + expected + "!")
+              .build())
+          .build());
+    }
+    
+    
+    
+    for(final var role : allRoles) {
+      if(this.addUserToRoles.stream().filter(c -> role.isMatch(c)).findFirst().isPresent()) {
+        addToRoles.add(role);
+      }
+
+      
+      for(final var entry : addUserToGroupRoles.entrySet()) {
+        final var addRoleToUserGroup = entry.getValue().stream().filter(c -> role.isMatch(c)).findFirst().isPresent();
+        if(addRoleToUserGroup) {
+          groupsBy.get(groupMapping.get(entry.getKey())).add(role);
+          break;
+        }
+      }
+    }
+    
+    // assert roles
+    if(addToRoles.size() != this.addUserToRoles.size()) {
+      final var found = String.join(", ", addToRoles.stream().map(e -> e.getRoleName()).toList());
+      final var expected = String.join(", ", this.addUserToRoles);
+      return Uni.createFrom().item(ImmutableOneUserEnvelope.builder()
+          .repoId(repoId)
+          .status(CommitResultStatus.ERROR)
+          .addMessages(ImmutableMessage.builder()
+              .text("Could not find all roles(for user): \r\n found: \r\n" + found + " \r\n but requested: \r\n" + expected + "!")
+              .build())
+          .build());
+    }    
+    if(groups.values().stream().flatMap(e -> e.stream()).count() != this.addUserToGroupRoles.values().stream().flatMap(e -> e.stream()).count()) {
+      final var found = String.join(", ", groups.values().stream().flatMap(e -> e.stream()).map(e -> e.getRoleName()).toList());
+      final var expected = String.join(", ", this.addUserToGroupRoles.values().stream().flatMap(e -> e.stream()).toList());
+      return Uni.createFrom().item(ImmutableOneUserEnvelope.builder()
+          .repoId(repoId)
+          .status(CommitResultStatus.ERROR)
+          .addMessages(ImmutableMessage.builder()
+              .text("Could not find all role(for user and group): \r\n found: \r\n" + found + " \r\n but requested: \r\n" + expected + "!")
+              .build())
+          .build());
+    }
+
     final OrgBatchForOne batch = new BatchForOneUserCreate(tx.getRepo().getId(), author, message)
         .externalId(externalId)
         .email(email)
-        .groups(groups)
-        .roles(roles)
+        .addToGroups(addToGroups)
+        .addToRoles(addToRoles)
+        .addUserToGroupRoles(groups)
         .userName(userName)
         .create(); 
 
@@ -96,5 +210,5 @@ public class CreateOneUserImpl implements CreateOneUser {
         .addAllMessages(rsp.getMessages())
         .status(DataMapper.mapStatus(rsp.getStatus()))
         .build());
-  } 
+  }
 }

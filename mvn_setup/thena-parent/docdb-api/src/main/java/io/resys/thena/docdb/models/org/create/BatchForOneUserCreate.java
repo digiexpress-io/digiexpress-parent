@@ -3,6 +3,7 @@ package io.resys.thena.docdb.models.org.create;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import io.resys.thena.docdb.api.models.ImmutableMessage;
 import io.resys.thena.docdb.api.models.ImmutableOrgCommit;
@@ -32,14 +33,16 @@ public class BatchForOneUserCreate {
   private final String author;
   private final String message;
 
-  private List<OrgGroup> groups; 
-  private List<OrgRole> roles;  
+  private Map<OrgGroup, List<OrgRole>> addUserToGroupRoles;
+  private List<OrgGroup> addToGroups; 
+  private List<OrgRole> addToRoles;  
   private String userName;
   private String email;
   private String externalId;
 
-  public BatchForOneUserCreate groups(List<OrgGroup> groups) { this.groups = groups; return this; }
-  public BatchForOneUserCreate roles(List<OrgRole> roles) {    this.roles = roles; return this; }
+  public BatchForOneUserCreate addUserToGroupRoles(Map<OrgGroup, List<OrgRole>> groups) { this.addUserToGroupRoles = groups; return this; }
+  public BatchForOneUserCreate addToGroups(List<OrgGroup> groups) { this.addToGroups = groups; return this; }
+  public BatchForOneUserCreate addToRoles(List<OrgRole> roles) {    this.addToRoles = roles; return this; }
   public BatchForOneUserCreate userName(String userName) {     this.userName = userName; return this; }
   public BatchForOneUserCreate email(String email) {           this.email = email; return this; }
   public BatchForOneUserCreate externalId(String externalId) { this.externalId = externalId; return this; }
@@ -50,8 +53,9 @@ public class BatchForOneUserCreate {
     RepoAssert.notEmpty(message,  () -> "message can't be empty!");
     RepoAssert.notEmpty(email,    () -> "email can't be empty!");
     RepoAssert.notEmpty(userName, () -> "userName can't be empty!");
-    RepoAssert.notNull(groups,    () -> "groups can't be null!");
-    RepoAssert.notNull(roles,     () -> "roles can't be null!");
+    RepoAssert.notNull(addToGroups,    () -> "addToGroups can't be null!");
+    RepoAssert.notNull(addToRoles,     () -> "addToRoles can't be null!");
+    RepoAssert.notNull(addUserToGroupRoles, () -> "addUserToGroupRoles can't be null!");
     
     final var commitId = OidUtils.gen();
     final var createdAt = OffsetDateTime.now();
@@ -68,7 +72,7 @@ public class BatchForOneUserCreate {
     
     
     final var memberships = new ArrayList<OrgUserMembership>();
-    for(final var group : this.groups) {
+    for(final var group : this.addToGroups) {
       final var membership = ImmutableOrgUserMembership.builder()
           .id(OidUtils.gen())
           .groupId(group.getId())
@@ -80,7 +84,7 @@ public class BatchForOneUserCreate {
     }
     
     final var userRoles = new ArrayList<OrgUserRole>();
-    for(final var role : this.roles) {
+    for(final var role : this.addToRoles) {
       final var userRole = ImmutableOrgUserRole.builder()
           .id(OidUtils.gen())
           .userId(user.getId())
@@ -99,9 +103,9 @@ public class BatchForOneUserCreate {
       .append(System.lineSeparator())
       .append("  + user:            ").append(user.getId()).append("::").append(userName)
       .append(System.lineSeparator())
-      .append("  + added to groups: ").append(String.join(",", groups.stream().map(g -> g.getGroupName() + "::" + g.getId()).toList()))
+      .append("  + added to groups: ").append(String.join(",", addToGroups.stream().map(g -> g.getGroupName() + "::" + g.getId()).toList()))
       .append(System.lineSeparator())
-      .append("  + added to roles:  ").append(String.join(",", roles.stream().map(g -> g.getRoleName() + "::" + g.getId()).toList()))
+      .append("  + added to roles:  ").append(String.join(",", addToRoles.stream().map(g -> g.getRoleName() + "::" + g.getId()).toList()))
       .append(System.lineSeparator());
     
     final var commit = ImmutableOrgCommit.builder()

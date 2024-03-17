@@ -71,6 +71,13 @@ public interface ThenaOrgObject {
     String getGroupDescription();
     
     @JsonIgnore @Override default public OrgDocType getDocType() { return OrgDocType.OrgGroup; };
+    
+    default boolean isMatch(String groupIdOrNameOrExternalId) {
+      return groupIdOrNameOrExternalId.equals(getExternalId()) ||
+          groupIdOrNameOrExternalId.equals(getGroupName()) ||
+          groupIdOrNameOrExternalId.equals(getId());
+    }
+    
   }
   
   @Value.Immutable
@@ -82,6 +89,11 @@ public interface ThenaOrgObject {
     String getRoleDescription();
     
     @JsonIgnore @Override default public OrgDocType getDocType() { return OrgDocType.OrgRole; };
+    default boolean isMatch(String roleIdOrNameOrExternalId) {
+      return roleIdOrNameOrExternalId.equals(getExternalId()) ||
+          roleIdOrNameOrExternalId.equals(getRoleName()) ||
+          roleIdOrNameOrExternalId.equals(getId());
+    }
   }
   
 
