@@ -1,6 +1,6 @@
 package io.resys.thena.docdb.store.sql.queries;
 
-import java.util.List;
+import java.util.Collection;
 
 import io.resys.thena.docdb.api.LogConstants;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
@@ -43,7 +43,7 @@ public class OrgGroupQuerySqlPool implements OrgQueries.GroupQuery {
   }
   
   @Override
-  public Multi<OrgGroup> findAll(List<String> id) {
+  public Multi<OrgGroup> findAll(Collection<String> id) {
     final var sql = sqlBuilder.orgGroups().findAll(id);
     if(log.isDebugEnabled()) {
       log.debug("Group findAll query, with props: {} \r\n{}", 

@@ -94,6 +94,19 @@ public class BatchForOneUserCreate {
       tree.add(addToTree(commitId, userRole));
       userRoles.add(userRole);
     }
+    for(final var entry : this.addUserToGroupRoles.entrySet()) {
+      for(final var role : entry.getValue()) {
+        final var userRole = ImmutableOrgUserRole.builder()
+            .id(OidUtils.gen())
+            .userId(user.getId())
+            .roleId(role.getId())
+            .groupId(entry.getKey().getId())
+            .commitId(commitId)
+            .build();
+        tree.add(addToTree(commitId, userRole));
+        userRoles.add(userRole);
+      }
+    }
     
     final var logger = new StringBuilder();
     logger.append(System.lineSeparator())

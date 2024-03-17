@@ -1,6 +1,7 @@
 package io.resys.thena.docdb.support;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /*-
@@ -46,6 +47,12 @@ public class RepoAssert {
     return object;
   }
   public static List<String> notEmpty(List<String> object, Supplier<String> message) {
+    if (object == null || object.isEmpty()) {
+      throw new RepoException(getMessage(message));
+    }
+    return object;
+  }
+  public static <T, K> Map<T, K> notEmpty(Map<T, K> object, Supplier<String> message) {
     if (object == null || object.isEmpty()) {
       throw new RepoException(getMessage(message));
     }

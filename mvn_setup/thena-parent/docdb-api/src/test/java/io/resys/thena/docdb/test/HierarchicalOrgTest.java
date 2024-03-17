@@ -2,6 +2,7 @@ package io.resys.thena.docdb.test;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -43,6 +44,8 @@ public class HierarchicalOrgTest extends DbTestTemplate {
     createUsers(repo.getRepo());
     createGroups(repo.getRepo());
     createUsermemberships(repo.getRepo());
+    createRoles(repo.getRepo());
+    createUserGroupRoles(repo.getRepo());
     
     final var groupHierarchy = getClient().org().find().groupHierarchyQuery()
         .repoId(repo.getRepo().getId())
@@ -67,99 +70,99 @@ Testitestiasiakas Oyj::tenant <= you are here
 |         `--- mikki.td
 +--- Testiasiakas Oy
 |    +--- users
-|    |    +--- tomi.p6
-|    |    +--- ulla op.j9
-|    |    +--- mika.l5
-|    |    +--- villu.vc
-|    |    +--- ullan admin.t6
-|    |    +--- ulla lv.j6
-|    |    +--- ulla ltp.j8
-|    |    +--- mikki.t4
-|    |    +--- emilia op.ke
-|    |    `--- emilia lv.kf
+|    |    +--- tomi.p6 (USER)
+|    |    +--- ulla op.j9 (VIEWER)
+|    |    +--- mika.l5 (MANAGER)
+|    |    +--- villu.vc (MANAGER)
+|    |    +--- ullan admin.t6 (MANAGER)
+|    |    +--- ulla lv.j6 (USER)
+|    |    +--- ulla ltp.j8 (MANAGER)
+|    |    +--- mikki.t4 (USER)
+|    |    +--- emilia op.ke (MANAGER)
+|    |    `--- emilia lv.kf (MANAGER)
 |    +--- Head Office
 |    |    `--- users
-|    |         +--- tomi.p6
-|    |         +--- ulla op.j9
-|    |         +--- mika.l5
-|    |         +--- villu.vc
-|    |         +--- ullan admin.t6
-|    |         +--- ulla lv.j6
-|    |         +--- ulla ltp.j8
-|    |         +--- mikki.t4
-|    |         +--- emilia op.ke
-|    |         `--- emilia lv.kf
+|    |         +--- tomi.p6 (USER)
+|    |         +--- ulla op.j9 (VIEWER)
+|    |         +--- mika.l5 (MANAGER)
+|    |         +--- villu.vc (MANAGER)
+|    |         +--- ullan admin.t6 (MANAGER)
+|    |         +--- ulla lv.j6 (USER)
+|    |         +--- ulla ltp.j8 (MANAGER)
+|    |         +--- mikki.t4 (USER)
+|    |         +--- emilia op.ke (MANAGER)
+|    |         `--- emilia lv.kf (MANAGER)
 |    +--- Riskipäälliköt
 |    |    +--- users
-|    |    |    +--- tomi.p6
-|    |    |    +--- ulla op.j9
-|    |    |    +--- mika.l5
-|    |    |    +--- villu.vc
-|    |    |    +--- ullan admin.t6
-|    |    |    +--- ulla lv.j6
-|    |    |    +--- ulla ltp.j8
-|    |    |    +--- mikki.t4
-|    |    |    +--- emilia op.ke
-|    |    |    +--- emilia lv.kf
+|    |    |    +--- tomi.p6 (USER)
+|    |    |    +--- ulla op.j9 (VIEWER)
+|    |    |    +--- mika.l5 (MANAGER)
+|    |    |    +--- villu.vc (MANAGER)
+|    |    |    +--- ullan admin.t6 (MANAGER)
+|    |    |    +--- ulla lv.j6 (USER)
+|    |    |    +--- ulla ltp.j8 (MANAGER)
+|    |    |    +--- mikki.t4 (USER)
+|    |    |    +--- emilia op.ke (MANAGER)
+|    |    |    +--- emilia lv.kf (MANAGER)
 |    |    |    `--- ari.ra
 |    |    +--- Mikon testi
 |    |    |    `--- users
-|    |    |         `--- ari.ra
+|    |    |         `--- ari.ra (MANAGER)
 |    |    +--- Riskipaikka 1
 |    |    |    `--- users
-|    |    |         `--- ari.ra
+|    |    |         `--- ari.ra (MANAGER)
 |    |    `--- Riskipaikka 1_1
 |    |         `--- users
-|    |              `--- ari.ra
+|    |              `--- ari.ra (MANAGER)
 |    +--- Testi joulukuu
 |    |    `--- users
-|    |         +--- tomi.p6
-|    |         +--- ulla op.j9
-|    |         +--- mika.l5
-|    |         +--- villu.vc
-|    |         +--- ullan admin.t6
-|    |         +--- ulla lv.j6
-|    |         +--- ulla ltp.j8
-|    |         +--- mikki.t4
-|    |         +--- emilia op.ke
-|    |         `--- emilia lv.kf
+|    |         +--- tomi.p6 (USER)
+|    |         +--- ulla op.j9 (VIEWER)
+|    |         +--- mika.l5 (MANAGER)
+|    |         +--- villu.vc (MANAGER)
+|    |         +--- ullan admin.t6 (MANAGER)
+|    |         +--- ulla lv.j6 (USER)
+|    |         +--- ulla ltp.j8 (MANAGER)
+|    |         +--- mikki.t4 (USER)
+|    |         +--- emilia op.ke (MANAGER)
+|    |         `--- emilia lv.kf (MANAGER)
 |    +--- Testipaikka
 |    |    +--- users
-|    |    |    +--- tomi.p6
-|    |    |    +--- ulla op.j9
-|    |    |    +--- mika.l5
-|    |    |    +--- villu.vc
-|    |    |    +--- ullan admin.t6
-|    |    |    +--- ulla lv.j6
-|    |    |    +--- ulla ltp.j8
-|    |    |    +--- mikki.t4
-|    |    |    +--- emilia op.ke
-|    |    |    `--- emilia lv.kf
+|    |    |    +--- tomi.p6 (USER)
+|    |    |    +--- ulla op.j9 (VIEWER)
+|    |    |    +--- mika.l5 (MANAGER)
+|    |    |    +--- villu.vc (MANAGER)
+|    |    |    +--- ullan admin.t6 (MANAGER)
+|    |    |    +--- ulla lv.j6 (USER)
+|    |    |    +--- ulla ltp.j8 (MANAGER)
+|    |    |    +--- mikki.t4 (USER)
+|    |    |    +--- emilia op.ke (MANAGER)
+|    |    |    `--- emilia lv.kf (MANAGER)
 |    |    `--- Tyomaa 2
 |    |         `--- testipaikka
 |    `--- Uusi testipaikka
 |         +--- users
-|         |    +--- tomi.p6
-|         |    +--- ulla op.j9
-|         |    +--- mika.l5
-|         |    +--- villu.vc
-|         |    +--- ullan admin.t6
-|         |    +--- ulla lv.j6
-|         |    +--- ulla ltp.j8
-|         |    +--- mikki.t4
-|         |    +--- emilia op.ke
-|         |    +--- emilia lv.kf
+|         |    +--- tomi.p6 (USER)
+|         |    +--- ulla op.j9 (VIEWER)
+|         |    +--- mika.l5 (MANAGER)
+|         |    +--- villu.vc (MANAGER)
+|         |    +--- ullan admin.t6 (MANAGER)
+|         |    +--- ulla lv.j6 (USER)
+|         |    +--- ulla ltp.j8 (MANAGER)
+|         |    +--- mikki.t4 (USER)
+|         |    +--- emilia op.ke (MANAGER)
+|         |    +--- emilia lv.kf (MANAGER)
 |         |    +--- sanna.ns
 |         |    `--- anton.aa
 |         +--- Tyomaa 1
 |         |    `--- users
-|         |         +--- sanna.ns
-|         |         +--- anton.aa
+|         |         +--- sanna.ns (VIEWER)
+|         |         +--- anton.aa (USER)
 |         |         `--- ilkka.hi
 |         `--- Varasto
 |              `--- users
-|                   +--- sanna.ns
-|                   `--- anton.aa
+|                   +--- sanna.ns (VIEWER)
+|                   `--- anton.aa (USER)
 +--- Testipäivä 170124
 |    `--- users
 |         +--- mika.l5
@@ -182,25 +185,25 @@ Testiasiakas 2::tenant <= you are here
 |    `--- testitalo
 +--- Testimesta
 |    +--- users
-|    |    `--- ulla manager ee.j0
+|    |    `--- ulla manager ee.j0 (MANAGER)
 |    +--- Hiekkalaatikko
 |    |    +--- users
-|    |    |    +--- ulla manager ee.j0
+|    |    |    +--- ulla manager ee.j0 (MANAGER)
 |    |    |    `--- ursula test2.ue
 |    |    +--- Ämpäritehdas
 |    |    |    `--- users
-|    |    |         `--- ursula test2.ue
+|    |    |         `--- ursula test2.ue (USER)
 |    |    `--- Lapiotehdas
 |    |         `--- users
-|    |              `--- ursula test2.ue
+|    |              `--- ursula test2.ue (USER)
 |    +--- Keinumaailma
 |    |    +--- users
-|    |    |    `--- ulla manager ee.j0
+|    |    |    `--- ulla manager ee.j0 (MANAGER)
 |    |    +--- Lautakeinut
 |    |    `--- Vauvakeinut
 |    `--- Leikkikehä
 |         +--- users
-|         |    `--- ulla manager ee.j0
+|         |    `--- ulla manager ee.j0 (MANAGER)
 |         +--- Autot
 |         `--- Nuket
 `--- Testorganisation 1
@@ -216,17 +219,17 @@ OX Testausyritys::tenant <= you are here
 +--- 2.5.2 lokaatio
 +--- Keskusvarasto 1
 |    +--- users
-|    |    `--- anni.ee
+|    |    `--- anni.ee (MANAGER)
 |    `--- Testilokaatio 2.0
 |         +--- users
-|         |    +--- proto.k1
-|         |    `--- anni.ee
+|         |    +--- proto.k1 (USER)
+|         |    `--- anni.ee (MANAGER)
 |         +--- Paikka 2.1 *¨*
 |         |    `--- users
-|         |         `--- proto.k1
+|         |         `--- proto.k1 (USER)
 |         `--- Uusi paikka 2.2.
 |              +--- users
-|              |    `--- proto.k1
+|              |    `--- proto.k1 (USER)
 |              `--- Uusin paikka 2.2.1.
 +--- newTopLeve
 |    +--- users
@@ -235,33 +238,33 @@ OX Testausyritys::tenant <= you are here
 |    `--- nextLevel
 |         `--- users
 |              +--- mika.l5
-|              `--- anni.pe
+|              `--- anni.pe (VIEWER)
 +--- Päätoimipaikka
 |    +--- users
 |    |    +--- mika.l5
-|    |    +--- anni.lb
-|    |    `--- protonen.l2
+|    |    +--- anni.lb (VIEWER)
+|    |    `--- protonen.l2 (VIEWER)
 |    +--- Keskitason toimipiste
 |    |    +--- users
 |    |    |    +--- mika.l5
-|    |    |    +--- anni.lb
-|    |    |    `--- protonen.l2
+|    |    |    +--- anni.lb (VIEWER)
+|    |    |    `--- protonen.l2 (VIEWER)
 |    |    `--- #Erikoismerkki,;?   {"__"} ¨¨
 |    |         `--- users
-|    |              `--- protonen.l2
+|    |              `--- protonen.l2 (VIEWER)
 |    `--- Testauskeskus
 |         +--- users
 |         |    +--- mika.l5
-|         |    +--- anni.lb
-|         |    +--- protonen.l2
+|         |    +--- anni.lb (VIEWER)
+|         |    +--- protonen.l2 (VIEWER)
 |         |    `--- anni.a1
 |         +--- Laitevarasto
 |         |    `--- users
-|         |         +--- anni.a1
+|         |         +--- anni.a1 (USER)
 |         |         `--- proto.l0
 |         `--- Pienenpieni ja erittäin pitkäniminen testauspiste?! Pienenpieni ja erittäin pitkäniminen testauspiste?!Pienenpieni ja erittäin pitkäniminen testauspis
 |              `--- users
-|                   +--- anni.a1
+|                   +--- anni.a1 (USER)
 |                   +--- proto.k1
 |                   `--- proto.l0
 `--- Paikka roolitesti
@@ -273,7 +276,7 @@ OX Testausyritys::tenant <= you are here
                `--- users
                     +--- anni.lb
                     +--- proto.k1
-                    `--- proto.ne
+                    `--- proto.ne (MANAGER)
 
 
 
@@ -324,9 +327,9 @@ Acme corporation::tenant <= you are here
      |    `--- jocelyn.m4
      `--- TestiOne
           `--- users
-               +--- mikki.lc
-               +--- kaur.t7
-               `--- jocelyn.m4
+               +--- mikki.lc (USER)
+               +--- kaur.t7 (MANAGER)
+               `--- jocelyn.m4 (MANAGER)
 
 
 
@@ -488,6 +491,58 @@ Testi 1::tenant <= you are here
       Assertions.assertEquals(CommitResultStatus.OK, result.getStatus());
  
     }
+  }
+  
+  public void createRoles(Repo repo) {
+    var result = getClient().org().commit().createOneRole()
+        .repoId(repo.getId())
+        .externalId("0")
+        .roleName("VIEWER")
+        .roleDescription("direct user and group role")
+        .author("au-")
+        .message("created role")
+        .build().await().atMost(Duration.ofMinutes(1));
+      Assertions.assertEquals(CommitResultStatus.OK, result.getStatus());
+ 
+    result = getClient().org().commit().createOneRole()
+        .repoId(repo.getId())
+        .externalId("1")
+        .roleName("USER")
+        .roleDescription("direct user and group role")
+        .author("au-")
+        .message("created role")
+        .build().await().atMost(Duration.ofMinutes(1));
+    Assertions.assertEquals(CommitResultStatus.OK, result.getStatus());
     
+    result = getClient().org().commit().createOneRole()
+        .repoId(repo.getId())
+        .externalId("2")
+        .roleName("MANAGER")
+        .roleDescription("direct user and group role")
+        .author("au-")
+        .message("created role")
+        .build().await().atMost(Duration.ofMinutes(1));
+    Assertions.assertEquals(CommitResultStatus.OK, result.getStatus());
+  }
+  
+  public void createUserGroupRoles(Repo repo) {
+    final var users = new JsonArray(DbTestTemplate.toString(getClass(), "org_test_data_json/test_data_users_group_role.json"));
+
+    for(final var userRaw : users) {
+      final var user = (JsonObject) userRaw;
+      
+      final var result = getClient().org().commit().modifyOneUser()
+        .repoId(repo.getId())
+        .userId(user.getString("user_external_id"))
+        .groupsRoles(ModType.ADD, Map.of(user.getString("group_external_id"), Arrays.asList(user.getString("role_external_id"))))
+        .author("au-")
+        .message("created user group role association")
+        .build().await().atMost(Duration.ofMinutes(1));
+      if(result.getStatus() == CommitResultStatus.NO_CHANGES) {
+        continue;
+      }
+      Assertions.assertEquals(CommitResultStatus.OK, result.getStatus());
+ 
+    } 
   }
 }

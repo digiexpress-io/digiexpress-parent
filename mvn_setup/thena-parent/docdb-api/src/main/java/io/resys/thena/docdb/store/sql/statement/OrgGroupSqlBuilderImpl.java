@@ -1,7 +1,7 @@
 package io.resys.thena.docdb.store.sql.statement;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
@@ -22,7 +22,7 @@ public class OrgGroupSqlBuilderImpl implements OrgGroupSqlBuilder {
   private final DbCollections options;
   
   @Override
-  public SqlTuple findAll(List<String> id) {
+  public SqlTuple findAll(Collection<String> id) {
     final var sql = new SqlStatement()
       .append("SELECT * ").ln()
       .append("  FROM ").append(options.getOrgGroups()).ln()
@@ -43,7 +43,7 @@ public class OrgGroupSqlBuilderImpl implements OrgGroupSqlBuilder {
     
     return ImmutableSqlTuple.builder()
         .value(sql.build())
-        .props(Tuple.from(id))
+        .props(Tuple.from(new ArrayList<>(id)))
         .build();
   }
   

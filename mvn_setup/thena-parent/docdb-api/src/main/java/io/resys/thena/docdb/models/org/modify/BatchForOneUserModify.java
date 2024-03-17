@@ -4,7 +4,9 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -50,7 +52,8 @@ public class BatchForOneUserModify {
   private final List<OrgCommitTree> tree = new ArrayList<OrgCommitTree>();
   private final List<OrgUserMembership> memberships = new ArrayList<>();
   private final List<OrgUserRole> userRoles = new ArrayList<>();
-  
+  private final Map<OrgGroup, List<OrgRole>> addUserToGroupRoles = new LinkedHashMap<>();
+ 
   private final List<OrgActorStatus> actorStatus = new ArrayList<>();
   private final List<String> identifiersForUpdates = new ArrayList<>();
   private OrgUserHierarchy current;
@@ -69,6 +72,14 @@ public class BatchForOneUserModify {
   }
   public BatchForOneUserModify updateRoles(ModType type, OrgRole role) { 
     this.roles.add(new ModRole(type, role)); 
+    return this;
+  }
+  public BatchForOneUserModify updateGroupRoles(ModType type, Map<OrgGroup, List<OrgRole>> addUserToGroupRoles) { 
+    if(type == ModType.ADD) {
+      this.addUserToGroupRoles.putAll(addUserToGroupRoles);
+    } else {
+      throw new RuntimeException("not implemented!!");
+    }
     return this;
   }
   public ImmutableOrgBatchForOne create() throws NoChangesException {
@@ -106,11 +117,18 @@ public class BatchForOneUserModify {
     for(final var entry : roles) {
       final var status = roleStatus.get(entry.getRole().getId());
       if(entry.getType() == ModType.ADD) {
-        this.visitAddUserToRole(entry.getRole(), status, commitId);  
+        this.visitAddUserToRole(entry.getRole(), status, Optional.empty(), commitId);  
       } else if(entry.getType() == ModType.DISABLED) {
         this.visitRemoveUserFromRole(entry.getRole(), status, commitId);
       } else {
         RepoAssert.fail("Unknown modification type: " + entry.getType() + "!"); 
+      }
+    }
+    
+    for(final var entry : this.addUserToGroupRoles.entrySet()) {
+      for(final var role : entry.getValue()) {
+        final OrgUserRoleStatus status = null;
+        this.visitAddUserToRole(role, status, Optional.of(entry.getKey()), commitId);
       }
     }
     
@@ -242,13 +260,14 @@ public class BatchForOneUserModify {
     visitChangeTree(commitId, roleStatus, OrgOperationType.MOD);
   }
   
-  private void visitAddUserToRole(OrgRole entry, OrgUserRoleStatus status, String commitId) {
+  private void visitAddUserToRole(OrgRole entry, OrgUserRoleStatus status, Optional<OrgGroup> group, String commitId) {
     if(!current.getDirectRoleNames().contains(entry.getRoleName())) {
       final var membership = ImmutableOrgUserRole.builder()
           .id(OidUtils.gen())
           .roleId(entry.getId())
           .userId(current.getUserId())
           .commitId(commitId)
+          .groupId(group.map(g -> g.getId()).orElse(null))
           .build();
       userRoles.add(membership);
       visitChangeTree(commitId, membership, OrgOperationType.ADD);
@@ -260,6 +279,7 @@ public class BatchForOneUserModify {
           .roleId(entry.getId())
           .userId(current.getUserId())
           .commitId(commitId)
+          .groupId(group.map(g -> g.getId()).orElse(null))
           .value(OrgActorStatusType.IN_FORCE)
           .build();
       identifiersForUpdates.add(status.getStatusId());

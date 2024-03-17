@@ -1,8 +1,12 @@
 package io.resys.thena.docdb.models.org.modify;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import io.resys.thena.docdb.api.actions.ImmutableOneUserEnvelope;
@@ -41,13 +45,15 @@ public class ModifyOneUserImpl implements ModifyOneUser {
   private Optional<String> email;
   private Optional<String> externalId;
 
-  private List<String> allGroups = new ArrayList<>();
-  private List<String> groupsToAdd = new ArrayList<>();
-  private List<String> groupsToRemove = new ArrayList<>();
-  private List<String> allRoles = new ArrayList<>();
-  private List<String> rolesToAdd = new ArrayList<>();
-  private List<String> rolesToRemove = new ArrayList<>();
-
+  private Collection<String> allGroups = new LinkedHashSet<>();
+  private Collection<String> groupsToAdd = new LinkedHashSet<>();
+  private Collection<String> groupsToRemove = new LinkedHashSet<>();
+  private Collection<String> allRoles = new LinkedHashSet<>();
+  private Collection<String> rolesToAdd = new LinkedHashSet<>();
+  private Collection<String> rolesToRemove = new LinkedHashSet<>();
+  private Map<String, List<String>> addUseGroupRoles = new HashMap<>();
+  private Map<String, List<String>> removeUseGroupRoles = new HashMap<>();
+  
   @Override public ModifyOneUserImpl userId(String userId) {         this.userId = RepoAssert.notEmpty(userId,           () -> "userId can't be empty!"); return this; }
   @Override public ModifyOneUserImpl repoId(String repoId) {         this.repoId = RepoAssert.notEmpty(repoId,           () -> "repoId can't be empty!"); return this; }
   @Override public ModifyOneUserImpl author(String author) {         this.author = RepoAssert.notEmpty(author,           () -> "author can't be empty!"); return this; }
@@ -55,6 +61,23 @@ public class ModifyOneUserImpl implements ModifyOneUser {
   @Override public ModifyOneUserImpl userName(String userName) {     this.userName = Optional.ofNullable(RepoAssert.notEmpty(userName,       () -> "userName can't be empty!")); return this; }
   @Override public ModifyOneUserImpl email(String email) {           this.email = Optional.ofNullable(RepoAssert.notEmpty(email,             () -> "email can't be empty!")); return this; }
   @Override public ModifyOneUserImpl externalId(String externalId) { this.externalId = Optional.ofNullable(externalId); return this; }
+  
+  @Override
+  public ModifyOneUser groupsRoles(ModType type, Map<String, List<String>> addUseGroupRoles) {
+    RepoAssert.notEmpty(addUseGroupRoles, () -> "groups can't be empty!");
+    final var groups = addUseGroupRoles.keySet().stream().distinct().toList();
+    final var roles = addUseGroupRoles.values().stream().flatMap(e -> e.stream()).distinct().toList();
+    this.allGroups.addAll(groups);
+    this.allRoles.addAll(roles);
+    if(type == ModType.ADD) {
+      this.addUseGroupRoles.putAll(addUseGroupRoles);
+    } else if(type == ModType.DISABLED) {
+      this.removeUseGroupRoles.putAll(addUseGroupRoles);
+    } else {
+      RepoAssert.fail("Unknown modification type: " + type + "!");
+    }
+    return this; 
+  }
   @Override 
   public ModifyOneUserImpl groups(ModType type, List<String> initGroups) { 
     RepoAssert.notEmpty(initGroups, () -> "groups can't be empty!");
@@ -128,8 +151,14 @@ public class ModifyOneUserImpl implements ModifyOneUser {
   private Uni<OneUserEnvelope> modifyUser(
       OrgRepo tx, 
       QueryEnvelope<OrgUserHierarchy> user, 
-      List<OrgGroup> groups, 
-      List<OrgRole> roles) {
+      List<OrgGroup> allGroups, 
+      List<OrgRole> allRoles) {
+    
+    final Map<OrgGroup, List<OrgRole>> addUseGroupRoles = new HashMap<>();
+    
+    final Map<String, List<OrgRole>> addGroupsBy = new HashMap<>();
+    final Map<String, String> addGroupMapping = new HashMap<>();
+    
     
     if(user.getStatus() == QueryEnvelopeStatus.ERROR) {
       return Uni.createFrom().item(ImmutableOneUserEnvelope.builder()
@@ -139,8 +168,8 @@ public class ModifyOneUserImpl implements ModifyOneUser {
           .build());
     }
     
-    if(groups.size() != this.allGroups.size()) {
-      final var found = String.join(", ", groups.stream().map(e -> e.getGroupName()).toList());
+    if(allGroups.size() < this.allGroups.size()) {
+      final var found = String.join(", ", allGroups.stream().map(e -> e.getGroupName()).toList());
       final var expected = String.join(", ", this.allGroups);
       return Uni.createFrom().item(ImmutableOneUserEnvelope.builder()
           .repoId(repoId)
@@ -151,8 +180,8 @@ public class ModifyOneUserImpl implements ModifyOneUser {
           .build());
     }
     
-    if(roles.size() != this.allRoles.size()) {
-      final var found = String.join(", ", roles.stream().map(e -> e.getRoleName()).toList());
+    if(allRoles.size() < this.allRoles.size()) {
+      final var found = String.join(", ", allRoles.stream().map(e -> e.getRoleName()).toList());
       final var expected = String.join(", ", this.allRoles);
       return Uni.createFrom().item(ImmutableOneUserEnvelope.builder()
           .repoId(repoId)
@@ -171,7 +200,7 @@ public class ModifyOneUserImpl implements ModifyOneUser {
 
     
     // Remove or add groups 
-    groups.forEach(group -> {
+    allGroups.forEach(group -> {
       if( groupsToAdd.contains(group.getGroupName()) ||
           groupsToAdd.contains(group.getId()) ||
           groupsToAdd.contains(group.getExternalId())
@@ -185,10 +214,19 @@ public class ModifyOneUserImpl implements ModifyOneUser {
        ) {
          modify.updateGroups(ModType.DISABLED, group);
        }
+      
+      
+      final var addToGroupRole = this.addUseGroupRoles.keySet().stream().filter(c -> group.isMatch(c)).findFirst();
+      if(addToGroupRole.isPresent()) {
+        final var roles = new ArrayList<OrgRole>();
+        addGroupsBy.put(group.getId(), roles);
+        addUseGroupRoles.put(group, roles);
+        addGroupMapping.put(addToGroupRole.get(), group.getId());
+      }
     });
     
     // Remove or add roles 
-    roles.forEach(role -> {
+    allRoles.forEach(role -> {
       
       if( rolesToAdd.contains(role.getRoleName()) ||
           rolesToAdd.contains(role.getId()) ||
@@ -203,11 +241,23 @@ public class ModifyOneUserImpl implements ModifyOneUser {
        ) {
          modify.updateRoles(ModType.DISABLED, role);
        }
+      
+      
+      
+      for(final var entry : this.addUseGroupRoles.entrySet()) {
+        final var addRoleToUserGroup = entry.getValue().stream().filter(c -> role.isMatch(c)).findFirst().isPresent();
+        if(addRoleToUserGroup) {
+          addGroupsBy.get(addGroupMapping.get(entry.getKey())).add(role);
+        }
+      }
+      
     });
     
     
     try {
-      final OrgBatchForOne batch = modify.create();
+      final OrgBatchForOne batch = modify
+          .updateGroupRoles(ModType.ADD, addUseGroupRoles)
+          .create();
       return tx.insert().batchOne(batch)
           .onItem().transform(rsp -> ImmutableOneUserEnvelope.builder()
             .repoId(repoId)

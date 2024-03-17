@@ -1,16 +1,17 @@
 package io.resys.thena.docdb.models.org;
 
+import java.util.Collection;
 import java.util.List;
 
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatus;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgCommit;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserHierarchyEntry;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroupRole;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRoleFlattened;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUser;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserFlattened;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserHierarchyEntry;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserMembership;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserRole;
 import io.smallrye.mutiny.Multi;
@@ -74,13 +75,13 @@ public interface OrgQueries {
   
   interface RoleQuery {    
     Multi<OrgRole> findAll();
-    Multi<OrgRole> findAll(List<String> id);
+    Multi<OrgRole> findAll(Collection<String> id);
     Uni<OrgRole> getById(String id);
   }
   
   interface GroupQuery {
     Multi<OrgGroup> findAll();
-    Multi<OrgGroup> findAll(List<String> id);
+    Multi<OrgGroup> findAll(Collection<String> id);
     Uni<OrgGroup> getById(String id);
   }
 }

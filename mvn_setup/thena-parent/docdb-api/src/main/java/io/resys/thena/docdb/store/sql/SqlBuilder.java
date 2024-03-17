@@ -123,7 +123,7 @@ public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
   interface OrgRoleSqlBuilder {
     SqlTuple getById(String id); //role name or id or external_id
     Sql findAll();
-    SqlTuple findAll(List<String> id);
+    SqlTuple findAll(Collection<String> id);
     SqlTuple insertOne(OrgRole role);
     SqlTupleList insertAll(Collection<OrgRole> roles);
     SqlTuple updateOne(OrgRole role);
@@ -156,7 +156,7 @@ public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
   interface OrgGroupSqlBuilder {
     SqlTuple getById(String id); //group name or id or external_id
     Sql findAll();
-    SqlTuple findAll(List<String> id);
+    SqlTuple findAll(Collection<String> id);
     SqlTuple insertOne(OrgGroup group);
     SqlTupleList insertAll(Collection<OrgGroup> OrgGroup);
     SqlTuple updateOne(OrgGroup group);

@@ -1,6 +1,6 @@
 package io.resys.thena.docdb.store.sql.queries;
 
-import java.util.List;
+import java.util.Collection;
 
 import io.resys.thena.docdb.api.LogConstants;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
@@ -43,7 +43,7 @@ public class OrgRoleQuerySqlPool implements OrgQueries.RoleQuery {
   }
   
   @Override
-  public Multi<OrgRole> findAll(List<String> id) {
+  public Multi<OrgRole> findAll(Collection<String> id) {
     final var sql = sqlBuilder.orgRoles().findAll(id);
     if(log.isDebugEnabled()) {
       log.debug("Role findAll query, with props: {} \r\n{}", 

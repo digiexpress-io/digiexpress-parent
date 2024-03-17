@@ -15,6 +15,7 @@ import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroupRole;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUser;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserMembership;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserRole;
 import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgRoleHierarchy;
 import io.resys.thena.docdb.models.org.anytree.AnyTreeContainer.AnyTreeContainerContext;
 import io.resys.thena.docdb.models.org.anytree.AnyTreeContainer.AnyTreeContainerVisitor;
@@ -164,6 +165,23 @@ public class RoleHierarchyContainerVisitor extends AnyTreeContainerVisitorImpl<O
         groupContainsRole = true;
         
         final var groupNode = new DefaultNode(group.getGroupName() + " <= direct role");
+        nodesGroup.put(group.getId(), groupNode);
+        nodeRoot.addChild(groupNode);
+      }
+    }
+    
+    @Override
+    public void visitRole(OrgGroup group, OrgUserRole groupRole, OrgRole role, boolean isDisabled) {
+      if(isDisabled) {
+        return;
+      }
+      if(groupContainsRole != null) {
+        return;
+      }
+      if(this.target.getId().equals(groupRole.getRoleId())) {
+        groupContainsRole = true;
+        
+        final var groupNode = new DefaultNode(group.getGroupName() + " <= inherited role");
         nodesGroup.put(group.getId(), groupNode);
         nodeRoot.addChild(groupNode);
       }

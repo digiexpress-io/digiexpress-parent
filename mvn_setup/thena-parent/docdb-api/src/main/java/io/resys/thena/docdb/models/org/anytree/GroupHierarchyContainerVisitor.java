@@ -15,6 +15,7 @@ import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroupRole;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUser;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserMembership;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserRole;
 import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgGroupHierarchy;
 import io.resys.thena.docdb.models.org.anytree.AnyTreeContainer.AnyTreeContainerContext;
 import io.resys.thena.docdb.models.org.anytree.AnyTreeContainer.AnyTreeContainerVisitor;
@@ -31,6 +32,7 @@ public class GroupHierarchyContainerVisitor extends AnyTreeContainerVisitorImpl<
   private final DefaultNode nodeRoot = new DefaultNode("organization");
   
   private final Map<String, DefaultNode> nodesGroup = new HashMap<>();
+  private final Map<String, DefaultNode> nodesGroupUsers = new HashMap<>();
   private final Map<String, DefaultNode> nodesGroupRoles = new HashMap<>();
   private final Map<String, DefaultNode> nodesGroupMembers = new HashMap<>();
   
@@ -49,6 +51,7 @@ public class GroupHierarchyContainerVisitor extends AnyTreeContainerVisitorImpl<
     if(isDisabled) {
       return;
     }
+    
     if(foundGroupId == null) {
       return;
     }
@@ -70,7 +73,10 @@ public class GroupHierarchyContainerVisitor extends AnyTreeContainerVisitorImpl<
       nodesGroup.get(group.getId()).addChild(users);
       nodesGroupMembers.put(group.getId(), users);
     }
-    nodesGroupMembers.get(group.getId()).addChild(new DefaultNode(user.getUserName()));
+    final var nodeUser = new DefaultNode(user.getUserName());
+    
+    nodesGroupMembers.get(group.getId()).addChild(nodeUser);
+    nodesGroupUsers.put(group.getId() + user.getId(), nodeUser);
     
     
     if(!isDirectGroup(group)) {
@@ -96,6 +102,20 @@ public class GroupHierarchyContainerVisitor extends AnyTreeContainerVisitorImpl<
     }
     builder.addDirectRoleNames(role);    
   }
+  @Override
+  public void visitRole(OrgGroup group, OrgUserRole groupRole, OrgRole role, boolean isDisabled) {
+    if(isDisabled) {
+      return;
+    }
+    
+    final var userNode = nodesGroupUsers.get(group.getId() + groupRole.getUserId());
+    if(userNode.getText().endsWith(")")) {
+      userNode.setText(userNode.getText().substring(0, userNode.getText().length() -2) + ", " + role.getRoleName() + ")");            
+    } else {
+      userNode.setText(userNode.getText() + " (" + role.getRoleName() + ")");      
+    }
+  }
+  
   @Override
   public void visitChild(OrgGroup group, boolean isDisabled) {
     if(isDisabled) {
@@ -158,5 +178,4 @@ public class GroupHierarchyContainerVisitor extends AnyTreeContainerVisitorImpl<
   GroupVisitor visitChild(OrgGroup group, AnyTreeContainerContext worldState) {
     return this;
   }
-  
 }

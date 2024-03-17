@@ -1,6 +1,7 @@
 package io.resys.thena.docdb.api.actions;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nullable;
 
@@ -88,6 +89,7 @@ public interface OrgCommitActions {
     
     ModifyOneUser roles(ModType type, List<String> roleIdOrNameOrExternalId); // group.(id OR externalId OR rolename)
     ModifyOneUser groups(ModType type, List<String> groupIdOrNameOrExternalId);
+    ModifyOneUser groupsRoles(ModType type, Map<String, List<String>> addUseGroupRoles);
     
     Uni<OneUserEnvelope> build();
   }
