@@ -366,6 +366,7 @@ public class SqlMapperImpl implements SqlMapper {
         .commitId(row.getString("commit_id"))
         .roleId(row.getString("role_id"))
         .userId(row.getString("user_id"))
+        .groupId(row.getString("group_id"))
         .build();
 	}
 	@Override

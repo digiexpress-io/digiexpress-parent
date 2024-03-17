@@ -222,12 +222,15 @@ CREATE TABLE org_user_roles
   commit_id VARCHAR(40) NOT NULL,
   user_id VARCHAR(40) NOT NULL,
   role_id VARCHAR(40) NOT NULL,
-  UNIQUE (user_id, role_id)
+  group_id VARCHAR(40),
+  UNIQUE (user_id, role_id, group_id)
 );
 CREATE INDEX org_user_roles_COMMIT_INDEX ON org_user_roles (commit_id);
 CREATE INDEX org_user_roles_ROLE_INDEX ON org_user_roles (role_id);
 CREATE INDEX org_user_roles_USER_INDEX ON org_user_roles (user_id);
+CREATE INDEX org_user_roles_GROUP_INDEX ON org_user_roles (group_id);
 CREATE INDEX org_user_roles_REF_INDEX ON org_user_roles (role_id, user_id);
+CREATE INDEX org_user_roles_REF_2_INDEX ON org_user_roles (role_id, user_id, group_id);
 
 CREATE TABLE org_user_memberships
 (
@@ -391,11 +394,23 @@ ALTER TABLE org_group_roles
 
 
 
+ALTER TABLE org_user_roles
+  ADD CONSTRAINT org_user_roles_GROUP_FK
+  FOREIGN KEY (group_id)
+  REFERENCES org_groups (id);
+
+
+
 ALTER TABLE org_user_memberships
   ADD CONSTRAINT org_user_memberships_GROUP_FK
   FOREIGN KEY (group_id)
   REFERENCES org_groups (id);
 
+
+ALTER TABLE org_user_roles
+  ADD CONSTRAINT org_user_roles_GROUP_MEMBER_FK
+  FOREIGN KEY (group_id, user_id)
+  REFERENCES org_user_memberships (group_id, user_id);
 
 
 ALTER TABLE org_user_memberships

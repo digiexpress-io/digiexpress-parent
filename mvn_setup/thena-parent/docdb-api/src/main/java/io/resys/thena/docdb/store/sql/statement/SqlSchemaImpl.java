@@ -478,7 +478,8 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("  commit_id VARCHAR(40) NOT NULL,").ln()
     .append("  user_id VARCHAR(40) NOT NULL,").ln()
     .append("  role_id VARCHAR(40) NOT NULL,").ln()
-    .append("  UNIQUE (user_id, role_id)").ln()
+    .append("  group_id VARCHAR(40),").ln()
+    .append("  UNIQUE (user_id, role_id, group_id)").ln()
     .append(");").ln()
     
     .append("CREATE INDEX ").append(options.getOrgUserRoles()).append("_COMMIT_INDEX")
@@ -490,8 +491,15 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("CREATE INDEX ").append(options.getOrgUserRoles()).append("_USER_INDEX")
     .append(" ON ").append(options.getOrgUserRoles()).append(" (user_id);").ln()
     
+
+    .append("CREATE INDEX ").append(options.getOrgUserRoles()).append("_GROUP_INDEX")
+    .append(" ON ").append(options.getOrgUserRoles()).append(" (group_id);").ln()
+    
     .append("CREATE INDEX ").append(options.getOrgUserRoles()).append("_REF_INDEX")
     .append(" ON ").append(options.getOrgUserRoles()).append(" (role_id, user_id);").ln()    
+
+    .append("CREATE INDEX ").append(options.getOrgUserRoles()).append("_REF_2_INDEX")
+    .append(" ON ").append(options.getOrgUserRoles()).append(" (role_id, user_id, group_id);").ln()    
 
 
     .build()).build();
@@ -679,7 +687,16 @@ public class SqlSchemaImpl implements SqlSchema {
         .append(createOrgGroupFk(options.getOrgActorData())).ln()
         .append(createOrgGroupFk(options.getOrgActorStatus())).ln()
         .append(createOrgGroupFk(options.getOrgGroupRoles())).ln()
+        .append(createOrgGroupFk(options.getOrgUserRoles())).ln()
         .append(createOrgGroupFk(options.getOrgUserMemberships())).ln()
+        
+
+        .append("ALTER TABLE ").append(options.getOrgUserRoles()).ln()
+        .append("  ADD CONSTRAINT ").append(options.getOrgUserRoles()).append("_GROUP_MEMBER_FK").ln()
+        .append("  FOREIGN KEY (group_id, user_id)").ln()
+        .append("  REFERENCES ").append(options.getOrgUserMemberships()).append(" (group_id, user_id);").ln().ln()
+        
+        
         .build())
         .build();
   }

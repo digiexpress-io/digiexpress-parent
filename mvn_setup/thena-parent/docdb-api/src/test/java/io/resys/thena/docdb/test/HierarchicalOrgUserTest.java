@@ -42,7 +42,7 @@ public class HierarchicalOrgUserTest extends DbTestTemplate {
   public void createRepoAndUserGroups() {
     // create project
     RepoResult repo = getClient().repo().projectBuilder()
-        .name("HierarchicalOrgTest-1", RepoType.org)
+        .name("HierarchicalOrgUserTest-1", RepoType.org)
         .build()
         .await().atMost(Duration.ofMinutes(1));
     log.debug("created repo {}", repo);

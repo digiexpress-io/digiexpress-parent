@@ -56,8 +56,10 @@ public class ModifyOneUserImpl implements ModifyOneUser {
   @Override public ModifyOneUserImpl email(String email) {           this.email = Optional.ofNullable(RepoAssert.notEmpty(email,             () -> "email can't be empty!")); return this; }
   @Override public ModifyOneUserImpl externalId(String externalId) { this.externalId = Optional.ofNullable(externalId); return this; }
   @Override 
-  public ModifyOneUserImpl groups(ModType type, List<String> groups) { 
-    this.allGroups.addAll(RepoAssert.notEmpty(groups, () -> "groups can't be empty!"));
+  public ModifyOneUserImpl groups(ModType type, List<String> initGroups) { 
+    RepoAssert.notEmpty(initGroups, () -> "groups can't be empty!");
+    final var groups = initGroups.stream().distinct().toList();
+    this.allGroups.addAll(groups);
     if(type == ModType.ADD) {
       groupsToAdd.addAll(groups);
     } else if(type == ModType.DISABLED) {
@@ -68,8 +70,12 @@ public class ModifyOneUserImpl implements ModifyOneUser {
     return this; 
    }
   @Override 
-  public ModifyOneUserImpl roles(ModType type, List<String> roles) {
-    this.allRoles.addAll(RepoAssert.notEmpty(roles, () -> "roles can't be empty!"));
+  public ModifyOneUserImpl roles(ModType type, List<String> initRoles) {
+    RepoAssert.notEmpty(initRoles, () -> "roles can't be empty!");
+    
+    final var roles = initRoles.stream().distinct().toList();
+    this.allRoles.addAll(roles);
+    
     if(type == ModType.ADD) {
       rolesToAdd.addAll(roles);
     } else if(type == ModType.DISABLED) {

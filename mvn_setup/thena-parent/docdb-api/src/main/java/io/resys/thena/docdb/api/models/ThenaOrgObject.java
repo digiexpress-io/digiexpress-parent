@@ -124,6 +124,7 @@ public interface ThenaOrgObject {
     String getCommitId();
     String getUserId();
     String getRoleId();
+    @Nullable String getGroupId();
     
     @JsonIgnore @Override default public OrgDocType getDocType() { return OrgDocType.OrgUserRole; };
   }

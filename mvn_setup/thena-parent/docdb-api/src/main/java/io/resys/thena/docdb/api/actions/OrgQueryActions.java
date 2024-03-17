@@ -39,6 +39,7 @@ public interface OrgQueryActions {
   interface GroupHierarchyQuery {
     GroupHierarchyQuery repoId(String repoId);
     Uni<QueryEnvelope<OrgGroupHierarchy>> get(String groupIdOrNameOrExternalId);
-    Uni<QueryEnvelopeList<OrgGroupHierarchy>> findAll();    
+    Uni<QueryEnvelopeList<OrgGroupHierarchy>> findAll();
+    
   }
 }
