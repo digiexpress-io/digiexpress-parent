@@ -137,6 +137,7 @@ const Secondary: React.FC<{ init?: { profile: UserProfileAndOrg, backend: Backen
   function handleTenant() { actions.handleTabAdd({ id: 'tenant', label: <FormattedMessage id="activities.frontoffice.crm.tenant.title" /> }) }
   function handleCurrentUserProfile() { actions.handleTabAdd({ id: 'currentUserProfile', label: <FormattedMessage id="activities.frontoffice.userProfile.title" /> }) }
   function handleAllUserProfiles() { actions.handleTabAdd({ id: 'allUserProfiles', label: <FormattedMessage id="activities.frontoffice.allUserProfiles.title" /> }) }
+  function handleOrgChart() { actions.handleTabAdd({ id: 'orgChart', label: <FormattedMessage id="activities.frontoffice.permissions.orgChart.title" /> }) }
 
 
   React.useEffect(() => {
@@ -212,6 +213,8 @@ const Secondary: React.FC<{ init?: { profile: UserProfileAndOrg, backend: Backen
         <StyledExplorerSubTab value='explorer.permissions.users' label={<FormattedMessage id="explorer.frontoffice.permissions.users.menuOption" />} onClick={undefined}
           icon={<AdminPanelSettingsOutlinedIcon fontSize='small' />} />
         <StyledExplorerSubTab value='explorer.permissions.permissions' label={<FormattedMessage id="explorer.frontoffice.permissions.allPermissions.menuOption" />} onClick={undefined}
+          icon={<AdminPanelSettingsOutlinedIcon fontSize='small' />} />
+        <StyledExplorerSubTab value='explorer.permissions.orgChart' label={<FormattedMessage id="explorer.frontoffice.permissions.orgChart.menuOption" />} onClick={handleOrgChart}
           icon={<AdminPanelSettingsOutlinedIcon fontSize='small' />} />
         <StyledExplorerTab value='explorer.reporting' label={<FormattedMessage id="activities.reporting.title" />} onClick={handleReporting}
           icon={<PieChartIcon fontSize='small' />} />

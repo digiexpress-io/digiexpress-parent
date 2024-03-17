@@ -450,6 +450,9 @@ const en = {
   'activities.frontoffice.allUserProfiles.title': 'All user profiles',
   'activities.frontoffice.allUserProfiles.desc': 'View all registered users',
 
+  'activities.frontoffice.permissions.orgChart.title': 'Org chart',
+  'activities.frontoffice.permissions.orgChart.desc': 'Permissions, roles, users',
+
   'activities.profile.title': 'My profile',
   'activities.permissions.title': 'Permissions',
   'activities.permissions.roles.title': 'Roles',
@@ -475,6 +478,7 @@ const en = {
   'explorer.frontoffice.permissions.roles.menuOption': 'Roles overview',
   'explorer.frontoffice.permissions.users.menuOption': 'All users',
   'explorer.frontoffice.permissions.allPermissions.menuOption': 'All permissions',
+  'explorer.frontoffice.permissions.orgChart.menuOption': 'Org chart',
 
 
   'explorer.frontoffice.tenant.menuOption': 'Tenant',

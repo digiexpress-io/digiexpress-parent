@@ -18,6 +18,7 @@ const modules: string[] = [
   'components-dialob-composer',
   'components-user-profile',
   'components-permissions',
+  'components-org-chart',
 
   'descriptor-customer',
   'descriptor-organization',
