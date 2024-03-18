@@ -1,0 +1,416 @@
+[
+  {
+    "external_id": "146",
+    "group_name": "Ratapiha",
+    "parent_group_name": "Valmistuneet työmaat",
+    "parent_group_external_id": "138"
+  },
+  {
+    "external_id": "22",
+    "group_name": "Tyomaa 1",
+    "parent_group_name": "Uusi testipaikka",
+    "parent_group_external_id": "2"
+  },
+  {
+    "external_id": "35",
+    "group_name": "Varasto",
+    "parent_group_name": "Uusi testipaikka",
+    "parent_group_external_id": "2"
+  },
+  {
+    "external_id": "150",
+    "group_name": "Uusin paikka 2.2.1.",
+    "parent_group_name": "Uusi paikka 2.2.",
+    "parent_group_external_id": "149"
+  },
+  {
+    "external_id": "163",
+    "group_name": "Default location",
+    "parent_group_name": "Ullan uusi testi::tenant",
+    "parent_group_external_id": "31::tenant"
+  },
+  {
+    "external_id": "168",
+    "group_name": "testipaikka",
+    "parent_group_name": "Tyomaa 2",
+    "parent_group_external_id": "36"
+  },
+  {
+    "external_id": "159",
+    "group_name": "Muutoksen lokakuu",
+    "parent_group_name": "Testitestiasiakas Oyj::tenant",
+    "parent_group_external_id": "1::tenant"
+  },
+  {
+    "external_id": "74",
+    "group_name": "Testiasiakas Oy",
+    "parent_group_name": "Testitestiasiakas Oyj::tenant",
+    "parent_group_external_id": "1::tenant"
+  },
+  {
+    "external_id": "186",
+    "group_name": "Testipäivä 170124",
+    "parent_group_name": "Testitestiasiakas Oyj::tenant",
+    "parent_group_external_id": "1::tenant"
+  },
+  {
+    "external_id": "138",
+    "group_name": "Valmistuneet työmaat",
+    "parent_group_name": "Testitestiasiakas Oyj::tenant",
+    "parent_group_external_id": "1::tenant"
+  },
+  {
+    "external_id": "36",
+    "group_name": "Tyomaa 2",
+    "parent_group_name": "Testipaikka",
+    "parent_group_external_id": "1"
+  },
+  {
+    "external_id": "77",
+    "group_name": "Hiekkalaatikko",
+    "parent_group_name": "Testimesta",
+    "parent_group_external_id": "75"
+  },
+  {
+    "external_id": "78",
+    "group_name": "Keinumaailma",
+    "parent_group_name": "Testimesta",
+    "parent_group_external_id": "75"
+  },
+  {
+    "external_id": "76",
+    "group_name": "Leikkikehä",
+    "parent_group_name": "Testimesta",
+    "parent_group_external_id": "75"
+  },
+  {
+    "external_id": "114",
+    "group_name": "Paikka 2.1 *¨*",
+    "parent_group_name": "Testilokaatio 2.0",
+    "parent_group_external_id": "108"
+  },
+  {
+    "external_id": "149",
+    "group_name": "Uusi paikka 2.2.",
+    "parent_group_name": "Testilokaatio 2.0",
+    "parent_group_external_id": "108"
+  },
+  {
+    "external_id": "87",
+    "group_name": "Head Office",
+    "parent_group_name": "Testiasiakas Oy",
+    "parent_group_external_id": "74"
+  },
+  {
+    "external_id": "86",
+    "group_name": "Riskipäälliköt",
+    "parent_group_name": "Testiasiakas Oy",
+    "parent_group_external_id": "74"
+  },
+  {
+    "external_id": "184",
+    "group_name": "Testi joulukuu",
+    "parent_group_name": "Testiasiakas Oy",
+    "parent_group_external_id": "74"
+  },
+  {
+    "external_id": "1",
+    "group_name": "Testipaikka",
+    "parent_group_name": "Testiasiakas Oy",
+    "parent_group_external_id": "74"
+  },
+  {
+    "external_id": "2",
+    "group_name": "Uusi testipaikka",
+    "parent_group_name": "Testiasiakas Oy",
+    "parent_group_external_id": "74"
+  },
+  {
+    "external_id": "177",
+    "group_name": "kakkulaari",
+    "parent_group_name": "Testiasiakas 2::tenant",
+    "parent_group_external_id": "25::tenant"
+  },
+  {
+    "external_id": "75",
+    "group_name": "Testimesta",
+    "parent_group_name": "Testiasiakas 2::tenant",
+    "parent_group_external_id": "25::tenant"
+  },
+  {
+    "external_id": "85",
+    "group_name": "Testorganisation 1",
+    "parent_group_name": "Testiasiakas 2::tenant",
+    "parent_group_external_id": "25::tenant"
+  },
+  {
+    "external_id": "189",
+    "group_name": "Paikka",
+    "parent_group_name": "Testi 1::tenant",
+    "parent_group_external_id": "66::tenant"
+  },
+  {
+    "external_id": "92",
+    "group_name": "Laitevarasto",
+    "parent_group_name": "Testauskeskus",
+    "parent_group_external_id": "90"
+  },
+  {
+    "external_id": "91",
+    "group_name": "Pienenpieni ja erittäin pitkäniminen testauspiste?! Pienenpieni ja erittäin pitkäniminen testauspiste?!Pienenpieni ja erittäin pitkäniminen testauspis",
+    "parent_group_name": "Testauskeskus",
+    "parent_group_external_id": "90"
+  },
+  {
+    "external_id": "98",
+    "group_name": "Kalakauppa",
+    "parent_group_name": "test",
+    "parent_group_external_id": "97"
+  },
+  {
+    "external_id": "116",
+    "group_name": "Mikon testi",
+    "parent_group_name": "Riskipäälliköt",
+    "parent_group_external_id": "86"
+  },
+  {
+    "external_id": "115",
+    "group_name": "Riskipaikka 1",
+    "parent_group_name": "Riskipäälliköt",
+    "parent_group_external_id": "86"
+  },
+  {
+    "external_id": "137",
+    "group_name": "Riskipaikka 1",
+    "parent_group_name": "Riskipäälliköt",
+    "parent_group_external_id": "86"
+  },
+  {
+    "external_id": "160",
+    "group_name": "Uusin paikka, versio 2.3.0",
+    "parent_group_name": "Paikka roolitesti, alempi",
+    "parent_group_external_id": "153"
+  },
+  {
+    "external_id": "153",
+    "group_name": "Paikka roolitesti, alempi",
+    "parent_group_name": "Paikka roolitesti",
+    "parent_group_external_id": "152"
+  },
+  {
+    "external_id": "94",
+    "group_name": "Keskitason toimipiste",
+    "parent_group_name": "Päätoimipaikka",
+    "parent_group_external_id": "89"
+  },
+  {
+    "external_id": "90",
+    "group_name": "Testauskeskus",
+    "parent_group_name": "Päätoimipaikka",
+    "parent_group_external_id": "89"
+  },
+  {
+    "external_id": "158",
+    "group_name": "Test Location",
+    "parent_group_name": "Oskar Test::tenant",
+    "parent_group_external_id": "29::tenant"
+  },
+  {
+    "external_id": "185",
+    "group_name": "TestiOne",
+    "parent_group_name": "Organisation Y",
+    "parent_group_external_id": "182"
+  },
+  {
+    "external_id": "180",
+    "group_name": "2.5.11",
+    "parent_group_name": "OX Testausyritys::tenant",
+    "parent_group_external_id": "26::tenant"
+  },
+  {
+    "external_id": "171",
+    "group_name": "2.5.2 lokaatio",
+    "parent_group_name": "OX Testausyritys::tenant",
+    "parent_group_external_id": "26::tenant"
+  },
+  {
+    "external_id": "93",
+    "group_name": "Keskusvarasto 1",
+    "parent_group_name": "OX Testausyritys::tenant",
+    "parent_group_external_id": "26::tenant"
+  },
+  {
+    "external_id": "187",
+    "group_name": "newTopLeve",
+    "parent_group_name": "OX Testausyritys::tenant",
+    "parent_group_external_id": "26::tenant"
+  },
+  {
+    "external_id": "89",
+    "group_name": "Päätoimipaikka",
+    "parent_group_name": "OX Testausyritys::tenant",
+    "parent_group_external_id": "26::tenant"
+  },
+  {
+    "external_id": "152",
+    "group_name": "Paikka roolitesti",
+    "parent_group_name": "OX Testausyritys::tenant",
+    "parent_group_external_id": "26::tenant"
+  },
+  {
+    "external_id": "100",
+    "group_name": "asd",
+    "parent_group_name": "OX Audit::tenant",
+    "parent_group_external_id": "27::tenant"
+  },
+  {
+    "external_id": "97",
+    "group_name": "test",
+    "parent_group_name": "OX Audit::tenant",
+    "parent_group_external_id": "27::tenant"
+  },
+  {
+    "external_id": "188",
+    "group_name": "nextLevel",
+    "parent_group_name": "newTopLeve",
+    "parent_group_external_id": "187"
+  },
+  {
+    "external_id": "84",
+    "group_name": "Autot",
+    "parent_group_name": "Leikkikehä",
+    "parent_group_external_id": "76"
+  },
+  {
+    "external_id": "83",
+    "group_name": "Nuket",
+    "parent_group_name": "Leikkikehä",
+    "parent_group_external_id": "76"
+  },
+  {
+    "external_id": "108",
+    "group_name": "Testilokaatio 2.0",
+    "parent_group_name": "Keskusvarasto 1",
+    "parent_group_external_id": "93"
+  },
+  {
+    "external_id": "95",
+    "group_name": "#Erikoismerkki,;?   {\"__\"} ¨¨",
+    "parent_group_name": "Keskitason toimipiste",
+    "parent_group_external_id": "94"
+  },
+  {
+    "external_id": "80",
+    "group_name": "Lautakeinut",
+    "parent_group_name": "Keinumaailma",
+    "parent_group_external_id": "78"
+  },
+  {
+    "external_id": "79",
+    "group_name": "Vauvakeinut",
+    "parent_group_name": "Keinumaailma",
+    "parent_group_external_id": "78"
+  },
+  {
+    "external_id": "99",
+    "group_name": "asd",
+    "parent_group_name": "Kalakauppa",
+    "parent_group_external_id": "98"
+  },
+  {
+    "external_id": "134",
+    "group_name": "sdfd",
+    "parent_group_name": "Kalakauppa",
+    "parent_group_external_id": "98"
+  },
+  {
+    "external_id": "178",
+    "group_name": "testitalo",
+    "parent_group_name": "kakkulaari",
+    "parent_group_external_id": "177"
+  },
+  {
+    "external_id": "81",
+    "group_name": "Ämpäritehdas",
+    "parent_group_name": "Hiekkalaatikko",
+    "parent_group_external_id": "77"
+  },
+  {
+    "external_id": "82",
+    "group_name": "Lapiotehdas",
+    "parent_group_name": "Hiekkalaatikko",
+    "parent_group_external_id": "77"
+  },
+  {
+    "external_id": "181",
+    "group_name": "New location",
+    "parent_group_name": "Fooly::tenant",
+    "parent_group_external_id": "45::tenant"
+  },
+  {
+    "external_id": "102",
+    "group_name": "asd",
+    "parent_group_name": "asd",
+    "parent_group_external_id": "101"
+  },
+  {
+    "external_id": "103",
+    "group_name": "asd",
+    "parent_group_name": "asd",
+    "parent_group_external_id": "102"
+  },
+  {
+    "external_id": "101",
+    "group_name": "asd",
+    "parent_group_name": "asd",
+    "parent_group_external_id": "100"
+  },
+  {
+    "external_id": "104",
+    "group_name": "asd",
+    "parent_group_name": "asd",
+    "parent_group_external_id": "103"
+  },
+  {
+    "external_id": "105",
+    "group_name": "asd",
+    "parent_group_name": "asd",
+    "parent_group_external_id": "104"
+  },
+  {
+    "external_id": "107",
+    "group_name": "asd",
+    "parent_group_name": "asd",
+    "parent_group_external_id": "106"
+  },
+  {
+    "external_id": "106",
+    "group_name": "asd",
+    "parent_group_name": "asd",
+    "parent_group_external_id": "105"
+  },
+  {
+    "external_id": "140",
+    "group_name": "kkkkk",
+    "parent_group_name": "asd",
+    "parent_group_external_id": "107"
+  },
+  {
+    "external_id": "170",
+    "group_name": "Oletuspaikka",
+    "parent_group_name": "Annin UAT-Yritys::tenant",
+    "parent_group_external_id": "32::tenant"
+  },
+  {
+    "external_id": "183",
+    "group_name": "Organisation X",
+    "parent_group_name": "Acme corporation::tenant",
+    "parent_group_external_id": "44::tenant"
+  },
+  {
+    "external_id": "182",
+    "group_name": "Organisation Y",
+    "parent_group_name": "Acme corporation::tenant",
+    "parent_group_external_id": "44::tenant"
+  }
+]

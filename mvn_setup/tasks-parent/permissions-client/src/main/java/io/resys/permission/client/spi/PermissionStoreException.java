@@ -1,4 +1,4 @@
-package io.resys.userprofile.client.spi.store;
+package io.resys.permission.client.spi;
 
 /*-
  * #%L
@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import io.resys.permission.client.spi.PermissionStore.PermissionStoreConfig;
 import io.resys.thena.docdb.api.actions.CommitActions.CommitResultEnvelope;
 import io.resys.thena.docdb.api.actions.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
@@ -39,7 +40,7 @@ import lombok.RequiredArgsConstructor;
 
 
 
-public class DocumentStoreException extends RuntimeException {
+public class PermissionStoreException extends RuntimeException {
 
   private static final long serialVersionUID = 7058468238867536222L;
 
@@ -47,13 +48,14 @@ public class DocumentStoreException extends RuntimeException {
   private final JsonObject target;
   private final List<DocumentExceptionMsg> messages = new ArrayList<>();
 
-  public DocumentStoreException(String code, DocumentExceptionMsg ... msg) {
+  
+  public PermissionStoreException(String code, DocumentExceptionMsg ... msg) {
     super(new ExMessageFormatter(code, null, msg).format());
     this.code = code;
     this.messages.addAll(Arrays.asList(msg));
     this.target = null;
   }
-  public DocumentStoreException(String code, JsonObject target, DocumentExceptionMsg ... msg) {
+  public PermissionStoreException(String code, JsonObject target, DocumentExceptionMsg ... msg) {
     super(new ExMessageFormatter(code, target, msg).format());
     this.code = code;
     this.messages.addAll(Arrays.asList(msg));
@@ -104,7 +106,7 @@ public class DocumentStoreException extends RuntimeException {
     private final String id;
     private final ImmutableDocumentExceptionMsg.Builder msg = ImmutableDocumentExceptionMsg.builder();
     
-    public Builder add(DocumentConfig config, QueryEnvelope<?> envelope) {
+    public Builder add(PermissionStoreConfig config, QueryEnvelope<?> envelope) {
       msg.id(envelope.getRepo() == null ? config.getRepoId() : envelope.getRepo().getName())
       .value(envelope.getRepo() == null ? "no-repo" : envelope.getRepo().getId())
       .addAllArgs(envelope.getMessages().stream().map(message->message.getText()).collect(Collectors.toList()));
@@ -115,8 +117,8 @@ public class DocumentStoreException extends RuntimeException {
       return this;
     }
     
-    public DocumentStoreException build() {
-      return new DocumentStoreException(id, msg.build());
+    public PermissionStoreException build() {
+      return new PermissionStoreException(id, msg.build());
     }
   }
 }

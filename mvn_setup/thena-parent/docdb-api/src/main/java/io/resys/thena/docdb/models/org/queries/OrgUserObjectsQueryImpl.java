@@ -6,6 +6,7 @@ import io.resys.thena.docdb.api.actions.OrgQueryActions.UserObjectsQuery;
 import io.resys.thena.docdb.api.models.ImmutableQueryEnvelope;
 import io.resys.thena.docdb.api.models.ImmutableQueryEnvelopeList;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
+import io.resys.thena.docdb.api.models.QueryEnvelope.DocNotFoundException;
 import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.docdb.api.models.QueryEnvelopeList;
 import io.resys.thena.docdb.api.models.Repo;
@@ -43,7 +44,7 @@ public class OrgUserObjectsQueryImpl implements UserObjectsQuery {
         .onItem().transformToUni((OrgQueries repo) -> repo.users().getById(userId))
         .onItem().transformToUni(data -> {
           if(data == null) {
-            return Uni.createFrom().item(docNotFound(existing));
+            return Uni.createFrom().item(docNotFound(existing, userId, new DocNotFoundException()));
           }
           return getUserObject(existing, data);
         });
@@ -80,10 +81,10 @@ public class OrgUserObjectsQueryImpl implements UserObjectsQuery {
         .build());
   }
 
-  private <T extends ThenaEnvelope.ThenaObjects> QueryEnvelope<T> docNotFound(Repo existing) {
+  private <T extends ThenaEnvelope.ThenaObjects> QueryEnvelope<T> docNotFound(Repo existing, String userId, DocNotFoundException ex) {
     final var msg = new StringBuilder()
-        .append("User not found by given id, from repo: '").append(existing.getId()).append("'!")
+        .append("User not found by given id = '").append(userId).append("', from repo: '").append(existing.getId()).append("'!")
         .toString();
-    return QueryEnvelope.docNotFound(existing, log, msg);
+    return QueryEnvelope.docNotFound(existing, log, msg, ex);
   }
 }

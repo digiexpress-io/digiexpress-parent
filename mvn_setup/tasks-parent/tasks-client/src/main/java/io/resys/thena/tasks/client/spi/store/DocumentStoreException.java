@@ -26,14 +26,13 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import org.immutables.value.Value;
-
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
 import io.resys.thena.docdb.api.actions.CommitActions.CommitResultEnvelope;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
 import io.resys.thena.docdb.api.models.ThenaGitObjects.PullObject;
 import io.resys.thena.docdb.api.models.ThenaGitObjects.PullObjects;
+import io.resys.thena.docdb.spi.ExMessageFormatter;
+import io.resys.thena.docdb.spi.ExMessageFormatter.DocumentExceptionMsg;
+import io.resys.thena.docdb.spi.ImmutableDocumentExceptionMsg;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
@@ -47,12 +46,6 @@ public class DocumentStoreException extends RuntimeException {
   private final JsonObject target;
   private final List<DocumentExceptionMsg> messages = new ArrayList<>();
   
-  @Value.Immutable @JsonSerialize(as = ImmutableDocumentExceptionMsg.class)
-  public interface DocumentExceptionMsg {
-    String getId();
-    String getValue();
-    List<String> getArgs();
-  }
   
   public DocumentStoreException(String code, DocumentExceptionMsg ... msg) {
     super(new ExMessageFormatter(code, null, msg).format());

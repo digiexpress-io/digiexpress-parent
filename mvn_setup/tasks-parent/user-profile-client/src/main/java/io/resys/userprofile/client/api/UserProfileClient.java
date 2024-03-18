@@ -50,8 +50,7 @@ public interface UserProfileClient {
     Uni<UserProfileClient> delete();
     Uni<UserProfileClient> create();
     Uni<UserProfileClient> createIfNot();
-    
-    Uni<Optional<UserProfileClient>> get(String repoId);
+    Uni<Optional<UserProfileClient>> get();
   } 
 
 }

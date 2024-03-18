@@ -1,8 +1,6 @@
 import { NotificationSetting, UserProfile, UserProfileDescriptor } from './profile-types';
 
 
-
-
 export class ImmutableUserProfileDescriptor implements UserProfileDescriptor {
   private _entry: UserProfile;
   private _created: Date;

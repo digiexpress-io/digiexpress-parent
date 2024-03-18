@@ -8,14 +8,15 @@ import io.resys.thena.docdb.api.actions.OrgQueryActions.UserHierarchyQuery;
 import io.resys.thena.docdb.api.models.ImmutableQueryEnvelope;
 import io.resys.thena.docdb.api.models.ImmutableQueryEnvelopeList;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
+import io.resys.thena.docdb.api.models.QueryEnvelope.DocNotFoundException;
 import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.docdb.api.models.QueryEnvelopeList;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.ThenaEnvelope;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserHierarchyEntry;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRoleFlattened;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUser;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserFlattened;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserHierarchyEntry;
 import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgUserHierarchy;
 import io.resys.thena.docdb.models.org.OrgQueries;
 import io.resys.thena.docdb.models.org.userhierarchy.UserTreeBuilder;
@@ -72,7 +73,7 @@ public class OrgUserHierarchyQueryImpl implements UserHierarchyQuery {
 	private Uni<QueryEnvelope<OrgUserHierarchy>> getUser(OrgQueries org, Repo existing, String userId) {
     return org.users().getStatusById(userId).onItem().transformToUni(user -> {
       if(user == null) {
-        return Uni.createFrom().item(docNotFound(existing));
+        return Uni.createFrom().item(docNotFound(existing, userId, new DocNotFoundException()));
       }
       return Uni.combine().all().unis(
           org.users().findAllRolesByUserId(user.getId()),
@@ -108,10 +109,13 @@ public class OrgUserHierarchyQueryImpl implements UserHierarchyQuery {
     return builder.objects(Collections.unmodifiableList(objects)).build();
   }
   
-  private <T extends ThenaEnvelope.ThenaObjects> QueryEnvelope<T> docNotFound(Repo existing) {
+  private <T extends ThenaEnvelope.ThenaObjects> QueryEnvelope<T> docNotFound(
+      Repo existing, String userId,
+      DocNotFoundException ex
+      ) {
     final var msg = new StringBuilder()
-        .append("User groups and roles not found by given id, from repo: '").append(existing.getId()).append("'!")
+        .append("User groups and roles not found by given id = '").append(userId).append("', from repo: '").append(existing.getId()).append("'!")
         .toString();
-    return QueryEnvelope.docNotFound(existing, log, msg);
+    return QueryEnvelope.docNotFound(existing, log, msg, ex);
   }
 }

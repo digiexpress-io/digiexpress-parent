@@ -1,10 +1,8 @@
-import type { UserProfileAndOrg, UserProfileStore, UserProfile, UserProfileUpdateCommand } from './profile-types';
-
+import type { UserProfileStore, UserProfile, UserProfileUpdateCommand } from './profile-types';
 
 export interface UserProfileStoreConfig {
   fetch<T>(path: string, init: RequestInit & { notFound?: () => T, repoType: 'USER_PROFILE' }): Promise<T>;
 }
-
 
 export class ImmutableUserProfileStore implements UserProfileStore {
   private _store: UserProfileStoreConfig;

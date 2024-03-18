@@ -6,8 +6,8 @@ import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.support.RepoAssert;
 import io.resys.userprofile.client.api.UserProfileClient;
 import io.resys.userprofile.client.spi.actions.CreateUserProfileActionImpl;
-import io.resys.userprofile.client.spi.actions.UserProfileQueryImpl;
 import io.resys.userprofile.client.spi.actions.UpdateUserProfileActionImpl;
+import io.resys.userprofile.client.spi.actions.UserProfileQueryImpl;
 import io.resys.userprofile.client.spi.store.DocumentStore;
 import io.resys.userprofile.client.spi.store.MainBranch;
 import io.smallrye.mutiny.Uni;
@@ -62,8 +62,7 @@ public class UserProfileClientImpl implements UserProfileClient {
         return this;
       }
       @Override
-      public Uni<Optional<UserProfileClient>> get(String customerId) {
-        RepoAssert.notEmpty(customerId, () -> "customerId must be defined!");
+      public Uni<Optional<UserProfileClient>> get() {
         RepoAssert.notEmpty(repoName, () -> "repoName must be defined!");
         
         final var client = ctx.getConfig().getClient();

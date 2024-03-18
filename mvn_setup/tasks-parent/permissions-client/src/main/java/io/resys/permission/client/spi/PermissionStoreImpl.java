@@ -1,4 +1,4 @@
-package io.resys.userprofile.client.spi;
+package io.resys.permission.client.spi;
 
 import java.util.stream.Collectors;
 
@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.resys.thena.docdb.api.DocDB;
+import io.resys.thena.docdb.api.DocDB.OrgModel;
 import io.resys.thena.docdb.api.actions.RepoActions.RepoStatus;
 import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.docdb.api.models.Repo;
@@ -33,16 +34,7 @@ import io.resys.thena.docdb.api.models.Repo.RepoType;
 import io.resys.thena.docdb.spi.ImmutableDocumentExceptionMsg;
 import io.resys.thena.docdb.store.sql.DbStateSqlImpl;
 import io.resys.thena.docdb.store.sql.PgErrors;
-import io.resys.thena.docdb.support.OidUtils;
 import io.resys.thena.docdb.support.RepoAssert;
-import io.resys.userprofile.client.api.model.Document.DocumentType;
-import io.resys.userprofile.client.spi.store.DocumentConfig;
-import io.resys.userprofile.client.spi.store.DocumentConfig.DocumentAuthorProvider;
-import io.resys.userprofile.client.spi.store.DocumentConfig.DocumentGidProvider;
-import io.resys.userprofile.client.spi.store.DocumentStore;
-import io.resys.userprofile.client.spi.store.DocumentStoreException;
-import io.resys.userprofile.client.spi.store.ImmutableDocumentConfig;
-import io.resys.userprofile.client.spi.store.MainBranch;
 import io.smallrye.mutiny.Uni;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.sqlclient.PoolOptions;
@@ -56,42 +48,44 @@ import lombok.extern.slf4j.Slf4j;
 
 
 @RequiredArgsConstructor
-public class DocumentStoreImpl implements DocumentStore {
-  private final DocumentConfig config;
+public class PermissionStoreImpl implements PermissionStore {
+  private final PermissionStoreConfig config;
   
   @Override
-  public DocumentStore withRepoId(String repoId) {
-    return new DocumentStoreImpl(ImmutableDocumentConfig.builder().from(config).repoId(repoId).build());
+  public OrgModel getOrg() {
+    return config.getClient().org();
   }
-  
+  @Override
+  public PermissionStore withRepoId(String repoId) {
+    return new PermissionStoreImpl(ImmutablePermissionStoreConfig.builder().from(config).repoId(repoId).build());
+  }
   @Override
   public Uni<Repo> getRepo() {
     final var client = config.getClient();
     return client.repo().projectsQuery().id(config.getRepoId()).get();
   }
-  @Override public DocumentConfig getConfig() { return config; }
-  @Override public DocumentRepositoryQuery query() {
-    return new DocumentRepositoryQuery() {
-      private String repoName, headName;
-      @Override public DocumentRepositoryQuery repoName(String repoName) { this.repoName = repoName; return this; }
-      @Override public DocumentRepositoryQuery headName(String headName) { this.headName = headName; return this; }
-      @Override public Uni<DocumentStore> create() { return createRepo(repoName, headName); }
-      @Override public DocumentStore build() { return createClientStore(repoName, headName); }
-      @Override public Uni<DocumentStore> createIfNot() { return createRepoOrGetRepo(repoName, headName); }
-      @Override public Uni<DocumentStore> delete() { return deleteRepo(repoName, headName); }
+  @Override public PermissionStoreConfig getConfig() { return config; }
+  @Override public PermissionRepositoryQuery query() {
+    return new PermissionRepositoryQuery() {
+      private String repoName;
+      @Override public PermissionRepositoryQuery repoName(String repoName) { this.repoName = repoName; return this; }
+      @Override public Uni<PermissionStore> create() { return createRepo(repoName); }
+      @Override public PermissionStore build() { return createClientStore(repoName); }
+      @Override public Uni<PermissionStore> createIfNot() { return createRepoOrGetRepo(repoName); }
+      @Override public Uni<PermissionStore> delete() { return deleteRepo(repoName); }
       @Override public Uni<Void> deleteAll() { return deleteRepos(); }
     };
   }
   
-  private Uni<DocumentStore> createRepoOrGetRepo(String repoName, String headName) {
+  private Uni<PermissionStore> createRepoOrGetRepo(String repoName) {
     final var client = config.getClient();
     
     return client.repo().projectsQuery().id(repoName).get()
         .onItem().transformToUni(repo -> {        
           if(repo == null) {
-            return createRepo(repoName, headName); 
+            return createRepo(repoName); 
           }
-          return Uni.createFrom().item(createClientStore(repoName, headName));
+          return Uni.createFrom().item(createClientStore(repoName));
     });
   }
   
@@ -111,15 +105,15 @@ public class DocumentStoreImpl implements DocumentStore {
       .onItem().transformToUni((junk) -> Uni.createFrom().voidItem());
   }
   
-  private Uni<DocumentStore> deleteRepo(String repoName, String headName) {
+  private Uni<PermissionStore> deleteRepo(String repoName) {
     RepoAssert.notNull(repoName, () -> "repoName must be defined!");
     final var client = config.getClient();
-    final var existingRepo = client.git().project().projectName(repoName).get();
+    final var existingRepo = client.org().project().projectName(repoName).get();
     
     
     return existingRepo.onItem().transformToUni((repoResult) -> {
       if(repoResult.getStatus() != QueryEnvelopeStatus.OK) {
-        throw new DocumentStoreException("CRM_REPO_GET_FOR_DELETE_FAIL", 
+        throw new PermissionStoreException("PERMISSION_REPO_GET_FOR_DELETE_FAIL", 
             ImmutableDocumentExceptionMsg.builder()
             .id(repoResult.getStatus().toString())
             .value(repoName)
@@ -129,21 +123,21 @@ public class DocumentStoreImpl implements DocumentStore {
       
       final var repoId = repoResult.getRepo().getId();
       final var rev = repoResult.getRepo().getRev();
-      final var docStore = createClientStore(repoName, headName);
+      final var docStore = createClientStore(repoName);
       
       return client.repo().projectsQuery().id(repoId).rev(rev).delete()
           .onItem().transform(junk -> docStore);
     });
   }
     
-  private Uni<DocumentStore> createRepo(String repoName, String headName) {
+  private Uni<PermissionStore> createRepo(String repoName) {
     RepoAssert.notNull(repoName, () -> "repoName must be defined!");
     
     final var client = config.getClient();
-    final var newRepo = client.repo().projectBuilder().name(repoName, RepoType.doc).build();
+    final var newRepo = client.repo().projectBuilder().name(repoName, RepoType.org).build();
     return newRepo.onItem().transform((repoResult) -> {
       if(repoResult.getStatus() != RepoStatus.OK) {
-        throw new DocumentStoreException("CRM_REPO_CREATE_FAIL", 
+        throw new PermissionStoreException("PERMISSION_REPO_CREATE_FAIL", 
             ImmutableDocumentExceptionMsg.builder()
             .id(repoResult.getStatus().toString())
             .value(repoName)
@@ -151,16 +145,15 @@ public class DocumentStoreImpl implements DocumentStore {
             .build()); 
       }
       
-      return createClientStore(repoName, headName);
+      return createClientStore(repoName);
     });
   }
   
-  private DocumentStore createClientStore(String repoName, String headName) {
+  private PermissionStore createClientStore(String repoName) {
     RepoAssert.notNull(repoName, () -> "repoName must be defined!");
-    return new DocumentStoreImpl(ImmutableDocumentConfig.builder()
+    return new PermissionStoreImpl(ImmutablePermissionStoreConfig.builder()
         .from(config)
         .repoId(repoName)
-        .branchName(headName == null ? config.getBranchName() : headName)
         .build());
     
   }
@@ -175,10 +168,8 @@ public class DocumentStoreImpl implements DocumentStore {
   @Data
   public static class Builder {
     private String repoName;
-    private String headName;
     private ObjectMapper objectMapper;
-    private DocumentGidProvider gidProvider;
-    private DocumentAuthorProvider authorProvider;
+    private PermissionAuthorProvider authorProvider;
     private io.vertx.mutiny.pgclient.PgPool pgPool;
     private String pgHost;
     private String pgDb;
@@ -187,28 +178,17 @@ public class DocumentStoreImpl implements DocumentStore {
     private String pgPass;
     private Integer pgPoolSize;
     
-    private DocumentGidProvider getGidProvider() {
-      return this.gidProvider != null ? this.gidProvider : new DocumentGidProvider() {
-        @Override public String getNextVersion(DocumentType entity) { return OidUtils.gen(); }
-        @Override public String getNextId(DocumentType entity) { return OidUtils.gen(); }
-      };
-    }
-    
-    private DocumentAuthorProvider getAuthorProvider() {
+    private PermissionAuthorProvider getAuthorProvider() {
       return this.authorProvider == null ? ()-> "not-configured" : this.authorProvider;
     } 
     
-    public DocumentStoreImpl build() {
+    public PermissionStoreImpl build() {
       RepoAssert.notNull(repoName, () -> "repoName must be defined!");
-    
-      final var headName = this.headName == null ? MainBranch.HEAD_NAME: this.headName;
       if(log.isDebugEnabled()) {
         log.debug("""
           Configuring Thena:
             repoName: {}
-            headName: {}
             objectMapper: {}
-            gidProvider: {}
             authorProvider: {}
             pgPool: {}
             pgPoolSize: {}
@@ -219,9 +199,7 @@ public class DocumentStoreImpl implements DocumentStore {
             pgPass: {}
           """,
           this.repoName,
-          headName,
           this.objectMapper == null ? "configuring" : "provided",
-          this.gidProvider == null ? "configuring" : "provided",
           this.authorProvider == null ? "configuring" : "provided",
           this.pgPool == null ? "configuring" : "provided",
           this.pgPoolSize,
@@ -257,13 +235,11 @@ public class DocumentStoreImpl implements DocumentStore {
         thena = DbStateSqlImpl.create().client(pgPool).db(repoName).errorHandler(new PgErrors()).build();
       }
       
-      final DocumentConfig config = ImmutableDocumentConfig.builder()
-          .client(thena).repoId(repoName).branchName(headName)
-          .gid(getGidProvider())
+      final PermissionStoreConfig config = ImmutablePermissionStoreConfig.builder()
+          .client(thena).repoId(repoName)
           .author(getAuthorProvider())
           .build();
-      return new DocumentStoreImpl(config);
+      return new PermissionStoreImpl(config);
     }
   }
-
 }

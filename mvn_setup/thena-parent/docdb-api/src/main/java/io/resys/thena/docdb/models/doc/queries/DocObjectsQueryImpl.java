@@ -16,6 +16,7 @@ import io.resys.thena.docdb.api.models.ImmutableDocObject;
 import io.resys.thena.docdb.api.models.ImmutableDocObjects;
 import io.resys.thena.docdb.api.models.ImmutableQueryEnvelope;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
+import io.resys.thena.docdb.api.models.QueryEnvelope.DocNotFoundException;
 import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.ThenaDocObject.Doc;
@@ -73,7 +74,7 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
           .collect().asList()
           .onItem().transform(data -> {
             if(data.isEmpty()) {
-              return docNotFound(existing);
+              return docNotFound(existing, new DocNotFoundException());
             }
             final var docIds = data.stream().map(d -> d.getDocId()).collect(Collectors.toSet());
             if(docIds.size() > 1) {
@@ -218,11 +219,11 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
     .build();
   }
   
-  private <T extends ThenaEnvelope.ThenaObjects> QueryEnvelope<T> docNotFound(Repo existing) {
+  private <T extends ThenaEnvelope.ThenaObjects> QueryEnvelope<T> docNotFound(Repo existing, DocNotFoundException ex) {
     final var msg = new StringBuilder()
       .append("Document not found by given id, from repo: '").append(existing.getId()).append("'!")
       .toString();
-    return QueryEnvelope.docNotFound(existing, log, msg);
+    return QueryEnvelope.docNotFound(existing, log, msg, ex);
   }
   
   private <T extends ThenaEnvelope.ThenaObjects> QueryEnvelope<T> docUnexpected(Repo existing, Set<String> unexpected) {

@@ -120,11 +120,14 @@ public interface QueryEnvelope<T extends ThenaObjects> extends ThenaEnvelope {
         .build();
   }
   
-  public static <T extends ThenaEnvelope.ThenaObjects> QueryEnvelope<T> docNotFound(Repo existing, Logger logger, String text) {
+  public static <T extends ThenaEnvelope.ThenaObjects> QueryEnvelope<T> docNotFound(
+      Repo existing, Logger logger, String text,
+      DocNotFoundException ex
+    ) {
     return ImmutableQueryEnvelope.<T>builder()
       .repo(existing)
       .status(QueryEnvelopeStatus.ERROR)
-      .addMessages(ImmutableMessage.builder().text(text).build())
+      .addMessages(ImmutableMessage.builder().exception(ex).text(text).build())
       .build();
   }
   
@@ -145,5 +148,10 @@ public interface QueryEnvelope<T extends ThenaObjects> extends ThenaEnvelope {
       .addMessages(ImmutableMessage.builder().text(msg).exception(t).build())
       .addMessages(ImmutableMessage.builder().text(t.getMessage()).build())
       .build();
+  }
+  
+  public static class DocNotFoundException extends RuntimeException {
+    private static final long serialVersionUID = 5293530111825347496L;
+    
   }
 }

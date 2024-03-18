@@ -1,6 +1,5 @@
 package io.resys.permission.client.api;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -66,19 +65,16 @@ public interface PermissionClient {
   interface PermissionQuery {
     Uni<Permission> get(String permissionId);    
     Uni<List<Permission>> findAllPermissions();
-    Uni<List<Permission>> findPermissionsByIds(Collection<String> permissionIds);
   }
   
   interface RoleQuery {
     Uni<Role> get(String roleId);  
     Uni<List<Role>> findAllRoles();
-    Uni<List<Role>> findRolesByIds(Collection<String> roleIds);
   }
   
   interface PrincipalQuery {
     Uni<Principal> get(String principalId);  
     Uni<List<Principal>> findAllPrincipals();
-    Uni<List<Principal>> findPrincipalsByIds(Collection<String> principalIds);
   }
   
   interface RoleHierarchyQuery {
@@ -94,7 +90,7 @@ public interface PermissionClient {
     Uni<PermissionClient> create();
     Uni<PermissionClient> createIfNot();
     
-    Uni<Optional<PermissionClient>> get(String repoId);
+    Uni<Optional<PermissionClient>> get();
   } 
 }
 

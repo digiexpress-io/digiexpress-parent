@@ -1,4 +1,4 @@
-package io.resys.userprofile.client.spi.store;
+package io.resys.thena.docdb.spi;
 
 /*-
  * #%L
@@ -21,9 +21,13 @@ package io.resys.userprofile.client.spi.store;
  */
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
-import io.resys.userprofile.client.spi.store.DocumentStoreException.DocumentExceptionMsg;
+import org.immutables.value.Value;
+
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
@@ -33,6 +37,13 @@ public class ExMessageFormatter {
   private final JsonObject target;
   private final DocumentExceptionMsg[] msg;
   private final StringBuilder result = new StringBuilder(System.lineSeparator()); 
+  
+  @Value.Immutable @JsonSerialize(as = ImmutableDocumentExceptionMsg.class)
+  public interface DocumentExceptionMsg {
+    String getId();
+    String getValue();
+    List<String> getArgs();
+  }
   
   public String format() {
     result.append("Store operation failed with:").append(System.lineSeparator());
