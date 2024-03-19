@@ -81,7 +81,7 @@ public class HierarchicalOrgGroupTest extends DbTestTemplate {
 
     
     // user 2 sanity
-    var groupHierarchy = getClient().org().find().groupHierarchyQuery()
+    var groupHierarchy = getClient().org().find().partyHierarchyQuery()
         .repoId(repo.getRepo().getId())
         .get(child1_2_1.getId()).await().atMost(Duration.ofMinutes(1)).getObjects();
     
@@ -118,7 +118,7 @@ group-1
         .build().await().atMost(Duration.ofMinutes(1))
         .getUser();
     
-    groupHierarchy = getClient().org().find().groupHierarchyQuery()
+    groupHierarchy = getClient().org().find().partyHierarchyQuery()
         .repoId(repo.getRepo().getId())
         .get(child1_2_2.getId()).await().atMost(Duration.ofMinutes(1)).getObjects(); 
     Assertions.assertEquals("""
@@ -152,7 +152,7 @@ group-1
         .build().await().atMost(Duration.ofMinutes(1))
         .getUser();
     
-    groupHierarchy = getClient().org().find().groupHierarchyQuery()
+    groupHierarchy = getClient().org().find().partyHierarchyQuery()
         .repoId(repo.getRepo().getId())
         .get(child1_2_2.getId()).await().atMost(Duration.ofMinutes(1)).getObjects(); 
     Assertions.assertEquals("""
@@ -185,7 +185,7 @@ group-1
       .getStatus();
     Assertions.assertEquals(Repo.CommitResultStatus.NO_CHANGES, rejectNoChanges);
     
-    groupHierarchy = getClient().org().find().groupHierarchyQuery()
+    groupHierarchy = getClient().org().find().partyHierarchyQuery()
         .repoId(repo.getRepo().getId())
         .get(root2.getId()).await().atMost(Duration.ofMinutes(1)).getObjects(); 
     Assertions.assertEquals("""

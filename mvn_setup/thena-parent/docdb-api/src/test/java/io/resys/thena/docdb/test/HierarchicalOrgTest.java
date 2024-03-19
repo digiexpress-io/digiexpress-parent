@@ -47,7 +47,7 @@ public class HierarchicalOrgTest extends DbTestTemplate {
     createRoles(repo.getRepo());
     createUserGroupRoles(repo.getRepo());
     
-    final var groupHierarchy = getClient().org().find().groupHierarchyQuery()
+    final var groupHierarchy = getClient().org().find().partyHierarchyQuery()
         .repoId(repo.getRepo().getId())
         .findAll().await().atMost(Duration.ofMinutes(1));
     

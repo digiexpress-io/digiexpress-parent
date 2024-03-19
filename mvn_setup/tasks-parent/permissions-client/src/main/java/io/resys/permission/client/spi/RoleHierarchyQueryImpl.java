@@ -18,7 +18,7 @@ public class RoleHierarchyQueryImpl implements RoleHierarchyQuery {
     final var repoId = ctx.getConfig().getRepoId();
     final Uni<QueryEnvelope<RoleHierarchyContainer>> roleHierarchy = ctx.getOrg()
         .find()
-        .roleHierarchyQuery()
+        .rightHierarchyQuery()
         .repoId(repoId)
         .get(roleId, new RoleHierarchyQueryVisitor(roleId));
     

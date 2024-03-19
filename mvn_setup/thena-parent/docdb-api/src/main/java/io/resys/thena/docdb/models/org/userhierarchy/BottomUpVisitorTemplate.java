@@ -6,8 +6,8 @@ import java.util.Optional;
 
 import org.immutables.value.Value;
 
-import io.resys.thena.docdb.api.models.ImmutableOrgUserGroupStatus;
-import io.resys.thena.docdb.api.models.ImmutableOrgUserRoleStatus;
+import io.resys.thena.docdb.api.models.ImmutableOrgMemberPartyStatus;
+import io.resys.thena.docdb.api.models.ImmutableOrgMemberRightStatus;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatusType;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberHierarchyEntry;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRightFlattened;
@@ -119,7 +119,7 @@ public abstract class BottomUpVisitorTemplate<T> implements BottomUpVisitor<T> {
     }
     
     // Extract status
-    final var result = ImmutableOrgUserGroupStatus.builder()
+    final var result = ImmutableOrgMemberPartyStatus.builder()
         .groupId(value.getPartyId())
         .status(value.getPartyStatus())
         .statusId(value.getPartyStatusId())
@@ -142,7 +142,7 @@ public abstract class BottomUpVisitorTemplate<T> implements BottomUpVisitor<T> {
     }
     
     // extract status
-    final var result = ImmutableOrgUserRoleStatus.builder()
+    final var result = ImmutableOrgMemberRightStatus.builder()
         .roleId(value.getRightId())
         .status(value.getRightStatus())
         .statusId(value.getRightStatusId())
@@ -159,7 +159,7 @@ public abstract class BottomUpVisitorTemplate<T> implements BottomUpVisitor<T> {
     }
     
     // extract status
-    final var result = ImmutableOrgUserRoleStatus.builder()
+    final var result = ImmutableOrgMemberRightStatus.builder()
         .roleId(value.getRightId())
         .status(value.getRightStatus())
         .statusId(value.getRightStatusId())

@@ -3,13 +3,13 @@ package io.resys.thena.docdb.models.org.queries;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import io.resys.thena.docdb.api.actions.OrgQueryActions.GroupHierarchyQuery;
+import io.resys.thena.docdb.api.actions.OrgQueryActions.PartyHierarchyQuery;
 import io.resys.thena.docdb.api.models.ImmutableQueryEnvelope;
 import io.resys.thena.docdb.api.models.ImmutableQueryEnvelopeList;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
 import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.docdb.api.models.QueryEnvelopeList;
-import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgGroupHierarchy;
+import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgPartyHierarchy;
 import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgProjectObjects;
 import io.resys.thena.docdb.models.org.anytree.AnyTreeContainerContextImpl;
 import io.resys.thena.docdb.models.org.anytree.AnyTreeContainerImpl;
@@ -23,18 +23,18 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
-public class OrgGroupHierarchyQueryImpl implements GroupHierarchyQuery {
+public class OrgGroupHierarchyQueryImpl implements PartyHierarchyQuery {
   private final DbState state;
   private String repoId;
   
   @Override
-  public GroupHierarchyQuery repoId(String repoId) {
+  public PartyHierarchyQuery repoId(String repoId) {
     RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
     this.repoId = repoId;
     return this;
   }
   @Override
-  public Uni<QueryEnvelope<OrgGroupHierarchy>> get(String groupIdOrNameOrExternalId) {
+  public Uni<QueryEnvelope<OrgPartyHierarchy>> get(String groupIdOrNameOrExternalId) {
     RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
     
     return new OrgProjectQueryImpl(state).projectName(repoId).get()
@@ -44,7 +44,7 @@ public class OrgGroupHierarchyQueryImpl implements GroupHierarchyQuery {
           }
           
           try {
-            final QueryEnvelope<OrgGroupHierarchy> success = createGroupHierarchy(resp, groupIdOrNameOrExternalId);
+            final QueryEnvelope<OrgPartyHierarchy> success = createGroupHierarchy(resp, groupIdOrNameOrExternalId);
             return success;
           } catch(Exception e) {
             return QueryEnvelope.fatalError(resp.getRepo(), "Failed to build hierarchy for all groups", log, e);
@@ -52,7 +52,7 @@ public class OrgGroupHierarchyQueryImpl implements GroupHierarchyQuery {
         });
   }
   @Override
-  public Uni<QueryEnvelopeList<OrgGroupHierarchy>> findAll() {
+  public Uni<QueryEnvelopeList<OrgPartyHierarchy>> findAll() {
     return new OrgProjectQueryImpl(state).projectName(repoId).get()
         .onItem().transform(resp -> {
           if(resp.getStatus() != QueryEnvelopeStatus.OK) {
@@ -60,17 +60,17 @@ public class OrgGroupHierarchyQueryImpl implements GroupHierarchyQuery {
           }
           
           try {
-            final QueryEnvelopeList<OrgGroupHierarchy> success = createGroupHierarchy(resp);
+            final QueryEnvelopeList<OrgPartyHierarchy> success = createGroupHierarchy(resp);
             return success;
           } catch(Exception e) {
-            final QueryEnvelope<OrgGroupHierarchy> fail = QueryEnvelope.fatalError(resp.getRepo(), "Failed to build hierarchy for all groups", log, e);
+            final QueryEnvelope<OrgPartyHierarchy> fail = QueryEnvelope.fatalError(resp.getRepo(), "Failed to build hierarchy for all groups", log, e);
             return fail.toList();
           }
         });
   }
 
-  private QueryEnvelopeList<OrgGroupHierarchy> createGroupHierarchy(QueryEnvelope<OrgProjectObjects> init) {
-    final var groups = new ArrayList<OrgGroupHierarchy>();
+  private QueryEnvelopeList<OrgPartyHierarchy> createGroupHierarchy(QueryEnvelope<OrgProjectObjects> init) {
+    final var groups = new ArrayList<OrgPartyHierarchy>();
     final var ctx = new AnyTreeContainerContextImpl(init.getObjects());
     final var container = new AnyTreeContainerImpl(ctx);
     for(final var criteria : init.getObjects().getGroups().values().stream().sorted((a, b) -> a.getPartyName().compareTo(b.getPartyName())).toList()) {
@@ -79,24 +79,24 @@ public class OrgGroupHierarchyQueryImpl implements GroupHierarchyQuery {
       final var log = container.accept(new GroupHierarchyContainerLogVisitor(criteria.getId(), true));
       groups.add(group.withLog(log));
     }
-    return ImmutableQueryEnvelopeList.<OrgGroupHierarchy>builder()
+    return ImmutableQueryEnvelopeList.<OrgPartyHierarchy>builder()
         .objects(Collections.unmodifiableList(groups))
         .repo(init.getRepo())
         .status(QueryEnvelope.QueryEnvelopeStatus.OK)
         .build();
   }
   
-  private QueryEnvelope<OrgGroupHierarchy> createGroupHierarchy(
+  private QueryEnvelope<OrgPartyHierarchy> createGroupHierarchy(
       QueryEnvelope<OrgProjectObjects> init, 
       String groupIdOrNameOrExternalId) {
     
     final var ctx = new AnyTreeContainerContextImpl(init.getObjects());
     final var container = new AnyTreeContainerImpl(ctx);
     final var log = container.accept(new GroupHierarchyContainerLogVisitor(groupIdOrNameOrExternalId, true));
-    final OrgGroupHierarchy group = container.accept(new GroupHierarchyContainerVisitor(groupIdOrNameOrExternalId)).withLog(log);
+    final OrgPartyHierarchy group = container.accept(new GroupHierarchyContainerVisitor(groupIdOrNameOrExternalId)).withLog(log);
     
     
-    return ImmutableQueryEnvelope.<OrgGroupHierarchy>builder()
+    return ImmutableQueryEnvelope.<OrgPartyHierarchy>builder()
         .objects(group)
         .repo(init.getRepo())
         .status(QueryEnvelope.QueryEnvelopeStatus.OK)

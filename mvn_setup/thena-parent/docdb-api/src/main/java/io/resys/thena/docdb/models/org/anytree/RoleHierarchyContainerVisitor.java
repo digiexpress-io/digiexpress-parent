@@ -8,7 +8,7 @@ import org.barfuin.texttree.api.DefaultNode;
 import org.barfuin.texttree.api.TextTree;
 import org.barfuin.texttree.api.TreeOptions;
 
-import io.resys.thena.docdb.api.models.ImmutableOrgRoleHierarchy;
+import io.resys.thena.docdb.api.models.ImmutableOrgRightHierarchy;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatusType;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgParty;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgPartyRight;
@@ -16,7 +16,7 @@ import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRight;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMembership;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberRight;
-import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgRoleHierarchy;
+import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgRightHierarchy;
 import io.resys.thena.docdb.api.visitors.OrgGroupContainerVisitor;
 import io.resys.thena.docdb.api.visitors.OrgTreeContainer.OrgAnyTreeContainerContext;
 import io.resys.thena.docdb.api.visitors.OrgTreeContainer.OrgAnyTreeContainerVisitor;
@@ -24,11 +24,11 @@ import lombok.RequiredArgsConstructor;
 
 
 
-public class RoleHierarchyContainerVisitor extends OrgGroupContainerVisitor<OrgRoleHierarchy> 
-  implements OrgAnyTreeContainerVisitor<OrgRoleHierarchy> {
+public class RoleHierarchyContainerVisitor extends OrgGroupContainerVisitor<OrgRightHierarchy> 
+  implements OrgAnyTreeContainerVisitor<OrgRightHierarchy> {
   
   private final String roleIdOrNameOrExternalId;
-  private final ImmutableOrgRoleHierarchy.Builder builder = ImmutableOrgRoleHierarchy.builder();
+  private final ImmutableOrgRightHierarchy.Builder builder = ImmutableOrgRightHierarchy.builder();
   private final Map<String, GroupVisitorForRole> visitorsByGroup = new HashMap<>();
   
   private OrgAnyTreeContainerContext ctx;
@@ -72,7 +72,7 @@ public class RoleHierarchyContainerVisitor extends OrgGroupContainerVisitor<OrgR
   }
   
   @Override
-  public OrgRoleHierarchy close() {
+  public OrgRightHierarchy close() {
     final var options = new TreeOptions();
     final var tree = TextTree.newInstance(options).render(nodeRoot);
 

@@ -6,12 +6,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.resys.thena.docdb.api.LogConstants;
-import io.resys.thena.docdb.api.models.ImmutableOrgUserHierarchy;
+import io.resys.thena.docdb.api.models.ImmutableOrgMemberHierarchy;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatusType;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberHierarchyEntry;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRightFlattened;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberFlattened;
-import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgUserHierarchy;
+import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgMemberHierarchy;
 import io.resys.thena.docdb.support.RepoAssert;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -29,7 +29,7 @@ public class UserTreeBuilder {
   public UserTreeBuilder roleData(List<OrgRightFlattened> roleData) {           this.roleData = RepoAssert.notNull(roleData,    () -> "roleData can't be null!"); return this; }
   
   
-  public OrgUserHierarchy build() {
+  public OrgMemberHierarchy build() {
     RepoAssert.notNull(user,      () -> "user can't be empty!");
     RepoAssert.notNull(groupData, () -> "groupData can't be empty!");
     RepoAssert.notNull(roleData,  () -> "roleData can't be null!");
@@ -45,7 +45,7 @@ public class UserTreeBuilder {
     final String log = container.accept(new CreateUserTreeGroupsLog(roleData, user));
     
     
-    return ImmutableOrgUserHierarchy.builder()
+    return ImmutableOrgMemberHierarchy.builder()
       .userId(user.getId())
       .userName(user.getUserName())
       .externalId(user.getExternalId())

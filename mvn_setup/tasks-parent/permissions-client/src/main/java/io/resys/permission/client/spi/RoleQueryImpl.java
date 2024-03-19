@@ -8,7 +8,7 @@ import io.resys.permission.client.api.model.Principal.Role;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
 import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.docdb.api.models.QueryEnvelopeList;
-import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgRoleHierarchy;
+import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgRightHierarchy;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +22,7 @@ public class RoleQueryImpl implements RoleQuery {
   @Override
   public Uni<Role> get(String roleId) {
     final var repoId = ctx.getConfig().getRepoId();
-    final Uni<QueryEnvelope<OrgRoleHierarchy>> role = ctx.getOrg().find().roleHierarchyQuery().repoId(repoId).get(roleId);
+    final Uni<QueryEnvelope<OrgRightHierarchy>> role = ctx.getOrg().find().rightHierarchyQuery().repoId(repoId).get(roleId);
     
     return role.onItem().transform((response) -> {
       if(response.getStatus() != QueryEnvelopeStatus.OK) {
@@ -45,7 +45,7 @@ public class RoleQueryImpl implements RoleQuery {
   @Override
   public Uni<List<Role>> findAllRoles() {
     final var repoId = ctx.getConfig().getRepoId();
-    final Uni<QueryEnvelopeList<OrgRoleHierarchy>> roles = ctx.getOrg().find().roleHierarchyQuery().repoId(repoId).findAll();
+    final Uni<QueryEnvelopeList<OrgRightHierarchy>> roles = ctx.getOrg().find().rightHierarchyQuery().repoId(repoId).findAll();
     
     return roles.onItem().transform((response) -> {
       if(response.getStatus() != QueryEnvelopeStatus.OK) {
@@ -65,7 +65,7 @@ public class RoleQueryImpl implements RoleQuery {
     });
   }
   
- private Role mapTo(OrgRoleHierarchy role) {
+ private Role mapTo(OrgRightHierarchy role) {
     
     return ImmutableRole.builder()
       .id(role.getRoleId())

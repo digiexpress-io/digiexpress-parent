@@ -8,7 +8,7 @@ import io.resys.permission.client.api.model.Principal.Permission;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
 import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.docdb.api.models.QueryEnvelopeList;
-import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgRoleHierarchy;
+import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgRightHierarchy;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,7 @@ public class PermissionQueryImpl implements PermissionQuery {
   @Override
   public Uni<Permission> get(String permissionId) {
     final var repoId = ctx.getConfig().getRepoId();
-    final Uni<QueryEnvelope<OrgRoleHierarchy>> permission = ctx.getOrg().find().roleHierarchyQuery().repoId(repoId).get(permissionId);
+    final Uni<QueryEnvelope<OrgRightHierarchy>> permission = ctx.getOrg().find().rightHierarchyQuery().repoId(repoId).get(permissionId);
     
     return permission.onItem().transform((response) -> {
       if(response.getStatus() != QueryEnvelopeStatus.OK) {
@@ -44,7 +44,7 @@ public class PermissionQueryImpl implements PermissionQuery {
   @Override
   public Uni<List<Permission>> findAllPermissions() {
     final var repoId = ctx.getConfig().getRepoId();
-    final Uni<QueryEnvelopeList<OrgRoleHierarchy>> permissions = ctx.getOrg().find().roleHierarchyQuery().repoId(repoId).findAll();
+    final Uni<QueryEnvelopeList<OrgRightHierarchy>> permissions = ctx.getOrg().find().rightHierarchyQuery().repoId(repoId).findAll();
     
     return permissions.onItem().transform((response) -> {
       if(response.getStatus() != QueryEnvelopeStatus.OK) {
@@ -65,7 +65,7 @@ public class PermissionQueryImpl implements PermissionQuery {
   }
   
   
-  private Permission mapTo(OrgRoleHierarchy permission) {
+  private Permission mapTo(OrgRightHierarchy permission) {
     
     return ImmutablePermission.builder()
       .id(permission.getRoleId())

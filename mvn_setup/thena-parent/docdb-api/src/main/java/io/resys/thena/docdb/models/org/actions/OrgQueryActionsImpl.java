@@ -13,22 +13,22 @@ public class OrgQueryActionsImpl implements OrgQueryActions {
   private final DbState state;
 
   @Override
-  public UserObjectsQuery userQuery() {
+  public MemberObjectsQuery memberQuery() {
     return new OrgUserObjectsQueryImpl(state);
   }
 
 	@Override
-	public UserHierarchyQuery userHierarchyQuery() {
+	public MemberHierarchyQuery memberHierarchyQuery() {
 		return new OrgUserHierarchyQueryImpl(state);
 	}
 
   @Override
-  public GroupHierarchyQuery groupHierarchyQuery() {
+  public PartyHierarchyQuery partyHierarchyQuery() {
     return new OrgGroupHierarchyQueryImpl(state);
   }
 
   @Override
-  public RoleHierarchyQuery roleHierarchyQuery() {
+  public RightHierarchyQuery rightHierarchyQuery() {
     return new OrgRoleHierarchyQueryImpl(state);
   }
 }

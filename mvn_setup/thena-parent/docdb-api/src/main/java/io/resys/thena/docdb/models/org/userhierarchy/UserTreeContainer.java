@@ -4,14 +4,14 @@ import java.util.List;
 
 import org.immutables.value.Value;
 
-import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgUserGroupStatus;
-import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgUserRoleStatus;
+import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgMemberPartyStatus;
+import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgMemberRightStatus;
 
 @Value.Immutable
 public interface UserTreeContainer {
   List<UserTree> getRoots();
-  List<OrgUserRoleStatus> getRoleStatus();
-  List<OrgUserGroupStatus> getGroupStatus();
+  List<OrgMemberRightStatus> getRoleStatus();
+  List<OrgMemberPartyStatus> getGroupStatus();
   
   default <T> T accept(final TopDownVisitor<T> visitor) {
     getRoots().stream().sorted((a, b) -> a.getGroupName().compareTo(b.getGroupName()))

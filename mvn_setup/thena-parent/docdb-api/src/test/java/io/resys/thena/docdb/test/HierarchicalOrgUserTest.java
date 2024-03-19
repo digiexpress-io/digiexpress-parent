@@ -85,7 +85,7 @@ public class HierarchicalOrgUserTest extends DbTestTemplate {
     */
     
     // user 2 sanity
-    var userGroupsAndRoles2 = getClient().org().find().userHierarchyQuery()
+    var userGroupsAndRoles2 = getClient().org().find().memberHierarchyQuery()
         .repoId(repo.getRepo().getId())
         .get(userId2.getId()).await().atMost(Duration.ofMinutes(1)).getObjects();
     
@@ -124,7 +124,7 @@ user-2
         .build().await().atMost(Duration.ofMinutes(1))
         .getUser();
     
-    userGroupsAndRoles2 = getClient().org().find().userHierarchyQuery()
+    userGroupsAndRoles2 = getClient().org().find().memberHierarchyQuery()
         .repoId(repo.getRepo().getId())
         .get(userId2.getId()).await().atMost(Duration.ofMinutes(1)).getObjects(); 
     Assertions.assertEquals("""
@@ -154,7 +154,7 @@ super-user
         .build().await().atMost(Duration.ofMinutes(1))
         .getUser();
     
-    userGroupsAndRoles2 = getClient().org().find().userHierarchyQuery()
+    userGroupsAndRoles2 = getClient().org().find().memberHierarchyQuery()
         .repoId(repo.getRepo().getId())
         .get(userId2.getId()).await().atMost(Duration.ofMinutes(1)).getObjects(); 
     Assertions.assertEquals("""
@@ -192,7 +192,7 @@ super-user
       .getStatus();
     Assertions.assertEquals(Repo.CommitResultStatus.NO_CHANGES, rejectNoChanges);
     
-    userGroupsAndRoles2 = getClient().org().find().userHierarchyQuery()
+    userGroupsAndRoles2 = getClient().org().find().memberHierarchyQuery()
         .repoId(repo.getRepo().getId())
         .get(userId2.getId()).await().atMost(Duration.ofMinutes(1)).getObjects(); 
     Assertions.assertEquals("""
@@ -220,7 +220,7 @@ super-user
     //printRepo(repo.getRepo()); //LOG THE DB 
     
     // 
-    final var users = getClient().org().find().userHierarchyQuery()
+    final var users = getClient().org().find().memberHierarchyQuery()
         .repoId(repo.getRepo().getId())
         .findAll().await().atMost(Duration.ofMinutes(1));
     Assertions.assertEquals(2, users.getObjects().size());

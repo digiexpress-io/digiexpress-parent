@@ -48,7 +48,7 @@ public class SimpleOrgTest extends DbTestTemplate {
       .externalId("captain-of-the-guard")
       .build().await().atMost(Duration.ofMinutes(1));
     
-    final var users = getClient().org().find().userQuery()
+    final var users = getClient().org().find().memberQuery()
         .repoId(repo.getRepo().getId())
         .findAll().await().atMost(Duration.ofMinutes(1));
     
@@ -108,7 +108,7 @@ public class SimpleOrgTest extends DbTestTemplate {
       .externalId("captain-of-the-guard")
       .build().await().atMost(Duration.ofMinutes(1));
     
-    final var users = getClient().org().find().userQuery()
+    final var users = getClient().org().find().memberQuery()
         .repoId(repo.getRepo().getId())
         .findAll().await().atMost(Duration.ofMinutes(1));
     

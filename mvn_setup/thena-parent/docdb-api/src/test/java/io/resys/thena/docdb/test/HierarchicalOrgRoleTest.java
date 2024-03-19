@@ -81,7 +81,7 @@ public class HierarchicalOrgRoleTest extends DbTestTemplate {
 
     
     // user 2 sanity
-    var roleHierarchy = getClient().org().find().roleHierarchyQuery()
+    var roleHierarchy = getClient().org().find().rightHierarchyQuery()
         .repoId(repo.getRepo().getId())
         .get(jailer3.getId()).await().atMost(Duration.ofMinutes(1)).getObjects();
     
@@ -105,7 +105,7 @@ jailer-3
         .build().await().atMost(Duration.ofMinutes(1))
         .getUser();
     
-    roleHierarchy = getClient().org().find().roleHierarchyQuery()
+    roleHierarchy = getClient().org().find().rightHierarchyQuery()
         .repoId(repo.getRepo().getId())
         .get(jailer1.getId()).await().atMost(Duration.ofMinutes(1)).getObjects(); 
     Assertions.assertEquals("""
@@ -127,7 +127,7 @@ jailer-1
         .build().await().atMost(Duration.ofMinutes(1))
         .getUser();
     
-    roleHierarchy = getClient().org().find().roleHierarchyQuery()
+    roleHierarchy = getClient().org().find().rightHierarchyQuery()
         .repoId(repo.getRepo().getId())
         .get(jailer2.getId()).await().atMost(Duration.ofMinutes(1)).getObjects(); 
     Assertions.assertEquals("""
@@ -147,7 +147,7 @@ jailer-2
       .getStatus();
     Assertions.assertEquals(Repo.CommitResultStatus.NO_CHANGES, rejectNoChanges);
     
-    roleHierarchy = getClient().org().find().roleHierarchyQuery()
+    roleHierarchy = getClient().org().find().rightHierarchyQuery()
         .repoId(repo.getRepo().getId())
         .get(bakerMain.getId()).await().atMost(Duration.ofMinutes(1)).getObjects(); 
     Assertions.assertEquals("""

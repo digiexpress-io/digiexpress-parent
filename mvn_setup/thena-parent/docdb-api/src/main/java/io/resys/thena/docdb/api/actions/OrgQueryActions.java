@@ -4,45 +4,45 @@ import io.resys.thena.docdb.api.models.QueryEnvelope;
 import io.resys.thena.docdb.api.models.QueryEnvelopeList;
 import io.resys.thena.docdb.api.models.ThenaEnvelope.ThenaObjects;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
-import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgGroupHierarchy;
-import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgRoleHierarchy;
-import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgUserHierarchy;
+import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgPartyHierarchy;
+import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgRightHierarchy;
+import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgMemberHierarchy;
 import io.resys.thena.docdb.api.visitors.OrgTreeContainer.OrgAnyTreeContainerVisitor;
 import io.smallrye.mutiny.Uni;
 
 public interface OrgQueryActions {
 
-  UserObjectsQuery userQuery();
-  UserHierarchyQuery userHierarchyQuery();
-  GroupHierarchyQuery groupHierarchyQuery();
-  RoleHierarchyQuery roleHierarchyQuery();
+  MemberObjectsQuery memberQuery();
+  MemberHierarchyQuery memberHierarchyQuery();
+  PartyHierarchyQuery partyHierarchyQuery();
+  RightHierarchyQuery rightHierarchyQuery();
   //OrphanedUserQuery orphanedUserQuery();
   
-  interface UserObjectsQuery {
-    UserObjectsQuery repoId(String repoId);
+  interface MemberObjectsQuery {
+    MemberObjectsQuery repoId(String repoId);
     
     Uni<QueryEnvelope<OrgMember>> get(String userId);
     Uni<QueryEnvelopeList<OrgMember>> findAll();
   }
 
-  interface RoleHierarchyQuery {
-    RoleHierarchyQuery repoId(String repoId);
-    Uni<QueryEnvelope<OrgRoleHierarchy>> get(String roleIdOrNameOrExternalId);
+  interface RightHierarchyQuery {
+    RightHierarchyQuery repoId(String repoId);
+    Uni<QueryEnvelope<OrgRightHierarchy>> get(String roleIdOrNameOrExternalId);
     <T extends ThenaObjects> Uni<QueryEnvelope<T>> get(String roleIdOrNameOrExternalId, OrgAnyTreeContainerVisitor<T> visitor);
-    Uni<QueryEnvelopeList<OrgRoleHierarchy>> findAll();
+    Uni<QueryEnvelopeList<OrgRightHierarchy>> findAll();
   }
 
   
-  interface UserHierarchyQuery {
-  	UserHierarchyQuery repoId(String repoId);
-  	Uni<QueryEnvelope<OrgUserHierarchy>> get(String userIdOrNameOrExternalId);
-  	Uni<QueryEnvelopeList<OrgUserHierarchy>> findAll();
+  interface MemberHierarchyQuery {
+  	MemberHierarchyQuery repoId(String repoId);
+  	Uni<QueryEnvelope<OrgMemberHierarchy>> get(String userIdOrNameOrExternalId);
+  	Uni<QueryEnvelopeList<OrgMemberHierarchy>> findAll();
   }
   
-  interface GroupHierarchyQuery {
-    GroupHierarchyQuery repoId(String repoId);
-    Uni<QueryEnvelope<OrgGroupHierarchy>> get(String groupIdOrNameOrExternalId);
-    Uni<QueryEnvelopeList<OrgGroupHierarchy>> findAll();
+  interface PartyHierarchyQuery {
+    PartyHierarchyQuery repoId(String repoId);
+    Uni<QueryEnvelope<OrgPartyHierarchy>> get(String groupIdOrNameOrExternalId);
+    Uni<QueryEnvelopeList<OrgPartyHierarchy>> findAll();
     
   }
 }

@@ -8,7 +8,7 @@ import io.resys.permission.client.api.model.Principal;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
 import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.docdb.api.models.QueryEnvelopeList;
-import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgUserHierarchy;
+import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgMemberHierarchy;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,7 @@ public class PrincipalQueryImpl implements PrincipalQuery {
   @Override
   public Uni<Principal> get(String principalId) {
     final var repoId = ctx.getConfig().getRepoId();
-    final Uni<QueryEnvelope<OrgUserHierarchy>> user = ctx.getOrg().find().userHierarchyQuery().repoId(repoId).get(principalId);
+    final Uni<QueryEnvelope<OrgMemberHierarchy>> user = ctx.getOrg().find().memberHierarchyQuery().repoId(repoId).get(principalId);
     return user.onItem().transform((response) -> {
       if(response.getStatus() != QueryEnvelopeStatus.OK) {
         final var msg = "Failed to get principal by id = '%s'!".formatted(principalId);
@@ -44,7 +44,7 @@ public class PrincipalQueryImpl implements PrincipalQuery {
   @Override
   public Uni<List<Principal>> findAllPrincipals() {
     final var repoId = ctx.getConfig().getRepoId();
-    final Uni<QueryEnvelopeList<OrgUserHierarchy>> users = ctx.getOrg().find().userHierarchyQuery().repoId(repoId).findAll();
+    final Uni<QueryEnvelopeList<OrgMemberHierarchy>> users = ctx.getOrg().find().memberHierarchyQuery().repoId(repoId).findAll();
     return users.onItem().transform((response) -> {
       if(response.getStatus() != QueryEnvelopeStatus.OK) {
         final var msg = "Failed to find all principals!";
@@ -64,7 +64,7 @@ public class PrincipalQueryImpl implements PrincipalQuery {
     });
   }
   
-  private Principal mapTo(OrgUserHierarchy user) {
+  private Principal mapTo(OrgMemberHierarchy user) {
         
     return ImmutablePrincipal.builder()
         .id(user.getUserId())

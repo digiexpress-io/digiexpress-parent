@@ -2,7 +2,7 @@ package io.resys.thena.docdb.models.org.anytree;
 
 import java.util.List;
 
-import io.resys.thena.docdb.api.models.ImmutableOrgGroupHierarchy;
+import io.resys.thena.docdb.api.models.ImmutableOrgPartyHierarchy;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatusType;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgParty;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgPartyRight;
@@ -17,11 +17,11 @@ import io.resys.thena.docdb.api.visitors.OrgTreeContainer.OrgAnyTreeContainerVis
 
 
 
-public class GroupHierarchyContainerVisitor extends OrgGroupContainerVisitor<ImmutableOrgGroupHierarchy> 
-  implements OrgAnyTreeContainerVisitor<ImmutableOrgGroupHierarchy>, GroupVisitor {
+public class GroupHierarchyContainerVisitor extends OrgGroupContainerVisitor<ImmutableOrgPartyHierarchy> 
+  implements OrgAnyTreeContainerVisitor<ImmutableOrgPartyHierarchy>, GroupVisitor {
   
   private final String groupIdOrNameOrExternalId;
-  private final ImmutableOrgGroupHierarchy.Builder builder = ImmutableOrgGroupHierarchy.builder();
+  private final ImmutableOrgPartyHierarchy.Builder builder = ImmutableOrgPartyHierarchy.builder();
   
   private String foundGroupId;
   
@@ -123,7 +123,7 @@ public class GroupHierarchyContainerVisitor extends OrgGroupContainerVisitor<Imm
   }
   
   @Override
-  public ImmutableOrgGroupHierarchy close() {
+  public ImmutableOrgPartyHierarchy close() {
     return builder.log("").build();
   }
   @Override

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import io.resys.thena.docdb.api.actions.OrgQueryActions.UserHierarchyQuery;
+import io.resys.thena.docdb.api.actions.OrgQueryActions.MemberHierarchyQuery;
 import io.resys.thena.docdb.api.models.ImmutableQueryEnvelope;
 import io.resys.thena.docdb.api.models.ImmutableQueryEnvelopeList;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
@@ -17,7 +17,7 @@ import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRightFlattened;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberFlattened;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberHierarchyEntry;
-import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgUserHierarchy;
+import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgMemberHierarchy;
 import io.resys.thena.docdb.models.org.OrgQueries;
 import io.resys.thena.docdb.models.org.userhierarchy.UserTreeBuilder;
 import io.resys.thena.docdb.spi.DbState;
@@ -29,19 +29,19 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
-public class OrgUserHierarchyQueryImpl implements UserHierarchyQuery {
+public class OrgUserHierarchyQueryImpl implements MemberHierarchyQuery {
   private final DbState state;
   private String repoId;
 
   @Override
-  public UserHierarchyQuery repoId(String repoId) {
+  public MemberHierarchyQuery repoId(String repoId) {
     RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
     this.repoId = repoId;
     return this;
   }
 
 	@Override
-	public Uni<QueryEnvelope<OrgUserHierarchy>> get(String userId) {
+	public Uni<QueryEnvelope<OrgMemberHierarchy>> get(String userId) {
 		RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
 		
     return state.project().getByNameOrId(repoId)
@@ -54,7 +54,7 @@ public class OrgUserHierarchyQueryImpl implements UserHierarchyQuery {
     });
 	}
   @Override
-  public Uni<QueryEnvelopeList<OrgUserHierarchy>> findAll() {
+  public Uni<QueryEnvelopeList<OrgMemberHierarchy>> findAll() {
     RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
     
     return state.project().getByNameOrId(repoId)
@@ -65,12 +65,12 @@ public class OrgUserHierarchyQueryImpl implements UserHierarchyQuery {
       
       final var state = this.state.toOrgState().query(existing);
       final Multi<OrgMember> users = state.users().findAll();
-      final Multi<QueryEnvelope<OrgUserHierarchy>> userAndGroups = users.onItem().transformToUni(user -> getUser(state, existing, user.getId())).merge();
+      final Multi<QueryEnvelope<OrgMemberHierarchy>> userAndGroups = users.onItem().transformToUni(user -> getUser(state, existing, user.getId())).merge();
       return userAndGroups.collect().asList().onItem().transform(this::createUsersResult);
     });
   }
 	
-	private Uni<QueryEnvelope<OrgUserHierarchy>> getUser(OrgQueries org, Repo existing, String userId) {
+	private Uni<QueryEnvelope<OrgMemberHierarchy>> getUser(OrgQueries org, Repo existing, String userId) {
     return org.users().getStatusById(userId).onItem().transformToUni(user -> {
       if(user == null) {
         return Uni.createFrom().item(docNotFound(existing, userId, new DocNotFoundException()));
@@ -84,19 +84,19 @@ public class OrgUserHierarchyQueryImpl implements UserHierarchyQuery {
 	}
 	
 
-	private QueryEnvelope<OrgUserHierarchy> createUserResult(OrgMemberFlattened user, List<OrgMemberHierarchyEntry> groups, List<OrgRightFlattened> roles) {
+	private QueryEnvelope<OrgMemberHierarchy> createUserResult(OrgMemberFlattened user, List<OrgMemberHierarchyEntry> groups, List<OrgRightFlattened> roles) {
     return ImmutableQueryEnvelope
-        .<OrgUserHierarchy>builder()
+        .<OrgMemberHierarchy>builder()
         .status(QueryEnvelopeStatus.OK)
         .objects(new UserTreeBuilder().user(user).groupData(groups).roleData(roles).build())
         .build();
 	}
 	
-	private QueryEnvelopeList<OrgUserHierarchy> createUsersResult(List<QueryEnvelope<OrgUserHierarchy>> users) {
-	  final var builder = ImmutableQueryEnvelopeList.<OrgUserHierarchy>builder()
+	private QueryEnvelopeList<OrgMemberHierarchy> createUsersResult(List<QueryEnvelope<OrgMemberHierarchy>> users) {
+	  final var builder = ImmutableQueryEnvelopeList.<OrgMemberHierarchy>builder()
 	      .status(QueryEnvelopeStatus.OK);
 	  
-	  final List<OrgUserHierarchy> objects = new ArrayList<>();
+	  final List<OrgMemberHierarchy> objects = new ArrayList<>();
 	  for(final var resp : users) {
 	    objects.add(resp.getObjects());
 	    builder.addAllMessages(resp.getMessages());

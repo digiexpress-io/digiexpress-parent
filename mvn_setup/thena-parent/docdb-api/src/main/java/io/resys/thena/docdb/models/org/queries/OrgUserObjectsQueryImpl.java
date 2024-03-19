@@ -2,7 +2,7 @@ package io.resys.thena.docdb.models.org.queries;
 
 import java.util.List;
 
-import io.resys.thena.docdb.api.actions.OrgQueryActions.UserObjectsQuery;
+import io.resys.thena.docdb.api.actions.OrgQueryActions.MemberObjectsQuery;
 import io.resys.thena.docdb.api.models.ImmutableQueryEnvelope;
 import io.resys.thena.docdb.api.models.ImmutableQueryEnvelopeList;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
@@ -21,12 +21,12 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
-public class OrgUserObjectsQueryImpl implements UserObjectsQuery {
+public class OrgUserObjectsQueryImpl implements MemberObjectsQuery {
   private final DbState state;
   private String repoId;
 
   @Override
-  public UserObjectsQuery repoId(String repoId) {
+  public MemberObjectsQuery repoId(String repoId) {
     RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
     this.repoId = repoId;
     return this;

@@ -30,9 +30,9 @@ import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRight;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMembership;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberRight;
-import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgUserGroupStatus;
-import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgUserHierarchy;
-import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgUserRoleStatus;
+import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgMemberPartyStatus;
+import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgMemberHierarchy;
+import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgMemberRightStatus;
 import io.resys.thena.docdb.models.git.GitInserts.BatchStatus;
 import io.resys.thena.docdb.models.org.ImmutableOrgBatchForOne;
 import io.resys.thena.docdb.support.OidUtils;
@@ -56,13 +56,13 @@ public class BatchForOneUserModify {
  
   private final List<OrgActorStatus> actorStatus = new ArrayList<>();
   private final List<String> identifiersForUpdates = new ArrayList<>();
-  private OrgUserHierarchy current;
+  private OrgMemberHierarchy current;
 
   private Optional<String> userName;
   private Optional<String> email;
   private Optional<String> externalId;
 
-  public BatchForOneUserModify current(OrgUserHierarchy current) {this.current = current; return this; }
+  public BatchForOneUserModify current(OrgMemberHierarchy current) {this.current = current; return this; }
   public BatchForOneUserModify userName(Optional<String> userName) {     this.userName = userName; return this; }
   public BatchForOneUserModify email(Optional<String> email) {           this.email = email; return this; }
   public BatchForOneUserModify externalId(Optional<String> externalId) { this.externalId = externalId; return this; }
@@ -127,7 +127,7 @@ public class BatchForOneUserModify {
     
     for(final var entry : this.addUserToGroupRoles.entrySet()) {
       for(final var role : entry.getValue()) {
-        final OrgUserRoleStatus status = null;
+        final OrgMemberRightStatus status = null;
         this.visitAddUserToRole(role, status, Optional.of(entry.getKey()), commitId);
       }
     }
@@ -229,7 +229,7 @@ public class BatchForOneUserModify {
     return Optional.of(newState);
   }
 
-  private void visitRemoveUserFromRole(OrgRight entry, OrgUserRoleStatus status, String commitId) {
+  private void visitRemoveUserFromRole(OrgRight entry, OrgMemberRightStatus status, String commitId) {
     if(status == null) {
       final var roleStatus = ImmutableOrgActorStatus.builder()
           .id(OidUtils.gen())
@@ -260,7 +260,7 @@ public class BatchForOneUserModify {
     visitChangeTree(commitId, roleStatus, OrgOperationType.MOD);
   }
   
-  private void visitAddUserToRole(OrgRight entry, OrgUserRoleStatus status, Optional<OrgParty> group, String commitId) {
+  private void visitAddUserToRole(OrgRight entry, OrgMemberRightStatus status, Optional<OrgParty> group, String commitId) {
     if(!current.getDirectRoleNames().contains(entry.getRightName())) {
       final var membership = ImmutableOrgMemberRight.builder()
           .id(OidUtils.gen())
@@ -288,7 +288,7 @@ public class BatchForOneUserModify {
     }
   }
   
-  private void visitRemoveUserFromGroup(OrgParty entry, OrgUserGroupStatus status, String commitId) {
+  private void visitRemoveUserFromGroup(OrgParty entry, OrgMemberPartyStatus status, String commitId) {
     if(status == null) {
       final var groupStatus = ImmutableOrgActorStatus.builder()
           .id(OidUtils.gen())
@@ -319,7 +319,7 @@ public class BatchForOneUserModify {
     visitChangeTree(commitId, groupStatus, OrgOperationType.MOD);
   }
   
-  private void visitAddUserToGroup(OrgParty entry, OrgUserGroupStatus status, String commitId) {
+  private void visitAddUserToGroup(OrgParty entry, OrgMemberPartyStatus status, String commitId) {
     if(!current.getDirectGroupNames().contains(entry.getPartyName())) {
       final var membership = ImmutableOrgMembership.builder()
           .id(OidUtils.gen())
