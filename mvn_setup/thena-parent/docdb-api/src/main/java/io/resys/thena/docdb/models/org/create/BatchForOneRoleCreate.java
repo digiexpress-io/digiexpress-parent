@@ -7,16 +7,16 @@ import java.util.List;
 import io.resys.thena.docdb.api.models.ImmutableMessage;
 import io.resys.thena.docdb.api.models.ImmutableOrgCommit;
 import io.resys.thena.docdb.api.models.ImmutableOrgCommitTree;
+import io.resys.thena.docdb.api.models.ImmutableOrgMemberRight;
 import io.resys.thena.docdb.api.models.ImmutableOrgPartyRight;
 import io.resys.thena.docdb.api.models.ImmutableOrgRight;
-import io.resys.thena.docdb.api.models.ImmutableOrgMemberRight;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.IsOrgObject;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgCommitTree;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgParty;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgPartyRight;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgOperationType;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberRight;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgOperationType;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgParty;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgPartyRight;
 import io.resys.thena.docdb.models.git.GitInserts.BatchStatus;
 import io.resys.thena.docdb.models.org.ImmutableOrgBatchForOne;
 import io.resys.thena.docdb.support.OidUtils;
@@ -100,9 +100,9 @@ public class BatchForOneRoleCreate {
       .append(System.lineSeparator())
       .append("  + role:            ").append(role.getId()).append("::").append(roleName)
       .append(System.lineSeparator())
-      .append("  + added to groups: ").append(String.join(",", groups.stream().map(g -> g.getPartyName() + "::" + g.getId()).toList()))
+      .append("  + added to parties: ").append(String.join(",", groups.stream().map(g -> g.getPartyName() + "::" + g.getId()).toList()))
       .append(System.lineSeparator())
-      .append("  + added to users:  ").append(String.join(",", users.stream().map(g -> g.getUserName() + "::" + g.getId()).toList()))
+      .append("  + added to members:  ").append(String.join(",", users.stream().map(g -> g.getUserName() + "::" + g.getId()).toList()))
       .append(System.lineSeparator());
     
     final var commit = ImmutableOrgCommit.builder()

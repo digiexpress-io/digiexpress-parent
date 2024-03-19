@@ -8,17 +8,17 @@ import java.util.Optional;
 import io.resys.thena.docdb.api.models.ImmutableMessage;
 import io.resys.thena.docdb.api.models.ImmutableOrgCommit;
 import io.resys.thena.docdb.api.models.ImmutableOrgCommitTree;
+import io.resys.thena.docdb.api.models.ImmutableOrgMembership;
 import io.resys.thena.docdb.api.models.ImmutableOrgParty;
 import io.resys.thena.docdb.api.models.ImmutableOrgPartyRight;
-import io.resys.thena.docdb.api.models.ImmutableOrgMembership;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.IsOrgObject;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgCommitTree;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgParty;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgPartyRight;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgOperationType;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRight;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMembership;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgOperationType;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgParty;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgPartyRight;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRight;
 import io.resys.thena.docdb.models.git.GitInserts.BatchStatus;
 import io.resys.thena.docdb.models.org.ImmutableOrgBatchForOne;
 import io.resys.thena.docdb.support.OidUtils;
@@ -105,9 +105,9 @@ public class BatchForOneGroupCreate {
       .append(System.lineSeparator())
       .append("  + group:          ").append(group.getId()).append("::").append(groupName)
       .append(System.lineSeparator())
-      .append("  + added users:    ").append(String.join(",", users.stream().map(g -> g.getUserName() + "::" + g.getId()).toList()))
+      .append("  + added members:    ").append(String.join(",", users.stream().map(g -> g.getUserName() + "::" + g.getId()).toList()))
       .append(System.lineSeparator())
-      .append("  + added to roles: ").append(String.join(",", roles.stream().map(g -> g.getRightName() + "::" + g.getId()).toList()))
+      .append("  + added to rights: ").append(String.join(",", roles.stream().map(g -> g.getRightName() + "::" + g.getId()).toList()))
       .append(System.lineSeparator());
     
     final var commit = ImmutableOrgCommit.builder()
