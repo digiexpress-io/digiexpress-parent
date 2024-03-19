@@ -8,7 +8,7 @@ import io.resys.permission.client.api.model.Principal.Role;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
 import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.docdb.api.models.QueryEnvelopeList;
-import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgRightHierarchy;
+import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgPartyHierarchy;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +22,7 @@ public class RoleQueryImpl implements RoleQuery {
   @Override
   public Uni<Role> get(String roleId) {
     final var repoId = ctx.getConfig().getRepoId();
-    final Uni<QueryEnvelope<OrgRightHierarchy>> role = ctx.getOrg().find().rightHierarchyQuery().repoId(repoId).get(roleId);
+    final Uni<QueryEnvelope<OrgPartyHierarchy>> role = ctx.getOrg().find().partyHierarchyQuery().repoId(repoId).get(roleId);
     
     return role.onItem().transform((response) -> {
       if(response.getStatus() != QueryEnvelopeStatus.OK) {
@@ -45,7 +45,7 @@ public class RoleQueryImpl implements RoleQuery {
   @Override
   public Uni<List<Role>> findAllRoles() {
     final var repoId = ctx.getConfig().getRepoId();
-    final Uni<QueryEnvelopeList<OrgRightHierarchy>> roles = ctx.getOrg().find().rightHierarchyQuery().repoId(repoId).findAll();
+    final Uni<QueryEnvelopeList<OrgPartyHierarchy>> roles = ctx.getOrg().find().partyHierarchyQuery().repoId(repoId).findAll();
     
     return roles.onItem().transform((response) -> {
       if(response.getStatus() != QueryEnvelopeStatus.OK) {
@@ -65,14 +65,14 @@ public class RoleQueryImpl implements RoleQuery {
     });
   }
   
- private Role mapTo(OrgRightHierarchy role) {
+ private Role mapTo(OrgPartyHierarchy party) {
     
     return ImmutableRole.builder()
-      .id(role.getRoleId())
-      .version(role.getCommitId())
-      .name(role.getRoleName())
-      .description(role.getRoleDescription())
-      .status(role.getStatus())
+      .id(party.getPartyId())
+      .version(party.getCommitId())
+      .name(party.getPartyName())
+      .description(party.getPartyDescription())
+      .status(party.getStatus())
       .build();
   }
   

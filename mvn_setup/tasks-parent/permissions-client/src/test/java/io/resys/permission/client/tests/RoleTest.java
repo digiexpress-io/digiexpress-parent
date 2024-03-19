@@ -14,7 +14,7 @@ import io.resys.permission.client.tests.config.DbTestTemplate;
 import io.resys.permission.client.tests.config.GenerateTestData;
 import io.resys.permission.client.tests.config.OrgPgProfile;
 import io.resys.thena.docdb.api.models.Repo;
-import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 
 @QuarkusTest
@@ -43,10 +43,12 @@ public class RoleTest extends DbTestTemplate {
       .roleHierarchyQuery().get(role.getName())
       .await().atMost(Duration.ofMinutes(1));
       
-      Assertions.assertEquals(role.getId(), foundByName.getRoles().get(0).getRole().getId());
+      log.debug(JsonObject.mapFrom(foundByName).encodePrettily());
+      
+      Assertions.assertEquals(role.getId(), foundByName.getTargetRoleId());
     }
     
-  log.debug(new JsonArray(allRoles).encodePrettily());
+  //log.debug(new JsonArray(allRoles).encodePrettily());
   
   }
 }

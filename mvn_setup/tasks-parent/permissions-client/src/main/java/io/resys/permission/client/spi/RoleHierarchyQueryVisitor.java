@@ -7,9 +7,9 @@ import java.util.Map;
 import io.resys.permission.client.api.model.ImmutablePermission;
 import io.resys.permission.client.api.model.ImmutablePrincipal;
 import io.resys.permission.client.api.model.ImmutableRole;
-import io.resys.permission.client.api.model.ImmutableRoleHierarchy;
 import io.resys.permission.client.api.model.ImmutableRoleHierarchyContainer;
 import io.resys.permission.client.api.model.RoleHierarchyContainer;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatusType;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberRight;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMembership;
@@ -17,22 +17,21 @@ import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgParty;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgPartyRight;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRight;
 import io.resys.thena.docdb.api.visitors.OrgPartyContainerVisitor;
-import io.resys.thena.docdb.api.visitors.OrgPartyContainerVisitor.PartyVisitor;
 import io.resys.thena.docdb.api.visitors.OrgTreeContainer.OrgAnyTreeContainerContext;
 import io.resys.thena.docdb.api.visitors.OrgTreeContainer.OrgAnyTreeContainerVisitor;
 
 
 public class RoleHierarchyQueryVisitor extends OrgPartyContainerVisitor<RoleHierarchyContainer> 
-  implements OrgAnyTreeContainerVisitor<RoleHierarchyContainer>, PartyVisitor {
+  implements OrgAnyTreeContainerVisitor<RoleHierarchyContainer> {
   
   private final String idOrNameOrExtId;
  
   private final Map<String, ImmutablePermission> permissions = new LinkedHashMap<>(); // permissions by name
   private final Map<String, ImmutablePrincipal> principals = new LinkedHashMap<>();   // principals by name
-    
-  private String foundRoleId;
-  private ImmutableRoleHierarchy.Builder roleHierarchy;
-  private ImmutableRole.Builder role;
+  private final Map<String, ImmutableRole> roles = new LinkedHashMap<>();   // principals by name
+  private final ImmutableRoleHierarchyContainer.Builder result = ImmutableRoleHierarchyContainer.builder();
+  private String roleFoundId;  
+  
 
   
   public RoleHierarchyQueryVisitor(String idOrNameOrExtId) {
@@ -40,98 +39,118 @@ public class RoleHierarchyQueryVisitor extends OrgPartyContainerVisitor<RoleHier
     this.idOrNameOrExtId = idOrNameOrExtId;
   }
   
-  private boolean isDirectGroup(OrgParty group) {
-    if(foundRoleId != null) {
-      return group.getId().equals(foundRoleId);
-    }
-    return false;  
+  @Override
+  public RoleHierarchyContainer close() {
+    return result.log("").build();
   }
   
   @Override
-  public void visitMembershipWithInheritance(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled) {
-    if(foundRoleId == null) {
-      return;
-    }
-    if(!principals.containsKey(user.getUserName())) {
-      permissions.put(user.getUserName(), null);
-    }
+  protected PartyVisitor visitTop(OrgParty group, OrgAnyTreeContainerContext worldState) {
+    final ImmutableRole.Builder role = ImmutableRole.builder();
     
-    
-    if(isDirectGroup(group)) {
-      // TODO builder.addParenUsers(user);
-    } else {
-      // TODO       builder.addChildUsers(user);
-    }
-    
-  }
-  @Override
-  public void visitMembership(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled) {
-    if(!principals.containsKey(user.getUserName())) {
-      permissions.put(user.getUserName(), null);
-    }
-    
-    
-    if(!isDirectGroup(group)) {
-      return;
-    }
-    // TODO builder.addDirectUsers(user);
-  }
-  @Override
-  public void visitPartyRight(OrgParty group, OrgPartyRight groupRole, OrgRight role, boolean isDisabled) {
-    if(foundRoleId == null) {
-      return;
-    }
-    // TODO builder.addDirectRoleNames(role);    
-  }
-  @Override
-  public void visitMemberPartyRight(OrgParty group, OrgMemberRight groupRole, OrgRight role, boolean isDisabled) {
-
-    
-  }
-  
-  
-  @Override
-  public void visitChildParty(OrgParty group, boolean isDisabled) {
-    if(foundRoleId == null) {
-      return;
-    }
-    // TODO builder.addChildGroups(group);
-  }
-  @Override
-  public void start(OrgParty party, List<OrgParty> parents, boolean isDisabled) {
-
-    if(party.isMatch(idOrNameOrExtId)) {
-      foundRoleId = party.getId();
-      role = ImmutableRole.builder()
+    return new PartyVisitor() {
+      @Override 
+      public void visitPartyRight(OrgParty party, OrgPartyRight partyRight, OrgRight right, boolean isDisabled) {
+        role.addPermissions(right.getRightName()); 
+      }
+      @Override
+      public void visitMemberPartyRight(OrgParty party, OrgMemberRight memberRight, OrgRight right, boolean isDisabled) {
+        //role.addPermissions(right.getRightName()); 
+      }
+      @Override
+      public void visitMembershipWithInheritance(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled) {
+        role.addPrinciples(user.getUserName());
+      }
+      @Override
+      public void visitMembership(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled) {
+        role.addPrinciples(user.getUserName());
+      }
+      @Override
+      public void visitChildParty(OrgParty party, boolean isDisabled) {
+        
+      }
+      
+      @Override
+      public void start(OrgParty party, List<OrgParty> parents, List<OrgRight> parentRights, boolean isDisabled) {
+        if(party.isMatch(idOrNameOrExtId)) {
+          roleFoundId = party.getId();  
+        }
+        role
           .id(party.getId())
           .name(party.getPartyName())
           .version(party.getCommitId())
-          .description(party.getPartyDescription());
-      roleHierarchy = ImmutableRoleHierarchy.builder();
-    }
+          .description(party.getPartyDescription())
+          .status(OrgActorStatusType.IN_FORCE)
+          .parentId(party.getParentId())
+          .addAllPermissions(parentRights.stream().map(r -> r.getRightName()).toList());
+      }
+      
+      @Override
+      public void end(OrgParty group, List<OrgParty> parents, boolean isDisabled) {
+        final var completedRole = role.build();
+        roles.put(completedRole.getId(), completedRole);
+        
+        if(roleFoundId != null) {
+          result
+            .targetRoleId(roleFoundId)
+            .putAllPrincipals(principals)
+            .putAllPermissions(permissions)
+            .putAllRoles(roles);
+          roleFoundId = null;  
+        }
+        permissions.clear();
+        principals.clear();
+        roles.clear();
+      }
+    };
   }
   
-  @Override
-  public void end(OrgParty group, List<OrgParty> parents, boolean isDisabled) {
-    if(group.getId().equals(foundRoleId)) {
-      foundRoleId = null;
-    }
-  }
-  
-  @Override
-  public RoleHierarchyContainer close() {
-    final var role = this.role.build();
-    return ImmutableRoleHierarchyContainer.builder()
-        .log("")
-        .addRoles(roleHierarchy.role(role).build())
-        .build();
-  }
-  @Override
-  protected PartyVisitor visitTop(OrgParty group, OrgAnyTreeContainerContext worldState) {
-    return this;
-  }
   @Override
   protected PartyVisitor visitChild(OrgParty group, OrgAnyTreeContainerContext worldState) {
-    return this;
+   final ImmutableRole.Builder role = ImmutableRole.builder();
+    
+    return new PartyVisitor() {
+      @Override 
+      public void visitPartyRight(OrgParty party, OrgPartyRight partyRight, OrgRight right, boolean isDisabled) {
+        role.addPermissions(right.getRightName()); 
+      }
+      @Override
+      public void visitMemberPartyRight(OrgParty party, OrgMemberRight memberRight, OrgRight right, boolean isDisabled) {
+        //role.addPermissions(right.getRightName()); 
+      }
+      @Override
+      public void visitMembershipWithInheritance(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled) {
+        role.addPrinciples(user.getUserName());
+      }
+      @Override
+      public void visitMembership(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled) {
+        role.addPrinciples(user.getUserName());
+      }
+      @Override
+      public void visitChildParty(OrgParty party, boolean isDisabled) {
+        
+      }
+      
+      @Override
+      public void start(OrgParty party, List<OrgParty> parents, List<OrgRight> parentRights, boolean isDisabled) {
+        if(party.isMatch(idOrNameOrExtId)) {
+          roleFoundId = party.getId();  
+        }
+        role
+          .id(party.getId())
+          .name(party.getPartyName())
+          .version(party.getCommitId())
+          .description(party.getPartyDescription())
+          .status(OrgActorStatusType.IN_FORCE)
+          .parentId(party.getParentId())
+          .addAllPermissions(parentRights.stream().map(r -> r.getRightName()).toList());
+      }
+      
+      @Override
+      public void end(OrgParty group, List<OrgParty> parents, boolean isDisabled) {
+        final var completedRole = role.build();
+        roles.put(completedRole.getId(), completedRole);
+      }
+    };
   }
 }

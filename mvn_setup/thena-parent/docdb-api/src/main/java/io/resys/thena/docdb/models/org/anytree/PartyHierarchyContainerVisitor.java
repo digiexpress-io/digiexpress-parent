@@ -4,12 +4,12 @@ import java.util.List;
 
 import io.resys.thena.docdb.api.models.ImmutableOrgPartyHierarchy;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatusType;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberRight;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMembership;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgParty;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgPartyRight;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRight;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMembership;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberRight;
 import io.resys.thena.docdb.api.visitors.OrgPartyContainerVisitor;
 import io.resys.thena.docdb.api.visitors.OrgPartyContainerVisitor.PartyVisitor;
 import io.resys.thena.docdb.api.visitors.OrgTreeContainer.OrgAnyTreeContainerContext;
@@ -17,7 +17,7 @@ import io.resys.thena.docdb.api.visitors.OrgTreeContainer.OrgAnyTreeContainerVis
 
 
 
-public class GroupHierarchyContainerVisitor extends OrgPartyContainerVisitor<ImmutableOrgPartyHierarchy> 
+public class PartyHierarchyContainerVisitor extends OrgPartyContainerVisitor<ImmutableOrgPartyHierarchy> 
   implements OrgAnyTreeContainerVisitor<ImmutableOrgPartyHierarchy>, PartyVisitor {
   
   private final String groupIdOrNameOrExternalId;
@@ -26,7 +26,7 @@ public class GroupHierarchyContainerVisitor extends OrgPartyContainerVisitor<Imm
   private String foundGroupId;
   
   
-  public GroupHierarchyContainerVisitor(String groupIdOrNameOrExternalId) {
+  public PartyHierarchyContainerVisitor(String groupIdOrNameOrExternalId) {
     super(true);
     this.groupIdOrNameOrExternalId = groupIdOrNameOrExternalId;
   }
@@ -48,9 +48,9 @@ public class GroupHierarchyContainerVisitor extends OrgPartyContainerVisitor<Imm
       return;
     }
     if(isDirectGroup(group)) {
-      builder.addParenUsers(user);
+      builder.addParenMembers(user);
     } else {
-      builder.addChildUsers(user);
+      builder.addChildMembers(user);
     }
     
   }
@@ -64,7 +64,7 @@ public class GroupHierarchyContainerVisitor extends OrgPartyContainerVisitor<Imm
     if(!isDirectGroup(group)) {
       return;
     }
-    builder.addDirectUsers(user);
+    builder.addDirectMembers(user);
   }
   @Override
   public void visitPartyRight(OrgParty group, OrgPartyRight groupRole, OrgRight role, boolean isDisabled) {
@@ -75,7 +75,7 @@ public class GroupHierarchyContainerVisitor extends OrgPartyContainerVisitor<Imm
     if(foundGroupId == null) {
       return;
     }
-    builder.addDirectRoleNames(role);    
+    builder.addDirectRights(role);    
   }
   @Override
   public void visitMemberPartyRight(OrgParty group, OrgMemberRight groupRole, OrgRight role, boolean isDisabled) {
@@ -94,10 +94,10 @@ public class GroupHierarchyContainerVisitor extends OrgPartyContainerVisitor<Imm
     if(foundGroupId == null) {
       return;
     }
-    builder.addChildGroups(group);
+    builder.addChildParties(group);
   }
   @Override
-  public void start(OrgParty group, List<OrgParty> parents, boolean isDisabled) {
+  public void start(OrgParty group, List<OrgParty> parents, List<OrgRight> parentRights, boolean isDisabled) {
 
     
     if( groupIdOrNameOrExternalId.equals(group.getExternalId()) ||
@@ -106,12 +106,14 @@ public class GroupHierarchyContainerVisitor extends OrgPartyContainerVisitor<Imm
       
       foundGroupId = group.getId();
       builder
-        .groupId(group.getId())
-        .groupName(group.getPartyName())
+        .partyId(group.getId())
+        .partyName(group.getPartyName())
+        .partyDescription(group.getPartyDescription())
         .externalId(group.getExternalId())
         .commitId(group.getCommitId())
-        .parentGroupId(group.getParentId())
-        .parentGroups(parents)
+        .parentPartyId(group.getParentId())
+        .parentParties(parents)
+
         .status(isDisabled ? OrgActorStatusType.DISABLED : OrgActorStatusType.IN_FORCE);
     }
   }

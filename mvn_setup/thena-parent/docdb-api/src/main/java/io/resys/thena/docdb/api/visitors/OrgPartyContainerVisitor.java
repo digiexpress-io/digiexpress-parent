@@ -26,7 +26,7 @@ public abstract class OrgPartyContainerVisitor<T> implements OrgAnyTreeContainer
 
 
   public interface PartyVisitor {
-    void start(OrgParty group, List<OrgParty> parents, boolean isDisabled);
+    void start(OrgParty group, List<OrgParty> parents, List<OrgRight> parentRights, boolean isDisabled);
     
     void visitMembership(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled);
     void visitMembershipWithInheritance(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled);
@@ -51,16 +51,21 @@ public abstract class OrgPartyContainerVisitor<T> implements OrgAnyTreeContainer
     final var parentGroupIds = parents.stream().map(e -> e.getId()).toList();
     final var visitor = group.getParentId() == null ? visitTop(group, worldState) : visitChild(group, worldState);
     final var isDisabledDirectly = worldState.isStatusDisabled(worldState.getStatus(group));
-    final var isDisabledUpward = worldState.isGroupDisabledUpward(group);
+    final var isDisabledUpward = worldState.isPartyDisabledUpward(group);
     
     if(isDisabledDirectly && !includeDisabled) {
       return;
     }
     
-    visitor.start(group, parents, isDisabledDirectly || isDisabledUpward);
+    final var parentRights = parents.stream()
+        .flatMap(e -> worldState.getPartyRights(e.getId()).stream())
+        .map(right -> worldState.getRight(right.getId()))
+        .toList();
+    
+    visitor.start(group, parents, parentRights, isDisabledDirectly || isDisabledUpward);
     for(final var groupRole : worldState.getPartyRights(group.getId())) {
       
-      final var role = worldState.getRole(groupRole.getRightId());
+      final var role = worldState.getRight(groupRole.getRightId());
       final var groupRoleStatus = worldState.isStatusDisabled(worldState.getStatus(groupRole));
       final var roleStatus = worldState.isStatusDisabled(worldState.getStatus(role));
       
@@ -74,7 +79,7 @@ public abstract class OrgPartyContainerVisitor<T> implements OrgAnyTreeContainer
     
     for(final var member : worldState.getPartyMemberships(group.getId())) {
       
-      final var user = worldState.getUser(member.getMemberId());
+      final var user = worldState.getMember(member.getMemberId());
       final var memberStatus = worldState.isStatusDisabled(worldState.getStatus(member));
       final var userStatus = worldState.isStatusDisabled(worldState.getStatus(user));
       final var isUserDisabled = memberStatus || userStatus;
@@ -93,7 +98,7 @@ public abstract class OrgPartyContainerVisitor<T> implements OrgAnyTreeContainer
         if(!parentGroupIds.contains(groupUserRole.getPartyId())) {
           continue;
         }
-        final var role = worldState.getRole(groupUserRole.getRightId());
+        final var role = worldState.getRight(groupUserRole.getRightId());
         final var groupRoleStatus = worldState.isStatusDisabled(worldState.getStatus(groupUserRole));
         final var roleStatus = worldState.isStatusDisabled(worldState.getStatus(role));
         final var isRoleDisabled = groupRoleStatus || roleStatus;
@@ -106,14 +111,14 @@ public abstract class OrgPartyContainerVisitor<T> implements OrgAnyTreeContainer
       
     }
     for(final var member : worldState.getPartyInheritedMembers(group.getId())) {
-      final var user = worldState.getUser(member.getMemberId());
+      final var user = worldState.getMember(member.getMemberId());
       visitor.visitMembershipWithInheritance(group, member, user, false);
       
       for(final var groupUserRole : worldState.getMemberRoles(user.getId())) {
         if(!group.getId().equals(groupUserRole.getPartyId())) {
           continue;
         }
-        final var role = worldState.getRole(groupUserRole.getRightId());
+        final var role = worldState.getRight(groupUserRole.getRightId());
         final var groupRoleStatus = worldState.isStatusDisabled(worldState.getStatus(groupUserRole));
         final var roleStatus = worldState.isStatusDisabled(worldState.getStatus(role));
         visitor.visitMemberPartyRight(group, groupUserRole, role, groupRoleStatus || roleStatus);

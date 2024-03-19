@@ -158,14 +158,14 @@ public class AnyTreeContainerContextImpl implements OrgAnyTreeContainerContext {
     final var groupInheritedUsers = new LinkedHashMap<String, List<OrgMembership>>();
     
     for(final var bottom : groupBottoms) {
-      if(isGroupDisabledUpward(bottom)) {
+      if(isPartyDisabledUpward(bottom)) {
         continue;
       }
       var parentId = bottom.getParentId();
       final var users = new ArrayList<OrgMembership>();
       while(parentId != null) {
         final var next = worldState.getParties().get(parentId);
-        if(isGroupDisabledUpward(bottom)) {
+        if(isPartyDisabledUpward(bottom)) {
           continue;
         }
         groupInheritedUsers.put(next.getId(), Collections.unmodifiableList(users.stream().distinct().toList()));
@@ -196,7 +196,7 @@ public class AnyTreeContainerContextImpl implements OrgAnyTreeContainerContext {
     return this.groupBottoms;
   }
   @Override
-  public OrgMember getUser(String id) {
+  public OrgMember getMember(String id) {
     return worldState.getMembers().get(id);
   }
   @Override
@@ -253,7 +253,7 @@ public class AnyTreeContainerContextImpl implements OrgAnyTreeContainerContext {
     return status.get().getValue() != OrgActorStatusType.IN_FORCE;
   }
   @Override  
-  public boolean isGroupDisabledUpward(OrgParty group) {
+  public boolean isPartyDisabledUpward(OrgParty group) {
     if(isStatusDisabled(getStatus(group))) {
       return true;
     }
@@ -282,7 +282,7 @@ public class AnyTreeContainerContextImpl implements OrgAnyTreeContainerContext {
   }
 
   @Override
-  public OrgRight getRole(String id) {
+  public OrgRight getRight(String id) {
     return worldState.getRights().get(id);
   }
 

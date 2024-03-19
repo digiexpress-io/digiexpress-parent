@@ -12,12 +12,12 @@ import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorData;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatus;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatusType;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgCommit;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberRight;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMembership;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgParty;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgPartyRight;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRight;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMembership;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberRight;
 
 public interface ThenaOrgObjects extends ThenaObjects {
   
@@ -62,24 +62,25 @@ public interface ThenaOrgObjects extends ThenaObjects {
   @Value.Immutable
   interface OrgPartyHierarchy extends ThenaOrgObjects {
     String getCommitId();
-    String getGroupId();
-    String getGroupName();
+    String getPartyId();
+    String getPartyName();
+    String getPartyDescription();
     
-    @Nullable String getParentGroupId();
+    @Nullable String getParentPartyId();
     @Nullable String getExternalId();
     
     String getLog();
     OrgActorStatusType getStatus();
     
-    List<OrgRight> getRoleNames();  // roles that are enabled
-    List<OrgRight> getDirectRoleNames();  // roles that are enabled
+    List<OrgRight> getRights();  // roles that are enabled
+    List<OrgRight> getDirectRights();  // roles that are enabled
     
-    List<OrgMember> getDirectUsers();
-    List<OrgMember> getParenUsers();
-    List<OrgMember> getChildUsers();
+    List<OrgMember> getDirectMembers();
+    List<OrgMember> getParenMembers();
+    List<OrgMember> getChildMembers();
     
-    List<OrgParty> getParentGroups();
-    List<OrgParty> getChildGroups();
+    List<OrgParty> getParentParties();
+    List<OrgParty> getChildParties();
   }
   
   @Value.Immutable

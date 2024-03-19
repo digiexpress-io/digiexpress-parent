@@ -10,12 +10,12 @@ import org.barfuin.texttree.api.TreeOptions;
 
 import io.resys.thena.docdb.api.models.ImmutableOrgRightHierarchy;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatusType;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberRight;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMembership;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgParty;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgPartyRight;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRight;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMembership;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberRight;
 import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgRightHierarchy;
 import io.resys.thena.docdb.api.visitors.OrgPartyContainerVisitor;
 import io.resys.thena.docdb.api.visitors.OrgTreeContainer.OrgAnyTreeContainerContext;
@@ -112,7 +112,7 @@ public class RoleHierarchyContainerVisitor extends OrgPartyContainerVisitor<OrgR
     private final Map<String, DefaultNode> nodesGroupMembers = new HashMap<>();
     
     @Override
-    public void start(OrgParty group, List<OrgParty> parents, boolean isDisabled) {
+    public void start(OrgParty group, List<OrgParty> parents, List<OrgRight> parentRights, boolean isDisabled) {
       if(isDisabled) {
         return;
       }

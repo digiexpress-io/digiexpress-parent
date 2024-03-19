@@ -22,8 +22,8 @@ public interface OrgTreeContainer {
   }
   
   interface OrgAnyTreeContainerContext {
-    OrgMember getUser(String id);
-    OrgRight getRole(String id);
+    OrgMember getMember(String id);
+    OrgRight getRight(String id);
     Collection<OrgRight> getRights();
     List<OrgMemberRight> getMemberRoles(String memberId);
     
@@ -32,6 +32,7 @@ public interface OrgTreeContainer {
     List<OrgParty> getPartyChildren(String partyId);
     List<OrgMembership> getPartyMemberships(String partyId);
     List<OrgPartyRight> getPartyRights(String partyId);
+    
     List<OrgParty> getPartyTops();
     List<OrgParty> getPartyBottoms();
     
@@ -45,6 +46,6 @@ public interface OrgTreeContainer {
     Optional<OrgActorStatus> getStatus(OrgMember member);
     Optional<OrgActorStatus> getStatus(OrgRight right);
     boolean isStatusDisabled(Optional<OrgActorStatus> status);
-    boolean isGroupDisabledUpward(OrgParty group);
+    boolean isPartyDisabledUpward(OrgParty group);
   }
 }

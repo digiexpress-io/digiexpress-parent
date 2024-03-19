@@ -54,7 +54,7 @@ public class HierarchicalOrgTest extends DbTestTemplate {
     final var groups = groupHierarchy.getObjects()
       .stream()
       .sorted((a, b) -> a.getExternalId().compareTo(b.getExternalId()))
-      .filter(e -> e.getParentGroupId() == null)
+      .filter(e -> e.getParentPartyId() == null)
       .map(e -> e.getLog())
       .toList();
     
