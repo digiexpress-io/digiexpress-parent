@@ -5,35 +5,35 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberRight;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMembership;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgParty;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgPartyRight;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRight;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMembership;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberRight;
 import io.resys.thena.docdb.api.visitors.OrgTreeContainer.OrgAnyTreeContainerContext;
 import io.resys.thena.docdb.api.visitors.OrgTreeContainer.OrgAnyTreeContainerVisitor;
 
 
-public abstract class OrgGroupContainerVisitor<T> implements OrgAnyTreeContainerVisitor<T> {
+public abstract class OrgPartyContainerVisitor<T> implements OrgAnyTreeContainerVisitor<T> {
   
   private final boolean includeDisabled;
   
-  public OrgGroupContainerVisitor(boolean includeDisabled) {
+  public OrgPartyContainerVisitor(boolean includeDisabled) {
     super();
     this.includeDisabled = includeDisabled;
   }
 
 
-  public interface GroupVisitor {
+  public interface PartyVisitor {
     void start(OrgParty group, List<OrgParty> parents, boolean isDisabled);
     
     void visitMembership(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled);
     void visitMembershipWithInheritance(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled);
     
-    void visitRole(OrgParty group, OrgMemberRight groupRole, OrgRight role, boolean isDisabled);
-    void visitRole(OrgParty group, OrgPartyRight groupRole, OrgRight role, boolean isDisabled);
-    void visitChild(OrgParty group, boolean isDisabled);
+    void visitMemberPartyRight(OrgParty party, OrgMemberRight memberRight, OrgRight right, boolean isDisabled);
+    void visitPartyRight(OrgParty party, OrgPartyRight partyRight, OrgRight right, boolean isDisabled);
+    void visitChildParty(OrgParty party, boolean isDisabled);
     void end(OrgParty group, List<OrgParty> parents, boolean isDisabled);
   }
   
@@ -43,8 +43,8 @@ public abstract class OrgGroupContainerVisitor<T> implements OrgAnyTreeContainer
       visitGroup(top, worldState, Collections.emptyList());
     }
   }
-  protected abstract GroupVisitor visitTop(OrgParty group, OrgAnyTreeContainerContext worldState);
-  protected abstract GroupVisitor visitChild(OrgParty group, OrgAnyTreeContainerContext worldState);
+  protected abstract PartyVisitor visitTop(OrgParty group, OrgAnyTreeContainerContext worldState);
+  protected abstract PartyVisitor visitChild(OrgParty group, OrgAnyTreeContainerContext worldState);
 
   
   protected void visitGroup(OrgParty group, OrgAnyTreeContainerContext worldState, List<OrgParty> parents) {
@@ -69,7 +69,7 @@ public abstract class OrgGroupContainerVisitor<T> implements OrgAnyTreeContainer
         continue;
       }
       
-      visitor.visitRole(group, groupRole, role, groupRoleStatus || roleStatus);
+      visitor.visitPartyRight(group, groupRole, role, groupRoleStatus || roleStatus);
     }
     
     for(final var member : worldState.getPartyMemberships(group.getId())) {
@@ -101,7 +101,7 @@ public abstract class OrgGroupContainerVisitor<T> implements OrgAnyTreeContainer
         if(isRoleDisabled && !includeDisabled) {
           continue;
         }
-        visitor.visitRole(group, groupUserRole, role, isRoleDisabled);
+        visitor.visitMemberPartyRight(group, groupUserRole, role, isRoleDisabled);
       }
       
     }
@@ -116,14 +116,14 @@ public abstract class OrgGroupContainerVisitor<T> implements OrgAnyTreeContainer
         final var role = worldState.getRole(groupUserRole.getRightId());
         final var groupRoleStatus = worldState.isStatusDisabled(worldState.getStatus(groupUserRole));
         final var roleStatus = worldState.isStatusDisabled(worldState.getStatus(role));
-        visitor.visitRole(group, groupUserRole, role, groupRoleStatus || roleStatus);
+        visitor.visitMemberPartyRight(group, groupUserRole, role, groupRoleStatus || roleStatus);
       }
       
     }
     
     final var nextParents = ImmutableList.<OrgParty>builder().addAll(parents).add(group).build();
     for(final var child : worldState.getPartyChildren(group.getId())) {
-      visitor.visitChild(child, worldState.isStatusDisabled(worldState.getStatus(child)));
+      visitor.visitChildParty(child, worldState.isStatusDisabled(worldState.getStatus(child)));
       visitGroup(child, worldState, nextParents);
     }
     

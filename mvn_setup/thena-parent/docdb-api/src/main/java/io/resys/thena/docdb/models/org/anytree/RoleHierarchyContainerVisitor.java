@@ -17,14 +17,14 @@ import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMembership;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberRight;
 import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgRightHierarchy;
-import io.resys.thena.docdb.api.visitors.OrgGroupContainerVisitor;
+import io.resys.thena.docdb.api.visitors.OrgPartyContainerVisitor;
 import io.resys.thena.docdb.api.visitors.OrgTreeContainer.OrgAnyTreeContainerContext;
 import io.resys.thena.docdb.api.visitors.OrgTreeContainer.OrgAnyTreeContainerVisitor;
 import lombok.RequiredArgsConstructor;
 
 
 
-public class RoleHierarchyContainerVisitor extends OrgGroupContainerVisitor<OrgRightHierarchy> 
+public class RoleHierarchyContainerVisitor extends OrgPartyContainerVisitor<OrgRightHierarchy> 
   implements OrgAnyTreeContainerVisitor<OrgRightHierarchy> {
   
   private final String roleIdOrNameOrExternalId;
@@ -32,7 +32,7 @@ public class RoleHierarchyContainerVisitor extends OrgGroupContainerVisitor<OrgR
   private final Map<String, GroupVisitorForRole> visitorsByGroup = new HashMap<>();
   
   private OrgAnyTreeContainerContext ctx;
-  private GroupVisitor currentVisitor;
+  private PartyVisitor currentVisitor;
   private OrgRight target;
   private DefaultNode nodeRoot;
   
@@ -89,7 +89,7 @@ public class RoleHierarchyContainerVisitor extends OrgGroupContainerVisitor<OrgR
   }
 
   @Override
-  protected GroupVisitor visitTop(OrgParty group, OrgAnyTreeContainerContext worldState) {
+  protected PartyVisitor visitTop(OrgParty group, OrgAnyTreeContainerContext worldState) {
     final var currentVisitor = new GroupVisitorForRole(target, nodeRoot, ctx);
     this.visitorsByGroup.put(group.getId(), currentVisitor);
     this.currentVisitor = currentVisitor;
@@ -97,12 +97,12 @@ public class RoleHierarchyContainerVisitor extends OrgGroupContainerVisitor<OrgR
   }
 
   @Override
-  protected GroupVisitor visitChild(OrgParty group, OrgAnyTreeContainerContext worldState) {
+  protected PartyVisitor visitChild(OrgParty group, OrgAnyTreeContainerContext worldState) {
     return this.currentVisitor;
   }
   
   @RequiredArgsConstructor
-  private static class GroupVisitorForRole implements GroupVisitor {
+  private static class GroupVisitorForRole implements PartyVisitor {
     private final OrgRight target;
     private final DefaultNode nodeRoot;
     private final OrgAnyTreeContainerContext ctx;
@@ -157,7 +157,7 @@ public class RoleHierarchyContainerVisitor extends OrgGroupContainerVisitor<OrgR
     }
 
     @Override
-    public void visitRole(OrgParty group, OrgPartyRight groupRole, OrgRight role, boolean isDisabled) {
+    public void visitPartyRight(OrgParty group, OrgPartyRight groupRole, OrgRight role, boolean isDisabled) {
       if(isDisabled) {
         return;
       }
@@ -176,7 +176,7 @@ public class RoleHierarchyContainerVisitor extends OrgGroupContainerVisitor<OrgR
     }
     
     @Override
-    public void visitRole(OrgParty group, OrgMemberRight groupRole, OrgRight role, boolean isDisabled) {
+    public void visitMemberPartyRight(OrgParty group, OrgMemberRight groupRole, OrgRight role, boolean isDisabled) {
       if(isDisabled) {
         return;
       }
@@ -193,7 +193,7 @@ public class RoleHierarchyContainerVisitor extends OrgGroupContainerVisitor<OrgR
     }
 
     @Override
-    public void visitChild(OrgParty group, boolean isDisabled) {
+    public void visitChildParty(OrgParty group, boolean isDisabled) {
       
     }
 

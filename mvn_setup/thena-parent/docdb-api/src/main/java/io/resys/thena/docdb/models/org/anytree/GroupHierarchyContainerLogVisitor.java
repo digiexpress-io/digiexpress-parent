@@ -14,15 +14,15 @@ import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRight;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMembership;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberRight;
-import io.resys.thena.docdb.api.visitors.OrgGroupContainerVisitor;
-import io.resys.thena.docdb.api.visitors.OrgGroupContainerVisitor.GroupVisitor;
+import io.resys.thena.docdb.api.visitors.OrgPartyContainerVisitor;
+import io.resys.thena.docdb.api.visitors.OrgPartyContainerVisitor.PartyVisitor;
 import io.resys.thena.docdb.api.visitors.OrgTreeContainer.OrgAnyTreeContainerContext;
 import io.resys.thena.docdb.api.visitors.OrgTreeContainer.OrgAnyTreeContainerVisitor;
 
 
 
-public class GroupHierarchyContainerLogVisitor extends OrgGroupContainerVisitor<String> 
-  implements OrgAnyTreeContainerVisitor<String>, GroupVisitor {
+public class GroupHierarchyContainerLogVisitor extends OrgPartyContainerVisitor<String> 
+  implements OrgAnyTreeContainerVisitor<String>, PartyVisitor {
   
   private final String groupIdOrNameOrExternalId;
   private final DefaultNode nodeRoot = new DefaultNode("organization");
@@ -65,7 +65,7 @@ public class GroupHierarchyContainerLogVisitor extends OrgGroupContainerVisitor<
     
   }
   @Override
-  public void visitRole(OrgParty group, OrgPartyRight groupRole, OrgRight role, boolean isDisabled) {
+  public void visitPartyRight(OrgParty group, OrgPartyRight groupRole, OrgRight role, boolean isDisabled) {
     if(isDisabled) {
       return;
     }
@@ -77,7 +77,7 @@ public class GroupHierarchyContainerLogVisitor extends OrgGroupContainerVisitor<
     nodesGroupRoles.get(group.getId()).addChild(new DefaultNode(role.getRightName()));
   }
   @Override
-  public void visitRole(OrgParty group, OrgMemberRight groupRole, OrgRight role, boolean isDisabled) {
+  public void visitMemberPartyRight(OrgParty group, OrgMemberRight groupRole, OrgRight role, boolean isDisabled) {
     if(isDisabled) {
       return;
     }
@@ -91,7 +91,7 @@ public class GroupHierarchyContainerLogVisitor extends OrgGroupContainerVisitor<
   }
   
   @Override
-  public void visitChild(OrgParty group, boolean isDisabled) {
+  public void visitChildParty(OrgParty group, boolean isDisabled) {
     if(isDisabled) {
       return;
     }
@@ -132,11 +132,11 @@ public class GroupHierarchyContainerLogVisitor extends OrgGroupContainerVisitor<
     return tree;
   }
   @Override
-  protected GroupVisitor visitTop(OrgParty group, OrgAnyTreeContainerContext worldState) {
+  protected PartyVisitor visitTop(OrgParty group, OrgAnyTreeContainerContext worldState) {
     return this;
   }
   @Override
-  protected GroupVisitor visitChild(OrgParty group, OrgAnyTreeContainerContext worldState) {
+  protected PartyVisitor visitChild(OrgParty group, OrgAnyTreeContainerContext worldState) {
     return this;
   }
 }

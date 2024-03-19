@@ -6,35 +6,38 @@ import java.util.Map;
 
 import io.resys.permission.client.api.model.ImmutablePermission;
 import io.resys.permission.client.api.model.ImmutablePrincipal;
+import io.resys.permission.client.api.model.ImmutableRole;
 import io.resys.permission.client.api.model.ImmutableRoleHierarchy;
 import io.resys.permission.client.api.model.ImmutableRoleHierarchyContainer;
 import io.resys.permission.client.api.model.RoleHierarchyContainer;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberRight;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMembership;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgParty;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgPartyRight;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRight;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMembership;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberRight;
-import io.resys.thena.docdb.api.visitors.OrgGroupContainerVisitor;
-import io.resys.thena.docdb.api.visitors.OrgGroupContainerVisitor.GroupVisitor;
+import io.resys.thena.docdb.api.visitors.OrgPartyContainerVisitor;
+import io.resys.thena.docdb.api.visitors.OrgPartyContainerVisitor.PartyVisitor;
 import io.resys.thena.docdb.api.visitors.OrgTreeContainer.OrgAnyTreeContainerContext;
 import io.resys.thena.docdb.api.visitors.OrgTreeContainer.OrgAnyTreeContainerVisitor;
 
 
-public class RoleHierarchyQueryVisitor extends OrgGroupContainerVisitor<RoleHierarchyContainer> 
-  implements OrgAnyTreeContainerVisitor<RoleHierarchyContainer>, GroupVisitor {
+public class RoleHierarchyQueryVisitor extends OrgPartyContainerVisitor<RoleHierarchyContainer> 
+  implements OrgAnyTreeContainerVisitor<RoleHierarchyContainer>, PartyVisitor {
   
-  private final String groupIdOrNameOrExternalId;
+  private final String idOrNameOrExtId;
  
   private final Map<String, ImmutablePermission> permissions = new LinkedHashMap<>(); // permissions by name
   private final Map<String, ImmutablePrincipal> principals = new LinkedHashMap<>();   // principals by name
     
   private String foundRoleId;
-  private ImmutableRoleHierarchy.Builder foundRole;
+  private ImmutableRoleHierarchy.Builder roleHierarchy;
+  private ImmutableRole.Builder role;
 
-  public RoleHierarchyQueryVisitor(String groupIdOrNameOrExternalId) {
+  
+  public RoleHierarchyQueryVisitor(String idOrNameOrExtId) {
     super(false);
-    this.groupIdOrNameOrExternalId = groupIdOrNameOrExternalId;
+    this.idOrNameOrExtId = idOrNameOrExtId;
   }
   
   private boolean isDirectGroup(OrgParty group) {
@@ -74,34 +77,37 @@ public class RoleHierarchyQueryVisitor extends OrgGroupContainerVisitor<RoleHier
     // TODO builder.addDirectUsers(user);
   }
   @Override
-  public void visitRole(OrgParty group, OrgPartyRight groupRole, OrgRight role, boolean isDisabled) {
-    
+  public void visitPartyRight(OrgParty group, OrgPartyRight groupRole, OrgRight role, boolean isDisabled) {
     if(foundRoleId == null) {
       return;
     }
     // TODO builder.addDirectRoleNames(role);    
   }
   @Override
-  public void visitRole(OrgParty group, OrgMemberRight groupRole, OrgRight role, boolean isDisabled) {
+  public void visitMemberPartyRight(OrgParty group, OrgMemberRight groupRole, OrgRight role, boolean isDisabled) {
 
     
   }
   
+  
   @Override
-  public void visitChild(OrgParty group, boolean isDisabled) {
-    
+  public void visitChildParty(OrgParty group, boolean isDisabled) {
     if(foundRoleId == null) {
       return;
     }
     // TODO builder.addChildGroups(group);
   }
   @Override
-  public void start(OrgParty group, List<OrgParty> parents, boolean isDisabled) {
+  public void start(OrgParty party, List<OrgParty> parents, boolean isDisabled) {
 
-    if(group.isMatch(groupIdOrNameOrExternalId)) {
-      
-      foundRoleId = group.getId();
-      foundRole = ImmutableRoleHierarchy.builder().role(null);
+    if(party.isMatch(idOrNameOrExtId)) {
+      foundRoleId = party.getId();
+      role = ImmutableRole.builder()
+          .id(party.getId())
+          .name(party.getPartyName())
+          .version(party.getCommitId())
+          .description(party.getPartyDescription());
+      roleHierarchy = ImmutableRoleHierarchy.builder();
     }
   }
   
@@ -114,16 +120,18 @@ public class RoleHierarchyQueryVisitor extends OrgGroupContainerVisitor<RoleHier
   
   @Override
   public RoleHierarchyContainer close() {
+    final var role = this.role.build();
     return ImmutableRoleHierarchyContainer.builder()
         .log("")
+        .addRoles(roleHierarchy.role(role).build())
         .build();
   }
   @Override
-  protected GroupVisitor visitTop(OrgParty group, OrgAnyTreeContainerContext worldState) {
+  protected PartyVisitor visitTop(OrgParty group, OrgAnyTreeContainerContext worldState) {
     return this;
   }
   @Override
-  protected GroupVisitor visitChild(OrgParty group, OrgAnyTreeContainerContext worldState) {
+  protected PartyVisitor visitChild(OrgParty group, OrgAnyTreeContainerContext worldState) {
     return this;
   }
 }

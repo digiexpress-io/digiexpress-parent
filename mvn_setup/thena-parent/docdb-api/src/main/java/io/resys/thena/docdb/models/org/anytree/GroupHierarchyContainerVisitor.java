@@ -10,15 +10,15 @@ import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRight;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMembership;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberRight;
-import io.resys.thena.docdb.api.visitors.OrgGroupContainerVisitor;
-import io.resys.thena.docdb.api.visitors.OrgGroupContainerVisitor.GroupVisitor;
+import io.resys.thena.docdb.api.visitors.OrgPartyContainerVisitor;
+import io.resys.thena.docdb.api.visitors.OrgPartyContainerVisitor.PartyVisitor;
 import io.resys.thena.docdb.api.visitors.OrgTreeContainer.OrgAnyTreeContainerContext;
 import io.resys.thena.docdb.api.visitors.OrgTreeContainer.OrgAnyTreeContainerVisitor;
 
 
 
-public class GroupHierarchyContainerVisitor extends OrgGroupContainerVisitor<ImmutableOrgPartyHierarchy> 
-  implements OrgAnyTreeContainerVisitor<ImmutableOrgPartyHierarchy>, GroupVisitor {
+public class GroupHierarchyContainerVisitor extends OrgPartyContainerVisitor<ImmutableOrgPartyHierarchy> 
+  implements OrgAnyTreeContainerVisitor<ImmutableOrgPartyHierarchy>, PartyVisitor {
   
   private final String groupIdOrNameOrExternalId;
   private final ImmutableOrgPartyHierarchy.Builder builder = ImmutableOrgPartyHierarchy.builder();
@@ -67,7 +67,7 @@ public class GroupHierarchyContainerVisitor extends OrgGroupContainerVisitor<Imm
     builder.addDirectUsers(user);
   }
   @Override
-  public void visitRole(OrgParty group, OrgPartyRight groupRole, OrgRight role, boolean isDisabled) {
+  public void visitPartyRight(OrgParty group, OrgPartyRight groupRole, OrgRight role, boolean isDisabled) {
     if(isDisabled) {
       return;
     }
@@ -78,7 +78,7 @@ public class GroupHierarchyContainerVisitor extends OrgGroupContainerVisitor<Imm
     builder.addDirectRoleNames(role);    
   }
   @Override
-  public void visitRole(OrgParty group, OrgMemberRight groupRole, OrgRight role, boolean isDisabled) {
+  public void visitMemberPartyRight(OrgParty group, OrgMemberRight groupRole, OrgRight role, boolean isDisabled) {
     if(isDisabled) {
       return;
     }
@@ -86,7 +86,7 @@ public class GroupHierarchyContainerVisitor extends OrgGroupContainerVisitor<Imm
   }
   
   @Override
-  public void visitChild(OrgParty group, boolean isDisabled) {
+  public void visitChildParty(OrgParty group, boolean isDisabled) {
     if(isDisabled) {
       return;
     }
@@ -127,11 +127,11 @@ public class GroupHierarchyContainerVisitor extends OrgGroupContainerVisitor<Imm
     return builder.log("").build();
   }
   @Override
-  protected GroupVisitor visitTop(OrgParty group, OrgAnyTreeContainerContext worldState) {
+  protected PartyVisitor visitTop(OrgParty group, OrgAnyTreeContainerContext worldState) {
     return this;
   }
   @Override
-  protected GroupVisitor visitChild(OrgParty group, OrgAnyTreeContainerContext worldState) {
+  protected PartyVisitor visitChild(OrgParty group, OrgAnyTreeContainerContext worldState) {
     return this;
   }
 }

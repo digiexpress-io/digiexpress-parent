@@ -40,10 +40,10 @@ public class RoleTest extends DbTestTemplate {
   
     for(final var role : allRoles) {
       final var foundByName = client
-      .roleQuery().get(role.getName())
+      .roleHierarchyQuery().get(role.getName())
       .await().atMost(Duration.ofMinutes(1));
       
-      Assertions.assertEquals(role.getId(), foundByName.getId());
+      Assertions.assertEquals(role.getId(), foundByName.getRoles().get(0).getRole().getId());
     }
     
   log.debug(new JsonArray(allRoles).encodePrettily());

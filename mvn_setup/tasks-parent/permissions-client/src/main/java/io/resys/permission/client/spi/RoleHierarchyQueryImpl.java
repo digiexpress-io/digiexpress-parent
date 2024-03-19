@@ -14,7 +14,7 @@ public class RoleHierarchyQueryImpl implements RoleHierarchyQuery {
   private final PermissionStore ctx;
 
   @Override
-  public Uni<RoleHierarchyContainer> getRoleHierarchy(String roleId) {
+  public Uni<RoleHierarchyContainer> get(String roleId) {
     final var repoId = ctx.getConfig().getRepoId();
     final Uni<QueryEnvelope<RoleHierarchyContainer>> roleHierarchy = ctx.getOrg()
         .find()

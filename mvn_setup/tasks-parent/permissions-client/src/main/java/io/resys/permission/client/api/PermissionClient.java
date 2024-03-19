@@ -78,7 +78,7 @@ public interface PermissionClient {
   }
   
   interface RoleHierarchyQuery {
-    Uni<RoleHierarchyContainer> getRoleHierarchy(String roleId);
+    Uni<RoleHierarchyContainer> get(String roleId);
   }
   
   public interface RepositoryQuery {
