@@ -162,7 +162,7 @@ ALTER TABLE doc_log
   REFERENCES doc_commits (id);
 
 
-CREATE TABLE org_roles
+CREATE TABLE org_rights
 (
   id VARCHAR(40) PRIMARY KEY,
   commit_id VARCHAR(40) NOT NULL,
@@ -170,11 +170,11 @@ CREATE TABLE org_roles
   role_name VARCHAR(255) UNIQUE NOT NULL,
   role_description VARCHAR(255) NOT NULL
 );
-CREATE INDEX org_roles_NAME_INDEX ON org_roles (role_name);
-CREATE INDEX org_roles_COMMIT_INDEX ON org_roles (commit_id);
-CREATE INDEX org_roles_EXTERNAL_INDEX ON org_roles (external_id);
+CREATE INDEX org_rights_NAME_INDEX ON org_rights (role_name);
+CREATE INDEX org_rights_COMMIT_INDEX ON org_rights (commit_id);
+CREATE INDEX org_rights_EXTERNAL_INDEX ON org_rights (external_id);
 
-CREATE TABLE org_groups
+CREATE TABLE org_parties
 (
   id VARCHAR(40) PRIMARY KEY,
   commit_id VARCHAR(40) NOT NULL,
@@ -184,15 +184,15 @@ CREATE TABLE org_groups
   group_description VARCHAR(255) NOT NULL
 );
 
-ALTER TABLE org_groups
-  ADD CONSTRAINT org_groups_PARENT_FK
+ALTER TABLE org_parties
+  ADD CONSTRAINT org_parties_PARENT_FK
   FOREIGN KEY (parent_id)
-  REFERENCES org_groups (id);
-CREATE INDEX org_groups_NAME_INDEX ON org_groups (group_name);
-CREATE INDEX org_groups_COMMIT_INDEX ON org_groups (commit_id);
-CREATE INDEX org_groups_EXTERNAL_INDEX ON org_groups (external_id);
+  REFERENCES org_parties (id);
+CREATE INDEX org_parties_NAME_INDEX ON org_parties (group_name);
+CREATE INDEX org_parties_COMMIT_INDEX ON org_parties (commit_id);
+CREATE INDEX org_parties_EXTERNAL_INDEX ON org_parties (external_id);
 
-CREATE TABLE org_group_roles
+CREATE TABLE org_party_rights
 (
   id VARCHAR(40) PRIMARY KEY,
   commit_id VARCHAR(40) NOT NULL,
@@ -200,11 +200,11 @@ CREATE TABLE org_group_roles
   role_id VARCHAR(40) NOT NULL,
   UNIQUE (role_id, group_id)
 );
-CREATE INDEX org_group_roles_COMMIT_INDEX ON org_group_roles (commit_id);
-CREATE INDEX org_group_roles_GROUP_INDEX ON org_group_roles (group_id);
-CREATE INDEX org_group_roles_ROLE_INDEX ON org_group_roles (role_id);
+CREATE INDEX org_party_rights_COMMIT_INDEX ON org_party_rights (commit_id);
+CREATE INDEX org_party_rights_GROUP_INDEX ON org_party_rights (group_id);
+CREATE INDEX org_party_rights_ROLE_INDEX ON org_party_rights (role_id);
 
-CREATE TABLE org_users
+CREATE TABLE org_members
 (
   id VARCHAR(40) PRIMARY KEY,
   commit_id VARCHAR(40) NOT NULL,
@@ -212,11 +212,11 @@ CREATE TABLE org_users
   username VARCHAR(255) UNIQUE NOT NULL,
   email VARCHAR(255) NOT NULL
 );
-CREATE INDEX org_users_COMMIT_INDEX ON org_users (commit_id);
-CREATE INDEX org_users_EXTERNAL_INDEX ON org_users (external_id);
-CREATE INDEX org_users_USER_NAME_INDEX ON org_users (username);
+CREATE INDEX org_members_COMMIT_INDEX ON org_members (commit_id);
+CREATE INDEX org_members_EXTERNAL_INDEX ON org_members (external_id);
+CREATE INDEX org_members_USER_NAME_INDEX ON org_members (username);
 
-CREATE TABLE org_user_roles
+CREATE TABLE org_member_rights
 (
   id VARCHAR(40) PRIMARY KEY,
   commit_id VARCHAR(40) NOT NULL,
@@ -225,14 +225,14 @@ CREATE TABLE org_user_roles
   group_id VARCHAR(40),
   UNIQUE (user_id, role_id, group_id)
 );
-CREATE INDEX org_user_roles_COMMIT_INDEX ON org_user_roles (commit_id);
-CREATE INDEX org_user_roles_ROLE_INDEX ON org_user_roles (role_id);
-CREATE INDEX org_user_roles_USER_INDEX ON org_user_roles (user_id);
-CREATE INDEX org_user_roles_GROUP_INDEX ON org_user_roles (group_id);
-CREATE INDEX org_user_roles_REF_INDEX ON org_user_roles (role_id, user_id);
-CREATE INDEX org_user_roles_REF_2_INDEX ON org_user_roles (role_id, user_id, group_id);
+CREATE INDEX org_member_rights_COMMIT_INDEX ON org_member_rights (commit_id);
+CREATE INDEX org_member_rights_ROLE_INDEX ON org_member_rights (role_id);
+CREATE INDEX org_member_rights_USER_INDEX ON org_member_rights (user_id);
+CREATE INDEX org_member_rights_GROUP_INDEX ON org_member_rights (group_id);
+CREATE INDEX org_member_rights_REF_INDEX ON org_member_rights (role_id, user_id);
+CREATE INDEX org_member_rights_REF_2_INDEX ON org_member_rights (role_id, user_id, group_id);
 
-CREATE TABLE org_user_memberships
+CREATE TABLE org_memberships
 (
   id VARCHAR(40) PRIMARY KEY,
   commit_id VARCHAR(40) NOT NULL,
@@ -240,10 +240,10 @@ CREATE TABLE org_user_memberships
   group_id VARCHAR(40) NOT NULL,
   UNIQUE (user_id, group_id)
 );
-CREATE INDEX org_user_memberships_COMMIT_INDEX ON org_user_memberships (commit_id);
-CREATE INDEX org_user_memberships_USER_INDEX ON org_user_memberships (user_id);
-CREATE INDEX org_user_memberships_GROUP_INDEX ON org_user_memberships (group_id);
-CREATE INDEX org_user_memberships_REF_INDEX ON org_user_memberships (group_id, user_id);
+CREATE INDEX org_memberships_COMMIT_INDEX ON org_memberships (commit_id);
+CREATE INDEX org_memberships_USER_INDEX ON org_memberships (user_id);
+CREATE INDEX org_memberships_GROUP_INDEX ON org_memberships (group_id);
+CREATE INDEX org_memberships_REF_INDEX ON org_memberships (group_id, user_id);
 
 CREATE TABLE org_actor_status
 (
@@ -320,101 +320,101 @@ ALTER TABLE org_actor_data
 ALTER TABLE org_actor_data
   ADD CONSTRAINT org_actor_data_ROLE_FK
   FOREIGN KEY (role_id)
-  REFERENCES org_roles (id);
+  REFERENCES org_rights (id);
 
 
 
 ALTER TABLE org_actor_status
   ADD CONSTRAINT org_actor_status_ROLE_FK
   FOREIGN KEY (role_id)
-  REFERENCES org_roles (id);
+  REFERENCES org_rights (id);
 
 
 
-ALTER TABLE org_user_roles
-  ADD CONSTRAINT org_user_roles_ROLE_FK
+ALTER TABLE org_member_rights
+  ADD CONSTRAINT org_member_rights_ROLE_FK
   FOREIGN KEY (role_id)
-  REFERENCES org_roles (id);
+  REFERENCES org_rights (id);
 
 
 
-ALTER TABLE org_group_roles
-  ADD CONSTRAINT org_group_roles_ROLE_FK
+ALTER TABLE org_party_rights
+  ADD CONSTRAINT org_party_rights_ROLE_FK
   FOREIGN KEY (role_id)
-  REFERENCES org_roles (id);
+  REFERENCES org_rights (id);
 
 
 
-ALTER TABLE org_user_memberships
-  ADD CONSTRAINT org_user_memberships_USER_FK
+ALTER TABLE org_memberships
+  ADD CONSTRAINT org_memberships_USER_FK
   FOREIGN KEY (user_id)
-  REFERENCES org_users (id);
+  REFERENCES org_members (id);
 
 
 
-ALTER TABLE org_user_roles
-  ADD CONSTRAINT org_user_roles_USER_FK
+ALTER TABLE org_member_rights
+  ADD CONSTRAINT org_member_rights_USER_FK
   FOREIGN KEY (user_id)
-  REFERENCES org_users (id);
+  REFERENCES org_members (id);
 
 
 
 ALTER TABLE org_actor_data
   ADD CONSTRAINT org_actor_data_USER_FK
   FOREIGN KEY (user_id)
-  REFERENCES org_users (id);
+  REFERENCES org_members (id);
 
 
 
 ALTER TABLE org_actor_status
   ADD CONSTRAINT org_actor_status_USER_FK
   FOREIGN KEY (user_id)
-  REFERENCES org_users (id);
+  REFERENCES org_members (id);
 
 
 
 ALTER TABLE org_actor_data
   ADD CONSTRAINT org_actor_data_GROUP_FK
   FOREIGN KEY (group_id)
-  REFERENCES org_groups (id);
+  REFERENCES org_parties (id);
 
 
 
 ALTER TABLE org_actor_status
   ADD CONSTRAINT org_actor_status_GROUP_FK
   FOREIGN KEY (group_id)
-  REFERENCES org_groups (id);
+  REFERENCES org_parties (id);
 
 
 
-ALTER TABLE org_group_roles
-  ADD CONSTRAINT org_group_roles_GROUP_FK
+ALTER TABLE org_party_rights
+  ADD CONSTRAINT org_party_rights_GROUP_FK
   FOREIGN KEY (group_id)
-  REFERENCES org_groups (id);
+  REFERENCES org_parties (id);
 
 
 
-ALTER TABLE org_user_roles
-  ADD CONSTRAINT org_user_roles_GROUP_FK
+ALTER TABLE org_member_rights
+  ADD CONSTRAINT org_member_rights_GROUP_FK
   FOREIGN KEY (group_id)
-  REFERENCES org_groups (id);
+  REFERENCES org_parties (id);
 
 
 
-ALTER TABLE org_user_memberships
-  ADD CONSTRAINT org_user_memberships_GROUP_FK
+ALTER TABLE org_memberships
+  ADD CONSTRAINT org_memberships_GROUP_FK
   FOREIGN KEY (group_id)
-  REFERENCES org_groups (id);
+  REFERENCES org_parties (id);
 
 
-ALTER TABLE org_user_roles
-  ADD CONSTRAINT org_user_roles_GROUP_MEMBER_FK
+ALTER TABLE org_member_rights
+  ADD CONSTRAINT org_member_rights_GROUP_MEMBER_FK
   FOREIGN KEY (group_id, user_id)
-  REFERENCES org_user_memberships (group_id, user_id);
+  REFERENCES org_memberships (group_id, user_id);
 
 
-ALTER TABLE org_user_memberships
-  ADD CONSTRAINT org_user_memberships_COMMIT_FK
+ALTER TABLE org_memberships
+  ADD CONSTRAINT org_memberships_COMMIT_FK
   FOREIGN KEY (commit_id)
   REFERENCES org_commits (commit_id);
 

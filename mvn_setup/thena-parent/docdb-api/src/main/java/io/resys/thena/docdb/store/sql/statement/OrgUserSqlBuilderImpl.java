@@ -25,7 +25,7 @@ public class OrgUserSqlBuilderImpl implements OrgUserSqlBuilder {
   public SqlTuple findAll(List<String> id) {
     final var sql = new SqlStatement()
       .append("SELECT * ").ln()
-      .append("  FROM ").append(options.getOrgUsers()).ln()
+      .append("  FROM ").append(options.getOrgMembers()).ln()
       .append("  WHERE ").ln();
     
     var index = 1;
@@ -51,7 +51,7 @@ public class OrgUserSqlBuilderImpl implements OrgUserSqlBuilder {
   public Sql findAll() {
     return ImmutableSql.builder()
         .value(new SqlStatement()
-        .append("SELECT * FROM ").append(options.getOrgUsers())
+        .append("SELECT * FROM ").append(options.getOrgMembers())
         .build())
         .build();
   }
@@ -60,7 +60,7 @@ public class OrgUserSqlBuilderImpl implements OrgUserSqlBuilder {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT * ").ln()
-        .append("  FROM ").append(options.getOrgUsers()).ln()
+        .append("  FROM ").append(options.getOrgMembers()).ln()
         .append("  WHERE (id = $1 OR external_id = $1 OR username = $1)").ln() 
         .build())
         .props(Tuple.of(id))
@@ -70,7 +70,7 @@ public class OrgUserSqlBuilderImpl implements OrgUserSqlBuilder {
   public SqlTuple insertOne(OrgUser doc) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
-        .append("INSERT INTO ").append(options.getOrgUsers())
+        .append("INSERT INTO ").append(options.getOrgMembers())
         .append(" (id, commit_id, external_id, username, email) VALUES($1, $2, $3, $4, $5)").ln()
         .build())
         .props(Tuple.from(new Object[]{ doc.getId(), doc.getCommitId(), doc.getExternalId(), doc.getUserName(), doc.getEmail() }))
@@ -80,7 +80,7 @@ public class OrgUserSqlBuilderImpl implements OrgUserSqlBuilder {
   public SqlTuple updateOne(OrgUser doc) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
-        .append("UPDATE ").append(options.getOrgUsers())
+        .append("UPDATE ").append(options.getOrgMembers())
         .append(" SET external_id = $1, username = $2, email = $3, commit_id = $4")
         .append(" WHERE id = $5")
         .build())
@@ -91,7 +91,7 @@ public class OrgUserSqlBuilderImpl implements OrgUserSqlBuilder {
   public SqlTupleList insertAll(Collection<OrgUser> users) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
-        .append("INSERT INTO ").append(options.getOrgUsers())
+        .append("INSERT INTO ").append(options.getOrgMembers())
         .append(" (id, commit_id, external_id, username, email) VALUES($1, $2, $3, $4, $5)").ln()
         .build())
         .props(users.stream()
@@ -103,7 +103,7 @@ public class OrgUserSqlBuilderImpl implements OrgUserSqlBuilder {
   public SqlTupleList updateMany(Collection<OrgUser> users) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
-        .append("UPDATE ").append(options.getOrgUsers())
+        .append("UPDATE ").append(options.getOrgMembers())
         .append(" SET external_id = $1, username = $2, email = $3, commit_id = $4")
         .append(" WHERE id = $5")
         .build())
@@ -144,10 +144,10 @@ SELECT * FROM child;
         
         // starting point
         .append("  SELECT id, parent_id, group_name, group_description").ln()
-        .append("  FROM ").append(options.getOrgGroups()).ln()
+        .append("  FROM ").append(options.getOrgParties()).ln()
         .append("  WHERE id in( ").ln()
         .append("    SELECT DISTINCT group_id ")
-        .append("    FROM ").append(options.getOrgUserMemberships()).ln()
+        .append("    FROM ").append(options.getOrgMemberships()).ln()
         .append("    WHERE user_id = $1")
         .append("  )")
         
@@ -155,7 +155,7 @@ SELECT * FROM child;
         
         // recursion from bottom to up, join parent to each child until the tip
         .append("  SELECT parent.id, parent.parent_id, parent.group_name, parent.group_description").ln()
-        .append("  FROM ").append(options.getOrgGroups()).append(" as parent").ln()
+        .append("  FROM ").append(options.getOrgParties()).append(" as parent").ln()
         .append("  INNER JOIN child on (parent.id = child.parent_id) ").ln()
         
     		.append(")").ln()
@@ -180,13 +180,13 @@ SELECT * FROM child;
         .append("FROM ").ln()
         .append("  (SELECT DISTINCT id, parent_id, group_name, group_description from child) as groups").ln()
         
-        .append("  LEFT JOIN ").append(options.getOrgUserMemberships()).append(" as direct_memberships").ln()        
+        .append("  LEFT JOIN ").append(options.getOrgMemberships()).append(" as direct_memberships").ln()        
         .append("  ON(direct_memberships.group_id = groups.id and direct_memberships.user_id = $1) ").ln()
         
         .append("  LEFT JOIN ").append(options.getOrgActorStatus()).append(" as group_status").ln()
         .append("  ON(group_status.group_id = groups.id and (group_status.user_id is null or group_status.user_id = $1) and group_status.role_id is null) ").ln()
     
-        .append("  LEFT JOIN ").append(options.getOrgGroupRoles()).append(" as group_roles").ln()
+        .append("  LEFT JOIN ").append(options.getOrgPartyRights()).append(" as group_roles").ln()
         .append("  ON(group_roles.group_id = groups.id) ").ln()
     
         .append("  LEFT JOIN ").append(options.getOrgActorStatus()).append(" as role_status").ln()
@@ -195,7 +195,7 @@ SELECT * FROM child;
         .append("    and (role_status.user_id is null or role_status.user_id = $1)").ln()
         .append("  ) ").ln()
         
-        .append("  LEFT JOIN ").append(options.getOrgRoles()).append(" as role").ln()
+        .append("  LEFT JOIN ").append(options.getOrgRights()).append(" as role").ln()
         .append("  ON(role.id = group_roles.role_id)").ln()
         ;
     
@@ -218,8 +218,8 @@ SELECT * FROM child;
         .append("  role.role_description    as role_description ").ln()
         
         .append("FROM ").ln()
-        .append("  ").append(options.getOrgRoles()).append(" as role").ln()
-        .append("INNER JOIN ").append(options.getOrgUserRoles()).append(" as user_roles").ln()
+        .append("  ").append(options.getOrgRights()).append(" as role").ln()
+        .append("INNER JOIN ").append(options.getOrgMemberRights()).append(" as user_roles").ln()
         .append("  ON(").ln()
         .append("    user_roles.role_id = role.id").ln()
         .append("    and user_roles.user_id = $1").ln()
@@ -246,7 +246,7 @@ SELECT * FROM child;
         .append("  users.* ,").ln()
         .append("  user_status.actor_status as user_status,").ln()
         .append("  user_status.id as user_status_id").ln()
-        .append("FROM ").append(options.getOrgUsers()).append(" as users").ln()
+        .append("FROM ").append(options.getOrgMembers()).append(" as users").ln()
 
         .append("LEFT JOIN ").append(options.getOrgActorStatus()).append(" as user_status").ln()
         .append("ON(").ln()

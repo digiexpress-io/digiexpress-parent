@@ -23,7 +23,7 @@ public class OrgCommitSqlBuilderImpl implements OrgCommitSqlBuilder {
   public Sql findAll() {
     return ImmutableSql.builder()
         .value(new SqlStatement()
-        .append("SELECT * FROM ").append(options.getOrgUsers())
+        .append("SELECT * FROM ").append(options.getOrgMembers())
         .build())
         .build();
   }

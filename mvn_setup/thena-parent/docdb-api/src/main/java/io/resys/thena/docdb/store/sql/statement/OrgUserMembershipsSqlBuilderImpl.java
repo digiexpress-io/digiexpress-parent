@@ -25,7 +25,7 @@ public class OrgUserMembershipsSqlBuilderImpl implements OrgUserMembershipsSqlBu
   public SqlTuple findAll(List<String> id) {
     final var sql = new SqlStatement()
       .append("SELECT * ").ln()
-      .append("  FROM ").append(options.getOrgUserMemberships()).ln()
+      .append("  FROM ").append(options.getOrgMemberships()).ln()
       .append("  WHERE ").ln();
     
     var index = 1;
@@ -47,7 +47,7 @@ public class OrgUserMembershipsSqlBuilderImpl implements OrgUserMembershipsSqlBu
   public Sql findAll() {
     return ImmutableSql.builder()
         .value(new SqlStatement()
-        .append("SELECT * FROM ").append(options.getOrgUserMemberships())
+        .append("SELECT * FROM ").append(options.getOrgMemberships())
         .build())
         .build();
   }
@@ -56,7 +56,7 @@ public class OrgUserMembershipsSqlBuilderImpl implements OrgUserMembershipsSqlBu
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT * ").ln()
-        .append("  FROM ").append(options.getOrgUserMemberships()).ln()
+        .append("  FROM ").append(options.getOrgMemberships()).ln()
         .append("  WHERE id = $1").ln() 
         .build())
         .props(Tuple.of(id))
@@ -69,7 +69,7 @@ public class OrgUserMembershipsSqlBuilderImpl implements OrgUserMembershipsSqlBu
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT * ").ln()
-        .append("  FROM ").append(options.getOrgUserMemberships()).ln()
+        .append("  FROM ").append(options.getOrgMemberships()).ln()
         .append("  WHERE group_id = $1").ln() 
         .build())
         .props(Tuple.of(groupId))
@@ -81,7 +81,7 @@ public class OrgUserMembershipsSqlBuilderImpl implements OrgUserMembershipsSqlBu
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT * ").ln()
-        .append("  FROM ").append(options.getOrgUserMemberships()).ln()
+        .append("  FROM ").append(options.getOrgMemberships()).ln()
         .append("  WHERE user_id = $1").ln() 
         .build())
         .props(Tuple.of(userId))
@@ -91,7 +91,7 @@ public class OrgUserMembershipsSqlBuilderImpl implements OrgUserMembershipsSqlBu
   public SqlTuple insertOne(OrgUserMembership doc) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
-        .append("INSERT INTO ").append(options.getOrgUserMemberships())
+        .append("INSERT INTO ").append(options.getOrgMemberships())
         .append(" (id, commit_id, group_id, user_id) VALUES($1, $2, $3, $4)").ln()
         .build())
         .props(Tuple.from(new Object[]{ doc.getId(), doc.getCommitId(), doc.getGroupId(), doc.getUserId() }))
@@ -101,7 +101,7 @@ public class OrgUserMembershipsSqlBuilderImpl implements OrgUserMembershipsSqlBu
   public SqlTupleList insertAll(Collection<OrgUserMembership> users) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
-        .append("INSERT INTO ").append(options.getOrgUserMemberships())
+        .append("INSERT INTO ").append(options.getOrgMemberships())
         .append(" (id, commit_id, group_id, user_id) VALUES($1, $2, $3, $4)").ln()
         .build())
         .props(users.stream()

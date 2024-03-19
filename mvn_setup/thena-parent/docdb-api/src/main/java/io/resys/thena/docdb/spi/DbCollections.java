@@ -47,12 +47,12 @@ public abstract class DbCollections {
   public abstract String getDoc();
   
   
-  public abstract String getOrgRoles();
-  public abstract String getOrgGroups();
-  public abstract String getOrgGroupRoles();
-  public abstract String getOrgUsers();
-  public abstract String getOrgUserRoles();
-  public abstract String getOrgUserMemberships();
+  public abstract String getOrgRights();
+  public abstract String getOrgParties();
+  public abstract String getOrgPartyRights();
+  public abstract String getOrgMembers();
+  public abstract String getOrgMemberRights();
+  public abstract String getOrgMemberships();
   public abstract String getOrgActorStatus();
   public abstract String getOrgCommits();
   public abstract String getOrgCommitTrees();
@@ -79,12 +79,12 @@ public abstract class DbCollections {
         .docLog(    prefix + this.getDocLog())
         .doc(       prefix + this.getDoc())
         
-        .orgRoles(          prefix + this.getOrgRoles())
-        .orgGroups(         prefix + this.getOrgGroups())
-        .orgGroupRoles(     prefix + this.getOrgGroupRoles())
-        .orgUsers(          prefix + this.getOrgUsers())
-        .orgUserRoles(      prefix + this.getOrgUserRoles())
-        .orgUserMemberships(prefix + this.getOrgUserMemberships())
+        .orgRights(         prefix + this.getOrgRights())
+        .orgParties(        prefix + this.getOrgParties())
+        .orgPartyRights(    prefix + this.getOrgPartyRights())
+        .orgMembers(        prefix + this.getOrgMembers())
+        .orgMemberRights(   prefix + this.getOrgMemberRights())
+        .orgMemberships(    prefix + this.getOrgMemberships())
         .orgActorStatus(    prefix + this.getOrgActorStatus())
         .orgCommits(        prefix + this.getOrgCommits())
         .orgCommitTrees(    prefix + this.getOrgCommitTrees())
@@ -110,12 +110,13 @@ public abstract class DbCollections {
         .docLog("doc_log")
         .doc("doc")
         
-        .orgRoles("org_roles")
-        .orgGroups("org_groups")
-        .orgGroupRoles("org_group_roles")
-        .orgUsers("org_users")
-        .orgUserRoles("org_user_roles")
-        .orgUserMemberships("org_user_memberships")
+        .orgRights("org_rights")
+        .orgParties("org_parties")
+        .orgPartyRights("org_party_rights")
+        .orgMembers("org_members")
+        .orgMemberRights("org_member_rights")
+        .orgMemberships("org_memberships")
+        
         .orgCommits("org_commits")
         .orgCommitTrees("org_commit_trees")
         .orgActorStatus("org_actor_status")
