@@ -14,30 +14,30 @@ public class OrgCommitActionsImpl implements OrgCommitActions {
   private final DbState state;
 
   @Override
-  public CreateOneUser createOneUser() {
+  public CreateOneMember createOneMember() {
     return new CreateOneUserImpl(state);
   }
   @Override
-  public CreateOneGroup createOneGroup() {
+  public CreateOneParty createOneParty() {
     return new CreateOneGroupImpl(state);
   }
   @Override
-  public CreateOneRole createOneRole() {
+  public CreateOneRight createOneRight() {
   	return new CreateOneRoleImpl(state);
   }
   @Override
-  public ModifyOneUser modifyOneUser() {
+  public ModifyOneMember modifyOneMember() {
     return new ModifyOneUserImpl(state);
   }
 
   @Override
-  public ModifyOneGroup modifyOneGroup() {
+  public ModifyOneParty modifyOneParty() {
     // TODO Auto-generated method stub
     return null;
   }
 
   @Override
-  public ModifyOneRole modifyOneRole() {
+  public ModifyOneRight modifyOneRight() {
     // TODO Auto-generated method stub
     return null;
   }

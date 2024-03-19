@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import io.resys.thena.docdb.api.actions.ImmutableOneUserEnvelope;
-import io.resys.thena.docdb.api.actions.OrgCommitActions.CreateOneUser;
+import io.resys.thena.docdb.api.actions.OrgCommitActions.CreateOneMember;
 import io.resys.thena.docdb.api.actions.OrgCommitActions.OneUserEnvelope;
 import io.resys.thena.docdb.api.models.ImmutableMessage;
 import io.resys.thena.docdb.api.models.Repo.CommitResultStatus;
@@ -27,7 +27,7 @@ import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class CreateOneUserImpl implements CreateOneUser {
+public class CreateOneUserImpl implements CreateOneMember {
 
   private final DbState state;
 
@@ -51,10 +51,10 @@ public class CreateOneUserImpl implements CreateOneUser {
   @Override public CreateOneUserImpl email(String email) {           this.email = RepoAssert.notEmpty(email,             () -> "email can't be empty!"); return this; }
   
   @Override public CreateOneUserImpl externalId(String externalId) { this.externalId = externalId; return this; }
-  @Override public CreateOneUserImpl addUserToGroups(String ... addUserToGroups) { this.addUserToGroups.addAll(Arrays.asList(addUserToGroups)); return this; }
-  @Override public CreateOneUserImpl addUserToGroups(List<String> addUserToGroups) { this.addUserToGroups.addAll(RepoAssert.notNull(addUserToGroups, () -> "addUserToGroups can't be empty!")); return this; }
-  @Override public CreateOneUserImpl addUserToRoles(List<String> addUserToRoles) { this.addUserToRoles.addAll(RepoAssert.notNull(addUserToRoles, () -> "addUserToRoles can't be empty!")); return this; }
-  @Override public CreateOneUser addUserToGroupRoles(String groupId, List<String> roledId) {
+  @Override public CreateOneUserImpl addMemberToParties(String ... addUserToGroups) { this.addUserToGroups.addAll(Arrays.asList(addUserToGroups)); return this; }
+  @Override public CreateOneUserImpl addMemberToParties(List<String> addUserToGroups) { this.addUserToGroups.addAll(RepoAssert.notNull(addUserToGroups, () -> "addUserToGroups can't be empty!")); return this; }
+  @Override public CreateOneUserImpl addMemberRight(List<String> addUserToRoles) { this.addUserToRoles.addAll(RepoAssert.notNull(addUserToRoles, () -> "addUserToRoles can't be empty!")); return this; }
+  @Override public CreateOneMember addMemberToPartyRight(String groupId, List<String> roledId) {
     RepoAssert.notEmpty(groupId, () -> "groupId can't be empty!");
     RepoAssert.notEmpty(roledId, () -> "roledId can't be empty!");
     RepoAssert.isTrue(!addUserToGroupRoles.containsKey(groupId), () -> "groupId already defined!");

@@ -367,7 +367,7 @@ Testi 1::tenant <= you are here
     }
     
     for(final var entry : groupsByUsers.entrySet()) {
-      final var result = getClient().org().commit().modifyOneUser()
+      final var result = getClient().org().commit().modifyOneMember()
           .repoId(repo.getId())
           .userId(entry.getKey())
           .groups(ModType.ADD, entry.getValue())
@@ -414,10 +414,10 @@ Testi 1::tenant <= you are here
       
       
       final var externalId = root.getString("external_id");
-      final var result = getClient().org().commit().createOneGroup()
+      final var result = getClient().org().commit().createOneParty()
           .repoId(repo.getId())
-          .groupName(groupName)
-          .groupDescription("created from tenant")
+          .partyName(groupName)
+          .partyDescription("created from tenant")
           .externalId(externalId)
           .author("ar-")
           .message("created group")
@@ -447,11 +447,11 @@ Testi 1::tenant <= you are here
     takenGroupNames.add(groupNameInit);
     
     final var externalId = json.getString("external_id");
-    final var result = getClient().org().commit().createOneGroup()
+    final var result = getClient().org().commit().createOneParty()
         .repoId(repo.getId())
         .parentId(json.getString("parent_group_external_id"))
-        .groupName(groupName)
-        .groupDescription("location")
+        .partyName(groupName)
+        .partyDescription("location")
         .externalId(externalId)
         .author("ar-")
         .message("created group")
@@ -480,7 +480,7 @@ Testi 1::tenant <= you are here
       takenUsernames.add(userNameInit);
       final var userName = userNameInit + suffix;
       
-      final var result = getClient().org().commit().createOneUser()
+      final var result = getClient().org().commit().createOneMember()
         .repoId(repo.getId())
         .userName(userName)
         .email(userName + "@digiexpress.io")
@@ -494,31 +494,31 @@ Testi 1::tenant <= you are here
   }
   
   public void createRoles(Repo repo) {
-    var result = getClient().org().commit().createOneRole()
+    var result = getClient().org().commit().createOneRight()
         .repoId(repo.getId())
         .externalId("0")
-        .roleName("VIEWER")
-        .roleDescription("direct user and group role")
+        .rightName("VIEWER")
+        .rightDescription("direct user and group role")
         .author("au-")
         .message("created role")
         .build().await().atMost(Duration.ofMinutes(1));
       Assertions.assertEquals(CommitResultStatus.OK, result.getStatus());
  
-    result = getClient().org().commit().createOneRole()
+    result = getClient().org().commit().createOneRight()
         .repoId(repo.getId())
         .externalId("1")
-        .roleName("USER")
-        .roleDescription("direct user and group role")
+        .rightName("USER")
+        .rightDescription("direct user and group role")
         .author("au-")
         .message("created role")
         .build().await().atMost(Duration.ofMinutes(1));
     Assertions.assertEquals(CommitResultStatus.OK, result.getStatus());
     
-    result = getClient().org().commit().createOneRole()
+    result = getClient().org().commit().createOneRight()
         .repoId(repo.getId())
         .externalId("2")
-        .roleName("MANAGER")
-        .roleDescription("direct user and group role")
+        .rightName("MANAGER")
+        .rightDescription("direct user and group role")
         .author("au-")
         .message("created role")
         .build().await().atMost(Duration.ofMinutes(1));
@@ -531,7 +531,7 @@ Testi 1::tenant <= you are here
     for(final var userRaw : users) {
       final var user = (JsonObject) userRaw;
       
-      final var result = getClient().org().commit().modifyOneUser()
+      final var result = getClient().org().commit().modifyOneMember()
         .repoId(repo.getId())
         .userId(user.getString("user_external_id"))
         .groupsRoles(ModType.ADD, Map.of(user.getString("group_external_id"), Arrays.asList(user.getString("role_external_id"))))

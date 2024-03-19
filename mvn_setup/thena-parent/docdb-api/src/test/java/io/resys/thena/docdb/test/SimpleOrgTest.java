@@ -39,7 +39,7 @@ public class SimpleOrgTest extends DbTestTemplate {
     log.debug("created repo {}", repo);
     Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
     
-    getClient().org().commit().createOneUser()
+    getClient().org().commit().createOneMember()
       .repoId(repo.getRepo().getId())
       .userName("sam vimes")
       .email("sam.vimes@digiexpress.io")
@@ -69,38 +69,38 @@ public class SimpleOrgTest extends DbTestTemplate {
     Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
 
     
-    final var jailerRole = getClient().org().commit().createOneRole()
+    final var jailerRole = getClient().org().commit().createOneRight()
       .repoId(repo.getRepo().getId())
-      .roleName("jailer")
-      .roleDescription("role for all jailers")
+      .rightName("jailer")
+      .rightDescription("role for all jailers")
       .author("nobby nobbs")
       .message("my first role")
       .externalId("role for all the guardsmen")
       .build().await().atMost(Duration.ofMinutes(1)).getRole();
 
-    final var detectiveRole = getClient().org().commit().createOneRole()
+    final var detectiveRole = getClient().org().commit().createOneRight()
       .repoId(repo.getRepo().getId())
-      .roleName("detective")
-      .roleDescription("role for all the detective doing investigations and things")
+      .rightName("detective")
+      .rightDescription("role for all the detective doing investigations and things")
       .author("nobby nobbs")
       .message("my second role")
       .externalId("role for all the detective")
       .build().await().atMost(Duration.ofMinutes(1)).getRole();
         
-    final var group = getClient().org().commit().createOneGroup()
+    final var group = getClient().org().commit().createOneParty()
       .repoId(repo.getRepo().getId())
-      .groupName("captains")
-      .groupDescription("group for all the captains of the guard")
-      .addRolesToGroup(Arrays.asList(jailerRole.getId(), detectiveRole.getId()))
+      .partyName("captains")
+      .partyDescription("group for all the captains of the guard")
+      .addRightsToParty(Arrays.asList(jailerRole.getId(), detectiveRole.getId()))
       .author("nobby nobbs")
       .message("my first group")
       .externalId("one-man-group")
       .build().await().atMost(Duration.ofMinutes(1)).getGroup();
       
     
-    getClient().org().commit().createOneUser()
+    getClient().org().commit().createOneMember()
       .repoId(repo.getRepo().getId())
-      .addUserToGroups(group.getId())
+      .addMemberToParties(group.getId())
       .userName("sam vimes")
       .email("sam.vimes@digiexpress.io")
       .author("nobby nobbs")

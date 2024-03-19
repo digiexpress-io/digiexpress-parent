@@ -10,121 +10,121 @@ import org.immutables.value.Value;
 import io.resys.thena.docdb.api.models.Message;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.ThenaEnvelope;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgParty;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRight;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
 import io.smallrye.mutiny.Uni;
 
 public interface OrgCommitActions {
   
-  CreateOneUser createOneUser();  
-  CreateOneGroup createOneGroup();
-  CreateOneRole createOneRole();
+  CreateOneMember createOneMember();  
+  CreateOneParty createOneParty();
+  CreateOneRight createOneRight();
   
-  ModifyOneUser modifyOneUser();
-  ModifyOneGroup modifyOneGroup();
-  ModifyOneRole modifyOneRole();
+  ModifyOneMember modifyOneMember();
+  ModifyOneParty modifyOneParty();
+  ModifyOneRight modifyOneRight();
 
 
-  interface CreateOneUser {
-    CreateOneUser repoId(String repoId);
-    CreateOneUser author(String author);
-    CreateOneUser message(String message);
+  interface CreateOneMember {
+    CreateOneMember repoId(String repoId);
+    CreateOneMember author(String author);
+    CreateOneMember message(String message);
   
-    CreateOneUser userName(String userName);
-    CreateOneUser email(String email);
-    CreateOneUser externalId(@Nullable String externalId);
+    CreateOneMember userName(String userName);
+    CreateOneMember email(String email);
+    CreateOneMember externalId(@Nullable String externalId);
 
-    CreateOneUser addUserToGroups(String ... groupId);
-    CreateOneUser addUserToGroups(List<String> groupId);
-    CreateOneUser addUserToRoles(List<String> roledId);
+    CreateOneMember addMemberToParties(String ... groupId);
+    CreateOneMember addMemberToParties(List<String> groupId);
+    CreateOneMember addMemberRight(List<String> roledId);
 
-    CreateOneUser addUserToGroupRoles(String groupId, List<String> roledId);
+    CreateOneMember addMemberToPartyRight(String groupId, List<String> roledId);
     
     Uni<OneUserEnvelope> build();
   }
   
-  interface CreateOneGroup {
-    CreateOneGroup repoId(String repoId);
-    CreateOneGroup author(String author);
-    CreateOneGroup message(String message);
+  interface CreateOneParty {
+    CreateOneParty repoId(String repoId);
+    CreateOneParty author(String author);
+    CreateOneParty message(String message);
    
-    CreateOneGroup parentId(@Nullable String parentId);
-    CreateOneGroup externalId(@Nullable String externalId);
-    CreateOneGroup groupName(String groupName);
-    CreateOneGroup groupDescription(String groupDescription);
+    CreateOneParty parentId(@Nullable String parentId);
+    CreateOneParty externalId(@Nullable String externalId);
+    CreateOneParty partyName(String groupName);
+    CreateOneParty partyDescription(String groupDescription);
     
-    CreateOneGroup addUsersToGroup(List<String> userId);
-    CreateOneGroup addRolesToGroup(List<String> roledId);
+    CreateOneParty addMemberToParty(List<String> userId);
+    CreateOneParty addRightsToParty(List<String> roledId);
 
     Uni<OneGroupEnvelope> build();
   }
   
   
-  interface CreateOneRole {
-    CreateOneRole repoId(String repoId);
-    CreateOneRole author(String author);
-    CreateOneRole message(String message);
+  interface CreateOneRight {
+    CreateOneRight repoId(String repoId);
+    CreateOneRight author(String author);
+    CreateOneRight message(String message);
     
-    CreateOneRole externalId(@Nullable String externalId);
-    CreateOneRole roleName(String roleName);
-    CreateOneRole roleDescription(String roleDescription);
+    CreateOneRight externalId(@Nullable String externalId);
+    CreateOneRight rightName(String roleName);
+    CreateOneRight rightDescription(String roleDescription);
 
-    CreateOneRole addRoleToUsers(List<String> userId);
-    CreateOneRole addRoleToGroups(List<String> groupId);
+    CreateOneRight addRightToMembers(List<String> userId);
+    CreateOneRight addRightToParties(List<String> groupId);
         
     Uni<OneRoleEnvelope> build();
   }
   
 
-  interface ModifyOneUser {
-    ModifyOneUser repoId(String repoId);
-    ModifyOneUser author(String author);
-    ModifyOneUser message(String message);
+  interface ModifyOneMember {
+    ModifyOneMember repoId(String repoId);
+    ModifyOneMember author(String author);
+    ModifyOneMember message(String message);
   
-    ModifyOneUser userId(String userId);
-    ModifyOneUser externalId(@Nullable String externalId);
-    ModifyOneUser userName(String userName);
-    ModifyOneUser email(String email); 
+    ModifyOneMember userId(String userId);
+    ModifyOneMember externalId(@Nullable String externalId);
+    ModifyOneMember userName(String userName);
+    ModifyOneMember email(String email); 
     
-    ModifyOneUser roles(ModType type, List<String> roleIdOrNameOrExternalId); // group.(id OR externalId OR rolename)
-    ModifyOneUser groups(ModType type, List<String> groupIdOrNameOrExternalId);
-    ModifyOneUser groupsRoles(ModType type, Map<String, List<String>> addUseGroupRoles);
+    ModifyOneMember roles(ModType type, List<String> roleIdOrNameOrExternalId); // group.(id OR externalId OR rolename)
+    ModifyOneMember groups(ModType type, List<String> groupIdOrNameOrExternalId);
+    ModifyOneMember groupsRoles(ModType type, Map<String, List<String>> addUseGroupRoles);
     
     Uni<OneUserEnvelope> build();
   }
 
 
-  interface ModifyOneGroup {
-    ModifyOneGroup repoId(String repoId);
-    ModifyOneGroup author(String author);
-    ModifyOneGroup message(String message);
+  interface ModifyOneParty {
+    ModifyOneParty repoId(String repoId);
+    ModifyOneParty author(String author);
+    ModifyOneParty message(String message);
     
-    ModifyOneGroup groupId(String groupId);
-    ModifyOneGroup parentId(@Nullable String parentId);
-    ModifyOneGroup externalId(@Nullable String externalId);
-    ModifyOneGroup groupName(String groupName);
-    ModifyOneGroup groupDescription(String groupDescription);
+    ModifyOneParty groupId(String groupId);
+    ModifyOneParty parentId(@Nullable String parentId);
+    ModifyOneParty externalId(@Nullable String externalId);
+    ModifyOneParty partyName(String partyName);
+    ModifyOneParty partyDescription(String partyDescription);
     
-    ModifyOneGroup users(ModType type, List<String> userIds);
-    ModifyOneGroup roles(ModType type, List<String> roleIds);
+    ModifyOneParty members(ModType type, List<String> userIds);
+    ModifyOneParty rights(ModType type, List<String> roleIds);
 
     Uni<OneGroupEnvelope> build();
   }
 
   
-  interface ModifyOneRole {
-    ModifyOneRole repoId(String repoId);
-    ModifyOneRole author(String author);
-    ModifyOneRole message(String message);
+  interface ModifyOneRight {
+    ModifyOneRight repoId(String repoId);
+    ModifyOneRight author(String author);
+    ModifyOneRight message(String message);
     
-    ModifyOneRole roleId(String roleId);
-    ModifyOneRole externalId(@Nullable String externalId);
-    ModifyOneRole roleName(String roleName);
-    ModifyOneRole roleDescription(String roleDescription);
+    ModifyOneRight rightId(String roleId);
+    ModifyOneRight externalId(@Nullable String externalId);
+    ModifyOneRight rightName(String roleName);
+    ModifyOneRight rightDescription(String roleDescription);
     
-    ModifyOneRole users(ModType type, List<String> userIds);
-    ModifyOneRole roles(ModType type, List<String> roleIds);
+    ModifyOneRight members(ModType type, List<String> memberIds);
+    ModifyOneRight parties(ModType type, List<String> partyIds);
 
     Uni<OneRoleEnvelope> build();
   }

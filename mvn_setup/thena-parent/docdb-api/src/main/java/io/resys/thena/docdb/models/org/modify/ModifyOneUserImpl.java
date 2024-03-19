@@ -11,7 +11,7 @@ import java.util.Optional;
 
 import io.resys.thena.docdb.api.actions.ImmutableOneUserEnvelope;
 import io.resys.thena.docdb.api.actions.OrgCommitActions.ModType;
-import io.resys.thena.docdb.api.actions.OrgCommitActions.ModifyOneUser;
+import io.resys.thena.docdb.api.actions.OrgCommitActions.ModifyOneMember;
 import io.resys.thena.docdb.api.actions.OrgCommitActions.OneUserEnvelope;
 import io.resys.thena.docdb.api.models.ImmutableMessage;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
@@ -32,7 +32,7 @@ import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class ModifyOneUserImpl implements ModifyOneUser {
+public class ModifyOneUserImpl implements ModifyOneMember {
 
   private final DbState state;
 
@@ -63,7 +63,7 @@ public class ModifyOneUserImpl implements ModifyOneUser {
   @Override public ModifyOneUserImpl externalId(String externalId) { this.externalId = Optional.ofNullable(externalId); return this; }
   
   @Override
-  public ModifyOneUser groupsRoles(ModType type, Map<String, List<String>> addUseGroupRoles) {
+  public ModifyOneMember groupsRoles(ModType type, Map<String, List<String>> addUseGroupRoles) {
     RepoAssert.notEmpty(addUseGroupRoles, () -> "groups can't be empty!");
     final var groups = addUseGroupRoles.keySet().stream().distinct().toList();
     final var roles = addUseGroupRoles.values().stream().flatMap(e -> e.stream()).distinct().toList();

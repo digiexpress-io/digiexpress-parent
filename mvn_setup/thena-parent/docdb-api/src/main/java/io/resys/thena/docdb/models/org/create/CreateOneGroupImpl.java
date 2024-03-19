@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import io.resys.thena.docdb.api.actions.ImmutableOneGroupEnvelope;
-import io.resys.thena.docdb.api.actions.OrgCommitActions.CreateOneGroup;
+import io.resys.thena.docdb.api.actions.OrgCommitActions.CreateOneParty;
 import io.resys.thena.docdb.api.actions.OrgCommitActions.OneGroupEnvelope;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgParty;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRight;
@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class CreateOneGroupImpl implements CreateOneGroup {
+public class CreateOneGroupImpl implements CreateOneParty {
 
   private final DbState state;
 
@@ -40,13 +40,13 @@ public class CreateOneGroupImpl implements CreateOneGroup {
   @Override public CreateOneGroupImpl repoId(String repoId) {         this.repoId = RepoAssert.notEmpty(repoId,           () -> "repoId can't be empty!"); return this; }
   @Override public CreateOneGroupImpl author(String author) {         this.author = RepoAssert.notEmpty(author,           () -> "author can't be empty!"); return this; }
   @Override public CreateOneGroupImpl message(String message) {       this.message = RepoAssert.notEmpty(message,         () -> "message can't be empty!"); return this; }
-  @Override public CreateOneGroupImpl groupName(String groupName) {   this.groupName = RepoAssert.notEmpty(groupName,     () -> "groupName can't be empty!"); return this; }
-  @Override public CreateOneGroupImpl groupDescription(String desc) { this.groupDescription = RepoAssert.notEmpty(desc,   () -> "groupDescription can't be empty!"); return this; }
+  @Override public CreateOneGroupImpl partyName(String groupName) {   this.groupName = RepoAssert.notEmpty(groupName,     () -> "groupName can't be empty!"); return this; }
+  @Override public CreateOneGroupImpl partyDescription(String desc) { this.groupDescription = RepoAssert.notEmpty(desc,   () -> "groupDescription can't be empty!"); return this; }
   
   @Override public CreateOneGroupImpl parentId(String parentId) {     this.parentId = parentId; return this; }
   @Override public CreateOneGroupImpl externalId(String externalId) { this.externalId = externalId; return this; }
-  @Override public CreateOneGroupImpl addUsersToGroup(List<String> addUsersToGroup) { this.addUsersToGroup.addAll(RepoAssert.notNull(addUsersToGroup, () -> "addUsersToGroup can't be empty!")); return this; }
-  @Override public CreateOneGroupImpl addRolesToGroup(List<String> addRolesToGroup) { this.addRolesToGroup.addAll(RepoAssert.notNull(addRolesToGroup, () -> "addRolesToGroup can't be empty!")); return this; }
+  @Override public CreateOneGroupImpl addMemberToParty(List<String> addUsersToGroup) { this.addUsersToGroup.addAll(RepoAssert.notNull(addUsersToGroup, () -> "addUsersToGroup can't be empty!")); return this; }
+  @Override public CreateOneGroupImpl addRightsToParty(List<String> addRolesToGroup) { this.addRolesToGroup.addAll(RepoAssert.notNull(addRolesToGroup, () -> "addRolesToGroup can't be empty!")); return this; }
   
   @Override
   public Uni<OneGroupEnvelope> build() {

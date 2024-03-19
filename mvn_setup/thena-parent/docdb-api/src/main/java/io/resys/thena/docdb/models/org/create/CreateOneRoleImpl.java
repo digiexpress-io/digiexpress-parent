@@ -5,10 +5,10 @@ import java.util.Collections;
 import java.util.List;
 
 import io.resys.thena.docdb.api.actions.ImmutableOneRoleEnvelope;
-import io.resys.thena.docdb.api.actions.OrgCommitActions.CreateOneRole;
+import io.resys.thena.docdb.api.actions.OrgCommitActions.CreateOneRight;
 import io.resys.thena.docdb.api.actions.OrgCommitActions.OneRoleEnvelope;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgParty;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgParty;
 import io.resys.thena.docdb.models.org.OrgInserts.OrgBatchForOne;
 import io.resys.thena.docdb.models.org.OrgState.OrgRepo;
 import io.resys.thena.docdb.spi.DataMapper;
@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class CreateOneRoleImpl implements CreateOneRole {
+public class CreateOneRoleImpl implements CreateOneRight {
 
   private final DbState state;
 
@@ -37,12 +37,12 @@ public class CreateOneRoleImpl implements CreateOneRole {
   @Override public CreateOneRoleImpl repoId(String repoId) {         this.repoId = RepoAssert.notEmpty(repoId,           () -> "repoId can't be empty!"); return this; }
   @Override public CreateOneRoleImpl author(String author) {         this.author = RepoAssert.notEmpty(author,           () -> "author can't be empty!"); return this; }
   @Override public CreateOneRoleImpl message(String message) {       this.message = RepoAssert.notEmpty(message,         () -> "message can't be empty!"); return this; }
-  @Override public CreateOneRoleImpl roleName(String roleName) {   	 this.roleName = RepoAssert.notEmpty(roleName,       () -> "roleName can't be empty!"); return this; }
-  @Override public CreateOneRoleImpl roleDescription(String desc) {  this.roleDescription = RepoAssert.notEmpty(desc,    () -> "roleDescription can't be empty!"); return this; }
+  @Override public CreateOneRoleImpl rightName(String roleName) {   	 this.roleName = RepoAssert.notEmpty(roleName,       () -> "roleName can't be empty!"); return this; }
+  @Override public CreateOneRoleImpl rightDescription(String desc) {  this.roleDescription = RepoAssert.notEmpty(desc,    () -> "roleDescription can't be empty!"); return this; }
   @Override public CreateOneRoleImpl externalId(String externalId) { this.externalId = externalId; return this; }
   
-  @Override public CreateOneRoleImpl addRoleToGroups(List<String> addRoleToGroups) { this.addRoleToGroups.addAll(RepoAssert.notNull(addRoleToGroups, () -> "addRoleToGroups can't be empty!")); return this; }
-  @Override public CreateOneRoleImpl addRoleToUsers(List<String> addRoleToUsers) { 	 this.addRoleToUsers.addAll(RepoAssert.notNull(addRoleToUsers, () -> "addRoleToUsers can't be empty!")); return this; }
+  @Override public CreateOneRoleImpl addRightToParties(List<String> addRoleToGroups) { this.addRoleToGroups.addAll(RepoAssert.notNull(addRoleToGroups, () -> "addRoleToGroups can't be empty!")); return this; }
+  @Override public CreateOneRoleImpl addRightToMembers(List<String> addRoleToUsers) { 	 this.addRoleToUsers.addAll(RepoAssert.notNull(addRoleToUsers, () -> "addRoleToUsers can't be empty!")); return this; }
   
   @Override
   public Uni<OneRoleEnvelope> build() {
@@ -81,9 +81,9 @@ public class CreateOneRoleImpl implements CreateOneRole {
     final OrgBatchForOne batch = new BatchForOneRoleCreate(tx.getRepo().getId(), author, message)
         .externalId(externalId)
         .users(users)
-        .groups(groups)
-        .roleName(roleName)
-        .roleDescription(roleDescription)
+        .parties(groups)
+        .partyName(roleName)
+        .partyDescription(roleDescription)
         .create();
 
     return tx.insert().batchOne(batch)

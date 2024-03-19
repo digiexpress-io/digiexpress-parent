@@ -32,16 +32,16 @@ public class BatchForOneRoleCreate {
   private final String author;
   private final String message;
 
-  private List<OrgParty> groups; 
+  private List<OrgParty> parties; 
   private List<OrgMember> users;  
   private String roleName;
   private String roleDesc;
   private String externalId;
 
-  public BatchForOneRoleCreate groups(List<OrgParty> groups) { 		this.groups = groups; return this; }
+  public BatchForOneRoleCreate parties(List<OrgParty> parties) { 		this.parties = parties; return this; }
   public BatchForOneRoleCreate users(List<OrgMember> users) {    		this.users = users; return this; }
-  public BatchForOneRoleCreate roleName(String roleName) {     		this.roleName = roleName; return this; }
-  public BatchForOneRoleCreate roleDescription(String roleDesc) { this.roleDesc = roleDesc; return this; }
+  public BatchForOneRoleCreate partyName(String roleName) {     		this.roleName = roleName; return this; }
+  public BatchForOneRoleCreate partyDescription(String roleDesc) { this.roleDesc = roleDesc; return this; }
   public BatchForOneRoleCreate externalId(String externalId) { 		this.externalId = externalId; return this; }
   
   public ImmutableOrgBatchForOne create() {
@@ -50,7 +50,7 @@ public class BatchForOneRoleCreate {
     RepoAssert.notEmpty(message,  () -> "message can't be empty!");
     RepoAssert.notEmpty(roleName, () -> "roleName can't be empty!");
     RepoAssert.notEmpty(roleDesc, () -> "roleDesc can't be empty!");
-    RepoAssert.notNull(groups,    () -> "groups can't be null!");
+    RepoAssert.notNull(parties,    () -> "parties can't be null!");
     RepoAssert.notNull(users,     () -> "roles can't be null!");
     
     final var commitId = OidUtils.gen();
@@ -68,7 +68,7 @@ public class BatchForOneRoleCreate {
     
     
     final var groupRoles = new ArrayList<OrgPartyRight>();
-    for(final var group : this.groups) {
+    for(final var group : this.parties) {
       final var membership = ImmutableOrgPartyRight.builder()
           .id(OidUtils.gen())
           .partyId(group.getId())
@@ -100,7 +100,7 @@ public class BatchForOneRoleCreate {
       .append(System.lineSeparator())
       .append("  + role:            ").append(role.getId()).append("::").append(roleName)
       .append(System.lineSeparator())
-      .append("  + added to parties: ").append(String.join(",", groups.stream().map(g -> g.getPartyName() + "::" + g.getId()).toList()))
+      .append("  + added to parties: ").append(String.join(",", parties.stream().map(g -> g.getPartyName() + "::" + g.getId()).toList()))
       .append(System.lineSeparator())
       .append("  + added to members:  ").append(String.join(",", users.stream().map(g -> g.getUserName() + "::" + g.getId()).toList()))
       .append(System.lineSeparator());

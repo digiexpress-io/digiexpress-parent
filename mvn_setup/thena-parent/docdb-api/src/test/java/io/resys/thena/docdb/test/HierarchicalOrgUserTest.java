@@ -111,7 +111,7 @@ user-2
         """, userGroupsAndRoles2.getLog());
     
     // modify user 2
-    getClient().org().commit().modifyOneUser()
+    getClient().org().commit().modifyOneMember()
         .repoId(repo.getRepo().getId())
         .userId(userGroupsAndRoles2.getUserId())
         .groups(ModType.ADD, Arrays.asList(root1.getId()))
@@ -145,7 +145,7 @@ super-user
     
     
     // remove user 2 from child-1.2.2 group
-    getClient().org().commit().modifyOneUser()
+    getClient().org().commit().modifyOneMember()
         .repoId(repo.getRepo().getId())
         .userId(userGroupsAndRoles2.getUserId())
         .groups(ModType.DISABLED, Arrays.asList(child1_2_2.getId()))
@@ -182,7 +182,7 @@ super-user
     
     
     // Reject changes because there are non
-    final var rejectNoChanges = getClient().org().commit().modifyOneUser()
+    final var rejectNoChanges = getClient().org().commit().modifyOneMember()
       .repoId(repo.getRepo().getId())
       .userId(userGroupsAndRoles2.getUserId())
       .groups(ModType.DISABLED, Arrays.asList(child1_2_2.getId()))
@@ -230,10 +230,10 @@ super-user
 
   
   private OrgMember createUser(String userName, RepoResult repo, List<OrgParty> groups, List<OrgRight> roles) {
-    return getClient().org().commit().createOneUser()
+    return getClient().org().commit().createOneMember()
         .repoId(repo.getRepo().getId())
-        .addUserToGroups(groups.stream().map(group -> group.getId()).toList())
-        .addUserToRoles(roles.stream().map(role -> role.getId()).toList())
+        .addMemberToParties(groups.stream().map(group -> group.getId()).toList())
+        .addMemberRight(roles.stream().map(role -> role.getId()).toList())
         .userName(userName)
         .email("em-")
         .author("au-")
@@ -244,11 +244,11 @@ super-user
   }
   
   private OrgParty createRootGroup(String groupName, RepoResult repo, OrgRight ...roles) {
-    return getClient().org().commit().createOneGroup()
+    return getClient().org().commit().createOneParty()
         .repoId(repo.getRepo().getId())
-        .groupName(groupName)
-        .groupDescription("gd-")
-        .addRolesToGroup(
+        .partyName(groupName)
+        .partyDescription("gd-")
+        .addRightsToParty(
       		Arrays.asList(roles).stream()
       		.map(e -> e.getId())
       		.toList()
@@ -260,12 +260,12 @@ super-user
   }
   
   private OrgParty createChildGroup(String groupName, String parentId, RepoResult repo, OrgRight ...roles) {
-    return getClient().org().commit().createOneGroup()
+    return getClient().org().commit().createOneParty()
         .repoId(repo.getRepo().getId())
-        .groupName(groupName)
-        .groupDescription("gd-")
+        .partyName(groupName)
+        .partyDescription("gd-")
         .parentId(parentId)
-        .addRolesToGroup(
+        .addRightsToParty(
       		Arrays.asList(roles).stream()
       		.map(e -> e.getId())
       		.toList()
@@ -277,10 +277,10 @@ super-user
   }
   
   private OrgRight createRole(RepoResult repo, String roleName) {
-    return getClient().org().commit().createOneRole()
+    return getClient().org().commit().createOneRight()
         .repoId(repo.getRepo().getId())
-        .roleName(roleName)
-        .roleDescription("rd-")
+        .rightName(roleName)
+        .rightDescription("rd-")
         .author("ar-")
         .message("me-")
         .externalId(null)
