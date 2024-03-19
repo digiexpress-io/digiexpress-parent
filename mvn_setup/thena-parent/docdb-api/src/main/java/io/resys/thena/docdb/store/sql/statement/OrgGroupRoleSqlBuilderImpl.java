@@ -71,7 +71,7 @@ public class OrgGroupRoleSqlBuilderImpl implements OrgGroupRoleSqlBuilder {
         .value(new SqlStatement()
         .append("SELECT * ").ln()
         .append("  FROM ").append(options.getOrgPartyRights()).ln()
-        .append("  WHERE group_id = $1").ln() 
+        .append("  WHERE party_id = $1").ln() 
         .build())
         .props(Tuple.of(userId))
         .build();
@@ -82,7 +82,7 @@ public class OrgGroupRoleSqlBuilderImpl implements OrgGroupRoleSqlBuilder {
         .value(new SqlStatement()
         .append("SELECT * ").ln()
         .append("  FROM ").append(options.getOrgPartyRights()).ln()
-        .append("  WHERE role_id = $1").ln() 
+        .append("  WHERE right_id = $1").ln() 
         .build())
         .props(Tuple.of(userId))
         .build();
@@ -92,7 +92,7 @@ public class OrgGroupRoleSqlBuilderImpl implements OrgGroupRoleSqlBuilder {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getOrgPartyRights())
-        .append(" (id, commit_id, group_id, role_id) VALUES($1, $2, $3, $4)").ln()
+        .append(" (id, commit_id, party_id, right_id) VALUES($1, $2, $3, $4)").ln()
         .build())
         .props(Tuple.from(new Object[]{ doc.getId(), doc.getCommitId(), doc.getGroupId(), doc.getRoleId()}))
         .build();
@@ -102,7 +102,7 @@ public class OrgGroupRoleSqlBuilderImpl implements OrgGroupRoleSqlBuilder {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getOrgPartyRights())
-        .append(" (id, commit_id, group_id, role_id) VALUES($1, $2, $3, $4)").ln()
+        .append(" (id, commit_id, party_id, right_id) VALUES($1, $2, $3, $4)").ln()
         .build())
         .props(users.stream()
             .map(doc -> Tuple.from(new Object[]{ doc.getId(), doc.getCommitId(), doc.getGroupId(), doc.getRoleId()}))

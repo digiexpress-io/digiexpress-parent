@@ -426,9 +426,9 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("(").ln()
     .append("  id VARCHAR(40) PRIMARY KEY,").ln()
     .append("  commit_id VARCHAR(40) NOT NULL,").ln()
-    .append("  group_id VARCHAR(40) NOT NULL,").ln()
-    .append("  role_id VARCHAR(40) NOT NULL,").ln()
-    .append("  UNIQUE (role_id, group_id)").ln()
+    .append("  party_id VARCHAR(40) NOT NULL,").ln()
+    .append("  right_id VARCHAR(40) NOT NULL,").ln()
+    .append("  UNIQUE (right_id, party_id)").ln()
     .append(");").ln()
     
     
@@ -436,10 +436,10 @@ public class SqlSchemaImpl implements SqlSchema {
     .append(" ON ").append(options.getOrgPartyRights()).append(" (commit_id);").ln()
 
     .append("CREATE INDEX ").append(options.getOrgPartyRights()).append("_GROUP_INDEX")
-    .append(" ON ").append(options.getOrgPartyRights()).append(" (group_id);").ln()
+    .append(" ON ").append(options.getOrgPartyRights()).append(" (party_id);").ln()
 
     .append("CREATE INDEX ").append(options.getOrgPartyRights()).append("_ROLE_INDEX")
-    .append(" ON ").append(options.getOrgPartyRights()).append(" (role_id);").ln()    
+    .append(" ON ").append(options.getOrgPartyRights()).append(" (right_id);").ln()    
 
     .build()).build();
   }
@@ -477,29 +477,29 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("  id VARCHAR(40) PRIMARY KEY,").ln()
     .append("  commit_id VARCHAR(40) NOT NULL,").ln()
     .append("  user_id VARCHAR(40) NOT NULL,").ln()
-    .append("  role_id VARCHAR(40) NOT NULL,").ln()
-    .append("  group_id VARCHAR(40),").ln()
-    .append("  UNIQUE (user_id, role_id, group_id)").ln()
+    .append("  right_id VARCHAR(40) NOT NULL,").ln()
+    .append("  party_id VARCHAR(40),").ln()
+    .append("  UNIQUE (user_id, right_id, party_id)").ln()
     .append(");").ln()
     
     .append("CREATE INDEX ").append(options.getOrgMemberRights()).append("_COMMIT_INDEX")
     .append(" ON ").append(options.getOrgMemberRights()).append(" (commit_id);").ln()
     
     .append("CREATE INDEX ").append(options.getOrgMemberRights()).append("_ROLE_INDEX")
-    .append(" ON ").append(options.getOrgMemberRights()).append(" (role_id);").ln()
+    .append(" ON ").append(options.getOrgMemberRights()).append(" (right_id);").ln()
 
     .append("CREATE INDEX ").append(options.getOrgMemberRights()).append("_USER_INDEX")
     .append(" ON ").append(options.getOrgMemberRights()).append(" (user_id);").ln()
     
 
     .append("CREATE INDEX ").append(options.getOrgMemberRights()).append("_GROUP_INDEX")
-    .append(" ON ").append(options.getOrgMemberRights()).append(" (group_id);").ln()
+    .append(" ON ").append(options.getOrgMemberRights()).append(" (party_id);").ln()
     
     .append("CREATE INDEX ").append(options.getOrgMemberRights()).append("_REF_INDEX")
-    .append(" ON ").append(options.getOrgMemberRights()).append(" (role_id, user_id);").ln()    
+    .append(" ON ").append(options.getOrgMemberRights()).append(" (right_id, user_id);").ln()    
 
     .append("CREATE INDEX ").append(options.getOrgMemberRights()).append("_REF_2_INDEX")
-    .append(" ON ").append(options.getOrgMemberRights()).append(" (role_id, user_id, group_id);").ln()    
+    .append(" ON ").append(options.getOrgMemberRights()).append(" (right_id, user_id, party_id);").ln()    
 
 
     .build()).build();
@@ -513,8 +513,8 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("  id VARCHAR(40) PRIMARY KEY,").ln()
     .append("  commit_id VARCHAR(40) NOT NULL,").ln()
     .append("  user_id VARCHAR(40) NOT NULL,").ln()
-    .append("  group_id VARCHAR(40) NOT NULL,").ln()
-    .append("  UNIQUE (user_id, group_id)").ln()
+    .append("  party_id VARCHAR(40) NOT NULL,").ln()
+    .append("  UNIQUE (user_id, party_id)").ln()
     .append(");").ln()
     
     .append("CREATE INDEX ").append(options.getOrgMemberships()).append("_COMMIT_INDEX")
@@ -524,10 +524,10 @@ public class SqlSchemaImpl implements SqlSchema {
     .append(" ON ").append(options.getOrgMemberships()).append(" (user_id);").ln()
     
     .append("CREATE INDEX ").append(options.getOrgMemberships()).append("_GROUP_INDEX")
-    .append(" ON ").append(options.getOrgMemberships()).append(" (group_id);").ln()
+    .append(" ON ").append(options.getOrgMemberships()).append(" (party_id);").ln()
     
     .append("CREATE INDEX ").append(options.getOrgMemberships()).append("_REF_INDEX")
-    .append(" ON ").append(options.getOrgMemberships()).append(" (group_id, user_id);").ln()    
+    .append(" ON ").append(options.getOrgMemberships()).append(" (party_id, user_id);").ln()    
 
 
     .build()).build();
@@ -541,23 +541,23 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("  id VARCHAR(40) PRIMARY KEY,").ln()
     .append("  commit_id VARCHAR(40) NOT NULL,").ln()
     .append("  user_id VARCHAR(40),").ln()
-    .append("  role_id VARCHAR(40),").ln()
-    .append("  group_id VARCHAR(40),").ln()
+    .append("  right_id VARCHAR(40),").ln()
+    .append("  party_id VARCHAR(40),").ln()
     .append("  actor_status VARCHAR(100) NOT NULL,").ln() // visibility: in_force | archived 
-    .append("  UNIQUE (user_id, role_id, group_id)").ln()
+    .append("  UNIQUE (user_id, right_id, party_id)").ln()
     .append(");").ln()
     
     .append("CREATE INDEX ").append(options.getOrgActorStatus()).append("_COMMIT_INDEX")
     .append(" ON ").append(options.getOrgActorStatus()).append(" (commit_id);").ln()
 
     .append("CREATE INDEX ").append(options.getOrgActorStatus()).append("_ROLE_INDEX")
-    .append(" ON ").append(options.getOrgActorStatus()).append(" (role_id);").ln()
+    .append(" ON ").append(options.getOrgActorStatus()).append(" (right_id);").ln()
     
     .append("CREATE INDEX ").append(options.getOrgActorStatus()).append("_USER_INDEX")
     .append(" ON ").append(options.getOrgActorStatus()).append(" (user_id);").ln()
     
     .append("CREATE INDEX ").append(options.getOrgActorStatus()).append("_GROUP_INDEX")
-    .append(" ON ").append(options.getOrgActorStatus()).append(" (group_id);").ln()
+    .append(" ON ").append(options.getOrgActorStatus()).append(" (party_id);").ln()
     
 
     .build()).build();
@@ -633,8 +633,8 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("  parent_id VARCHAR(40),").ln()
     .append("  external_id VARCHAR(40) UNIQUE,").ln()
     .append("  user_id VARCHAR(40),").ln()
-    .append("  role_id VARCHAR(40),").ln()
-    .append("  group_id VARCHAR(40),").ln()
+    .append("  right_id VARCHAR(40),").ln()
+    .append("  party_id VARCHAR(40),").ln()
 
     .append("  data_type VARCHAR(255) NOT NULL,").ln()
     .append("  value JSONB NOT NULL,").ln()
@@ -693,8 +693,8 @@ public class SqlSchemaImpl implements SqlSchema {
 
         .append("ALTER TABLE ").append(options.getOrgMemberRights()).ln()
         .append("  ADD CONSTRAINT ").append(options.getOrgMemberRights()).append("_GROUP_MEMBER_FK").ln()
-        .append("  FOREIGN KEY (group_id, user_id)").ln()
-        .append("  REFERENCES ").append(options.getOrgMemberships()).append(" (group_id, user_id);").ln().ln()
+        .append("  FOREIGN KEY (party_id, user_id)").ln()
+        .append("  REFERENCES ").append(options.getOrgMemberships()).append(" (party_id, user_id);").ln().ln()
         
         
         .build())
@@ -768,7 +768,7 @@ public class SqlSchemaImpl implements SqlSchema {
     return new SqlStatement().ln()
         .append("ALTER TABLE ").append(tableNameThatPointToCommits).ln()
         .append("  ADD CONSTRAINT ").append(tableNameThatPointToCommits).append("_GROUP_FK").ln()
-        .append("  FOREIGN KEY (group_id)").ln()
+        .append("  FOREIGN KEY (party_id)").ln()
         .append("  REFERENCES ").append(options.getOrgParties()).append(" (id);").ln().ln()
         .build();
   }
@@ -778,7 +778,7 @@ public class SqlSchemaImpl implements SqlSchema {
     return  new SqlStatement().ln()
         .append("ALTER TABLE ").append(tableNameThatPointToCommits).ln()
         .append("  ADD CONSTRAINT ").append(tableNameThatPointToCommits).append("_ROLE_FK").ln()
-        .append("  FOREIGN KEY (role_id)").ln()
+        .append("  FOREIGN KEY (right_id)").ln()
         .append("  REFERENCES ").append(options.getOrgRights()).append(" (id);").ln().ln()
         .build();
   }

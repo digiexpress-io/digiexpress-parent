@@ -67,7 +67,7 @@ public class OrgActorStatusSqlBuilderImpl implements OrgActorStatusSqlBuilder {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getOrgActorStatus())
-        .append(" (id, commit_id, user_id, role_id, group_id, actor_status) VALUES($1, $2, $3, $4, $5, $6)").ln()
+        .append(" (id, commit_id, user_id, right_id, party_id, actor_status) VALUES($1, $2, $3, $4, $5, $6)").ln()
         .build())
         .props(Tuple.from(new Object[]{ doc.getId(), doc.getCommitId(), doc.getUserId(), doc.getRoleId(), doc.getGroupId(), doc.getValue().name() }))
         .build();
@@ -88,7 +88,7 @@ public class OrgActorStatusSqlBuilderImpl implements OrgActorStatusSqlBuilder {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getOrgActorStatus())
-        .append(" (id, commit_id, user_id, role_id, group_id, actor_status) VALUES($1, $2, $3, $4, $5, $6)").ln()
+        .append(" (id, commit_id, user_id, right_id, party_id, actor_status) VALUES($1, $2, $3, $4, $5, $6)").ln()
         .build())
         .props(users.stream()
             .map(doc -> Tuple.from(new Object[]{ doc.getId(), doc.getCommitId(), doc.getUserId(), doc.getRoleId(), doc.getGroupId(), doc.getValue().name() }))

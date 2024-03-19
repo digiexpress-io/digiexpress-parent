@@ -146,7 +146,7 @@ SELECT * FROM child;
         .append("  SELECT id, parent_id, group_name, group_description").ln()
         .append("  FROM ").append(options.getOrgParties()).ln()
         .append("  WHERE id in( ").ln()
-        .append("    SELECT DISTINCT group_id ")
+        .append("    SELECT DISTINCT party_id ")
         .append("    FROM ").append(options.getOrgMemberships()).ln()
         .append("    WHERE user_id = $1")
         .append("  )")
@@ -171,7 +171,7 @@ SELECT * FROM child;
         .append("  group_status.actor_status    as status, ").ln()
         .append("  group_status.user_id         as status_user_id, ").ln()
 
-        .append("  group_roles.role_id          as role_id, ").ln()
+        .append("  group_roles.right_id          as right_id, ").ln()
         .append("  role.role_name               as role_name, ").ln()
         .append("  role.role_description        as role_description, ").ln()
         .append("  role_status.actor_status     as role_status, ").ln()
@@ -181,22 +181,22 @@ SELECT * FROM child;
         .append("  (SELECT DISTINCT id, parent_id, group_name, group_description from child) as groups").ln()
         
         .append("  LEFT JOIN ").append(options.getOrgMemberships()).append(" as direct_memberships").ln()        
-        .append("  ON(direct_memberships.group_id = groups.id and direct_memberships.user_id = $1) ").ln()
+        .append("  ON(direct_memberships.party_id = groups.id and direct_memberships.user_id = $1) ").ln()
         
         .append("  LEFT JOIN ").append(options.getOrgActorStatus()).append(" as group_status").ln()
-        .append("  ON(group_status.group_id = groups.id and (group_status.user_id is null or group_status.user_id = $1) and group_status.role_id is null) ").ln()
+        .append("  ON(group_status.party_id = groups.id and (group_status.user_id is null or group_status.user_id = $1) and group_status.right_id is null) ").ln()
     
         .append("  LEFT JOIN ").append(options.getOrgPartyRights()).append(" as group_roles").ln()
-        .append("  ON(group_roles.group_id = groups.id) ").ln()
+        .append("  ON(group_roles.party_id = groups.id) ").ln()
     
         .append("  LEFT JOIN ").append(options.getOrgActorStatus()).append(" as role_status").ln()
-        .append("  ON(role_status.group_id = groups.id ").ln()
-        .append("    and role_status.role_id = group_roles.role_id ").ln()
+        .append("  ON(role_status.party_id = groups.id ").ln()
+        .append("    and role_status.right_id = group_roles.right_id ").ln()
         .append("    and (role_status.user_id is null or role_status.user_id = $1)").ln()
         .append("  ) ").ln()
         
         .append("  LEFT JOIN ").append(options.getOrgRights()).append(" as role").ln()
-        .append("  ON(role.id = group_roles.role_id)").ln()
+        .append("  ON(role.id = group_roles.right_id)").ln()
         ;
     
         
@@ -211,7 +211,7 @@ SELECT * FROM child;
     final var sql = new SqlStatement()
         
         .append("SELECT ").ln()
-        .append("  role.id                  as role_id, ").ln()
+        .append("  role.id                  as right_id, ").ln()
         .append("  role_status.actor_status as role_status, ").ln()
         .append("  role_status.id           as role_status_id, ").ln()
         .append("  role.role_name           as role_name, ").ln()
@@ -221,14 +221,14 @@ SELECT * FROM child;
         .append("  ").append(options.getOrgRights()).append(" as role").ln()
         .append("INNER JOIN ").append(options.getOrgMemberRights()).append(" as user_roles").ln()
         .append("  ON(").ln()
-        .append("    user_roles.role_id = role.id").ln()
+        .append("    user_roles.right_id = role.id").ln()
         .append("    and user_roles.user_id = $1").ln()
          .append("  ) ").ln()
         
         .append("LEFT JOIN ").append(options.getOrgActorStatus()).append(" as role_status").ln()
         .append("  ON(").ln()
-        .append("    role_status.role_id = role.id").ln()
-        .append("    and role_status.group_id is null").ln()
+        .append("    role_status.right_id = role.id").ln()
+        .append("    and role_status.party_id is null").ln()
         .append("    and (role_status.user_id is null or role_status.user_id = $1)").ln()
         .append("  ) ").ln();
 
@@ -251,8 +251,8 @@ SELECT * FROM child;
         .append("LEFT JOIN ").append(options.getOrgActorStatus()).append(" as user_status").ln()
         .append("ON(").ln()
         .append("  user_status.user_id = users.id").ln()
-        .append("  and user_status.role_id is null").ln()
-        .append("  and user_status.group_id is null").ln()
+        .append("  and user_status.right_id is null").ln()
+        .append("  and user_status.party_id is null").ln()
         .append(") ").ln()
         .append("WHERE (users.id = $1 OR users.external_id = $1 OR users.username = $1)").ln()
         .build())

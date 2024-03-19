@@ -345,7 +345,7 @@ public class SqlMapperImpl implements SqlMapper {
         .id(row.getString("id"))
         .commitId(row.getString("commit_id"))
         .userId(row.getString("user_id"))
-        .groupId(row.getString("group_id"))
+        .groupId(row.getString("party_id"))
         .build();
 	}
 	
@@ -354,8 +354,8 @@ public class SqlMapperImpl implements SqlMapper {
     return ImmutableOrgGroupRole.builder()
         .id(row.getString("id"))
         .commitId(row.getString("commit_id"))
-        .roleId(row.getString("role_id"))
-        .groupId(row.getString("group_id"))
+        .roleId(row.getString("right_id"))
+        .groupId(row.getString("party_id"))
         .build();
 	}
 	
@@ -364,9 +364,9 @@ public class SqlMapperImpl implements SqlMapper {
     return ImmutableOrgUserRole.builder()
         .id(row.getString("id"))
         .commitId(row.getString("commit_id"))
-        .roleId(row.getString("role_id"))
+        .roleId(row.getString("right_id"))
         .userId(row.getString("user_id"))
-        .groupId(row.getString("group_id"))
+        .groupId(row.getString("party_id"))
         .build();
 	}
 	@Override
@@ -385,7 +385,7 @@ public class SqlMapperImpl implements SqlMapper {
 		  	.groupStatus(groupStatus != null ? OrgActorStatusType.valueOf(groupStatus) : null)
 		  	.groupStatusUserId(row.getString("status_user_id"))
 		  	
-		  	.roleId(row.getString("role_id"))
+		  	.roleId(row.getString("right_id"))
 		  	.roleName(row.getString("role_name"))
         .roleDescription(row.getString("role_description"))
         
@@ -398,7 +398,7 @@ public class SqlMapperImpl implements SqlMapper {
   public OrgRoleFlattened orgOrgRoleFlattened(Row row) {
     final var roleStatus = row.getString("role_status");
     return ImmutableOrgRoleFlattened.builder()
-        .roleId(row.getString("role_id"))
+        .roleId(row.getString("right_id"))
         .roleName(row.getString("role_name"))
         .roleDescription(row.getString("role_description"))
         .roleStatus(roleStatus != null ? OrgActorStatusType.valueOf(roleStatus) : null)
@@ -425,8 +425,8 @@ public class SqlMapperImpl implements SqlMapper {
         .id(row.getString("id"))
         .commitId(row.getString("commit_id"))
         .userId(row.getString("user_id"))
-        .roleId(row.getString("role_id"))
-        .groupId(row.getString("group_id"))
+        .roleId(row.getString("right_id"))
+        .groupId(row.getString("party_id"))
         .value(actorStatus != null ? OrgActorStatusType.valueOf(actorStatus) : null)
         .build();
   }
