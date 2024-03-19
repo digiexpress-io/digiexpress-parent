@@ -37,7 +37,7 @@ public class OrgDbPrinter {
     .append(System.lineSeparator())
     .append("Users").append(System.lineSeparator());
     
-    ctx.query().users()
+    ctx.query().members()
     .findAll().onItem()
     .transform(item -> {
       result.append("  - ")
@@ -63,7 +63,7 @@ public class OrgDbPrinter {
     result
     .append(System.lineSeparator())
     .append("Groups").append(System.lineSeparator());
-    ctx.query().groups()
+    ctx.query().parties()
     .findAll().onItem()
     .transform(item -> {
       result.append("  - ")
@@ -91,7 +91,7 @@ public class OrgDbPrinter {
     result
     .append(System.lineSeparator())
     .append("Group Members").append(System.lineSeparator());
-    ctx.query().groups()
+    ctx.query().parties()
     .findAll().onItem()
     .transform(item -> {
       result.append("  - ")
@@ -117,7 +117,7 @@ public class OrgDbPrinter {
     result
     .append(System.lineSeparator())
     .append("Roles").append(System.lineSeparator());
-    ctx.query().roles()
+    ctx.query().rights()
     .findAll().onItem()
     .transform(item -> {
       result.append("  - ")
@@ -145,7 +145,7 @@ public class OrgDbPrinter {
     result
     .append(System.lineSeparator())
     .append("User roles").append(System.lineSeparator());
-    ctx.query().userRoles()
+    ctx.query().memberRights()
     .findAll().onItem()
     .transform(item -> {
       result.append("  - ")
@@ -168,7 +168,7 @@ public class OrgDbPrinter {
     result
     .append(System.lineSeparator())
     .append("Group roles").append(System.lineSeparator());
-    ctx.query().groupRoles()
+    ctx.query().partyRights()
     .findAll().onItem()
     .transform(item -> {
       result.append("  - ")
@@ -235,7 +235,7 @@ public class OrgDbPrinter {
     .append(System.lineSeparator())
     .append("Users").append(System.lineSeparator());
     
-    ctx.query().users()
+    ctx.query().members()
     .findAll().onItem()
     .transform(item -> {
       result.append("  - ")
@@ -261,7 +261,7 @@ public class OrgDbPrinter {
     result
     .append(System.lineSeparator())
     .append("Groups").append(System.lineSeparator());
-    ctx.query().groups()
+    ctx.query().parties()
     .findAll().onItem()
     .transform(item -> {
       result.append("  - ")
@@ -289,7 +289,7 @@ public class OrgDbPrinter {
     result
     .append(System.lineSeparator())
     .append("Group Members").append(System.lineSeparator());
-    ctx.query().groups()
+    ctx.query().parties()
     .findAll().onItem()
     .transform(item -> {
       result.append("  - ")
@@ -315,7 +315,7 @@ public class OrgDbPrinter {
     result
     .append(System.lineSeparator())
     .append("Roles").append(System.lineSeparator());
-    ctx.query().roles()
+    ctx.query().rights()
     .findAll().onItem()
     .transform(item -> {
       result.append("  - ")
@@ -343,7 +343,7 @@ public class OrgDbPrinter {
     result
     .append(System.lineSeparator())
     .append("User roles").append(System.lineSeparator());
-    ctx.query().userRoles()
+    ctx.query().memberRights()
     .findAll().onItem()
     .transform(item -> {
       result.append("  - ")
@@ -366,7 +366,7 @@ public class OrgDbPrinter {
     result
     .append(System.lineSeparator())
     .append("Group roles").append(System.lineSeparator());
-    ctx.query().groupRoles()
+    ctx.query().partyRights()
     .findAll().onItem()
     .transform(item -> {
       result.append("  - ")

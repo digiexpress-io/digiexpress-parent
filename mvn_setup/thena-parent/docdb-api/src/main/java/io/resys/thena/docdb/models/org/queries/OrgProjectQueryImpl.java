@@ -43,12 +43,12 @@ public class OrgProjectQueryImpl implements OrgProjectQuery {
 
   private Uni<QueryEnvelope<OrgProjectObjects>> getProjectObjects(OrgQueries org, Repo repo) {
     return Uni.combine().all().unis(
-        org.groups().findAll().collect().asList(),
-        org.users().findAll().collect().asList(),
-        org.roles().findAll().collect().asList(),
-        org.userMemberships().findAll().collect().asList(),
-        org.groupRoles().findAll().collect().asList(),
-        org.userRoles().findAll().collect().asList(),
+        org.parties().findAll().collect().asList(),
+        org.members().findAll().collect().asList(),
+        org.rights().findAll().collect().asList(),
+        org.memberships().findAll().collect().asList(),
+        org.partyRights().findAll().collect().asList(),
+        org.memberRights().findAll().collect().asList(),
         org.actorStatus().findAll().collect().asList()
     ).asTuple().onItem().transform(tuple -> {
       

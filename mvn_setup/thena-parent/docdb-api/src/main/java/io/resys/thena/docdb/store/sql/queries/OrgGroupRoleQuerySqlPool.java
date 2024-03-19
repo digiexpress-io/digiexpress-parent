@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j(topic = LogConstants.SHOW_SQL)
 @RequiredArgsConstructor
-public class OrgGroupRoleQuerySqlPool implements OrgQueries.GroupRolesQuery {
+public class OrgGroupRoleQuerySqlPool implements OrgQueries.PartyRightsQuery {
   private final SqlClientWrapper wrapper;
   private final SqlMapper sqlMapper;
   private final SqlBuilder sqlBuilder;
@@ -82,7 +82,7 @@ public class OrgGroupRoleQuerySqlPool implements OrgQueries.GroupRolesQuery {
   }
 
 	@Override
-	public Multi<OrgPartyRight> findAllByGroupId(String id) {
+	public Multi<OrgPartyRight> findAllByPartyId(String id) {
     final var sql = sqlBuilder.orgGroupRoles().findAllByGroupId(id);
     if(log.isDebugEnabled()) {
       log.debug("GroupRole findAllByGroupId query, with props: {} \r\n{}", 
@@ -98,7 +98,7 @@ public class OrgGroupRoleQuerySqlPool implements OrgQueries.GroupRolesQuery {
 	}
 
 	@Override
-	public Multi<OrgPartyRight> findAllByRoleId(String id) {
+	public Multi<OrgPartyRight> findAllByRightId(String id) {
     final var sql = sqlBuilder.orgGroupRoles().findAllByRoleId(id);
     if(log.isDebugEnabled()) {
       log.debug("UserRole findAllByRoleId query, with props: {} \r\n{}", 

@@ -59,13 +59,13 @@ public class CreateOneRoleImpl implements CreateOneRole {
 		// find users
 		final Uni<List<OrgMember>> usersUni = this.addRoleToUsers.isEmpty() ? 
 			Uni.createFrom().item(Collections.emptyList()) : 
-			tx.query().users().findAll(addRoleToUsers).collect().asList();
+			tx.query().members().findAll(addRoleToUsers).collect().asList();
 		
 		
 		// find group
 		final Uni<List<OrgParty>> groupsUni = this.addRoleToGroups.isEmpty() ?
 			Uni.createFrom().item(Collections.emptyList()) : 
-			tx.query().groups().findAll(addRoleToGroups).collect().asList();
+			tx.query().parties().findAll(addRoleToGroups).collect().asList();
 	
 		// join data
 		return Uni.combine().all().unis(usersUni, groupsUni).asTuple()

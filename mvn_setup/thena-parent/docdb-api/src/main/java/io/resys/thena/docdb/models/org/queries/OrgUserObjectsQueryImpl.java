@@ -41,7 +41,7 @@ public class OrgUserObjectsQueryImpl implements MemberObjectsQuery {
         return Uni.createFrom().item(QueryEnvelope.repoNotFound(repoId, log));
       }
       return state.toOrgState().query(repoId)
-        .onItem().transformToUni((OrgQueries repo) -> repo.users().getById(userId))
+        .onItem().transformToUni((OrgQueries repo) -> repo.members().getById(userId))
         .onItem().transformToUni(data -> {
           if(data == null) {
             return Uni.createFrom().item(docNotFound(existing, userId, new DocNotFoundException()));
@@ -60,7 +60,7 @@ public class OrgUserObjectsQueryImpl implements MemberObjectsQuery {
         return Uni.createFrom().item(QueryEnvelope.repoNotFoundList(repoId, log));
       }
       return state.toOrgState().query(repoId)
-        .onItem().transformToUni((OrgQueries repo) -> repo.users().findAll().collect().asList())
+        .onItem().transformToUni((OrgQueries repo) -> repo.members().findAll().collect().asList())
         .onItem().transformToUni(data -> getUserObjects(existing, data));
     });
   }

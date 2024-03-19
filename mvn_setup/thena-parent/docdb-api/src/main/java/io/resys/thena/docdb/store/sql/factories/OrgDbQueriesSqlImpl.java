@@ -18,27 +18,27 @@ public class OrgDbQueriesSqlImpl implements OrgQueries {
   protected final ClientQuerySqlContext context;
 
   @Override
-  public UserQuery users() {
+  public MemberQuery members() {
     return new OrgUserQuerySqlPool(context.getWrapper(), context.getMapper(), context.getBuilder(), context.getErrorHandler());
   }
   @Override
-  public GroupQuery groups() {
+  public PartyQuery parties() {
     return new OrgGroupQuerySqlPool(context.getWrapper(), context.getMapper(), context.getBuilder(), context.getErrorHandler());
   }
   @Override
-  public RoleQuery roles() {
+  public RightsQuery rights() {
     return new OrgRoleQuerySqlPool(context.getWrapper(), context.getMapper(), context.getBuilder(), context.getErrorHandler());
   }
 	@Override
-	public UserMembershipQuery userMemberships() {
+	public MembershipQuery memberships() {
     return new OrgUserMembershipsQuerySqlPool(context.getWrapper(), context.getMapper(), context.getBuilder(), context.getErrorHandler());
 	}
 	@Override
-	public UserRolesQuery userRoles() {
+	public MemberRightsQuery memberRights() {
     return new OrgUserRoleQuerySqlPool(context.getWrapper(), context.getMapper(), context.getBuilder(), context.getErrorHandler());
 	}
 	@Override
-	public GroupRolesQuery groupRoles() {
+	public PartyRightsQuery partyRights() {
     return new OrgGroupRoleQuerySqlPool(context.getWrapper(), context.getMapper(), context.getBuilder(), context.getErrorHandler());
 	}
   @Override

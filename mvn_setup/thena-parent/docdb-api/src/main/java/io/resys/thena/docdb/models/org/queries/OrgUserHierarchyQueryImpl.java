@@ -64,20 +64,20 @@ public class OrgUserHierarchyQueryImpl implements MemberHierarchyQuery {
       }
       
       final var state = this.state.toOrgState().query(existing);
-      final Multi<OrgMember> users = state.users().findAll();
+      final Multi<OrgMember> users = state.members().findAll();
       final Multi<QueryEnvelope<OrgMemberHierarchy>> userAndGroups = users.onItem().transformToUni(user -> getUser(state, existing, user.getId())).merge();
       return userAndGroups.collect().asList().onItem().transform(this::createUsersResult);
     });
   }
 	
 	private Uni<QueryEnvelope<OrgMemberHierarchy>> getUser(OrgQueries org, Repo existing, String userId) {
-    return org.users().getStatusById(userId).onItem().transformToUni(user -> {
+    return org.members().getStatusById(userId).onItem().transformToUni(user -> {
       if(user == null) {
         return Uni.createFrom().item(docNotFound(existing, userId, new DocNotFoundException()));
       }
       return Uni.combine().all().unis(
-          org.users().findAllRolesByUserId(user.getId()),
-          org.users().findAllUserHierarchyEntries(user.getId())
+          org.members().findAllRightsByMemberId(user.getId()),
+          org.members().findAllMemberHierarchyEntries(user.getId())
         ).asTuple()
         .onItem().transform(tuple -> createUserResult(user, tuple.getItem2(), tuple.getItem1()));
     });

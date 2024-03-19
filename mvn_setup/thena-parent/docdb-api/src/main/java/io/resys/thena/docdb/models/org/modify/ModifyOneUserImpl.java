@@ -127,12 +127,12 @@ public class ModifyOneUserImpl implements ModifyOneUser {
 		// find groups
 		final Uni<List<OrgParty>> groupsUni = this.allGroups.isEmpty() ? 
 			Uni.createFrom().item(Collections.emptyList()) : 
-			tx.query().groups().findAll(allGroups).collect().asList();
+			tx.query().parties().findAll(allGroups).collect().asList();
 		
 		// roles
 		final Uni<List<OrgRight>> rolesUni = this.allRoles.isEmpty() ? 
 			Uni.createFrom().item(Collections.emptyList()) :
-			tx.query().roles().findAll(allRoles).collect().asList();
+			tx.query().rights().findAll(allRoles).collect().asList();
 		
 		final Uni<QueryEnvelope<OrgMemberHierarchy>> userUni = new OrgUserHierarchyQueryImpl(state).repoId(repoId).get(userId);
 	    

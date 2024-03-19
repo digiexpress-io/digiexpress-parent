@@ -85,12 +85,12 @@ public class CreateOneUserImpl implements CreateOneUser {
 		// find groups
 		final Uni<List<OrgParty>> groupsUni = groupIds.isEmpty() ? 
 			Uni.createFrom().item(Collections.emptyList()) : 
-			tx.query().groups().findAll(groupIds.stream().distinct().toList()).collect().asList();
+			tx.query().parties().findAll(groupIds.stream().distinct().toList()).collect().asList();
 		
 		// roles
 		final Uni<List<OrgRight>> rolesUni = roleIds.isEmpty() ? 
 			Uni.createFrom().item(Collections.emptyList()) :
-			tx.query().roles().findAll(roleIds.stream().distinct().toList()).collect().asList();
+			tx.query().rights().findAll(roleIds.stream().distinct().toList()).collect().asList();
 		
 		// join data
 		return Uni.combine().all().unis(groupsUni, rolesUni).asTuple()

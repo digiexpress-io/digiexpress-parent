@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j(topic = LogConstants.SHOW_SQL)
 @RequiredArgsConstructor
-public class OrgRoleQuerySqlPool implements OrgQueries.RoleQuery {
+public class OrgRoleQuerySqlPool implements OrgQueries.RightsQuery {
   private final SqlClientWrapper wrapper;
   private final SqlMapper sqlMapper;
   private final SqlBuilder sqlBuilder;

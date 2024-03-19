@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j(topic = LogConstants.SHOW_SQL)
 @RequiredArgsConstructor
-public class OrgUserMembershipsQuerySqlPool implements OrgQueries.UserMembershipQuery {
+public class OrgUserMembershipsQuerySqlPool implements OrgQueries.MembershipQuery {
   private final SqlClientWrapper wrapper;
   private final SqlMapper sqlMapper;
   private final SqlBuilder sqlBuilder;
@@ -82,7 +82,7 @@ public class OrgUserMembershipsQuerySqlPool implements OrgQueries.UserMembership
   }
 
 	@Override
-	public Multi<OrgMembership> findAllByGroupId(String id) {
+	public Multi<OrgMembership> findAllByPartyId(String id) {
     final var sql = sqlBuilder.orgUserMemberships().findAllByGroupId(id);
     if(log.isDebugEnabled()) {
       log.debug("UserMembership findAllByGroupId query, with props: {} \r\n{}", 
@@ -98,7 +98,7 @@ public class OrgUserMembershipsQuerySqlPool implements OrgQueries.UserMembership
 	}
 
 	@Override
-	public Multi<OrgMembership> findAllByUserId(String id) {
+	public Multi<OrgMembership> findAllByMemberId(String id) {
     final var sql = sqlBuilder.orgUserMemberships().findAllByUserId(id);
     if(log.isDebugEnabled()) {
       log.debug("UserMembership findAllByUserId query, with props: {} \r\n{}", 

@@ -63,17 +63,17 @@ public class CreateOneGroupImpl implements CreateOneGroup {
 		// find users
 		final Uni<List<OrgMember>> usersUni = this.addUsersToGroup.isEmpty() ? 
 			Uni.createFrom().item(Collections.emptyList()) : 
-			tx.query().users().findAll(addUsersToGroup).collect().asList();
+			tx.query().members().findAll(addUsersToGroup).collect().asList();
 		
 		// roles
 		final Uni<List<OrgRight>> rolesUni = this.addRolesToGroup.isEmpty() ? 
 			Uni.createFrom().item(Collections.emptyList()) :
-			tx.query().roles().findAll(addRolesToGroup).collect().asList();
+			tx.query().rights().findAll(addRolesToGroup).collect().asList();
 		
 		// fetch parent group
 		final Uni<Optional<OrgParty>> parentUni = this.parentId == null ? 
 			Uni.createFrom().item(Optional.empty()) : 
-			tx.query().groups().getById(parentId).onItem().transform(parent -> Optional.of(parent));
+			tx.query().parties().getById(parentId).onItem().transform(parent -> Optional.of(parent));
 	
 		// join data
 		return Uni.combine().all().unis(usersUni, rolesUni, parentUni).asTuple()
