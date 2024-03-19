@@ -39,7 +39,7 @@ public class OrgUserRoleQuerySqlPool implements OrgQueries.MemberRightsQuery {
         .execute()
         .onItem()
         .transformToMulti((RowSet<OrgMemberRight> rowset) -> Multi.createFrom().iterable(rowset))
-        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlFailed("Can't find 'USER_ROLE'!", sql, e)));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlFailed("Can't find 'MEMBER_RIGHT'!", sql, e)));
   }
   
   @Override
@@ -55,7 +55,7 @@ public class OrgUserRoleQuerySqlPool implements OrgQueries.MemberRightsQuery {
         .execute(sql.getProps())
         .onItem()
         .transformToMulti((RowSet<OrgMemberRight> rowset) -> Multi.createFrom().iterable(rowset))
-        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'USER_ROLE'!", sql, e)));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'MEMBER_RIGHT'!", sql, e)));
   }
 
   @Override
@@ -78,7 +78,7 @@ public class OrgUserRoleQuerySqlPool implements OrgQueries.MemberRightsQuery {
           return null;
         })
         .onFailure(e -> errorHandler.notFound(e)).recoverWithNull()
-        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't get 'USER_ROLE' by 'id': '" + id + "'!", sql, e)));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't get 'MEMBER_RIGHT' by 'id': '" + id + "'!", sql, e)));
   }
 
 	@Override
@@ -94,7 +94,7 @@ public class OrgUserRoleQuerySqlPool implements OrgQueries.MemberRightsQuery {
         .execute(sql.getProps())
         .onItem()
         .transformToMulti((RowSet<OrgMemberRight> rowset) -> Multi.createFrom().iterable(rowset))
-        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'USER_ROLE'!", sql, e)));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'MEMBER_RIGHT'!", sql, e)));
 	}
 
 	@Override
@@ -110,6 +110,6 @@ public class OrgUserRoleQuerySqlPool implements OrgQueries.MemberRightsQuery {
         .execute(sql.getProps())
         .onItem()
         .transformToMulti((RowSet<OrgMemberRight> rowset) -> Multi.createFrom().iterable(rowset))
-        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'USER_ROLE'!", sql, e)));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'MEMBER_RIGHT'!", sql, e)));
 	}
 }

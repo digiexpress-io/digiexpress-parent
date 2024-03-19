@@ -39,7 +39,7 @@ public class OrgGroupQuerySqlPool implements OrgQueries.PartyQuery {
         .execute()
         .onItem()
         .transformToMulti((RowSet<OrgParty> rowset) -> Multi.createFrom().iterable(rowset))
-        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlFailed("Can't find 'GROUP'!", sql, e)));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlFailed("Can't find 'PARTY'!", sql, e)));
   }
   
   @Override
@@ -55,7 +55,7 @@ public class OrgGroupQuerySqlPool implements OrgQueries.PartyQuery {
         .execute(sql.getProps())
         .onItem()
         .transformToMulti((RowSet<OrgParty> rowset) -> Multi.createFrom().iterable(rowset))
-        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'GROUP'!", sql, e)));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'PARTY'!", sql, e)));
   }
 
   @Override
@@ -78,6 +78,6 @@ public class OrgGroupQuerySqlPool implements OrgQueries.PartyQuery {
           return null;
         })
         .onFailure(e -> errorHandler.notFound(e)).recoverWithNull()
-        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't get 'GROUP' by 'id': '" + id + "'!", sql, e)));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't get 'PARTY' by 'id': '" + id + "'!", sql, e)));
   }
 }

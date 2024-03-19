@@ -3,10 +3,10 @@ package io.resys.thena.docdb.store.sql.queries;
 import java.util.List;
 
 import io.resys.thena.docdb.api.LogConstants;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberHierarchyEntry;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRightFlattened;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberFlattened;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberHierarchyEntry;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRightFlattened;
 import io.resys.thena.docdb.models.org.OrgQueries;
 import io.resys.thena.docdb.store.sql.SqlBuilder;
 import io.resys.thena.docdb.store.sql.SqlMapper;
@@ -42,7 +42,7 @@ public class OrgUserQuerySqlPool implements OrgQueries.MemberQuery {
         .execute()
         .onItem()
         .transformToMulti((RowSet<OrgMember> rowset) -> Multi.createFrom().iterable(rowset))
-        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlFailed("Can't find 'USER'!", sql, e)));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlFailed("Can't find 'MEMBER'!", sql, e)));
   }
   
   @Override
@@ -58,7 +58,7 @@ public class OrgUserQuerySqlPool implements OrgQueries.MemberQuery {
         .execute(sql.getProps())
         .onItem()
         .transformToMulti((RowSet<OrgMember> rowset) -> Multi.createFrom().iterable(rowset))
-        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'USER'!", sql, e)));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'MEMBER'!", sql, e)));
   }
 
 
@@ -82,7 +82,7 @@ public class OrgUserQuerySqlPool implements OrgQueries.MemberQuery {
           return null;
         })
         .onFailure(e -> errorHandler.notFound(e)).recoverWithNull()
-        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't get 'USER' by 'id': '" + id + "'!", sql, e)));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't get 'MEMBER' by 'id': '" + id + "'!", sql, e)));
   }
   
 	@Override
@@ -99,7 +99,7 @@ public class OrgUserQuerySqlPool implements OrgQueries.MemberQuery {
         .onItem()
         .transformToMulti((RowSet<OrgMemberHierarchyEntry> rowset) -> Multi.createFrom().iterable(rowset))
         .collect().asList()
-        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'USER_GROUPS_ROLES'!", sql, e)));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'MEMBER_PARTY_RIGHTS'!", sql, e)));
 	}
 
   @Override
@@ -116,7 +116,7 @@ public class OrgUserQuerySqlPool implements OrgQueries.MemberQuery {
         .onItem()
         .transformToMulti((RowSet<OrgRightFlattened> rowset) -> Multi.createFrom().iterable(rowset))
         .collect().asList()
-        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'USER_DIRECT_ROLES'!", sql, e)));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'MEMBER_DIRECT_RIGHTS'!", sql, e)));
   }
 
   @Override
@@ -138,6 +138,6 @@ public class OrgUserQuerySqlPool implements OrgQueries.MemberQuery {
           }
           return null;
         })
-        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'USER_STATUS'!", sql, e)));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'MEMBER_STATUS'!", sql, e)));
   }
 }

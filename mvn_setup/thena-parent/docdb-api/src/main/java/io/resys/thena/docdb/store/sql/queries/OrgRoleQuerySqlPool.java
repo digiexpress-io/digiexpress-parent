@@ -39,7 +39,7 @@ public class OrgRoleQuerySqlPool implements OrgQueries.RightsQuery {
         .execute()
         .onItem()
         .transformToMulti((RowSet<OrgRight> rowset) -> Multi.createFrom().iterable(rowset))
-        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlFailed("Can't find 'ROLE'!", sql, e)));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlFailed("Can't find 'RIGHTS'!", sql, e)));
   }
   
   @Override
@@ -55,7 +55,7 @@ public class OrgRoleQuerySqlPool implements OrgQueries.RightsQuery {
         .execute(sql.getProps())
         .onItem()
         .transformToMulti((RowSet<OrgRight> rowset) -> Multi.createFrom().iterable(rowset))
-        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'ROLE'!", sql, e)));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'RIGHTS'!", sql, e)));
   }
 
   @Override
@@ -78,6 +78,6 @@ public class OrgRoleQuerySqlPool implements OrgQueries.RightsQuery {
           return null;
         })
         .onFailure(e -> errorHandler.notFound(e)).recoverWithNull()
-        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't get 'ROLE' by 'id': '" + id + "'!", sql, e)));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't get 'RIGHTS' by 'id': '" + id + "'!", sql, e)));
   }
 }

@@ -39,7 +39,7 @@ public class OrgGroupRoleQuerySqlPool implements OrgQueries.PartyRightsQuery {
         .execute()
         .onItem()
         .transformToMulti((RowSet<OrgPartyRight> rowset) -> Multi.createFrom().iterable(rowset))
-        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlFailed("Can't find 'GROUP_ROLE'!", sql, e)));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlFailed("Can't find 'PARTY_RIGHTS'!", sql, e)));
   }
   
   @Override
@@ -55,7 +55,7 @@ public class OrgGroupRoleQuerySqlPool implements OrgQueries.PartyRightsQuery {
         .execute(sql.getProps())
         .onItem()
         .transformToMulti((RowSet<OrgPartyRight> rowset) -> Multi.createFrom().iterable(rowset))
-        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'GROUP_ROLE'!", sql, e)));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'PARTY_RIGHTS'!", sql, e)));
   }
 
   @Override
@@ -78,7 +78,7 @@ public class OrgGroupRoleQuerySqlPool implements OrgQueries.PartyRightsQuery {
           return null;
         })
         .onFailure(e -> errorHandler.notFound(e)).recoverWithNull()
-        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't get 'GROUP_ROLE' by 'id': '" + id + "'!", sql, e)));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't get 'PARTY_RIGHTS' by 'id': '" + id + "'!", sql, e)));
   }
 
 	@Override
@@ -94,7 +94,7 @@ public class OrgGroupRoleQuerySqlPool implements OrgQueries.PartyRightsQuery {
         .execute(sql.getProps())
         .onItem()
         .transformToMulti((RowSet<OrgPartyRight> rowset) -> Multi.createFrom().iterable(rowset))
-        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'GROUP_ROLE'!", sql, e)));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'PARTY_RIGHTS'!", sql, e)));
 	}
 
 	@Override
@@ -110,6 +110,6 @@ public class OrgGroupRoleQuerySqlPool implements OrgQueries.PartyRightsQuery {
         .execute(sql.getProps())
         .onItem()
         .transformToMulti((RowSet<OrgPartyRight> rowset) -> Multi.createFrom().iterable(rowset))
-        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'GROUP_ROLE'!", sql, e)));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'PARTY_RIGHTS'!", sql, e)));
 	}
 }

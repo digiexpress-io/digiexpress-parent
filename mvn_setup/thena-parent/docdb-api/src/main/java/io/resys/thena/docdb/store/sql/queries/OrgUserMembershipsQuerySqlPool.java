@@ -39,7 +39,7 @@ public class OrgUserMembershipsQuerySqlPool implements OrgQueries.MembershipQuer
         .execute()
         .onItem()
         .transformToMulti((RowSet<OrgMembership> rowset) -> Multi.createFrom().iterable(rowset))
-        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlFailed("Can't find 'USER_MEMBERSHIP'!", sql, e)));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlFailed("Can't find 'MEMBERSHIP'!", sql, e)));
   }
   
   @Override
@@ -55,7 +55,7 @@ public class OrgUserMembershipsQuerySqlPool implements OrgQueries.MembershipQuer
         .execute(sql.getProps())
         .onItem()
         .transformToMulti((RowSet<OrgMembership> rowset) -> Multi.createFrom().iterable(rowset))
-        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'USER_MEMBERSHIP'!", sql, e)));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'MEMBERSHIP'!", sql, e)));
   }
 
   @Override
@@ -78,7 +78,7 @@ public class OrgUserMembershipsQuerySqlPool implements OrgQueries.MembershipQuer
           return null;
         })
         .onFailure(e -> errorHandler.notFound(e)).recoverWithNull()
-        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't get 'USER_MEMBERSHIP' by 'id': '" + id + "'!", sql, e)));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't get 'MEMBERSHIP' by 'id': '" + id + "'!", sql, e)));
   }
 
 	@Override
@@ -94,7 +94,7 @@ public class OrgUserMembershipsQuerySqlPool implements OrgQueries.MembershipQuer
         .execute(sql.getProps())
         .onItem()
         .transformToMulti((RowSet<OrgMembership> rowset) -> Multi.createFrom().iterable(rowset))
-        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'USER_MEMBERSHIP'!", sql, e)));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'MEMBERSHIP'!", sql, e)));
 	}
 
 	@Override
@@ -110,6 +110,6 @@ public class OrgUserMembershipsQuerySqlPool implements OrgQueries.MembershipQuer
         .execute(sql.getProps())
         .onItem()
         .transformToMulti((RowSet<OrgMembership> rowset) -> Multi.createFrom().iterable(rowset))
-        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'USER_MEMBERSHIP'!", sql, e)));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'MEMBERSHIP'!", sql, e)));
 	}
 }
