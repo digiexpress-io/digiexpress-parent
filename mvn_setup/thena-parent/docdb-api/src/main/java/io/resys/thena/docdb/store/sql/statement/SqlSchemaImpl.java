@@ -435,10 +435,10 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("CREATE INDEX ").append(options.getOrgPartyRights()).append("_COMMIT_INDEX")
     .append(" ON ").append(options.getOrgPartyRights()).append(" (commit_id);").ln()
 
-    .append("CREATE INDEX ").append(options.getOrgPartyRights()).append("_GROUP_INDEX")
+    .append("CREATE INDEX ").append(options.getOrgPartyRights()).append("_PARTY_INDEX")
     .append(" ON ").append(options.getOrgPartyRights()).append(" (party_id);").ln()
 
-    .append("CREATE INDEX ").append(options.getOrgPartyRights()).append("_ROLE_INDEX")
+    .append("CREATE INDEX ").append(options.getOrgPartyRights()).append("_RIGHT_INDEX")
     .append(" ON ").append(options.getOrgPartyRights()).append(" (right_id);").ln()    
 
     .build()).build();
@@ -463,7 +463,7 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("CREATE INDEX ").append(options.getOrgMembers()).append("_EXTERNAL_INDEX")
     .append(" ON ").append(options.getOrgMembers()).append(" (external_id);").ln()
 
-    .append("CREATE INDEX ").append(options.getOrgMembers()).append("_USER_NAME_INDEX")
+    .append("CREATE INDEX ").append(options.getOrgMembers()).append("_MEMBER_NAME_INDEX")
     .append(" ON ").append(options.getOrgMembers()).append(" (username);").ln()
 
     .build()).build();
@@ -485,14 +485,14 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("CREATE INDEX ").append(options.getOrgMemberRights()).append("_COMMIT_INDEX")
     .append(" ON ").append(options.getOrgMemberRights()).append(" (commit_id);").ln()
     
-    .append("CREATE INDEX ").append(options.getOrgMemberRights()).append("_ROLE_INDEX")
+    .append("CREATE INDEX ").append(options.getOrgMemberRights()).append("_RIGHT_INDEX")
     .append(" ON ").append(options.getOrgMemberRights()).append(" (right_id);").ln()
 
-    .append("CREATE INDEX ").append(options.getOrgMemberRights()).append("_USER_INDEX")
+    .append("CREATE INDEX ").append(options.getOrgMemberRights()).append("_MEMBER_INDEX")
     .append(" ON ").append(options.getOrgMemberRights()).append(" (member_id);").ln()
     
 
-    .append("CREATE INDEX ").append(options.getOrgMemberRights()).append("_GROUP_INDEX")
+    .append("CREATE INDEX ").append(options.getOrgMemberRights()).append("_PARTY_INDEX")
     .append(" ON ").append(options.getOrgMemberRights()).append(" (party_id);").ln()
     
     .append("CREATE INDEX ").append(options.getOrgMemberRights()).append("_REF_INDEX")
@@ -520,10 +520,10 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("CREATE INDEX ").append(options.getOrgMemberships()).append("_COMMIT_INDEX")
     .append(" ON ").append(options.getOrgMemberships()).append(" (commit_id);").ln()
     
-    .append("CREATE INDEX ").append(options.getOrgMemberships()).append("_USER_INDEX")
+    .append("CREATE INDEX ").append(options.getOrgMemberships()).append("_MEMBER_INDEX")
     .append(" ON ").append(options.getOrgMemberships()).append(" (member_id);").ln()
     
-    .append("CREATE INDEX ").append(options.getOrgMemberships()).append("_GROUP_INDEX")
+    .append("CREATE INDEX ").append(options.getOrgMemberships()).append("_PARTY_INDEX")
     .append(" ON ").append(options.getOrgMemberships()).append(" (party_id);").ln()
     
     .append("CREATE INDEX ").append(options.getOrgMemberships()).append("_REF_INDEX")
@@ -550,13 +550,13 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("CREATE INDEX ").append(options.getOrgActorStatus()).append("_COMMIT_INDEX")
     .append(" ON ").append(options.getOrgActorStatus()).append(" (commit_id);").ln()
 
-    .append("CREATE INDEX ").append(options.getOrgActorStatus()).append("_ROLE_INDEX")
+    .append("CREATE INDEX ").append(options.getOrgActorStatus()).append("_RIGHT_INDEX")
     .append(" ON ").append(options.getOrgActorStatus()).append(" (right_id);").ln()
     
-    .append("CREATE INDEX ").append(options.getOrgActorStatus()).append("_USER_INDEX")
+    .append("CREATE INDEX ").append(options.getOrgActorStatus()).append("_MEMBER_INDEX")
     .append(" ON ").append(options.getOrgActorStatus()).append(" (member_id);").ln()
     
-    .append("CREATE INDEX ").append(options.getOrgActorStatus()).append("_GROUP_INDEX")
+    .append("CREATE INDEX ").append(options.getOrgActorStatus()).append("_PARTY_INDEX")
     .append(" ON ").append(options.getOrgActorStatus()).append(" (party_id);").ln()
     
 
@@ -692,7 +692,7 @@ public class SqlSchemaImpl implements SqlSchema {
         
 
         .append("ALTER TABLE ").append(options.getOrgMemberRights()).ln()
-        .append("  ADD CONSTRAINT ").append(options.getOrgMemberRights()).append("_GROUP_MEMBER_FK").ln()
+        .append("  ADD CONSTRAINT ").append(options.getOrgMemberRights()).append("_PARTY_MEMBER_FK").ln()
         .append("  FOREIGN KEY (party_id, member_id)").ln()
         .append("  REFERENCES ").append(options.getOrgMemberships()).append(" (party_id, member_id);").ln().ln()
         
@@ -758,7 +758,7 @@ public class SqlSchemaImpl implements SqlSchema {
   private String createOrgUserFk(String tableNameThatPointToCommits) {
     return  new SqlStatement().ln()
         .append("ALTER TABLE ").append(tableNameThatPointToCommits).ln()
-        .append("  ADD CONSTRAINT ").append(tableNameThatPointToCommits).append("_USER_FK").ln()
+        .append("  ADD CONSTRAINT ").append(tableNameThatPointToCommits).append("_MEMBER_FK").ln()
         .append("  FOREIGN KEY (member_id)").ln()
         .append("  REFERENCES ").append(options.getOrgMembers()).append(" (id);").ln().ln()
         .build();
@@ -767,7 +767,7 @@ public class SqlSchemaImpl implements SqlSchema {
   private String createOrgGroupFk(String tableNameThatPointToCommits) {
     return new SqlStatement().ln()
         .append("ALTER TABLE ").append(tableNameThatPointToCommits).ln()
-        .append("  ADD CONSTRAINT ").append(tableNameThatPointToCommits).append("_GROUP_FK").ln()
+        .append("  ADD CONSTRAINT ").append(tableNameThatPointToCommits).append("_PARTY_FK").ln()
         .append("  FOREIGN KEY (party_id)").ln()
         .append("  REFERENCES ").append(options.getOrgParties()).append(" (id);").ln().ln()
         .build();
@@ -777,7 +777,7 @@ public class SqlSchemaImpl implements SqlSchema {
   private String createOrgRoleFk(String tableNameThatPointToCommits) {
     return  new SqlStatement().ln()
         .append("ALTER TABLE ").append(tableNameThatPointToCommits).ln()
-        .append("  ADD CONSTRAINT ").append(tableNameThatPointToCommits).append("_ROLE_FK").ln()
+        .append("  ADD CONSTRAINT ").append(tableNameThatPointToCommits).append("_RIGHT_FK").ln()
         .append("  FOREIGN KEY (right_id)").ln()
         .append("  REFERENCES ").append(options.getOrgRights()).append(" (id);").ln().ln()
         .build();
