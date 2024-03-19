@@ -73,31 +73,31 @@ public interface SqlSchema extends DbCollections.WithOptions<SqlSchema>{
   
   
   // organization model
-  Sql createOrgRoles();
-  Sql createOrgGroups();
-  Sql createOrgGroupRoles();
+  Sql createOrgRights();
+  Sql createOrgParties();
+  Sql createOrgPartyRights();
   
-  Sql createOrgUsers();
-  Sql createOrgUserRoles();
-  Sql createOrgUserMemberships();
+  Sql createOrgMembers();
+  Sql createOrgMemberRights();
+  Sql createOrgMemberships();
 
   Sql createOrgActorStatus();
   Sql createOrgCommits();
   Sql createOrgActorData();
   
-  Sql createOrgRolesConstraints();
-  Sql createOrgUserConstraints();  
-  Sql createOrgGroupConstraints();  
+  Sql createOrgRightsConstraints();
+  Sql createOrgMemberConstraints();  
+  Sql createOrgPartyConstraints();  
   Sql createOrgCommitConstraints();
   
 
-  Sql dropOrgRoles();
-  Sql dropOrgGroups();
-  Sql dropOrgGroupRoles();
+  Sql dropOrgRights();
+  Sql dropOrgParties();
+  Sql dropOrgPartyRights();
   
-  Sql dropOrgUsers();
-  Sql dropOrgUserRoles();
-  Sql dropOrgUserMemberships();
+  Sql dropOrgMembers();
+  Sql dropOrgMemberRights();
+  Sql dropOrgMemberships();
 
   Sql dropOrgActorStatus();
   Sql dropOrgActorLogs();

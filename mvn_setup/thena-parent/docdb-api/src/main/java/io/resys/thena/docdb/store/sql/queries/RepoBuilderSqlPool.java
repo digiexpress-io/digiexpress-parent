@@ -140,22 +140,22 @@ public class RepoBuilderSqlPool implements RepoBuilder {
       } else if(newRepo.getType() == RepoType.org) {
         
         tablesCreate
-          .append(sqlSchema.createOrgRoles().getValue())
-          .append(sqlSchema.createOrgGroups().getValue())
-          .append(sqlSchema.createOrgGroupRoles().getValue())
+          .append(sqlSchema.createOrgRights().getValue())
+          .append(sqlSchema.createOrgParties().getValue())
+          .append(sqlSchema.createOrgPartyRights().getValue())
           
-          .append(sqlSchema.createOrgUsers().getValue())
-          .append(sqlSchema.createOrgUserRoles().getValue())
-          .append(sqlSchema.createOrgUserMemberships().getValue())
+          .append(sqlSchema.createOrgMembers().getValue())
+          .append(sqlSchema.createOrgMemberRights().getValue())
+          .append(sqlSchema.createOrgMemberships().getValue())
           
 
           .append(sqlSchema.createOrgActorStatus().getValue())
           .append(sqlSchema.createOrgCommits().getValue())
           .append(sqlSchema.createOrgActorData().getValue())
           
-          .append(sqlSchema.createOrgRolesConstraints().getValue())
-          .append(sqlSchema.createOrgUserConstraints().getValue())
-          .append(sqlSchema.createOrgGroupConstraints().getValue())
+          .append(sqlSchema.createOrgRightsConstraints().getValue())
+          .append(sqlSchema.createOrgMemberConstraints().getValue())
+          .append(sqlSchema.createOrgPartyConstraints().getValue())
           .append(sqlSchema.createOrgCommitConstraints().getValue())
           
           .toString();
@@ -241,13 +241,13 @@ public class RepoBuilderSqlPool implements RepoBuilder {
       } else if(newRepo.getType() == RepoType.org) {
         
         tablesDrop
-        .append(sqlSchema.dropOrgRoles().getValue())
-        .append(sqlSchema.dropOrgGroups().getValue())
-        .append(sqlSchema.dropOrgGroupRoles().getValue())
+        .append(sqlSchema.dropOrgRights().getValue())
+        .append(sqlSchema.dropOrgParties().getValue())
+        .append(sqlSchema.dropOrgPartyRights().getValue())
 
-        .append(sqlSchema.dropOrgUsers().getValue())
-        .append(sqlSchema.dropOrgUserRoles().getValue())
-        .append(sqlSchema.dropOrgUserMemberships().getValue())
+        .append(sqlSchema.dropOrgMembers().getValue())
+        .append(sqlSchema.dropOrgMemberRights().getValue())
+        .append(sqlSchema.dropOrgMemberships().getValue())
         
         .append(sqlSchema.dropOrgActorStatus().getValue())
         .append(sqlSchema.dropOrgActorLogs().getValue())

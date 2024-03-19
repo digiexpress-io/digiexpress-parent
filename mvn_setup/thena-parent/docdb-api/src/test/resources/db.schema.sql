@@ -167,10 +167,10 @@ CREATE TABLE org_rights
   id VARCHAR(40) PRIMARY KEY,
   commit_id VARCHAR(40) NOT NULL,
   external_id VARCHAR(40) UNIQUE,
-  role_name VARCHAR(255) UNIQUE NOT NULL,
-  role_description VARCHAR(255) NOT NULL
+  right_name VARCHAR(255) UNIQUE NOT NULL,
+  right_description VARCHAR(255) NOT NULL
 );
-CREATE INDEX org_rights_NAME_INDEX ON org_rights (role_name);
+CREATE INDEX org_rights_NAME_INDEX ON org_rights (right_name);
 CREATE INDEX org_rights_COMMIT_INDEX ON org_rights (commit_id);
 CREATE INDEX org_rights_EXTERNAL_INDEX ON org_rights (external_id);
 
@@ -180,15 +180,15 @@ CREATE TABLE org_parties
   commit_id VARCHAR(40) NOT NULL,
   external_id VARCHAR(40) UNIQUE,
   parent_id VARCHAR(40),
-  group_name VARCHAR(255) UNIQUE NOT NULL,
-  group_description VARCHAR(255) NOT NULL
+  party_name VARCHAR(255) UNIQUE NOT NULL,
+  party_description VARCHAR(255) NOT NULL
 );
 
 ALTER TABLE org_parties
   ADD CONSTRAINT org_parties_PARENT_FK
   FOREIGN KEY (parent_id)
   REFERENCES org_parties (id);
-CREATE INDEX org_parties_NAME_INDEX ON org_parties (group_name);
+CREATE INDEX org_parties_NAME_INDEX ON org_parties (party_name);
 CREATE INDEX org_parties_COMMIT_INDEX ON org_parties (commit_id);
 CREATE INDEX org_parties_EXTERNAL_INDEX ON org_parties (external_id);
 
@@ -196,13 +196,13 @@ CREATE TABLE org_party_rights
 (
   id VARCHAR(40) PRIMARY KEY,
   commit_id VARCHAR(40) NOT NULL,
-  group_id VARCHAR(40) NOT NULL,
-  role_id VARCHAR(40) NOT NULL,
-  UNIQUE (role_id, group_id)
+  party_id VARCHAR(40) NOT NULL,
+  right_id VARCHAR(40) NOT NULL,
+  UNIQUE (right_id, party_id)
 );
 CREATE INDEX org_party_rights_COMMIT_INDEX ON org_party_rights (commit_id);
-CREATE INDEX org_party_rights_GROUP_INDEX ON org_party_rights (group_id);
-CREATE INDEX org_party_rights_ROLE_INDEX ON org_party_rights (role_id);
+CREATE INDEX org_party_rights_PARTY_INDEX ON org_party_rights (party_id);
+CREATE INDEX org_party_rights_RIGHT_INDEX ON org_party_rights (right_id);
 
 CREATE TABLE org_members
 (
@@ -214,51 +214,51 @@ CREATE TABLE org_members
 );
 CREATE INDEX org_members_COMMIT_INDEX ON org_members (commit_id);
 CREATE INDEX org_members_EXTERNAL_INDEX ON org_members (external_id);
-CREATE INDEX org_members_USER_NAME_INDEX ON org_members (username);
+CREATE INDEX org_members_MEMBER_NAME_INDEX ON org_members (username);
 
 CREATE TABLE org_member_rights
 (
   id VARCHAR(40) PRIMARY KEY,
   commit_id VARCHAR(40) NOT NULL,
-  user_id VARCHAR(40) NOT NULL,
-  role_id VARCHAR(40) NOT NULL,
-  group_id VARCHAR(40),
-  UNIQUE (user_id, role_id, group_id)
+  member_id VARCHAR(40) NOT NULL,
+  right_id VARCHAR(40) NOT NULL,
+  party_id VARCHAR(40),
+  UNIQUE (member_id, right_id, party_id)
 );
 CREATE INDEX org_member_rights_COMMIT_INDEX ON org_member_rights (commit_id);
-CREATE INDEX org_member_rights_ROLE_INDEX ON org_member_rights (role_id);
-CREATE INDEX org_member_rights_USER_INDEX ON org_member_rights (user_id);
-CREATE INDEX org_member_rights_GROUP_INDEX ON org_member_rights (group_id);
-CREATE INDEX org_member_rights_REF_INDEX ON org_member_rights (role_id, user_id);
-CREATE INDEX org_member_rights_REF_2_INDEX ON org_member_rights (role_id, user_id, group_id);
+CREATE INDEX org_member_rights_RIGHT_INDEX ON org_member_rights (right_id);
+CREATE INDEX org_member_rights_MEMBER_INDEX ON org_member_rights (member_id);
+CREATE INDEX org_member_rights_PARTY_INDEX ON org_member_rights (party_id);
+CREATE INDEX org_member_rights_REF_INDEX ON org_member_rights (right_id, member_id);
+CREATE INDEX org_member_rights_REF_2_INDEX ON org_member_rights (right_id, member_id, party_id);
 
 CREATE TABLE org_memberships
 (
   id VARCHAR(40) PRIMARY KEY,
   commit_id VARCHAR(40) NOT NULL,
-  user_id VARCHAR(40) NOT NULL,
-  group_id VARCHAR(40) NOT NULL,
-  UNIQUE (user_id, group_id)
+  member_id VARCHAR(40) NOT NULL,
+  party_id VARCHAR(40) NOT NULL,
+  UNIQUE (member_id, party_id)
 );
 CREATE INDEX org_memberships_COMMIT_INDEX ON org_memberships (commit_id);
-CREATE INDEX org_memberships_USER_INDEX ON org_memberships (user_id);
-CREATE INDEX org_memberships_GROUP_INDEX ON org_memberships (group_id);
-CREATE INDEX org_memberships_REF_INDEX ON org_memberships (group_id, user_id);
+CREATE INDEX org_memberships_MEMBER_INDEX ON org_memberships (member_id);
+CREATE INDEX org_memberships_PARTY_INDEX ON org_memberships (party_id);
+CREATE INDEX org_memberships_REF_INDEX ON org_memberships (party_id, member_id);
 
 CREATE TABLE org_actor_status
 (
   id VARCHAR(40) PRIMARY KEY,
   commit_id VARCHAR(40) NOT NULL,
-  user_id VARCHAR(40),
-  role_id VARCHAR(40),
-  group_id VARCHAR(40),
+  member_id VARCHAR(40),
+  right_id VARCHAR(40),
+  party_id VARCHAR(40),
   actor_status VARCHAR(100) NOT NULL,
-  UNIQUE (user_id, role_id, group_id)
+  UNIQUE (member_id, right_id, party_id)
 );
 CREATE INDEX org_actor_status_COMMIT_INDEX ON org_actor_status (commit_id);
-CREATE INDEX org_actor_status_ROLE_INDEX ON org_actor_status (role_id);
-CREATE INDEX org_actor_status_USER_INDEX ON org_actor_status (user_id);
-CREATE INDEX org_actor_status_GROUP_INDEX ON org_actor_status (group_id);
+CREATE INDEX org_actor_status_RIGHT_INDEX ON org_actor_status (right_id);
+CREATE INDEX org_actor_status_MEMBER_INDEX ON org_actor_status (member_id);
+CREATE INDEX org_actor_status_PARTY_INDEX ON org_actor_status (party_id);
 
 CREATE TABLE org_commits
 (
@@ -303,9 +303,9 @@ CREATE TABLE org_actor_data
   commit_id VARCHAR(40) NOT NULL,
   parent_id VARCHAR(40),
   external_id VARCHAR(40) UNIQUE,
-  user_id VARCHAR(40),
-  role_id VARCHAR(40),
-  group_id VARCHAR(40),
+  member_id VARCHAR(40),
+  right_id VARCHAR(40),
+  party_id VARCHAR(40),
   data_type VARCHAR(255) NOT NULL,
   value JSONB NOT NULL,
   commit_author VARCHAR(255) NOT NULL,
@@ -318,99 +318,99 @@ ALTER TABLE org_actor_data
   REFERENCES org_actor_data (id);
 
 ALTER TABLE org_actor_data
-  ADD CONSTRAINT org_actor_data_ROLE_FK
-  FOREIGN KEY (role_id)
+  ADD CONSTRAINT org_actor_data_RIGHT_FK
+  FOREIGN KEY (right_id)
   REFERENCES org_rights (id);
 
 
 
 ALTER TABLE org_actor_status
-  ADD CONSTRAINT org_actor_status_ROLE_FK
-  FOREIGN KEY (role_id)
+  ADD CONSTRAINT org_actor_status_RIGHT_FK
+  FOREIGN KEY (right_id)
   REFERENCES org_rights (id);
 
 
 
 ALTER TABLE org_member_rights
-  ADD CONSTRAINT org_member_rights_ROLE_FK
-  FOREIGN KEY (role_id)
+  ADD CONSTRAINT org_member_rights_RIGHT_FK
+  FOREIGN KEY (right_id)
   REFERENCES org_rights (id);
 
 
 
 ALTER TABLE org_party_rights
-  ADD CONSTRAINT org_party_rights_ROLE_FK
-  FOREIGN KEY (role_id)
+  ADD CONSTRAINT org_party_rights_RIGHT_FK
+  FOREIGN KEY (right_id)
   REFERENCES org_rights (id);
 
 
 
 ALTER TABLE org_memberships
-  ADD CONSTRAINT org_memberships_USER_FK
-  FOREIGN KEY (user_id)
+  ADD CONSTRAINT org_memberships_MEMBER_FK
+  FOREIGN KEY (member_id)
   REFERENCES org_members (id);
 
 
 
 ALTER TABLE org_member_rights
-  ADD CONSTRAINT org_member_rights_USER_FK
-  FOREIGN KEY (user_id)
+  ADD CONSTRAINT org_member_rights_MEMBER_FK
+  FOREIGN KEY (member_id)
   REFERENCES org_members (id);
 
 
 
 ALTER TABLE org_actor_data
-  ADD CONSTRAINT org_actor_data_USER_FK
-  FOREIGN KEY (user_id)
+  ADD CONSTRAINT org_actor_data_MEMBER_FK
+  FOREIGN KEY (member_id)
   REFERENCES org_members (id);
 
 
 
 ALTER TABLE org_actor_status
-  ADD CONSTRAINT org_actor_status_USER_FK
-  FOREIGN KEY (user_id)
+  ADD CONSTRAINT org_actor_status_MEMBER_FK
+  FOREIGN KEY (member_id)
   REFERENCES org_members (id);
 
 
 
 ALTER TABLE org_actor_data
-  ADD CONSTRAINT org_actor_data_GROUP_FK
-  FOREIGN KEY (group_id)
+  ADD CONSTRAINT org_actor_data_PARTY_FK
+  FOREIGN KEY (party_id)
   REFERENCES org_parties (id);
 
 
 
 ALTER TABLE org_actor_status
-  ADD CONSTRAINT org_actor_status_GROUP_FK
-  FOREIGN KEY (group_id)
+  ADD CONSTRAINT org_actor_status_PARTY_FK
+  FOREIGN KEY (party_id)
   REFERENCES org_parties (id);
 
 
 
 ALTER TABLE org_party_rights
-  ADD CONSTRAINT org_party_rights_GROUP_FK
-  FOREIGN KEY (group_id)
+  ADD CONSTRAINT org_party_rights_PARTY_FK
+  FOREIGN KEY (party_id)
   REFERENCES org_parties (id);
 
 
 
 ALTER TABLE org_member_rights
-  ADD CONSTRAINT org_member_rights_GROUP_FK
-  FOREIGN KEY (group_id)
+  ADD CONSTRAINT org_member_rights_PARTY_FK
+  FOREIGN KEY (party_id)
   REFERENCES org_parties (id);
 
 
 
 ALTER TABLE org_memberships
-  ADD CONSTRAINT org_memberships_GROUP_FK
-  FOREIGN KEY (group_id)
+  ADD CONSTRAINT org_memberships_PARTY_FK
+  FOREIGN KEY (party_id)
   REFERENCES org_parties (id);
 
 
 ALTER TABLE org_member_rights
-  ADD CONSTRAINT org_member_rights_GROUP_MEMBER_FK
-  FOREIGN KEY (group_id, user_id)
-  REFERENCES org_memberships (group_id, user_id);
+  ADD CONSTRAINT org_member_rights_PARTY_MEMBER_FK
+  FOREIGN KEY (party_id, member_id)
+  REFERENCES org_memberships (party_id, member_id);
 
 
 ALTER TABLE org_memberships

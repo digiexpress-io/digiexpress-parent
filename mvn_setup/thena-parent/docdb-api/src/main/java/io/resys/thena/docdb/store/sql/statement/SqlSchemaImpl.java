@@ -361,7 +361,7 @@ public class SqlSchemaImpl implements SqlSchema {
   }
 
   @Override
-  public Sql createOrgRoles() {
+  public Sql createOrgRights() {
     return ImmutableSql.builder().value(new SqlStatement().ln()
     .append("CREATE TABLE ").append(options.getOrgRights()).ln()
     .append("(").ln()
@@ -387,7 +387,7 @@ public class SqlSchemaImpl implements SqlSchema {
   }
 
   @Override
-  public Sql createOrgGroups() {
+  public Sql createOrgParties() {
     return ImmutableSql.builder().value(new SqlStatement().ln()
     .append("CREATE TABLE ").append(options.getOrgParties()).ln()
     .append("(").ln()
@@ -420,7 +420,7 @@ public class SqlSchemaImpl implements SqlSchema {
   }
 
   @Override
-  public Sql createOrgGroupRoles() {
+  public Sql createOrgPartyRights() {
     return ImmutableSql.builder().value(new SqlStatement().ln()
     .append("CREATE TABLE ").append(options.getOrgPartyRights()).ln()
     .append("(").ln()
@@ -445,7 +445,7 @@ public class SqlSchemaImpl implements SqlSchema {
   }
 
   @Override
-  public Sql createOrgUsers() {
+  public Sql createOrgMembers() {
     return ImmutableSql.builder().value(new SqlStatement().ln()
     .append("CREATE TABLE ").append(options.getOrgMembers()).ln()
     .append("(").ln()
@@ -470,7 +470,7 @@ public class SqlSchemaImpl implements SqlSchema {
   }
 
   @Override
-  public Sql createOrgUserRoles() {
+  public Sql createOrgMemberRights() {
     return ImmutableSql.builder().value(new SqlStatement().ln()
     .append("CREATE TABLE ").append(options.getOrgMemberRights()).ln()
     .append("(").ln()
@@ -506,7 +506,7 @@ public class SqlSchemaImpl implements SqlSchema {
   }
 
   @Override
-  public Sql createOrgUserMemberships() {
+  public Sql createOrgMemberships() {
     return ImmutableSql.builder().value(new SqlStatement().ln()
     .append("CREATE TABLE ").append(options.getOrgMemberships()).ln()
     .append("(").ln()
@@ -670,7 +670,7 @@ public class SqlSchemaImpl implements SqlSchema {
   }
 
   @Override
-  public Sql createOrgRolesConstraints() {
+  public Sql createOrgRightsConstraints() {
     return ImmutableSql.builder().value(new SqlStatement()
         .append(createOrgRoleFk(options.getOrgActorData())).ln()
         .append(createOrgRoleFk(options.getOrgActorStatus())).ln()
@@ -682,7 +682,7 @@ public class SqlSchemaImpl implements SqlSchema {
   }
   
   @Override
-  public Sql createOrgGroupConstraints() {
+  public Sql createOrgPartyConstraints() {
     return ImmutableSql.builder().value(new SqlStatement()
         .append(createOrgGroupFk(options.getOrgActorData())).ln()
         .append(createOrgGroupFk(options.getOrgActorStatus())).ln()
@@ -703,7 +703,7 @@ public class SqlSchemaImpl implements SqlSchema {
 
   
   @Override
-  public Sql createOrgUserConstraints() {
+  public Sql createOrgMemberConstraints() {
     return ImmutableSql.builder().value(new SqlStatement()
         .append(createOrgUserFk(options.getOrgMemberships())).ln()
         .append(createOrgUserFk(options.getOrgMemberRights())).ln()
@@ -728,12 +728,12 @@ public class SqlSchemaImpl implements SqlSchema {
   @Override public Sql dropDocLog() { return dropTableIfNotExists(options.getDocLog()); }
   
 
-  @Override public Sql dropOrgRoles() { return dropTableIfNotExists(options.getOrgRights()); }
-  @Override public Sql dropOrgGroups() { return dropTableIfNotExists(options.getOrgParties()); }
-  @Override public Sql dropOrgGroupRoles() { return dropTableIfNotExists(options.getOrgPartyRights()); }
-  @Override public Sql dropOrgUsers() { return dropTableIfNotExists(options.getOrgMembers()); }
-  @Override public Sql dropOrgUserRoles() { return dropTableIfNotExists(options.getOrgMemberRights()); }
-  @Override public Sql dropOrgUserMemberships() { return dropTableIfNotExists(options.getOrgMemberships()); }
+  @Override public Sql dropOrgRights() { return dropTableIfNotExists(options.getOrgRights()); }
+  @Override public Sql dropOrgParties() { return dropTableIfNotExists(options.getOrgParties()); }
+  @Override public Sql dropOrgPartyRights() { return dropTableIfNotExists(options.getOrgPartyRights()); }
+  @Override public Sql dropOrgMembers() { return dropTableIfNotExists(options.getOrgMembers()); }
+  @Override public Sql dropOrgMemberRights() { return dropTableIfNotExists(options.getOrgMemberRights()); }
+  @Override public Sql dropOrgMemberships() { return dropTableIfNotExists(options.getOrgMemberships()); }
   @Override public Sql dropOrgActorStatus() { return dropTableIfNotExists(options.getOrgActorStatus()); }
   @Override public Sql dropOrgActorLogs() { return dropTableIfNotExists(options.getOrgCommits()); }
   @Override public Sql dropOrgActorData() { return dropTableIfNotExists(options.getOrgActorData()); }
