@@ -69,15 +69,16 @@ public class OrgRoleHierarchyQueryImpl implements RoleHierarchyQuery {
   }
 
   private QueryEnvelopeList<OrgRoleHierarchy> createRoleHierarchy(QueryEnvelope<OrgProjectObjects> init) {
-    final var groups = new ArrayList<OrgRoleHierarchy>();
+    final var result = new ArrayList<OrgRoleHierarchy>();
     final var ctx = new AnyTreeContainerContextImpl(init.getObjects());
     final var container = new AnyTreeContainerImpl<OrgRoleHierarchy>(ctx);
-    for(final var criteria : init.getObjects().getGroups().values().stream().sorted((a, b) -> a.getGroupName().compareTo(b.getGroupName())).toList()) {
-      final OrgRoleHierarchy group = container.accept(new RoleHierarchyContainerVisitor(criteria.getId()));
-      groups.add(group);
+    
+    for(final var roleCriteria : init.getObjects().getRoles().values().stream().sorted((a, b) -> a.getRoleName().compareTo(b.getRoleName())).toList()) {
+      final OrgRoleHierarchy roleHierarchy = container.accept(new RoleHierarchyContainerVisitor(roleCriteria.getId()));
+      result.add(roleHierarchy);
     }
     return ImmutableQueryEnvelopeList.<OrgRoleHierarchy>builder()
-        .objects(Collections.unmodifiableList(groups))
+        .objects(Collections.unmodifiableList(result))
         .repo(init.getRepo())
         .status(QueryEnvelope.QueryEnvelopeStatus.OK)
         .build();

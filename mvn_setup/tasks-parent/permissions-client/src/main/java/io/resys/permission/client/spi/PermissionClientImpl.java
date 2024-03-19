@@ -90,8 +90,7 @@ public class PermissionClientImpl implements PermissionClient {
   
   @Override
   public PermissionQuery permissionQuery() {
-    // TODO Auto-generated method stub
-    return null;
+    return new PermissionQueryImpl(ctx);
   }
 
   @Override
