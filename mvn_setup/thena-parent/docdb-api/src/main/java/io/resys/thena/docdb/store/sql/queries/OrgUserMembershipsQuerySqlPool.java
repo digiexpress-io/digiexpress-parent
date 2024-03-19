@@ -35,7 +35,7 @@ public class OrgUserMembershipsQuerySqlPool implements OrgQueries.UserMembership
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.orgUserMemberships(row))
+        .mapping(row -> sqlMapper.orgMembership(row))
         .execute()
         .onItem()
         .transformToMulti((RowSet<OrgMembership> rowset) -> Multi.createFrom().iterable(rowset))
@@ -51,7 +51,7 @@ public class OrgUserMembershipsQuerySqlPool implements OrgQueries.UserMembership
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.orgUserMemberships(row))
+        .mapping(row -> sqlMapper.orgMembership(row))
         .execute(sql.getProps())
         .onItem()
         .transformToMulti((RowSet<OrgMembership> rowset) -> Multi.createFrom().iterable(rowset))
@@ -67,7 +67,7 @@ public class OrgUserMembershipsQuerySqlPool implements OrgQueries.UserMembership
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.orgUserMemberships(row))
+        .mapping(row -> sqlMapper.orgMembership(row))
         .execute(sql.getProps())
         .onItem()
         .transform((RowSet<OrgMembership> rowset) -> {
@@ -90,7 +90,7 @@ public class OrgUserMembershipsQuerySqlPool implements OrgQueries.UserMembership
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.orgUserMemberships(row))
+        .mapping(row -> sqlMapper.orgMembership(row))
         .execute(sql.getProps())
         .onItem()
         .transformToMulti((RowSet<OrgMembership> rowset) -> Multi.createFrom().iterable(rowset))
@@ -106,7 +106,7 @@ public class OrgUserMembershipsQuerySqlPool implements OrgQueries.UserMembership
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.orgUserMemberships(row))
+        .mapping(row -> sqlMapper.orgMembership(row))
         .execute(sql.getProps())
         .onItem()
         .transformToMulti((RowSet<OrgMembership> rowset) -> Multi.createFrom().iterable(rowset))

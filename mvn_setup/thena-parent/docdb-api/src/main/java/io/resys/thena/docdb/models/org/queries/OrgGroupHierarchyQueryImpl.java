@@ -73,7 +73,7 @@ public class OrgGroupHierarchyQueryImpl implements GroupHierarchyQuery {
     final var groups = new ArrayList<OrgGroupHierarchy>();
     final var ctx = new AnyTreeContainerContextImpl(init.getObjects());
     final var container = new AnyTreeContainerImpl(ctx);
-    for(final var criteria : init.getObjects().getGroups().values().stream().sorted((a, b) -> a.getGroupName().compareTo(b.getGroupName())).toList()) {
+    for(final var criteria : init.getObjects().getGroups().values().stream().sorted((a, b) -> a.getPartyName().compareTo(b.getPartyName())).toList()) {
       
       final var group = container.accept(new GroupHierarchyContainerVisitor(criteria.getId()));
       final var log = container.accept(new GroupHierarchyContainerLogVisitor(criteria.getId(), true));

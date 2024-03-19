@@ -5,13 +5,13 @@ import java.util.List;
 
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatus;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgCommit;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgParty;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgPartyRight;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRoleFlattened;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRight;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRightFlattened;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserFlattened;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserHierarchyEntry;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberFlattened;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberHierarchyEntry;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMembership;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberRight;
 import io.smallrye.mutiny.Multi;
@@ -68,20 +68,20 @@ public interface OrgQueries {
     Multi<OrgMember> findAll();
     Multi<OrgMember> findAll(List<String> id);
     Uni<OrgMember> getById(String id); //user.id or user.email or user.external_id 
-    Uni<List<OrgUserHierarchyEntry>> findAllUserHierarchyEntries(String userId);
-    Uni<List<OrgRoleFlattened>> findAllRolesByUserId(String userId);
-    Uni<OrgUserFlattened> getStatusById(String userId);
+    Uni<List<OrgMemberHierarchyEntry>> findAllUserHierarchyEntries(String userId);
+    Uni<List<OrgRightFlattened>> findAllRolesByUserId(String userId);
+    Uni<OrgMemberFlattened> getStatusById(String userId);
   }
   
   interface RoleQuery {    
-    Multi<OrgRole> findAll();
-    Multi<OrgRole> findAll(Collection<String> id);
-    Uni<OrgRole> getById(String id);
+    Multi<OrgRight> findAll();
+    Multi<OrgRight> findAll(Collection<String> id);
+    Uni<OrgRight> getById(String id);
   }
   
   interface GroupQuery {
-    Multi<OrgGroup> findAll();
-    Multi<OrgGroup> findAll(Collection<String> id);
-    Uni<OrgGroup> getById(String id);
+    Multi<OrgParty> findAll();
+    Multi<OrgParty> findAll(Collection<String> id);
+    Uni<OrgParty> getById(String id);
   }
 }

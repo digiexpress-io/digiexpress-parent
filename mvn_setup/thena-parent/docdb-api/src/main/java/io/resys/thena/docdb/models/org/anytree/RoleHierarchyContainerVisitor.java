@@ -10,9 +10,9 @@ import org.barfuin.texttree.api.TreeOptions;
 
 import io.resys.thena.docdb.api.models.ImmutableOrgRoleHierarchy;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatusType;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgParty;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgPartyRight;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRight;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMembership;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberRight;
@@ -33,7 +33,7 @@ public class RoleHierarchyContainerVisitor extends OrgGroupContainerVisitor<OrgR
   
   private OrgAnyTreeContainerContext ctx;
   private GroupVisitor currentVisitor;
-  private OrgRole target;
+  private OrgRight target;
   private DefaultNode nodeRoot;
   
   public RoleHierarchyContainerVisitor(String roleIdOrNameOrExternalId) {
@@ -45,7 +45,7 @@ public class RoleHierarchyContainerVisitor extends OrgGroupContainerVisitor<OrgR
     final var target = ctx.getRoles().stream()
     .filter(role -> {
       return roleIdOrNameOrExternalId.equals(role.getExternalId()) ||
-          roleIdOrNameOrExternalId.equals(role.getRoleName()) ||
+          roleIdOrNameOrExternalId.equals(role.getRightName()) ||
           roleIdOrNameOrExternalId.equals(role.getId());
     }).findAny();
     
@@ -58,7 +58,7 @@ public class RoleHierarchyContainerVisitor extends OrgGroupContainerVisitor<OrgR
         msg
           .append("    - existing role ").append(System.lineSeparator())
           .append("      id: ").append(role.getId()).append(System.lineSeparator())
-          .append("      name: ").append(role.getRoleName()).append(System.lineSeparator())
+          .append("      name: ").append(role.getRightName()).append(System.lineSeparator())
           .append("      external id: ").append(role.getExternalId()).append(System.lineSeparator());
       }
       
@@ -66,7 +66,7 @@ public class RoleHierarchyContainerVisitor extends OrgGroupContainerVisitor<OrgR
     }
     this.target = target.get();
     this.ctx = ctx;
-    this.nodeRoot = new DefaultNode(this.target.getRoleName());
+    this.nodeRoot = new DefaultNode(this.target.getRightName());
     super.start(ctx);
     
   }
@@ -83,13 +83,13 @@ public class RoleHierarchyContainerVisitor extends OrgGroupContainerVisitor<OrgR
         .roleId(target.getId())
         .commitId(target.getCommitId())
         .externalId(target.getExternalId())
-        .roleName(target.getRoleName())
-        .roleDescription(target.getRoleDescription())
+        .roleName(target.getRightName())
+        .roleDescription(target.getRightDescription())
         .build();
   }
 
   @Override
-  protected GroupVisitor visitTop(OrgGroup group, OrgAnyTreeContainerContext worldState) {
+  protected GroupVisitor visitTop(OrgParty group, OrgAnyTreeContainerContext worldState) {
     final var currentVisitor = new GroupVisitorForRole(target, nodeRoot, ctx);
     this.visitorsByGroup.put(group.getId(), currentVisitor);
     this.currentVisitor = currentVisitor;
@@ -97,13 +97,13 @@ public class RoleHierarchyContainerVisitor extends OrgGroupContainerVisitor<OrgR
   }
 
   @Override
-  protected GroupVisitor visitChild(OrgGroup group, OrgAnyTreeContainerContext worldState) {
+  protected GroupVisitor visitChild(OrgParty group, OrgAnyTreeContainerContext worldState) {
     return this.currentVisitor;
   }
   
   @RequiredArgsConstructor
   private static class GroupVisitorForRole implements GroupVisitor {
-    private final OrgRole target;
+    private final OrgRight target;
     private final DefaultNode nodeRoot;
     private final OrgAnyTreeContainerContext ctx;
     
@@ -112,7 +112,7 @@ public class RoleHierarchyContainerVisitor extends OrgGroupContainerVisitor<OrgR
     private final Map<String, DefaultNode> nodesGroupMembers = new HashMap<>();
     
     @Override
-    public void start(OrgGroup group, List<OrgGroup> parents, boolean isDisabled) {
+    public void start(OrgParty group, List<OrgParty> parents, boolean isDisabled) {
       if(isDisabled) {
         return;
       }
@@ -122,13 +122,13 @@ public class RoleHierarchyContainerVisitor extends OrgGroupContainerVisitor<OrgR
       }
       
 
-      final var groupNode = new DefaultNode(group.getGroupName());
+      final var groupNode = new DefaultNode(group.getPartyName());
       nodesGroup.put(group.getId(), groupNode);
       nodesGroup.get(group.getParentId()).addChild(groupNode);
     }
 
     @Override
-    public void visitMembership(OrgGroup group, OrgMembership membership, OrgMember user, boolean isDisabled) {
+    public void visitMembership(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled) {
       if(isDisabled) {
         return;
       }
@@ -138,7 +138,7 @@ public class RoleHierarchyContainerVisitor extends OrgGroupContainerVisitor<OrgR
       }
       
       final var disabledSpecificallyForUser = ctx.getUserRoles(user.getId()).stream()
-          .filter(role -> role.getRoleId().equals(target.getId()))
+          .filter(role -> role.getRightId().equals(target.getId()))
           .filter(role -> ctx.isStatusDisabled(ctx.getStatus(role)))
           .findAny().isPresent();
       
@@ -151,13 +151,13 @@ public class RoleHierarchyContainerVisitor extends OrgGroupContainerVisitor<OrgR
     }
 
     @Override
-    public void visitMembershipWithInheritance(OrgGroup group, OrgMembership membership, OrgMember user,
+    public void visitMembershipWithInheritance(OrgParty group, OrgMembership membership, OrgMember user,
         boolean isDisabled) {
       
     }
 
     @Override
-    public void visitRole(OrgGroup group, OrgPartyRight groupRole, OrgRole role, boolean isDisabled) {
+    public void visitRole(OrgParty group, OrgPartyRight groupRole, OrgRight role, boolean isDisabled) {
       if(isDisabled) {
         return;
       }
@@ -166,39 +166,39 @@ public class RoleHierarchyContainerVisitor extends OrgGroupContainerVisitor<OrgR
         return;
       }
       
-      if(this.target.getId().equals(groupRole.getRoleId())) {
+      if(this.target.getId().equals(groupRole.getRightId())) {
         groupContainsRole = true;
         
-        final var groupNode = new DefaultNode(group.getGroupName() + " <= direct role");
+        final var groupNode = new DefaultNode(group.getPartyName() + " <= direct role");
         nodesGroup.put(group.getId(), groupNode);
         nodeRoot.addChild(groupNode);
       }
     }
     
     @Override
-    public void visitRole(OrgGroup group, OrgMemberRight groupRole, OrgRole role, boolean isDisabled) {
+    public void visitRole(OrgParty group, OrgMemberRight groupRole, OrgRight role, boolean isDisabled) {
       if(isDisabled) {
         return;
       }
       if(groupContainsRole != null) {
         return;
       }
-      if(this.target.getId().equals(groupRole.getRoleId())) {
+      if(this.target.getId().equals(groupRole.getRightId())) {
         groupContainsRole = true;
         
-        final var groupNode = new DefaultNode(group.getGroupName() + " <= inherited role");
+        final var groupNode = new DefaultNode(group.getPartyName() + " <= inherited role");
         nodesGroup.put(group.getId(), groupNode);
         nodeRoot.addChild(groupNode);
       }
     }
 
     @Override
-    public void visitChild(OrgGroup group, boolean isDisabled) {
+    public void visitChild(OrgParty group, boolean isDisabled) {
       
     }
 
     @Override
-    public void end(OrgGroup group, List<OrgGroup> parents, boolean isDisabled) {
+    public void end(OrgParty group, List<OrgParty> parents, boolean isDisabled) {
       groupContainsRole = null;
     }
   }

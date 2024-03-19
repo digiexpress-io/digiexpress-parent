@@ -3,7 +3,7 @@ package io.resys.thena.docdb.store.sql.queries;
 import java.util.Collection;
 
 import io.resys.thena.docdb.api.LogConstants;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRight;
 import io.resys.thena.docdb.models.org.OrgQueries;
 import io.resys.thena.docdb.store.sql.SqlBuilder;
 import io.resys.thena.docdb.store.sql.SqlMapper;
@@ -27,7 +27,7 @@ public class OrgRoleQuerySqlPool implements OrgQueries.RoleQuery {
   private final ErrorHandler errorHandler;
 
   @Override
-  public Multi<OrgRole> findAll() {
+  public Multi<OrgRight> findAll() {
     final var sql = sqlBuilder.orgRoles().findAll();
     if(log.isDebugEnabled()) {
       log.debug("Role findAll query, with props: {} \r\n{}", 
@@ -35,15 +35,15 @@ public class OrgRoleQuerySqlPool implements OrgQueries.RoleQuery {
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.orgRole(row))
+        .mapping(row -> sqlMapper.orgRight(row))
         .execute()
         .onItem()
-        .transformToMulti((RowSet<OrgRole> rowset) -> Multi.createFrom().iterable(rowset))
+        .transformToMulti((RowSet<OrgRight> rowset) -> Multi.createFrom().iterable(rowset))
         .onFailure().invoke(e -> errorHandler.deadEnd(new SqlFailed("Can't find 'ROLE'!", sql, e)));
   }
   
   @Override
-  public Multi<OrgRole> findAll(Collection<String> id) {
+  public Multi<OrgRight> findAll(Collection<String> id) {
     final var sql = sqlBuilder.orgRoles().findAll(id);
     if(log.isDebugEnabled()) {
       log.debug("Role findAll query, with props: {} \r\n{}", 
@@ -51,15 +51,15 @@ public class OrgRoleQuerySqlPool implements OrgQueries.RoleQuery {
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.orgRole(row))
+        .mapping(row -> sqlMapper.orgRight(row))
         .execute(sql.getProps())
         .onItem()
-        .transformToMulti((RowSet<OrgRole> rowset) -> Multi.createFrom().iterable(rowset))
+        .transformToMulti((RowSet<OrgRight> rowset) -> Multi.createFrom().iterable(rowset))
         .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'ROLE'!", sql, e)));
   }
 
   @Override
-  public Uni<OrgRole> getById(String id) {
+  public Uni<OrgRight> getById(String id) {
     final var sql = sqlBuilder.orgRoles().getById(id);
     if(log.isDebugEnabled()) {
       log.debug("Role byId query, with props: {} \r\n{}", 
@@ -67,10 +67,10 @@ public class OrgRoleQuerySqlPool implements OrgQueries.RoleQuery {
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.orgRole(row))
+        .mapping(row -> sqlMapper.orgRight(row))
         .execute(sql.getProps())
         .onItem()
-        .transform((RowSet<OrgRole> rowset) -> {
+        .transform((RowSet<OrgRight> rowset) -> {
           final var it = rowset.iterator();
           if(it.hasNext()) {
             return it.next();

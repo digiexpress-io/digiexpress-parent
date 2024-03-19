@@ -13,9 +13,9 @@ import io.resys.thena.docdb.api.models.ImmutableOrgMembership;
 import io.resys.thena.docdb.api.models.ImmutableOrgMemberRight;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.IsOrgObject;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgCommitTree;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgParty;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgOperationType;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRight;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMembership;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberRight;
 import io.resys.thena.docdb.models.git.GitInserts.BatchStatus;
@@ -33,16 +33,16 @@ public class BatchForOneUserCreate {
   private final String author;
   private final String message;
 
-  private Map<OrgGroup, List<OrgRole>> addUserToGroupRoles;
-  private List<OrgGroup> addToGroups; 
-  private List<OrgRole> addToRoles;  
+  private Map<OrgParty, List<OrgRight>> addUserToGroupRoles;
+  private List<OrgParty> addToGroups; 
+  private List<OrgRight> addToRoles;  
   private String userName;
   private String email;
   private String externalId;
 
-  public BatchForOneUserCreate addUserToGroupRoles(Map<OrgGroup, List<OrgRole>> groups) { this.addUserToGroupRoles = groups; return this; }
-  public BatchForOneUserCreate addToGroups(List<OrgGroup> groups) { this.addToGroups = groups; return this; }
-  public BatchForOneUserCreate addToRoles(List<OrgRole> roles) {    this.addToRoles = roles; return this; }
+  public BatchForOneUserCreate addUserToGroupRoles(Map<OrgParty, List<OrgRight>> groups) { this.addUserToGroupRoles = groups; return this; }
+  public BatchForOneUserCreate addToGroups(List<OrgParty> groups) { this.addToGroups = groups; return this; }
+  public BatchForOneUserCreate addToRoles(List<OrgRight> roles) {    this.addToRoles = roles; return this; }
   public BatchForOneUserCreate userName(String userName) {     this.userName = userName; return this; }
   public BatchForOneUserCreate email(String email) {           this.email = email; return this; }
   public BatchForOneUserCreate externalId(String externalId) { this.externalId = externalId; return this; }
@@ -75,8 +75,8 @@ public class BatchForOneUserCreate {
     for(final var group : this.addToGroups) {
       final var membership = ImmutableOrgMembership.builder()
           .id(OidUtils.gen())
-          .groupId(group.getId())
-          .userId(user.getId())
+          .partyId(group.getId())
+          .memberId(user.getId())
           .commitId(commitId)
           .build();
       tree.add(addToTree(commitId, membership));
@@ -87,8 +87,8 @@ public class BatchForOneUserCreate {
     for(final var role : this.addToRoles) {
       final var userRole = ImmutableOrgMemberRight.builder()
           .id(OidUtils.gen())
-          .userId(user.getId())
-          .roleId(role.getId())
+          .memberId(user.getId())
+          .rightId(role.getId())
           .commitId(commitId)
           .build();
       tree.add(addToTree(commitId, userRole));
@@ -98,9 +98,9 @@ public class BatchForOneUserCreate {
       for(final var role : entry.getValue()) {
         final var userRole = ImmutableOrgMemberRight.builder()
             .id(OidUtils.gen())
-            .userId(user.getId())
-            .roleId(role.getId())
-            .groupId(entry.getKey().getId())
+            .memberId(user.getId())
+            .rightId(role.getId())
+            .partyId(entry.getKey().getId())
             .commitId(commitId)
             .build();
         tree.add(addToTree(commitId, userRole));
@@ -116,9 +116,9 @@ public class BatchForOneUserCreate {
       .append(System.lineSeparator())
       .append("  + user:            ").append(user.getId()).append("::").append(userName)
       .append(System.lineSeparator())
-      .append("  + added to groups: ").append(String.join(",", addToGroups.stream().map(g -> g.getGroupName() + "::" + g.getId()).toList()))
+      .append("  + added to groups: ").append(String.join(",", addToGroups.stream().map(g -> g.getPartyName() + "::" + g.getId()).toList()))
       .append(System.lineSeparator())
-      .append("  + added to roles:  ").append(String.join(",", addToRoles.stream().map(g -> g.getRoleName() + "::" + g.getId()).toList()))
+      .append("  + added to roles:  ").append(String.join(",", addToRoles.stream().map(g -> g.getRightName() + "::" + g.getId()).toList()))
       .append(System.lineSeparator());
     
     final var commit = ImmutableOrgCommit.builder()

@@ -4,9 +4,9 @@ import java.util.List;
 
 import io.resys.thena.docdb.api.models.ImmutableOrgGroupHierarchy;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatusType;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgParty;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgPartyRight;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRight;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMembership;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberRight;
@@ -31,7 +31,7 @@ public class GroupHierarchyContainerVisitor extends OrgGroupContainerVisitor<Imm
     this.groupIdOrNameOrExternalId = groupIdOrNameOrExternalId;
   }
   
-  private boolean isDirectGroup(OrgGroup group) {
+  private boolean isDirectGroup(OrgParty group) {
     if(foundGroupId != null) {
       return group.getId().equals(foundGroupId);
     }
@@ -39,7 +39,7 @@ public class GroupHierarchyContainerVisitor extends OrgGroupContainerVisitor<Imm
   }
   
   @Override
-  public void visitMembershipWithInheritance(OrgGroup group, OrgMembership membership, OrgMember user, boolean isDisabled) {
+  public void visitMembershipWithInheritance(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled) {
     if(isDisabled) {
       return;
     }
@@ -55,7 +55,7 @@ public class GroupHierarchyContainerVisitor extends OrgGroupContainerVisitor<Imm
     
   }
   @Override
-  public void visitMembership(OrgGroup group, OrgMembership membership, OrgMember user, boolean isDisabled) {
+  public void visitMembership(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled) {
     if(isDisabled) {
       return;
     }
@@ -67,7 +67,7 @@ public class GroupHierarchyContainerVisitor extends OrgGroupContainerVisitor<Imm
     builder.addDirectUsers(user);
   }
   @Override
-  public void visitRole(OrgGroup group, OrgPartyRight groupRole, OrgRole role, boolean isDisabled) {
+  public void visitRole(OrgParty group, OrgPartyRight groupRole, OrgRight role, boolean isDisabled) {
     if(isDisabled) {
       return;
     }
@@ -78,7 +78,7 @@ public class GroupHierarchyContainerVisitor extends OrgGroupContainerVisitor<Imm
     builder.addDirectRoleNames(role);    
   }
   @Override
-  public void visitRole(OrgGroup group, OrgMemberRight groupRole, OrgRole role, boolean isDisabled) {
+  public void visitRole(OrgParty group, OrgMemberRight groupRole, OrgRight role, boolean isDisabled) {
     if(isDisabled) {
       return;
     }
@@ -86,7 +86,7 @@ public class GroupHierarchyContainerVisitor extends OrgGroupContainerVisitor<Imm
   }
   
   @Override
-  public void visitChild(OrgGroup group, boolean isDisabled) {
+  public void visitChild(OrgParty group, boolean isDisabled) {
     if(isDisabled) {
       return;
     }
@@ -97,17 +97,17 @@ public class GroupHierarchyContainerVisitor extends OrgGroupContainerVisitor<Imm
     builder.addChildGroups(group);
   }
   @Override
-  public void start(OrgGroup group, List<OrgGroup> parents, boolean isDisabled) {
+  public void start(OrgParty group, List<OrgParty> parents, boolean isDisabled) {
 
     
     if( groupIdOrNameOrExternalId.equals(group.getExternalId()) ||
-        groupIdOrNameOrExternalId.equals(group.getGroupName()) ||
+        groupIdOrNameOrExternalId.equals(group.getPartyName()) ||
         groupIdOrNameOrExternalId.equals(group.getId())) {
       
       foundGroupId = group.getId();
       builder
         .groupId(group.getId())
-        .groupName(group.getGroupName())
+        .groupName(group.getPartyName())
         .externalId(group.getExternalId())
         .commitId(group.getCommitId())
         .parentGroupId(group.getParentId())
@@ -116,7 +116,7 @@ public class GroupHierarchyContainerVisitor extends OrgGroupContainerVisitor<Imm
     }
   }
   @Override
-  public void end(OrgGroup group, List<OrgGroup> parents, boolean isDisabled) {
+  public void end(OrgParty group, List<OrgParty> parents, boolean isDisabled) {
     if(group.getId().equals(foundGroupId)) {
       foundGroupId = null;
     }
@@ -127,11 +127,11 @@ public class GroupHierarchyContainerVisitor extends OrgGroupContainerVisitor<Imm
     return builder.log("").build();
   }
   @Override
-  protected GroupVisitor visitTop(OrgGroup group, OrgAnyTreeContainerContext worldState) {
+  protected GroupVisitor visitTop(OrgParty group, OrgAnyTreeContainerContext worldState) {
     return this;
   }
   @Override
-  protected GroupVisitor visitChild(OrgGroup group, OrgAnyTreeContainerContext worldState) {
+  protected GroupVisitor visitChild(OrgParty group, OrgAnyTreeContainerContext worldState) {
     return this;
   }
 }

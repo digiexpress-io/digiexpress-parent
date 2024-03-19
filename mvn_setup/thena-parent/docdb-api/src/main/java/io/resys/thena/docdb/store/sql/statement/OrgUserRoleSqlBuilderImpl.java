@@ -94,7 +94,7 @@ public class OrgUserRoleSqlBuilderImpl implements OrgUserRoleSqlBuilder {
         .append("INSERT INTO ").append(options.getOrgMemberRights())
         .append(" (id, commit_id, member_id, right_id, party_id) VALUES($1, $2, $3, $4, $5)").ln()
         .build())
-        .props(Tuple.from(new Object[]{ doc.getId(), doc.getCommitId(), doc.getUserId(), doc.getRoleId(), doc.getGroupId()}))
+        .props(Tuple.from(new Object[]{ doc.getId(), doc.getCommitId(), doc.getMemberId(), doc.getRightId(), doc.getPartyId()}))
         .build();
   }
   @Override
@@ -105,7 +105,7 @@ public class OrgUserRoleSqlBuilderImpl implements OrgUserRoleSqlBuilder {
         .append(" (id, commit_id, member_id, right_id, party_id) VALUES($1, $2, $3, $4, $5)").ln()
         .build())
         .props(users.stream()
-            .map(doc -> Tuple.from(new Object[]{ doc.getId(), doc.getCommitId(), doc.getUserId(), doc.getRoleId(), doc.getGroupId()}))
+            .map(doc -> Tuple.from(new Object[]{ doc.getId(), doc.getCommitId(), doc.getMemberId(), doc.getRightId(), doc.getPartyId()}))
             .collect(Collectors.toList()))
         .build();
   }

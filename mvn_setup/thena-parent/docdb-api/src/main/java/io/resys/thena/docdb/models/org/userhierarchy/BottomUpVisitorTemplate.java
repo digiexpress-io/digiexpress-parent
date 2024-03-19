@@ -9,8 +9,8 @@ import org.immutables.value.Value;
 import io.resys.thena.docdb.api.models.ImmutableOrgUserGroupStatus;
 import io.resys.thena.docdb.api.models.ImmutableOrgUserRoleStatus;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatusType;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserHierarchyEntry;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRoleFlattened;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberHierarchyEntry;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRightFlattened;
 import io.resys.thena.docdb.models.org.userhierarchy.UserTreeContainer.BottomUpVisitor;
 
 
@@ -20,11 +20,11 @@ public abstract class BottomUpVisitorTemplate<T> implements BottomUpVisitor<T> {
   private final List<String> groupsDisabled = new ArrayList<>();
   private final List<String> rolesDisabled = new ArrayList<>();
   private final List<String> visited = new ArrayList<>();
-  private final List<OrgRoleFlattened> globalRoles;
+  private final List<OrgRightFlattened> globalRoles;
   private boolean initDone;
   
-  public BottomUpVisitorTemplate(List<OrgRoleFlattened> globalRoles) {
-    this.globalRoles = globalRoles.stream().sorted((a, b) -> b.getRoleName().compareTo(a.getRoleName())).toList();
+  public BottomUpVisitorTemplate(List<OrgRightFlattened> globalRoles) {
+    this.globalRoles = globalRoles.stream().sorted((a, b) -> b.getRightName().compareTo(a.getRightName())).toList();
     this.initDone = false;
   }
 
@@ -49,11 +49,11 @@ public abstract class BottomUpVisitorTemplate<T> implements BottomUpVisitor<T> {
     visitTree(parent);
   }
   
-  private void visitGlobalRole(OrgRoleFlattened globalRole) {
-    if((globalRole.getRoleStatus() == null || globalRole.getRoleStatus() == OrgActorStatusType.IN_FORCE)) {
-      visitGlobalRoleEnabled(globalRole.getRoleName());
+  private void visitGlobalRole(OrgRightFlattened globalRole) {
+    if((globalRole.getRightStatus() == null || globalRole.getRightStatus() == OrgActorStatusType.IN_FORCE)) {
+      visitGlobalRoleEnabled(globalRole.getRightName());
     } else {
-      visitGlobalRoleDisabled(globalRole.getRoleName());
+      visitGlobalRoleDisabled(globalRole.getRightName());
     }
   }
   
@@ -87,16 +87,16 @@ public abstract class BottomUpVisitorTemplate<T> implements BottomUpVisitor<T> {
     
     final var directMembership = tree.isDirect();
     for(final var value : tree.getGroupValues()) {
-      if(value.getRoleId() == null) {
+      if(value.getRightId() == null) {
         continue;
       }
       final var groupName = tree.getGroupName();
       final var parentGroup = Optional.ofNullable(tree.getParent()).map(e -> e.getGroupName());
-      final var roleDisabled = rolesDisabled.contains(value.getRoleId());
+      final var roleDisabled = rolesDisabled.contains(value.getRightId());
       if(roleDisabled || groupDisabled) {
-        this.visitRoleDisabled(value.getRoleName(), groupName, parentGroup, directMembership);
+        this.visitRoleDisabled(value.getRightName(), groupName, parentGroup, directMembership);
       } else {
-        this.visitRoleEnabled(value.getRoleName(), groupName, parentGroup, directMembership);        
+        this.visitRoleEnabled(value.getRightName(), groupName, parentGroup, directMembership);        
       }
     }
   }
@@ -107,45 +107,45 @@ public abstract class BottomUpVisitorTemplate<T> implements BottomUpVisitor<T> {
     return groupDisabled;
   }
   
-  private void visitGroupStatus(UserTree tree, OrgUserHierarchyEntry value) {
+  private void visitGroupStatus(UserTree tree, OrgMemberHierarchyEntry value) {
     
     // disabled
-    if(!tree.isDirect() && inheritanceDisabledFromBottom.contains(value.getGroupId())) {
-      groupsDisabled.add(value.getGroupId());
+    if(!tree.isDirect() && inheritanceDisabledFromBottom.contains(value.getPartyId())) {
+      groupsDisabled.add(value.getPartyId());
     }
     
-    if(value.getGroupStatusId() == null || this.visited.contains(value.getGroupStatusId())) {
+    if(value.getPartyStatusId() == null || this.visited.contains(value.getPartyStatusId())) {
       return;
     }
     
     // Extract status
     final var result = ImmutableOrgUserGroupStatus.builder()
-        .groupId(value.getGroupId())
-        .status(value.getGroupStatus())
-        .statusId(value.getGroupStatusId())
+        .groupId(value.getPartyId())
+        .status(value.getPartyStatus())
+        .statusId(value.getPartyStatusId())
         .build();
     
     // disable one group
     if(result.getStatus() != OrgActorStatusType.IN_FORCE) {
-      groupsDisabled.add(value.getGroupId());
+      groupsDisabled.add(value.getPartyId());
     }
     
     // disable the whole chain
-    if(result.getStatus() != OrgActorStatusType.IN_FORCE && value.getGroupParentId() != null) {
-      inheritanceDisabledFromBottom.add(value.getGroupParentId());
+    if(result.getStatus() != OrgActorStatusType.IN_FORCE && value.getPartyParentId() != null) {
+      inheritanceDisabledFromBottom.add(value.getPartyParentId());
     }
   }
   
-  private void visitRoleStatus(OrgUserHierarchyEntry value) {
-    if(value.getRoleStatusId() == null || this.visited.contains(value.getRoleStatusId())) {
+  private void visitRoleStatus(OrgMemberHierarchyEntry value) {
+    if(value.getRightStatusId() == null || this.visited.contains(value.getRightStatusId())) {
       return;
     }
     
     // extract status
     final var result = ImmutableOrgUserRoleStatus.builder()
-        .roleId(value.getRoleId())
-        .status(value.getRoleStatus())
-        .statusId(value.getRoleStatusId())
+        .roleId(value.getRightId())
+        .status(value.getRightStatus())
+        .statusId(value.getRightStatusId())
         .build();
 
     if(result.getStatus() != OrgActorStatusType.IN_FORCE) {
@@ -153,16 +153,16 @@ public abstract class BottomUpVisitorTemplate<T> implements BottomUpVisitor<T> {
     }
   }
   
-  private void visitRoleStatus(OrgRoleFlattened value) {
-    if(value.getRoleStatusId() == null || this.visited.contains(value.getRoleStatusId())) {
+  private void visitRoleStatus(OrgRightFlattened value) {
+    if(value.getRightStatusId() == null || this.visited.contains(value.getRightStatusId())) {
       return;
     }
     
     // extract status
     final var result = ImmutableOrgUserRoleStatus.builder()
-        .roleId(value.getRoleId())
-        .status(value.getRoleStatus())
-        .statusId(value.getRoleStatusId())
+        .roleId(value.getRightId())
+        .status(value.getRightStatus())
+        .statusId(value.getRightStatusId())
         .build();
     if(result.getStatus() != OrgActorStatusType.IN_FORCE) {
       rolesDisabled.add(result.getRoleId());

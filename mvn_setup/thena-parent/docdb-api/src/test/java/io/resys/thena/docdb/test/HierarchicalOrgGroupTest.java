@@ -17,8 +17,8 @@ import io.resys.thena.docdb.api.actions.RepoActions.RepoResult;
 import io.resys.thena.docdb.api.actions.RepoActions.RepoStatus;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.Repo.RepoType;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgParty;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRight;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
 import io.resys.thena.docdb.test.config.DbTestTemplate;
 import io.resys.thena.docdb.test.config.PgProfile;
@@ -199,7 +199,7 @@ group-2 <= you are here
   }
 
   
-  private OrgMember createUser(String userName, RepoResult repo, List<OrgGroup> groups, List<OrgRole> roles) {
+  private OrgMember createUser(String userName, RepoResult repo, List<OrgParty> groups, List<OrgRight> roles) {
     return getClient().org().commit().createOneUser()
         .repoId(repo.getRepo().getId())
         .addUserToGroups(groups.stream().map(group -> group.getId()).toList())
@@ -213,7 +213,7 @@ group-2 <= you are here
         .getUser();
   }
   
-  private OrgGroup createRootGroup(String groupName, RepoResult repo, OrgRole ...roles) {
+  private OrgParty createRootGroup(String groupName, RepoResult repo, OrgRight ...roles) {
     return getClient().org().commit().createOneGroup()
         .repoId(repo.getRepo().getId())
         .groupName(groupName)
@@ -229,7 +229,7 @@ group-2 <= you are here
         .build().await().atMost(Duration.ofMinutes(1)).getGroup();
   }
   
-  private OrgGroup createChildGroup(String groupName, String parentId, RepoResult repo, OrgRole ...roles) {
+  private OrgParty createChildGroup(String groupName, String parentId, RepoResult repo, OrgRight ...roles) {
     return getClient().org().commit().createOneGroup()
         .repoId(repo.getRepo().getId())
         .groupName(groupName)
@@ -246,7 +246,7 @@ group-2 <= you are here
         .build().await().atMost(Duration.ofMinutes(1)).getGroup();
   }
   
-  private OrgRole createRole(RepoResult repo, String roleName) {
+  private OrgRight createRole(RepoResult repo, String roleName) {
     return getClient().org().commit().createOneRole()
         .repoId(repo.getRepo().getId())
         .roleName(roleName)

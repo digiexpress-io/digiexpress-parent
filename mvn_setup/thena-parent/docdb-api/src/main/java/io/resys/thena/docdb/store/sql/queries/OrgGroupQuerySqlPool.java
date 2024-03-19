@@ -3,7 +3,7 @@ package io.resys.thena.docdb.store.sql.queries;
 import java.util.Collection;
 
 import io.resys.thena.docdb.api.LogConstants;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgParty;
 import io.resys.thena.docdb.models.org.OrgQueries;
 import io.resys.thena.docdb.store.sql.SqlBuilder;
 import io.resys.thena.docdb.store.sql.SqlMapper;
@@ -27,7 +27,7 @@ public class OrgGroupQuerySqlPool implements OrgQueries.GroupQuery {
   private final ErrorHandler errorHandler;
 
   @Override
-  public Multi<OrgGroup> findAll() {
+  public Multi<OrgParty> findAll() {
     final var sql = sqlBuilder.orgGroups().findAll();
     if(log.isDebugEnabled()) {
       log.debug("Group findAll query, with props: {} \r\n{}", 
@@ -35,15 +35,15 @@ public class OrgGroupQuerySqlPool implements OrgQueries.GroupQuery {
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.orgGroup(row))
+        .mapping(row -> sqlMapper.orgParty(row))
         .execute()
         .onItem()
-        .transformToMulti((RowSet<OrgGroup> rowset) -> Multi.createFrom().iterable(rowset))
+        .transformToMulti((RowSet<OrgParty> rowset) -> Multi.createFrom().iterable(rowset))
         .onFailure().invoke(e -> errorHandler.deadEnd(new SqlFailed("Can't find 'GROUP'!", sql, e)));
   }
   
   @Override
-  public Multi<OrgGroup> findAll(Collection<String> id) {
+  public Multi<OrgParty> findAll(Collection<String> id) {
     final var sql = sqlBuilder.orgGroups().findAll(id);
     if(log.isDebugEnabled()) {
       log.debug("Group findAll query, with props: {} \r\n{}", 
@@ -51,15 +51,15 @@ public class OrgGroupQuerySqlPool implements OrgQueries.GroupQuery {
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.orgGroup(row))
+        .mapping(row -> sqlMapper.orgParty(row))
         .execute(sql.getProps())
         .onItem()
-        .transformToMulti((RowSet<OrgGroup> rowset) -> Multi.createFrom().iterable(rowset))
+        .transformToMulti((RowSet<OrgParty> rowset) -> Multi.createFrom().iterable(rowset))
         .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'GROUP'!", sql, e)));
   }
 
   @Override
-  public Uni<OrgGroup> getById(String id) {
+  public Uni<OrgParty> getById(String id) {
     final var sql = sqlBuilder.orgGroups().getById(id);
     if(log.isDebugEnabled()) {
       log.debug("Group byId query, with props: {} \r\n{}", 
@@ -67,10 +67,10 @@ public class OrgGroupQuerySqlPool implements OrgQueries.GroupQuery {
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.orgGroup(row))
+        .mapping(row -> sqlMapper.orgParty(row))
         .execute(sql.getProps())
         .onItem()
-        .transform((RowSet<OrgGroup> rowset) -> {
+        .transform((RowSet<OrgParty> rowset) -> {
           final var it = rowset.iterator();
           if(it.hasNext()) {
             return it.next();

@@ -18,37 +18,37 @@ public interface ThenaOrgObject {
   interface IsOrgVersionObject { String getCommitId(); }  
 
   @Value.Immutable
-  interface OrgUserHierarchyEntry extends ThenaOrgObject {
-  	String getGroupId();
-  	String getGroupName();
-  	String getGroupDescription();
-  	@Nullable String getGroupParentId();
+  interface OrgMemberHierarchyEntry extends ThenaOrgObject {
+  	String getPartyId();
+  	String getPartyName();
+  	String getPartyDescription();
+  	@Nullable String getPartyParentId();
   	@Nullable String getMembershipId();
   	
-  	@Nullable String getGroupStatusId();
-  	@Nullable OrgActorStatusType getGroupStatus();
-  	@Nullable String getGroupStatusUserId();
+  	@Nullable String getPartyStatusId();
+  	@Nullable OrgActorStatusType getPartyStatus();
+  	@Nullable String getPartyStatusMemberId();
 
-  	@Nullable String getRoleName();
-  	@Nullable String getRoleDescription();
+  	@Nullable String getRightName();
+  	@Nullable String getRightDescription();
     
-    @Nullable String getRoleId();
-    @Nullable String getRoleStatusId();
-    @Nullable OrgActorStatusType getRoleStatus();    
+    @Nullable String getRightId();
+    @Nullable String getRightStatusId();
+    @Nullable OrgActorStatusType getRightStatus();    
   }
 
   @Value.Immutable
-  interface OrgRoleFlattened extends ThenaOrgObject {
-    String getRoleId();
-    String getRoleName();
-    String getRoleDescription();
+  interface OrgRightFlattened extends ThenaOrgObject {
+    String getRightId();
+    String getRightName();
+    String getRightDescription();
     
-    @Nullable String getRoleStatusId();
-    @Nullable OrgActorStatusType getRoleStatus();
+    @Nullable String getRightStatusId();
+    @Nullable OrgActorStatusType getRightStatus();
   }
   
   @Value.Immutable
-  interface OrgUserFlattened extends ThenaOrgObject {
+  interface OrgMemberFlattened extends ThenaOrgObject {
     String getId();
     String getCommitId();
     @Nullable String getExternalId();
@@ -61,38 +61,38 @@ public interface ThenaOrgObject {
 
   
   @Value.Immutable
-  interface OrgGroup extends ThenaOrgObject, IsOrgObject, IsOrgVersionObject {
+  interface OrgParty extends ThenaOrgObject, IsOrgObject, IsOrgVersionObject {
     String getId();
     String getCommitId();
 
     @Nullable String getExternalId();
     @Nullable String getParentId();
-    String getGroupName(); 
-    String getGroupDescription();
+    String getPartyName(); 
+    String getPartyDescription();
     
     @JsonIgnore @Override default public OrgDocType getDocType() { return OrgDocType.OrgGroup; };
     
-    default boolean isMatch(String groupIdOrNameOrExternalId) {
-      return groupIdOrNameOrExternalId.equals(getExternalId()) ||
-          groupIdOrNameOrExternalId.equals(getGroupName()) ||
-          groupIdOrNameOrExternalId.equals(getId());
+    default boolean isMatch(String idOrNameOrExtId) {
+      return idOrNameOrExtId.equals(getExternalId()) ||
+          idOrNameOrExtId.equals(getPartyName()) ||
+          idOrNameOrExtId.equals(getId());
     }
     
   }
   
   @Value.Immutable
-  interface OrgRole extends ThenaOrgObject, IsOrgObject, IsOrgVersionObject {
+  interface OrgRight extends ThenaOrgObject, IsOrgObject, IsOrgVersionObject {
     String getId();
     String getCommitId();
     @Nullable String getExternalId();
-    String getRoleName();
-    String getRoleDescription();
+    String getRightName();
+    String getRightDescription();
     
     @JsonIgnore @Override default public OrgDocType getDocType() { return OrgDocType.OrgRole; };
-    default boolean isMatch(String roleIdOrNameOrExternalId) {
-      return roleIdOrNameOrExternalId.equals(getExternalId()) ||
-          roleIdOrNameOrExternalId.equals(getRoleName()) ||
-          roleIdOrNameOrExternalId.equals(getId());
+    default boolean isMatch(String IdOrNameOrExtId) {
+      return IdOrNameOrExtId.equals(getExternalId()) ||
+          IdOrNameOrExtId.equals(getRightName()) ||
+          IdOrNameOrExtId.equals(getId());
     }
   }
   
@@ -112,8 +112,8 @@ public interface ThenaOrgObject {
   @Value.Immutable
   interface OrgMembership extends ThenaOrgObject, IsOrgObject {
     String getId();
-    String getUserId();
-    String getGroupId();
+    String getMemberId();
+    String getPartyId();
     String getCommitId();
     
     @JsonIgnore @Override default public OrgDocType getDocType() { return OrgDocType.OrgUserMembership; };
@@ -124,8 +124,8 @@ public interface ThenaOrgObject {
   interface OrgPartyRight extends ThenaOrgObject, IsOrgObject {
     String getId();
     String getCommitId();
-    String getGroupId();
-    String getRoleId();
+    String getPartyId();
+    String getRightId();
     
     @JsonIgnore @Override default public OrgDocType getDocType() { return OrgDocType.OrgGroupRole; };
   }
@@ -134,9 +134,9 @@ public interface ThenaOrgObject {
   interface OrgMemberRight extends ThenaOrgObject, IsOrgObject {
     String getId();
     String getCommitId();
-    String getUserId();
-    String getRoleId();
-    @Nullable String getGroupId();
+    String getMemberId();
+    String getRightId();
+    @Nullable String getPartyId();
     
     @JsonIgnore @Override default public OrgDocType getDocType() { return OrgDocType.OrgUserRole; };
   }
@@ -146,9 +146,9 @@ public interface ThenaOrgObject {
   interface OrgActorStatus extends ThenaOrgObject, IsOrgObject, IsOrgVersionObject {
     String getId();
     String getCommitId();
-    @Nullable String getUserId();
-    @Nullable String getRoleId();
-    @Nullable String getGroupId();
+    @Nullable String getMemberId();
+    @Nullable String getRightId();
+    @Nullable String getPartyId();
     OrgActorStatusType getValue();
     @JsonIgnore @Override default public OrgDocType getDocType() { return OrgDocType.OrgActorStatus; };
   }
@@ -184,9 +184,9 @@ public interface ThenaOrgObject {
     String getId();
     String getCommitId();
     @Nullable String getParentId();
-    @Nullable String getUserId();
-    @Nullable String getRoleId();
-    @Nullable String getGroupId();
+    @Nullable String getMemberId();
+    @Nullable String getRightId();
+    @Nullable String getPartyId();
     
     String getDataType();
     JsonObject getValue();
@@ -197,10 +197,6 @@ public interface ThenaOrgObject {
   @Value.Immutable  
   interface OrgLock extends ThenaDocObject {
     OrgLockStatus getStatus();
-    Optional<OrgGroup> getGroup();
-    Optional<OrgRole> getRole();
-    Optional<OrgMember> getUser();
-    Optional<OrgActorStatus> getActorStatus();
     Optional<String> getMessage();
   }
   

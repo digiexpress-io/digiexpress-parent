@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgParty;
 import io.resys.thena.docdb.spi.DbCollections;
 import io.resys.thena.docdb.store.sql.ImmutableSql;
 import io.resys.thena.docdb.store.sql.ImmutableSqlTuple;
@@ -67,40 +67,40 @@ public class OrgGroupSqlBuilderImpl implements OrgGroupSqlBuilder {
         .build();
   }
   @Override
-  public SqlTuple insertOne(OrgGroup doc) {
+  public SqlTuple insertOne(OrgParty doc) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getOrgParties())
         .append(" (id, commit_id, external_id, parent_id, party_name, party_description) VALUES($1, $2, $3, $4, $5, $6)").ln()
         .build())
-        .props(Tuple.from(new Object[]{ doc.getId(), doc.getCommitId(), doc.getExternalId(), doc.getParentId(), doc.getGroupName(), doc.getGroupDescription() }))
+        .props(Tuple.from(new Object[]{ doc.getId(), doc.getCommitId(), doc.getExternalId(), doc.getParentId(), doc.getPartyName(), doc.getPartyDescription() }))
         .build();
   }
   @Override
-  public SqlTuple updateOne(OrgGroup doc) {
+  public SqlTuple updateOne(OrgParty doc) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("UPDATE ").append(options.getOrgMembers())
         .append(" SET external_id = $1, party_name = $2, party_description = $3, commit_id = $4")
         .append(" WHERE id = $5")
         .build())
-        .props(Tuple.from(new Object[]{doc.getExternalId(), doc.getGroupName(), doc.getGroupDescription(), doc.getCommitId(), doc.getId()}))
+        .props(Tuple.from(new Object[]{doc.getExternalId(), doc.getPartyName(), doc.getPartyDescription(), doc.getCommitId(), doc.getId()}))
         .build();
   }
   @Override
-  public SqlTupleList insertAll(Collection<OrgGroup> users) {
+  public SqlTupleList insertAll(Collection<OrgParty> users) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getOrgParties())
         .append("  (id, commit_id, external_id, parent_id, party_name, party_description) VALUES($1, $2, $3, $4, $5, $6)").ln()
         .build())
         .props(users.stream()
-            .map(doc -> Tuple.from(new Object[]{ doc.getId(), doc.getCommitId(), doc.getExternalId(), doc.getParentId(), doc.getGroupName(), doc.getGroupDescription() }))
+            .map(doc -> Tuple.from(new Object[]{ doc.getId(), doc.getCommitId(), doc.getExternalId(), doc.getParentId(), doc.getPartyName(), doc.getPartyDescription() }))
             .collect(Collectors.toList()))
         .build();
   }
   @Override
-  public SqlTupleList updateMany(Collection<OrgGroup> users) {
+  public SqlTupleList updateMany(Collection<OrgParty> users) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("UPDATE ").append(options.getOrgMembers())
@@ -108,7 +108,7 @@ public class OrgGroupSqlBuilderImpl implements OrgGroupSqlBuilder {
         .append(" WHERE id = $5")
         .build())
         .props(users.stream()
-            .map(doc -> Tuple.from(new Object[]{doc.getExternalId(), doc.getGroupName(), doc.getGroupDescription(), doc.getCommitId(), doc.getId()}))
+            .map(doc -> Tuple.from(new Object[]{doc.getExternalId(), doc.getPartyName(), doc.getPartyDescription(), doc.getCommitId(), doc.getId()}))
             .collect(Collectors.toList()))
         .build();
   }

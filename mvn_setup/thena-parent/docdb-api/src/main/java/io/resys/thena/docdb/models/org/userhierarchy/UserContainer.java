@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserHierarchyEntry;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberHierarchyEntry;
 
 public class UserContainer {
-  private final Map<String, List<OrgUserHierarchyEntry>> groupsById = new HashMap<>();
-  private final Map<String, List<OrgUserHierarchyEntry>> groupsByParentId = new HashMap<>();
+  private final Map<String, List<OrgMemberHierarchyEntry>> groupsById = new HashMap<>();
+  private final Map<String, List<OrgMemberHierarchyEntry>> groupsByParentId = new HashMap<>();
   private final Set<String> roots = new LinkedHashSet<>();
   
 
@@ -22,12 +22,12 @@ public class UserContainer {
 
   @FunctionalInterface
   public interface UserContainerChildVisitor {
-    void visitChild(OrgUserHierarchyEntry entry);
+    void visitChild(OrgMemberHierarchyEntry entry);
   }
   
   public <T> T accept(UserContainerVisitor<T> visitor) {
     for(final var root : this.roots.stream()
-        .sorted((a, b) -> groupsById.get(a).get(0).getGroupName().compareTo(groupsById.get(b).get(0).getGroupName()))
+        .sorted((a, b) -> groupsById.get(a).get(0).getPartyName().compareTo(groupsById.get(b).get(0).getPartyName()))
         .toList()) {
       
       final var next = visitor.visitRoot(root);
@@ -37,20 +37,20 @@ public class UserContainer {
     return visitor.close(); 
   }
   
-  public UserContainer(List<OrgUserHierarchyEntry> init) {
+  public UserContainer(List<OrgMemberHierarchyEntry> init) {
     for(final var entry : init) {
-      if(entry.getGroupParentId() == null) {
-        roots.add(entry.getGroupId());
+      if(entry.getPartyParentId() == null) {
+        roots.add(entry.getPartyId());
       }
-      if(!groupsById.containsKey(entry.getGroupId())) {
-        groupsById.put(entry.getGroupId(), new ArrayList<>());
+      if(!groupsById.containsKey(entry.getPartyId())) {
+        groupsById.put(entry.getPartyId(), new ArrayList<>());
       }
-      groupsById.get(entry.getGroupId()).add(entry);
+      groupsById.get(entry.getPartyId()).add(entry);
       
-      if(!groupsByParentId.containsKey(entry.getGroupParentId())) {
-        groupsByParentId.put(entry.getGroupParentId(), new ArrayList<>());
+      if(!groupsByParentId.containsKey(entry.getPartyParentId())) {
+        groupsByParentId.put(entry.getPartyParentId(), new ArrayList<>());
       }
-      groupsByParentId.get(entry.getGroupParentId()).add(entry);
+      groupsByParentId.get(entry.getPartyParentId()).add(entry);
     }
   }
   
@@ -65,11 +65,11 @@ public class UserContainer {
         .sorted((a, b) -> getSortableId(a).compareTo(getSortableId(b)))
         .toList()) {
       visitor.visitChild(child);
-      visitChildren(child.getGroupId(), visitor);
+      visitChildren(child.getPartyId(), visitor);
     }
   }
  
-  private static String getSortableId(OrgUserHierarchyEntry entry) {
-    return entry.getGroupName() + entry.getRoleName() + entry.getGroupStatus() + entry.getRoleStatus();
+  private static String getSortableId(OrgMemberHierarchyEntry entry) {
+    return entry.getPartyName() + entry.getRightName() + entry.getPartyStatus() + entry.getRightStatus();
   }
 }

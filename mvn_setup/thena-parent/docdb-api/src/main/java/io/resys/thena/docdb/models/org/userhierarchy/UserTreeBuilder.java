@@ -8,9 +8,9 @@ import org.slf4j.LoggerFactory;
 import io.resys.thena.docdb.api.LogConstants;
 import io.resys.thena.docdb.api.models.ImmutableOrgUserHierarchy;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatusType;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserHierarchyEntry;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRoleFlattened;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserFlattened;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberHierarchyEntry;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRightFlattened;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberFlattened;
 import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgUserHierarchy;
 import io.resys.thena.docdb.support.RepoAssert;
 import io.vertx.core.json.JsonArray;
@@ -20,13 +20,13 @@ public class UserTreeBuilder {
 
   private Logger logger;
   
-  private OrgUserFlattened user;
-  private List<OrgUserHierarchyEntry> groupData;
-  private List<OrgRoleFlattened> roleData;
+  private OrgMemberFlattened user;
+  private List<OrgMemberHierarchyEntry> groupData;
+  private List<OrgRightFlattened> roleData;
   
-  public UserTreeBuilder user(OrgUserFlattened user) {                         this.user = RepoAssert.notNull(user,            () -> "user can't be empty!"); return this; }
-  public UserTreeBuilder groupData(List<OrgUserHierarchyEntry> groupData) { this.groupData = RepoAssert.notNull(groupData,  () -> "groupData can't be empty!"); return this; }
-  public UserTreeBuilder roleData(List<OrgRoleFlattened> roleData) {           this.roleData = RepoAssert.notNull(roleData,    () -> "roleData can't be null!"); return this; }
+  public UserTreeBuilder user(OrgMemberFlattened user) {                         this.user = RepoAssert.notNull(user,            () -> "user can't be empty!"); return this; }
+  public UserTreeBuilder groupData(List<OrgMemberHierarchyEntry> groupData) { this.groupData = RepoAssert.notNull(groupData,  () -> "groupData can't be empty!"); return this; }
+  public UserTreeBuilder roleData(List<OrgRightFlattened> roleData) {           this.roleData = RepoAssert.notNull(roleData,    () -> "roleData can't be null!"); return this; }
   
   
   public OrgUserHierarchy build() {

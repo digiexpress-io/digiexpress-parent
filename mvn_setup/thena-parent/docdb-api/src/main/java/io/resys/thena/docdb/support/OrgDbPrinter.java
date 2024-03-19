@@ -76,10 +76,10 @@ public class OrgDbPrinter {
         .append("    parentId").append(": ").append(ID.apply(item.getParentId()))
         .append(System.lineSeparator())
         
-        .append("    groupName").append(": ").append(item.getGroupName())
+        .append("    groupName").append(": ").append(item.getPartyName())
         .append(System.lineSeparator())
 
-        .append("    groupDescription").append(": ").append(item.getGroupDescription())
+        .append("    groupDescription").append(": ").append(item.getPartyDescription())
         .append(System.lineSeparator())
 
         .append("    externalId").append(": ").append(item.getExternalId())
@@ -101,10 +101,10 @@ public class OrgDbPrinter {
         .append("    commitId").append(": ").append(ID.apply(item.getCommitId()))
         .append(System.lineSeparator())
         
-        .append("    groupName").append(": ").append(item.getGroupName())
+        .append("    groupName").append(": ").append(item.getPartyName())
         .append(System.lineSeparator())
 
-        .append("    groupDescription").append(": ").append(item.getGroupDescription())
+        .append("    groupDescription").append(": ").append(item.getPartyDescription())
         .append(System.lineSeparator())
 
         .append("    externalId").append(": ").append(item.getExternalId())
@@ -128,10 +128,10 @@ public class OrgDbPrinter {
         .append(System.lineSeparator())
       
 
-        .append("    roleName").append(": ").append(item.getRoleName())
+        .append("    roleName").append(": ").append(item.getRightName())
         .append(System.lineSeparator())
         
-        .append("    roleDescription").append(": ").append(item.getRoleDescription())
+        .append("    roleDescription").append(": ").append(item.getRightDescription())
         .append(System.lineSeparator())
 
         .append("    externalId").append(": ").append(item.getExternalId())
@@ -155,10 +155,10 @@ public class OrgDbPrinter {
         .append("    commitId").append(": ").append(ID.apply(item.getCommitId()))
         .append(System.lineSeparator())
         
-        .append("    userId").append(": ").append(ID.apply(item.getUserId()))
+        .append("    userId").append(": ").append(ID.apply(item.getMemberId()))
         .append(System.lineSeparator())
 
-        .append("    roleId").append(": ").append(ID.apply(item.getRoleId()))
+        .append("    roleId").append(": ").append(ID.apply(item.getRightId()))
         .append(System.lineSeparator());
       
       return item;
@@ -178,10 +178,10 @@ public class OrgDbPrinter {
         .append("    commitId").append(": ").append(ID.apply(item.getCommitId()))
         .append(System.lineSeparator())
         
-        .append("    groupId").append(": ").append(ID.apply(item.getGroupId()))
+        .append("    groupId").append(": ").append(ID.apply(item.getPartyId()))
         .append(System.lineSeparator())
 
-        .append("    roleId").append(": ").append(ID.apply(item.getRoleId()))
+        .append("    roleId").append(": ").append(ID.apply(item.getRightId()))
         .append(System.lineSeparator());
       
       return item;
@@ -201,10 +201,10 @@ public class OrgDbPrinter {
         .append("    commitId").append(": ").append(ID.apply(item.getCommitId()))
         .append(System.lineSeparator())
         
-        .append("    groupId").append(": ").append(ID.apply(item.getGroupId()))
+        .append("    groupId").append(": ").append(ID.apply(item.getPartyId()))
         .append(System.lineSeparator())
 
-        .append("    roleId").append(": ").append(ID.apply(item.getRoleId()))
+        .append("    roleId").append(": ").append(ID.apply(item.getRightId()))
         .append(System.lineSeparator())
          
         .append("    status").append(": ").append(item.getValue())
@@ -274,10 +274,10 @@ public class OrgDbPrinter {
         .append("    parentId").append(": ").append(item.getParentId())
         .append(System.lineSeparator())
         
-        .append("    groupName").append(": ").append(item.getGroupName())
+        .append("    groupName").append(": ").append(item.getPartyName())
         .append(System.lineSeparator())
 
-        .append("    groupDescription").append(": ").append(item.getGroupDescription())
+        .append("    groupDescription").append(": ").append(item.getPartyDescription())
         .append(System.lineSeparator())
 
         .append("    externalId").append(": ").append(item.getExternalId())
@@ -299,10 +299,10 @@ public class OrgDbPrinter {
         .append("    commitId").append(": ").append(item.getCommitId())
         .append(System.lineSeparator())
         
-        .append("    groupName").append(": ").append(item.getGroupName())
+        .append("    groupName").append(": ").append(item.getPartyName())
         .append(System.lineSeparator())
 
-        .append("    groupDescription").append(": ").append(item.getGroupDescription())
+        .append("    groupDescription").append(": ").append(item.getPartyDescription())
         .append(System.lineSeparator())
 
         .append("    externalId").append(": ").append(item.getExternalId())
@@ -326,10 +326,10 @@ public class OrgDbPrinter {
         .append(System.lineSeparator())
       
 
-        .append("    roleName").append(": ").append(item.getRoleName())
+        .append("    roleName").append(": ").append(item.getRightName())
         .append(System.lineSeparator())
         
-        .append("    roleDescription").append(": ").append(item.getRoleDescription())
+        .append("    roleDescription").append(": ").append(item.getRightDescription())
         .append(System.lineSeparator())
 
         .append("    externalId").append(": ").append(item.getExternalId())
@@ -353,10 +353,10 @@ public class OrgDbPrinter {
         .append("    commitId").append(": ").append(item.getCommitId())
         .append(System.lineSeparator())
         
-        .append("    userId").append(": ").append(item.getUserId())
+        .append("    userId").append(": ").append(item.getMemberId())
         .append(System.lineSeparator())
 
-        .append("    roleId").append(": ").append(item.getRoleId())
+        .append("    roleId").append(": ").append(item.getRightId())
         .append(System.lineSeparator());
       
       return item;
@@ -376,10 +376,10 @@ public class OrgDbPrinter {
         .append("    commitId").append(": ").append(item.getCommitId())
         .append(System.lineSeparator())
         
-        .append("    groupId").append(": ").append(item.getGroupId())
+        .append("    groupId").append(": ").append(item.getPartyId())
         .append(System.lineSeparator())
 
-        .append("    roleId").append(": ").append(item.getRoleId())
+        .append("    roleId").append(": ").append(item.getRightId())
         .append(System.lineSeparator());
       
       return item;
@@ -398,10 +398,10 @@ public class OrgDbPrinter {
         .append("    commitId").append(": ").append(item.getCommitId())
         .append(System.lineSeparator())
         
-        .append("    groupId").append(": ").append(item.getGroupId())
+        .append("    groupId").append(": ").append(item.getPartyId())
         .append(System.lineSeparator())
 
-        .append("    roleId").append(": ").append(item.getRoleId())
+        .append("    roleId").append(": ").append(item.getRightId())
         .append(System.lineSeparator())
          
         .append("    status").append(": ").append(item.getValue())

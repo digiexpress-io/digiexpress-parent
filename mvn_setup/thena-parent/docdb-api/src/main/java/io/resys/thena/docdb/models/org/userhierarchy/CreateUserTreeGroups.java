@@ -6,8 +6,8 @@ import java.util.Optional;
 import org.immutables.value.Value;
 import org.slf4j.Logger;
 
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRoleFlattened;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserFlattened;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRightFlattened;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberFlattened;
 import io.vertx.core.json.JsonObject;
 
 
@@ -15,10 +15,10 @@ import io.vertx.core.json.JsonObject;
 public class CreateUserTreeGroups extends BottomUpVisitorTemplate<ImmutableUserGroupsData> {
 
   private final Logger logger;
-  private final OrgUserFlattened user;
+  private final OrgMemberFlattened user;
   private final ImmutableUserGroupsData.Builder groups = ImmutableUserGroupsData.builder();
   
-  public CreateUserTreeGroups(List<OrgRoleFlattened> globalRoles, Logger logger, OrgUserFlattened user) {
+  public CreateUserTreeGroups(List<OrgRightFlattened> globalRoles, Logger logger, OrgMemberFlattened user) {
     super(globalRoles);
     this.logger = logger;
     this.user = user;

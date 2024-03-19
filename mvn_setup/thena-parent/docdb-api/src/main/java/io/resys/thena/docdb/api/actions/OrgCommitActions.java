@@ -10,8 +10,8 @@ import org.immutables.value.Value;
 import io.resys.thena.docdb.api.models.Message;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.ThenaEnvelope;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgParty;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRight;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
 import io.smallrye.mutiny.Uni;
 
@@ -137,7 +137,7 @@ public interface OrgCommitActions {
     Repo.CommitResultStatus getStatus();
     List<Message> getMessages();
 
-    @Nullable OrgRole getRole();
+    @Nullable OrgRight getRole();
   }
   
   
@@ -156,7 +156,7 @@ public interface OrgCommitActions {
     Repo.CommitResultStatus getStatus();
     List<Message> getMessages();
     
-    @Nullable OrgGroup getGroup();
+    @Nullable OrgParty getGroup();
   }
   
   enum ModType {

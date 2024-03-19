@@ -7,7 +7,7 @@ import java.util.List;
 import io.resys.thena.docdb.api.actions.ImmutableOneRoleEnvelope;
 import io.resys.thena.docdb.api.actions.OrgCommitActions.CreateOneRole;
 import io.resys.thena.docdb.api.actions.OrgCommitActions.OneRoleEnvelope;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgParty;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
 import io.resys.thena.docdb.models.org.OrgInserts.OrgBatchForOne;
 import io.resys.thena.docdb.models.org.OrgState.OrgRepo;
@@ -63,7 +63,7 @@ public class CreateOneRoleImpl implements CreateOneRole {
 		
 		
 		// find group
-		final Uni<List<OrgGroup>> groupsUni = this.addRoleToGroups.isEmpty() ?
+		final Uni<List<OrgParty>> groupsUni = this.addRoleToGroups.isEmpty() ?
 			Uni.createFrom().item(Collections.emptyList()) : 
 			tx.query().groups().findAll(addRoleToGroups).collect().asList();
 	
@@ -77,7 +77,7 @@ public class CreateOneRoleImpl implements CreateOneRole {
 		);
   }
 
-  private Uni<OneRoleEnvelope> createRole(OrgRepo tx, List<OrgMember> users, List<OrgGroup> groups) {
+  private Uni<OneRoleEnvelope> createRole(OrgRepo tx, List<OrgMember> users, List<OrgParty> groups) {
     final OrgBatchForOne batch = new BatchForOneRoleCreate(tx.getRepo().getId(), author, message)
         .externalId(externalId)
         .users(users)

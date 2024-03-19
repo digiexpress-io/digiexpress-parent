@@ -12,9 +12,9 @@ import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorData;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatus;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatusType;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgCommit;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgParty;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgPartyRight;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRight;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMembership;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberRight;
@@ -25,8 +25,8 @@ public interface ThenaOrgObjects extends ThenaObjects {
   // world state
   @Value.Immutable
   interface OrgProjectObjects extends ThenaOrgObjects { 
-    Map<String, OrgGroup> getGroups();
-    Map<String, OrgRole> getRoles();
+    Map<String, OrgParty> getGroups();
+    Map<String, OrgRight> getRoles();
     Map<String, OrgMember> getUsers();
     
     Map<String, OrgMembership> getUserMemberships();
@@ -71,15 +71,15 @@ public interface ThenaOrgObjects extends ThenaObjects {
     String getLog();
     OrgActorStatusType getStatus();
     
-    List<OrgRole> getRoleNames();  // roles that are enabled
-    List<OrgRole> getDirectRoleNames();  // roles that are enabled
+    List<OrgRight> getRoleNames();  // roles that are enabled
+    List<OrgRight> getDirectRoleNames();  // roles that are enabled
     
     List<OrgMember> getDirectUsers();
     List<OrgMember> getParenUsers();
     List<OrgMember> getChildUsers();
     
-    List<OrgGroup> getParentGroups();
-    List<OrgGroup> getChildGroups();
+    List<OrgParty> getParentGroups();
+    List<OrgParty> getChildGroups();
   }
   
   @Value.Immutable
@@ -96,8 +96,8 @@ public interface ThenaOrgObjects extends ThenaObjects {
     List<OrgMember> getDirectUsers();
     List<OrgMember> getChildUsers();
     
-    List<OrgGroup> getDirectGroup();
-    List<OrgGroup> getChildGroup();
+    List<OrgParty> getDirectGroup();
+    List<OrgParty> getChildGroup();
   }
   
   

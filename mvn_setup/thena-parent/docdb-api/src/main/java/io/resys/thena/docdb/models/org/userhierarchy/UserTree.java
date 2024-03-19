@@ -10,8 +10,8 @@ import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatusType;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserHierarchyEntry;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRoleFlattened;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberHierarchyEntry;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRightFlattened;
 
 
 public class UserTree {
@@ -21,8 +21,8 @@ public class UserTree {
   
   // seed data
   private final String groupId;
-  private final List<OrgUserHierarchyEntry> groupValues = new ArrayList<>();
-  private final Map<String, OrgRoleFlattened> roleValues = new HashMap<>();
+  private final List<OrgMemberHierarchyEntry> groupValues = new ArrayList<>();
+  private final Map<String, OrgRightFlattened> roleValues = new HashMap<>();
   
  
   private Boolean removed;
@@ -39,11 +39,11 @@ public class UserTree {
     this.parent = parent;
   }
   public Map<String, UserTree> getChildren() { return Collections.unmodifiableMap(children); }
-  public Map<String, OrgRoleFlattened> getRoleValues() { return Collections.unmodifiableMap(roleValues); }
-  public List<OrgUserHierarchyEntry> getGroupValues() { return Collections.unmodifiableList(groupValues); }
+  public Map<String, OrgRightFlattened> getRoleValues() { return Collections.unmodifiableMap(roleValues); }
+  public List<OrgMemberHierarchyEntry> getGroupValues() { return Collections.unmodifiableList(groupValues); }
   
   public String getGroupId() { return this.groupId; }
-  public String getGroupName() { return this.groupValues.get(0).getGroupName(); }
+  public String getGroupName() { return this.groupValues.get(0).getPartyName(); }
   @JsonIgnore public UserTree getParent() { return this.parent; }
 
   public UserTree addChild(String groupId) {
@@ -63,10 +63,10 @@ public class UserTree {
     }
     return null;
   }
-  public void addGroupValue(OrgUserHierarchyEntry next, OrgRoleFlattened role) {
+  public void addGroupValue(OrgMemberHierarchyEntry next, OrgRightFlattened role) {
     groupValues.add(next); 
     if(role != null) {
-      roleValues.put(role.getRoleId(), role);
+      roleValues.put(role.getRightId(), role);
     }
   }
   @JsonIgnore
@@ -99,8 +99,8 @@ public class UserTree {
   @JsonIgnore
   private boolean calcGreyGroup() {
     final var directRemoval = this.groupValues.stream()
-        .filter(e -> e.getGroupStatus() != null)
-        .filter(e -> e.getGroupStatus() != OrgActorStatusType.IN_FORCE)
+        .filter(e -> e.getPartyStatus() != null)
+        .filter(e -> e.getPartyStatus() != OrgActorStatusType.IN_FORCE)
         .count() > 0;
     
     if(directRemoval) {

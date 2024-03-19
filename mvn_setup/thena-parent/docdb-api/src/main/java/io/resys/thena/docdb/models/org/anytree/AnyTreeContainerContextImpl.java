@@ -10,9 +10,9 @@ import java.util.Optional;
 
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatus;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatusType;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgParty;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgPartyRight;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRight;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMembership;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberRight;
@@ -22,9 +22,9 @@ import io.resys.thena.docdb.api.visitors.OrgTreeContainer.OrgAnyTreeContainerCon
 public class AnyTreeContainerContextImpl implements OrgAnyTreeContainerContext {
   
   private final OrgProjectObjects worldState;
-  private final List<OrgGroup> groupTops;
-  private final List<OrgGroup> groupBottoms;
-  private final Map<String, List<OrgGroup>> groupsByParentId;
+  private final List<OrgParty> groupTops;
+  private final List<OrgParty> groupBottoms;
+  private final Map<String, List<OrgParty>> groupsByParentId;
   private final Map<String, List<OrgMemberRight>> userRoles;
   private final Map<String, List<OrgMembership>> groupMemberships;
   private final Map<String, List<OrgPartyRight>> groupRoles;
@@ -42,9 +42,9 @@ public class AnyTreeContainerContextImpl implements OrgAnyTreeContainerContext {
     super();
     this.worldState = worldState;
     
-    final var groupTops = new ArrayList<OrgGroup>();
-    final var groupBottoms = new ArrayList<OrgGroup>();
-    final var groupsByParentId = new LinkedHashMap<String, List<OrgGroup>>();
+    final var groupTops = new ArrayList<OrgParty>();
+    final var groupBottoms = new ArrayList<OrgParty>();
+    final var groupsByParentId = new LinkedHashMap<String, List<OrgParty>>();
     final var allGroups = worldState.getGroups().values();
     
     for(final var group : allGroups) {
@@ -71,28 +71,28 @@ public class AnyTreeContainerContextImpl implements OrgAnyTreeContainerContext {
     // group -> user roles by user id
     final var userRoles = new LinkedHashMap<String, List<OrgMemberRight>>();
     for(final var userRole : worldState.getUserRoles().values()) {
-      if(!userRoles.containsKey(userRole.getUserId())) {
-        userRoles.put(userRole.getUserId(), new ArrayList<>());  
+      if(!userRoles.containsKey(userRole.getMemberId())) {
+        userRoles.put(userRole.getMemberId(), new ArrayList<>());  
       }
-      userRoles.get(userRole.getUserId()).add(userRole);
+      userRoles.get(userRole.getMemberId()).add(userRole);
     }
     
     //group -> group roles by user id
     final var groupRoles = new LinkedHashMap<String, List<OrgPartyRight>>();
     for(final var groupRole : worldState.getGroupRoles().values()) {
-      if(!groupRoles.containsKey(groupRole.getGroupId())) {
-        groupRoles.put(groupRole.getGroupId(), new ArrayList<>());  
+      if(!groupRoles.containsKey(groupRole.getPartyId())) {
+        groupRoles.put(groupRole.getPartyId(), new ArrayList<>());  
       }
-      groupRoles.get(groupRole.getGroupId()).add(groupRole);
+      groupRoles.get(groupRole.getPartyId()).add(groupRole);
     }
 
     // group -> group memberships by group id
     final var groupMemberships = new LinkedHashMap<String, List<OrgMembership>>();
     for(final var groupMembership : worldState.getUserMemberships().values()) {
-      if(!groupMemberships.containsKey(groupMembership.getGroupId())) {
-        groupMemberships.put(groupMembership.getGroupId(), new ArrayList<>());  
+      if(!groupMemberships.containsKey(groupMembership.getPartyId())) {
+        groupMemberships.put(groupMembership.getPartyId(), new ArrayList<>());  
       }
-      groupMemberships.get(groupMembership.getGroupId()).add(groupMembership);
+      groupMemberships.get(groupMembership.getPartyId()).add(groupMembership);
     }
     
     final var userStatus = new LinkedHashMap<String, OrgActorStatus>();
@@ -105,38 +105,38 @@ public class AnyTreeContainerContextImpl implements OrgAnyTreeContainerContext {
     // load up all status combinations
     for(final var status : worldState.getActorStatus().values()) {
       // user status
-      if(status.getUserId() != null && status.getGroupId() == null && status.getRoleId() == null) {
-        userStatus.put(status.getUserId(), status);
+      if(status.getMemberId() != null && status.getPartyId() == null && status.getRightId() == null) {
+        userStatus.put(status.getMemberId(), status);
         continue;
       }
       
       // group status
-      if(status.getUserId() == null && status.getGroupId() != null && status.getRoleId() == null) {
-        groupStatus.put(status.getUserId(), status);
+      if(status.getMemberId() == null && status.getPartyId() != null && status.getRightId() == null) {
+        groupStatus.put(status.getMemberId(), status);
         continue;
       }
 
       // role status
-      if(status.getUserId() == null && status.getGroupId() == null && status.getRoleId() != null) {
-        roleStatus.put(status.getUserId(), status);
+      if(status.getMemberId() == null && status.getPartyId() == null && status.getRightId() != null) {
+        roleStatus.put(status.getMemberId(), status);
         continue;
       }
       
       // group membership status
-      if(status.getUserId() != null && status.getGroupId() != null && status.getRoleId() == null) {
-        membershipStatus.put(membershipStatusId(status.getGroupId(), status.getUserId()), status);
+      if(status.getMemberId() != null && status.getPartyId() != null && status.getRightId() == null) {
+        membershipStatus.put(membershipStatusId(status.getPartyId(), status.getMemberId()), status);
         continue;
       }
       
       // group role
-      if(status.getUserId() == null && status.getGroupId() != null && status.getRoleId() != null) {
-        membershipStatus.put(groupRoleStatusId(status.getGroupId(), status.getRoleId()), status);
+      if(status.getMemberId() == null && status.getPartyId() != null && status.getRightId() != null) {
+        membershipStatus.put(groupRoleStatusId(status.getPartyId(), status.getRightId()), status);
         continue;
       }
       
       // user role
-      if(status.getUserId() != null && status.getGroupId() == null && status.getRoleId() != null) {
-        membershipStatus.put(userRoleStatusId(status.getUserId(), status.getRoleId()), status);
+      if(status.getMemberId() != null && status.getPartyId() == null && status.getRightId() != null) {
+        membershipStatus.put(userRoleStatusId(status.getMemberId(), status.getRightId()), status);
         continue;
       }
     }
@@ -188,11 +188,11 @@ public class AnyTreeContainerContextImpl implements OrgAnyTreeContainerContext {
   }
   
   @Override
-  public List<OrgGroup> getGroupTops() {
+  public List<OrgParty> getGroupTops() {
     return this.groupTops;
   }
   @Override
-  public List<OrgGroup> getGroupBottoms() {
+  public List<OrgParty> getGroupBottoms() {
     return this.groupBottoms;
   }
   @Override
@@ -204,11 +204,11 @@ public class AnyTreeContainerContextImpl implements OrgAnyTreeContainerContext {
     return Optional.ofNullable(userRoles.get(userId)).orElse(Collections.emptyList());
   }
   @Override
-  public OrgGroup getGroup(String groupId) {
+  public OrgParty getGroup(String groupId) {
     return worldState.getGroups().get(groupId);
   }
   @Override
-  public List<OrgGroup> getGroupChildren(String groupId) {
+  public List<OrgParty> getGroupChildren(String groupId) {
     return Optional.ofNullable(groupsByParentId.get(groupId)).orElse(Collections.emptyList());
   }
   @Override
@@ -222,27 +222,27 @@ public class AnyTreeContainerContextImpl implements OrgAnyTreeContainerContext {
 
   
   @Override
-  public Optional<OrgActorStatus> getStatus(OrgGroup group) {
+  public Optional<OrgActorStatus> getStatus(OrgParty group) {
     return Optional.ofNullable(groupStatus.get(group.getId()));
   }
   @Override
   public Optional<OrgActorStatus> getStatus(OrgMembership membership) {
-    return Optional.ofNullable(membershipStatus.get(membershipStatusId(membership.getGroupId(), membership.getUserId())));
+    return Optional.ofNullable(membershipStatus.get(membershipStatusId(membership.getPartyId(), membership.getMemberId())));
   }
   @Override
   public Optional<OrgActorStatus> getStatus(OrgMemberRight role) {
-    return Optional.ofNullable(userRoleStatus.get(userRoleStatusId(role.getUserId(), role.getRoleId())));
+    return Optional.ofNullable(userRoleStatus.get(userRoleStatusId(role.getMemberId(), role.getRightId())));
   }
   @Override
   public Optional<OrgActorStatus> getStatus(OrgPartyRight role) {
-    return Optional.ofNullable(groupRoleStatus.get(groupRoleStatusId(role.getGroupId(), role.getRoleId())));
+    return Optional.ofNullable(groupRoleStatus.get(groupRoleStatusId(role.getPartyId(), role.getRightId())));
   }
   @Override
   public Optional<OrgActorStatus> getStatus(OrgMember user) {
     return Optional.ofNullable(userStatus.get(user.getId()));
   }
   @Override
-  public Optional<OrgActorStatus> getStatus(OrgRole role) {
+  public Optional<OrgActorStatus> getStatus(OrgRight role) {
     return Optional.ofNullable(roleStatus.get(role.getId()));
   }
   @Override  
@@ -253,7 +253,7 @@ public class AnyTreeContainerContextImpl implements OrgAnyTreeContainerContext {
     return status.get().getValue() != OrgActorStatusType.IN_FORCE;
   }
   @Override  
-  public boolean isGroupDisabledUpward(OrgGroup group) {
+  public boolean isGroupDisabledUpward(OrgParty group) {
     if(isStatusDisabled(getStatus(group))) {
       return true;
     }
@@ -282,12 +282,12 @@ public class AnyTreeContainerContextImpl implements OrgAnyTreeContainerContext {
   }
 
   @Override
-  public OrgRole getRole(String id) {
+  public OrgRight getRole(String id) {
     return worldState.getRoles().get(id);
   }
 
   @Override
-  public Collection<OrgRole> getRoles() {
+  public Collection<OrgRight> getRoles() {
     return worldState.getRoles().values();
   }
 }

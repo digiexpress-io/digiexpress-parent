@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRight;
 import io.resys.thena.docdb.spi.DbCollections;
 import io.resys.thena.docdb.store.sql.ImmutableSql;
 import io.resys.thena.docdb.store.sql.ImmutableSqlTuple;
@@ -67,40 +67,40 @@ public class OrgRoleSqlBuilderImpl implements OrgRoleSqlBuilder {
         .build();
   }
   @Override
-  public SqlTuple insertOne(OrgRole doc) {
+  public SqlTuple insertOne(OrgRight doc) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getOrgRights())
         .append(" (id, commit_id, external_id, right_name, right_description) VALUES($1, $2, $3, $4, $5)").ln()
         .build())
-        .props(Tuple.from(new Object[]{ doc.getId(), doc.getCommitId(), doc.getExternalId(), doc.getRoleName(), doc.getRoleDescription() }))
+        .props(Tuple.from(new Object[]{ doc.getId(), doc.getCommitId(), doc.getExternalId(), doc.getRightName(), doc.getRightDescription() }))
         .build();
   }
   @Override
-  public SqlTuple updateOne(OrgRole doc) {
+  public SqlTuple updateOne(OrgRight doc) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("UPDATE ").append(options.getOrgRights())
         .append(" SET external_id = $1, right_name = $2, right_description = $3, commit_id = $4")
         .append(" WHERE id = $5")
         .build())
-        .props(Tuple.from(new Object[]{doc.getExternalId(), doc.getRoleName(), doc.getRoleDescription(), doc.getCommitId(), doc.getId()}))
+        .props(Tuple.from(new Object[]{doc.getExternalId(), doc.getRightName(), doc.getRightDescription(), doc.getCommitId(), doc.getId()}))
         .build();
   }
   @Override
-  public SqlTupleList insertAll(Collection<OrgRole> users) {
+  public SqlTupleList insertAll(Collection<OrgRight> users) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getOrgRights())
         .append(" (id, commit_id, external_id, right_name, right_description) VALUES($1, $2, $3, $4, $5)").ln()
         .build())
         .props(users.stream()
-            .map(doc -> Tuple.from(new Object[]{ doc.getId(), doc.getCommitId(), doc.getExternalId(), doc.getRoleName(), doc.getRoleDescription() }))
+            .map(doc -> Tuple.from(new Object[]{ doc.getId(), doc.getCommitId(), doc.getExternalId(), doc.getRightName(), doc.getRightDescription() }))
             .collect(Collectors.toList()))
         .build();
   }
   @Override
-  public SqlTupleList updateMany(Collection<OrgRole> users) {
+  public SqlTupleList updateMany(Collection<OrgRight> users) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("UPDATE ").append(options.getOrgRights())
@@ -108,7 +108,7 @@ public class OrgRoleSqlBuilderImpl implements OrgRoleSqlBuilder {
         .append(" WHERE id = $5")
         .build())
         .props(users.stream()
-            .map(doc -> Tuple.from(new Object[]{doc.getExternalId(), doc.getRoleName(), doc.getRoleDescription(), doc.getCommitId(), doc.getId()}))
+            .map(doc -> Tuple.from(new Object[]{doc.getExternalId(), doc.getRightName(), doc.getRightDescription(), doc.getCommitId(), doc.getId()}))
             .collect(Collectors.toList()))
         .build();
   }

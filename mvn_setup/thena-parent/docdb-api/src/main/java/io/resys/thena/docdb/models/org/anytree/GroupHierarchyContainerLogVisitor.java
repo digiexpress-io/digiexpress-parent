@@ -8,9 +8,9 @@ import org.barfuin.texttree.api.DefaultNode;
 import org.barfuin.texttree.api.TextTree;
 import org.barfuin.texttree.api.TreeOptions;
 
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgParty;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgPartyRight;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRight;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMembership;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberRight;
@@ -42,13 +42,13 @@ public class GroupHierarchyContainerLogVisitor extends OrgGroupContainerVisitor<
   }
 
   @Override
-  public void visitMembershipWithInheritance(OrgGroup group, OrgMembership membership, OrgMember user, boolean isDisabled) {
+  public void visitMembershipWithInheritance(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled) {
     if(isDisabled) {
       return;
     }
   }
   @Override
-  public void visitMembership(OrgGroup group, OrgMembership membership, OrgMember user, boolean isDisabled) {
+  public void visitMembership(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled) {
     if(isDisabled) {
       return;
     }
@@ -65,7 +65,7 @@ public class GroupHierarchyContainerLogVisitor extends OrgGroupContainerVisitor<
     
   }
   @Override
-  public void visitRole(OrgGroup group, OrgPartyRight groupRole, OrgRole role, boolean isDisabled) {
+  public void visitRole(OrgParty group, OrgPartyRight groupRole, OrgRight role, boolean isDisabled) {
     if(isDisabled) {
       return;
     }
@@ -74,51 +74,51 @@ public class GroupHierarchyContainerLogVisitor extends OrgGroupContainerVisitor<
       nodesGroup.get(group.getId()).addChild(roles);
       nodesGroupRoles.put(group.getId(), roles);
     }
-    nodesGroupRoles.get(group.getId()).addChild(new DefaultNode(role.getRoleName()));
+    nodesGroupRoles.get(group.getId()).addChild(new DefaultNode(role.getRightName()));
   }
   @Override
-  public void visitRole(OrgGroup group, OrgMemberRight groupRole, OrgRole role, boolean isDisabled) {
+  public void visitRole(OrgParty group, OrgMemberRight groupRole, OrgRight role, boolean isDisabled) {
     if(isDisabled) {
       return;
     }
     
-    final var userNode = nodesGroupUsers.get(group.getId() + groupRole.getUserId());
+    final var userNode = nodesGroupUsers.get(group.getId() + groupRole.getMemberId());
     if(userNode.getText().endsWith(")")) {
-      userNode.setText(userNode.getText().substring(0, userNode.getText().length() -2) + ", " + role.getRoleName() + ")");            
+      userNode.setText(userNode.getText().substring(0, userNode.getText().length() -2) + ", " + role.getRightName() + ")");            
     } else {
-      userNode.setText(userNode.getText() + " (" + role.getRoleName() + ")");      
+      userNode.setText(userNode.getText() + " (" + role.getRightName() + ")");      
     }
   }
   
   @Override
-  public void visitChild(OrgGroup group, boolean isDisabled) {
+  public void visitChild(OrgParty group, boolean isDisabled) {
     if(isDisabled) {
       return;
     }
   }
   @Override
-  public void start(OrgGroup group, List<OrgGroup> parents, boolean isDisabled) {
+  public void start(OrgParty group, List<OrgParty> parents, boolean isDisabled) {
     final var previousNode = group.getParentId() == null ? nodeRoot : nodesGroup.get(group.getParentId());    
 
     
     if( groupIdOrNameOrExternalId.equals(group.getExternalId()) ||
-        groupIdOrNameOrExternalId.equals(group.getGroupName()) ||
+        groupIdOrNameOrExternalId.equals(group.getPartyName()) ||
         groupIdOrNameOrExternalId.equals(group.getId())) {
       
-      final var groupNode = new DefaultNode(group.getGroupName() + " <= you are here");
+      final var groupNode = new DefaultNode(group.getPartyName() + " <= you are here");
       previousNode.addChild(groupNode);
       nodesGroup.put(group.getId(), groupNode);
       
       nodeToLog = parents.isEmpty() ? groupNode : nodesGroup.get(parents.iterator().next().getId());
       foundGroupId = group.getId();
     } else {
-      final var groupNode = new DefaultNode(group.getGroupName());
+      final var groupNode = new DefaultNode(group.getPartyName());
       previousNode.addChild(groupNode);
       nodesGroup.put(group.getId(), groupNode);
     }
   }
   @Override
-  public void end(OrgGroup group, List<OrgGroup> parents, boolean isDisabled) {
+  public void end(OrgParty group, List<OrgParty> parents, boolean isDisabled) {
     if(group.getId().equals(foundGroupId)) {
       foundGroupId = null;
     }
@@ -132,11 +132,11 @@ public class GroupHierarchyContainerLogVisitor extends OrgGroupContainerVisitor<
     return tree;
   }
   @Override
-  protected GroupVisitor visitTop(OrgGroup group, OrgAnyTreeContainerContext worldState) {
+  protected GroupVisitor visitTop(OrgParty group, OrgAnyTreeContainerContext worldState) {
     return this;
   }
   @Override
-  protected GroupVisitor visitChild(OrgGroup group, OrgAnyTreeContainerContext worldState) {
+  protected GroupVisitor visitChild(OrgParty group, OrgAnyTreeContainerContext worldState) {
     return this;
   }
 }

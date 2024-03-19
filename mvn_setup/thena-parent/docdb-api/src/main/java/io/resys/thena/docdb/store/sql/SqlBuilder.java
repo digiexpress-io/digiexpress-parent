@@ -43,9 +43,9 @@ import io.resys.thena.docdb.api.models.ThenaGitObject.TreeValue;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatus;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgCommit;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgCommitTree;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgParty;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgPartyRight;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRight;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMembership;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberRight;
@@ -124,10 +124,10 @@ public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
     SqlTuple getById(String id); //role name or id or external_id
     Sql findAll();
     SqlTuple findAll(Collection<String> id);
-    SqlTuple insertOne(OrgRole role);
-    SqlTupleList insertAll(Collection<OrgRole> roles);
-    SqlTuple updateOne(OrgRole role);
-    SqlTupleList updateMany(Collection<OrgRole> roles);
+    SqlTuple insertOne(OrgRight role);
+    SqlTupleList insertAll(Collection<OrgRight> roles);
+    SqlTuple updateOne(OrgRight role);
+    SqlTupleList updateMany(Collection<OrgRight> roles);
   }
   
   interface OrgUserRoleSqlBuilder {
@@ -157,10 +157,10 @@ public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
     SqlTuple getById(String id); //group name or id or external_id
     Sql findAll();
     SqlTuple findAll(Collection<String> id);
-    SqlTuple insertOne(OrgGroup group);
-    SqlTupleList insertAll(Collection<OrgGroup> OrgGroup);
-    SqlTuple updateOne(OrgGroup group);
-    SqlTupleList updateMany(Collection<OrgGroup> groups);
+    SqlTuple insertOne(OrgParty group);
+    SqlTupleList insertAll(Collection<OrgParty> OrgGroup);
+    SqlTuple updateOne(OrgParty group);
+    SqlTupleList updateMany(Collection<OrgParty> groups);
   }
 
   interface OrgUserMembershipsSqlBuilder {

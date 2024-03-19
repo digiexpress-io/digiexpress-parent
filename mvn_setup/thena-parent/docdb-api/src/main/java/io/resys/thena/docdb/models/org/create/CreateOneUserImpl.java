@@ -15,8 +15,8 @@ import io.resys.thena.docdb.api.actions.OrgCommitActions.CreateOneUser;
 import io.resys.thena.docdb.api.actions.OrgCommitActions.OneUserEnvelope;
 import io.resys.thena.docdb.api.models.ImmutableMessage;
 import io.resys.thena.docdb.api.models.Repo.CommitResultStatus;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgParty;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRight;
 import io.resys.thena.docdb.models.org.OrgInserts.OrgBatchForOne;
 import io.resys.thena.docdb.models.org.OrgState.OrgRepo;
 import io.resys.thena.docdb.spi.DataMapper;
@@ -83,12 +83,12 @@ public class CreateOneUserImpl implements CreateOneUser {
     roleIds.addAll(addUserToGroupRoles.values().stream().flatMap(e -> e.stream()).toList());
     
 		// find groups
-		final Uni<List<OrgGroup>> groupsUni = groupIds.isEmpty() ? 
+		final Uni<List<OrgParty>> groupsUni = groupIds.isEmpty() ? 
 			Uni.createFrom().item(Collections.emptyList()) : 
 			tx.query().groups().findAll(groupIds.stream().distinct().toList()).collect().asList();
 		
 		// roles
-		final Uni<List<OrgRole>> rolesUni = roleIds.isEmpty() ? 
+		final Uni<List<OrgRight>> rolesUni = roleIds.isEmpty() ? 
 			Uni.createFrom().item(Collections.emptyList()) :
 			tx.query().roles().findAll(roleIds.stream().distinct().toList()).collect().asList();
 		
@@ -105,12 +105,12 @@ public class CreateOneUserImpl implements CreateOneUser {
   
   private Uni<OneUserEnvelope> createUser(
       OrgRepo tx, 
-      List<OrgGroup> allGroups, List<OrgRole> allRoles) {
+      List<OrgParty> allGroups, List<OrgRight> allRoles) {
     
-    final List<OrgGroup> addToGroups = new ArrayList<>();
-    final List<OrgRole> addToRoles = new ArrayList<>();
-    final Map<OrgGroup, List<OrgRole>> groups = new HashMap<>();
-    final Map<String, List<OrgRole>> groupsBy = new HashMap<>();
+    final List<OrgParty> addToGroups = new ArrayList<>();
+    final List<OrgRight> addToRoles = new ArrayList<>();
+    final Map<OrgParty, List<OrgRight>> groups = new HashMap<>();
+    final Map<String, List<OrgRight>> groupsBy = new HashMap<>();
     final Map<String, String> groupMapping = new HashMap<>();
     
     
@@ -121,7 +121,7 @@ public class CreateOneUserImpl implements CreateOneUser {
       
       final var addToGroupRole = this.addUserToGroupRoles.keySet().stream().filter(c -> group.isMatch(c)).findFirst();
       if(addToGroupRole.isPresent()) {
-        final var roles = new ArrayList<OrgRole>();
+        final var roles = new ArrayList<OrgRight>();
         groupsBy.put(group.getId(), roles);
         groups.put(group, roles);
         groupMapping.put(addToGroupRole.get(), group.getId());
@@ -130,7 +130,7 @@ public class CreateOneUserImpl implements CreateOneUser {
     
     // assert groups
     if(addToGroups.size() != this.addUserToGroups.size()) {
-      final var found = String.join(", ", addToGroups.stream().map(e -> e.getGroupName()).toList());
+      final var found = String.join(", ", addToGroups.stream().map(e -> e.getPartyName()).toList());
       final var expected = String.join(", ", this.addUserToGroups);
       return Uni.createFrom().item(ImmutableOneUserEnvelope.builder()
           .repoId(repoId)
@@ -141,7 +141,7 @@ public class CreateOneUserImpl implements CreateOneUser {
           .build());
     }    
     if(groups.size() != this.addUserToGroupRoles.size()) {
-      final var found = String.join(", ", groups.keySet().stream().map(e -> e.getGroupName()).toList());
+      final var found = String.join(", ", groups.keySet().stream().map(e -> e.getPartyName()).toList());
       final var expected = String.join(", ", this.addUserToGroupRoles.keySet());
       return Uni.createFrom().item(ImmutableOneUserEnvelope.builder()
           .repoId(repoId)
@@ -171,7 +171,7 @@ public class CreateOneUserImpl implements CreateOneUser {
     
     // assert roles
     if(addToRoles.size() != this.addUserToRoles.size()) {
-      final var found = String.join(", ", addToRoles.stream().map(e -> e.getRoleName()).toList());
+      final var found = String.join(", ", addToRoles.stream().map(e -> e.getRightName()).toList());
       final var expected = String.join(", ", this.addUserToRoles);
       return Uni.createFrom().item(ImmutableOneUserEnvelope.builder()
           .repoId(repoId)
@@ -182,7 +182,7 @@ public class CreateOneUserImpl implements CreateOneUser {
           .build());
     }    
     if(groups.values().stream().flatMap(e -> e.stream()).count() != this.addUserToGroupRoles.values().stream().flatMap(e -> e.stream()).count()) {
-      final var found = String.join(", ", groups.values().stream().flatMap(e -> e.stream()).map(e -> e.getRoleName()).toList());
+      final var found = String.join(", ", groups.values().stream().flatMap(e -> e.stream()).map(e -> e.getRightName()).toList());
       final var expected = String.join(", ", this.addUserToGroupRoles.values().stream().flatMap(e -> e.stream()).toList());
       return Uni.createFrom().item(ImmutableOneUserEnvelope.builder()
           .repoId(repoId)

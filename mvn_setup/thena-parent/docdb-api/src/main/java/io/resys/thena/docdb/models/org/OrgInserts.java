@@ -29,9 +29,9 @@ import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorData;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatus;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgCommit;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgParty;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgPartyRight;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRight;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMembership;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberRight;
@@ -49,8 +49,8 @@ public interface OrgInserts {
     
     List<OrgActorData> getActorData();
     List<OrgActorStatus> getActorStatus();
-    List<OrgGroup> getGroups();
-    List<OrgRole> getRoles();
+    List<OrgParty> getGroups();
+    List<OrgRight> getRoles();
     List<OrgMember> getUsers();
     List<OrgPartyRight> getGroupRoles();
     List<OrgMemberRight> getUserRoles();

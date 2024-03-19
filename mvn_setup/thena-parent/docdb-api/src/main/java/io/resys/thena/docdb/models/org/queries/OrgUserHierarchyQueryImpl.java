@@ -13,10 +13,10 @@ import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.docdb.api.models.QueryEnvelopeList;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.ThenaEnvelope;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRoleFlattened;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRightFlattened;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserFlattened;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserHierarchyEntry;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberFlattened;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberHierarchyEntry;
 import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgUserHierarchy;
 import io.resys.thena.docdb.models.org.OrgQueries;
 import io.resys.thena.docdb.models.org.userhierarchy.UserTreeBuilder;
@@ -84,7 +84,7 @@ public class OrgUserHierarchyQueryImpl implements UserHierarchyQuery {
 	}
 	
 
-	private QueryEnvelope<OrgUserHierarchy> createUserResult(OrgUserFlattened user, List<OrgUserHierarchyEntry> groups, List<OrgRoleFlattened> roles) {
+	private QueryEnvelope<OrgUserHierarchy> createUserResult(OrgMemberFlattened user, List<OrgMemberHierarchyEntry> groups, List<OrgRightFlattened> roles) {
     return ImmutableQueryEnvelope
         .<OrgUserHierarchy>builder()
         .status(QueryEnvelopeStatus.OK)

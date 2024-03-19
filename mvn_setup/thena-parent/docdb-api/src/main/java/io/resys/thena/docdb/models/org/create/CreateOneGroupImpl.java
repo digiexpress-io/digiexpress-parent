@@ -8,8 +8,8 @@ import java.util.Optional;
 import io.resys.thena.docdb.api.actions.ImmutableOneGroupEnvelope;
 import io.resys.thena.docdb.api.actions.OrgCommitActions.CreateOneGroup;
 import io.resys.thena.docdb.api.actions.OrgCommitActions.OneGroupEnvelope;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgParty;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRight;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
 import io.resys.thena.docdb.models.org.OrgInserts.OrgBatchForOne;
 import io.resys.thena.docdb.models.org.OrgState.OrgRepo;
@@ -66,12 +66,12 @@ public class CreateOneGroupImpl implements CreateOneGroup {
 			tx.query().users().findAll(addUsersToGroup).collect().asList();
 		
 		// roles
-		final Uni<List<OrgRole>> rolesUni = this.addRolesToGroup.isEmpty() ? 
+		final Uni<List<OrgRight>> rolesUni = this.addRolesToGroup.isEmpty() ? 
 			Uni.createFrom().item(Collections.emptyList()) :
 			tx.query().roles().findAll(addRolesToGroup).collect().asList();
 		
 		// fetch parent group
-		final Uni<Optional<OrgGroup>> parentUni = this.parentId == null ? 
+		final Uni<Optional<OrgParty>> parentUni = this.parentId == null ? 
 			Uni.createFrom().item(Optional.empty()) : 
 			tx.query().groups().getById(parentId).onItem().transform(parent -> Optional.of(parent));
 	
@@ -86,7 +86,7 @@ public class CreateOneGroupImpl implements CreateOneGroup {
 		);
   }
 
-  private Uni<OneGroupEnvelope> createGroup(OrgRepo tx, List<OrgMember> users, List<OrgRole> roles, Optional<OrgGroup> parent) {
+  private Uni<OneGroupEnvelope> createGroup(OrgRepo tx, List<OrgMember> users, List<OrgRight> roles, Optional<OrgParty> parent) {
     final OrgBatchForOne batch = new BatchForOneGroupCreate(tx.getRepo().getId(), author, message)
         .externalId(externalId)
         .users(users)

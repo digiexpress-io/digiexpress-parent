@@ -35,7 +35,7 @@ public class OrgUserRoleQuerySqlPool implements OrgQueries.UserRolesQuery {
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.orgUserRole(row))
+        .mapping(row -> sqlMapper.orgMemberRight(row))
         .execute()
         .onItem()
         .transformToMulti((RowSet<OrgMemberRight> rowset) -> Multi.createFrom().iterable(rowset))
@@ -51,7 +51,7 @@ public class OrgUserRoleQuerySqlPool implements OrgQueries.UserRolesQuery {
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.orgUserRole(row))
+        .mapping(row -> sqlMapper.orgMemberRight(row))
         .execute(sql.getProps())
         .onItem()
         .transformToMulti((RowSet<OrgMemberRight> rowset) -> Multi.createFrom().iterable(rowset))
@@ -67,7 +67,7 @@ public class OrgUserRoleQuerySqlPool implements OrgQueries.UserRolesQuery {
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.orgUserRole(row))
+        .mapping(row -> sqlMapper.orgMemberRight(row))
         .execute(sql.getProps())
         .onItem()
         .transform((RowSet<OrgMemberRight> rowset) -> {
@@ -90,7 +90,7 @@ public class OrgUserRoleQuerySqlPool implements OrgQueries.UserRolesQuery {
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.orgUserRole(row))
+        .mapping(row -> sqlMapper.orgMemberRight(row))
         .execute(sql.getProps())
         .onItem()
         .transformToMulti((RowSet<OrgMemberRight> rowset) -> Multi.createFrom().iterable(rowset))
@@ -106,7 +106,7 @@ public class OrgUserRoleQuerySqlPool implements OrgQueries.UserRolesQuery {
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.orgUserRole(row))
+        .mapping(row -> sqlMapper.orgMemberRight(row))
         .execute(sql.getProps())
         .onItem()
         .transformToMulti((RowSet<OrgMemberRight> rowset) -> Multi.createFrom().iterable(rowset))

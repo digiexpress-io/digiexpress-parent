@@ -17,8 +17,8 @@ import io.resys.thena.docdb.api.models.ImmutableMessage;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
 import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.docdb.api.models.Repo.CommitResultStatus;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgParty;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRight;
 import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgUserHierarchy;
 import io.resys.thena.docdb.models.org.OrgInserts.OrgBatchForOne;
 import io.resys.thena.docdb.models.org.OrgState.OrgRepo;
@@ -125,12 +125,12 @@ public class ModifyOneUserImpl implements ModifyOneUser {
   
   private Uni<OneUserEnvelope> doInTx(OrgRepo tx) {
 		// find groups
-		final Uni<List<OrgGroup>> groupsUni = this.allGroups.isEmpty() ? 
+		final Uni<List<OrgParty>> groupsUni = this.allGroups.isEmpty() ? 
 			Uni.createFrom().item(Collections.emptyList()) : 
 			tx.query().groups().findAll(allGroups).collect().asList();
 		
 		// roles
-		final Uni<List<OrgRole>> rolesUni = this.allRoles.isEmpty() ? 
+		final Uni<List<OrgRight>> rolesUni = this.allRoles.isEmpty() ? 
 			Uni.createFrom().item(Collections.emptyList()) :
 			tx.query().roles().findAll(allRoles).collect().asList();
 		
@@ -151,12 +151,12 @@ public class ModifyOneUserImpl implements ModifyOneUser {
   private Uni<OneUserEnvelope> modifyUser(
       OrgRepo tx, 
       QueryEnvelope<OrgUserHierarchy> user, 
-      List<OrgGroup> allGroups, 
-      List<OrgRole> allRoles) {
+      List<OrgParty> allGroups, 
+      List<OrgRight> allRoles) {
     
-    final Map<OrgGroup, List<OrgRole>> addUseGroupRoles = new HashMap<>();
+    final Map<OrgParty, List<OrgRight>> addUseGroupRoles = new HashMap<>();
     
-    final Map<String, List<OrgRole>> addGroupsBy = new HashMap<>();
+    final Map<String, List<OrgRight>> addGroupsBy = new HashMap<>();
     final Map<String, String> addGroupMapping = new HashMap<>();
     
     
@@ -169,7 +169,7 @@ public class ModifyOneUserImpl implements ModifyOneUser {
     }
     
     if(allGroups.size() < this.allGroups.size()) {
-      final var found = String.join(", ", allGroups.stream().map(e -> e.getGroupName()).toList());
+      final var found = String.join(", ", allGroups.stream().map(e -> e.getPartyName()).toList());
       final var expected = String.join(", ", this.allGroups);
       return Uni.createFrom().item(ImmutableOneUserEnvelope.builder()
           .repoId(repoId)
@@ -181,7 +181,7 @@ public class ModifyOneUserImpl implements ModifyOneUser {
     }
     
     if(allRoles.size() < this.allRoles.size()) {
-      final var found = String.join(", ", allRoles.stream().map(e -> e.getRoleName()).toList());
+      final var found = String.join(", ", allRoles.stream().map(e -> e.getRightName()).toList());
       final var expected = String.join(", ", this.allRoles);
       return Uni.createFrom().item(ImmutableOneUserEnvelope.builder()
           .repoId(repoId)
@@ -201,14 +201,14 @@ public class ModifyOneUserImpl implements ModifyOneUser {
     
     // Remove or add groups 
     allGroups.forEach(group -> {
-      if( groupsToAdd.contains(group.getGroupName()) ||
+      if( groupsToAdd.contains(group.getPartyName()) ||
           groupsToAdd.contains(group.getId()) ||
           groupsToAdd.contains(group.getExternalId())
       ) {
         modify.updateGroups(ModType.ADD, group);
       }
       
-      if( groupsToRemove.contains(group.getGroupName()) ||
+      if( groupsToRemove.contains(group.getPartyName()) ||
           groupsToRemove.contains(group.getId()) ||
           groupsToRemove.contains(group.getExternalId())
        ) {
@@ -218,7 +218,7 @@ public class ModifyOneUserImpl implements ModifyOneUser {
       
       final var addToGroupRole = this.addUseGroupRoles.keySet().stream().filter(c -> group.isMatch(c)).findFirst();
       if(addToGroupRole.isPresent()) {
-        final var roles = new ArrayList<OrgRole>();
+        final var roles = new ArrayList<OrgRight>();
         addGroupsBy.put(group.getId(), roles);
         addUseGroupRoles.put(group, roles);
         addGroupMapping.put(addToGroupRole.get(), group.getId());
@@ -228,14 +228,14 @@ public class ModifyOneUserImpl implements ModifyOneUser {
     // Remove or add roles 
     allRoles.forEach(role -> {
       
-      if( rolesToAdd.contains(role.getRoleName()) ||
+      if( rolesToAdd.contains(role.getRightName()) ||
           rolesToAdd.contains(role.getId()) ||
           rolesToAdd.contains(role.getExternalId())
       ) {
         modify.updateRoles(ModType.ADD, role);
       }
       
-      if( rolesToRemove.contains(role.getRoleName()) ||
+      if( rolesToRemove.contains(role.getRightName()) ||
           rolesToRemove.contains(role.getId()) ||
           rolesToRemove.contains(role.getExternalId())
        ) {

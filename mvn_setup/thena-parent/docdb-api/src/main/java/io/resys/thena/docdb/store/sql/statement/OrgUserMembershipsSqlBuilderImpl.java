@@ -94,7 +94,7 @@ public class OrgUserMembershipsSqlBuilderImpl implements OrgUserMembershipsSqlBu
         .append("INSERT INTO ").append(options.getOrgMemberships())
         .append(" (id, commit_id, party_id, member_id) VALUES($1, $2, $3, $4)").ln()
         .build())
-        .props(Tuple.from(new Object[]{ doc.getId(), doc.getCommitId(), doc.getGroupId(), doc.getUserId() }))
+        .props(Tuple.from(new Object[]{ doc.getId(), doc.getCommitId(), doc.getPartyId(), doc.getMemberId() }))
         .build();
   }
   @Override
@@ -105,7 +105,7 @@ public class OrgUserMembershipsSqlBuilderImpl implements OrgUserMembershipsSqlBu
         .append(" (id, commit_id, party_id, member_id) VALUES($1, $2, $3, $4)").ln()
         .build())
         .props(users.stream()
-            .map(doc -> Tuple.from(new Object[]{ doc.getId(), doc.getCommitId(), doc.getGroupId(), doc.getUserId() }))
+            .map(doc -> Tuple.from(new Object[]{ doc.getId(), doc.getCommitId(), doc.getPartyId(), doc.getMemberId() }))
             .collect(Collectors.toList()))
         .build();
   }

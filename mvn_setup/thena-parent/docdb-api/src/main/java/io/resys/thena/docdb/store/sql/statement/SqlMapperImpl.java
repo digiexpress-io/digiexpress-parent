@@ -35,13 +35,13 @@ import io.resys.thena.docdb.api.models.ImmutableDocCommit;
 import io.resys.thena.docdb.api.models.ImmutableDocFlatted;
 import io.resys.thena.docdb.api.models.ImmutableDocLog;
 import io.resys.thena.docdb.api.models.ImmutableOrgActorStatus;
-import io.resys.thena.docdb.api.models.ImmutableOrgGroup;
+import io.resys.thena.docdb.api.models.ImmutableOrgParty;
 import io.resys.thena.docdb.api.models.ImmutableOrgPartyRight;
-import io.resys.thena.docdb.api.models.ImmutableOrgRole;
-import io.resys.thena.docdb.api.models.ImmutableOrgRoleFlattened;
+import io.resys.thena.docdb.api.models.ImmutableOrgRight;
+import io.resys.thena.docdb.api.models.ImmutableOrgRightFlattened;
 import io.resys.thena.docdb.api.models.ImmutableOrgMember;
-import io.resys.thena.docdb.api.models.ImmutableOrgUserFlattened;
-import io.resys.thena.docdb.api.models.ImmutableOrgUserHierarchyEntry;
+import io.resys.thena.docdb.api.models.ImmutableOrgMemberFlattened;
+import io.resys.thena.docdb.api.models.ImmutableOrgMemberHierarchyEntry;
 import io.resys.thena.docdb.api.models.ImmutableOrgMembership;
 import io.resys.thena.docdb.api.models.ImmutableOrgMemberRight;
 import io.resys.thena.docdb.api.models.ImmutableRepo;
@@ -68,13 +68,13 @@ import io.resys.thena.docdb.api.models.ThenaGitObject.Tree;
 import io.resys.thena.docdb.api.models.ThenaGitObject.TreeValue;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatus;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatusType;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgParty;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgPartyRight;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRoleFlattened;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRight;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRightFlattened;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserFlattened;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserHierarchyEntry;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberFlattened;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberHierarchyEntry;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMembership;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberRight;
 import io.resys.thena.docdb.spi.DbCollections;
@@ -309,7 +309,7 @@ public class SqlMapperImpl implements SqlMapper {
         .build();
   }
   @Override
-  public OrgMember orgUser(Row row) {
+  public OrgMember orgMember(Row row) {
     return ImmutableOrgMember.builder()
         .id(row.getString("id"))
         .externalId(row.getString("external_id"))
@@ -319,96 +319,96 @@ public class SqlMapperImpl implements SqlMapper {
         .build();
   }
 	@Override
-	public OrgGroup orgGroup(Row row) {
-    return ImmutableOrgGroup.builder()
+	public OrgParty orgParty(Row row) {
+    return ImmutableOrgParty.builder()
         .id(row.getString("id"))
         .externalId(row.getString("external_id"))
         .parentId(row.getString("parent_id"))
         .commitId(row.getString("commit_id"))
-        .groupName(row.getString("party_name"))
-        .groupDescription(row.getString("party_description"))
+        .partyName(row.getString("party_name"))
+        .partyDescription(row.getString("party_description"))
         .build();
 	}
 	@Override
-	public OrgRole orgRole(Row row) {
-    return ImmutableOrgRole.builder()
+	public OrgRight orgRight(Row row) {
+    return ImmutableOrgRight.builder()
         .id(row.getString("id"))
         .externalId(row.getString("external_id"))
-        .roleName(row.getString("right_name"))
-        .roleDescription(row.getString("right_description"))
+        .rightName(row.getString("right_name"))
+        .rightDescription(row.getString("right_description"))
         .commitId(row.getString("commit_id"))
         .build();
 	}
 	@Override
-	public OrgMembership orgUserMemberships(Row row) {
+	public OrgMembership orgMembership(Row row) {
     return ImmutableOrgMembership.builder()
         .id(row.getString("id"))
         .commitId(row.getString("commit_id"))
-        .userId(row.getString("member_id"))
-        .groupId(row.getString("party_id"))
+        .memberId(row.getString("member_id"))
+        .partyId(row.getString("party_id"))
         .build();
 	}
 	
 	@Override
-	public OrgPartyRight orgGroupRole(Row row) {
+	public OrgPartyRight orgPartyRright(Row row) {
     return ImmutableOrgPartyRight.builder()
         .id(row.getString("id"))
         .commitId(row.getString("commit_id"))
-        .roleId(row.getString("right_id"))
-        .groupId(row.getString("party_id"))
+        .rightId(row.getString("right_id"))
+        .partyId(row.getString("party_id"))
         .build();
 	}
 	
 	@Override
-	public OrgMemberRight orgUserRole(Row row) {
+	public OrgMemberRight orgMemberRight(Row row) {
     return ImmutableOrgMemberRight.builder()
         .id(row.getString("id"))
         .commitId(row.getString("commit_id"))
-        .roleId(row.getString("right_id"))
-        .userId(row.getString("member_id"))
-        .groupId(row.getString("party_id"))
+        .rightId(row.getString("right_id"))
+        .memberId(row.getString("member_id"))
+        .partyId(row.getString("party_id"))
         .build();
 	}
 	@Override
-	public OrgUserHierarchyEntry orgUserHierarchyEntry(Row row) {
+	public OrgMemberHierarchyEntry orgMemberHierarchyEntry(Row row) {
 		final var roleStatus = row.getString("right_status");
 		final var groupStatus = row.getString("status");
 		
-		return ImmutableOrgUserHierarchyEntry.builder()
-		  	.groupId(row.getString("id"))
-		  	.groupParentId(row.getString("parent_id"))
-		  	.groupName(row.getString("party_name"))
-        .groupDescription(row.getString("party_description"))
+		return ImmutableOrgMemberHierarchyEntry.builder()
+		  	.partyId(row.getString("id"))
+		  	.partyParentId(row.getString("parent_id"))
+		  	.partyName(row.getString("party_name"))
+        .partyDescription(row.getString("party_description"))
 		  	.membershipId(row.getString("membership_id"))
 		  	
-		  	.groupStatusId(row.getString("status_id"))
-		  	.groupStatus(groupStatus != null ? OrgActorStatusType.valueOf(groupStatus) : null)
-		  	.groupStatusUserId(row.getString("status_member_id"))
+		  	.partyStatusId(row.getString("status_id"))
+		  	.partyStatus(groupStatus != null ? OrgActorStatusType.valueOf(groupStatus) : null)
+		  	.partyStatusMemberId(row.getString("status_member_id"))
 		  	
-		  	.roleId(row.getString("right_id"))
-		  	.roleName(row.getString("right_name"))
-        .roleDescription(row.getString("right_description"))
+		  	.rightId(row.getString("right_id"))
+		  	.rightName(row.getString("right_name"))
+        .rightDescription(row.getString("right_description"))
         
-		  	.roleStatus(roleStatus != null ? OrgActorStatusType.valueOf(roleStatus) : null)
-		  	.roleStatusId(row.getString("right_status_id"))
+		  	.rightStatus(roleStatus != null ? OrgActorStatusType.valueOf(roleStatus) : null)
+		  	.rightStatusId(row.getString("right_status_id"))
 				.build();
 	}
 	
   @Override
-  public OrgRoleFlattened orgOrgRoleFlattened(Row row) {
+  public OrgRightFlattened orgOrgRightFlattened(Row row) {
     final var roleStatus = row.getString("right_status");
-    return ImmutableOrgRoleFlattened.builder()
-        .roleId(row.getString("right_id"))
-        .roleName(row.getString("right_name"))
-        .roleDescription(row.getString("right_description"))
-        .roleStatus(roleStatus != null ? OrgActorStatusType.valueOf(roleStatus) : null)
-        .roleStatusId(row.getString("right_status_id"))
+    return ImmutableOrgRightFlattened.builder()
+        .rightId(row.getString("right_id"))
+        .rightName(row.getString("right_name"))
+        .rightDescription(row.getString("right_description"))
+        .rightStatus(roleStatus != null ? OrgActorStatusType.valueOf(roleStatus) : null)
+        .rightStatusId(row.getString("right_status_id"))
         .build();
   }
   @Override
-  public OrgUserFlattened orgUserFlattened(Row row) {
+  public OrgMemberFlattened orgMemberFlattened(Row row) {
     final var userStatus = row.getString("user_status");
-    return ImmutableOrgUserFlattened.builder()
+    return ImmutableOrgMemberFlattened.builder()
         .id(row.getString("id"))
         .externalId(row.getString("external_id"))
         .commitId(row.getString("commit_id"))
@@ -424,9 +424,9 @@ public class SqlMapperImpl implements SqlMapper {
     return ImmutableOrgActorStatus.builder()
         .id(row.getString("id"))
         .commitId(row.getString("commit_id"))
-        .userId(row.getString("member_id"))
-        .roleId(row.getString("right_id"))
-        .groupId(row.getString("party_id"))
+        .memberId(row.getString("member_id"))
+        .rightId(row.getString("right_id"))
+        .partyId(row.getString("party_id"))
         .value(actorStatus != null ? OrgActorStatusType.valueOf(actorStatus) : null)
         .build();
   }
