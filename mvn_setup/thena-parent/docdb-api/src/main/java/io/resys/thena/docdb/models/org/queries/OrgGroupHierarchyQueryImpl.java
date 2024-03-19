@@ -13,6 +13,7 @@ import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgGroupHierarchy;
 import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgProjectObjects;
 import io.resys.thena.docdb.models.org.anytree.AnyTreeContainerContextImpl;
 import io.resys.thena.docdb.models.org.anytree.AnyTreeContainerImpl;
+import io.resys.thena.docdb.models.org.anytree.GroupHierarchyContainerLogVisitor;
 import io.resys.thena.docdb.models.org.anytree.GroupHierarchyContainerVisitor;
 import io.resys.thena.docdb.spi.DbState;
 import io.resys.thena.docdb.support.RepoAssert;
@@ -71,10 +72,12 @@ public class OrgGroupHierarchyQueryImpl implements GroupHierarchyQuery {
   private QueryEnvelopeList<OrgGroupHierarchy> createGroupHierarchy(QueryEnvelope<OrgProjectObjects> init) {
     final var groups = new ArrayList<OrgGroupHierarchy>();
     final var ctx = new AnyTreeContainerContextImpl(init.getObjects());
-    final var container = new AnyTreeContainerImpl<OrgGroupHierarchy>(ctx);
+    final var container = new AnyTreeContainerImpl(ctx);
     for(final var criteria : init.getObjects().getGroups().values().stream().sorted((a, b) -> a.getGroupName().compareTo(b.getGroupName())).toList()) {
-      final OrgGroupHierarchy group = container.accept(new GroupHierarchyContainerVisitor(criteria.getId()));
-      groups.add(group);
+      
+      final var group = container.accept(new GroupHierarchyContainerVisitor(criteria.getId()));
+      final var log = container.accept(new GroupHierarchyContainerLogVisitor(criteria.getId(), true));
+      groups.add(group.withLog(log));
     }
     return ImmutableQueryEnvelopeList.<OrgGroupHierarchy>builder()
         .objects(Collections.unmodifiableList(groups))
@@ -88,7 +91,11 @@ public class OrgGroupHierarchyQueryImpl implements GroupHierarchyQuery {
       String groupIdOrNameOrExternalId) {
     
     final var ctx = new AnyTreeContainerContextImpl(init.getObjects());
-    final OrgGroupHierarchy group = new AnyTreeContainerImpl<OrgGroupHierarchy>(ctx).accept(new GroupHierarchyContainerVisitor(groupIdOrNameOrExternalId));
+    final var container = new AnyTreeContainerImpl(ctx);
+    final var log = container.accept(new GroupHierarchyContainerLogVisitor(groupIdOrNameOrExternalId, true));
+    final OrgGroupHierarchy group = container.accept(new GroupHierarchyContainerVisitor(groupIdOrNameOrExternalId)).withLog(log);
+    
+    
     return ImmutableQueryEnvelope.<OrgGroupHierarchy>builder()
         .objects(group)
         .repo(init.getRepo())

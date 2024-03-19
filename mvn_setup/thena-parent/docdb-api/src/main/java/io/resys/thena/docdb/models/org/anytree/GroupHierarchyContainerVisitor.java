@@ -1,12 +1,6 @@
 package io.resys.thena.docdb.models.org.anytree;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import org.barfuin.texttree.api.DefaultNode;
-import org.barfuin.texttree.api.TextTree;
-import org.barfuin.texttree.api.TreeOptions;
 
 import io.resys.thena.docdb.api.models.ImmutableOrgGroupHierarchy;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatusType;
@@ -16,28 +10,26 @@ import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUser;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserMembership;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserRole;
-import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgGroupHierarchy;
-import io.resys.thena.docdb.models.org.anytree.AnyTreeContainer.AnyTreeContainerContext;
-import io.resys.thena.docdb.models.org.anytree.AnyTreeContainer.AnyTreeContainerVisitor;
-import io.resys.thena.docdb.models.org.anytree.AnyTreeContainerVisitorImpl.GroupVisitor;
-import lombok.RequiredArgsConstructor;
+import io.resys.thena.docdb.api.visitors.OrgGroupContainerVisitor;
+import io.resys.thena.docdb.api.visitors.OrgGroupContainerVisitor.GroupVisitor;
+import io.resys.thena.docdb.api.visitors.OrgTreeContainer.OrgAnyTreeContainerContext;
+import io.resys.thena.docdb.api.visitors.OrgTreeContainer.OrgAnyTreeContainerVisitor;
 
 
-@RequiredArgsConstructor
-public class GroupHierarchyContainerVisitor extends AnyTreeContainerVisitorImpl<OrgGroupHierarchy> 
-  implements AnyTreeContainerVisitor<OrgGroupHierarchy>, GroupVisitor {
+
+public class GroupHierarchyContainerVisitor extends OrgGroupContainerVisitor<ImmutableOrgGroupHierarchy> 
+  implements OrgAnyTreeContainerVisitor<ImmutableOrgGroupHierarchy>, GroupVisitor {
   
   private final String groupIdOrNameOrExternalId;
   private final ImmutableOrgGroupHierarchy.Builder builder = ImmutableOrgGroupHierarchy.builder();
-  private final DefaultNode nodeRoot = new DefaultNode("organization");
-  
-  private final Map<String, DefaultNode> nodesGroup = new HashMap<>();
-  private final Map<String, DefaultNode> nodesGroupUsers = new HashMap<>();
-  private final Map<String, DefaultNode> nodesGroupRoles = new HashMap<>();
-  private final Map<String, DefaultNode> nodesGroupMembers = new HashMap<>();
   
   private String foundGroupId;
-  private DefaultNode nodeToLog;
+  
+  
+  public GroupHierarchyContainerVisitor(String groupIdOrNameOrExternalId) {
+    super(true);
+    this.groupIdOrNameOrExternalId = groupIdOrNameOrExternalId;
+  }
   
   private boolean isDirectGroup(OrgGroup group) {
     if(foundGroupId != null) {
@@ -68,16 +60,6 @@ public class GroupHierarchyContainerVisitor extends AnyTreeContainerVisitorImpl<
       return;
     }
     
-    if(!nodesGroupMembers.containsKey(group.getId())) {
-      final var users = new DefaultNode("users");
-      nodesGroup.get(group.getId()).addChild(users);
-      nodesGroupMembers.put(group.getId(), users);
-    }
-    final var nodeUser = new DefaultNode(user.getUserName());
-    
-    nodesGroupMembers.get(group.getId()).addChild(nodeUser);
-    nodesGroupUsers.put(group.getId() + user.getId(), nodeUser);
-    
     
     if(!isDirectGroup(group)) {
       return;
@@ -89,13 +71,6 @@ public class GroupHierarchyContainerVisitor extends AnyTreeContainerVisitorImpl<
     if(isDisabled) {
       return;
     }
-    if(!nodesGroupRoles.containsKey(group.getId())) {
-      final var roles = new DefaultNode("roles");
-      nodesGroup.get(group.getId()).addChild(roles);
-      nodesGroupRoles.put(group.getId(), roles);
-    }
-    nodesGroupRoles.get(group.getId()).addChild(new DefaultNode(role.getRoleName()));
-    
     
     if(foundGroupId == null) {
       return;
@@ -108,12 +83,6 @@ public class GroupHierarchyContainerVisitor extends AnyTreeContainerVisitorImpl<
       return;
     }
     
-    final var userNode = nodesGroupUsers.get(group.getId() + groupRole.getUserId());
-    if(userNode.getText().endsWith(")")) {
-      userNode.setText(userNode.getText().substring(0, userNode.getText().length() -2) + ", " + role.getRoleName() + ")");            
-    } else {
-      userNode.setText(userNode.getText() + " (" + role.getRoleName() + ")");      
-    }
   }
   
   @Override
@@ -129,18 +98,12 @@ public class GroupHierarchyContainerVisitor extends AnyTreeContainerVisitorImpl<
   }
   @Override
   public void start(OrgGroup group, List<OrgGroup> parents, boolean isDisabled) {
-    final var previousNode = group.getParentId() == null ? nodeRoot : nodesGroup.get(group.getParentId());    
 
     
     if( groupIdOrNameOrExternalId.equals(group.getExternalId()) ||
         groupIdOrNameOrExternalId.equals(group.getGroupName()) ||
         groupIdOrNameOrExternalId.equals(group.getId())) {
       
-      final var groupNode = new DefaultNode(group.getGroupName() + " <= you are here");
-      previousNode.addChild(groupNode);
-      nodesGroup.put(group.getId(), groupNode);
-      
-      nodeToLog = parents.isEmpty() ? groupNode : nodesGroup.get(parents.iterator().next().getId());
       foundGroupId = group.getId();
       builder
         .groupId(group.getId())
@@ -150,10 +113,6 @@ public class GroupHierarchyContainerVisitor extends AnyTreeContainerVisitorImpl<
         .parentGroupId(group.getParentId())
         .parentGroups(parents)
         .status(isDisabled ? OrgActorStatusType.DISABLED : OrgActorStatusType.IN_FORCE);
-    } else {
-      final var groupNode = new DefaultNode(group.getGroupName());
-      previousNode.addChild(groupNode);
-      nodesGroup.put(group.getId(), groupNode);
     }
   }
   @Override
@@ -164,18 +123,15 @@ public class GroupHierarchyContainerVisitor extends AnyTreeContainerVisitorImpl<
   }
   
   @Override
-  public OrgGroupHierarchy close() {
-    final var options = new TreeOptions();
-    final var tree = TextTree.newInstance(options).render(nodeToLog);
-
-    return builder.log(tree).build();
+  public ImmutableOrgGroupHierarchy close() {
+    return builder.log("").build();
   }
   @Override
-  GroupVisitor visitTop(OrgGroup group, AnyTreeContainerContext worldState) {
+  protected GroupVisitor visitTop(OrgGroup group, OrgAnyTreeContainerContext worldState) {
     return this;
   }
   @Override
-  GroupVisitor visitChild(OrgGroup group, AnyTreeContainerContext worldState) {
+  protected GroupVisitor visitChild(OrgGroup group, OrgAnyTreeContainerContext worldState) {
     return this;
   }
 }

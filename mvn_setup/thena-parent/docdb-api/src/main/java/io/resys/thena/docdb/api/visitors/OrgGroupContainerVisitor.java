@@ -1,4 +1,4 @@
-package io.resys.thena.docdb.models.org.anytree;
+package io.resys.thena.docdb.api.visitors;
 
 import java.util.Collections;
 import java.util.List;
@@ -11,12 +11,20 @@ import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUser;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserMembership;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserRole;
-import io.resys.thena.docdb.models.org.anytree.AnyTreeContainer.AnyTreeContainerContext;
-import io.resys.thena.docdb.models.org.anytree.AnyTreeContainer.AnyTreeContainerVisitor;
+import io.resys.thena.docdb.api.visitors.OrgTreeContainer.OrgAnyTreeContainerContext;
+import io.resys.thena.docdb.api.visitors.OrgTreeContainer.OrgAnyTreeContainerVisitor;
 
 
-public abstract class AnyTreeContainerVisitorImpl<T> implements AnyTreeContainerVisitor<T> {
+public abstract class OrgGroupContainerVisitor<T> implements OrgAnyTreeContainerVisitor<T> {
   
+  private final boolean includeDisabled;
+  
+  public OrgGroupContainerVisitor(boolean includeDisabled) {
+    super();
+    this.includeDisabled = includeDisabled;
+  }
+
+
   public interface GroupVisitor {
     void start(OrgGroup group, List<OrgGroup> parents, boolean isDisabled);
     
@@ -27,22 +35,27 @@ public abstract class AnyTreeContainerVisitorImpl<T> implements AnyTreeContainer
     void visitRole(OrgGroup group, OrgGroupRole groupRole, OrgRole role, boolean isDisabled);
     void visitChild(OrgGroup group, boolean isDisabled);
     void end(OrgGroup group, List<OrgGroup> parents, boolean isDisabled);
-  }  
+  }
+  
   @Override
-  public void start(AnyTreeContainerContext worldState) {
+  public void start(OrgAnyTreeContainerContext worldState) {
     for(final var top : worldState.getGroupTops()) {
       visitGroup(top, worldState, Collections.emptyList());
     }
   }
-  abstract GroupVisitor visitTop(OrgGroup group, AnyTreeContainerContext worldState);
-  abstract GroupVisitor visitChild(OrgGroup group, AnyTreeContainerContext worldState);
+  protected abstract GroupVisitor visitTop(OrgGroup group, OrgAnyTreeContainerContext worldState);
+  protected abstract GroupVisitor visitChild(OrgGroup group, OrgAnyTreeContainerContext worldState);
 
   
-  protected void visitGroup(OrgGroup group, AnyTreeContainerContext worldState, List<OrgGroup> parents) {
+  protected void visitGroup(OrgGroup group, OrgAnyTreeContainerContext worldState, List<OrgGroup> parents) {
     final var parentGroupIds = parents.stream().map(e -> e.getId()).toList();
     final var visitor = group.getParentId() == null ? visitTop(group, worldState) : visitChild(group, worldState);
     final var isDisabledDirectly = worldState.isStatusDisabled(worldState.getStatus(group));
     final var isDisabledUpward = worldState.isGroupDisabledUpward(group);
+    
+    if(isDisabledDirectly && !includeDisabled) {
+      return;
+    }
     
     visitor.start(group, parents, isDisabledDirectly || isDisabledUpward);
     for(final var groupRole : worldState.getGroupRoles(group.getId())) {
@@ -50,6 +63,11 @@ public abstract class AnyTreeContainerVisitorImpl<T> implements AnyTreeContainer
       final var role = worldState.getRole(groupRole.getRoleId());
       final var groupRoleStatus = worldState.isStatusDisabled(worldState.getStatus(groupRole));
       final var roleStatus = worldState.isStatusDisabled(worldState.getStatus(role));
+      
+      final var isRoleDisabled = groupRoleStatus || roleStatus;
+      if(isRoleDisabled && !includeDisabled) {
+        continue;
+      }
       
       visitor.visitRole(group, groupRole, role, groupRoleStatus || roleStatus);
     }
@@ -59,8 +77,13 @@ public abstract class AnyTreeContainerVisitorImpl<T> implements AnyTreeContainer
       final var user = worldState.getUser(member.getUserId());
       final var memberStatus = worldState.isStatusDisabled(worldState.getStatus(member));
       final var userStatus = worldState.isStatusDisabled(worldState.getStatus(user));
+      final var isUserDisabled = memberStatus || userStatus;
       
-      visitor.visitMembership(group, member, user, memberStatus || userStatus);
+      if(isUserDisabled && !includeDisabled) {
+        continue;
+      }
+      
+      visitor.visitMembership(group, member, user, isUserDisabled);
       
       
       for(final var groupUserRole : worldState.getUserRoles(user.getId())) {
@@ -73,7 +96,12 @@ public abstract class AnyTreeContainerVisitorImpl<T> implements AnyTreeContainer
         final var role = worldState.getRole(groupUserRole.getRoleId());
         final var groupRoleStatus = worldState.isStatusDisabled(worldState.getStatus(groupUserRole));
         final var roleStatus = worldState.isStatusDisabled(worldState.getStatus(role));
-        visitor.visitRole(group, groupUserRole, role, groupRoleStatus || roleStatus);
+        final var isRoleDisabled = groupRoleStatus || roleStatus;
+        
+        if(isRoleDisabled && !includeDisabled) {
+          continue;
+        }
+        visitor.visitRole(group, groupUserRole, role, isRoleDisabled);
       }
       
     }

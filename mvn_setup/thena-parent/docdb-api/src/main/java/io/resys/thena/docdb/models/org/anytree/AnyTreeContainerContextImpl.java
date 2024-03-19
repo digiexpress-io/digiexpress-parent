@@ -17,9 +17,9 @@ import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUser;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserMembership;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserRole;
 import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgProjectObjects;
-import io.resys.thena.docdb.models.org.anytree.AnyTreeContainer.AnyTreeContainerContext;
+import io.resys.thena.docdb.api.visitors.OrgTreeContainer.OrgAnyTreeContainerContext;
 
-public class AnyTreeContainerContextImpl implements AnyTreeContainerContext {
+public class AnyTreeContainerContextImpl implements OrgAnyTreeContainerContext {
   
   private final OrgProjectObjects worldState;
   private final List<OrgGroup> groupTops;

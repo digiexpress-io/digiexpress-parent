@@ -1,4 +1,4 @@
-package io.resys.thena.docdb.models.org.anytree;
+package io.resys.thena.docdb.api.visitors;
 
 import java.util.Collection;
 import java.util.List;
@@ -12,16 +12,16 @@ import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUser;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserMembership;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserRole;
 
-public interface AnyTreeContainer<T> {
-  T accept(AnyTreeContainerVisitor<T> visitor);
+public interface OrgTreeContainer {
+  <T> T accept(OrgAnyTreeContainerVisitor<T> visitor);
   
   
-  interface AnyTreeContainerVisitor<T> {
-    void start(AnyTreeContainerContext ctx);
+  interface OrgAnyTreeContainerVisitor<T> {
+    void start(OrgAnyTreeContainerContext ctx);
     T close();
   }
   
-  interface AnyTreeContainerContext {
+  interface OrgAnyTreeContainerContext {
     OrgUser getUser(String id);
     OrgRole getRole(String id);
     Collection<OrgRole> getRoles();

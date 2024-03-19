@@ -9,8 +9,10 @@ import io.resys.thena.docdb.api.models.ImmutableQueryEnvelopeList;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
 import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.docdb.api.models.QueryEnvelopeList;
+import io.resys.thena.docdb.api.models.ThenaEnvelope.ThenaObjects;
 import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgProjectObjects;
 import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgRoleHierarchy;
+import io.resys.thena.docdb.api.visitors.OrgTreeContainer.OrgAnyTreeContainerVisitor;
 import io.resys.thena.docdb.models.org.anytree.AnyTreeContainerContextImpl;
 import io.resys.thena.docdb.models.org.anytree.AnyTreeContainerImpl;
 import io.resys.thena.docdb.models.org.anytree.RoleHierarchyContainerVisitor;
@@ -71,7 +73,7 @@ public class OrgRoleHierarchyQueryImpl implements RoleHierarchyQuery {
   private QueryEnvelopeList<OrgRoleHierarchy> createRoleHierarchy(QueryEnvelope<OrgProjectObjects> init) {
     final var result = new ArrayList<OrgRoleHierarchy>();
     final var ctx = new AnyTreeContainerContextImpl(init.getObjects());
-    final var container = new AnyTreeContainerImpl<OrgRoleHierarchy>(ctx);
+    final var container = new AnyTreeContainerImpl(ctx);
     
     for(final var roleCriteria : init.getObjects().getRoles().values().stream().sorted((a, b) -> a.getRoleName().compareTo(b.getRoleName())).toList()) {
       final OrgRoleHierarchy roleHierarchy = container.accept(new RoleHierarchyContainerVisitor(roleCriteria.getId()));
@@ -89,11 +91,36 @@ public class OrgRoleHierarchyQueryImpl implements RoleHierarchyQuery {
       String roleIdOrNameOrExternalId) {
     
     final var ctx = new AnyTreeContainerContextImpl(init.getObjects());
-    final OrgRoleHierarchy group = new AnyTreeContainerImpl<OrgRoleHierarchy>(ctx).accept(new RoleHierarchyContainerVisitor(roleIdOrNameOrExternalId));
+    final OrgRoleHierarchy group = new AnyTreeContainerImpl(ctx).accept(new RoleHierarchyContainerVisitor(roleIdOrNameOrExternalId));
     return ImmutableQueryEnvelope.<OrgRoleHierarchy>builder()
         .objects(group)
         .repo(init.getRepo())
         .status(QueryEnvelope.QueryEnvelopeStatus.OK)
         .build();
+  }
+  @Override
+  public <T extends ThenaObjects> Uni<QueryEnvelope<T>> get(String roleIdOrNameOrExternalId,
+      OrgAnyTreeContainerVisitor<T> visitor) {
+    
+    RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
+    
+    return new OrgProjectQueryImpl(state).projectName(repoId).get()
+        .onItem().transform(resp -> {
+          if(resp.getStatus() != QueryEnvelopeStatus.OK) {
+            return resp.toType();
+          }
+          
+          try {
+            final var ctx = new AnyTreeContainerContextImpl(resp.getObjects());
+            final T group = new AnyTreeContainerImpl(ctx).accept(visitor);
+            return ImmutableQueryEnvelope.<T>builder()
+                .objects(group)
+                .repo(resp.getRepo())
+                .status(QueryEnvelope.QueryEnvelopeStatus.OK)
+                .build();
+          } catch(Exception e) {
+            return QueryEnvelope.fatalError(resp.getRepo(), "Failed to build hierarchy for all roles", log, e);
+          }
+        });
   }
 }

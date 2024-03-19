@@ -105,7 +105,6 @@ public class PermissionClientImpl implements PermissionClient {
 
   @Override
   public RoleHierarchyQuery roleHierarchyQuery() {
-    // TODO Auto-generated method stub
-    return null;
+    return new RoleHierarchyQueryImpl(ctx);
   }
 }

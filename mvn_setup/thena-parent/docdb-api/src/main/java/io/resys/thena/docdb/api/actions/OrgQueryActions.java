@@ -2,10 +2,12 @@ package io.resys.thena.docdb.api.actions;
 
 import io.resys.thena.docdb.api.models.QueryEnvelope;
 import io.resys.thena.docdb.api.models.QueryEnvelopeList;
+import io.resys.thena.docdb.api.models.ThenaEnvelope.ThenaObjects;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUser;
 import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgGroupHierarchy;
 import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgRoleHierarchy;
 import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgUserHierarchy;
+import io.resys.thena.docdb.api.visitors.OrgTreeContainer.OrgAnyTreeContainerVisitor;
 import io.smallrye.mutiny.Uni;
 
 public interface OrgQueryActions {
@@ -26,6 +28,7 @@ public interface OrgQueryActions {
   interface RoleHierarchyQuery {
     RoleHierarchyQuery repoId(String repoId);
     Uni<QueryEnvelope<OrgRoleHierarchy>> get(String roleIdOrNameOrExternalId);
+    <T extends ThenaObjects> Uni<QueryEnvelope<T>> get(String roleIdOrNameOrExternalId, OrgAnyTreeContainerVisitor<T> visitor);
     Uni<QueryEnvelopeList<OrgRoleHierarchy>> findAll();
   }
 

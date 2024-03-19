@@ -17,25 +17,30 @@ import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUser;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserMembership;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserRole;
 import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgRoleHierarchy;
-import io.resys.thena.docdb.models.org.anytree.AnyTreeContainer.AnyTreeContainerContext;
-import io.resys.thena.docdb.models.org.anytree.AnyTreeContainer.AnyTreeContainerVisitor;
+import io.resys.thena.docdb.api.visitors.OrgGroupContainerVisitor;
+import io.resys.thena.docdb.api.visitors.OrgTreeContainer.OrgAnyTreeContainerContext;
+import io.resys.thena.docdb.api.visitors.OrgTreeContainer.OrgAnyTreeContainerVisitor;
 import lombok.RequiredArgsConstructor;
 
 
-@RequiredArgsConstructor
-public class RoleHierarchyContainerVisitor extends AnyTreeContainerVisitorImpl<OrgRoleHierarchy> 
-  implements AnyTreeContainerVisitor<OrgRoleHierarchy> {
+
+public class RoleHierarchyContainerVisitor extends OrgGroupContainerVisitor<OrgRoleHierarchy> 
+  implements OrgAnyTreeContainerVisitor<OrgRoleHierarchy> {
   
   private final String roleIdOrNameOrExternalId;
   private final ImmutableOrgRoleHierarchy.Builder builder = ImmutableOrgRoleHierarchy.builder();
   private final Map<String, GroupVisitorForRole> visitorsByGroup = new HashMap<>();
   
-  private AnyTreeContainerContext ctx;
+  private OrgAnyTreeContainerContext ctx;
   private GroupVisitor currentVisitor;
   private OrgRole target;
   private DefaultNode nodeRoot;
   
-  public void start(AnyTreeContainerContext ctx) {
+  public RoleHierarchyContainerVisitor(String roleIdOrNameOrExternalId) {
+    super(true);
+    this.roleIdOrNameOrExternalId = roleIdOrNameOrExternalId;
+  }
+  public void start(OrgAnyTreeContainerContext ctx) {
     
     final var target = ctx.getRoles().stream()
     .filter(role -> {
@@ -84,7 +89,7 @@ public class RoleHierarchyContainerVisitor extends AnyTreeContainerVisitorImpl<O
   }
 
   @Override
-  GroupVisitor visitTop(OrgGroup group, AnyTreeContainerContext worldState) {
+  protected GroupVisitor visitTop(OrgGroup group, OrgAnyTreeContainerContext worldState) {
     final var currentVisitor = new GroupVisitorForRole(target, nodeRoot, ctx);
     this.visitorsByGroup.put(group.getId(), currentVisitor);
     this.currentVisitor = currentVisitor;
@@ -92,7 +97,7 @@ public class RoleHierarchyContainerVisitor extends AnyTreeContainerVisitorImpl<O
   }
 
   @Override
-  GroupVisitor visitChild(OrgGroup group, AnyTreeContainerContext worldState) {
+  protected GroupVisitor visitChild(OrgGroup group, OrgAnyTreeContainerContext worldState) {
     return this.currentVisitor;
   }
   
@@ -100,7 +105,7 @@ public class RoleHierarchyContainerVisitor extends AnyTreeContainerVisitorImpl<O
   private static class GroupVisitorForRole implements GroupVisitor {
     private final OrgRole target;
     private final DefaultNode nodeRoot;
-    private final AnyTreeContainerContext ctx;
+    private final OrgAnyTreeContainerContext ctx;
     
     private Boolean groupContainsRole;
     private final Map<String, DefaultNode> nodesGroup = new HashMap<>();
