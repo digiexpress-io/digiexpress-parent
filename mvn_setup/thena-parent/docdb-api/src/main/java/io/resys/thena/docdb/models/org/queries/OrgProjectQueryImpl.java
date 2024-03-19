@@ -55,22 +55,22 @@ public class OrgProjectQueryImpl implements OrgProjectQuery {
       final var container = ImmutableOrgProjectObjects.builder();
 
       // GROUP 1
-      tuple.getItem1().forEach(group -> container.putGroups(group.getId(), group));
+      tuple.getItem1().forEach(group -> container.putParties(group.getId(), group));
       
       // USER 2
-      tuple.getItem2().forEach(user -> container.putUsers(user.getId(), user));
+      tuple.getItem2().forEach(user -> container.putMembers(user.getId(), user));
       
       // ROLE 3
-      tuple.getItem3().forEach(role -> container.putRoles(role.getId(), role));
+      tuple.getItem3().forEach(role -> container.putRights(role.getId(), role));
       
       // MEMBERSHIP 4
-      tuple.getItem4().forEach(member -> container.putUserMemberships(member.getId(), member));
+      tuple.getItem4().forEach(member -> container.putMemberships(member.getId(), member));
       
       // GROUP_ROLE 5
-      tuple.getItem5().forEach(groupRole -> container.putGroupRoles(groupRole.getId(), groupRole));
+      tuple.getItem5().forEach(groupRole -> container.putPartyRights(groupRole.getId(), groupRole));
       
       // USER_ROLE 6
-      tuple.getItem6().forEach(userRole -> container.putUserRoles(userRole.getId(), userRole));
+      tuple.getItem6().forEach(userRole -> container.putMemberRights(userRole.getId(), userRole));
       
       // ACTOR_STATUS 7
       tuple.getItem7().forEach(status -> container.putActorStatus(status.getId(), status));

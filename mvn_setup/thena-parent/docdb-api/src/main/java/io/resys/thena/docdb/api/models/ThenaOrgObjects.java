@@ -25,13 +25,13 @@ public interface ThenaOrgObjects extends ThenaObjects {
   // world state
   @Value.Immutable
   interface OrgProjectObjects extends ThenaOrgObjects { 
-    Map<String, OrgParty> getGroups();
-    Map<String, OrgRight> getRoles();
-    Map<String, OrgMember> getUsers();
+    Map<String, OrgParty> getParties();
+    Map<String, OrgRight> getRights();
+    Map<String, OrgMember> getMembers();
     
-    Map<String, OrgMembership> getUserMemberships();
-    Map<String, OrgPartyRight> getGroupRoles();
-    Map<String, OrgMemberRight> getUserRoles();
+    Map<String, OrgMembership> getMemberships();
+    Map<String, OrgPartyRight> getPartyRights();
+    Map<String, OrgMemberRight> getMemberRights();
     
     Map<String, OrgCommit> getCommits();
     Map<String, OrgActorData> getActorData();

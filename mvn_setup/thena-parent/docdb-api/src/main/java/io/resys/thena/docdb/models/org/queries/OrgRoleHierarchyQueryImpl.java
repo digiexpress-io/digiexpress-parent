@@ -75,7 +75,7 @@ public class OrgRoleHierarchyQueryImpl implements RightHierarchyQuery {
     final var ctx = new AnyTreeContainerContextImpl(init.getObjects());
     final var container = new AnyTreeContainerImpl(ctx);
     
-    for(final var roleCriteria : init.getObjects().getRoles().values().stream().sorted((a, b) -> a.getRightName().compareTo(b.getRightName())).toList()) {
+    for(final var roleCriteria : init.getObjects().getRights().values().stream().sorted((a, b) -> a.getRightName().compareTo(b.getRightName())).toList()) {
       final OrgRightHierarchy roleHierarchy = container.accept(new RoleHierarchyContainerVisitor(roleCriteria.getId()));
       result.add(roleHierarchy);
     }

@@ -45,7 +45,7 @@ public class AnyTreeContainerContextImpl implements OrgAnyTreeContainerContext {
     final var groupTops = new ArrayList<OrgParty>();
     final var groupBottoms = new ArrayList<OrgParty>();
     final var groupsByParentId = new LinkedHashMap<String, List<OrgParty>>();
-    final var allGroups = worldState.getGroups().values();
+    final var allGroups = worldState.getParties().values();
     
     for(final var group : allGroups) {
       if(group.getParentId() == null) {
@@ -70,7 +70,7 @@ public class AnyTreeContainerContextImpl implements OrgAnyTreeContainerContext {
     
     // group -> user roles by user id
     final var userRoles = new LinkedHashMap<String, List<OrgMemberRight>>();
-    for(final var userRole : worldState.getUserRoles().values()) {
+    for(final var userRole : worldState.getMemberRights().values()) {
       if(!userRoles.containsKey(userRole.getMemberId())) {
         userRoles.put(userRole.getMemberId(), new ArrayList<>());  
       }
@@ -79,7 +79,7 @@ public class AnyTreeContainerContextImpl implements OrgAnyTreeContainerContext {
     
     //group -> group roles by user id
     final var groupRoles = new LinkedHashMap<String, List<OrgPartyRight>>();
-    for(final var groupRole : worldState.getGroupRoles().values()) {
+    for(final var groupRole : worldState.getPartyRights().values()) {
       if(!groupRoles.containsKey(groupRole.getPartyId())) {
         groupRoles.put(groupRole.getPartyId(), new ArrayList<>());  
       }
@@ -88,7 +88,7 @@ public class AnyTreeContainerContextImpl implements OrgAnyTreeContainerContext {
 
     // group -> group memberships by group id
     final var groupMemberships = new LinkedHashMap<String, List<OrgMembership>>();
-    for(final var groupMembership : worldState.getUserMemberships().values()) {
+    for(final var groupMembership : worldState.getMemberships().values()) {
       if(!groupMemberships.containsKey(groupMembership.getPartyId())) {
         groupMemberships.put(groupMembership.getPartyId(), new ArrayList<>());  
       }
@@ -164,7 +164,7 @@ public class AnyTreeContainerContextImpl implements OrgAnyTreeContainerContext {
       var parentId = bottom.getParentId();
       final var users = new ArrayList<OrgMembership>();
       while(parentId != null) {
-        final var next = worldState.getGroups().get(parentId);
+        final var next = worldState.getParties().get(parentId);
         if(isGroupDisabledUpward(bottom)) {
           continue;
         }
@@ -197,7 +197,7 @@ public class AnyTreeContainerContextImpl implements OrgAnyTreeContainerContext {
   }
   @Override
   public OrgMember getUser(String id) {
-    return worldState.getUsers().get(id);
+    return worldState.getMembers().get(id);
   }
   @Override
   public List<OrgMemberRight> getUserRoles(String userId) {
@@ -205,7 +205,7 @@ public class AnyTreeContainerContextImpl implements OrgAnyTreeContainerContext {
   }
   @Override
   public OrgParty getGroup(String groupId) {
-    return worldState.getGroups().get(groupId);
+    return worldState.getParties().get(groupId);
   }
   @Override
   public List<OrgParty> getGroupChildren(String groupId) {
@@ -259,7 +259,7 @@ public class AnyTreeContainerContextImpl implements OrgAnyTreeContainerContext {
     }
     var parentId = group.getParentId();
     while(parentId != null) {
-      final var next = worldState.getGroups().get(parentId);      
+      final var next = worldState.getParties().get(parentId);      
       if(isStatusDisabled(getStatus(next))) {
         return true;
       }
@@ -283,11 +283,11 @@ public class AnyTreeContainerContextImpl implements OrgAnyTreeContainerContext {
 
   @Override
   public OrgRight getRole(String id) {
-    return worldState.getRoles().get(id);
+    return worldState.getRights().get(id);
   }
 
   @Override
   public Collection<OrgRight> getRoles() {
-    return worldState.getRoles().values();
+    return worldState.getRights().values();
   }
 }
