@@ -169,7 +169,7 @@ public class AnyTreeContainerContextImpl implements OrgAnyTreeContainerContext {
           continue;
         }
         groupInheritedUsers.put(next.getId(), Collections.unmodifiableList(users.stream().distinct().toList()));
-        users.addAll(getGroupMemberships(next.getId()).stream().filter(m -> !isStatusDisabled(getStatus(m))).toList());
+        users.addAll(getPartyMemberships(next.getId()).stream().filter(m -> !isStatusDisabled(getStatus(m))).toList());
         parentId = next.getParentId();
       }
     }
@@ -188,11 +188,11 @@ public class AnyTreeContainerContextImpl implements OrgAnyTreeContainerContext {
   }
   
   @Override
-  public List<OrgParty> getGroupTops() {
+  public List<OrgParty> getPartyTops() {
     return this.groupTops;
   }
   @Override
-  public List<OrgParty> getGroupBottoms() {
+  public List<OrgParty> getPartyBottoms() {
     return this.groupBottoms;
   }
   @Override
@@ -200,23 +200,23 @@ public class AnyTreeContainerContextImpl implements OrgAnyTreeContainerContext {
     return worldState.getMembers().get(id);
   }
   @Override
-  public List<OrgMemberRight> getUserRoles(String userId) {
+  public List<OrgMemberRight> getMemberRoles(String userId) {
     return Optional.ofNullable(userRoles.get(userId)).orElse(Collections.emptyList());
   }
   @Override
-  public OrgParty getGroup(String groupId) {
+  public OrgParty getParty(String groupId) {
     return worldState.getParties().get(groupId);
   }
   @Override
-  public List<OrgParty> getGroupChildren(String groupId) {
+  public List<OrgParty> getPartyChildren(String groupId) {
     return Optional.ofNullable(groupsByParentId.get(groupId)).orElse(Collections.emptyList());
   }
   @Override
-  public List<OrgMembership> getGroupMemberships(String groupId) {
+  public List<OrgMembership> getPartyMemberships(String groupId) {
     return Optional.ofNullable(groupMemberships.get(groupId)).orElse(Collections.emptyList());
   }
   @Override
-  public List<OrgPartyRight> getGroupRoles(String groupId) {
+  public List<OrgPartyRight> getPartyRights(String groupId) {
     return Optional.ofNullable(groupRoles.get(groupId)).orElse(Collections.emptyList());
   }
 
@@ -268,7 +268,7 @@ public class AnyTreeContainerContextImpl implements OrgAnyTreeContainerContext {
     return false;
   }
   @Override
-  public List<OrgMembership> getGroupInheritedUsers(String groupId) {
+  public List<OrgMembership> getPartyInheritedMembers(String groupId) {
     return Optional.ofNullable(groupInheritedUsers.get(groupId)).orElse(Collections.emptyList());
   }
   private String membershipStatusId(String groupId, String userId) {
@@ -287,7 +287,7 @@ public class AnyTreeContainerContextImpl implements OrgAnyTreeContainerContext {
   }
 
   @Override
-  public Collection<OrgRight> getRoles() {
+  public Collection<OrgRight> getRights() {
     return worldState.getRights().values();
   }
 }

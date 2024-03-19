@@ -39,7 +39,7 @@ public abstract class OrgGroupContainerVisitor<T> implements OrgAnyTreeContainer
   
   @Override
   public void start(OrgAnyTreeContainerContext worldState) {
-    for(final var top : worldState.getGroupTops()) {
+    for(final var top : worldState.getPartyTops()) {
       visitGroup(top, worldState, Collections.emptyList());
     }
   }
@@ -58,7 +58,7 @@ public abstract class OrgGroupContainerVisitor<T> implements OrgAnyTreeContainer
     }
     
     visitor.start(group, parents, isDisabledDirectly || isDisabledUpward);
-    for(final var groupRole : worldState.getGroupRoles(group.getId())) {
+    for(final var groupRole : worldState.getPartyRights(group.getId())) {
       
       final var role = worldState.getRole(groupRole.getRightId());
       final var groupRoleStatus = worldState.isStatusDisabled(worldState.getStatus(groupRole));
@@ -72,7 +72,7 @@ public abstract class OrgGroupContainerVisitor<T> implements OrgAnyTreeContainer
       visitor.visitRole(group, groupRole, role, groupRoleStatus || roleStatus);
     }
     
-    for(final var member : worldState.getGroupMemberships(group.getId())) {
+    for(final var member : worldState.getPartyMemberships(group.getId())) {
       
       final var user = worldState.getUser(member.getMemberId());
       final var memberStatus = worldState.isStatusDisabled(worldState.getStatus(member));
@@ -86,7 +86,7 @@ public abstract class OrgGroupContainerVisitor<T> implements OrgAnyTreeContainer
       visitor.visitMembership(group, member, user, isUserDisabled);
       
       
-      for(final var groupUserRole : worldState.getUserRoles(user.getId())) {
+      for(final var groupUserRole : worldState.getMemberRoles(user.getId())) {
         if(groupUserRole.getPartyId() == null) {
           continue;
         }
@@ -105,11 +105,11 @@ public abstract class OrgGroupContainerVisitor<T> implements OrgAnyTreeContainer
       }
       
     }
-    for(final var member : worldState.getGroupInheritedUsers(group.getId())) {
+    for(final var member : worldState.getPartyInheritedMembers(group.getId())) {
       final var user = worldState.getUser(member.getMemberId());
       visitor.visitMembershipWithInheritance(group, member, user, false);
       
-      for(final var groupUserRole : worldState.getUserRoles(user.getId())) {
+      for(final var groupUserRole : worldState.getMemberRoles(user.getId())) {
         if(!group.getId().equals(groupUserRole.getPartyId())) {
           continue;
         }
@@ -122,7 +122,7 @@ public abstract class OrgGroupContainerVisitor<T> implements OrgAnyTreeContainer
     }
     
     final var nextParents = ImmutableList.<OrgParty>builder().addAll(parents).add(group).build();
-    for(final var child : worldState.getGroupChildren(group.getId())) {
+    for(final var child : worldState.getPartyChildren(group.getId())) {
       visitor.visitChild(child, worldState.isStatusDisabled(worldState.getStatus(child)));
       visitGroup(child, worldState, nextParents);
     }

@@ -42,7 +42,7 @@ public class RoleHierarchyContainerVisitor extends OrgGroupContainerVisitor<OrgR
   }
   public void start(OrgAnyTreeContainerContext ctx) {
     
-    final var target = ctx.getRoles().stream()
+    final var target = ctx.getRights().stream()
     .filter(role -> {
       return roleIdOrNameOrExternalId.equals(role.getExternalId()) ||
           roleIdOrNameOrExternalId.equals(role.getRightName()) ||
@@ -54,7 +54,7 @@ public class RoleHierarchyContainerVisitor extends OrgGroupContainerVisitor<OrgR
           .append("  - tried to match by, id or name or external id: ").append(roleIdOrNameOrExternalId).append(System.lineSeparator())
           .append("  - known roles: ").append(System.lineSeparator());
       
-      for(final var role : ctx.getRoles()) {
+      for(final var role : ctx.getRights()) {
         msg
           .append("    - existing role ").append(System.lineSeparator())
           .append("      id: ").append(role.getId()).append(System.lineSeparator())
@@ -137,7 +137,7 @@ public class RoleHierarchyContainerVisitor extends OrgGroupContainerVisitor<OrgR
         return;
       }
       
-      final var disabledSpecificallyForUser = ctx.getUserRoles(user.getId()).stream()
+      final var disabledSpecificallyForUser = ctx.getMemberRoles(user.getId()).stream()
           .filter(role -> role.getRightId().equals(target.getId()))
           .filter(role -> ctx.isStatusDisabled(ctx.getStatus(role)))
           .findAny().isPresent();

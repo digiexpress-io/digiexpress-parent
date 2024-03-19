@@ -5,12 +5,12 @@ import java.util.List;
 import java.util.Optional;
 
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatus;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberRight;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMembership;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgParty;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgPartyRight;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRight;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMembership;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberRight;
 
 public interface OrgTreeContainer {
   <T> T accept(OrgAnyTreeContainerVisitor<T> visitor);
@@ -24,26 +24,26 @@ public interface OrgTreeContainer {
   interface OrgAnyTreeContainerContext {
     OrgMember getUser(String id);
     OrgRight getRole(String id);
-    Collection<OrgRight> getRoles();
-    List<OrgMemberRight> getUserRoles(String id);
+    Collection<OrgRight> getRights();
+    List<OrgMemberRight> getMemberRoles(String memberId);
     
     // Group related 
-    OrgParty getGroup(String groupId);
-    List<OrgParty> getGroupChildren(String groupId);
-    List<OrgMembership> getGroupMemberships(String groupId);
-    List<OrgPartyRight> getGroupRoles(String groupId);
-    List<OrgParty> getGroupTops();
-    List<OrgParty> getGroupBottoms();
+    OrgParty getParty(String partyId);
+    List<OrgParty> getPartyChildren(String partyId);
+    List<OrgMembership> getPartyMemberships(String partyId);
+    List<OrgPartyRight> getPartyRights(String partyId);
+    List<OrgParty> getPartyTops();
+    List<OrgParty> getPartyBottoms();
     
-    List<OrgMembership> getGroupInheritedUsers(String groupId);
+    List<OrgMembership> getPartyInheritedMembers(String partyId);
 
     // Status for all entities
-    Optional<OrgActorStatus> getStatus(OrgParty group);
+    Optional<OrgActorStatus> getStatus(OrgParty party);
     Optional<OrgActorStatus> getStatus(OrgMembership membership);
-    Optional<OrgActorStatus> getStatus(OrgMemberRight role);
-    Optional<OrgActorStatus> getStatus(OrgPartyRight role);
-    Optional<OrgActorStatus> getStatus(OrgMember user);
-    Optional<OrgActorStatus> getStatus(OrgRight role);
+    Optional<OrgActorStatus> getStatus(OrgMemberRight memberRight);
+    Optional<OrgActorStatus> getStatus(OrgPartyRight partyRight);
+    Optional<OrgActorStatus> getStatus(OrgMember member);
+    Optional<OrgActorStatus> getStatus(OrgRight right);
     boolean isStatusDisabled(Optional<OrgActorStatus> status);
     boolean isGroupDisabledUpward(OrgParty group);
   }
