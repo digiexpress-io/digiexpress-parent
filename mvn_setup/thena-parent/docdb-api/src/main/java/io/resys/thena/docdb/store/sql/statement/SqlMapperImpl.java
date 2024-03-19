@@ -344,7 +344,7 @@ public class SqlMapperImpl implements SqlMapper {
     return ImmutableOrgUserMembership.builder()
         .id(row.getString("id"))
         .commitId(row.getString("commit_id"))
-        .userId(row.getString("user_id"))
+        .userId(row.getString("member_id"))
         .groupId(row.getString("party_id"))
         .build();
 	}
@@ -365,7 +365,7 @@ public class SqlMapperImpl implements SqlMapper {
         .id(row.getString("id"))
         .commitId(row.getString("commit_id"))
         .roleId(row.getString("right_id"))
-        .userId(row.getString("user_id"))
+        .userId(row.getString("member_id"))
         .groupId(row.getString("party_id"))
         .build();
 	}
@@ -383,7 +383,7 @@ public class SqlMapperImpl implements SqlMapper {
 		  	
 		  	.groupStatusId(row.getString("status_id"))
 		  	.groupStatus(groupStatus != null ? OrgActorStatusType.valueOf(groupStatus) : null)
-		  	.groupStatusUserId(row.getString("status_user_id"))
+		  	.groupStatusUserId(row.getString("status_member_id"))
 		  	
 		  	.roleId(row.getString("right_id"))
 		  	.roleName(row.getString("role_name"))
@@ -424,7 +424,7 @@ public class SqlMapperImpl implements SqlMapper {
     return ImmutableOrgActorStatus.builder()
         .id(row.getString("id"))
         .commitId(row.getString("commit_id"))
-        .userId(row.getString("user_id"))
+        .userId(row.getString("member_id"))
         .roleId(row.getString("right_id"))
         .groupId(row.getString("party_id"))
         .value(actorStatus != null ? OrgActorStatusType.valueOf(actorStatus) : null)
