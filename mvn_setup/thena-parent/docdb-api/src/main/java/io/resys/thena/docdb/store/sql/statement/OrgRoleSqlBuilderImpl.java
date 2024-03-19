@@ -36,7 +36,7 @@ public class OrgRoleSqlBuilderImpl implements OrgRoleSqlBuilder {
       sql.append(" (")
         .append("id = $").append(index)
         .append(" OR external_id = $").append(index)
-        .append(" OR role_name = $").append(index)
+        .append(" OR right_name = $").append(index)
       .append(")");
       index++;
     }
@@ -61,7 +61,7 @@ public class OrgRoleSqlBuilderImpl implements OrgRoleSqlBuilder {
         .value(new SqlStatement()
         .append("SELECT * ").ln()
         .append("  FROM ").append(options.getOrgRights()).ln()
-        .append("  WHERE (id = $1 OR external_id = $1 OR role_name = $1)").ln() 
+        .append("  WHERE (id = $1 OR external_id = $1 OR right_name = $1)").ln() 
         .build())
         .props(Tuple.of(id))
         .build();
@@ -71,7 +71,7 @@ public class OrgRoleSqlBuilderImpl implements OrgRoleSqlBuilder {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getOrgRights())
-        .append(" (id, commit_id, external_id, role_name, role_description) VALUES($1, $2, $3, $4, $5)").ln()
+        .append(" (id, commit_id, external_id, right_name, right_description) VALUES($1, $2, $3, $4, $5)").ln()
         .build())
         .props(Tuple.from(new Object[]{ doc.getId(), doc.getCommitId(), doc.getExternalId(), doc.getRoleName(), doc.getRoleDescription() }))
         .build();
@@ -81,7 +81,7 @@ public class OrgRoleSqlBuilderImpl implements OrgRoleSqlBuilder {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("UPDATE ").append(options.getOrgRights())
-        .append(" SET external_id = $1, role_name = $2, role_description = $3, commit_id = $4")
+        .append(" SET external_id = $1, right_name = $2, right_description = $3, commit_id = $4")
         .append(" WHERE id = $5")
         .build())
         .props(Tuple.from(new Object[]{doc.getExternalId(), doc.getRoleName(), doc.getRoleDescription(), doc.getCommitId(), doc.getId()}))
@@ -92,7 +92,7 @@ public class OrgRoleSqlBuilderImpl implements OrgRoleSqlBuilder {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getOrgRights())
-        .append(" (id, commit_id, external_id, role_name, role_description) VALUES($1, $2, $3, $4, $5)").ln()
+        .append(" (id, commit_id, external_id, right_name, right_description) VALUES($1, $2, $3, $4, $5)").ln()
         .build())
         .props(users.stream()
             .map(doc -> Tuple.from(new Object[]{ doc.getId(), doc.getCommitId(), doc.getExternalId(), doc.getRoleName(), doc.getRoleDescription() }))
@@ -104,7 +104,7 @@ public class OrgRoleSqlBuilderImpl implements OrgRoleSqlBuilder {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("UPDATE ").append(options.getOrgRights())
-        .append(" SET external_id = $1, role_name = $2, role_description = $3, commit_id = $4")
+        .append(" SET external_id = $1, right_name = $2, right_description = $3, commit_id = $4")
         .append(" WHERE id = $5")
         .build())
         .props(users.stream()

@@ -368,13 +368,13 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("  id VARCHAR(40) PRIMARY KEY,").ln()
     .append("  commit_id VARCHAR(40) NOT NULL,").ln()
     .append("  external_id VARCHAR(40) UNIQUE,").ln()
-    .append("  role_name VARCHAR(255) UNIQUE NOT NULL,").ln()
-    .append("  role_description VARCHAR(255) NOT NULL").ln()
+    .append("  right_name VARCHAR(255) UNIQUE NOT NULL,").ln()
+    .append("  right_description VARCHAR(255) NOT NULL").ln()
     .append(");").ln()
     
     
     .append("CREATE INDEX ").append(options.getOrgRights()).append("_NAME_INDEX")
-    .append(" ON ").append(options.getOrgRights()).append(" (role_name);").ln()
+    .append(" ON ").append(options.getOrgRights()).append(" (right_name);").ln()
     
     .append("CREATE INDEX ").append(options.getOrgRights()).append("_COMMIT_INDEX")
     .append(" ON ").append(options.getOrgRights()).append(" (commit_id);").ln()

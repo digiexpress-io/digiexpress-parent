@@ -172,8 +172,8 @@ SELECT * FROM child;
         .append("  group_status.member_id         as status_member_id, ").ln()
 
         .append("  group_roles.right_id          as right_id, ").ln()
-        .append("  role.role_name               as role_name, ").ln()
-        .append("  role.role_description        as role_description, ").ln()
+        .append("  role.right_name               as right_name, ").ln()
+        .append("  role.right_description        as right_description, ").ln()
         .append("  right_status.actor_status     as right_status, ").ln()
         .append("  right_status.id               as right_status_id ").ln()
         
@@ -214,8 +214,8 @@ SELECT * FROM child;
         .append("  role.id                  as right_id, ").ln()
         .append("  right_status.actor_status as right_status, ").ln()
         .append("  right_status.id           as right_status_id, ").ln()
-        .append("  role.role_name           as role_name, ").ln()
-        .append("  role.role_description    as role_description ").ln()
+        .append("  role.right_name           as right_name, ").ln()
+        .append("  role.right_description    as right_description ").ln()
         
         .append("FROM ").ln()
         .append("  ").append(options.getOrgRights()).append(" as role").ln()

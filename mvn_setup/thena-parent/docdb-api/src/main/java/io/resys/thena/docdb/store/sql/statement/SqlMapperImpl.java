@@ -334,8 +334,8 @@ public class SqlMapperImpl implements SqlMapper {
     return ImmutableOrgRole.builder()
         .id(row.getString("id"))
         .externalId(row.getString("external_id"))
-        .roleName(row.getString("role_name"))
-        .roleDescription(row.getString("role_description"))
+        .roleName(row.getString("right_name"))
+        .roleDescription(row.getString("right_description"))
         .commitId(row.getString("commit_id"))
         .build();
 	}
@@ -386,8 +386,8 @@ public class SqlMapperImpl implements SqlMapper {
 		  	.groupStatusUserId(row.getString("status_member_id"))
 		  	
 		  	.roleId(row.getString("right_id"))
-		  	.roleName(row.getString("role_name"))
-        .roleDescription(row.getString("role_description"))
+		  	.roleName(row.getString("right_name"))
+        .roleDescription(row.getString("right_description"))
         
 		  	.roleStatus(roleStatus != null ? OrgActorStatusType.valueOf(roleStatus) : null)
 		  	.roleStatusId(row.getString("right_status_id"))
@@ -399,8 +399,8 @@ public class SqlMapperImpl implements SqlMapper {
     final var roleStatus = row.getString("right_status");
     return ImmutableOrgRoleFlattened.builder()
         .roleId(row.getString("right_id"))
-        .roleName(row.getString("role_name"))
-        .roleDescription(row.getString("role_description"))
+        .roleName(row.getString("right_name"))
+        .roleDescription(row.getString("right_description"))
         .roleStatus(roleStatus != null ? OrgActorStatusType.valueOf(roleStatus) : null)
         .roleStatusId(row.getString("right_status_id"))
         .build();
