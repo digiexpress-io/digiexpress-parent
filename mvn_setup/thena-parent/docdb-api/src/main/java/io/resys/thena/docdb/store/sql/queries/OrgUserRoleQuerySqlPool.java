@@ -3,7 +3,7 @@ package io.resys.thena.docdb.store.sql.queries;
 import java.util.List;
 
 import io.resys.thena.docdb.api.LogConstants;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserRole;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberRight;
 import io.resys.thena.docdb.models.org.OrgQueries;
 import io.resys.thena.docdb.store.sql.SqlBuilder;
 import io.resys.thena.docdb.store.sql.SqlMapper;
@@ -27,7 +27,7 @@ public class OrgUserRoleQuerySqlPool implements OrgQueries.UserRolesQuery {
   private final ErrorHandler errorHandler;
 
   @Override
-  public Multi<OrgUserRole> findAll() {
+  public Multi<OrgMemberRight> findAll() {
     final var sql = sqlBuilder.orgUserRoles().findAll();
     if(log.isDebugEnabled()) {
       log.debug("UserRole findAll query, with props: {} \r\n{}", 
@@ -38,12 +38,12 @@ public class OrgUserRoleQuerySqlPool implements OrgQueries.UserRolesQuery {
         .mapping(row -> sqlMapper.orgUserRole(row))
         .execute()
         .onItem()
-        .transformToMulti((RowSet<OrgUserRole> rowset) -> Multi.createFrom().iterable(rowset))
+        .transformToMulti((RowSet<OrgMemberRight> rowset) -> Multi.createFrom().iterable(rowset))
         .onFailure().invoke(e -> errorHandler.deadEnd(new SqlFailed("Can't find 'USER_ROLE'!", sql, e)));
   }
   
   @Override
-  public Multi<OrgUserRole> findAll(List<String> id) {
+  public Multi<OrgMemberRight> findAll(List<String> id) {
     final var sql = sqlBuilder.orgUserRoles().findAll(id);
     if(log.isDebugEnabled()) {
       log.debug("UserRole findAll query, with props: {} \r\n{}", 
@@ -54,12 +54,12 @@ public class OrgUserRoleQuerySqlPool implements OrgQueries.UserRolesQuery {
         .mapping(row -> sqlMapper.orgUserRole(row))
         .execute(sql.getProps())
         .onItem()
-        .transformToMulti((RowSet<OrgUserRole> rowset) -> Multi.createFrom().iterable(rowset))
+        .transformToMulti((RowSet<OrgMemberRight> rowset) -> Multi.createFrom().iterable(rowset))
         .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'USER_ROLE'!", sql, e)));
   }
 
   @Override
-  public Uni<OrgUserRole> getById(String id) {
+  public Uni<OrgMemberRight> getById(String id) {
     final var sql = sqlBuilder.orgUserRoles().getById(id);
     if(log.isDebugEnabled()) {
       log.debug("UserRole byId query, with props: {} \r\n{}", 
@@ -70,7 +70,7 @@ public class OrgUserRoleQuerySqlPool implements OrgQueries.UserRolesQuery {
         .mapping(row -> sqlMapper.orgUserRole(row))
         .execute(sql.getProps())
         .onItem()
-        .transform((RowSet<OrgUserRole> rowset) -> {
+        .transform((RowSet<OrgMemberRight> rowset) -> {
           final var it = rowset.iterator();
           if(it.hasNext()) {
             return it.next();
@@ -82,7 +82,7 @@ public class OrgUserRoleQuerySqlPool implements OrgQueries.UserRolesQuery {
   }
 
 	@Override
-	public Multi<OrgUserRole> findAllByUserId(String id) {
+	public Multi<OrgMemberRight> findAllByUserId(String id) {
     final var sql = sqlBuilder.orgUserRoles().findAllByUserId(id);
     if(log.isDebugEnabled()) {
       log.debug("UserRole findAllByUserId query, with props: {} \r\n{}", 
@@ -93,12 +93,12 @@ public class OrgUserRoleQuerySqlPool implements OrgQueries.UserRolesQuery {
         .mapping(row -> sqlMapper.orgUserRole(row))
         .execute(sql.getProps())
         .onItem()
-        .transformToMulti((RowSet<OrgUserRole> rowset) -> Multi.createFrom().iterable(rowset))
+        .transformToMulti((RowSet<OrgMemberRight> rowset) -> Multi.createFrom().iterable(rowset))
         .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'USER_ROLE'!", sql, e)));
 	}
 
 	@Override
-	public Multi<OrgUserRole> findAllByRoleId(String id) {
+	public Multi<OrgMemberRight> findAllByRoleId(String id) {
     final var sql = sqlBuilder.orgUserRoles().findAllByRoleId(id);
     if(log.isDebugEnabled()) {
       log.debug("UserRole findAllByRoleId query, with props: {} \r\n{}", 
@@ -109,7 +109,7 @@ public class OrgUserRoleQuerySqlPool implements OrgQueries.UserRolesQuery {
         .mapping(row -> sqlMapper.orgUserRole(row))
         .execute(sql.getProps())
         .onItem()
-        .transformToMulti((RowSet<OrgUserRole> rowset) -> Multi.createFrom().iterable(rowset))
+        .transformToMulti((RowSet<OrgMemberRight> rowset) -> Multi.createFrom().iterable(rowset))
         .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'USER_ROLE'!", sql, e)));
 	}
 }

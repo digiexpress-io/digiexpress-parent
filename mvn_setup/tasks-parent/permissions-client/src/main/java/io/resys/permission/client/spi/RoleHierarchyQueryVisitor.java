@@ -10,11 +10,11 @@ import io.resys.permission.client.api.model.ImmutableRoleHierarchy;
 import io.resys.permission.client.api.model.ImmutableRoleHierarchyContainer;
 import io.resys.permission.client.api.model.RoleHierarchyContainer;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroupRole;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgPartyRight;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUser;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserMembership;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserRole;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMembership;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberRight;
 import io.resys.thena.docdb.api.visitors.OrgGroupContainerVisitor;
 import io.resys.thena.docdb.api.visitors.OrgGroupContainerVisitor.GroupVisitor;
 import io.resys.thena.docdb.api.visitors.OrgTreeContainer.OrgAnyTreeContainerContext;
@@ -45,7 +45,7 @@ public class RoleHierarchyQueryVisitor extends OrgGroupContainerVisitor<RoleHier
   }
   
   @Override
-  public void visitMembershipWithInheritance(OrgGroup group, OrgUserMembership membership, OrgUser user, boolean isDisabled) {
+  public void visitMembershipWithInheritance(OrgGroup group, OrgMembership membership, OrgMember user, boolean isDisabled) {
     if(foundRoleId == null) {
       return;
     }
@@ -62,7 +62,7 @@ public class RoleHierarchyQueryVisitor extends OrgGroupContainerVisitor<RoleHier
     
   }
   @Override
-  public void visitMembership(OrgGroup group, OrgUserMembership membership, OrgUser user, boolean isDisabled) {
+  public void visitMembership(OrgGroup group, OrgMembership membership, OrgMember user, boolean isDisabled) {
     if(!principals.containsKey(user.getUserName())) {
       permissions.put(user.getUserName(), null);
     }
@@ -74,7 +74,7 @@ public class RoleHierarchyQueryVisitor extends OrgGroupContainerVisitor<RoleHier
     // TODO builder.addDirectUsers(user);
   }
   @Override
-  public void visitRole(OrgGroup group, OrgGroupRole groupRole, OrgRole role, boolean isDisabled) {
+  public void visitRole(OrgGroup group, OrgPartyRight groupRole, OrgRole role, boolean isDisabled) {
     
     if(foundRoleId == null) {
       return;
@@ -82,7 +82,7 @@ public class RoleHierarchyQueryVisitor extends OrgGroupContainerVisitor<RoleHier
     // TODO builder.addDirectRoleNames(role);    
   }
   @Override
-  public void visitRole(OrgGroup group, OrgUserRole groupRole, OrgRole role, boolean isDisabled) {
+  public void visitRole(OrgGroup group, OrgMemberRight groupRole, OrgRole role, boolean isDisabled) {
 
     
   }

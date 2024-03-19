@@ -6,11 +6,11 @@ import java.util.List;
 import com.google.common.collect.ImmutableList;
 
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroupRole;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgPartyRight;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUser;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserMembership;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserRole;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMembership;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberRight;
 import io.resys.thena.docdb.api.visitors.OrgTreeContainer.OrgAnyTreeContainerContext;
 import io.resys.thena.docdb.api.visitors.OrgTreeContainer.OrgAnyTreeContainerVisitor;
 
@@ -28,11 +28,11 @@ public abstract class OrgGroupContainerVisitor<T> implements OrgAnyTreeContainer
   public interface GroupVisitor {
     void start(OrgGroup group, List<OrgGroup> parents, boolean isDisabled);
     
-    void visitMembership(OrgGroup group, OrgUserMembership membership, OrgUser user, boolean isDisabled);
-    void visitMembershipWithInheritance(OrgGroup group, OrgUserMembership membership, OrgUser user, boolean isDisabled);
+    void visitMembership(OrgGroup group, OrgMembership membership, OrgMember user, boolean isDisabled);
+    void visitMembershipWithInheritance(OrgGroup group, OrgMembership membership, OrgMember user, boolean isDisabled);
     
-    void visitRole(OrgGroup group, OrgUserRole groupRole, OrgRole role, boolean isDisabled);
-    void visitRole(OrgGroup group, OrgGroupRole groupRole, OrgRole role, boolean isDisabled);
+    void visitRole(OrgGroup group, OrgMemberRight groupRole, OrgRole role, boolean isDisabled);
+    void visitRole(OrgGroup group, OrgPartyRight groupRole, OrgRole role, boolean isDisabled);
     void visitChild(OrgGroup group, boolean isDisabled);
     void end(OrgGroup group, List<OrgGroup> parents, boolean isDisabled);
   }

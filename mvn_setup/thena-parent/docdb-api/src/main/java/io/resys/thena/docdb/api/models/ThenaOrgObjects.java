@@ -13,11 +13,11 @@ import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatus;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatusType;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgCommit;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroupRole;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgPartyRight;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUser;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserMembership;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserRole;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMembership;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberRight;
 
 public interface ThenaOrgObjects extends ThenaObjects {
   
@@ -27,11 +27,11 @@ public interface ThenaOrgObjects extends ThenaObjects {
   interface OrgProjectObjects extends ThenaOrgObjects { 
     Map<String, OrgGroup> getGroups();
     Map<String, OrgRole> getRoles();
-    Map<String, OrgUser> getUsers();
+    Map<String, OrgMember> getUsers();
     
-    Map<String, OrgUserMembership> getUserMemberships();
-    Map<String, OrgGroupRole> getGroupRoles();
-    Map<String, OrgUserRole> getUserRoles();
+    Map<String, OrgMembership> getUserMemberships();
+    Map<String, OrgPartyRight> getGroupRoles();
+    Map<String, OrgMemberRight> getUserRoles();
     
     Map<String, OrgCommit> getCommits();
     Map<String, OrgActorData> getActorData();
@@ -74,9 +74,9 @@ public interface ThenaOrgObjects extends ThenaObjects {
     List<OrgRole> getRoleNames();  // roles that are enabled
     List<OrgRole> getDirectRoleNames();  // roles that are enabled
     
-    List<OrgUser> getDirectUsers();
-    List<OrgUser> getParenUsers();
-    List<OrgUser> getChildUsers();
+    List<OrgMember> getDirectUsers();
+    List<OrgMember> getParenUsers();
+    List<OrgMember> getChildUsers();
     
     List<OrgGroup> getParentGroups();
     List<OrgGroup> getChildGroups();
@@ -93,8 +93,8 @@ public interface ThenaOrgObjects extends ThenaObjects {
     
     String getLog();
     
-    List<OrgUser> getDirectUsers();
-    List<OrgUser> getChildUsers();
+    List<OrgMember> getDirectUsers();
+    List<OrgMember> getChildUsers();
     
     List<OrgGroup> getDirectGroup();
     List<OrgGroup> getChildGroup();

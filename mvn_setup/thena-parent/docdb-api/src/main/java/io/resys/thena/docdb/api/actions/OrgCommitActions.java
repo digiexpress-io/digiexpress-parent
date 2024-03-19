@@ -12,7 +12,7 @@ import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.ThenaEnvelope;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUser;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
 import io.smallrye.mutiny.Uni;
 
 public interface OrgCommitActions {
@@ -147,7 +147,7 @@ public interface OrgCommitActions {
     Repo.CommitResultStatus getStatus();
     List<Message> getMessages();
     
-    @Nullable OrgUser getUser();
+    @Nullable OrgMember getUser();
   }
   
   @Value.Immutable

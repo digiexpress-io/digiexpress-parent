@@ -98,7 +98,7 @@ public interface ThenaOrgObject {
   
 
   @Value.Immutable
-  interface OrgUser extends ThenaOrgObject, ThenaObjects, IsOrgObject, IsOrgVersionObject {
+  interface OrgMember extends ThenaOrgObject, ThenaObjects, IsOrgObject, IsOrgVersionObject {
     String getId();
     String getCommitId();
     @Nullable String getExternalId();
@@ -110,7 +110,7 @@ public interface ThenaOrgObject {
   
 
   @Value.Immutable
-  interface OrgUserMembership extends ThenaOrgObject, IsOrgObject {
+  interface OrgMembership extends ThenaOrgObject, IsOrgObject {
     String getId();
     String getUserId();
     String getGroupId();
@@ -121,7 +121,7 @@ public interface ThenaOrgObject {
   
   
   @Value.Immutable
-  interface OrgGroupRole extends ThenaOrgObject, IsOrgObject {
+  interface OrgPartyRight extends ThenaOrgObject, IsOrgObject {
     String getId();
     String getCommitId();
     String getGroupId();
@@ -131,7 +131,7 @@ public interface ThenaOrgObject {
   }
   
   @Value.Immutable
-  interface OrgUserRole extends ThenaOrgObject, IsOrgObject {
+  interface OrgMemberRight extends ThenaOrgObject, IsOrgObject {
     String getId();
     String getCommitId();
     String getUserId();
@@ -199,7 +199,7 @@ public interface ThenaOrgObject {
     OrgLockStatus getStatus();
     Optional<OrgGroup> getGroup();
     Optional<OrgRole> getRole();
-    Optional<OrgUser> getUser();
+    Optional<OrgMember> getUser();
     Optional<OrgActorStatus> getActorStatus();
     Optional<String> getMessage();
   }

@@ -3,7 +3,7 @@ package io.resys.thena.docdb.store.sql.queries;
 import java.util.List;
 
 import io.resys.thena.docdb.api.LogConstants;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserMembership;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMembership;
 import io.resys.thena.docdb.models.org.OrgQueries;
 import io.resys.thena.docdb.store.sql.SqlBuilder;
 import io.resys.thena.docdb.store.sql.SqlMapper;
@@ -27,7 +27,7 @@ public class OrgUserMembershipsQuerySqlPool implements OrgQueries.UserMembership
   private final ErrorHandler errorHandler;
 
   @Override
-  public Multi<OrgUserMembership> findAll() {
+  public Multi<OrgMembership> findAll() {
     final var sql = sqlBuilder.orgUserMemberships().findAll();
     if(log.isDebugEnabled()) {
       log.debug("UserMembership findAll query, with props: {} \r\n{}", 
@@ -38,12 +38,12 @@ public class OrgUserMembershipsQuerySqlPool implements OrgQueries.UserMembership
         .mapping(row -> sqlMapper.orgUserMemberships(row))
         .execute()
         .onItem()
-        .transformToMulti((RowSet<OrgUserMembership> rowset) -> Multi.createFrom().iterable(rowset))
+        .transformToMulti((RowSet<OrgMembership> rowset) -> Multi.createFrom().iterable(rowset))
         .onFailure().invoke(e -> errorHandler.deadEnd(new SqlFailed("Can't find 'USER_MEMBERSHIP'!", sql, e)));
   }
   
   @Override
-  public Multi<OrgUserMembership> findAll(List<String> id) {
+  public Multi<OrgMembership> findAll(List<String> id) {
     final var sql = sqlBuilder.orgUserMemberships().findAll(id);
     if(log.isDebugEnabled()) {
       log.debug("UserMembership findAll query, with props: {} \r\n{}", 
@@ -54,12 +54,12 @@ public class OrgUserMembershipsQuerySqlPool implements OrgQueries.UserMembership
         .mapping(row -> sqlMapper.orgUserMemberships(row))
         .execute(sql.getProps())
         .onItem()
-        .transformToMulti((RowSet<OrgUserMembership> rowset) -> Multi.createFrom().iterable(rowset))
+        .transformToMulti((RowSet<OrgMembership> rowset) -> Multi.createFrom().iterable(rowset))
         .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'USER_MEMBERSHIP'!", sql, e)));
   }
 
   @Override
-  public Uni<OrgUserMembership> getById(String id) {
+  public Uni<OrgMembership> getById(String id) {
     final var sql = sqlBuilder.orgUserMemberships().getById(id);
     if(log.isDebugEnabled()) {
       log.debug("UserMembership byId query, with props: {} \r\n{}", 
@@ -70,7 +70,7 @@ public class OrgUserMembershipsQuerySqlPool implements OrgQueries.UserMembership
         .mapping(row -> sqlMapper.orgUserMemberships(row))
         .execute(sql.getProps())
         .onItem()
-        .transform((RowSet<OrgUserMembership> rowset) -> {
+        .transform((RowSet<OrgMembership> rowset) -> {
           final var it = rowset.iterator();
           if(it.hasNext()) {
             return it.next();
@@ -82,7 +82,7 @@ public class OrgUserMembershipsQuerySqlPool implements OrgQueries.UserMembership
   }
 
 	@Override
-	public Multi<OrgUserMembership> findAllByGroupId(String id) {
+	public Multi<OrgMembership> findAllByGroupId(String id) {
     final var sql = sqlBuilder.orgUserMemberships().findAllByGroupId(id);
     if(log.isDebugEnabled()) {
       log.debug("UserMembership findAllByGroupId query, with props: {} \r\n{}", 
@@ -93,12 +93,12 @@ public class OrgUserMembershipsQuerySqlPool implements OrgQueries.UserMembership
         .mapping(row -> sqlMapper.orgUserMemberships(row))
         .execute(sql.getProps())
         .onItem()
-        .transformToMulti((RowSet<OrgUserMembership> rowset) -> Multi.createFrom().iterable(rowset))
+        .transformToMulti((RowSet<OrgMembership> rowset) -> Multi.createFrom().iterable(rowset))
         .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'USER_MEMBERSHIP'!", sql, e)));
 	}
 
 	@Override
-	public Multi<OrgUserMembership> findAllByUserId(String id) {
+	public Multi<OrgMembership> findAllByUserId(String id) {
     final var sql = sqlBuilder.orgUserMemberships().findAllByUserId(id);
     if(log.isDebugEnabled()) {
       log.debug("UserMembership findAllByUserId query, with props: {} \r\n{}", 
@@ -109,7 +109,7 @@ public class OrgUserMembershipsQuerySqlPool implements OrgQueries.UserMembership
         .mapping(row -> sqlMapper.orgUserMemberships(row))
         .execute(sql.getProps())
         .onItem()
-        .transformToMulti((RowSet<OrgUserMembership> rowset) -> Multi.createFrom().iterable(rowset))
+        .transformToMulti((RowSet<OrgMembership> rowset) -> Multi.createFrom().iterable(rowset))
         .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'USER_MEMBERSHIP'!", sql, e)));
 	}
 }

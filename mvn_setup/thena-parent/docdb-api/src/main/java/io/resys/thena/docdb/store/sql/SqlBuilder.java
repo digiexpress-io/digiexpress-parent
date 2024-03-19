@@ -44,11 +44,11 @@ import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatus;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgCommit;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgCommitTree;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroupRole;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgPartyRight;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUser;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserMembership;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserRole;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMembership;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberRight;
 import io.resys.thena.docdb.models.doc.DocQueries.DocBranchLockCriteria;
 import io.resys.thena.docdb.models.doc.DocQueries.DocLockCriteria;
 import io.resys.thena.docdb.models.doc.DocQueries.FlattedCriteria;
@@ -103,10 +103,10 @@ public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
     
     Sql findAll();
     SqlTuple findAll(List<String> id);
-    SqlTuple insertOne(OrgUser user);
-    SqlTupleList insertAll(Collection<OrgUser> users);
-    SqlTuple updateOne(OrgUser user);
-    SqlTupleList updateMany(Collection<OrgUser> users);
+    SqlTuple insertOne(OrgMember user);
+    SqlTupleList insertAll(Collection<OrgMember> users);
+    SqlTuple updateOne(OrgMember user);
+    SqlTupleList updateMany(Collection<OrgMember> users);
   }
   
   interface OrgActorStatusSqlBuilder {
@@ -136,8 +136,8 @@ public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
     SqlTuple findAllByRoleId(String userId);
     Sql findAll();
     SqlTuple findAll(List<String> id);
-    SqlTuple insertOne(OrgUserRole role);
-    SqlTupleList insertAll(Collection<OrgUserRole> roles);
+    SqlTuple insertOne(OrgMemberRight role);
+    SqlTupleList insertAll(Collection<OrgMemberRight> roles);
   }
   
   interface OrgGroupRoleSqlBuilder {
@@ -147,8 +147,8 @@ public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
     SqlTuple findAll(List<String> id);
     Sql findAll();
     
-    SqlTuple insertOne(OrgGroupRole role);
-    SqlTupleList insertAll(Collection<OrgGroupRole> roles);
+    SqlTuple insertOne(OrgPartyRight role);
+    SqlTupleList insertAll(Collection<OrgPartyRight> roles);
   }
   
   
@@ -169,8 +169,8 @@ public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
     SqlTuple getById(String id); 
     SqlTuple findAllByGroupId(String groupId);
     SqlTuple findAllByUserId(String userId);
-    SqlTuple insertOne(OrgUserMembership membership);
-    SqlTupleList insertAll(Collection<OrgUserMembership> memberships);
+    SqlTuple insertOne(OrgMembership membership);
+    SqlTupleList insertAll(Collection<OrgMembership> memberships);
   }
 
   interface OrgCommitSqlBuilder {

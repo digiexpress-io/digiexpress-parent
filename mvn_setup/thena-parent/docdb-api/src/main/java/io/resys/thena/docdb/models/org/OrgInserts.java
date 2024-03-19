@@ -30,11 +30,11 @@ import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorData;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatus;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgCommit;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroupRole;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgPartyRight;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUser;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserMembership;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserRole;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMembership;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberRight;
 import io.resys.thena.docdb.models.git.GitInserts.BatchStatus;
 import io.smallrye.mutiny.Uni;
 
@@ -51,10 +51,10 @@ public interface OrgInserts {
     List<OrgActorStatus> getActorStatus();
     List<OrgGroup> getGroups();
     List<OrgRole> getRoles();
-    List<OrgUser> getUsers();
-    List<OrgGroupRole> getGroupRoles();
-    List<OrgUserRole> getUserRoles();
-    List<OrgUserMembership> getUserMemberships(); 
+    List<OrgMember> getUsers();
+    List<OrgPartyRight> getGroupRoles();
+    List<OrgMemberRight> getUserRoles();
+    List<OrgMembership> getUserMemberships(); 
     
     List<String> getIdentifiersForUpdates();
     

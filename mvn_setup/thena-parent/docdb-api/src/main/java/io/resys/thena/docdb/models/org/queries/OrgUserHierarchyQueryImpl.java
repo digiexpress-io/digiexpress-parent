@@ -14,7 +14,7 @@ import io.resys.thena.docdb.api.models.QueryEnvelopeList;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.ThenaEnvelope;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRoleFlattened;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUser;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserFlattened;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserHierarchyEntry;
 import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgUserHierarchy;
@@ -64,7 +64,7 @@ public class OrgUserHierarchyQueryImpl implements UserHierarchyQuery {
       }
       
       final var state = this.state.toOrgState().query(existing);
-      final Multi<OrgUser> users = state.users().findAll();
+      final Multi<OrgMember> users = state.users().findAll();
       final Multi<QueryEnvelope<OrgUserHierarchy>> userAndGroups = users.onItem().transformToUni(user -> getUser(state, existing, user.getId())).merge();
       return userAndGroups.collect().asList().onItem().transform(this::createUsersResult);
     });

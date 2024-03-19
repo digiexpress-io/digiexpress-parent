@@ -11,11 +11,11 @@ import java.util.Optional;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatus;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatusType;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroupRole;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgPartyRight;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUser;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserMembership;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserRole;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMembership;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberRight;
 import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgProjectObjects;
 import io.resys.thena.docdb.api.visitors.OrgTreeContainer.OrgAnyTreeContainerContext;
 
@@ -25,10 +25,10 @@ public class AnyTreeContainerContextImpl implements OrgAnyTreeContainerContext {
   private final List<OrgGroup> groupTops;
   private final List<OrgGroup> groupBottoms;
   private final Map<String, List<OrgGroup>> groupsByParentId;
-  private final Map<String, List<OrgUserRole>> userRoles;
-  private final Map<String, List<OrgUserMembership>> groupMemberships;
-  private final Map<String, List<OrgGroupRole>> groupRoles;
-  private final Map<String, List<OrgUserMembership>> groupInheritedUsers;
+  private final Map<String, List<OrgMemberRight>> userRoles;
+  private final Map<String, List<OrgMembership>> groupMemberships;
+  private final Map<String, List<OrgPartyRight>> groupRoles;
+  private final Map<String, List<OrgMembership>> groupInheritedUsers;
   
   private final Map<String, OrgActorStatus> userStatus;
   private final Map<String, OrgActorStatus> groupStatus;
@@ -69,7 +69,7 @@ public class AnyTreeContainerContextImpl implements OrgAnyTreeContainerContext {
     }
     
     // group -> user roles by user id
-    final var userRoles = new LinkedHashMap<String, List<OrgUserRole>>();
+    final var userRoles = new LinkedHashMap<String, List<OrgMemberRight>>();
     for(final var userRole : worldState.getUserRoles().values()) {
       if(!userRoles.containsKey(userRole.getUserId())) {
         userRoles.put(userRole.getUserId(), new ArrayList<>());  
@@ -78,7 +78,7 @@ public class AnyTreeContainerContextImpl implements OrgAnyTreeContainerContext {
     }
     
     //group -> group roles by user id
-    final var groupRoles = new LinkedHashMap<String, List<OrgGroupRole>>();
+    final var groupRoles = new LinkedHashMap<String, List<OrgPartyRight>>();
     for(final var groupRole : worldState.getGroupRoles().values()) {
       if(!groupRoles.containsKey(groupRole.getGroupId())) {
         groupRoles.put(groupRole.getGroupId(), new ArrayList<>());  
@@ -87,7 +87,7 @@ public class AnyTreeContainerContextImpl implements OrgAnyTreeContainerContext {
     }
 
     // group -> group memberships by group id
-    final var groupMemberships = new LinkedHashMap<String, List<OrgUserMembership>>();
+    final var groupMemberships = new LinkedHashMap<String, List<OrgMembership>>();
     for(final var groupMembership : worldState.getUserMemberships().values()) {
       if(!groupMemberships.containsKey(groupMembership.getGroupId())) {
         groupMemberships.put(groupMembership.getGroupId(), new ArrayList<>());  
@@ -155,14 +155,14 @@ public class AnyTreeContainerContextImpl implements OrgAnyTreeContainerContext {
     this.membershipStatus = Collections.unmodifiableMap(membershipStatus);
     
     // inheritance
-    final var groupInheritedUsers = new LinkedHashMap<String, List<OrgUserMembership>>();
+    final var groupInheritedUsers = new LinkedHashMap<String, List<OrgMembership>>();
     
     for(final var bottom : groupBottoms) {
       if(isGroupDisabledUpward(bottom)) {
         continue;
       }
       var parentId = bottom.getParentId();
-      final var users = new ArrayList<OrgUserMembership>();
+      final var users = new ArrayList<OrgMembership>();
       while(parentId != null) {
         final var next = worldState.getGroups().get(parentId);
         if(isGroupDisabledUpward(bottom)) {
@@ -196,11 +196,11 @@ public class AnyTreeContainerContextImpl implements OrgAnyTreeContainerContext {
     return this.groupBottoms;
   }
   @Override
-  public OrgUser getUser(String id) {
+  public OrgMember getUser(String id) {
     return worldState.getUsers().get(id);
   }
   @Override
-  public List<OrgUserRole> getUserRoles(String userId) {
+  public List<OrgMemberRight> getUserRoles(String userId) {
     return Optional.ofNullable(userRoles.get(userId)).orElse(Collections.emptyList());
   }
   @Override
@@ -212,11 +212,11 @@ public class AnyTreeContainerContextImpl implements OrgAnyTreeContainerContext {
     return Optional.ofNullable(groupsByParentId.get(groupId)).orElse(Collections.emptyList());
   }
   @Override
-  public List<OrgUserMembership> getGroupMemberships(String groupId) {
+  public List<OrgMembership> getGroupMemberships(String groupId) {
     return Optional.ofNullable(groupMemberships.get(groupId)).orElse(Collections.emptyList());
   }
   @Override
-  public List<OrgGroupRole> getGroupRoles(String groupId) {
+  public List<OrgPartyRight> getGroupRoles(String groupId) {
     return Optional.ofNullable(groupRoles.get(groupId)).orElse(Collections.emptyList());
   }
 
@@ -226,19 +226,19 @@ public class AnyTreeContainerContextImpl implements OrgAnyTreeContainerContext {
     return Optional.ofNullable(groupStatus.get(group.getId()));
   }
   @Override
-  public Optional<OrgActorStatus> getStatus(OrgUserMembership membership) {
+  public Optional<OrgActorStatus> getStatus(OrgMembership membership) {
     return Optional.ofNullable(membershipStatus.get(membershipStatusId(membership.getGroupId(), membership.getUserId())));
   }
   @Override
-  public Optional<OrgActorStatus> getStatus(OrgUserRole role) {
+  public Optional<OrgActorStatus> getStatus(OrgMemberRight role) {
     return Optional.ofNullable(userRoleStatus.get(userRoleStatusId(role.getUserId(), role.getRoleId())));
   }
   @Override
-  public Optional<OrgActorStatus> getStatus(OrgGroupRole role) {
+  public Optional<OrgActorStatus> getStatus(OrgPartyRight role) {
     return Optional.ofNullable(groupRoleStatus.get(groupRoleStatusId(role.getGroupId(), role.getRoleId())));
   }
   @Override
-  public Optional<OrgActorStatus> getStatus(OrgUser user) {
+  public Optional<OrgActorStatus> getStatus(OrgMember user) {
     return Optional.ofNullable(userStatus.get(user.getId()));
   }
   @Override
@@ -268,7 +268,7 @@ public class AnyTreeContainerContextImpl implements OrgAnyTreeContainerContext {
     return false;
   }
   @Override
-  public List<OrgUserMembership> getGroupInheritedUsers(String groupId) {
+  public List<OrgMembership> getGroupInheritedUsers(String groupId) {
     return Optional.ofNullable(groupInheritedUsers.get(groupId)).orElse(Collections.emptyList());
   }
   private String membershipStatusId(String groupId, String userId) {

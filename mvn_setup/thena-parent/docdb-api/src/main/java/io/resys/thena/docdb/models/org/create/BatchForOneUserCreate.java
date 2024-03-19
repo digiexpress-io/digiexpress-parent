@@ -8,16 +8,16 @@ import java.util.Map;
 import io.resys.thena.docdb.api.models.ImmutableMessage;
 import io.resys.thena.docdb.api.models.ImmutableOrgCommit;
 import io.resys.thena.docdb.api.models.ImmutableOrgCommitTree;
-import io.resys.thena.docdb.api.models.ImmutableOrgUser;
-import io.resys.thena.docdb.api.models.ImmutableOrgUserMembership;
-import io.resys.thena.docdb.api.models.ImmutableOrgUserRole;
+import io.resys.thena.docdb.api.models.ImmutableOrgMember;
+import io.resys.thena.docdb.api.models.ImmutableOrgMembership;
+import io.resys.thena.docdb.api.models.ImmutableOrgMemberRight;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.IsOrgObject;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgCommitTree;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgOperationType;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserMembership;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserRole;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMembership;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberRight;
 import io.resys.thena.docdb.models.git.GitInserts.BatchStatus;
 import io.resys.thena.docdb.models.org.ImmutableOrgBatchForOne;
 import io.resys.thena.docdb.support.OidUtils;
@@ -61,7 +61,7 @@ public class BatchForOneUserCreate {
     final var createdAt = OffsetDateTime.now();
     final var tree = new ArrayList<OrgCommitTree>();
     
-    final var user = ImmutableOrgUser.builder()
+    final var user = ImmutableOrgMember.builder()
       .id(OidUtils.gen())
       .commitId(commitId)
       .externalId(externalId)
@@ -71,9 +71,9 @@ public class BatchForOneUserCreate {
     tree.add(addToTree(commitId, user));
     
     
-    final var memberships = new ArrayList<OrgUserMembership>();
+    final var memberships = new ArrayList<OrgMembership>();
     for(final var group : this.addToGroups) {
-      final var membership = ImmutableOrgUserMembership.builder()
+      final var membership = ImmutableOrgMembership.builder()
           .id(OidUtils.gen())
           .groupId(group.getId())
           .userId(user.getId())
@@ -83,9 +83,9 @@ public class BatchForOneUserCreate {
       memberships.add(membership);
     }
     
-    final var userRoles = new ArrayList<OrgUserRole>();
+    final var userRoles = new ArrayList<OrgMemberRight>();
     for(final var role : this.addToRoles) {
-      final var userRole = ImmutableOrgUserRole.builder()
+      final var userRole = ImmutableOrgMemberRight.builder()
           .id(OidUtils.gen())
           .userId(user.getId())
           .roleId(role.getId())
@@ -96,7 +96,7 @@ public class BatchForOneUserCreate {
     }
     for(final var entry : this.addUserToGroupRoles.entrySet()) {
       for(final var role : entry.getValue()) {
-        final var userRole = ImmutableOrgUserRole.builder()
+        final var userRole = ImmutableOrgMemberRight.builder()
             .id(OidUtils.gen())
             .userId(user.getId())
             .roleId(role.getId())

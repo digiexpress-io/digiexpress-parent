@@ -19,7 +19,7 @@ import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.Repo.RepoType;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUser;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
 import io.resys.thena.docdb.test.config.DbTestTemplate;
 import io.resys.thena.docdb.test.config.PgProfile;
 import lombok.extern.slf4j.Slf4j;
@@ -199,7 +199,7 @@ group-2 <= you are here
   }
 
   
-  private OrgUser createUser(String userName, RepoResult repo, List<OrgGroup> groups, List<OrgRole> roles) {
+  private OrgMember createUser(String userName, RepoResult repo, List<OrgGroup> groups, List<OrgRole> roles) {
     return getClient().org().commit().createOneUser()
         .repoId(repo.getRepo().getId())
         .addUserToGroups(groups.stream().map(group -> group.getId()).toList())

@@ -11,7 +11,7 @@ import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.docdb.api.models.QueryEnvelopeList;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.ThenaEnvelope;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUser;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
 import io.resys.thena.docdb.models.org.OrgQueries;
 import io.resys.thena.docdb.spi.DbState;
 import io.resys.thena.docdb.support.RepoAssert;
@@ -32,7 +32,7 @@ public class OrgUserObjectsQueryImpl implements UserObjectsQuery {
     return this;
   }
   @Override
-  public Uni<QueryEnvelope<OrgUser>> get(String userId) {
+  public Uni<QueryEnvelope<OrgMember>> get(String userId) {
     RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
 
     return state.project().getByNameOrId(repoId)
@@ -52,7 +52,7 @@ public class OrgUserObjectsQueryImpl implements UserObjectsQuery {
   }
  
   @Override
-  public Uni<QueryEnvelopeList<OrgUser>> findAll() {
+  public Uni<QueryEnvelopeList<OrgMember>> findAll() {
     RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
     return state.project().getByNameOrId(repoId)
     .onItem().transformToUni((Repo existing) -> {
@@ -65,16 +65,16 @@ public class OrgUserObjectsQueryImpl implements UserObjectsQuery {
     });
   }
   
-  private Uni<QueryEnvelope<OrgUser>> getUserObject(Repo existing, OrgUser user) {
-    return Uni.createFrom().item(ImmutableQueryEnvelope.<OrgUser>builder()
+  private Uni<QueryEnvelope<OrgMember>> getUserObject(Repo existing, OrgMember user) {
+    return Uni.createFrom().item(ImmutableQueryEnvelope.<OrgMember>builder()
         .repo(existing)
         .status(QueryEnvelopeStatus.OK)
         .objects(user)
         .build());
   }  
-  private Uni<QueryEnvelopeList<OrgUser>> getUserObjects(Repo existing, List<OrgUser> users) {
+  private Uni<QueryEnvelopeList<OrgMember>> getUserObjects(Repo existing, List<OrgMember> users) {
     
-    return Uni.createFrom().item(ImmutableQueryEnvelopeList.<OrgUser>builder()
+    return Uni.createFrom().item(ImmutableQueryEnvelopeList.<OrgMember>builder()
         .repo(existing)
         .status(QueryEnvelopeStatus.OK)
         .objects(users)

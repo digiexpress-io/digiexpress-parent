@@ -10,7 +10,7 @@ import io.resys.thena.docdb.api.actions.OrgCommitActions.CreateOneGroup;
 import io.resys.thena.docdb.api.actions.OrgCommitActions.OneGroupEnvelope;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUser;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
 import io.resys.thena.docdb.models.org.OrgInserts.OrgBatchForOne;
 import io.resys.thena.docdb.models.org.OrgState.OrgRepo;
 import io.resys.thena.docdb.spi.DataMapper;
@@ -61,7 +61,7 @@ public class CreateOneGroupImpl implements CreateOneGroup {
   
   private Uni<OneGroupEnvelope> doInTx(OrgRepo tx) {
 		// find users
-		final Uni<List<OrgUser>> usersUni = this.addUsersToGroup.isEmpty() ? 
+		final Uni<List<OrgMember>> usersUni = this.addUsersToGroup.isEmpty() ? 
 			Uni.createFrom().item(Collections.emptyList()) : 
 			tx.query().users().findAll(addUsersToGroup).collect().asList();
 		
@@ -86,7 +86,7 @@ public class CreateOneGroupImpl implements CreateOneGroup {
 		);
   }
 
-  private Uni<OneGroupEnvelope> createGroup(OrgRepo tx, List<OrgUser> users, List<OrgRole> roles, Optional<OrgGroup> parent) {
+  private Uni<OneGroupEnvelope> createGroup(OrgRepo tx, List<OrgMember> users, List<OrgRole> roles, Optional<OrgGroup> parent) {
     final OrgBatchForOne batch = new BatchForOneGroupCreate(tx.getRepo().getId(), author, message)
         .externalId(externalId)
         .users(users)

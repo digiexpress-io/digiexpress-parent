@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUser;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
 import io.resys.thena.docdb.spi.DbCollections;
 import io.resys.thena.docdb.store.sql.ImmutableSql;
 import io.resys.thena.docdb.store.sql.ImmutableSqlTuple;
@@ -67,7 +67,7 @@ public class OrgUserSqlBuilderImpl implements OrgUserSqlBuilder {
         .build();
   }
   @Override
-  public SqlTuple insertOne(OrgUser doc) {
+  public SqlTuple insertOne(OrgMember doc) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getOrgMembers())
@@ -77,7 +77,7 @@ public class OrgUserSqlBuilderImpl implements OrgUserSqlBuilder {
         .build();
   }
   @Override
-  public SqlTuple updateOne(OrgUser doc) {
+  public SqlTuple updateOne(OrgMember doc) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("UPDATE ").append(options.getOrgMembers())
@@ -88,7 +88,7 @@ public class OrgUserSqlBuilderImpl implements OrgUserSqlBuilder {
         .build();
   }
   @Override
-  public SqlTupleList insertAll(Collection<OrgUser> users) {
+  public SqlTupleList insertAll(Collection<OrgMember> users) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getOrgMembers())
@@ -100,7 +100,7 @@ public class OrgUserSqlBuilderImpl implements OrgUserSqlBuilder {
         .build();
   }
   @Override
-  public SqlTupleList updateMany(Collection<OrgUser> users) {
+  public SqlTupleList updateMany(Collection<OrgMember> users) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("UPDATE ").append(options.getOrgMembers())

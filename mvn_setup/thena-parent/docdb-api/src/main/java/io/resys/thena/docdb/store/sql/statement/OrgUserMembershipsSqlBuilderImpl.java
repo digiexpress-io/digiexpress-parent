@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserMembership;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMembership;
 import io.resys.thena.docdb.spi.DbCollections;
 import io.resys.thena.docdb.store.sql.ImmutableSql;
 import io.resys.thena.docdb.store.sql.ImmutableSqlTuple;
@@ -88,7 +88,7 @@ public class OrgUserMembershipsSqlBuilderImpl implements OrgUserMembershipsSqlBu
         .build();
 	}
   @Override
-  public SqlTuple insertOne(OrgUserMembership doc) {
+  public SqlTuple insertOne(OrgMembership doc) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getOrgMemberships())
@@ -98,7 +98,7 @@ public class OrgUserMembershipsSqlBuilderImpl implements OrgUserMembershipsSqlBu
         .build();
   }
   @Override
-  public SqlTupleList insertAll(Collection<OrgUserMembership> users) {
+  public SqlTupleList insertAll(Collection<OrgMembership> users) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getOrgMemberships())

@@ -5,7 +5,7 @@ import java.util.List;
 import io.resys.thena.docdb.api.LogConstants;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserHierarchyEntry;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRoleFlattened;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUser;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserFlattened;
 import io.resys.thena.docdb.models.org.OrgQueries;
 import io.resys.thena.docdb.store.sql.SqlBuilder;
@@ -30,7 +30,7 @@ public class OrgUserQuerySqlPool implements OrgQueries.UserQuery {
   private final ErrorHandler errorHandler;
 
   @Override
-  public Multi<OrgUser> findAll() {
+  public Multi<OrgMember> findAll() {
     final var sql = sqlBuilder.orgUsers().findAll();
     if(log.isDebugEnabled()) {
       log.debug("User findAll query, with props: {} \r\n{}", 
@@ -41,12 +41,12 @@ public class OrgUserQuerySqlPool implements OrgQueries.UserQuery {
         .mapping(row -> sqlMapper.orgUser(row))
         .execute()
         .onItem()
-        .transformToMulti((RowSet<OrgUser> rowset) -> Multi.createFrom().iterable(rowset))
+        .transformToMulti((RowSet<OrgMember> rowset) -> Multi.createFrom().iterable(rowset))
         .onFailure().invoke(e -> errorHandler.deadEnd(new SqlFailed("Can't find 'USER'!", sql, e)));
   }
   
   @Override
-  public Multi<OrgUser> findAll(List<String> id) {
+  public Multi<OrgMember> findAll(List<String> id) {
     final var sql = sqlBuilder.orgUsers().findAll(id);
     if(log.isDebugEnabled()) {
       log.debug("User findAll query, with props: {} \r\n{}", 
@@ -57,13 +57,13 @@ public class OrgUserQuerySqlPool implements OrgQueries.UserQuery {
         .mapping(row -> sqlMapper.orgUser(row))
         .execute(sql.getProps())
         .onItem()
-        .transformToMulti((RowSet<OrgUser> rowset) -> Multi.createFrom().iterable(rowset))
+        .transformToMulti((RowSet<OrgMember> rowset) -> Multi.createFrom().iterable(rowset))
         .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'USER'!", sql, e)));
   }
 
 
   @Override
-  public Uni<OrgUser> getById(String id) {
+  public Uni<OrgMember> getById(String id) {
     final var sql = sqlBuilder.orgUsers().getById(id);
     if(log.isDebugEnabled()) {
       log.debug("User byId query, with props: {} \r\n{}", 
@@ -74,7 +74,7 @@ public class OrgUserQuerySqlPool implements OrgQueries.UserQuery {
         .mapping(row -> sqlMapper.orgUser(row))
         .execute(sql.getProps())
         .onItem()
-        .transform((RowSet<OrgUser> rowset) -> {
+        .transform((RowSet<OrgMember> rowset) -> {
           final var it = rowset.iterator();
           if(it.hasNext()) {
             return it.next();

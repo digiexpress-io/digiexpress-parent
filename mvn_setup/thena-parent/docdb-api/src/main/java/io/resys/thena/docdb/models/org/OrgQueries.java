@@ -6,14 +6,14 @@ import java.util.List;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatus;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgCommit;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroupRole;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgPartyRight;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRoleFlattened;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUser;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserFlattened;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserHierarchyEntry;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserMembership;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserRole;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMembership;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberRight;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 
@@ -34,28 +34,28 @@ public interface OrgQueries {
 
   }
   interface UserRolesQuery {
-    Uni<OrgUserRole> getById(String id);
-    Multi<OrgUserRole> findAll();
-    Multi<OrgUserRole> findAll(List<String> id);
-    Multi<OrgUserRole> findAllByUserId(String id);
-    Multi<OrgUserRole> findAllByRoleId(String id);
+    Uni<OrgMemberRight> getById(String id);
+    Multi<OrgMemberRight> findAll();
+    Multi<OrgMemberRight> findAll(List<String> id);
+    Multi<OrgMemberRight> findAllByUserId(String id);
+    Multi<OrgMemberRight> findAllByRoleId(String id);
   }
     
   interface GroupRolesQuery {
-    Uni<OrgGroupRole> getById(String id);
-    Multi<OrgGroupRole> findAll();
-    Multi<OrgGroupRole> findAll(List<String> id);
-    Multi<OrgGroupRole> findAllByGroupId(String id);
-    Multi<OrgGroupRole> findAllByRoleId(String id);
+    Uni<OrgPartyRight> getById(String id);
+    Multi<OrgPartyRight> findAll();
+    Multi<OrgPartyRight> findAll(List<String> id);
+    Multi<OrgPartyRight> findAllByGroupId(String id);
+    Multi<OrgPartyRight> findAllByRoleId(String id);
   }
   
   
   interface UserMembershipQuery {
-    Multi<OrgUserMembership> findAll();
-    Multi<OrgUserMembership> findAll(List<String> id);
-    Multi<OrgUserMembership> findAllByGroupId(String id);
-    Multi<OrgUserMembership> findAllByUserId(String id);
-    Uni<OrgUserMembership> getById(String id);
+    Multi<OrgMembership> findAll();
+    Multi<OrgMembership> findAll(List<String> id);
+    Multi<OrgMembership> findAllByGroupId(String id);
+    Multi<OrgMembership> findAllByUserId(String id);
+    Uni<OrgMembership> getById(String id);
   }
   
   interface CommitQuery {
@@ -65,9 +65,9 @@ public interface OrgQueries {
   
   
   interface UserQuery {
-    Multi<OrgUser> findAll();
-    Multi<OrgUser> findAll(List<String> id);
-    Uni<OrgUser> getById(String id); //user.id or user.email or user.external_id 
+    Multi<OrgMember> findAll();
+    Multi<OrgMember> findAll(List<String> id);
+    Uni<OrgMember> getById(String id); //user.id or user.email or user.external_id 
     Uni<List<OrgUserHierarchyEntry>> findAllUserHierarchyEntries(String userId);
     Uni<List<OrgRoleFlattened>> findAllRolesByUserId(String userId);
     Uni<OrgUserFlattened> getStatusById(String userId);

@@ -9,16 +9,16 @@ import io.resys.thena.docdb.api.models.ImmutableMessage;
 import io.resys.thena.docdb.api.models.ImmutableOrgCommit;
 import io.resys.thena.docdb.api.models.ImmutableOrgCommitTree;
 import io.resys.thena.docdb.api.models.ImmutableOrgGroup;
-import io.resys.thena.docdb.api.models.ImmutableOrgGroupRole;
-import io.resys.thena.docdb.api.models.ImmutableOrgUserMembership;
+import io.resys.thena.docdb.api.models.ImmutableOrgPartyRight;
+import io.resys.thena.docdb.api.models.ImmutableOrgMembership;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.IsOrgObject;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgCommitTree;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroupRole;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgPartyRight;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgOperationType;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUser;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserMembership;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMembership;
 import io.resys.thena.docdb.models.git.GitInserts.BatchStatus;
 import io.resys.thena.docdb.models.org.ImmutableOrgBatchForOne;
 import io.resys.thena.docdb.support.OidUtils;
@@ -35,14 +35,14 @@ public class BatchForOneGroupCreate {
   private final String message;
 
   private OrgGroup parent;
-  private List<OrgUser> users; 
+  private List<OrgMember> users; 
   private List<OrgRole> roles;  
   private String groupName;
   private String groupDescription;
   private String externalId;
 
   public BatchForOneGroupCreate parent(OrgGroup parent) { 		this.parent = parent; return this; }
-  public BatchForOneGroupCreate users(List<OrgUser> users) { 	this.users = users; return this; }
+  public BatchForOneGroupCreate users(List<OrgMember> users) { 	this.users = users; return this; }
   public BatchForOneGroupCreate roles(List<OrgRole> roles) {    this.roles = roles; return this; }
   public BatchForOneGroupCreate groupName(String groupName) {   this.groupName = groupName; return this; }
   public BatchForOneGroupCreate groupDescription(String desc) {	this.groupDescription = desc; return this; }
@@ -72,9 +72,9 @@ public class BatchForOneGroupCreate {
     tree.add(addToTree(commitId, group));
     
     
-    final var memberships = new ArrayList<OrgUserMembership>();
+    final var memberships = new ArrayList<OrgMembership>();
     for(final var user : this.users) {
-      final var membership = ImmutableOrgUserMembership.builder()
+      final var membership = ImmutableOrgMembership.builder()
           .id(OidUtils.gen())
           .groupId(group.getId())
           .userId(user.getId())
@@ -84,9 +84,9 @@ public class BatchForOneGroupCreate {
       memberships.add(membership);
     }
     
-    final var groupRoles = new ArrayList<OrgGroupRole>();
+    final var groupRoles = new ArrayList<OrgPartyRight>();
     for(final var role : this.roles) {
-      final var groupRole = ImmutableOrgGroupRole.builder()
+      final var groupRole = ImmutableOrgPartyRight.builder()
           .id(OidUtils.gen())
           .groupId(group.getId())
           .roleId(role.getId())

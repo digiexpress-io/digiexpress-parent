@@ -3,7 +3,7 @@ package io.resys.thena.docdb.api.actions;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
 import io.resys.thena.docdb.api.models.QueryEnvelopeList;
 import io.resys.thena.docdb.api.models.ThenaEnvelope.ThenaObjects;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUser;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
 import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgGroupHierarchy;
 import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgRoleHierarchy;
 import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgUserHierarchy;
@@ -21,8 +21,8 @@ public interface OrgQueryActions {
   interface UserObjectsQuery {
     UserObjectsQuery repoId(String repoId);
     
-    Uni<QueryEnvelope<OrgUser>> get(String userId);
-    Uni<QueryEnvelopeList<OrgUser>> findAll();
+    Uni<QueryEnvelope<OrgMember>> get(String userId);
+    Uni<QueryEnvelopeList<OrgMember>> findAll();
   }
 
   interface RoleHierarchyQuery {

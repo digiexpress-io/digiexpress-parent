@@ -3,7 +3,7 @@ package io.resys.thena.docdb.store.sql.queries;
 import java.util.List;
 
 import io.resys.thena.docdb.api.LogConstants;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroupRole;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgPartyRight;
 import io.resys.thena.docdb.models.org.OrgQueries;
 import io.resys.thena.docdb.store.sql.SqlBuilder;
 import io.resys.thena.docdb.store.sql.SqlMapper;
@@ -27,7 +27,7 @@ public class OrgGroupRoleQuerySqlPool implements OrgQueries.GroupRolesQuery {
   private final ErrorHandler errorHandler;
 
   @Override
-  public Multi<OrgGroupRole> findAll() {
+  public Multi<OrgPartyRight> findAll() {
     final var sql = sqlBuilder.orgGroupRoles().findAll();
     if(log.isDebugEnabled()) {
       log.debug("GroupRole findAll query, with props: {} \r\n{}", 
@@ -38,12 +38,12 @@ public class OrgGroupRoleQuerySqlPool implements OrgQueries.GroupRolesQuery {
         .mapping(row -> sqlMapper.orgGroupRole(row))
         .execute()
         .onItem()
-        .transformToMulti((RowSet<OrgGroupRole> rowset) -> Multi.createFrom().iterable(rowset))
+        .transformToMulti((RowSet<OrgPartyRight> rowset) -> Multi.createFrom().iterable(rowset))
         .onFailure().invoke(e -> errorHandler.deadEnd(new SqlFailed("Can't find 'GROUP_ROLE'!", sql, e)));
   }
   
   @Override
-  public Multi<OrgGroupRole> findAll(List<String> id) {
+  public Multi<OrgPartyRight> findAll(List<String> id) {
     final var sql = sqlBuilder.orgGroupRoles().findAll(id);
     if(log.isDebugEnabled()) {
       log.debug("GroupRole findAll query, with props: {} \r\n{}", 
@@ -54,12 +54,12 @@ public class OrgGroupRoleQuerySqlPool implements OrgQueries.GroupRolesQuery {
         .mapping(row -> sqlMapper.orgGroupRole(row))
         .execute(sql.getProps())
         .onItem()
-        .transformToMulti((RowSet<OrgGroupRole> rowset) -> Multi.createFrom().iterable(rowset))
+        .transformToMulti((RowSet<OrgPartyRight> rowset) -> Multi.createFrom().iterable(rowset))
         .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'GROUP_ROLE'!", sql, e)));
   }
 
   @Override
-  public Uni<OrgGroupRole> getById(String id) {
+  public Uni<OrgPartyRight> getById(String id) {
     final var sql = sqlBuilder.orgGroupRoles().getById(id);
     if(log.isDebugEnabled()) {
       log.debug("GroupRole byId query, with props: {} \r\n{}", 
@@ -70,7 +70,7 @@ public class OrgGroupRoleQuerySqlPool implements OrgQueries.GroupRolesQuery {
         .mapping(row -> sqlMapper.orgGroupRole(row))
         .execute(sql.getProps())
         .onItem()
-        .transform((RowSet<OrgGroupRole> rowset) -> {
+        .transform((RowSet<OrgPartyRight> rowset) -> {
           final var it = rowset.iterator();
           if(it.hasNext()) {
             return it.next();
@@ -82,7 +82,7 @@ public class OrgGroupRoleQuerySqlPool implements OrgQueries.GroupRolesQuery {
   }
 
 	@Override
-	public Multi<OrgGroupRole> findAllByGroupId(String id) {
+	public Multi<OrgPartyRight> findAllByGroupId(String id) {
     final var sql = sqlBuilder.orgGroupRoles().findAllByGroupId(id);
     if(log.isDebugEnabled()) {
       log.debug("GroupRole findAllByGroupId query, with props: {} \r\n{}", 
@@ -93,12 +93,12 @@ public class OrgGroupRoleQuerySqlPool implements OrgQueries.GroupRolesQuery {
         .mapping(row -> sqlMapper.orgGroupRole(row))
         .execute(sql.getProps())
         .onItem()
-        .transformToMulti((RowSet<OrgGroupRole> rowset) -> Multi.createFrom().iterable(rowset))
+        .transformToMulti((RowSet<OrgPartyRight> rowset) -> Multi.createFrom().iterable(rowset))
         .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'GROUP_ROLE'!", sql, e)));
 	}
 
 	@Override
-	public Multi<OrgGroupRole> findAllByRoleId(String id) {
+	public Multi<OrgPartyRight> findAllByRoleId(String id) {
     final var sql = sqlBuilder.orgGroupRoles().findAllByRoleId(id);
     if(log.isDebugEnabled()) {
       log.debug("UserRole findAllByRoleId query, with props: {} \r\n{}", 
@@ -109,7 +109,7 @@ public class OrgGroupRoleQuerySqlPool implements OrgQueries.GroupRolesQuery {
         .mapping(row -> sqlMapper.orgGroupRole(row))
         .execute(sql.getProps())
         .onItem()
-        .transformToMulti((RowSet<OrgGroupRole> rowset) -> Multi.createFrom().iterable(rowset))
+        .transformToMulti((RowSet<OrgPartyRight> rowset) -> Multi.createFrom().iterable(rowset))
         .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'GROUP_ROLE'!", sql, e)));
 	}
 }

@@ -36,14 +36,14 @@ import io.resys.thena.docdb.api.models.ImmutableDocFlatted;
 import io.resys.thena.docdb.api.models.ImmutableDocLog;
 import io.resys.thena.docdb.api.models.ImmutableOrgActorStatus;
 import io.resys.thena.docdb.api.models.ImmutableOrgGroup;
-import io.resys.thena.docdb.api.models.ImmutableOrgGroupRole;
+import io.resys.thena.docdb.api.models.ImmutableOrgPartyRight;
 import io.resys.thena.docdb.api.models.ImmutableOrgRole;
 import io.resys.thena.docdb.api.models.ImmutableOrgRoleFlattened;
-import io.resys.thena.docdb.api.models.ImmutableOrgUser;
+import io.resys.thena.docdb.api.models.ImmutableOrgMember;
 import io.resys.thena.docdb.api.models.ImmutableOrgUserFlattened;
 import io.resys.thena.docdb.api.models.ImmutableOrgUserHierarchyEntry;
-import io.resys.thena.docdb.api.models.ImmutableOrgUserMembership;
-import io.resys.thena.docdb.api.models.ImmutableOrgUserRole;
+import io.resys.thena.docdb.api.models.ImmutableOrgMembership;
+import io.resys.thena.docdb.api.models.ImmutableOrgMemberRight;
 import io.resys.thena.docdb.api.models.ImmutableRepo;
 import io.resys.thena.docdb.api.models.ImmutableTag;
 import io.resys.thena.docdb.api.models.ImmutableTree;
@@ -69,14 +69,14 @@ import io.resys.thena.docdb.api.models.ThenaGitObject.TreeValue;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatus;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatusType;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroup;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgGroupRole;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgPartyRight;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRole;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRoleFlattened;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUser;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserFlattened;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserHierarchyEntry;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserMembership;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgUserRole;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMembership;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberRight;
 import io.resys.thena.docdb.spi.DbCollections;
 import io.resys.thena.docdb.store.sql.SqlMapper;
 import io.vertx.core.json.JsonObject;
@@ -309,8 +309,8 @@ public class SqlMapperImpl implements SqlMapper {
         .build();
   }
   @Override
-  public OrgUser orgUser(Row row) {
-    return ImmutableOrgUser.builder()
+  public OrgMember orgUser(Row row) {
+    return ImmutableOrgMember.builder()
         .id(row.getString("id"))
         .externalId(row.getString("external_id"))
         .commitId(row.getString("commit_id"))
@@ -340,8 +340,8 @@ public class SqlMapperImpl implements SqlMapper {
         .build();
 	}
 	@Override
-	public OrgUserMembership orgUserMemberships(Row row) {
-    return ImmutableOrgUserMembership.builder()
+	public OrgMembership orgUserMemberships(Row row) {
+    return ImmutableOrgMembership.builder()
         .id(row.getString("id"))
         .commitId(row.getString("commit_id"))
         .userId(row.getString("member_id"))
@@ -350,8 +350,8 @@ public class SqlMapperImpl implements SqlMapper {
 	}
 	
 	@Override
-	public OrgGroupRole orgGroupRole(Row row) {
-    return ImmutableOrgGroupRole.builder()
+	public OrgPartyRight orgGroupRole(Row row) {
+    return ImmutableOrgPartyRight.builder()
         .id(row.getString("id"))
         .commitId(row.getString("commit_id"))
         .roleId(row.getString("right_id"))
@@ -360,8 +360,8 @@ public class SqlMapperImpl implements SqlMapper {
 	}
 	
 	@Override
-	public OrgUserRole orgUserRole(Row row) {
-    return ImmutableOrgUserRole.builder()
+	public OrgMemberRight orgUserRole(Row row) {
+    return ImmutableOrgMemberRight.builder()
         .id(row.getString("id"))
         .commitId(row.getString("commit_id"))
         .roleId(row.getString("right_id"))
