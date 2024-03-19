@@ -12,13 +12,13 @@ import io.vertx.core.json.JsonObject;
 
 
 
-public class CreateUserTreeGroups extends BottomUpVisitorTemplate<ImmutableUserGroupsData> {
+public class CreateMemberTreeGroups extends BottomUpVisitorTemplate<ImmutableUserGroupsData> {
 
   private final Logger logger;
   private final OrgMemberFlattened user;
   private final ImmutableUserGroupsData.Builder groups = ImmutableUserGroupsData.builder();
   
-  public CreateUserTreeGroups(List<OrgRightFlattened> globalRoles, Logger logger, OrgMemberFlattened user) {
+  public CreateMemberTreeGroups(List<OrgRightFlattened> globalRoles, Logger logger, OrgMemberFlattened user) {
     super(globalRoles);
     this.logger = logger;
     this.user = user;

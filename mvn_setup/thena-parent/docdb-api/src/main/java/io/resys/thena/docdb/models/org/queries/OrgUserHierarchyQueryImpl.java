@@ -19,7 +19,7 @@ import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberFlattened;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberHierarchyEntry;
 import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgMemberHierarchy;
 import io.resys.thena.docdb.models.org.OrgQueries;
-import io.resys.thena.docdb.models.org.userhierarchy.UserTreeBuilder;
+import io.resys.thena.docdb.models.org.userhierarchy.MemberTreeBuilder;
 import io.resys.thena.docdb.spi.DbState;
 import io.resys.thena.docdb.support.RepoAssert;
 import io.smallrye.mutiny.Multi;
@@ -88,7 +88,7 @@ public class OrgUserHierarchyQueryImpl implements MemberHierarchyQuery {
     return ImmutableQueryEnvelope
         .<OrgMemberHierarchy>builder()
         .status(QueryEnvelopeStatus.OK)
-        .objects(new UserTreeBuilder().user(user).groupData(groups).roleData(roles).build())
+        .objects(new MemberTreeBuilder().member(user).partyData(groups).rightData(roles).build())
         .build();
 	}
 	

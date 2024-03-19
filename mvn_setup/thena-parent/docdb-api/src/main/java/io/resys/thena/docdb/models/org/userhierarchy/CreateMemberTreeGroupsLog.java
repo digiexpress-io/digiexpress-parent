@@ -15,7 +15,7 @@ import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberFlattened;
 
 
 
-public class CreateUserTreeGroupsLog extends BottomUpVisitorTemplate<String> {
+public class CreateMemberTreeGroupsLog extends BottomUpVisitorTemplate<String> {
 
   private final DefaultNode userNode;
   private final DefaultNode userRoles = new DefaultNode("roles");
@@ -25,7 +25,7 @@ public class CreateUserTreeGroupsLog extends BottomUpVisitorTemplate<String> {
   private final Map<String, DefaultNode> rolesByGroup = new HashMap<>();
   
   
-  public CreateUserTreeGroupsLog(List<OrgRightFlattened> globalRoles, OrgMemberFlattened user) {
+  public CreateMemberTreeGroupsLog(List<OrgRightFlattened> globalRoles, OrgMemberFlattened user) {
     super(globalRoles);
     this.userNode = new DefaultNode(user.getUserName());
   } 
