@@ -371,7 +371,7 @@ public class SqlMapperImpl implements SqlMapper {
 	}
 	@Override
 	public OrgUserHierarchyEntry orgUserHierarchyEntry(Row row) {
-		final var roleStatus = row.getString("role_status");
+		final var roleStatus = row.getString("right_status");
 		final var groupStatus = row.getString("status");
 		
 		return ImmutableOrgUserHierarchyEntry.builder()
@@ -390,19 +390,19 @@ public class SqlMapperImpl implements SqlMapper {
         .roleDescription(row.getString("role_description"))
         
 		  	.roleStatus(roleStatus != null ? OrgActorStatusType.valueOf(roleStatus) : null)
-		  	.roleStatusId(row.getString("role_status_id"))
+		  	.roleStatusId(row.getString("right_status_id"))
 				.build();
 	}
 	
   @Override
   public OrgRoleFlattened orgOrgRoleFlattened(Row row) {
-    final var roleStatus = row.getString("role_status");
+    final var roleStatus = row.getString("right_status");
     return ImmutableOrgRoleFlattened.builder()
         .roleId(row.getString("right_id"))
         .roleName(row.getString("role_name"))
         .roleDescription(row.getString("role_description"))
         .roleStatus(roleStatus != null ? OrgActorStatusType.valueOf(roleStatus) : null)
-        .roleStatusId(row.getString("role_status_id"))
+        .roleStatusId(row.getString("right_status_id"))
         .build();
   }
   @Override

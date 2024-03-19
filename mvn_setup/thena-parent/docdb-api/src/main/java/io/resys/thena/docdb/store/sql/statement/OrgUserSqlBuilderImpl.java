@@ -174,8 +174,8 @@ SELECT * FROM child;
         .append("  group_roles.right_id          as right_id, ").ln()
         .append("  role.role_name               as role_name, ").ln()
         .append("  role.role_description        as role_description, ").ln()
-        .append("  role_status.actor_status     as role_status, ").ln()
-        .append("  role_status.id               as role_status_id ").ln()
+        .append("  right_status.actor_status     as right_status, ").ln()
+        .append("  right_status.id               as right_status_id ").ln()
         
         .append("FROM ").ln()
         .append("  (SELECT DISTINCT id, parent_id, group_name, group_description from child) as groups").ln()
@@ -189,10 +189,10 @@ SELECT * FROM child;
         .append("  LEFT JOIN ").append(options.getOrgPartyRights()).append(" as group_roles").ln()
         .append("  ON(group_roles.party_id = groups.id) ").ln()
     
-        .append("  LEFT JOIN ").append(options.getOrgActorStatus()).append(" as role_status").ln()
-        .append("  ON(role_status.party_id = groups.id ").ln()
-        .append("    and role_status.right_id = group_roles.right_id ").ln()
-        .append("    and (role_status.member_id is null or role_status.member_id = $1)").ln()
+        .append("  LEFT JOIN ").append(options.getOrgActorStatus()).append(" as right_status").ln()
+        .append("  ON(right_status.party_id = groups.id ").ln()
+        .append("    and right_status.right_id = group_roles.right_id ").ln()
+        .append("    and (right_status.member_id is null or right_status.member_id = $1)").ln()
         .append("  ) ").ln()
         
         .append("  LEFT JOIN ").append(options.getOrgRights()).append(" as role").ln()
@@ -212,8 +212,8 @@ SELECT * FROM child;
         
         .append("SELECT ").ln()
         .append("  role.id                  as right_id, ").ln()
-        .append("  role_status.actor_status as role_status, ").ln()
-        .append("  role_status.id           as role_status_id, ").ln()
+        .append("  right_status.actor_status as right_status, ").ln()
+        .append("  right_status.id           as right_status_id, ").ln()
         .append("  role.role_name           as role_name, ").ln()
         .append("  role.role_description    as role_description ").ln()
         
@@ -225,11 +225,11 @@ SELECT * FROM child;
         .append("    and user_roles.member_id = $1").ln()
          .append("  ) ").ln()
         
-        .append("LEFT JOIN ").append(options.getOrgActorStatus()).append(" as role_status").ln()
+        .append("LEFT JOIN ").append(options.getOrgActorStatus()).append(" as right_status").ln()
         .append("  ON(").ln()
-        .append("    role_status.right_id = role.id").ln()
-        .append("    and role_status.party_id is null").ln()
-        .append("    and (role_status.member_id is null or role_status.member_id = $1)").ln()
+        .append("    right_status.right_id = role.id").ln()
+        .append("    and right_status.party_id is null").ln()
+        .append("    and (right_status.member_id is null or right_status.member_id = $1)").ln()
         .append("  ) ").ln();
 
     return ImmutableSqlTuple.builder()
