@@ -325,8 +325,8 @@ public class SqlMapperImpl implements SqlMapper {
         .externalId(row.getString("external_id"))
         .parentId(row.getString("parent_id"))
         .commitId(row.getString("commit_id"))
-        .groupName(row.getString("group_name"))
-        .groupDescription(row.getString("group_description"))
+        .groupName(row.getString("party_name"))
+        .groupDescription(row.getString("party_description"))
         .build();
 	}
 	@Override
@@ -377,8 +377,8 @@ public class SqlMapperImpl implements SqlMapper {
 		return ImmutableOrgUserHierarchyEntry.builder()
 		  	.groupId(row.getString("id"))
 		  	.groupParentId(row.getString("parent_id"))
-		  	.groupName(row.getString("group_name"))
-        .groupDescription(row.getString("group_description"))
+		  	.groupName(row.getString("party_name"))
+        .groupDescription(row.getString("party_description"))
 		  	.membershipId(row.getString("membership_id"))
 		  	
 		  	.groupStatusId(row.getString("status_id"))

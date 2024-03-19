@@ -36,7 +36,7 @@ public class OrgGroupSqlBuilderImpl implements OrgGroupSqlBuilder {
       sql.append(" (")
         .append("id = $").append(index)
         .append(" OR external_id = $").append(index)
-        .append(" OR group_name = $").append(index)
+        .append(" OR party_name = $").append(index)
       .append(")");
       index++;
     }
@@ -61,7 +61,7 @@ public class OrgGroupSqlBuilderImpl implements OrgGroupSqlBuilder {
         .value(new SqlStatement()
         .append("SELECT * ").ln()
         .append("  FROM ").append(options.getOrgParties()).ln()
-        .append("  WHERE (id = $1 OR external_id = $1 OR group_name = $1)").ln() 
+        .append("  WHERE (id = $1 OR external_id = $1 OR party_name = $1)").ln() 
         .build())
         .props(Tuple.of(id))
         .build();
@@ -71,7 +71,7 @@ public class OrgGroupSqlBuilderImpl implements OrgGroupSqlBuilder {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getOrgParties())
-        .append(" (id, commit_id, external_id, parent_id, group_name, group_description) VALUES($1, $2, $3, $4, $5, $6)").ln()
+        .append(" (id, commit_id, external_id, parent_id, party_name, party_description) VALUES($1, $2, $3, $4, $5, $6)").ln()
         .build())
         .props(Tuple.from(new Object[]{ doc.getId(), doc.getCommitId(), doc.getExternalId(), doc.getParentId(), doc.getGroupName(), doc.getGroupDescription() }))
         .build();
@@ -81,7 +81,7 @@ public class OrgGroupSqlBuilderImpl implements OrgGroupSqlBuilder {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("UPDATE ").append(options.getOrgMembers())
-        .append(" SET external_id = $1, group_name = $2, group_description = $3, commit_id = $4")
+        .append(" SET external_id = $1, party_name = $2, party_description = $3, commit_id = $4")
         .append(" WHERE id = $5")
         .build())
         .props(Tuple.from(new Object[]{doc.getExternalId(), doc.getGroupName(), doc.getGroupDescription(), doc.getCommitId(), doc.getId()}))
@@ -92,7 +92,7 @@ public class OrgGroupSqlBuilderImpl implements OrgGroupSqlBuilder {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getOrgParties())
-        .append("  (id, commit_id, external_id, parent_id, group_name, group_description) VALUES($1, $2, $3, $4, $5, $6)").ln()
+        .append("  (id, commit_id, external_id, parent_id, party_name, party_description) VALUES($1, $2, $3, $4, $5, $6)").ln()
         .build())
         .props(users.stream()
             .map(doc -> Tuple.from(new Object[]{ doc.getId(), doc.getCommitId(), doc.getExternalId(), doc.getParentId(), doc.getGroupName(), doc.getGroupDescription() }))
@@ -104,7 +104,7 @@ public class OrgGroupSqlBuilderImpl implements OrgGroupSqlBuilder {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("UPDATE ").append(options.getOrgMembers())
-        .append(" SET external_id = $1, group_name = $2, group_description = $3, commit_id = $4")
+        .append(" SET external_id = $1, party_name = $2, party_description = $3, commit_id = $4")
         .append(" WHERE id = $5")
         .build())
         .props(users.stream()

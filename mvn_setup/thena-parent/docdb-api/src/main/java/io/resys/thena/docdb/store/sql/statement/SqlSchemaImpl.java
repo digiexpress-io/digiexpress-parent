@@ -395,8 +395,8 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("  commit_id VARCHAR(40) NOT NULL,").ln()
     .append("  external_id VARCHAR(40) UNIQUE,").ln()
     .append("  parent_id VARCHAR(40),").ln()
-    .append("  group_name VARCHAR(255) UNIQUE NOT NULL,").ln()
-    .append("  group_description VARCHAR(255) NOT NULL").ln()
+    .append("  party_name VARCHAR(255) UNIQUE NOT NULL,").ln()
+    .append("  party_description VARCHAR(255) NOT NULL").ln()
     .append(");").ln().ln()
     
     // parent id, references self
@@ -407,7 +407,7 @@ public class SqlSchemaImpl implements SqlSchema {
 
     
     .append("CREATE INDEX ").append(options.getOrgParties()).append("_NAME_INDEX")
-    .append(" ON ").append(options.getOrgParties()).append(" (group_name);").ln()
+    .append(" ON ").append(options.getOrgParties()).append(" (party_name);").ln()
     
     .append("CREATE INDEX ").append(options.getOrgParties()).append("_COMMIT_INDEX")
     .append(" ON ").append(options.getOrgParties()).append(" (commit_id);").ln()

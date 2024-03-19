@@ -120,7 +120,7 @@ SELECT * FROM org_group;
 WITH RECURSIVE child AS (
   SELECT 
     id, 
-    group_name, 
+    party_name, 
     parent_id
   FROM org_group
   WHERE id = 9 
@@ -129,7 +129,7 @@ WITH RECURSIVE child AS (
 
   SELECT 
     parent.id, 
-    parent.group_name, 
+    parent.party_name, 
     parent.parent_id 
   FROM org_group as parent 
   INNER JOIN child on (parent.id = child.parent_id)
@@ -143,7 +143,7 @@ SELECT * FROM child;
         .append("WITH RECURSIVE child AS (").ln()
         
         // starting point
-        .append("  SELECT id, parent_id, group_name, group_description").ln()
+        .append("  SELECT id, parent_id, party_name, party_description").ln()
         .append("  FROM ").append(options.getOrgParties()).ln()
         .append("  WHERE id in( ").ln()
         .append("    SELECT DISTINCT party_id ")
@@ -154,7 +154,7 @@ SELECT * FROM child;
         .append("  UNION ALL ").ln()
         
         // recursion from bottom to up, join parent to each child until the tip
-        .append("  SELECT parent.id, parent.parent_id, parent.group_name, parent.group_description").ln()
+        .append("  SELECT parent.id, parent.parent_id, parent.party_name, parent.party_description").ln()
         .append("  FROM ").append(options.getOrgParties()).append(" as parent").ln()
         .append("  INNER JOIN child on (parent.id = child.parent_id) ").ln()
         
@@ -163,8 +163,8 @@ SELECT * FROM child;
         .append("SELECT ").ln()
         .append("  groups.id                as id, ").ln()
         .append("  groups.parent_id         as parent_id, ").ln()
-        .append("  groups.group_name        as group_name, ").ln()
-        .append("  groups.group_description as group_description, ").ln()
+        .append("  groups.party_name        as party_name, ").ln()
+        .append("  groups.party_description as party_description, ").ln()
         .append("  direct_memberships.id    as membership_id, ").ln()
 
         .append("  group_status.id              as status_id, ").ln()
@@ -178,7 +178,7 @@ SELECT * FROM child;
         .append("  right_status.id               as right_status_id ").ln()
         
         .append("FROM ").ln()
-        .append("  (SELECT DISTINCT id, parent_id, group_name, group_description from child) as groups").ln()
+        .append("  (SELECT DISTINCT id, parent_id, party_name, party_description from child) as groups").ln()
         
         .append("  LEFT JOIN ").append(options.getOrgMemberships()).append(" as direct_memberships").ln()        
         .append("  ON(direct_memberships.party_id = groups.id and direct_memberships.member_id = $1) ").ln()
