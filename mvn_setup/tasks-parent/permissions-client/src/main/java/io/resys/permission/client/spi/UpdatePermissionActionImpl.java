@@ -71,7 +71,7 @@ public class UpdatePermissionActionImpl implements UpdatePermissionAction {
   }
 
   public static class UpdatePermissionException extends RuntimeException {
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -6566691011186609788L;
 
     public UpdatePermissionException(String message) {
       super(message);

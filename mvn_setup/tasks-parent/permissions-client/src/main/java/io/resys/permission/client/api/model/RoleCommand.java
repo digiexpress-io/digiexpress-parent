@@ -107,7 +107,7 @@ public interface RoleCommand extends Serializable {
   
   @Value.Immutable @JsonSerialize(as = ImmutableChangeRoleDescription.class) @JsonDeserialize(as = ImmutableChangeRoleDescription.class)
   interface ChangeRoleDescription extends RoleUpdateCommand {
-    String getName();
+    String getDescription();
     
     @Override default RoleCommandType getCommandType() { return RoleCommandType.CHANGE_ROLE_DESCRIPTION; }
   }
