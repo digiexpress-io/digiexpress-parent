@@ -9,10 +9,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import io.resys.thena.docdb.api.actions.ImmutableOneUserEnvelope;
+import io.resys.thena.docdb.api.actions.ImmutableOneMemberEnvelope;
 import io.resys.thena.docdb.api.actions.OrgCommitActions.ModType;
 import io.resys.thena.docdb.api.actions.OrgCommitActions.ModifyOneMember;
-import io.resys.thena.docdb.api.actions.OrgCommitActions.OneUserEnvelope;
+import io.resys.thena.docdb.api.actions.OrgCommitActions.OneMemberEnvelope;
 import io.resys.thena.docdb.api.models.ImmutableMessage;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
 import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
@@ -110,7 +110,7 @@ public class ModifyOneMemberImpl implements ModifyOneMember {
   }
 
   @Override
-  public Uni<OneUserEnvelope> build() {
+  public Uni<OneMemberEnvelope> build() {
     RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
     RepoAssert.notEmpty(author, () -> "author can't be empty!");
     RepoAssert.notEmpty(message, () -> "message can't be empty!");
@@ -123,7 +123,7 @@ public class ModifyOneMemberImpl implements ModifyOneMember {
   }
   
   
-  private Uni<OneUserEnvelope> doInTx(OrgRepo tx) {
+  private Uni<OneMemberEnvelope> doInTx(OrgRepo tx) {
 		// find groups
 		final Uni<List<OrgParty>> groupsUni = this.allGroups.isEmpty() ? 
 			Uni.createFrom().item(Collections.emptyList()) : 
@@ -148,7 +148,7 @@ public class ModifyOneMemberImpl implements ModifyOneMember {
 		);
   }
 
-  private Uni<OneUserEnvelope> modifyUser(
+  private Uni<OneMemberEnvelope> modifyUser(
       OrgRepo tx, 
       QueryEnvelope<OrgMemberHierarchy> user, 
       List<OrgParty> allGroups, 
@@ -161,7 +161,7 @@ public class ModifyOneMemberImpl implements ModifyOneMember {
     
     
     if(user.getStatus() == QueryEnvelopeStatus.ERROR) {
-      return Uni.createFrom().item(ImmutableOneUserEnvelope.builder()
+      return Uni.createFrom().item(ImmutableOneMemberEnvelope.builder()
           .repoId(repoId)
           .status(CommitResultStatus.ERROR)
           .addAllMessages(user.getMessages())
@@ -171,7 +171,7 @@ public class ModifyOneMemberImpl implements ModifyOneMember {
     if(allGroups.size() < this.allGroups.size()) {
       final var found = String.join(", ", allGroups.stream().map(e -> e.getPartyName()).toList());
       final var expected = String.join(", ", this.allGroups);
-      return Uni.createFrom().item(ImmutableOneUserEnvelope.builder()
+      return Uni.createFrom().item(ImmutableOneMemberEnvelope.builder()
           .repoId(repoId)
           .status(CommitResultStatus.ERROR)
           .addMessages(ImmutableMessage.builder()
@@ -183,7 +183,7 @@ public class ModifyOneMemberImpl implements ModifyOneMember {
     if(allRoles.size() < this.allRoles.size()) {
       final var found = String.join(", ", allRoles.stream().map(e -> e.getRightName()).toList());
       final var expected = String.join(", ", this.allRoles);
-      return Uni.createFrom().item(ImmutableOneUserEnvelope.builder()
+      return Uni.createFrom().item(ImmutableOneMemberEnvelope.builder()
           .repoId(repoId)
           .status(CommitResultStatus.ERROR)
           .addMessages(ImmutableMessage.builder()
@@ -205,14 +205,14 @@ public class ModifyOneMemberImpl implements ModifyOneMember {
           groupsToAdd.contains(group.getId()) ||
           groupsToAdd.contains(group.getExternalId())
       ) {
-        modify.updateGroups(ModType.ADD, group);
+        modify.updateParty(ModType.ADD, group);
       }
       
       if( groupsToRemove.contains(group.getPartyName()) ||
           groupsToRemove.contains(group.getId()) ||
           groupsToRemove.contains(group.getExternalId())
        ) {
-         modify.updateGroups(ModType.DISABLED, group);
+         modify.updateParty(ModType.DISABLED, group);
        }
       
       
@@ -259,7 +259,7 @@ public class ModifyOneMemberImpl implements ModifyOneMember {
           .updateGroupRoles(ModType.ADD, addUseGroupRoles)
           .create();
       return tx.insert().batchOne(batch)
-          .onItem().transform(rsp -> ImmutableOneUserEnvelope.builder()
+          .onItem().transform(rsp -> ImmutableOneMemberEnvelope.builder()
             .repoId(repoId)
             .user(rsp.getMembers().isEmpty() ? null : rsp.getMembers().get(0))
             .addMessages(rsp.getLog())
@@ -267,7 +267,7 @@ public class ModifyOneMemberImpl implements ModifyOneMember {
             .status(DataMapper.mapStatus(rsp.getStatus()))
             .build());
     } catch (NoChangesException e) {
-      return Uni.createFrom().item(ImmutableOneUserEnvelope.builder()
+      return Uni.createFrom().item(ImmutableOneMemberEnvelope.builder()
             .repoId(repoId)
             .addMessages(ImmutableMessage.builder()
                 .exception(e).text("Nothing to commit, data already in the expected state!")

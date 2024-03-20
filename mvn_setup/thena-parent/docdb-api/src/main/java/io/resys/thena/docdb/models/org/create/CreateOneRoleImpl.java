@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import io.resys.thena.docdb.api.actions.ImmutableOneRoleEnvelope;
+import io.resys.thena.docdb.api.actions.ImmutableOneRightEnvelope;
 import io.resys.thena.docdb.api.actions.OrgCommitActions.CreateOneRight;
-import io.resys.thena.docdb.api.actions.OrgCommitActions.OneRoleEnvelope;
+import io.resys.thena.docdb.api.actions.OrgCommitActions.OneRightEnvelope;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgParty;
 import io.resys.thena.docdb.models.org.OrgInserts.OrgBatchForOne;
@@ -45,7 +45,7 @@ public class CreateOneRoleImpl implements CreateOneRight {
   @Override public CreateOneRoleImpl addRightToMembers(List<String> addRoleToUsers) { 	 this.addRoleToUsers.addAll(RepoAssert.notNull(addRoleToUsers, () -> "addRoleToUsers can't be empty!")); return this; }
   
   @Override
-  public Uni<OneRoleEnvelope> build() {
+  public Uni<OneRightEnvelope> build() {
     RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
     RepoAssert.notEmpty(author, () -> "author can't be empty!");
     RepoAssert.notEmpty(message, () -> "message can't be empty!");
@@ -55,7 +55,7 @@ public class CreateOneRoleImpl implements CreateOneRight {
     return this.state.toOrgState().withTransaction(repoId, this::doInTx);
   }
   
-  private Uni<OneRoleEnvelope> doInTx(OrgRepo tx) {
+  private Uni<OneRightEnvelope> doInTx(OrgRepo tx) {
 		// find users
 		final Uni<List<OrgMember>> usersUni = this.addRoleToUsers.isEmpty() ? 
 			Uni.createFrom().item(Collections.emptyList()) : 
@@ -77,7 +77,7 @@ public class CreateOneRoleImpl implements CreateOneRight {
 		);
   }
 
-  private Uni<OneRoleEnvelope> createRole(OrgRepo tx, List<OrgMember> users, List<OrgParty> groups) {
+  private Uni<OneRightEnvelope> createRole(OrgRepo tx, List<OrgMember> users, List<OrgParty> groups) {
     final OrgBatchForOne batch = new BatchForOneRoleCreate(tx.getRepo().getId(), author, message)
         .externalId(externalId)
         .users(users)
@@ -87,9 +87,9 @@ public class CreateOneRoleImpl implements CreateOneRight {
         .create();
 
     return tx.insert().batchOne(batch)
-      .onItem().transform(rsp -> ImmutableOneRoleEnvelope.builder()
+      .onItem().transform(rsp -> ImmutableOneRightEnvelope.builder()
         .repoId(repoId)
-        .role(rsp.getRights().isEmpty() ? null : rsp.getRights().get(0))
+        .right(rsp.getRights().isEmpty() ? null : rsp.getRights().get(0))
         .addMessages(rsp.getLog())
         .addAllMessages(rsp.getMessages())
         .status(DataMapper.mapStatus(rsp.getStatus()))

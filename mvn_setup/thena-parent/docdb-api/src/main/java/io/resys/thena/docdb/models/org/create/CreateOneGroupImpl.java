@@ -5,12 +5,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import io.resys.thena.docdb.api.actions.ImmutableOneGroupEnvelope;
+import io.resys.thena.docdb.api.actions.ImmutableOnePartyEnvelope;
 import io.resys.thena.docdb.api.actions.OrgCommitActions.CreateOneParty;
-import io.resys.thena.docdb.api.actions.OrgCommitActions.OneGroupEnvelope;
+import io.resys.thena.docdb.api.actions.OrgCommitActions.OnePartyEnvelope;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgParty;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRight;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
 import io.resys.thena.docdb.models.org.OrgInserts.OrgBatchForOne;
 import io.resys.thena.docdb.models.org.OrgState.OrgRepo;
 import io.resys.thena.docdb.spi.DataMapper;
@@ -49,7 +49,7 @@ public class CreateOneGroupImpl implements CreateOneParty {
   @Override public CreateOneGroupImpl addRightsToParty(List<String> addRolesToGroup) { this.addRolesToGroup.addAll(RepoAssert.notNull(addRolesToGroup, () -> "addRolesToGroup can't be empty!")); return this; }
   
   @Override
-  public Uni<OneGroupEnvelope> build() {
+  public Uni<OnePartyEnvelope> build() {
     RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
     RepoAssert.notEmpty(author, () -> "author can't be empty!");
     RepoAssert.notEmpty(message, () -> "message can't be empty!");
@@ -59,7 +59,7 @@ public class CreateOneGroupImpl implements CreateOneParty {
     return this.state.toOrgState().withTransaction(repoId, this::doInTx);
   }
   
-  private Uni<OneGroupEnvelope> doInTx(OrgRepo tx) {
+  private Uni<OnePartyEnvelope> doInTx(OrgRepo tx) {
 		// find users
 		final Uni<List<OrgMember>> usersUni = this.addUsersToGroup.isEmpty() ? 
 			Uni.createFrom().item(Collections.emptyList()) : 
@@ -86,7 +86,7 @@ public class CreateOneGroupImpl implements CreateOneParty {
 		);
   }
 
-  private Uni<OneGroupEnvelope> createGroup(OrgRepo tx, List<OrgMember> users, List<OrgRight> roles, Optional<OrgParty> parent) {
+  private Uni<OnePartyEnvelope> createGroup(OrgRepo tx, List<OrgMember> users, List<OrgRight> roles, Optional<OrgParty> parent) {
     final OrgBatchForOne batch = new BatchForOneGroupCreate(tx.getRepo().getId(), author, message)
         .externalId(externalId)
         .users(users)
@@ -100,7 +100,7 @@ public class CreateOneGroupImpl implements CreateOneParty {
       .onItem().transform(rsp -> {
       	
       	
-      	return ImmutableOneGroupEnvelope.builder()
+      	return ImmutableOnePartyEnvelope.builder()
         .repoId(repoId)
         .group(rsp.getParties().isEmpty() ? null : rsp.getParties().get(0))
         .addMessages(rsp.getLog())

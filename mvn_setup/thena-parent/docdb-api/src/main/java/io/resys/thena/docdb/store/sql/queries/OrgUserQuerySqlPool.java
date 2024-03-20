@@ -1,5 +1,6 @@
 package io.resys.thena.docdb.store.sql.queries;
 
+import java.util.Collection;
 import java.util.List;
 
 import io.resys.thena.docdb.api.LogConstants;
@@ -46,7 +47,7 @@ public class OrgUserQuerySqlPool implements OrgQueries.MemberQuery {
   }
   
   @Override
-  public Multi<OrgMember> findAll(List<String> id) {
+  public Multi<OrgMember> findAll(Collection<String> id) {
     final var sql = sqlBuilder.orgUsers().findAll(id);
     if(log.isDebugEnabled()) {
       log.debug("User findAll query, with props: {} \r\n{}", 

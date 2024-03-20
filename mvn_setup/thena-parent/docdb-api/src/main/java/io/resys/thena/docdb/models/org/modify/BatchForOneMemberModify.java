@@ -66,7 +66,7 @@ public class BatchForOneMemberModify {
   public BatchForOneMemberModify userName(Optional<String> userName) {     this.userName = userName; return this; }
   public BatchForOneMemberModify email(Optional<String> email) {           this.email = email; return this; }
   public BatchForOneMemberModify externalId(Optional<String> externalId) { this.externalId = externalId; return this; }
-  public BatchForOneMemberModify updateGroups(ModType type, OrgParty groups) { 
+  public BatchForOneMemberModify updateParty(ModType type, OrgParty groups) { 
     this.groups.add(new ModGroup(type, groups));
     return this; 
   }

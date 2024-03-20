@@ -10,9 +10,9 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
-import io.resys.thena.docdb.api.actions.ImmutableOneUserEnvelope;
+import io.resys.thena.docdb.api.actions.ImmutableOneMemberEnvelope;
 import io.resys.thena.docdb.api.actions.OrgCommitActions.CreateOneMember;
-import io.resys.thena.docdb.api.actions.OrgCommitActions.OneUserEnvelope;
+import io.resys.thena.docdb.api.actions.OrgCommitActions.OneMemberEnvelope;
 import io.resys.thena.docdb.api.models.ImmutableMessage;
 import io.resys.thena.docdb.api.models.Repo.CommitResultStatus;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgParty;
@@ -63,7 +63,7 @@ public class CreateOneUserImpl implements CreateOneMember {
   } 
   
   @Override
-  public Uni<OneUserEnvelope> build() {
+  public Uni<OneMemberEnvelope> build() {
     RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
     RepoAssert.notEmpty(author, () -> "author can't be empty!");
     RepoAssert.notEmpty(message, () -> "message can't be empty!");
@@ -73,7 +73,7 @@ public class CreateOneUserImpl implements CreateOneMember {
     return this.state.toOrgState().withTransaction(repoId, this::doInTx);
   }
   
-  private Uni<OneUserEnvelope> doInTx(OrgRepo tx) {
+  private Uni<OneMemberEnvelope> doInTx(OrgRepo tx) {
     final List<String> groupIds = new ArrayList<>();
     groupIds.addAll(addUserToGroups);
     groupIds.addAll(addUserToGroupRoles.keySet());
@@ -103,7 +103,7 @@ public class CreateOneUserImpl implements CreateOneMember {
   }
 
   
-  private Uni<OneUserEnvelope> createUser(
+  private Uni<OneMemberEnvelope> createUser(
       OrgRepo tx, 
       List<OrgParty> allGroups, List<OrgRight> allRoles) {
     
@@ -132,7 +132,7 @@ public class CreateOneUserImpl implements CreateOneMember {
     if(addToGroups.size() != this.addUserToGroups.size()) {
       final var found = String.join(", ", addToGroups.stream().map(e -> e.getPartyName()).toList());
       final var expected = String.join(", ", this.addUserToGroups);
-      return Uni.createFrom().item(ImmutableOneUserEnvelope.builder()
+      return Uni.createFrom().item(ImmutableOneMemberEnvelope.builder()
           .repoId(repoId)
           .status(CommitResultStatus.ERROR)
           .addMessages(ImmutableMessage.builder()
@@ -143,7 +143,7 @@ public class CreateOneUserImpl implements CreateOneMember {
     if(groups.size() != this.addUserToGroupRoles.size()) {
       final var found = String.join(", ", groups.keySet().stream().map(e -> e.getPartyName()).toList());
       final var expected = String.join(", ", this.addUserToGroupRoles.keySet());
-      return Uni.createFrom().item(ImmutableOneUserEnvelope.builder()
+      return Uni.createFrom().item(ImmutableOneMemberEnvelope.builder()
           .repoId(repoId)
           .status(CommitResultStatus.ERROR)
           .addMessages(ImmutableMessage.builder()
@@ -173,7 +173,7 @@ public class CreateOneUserImpl implements CreateOneMember {
     if(addToRoles.size() != this.addUserToRoles.size()) {
       final var found = String.join(", ", addToRoles.stream().map(e -> e.getRightName()).toList());
       final var expected = String.join(", ", this.addUserToRoles);
-      return Uni.createFrom().item(ImmutableOneUserEnvelope.builder()
+      return Uni.createFrom().item(ImmutableOneMemberEnvelope.builder()
           .repoId(repoId)
           .status(CommitResultStatus.ERROR)
           .addMessages(ImmutableMessage.builder()
@@ -184,7 +184,7 @@ public class CreateOneUserImpl implements CreateOneMember {
     if(groups.values().stream().flatMap(e -> e.stream()).count() != this.addUserToGroupRoles.values().stream().flatMap(e -> e.stream()).count()) {
       final var found = String.join(", ", groups.values().stream().flatMap(e -> e.stream()).map(e -> e.getRightName()).toList());
       final var expected = String.join(", ", this.addUserToGroupRoles.values().stream().flatMap(e -> e.stream()).toList());
-      return Uni.createFrom().item(ImmutableOneUserEnvelope.builder()
+      return Uni.createFrom().item(ImmutableOneMemberEnvelope.builder()
           .repoId(repoId)
           .status(CommitResultStatus.ERROR)
           .addMessages(ImmutableMessage.builder()
@@ -203,7 +203,7 @@ public class CreateOneUserImpl implements CreateOneMember {
         .create(); 
 
     return tx.insert().batchOne(batch)
-      .onItem().transform(rsp -> ImmutableOneUserEnvelope.builder()
+      .onItem().transform(rsp -> ImmutableOneMemberEnvelope.builder()
         .repoId(repoId)
         .user(rsp.getMembers().isEmpty() ? null : rsp.getMembers().get(0))
         .addMessages(rsp.getLog())

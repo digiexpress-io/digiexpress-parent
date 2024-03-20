@@ -31,7 +31,9 @@ public interface OrgQueries {
   
   interface ActorStatusQuery {
     Uni<OrgActorStatus> getById(String id);
+    Multi<OrgActorStatus> findAllByIdRightId(String id);
     Multi<OrgActorStatus> findAll();
+
 
   }
   interface MemberRightsQuery {
@@ -67,7 +69,7 @@ public interface OrgQueries {
   
   interface MemberQuery {
     Multi<OrgMember> findAll();
-    Multi<OrgMember> findAll(List<String> id);
+    Multi<OrgMember> findAll(Collection<String> id);
     Uni<OrgMember> getById(String id); //user.id or user.email or user.external_id 
     Uni<List<OrgMemberHierarchyEntry>> findAllMemberHierarchyEntries(String memberId);
     Uni<List<OrgRightFlattened>> findAllRightsByMemberId(String memberId);

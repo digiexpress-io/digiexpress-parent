@@ -76,7 +76,7 @@ public class SimpleOrgTest extends DbTestTemplate {
       .author("nobby nobbs")
       .message("my first role")
       .externalId("role for all the guardsmen")
-      .build().await().atMost(Duration.ofMinutes(1)).getRole();
+      .build().await().atMost(Duration.ofMinutes(1)).getRight();
 
     final var detectiveRole = getClient().org().commit().createOneRight()
       .repoId(repo.getRepo().getId())
@@ -85,7 +85,7 @@ public class SimpleOrgTest extends DbTestTemplate {
       .author("nobby nobbs")
       .message("my second role")
       .externalId("role for all the detective")
-      .build().await().atMost(Duration.ofMinutes(1)).getRole();
+      .build().await().atMost(Duration.ofMinutes(1)).getRight();
         
     final var group = getClient().org().commit().createOneParty()
       .repoId(repo.getRepo().getId())

@@ -45,7 +45,7 @@ public class OrgActorStatusQuerySqlPool implements OrgQueries.ActorStatusQuery {
   public Uni<OrgActorStatus> getById(String id) {
     final var sql = sqlBuilder.orgActorStatus().getById(id);
     if(log.isDebugEnabled()) {
-      log.debug("User byId query, with props: {} \r\n{}", 
+      log.debug("OrgActorStatus getById query, with props: {} \r\n{}", 
           sql.getProps().deepToString(),
           sql.getValue());
     }
@@ -61,6 +61,22 @@ public class OrgActorStatusQuerySqlPool implements OrgQueries.ActorStatusQuery {
           return null;
         })
         .onFailure(e -> errorHandler.notFound(e)).recoverWithNull()
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't get 'ACTOR_STATUS' by 'id': '" + id + "'!", sql, e)));
+  }
+  
+  @Override
+  public Multi<OrgActorStatus> findAllByIdRightId(String id) {
+    final var sql = sqlBuilder.orgActorStatus().findAllByIdRightId(id);
+    if(log.isDebugEnabled()) {
+      log.debug("OrgActorStatus getByIdRightId query, with props: {} \r\n{}", 
+          sql.getProps().deepToString(),
+          sql.getValue());
+    }
+    return wrapper.getClient().preparedQuery(sql.getValue())
+        .mapping(row -> sqlMapper.orgActorStatus(row))
+        .execute(sql.getProps())
+        .onItem()
+        .transformToMulti((RowSet<OrgActorStatus> rowset) -> Multi.createFrom().iterable(rowset))
         .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't get 'ACTOR_STATUS' by 'id': '" + id + "'!", sql, e)));
   }
 }

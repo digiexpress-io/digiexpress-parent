@@ -299,7 +299,7 @@ group-2 <= you are here
         .author("ar-")
         .message("me-")
         .externalId(null)
-        .build().await().atMost(Duration.ofMinutes(1)).getRole();
+        .build().await().atMost(Duration.ofMinutes(1)).getRight();
   }  
 
 }

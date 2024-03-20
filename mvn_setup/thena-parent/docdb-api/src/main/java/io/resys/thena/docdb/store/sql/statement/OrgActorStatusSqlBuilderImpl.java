@@ -63,6 +63,17 @@ public class OrgActorStatusSqlBuilderImpl implements OrgActorStatusSqlBuilder {
         .build();
   }
   @Override
+  public SqlTuple findAllByIdRightId(String rightId) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT * ").ln()
+        .append("  FROM ").append(options.getOrgActorStatus()).ln()
+        .append("  WHERE (right_id = $1)").ln() 
+        .build())
+        .props(Tuple.of(rightId))
+        .build();
+  }
+  @Override
   public SqlTuple insertOne(OrgActorStatus doc) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()

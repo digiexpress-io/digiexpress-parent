@@ -41,7 +41,7 @@ public interface OrgCommitActions {
 
     CreateOneMember addMemberToPartyRight(String groupId, List<String> roledId);
     
-    Uni<OneUserEnvelope> build();
+    Uni<OneMemberEnvelope> build();
   }
   
   interface CreateOneParty {
@@ -57,7 +57,7 @@ public interface OrgCommitActions {
     CreateOneParty addMemberToParty(List<String> userId);
     CreateOneParty addRightsToParty(List<String> roledId);
 
-    Uni<OneGroupEnvelope> build();
+    Uni<OnePartyEnvelope> build();
   }
   
   
@@ -73,7 +73,7 @@ public interface OrgCommitActions {
     CreateOneRight addRightToMembers(List<String> userId);
     CreateOneRight addRightToParties(List<String> groupId);
         
-    Uni<OneRoleEnvelope> build();
+    Uni<OneRightEnvelope> build();
   }
   
 
@@ -91,7 +91,7 @@ public interface OrgCommitActions {
     ModifyOneMember groups(ModType type, List<String> groupIdOrNameOrExternalId);
     ModifyOneMember groupsRoles(ModType type, Map<String, List<String>> addUseGroupRoles);
     
-    Uni<OneUserEnvelope> build();
+    Uni<OneMemberEnvelope> build();
   }
 
 
@@ -109,7 +109,7 @@ public interface OrgCommitActions {
     ModifyOneParty members(ModType type, List<String> userIds);
     ModifyOneParty rights(ModType type, List<String> roleIds);
 
-    Uni<OneGroupEnvelope> build();
+    Uni<OnePartyEnvelope> build();
   }
 
   
@@ -126,23 +126,23 @@ public interface OrgCommitActions {
     ModifyOneRight members(ModType type, List<String> memberIds);
     ModifyOneRight parties(ModType type, List<String> partyIds);
 
-    Uni<OneRoleEnvelope> build();
+    Uni<OneRightEnvelope> build();
   }
   
   
   
   @Value.Immutable
-  interface OneRoleEnvelope extends ThenaEnvelope {
+  interface OneRightEnvelope extends ThenaEnvelope {
     String getRepoId();
     Repo.CommitResultStatus getStatus();
     List<Message> getMessages();
 
-    @Nullable OrgRight getRole();
+    @Nullable OrgRight getRight();
   }
   
   
   @Value.Immutable
-  interface OneUserEnvelope extends ThenaEnvelope {
+  interface OneMemberEnvelope extends ThenaEnvelope {
     String getRepoId();
     Repo.CommitResultStatus getStatus();
     List<Message> getMessages();
@@ -151,7 +151,7 @@ public interface OrgCommitActions {
   }
   
   @Value.Immutable
-  interface OneGroupEnvelope extends ThenaEnvelope {
+  interface OnePartyEnvelope extends ThenaEnvelope {
     String getRepoId();
     Repo.CommitResultStatus getStatus();
     List<Message> getMessages();
