@@ -72,17 +72,17 @@ public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
   GitTreeSqlBuilder trees();
   GitTreeItemSqlBuilder treeItems();
   
-  OrgUserSqlBuilder orgUsers();
-  OrgGroupSqlBuilder orgGroups();
-  OrgUserMembershipsSqlBuilder orgUserMemberships();
+  OrgUserSqlBuilder orgMembers();
+  OrgGroupSqlBuilder orgParties();
+  OrgUserMembershipsSqlBuilder orgMemberships();
   OrgCommitSqlBuilder orgCommits();
   OrgCommitTreeSqlBuilder orgCommitTrees();
   
   OrgActorStatusSqlBuilder orgActorStatus();
   
-  OrgRoleSqlBuilder orgRoles();
-  OrgUserRoleSqlBuilder orgUserRoles();
-  OrgGroupRoleSqlBuilder orgGroupRoles();
+  OrgRoleSqlBuilder orgRights();
+  OrgUserRoleSqlBuilder orgMemberRights();
+  OrgGroupRoleSqlBuilder orgPartyRights();
   
   SqlBuilder withOptions(DbCollections options);
 

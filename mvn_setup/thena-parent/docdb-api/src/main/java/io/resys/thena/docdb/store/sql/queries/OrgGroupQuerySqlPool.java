@@ -28,7 +28,7 @@ public class OrgGroupQuerySqlPool implements OrgQueries.PartyQuery {
 
   @Override
   public Multi<OrgParty> findAll() {
-    final var sql = sqlBuilder.orgGroups().findAll();
+    final var sql = sqlBuilder.orgParties().findAll();
     if(log.isDebugEnabled()) {
       log.debug("Group findAll query, with props: {} \r\n{}", 
           "",
@@ -44,7 +44,7 @@ public class OrgGroupQuerySqlPool implements OrgQueries.PartyQuery {
   
   @Override
   public Multi<OrgParty> findAll(Collection<String> id) {
-    final var sql = sqlBuilder.orgGroups().findAll(id);
+    final var sql = sqlBuilder.orgParties().findAll(id);
     if(log.isDebugEnabled()) {
       log.debug("Group findAll query, with props: {} \r\n{}", 
           "",
@@ -60,7 +60,7 @@ public class OrgGroupQuerySqlPool implements OrgQueries.PartyQuery {
 
   @Override
   public Uni<OrgParty> getById(String id) {
-    final var sql = sqlBuilder.orgGroups().getById(id);
+    final var sql = sqlBuilder.orgParties().getById(id);
     if(log.isDebugEnabled()) {
       log.debug("Group byId query, with props: {} \r\n{}", 
           sql.getProps().deepToString(),

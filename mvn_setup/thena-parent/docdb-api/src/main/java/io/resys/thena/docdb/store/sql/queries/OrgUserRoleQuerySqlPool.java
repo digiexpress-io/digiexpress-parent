@@ -28,7 +28,7 @@ public class OrgUserRoleQuerySqlPool implements OrgQueries.MemberRightsQuery {
 
   @Override
   public Multi<OrgMemberRight> findAll() {
-    final var sql = sqlBuilder.orgUserRoles().findAll();
+    final var sql = sqlBuilder.orgMemberRights().findAll();
     if(log.isDebugEnabled()) {
       log.debug("UserRole findAll query, with props: {} \r\n{}", 
           "",
@@ -44,7 +44,7 @@ public class OrgUserRoleQuerySqlPool implements OrgQueries.MemberRightsQuery {
   
   @Override
   public Multi<OrgMemberRight> findAll(List<String> id) {
-    final var sql = sqlBuilder.orgUserRoles().findAll(id);
+    final var sql = sqlBuilder.orgMemberRights().findAll(id);
     if(log.isDebugEnabled()) {
       log.debug("UserRole findAll query, with props: {} \r\n{}", 
           "",
@@ -60,7 +60,7 @@ public class OrgUserRoleQuerySqlPool implements OrgQueries.MemberRightsQuery {
 
   @Override
   public Uni<OrgMemberRight> getById(String id) {
-    final var sql = sqlBuilder.orgUserRoles().getById(id);
+    final var sql = sqlBuilder.orgMemberRights().getById(id);
     if(log.isDebugEnabled()) {
       log.debug("UserRole byId query, with props: {} \r\n{}", 
           sql.getProps().deepToString(),
@@ -83,7 +83,7 @@ public class OrgUserRoleQuerySqlPool implements OrgQueries.MemberRightsQuery {
 
 	@Override
 	public Multi<OrgMemberRight> findAllByMemberId(String id) {
-    final var sql = sqlBuilder.orgUserRoles().findAllByUserId(id);
+    final var sql = sqlBuilder.orgMemberRights().findAllByUserId(id);
     if(log.isDebugEnabled()) {
       log.debug("UserRole findAllByUserId query, with props: {} \r\n{}", 
           "",
@@ -99,7 +99,7 @@ public class OrgUserRoleQuerySqlPool implements OrgQueries.MemberRightsQuery {
 
 	@Override
 	public Multi<OrgMemberRight> findAllByRightId(String id) {
-    final var sql = sqlBuilder.orgUserRoles().findAllByRoleId(id);
+    final var sql = sqlBuilder.orgMemberRights().findAllByRoleId(id);
     if(log.isDebugEnabled()) {
       log.debug("UserRole findAllByRoleId query, with props: {} \r\n{}", 
           "",

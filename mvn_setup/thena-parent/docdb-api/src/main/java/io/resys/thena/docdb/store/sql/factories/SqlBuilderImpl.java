@@ -97,11 +97,11 @@ public class SqlBuilderImpl implements SqlBuilder {
     return new DocBranchSqlBuilderImpl(ctx);
   }
   @Override
-  public OrgUserSqlBuilder orgUsers() {
+  public OrgUserSqlBuilder orgMembers() {
     return new OrgUserSqlBuilderImpl(ctx);
   }
   @Override
-  public OrgGroupSqlBuilder orgGroups() {
+  public OrgGroupSqlBuilder orgParties() {
     return new OrgGroupSqlBuilderImpl(ctx);
   }
   @Override
@@ -113,19 +113,19 @@ public class SqlBuilderImpl implements SqlBuilder {
     return new OrgCommitTreeSqlBuilderImpl(ctx);
   }
 	@Override
-	public OrgUserMembershipsSqlBuilder orgUserMemberships() {
+	public OrgUserMembershipsSqlBuilder orgMemberships() {
 		return new OrgUserMembershipsSqlBuilderImpl(ctx);
 	}
 	@Override
-	public OrgRoleSqlBuilder orgRoles() {
+	public OrgRoleSqlBuilder orgRights() {
 		return new OrgRoleSqlBuilderImpl(ctx);
 	}
 	@Override
-	public OrgUserRoleSqlBuilder orgUserRoles() {
+	public OrgUserRoleSqlBuilder orgMemberRights() {
 		return new OrgUserRoleSqlBuilderImpl(ctx);
 	}
 	@Override
-	public OrgGroupRoleSqlBuilder orgGroupRoles() {
+	public OrgGroupRoleSqlBuilder orgPartyRights() {
 		return new OrgGroupRoleSqlBuilderImpl(ctx);
 	}
   @Override

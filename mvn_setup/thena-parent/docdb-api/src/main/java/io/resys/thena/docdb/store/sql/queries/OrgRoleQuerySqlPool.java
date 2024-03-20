@@ -28,7 +28,7 @@ public class OrgRoleQuerySqlPool implements OrgQueries.RightsQuery {
 
   @Override
   public Multi<OrgRight> findAll() {
-    final var sql = sqlBuilder.orgRoles().findAll();
+    final var sql = sqlBuilder.orgRights().findAll();
     if(log.isDebugEnabled()) {
       log.debug("Role findAll query, with props: {} \r\n{}", 
           "",
@@ -44,7 +44,7 @@ public class OrgRoleQuerySqlPool implements OrgQueries.RightsQuery {
   
   @Override
   public Multi<OrgRight> findAll(Collection<String> id) {
-    final var sql = sqlBuilder.orgRoles().findAll(id);
+    final var sql = sqlBuilder.orgRights().findAll(id);
     if(log.isDebugEnabled()) {
       log.debug("Role findAll query, with props: {} \r\n{}", 
           "",
@@ -60,7 +60,7 @@ public class OrgRoleQuerySqlPool implements OrgQueries.RightsQuery {
 
   @Override
   public Uni<OrgRight> getById(String id) {
-    final var sql = sqlBuilder.orgRoles().getById(id);
+    final var sql = sqlBuilder.orgRights().getById(id);
     if(log.isDebugEnabled()) {
       log.debug("Role byId query, with props: {} \r\n{}", 
           sql.getProps().deepToString(),

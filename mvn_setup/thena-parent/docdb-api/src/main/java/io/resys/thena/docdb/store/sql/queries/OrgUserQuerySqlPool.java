@@ -32,7 +32,7 @@ public class OrgUserQuerySqlPool implements OrgQueries.MemberQuery {
 
   @Override
   public Multi<OrgMember> findAll() {
-    final var sql = sqlBuilder.orgUsers().findAll();
+    final var sql = sqlBuilder.orgMembers().findAll();
     if(log.isDebugEnabled()) {
       log.debug("User findAll query, with props: {} \r\n{}", 
           "",
@@ -48,7 +48,7 @@ public class OrgUserQuerySqlPool implements OrgQueries.MemberQuery {
   
   @Override
   public Multi<OrgMember> findAll(Collection<String> id) {
-    final var sql = sqlBuilder.orgUsers().findAll(id);
+    final var sql = sqlBuilder.orgMembers().findAll(id);
     if(log.isDebugEnabled()) {
       log.debug("User findAll query, with props: {} \r\n{}", 
           "",
@@ -65,7 +65,7 @@ public class OrgUserQuerySqlPool implements OrgQueries.MemberQuery {
 
   @Override
   public Uni<OrgMember> getById(String id) {
-    final var sql = sqlBuilder.orgUsers().getById(id);
+    final var sql = sqlBuilder.orgMembers().getById(id);
     if(log.isDebugEnabled()) {
       log.debug("User byId query, with props: {} \r\n{}", 
           sql.getProps().deepToString(),
@@ -88,7 +88,7 @@ public class OrgUserQuerySqlPool implements OrgQueries.MemberQuery {
   
 	@Override
 	public Uni<List<OrgMemberHierarchyEntry>> findAllMemberHierarchyEntries(String userId) {
-    final var sql = sqlBuilder.orgUsers().findAllUserGroupsAndRolesByUserId(userId);
+    final var sql = sqlBuilder.orgMembers().findAllUserGroupsAndRolesByUserId(userId);
     if(log.isDebugEnabled()) {
       log.debug("User findAllUserHierarchyEntries query, with props: {} \r\n{}", 
       		sql.getProps().deepToString(),
@@ -105,7 +105,7 @@ public class OrgUserQuerySqlPool implements OrgQueries.MemberQuery {
 
   @Override
   public Uni<List<OrgRightFlattened>> findAllRightsByMemberId(String userId) {
-    final var sql = sqlBuilder.orgUsers().findAllRolesByUserId(userId);
+    final var sql = sqlBuilder.orgMembers().findAllRolesByUserId(userId);
     if(log.isDebugEnabled()) {
       log.debug("User findAllRolesByUserId query, with props: {} \r\n{}", 
           sql.getProps().deepToString(),
@@ -122,7 +122,7 @@ public class OrgUserQuerySqlPool implements OrgQueries.MemberQuery {
 
   @Override
   public Uni<OrgMemberFlattened> getStatusById(String userId) {
-    final var sql = sqlBuilder.orgUsers().getStatusByUserId(userId);
+    final var sql = sqlBuilder.orgMembers().getStatusByUserId(userId);
     if(log.isDebugEnabled()) {
       log.debug("User getStatusById query, with props: {} \r\n{}", 
           sql.getProps().deepToString(),

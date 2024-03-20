@@ -54,18 +54,18 @@ public class OrgDbInsertsSqlPool implements OrgInserts {
     final var isInsert = new IsInsert(inputBatch);
     final var isUpdate = new IsUpdate(inputBatch);
 
-    final var usersInsert = sqlBuilder.orgUsers().insertAll(inputBatch.getMembers().stream().filter(isInsert).toList());
-    final var usersUpdate = sqlBuilder.orgUsers().updateMany(inputBatch.getMembers().stream().filter(isUpdate).toList());
+    final var memberInsert = sqlBuilder.orgMembers().insertAll(inputBatch.getMembers().stream().filter(isInsert).toList());
+    final var membersUpdate = sqlBuilder.orgMembers().updateMany(inputBatch.getMembers().stream().filter(isUpdate).toList());
     
-    final var groupsInsert = sqlBuilder.orgGroups().insertAll(inputBatch.getParties().stream().filter(isInsert).toList());
-    final var groupsUpdate = sqlBuilder.orgGroups().updateMany(inputBatch.getParties().stream().filter(isUpdate).toList());
-    final var userMembershipsInsert = sqlBuilder.orgUserMemberships().insertAll(inputBatch.getMemberships());
+    final var partiesInsert = sqlBuilder.orgParties().insertAll(inputBatch.getParties().stream().filter(isInsert).toList());
+    final var partiesUpdate = sqlBuilder.orgParties().updateMany(inputBatch.getParties().stream().filter(isUpdate).toList());
+    final var membershipsInsert = sqlBuilder.orgMemberships().insertAll(inputBatch.getMemberships());
     
     
-    final var rolesInsert = sqlBuilder.orgRoles().insertAll(inputBatch.getRights().stream().filter(isInsert).toList());
-    final var rolesUpdate = sqlBuilder.orgRoles().updateMany(inputBatch.getRights().stream().filter(isUpdate).toList());
-    final var userRolesInsert = sqlBuilder.orgUserRoles().insertAll(inputBatch.getMemberRights());
-    final var groupRolesInsert = sqlBuilder.orgGroupRoles().insertAll(inputBatch.getPartyRights());
+    final var rightsInsert = sqlBuilder.orgRights().insertAll(inputBatch.getRights().stream().filter(isInsert).toList());
+    final var rightsUpdate = sqlBuilder.orgRights().updateMany(inputBatch.getRights().stream().filter(isUpdate).toList());
+    final var memberRightsInsert = sqlBuilder.orgMemberRights().insertAll(inputBatch.getMemberRights());
+    final var partyRightsInsert = sqlBuilder.orgPartyRights().insertAll(inputBatch.getPartyRights());
     
     
     final var statusInsert = sqlBuilder.orgActorStatus().insertAll(inputBatch.getActorStatus().stream().filter(isInsert).toList());
@@ -76,40 +76,40 @@ public class OrgDbInsertsSqlPool implements OrgInserts {
     final var treeInsert = sqlBuilder.orgCommitTrees().insertAll(inputBatch.getCommit().getTree());
     
     
-    // User insert/update
-    final Uni<OrgBatchForOne> userInsertUni = Execute.apply(tx, usersInsert).onItem()
-        .transform(row -> successOutput(inputBatch, "Users saved, number of new entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to save users \r\n" + inputBatch.getMembers(), e));
-    final Uni<OrgBatchForOne> userUpdateUni = Execute.apply(tx, usersUpdate).onItem()
-        .transform(row -> successOutput(inputBatch, "Users saved, number of changed entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to change users \r\n" + inputBatch.getMembers(), e));
+    // Member insert/update
+    final Uni<OrgBatchForOne> memberInsertUni = Execute.apply(tx, memberInsert).onItem()
+        .transform(row -> successOutput(inputBatch, "Members saved, number of new entries: " + + (row == null ? 0 : row.rowCount())))
+        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to save members \r\n" + inputBatch.getMembers(), e));
+    final Uni<OrgBatchForOne> memberUpdateUni = Execute.apply(tx, membersUpdate).onItem()
+        .transform(row -> successOutput(inputBatch, "Members saved, number of changed entries: " + + (row == null ? 0 : row.rowCount())))
+        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to change members \r\n" + inputBatch.getMembers(), e));
 
     
-    // Group insert/update
-    final Uni<OrgBatchForOne> groupsInsertUni = Execute.apply(tx, groupsInsert).onItem()
-        .transform(row -> successOutput(inputBatch, "Groups saved, number of new entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to save groups \r\n" + inputBatch.getParties(), e));
-    final Uni<OrgBatchForOne> groupsUpdateUni = Execute.apply(tx, groupsUpdate).onItem()
-        .transform(row -> successOutput(inputBatch, "Groups saved, number of changed entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to change groups \r\n" + inputBatch.getParties(), e));
+    // Parties insert/update
+    final Uni<OrgBatchForOne> partiesInsertUni = Execute.apply(tx, partiesInsert).onItem()
+        .transform(row -> successOutput(inputBatch, "Parties saved, number of new entries: " + + (row == null ? 0 : row.rowCount())))
+        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to save parties \r\n" + inputBatch.getParties(), e));
+    final Uni<OrgBatchForOne> partiesUpdateUni = Execute.apply(tx, partiesUpdate).onItem()
+        .transform(row -> successOutput(inputBatch, "Parties saved, number of changed entries: " + + (row == null ? 0 : row.rowCount())))
+        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to change parties \r\n" + inputBatch.getParties(), e));
     
-    final Uni<OrgBatchForOne> membershipUni = Execute.apply(tx, userMembershipsInsert).onItem()
-        .transform(row -> successOutput(inputBatch, "User memberships saved, number of new entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to save User memberships \r\n" + inputBatch.getMemberships(), e));
+    final Uni<OrgBatchForOne> membershipUni = Execute.apply(tx, membershipsInsert).onItem()
+        .transform(row -> successOutput(inputBatch, "Memberships saved, number of new entries: " + + (row == null ? 0 : row.rowCount())))
+        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to save memberships \r\n" + inputBatch.getMemberships(), e));
     
     // Role related
-    final Uni<OrgBatchForOne> roleInsertUni = Execute.apply(tx, rolesInsert).onItem()
-        .transform(row -> successOutput(inputBatch, "Roles saved, number of new entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to save roles \r\n" + inputBatch.getRights(), e));
-    final Uni<OrgBatchForOne> roleUpdateUni = Execute.apply(tx, rolesUpdate).onItem()
-        .transform(row -> successOutput(inputBatch, "Roles saved, number of changed entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to change roles \r\n" + inputBatch.getRights(), e));
-    final Uni<OrgBatchForOne> groupRolesUni = Execute.apply(tx, groupRolesInsert).onItem()
-        .transform(row -> successOutput(inputBatch, "Group roles memberships saved, number of new entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to save group roles \r\n" + inputBatch.getPartyRights(), e));
-    final Uni<OrgBatchForOne> userRolesUni = Execute.apply(tx, userRolesInsert).onItem()
-        .transform(row -> successOutput(inputBatch, "User roles memberships saved, number of new entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to save User roles \r\n" + inputBatch.getMemberRights(), e));
+    final Uni<OrgBatchForOne> rightsInsertUni = Execute.apply(tx, rightsInsert).onItem()
+        .transform(row -> successOutput(inputBatch, "Rights saved, number of new entries: " + + (row == null ? 0 : row.rowCount())))
+        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to save rights \r\n" + inputBatch.getRights(), e));
+    final Uni<OrgBatchForOne> rightsUpdateUni = Execute.apply(tx, rightsUpdate).onItem()
+        .transform(row -> successOutput(inputBatch, "Rights saved, number of changed entries: " + + (row == null ? 0 : row.rowCount())))
+        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to change rights \r\n" + inputBatch.getRights(), e));
+    final Uni<OrgBatchForOne> partyRightsUni = Execute.apply(tx, partyRightsInsert).onItem()
+        .transform(row -> successOutput(inputBatch, "Parties rights saved, number of new entries: " + + (row == null ? 0 : row.rowCount())))
+        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to save group rights \r\n" + inputBatch.getPartyRights(), e));
+    final Uni<OrgBatchForOne> memberRightsUni = Execute.apply(tx, memberRightsInsert).onItem()
+        .transform(row -> successOutput(inputBatch, "Member rights saved, number of new entries: " + + (row == null ? 0 : row.rowCount())))
+        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to save rights \r\n" + inputBatch.getMemberRights(), e));
     
     // Status related
     final Uni<OrgBatchForOne> statusInsertUni = Execute.apply(tx, statusInsert).onItem()
@@ -133,9 +133,9 @@ public class OrgDbInsertsSqlPool implements OrgInserts {
     return Uni.combine().all()
     		.unis(
     		    commitUni,
-    		    userInsertUni, userUpdateUni, 
-    		    groupsInsertUni, groupsUpdateUni, membershipUni, 
-    		    roleInsertUni, roleUpdateUni, groupRolesUni, userRolesUni,
+    		    memberInsertUni, memberUpdateUni, 
+    		    partiesInsertUni, partiesUpdateUni, membershipUni, 
+    		    rightsInsertUni, rightsUpdateUni, partyRightsUni, memberRightsUni,
     		    statusInsertUni, statusUpdateUni,
     		    treeUni
     		 )

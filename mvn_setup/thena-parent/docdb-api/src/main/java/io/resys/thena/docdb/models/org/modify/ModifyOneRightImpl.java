@@ -187,6 +187,8 @@ public class ModifyOneRightImpl implements ModifyOneRight {
         .memberRights(memberRights)
         .rightStatus(rightStatus)
         .partyRights(partyRights)
+        .rightName(rightName)
+        .rightDescription(rightDescription)
         .current(right); 
 
     // Remove or add groups 

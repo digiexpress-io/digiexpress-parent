@@ -28,7 +28,7 @@ public class OrgUserMembershipsQuerySqlPool implements OrgQueries.MembershipQuer
 
   @Override
   public Multi<OrgMembership> findAll() {
-    final var sql = sqlBuilder.orgUserMemberships().findAll();
+    final var sql = sqlBuilder.orgMemberships().findAll();
     if(log.isDebugEnabled()) {
       log.debug("UserMembership findAll query, with props: {} \r\n{}", 
           "",
@@ -44,7 +44,7 @@ public class OrgUserMembershipsQuerySqlPool implements OrgQueries.MembershipQuer
   
   @Override
   public Multi<OrgMembership> findAll(List<String> id) {
-    final var sql = sqlBuilder.orgUserMemberships().findAll(id);
+    final var sql = sqlBuilder.orgMemberships().findAll(id);
     if(log.isDebugEnabled()) {
       log.debug("UserMembership findAll query, with props: {} \r\n{}", 
           "",
@@ -60,7 +60,7 @@ public class OrgUserMembershipsQuerySqlPool implements OrgQueries.MembershipQuer
 
   @Override
   public Uni<OrgMembership> getById(String id) {
-    final var sql = sqlBuilder.orgUserMemberships().getById(id);
+    final var sql = sqlBuilder.orgMemberships().getById(id);
     if(log.isDebugEnabled()) {
       log.debug("UserMembership byId query, with props: {} \r\n{}", 
           sql.getProps().deepToString(),
@@ -83,7 +83,7 @@ public class OrgUserMembershipsQuerySqlPool implements OrgQueries.MembershipQuer
 
 	@Override
 	public Multi<OrgMembership> findAllByPartyId(String id) {
-    final var sql = sqlBuilder.orgUserMemberships().findAllByGroupId(id);
+    final var sql = sqlBuilder.orgMemberships().findAllByGroupId(id);
     if(log.isDebugEnabled()) {
       log.debug("UserMembership findAllByGroupId query, with props: {} \r\n{}", 
           "",
@@ -99,7 +99,7 @@ public class OrgUserMembershipsQuerySqlPool implements OrgQueries.MembershipQuer
 
 	@Override
 	public Multi<OrgMembership> findAllByMemberId(String id) {
-    final var sql = sqlBuilder.orgUserMemberships().findAllByUserId(id);
+    final var sql = sqlBuilder.orgMemberships().findAllByUserId(id);
     if(log.isDebugEnabled()) {
       log.debug("UserMembership findAllByUserId query, with props: {} \r\n{}", 
           "",

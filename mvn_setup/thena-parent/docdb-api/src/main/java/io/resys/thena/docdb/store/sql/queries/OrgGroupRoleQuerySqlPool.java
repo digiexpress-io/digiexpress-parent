@@ -28,7 +28,7 @@ public class OrgGroupRoleQuerySqlPool implements OrgQueries.PartyRightsQuery {
 
   @Override
   public Multi<OrgPartyRight> findAll() {
-    final var sql = sqlBuilder.orgGroupRoles().findAll();
+    final var sql = sqlBuilder.orgPartyRights().findAll();
     if(log.isDebugEnabled()) {
       log.debug("GroupRole findAll query, with props: {} \r\n{}", 
           "",
@@ -44,7 +44,7 @@ public class OrgGroupRoleQuerySqlPool implements OrgQueries.PartyRightsQuery {
   
   @Override
   public Multi<OrgPartyRight> findAll(List<String> id) {
-    final var sql = sqlBuilder.orgGroupRoles().findAll(id);
+    final var sql = sqlBuilder.orgPartyRights().findAll(id);
     if(log.isDebugEnabled()) {
       log.debug("GroupRole findAll query, with props: {} \r\n{}", 
           "",
@@ -60,7 +60,7 @@ public class OrgGroupRoleQuerySqlPool implements OrgQueries.PartyRightsQuery {
 
   @Override
   public Uni<OrgPartyRight> getById(String id) {
-    final var sql = sqlBuilder.orgGroupRoles().getById(id);
+    final var sql = sqlBuilder.orgPartyRights().getById(id);
     if(log.isDebugEnabled()) {
       log.debug("GroupRole byId query, with props: {} \r\n{}", 
           sql.getProps().deepToString(),
@@ -83,7 +83,7 @@ public class OrgGroupRoleQuerySqlPool implements OrgQueries.PartyRightsQuery {
 
 	@Override
 	public Multi<OrgPartyRight> findAllByPartyId(String id) {
-    final var sql = sqlBuilder.orgGroupRoles().findAllByGroupId(id);
+    final var sql = sqlBuilder.orgPartyRights().findAllByGroupId(id);
     if(log.isDebugEnabled()) {
       log.debug("GroupRole findAllByGroupId query, with props: {} \r\n{}", 
           "",
@@ -99,7 +99,7 @@ public class OrgGroupRoleQuerySqlPool implements OrgQueries.PartyRightsQuery {
 
 	@Override
 	public Multi<OrgPartyRight> findAllByRightId(String id) {
-    final var sql = sqlBuilder.orgGroupRoles().findAllByRoleId(id);
+    final var sql = sqlBuilder.orgPartyRights().findAllByRoleId(id);
     if(log.isDebugEnabled()) {
       log.debug("UserRole findAllByRoleId query, with props: {} \r\n{}", 
           "",
