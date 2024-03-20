@@ -22,7 +22,7 @@ import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRight;
 import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgMemberHierarchy;
 import io.resys.thena.docdb.models.org.OrgInserts.OrgBatchForOne;
 import io.resys.thena.docdb.models.org.OrgState.OrgRepo;
-import io.resys.thena.docdb.models.org.modify.BatchForOneUserModify.NoChangesException;
+import io.resys.thena.docdb.models.org.modify.BatchForOneMemberModify.NoChangesException;
 import io.resys.thena.docdb.models.org.queries.OrgUserHierarchyQueryImpl;
 import io.resys.thena.docdb.spi.DataMapper;
 import io.resys.thena.docdb.spi.DbState;
@@ -32,7 +32,7 @@ import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class ModifyOneUserImpl implements ModifyOneMember {
+public class ModifyOneMemberImpl implements ModifyOneMember {
 
   private final DbState state;
 
@@ -54,13 +54,13 @@ public class ModifyOneUserImpl implements ModifyOneMember {
   private Map<String, List<String>> addUseGroupRoles = new HashMap<>();
   private Map<String, List<String>> removeUseGroupRoles = new HashMap<>();
   
-  @Override public ModifyOneUserImpl userId(String userId) {         this.userId = RepoAssert.notEmpty(userId,           () -> "userId can't be empty!"); return this; }
-  @Override public ModifyOneUserImpl repoId(String repoId) {         this.repoId = RepoAssert.notEmpty(repoId,           () -> "repoId can't be empty!"); return this; }
-  @Override public ModifyOneUserImpl author(String author) {         this.author = RepoAssert.notEmpty(author,           () -> "author can't be empty!"); return this; }
-  @Override public ModifyOneUserImpl message(String message) {       this.message = RepoAssert.notEmpty(message,         () -> "message can't be empty!"); return this; }
-  @Override public ModifyOneUserImpl userName(String userName) {     this.userName = Optional.ofNullable(RepoAssert.notEmpty(userName,       () -> "userName can't be empty!")); return this; }
-  @Override public ModifyOneUserImpl email(String email) {           this.email = Optional.ofNullable(RepoAssert.notEmpty(email,             () -> "email can't be empty!")); return this; }
-  @Override public ModifyOneUserImpl externalId(String externalId) { this.externalId = Optional.ofNullable(externalId); return this; }
+  @Override public ModifyOneMemberImpl userId(String userId) {         this.userId = RepoAssert.notEmpty(userId,           () -> "userId can't be empty!"); return this; }
+  @Override public ModifyOneMemberImpl repoId(String repoId) {         this.repoId = RepoAssert.notEmpty(repoId,           () -> "repoId can't be empty!"); return this; }
+  @Override public ModifyOneMemberImpl author(String author) {         this.author = RepoAssert.notEmpty(author,           () -> "author can't be empty!"); return this; }
+  @Override public ModifyOneMemberImpl message(String message) {       this.message = RepoAssert.notEmpty(message,         () -> "message can't be empty!"); return this; }
+  @Override public ModifyOneMemberImpl userName(String userName) {     this.userName = Optional.ofNullable(RepoAssert.notEmpty(userName,       () -> "userName can't be empty!")); return this; }
+  @Override public ModifyOneMemberImpl email(String email) {           this.email = Optional.ofNullable(RepoAssert.notEmpty(email,             () -> "email can't be empty!")); return this; }
+  @Override public ModifyOneMemberImpl externalId(String externalId) { this.externalId = Optional.ofNullable(externalId); return this; }
   
   @Override
   public ModifyOneMember groupsRoles(ModType type, Map<String, List<String>> addUseGroupRoles) {
@@ -79,7 +79,7 @@ public class ModifyOneUserImpl implements ModifyOneMember {
     return this; 
   }
   @Override 
-  public ModifyOneUserImpl groups(ModType type, List<String> initGroups) { 
+  public ModifyOneMemberImpl groups(ModType type, List<String> initGroups) { 
     RepoAssert.notEmpty(initGroups, () -> "groups can't be empty!");
     final var groups = initGroups.stream().distinct().toList();
     this.allGroups.addAll(groups);
@@ -93,7 +93,7 @@ public class ModifyOneUserImpl implements ModifyOneMember {
     return this; 
    }
   @Override 
-  public ModifyOneUserImpl roles(ModType type, List<String> initRoles) {
+  public ModifyOneMemberImpl roles(ModType type, List<String> initRoles) {
     RepoAssert.notEmpty(initRoles, () -> "roles can't be empty!");
     
     final var roles = initRoles.stream().distinct().toList();
@@ -192,7 +192,7 @@ public class ModifyOneUserImpl implements ModifyOneMember {
           .build());
     }
     
-    final var modify = new BatchForOneUserModify(tx.getRepo().getId(), author, message)
+    final var modify = new BatchForOneMemberModify(tx.getRepo().getId(), author, message)
       .externalId(externalId)
       .email(email)
       .current(user.getObjects())

@@ -43,7 +43,7 @@ import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class BatchForOneUserModify {
+public class BatchForOneMemberModify {
   private final String repoId;
   private final String author;
   private final String message;
@@ -62,19 +62,19 @@ public class BatchForOneUserModify {
   private Optional<String> email;
   private Optional<String> externalId;
 
-  public BatchForOneUserModify current(OrgMemberHierarchy current) {this.current = current; return this; }
-  public BatchForOneUserModify userName(Optional<String> userName) {     this.userName = userName; return this; }
-  public BatchForOneUserModify email(Optional<String> email) {           this.email = email; return this; }
-  public BatchForOneUserModify externalId(Optional<String> externalId) { this.externalId = externalId; return this; }
-  public BatchForOneUserModify updateGroups(ModType type, OrgParty groups) { 
+  public BatchForOneMemberModify current(OrgMemberHierarchy current) {this.current = current; return this; }
+  public BatchForOneMemberModify userName(Optional<String> userName) {     this.userName = userName; return this; }
+  public BatchForOneMemberModify email(Optional<String> email) {           this.email = email; return this; }
+  public BatchForOneMemberModify externalId(Optional<String> externalId) { this.externalId = externalId; return this; }
+  public BatchForOneMemberModify updateGroups(ModType type, OrgParty groups) { 
     this.groups.add(new ModGroup(type, groups));
     return this; 
   }
-  public BatchForOneUserModify updateRoles(ModType type, OrgRight role) { 
+  public BatchForOneMemberModify updateRoles(ModType type, OrgRight role) { 
     this.roles.add(new ModRole(type, role)); 
     return this;
   }
-  public BatchForOneUserModify updateGroupRoles(ModType type, Map<OrgParty, List<OrgRight>> addUserToGroupRoles) { 
+  public BatchForOneMemberModify updateGroupRoles(ModType type, Map<OrgParty, List<OrgRight>> addUserToGroupRoles) { 
     if(type == ModType.ADD) {
       this.addUserToGroupRoles.putAll(addUserToGroupRoles);
     } else {
