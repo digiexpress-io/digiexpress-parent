@@ -44,8 +44,8 @@ import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatusType;
     include = JsonTypeInfo.As.PROPERTY,
     property = "commandType")
 @JsonSubTypes({
-  @Type(value = ImmutableChangePrincipalRoles.class, name = "ChangePrincipalRoles"), 
-  @Type(value = ImmutableChangePrincipalStatus.class, name = "ChangePrincipalStatus"), 
+  @Type(value = ImmutableChangePrincipalRoles.class, name = "CHANGE_PRINCIPAL_ROLES"), 
+  @Type(value = ImmutableChangePrincipalStatus.class, name = "CHANGE_PRINCIPAL_STATUS"), 
 })
 
 public interface PrincipalCommand extends Serializable {
@@ -60,8 +60,8 @@ public interface PrincipalCommand extends Serializable {
   PrincipalCommand withTargetDate(Instant targetDate);
   
   enum PrincipalCommandType {
-    ChangePrincipalRoles,
-    ChangePrincipalStatus
+    CHANGE_PRINCIPAL_ROLES,
+    CHANGE_PRINCIPAL_STATUS
   }
   
   @JsonTypeInfo(
@@ -69,8 +69,8 @@ public interface PrincipalCommand extends Serializable {
       include = JsonTypeInfo.As.PROPERTY,
       property = "commandType")
   @JsonSubTypes({
-    @Type(value = ImmutableChangePrincipalRoles.class, name = "ChangePrincipalRoles"), 
-    @Type(value = ImmutableChangePrincipalStatus.class, name = "ChangePrincipalStatus"), 
+    @Type(value = ImmutableChangePrincipalRoles.class, name = "CHANGE_PRINCIPAL_ROLES"), 
+    @Type(value = ImmutableChangePrincipalStatus.class, name = "CHANGE_PRINCIPAL_STATUS"), 
   })
   
   interface PrincipalUpdateCommand extends PrincipalCommand {
@@ -82,14 +82,14 @@ public interface PrincipalCommand extends Serializable {
   interface ChangePrincipalRoles extends PrincipalUpdateCommand {
     List<Role> getRoles();
     
-    @Override default PrincipalCommandType getCommandType() { return PrincipalCommandType.ChangePrincipalRoles; }
+    @Override default PrincipalCommandType getCommandType() { return PrincipalCommandType.CHANGE_PRINCIPAL_ROLES; }
   }
   
   @Value.Immutable @JsonSerialize(as = ImmutableChangePrincipalStatus.class) @JsonDeserialize(as = ImmutableChangePrincipalStatus.class)
   interface ChangePrincipalStatus extends PrincipalUpdateCommand {
     OrgActorStatusType getStatus();
     
-    @Override default PrincipalCommandType getCommandType() { return PrincipalCommandType.ChangePrincipalStatus; }
+    @Override default PrincipalCommandType getCommandType() { return PrincipalCommandType.CHANGE_PRINCIPAL_STATUS; }
   }
 
 }

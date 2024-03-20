@@ -44,11 +44,11 @@ import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatusType;
     include = JsonTypeInfo.As.PROPERTY,
     property = "commandType")
 @JsonSubTypes({
-  @Type(value = ImmutableCreateRole.class, name = "CreateRole"),  
-  @Type(value = ImmutableChangeRoleName.class, name = "ChangeRoleName"),  
-  @Type(value = ImmutableChangeRoleDescription.class, name = "ChangeRoleDescription"),  
-  @Type(value = ImmutableChangeRoleStatus.class, name = "ChangeRoleStatus"), 
-  @Type(value = ImmutableChangeRolePermissions.class, name = "ChangeRolePermissions"), 
+  @Type(value = ImmutableCreateRole.class, name = "CREATE_ROLE"),  
+  @Type(value = ImmutableChangeRoleName.class, name = "CHANGE_ROLE_NAME"),  
+  @Type(value = ImmutableChangeRoleDescription.class, name = "CHANGE_ROLE_DESCRIPTION"),  
+  @Type(value = ImmutableChangeRoleStatus.class, name = "CHANGE_ROLE_STATUS"), 
+  @Type(value = ImmutableChangeRolePermissions.class, name = "CHANGE_ROLE_PERMISSIONS"), 
 })
 
 public interface RoleCommand extends Serializable {
@@ -63,11 +63,11 @@ public interface RoleCommand extends Serializable {
   RoleCommand withTargetDate(Instant targetDate);
   
   enum RoleCommandType {
-    CreateRole, 
-    ChangeRoleName, 
-    ChangeRoleDescription,
-    ChangeRoleStatus,
-    ChangeRolePermissions,
+    CREATE_ROLE, 
+    CHANGE_ROLE_NAME, 
+    CHANGE_ROLE_DESCRIPTION,
+    CHANGE_ROLE_STATUS,
+    CHANGE_ROLE_PERMISSIONS,
   }
 
   @Value.Immutable @JsonSerialize(as = ImmutableCreateRole.class) @JsonDeserialize(as = ImmutableCreateRole.class)
@@ -77,7 +77,7 @@ public interface RoleCommand extends Serializable {
     List<Permission> getPermissions();
     
     @Value.Default
-    @Override default RoleCommandType getCommandType() { return RoleCommandType.CreateRole; }
+    @Override default RoleCommandType getCommandType() { return RoleCommandType.CREATE_ROLE; }
   }
   
   
@@ -86,10 +86,10 @@ public interface RoleCommand extends Serializable {
       include = JsonTypeInfo.As.PROPERTY,
       property = "commandType")
   @JsonSubTypes({
-    @Type(value = ImmutableChangeRoleName.class, name = "ChangeRoleName"), 
-    @Type(value = ImmutableChangeRoleDescription.class, name = "ChangeRoleDescription"),  
-    @Type(value = ImmutableChangeRoleStatus.class, name = "ChangeRoleStatus"), 
-    @Type(value = ImmutableChangeRolePermissions.class, name = "ChangeRolePermissions"), 
+    @Type(value = ImmutableChangeRoleName.class, name = "CHANGE_ROLE_NAME"), 
+    @Type(value = ImmutableChangeRoleDescription.class, name = "CHANGE_ROLE_DESCRIPTION"),  
+    @Type(value = ImmutableChangeRoleStatus.class, name = "CHANGE_ROLE_STATUS"), 
+    @Type(value = ImmutableChangeRolePermissions.class, name = "CHANGE_ROLE_PERMISSIONS"), 
   })
 
   
@@ -102,28 +102,28 @@ public interface RoleCommand extends Serializable {
   interface ChangeRoleName extends RoleUpdateCommand {
     String getName();
     
-    @Override default RoleCommandType getCommandType() { return RoleCommandType.ChangeRoleName; }
+    @Override default RoleCommandType getCommandType() { return RoleCommandType.CHANGE_ROLE_NAME; }
   }
   
   @Value.Immutable @JsonSerialize(as = ImmutableChangeRoleDescription.class) @JsonDeserialize(as = ImmutableChangeRoleDescription.class)
   interface ChangeRoleDescription extends RoleUpdateCommand {
     String getName();
     
-    @Override default RoleCommandType getCommandType() { return RoleCommandType.ChangeRoleDescription; }
+    @Override default RoleCommandType getCommandType() { return RoleCommandType.CHANGE_ROLE_DESCRIPTION; }
   }
   
   @Value.Immutable @JsonSerialize(as = ImmutableChangeRoleStatus.class) @JsonDeserialize(as = ImmutableChangeRoleStatus.class)
   interface ChangeRoleStatus extends RoleUpdateCommand {
     OrgActorStatusType getStatus();
     
-    @Override default RoleCommandType getCommandType() { return RoleCommandType.ChangeRoleStatus; }
+    @Override default RoleCommandType getCommandType() { return RoleCommandType.CHANGE_ROLE_STATUS; }
   }
   
   @Value.Immutable @JsonSerialize(as = ImmutableChangeRolePermissions.class) @JsonDeserialize(as = ImmutableChangeRolePermissions.class)
   interface ChangeRolePermissions extends RoleUpdateCommand {
     List<Permission> getPermissions();
     
-    @Override default RoleCommandType getCommandType() { return RoleCommandType.ChangeRolePermissions; }
+    @Override default RoleCommandType getCommandType() { return RoleCommandType.CHANGE_ROLE_PERMISSIONS; }
   }
   
 }
