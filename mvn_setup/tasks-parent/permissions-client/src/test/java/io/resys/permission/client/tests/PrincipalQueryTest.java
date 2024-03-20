@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
 import io.resys.permission.client.api.PermissionClient;
-import io.resys.permission.client.api.model.Principal.Permission;
+import io.resys.permission.client.api.model.Principal;
 import io.resys.permission.client.tests.config.DbTestTemplate;
 import io.resys.permission.client.tests.config.GenerateTestData;
 import io.resys.permission.client.tests.config.OrgPgProfile;
@@ -20,13 +20,14 @@ import lombok.extern.slf4j.Slf4j;
 @QuarkusTest
 @TestProfile(OrgPgProfile.class)
 @Slf4j
-public class PermissionTest extends DbTestTemplate {
+public class PrincipalQueryTest extends DbTestTemplate {
 
+  
   @Test  
   public void basicTest() {
     // create project
     final PermissionClient client = getClient().repoQuery()
-        .repoName("PermissionTest-1")
+        .repoName("PrincipalQueryTest-1")
         .create()
         .await().atMost(Duration.ofMinutes(1));
 
@@ -35,18 +36,19 @@ public class PermissionTest extends DbTestTemplate {
     new GenerateTestData(getDocDb()).populate(repo);
 
     
-    final List<Permission> allPermissions = client
-        .permissionQuery().findAllPermissions()
+    final List<Principal> allPrincipals = client
+        .principalQuery().findAllPrincipals()
         .await().atMost(Duration.ofMinutes(1));
-    
-    for(final var permission : allPermissions) {
+  
+    for(final var principal: allPrincipals) {
       final var foundByName = client
-        .permissionQuery().get(permission.getName())
+        .principalQuery().get(principal.getName())
         .await().atMost(Duration.ofMinutes(1));
-      
-      Assertions.assertEquals(permission.getId(), foundByName.getId());
+  
+      Assertions.assertEquals(principal.getId(), foundByName.getId());
     }
-
-    log.debug(new JsonArray(allPermissions).encodePrettily());
+    log.debug(new JsonArray(allPrincipals).encodePrettily());
   }
+
+  
 }

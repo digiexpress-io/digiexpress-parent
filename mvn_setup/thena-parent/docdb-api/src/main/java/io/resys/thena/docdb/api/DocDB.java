@@ -60,8 +60,7 @@ public interface DocDB {
     }
   }
 
-  
-  
+
   // single document model
   interface DocModel {
     DocCommitActions commit();

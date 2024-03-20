@@ -44,10 +44,10 @@ import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatusType;
     include = JsonTypeInfo.As.PROPERTY,
     property = "commandType")
 @JsonSubTypes({
-  @Type(value = ImmutableCreatePermission.class, name = "CreatePermission"), 
-  @Type(value = ImmutableChangePermissionName.class, name = "ChangePermissionName"), 
-  @Type(value = ImmutableChangePermissionDescription.class, name = "ChangePermissionDescription"), 
-  @Type(value = ImmutableChangePermissionStatus.class, name = "ChangePermissionStatus"), 
+  @Type(value = ImmutableCreatePermission.class, name = "CREATE_PERMISSION"), 
+  @Type(value = ImmutableChangePermissionName.class, name = "CHANGE_PERMISSION_NAME"), 
+  @Type(value = ImmutableChangePermissionDescription.class, name = "CHANGE_PERMISSION_DESCRIPTION"), 
+  @Type(value = ImmutableChangePermissionStatus.class, name = "CHANGE_PERMISSION_STATUS"), 
 })
 
 public interface PermissionCommand extends Serializable {
@@ -62,10 +62,10 @@ public interface PermissionCommand extends Serializable {
   PermissionCommand withTargetDate(Instant targetDate);
   
   enum PermissionCommandType {
-    CreatePermission,
-    ChangePermissionName,
-    ChangePermissionDescription,
-    ChangePermissionStatus,
+    CREATE_PERMISSION,
+    CHANGE_PERMISSION_NAME,
+    CHANGE_PERMISSION_DESCRIPTION,
+    CHANGE_PERMISSION_STATUS,
   }
   
   @Value.Immutable @JsonSerialize(as = ImmutableCreatePermission.class) @JsonDeserialize(as = ImmutableCreatePermission.class)
@@ -75,7 +75,7 @@ public interface PermissionCommand extends Serializable {
     List<Role> getRoles();
     
     @Value.Default
-    @Override default PermissionCommandType getCommandType() { return PermissionCommandType.CreatePermission; }
+    @Override default PermissionCommandType getCommandType() { return PermissionCommandType.CREATE_PERMISSION; }
   }
   
   @JsonTypeInfo(
@@ -83,9 +83,9 @@ public interface PermissionCommand extends Serializable {
       include = JsonTypeInfo.As.PROPERTY,
       property = "commandType")
   @JsonSubTypes({
-    @Type(value = ImmutableChangePermissionName.class, name = "ChangePermissionName"), 
-    @Type(value = ImmutableChangePermissionDescription.class, name = "ChangePermissionDescription"), 
-    @Type(value = ImmutableChangePermissionStatus.class, name = "ChangePermissionStatus"), 
+    @Type(value = ImmutableChangePermissionName.class, name = "CHANGE_PERMISSION_NAME"), 
+    @Type(value = ImmutableChangePermissionDescription.class, name = "CHANGE_PERMISSION_DESCRIPTION"), 
+    @Type(value = ImmutableChangePermissionStatus.class, name = "CHANGE_PERMISSION_STATUS"), 
   })
   
   interface PermissionUpdateCommand extends PermissionCommand {
@@ -97,21 +97,21 @@ public interface PermissionCommand extends Serializable {
   interface ChangePermissionName extends PermissionUpdateCommand {
     String getName();
     
-    @Override default PermissionCommandType getCommandType() { return PermissionCommandType.ChangePermissionName; }
+    @Override default PermissionCommandType getCommandType() { return PermissionCommandType.CHANGE_PERMISSION_NAME; }
   }
   
   @Value.Immutable @JsonSerialize(as = ImmutableChangePermissionDescription.class) @JsonDeserialize(as = ImmutableChangePermissionDescription.class)
   interface ChangePermissionDescription extends PermissionUpdateCommand {
     String getDescription();
     
-    @Override default PermissionCommandType getCommandType() { return PermissionCommandType.ChangePermissionDescription; }
+    @Override default PermissionCommandType getCommandType() { return PermissionCommandType.CHANGE_PERMISSION_DESCRIPTION; }
   }
   
   @Value.Immutable @JsonSerialize(as = ImmutableChangePermissionStatus.class) @JsonDeserialize(as = ImmutableChangePermissionStatus.class)
   interface ChangePermissionStatus extends PermissionUpdateCommand {
     OrgActorStatusType getStatus();
     
-    @Override default PermissionCommandType getCommandType() { return PermissionCommandType.ChangePermissionStatus; }
+    @Override default PermissionCommandType getCommandType() { return PermissionCommandType.CHANGE_PERMISSION_STATUS; }
   }
   
 }

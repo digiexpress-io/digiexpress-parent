@@ -9,46 +9,48 @@ import org.junit.jupiter.api.Test;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
 import io.resys.permission.client.api.PermissionClient;
-import io.resys.permission.client.api.model.Principal;
+import io.resys.permission.client.api.model.Principal.Role;
 import io.resys.permission.client.tests.config.DbTestTemplate;
 import io.resys.permission.client.tests.config.GenerateTestData;
 import io.resys.permission.client.tests.config.OrgPgProfile;
 import io.resys.thena.docdb.api.models.Repo;
-import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 
 @QuarkusTest
 @TestProfile(OrgPgProfile.class)
 @Slf4j
-public class PrincipalTest extends DbTestTemplate {
+public class RoleQueryTest extends DbTestTemplate {
 
-  
-  @Test  
+  @Test 
   public void basicTest() {
-    // create project
+    
     final PermissionClient client = getClient().repoQuery()
-        .repoName("PrincipalTest-1")
-        .create()
-        .await().atMost(Duration.ofMinutes(1));
-
+      .repoName("RoleQueryTest-1")
+      .create()
+      .await().atMost(Duration.ofMinutes(1));
+    
     final Repo repo = client.getRepo().await().atMost(Duration.ofMinutes(1));
     log.debug("created repo {}", repo);
     new GenerateTestData(getDocDb()).populate(repo);
-
     
-    final List<Principal> allPrincipals = client
-        .principalQuery().findAllPrincipals()
-        .await().atMost(Duration.ofMinutes(1));
+    final List<Role> allRoles = client
+      .roleQuery().findAllRoles()
+      .await().atMost(Duration.ofMinutes(1));
   
-    for(final var principal: allPrincipals) {
+    for(final var role : allRoles) {
       final var foundByName = client
-        .principalQuery().get(principal.getName())
-        .await().atMost(Duration.ofMinutes(1));
-  
-      Assertions.assertEquals(principal.getId(), foundByName.getId());
+      .roleHierarchyQuery().get(role.getName())
+      .await().atMost(Duration.ofMinutes(1));
+      
+      log.debug(JsonObject.mapFrom(foundByName).encodePrettily());
+      log.debug(System.lineSeparator()+ foundByName.getLog());
+      
+      
+      Assertions.assertEquals(role.getId(), foundByName.getTargetRoleId());
     }
-    log.debug(new JsonArray(allPrincipals).encodePrettily());
-  }
-
+    
+  //log.debug(new JsonArray(allRoles).encodePrettily());
   
+  }
 }
