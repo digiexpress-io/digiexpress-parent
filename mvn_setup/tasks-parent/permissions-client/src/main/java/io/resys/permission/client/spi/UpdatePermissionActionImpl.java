@@ -4,16 +4,22 @@ import java.util.Arrays;
 import java.util.List;
 
 import io.resys.permission.client.api.PermissionClient.UpdatePermissionAction;
+import io.resys.permission.client.api.model.ImmutablePermission;
 import io.resys.permission.client.api.model.PermissionCommand.ChangePermissionDescription;
 import io.resys.permission.client.api.model.PermissionCommand.ChangePermissionName;
 import io.resys.permission.client.api.model.PermissionCommand.ChangePermissionStatus;
 import io.resys.permission.client.api.model.PermissionCommand.PermissionUpdateCommand;
 import io.resys.permission.client.api.model.Principal.Permission;
 import io.resys.thena.docdb.api.actions.OrgCommitActions.ModifyOneRight;
+import io.resys.thena.docdb.api.models.Repo;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatusType;
 import io.resys.thena.docdb.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+
+@Slf4j
 @RequiredArgsConstructor
 public class UpdatePermissionActionImpl implements UpdatePermissionAction {
   
@@ -61,7 +67,30 @@ public class UpdatePermissionActionImpl implements UpdatePermissionAction {
         .repoId(ctx.getConfig().getRepoId())
         .message("Permission update")
         .author(ctx.getConfig().getAuthor().get())
-        .build().onItem().transform(e -> null);
+        .build().onItem().transform(response -> {
+          if(response.getStatus() != Repo.CommitResultStatus.OK) {
+            final var msg = "failed to update permission hierarchy by id = '%s'!".formatted(id.iterator().next());
+            final var exception = new UpdatePermissionException(msg);
+            
+            response.getMessages().forEach((e) -> {
+              if(e.getException() != null) {
+                exception.addSuppressed(e.getException());
+              }
+            });
+            log.error(msg);
+            throw exception;
+          }
+          final var right = response.getRight();
+          
+          return ImmutablePermission.builder()
+              .description(right.getRightDescription())
+              .name(right.getRightName())
+              .id(right.getId())
+              .status(OrgActorStatusType.IN_FORCE)
+              .version(right.getCommitId())
+              
+              .build();
+        });
   }
 
   @Override

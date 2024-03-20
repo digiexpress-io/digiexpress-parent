@@ -16,7 +16,7 @@ import io.resys.thena.docdb.api.actions.OrgCommitActions.OneMemberEnvelope;
 import io.resys.thena.docdb.api.models.ImmutableMessage;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
 import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
-import io.resys.thena.docdb.api.models.Repo.CommitResultStatus;
+import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgParty;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRight;
 import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgMemberHierarchy;
@@ -163,7 +163,7 @@ public class ModifyOneMemberImpl implements ModifyOneMember {
     if(user.getStatus() == QueryEnvelopeStatus.ERROR) {
       return Uni.createFrom().item(ImmutableOneMemberEnvelope.builder()
           .repoId(repoId)
-          .status(CommitResultStatus.ERROR)
+          .status(Repo.CommitResultStatus.ERROR)
           .addAllMessages(user.getMessages())
           .build());
     }
@@ -173,7 +173,7 @@ public class ModifyOneMemberImpl implements ModifyOneMember {
       final var expected = String.join(", ", this.allGroups);
       return Uni.createFrom().item(ImmutableOneMemberEnvelope.builder()
           .repoId(repoId)
-          .status(CommitResultStatus.ERROR)
+          .status(Repo.CommitResultStatus.ERROR)
           .addMessages(ImmutableMessage.builder()
               .text("Could not find all groups: \r\n found: \r\n" + found + " \r\n but requested: \r\n" + expected + "!")
               .build())
@@ -185,7 +185,7 @@ public class ModifyOneMemberImpl implements ModifyOneMember {
       final var expected = String.join(", ", this.allRoles);
       return Uni.createFrom().item(ImmutableOneMemberEnvelope.builder()
           .repoId(repoId)
-          .status(CommitResultStatus.ERROR)
+          .status(Repo.CommitResultStatus.ERROR)
           .addMessages(ImmutableMessage.builder()
               .text("Could not find all roles: \r\n found: \r\n" + found + " \r\n but requested: \r\n" + expected + "!")
               .build())
@@ -272,7 +272,7 @@ public class ModifyOneMemberImpl implements ModifyOneMember {
             .addMessages(ImmutableMessage.builder()
                 .exception(e).text("Nothing to commit, data already in the expected state!")
                 .build())
-            .status(CommitResultStatus.NO_CHANGES)
+            .status(Repo.CommitResultStatus.NO_CHANGES)
             .build());
     }
      
