@@ -11,14 +11,14 @@ import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgParty;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgPartyRight;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRight;
 import io.resys.thena.docdb.api.visitors.OrgPartyContainerVisitor;
-import io.resys.thena.docdb.api.visitors.OrgPartyContainerVisitor.PartyVisitor;
+import io.resys.thena.docdb.api.visitors.OrgPartyContainerVisitor.TopPartyVisitor;
 import io.resys.thena.docdb.api.visitors.OrgTreeContainer.OrgAnyTreeContainerContext;
 import io.resys.thena.docdb.api.visitors.OrgTreeContainer.OrgAnyTreeContainerVisitor;
 
 
 
 public class PartyHierarchyContainerVisitor extends OrgPartyContainerVisitor<ImmutableOrgPartyHierarchy> 
-  implements OrgAnyTreeContainerVisitor<ImmutableOrgPartyHierarchy>, PartyVisitor {
+  implements OrgAnyTreeContainerVisitor<ImmutableOrgPartyHierarchy>, TopPartyVisitor {
   
   private final String groupIdOrNameOrExternalId;
   private final ImmutableOrgPartyHierarchy.Builder builder = ImmutableOrgPartyHierarchy.builder();
@@ -129,11 +129,16 @@ public class PartyHierarchyContainerVisitor extends OrgPartyContainerVisitor<Imm
     return builder.log("").build();
   }
   @Override
-  protected PartyVisitor visitTop(OrgParty group, OrgAnyTreeContainerContext worldState) {
+  protected TopPartyVisitor visitTop(OrgParty group, OrgAnyTreeContainerContext worldState) {
     return this;
   }
   @Override
   protected PartyVisitor visitChild(OrgParty group, OrgAnyTreeContainerContext worldState) {
     return this;
+  }
+
+  @Override
+  public void visitLog(String log) {
+    
   }
 }

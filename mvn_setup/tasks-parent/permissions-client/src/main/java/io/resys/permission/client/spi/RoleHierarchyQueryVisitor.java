@@ -29,26 +29,35 @@ public class RoleHierarchyQueryVisitor extends OrgPartyContainerVisitor<RoleHier
   private final Map<String, ImmutablePermission> permissions = new LinkedHashMap<>(); // permissions by name
   private final Map<String, ImmutablePrincipal> principals = new LinkedHashMap<>();   // principals by name
   private final Map<String, ImmutableRole> roles = new LinkedHashMap<>();   // principals by name
-  private final ImmutableRoleHierarchyContainer.Builder result = ImmutableRoleHierarchyContainer.builder();
+  private final ImmutableRoleHierarchyContainer.Builder result = ImmutableRoleHierarchyContainer.builder().log("");
   private String roleFoundId;  
   
-
-  
   public RoleHierarchyQueryVisitor(String idOrNameOrExtId) {
-    super(false);
+    super(false, true);
     this.idOrNameOrExtId = idOrNameOrExtId;
   }
   
   @Override
   public RoleHierarchyContainer close() {
-    return result.log("").build();
+    return result.build();
+  }
+  
+  private void visitRole(ImmutableRole.Builder role, OrgParty party, List<OrgParty> parents, List<OrgRight> parentRights) {
+    role
+    .id(party.getId())
+    .name(party.getPartyName())
+    .version(party.getCommitId())
+    .description(party.getPartyDescription())
+    .status(OrgActorStatusType.IN_FORCE)
+    .parentId(party.getParentId())
+    .addAllPermissions(parentRights.stream().map(r -> r.getRightName()).toList()); 
   }
   
   @Override
-  protected PartyVisitor visitTop(OrgParty group, OrgAnyTreeContainerContext worldState) {
+  protected TopPartyVisitor visitTop(OrgParty group, OrgAnyTreeContainerContext worldState) {
     final ImmutableRole.Builder role = ImmutableRole.builder();
     
-    return new PartyVisitor() {
+    return new TopPartyVisitor() {
       @Override 
       public void visitPartyRight(OrgParty party, OrgPartyRight partyRight, OrgRight right, boolean isDisabled) {
         role.addPermissions(right.getRightName()); 
@@ -59,11 +68,11 @@ public class RoleHierarchyQueryVisitor extends OrgPartyContainerVisitor<RoleHier
       }
       @Override
       public void visitMembershipWithInheritance(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled) {
-        role.addPrinciples(user.getUserName());
+        role.addPrincipals(user.getUserName());
       }
       @Override
       public void visitMembership(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled) {
-        role.addPrinciples(user.getUserName());
+        role.addPrincipals(user.getUserName()); // direct members
       }
       @Override
       public void visitChildParty(OrgParty party, boolean isDisabled) {
@@ -75,23 +84,23 @@ public class RoleHierarchyQueryVisitor extends OrgPartyContainerVisitor<RoleHier
         if(party.isMatch(idOrNameOrExtId)) {
           roleFoundId = party.getId();  
         }
-        role
-          .id(party.getId())
-          .name(party.getPartyName())
-          .version(party.getCommitId())
-          .description(party.getPartyDescription())
-          .status(OrgActorStatusType.IN_FORCE)
-          .parentId(party.getParentId())
-          .addAllPermissions(parentRights.stream().map(r -> r.getRightName()).toList());
+        visitRole(role, party, parents, parentRights);
       }
-      
+      @Override
+      public void visitLog(String log) {
+        if(roleFoundId != null) {
+          result.log(log);
+        }
+      }      
       @Override
       public void end(OrgParty group, List<OrgParty> parents, boolean isDisabled) {
         final var completedRole = role.build();
         roles.put(completedRole.getId(), completedRole);
         
         if(roleFoundId != null) {
+          
           result
+            .rootRoleId(group.getId())
             .targetRoleId(roleFoundId)
             .putAllPrincipals(principals)
             .putAllPermissions(permissions)
@@ -102,6 +111,7 @@ public class RoleHierarchyQueryVisitor extends OrgPartyContainerVisitor<RoleHier
         principals.clear();
         roles.clear();
       }
+
     };
   }
   
@@ -120,30 +130,21 @@ public class RoleHierarchyQueryVisitor extends OrgPartyContainerVisitor<RoleHier
       }
       @Override
       public void visitMembershipWithInheritance(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled) {
-        role.addPrinciples(user.getUserName());
+        role.addPrincipals(user.getUserName());
       }
       @Override
       public void visitMembership(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled) {
-        role.addPrinciples(user.getUserName());
+        role.addPrincipals(user.getUserName());
       }
       @Override
       public void visitChildParty(OrgParty party, boolean isDisabled) {
-        
       }
-      
       @Override
       public void start(OrgParty party, List<OrgParty> parents, List<OrgRight> parentRights, boolean isDisabled) {
         if(party.isMatch(idOrNameOrExtId)) {
           roleFoundId = party.getId();  
         }
-        role
-          .id(party.getId())
-          .name(party.getPartyName())
-          .version(party.getCommitId())
-          .description(party.getPartyDescription())
-          .status(OrgActorStatusType.IN_FORCE)
-          .parentId(party.getParentId())
-          .addAllPermissions(parentRights.stream().map(r -> r.getRightName()).toList());
+        visitRole(role, party, parents, parentRights);
       }
       
       @Override

@@ -25,7 +25,7 @@ public interface OrgTreeContainer {
     OrgMember getMember(String id);
     OrgRight getRight(String id);
     Collection<OrgRight> getRights();
-    List<OrgMemberRight> getMemberRoles(String memberId);
+    List<OrgMemberRight> getMemberRights(String memberId);
     
     // Group related 
     OrgParty getParty(String partyId);

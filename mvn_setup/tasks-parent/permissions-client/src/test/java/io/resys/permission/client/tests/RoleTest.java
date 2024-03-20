@@ -44,6 +44,8 @@ public class RoleTest extends DbTestTemplate {
       .await().atMost(Duration.ofMinutes(1));
       
       log.debug(JsonObject.mapFrom(foundByName).encodePrettily());
+      log.debug(System.lineSeparator()+ foundByName.getLog());
+      
       
       Assertions.assertEquals(role.getId(), foundByName.getTargetRoleId());
     }

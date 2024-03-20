@@ -14,8 +14,10 @@ import io.resys.thena.docdb.api.models.ThenaEnvelope.ThenaObjects;
 @Value.Immutable @JsonSerialize(as = ImmutableRoleHierarchyContainer.class) @JsonDeserialize(as = ImmutableRoleHierarchyContainer.class)
 public interface RoleHierarchyContainer extends ThenaObjects {
   String getTargetRoleId();
+  String getRootRoleId();
+  
   Map<String, Role> getRoles();
-  Map<String, Permission> getPermissions(); // permissions by name
-  Map<String, Principal> getPrincipals();   // principals by name
+  Map<String, Permission> getPermissions(); // permissions by id
+  Map<String, Principal> getPrincipals();   // principals by id
   String getLog();
 }

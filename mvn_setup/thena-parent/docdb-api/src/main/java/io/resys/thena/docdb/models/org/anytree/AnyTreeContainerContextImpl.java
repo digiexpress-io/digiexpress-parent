@@ -8,14 +8,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import com.google.common.collect.ImmutableList;
+
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatus;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatusType;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberRight;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMembership;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgParty;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgPartyRight;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRight;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMembership;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberRight;
 import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgProjectObjects;
 import io.resys.thena.docdb.api.visitors.OrgTreeContainer.OrgAnyTreeContainerContext;
 
@@ -155,31 +157,30 @@ public class AnyTreeContainerContextImpl implements OrgAnyTreeContainerContext {
     this.membershipStatus = Collections.unmodifiableMap(membershipStatus);
     
     // inheritance
-    final var groupInheritedUsers = new LinkedHashMap<String, List<OrgMembership>>();
-    
-    for(final var bottom : groupBottoms) {
-      if(isPartyDisabledUpward(bottom)) {
-        continue;
-      }
-      var parentId = bottom.getParentId();
-      final var users = new ArrayList<OrgMembership>();
-      while(parentId != null) {
-        final var next = worldState.getParties().get(parentId);
-        if(isPartyDisabledUpward(bottom)) {
-          continue;
-        }
-        groupInheritedUsers.put(next.getId(), Collections.unmodifiableList(users.stream().distinct().toList()));
-        users.addAll(getPartyMemberships(next.getId()).stream().filter(m -> !isStatusDisabled(getStatus(m))).toList());
-        parentId = next.getParentId();
-      }
+    final var inheritedMembersForParties = new LinkedHashMap<String, List<OrgMembership>>();
+    for(final var rootNode : groupTops) {
+      putAllInheritedMembers(rootNode, Collections.emptyList(), inheritedMembersForParties);
     }
+    this.groupInheritedUsers = unmodifiableMap(inheritedMembersForParties);
+  }
+  
+
+  private void putAllInheritedMembers(OrgParty party, List<OrgMembership> inheritedSoFar, Map<String, List<OrgMembership>> collector) {
+    if(isStatusDisabled(getStatus(party))) {
+      return;
+    }
+    collector.put(party.getId(), new ArrayList<>(inheritedSoFar));
     
-    
-    
-    this.groupInheritedUsers = unmodifiableMap(groupInheritedUsers);
+    final List<OrgMembership> myChildrenWillInherit = ImmutableList.<OrgMembership>builder()
+        .addAll(inheritedSoFar)
+        .addAll(getPartyMemberships(party.getId()))
+        .build();
+    for(final var child : getPartyChildren(party.getId())) {
+      putAllInheritedMembers(child, myChildrenWillInherit, collector); 
+    }
   }
 
-  private final <T> Map<String, List<T>> unmodifiableMap(Map<String, List<T>> input) {
+  private static final <T> Map<String, List<T>> unmodifiableMap(Map<String, List<T>> input) {
     final var result = new LinkedHashMap<String, List<T>>();
     for (var entry : input.entrySet()) {
       result.put(entry.getKey(), Collections.unmodifiableList(entry.getValue()));
@@ -200,7 +201,7 @@ public class AnyTreeContainerContextImpl implements OrgAnyTreeContainerContext {
     return worldState.getMembers().get(id);
   }
   @Override
-  public List<OrgMemberRight> getMemberRoles(String userId) {
+  public List<OrgMemberRight> getMemberRights(String userId) {
     return Optional.ofNullable(userRoles.get(userId)).orElse(Collections.emptyList());
   }
   @Override

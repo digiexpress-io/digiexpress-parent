@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 
 
 
-public class RoleHierarchyContainerVisitor extends OrgPartyContainerVisitor<OrgRightHierarchy> 
+public class RightHierarchyContainerVisitor extends OrgPartyContainerVisitor<OrgRightHierarchy> 
   implements OrgAnyTreeContainerVisitor<OrgRightHierarchy> {
   
   private final String roleIdOrNameOrExternalId;
@@ -32,11 +32,11 @@ public class RoleHierarchyContainerVisitor extends OrgPartyContainerVisitor<OrgR
   private final Map<String, GroupVisitorForRole> visitorsByGroup = new HashMap<>();
   
   private OrgAnyTreeContainerContext ctx;
-  private PartyVisitor currentVisitor;
+  private TopPartyVisitor currentVisitor;
   private OrgRight target;
   private DefaultNode nodeRoot;
   
-  public RoleHierarchyContainerVisitor(String roleIdOrNameOrExternalId) {
+  public RightHierarchyContainerVisitor(String roleIdOrNameOrExternalId) {
     super(true);
     this.roleIdOrNameOrExternalId = roleIdOrNameOrExternalId;
   }
@@ -89,7 +89,7 @@ public class RoleHierarchyContainerVisitor extends OrgPartyContainerVisitor<OrgR
   }
 
   @Override
-  protected PartyVisitor visitTop(OrgParty group, OrgAnyTreeContainerContext worldState) {
+  protected TopPartyVisitor visitTop(OrgParty group, OrgAnyTreeContainerContext worldState) {
     final var currentVisitor = new GroupVisitorForRole(target, nodeRoot, ctx);
     this.visitorsByGroup.put(group.getId(), currentVisitor);
     this.currentVisitor = currentVisitor;
@@ -102,7 +102,7 @@ public class RoleHierarchyContainerVisitor extends OrgPartyContainerVisitor<OrgR
   }
   
   @RequiredArgsConstructor
-  private static class GroupVisitorForRole implements PartyVisitor {
+  private static class GroupVisitorForRole implements TopPartyVisitor {
     private final OrgRight target;
     private final DefaultNode nodeRoot;
     private final OrgAnyTreeContainerContext ctx;
@@ -137,7 +137,7 @@ public class RoleHierarchyContainerVisitor extends OrgPartyContainerVisitor<OrgR
         return;
       }
       
-      final var disabledSpecificallyForUser = ctx.getMemberRoles(user.getId()).stream()
+      final var disabledSpecificallyForUser = ctx.getMemberRights(user.getId()).stream()
           .filter(role -> role.getRightId().equals(target.getId()))
           .filter(role -> ctx.isStatusDisabled(ctx.getStatus(role)))
           .findAny().isPresent();
@@ -200,6 +200,11 @@ public class RoleHierarchyContainerVisitor extends OrgPartyContainerVisitor<OrgR
     @Override
     public void end(OrgParty group, List<OrgParty> parents, boolean isDisabled) {
       groupContainsRole = null;
+    }
+
+    @Override
+    public void visitLog(String log) {
+      
     }
   }
   

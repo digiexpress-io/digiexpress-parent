@@ -15,7 +15,7 @@ import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgRightHierarchy;
 import io.resys.thena.docdb.api.visitors.OrgTreeContainer.OrgAnyTreeContainerVisitor;
 import io.resys.thena.docdb.models.org.anytree.AnyTreeContainerContextImpl;
 import io.resys.thena.docdb.models.org.anytree.AnyTreeContainerImpl;
-import io.resys.thena.docdb.models.org.anytree.RoleHierarchyContainerVisitor;
+import io.resys.thena.docdb.models.org.anytree.RightHierarchyContainerVisitor;
 import io.resys.thena.docdb.spi.DbState;
 import io.resys.thena.docdb.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
@@ -76,7 +76,7 @@ public class OrgRoleHierarchyQueryImpl implements RightHierarchyQuery {
     final var container = new AnyTreeContainerImpl(ctx);
     
     for(final var roleCriteria : init.getObjects().getRights().values().stream().sorted((a, b) -> a.getRightName().compareTo(b.getRightName())).toList()) {
-      final OrgRightHierarchy roleHierarchy = container.accept(new RoleHierarchyContainerVisitor(roleCriteria.getId()));
+      final OrgRightHierarchy roleHierarchy = container.accept(new RightHierarchyContainerVisitor(roleCriteria.getId()));
       result.add(roleHierarchy);
     }
     return ImmutableQueryEnvelopeList.<OrgRightHierarchy>builder()
@@ -91,7 +91,7 @@ public class OrgRoleHierarchyQueryImpl implements RightHierarchyQuery {
       String roleIdOrNameOrExternalId) {
     
     final var ctx = new AnyTreeContainerContextImpl(init.getObjects());
-    final OrgRightHierarchy group = new AnyTreeContainerImpl(ctx).accept(new RoleHierarchyContainerVisitor(roleIdOrNameOrExternalId));
+    final OrgRightHierarchy group = new AnyTreeContainerImpl(ctx).accept(new RightHierarchyContainerVisitor(roleIdOrNameOrExternalId));
     return ImmutableQueryEnvelope.<OrgRightHierarchy>builder()
         .objects(group)
         .repo(init.getRepo())
