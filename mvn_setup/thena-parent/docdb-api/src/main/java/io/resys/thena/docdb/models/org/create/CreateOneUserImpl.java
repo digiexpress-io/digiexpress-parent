@@ -205,7 +205,7 @@ public class CreateOneUserImpl implements CreateOneMember {
     return tx.insert().batchOne(batch)
       .onItem().transform(rsp -> ImmutableOneUserEnvelope.builder()
         .repoId(repoId)
-        .user(rsp.getUsers().isEmpty() ? null : rsp.getUsers().get(0))
+        .user(rsp.getMembers().isEmpty() ? null : rsp.getMembers().get(0))
         .addMessages(rsp.getLog())
         .addAllMessages(rsp.getMessages())
         .status(DataMapper.mapStatus(rsp.getStatus()))

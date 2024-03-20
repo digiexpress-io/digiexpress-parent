@@ -89,7 +89,7 @@ public class CreateOneRoleImpl implements CreateOneRight {
     return tx.insert().batchOne(batch)
       .onItem().transform(rsp -> ImmutableOneRoleEnvelope.builder()
         .repoId(repoId)
-        .role(rsp.getRoles().isEmpty() ? null : rsp.getRoles().get(0))
+        .role(rsp.getRights().isEmpty() ? null : rsp.getRights().get(0))
         .addMessages(rsp.getLog())
         .addAllMessages(rsp.getMessages())
         .status(DataMapper.mapStatus(rsp.getStatus()))

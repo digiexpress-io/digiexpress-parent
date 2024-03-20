@@ -134,9 +134,9 @@ public class BatchForOneUserCreate {
       .repoId(repoId)
       .status(BatchStatus.OK)
       .commit(commit)
-      .addUsers(user)
-      .userMemberships(memberships)
-      .userRoles(userRoles)
+      .addMembers(user)
+      .memberships(memberships)
+      .memberRights(userRoles)
       .log(ImmutableMessage.builder().text(logger.toString()).build())
       .build();
     return batch;

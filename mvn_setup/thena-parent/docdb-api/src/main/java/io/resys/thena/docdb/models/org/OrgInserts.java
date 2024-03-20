@@ -49,12 +49,12 @@ public interface OrgInserts {
     
     List<OrgActorData> getActorData();
     List<OrgActorStatus> getActorStatus();
-    List<OrgParty> getGroups();
-    List<OrgRight> getRoles();
-    List<OrgMember> getUsers();
-    List<OrgPartyRight> getGroupRoles();
-    List<OrgMemberRight> getUserRoles();
-    List<OrgMembership> getUserMemberships(); 
+    List<OrgParty> getParties();
+    List<OrgRight> getRights();
+    List<OrgMember> getMembers();
+    List<OrgPartyRight> getPartyRights();
+    List<OrgMemberRight> getMemberRights();
+    List<OrgMembership> getMemberships(); 
     
     List<String> getIdentifiersForUpdates();
     

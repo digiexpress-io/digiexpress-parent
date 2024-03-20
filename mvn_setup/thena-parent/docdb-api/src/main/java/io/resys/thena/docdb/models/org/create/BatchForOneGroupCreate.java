@@ -123,9 +123,9 @@ public class BatchForOneGroupCreate {
       .repoId(repoId)
       .status(BatchStatus.OK)
       .commit(commit)
-      .addGroups(group)
-      .userMemberships(memberships)
-      .groupRoles(groupRoles)
+      .addParties(group)
+      .memberships(memberships)
+      .partyRights(groupRoles)
       .log(ImmutableMessage.builder().text(logger.toString()).build())
       .build();
     return batch;

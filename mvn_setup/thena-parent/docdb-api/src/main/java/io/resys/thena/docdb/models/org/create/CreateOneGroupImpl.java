@@ -102,7 +102,7 @@ public class CreateOneGroupImpl implements CreateOneParty {
       	
       	return ImmutableOneGroupEnvelope.builder()
         .repoId(repoId)
-        .group(rsp.getGroups().isEmpty() ? null : rsp.getGroups().get(0))
+        .group(rsp.getParties().isEmpty() ? null : rsp.getParties().get(0))
         .addMessages(rsp.getLog())
         .addAllMessages(rsp.getMessages())
         .status(DataMapper.mapStatus(rsp.getStatus()))

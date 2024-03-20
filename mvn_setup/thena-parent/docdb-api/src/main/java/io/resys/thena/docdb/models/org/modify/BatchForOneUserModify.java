@@ -181,16 +181,16 @@ public class BatchForOneUserModify {
       .repoId(repoId)
       .status(BatchStatus.OK)
       .commit(commit)
-      .users(user.map(u -> Arrays.asList(u)).orElse(Collections.emptyList()))
-      .userMemberships(memberships)
-      .userRoles(userRoles)
+      .members(user.map(u -> Arrays.asList(u)).orElse(Collections.emptyList()))
+      .memberships(memberships)
+      .memberRights(userRoles)
       .actorStatus(actorStatus)
       .identifiersForUpdates(identifiersForUpdates)
       .log(ImmutableMessage.builder().text(logger.toString()).build())
       .build();
     
     // no changes
-    if(actorStatus.isEmpty() && userRoles.isEmpty() && memberships.isEmpty() && batch.getUsers().isEmpty()) {
+    if(actorStatus.isEmpty() && userRoles.isEmpty() && memberships.isEmpty() && batch.getMembers().isEmpty()) {
       throw new NoChangesException();
     }
     return batch;

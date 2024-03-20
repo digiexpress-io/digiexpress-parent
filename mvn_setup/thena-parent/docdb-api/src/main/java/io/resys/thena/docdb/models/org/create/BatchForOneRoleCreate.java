@@ -118,9 +118,9 @@ public class BatchForOneRoleCreate {
       .repoId(repoId)
       .status(BatchStatus.OK)
       .commit(commit)
-      .addRoles(role)
-      .userRoles(userRoles)
-      .groupRoles(groupRoles)
+      .addRights(role)
+      .memberRights(userRoles)
+      .partyRights(groupRoles)
       .log(ImmutableMessage.builder().text(logger.toString()).build())
       .build();
     return batch;
