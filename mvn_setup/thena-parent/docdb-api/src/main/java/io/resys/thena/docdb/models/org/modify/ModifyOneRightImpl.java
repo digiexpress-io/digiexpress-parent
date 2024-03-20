@@ -2,10 +2,8 @@ package io.resys.thena.docdb.models.org.modify;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import io.resys.thena.docdb.api.actions.ImmutableOneRightEnvelope;
@@ -22,7 +20,7 @@ import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgPartyRight;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRight;
 import io.resys.thena.docdb.models.org.OrgInserts.OrgBatchForOne;
 import io.resys.thena.docdb.models.org.OrgState.OrgRepo;
-import io.resys.thena.docdb.models.org.modify.BatchForOneMemberModify.NoChangesException;
+import io.resys.thena.docdb.models.org.modify.BatchForOneRightModify.NoRightChangesException;
 import io.resys.thena.docdb.spi.DataMapper;
 import io.resys.thena.docdb.spi.DbState;
 import io.resys.thena.docdb.support.RepoAssert;
@@ -134,6 +132,7 @@ public class ModifyOneRightImpl implements ModifyOneRight {
 		    partiesPromise, 
 		    membersPromise, 
 		    partyRightsPromise, 
+		    
 		    memberRightsPromise, 
 		    rightStatusPromise, 
 		    rightPromise
@@ -154,15 +153,10 @@ public class ModifyOneRightImpl implements ModifyOneRight {
       OrgRepo tx, 
       List<OrgParty> parties, 
       List<OrgMember> members,
-      List<OrgPartyRight> partyRightsPromise,
-      List<OrgMemberRight> memberRightsPromise, 
-      List<OrgActorStatus> rightStatusPromise,           
-      OrgRight rightPromise) {
-    
-    final Map<OrgParty, List<OrgRight>> addUseGroupRoles = new HashMap<>();
-    final Map<String, List<OrgRight>> addGroupsBy = new HashMap<>();
-    final Map<String, String> addGroupMapping = new HashMap<>();
-    
+      List<OrgPartyRight> partyRights,
+      List<OrgMemberRight> memberRights, 
+      List<OrgActorStatus> rightStatus,           
+      OrgRight right) {
     
     if(parties.size() < this.allParties.size()) {
       final var found = String.join(", ", parties.stream().map(e -> e.getPartyName()).toList());
@@ -188,13 +182,13 @@ public class ModifyOneRightImpl implements ModifyOneRight {
           .build());
     }
     
-    final var modify = new BatchForOneMemberModify(tx.getRepo().getId(), author, message)
-//      .externalId(externalId)
-//      .email(email)
-//      .current(user.getObjects())
-//      .userName(userName); 
-;
-    
+    final var modify = new BatchForOneRightModify(tx.getRepo().getId(), author, message)
+        .externalId(externalId)
+        .memberRights(memberRights)
+        .rightStatus(rightStatus)
+        .partyRights(partyRights)
+        .current(right); 
+
     // Remove or add groups 
     parties.forEach(party -> {
       if( partiesToAdd.contains(party.getPartyName()) ||
@@ -213,28 +207,26 @@ public class ModifyOneRightImpl implements ModifyOneRight {
     });
     
     // Remove or add roles 
-    members.forEach(role -> {
+    members.forEach(member -> {
       
-      if( membersToAdd.contains(role.getUserName()) ||
-          membersToAdd.contains(role.getId()) ||
-          membersToAdd.contains(role.getExternalId())
+      if( membersToAdd.contains(member.getUserName()) ||
+          membersToAdd.contains(member.getId()) ||
+          membersToAdd.contains(member.getExternalId())
       ) {
-        //modify.updateRoles(ModType.ADD, role);
+        modify.updateMember(ModType.ADD, member);
       }
       
-      if( membersToRemove.contains(role.getUserName()) ||
-          membersToRemove.contains(role.getId()) ||
-          membersToRemove.contains(role.getExternalId())
+      if( membersToRemove.contains(member.getUserName()) ||
+          membersToRemove.contains(member.getId()) ||
+          membersToRemove.contains(member.getExternalId())
        ) {
-        // modify.updateRoles(ModType.DISABLED, role);
+        modify.updateMember(ModType.DISABLED, member);
        }
     });
     
     
     try {
-      final OrgBatchForOne batch = modify
-          .updateGroupRoles(ModType.ADD, addUseGroupRoles)
-          .create();
+      final OrgBatchForOne batch = modify.create();
       return tx.insert().batchOne(batch)
           .onItem().transform(rsp -> ImmutableOneRightEnvelope.builder()
             .repoId(repoId)
@@ -243,11 +235,11 @@ public class ModifyOneRightImpl implements ModifyOneRight {
             .addAllMessages(rsp.getMessages())
             .status(DataMapper.mapStatus(rsp.getStatus()))
             .build());
-    } catch (NoChangesException e) {
+    } catch (NoRightChangesException e) {
       return Uni.createFrom().item(ImmutableOneRightEnvelope.builder()
             .repoId(repoId)
             .addMessages(ImmutableMessage.builder()
-                .exception(e).text("Nothing to commit, data already in the expected state!")
+                .exception(e).text("Nothing to commit, rights data already in the expected state!")
                 .build())
             .status(CommitResultStatus.NO_CHANGES)
             .build());

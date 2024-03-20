@@ -10,6 +10,7 @@ import io.resys.permission.client.api.model.PermissionCommand.ChangePermissionSt
 import io.resys.permission.client.api.model.PermissionCommand.PermissionUpdateCommand;
 import io.resys.permission.client.api.model.Principal.Permission;
 import io.resys.thena.docdb.api.actions.OrgCommitActions.ModifyOneRight;
+import io.resys.thena.docdb.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
@@ -25,6 +26,9 @@ public class UpdatePermissionActionImpl implements UpdatePermissionAction {
 
   @Override
   public Uni<Permission> updateOne(List<PermissionUpdateCommand> commands) {
+    final var id = commands.stream().map(e -> e.getId()).distinct().toList();
+    RepoAssert.isTrue(id.size() == 1, () -> "Update commands must have same id because they are for the same right!");
+    
     
     final ModifyOneRight modifyOneRight = ctx.getOrg().commit().modifyOneRight();
     for(PermissionUpdateCommand command : commands) {
@@ -52,7 +56,12 @@ public class UpdatePermissionActionImpl implements UpdatePermissionAction {
       }
     }
     
-    return null;
+    return modifyOneRight
+        .rightId(id.iterator().next())
+        .repoId(ctx.getConfig().getRepoId())
+        .message("Permission update")
+        .author(ctx.getConfig().getAuthor().get())
+        .build().onItem().transform(e -> null);
   }
 
   @Override
