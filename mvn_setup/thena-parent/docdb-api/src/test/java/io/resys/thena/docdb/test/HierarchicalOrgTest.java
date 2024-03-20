@@ -62,12 +62,12 @@ public class HierarchicalOrgTest extends DbTestTemplate {
 Testitestiasiakas Oyj::tenant <= you are here
 +--- Muutoksen lokakuu
 |    `--- users
-|         +--- ulla lv.j6
-|         +--- ulla ltp.j8
-|         +--- emilia op.ke
-|         +--- marko.vm
-|         +--- jari.sj
-|         `--- mikki.td
+|         +--- ulla lv.j6 (MANAGER)
+|         +--- ulla ltp.j8 (USER)
+|         +--- emilia op.ke (USER)
+|         +--- marko.vm (VIEWER)
+|         +--- jari.sj (MANAGER)
+|         `--- mikki.td (MANAGER)
 +--- Testiasiakas Oy
 |    +--- users
 |    |    +--- tomi.p6 (USER)
@@ -82,93 +82,165 @@ Testitestiasiakas Oyj::tenant <= you are here
 |    |    `--- emilia lv.kf (MANAGER)
 |    +--- Head Office
 |    |    `--- users
-|    |         +--- tomi.p6 (USER)
-|    |         +--- ulla op.j9 (VIEWER)
-|    |         +--- mika.l5 (MANAGER)
-|    |         +--- villu.vc (MANAGER)
-|    |         +--- ullan admin.t6 (MANAGER)
-|    |         +--- ulla lv.j6 (USER)
-|    |         +--- ulla ltp.j8 (MANAGER)
-|    |         +--- mikki.t4 (USER)
-|    |         +--- emilia op.ke (MANAGER)
-|    |         `--- emilia lv.kf (MANAGER)
+|    |         +--- tomi.p6 (USER::inherited)
+|    |         +--- ulla op.j9 (MANAGER, VIEWER::inherited)
+|    |         +--- mika.l5 (MANAGER::inherited)
+|    |         +--- villu.vc (MANAGER::inherited)
+|    |         +--- ullan admin.t6 (MANAGER::inherited)
+|    |         +--- ulla lv.j6 (USER::inherited)
+|    |         +--- ulla ltp.j8 (MANAGER::inherited)
+|    |         +--- mikki.t4 (USER::inherited)
+|    |         +--- emilia op.ke (MANAGER::inherited)
+|    |         `--- emilia lv.kf (MANAGER::inherited)
 |    +--- Riskipäälliköt
 |    |    +--- users
-|    |    |    +--- tomi.p6 (USER)
-|    |    |    +--- ulla op.j9 (VIEWER)
-|    |    |    +--- mika.l5 (MANAGER)
-|    |    |    +--- villu.vc (MANAGER)
-|    |    |    +--- ullan admin.t6 (MANAGER)
-|    |    |    +--- ulla lv.j6 (USER)
-|    |    |    +--- ulla ltp.j8 (MANAGER)
-|    |    |    +--- mikki.t4 (USER)
-|    |    |    +--- emilia op.ke (MANAGER)
-|    |    |    +--- emilia lv.kf (MANAGER)
-|    |    |    `--- ari.ra
+|    |    |    +--- tomi.p6 (USER::inherited)
+|    |    |    +--- ulla op.j9 (VIEWER::inherited)
+|    |    |    +--- mika.l5 (MANAGER::inherited)
+|    |    |    +--- villu.vc (MANAGER::inherited)
+|    |    |    +--- ullan admin.t6 (MANAGER::inherited)
+|    |    |    +--- ulla lv.j6 (USER::inherited)
+|    |    |    +--- ulla ltp.j8 (MANAGER::inherited)
+|    |    |    +--- mikki.t4 (USER::inherited)
+|    |    |    +--- emilia op.ke (MANAGER::inherited)
+|    |    |    +--- emilia lv.kf (MANAGER::inherited)
+|    |    |    `--- ari.ra (MANAGER)
 |    |    +--- Mikon testi
 |    |    |    `--- users
-|    |    |         `--- ari.ra (MANAGER)
+|    |    |         +--- ari.ra (MANAGER::inherited)
+|    |    |         +--- tomi.p6::inherited (USER::inherited)
+|    |    |         +--- ulla op.j9::inherited (VIEWER::inherited)
+|    |    |         +--- mika.l5::inherited (MANAGER::inherited)
+|    |    |         +--- villu.vc::inherited (MANAGER::inherited)
+|    |    |         +--- ullan admin.t6::inherited (MANAGER::inherited)
+|    |    |         +--- ulla lv.j6::inherited (USER::inherited)
+|    |    |         +--- ulla ltp.j8::inherited (MANAGER::inherited)
+|    |    |         +--- mikki.t4::inherited (USER::inherited)
+|    |    |         +--- emilia op.ke::inherited (MANAGER::inherited)
+|    |    |         `--- emilia lv.kf::inherited (MANAGER::inherited)
 |    |    +--- Riskipaikka 1
 |    |    |    `--- users
-|    |    |         `--- ari.ra (MANAGER)
+|    |    |         +--- ari.ra (MANAGER::inherited)
+|    |    |         +--- tomi.p6::inherited (USER::inherited)
+|    |    |         +--- ulla op.j9::inherited (VIEWER::inherited)
+|    |    |         +--- mika.l5::inherited (MANAGER::inherited)
+|    |    |         +--- villu.vc::inherited (MANAGER::inherited)
+|    |    |         +--- ullan admin.t6::inherited (MANAGER::inherited)
+|    |    |         +--- ulla lv.j6::inherited (USER::inherited)
+|    |    |         +--- ulla ltp.j8::inherited (MANAGER::inherited)
+|    |    |         +--- mikki.t4::inherited (USER::inherited)
+|    |    |         +--- emilia op.ke::inherited (MANAGER::inherited)
+|    |    |         `--- emilia lv.kf::inherited (MANAGER::inherited)
 |    |    `--- Riskipaikka 1_1
 |    |         `--- users
-|    |              `--- ari.ra (MANAGER)
+|    |              +--- ari.ra (MANAGER::inherited)
+|    |              +--- tomi.p6::inherited (USER::inherited)
+|    |              +--- ulla op.j9::inherited (VIEWER::inherited)
+|    |              +--- mika.l5::inherited (MANAGER::inherited)
+|    |              +--- villu.vc::inherited (MANAGER::inherited)
+|    |              +--- ullan admin.t6::inherited (MANAGER::inherited)
+|    |              +--- ulla lv.j6::inherited (USER::inherited)
+|    |              +--- ulla ltp.j8::inherited (MANAGER::inherited)
+|    |              +--- mikki.t4::inherited (USER::inherited)
+|    |              +--- emilia op.ke::inherited (MANAGER::inherited)
+|    |              `--- emilia lv.kf::inherited (MANAGER::inherited)
 |    +--- Testi joulukuu
 |    |    `--- users
-|    |         +--- tomi.p6 (USER)
-|    |         +--- ulla op.j9 (VIEWER)
-|    |         +--- mika.l5 (MANAGER)
-|    |         +--- villu.vc (MANAGER)
-|    |         +--- ullan admin.t6 (MANAGER)
-|    |         +--- ulla lv.j6 (USER)
-|    |         +--- ulla ltp.j8 (MANAGER)
-|    |         +--- mikki.t4 (USER)
-|    |         +--- emilia op.ke (MANAGER)
-|    |         `--- emilia lv.kf (MANAGER)
+|    |         +--- tomi.p6 (USER::inherited)
+|    |         +--- ulla op.j9 (VIEWER::inherited)
+|    |         +--- mika.l5 (MANAGER::inherited)
+|    |         +--- villu.vc (MANAGER::inherited)
+|    |         +--- ullan admin.t6 (MANAGER::inherited)
+|    |         +--- ulla lv.j6 (USER::inherited)
+|    |         +--- ulla ltp.j8 (MANAGER::inherited)
+|    |         +--- mikki.t4 (USER::inherited)
+|    |         +--- emilia op.ke (MANAGER::inherited)
+|    |         `--- emilia lv.kf (MANAGER::inherited)
 |    +--- Testipaikka
 |    |    +--- users
-|    |    |    +--- tomi.p6 (USER)
-|    |    |    +--- ulla op.j9 (VIEWER)
-|    |    |    +--- mika.l5 (MANAGER)
-|    |    |    +--- villu.vc (MANAGER)
-|    |    |    +--- ullan admin.t6 (MANAGER)
-|    |    |    +--- ulla lv.j6 (USER)
-|    |    |    +--- ulla ltp.j8 (MANAGER)
-|    |    |    +--- mikki.t4 (USER)
-|    |    |    +--- emilia op.ke (MANAGER)
-|    |    |    `--- emilia lv.kf (MANAGER)
+|    |    |    +--- tomi.p6 (USER::inherited)
+|    |    |    +--- ulla op.j9 (VIEWER::inherited)
+|    |    |    +--- mika.l5 (MANAGER::inherited)
+|    |    |    +--- villu.vc (MANAGER::inherited)
+|    |    |    +--- ullan admin.t6 (MANAGER::inherited)
+|    |    |    +--- ulla lv.j6 (USER::inherited)
+|    |    |    +--- ulla ltp.j8 (MANAGER::inherited)
+|    |    |    +--- mikki.t4 (USER::inherited)
+|    |    |    +--- emilia op.ke (MANAGER::inherited)
+|    |    |    `--- emilia lv.kf (MANAGER::inherited)
 |    |    `--- Tyomaa 2
+|    |         +--- users
+|    |         |    +--- tomi.p6::inherited (USER::inherited)
+|    |         |    +--- ulla op.j9::inherited (VIEWER::inherited)
+|    |         |    +--- mika.l5::inherited (MANAGER::inherited)
+|    |         |    +--- villu.vc::inherited (MANAGER::inherited)
+|    |         |    +--- ullan admin.t6::inherited (MANAGER::inherited)
+|    |         |    +--- ulla lv.j6::inherited (USER::inherited)
+|    |         |    +--- ulla ltp.j8::inherited (MANAGER::inherited)
+|    |         |    +--- mikki.t4::inherited (USER::inherited)
+|    |         |    +--- emilia op.ke::inherited (MANAGER::inherited)
+|    |         |    `--- emilia lv.kf::inherited (MANAGER::inherited)
 |    |         `--- testipaikka
+|    |              `--- users
+|    |                   +--- tomi.p6::inherited (USER::inherited)
+|    |                   +--- ulla op.j9::inherited (VIEWER::inherited)
+|    |                   +--- mika.l5::inherited (MANAGER::inherited)
+|    |                   +--- villu.vc::inherited (MANAGER::inherited)
+|    |                   +--- ullan admin.t6::inherited (MANAGER::inherited)
+|    |                   +--- ulla lv.j6::inherited (USER::inherited)
+|    |                   +--- ulla ltp.j8::inherited (MANAGER::inherited)
+|    |                   +--- mikki.t4::inherited (USER::inherited)
+|    |                   +--- emilia op.ke::inherited (MANAGER::inherited)
+|    |                   `--- emilia lv.kf::inherited (MANAGER::inherited)
 |    `--- Uusi testipaikka
 |         +--- users
-|         |    +--- tomi.p6 (USER)
-|         |    +--- ulla op.j9 (VIEWER)
-|         |    +--- mika.l5 (MANAGER)
-|         |    +--- villu.vc (MANAGER)
-|         |    +--- ullan admin.t6 (MANAGER)
-|         |    +--- ulla lv.j6 (USER)
-|         |    +--- ulla ltp.j8 (MANAGER)
-|         |    +--- mikki.t4 (USER)
-|         |    +--- emilia op.ke (MANAGER)
-|         |    +--- emilia lv.kf (MANAGER)
-|         |    +--- sanna.ns
-|         |    `--- anton.aa
+|         |    +--- tomi.p6 (USER::inherited)
+|         |    +--- ulla op.j9 (VIEWER::inherited)
+|         |    +--- mika.l5 (MANAGER::inherited)
+|         |    +--- villu.vc (MANAGER::inherited)
+|         |    +--- ullan admin.t6 (MANAGER::inherited)
+|         |    +--- ulla lv.j6 (USER::inherited)
+|         |    +--- ulla ltp.j8 (MANAGER::inherited)
+|         |    +--- mikki.t4 (USER::inherited)
+|         |    +--- emilia op.ke (MANAGER::inherited)
+|         |    +--- emilia lv.kf (MANAGER::inherited)
+|         |    +--- sanna.ns (VIEWER)
+|         |    `--- anton.aa (USER)
 |         +--- Tyomaa 1
 |         |    `--- users
-|         |         +--- sanna.ns (VIEWER)
-|         |         +--- anton.aa (USER)
-|         |         `--- ilkka.hi
+|         |         +--- sanna.ns (VIEWER::inherited)
+|         |         +--- anton.aa (USER::inherited)
+|         |         +--- ilkka.hi (USER)
+|         |         +--- tomi.p6::inherited (USER::inherited)
+|         |         +--- ulla op.j9::inherited (VIEWER::inherited)
+|         |         +--- mika.l5::inherited (MANAGER::inherited)
+|         |         +--- villu.vc::inherited (MANAGER::inherited)
+|         |         +--- ullan admin.t6::inherited (MANAGER::inherited)
+|         |         +--- ulla lv.j6::inherited (USER::inherited)
+|         |         +--- ulla ltp.j8::inherited (MANAGER::inherited)
+|         |         +--- mikki.t4::inherited (USER::inherited)
+|         |         +--- emilia op.ke::inherited (MANAGER::inherited)
+|         |         `--- emilia lv.kf::inherited (MANAGER::inherited)
 |         `--- Varasto
 |              `--- users
-|                   +--- sanna.ns (VIEWER)
-|                   `--- anton.aa (USER)
+|                   +--- sanna.ns (VIEWER::inherited)
+|                   +--- anton.aa (USER::inherited)
+|                   +--- tomi.p6::inherited (USER::inherited)
+|                   +--- ulla op.j9::inherited (VIEWER::inherited)
+|                   +--- mika.l5::inherited (MANAGER::inherited)
+|                   +--- villu.vc::inherited (MANAGER::inherited)
+|                   +--- ullan admin.t6::inherited (MANAGER::inherited)
+|                   +--- ulla lv.j6::inherited (USER::inherited)
+|                   +--- ulla ltp.j8::inherited (MANAGER::inherited)
+|                   +--- mikki.t4::inherited (USER::inherited)
+|                   +--- emilia op.ke::inherited (MANAGER::inherited)
+|                   `--- emilia lv.kf::inherited (MANAGER::inherited)
 +--- Testipäivä 170124
 |    `--- users
-|         +--- mika.l5
+|         +--- mika.l5 (VIEWER)
 |         +--- ulla ltp.j8
 |         +--- emilia op.ke
-|         `--- teppo.t8
+|         `--- teppo.t8 (USER)
 `--- Valmistuneet työmaat
      +--- users
      |    +--- ullan admin.t6
@@ -188,24 +260,34 @@ Testiasiakas 2::tenant <= you are here
 |    |    `--- ulla manager ee.j0 (MANAGER)
 |    +--- Hiekkalaatikko
 |    |    +--- users
-|    |    |    +--- ulla manager ee.j0 (MANAGER)
-|    |    |    `--- ursula test2.ue
+|    |    |    +--- ulla manager ee.j0 (MANAGER::inherited)
+|    |    |    `--- ursula test2.ue (USER)
 |    |    +--- Ämpäritehdas
 |    |    |    `--- users
-|    |    |         `--- ursula test2.ue (USER)
+|    |    |         +--- ursula test2.ue (USER::inherited)
+|    |    |         `--- ulla manager ee.j0::inherited (MANAGER::inherited)
 |    |    `--- Lapiotehdas
 |    |         `--- users
-|    |              `--- ursula test2.ue (USER)
+|    |              +--- ursula test2.ue (USER::inherited)
+|    |              `--- ulla manager ee.j0::inherited (MANAGER::inherited)
 |    +--- Keinumaailma
 |    |    +--- users
-|    |    |    `--- ulla manager ee.j0 (MANAGER)
+|    |    |    `--- ulla manager ee.j0 (MANAGER::inherited)
 |    |    +--- Lautakeinut
+|    |    |    `--- users
+|    |    |         `--- ulla manager ee.j0::inherited (MANAGER::inherited)
 |    |    `--- Vauvakeinut
+|    |         `--- users
+|    |              `--- ulla manager ee.j0::inherited (MANAGER::inherited)
 |    `--- Leikkikehä
 |         +--- users
-|         |    `--- ulla manager ee.j0 (MANAGER)
+|         |    `--- ulla manager ee.j0 (MANAGER::inherited)
 |         +--- Autot
+|         |    `--- users
+|         |         `--- ulla manager ee.j0::inherited (MANAGER::inherited)
 |         `--- Nuket
+|              `--- users
+|                   `--- ulla manager ee.j0::inherited (MANAGER::inherited)
 `--- Testorganisation 1
 
 
@@ -215,7 +297,7 @@ OX Testausyritys::tenant <= you are here
 |    `--- users
 |         +--- anni.lb
 |         +--- proto.ne
-|         `--- proto.v7
+|         `--- proto.v7 (USER)
 +--- 2.5.2 lokaatio
 +--- Keskusvarasto 1
 |    +--- users
@@ -223,22 +305,27 @@ OX Testausyritys::tenant <= you are here
 |    `--- Testilokaatio 2.0
 |         +--- users
 |         |    +--- proto.k1 (USER)
-|         |    `--- anni.ee (MANAGER)
+|         |    `--- anni.ee (MANAGER::inherited)
 |         +--- Paikka 2.1 *¨*
 |         |    `--- users
-|         |         `--- proto.k1 (USER)
+|         |         +--- proto.k1 (USER::inherited)
+|         |         `--- anni.ee::inherited (MANAGER::inherited)
 |         `--- Uusi paikka 2.2.
 |              +--- users
-|              |    `--- proto.k1 (USER)
+|              |    +--- proto.k1 (USER::inherited)
+|              |    `--- anni.ee::inherited (MANAGER::inherited)
 |              `--- Uusin paikka 2.2.1.
+|                   `--- users
+|                        +--- anni.ee::inherited (MANAGER::inherited)
+|                        `--- proto.k1::inherited (USER::inherited)
 +--- newTopLeve
 |    +--- users
 |    |    +--- mika.l5
-|    |    `--- anni.pe
+|    |    `--- anni.pe (VIEWER)
 |    `--- nextLevel
 |         `--- users
 |              +--- mika.l5
-|              `--- anni.pe (VIEWER)
+|              `--- anni.pe (VIEWER::inherited)
 +--- Päätoimipaikka
 |    +--- users
 |    |    +--- mika.l5
@@ -247,36 +334,44 @@ OX Testausyritys::tenant <= you are here
 |    +--- Keskitason toimipiste
 |    |    +--- users
 |    |    |    +--- mika.l5
-|    |    |    +--- anni.lb (VIEWER)
-|    |    |    `--- protonen.l2 (VIEWER)
+|    |    |    +--- anni.lb (VIEWER::inherited)
+|    |    |    `--- protonen.l2 (VIEWER::inherited)
 |    |    `--- #Erikoismerkki,;?   {"__"} ¨¨
 |    |         `--- users
-|    |              `--- protonen.l2 (VIEWER)
+|    |              +--- protonen.l2 (MANAGER, VIEWER::inherited)
+|    |              +--- mika.l5::inherited
+|    |              `--- anni.lb::inherited (VIEWER::inherited)
 |    `--- Testauskeskus
 |         +--- users
 |         |    +--- mika.l5
-|         |    +--- anni.lb (VIEWER)
-|         |    +--- protonen.l2 (VIEWER)
-|         |    `--- anni.a1
+|         |    +--- anni.lb (VIEWER::inherited)
+|         |    +--- protonen.l2 (VIEWER::inherited)
+|         |    `--- anni.a1 (USER)
 |         +--- Laitevarasto
 |         |    `--- users
-|         |         +--- anni.a1 (USER)
-|         |         `--- proto.l0
+|         |         +--- anni.a1 (USER::inherited)
+|         |         +--- proto.l0 (USER)
+|         |         +--- mika.l5::inherited
+|         |         +--- anni.lb::inherited (VIEWER::inherited)
+|         |         `--- protonen.l2::inherited (VIEWER::inherited)
 |         `--- Pienenpieni ja erittäin pitkäniminen testauspiste?! Pienenpieni ja erittäin pitkäniminen testauspiste?!Pienenpieni ja erittäin pitkäniminen testauspis
 |              `--- users
-|                   +--- anni.a1 (USER)
-|                   +--- proto.k1
-|                   `--- proto.l0
+|                   +--- anni.a1 (USER::inherited)
+|                   +--- proto.k1 (MANAGER)
+|                   +--- proto.l0 (VIEWER)
+|                   +--- mika.l5::inherited
+|                   +--- anni.lb::inherited (VIEWER::inherited)
+|                   `--- protonen.l2::inherited (VIEWER::inherited)
 `--- Paikka roolitesti
      `--- Paikka roolitesti, alempi
           +--- users
           |    +--- proto.k1
-          |    `--- proto.ne
+          |    `--- proto.ne (MANAGER)
           `--- Uusin paikka, versio 2.3.0
                `--- users
                     +--- anni.lb
                     +--- proto.k1
-                    `--- proto.ne (MANAGER)
+                    `--- proto.ne (MANAGER::inherited)
 
 
 
@@ -310,26 +405,26 @@ Ullan uusi testi::tenant <= you are here
 Annin UAT-Yritys::tenant <= you are here
 `--- Oletuspaikka
      `--- users
-          +--- proto.ne
-          `--- anni.pe
+          +--- proto.ne (USER)
+          `--- anni.pe (MANAGER)
 
 
 
 Acme corporation::tenant <= you are here
 +--- Organisation X
 |    `--- users
-|         +--- kaur.t7
-|         `--- john.se
+|         +--- kaur.t7 (USER)
+|         `--- john.se (USER)
 `--- Organisation Y
      +--- users
-     |    +--- mikki.lc
-     |    +--- kaur.t7
-     |    `--- jocelyn.m4
+     |    +--- mikki.lc (USER)
+     |    +--- kaur.t7 (MANAGER)
+     |    `--- jocelyn.m4 (MANAGER)
      `--- TestiOne
           `--- users
-               +--- mikki.lc (USER)
-               +--- kaur.t7 (MANAGER)
-               `--- jocelyn.m4 (MANAGER)
+               +--- mikki.lc (USER::inherited)
+               +--- kaur.t7 (MANAGER::inherited)
+               `--- jocelyn.m4 (MANAGER::inherited)
 
 
 

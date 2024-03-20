@@ -17,9 +17,9 @@ import io.resys.thena.docdb.api.actions.RepoActions.RepoResult;
 import io.resys.thena.docdb.api.actions.RepoActions.RepoStatus;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.Repo.RepoType;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgParty;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRight;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
 import io.resys.thena.docdb.test.config.DbTestTemplate;
 import io.resys.thena.docdb.test.config.PgProfile;
 import lombok.extern.slf4j.Slf4j;
@@ -92,16 +92,27 @@ group-1
 +--- users
 |    `--- user-1
 +--- child-1.1
+|    `--- users
+|         `--- user-1::inherited
 +--- child-1.2
+|    +--- users
+|    |    `--- user-1::inherited
 |    +--- child-1.2.1 <= you are here
+|    |    `--- users
+|    |         `--- user-1::inherited
 |    `--- child-1.2.2
 |         +--- roles
 |         |    +--- jailer-2
 |         |    `--- jailer-3
 |         `--- users
-|              `--- user-2
+|              +--- user-2
+|              `--- user-1::inherited
 +--- child-1.3
+|    `--- users
+|         `--- user-1::inherited
 `--- child-1.4
+     `--- users
+          `--- user-1::inherited
         """, groupHierarchy.getLog());
     
     // modify user 2
@@ -129,16 +140,32 @@ group-1
 |    +--- user-1
 |    `--- super-user
 +--- child-1.1
+|    `--- users
+|         +--- user-1::inherited
+|         `--- super-user::inherited
 +--- child-1.2
+|    +--- users
+|    |    +--- user-1::inherited
+|    |    `--- super-user::inherited
 |    +--- child-1.2.1
+|    |    `--- users
+|    |         +--- user-1::inherited
+|    |         `--- super-user::inherited
 |    `--- child-1.2.2 <= you are here
 |         +--- roles
 |         |    +--- jailer-2
 |         |    `--- jailer-3
 |         `--- users
-|              `--- super-user
+|              +--- super-user
+|              `--- user-1::inherited
 +--- child-1.3
+|    `--- users
+|         +--- user-1::inherited
+|         `--- super-user::inherited
 `--- child-1.4
+     `--- users
+          +--- user-1::inherited
+          `--- super-user::inherited
         """, groupHierarchy.getLog());
     
     
@@ -163,14 +190,32 @@ group-1
 |    +--- user-1
 |    `--- super-user
 +--- child-1.1
+|    `--- users
+|         +--- user-1::inherited
+|         `--- super-user::inherited
 +--- child-1.2
+|    +--- users
+|    |    +--- user-1::inherited
+|    |    `--- super-user::inherited
 |    +--- child-1.2.1
+|    |    `--- users
+|    |         +--- user-1::inherited
+|    |         `--- super-user::inherited
 |    `--- child-1.2.2 <= you are here
-|         `--- roles
-|              +--- jailer-2
-|              `--- jailer-3
+|         +--- roles
+|         |    +--- jailer-2
+|         |    `--- jailer-3
+|         `--- users
+|              +--- user-1::inherited
+|              `--- super-user::inherited
 +--- child-1.3
+|    `--- users
+|         +--- user-1::inherited
+|         `--- super-user::inherited
 `--- child-1.4
+     `--- users
+          +--- user-1::inherited
+          `--- super-user::inherited
         """, groupHierarchy.getLog());
     
     
