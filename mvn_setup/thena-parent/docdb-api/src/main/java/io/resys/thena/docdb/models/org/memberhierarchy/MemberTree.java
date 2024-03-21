@@ -1,4 +1,4 @@
-package io.resys.thena.docdb.models.org.userhierarchy;
+package io.resys.thena.docdb.models.org.memberhierarchy;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,10 +14,10 @@ import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberHierarchyEntry;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRightFlattened;
 
 
-public class UserTree {
+public class MemberTree {
   @JsonIgnore
-  private final UserTree parent;
-  private final Map<String, UserTree> children = new HashMap<>();
+  private final MemberTree parent;
+  private final Map<String, MemberTree> children = new HashMap<>();
   
   // seed data
   private final String groupId;
@@ -28,30 +28,30 @@ public class UserTree {
   private Boolean removed;
   private Boolean direct;
 
-  public UserTree(String groupId) {
+  public MemberTree(String groupId) {
     super();
     this.groupId = groupId;
     this.parent = null;
   }
-  private UserTree(UserTree parent, String groupId) {
+  private MemberTree(MemberTree parent, String groupId) {
     super();
     this.groupId = groupId;
     this.parent = parent;
   }
-  public Map<String, UserTree> getChildren() { return Collections.unmodifiableMap(children); }
+  public Map<String, MemberTree> getChildren() { return Collections.unmodifiableMap(children); }
   public Map<String, OrgRightFlattened> getRoleValues() { return Collections.unmodifiableMap(roleValues); }
   public List<OrgMemberHierarchyEntry> getGroupValues() { return Collections.unmodifiableList(groupValues); }
   
   public String getGroupId() { return this.groupId; }
   public String getGroupName() { return this.groupValues.get(0).getPartyName(); }
-  @JsonIgnore public UserTree getParent() { return this.parent; }
+  @JsonIgnore public MemberTree getParent() { return this.parent; }
 
-  public UserTree addChild(String groupId) {
-    final var child = new UserTree(this, groupId);
+  public MemberTree addChild(String groupId) {
+    final var child = new MemberTree(this, groupId);
     children.put(groupId, child);
     return child;
   }
-  public UserTree getNode(String groupId) {
+  public MemberTree getNode(String groupId) {
     if(this.groupId.equals(groupId)) {
       return this;
     }
@@ -70,7 +70,7 @@ public class UserTree {
     }
   }
   @JsonIgnore
-  public List<UserTree> getLastNodes() {
+  public List<MemberTree> getLastNodes() {
     if(children.isEmpty()) {
       return Arrays.asList(this);
     }

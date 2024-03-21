@@ -1,4 +1,4 @@
-package io.resys.thena.docdb.models.org.userhierarchy;
+package io.resys.thena.docdb.models.org.memberhierarchy;
 
 import java.util.List;
 
@@ -37,8 +37,8 @@ public class MemberTreeBuilder {
     logInputs();
     
     // format data
-    final var visitor = new UserContainerVisitorImpl(rightsData);
-    final UserTreeContainer container = new UserContainer(partyData).accept(visitor);
+    final var visitor = new MemberContainerVisitorImpl(rightsData);
+    final MemberTreeContainer container = new MemberContainer(partyData).accept(visitor);
 
     // create end result
     final ImmutableUserGroupsData result = container.accept(new CreateMemberTreeGroups(rightsData, logger, member));

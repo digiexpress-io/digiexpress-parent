@@ -1,4 +1,4 @@
-package io.resys.thena.docdb.models.org.userhierarchy;
+package io.resys.thena.docdb.models.org.memberhierarchy;
 
 import java.util.List;
 
@@ -8,8 +8,8 @@ import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgMemberPartyStatus;
 import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgMemberRightStatus;
 
 @Value.Immutable
-public interface UserTreeContainer {
-  List<UserTree> getRoots();
+public interface MemberTreeContainer {
+  List<MemberTree> getRoots();
   List<OrgMemberRightStatus> getRoleStatus();
   List<OrgMemberPartyStatus> getGroupStatus();
   
@@ -21,7 +21,7 @@ public interface UserTreeContainer {
     });
     return visitor.close();
   }
-  default void acceptChildren(UserTree parent, final TopDownVisitor<?> visitor) {
+  default void acceptChildren(MemberTree parent, final TopDownVisitor<?> visitor) {
     parent.getChildren().values().stream().sorted((a, b) -> a.getGroupName().compareTo(b.getGroupName()))
     .forEach(child -> {
       visitor.visitChild(parent, child);
@@ -31,10 +31,10 @@ public interface UserTreeContainer {
   
   default <T> T accept(final BottomUpVisitor<T> visitor) {
     getRoots().stream().forEach(e -> {
-      for(final UserTree bottom : e.getLastNodes()) {
+      for(final MemberTree bottom : e.getLastNodes()) {
         visitor.visitBottom(bottom);
         
-        UserTree next = bottom.getParent();
+        MemberTree next = bottom.getParent();
         while(next != null) {
           visitor.visitParent(next);
           next = next.getParent();
@@ -46,14 +46,14 @@ public interface UserTreeContainer {
 
   
   interface TopDownVisitor<T> {
-    void visitTop(UserTree top);
-    void visitChild(UserTree parent, UserTree child);
+    void visitTop(MemberTree top);
+    void visitChild(MemberTree parent, MemberTree child);
     T close();
   }
   
   interface BottomUpVisitor<T> {
-    void visitBottom(UserTree bottom);
-    void visitParent(UserTree parent);
+    void visitBottom(MemberTree bottom);
+    void visitParent(MemberTree parent);
     T close();
   }
 }

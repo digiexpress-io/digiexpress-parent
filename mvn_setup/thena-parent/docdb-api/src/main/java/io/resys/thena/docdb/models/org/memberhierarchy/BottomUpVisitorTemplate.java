@@ -1,4 +1,4 @@
-package io.resys.thena.docdb.models.org.userhierarchy;
+package io.resys.thena.docdb.models.org.memberhierarchy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,7 @@ import io.resys.thena.docdb.api.models.ImmutableOrgMemberRightStatus;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatusType;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberHierarchyEntry;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRightFlattened;
-import io.resys.thena.docdb.models.org.userhierarchy.UserTreeContainer.BottomUpVisitor;
+import io.resys.thena.docdb.models.org.memberhierarchy.MemberTreeContainer.BottomUpVisitor;
 
 
 public abstract class BottomUpVisitorTemplate<T> implements BottomUpVisitor<T> {
@@ -37,7 +37,7 @@ public abstract class BottomUpVisitorTemplate<T> implements BottomUpVisitor<T> {
   
   
   @Override
-  public void visitBottom(UserTree bottom) {
+  public void visitBottom(MemberTree bottom) {
     if(!initDone) {
       initDone = true;
       globalRoles.forEach(role -> visitGlobalRole(role));
@@ -45,7 +45,7 @@ public abstract class BottomUpVisitorTemplate<T> implements BottomUpVisitor<T> {
     visitTree(bottom);
   }
   @Override
-  public void visitParent(UserTree parent) {
+  public void visitParent(MemberTree parent) {
     visitTree(parent);
   }
   
@@ -57,7 +57,7 @@ public abstract class BottomUpVisitorTemplate<T> implements BottomUpVisitor<T> {
     }
   }
   
-  private void visitTree(UserTree tree) {
+  private void visitTree(MemberTree tree) {
     // status need to be processed first, no exceptions
     tree.getGroupValues().forEach(value -> {
       visitRoleStatus(value);
@@ -71,7 +71,7 @@ public abstract class BottomUpVisitorTemplate<T> implements BottomUpVisitor<T> {
     visitRole(tree);
   }
   
-  private void visitGroup(UserTree tree) {
+  private void visitGroup(MemberTree tree) {
     final var directMembership = tree.isDirect();
     final var parentGroup = Optional.ofNullable(tree.getParent()).map(e -> e.getGroupName());
     if(isGroupDisabled(tree)) {
@@ -82,7 +82,7 @@ public abstract class BottomUpVisitorTemplate<T> implements BottomUpVisitor<T> {
     visitGroupEnabled(tree.getGroupName(), parentGroup, directMembership);
   }
   
-  private void visitRole(UserTree tree) {
+  private void visitRole(MemberTree tree) {
     final var groupDisabled = isGroupDisabled(tree);
     
     final var directMembership = tree.isDirect();
@@ -102,12 +102,12 @@ public abstract class BottomUpVisitorTemplate<T> implements BottomUpVisitor<T> {
   }
   
   
-  private boolean isGroupDisabled(UserTree tree) {
+  private boolean isGroupDisabled(MemberTree tree) {
     final var groupDisabled = groupsDisabled.contains(tree.getGroupId());
     return groupDisabled;
   }
   
-  private void visitGroupStatus(UserTree tree, OrgMemberHierarchyEntry value) {
+  private void visitGroupStatus(MemberTree tree, OrgMemberHierarchyEntry value) {
     
     // disabled
     if(!tree.isDirect() && inheritanceDisabledFromBottom.contains(value.getPartyId())) {

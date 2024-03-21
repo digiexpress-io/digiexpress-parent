@@ -21,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
-public class OrgUserObjectsQueryImpl implements MemberObjectsQuery {
+public class MemberObjectsQueryImpl implements MemberObjectsQuery {
   private final DbState state;
   private String repoId;
 

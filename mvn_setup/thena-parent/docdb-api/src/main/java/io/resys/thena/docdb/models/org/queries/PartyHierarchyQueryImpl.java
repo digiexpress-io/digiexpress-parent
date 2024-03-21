@@ -23,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
-public class OrgGroupHierarchyQueryImpl implements PartyHierarchyQuery {
+public class PartyHierarchyQueryImpl implements PartyHierarchyQuery {
   private final DbState state;
   private String repoId;
   

@@ -19,7 +19,7 @@ import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberFlattened;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberHierarchyEntry;
 import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgMemberHierarchy;
 import io.resys.thena.docdb.models.org.OrgQueries;
-import io.resys.thena.docdb.models.org.userhierarchy.MemberTreeBuilder;
+import io.resys.thena.docdb.models.org.memberhierarchy.MemberTreeBuilder;
 import io.resys.thena.docdb.spi.DbState;
 import io.resys.thena.docdb.support.RepoAssert;
 import io.smallrye.mutiny.Multi;
@@ -29,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
-public class OrgUserHierarchyQueryImpl implements MemberHierarchyQuery {
+public class MemberHierarchyQueryImpl implements MemberHierarchyQuery {
   private final DbState state;
   private String repoId;
 

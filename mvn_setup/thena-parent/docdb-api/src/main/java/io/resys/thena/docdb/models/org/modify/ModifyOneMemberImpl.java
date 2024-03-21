@@ -23,7 +23,7 @@ import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgMemberHierarchy;
 import io.resys.thena.docdb.models.org.OrgInserts.OrgBatchForOne;
 import io.resys.thena.docdb.models.org.OrgState.OrgRepo;
 import io.resys.thena.docdb.models.org.modify.BatchForOneMemberModify.NoChangesException;
-import io.resys.thena.docdb.models.org.queries.OrgUserHierarchyQueryImpl;
+import io.resys.thena.docdb.models.org.queries.MemberHierarchyQueryImpl;
 import io.resys.thena.docdb.spi.DataMapper;
 import io.resys.thena.docdb.spi.DbState;
 import io.resys.thena.docdb.support.RepoAssert;
@@ -134,7 +134,7 @@ public class ModifyOneMemberImpl implements ModifyOneMember {
 			Uni.createFrom().item(Collections.emptyList()) :
 			tx.query().rights().findAll(allRoles).collect().asList();
 		
-		final Uni<QueryEnvelope<OrgMemberHierarchy>> userUni = new OrgUserHierarchyQueryImpl(state).repoId(repoId).get(userId);
+		final Uni<QueryEnvelope<OrgMemberHierarchy>> userUni = new MemberHierarchyQueryImpl(state).repoId(repoId).get(userId);
 	    
 		
 		// join data

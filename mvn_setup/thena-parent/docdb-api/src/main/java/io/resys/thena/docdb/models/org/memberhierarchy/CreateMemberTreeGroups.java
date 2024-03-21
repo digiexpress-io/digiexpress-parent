@@ -1,4 +1,4 @@
-package io.resys.thena.docdb.models.org.userhierarchy;
+package io.resys.thena.docdb.models.org.memberhierarchy;
 
 import java.util.List;
 import java.util.Optional;
@@ -6,8 +6,8 @@ import java.util.Optional;
 import org.immutables.value.Value;
 import org.slf4j.Logger;
 
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRightFlattened;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberFlattened;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRightFlattened;
 import io.vertx.core.json.JsonObject;
 
 
@@ -25,7 +25,7 @@ public class CreateMemberTreeGroups extends BottomUpVisitorTemplate<ImmutableUse
   }
 
   @Override
-  public void visitParent(UserTree parent) {
+  public void visitParent(MemberTree parent) {
     super.visitParent(parent);
     
     if(parent.getParent() == null && logger != null) {

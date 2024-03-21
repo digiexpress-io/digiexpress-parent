@@ -24,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
-public class OrgRoleHierarchyQueryImpl implements RightHierarchyQuery {
+public class RightHierarchyQueryImpl implements RightHierarchyQuery {
   private final DbState state;
   private String repoId;
   

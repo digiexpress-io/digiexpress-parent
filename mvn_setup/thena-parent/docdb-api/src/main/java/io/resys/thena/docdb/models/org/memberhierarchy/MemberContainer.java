@@ -1,4 +1,4 @@
-package io.resys.thena.docdb.models.org.userhierarchy;
+package io.resys.thena.docdb.models.org.memberhierarchy;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,7 +9,7 @@ import java.util.Set;
 
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberHierarchyEntry;
 
-public class UserContainer {
+public class MemberContainer {
   private final Map<String, List<OrgMemberHierarchyEntry>> groupsById = new HashMap<>();
   private final Map<String, List<OrgMemberHierarchyEntry>> groupsByParentId = new HashMap<>();
   private final Set<String> roots = new LinkedHashSet<>();
@@ -37,7 +37,7 @@ public class UserContainer {
     return visitor.close(); 
   }
   
-  public UserContainer(List<OrgMemberHierarchyEntry> init) {
+  public MemberContainer(List<OrgMemberHierarchyEntry> init) {
     for(final var entry : init) {
       if(entry.getPartyParentId() == null) {
         roots.add(entry.getPartyId());

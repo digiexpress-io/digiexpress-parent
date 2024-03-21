@@ -1,10 +1,10 @@
 package io.resys.thena.docdb.models.org.actions;
 
 import io.resys.thena.docdb.api.actions.OrgQueryActions;
-import io.resys.thena.docdb.models.org.queries.OrgGroupHierarchyQueryImpl;
-import io.resys.thena.docdb.models.org.queries.OrgRoleHierarchyQueryImpl;
-import io.resys.thena.docdb.models.org.queries.OrgUserHierarchyQueryImpl;
-import io.resys.thena.docdb.models.org.queries.OrgUserObjectsQueryImpl;
+import io.resys.thena.docdb.models.org.queries.PartyHierarchyQueryImpl;
+import io.resys.thena.docdb.models.org.queries.RightHierarchyQueryImpl;
+import io.resys.thena.docdb.models.org.queries.MemberHierarchyQueryImpl;
+import io.resys.thena.docdb.models.org.queries.MemberObjectsQueryImpl;
 import io.resys.thena.docdb.spi.DbState;
 import lombok.RequiredArgsConstructor;
 
@@ -14,21 +14,21 @@ public class OrgQueryActionsImpl implements OrgQueryActions {
 
   @Override
   public MemberObjectsQuery memberQuery() {
-    return new OrgUserObjectsQueryImpl(state);
+    return new MemberObjectsQueryImpl(state);
   }
 
 	@Override
 	public MemberHierarchyQuery memberHierarchyQuery() {
-		return new OrgUserHierarchyQueryImpl(state);
+		return new MemberHierarchyQueryImpl(state);
 	}
 
   @Override
   public PartyHierarchyQuery partyHierarchyQuery() {
-    return new OrgGroupHierarchyQueryImpl(state);
+    return new PartyHierarchyQueryImpl(state);
   }
 
   @Override
   public RightHierarchyQuery rightHierarchyQuery() {
-    return new OrgRoleHierarchyQueryImpl(state);
+    return new RightHierarchyQueryImpl(state);
   }
 }
