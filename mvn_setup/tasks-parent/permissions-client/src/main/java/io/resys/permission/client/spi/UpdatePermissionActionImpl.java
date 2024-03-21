@@ -88,7 +88,6 @@ public class UpdatePermissionActionImpl implements UpdatePermissionAction {
               .id(right.getId())
               .status(OrgActorStatusType.IN_FORCE)
               .version(right.getCommitId())
-              
               .build();
         });
   }
