@@ -2,7 +2,6 @@ package io.resys.thena.docdb.test;
 
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -462,13 +461,15 @@ Testi 1::tenant <= you are here
     }
     
     for(final var entry : groupsByUsers.entrySet()) {
-      final var result = getClient().org().commit().modifyOneMember()
+      final var builder = getClient().org().commit().modifyOneMember()
           .repoId(repo.getId())
           .userId(entry.getKey())
-          .groups(ModType.ADD, entry.getValue())
           .author("ar-")
-          .message("created membership")
-          .build().await().atMost(Duration.ofMinutes(1));
+          .message("created membership");
+      
+      entry.getValue().forEach((v) -> builder.modifyParties(ModType.ADD, v));
+      
+      final var result = builder.build().await().atMost(Duration.ofMinutes(1));
       Assertions.assertEquals(CommitResultStatus.OK, result.getStatus()); 
     }
     
@@ -626,13 +627,18 @@ Testi 1::tenant <= you are here
     for(final var userRaw : users) {
       final var user = (JsonObject) userRaw;
       
-      final var result = getClient().org().commit().modifyOneMember()
+      final var builder = getClient().org().commit().modifyOneMember()
         .repoId(repo.getId())
         .userId(user.getString("user_external_id"))
-        .groupsRoles(ModType.ADD, Map.of(user.getString("group_external_id"), Arrays.asList(user.getString("role_external_id"))))
         .author("au-")
-        .message("created user group role association")
-        .build().await().atMost(Duration.ofMinutes(1));
+        .message("created user group role association");
+      
+      
+        builder.modifyPartyRight(ModType.ADD, 
+            user.getString("group_external_id"), 
+            user.getString("role_external_id"));
+        
+      final var result = builder.build().await().atMost(Duration.ofMinutes(1));
       if(result.getStatus() == CommitResultStatus.NO_CHANGES) {
         continue;
       }

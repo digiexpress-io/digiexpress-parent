@@ -1,7 +1,6 @@
 package io.resys.thena.docdb.api.actions;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Nullable;
 
@@ -10,6 +9,7 @@ import org.immutables.value.Value;
 import io.resys.thena.docdb.api.models.Message;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.ThenaEnvelope;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatusType;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgParty;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRight;
@@ -85,13 +85,12 @@ public interface OrgCommitActions {
     ModifyOneMember userId(String userId);
     ModifyOneMember externalId(@Nullable String externalId);
     ModifyOneMember userName(String userName);
-    ModifyOneMember email(String email); 
+    ModifyOneMember email(String email);
+    ModifyOneMember status(OrgActorStatusType status);
     
-    ModifyOneMember roles(ModType type, List<String> roleIdOrNameOrExternalId); // group.(id OR externalId OR rolename)
-    ModifyOneMember groups(ModType type, List<String> groupIdOrNameOrExternalId);
-    ModifyOneMember groupsRoles(ModType type, Map<String, List<String>> addUseGroupRoles);
-   
-    //TODO status:: not implemented
+    ModifyOneMember modifyRights(ModType type, String rightIdNameOrExtId); // group.(id OR externalId OR rolename)
+    ModifyOneMember modifyParties(ModType type, String partyIdNameOrExtId);
+    ModifyOneMember modifyPartyRight(ModType type, String partyIdNameOrExtId, String rightIdNameOrExtId);
 
     Uni<OneMemberEnvelope> build();
   }
@@ -108,10 +107,9 @@ public interface OrgCommitActions {
     ModifyOneParty partyName(String partyName);
     ModifyOneParty partyDescription(String partyDescription);
     
-    ModifyOneParty members(ModType type, List<String> userIds);
-    ModifyOneParty rights(ModType type, List<String> roleIds);
-    
-    //TODO status:: not implemented
+    ModifyOneParty modifyMember(ModType type, String memberIdNameOrExtId);
+    ModifyOneParty modifyRights(ModType type, String rightIdNameOrExtId);
+    ModifyOneParty status(OrgActorStatusType status);
     
     Uni<OnePartyEnvelope> build();
   }
@@ -127,11 +125,10 @@ public interface OrgCommitActions {
     ModifyOneRight rightName(String roleName);
     ModifyOneRight rightDescription(String roleDescription);
     
-    ModifyOneRight members(ModType type, List<String> memberIds);
-    ModifyOneRight parties(ModType type, List<String> partyIds);
-  
-    //TODO status:: not implemented
-
+    ModifyOneRight modifyMember(ModType type, String memberIdNameOrExtId);
+    ModifyOneRight modifyParty(ModType type, String partyIdNameOrExtId);
+    ModifyOneParty status(OrgActorStatusType status);
+    
     Uni<OneRightEnvelope> build();
   }
   
@@ -153,7 +150,7 @@ public interface OrgCommitActions {
     Repo.CommitResultStatus getStatus();
     List<Message> getMessages();
     
-    @Nullable OrgMember getUser();
+    @Nullable OrgMember getMember();
   }
   
   @Value.Immutable
@@ -162,10 +159,10 @@ public interface OrgCommitActions {
     Repo.CommitResultStatus getStatus();
     List<Message> getMessages();
     
-    @Nullable OrgParty getGroup();
+    @Nullable OrgParty getParty();
   }
   
   enum ModType {
-    ADD, DISABLED // not implemented yet TODO::, DELETE
+    ADD, DISABLED, REMOVE
   }
 }

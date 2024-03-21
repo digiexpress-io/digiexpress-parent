@@ -47,23 +47,21 @@ public class UpdatePrincipalActionImpl implements UpdatePrincipalAction {
         ChangePrincipalRoles roles = (ChangePrincipalRoles) command;
         
         if(roles.getChangeType() == ChangeType.ADD) {
-          modifyOneMember.roles(ModType.ADD, roles.getRoles());
+          roles.getRoles().forEach(role -> modifyOneMember.modifyRights(ModType.ADD, role));
           
-        } else if(roles.getChangeType() == ChangeType.DISABLE) {
-          modifyOneMember.roles(ModType.DISABLED, roles.getRoles());
+        } else if(roles.getChangeType() == ChangeType.DISABLE) {          
+          roles.getRoles().forEach(role -> modifyOneMember.modifyRights(ModType.DISABLED, role));
           
         } else if(roles.getChangeType() == ChangeType.REMOVE) {
-          //TODO:: not implemented
-          throw new UpdatePrincipalException("Command type not implemented: " + command.getCommandType()); 
+          roles.getRoles().forEach(role -> modifyOneMember.modifyRights(ModType.REMOVE, role)); 
         }
         break;
       }
       
       case CHANGE_PRINCIPAL_STATUS: {
         ChangePrincipalStatus status = (ChangePrincipalStatus) command;
-        /* TODO:: not implemented
-         * break;
-         */ 
+        modifyOneMember.status(status.getStatus());
+        break;
       }    
       default: throw new UpdatePrincipalException("Command type not found exception: " + command.getCommandType());
       }
@@ -85,7 +83,7 @@ public class UpdatePrincipalActionImpl implements UpdatePrincipalAction {
     }
 
     
-    final var principal = response.getUser();
+    final var principal = response.getMember();
     
     return ImmutablePrincipal.builder()
       .id(principal.getId())

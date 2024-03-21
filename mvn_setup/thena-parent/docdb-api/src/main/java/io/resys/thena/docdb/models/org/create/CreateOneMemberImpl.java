@@ -27,7 +27,7 @@ import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class CreateOneUserImpl implements CreateOneMember {
+public class CreateOneMemberImpl implements CreateOneMember {
 
   private final DbState state;
 
@@ -44,16 +44,16 @@ public class CreateOneUserImpl implements CreateOneMember {
   private Map<String, List<String>> addUserToGroupRoles = new LinkedHashMap<>();
 
   
-  @Override public CreateOneUserImpl repoId(String repoId) {         this.repoId = RepoAssert.notEmpty(repoId,           () -> "repoId can't be empty!"); return this; }
-  @Override public CreateOneUserImpl author(String author) {         this.author = RepoAssert.notEmpty(author,           () -> "author can't be empty!"); return this; }
-  @Override public CreateOneUserImpl message(String message) {       this.message = RepoAssert.notEmpty(message,         () -> "message can't be empty!"); return this; }
-  @Override public CreateOneUserImpl userName(String userName) {     this.userName = RepoAssert.notEmpty(userName,       () -> "userName can't be empty!"); return this; }
-  @Override public CreateOneUserImpl email(String email) {           this.email = RepoAssert.notEmpty(email,             () -> "email can't be empty!"); return this; }
+  @Override public CreateOneMemberImpl repoId(String repoId) {         this.repoId = RepoAssert.notEmpty(repoId,           () -> "repoId can't be empty!"); return this; }
+  @Override public CreateOneMemberImpl author(String author) {         this.author = RepoAssert.notEmpty(author,           () -> "author can't be empty!"); return this; }
+  @Override public CreateOneMemberImpl message(String message) {       this.message = RepoAssert.notEmpty(message,         () -> "message can't be empty!"); return this; }
+  @Override public CreateOneMemberImpl userName(String userName) {     this.userName = RepoAssert.notEmpty(userName,       () -> "userName can't be empty!"); return this; }
+  @Override public CreateOneMemberImpl email(String email) {           this.email = RepoAssert.notEmpty(email,             () -> "email can't be empty!"); return this; }
   
-  @Override public CreateOneUserImpl externalId(String externalId) { this.externalId = externalId; return this; }
-  @Override public CreateOneUserImpl addMemberToParties(String ... addUserToGroups) { this.addUserToGroups.addAll(Arrays.asList(addUserToGroups)); return this; }
-  @Override public CreateOneUserImpl addMemberToParties(List<String> addUserToGroups) { this.addUserToGroups.addAll(RepoAssert.notNull(addUserToGroups, () -> "addUserToGroups can't be empty!")); return this; }
-  @Override public CreateOneUserImpl addMemberRight(List<String> addUserToRoles) { this.addUserToRoles.addAll(RepoAssert.notNull(addUserToRoles, () -> "addUserToRoles can't be empty!")); return this; }
+  @Override public CreateOneMemberImpl externalId(String externalId) { this.externalId = externalId; return this; }
+  @Override public CreateOneMemberImpl addMemberToParties(String ... addUserToGroups) { this.addUserToGroups.addAll(Arrays.asList(addUserToGroups)); return this; }
+  @Override public CreateOneMemberImpl addMemberToParties(List<String> addUserToGroups) { this.addUserToGroups.addAll(RepoAssert.notNull(addUserToGroups, () -> "addUserToGroups can't be empty!")); return this; }
+  @Override public CreateOneMemberImpl addMemberRight(List<String> addUserToRoles) { this.addUserToRoles.addAll(RepoAssert.notNull(addUserToRoles, () -> "addUserToRoles can't be empty!")); return this; }
   @Override public CreateOneMember addMemberToPartyRight(String groupId, List<String> roledId) {
     RepoAssert.notEmpty(groupId, () -> "groupId can't be empty!");
     RepoAssert.notEmpty(roledId, () -> "roledId can't be empty!");
@@ -193,7 +193,7 @@ public class CreateOneUserImpl implements CreateOneMember {
           .build());
     }
 
-    final OrgBatchForOne batch = new BatchForOneUserCreate(tx.getRepo().getId(), author, message)
+    final OrgBatchForOne batch = new BatchForOneMemberCreate(tx.getRepo().getId(), author, message)
         .externalId(externalId)
         .email(email)
         .addToGroups(addToGroups)
@@ -205,7 +205,7 @@ public class CreateOneUserImpl implements CreateOneMember {
     return tx.insert().batchMany(batch)
       .onItem().transform(rsp -> ImmutableOneMemberEnvelope.builder()
         .repoId(repoId)
-        .user(rsp.getMembers().isEmpty() ? null : rsp.getMembers().get(0))
+        .member(rsp.getMembers().isEmpty() ? null : rsp.getMembers().get(0))
         .addMessages(rsp.getLog())
         .addAllMessages(rsp.getMessages())
         .status(DataMapper.mapStatus(rsp.getStatus()))

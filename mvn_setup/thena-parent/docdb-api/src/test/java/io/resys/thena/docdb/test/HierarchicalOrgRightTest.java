@@ -95,15 +95,15 @@ jailer-3
     getClient().org().commit().modifyOneMember()
         .repoId(repo.getRepo().getId())
         .userId(userId2.getId())
-        .groups(ModType.ADD, Arrays.asList(root1.getId()))
-        .roles(ModType.ADD, Arrays.asList(bakerMain.getId()))
+        .modifyParties(ModType.ADD, root1.getId())
+        .modifyRights(ModType.ADD, bakerMain.getId())
         .userName("super-user")
         .externalId("ext-1")
         .email("em@mod.com")
         .author("au")
         .message("mod for user")
         .build().await().atMost(Duration.ofMinutes(1))
-        .getUser();
+        .getMember();
     
     roleHierarchy = getClient().org().find().rightHierarchyQuery()
         .repoId(repo.getRepo().getId())
@@ -121,11 +121,11 @@ jailer-1
     getClient().org().commit().modifyOneMember()
         .repoId(repo.getRepo().getId())
         .userId(userId2.getId())
-        .groups(ModType.DISABLED, Arrays.asList(child1_2_2.getId()))
+        .modifyParties(ModType.DISABLED, child1_2_2.getId())
         .author("au")
         .message("mod for user")
         .build().await().atMost(Duration.ofMinutes(1))
-        .getUser();
+        .getMember();
     
     roleHierarchy = getClient().org().find().rightHierarchyQuery()
         .repoId(repo.getRepo().getId())
@@ -140,7 +140,7 @@ jailer-2
     final var rejectNoChanges = getClient().org().commit().modifyOneMember()
       .repoId(repo.getRepo().getId())
       .userId(userId2.getId())
-      .groups(ModType.DISABLED, Arrays.asList(child1_2_2.getId()))
+      .modifyParties(ModType.DISABLED, child1_2_2.getId())
       .author("au")
       .message("mod for user")
       .build().await().atMost(Duration.ofMinutes(1))
@@ -168,7 +168,7 @@ baker-main
         .message("me-")
         .externalId(null)
         .build().await().atMost(Duration.ofMinutes(1))
-        .getUser();
+        .getMember();
   }
   
   private OrgParty createRootGroup(String groupName, RepoResult repo, OrgRight ...roles) {
@@ -184,7 +184,7 @@ baker-main
         .author("ar-")
         .message("me-")
         .externalId(null)
-        .build().await().atMost(Duration.ofMinutes(1)).getGroup();
+        .build().await().atMost(Duration.ofMinutes(1)).getParty();
   }
   
   private OrgParty createChildGroup(String groupName, String parentId, RepoResult repo, OrgRight ...roles) {
@@ -201,7 +201,7 @@ baker-main
         .author("ar-")
         .message("me-")
         .externalId(null)
-        .build().await().atMost(Duration.ofMinutes(1)).getGroup();
+        .build().await().atMost(Duration.ofMinutes(1)).getParty();
   }
   
   private OrgRight createRole(RepoResult repo, String roleName) {

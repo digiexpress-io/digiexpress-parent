@@ -95,7 +95,7 @@ public class SimpleOrgTest extends DbTestTemplate {
       .author("nobby nobbs")
       .message("my first group")
       .externalId("one-man-group")
-      .build().await().atMost(Duration.ofMinutes(1)).getGroup();
+      .build().await().atMost(Duration.ofMinutes(1)).getParty();
       
     
     getClient().org().commit().createOneMember()

@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class CreateOneGroupImpl implements CreateOneParty {
+public class CreateOnePartyImpl implements CreateOneParty {
 
   private final DbState state;
 
@@ -37,16 +37,16 @@ public class CreateOneGroupImpl implements CreateOneParty {
   private List<String> addUsersToGroup = new ArrayList<>();
   private List<String> addRolesToGroup = new ArrayList<>();
 
-  @Override public CreateOneGroupImpl repoId(String repoId) {         this.repoId = RepoAssert.notEmpty(repoId,           () -> "repoId can't be empty!"); return this; }
-  @Override public CreateOneGroupImpl author(String author) {         this.author = RepoAssert.notEmpty(author,           () -> "author can't be empty!"); return this; }
-  @Override public CreateOneGroupImpl message(String message) {       this.message = RepoAssert.notEmpty(message,         () -> "message can't be empty!"); return this; }
-  @Override public CreateOneGroupImpl partyName(String groupName) {   this.groupName = RepoAssert.notEmpty(groupName,     () -> "groupName can't be empty!"); return this; }
-  @Override public CreateOneGroupImpl partyDescription(String desc) { this.groupDescription = RepoAssert.notEmpty(desc,   () -> "groupDescription can't be empty!"); return this; }
+  @Override public CreateOnePartyImpl repoId(String repoId) {         this.repoId = RepoAssert.notEmpty(repoId,           () -> "repoId can't be empty!"); return this; }
+  @Override public CreateOnePartyImpl author(String author) {         this.author = RepoAssert.notEmpty(author,           () -> "author can't be empty!"); return this; }
+  @Override public CreateOnePartyImpl message(String message) {       this.message = RepoAssert.notEmpty(message,         () -> "message can't be empty!"); return this; }
+  @Override public CreateOnePartyImpl partyName(String groupName) {   this.groupName = RepoAssert.notEmpty(groupName,     () -> "groupName can't be empty!"); return this; }
+  @Override public CreateOnePartyImpl partyDescription(String desc) { this.groupDescription = RepoAssert.notEmpty(desc,   () -> "groupDescription can't be empty!"); return this; }
   
-  @Override public CreateOneGroupImpl parentId(String parentId) {     this.parentId = parentId; return this; }
-  @Override public CreateOneGroupImpl externalId(String externalId) { this.externalId = externalId; return this; }
-  @Override public CreateOneGroupImpl addMemberToParty(List<String> addUsersToGroup) { this.addUsersToGroup.addAll(RepoAssert.notNull(addUsersToGroup, () -> "addUsersToGroup can't be empty!")); return this; }
-  @Override public CreateOneGroupImpl addRightsToParty(List<String> addRolesToGroup) { this.addRolesToGroup.addAll(RepoAssert.notNull(addRolesToGroup, () -> "addRolesToGroup can't be empty!")); return this; }
+  @Override public CreateOnePartyImpl parentId(String parentId) {     this.parentId = parentId; return this; }
+  @Override public CreateOnePartyImpl externalId(String externalId) { this.externalId = externalId; return this; }
+  @Override public CreateOnePartyImpl addMemberToParty(List<String> addUsersToGroup) { this.addUsersToGroup.addAll(RepoAssert.notNull(addUsersToGroup, () -> "addUsersToGroup can't be empty!")); return this; }
+  @Override public CreateOnePartyImpl addRightsToParty(List<String> addRolesToGroup) { this.addRolesToGroup.addAll(RepoAssert.notNull(addRolesToGroup, () -> "addRolesToGroup can't be empty!")); return this; }
   
   @Override
   public Uni<OnePartyEnvelope> build() {
@@ -87,7 +87,7 @@ public class CreateOneGroupImpl implements CreateOneParty {
   }
 
   private Uni<OnePartyEnvelope> createGroup(OrgRepo tx, List<OrgMember> users, List<OrgRight> roles, Optional<OrgParty> parent) {
-    final OrgBatchForOne batch = new BatchForOneGroupCreate(tx.getRepo().getId(), author, message)
+    final OrgBatchForOne batch = new BatchForOnePartyCreate(tx.getRepo().getId(), author, message)
         .externalId(externalId)
         .users(users)
         .roles(roles)
@@ -102,7 +102,7 @@ public class CreateOneGroupImpl implements CreateOneParty {
       	
       	return ImmutableOnePartyEnvelope.builder()
         .repoId(repoId)
-        .group(rsp.getParties().isEmpty() ? null : rsp.getParties().get(0))
+        .party(rsp.getParties().isEmpty() ? null : rsp.getParties().get(0))
         .addMessages(rsp.getLog())
         .addAllMessages(rsp.getMessages())
         .status(DataMapper.mapStatus(rsp.getStatus()))

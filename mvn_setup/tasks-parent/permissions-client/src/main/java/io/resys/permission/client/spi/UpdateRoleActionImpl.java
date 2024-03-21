@@ -89,7 +89,7 @@ public class UpdateRoleActionImpl implements UpdateRoleAction {
       throw new UpdateRoleException(msg, response);
     }
     
-    final var role = response.getGroup();
+    final var role = response.getParty();
     return ImmutableRole.builder()
       .id(role.getId())
       .parentId(role.getParentId())

@@ -17,6 +17,7 @@ import io.resys.thena.docdb.api.models.ImmutableMessage;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
 import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.docdb.api.models.Repo;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatusType;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgParty;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRight;
 import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgMemberHierarchy;
@@ -61,48 +62,55 @@ public class ModifyOneMemberImpl implements ModifyOneMember {
   @Override public ModifyOneMemberImpl userName(String userName) {     this.userName = Optional.ofNullable(RepoAssert.notEmpty(userName,       () -> "userName can't be empty!")); return this; }
   @Override public ModifyOneMemberImpl email(String email) {           this.email = Optional.ofNullable(RepoAssert.notEmpty(email,             () -> "email can't be empty!")); return this; }
   @Override public ModifyOneMemberImpl externalId(String externalId) { this.externalId = Optional.ofNullable(externalId); return this; }
-  
   @Override
-  public ModifyOneMember groupsRoles(ModType type, Map<String, List<String>> addUseGroupRoles) {
-    RepoAssert.notEmpty(addUseGroupRoles, () -> "groups can't be empty!");
-    final var groups = addUseGroupRoles.keySet().stream().distinct().toList();
-    final var roles = addUseGroupRoles.values().stream().flatMap(e -> e.stream()).distinct().toList();
-    this.allGroups.addAll(groups);
-    this.allRoles.addAll(roles);
+  public ModifyOneMember status(OrgActorStatusType status) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+  @Override
+  public ModifyOneMember modifyPartyRight(ModType type, String partyIdNameOrExtId, String rightIdNameOrExtId) {
+    RepoAssert.notEmpty(partyIdNameOrExtId, () -> "partyIdNameOrExtId can't be empty!");
+    RepoAssert.notEmpty(rightIdNameOrExtId, () -> "rightIdNameOrExtId can't be empty!");
+
+    this.allGroups.add(partyIdNameOrExtId);
+    this.allRoles.add(rightIdNameOrExtId);
     if(type == ModType.ADD) {
-      this.addUseGroupRoles.putAll(addUseGroupRoles);
+      if(!this.addUseGroupRoles.containsKey(partyIdNameOrExtId)) {
+        this.addUseGroupRoles.put(partyIdNameOrExtId, new ArrayList<>());
+      }
+      this.addUseGroupRoles.get(partyIdNameOrExtId).add(rightIdNameOrExtId);
     } else if(type == ModType.DISABLED) {
-      this.removeUseGroupRoles.putAll(addUseGroupRoles);
+      if(!this.removeUseGroupRoles.containsKey(partyIdNameOrExtId)) {
+        this.removeUseGroupRoles.put(partyIdNameOrExtId, new ArrayList<>());
+      }
+      this.removeUseGroupRoles.get(partyIdNameOrExtId).add(rightIdNameOrExtId);
     } else {
       RepoAssert.fail("Unknown modification type: " + type + "!");
     }
     return this; 
   }
   @Override 
-  public ModifyOneMemberImpl groups(ModType type, List<String> initGroups) { 
-    RepoAssert.notEmpty(initGroups, () -> "groups can't be empty!");
-    final var groups = initGroups.stream().distinct().toList();
-    this.allGroups.addAll(groups);
+  public ModifyOneMemberImpl modifyParties(ModType type, String partyId) { 
+    RepoAssert.notEmpty(partyId, () -> "partyId can't be empty!");
+    this.allGroups.add(partyId);
     if(type == ModType.ADD) {
-      groupsToAdd.addAll(groups);
+      groupsToAdd.add(partyId);
     } else if(type == ModType.DISABLED) {
-      groupsToRemove.addAll(groups);
+      groupsToRemove.add(partyId);
     } else {
       RepoAssert.fail("Unknown modification type: " + type + "!");
     }
     return this; 
    }
   @Override 
-  public ModifyOneMemberImpl roles(ModType type, List<String> initRoles) {
-    RepoAssert.notEmpty(initRoles, () -> "roles can't be empty!");
+  public ModifyOneMemberImpl modifyRights(ModType type, String rightId) {
+    RepoAssert.notEmpty(rightId, () -> "rightId can't be empty!");
     
-    final var roles = initRoles.stream().distinct().toList();
-    this.allRoles.addAll(roles);
-    
+    this.allRoles.add(rightId);
     if(type == ModType.ADD) {
-      rolesToAdd.addAll(roles);
+      rolesToAdd.add(rightId);
     } else if(type == ModType.DISABLED) {
-      rolesToRemove.addAll(roles);
+      rolesToRemove.add(rightId);
     } else {
       RepoAssert.fail("Unknown modification type: " + type + "!");
     }
@@ -261,7 +269,7 @@ public class ModifyOneMemberImpl implements ModifyOneMember {
       return tx.insert().batchMany(batch)
           .onItem().transform(rsp -> ImmutableOneMemberEnvelope.builder()
             .repoId(repoId)
-            .user(rsp.getMembers().isEmpty() ? null : rsp.getMembers().get(0))
+            .member(rsp.getMembers().isEmpty() ? null : rsp.getMembers().get(0))
             .addMessages(rsp.getLog())
             .addAllMessages(rsp.getMessages())
             .status(DataMapper.mapStatus(rsp.getStatus()))
@@ -275,7 +283,5 @@ public class ModifyOneMemberImpl implements ModifyOneMember {
             .status(Repo.CommitResultStatus.NO_CHANGES)
             .build());
     }
-     
-
   }
 }

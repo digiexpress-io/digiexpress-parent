@@ -27,7 +27,7 @@ import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class BatchForOneUserCreate {
+public class BatchForOneMemberCreate {
 
   private final String repoId;
   private final String author;
@@ -40,12 +40,12 @@ public class BatchForOneUserCreate {
   private String email;
   private String externalId;
 
-  public BatchForOneUserCreate addUserToGroupRoles(Map<OrgParty, List<OrgRight>> groups) { this.addUserToGroupRoles = groups; return this; }
-  public BatchForOneUserCreate addToGroups(List<OrgParty> groups) { this.addToGroups = groups; return this; }
-  public BatchForOneUserCreate addToRoles(List<OrgRight> roles) {    this.addToRoles = roles; return this; }
-  public BatchForOneUserCreate userName(String userName) {     this.userName = userName; return this; }
-  public BatchForOneUserCreate email(String email) {           this.email = email; return this; }
-  public BatchForOneUserCreate externalId(String externalId) { this.externalId = externalId; return this; }
+  public BatchForOneMemberCreate addUserToGroupRoles(Map<OrgParty, List<OrgRight>> groups) { this.addUserToGroupRoles = groups; return this; }
+  public BatchForOneMemberCreate addToGroups(List<OrgParty> groups) { this.addToGroups = groups; return this; }
+  public BatchForOneMemberCreate addToRoles(List<OrgRight> roles) {    this.addToRoles = roles; return this; }
+  public BatchForOneMemberCreate userName(String userName) {     this.userName = userName; return this; }
+  public BatchForOneMemberCreate email(String email) {           this.email = email; return this; }
+  public BatchForOneMemberCreate externalId(String externalId) { this.externalId = externalId; return this; }
   
   public ImmutableOrgBatchForOne create() {
     RepoAssert.notEmpty(repoId,   () -> "repoId can't be empty!");

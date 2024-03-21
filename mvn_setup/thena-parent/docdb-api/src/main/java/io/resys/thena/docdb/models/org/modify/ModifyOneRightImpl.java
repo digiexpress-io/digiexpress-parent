@@ -8,11 +8,13 @@ import java.util.Optional;
 
 import io.resys.thena.docdb.api.actions.ImmutableOneRightEnvelope;
 import io.resys.thena.docdb.api.actions.OrgCommitActions.ModType;
+import io.resys.thena.docdb.api.actions.OrgCommitActions.ModifyOneParty;
 import io.resys.thena.docdb.api.actions.OrgCommitActions.ModifyOneRight;
 import io.resys.thena.docdb.api.actions.OrgCommitActions.OneRightEnvelope;
 import io.resys.thena.docdb.api.models.ImmutableMessage;
 import io.resys.thena.docdb.api.models.Repo.CommitResultStatus;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatus;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatusType;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberRight;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgParty;
@@ -56,32 +58,34 @@ public class ModifyOneRightImpl implements ModifyOneRight {
   @Override public ModifyOneRightImpl externalId(String externalId) { this.externalId = Optional.ofNullable(externalId); return this; }
   @Override public ModifyOneRightImpl rightName(String rightName) {   this.rightName = Optional.ofNullable(RepoAssert.notEmpty(rightName, () -> "rightName can't be empty!")); return this; }
   @Override public ModifyOneRightImpl rightDescription(String rightDescription) { this.rightDescription = Optional.ofNullable(RepoAssert.notEmpty(rightDescription, () -> "rightDescription can't be empty!")); return this; }
-  
+  @Override
+  public ModifyOneParty status(OrgActorStatusType status) {
+    // TODO Auto-generated method stub
+    return null;
+  }
   @Override 
-  public ModifyOneRightImpl parties(ModType type, List<String> partyIds) { 
+  public ModifyOneRightImpl modifyParty(ModType type, String partyIds) { 
     RepoAssert.notEmpty(partyIds, () -> "partyIds can't be empty!");
-    final var parties = partyIds.stream().distinct().toList();
-    this.allParties.addAll(parties);
+    
+    this.allParties.add(partyIds);
     if(type == ModType.ADD) {
-      partiesToAdd.addAll(parties);
+      partiesToAdd.add(partyIds);
     } else if(type == ModType.DISABLED) {
-      partiesToRemove.addAll(parties);
+      partiesToRemove.add(partyIds);
     } else {
       RepoAssert.fail("Unknown modification type: " + type + "!");
     }
     return this; 
    }
   @Override 
-  public ModifyOneRightImpl members(ModType type, List<String> memberIds) {
+  public ModifyOneRightImpl modifyMember(ModType type, String memberIds) {
     RepoAssert.notEmpty(memberIds, () -> "memberIds can't be empty!");
-    
-    final var roles = memberIds.stream().distinct().toList();
-    this.allMembers.addAll(roles);
-    
+
+    this.allMembers.add(memberIds);
     if(type == ModType.ADD) {
-      membersToAdd.addAll(roles);
+      membersToAdd.add(memberIds);
     } else if(type == ModType.DISABLED) {
-      membersToRemove.addAll(roles);
+      membersToRemove.add(memberIds);
     } else {
       RepoAssert.fail("Unknown modification type: " + type + "!");
     }
@@ -246,7 +250,6 @@ public class ModifyOneRightImpl implements ModifyOneRight {
             .status(CommitResultStatus.NO_CHANGES)
             .build());
     }
-     
-
   }
+
 }

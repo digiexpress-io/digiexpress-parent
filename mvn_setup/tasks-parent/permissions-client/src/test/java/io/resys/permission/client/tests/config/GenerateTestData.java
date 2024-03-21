@@ -52,7 +52,7 @@ public class GenerateTestData {
       final var result = docDb.org().commit().modifyOneMember()
           .repoId(repo.getId())
           .userId(entry.getKey())
-          .groups(ModType.ADD, entry.getValue())
+          .modifyParties(ModType.ADD, entry.getValue())
           .author("ar-")
           .message("created membership")
           .build().await().atMost(Duration.ofMinutes(1));
@@ -216,7 +216,7 @@ public class GenerateTestData {
       final var result = docDb.org().commit().modifyOneMember()
         .repoId(repo.getId())
         .userId(user.getString("user_external_id"))
-        .groupsRoles(ModType.ADD, Map.of(user.getString("group_external_id"), Arrays.asList(user.getString("role_external_id"))))
+        .partyRight(ModType.ADD, Map.of(user.getString("group_external_id"), Arrays.asList(user.getString("role_external_id"))))
         .author("au-")
         .message("created user group role association")
         .build().await().atMost(Duration.ofMinutes(1));

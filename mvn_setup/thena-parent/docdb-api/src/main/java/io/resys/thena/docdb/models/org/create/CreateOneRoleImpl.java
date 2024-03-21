@@ -78,7 +78,7 @@ public class CreateOneRoleImpl implements CreateOneRight {
   }
 
   private Uni<OneRightEnvelope> createRole(OrgRepo tx, List<OrgMember> users, List<OrgParty> groups) {
-    final OrgBatchForOne batch = new BatchForOneRoleCreate(tx.getRepo().getId(), author, message)
+    final OrgBatchForOne batch = new BatchForOneRightCreate(tx.getRepo().getId(), author, message)
         .externalId(externalId)
         .users(users)
         .parties(groups)
