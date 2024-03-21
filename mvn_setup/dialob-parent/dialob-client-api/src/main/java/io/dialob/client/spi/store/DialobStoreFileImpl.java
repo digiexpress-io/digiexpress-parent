@@ -1,9 +1,12 @@
 package io.dialob.client.spi.store;
 
+import java.io.File;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
 import io.dialob.client.api.DialobStore;
 import io.dialob.client.api.ImmutableStoreEntity;
 import io.dialob.client.spi.DialobStoreTemplate;
@@ -12,14 +15,12 @@ import io.dialob.client.spi.store.DialobStoreConfig.GidProvider;
 import io.dialob.client.spi.support.DialobAssert;
 import io.dialob.client.spi.support.OidUtils;
 import io.resys.thena.docdb.api.DocDB;
-import io.resys.thena.docdb.store.file.DocDBFactoryFile;
-import io.resys.thena.docdb.store.file.FileErrors;
-import io.resys.thena.docdb.store.file.spi.FilePoolImpl;
-import io.resys.thena.docdb.store.file.tables.Table.FilePool;
+import io.resys.thena.docdb.storefile.DocDBFactoryFile;
+import io.resys.thena.docdb.storefile.FileErrors;
+import io.resys.thena.docdb.storefile.spi.FilePoolImpl;
+import io.resys.thena.docdb.storefile.tables.Table.FilePool;
 import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;
-
-import java.io.File;
 
 @Slf4j
 public class DialobStoreFileImpl extends DialobStoreTemplate implements DialobStore {

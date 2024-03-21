@@ -1,5 +1,7 @@
 package io.resys.thena.projects.client.spi;
 
+import java.util.stream.Collectors;
+
 /*-
  * #%L
  * thena-tasks-client
@@ -22,19 +24,25 @@ package io.resys.thena.projects.client.spi;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import io.resys.thena.docdb.api.DocDB;
 import io.resys.thena.docdb.api.actions.RepoActions.RepoStatus;
 import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.Repo.RepoType;
-import io.resys.thena.docdb.store.sql.DbStateSqlImpl;
-import io.resys.thena.docdb.store.sql.PgErrors;
+import io.resys.thena.docdb.storesql.DbStateSqlImpl;
+import io.resys.thena.docdb.storesql.PgErrors;
 import io.resys.thena.docdb.support.OidUtils;
 import io.resys.thena.docdb.support.RepoAssert;
 import io.resys.thena.projects.client.api.model.Document.DocumentType;
-import io.resys.thena.projects.client.spi.store.*;
+import io.resys.thena.projects.client.spi.store.DocumentConfig;
 import io.resys.thena.projects.client.spi.store.DocumentConfig.DocumentAuthorProvider;
 import io.resys.thena.projects.client.spi.store.DocumentConfig.DocumentGidProvider;
+import io.resys.thena.projects.client.spi.store.DocumentStore;
+import io.resys.thena.projects.client.spi.store.DocumentStoreException;
+import io.resys.thena.projects.client.spi.store.ImmutableDocumentConfig;
+import io.resys.thena.projects.client.spi.store.ImmutableDocumentExceptionMsg;
+import io.resys.thena.projects.client.spi.store.MainBranch;
 import io.smallrye.mutiny.Uni;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.sqlclient.PoolOptions;
@@ -44,8 +52,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.stream.Collectors;
 
 
 

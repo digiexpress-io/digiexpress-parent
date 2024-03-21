@@ -3,7 +3,6 @@ package io.dialob.pgsql.test.config;
 import java.time.Duration;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -21,8 +20,8 @@ import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.models.git.GitPrinter;
 import io.resys.thena.docdb.spi.DbCollections;
 import io.resys.thena.docdb.spi.DbState;
-import io.resys.thena.docdb.store.sql.DbStateSqlImpl;
-import io.resys.thena.docdb.store.sql.PgErrors;
+import io.resys.thena.docdb.storesql.DbStateSqlImpl;
+import io.resys.thena.docdb.storesql.PgErrors;
 import io.vertx.core.VertxOptions;
 import io.vertx.mutiny.sqlclient.Pool;
 
@@ -47,6 +46,7 @@ import io.vertx.mutiny.sqlclient.Pool;
  */
 
 import jakarta.inject.Inject;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class PgTestTemplate {

@@ -1,9 +1,12 @@
 package io.dialob.client.pgsql;
 
+import java.io.IOException;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
 import io.dialob.client.api.DialobStore;
 import io.dialob.client.api.ImmutableStoreEntity;
 import io.dialob.client.spi.DialobStoreTemplate;
@@ -13,14 +16,12 @@ import io.dialob.client.spi.store.ImmutableDialobStoreConfig;
 import io.dialob.client.spi.support.DialobAssert;
 import io.dialob.client.spi.support.OidUtils;
 import io.resys.thena.docdb.api.DocDB;
-import io.resys.thena.docdb.store.sql.DbStateSqlImpl;
-import io.resys.thena.docdb.store.sql.PgErrors;
+import io.resys.thena.docdb.storesql.DbStateSqlImpl;
+import io.resys.thena.docdb.storesql.PgErrors;
 import io.vertx.core.json.JsonObject;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.sqlclient.PoolOptions;
 import lombok.extern.slf4j.Slf4j;
-
-import java.io.IOException;
 
 @Slf4j
 public class PgSqlDialobStore extends DialobStoreTemplate implements DialobStore {

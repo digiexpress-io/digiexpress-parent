@@ -43,9 +43,9 @@ import io.resys.thena.docdb.jackson.VertexExtModule;
 import io.resys.thena.docdb.models.git.GitPrinter;
 import io.resys.thena.docdb.spi.DbCollections;
 import io.resys.thena.docdb.spi.DbState;
-import io.resys.thena.docdb.store.file.DocDBFactoryFile;
-import io.resys.thena.docdb.store.file.FileErrors;
-import io.resys.thena.docdb.store.file.spi.FilePoolImpl;
+import io.resys.thena.docdb.storefile.DocDBFactoryFile;
+import io.resys.thena.docdb.storefile.FileErrors;
+import io.resys.thena.docdb.storefile.spi.FilePoolImpl;
 import io.vertx.core.json.jackson.VertxModule;
 import lombok.extern.slf4j.Slf4j;
 

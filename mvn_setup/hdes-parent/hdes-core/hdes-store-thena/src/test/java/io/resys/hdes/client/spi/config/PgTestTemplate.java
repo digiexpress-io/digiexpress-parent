@@ -1,5 +1,12 @@
 package io.resys.hdes.client.spi.config;
 
+import java.time.Duration;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.TestInfo;
+
 import io.resys.hdes.client.api.HdesClient;
 import io.resys.hdes.client.api.HdesComposer;
 import io.resys.hdes.client.spi.HdesClientImpl;
@@ -13,17 +20,11 @@ import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.models.git.GitPrinter;
 import io.resys.thena.docdb.spi.DbCollections;
 import io.resys.thena.docdb.spi.DbState;
-import io.resys.thena.docdb.store.sql.DbStateSqlImpl;
-import io.resys.thena.docdb.store.sql.PgErrors;
+import io.resys.thena.docdb.storesql.DbStateSqlImpl;
+import io.resys.thena.docdb.storesql.PgErrors;
 import io.vertx.mutiny.sqlclient.Pool;
 import jakarta.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.TestInfo;
-
-import java.time.Duration;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 public class PgTestTemplate {

@@ -41,8 +41,8 @@ import io.resys.sysconfig.client.api.SysConfigClient;
 import io.resys.sysconfig.client.spi.SysConfigClientImpl;
 import io.resys.sysconfig.client.spi.asset.AssetClientImpl;
 import io.resys.thena.docdb.jackson.VertexExtModule;
-import io.resys.thena.docdb.store.sql.DbStateSqlImpl;
-import io.resys.thena.docdb.store.sql.PgErrors;
+import io.resys.thena.docdb.storesql.DbStateSqlImpl;
+import io.resys.thena.docdb.storesql.PgErrors;
 import io.resys.thena.projects.client.api.TenantConfigClient;
 import io.resys.thena.projects.client.spi.ProjectsClientImpl;
 import io.resys.thena.projects.client.spi.store.MainBranch;
@@ -54,7 +54,6 @@ import io.resys.thena.tasks.client.spi.TaskClientImpl;
 import io.resys.userprofile.client.api.UserProfileClient;
 import io.resys.userprofile.client.spi.UserProfileClientImpl;
 import io.thestencil.client.api.StencilClient;
-
 import io.thestencil.client.api.StencilComposer;
 import io.thestencil.client.spi.StencilClientImpl;
 import io.thestencil.client.spi.StencilComposerImpl;

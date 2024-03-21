@@ -1,8 +1,8 @@
 package io.resys.thena.docdb.support;
 
-import io.resys.thena.docdb.store.sql.SqlBuilder.Sql;
-import io.resys.thena.docdb.store.sql.SqlBuilder.SqlTuple;
-import io.resys.thena.docdb.store.sql.SqlBuilder.SqlTupleList;
+import io.resys.thena.docdb.storesql.SqlBuilder.Sql;
+import io.resys.thena.docdb.storesql.SqlBuilder.SqlTuple;
+import io.resys.thena.docdb.storesql.SqlBuilder.SqlTupleList;
 
 /*-
  * #%L

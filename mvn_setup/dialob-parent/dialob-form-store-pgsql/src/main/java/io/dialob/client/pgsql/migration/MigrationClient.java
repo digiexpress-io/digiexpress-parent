@@ -1,24 +1,5 @@
 package io.dialob.client.pgsql.migration;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.guava.GuavaModule;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import io.dialob.client.api.DialobDocument.FormReleaseDocument;
-import io.dialob.client.api.DialobDocument.FormRevisionDocument;
-import io.dialob.client.spi.DialobTypesMapperImpl;
-import io.dialob.client.spi.migration.MigrationSupport;
-import io.dialob.client.spi.migration.MigrationSupport.Migration;
-import io.resys.thena.docdb.store.sql.PgErrors;
-import io.smallrye.mutiny.Uni;
-import io.vertx.mutiny.sqlclient.Tuple;
-import lombok.Builder;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.core.io.support.ResourcePatternResolver;
-
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
@@ -27,6 +8,27 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.guava.GuavaModule;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
+import io.dialob.client.api.DialobDocument.FormReleaseDocument;
+import io.dialob.client.api.DialobDocument.FormRevisionDocument;
+import io.dialob.client.spi.DialobTypesMapperImpl;
+import io.dialob.client.spi.migration.MigrationSupport;
+import io.dialob.client.spi.migration.MigrationSupport.Migration;
+import io.resys.thena.docdb.storesql.PgErrors;
+import io.smallrye.mutiny.Uni;
+import io.vertx.mutiny.sqlclient.Tuple;
+import lombok.Builder;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 
 /**

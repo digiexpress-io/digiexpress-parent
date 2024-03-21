@@ -43,10 +43,10 @@ import io.resys.hdes.client.spi.store.ThenaConfig.GidProvider;
 import io.resys.hdes.client.spi.store.ThenaStoreTemplate;
 import io.resys.hdes.client.spi.util.HdesAssert;
 import io.resys.thena.docdb.api.DocDB;
-import io.resys.thena.docdb.store.file.DocDBFactoryFile;
-import io.resys.thena.docdb.store.file.FileErrors;
-import io.resys.thena.docdb.store.file.spi.FilePoolImpl;
-import io.resys.thena.docdb.store.file.tables.Table.FilePool;
+import io.resys.thena.docdb.storefile.DocDBFactoryFile;
+import io.resys.thena.docdb.storefile.FileErrors;
+import io.resys.thena.docdb.storefile.spi.FilePoolImpl;
+import io.resys.thena.docdb.storefile.tables.Table.FilePool;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 
