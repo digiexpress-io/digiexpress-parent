@@ -18,9 +18,7 @@ import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatusType;
 import io.resys.thena.docdb.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @RequiredArgsConstructor
 public class UpdateRoleActionImpl implements UpdateRoleAction {
   private final PermissionStore ctx;
@@ -71,7 +69,7 @@ public class UpdateRoleActionImpl implements UpdateRoleAction {
          * break;
          */
       }
-      default: throw new UpdateRoleException("Command type not found exception: " + command.getCommandType()); 
+      default: throw new UpdateRoleException("Command type not found exception ='%s'!".formatted(command.getCommandType())); 
       }
     }
     
@@ -87,14 +85,8 @@ public class UpdateRoleActionImpl implements UpdateRoleAction {
   
   public Role createResponse(String id, OnePartyEnvelope response) {
     if(response.getStatus() != Repo.CommitResultStatus.OK) {
-      final var msg = "failed to update role by id ='%s'".formatted(id);
-      final var exception = new UpdateRoleException(msg);
-      
-      response.getMessages().forEach(e -> {
-        exception.addSuppressed(e.getException());
-      });
-      log.error(msg);
-      throw exception;
+      final var msg = "failed to update role by id ='%s'!".formatted(id);
+      throw new UpdateRoleException(msg, response);
     }
     
     final var role = response.getGroup();
@@ -109,10 +101,19 @@ public class UpdateRoleActionImpl implements UpdateRoleAction {
       .permissions(null)
       .principals(null)
       .build();
-  }
+    }
+  
+  
   public static class UpdateRoleException extends RuntimeException {
     private static final long serialVersionUID = 1224569524137159792L;
-
+    
+    public UpdateRoleException(String message, OnePartyEnvelope response) {
+      super(message + System.lineSeparator() + "  " + 
+          String.join(System.lineSeparator() + "  ", response.getMessages().stream().map(e -> e.getText()).toList()));
+            response.getMessages().forEach(e -> {
+            addSuppressed(e.getException());
+      });
+    }
     public UpdateRoleException(String message) {
       super(message);
     }

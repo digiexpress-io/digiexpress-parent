@@ -12,13 +12,12 @@ import io.resys.permission.client.api.model.PrincipalCommand.ChangeType;
 import io.resys.permission.client.api.model.PrincipalCommand.PrincipalUpdateCommand;
 import io.resys.thena.docdb.api.actions.OrgCommitActions.ModType;
 import io.resys.thena.docdb.api.actions.OrgCommitActions.ModifyOneMember;
+import io.resys.thena.docdb.api.actions.OrgCommitActions.OneMemberEnvelope;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @RequiredArgsConstructor
 public class UpdatePrincipalActionImpl implements UpdatePrincipalAction {
   
@@ -31,12 +30,16 @@ public class UpdatePrincipalActionImpl implements UpdatePrincipalAction {
 
   @Override
   public Uni<Principal> updateOne(List<PrincipalUpdateCommand> commands) {
-    final ModifyOneMember modifyOneMember = ctx.getOrg().commit().modifyOneMember();
     final var ids = commands.stream().map(c -> c.getId()).distinct().toList();
     RepoAssert.isTrue(ids.size() == 1, () -> "Update commands must have same id because they are for the same role!");
     final var id = ids.get(0);
-    
-    
+         
+    return createRequest(id, commands).onItem().transform(response -> createResponse(id, response));
+  }
+        
+  public Uni<OneMemberEnvelope> createRequest(String id, List<PrincipalUpdateCommand> commands){
+    final ModifyOneMember modifyOneMember = ctx.getOrg().commit().modifyOneMember();
+
     for (PrincipalUpdateCommand command : commands) {
       switch(command.getCommandType()) {
       
@@ -54,7 +57,6 @@ public class UpdatePrincipalActionImpl implements UpdatePrincipalAction {
           throw new UpdatePrincipalException("Command type not implemented: " + command.getCommandType()); 
         }
         break;
-         
       }
       
       case CHANGE_PRINCIPAL_STATUS: {
@@ -62,10 +64,8 @@ public class UpdatePrincipalActionImpl implements UpdatePrincipalAction {
         /* TODO:: not implemented
          * break;
          */ 
-      }
-            
+      }    
       default: throw new UpdatePrincipalException("Command type not found exception: " + command.getCommandType());
-      
       }
     }
     
@@ -74,40 +74,43 @@ public class UpdatePrincipalActionImpl implements UpdatePrincipalAction {
       .repoId(ctx.getConfig().getRepoId())
       .author(ctx.getConfig().getAuthor().get())
       .message("Principal update")
-        .build().onItem().transform(response -> {
-          
-          if(response.getStatus() != Repo.CommitResultStatus.OK) {
-            final var msg = "failed to update principal by id='%s'".formatted(id);
-            final var exception = new UpdatePrincipalException(msg);
-            
-            response.getMessages().forEach(e -> {
-              exception.addSuppressed(e.getException());
-            });
-            log.error(msg); 
-            throw exception;
-          }
-          
-          final var principal = response.getUser();
-          
-          return ImmutablePrincipal.builder()
-            .id(principal.getId())
-            .version(principal.getCommitId())
-            
-            .name(principal.getUserName())
-            .email(principal.getEmail())
-            .roles(null)
-            .status(null)
-            .build();
-        });
+      .build();
+  }
+    
+  
+  public Principal createResponse(String id, OneMemberEnvelope response) {
+    if(response.getStatus() != Repo.CommitResultStatus.OK) {
+      final var msg = "failed to update principal by id='%s'!".formatted(id);
+      throw new UpdatePrincipalException(msg, response);
+    }
+
+    
+    final var principal = response.getUser();
+    
+    return ImmutablePrincipal.builder()
+      .id(principal.getId())
+      .version(principal.getCommitId())
       
+      .name(principal.getUserName())
+      .email(principal.getEmail())
+      .roles(null)
+      .status(null)
+      .build();
   }
 
-  public class UpdatePrincipalException extends RuntimeException {
+  public static class UpdatePrincipalException extends RuntimeException {
     private static final long serialVersionUID = -3041737023950149699L;
 
+    public UpdatePrincipalException(String message, OneMemberEnvelope response) {
+      super(message + System.lineSeparator() + " " +
+        String.join(System.lineSeparator() + " ", response.getMessages().stream().map(e -> e.getText()).toList()));
+          response.getMessages().forEach(e -> {
+          addSuppressed(e.getException());
+     });
+    }
+    
     public UpdatePrincipalException(String message) {
       super(message);
     }
   }
-
 }
