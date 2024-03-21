@@ -76,8 +76,7 @@ public class PermissionClientImpl implements PermissionClient {
 
   @Override
   public UpdatePrincipalAction updatePrincipal() {
-    // TODO Auto-generated method stub
-    return null;
+    return new UpdatePrincipalActionImpl(ctx);
   }
 
   @Override

@@ -4,13 +4,23 @@ import java.util.Arrays;
 import java.util.List;
 
 import io.resys.permission.client.api.PermissionClient.UpdateRoleAction;
+import io.resys.permission.client.api.model.ImmutableRole;
 import io.resys.permission.client.api.model.Principal.Role;
 import io.resys.permission.client.api.model.RoleCommand.ChangeRoleDescription;
+import io.resys.permission.client.api.model.RoleCommand.ChangeRoleName;
+import io.resys.permission.client.api.model.RoleCommand.ChangeRolePermissions;
+import io.resys.permission.client.api.model.RoleCommand.ChangeRoleStatus;
 import io.resys.permission.client.api.model.RoleCommand.RoleUpdateCommand;
 import io.resys.thena.docdb.api.actions.OrgCommitActions.ModifyOneParty;
+import io.resys.thena.docdb.api.actions.OrgCommitActions.OnePartyEnvelope;
+import io.resys.thena.docdb.api.models.Repo;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatusType;
+import io.resys.thena.docdb.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
 public class UpdateRoleActionImpl implements UpdateRoleAction {
   private final PermissionStore ctx;
@@ -22,7 +32,17 @@ public class UpdateRoleActionImpl implements UpdateRoleAction {
 
   @Override
   public Uni<Role> updateOne(List<RoleUpdateCommand> commands) {
+    final var ids = commands.stream().map(e -> e.getId()).distinct().toList();
+    RepoAssert.isTrue(ids.size() == 1, () -> "Update commands must have same id because they are for the same role!");
+    final var id = ids.get(0);
+    
+    return createRequest(id, commands).onItem().transform(resp -> createResponse(id, resp));
+  }
+  
+  
+  public Uni<OnePartyEnvelope> createRequest(String id, List<RoleUpdateCommand> commands) {
     final ModifyOneParty modifyOneParty = ctx.getOrg().commit().modifyOneParty();
+    
     for (RoleUpdateCommand command : commands) {
       switch(command.getCommandType()) {
       
@@ -33,31 +53,68 @@ public class UpdateRoleActionImpl implements UpdateRoleAction {
       }
       
       case CHANGE_ROLE_NAME: {
-        //TODO
+        ChangeRoleName name = (ChangeRoleName) command;
+        modifyOneParty.partyName(name.getName());
+        break;
       }
       
       case CHANGE_ROLE_STATUS: {
-        //TODO
-
+        ChangeRoleStatus status = (ChangeRoleStatus) command;
+        /* TODO not implemented
+         * break;
+         */ 
       }
       
       case CHANGE_ROLE_PERMISSIONS: {
-        //TODO
-
+        ChangeRolePermissions permissions = (ChangeRolePermissions) command;
+        /* TODO not implemented
+         * break;
+         */
       }
-      
-      default: 
+      default: throw new UpdateRoleException("Command type not found exception: " + command.getCommandType()); 
       }
     }
     
     
-    return null;
+    return modifyOneParty
+      .partyId(id) 
+      .repoId(ctx.getConfig().getRepoId())
+      .message("Role update")
+      .author(ctx.getConfig().getAuthor().get())
+      .build();
   }
-
-  @Override
-  public Uni<List<Role>> updateMany(List<? extends RoleUpdateCommand> commands) {
-    // TODO Auto-generated method stub
-    return null;
+  
+  
+  public Role createResponse(String id, OnePartyEnvelope response) {
+    if(response.getStatus() != Repo.CommitResultStatus.OK) {
+      final var msg = "failed to update role by id ='%s'".formatted(id);
+      final var exception = new UpdateRoleException(msg);
+      
+      response.getMessages().forEach(e -> {
+        exception.addSuppressed(e.getException());
+      });
+      log.error(msg);
+      throw exception;
+    }
+    
+    final var role = response.getGroup();
+    return ImmutableRole.builder()
+      .id(role.getId())
+      .parentId(role.getParentId())
+      .version(role.getCommitId())
+      
+      .name(role.getPartyName())
+      .description(role.getPartyDescription())
+      .status(OrgActorStatusType.IN_FORCE)
+      .permissions(null)
+      .principals(null)
+      .build();
   }
+  public static class UpdateRoleException extends RuntimeException {
+    private static final long serialVersionUID = 1224569524137159792L;
 
+    public UpdateRoleException(String message) {
+      super(message);
+    }
+  }
 }

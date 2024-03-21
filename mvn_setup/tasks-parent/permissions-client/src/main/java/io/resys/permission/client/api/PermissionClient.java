@@ -42,7 +42,6 @@ public interface PermissionClient {
   interface UpdatePermissionAction {
     Uni<Permission> updateOne(PermissionUpdateCommand command);
     Uni<Permission> updateOne(List<PermissionUpdateCommand> commands);
-    Uni<List<Permission>> updateMany(List<? extends PermissionUpdateCommand> commands);
   }
   
   interface CreateRoleAction {
@@ -52,14 +51,12 @@ public interface PermissionClient {
   
   interface UpdateRoleAction {
     Uni<Role> updateOne(RoleUpdateCommand command);
-    Uni<Role> updateOne(List<RoleUpdateCommand> commands);
-    Uni<List<Role>> updateMany(List<? extends RoleUpdateCommand> commands);
+    Uni<Role> updateOne(List<RoleUpdateCommand> commands);;
   }
   
   interface UpdatePrincipalAction {
     Uni<Principal> updateOne(PrincipalUpdateCommand command);
-    Uni<Principal> updateOne(List<PrincipalUpdateCommand> commands);
-    Uni<List<Principal>> updateMany(List<? extends PrincipalUpdateCommand> commands);
+    Uni<Principal> updateOne(List<PrincipalUpdateCommand> commands);;
   }
   
   interface PermissionQuery {

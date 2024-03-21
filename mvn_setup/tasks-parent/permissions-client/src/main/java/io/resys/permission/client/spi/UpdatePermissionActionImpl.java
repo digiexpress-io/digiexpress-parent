@@ -83,19 +83,14 @@ public class UpdatePermissionActionImpl implements UpdatePermissionAction {
           final var right = response.getRight();
           
           return ImmutablePermission.builder()
+              .id(right.getId())
+              .version(right.getCommitId())
+
               .description(right.getRightDescription())
               .name(right.getRightName())
-              .id(right.getId())
               .status(OrgActorStatusType.IN_FORCE)
-              .version(right.getCommitId())
               .build();
         });
-  }
-
-  @Override
-  public Uni<List<Permission>> updateMany(List<? extends PermissionUpdateCommand> commands) {
-    // TODO Auto-generated method stub
-    return null;
   }
 
   public static class UpdatePermissionException extends RuntimeException {

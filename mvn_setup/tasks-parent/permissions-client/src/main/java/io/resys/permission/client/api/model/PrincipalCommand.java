@@ -34,7 +34,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import io.resys.permission.client.api.model.Principal.Role;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatusType;
 
 
@@ -64,6 +63,10 @@ public interface PrincipalCommand extends Serializable {
     CHANGE_PRINCIPAL_STATUS
   }
   
+  enum ChangeType {
+    ADD, REMOVE, DISABLE
+  }
+  
   @JsonTypeInfo(
       use = JsonTypeInfo.Id.NAME,
       include = JsonTypeInfo.As.PROPERTY,
@@ -80,8 +83,8 @@ public interface PrincipalCommand extends Serializable {
 
   @Value.Immutable @JsonSerialize(as = ImmutableChangePrincipalRoles.class) @JsonDeserialize(as = ImmutableChangePrincipalRoles.class)
   interface ChangePrincipalRoles extends PrincipalUpdateCommand {
-    List<Role> getRoles();
-    
+    List<String> getRoles(); // id/name/extId
+    ChangeType getChangeType();
     @Override default PrincipalCommandType getCommandType() { return PrincipalCommandType.CHANGE_PRINCIPAL_ROLES; }
   }
   

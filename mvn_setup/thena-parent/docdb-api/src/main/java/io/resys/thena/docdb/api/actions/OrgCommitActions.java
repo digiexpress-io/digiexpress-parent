@@ -90,7 +90,9 @@ public interface OrgCommitActions {
     ModifyOneMember roles(ModType type, List<String> roleIdOrNameOrExternalId); // group.(id OR externalId OR rolename)
     ModifyOneMember groups(ModType type, List<String> groupIdOrNameOrExternalId);
     ModifyOneMember groupsRoles(ModType type, Map<String, List<String>> addUseGroupRoles);
-    
+   
+    //TODO status:: not implemented
+
     Uni<OneMemberEnvelope> build();
   }
 
@@ -100,7 +102,7 @@ public interface OrgCommitActions {
     ModifyOneParty author(String author);
     ModifyOneParty message(String message);
     
-    ModifyOneParty groupId(String groupId);
+    ModifyOneParty partyId(String groupId);
     ModifyOneParty parentId(@Nullable String parentId);
     ModifyOneParty externalId(@Nullable String externalId);
     ModifyOneParty partyName(String partyName);
@@ -108,7 +110,9 @@ public interface OrgCommitActions {
     
     ModifyOneParty members(ModType type, List<String> userIds);
     ModifyOneParty rights(ModType type, List<String> roleIds);
-
+    
+    //TODO status:: not implemented
+    
     Uni<OnePartyEnvelope> build();
   }
 
@@ -125,6 +129,8 @@ public interface OrgCommitActions {
     
     ModifyOneRight members(ModType type, List<String> memberIds);
     ModifyOneRight parties(ModType type, List<String> partyIds);
+  
+    //TODO status:: not implemented
 
     Uni<OneRightEnvelope> build();
   }
