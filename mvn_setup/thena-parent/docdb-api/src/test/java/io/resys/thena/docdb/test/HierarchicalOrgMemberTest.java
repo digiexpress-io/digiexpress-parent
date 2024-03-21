@@ -17,9 +17,9 @@ import io.resys.thena.docdb.api.actions.RepoActions.RepoResult;
 import io.resys.thena.docdb.api.actions.RepoActions.RepoStatus;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.Repo.RepoType;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgParty;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRight;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
 import io.resys.thena.docdb.test.config.DbTestTemplate;
 import io.resys.thena.docdb.test.config.PgProfile;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 @QuarkusTest
 @TestProfile(PgProfile.class)
 @Slf4j
-public class HierarchicalOrgGroupTest extends DbTestTemplate {
+public class HierarchicalOrgMemberTest extends DbTestTemplate {
 
   @Value.Immutable
   public interface TestContent extends Serializable {
@@ -37,13 +37,12 @@ public class HierarchicalOrgGroupTest extends DbTestTemplate {
     String getName();
   }
 
-  
-  @SuppressWarnings("unused")
+  @SuppressWarnings("unused")  
   @Test
   public void createRepoAndUserGroups() {
     // create project
     RepoResult repo = getClient().repo().projectBuilder()
-        .name("HierarchicalOrgGroupTest-1", RepoType.org)
+        .name("HierarchicalOrgUserTest-1", RepoType.org)
         .build()
         .await().atMost(Duration.ofMinutes(1));
     log.debug("created repo {}", repo);
@@ -64,61 +63,57 @@ public class HierarchicalOrgGroupTest extends DbTestTemplate {
     final var child1_4 = createChildGroup("child-1.4", root1.getId(), repo);
     
     final var root2 = createRootGroup("group-2", repo);
-    final var child2_1 = createChildGroup("child-2.1", root2.getId(), repo);
-    final var child2_2 = createChildGroup("child-2.2", root2.getId(), repo);
-    final var child2_3 = createChildGroup("child-2.3", root2.getId(), repo);
-    final var child2_4 = createChildGroup("child-2.4", root2.getId(), repo);
+    final var child2_1 = createChildGroup("child-2.1", root1.getId(), repo);
+    final var child2_2 = createChildGroup("child-2.2", root1.getId(), repo);
+    final var child2_3 = createChildGroup("child-2.3", root1.getId(), repo);
+    final var child2_4 = createChildGroup("child-2.4", root1.getId(), repo);
     
     final var root3 = createRootGroup("group-3", repo);
-    final var child3_1 = createChildGroup("child-3.1", root3.getId(), repo);
-    final var child3_2 = createChildGroup("child-3.2", root3.getId(), repo);
-    final var child3_3 = createChildGroup("child-3.3", root3.getId(), repo);
-    final var child3_4 = createChildGroup("child-3.4", root3.getId(), repo);
+    final var child3_1 = createChildGroup("child-3.1", root1.getId(), repo);
+    final var child3_2 = createChildGroup("child-3.2", root1.getId(), repo);
+    final var child3_3 = createChildGroup("child-3.3", root1.getId(), repo);
+    final var child3_4 = createChildGroup("child-3.4", root1.getId(), repo);
     
     
     final var userId1 = createUser("user-1", repo, Arrays.asList(root1), Collections.emptyList());
     final var userId2 = createUser("user-2", repo, Arrays.asList(child1_2_2), Arrays.asList(jailer4));
 
+    /*
+    final var userGroupsAndRoles1 = getClient().org().find().userGroupsAndRolesQuery()
+        .repoId(repo.getRepo().getId())
+        .get(userId1.getId()).await().atMost(Duration.ofMinutes(1));
+    */
     
     // user 2 sanity
-    var groupHierarchy = getClient().org().find().partyHierarchyQuery()
+    var userGroupsAndRoles2 = getClient().org().find().memberHierarchyQuery()
         .repoId(repo.getRepo().getId())
-        .get(child1_2_1.getId()).await().atMost(Duration.ofMinutes(1)).getObjects();
+        .get(userId2.getId()).await().atMost(Duration.ofMinutes(1)).getObjects();
     
+    
+    Assertions.assertEquals(userId2.getId(), userGroupsAndRoles2.getUserId());
+    Assertions.assertEquals("[child-1.2.2, child-1.2, group-1]", userGroupsAndRoles2.getGroupNames().toString());
+    Assertions.assertEquals("[jailer-main, jailer-2, jailer-3, jailer-1]", userGroupsAndRoles2.getRoleNames().toString());
+    
+    Assertions.assertEquals("[child-1.2.2]", userGroupsAndRoles2.getDirectGroupNames().toString());
+    Assertions.assertEquals("[jailer-main, jailer-2, jailer-3]", userGroupsAndRoles2.getDirectRoleNames().toString());
     Assertions.assertEquals("""
-group-1
-+--- roles
-|    `--- jailer-1
-+--- users
-|    `--- user-1
-+--- child-1.1
-|    `--- users
-|         `--- user-1::inherited
-+--- child-1.2
-|    +--- users
-|    |    `--- user-1::inherited
-|    +--- child-1.2.1 <= you are here
-|    |    `--- users
-|    |         `--- user-1::inherited
-|    `--- child-1.2.2
+user-2
++--- group-1
+|    +--- roles
+|    `--- child-1.2
 |         +--- roles
-|         |    +--- jailer-2
-|         |    `--- jailer-3
-|         `--- users
-|              +--- user-2
-|              `--- user-1::inherited
-+--- child-1.3
-|    `--- users
-|         `--- user-1::inherited
-`--- child-1.4
-     `--- users
-          `--- user-1::inherited
-        """, groupHierarchy.getLog());
+|         `--- child-1.2.2::DIRECT
+|              `--- roles
+|                   +--- jailer-2
+|                   `--- jailer-3
+`--- roles
+     `--- jailer-main
+        """, userGroupsAndRoles2.getLog());
     
     // modify user 2
     getClient().org().commit().modifyOneMember()
         .repoId(repo.getRepo().getId())
-        .userId(userId2.getId())
+        .userId(userGroupsAndRoles2.getUserId())
         .groups(ModType.ADD, Arrays.asList(root1.getId()))
         .roles(ModType.ADD, Arrays.asList(bakerMain.getId()))
         .userName("super-user")
@@ -129,100 +124,67 @@ group-1
         .build().await().atMost(Duration.ofMinutes(1))
         .getUser();
     
-    groupHierarchy = getClient().org().find().partyHierarchyQuery()
+    userGroupsAndRoles2 = getClient().org().find().memberHierarchyQuery()
         .repoId(repo.getRepo().getId())
-        .get(child1_2_2.getId()).await().atMost(Duration.ofMinutes(1)).getObjects(); 
+        .get(userId2.getId()).await().atMost(Duration.ofMinutes(1)).getObjects(); 
     Assertions.assertEquals("""
-group-1
-+--- roles
-|    `--- jailer-1
-+--- users
-|    +--- user-1
-|    `--- super-user
-+--- child-1.1
-|    `--- users
-|         +--- user-1::inherited
-|         `--- super-user::inherited
-+--- child-1.2
-|    +--- users
-|    |    +--- user-1::inherited
-|    |    `--- super-user::inherited
-|    +--- child-1.2.1
-|    |    `--- users
-|    |         +--- user-1::inherited
-|    |         `--- super-user::inherited
-|    `--- child-1.2.2 <= you are here
+super-user
++--- group-1::DIRECT
+|    +--- roles
+|    |    `--- jailer-1
+|    `--- child-1.2
 |         +--- roles
-|         |    +--- jailer-2
-|         |    `--- jailer-3
-|         `--- users
-|              +--- super-user
-|              `--- user-1::inherited
-+--- child-1.3
-|    `--- users
-|         +--- user-1::inherited
-|         `--- super-user::inherited
-`--- child-1.4
-     `--- users
-          +--- user-1::inherited
-          `--- super-user::inherited
-        """, groupHierarchy.getLog());
+|         `--- child-1.2.2::DIRECT
+|              `--- roles
+|                   +--- jailer-2
+|                   `--- jailer-3
+`--- roles
+     +--- jailer-main
+     `--- baker-main
+        """, userGroupsAndRoles2.getLog());
     
     
     // remove user 2 from child-1.2.2 group
     getClient().org().commit().modifyOneMember()
         .repoId(repo.getRepo().getId())
-        .userId(userId2.getId())
+        .userId(userGroupsAndRoles2.getUserId())
         .groups(ModType.DISABLED, Arrays.asList(child1_2_2.getId()))
         .author("au")
         .message("mod for user")
         .build().await().atMost(Duration.ofMinutes(1))
         .getUser();
     
-    groupHierarchy = getClient().org().find().partyHierarchyQuery()
+    userGroupsAndRoles2 = getClient().org().find().memberHierarchyQuery()
         .repoId(repo.getRepo().getId())
-        .get(child1_2_2.getId()).await().atMost(Duration.ofMinutes(1)).getObjects(); 
+        .get(userId2.getId()).await().atMost(Duration.ofMinutes(1)).getObjects(); 
     Assertions.assertEquals("""
-group-1
+super-user
++--- group-1::DIRECT
+|    `--- roles
+|         `--- jailer-1
 +--- roles
-|    `--- jailer-1
-+--- users
-|    +--- user-1
-|    `--- super-user
-+--- child-1.1
-|    `--- users
-|         +--- user-1::inherited
-|         `--- super-user::inherited
-+--- child-1.2
-|    +--- users
-|    |    +--- user-1::inherited
-|    |    `--- super-user::inherited
-|    +--- child-1.2.1
-|    |    `--- users
-|    |         +--- user-1::inherited
-|    |         `--- super-user::inherited
-|    `--- child-1.2.2 <= you are here
-|         +--- roles
-|         |    +--- jailer-2
-|         |    `--- jailer-3
-|         `--- users
-|              +--- user-1::inherited
-|              `--- super-user::inherited
-+--- child-1.3
-|    `--- users
-|         +--- user-1::inherited
-|         `--- super-user::inherited
-`--- child-1.4
-     `--- users
-          +--- user-1::inherited
-          `--- super-user::inherited
-        """, groupHierarchy.getLog());
+|    +--- jailer-main
+|    `--- baker-main
++--- grey-roles
+|    +--- jailer-2
+|    `--- jailer-3
+`--- grey-groups
+     `--- child-1.2.2
+        """, userGroupsAndRoles2.getLog());
+    
+    Assertions.assertEquals(userId2.getId(), userGroupsAndRoles2.getUserId());
+    Assertions.assertEquals("[group-1]", userGroupsAndRoles2.getGroupNames().toString());
+    Assertions.assertEquals("[jailer-main, baker-main, jailer-1]", userGroupsAndRoles2.getRoleNames().toString());
+    
+    Assertions.assertEquals("[group-1]", userGroupsAndRoles2.getDirectGroupNames().toString());
+    Assertions.assertEquals("[jailer-main, baker-main, jailer-1]", userGroupsAndRoles2.getDirectRoleNames().toString());
+    
     
     
     // Reject changes because there are non
     final var rejectNoChanges = getClient().org().commit().modifyOneMember()
       .repoId(repo.getRepo().getId())
-      .userId(userId2.getId())
+      .userId(userGroupsAndRoles2.getUserId())
       .groups(ModType.DISABLED, Arrays.asList(child1_2_2.getId()))
       .author("au")
       .message("mod for user")
@@ -230,17 +192,40 @@ group-1
       .getStatus();
     Assertions.assertEquals(Repo.CommitResultStatus.NO_CHANGES, rejectNoChanges);
     
-    groupHierarchy = getClient().org().find().partyHierarchyQuery()
+    userGroupsAndRoles2 = getClient().org().find().memberHierarchyQuery()
         .repoId(repo.getRepo().getId())
-        .get(root2.getId()).await().atMost(Duration.ofMinutes(1)).getObjects(); 
+        .get(userId2.getId()).await().atMost(Duration.ofMinutes(1)).getObjects(); 
     Assertions.assertEquals("""
-group-2 <= you are here
-+--- child-2.1
-+--- child-2.2
-+--- child-2.3
-`--- child-2.4
-        """, groupHierarchy.getLog());
+super-user
++--- group-1::DIRECT
+|    `--- roles
+|         `--- jailer-1
++--- roles
+|    +--- jailer-main
+|    `--- baker-main
++--- grey-roles
+|    +--- jailer-2
+|    `--- jailer-3
+`--- grey-groups
+     `--- child-1.2.2
+        """, userGroupsAndRoles2.getLog());
+    
+    Assertions.assertEquals(userId2.getId(), userGroupsAndRoles2.getUserId());
+    Assertions.assertEquals("[group-1]", userGroupsAndRoles2.getGroupNames().toString());
+    Assertions.assertEquals("[jailer-main, baker-main, jailer-1]", userGroupsAndRoles2.getRoleNames().toString());
+    
+    Assertions.assertEquals("[group-1]", userGroupsAndRoles2.getDirectGroupNames().toString());
+    Assertions.assertEquals("[jailer-main, baker-main, jailer-1]", userGroupsAndRoles2.getDirectRoleNames().toString());
+
     //printRepo(repo.getRepo()); //LOG THE DB 
+    
+    // 
+    final var users = getClient().org().find().memberHierarchyQuery()
+        .repoId(repo.getRepo().getId())
+        .findAll().await().atMost(Duration.ofMinutes(1));
+    Assertions.assertEquals(2, users.getObjects().size());
+    
+
   }
 
   
