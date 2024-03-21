@@ -25,23 +25,21 @@ import java.util.List;
 import org.immutables.value.Value;
 
 import io.resys.thena.docdb.api.models.Message;
-import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorData;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatus;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgCommit;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberRight;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMembership;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgParty;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgPartyRight;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRight;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMembership;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberRight;
 import io.resys.thena.docdb.models.git.GitInserts.BatchStatus;
 import io.smallrye.mutiny.Uni;
 
 public interface OrgInserts {
   
-  Uni<OrgBatchForOne> batchOne(OrgBatchForOne output);
-  Uni<OrgBatchForMany> batchMany(OrgBatchForMany output);
+  Uni<OrgBatchForOne> batchMany(OrgBatchForOne output);
   
   @Value.Immutable
   interface OrgBatchForOne {
@@ -60,18 +58,6 @@ public interface OrgInserts {
     
     BatchStatus getStatus();
     String getRepoId();
-
-    Message getLog();
-    List<Message> getMessages();
-  }
-  
-  @Value.Immutable
-  interface OrgBatchForMany {
-    BatchStatus getStatus();
-    Repo getRepo();
-
-    // TODO
-    List<OrgBatchForOne> getItems();
 
     Message getLog();
     List<Message> getMessages();

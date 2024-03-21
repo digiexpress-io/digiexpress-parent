@@ -229,7 +229,7 @@ public class ModifyOneRightImpl implements ModifyOneRight {
     
     try {
       final OrgBatchForOne batch = modify.create();
-      return tx.insert().batchOne(batch)
+      return tx.insert().batchMany(batch)
           .onItem().transform(rsp -> ImmutableOneRightEnvelope.builder()
             .repoId(repoId)
             .right(rsp.getRights().isEmpty() ? null : rsp.getRights().get(0))

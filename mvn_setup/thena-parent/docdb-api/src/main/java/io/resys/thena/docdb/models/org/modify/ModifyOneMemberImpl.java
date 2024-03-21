@@ -258,7 +258,7 @@ public class ModifyOneMemberImpl implements ModifyOneMember {
       final OrgBatchForOne batch = modify
           .updateGroupRoles(ModType.ADD, addUseGroupRoles)
           .create();
-      return tx.insert().batchOne(batch)
+      return tx.insert().batchMany(batch)
           .onItem().transform(rsp -> ImmutableOneMemberEnvelope.builder()
             .repoId(repoId)
             .user(rsp.getMembers().isEmpty() ? null : rsp.getMembers().get(0))

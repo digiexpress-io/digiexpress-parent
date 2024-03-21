@@ -8,7 +8,6 @@ import java.util.function.Predicate;
 import io.resys.thena.docdb.api.models.ImmutableMessage;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.IsOrgObject;
 import io.resys.thena.docdb.models.git.GitInserts.BatchStatus;
-import io.resys.thena.docdb.models.org.ImmutableOrgBatchForMany;
 import io.resys.thena.docdb.models.org.ImmutableOrgBatchForOne;
 import io.resys.thena.docdb.models.org.OrgInserts;
 import io.resys.thena.docdb.storesql.SqlBuilder;
@@ -48,7 +47,7 @@ public class OrgDbInsertsSqlPool implements OrgInserts {
   }
   
   @Override
-  public Uni<OrgBatchForOne> batchOne(OrgBatchForOne inputBatch) {
+  public Uni<OrgBatchForOne> batchMany(OrgBatchForOne inputBatch) {
     RepoAssert.isTrue(this.wrapper.getTx().isPresent(), () -> "Transaction must be started!");
     final var tx = wrapper.getClient();
     final var isInsert = new IsInsert(inputBatch);
@@ -141,16 +140,6 @@ public class OrgDbInsertsSqlPool implements OrgInserts {
     		 )
     		.combinedWith(OrgBatchForOne.class, (List<OrgBatchForOne> items) -> merge(inputBatch, items));
   }
-  @Override
-  public Uni<OrgBatchForMany> batchMany(OrgBatchForMany output) {
-    RepoAssert.isTrue(this.wrapper.getTx().isPresent(), () -> "Transaction must be started!");
-    final var tx = wrapper.getClient();
-    
-    
-    // TODO Auto-generated method stub
-    return null;
-  }
-
 
   
   private OrgBatchForOne merge(OrgBatchForOne start, List<OrgBatchForOne> current) {
@@ -171,23 +160,6 @@ public class OrgDbInsertsSqlPool implements OrgInserts {
     
     return builder.status(status).build();
   }
-  private OrgBatchForMany successOutput(OrgBatchForMany current, String msg) {
-    return ImmutableOrgBatchForMany.builder()
-      .from(current)
-      .status(BatchStatus.OK)
-      .addMessages(ImmutableMessage.builder().text(msg).build())
-      .build();
-  }
-  private OrgBatchForMany failOutput(OrgBatchForMany current, String msg, Throwable t) {
-    log.error("Batch failed because of: " + msg, t);
-    return ImmutableOrgBatchForMany.builder()
-        .from(current)
-        .status(BatchStatus.ERROR)
-        .addMessages(ImmutableMessage.builder().text(msg).exception(t).build())
-        .addMessages(ImmutableMessage.builder().text(t.getMessage()).build())
-        .build(); 
-  }
-  
   private OrgBatchForOne successOutput(OrgBatchForOne current, String msg) {
     return ImmutableOrgBatchForOne.builder()
       .from(current)

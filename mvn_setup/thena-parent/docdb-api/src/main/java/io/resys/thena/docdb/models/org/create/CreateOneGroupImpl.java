@@ -96,7 +96,7 @@ public class CreateOneGroupImpl implements CreateOneParty {
         .parent(parent.orElse(null))
         .create();
 
-    return tx.insert().batchOne(batch)
+    return tx.insert().batchMany(batch)
       .onItem().transform(rsp -> {
       	
       	

@@ -86,7 +86,7 @@ public class CreateOneRoleImpl implements CreateOneRight {
         .partyDescription(roleDescription)
         .create();
 
-    return tx.insert().batchOne(batch)
+    return tx.insert().batchMany(batch)
       .onItem().transform(rsp -> ImmutableOneRightEnvelope.builder()
         .repoId(repoId)
         .right(rsp.getRights().isEmpty() ? null : rsp.getRights().get(0))

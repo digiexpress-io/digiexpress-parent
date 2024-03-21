@@ -202,7 +202,7 @@ public class CreateOneUserImpl implements CreateOneMember {
         .userName(userName)
         .create(); 
 
-    return tx.insert().batchOne(batch)
+    return tx.insert().batchMany(batch)
       .onItem().transform(rsp -> ImmutableOneMemberEnvelope.builder()
         .repoId(repoId)
         .user(rsp.getMembers().isEmpty() ? null : rsp.getMembers().get(0))
