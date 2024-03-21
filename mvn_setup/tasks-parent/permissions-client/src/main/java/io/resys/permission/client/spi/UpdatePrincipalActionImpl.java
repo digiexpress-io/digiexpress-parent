@@ -26,7 +26,7 @@ public class UpdatePrincipalActionImpl implements UpdatePrincipalAction {
 
   @Override
   public Uni<Principal> updateOne(PrincipalUpdateCommand command) {
-    return updateOne(Arrays.asList());
+    return updateOne(Arrays.asList(command));
   }
 
   @Override

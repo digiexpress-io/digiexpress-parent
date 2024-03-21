@@ -1,6 +1,8 @@
 package io.resys.permission.client.tests;
 
 import java.time.Duration;
+import java.util.Arrays;
+import java.util.List;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -34,10 +36,12 @@ public class PrincipalUpdateTest extends DbTestTemplate {
     final Repo repo = client.getRepo().await().atMost(Duration.ofMinutes(1));
     log.debug("created repo {}", repo);
     new GenerateTestData(getDocDb()).populate(repo);
+    
+    List<String> roles = Arrays.asList("testitalo", "kakkulaari", "Lapiotehdas");
       
     final var updated = client.updatePrincipal().updateOne(ImmutableChangePrincipalRoles.builder()
       .id(null)
-      .roles(null)
+      .roles(roles)
       .changeType(ChangeType.ADD)
       .comment("New roles needed to access ABC")
       .build())
