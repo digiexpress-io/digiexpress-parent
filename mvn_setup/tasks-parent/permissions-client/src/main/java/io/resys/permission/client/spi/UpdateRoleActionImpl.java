@@ -5,12 +5,14 @@ import java.util.List;
 
 import io.resys.permission.client.api.PermissionClient.UpdateRoleAction;
 import io.resys.permission.client.api.model.ImmutableRole;
+import io.resys.permission.client.api.model.PermissionCommand.ChangeType;
 import io.resys.permission.client.api.model.Principal.Role;
 import io.resys.permission.client.api.model.RoleCommand.ChangeRoleDescription;
 import io.resys.permission.client.api.model.RoleCommand.ChangeRoleName;
 import io.resys.permission.client.api.model.RoleCommand.ChangeRolePermissions;
 import io.resys.permission.client.api.model.RoleCommand.ChangeRoleStatus;
 import io.resys.permission.client.api.model.RoleCommand.RoleUpdateCommand;
+import io.resys.thena.docdb.api.actions.OrgCommitActions.ModType;
 import io.resys.thena.docdb.api.actions.OrgCommitActions.ModifyOneParty;
 import io.resys.thena.docdb.api.actions.OrgCommitActions.OnePartyEnvelope;
 import io.resys.thena.docdb.api.models.Repo;
@@ -45,29 +47,36 @@ public class UpdateRoleActionImpl implements UpdateRoleAction {
       switch(command.getCommandType()) {
       
       case CHANGE_ROLE_DESCRIPTION: {
-        ChangeRoleDescription description = (ChangeRoleDescription) command;
+        final var description = (ChangeRoleDescription) command;
         modifyOneParty.partyDescription(description.getDescription());
         break;
       }
       
       case CHANGE_ROLE_NAME: {
-        ChangeRoleName name = (ChangeRoleName) command;
+        final var name = (ChangeRoleName) command;
         modifyOneParty.partyName(name.getName());
         break;
       }
       
       case CHANGE_ROLE_STATUS: {
-        ChangeRoleStatus status = (ChangeRoleStatus) command;
-        /* TODO not implemented
-         * break;
-         */ 
+        final var status = (ChangeRoleStatus) command;
+        modifyOneParty.status(status.getStatus());
+        break;
       }
       
       case CHANGE_ROLE_PERMISSIONS: {
-        ChangeRolePermissions permissions = (ChangeRolePermissions) command;
-        /* TODO not implemented
-         * break;
-         */
+        ChangeRolePermissions role = (ChangeRolePermissions) command;
+        
+        if(role.getChangeType() == ChangeType.ADD) {
+          role.getPermissions().forEach(perm -> modifyOneParty.modifyRights(ModType.ADD, perm));
+          
+        } else if(role.getChangeType() == ChangeType.DISABLE) {          
+          role.getPermissions().forEach(perm -> modifyOneParty.modifyRights(ModType.DISABLED, perm));
+          
+        } else if(role.getChangeType() == ChangeType.REMOVE) {
+          role.getPermissions().forEach(perm -> modifyOneParty.modifyRights(ModType.REMOVE, perm)); 
+        }
+        break;
       }
       default: throw new UpdateRoleException("Command type not found exception ='%s'!".formatted(command.getCommandType())); 
       }

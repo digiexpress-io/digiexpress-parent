@@ -58,8 +58,8 @@ public class UpdatePermissionActionImpl implements UpdatePermissionAction {
       
       case CHANGE_PERMISSION_STATUS: {
         ChangePermissionStatus status = (ChangePermissionStatus) command;
-        //TODO not implemented
-        //break;
+        modifyOneRight.status(status.getStatus());
+        break;
       }
       
       default: throw new UpdatePermissionException("Command type not found exception :" + command.getCommandType());

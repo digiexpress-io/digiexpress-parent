@@ -67,6 +67,11 @@ public interface PermissionCommand extends Serializable {
     CHANGE_PERMISSION_DESCRIPTION,
     CHANGE_PERMISSION_STATUS,
   }
+
+  enum ChangeType {
+    ADD, REMOVE, DISABLE
+  }
+  
   
   @Value.Immutable @JsonSerialize(as = ImmutableCreatePermission.class) @JsonDeserialize(as = ImmutableCreatePermission.class)
   interface CreatePermission extends PermissionCommand {

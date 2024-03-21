@@ -11,7 +11,7 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
 import io.resys.permission.client.api.PermissionClient;
 import io.resys.permission.client.api.model.ImmutableChangePrincipalRoles;
-import io.resys.permission.client.api.model.PrincipalCommand.ChangeType;
+import io.resys.permission.client.api.model.PermissionCommand.ChangeType;
 import io.resys.permission.client.tests.config.DbTestTemplate;
 import io.resys.permission.client.tests.config.GenerateTestData;
 import io.resys.permission.client.tests.config.OrgPgProfile;

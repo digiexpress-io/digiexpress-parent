@@ -2,7 +2,6 @@ package io.resys.permission.client.tests.config;
 
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -49,13 +48,14 @@ public class GenerateTestData {
     }
     
     for(final var entry : groupsByUsers.entrySet()) {
-      final var result = docDb.org().commit().modifyOneMember()
+      final var builder = docDb.org().commit().modifyOneMember()
           .repoId(repo.getId())
           .userId(entry.getKey())
-          .modifyParties(ModType.ADD, entry.getValue())
           .author("ar-")
-          .message("created membership")
-          .build().await().atMost(Duration.ofMinutes(1));
+          .message("created membership");
+      entry.getValue().forEach(p -> builder.modifyParties(ModType.ADD, p));
+          
+      final var result = builder.build().await().atMost(Duration.ofMinutes(1));
       Assertions.assertEquals(CommitResultStatus.OK, result.getStatus()); 
     }
     
@@ -216,7 +216,7 @@ public class GenerateTestData {
       final var result = docDb.org().commit().modifyOneMember()
         .repoId(repo.getId())
         .userId(user.getString("user_external_id"))
-        .partyRight(ModType.ADD, Map.of(user.getString("group_external_id"), Arrays.asList(user.getString("role_external_id"))))
+        .modifyPartyRight(ModType.ADD, user.getString("group_external_id"), user.getString("role_external_id"))
         .author("au-")
         .message("created user group role association")
         .build().await().atMost(Duration.ofMinutes(1));

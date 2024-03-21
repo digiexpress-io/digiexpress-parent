@@ -5,10 +5,10 @@ import java.util.List;
 
 import io.resys.permission.client.api.PermissionClient.UpdatePrincipalAction;
 import io.resys.permission.client.api.model.ImmutablePrincipal;
+import io.resys.permission.client.api.model.PermissionCommand.ChangeType;
 import io.resys.permission.client.api.model.Principal;
 import io.resys.permission.client.api.model.PrincipalCommand.ChangePrincipalRoles;
 import io.resys.permission.client.api.model.PrincipalCommand.ChangePrincipalStatus;
-import io.resys.permission.client.api.model.PrincipalCommand.ChangeType;
 import io.resys.permission.client.api.model.PrincipalCommand.PrincipalUpdateCommand;
 import io.resys.thena.docdb.api.actions.OrgCommitActions.ModType;
 import io.resys.thena.docdb.api.actions.OrgCommitActions.ModifyOneMember;
