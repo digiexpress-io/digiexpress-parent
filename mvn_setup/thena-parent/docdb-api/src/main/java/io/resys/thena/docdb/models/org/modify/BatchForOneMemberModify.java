@@ -131,11 +131,11 @@ public class BatchForOneMemberModify {
     final var createdAt = OffsetDateTime.now();
     
     // member
-    final var member = visitUserChanges(commitId);
+    final var member = visitMemberChanges(commitId);
     
     // user status
     final var memberStatus = this.currentActorStatus.stream().filter(g -> g.getRightId() == null && g.getPartyId() == null).findFirst();
-    visitUserStatus(commitId, memberStatus.orElse(null));
+    visitMemberStatus(commitId, memberStatus.orElse(null));
     
     // parties
     final var memebrShipInParty = this.currentMemberships.stream().filter(g -> g.getPartyId() != null).collect(Collectors.toMap(e -> e.getPartyId(), e -> e));
@@ -285,7 +285,7 @@ public class BatchForOneMemberModify {
     tree.add(entry);
   }
   
-  private Optional<OrgMember> visitUserChanges(String commitId) {
+  private Optional<OrgMember> visitMemberChanges(String commitId) {
     final var newState = ImmutableOrgMember.builder()
     .id(current.getId())
     .commitId(commitId)
@@ -306,7 +306,7 @@ public class BatchForOneMemberModify {
     return Optional.of(newState);
   }
   
-  private void visitUserStatus(String commitId, OrgActorStatus status) {
+  private void visitMemberStatus(String commitId, OrgActorStatus status) {
     if(this.newStatus == null) {
       return;
     }

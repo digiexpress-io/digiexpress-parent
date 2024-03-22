@@ -130,4 +130,17 @@ public class OrgActorStatusSqlBuilderImpl implements OrgActorStatusSqlBuilder {
             .collect(Collectors.toList()))
         .build();
   }
+
+  @Override
+  public SqlTupleList deleteAll(Collection<OrgActorStatus> users) {
+    return ImmutableSqlTupleList.builder()
+        .value(new SqlStatement()
+        .append("DELETE FROM ").append(options.getOrgActorStatus())
+        .append(" WHERE id = $1")
+        .build())
+        .props(users.stream()
+            .map(doc -> Tuple.from(new Object[]{doc.getId()}))
+            .collect(Collectors.toList()))
+        .build();
+  }
 }

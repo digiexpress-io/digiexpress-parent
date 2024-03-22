@@ -109,4 +109,17 @@ public class OrgGroupRoleSqlBuilderImpl implements OrgGroupRoleSqlBuilder {
             .collect(Collectors.toList()))
         .build();
   }
+
+  @Override
+  public SqlTupleList deleteAll(Collection<OrgPartyRight> roles) {
+    return ImmutableSqlTupleList.builder()
+        .value(new SqlStatement()
+        .append("DELETE FROM ").append(options.getOrgPartyRights())
+        .append(" WHERE id = $1").ln()
+        .build())
+        .props(roles.stream()
+            .map(doc -> Tuple.from(new Object[]{ doc.getId() }))
+            .collect(Collectors.toList()))
+        .build();
+  }
 }

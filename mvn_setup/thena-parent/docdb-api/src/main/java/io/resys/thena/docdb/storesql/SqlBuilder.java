@@ -43,12 +43,12 @@ import io.resys.thena.docdb.api.models.ThenaGitObject.TreeValue;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatus;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgCommit;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgCommitTree;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberRight;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMembership;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgParty;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgPartyRight;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRight;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMembership;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberRight;
 import io.resys.thena.docdb.models.doc.DocQueries.DocBranchLockCriteria;
 import io.resys.thena.docdb.models.doc.DocQueries.DocLockCriteria;
 import io.resys.thena.docdb.models.doc.DocQueries.FlattedCriteria;
@@ -72,7 +72,7 @@ public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
   GitTreeSqlBuilder trees();
   GitTreeItemSqlBuilder treeItems();
   
-  OrgUserSqlBuilder orgMembers();
+  OrgMemberSqlBuilder orgMembers();
   OrgGroupSqlBuilder orgParties();
   OrgUserMembershipsSqlBuilder orgMemberships();
   OrgCommitSqlBuilder orgCommits();
@@ -95,7 +95,7 @@ public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
     SqlTuple deleteOne(Repo repo);
   }
 
-  interface OrgUserSqlBuilder {
+  interface OrgMemberSqlBuilder {
     SqlTuple getById(String id); //username or id or external_id
     SqlTuple findAllUserGroupsAndRolesByUserId(String userId);
     SqlTuple findAllRolesByUserId(String userId);
@@ -118,6 +118,7 @@ public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
     SqlTuple findAll(List<String> id);
     SqlTuple insertOne(OrgActorStatus user);
     SqlTupleList insertAll(Collection<OrgActorStatus> users);
+    SqlTupleList deleteAll(Collection<OrgActorStatus> users);
     SqlTuple updateOne(OrgActorStatus user);
     SqlTupleList updateMany(Collection<OrgActorStatus> users);
 
@@ -141,6 +142,7 @@ public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
     SqlTuple findAll(List<String> id);
     SqlTuple insertOne(OrgMemberRight role);
     SqlTupleList insertAll(Collection<OrgMemberRight> roles);
+    SqlTupleList deleteAll(Collection<OrgMemberRight> roles);
   }
   
   interface OrgGroupRoleSqlBuilder {
@@ -152,6 +154,7 @@ public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
     
     SqlTuple insertOne(OrgPartyRight role);
     SqlTupleList insertAll(Collection<OrgPartyRight> roles);
+    SqlTupleList deleteAll(Collection<OrgPartyRight> roles);
   }
   
   
@@ -174,6 +177,7 @@ public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
     SqlTuple findAllByUserId(String userId);
     SqlTuple insertOne(OrgMembership membership);
     SqlTupleList insertAll(Collection<OrgMembership> memberships);
+    SqlTupleList deleteAll(Collection<OrgMembership> memberships);
   }
 
   interface OrgCommitSqlBuilder {

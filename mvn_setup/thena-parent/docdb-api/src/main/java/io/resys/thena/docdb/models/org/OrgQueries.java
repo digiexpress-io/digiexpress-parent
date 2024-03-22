@@ -66,8 +66,6 @@ public interface OrgQueries {
     Multi<OrgCommit> findAll();
     Uni<OrgCommit> getById(String id);
   }
-  
-  
   interface MemberQuery {
     Multi<OrgMember> findAll();
     Multi<OrgMember> findAll(Collection<String> id);

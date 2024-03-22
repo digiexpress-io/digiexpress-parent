@@ -17,9 +17,10 @@ import io.resys.thena.docdb.api.actions.RepoActions.RepoResult;
 import io.resys.thena.docdb.api.actions.RepoActions.RepoStatus;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.Repo.RepoType;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatusType;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgParty;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRight;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
 import io.resys.thena.docdb.test.config.DbTestTemplate;
 import io.resys.thena.docdb.test.config.PgProfile;
 import lombok.extern.slf4j.Slf4j;
@@ -77,12 +78,8 @@ public class HierarchicalOrgMemberTest extends DbTestTemplate {
     
     final var userId1 = createUser("user-1", repo, Arrays.asList(root1), Collections.emptyList());
     final var userId2 = createUser("user-2", repo, Arrays.asList(child1_2_2), Arrays.asList(jailer4));
-
-    /*
-    final var userGroupsAndRoles1 = getClient().org().find().userGroupsAndRolesQuery()
-        .repoId(repo.getRepo().getId())
-        .get(userId1.getId()).await().atMost(Duration.ofMinutes(1));
-    */
+    assertRepo(repo.getRepo(), "HierarchicalOrgMemberTest/data-created.txt");
+    
     
     // user 2 sanity
     var userGroupsAndRoles2 = getClient().org().find().memberHierarchyQuery()
@@ -123,7 +120,8 @@ user-2
         .message("mod for user")
         .build().await().atMost(Duration.ofMinutes(1))
         .getMember();
-    
+    assertRepo(repo.getRepo(), "HierarchicalOrgMemberTest/user-modified.txt");
+
     userGroupsAndRoles2 = getClient().org().find().memberHierarchyQuery()
         .repoId(repo.getRepo().getId())
         .get(userId2.getId()).await().atMost(Duration.ofMinutes(1)).getObjects(); 
@@ -153,6 +151,7 @@ super-user
         .message("mod for user")
         .build().await().atMost(Duration.ofMinutes(1))
         .getMember();
+    assertRepo(repo.getRepo(), "HierarchicalOrgMemberTest/membership-disabled.txt");
     
     userGroupsAndRoles2 = getClient().org().find().memberHierarchyQuery()
         .repoId(repo.getRepo().getId())
@@ -217,14 +216,45 @@ super-user
     Assertions.assertEquals("[group-1]", userGroupsAndRoles2.getDirectGroupNames().toString());
     Assertions.assertEquals("[jailer-main, baker-main, jailer-1]", userGroupsAndRoles2.getDirectRoleNames().toString());
 
-    //printRepo(repo.getRepo()); //LOG THE DB 
-    
-    // 
+     
     final var users = getClient().org().find().memberHierarchyQuery()
         .repoId(repo.getRepo().getId())
         .findAll().await().atMost(Duration.ofMinutes(1));
     Assertions.assertEquals(2, users.getObjects().size());
     
+    
+    // disable member
+    getClient().org().commit().modifyOneMember()
+      .repoId(repo.getRepo().getId())
+      .userId(userGroupsAndRoles2.getUserId())
+      .status(OrgActorStatusType.DISABLED)
+      .author("au")
+      .message("mod for user")
+      .build().await().atMost(Duration.ofMinutes(1))
+      .getMember();
+    assertRepo(repo.getRepo(), "HierarchicalOrgMemberTest/user-disabled.txt");
+    
+    // enable member
+    getClient().org().commit().modifyOneMember()
+      .repoId(repo.getRepo().getId())
+      .userId(userGroupsAndRoles2.getUserId())
+      .status(OrgActorStatusType.IN_FORCE)
+      .author("au")
+      .message("mod for user")
+      .build().await().atMost(Duration.ofMinutes(1))
+      .getMember();
+    assertRepo(repo.getRepo(), "HierarchicalOrgMemberTest/user-enabled.txt");
+
+    
+    getClient().org().commit().modifyOneMember()
+      .repoId(repo.getRepo().getId())
+      .userId(userGroupsAndRoles2.getUserId())
+      .modifyParties(ModType.REMOVE, child1_2_2.getId())
+      .author("au")
+      .message("mod for user")
+      .build().await().atMost(Duration.ofMinutes(1))
+      .getMember();
+    assertRepo(repo.getRepo(), "HierarchicalOrgMemberTest/membership-removed.txt");
 
   }
 

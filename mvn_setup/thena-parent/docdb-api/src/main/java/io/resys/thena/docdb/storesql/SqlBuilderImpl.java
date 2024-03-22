@@ -40,7 +40,7 @@ import io.resys.thena.docdb.storesql.statement.OrgGroupSqlBuilderImpl;
 import io.resys.thena.docdb.storesql.statement.OrgRoleSqlBuilderImpl;
 import io.resys.thena.docdb.storesql.statement.OrgUserMembershipsSqlBuilderImpl;
 import io.resys.thena.docdb.storesql.statement.OrgUserRoleSqlBuilderImpl;
-import io.resys.thena.docdb.storesql.statement.OrgUserSqlBuilderImpl;
+import io.resys.thena.docdb.storesql.statement.OrgMemberSqlBuilderImpl;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -96,8 +96,8 @@ public class SqlBuilderImpl implements SqlBuilder {
     return new DocBranchSqlBuilderImpl(ctx);
   }
   @Override
-  public OrgUserSqlBuilder orgMembers() {
-    return new OrgUserSqlBuilderImpl(ctx);
+  public OrgMemberSqlBuilder orgMembers() {
+    return new OrgMemberSqlBuilderImpl(ctx);
   }
   @Override
   public OrgGroupSqlBuilder orgParties() {

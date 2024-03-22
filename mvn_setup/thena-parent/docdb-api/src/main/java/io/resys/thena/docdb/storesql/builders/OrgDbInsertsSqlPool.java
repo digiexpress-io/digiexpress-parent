@@ -74,6 +74,26 @@ public class OrgDbInsertsSqlPool implements OrgInserts {
     final var commitInsert = sqlBuilder.orgCommits().insertOne(inputBatch.getCommit());
     final var treeInsert = sqlBuilder.orgCommitTrees().insertAll(inputBatch.getCommit().getTree());
     
+
+    final var partyRightsDelete = sqlBuilder.orgPartyRights().deleteAll(inputBatch.getPartyRightToDelete());
+    final var memberRightsDelete = sqlBuilder.orgMemberRights().deleteAll(inputBatch.getMemberRightsToDelete());
+    final var actorStatusDelete = sqlBuilder.orgActorStatus().deleteAll(inputBatch.getStatusToDelete());
+    final var membershipsDelete = sqlBuilder.orgMemberships().deleteAll(inputBatch.getMembershipsToDelete());
+
+    
+    final Uni<OrgBatchForOne> partyRightsDeleteUni = Execute.apply(tx, partyRightsDelete).onItem()
+        .transform(row -> successOutput(inputBatch, "Party rights deleted, number of deleted entries: " + + (row == null ? 0 : row.rowCount())))
+        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to delete party rights \r\n" + inputBatch.getMembers(), e));
+    final Uni<OrgBatchForOne> memberRightsDeleteUni = Execute.apply(tx, memberRightsDelete).onItem()
+        .transform(row -> successOutput(inputBatch, "Member rights deleted, number of deleted entries: " + + (row == null ? 0 : row.rowCount())))
+        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to delete member rights \r\n" + inputBatch.getMembers(), e));
+    final Uni<OrgBatchForOne> actorStatusDeleteUni = Execute.apply(tx, actorStatusDelete).onItem()
+        .transform(row -> successOutput(inputBatch, "Actor status deleted, number of deleted entries: " + + (row == null ? 0 : row.rowCount())))
+        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to delete actor status \r\n" + inputBatch.getMembers(), e));
+    final Uni<OrgBatchForOne> membershipsDeleteUni = Execute.apply(tx, membershipsDelete).onItem()
+        .transform(row -> successOutput(inputBatch, "Memberships deleted, number of deleted entries: " + + (row == null ? 0 : row.rowCount())))
+        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to delete memberships \r\n" + inputBatch.getMembers(), e));
+    
     
     // Member insert/update
     final Uni<OrgBatchForOne> memberInsertUni = Execute.apply(tx, memberInsert).onItem()
@@ -131,6 +151,11 @@ public class OrgDbInsertsSqlPool implements OrgInserts {
     // combine all
     return Uni.combine().all()
     		.unis(
+    		    partyRightsDeleteUni,
+    		    memberRightsDeleteUni,
+    		    actorStatusDeleteUni,
+    		    membershipsDeleteUni,
+    		    
     		    commitUni,
     		    memberInsertUni, memberUpdateUni, 
     		    partiesInsertUni, partiesUpdateUni, membershipUni, 

@@ -47,11 +47,14 @@ public class ModifyOneMemberImpl implements ModifyOneMember {
   private Optional<String> externalId;
 
   private Collection<String> allParties = new LinkedHashSet<>();
-  private Collection<String> groupsToAdd = new LinkedHashSet<>();
-  private Collection<String> groupsToRemove = new LinkedHashSet<>();
+  private Collection<String> partiesToAdd = new LinkedHashSet<>();
+  private Collection<String> partiesToDisable = new LinkedHashSet<>();
+  private Collection<String> partiesToRemove = new LinkedHashSet<>();
+  
   private Collection<String> allRights = new LinkedHashSet<>();
-  private Collection<String> rolesToAdd = new LinkedHashSet<>();
-  private Collection<String> rolesToRemove = new LinkedHashSet<>();
+  private Collection<String> rightsToRemove = new LinkedHashSet<>();
+  private Collection<String> rightsToAdd = new LinkedHashSet<>();
+  private Collection<String> rightsToDisable = new LinkedHashSet<>();
   private Map<String, List<String>> addUseGroupRoles = new HashMap<>();
   private Map<String, List<String>> removeUseGroupRoles = new HashMap<>();
   private OrgActorStatusType newStatus;
@@ -115,9 +118,11 @@ public class ModifyOneMemberImpl implements ModifyOneMember {
     RepoAssert.notEmpty(partyId, () -> "partyId can't be empty!");
     this.allParties.add(partyId);
     if(type == ModType.ADD) {
-      groupsToAdd.add(partyId);
+      partiesToAdd.add(partyId);
     } else if(type == ModType.DISABLED) {
-      groupsToRemove.add(partyId);
+      partiesToDisable.add(partyId);
+    } else if(type == ModType.REMOVE) {
+      partiesToRemove.add(partyId);
     } else {
       RepoAssert.fail("Unknown modification type: " + type + "!");
     }
@@ -129,9 +134,11 @@ public class ModifyOneMemberImpl implements ModifyOneMember {
     
     this.allRights.add(rightId);
     if(type == ModType.ADD) {
-      rolesToAdd.add(rightId);
+      rightsToAdd.add(rightId);
     } else if(type == ModType.DISABLED) {
-      rolesToRemove.add(rightId);
+      rightsToDisable.add(rightId);
+    } else if(type == ModType.REMOVE) {
+      rightsToRemove.add(rightId);
     } else {
       RepoAssert.fail("Unknown modification type: " + type + "!");
     }
@@ -264,11 +271,14 @@ public class ModifyOneMemberImpl implements ModifyOneMember {
 
     // Remove or add groups 
     parties.forEach(group -> {
-      if(group.isMatch(groupsToAdd)) {
+      if(group.isMatch(partiesToAdd)) {
         modify.modifyMembership(ModType.ADD, group);
       }
-      if(group.isMatch(groupsToRemove)) {
+      if(group.isMatch(partiesToDisable)) {
          modify.modifyMembership(ModType.DISABLED, group);
+      }
+      if(group.isMatch(partiesToRemove)) {
+        modify.modifyMembership(ModType.REMOVE, group);
       }
       final var addToGroupRole = this.addUseGroupRoles.keySet().stream().filter(c -> group.isMatch(c)).findFirst();
       if(addToGroupRole.isPresent()) {
@@ -282,13 +292,15 @@ public class ModifyOneMemberImpl implements ModifyOneMember {
     // Remove or add roles 
     rights.forEach(role -> {
       
-      if(role.isMatch(rolesToAdd)) {
+      if(role.isMatch(rightsToAdd)) {
         modify.modifyMemberRights(ModType.ADD, role);
       }
-      if(role.isMatch(rolesToRemove)) {
+      if(role.isMatch(rightsToDisable)) {
         modify.modifyMemberRights(ModType.DISABLED, role);
       }
-      
+      if(role.isMatch(rightsToRemove)) {
+        modify.modifyMemberRights(ModType.REMOVE, role);
+      }      
       for(final var entry : this.addUseGroupRoles.entrySet()) {
         final var addRoleToUserGroup = entry.getValue().stream().filter(c -> role.isMatch(c)).findFirst().isPresent();
         if(addRoleToUserGroup) {

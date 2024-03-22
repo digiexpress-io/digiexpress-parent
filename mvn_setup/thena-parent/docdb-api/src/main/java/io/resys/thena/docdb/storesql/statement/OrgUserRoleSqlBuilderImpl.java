@@ -109,4 +109,17 @@ public class OrgUserRoleSqlBuilderImpl implements OrgUserRoleSqlBuilder {
             .collect(Collectors.toList()))
         .build();
   }
+
+  @Override
+  public SqlTupleList deleteAll(Collection<OrgMemberRight> roles) {
+    return ImmutableSqlTupleList.builder()
+        .value(new SqlStatement()
+        .append("DELETE FROM ").append(options.getOrgMemberRights())
+        .append(" WHERE id = $1 ").ln()
+        .build())
+        .props(roles.stream()
+            .map(doc -> Tuple.from(new Object[]{ doc.getId() }))
+            .collect(Collectors.toList()))
+        .build();
+  }
 }

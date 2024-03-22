@@ -109,4 +109,16 @@ public class OrgUserMembershipsSqlBuilderImpl implements OrgUserMembershipsSqlBu
             .collect(Collectors.toList()))
         .build();
   }
+  @Override
+  public SqlTupleList deleteAll(Collection<OrgMembership> users) {
+    return ImmutableSqlTupleList.builder()
+        .value(new SqlStatement()
+        .append("DELETE FROM ").append(options.getOrgMemberships())
+        .append(" WHERE id = $1").ln()
+        .build())
+        .props(users.stream()
+            .map(doc -> Tuple.from(new Object[]{ doc.getId() }))
+            .collect(Collectors.toList()))
+        .build();
+  }
 }
