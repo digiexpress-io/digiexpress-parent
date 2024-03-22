@@ -1,0 +1,222 @@
+
+Members
+  - id: 1    commitId: 2
+    membername: user-1
+    email: em-
+    externalId: null
+  - id: 3    commitId: 53
+    membername: super-user
+    email: em@mod.com
+    externalId: ext-1
+
+Parties
+  - id: 5    commitId: 6
+    parentId: null
+    partyName: group-1
+    partyDescription: gd-
+    externalId: null
+  - id: 7    commitId: 8
+    parentId: 5
+    partyName: child-1.1
+    partyDescription: gd-
+    externalId: null
+  - id: 9    commitId: 10
+    parentId: 5
+    partyName: child-1.2
+    partyDescription: gd-
+    externalId: null
+  - id: 11    commitId: 12
+    parentId: 9
+    partyName: child-1.2.1
+    partyDescription: gd-
+    externalId: null
+  - id: 13    commitId: 14
+    parentId: 9
+    partyName: child-1.2.2
+    partyDescription: gd-
+    externalId: null
+  - id: 15    commitId: 16
+    parentId: 5
+    partyName: child-1.3
+    partyDescription: gd-
+    externalId: null
+  - id: 17    commitId: 18
+    parentId: 5
+    partyName: child-1.4
+    partyDescription: gd-
+    externalId: null
+  - id: 19    commitId: 20
+    parentId: null
+    partyName: group-2
+    partyDescription: gd-
+    externalId: null
+  - id: 21    commitId: 22
+    parentId: 5
+    partyName: child-2.1
+    partyDescription: gd-
+    externalId: null
+  - id: 23    commitId: 24
+    parentId: 5
+    partyName: child-2.2
+    partyDescription: gd-
+    externalId: null
+  - id: 25    commitId: 26
+    parentId: 5
+    partyName: child-2.3
+    partyDescription: gd-
+    externalId: null
+  - id: 27    commitId: 28
+    parentId: 5
+    partyName: child-2.4
+    partyDescription: gd-
+    externalId: null
+  - id: 29    commitId: 30
+    parentId: null
+    partyName: group-3
+    partyDescription: gd-
+    externalId: null
+  - id: 31    commitId: 32
+    parentId: 5
+    partyName: child-3.1
+    partyDescription: gd-
+    externalId: null
+  - id: 33    commitId: 34
+    parentId: 5
+    partyName: child-3.2
+    partyDescription: gd-
+    externalId: null
+  - id: 35    commitId: 36
+    parentId: 5
+    partyName: child-3.3
+    partyDescription: gd-
+    externalId: null
+  - id: 37    commitId: 38
+    parentId: 5
+    partyName: child-3.4
+    partyDescription: gd-
+    externalId: null
+
+Memberships
+  - id: 5    commitId: 6
+    partyName: group-1
+    partyDescription: gd-
+    externalId: null
+  - id: 7    commitId: 8
+    partyName: child-1.1
+    partyDescription: gd-
+    externalId: null
+  - id: 9    commitId: 10
+    partyName: child-1.2
+    partyDescription: gd-
+    externalId: null
+  - id: 11    commitId: 12
+    partyName: child-1.2.1
+    partyDescription: gd-
+    externalId: null
+  - id: 13    commitId: 14
+    partyName: child-1.2.2
+    partyDescription: gd-
+    externalId: null
+  - id: 15    commitId: 16
+    partyName: child-1.3
+    partyDescription: gd-
+    externalId: null
+  - id: 17    commitId: 18
+    partyName: child-1.4
+    partyDescription: gd-
+    externalId: null
+  - id: 19    commitId: 20
+    partyName: group-2
+    partyDescription: gd-
+    externalId: null
+  - id: 21    commitId: 22
+    partyName: child-2.1
+    partyDescription: gd-
+    externalId: null
+  - id: 23    commitId: 24
+    partyName: child-2.2
+    partyDescription: gd-
+    externalId: null
+  - id: 25    commitId: 26
+    partyName: child-2.3
+    partyDescription: gd-
+    externalId: null
+  - id: 27    commitId: 28
+    partyName: child-2.4
+    partyDescription: gd-
+    externalId: null
+  - id: 29    commitId: 30
+    partyName: group-3
+    partyDescription: gd-
+    externalId: null
+  - id: 31    commitId: 32
+    partyName: child-3.1
+    partyDescription: gd-
+    externalId: null
+  - id: 33    commitId: 34
+    partyName: child-3.2
+    partyDescription: gd-
+    externalId: null
+  - id: 35    commitId: 36
+    partyName: child-3.3
+    partyDescription: gd-
+    externalId: null
+  - id: 37    commitId: 38
+    partyName: child-3.4
+    partyDescription: gd-
+    externalId: null
+
+Rights
+  - id: 39    commitId: 40
+    rightName: jailer-1
+    rightDescription: rd-
+    externalId: null
+  - id: 41    commitId: 42
+    rightName: jailer-2
+    rightDescription: rd-
+    externalId: null
+  - id: 43    commitId: 44
+    rightName: jailer-3
+    rightDescription: rd-
+    externalId: null
+  - id: 45    commitId: 46
+    rightName: jailer-main
+    rightDescription: rd-
+    externalId: null
+  - id: 47    commitId: 48
+    rightName: baker-main
+    rightDescription: rd-
+    externalId: null
+
+Member rights
+  - id: 49    commitId: 4
+    memberId: 3
+    partyId: null
+    rightId: 45
+  - id: 54    commitId: 53
+    memberId: 3
+    partyId: null
+    rightId: 47
+
+Party rights
+  - id: 50    commitId: 6
+    partyId: 5
+    rightId: 39
+  - id: 51    commitId: 14
+    partyId: 13
+    rightId: 41
+  - id: 52    commitId: 14
+    partyId: 13
+    rightId: 43
+
+Actors status
+  - id: 55    commitId: 56
+    memberId: 3
+    partyId: 13
+    rightId: null
+    status: DISABLED
+  - id: 57    commitId: 58
+    memberId: 3
+    partyId: null
+    rightId: null
+    status: DISABLED
