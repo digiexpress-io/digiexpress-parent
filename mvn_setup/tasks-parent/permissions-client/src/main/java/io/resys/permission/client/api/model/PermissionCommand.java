@@ -51,7 +51,7 @@ import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatusType;
 })
 
 public interface PermissionCommand extends Serializable {
-  String getId();
+
   @Nullable String getUserId();
   @Nullable Instant getTargetDate();
   PermissionCommandType getCommandType();
@@ -94,6 +94,7 @@ public interface PermissionCommand extends Serializable {
   })
   
   interface PermissionUpdateCommand extends PermissionCommand {
+    String getId();
     PermissionUpdateCommand withUserId(String userId);
     PermissionUpdateCommand withTargetDate(Instant targetDate);
   }

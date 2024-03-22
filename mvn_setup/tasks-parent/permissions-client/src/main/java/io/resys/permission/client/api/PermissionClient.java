@@ -36,7 +36,6 @@ public interface PermissionClient {
   
   interface CreatePermissionAction {
     Uni<Permission> createOne(CreatePermission command);
-    Uni<List<Permission>> createMany(List<? extends CreatePermission> commands);
   }
   
   interface UpdatePermissionAction {
@@ -46,7 +45,6 @@ public interface PermissionClient {
   
   interface CreateRoleAction {
     Uni<Role> createOne(CreateRole command);
-    Uni<List<Role>> createMany(List<? extends CreateRole> commands);
   }
   
   interface UpdateRoleAction {

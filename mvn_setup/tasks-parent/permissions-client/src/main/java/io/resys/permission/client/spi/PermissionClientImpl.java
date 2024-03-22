@@ -59,14 +59,12 @@ public class PermissionClientImpl implements PermissionClient {
 
   @Override
   public CreatePermissionAction createPermission() {
-    // TODO Auto-generated method stub
-    return null;
+    return new CreatePermissionActionImpl(ctx);
   }
 
   @Override
   public CreateRoleAction createRole() {
-    // TODO Auto-generated method stub
-    return null;
+    return new CreateRoleActionImpl(ctx);
   }
 
   @Override
