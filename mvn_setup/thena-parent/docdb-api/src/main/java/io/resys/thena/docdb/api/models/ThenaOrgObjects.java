@@ -107,11 +107,17 @@ public interface ThenaOrgObjects extends ThenaObjects {
     String getStatusId();
     String getGroupId();
     OrgActorStatusType getStatus();
+    default String getId() { 
+      return getStatusId(); 
+    }
   }
   @Value.Immutable
   interface OrgMemberRightStatus extends ThenaOrgObjects {
     String getStatusId();
     String getRoleId();
     OrgActorStatusType getStatus();
+    default String getId() { 
+      return getStatusId(); 
+    }
   }
 }

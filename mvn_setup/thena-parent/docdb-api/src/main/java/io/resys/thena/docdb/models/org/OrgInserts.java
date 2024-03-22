@@ -53,8 +53,13 @@ public interface OrgInserts {
     List<OrgPartyRight> getPartyRights();
     List<OrgMemberRight> getMemberRights();
     List<OrgMembership> getMemberships(); 
-    
     List<String> getIdentifiersForUpdates();
+
+    List<OrgMemberRight> getMemberRightsToDelete();
+    List<OrgPartyRight> getPartyRightToDelete();
+    List<OrgMembership> getMembershipsToDelete();
+    List<OrgActorStatus> getStatusToDelete();
+    
     
     BatchStatus getStatus();
     String getRepoId();

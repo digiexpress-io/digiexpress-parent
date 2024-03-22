@@ -32,6 +32,7 @@ public interface OrgQueries {
   interface ActorStatusQuery {
     Uni<OrgActorStatus> getById(String id);
     Multi<OrgActorStatus> findAllByIdRightId(String id);
+    Multi<OrgActorStatus> findAllByIdMemberId(String id);
     Multi<OrgActorStatus> findAll();
 
 

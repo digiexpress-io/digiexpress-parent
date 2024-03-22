@@ -1,6 +1,7 @@
 package io.resys.thena.docdb.api.models;
 
 import java.time.OffsetDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -77,6 +78,11 @@ public interface ThenaOrgObject {
           idOrNameOrExtId.equals(getPartyName()) ||
           idOrNameOrExtId.equals(getId());
     }
+    default boolean isMatch(Collection<String> idOrNameOrExtId) {
+      return idOrNameOrExtId.contains(getExternalId()) ||
+          idOrNameOrExtId.contains(getPartyName()) ||
+          idOrNameOrExtId.contains(getId());
+    }
     
   }
   
@@ -93,6 +99,11 @@ public interface ThenaOrgObject {
       return IdOrNameOrExtId.equals(getExternalId()) ||
           IdOrNameOrExtId.equals(getRightName()) ||
           IdOrNameOrExtId.equals(getId());
+    }
+    default boolean isMatch(Collection<String> IdOrNameOrExtId) {
+      return IdOrNameOrExtId.contains(getExternalId()) ||
+          IdOrNameOrExtId.contains(getRightName()) ||
+          IdOrNameOrExtId.contains(getId());
     }
   }
   
@@ -202,7 +213,7 @@ public interface ThenaOrgObject {
   
   
   enum OrgOperationType {
-    ADD, MOD
+    ADD, MOD, REM
   }
   
   enum OrgLockStatus { 

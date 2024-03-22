@@ -146,14 +146,14 @@ Testitestiasiakas Oyj::tenant <= you are here
 |    +--- Testi joulukuu
 |    |    `--- users
 |    |         +--- tomi.p6 (USER::inherited)
-|    |         +--- ulla op.j9 (VIEWER::inherited)
+|    |         +--- ulla op.j9 (MANAGER, VIEWER::inherited)
 |    |         +--- mika.l5 (MANAGER::inherited)
 |    |         +--- villu.vc (MANAGER::inherited)
 |    |         +--- ullan admin.t6 (MANAGER::inherited)
 |    |         +--- ulla lv.j6 (USER::inherited)
 |    |         +--- ulla ltp.j8 (MANAGER::inherited)
 |    |         +--- mikki.t4 (USER::inherited)
-|    |         +--- emilia op.ke (MANAGER::inherited)
+|    |         +--- emilia op.ke (USER, MANAGER::inherited)
 |    |         `--- emilia lv.kf (MANAGER::inherited)
 |    +--- Testipaikka
 |    |    +--- users
@@ -207,7 +207,7 @@ Testitestiasiakas Oyj::tenant <= you are here
 |         |    `--- anton.aa (USER)
 |         +--- Tyomaa 1
 |         |    `--- users
-|         |         +--- sanna.ns (VIEWER::inherited)
+|         |         +--- sanna.ns (VIEWER, VIEWER::inherited)
 |         |         +--- anton.aa (USER::inherited)
 |         |         +--- ilkka.hi (USER)
 |         |         +--- tomi.p6::inherited (USER::inherited)
@@ -237,17 +237,17 @@ Testitestiasiakas Oyj::tenant <= you are here
 +--- Testipäivä 170124
 |    `--- users
 |         +--- mika.l5 (VIEWER)
-|         +--- ulla ltp.j8
-|         +--- emilia op.ke
+|         +--- ulla ltp.j8 (MANAGER)
+|         +--- emilia op.ke (MANAGER)
 |         `--- teppo.t8 (USER)
 `--- Valmistuneet työmaat
      +--- users
-     |    +--- ullan admin.t6
-     |    `--- ulla ltp.j8
+     |    +--- ullan admin.t6 (MANAGER)
+     |    `--- ulla ltp.j8 (MANAGER)
      `--- Ratapiha
           `--- users
-               +--- ullan admin.t6
-               `--- ulla ltp.j8
+               +--- ullan admin.t6 (MANAGER::inherited)
+               `--- ulla ltp.j8 (MANAGER::inherited)
 
 
 
@@ -294,8 +294,8 @@ Testiasiakas 2::tenant <= you are here
 OX Testausyritys::tenant <= you are here
 +--- 2.5.11
 |    `--- users
-|         +--- anni.lb
-|         +--- proto.ne
+|         +--- anni.lb (VIEWER)
+|         +--- proto.ne (USER)
 |         `--- proto.v7 (USER)
 +--- 2.5.2 lokaatio
 +--- Keskusvarasto 1
@@ -307,7 +307,7 @@ OX Testausyritys::tenant <= you are here
 |         |    `--- anni.ee (MANAGER::inherited)
 |         +--- Paikka 2.1 *¨*
 |         |    `--- users
-|         |         +--- proto.k1 (USER::inherited)
+|         |         +--- proto.k1 (MANAGER, USER::inherited)
 |         |         `--- anni.ee::inherited (MANAGER::inherited)
 |         `--- Uusi paikka 2.2.
 |              +--- users
@@ -319,30 +319,30 @@ OX Testausyritys::tenant <= you are here
 |                        `--- proto.k1::inherited (USER::inherited)
 +--- newTopLeve
 |    +--- users
-|    |    +--- mika.l5
+|    |    +--- mika.l5 (MANAGER)
 |    |    `--- anni.pe (VIEWER)
 |    `--- nextLevel
 |         `--- users
-|              +--- mika.l5
+|              +--- mika.l5 (MANAGER::inherited)
 |              `--- anni.pe (VIEWER::inherited)
 +--- Päätoimipaikka
 |    +--- users
-|    |    +--- mika.l5
+|    |    +--- mika.l5 (MANAGER)
 |    |    +--- anni.lb (VIEWER)
 |    |    `--- protonen.l2 (VIEWER)
 |    +--- Keskitason toimipiste
 |    |    +--- users
-|    |    |    +--- mika.l5
+|    |    |    +--- mika.l5 (MANAGER::inherited)
 |    |    |    +--- anni.lb (VIEWER::inherited)
 |    |    |    `--- protonen.l2 (VIEWER::inherited)
 |    |    `--- #Erikoismerkki,;?   {"__"} ¨¨
 |    |         `--- users
 |    |              +--- protonen.l2 (MANAGER, VIEWER::inherited)
-|    |              +--- mika.l5::inherited
+|    |              +--- mika.l5::inherited (MANAGER::inherited)
 |    |              `--- anni.lb::inherited (VIEWER::inherited)
 |    `--- Testauskeskus
 |         +--- users
-|         |    +--- mika.l5
+|         |    +--- mika.l5 (MANAGER::inherited)
 |         |    +--- anni.lb (VIEWER::inherited)
 |         |    +--- protonen.l2 (VIEWER::inherited)
 |         |    `--- anni.a1 (USER)
@@ -350,7 +350,7 @@ OX Testausyritys::tenant <= you are here
 |         |    `--- users
 |         |         +--- anni.a1 (USER::inherited)
 |         |         +--- proto.l0 (USER)
-|         |         +--- mika.l5::inherited
+|         |         +--- mika.l5::inherited (MANAGER::inherited)
 |         |         +--- anni.lb::inherited (VIEWER::inherited)
 |         |         `--- protonen.l2::inherited (VIEWER::inherited)
 |         `--- Pienenpieni ja erittäin pitkäniminen testauspiste?! Pienenpieni ja erittäin pitkäniminen testauspiste?!Pienenpieni ja erittäin pitkäniminen testauspis
@@ -358,18 +358,18 @@ OX Testausyritys::tenant <= you are here
 |                   +--- anni.a1 (USER::inherited)
 |                   +--- proto.k1 (MANAGER)
 |                   +--- proto.l0 (VIEWER)
-|                   +--- mika.l5::inherited
+|                   +--- mika.l5::inherited (MANAGER::inherited)
 |                   +--- anni.lb::inherited (VIEWER::inherited)
 |                   `--- protonen.l2::inherited (VIEWER::inherited)
 `--- Paikka roolitesti
      `--- Paikka roolitesti, alempi
           +--- users
-          |    +--- proto.k1
+          |    +--- proto.k1 (USER)
           |    `--- proto.ne (MANAGER)
           `--- Uusin paikka, versio 2.3.0
                `--- users
-                    +--- anni.lb
-                    +--- proto.k1
+                    +--- anni.lb (VIEWER)
+                    +--- proto.k1 (USER::inherited)
                     `--- proto.ne (MANAGER::inherited)
 
 
