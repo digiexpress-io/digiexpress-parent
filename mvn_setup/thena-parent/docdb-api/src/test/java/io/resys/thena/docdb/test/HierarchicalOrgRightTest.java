@@ -17,6 +17,7 @@ import io.resys.thena.docdb.api.actions.RepoActions.RepoResult;
 import io.resys.thena.docdb.api.actions.RepoActions.RepoStatus;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.Repo.RepoType;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatusType;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgParty;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRight;
@@ -62,8 +63,6 @@ public class HierarchicalOrgRightTest extends DbTestTemplate {
 
     assertRepo(repo.getRepo(), "HierarchicalOrgRightTest/data-created.txt");
     
-
-    
     
     { // add right directly to member and party
       final var changes = getClient().org().commit().modifyOneRight()
@@ -76,9 +75,23 @@ public class HierarchicalOrgRightTest extends DbTestTemplate {
         .build().await().atMost(Duration.ofMinutes(1));
         
       Assertions.assertEquals(Repo.CommitResultStatus.OK, changes.getStatus());
-      
+      assertRepo(repo.getRepo(), "HierarchicalOrgRightTest/data-add-party-member.txt");
     }
     
+    { // modify status
+      final var changes = getClient().org().commit().modifyOneRight()
+        .repoId(repo.getRepo().getId())
+        .author("sam-vimes")
+        .message("modify rights")
+        .rightId(cityGuards.getId())
+        .status(OrgActorStatusType.DISABLED)
+        .modifyMember(ModType.DISABLED, userId1.getId())
+        .modifyParty(ModType.DISABLED, child1_2_2.getId())
+        .build().await().atMost(Duration.ofMinutes(1));
+        
+      Assertions.assertEquals(Repo.CommitResultStatus.OK, changes.getStatus());
+      assertRepo(repo.getRepo(), "HierarchicalOrgRightTest/data-disable-party-member.txt");
+    }
   }
 
   

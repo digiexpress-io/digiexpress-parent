@@ -127,7 +127,7 @@ public interface OrgCommitActions {
     
     ModifyOneRight modifyMember(ModType type, String memberIdNameOrExtId);
     ModifyOneRight modifyParty(ModType type, String partyIdNameOrExtId);
-    ModifyOneParty status(OrgActorStatusType status);
+    ModifyOneRight status(OrgActorStatusType status);
     
     Uni<OneRightEnvelope> build();
   }

@@ -51,20 +51,22 @@ public class BatchForOneRightModify {
   
   private List<OrgPartyRight> currentPartyRights;
   private List<OrgMemberRight> currentMemberRights; 
-  private List<OrgActorStatus> currentRightStatus;  
+  private List<OrgActorStatus> currentActorStatus;  
   private OrgRight current;
 
   private Optional<String> newRightName;
   private Optional<String> newRightDescription;
   private Optional<String> newExternalId;
+  private OrgActorStatusType newStatus;
 
   public BatchForOneRightModify current(OrgRight right) {                          this.current = right; return this; }
   public BatchForOneRightModify newRightDescription(Optional<String> rightDesc) {  this.newRightDescription = rightDesc; return this; }
   public BatchForOneRightModify newRightName(Optional<String> rightName) {         this.newRightName = rightName; return this; }
   public BatchForOneRightModify newExternalId(Optional<String> externalId) {       this.newExternalId = externalId; return this; }
+  public BatchForOneRightModify newStatus(OrgActorStatusType newStatus) {          this.newStatus = newStatus; return this; }
 
   public BatchForOneRightModify currentPartyRights(List<OrgPartyRight> partyRights) {    this.currentPartyRights = partyRights; return this; }
-  public BatchForOneRightModify currentRightStatus(List<OrgActorStatus> rightStatus) {   this.currentRightStatus = rightStatus; return this; }
+  public BatchForOneRightModify currentRightStatus(List<OrgActorStatus> rightStatus) {   this.currentActorStatus = rightStatus; return this; }
   public BatchForOneRightModify currentMemberRights(List<OrgMemberRight> memberRights) { this.currentMemberRights = memberRights; return this; }
 
   
@@ -86,15 +88,20 @@ public class BatchForOneRightModify {
     RepoAssert.notNull(parties, () -> "parties can't be null!");
     RepoAssert.notNull(members,   () -> "roles can't be null!");
     RepoAssert.notNull(currentPartyRights,   () -> "partyRights can't be null!");
-    RepoAssert.notNull(currentRightStatus,   () -> "rightStatus can't be null!");
+    RepoAssert.notNull(currentActorStatus,   () -> "rightStatus can't be null!");
     RepoAssert.notNull(currentMemberRights,  () -> "memberRights can't be null!");
     
     
     final var commitId = OidUtils.gen();
     final var createdAt = OffsetDateTime.now();
     
-    // user
+    // right
     final var right = visitRightsChanges(commitId);
+    
+    // right status
+    final var rightStatus = this.currentActorStatus.stream().filter(g -> g.getRightId() == null && g.getPartyId() == null).findFirst();
+    visitRightsStatus(commitId, rightStatus.orElse(null));
+    
     
     // parties
     for(final var entry : parties) {
@@ -139,6 +146,12 @@ public class BatchForOneRightModify {
       .append(System.lineSeparator())
 
       .append("  + removed from parties: ").append(String.join(",", parties.stream()
+          .filter(g -> g.getType() == ModType.REMOVE)
+          .map(g -> g.getParty().getPartyName() + "::" + g.getParty().getId())
+          .toList()))
+      .append(System.lineSeparator())
+
+      .append("  + disabled from parties: ").append(String.join(",", parties.stream()
           .filter(g -> g.getType() == ModType.DISABLED)
           .map(g -> g.getParty().getPartyName() + "::" + g.getParty().getId())
           .toList()))
@@ -148,8 +161,15 @@ public class BatchForOneRightModify {
           .filter(g -> g.getType() == ModType.ADD)
           .map(g -> g.getMember().getUserName() + "::" + g.getMember().getId())
           .toList()))
-      
+      .append(System.lineSeparator())
+
       .append("  + removed from members:  ").append(String.join(",", members.stream()
+          .filter(g -> g.getType() == ModType.REMOVE)
+          .map(g -> g.getMember().getUserName() + "::" + g.getMember().getId())
+          .toList()))
+      .append(System.lineSeparator())
+
+      .append("  + disabled from members:  ").append(String.join(",", members.stream()
           .filter(g -> g.getType() == ModType.DISABLED)
           .map(g -> g.getMember().getUserName() + "::" + g.getMember().getId())
           .toList()))
@@ -177,7 +197,11 @@ public class BatchForOneRightModify {
       .build();
     
     // no changes
-    if(resultActorStatus.isEmpty() && resultPartyRights.isEmpty() && resultMemberRights.isEmpty() && batch.getRights().isEmpty()) {
+    if( resultActorStatus.isEmpty() && 
+        resultPartyRights.isEmpty() && 
+        resultMemberRights.isEmpty() && 
+        batch.getRights().isEmpty()
+    ) {
       throw new NoRightChangesException();
     }
     return batch;
@@ -193,6 +217,30 @@ public class BatchForOneRightModify {
         .value(JsonObject.mapFrom(target))
         .build();
     tree.add(entry);
+  }
+  
+  private void visitRightsStatus(String commitId, OrgActorStatus status) {
+    if(this.newStatus == null) {
+      return;
+    }
+    if(status != null && status.getValue() == newStatus) {
+      return;
+    }
+     
+    if(status == null) {
+      final var newStatus = ImmutableOrgActorStatus.builder()
+        .id(OidUtils.gen())
+        .commitId(commitId)
+        .rightId(current.getId())
+        .value(this.newStatus)
+        .build();
+      this.resultActorStatus.add(newStatus);
+      visitChangeTree(commitId, newStatus, OrgOperationType.ADD);
+    } else {
+      final var newStatus = ImmutableOrgActorStatus.builder().from(status).value(this.newStatus).build();
+      visitChangeTree(commitId, newStatus, OrgOperationType.MOD);
+      identifiersForUpdates.add(newStatus.getId());      
+    }
   }
   
   private Optional<OrgRight> visitRightsChanges(String commitId) {
@@ -217,7 +265,7 @@ public class BatchForOneRightModify {
   }
 
   private void visitDisableRightsToMember(OrgMember member, String commitId) {
-    final var disabled = currentRightStatus.stream()
+    final var disabled = currentActorStatus.stream()
         .filter(e -> member.getId().equals(e.getMemberId()))
         .filter(e -> e.getPartyId() == null)
         .findFirst();
@@ -263,7 +311,7 @@ public class BatchForOneRightModify {
     }
     
     
-    final var disabled = currentRightStatus.stream()
+    final var disabled = currentActorStatus.stream()
         .filter(e -> e.getPartyId() == null)
         .filter(e -> e.getValue() == OrgActorStatusType.DISABLED)
         .filter(e -> entry.getId().equals(e.getMemberId()))
@@ -283,7 +331,7 @@ public class BatchForOneRightModify {
   }
   
   private void visitDisableRightFromParty(OrgParty entry, String commitId) {
-    final var disabled = currentRightStatus.stream()
+    final var disabled = currentActorStatus.stream()
         .filter(e -> entry.getId().equals(e.getPartyId()))
         .filter(e -> e.getMemberId() == null)
         .findFirst();
@@ -328,7 +376,7 @@ public class BatchForOneRightModify {
       visitChangeTree(commitId, partyRight, OrgOperationType.ADD);
     }
     
-    final var disabled = currentRightStatus.stream()
+    final var disabled = currentActorStatus.stream()
         .filter(e -> entry.getId().equals(e.getPartyId()))
         .filter(e -> e.getValue() == OrgActorStatusType.DISABLED)
         .filter(e -> e.getMemberId() == null)

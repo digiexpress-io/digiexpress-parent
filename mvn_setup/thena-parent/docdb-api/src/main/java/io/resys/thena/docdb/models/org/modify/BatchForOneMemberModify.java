@@ -133,7 +133,7 @@ public class BatchForOneMemberModify {
     // member
     final var member = visitMemberChanges(commitId);
     
-    // user status
+    // member status
     final var memberStatus = this.currentActorStatus.stream().filter(g -> g.getRightId() == null && g.getPartyId() == null).findFirst();
     visitMemberStatus(commitId, memberStatus.orElse(null));
     

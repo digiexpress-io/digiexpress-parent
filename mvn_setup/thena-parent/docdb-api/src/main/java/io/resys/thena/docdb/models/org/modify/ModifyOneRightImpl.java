@@ -8,7 +8,6 @@ import java.util.Optional;
 
 import io.resys.thena.docdb.api.actions.ImmutableOneRightEnvelope;
 import io.resys.thena.docdb.api.actions.OrgCommitActions.ModType;
-import io.resys.thena.docdb.api.actions.OrgCommitActions.ModifyOneParty;
 import io.resys.thena.docdb.api.actions.OrgCommitActions.ModifyOneRight;
 import io.resys.thena.docdb.api.actions.OrgCommitActions.OneRightEnvelope;
 import io.resys.thena.docdb.api.models.ImmutableMessage;
@@ -50,18 +49,39 @@ public class ModifyOneRightImpl implements ModifyOneRight {
   private Collection<String> allMembers = new LinkedHashSet<>();
   private Collection<String> membersToAdd = new LinkedHashSet<>();
   private Collection<String> membersToRemove = new LinkedHashSet<>();
+  private OrgActorStatusType status;
   
-  @Override public ModifyOneRightImpl rightId(String rightId) {       this.rightId = RepoAssert.notEmpty(rightId,         () -> "rightId can't be empty!"); return this; }
-  @Override public ModifyOneRightImpl repoId(String repoId) {         this.repoId = RepoAssert.notEmpty(repoId,           () -> "repoId can't be empty!"); return this; }
-  @Override public ModifyOneRightImpl author(String author) {         this.author = RepoAssert.notEmpty(author,           () -> "author can't be empty!"); return this; }
-  @Override public ModifyOneRightImpl message(String message) {       this.message = RepoAssert.notEmpty(message,         () -> "message can't be empty!"); return this; }
-  @Override public ModifyOneRightImpl externalId(String externalId) { this.externalId = Optional.ofNullable(externalId); return this; }
-  @Override public ModifyOneRightImpl rightName(String rightName) {   this.rightName = Optional.ofNullable(RepoAssert.notEmpty(rightName, () -> "rightName can't be empty!")); return this; }
-  @Override public ModifyOneRightImpl rightDescription(String rightDescription) { this.rightDescription = Optional.ofNullable(RepoAssert.notEmpty(rightDescription, () -> "rightDescription can't be empty!")); return this; }
-  @Override
-  public ModifyOneParty status(OrgActorStatusType status) {
-    // TODO Auto-generated method stub
-    return null;
+  @Override public ModifyOneRightImpl rightId(String rightId) {
+    this.rightId = RepoAssert.notEmpty(rightId, () -> "rightId can't be empty!"); 
+    return this; 
+  }
+  @Override public ModifyOneRightImpl repoId(String repoId) {
+    this.repoId = RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!"); 
+    return this; 
+  }
+  @Override public ModifyOneRightImpl author(String author) {
+    this.author = RepoAssert.notEmpty(author, () -> "author can't be empty!"); 
+    return this; 
+  }
+  @Override public ModifyOneRightImpl message(String message) { 
+    this.message = RepoAssert.notEmpty(message, () -> "message can't be empty!"); 
+    return this; 
+  }
+  @Override public ModifyOneRightImpl externalId(String externalId) {
+    this.externalId = Optional.ofNullable(externalId); 
+    return this; 
+  }
+  @Override public ModifyOneRightImpl rightName(String rightName) {
+    this.rightName = Optional.ofNullable(RepoAssert.notEmpty(rightName, () -> "rightName can't be empty!")); 
+    return this; 
+  }
+  @Override public ModifyOneRightImpl rightDescription(String rightDescription) { 
+    this.rightDescription = Optional.ofNullable(RepoAssert.notEmpty(rightDescription, () -> "rightDescription can't be empty!")); 
+    return this; 
+  }
+  @Override public ModifyOneRightImpl status(OrgActorStatusType status) {
+    this.status = status;
+    return this;
   }
   @Override 
   public ModifyOneRightImpl modifyParty(ModType type, String partyIds) { 
@@ -211,13 +231,14 @@ public class ModifyOneRightImpl implements ModifyOneRight {
     
     
     final var modify = new BatchForOneRightModify(tx.getRepo().getId(), author, message)
-        .newExternalId(externalId)
+        .current(right)
         .currentMemberRights(memberRights)
         .currentRightStatus(rightStatus)
         .currentPartyRights(partyRights)
+        .newExternalId(externalId)
         .newRightName(rightName)
         .newRightDescription(rightDescription)
-        .current(right); 
+        .newStatus(status); 
 
     // Remove or add groups 
     parties.forEach(party -> {
