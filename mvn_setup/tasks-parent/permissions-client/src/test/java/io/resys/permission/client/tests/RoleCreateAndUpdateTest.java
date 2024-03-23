@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
 import io.resys.permission.client.api.PermissionClient;
+import io.resys.permission.client.api.model.ImmutableChangeRoleDescription;
 import io.resys.permission.client.api.model.ImmutableChangeRoleName;
 import io.resys.permission.client.api.model.ImmutableCreateRole;
 import io.resys.permission.client.api.model.Principal.Role;
@@ -43,6 +44,7 @@ public class RoleCreateAndUpdateTest extends DbTestTemplate {
         .id(created.getId())
         .userId("user-1")
         .comment("Name change requested by admin")
+        
         .name("Updated role name is super good")
         .build())
       .await().atMost(Duration.ofMinutes(1));
@@ -50,7 +52,18 @@ public class RoleCreateAndUpdateTest extends DbTestTemplate {
     Assertions.assertEquals("My first role", created.getName());    
     Assertions.assertEquals("Updated role name is super good", updatedName.getName());
     Assertions.assertEquals("Updated role name is super good", client.roleQuery().get(created.getId()).await().atMost(Duration.ofMinutes(1)).getName());
- 
+    
+    final var updatedDescription = client.updateRole().updateOne(ImmutableChangeRoleDescription.builder()
+        .id(updatedName.getId())
+        .userId("user-1")
+        .comment("Corrected typo in name")
+        
+        .description("New description")
+        .build())
+      .await().atMost(Duration.ofMinutes(1));
+    
+    Assertions.assertEquals("New description", updatedDescription.getDescription());
+    Assertions.assertEquals("New description", client.roleQuery().get(created.getId()).await().atMost(Duration.ofMinutes(1)).getDescription());
   }
 }
 
