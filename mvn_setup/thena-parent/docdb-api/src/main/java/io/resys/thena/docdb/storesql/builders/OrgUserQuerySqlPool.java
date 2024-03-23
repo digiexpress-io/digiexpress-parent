@@ -88,7 +88,7 @@ public class OrgUserQuerySqlPool implements OrgQueries.MemberQuery {
   
 	@Override
 	public Uni<List<OrgMemberHierarchyEntry>> findAllMemberHierarchyEntries(String userId) {
-    final var sql = sqlBuilder.orgMembers().findAllUserGroupsAndRolesByUserId(userId);
+    final var sql = sqlBuilder.orgMembers().findAllUserPartiesAndRightsByMemberId(userId);
     if(log.isDebugEnabled()) {
       log.debug("User findAllUserHierarchyEntries query, with props: {} \r\n{}", 
       		sql.getProps().deepToString(),

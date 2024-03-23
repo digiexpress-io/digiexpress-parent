@@ -107,8 +107,8 @@ public class UpdateRoleActionImpl implements UpdateRoleAction {
       .name(role.getPartyName())
       .description(role.getPartyDescription())
       .status(OrgActorStatusType.IN_FORCE)
-      .permissions(null)
-      .principals(null)
+      // .permissions(null) TODO
+      // .principals(null)  TODO
       .build();
     }
   

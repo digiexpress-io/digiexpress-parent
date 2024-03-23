@@ -138,7 +138,7 @@ SELECT * FROM child;
 */
   
 	@Override
-	public SqlTuple findAllUserGroupsAndRolesByUserId(String userId) {
+	public SqlTuple findAllUserPartiesAndRightsByMemberId(String userId) {
     final var sql = new SqlStatement()
         .append("WITH RECURSIVE child AS (").ln()
         

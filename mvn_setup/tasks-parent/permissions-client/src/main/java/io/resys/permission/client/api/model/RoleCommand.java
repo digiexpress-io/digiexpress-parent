@@ -53,7 +53,6 @@ import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatusType;
 })
 
 public interface RoleCommand extends Serializable {
-  String getId();
   @Nullable String getUserId();
   @Nullable Instant getTargetDate();
   RoleCommandType getCommandType();
@@ -95,6 +94,7 @@ public interface RoleCommand extends Serializable {
 
   
   interface RoleUpdateCommand extends RoleCommand {
+    String getId();
     RoleUpdateCommand withUserId(String userId);
     RoleUpdateCommand withTargetDate(Instant targetDate);
   }

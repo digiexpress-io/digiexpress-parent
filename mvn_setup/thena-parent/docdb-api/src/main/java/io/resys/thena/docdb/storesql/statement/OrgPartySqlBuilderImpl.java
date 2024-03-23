@@ -103,7 +103,7 @@ public class OrgPartySqlBuilderImpl implements OrgPartySqlBuilder {
   public SqlTupleList updateMany(Collection<OrgParty> users) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
-        .append("UPDATE ").append(options.getOrgMembers())
+        .append("UPDATE ").append(options.getOrgParties())
         .append(" SET external_id = $1, party_name = $2, party_description = $3, commit_id = $4")
         .append(" WHERE id = $5")
         .build())
