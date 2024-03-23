@@ -324,7 +324,7 @@ public class BatchForOneRightModify {
           .commitId(commitId)
           .rightId(current.getId())
           .build();
-      resultPartyRights.add(null);
+      resultPartyRights.add(partyRight);
       visitChangeTree(commitId, partyRight, OrgOperationType.ADD);
     }
     
