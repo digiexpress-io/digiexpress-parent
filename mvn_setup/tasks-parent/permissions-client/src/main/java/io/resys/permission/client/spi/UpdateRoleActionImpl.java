@@ -68,13 +68,13 @@ public class UpdateRoleActionImpl implements UpdateRoleAction {
         ChangeRolePermissions role = (ChangeRolePermissions) command;
         
         if(role.getChangeType() == ChangeType.ADD) {
-          role.getPermissions().forEach(perm -> modifyOneParty.modifyRights(ModType.ADD, perm));
+          role.getPermissions().forEach(perm -> modifyOneParty.modifyRight(ModType.ADD, perm));
           
         } else if(role.getChangeType() == ChangeType.DISABLE) {          
-          role.getPermissions().forEach(perm -> modifyOneParty.modifyRights(ModType.DISABLED, perm));
+          role.getPermissions().forEach(perm -> modifyOneParty.modifyRight(ModType.DISABLED, perm));
           
         } else if(role.getChangeType() == ChangeType.REMOVE) {
-          role.getPermissions().forEach(perm -> modifyOneParty.modifyRights(ModType.REMOVE, perm)); 
+          role.getPermissions().forEach(perm -> modifyOneParty.modifyRight(ModType.REMOVE, perm)); 
         }
         break;
       }

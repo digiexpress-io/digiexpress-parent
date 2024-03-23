@@ -1,10 +1,11 @@
 package io.resys.thena.docdb.models.org.actions;
 
 import io.resys.thena.docdb.api.actions.OrgCommitActions;
+import io.resys.thena.docdb.models.org.create.CreateOneMemberImpl;
 import io.resys.thena.docdb.models.org.create.CreateOnePartyImpl;
 import io.resys.thena.docdb.models.org.create.CreateOneRoleImpl;
-import io.resys.thena.docdb.models.org.create.CreateOneMemberImpl;
 import io.resys.thena.docdb.models.org.modify.ModifyOneMemberImpl;
+import io.resys.thena.docdb.models.org.modify.ModifyOnePartyImpl;
 import io.resys.thena.docdb.models.org.modify.ModifyOneRightImpl;
 import io.resys.thena.docdb.spi.DbState;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +37,6 @@ public class OrgCommitActionsImpl implements OrgCommitActions {
   }
   @Override
   public ModifyOneParty modifyOneParty() {
-    // TODO Auto-generated method stub
-    return null;
+    return new ModifyOnePartyImpl(state);
   }
 }

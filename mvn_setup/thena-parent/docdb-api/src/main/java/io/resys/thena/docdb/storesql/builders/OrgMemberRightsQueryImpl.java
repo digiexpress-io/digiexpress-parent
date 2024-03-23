@@ -112,4 +112,20 @@ public class OrgMemberRightsQueryImpl implements OrgQueries.MemberRightsQuery {
         .transformToMulti((RowSet<OrgMemberRight> rowset) -> Multi.createFrom().iterable(rowset))
         .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'MEMBER_RIGHT'!", sql, e)));
 	}
+
+  @Override
+  public Multi<OrgMemberRight> findAllByPartyId(String partyId) {
+    final var sql = sqlBuilder.orgMemberRights().findAllByPartyId(partyId);
+    if(log.isDebugEnabled()) {
+      log.debug("MemberRight findAllByPartyId query, with props: {} \r\n{}", 
+          partyId,
+          sql.getValue());
+    }
+    return wrapper.getClient().preparedQuery(sql.getValue())
+        .mapping(row -> sqlMapper.orgMemberRight(row))
+        .execute(sql.getProps())
+        .onItem()
+        .transformToMulti((RowSet<OrgMemberRight> rowset) -> Multi.createFrom().iterable(rowset))
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'MEMBER_RIGHT'!", sql, e)));
+  }
 }

@@ -174,7 +174,7 @@ public class ModifyOneMemberImpl implements ModifyOneMember {
 			tx.query().rights().findAll(allRights).collect().asList();
 		
 		// statuses
-		final Uni<List<OrgActorStatus>> statusPromise = tx.query().actorStatus().findAllByIdMemberId(memberId).collect().asList();
+		final Uni<List<OrgActorStatus>> statusPromise = tx.query().actorStatus().findAllByMemberId(memberId).collect().asList();
 		
 		// member data
 		final Uni<OrgMember> memberPromise = tx.query().members().getById(memberId);

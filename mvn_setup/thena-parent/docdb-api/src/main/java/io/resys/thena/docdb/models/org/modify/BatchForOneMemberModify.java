@@ -325,6 +325,7 @@ public class BatchForOneMemberModify {
       visitChangeTree(commitId, newStatus, OrgOperationType.ADD);
     } else {
       final var newStatus = ImmutableOrgActorStatus.builder().from(status).value(this.newStatus).build();
+      this.newActorStatus.add(newStatus);
       visitChangeTree(commitId, newStatus, OrgOperationType.MOD);
       identifiersForUpdates.add(newStatus.getId());      
     }

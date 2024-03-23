@@ -108,7 +108,8 @@ public interface OrgCommitActions {
     ModifyOneParty partyDescription(String partyDescription);
     
     ModifyOneParty modifyMember(ModType type, String memberIdNameOrExtId);
-    ModifyOneParty modifyRights(ModType type, String rightIdNameOrExtId);
+    ModifyOneParty modifyRight(ModType type, String rightIdNameOrExtId);
+    ModifyOneParty modifyMemberRight(ModType type, String memberIdNameOrExtId, String rightIdNameOrExtId);
     ModifyOneParty status(OrgActorStatusType status);
     
     Uni<OnePartyEnvelope> build();

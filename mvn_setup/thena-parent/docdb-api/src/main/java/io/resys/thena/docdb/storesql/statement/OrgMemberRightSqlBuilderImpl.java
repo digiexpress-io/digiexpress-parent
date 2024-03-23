@@ -88,6 +88,17 @@ public class OrgMemberRightSqlBuilderImpl implements OrgMemberRightSqlBuilder {
         .build();
 	}
   @Override
+  public SqlTuple findAllByPartyId(String partyId) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT * ").ln()
+        .append("  FROM ").append(options.getOrgMemberRights()).ln()
+        .append("  WHERE party_id = $1").ln() 
+        .build())
+        .props(Tuple.of(partyId))
+        .build();
+  }
+  @Override
   public SqlTuple insertOne(OrgMemberRight doc) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()

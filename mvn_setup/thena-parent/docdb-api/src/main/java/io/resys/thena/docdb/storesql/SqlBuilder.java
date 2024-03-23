@@ -112,7 +112,8 @@ public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
   interface OrgActorStatusSqlBuilder {
     SqlTuple getById(String id);
     SqlTuple findAllByIdRightId(String rightId);
-    SqlTuple findAllByIdMemberId(String memberId);
+    SqlTuple findAllByMemberId(String memberId);
+    SqlTuple findAllByPartyId(String partyId);
     
     Sql findAll();
     SqlTuple findAll(List<String> id);
@@ -138,6 +139,7 @@ public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
     SqlTuple getById(String id); 
     SqlTuple findAllByUserId(String userId);
     SqlTuple findAllByRoleId(String userId);
+    SqlTuple findAllByPartyId(String partyId);
     Sql findAll();
     SqlTuple findAll(List<String> id);
     SqlTuple insertOne(OrgMemberRight role);

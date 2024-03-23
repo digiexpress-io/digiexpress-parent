@@ -153,7 +153,7 @@ public class ModifyOneRightImpl implements ModifyOneRight {
     
 		// find right status
 		final Uni<List<OrgActorStatus>> rightStatusPromise = 
-	    tx.query().actorStatus().findAllByIdRightId(rightId).collect().asList();
+	    tx.query().actorStatus().findAllByRightId(rightId).collect().asList();
 	    
 		final Uni<OrgRight> rightPromise = tx.query().rights().getById(rightId);
 		
