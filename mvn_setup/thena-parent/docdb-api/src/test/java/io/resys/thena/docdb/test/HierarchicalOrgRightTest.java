@@ -107,6 +107,20 @@ public class HierarchicalOrgRightTest extends DbTestTemplate {
       Assertions.assertEquals(Repo.CommitResultStatus.OK, changes.getStatus());
       assertRepo(repo.getRepo(), "HierarchicalOrgRightTest/data-enable-party-member.txt");
     }
+    
+    { // delete rights from party and member
+      final var changes = getClient().org().commit().modifyOneRight()
+        .repoId(repo.getRepo().getId())
+        .author("sam-vimes")
+        .message("modify rights")
+        .rightId(cityGuards.getId())
+        .modifyMember(ModType.REMOVE, userId1.getId())
+        .modifyParty(ModType.REMOVE, child1_2_2.getId())
+        .build().await().atMost(Duration.ofMinutes(1));
+        
+      Assertions.assertEquals(Repo.CommitResultStatus.OK, changes.getStatus());
+      assertRepo(repo.getRepo(), "HierarchicalOrgRightTest/data-delete-party-member.txt");
+    }
   }
 
   

@@ -45,9 +45,11 @@ public class ModifyOneRightImpl implements ModifyOneRight {
 
   private Collection<String> allParties = new LinkedHashSet<>();
   private Collection<String> partiesToAdd = new LinkedHashSet<>();
+  private Collection<String> partiesToDisable = new LinkedHashSet<>();
   private Collection<String> partiesToRemove = new LinkedHashSet<>();
   private Collection<String> allMembers = new LinkedHashSet<>();
   private Collection<String> membersToAdd = new LinkedHashSet<>();
+  private Collection<String> membersToDisable = new LinkedHashSet<>();
   private Collection<String> membersToRemove = new LinkedHashSet<>();
   private OrgActorStatusType status;
   
@@ -91,6 +93,8 @@ public class ModifyOneRightImpl implements ModifyOneRight {
     if(type == ModType.ADD) {
       partiesToAdd.add(partyIds);
     } else if(type == ModType.DISABLED) {
+      partiesToDisable.add(partyIds);
+    } else if(type == ModType.REMOVE) {
       partiesToRemove.add(partyIds);
     } else {
       RepoAssert.fail("Unknown modification type: " + type + "!");
@@ -105,6 +109,8 @@ public class ModifyOneRightImpl implements ModifyOneRight {
     if(type == ModType.ADD) {
       membersToAdd.add(memberIds);
     } else if(type == ModType.DISABLED) {
+      membersToDisable.add(memberIds);
+    } else if(type == ModType.REMOVE) {
       membersToRemove.add(memberIds);
     } else {
       RepoAssert.fail("Unknown modification type: " + type + "!");
@@ -246,9 +252,13 @@ public class ModifyOneRightImpl implements ModifyOneRight {
         modify.updateParty(ModType.ADD, party);
       }
       
-      if(party.isMatch(partiesToRemove)) {
+      if( party.isMatch(partiesToDisable)) {
          modify.updateParty(ModType.DISABLED, party);
        }
+      
+      if( party.isMatch(partiesToRemove)) {
+        modify.updateParty(ModType.REMOVE, party);
+      }
     });
     
     // Remove or add roles 
@@ -257,8 +267,12 @@ public class ModifyOneRightImpl implements ModifyOneRight {
         modify.updateMember(ModType.ADD, member);
       }
       
-      if( member.isMatch(membersToRemove) ) {
+      if( member.isMatch(membersToDisable) ) {
         modify.updateMember(ModType.DISABLED, member);
+       }
+      
+      if( member.isMatch(membersToRemove) ) {
+        modify.updateMember(ModType.REMOVE, member);
        }
     });
     

@@ -49,6 +49,11 @@ public class BatchForOneRightModify {
   private final List<OrgActorStatus> resultActorStatus = new ArrayList<>();
   private final List<String> identifiersForUpdates = new ArrayList<>();
   
+  private final List<OrgMemberRight> memberRightsToDelete = new ArrayList<OrgMemberRight>();
+  private final List<OrgPartyRight> partyRightsToDelete = new ArrayList<OrgPartyRight>();
+  private final List<OrgActorStatus> statusToDelete = new ArrayList<OrgActorStatus>();
+
+  
   private List<OrgPartyRight> currentPartyRights;
   private List<OrgMemberRight> currentMemberRights; 
   private List<OrgActorStatus> currentActorStatus;  
@@ -109,6 +114,8 @@ public class BatchForOneRightModify {
         this.visitAddRightsToParty(entry.getParty(), commitId);  
       } else if(entry.getType() == ModType.DISABLED) {
         this.visitDisableRightFromParty(entry.getParty(), commitId);
+      } else if(entry.getType() == ModType.REMOVE) {
+        this.visitRemoveRightFromParty(entry.getParty(), commitId);
       } else {
         RepoAssert.fail("Unknown modification type: " + entry.getType() + "!"); 
       }
@@ -120,6 +127,8 @@ public class BatchForOneRightModify {
         this.visitAddRightsToMember(entry.getMember(), commitId);  
       } else if(entry.getType() == ModType.DISABLED) {
         this.visitDisableRightsToMember(entry.getMember(), commitId);
+      } else if(entry.getType() == ModType.REMOVE) {
+        this.visitRemoveRightsToMember(entry.getMember(), commitId);
       } else {
         RepoAssert.fail("Unknown modification type: " + entry.getType() + "!"); 
       }
@@ -193,6 +202,11 @@ public class BatchForOneRightModify {
       .memberRights(resultMemberRights)
       .actorStatus(resultActorStatus)
       .identifiersForUpdates(identifiersForUpdates)
+      
+      .memberRightsToDelete(memberRightsToDelete)
+      .partyRightToDelete(partyRightsToDelete)
+      .statusToDelete(statusToDelete)
+      
       .log(ImmutableMessage.builder().text(logger.toString()).build())
       .build();
     
@@ -200,6 +214,11 @@ public class BatchForOneRightModify {
     if( resultActorStatus.isEmpty() && 
         resultPartyRights.isEmpty() && 
         resultMemberRights.isEmpty() && 
+        
+        statusToDelete.isEmpty() &&
+        partyRightsToDelete.isEmpty() &&
+        memberRightsToDelete.isEmpty() &&
+        
         batch.getRights().isEmpty()
     ) {
       throw new NoRightChangesException();
@@ -268,7 +287,27 @@ public class BatchForOneRightModify {
     identifiersForUpdates.add(current.getId());
     return Optional.of(newState);
   }
-
+  private void visitRemoveRightsToMember(OrgMember member, String commitId) {
+    final var currentStatus = currentActorStatus.stream()
+        .filter(e -> member.getId().equals(e.getMemberId()))
+        .filter(e -> e.getPartyId() == null)
+        .findFirst();
+    
+    final var currentMemberRight = currentMemberRights.stream()
+        .filter(e -> member.getId().equals(e.getMemberId()))
+        .findFirst();
+    
+    if(currentMemberRight.isPresent()) {
+      memberRightsToDelete.add(currentMemberRight.get());
+      visitChangeTree(commitId, currentMemberRight.get(), OrgOperationType.REM);
+    }
+    if(currentStatus.isPresent()) {
+      statusToDelete.add(currentStatus.get());
+      visitChangeTree(commitId, currentStatus.get(), OrgOperationType.REM);
+    }
+    
+  }
+  
   private void visitDisableRightsToMember(OrgMember member, String commitId) {
     final var disabled = currentActorStatus.stream()
         .filter(e -> member.getId().equals(e.getMemberId()))
@@ -340,6 +379,25 @@ public class BatchForOneRightModify {
     visitChangeTree(commitId, status, OrgOperationType.MOD);
   }
   
+  private void visitRemoveRightFromParty(OrgParty entry, String commitId) {
+    final var currentStatus = currentActorStatus.stream()
+        .filter(e -> entry.getId().equals(e.getPartyId()))
+        .filter(e -> e.getMemberId() == null)
+        .findFirst();
+    
+    final var currentPartyRight = currentPartyRights.stream()
+        .filter(e -> entry.getId().equals(e.getPartyId()))
+        .findFirst();
+    
+    if(currentPartyRight.isPresent()) {
+      partyRightsToDelete.add(currentPartyRight.get());
+      visitChangeTree(commitId, currentPartyRight.get(), OrgOperationType.REM);
+    }
+    if(currentStatus.isPresent()) {
+      statusToDelete.add(currentStatus.get());
+      visitChangeTree(commitId, currentStatus.get(), OrgOperationType.REM);
+    }
+  }
   private void visitDisableRightFromParty(OrgParty entry, String commitId) {
     final var currentStatus = currentActorStatus.stream()
         .filter(e -> entry.getId().equals(e.getPartyId()))
