@@ -110,7 +110,7 @@ user-2
     // modify user 2
     getClient().org().commit().modifyOneMember()
         .repoId(repo.getRepo().getId())
-        .userId(userGroupsAndRoles2.getUserId())
+        .memberId(userGroupsAndRoles2.getUserId())
         .modifyParties(ModType.ADD, root1.getId())
         .modifyRights(ModType.ADD, bakerMain.getId())
         .userName("super-user")
@@ -145,7 +145,7 @@ super-user
     // remove user 2 from child-1.2.2 group
     getClient().org().commit().modifyOneMember()
         .repoId(repo.getRepo().getId())
-        .userId(userGroupsAndRoles2.getUserId())
+        .memberId(userGroupsAndRoles2.getUserId())
         .modifyParties(ModType.DISABLED, child1_2_2.getId())
         .author("au")
         .message("mod for user")
@@ -183,7 +183,7 @@ super-user
     // Reject changes because there are non
     final var rejectNoChanges = getClient().org().commit().modifyOneMember()
       .repoId(repo.getRepo().getId())
-      .userId(userGroupsAndRoles2.getUserId())
+      .memberId(userGroupsAndRoles2.getUserId())
       .modifyParties(ModType.DISABLED, child1_2_2.getId())
       .author("au")
       .message("mod for user")
@@ -226,7 +226,7 @@ super-user
     // disable member
     getClient().org().commit().modifyOneMember()
       .repoId(repo.getRepo().getId())
-      .userId(userGroupsAndRoles2.getUserId())
+      .memberId(userGroupsAndRoles2.getUserId())
       .status(OrgActorStatusType.DISABLED)
       .author("au")
       .message("mod for user")
@@ -237,7 +237,7 @@ super-user
     // enable member
     getClient().org().commit().modifyOneMember()
       .repoId(repo.getRepo().getId())
-      .userId(userGroupsAndRoles2.getUserId())
+      .memberId(userGroupsAndRoles2.getUserId())
       .status(OrgActorStatusType.IN_FORCE)
       .author("au")
       .message("mod for user")
@@ -248,7 +248,7 @@ super-user
     
     getClient().org().commit().modifyOneMember()
       .repoId(repo.getRepo().getId())
-      .userId(userGroupsAndRoles2.getUserId())
+      .memberId(userGroupsAndRoles2.getUserId())
       .modifyParties(ModType.REMOVE, child1_2_2.getId())
       .author("au")
       .message("mod for user")

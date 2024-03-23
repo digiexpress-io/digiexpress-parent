@@ -82,7 +82,7 @@ public interface OrgCommitActions {
     ModifyOneMember author(String author);
     ModifyOneMember message(String message);
   
-    ModifyOneMember userId(String userId);
+    ModifyOneMember memberId(String userId);
     ModifyOneMember externalId(@Nullable String externalId);
     ModifyOneMember userName(String userName);
     ModifyOneMember email(String email);

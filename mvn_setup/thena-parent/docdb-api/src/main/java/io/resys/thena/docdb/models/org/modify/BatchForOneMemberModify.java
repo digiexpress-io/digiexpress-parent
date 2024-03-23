@@ -116,7 +116,7 @@ public class BatchForOneMemberModify {
     }
     return this;
   }
-  public ImmutableOrgBatchForOne create() throws NoChangesException {
+  public ImmutableOrgBatchForOne create() throws NoMemberChangesException {
     RepoAssert.notEmpty(repoId,   () -> "repoId can't be empty!");
     RepoAssert.notEmpty(author,   () -> "author can't be empty!");
     RepoAssert.notEmpty(message,  () -> "message can't be empty!");
@@ -268,7 +268,7 @@ public class BatchForOneMemberModify {
         
         batch.getMembers().isEmpty()) {
       
-      throw new NoChangesException();
+      throw new NoMemberChangesException();
     }
     return batch;
   }
@@ -544,7 +544,7 @@ public class BatchForOneMemberModify {
     private final OrgParty group;
   }
   
-  public static class NoChangesException extends Exception {
+  public static class NoMemberChangesException extends Exception {
     private static final long serialVersionUID = 3041890960089273165L;
     
   }

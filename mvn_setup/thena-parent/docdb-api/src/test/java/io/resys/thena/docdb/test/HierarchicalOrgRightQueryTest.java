@@ -29,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 @QuarkusTest
 @TestProfile(PgProfile.class)
 @Slf4j
-public class HierarchicalOrgRightTest extends DbTestTemplate {
+public class HierarchicalOrgRightQueryTest extends DbTestTemplate {
 
   @Value.Immutable
   public interface TestContent extends Serializable {
@@ -43,46 +43,45 @@ public class HierarchicalOrgRightTest extends DbTestTemplate {
   public void createRepoAndUserGroups() {
     // create project
     RepoResult repo = getClient().repo().projectBuilder()
-        .name("HierarchicalOrgRoleTest-1", RepoType.org)
+        .name("HierarchicalOrgRightQueryTest-1", RepoType.org)
         .build()
         .await().atMost(Duration.ofMinutes(1));
     log.debug("created repo {}", repo);
     Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
 
-    final var jailer1 = createRole(repo, "jailer-1");
-    final var jailer2 = createRole(repo, "jailer-2");
-    final var jailer3 = createRole(repo, "jailer-3");
-    final var jailer4 = createRole(repo, "jailer-main");
-    final var bakerMain = createRole(repo, "baker-main");
+    final var jailer1 = createRight(repo, "jailer-1");
+    final var jailer2 = createRight(repo, "jailer-2");
+    final var jailer3 = createRight(repo, "jailer-3");
+    final var jailer4 = createRight(repo, "jailer-main");
+    final var bakerMain = createRight(repo, "baker-main");
         
-    final var root1 = createRootGroup("group-1", repo, jailer1);
-    final var child1_1 = createChildGroup("child-1.1", root1.getId(), repo);
-    final var child1_2 = createChildGroup("child-1.2", root1.getId(), repo);
-    final var child1_2_1 = createChildGroup("child-1.2.1", child1_2.getId(), repo);
-    final var child1_2_2 = createChildGroup("child-1.2.2", child1_2.getId(), repo, jailer2, jailer3);
-    final var child1_3 = createChildGroup("child-1.3", root1.getId(), repo);
-    final var child1_4 = createChildGroup("child-1.4", root1.getId(), repo);
+    final var root1 = createRootParty("group-1", repo, jailer1);
+    final var child1_1 = createChildParty("child-1.1", root1.getId(), repo);
+    final var child1_2 = createChildParty("child-1.2", root1.getId(), repo);
+    final var child1_2_1 = createChildParty("child-1.2.1", child1_2.getId(), repo);
+    final var child1_2_2 = createChildParty("child-1.2.2", child1_2.getId(), repo, jailer2, jailer3);
+    final var child1_3 = createChildParty("child-1.3", root1.getId(), repo);
+    final var child1_4 = createChildParty("child-1.4", root1.getId(), repo);
     
-    final var root2 = createRootGroup("group-2", repo);
-    final var child2_1 = createChildGroup("child-2.1", root2.getId(), repo);
-    final var child2_2 = createChildGroup("child-2.2", root2.getId(), repo);
-    final var child2_3 = createChildGroup("child-2.3", root2.getId(), repo);
-    final var child2_4 = createChildGroup("child-2.4", root2.getId(), repo);
+    final var root2 = createRootParty("group-2", repo);
+    final var child2_1 = createChildParty("child-2.1", root2.getId(), repo);
+    final var child2_2 = createChildParty("child-2.2", root2.getId(), repo);
+    final var child2_3 = createChildParty("child-2.3", root2.getId(), repo);
+    final var child2_4 = createChildParty("child-2.4", root2.getId(), repo);
     
-    final var root3 = createRootGroup("group-3", repo);
-    final var child3_1 = createChildGroup("child-3.1", root3.getId(), repo);
-    final var child3_2 = createChildGroup("child-3.2", root3.getId(), repo);
-    final var child3_3 = createChildGroup("child-3.3", root3.getId(), repo);
-    final var child3_4 = createChildGroup("child-3.4", root3.getId(), repo);
-    
-    
-    final var userId1 = createUser("user-1", repo, Arrays.asList(root1), Collections.emptyList());
-    final var userId2 = createUser("user-2", repo, Arrays.asList(child1_2_2), Arrays.asList(jailer4));
-    assertRepo(repo.getRepo(), "HierarchicalOrgRightTest/data-created.txt");
+    final var root3 = createRootParty("group-3", repo);
+    final var child3_1 = createChildParty("child-3.1", root3.getId(), repo);
+    final var child3_2 = createChildParty("child-3.2", root3.getId(), repo);
+    final var child3_3 = createChildParty("child-3.3", root3.getId(), repo);
+    final var child3_4 = createChildParty("child-3.4", root3.getId(), repo);
     
     
-    // user 2 sanity
-    var roleHierarchy = getClient().org().find().rightHierarchyQuery()
+    final var userId1 = createMember("user-1", repo, Arrays.asList(root1), Collections.emptyList());
+    final var userId2 = createMember("user-2", repo, Arrays.asList(child1_2_2), Arrays.asList(jailer4));
+    assertRepo(repo.getRepo(), "HierarchicalOrgRightQueryTest/data-created.txt");
+    
+    { // user 2 sanity
+    final var roleHierarchy = getClient().org().find().rightHierarchyQuery()
         .repoId(repo.getRepo().getId())
         .get(jailer3.getId()).await().atMost(Duration.ofMinutes(1)).getObjects();
     
@@ -91,11 +90,12 @@ jailer-3
 `--- child-1.2.2 <= direct role
      `--- user-2
         """, roleHierarchy.getLog());
+    }
     
-    // modify user 2
+    { // modify user 2
     getClient().org().commit().modifyOneMember()
         .repoId(repo.getRepo().getId())
-        .userId(userId2.getId())
+        .memberId(userId2.getId())
         .modifyParties(ModType.ADD, root1.getId())
         .modifyRights(ModType.ADD, bakerMain.getId())
         .userName("super-user")
@@ -105,10 +105,10 @@ jailer-3
         .message("mod for user")
         .build().await().atMost(Duration.ofMinutes(1))
         .getMember();
-    assertRepo(repo.getRepo(), "HierarchicalOrgRightTest/data-add-rights-parties.txt");
+    assertRepo(repo.getRepo(), "HierarchicalOrgRightQueryTest/data-add-rights-parties.txt");
     
     
-    roleHierarchy = getClient().org().find().rightHierarchyQuery()
+    final var roleHierarchy = getClient().org().find().rightHierarchyQuery()
         .repoId(repo.getRepo().getId())
         .get(jailer1.getId()).await().atMost(Duration.ofMinutes(1)).getObjects(); 
     Assertions.assertEquals("""
@@ -118,53 +118,53 @@ jailer-1
      +--- super-user
      `--- child-1.1
         """, roleHierarchy.getLog());
+    }
     
-    
-    // remove user 2 from child-1.2.2 group
+    {// remove user 2 from child-1.2.2 group
     getClient().org().commit().modifyOneMember()
         .repoId(repo.getRepo().getId())
-        .userId(userId2.getId())
+        .memberId(userId2.getId())
         .modifyParties(ModType.DISABLED, child1_2_2.getId())
         .author("au")
         .message("mod for user")
         .build().await().atMost(Duration.ofMinutes(1))
         .getMember();
-    assertRepo(repo.getRepo(), "HierarchicalOrgRightTest/data-remove-party.txt");
+    assertRepo(repo.getRepo(), "HierarchicalOrgRightQueryTest/data-remove-party.txt");
     
     
-    roleHierarchy = getClient().org().find().rightHierarchyQuery()
+    final var roleHierarchy = getClient().org().find().rightHierarchyQuery()
         .repoId(repo.getRepo().getId())
         .get(jailer2.getId()).await().atMost(Duration.ofMinutes(1)).getObjects(); 
     Assertions.assertEquals("""
 jailer-2
 `--- child-1.2.2 <= direct role
         """, roleHierarchy.getLog());
+    }
     
-    
-    // Reject changes because there are non
+    {// Reject changes because there are non
     final var rejectNoChanges = getClient().org().commit().modifyOneMember()
       .repoId(repo.getRepo().getId())
-      .userId(userId2.getId())
+      .memberId(userId2.getId())
       .modifyParties(ModType.DISABLED, child1_2_2.getId())
       .author("au")
       .message("mod for user")
       .build().await().atMost(Duration.ofMinutes(1))
       .getStatus();
     Assertions.assertEquals(Repo.CommitResultStatus.NO_CHANGES, rejectNoChanges);
-    assertRepo(repo.getRepo(), "HierarchicalOrgRightTest/no-changes.txt");
+    assertRepo(repo.getRepo(), "HierarchicalOrgRightQueryTest/no-changes.txt");
     
     
-    roleHierarchy = getClient().org().find().rightHierarchyQuery()
+    final var roleHierarchy = getClient().org().find().rightHierarchyQuery()
         .repoId(repo.getRepo().getId())
         .get(bakerMain.getId()).await().atMost(Duration.ofMinutes(1)).getObjects(); 
     Assertions.assertEquals("""
 baker-main
         """, roleHierarchy.getLog());
-    //printRepo(repo.getRepo()); //LOG THE DB 
+    }
   }
 
   
-  private OrgMember createUser(String userName, RepoResult repo, List<OrgParty> groups, List<OrgRight> roles) {
+  private OrgMember createMember(String userName, RepoResult repo, List<OrgParty> groups, List<OrgRight> roles) {
     return getClient().org().commit().createOneMember()
         .repoId(repo.getRepo().getId())
         .addMemberToParties(groups.stream().map(group -> group.getId()).toList())
@@ -178,7 +178,7 @@ baker-main
         .getMember();
   }
   
-  private OrgParty createRootGroup(String groupName, RepoResult repo, OrgRight ...roles) {
+  private OrgParty createRootParty(String groupName, RepoResult repo, OrgRight ...roles) {
     return getClient().org().commit().createOneParty()
         .repoId(repo.getRepo().getId())
         .partyName(groupName)
@@ -194,7 +194,7 @@ baker-main
         .build().await().atMost(Duration.ofMinutes(1)).getParty();
   }
   
-  private OrgParty createChildGroup(String groupName, String parentId, RepoResult repo, OrgRight ...roles) {
+  private OrgParty createChildParty(String groupName, String parentId, RepoResult repo, OrgRight ...roles) {
     return getClient().org().commit().createOneParty()
         .repoId(repo.getRepo().getId())
         .partyName(groupName)
@@ -211,7 +211,7 @@ baker-main
         .build().await().atMost(Duration.ofMinutes(1)).getParty();
   }
   
-  private OrgRight createRole(RepoResult repo, String roleName) {
+  private OrgRight createRight(RepoResult repo, String roleName) {
     return getClient().org().commit().createOneRight()
         .repoId(repo.getRepo().getId())
         .rightName(roleName)

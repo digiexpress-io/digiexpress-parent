@@ -118,7 +118,7 @@ group-1
     // modify user 2
     getClient().org().commit().modifyOneMember()
         .repoId(repo.getRepo().getId())
-        .userId(userId2.getId())
+        .memberId(userId2.getId())
         .modifyParties(ModType.ADD, root1.getId())
         .modifyRights(ModType.ADD, bakerMain.getId())
         .userName("super-user")
@@ -172,7 +172,7 @@ group-1
     // remove user 2 from child-1.2.2 group
     getClient().org().commit().modifyOneMember()
         .repoId(repo.getRepo().getId())
-        .userId(userId2.getId())
+        .memberId(userId2.getId())
         .modifyParties(ModType.DISABLED, child1_2_2.getId())
         .author("au")
         .message("mod for user")
@@ -222,7 +222,7 @@ group-1
     // Reject changes because there are non
     final var rejectNoChanges = getClient().org().commit().modifyOneMember()
       .repoId(repo.getRepo().getId())
-      .userId(userId2.getId())
+      .memberId(userId2.getId())
       .modifyParties(ModType.DISABLED, child1_2_2.getId())
       .author("au")
       .message("mod for user")

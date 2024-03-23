@@ -24,7 +24,7 @@ import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgParty;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRight;
 import io.resys.thena.docdb.models.org.OrgInserts.OrgBatchForOne;
 import io.resys.thena.docdb.models.org.OrgState.OrgRepo;
-import io.resys.thena.docdb.models.org.modify.BatchForOneMemberModify.NoChangesException;
+import io.resys.thena.docdb.models.org.modify.BatchForOneMemberModify.NoMemberChangesException;
 import io.resys.thena.docdb.spi.DataMapper;
 import io.resys.thena.docdb.spi.DbState;
 import io.resys.thena.docdb.support.RepoAssert;
@@ -59,7 +59,7 @@ public class ModifyOneMemberImpl implements ModifyOneMember {
   private Map<String, List<String>> removeUseGroupRoles = new HashMap<>();
   private OrgActorStatusType newStatus;
   
-  @Override public ModifyOneMemberImpl userId(String userId) {
+  @Override public ModifyOneMemberImpl memberId(String userId) {
     this.memberId = RepoAssert.notEmpty(userId, () -> "userId can't be empty!"); 
     return this; 
   }
@@ -192,7 +192,7 @@ public class ModifyOneMemberImpl implements ModifyOneMember {
 		    
 		    try {
 		      return createResponse(tx, tuple.getItem1(), tuple.getItem2(), tuple.getItem3(), tuple.getItem4(), tuple.getItem5(), tuple.getItem6());
-		    } catch (NoChangesException e) {
+		    } catch (NoMemberChangesException e) {
 		      return Uni.createFrom().item(ImmutableOneMemberEnvelope.builder()
             .repoId(repoId)
             .addMessages(ImmutableMessage.builder()
@@ -253,7 +253,7 @@ public class ModifyOneMemberImpl implements ModifyOneMember {
       List<OrgRight> rights,
       List<OrgActorStatus> status,
       List<OrgMembership> memberships,
-      List<OrgMemberRight> memberRights) throws NoChangesException {
+      List<OrgMemberRight> memberRights) throws NoMemberChangesException {
     
     final Map<OrgParty, List<OrgRight>> modifyMemberRightsInParty = new HashMap<>();
     final Map<String, List<OrgRight>> addGroupsBy = new HashMap<>();

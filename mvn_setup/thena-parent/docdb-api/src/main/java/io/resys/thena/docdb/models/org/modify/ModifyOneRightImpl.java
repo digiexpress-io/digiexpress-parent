@@ -140,116 +140,118 @@ public class ModifyOneRightImpl implements ModifyOneRight {
 		    memberRightsPromise, 
 		    rightStatusPromise, 
 		    rightPromise
-		).asTuple()
-		  .onItem().transformToUni(tuple -> modifyRight(
-			  tx,
-	      tuple.getItem1(), 
-	      tuple.getItem2(),
-	      tuple.getItem3(),
-	      tuple.getItem4(),
-	      tuple.getItem5(),
-	      tuple.getItem6()
-		  )
-		);
+		).asTuple().onItem().transformToUni(tuple -> {
+		  
+		   final var validated = validateQueryResponse(tuple.getItem1(), tuple.getItem2());
+       if(validated != null) {
+         return Uni.createFrom().item(validated);
+       }
+		  
+       try {
+         
+         return createResponse(
+           tx,
+           tuple.getItem1(), 
+           tuple.getItem2(),
+           tuple.getItem3(),
+           tuple.getItem4(),
+           tuple.getItem5(),
+           tuple.getItem6()
+         );
+         
+       } catch(NoRightChangesException ex) {
+         return Uni.createFrom().item(ImmutableOneRightEnvelope.builder()
+             .repoId(repoId)
+             .addMessages(ImmutableMessage.builder()
+                 .exception(ex).text("Nothing to commit, rights data already in the expected state!")
+                 .build())
+             .status(CommitResultStatus.NO_CHANGES)
+             .build());
+       }
+		});
   }
+  
+  private OneRightEnvelope validateQueryResponse(List<OrgParty> parties, List<OrgMember> members) {
 
-  private Uni<OneRightEnvelope> modifyRight(
+    if(parties.size() < this.allParties.size()) {
+      final var found = String.join(", ", parties.stream().map(e -> e.getPartyName()).toList());
+      final var expected = String.join(", ", this.allParties);
+      return ImmutableOneRightEnvelope.builder()
+          .repoId(repoId)
+          .status(CommitResultStatus.ERROR)
+          .addMessages(ImmutableMessage.builder()
+              .text("Could not find all parties: \r\n found: \r\n" + found + " \r\n but requested: \r\n" + expected + "!")
+              .build())
+          .build();
+    }
+    
+    if(members.size() < this.allMembers.size()) {
+      final var found = String.join(", ", members.stream().map(e -> e.getUserName()).toList());
+      final var expected = String.join(", ", this.allMembers);
+      return ImmutableOneRightEnvelope.builder()
+          .repoId(repoId)
+          .status(CommitResultStatus.ERROR)
+          .addMessages(ImmutableMessage.builder()
+              .text("Could not find all members: \r\n found: \r\n" + found + " \r\n but requested: \r\n" + expected + "!")
+              .build())
+          .build();
+    }
+    return null;
+  }
+      
+
+  private Uni<OneRightEnvelope> createResponse(
       OrgRepo tx, 
       List<OrgParty> parties, 
       List<OrgMember> members,
       List<OrgPartyRight> partyRights,
       List<OrgMemberRight> memberRights, 
       List<OrgActorStatus> rightStatus,           
-      OrgRight right) {
+      OrgRight right) throws NoRightChangesException {
     
-    if(parties.size() < this.allParties.size()) {
-      final var found = String.join(", ", parties.stream().map(e -> e.getPartyName()).toList());
-      final var expected = String.join(", ", this.allParties);
-      return Uni.createFrom().item(ImmutableOneRightEnvelope.builder()
-          .repoId(repoId)
-          .status(CommitResultStatus.ERROR)
-          .addMessages(ImmutableMessage.builder()
-              .text("Could not find all parties: \r\n found: \r\n" + found + " \r\n but requested: \r\n" + expected + "!")
-              .build())
-          .build());
-    }
-    
-    if(members.size() < this.allMembers.size()) {
-      final var found = String.join(", ", members.stream().map(e -> e.getUserName()).toList());
-      final var expected = String.join(", ", this.allMembers);
-      return Uni.createFrom().item(ImmutableOneRightEnvelope.builder()
-          .repoId(repoId)
-          .status(CommitResultStatus.ERROR)
-          .addMessages(ImmutableMessage.builder()
-              .text("Could not find all members: \r\n found: \r\n" + found + " \r\n but requested: \r\n" + expected + "!")
-              .build())
-          .build());
-    }
     
     final var modify = new BatchForOneRightModify(tx.getRepo().getId(), author, message)
-        .externalId(externalId)
-        .memberRights(memberRights)
-        .rightStatus(rightStatus)
-        .partyRights(partyRights)
-        .rightName(rightName)
-        .rightDescription(rightDescription)
+        .newExternalId(externalId)
+        .currentMemberRights(memberRights)
+        .currentRightStatus(rightStatus)
+        .currentPartyRights(partyRights)
+        .newRightName(rightName)
+        .newRightDescription(rightDescription)
         .current(right); 
 
     // Remove or add groups 
     parties.forEach(party -> {
-      if( partiesToAdd.contains(party.getPartyName()) ||
-          partiesToAdd.contains(party.getId()) ||
-          partiesToAdd.contains(party.getExternalId())
-      ) {
+      if( party.isMatch(partiesToAdd)) {
         modify.updateParty(ModType.ADD, party);
       }
       
-      if( partiesToRemove.contains(party.getPartyName()) ||
-          partiesToRemove.contains(party.getId()) ||
-          partiesToRemove.contains(party.getExternalId())
-       ) {
+      if(party.isMatch(partiesToRemove)) {
          modify.updateParty(ModType.DISABLED, party);
        }
     });
     
     // Remove or add roles 
     members.forEach(member -> {
-      
-      if( membersToAdd.contains(member.getUserName()) ||
-          membersToAdd.contains(member.getId()) ||
-          membersToAdd.contains(member.getExternalId())
-      ) {
+      if( member.isMatch(membersToAdd) ) {
         modify.updateMember(ModType.ADD, member);
       }
       
-      if( membersToRemove.contains(member.getUserName()) ||
-          membersToRemove.contains(member.getId()) ||
-          membersToRemove.contains(member.getExternalId())
-       ) {
+      if( member.isMatch(membersToRemove) ) {
         modify.updateMember(ModType.DISABLED, member);
        }
     });
     
     
-    try {
-      final OrgBatchForOne batch = modify.create();
-      return tx.insert().batchMany(batch)
-          .onItem().transform(rsp -> ImmutableOneRightEnvelope.builder()
-            .repoId(repoId)
-            .right(rsp.getRights().isEmpty() ? null : rsp.getRights().get(0))
-            .addMessages(rsp.getLog())
-            .addAllMessages(rsp.getMessages())
-            .status(DataMapper.mapStatus(rsp.getStatus()))
-            .build());
-    } catch (NoRightChangesException e) {
-      return Uni.createFrom().item(ImmutableOneRightEnvelope.builder()
-            .repoId(repoId)
-            .addMessages(ImmutableMessage.builder()
-                .exception(e).text("Nothing to commit, rights data already in the expected state!")
-                .build())
-            .status(CommitResultStatus.NO_CHANGES)
-            .build());
-    }
+    final OrgBatchForOne batch = modify.create();
+    return tx.insert().batchMany(batch)
+        .onItem().transform(rsp -> ImmutableOneRightEnvelope.builder()
+          .repoId(repoId)
+          .right(rsp.getRights().isEmpty() ? null : rsp.getRights().get(0))
+          .addMessages(rsp.getLog())
+          .addAllMessages(rsp.getMessages())
+          .status(DataMapper.mapStatus(rsp.getStatus()))
+          .build());
+
   }
 
 }
