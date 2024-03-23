@@ -17,9 +17,9 @@ import io.resys.thena.docdb.api.actions.RepoActions.RepoResult;
 import io.resys.thena.docdb.api.actions.RepoActions.RepoStatus;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.Repo.RepoType;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgParty;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRight;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
 import io.resys.thena.docdb.test.config.DbTestTemplate;
 import io.resys.thena.docdb.test.config.PgProfile;
 import lombok.extern.slf4j.Slf4j;
@@ -78,7 +78,8 @@ public class HierarchicalOrgRightTest extends DbTestTemplate {
     
     final var userId1 = createUser("user-1", repo, Arrays.asList(root1), Collections.emptyList());
     final var userId2 = createUser("user-2", repo, Arrays.asList(child1_2_2), Arrays.asList(jailer4));
-
+    assertRepo(repo.getRepo(), "HierarchicalOrgRightTest/data-created.txt");
+    
     
     // user 2 sanity
     var roleHierarchy = getClient().org().find().rightHierarchyQuery()
@@ -104,6 +105,8 @@ jailer-3
         .message("mod for user")
         .build().await().atMost(Duration.ofMinutes(1))
         .getMember();
+    assertRepo(repo.getRepo(), "HierarchicalOrgRightTest/data-add-rights-parties.txt");
+    
     
     roleHierarchy = getClient().org().find().rightHierarchyQuery()
         .repoId(repo.getRepo().getId())
@@ -126,6 +129,8 @@ jailer-1
         .message("mod for user")
         .build().await().atMost(Duration.ofMinutes(1))
         .getMember();
+    assertRepo(repo.getRepo(), "HierarchicalOrgRightTest/data-remove-party.txt");
+    
     
     roleHierarchy = getClient().org().find().rightHierarchyQuery()
         .repoId(repo.getRepo().getId())
@@ -146,6 +151,8 @@ jailer-2
       .build().await().atMost(Duration.ofMinutes(1))
       .getStatus();
     Assertions.assertEquals(Repo.CommitResultStatus.NO_CHANGES, rejectNoChanges);
+    assertRepo(repo.getRepo(), "HierarchicalOrgRightTest/no-changes.txt");
+    
     
     roleHierarchy = getClient().org().find().rightHierarchyQuery()
         .repoId(repo.getRepo().getId())
