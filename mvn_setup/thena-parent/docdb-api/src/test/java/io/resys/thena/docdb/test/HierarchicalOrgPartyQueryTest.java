@@ -29,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 @QuarkusTest
 @TestProfile(PgProfile.class)
 @Slf4j
-public class HierarchicalOrgPartyTest extends DbTestTemplate {
+public class HierarchicalOrgPartyQueryTest extends DbTestTemplate {
 
   @Value.Immutable
   public interface TestContent extends Serializable {
