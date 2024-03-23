@@ -4,12 +4,12 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgPartyRight;
+import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMembership;
 import io.resys.thena.docdb.spi.DbCollections;
 import io.resys.thena.docdb.storesql.ImmutableSql;
 import io.resys.thena.docdb.storesql.ImmutableSqlTuple;
 import io.resys.thena.docdb.storesql.ImmutableSqlTupleList;
-import io.resys.thena.docdb.storesql.SqlBuilder.OrgGroupRoleSqlBuilder;
+import io.resys.thena.docdb.storesql.SqlBuilder.OrgMembershipsSqlBuilder;
 import io.resys.thena.docdb.storesql.SqlBuilder.Sql;
 import io.resys.thena.docdb.storesql.SqlBuilder.SqlTuple;
 import io.resys.thena.docdb.storesql.SqlBuilder.SqlTupleList;
@@ -18,14 +18,14 @@ import io.vertx.mutiny.sqlclient.Tuple;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class OrgGroupRoleSqlBuilderImpl implements OrgGroupRoleSqlBuilder {
+public class OrgMembershipsSqlBuilderImpl implements OrgMembershipsSqlBuilder {
   private final DbCollections options;
   
   @Override
   public SqlTuple findAll(List<String> id) {
     final var sql = new SqlStatement()
       .append("SELECT * ").ln()
-      .append("  FROM ").append(options.getOrgMemberRights()).ln()
+      .append("  FROM ").append(options.getOrgMemberships()).ln()
       .append("  WHERE ").ln();
     
     var index = 1;
@@ -33,9 +33,7 @@ public class OrgGroupRoleSqlBuilderImpl implements OrgGroupRoleSqlBuilder {
       if(index > 1) {
         sql.append(" OR ").ln();
       }
-      sql.append(" (")
-        .append("id = $").append(index)
-      .append(")");
+      sql.append("id = $").append(index);
       index++;
     }
     
@@ -49,7 +47,7 @@ public class OrgGroupRoleSqlBuilderImpl implements OrgGroupRoleSqlBuilder {
   public Sql findAll() {
     return ImmutableSql.builder()
         .value(new SqlStatement()
-        .append("SELECT * FROM ").append(options.getOrgPartyRights())
+        .append("SELECT * FROM ").append(options.getOrgMemberships())
         .build())
         .build();
   }
@@ -58,66 +56,67 @@ public class OrgGroupRoleSqlBuilderImpl implements OrgGroupRoleSqlBuilder {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT * ").ln()
-        .append("  FROM ").append(options.getOrgPartyRights()).ln()
+        .append("  FROM ").append(options.getOrgMemberships()).ln()
         .append("  WHERE id = $1").ln() 
         .build())
         .props(Tuple.of(id))
         .build();
   }
+  
 
 	@Override
-	public SqlTuple findAllByGroupId(String userId) {
+	public SqlTuple findAllByGroupId(String groupId) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT * ").ln()
-        .append("  FROM ").append(options.getOrgPartyRights()).ln()
+        .append("  FROM ").append(options.getOrgMemberships()).ln()
         .append("  WHERE party_id = $1").ln() 
         .build())
-        .props(Tuple.of(userId))
+        .props(Tuple.of(groupId))
         .build();
 	}
+
 	@Override
-	public SqlTuple findAllByRoleId(String userId) {
+	public SqlTuple findAllByUserId(String userId) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT * ").ln()
-        .append("  FROM ").append(options.getOrgPartyRights()).ln()
-        .append("  WHERE right_id = $1").ln() 
+        .append("  FROM ").append(options.getOrgMemberships()).ln()
+        .append("  WHERE member_id = $1").ln() 
         .build())
         .props(Tuple.of(userId))
         .build();
 	}
   @Override
-  public SqlTuple insertOne(OrgPartyRight doc) {
+  public SqlTuple insertOne(OrgMembership doc) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
-        .append("INSERT INTO ").append(options.getOrgPartyRights())
-        .append(" (id, commit_id, party_id, right_id) VALUES($1, $2, $3, $4)").ln()
+        .append("INSERT INTO ").append(options.getOrgMemberships())
+        .append(" (id, commit_id, party_id, member_id) VALUES($1, $2, $3, $4)").ln()
         .build())
-        .props(Tuple.from(new Object[]{ doc.getId(), doc.getCommitId(), doc.getPartyId(), doc.getRightId()}))
+        .props(Tuple.from(new Object[]{ doc.getId(), doc.getCommitId(), doc.getPartyId(), doc.getMemberId() }))
         .build();
   }
   @Override
-  public SqlTupleList insertAll(Collection<OrgPartyRight> users) {
+  public SqlTupleList insertAll(Collection<OrgMembership> users) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
-        .append("INSERT INTO ").append(options.getOrgPartyRights())
-        .append(" (id, commit_id, party_id, right_id) VALUES($1, $2, $3, $4)").ln()
+        .append("INSERT INTO ").append(options.getOrgMemberships())
+        .append(" (id, commit_id, party_id, member_id) VALUES($1, $2, $3, $4)").ln()
         .build())
         .props(users.stream()
-            .map(doc -> Tuple.from(new Object[]{ doc.getId(), doc.getCommitId(), doc.getPartyId(), doc.getRightId()}))
+            .map(doc -> Tuple.from(new Object[]{ doc.getId(), doc.getCommitId(), doc.getPartyId(), doc.getMemberId() }))
             .collect(Collectors.toList()))
         .build();
   }
-
   @Override
-  public SqlTupleList deleteAll(Collection<OrgPartyRight> roles) {
+  public SqlTupleList deleteAll(Collection<OrgMembership> users) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
-        .append("DELETE FROM ").append(options.getOrgPartyRights())
+        .append("DELETE FROM ").append(options.getOrgMemberships())
         .append(" WHERE id = $1").ln()
         .build())
-        .props(roles.stream()
+        .props(users.stream()
             .map(doc -> Tuple.from(new Object[]{ doc.getId() }))
             .collect(Collectors.toList()))
         .build();

@@ -99,7 +99,7 @@ public class BatchForOneRightModify {
     final var right = visitRightsChanges(commitId);
     
     // right status
-    final var rightStatus = this.currentActorStatus.stream().filter(g -> g.getRightId() == null && g.getPartyId() == null).findFirst();
+    final var rightStatus = this.currentActorStatus.stream().filter(g -> g.getMemberId() == null && g.getPartyId() == null).findFirst();
     visitRightsStatus(commitId, rightStatus.orElse(null));
     
     
@@ -226,6 +226,10 @@ public class BatchForOneRightModify {
     if(status != null && status.getValue() == newStatus) {
       return;
     }
+    if(status == null && this.newStatus == OrgActorStatusType.IN_FORCE) {
+      return;
+    }    
+    
      
     if(status == null) {
       final var newStatus = ImmutableOrgActorStatus.builder()
@@ -239,6 +243,7 @@ public class BatchForOneRightModify {
     } else {
       final var newStatus = ImmutableOrgActorStatus.builder().from(status).value(this.newStatus).build();
       visitChangeTree(commitId, newStatus, OrgOperationType.MOD);
+      this.resultActorStatus.add(newStatus);
       identifiersForUpdates.add(newStatus.getId());      
     }
   }
@@ -299,7 +304,11 @@ public class BatchForOneRightModify {
   }
   
   private void visitAddRightsToMember(OrgMember entry, String commitId) {
-    if(currentMemberRights.stream().filter(e -> e.getMemberId().equals(entry.getId())).count() == 0) {
+    final var exists = currentMemberRights.stream()
+        .filter(e -> e.getMemberId().equals(entry.getId()))
+        .filter(e -> e.getPartyId() == null)
+        .count() > 0;
+    if(!exists) {
       final var membership = ImmutableOrgMemberRight.builder()
           .id(OidUtils.gen())
           .rightId(current.getId())
@@ -310,18 +319,19 @@ public class BatchForOneRightModify {
       visitChangeTree(commitId, membership, OrgOperationType.ADD);
     }
     
-    
-    final var disabled = currentActorStatus.stream()
+    final var currentStatus = currentActorStatus.stream()
         .filter(e -> e.getPartyId() == null)
-        .filter(e -> e.getValue() == OrgActorStatusType.DISABLED)
         .filter(e -> entry.getId().equals(e.getMemberId()))
         .findFirst();
-    if(disabled.isEmpty()) {
+    if(currentStatus.isEmpty()) {
+      return;
+    }
+    if(currentStatus.get().getValue() == OrgActorStatusType.IN_FORCE) {
       return;
     }
     
     final var status = ImmutableOrgActorStatus.builder()
-        .from(disabled.get())
+        .from(currentStatus.get())
         .commitId(commitId)
         .value(OrgActorStatusType.IN_FORCE)
         .build();
@@ -331,12 +341,12 @@ public class BatchForOneRightModify {
   }
   
   private void visitDisableRightFromParty(OrgParty entry, String commitId) {
-    final var disabled = currentActorStatus.stream()
+    final var currentStatus = currentActorStatus.stream()
         .filter(e -> entry.getId().equals(e.getPartyId()))
         .filter(e -> e.getMemberId() == null)
         .findFirst();
     
-    if(disabled.isEmpty()) {
+    if(currentStatus.isEmpty()) {
       final var status = ImmutableOrgActorStatus.builder()
           .id(OidUtils.gen())
           .partyId(entry.getId())
@@ -350,12 +360,12 @@ public class BatchForOneRightModify {
     }
 
     // already removed
-    if(disabled.get().getValue() == OrgActorStatusType.DISABLED) {
+    if(currentStatus.get().getValue() == OrgActorStatusType.DISABLED) {
       return;
     }
 
     final var status = ImmutableOrgActorStatus.builder()
-        .from(disabled.get())
+        .from(currentStatus.get())
         .commitId(commitId)
         .value(OrgActorStatusType.DISABLED)
         .build();
@@ -365,7 +375,10 @@ public class BatchForOneRightModify {
   }
   
   private void visitAddRightsToParty(OrgParty entry, String commitId) {
-    if(currentPartyRights.stream().filter(e -> e.getPartyId().equals(entry.getId())).count() == 0) {
+    final var exists = currentPartyRights.stream()
+        .filter(e -> e.getPartyId().equals(entry.getId()))
+        .count() > 0;
+    if(!exists) {
       final var partyRight = ImmutableOrgPartyRight.builder()
           .id(OidUtils.gen())
           .partyId(entry.getId())
@@ -376,16 +389,19 @@ public class BatchForOneRightModify {
       visitChangeTree(commitId, partyRight, OrgOperationType.ADD);
     }
     
-    final var disabled = currentActorStatus.stream()
+    final var currentStatus = currentActorStatus.stream()
         .filter(e -> entry.getId().equals(e.getPartyId()))
-        .filter(e -> e.getValue() == OrgActorStatusType.DISABLED)
         .filter(e -> e.getMemberId() == null)
         .findFirst();
-    if(disabled.isEmpty()) {
+    
+    if(currentStatus.isEmpty()) {
+      return;
+    }
+    if(currentStatus.get().getValue() == OrgActorStatusType.IN_FORCE) {
       return;
     }
     final var status = ImmutableOrgActorStatus.builder()
-        .from(disabled.get())
+        .from(currentStatus.get())
         .commitId(commitId)
         .value(OrgActorStatusType.IN_FORCE)
         .build();

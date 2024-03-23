@@ -73,16 +73,16 @@ public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
   GitTreeItemSqlBuilder treeItems();
   
   OrgMemberSqlBuilder orgMembers();
-  OrgGroupSqlBuilder orgParties();
-  OrgUserMembershipsSqlBuilder orgMemberships();
+  OrgPartySqlBuilder orgParties();
+  OrgMembershipsSqlBuilder orgMemberships();
   OrgCommitSqlBuilder orgCommits();
   OrgCommitTreeSqlBuilder orgCommitTrees();
   
   OrgActorStatusSqlBuilder orgActorStatus();
   
-  OrgRoleSqlBuilder orgRights();
-  OrgUserRoleSqlBuilder orgMemberRights();
-  OrgGroupRoleSqlBuilder orgPartyRights();
+  OrgRightSqlBuilder orgRights();
+  OrgMemberRightSqlBuilder orgMemberRights();
+  OrgPartyRightSqlBuilder orgPartyRights();
   
   SqlBuilder withOptions(DbCollections options);
 
@@ -124,7 +124,7 @@ public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
 
   }
   
-  interface OrgRoleSqlBuilder {
+  interface OrgRightSqlBuilder {
     SqlTuple getById(String id); //role name or id or external_id
     Sql findAll();
     SqlTuple findAll(Collection<String> id);
@@ -134,7 +134,7 @@ public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
     SqlTupleList updateMany(Collection<OrgRight> roles);
   }
   
-  interface OrgUserRoleSqlBuilder {
+  interface OrgMemberRightSqlBuilder {
     SqlTuple getById(String id); 
     SqlTuple findAllByUserId(String userId);
     SqlTuple findAllByRoleId(String userId);
@@ -145,7 +145,7 @@ public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
     SqlTupleList deleteAll(Collection<OrgMemberRight> roles);
   }
   
-  interface OrgGroupRoleSqlBuilder {
+  interface OrgPartyRightSqlBuilder {
     SqlTuple getById(String id); 
     SqlTuple findAllByGroupId(String groupId); 
     SqlTuple findAllByRoleId(String groupId);
@@ -159,7 +159,7 @@ public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
   
   
   
-  interface OrgGroupSqlBuilder {
+  interface OrgPartySqlBuilder {
     SqlTuple getById(String id); //group name or id or external_id
     Sql findAll();
     SqlTuple findAll(Collection<String> id);
@@ -169,7 +169,7 @@ public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
     SqlTupleList updateMany(Collection<OrgParty> groups);
   }
 
-  interface OrgUserMembershipsSqlBuilder {
+  interface OrgMembershipsSqlBuilder {
     Sql findAll();
     SqlTuple findAll(List<String> id);
     SqlTuple getById(String id); 

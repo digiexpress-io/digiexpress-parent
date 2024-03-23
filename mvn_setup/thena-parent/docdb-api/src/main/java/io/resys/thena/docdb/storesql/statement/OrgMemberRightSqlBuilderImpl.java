@@ -9,7 +9,7 @@ import io.resys.thena.docdb.spi.DbCollections;
 import io.resys.thena.docdb.storesql.ImmutableSql;
 import io.resys.thena.docdb.storesql.ImmutableSqlTuple;
 import io.resys.thena.docdb.storesql.ImmutableSqlTupleList;
-import io.resys.thena.docdb.storesql.SqlBuilder.OrgUserRoleSqlBuilder;
+import io.resys.thena.docdb.storesql.SqlBuilder.OrgMemberRightSqlBuilder;
 import io.resys.thena.docdb.storesql.SqlBuilder.Sql;
 import io.resys.thena.docdb.storesql.SqlBuilder.SqlTuple;
 import io.resys.thena.docdb.storesql.SqlBuilder.SqlTupleList;
@@ -18,7 +18,7 @@ import io.vertx.mutiny.sqlclient.Tuple;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class OrgUserRoleSqlBuilderImpl implements OrgUserRoleSqlBuilder {
+public class OrgMemberRightSqlBuilderImpl implements OrgMemberRightSqlBuilder {
   private final DbCollections options;
   
   @Override

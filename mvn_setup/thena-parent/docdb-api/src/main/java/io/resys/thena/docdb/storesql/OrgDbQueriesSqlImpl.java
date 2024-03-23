@@ -8,7 +8,7 @@ import io.resys.thena.docdb.storesql.builders.OrgGroupRoleQuerySqlPool;
 import io.resys.thena.docdb.storesql.builders.OrgRoleQuerySqlPool;
 import io.resys.thena.docdb.storesql.builders.OrgUserMembershipsQuerySqlPool;
 import io.resys.thena.docdb.storesql.builders.OrgUserQuerySqlPool;
-import io.resys.thena.docdb.storesql.builders.OrgUserRoleQuerySqlPool;
+import io.resys.thena.docdb.storesql.builders.OrgMemberRightsQueryImpl;
 import lombok.RequiredArgsConstructor;
 
 
@@ -35,7 +35,7 @@ public class OrgDbQueriesSqlImpl implements OrgQueries {
 	}
 	@Override
 	public MemberRightsQuery memberRights() {
-    return new OrgUserRoleQuerySqlPool(context.getWrapper(), context.getMapper(), context.getBuilder(), context.getErrorHandler());
+    return new OrgMemberRightsQueryImpl(context.getWrapper(), context.getMapper(), context.getBuilder(), context.getErrorHandler());
 	}
 	@Override
 	public PartyRightsQuery partyRights() {
