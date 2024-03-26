@@ -27,10 +27,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
-import io.resys.thena.api.entities.doc.ThenaDocObject.Doc;
-import io.resys.thena.api.entities.doc.ThenaDocObject.DocBranch;
-import io.resys.thena.api.entities.doc.ThenaDocObject.DocCommit;
-import io.resys.thena.api.entities.doc.ThenaDocObject.DocLog;
+import io.resys.thena.api.entities.doc.Doc;
+import io.resys.thena.api.entities.doc.DocBranch;
+import io.resys.thena.api.entities.doc.DocCommit;
+import io.resys.thena.api.entities.doc.DocLog;
 import io.resys.thena.api.entities.doc.ThenaDocObjects.DocObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;

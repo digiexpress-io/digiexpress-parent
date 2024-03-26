@@ -13,9 +13,10 @@ import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.doc.ImmutableDocBranch;
 import io.resys.thena.api.entities.doc.ImmutableDocCommit;
 import io.resys.thena.api.entities.doc.ImmutableDocLog;
-import io.resys.thena.api.entities.doc.ThenaDocObject.DocBranchLock;
-import io.resys.thena.api.entities.doc.ThenaDocObject.DocLog;
-import io.resys.thena.api.entities.doc.ThenaDocObject.DocStatus;
+import io.resys.thena.api.entities.doc.Doc;
+import io.resys.thena.api.entities.doc.Doc.DocStatus;
+import io.resys.thena.api.entities.doc.DocBranchLock;
+import io.resys.thena.api.entities.doc.DocLog;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.api.actions.ImmutableOneDocEnvelope;
 import io.resys.thena.spi.DataMapper;
@@ -129,7 +130,7 @@ public class CreateOneDocBranchImpl implements CreateOneDocBranch {
       .commitId(commit.getId())
       .branchName(branchName)
       .value(appendBlobs)
-      .status(DocStatus.IN_FORCE)
+      .status(Doc.DocStatus.IN_FORCE)
       .build();
     
     final List<DocLog> docLogs = appendLogs == null ? Collections.emptyList() : Arrays.asList(

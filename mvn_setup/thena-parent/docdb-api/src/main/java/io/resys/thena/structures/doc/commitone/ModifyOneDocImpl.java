@@ -5,7 +5,7 @@ import java.time.Duration;
 import io.resys.thena.api.actions.DocCommitActions.ModifyOneDoc;
 import io.resys.thena.api.actions.DocCommitActions.OneDocEnvelope;
 import io.resys.thena.api.entities.CommitResultStatus;
-import io.resys.thena.api.entities.doc.ThenaDocObject.DocLock;
+import io.resys.thena.api.entities.doc.DocLock;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.api.actions.ImmutableOneDocEnvelope;
 import io.resys.thena.spi.DataMapper;

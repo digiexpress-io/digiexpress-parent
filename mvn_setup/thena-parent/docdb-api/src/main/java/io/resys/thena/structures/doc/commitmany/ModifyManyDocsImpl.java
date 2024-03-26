@@ -9,7 +9,7 @@ import io.resys.thena.api.actions.DocCommitActions.AddItemToModifyDoc;
 import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.api.actions.DocCommitActions.ModifyManyDocs;
 import io.resys.thena.api.entities.CommitResultStatus;
-import io.resys.thena.api.entities.doc.ThenaDocObject.DocLock;
+import io.resys.thena.api.entities.doc.DocLock;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.api.actions.ImmutableManyDocsEnvelope;
 import io.resys.thena.spi.DbState;

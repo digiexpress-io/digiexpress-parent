@@ -29,9 +29,9 @@ import java.util.Map;
 import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
 
-import io.resys.thena.api.entities.doc.ThenaDocObject.DocCommit;
 import io.resys.thena.api.entities.git.ImmutableBlob;
 import io.resys.thena.api.entities.git.TreeValue;
+import io.resys.thena.api.entities.doc.DocCommit;
 import io.resys.thena.api.entities.git.Blob;
 import io.resys.thena.api.entities.git.Commit;
 import io.vertx.core.json.JsonObject;

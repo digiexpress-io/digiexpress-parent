@@ -9,11 +9,11 @@ import io.resys.thena.api.entities.doc.ImmutableDoc;
 import io.resys.thena.api.entities.doc.ImmutableDocBranch;
 import io.resys.thena.api.entities.doc.ImmutableDocCommit;
 import io.resys.thena.api.entities.doc.ImmutableDocLog;
-import io.resys.thena.api.entities.doc.ThenaDocObject.Doc;
-import io.resys.thena.api.entities.doc.ThenaDocObject.DocBranchLock;
-import io.resys.thena.api.entities.doc.ThenaDocObject.DocLock;
-import io.resys.thena.api.entities.doc.ThenaDocObject.DocLog;
-import io.resys.thena.api.entities.doc.ThenaDocObject.DocStatus;
+import io.resys.thena.api.entities.doc.Doc;
+import io.resys.thena.api.entities.doc.Doc.DocStatus;
+import io.resys.thena.api.entities.doc.DocBranchLock;
+import io.resys.thena.api.entities.doc.DocLock;
+import io.resys.thena.api.entities.doc.DocLog;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.structures.doc.DocInserts.DocBatchForOne;
 import io.resys.thena.structures.doc.DocState.DocRepo;
@@ -53,7 +53,7 @@ public class BatchForOneDocModify {
     final var doc = ImmutableDoc.builder()
       .from(docLock.getDoc().get())
       .meta(appendMeta)
-      .status(remove ? DocStatus.ARCHIVED : DocStatus.IN_FORCE)
+      .status(remove ? Doc.DocStatus.ARCHIVED : Doc.DocStatus.IN_FORCE)
       .externalId(remove ?  OidUtils.gen(): docLock.getDoc().get().getExternalId())
       .externalIdDeleted(remove ? docLock.getDoc().get().getExternalId() : null)
       .build();
@@ -91,7 +91,7 @@ public class BatchForOneDocModify {
       .build();
     final var docBranch = ImmutableDocBranch.builder()
       .from(lock.getBranch().get())
-      .status(remove ? DocStatus.ARCHIVED : DocStatus.IN_FORCE)
+      .status(remove ? Doc.DocStatus.ARCHIVED : Doc.DocStatus.IN_FORCE)
       .branchName(remove ? OidUtils.gen(): lock.getBranch().get().getBranchName())
       .branchNameDeleted(remove ? lock.getBranch().get().getBranchName() : null)
       .commitId(commit.getId())

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import io.resys.thena.api.entities.doc.ThenaDocObject.Doc;
-import io.resys.thena.api.entities.doc.ThenaDocObject.DocStatus;
+import io.resys.thena.api.entities.doc.Doc;
+import io.resys.thena.api.entities.doc.Doc.DocStatus;
 import io.resys.thena.spi.DbCollections;
 import io.resys.thena.storesql.ImmutableSql;
 import io.resys.thena.storesql.ImmutableSqlTuple;
@@ -200,7 +200,7 @@ public class DocSqlBuilderImpl implements DocSqlBuilder {
       additional.append(" AND (" + value + ")");
     }    
 
-    final var status = criteria.getOnlyActiveDocs() ? DocStatus.IN_FORCE.name() : DocStatus.ARCHIVED.name();
+    final var status = criteria.getOnlyActiveDocs() ? Doc.DocStatus.IN_FORCE.name() : Doc.DocStatus.ARCHIVED.name();
     
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()

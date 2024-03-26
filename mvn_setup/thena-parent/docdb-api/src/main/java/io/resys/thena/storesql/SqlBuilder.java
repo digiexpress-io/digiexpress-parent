@@ -30,10 +30,10 @@ import org.immutables.value.Value;
 
 import io.resys.thena.api.actions.GitPullActions.MatchCriteria;
 import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.api.entities.doc.ThenaDocObject.Doc;
-import io.resys.thena.api.entities.doc.ThenaDocObject.DocBranch;
-import io.resys.thena.api.entities.doc.ThenaDocObject.DocCommit;
-import io.resys.thena.api.entities.doc.ThenaDocObject.DocLog;
+import io.resys.thena.api.entities.doc.Doc;
+import io.resys.thena.api.entities.doc.DocBranch;
+import io.resys.thena.api.entities.doc.DocCommit;
+import io.resys.thena.api.entities.doc.DocLog;
 import io.resys.thena.api.entities.git.Blob;
 import io.resys.thena.api.entities.git.Branch;
 import io.resys.thena.api.entities.git.Commit;

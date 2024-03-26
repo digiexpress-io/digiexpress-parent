@@ -25,12 +25,12 @@ import java.util.Optional;
 
 import io.resys.thena.api.entities.ImmutableTenant;
 import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.api.entities.doc.ThenaDocObject.Doc;
-import io.resys.thena.api.entities.doc.ThenaDocObject.DocBranch;
-import io.resys.thena.api.entities.doc.ThenaDocObject.DocBranchLock;
-import io.resys.thena.api.entities.doc.ThenaDocObject.DocCommit;
-import io.resys.thena.api.entities.doc.ThenaDocObject.DocFlatted;
-import io.resys.thena.api.entities.doc.ThenaDocObject.DocLog;
+import io.resys.thena.api.entities.doc.Doc;
+import io.resys.thena.api.entities.doc.DocBranch;
+import io.resys.thena.api.entities.doc.DocBranchLock;
+import io.resys.thena.api.entities.doc.DocCommit;
+import io.resys.thena.api.entities.doc.DocFlatted;
+import io.resys.thena.api.entities.doc.DocLog;
 import io.resys.thena.api.entities.git.ImmutableBlob;
 import io.resys.thena.api.entities.git.ImmutableBranch;
 import io.resys.thena.api.entities.git.ImmutableCommit;

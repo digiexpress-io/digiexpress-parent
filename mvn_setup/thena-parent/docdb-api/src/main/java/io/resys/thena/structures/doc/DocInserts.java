@@ -26,11 +26,11 @@ import java.util.Optional;
 import org.immutables.value.Value;
 
 import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.api.entities.doc.ThenaDocObject.Doc;
-import io.resys.thena.api.entities.doc.ThenaDocObject.DocBranch;
-import io.resys.thena.api.entities.doc.ThenaDocObject.DocBranchLock;
-import io.resys.thena.api.entities.doc.ThenaDocObject.DocCommit;
-import io.resys.thena.api.entities.doc.ThenaDocObject.DocLog;
+import io.resys.thena.api.entities.doc.Doc;
+import io.resys.thena.api.entities.doc.DocBranch;
+import io.resys.thena.api.entities.doc.DocBranchLock;
+import io.resys.thena.api.entities.doc.DocCommit;
+import io.resys.thena.api.entities.doc.DocLog;
 import io.resys.thena.api.envelope.Message;
 import io.resys.thena.structures.git.GitInserts.BatchStatus;
 import io.smallrye.mutiny.Uni;

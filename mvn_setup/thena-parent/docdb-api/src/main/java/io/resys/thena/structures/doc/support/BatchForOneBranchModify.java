@@ -12,9 +12,10 @@ import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.api.entities.doc.ImmutableDocBranch;
 import io.resys.thena.api.entities.doc.ImmutableDocCommit;
 import io.resys.thena.api.entities.doc.ImmutableDocLog;
-import io.resys.thena.api.entities.doc.ThenaDocObject.DocBranchLock;
-import io.resys.thena.api.entities.doc.ThenaDocObject.DocLog;
-import io.resys.thena.api.entities.doc.ThenaDocObject.DocStatus;
+import io.resys.thena.api.entities.doc.Doc;
+import io.resys.thena.api.entities.doc.Doc.DocStatus;
+import io.resys.thena.api.entities.doc.DocBranchLock;
+import io.resys.thena.api.entities.doc.DocLog;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.api.actions.ImmutableManyDocsEnvelope;
 import io.resys.thena.spi.DataMapper;
@@ -81,7 +82,7 @@ public class BatchForOneBranchModify {
       .from(lock.getBranch().get())
       .value(appendBlobs)
       .commitId(commit.getId())
-      .status(remove ? DocStatus.ARCHIVED : DocStatus.IN_FORCE)
+      .status(remove ? Doc.DocStatus.ARCHIVED : Doc.DocStatus.IN_FORCE)
       .branchName(remove ? OidUtils.gen(): lock.getBranch().get().getBranchName())
       .branchNameDeleted(remove ? lock.getBranch().get().getBranchName() : null)
       .value(appendBlobs == null ? appendMerge.apply(lock.getBranch().get().getValue()): appendBlobs)

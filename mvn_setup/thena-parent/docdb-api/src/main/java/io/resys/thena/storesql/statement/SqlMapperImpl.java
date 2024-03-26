@@ -33,13 +33,12 @@ import io.resys.thena.api.entities.doc.ImmutableDocBranchLock;
 import io.resys.thena.api.entities.doc.ImmutableDocCommit;
 import io.resys.thena.api.entities.doc.ImmutableDocFlatted;
 import io.resys.thena.api.entities.doc.ImmutableDocLog;
-import io.resys.thena.api.entities.doc.ThenaDocObject;
-import io.resys.thena.api.entities.doc.ThenaDocObject.Doc;
-import io.resys.thena.api.entities.doc.ThenaDocObject.DocBranch;
-import io.resys.thena.api.entities.doc.ThenaDocObject.DocBranchLock;
-import io.resys.thena.api.entities.doc.ThenaDocObject.DocCommit;
-import io.resys.thena.api.entities.doc.ThenaDocObject.DocFlatted;
-import io.resys.thena.api.entities.doc.ThenaDocObject.DocLog;
+import io.resys.thena.api.entities.doc.Doc;
+import io.resys.thena.api.entities.doc.DocBranch;
+import io.resys.thena.api.entities.doc.DocBranchLock;
+import io.resys.thena.api.entities.doc.DocCommit;
+import io.resys.thena.api.entities.doc.DocFlatted;
+import io.resys.thena.api.entities.doc.DocLog;
 import io.resys.thena.api.entities.git.ImmutableBlob;
 import io.resys.thena.api.entities.git.ImmutableBlobHistory;
 import io.resys.thena.api.entities.git.ImmutableBranch;
@@ -221,18 +220,18 @@ public class SqlMapperImpl implements SqlMapper {
             .externalIdDeleted(row.getString("external_id_deleted"))
             .parentId(row.getString("doc_parent_id"))
             .type(row.getString("doc_type"))
-            .status(ThenaDocObject.DocStatus.valueOf(row.getString("doc_status")))
+            .status(Doc.DocStatus.valueOf(row.getString("doc_status")))
             .meta(jsonObject(row, "doc_meta"))
             .build())
         .branch(ImmutableDocBranch.builder()
             .id(row.getString("branch_id"))
             .docId(row.getString("doc_id"))
-            .status(ThenaDocObject.DocStatus.valueOf(row.getString("branch_status")))
+            .status(Doc.DocStatus.valueOf(row.getString("branch_status")))
             .commitId(row.getString("commit_id"))
             .branchName(row.getString("branch_name"))
             .branchNameDeleted(row.getString("branch_name_deleted"))
             .value(jsonObject(row, "branch_value"))
-            .status(ThenaDocObject.DocStatus.valueOf(row.getString("branch_status")))
+            .status(Doc.DocStatus.valueOf(row.getString("branch_status")))
             .build())
         .commit(ImmutableDocCommit.builder()
             .id(row.getString("commit_id"))
@@ -253,7 +252,7 @@ public class SqlMapperImpl implements SqlMapper {
         .parentId(row.getString("doc_parent_id"))
         .externalIdDeleted(row.getString("external_id_deleted"))
         .type(row.getString("doc_type"))
-        .status(ThenaDocObject.DocStatus.valueOf(row.getString("doc_status")))
+        .status(Doc.DocStatus.valueOf(row.getString("doc_status")))
         .meta(jsonObject(row, "doc_meta"))
         .build();
   }
@@ -276,7 +275,7 @@ public class SqlMapperImpl implements SqlMapper {
         .branchName(row.getString("branch_name"))
         .branchNameDeleted(row.getString("branch_name_deleted"))
         .value(jsonObject(row, "value"))
-        .status(ThenaDocObject.DocStatus.valueOf(row.getString("branch_status")))
+        .status(Doc.DocStatus.valueOf(row.getString("branch_status")))
         .build();
     
   }
@@ -286,7 +285,7 @@ public class SqlMapperImpl implements SqlMapper {
         .externalId(row.getString("external_id"))
         .docId(row.getString("doc_id"))
         .docType(row.getString("doc_type"))
-        .docStatus(ThenaDocObject.DocStatus.valueOf(row.getString("doc_status")))
+        .docStatus(Doc.DocStatus.valueOf(row.getString("doc_status")))
         .docMeta(Optional.ofNullable(jsonObject(row, "doc_meta")))
         .docParentId(Optional.ofNullable(row.getString("doc_parent_id")))
         .externalIdDeleted(Optional.ofNullable(row.getString("external_id_deleted")))
@@ -295,7 +294,7 @@ public class SqlMapperImpl implements SqlMapper {
         .branchName(row.getString("branch_name"))
         .branchNameDeleted(Optional.ofNullable(row.getString("branch_name_deleted")))
         .branchValue(jsonObject(row, "branch_value"))
-        .branchStatus(ThenaDocObject.DocStatus.valueOf(row.getString("branch_status")))
+        .branchStatus(Doc.DocStatus.valueOf(row.getString("branch_status")))
         
         .commitId(row.getString("commit_id"))
         .commitAuthor(row.getString("commit_author"))

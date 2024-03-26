@@ -10,8 +10,9 @@ import io.resys.thena.api.entities.doc.ImmutableDoc;
 import io.resys.thena.api.entities.doc.ImmutableDocBranch;
 import io.resys.thena.api.entities.doc.ImmutableDocCommit;
 import io.resys.thena.api.entities.doc.ImmutableDocLog;
-import io.resys.thena.api.entities.doc.ThenaDocObject.DocLog;
-import io.resys.thena.api.entities.doc.ThenaDocObject.DocStatus;
+import io.resys.thena.api.entities.doc.Doc;
+import io.resys.thena.api.entities.doc.Doc.DocStatus;
+import io.resys.thena.api.entities.doc.DocLog;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.structures.doc.DocInserts.DocBatchForOne;
 import io.resys.thena.structures.doc.ImmutableDocBatchForOne;
@@ -67,7 +68,7 @@ public class BatchForOneDocCreate {
         .parentId(parentDocId)
         .externalId(Optional.ofNullable(this.externalId == null || this.externalId.trim().isEmpty() ? null : this.externalId).orElse(OidUtils.gen()))
         .type(docType)
-        .status(DocStatus.IN_FORCE)
+        .status(Doc.DocStatus.IN_FORCE)
         .meta(appendMeta)
         .build();
     
@@ -91,7 +92,7 @@ public class BatchForOneDocCreate {
       .commitId(commit.getId())
       .branchName(branchName)
       .value(appendBlobs)
-      .status(DocStatus.IN_FORCE)
+      .status(Doc.DocStatus.IN_FORCE)
       .build();
     
     final List<DocLog> docLogs = appendLogs == null ? Collections.emptyList() : Arrays.asList(

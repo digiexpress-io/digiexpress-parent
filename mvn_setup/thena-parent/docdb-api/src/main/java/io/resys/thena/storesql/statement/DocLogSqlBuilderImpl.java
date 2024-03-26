@@ -3,7 +3,7 @@ package io.resys.thena.storesql.statement;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-import io.resys.thena.api.entities.doc.ThenaDocObject.DocLog;
+import io.resys.thena.api.entities.doc.DocLog;
 import io.resys.thena.spi.DbCollections;
 import io.resys.thena.storesql.ImmutableSql;
 import io.resys.thena.storesql.ImmutableSqlTuple;

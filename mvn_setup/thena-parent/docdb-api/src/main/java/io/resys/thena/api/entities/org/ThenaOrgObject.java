@@ -12,7 +12,7 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.resys.thena.api.entities.ThenaObjects;
-import io.resys.thena.api.entities.doc.ThenaDocObject;
+import io.resys.thena.api.entities.doc.DocEntity;
 import io.vertx.core.json.JsonObject;
 
 public interface ThenaOrgObject {
@@ -207,7 +207,7 @@ public interface ThenaOrgObject {
   
   
   @Value.Immutable  
-  interface OrgLock extends ThenaDocObject {
+  interface OrgLock extends DocEntity {
     OrgLockStatus getStatus();
     Optional<String> getMessage();
   }

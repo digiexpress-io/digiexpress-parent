@@ -19,7 +19,7 @@ import io.resys.sysconfig.client.spi.visitors.SysConfigDeploymentCommandVisitor.
 import io.resys.thena.api.actions.DocCommitActions.CreateManyDocs;
 import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.api.entities.CommitResultStatus;
-import io.resys.thena.api.entities.doc.ThenaDocObject.DocBranch;
+import io.resys.thena.api.entities.doc.DocBranch;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
