@@ -33,7 +33,7 @@ import io.resys.thena.api.actions.DiffActions.DiffResultStatus;
 import io.resys.thena.api.entities.git.Diff;
 import io.resys.thena.api.entities.git.ThenaGitObjects.CommitObjects;
 import io.resys.thena.api.entities.git.ThenaGitObjects.GitRepoObjects;
-import io.resys.thena.api.models.QueryEnvelope.QueryEnvelopeStatus;
+import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;

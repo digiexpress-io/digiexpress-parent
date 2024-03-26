@@ -21,7 +21,7 @@ import io.resys.hdes.client.spi.store.ThenaConfig;
 import io.resys.hdes.client.spi.store.ThenaStoreTemplate;
 import io.resys.hdes.client.spi.util.HdesAssert;
 import io.resys.thena.api.ThenaClient;
-import io.resys.thena.api.models.QueryEnvelope.QueryEnvelopeStatus;
+import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.storesql.DbStateSqlImpl;
 import io.resys.thena.storesql.PgErrors;
 import io.smallrye.mutiny.Uni;

@@ -11,8 +11,8 @@ import io.resys.thena.api.entities.org.ThenaOrgObject.OrgActorStatusType;
 import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMember;
 import io.resys.thena.api.entities.org.ThenaOrgObject.OrgParty;
 import io.resys.thena.api.entities.org.ThenaOrgObject.OrgRight;
-import io.resys.thena.api.models.Message;
-import io.resys.thena.api.models.ThenaEnvelope;
+import io.resys.thena.api.envelope.Message;
+import io.resys.thena.api.envelope.ThenaEnvelope;
 import io.smallrye.mutiny.Uni;
 
 public interface OrgCommitActions {

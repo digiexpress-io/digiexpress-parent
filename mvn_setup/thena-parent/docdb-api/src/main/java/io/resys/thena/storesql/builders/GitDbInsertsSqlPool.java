@@ -5,7 +5,7 @@ import io.resys.thena.api.entities.git.ThenaGitObject.Branch;
 import io.resys.thena.api.entities.git.ThenaGitObject.Commit;
 import io.resys.thena.api.entities.git.ThenaGitObject.Tag;
 import io.resys.thena.api.entities.git.ThenaGitObject.Tree;
-import io.resys.thena.api.models.ImmutableMessage;
+import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.storesql.SqlBuilder;
 import io.resys.thena.storesql.SqlMapper;
 import io.resys.thena.storesql.support.Execute;

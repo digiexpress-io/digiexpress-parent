@@ -1,4 +1,4 @@
-package io.resys.thena.api.models;
+package io.resys.thena.api.envelope;
 
 /*-
  * #%L
@@ -20,16 +20,7 @@ package io.resys.thena.api.models;
  * #L%
  */
 
-import java.util.List;
+public interface ThenaEnvelope {
 
-import io.vertx.core.json.JsonObject;
-
-public interface BlobContainer {
-  <T> List<T> accept(BlobVisitor<T> visitor);
-
-  @FunctionalInterface
-  interface BlobVisitor<T> {
-    T visit(JsonObject blobValue);
-  }
-
+  interface ThenaObjects {}
 }

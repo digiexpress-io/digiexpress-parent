@@ -3,8 +3,8 @@ package io.resys.thena.api.exceptions;
 import java.util.List;
 
 import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.api.models.ImmutableMessage;
-import io.resys.thena.api.models.Message;
+import io.resys.thena.api.envelope.ImmutableMessage;
+import io.resys.thena.api.envelope.Message;
 
 
 public class RepoException extends DocDBException {

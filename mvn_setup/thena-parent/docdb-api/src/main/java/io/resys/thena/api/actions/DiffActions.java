@@ -28,8 +28,8 @@ import org.immutables.value.Value;
 
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.git.Diff;
-import io.resys.thena.api.models.Message;
-import io.resys.thena.api.models.ThenaEnvelope;
+import io.resys.thena.api.envelope.Message;
+import io.resys.thena.api.envelope.ThenaEnvelope;
 import io.smallrye.mutiny.Uni;
 
 public interface DiffActions {

@@ -31,7 +31,7 @@ import org.immutables.value.Value;
 import io.resys.thena.api.actions.ImmutableMatchCriteria;
 import io.resys.thena.api.entities.git.ThenaGitObjects.PullObject;
 import io.resys.thena.api.entities.git.ThenaGitObjects.PullObjects;
-import io.resys.thena.api.models.QueryEnvelope;
+import io.resys.thena.api.envelope.QueryEnvelope;
 import io.smallrye.mutiny.Uni;
 
 public interface PullActions {

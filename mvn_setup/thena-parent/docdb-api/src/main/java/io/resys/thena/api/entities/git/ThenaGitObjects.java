@@ -34,9 +34,9 @@ import io.resys.thena.api.entities.git.ThenaGitObject.Commit;
 import io.resys.thena.api.entities.git.ThenaGitObject.IsGitObject;
 import io.resys.thena.api.entities.git.ThenaGitObject.Tag;
 import io.resys.thena.api.entities.git.ThenaGitObject.Tree;
-import io.resys.thena.api.models.BlobContainer;
-import io.resys.thena.api.models.BlobContainer.BlobVisitor;
-import io.resys.thena.api.models.ThenaEnvelope.ThenaObjects;
+import io.resys.thena.api.envelope.BlobContainer;
+import io.resys.thena.api.envelope.BlobContainer.BlobVisitor;
+import io.resys.thena.api.envelope.ThenaEnvelope.ThenaObjects;
 
 public interface ThenaGitObjects extends ThenaObjects { 
   @Value.Immutable

@@ -50,8 +50,8 @@ import io.resys.thena.api.entities.doc.ThenaDocObject.DocBranch;
 import io.resys.thena.api.entities.doc.ThenaDocObject.DocCommit;
 import io.resys.thena.api.entities.doc.ThenaDocObject.DocLog;
 import io.resys.thena.api.entities.doc.ThenaDocObjects.DocObjects;
-import io.resys.thena.api.models.QueryEnvelope;
-import io.resys.thena.api.models.QueryEnvelope.QueryEnvelopeStatus;
+import io.resys.thena.api.envelope.QueryEnvelope;
+import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 

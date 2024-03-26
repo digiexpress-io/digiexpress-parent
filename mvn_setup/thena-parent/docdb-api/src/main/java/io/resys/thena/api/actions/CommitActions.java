@@ -31,9 +31,9 @@ import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.git.ThenaGitObject.Commit;
 import io.resys.thena.api.entities.git.ThenaGitObject.Tree;
 import io.resys.thena.api.entities.git.ThenaGitObjects.CommitObjects;
-import io.resys.thena.api.models.Message;
-import io.resys.thena.api.models.QueryEnvelope;
-import io.resys.thena.api.models.ThenaEnvelope;
+import io.resys.thena.api.envelope.Message;
+import io.resys.thena.api.envelope.QueryEnvelope;
+import io.resys.thena.api.envelope.ThenaEnvelope;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 

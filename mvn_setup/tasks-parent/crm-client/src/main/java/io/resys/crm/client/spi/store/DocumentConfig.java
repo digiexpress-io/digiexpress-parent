@@ -34,7 +34,7 @@ import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.api.entities.doc.ThenaDocObject.DocBranch;
 import io.resys.thena.api.entities.doc.ThenaDocObjects.DocObject;
 import io.resys.thena.api.entities.doc.ThenaDocObjects.DocObjects;
-import io.resys.thena.api.models.QueryEnvelope;
+import io.resys.thena.api.envelope.QueryEnvelope;
 import io.smallrye.mutiny.Uni;
 
 

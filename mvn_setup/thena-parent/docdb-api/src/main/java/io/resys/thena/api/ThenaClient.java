@@ -17,7 +17,7 @@ import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.doc.ThenaDocObjects.DocProjectObjects;
 import io.resys.thena.api.entities.git.ThenaGitObjects.GitRepoObjects;
 import io.resys.thena.api.entities.org.ThenaOrgObjects.OrgProjectObjects;
-import io.resys.thena.api.models.QueryEnvelope;
+import io.resys.thena.api.envelope.QueryEnvelope;
 import io.smallrye.mutiny.Uni;
 
 public interface ThenaClient {  

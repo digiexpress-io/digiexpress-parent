@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 
 import io.resys.thena.api.entities.git.ThenaGitObject.Blob;
 import io.resys.thena.api.entities.git.ThenaGitObject.Tree;
-import io.resys.thena.api.models.QueryEnvelope.QueryEnvelopeStatus;
+import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.ImmutableSiteState;
 import io.thestencil.client.api.StencilClient.Article;

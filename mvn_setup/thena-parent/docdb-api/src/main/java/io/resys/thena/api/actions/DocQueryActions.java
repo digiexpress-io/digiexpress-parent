@@ -4,7 +4,7 @@ import java.util.List;
 
 import io.resys.thena.api.entities.doc.ThenaDocObjects.DocObject;
 import io.resys.thena.api.entities.doc.ThenaDocObjects.DocObjects;
-import io.resys.thena.api.models.QueryEnvelope;
+import io.resys.thena.api.envelope.QueryEnvelope;
 import io.smallrye.mutiny.Uni;
 
 public interface DocQueryActions {

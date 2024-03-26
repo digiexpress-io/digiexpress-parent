@@ -1,4 +1,4 @@
-package io.resys.thena.api.models;
+package io.resys.thena.api.envelope;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -32,8 +32,11 @@ import org.slf4j.Logger;
 
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.git.ThenaGitObject.Commit;
+import io.resys.thena.api.envelope.ImmutableMessage;
+import io.resys.thena.api.envelope.ImmutableQueryEnvelope;
+import io.resys.thena.api.envelope.ImmutableQueryEnvelopeList;
+import io.resys.thena.api.envelope.ThenaEnvelope.ThenaObjects;
 import io.resys.thena.api.exceptions.RepoException;
-import io.resys.thena.api.models.ThenaEnvelope.ThenaObjects;
 import io.resys.thena.structures.git.objects.PullObjectsQueryImpl.BlobAndTree;
 
 

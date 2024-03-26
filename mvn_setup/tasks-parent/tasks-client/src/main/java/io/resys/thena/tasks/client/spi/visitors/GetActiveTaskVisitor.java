@@ -2,8 +2,8 @@ package io.resys.thena.tasks.client.spi.visitors;
 
 import io.resys.thena.api.actions.PullActions.PullObjectsQuery;
 import io.resys.thena.api.entities.git.ThenaGitObjects.PullObject;
-import io.resys.thena.api.models.QueryEnvelope;
-import io.resys.thena.api.models.QueryEnvelope.QueryEnvelopeStatus;
+import io.resys.thena.api.envelope.QueryEnvelope;
+import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.tasks.client.api.model.ImmutableTask;
 import io.resys.thena.tasks.client.api.model.Task;
 import io.resys.thena.tasks.client.spi.store.DocumentConfig;

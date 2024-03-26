@@ -1,12 +1,10 @@
-package io.resys.thena.api.models;
-
-import javax.annotation.Nullable;
+package io.resys.thena.api.envelope;
 
 /*-
  * #%L
  * thena-docdb-api
  * %%
- * Copyright (C) 2021 Copyright 2021 ReSys OÜ
+ * Copyright (C) 2021 - 2023 Copyright 2021 ReSys OÜ
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,10 +20,16 @@ import javax.annotation.Nullable;
  * #L%
  */
 
-import org.immutables.value.Value;
+import java.util.List;
 
-@Value.Immutable
-public interface Message {
-  String getText();
-  @Nullable Throwable getException();
+import io.vertx.core.json.JsonObject;
+
+public interface BlobContainer {
+  <T> List<T> accept(BlobVisitor<T> visitor);
+
+  @FunctionalInterface
+  interface BlobVisitor<T> {
+    T visit(JsonObject blobValue);
+  }
+
 }

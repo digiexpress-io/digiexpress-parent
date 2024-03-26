@@ -31,7 +31,7 @@ import io.resys.thena.api.entities.git.ThenaGitObject.Branch;
 import io.resys.thena.api.entities.git.ThenaGitObject.Commit;
 import io.resys.thena.api.entities.git.ThenaGitObject.Tag;
 import io.resys.thena.api.entities.git.ThenaGitObject.Tree;
-import io.resys.thena.api.models.Message;
+import io.resys.thena.api.envelope.Message;
 import io.smallrye.mutiny.Uni;
 
 public interface GitInserts {

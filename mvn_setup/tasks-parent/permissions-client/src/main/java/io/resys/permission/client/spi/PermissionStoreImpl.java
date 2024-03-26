@@ -30,7 +30,7 @@ import io.resys.thena.api.ThenaClient.OrgStructuredTenant;
 import io.resys.thena.api.actions.TenantActions.RepoStatus;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.RepoType;
-import io.resys.thena.api.models.QueryEnvelope.QueryEnvelopeStatus;
+import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.spi.ImmutableDocumentExceptionMsg;
 import io.resys.thena.storesql.DbStateSqlImpl;
 import io.resys.thena.storesql.PgErrors;

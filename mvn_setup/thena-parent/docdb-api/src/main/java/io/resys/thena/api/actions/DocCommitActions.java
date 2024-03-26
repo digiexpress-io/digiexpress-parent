@@ -11,8 +11,8 @@ import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.doc.ThenaDocObject.Doc;
 import io.resys.thena.api.entities.doc.ThenaDocObject.DocBranch;
 import io.resys.thena.api.entities.doc.ThenaDocObject.DocCommit;
-import io.resys.thena.api.models.Message;
-import io.resys.thena.api.models.ThenaEnvelope;
+import io.resys.thena.api.envelope.Message;
+import io.resys.thena.api.envelope.ThenaEnvelope;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 

@@ -31,7 +31,7 @@ import io.resys.thena.api.entities.doc.ThenaDocObject.DocBranch;
 import io.resys.thena.api.entities.doc.ThenaDocObject.DocBranchLock;
 import io.resys.thena.api.entities.doc.ThenaDocObject.DocCommit;
 import io.resys.thena.api.entities.doc.ThenaDocObject.DocLog;
-import io.resys.thena.api.models.Message;
+import io.resys.thena.api.envelope.Message;
 import io.resys.thena.structures.git.GitInserts.BatchStatus;
 import io.smallrye.mutiny.Uni;
 

@@ -12,7 +12,7 @@ import io.resys.thena.api.entities.doc.ImmutableDocCommit;
 import io.resys.thena.api.entities.doc.ImmutableDocLog;
 import io.resys.thena.api.entities.doc.ThenaDocObject.DocLog;
 import io.resys.thena.api.entities.doc.ThenaDocObject.DocStatus;
-import io.resys.thena.api.models.ImmutableMessage;
+import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.structures.doc.DocInserts.DocBatchForOne;
 import io.resys.thena.structures.doc.ImmutableDocBatchForOne;
 import io.resys.thena.structures.git.GitInserts.BatchStatus;

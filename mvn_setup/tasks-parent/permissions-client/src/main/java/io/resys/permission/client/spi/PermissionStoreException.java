@@ -31,7 +31,7 @@ import io.resys.thena.api.actions.CommitActions.CommitResultEnvelope;
 import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.api.entities.git.ThenaGitObjects.PullObject;
 import io.resys.thena.api.entities.git.ThenaGitObjects.PullObjects;
-import io.resys.thena.api.models.QueryEnvelope;
+import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.spi.ExMessageFormatter;
 import io.resys.thena.spi.ImmutableDocumentExceptionMsg;
 import io.resys.thena.spi.ExMessageFormatter.DocumentExceptionMsg;

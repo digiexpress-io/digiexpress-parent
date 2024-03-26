@@ -34,7 +34,7 @@ import io.resys.hdes.client.spi.util.HdesAssert;
 import io.resys.thena.api.actions.TenantActions.RepoStatus;
 import io.resys.thena.api.entities.Tenant.CommitResultStatus;
 import io.resys.thena.api.entities.Tenant.RepoType;
-import io.resys.thena.api.models.QueryEnvelope.QueryEnvelopeStatus;
+import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.smallrye.mutiny.Uni;
 
 public abstract class ThenaStoreTemplate extends PersistenceCommands implements HdesStore {

@@ -4,7 +4,7 @@ package io.resys.thena.storesql.builders;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import io.resys.thena.api.models.ImmutableMessage;
+import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.storesql.SqlBuilder;
 import io.resys.thena.storesql.SqlMapper;
 import io.resys.thena.storesql.support.Execute;

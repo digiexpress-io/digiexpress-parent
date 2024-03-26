@@ -30,7 +30,7 @@ import io.resys.thena.api.entities.git.ImmutableTag;
 import io.resys.thena.api.entities.git.ThenaGitObject.Branch;
 import io.resys.thena.api.entities.git.ThenaGitObject.Commit;
 import io.resys.thena.api.entities.git.ThenaGitObject.Tag;
-import io.resys.thena.api.models.ImmutableMessage;
+import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.structures.git.GitState.GitRepo;
 import io.resys.thena.support.RepoAssert;

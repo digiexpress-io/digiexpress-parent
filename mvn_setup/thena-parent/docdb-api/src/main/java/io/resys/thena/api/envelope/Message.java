@@ -1,10 +1,12 @@
-package io.resys.thena.api.models;
+package io.resys.thena.api.envelope;
+
+import javax.annotation.Nullable;
 
 /*-
  * #%L
  * thena-docdb-api
  * %%
- * Copyright (C) 2021 - 2023 Copyright 2021 ReSys OÜ
+ * Copyright (C) 2021 Copyright 2021 ReSys OÜ
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +22,10 @@ package io.resys.thena.api.models;
  * #L%
  */
 
-public interface ThenaEnvelope {
+import org.immutables.value.Value;
 
-  interface ThenaObjects {}
+@Value.Immutable
+public interface Message {
+  String getText();
+  @Nullable Throwable getException();
 }

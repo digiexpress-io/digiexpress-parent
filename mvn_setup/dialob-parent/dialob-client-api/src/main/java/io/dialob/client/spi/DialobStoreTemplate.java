@@ -25,7 +25,7 @@ import io.resys.thena.api.actions.CommitActions.CommitBuilder;
 import io.resys.thena.api.actions.TenantActions.RepoStatus;
 import io.resys.thena.api.entities.Tenant.CommitResultStatus;
 import io.resys.thena.api.entities.Tenant.RepoType;
-import io.resys.thena.api.models.QueryEnvelope.QueryEnvelopeStatus;
+import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.smallrye.mutiny.Uni;
 
 public class DialobStoreTemplate extends PersistenceCommands implements DialobStore {

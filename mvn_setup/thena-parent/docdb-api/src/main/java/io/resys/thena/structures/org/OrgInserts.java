@@ -33,7 +33,7 @@ import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMembership;
 import io.resys.thena.api.entities.org.ThenaOrgObject.OrgParty;
 import io.resys.thena.api.entities.org.ThenaOrgObject.OrgPartyRight;
 import io.resys.thena.api.entities.org.ThenaOrgObject.OrgRight;
-import io.resys.thena.api.models.Message;
+import io.resys.thena.api.envelope.Message;
 import io.resys.thena.structures.git.GitInserts.BatchStatus;
 import io.smallrye.mutiny.Uni;
 
