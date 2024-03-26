@@ -13,18 +13,23 @@ import io.resys.permission.client.api.model.ImmutableCreatePermission;
 import io.resys.permission.client.api.model.Principal.Permission;
 import io.resys.permission.client.tests.config.DbTestTemplate;
 import io.resys.permission.client.tests.config.OrgPgProfile;
+import io.vertx.core.json.JsonArray;
+import lombok.extern.slf4j.Slf4j;
+
 
 @QuarkusTest
 @TestProfile(OrgPgProfile.class)
+@Slf4j
 public class PermissionQueryTest extends DbTestTemplate {
   
-  public Permission createPermissionForQuery(PermissionClient client) {
+  
+  public Permission createPermissionForQuery(PermissionClient client, String name, String description) {
     
    return client.createPermission().createOne(ImmutableCreatePermission.builder()
        .userId("user-1")
-       .comment("Created permission")
-       .name("Permission-1")
-       .description("New permission 1")
+       .comment("Created permission 1")
+       .name(name)
+       .description(description)
        .build()).await().atMost(Duration.ofMinutes(1));
   }
 
@@ -36,17 +41,23 @@ public class PermissionQueryTest extends DbTestTemplate {
         .create()
         .await().atMost(Duration.ofMinutes(1));
     
-    final var createdPermission = createPermissionForQuery(client);
+    final var createdReadPermission = createPermissionForQuery(client, "ReadPermission", "DB Reading");
+    final var createdWritePermission = createPermissionForQuery(client, "WritePermission", "Write into DB");
+    final var createdViewPermission = createPermissionForQuery(client, "ViewPermission", "Viewer for content");
+
     
-    Assertions.assertEquals("Permission-1", client.permissionQuery().get(createdPermission.getId()).await().atMost(Duration.ofMinutes(1)).getName());
-   
+    Assertions.assertEquals("ReadPermission", client.permissionQuery().get(createdReadPermission.getId()).await().atMost(Duration.ofMinutes(1)).getName());
+    Assertions.assertEquals("WritePermission", client.permissionQuery().get(createdWritePermission.getId()).await().atMost(Duration.ofMinutes(1)).getName());
+    Assertions.assertEquals("ViewPermission", client.permissionQuery().get(createdViewPermission.getId()).await().atMost(Duration.ofMinutes(1)).getName());
+
     
     final List<Permission> allPermissions = client
         .permissionQuery()
         .findAllPermissions()
         .await().atMost(Duration.ofMinutes(1));
     
-    Assertions.assertEquals(1, allPermissions.size());
+    Assertions.assertEquals(3, allPermissions.size());
+    log.debug("created 3 permissions \r\n {}", new JsonArray(allPermissions).encodePrettily());
 
     }
   }

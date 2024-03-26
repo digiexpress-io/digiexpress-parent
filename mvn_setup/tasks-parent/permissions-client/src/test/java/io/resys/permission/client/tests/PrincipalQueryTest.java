@@ -13,40 +13,49 @@ import io.resys.permission.client.api.model.ImmutableCreatePrincipal;
 import io.resys.permission.client.api.model.Principal;
 import io.resys.permission.client.tests.config.DbTestTemplate;
 import io.resys.permission.client.tests.config.OrgPgProfile;
+import io.vertx.core.json.JsonArray;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @QuarkusTest
 @TestProfile(OrgPgProfile.class)
 public class PrincipalQueryTest extends DbTestTemplate {
 
-  public Principal createPrincipalForTest(PermissionClient client) {
+  public Principal createPrincipalForTest(PermissionClient client, String name, String email) {
     
     return client.createPrincipal().createOne(ImmutableCreatePrincipal.builder()
         .comment("Added new tester to system")
         .userId("user-1")
-        .name("John Cena")
-        .email("muscles@super-cool.com")
+        .name(name)
+        .email(email)
         .build()).await().atMost(Duration.ofMinutes(1));
   }
   
   
   @Test  
-  public void basicTest() {
+  public void principalQueryTest() {
     
     final PermissionClient client = getClient().repoQuery()
         .repoName("PrincipalQueryTest-1")
         .create()
         .await().atMost(Duration.ofMinutes(1));
 
-    final var createdPrincipal = createPrincipalForTest(client);
-    
-    Assertions.assertEquals("John Cena", client.principalQuery().get(createdPrincipal.getId()).await().atMost(Duration.ofMinutes(1)).getName());
+    final var principalJohn = createPrincipalForTest(client, "John Cena", "muscles@super-cool.org");
+    final var principalMark = createPrincipalForTest(client, "Mark McGamle", "mark.m@gmail.com");
+    final var principalAmy = createPrincipalForTest(client, "Amy Anders", "anders@gmail.com");
+
+    Assertions.assertEquals("John Cena", client.principalQuery().get(principalJohn.getId()).await().atMost(Duration.ofMinutes(1)).getName());
+    Assertions.assertEquals("Mark McGamle", client.principalQuery().get(principalMark.getId()).await().atMost(Duration.ofMinutes(1)).getName());
+    Assertions.assertEquals("Amy Anders", client.principalQuery().get(principalAmy.getId()).await().atMost(Duration.ofMinutes(1)).getName());
+
     
     final List<Principal> allPrincipals = client
         .principalQuery().findAllPrincipals()
         .await().atMost(Duration.ofMinutes(1));
   
     
-    Assertions.assertEquals(1, allPrincipals.size());
+    log.debug(new JsonArray(allPrincipals).encodePrettily());
+    Assertions.assertEquals(3, allPrincipals.size());
   }
 
   

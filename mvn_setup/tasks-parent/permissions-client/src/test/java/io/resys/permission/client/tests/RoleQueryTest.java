@@ -13,18 +13,21 @@ import io.resys.permission.client.api.model.ImmutableCreateRole;
 import io.resys.permission.client.api.model.Principal.Role;
 import io.resys.permission.client.tests.config.DbTestTemplate;
 import io.resys.permission.client.tests.config.OrgPgProfile;
+import io.vertx.core.json.JsonArray;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @QuarkusTest
 @TestProfile(OrgPgProfile.class)
 public class RoleQueryTest extends DbTestTemplate {
   
-  public Role createRoleForQuery(PermissionClient client) {
+  public Role createRoleForQuery(PermissionClient client, String name, String description) {
     
     return client.createRole().createOne(ImmutableCreateRole.builder()
         .userId("user-1")
         .comment("Created role")
-        .name("Role-1")
-        .description("Description of Role-1")
+        .name(name)
+        .description(description)
         .build()).await().atMost(Duration.ofMinutes(1));
   }
 
@@ -36,9 +39,12 @@ public class RoleQueryTest extends DbTestTemplate {
       .create()
       .await().atMost(Duration.ofMinutes(1));
     
-    final var createdRole = createRoleForQuery(client);
+    final var createdAdminRole = createRoleForQuery(client, "Admin", "Read/Write to all DB fields");
+    final var createdViewerRole = createRoleForQuery(client, "Viewer", "View all DB fields");
+
     
-    Assertions.assertEquals("Role-1", client.roleQuery().get(createdRole.getId()).await().atMost(Duration.ofMinutes(1)).getName());
+    Assertions.assertEquals("Admin", client.roleQuery().get(createdAdminRole.getId()).await().atMost(Duration.ofMinutes(1)).getName());
+    Assertions.assertEquals("Viewer", client.roleQuery().get(createdViewerRole.getId()).await().atMost(Duration.ofMinutes(1)).getName());
 
     
     final List<Role> allRoles = client
@@ -46,6 +52,7 @@ public class RoleQueryTest extends DbTestTemplate {
         .findAllRoles()
         .await().atMost(Duration.ofMinutes(1));
     
-    Assertions.assertEquals(1, allRoles.size());
+    log.debug(new JsonArray(allRoles).encodePrettily());
+    Assertions.assertEquals(2, allRoles.size());
   }
 }
