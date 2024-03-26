@@ -26,9 +26,9 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.resys.thena.api.ThenaClient;
-import io.resys.thena.api.actions.TenantActions.RepoStatus;
+import io.resys.thena.api.actions.TenantActions.TenantStatus;
 import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.api.entities.Tenant.RepoType;
+import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.projects.client.api.model.Document.DocumentType;
 import io.resys.thena.projects.client.spi.store.DocumentConfig;
@@ -69,10 +69,10 @@ public class DocumentStoreImpl implements DocumentStore {
   @Override public DocumentRepositoryQuery query() {
     return new DocumentRepositoryQuery() {
       private String repoName, headName;
-      private RepoType repoType;
+      private StructureType repoType;
       @Override public DocumentRepositoryQuery repoName(String repoName) { this.repoName = repoName; return this; }
       @Override public DocumentRepositoryQuery headName(String headName) { this.headName = headName; return this; }
-      @Override public DocumentRepositoryQuery repoType(RepoType repoType) { this.repoType = repoType; return this; }
+      @Override public DocumentRepositoryQuery repoType(StructureType repoType) { this.repoType = repoType; return this; }
       @Override public Uni<DocumentStore> create() { return createRepo(repoName, headName, repoType); }
       @Override public DocumentStore build() { return createClientStore(repoName, headName); }
       @Override public Uni<DocumentStore> createIfNot() { return createRepoOrGetRepo(repoName, headName, repoType); }
@@ -81,7 +81,7 @@ public class DocumentStoreImpl implements DocumentStore {
     };
   }
   
-  private Uni<DocumentStore> createRepoOrGetRepo(String repoName, String headName, RepoType type) {
+  private Uni<DocumentStore> createRepoOrGetRepo(String repoName, String headName, StructureType type) {
     final var client = config.getClient();
     
     return client.tenants().find().id(repoName).get()
@@ -134,14 +134,14 @@ public class DocumentStoreImpl implements DocumentStore {
     });
   }
     
-  private Uni<DocumentStore> createRepo(String repoName, String headName, RepoType repoType) {
+  private Uni<DocumentStore> createRepo(String repoName, String headName, StructureType repoType) {
     RepoAssert.notNull(repoName, () -> "repoName must be defined!");
     RepoAssert.notNull(repoType, () -> "repoType must be defined!");
     
     final var client = config.getClient();
     final var newRepo = client.tenants().commit().name(repoName, repoType).build();
     return newRepo.onItem().transform((repoResult) -> {
-      if(repoResult.getStatus() != RepoStatus.OK) {
+      if(repoResult.getStatus() != TenantStatus.OK) {
         throw new DocumentStoreException("REPO_CREATE_FAIL", 
             ImmutableDocumentExceptionMsg.builder()
             .id(repoResult.getStatus().toString())

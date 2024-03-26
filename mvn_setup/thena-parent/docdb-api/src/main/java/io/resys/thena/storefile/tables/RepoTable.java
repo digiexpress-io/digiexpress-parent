@@ -25,7 +25,7 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import io.resys.thena.api.entities.Tenant.RepoType;
+import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.spi.DbCollections;
 import io.resys.thena.storefile.tables.ImmutableRepoTableRow;
 import io.resys.thena.storefile.tables.RepoTable.RepoTableRow;
@@ -47,7 +47,7 @@ public interface RepoTable extends Table<RepoTableRow> {
     String getRev();
     String getPrefix();
     String getName();
-    RepoType getType();
+    StructureType getType();
   }
   
   RepoTable withContext(DbCollections ctx);

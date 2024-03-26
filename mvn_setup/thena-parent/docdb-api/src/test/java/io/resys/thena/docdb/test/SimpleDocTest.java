@@ -22,9 +22,9 @@ package io.resys.thena.docdb.test;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
-import io.resys.thena.api.actions.TenantActions.RepoResult;
-import io.resys.thena.api.actions.TenantActions.RepoStatus;
-import io.resys.thena.api.entities.Tenant.RepoType;
+import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
+import io.resys.thena.api.actions.TenantActions.TenantStatus;
+import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.docdb.test.config.DbTestTemplate;
 import io.resys.thena.docdb.test.config.PgProfile;
 import io.vertx.core.json.JsonObject;
@@ -51,12 +51,12 @@ public class SimpleDocTest extends DbTestTemplate {
   @Test
   public void crateRepoAddAndDeleteFile() {
     // create project
-    RepoResult repo = getClient().tenants().commit()
-        .name("SimpleDocTest-1", RepoType.doc)
+    TenantCommitResult repo = getClient().tenants().commit()
+        .name("SimpleDocTest-1", StructureType.doc)
         .build()
         .await().atMost(Duration.ofMinutes(1));
     log.debug("created repo {}", repo);
-    Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
+    Assertions.assertEquals(TenantStatus.OK, repo.getStatus());
     
     // branch 1
     final var createdDoc = getClient().doc(repo).commit()
@@ -133,12 +133,12 @@ public class SimpleDocTest extends DbTestTemplate {
   @Test
   public void parentChild() {
     // create project
-    RepoResult repo = getClient().tenants().commit()
-        .name("SimpleDocTest-parent-child", RepoType.doc)
+    TenantCommitResult repo = getClient().tenants().commit()
+        .name("SimpleDocTest-parent-child", StructureType.doc)
         .build()
         .await().atMost(Duration.ofMinutes(1));
     log.debug("created repo {}", repo);
-    Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
+    Assertions.assertEquals(TenantStatus.OK, repo.getStatus());
     
     // doc 1
     final var parentDoc = getClient().doc(repo).commit()

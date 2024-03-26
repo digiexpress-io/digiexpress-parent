@@ -14,11 +14,11 @@ import org.junit.jupiter.api.Test;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
 import io.resys.thena.api.actions.OrgCommitActions.ModType;
-import io.resys.thena.api.actions.TenantActions.RepoResult;
-import io.resys.thena.api.actions.TenantActions.RepoStatus;
+import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
+import io.resys.thena.api.actions.TenantActions.TenantStatus;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.api.entities.Tenant.RepoType;
+import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.docdb.test.config.DbTestTemplate;
 import io.resys.thena.docdb.test.config.PgProfile;
 import io.vertx.core.json.JsonArray;
@@ -33,12 +33,12 @@ public class HierarchicalOrgTest extends DbTestTemplate {
   @Test  
   public void populate() {
     // create project
-    RepoResult repo = getClient().tenants().commit()
-        .name("HierarchicalOrgTest-1", RepoType.org)
+    TenantCommitResult repo = getClient().tenants().commit()
+        .name("HierarchicalOrgTest-1", StructureType.org)
         .build()
         .await().atMost(Duration.ofMinutes(1));
     log.debug("created repo {}", repo);
-    Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
+    Assertions.assertEquals(TenantStatus.OK, repo.getStatus());
 
     createUsers(repo.getRepo());
     createGroups(repo.getRepo());

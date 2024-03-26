@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
 import org.immutables.value.Value;
 
 import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.api.entities.Tenant.RepoType;
+import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.api.envelope.Message;
 import io.resys.thena.api.envelope.ThenaEnvelope;
 import io.smallrye.mutiny.Multi;
@@ -47,19 +47,19 @@ public interface TenantActions {
   }
   
   interface RepoBuilder {
-    RepoBuilder name(String name, RepoType type);
-    Uni<RepoResult> build();
+    RepoBuilder name(String name, StructureType type);
+    Uni<TenantCommitResult> build();
   }
   
-  enum RepoStatus {
+  enum TenantStatus {
     OK, CONFLICT
   }
   
   @Value.Immutable
-  interface RepoResult extends ThenaEnvelope {
+  interface TenantCommitResult extends ThenaEnvelope {
     @Nullable
     Tenant getRepo();
-    RepoStatus getStatus();
+    TenantStatus getStatus();
     List<Message> getMessages();
   }
 }

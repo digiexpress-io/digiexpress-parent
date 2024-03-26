@@ -19,7 +19,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.resys.thena.api.ThenaClient;
 import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.api.entities.Tenant.RepoType;
+import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.jackson.VertexExtModule;
 import io.resys.thena.spi.DbCollections;
 import io.resys.thena.spi.DbState;
@@ -119,7 +119,7 @@ public class DbTestTemplate {
 
     if(callback != null) {
       repo = this.client.tenants().commit()
-          .name("junit" + index.incrementAndGet(), RepoType.git)
+          .name("junit" + index.incrementAndGet(), StructureType.git)
           .build()
           .await().atMost(Duration.ofSeconds(10)).getRepo();
       callback.accept(client, repo);
@@ -150,10 +150,10 @@ public class DbTestTemplate {
   }
   
   public void printRepo(Tenant repo) {
-    if(repo.getType() == RepoType.doc) {
+    if(repo.getType() == StructureType.doc) {
       final String result = new DocDbPrinter(createState()).print(repo);
       log.debug(result);
-    } else if(repo.getType() == RepoType.org) {
+    } else if(repo.getType() == StructureType.org) {
       final String result = new OrgDbPrinter(createState()).print(repo);
       log.debug(result);
     } else {
@@ -191,9 +191,9 @@ public class DbTestTemplate {
   }
   
   public String toStaticData(Tenant client) {    
-    if(client.getType() == RepoType.doc) {
+    if(client.getType() == StructureType.doc) {
       return new DocDbPrinter(createState()).printWithStaticIds(client);
-    } else if(client.getType() == RepoType.org) {
+    } else if(client.getType() == StructureType.org) {
       return new OrgDbPrinter(createState()).printWithStaticIds(client, replacements);
     }
     return new GitPrinter(createState()).printWithStaticIds(client);

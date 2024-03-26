@@ -8,9 +8,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
 import io.resys.thena.api.ThenaClient;
-import io.resys.thena.api.actions.TenantActions.RepoResult;
+import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
 import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.api.entities.Tenant.RepoType;
+import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.spi.DbCollections;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.storesql.DbStateSqlImpl;
@@ -41,7 +41,7 @@ public class PgTestTemplate {
         .client(pgPool)
         .errorHandler(new PgErrors())
         .build();
-    this.client.tenants().commit().name("junit", RepoType.git).build();
+    this.client.tenants().commit().name("junit", StructureType.git).build();
   }
   
   @AfterEach
@@ -91,8 +91,8 @@ public class PgTestTemplate {
     final ThenaClient client = getClient();
     
     // create project
-    RepoResult repo = getClient().tenants().commit()
-        .name(repoId, RepoType.git)
+    TenantCommitResult repo = getClient().tenants().commit()
+        .name(repoId, StructureType.git)
         .build()
         .await().atMost(Duration.ofMinutes(1));
     

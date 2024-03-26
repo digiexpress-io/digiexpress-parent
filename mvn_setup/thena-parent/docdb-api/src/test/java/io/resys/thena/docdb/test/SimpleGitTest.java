@@ -31,10 +31,10 @@ import org.junit.jupiter.api.Test;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
 import io.resys.thena.api.actions.GitCommitActions.CommitResultEnvelope;
-import io.resys.thena.api.actions.TenantActions.RepoResult;
-import io.resys.thena.api.actions.TenantActions.RepoStatus;
+import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
+import io.resys.thena.api.actions.TenantActions.TenantStatus;
 import io.resys.thena.api.entities.CommitResultStatus;
-import io.resys.thena.api.entities.Tenant.RepoType;
+import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.docdb.test.config.DbTestTemplate;
 import io.resys.thena.docdb.test.config.PgProfile;
 import io.vertx.core.json.JsonObject;
@@ -56,12 +56,12 @@ public class SimpleGitTest extends DbTestTemplate {
   @Test
   public void crateRepoAddAndDeleteFile() {
     // create project
-    RepoResult repo = getClient().tenants().commit()
-        .name("crateRepoAddAndDeleteFile", RepoType.git)
+    TenantCommitResult repo = getClient().tenants().commit()
+        .name("crateRepoAddAndDeleteFile", StructureType.git)
         .build()
         .await().atMost(Duration.ofMinutes(1));
     log.debug("created repo {}", repo);
-    Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
+    Assertions.assertEquals(TenantStatus.OK, repo.getStatus());
     
     // Create head and first commit
     CommitResultEnvelope commit_0 = getClient().git(repo).commit().commitBuilder()
@@ -99,12 +99,12 @@ public class SimpleGitTest extends DbTestTemplate {
   @Test
   public void crateRepoWithOneCommit() {
     // create project
-    RepoResult repo = getClient().tenants().commit()
-        .name("project-x", RepoType.git)
+    TenantCommitResult repo = getClient().tenants().commit()
+        .name("project-x", StructureType.git)
         .build()
         .await().atMost(Duration.ofMinutes(1));
     log.debug("created repo {}", repo);
-    Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
+    Assertions.assertEquals(TenantStatus.OK, repo.getStatus());
     
     // Create head and first commit
     CommitResultEnvelope commit_0 = getClient().git(repo).commit().commitBuilder()
@@ -127,12 +127,12 @@ public class SimpleGitTest extends DbTestTemplate {
   @Test
   public void createRepoWithTwoCommits() {
     // create project
-    RepoResult repo = getClient().tenants().commit()
-        .name("project-xy", RepoType.git)
+    TenantCommitResult repo = getClient().tenants().commit()
+        .name("project-xy", StructureType.git)
         .build()
         .await().atMost(Duration.ofMinutes(1));
     log.debug("created repo {}", repo);
-    Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
+    Assertions.assertEquals(TenantStatus.OK, repo.getStatus());
     
     // Create head and first commit
     CommitResultEnvelope commit_0 = getClient().git(repo).commit().commitBuilder()

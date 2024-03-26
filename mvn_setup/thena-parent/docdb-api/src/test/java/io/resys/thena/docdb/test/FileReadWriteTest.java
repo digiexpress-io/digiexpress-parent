@@ -28,8 +28,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import io.resys.thena.api.actions.GitCommitActions.CommitResultEnvelope;
-import io.resys.thena.api.actions.TenantActions.RepoResult;
-import io.resys.thena.api.actions.TenantActions.RepoStatus;
+import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
+import io.resys.thena.api.actions.TenantActions.TenantStatus;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.docdb.test.config.FileTestTemplate;
 import io.vertx.core.json.JsonObject;
@@ -49,8 +49,8 @@ public class FileReadWriteTest extends FileTestTemplate {
   @Test
   public void crateRepoAddAndDeleteFile() {
     // create project
-    RepoResult repo = createRepo("crateRepoAddAndDeleteFile");
-    Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
+    TenantCommitResult repo = createRepo("crateRepoAddAndDeleteFile");
+    Assertions.assertEquals(TenantStatus.OK, repo.getStatus());
     
     // Create head and first commit
     CommitResultEnvelope commit_0 = getClient(repo.getRepo()).git(repo).commit().commitBuilder()
@@ -85,8 +85,8 @@ public class FileReadWriteTest extends FileTestTemplate {
   @Test
   public void crateRepoWithOneCommit() {
     // create project
-    RepoResult repo = createRepo("project-x");
-    Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
+    TenantCommitResult repo = createRepo("project-x");
+    Assertions.assertEquals(TenantStatus.OK, repo.getStatus());
     
     // Create head and first commit
     CommitResultEnvelope commit_0 = getClient(repo.getRepo()).git(repo).commit().commitBuilder()
@@ -109,8 +109,8 @@ public class FileReadWriteTest extends FileTestTemplate {
   @Test
   public void createRepoWithTwoCommits() {
     // create project
-    RepoResult repo = createRepo("project-xy");
-    Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
+    TenantCommitResult repo = createRepo("project-xy");
+    Assertions.assertEquals(TenantStatus.OK, repo.getStatus());
     
     // Create head and first commit
     CommitResultEnvelope commit_0 = getClient(repo.getRepo()).git(repo).commit().commitBuilder()

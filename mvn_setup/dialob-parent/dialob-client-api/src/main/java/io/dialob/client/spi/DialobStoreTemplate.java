@@ -22,9 +22,9 @@ import io.dialob.client.spi.support.DialobAssert;
 import io.dialob.client.spi.support.OidUtils;
 import io.dialob.client.spi.support.Sha2;
 import io.resys.thena.api.actions.GitCommitActions.CommitBuilder;
-import io.resys.thena.api.actions.TenantActions.RepoStatus;
+import io.resys.thena.api.actions.TenantActions.TenantStatus;
 import io.resys.thena.api.entities.CommitResultStatus;
-import io.resys.thena.api.entities.Tenant.RepoType;
+import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.smallrye.mutiny.Uni;
 
@@ -66,9 +66,9 @@ public class DialobStoreTemplate extends PersistenceCommands implements DialobSt
       public Uni<DialobStore> create() {
         DialobAssert.notNull(repoName, () -> "repoName must be defined!");
         final var client = config.getClient();
-        final var newRepo = client.tenants().commit().name(repoName, RepoType.git).build();
+        final var newRepo = client.tenants().commit().name(repoName, StructureType.git).build();
         return newRepo.onItem().transform((repoResult) -> {
-          if(repoResult.getStatus() != RepoStatus.OK) {
+          if(repoResult.getStatus() != TenantStatus.OK) {
             throw new StoreException("REPO_CREATE_FAIL", null, 
                 ImmutableStoreExceptionMsg.builder()
                 .id(repoResult.getStatus().toString())
@@ -95,7 +95,7 @@ public class DialobStoreTemplate extends PersistenceCommands implements DialobSt
         
         return client.git(config.getRepoName()).project().get().onItem().transformToUni(repo -> {
           if(repo == null) {
-            return client.tenants().commit().name(config.getRepoName(), RepoType.git).build().onItem().transform(newRepo -> true); 
+            return client.tenants().commit().name(config.getRepoName(), StructureType.git).build().onItem().transform(newRepo -> true); 
           }
           return Uni.createFrom().item(true);
         });

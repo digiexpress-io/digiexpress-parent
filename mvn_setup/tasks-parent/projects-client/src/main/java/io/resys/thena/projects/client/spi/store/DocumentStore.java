@@ -1,7 +1,7 @@
 package io.resys.thena.projects.client.spi.store;
 
 import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.api.entities.Tenant.RepoType;
+import io.resys.thena.api.entities.Tenant.StructureType;
 
 /*-
  * #%L
@@ -34,7 +34,7 @@ public interface DocumentStore {
   interface DocumentRepositoryQuery {
     DocumentRepositoryQuery repoName(String repoName);
     DocumentRepositoryQuery headName(String headName);
-    DocumentRepositoryQuery repoType(RepoType repoType);
+    DocumentRepositoryQuery repoType(StructureType repoType);
     DocumentStore build();
     Uni<DocumentStore> delete();
     Uni<DocumentStore> create();

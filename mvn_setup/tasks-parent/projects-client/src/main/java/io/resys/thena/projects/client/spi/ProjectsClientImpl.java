@@ -3,7 +3,7 @@ package io.resys.thena.projects.client.spi;
 import java.util.Optional;
 
 import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.api.entities.Tenant.RepoType;
+import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.projects.client.api.TenantConfigClient;
 import io.resys.thena.projects.client.api.model.TenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
@@ -65,15 +65,15 @@ public class ProjectsClientImpl implements TenantConfigClient {
         repo.repoName(repoName).headName(MainBranch.HEAD_NAME);
         
         switch (type) {
-        case CRM: { repo.repoType(RepoType.doc); break; }
-        case TENANT: { repo.repoType(RepoType.doc); break; }
-        case SYS_CONFIG: { repo.repoType(RepoType.doc); break; }
-        case USER_PROFILE: { repo.repoType(RepoType.doc); break; }
+        case CRM: { repo.repoType(StructureType.doc); break; }
+        case TENANT: { repo.repoType(StructureType.doc); break; }
+        case SYS_CONFIG: { repo.repoType(StructureType.doc); break; }
+        case USER_PROFILE: { repo.repoType(StructureType.doc); break; }
 
-        case DIALOB: { repo.repoType(RepoType.git); break; }
-        case TASKS: { repo.repoType(RepoType.git); break; }
-        case STENCIL: { repo.repoType(RepoType.git); break; }
-        case WRENCH: { repo.repoType(RepoType.git); break; }
+        case DIALOB: { repo.repoType(StructureType.git); break; }
+        case TASKS: { repo.repoType(StructureType.git); break; }
+        case STENCIL: { repo.repoType(StructureType.git); break; }
+        case WRENCH: { repo.repoType(StructureType.git); break; }
         }
         return this;
       }

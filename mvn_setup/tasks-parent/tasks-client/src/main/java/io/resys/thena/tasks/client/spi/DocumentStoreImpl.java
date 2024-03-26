@@ -26,9 +26,9 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.resys.thena.api.ThenaClient;
-import io.resys.thena.api.actions.TenantActions.RepoStatus;
+import io.resys.thena.api.actions.TenantActions.TenantStatus;
 import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.api.entities.Tenant.RepoType;
+import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.spi.ImmutableDocumentExceptionMsg;
 import io.resys.thena.storesql.DbStateSqlImpl;
@@ -121,9 +121,9 @@ public class DocumentStoreImpl implements DocumentStore {
   private Uni<DocumentStore> createRepo(String repoName, String headName) {
     RepoAssert.notNull(repoName, () -> "repoName must be defined!");
     final var client = config.getClient();
-    final var newRepo = client.tenants().commit().name(repoName, RepoType.git).build();
+    final var newRepo = client.tenants().commit().name(repoName, StructureType.git).build();
     return newRepo.onItem().transform((repoResult) -> {
-      if(repoResult.getStatus() != RepoStatus.OK) {
+      if(repoResult.getStatus() != TenantStatus.OK) {
         throw new DocumentStoreException("REPO_CREATE_FAIL", 
             ImmutableDocumentExceptionMsg.builder()
             .id(repoResult.getStatus().toString())

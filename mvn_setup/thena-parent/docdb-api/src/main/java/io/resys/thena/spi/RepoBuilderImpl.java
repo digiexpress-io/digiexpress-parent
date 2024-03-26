@@ -1,12 +1,12 @@
 package io.resys.thena.spi;
 
-import io.resys.thena.api.actions.ImmutableRepoResult;
+import io.resys.thena.api.actions.ImmutableTenantCommitResult;
 import io.resys.thena.api.actions.TenantActions;
-import io.resys.thena.api.actions.TenantActions.RepoResult;
-import io.resys.thena.api.actions.TenantActions.RepoStatus;
+import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
+import io.resys.thena.api.actions.TenantActions.TenantStatus;
 import io.resys.thena.api.entities.ImmutableTenant;
 import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.api.entities.Tenant.RepoType;
+import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.api.exceptions.RepoException;
 import io.resys.thena.support.Identifiers;
 import io.resys.thena.support.RepoAssert;
@@ -20,16 +20,16 @@ public class RepoBuilderImpl implements TenantActions.RepoBuilder {
 
   private final DbState state;
   private String name;
-  private RepoType type;
+  private StructureType type;
   
-  public RepoBuilderImpl name(String name, RepoType type) {
+  public RepoBuilderImpl name(String name, StructureType type) {
     this.name = name;
     this.type = type;
     return this;
   }
   
   @Override
-  public Uni<RepoResult> build() {
+  public Uni<TenantCommitResult> build() {
     log.debug("Creating repository '{}' of type {}.", name, type);
 
     RepoAssert.notEmpty(name, () -> "repo name not defined!");
@@ -39,11 +39,11 @@ public class RepoBuilderImpl implements TenantActions.RepoBuilder {
     return state.project().getByName(name)
       .onItem().transformToUni((Tenant existing) -> {
       
-      final Uni<RepoResult> result;
+      final Uni<TenantCommitResult> result;
       if(existing != null) {
         log.error("Existing repository found with name '{}'", name);
-        result = Uni.createFrom().item(ImmutableRepoResult.builder()
-            .status(RepoStatus.CONFLICT)
+        result = Uni.createFrom().item(ImmutableTenantCommitResult.builder()
+            .status(TenantStatus.CONFLICT)
             .addMessages(RepoException.builder().nameNotUnique(existing.getName(), existing.getId()))
             .build());
       } else {
@@ -60,9 +60,9 @@ public class RepoBuilderImpl implements TenantActions.RepoBuilder {
               .build();
           
           return state.project().insert(newRepo)
-            .onItem().transform(next -> (RepoResult) ImmutableRepoResult.builder()
+            .onItem().transform(next -> (TenantCommitResult) ImmutableTenantCommitResult.builder()
                 .repo(next)
-                .status(RepoStatus.OK)
+                .status(TenantStatus.OK)
                 .build());
         });
       }

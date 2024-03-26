@@ -22,9 +22,9 @@ package io.resys.thena.docdb.test;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
-import io.resys.thena.api.actions.TenantActions.RepoResult;
-import io.resys.thena.api.actions.TenantActions.RepoStatus;
-import io.resys.thena.api.entities.Tenant.RepoType;
+import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
+import io.resys.thena.api.actions.TenantActions.TenantStatus;
+import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.docdb.test.config.DbTestTemplate;
 import io.resys.thena.docdb.test.config.PgProfile;
 import io.vertx.core.json.JsonObject;
@@ -52,12 +52,12 @@ public class BatchDocTest extends DbTestTemplate {
   public void batch10Docs() {
     // create project
     // with main branch, commit log na doc id from json
-    RepoResult repo = getClient().tenants().commit()
-        .name("BatchDocTest-1", RepoType.doc)
+    TenantCommitResult repo = getClient().tenants().commit()
+        .name("BatchDocTest-1", StructureType.doc)
         .build()
         .await().atMost(Duration.ofMinutes(1));
     log.debug("created repo {}", repo);
-    Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
+    Assertions.assertEquals(TenantStatus.OK, repo.getStatus());
     
     final var createdDoc = getClient().doc(repo).commit()
         .createManyDocs()

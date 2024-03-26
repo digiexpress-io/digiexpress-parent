@@ -10,9 +10,9 @@ import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
-import io.resys.thena.api.actions.TenantActions.RepoResult;
-import io.resys.thena.api.actions.TenantActions.RepoStatus;
-import io.resys.thena.api.entities.Tenant.RepoType;
+import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
+import io.resys.thena.api.actions.TenantActions.TenantStatus;
+import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.docdb.test.config.DbTestTemplate;
 import io.resys.thena.docdb.test.config.PgProfile;
 import lombok.extern.slf4j.Slf4j;
@@ -32,12 +32,12 @@ public class SimpleOrgTest extends DbTestTemplate {
   @Test
   public void createRepoAndUser() {
     // create project
-    RepoResult repo = getClient().tenants().commit()
-        .name("SimpleOrgTest-1-createRepoAndUser", RepoType.org)
+    TenantCommitResult repo = getClient().tenants().commit()
+        .name("SimpleOrgTest-1-createRepoAndUser", StructureType.org)
         .build()
         .await().atMost(Duration.ofMinutes(1));
     log.debug("created repo {}", repo);
-    Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
+    Assertions.assertEquals(TenantStatus.OK, repo.getStatus());
     
     getClient().org(repo).commit().createOneMember()
       .userName("sam vimes")
@@ -59,12 +59,12 @@ public class SimpleOrgTest extends DbTestTemplate {
   @Test
   public void createRepoAndUserGroups() {
     // create project
-    RepoResult repo = getClient().tenants().commit()
-        .name("SimpleOrgTest-1-createRepoAndUserGroups", RepoType.org)
+    TenantCommitResult repo = getClient().tenants().commit()
+        .name("SimpleOrgTest-1-createRepoAndUserGroups", StructureType.org)
         .build()
         .await().atMost(Duration.ofMinutes(1));
     log.debug("created repo {}", repo);
-    Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
+    Assertions.assertEquals(TenantStatus.OK, repo.getStatus());
 
     
     final var jailerRole = getClient().org(repo).commit().createOneRight()

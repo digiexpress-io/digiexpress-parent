@@ -13,7 +13,7 @@ import io.resys.thena.api.actions.OrgCommitActions;
 import io.resys.thena.api.actions.OrgHistoryActions;
 import io.resys.thena.api.actions.OrgQueryActions;
 import io.resys.thena.api.actions.TenantActions;
-import io.resys.thena.api.actions.TenantActions.RepoResult;
+import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.structures.doc.actions.DocAppendActionsImpl;
 import io.resys.thena.structures.doc.actions.DocQueryActionsImpl;
@@ -80,7 +80,7 @@ public class ThenaClientPgSql implements ThenaClient {
     };
   }
   @Override
-  public GitStructuredTenant git(RepoResult repo) {
+  public GitStructuredTenant git(TenantCommitResult repo) {
     return git(repo.getRepo().getId());
   }
   @Override
@@ -88,7 +88,7 @@ public class ThenaClientPgSql implements ThenaClient {
     return git(repo.getId());
   }
   @Override
-  public DocStructuredTenant doc(RepoResult repo) {
+  public DocStructuredTenant doc(TenantCommitResult repo) {
     return doc(repo.getRepo().getId());
   }
   @Override
@@ -96,7 +96,7 @@ public class ThenaClientPgSql implements ThenaClient {
     return doc(repo.getId());
   }
   @Override
-  public OrgStructuredTenant org(RepoResult repo) {
+  public OrgStructuredTenant org(TenantCommitResult repo) {
     return org(repo.getRepo().getId());
   }
   @Override

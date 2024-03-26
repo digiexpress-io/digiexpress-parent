@@ -26,7 +26,7 @@ import java.util.Optional;
 import io.resys.thena.api.entities.CommitLockStatus;
 import io.resys.thena.api.entities.ImmutableTenant;
 import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.api.entities.Tenant.RepoType;
+import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.DocBranch;
 import io.resys.thena.api.entities.doc.DocBranchLock;
@@ -92,7 +92,7 @@ public class SqlMapperImpl implements SqlMapper {
         .id(row.getString("id"))
         .rev(row.getString("rev"))
         .name(row.getString("name"))
-        .type(RepoType.valueOf(row.getString("type")))
+        .type(StructureType.valueOf(row.getString("type")))
         .prefix(row.getString("prefix"))
         .build();
   }

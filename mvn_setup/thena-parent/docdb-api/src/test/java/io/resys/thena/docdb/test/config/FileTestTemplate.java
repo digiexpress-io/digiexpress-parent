@@ -36,9 +36,9 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.resys.thena.api.ThenaClient;
-import io.resys.thena.api.actions.TenantActions.RepoResult;
+import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
 import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.api.entities.Tenant.RepoType;
+import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.jackson.VertexExtModule;
 import io.resys.thena.spi.DbCollections;
 import io.resys.thena.spi.DbState;
@@ -97,7 +97,7 @@ public class FileTestTemplate {
         .errorHandler(new FileErrors())
         .build();
     
-    repo = this.client.tenants().commit().name("junit" + index.incrementAndGet(), RepoType.git).build().await().atMost(Duration.ofSeconds(10)).getRepo();
+    repo = this.client.tenants().commit().name("junit" + index.incrementAndGet(), StructureType.git).build().await().atMost(Duration.ofSeconds(10)).getRepo();
     if(callback != null) {
       callback.accept(client, repo);
     }
@@ -108,10 +108,10 @@ public class FileTestTemplate {
   }
 
     
-  public RepoResult createRepo(String name) {
+  public TenantCommitResult createRepo(String name) {
     
-    RepoResult repo = client.tenants().commit()
-        .name(name, RepoType.git)
+    TenantCommitResult repo = client.tenants().commit()
+        .name(name, StructureType.git)
         .build()
         .await().atMost(Duration.ofMinutes(1));
     

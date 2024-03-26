@@ -28,7 +28,7 @@ public interface Tenant {
   String getRev();
   String getPrefix();
   String getName();
-  RepoType getType();
+  StructureType getType();
   
-  enum RepoType { doc, git, org }
+  enum StructureType { doc, git, org }
 }

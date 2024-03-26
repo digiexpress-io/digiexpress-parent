@@ -2,7 +2,7 @@ package io.resys.thena.storesql.builders;
 
 import io.resys.thena.api.LogConstants;
 import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.api.entities.Tenant.RepoType;
+import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.spi.DbCollections;
 import io.resys.thena.spi.DbState.RepoBuilder;
 import io.resys.thena.storesql.SqlBuilder;
@@ -102,7 +102,7 @@ public class RepoBuilderSqlPool implements RepoBuilder {
       final var repoInsert = this.sqlBuilder.withOptions(next).repo().insertOne(newRepo);
       final var tablesCreate = new StringBuilder();
       
-      if(newRepo.getType() == RepoType.git) {
+      if(newRepo.getType() == StructureType.git) {
         tablesCreate.append(sqlSchema.createGitBlobs().getValue())
           .append(sqlSchema.createGitCommits().getValue())
           .append(sqlSchema.createGitTreeItems().getValue())
@@ -116,7 +116,7 @@ public class RepoBuilderSqlPool implements RepoBuilder {
           .append(sqlSchema.createGitTreeItemsConstraints().getValue())
           .toString();
         
-      } else if(newRepo.getType() == RepoType.org) {
+      } else if(newRepo.getType() == StructureType.org) {
         
         tablesCreate
           .append(sqlSchema.createOrgRights().getValue())
@@ -208,7 +208,7 @@ public class RepoBuilderSqlPool implements RepoBuilder {
       final var repoDelete = this.sqlBuilder.withOptions(next).repo().deleteOne(newRepo);
       final var tablesDrop = new StringBuilder();
       
-      if(newRepo.getType() == RepoType.git) {
+      if(newRepo.getType() == StructureType.git) {
         tablesDrop
         .append(sqlSchema.dropGitRefs().getValue())
         .append(sqlSchema.dropGitTags().getValue())
@@ -217,7 +217,7 @@ public class RepoBuilderSqlPool implements RepoBuilder {
         .append(sqlSchema.dropGitTrees().getValue())
         .append(sqlSchema.dropGitBlobs().getValue());
         
-      } else if(newRepo.getType() == RepoType.org) {
+      } else if(newRepo.getType() == StructureType.org) {
         
         tablesDrop
         .append(sqlSchema.dropOrgRights().getValue())
