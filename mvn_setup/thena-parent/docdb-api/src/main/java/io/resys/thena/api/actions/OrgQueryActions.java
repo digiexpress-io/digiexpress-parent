@@ -1,6 +1,6 @@
 package io.resys.thena.api.actions;
 
-import io.resys.thena.api.entities.ThenaObjects;
+import io.resys.thena.api.entities.ThenaContainer;
 import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMember;
 import io.resys.thena.api.entities.org.ThenaOrgObjects.OrgMemberHierarchy;
 import io.resys.thena.api.entities.org.ThenaOrgObjects.OrgPartyHierarchy;
@@ -25,7 +25,7 @@ public interface OrgQueryActions {
 
   interface RightHierarchyQuery {
     Uni<QueryEnvelope<OrgRightHierarchy>> get(String idOrNameOrExtId);
-    <T extends ThenaObjects> Uni<QueryEnvelope<T>> get(String idOrNameOrExtId, OrgAnyTreeContainerVisitor<T> visitor);
+    <T extends ThenaContainer> Uni<QueryEnvelope<T>> get(String idOrNameOrExtId, OrgAnyTreeContainerVisitor<T> visitor);
     Uni<QueryEnvelopeList<OrgRightHierarchy>> findAll();
   }
 

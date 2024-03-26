@@ -26,12 +26,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import io.resys.thena.api.actions.DocQueryActions;
+import io.resys.thena.api.actions.DocQueryActions.DocObjects;
 import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.DocBranch;
 import io.resys.thena.api.entities.doc.DocCommit;
 import io.resys.thena.api.entities.doc.DocLog;
-import io.resys.thena.api.entities.doc.ThenaDocObjects.DocObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.projects.client.api.model.Document;
@@ -57,7 +58,7 @@ public class GetTenantsByIdsVisitor implements DocObjectsVisitor<List<TenantConf
   }
 
   @Override
-  public DocObjects visitEnvelope(DocumentConfig config, QueryEnvelope<DocObjects> envelope) {
+  public DocQueryActions.DocObjects visitEnvelope(DocumentConfig config, QueryEnvelope<DocQueryActions.DocObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
       throw DocumentStoreException.builder("GET_TENANT_BY_ID_FAIL")
         .add(config, envelope)
@@ -75,7 +76,7 @@ public class GetTenantsByIdsVisitor implements DocObjectsVisitor<List<TenantConf
   }
 
   @Override
-  public List<TenantConfig> end(DocumentConfig config, DocObjects ref) {
+  public List<TenantConfig> end(DocumentConfig config, DocQueryActions.DocObjects ref) {
     if(ref == null) {
       return Collections.emptyList();
     }

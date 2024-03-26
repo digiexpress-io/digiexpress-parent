@@ -9,12 +9,13 @@ import io.resys.sysconfig.client.api.model.SysConfigRelease;
 import io.resys.sysconfig.client.spi.store.DocumentConfig;
 import io.resys.sysconfig.client.spi.store.DocumentConfig.DocObjectVisitor;
 import io.resys.sysconfig.client.spi.store.DocumentStoreException;
+import io.resys.thena.api.actions.DocQueryActions;
+import io.resys.thena.api.actions.DocQueryActions.DocObject;
 import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.DocBranch;
 import io.resys.thena.api.entities.doc.DocCommit;
 import io.resys.thena.api.entities.doc.DocLog;
-import io.resys.thena.api.entities.doc.ThenaDocObjects.DocObject;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.projects.client.spi.store.MainBranch;
@@ -34,7 +35,7 @@ public class GetSysConfigReleaseByIdVisitor implements DocObjectVisitor<SysConfi
   }
 
   @Override
-  public DocObject visitEnvelope(DocumentConfig config, QueryEnvelope<DocObject> envelope) {
+  public DocQueryActions.DocObject visitEnvelope(DocumentConfig config, QueryEnvelope<DocQueryActions.DocObject> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
       throw DocumentStoreException.builder("GET_SYS_CONFIG_RELEASE_BY_ID_FAIL")
         .add(config, envelope)
@@ -52,7 +53,7 @@ public class GetSysConfigReleaseByIdVisitor implements DocObjectVisitor<SysConfi
   }
 
   @Override
-  public SysConfigRelease end(DocumentConfig config, DocObject ref) {
+  public SysConfigRelease end(DocumentConfig config, DocQueryActions.DocObject ref) {
     return ref.accept((Doc doc, DocBranch docBranch, DocCommit commit, List<DocLog> log) -> 
       docBranch.getValue()
       .mapTo(ImmutableSysConfigRelease.class).withVersion(commit.getId())

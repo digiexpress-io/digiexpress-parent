@@ -7,22 +7,23 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import io.resys.thena.api.actions.ImmutableDocObject;
+import io.resys.thena.api.actions.ImmutableDocObjects;
+import io.resys.thena.api.actions.DocQueryActions;
+import io.resys.thena.api.actions.DocQueryActions.DocObject;
+import io.resys.thena.api.actions.DocQueryActions.DocObjects;
 import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.api.entities.ThenaObjects;
+import io.resys.thena.api.entities.ThenaContainer;
 import io.resys.thena.api.entities.doc.ImmutableDoc;
 import io.resys.thena.api.entities.doc.ImmutableDocBranch;
 import io.resys.thena.api.entities.doc.ImmutableDocCommit;
 import io.resys.thena.api.entities.doc.ImmutableDocLog;
-import io.resys.thena.api.entities.doc.ImmutableDocObject;
-import io.resys.thena.api.entities.doc.ImmutableDocObjects;
 import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.DocBranch;
 import io.resys.thena.api.entities.doc.DocCommit;
 import io.resys.thena.api.entities.doc.DocFlatted;
 import io.resys.thena.api.entities.doc.DocLog;
-import io.resys.thena.api.entities.doc.ThenaDocObjects.DocObject;
-import io.resys.thena.api.entities.doc.ThenaDocObjects.DocObjects;
 import io.resys.thena.api.envelope.ImmutableQueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.DocNotFoundException;
@@ -55,7 +56,7 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
   }
   
   @Override
-  public Uni<QueryEnvelope<DocObject>> get() {
+  public Uni<QueryEnvelope<DocQueryActions.DocObject>> get() {
     final var criteria = this.criteria.build();
     
     return state.project().getByNameOrId(repoId)
@@ -76,7 +77,7 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
             }
             
             final var objects = toDocObject(data);
-            return ImmutableQueryEnvelope.<DocObject>builder()
+            return ImmutableQueryEnvelope.<DocQueryActions.DocObject>builder()
                 .repo(existing)
                 .status(QueryEnvelopeStatus.OK)
                 .objects(objects)
@@ -86,7 +87,7 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
   }
 
   @Override
-  public Uni<QueryEnvelope<DocObjects>> findAll() {
+  public Uni<QueryEnvelope<DocQueryActions.DocObjects>> findAll() {
     final var criteria = this.criteria.build();
     
     return state.project().getByNameOrId(repoId)
@@ -97,14 +98,14 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
       return state.toDocState().query(repoId)
           .onItem().transformToMulti((DocQueries repo) -> repo.docs().findAllFlatted(criteria))
           .collect().asList()
-          .onItem().transform(data -> ImmutableQueryEnvelope.<DocObjects>builder()
+          .onItem().transform(data -> ImmutableQueryEnvelope.<DocQueryActions.DocObjects>builder()
               .repo(existing)
               .status(QueryEnvelopeStatus.OK)
               .objects(toDocObjects(data))
               .build());
     });
   }
-  private DocObjects toDocObjects(List<DocFlatted> data) {
+  private DocQueryActions.DocObjects toDocObjects(List<DocFlatted> data) {
     
     final var docs = new HashMap<String, Doc>();
     final var logs = new HashMap<String, List<DocLog>>();
@@ -141,7 +142,7 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
         .build(); 
   }
   
-  private DocObject toDocObject(List<DocFlatted> data) {
+  private DocQueryActions.DocObject toDocObject(List<DocFlatted> data) {
     final var builder = ImmutableDocObject.builder();
     final var docIds = new HashSet<String>();
     final var logs = new HashMap<String, List<DocLog>>();
@@ -213,14 +214,14 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
     .build();
   }
   
-  private <T extends ThenaObjects> QueryEnvelope<T> docNotFound(Tenant existing, DocNotFoundException ex) {
+  private <T extends ThenaContainer> QueryEnvelope<T> docNotFound(Tenant existing, DocNotFoundException ex) {
     final var msg = new StringBuilder()
       .append("Document not found by given id, from repo: '").append(existing.getId()).append("'!")
       .toString();
     return QueryEnvelope.docNotFound(existing, log, msg, ex);
   }
   
-  private <T extends ThenaObjects> QueryEnvelope<T> docUnexpected(Tenant existing, Set<String> unexpected) {
+  private <T extends ThenaContainer> QueryEnvelope<T> docUnexpected(Tenant existing, Set<String> unexpected) {
     final var msg = new StringBuilder()
       .append("Expecting: '1' document, but found: '").append(unexpected.size()).append("'")
       .append(", from repo: '").append(existing.getId()).append("'!")

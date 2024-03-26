@@ -32,12 +32,13 @@ import io.resys.sysconfig.client.api.model.SysConfig;
 import io.resys.sysconfig.client.spi.store.DocumentConfig;
 import io.resys.sysconfig.client.spi.store.DocumentConfig.DocObjectsVisitor;
 import io.resys.sysconfig.client.spi.store.DocumentStoreException;
+import io.resys.thena.api.actions.DocQueryActions;
+import io.resys.thena.api.actions.DocQueryActions.DocObjects;
 import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.DocBranch;
 import io.resys.thena.api.entities.doc.DocCommit;
 import io.resys.thena.api.entities.doc.DocLog;
-import io.resys.thena.api.entities.doc.ThenaDocObjects.DocObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.projects.client.spi.store.MainBranch;
@@ -57,7 +58,7 @@ public class GetSysConfigsByIdsVisitor implements DocObjectsVisitor<List<SysConf
   }
 
   @Override
-  public DocObjects visitEnvelope(DocumentConfig config, QueryEnvelope<DocObjects> envelope) {
+  public DocQueryActions.DocObjects visitEnvelope(DocumentConfig config, QueryEnvelope<DocQueryActions.DocObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
       throw DocumentStoreException.builder("GET_SYS_CONFIG_BY_ID_FAIL")
         .add(config, envelope)
@@ -75,7 +76,7 @@ public class GetSysConfigsByIdsVisitor implements DocObjectsVisitor<List<SysConf
   }
 
   @Override
-  public List<SysConfig> end(DocumentConfig config, DocObjects ref) {
+  public List<SysConfig> end(DocumentConfig config, DocQueryActions.DocObjects ref) {
     if(ref == null) {
       return Collections.emptyList();
     }

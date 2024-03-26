@@ -28,13 +28,13 @@ import org.immutables.value.Value;
 import org.slf4j.Logger;
 
 import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.api.entities.ThenaObjects;
+import io.resys.thena.api.entities.ThenaContainer;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.api.exceptions.RepoException;
 
 
 @Value.Immutable
-public interface QueryEnvelopeList<T extends ThenaObjects> extends ThenaEnvelope {
+public interface QueryEnvelopeList<T extends ThenaContainer> extends ThenaEnvelope {
   @Nullable
   Tenant getRepo();    
   @Nullable
@@ -43,7 +43,7 @@ public interface QueryEnvelopeList<T extends ThenaObjects> extends ThenaEnvelope
   QueryEnvelopeStatus getStatus();
   List<Message> getMessages();
   
-  public static <T extends ThenaObjects> QueryEnvelopeList<T> repoNotFound(String repoId, Logger log) {
+  public static <T extends ThenaContainer> QueryEnvelopeList<T> repoNotFound(String repoId, Logger log) {
     final var ex = RepoException.builder().notRepoWithName(repoId);
     log.warn(ex.getText());
     return ImmutableQueryEnvelopeList

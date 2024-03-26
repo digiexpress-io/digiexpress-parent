@@ -28,9 +28,10 @@ import java.util.stream.Collectors;
 import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.api.actions.DocCommitActions.ModifyManyDocBranches;
 import io.resys.thena.api.actions.DocCommitActions.ModifyManyDocs;
+import io.resys.thena.api.actions.DocQueryActions;
+import io.resys.thena.api.actions.DocQueryActions.DocObjects;
 import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.api.entities.CommitResultStatus;
-import io.resys.thena.api.entities.doc.ThenaDocObjects.DocObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.userprofile.client.api.model.Document;
@@ -63,7 +64,7 @@ public class DeleteAllUserProfilesVisitor implements DocObjectsVisitor<Uni<List<
   }
 
   @Override
-  public DocObjects visitEnvelope(DocumentConfig config, QueryEnvelope<DocObjects> envelope) {
+  public DocQueryActions.DocObjects visitEnvelope(DocumentConfig config, QueryEnvelope<DocQueryActions.DocObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
       throw DocumentStoreException.builder("FIND_ALL_USER_PROFILES_FAIL_FOR_DELETE").add(config, envelope).build();
     }
@@ -71,7 +72,7 @@ public class DeleteAllUserProfilesVisitor implements DocObjectsVisitor<Uni<List<
   }
   
   @Override
-  public Uni<List<UserProfile>> end(DocumentConfig config, DocObjects ref) {
+  public Uni<List<UserProfile>> end(DocumentConfig config, DocQueryActions.DocObjects ref) {
     if(ref == null) {
       return Uni.createFrom().item(Collections.emptyList());
     }
@@ -97,7 +98,7 @@ public class DeleteAllUserProfilesVisitor implements DocObjectsVisitor<Uni<List<
   
   
   
-  private List<UserProfile> visitTree(DocObjects state) {
+  private List<UserProfile> visitTree(DocQueryActions.DocObjects state) {
     return state.getBranches().values().stream().flatMap(e -> e.stream())
       .map(blob -> blob.getValue().mapTo(ImmutableUserProfile.class))
       .map(UserProfile -> visitUserProfile(UserProfile))

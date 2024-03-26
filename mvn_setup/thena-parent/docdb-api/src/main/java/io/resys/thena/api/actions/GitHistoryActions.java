@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 import org.immutables.value.Value;
 
 import io.resys.thena.api.actions.GitPullActions.MatchCriteria;
-import io.resys.thena.api.entities.GitObjects;
+import io.resys.thena.api.entities.GitContainer;
 import io.resys.thena.api.entities.git.BlobHistory;
 import io.resys.thena.api.envelope.BlobContainer;
 import io.resys.thena.api.envelope.QueryEnvelope;
@@ -48,7 +48,7 @@ public interface GitHistoryActions {
   }
 
   @Value.Immutable
-  interface HistoryObjects extends BlobContainer, GitObjects {
+  interface HistoryObjects extends BlobContainer, GitContainer {
     List<BlobHistory> getValues();
     
     default <T> List<T> accept(BlobVisitor<T> visitor) {

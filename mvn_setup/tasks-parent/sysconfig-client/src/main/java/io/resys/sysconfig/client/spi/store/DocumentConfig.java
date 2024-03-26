@@ -12,10 +12,11 @@ import io.resys.sysconfig.client.api.model.Document.DocumentType;
 import io.resys.thena.api.ThenaClient;
 import io.resys.thena.api.actions.DocCommitActions.CreateManyDocs;
 import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
+import io.resys.thena.api.actions.DocQueryActions;
+import io.resys.thena.api.actions.DocQueryActions.DocObject;
+import io.resys.thena.api.actions.DocQueryActions.DocObjects;
 import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.api.entities.doc.DocBranch;
-import io.resys.thena.api.entities.doc.ThenaDocObjects.DocObject;
-import io.resys.thena.api.entities.doc.ThenaDocObjects.DocObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.smallrye.mutiny.Uni;
 
@@ -41,14 +42,14 @@ public interface DocumentConfig {
   
   interface DocObjectsVisitor<T> extends DocVisitor { 
     DocObjectsQuery start(DocumentConfig config, DocObjectsQuery builder);
-    @Nullable DocObjects visitEnvelope(DocumentConfig config, QueryEnvelope<DocObjects> envelope);
-    T end(DocumentConfig config, @Nullable DocObjects ref);
+    @Nullable DocQueryActions.DocObjects visitEnvelope(DocumentConfig config, QueryEnvelope<DocQueryActions.DocObjects> envelope);
+    T end(DocumentConfig config, @Nullable DocQueryActions.DocObjects ref);
   }
   
   interface DocObjectVisitor<T> extends DocVisitor { 
     DocObjectsQuery start(DocumentConfig config, DocObjectsQuery builder);
-    @Nullable DocObject visitEnvelope(DocumentConfig config, QueryEnvelope<DocObject> envelope);
-    T end(DocumentConfig config, @Nullable DocObject ref);
+    @Nullable DocQueryActions.DocObject visitEnvelope(DocumentConfig config, QueryEnvelope<DocQueryActions.DocObject> envelope);
+    T end(DocumentConfig config, @Nullable DocQueryActions.DocObject ref);
   }
   
   interface DocCreateVisitor<T> extends DocVisitor { 

@@ -33,9 +33,10 @@ import io.resys.crm.client.spi.store.DocumentConfig.DocObjectsVisitor;
 import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.api.actions.DocCommitActions.ModifyManyDocBranches;
 import io.resys.thena.api.actions.DocCommitActions.ModifyManyDocs;
+import io.resys.thena.api.actions.DocQueryActions;
+import io.resys.thena.api.actions.DocQueryActions.DocObjects;
 import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.api.entities.CommitResultStatus;
-import io.resys.thena.api.entities.doc.ThenaDocObjects.DocObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.crm.client.spi.store.DocumentStoreException;
@@ -63,7 +64,7 @@ public class DeleteAllCustomersVisitor implements DocObjectsVisitor<Uni<List<Cus
   }
 
   @Override
-  public DocObjects visitEnvelope(DocumentConfig config, QueryEnvelope<DocObjects> envelope) {
+  public DocQueryActions.DocObjects visitEnvelope(DocumentConfig config, QueryEnvelope<DocQueryActions.DocObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
       throw DocumentStoreException.builder("FIND_ALL_TENANTS_FAIL_FOR_DELETE").add(config, envelope).build();
     }
@@ -71,7 +72,7 @@ public class DeleteAllCustomersVisitor implements DocObjectsVisitor<Uni<List<Cus
   }
   
   @Override
-  public Uni<List<Customer>> end(DocumentConfig config, DocObjects ref) {
+  public Uni<List<Customer>> end(DocumentConfig config, DocQueryActions.DocObjects ref) {
     if(ref == null) {
       return Uni.createFrom().item(Collections.emptyList());
     }
@@ -97,7 +98,7 @@ public class DeleteAllCustomersVisitor implements DocObjectsVisitor<Uni<List<Cus
   
   
   
-  private List<Customer> visitTree(DocObjects state) {
+  private List<Customer> visitTree(DocQueryActions.DocObjects state) {
     return state.getBranches().values().stream().flatMap(e -> e.stream())
       .map(blob -> blob.getValue().mapTo(ImmutableCustomer.class))
       .map(TenantConfig -> visitTenantConfig(TenantConfig))

@@ -43,13 +43,14 @@ import io.resys.crm.client.spi.visitors.CustomerCommandVisitor.NoChangesExceptio
 import io.resys.thena.api.actions.DocCommitActions.CreateManyDocs;
 import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.api.actions.DocCommitActions.ModifyManyDocBranches;
+import io.resys.thena.api.actions.DocQueryActions;
+import io.resys.thena.api.actions.DocQueryActions.DocObjects;
 import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.DocBranch;
 import io.resys.thena.api.entities.doc.DocCommit;
 import io.resys.thena.api.entities.doc.DocLog;
-import io.resys.thena.api.entities.doc.ThenaDocObjects.DocObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.smallrye.mutiny.Uni;
@@ -87,7 +88,7 @@ public class UpdateCustomerVisitor implements DocObjectsVisitor<Uni<List<Custome
   }
 
   @Override
-  public DocObjects visitEnvelope(DocumentConfig config, QueryEnvelope<DocObjects> envelope) {
+  public DocQueryActions.DocObjects visitEnvelope(DocumentConfig config, QueryEnvelope<DocQueryActions.DocObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
       throw DocumentStoreException.builder("GET_CUSTOMERS_BY_IDS_FOR_UPDATE_FAIL")
         .add(config, envelope)
@@ -110,7 +111,7 @@ public class UpdateCustomerVisitor implements DocObjectsVisitor<Uni<List<Custome
   }
 
   @Override
-  public Uni<List<Customer>> end(DocumentConfig config, DocObjects blob) {
+  public Uni<List<Customer>> end(DocumentConfig config, DocQueryActions.DocObjects blob) {
     return applyUpdates(config, blob).onItem()
       .transformToUni(updated -> applyInserts(config, blob).onItem().transform(inserted -> {
         final var result = new ArrayList<Customer>();
@@ -120,7 +121,7 @@ public class UpdateCustomerVisitor implements DocObjectsVisitor<Uni<List<Custome
       }));
   }
   
-  private Uni<List<Customer>> applyInserts(DocumentConfig config, DocObjects blob) {
+  private Uni<List<Customer>> applyInserts(DocumentConfig config, DocQueryActions.DocObjects blob) {
     final var insertedCustomers = new ArrayList<Customer>(); 
     for(final var entry : commandsByCustomerId.entrySet()) {
       try {
@@ -145,7 +146,7 @@ public class UpdateCustomerVisitor implements DocObjectsVisitor<Uni<List<Custome
     return createBuilder.build().onItem().transform(envelope -> mapInsertedResponse(envelope, insertedCustomers));
   }
 
-  private Uni<List<Customer>> applyUpdates(DocumentConfig config, DocObjects blob) {
+  private Uni<List<Customer>> applyUpdates(DocumentConfig config, DocQueryActions.DocObjects blob) {
     final var updatedCustomers = blob.accept((Doc doc, DocBranch docBranch, DocCommit commit, List<DocLog> log) -> {  
       final var start = docBranch.getValue().mapTo(ImmutableCustomer.class);
       

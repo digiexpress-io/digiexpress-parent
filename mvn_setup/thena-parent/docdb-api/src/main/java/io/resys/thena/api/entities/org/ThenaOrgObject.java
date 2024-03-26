@@ -11,7 +11,7 @@ import org.immutables.value.Value;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import io.resys.thena.api.entities.ThenaObjects;
+import io.resys.thena.api.entities.ThenaContainer;
 import io.resys.thena.api.entities.doc.DocEntity;
 import io.vertx.core.json.JsonObject;
 
@@ -110,7 +110,7 @@ public interface ThenaOrgObject {
   
 
   @Value.Immutable
-  interface OrgMember extends ThenaOrgObject, ThenaObjects, IsOrgObject, IsOrgVersionObject {
+  interface OrgMember extends ThenaOrgObject, ThenaContainer, IsOrgObject, IsOrgVersionObject {
     String getId();
     String getCommitId();
     @Nullable String getExternalId();

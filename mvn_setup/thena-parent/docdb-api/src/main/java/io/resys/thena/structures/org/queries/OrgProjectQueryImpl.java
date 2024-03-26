@@ -1,6 +1,6 @@
 package io.resys.thena.structures.org.queries;
 
-import io.resys.thena.api.ThenaClient.OrgStructuredTenant.OrgProjectQuery;
+import io.resys.thena.api.ThenaClient.OrgProjectQuery;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.org.ImmutableOrgProjectObjects;
 import io.resys.thena.api.entities.org.ThenaOrgObjects.OrgProjectObjects;

@@ -1,17 +1,17 @@
 package io.resys.thena.spi;
 
 import io.resys.thena.api.ThenaClient;
+import io.resys.thena.api.actions.DocCommitActions;
+import io.resys.thena.api.actions.DocQueryActions;
 import io.resys.thena.api.actions.GitBranchActions;
 import io.resys.thena.api.actions.GitCommitActions;
 import io.resys.thena.api.actions.GitDiffActions;
-import io.resys.thena.api.actions.DocCommitActions;
-import io.resys.thena.api.actions.DocQueryActions;
 import io.resys.thena.api.actions.GitHistoryActions;
+import io.resys.thena.api.actions.GitPullActions;
+import io.resys.thena.api.actions.GitTagActions;
 import io.resys.thena.api.actions.OrgCommitActions;
 import io.resys.thena.api.actions.OrgHistoryActions;
 import io.resys.thena.api.actions.OrgQueryActions;
-import io.resys.thena.api.actions.GitPullActions;
-import io.resys.thena.api.actions.GitTagActions;
 import io.resys.thena.api.actions.TenantActions;
 import io.resys.thena.api.actions.TenantActions.RepoResult;
 import io.resys.thena.api.entities.Tenant;

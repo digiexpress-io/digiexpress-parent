@@ -32,13 +32,14 @@ import java.util.stream.Collectors;
 import io.resys.thena.api.actions.DocCommitActions.CreateManyDocs;
 import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.api.actions.DocCommitActions.ModifyManyDocBranches;
+import io.resys.thena.api.actions.DocQueryActions;
+import io.resys.thena.api.actions.DocQueryActions.DocObjects;
 import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.DocBranch;
 import io.resys.thena.api.entities.doc.DocCommit;
 import io.resys.thena.api.entities.doc.DocLog;
-import io.resys.thena.api.entities.doc.ThenaDocObjects.DocObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.userprofile.client.api.model.Document;
@@ -87,7 +88,7 @@ public class UpdateUserProfileVisitor implements DocObjectsVisitor<Uni<List<User
   }
 
   @Override
-  public DocObjects visitEnvelope(DocumentConfig config, QueryEnvelope<DocObjects> envelope) {
+  public DocQueryActions.DocObjects visitEnvelope(DocumentConfig config, QueryEnvelope<DocQueryActions.DocObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
       throw DocumentStoreException.builder("GET_USER_PROFILES_BY_IDS_FOR_UPDATE_FAIL")
         .add(config, envelope)
@@ -110,7 +111,7 @@ public class UpdateUserProfileVisitor implements DocObjectsVisitor<Uni<List<User
   }
 
   @Override
-  public Uni<List<UserProfile>> end(DocumentConfig config, DocObjects blob) {
+  public Uni<List<UserProfile>> end(DocumentConfig config, DocQueryActions.DocObjects blob) {
     return applyUpdates(config, blob).onItem()
       .transformToUni(updated -> applyInserts(config, blob).onItem().transform(inserted -> {
         final var result = new ArrayList<UserProfile>();
@@ -120,7 +121,7 @@ public class UpdateUserProfileVisitor implements DocObjectsVisitor<Uni<List<User
       }));
   }
   
-  private Uni<List<UserProfile>> applyInserts(DocumentConfig config, DocObjects blob) {
+  private Uni<List<UserProfile>> applyInserts(DocumentConfig config, DocQueryActions.DocObjects blob) {
     final var insertedProfiles = new ArrayList<UserProfile>(); 
     for(final var entry : commandsByUserProfileId.entrySet()) {
       try {
@@ -144,7 +145,7 @@ public class UpdateUserProfileVisitor implements DocObjectsVisitor<Uni<List<User
     return createBuilder.build().onItem().transform(envelope -> mapInsertedResponse(envelope, insertedProfiles));
   }
 
-  private Uni<List<UserProfile>> applyUpdates(DocumentConfig config, DocObjects blob) {
+  private Uni<List<UserProfile>> applyUpdates(DocumentConfig config, DocQueryActions.DocObjects blob) {
     final var updatedProfiles = blob.accept((Doc doc, DocBranch docBranch, DocCommit commit, List<DocLog> log) -> {  
       final var start = docBranch.getValue().mapTo(ImmutableUserProfile.class);
       

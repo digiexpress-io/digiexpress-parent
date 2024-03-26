@@ -28,9 +28,10 @@ import java.util.stream.Collectors;
 import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.api.actions.DocCommitActions.ModifyManyDocBranches;
 import io.resys.thena.api.actions.DocCommitActions.ModifyManyDocs;
+import io.resys.thena.api.actions.DocQueryActions;
+import io.resys.thena.api.actions.DocQueryActions.DocObjects;
 import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.api.entities.CommitResultStatus;
-import io.resys.thena.api.entities.doc.ThenaDocObjects.DocObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.projects.client.api.model.Document;
@@ -70,7 +71,7 @@ public class DeleteAllTenantsVisitor implements DocObjectsVisitor<Uni<List<Tenan
   }
 
   @Override
-  public DocObjects visitEnvelope(DocumentConfig config, QueryEnvelope<DocObjects> envelope) {
+  public DocQueryActions.DocObjects visitEnvelope(DocumentConfig config, QueryEnvelope<DocQueryActions.DocObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
       throw DocumentStoreException.builder("FIND_ALL_TENANTS_FAIL_FOR_DELETE").add(config, envelope).build();
     }
@@ -78,7 +79,7 @@ public class DeleteAllTenantsVisitor implements DocObjectsVisitor<Uni<List<Tenan
   }
   
   @Override
-  public Uni<List<TenantConfig>> end(DocumentConfig config, DocObjects ref) {
+  public Uni<List<TenantConfig>> end(DocumentConfig config, DocQueryActions.DocObjects ref) {
     if(ref == null) {
       return Uni.createFrom().item(Collections.emptyList());
     }
@@ -104,7 +105,7 @@ public class DeleteAllTenantsVisitor implements DocObjectsVisitor<Uni<List<Tenan
   
   
   
-  private List<TenantConfig> visitTree(DocObjects state) {
+  private List<TenantConfig> visitTree(DocQueryActions.DocObjects state) {
     return state.getBranches().values().stream().flatMap(e -> e.stream())
       .map(blob -> blob.getValue().mapTo(ImmutableTenantConfig.class))
       .map(TenantConfig -> visitTenantConfig(TenantConfig))

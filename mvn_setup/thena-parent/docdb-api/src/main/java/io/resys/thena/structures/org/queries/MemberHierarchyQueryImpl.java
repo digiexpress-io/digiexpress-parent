@@ -6,7 +6,7 @@ import java.util.List;
 
 import io.resys.thena.api.actions.OrgQueryActions.MemberHierarchyQuery;
 import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.api.entities.ThenaObjects;
+import io.resys.thena.api.entities.ThenaContainer;
 import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMember;
 import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMemberFlattened;
 import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMemberHierarchyEntry;
@@ -102,7 +102,7 @@ public class MemberHierarchyQueryImpl implements MemberHierarchyQuery {
     return builder.objects(Collections.unmodifiableList(objects)).build();
   }
   
-  private <T extends ThenaObjects> QueryEnvelope<T> docNotFound(
+  private <T extends ThenaContainer> QueryEnvelope<T> docNotFound(
       Tenant existing, String userId,
       DocNotFoundException ex
       ) {

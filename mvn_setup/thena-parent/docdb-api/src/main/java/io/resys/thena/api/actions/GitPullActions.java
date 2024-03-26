@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
 
 import org.immutables.value.Value;
 
-import io.resys.thena.api.entities.GitObjects;
+import io.resys.thena.api.entities.GitContainer;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.git.Blob;
 import io.resys.thena.api.entities.git.Commit;
@@ -100,7 +100,7 @@ public interface GitPullActions {
   }
 
   @Value.Immutable
-  interface PullObject extends GitObjects {
+  interface PullObject extends GitContainer {
     Tenant getRepo();
     Commit getCommit();
     //Tree getTree();
@@ -113,7 +113,7 @@ public interface GitPullActions {
 
 
   @Value.Immutable
-  interface PullObjects extends BlobContainer, GitObjects {
+  interface PullObjects extends BlobContainer, GitContainer {
     Tenant getRepo();
     Commit getCommit();
     //Tree getTree();

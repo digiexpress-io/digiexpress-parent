@@ -4,22 +4,24 @@ import java.util.Map;
 
 import org.immutables.value.Value;
 
+import io.resys.thena.api.actions.DocCommitActions;
+import io.resys.thena.api.actions.DocQueryActions;
 import io.resys.thena.api.actions.GitBranchActions;
 import io.resys.thena.api.actions.GitCommitActions;
 import io.resys.thena.api.actions.GitDiffActions;
-import io.resys.thena.api.actions.DocCommitActions;
-import io.resys.thena.api.actions.DocQueryActions;
 import io.resys.thena.api.actions.GitHistoryActions;
+import io.resys.thena.api.actions.GitPullActions;
+import io.resys.thena.api.actions.GitTagActions;
 import io.resys.thena.api.actions.OrgCommitActions;
 import io.resys.thena.api.actions.OrgHistoryActions;
 import io.resys.thena.api.actions.OrgQueryActions;
-import io.resys.thena.api.actions.GitPullActions;
-import io.resys.thena.api.actions.GitTagActions;
 import io.resys.thena.api.actions.TenantActions;
 import io.resys.thena.api.actions.TenantActions.RepoResult;
-import io.resys.thena.api.entities.GitObjects;
+import io.resys.thena.api.entities.DocContainer;
+import io.resys.thena.api.entities.GitContainer;
 import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.api.entities.doc.ThenaDocObjects.DocProjectObjects;
+import io.resys.thena.api.entities.doc.DocBranch;
+import io.resys.thena.api.entities.doc.DocEntity.IsDocObject;
 import io.resys.thena.api.entities.git.Branch;
 import io.resys.thena.api.entities.git.GitEntity.IsGitObject;
 import io.resys.thena.api.entities.git.Tag;
@@ -48,11 +50,10 @@ public interface ThenaClient {
     OrgQueryActions find();
     OrgHistoryActions history();
     OrgProjectQuery project();
-
-    // build world state
-    interface OrgProjectQuery {
-      Uni<QueryEnvelope<OrgProjectObjects>> get();
-    }
+  }
+  // build world state
+  interface OrgProjectQuery {
+    Uni<QueryEnvelope<OrgProjectObjects>> get();
   }
 
 
@@ -60,15 +61,17 @@ public interface ThenaClient {
   interface DocStructuredTenant {
     DocCommitActions commit();
     DocQueryActions find();
-    
-
-    // build world state
-    interface DocProjectQuery {
-      DocProjectQuery projectName(String projectName);
-      Uni<QueryEnvelope<DocProjectObjects>> get();
-    }
   }
-
+  // build world state
+  interface DocProjectQuery {
+    DocProjectQuery projectName(String projectName);
+    Uni<QueryEnvelope<ThenaClient.DocProjectObjects>> get();
+  }
+  @Value.Immutable
+  interface DocProjectObjects extends DocContainer {
+    Map<String, DocBranch> getBranches();
+    Map<String, IsDocObject> getValues();   
+  }
   
   // multi doc model, cropped git replica
   interface GitStructuredTenant {
@@ -87,7 +90,7 @@ public interface ThenaClient {
   }
 
   @Value.Immutable 
-  interface GitRepoObjects extends GitObjects {
+  interface GitRepoObjects extends GitContainer {
     Map<String, Branch> getBranches();
     Map<String, Tag> getTags();
     Map<String, IsGitObject> getValues();   

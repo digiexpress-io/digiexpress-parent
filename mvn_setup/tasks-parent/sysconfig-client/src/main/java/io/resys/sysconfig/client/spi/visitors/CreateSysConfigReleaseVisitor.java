@@ -19,13 +19,14 @@ import io.resys.sysconfig.client.spi.store.DocumentStore;
 import io.resys.sysconfig.client.spi.store.DocumentStoreException;
 import io.resys.thena.api.actions.DocCommitActions.CreateOneDoc;
 import io.resys.thena.api.actions.DocCommitActions.ModifyOneDocBranch;
+import io.resys.thena.api.actions.DocQueryActions;
+import io.resys.thena.api.actions.DocQueryActions.DocObject;
 import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.DocBranch;
 import io.resys.thena.api.entities.doc.DocCommit;
 import io.resys.thena.api.entities.doc.DocLog;
-import io.resys.thena.api.entities.doc.ThenaDocObjects.DocObject;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.projects.client.spi.store.MainBranch;
@@ -66,7 +67,7 @@ public class CreateSysConfigReleaseVisitor implements DocObjectVisitor<Uni<SysCo
   }
 
   @Override
-  public DocObject visitEnvelope(DocumentConfig config, QueryEnvelope<DocObject> envelope) {
+  public DocQueryActions.DocObject visitEnvelope(DocumentConfig config, QueryEnvelope<DocQueryActions.DocObject> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
       throw DocumentStoreException.builder("GET_SYS_CONFIG_FOR_CREATING_RELEASE_FAIL")
         .add(config, envelope)
@@ -84,7 +85,7 @@ public class CreateSysConfigReleaseVisitor implements DocObjectVisitor<Uni<SysCo
   }
 
   @Override
-  public Uni<SysConfigRelease> end(DocumentConfig config, DocObject blob) {
+  public Uni<SysConfigRelease> end(DocumentConfig config, DocQueryActions.DocObject blob) {
     final var sysConfig = blob.accept((Doc doc, DocBranch docBranch, DocCommit commit, List<DocLog> log) -> docBranch.getValue().mapTo(ImmutableSysConfig.class))
         .stream().findFirst().get();
   

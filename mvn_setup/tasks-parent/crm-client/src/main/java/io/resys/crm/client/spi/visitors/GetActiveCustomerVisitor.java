@@ -6,12 +6,13 @@ import io.resys.crm.client.api.model.Customer;
 import io.resys.crm.client.api.model.ImmutableCustomer;
 import io.resys.crm.client.spi.store.DocumentConfig;
 import io.resys.crm.client.spi.store.DocumentConfig.DocObjectVisitor;
+import io.resys.thena.api.actions.DocQueryActions;
+import io.resys.thena.api.actions.DocQueryActions.DocObject;
 import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.DocBranch;
 import io.resys.thena.api.entities.doc.DocCommit;
 import io.resys.thena.api.entities.doc.DocLog;
-import io.resys.thena.api.entities.doc.ThenaDocObjects.DocObject;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.crm.client.spi.store.DocumentStoreException;
@@ -29,7 +30,7 @@ public class GetActiveCustomerVisitor implements DocObjectVisitor<Customer>{
   }
 
   @Override
-  public DocObject visitEnvelope(DocumentConfig config, QueryEnvelope<DocObject> envelope) {
+  public DocQueryActions.DocObject visitEnvelope(DocumentConfig config, QueryEnvelope<DocQueryActions.DocObject> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
       throw DocumentStoreException.builder("GET_CUSTOMER_BY_ID_FAIL")
         .add(config, envelope)
@@ -47,7 +48,7 @@ public class GetActiveCustomerVisitor implements DocObjectVisitor<Customer>{
   }
 
   @Override
-  public Customer end(DocumentConfig config, DocObject ref) {
+  public Customer end(DocumentConfig config, DocQueryActions.DocObject ref) {
     return ref.accept((Doc doc, DocBranch docBranch, DocCommit commit, List<DocLog> log) -> 
         docBranch.getValue()
         .mapTo(ImmutableCustomer.class).withVersion(docBranch.getCommitId())

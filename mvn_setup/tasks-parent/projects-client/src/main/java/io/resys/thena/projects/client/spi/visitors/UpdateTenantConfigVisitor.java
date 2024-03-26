@@ -29,13 +29,14 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import io.resys.thena.api.actions.DocCommitActions.ModifyManyDocBranches;
+import io.resys.thena.api.actions.DocQueryActions;
+import io.resys.thena.api.actions.DocQueryActions.DocObjects;
 import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.DocBranch;
 import io.resys.thena.api.entities.doc.DocCommit;
 import io.resys.thena.api.entities.doc.DocLog;
-import io.resys.thena.api.entities.doc.ThenaDocObjects.DocObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.projects.client.api.model.ImmutableTenantConfig;
@@ -75,7 +76,7 @@ public class UpdateTenantConfigVisitor implements DocObjectsVisitor<Uni<List<Ten
   }
 
   @Override
-  public DocObjects visitEnvelope(DocumentConfig config, QueryEnvelope<DocObjects> envelope) {
+  public DocQueryActions.DocObjects visitEnvelope(DocumentConfig config, QueryEnvelope<DocQueryActions.DocObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
       throw DocumentStoreException.builder("GET_TENANTS_BY_IDS_FOR_UPDATE_FAIL")
         .add(config, envelope)
@@ -96,7 +97,7 @@ public class UpdateTenantConfigVisitor implements DocObjectsVisitor<Uni<List<Ten
   }
 
   @Override
-  public Uni<List<TenantConfig>> end(DocumentConfig config, DocObjects blob) {
+  public Uni<List<TenantConfig>> end(DocumentConfig config, DocQueryActions.DocObjects blob) {
     final var updatedTenants = blob.accept((Doc doc, DocBranch docBranch, DocCommit commit, List<DocLog> log) -> {
       final var start = docBranch.getValue().mapTo(ImmutableTenantConfig.class);
       final var commands = commandsByTenantId.get(start.getId());

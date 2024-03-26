@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import io.resys.thena.api.actions.OrgQueryActions.RightHierarchyQuery;
-import io.resys.thena.api.entities.ThenaObjects;
+import io.resys.thena.api.entities.ThenaContainer;
 import io.resys.thena.api.entities.org.ThenaOrgObjects.OrgProjectObjects;
 import io.resys.thena.api.entities.org.ThenaOrgObjects.OrgRightHierarchy;
 import io.resys.thena.api.envelope.ImmutableQueryEnvelope;
@@ -93,7 +93,7 @@ public class RightHierarchyQueryImpl implements RightHierarchyQuery {
         .build();
   }
   @Override
-  public <T extends ThenaObjects> Uni<QueryEnvelope<T>> get(String roleIdOrNameOrExternalId,
+  public <T extends ThenaContainer> Uni<QueryEnvelope<T>> get(String roleIdOrNameOrExternalId,
       OrgAnyTreeContainerVisitor<T> visitor) {
     
     RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");

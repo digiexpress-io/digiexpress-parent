@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 import org.immutables.value.Value;
 
 import io.resys.thena.api.actions.GitPullActions.MatchCriteria;
-import io.resys.thena.api.entities.GitObjects;
+import io.resys.thena.api.entities.GitContainer;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.git.Blob;
 import io.resys.thena.api.entities.git.Branch;
@@ -51,7 +51,7 @@ public interface GitBranchActions {
   }
 
   @Value.Immutable
-  interface BranchObjects extends BlobContainer, GitObjects {
+  interface BranchObjects extends BlobContainer, GitContainer {
     Tenant getRepo();
     Branch getRef();
     Commit getCommit();
