@@ -60,7 +60,7 @@ public abstract class OrgPartyContainerVisitor<T> implements OrgAnyTreeContainer
     }
   }
   protected void visitGroup(OrgParty party, OrgAnyTreeContainerContext worldState, List<OrgParty> parents) {
-    final var parentGroupIds = parents.stream().map(e -> e.getId()).toList();
+    //final var parentGroupIds = parents.stream().map(e -> e.getId()).toList();
     final var visitor = party.getParentId() == null ? visitTop(party, worldState) : visitChild(party, worldState);
     final var isDisabledDirectly = worldState.isStatusDisabled(worldState.getStatus(party));
     final var isDisabledUpward = worldState.isPartyDisabledUpward(party);
