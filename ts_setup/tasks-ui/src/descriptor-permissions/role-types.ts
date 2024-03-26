@@ -6,7 +6,6 @@ export type RoleName = string;
 export interface Role {
   id: RoleId;
   parentId: RoleId | undefined;
-  version: string;
   name: RoleName;
   description: string;
 
@@ -37,7 +36,7 @@ export interface CreateRole {
   commandType: 'CreateRole';
   name: RoleName;
   description: string;
-  permissions: string[] | undefined;
+  permissions: string[];
 }
 
 export interface ChangeRoleName extends RoleUpdateCommand<'ChangeRoleName'> {
@@ -53,6 +52,6 @@ export interface ChangeRoleStatus extends RoleUpdateCommand<'ChangeRoleStatus'> 
 }
 
 export interface ChangeRolePermissions extends RoleUpdateCommand<'ChangeRolePermissions'> {
-  permissions: string[] | undefined;
+  permissions: string[];
   changeType: ChangeType;
 }

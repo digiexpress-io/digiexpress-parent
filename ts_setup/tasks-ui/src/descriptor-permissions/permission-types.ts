@@ -1,11 +1,10 @@
-import { ActorStatus, ChangeType } from './descriptor-types';
+import { ActorStatus } from './descriptor-types';
 
 export type PermissionId = string;
 export type PermissionName = string;
 
 export interface Permission {
   id: PermissionId;
-  version: string;
   name: PermissionName;
   description: string;
   status: ActorStatus
@@ -31,7 +30,7 @@ export interface CreatePermission {
   commandType: 'CreatePermission';
   name: PermissionName;
   description: string;
-  roles: string[] | undefined;
+  roles: string[];
 }
 
 export interface ChangePermissionName extends PermissionUpdateCommand<'ChangePermissionName'> {

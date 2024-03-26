@@ -5,7 +5,6 @@ export type PrincipalName = string;
 
 export interface Principal {
   id: PrincipalId;
-  version: string;
   name: PrincipalName;
   email: string;
 
@@ -35,13 +34,14 @@ export interface PrincipalUpdateCommand<T extends PrincipalCommandType> extends 
 
 export interface CreatePrincipal {
   commandType: 'CreatePrincipal';
+  name: PrincipalName;
   email: string;
-  roles: string[] | undefined;
-  permissions: string[] | undefined;
+  roles: string[];
+  permissions: string[];
 }
 
 export interface ChangePrincipalRoles extends PrincipalUpdateCommand<'ChangePrincipalRoles'> {
-  roles: string | undefined;        // id/name/extId
+  roles: string;        // id/name/extId
   changeType: ChangeType;
 }
 
