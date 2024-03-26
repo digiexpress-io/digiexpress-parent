@@ -32,7 +32,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.api.entities.git.ThenaGitObject.TreeValue;
+import io.resys.thena.api.entities.git.TreeValue;
 import io.resys.thena.spi.DbState;
 
 public class RepositoryToStaticData {

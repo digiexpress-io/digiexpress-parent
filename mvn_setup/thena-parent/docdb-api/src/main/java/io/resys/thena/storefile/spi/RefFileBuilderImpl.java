@@ -24,8 +24,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
-import io.resys.thena.api.entities.git.ThenaGitObject.Branch;
-import io.resys.thena.api.entities.git.ThenaGitObject.Commit;
+import io.resys.thena.api.entities.git.Branch;
+import io.resys.thena.api.entities.git.Commit;
 import io.resys.thena.spi.DbCollections;
 import io.resys.thena.storefile.FileBuilder.RefFileBuilder;
 import io.resys.thena.storefile.tables.ImmutableFileStatement;

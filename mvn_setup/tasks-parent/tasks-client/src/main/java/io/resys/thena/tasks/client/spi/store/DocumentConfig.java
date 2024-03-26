@@ -32,7 +32,7 @@ import io.resys.thena.api.actions.CommitActions.CommitBuilder;
 import io.resys.thena.api.actions.CommitActions.CommitResultEnvelope;
 import io.resys.thena.api.actions.HistoryActions.BlobHistoryQuery;
 import io.resys.thena.api.actions.PullActions.PullObjectsQuery;
-import io.resys.thena.api.entities.git.ThenaGitObject.Commit;
+import io.resys.thena.api.entities.git.Commit;
 import io.resys.thena.api.entities.git.ThenaGitObjects.BranchObjects;
 import io.resys.thena.api.entities.git.ThenaGitObjects.HistoryObjects;
 import io.resys.thena.api.entities.git.ThenaGitObjects.PullObject;

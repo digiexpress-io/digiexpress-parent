@@ -27,7 +27,6 @@ import javax.annotation.Nullable;
 import org.immutables.value.Value;
 
 import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.api.entities.git.ThenaGitObject.Commit;
 
 @Value.Immutable
 public interface Diff {

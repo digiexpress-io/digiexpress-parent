@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 
 import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.api.entities.git.ThenaGitObject.TreeValue;
+import io.resys.thena.api.entities.git.TreeValue;
 import io.resys.thena.spi.DbState;
 import io.thestencil.client.api.StencilClient.EntityType;
 import org.apache.commons.io.IOUtils;

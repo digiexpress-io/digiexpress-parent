@@ -4,8 +4,8 @@ import java.util.List;
 
 import io.resys.thena.api.actions.CommitActions;
 import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.api.entities.git.ThenaGitObject.Commit;
-import io.resys.thena.api.entities.git.ThenaGitObject.Tree;
+import io.resys.thena.api.entities.git.Commit;
+import io.resys.thena.api.entities.git.Tree;
 import io.resys.thena.api.exceptions.RepoException;
 import io.resys.thena.spi.DbState;
 import io.smallrye.mutiny.Uni;

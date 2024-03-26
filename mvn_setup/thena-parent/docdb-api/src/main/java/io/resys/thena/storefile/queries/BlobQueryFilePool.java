@@ -28,9 +28,9 @@ import java.util.List;
 
 import io.resys.thena.api.actions.PullActions.MatchCriteria;
 import io.resys.thena.api.actions.PullActions.MatchCriteriaType;
+import io.resys.thena.api.entities.git.Blob;
 import io.resys.thena.api.entities.git.ImmutableTree;
-import io.resys.thena.api.entities.git.ThenaGitObject.Blob;
-import io.resys.thena.api.entities.git.ThenaGitObject.TreeValue;
+import io.resys.thena.api.entities.git.TreeValue;
 import io.resys.thena.storefile.FileBuilder;
 import io.resys.thena.storefile.tables.Table.FileMapper;
 import io.resys.thena.storefile.tables.Table.FilePool;

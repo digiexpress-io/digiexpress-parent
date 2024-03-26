@@ -28,7 +28,7 @@ import io.resys.hdes.client.api.HdesStore.StoreEntity;
 import io.resys.hdes.client.api.HdesStore.StoreState;
 import io.resys.hdes.client.api.ast.AstBody.AstBodyType;
 import io.resys.thena.api.ThenaClient;
-import io.resys.thena.api.entities.git.ThenaGitObject.Blob;
+import io.resys.thena.api.entities.git.Blob;
 import io.resys.thena.api.entities.git.ThenaGitObjects.PullObject;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.smallrye.mutiny.Uni;

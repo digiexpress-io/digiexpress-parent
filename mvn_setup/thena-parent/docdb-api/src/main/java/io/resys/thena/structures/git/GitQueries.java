@@ -27,13 +27,13 @@ import javax.annotation.Nullable;
 import org.immutables.value.Value;
 
 import io.resys.thena.api.actions.PullActions.MatchCriteria;
-import io.resys.thena.api.entities.git.ThenaGitObject.Blob;
-import io.resys.thena.api.entities.git.ThenaGitObject.BlobHistory;
-import io.resys.thena.api.entities.git.ThenaGitObject.Branch;
-import io.resys.thena.api.entities.git.ThenaGitObject.Commit;
-import io.resys.thena.api.entities.git.ThenaGitObject.CommitLock;
-import io.resys.thena.api.entities.git.ThenaGitObject.Tag;
-import io.resys.thena.api.entities.git.ThenaGitObject.Tree;
+import io.resys.thena.api.entities.git.Blob;
+import io.resys.thena.api.entities.git.BlobHistory;
+import io.resys.thena.api.entities.git.Branch;
+import io.resys.thena.api.entities.git.Commit;
+import io.resys.thena.api.entities.git.CommitLock;
+import io.resys.thena.api.entities.git.Tag;
+import io.resys.thena.api.entities.git.Tree;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 

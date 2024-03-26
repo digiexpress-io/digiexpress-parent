@@ -23,12 +23,12 @@ package io.resys.thena.storefile;
 import java.util.Collection;
 
 import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.api.entities.git.ThenaGitObject.Blob;
-import io.resys.thena.api.entities.git.ThenaGitObject.Branch;
-import io.resys.thena.api.entities.git.ThenaGitObject.Commit;
-import io.resys.thena.api.entities.git.ThenaGitObject.Tag;
-import io.resys.thena.api.entities.git.ThenaGitObject.Tree;
-import io.resys.thena.api.entities.git.ThenaGitObject.TreeValue;
+import io.resys.thena.api.entities.git.Blob;
+import io.resys.thena.api.entities.git.Branch;
+import io.resys.thena.api.entities.git.Commit;
+import io.resys.thena.api.entities.git.Tag;
+import io.resys.thena.api.entities.git.Tree;
+import io.resys.thena.api.entities.git.TreeValue;
 import io.resys.thena.spi.DbCollections;
 import io.resys.thena.storefile.tables.Table.FileStatement;
 import io.resys.thena.storefile.tables.Table.FileTuple;

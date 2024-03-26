@@ -1,7 +1,7 @@
 package io.resys.thena.storesql.statement;
 
-import io.resys.thena.api.entities.git.ThenaGitObject.Branch;
-import io.resys.thena.api.entities.git.ThenaGitObject.Commit;
+import io.resys.thena.api.entities.git.Branch;
+import io.resys.thena.api.entities.git.Commit;
 import io.resys.thena.spi.DbCollections;
 import io.resys.thena.storesql.ImmutableSql;
 import io.resys.thena.storesql.ImmutableSqlTuple;

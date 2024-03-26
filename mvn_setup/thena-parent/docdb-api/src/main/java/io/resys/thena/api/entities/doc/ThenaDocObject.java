@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
 
 import org.immutables.value.Value;
 
-import io.resys.thena.api.entities.git.ThenaGitObject.CommitLockStatus;
+import io.resys.thena.api.entities.CommitLockStatus;
 import io.vertx.core.json.JsonObject;
 
 public interface ThenaDocObject {

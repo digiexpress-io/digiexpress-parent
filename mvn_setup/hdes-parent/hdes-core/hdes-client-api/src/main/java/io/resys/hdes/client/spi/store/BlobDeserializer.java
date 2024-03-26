@@ -23,8 +23,8 @@ package io.resys.hdes.client.spi.store;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.resys.hdes.client.api.HdesStore.StoreEntity;
-import io.resys.thena.api.entities.git.ThenaGitObject.Blob;
 import io.resys.hdes.client.api.ImmutableStoreEntity;
+import io.resys.thena.api.entities.git.Blob;
 
 
 public class BlobDeserializer implements ThenaConfig.Deserializer {

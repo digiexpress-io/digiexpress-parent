@@ -24,7 +24,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
-import io.resys.thena.api.entities.git.ThenaGitObject.Tag;
+import io.resys.thena.api.entities.git.Tag;
 import io.resys.thena.spi.DbCollections;
 import io.resys.thena.storefile.FileBuilder.TagFileBuilder;
 import io.resys.thena.storefile.tables.ImmutableFileStatement;

@@ -25,7 +25,7 @@ import java.util.List;
 
 import io.resys.thena.api.actions.HistoryActions.BlobHistoryQuery;
 import io.resys.thena.api.actions.PullActions.MatchCriteria;
-import io.resys.thena.api.entities.git.ThenaGitObject.BlobHistory;
+import io.resys.thena.api.entities.git.BlobHistory;
 import io.resys.thena.api.entities.git.ThenaGitObjects.HistoryObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;

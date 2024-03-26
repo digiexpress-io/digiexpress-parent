@@ -23,7 +23,7 @@ package io.resys.thena.storefile.spi;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-import io.resys.thena.api.entities.git.ThenaGitObject.Tree;
+import io.resys.thena.api.entities.git.Tree;
 import io.resys.thena.spi.DbCollections;
 import io.resys.thena.storefile.FileBuilder.TreeFileBuilder;
 import io.resys.thena.storefile.tables.ImmutableFileStatement;

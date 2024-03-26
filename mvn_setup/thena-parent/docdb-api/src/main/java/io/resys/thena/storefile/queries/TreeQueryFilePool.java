@@ -3,8 +3,8 @@ package io.resys.thena.storefile.queries;
 import java.util.Collection;
 
 import io.resys.thena.api.entities.git.ImmutableTree;
-import io.resys.thena.api.entities.git.ThenaGitObject.Tree;
-import io.resys.thena.api.entities.git.ThenaGitObject.TreeValue;
+import io.resys.thena.api.entities.git.Tree;
+import io.resys.thena.api.entities.git.TreeValue;
 import io.resys.thena.storefile.FileBuilder;
 import io.resys.thena.storefile.tables.Table.FileMapper;
 import io.resys.thena.storefile.tables.Table.FilePool;

@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import io.resys.thena.api.entities.git.ThenaGitObject.Commit;
+import io.resys.thena.api.entities.git.Commit;
 import io.resys.thena.spi.DbCollections;
 import io.resys.thena.storesql.ImmutableSql;
 import io.resys.thena.storesql.ImmutableSqlTuple;

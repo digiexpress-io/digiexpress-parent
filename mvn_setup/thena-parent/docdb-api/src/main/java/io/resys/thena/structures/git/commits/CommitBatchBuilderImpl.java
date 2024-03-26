@@ -32,7 +32,7 @@ import io.resys.thena.api.entities.git.ImmutableBranch;
 import io.resys.thena.api.entities.git.ImmutableCommit;
 import io.resys.thena.api.entities.git.ImmutableTree;
 import io.resys.thena.api.entities.git.ImmutableTreeValue;
-import io.resys.thena.api.entities.git.ThenaGitObject.TreeValue;
+import io.resys.thena.api.entities.git.TreeValue;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.structures.git.GitInserts.BatchStatus;
 import io.resys.thena.structures.git.GitInserts.GitBatch;

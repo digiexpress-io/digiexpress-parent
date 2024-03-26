@@ -26,8 +26,8 @@ import java.util.UUID;
 
 import java.util.stream.Collectors;
 
-import io.resys.thena.api.entities.git.ThenaGitObject.Tree;
-import io.resys.thena.api.entities.git.ThenaGitObject.TreeValue;
+import io.resys.thena.api.entities.git.Tree;
+import io.resys.thena.api.entities.git.TreeValue;
 import io.resys.thena.spi.DbCollections;
 import io.resys.thena.storefile.FileBuilder.TreeItemFileBuilder;
 import io.resys.thena.storefile.tables.ImmutableFileStatement;

@@ -27,13 +27,7 @@ import java.util.stream.Collectors;
 import org.immutables.value.Value;
 
 import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.api.entities.git.ThenaGitObject.Blob;
-import io.resys.thena.api.entities.git.ThenaGitObject.BlobHistory;
-import io.resys.thena.api.entities.git.ThenaGitObject.Branch;
-import io.resys.thena.api.entities.git.ThenaGitObject.Commit;
-import io.resys.thena.api.entities.git.ThenaGitObject.IsGitObject;
-import io.resys.thena.api.entities.git.ThenaGitObject.Tag;
-import io.resys.thena.api.entities.git.ThenaGitObject.Tree;
+import io.resys.thena.api.entities.git.GitEntity.IsGitObject;
 import io.resys.thena.api.envelope.BlobContainer;
 import io.resys.thena.api.envelope.BlobContainer.BlobVisitor;
 import io.resys.thena.api.envelope.ThenaEnvelope.ThenaObjects;
