@@ -23,7 +23,7 @@ import io.resys.thena.api.entities.org.OrgRight;
 import io.resys.thena.docdb.test.config.DbTestTemplate;
 import io.resys.thena.docdb.test.config.PgProfile;
 import lombok.extern.slf4j.Slf4j;
-
+ 
 
 
 @QuarkusTest
@@ -43,7 +43,7 @@ public class HierarchicalOrgPartyTest extends DbTestTemplate {
   public void createRepoAndUserGroups() {
     // create project
     RepoResult repo = getClient().tenants().commit()
-        .name("HierarchicalOrgGroupTest-1", RepoType.org)
+        .name("HierarchicalOrgPartyTest-1", RepoType.org)
         .build()
         .await().atMost(Duration.ofMinutes(1));
     log.debug("created repo {}", repo);
@@ -116,7 +116,7 @@ group-1
     
     // modify user 2
     getClient().org(repo).commit().modifyOneMember()
-        .userId(userId2.getId())
+        .memberId(userId2.getId())
         .modifyParties(ModType.ADD, root1.getId())
         .modifyRights(ModType.ADD, bakerMain.getId())
         .userName("super-user")
@@ -168,7 +168,7 @@ group-1
     
     // remove user 2 from child-1.2.2 group
     getClient().org(repo).commit().modifyOneMember()
-        .userId(userId2.getId())
+        .memberId(userId2.getId())
         .modifyParties(ModType.DISABLED, child1_2_2.getId())
         .author("au")
         .message("mod for user")
@@ -216,7 +216,7 @@ group-1
     
     // Reject changes because there are non
     final var rejectNoChanges = getClient().org(repo).commit().modifyOneMember()
-      .userId(userId2.getId())
+      .memberId(userId2.getId())
       .modifyParties(ModType.DISABLED, child1_2_2.getId())
       .author("au")
       .message("mod for user")

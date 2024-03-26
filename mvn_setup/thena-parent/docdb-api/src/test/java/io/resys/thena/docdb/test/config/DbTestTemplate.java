@@ -3,6 +3,8 @@ package io.resys.thena.docdb.test.config;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
 
@@ -68,6 +70,8 @@ public class DbTestTemplate {
   private String db;
   private BiConsumer<ThenaClient, Tenant> callback;
   private Tenant repo;
+  private final Map<String, String> replacements = new HashMap<>();
+
   
   public DbTestTemplate() {
   }
@@ -92,6 +96,7 @@ public class DbTestTemplate {
   
   @BeforeEach
   public void setUp(TestInfo testInfo) throws InterruptedException {
+    replacements.clear();
   	connectToDebugDb();
     waitUntilPostgresqlAcceptsConnections(pgPool);
 
@@ -189,7 +194,7 @@ public class DbTestTemplate {
     if(client.getType() == RepoType.doc) {
       return new DocDbPrinter(createState()).printWithStaticIds(client);
     } else if(client.getType() == RepoType.org) {
-      return new OrgDbPrinter(createState()).printWithStaticIds(client);
+      return new OrgDbPrinter(createState()).printWithStaticIds(client, replacements);
     }
     return new GitPrinter(createState()).printWithStaticIds(client);
   }

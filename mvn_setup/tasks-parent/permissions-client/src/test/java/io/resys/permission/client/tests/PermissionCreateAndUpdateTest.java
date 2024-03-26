@@ -59,9 +59,5 @@ public class PermissionCreateAndUpdateTest extends DbTestTemplate {
       .await().atMost(Duration.ofMinutes(1));
     Assertions.assertEquals("An even better description here", updatedDesc.getDescription());
     Assertions.assertEquals("An even better description here", client.permissionQuery().get(created.getId()).await().atMost(Duration.ofMinutes(1)).getDescription());
-    
-    
-
-
   }
 }

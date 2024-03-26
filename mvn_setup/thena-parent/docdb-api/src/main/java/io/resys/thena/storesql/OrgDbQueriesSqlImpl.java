@@ -4,10 +4,10 @@ import io.resys.thena.storesql.GitDbQueriesSqlImpl.ClientQuerySqlContext;
 import io.resys.thena.storesql.builders.OrgActorStatusQuerySqlPool;
 import io.resys.thena.storesql.builders.OrgGroupQuerySqlPool;
 import io.resys.thena.storesql.builders.OrgGroupRoleQuerySqlPool;
+import io.resys.thena.storesql.builders.OrgMemberRightsQueryImpl;
 import io.resys.thena.storesql.builders.OrgRoleQuerySqlPool;
 import io.resys.thena.storesql.builders.OrgUserMembershipsQuerySqlPool;
 import io.resys.thena.storesql.builders.OrgUserQuerySqlPool;
-import io.resys.thena.storesql.builders.OrgUserRoleQuerySqlPool;
 import io.resys.thena.structures.org.OrgQueries;
 import lombok.RequiredArgsConstructor;
 
@@ -35,7 +35,7 @@ public class OrgDbQueriesSqlImpl implements OrgQueries {
 	}
 	@Override
 	public MemberRightsQuery memberRights() {
-    return new OrgUserRoleQuerySqlPool(context.getWrapper(), context.getMapper(), context.getBuilder(), context.getErrorHandler());
+    return new OrgMemberRightsQueryImpl(context.getWrapper(), context.getMapper(), context.getBuilder(), context.getErrorHandler());
 	}
 	@Override
 	public PartyRightsQuery partyRights() {

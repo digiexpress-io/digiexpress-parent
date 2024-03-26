@@ -6,6 +6,7 @@ import io.resys.thena.structures.org.create.CreateOneMemberImpl;
 import io.resys.thena.structures.org.create.CreateOnePartyImpl;
 import io.resys.thena.structures.org.create.CreateOneRoleImpl;
 import io.resys.thena.structures.org.modify.ModifyOneMemberImpl;
+import io.resys.thena.structures.org.modify.ModifyOnePartyImpl;
 import io.resys.thena.structures.org.modify.ModifyOneRightImpl;
 import lombok.RequiredArgsConstructor;
 
@@ -37,7 +38,6 @@ public class OrgCommitActionsImpl implements OrgCommitActions {
   }
   @Override
   public ModifyOneParty modifyOneParty() {
-    // TODO Auto-generated method stub
-    return null;
+    return new ModifyOnePartyImpl(state, repoId);
   }
 }

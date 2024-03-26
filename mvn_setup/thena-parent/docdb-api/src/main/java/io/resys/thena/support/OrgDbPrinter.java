@@ -1,6 +1,5 @@
 package io.resys.thena.support;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -15,8 +14,8 @@ public class OrgDbPrinter {
     this.state = state;
   }
   
-  public String printWithStaticIds(Tenant repo) {
-    final Map<String, String> replacements = new HashMap<>();
+  public String printWithStaticIds(Tenant repo, final Map<String, String> replacements) {
+
     final Function<String, String> ID = (id) -> {
     	if(id == null) {
     		return null;
@@ -30,24 +29,22 @@ public class OrgDbPrinter {
       return next;
     };
   
+    
+    
     final var ctx = state.toOrgState().withRepo(repo);
     StringBuilder result = new StringBuilder();
     
     result
     .append(System.lineSeparator())
-    .append("Users").append(System.lineSeparator());
+    .append("Members").append(System.lineSeparator());
     
     ctx.query().members()
     .findAll().onItem()
     .transform(item -> {
-      result.append("  - ")
-        .append(ID.apply(item.getId()))
-        .append(System.lineSeparator())
-
-        .append("    commitId").append(": ").append(ID.apply(item.getCommitId()))
+      result.append("  - id: ").append(ID.apply(item.getId())).append("    commitId: ").append(ID.apply(item.getCommitId()))
         .append(System.lineSeparator())
         
-        .append("    username").append(": ").append(item.getUserName())
+        .append("    membername").append(": ").append(item.getUserName())
         .append(System.lineSeparator())
 
         .append("    email").append(": ").append(item.getEmail())
@@ -62,24 +59,20 @@ public class OrgDbPrinter {
     
     result
     .append(System.lineSeparator())
-    .append("Groups").append(System.lineSeparator());
+    .append("Parties").append(System.lineSeparator());
     ctx.query().parties()
     .findAll().onItem()
     .transform(item -> {
-      result.append("  - ")
-      	.append(ID.apply(item.getId()))
-        .append(System.lineSeparator())
-
-        .append("    commitId").append(": ").append(ID.apply(item.getCommitId()))
+      result.append("  - id: ").append(ID.apply(item.getId())).append("    commitId: ").append(ID.apply(item.getCommitId()))
         .append(System.lineSeparator())
 
         .append("    parentId").append(": ").append(ID.apply(item.getParentId()))
         .append(System.lineSeparator())
         
-        .append("    groupName").append(": ").append(item.getPartyName())
+        .append("    partyName").append(": ").append(item.getPartyName())
         .append(System.lineSeparator())
 
-        .append("    groupDescription").append(": ").append(item.getPartyDescription())
+        .append("    partyDescription").append(": ").append(item.getPartyDescription())
         .append(System.lineSeparator())
 
         .append("    externalId").append(": ").append(item.getExternalId())
@@ -90,21 +83,17 @@ public class OrgDbPrinter {
     
     result
     .append(System.lineSeparator())
-    .append("Group Members").append(System.lineSeparator());
+    .append("Memberships").append(System.lineSeparator());
     ctx.query().parties()
     .findAll().onItem()
     .transform(item -> {
-      result.append("  - ")
-      	.append(ID.apply(item.getId()))
-        .append(System.lineSeparator())
-
-        .append("    commitId").append(": ").append(ID.apply(item.getCommitId()))
+      result.append("  - id: ").append(ID.apply(item.getId())).append("    commitId: ").append(ID.apply(item.getCommitId()))
         .append(System.lineSeparator())
         
-        .append("    groupName").append(": ").append(item.getPartyName())
+        .append("    partyName").append(": ").append(item.getPartyName())
         .append(System.lineSeparator())
 
-        .append("    groupDescription").append(": ").append(item.getPartyDescription())
+        .append("    partyDescription").append(": ").append(item.getPartyDescription())
         .append(System.lineSeparator())
 
         .append("    externalId").append(": ").append(item.getExternalId())
@@ -116,22 +105,18 @@ public class OrgDbPrinter {
     
     result
     .append(System.lineSeparator())
-    .append("Roles").append(System.lineSeparator());
+    .append("Rights").append(System.lineSeparator());
     ctx.query().rights()
     .findAll().onItem()
     .transform(item -> {
-      result.append("  - ")
-      	.append(ID.apply(item.getId()))
-        .append(System.lineSeparator())
-
-        .append("    commitId").append(": ").append(ID.apply(item.getCommitId()))
+      result.append("  - id: ").append(ID.apply(item.getId())).append("    commitId: ").append(ID.apply(item.getCommitId()))
         .append(System.lineSeparator())
       
 
-        .append("    roleName").append(": ").append(item.getRightName())
+        .append("    rightName").append(": ").append(item.getRightName())
         .append(System.lineSeparator())
         
-        .append("    roleDescription").append(": ").append(item.getRightDescription())
+        .append("    rightDescription").append(": ").append(item.getRightDescription())
         .append(System.lineSeparator())
 
         .append("    externalId").append(": ").append(item.getExternalId())
@@ -144,21 +129,20 @@ public class OrgDbPrinter {
     
     result
     .append(System.lineSeparator())
-    .append("User roles").append(System.lineSeparator());
+    .append("Member rights").append(System.lineSeparator());
     ctx.query().memberRights()
     .findAll().onItem()
     .transform(item -> {
-      result.append("  - ")
-      	.append(ID.apply(item.getId()))
-        .append(System.lineSeparator())
-
-        .append("    commitId").append(": ").append(ID.apply(item.getCommitId()))
+      result.append("  - id: ").append(ID.apply(item.getId())).append("    commitId: ").append(ID.apply(item.getCommitId()))
         .append(System.lineSeparator())
         
-        .append("    userId").append(": ").append(ID.apply(item.getMemberId()))
+        .append("    memberId").append(": ").append(ID.apply(item.getMemberId()))
         .append(System.lineSeparator())
 
-        .append("    roleId").append(": ").append(ID.apply(item.getRightId()))
+        .append("    partyId").append(": ").append(ID.apply(item.getPartyId()))
+        .append(System.lineSeparator())
+
+        .append("    rightId").append(": ").append(ID.apply(item.getRightId()))
         .append(System.lineSeparator());
       
       return item;
@@ -167,21 +151,17 @@ public class OrgDbPrinter {
     
     result
     .append(System.lineSeparator())
-    .append("Group roles").append(System.lineSeparator());
+    .append("Party rights").append(System.lineSeparator());
     ctx.query().partyRights()
     .findAll().onItem()
     .transform(item -> {
-      result.append("  - ")
-      	.append(ID.apply(item.getId()))
-        .append(System.lineSeparator())
-
-        .append("    commitId").append(": ").append(ID.apply(item.getCommitId()))
+      result.append("  - id: ").append(ID.apply(item.getId())).append("    commitId: ").append(ID.apply(item.getCommitId()))
         .append(System.lineSeparator())
         
-        .append("    groupId").append(": ").append(ID.apply(item.getPartyId()))
+        .append("    partyId").append(": ").append(ID.apply(item.getPartyId()))
         .append(System.lineSeparator())
 
-        .append("    roleId").append(": ").append(ID.apply(item.getRightId()))
+        .append("    rightId").append(": ").append(ID.apply(item.getRightId()))
         .append(System.lineSeparator());
       
       return item;
@@ -194,17 +174,16 @@ public class OrgDbPrinter {
     ctx.query().actorStatus()
     .findAll().onItem()
     .transform(item -> {
-      result.append("  - ")
-        .append(ID.apply(item.getId()))
+      result.append("  - id: ").append(ID.apply(item.getId())).append("    commitId: ").append(ID.apply(item.getCommitId()))
         .append(System.lineSeparator())
 
-        .append("    commitId").append(": ").append(ID.apply(item.getCommitId()))
+        .append("    memberId").append(": ").append(ID.apply(item.getMemberId()))
         .append(System.lineSeparator())
         
-        .append("    groupId").append(": ").append(ID.apply(item.getPartyId()))
+        .append("    partyId").append(": ").append(ID.apply(item.getPartyId()))
         .append(System.lineSeparator())
 
-        .append("    roleId").append(": ").append(ID.apply(item.getRightId()))
+        .append("    rightId").append(": ").append(ID.apply(item.getRightId()))
         .append(System.lineSeparator())
          
         .append("    status").append(": ").append(item.getValue())
@@ -233,19 +212,15 @@ public class OrgDbPrinter {
     
     result
     .append(System.lineSeparator())
-    .append("Users").append(System.lineSeparator());
+    .append("Members").append(System.lineSeparator());
     
     ctx.query().members()
     .findAll().onItem()
     .transform(item -> {
-      result.append("  - ")
-        .append(item.getId())
-        .append(System.lineSeparator())
-
-        .append("    commitId").append(": ").append(item.getCommitId())
+      result.append("  - id: ").append(item.getId()).append("    commitId: ").append(item.getCommitId())
         .append(System.lineSeparator())
         
-        .append("    username").append(": ").append(item.getUserName())
+        .append("    membername").append(": ").append(item.getUserName())
         .append(System.lineSeparator())
 
         .append("    email").append(": ").append(item.getEmail())
@@ -260,24 +235,20 @@ public class OrgDbPrinter {
     
     result
     .append(System.lineSeparator())
-    .append("Groups").append(System.lineSeparator());
+    .append("Parties").append(System.lineSeparator());
     ctx.query().parties()
     .findAll().onItem()
     .transform(item -> {
-      result.append("  - ")
-        .append(item.getId())
-        .append(System.lineSeparator())
-
-        .append("    commitId").append(": ").append(item.getCommitId())
+      result.append("  - id: ").append(item.getId()).append("    commitId: ").append(item.getCommitId())
         .append(System.lineSeparator())
 
         .append("    parentId").append(": ").append(item.getParentId())
         .append(System.lineSeparator())
         
-        .append("    groupName").append(": ").append(item.getPartyName())
+        .append("    partyName").append(": ").append(item.getPartyName())
         .append(System.lineSeparator())
 
-        .append("    groupDescription").append(": ").append(item.getPartyDescription())
+        .append("    partyDescription").append(": ").append(item.getPartyDescription())
         .append(System.lineSeparator())
 
         .append("    externalId").append(": ").append(item.getExternalId())
@@ -288,21 +259,17 @@ public class OrgDbPrinter {
     
     result
     .append(System.lineSeparator())
-    .append("Group Members").append(System.lineSeparator());
+    .append("Memberships").append(System.lineSeparator());
     ctx.query().parties()
     .findAll().onItem()
     .transform(item -> {
-      result.append("  - ")
-        .append(item.getId())
-        .append(System.lineSeparator())
-
-        .append("    commitId").append(": ").append(item.getCommitId())
+      result.append("  - id: ").append(item.getId()).append("    commitId: ").append(item.getCommitId())
         .append(System.lineSeparator())
         
-        .append("    groupName").append(": ").append(item.getPartyName())
+        .append("    partyName").append(": ").append(item.getPartyName())
         .append(System.lineSeparator())
 
-        .append("    groupDescription").append(": ").append(item.getPartyDescription())
+        .append("    partyDescription").append(": ").append(item.getPartyDescription())
         .append(System.lineSeparator())
 
         .append("    externalId").append(": ").append(item.getExternalId())
@@ -314,22 +281,18 @@ public class OrgDbPrinter {
     
     result
     .append(System.lineSeparator())
-    .append("Roles").append(System.lineSeparator());
+    .append("Rights").append(System.lineSeparator());
     ctx.query().rights()
     .findAll().onItem()
     .transform(item -> {
-      result.append("  - ")
-        .append(item.getId())
-        .append(System.lineSeparator())
-
-        .append("    commitId").append(": ").append(item.getCommitId())
+      result.append("  - id: ").append(item.getId()).append("    commitId: ").append(item.getCommitId())
         .append(System.lineSeparator())
       
 
-        .append("    roleName").append(": ").append(item.getRightName())
+        .append("    rightName").append(": ").append(item.getRightName())
         .append(System.lineSeparator())
         
-        .append("    roleDescription").append(": ").append(item.getRightDescription())
+        .append("    rightDescription").append(": ").append(item.getRightDescription())
         .append(System.lineSeparator())
 
         .append("    externalId").append(": ").append(item.getExternalId())
@@ -342,21 +305,20 @@ public class OrgDbPrinter {
     
     result
     .append(System.lineSeparator())
-    .append("User roles").append(System.lineSeparator());
+    .append("Member rights").append(System.lineSeparator());
     ctx.query().memberRights()
     .findAll().onItem()
     .transform(item -> {
-      result.append("  - ")
-        .append(item.getId())
-        .append(System.lineSeparator())
-
-        .append("    commitId").append(": ").append(item.getCommitId())
+      result.append("  - id: ").append(item.getId()).append("    commitId: ").append(item.getCommitId())
         .append(System.lineSeparator())
         
-        .append("    userId").append(": ").append(item.getMemberId())
+        .append("    memberId").append(": ").append(item.getMemberId())
+        .append(System.lineSeparator())
+        
+        .append("    partyId").append(": ").append(item.getPartyId())
         .append(System.lineSeparator())
 
-        .append("    roleId").append(": ").append(item.getRightId())
+        .append("    rightId").append(": ").append(item.getRightId())
         .append(System.lineSeparator());
       
       return item;
@@ -365,21 +327,17 @@ public class OrgDbPrinter {
     
     result
     .append(System.lineSeparator())
-    .append("Group roles").append(System.lineSeparator());
+    .append("Party rights").append(System.lineSeparator());
     ctx.query().partyRights()
     .findAll().onItem()
     .transform(item -> {
-      result.append("  - ")
-        .append(item.getId())
-        .append(System.lineSeparator())
-
-        .append("    commitId").append(": ").append(item.getCommitId())
+      result.append("  - id: ").append(item.getId()).append("    commitId: ").append(item.getCommitId())
         .append(System.lineSeparator())
         
-        .append("    groupId").append(": ").append(item.getPartyId())
+        .append("    partyId").append(": ").append(item.getPartyId())
         .append(System.lineSeparator())
 
-        .append("    roleId").append(": ").append(item.getRightId())
+        .append("    rightId").append(": ").append(item.getRightId())
         .append(System.lineSeparator());
       
       return item;
@@ -391,17 +349,13 @@ public class OrgDbPrinter {
     ctx.query().actorStatus()
     .findAll().onItem()
     .transform(item -> {
-      result.append("  - ")
-        .append(item.getId())
-        .append(System.lineSeparator())
-
-        .append("    commitId").append(": ").append(item.getCommitId())
+      result.append("  - id: ").append(item.getId()).append("    commitId: ").append(item.getCommitId())
         .append(System.lineSeparator())
         
-        .append("    groupId").append(": ").append(item.getPartyId())
+        .append("    partyId").append(": ").append(item.getPartyId())
         .append(System.lineSeparator())
 
-        .append("    roleId").append(": ").append(item.getRightId())
+        .append("    rightId").append(": ").append(item.getRightId())
         .append(System.lineSeparator())
          
         .append("    status").append(": ").append(item.getValue())

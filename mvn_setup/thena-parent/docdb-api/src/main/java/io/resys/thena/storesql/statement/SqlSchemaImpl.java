@@ -459,7 +459,7 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("  member_id VARCHAR(40) NOT NULL,").ln()
     .append("  right_id VARCHAR(40) NOT NULL,").ln()
     .append("  party_id VARCHAR(40),").ln()
-    .append("  UNIQUE (member_id, right_id, party_id)").ln()
+    .append("  UNIQUE NULLS NOT DISTINCT(member_id, right_id, party_id)").ln()
     .append(");").ln()
     
     .append("CREATE INDEX ").append(options.getOrgMemberRights()).append("_COMMIT_INDEX")
@@ -524,7 +524,7 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("  right_id VARCHAR(40),").ln()
     .append("  party_id VARCHAR(40),").ln()
     .append("  actor_status VARCHAR(100) NOT NULL,").ln() // visibility: in_force | archived 
-    .append("  UNIQUE (member_id, right_id, party_id)").ln()
+    .append("  UNIQUE NULLS NOT DISTINCT(member_id, right_id, party_id)").ln()
     .append(");").ln()
     
     .append("CREATE INDEX ").append(options.getOrgActorStatus()).append("_COMMIT_INDEX")

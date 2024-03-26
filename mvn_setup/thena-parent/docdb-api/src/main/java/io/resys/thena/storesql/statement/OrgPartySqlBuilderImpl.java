@@ -9,7 +9,7 @@ import io.resys.thena.spi.DbCollections;
 import io.resys.thena.storesql.ImmutableSql;
 import io.resys.thena.storesql.ImmutableSqlTuple;
 import io.resys.thena.storesql.ImmutableSqlTupleList;
-import io.resys.thena.storesql.SqlBuilder.OrgGroupSqlBuilder;
+import io.resys.thena.storesql.SqlBuilder.OrgPartySqlBuilder;
 import io.resys.thena.storesql.SqlBuilder.Sql;
 import io.resys.thena.storesql.SqlBuilder.SqlTuple;
 import io.resys.thena.storesql.SqlBuilder.SqlTupleList;
@@ -18,7 +18,7 @@ import io.vertx.mutiny.sqlclient.Tuple;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class OrgGroupSqlBuilderImpl implements OrgGroupSqlBuilder {
+public class OrgPartySqlBuilderImpl implements OrgPartySqlBuilder {
   private final DbCollections options;
   
   @Override
@@ -103,7 +103,7 @@ public class OrgGroupSqlBuilderImpl implements OrgGroupSqlBuilder {
   public SqlTupleList updateMany(Collection<OrgParty> users) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
-        .append("UPDATE ").append(options.getOrgMembers())
+        .append("UPDATE ").append(options.getOrgParties())
         .append(" SET external_id = $1, party_name = $2, party_description = $3, commit_id = $4")
         .append(" WHERE id = $5")
         .build())

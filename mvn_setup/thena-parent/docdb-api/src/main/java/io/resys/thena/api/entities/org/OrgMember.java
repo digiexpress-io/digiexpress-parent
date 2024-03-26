@@ -1,5 +1,7 @@
 package io.resys.thena.api.entities.org;
 
+import java.util.Collection;
+
 import javax.annotation.Nullable;
 
 import org.immutables.value.Value;
@@ -20,4 +22,15 @@ interface OrgMember extends ThenaOrgObject, ThenaContainer, IsOrgObject, IsOrgVe
   String getEmail();
   
   @JsonIgnore @Override default public OrgDocType getDocType() { return OrgDocType.OrgUser; };
+  
+  default boolean isMatch(String IdOrNameOrExtId) {
+    return IdOrNameOrExtId.equals(getExternalId()) ||
+        IdOrNameOrExtId.equals(getUserName()) ||
+        IdOrNameOrExtId.equals(getId());
+  }
+  default boolean isMatch(Collection<String> IdOrNameOrExtId) {
+    return IdOrNameOrExtId.contains(getExternalId()) ||
+        IdOrNameOrExtId.contains(getUserName()) ||
+        IdOrNameOrExtId.contains(getId());
+  }
 }

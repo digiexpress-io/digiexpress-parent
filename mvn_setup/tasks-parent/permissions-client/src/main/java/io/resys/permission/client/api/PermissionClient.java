@@ -8,6 +8,7 @@ import io.resys.permission.client.api.model.PermissionCommand.PermissionUpdateCo
 import io.resys.permission.client.api.model.Principal;
 import io.resys.permission.client.api.model.Principal.Permission;
 import io.resys.permission.client.api.model.Principal.Role;
+import io.resys.permission.client.api.model.PrincipalCommand.CreatePrincipal;
 import io.resys.permission.client.api.model.PrincipalCommand.PrincipalUpdateCommand;
 import io.resys.permission.client.api.model.RoleCommand.CreateRole;
 import io.resys.permission.client.api.model.RoleCommand.RoleUpdateCommand;
@@ -23,6 +24,7 @@ public interface PermissionClient {
 
   CreatePermissionAction createPermission();
   CreateRoleAction createRole();
+  CreatePrincipalAction createPrincipal();
 
   UpdatePermissionAction updatePermission();
   UpdatePrincipalAction updatePrincipal();
@@ -49,12 +51,16 @@ public interface PermissionClient {
   
   interface UpdateRoleAction {
     Uni<Role> updateOne(RoleUpdateCommand command);
-    Uni<Role> updateOne(List<RoleUpdateCommand> commands);;
+    Uni<Role> updateOne(List<RoleUpdateCommand> commands);
+  }
+  
+  interface CreatePrincipalAction {
+    Uni<Principal> createOne(CreatePrincipal command);
   }
   
   interface UpdatePrincipalAction {
     Uni<Principal> updateOne(PrincipalUpdateCommand command);
-    Uni<Principal> updateOne(List<PrincipalUpdateCommand> commands);;
+    Uni<Principal> updateOne(List<PrincipalUpdateCommand> commands);
   }
   
   interface PermissionQuery {

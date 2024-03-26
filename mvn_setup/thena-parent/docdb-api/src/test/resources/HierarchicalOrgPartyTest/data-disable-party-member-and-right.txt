@@ -1,0 +1,100 @@
+
+Members
+  - id: 1    commitId: 2
+    membername: user-1
+    email: em-
+    externalId: null
+
+Parties
+  - id: 3    commitId: 4
+    parentId: null
+    partyName: group-1
+    partyDescription: gd-
+    externalId: null
+  - id: 5    commitId: 6
+    parentId: 3
+    partyName: child-1.1
+    partyDescription: gd-
+    externalId: null
+  - id: 7    commitId: 8
+    parentId: 3
+    partyName: child-1.2
+    partyDescription: gd-
+    externalId: null
+  - id: 9    commitId: 10
+    parentId: 7
+    partyName: child-1.2.1
+    partyDescription: gd-
+    externalId: null
+  - id: 11    commitId: 12
+    parentId: 7
+    partyName: child-1.2.2
+    partyDescription: gd-
+    externalId: null
+  - id: 13    commitId: 14
+    parentId: 3
+    partyName: child-1.3
+    partyDescription: gd-
+    externalId: null
+  - id: 15    commitId: 16
+    parentId: 3
+    partyName: child-1.4
+    partyDescription: gd-
+    externalId: null
+
+Memberships
+  - id: 3    commitId: 4
+    partyName: group-1
+    partyDescription: gd-
+    externalId: null
+  - id: 5    commitId: 6
+    partyName: child-1.1
+    partyDescription: gd-
+    externalId: null
+  - id: 7    commitId: 8
+    partyName: child-1.2
+    partyDescription: gd-
+    externalId: null
+  - id: 9    commitId: 10
+    partyName: child-1.2.1
+    partyDescription: gd-
+    externalId: null
+  - id: 11    commitId: 12
+    partyName: child-1.2.2
+    partyDescription: gd-
+    externalId: null
+  - id: 13    commitId: 14
+    partyName: child-1.3
+    partyDescription: gd-
+    externalId: null
+  - id: 15    commitId: 16
+    partyName: child-1.4
+    partyDescription: gd-
+    externalId: null
+
+Rights
+  - id: 17    commitId: 18
+    rightName: city-guards
+    rightDescription: rd-
+    externalId: null
+
+Member rights
+
+Party rights
+
+Actors status
+  - id: 19    commitId: 20
+    memberId: null
+    partyId: 11
+    rightId: null
+    status: DISABLED
+  - id: 21    commitId: 20
+    memberId: 1
+    partyId: 11
+    rightId: null
+    status: DISABLED
+  - id: 22    commitId: 20
+    memberId: null
+    partyId: 11
+    rightId: 17
+    status: DISABLED

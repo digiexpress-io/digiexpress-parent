@@ -3,6 +3,8 @@ package io.resys.permission.client.tests.config;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.AfterEach;
@@ -70,7 +72,8 @@ public class DbTestTemplate {
   private Tenant repo;
   private PermissionClient client;
   private PermissionStore store;
-
+  private final Map<String, String> replacements = new HashMap<>();
+  
 
   private void connectToDebugDb() {
   	if(!STORE_TO_DEBUG_DB) {
@@ -89,6 +92,7 @@ public class DbTestTemplate {
   
   @BeforeEach
   public void setUp(TestInfo testInfo) throws InterruptedException {
+    replacements.clear();
   	connectToDebugDb();
     waitUntilPostgresqlAcceptsConnections(pgPool);
 
@@ -175,8 +179,10 @@ public class DbTestTemplate {
     }
   }
   
+
   public String toStaticData(Tenant client) {    
-    return new OrgDbPrinter(createState()).printWithStaticIds(client);
+    return new OrgDbPrinter(createState()).printWithStaticIds(client, replacements);
+
   }
   
 }

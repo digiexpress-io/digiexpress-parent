@@ -14,12 +14,12 @@ import io.resys.thena.storesql.statement.GitTreeSqlBuilderImpl;
 import io.resys.thena.storesql.statement.OrgActorStatusSqlBuilderImpl;
 import io.resys.thena.storesql.statement.OrgCommitSqlBuilderImpl;
 import io.resys.thena.storesql.statement.OrgCommitTreeSqlBuilderImpl;
-import io.resys.thena.storesql.statement.OrgGroupRoleSqlBuilderImpl;
-import io.resys.thena.storesql.statement.OrgGroupSqlBuilderImpl;
-import io.resys.thena.storesql.statement.OrgRoleSqlBuilderImpl;
-import io.resys.thena.storesql.statement.OrgUserMembershipsSqlBuilderImpl;
-import io.resys.thena.storesql.statement.OrgUserRoleSqlBuilderImpl;
-import io.resys.thena.storesql.statement.OrgUserSqlBuilderImpl;
+import io.resys.thena.storesql.statement.OrgMemberRightSqlBuilderImpl;
+import io.resys.thena.storesql.statement.OrgMemberSqlBuilderImpl;
+import io.resys.thena.storesql.statement.OrgMembershipsSqlBuilderImpl;
+import io.resys.thena.storesql.statement.OrgPartyRightSqlBuilderImpl;
+import io.resys.thena.storesql.statement.OrgPartySqlBuilderImpl;
+import io.resys.thena.storesql.statement.OrgRightSqlBuilderImpl;
 import io.resys.thena.storesql.statement.RepoSqlBuilderImpl;
 import lombok.RequiredArgsConstructor;
 
@@ -76,12 +76,12 @@ public class SqlBuilderImpl implements SqlBuilder {
     return new DocBranchSqlBuilderImpl(ctx);
   }
   @Override
-  public OrgUserSqlBuilder orgMembers() {
-    return new OrgUserSqlBuilderImpl(ctx);
+  public OrgMemberSqlBuilder orgMembers() {
+    return new OrgMemberSqlBuilderImpl(ctx);
   }
   @Override
-  public OrgGroupSqlBuilder orgParties() {
-    return new OrgGroupSqlBuilderImpl(ctx);
+  public OrgPartySqlBuilder orgParties() {
+    return new OrgPartySqlBuilderImpl(ctx);
   }
   @Override
   public OrgCommitSqlBuilder orgCommits() {
@@ -92,20 +92,20 @@ public class SqlBuilderImpl implements SqlBuilder {
     return new OrgCommitTreeSqlBuilderImpl(ctx);
   }
 	@Override
-	public OrgUserMembershipsSqlBuilder orgMemberships() {
-		return new OrgUserMembershipsSqlBuilderImpl(ctx);
+	public OrgMembershipsSqlBuilder orgMemberships() {
+		return new OrgMembershipsSqlBuilderImpl(ctx);
 	}
 	@Override
-	public OrgRoleSqlBuilder orgRights() {
-		return new OrgRoleSqlBuilderImpl(ctx);
+	public OrgRightSqlBuilder orgRights() {
+		return new OrgRightSqlBuilderImpl(ctx);
 	}
 	@Override
-	public OrgUserRoleSqlBuilder orgMemberRights() {
-		return new OrgUserRoleSqlBuilderImpl(ctx);
+	public OrgMemberRightSqlBuilder orgMemberRights() {
+		return new OrgMemberRightSqlBuilderImpl(ctx);
 	}
 	@Override
-	public OrgGroupRoleSqlBuilder orgPartyRights() {
-		return new OrgGroupRoleSqlBuilderImpl(ctx);
+	public OrgPartyRightSqlBuilder orgPartyRights() {
+		return new OrgPartyRightSqlBuilderImpl(ctx);
 	}
   @Override
   public OrgActorStatusSqlBuilder orgActorStatus() {

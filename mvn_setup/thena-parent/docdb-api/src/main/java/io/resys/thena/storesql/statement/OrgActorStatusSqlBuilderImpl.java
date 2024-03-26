@@ -74,7 +74,7 @@ public class OrgActorStatusSqlBuilderImpl implements OrgActorStatusSqlBuilder {
         .build();
   }
   @Override
-  public SqlTuple findAllByIdMemberId(String memberId) {
+  public SqlTuple findAllByMemberId(String memberId) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT * ").ln()
@@ -128,6 +128,31 @@ public class OrgActorStatusSqlBuilderImpl implements OrgActorStatusSqlBuilder {
         .props(users.stream()
             .map(doc -> Tuple.from(new Object[]{doc.getValue().name(), doc.getCommitId(), doc.getId()}))
             .collect(Collectors.toList()))
+        .build();
+  }
+
+  @Override
+  public SqlTupleList deleteAll(Collection<OrgActorStatus> users) {
+    return ImmutableSqlTupleList.builder()
+        .value(new SqlStatement()
+        .append("DELETE FROM ").append(options.getOrgActorStatus())
+        .append(" WHERE id = $1")
+        .build())
+        .props(users.stream()
+            .map(doc -> Tuple.from(new Object[]{doc.getId()}))
+            .collect(Collectors.toList()))
+        .build();
+  }
+
+  @Override
+  public SqlTuple findAllByPartyId(String partyId) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT * ").ln()
+        .append("  FROM ").append(options.getOrgActorStatus()).ln()
+        .append("  WHERE (party_id = $1)").ln() 
+        .build())
+        .props(Tuple.of(partyId))
         .build();
   }
 }

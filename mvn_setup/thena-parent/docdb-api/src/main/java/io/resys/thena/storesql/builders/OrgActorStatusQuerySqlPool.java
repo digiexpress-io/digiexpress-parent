@@ -65,10 +65,10 @@ public class OrgActorStatusQuerySqlPool implements OrgQueries.ActorStatusQuery {
   }
   
   @Override
-  public Multi<OrgActorStatus> findAllByIdRightId(String id) {
+  public Multi<OrgActorStatus> findAllByRightId(String id) {
     final var sql = sqlBuilder.orgActorStatus().findAllByIdRightId(id);
     if(log.isDebugEnabled()) {
-      log.debug("OrgActorStatus findAllByIdRightId query, with props: {} \r\n{}", 
+      log.debug("OrgActorStatus findAllByRightId query, with props: {} \r\n{}", 
           sql.getProps().deepToString(),
           sql.getValue());
     }
@@ -82,10 +82,10 @@ public class OrgActorStatusQuerySqlPool implements OrgQueries.ActorStatusQuery {
 
 
   @Override
-  public Multi<OrgActorStatus> findAllByIdMemberId(String id) {
-    final var sql = sqlBuilder.orgActorStatus().findAllByIdMemberId(id);
+  public Multi<OrgActorStatus> findAllByMemberId(String id) {
+    final var sql = sqlBuilder.orgActorStatus().findAllByMemberId(id);
     if(log.isDebugEnabled()) {
-      log.debug("OrgActorStatus findAllByIdMemberId query, with props: {} \r\n{}", 
+      log.debug("OrgActorStatus findAllByMemberId query, with props: {} \r\n{}", 
           sql.getProps().deepToString(),
           sql.getValue());
     }
@@ -95,5 +95,20 @@ public class OrgActorStatusQuerySqlPool implements OrgQueries.ActorStatusQuery {
         .onItem()
         .transformToMulti((RowSet<OrgActorStatus> rowset) -> Multi.createFrom().iterable(rowset))
         .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't get 'ACTOR_STATUS' by 'member_id': '" + id + "'!", sql, e)));
+  }
+  @Override
+  public Multi<OrgActorStatus> findAllByPartyId(String id) {
+    final var sql = sqlBuilder.orgActorStatus().findAllByPartyId(id);
+    if(log.isDebugEnabled()) {
+      log.debug("OrgActorStatus findAllByPartyId query, with props: {} \r\n{}", 
+          sql.getProps().deepToString(),
+          sql.getValue());
+    }
+    return wrapper.getClient().preparedQuery(sql.getValue())
+        .mapping(row -> sqlMapper.orgActorStatus(row))
+        .execute(sql.getProps())
+        .onItem()
+        .transformToMulti((RowSet<OrgActorStatus> rowset) -> Multi.createFrom().iterable(rowset))
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't get 'ACTOR_STATUS' by 'party_id': '" + id + "'!", sql, e)));
   }
 }

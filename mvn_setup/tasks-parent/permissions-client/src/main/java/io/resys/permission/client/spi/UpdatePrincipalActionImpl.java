@@ -68,7 +68,7 @@ public class UpdatePrincipalActionImpl implements UpdatePrincipalAction {
     }
     
     return modifyOneMember
-      .userId(id)
+      .memberId(id)
       .author(ctx.getConfig().getAuthor().get())
       .message("Principal update")
       .build();

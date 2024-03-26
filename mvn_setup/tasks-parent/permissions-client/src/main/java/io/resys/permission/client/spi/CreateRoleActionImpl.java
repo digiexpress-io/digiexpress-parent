@@ -32,9 +32,9 @@ public class CreateRoleActionImpl implements CreateRoleAction {
     
     final var role = response.getParty();
     return ImmutableRole.builder()
-        .id("")
+        .id(role.getId())
         .version(role.getCommitId())
-
+      
         .name(role.getPartyName())
         .description(role.getPartyDescription())
         .status(OrgActorStatus.OrgActorStatusType.IN_FORCE)
@@ -52,10 +52,9 @@ public class CreateRoleActionImpl implements CreateRoleAction {
     return createOneParty
         .message("created role")
         .author(ctx.getConfig().getAuthor().get())
-
+        
         .partyDescription(role.getDescription())
         .partyName(role.getName())
-        .parentId(role.getId())
         .build();
     }
     

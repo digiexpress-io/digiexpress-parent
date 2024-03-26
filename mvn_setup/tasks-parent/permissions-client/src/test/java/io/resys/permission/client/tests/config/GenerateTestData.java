@@ -49,7 +49,7 @@ public class GenerateTestData {
     
     for(final var entry : groupsByUsers.entrySet()) {
       final var builder = docDb.org(repo.getId()).commit().modifyOneMember()
-          .userId(entry.getKey())
+          .memberId(entry.getKey())
           .author("ar-")
           .message("created membership");
       entry.getValue().forEach(p -> builder.modifyParties(ModType.ADD, p));
@@ -207,7 +207,8 @@ public class GenerateTestData {
       final var user = (JsonObject) userRaw;
       
       final var result = docDb.org(repo.getId()).commit().modifyOneMember()
-        .userId(user.getString("user_external_id"))
+        .memberId(user.getString("user_external_id"))
+
         .modifyPartyRight(ModType.ADD, user.getString("group_external_id"), user.getString("role_external_id"))
         .author("au-")
         .message("created user group role association")

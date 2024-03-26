@@ -461,7 +461,7 @@ Testi 1::tenant <= you are here
     
     for(final var entry : groupsByUsers.entrySet()) {
       final var builder = getClient().org(repo).commit().modifyOneMember()
-          .userId(entry.getKey())
+          .memberId(entry.getKey())
           .author("ar-")
           .message("created membership");
       
@@ -621,7 +621,7 @@ Testi 1::tenant <= you are here
       final var user = (JsonObject) userRaw;
       
       final var builder = getClient().org(repo).commit().modifyOneMember()
-        .userId(user.getString("user_external_id"))
+        .memberId(user.getString("user_external_id"))
         .author("au-")
         .message("created user group role association");
       

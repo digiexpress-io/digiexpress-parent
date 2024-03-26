@@ -20,7 +20,6 @@ import io.resys.thena.api.entities.org.ImmutableOrgMember;
 import io.resys.thena.api.entities.org.ImmutableOrgMemberRight;
 import io.resys.thena.api.entities.org.ImmutableOrgMembership;
 import io.resys.thena.api.entities.org.OrgActorStatus;
-import io.resys.thena.api.entities.org.OrgActorStatus.OrgActorStatusType;
 import io.resys.thena.api.entities.org.OrgCommitTree;
 import io.resys.thena.api.entities.org.OrgCommitTree.OrgOperationType;
 import io.resys.thena.api.entities.org.OrgMember;
@@ -116,7 +115,7 @@ public class BatchForOneMemberModify {
     }
     return this;
   }
-  public ImmutableOrgBatchForOne create() throws NoChangesException {
+  public ImmutableOrgBatchForOne create() throws NoMemberChangesException {
     RepoAssert.notEmpty(repoId,   () -> "repoId can't be empty!");
     RepoAssert.notEmpty(author,   () -> "author can't be empty!");
     RepoAssert.notEmpty(message,  () -> "message can't be empty!");
@@ -131,11 +130,11 @@ public class BatchForOneMemberModify {
     final var createdAt = OffsetDateTime.now();
     
     // member
-    final var member = visitUserChanges(commitId);
+    final var member = visitMemberChanges(commitId);
     
-    // user status
+    // member status
     final var memberStatus = this.currentActorStatus.stream().filter(g -> g.getRightId() == null && g.getPartyId() == null).findFirst();
-    visitUserStatus(commitId, memberStatus.orElse(null));
+    visitMemberStatus(commitId, memberStatus.orElse(null));
     
     // parties
     final var memebrShipInParty = this.currentMemberships.stream().filter(g -> g.getPartyId() != null).collect(Collectors.toMap(e -> e.getPartyId(), e -> e));
@@ -268,7 +267,7 @@ public class BatchForOneMemberModify {
         
         batch.getMembers().isEmpty()) {
       
-      throw new NoChangesException();
+      throw new NoMemberChangesException();
     }
     return batch;
   }
@@ -285,7 +284,7 @@ public class BatchForOneMemberModify {
     tree.add(entry);
   }
   
-  private Optional<OrgMember> visitUserChanges(String commitId) {
+  private Optional<OrgMember> visitMemberChanges(String commitId) {
     final var newState = ImmutableOrgMember.builder()
     .id(current.getId())
     .commitId(commitId)
@@ -306,7 +305,7 @@ public class BatchForOneMemberModify {
     return Optional.of(newState);
   }
   
-  private void visitUserStatus(String commitId, OrgActorStatus status) {
+  private void visitMemberStatus(String commitId, OrgActorStatus status) {
     if(this.newStatus == null) {
       return;
     }
@@ -325,7 +324,8 @@ public class BatchForOneMemberModify {
       visitChangeTree(commitId, newStatus, OrgCommitTree.OrgOperationType.ADD);
     } else {
       final var newStatus = ImmutableOrgActorStatus.builder().from(status).value(this.newStatus).build();
-      visitChangeTree(commitId, newStatus, OrgCommitTree.OrgOperationType.MOD);
+      this.newActorStatus.add(newStatus);
+      visitChangeTree(commitId, newStatus, OrgOperationType.MOD);
       identifiersForUpdates.add(newStatus.getId());      
     }
   }
@@ -544,7 +544,7 @@ public class BatchForOneMemberModify {
     private final OrgParty group;
   }
   
-  public static class NoChangesException extends Exception {
+  public static class NoMemberChangesException extends Exception {
     private static final long serialVersionUID = 3041890960089273165L;
     
   }

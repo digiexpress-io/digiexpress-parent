@@ -44,12 +44,12 @@ import io.resys.thena.api.entities.org.OrgActorStatus;
     include = JsonTypeInfo.As.PROPERTY,
     property = "commandType")
 @JsonSubTypes({
+  @Type(value = ImmutableCreatePrincipal.class, name = "CREATE_PRINCIPAL"), 
   @Type(value = ImmutableChangePrincipalRoles.class, name = "CHANGE_PRINCIPAL_ROLES"), 
   @Type(value = ImmutableChangePrincipalStatus.class, name = "CHANGE_PRINCIPAL_STATUS"), 
 })
 
 public interface PrincipalCommand extends Serializable {
-  String getId();
   @Nullable String getUserId();
   @Nullable Instant getTargetDate();
   PrincipalCommandType getCommandType();
@@ -60,8 +60,20 @@ public interface PrincipalCommand extends Serializable {
   PrincipalCommand withTargetDate(Instant targetDate);
   
   enum PrincipalCommandType {
+    CREATE_PRINCIPAL,
     CHANGE_PRINCIPAL_ROLES,
     CHANGE_PRINCIPAL_STATUS
+  }
+
+  @Value.Immutable @JsonSerialize(as = ImmutableCreatePrincipal.class) @JsonDeserialize( as = ImmutableCreatePrincipal.class)
+  interface CreatePrincipal extends PrincipalCommand {
+    String getName();
+    String getEmail();
+    List<String> getRoles();
+    List<String> getPermissions();
+    
+    @Value.Default
+    @Override default PrincipalCommandType getCommandType() { return PrincipalCommandType.CREATE_PRINCIPAL; } 
   }
   
   @JsonTypeInfo(
@@ -74,6 +86,7 @@ public interface PrincipalCommand extends Serializable {
   })
   
   interface PrincipalUpdateCommand extends PrincipalCommand {
+    String getId();
     PrincipalUpdateCommand withUserId(String userId);
     PrincipalUpdateCommand withTargetDate(Instant targetDate);
   }

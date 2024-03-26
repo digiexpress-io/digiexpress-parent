@@ -8,6 +8,7 @@ import org.immutables.value.Value;
 
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.org.OrgActorStatus;
+import io.resys.thena.api.entities.org.OrgActorStatus.OrgActorStatusType;
 import io.resys.thena.api.entities.org.OrgMember;
 import io.resys.thena.api.entities.org.OrgParty;
 import io.resys.thena.api.entities.org.OrgRight;
@@ -78,7 +79,7 @@ public interface OrgCommitActions {
     ModifyOneMember author(String author);
     ModifyOneMember message(String message);
   
-    ModifyOneMember userId(String userId);
+    ModifyOneMember memberId(String userId);
     ModifyOneMember externalId(@Nullable String externalId);
     ModifyOneMember userName(String userName);
     ModifyOneMember email(String email);
@@ -103,9 +104,9 @@ public interface OrgCommitActions {
     ModifyOneParty partyDescription(String partyDescription);
     
     ModifyOneParty modifyMember(ModType type, String memberIdNameOrExtId);
-    ModifyOneParty modifyRights(ModType type, String rightIdNameOrExtId);
-    ModifyOneParty status(OrgActorStatus.OrgActorStatusType status);
-    
+    ModifyOneParty modifyRight(ModType type, String rightIdNameOrExtId);
+    ModifyOneParty modifyMemberRight(ModType type, String memberIdNameOrExtId, String rightIdNameOrExtId);
+    ModifyOneParty status(OrgActorStatusType status);    
     Uni<OnePartyEnvelope> build();
   }
 
@@ -121,8 +122,7 @@ public interface OrgCommitActions {
     
     ModifyOneRight modifyMember(ModType type, String memberIdNameOrExtId);
     ModifyOneRight modifyParty(ModType type, String partyIdNameOrExtId);
-    ModifyOneParty status(OrgActorStatus.OrgActorStatusType status);
-    
+    ModifyOneRight status(OrgActorStatusType status);
     Uni<OneRightEnvelope> build();
   }
   
