@@ -8,7 +8,7 @@ import javax.annotation.Nullable;
 import org.immutables.value.Value;
 
 @Value.Immutable
-public  
+public 
 interface CommitTree extends GitEntity {
   String getCommitId();
   
