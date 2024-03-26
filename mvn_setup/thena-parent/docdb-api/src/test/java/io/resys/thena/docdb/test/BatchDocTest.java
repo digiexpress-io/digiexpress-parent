@@ -22,8 +22,8 @@ package io.resys.thena.docdb.test;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
-import io.resys.thena.docdb.api.actions.TenantModel.RepoResult;
-import io.resys.thena.docdb.api.actions.TenantModel.RepoStatus;
+import io.resys.thena.docdb.api.actions.TenantActions.RepoResult;
+import io.resys.thena.docdb.api.actions.TenantActions.RepoStatus;
 import io.resys.thena.docdb.api.models.Repo.RepoType;
 import io.resys.thena.docdb.test.config.DbTestTemplate;
 import io.resys.thena.docdb.test.config.PgProfile;

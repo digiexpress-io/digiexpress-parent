@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.resys.thena.docdb.api.ThenaClient;
-import io.resys.thena.docdb.api.actions.TenantModel.RepoStatus;
+import io.resys.thena.docdb.api.actions.TenantActions.RepoStatus;
 import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.Repo.RepoType;

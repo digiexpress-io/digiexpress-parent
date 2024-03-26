@@ -32,8 +32,8 @@ import io.resys.thena.docdb.api.actions.OrgHistoryActions;
 import io.resys.thena.docdb.api.actions.OrgQueryActions;
 import io.resys.thena.docdb.api.actions.PullActions;
 import io.resys.thena.docdb.api.actions.TagActions;
-import io.resys.thena.docdb.api.actions.TenantModel;
-import io.resys.thena.docdb.api.actions.TenantModel.RepoResult;
+import io.resys.thena.docdb.api.actions.TenantActions;
+import io.resys.thena.docdb.api.actions.TenantActions.RepoResult;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.ThenaDocObjects.DocProjectObjects;
@@ -42,22 +42,22 @@ import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgProjectObjects;
 import io.smallrye.mutiny.Uni;
 
 public interface ThenaClient {  
-  TenantModel tenants();
+  TenantActions tenants();
   
-  GitModel git(String tenantIdOrName);
-  GitModel git(RepoResult repo);
-  GitModel git(Repo repo);
+  GitStructuredTenant git(String tenantIdOrName);
+  GitStructuredTenant git(RepoResult repo);
+  GitStructuredTenant git(Repo repo);
   
-  DocModel doc(String tenantIdOrName);
-  DocModel doc(RepoResult repo);
-  DocModel doc(Repo repo);
+  DocStructuredTenant doc(String tenantIdOrName);
+  DocStructuredTenant doc(RepoResult repo);
+  DocStructuredTenant doc(Repo repo);
   
-  OrgModel org(String tenantIdOrName);
-  OrgModel org(RepoResult repo);
-  OrgModel org(Repo repo);
+  OrgStructuredTenant org(String tenantIdOrName);
+  OrgStructuredTenant org(RepoResult repo);
+  OrgStructuredTenant org(Repo repo);
   
 
-  interface OrgModel {
+  interface OrgStructuredTenant {
     OrgCommitActions commit();
     OrgQueryActions find();
     OrgHistoryActions history();
@@ -71,7 +71,7 @@ public interface ThenaClient {
 
 
   // single document model
-  interface DocModel {
+  interface DocStructuredTenant {
     DocCommitActions commit();
     DocQueryActions find();
     
@@ -85,7 +85,7 @@ public interface ThenaClient {
 
   
   // multi doc model, cropped git replica
-  interface GitModel {
+  interface GitStructuredTenant {
     CommitActions commit();
     TagActions tag();
     DiffActions diff();

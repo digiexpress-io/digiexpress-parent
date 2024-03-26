@@ -26,8 +26,8 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.resys.thena.docdb.api.ThenaClient;
-import io.resys.thena.docdb.api.ThenaClient.OrgModel;
-import io.resys.thena.docdb.api.actions.TenantModel.RepoStatus;
+import io.resys.thena.docdb.api.ThenaClient.OrgStructuredTenant;
+import io.resys.thena.docdb.api.actions.TenantActions.RepoStatus;
 import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.Repo.RepoType;
@@ -52,7 +52,7 @@ public class PermissionStoreImpl implements PermissionStore {
   private final PermissionStoreConfig config;
   
   @Override
-  public OrgModel getOrg(String repoId) {
+  public OrgStructuredTenant getOrg(String repoId) {
     return config.getClient().org(repoId);
   }
   @Override

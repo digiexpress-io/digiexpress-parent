@@ -36,7 +36,7 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.resys.thena.docdb.api.ThenaClient;
-import io.resys.thena.docdb.api.actions.TenantModel.RepoResult;
+import io.resys.thena.docdb.api.actions.TenantActions.RepoResult;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.Repo.RepoType;
 import io.resys.thena.docdb.jackson.VertexExtModule;

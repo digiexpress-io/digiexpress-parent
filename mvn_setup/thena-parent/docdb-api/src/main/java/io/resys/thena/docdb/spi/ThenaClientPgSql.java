@@ -31,8 +31,8 @@ import io.resys.thena.docdb.api.actions.OrgCommitActions;
 import io.resys.thena.docdb.api.actions.OrgHistoryActions;
 import io.resys.thena.docdb.api.actions.OrgQueryActions;
 import io.resys.thena.docdb.api.actions.PullActions;
-import io.resys.thena.docdb.api.actions.TenantModel;
-import io.resys.thena.docdb.api.actions.TenantModel.RepoResult;
+import io.resys.thena.docdb.api.actions.TenantActions;
+import io.resys.thena.docdb.api.actions.TenantActions.RepoResult;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.actions.TagActions;
 import io.resys.thena.docdb.models.doc.actions.DocAppendActionsImpl;
@@ -59,7 +59,7 @@ public class ThenaClientPgSql implements ThenaClient {
   }
   
   @Override
-  public TenantModel tenants() {
+  public TenantActions tenants() {
     return new RepoActionsImpl(state);
   }
   public DbState getState() {
@@ -67,9 +67,9 @@ public class ThenaClientPgSql implements ThenaClient {
   }
 
   @Override
-  public GitModel git(String repoId) {
+  public GitStructuredTenant git(String repoId) {
     RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
-    return new GitModel() {
+    return new GitStructuredTenant() {
       @Override public GitRepoQuery project() { return new GitRepoQueryImpl(state, repoId); }
       @Override public CommitActions commit() { return new CommitActionsImpl(state, repoId); }
       @Override public TagActions tag() { return new TagActionsDefault(state, repoId); }
@@ -81,18 +81,18 @@ public class ThenaClientPgSql implements ThenaClient {
   }
 
   @Override
-  public DocModel doc(String repoId) {
+  public DocStructuredTenant doc(String repoId) {
     RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
-    return new DocModel() {
+    return new DocStructuredTenant() {
       @Override public DocQueryActions find() { return new DocQueryActionsImpl(state, repoId); }
       @Override public DocCommitActions commit() { return new DocAppendActionsImpl(state, repoId); }
     };
   }
 
   @Override
-  public OrgModel org(String repoId) {
+  public OrgStructuredTenant org(String repoId) {
     RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
-    return new OrgModel() {
+    return new OrgStructuredTenant() {
       @Override public OrgHistoryActions history() { return new OrgHistoryActionsImpl(state, repoId); }
       @Override public OrgQueryActions find() { return new OrgQueryActionsImpl(state, repoId); }
       @Override public OrgCommitActions commit() { return new OrgCommitActionsImpl(state, repoId); }
@@ -100,27 +100,27 @@ public class ThenaClientPgSql implements ThenaClient {
     };
   }
   @Override
-  public GitModel git(RepoResult repo) {
+  public GitStructuredTenant git(RepoResult repo) {
     return git(repo.getRepo().getId());
   }
   @Override
-  public GitModel git(Repo repo) {
+  public GitStructuredTenant git(Repo repo) {
     return git(repo.getId());
   }
   @Override
-  public DocModel doc(RepoResult repo) {
+  public DocStructuredTenant doc(RepoResult repo) {
     return doc(repo.getRepo().getId());
   }
   @Override
-  public DocModel doc(Repo repo) {
+  public DocStructuredTenant doc(Repo repo) {
     return doc(repo.getId());
   }
   @Override
-  public OrgModel org(RepoResult repo) {
+  public OrgStructuredTenant org(RepoResult repo) {
     return org(repo.getRepo().getId());
   }
   @Override
-  public OrgModel org(Repo repo) {
+  public OrgStructuredTenant org(Repo repo) {
     return this.org(repo.getId());
   }
 }

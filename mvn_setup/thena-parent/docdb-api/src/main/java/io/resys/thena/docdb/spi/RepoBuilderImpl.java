@@ -21,9 +21,9 @@ package io.resys.thena.docdb.spi;
  */
 
 import io.resys.thena.docdb.api.actions.ImmutableRepoResult;
-import io.resys.thena.docdb.api.actions.TenantModel;
-import io.resys.thena.docdb.api.actions.TenantModel.RepoResult;
-import io.resys.thena.docdb.api.actions.TenantModel.RepoStatus;
+import io.resys.thena.docdb.api.actions.TenantActions;
+import io.resys.thena.docdb.api.actions.TenantActions.RepoResult;
+import io.resys.thena.docdb.api.actions.TenantActions.RepoStatus;
 import io.resys.thena.docdb.api.exceptions.RepoException;
 import io.resys.thena.docdb.api.models.ImmutableRepo;
 import io.resys.thena.docdb.api.models.Repo;
@@ -36,7 +36,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @RequiredArgsConstructor
 @Slf4j
-public class RepoBuilderImpl implements TenantModel.RepoBuilder {
+public class RepoBuilderImpl implements TenantActions.RepoBuilder {
 
   private final DbState state;
   private String name;

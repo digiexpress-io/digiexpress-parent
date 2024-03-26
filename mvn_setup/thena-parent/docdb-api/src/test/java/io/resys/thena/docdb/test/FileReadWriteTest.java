@@ -28,8 +28,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import io.resys.thena.docdb.api.actions.CommitActions.CommitResultEnvelope;
-import io.resys.thena.docdb.api.actions.TenantModel.RepoResult;
-import io.resys.thena.docdb.api.actions.TenantModel.RepoStatus;
+import io.resys.thena.docdb.api.actions.TenantActions.RepoResult;
+import io.resys.thena.docdb.api.actions.TenantActions.RepoStatus;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.test.config.FileTestTemplate;
 import io.vertx.core.json.JsonObject;

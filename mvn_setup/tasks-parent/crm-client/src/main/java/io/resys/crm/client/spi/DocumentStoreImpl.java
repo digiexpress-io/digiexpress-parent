@@ -35,7 +35,7 @@ import io.resys.crm.client.spi.store.ImmutableDocumentConfig;
 import io.resys.crm.client.spi.store.ImmutableDocumentExceptionMsg;
 import io.resys.crm.client.spi.store.MainBranch;
 import io.resys.thena.docdb.api.ThenaClient;
-import io.resys.thena.docdb.api.actions.TenantModel.RepoStatus;
+import io.resys.thena.docdb.api.actions.TenantActions.RepoStatus;
 import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.Repo.RepoType;

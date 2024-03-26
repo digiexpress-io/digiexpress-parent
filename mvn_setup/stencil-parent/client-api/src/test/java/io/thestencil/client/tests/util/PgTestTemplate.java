@@ -8,7 +8,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
 import io.resys.thena.docdb.api.ThenaClient;
-import io.resys.thena.docdb.api.actions.TenantModel.RepoResult;
+import io.resys.thena.docdb.api.actions.TenantActions.RepoResult;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.Repo.RepoType;
 import io.resys.thena.docdb.models.git.GitPrinter;

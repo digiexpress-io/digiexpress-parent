@@ -29,7 +29,7 @@ import io.resys.sysconfig.client.api.model.Document.DocumentType;
 import io.resys.sysconfig.client.spi.store.DocumentConfig.DocumentAuthorProvider;
 import io.resys.sysconfig.client.spi.store.DocumentConfig.DocumentGidProvider;
 import io.resys.thena.docdb.api.ThenaClient;
-import io.resys.thena.docdb.api.actions.TenantModel.RepoStatus;
+import io.resys.thena.docdb.api.actions.TenantActions.RepoStatus;
 import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.Repo.RepoType;

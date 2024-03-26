@@ -31,7 +31,7 @@ import io.resys.hdes.client.api.ast.AstBody.AstBodyType;
 import io.resys.hdes.client.api.exceptions.StoreException;
 import io.resys.hdes.client.spi.store.ThenaConfig.EntityState;
 import io.resys.hdes.client.spi.util.HdesAssert;
-import io.resys.thena.docdb.api.actions.TenantModel.RepoStatus;
+import io.resys.thena.docdb.api.actions.TenantActions.RepoStatus;
 import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.docdb.api.models.Repo.CommitResultStatus;
 import io.resys.thena.docdb.api.models.Repo.RepoType;

@@ -20,7 +20,7 @@ package io.resys.thena.docdb.spi;
  * #L%
  */
 
-import io.resys.thena.docdb.api.actions.TenantModel;
+import io.resys.thena.docdb.api.actions.TenantActions;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.support.RepoAssert;
 import io.smallrye.mutiny.Multi;
@@ -31,7 +31,7 @@ import lombok.experimental.Accessors;
 
 @RequiredArgsConstructor
 @Data @Accessors(fluent = true)
-public class RepoQueryImpl implements TenantModel.RepoQuery {
+public class RepoQueryImpl implements TenantActions.RepoQuery {
 
   private final DbState state;
   private String id;

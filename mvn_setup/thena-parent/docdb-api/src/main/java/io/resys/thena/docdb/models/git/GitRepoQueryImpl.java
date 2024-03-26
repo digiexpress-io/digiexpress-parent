@@ -22,7 +22,7 @@ package io.resys.thena.docdb.models.git;
 
 import java.util.stream.Collectors;
 
-import io.resys.thena.docdb.api.ThenaClient.GitModel.GitRepoQuery;
+import io.resys.thena.docdb.api.ThenaClient.GitStructuredTenant.GitRepoQuery;
 import io.resys.thena.docdb.api.models.ImmutableGitRepoObjects;
 import io.resys.thena.docdb.api.models.ImmutableQueryEnvelope;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
