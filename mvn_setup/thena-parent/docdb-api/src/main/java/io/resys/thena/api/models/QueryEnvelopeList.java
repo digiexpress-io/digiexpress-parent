@@ -28,7 +28,6 @@ import org.immutables.value.Value;
 import org.slf4j.Logger;
 
 import io.resys.thena.api.exceptions.RepoException;
-import io.resys.thena.api.models.ImmutableQueryEnvelopeList;
 import io.resys.thena.api.models.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.api.models.ThenaEnvelope.ThenaObjects;
 

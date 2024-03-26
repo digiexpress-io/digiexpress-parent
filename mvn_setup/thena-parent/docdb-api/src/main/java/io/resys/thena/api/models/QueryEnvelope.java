@@ -31,9 +31,6 @@ import org.immutables.value.Value;
 import org.slf4j.Logger;
 
 import io.resys.thena.api.exceptions.RepoException;
-import io.resys.thena.api.models.ImmutableMessage;
-import io.resys.thena.api.models.ImmutableQueryEnvelope;
-import io.resys.thena.api.models.ImmutableQueryEnvelopeList;
 import io.resys.thena.api.models.ThenaEnvelope.ThenaObjects;
 import io.resys.thena.api.models.ThenaGitObject.Commit;
 import io.resys.thena.structures.git.objects.PullObjectsQueryImpl.BlobAndTree;
