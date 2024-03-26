@@ -34,7 +34,6 @@ import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.git.Blob;
 import io.resys.thena.api.entities.git.Commit;
 import io.resys.thena.api.entities.git.Tree;
-import io.resys.thena.api.envelope.BlobContainer;
 import io.resys.thena.api.envelope.GitContainer;
 import io.resys.thena.api.envelope.Message;
 import io.resys.thena.api.envelope.QueryEnvelope;
@@ -85,7 +84,7 @@ public interface GitCommitActions {
   }
   
   @Value.Immutable
-  interface CommitObjects extends GitContainer, BlobContainer  {
+  interface CommitObjects extends GitContainer  {
     Tenant getRepo();
     Commit getCommit();
     Tree getTree();

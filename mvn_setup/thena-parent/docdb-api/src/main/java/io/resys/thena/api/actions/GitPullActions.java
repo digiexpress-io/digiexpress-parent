@@ -32,10 +32,10 @@ import org.immutables.value.Value;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.git.Blob;
 import io.resys.thena.api.entities.git.Commit;
-import io.resys.thena.api.envelope.BlobContainer;
 import io.resys.thena.api.envelope.GitContainer;
-import io.resys.thena.api.envelope.BlobContainer.BlobVisitor;
+import io.resys.thena.api.envelope.GitContainer.BlobVisitor;
 import io.resys.thena.api.envelope.QueryEnvelope;
+import io.resys.thena.api.envelope.ThenaContainer;
 import io.smallrye.mutiny.Uni;
 
 public interface GitPullActions {
@@ -100,7 +100,7 @@ public interface GitPullActions {
   }
 
   @Value.Immutable
-  interface PullObject extends GitContainer {
+  interface PullObject extends ThenaContainer {
     Tenant getRepo();
     Commit getCommit();
     //Tree getTree();
@@ -113,7 +113,7 @@ public interface GitPullActions {
 
 
   @Value.Immutable
-  interface PullObjects extends BlobContainer, GitContainer {
+  interface PullObjects extends GitContainer {
     Tenant getRepo();
     Commit getCommit();
     //Tree getTree();

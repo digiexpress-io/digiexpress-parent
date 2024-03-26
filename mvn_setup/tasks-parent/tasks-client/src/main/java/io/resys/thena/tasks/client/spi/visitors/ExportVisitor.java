@@ -30,15 +30,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
-import io.resys.thena.api.actions.ImmutableMatchCriteria;
 import io.resys.thena.api.actions.GitBranchActions;
-import io.resys.thena.api.actions.GitBranchActions.BranchObjects;
 import io.resys.thena.api.actions.GitBranchActions.BranchObjectsQuery;
 import io.resys.thena.api.actions.GitPullActions.MatchCriteriaType;
+import io.resys.thena.api.actions.ImmutableMatchCriteria;
+import io.resys.thena.api.envelope.GitContainer.BlobVisitor;
 import io.resys.thena.api.envelope.QueryEnvelope;
-import io.resys.thena.api.envelope.BlobContainer.BlobVisitor;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.tasks.client.api.model.Document;
 import io.resys.thena.tasks.client.api.model.Export;

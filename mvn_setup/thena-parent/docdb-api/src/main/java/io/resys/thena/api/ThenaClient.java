@@ -25,8 +25,8 @@ import io.resys.thena.api.entities.git.GitEntity.IsGitObject;
 import io.resys.thena.api.entities.git.Tag;
 import io.resys.thena.api.entities.org.ThenaOrgObjects.OrgProjectObjects;
 import io.resys.thena.api.envelope.DocContainer;
-import io.resys.thena.api.envelope.GitContainer;
 import io.resys.thena.api.envelope.QueryEnvelope;
+import io.resys.thena.api.envelope.ThenaContainer;
 import io.smallrye.mutiny.Uni;
 
 public interface ThenaClient {  
@@ -90,7 +90,7 @@ public interface ThenaClient {
   }
 
   @Value.Immutable 
-  interface GitRepoObjects extends GitContainer {
+  interface GitRepoObjects extends ThenaContainer {
     Map<String, Branch> getBranches();
     Map<String, Tag> getTags();
     Map<String, IsGitObject> getValues();   
