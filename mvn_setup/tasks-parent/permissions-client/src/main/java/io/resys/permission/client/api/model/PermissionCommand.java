@@ -35,7 +35,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.resys.permission.client.api.model.Principal.Role;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgActorStatusType;
+import io.resys.thena.api.entities.org.OrgActorStatus;
 
 
 
@@ -115,7 +115,7 @@ public interface PermissionCommand extends Serializable {
   
   @Value.Immutable @JsonSerialize(as = ImmutableChangePermissionStatus.class) @JsonDeserialize(as = ImmutableChangePermissionStatus.class)
   interface ChangePermissionStatus extends PermissionUpdateCommand {
-    OrgActorStatusType getStatus();
+    OrgActorStatus.OrgActorStatusType getStatus();
     
     @Override default PermissionCommandType getCommandType() { return PermissionCommandType.CHANGE_PERMISSION_STATUS; }
   }

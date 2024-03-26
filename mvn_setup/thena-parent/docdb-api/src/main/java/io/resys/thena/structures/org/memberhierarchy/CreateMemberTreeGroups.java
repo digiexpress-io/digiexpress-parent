@@ -6,8 +6,8 @@ import java.util.Optional;
 import org.immutables.value.Value;
 import org.slf4j.Logger;
 
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMemberFlattened;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgRightFlattened;
+import io.resys.thena.api.entities.org.OrgMemberFlattened;
+import io.resys.thena.api.entities.org.OrgRightFlattened;
 import io.vertx.core.json.JsonObject;
 
 

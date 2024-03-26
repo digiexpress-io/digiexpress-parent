@@ -3,13 +3,14 @@ package io.resys.thena.structures.org.anytree;
 import java.util.List;
 
 import io.resys.thena.api.entities.org.ImmutableOrgPartyHierarchy;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgActorStatusType;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMember;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMemberRight;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMembership;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgParty;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgPartyRight;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgRight;
+import io.resys.thena.api.entities.org.OrgActorStatus;
+import io.resys.thena.api.entities.org.OrgActorStatus.OrgActorStatusType;
+import io.resys.thena.api.entities.org.OrgMember;
+import io.resys.thena.api.entities.org.OrgMemberRight;
+import io.resys.thena.api.entities.org.OrgMembership;
+import io.resys.thena.api.entities.org.OrgParty;
+import io.resys.thena.api.entities.org.OrgPartyRight;
+import io.resys.thena.api.entities.org.OrgRight;
 import io.resys.thena.api.envelope.OrgPartyContainerVisitor;
 import io.resys.thena.api.envelope.OrgPartyContainerVisitor.TopPartyVisitor;
 import io.resys.thena.api.envelope.OrgTreeContainer.OrgAnyTreeContainerContext;
@@ -114,7 +115,7 @@ public class PartyHierarchyContainerVisitor extends OrgPartyContainerVisitor<Imm
         .parentPartyId(group.getParentId())
         .parentParties(parents)
 
-        .status(isDisabled ? OrgActorStatusType.DISABLED : OrgActorStatusType.IN_FORCE);
+        .status(isDisabled ? OrgActorStatus.OrgActorStatusType.DISABLED : OrgActorStatus.OrgActorStatusType.IN_FORCE);
     }
   }
   @Override

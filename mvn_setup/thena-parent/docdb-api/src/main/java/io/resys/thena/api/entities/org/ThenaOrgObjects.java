@@ -8,16 +8,6 @@ import javax.annotation.Nullable;
 import org.immutables.value.Value;
 
 import io.resys.thena.api.entities.ThenaContainer;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgActorData;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgActorStatus;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgActorStatusType;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgCommit;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMember;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMemberRight;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMembership;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgParty;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgPartyRight;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgRight;
 
 public interface ThenaOrgObjects extends ThenaContainer {
   
@@ -47,7 +37,7 @@ public interface ThenaOrgObjects extends ThenaContainer {
     String getEmail();
     
     String getLog();
-    OrgActorStatusType getStatus();
+    OrgActorStatus.OrgActorStatusType getStatus();
     
     List<String> getRoleNames();  // roles that are enabled
     List<String> getGroupNames(); // groups that are enabled
@@ -70,7 +60,7 @@ public interface ThenaOrgObjects extends ThenaContainer {
     @Nullable String getExternalId();
     
     String getLog();
-    OrgActorStatusType getStatus();
+    OrgActorStatus.OrgActorStatusType getStatus();
     
     List<OrgRight> getRights();  // roles that are enabled
     List<OrgRight> getDirectRights();  // roles that are enabled
@@ -90,7 +80,7 @@ public interface ThenaOrgObjects extends ThenaContainer {
     @Nullable String getExternalId();
     String getRoleName();
     String getRoleDescription();
-    OrgActorStatusType getStatus();
+    OrgActorStatus.OrgActorStatusType getStatus();
     
     String getLog();
     
@@ -106,7 +96,7 @@ public interface ThenaOrgObjects extends ThenaContainer {
   interface OrgMemberPartyStatus extends ThenaOrgObjects {
     String getStatusId();
     String getGroupId();
-    OrgActorStatusType getStatus();
+    OrgActorStatus.OrgActorStatusType getStatus();
     default String getId() { 
       return getStatusId(); 
     }
@@ -115,7 +105,7 @@ public interface ThenaOrgObjects extends ThenaContainer {
   interface OrgMemberRightStatus extends ThenaOrgObjects {
     String getStatusId();
     String getRoleId();
-    OrgActorStatusType getStatus();
+    OrgActorStatus.OrgActorStatusType getStatus();
     default String getId() { 
       return getStatusId(); 
     }

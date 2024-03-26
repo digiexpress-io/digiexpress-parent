@@ -16,7 +16,8 @@ import io.resys.thena.api.actions.OrgCommitActions.ModType;
 import io.resys.thena.api.actions.OrgCommitActions.ModifyOneParty;
 import io.resys.thena.api.actions.OrgCommitActions.OnePartyEnvelope;
 import io.resys.thena.api.entities.CommitResultStatus;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgActorStatusType;
+import io.resys.thena.api.entities.org.OrgActorStatus;
+import io.resys.thena.api.entities.org.OrgActorStatus.OrgActorStatusType;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -105,7 +106,7 @@ public class UpdateRoleActionImpl implements UpdateRoleAction {
       
       .name(role.getPartyName())
       .description(role.getPartyDescription())
-      .status(OrgActorStatusType.IN_FORCE)
+      .status(OrgActorStatus.OrgActorStatusType.IN_FORCE)
       .permissions(null)
       .principals(null)
       .build();

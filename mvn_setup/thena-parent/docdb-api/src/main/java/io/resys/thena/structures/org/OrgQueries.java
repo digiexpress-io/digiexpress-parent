@@ -3,17 +3,17 @@ package io.resys.thena.structures.org;
 import java.util.Collection;
 import java.util.List;
 
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgActorStatus;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgCommit;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMember;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMemberFlattened;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMemberHierarchyEntry;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMemberRight;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMembership;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgParty;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgPartyRight;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgRight;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgRightFlattened;
+import io.resys.thena.api.entities.org.OrgActorStatus;
+import io.resys.thena.api.entities.org.OrgCommit;
+import io.resys.thena.api.entities.org.OrgMember;
+import io.resys.thena.api.entities.org.OrgMemberFlattened;
+import io.resys.thena.api.entities.org.OrgMemberHierarchyEntry;
+import io.resys.thena.api.entities.org.OrgMemberRight;
+import io.resys.thena.api.entities.org.OrgMembership;
+import io.resys.thena.api.entities.org.OrgParty;
+import io.resys.thena.api.entities.org.OrgPartyRight;
+import io.resys.thena.api.entities.org.OrgRight;
+import io.resys.thena.api.entities.org.OrgRightFlattened;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 

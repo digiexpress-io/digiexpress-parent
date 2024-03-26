@@ -1,7 +1,7 @@
 package io.resys.thena.api.actions;
 
 import io.resys.thena.api.entities.ThenaContainer;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMember;
+import io.resys.thena.api.entities.org.OrgMember;
 import io.resys.thena.api.entities.org.ThenaOrgObjects.OrgMemberHierarchy;
 import io.resys.thena.api.entities.org.ThenaOrgObjects.OrgPartyHierarchy;
 import io.resys.thena.api.entities.org.ThenaOrgObjects.OrgRightHierarchy;

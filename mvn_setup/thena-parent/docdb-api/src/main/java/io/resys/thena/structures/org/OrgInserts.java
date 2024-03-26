@@ -24,15 +24,15 @@ import java.util.List;
 
 import org.immutables.value.Value;
 
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgActorData;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgActorStatus;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgCommit;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMember;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMemberRight;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMembership;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgParty;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgPartyRight;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgRight;
+import io.resys.thena.api.entities.org.OrgActorData;
+import io.resys.thena.api.entities.org.OrgActorStatus;
+import io.resys.thena.api.entities.org.OrgCommit;
+import io.resys.thena.api.entities.org.OrgMember;
+import io.resys.thena.api.entities.org.OrgMemberRight;
+import io.resys.thena.api.entities.org.OrgMembership;
+import io.resys.thena.api.entities.org.OrgParty;
+import io.resys.thena.api.entities.org.OrgPartyRight;
+import io.resys.thena.api.entities.org.OrgRight;
 import io.resys.thena.api.envelope.Message;
 import io.resys.thena.structures.git.GitInserts.BatchStatus;
 import io.smallrye.mutiny.Uni;

@@ -8,7 +8,7 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgActorStatusType;
+import io.resys.thena.api.entities.org.OrgActorStatus;
 
 
 
@@ -26,7 +26,7 @@ public interface Principal {
   List<String> getDirectRolePermissions(); // inherited from the role that is directly connected to the principal
   List<String> getDirectPermissions(); // explicitly given to this principal only
   
-  OrgActorStatusType getStatus();
+  OrgActorStatus.OrgActorStatusType getStatus();
   
 
   @Value.Immutable @JsonSerialize(as = ImmutableRole.class) @JsonDeserialize(as = ImmutableRole.class)
@@ -38,7 +38,7 @@ public interface Principal {
     String getDescription();
     List<String> getPermissions();  // permission names
     List<String> getPrincipals();   // user names
-    OrgActorStatusType getStatus();
+    OrgActorStatus.OrgActorStatusType getStatus();
   }
 
   @Value.Immutable @JsonSerialize(as = ImmutablePermission.class) @JsonDeserialize(as = ImmutablePermission.class)
@@ -47,7 +47,7 @@ public interface Principal {
     String getVersion();
     String getName();  // example service.resource.verb --> pubsub.subscriptions.consume
     String getDescription();
-    OrgActorStatusType getStatus();
+    OrgActorStatus.OrgActorStatusType getStatus();
   }
 
 

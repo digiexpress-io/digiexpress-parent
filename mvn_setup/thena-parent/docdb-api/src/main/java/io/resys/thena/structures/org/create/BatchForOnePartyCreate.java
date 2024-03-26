@@ -10,14 +10,14 @@ import io.resys.thena.api.entities.org.ImmutableOrgCommitTree;
 import io.resys.thena.api.entities.org.ImmutableOrgMembership;
 import io.resys.thena.api.entities.org.ImmutableOrgParty;
 import io.resys.thena.api.entities.org.ImmutableOrgPartyRight;
+import io.resys.thena.api.entities.org.OrgCommitTree;
+import io.resys.thena.api.entities.org.OrgCommitTree.OrgOperationType;
+import io.resys.thena.api.entities.org.OrgMember;
+import io.resys.thena.api.entities.org.OrgMembership;
+import io.resys.thena.api.entities.org.OrgParty;
+import io.resys.thena.api.entities.org.OrgPartyRight;
+import io.resys.thena.api.entities.org.OrgRight;
 import io.resys.thena.api.entities.org.ThenaOrgObject.IsOrgObject;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgCommitTree;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMember;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMembership;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgOperationType;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgParty;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgPartyRight;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgRight;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.structures.git.GitInserts.BatchStatus;
 import io.resys.thena.structures.org.ImmutableOrgBatchForOne;
@@ -136,7 +136,7 @@ public class BatchForOnePartyCreate {
         .actorId(target.getId())
         .actorType(target.getDocType().name())
         .commitId(commitId)
-        .operationType(OrgOperationType.ADD)
+        .operationType(OrgCommitTree.OrgOperationType.ADD)
         .id(OidUtils.gen())
         .value(JsonObject.mapFrom(target))
         .build();

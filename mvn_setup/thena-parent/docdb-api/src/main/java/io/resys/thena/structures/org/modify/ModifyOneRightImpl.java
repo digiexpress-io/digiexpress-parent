@@ -12,13 +12,12 @@ import io.resys.thena.api.actions.OrgCommitActions.ModifyOneParty;
 import io.resys.thena.api.actions.OrgCommitActions.ModifyOneRight;
 import io.resys.thena.api.actions.OrgCommitActions.OneRightEnvelope;
 import io.resys.thena.api.entities.CommitResultStatus;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgActorStatus;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgActorStatusType;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMember;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMemberRight;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgParty;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgPartyRight;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgRight;
+import io.resys.thena.api.entities.org.OrgActorStatus;
+import io.resys.thena.api.entities.org.OrgMember;
+import io.resys.thena.api.entities.org.OrgMemberRight;
+import io.resys.thena.api.entities.org.OrgParty;
+import io.resys.thena.api.entities.org.OrgPartyRight;
+import io.resys.thena.api.entities.org.OrgRight;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.spi.DataMapper;
 import io.resys.thena.spi.DbState;
@@ -58,7 +57,7 @@ public class ModifyOneRightImpl implements ModifyOneRight {
   @Override public ModifyOneRightImpl rightName(String rightName) {   this.rightName = Optional.ofNullable(RepoAssert.notEmpty(rightName, () -> "rightName can't be empty!")); return this; }
   @Override public ModifyOneRightImpl rightDescription(String rightDescription) { this.rightDescription = Optional.ofNullable(RepoAssert.notEmpty(rightDescription, () -> "rightDescription can't be empty!")); return this; }
   @Override
-  public ModifyOneParty status(OrgActorStatusType status) {
+  public ModifyOneParty status(OrgActorStatus.OrgActorStatusType status) {
     // TODO Auto-generated method stub
     return null;
   }

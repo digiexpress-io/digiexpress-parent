@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMembership;
+import io.resys.thena.api.entities.org.OrgMembership;
 import io.resys.thena.spi.DbCollections;
 import io.resys.thena.storesql.ImmutableSql;
 import io.resys.thena.storesql.ImmutableSqlTuple;

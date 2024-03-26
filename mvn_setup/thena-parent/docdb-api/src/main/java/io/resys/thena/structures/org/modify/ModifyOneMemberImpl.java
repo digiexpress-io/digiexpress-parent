@@ -14,13 +14,12 @@ import io.resys.thena.api.actions.OrgCommitActions.ModType;
 import io.resys.thena.api.actions.OrgCommitActions.ModifyOneMember;
 import io.resys.thena.api.actions.OrgCommitActions.OneMemberEnvelope;
 import io.resys.thena.api.entities.CommitResultStatus;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgActorStatus;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgActorStatusType;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMember;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMemberRight;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMembership;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgParty;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgRight;
+import io.resys.thena.api.entities.org.OrgActorStatus;
+import io.resys.thena.api.entities.org.OrgMember;
+import io.resys.thena.api.entities.org.OrgMemberRight;
+import io.resys.thena.api.entities.org.OrgMembership;
+import io.resys.thena.api.entities.org.OrgParty;
+import io.resys.thena.api.entities.org.OrgRight;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.spi.DataMapper;
 import io.resys.thena.spi.DbState;
@@ -54,7 +53,7 @@ public class ModifyOneMemberImpl implements ModifyOneMember {
   private Collection<String> rolesToRemove = new LinkedHashSet<>();
   private Map<String, List<String>> addUseGroupRoles = new HashMap<>();
   private Map<String, List<String>> removeUseGroupRoles = new HashMap<>();
-  private OrgActorStatusType newStatus;
+  private OrgActorStatus.OrgActorStatusType newStatus;
   
   @Override public ModifyOneMemberImpl userId(String userId) {
     this.memberId = RepoAssert.notEmpty(userId, () -> "userId can't be empty!"); 
@@ -80,7 +79,7 @@ public class ModifyOneMemberImpl implements ModifyOneMember {
     this.externalId = Optional.ofNullable(externalId); 
     return this; 
   }
-  @Override public ModifyOneMember status(OrgActorStatusType status) {
+  @Override public ModifyOneMember status(OrgActorStatus.OrgActorStatusType status) {
     this.newStatus = RepoAssert.notNull(status, () -> "new status can't be null!");
     return this;
   }

@@ -65,17 +65,17 @@ import io.resys.thena.api.entities.org.ImmutableOrgParty;
 import io.resys.thena.api.entities.org.ImmutableOrgPartyRight;
 import io.resys.thena.api.entities.org.ImmutableOrgRight;
 import io.resys.thena.api.entities.org.ImmutableOrgRightFlattened;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgActorStatus;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgActorStatusType;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMember;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMemberFlattened;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMemberHierarchyEntry;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMemberRight;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMembership;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgParty;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgPartyRight;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgRight;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgRightFlattened;
+import io.resys.thena.api.entities.org.OrgActorStatus;
+import io.resys.thena.api.entities.org.OrgActorStatus.OrgActorStatusType;
+import io.resys.thena.api.entities.org.OrgMember;
+import io.resys.thena.api.entities.org.OrgMemberFlattened;
+import io.resys.thena.api.entities.org.OrgMemberHierarchyEntry;
+import io.resys.thena.api.entities.org.OrgMemberRight;
+import io.resys.thena.api.entities.org.OrgMembership;
+import io.resys.thena.api.entities.org.OrgParty;
+import io.resys.thena.api.entities.org.OrgPartyRight;
+import io.resys.thena.api.entities.org.OrgRight;
+import io.resys.thena.api.entities.org.OrgRightFlattened;
 import io.resys.thena.spi.DbCollections;
 import io.resys.thena.storesql.SqlMapper;
 import io.vertx.core.json.JsonObject;
@@ -381,14 +381,14 @@ public class SqlMapperImpl implements SqlMapper {
 		  	.membershipId(row.getString("membership_id"))
 		  	
 		  	.partyStatusId(row.getString("status_id"))
-		  	.partyStatus(groupStatus != null ? OrgActorStatusType.valueOf(groupStatus) : null)
+		  	.partyStatus(groupStatus != null ? OrgActorStatus.OrgActorStatusType.valueOf(groupStatus) : null)
 		  	.partyStatusMemberId(row.getString("status_member_id"))
 		  	
 		  	.rightId(row.getString("right_id"))
 		  	.rightName(row.getString("right_name"))
         .rightDescription(row.getString("right_description"))
         
-		  	.rightStatus(roleStatus != null ? OrgActorStatusType.valueOf(roleStatus) : null)
+		  	.rightStatus(roleStatus != null ? OrgActorStatus.OrgActorStatusType.valueOf(roleStatus) : null)
 		  	.rightStatusId(row.getString("right_status_id"))
 				.build();
 	}
@@ -400,7 +400,7 @@ public class SqlMapperImpl implements SqlMapper {
         .rightId(row.getString("right_id"))
         .rightName(row.getString("right_name"))
         .rightDescription(row.getString("right_description"))
-        .rightStatus(roleStatus != null ? OrgActorStatusType.valueOf(roleStatus) : null)
+        .rightStatus(roleStatus != null ? OrgActorStatus.OrgActorStatusType.valueOf(roleStatus) : null)
         .rightStatusId(row.getString("right_status_id"))
         .build();
   }
@@ -413,7 +413,7 @@ public class SqlMapperImpl implements SqlMapper {
         .commitId(row.getString("commit_id"))
         .userName(row.getString("username"))
         .email(row.getString("email"))
-        .status(userStatus != null ? OrgActorStatusType.valueOf(userStatus) : null)
+        .status(userStatus != null ? OrgActorStatus.OrgActorStatusType.valueOf(userStatus) : null)
         .statusId(row.getString("user_status_id"))
         .build();
   }
@@ -426,7 +426,7 @@ public class SqlMapperImpl implements SqlMapper {
         .memberId(row.getString("member_id"))
         .rightId(row.getString("right_id"))
         .partyId(row.getString("party_id"))
-        .value(actorStatus != null ? OrgActorStatusType.valueOf(actorStatus) : null)
+        .value(actorStatus != null ? OrgActorStatus.OrgActorStatusType.valueOf(actorStatus) : null)
         .build();
   }
 }

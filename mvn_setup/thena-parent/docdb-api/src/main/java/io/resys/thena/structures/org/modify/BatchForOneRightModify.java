@@ -16,16 +16,16 @@ import io.resys.thena.api.entities.org.ImmutableOrgCommitTree;
 import io.resys.thena.api.entities.org.ImmutableOrgMemberRight;
 import io.resys.thena.api.entities.org.ImmutableOrgPartyRight;
 import io.resys.thena.api.entities.org.ImmutableOrgRight;
+import io.resys.thena.api.entities.org.OrgActorStatus;
+import io.resys.thena.api.entities.org.OrgActorStatus.OrgActorStatusType;
+import io.resys.thena.api.entities.org.OrgCommitTree;
+import io.resys.thena.api.entities.org.OrgCommitTree.OrgOperationType;
+import io.resys.thena.api.entities.org.OrgMember;
+import io.resys.thena.api.entities.org.OrgMemberRight;
+import io.resys.thena.api.entities.org.OrgParty;
+import io.resys.thena.api.entities.org.OrgPartyRight;
+import io.resys.thena.api.entities.org.OrgRight;
 import io.resys.thena.api.entities.org.ThenaOrgObject.IsOrgObject;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgActorStatus;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgActorStatusType;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgCommitTree;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMember;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMemberRight;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgOperationType;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgParty;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgPartyRight;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgRight;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.structures.git.GitInserts.BatchStatus;
 import io.resys.thena.structures.org.ImmutableOrgBatchForOne;
@@ -184,7 +184,7 @@ public class BatchForOneRightModify {
     return batch;
   }
   
-  private void visitChangeTree(String commitId, IsOrgObject target, OrgOperationType op) {
+  private void visitChangeTree(String commitId, IsOrgObject target, OrgCommitTree.OrgOperationType op) {
     final var entry = ImmutableOrgCommitTree.builder()
         .actorId(target.getId())
         .actorType(target.getDocType().name())
@@ -212,7 +212,7 @@ public class BatchForOneRightModify {
         ) {
       return Optional.empty();
     }
-    visitChangeTree(commitId, newState, OrgOperationType.MOD);
+    visitChangeTree(commitId, newState, OrgCommitTree.OrgOperationType.MOD);
     identifiersForUpdates.add(current.getId());
     return Optional.of(newState);
   }
@@ -229,26 +229,26 @@ public class BatchForOneRightModify {
           .memberId(member.getId())
           .commitId(commitId)
           .rightId(current.getId())
-          .value(OrgActorStatusType.DISABLED)
+          .value(OrgActorStatus.OrgActorStatusType.DISABLED)
           .build();
       resultActorStatus.add(status);
-      visitChangeTree(commitId, status, OrgOperationType.ADD);
+      visitChangeTree(commitId, status, OrgCommitTree.OrgOperationType.ADD);
       return;
     }
 
     // already removed
-    if(disabled.get().getValue() == OrgActorStatusType.DISABLED) {
+    if(disabled.get().getValue() == OrgActorStatus.OrgActorStatusType.DISABLED) {
       return;
     }
 
     final var status = ImmutableOrgActorStatus.builder()
         .from(disabled.get())
         .commitId(commitId)
-        .value(OrgActorStatusType.DISABLED)
+        .value(OrgActorStatus.OrgActorStatusType.DISABLED)
         .build();
     identifiersForUpdates.add(status.getId());
     resultActorStatus.add(status);
-    visitChangeTree(commitId, status, OrgOperationType.MOD);
+    visitChangeTree(commitId, status, OrgCommitTree.OrgOperationType.MOD);
   }
   
   private void visitAddRightsToMember(OrgMember entry, String commitId) {
@@ -260,13 +260,13 @@ public class BatchForOneRightModify {
           .commitId(commitId)
           .build();
       resultMemberRights.add(membership);
-      visitChangeTree(commitId, membership, OrgOperationType.ADD);
+      visitChangeTree(commitId, membership, OrgCommitTree.OrgOperationType.ADD);
     }
     
     
     final var disabled = inputRightStatus.stream()
         .filter(e -> e.getPartyId() == null)
-        .filter(e -> e.getValue() == OrgActorStatusType.DISABLED)
+        .filter(e -> e.getValue() == OrgActorStatus.OrgActorStatusType.DISABLED)
         .filter(e -> entry.getId().equals(e.getMemberId()))
         .findFirst();
     if(disabled.isEmpty()) {
@@ -276,11 +276,11 @@ public class BatchForOneRightModify {
     final var status = ImmutableOrgActorStatus.builder()
         .from(disabled.get())
         .commitId(commitId)
-        .value(OrgActorStatusType.IN_FORCE)
+        .value(OrgActorStatus.OrgActorStatusType.IN_FORCE)
         .build();
     resultActorStatus.add(status);
     identifiersForUpdates.add(status.getId());
-    visitChangeTree(commitId, status, OrgOperationType.MOD);
+    visitChangeTree(commitId, status, OrgCommitTree.OrgOperationType.MOD);
   }
   
   private void visitDisableRightFromParty(OrgParty entry, String commitId) {
@@ -295,26 +295,26 @@ public class BatchForOneRightModify {
           .partyId(entry.getId())
           .commitId(commitId)
           .rightId(current.getId())
-          .value(OrgActorStatusType.DISABLED)
+          .value(OrgActorStatus.OrgActorStatusType.DISABLED)
           .build();
       resultActorStatus.add(status);
-      visitChangeTree(commitId, status, OrgOperationType.ADD);
+      visitChangeTree(commitId, status, OrgCommitTree.OrgOperationType.ADD);
       return;
     }
 
     // already removed
-    if(disabled.get().getValue() == OrgActorStatusType.DISABLED) {
+    if(disabled.get().getValue() == OrgActorStatus.OrgActorStatusType.DISABLED) {
       return;
     }
 
     final var status = ImmutableOrgActorStatus.builder()
         .from(disabled.get())
         .commitId(commitId)
-        .value(OrgActorStatusType.DISABLED)
+        .value(OrgActorStatus.OrgActorStatusType.DISABLED)
         .build();
     identifiersForUpdates.add(status.getId());
     resultActorStatus.add(status);
-    visitChangeTree(commitId, status, OrgOperationType.MOD);
+    visitChangeTree(commitId, status, OrgCommitTree.OrgOperationType.MOD);
   }
   
   private void visitAddRightsToParty(OrgParty entry, String commitId) {
@@ -326,12 +326,12 @@ public class BatchForOneRightModify {
           .rightId(current.getId())
           .build();
       resultPartyRights.add(null);
-      visitChangeTree(commitId, partyRight, OrgOperationType.ADD);
+      visitChangeTree(commitId, partyRight, OrgCommitTree.OrgOperationType.ADD);
     }
     
     final var disabled = inputRightStatus.stream()
         .filter(e -> entry.getId().equals(e.getPartyId()))
-        .filter(e -> e.getValue() == OrgActorStatusType.DISABLED)
+        .filter(e -> e.getValue() == OrgActorStatus.OrgActorStatusType.DISABLED)
         .filter(e -> e.getMemberId() == null)
         .findFirst();
     if(disabled.isEmpty()) {
@@ -340,11 +340,11 @@ public class BatchForOneRightModify {
     final var status = ImmutableOrgActorStatus.builder()
         .from(disabled.get())
         .commitId(commitId)
-        .value(OrgActorStatusType.IN_FORCE)
+        .value(OrgActorStatus.OrgActorStatusType.IN_FORCE)
         .build();
     resultActorStatus.add(status);
     identifiersForUpdates.add(status.getId());
-    visitChangeTree(commitId, status, OrgOperationType.MOD);
+    visitChangeTree(commitId, status, OrgCommitTree.OrgOperationType.MOD);
   }
   
   @Data @RequiredArgsConstructor

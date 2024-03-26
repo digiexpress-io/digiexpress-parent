@@ -9,13 +9,14 @@ import org.barfuin.texttree.api.TextTree;
 import org.barfuin.texttree.api.TreeOptions;
 
 import io.resys.thena.api.entities.org.ImmutableOrgRightHierarchy;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgActorStatusType;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMember;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMemberRight;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMembership;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgParty;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgPartyRight;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgRight;
+import io.resys.thena.api.entities.org.OrgActorStatus;
+import io.resys.thena.api.entities.org.OrgActorStatus.OrgActorStatusType;
+import io.resys.thena.api.entities.org.OrgMember;
+import io.resys.thena.api.entities.org.OrgMemberRight;
+import io.resys.thena.api.entities.org.OrgMembership;
+import io.resys.thena.api.entities.org.OrgParty;
+import io.resys.thena.api.entities.org.OrgPartyRight;
+import io.resys.thena.api.entities.org.OrgRight;
 import io.resys.thena.api.entities.org.ThenaOrgObjects.OrgRightHierarchy;
 import io.resys.thena.api.envelope.OrgPartyContainerVisitor;
 import io.resys.thena.api.envelope.OrgTreeContainer.OrgAnyTreeContainerContext;
@@ -78,7 +79,7 @@ public class RightHierarchyContainerVisitor extends OrgPartyContainerVisitor<Org
 
     
     return builder
-        .status(ctx.getStatus(target).map(status -> status.getValue()).orElse(OrgActorStatusType.IN_FORCE))
+        .status(ctx.getStatus(target).map(status -> status.getValue()).orElse(OrgActorStatus.OrgActorStatusType.IN_FORCE))
         .log(tree)
         .roleId(target.getId())
         .commitId(target.getCommitId())

@@ -7,10 +7,11 @@ import org.slf4j.LoggerFactory;
 
 import io.resys.thena.api.LogConstants;
 import io.resys.thena.api.entities.org.ImmutableOrgMemberHierarchy;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgActorStatusType;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMemberFlattened;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMemberHierarchyEntry;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgRightFlattened;
+import io.resys.thena.api.entities.org.OrgActorStatus;
+import io.resys.thena.api.entities.org.OrgActorStatus.OrgActorStatusType;
+import io.resys.thena.api.entities.org.OrgMemberFlattened;
+import io.resys.thena.api.entities.org.OrgMemberHierarchyEntry;
+import io.resys.thena.api.entities.org.OrgRightFlattened;
 import io.resys.thena.api.entities.org.ThenaOrgObjects.OrgMemberHierarchy;
 import io.resys.thena.support.RepoAssert;
 import io.vertx.core.json.JsonArray;
@@ -51,7 +52,7 @@ public class MemberTreeBuilder {
       .externalId(member.getExternalId())
       .email(member.getEmail())
       .commitId(member.getCommitId())
-      .status(member.getStatus() == null ? OrgActorStatusType.IN_FORCE : member.getStatus())
+      .status(member.getStatus() == null ? OrgActorStatus.OrgActorStatusType.IN_FORCE : member.getStatus())
       .addAllUserRoleStatus(container.getRoleStatus())
       .addAllUserGroupStatus(container.getGroupStatus())
       .roleNames(result.getRoleNames())

@@ -7,10 +7,10 @@ import javax.annotation.Nullable;
 import org.immutables.value.Value;
 
 import io.resys.thena.api.entities.CommitResultStatus;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgActorStatusType;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMember;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgParty;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgRight;
+import io.resys.thena.api.entities.org.OrgActorStatus;
+import io.resys.thena.api.entities.org.OrgMember;
+import io.resys.thena.api.entities.org.OrgParty;
+import io.resys.thena.api.entities.org.OrgRight;
 import io.resys.thena.api.envelope.Message;
 import io.resys.thena.api.envelope.ThenaEnvelope;
 import io.smallrye.mutiny.Uni;
@@ -82,7 +82,7 @@ public interface OrgCommitActions {
     ModifyOneMember externalId(@Nullable String externalId);
     ModifyOneMember userName(String userName);
     ModifyOneMember email(String email);
-    ModifyOneMember status(OrgActorStatusType status);
+    ModifyOneMember status(OrgActorStatus.OrgActorStatusType status);
     
     ModifyOneMember modifyRights(ModType type, String rightIdNameOrExtId); // group.(id OR externalId OR rolename)
     ModifyOneMember modifyParties(ModType type, String partyIdNameOrExtId);
@@ -104,7 +104,7 @@ public interface OrgCommitActions {
     
     ModifyOneParty modifyMember(ModType type, String memberIdNameOrExtId);
     ModifyOneParty modifyRights(ModType type, String rightIdNameOrExtId);
-    ModifyOneParty status(OrgActorStatusType status);
+    ModifyOneParty status(OrgActorStatus.OrgActorStatusType status);
     
     Uni<OnePartyEnvelope> build();
   }
@@ -121,7 +121,7 @@ public interface OrgCommitActions {
     
     ModifyOneRight modifyMember(ModType type, String memberIdNameOrExtId);
     ModifyOneRight modifyParty(ModType type, String partyIdNameOrExtId);
-    ModifyOneParty status(OrgActorStatusType status);
+    ModifyOneParty status(OrgActorStatus.OrgActorStatusType status);
     
     Uni<OneRightEnvelope> build();
   }

@@ -5,7 +5,7 @@ import java.util.List;
 import io.resys.thena.api.actions.OrgQueryActions.MemberObjectsQuery;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.ThenaContainer;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMember;
+import io.resys.thena.api.entities.org.OrgMember;
 import io.resys.thena.api.envelope.ImmutableQueryEnvelope;
 import io.resys.thena.api.envelope.ImmutableQueryEnvelopeList;
 import io.resys.thena.api.envelope.QueryEnvelope;

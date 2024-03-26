@@ -8,9 +8,10 @@ import org.immutables.value.Value;
 
 import io.resys.thena.api.entities.org.ImmutableOrgMemberPartyStatus;
 import io.resys.thena.api.entities.org.ImmutableOrgMemberRightStatus;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgActorStatusType;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMemberHierarchyEntry;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgRightFlattened;
+import io.resys.thena.api.entities.org.OrgActorStatus;
+import io.resys.thena.api.entities.org.OrgActorStatus.OrgActorStatusType;
+import io.resys.thena.api.entities.org.OrgMemberHierarchyEntry;
+import io.resys.thena.api.entities.org.OrgRightFlattened;
 import io.resys.thena.structures.org.memberhierarchy.MemberTreeContainer.BottomUpVisitor;
 
 
@@ -50,7 +51,7 @@ public abstract class BottomUpVisitorTemplate<T> implements BottomUpVisitor<T> {
   }
   
   private void visitGlobalRole(OrgRightFlattened globalRole) {
-    if((globalRole.getRightStatus() == null || globalRole.getRightStatus() == OrgActorStatusType.IN_FORCE)) {
+    if((globalRole.getRightStatus() == null || globalRole.getRightStatus() == OrgActorStatus.OrgActorStatusType.IN_FORCE)) {
       visitGlobalRoleEnabled(globalRole.getRightName());
     } else {
       visitGlobalRoleDisabled(globalRole.getRightName());
@@ -126,12 +127,12 @@ public abstract class BottomUpVisitorTemplate<T> implements BottomUpVisitor<T> {
         .build();
     
     // disable one group
-    if(result.getStatus() != OrgActorStatusType.IN_FORCE) {
+    if(result.getStatus() != OrgActorStatus.OrgActorStatusType.IN_FORCE) {
       groupsDisabled.add(value.getPartyId());
     }
     
     // disable the whole chain
-    if(result.getStatus() != OrgActorStatusType.IN_FORCE && value.getPartyParentId() != null) {
+    if(result.getStatus() != OrgActorStatus.OrgActorStatusType.IN_FORCE && value.getPartyParentId() != null) {
       inheritanceDisabledFromBottom.add(value.getPartyParentId());
     }
   }
@@ -148,7 +149,7 @@ public abstract class BottomUpVisitorTemplate<T> implements BottomUpVisitor<T> {
         .statusId(value.getRightStatusId())
         .build();
 
-    if(result.getStatus() != OrgActorStatusType.IN_FORCE) {
+    if(result.getStatus() != OrgActorStatus.OrgActorStatusType.IN_FORCE) {
       rolesDisabled.add(result.getRoleId());
     }
   }
@@ -164,7 +165,7 @@ public abstract class BottomUpVisitorTemplate<T> implements BottomUpVisitor<T> {
         .status(value.getRightStatus())
         .statusId(value.getRightStatusId())
         .build();
-    if(result.getStatus() != OrgActorStatusType.IN_FORCE) {
+    if(result.getStatus() != OrgActorStatus.OrgActorStatusType.IN_FORCE) {
       rolesDisabled.add(result.getRoleId());
     }
   }

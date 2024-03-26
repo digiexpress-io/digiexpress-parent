@@ -7,8 +7,8 @@ import java.util.Map;
 
 import io.resys.thena.api.entities.org.ImmutableOrgMemberPartyStatus;
 import io.resys.thena.api.entities.org.ImmutableOrgMemberRightStatus;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMemberHierarchyEntry;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgRightFlattened;
+import io.resys.thena.api.entities.org.OrgMemberHierarchyEntry;
+import io.resys.thena.api.entities.org.OrgRightFlattened;
 import io.resys.thena.api.entities.org.ThenaOrgObjects.OrgMemberPartyStatus;
 import io.resys.thena.api.entities.org.ThenaOrgObjects.OrgMemberRightStatus;
 import io.resys.thena.structures.org.memberhierarchy.MemberContainer.UserContainerChildVisitor;

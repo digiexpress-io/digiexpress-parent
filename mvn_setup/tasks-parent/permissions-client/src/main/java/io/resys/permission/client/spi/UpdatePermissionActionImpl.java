@@ -13,7 +13,8 @@ import io.resys.permission.client.api.model.Principal.Permission;
 import io.resys.thena.api.actions.OrgCommitActions.ModifyOneRight;
 import io.resys.thena.api.actions.OrgCommitActions.OneRightEnvelope;
 import io.resys.thena.api.entities.CommitResultStatus;
-import io.resys.thena.api.entities.org.ThenaOrgObject.OrgActorStatusType;
+import io.resys.thena.api.entities.org.OrgActorStatus;
+import io.resys.thena.api.entities.org.OrgActorStatus.OrgActorStatusType;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -85,7 +86,7 @@ public class UpdatePermissionActionImpl implements UpdatePermissionAction {
 
       .description(right.getRightDescription())
       .name(right.getRightName())
-      .status(OrgActorStatusType.IN_FORCE)
+      .status(OrgActorStatus.OrgActorStatusType.IN_FORCE)
       .build();
     }
 
