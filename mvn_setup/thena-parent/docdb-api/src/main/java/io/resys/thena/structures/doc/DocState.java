@@ -1,6 +1,6 @@
 package io.resys.thena.structures.doc;
 
-import io.resys.thena.api.models.Repo;
+import io.resys.thena.api.entities.Tenant;
 import io.smallrye.mutiny.Uni;
 
 public interface DocState {
@@ -11,13 +11,13 @@ public interface DocState {
   Uni<DocInserts> insert(String repoNameOrId);
   Uni<DocRepo> withRepo(String repoNameOrId);
 
-  DocInserts insert(Repo repo);
-  DocQueries query(Repo repo);
-  DocRepo withRepo(Repo repo);
+  DocInserts insert(Tenant repo);
+  DocQueries query(Tenant repo);
+  DocRepo withRepo(Tenant repo);
 
   interface DocRepo {
     String getRepoName();
-    Repo getRepo();
+    Tenant getRepo();
     
     DocInserts insert();
     DocQueries query();

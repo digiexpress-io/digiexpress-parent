@@ -9,13 +9,13 @@ import io.resys.crm.client.api.model.Customer;
 import io.resys.crm.client.api.model.CustomerCommand.CreateCustomer;
 import io.resys.crm.client.api.model.CustomerCommand.CustomerUpdateCommand;
 import io.resys.crm.client.api.model.CustomerCommand.UpsertSuomiFiPerson;
-import io.resys.thena.api.models.Repo;
+import io.resys.thena.api.entities.Tenant;
 import io.smallrye.mutiny.Uni;
 
 public interface CrmClient {
 
   RepositoryQuery repoQuery();
-  Uni<Repo> getRepo();
+  Uni<Tenant> getRepo();
   CrmClient withRepoId(String repoId);
   
   CreateCustomerAction createCustomer();

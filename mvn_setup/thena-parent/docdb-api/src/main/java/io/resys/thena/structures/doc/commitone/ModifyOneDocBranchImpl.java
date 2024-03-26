@@ -5,10 +5,10 @@ import java.time.Duration;
 import io.resys.thena.api.actions.CommitActions.JsonObjectMerge;
 import io.resys.thena.api.actions.DocCommitActions.ModifyOneDocBranch;
 import io.resys.thena.api.actions.DocCommitActions.OneDocEnvelope;
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.doc.ThenaDocObject.DocBranchLock;
 import io.resys.thena.api.actions.ImmutableOneDocEnvelope;
 import io.resys.thena.api.models.ImmutableMessage;
-import io.resys.thena.api.models.Repo;
-import io.resys.thena.api.models.ThenaDocObject.DocBranchLock;
 import io.resys.thena.spi.DataMapper;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.structures.doc.DocState.DocRepo;
@@ -88,7 +88,7 @@ public class ModifyOneDocBranchImpl implements ModifyOneDocBranch {
       return ImmutableOneDocEnvelope.builder()
           .repoId(repoId)
           .addMessages(ImmutableMessage.builder().text(text).build())
-          .status(Repo.CommitResultStatus.ERROR)
+          .status(Tenant.CommitResultStatus.ERROR)
           .build();
     }
 
@@ -104,7 +104,7 @@ public class ModifyOneDocBranchImpl implements ModifyOneDocBranch {
                 .append(" Unknown branch: '").append(branchName).append("'!")
                 .toString())
               .build())
-          .status(Repo.CommitResultStatus.ERROR)
+          .status(Tenant.CommitResultStatus.ERROR)
           .build();
       
     }

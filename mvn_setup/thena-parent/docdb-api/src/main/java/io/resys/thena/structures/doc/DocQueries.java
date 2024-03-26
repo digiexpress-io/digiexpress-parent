@@ -26,13 +26,13 @@ import javax.annotation.Nullable;
 
 import org.immutables.value.Value;
 
-import io.resys.thena.api.models.ThenaDocObject.Doc;
-import io.resys.thena.api.models.ThenaDocObject.DocBranch;
-import io.resys.thena.api.models.ThenaDocObject.DocBranchLock;
-import io.resys.thena.api.models.ThenaDocObject.DocCommit;
-import io.resys.thena.api.models.ThenaDocObject.DocFlatted;
-import io.resys.thena.api.models.ThenaDocObject.DocLock;
-import io.resys.thena.api.models.ThenaDocObject.DocLog;
+import io.resys.thena.api.entities.doc.ThenaDocObject.Doc;
+import io.resys.thena.api.entities.doc.ThenaDocObject.DocBranch;
+import io.resys.thena.api.entities.doc.ThenaDocObject.DocBranchLock;
+import io.resys.thena.api.entities.doc.ThenaDocObject.DocCommit;
+import io.resys.thena.api.entities.doc.ThenaDocObject.DocFlatted;
+import io.resys.thena.api.entities.doc.ThenaDocObject.DocLock;
+import io.resys.thena.api.entities.doc.ThenaDocObject.DocLog;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 

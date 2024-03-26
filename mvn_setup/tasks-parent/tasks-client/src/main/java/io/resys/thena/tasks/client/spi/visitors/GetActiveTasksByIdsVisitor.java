@@ -26,9 +26,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import io.resys.thena.api.actions.PullActions.PullObjectsQuery;
+import io.resys.thena.api.entities.git.ThenaGitObjects.PullObjects;
 import io.resys.thena.api.models.QueryEnvelope;
 import io.resys.thena.api.models.QueryEnvelope.QueryEnvelopeStatus;
-import io.resys.thena.api.models.ThenaGitObjects.PullObjects;
 import io.resys.thena.tasks.client.api.model.ImmutableTask;
 import io.resys.thena.tasks.client.api.model.Task;
 import io.resys.thena.tasks.client.spi.store.DocumentConfig;

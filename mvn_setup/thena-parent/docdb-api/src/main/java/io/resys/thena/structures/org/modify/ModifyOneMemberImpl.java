@@ -13,15 +13,15 @@ import io.resys.thena.api.actions.ImmutableOneMemberEnvelope;
 import io.resys.thena.api.actions.OrgCommitActions.ModType;
 import io.resys.thena.api.actions.OrgCommitActions.ModifyOneMember;
 import io.resys.thena.api.actions.OrgCommitActions.OneMemberEnvelope;
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgActorStatus;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgActorStatusType;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMember;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMemberRight;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMembership;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgParty;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgRight;
 import io.resys.thena.api.models.ImmutableMessage;
-import io.resys.thena.api.models.Repo;
-import io.resys.thena.api.models.ThenaOrgObject.OrgActorStatus;
-import io.resys.thena.api.models.ThenaOrgObject.OrgActorStatusType;
-import io.resys.thena.api.models.ThenaOrgObject.OrgMember;
-import io.resys.thena.api.models.ThenaOrgObject.OrgMemberRight;
-import io.resys.thena.api.models.ThenaOrgObject.OrgMembership;
-import io.resys.thena.api.models.ThenaOrgObject.OrgParty;
-import io.resys.thena.api.models.ThenaOrgObject.OrgRight;
 import io.resys.thena.spi.DataMapper;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.structures.org.OrgInserts.OrgBatchForOne;
@@ -187,7 +187,7 @@ public class ModifyOneMemberImpl implements ModifyOneMember {
             .addMessages(ImmutableMessage.builder()
                 .exception(e).text("Nothing to commit, data already in the expected state!")
                 .build())
-            .status(Repo.CommitResultStatus.NO_CHANGES)
+            .status(Tenant.CommitResultStatus.NO_CHANGES)
             .build());
 		    }
 		  });
@@ -202,7 +202,7 @@ public class ModifyOneMemberImpl implements ModifyOneMember {
     if(member == null) {
       return ImmutableOneMemberEnvelope.builder()
           .repoId(repoId)
-          .status(Repo.CommitResultStatus.ERROR)
+          .status(Tenant.CommitResultStatus.ERROR)
           .addMessages(ImmutableMessage.builder()
               .text("Could not find member by id/name/externalid: '" + memberId  +"'!")
               .build())
@@ -214,7 +214,7 @@ public class ModifyOneMemberImpl implements ModifyOneMember {
       final var expected = String.join(", ", this.allParties);
       return ImmutableOneMemberEnvelope.builder()
           .repoId(repoId)
-          .status(Repo.CommitResultStatus.ERROR)
+          .status(Tenant.CommitResultStatus.ERROR)
           .addMessages(ImmutableMessage.builder()
               .text("Could not find all groups: \r\n found: \r\n" + found + " \r\n but requested: \r\n" + expected + "!")
               .build())
@@ -226,7 +226,7 @@ public class ModifyOneMemberImpl implements ModifyOneMember {
       final var expected = String.join(", ", this.allRights);
       return ImmutableOneMemberEnvelope.builder()
           .repoId(repoId)
-          .status(Repo.CommitResultStatus.ERROR)
+          .status(Tenant.CommitResultStatus.ERROR)
           .addMessages(ImmutableMessage.builder()
               .text("Could not find all roles: \r\n found: \r\n" + found + " \r\n but requested: \r\n" + expected + "!")
               .build())

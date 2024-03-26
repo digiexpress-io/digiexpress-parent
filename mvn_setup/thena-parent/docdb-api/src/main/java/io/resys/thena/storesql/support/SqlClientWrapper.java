@@ -25,12 +25,12 @@ import java.util.Optional;
 
 import org.immutables.value.Value;
 
-import io.resys.thena.api.models.Repo;
+import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.spi.DbCollections;
 
 @Value.Immutable
 public interface SqlClientWrapper {
-  Repo getRepo();
+  Tenant getRepo();
   io.vertx.mutiny.sqlclient.Pool getPool();
   Optional<io.vertx.mutiny.sqlclient.SqlClient> getTx();
   DbCollections getNames();

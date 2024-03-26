@@ -23,8 +23,8 @@ package io.resys.thena.structures.git.diff;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import io.resys.thena.api.models.ThenaGitObject.Commit;
-import io.resys.thena.api.models.ThenaGitObjects.GitRepoObjects;
+import io.resys.thena.api.entities.git.ThenaGitObject.Commit;
+import io.resys.thena.api.entities.git.ThenaGitObjects.GitRepoObjects;
 
 public interface CommitHistory {
   int getIndex();

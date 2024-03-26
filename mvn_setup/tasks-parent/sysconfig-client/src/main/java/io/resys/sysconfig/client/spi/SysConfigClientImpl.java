@@ -9,7 +9,7 @@ import io.resys.sysconfig.client.spi.actions.CreateSysConfigActionImpl;
 import io.resys.sysconfig.client.spi.actions.SysConfigQueryImpl;
 import io.resys.sysconfig.client.spi.asset.exceptions.AssetClientException;
 import io.resys.sysconfig.client.spi.store.DocumentStore;
-import io.resys.thena.api.models.Repo;
+import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.projects.client.api.TenantConfigClient;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
@@ -27,7 +27,7 @@ public class SysConfigClientImpl implements SysConfigClient {
   private final TenantConfigClient tenantClient;
   public DocumentStore getCtx() { return ctx; }
 
-  @Override public Uni<Repo> getRepo() { return ctx.getRepo(); }
+  @Override public Uni<Tenant> getRepo() { return ctx.getRepo(); }
   @Override public SysConfigClient withRepoId(String repoId) { return new SysConfigClientImpl(ctx.withRepoId(repoId), assets, tenantClient); }
 
   @Override

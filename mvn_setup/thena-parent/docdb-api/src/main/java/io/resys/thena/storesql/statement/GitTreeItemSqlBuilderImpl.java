@@ -22,8 +22,8 @@ package io.resys.thena.storesql.statement;
 
 import java.util.stream.Collectors;
 
-import io.resys.thena.api.models.ThenaGitObject.Tree;
-import io.resys.thena.api.models.ThenaGitObject.TreeValue;
+import io.resys.thena.api.entities.git.ThenaGitObject.Tree;
+import io.resys.thena.api.entities.git.ThenaGitObject.TreeValue;
 import io.resys.thena.spi.DbCollections;
 import io.resys.thena.storesql.ImmutableSql;
 import io.resys.thena.storesql.ImmutableSqlTuple;

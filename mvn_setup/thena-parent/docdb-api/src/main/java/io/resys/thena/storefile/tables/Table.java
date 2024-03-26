@@ -25,7 +25,7 @@ import java.util.function.Function;
 
 import org.immutables.value.Value;
 
-import io.resys.thena.api.models.Repo;
+import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.spi.DataMapper;
 import io.resys.thena.spi.DbCollections;
 import io.resys.thena.storefile.tables.Table.Row;
@@ -69,7 +69,7 @@ public interface Table<T extends Row>  {
   
   @Value.Immutable
   interface FileClientWrapper {
-    Repo getRepo();
+    Tenant getRepo();
     FilePool getClient();
     DbCollections getNames();    
   }

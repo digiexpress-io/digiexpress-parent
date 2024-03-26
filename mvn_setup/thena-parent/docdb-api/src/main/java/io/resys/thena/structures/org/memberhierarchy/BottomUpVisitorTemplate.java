@@ -6,11 +6,11 @@ import java.util.Optional;
 
 import org.immutables.value.Value;
 
-import io.resys.thena.api.models.ImmutableOrgMemberPartyStatus;
-import io.resys.thena.api.models.ImmutableOrgMemberRightStatus;
-import io.resys.thena.api.models.ThenaOrgObject.OrgActorStatusType;
-import io.resys.thena.api.models.ThenaOrgObject.OrgMemberHierarchyEntry;
-import io.resys.thena.api.models.ThenaOrgObject.OrgRightFlattened;
+import io.resys.thena.api.entities.org.ImmutableOrgMemberPartyStatus;
+import io.resys.thena.api.entities.org.ImmutableOrgMemberRightStatus;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgActorStatusType;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMemberHierarchyEntry;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgRightFlattened;
 import io.resys.thena.structures.org.memberhierarchy.MemberTreeContainer.BottomUpVisitor;
 
 

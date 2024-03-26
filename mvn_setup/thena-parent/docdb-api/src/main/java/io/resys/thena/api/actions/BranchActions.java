@@ -23,8 +23,8 @@ package io.resys.thena.api.actions;
 import java.util.List;
 
 import io.resys.thena.api.actions.PullActions.MatchCriteria;
+import io.resys.thena.api.entities.git.ThenaGitObjects.BranchObjects;
 import io.resys.thena.api.models.QueryEnvelope;
-import io.resys.thena.api.models.ThenaGitObjects.BranchObjects;
 import io.smallrye.mutiny.Uni;
 
 public interface BranchActions {

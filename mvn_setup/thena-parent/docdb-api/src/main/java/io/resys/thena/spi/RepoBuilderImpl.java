@@ -4,10 +4,10 @@ import io.resys.thena.api.actions.ImmutableRepoResult;
 import io.resys.thena.api.actions.TenantActions;
 import io.resys.thena.api.actions.TenantActions.RepoResult;
 import io.resys.thena.api.actions.TenantActions.RepoStatus;
+import io.resys.thena.api.entities.ImmutableTenant;
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.Tenant.RepoType;
 import io.resys.thena.api.exceptions.RepoException;
-import io.resys.thena.api.models.ImmutableRepo;
-import io.resys.thena.api.models.Repo;
-import io.resys.thena.api.models.Repo.RepoType;
 import io.resys.thena.support.Identifiers;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
@@ -37,7 +37,7 @@ public class RepoBuilderImpl implements TenantActions.RepoBuilder {
     RepoAssert.isName(name, () -> "repo name has invalid characters!");
 
     return state.project().getByName(name)
-      .onItem().transformToUni((Repo existing) -> {
+      .onItem().transformToUni((Tenant existing) -> {
       
       final Uni<RepoResult> result;
       if(existing != null) {
@@ -51,7 +51,7 @@ public class RepoBuilderImpl implements TenantActions.RepoBuilder {
         .collect().asList().onItem()
         .transformToUni((allRepos) -> { 
           
-          final var newRepo = ImmutableRepo.builder()
+          final var newRepo = ImmutableTenant.builder()
               .id(Identifiers.uuid())
               .rev(Identifiers.uuid())
               .type(type)

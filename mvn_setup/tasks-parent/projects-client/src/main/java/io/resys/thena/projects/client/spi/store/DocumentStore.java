@@ -1,7 +1,7 @@
 package io.resys.thena.projects.client.spi.store;
 
-import io.resys.thena.api.models.Repo;
-import io.resys.thena.api.models.Repo.RepoType;
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.Tenant.RepoType;
 
 /*-
  * #%L
@@ -28,7 +28,7 @@ import io.smallrye.mutiny.Uni;
 public interface DocumentStore {
   DocumentRepositoryQuery query();
   DocumentConfig getConfig();
-  Uni<Repo> getRepo();
+  Uni<Tenant> getRepo();
   DocumentStore withRepoId(String repoId);
   
   interface DocumentRepositoryQuery {

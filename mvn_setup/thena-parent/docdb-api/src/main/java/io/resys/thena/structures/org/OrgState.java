@@ -1,6 +1,6 @@
 package io.resys.thena.structures.org;
 
-import io.resys.thena.api.models.Repo;
+import io.resys.thena.api.entities.Tenant;
 import io.smallrye.mutiny.Uni;
 
 public interface OrgState {
@@ -11,13 +11,13 @@ public interface OrgState {
   Uni<OrgInserts> insert(String repoNameOrId);
   Uni<OrgRepo> withRepo(String repoNameOrId);
 
-  OrgInserts insert(Repo repo);
-  OrgQueries query(Repo repo);
-  OrgRepo withRepo(Repo repo);
+  OrgInserts insert(Tenant repo);
+  OrgQueries query(Tenant repo);
+  OrgRepo withRepo(Tenant repo);
 
   interface OrgRepo {
     String getRepoName();
-    Repo getRepo();
+    Tenant getRepo();
     
     OrgInserts insert();
     OrgQueries query();

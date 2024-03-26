@@ -2,9 +2,9 @@ package io.resys.thena.api.actions;
 
 import java.util.List;
 
+import io.resys.thena.api.entities.doc.ThenaDocObjects.DocObject;
+import io.resys.thena.api.entities.doc.ThenaDocObjects.DocObjects;
 import io.resys.thena.api.models.QueryEnvelope;
-import io.resys.thena.api.models.ThenaDocObjects.DocObject;
-import io.resys.thena.api.models.ThenaDocObjects.DocObjects;
 import io.smallrye.mutiny.Uni;
 
 public interface DocQueryActions {

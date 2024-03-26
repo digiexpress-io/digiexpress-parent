@@ -30,8 +30,8 @@ import java.util.stream.Collectors;
 
 import io.resys.thena.api.actions.DocCommitActions.CreateManyDocs;
 import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
-import io.resys.thena.api.models.Repo.CommitResultStatus;
-import io.resys.thena.api.models.ThenaDocObject.DocBranch;
+import io.resys.thena.api.entities.Tenant.CommitResultStatus;
+import io.resys.thena.api.entities.doc.ThenaDocObject.DocBranch;
 import io.resys.userprofile.client.api.model.Document;
 import io.resys.userprofile.client.api.model.ImmutableUserProfile;
 import io.resys.userprofile.client.api.model.UserProfile;

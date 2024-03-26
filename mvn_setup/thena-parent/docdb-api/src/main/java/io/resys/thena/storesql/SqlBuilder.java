@@ -29,26 +29,26 @@ import javax.annotation.Nullable;
 import org.immutables.value.Value;
 
 import io.resys.thena.api.actions.PullActions.MatchCriteria;
-import io.resys.thena.api.models.Repo;
-import io.resys.thena.api.models.ThenaDocObject.Doc;
-import io.resys.thena.api.models.ThenaDocObject.DocBranch;
-import io.resys.thena.api.models.ThenaDocObject.DocCommit;
-import io.resys.thena.api.models.ThenaDocObject.DocLog;
-import io.resys.thena.api.models.ThenaGitObject.Blob;
-import io.resys.thena.api.models.ThenaGitObject.Branch;
-import io.resys.thena.api.models.ThenaGitObject.Commit;
-import io.resys.thena.api.models.ThenaGitObject.Tag;
-import io.resys.thena.api.models.ThenaGitObject.Tree;
-import io.resys.thena.api.models.ThenaGitObject.TreeValue;
-import io.resys.thena.api.models.ThenaOrgObject.OrgActorStatus;
-import io.resys.thena.api.models.ThenaOrgObject.OrgCommit;
-import io.resys.thena.api.models.ThenaOrgObject.OrgCommitTree;
-import io.resys.thena.api.models.ThenaOrgObject.OrgMember;
-import io.resys.thena.api.models.ThenaOrgObject.OrgMemberRight;
-import io.resys.thena.api.models.ThenaOrgObject.OrgMembership;
-import io.resys.thena.api.models.ThenaOrgObject.OrgParty;
-import io.resys.thena.api.models.ThenaOrgObject.OrgPartyRight;
-import io.resys.thena.api.models.ThenaOrgObject.OrgRight;
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.doc.ThenaDocObject.Doc;
+import io.resys.thena.api.entities.doc.ThenaDocObject.DocBranch;
+import io.resys.thena.api.entities.doc.ThenaDocObject.DocCommit;
+import io.resys.thena.api.entities.doc.ThenaDocObject.DocLog;
+import io.resys.thena.api.entities.git.ThenaGitObject.Blob;
+import io.resys.thena.api.entities.git.ThenaGitObject.Branch;
+import io.resys.thena.api.entities.git.ThenaGitObject.Commit;
+import io.resys.thena.api.entities.git.ThenaGitObject.Tag;
+import io.resys.thena.api.entities.git.ThenaGitObject.Tree;
+import io.resys.thena.api.entities.git.ThenaGitObject.TreeValue;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgActorStatus;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgCommit;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgCommitTree;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMember;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMemberRight;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMembership;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgParty;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgPartyRight;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgRight;
 import io.resys.thena.spi.DbCollections;
 import io.resys.thena.structures.doc.DocQueries.DocBranchLockCriteria;
 import io.resys.thena.structures.doc.DocQueries.DocLockCriteria;
@@ -91,8 +91,8 @@ public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
     Sql findAll();
     SqlTuple getByName(String name);
     SqlTuple getByNameOrId(String name);
-    SqlTuple insertOne(Repo repo);
-    SqlTuple deleteOne(Repo repo);
+    SqlTuple insertOne(Tenant repo);
+    SqlTuple deleteOne(Tenant repo);
   }
 
   interface OrgUserSqlBuilder {

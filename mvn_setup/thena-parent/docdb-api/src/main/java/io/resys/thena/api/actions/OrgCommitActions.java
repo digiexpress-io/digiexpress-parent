@@ -6,13 +6,13 @@ import javax.annotation.Nullable;
 
 import org.immutables.value.Value;
 
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgActorStatusType;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMember;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgParty;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgRight;
 import io.resys.thena.api.models.Message;
-import io.resys.thena.api.models.Repo;
 import io.resys.thena.api.models.ThenaEnvelope;
-import io.resys.thena.api.models.ThenaOrgObject.OrgActorStatusType;
-import io.resys.thena.api.models.ThenaOrgObject.OrgMember;
-import io.resys.thena.api.models.ThenaOrgObject.OrgParty;
-import io.resys.thena.api.models.ThenaOrgObject.OrgRight;
 import io.smallrye.mutiny.Uni;
 
 public interface OrgCommitActions {
@@ -131,7 +131,7 @@ public interface OrgCommitActions {
   @Value.Immutable
   interface OneRightEnvelope extends ThenaEnvelope {
     String getRepoId();
-    Repo.CommitResultStatus getStatus();
+    Tenant.CommitResultStatus getStatus();
     List<Message> getMessages();
 
     @Nullable OrgRight getRight();
@@ -141,7 +141,7 @@ public interface OrgCommitActions {
   @Value.Immutable
   interface OneMemberEnvelope extends ThenaEnvelope {
     String getRepoId();
-    Repo.CommitResultStatus getStatus();
+    Tenant.CommitResultStatus getStatus();
     List<Message> getMessages();
     
     @Nullable OrgMember getMember();
@@ -150,7 +150,7 @@ public interface OrgCommitActions {
   @Value.Immutable
   interface OnePartyEnvelope extends ThenaEnvelope {
     String getRepoId();
-    Repo.CommitResultStatus getStatus();
+    Tenant.CommitResultStatus getStatus();
     List<Message> getMessages();
     
     @Nullable OrgParty getParty();

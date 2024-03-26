@@ -22,7 +22,7 @@ package io.resys.thena.storefile.queries;
 
 import java.util.Collection;
 
-import io.resys.thena.api.models.ThenaGitObject.Tag;
+import io.resys.thena.api.entities.git.ThenaGitObject.Tag;
 import io.resys.thena.storefile.FileBuilder;
 import io.resys.thena.storefile.tables.Table.FileMapper;
 import io.resys.thena.storefile.tables.Table.FilePool;

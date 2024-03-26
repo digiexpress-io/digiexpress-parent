@@ -30,11 +30,11 @@ import java.util.Map;
 import io.resys.thena.api.actions.CommitActions.CommitBuilder;
 import io.resys.thena.api.actions.CommitActions.CommitResultEnvelope;
 import io.resys.thena.api.actions.CommitActions.JsonObjectMerge;
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.git.ThenaGitObject.CommitLock;
+import io.resys.thena.api.entities.git.ThenaGitObject.CommitLockStatus;
 import io.resys.thena.api.actions.ImmutableCommitResultEnvelope;
 import io.resys.thena.api.models.ImmutableMessage;
-import io.resys.thena.api.models.Repo;
-import io.resys.thena.api.models.ThenaGitObject.CommitLock;
-import io.resys.thena.api.models.ThenaGitObject.CommitLockStatus;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.structures.git.GitInserts.BatchStatus;
 import io.resys.thena.structures.git.GitState.GitRepo;
@@ -209,7 +209,7 @@ public class CommitBuilderImpl implements CommitBuilder {
                   .append(" Your trying to merge objects to non existent head!")
                   .toString())
               .build())
-          .status(Repo.CommitResultStatus.ERROR)
+          .status(Tenant.CommitResultStatus.ERROR)
           .build();
       
     }
@@ -227,7 +227,7 @@ public class CommitBuilderImpl implements CommitBuilder {
                   .append(" but remote has no head.").append("'!")
                   .toString())
               .build())
-          .status(Repo.CommitResultStatus.ERROR)
+          .status(Tenant.CommitResultStatus.ERROR)
           .build();
       
     }
@@ -245,7 +245,7 @@ public class CommitBuilderImpl implements CommitBuilder {
                   .append(" is: '").append(state.getCommit().get().getId()).append("'!")
                   .toString())
               .build())
-          .status(Repo.CommitResultStatus.ERROR)
+          .status(Tenant.CommitResultStatus.ERROR)
           .build();
     }
     
@@ -264,20 +264,20 @@ public class CommitBuilderImpl implements CommitBuilder {
       return ImmutableCommitResultEnvelope.builder()
           .gid(gid)
           .addMessages(ImmutableMessage.builder().text(text).build())
-          .status(Repo.CommitResultStatus.ERROR)
+          .status(Tenant.CommitResultStatus.ERROR)
           .build();
     }
 
     return null;
   }
   
-  private static Repo.CommitResultStatus visitStatus(BatchStatus src) {
+  private static Tenant.CommitResultStatus visitStatus(BatchStatus src) {
     if(src == BatchStatus.OK) {
-      return Repo.CommitResultStatus.OK;
+      return Tenant.CommitResultStatus.OK;
     } else if(src == BatchStatus.CONFLICT) {
-      return Repo.CommitResultStatus.CONFLICT;
+      return Tenant.CommitResultStatus.CONFLICT;
     }
-    return Repo.CommitResultStatus.ERROR;
+    return Tenant.CommitResultStatus.ERROR;
     
   }
 }

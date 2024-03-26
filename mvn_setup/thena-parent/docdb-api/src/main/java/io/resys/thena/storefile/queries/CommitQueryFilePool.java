@@ -25,10 +25,10 @@ import java.util.Collections;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import io.resys.thena.api.models.ImmutableCommitLock;
-import io.resys.thena.api.models.ThenaGitObject.Commit;
-import io.resys.thena.api.models.ThenaGitObject.CommitLock;
-import io.resys.thena.api.models.ThenaGitObject.CommitLockStatus;
+import io.resys.thena.api.entities.git.ImmutableCommitLock;
+import io.resys.thena.api.entities.git.ThenaGitObject.Commit;
+import io.resys.thena.api.entities.git.ThenaGitObject.CommitLock;
+import io.resys.thena.api.entities.git.ThenaGitObject.CommitLockStatus;
 import io.resys.thena.storefile.FileBuilder;
 import io.resys.thena.storefile.tables.Table.FileMapper;
 import io.resys.thena.storefile.tables.Table.FilePool;

@@ -38,8 +38,8 @@ import io.resys.sysconfig.client.spi.store.DocumentStoreException;
 import io.resys.sysconfig.client.spi.visitors.SysConfigCommandVisitor.NoChangesException;
 import io.resys.thena.api.actions.DocCommitActions.CreateManyDocs;
 import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
-import io.resys.thena.api.models.Repo.CommitResultStatus;
-import io.resys.thena.api.models.ThenaDocObject.DocBranch;
+import io.resys.thena.api.entities.Tenant.CommitResultStatus;
+import io.resys.thena.api.entities.doc.ThenaDocObject.DocBranch;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 

@@ -1,7 +1,7 @@
 package io.resys.thena.spi;
 
 import io.resys.thena.api.actions.TenantActions;
-import io.resys.thena.api.models.Repo;
+import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
@@ -19,18 +19,18 @@ public class RepoQueryImpl implements TenantActions.RepoQuery {
   
 
   @Override
-  public Multi<Repo> findAll() {
+  public Multi<Tenant> findAll() {
    return state.project().findAll(); 
   }
 
   @Override
-  public Uni<Repo> get() {
+  public Uni<Tenant> get() {
     RepoAssert.notEmpty(id, () -> "Define id or name!");
     return state.project().getByNameOrId(id);
   }
 
   @Override
-  public Uni<Repo> delete() {
+  public Uni<Tenant> delete() {
     return get().onItem().transformToUni(repo -> state.project().delete(repo));
   }
 }

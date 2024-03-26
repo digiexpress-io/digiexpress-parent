@@ -9,8 +9,8 @@ import org.junit.jupiter.api.BeforeEach;
 
 import io.resys.thena.api.ThenaClient;
 import io.resys.thena.api.actions.TenantActions.RepoResult;
-import io.resys.thena.api.models.Repo;
-import io.resys.thena.api.models.Repo.RepoType;
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.Tenant.RepoType;
 import io.resys.thena.spi.DbCollections;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.storesql.DbStateSqlImpl;
@@ -67,20 +67,20 @@ public class PgTestTemplate {
     return DbStateSqlImpl.state(ctx, pgPool, new PgErrors());
   }
   
-  public void printRepo(Repo repo) {
+  public void printRepo(Tenant repo) {
     final String result = new GitPrinter(createState()).print(repo);
     log.debug(result);
   }
   
   public void prettyPrint(String repoId) {
-    Repo repo = getClient().git(repoId).project().get()
+    Tenant repo = getClient().git(repoId).project().get()
         .await().atMost(Duration.ofMinutes(1)).getRepo();
     
     printRepo(repo);
   }
 
   public String toRepoExport(String repoId) {
-    Repo repo = getClient().git(repoId).project().get()
+    Tenant repo = getClient().git(repoId).project().get()
         .await().atMost(Duration.ofMinutes(1)).getRepo();
     final String result = new TestExporter(createState()).print(repo);
     return result;

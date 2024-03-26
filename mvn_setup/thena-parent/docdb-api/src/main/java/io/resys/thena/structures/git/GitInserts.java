@@ -25,13 +25,13 @@ import java.util.List;
 
 import org.immutables.value.Value;
 
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.git.ThenaGitObject.Blob;
+import io.resys.thena.api.entities.git.ThenaGitObject.Branch;
+import io.resys.thena.api.entities.git.ThenaGitObject.Commit;
+import io.resys.thena.api.entities.git.ThenaGitObject.Tag;
+import io.resys.thena.api.entities.git.ThenaGitObject.Tree;
 import io.resys.thena.api.models.Message;
-import io.resys.thena.api.models.Repo;
-import io.resys.thena.api.models.ThenaGitObject.Blob;
-import io.resys.thena.api.models.ThenaGitObject.Branch;
-import io.resys.thena.api.models.ThenaGitObject.Commit;
-import io.resys.thena.api.models.ThenaGitObject.Tag;
-import io.resys.thena.api.models.ThenaGitObject.Tree;
 import io.smallrye.mutiny.Uni;
 
 public interface GitInserts {
@@ -49,7 +49,7 @@ public interface GitInserts {
   @Value.Immutable
   interface GitBatch {
     BatchStatus getStatus();
-    Repo getRepo();
+    Tenant getRepo();
     Message getLog();
     BatchRef getRef();
     Commit getCommit();

@@ -10,13 +10,13 @@ import io.resys.sysconfig.client.spi.store.DocumentConfig;
 import io.resys.sysconfig.client.spi.store.DocumentConfig.DocObjectVisitor;
 import io.resys.sysconfig.client.spi.store.DocumentStoreException;
 import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
+import io.resys.thena.api.entities.doc.ThenaDocObject.Doc;
+import io.resys.thena.api.entities.doc.ThenaDocObject.DocBranch;
+import io.resys.thena.api.entities.doc.ThenaDocObject.DocCommit;
+import io.resys.thena.api.entities.doc.ThenaDocObject.DocLog;
+import io.resys.thena.api.entities.doc.ThenaDocObjects.DocObject;
 import io.resys.thena.api.models.QueryEnvelope;
 import io.resys.thena.api.models.QueryEnvelope.QueryEnvelopeStatus;
-import io.resys.thena.api.models.ThenaDocObject.Doc;
-import io.resys.thena.api.models.ThenaDocObject.DocBranch;
-import io.resys.thena.api.models.ThenaDocObject.DocCommit;
-import io.resys.thena.api.models.ThenaDocObject.DocLog;
-import io.resys.thena.api.models.ThenaDocObjects.DocObject;
 import io.resys.thena.projects.client.spi.store.MainBranch;
 import lombok.RequiredArgsConstructor;
 

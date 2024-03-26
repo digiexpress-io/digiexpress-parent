@@ -5,8 +5,8 @@ package io.resys.thena.storesql.builders;
 import java.util.List;
 import java.util.function.Predicate;
 
+import io.resys.thena.api.entities.org.ThenaOrgObject.IsOrgObject;
 import io.resys.thena.api.models.ImmutableMessage;
-import io.resys.thena.api.models.ThenaOrgObject.IsOrgObject;
 import io.resys.thena.storesql.SqlBuilder;
 import io.resys.thena.storesql.SqlMapper;
 import io.resys.thena.storesql.support.Execute;

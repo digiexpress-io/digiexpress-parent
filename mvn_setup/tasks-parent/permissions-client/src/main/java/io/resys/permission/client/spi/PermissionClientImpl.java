@@ -3,7 +3,7 @@ package io.resys.permission.client.spi;
 import java.util.Optional;
 
 import io.resys.permission.client.api.PermissionClient;
-import io.resys.thena.api.models.Repo;
+import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ public class PermissionClientImpl implements PermissionClient {
     return new PermissionClientImpl(ctx.withRepoId(repoId));
   }
   @Override
-  public Uni<Repo> getRepo() {
+  public Uni<Tenant> getRepo() {
     return ctx.getRepo();
   }
   @Override

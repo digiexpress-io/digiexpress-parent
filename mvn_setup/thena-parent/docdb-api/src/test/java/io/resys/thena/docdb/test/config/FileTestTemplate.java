@@ -37,8 +37,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.resys.thena.api.ThenaClient;
 import io.resys.thena.api.actions.TenantActions.RepoResult;
-import io.resys.thena.api.models.Repo;
-import io.resys.thena.api.models.Repo.RepoType;
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.Tenant.RepoType;
 import io.resys.thena.jackson.VertexExtModule;
 import io.resys.thena.spi.DbCollections;
 import io.resys.thena.spi.DbState;
@@ -64,18 +64,18 @@ public class FileTestTemplate {
       new VertxModule(),
       new VertexExtModule());
   private static AtomicInteger index = new AtomicInteger(1);
-  private BiConsumer<ThenaClient, Repo> callback;
-  private Repo repo;
+  private BiConsumer<ThenaClient, Tenant> callback;
+  private Tenant repo;
   
   public FileTestTemplate() {
   }
-  public FileTestTemplate(BiConsumer<ThenaClient, Repo> callback) {
+  public FileTestTemplate(BiConsumer<ThenaClient, Tenant> callback) {
     this.callback = callback;
   }  
   public ThenaClient getClient() {
     return client;
   }
-  public Repo getRepo() {
+  public Tenant getRepo() {
     return repo;
   }
   
@@ -119,7 +119,7 @@ public class FileTestTemplate {
     return repo;
   }
   
-  public ThenaClient getClient(Repo repo) {
+  public ThenaClient getClient(Tenant repo) {
     // final var ctx = ClientCollections.defaults(db).toRepo(repo);
     return client;
   }
@@ -129,7 +129,7 @@ public class FileTestTemplate {
     return DocDBFactoryFile.state(ctx, new FilePoolImpl(file, objectMapper), new FileErrors());
   }
   
-  public void printRepo(Repo repo) {
+  public void printRepo(Tenant repo) {
     final var ctx = DbCollections.defaults(db);
     final var state = DocDBFactoryFile.state(ctx, new FilePoolImpl(file, objectMapper), new FileErrors());
     

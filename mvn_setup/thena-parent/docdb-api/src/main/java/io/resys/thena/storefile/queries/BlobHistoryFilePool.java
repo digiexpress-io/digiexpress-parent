@@ -28,11 +28,11 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import io.resys.thena.api.actions.PullActions.MatchCriteria;
-import io.resys.thena.api.models.ImmutableBlobHistory;
-import io.resys.thena.api.models.ThenaGitObject.Blob;
-import io.resys.thena.api.models.ThenaGitObject.BlobHistory;
-import io.resys.thena.api.models.ThenaGitObject.Commit;
-import io.resys.thena.api.models.ThenaGitObject.Tree;
+import io.resys.thena.api.entities.git.ImmutableBlobHistory;
+import io.resys.thena.api.entities.git.ThenaGitObject.Blob;
+import io.resys.thena.api.entities.git.ThenaGitObject.BlobHistory;
+import io.resys.thena.api.entities.git.ThenaGitObject.Commit;
+import io.resys.thena.api.entities.git.ThenaGitObject.Tree;
 import io.resys.thena.storefile.FileBuilder;
 import io.resys.thena.storefile.tables.Table.FileMapper;
 import io.resys.thena.storefile.tables.Table.FilePool;

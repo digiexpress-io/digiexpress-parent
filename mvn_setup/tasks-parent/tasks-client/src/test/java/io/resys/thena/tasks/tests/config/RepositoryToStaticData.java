@@ -30,8 +30,8 @@ import java.util.function.Function;
 
 import org.apache.commons.io.IOUtils;
 
-import io.resys.thena.api.models.Repo;
-import io.resys.thena.api.models.ThenaGitObject.TreeValue;
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.git.ThenaGitObject.TreeValue;
 import io.resys.thena.spi.DbState;
 import io.vertx.core.json.JsonObject;
 
@@ -43,7 +43,7 @@ public class RepositoryToStaticData {
     this.state = state;
   }
 
-  public String print(Repo repo) {
+  public String print(Tenant repo) {
     final Map<String, String> replacements = new HashMap<>();
     final Function<String, String> ID = (id) -> {
       if(replacements.containsKey(id)) {

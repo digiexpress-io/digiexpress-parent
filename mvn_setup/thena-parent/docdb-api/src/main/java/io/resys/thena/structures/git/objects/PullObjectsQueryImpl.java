@@ -27,16 +27,16 @@ import org.immutables.value.Value;
 
 import io.resys.thena.api.actions.PullActions.MatchCriteria;
 import io.resys.thena.api.actions.PullActions.PullObjectsQuery;
-import io.resys.thena.api.models.ImmutablePullObject;
-import io.resys.thena.api.models.ImmutablePullObjects;
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.git.ImmutablePullObject;
+import io.resys.thena.api.entities.git.ImmutablePullObjects;
+import io.resys.thena.api.entities.git.ThenaGitObject.Blob;
+import io.resys.thena.api.entities.git.ThenaGitObject.Commit;
+import io.resys.thena.api.entities.git.ThenaGitObjects.PullObject;
+import io.resys.thena.api.entities.git.ThenaGitObjects.PullObjects;
 import io.resys.thena.api.models.ImmutableQueryEnvelope;
 import io.resys.thena.api.models.QueryEnvelope;
 import io.resys.thena.api.models.QueryEnvelope.QueryEnvelopeStatus;
-import io.resys.thena.api.models.Repo;
-import io.resys.thena.api.models.ThenaGitObject.Blob;
-import io.resys.thena.api.models.ThenaGitObject.Commit;
-import io.resys.thena.api.models.ThenaGitObjects.PullObject;
-import io.resys.thena.api.models.ThenaGitObjects.PullObjects;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.structures.git.GitState.GitRepo;
 import io.resys.thena.support.RepoAssert;
@@ -97,7 +97,7 @@ public class PullObjectsQueryImpl implements PullObjectsQuery {
    // RepoAssert.isTrue(!blobName.isEmpty(), () -> "docId is not defined!");
     
     return state.project().getByNameOrId(projectName).onItem()
-    .transformToUni((Repo existing) -> {
+    .transformToUni((Tenant existing) -> {
       if(existing == null) {
         return Uni.createFrom().item(QueryEnvelope.repoNotFound(projectName, log));
       }
@@ -118,7 +118,7 @@ public class PullObjectsQueryImpl implements PullObjectsQuery {
     RepoAssert.isTrue(!docIds.isEmpty(), () -> "blobName is not defined!");
     
     return state.project().getByNameOrId(projectName).onItem()
-    .transformToUni((Repo existing) -> {
+    .transformToUni((Tenant existing) -> {
       if(existing == null) {
         return Uni.createFrom().item(QueryEnvelope.repoNotFound(projectName, log));
       }
@@ -132,7 +132,7 @@ public class PullObjectsQueryImpl implements PullObjectsQuery {
     });
   }
   
-  private Uni<QueryEnvelope<PullObject>> getState(Repo repo, Commit commit, GitRepo ctx) {
+  private Uni<QueryEnvelope<PullObject>> getState(Tenant repo, Commit commit, GitRepo ctx) {
     return getBlob(commit.getTree(), ctx, blobCriteria, docIds).onItem()
         .transformToUni(blobTree -> {
           
@@ -153,7 +153,7 @@ public class PullObjectsQueryImpl implements PullObjectsQuery {
   
   }
   
-  private Uni<QueryEnvelope<PullObjects>> getListState(Repo repo, Commit commit, GitRepo ctx) {
+  private Uni<QueryEnvelope<PullObjects>> getListState(Tenant repo, Commit commit, GitRepo ctx) {
     return getBlob(commit.getTree(), ctx, blobCriteria, docIds).onItem()
         .transformToUni(blobAndTree -> {
           

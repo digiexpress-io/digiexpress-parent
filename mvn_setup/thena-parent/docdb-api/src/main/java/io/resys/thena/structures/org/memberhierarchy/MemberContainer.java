@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import io.resys.thena.api.models.ThenaOrgObject.OrgMemberHierarchyEntry;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMemberHierarchyEntry;
 
 public class MemberContainer {
   private final Map<String, List<OrgMemberHierarchyEntry>> groupsById = new HashMap<>();

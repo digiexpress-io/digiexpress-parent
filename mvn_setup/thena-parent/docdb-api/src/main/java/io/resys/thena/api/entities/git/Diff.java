@@ -1,4 +1,4 @@
-package io.resys.thena.api.models;
+package io.resys.thena.api.entities.git;
 
 /*-
  * #%L
@@ -26,14 +26,15 @@ import javax.annotation.Nullable;
 
 import org.immutables.value.Value;
 
-import io.resys.thena.api.models.ThenaGitObject.Commit;
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.git.ThenaGitObject.Commit;
 
 @Value.Immutable
 public interface Diff {
   enum DiffActionType { MODIFIED, CREATED, DELETED, RENAMED }
   enum DivergenceType { BEHIND, AHEAD, EQUAL, CONFLICT }
 
-  Repo getRepo();
+  Tenant getRepo();
   List<Divergence> getDivergences();
   
   @Value.Immutable

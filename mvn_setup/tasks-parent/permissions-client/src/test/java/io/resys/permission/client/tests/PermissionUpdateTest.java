@@ -11,7 +11,7 @@ import io.resys.permission.client.api.model.ImmutableChangePermissionName;
 import io.resys.permission.client.tests.config.DbTestTemplate;
 import io.resys.permission.client.tests.config.GenerateTestData;
 import io.resys.permission.client.tests.config.OrgPgProfile;
-import io.resys.thena.api.models.Repo;
+import io.resys.thena.api.entities.Tenant;
 import lombok.extern.slf4j.Slf4j;
 
 @QuarkusTest
@@ -26,7 +26,7 @@ public class PermissionUpdateTest extends DbTestTemplate {
       .create()
       .await().atMost(Duration.ofMinutes(1));
 
-    final Repo repo = client.getRepo().await().atMost(Duration.ofMinutes(1));
+    final Tenant repo = client.getRepo().await().atMost(Duration.ofMinutes(1));
     log.debug("created repo {}", repo);
     new GenerateTestData(getDocDb()).populate(repo);
     

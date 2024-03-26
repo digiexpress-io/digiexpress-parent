@@ -2,7 +2,7 @@ package io.resys.userprofile.client.spi;
 
 import java.util.Optional;
 
-import io.resys.thena.api.models.Repo;
+import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.support.RepoAssert;
 import io.resys.userprofile.client.api.UserProfileClient;
 import io.resys.userprofile.client.spi.actions.CreateUserProfileActionImpl;
@@ -25,7 +25,7 @@ public class UserProfileClientImpl implements UserProfileClient {
   }
 
   @Override
-  public Uni<Repo> getRepo() {
+  public Uni<Tenant> getRepo() {
     return ctx.getRepo();
   }
   

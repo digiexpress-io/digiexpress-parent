@@ -1,6 +1,6 @@
 package io.resys.thena.storesql.statement;
 
-import io.resys.thena.api.models.Repo;
+import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.spi.DbCollections;
 import io.resys.thena.storesql.ImmutableSql;
 import io.resys.thena.storesql.ImmutableSqlTuple;
@@ -59,7 +59,7 @@ public class RepoSqlBuilderImpl implements RepoSqlBuilder {
         .build();
   }
   @Override
-  public SqlTuple insertOne(Repo newRepo) {
+  public SqlTuple insertOne(Tenant newRepo) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getRepos())
@@ -70,7 +70,7 @@ public class RepoSqlBuilderImpl implements RepoSqlBuilder {
   }
   
   @Override
-  public SqlTuple deleteOne(Repo newRepo) {
+  public SqlTuple deleteOne(Tenant newRepo) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("DELETE FROM ").append(options.getRepos())

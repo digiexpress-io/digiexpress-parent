@@ -35,7 +35,7 @@ import io.resys.thena.api.actions.PullActions;
 import io.resys.thena.api.actions.TagActions;
 import io.resys.thena.api.actions.TenantActions;
 import io.resys.thena.api.actions.TenantActions.RepoResult;
-import io.resys.thena.api.models.Repo;
+import io.resys.thena.api.entities.Tenant;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.ImmutableBranch;
 import io.thestencil.client.api.ImmutableStencilConfig;
@@ -145,7 +145,7 @@ public class StencilStoreInMemory implements StencilStore {
     }
 
     @Override
-    public GitStructuredTenant git(Repo repo) {
+    public GitStructuredTenant git(Tenant repo) {
       throw new IllegalArgumentException("no read or writes supported!");
     }
 
@@ -155,7 +155,7 @@ public class StencilStoreInMemory implements StencilStore {
     }
 
     @Override
-    public DocStructuredTenant doc(Repo repo) {
+    public DocStructuredTenant doc(Tenant repo) {
       throw new IllegalArgumentException("no read or writes supported!");
     }
 
@@ -165,7 +165,7 @@ public class StencilStoreInMemory implements StencilStore {
     }
 
     @Override
-    public OrgStructuredTenant org(Repo repo) {
+    public OrgStructuredTenant org(Tenant repo) {
       throw new IllegalArgumentException("no read or writes supported!");
     }
     

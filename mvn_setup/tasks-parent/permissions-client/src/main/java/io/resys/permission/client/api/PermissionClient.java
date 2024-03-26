@@ -11,14 +11,14 @@ import io.resys.permission.client.api.model.Principal.Role;
 import io.resys.permission.client.api.model.PrincipalCommand.PrincipalUpdateCommand;
 import io.resys.permission.client.api.model.RoleCommand.CreateRole;
 import io.resys.permission.client.api.model.RoleCommand.RoleUpdateCommand;
-import io.resys.thena.api.models.Repo;
+import io.resys.thena.api.entities.Tenant;
 import io.resys.permission.client.api.model.RoleHierarchyContainer;
 import io.smallrye.mutiny.Uni;
 
 
 public interface PermissionClient {
   RepositoryQuery repoQuery();
-  Uni<Repo> getRepo();
+  Uni<Tenant> getRepo();
   PermissionClient withRepoId(String repoId);
 
   CreatePermissionAction createPermission();

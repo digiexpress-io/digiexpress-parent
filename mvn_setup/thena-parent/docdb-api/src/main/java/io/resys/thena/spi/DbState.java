@@ -1,6 +1,6 @@
 package io.resys.thena.spi;
 
-import io.resys.thena.api.models.Repo;
+import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.structures.doc.DocState;
 import io.resys.thena.structures.git.GitState;
 import io.resys.thena.structures.org.OrgState;
@@ -18,10 +18,10 @@ public interface DbState {
   OrgState toOrgState();
   
   interface RepoBuilder {
-    Uni<Repo> getByName(String name);
-    Uni<Repo> getByNameOrId(String nameOrId);
-    Multi<Repo> findAll();
-    Uni<Repo> delete(Repo newRepo);
-    Uni<Repo> insert(Repo newRepo);
+    Uni<Tenant> getByName(String name);
+    Uni<Tenant> getByNameOrId(String nameOrId);
+    Multi<Tenant> findAll();
+    Uni<Tenant> delete(Tenant newRepo);
+    Uni<Tenant> insert(Tenant newRepo);
   }
 }

@@ -12,8 +12,8 @@ import org.junit.jupiter.api.Assertions;
 
 import io.resys.thena.api.ThenaClient;
 import io.resys.thena.api.actions.OrgCommitActions.ModType;
-import io.resys.thena.api.models.Repo;
-import io.resys.thena.api.models.Repo.CommitResultStatus;
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.Tenant.CommitResultStatus;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ public class GenerateTestData {
   private final ThenaClient docDb;
   
 
-  public void populate(Repo repo) {
+  public void populate(Tenant repo) {
     createUsers(repo);
     createGroups(repo);
     createUsermemberships(repo);
@@ -32,7 +32,7 @@ public class GenerateTestData {
     createUserGroupRoles(repo);
   }
 
-  public void createUsermemberships(Repo repo) {
+  public void createUsermemberships(Tenant repo) {
     final var groupsByUsers = new LinkedHashMap<String, List<String>>();
     final var memberships = new JsonArray(DbTestTemplate.toString(getClass(), "org_test_data_json/test_data_user_groups.json"));    
     for(final var membershipRaw : memberships) {
@@ -61,7 +61,7 @@ public class GenerateTestData {
   }
   
   
-  public void createGroups(Repo repo) {
+  public void createGroups(Tenant repo) {
     final var roots = new LinkedHashMap<String, JsonObject>();
     final var groupsByParent = new LinkedHashMap<String, List<JsonObject>>();
     final var groups = new JsonArray(DbTestTemplate.toString(getClass(), "org_test_data_json/test_data_groups.json"));
@@ -114,7 +114,7 @@ public class GenerateTestData {
   
   public void createChildGroup(
       JsonObject json, 
-      Repo repo, 
+      Tenant repo, 
       Map<String, 
       List<JsonObject>> groupsByParent, 
       List<String> takenGroupNames) {
@@ -146,7 +146,7 @@ public class GenerateTestData {
   }
   
   
-  public void createUsers(Repo repo) {
+  public void createUsers(Tenant repo) {
     final var users = new JsonArray(DbTestTemplate.toString(getClass(), "org_test_data_json/test_data_users.json"));
     final var takenUsernames = new ArrayList<String>();
     var index = 0;
@@ -171,7 +171,7 @@ public class GenerateTestData {
     }
   }
   
-  public void createRoles(Repo repo) {
+  public void createRoles(Tenant repo) {
     var result = docDb.org(repo.getId()).commit().createOneRight()
         .externalId("0")
         .rightName("VIEWER")
@@ -200,7 +200,7 @@ public class GenerateTestData {
     Assertions.assertEquals(CommitResultStatus.OK, result.getStatus());
   }
   
-  public void createUserGroupRoles(Repo repo) {
+  public void createUserGroupRoles(Tenant repo) {
     final var users = new JsonArray(DbTestTemplate.toString(getClass(), "org_test_data_json/test_data_users_group_role.json"));
 
     for(final var userRaw : users) {

@@ -4,10 +4,10 @@ import java.time.Duration;
 
 import io.resys.thena.api.actions.DocCommitActions.ModifyOneDoc;
 import io.resys.thena.api.actions.DocCommitActions.OneDocEnvelope;
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.doc.ThenaDocObject.DocLock;
 import io.resys.thena.api.actions.ImmutableOneDocEnvelope;
 import io.resys.thena.api.models.ImmutableMessage;
-import io.resys.thena.api.models.Repo;
-import io.resys.thena.api.models.ThenaDocObject.DocLock;
 import io.resys.thena.spi.DataMapper;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.structures.doc.DocState.DocRepo;
@@ -88,7 +88,7 @@ public class ModifyOneDocImpl implements ModifyOneDoc {
                   .append(" Unknown docId: '").append(docId).append("'!")
                   .toString())
               .build())
-          .status(Repo.CommitResultStatus.ERROR)
+          .status(Tenant.CommitResultStatus.ERROR)
           .build();
       
     }

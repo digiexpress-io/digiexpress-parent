@@ -5,19 +5,19 @@ import java.util.Collections;
 import java.util.List;
 
 import io.resys.thena.api.actions.OrgQueryActions.MemberHierarchyQuery;
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMember;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMemberFlattened;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMemberHierarchyEntry;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgRightFlattened;
+import io.resys.thena.api.entities.org.ThenaOrgObjects.OrgMemberHierarchy;
 import io.resys.thena.api.models.ImmutableQueryEnvelope;
 import io.resys.thena.api.models.ImmutableQueryEnvelopeList;
 import io.resys.thena.api.models.QueryEnvelope;
 import io.resys.thena.api.models.QueryEnvelopeList;
-import io.resys.thena.api.models.Repo;
 import io.resys.thena.api.models.ThenaEnvelope;
 import io.resys.thena.api.models.QueryEnvelope.DocNotFoundException;
 import io.resys.thena.api.models.QueryEnvelope.QueryEnvelopeStatus;
-import io.resys.thena.api.models.ThenaOrgObject.OrgMember;
-import io.resys.thena.api.models.ThenaOrgObject.OrgMemberFlattened;
-import io.resys.thena.api.models.ThenaOrgObject.OrgMemberHierarchyEntry;
-import io.resys.thena.api.models.ThenaOrgObject.OrgRightFlattened;
-import io.resys.thena.api.models.ThenaOrgObjects.OrgMemberHierarchy;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.structures.org.OrgQueries;
 import io.resys.thena.structures.org.memberhierarchy.MemberTreeBuilder;
@@ -38,7 +38,7 @@ public class MemberHierarchyQueryImpl implements MemberHierarchyQuery {
 		RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
 		
     return state.project().getByNameOrId(repoId)
-    .onItem().transformToUni((Repo existing) -> {
+    .onItem().transformToUni((Tenant existing) -> {
       if(existing == null) {
         return Uni.createFrom().item(QueryEnvelope.repoNotFound(repoId, log));
       }
@@ -51,7 +51,7 @@ public class MemberHierarchyQueryImpl implements MemberHierarchyQuery {
     RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
     
     return state.project().getByNameOrId(repoId)
-    .onItem().transformToUni((Repo existing) -> {
+    .onItem().transformToUni((Tenant existing) -> {
       if(existing == null) {
         return Uni.createFrom().item(QueryEnvelopeList.repoNotFound(repoId, log));
       }
@@ -63,7 +63,7 @@ public class MemberHierarchyQueryImpl implements MemberHierarchyQuery {
     });
   }
 	
-	private Uni<QueryEnvelope<OrgMemberHierarchy>> getUser(OrgQueries org, Repo existing, String userId) {
+	private Uni<QueryEnvelope<OrgMemberHierarchy>> getUser(OrgQueries org, Tenant existing, String userId) {
     return org.members().getStatusById(userId).onItem().transformToUni(user -> {
       if(user == null) {
         return Uni.createFrom().item(docNotFound(existing, userId, new DocNotFoundException()));
@@ -103,7 +103,7 @@ public class MemberHierarchyQueryImpl implements MemberHierarchyQuery {
   }
   
   private <T extends ThenaEnvelope.ThenaObjects> QueryEnvelope<T> docNotFound(
-      Repo existing, String userId,
+      Tenant existing, String userId,
       DocNotFoundException ex
       ) {
     final var msg = new StringBuilder()

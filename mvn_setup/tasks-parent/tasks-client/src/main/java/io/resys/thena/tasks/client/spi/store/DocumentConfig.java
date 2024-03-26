@@ -32,12 +32,12 @@ import io.resys.thena.api.actions.CommitActions.CommitBuilder;
 import io.resys.thena.api.actions.CommitActions.CommitResultEnvelope;
 import io.resys.thena.api.actions.HistoryActions.BlobHistoryQuery;
 import io.resys.thena.api.actions.PullActions.PullObjectsQuery;
+import io.resys.thena.api.entities.git.ThenaGitObject.Commit;
+import io.resys.thena.api.entities.git.ThenaGitObjects.BranchObjects;
+import io.resys.thena.api.entities.git.ThenaGitObjects.HistoryObjects;
+import io.resys.thena.api.entities.git.ThenaGitObjects.PullObject;
+import io.resys.thena.api.entities.git.ThenaGitObjects.PullObjects;
 import io.resys.thena.api.models.QueryEnvelope;
-import io.resys.thena.api.models.ThenaGitObject.Commit;
-import io.resys.thena.api.models.ThenaGitObjects.BranchObjects;
-import io.resys.thena.api.models.ThenaGitObjects.HistoryObjects;
-import io.resys.thena.api.models.ThenaGitObjects.PullObject;
-import io.resys.thena.api.models.ThenaGitObjects.PullObjects;
 import io.resys.thena.tasks.client.api.model.Document.DocumentType;
 import io.smallrye.mutiny.Uni;
 

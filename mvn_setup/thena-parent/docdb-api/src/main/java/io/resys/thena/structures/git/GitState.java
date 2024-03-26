@@ -1,23 +1,23 @@
 package io.resys.thena.structures.git;
 
-import io.resys.thena.api.models.Repo;
+import io.resys.thena.api.entities.Tenant;
 import io.smallrye.mutiny.Uni;
 
 public interface GitState {
   Uni<GitInserts> insert(String repoNameOrId);
-  GitInserts insert(Repo repo);
+  GitInserts insert(Tenant repo);
   
   Uni<GitQueries> query(String repoNameOrId);
-  GitQueries query(Repo repo);
+  GitQueries query(Tenant repo);
   
-  GitRepo withRepo(Repo repo);
+  GitRepo withRepo(Tenant repo);
   Uni<GitRepo> withRepo(String repoNameOrId);
   <R> Uni<R> withTransaction(String repoId, String headName, TransactionFunction<R> callback);
   
 
   interface GitRepo {
     String getRepoName();
-    Repo getRepo();
+    Tenant getRepo();
     GitInserts insert();
     GitQueries query();
   }

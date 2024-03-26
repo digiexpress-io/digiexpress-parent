@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.immutables.value.Value;
 
-import io.resys.thena.api.models.ThenaOrgObjects.OrgMemberPartyStatus;
-import io.resys.thena.api.models.ThenaOrgObjects.OrgMemberRightStatus;
+import io.resys.thena.api.entities.org.ThenaOrgObjects.OrgMemberPartyStatus;
+import io.resys.thena.api.entities.org.ThenaOrgObjects.OrgMemberRightStatus;
 
 @Value.Immutable
 public interface MemberTreeContainer {

@@ -12,8 +12,8 @@ import io.resys.permission.client.api.model.PermissionCommand.PermissionUpdateCo
 import io.resys.permission.client.api.model.Principal.Permission;
 import io.resys.thena.api.actions.OrgCommitActions.ModifyOneRight;
 import io.resys.thena.api.actions.OrgCommitActions.OneRightEnvelope;
-import io.resys.thena.api.models.Repo;
-import io.resys.thena.api.models.ThenaOrgObject.OrgActorStatusType;
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgActorStatusType;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -73,7 +73,7 @@ public class UpdatePermissionActionImpl implements UpdatePermissionAction {
     }
   
   public Permission createResponse(String id, OneRightEnvelope response) {
-    if(response.getStatus() != Repo.CommitResultStatus.OK) {
+    if(response.getStatus() != Tenant.CommitResultStatus.OK) {
       final var msg = "failed to update permission by id='%s'!".formatted(id);
       throw new UpdatePermissionException(msg, response);
     }

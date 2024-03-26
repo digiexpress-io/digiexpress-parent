@@ -22,13 +22,13 @@ package io.resys.thena.storefile;
 
 import java.util.Collection;
 
-import io.resys.thena.api.models.Repo;
-import io.resys.thena.api.models.ThenaGitObject.Blob;
-import io.resys.thena.api.models.ThenaGitObject.Branch;
-import io.resys.thena.api.models.ThenaGitObject.Commit;
-import io.resys.thena.api.models.ThenaGitObject.Tag;
-import io.resys.thena.api.models.ThenaGitObject.Tree;
-import io.resys.thena.api.models.ThenaGitObject.TreeValue;
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.git.ThenaGitObject.Blob;
+import io.resys.thena.api.entities.git.ThenaGitObject.Branch;
+import io.resys.thena.api.entities.git.ThenaGitObject.Commit;
+import io.resys.thena.api.entities.git.ThenaGitObject.Tag;
+import io.resys.thena.api.entities.git.ThenaGitObject.Tree;
+import io.resys.thena.api.entities.git.ThenaGitObject.TreeValue;
 import io.resys.thena.spi.DbCollections;
 import io.resys.thena.storefile.tables.Table.FileStatement;
 import io.resys.thena.storefile.tables.Table.FileTuple;
@@ -51,7 +51,7 @@ public interface FileBuilder extends DbCollections.WithOptions<FileBuilder>{
     FileStatement findAll();
     FileTuple getByName(String name);
     FileTuple getByNameOrId(String name);
-    FileTuple insertOne(Repo repo);
+    FileTuple insertOne(Tenant repo);
   }
   
   interface BlobFileBuilder {

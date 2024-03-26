@@ -1,4 +1,4 @@
-package io.resys.thena.api.models;
+package io.resys.thena.api.entities.git;
 
 /*-
  * #%L
@@ -26,15 +26,17 @@ import java.util.stream.Collectors;
 
 import org.immutables.value.Value;
 
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.git.ThenaGitObject.Blob;
+import io.resys.thena.api.entities.git.ThenaGitObject.BlobHistory;
+import io.resys.thena.api.entities.git.ThenaGitObject.Branch;
+import io.resys.thena.api.entities.git.ThenaGitObject.Commit;
+import io.resys.thena.api.entities.git.ThenaGitObject.IsGitObject;
+import io.resys.thena.api.entities.git.ThenaGitObject.Tag;
+import io.resys.thena.api.entities.git.ThenaGitObject.Tree;
+import io.resys.thena.api.models.BlobContainer;
 import io.resys.thena.api.models.BlobContainer.BlobVisitor;
 import io.resys.thena.api.models.ThenaEnvelope.ThenaObjects;
-import io.resys.thena.api.models.ThenaGitObject.Blob;
-import io.resys.thena.api.models.ThenaGitObject.BlobHistory;
-import io.resys.thena.api.models.ThenaGitObject.Branch;
-import io.resys.thena.api.models.ThenaGitObject.Commit;
-import io.resys.thena.api.models.ThenaGitObject.IsGitObject;
-import io.resys.thena.api.models.ThenaGitObject.Tag;
-import io.resys.thena.api.models.ThenaGitObject.Tree;
 
 public interface ThenaGitObjects extends ThenaObjects { 
   @Value.Immutable
@@ -47,7 +49,7 @@ public interface ThenaGitObjects extends ThenaObjects {
   
   @Value.Immutable
   interface CommitObjects extends ThenaGitObjects, BlobContainer  {
-    Repo getRepo();
+    Tenant getRepo();
     Commit getCommit();
     Tree getTree();
     Map<String, Blob> getBlobs(); //only if loaded
@@ -62,7 +64,7 @@ public interface ThenaGitObjects extends ThenaObjects {
   
   @Value.Immutable
   interface PullObject extends ThenaGitObjects {
-    Repo getRepo();
+    Tenant getRepo();
     Commit getCommit();
     //Tree getTree();
     Blob getBlob();
@@ -75,7 +77,7 @@ public interface ThenaGitObjects extends ThenaObjects {
 
   @Value.Immutable
   interface PullObjects extends BlobContainer, ThenaGitObjects {
-    Repo getRepo();
+    Tenant getRepo();
     Commit getCommit();
     //Tree getTree();
     List<Blob> getBlob();
@@ -88,7 +90,7 @@ public interface ThenaGitObjects extends ThenaObjects {
   }
   @Value.Immutable
   interface BranchObjects extends BlobContainer, ThenaGitObjects {
-    Repo getRepo();
+    Tenant getRepo();
     Branch getRef();
     Commit getCommit();
     Tree getTree();

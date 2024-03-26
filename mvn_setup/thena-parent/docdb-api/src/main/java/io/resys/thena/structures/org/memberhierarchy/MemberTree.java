@@ -9,9 +9,9 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import io.resys.thena.api.models.ThenaOrgObject.OrgActorStatusType;
-import io.resys.thena.api.models.ThenaOrgObject.OrgMemberHierarchyEntry;
-import io.resys.thena.api.models.ThenaOrgObject.OrgRightFlattened;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgActorStatusType;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMemberHierarchyEntry;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgRightFlattened;
 
 
 public class MemberTree {

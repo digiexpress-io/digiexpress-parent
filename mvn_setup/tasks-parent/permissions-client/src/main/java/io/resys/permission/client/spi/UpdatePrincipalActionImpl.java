@@ -13,7 +13,7 @@ import io.resys.permission.client.api.model.PrincipalCommand.PrincipalUpdateComm
 import io.resys.thena.api.actions.OrgCommitActions.ModType;
 import io.resys.thena.api.actions.OrgCommitActions.ModifyOneMember;
 import io.resys.thena.api.actions.OrgCommitActions.OneMemberEnvelope;
-import io.resys.thena.api.models.Repo;
+import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -76,7 +76,7 @@ public class UpdatePrincipalActionImpl implements UpdatePrincipalAction {
     
   
   public Principal createResponse(String id, OneMemberEnvelope response) {
-    if(response.getStatus() != Repo.CommitResultStatus.OK) {
+    if(response.getStatus() != Tenant.CommitResultStatus.OK) {
       final var msg = "failed to update principal by id='%s'!".formatted(id);
       throw new UpdatePrincipalException(msg, response);
     }

@@ -13,11 +13,11 @@ import io.resys.thena.api.actions.PullActions;
 import io.resys.thena.api.actions.TagActions;
 import io.resys.thena.api.actions.TenantActions;
 import io.resys.thena.api.actions.TenantActions.RepoResult;
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.doc.ThenaDocObjects.DocProjectObjects;
+import io.resys.thena.api.entities.git.ThenaGitObjects.GitRepoObjects;
+import io.resys.thena.api.entities.org.ThenaOrgObjects.OrgProjectObjects;
 import io.resys.thena.api.models.QueryEnvelope;
-import io.resys.thena.api.models.Repo;
-import io.resys.thena.api.models.ThenaDocObjects.DocProjectObjects;
-import io.resys.thena.api.models.ThenaGitObjects.GitRepoObjects;
-import io.resys.thena.api.models.ThenaOrgObjects.OrgProjectObjects;
 import io.smallrye.mutiny.Uni;
 
 public interface ThenaClient {  
@@ -25,15 +25,15 @@ public interface ThenaClient {
   
   GitStructuredTenant git(String tenantIdOrName);
   GitStructuredTenant git(RepoResult repo);
-  GitStructuredTenant git(Repo repo);
+  GitStructuredTenant git(Tenant repo);
   
   DocStructuredTenant doc(String tenantIdOrName);
   DocStructuredTenant doc(RepoResult repo);
-  DocStructuredTenant doc(Repo repo);
+  DocStructuredTenant doc(Tenant repo);
   
   OrgStructuredTenant org(String tenantIdOrName);
   OrgStructuredTenant org(RepoResult repo);
-  OrgStructuredTenant org(Repo repo);
+  OrgStructuredTenant org(Tenant repo);
   
 
   interface OrgStructuredTenant {

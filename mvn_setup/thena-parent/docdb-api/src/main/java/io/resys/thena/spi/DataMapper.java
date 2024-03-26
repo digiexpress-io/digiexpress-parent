@@ -1,25 +1,25 @@
 package io.resys.thena.spi;
 
-import io.resys.thena.api.models.Repo;
-import io.resys.thena.api.models.ThenaDocObject.Doc;
-import io.resys.thena.api.models.ThenaDocObject.DocBranch;
-import io.resys.thena.api.models.ThenaDocObject.DocBranchLock;
-import io.resys.thena.api.models.ThenaDocObject.DocCommit;
-import io.resys.thena.api.models.ThenaDocObject.DocFlatted;
-import io.resys.thena.api.models.ThenaDocObject.DocLog;
-import io.resys.thena.api.models.ThenaGitObject.Blob;
-import io.resys.thena.api.models.ThenaGitObject.BlobHistory;
-import io.resys.thena.api.models.ThenaGitObject.Branch;
-import io.resys.thena.api.models.ThenaGitObject.Commit;
-import io.resys.thena.api.models.ThenaGitObject.CommitTree;
-import io.resys.thena.api.models.ThenaGitObject.Tag;
-import io.resys.thena.api.models.ThenaGitObject.Tree;
-import io.resys.thena.api.models.ThenaGitObject.TreeValue;
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.doc.ThenaDocObject.Doc;
+import io.resys.thena.api.entities.doc.ThenaDocObject.DocBranch;
+import io.resys.thena.api.entities.doc.ThenaDocObject.DocBranchLock;
+import io.resys.thena.api.entities.doc.ThenaDocObject.DocCommit;
+import io.resys.thena.api.entities.doc.ThenaDocObject.DocFlatted;
+import io.resys.thena.api.entities.doc.ThenaDocObject.DocLog;
+import io.resys.thena.api.entities.git.ThenaGitObject.Blob;
+import io.resys.thena.api.entities.git.ThenaGitObject.BlobHistory;
+import io.resys.thena.api.entities.git.ThenaGitObject.Branch;
+import io.resys.thena.api.entities.git.ThenaGitObject.Commit;
+import io.resys.thena.api.entities.git.ThenaGitObject.CommitTree;
+import io.resys.thena.api.entities.git.ThenaGitObject.Tag;
+import io.resys.thena.api.entities.git.ThenaGitObject.Tree;
+import io.resys.thena.api.entities.git.ThenaGitObject.TreeValue;
 import io.resys.thena.structures.git.GitInserts.BatchStatus;
 import io.vertx.mutiny.sqlclient.Row;
 
 public interface DataMapper<T> {
-  Repo repo(T row);
+  Tenant repo(T row);
   Commit commit(T row);
   Tree tree(T row);
   TreeValue treeItem(T row);
@@ -38,13 +38,13 @@ public interface DataMapper<T> {
   DocBranchLock docBranchLock(T row);
   
   
-  static Repo.CommitResultStatus mapStatus(BatchStatus src) {
+  static Tenant.CommitResultStatus mapStatus(BatchStatus src) {
     if(src == BatchStatus.OK) {
-      return Repo.CommitResultStatus.OK;
+      return Tenant.CommitResultStatus.OK;
     } else if(src == BatchStatus.CONFLICT) {
-      return Repo.CommitResultStatus.CONFLICT;
+      return Tenant.CommitResultStatus.CONFLICT;
     }
-    return Repo.CommitResultStatus.ERROR; 
+    return Tenant.CommitResultStatus.ERROR; 
   }
 
 }

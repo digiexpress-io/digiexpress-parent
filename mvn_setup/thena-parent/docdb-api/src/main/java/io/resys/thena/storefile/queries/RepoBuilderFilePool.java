@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import io.resys.thena.api.models.Repo;
+import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.spi.DbCollections;
 import io.resys.thena.spi.DbState.RepoBuilder;
 import io.resys.thena.storefile.FileBuilder;
@@ -32,13 +32,13 @@ public class RepoBuilderFilePool implements RepoBuilder {
 
 
   @Override
-  public Uni<Repo> getByName(String name) {
+  public Uni<Tenant> getByName(String name) {
     final var sql = builder.repo().getByName(name);
     return client.preparedQuery(sql)
         .mapping(row -> mapper.repo(row))
         .execute()
         .onItem()
-        .transform((Collection<Repo> rowset) -> {
+        .transform((Collection<Tenant> rowset) -> {
           final var it = rowset.iterator();
           if(it.hasNext()) {
             return it.next();
@@ -54,13 +54,13 @@ public class RepoBuilderFilePool implements RepoBuilder {
   }
 
   @Override
-  public Uni<Repo> getByNameOrId(String nameOrId) {
+  public Uni<Tenant> getByNameOrId(String nameOrId) {
     final var sql = builder.repo().getByNameOrId(nameOrId);
     return client.preparedQuery(sql)
         .mapping(row -> mapper.repo(row))
         .execute()
         .onItem()
-        .transform((Collection<Repo> rowset) -> {
+        .transform((Collection<Tenant> rowset) -> {
           final var it = rowset.iterator();
           if(it.hasNext()) {
             return it.next();
@@ -72,7 +72,7 @@ public class RepoBuilderFilePool implements RepoBuilder {
   }
   
   @Override
-  public Uni<Repo> insert(final Repo newRepo) {
+  public Uni<Tenant> insert(final Tenant newRepo) {
     final var next = names.toRepo(newRepo);
     final var sqlBuilder = this.builder.withOptions(next);
     final var repoInsert = sqlBuilder.repo().insertOne(newRepo);
@@ -128,18 +128,18 @@ public class RepoBuilderFilePool implements RepoBuilder {
   }
 
   @Override
-  public Multi<Repo> findAll() {
+  public Multi<Tenant> findAll() {
     return client.preparedQuery(this.builder.repo().findAll())
     .mapping(row -> mapper.repo(row))
     .execute()
     .onItem()
-    .transformToMulti((Collection<Repo> rowset) -> Multi.createFrom().iterable(rowset))
+    .transformToMulti((Collection<Tenant> rowset) -> Multi.createFrom().iterable(rowset))
     .onFailure(e -> errorHandler.notFound(e)).recoverWithCompletion()
     .onFailure().invoke(e -> errorHandler.deadEnd(new SqlSchemaFailed("Can't find 'REPOS'!", "", e)));
   }
 
   @Override
-  public Uni<Repo> delete(Repo repo) {
+  public Uni<Tenant> delete(Tenant repo) {
     throw new RuntimeException("Not implemented!!!");
   }
 }

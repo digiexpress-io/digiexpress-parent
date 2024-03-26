@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 
-import io.resys.thena.api.models.Repo;
-import io.resys.thena.api.models.ThenaGitObject.TreeValue;
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.git.ThenaGitObject.TreeValue;
 import io.resys.thena.spi.DbState;
 import io.thestencil.client.api.StencilClient.EntityType;
 import org.apache.commons.io.IOUtils;
@@ -26,7 +26,7 @@ public class TestExporter {
     this.state = state;
   }
 
-  public String print(Repo repo) {
+  public String print(Tenant repo) {
     final Map<String, String> replacements = new HashMap<>();
     final Function<String, String> ID = (id) -> {
       if(replacements.containsKey(id)) {

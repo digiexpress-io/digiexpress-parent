@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import io.resys.thena.api.LogConstants;
-import io.resys.thena.api.models.ImmutableDocLock;
-import io.resys.thena.api.models.ThenaDocObject.DocBranch;
-import io.resys.thena.api.models.ThenaDocObject.DocBranchLock;
-import io.resys.thena.api.models.ThenaDocObject.DocLock;
-import io.resys.thena.api.models.ThenaGitObject.CommitLockStatus;
+import io.resys.thena.api.entities.doc.ImmutableDocLock;
+import io.resys.thena.api.entities.doc.ThenaDocObject.DocBranch;
+import io.resys.thena.api.entities.doc.ThenaDocObject.DocBranchLock;
+import io.resys.thena.api.entities.doc.ThenaDocObject.DocLock;
+import io.resys.thena.api.entities.git.ThenaGitObject.CommitLockStatus;
 import io.resys.thena.storesql.SqlBuilder;
 import io.resys.thena.storesql.SqlMapper;
 import io.resys.thena.storesql.support.SqlClientWrapper;

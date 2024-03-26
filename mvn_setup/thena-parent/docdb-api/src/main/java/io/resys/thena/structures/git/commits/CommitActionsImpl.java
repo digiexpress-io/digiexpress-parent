@@ -3,10 +3,10 @@ package io.resys.thena.structures.git.commits;
 import java.util.List;
 
 import io.resys.thena.api.actions.CommitActions;
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.git.ThenaGitObject.Commit;
+import io.resys.thena.api.entities.git.ThenaGitObject.Tree;
 import io.resys.thena.api.exceptions.RepoException;
-import io.resys.thena.api.models.Repo;
-import io.resys.thena.api.models.ThenaGitObject.Commit;
-import io.resys.thena.api.models.ThenaGitObject.Tree;
 import io.resys.thena.spi.DbState;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ public class CommitActionsImpl implements CommitActions {
   @Override
   public Uni<List<Commit>> findAllCommits() {
     return state.project().getByNameOrId(repoId).onItem()
-        .transformToUni((Repo existing) -> {
+        .transformToUni((Tenant existing) -> {
           if(existing == null) {
             final var ex = RepoException.builder().notRepoWithName(repoId);
             log.error(ex.getText());
@@ -40,7 +40,7 @@ public class CommitActionsImpl implements CommitActions {
   @Override
   public Uni<List<Tree>> findAllCommitTrees() {
     return state.project().getByNameOrId(repoId).onItem()
-        .transformToUni((Repo existing) -> {
+        .transformToUni((Tenant existing) -> {
           if(existing == null) {
             final var ex = RepoException.builder().notRepoWithName(repoId);
             log.error(ex.getText());

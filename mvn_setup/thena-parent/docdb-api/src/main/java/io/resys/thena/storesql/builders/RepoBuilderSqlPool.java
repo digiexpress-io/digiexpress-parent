@@ -1,8 +1,8 @@
 package io.resys.thena.storesql.builders;
 
 import io.resys.thena.api.LogConstants;
-import io.resys.thena.api.models.Repo;
-import io.resys.thena.api.models.Repo.RepoType;
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.Tenant.RepoType;
 import io.resys.thena.spi.DbCollections;
 import io.resys.thena.spi.DbState.RepoBuilder;
 import io.resys.thena.storesql.SqlBuilder;
@@ -40,7 +40,7 @@ public class RepoBuilderSqlPool implements RepoBuilder {
   }
 
   @Override
-  public Uni<Repo> getByName(String name) {
+  public Uni<Tenant> getByName(String name) {
     final var sql = sqlBuilder.repo().getByName(name);
     if(log.isDebugEnabled()) {
       log.debug("Repo by name query, with props: {} \r\n{}", 
@@ -52,7 +52,7 @@ public class RepoBuilderSqlPool implements RepoBuilder {
         .mapping(row -> sqlMapper.repo(row))
         .execute(sql.getProps())
         .onItem()
-        .transform((RowSet<Repo> rowset) -> {
+        .transform((RowSet<Tenant> rowset) -> {
           final var it = rowset.iterator();
           if(it.hasNext()) {
             return it.next();
@@ -68,7 +68,7 @@ public class RepoBuilderSqlPool implements RepoBuilder {
   }
 
   @Override
-  public Uni<Repo> getByNameOrId(String nameOrId) {
+  public Uni<Tenant> getByNameOrId(String nameOrId) {
     final var sql = sqlBuilder.repo().getByNameOrId(nameOrId);
     
     if(log.isDebugEnabled()) {
@@ -82,7 +82,7 @@ public class RepoBuilderSqlPool implements RepoBuilder {
         .mapping(row -> sqlMapper.repo(row))
         .execute(sql.getProps())
         .onItem()
-        .transform((RowSet<Repo> rowset) -> {
+        .transform((RowSet<Tenant> rowset) -> {
           final var it = rowset.iterator();
           if(it.hasNext()) {
             return it.next();
@@ -94,7 +94,7 @@ public class RepoBuilderSqlPool implements RepoBuilder {
   }
   
   @Override
-  public Uni<Repo> insert(final Repo newRepo) {
+  public Uni<Tenant> insert(final Tenant newRepo) {
     final var next = names.toRepo(newRepo);
     final var sqlSchema = this.sqlSchema.withOptions(next);
     
@@ -180,7 +180,7 @@ public class RepoBuilderSqlPool implements RepoBuilder {
   }
 
   @Override
-  public Multi<Repo> findAll() {
+  public Multi<Tenant> findAll() {
     final var sql = this.sqlBuilder.repo().findAll();
     if(log.isDebugEnabled()) {
       log.debug("Fina all repos query, with props: {} \r\n{}", 
@@ -193,14 +193,14 @@ public class RepoBuilderSqlPool implements RepoBuilder {
     .mapping(row -> sqlMapper.repo(row))
     .execute()
     .onItem()
-    .transformToMulti((RowSet<Repo> rowset) -> Multi.createFrom().iterable(rowset))
+    .transformToMulti((RowSet<Tenant> rowset) -> Multi.createFrom().iterable(rowset))
     .onFailure(e -> errorHandler.notFound(e)).recoverWithCompletion()
     .onFailure().invoke(e -> errorHandler.deadEnd(new SqlFailed("Can't find 'REPOS'!", sql, e)));
   }
   
   
   @Override
-  public Uni<Repo> delete(final Repo newRepo) {
+  public Uni<Tenant> delete(final Tenant newRepo) {
     final var next = names.toRepo(newRepo);
     final var sqlSchema = this.sqlSchema.withOptions(next);
     

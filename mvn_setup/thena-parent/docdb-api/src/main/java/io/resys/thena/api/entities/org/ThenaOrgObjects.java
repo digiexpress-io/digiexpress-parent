@@ -1,4 +1,4 @@
-package io.resys.thena.api.models;
+package io.resys.thena.api.entities.org;
 
 import java.util.List;
 import java.util.Map;
@@ -7,17 +7,18 @@ import javax.annotation.Nullable;
 
 import org.immutables.value.Value;
 
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgActorData;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgActorStatus;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgActorStatusType;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgCommit;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMember;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMemberRight;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMembership;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgParty;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgPartyRight;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgRight;
+import io.resys.thena.api.models.ThenaEnvelope;
 import io.resys.thena.api.models.ThenaEnvelope.ThenaObjects;
-import io.resys.thena.api.models.ThenaOrgObject.OrgActorData;
-import io.resys.thena.api.models.ThenaOrgObject.OrgActorStatus;
-import io.resys.thena.api.models.ThenaOrgObject.OrgActorStatusType;
-import io.resys.thena.api.models.ThenaOrgObject.OrgCommit;
-import io.resys.thena.api.models.ThenaOrgObject.OrgMember;
-import io.resys.thena.api.models.ThenaOrgObject.OrgMemberRight;
-import io.resys.thena.api.models.ThenaOrgObject.OrgMembership;
-import io.resys.thena.api.models.ThenaOrgObject.OrgParty;
-import io.resys.thena.api.models.ThenaOrgObject.OrgPartyRight;
-import io.resys.thena.api.models.ThenaOrgObject.OrgRight;
 
 public interface ThenaOrgObjects extends ThenaObjects {
   

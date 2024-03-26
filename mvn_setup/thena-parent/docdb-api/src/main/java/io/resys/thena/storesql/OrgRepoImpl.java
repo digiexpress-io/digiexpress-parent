@@ -22,7 +22,7 @@ package io.resys.thena.storesql;
 
 import java.util.function.Function;
 
-import io.resys.thena.api.models.Repo;
+import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.spi.DbCollections;
 import io.resys.thena.storesql.ImmutableClientQuerySqlContext;
 import io.resys.thena.storesql.GitDbQueriesSqlImpl.ClientQuerySqlContext;
@@ -47,7 +47,7 @@ public class OrgRepoImpl implements OrgRepo {
     return wrapper.getRepo().getName();
   }
   @Override
-  public Repo getRepo() {
+  public Tenant getRepo() {
     return wrapper.getRepo();
   }
   @Override

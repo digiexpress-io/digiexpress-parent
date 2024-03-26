@@ -28,9 +28,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.resys.thena.api.ThenaClient;
 import io.resys.thena.api.ThenaClient.OrgStructuredTenant;
 import io.resys.thena.api.actions.TenantActions.RepoStatus;
-import io.resys.thena.api.models.Repo;
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.Tenant.RepoType;
 import io.resys.thena.api.models.QueryEnvelope.QueryEnvelopeStatus;
-import io.resys.thena.api.models.Repo.RepoType;
 import io.resys.thena.spi.ImmutableDocumentExceptionMsg;
 import io.resys.thena.storesql.DbStateSqlImpl;
 import io.resys.thena.storesql.PgErrors;
@@ -60,7 +60,7 @@ public class PermissionStoreImpl implements PermissionStore {
     return new PermissionStoreImpl(ImmutablePermissionStoreConfig.builder().from(config).repoId(repoId).build());
   }
   @Override
-  public Uni<Repo> getRepo() {
+  public Uni<Tenant> getRepo() {
     final var client = config.getClient();
     return client.tenants().find().id(config.getRepoId()).get();
   }

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-import io.resys.thena.api.models.Repo;
+import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.spi.DbCollections;
 import io.resys.thena.storefile.FileBuilder.RepoFileBuilder;
 import io.resys.thena.storefile.tables.ImmutableFileStatement;
@@ -80,7 +80,7 @@ public class RepoFileBuilderImpl implements RepoFileBuilder {
         .build();
   }
   @Override
-  public FileTuple insertOne(Repo newRepo) {
+  public FileTuple insertOne(Tenant newRepo) {
     return ImmutableFileTuple.builder()
         .value("Insert new row into REPO table")
         .command((root) -> {

@@ -1,6 +1,6 @@
 package io.resys.thena.tasks.client.spi.actions;
 
-import io.resys.thena.api.models.Repo;
+import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.tasks.client.api.TaskClient;
 import io.resys.thena.tasks.client.api.actions.RepositoryActions;
 import io.resys.thena.tasks.client.api.actions.RepositoryQuery;
@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 public class RepositoryActionsImpl implements RepositoryActions {
   private final DocumentStore ctx;
   @Override
-  public Uni<Repo> getRepo() {
+  public Uni<Tenant> getRepo() {
     return ctx.getRepo();
   }
   @Override

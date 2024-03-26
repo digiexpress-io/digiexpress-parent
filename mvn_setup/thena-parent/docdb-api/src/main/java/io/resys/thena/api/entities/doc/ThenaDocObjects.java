@@ -1,4 +1,4 @@
-package io.resys.thena.api.models;
+package io.resys.thena.api.entities.doc;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -7,11 +7,11 @@ import java.util.Map;
 
 import org.immutables.value.Value;
 
-import io.resys.thena.api.models.ThenaDocObject.Doc;
-import io.resys.thena.api.models.ThenaDocObject.DocBranch;
-import io.resys.thena.api.models.ThenaDocObject.DocCommit;
-import io.resys.thena.api.models.ThenaDocObject.DocLog;
-import io.resys.thena.api.models.ThenaDocObject.IsDocObject;
+import io.resys.thena.api.entities.doc.ThenaDocObject.Doc;
+import io.resys.thena.api.entities.doc.ThenaDocObject.DocBranch;
+import io.resys.thena.api.entities.doc.ThenaDocObject.DocCommit;
+import io.resys.thena.api.entities.doc.ThenaDocObject.DocLog;
+import io.resys.thena.api.entities.doc.ThenaDocObject.IsDocObject;
 import io.resys.thena.api.models.ThenaEnvelope.ThenaObjects;
 
 public interface ThenaDocObjects extends ThenaObjects {

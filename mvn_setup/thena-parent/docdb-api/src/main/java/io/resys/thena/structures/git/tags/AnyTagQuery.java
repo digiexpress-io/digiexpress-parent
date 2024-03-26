@@ -23,7 +23,7 @@ package io.resys.thena.structures.git.tags;
 import java.util.Optional;
 
 import io.resys.thena.api.actions.TagActions.TagQuery;
-import io.resys.thena.api.models.ThenaGitObject.Tag;
+import io.resys.thena.api.entities.git.ThenaGitObject.Tag;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Multi;

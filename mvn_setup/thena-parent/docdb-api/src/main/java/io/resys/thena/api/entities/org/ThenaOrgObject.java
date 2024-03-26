@@ -1,4 +1,4 @@
-package io.resys.thena.api.models;
+package io.resys.thena.api.entities.org;
 
 import java.time.OffsetDateTime;
 import java.util.Collection;
@@ -11,6 +11,8 @@ import org.immutables.value.Value;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import io.resys.thena.api.entities.doc.ThenaDocObject;
+import io.resys.thena.api.models.ThenaEnvelope;
 import io.resys.thena.api.models.ThenaEnvelope.ThenaObjects;
 import io.vertx.core.json.JsonObject;
 

@@ -8,7 +8,7 @@ import io.resys.crm.client.spi.actions.CustomerQueryImpl;
 import io.resys.crm.client.spi.actions.UpdateCustomerActionImpl;
 import io.resys.crm.client.spi.store.DocumentStore;
 import io.resys.crm.client.spi.store.MainBranch;
-import io.resys.thena.api.models.Repo;
+import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ public class CrmClientImpl implements CrmClient {
   }
 
   @Override
-  public Uni<Repo> getRepo() {
+  public Uni<Tenant> getRepo() {
     return ctx.getRepo();
   }
   

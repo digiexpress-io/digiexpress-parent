@@ -31,9 +31,9 @@ import io.resys.crm.client.spi.store.DocumentConfig.DocumentAuthorProvider;
 import io.resys.crm.client.spi.store.DocumentConfig.DocumentGidProvider;
 import io.resys.thena.api.ThenaClient;
 import io.resys.thena.api.actions.TenantActions.RepoStatus;
-import io.resys.thena.api.models.Repo;
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.Tenant.RepoType;
 import io.resys.thena.api.models.QueryEnvelope.QueryEnvelopeStatus;
-import io.resys.thena.api.models.Repo.RepoType;
 import io.resys.thena.storesql.DbStateSqlImpl;
 import io.resys.thena.storesql.PgErrors;
 import io.resys.thena.support.OidUtils;
@@ -65,7 +65,7 @@ public class DocumentStoreImpl implements DocumentStore {
   }
   
   @Override
-  public Uni<Repo> getRepo() {
+  public Uni<Tenant> getRepo() {
     final var client = config.getClient();
     return client.tenants().find().id(config.getRepoId()).get();
   }

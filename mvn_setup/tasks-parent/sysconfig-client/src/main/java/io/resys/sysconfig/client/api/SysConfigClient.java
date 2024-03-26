@@ -12,14 +12,14 @@ import io.resys.sysconfig.client.api.model.SysConfigCommand.SysConfigUpdateComma
 import io.resys.sysconfig.client.api.model.SysConfigDeployment;
 import io.resys.sysconfig.client.api.model.SysConfigDeploymentCommand.CreateSysConfigDeployment;
 import io.resys.sysconfig.client.api.model.SysConfigRelease;
-import io.resys.thena.api.models.Repo;
+import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfig;
 import io.smallrye.mutiny.Uni;
 
 public interface SysConfigClient {
 
   RepositoryQuery repoQuery();
-  Uni<Repo> getRepo();
+  Uni<Tenant> getRepo();
   SysConfigClient withRepoId(String repoId);
   
   Uni<SysConfigClient> withTenantConfig(String tenantConfigId);

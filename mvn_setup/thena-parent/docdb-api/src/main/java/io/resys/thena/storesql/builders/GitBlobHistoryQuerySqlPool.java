@@ -26,7 +26,7 @@ import java.util.List;
 
 import io.resys.thena.api.LogConstants;
 import io.resys.thena.api.actions.PullActions.MatchCriteria;
-import io.resys.thena.api.models.ThenaGitObject.BlobHistory;
+import io.resys.thena.api.entities.git.ThenaGitObject.BlobHistory;
 import io.resys.thena.storesql.GitDbQueriesSqlImpl.ClientQuerySqlContext;
 import io.resys.thena.structures.git.GitQueries.GitBlobHistoryQuery;
 import io.resys.thena.support.ErrorHandler.SqlTupleFailed;

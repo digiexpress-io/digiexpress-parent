@@ -26,14 +26,14 @@ import java.util.stream.Collectors;
 
 import io.resys.thena.api.actions.BranchActions.BranchObjectsQuery;
 import io.resys.thena.api.actions.PullActions.MatchCriteria;
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.git.ImmutableBranchObjects;
+import io.resys.thena.api.entities.git.ThenaGitObject.Branch;
+import io.resys.thena.api.entities.git.ThenaGitObjects.BranchObjects;
 import io.resys.thena.api.exceptions.RepoException;
-import io.resys.thena.api.models.ImmutableBranchObjects;
 import io.resys.thena.api.models.ImmutableQueryEnvelope;
 import io.resys.thena.api.models.QueryEnvelope;
-import io.resys.thena.api.models.Repo;
 import io.resys.thena.api.models.QueryEnvelope.QueryEnvelopeStatus;
-import io.resys.thena.api.models.ThenaGitObject.Branch;
-import io.resys.thena.api.models.ThenaGitObjects.BranchObjects;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.structures.git.GitState.GitRepo;
 import io.resys.thena.support.RepoAssert;
@@ -65,7 +65,7 @@ public class BranchObjectsQueryImpl implements BranchObjectsQuery {
     RepoAssert.notEmpty(branchName, () -> "branchName is not defined!");
     
     return state.project().getByNameOrId(repoId).onItem()
-    .transformToUni((Repo existing) -> {
+    .transformToUni((Tenant existing) -> {
       if(existing == null) {
         return Uni.createFrom().item(QueryEnvelope.repoNotFound(repoId, log));
       }
@@ -73,7 +73,7 @@ public class BranchObjectsQueryImpl implements BranchObjectsQuery {
     });
   }
   
-  private Uni<QueryEnvelope<BranchObjects>> getRef(Repo repo, String refName, GitRepo ctx) {
+  private Uni<QueryEnvelope<BranchObjects>> getRef(Tenant repo, String refName, GitRepo ctx) {
 
     return ctx.query().refs().name(refName).onItem()
         .transformToUni(ref -> {
@@ -93,7 +93,7 @@ public class BranchObjectsQueryImpl implements BranchObjectsQuery {
         });
   }
   
-  private Uni<QueryEnvelope<BranchObjects>> getState(Repo repo, Branch ref, GitRepo ctx) {
+  private Uni<QueryEnvelope<BranchObjects>> getState(Tenant repo, Branch ref, GitRepo ctx) {
     return ObjectsUtils.getCommit(ref.getCommit(), ctx).onItem()
         .transformToUni(commit -> ObjectsUtils.getTree(commit, ctx).onItem()
         .transformToUni(tree -> {

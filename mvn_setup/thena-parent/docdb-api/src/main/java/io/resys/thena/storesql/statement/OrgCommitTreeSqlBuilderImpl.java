@@ -3,7 +3,7 @@ package io.resys.thena.storesql.statement;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-import io.resys.thena.api.models.ThenaOrgObject.OrgCommitTree;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgCommitTree;
 import io.resys.thena.spi.DbCollections;
 import io.resys.thena.storesql.ImmutableSql;
 import io.resys.thena.storesql.ImmutableSqlTuple;

@@ -25,13 +25,13 @@ import java.util.Optional;
 
 import org.immutables.value.Value;
 
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.doc.ThenaDocObject.Doc;
+import io.resys.thena.api.entities.doc.ThenaDocObject.DocBranch;
+import io.resys.thena.api.entities.doc.ThenaDocObject.DocBranchLock;
+import io.resys.thena.api.entities.doc.ThenaDocObject.DocCommit;
+import io.resys.thena.api.entities.doc.ThenaDocObject.DocLog;
 import io.resys.thena.api.models.Message;
-import io.resys.thena.api.models.Repo;
-import io.resys.thena.api.models.ThenaDocObject.Doc;
-import io.resys.thena.api.models.ThenaDocObject.DocBranch;
-import io.resys.thena.api.models.ThenaDocObject.DocBranchLock;
-import io.resys.thena.api.models.ThenaDocObject.DocCommit;
-import io.resys.thena.api.models.ThenaDocObject.DocLog;
 import io.resys.thena.structures.git.GitInserts.BatchStatus;
 import io.smallrye.mutiny.Uni;
 
@@ -58,7 +58,7 @@ public interface DocInserts {
   @Value.Immutable
   interface DocBatchForMany {
     BatchStatus getStatus();
-    Repo getRepo();
+    Tenant getRepo();
     
     List<DocBatchForOne> getItems();
 

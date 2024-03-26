@@ -22,7 +22,7 @@ package io.resys.thena.spi;
 
 import org.immutables.value.Value;
 
-import io.resys.thena.api.models.Repo;
+import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.spi.ImmutableDbCollections;
 
 @Value.Immutable
@@ -63,7 +63,7 @@ public abstract class DbCollections {
   
   
   
-  public DbCollections toRepo(Repo repo) {
+  public DbCollections toRepo(Tenant repo) {
     String prefix = repo.getPrefix();
     return ImmutableDbCollections.builder()
         .db(this.getDb())

@@ -4,10 +4,10 @@ import java.util.Collection;
 import java.util.List;
 
 import io.resys.thena.api.LogConstants;
-import io.resys.thena.api.models.ThenaOrgObject.OrgMember;
-import io.resys.thena.api.models.ThenaOrgObject.OrgMemberFlattened;
-import io.resys.thena.api.models.ThenaOrgObject.OrgMemberHierarchyEntry;
-import io.resys.thena.api.models.ThenaOrgObject.OrgRightFlattened;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMember;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMemberFlattened;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMemberHierarchyEntry;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgRightFlattened;
 import io.resys.thena.storesql.SqlBuilder;
 import io.resys.thena.storesql.SqlMapper;
 import io.resys.thena.storesql.support.SqlClientWrapper;

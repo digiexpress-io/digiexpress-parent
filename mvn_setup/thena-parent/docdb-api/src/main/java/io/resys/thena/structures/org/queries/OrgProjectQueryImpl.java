@@ -1,12 +1,12 @@
 package io.resys.thena.structures.org.queries;
 
 import io.resys.thena.api.ThenaClient.OrgStructuredTenant.OrgProjectQuery;
-import io.resys.thena.api.models.ImmutableOrgProjectObjects;
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.org.ImmutableOrgProjectObjects;
+import io.resys.thena.api.entities.org.ThenaOrgObjects.OrgProjectObjects;
 import io.resys.thena.api.models.ImmutableQueryEnvelope;
 import io.resys.thena.api.models.QueryEnvelope;
-import io.resys.thena.api.models.Repo;
 import io.resys.thena.api.models.QueryEnvelope.QueryEnvelopeStatus;
-import io.resys.thena.api.models.ThenaOrgObjects.OrgProjectObjects;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.structures.org.OrgQueries;
 import io.resys.thena.support.RepoAssert;
@@ -25,7 +25,7 @@ public class OrgProjectQueryImpl implements OrgProjectQuery {
     RepoAssert.notEmpty(repoId, () -> "projectName can't be empty!");
     
     return state.project().getByNameOrId(repoId)
-    .onItem().transformToUni((Repo existing) -> {
+    .onItem().transformToUni((Tenant existing) -> {
       if(existing == null) {
         return Uni.createFrom().item(QueryEnvelope.repoNotFound(repoId, log));
       }
@@ -34,7 +34,7 @@ public class OrgProjectQueryImpl implements OrgProjectQuery {
     });
   }
 
-  private Uni<QueryEnvelope<OrgProjectObjects>> getProjectObjects(OrgQueries org, Repo repo) {
+  private Uni<QueryEnvelope<OrgProjectObjects>> getProjectObjects(OrgQueries org, Tenant repo) {
     return Uni.combine().all().unis(
         org.parties().findAll().collect().asList(),
         org.members().findAll().collect().asList(),

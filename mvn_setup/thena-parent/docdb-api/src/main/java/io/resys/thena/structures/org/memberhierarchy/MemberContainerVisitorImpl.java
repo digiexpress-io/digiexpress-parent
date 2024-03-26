@@ -5,12 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.resys.thena.api.models.ImmutableOrgMemberPartyStatus;
-import io.resys.thena.api.models.ImmutableOrgMemberRightStatus;
-import io.resys.thena.api.models.ThenaOrgObject.OrgMemberHierarchyEntry;
-import io.resys.thena.api.models.ThenaOrgObject.OrgRightFlattened;
-import io.resys.thena.api.models.ThenaOrgObjects.OrgMemberPartyStatus;
-import io.resys.thena.api.models.ThenaOrgObjects.OrgMemberRightStatus;
+import io.resys.thena.api.entities.org.ImmutableOrgMemberPartyStatus;
+import io.resys.thena.api.entities.org.ImmutableOrgMemberRightStatus;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMemberHierarchyEntry;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgRightFlattened;
+import io.resys.thena.api.entities.org.ThenaOrgObjects.OrgMemberPartyStatus;
+import io.resys.thena.api.entities.org.ThenaOrgObjects.OrgMemberRightStatus;
 import io.resys.thena.structures.org.memberhierarchy.MemberContainer.UserContainerChildVisitor;
 import io.resys.thena.structures.org.memberhierarchy.MemberContainer.UserContainerVisitor;
 import io.resys.thena.support.RepoAssert;

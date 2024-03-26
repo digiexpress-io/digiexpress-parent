@@ -29,11 +29,11 @@ import java.util.Map;
 import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
 
-import io.resys.thena.api.models.ImmutableBlob;
-import io.resys.thena.api.models.ThenaDocObject.DocCommit;
-import io.resys.thena.api.models.ThenaGitObject.Blob;
-import io.resys.thena.api.models.ThenaGitObject.Commit;
-import io.resys.thena.api.models.ThenaGitObject.TreeValue;
+import io.resys.thena.api.entities.doc.ThenaDocObject.DocCommit;
+import io.resys.thena.api.entities.git.ImmutableBlob;
+import io.resys.thena.api.entities.git.ThenaGitObject.Blob;
+import io.resys.thena.api.entities.git.ThenaGitObject.Commit;
+import io.resys.thena.api.entities.git.ThenaGitObject.TreeValue;
 import io.vertx.core.json.JsonObject;
 
 public final class Sha2  {

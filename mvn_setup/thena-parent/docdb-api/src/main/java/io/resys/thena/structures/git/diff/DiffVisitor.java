@@ -28,14 +28,14 @@ import java.util.stream.Collectors;
 
 import org.immutables.value.Value;
 
-import io.resys.thena.api.models.Diff;
-import io.resys.thena.api.models.Diff.Divergence;
-import io.resys.thena.api.models.Diff.DivergenceType;
-import io.resys.thena.api.models.ImmutableDiff;
-import io.resys.thena.api.models.ImmutableDivergence;
-import io.resys.thena.api.models.ImmutableDivergenceRef;
-import io.resys.thena.api.models.ThenaGitObjects.CommitObjects;
-import io.resys.thena.api.models.ThenaGitObjects.GitRepoObjects;
+import io.resys.thena.api.entities.git.Diff;
+import io.resys.thena.api.entities.git.ImmutableDiff;
+import io.resys.thena.api.entities.git.ImmutableDivergence;
+import io.resys.thena.api.entities.git.ImmutableDivergenceRef;
+import io.resys.thena.api.entities.git.Diff.Divergence;
+import io.resys.thena.api.entities.git.Diff.DivergenceType;
+import io.resys.thena.api.entities.git.ThenaGitObjects.CommitObjects;
+import io.resys.thena.api.entities.git.ThenaGitObjects.GitRepoObjects;
 
 public class DiffVisitor {
 

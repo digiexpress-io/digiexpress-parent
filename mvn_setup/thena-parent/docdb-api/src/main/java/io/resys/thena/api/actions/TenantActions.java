@@ -26,10 +26,10 @@ import javax.annotation.Nullable;
 
 import org.immutables.value.Value;
 
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.Tenant.RepoType;
 import io.resys.thena.api.models.Message;
-import io.resys.thena.api.models.Repo;
 import io.resys.thena.api.models.ThenaEnvelope;
-import io.resys.thena.api.models.Repo.RepoType;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 
@@ -41,9 +41,9 @@ public interface TenantActions {
   interface RepoQuery {
     RepoQuery id(String id);
     RepoQuery rev(String rev);
-    Multi<Repo> findAll();
-    Uni<Repo> delete();
-    Uni<Repo> get();
+    Multi<Tenant> findAll();
+    Uni<Tenant> delete();
+    Uni<Tenant> get();
   }
   
   interface RepoBuilder {
@@ -58,7 +58,7 @@ public interface TenantActions {
   @Value.Immutable
   interface RepoResult extends ThenaEnvelope {
     @Nullable
-    Repo getRepo();
+    Tenant getRepo();
     RepoStatus getStatus();
     List<Message> getMessages();
   }

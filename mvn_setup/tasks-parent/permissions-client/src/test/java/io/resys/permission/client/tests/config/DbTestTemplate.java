@@ -19,7 +19,7 @@ import io.resys.permission.client.spi.PermissionClientImpl;
 import io.resys.permission.client.spi.PermissionStore;
 import io.resys.permission.client.spi.PermissionStoreImpl;
 import io.resys.thena.api.ThenaClient;
-import io.resys.thena.api.models.Repo;
+import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.jackson.VertexExtModule;
 import io.resys.thena.spi.DbCollections;
 import io.resys.thena.spi.DbState;
@@ -67,7 +67,7 @@ public class DbTestTemplate {
   private String db;
   private static final String DB = "junit-perm-"; 
   private static final AtomicInteger DB_ID = new AtomicInteger();
-  private Repo repo;
+  private Tenant repo;
   private PermissionClient client;
   private PermissionStore store;
 
@@ -142,12 +142,12 @@ public class DbTestTemplate {
     return DbStateSqlImpl.state(ctx, pgPool, new PgErrors());
   }
   
-  public void printRepo(Repo repo) {
+  public void printRepo(Tenant repo) {
     final String result = new OrgDbPrinter(createState()).print(repo);
     log.debug(result);
 
   }
-  public Repo getRepo() {
+  public Tenant getRepo() {
     return repo;
   }
   
@@ -155,7 +155,7 @@ public class DbTestTemplate {
     return toString(DbTestTemplate.class, fileName);
   }
   
-  public void assertRepo(Repo client, String expectedFileName) {
+  public void assertRepo(Tenant client, String expectedFileName) {
     final var expected = toExpectedFile(expectedFileName);
     final var actual = toStaticData(client);
     Assertions.assertLinesMatch(expected.lines(), actual.lines(), actual);
@@ -175,7 +175,7 @@ public class DbTestTemplate {
     }
   }
   
-  public String toStaticData(Repo client) {    
+  public String toStaticData(Tenant client) {    
     return new OrgDbPrinter(createState()).printWithStaticIds(client);
   }
   

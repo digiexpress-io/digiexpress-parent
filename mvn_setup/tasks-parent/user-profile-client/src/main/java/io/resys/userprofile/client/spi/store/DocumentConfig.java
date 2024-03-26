@@ -30,10 +30,10 @@ import io.resys.thena.api.ThenaClient;
 import io.resys.thena.api.actions.DocCommitActions.CreateManyDocs;
 import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
+import io.resys.thena.api.entities.doc.ThenaDocObject.DocBranch;
+import io.resys.thena.api.entities.doc.ThenaDocObjects.DocObject;
+import io.resys.thena.api.entities.doc.ThenaDocObjects.DocObjects;
 import io.resys.thena.api.models.QueryEnvelope;
-import io.resys.thena.api.models.ThenaDocObject.DocBranch;
-import io.resys.thena.api.models.ThenaDocObjects.DocObject;
-import io.resys.thena.api.models.ThenaDocObjects.DocObjects;
 import io.resys.userprofile.client.api.model.Document.DocumentType;
 import io.smallrye.mutiny.Uni;
 

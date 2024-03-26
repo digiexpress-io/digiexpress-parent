@@ -16,7 +16,7 @@ import io.resys.hdes.client.spi.config.HdesClientConfig.DependencyInjectionConte
 import io.resys.hdes.client.spi.config.HdesClientConfig.ServiceInit;
 import io.resys.hdes.client.spi.util.RepositoryToStaticData;
 import io.resys.thena.api.ThenaClient;
-import io.resys.thena.api.models.Repo;
+import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.spi.DbCollections;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.storesql.DbStateSqlImpl;
@@ -64,7 +64,7 @@ public class PgTestTemplate {
     return DbStateSqlImpl.state(ctx, pgPool, new PgErrors());
   }
   
-  public void printRepo(Repo repo) {
+  public void printRepo(Tenant repo) {
     final String result = new GitPrinter(createState(repo.getName())).print(repo);
     log.debug(result);
   }

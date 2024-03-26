@@ -29,12 +29,12 @@ import java.util.Optional;
 import org.immutables.value.Value;
 
 import io.resys.thena.api.actions.CommitActions.JsonObjectMerge;
-import io.resys.thena.api.models.Repo;
-import io.resys.thena.api.models.ThenaGitObject.Blob;
-import io.resys.thena.api.models.ThenaGitObject.Branch;
-import io.resys.thena.api.models.ThenaGitObject.Commit;
-import io.resys.thena.api.models.ThenaGitObject.Tree;
-import io.resys.thena.api.models.ThenaGitObject.TreeValue;
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.git.ThenaGitObject.Blob;
+import io.resys.thena.api.entities.git.ThenaGitObject.Branch;
+import io.resys.thena.api.entities.git.ThenaGitObject.Commit;
+import io.resys.thena.api.entities.git.ThenaGitObject.Tree;
+import io.resys.thena.api.entities.git.ThenaGitObject.TreeValue;
 import io.resys.thena.structures.git.GitInserts.GitBatch;
 import io.vertx.core.json.JsonObject;
 import lombok.Builder;
@@ -52,7 +52,7 @@ public interface CommitBatchBuilder {
   @lombok.Data @lombok.Builder(toBuilder = true) @Accessors(fluent = false)
   public static class CommitTreeState {
     private final String gid;
-    private final Repo repo;
+    private final Tenant repo;
     private final String refName;
     @Builder.Default private final Map<String, Blob> blobs = Collections.emptyMap();
     @Builder.Default private final Optional<Branch> ref = Optional.empty();

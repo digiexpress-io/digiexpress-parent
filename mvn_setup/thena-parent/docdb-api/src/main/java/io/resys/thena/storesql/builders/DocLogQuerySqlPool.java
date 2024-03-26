@@ -1,7 +1,7 @@
 package io.resys.thena.storesql.builders;
 
 import io.resys.thena.api.LogConstants;
-import io.resys.thena.api.models.ThenaDocObject.DocLog;
+import io.resys.thena.api.entities.doc.ThenaDocObject.DocLog;
 import io.resys.thena.storesql.SqlBuilder;
 import io.resys.thena.storesql.SqlMapper;
 import io.resys.thena.storesql.support.SqlClientWrapper;

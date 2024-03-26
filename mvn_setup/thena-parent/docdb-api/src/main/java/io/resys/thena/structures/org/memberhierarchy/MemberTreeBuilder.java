@@ -6,12 +6,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.resys.thena.api.LogConstants;
-import io.resys.thena.api.models.ImmutableOrgMemberHierarchy;
-import io.resys.thena.api.models.ThenaOrgObject.OrgActorStatusType;
-import io.resys.thena.api.models.ThenaOrgObject.OrgMemberFlattened;
-import io.resys.thena.api.models.ThenaOrgObject.OrgMemberHierarchyEntry;
-import io.resys.thena.api.models.ThenaOrgObject.OrgRightFlattened;
-import io.resys.thena.api.models.ThenaOrgObjects.OrgMemberHierarchy;
+import io.resys.thena.api.entities.org.ImmutableOrgMemberHierarchy;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgActorStatusType;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMemberFlattened;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMemberHierarchyEntry;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgRightFlattened;
+import io.resys.thena.api.entities.org.ThenaOrgObjects.OrgMemberHierarchy;
 import io.resys.thena.support.RepoAssert;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;

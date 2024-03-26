@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 
 import io.resys.thena.api.actions.PullActions.MatchCriteria;
 import io.resys.thena.api.actions.PullActions.MatchCriteriaType;
-import io.resys.thena.api.models.ThenaGitObject.Blob;
+import io.resys.thena.api.entities.git.ThenaGitObject.Blob;
 import io.resys.thena.spi.DbCollections;
 import io.resys.thena.storesql.ImmutableSql;
 import io.resys.thena.storesql.ImmutableSqlTuple;

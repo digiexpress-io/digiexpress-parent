@@ -23,7 +23,7 @@ package io.dialob.client.spi.store;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.dialob.client.api.DialobStore.StoreEntity;
-import io.resys.thena.api.models.ThenaGitObject.Blob;
+import io.resys.thena.api.entities.git.ThenaGitObject.Blob;
 import io.dialob.client.api.ImmutableStoreEntity;
 
 

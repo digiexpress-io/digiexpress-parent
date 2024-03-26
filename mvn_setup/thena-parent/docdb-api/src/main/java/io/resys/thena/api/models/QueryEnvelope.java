@@ -30,16 +30,17 @@ import javax.annotation.Nullable;
 import org.immutables.value.Value;
 import org.slf4j.Logger;
 
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.git.ThenaGitObject.Commit;
 import io.resys.thena.api.exceptions.RepoException;
 import io.resys.thena.api.models.ThenaEnvelope.ThenaObjects;
-import io.resys.thena.api.models.ThenaGitObject.Commit;
 import io.resys.thena.structures.git.objects.PullObjectsQueryImpl.BlobAndTree;
 
 
 @Value.Immutable
 public interface QueryEnvelope<T extends ThenaObjects> extends ThenaEnvelope {
   @Nullable
-  Repo getRepo();    
+  Tenant getRepo();    
   @Nullable
   T getObjects();
   
@@ -77,7 +78,7 @@ public interface QueryEnvelope<T extends ThenaObjects> extends ThenaEnvelope {
   
   
   public static <T extends ThenaEnvelope.ThenaObjects> QueryEnvelope<T> repoBlobNotFound(
-      Repo repo, 
+      Tenant repo, 
       BlobAndTree blobAndTree, 
       Commit commit,
       List<String> docIds,
@@ -92,7 +93,7 @@ public interface QueryEnvelope<T extends ThenaObjects> extends ThenaEnvelope {
         .addMessages(error)
         .build();
   }
-  public static <T extends ThenaEnvelope.ThenaObjects> QueryEnvelope<T> repoCommitNotFound(Repo repo, String refCriteria, Logger logger) {
+  public static <T extends ThenaEnvelope.ThenaObjects> QueryEnvelope<T> repoCommitNotFound(Tenant repo, String refCriteria, Logger logger) {
     final var error = RepoException.builder().noCommit(repo, refCriteria);
     logger.warn(error.getText());
     return ImmutableQueryEnvelope
@@ -121,7 +122,7 @@ public interface QueryEnvelope<T extends ThenaObjects> extends ThenaEnvelope {
   }
   
   public static <T extends ThenaEnvelope.ThenaObjects> QueryEnvelope<T> docNotFound(
-      Repo existing, Logger logger, String text,
+      Tenant existing, Logger logger, String text,
       DocNotFoundException ex
     ) {
     return ImmutableQueryEnvelope.<T>builder()
@@ -131,7 +132,7 @@ public interface QueryEnvelope<T extends ThenaObjects> extends ThenaEnvelope {
       .build();
   }
   
-  public static <T extends ThenaEnvelope.ThenaObjects> QueryEnvelope<T> docUnexpected(Repo existing, Logger logger, String text) {
+  public static <T extends ThenaEnvelope.ThenaObjects> QueryEnvelope<T> docUnexpected(Tenant existing, Logger logger, String text) {
     logger.warn(text);
     return ImmutableQueryEnvelope.<T>builder()
       .repo(existing)
@@ -140,7 +141,7 @@ public interface QueryEnvelope<T extends ThenaObjects> extends ThenaEnvelope {
       .build();
   }
   
-  public static <T extends ThenaEnvelope.ThenaObjects> QueryEnvelope<T> fatalError(Repo existing, String msg, Logger logger, Throwable t) {
+  public static <T extends ThenaEnvelope.ThenaObjects> QueryEnvelope<T> fatalError(Tenant existing, String msg, Logger logger, Throwable t) {
     logger.error(msg, t);
     return ImmutableQueryEnvelope.<T>builder()
       .repo(existing)

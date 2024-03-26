@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-import io.resys.thena.api.models.Repo;
+import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.projects.client.api.model.TenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
 import io.resys.thena.projects.client.api.model.TenantConfigCommand.CreateTenantConfig;
@@ -16,7 +16,7 @@ public interface TenantConfigClient {
 
   TenantConfigClient withRepoId(String repoId);
   RepositoryQuery query();
-  Uni<Repo> getRepo();
+  Uni<Tenant> getRepo();
   
   CreateTenantConfigAction createTenantConfig();
   UpdateTenantConfigAction updateTenantConfig();

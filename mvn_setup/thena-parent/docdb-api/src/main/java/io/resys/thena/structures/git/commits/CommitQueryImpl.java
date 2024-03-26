@@ -25,14 +25,14 @@ import java.util.List;
 
 import io.resys.thena.api.actions.CommitActions.CommitQuery;
 import io.resys.thena.api.actions.PullActions.MatchCriteria;
-import io.resys.thena.api.models.ImmutableCommitObjects;
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.git.ImmutableCommitObjects;
+import io.resys.thena.api.entities.git.ThenaGitObject.Commit;
+import io.resys.thena.api.entities.git.ThenaGitObject.Tree;
+import io.resys.thena.api.entities.git.ThenaGitObjects.CommitObjects;
 import io.resys.thena.api.models.ImmutableQueryEnvelope;
 import io.resys.thena.api.models.QueryEnvelope;
-import io.resys.thena.api.models.Repo;
 import io.resys.thena.api.models.QueryEnvelope.QueryEnvelopeStatus;
-import io.resys.thena.api.models.ThenaGitObject.Commit;
-import io.resys.thena.api.models.ThenaGitObject.Tree;
-import io.resys.thena.api.models.ThenaGitObjects.CommitObjects;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.structures.git.GitState.GitRepo;
 import io.resys.thena.structures.git.objects.ObjectsUtils;
@@ -62,7 +62,7 @@ public class CommitQueryImpl implements CommitQuery {
     RepoAssert.notEmpty(branchNameOrCommitOrTag, () -> "branchNameOrCommitOrTag is not defined!");
     
     return state.project().getByNameOrId(projectName).onItem()
-    .transformToUni((Repo existing) -> {
+    .transformToUni((Tenant existing) -> {
       if(existing == null) {
         return Uni.createFrom().item(QueryEnvelope.repoNotFound(projectName, log));
       }
@@ -79,7 +79,7 @@ public class CommitQueryImpl implements CommitQuery {
   }
   
   
-  private Uni<QueryEnvelope<CommitObjects>> getState(Repo repo, Commit commit, GitRepo ctx) {
+  private Uni<QueryEnvelope<CommitObjects>> getState(Tenant repo, Commit commit, GitRepo ctx) {
     return ObjectsUtils.getTree(commit, ctx).onItem()
     .transformToUni(tree -> {
       if(this.docsIncluded) {

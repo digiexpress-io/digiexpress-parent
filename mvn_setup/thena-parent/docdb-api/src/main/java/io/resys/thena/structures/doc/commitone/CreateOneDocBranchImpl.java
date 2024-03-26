@@ -9,15 +9,15 @@ import java.util.Optional;
 
 import io.resys.thena.api.actions.DocCommitActions.CreateOneDocBranch;
 import io.resys.thena.api.actions.DocCommitActions.OneDocEnvelope;
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.doc.ImmutableDocBranch;
+import io.resys.thena.api.entities.doc.ImmutableDocCommit;
+import io.resys.thena.api.entities.doc.ImmutableDocLog;
+import io.resys.thena.api.entities.doc.ThenaDocObject.DocBranchLock;
+import io.resys.thena.api.entities.doc.ThenaDocObject.DocLog;
+import io.resys.thena.api.entities.doc.ThenaDocObject.DocStatus;
 import io.resys.thena.api.actions.ImmutableOneDocEnvelope;
-import io.resys.thena.api.models.ImmutableDocBranch;
-import io.resys.thena.api.models.ImmutableDocCommit;
-import io.resys.thena.api.models.ImmutableDocLog;
 import io.resys.thena.api.models.ImmutableMessage;
-import io.resys.thena.api.models.Repo;
-import io.resys.thena.api.models.ThenaDocObject.DocBranchLock;
-import io.resys.thena.api.models.ThenaDocObject.DocLog;
-import io.resys.thena.api.models.ThenaDocObject.DocStatus;
 import io.resys.thena.spi.DataMapper;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.structures.doc.DocState.DocRepo;
@@ -96,7 +96,7 @@ public class CreateOneDocBranchImpl implements CreateOneDocBranch {
                   .append(" Unknown branchId: '").append(branchFrom).append("'!")
                   .toString())
               .build())
-          .status(Repo.CommitResultStatus.ERROR)
+          .status(Tenant.CommitResultStatus.ERROR)
           .build();
       
     }

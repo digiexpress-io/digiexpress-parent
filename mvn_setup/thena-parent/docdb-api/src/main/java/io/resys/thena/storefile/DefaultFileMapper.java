@@ -23,28 +23,28 @@ package io.resys.thena.storefile;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import io.resys.thena.api.models.ImmutableBlob;
-import io.resys.thena.api.models.ImmutableBranch;
-import io.resys.thena.api.models.ImmutableCommit;
-import io.resys.thena.api.models.ImmutableRepo;
-import io.resys.thena.api.models.ImmutableTag;
-import io.resys.thena.api.models.ImmutableTree;
-import io.resys.thena.api.models.ImmutableTreeValue;
-import io.resys.thena.api.models.Repo;
-import io.resys.thena.api.models.ThenaDocObject.Doc;
-import io.resys.thena.api.models.ThenaDocObject.DocBranch;
-import io.resys.thena.api.models.ThenaDocObject.DocBranchLock;
-import io.resys.thena.api.models.ThenaDocObject.DocCommit;
-import io.resys.thena.api.models.ThenaDocObject.DocFlatted;
-import io.resys.thena.api.models.ThenaDocObject.DocLog;
-import io.resys.thena.api.models.ThenaGitObject.Blob;
-import io.resys.thena.api.models.ThenaGitObject.BlobHistory;
-import io.resys.thena.api.models.ThenaGitObject.Branch;
-import io.resys.thena.api.models.ThenaGitObject.Commit;
-import io.resys.thena.api.models.ThenaGitObject.CommitTree;
-import io.resys.thena.api.models.ThenaGitObject.Tag;
-import io.resys.thena.api.models.ThenaGitObject.Tree;
-import io.resys.thena.api.models.ThenaGitObject.TreeValue;
+import io.resys.thena.api.entities.ImmutableTenant;
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.doc.ThenaDocObject.Doc;
+import io.resys.thena.api.entities.doc.ThenaDocObject.DocBranch;
+import io.resys.thena.api.entities.doc.ThenaDocObject.DocBranchLock;
+import io.resys.thena.api.entities.doc.ThenaDocObject.DocCommit;
+import io.resys.thena.api.entities.doc.ThenaDocObject.DocFlatted;
+import io.resys.thena.api.entities.doc.ThenaDocObject.DocLog;
+import io.resys.thena.api.entities.git.ImmutableBlob;
+import io.resys.thena.api.entities.git.ImmutableBranch;
+import io.resys.thena.api.entities.git.ImmutableCommit;
+import io.resys.thena.api.entities.git.ImmutableTag;
+import io.resys.thena.api.entities.git.ImmutableTree;
+import io.resys.thena.api.entities.git.ImmutableTreeValue;
+import io.resys.thena.api.entities.git.ThenaGitObject.Blob;
+import io.resys.thena.api.entities.git.ThenaGitObject.BlobHistory;
+import io.resys.thena.api.entities.git.ThenaGitObject.Branch;
+import io.resys.thena.api.entities.git.ThenaGitObject.Commit;
+import io.resys.thena.api.entities.git.ThenaGitObject.CommitTree;
+import io.resys.thena.api.entities.git.ThenaGitObject.Tag;
+import io.resys.thena.api.entities.git.ThenaGitObject.Tree;
+import io.resys.thena.api.entities.git.ThenaGitObject.TreeValue;
 import io.resys.thena.storefile.tables.BlobTable.BlobTableRow;
 import io.resys.thena.storefile.tables.CommitTable.CommitTableRow;
 import io.resys.thena.storefile.tables.RefTable.RefTableRow;
@@ -59,10 +59,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class DefaultFileMapper implements FileMapper {
   @Override
-  public Repo repo(Row src) {
+  public Tenant repo(Row src) {
     RepoTableRow row = src.toType(RepoTableRow.class);
     
-    return ImmutableRepo.builder()
+    return ImmutableTenant.builder()
         .id(row.getId())
         .rev(row.getRev())
         .type(row.getType())

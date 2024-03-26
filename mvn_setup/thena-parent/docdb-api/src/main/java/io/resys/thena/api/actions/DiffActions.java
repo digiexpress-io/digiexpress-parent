@@ -26,9 +26,9 @@ import javax.annotation.Nullable;
 
 import org.immutables.value.Value;
 
-import io.resys.thena.api.models.Diff;
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.git.Diff;
 import io.resys.thena.api.models.Message;
-import io.resys.thena.api.models.Repo;
 import io.resys.thena.api.models.ThenaEnvelope;
 import io.smallrye.mutiny.Uni;
 
@@ -49,7 +49,7 @@ public interface DiffActions {
   @Value.Immutable
   interface DiffResult<T> extends ThenaEnvelope {
     @Nullable
-    Repo getRepo();    
+    Tenant getRepo();    
     @Nullable
     T getObjects();
     DiffResultStatus getStatus();

@@ -10,8 +10,8 @@ import org.barfuin.texttree.api.DefaultNode;
 import org.barfuin.texttree.api.TextTree;
 import org.barfuin.texttree.api.TreeOptions;
 
-import io.resys.thena.api.models.ThenaOrgObject.OrgMemberFlattened;
-import io.resys.thena.api.models.ThenaOrgObject.OrgRightFlattened;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMemberFlattened;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgRightFlattened;
 
 
 

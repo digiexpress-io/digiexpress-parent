@@ -1,7 +1,7 @@
 package io.resys.thena.storefile;
 
 import io.resys.thena.api.ThenaClient;
-import io.resys.thena.api.models.Repo;
+import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.spi.DbCollections;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.spi.ThenaClientPgSql;
@@ -58,7 +58,7 @@ public class DocDBFactoryFile {
             return project().getByNameOrId(repoNameOrId).onItem().transform(repo -> insert(repo));
           }
           @Override
-          public GitInserts insert(Repo repo) {
+          public GitInserts insert(Tenant repo) {
             final var wrapper = ImmutableFileClientWrapper.builder()
                 .repo(repo)
                 .client(client)
@@ -71,7 +71,7 @@ public class DocDBFactoryFile {
             return project().getByNameOrId(repoNameOrId).onItem().transform(repo -> query(repo));
           }
           @Override
-          public GitQueries query(Repo repo) {
+          public GitQueries query(Tenant repo) {
             final var wrapper = ImmutableFileClientWrapper.builder()
                 .repo(repo)
                 .client(client)
@@ -80,7 +80,7 @@ public class DocDBFactoryFile {
             return new ClientQueryFilePool(wrapper, sqlMapper(wrapper.getNames()), sqlBuilder(wrapper.getNames()), handler);
           }
           @Override
-          public GitRepo withRepo(Repo repo) {
+          public GitRepo withRepo(Tenant repo) {
             final var wrapper = ImmutableFileClientWrapper.builder()
                 .repo(repo)
                 .client(client)
@@ -88,7 +88,7 @@ public class DocDBFactoryFile {
                 .build();
             return new GitRepo() {
               @Override
-              public Repo getRepo() {
+              public Tenant getRepo() {
                 return wrapper.getRepo();
               }
               @Override

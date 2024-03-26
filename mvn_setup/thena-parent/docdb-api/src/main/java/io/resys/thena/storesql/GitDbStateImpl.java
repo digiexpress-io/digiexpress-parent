@@ -3,8 +3,8 @@ package io.resys.thena.storesql;
 import java.util.Optional;
 import java.util.function.Function;
 
+import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.exceptions.RepoException;
-import io.resys.thena.api.models.Repo;
 import io.resys.thena.spi.DbCollections;
 import io.resys.thena.spi.DbState.RepoBuilder;
 import io.resys.thena.storesql.ImmutableClientQuerySqlContext;
@@ -47,7 +47,7 @@ public class GitDbStateImpl implements GitState {
           
           return Uni.createFrom().item(repo);
         }))
-        .onItem().transformToUni((Repo existing) -> {
+        .onItem().transformToUni((Tenant existing) -> {
           if(existing == null) {
             final var ex = RepoException.builder().notRepoWithName(repoId);
             log.error(ex.getText());
@@ -79,7 +79,7 @@ public class GitDbStateImpl implements GitState {
     return new RepoBuilderSqlPool(pool, null, ctx, sqlSchema.apply(ctx), sqlMapper.apply(ctx), sqlBuilder.apply(ctx), handler);
   }
   @Override
-  public GitInserts insert(Repo repo) {
+  public GitInserts insert(Tenant repo) {
     final var wrapper = ImmutableSqlClientWrapper.builder()
         .repo(repo)
         .pool(pool)
@@ -89,7 +89,7 @@ public class GitDbStateImpl implements GitState {
     return new GitDbInsertsSqlPool(wrapper, sqlMapper.apply(wrapper.getNames()), sqlBuilder.apply(wrapper.getNames()), handler);
   }
   @Override
-  public GitQueries query(Repo repo) {
+  public GitQueries query(Tenant repo) {
     final var wrapper = ImmutableSqlClientWrapper.builder()
         .repo(repo)
         .pool(pool)
@@ -106,7 +106,7 @@ public class GitDbStateImpl implements GitState {
     return clientQuery.apply(ctx);
   }
   @Override
-  public GitRepo withRepo(Repo repo) {
+  public GitRepo withRepo(Tenant repo) {
     final var wrapper = ImmutableSqlClientWrapper.builder()
         .repo(repo)
         .pool(pool)

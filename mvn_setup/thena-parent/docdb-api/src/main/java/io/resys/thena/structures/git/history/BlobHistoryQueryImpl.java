@@ -26,12 +26,12 @@ import java.util.List;
 
 import io.resys.thena.api.actions.HistoryActions.BlobHistoryQuery;
 import io.resys.thena.api.actions.PullActions.MatchCriteria;
-import io.resys.thena.api.models.ImmutableHistoryObjects;
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.git.ImmutableHistoryObjects;
+import io.resys.thena.api.entities.git.ThenaGitObjects.HistoryObjects;
 import io.resys.thena.api.models.ImmutableQueryEnvelope;
 import io.resys.thena.api.models.QueryEnvelope;
-import io.resys.thena.api.models.Repo;
 import io.resys.thena.api.models.QueryEnvelope.QueryEnvelopeStatus;
-import io.resys.thena.api.models.ThenaGitObjects.HistoryObjects;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
@@ -63,7 +63,7 @@ public class BlobHistoryQueryImpl implements BlobHistoryQuery {
     RepoAssert.notEmpty(branchName, () -> "branchName is not defined!");
     
     return state.project().getByNameOrId(repoId).onItem()
-    .transformToUni((Repo existing) -> {
+    .transformToUni((Tenant existing) -> {
       if(existing == null) {
         return Uni.createFrom().item(QueryEnvelope.repoNotFound(repoId, log));
       }

@@ -24,16 +24,16 @@ import java.util.List;
 
 import org.immutables.value.Value;
 
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgActorData;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgActorStatus;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgCommit;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMember;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMemberRight;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMembership;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgParty;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgPartyRight;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgRight;
 import io.resys.thena.api.models.Message;
-import io.resys.thena.api.models.ThenaOrgObject.OrgActorData;
-import io.resys.thena.api.models.ThenaOrgObject.OrgActorStatus;
-import io.resys.thena.api.models.ThenaOrgObject.OrgCommit;
-import io.resys.thena.api.models.ThenaOrgObject.OrgMember;
-import io.resys.thena.api.models.ThenaOrgObject.OrgMemberRight;
-import io.resys.thena.api.models.ThenaOrgObject.OrgMembership;
-import io.resys.thena.api.models.ThenaOrgObject.OrgParty;
-import io.resys.thena.api.models.ThenaOrgObject.OrgPartyRight;
-import io.resys.thena.api.models.ThenaOrgObject.OrgRight;
 import io.resys.thena.structures.git.GitInserts.BatchStatus;
 import io.smallrye.mutiny.Uni;
 

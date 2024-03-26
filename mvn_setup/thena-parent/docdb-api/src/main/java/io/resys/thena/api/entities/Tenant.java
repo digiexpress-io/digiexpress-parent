@@ -1,4 +1,4 @@
-package io.resys.thena.api.models;
+package io.resys.thena.api.entities;
 
 /*-
  * #%L
@@ -23,7 +23,7 @@ package io.resys.thena.api.models;
 import org.immutables.value.Value;
 
 @Value.Immutable
-public interface Repo {
+public interface Tenant {
   String getId();
   String getRev();
   String getPrefix();

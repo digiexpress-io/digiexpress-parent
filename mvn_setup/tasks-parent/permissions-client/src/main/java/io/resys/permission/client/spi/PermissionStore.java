@@ -4,7 +4,7 @@ import org.immutables.value.Value;
 
 import io.resys.thena.api.ThenaClient;
 import io.resys.thena.api.ThenaClient.OrgStructuredTenant;
-import io.resys.thena.api.models.Repo;
+import io.resys.thena.api.entities.Tenant;
 
 /*-
  * #%L
@@ -31,7 +31,7 @@ import io.smallrye.mutiny.Uni;
 public interface PermissionStore {
   PermissionRepositoryQuery query();
   PermissionStoreConfig getConfig();
-  Uni<Repo> getRepo();
+  Uni<Tenant> getRepo();
   OrgStructuredTenant getOrg(String repoId);
   PermissionStore withRepoId(String repoId);
   

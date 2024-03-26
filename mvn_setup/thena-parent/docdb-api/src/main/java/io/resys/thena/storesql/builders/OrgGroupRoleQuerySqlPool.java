@@ -3,7 +3,7 @@ package io.resys.thena.storesql.builders;
 import java.util.List;
 
 import io.resys.thena.api.LogConstants;
-import io.resys.thena.api.models.ThenaOrgObject.OrgPartyRight;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgPartyRight;
 import io.resys.thena.storesql.SqlBuilder;
 import io.resys.thena.storesql.SqlMapper;
 import io.resys.thena.storesql.support.SqlClientWrapper;

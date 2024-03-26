@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-import io.resys.thena.api.models.Repo;
+import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.spi.DbState;
 
 public class DocDbPrinter {
@@ -15,7 +15,7 @@ public class DocDbPrinter {
     this.state = state;
   }
   
-  public String printWithStaticIds(Repo repo) {
+  public String printWithStaticIds(Tenant repo) {
     final Map<String, String> replacements = new HashMap<>();
     final Function<String, String> ID = (id) -> {
       if(replacements.containsKey(id)) {
@@ -103,7 +103,7 @@ public class DocDbPrinter {
     return result.toString();
   }
   
-  public String print(Repo repo) {
+  public String print(Tenant repo) {
    final var ctx = state.toDocState().withRepo(repo);
     
     StringBuilder result = new StringBuilder();

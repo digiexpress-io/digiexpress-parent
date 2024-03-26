@@ -2,9 +2,9 @@ package io.resys.thena.api.exceptions;
 
 import java.util.List;
 
+import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.models.ImmutableMessage;
 import io.resys.thena.api.models.Message;
-import io.resys.thena.api.models.Repo;
 
 
 public class RepoException extends DocDBException {
@@ -27,7 +27,7 @@ public class RepoException extends DocDBException {
             .text(text)
           .build();
     }
-    public Message notRepoWithName(String repoId, List<Repo> others) {
+    public Message notRepoWithName(String repoId, List<Tenant> others) {
       final var text = new StringBuilder()
           .append("Repo with name: '").append(repoId).append("' does not exist!")
           .append(" known repos: '").append(String.join(",", others.stream().map(r -> r.getName()).toList())).append("'")
@@ -77,7 +77,7 @@ public class RepoException extends DocDBException {
     }
     
     
-    public Message noCommit(Repo repo, String refCriteria) {
+    public Message noCommit(Tenant repo, String refCriteria) {
       return ImmutableMessage.builder()
         .text(new StringBuilder()
         .append("Repo with name: '").append(repo.getName()).append("'")
@@ -87,7 +87,7 @@ public class RepoException extends DocDBException {
         .build();
     }
     
-    public Message noBlob(Repo repo, String tree, String refCriteria, String ...blobName) {
+    public Message noBlob(Tenant repo, String tree, String refCriteria, String ...blobName) {
       return ImmutableMessage.builder()
         .text(new StringBuilder()
         .append("Repo with name: '").append(repo.getName()).append("'")

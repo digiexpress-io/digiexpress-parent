@@ -3,15 +3,15 @@ package io.resys.thena.structures.org.queries;
 import java.util.List;
 
 import io.resys.thena.api.actions.OrgQueryActions.MemberObjectsQuery;
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMember;
 import io.resys.thena.api.models.ImmutableQueryEnvelope;
 import io.resys.thena.api.models.ImmutableQueryEnvelopeList;
 import io.resys.thena.api.models.QueryEnvelope;
 import io.resys.thena.api.models.QueryEnvelopeList;
-import io.resys.thena.api.models.Repo;
 import io.resys.thena.api.models.ThenaEnvelope;
 import io.resys.thena.api.models.QueryEnvelope.DocNotFoundException;
 import io.resys.thena.api.models.QueryEnvelope.QueryEnvelopeStatus;
-import io.resys.thena.api.models.ThenaOrgObject.OrgMember;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.structures.org.OrgQueries;
 import io.resys.thena.support.RepoAssert;
@@ -30,7 +30,7 @@ public class MemberObjectsQueryImpl implements MemberObjectsQuery {
     RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
 
     return state.project().getByNameOrId(repoId)
-    .onItem().transformToUni((Repo existing) -> {
+    .onItem().transformToUni((Tenant existing) -> {
       if(existing == null) {
         return Uni.createFrom().item(QueryEnvelope.repoNotFound(repoId, log));
       }
@@ -49,7 +49,7 @@ public class MemberObjectsQueryImpl implements MemberObjectsQuery {
   public Uni<QueryEnvelopeList<OrgMember>> findAll() {
     RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
     return state.project().getByNameOrId(repoId)
-    .onItem().transformToUni((Repo existing) -> {
+    .onItem().transformToUni((Tenant existing) -> {
       if(existing == null) {
         return Uni.createFrom().item(QueryEnvelope.repoNotFoundList(repoId, log));
       }
@@ -59,14 +59,14 @@ public class MemberObjectsQueryImpl implements MemberObjectsQuery {
     });
   }
   
-  private Uni<QueryEnvelope<OrgMember>> getUserObject(Repo existing, OrgMember user) {
+  private Uni<QueryEnvelope<OrgMember>> getUserObject(Tenant existing, OrgMember user) {
     return Uni.createFrom().item(ImmutableQueryEnvelope.<OrgMember>builder()
         .repo(existing)
         .status(QueryEnvelopeStatus.OK)
         .objects(user)
         .build());
   }  
-  private Uni<QueryEnvelopeList<OrgMember>> getUserObjects(Repo existing, List<OrgMember> users) {
+  private Uni<QueryEnvelopeList<OrgMember>> getUserObjects(Tenant existing, List<OrgMember> users) {
     
     return Uni.createFrom().item(ImmutableQueryEnvelopeList.<OrgMember>builder()
         .repo(existing)
@@ -75,7 +75,7 @@ public class MemberObjectsQueryImpl implements MemberObjectsQuery {
         .build());
   }
 
-  private <T extends ThenaEnvelope.ThenaObjects> QueryEnvelope<T> docNotFound(Repo existing, String userId, DocNotFoundException ex) {
+  private <T extends ThenaEnvelope.ThenaObjects> QueryEnvelope<T> docNotFound(Tenant existing, String userId, DocNotFoundException ex) {
     final var msg = new StringBuilder()
         .append("User not found by given id = '").append(userId).append("', from repo: '").append(existing.getId()).append("'!")
         .toString();

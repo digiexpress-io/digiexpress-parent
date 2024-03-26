@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-import io.resys.thena.api.models.Repo;
+import io.resys.thena.api.entities.Tenant;
 import io.resys.userprofile.client.api.model.UserProfile;
 import io.resys.userprofile.client.api.model.UserProfileCommand.CreateUserProfile;
 import io.resys.userprofile.client.api.model.UserProfileCommand.UpsertUserProfile;
@@ -15,7 +15,7 @@ import io.smallrye.mutiny.Uni;
 public interface UserProfileClient {
 
   RepositoryQuery repoQuery();
-  Uni<Repo> getRepo();
+  Uni<Tenant> getRepo();
   UserProfileClient withRepoId(String repoId);
   
   CreateUserProfileAction createUserProfile();

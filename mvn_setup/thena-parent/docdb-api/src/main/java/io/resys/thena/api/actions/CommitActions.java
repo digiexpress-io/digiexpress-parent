@@ -27,13 +27,13 @@ import javax.annotation.Nullable;
 import org.immutables.value.Value;
 
 import io.resys.thena.api.actions.PullActions.MatchCriteria;
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.git.ThenaGitObject.Commit;
+import io.resys.thena.api.entities.git.ThenaGitObject.Tree;
+import io.resys.thena.api.entities.git.ThenaGitObjects.CommitObjects;
 import io.resys.thena.api.models.Message;
 import io.resys.thena.api.models.QueryEnvelope;
-import io.resys.thena.api.models.Repo;
 import io.resys.thena.api.models.ThenaEnvelope;
-import io.resys.thena.api.models.ThenaGitObject.Commit;
-import io.resys.thena.api.models.ThenaGitObject.Tree;
-import io.resys.thena.api.models.ThenaGitObjects.CommitObjects;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 
@@ -75,7 +75,7 @@ public interface CommitActions {
     String getGid(); // repo/head
     @Nullable
     Commit getCommit();
-    Repo.CommitResultStatus getStatus();
+    Tenant.CommitResultStatus getStatus();
     List<Message> getMessages();
   }
 }

@@ -16,8 +16,8 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.resys.thena.api.ThenaClient;
-import io.resys.thena.api.models.Repo;
-import io.resys.thena.api.models.Repo.RepoType;
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.Tenant.RepoType;
 import io.resys.thena.jackson.VertexExtModule;
 import io.resys.thena.spi.DbCollections;
 import io.resys.thena.spi.DbState;
@@ -66,12 +66,12 @@ public class DbTestTemplate {
   
   private static AtomicInteger index = new AtomicInteger(1);
   private String db;
-  private BiConsumer<ThenaClient, Repo> callback;
-  private Repo repo;
+  private BiConsumer<ThenaClient, Tenant> callback;
+  private Tenant repo;
   
   public DbTestTemplate() {
   }
-  public DbTestTemplate(BiConsumer<ThenaClient, Repo> callback) {
+  public DbTestTemplate(BiConsumer<ThenaClient, Tenant> callback) {
     this.callback = callback;
   }  
   
@@ -144,7 +144,7 @@ public class DbTestTemplate {
     return DbStateSqlImpl.state(ctx, pgPool, new PgErrors());
   }
   
-  public void printRepo(Repo repo) {
+  public void printRepo(Tenant repo) {
     if(repo.getType() == RepoType.doc) {
       final String result = new DocDbPrinter(createState()).print(repo);
       log.debug(result);
@@ -156,7 +156,7 @@ public class DbTestTemplate {
       log.debug(result);
     }
   }
-  public Repo getRepo() {
+  public Tenant getRepo() {
     return repo;
   }
 
@@ -165,7 +165,7 @@ public class DbTestTemplate {
     return toString(DbTestTemplate.class, fileName);
   }
   
-  public void assertRepo(Repo client, String expectedFileName) {
+  public void assertRepo(Tenant client, String expectedFileName) {
     final var expected = toExpectedFile(expectedFileName);
     final var actual = toStaticData(client);
     Assertions.assertLinesMatch(expected.lines(), actual.lines(), actual);
@@ -185,7 +185,7 @@ public class DbTestTemplate {
     }
   }
   
-  public String toStaticData(Repo client) {    
+  public String toStaticData(Tenant client) {    
     if(client.getType() == RepoType.doc) {
       return new DocDbPrinter(createState()).printWithStaticIds(client);
     } else if(client.getType() == RepoType.org) {

@@ -15,11 +15,11 @@ import io.quarkus.test.junit.TestProfile;
 import io.resys.thena.api.actions.OrgCommitActions.ModType;
 import io.resys.thena.api.actions.TenantActions.RepoResult;
 import io.resys.thena.api.actions.TenantActions.RepoStatus;
-import io.resys.thena.api.models.Repo;
-import io.resys.thena.api.models.Repo.RepoType;
-import io.resys.thena.api.models.ThenaOrgObject.OrgMember;
-import io.resys.thena.api.models.ThenaOrgObject.OrgParty;
-import io.resys.thena.api.models.ThenaOrgObject.OrgRight;
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.Tenant.RepoType;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMember;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgParty;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgRight;
 import io.resys.thena.docdb.test.config.DbTestTemplate;
 import io.resys.thena.docdb.test.config.PgProfile;
 import lombok.extern.slf4j.Slf4j;
@@ -139,7 +139,7 @@ jailer-2
       .message("mod for user")
       .build().await().atMost(Duration.ofMinutes(1))
       .getStatus();
-    Assertions.assertEquals(Repo.CommitResultStatus.NO_CHANGES, rejectNoChanges);
+    Assertions.assertEquals(Tenant.CommitResultStatus.NO_CHANGES, rejectNoChanges);
     
     roleHierarchy = getClient().org(repo).find().rightHierarchyQuery()
         .get(bakerMain.getId()).await().atMost(Duration.ofMinutes(1)).getObjects(); 

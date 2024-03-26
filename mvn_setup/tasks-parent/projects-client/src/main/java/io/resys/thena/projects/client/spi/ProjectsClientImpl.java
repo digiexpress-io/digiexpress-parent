@@ -2,8 +2,8 @@ package io.resys.thena.projects.client.spi;
 
 import java.util.Optional;
 
-import io.resys.thena.api.models.Repo;
-import io.resys.thena.api.models.Repo.RepoType;
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.Tenant.RepoType;
 import io.resys.thena.projects.client.api.TenantConfigClient;
 import io.resys.thena.projects.client.api.model.TenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
@@ -27,7 +27,7 @@ public class ProjectsClientImpl implements TenantConfigClient {
 
 
   @Override
-  public Uni<Repo> getRepo() {
+  public Uni<Tenant> getRepo() {
     return ctx.getRepo();
   }
   
