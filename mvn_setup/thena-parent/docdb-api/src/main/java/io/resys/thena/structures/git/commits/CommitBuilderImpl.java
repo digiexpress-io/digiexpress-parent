@@ -31,7 +31,7 @@ import io.resys.thena.api.actions.CommitActions.CommitBuilder;
 import io.resys.thena.api.actions.CommitActions.CommitResultEnvelope;
 import io.resys.thena.api.actions.CommitActions.JsonObjectMerge;
 import io.resys.thena.api.entities.CommitLockStatus;
-import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.git.CommitLock;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.api.actions.ImmutableCommitResultEnvelope;
@@ -209,7 +209,7 @@ public class CommitBuilderImpl implements CommitBuilder {
                   .append(" Your trying to merge objects to non existent head!")
                   .toString())
               .build())
-          .status(Tenant.CommitResultStatus.ERROR)
+          .status(CommitResultStatus.ERROR)
           .build();
       
     }
@@ -227,7 +227,7 @@ public class CommitBuilderImpl implements CommitBuilder {
                   .append(" but remote has no head.").append("'!")
                   .toString())
               .build())
-          .status(Tenant.CommitResultStatus.ERROR)
+          .status(CommitResultStatus.ERROR)
           .build();
       
     }
@@ -245,7 +245,7 @@ public class CommitBuilderImpl implements CommitBuilder {
                   .append(" is: '").append(state.getCommit().get().getId()).append("'!")
                   .toString())
               .build())
-          .status(Tenant.CommitResultStatus.ERROR)
+          .status(CommitResultStatus.ERROR)
           .build();
     }
     
@@ -264,20 +264,20 @@ public class CommitBuilderImpl implements CommitBuilder {
       return ImmutableCommitResultEnvelope.builder()
           .gid(gid)
           .addMessages(ImmutableMessage.builder().text(text).build())
-          .status(Tenant.CommitResultStatus.ERROR)
+          .status(CommitResultStatus.ERROR)
           .build();
     }
 
     return null;
   }
   
-  private static Tenant.CommitResultStatus visitStatus(BatchStatus src) {
+  private static CommitResultStatus visitStatus(BatchStatus src) {
     if(src == BatchStatus.OK) {
-      return Tenant.CommitResultStatus.OK;
+      return CommitResultStatus.OK;
     } else if(src == BatchStatus.CONFLICT) {
-      return Tenant.CommitResultStatus.CONFLICT;
+      return CommitResultStatus.CONFLICT;
     }
-    return Tenant.CommitResultStatus.ERROR;
+    return CommitResultStatus.ERROR;
     
   }
 }

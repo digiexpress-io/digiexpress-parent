@@ -7,7 +7,7 @@ import io.resys.permission.client.api.model.PermissionCommand.PermissionCommandT
 import io.resys.permission.client.api.model.Principal.Permission;
 import io.resys.thena.api.actions.OrgCommitActions.CreateOneRight;
 import io.resys.thena.api.actions.OrgCommitActions.OneRightEnvelope;
-import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.org.ThenaOrgObject.OrgActorStatusType;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +40,7 @@ public class CreatePermissionActionImpl implements CreatePermissionAction {
   }
 
   public Permission createResponse(OneRightEnvelope response) {
-    if(response.getStatus() != Tenant.CommitResultStatus.OK) {
+    if(response.getStatus() != CommitResultStatus.OK) {
       final var msg = "failed to create permission";
       throw new CreatePermissionException(msg, response);
     }

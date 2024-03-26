@@ -34,7 +34,7 @@ import io.resys.hdes.client.spi.config.PgProfile;
 import io.resys.hdes.client.spi.config.PgTestTemplate;
 import io.resys.thena.api.actions.TenantActions.RepoResult;
 import io.resys.thena.api.actions.TenantActions.RepoStatus;
-import io.resys.thena.api.entities.Tenant.CommitResultStatus;
+import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.Tenant.RepoType;
 import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;

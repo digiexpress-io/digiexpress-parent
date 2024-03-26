@@ -31,5 +31,4 @@ public interface Tenant {
   RepoType getType();
   
   enum RepoType { doc, git, org }
-  enum CommitResultStatus { OK, ERROR, CONFLICT, NO_CHANGES }
 }

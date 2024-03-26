@@ -15,7 +15,7 @@ import io.quarkus.test.junit.TestProfile;
 import io.resys.thena.api.actions.OrgCommitActions.ModType;
 import io.resys.thena.api.actions.TenantActions.RepoResult;
 import io.resys.thena.api.actions.TenantActions.RepoStatus;
-import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.Tenant.RepoType;
 import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMember;
 import io.resys.thena.api.entities.org.ThenaOrgObject.OrgParty;
@@ -184,7 +184,7 @@ super-user
       .message("mod for user")
       .build().await().atMost(Duration.ofMinutes(1))
       .getStatus();
-    Assertions.assertEquals(Tenant.CommitResultStatus.NO_CHANGES, rejectNoChanges);
+    Assertions.assertEquals(CommitResultStatus.NO_CHANGES, rejectNoChanges);
     
     userGroupsAndRoles2 = getClient().org(repo).find().memberHierarchyQuery()
         .get(userId2.getId()).await().atMost(Duration.ofMinutes(1)).getObjects(); 

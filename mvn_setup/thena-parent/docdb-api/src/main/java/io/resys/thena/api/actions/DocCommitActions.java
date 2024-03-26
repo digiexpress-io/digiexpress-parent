@@ -7,7 +7,7 @@ import javax.annotation.Nullable;
 import org.immutables.value.Value;
 
 import io.resys.thena.api.actions.CommitActions.JsonObjectMerge;
-import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.doc.ThenaDocObject.Doc;
 import io.resys.thena.api.entities.doc.ThenaDocObject.DocBranch;
 import io.resys.thena.api.entities.doc.ThenaDocObject.DocCommit;
@@ -152,7 +152,7 @@ public interface DocCommitActions {
     @Nullable Doc getDoc();
     @Nullable DocBranch getBranch();
     @Nullable DocCommit getCommit();
-    Tenant.CommitResultStatus getStatus();
+    CommitResultStatus getStatus();
     List<Message> getMessages();
   }
   @Value.Immutable
@@ -162,7 +162,7 @@ public interface DocCommitActions {
     List<DocBranch> getBranch();
     List<DocCommit> getCommit();
     
-    Tenant.CommitResultStatus getStatus();
+    CommitResultStatus getStatus();
     List<Message> getMessages();
   }
 }

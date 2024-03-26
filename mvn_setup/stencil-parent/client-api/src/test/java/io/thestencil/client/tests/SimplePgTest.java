@@ -31,7 +31,7 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
 import io.resys.thena.api.actions.TenantActions.RepoResult;
 import io.resys.thena.api.actions.TenantActions.RepoStatus;
-import io.resys.thena.api.entities.Tenant.CommitResultStatus;
+import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.Tenant.RepoType;
 import io.thestencil.client.tests.util.PgProfile;
 import io.thestencil.client.tests.util.PgTestTemplate;

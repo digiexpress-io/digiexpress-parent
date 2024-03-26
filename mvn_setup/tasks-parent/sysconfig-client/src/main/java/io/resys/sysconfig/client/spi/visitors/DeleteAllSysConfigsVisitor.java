@@ -34,7 +34,7 @@ import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.api.actions.DocCommitActions.ModifyManyDocBranches;
 import io.resys.thena.api.actions.DocCommitActions.ModifyManyDocs;
 import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
-import io.resys.thena.api.entities.Tenant.CommitResultStatus;
+import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.doc.ThenaDocObjects.DocObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;

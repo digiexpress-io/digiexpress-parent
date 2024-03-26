@@ -27,7 +27,7 @@ import java.util.List;
 
 import io.resys.thena.api.actions.CommitActions.CommitBuilder;
 import io.resys.thena.api.actions.CommitActions.CommitResultEnvelope;
-import io.resys.thena.api.entities.Tenant.CommitResultStatus;
+import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.git.Commit;
 import io.resys.thena.tasks.client.api.model.Task;
 import io.resys.thena.tasks.client.api.model.TaskCommand.CreateTask;

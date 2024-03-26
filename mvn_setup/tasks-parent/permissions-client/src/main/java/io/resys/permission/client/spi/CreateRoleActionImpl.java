@@ -7,7 +7,7 @@ import io.resys.permission.client.api.model.RoleCommand.CreateRole;
 import io.resys.permission.client.api.model.RoleCommand.RoleCommandType;
 import io.resys.thena.api.actions.OrgCommitActions.CreateOneParty;
 import io.resys.thena.api.actions.OrgCommitActions.OnePartyEnvelope;
-import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.org.ThenaOrgObject.OrgActorStatusType;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ public class CreateRoleActionImpl implements CreateRoleAction {
   
   public Role createResponse(OnePartyEnvelope response) {
     
-    if(response.getStatus() != Tenant.CommitResultStatus.OK) {
+    if(response.getStatus() != CommitResultStatus.OK) {
       final var msg = "failed to created role";
       throw new CreateRoleException(msg, response);
     }

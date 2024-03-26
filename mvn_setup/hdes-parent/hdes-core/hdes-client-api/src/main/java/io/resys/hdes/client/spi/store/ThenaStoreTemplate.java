@@ -32,7 +32,7 @@ import io.resys.hdes.client.api.exceptions.StoreException;
 import io.resys.hdes.client.spi.store.ThenaConfig.EntityState;
 import io.resys.hdes.client.spi.util.HdesAssert;
 import io.resys.thena.api.actions.TenantActions.RepoStatus;
-import io.resys.thena.api.entities.Tenant.CommitResultStatus;
+import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.Tenant.RepoType;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.smallrye.mutiny.Uni;

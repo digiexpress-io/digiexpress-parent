@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import io.resys.thena.api.actions.DocCommitActions.AddItemToModifyDoc;
 import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.api.actions.DocCommitActions.ModifyManyDocs;
-import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.doc.ThenaDocObject.DocLock;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.api.actions.ImmutableManyDocsEnvelope;
@@ -160,7 +160,7 @@ public class ModifyManyDocsImpl implements ModifyManyDocs {
                 .append("  - not found: ").append(String.join(",", notFound))
                 .toString())
               .build())
-          .status(Tenant.CommitResultStatus.ERROR)
+          .status(CommitResultStatus.ERROR)
           .build();
       
     }

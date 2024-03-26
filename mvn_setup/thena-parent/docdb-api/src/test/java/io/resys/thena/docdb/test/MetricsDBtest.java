@@ -31,7 +31,7 @@ import io.quarkus.test.junit.TestProfile;
 import io.resys.thena.api.actions.CommitActions.CommitResultEnvelope;
 import io.resys.thena.api.actions.TenantActions.RepoResult;
 import io.resys.thena.api.actions.TenantActions.RepoStatus;
-import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.Tenant.RepoType;
 import io.resys.thena.docdb.test.config.DbTestTemplate;
 import io.resys.thena.docdb.test.config.PgProfile;
@@ -105,7 +105,7 @@ public class MetricsDBtest extends DbTestTemplate {
     CommitResultEnvelope commit_0 = builder.build()
       .onFailure().invoke(e -> e.printStackTrace()).onFailure().recoverWithNull()
       .await().atMost(Duration.ofMinutes(1));
-    Assertions.assertEquals(Tenant.CommitResultStatus.OK, commit_0.getStatus());
+    Assertions.assertEquals(CommitResultStatus.OK, commit_0.getStatus());
     end = System.currentTimeMillis();
     log.debug("total time for inserting: {} entries is: {} millis, loop time: {}", total, end-start, loopTime);
   }

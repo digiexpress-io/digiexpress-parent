@@ -20,7 +20,7 @@ import io.resys.sysconfig.client.spi.store.DocumentStoreException;
 import io.resys.thena.api.actions.DocCommitActions.CreateOneDoc;
 import io.resys.thena.api.actions.DocCommitActions.ModifyOneDocBranch;
 import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
-import io.resys.thena.api.entities.Tenant.CommitResultStatus;
+import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.doc.ThenaDocObject.Doc;
 import io.resys.thena.api.entities.doc.ThenaDocObject.DocBranch;
 import io.resys.thena.api.entities.doc.ThenaDocObject.DocCommit;

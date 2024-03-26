@@ -31,7 +31,7 @@ import io.resys.hdes.client.api.ImmutableStoreState;
 import io.resys.hdes.client.api.exceptions.StoreException;
 import io.resys.hdes.client.spi.store.ThenaConfig.EntityState;
 import io.resys.thena.api.actions.CommitActions.CommitResultEnvelope;
-import io.resys.thena.api.entities.Tenant.CommitResultStatus;
+import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.git.ThenaGitObjects.PullObject;
 import io.resys.thena.api.entities.git.ThenaGitObjects.PullObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;

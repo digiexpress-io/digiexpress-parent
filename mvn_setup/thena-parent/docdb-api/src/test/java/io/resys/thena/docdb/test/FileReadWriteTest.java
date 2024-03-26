@@ -30,7 +30,7 @@ import org.junit.jupiter.api.Test;
 import io.resys.thena.api.actions.CommitActions.CommitResultEnvelope;
 import io.resys.thena.api.actions.TenantActions.RepoResult;
 import io.resys.thena.api.actions.TenantActions.RepoStatus;
-import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.docdb.test.config.FileTestTemplate;
 import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;
@@ -63,7 +63,7 @@ public class FileReadWriteTest extends FileTestTemplate {
       .await().atMost(Duration.ofMinutes(1));
 
     log.debug("created commit {}", commit_0);
-    Assertions.assertEquals(Tenant.CommitResultStatus.OK, commit_0.getStatus());
+    Assertions.assertEquals(CommitResultStatus.OK, commit_0.getStatus());
     
     
     // Create head and first commit
@@ -78,7 +78,7 @@ public class FileReadWriteTest extends FileTestTemplate {
       .await().atMost(Duration.ofMinutes(1));
     
     log.debug("created commit 1 {}", commit_1);
-    Assertions.assertEquals(Tenant.CommitResultStatus.OK, commit_1.getStatus());
+    Assertions.assertEquals(CommitResultStatus.OK, commit_1.getStatus());
     super.printRepo(repo.getRepo());
   }
   
@@ -101,7 +101,7 @@ public class FileReadWriteTest extends FileTestTemplate {
       .await().atMost(Duration.ofMinutes(1));
 
     log.debug("created commit {}", commit_0);
-    Assertions.assertEquals(Tenant.CommitResultStatus.OK, commit_0.getStatus());
+    Assertions.assertEquals(CommitResultStatus.OK, commit_0.getStatus());
     super.printRepo(repo.getRepo());
   }
   
@@ -125,7 +125,7 @@ public class FileReadWriteTest extends FileTestTemplate {
       .await().atMost(Duration.ofMinutes(1));
 
     log.debug("created commit 0 {}", commit_0);
-    Assertions.assertEquals(Tenant.CommitResultStatus.OK, commit_0.getStatus());
+    Assertions.assertEquals(CommitResultStatus.OK, commit_0.getStatus());
     
     
     // Create head and first commit
@@ -142,7 +142,7 @@ public class FileReadWriteTest extends FileTestTemplate {
       .await().atMost(Duration.ofMinutes(1));
     
     log.debug("created commit 1 {}", commit_1);
-    Assertions.assertEquals(Tenant.CommitResultStatus.OK, commit_1.getStatus());
+    Assertions.assertEquals(CommitResultStatus.OK, commit_1.getStatus());
     
     super.printRepo(repo.getRepo());
   }

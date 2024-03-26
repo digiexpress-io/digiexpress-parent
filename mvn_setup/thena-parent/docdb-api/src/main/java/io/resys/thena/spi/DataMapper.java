@@ -1,5 +1,6 @@
 package io.resys.thena.spi;
 
+import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.doc.ThenaDocObject.Doc;
 import io.resys.thena.api.entities.doc.ThenaDocObject.DocBranch;
@@ -38,13 +39,13 @@ public interface DataMapper<T> {
   DocBranchLock docBranchLock(T row);
   
   
-  static Tenant.CommitResultStatus mapStatus(BatchStatus src) {
+  static CommitResultStatus mapStatus(BatchStatus src) {
     if(src == BatchStatus.OK) {
-      return Tenant.CommitResultStatus.OK;
+      return CommitResultStatus.OK;
     } else if(src == BatchStatus.CONFLICT) {
-      return Tenant.CommitResultStatus.CONFLICT;
+      return CommitResultStatus.CONFLICT;
     }
-    return Tenant.CommitResultStatus.ERROR; 
+    return CommitResultStatus.ERROR; 
   }
 
 }

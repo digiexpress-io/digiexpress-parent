@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 
 import io.resys.thena.api.actions.CommitActions.CommitBuilder;
 import io.resys.thena.api.actions.PullActions.PullObjectsQuery;
-import io.resys.thena.api.entities.Tenant.CommitResultStatus;
+import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.git.ThenaGitObjects.PullObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;

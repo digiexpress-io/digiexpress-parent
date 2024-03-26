@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
 import org.immutables.value.Value;
 
 import io.resys.thena.api.actions.PullActions.MatchCriteria;
-import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.git.Commit;
 import io.resys.thena.api.entities.git.ThenaGitObjects.CommitObjects;
 import io.resys.thena.api.entities.git.Tree;
@@ -75,7 +75,7 @@ public interface CommitActions {
     String getGid(); // repo/head
     @Nullable
     Commit getCommit();
-    Tenant.CommitResultStatus getStatus();
+    CommitResultStatus getStatus();
     List<Message> getMessages();
   }
 }

@@ -15,7 +15,7 @@ import io.resys.permission.client.api.model.RoleCommand.RoleUpdateCommand;
 import io.resys.thena.api.actions.OrgCommitActions.ModType;
 import io.resys.thena.api.actions.OrgCommitActions.ModifyOneParty;
 import io.resys.thena.api.actions.OrgCommitActions.OnePartyEnvelope;
-import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.org.ThenaOrgObject.OrgActorStatusType;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
@@ -92,7 +92,7 @@ public class UpdateRoleActionImpl implements UpdateRoleAction {
   
   
   public Role createResponse(String id, OnePartyEnvelope response) {
-    if(response.getStatus() != Tenant.CommitResultStatus.OK) {
+    if(response.getStatus() != CommitResultStatus.OK) {
       final var msg = "failed to update role by id ='%s'!".formatted(id);
       throw new UpdateRoleException(msg, response);
     }

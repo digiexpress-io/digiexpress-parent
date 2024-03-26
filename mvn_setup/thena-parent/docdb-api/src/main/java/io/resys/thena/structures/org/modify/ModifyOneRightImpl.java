@@ -11,7 +11,7 @@ import io.resys.thena.api.actions.OrgCommitActions.ModType;
 import io.resys.thena.api.actions.OrgCommitActions.ModifyOneParty;
 import io.resys.thena.api.actions.OrgCommitActions.ModifyOneRight;
 import io.resys.thena.api.actions.OrgCommitActions.OneRightEnvelope;
-import io.resys.thena.api.entities.Tenant.CommitResultStatus;
+import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.org.ThenaOrgObject.OrgActorStatus;
 import io.resys.thena.api.entities.org.ThenaOrgObject.OrgActorStatusType;
 import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMember;

@@ -13,7 +13,7 @@ import java.util.Map;
 import io.resys.thena.api.actions.ImmutableOneMemberEnvelope;
 import io.resys.thena.api.actions.OrgCommitActions.CreateOneMember;
 import io.resys.thena.api.actions.OrgCommitActions.OneMemberEnvelope;
-import io.resys.thena.api.entities.Tenant.CommitResultStatus;
+import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.org.ThenaOrgObject.OrgParty;
 import io.resys.thena.api.entities.org.ThenaOrgObject.OrgRight;
 import io.resys.thena.api.envelope.ImmutableMessage;

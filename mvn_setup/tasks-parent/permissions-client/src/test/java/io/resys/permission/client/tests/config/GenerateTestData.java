@@ -12,8 +12,8 @@ import org.junit.jupiter.api.Assertions;
 
 import io.resys.thena.api.ThenaClient;
 import io.resys.thena.api.actions.OrgCommitActions.ModType;
+import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.api.entities.Tenant.CommitResultStatus;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;

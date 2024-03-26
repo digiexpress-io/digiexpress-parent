@@ -9,7 +9,7 @@ import java.util.Optional;
 
 import io.resys.thena.api.actions.DocCommitActions.CreateOneDocBranch;
 import io.resys.thena.api.actions.DocCommitActions.OneDocEnvelope;
-import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.doc.ImmutableDocBranch;
 import io.resys.thena.api.entities.doc.ImmutableDocCommit;
 import io.resys.thena.api.entities.doc.ImmutableDocLog;
@@ -96,7 +96,7 @@ public class CreateOneDocBranchImpl implements CreateOneDocBranch {
                   .append(" Unknown branchId: '").append(branchFrom).append("'!")
                   .toString())
               .build())
-          .status(Tenant.CommitResultStatus.ERROR)
+          .status(CommitResultStatus.ERROR)
           .build();
       
     }
