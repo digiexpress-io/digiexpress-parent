@@ -1,11 +1,11 @@
 package io.resys.thena.storesql;
 
-import io.resys.thena.models.doc.DocQueries;
 import io.resys.thena.storesql.GitDbQueriesSqlImpl.ClientQuerySqlContext;
 import io.resys.thena.storesql.builders.DocBranchQuerySqlPool;
 import io.resys.thena.storesql.builders.DocCommitQuerySqlPool;
 import io.resys.thena.storesql.builders.DocLogQuerySqlPool;
 import io.resys.thena.storesql.builders.DocQuerySqlPool;
+import io.resys.thena.structures.doc.DocQueries;
 import lombok.RequiredArgsConstructor;
 
 

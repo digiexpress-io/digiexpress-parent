@@ -15,7 +15,7 @@ import io.resys.thena.api.models.ThenaGitObject.CommitTree;
 import io.resys.thena.api.models.ThenaGitObject.Tag;
 import io.resys.thena.api.models.ThenaGitObject.Tree;
 import io.resys.thena.api.models.ThenaGitObject.TreeValue;
-import io.resys.thena.models.git.GitInserts.BatchStatus;
+import io.resys.thena.structures.git.GitInserts.BatchStatus;
 import io.vertx.mutiny.sqlclient.Row;
 
 public interface DataMapper<T> {

@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import io.resys.thena.api.models.ThenaDocObject.DocBranch;
-import io.resys.thena.models.doc.DocQueries.DocBranchLockCriteria;
-import io.resys.thena.models.doc.DocQueries.DocLockCriteria;
 import io.resys.thena.spi.DbCollections;
 import io.resys.thena.storesql.ImmutableSql;
 import io.resys.thena.storesql.ImmutableSqlTuple;
@@ -17,6 +15,8 @@ import io.resys.thena.storesql.SqlBuilder.Sql;
 import io.resys.thena.storesql.SqlBuilder.SqlTuple;
 import io.resys.thena.storesql.SqlBuilder.SqlTupleList;
 import io.resys.thena.storesql.support.SqlStatement;
+import io.resys.thena.structures.doc.DocQueries.DocBranchLockCriteria;
+import io.resys.thena.structures.doc.DocQueries.DocLockCriteria;
 import io.vertx.mutiny.sqlclient.Tuple;
 import lombok.RequiredArgsConstructor;
 

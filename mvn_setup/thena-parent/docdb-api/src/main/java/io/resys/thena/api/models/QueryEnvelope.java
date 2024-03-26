@@ -36,7 +36,7 @@ import io.resys.thena.api.models.ImmutableQueryEnvelope;
 import io.resys.thena.api.models.ImmutableQueryEnvelopeList;
 import io.resys.thena.api.models.ThenaEnvelope.ThenaObjects;
 import io.resys.thena.api.models.ThenaGitObject.Commit;
-import io.resys.thena.models.git.objects.PullObjectsQueryImpl.BlobAndTree;
+import io.resys.thena.structures.git.objects.PullObjectsQueryImpl.BlobAndTree;
 
 
 @Value.Immutable

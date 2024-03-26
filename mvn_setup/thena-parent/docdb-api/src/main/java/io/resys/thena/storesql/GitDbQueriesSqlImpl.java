@@ -2,7 +2,6 @@ package io.resys.thena.storesql;
 
 import org.immutables.value.Value;
 
-import io.resys.thena.models.git.GitQueries;
 import io.resys.thena.storesql.builders.GitBlobHistoryQuerySqlPool;
 import io.resys.thena.storesql.builders.GitBlobQuerySqlPool;
 import io.resys.thena.storesql.builders.GitCommitQuerySqlPool;
@@ -10,6 +9,7 @@ import io.resys.thena.storesql.builders.GitRefQuerySqlPool;
 import io.resys.thena.storesql.builders.GitTagQuerySqlPool;
 import io.resys.thena.storesql.builders.GitTreeQuerySqlPool;
 import io.resys.thena.storesql.support.SqlClientWrapper;
+import io.resys.thena.structures.git.GitQueries;
 import io.resys.thena.support.ErrorHandler;
 import lombok.RequiredArgsConstructor;
 

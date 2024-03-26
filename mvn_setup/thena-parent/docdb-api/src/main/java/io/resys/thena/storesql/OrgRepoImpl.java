@@ -23,14 +23,14 @@ package io.resys.thena.storesql;
 import java.util.function.Function;
 
 import io.resys.thena.api.models.Repo;
-import io.resys.thena.models.org.OrgInserts;
-import io.resys.thena.models.org.OrgQueries;
-import io.resys.thena.models.org.OrgState.OrgRepo;
 import io.resys.thena.spi.DbCollections;
 import io.resys.thena.storesql.ImmutableClientQuerySqlContext;
 import io.resys.thena.storesql.GitDbQueriesSqlImpl.ClientQuerySqlContext;
 import io.resys.thena.storesql.builders.OrgDbInsertsSqlPool;
 import io.resys.thena.storesql.support.ImmutableSqlClientWrapper;
+import io.resys.thena.structures.org.OrgInserts;
+import io.resys.thena.structures.org.OrgQueries;
+import io.resys.thena.structures.org.OrgState.OrgRepo;
 import io.resys.thena.support.ErrorHandler;
 import lombok.RequiredArgsConstructor;
 

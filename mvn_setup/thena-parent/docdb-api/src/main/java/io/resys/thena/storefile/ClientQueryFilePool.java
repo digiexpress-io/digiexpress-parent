@@ -1,6 +1,5 @@
 package io.resys.thena.storefile;
 
-import io.resys.thena.models.git.GitQueries;
 import io.resys.thena.storefile.queries.BlobHistoryFilePool;
 import io.resys.thena.storefile.queries.BlobQueryFilePool;
 import io.resys.thena.storefile.queries.CommitQueryFilePool;
@@ -9,6 +8,7 @@ import io.resys.thena.storefile.queries.TagQueryFilePool;
 import io.resys.thena.storefile.queries.TreeQueryFilePool;
 import io.resys.thena.storefile.tables.Table.FileClientWrapper;
 import io.resys.thena.storefile.tables.Table.FileMapper;
+import io.resys.thena.structures.git.GitQueries;
 import io.resys.thena.support.ErrorHandler;
 import lombok.RequiredArgsConstructor;
 

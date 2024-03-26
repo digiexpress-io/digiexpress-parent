@@ -23,14 +23,14 @@ package io.resys.thena.storesql;
 import java.util.function.Function;
 
 import io.resys.thena.api.models.Repo;
-import io.resys.thena.models.doc.DocInserts;
-import io.resys.thena.models.doc.DocQueries;
-import io.resys.thena.models.doc.DocState.DocRepo;
 import io.resys.thena.spi.DbCollections;
 import io.resys.thena.storesql.ImmutableClientQuerySqlContext;
 import io.resys.thena.storesql.GitDbQueriesSqlImpl.ClientQuerySqlContext;
 import io.resys.thena.storesql.builders.DocDbInsertsSqlPool;
 import io.resys.thena.storesql.support.ImmutableSqlClientWrapper;
+import io.resys.thena.structures.doc.DocInserts;
+import io.resys.thena.structures.doc.DocQueries;
+import io.resys.thena.structures.doc.DocState.DocRepo;
 import io.resys.thena.support.ErrorHandler;
 import lombok.RequiredArgsConstructor;
 

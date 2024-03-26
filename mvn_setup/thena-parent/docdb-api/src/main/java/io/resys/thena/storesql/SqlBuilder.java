@@ -49,11 +49,11 @@ import io.resys.thena.api.models.ThenaOrgObject.OrgMembership;
 import io.resys.thena.api.models.ThenaOrgObject.OrgParty;
 import io.resys.thena.api.models.ThenaOrgObject.OrgPartyRight;
 import io.resys.thena.api.models.ThenaOrgObject.OrgRight;
-import io.resys.thena.models.doc.DocQueries.DocBranchLockCriteria;
-import io.resys.thena.models.doc.DocQueries.DocLockCriteria;
-import io.resys.thena.models.doc.DocQueries.FlattedCriteria;
-import io.resys.thena.models.git.GitQueries.LockCriteria;
 import io.resys.thena.spi.DbCollections;
+import io.resys.thena.structures.doc.DocQueries.DocBranchLockCriteria;
+import io.resys.thena.structures.doc.DocQueries.DocLockCriteria;
+import io.resys.thena.structures.doc.DocQueries.FlattedCriteria;
+import io.resys.thena.structures.git.GitQueries.LockCriteria;
 import io.vertx.mutiny.sqlclient.Tuple;
 
 public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {

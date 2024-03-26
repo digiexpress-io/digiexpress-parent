@@ -5,14 +5,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import io.resys.thena.api.models.ImmutableMessage;
-import io.resys.thena.models.doc.DocInserts;
-import io.resys.thena.models.doc.ImmutableDocBatchForMany;
-import io.resys.thena.models.doc.ImmutableDocBatchForOne;
-import io.resys.thena.models.git.GitInserts.BatchStatus;
 import io.resys.thena.storesql.SqlBuilder;
 import io.resys.thena.storesql.SqlMapper;
 import io.resys.thena.storesql.support.Execute;
 import io.resys.thena.storesql.support.SqlClientWrapper;
+import io.resys.thena.structures.doc.DocInserts;
+import io.resys.thena.structures.doc.ImmutableDocBatchForMany;
+import io.resys.thena.structures.doc.ImmutableDocBatchForOne;
+import io.resys.thena.structures.git.GitInserts.BatchStatus;
 import io.resys.thena.support.ErrorHandler;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;

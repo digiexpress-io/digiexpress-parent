@@ -40,12 +40,12 @@ import io.resys.thena.api.actions.TenantActions.RepoResult;
 import io.resys.thena.api.models.Repo;
 import io.resys.thena.api.models.Repo.RepoType;
 import io.resys.thena.jackson.VertexExtModule;
-import io.resys.thena.models.git.GitPrinter;
 import io.resys.thena.spi.DbCollections;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.storefile.DocDBFactoryFile;
 import io.resys.thena.storefile.FileErrors;
 import io.resys.thena.storefile.spi.FilePoolImpl;
+import io.resys.thena.structures.git.GitPrinter;
 import io.vertx.core.json.jackson.VertxModule;
 import lombok.extern.slf4j.Slf4j;
 

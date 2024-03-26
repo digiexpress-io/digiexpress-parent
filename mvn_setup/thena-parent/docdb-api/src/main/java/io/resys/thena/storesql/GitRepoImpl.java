@@ -23,14 +23,14 @@ package io.resys.thena.storesql;
 import java.util.function.Function;
 
 import io.resys.thena.api.models.Repo;
-import io.resys.thena.models.git.GitInserts;
-import io.resys.thena.models.git.GitQueries;
-import io.resys.thena.models.git.GitState.GitRepo;
 import io.resys.thena.spi.DbCollections;
 import io.resys.thena.storesql.ImmutableClientQuerySqlContext;
 import io.resys.thena.storesql.GitDbQueriesSqlImpl.ClientQuerySqlContext;
 import io.resys.thena.storesql.builders.GitDbInsertsSqlPool;
 import io.resys.thena.storesql.support.ImmutableSqlClientWrapper;
+import io.resys.thena.structures.git.GitInserts;
+import io.resys.thena.structures.git.GitQueries;
+import io.resys.thena.structures.git.GitState.GitRepo;
 import io.resys.thena.support.ErrorHandler;
 import lombok.RequiredArgsConstructor;
 

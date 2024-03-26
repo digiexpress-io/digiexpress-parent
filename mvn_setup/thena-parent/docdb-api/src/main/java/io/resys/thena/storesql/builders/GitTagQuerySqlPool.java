@@ -2,12 +2,12 @@ package io.resys.thena.storesql.builders;
 
 import io.resys.thena.api.LogConstants;
 import io.resys.thena.api.models.ThenaGitObject.Tag;
-import io.resys.thena.models.git.ImmutableDeleteResult;
-import io.resys.thena.models.git.GitQueries.DeleteResult;
-import io.resys.thena.models.git.GitQueries.GitTagQuery;
 import io.resys.thena.storesql.SqlBuilder;
 import io.resys.thena.storesql.SqlMapper;
 import io.resys.thena.storesql.support.SqlClientWrapper;
+import io.resys.thena.structures.git.GitQueries.DeleteResult;
+import io.resys.thena.structures.git.GitQueries.GitTagQuery;
+import io.resys.thena.structures.git.ImmutableDeleteResult;
 import io.resys.thena.support.ErrorHandler;
 import io.resys.thena.support.ErrorHandler.SqlFailed;
 import io.resys.thena.support.ErrorHandler.SqlTupleFailed;

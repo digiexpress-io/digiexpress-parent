@@ -2,10 +2,10 @@ package io.resys.thena.storesql.builders;
 
 import io.resys.thena.api.LogConstants;
 import io.resys.thena.api.models.ThenaOrgObject.OrgActorStatus;
-import io.resys.thena.models.org.OrgQueries;
 import io.resys.thena.storesql.SqlBuilder;
 import io.resys.thena.storesql.SqlMapper;
 import io.resys.thena.storesql.support.SqlClientWrapper;
+import io.resys.thena.structures.org.OrgQueries;
 import io.resys.thena.support.ErrorHandler;
 import io.resys.thena.support.ErrorHandler.SqlFailed;
 import io.resys.thena.support.ErrorHandler.SqlTupleFailed;

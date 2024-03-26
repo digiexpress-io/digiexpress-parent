@@ -26,7 +26,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import io.resys.thena.api.models.ThenaGitObject.Commit;
-import io.resys.thena.models.git.GitQueries.LockCriteria;
 import io.resys.thena.spi.DbCollections;
 import io.resys.thena.storesql.ImmutableSql;
 import io.resys.thena.storesql.ImmutableSqlTuple;
@@ -34,6 +33,7 @@ import io.resys.thena.storesql.SqlBuilder.GitCommitSqlBuilder;
 import io.resys.thena.storesql.SqlBuilder.Sql;
 import io.resys.thena.storesql.SqlBuilder.SqlTuple;
 import io.resys.thena.storesql.support.SqlStatement;
+import io.resys.thena.structures.git.GitQueries.LockCriteria;
 import io.vertx.mutiny.sqlclient.Tuple;
 import lombok.RequiredArgsConstructor;
 

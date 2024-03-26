@@ -36,8 +36,8 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.resys.thena.jackson.VertexExtModule;
-import io.resys.thena.models.git.GitPrinter;
 import io.resys.thena.spi.ThenaClientPgSql;
+import io.resys.thena.structures.git.GitPrinter;
 import io.resys.thena.tasks.client.api.TaskClient;
 import io.resys.thena.tasks.client.api.model.Document.DocumentType;
 import io.resys.thena.tasks.client.spi.DocumentStoreImpl;

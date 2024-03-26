@@ -17,11 +17,11 @@ import io.dialob.client.spi.DialobStoreTemplate;
 import io.dialob.client.spi.support.RepositoryToStaticData;
 import io.resys.thena.api.ThenaClient;
 import io.resys.thena.api.models.Repo;
-import io.resys.thena.models.git.GitPrinter;
 import io.resys.thena.spi.DbCollections;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.storesql.DbStateSqlImpl;
 import io.resys.thena.storesql.PgErrors;
+import io.resys.thena.structures.git.GitPrinter;
 import io.vertx.core.VertxOptions;
 import io.vertx.mutiny.sqlclient.Pool;
 

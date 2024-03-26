@@ -1,6 +1,5 @@
 package io.resys.thena.storesql;
 
-import io.resys.thena.models.org.OrgQueries;
 import io.resys.thena.storesql.GitDbQueriesSqlImpl.ClientQuerySqlContext;
 import io.resys.thena.storesql.builders.OrgActorStatusQuerySqlPool;
 import io.resys.thena.storesql.builders.OrgGroupQuerySqlPool;
@@ -9,6 +8,7 @@ import io.resys.thena.storesql.builders.OrgRoleQuerySqlPool;
 import io.resys.thena.storesql.builders.OrgUserMembershipsQuerySqlPool;
 import io.resys.thena.storesql.builders.OrgUserQuerySqlPool;
 import io.resys.thena.storesql.builders.OrgUserRoleQuerySqlPool;
+import io.resys.thena.structures.org.OrgQueries;
 import lombok.RequiredArgsConstructor;
 
 

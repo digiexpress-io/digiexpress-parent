@@ -7,13 +7,13 @@ import java.util.function.Predicate;
 
 import io.resys.thena.api.models.ImmutableMessage;
 import io.resys.thena.api.models.ThenaOrgObject.IsOrgObject;
-import io.resys.thena.models.git.GitInserts.BatchStatus;
-import io.resys.thena.models.org.ImmutableOrgBatchForOne;
-import io.resys.thena.models.org.OrgInserts;
 import io.resys.thena.storesql.SqlBuilder;
 import io.resys.thena.storesql.SqlMapper;
 import io.resys.thena.storesql.support.Execute;
 import io.resys.thena.storesql.support.SqlClientWrapper;
+import io.resys.thena.structures.git.GitInserts.BatchStatus;
+import io.resys.thena.structures.org.ImmutableOrgBatchForOne;
+import io.resys.thena.structures.org.OrgInserts;
 import io.resys.thena.support.ErrorHandler;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
