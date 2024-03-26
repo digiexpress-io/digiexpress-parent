@@ -30,16 +30,6 @@ public interface Repo {
   String getName();
   RepoType getType();
   
-  @Value.Immutable
-  public interface RepoHeadState {
-    String getGid(); // GID
-    String getRepoId();
-    String getHeadName();
-    String getCommit();
-    HeadStateKind getKind();
-  }
-
   enum RepoType { doc, git, org }
-  enum HeadStateKind { ahead, behind, same }
   enum CommitResultStatus { OK, ERROR, CONFLICT, NO_CHANGES }
 }
