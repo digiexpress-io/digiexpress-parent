@@ -17,7 +17,6 @@ import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMembership;
 import io.resys.thena.api.entities.org.ThenaOrgObject.OrgParty;
 import io.resys.thena.api.entities.org.ThenaOrgObject.OrgPartyRight;
 import io.resys.thena.api.entities.org.ThenaOrgObject.OrgRight;
-import io.resys.thena.api.models.ThenaEnvelope;
 import io.resys.thena.api.models.ThenaEnvelope.ThenaObjects;
 
 public interface ThenaOrgObjects extends ThenaObjects {
