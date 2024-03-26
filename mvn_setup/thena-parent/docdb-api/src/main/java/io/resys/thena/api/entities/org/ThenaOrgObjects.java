@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 
 import org.immutables.value.Value;
 
+import io.resys.thena.api.entities.ThenaObjects;
 import io.resys.thena.api.entities.org.ThenaOrgObject.OrgActorData;
 import io.resys.thena.api.entities.org.ThenaOrgObject.OrgActorStatus;
 import io.resys.thena.api.entities.org.ThenaOrgObject.OrgActorStatusType;
@@ -17,7 +18,6 @@ import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMembership;
 import io.resys.thena.api.entities.org.ThenaOrgObject.OrgParty;
 import io.resys.thena.api.entities.org.ThenaOrgObject.OrgPartyRight;
 import io.resys.thena.api.entities.org.ThenaOrgObject.OrgRight;
-import io.resys.thena.api.envelope.ThenaEnvelope.ThenaObjects;
 
 public interface ThenaOrgObjects extends ThenaObjects {
   

@@ -1,6 +1,6 @@
 package io.resys.thena.structures.org.anytree;
 
-import io.resys.thena.api.visitors.OrgTreeContainer;
+import io.resys.thena.api.envelope.OrgTreeContainer;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.ThenaObjects;
 import io.resys.thena.api.entities.doc.ImmutableDoc;
 import io.resys.thena.api.entities.doc.ImmutableDocBranch;
 import io.resys.thena.api.entities.doc.ImmutableDocCommit;
@@ -24,7 +25,6 @@ import io.resys.thena.api.entities.doc.ThenaDocObjects.DocObject;
 import io.resys.thena.api.entities.doc.ThenaDocObjects.DocObjects;
 import io.resys.thena.api.envelope.ImmutableQueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope;
-import io.resys.thena.api.envelope.ThenaEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.DocNotFoundException;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.spi.DbState;
@@ -213,14 +213,14 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
     .build();
   }
   
-  private <T extends ThenaEnvelope.ThenaObjects> QueryEnvelope<T> docNotFound(Tenant existing, DocNotFoundException ex) {
+  private <T extends ThenaObjects> QueryEnvelope<T> docNotFound(Tenant existing, DocNotFoundException ex) {
     final var msg = new StringBuilder()
       .append("Document not found by given id, from repo: '").append(existing.getId()).append("'!")
       .toString();
     return QueryEnvelope.docNotFound(existing, log, msg, ex);
   }
   
-  private <T extends ThenaEnvelope.ThenaObjects> QueryEnvelope<T> docUnexpected(Tenant existing, Set<String> unexpected) {
+  private <T extends ThenaObjects> QueryEnvelope<T> docUnexpected(Tenant existing, Set<String> unexpected) {
     final var msg = new StringBuilder()
       .append("Expecting: '1' document, but found: '").append(unexpected.size()).append("'")
       .append(", from repo: '").append(existing.getId()).append("'!")

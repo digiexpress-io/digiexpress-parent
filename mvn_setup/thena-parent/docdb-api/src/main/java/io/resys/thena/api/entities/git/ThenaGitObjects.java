@@ -27,10 +27,10 @@ import java.util.stream.Collectors;
 import org.immutables.value.Value;
 
 import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.ThenaObjects;
 import io.resys.thena.api.entities.git.GitEntity.IsGitObject;
 import io.resys.thena.api.envelope.BlobContainer;
 import io.resys.thena.api.envelope.BlobContainer.BlobVisitor;
-import io.resys.thena.api.envelope.ThenaEnvelope.ThenaObjects;
 
 public interface ThenaGitObjects extends ThenaObjects { 
   @Value.Immutable

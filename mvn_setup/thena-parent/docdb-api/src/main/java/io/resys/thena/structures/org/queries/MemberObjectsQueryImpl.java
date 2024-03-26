@@ -4,12 +4,12 @@ import java.util.List;
 
 import io.resys.thena.api.actions.OrgQueryActions.MemberObjectsQuery;
 import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.ThenaObjects;
 import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMember;
 import io.resys.thena.api.envelope.ImmutableQueryEnvelope;
 import io.resys.thena.api.envelope.ImmutableQueryEnvelopeList;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelopeList;
-import io.resys.thena.api.envelope.ThenaEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.DocNotFoundException;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.spi.DbState;
@@ -75,7 +75,7 @@ public class MemberObjectsQueryImpl implements MemberObjectsQuery {
         .build());
   }
 
-  private <T extends ThenaEnvelope.ThenaObjects> QueryEnvelope<T> docNotFound(Tenant existing, String userId, DocNotFoundException ex) {
+  private <T extends ThenaObjects> QueryEnvelope<T> docNotFound(Tenant existing, String userId, DocNotFoundException ex) {
     final var msg = new StringBuilder()
         .append("User not found by given id = '").append(userId).append("', from repo: '").append(existing.getId()).append("'!")
         .toString();

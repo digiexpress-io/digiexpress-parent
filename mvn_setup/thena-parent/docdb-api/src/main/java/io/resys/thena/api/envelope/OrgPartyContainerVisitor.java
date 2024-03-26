@@ -1,4 +1,4 @@
-package io.resys.thena.api.visitors;
+package io.resys.thena.api.envelope;
 
 import java.util.Collections;
 import java.util.List;
@@ -11,8 +11,8 @@ import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMembership;
 import io.resys.thena.api.entities.org.ThenaOrgObject.OrgParty;
 import io.resys.thena.api.entities.org.ThenaOrgObject.OrgPartyRight;
 import io.resys.thena.api.entities.org.ThenaOrgObject.OrgRight;
-import io.resys.thena.api.visitors.OrgTreeContainer.OrgAnyTreeContainerContext;
-import io.resys.thena.api.visitors.OrgTreeContainer.OrgAnyTreeContainerVisitor;
+import io.resys.thena.api.envelope.OrgTreeContainer.OrgAnyTreeContainerContext;
+import io.resys.thena.api.envelope.OrgTreeContainer.OrgAnyTreeContainerVisitor;
 
 
 public abstract class OrgPartyContainerVisitor<T> implements OrgAnyTreeContainerVisitor<T> {

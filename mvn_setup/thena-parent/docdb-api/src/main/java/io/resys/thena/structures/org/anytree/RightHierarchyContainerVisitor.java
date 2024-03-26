@@ -17,9 +17,9 @@ import io.resys.thena.api.entities.org.ThenaOrgObject.OrgParty;
 import io.resys.thena.api.entities.org.ThenaOrgObject.OrgPartyRight;
 import io.resys.thena.api.entities.org.ThenaOrgObject.OrgRight;
 import io.resys.thena.api.entities.org.ThenaOrgObjects.OrgRightHierarchy;
-import io.resys.thena.api.visitors.OrgPartyContainerVisitor;
-import io.resys.thena.api.visitors.OrgTreeContainer.OrgAnyTreeContainerContext;
-import io.resys.thena.api.visitors.OrgTreeContainer.OrgAnyTreeContainerVisitor;
+import io.resys.thena.api.envelope.OrgPartyContainerVisitor;
+import io.resys.thena.api.envelope.OrgTreeContainer.OrgAnyTreeContainerContext;
+import io.resys.thena.api.envelope.OrgTreeContainer.OrgAnyTreeContainerVisitor;
 import lombok.RequiredArgsConstructor;
 
 

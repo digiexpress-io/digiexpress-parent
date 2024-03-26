@@ -19,7 +19,7 @@ import io.resys.thena.api.entities.org.ThenaOrgObject.OrgParty;
 import io.resys.thena.api.entities.org.ThenaOrgObject.OrgPartyRight;
 import io.resys.thena.api.entities.org.ThenaOrgObject.OrgRight;
 import io.resys.thena.api.entities.org.ThenaOrgObjects.OrgProjectObjects;
-import io.resys.thena.api.visitors.OrgTreeContainer.OrgAnyTreeContainerContext;
+import io.resys.thena.api.envelope.OrgTreeContainer.OrgAnyTreeContainerContext;
 
 public class AnyTreeContainerContextImpl implements OrgAnyTreeContainerContext {
   

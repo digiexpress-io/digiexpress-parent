@@ -1,4 +1,4 @@
-package io.resys.thena.api.visitors;
+package io.resys.thena.api.envelope;
 
 import java.util.Collection;
 import java.util.List;

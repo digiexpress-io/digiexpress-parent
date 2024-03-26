@@ -7,12 +7,12 @@ import java.util.Map;
 
 import org.immutables.value.Value;
 
+import io.resys.thena.api.entities.ThenaObjects;
 import io.resys.thena.api.entities.doc.ThenaDocObject.Doc;
 import io.resys.thena.api.entities.doc.ThenaDocObject.DocBranch;
 import io.resys.thena.api.entities.doc.ThenaDocObject.DocCommit;
 import io.resys.thena.api.entities.doc.ThenaDocObject.DocLog;
 import io.resys.thena.api.entities.doc.ThenaDocObject.IsDocObject;
-import io.resys.thena.api.envelope.ThenaEnvelope.ThenaObjects;
 
 public interface ThenaDocObjects extends ThenaObjects {
   

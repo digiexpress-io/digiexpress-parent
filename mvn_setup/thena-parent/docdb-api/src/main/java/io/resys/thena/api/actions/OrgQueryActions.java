@@ -1,13 +1,13 @@
 package io.resys.thena.api.actions;
 
+import io.resys.thena.api.entities.ThenaObjects;
 import io.resys.thena.api.entities.org.ThenaOrgObject.OrgMember;
 import io.resys.thena.api.entities.org.ThenaOrgObjects.OrgMemberHierarchy;
 import io.resys.thena.api.entities.org.ThenaOrgObjects.OrgPartyHierarchy;
 import io.resys.thena.api.entities.org.ThenaOrgObjects.OrgRightHierarchy;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelopeList;
-import io.resys.thena.api.envelope.ThenaEnvelope.ThenaObjects;
-import io.resys.thena.api.visitors.OrgTreeContainer.OrgAnyTreeContainerVisitor;
+import io.resys.thena.api.envelope.OrgTreeContainer.OrgAnyTreeContainerVisitor;
 import io.smallrye.mutiny.Uni;
 
 public interface OrgQueryActions {
