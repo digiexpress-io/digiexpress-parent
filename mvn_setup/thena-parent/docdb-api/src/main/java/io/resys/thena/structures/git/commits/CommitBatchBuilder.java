@@ -28,7 +28,7 @@ import java.util.Optional;
 
 import org.immutables.value.Value;
 
-import io.resys.thena.api.actions.CommitActions.JsonObjectMerge;
+import io.resys.thena.api.actions.GitCommitActions.JsonObjectMerge;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.git.Blob;
 import io.resys.thena.api.entities.git.Branch;

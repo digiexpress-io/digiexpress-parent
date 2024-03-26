@@ -30,10 +30,11 @@ import io.resys.hdes.client.api.ImmutableStoreExceptionMsg;
 import io.resys.hdes.client.api.ImmutableStoreState;
 import io.resys.hdes.client.api.exceptions.StoreException;
 import io.resys.hdes.client.spi.store.ThenaConfig.EntityState;
-import io.resys.thena.api.actions.CommitActions.CommitResultEnvelope;
+import io.resys.thena.api.actions.GitCommitActions.CommitResultEnvelope;
+import io.resys.thena.api.actions.GitPullActions;
+import io.resys.thena.api.actions.GitPullActions.PullObject;
+import io.resys.thena.api.actions.GitPullActions.PullObjects;
 import io.resys.thena.api.entities.CommitResultStatus;
-import io.resys.thena.api.entities.git.ThenaGitObjects.PullObject;
-import io.resys.thena.api.entities.git.ThenaGitObjects.PullObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.smallrye.mutiny.Uni;
@@ -171,13 +172,13 @@ public class PersistenceCommands implements ThenaConfig.Commands {
         .build();
   }
 
-  protected StoreExceptionMsg convertMessages1(QueryEnvelope<PullObject> state) {
+  protected StoreExceptionMsg convertMessages1(QueryEnvelope<GitPullActions.PullObject> state) {
     return ImmutableStoreExceptionMsg.builder()
         .id("STORE_STATE_ERROR").value("")
         .addAllArgs(state.getMessages().stream().map(message-> message.getText()).collect(Collectors.toList()))
         .build();
   }
-  protected StoreExceptionMsg convertMessages2(QueryEnvelope<PullObjects> state) {
+  protected StoreExceptionMsg convertMessages2(QueryEnvelope<GitPullActions.PullObjects> state) {
     return ImmutableStoreExceptionMsg.builder()
         .id("STORE_STATE_ERROR").value("")
         .addAllArgs(state.getMessages().stream().map(message-> message.getText()).collect(Collectors.toList()))

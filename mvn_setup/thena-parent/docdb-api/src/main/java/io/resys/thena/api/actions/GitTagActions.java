@@ -33,7 +33,7 @@ import io.resys.thena.api.envelope.ThenaEnvelope;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 
-public interface TagActions {
+public interface GitTagActions {
 
   TagBuilder tagBuilder();
   TagQuery tagQuery();

@@ -27,7 +27,7 @@ import org.immutables.value.Value;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import io.resys.thena.api.actions.CommitActions.CommitResultEnvelope;
+import io.resys.thena.api.actions.GitCommitActions.CommitResultEnvelope;
 import io.resys.thena.api.actions.TenantActions.RepoResult;
 import io.resys.thena.api.actions.TenantActions.RepoStatus;
 import io.resys.thena.api.entities.CommitResultStatus;

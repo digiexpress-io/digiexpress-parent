@@ -1,21 +1,28 @@
 package io.resys.thena.api;
 
-import io.resys.thena.api.actions.BranchActions;
-import io.resys.thena.api.actions.CommitActions;
-import io.resys.thena.api.actions.DiffActions;
+import java.util.Map;
+
+import org.immutables.value.Value;
+
+import io.resys.thena.api.actions.GitBranchActions;
+import io.resys.thena.api.actions.GitCommitActions;
+import io.resys.thena.api.actions.GitDiffActions;
 import io.resys.thena.api.actions.DocCommitActions;
 import io.resys.thena.api.actions.DocQueryActions;
-import io.resys.thena.api.actions.HistoryActions;
+import io.resys.thena.api.actions.GitHistoryActions;
 import io.resys.thena.api.actions.OrgCommitActions;
 import io.resys.thena.api.actions.OrgHistoryActions;
 import io.resys.thena.api.actions.OrgQueryActions;
-import io.resys.thena.api.actions.PullActions;
-import io.resys.thena.api.actions.TagActions;
+import io.resys.thena.api.actions.GitPullActions;
+import io.resys.thena.api.actions.GitTagActions;
 import io.resys.thena.api.actions.TenantActions;
 import io.resys.thena.api.actions.TenantActions.RepoResult;
+import io.resys.thena.api.entities.GitObjects;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.doc.ThenaDocObjects.DocProjectObjects;
-import io.resys.thena.api.entities.git.ThenaGitObjects.GitRepoObjects;
+import io.resys.thena.api.entities.git.Branch;
+import io.resys.thena.api.entities.git.GitEntity.IsGitObject;
+import io.resys.thena.api.entities.git.Tag;
 import io.resys.thena.api.entities.org.ThenaOrgObjects.OrgProjectObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.smallrye.mutiny.Uni;
@@ -65,18 +72,24 @@ public interface ThenaClient {
   
   // multi doc model, cropped git replica
   interface GitStructuredTenant {
-    CommitActions commit();
-    TagActions tag();
-    DiffActions diff();
-    HistoryActions history();
-    PullActions pull();
-    BranchActions branch();
+    GitCommitActions commit();
+    GitTagActions tag();
+    GitDiffActions diff();
+    GitHistoryActions history();
+    GitPullActions pull();
+    GitBranchActions branch();
     GitRepoQuery project();
-    
-    // build world state
-    interface GitRepoQuery {
-      Uni<QueryEnvelope<GitRepoObjects>> get();
-    }
+  }
+  
+  // build world state
+  interface GitRepoQuery {
+    Uni<QueryEnvelope<ThenaClient.GitRepoObjects>> get();
+  }
 
+  @Value.Immutable 
+  interface GitRepoObjects extends GitObjects {
+    Map<String, Branch> getBranches();
+    Map<String, Tag> getTags();
+    Map<String, IsGitObject> getValues();   
   }
 }

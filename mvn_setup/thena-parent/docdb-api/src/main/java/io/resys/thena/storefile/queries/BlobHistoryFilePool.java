@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import io.resys.thena.api.actions.PullActions.MatchCriteria;
+import io.resys.thena.api.actions.GitPullActions.MatchCriteria;
 import io.resys.thena.api.entities.git.ImmutableBlobHistory;
 import io.resys.thena.api.entities.git.Tree;
 import io.resys.thena.api.entities.git.Blob;

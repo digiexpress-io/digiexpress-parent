@@ -27,16 +27,19 @@ import javax.annotation.Nullable;
 import org.immutables.value.Value;
 
 import io.resys.thena.api.ThenaClient;
-import io.resys.thena.api.actions.BranchActions.BranchObjectsQuery;
-import io.resys.thena.api.actions.CommitActions.CommitBuilder;
-import io.resys.thena.api.actions.CommitActions.CommitResultEnvelope;
-import io.resys.thena.api.actions.HistoryActions.BlobHistoryQuery;
-import io.resys.thena.api.actions.PullActions.PullObjectsQuery;
+import io.resys.thena.api.actions.GitBranchActions;
+import io.resys.thena.api.actions.GitBranchActions.BranchObjects;
+import io.resys.thena.api.actions.GitBranchActions.BranchObjectsQuery;
+import io.resys.thena.api.actions.GitCommitActions.CommitBuilder;
+import io.resys.thena.api.actions.GitCommitActions.CommitResultEnvelope;
+import io.resys.thena.api.actions.GitHistoryActions;
+import io.resys.thena.api.actions.GitHistoryActions.BlobHistoryQuery;
+import io.resys.thena.api.actions.GitHistoryActions.HistoryObjects;
+import io.resys.thena.api.actions.GitPullActions;
+import io.resys.thena.api.actions.GitPullActions.PullObject;
+import io.resys.thena.api.actions.GitPullActions.PullObjects;
+import io.resys.thena.api.actions.GitPullActions.PullObjectsQuery;
 import io.resys.thena.api.entities.git.Commit;
-import io.resys.thena.api.entities.git.ThenaGitObjects.BranchObjects;
-import io.resys.thena.api.entities.git.ThenaGitObjects.HistoryObjects;
-import io.resys.thena.api.entities.git.ThenaGitObjects.PullObject;
-import io.resys.thena.api.entities.git.ThenaGitObjects.PullObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.tasks.client.api.model.Document.DocumentType;
 import io.smallrye.mutiny.Uni;
@@ -66,26 +69,26 @@ public interface DocumentConfig {
   
   interface DocBranchVisitor<T> extends DocVisitor { 
     BranchObjectsQuery start(DocumentConfig config, BranchObjectsQuery builder);
-    @Nullable BranchObjects visitEnvelope(DocumentConfig config, QueryEnvelope<BranchObjects> envelope);
-    T end(DocumentConfig config, @Nullable BranchObjects ref);
+    @Nullable GitBranchActions.BranchObjects visitEnvelope(DocumentConfig config, QueryEnvelope<GitBranchActions.BranchObjects> envelope);
+    T end(DocumentConfig config, @Nullable GitBranchActions.BranchObjects ref);
   }
   
   interface DocPullObjectVisitor<T> extends DocVisitor { 
     PullObjectsQuery start(DocumentConfig config, PullObjectsQuery builder);
-    @Nullable PullObject visitEnvelope(DocumentConfig config, QueryEnvelope<PullObject> envelope);
-    T end(DocumentConfig config, @Nullable PullObject blob);
+    @Nullable GitPullActions.PullObject visitEnvelope(DocumentConfig config, QueryEnvelope<GitPullActions.PullObject> envelope);
+    T end(DocumentConfig config, @Nullable GitPullActions.PullObject blob);
   }
   
   interface DocPullObjectsVisitor<T> extends DocVisitor { 
     PullObjectsQuery start(DocumentConfig config, PullObjectsQuery builder);
-    @Nullable PullObjects visitEnvelope(DocumentConfig config, QueryEnvelope<PullObjects> envelope);
-    List<T> end(DocumentConfig config, @Nullable PullObjects blobs);
+    @Nullable GitPullActions.PullObjects visitEnvelope(DocumentConfig config, QueryEnvelope<GitPullActions.PullObjects> envelope);
+    List<T> end(DocumentConfig config, @Nullable GitPullActions.PullObjects blobs);
   }
   
   interface DocPullAndCommitVisitor<T> extends DocVisitor { 
     PullObjectsQuery start(DocumentConfig config, PullObjectsQuery builder);
-    @Nullable PullObjects visitEnvelope(DocumentConfig config, QueryEnvelope<PullObjects> envelope);
-    Uni<List<T>> end(DocumentConfig config, @Nullable PullObjects blobs);
+    @Nullable GitPullActions.PullObjects visitEnvelope(DocumentConfig config, QueryEnvelope<GitPullActions.PullObjects> envelope);
+    Uni<List<T>> end(DocumentConfig config, @Nullable GitPullActions.PullObjects blobs);
   }
   
   interface DocCommitVisitor<T> extends DocVisitor { 
@@ -96,8 +99,8 @@ public interface DocumentConfig {
   
   interface DocHistoryVisitor<T> extends DocVisitor { 
     BlobHistoryQuery start(DocumentConfig config, BlobHistoryQuery builder);
-    @Nullable HistoryObjects visitEnvelope(DocumentConfig config, QueryEnvelope<HistoryObjects> envelope);
-    List<T> end(DocumentConfig config, @Nullable HistoryObjects values);
+    @Nullable GitHistoryActions.HistoryObjects visitEnvelope(DocumentConfig config, QueryEnvelope<GitHistoryActions.HistoryObjects> envelope);
+    List<T> end(DocumentConfig config, @Nullable GitHistoryActions.HistoryObjects values);
   }
 
   default <T> Uni<T> accept(DocBranchVisitor<T> visitor) {
@@ -137,7 +140,7 @@ public interface DocumentConfig {
         .pull().pullQuery()
         .branchNameOrCommitOrTag(getHeadName());
     
-    final Uni<QueryEnvelope<PullObjects>> query = visitor.start(this, prefilled).findAll();
+    final Uni<QueryEnvelope<GitPullActions.PullObjects>> query = visitor.start(this, prefilled).findAll();
     return query
         .onItem().transform(envelope -> visitor.visitEnvelope(this, envelope))
         .onItem().transformToUni(ref -> visitor.end(this, ref));
@@ -162,7 +165,7 @@ public interface DocumentConfig {
         .blobQuery()
         .branchName(getHeadName());
     
-    final Uni<QueryEnvelope<HistoryObjects>> query = visitor.start(this, prefilled).get();
+    final Uni<QueryEnvelope<GitHistoryActions.HistoryObjects>> query = visitor.start(this, prefilled).get();
     return query
         .onItem().transform(envelope -> visitor.visitEnvelope(this, envelope))
         .onItem().transform(ref -> visitor.end(this, ref));

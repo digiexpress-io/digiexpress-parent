@@ -25,9 +25,10 @@ import java.util.Collections;
 import java.util.List;
 
 import io.resys.thena.api.actions.ImmutableMatchCriteria;
-import io.resys.thena.api.actions.BranchActions.BranchObjectsQuery;
-import io.resys.thena.api.actions.PullActions.MatchCriteriaType;
-import io.resys.thena.api.entities.git.ThenaGitObjects.BranchObjects;
+import io.resys.thena.api.actions.GitBranchActions;
+import io.resys.thena.api.actions.GitBranchActions.BranchObjects;
+import io.resys.thena.api.actions.GitBranchActions.BranchObjectsQuery;
+import io.resys.thena.api.actions.GitPullActions.MatchCriteriaType;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.tasks.client.api.model.Document;
@@ -48,7 +49,7 @@ public class FindAllActiveTasksVisitor implements DocBranchVisitor<List<Task>> {
         .build()));
   }
   @Override
-  public BranchObjects visitEnvelope(DocumentConfig config, QueryEnvelope<BranchObjects> envelope) {
+  public GitBranchActions.BranchObjects visitEnvelope(DocumentConfig config, QueryEnvelope<GitBranchActions.BranchObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
       throw DocumentStoreException.builder("FIND_ALL_TASKS_FAIL").add(config, envelope).build();
     }
@@ -56,7 +57,7 @@ public class FindAllActiveTasksVisitor implements DocBranchVisitor<List<Task>> {
   }
 
   @Override
-  public List<Task> end(DocumentConfig config, BranchObjects ref) {
+  public List<Task> end(DocumentConfig config, GitBranchActions.BranchObjects ref) {
     if(ref == null) {
       return Collections.emptyList();
     }

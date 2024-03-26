@@ -27,9 +27,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.resys.thena.api.actions.CommitActions.CommitBuilder;
-import io.resys.thena.api.actions.CommitActions.CommitResultEnvelope;
-import io.resys.thena.api.actions.CommitActions.JsonObjectMerge;
+import io.resys.thena.api.actions.GitCommitActions.CommitBuilder;
+import io.resys.thena.api.actions.GitCommitActions.CommitResultEnvelope;
+import io.resys.thena.api.actions.GitCommitActions.JsonObjectMerge;
 import io.resys.thena.api.entities.CommitLockStatus;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.git.CommitLock;

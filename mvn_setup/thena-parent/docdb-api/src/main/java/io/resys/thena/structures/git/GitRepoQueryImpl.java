@@ -22,10 +22,10 @@ package io.resys.thena.structures.git;
 
 import java.util.stream.Collectors;
 
-import io.resys.thena.api.ThenaClient.GitStructuredTenant.GitRepoQuery;
+import io.resys.thena.api.ImmutableGitRepoObjects;
+import io.resys.thena.api.ThenaClient;
+import io.resys.thena.api.ThenaClient.GitRepoQuery;
 import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.api.entities.git.ImmutableGitRepoObjects;
-import io.resys.thena.api.entities.git.ThenaGitObjects.GitRepoObjects;
 import io.resys.thena.api.envelope.ImmutableQueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
@@ -47,7 +47,7 @@ public class GitRepoQueryImpl implements GitRepoQuery {
   private final String projectName; //repo name
 
   @Override
-  public Uni<QueryEnvelope<GitRepoObjects>> get() {
+  public Uni<QueryEnvelope<ThenaClient.GitRepoObjects>> get() {
     RepoAssert.notEmpty(projectName, () -> "projectName not defined!");
     
     return state.project().getByNameOrId(projectName).onItem().transformToUni((Tenant existing) -> {
@@ -59,8 +59,8 @@ public class GitRepoQueryImpl implements GitRepoQuery {
     });
   }
   
-  private Uni<QueryEnvelope<GitRepoObjects>> getState(Tenant repo, GitRepo ctx) {
-    final Uni<GitRepoObjects> objects = Uni.combine().all().unis(
+  private Uni<QueryEnvelope<ThenaClient.GitRepoObjects>> getState(Tenant repo, GitRepo ctx) {
+    final Uni<ThenaClient.GitRepoObjects> objects = Uni.combine().all().unis(
         getRefs(repo, ctx),
         getTags(repo, ctx),
         getBlobs(repo, ctx),
@@ -68,7 +68,7 @@ public class GitRepoQueryImpl implements GitRepoQuery {
         getCommits(repo, ctx)
     ).combinedWith(raw -> {
       final var builder = ImmutableGitRepoObjects.builder();
-      raw.stream().map(r -> (GitRepoObjects) r).forEach(r -> builder
+      raw.stream().map(r -> (ThenaClient.GitRepoObjects) r).forEach(r -> builder
           .putAllBranches(r.getBranches())
           .putAllTags(r.getTags())
           .putAllValues(r.getValues())
@@ -77,26 +77,26 @@ public class GitRepoQueryImpl implements GitRepoQuery {
     });
     
     return objects.onItem().transform(state -> ImmutableQueryEnvelope
-      .<GitRepoObjects>builder()
+      .<ThenaClient.GitRepoObjects>builder()
       .objects(state)
       .repo(repo)
       .status(QueryEnvelopeStatus.OK)
       .build());
   }
   
-  private Uni<GitRepoObjects> getRefs(Tenant repo, GitRepo ctx) {
+  private Uni<ThenaClient.GitRepoObjects> getRefs(Tenant repo, GitRepo ctx) {
     return ctx.query().refs().findAll().collect().asList().onItem()
         .transform(refs -> ImmutableGitRepoObjects.builder()
             .putAllBranches(refs.stream().collect(Collectors.toMap(r -> r.getName(), r -> r)))
             .build());
   }
-  private Uni<GitRepoObjects> getTags(Tenant repo, GitRepo ctx) {
+  private Uni<ThenaClient.GitRepoObjects> getTags(Tenant repo, GitRepo ctx) {
     return ctx.query().tags().find().collect().asList().onItem()
         .transform(refs -> ImmutableGitRepoObjects.builder()
             .putAllTags(refs.stream().collect(Collectors.toMap(r -> r.getName(), r -> r)))
             .build());
   }
-  private Uni<GitRepoObjects> getBlobs(Tenant repo, GitRepo ctx) {
+  private Uni<ThenaClient.GitRepoObjects> getBlobs(Tenant repo, GitRepo ctx) {
     return ctx.query().blobs().findAll().collect().asList().onItem()
         .transform(blobs -> {
           
@@ -105,13 +105,13 @@ public class GitRepoQueryImpl implements GitRepoQuery {
           return objects.build();
         });
   }
-  private Uni<GitRepoObjects> getTrees(Tenant repo, GitRepo ctx) {
+  private Uni<ThenaClient.GitRepoObjects> getTrees(Tenant repo, GitRepo ctx) {
     return ctx.query().trees().findAll().collect().asList().onItem()
         .transform(trees -> ImmutableGitRepoObjects.builder()
             .putAllValues(trees.stream().collect(Collectors.toMap(r -> r.getId(), r -> r)))
             .build());
   }
-  private Uni<GitRepoObjects> getCommits(Tenant repo, GitRepo ctx) {
+  private Uni<ThenaClient.GitRepoObjects> getCommits(Tenant repo, GitRepo ctx) {
     return ctx.query().commits().findAll().collect().asList().onItem()
         .transform(commits -> ImmutableGitRepoObjects.builder()
             .putAllValues(commits.stream().collect(Collectors.toMap(r -> r.getId(), r -> r)))

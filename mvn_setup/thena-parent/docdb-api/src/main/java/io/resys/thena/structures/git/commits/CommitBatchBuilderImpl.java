@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import io.resys.thena.api.actions.CommitActions.JsonObjectMerge;
+import io.resys.thena.api.actions.GitCommitActions.JsonObjectMerge;
 import io.resys.thena.api.entities.git.ImmutableBlob;
 import io.resys.thena.api.entities.git.ImmutableBranch;
 import io.resys.thena.api.entities.git.ImmutableCommit;

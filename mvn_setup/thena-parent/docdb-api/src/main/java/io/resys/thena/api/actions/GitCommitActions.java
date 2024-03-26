@@ -21,23 +21,28 @@ package io.resys.thena.api.actions;
  */
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
 import org.immutables.value.Value;
 
-import io.resys.thena.api.actions.PullActions.MatchCriteria;
+import io.resys.thena.api.actions.GitPullActions.MatchCriteria;
 import io.resys.thena.api.entities.CommitResultStatus;
+import io.resys.thena.api.entities.GitObjects;
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.git.Blob;
 import io.resys.thena.api.entities.git.Commit;
-import io.resys.thena.api.entities.git.ThenaGitObjects.CommitObjects;
 import io.resys.thena.api.entities.git.Tree;
+import io.resys.thena.api.envelope.BlobContainer;
 import io.resys.thena.api.envelope.Message;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.ThenaEnvelope;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 
-public interface CommitActions {
+public interface GitCommitActions {
   CommitBuilder commitBuilder();
   CommitQuery commitQuery();
   Uni<List<Commit>> findAllCommits();  // head GID to what to append
@@ -77,5 +82,20 @@ public interface CommitActions {
     Commit getCommit();
     CommitResultStatus getStatus();
     List<Message> getMessages();
+  }
+  
+  @Value.Immutable
+  interface CommitObjects extends GitObjects, BlobContainer  {
+    Tenant getRepo();
+    Commit getCommit();
+    Tree getTree();
+    Map<String, Blob> getBlobs(); //only if loaded
+    
+    default <T> List<T> accept(BlobVisitor<T> visitor) {
+      return getTree().getValues().values().stream()
+          .map(treeValue -> getBlobs().get(treeValue.getBlob()))
+          .map(blob -> visitor.visit(blob.getValue()))
+          .collect(Collectors.toUnmodifiableList());
+    }
   }
 }

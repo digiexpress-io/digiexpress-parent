@@ -2,18 +2,18 @@ package io.resys.thena.structures.git.diff;
 
 import java.util.function.Supplier;
 
-import io.resys.thena.api.ThenaClient.GitStructuredTenant.GitRepoQuery;
-import io.resys.thena.api.actions.CommitActions;
-import io.resys.thena.api.actions.DiffActions;
-import io.resys.thena.api.actions.PullActions;
+import io.resys.thena.api.ThenaClient.GitRepoQuery;
+import io.resys.thena.api.actions.GitCommitActions;
+import io.resys.thena.api.actions.GitDiffActions;
+import io.resys.thena.api.actions.GitPullActions;
 import io.resys.thena.spi.DbState;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class DiffActionsImpl implements DiffActions {
+public class DiffActionsImpl implements GitDiffActions {
   private final DbState state;
-  private final PullActions objects;
-  private final CommitActions commits;
+  private final GitPullActions objects;
+  private final GitCommitActions commits;
   private final Supplier<GitRepoQuery> repos;
   
   @Override

@@ -28,8 +28,9 @@ import io.dialob.client.api.DialobDocument.DocumentType;
 import io.dialob.client.api.DialobStore.StoreEntity;
 import io.dialob.client.api.DialobStore.StoreState;
 import io.resys.thena.api.ThenaClient;
+import io.resys.thena.api.actions.GitPullActions;
+import io.resys.thena.api.actions.GitPullActions.PullObject;
 import io.resys.thena.api.entities.git.Blob;
-import io.resys.thena.api.entities.git.ThenaGitObjects.PullObject;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
@@ -66,7 +67,7 @@ public interface DialobStoreConfig {
   
   @Value.Immutable
   interface EntityState {
-    QueryEnvelope<PullObject> getSrc();
+    QueryEnvelope<GitPullActions.PullObject> getSrc();
     StoreEntity getEntity();
   }
   

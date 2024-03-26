@@ -1,7 +1,8 @@
 package io.resys.thena.tasks.client.spi.visitors;
 
-import io.resys.thena.api.actions.PullActions.PullObjectsQuery;
-import io.resys.thena.api.entities.git.ThenaGitObjects.PullObject;
+import io.resys.thena.api.actions.GitPullActions;
+import io.resys.thena.api.actions.GitPullActions.PullObject;
+import io.resys.thena.api.actions.GitPullActions.PullObjectsQuery;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.tasks.client.api.model.ImmutableTask;
@@ -23,7 +24,7 @@ public class GetActiveTaskVisitor implements DocPullObjectVisitor<Task> {
   }
 
   @Override
-  public PullObject visitEnvelope(DocumentConfig config, QueryEnvelope<PullObject> envelope) {
+  public GitPullActions.PullObject visitEnvelope(DocumentConfig config, QueryEnvelope<GitPullActions.PullObject> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
       throw DocumentStoreException.builder("GET_TASK_BY_ID_FAIL")
         .add(config, envelope)
@@ -41,7 +42,7 @@ public class GetActiveTaskVisitor implements DocPullObjectVisitor<Task> {
   }
 
   @Override
-  public Task end(DocumentConfig config, PullObject blob) {
+  public Task end(DocumentConfig config, GitPullActions.PullObject blob) {
     return blob.accept((JsonObject json) -> json.mapTo(ImmutableTask.class));
   }
 }

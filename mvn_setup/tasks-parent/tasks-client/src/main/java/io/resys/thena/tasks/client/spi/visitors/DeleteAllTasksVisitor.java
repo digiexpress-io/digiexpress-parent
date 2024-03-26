@@ -25,12 +25,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import io.resys.thena.api.actions.CommitActions.CommitBuilder;
-import io.resys.thena.api.actions.CommitActions.CommitResultEnvelope;
-import io.resys.thena.api.actions.PullActions.MatchCriteria;
-import io.resys.thena.api.actions.PullActions.PullObjectsQuery;
+import io.resys.thena.api.actions.GitCommitActions.CommitBuilder;
+import io.resys.thena.api.actions.GitCommitActions.CommitResultEnvelope;
+import io.resys.thena.api.actions.GitPullActions;
+import io.resys.thena.api.actions.GitPullActions.MatchCriteria;
+import io.resys.thena.api.actions.GitPullActions.PullObjects;
+import io.resys.thena.api.actions.GitPullActions.PullObjectsQuery;
 import io.resys.thena.api.entities.CommitResultStatus;
-import io.resys.thena.api.entities.git.ThenaGitObjects.PullObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.tasks.client.api.model.Document;
@@ -67,7 +68,7 @@ public class DeleteAllTasksVisitor implements DocPullAndCommitVisitor<Task>{
   }
 
   @Override
-  public PullObjects visitEnvelope(DocumentConfig config, QueryEnvelope<PullObjects> envelope) {
+  public GitPullActions.PullObjects visitEnvelope(DocumentConfig config, QueryEnvelope<GitPullActions.PullObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
       throw DocumentStoreException.builder("FIND_ALL_TASKS_FAIL_FOR_DELETE").add(config, envelope).build();
     }
@@ -75,7 +76,7 @@ public class DeleteAllTasksVisitor implements DocPullAndCommitVisitor<Task>{
   }
   
   @Override
-  public Uni<List<Task>> end(DocumentConfig config, PullObjects ref) {
+  public Uni<List<Task>> end(DocumentConfig config, GitPullActions.PullObjects ref) {
     if(ref == null) {
       return Uni.createFrom().item(Collections.emptyList());
     }
@@ -109,7 +110,7 @@ public class DeleteAllTasksVisitor implements DocPullAndCommitVisitor<Task>{
   }
   
   
-  private List<Task> visitTree(PullObjects state) {
+  private List<Task> visitTree(GitPullActions.PullObjects state) {
     return state.getBlob().stream()
       .map(blob -> blob.getValue().mapTo(ImmutableTask.class))
       .map(task -> visitTask(task))

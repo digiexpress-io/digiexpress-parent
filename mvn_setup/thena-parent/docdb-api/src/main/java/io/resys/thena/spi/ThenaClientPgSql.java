@@ -1,17 +1,17 @@
 package io.resys.thena.spi;
 
 import io.resys.thena.api.ThenaClient;
-import io.resys.thena.api.actions.BranchActions;
-import io.resys.thena.api.actions.CommitActions;
-import io.resys.thena.api.actions.DiffActions;
+import io.resys.thena.api.actions.GitBranchActions;
+import io.resys.thena.api.actions.GitCommitActions;
+import io.resys.thena.api.actions.GitDiffActions;
 import io.resys.thena.api.actions.DocCommitActions;
 import io.resys.thena.api.actions.DocQueryActions;
-import io.resys.thena.api.actions.HistoryActions;
+import io.resys.thena.api.actions.GitHistoryActions;
 import io.resys.thena.api.actions.OrgCommitActions;
 import io.resys.thena.api.actions.OrgHistoryActions;
 import io.resys.thena.api.actions.OrgQueryActions;
-import io.resys.thena.api.actions.PullActions;
-import io.resys.thena.api.actions.TagActions;
+import io.resys.thena.api.actions.GitPullActions;
+import io.resys.thena.api.actions.GitTagActions;
 import io.resys.thena.api.actions.TenantActions;
 import io.resys.thena.api.actions.TenantActions.RepoResult;
 import io.resys.thena.api.entities.Tenant;
@@ -51,12 +51,12 @@ public class ThenaClientPgSql implements ThenaClient {
     RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
     return new GitStructuredTenant() {
       @Override public GitRepoQuery project() { return new GitRepoQueryImpl(state, repoId); }
-      @Override public CommitActions commit() { return new CommitActionsImpl(state, repoId); }
-      @Override public TagActions tag() { return new TagActionsDefault(state, repoId); }
-      @Override public HistoryActions history() { return new HistoryActionsDefault(state, repoId); }
-      @Override public PullActions pull() { return new ObjectsActionsImpl(state, repoId); }
-      @Override public DiffActions diff() { return new DiffActionsImpl(state, pull(), commit(), () -> project()); }
-      @Override public BranchActions branch() { return new BranchActionsImpl(state, repoId); }
+      @Override public GitCommitActions commit() { return new CommitActionsImpl(state, repoId); }
+      @Override public GitTagActions tag() { return new TagActionsDefault(state, repoId); }
+      @Override public GitHistoryActions history() { return new HistoryActionsDefault(state, repoId); }
+      @Override public GitPullActions pull() { return new ObjectsActionsImpl(state, repoId); }
+      @Override public GitDiffActions diff() { return new DiffActionsImpl(state, pull(), commit(), () -> project()); }
+      @Override public GitBranchActions branch() { return new BranchActionsImpl(state, repoId); }
     };
   }
 

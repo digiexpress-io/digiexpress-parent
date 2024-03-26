@@ -1,5 +1,6 @@
 package io.resys.thena.structures.git.diff;
 
+
 /*-
  * #%L
  * thena-docdb-api
@@ -23,16 +24,16 @@ package io.resys.thena.structures.git.diff;
 import java.util.Arrays;
 import java.util.function.Supplier;
 
-import io.resys.thena.api.ThenaClient.GitStructuredTenant.GitRepoQuery;
-import io.resys.thena.api.actions.CommitActions;
+import io.resys.thena.api.ThenaClient;
+import io.resys.thena.api.ThenaClient.GitRepoQuery;
+import io.resys.thena.api.actions.GitCommitActions;
+import io.resys.thena.api.actions.GitCommitActions.CommitObjects;
+import io.resys.thena.api.actions.GitDiffActions.DiffQuery;
+import io.resys.thena.api.actions.GitDiffActions.DiffResult;
+import io.resys.thena.api.actions.GitDiffActions.DiffResultStatus;
 import io.resys.thena.api.actions.ImmutableDiffResult;
-import io.resys.thena.api.actions.PullActions;
-import io.resys.thena.api.actions.DiffActions.DiffQuery;
-import io.resys.thena.api.actions.DiffActions.DiffResult;
-import io.resys.thena.api.actions.DiffActions.DiffResultStatus;
+import io.resys.thena.api.actions.GitPullActions;
 import io.resys.thena.api.entities.git.Diff;
-import io.resys.thena.api.entities.git.ThenaGitObjects.CommitObjects;
-import io.resys.thena.api.entities.git.ThenaGitObjects.GitRepoObjects;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.support.RepoAssert;
@@ -45,8 +46,8 @@ import lombok.experimental.Accessors;
 @Data @Accessors(fluent = true)
 public class DiffQueryImpl implements DiffQuery {
   private final DbState state;
-  private final PullActions objects;
-  private final CommitActions commits;
+  private final GitPullActions objects;
+  private final GitCommitActions commits;
   private final Supplier<GitRepoQuery> repos;
   
   private String left;  //HeadOrCommitOrTag;
@@ -77,7 +78,7 @@ public class DiffQueryImpl implements DiffQuery {
         return createDiff(objects.getObjects(), left.getObjects(), right.getObjects());
       });
   }
-  private DiffResult<Diff> createDiff(GitRepoObjects objects, CommitObjects left, CommitObjects right) {
+  private DiffResult<Diff> createDiff(ThenaClient.GitRepoObjects objects, CommitObjects left, CommitObjects right) {
     final var diff = new DiffVisitor().visit(objects, left, Arrays.asList(right));
     return ImmutableDiffResult.<Diff>builder()
         .repo(left.getRepo())

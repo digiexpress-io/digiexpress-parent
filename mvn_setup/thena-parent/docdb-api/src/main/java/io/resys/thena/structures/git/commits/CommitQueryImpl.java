@@ -23,12 +23,12 @@ package io.resys.thena.structures.git.commits;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.resys.thena.api.actions.CommitActions.CommitQuery;
-import io.resys.thena.api.actions.PullActions.MatchCriteria;
+import io.resys.thena.api.actions.GitCommitActions.CommitObjects;
+import io.resys.thena.api.actions.GitCommitActions.CommitQuery;
+import io.resys.thena.api.actions.ImmutableCommitObjects;
+import io.resys.thena.api.actions.GitPullActions.MatchCriteria;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.git.Commit;
-import io.resys.thena.api.entities.git.ImmutableCommitObjects;
-import io.resys.thena.api.entities.git.ThenaGitObjects.CommitObjects;
 import io.resys.thena.api.entities.git.Tree;
 import io.resys.thena.api.envelope.ImmutableQueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope;

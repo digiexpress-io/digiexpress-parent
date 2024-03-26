@@ -23,10 +23,11 @@ package io.resys.thena.tasks.client.spi.visitors;
 import java.util.Arrays;
 import java.util.List;
 
-import io.resys.thena.api.actions.HistoryActions.BlobHistoryQuery;
-import io.resys.thena.api.actions.PullActions.MatchCriteria;
+import io.resys.thena.api.actions.GitHistoryActions;
+import io.resys.thena.api.actions.GitHistoryActions.BlobHistoryQuery;
+import io.resys.thena.api.actions.GitHistoryActions.HistoryObjects;
+import io.resys.thena.api.actions.GitPullActions.MatchCriteria;
 import io.resys.thena.api.entities.git.BlobHistory;
-import io.resys.thena.api.entities.git.ThenaGitObjects.HistoryObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.tasks.client.api.model.Document;
@@ -54,7 +55,7 @@ public class GetTaskHistoryVisitor implements DocHistoryVisitor<TaskHistory> {
   }
 
   @Override
-  public HistoryObjects visitEnvelope(DocumentConfig config, QueryEnvelope<HistoryObjects> envelope) {
+  public GitHistoryActions.HistoryObjects visitEnvelope(DocumentConfig config, QueryEnvelope<GitHistoryActions.HistoryObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
       throw DocumentStoreException.builder("FIND_TASK_HISTORY_FAIL").add(config, envelope)
       .add(c -> c.addArgs(JsonObject.of(
@@ -73,7 +74,7 @@ public class GetTaskHistoryVisitor implements DocHistoryVisitor<TaskHistory> {
   }
 
   @Override
-  public List<TaskHistory> end(DocumentConfig config, HistoryObjects values) {
+  public List<TaskHistory> end(DocumentConfig config, GitHistoryActions.HistoryObjects values) {
     BlobHistory previous = null;
     ImmutableTaskHistory.Builder historyBuilder = ImmutableTaskHistory.builder();
     for(final var history : values.getValues()) {

@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
 
 import org.immutables.value.Value;
 
-import io.resys.thena.api.actions.PullActions.MatchCriteria;
+import io.resys.thena.api.actions.GitPullActions.MatchCriteria;
 import io.resys.thena.api.entities.git.Blob;
 import io.resys.thena.api.entities.git.BlobHistory;
 import io.resys.thena.api.entities.git.Branch;

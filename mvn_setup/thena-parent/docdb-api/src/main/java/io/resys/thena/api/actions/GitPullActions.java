@@ -23,18 +23,22 @@ import java.time.LocalDateTime;
  */
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
 import org.immutables.value.Value;
 
-import io.resys.thena.api.actions.ImmutableMatchCriteria;
-import io.resys.thena.api.entities.git.ThenaGitObjects.PullObject;
-import io.resys.thena.api.entities.git.ThenaGitObjects.PullObjects;
+import io.resys.thena.api.entities.GitObjects;
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.git.Blob;
+import io.resys.thena.api.entities.git.Commit;
+import io.resys.thena.api.envelope.BlobContainer;
+import io.resys.thena.api.envelope.BlobContainer.BlobVisitor;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.smallrye.mutiny.Uni;
 
-public interface PullActions {
+public interface GitPullActions {
 
   PullObjectsQuery pullQuery();
   
@@ -93,5 +97,32 @@ public interface PullActions {
     GTE;
     
 
+  }
+
+  @Value.Immutable
+  interface PullObject extends GitObjects {
+    Tenant getRepo();
+    Commit getCommit();
+    //Tree getTree();
+    Blob getBlob();
+    
+    default <T> T accept(BlobVisitor<T> visitor) {
+      return visitor.visit(getBlob().getValue());
+    }
+  }
+
+
+  @Value.Immutable
+  interface PullObjects extends BlobContainer, GitObjects {
+    Tenant getRepo();
+    Commit getCommit();
+    //Tree getTree();
+    List<Blob> getBlob();
+    
+    default <T> List<T> accept(BlobVisitor<T> visitor) {
+      return getBlob().stream()
+          .map(blob -> visitor.visit(blob.getValue()))
+          .collect(Collectors.toUnmodifiableList());
+    }
   }
 }

@@ -26,8 +26,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-import io.resys.thena.api.actions.PullActions.MatchCriteria;
-import io.resys.thena.api.actions.PullActions.MatchCriteriaType;
+import io.resys.thena.api.actions.GitPullActions.MatchCriteria;
+import io.resys.thena.api.actions.GitPullActions.MatchCriteriaType;
 import io.resys.thena.api.entities.git.Blob;
 import io.resys.thena.api.entities.git.ImmutableTree;
 import io.resys.thena.api.entities.git.TreeValue;

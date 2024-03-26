@@ -32,7 +32,7 @@ import io.resys.thena.api.envelope.Message;
 import io.resys.thena.api.envelope.ThenaEnvelope;
 import io.smallrye.mutiny.Uni;
 
-public interface DiffActions {
+public interface GitDiffActions {
 
   DiffQuery diffQuery();
   

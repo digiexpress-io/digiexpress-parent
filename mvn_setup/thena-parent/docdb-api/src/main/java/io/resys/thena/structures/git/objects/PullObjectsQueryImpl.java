@@ -25,15 +25,16 @@ import java.util.List;
 
 import org.immutables.value.Value;
 
-import io.resys.thena.api.actions.PullActions.MatchCriteria;
-import io.resys.thena.api.actions.PullActions.PullObjectsQuery;
+import io.resys.thena.api.actions.ImmutablePullObject;
+import io.resys.thena.api.actions.ImmutablePullObjects;
+import io.resys.thena.api.actions.GitPullActions;
+import io.resys.thena.api.actions.GitPullActions.MatchCriteria;
+import io.resys.thena.api.actions.GitPullActions.PullObject;
+import io.resys.thena.api.actions.GitPullActions.PullObjects;
+import io.resys.thena.api.actions.GitPullActions.PullObjectsQuery;
 import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.api.entities.git.ImmutablePullObject;
-import io.resys.thena.api.entities.git.ImmutablePullObjects;
 import io.resys.thena.api.entities.git.Blob;
 import io.resys.thena.api.entities.git.Commit;
-import io.resys.thena.api.entities.git.ThenaGitObjects.PullObject;
-import io.resys.thena.api.entities.git.ThenaGitObjects.PullObjects;
 import io.resys.thena.api.envelope.ImmutableQueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
@@ -91,7 +92,7 @@ public class PullObjectsQueryImpl implements PullObjectsQuery {
   }
   
   @Override
-  public Uni<QueryEnvelope<PullObjects>> findAll() {
+  public Uni<QueryEnvelope<GitPullActions.PullObjects>> findAll() {
     RepoAssert.notEmpty(projectName, () -> "projectName is not defined!");
     RepoAssert.notEmpty(branchNameOrCommitOrTag, () -> "branchNameOrCommitOrTag is not defined!");
    // RepoAssert.isTrue(!blobName.isEmpty(), () -> "docId is not defined!");
@@ -112,7 +113,7 @@ public class PullObjectsQueryImpl implements PullObjectsQuery {
   }
   
   @Override
-  public Uni<QueryEnvelope<PullObject>> get() {
+  public Uni<QueryEnvelope<GitPullActions.PullObject>> get() {
     RepoAssert.notEmpty(projectName, () -> "projectName is not defined!");
     RepoAssert.notEmpty(branchNameOrCommitOrTag, () -> "branchNameOrCommitOrTag is not defined!");
     RepoAssert.isTrue(!docIds.isEmpty(), () -> "blobName is not defined!");
@@ -132,7 +133,7 @@ public class PullObjectsQueryImpl implements PullObjectsQuery {
     });
   }
   
-  private Uni<QueryEnvelope<PullObject>> getState(Tenant repo, Commit commit, GitRepo ctx) {
+  private Uni<QueryEnvelope<GitPullActions.PullObject>> getState(Tenant repo, Commit commit, GitRepo ctx) {
     return getBlob(commit.getTree(), ctx, blobCriteria, docIds).onItem()
         .transformToUni(blobTree -> {
           
@@ -140,7 +141,7 @@ public class PullObjectsQueryImpl implements PullObjectsQuery {
             return Uni.createFrom().item(QueryEnvelope.repoBlobNotFound(repo, blobTree, commit, docIds, log));
           }
           
-          return Uni.createFrom().item(ImmutableQueryEnvelope.<PullObject>builder()
+          return Uni.createFrom().item(ImmutableQueryEnvelope.<GitPullActions.PullObject>builder()
             .repo(repo)
             .objects(ImmutablePullObject.builder()
                 .repo(repo)
@@ -153,14 +154,14 @@ public class PullObjectsQueryImpl implements PullObjectsQuery {
   
   }
   
-  private Uni<QueryEnvelope<PullObjects>> getListState(Tenant repo, Commit commit, GitRepo ctx) {
+  private Uni<QueryEnvelope<GitPullActions.PullObjects>> getListState(Tenant repo, Commit commit, GitRepo ctx) {
     return getBlob(commit.getTree(), ctx, blobCriteria, docIds).onItem()
         .transformToUni(blobAndTree -> {
           
           if(blobAndTree.getBlob().isEmpty()) {
             return Uni.createFrom().item(QueryEnvelope.repoBlobNotFound(repo, blobAndTree, commit, docIds, log));
           }
-          return Uni.createFrom().item(ImmutableQueryEnvelope.<PullObjects>builder()
+          return Uni.createFrom().item(ImmutableQueryEnvelope.<GitPullActions.PullObjects>builder()
             .repo(repo)
             .objects(ImmutablePullObjects.builder()
                 .repo(repo)

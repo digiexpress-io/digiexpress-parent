@@ -21,13 +21,23 @@ package io.resys.thena.api.actions;
  */
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
-import io.resys.thena.api.actions.PullActions.MatchCriteria;
-import io.resys.thena.api.entities.git.ThenaGitObjects.BranchObjects;
+import org.immutables.value.Value;
+
+import io.resys.thena.api.actions.GitPullActions.MatchCriteria;
+import io.resys.thena.api.entities.GitObjects;
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.git.Blob;
+import io.resys.thena.api.entities.git.Branch;
+import io.resys.thena.api.entities.git.Commit;
+import io.resys.thena.api.entities.git.Tree;
+import io.resys.thena.api.envelope.BlobContainer;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.smallrye.mutiny.Uni;
 
-public interface BranchActions {
+public interface GitBranchActions {
 
   BranchObjectsQuery branchQuery();
   
@@ -37,7 +47,23 @@ public interface BranchActions {
     BranchObjectsQuery docsIncluded();
     BranchObjectsQuery docsIncluded(boolean docsIncluded);
     BranchObjectsQuery matchBy(List<MatchCriteria> blobCriteria);
-    Uni<QueryEnvelope<BranchObjects>> get();
+    Uni<QueryEnvelope<GitBranchActions.BranchObjects>> get();
+  }
+
+  @Value.Immutable
+  interface BranchObjects extends BlobContainer, GitObjects {
+    Tenant getRepo();
+    Branch getRef();
+    Commit getCommit();
+    Tree getTree();
+    Map<String, Blob> getBlobs(); //only if loaded
+    
+    default <T> List<T> accept(BlobVisitor<T> visitor) {
+      return getTree().getValues().values().stream()
+          .map(treeValue -> getBlobs().get(treeValue.getBlob()))
+          .map(blob -> visitor.visit(blob.getValue()))
+          .collect(Collectors.toUnmodifiableList());
+    }
   }
 
 

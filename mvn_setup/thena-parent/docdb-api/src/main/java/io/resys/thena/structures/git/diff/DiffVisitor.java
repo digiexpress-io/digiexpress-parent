@@ -28,14 +28,14 @@ import java.util.stream.Collectors;
 
 import org.immutables.value.Value;
 
+import io.resys.thena.api.ThenaClient;
+import io.resys.thena.api.actions.GitCommitActions.CommitObjects;
 import io.resys.thena.api.entities.git.Diff;
+import io.resys.thena.api.entities.git.Diff.Divergence;
+import io.resys.thena.api.entities.git.Diff.DivergenceType;
 import io.resys.thena.api.entities.git.ImmutableDiff;
 import io.resys.thena.api.entities.git.ImmutableDivergence;
 import io.resys.thena.api.entities.git.ImmutableDivergenceRef;
-import io.resys.thena.api.entities.git.Diff.Divergence;
-import io.resys.thena.api.entities.git.Diff.DivergenceType;
-import io.resys.thena.api.entities.git.ThenaGitObjects.CommitObjects;
-import io.resys.thena.api.entities.git.ThenaGitObjects.GitRepoObjects;
 
 public class DiffVisitor {
 
@@ -45,7 +45,7 @@ public class DiffVisitor {
     CommitHistory getTarget();
   }
   
-  public Diff visit(GitRepoObjects repo, CommitObjects start, List<CommitObjects> targets) { 
+  public Diff visit(ThenaClient.GitRepoObjects repo, CommitObjects start, List<CommitObjects> targets) { 
     List<DiffCommitMatch> result = visitHistories(repo, CommitHistory.builder().from(repo, start.getCommit().getId()), targets);
     
     List<Divergence> values = result.stream()
@@ -57,7 +57,7 @@ public class DiffVisitor {
         .build();
   }
   
-  private Divergence visitDivergence(GitRepoObjects repo, DiffCommitMatch match) {
+  private Divergence visitDivergence(ThenaClient.GitRepoObjects repo, DiffCommitMatch match) {
     final var main = match.getSrc();
     final var head = match.getTarget();
     
@@ -92,7 +92,7 @@ public class DiffVisitor {
         .build();
   }
   
-  private List<DiffCommitMatch> visitHistories(GitRepoObjects repo, CommitHistory start, List<CommitObjects> end) {
+  private List<DiffCommitMatch> visitHistories(ThenaClient.GitRepoObjects repo, CommitHistory start, List<CommitObjects> end) {
     List<DiffCommitMatch> result = new ArrayList<>(); 
     List<CommitHistory> toBeVisited = new ArrayList<>(end.stream()
         .map(e -> CommitHistory.builder().from(repo, e.getCommit().getId(), start.getCommit().getDateTime()))

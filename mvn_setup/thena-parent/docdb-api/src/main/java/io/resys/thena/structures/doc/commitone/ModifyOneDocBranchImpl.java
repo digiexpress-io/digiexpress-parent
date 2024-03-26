@@ -2,7 +2,7 @@ package io.resys.thena.structures.doc.commitone;
 
 import java.time.Duration;
 
-import io.resys.thena.api.actions.CommitActions.JsonObjectMerge;
+import io.resys.thena.api.actions.GitCommitActions.JsonObjectMerge;
 import io.resys.thena.api.actions.DocCommitActions.ModifyOneDocBranch;
 import io.resys.thena.api.actions.DocCommitActions.OneDocEnvelope;
 import io.resys.thena.api.entities.CommitResultStatus;

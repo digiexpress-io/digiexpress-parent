@@ -26,10 +26,11 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import io.resys.thena.api.actions.CommitActions.CommitResultEnvelope;
+import io.resys.thena.api.actions.GitCommitActions.CommitResultEnvelope;
 import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
-import io.resys.thena.api.entities.git.ThenaGitObjects.PullObject;
-import io.resys.thena.api.entities.git.ThenaGitObjects.PullObjects;
+import io.resys.thena.api.actions.GitPullActions;
+import io.resys.thena.api.actions.GitPullActions.PullObject;
+import io.resys.thena.api.actions.GitPullActions.PullObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.spi.ExMessageFormatter;
 import io.resys.thena.spi.ImmutableDocumentExceptionMsg;
@@ -82,14 +83,14 @@ public class DocumentStoreException extends RuntimeException {
   }
   
   
-  public static DocumentExceptionMsg convertMessages1(QueryEnvelope<PullObject> state) {
+  public static DocumentExceptionMsg convertMessages1(QueryEnvelope<GitPullActions.PullObject> state) {
     return ImmutableDocumentExceptionMsg.builder()
         .id("STATE_FAIL")
         .value("")
         .addAllArgs(state.getMessages().stream().map(message->message.getText()).collect(Collectors.toList()))
         .build();
   }
-  public static DocumentExceptionMsg convertMessages2(QueryEnvelope<PullObjects> state) {
+  public static DocumentExceptionMsg convertMessages2(QueryEnvelope<GitPullActions.PullObjects> state) {
     return ImmutableDocumentExceptionMsg.builder()
         .addAllArgs(state.getMessages().stream().map(message->message.getText()).collect(Collectors.toList()))
         .build();

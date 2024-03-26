@@ -33,9 +33,10 @@ import java.util.Map;
 import java.util.Objects;
 
 import io.resys.thena.api.actions.ImmutableMatchCriteria;
-import io.resys.thena.api.actions.BranchActions.BranchObjectsQuery;
-import io.resys.thena.api.actions.PullActions.MatchCriteriaType;
-import io.resys.thena.api.entities.git.ThenaGitObjects.BranchObjects;
+import io.resys.thena.api.actions.GitBranchActions;
+import io.resys.thena.api.actions.GitBranchActions.BranchObjects;
+import io.resys.thena.api.actions.GitBranchActions.BranchObjectsQuery;
+import io.resys.thena.api.actions.GitPullActions.MatchCriteriaType;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.BlobContainer.BlobVisitor;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
@@ -72,7 +73,7 @@ public class ExportVisitor implements DocBranchVisitor<Export>, BlobVisitor<List
             .build()));
   }
   @Override
-  public BranchObjects visitEnvelope(DocumentConfig config, QueryEnvelope<BranchObjects> envelope) {
+  public GitBranchActions.BranchObjects visitEnvelope(DocumentConfig config, QueryEnvelope<GitBranchActions.BranchObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
       throw DocumentStoreException.builder("FIND_ALL_TASKS_FOR_EXPORT_FAIL").add(config, envelope).build();
     }
@@ -80,7 +81,7 @@ public class ExportVisitor implements DocBranchVisitor<Export>, BlobVisitor<List
   }
 
   @Override
-  public Export end(DocumentConfig config, BranchObjects ref) {
+  public Export end(DocumentConfig config, GitBranchActions.BranchObjects ref) {
     if(ref == null) {
       return visitExport(Collections.emptyList());
     }

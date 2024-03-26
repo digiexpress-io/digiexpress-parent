@@ -26,10 +26,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import io.resys.thena.api.actions.CommitActions.CommitBuilder;
-import io.resys.thena.api.actions.PullActions.PullObjectsQuery;
+import io.resys.thena.api.actions.GitCommitActions.CommitBuilder;
+import io.resys.thena.api.actions.GitPullActions;
+import io.resys.thena.api.actions.GitPullActions.PullObjects;
+import io.resys.thena.api.actions.GitPullActions.PullObjectsQuery;
 import io.resys.thena.api.entities.CommitResultStatus;
-import io.resys.thena.api.entities.git.ThenaGitObjects.PullObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.tasks.client.api.model.ImmutableTask;
@@ -70,7 +71,7 @@ public class UpdateTasksVisitor implements DocPullAndCommitVisitor<Task> {
   }
 
   @Override
-  public PullObjects visitEnvelope(DocumentConfig config, QueryEnvelope<PullObjects> envelope) {
+  public GitPullActions.PullObjects visitEnvelope(DocumentConfig config, QueryEnvelope<GitPullActions.PullObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
       throw DocumentStoreException.builder("GET_TASKS_BY_IDS_FOR_UPDATE_FAIL")
         .add(config, envelope)
@@ -91,7 +92,7 @@ public class UpdateTasksVisitor implements DocPullAndCommitVisitor<Task> {
   }
 
   @Override
-  public Uni<List<Task>> end(DocumentConfig config, PullObjects blob) {
+  public Uni<List<Task>> end(DocumentConfig config, GitPullActions.PullObjects blob) {
     final var updatedTasks = blob.accept((JsonObject blobValue) -> {
       final var start = blobValue.mapTo(ImmutableTask.class);
       final var commands = commandsByTaskId.get(start.getId());

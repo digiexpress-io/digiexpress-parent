@@ -24,12 +24,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import io.resys.thena.api.actions.BranchActions.BranchObjectsQuery;
-import io.resys.thena.api.actions.PullActions.MatchCriteria;
+import io.resys.thena.api.actions.ImmutableBranchObjects;
+import io.resys.thena.api.actions.GitBranchActions;
+import io.resys.thena.api.actions.GitBranchActions.BranchObjects;
+import io.resys.thena.api.actions.GitBranchActions.BranchObjectsQuery;
+import io.resys.thena.api.actions.GitPullActions.MatchCriteria;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.git.Branch;
-import io.resys.thena.api.entities.git.ImmutableBranchObjects;
-import io.resys.thena.api.entities.git.ThenaGitObjects.BranchObjects;
 import io.resys.thena.api.envelope.ImmutableQueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
@@ -61,7 +62,7 @@ public class BranchObjectsQueryImpl implements BranchObjectsQuery {
     return this;
   }
   @Override
-  public Uni<QueryEnvelope<BranchObjects>> get() {
+  public Uni<QueryEnvelope<GitBranchActions.BranchObjects>> get() {
     RepoAssert.notEmpty(branchName, () -> "branchName is not defined!");
     
     return state.project().getByNameOrId(repoId).onItem()
@@ -73,14 +74,14 @@ public class BranchObjectsQueryImpl implements BranchObjectsQuery {
     });
   }
   
-  private Uni<QueryEnvelope<BranchObjects>> getRef(Tenant repo, String refName, GitRepo ctx) {
+  private Uni<QueryEnvelope<GitBranchActions.BranchObjects>> getRef(Tenant repo, String refName, GitRepo ctx) {
 
     return ctx.query().refs().name(refName).onItem()
         .transformToUni(ref -> {
           if(ref == null) {
             return ctx.query().refs().findAll().collect().asList().onItem().transform(allRefs -> 
-              (QueryEnvelope<BranchObjects>) ImmutableQueryEnvelope
-              .<BranchObjects>builder()
+              (QueryEnvelope<GitBranchActions.BranchObjects>) ImmutableQueryEnvelope
+              .<GitBranchActions.BranchObjects>builder()
               .repo(repo)
               .status(QueryEnvelopeStatus.OK)
               .addMessages(RepoException.builder().noRepoRef(
@@ -93,13 +94,13 @@ public class BranchObjectsQueryImpl implements BranchObjectsQuery {
         });
   }
   
-  private Uni<QueryEnvelope<BranchObjects>> getState(Tenant repo, Branch ref, GitRepo ctx) {
+  private Uni<QueryEnvelope<GitBranchActions.BranchObjects>> getState(Tenant repo, Branch ref, GitRepo ctx) {
     return ObjectsUtils.getCommit(ref.getCommit(), ctx).onItem()
         .transformToUni(commit -> ObjectsUtils.getTree(commit, ctx).onItem()
         .transformToUni(tree -> {
           if(this.docsIncluded) {
             return ObjectsUtils.getBlobs(tree, blobCriteria, ctx)
-              .onItem().transform(blobs -> ImmutableQueryEnvelope.<BranchObjects>builder()
+              .onItem().transform(blobs -> ImmutableQueryEnvelope.<GitBranchActions.BranchObjects>builder()
                 .repo(repo)
                 .objects(ImmutableBranchObjects.builder()
                     .repo(repo)
@@ -113,7 +114,7 @@ public class BranchObjectsQueryImpl implements BranchObjectsQuery {
                 .build());
           }
           
-          return Uni.createFrom().item(ImmutableQueryEnvelope.<BranchObjects>builder()
+          return Uni.createFrom().item(ImmutableQueryEnvelope.<GitBranchActions.BranchObjects>builder()
             .repo(repo)
             .objects(ImmutableBranchObjects.builder()
                 .repo(repo)

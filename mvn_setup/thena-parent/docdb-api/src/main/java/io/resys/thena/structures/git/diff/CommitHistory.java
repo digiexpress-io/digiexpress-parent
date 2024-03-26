@@ -23,8 +23,8 @@ package io.resys.thena.structures.git.diff;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import io.resys.thena.api.ThenaClient;
 import io.resys.thena.api.entities.git.Commit;
-import io.resys.thena.api.entities.git.ThenaGitObjects.GitRepoObjects;
 
 public interface CommitHistory {
   int getIndex();
@@ -48,14 +48,14 @@ public interface CommitHistory {
   }
   
   public static class CommitHistoryBean implements CommitHistory {
-    private final GitRepoObjects repo;
+    private final ThenaClient.GitRepoObjects repo;
     private final int index;
     private final Commit commit;
     private final Optional<CommitHistory> after;
     private final CommitHistorySelectBean select;
     private Optional<CommitHistory> before;
     
-    public CommitHistoryBean(GitRepoObjects repo, String commit) {
+    public CommitHistoryBean(ThenaClient.GitRepoObjects repo, String commit) {
       this.index = 0;
       this.repo = repo;
       this.commit = (Commit) repo.getValues().get(commit);
@@ -63,7 +63,7 @@ public interface CommitHistory {
       this.select = new CommitHistorySelectBean().setSelect(this);
     }
     
-    private CommitHistoryBean(GitRepoObjects repo, Commit commit, int index, CommitHistory after, CommitHistorySelectBean select) {
+    private CommitHistoryBean(ThenaClient.GitRepoObjects repo, Commit commit, int index, CommitHistory after, CommitHistorySelectBean select) {
       this.index = index;
       this.repo = repo;
       this.commit = commit;
@@ -108,10 +108,10 @@ public interface CommitHistory {
   }
   
   public static class Builder {
-    public CommitHistory from(GitRepoObjects repo, String commit) {
+    public CommitHistory from(ThenaClient.GitRepoObjects repo, String commit) {
       return new CommitHistoryBean(repo, commit);
     }
-    public CommitHistory from(GitRepoObjects repo, String commit, LocalDateTime at) {
+    public CommitHistory from(ThenaClient.GitRepoObjects repo, String commit, LocalDateTime at) {
       CommitHistory history = new CommitHistoryBean(repo, commit);
       
       var start = history;

@@ -24,11 +24,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import io.resys.thena.api.actions.HistoryActions.BlobHistoryQuery;
-import io.resys.thena.api.actions.PullActions.MatchCriteria;
+import io.resys.thena.api.actions.ImmutableHistoryObjects;
+import io.resys.thena.api.actions.GitHistoryActions;
+import io.resys.thena.api.actions.GitHistoryActions.BlobHistoryQuery;
+import io.resys.thena.api.actions.GitHistoryActions.HistoryObjects;
+import io.resys.thena.api.actions.GitPullActions.MatchCriteria;
 import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.api.entities.git.ImmutableHistoryObjects;
-import io.resys.thena.api.entities.git.ThenaGitObjects.HistoryObjects;
 import io.resys.thena.api.envelope.ImmutableQueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
@@ -58,7 +59,7 @@ public class BlobHistoryQueryImpl implements BlobHistoryQuery {
   @Override public BlobHistoryQuery latestOnly() { this.latestOnly = true; return this; }
   
   @Override
-  public Uni<QueryEnvelope<HistoryObjects>> get() {
+  public Uni<QueryEnvelope<GitHistoryActions.HistoryObjects>> get() {
     RepoAssert.notEmpty(repoId, () -> "repoId is not defined!");
     RepoAssert.notEmpty(branchName, () -> "branchName is not defined!");
     
@@ -74,7 +75,7 @@ public class BlobHistoryQueryImpl implements BlobHistoryQuery {
         .criteria(criteria)
         .find().collect()
         .asList().onItem().transform(found -> ImmutableQueryEnvelope
-            .<HistoryObjects>builder().status(QueryEnvelopeStatus.OK).objects(ImmutableHistoryObjects.builder()
+            .<GitHistoryActions.HistoryObjects>builder().status(QueryEnvelopeStatus.OK).objects(ImmutableHistoryObjects.builder()
                 .values(found)
                 .build())
             .build());

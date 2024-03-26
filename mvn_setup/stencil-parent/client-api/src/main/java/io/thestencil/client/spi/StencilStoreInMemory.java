@@ -27,12 +27,12 @@ import java.util.List;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.resys.thena.api.ThenaClient;
-import io.resys.thena.api.actions.BranchActions;
-import io.resys.thena.api.actions.CommitActions;
-import io.resys.thena.api.actions.DiffActions;
-import io.resys.thena.api.actions.HistoryActions;
-import io.resys.thena.api.actions.PullActions;
-import io.resys.thena.api.actions.TagActions;
+import io.resys.thena.api.actions.GitBranchActions;
+import io.resys.thena.api.actions.GitCommitActions;
+import io.resys.thena.api.actions.GitDiffActions;
+import io.resys.thena.api.actions.GitHistoryActions;
+import io.resys.thena.api.actions.GitPullActions;
+import io.resys.thena.api.actions.GitTagActions;
 import io.resys.thena.api.actions.TenantActions;
 import io.resys.thena.api.actions.TenantActions.RepoResult;
 import io.resys.thena.api.entities.Tenant;
@@ -100,27 +100,27 @@ public class StencilStoreInMemory implements StencilStore {
       return new GitStructuredTenant() {
         
         @Override
-        public CommitActions commit() {
+        public GitCommitActions commit() {
           throw new IllegalArgumentException("no read or writes supported!");
         }
         @Override
-        public TagActions tag() {
+        public GitTagActions tag() {
           throw new IllegalArgumentException("no read or writes supported!");
         }
         @Override
-        public DiffActions diff() {
+        public GitDiffActions diff() {
           throw new IllegalArgumentException("no read or writes supported!");
         }
         @Override
-        public HistoryActions history() {
+        public GitHistoryActions history() {
           throw new IllegalArgumentException("no read or writes supported!");
         }
         @Override
-        public PullActions pull() {
+        public GitPullActions pull() {
           throw new IllegalArgumentException("no read or writes supported!");
         }
         @Override
-        public BranchActions branch() {
+        public GitBranchActions branch() {
           throw new IllegalArgumentException("no read or writes supported!");
         }
         @Override

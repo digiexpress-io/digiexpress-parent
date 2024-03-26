@@ -21,13 +21,18 @@ package io.resys.thena.api.actions;
  */
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-import io.resys.thena.api.actions.PullActions.MatchCriteria;
-import io.resys.thena.api.entities.git.ThenaGitObjects.HistoryObjects;
+import org.immutables.value.Value;
+
+import io.resys.thena.api.actions.GitPullActions.MatchCriteria;
+import io.resys.thena.api.entities.GitObjects;
+import io.resys.thena.api.entities.git.BlobHistory;
+import io.resys.thena.api.envelope.BlobContainer;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.smallrye.mutiny.Uni;
 
-public interface HistoryActions {
+public interface GitHistoryActions {
 
   BlobHistoryQuery blobQuery();
   
@@ -39,6 +44,18 @@ public interface HistoryActions {
     BlobHistoryQuery docId(String docId); // entity name
     BlobHistoryQuery latestOnly(); // search only from last known version
     BlobHistoryQuery latestOnly(boolean latest); // search only from last known version
-    Uni<QueryEnvelope<HistoryObjects>> get();
+    Uni<QueryEnvelope<GitHistoryActions.HistoryObjects>> get();
+  }
+
+  @Value.Immutable
+  interface HistoryObjects extends BlobContainer, GitObjects {
+    List<BlobHistory> getValues();
+    
+    default <T> List<T> accept(BlobVisitor<T> visitor) {
+      return getValues().stream()
+          .map(value -> value.getBlob())
+          .map(blob -> visitor.visit(blob.getValue()))
+          .collect(Collectors.toUnmodifiableList());
+    }
   }
 }

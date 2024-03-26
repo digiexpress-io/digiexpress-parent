@@ -1,6 +1,6 @@
 package io.thestencil.client.spi.exceptions;
 
-import io.resys.thena.api.actions.CommitActions.CommitResultEnvelope;
+import io.resys.thena.api.actions.GitCommitActions.CommitResultEnvelope;
 import io.thestencil.client.api.MigrationBuilder.Sites;
 import io.thestencil.client.api.StencilComposer.SiteState;
 

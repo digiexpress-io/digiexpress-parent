@@ -27,7 +27,8 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.resys.thena.api.ThenaClient;
-import io.resys.thena.api.entities.git.ThenaGitObjects.PullObject;
+import io.resys.thena.api.actions.GitPullActions;
+import io.resys.thena.api.actions.GitPullActions.PullObject;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.StencilClient.Entity;
@@ -52,7 +53,7 @@ public interface StencilConfig {
   
   @Value.Immutable
   interface EntityState<T extends EntityBody> {
-    QueryEnvelope<PullObject> getSrc();
+    QueryEnvelope<GitPullActions.PullObject> getSrc();
     Entity<T> getEntity();
   }
 

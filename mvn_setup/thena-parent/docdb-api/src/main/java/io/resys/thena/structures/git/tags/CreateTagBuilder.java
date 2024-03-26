@@ -23,9 +23,9 @@ package io.resys.thena.structures.git.tags;
 import java.time.LocalDateTime;
 
 import io.resys.thena.api.actions.ImmutableTagResult;
-import io.resys.thena.api.actions.TagActions.TagBuilder;
-import io.resys.thena.api.actions.TagActions.TagResult;
-import io.resys.thena.api.actions.TagActions.TagResultStatus;
+import io.resys.thena.api.actions.GitTagActions.TagBuilder;
+import io.resys.thena.api.actions.GitTagActions.TagResult;
+import io.resys.thena.api.actions.GitTagActions.TagResultStatus;
 import io.resys.thena.api.entities.git.ImmutableTag;
 import io.resys.thena.api.entities.git.Tag;
 import io.resys.thena.api.entities.git.Branch;

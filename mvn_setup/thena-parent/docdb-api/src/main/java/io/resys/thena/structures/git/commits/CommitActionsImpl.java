@@ -2,7 +2,7 @@ package io.resys.thena.structures.git.commits;
 
 import java.util.List;
 
-import io.resys.thena.api.actions.CommitActions;
+import io.resys.thena.api.actions.GitCommitActions;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.git.Commit;
 import io.resys.thena.api.entities.git.Tree;
@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @RequiredArgsConstructor
 @Slf4j
-public class CommitActionsImpl implements CommitActions {
+public class CommitActionsImpl implements GitCommitActions {
 
   private final DbState state;
   private final String repoId;
