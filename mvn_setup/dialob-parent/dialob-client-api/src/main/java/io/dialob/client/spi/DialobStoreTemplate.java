@@ -22,7 +22,7 @@ import io.dialob.client.spi.support.DialobAssert;
 import io.dialob.client.spi.support.OidUtils;
 import io.dialob.client.spi.support.Sha2;
 import io.resys.thena.docdb.api.actions.CommitActions.CommitBuilder;
-import io.resys.thena.docdb.api.actions.RepoActions.RepoStatus;
+import io.resys.thena.docdb.api.actions.TenantModel.RepoStatus;
 import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.docdb.api.models.Repo.CommitResultStatus;
 import io.resys.thena.docdb.api.models.Repo.RepoType;
@@ -66,7 +66,7 @@ public class DialobStoreTemplate extends PersistenceCommands implements DialobSt
       public Uni<DialobStore> create() {
         DialobAssert.notNull(repoName, () -> "repoName must be defined!");
         final var client = config.getClient();
-        final var newRepo = client.repo().projectBuilder().name(repoName, RepoType.git).build();
+        final var newRepo = client.tenants().commit().name(repoName, RepoType.git).build();
         return newRepo.onItem().transform((repoResult) -> {
           if(repoResult.getStatus() != RepoStatus.OK) {
             throw new StoreException("REPO_CREATE_FAIL", null, 
@@ -93,9 +93,9 @@ public class DialobStoreTemplate extends PersistenceCommands implements DialobSt
       public Uni<Boolean> createIfNot() {
         final var client = config.getClient();
         
-        return client.git().project().projectName(config.getRepoName()).get().onItem().transformToUni(repo -> {
+        return client.git(config.getRepoName()).project().get().onItem().transformToUni(repo -> {
           if(repo == null) {
-            return client.repo().projectBuilder().name(config.getRepoName(), RepoType.git).build().onItem().transform(newRepo -> true); 
+            return client.tenants().commit().name(config.getRepoName(), RepoType.git).build().onItem().transform(newRepo -> true); 
           }
           return Uni.createFrom().item(true);
         });
@@ -158,9 +158,9 @@ public class DialobStoreTemplate extends PersistenceCommands implements DialobSt
         .sorted(COMP)
         .collect(Collectors.toList());
     
-    final CommitBuilder commitBuilder = config.getClient().git().commit()
+    final CommitBuilder commitBuilder = config.getClient().git(config.getRepoName()).commit()
         .commitBuilder()
-        .head(config.getRepoName(), config.getHeadName())
+        .branchName(config.getHeadName())
         .message(
             "Save batch with new: " + create.size() + 
             " , updated: " + update.size() +
@@ -218,9 +218,8 @@ public class DialobStoreTemplate extends PersistenceCommands implements DialobSt
       
       return commitBuilder.build().onItem().transformToUni(commit -> {
         if(commit.getStatus() == CommitResultStatus.OK) {
-          return config.getClient().git()
+          return config.getClient().git(config.getRepoName())
               .pull().pullQuery()
-              .projectName(config.getRepoName())
               .branchNameOrCommitOrTag(config.getHeadName())
               .docId(ids)
               .findAll().onItem()

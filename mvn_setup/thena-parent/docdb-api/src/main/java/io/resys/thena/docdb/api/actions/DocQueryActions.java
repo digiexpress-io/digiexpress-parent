@@ -12,7 +12,6 @@ public interface DocQueryActions {
 
   
   interface DocObjectsQuery {
-    DocObjectsQuery repoId(String repoId);
     DocObjectsQuery matchId(String matchId);          // can be external id/doc id
     DocObjectsQuery matchIds(List<String> matchId);   // can be external id/doc id
     DocObjectsQuery branchName(String branchName);

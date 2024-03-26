@@ -31,14 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class MemberHierarchyQueryImpl implements MemberHierarchyQuery {
   private final DbState state;
-  private String repoId;
-
-  @Override
-  public MemberHierarchyQuery repoId(String repoId) {
-    RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
-    this.repoId = repoId;
-    return this;
-  }
+  private final String repoId;
 
 	@Override
 	public Uni<QueryEnvelope<OrgMemberHierarchy>> get(String userId) {

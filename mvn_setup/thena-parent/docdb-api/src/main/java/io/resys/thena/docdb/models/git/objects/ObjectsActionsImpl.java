@@ -28,10 +28,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ObjectsActionsImpl implements PullActions {
   private final DbState state;
-
-
+  private final String repoId;
   @Override
   public PullObjectsQuery pullQuery() {
-    return new PullObjectsQueryImpl(state);
+    return new PullObjectsQueryImpl(state, repoId);
   }
 }

@@ -32,7 +32,7 @@ public interface HistoryActions {
   BlobHistoryQuery blobQuery();
   
   interface BlobHistoryQuery {
-    BlobHistoryQuery head(String projectName, String branchName);
+    BlobHistoryQuery branchName(String branchName);
     BlobHistoryQuery matchBy(MatchCriteria ... matchCriteria);
     BlobHistoryQuery matchBy(List<MatchCriteria> matchCriteria);
 

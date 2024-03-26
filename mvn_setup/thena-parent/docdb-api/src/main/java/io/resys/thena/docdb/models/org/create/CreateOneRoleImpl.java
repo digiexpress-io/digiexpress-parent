@@ -23,7 +23,7 @@ public class CreateOneRoleImpl implements CreateOneRight {
 
   private final DbState state;
 
-  private String repoId;
+  private final String repoId;
   private String author;
   private String message;
 
@@ -34,7 +34,6 @@ public class CreateOneRoleImpl implements CreateOneRight {
   private List<String> addRoleToGroups = new ArrayList<>();
   private List<String> addRoleToUsers = new ArrayList<>();
 
-  @Override public CreateOneRoleImpl repoId(String repoId) {         this.repoId = RepoAssert.notEmpty(repoId,           () -> "repoId can't be empty!"); return this; }
   @Override public CreateOneRoleImpl author(String author) {         this.author = RepoAssert.notEmpty(author,           () -> "author can't be empty!"); return this; }
   @Override public CreateOneRoleImpl message(String message) {       this.message = RepoAssert.notEmpty(message,         () -> "message can't be empty!"); return this; }
   @Override public CreateOneRoleImpl rightName(String roleName) {   	 this.roleName = RepoAssert.notEmpty(roleName,       () -> "roleName can't be empty!"); return this; }
@@ -46,7 +45,6 @@ public class CreateOneRoleImpl implements CreateOneRight {
   
   @Override
   public Uni<OneRightEnvelope> build() {
-    RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
     RepoAssert.notEmpty(author, () -> "author can't be empty!");
     RepoAssert.notEmpty(message, () -> "message can't be empty!");
     RepoAssert.notEmpty(roleName, () -> "roleName can't be empty!");

@@ -21,7 +21,7 @@ public class PermissionQueryImpl implements PermissionQuery {
   @Override
   public Uni<Permission> get(String permissionId) {
     final var repoId = ctx.getConfig().getRepoId();
-    final Uni<QueryEnvelope<OrgRightHierarchy>> permission = ctx.getOrg().find().rightHierarchyQuery().repoId(repoId).get(permissionId);
+    final Uni<QueryEnvelope<OrgRightHierarchy>> permission = ctx.getOrg(repoId).find().rightHierarchyQuery().get(permissionId);
     
     return permission.onItem().transform((response) -> {
       if(response.getStatus() != QueryEnvelopeStatus.OK) {
@@ -44,7 +44,7 @@ public class PermissionQueryImpl implements PermissionQuery {
   @Override
   public Uni<List<Permission>> findAllPermissions() {
     final var repoId = ctx.getConfig().getRepoId();
-    final Uni<QueryEnvelopeList<OrgRightHierarchy>> permissions = ctx.getOrg().find().rightHierarchyQuery().repoId(repoId).findAll();
+    final Uni<QueryEnvelopeList<OrgRightHierarchy>> permissions = ctx.getOrg(repoId).find().rightHierarchyQuery().findAll();
     
     return permissions.onItem().transform((response) -> {
       if(response.getStatus() != QueryEnvelopeStatus.OK) {

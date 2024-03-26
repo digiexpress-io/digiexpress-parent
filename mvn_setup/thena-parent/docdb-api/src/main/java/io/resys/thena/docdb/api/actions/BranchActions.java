@@ -33,7 +33,6 @@ public interface BranchActions {
   
   // build REF world state, no blobs by default
   interface BranchObjectsQuery {
-    BranchObjectsQuery projectName(String project);
     BranchObjectsQuery branchName(String ref);
     BranchObjectsQuery docsIncluded();
     BranchObjectsQuery docsIncluded(boolean docsIncluded);

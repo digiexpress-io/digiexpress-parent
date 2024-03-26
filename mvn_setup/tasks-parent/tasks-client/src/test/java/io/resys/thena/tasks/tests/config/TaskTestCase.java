@@ -37,7 +37,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.resys.thena.docdb.jackson.VertexExtModule;
 import io.resys.thena.docdb.models.git.GitPrinter;
-import io.resys.thena.docdb.spi.DocDBDefault;
+import io.resys.thena.docdb.spi.ThenaClientPgSql;
 import io.resys.thena.tasks.client.api.TaskClient;
 import io.resys.thena.tasks.client.api.model.Document.DocumentType;
 import io.resys.thena.tasks.client.spi.DocumentStoreImpl;
@@ -111,8 +111,8 @@ public class TaskTestCase {
 
   public void assertCommits(String repoName) {
     final var config = getStore().getConfig();
-    final var state = ((DocDBDefault) config.getClient()).getState();
-    final var commits = config.getClient().git().commit().findAllCommits(repoName).await().atMost(atMost);
+    final var state = ((ThenaClientPgSql) config.getClient()).getState();
+    final var commits = config.getClient().git(repoName).commit().findAllCommits().await().atMost(atMost);
     log.debug("Total commits: {}", commits.size());
     
   }
@@ -136,7 +136,7 @@ public class TaskTestCase {
 
   public String printRepo(TaskClient client) {
     final var config = ((TaskClientImpl) client).getCtx().getConfig();
-    final var state = ((DocDBDefault) config.getClient()).getState();
+    final var state = ((ThenaClientPgSql) config.getClient()).getState();
     final var repo = client.repo().getRepo().await().atMost(Duration.ofMinutes(1));
     final String result = new GitPrinter(state).printWithStaticIds(repo);
     return result;
@@ -144,7 +144,7 @@ public class TaskTestCase {
   
   public String toStaticData(TaskClient client) {
     final var config = ((TaskClientImpl) client).getCtx().getConfig();
-    final var state = ((DocDBDefault) config.getClient()).getState();
+    final var state = ((ThenaClientPgSql) config.getClient()).getState();
     final var repo = client.repo().getRepo().await().atMost(Duration.ofMinutes(1));
     return new RepositoryToStaticData(state).print(repo);
   }

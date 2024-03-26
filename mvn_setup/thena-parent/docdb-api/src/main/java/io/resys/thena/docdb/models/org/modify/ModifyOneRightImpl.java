@@ -34,8 +34,8 @@ import lombok.RequiredArgsConstructor;
 public class ModifyOneRightImpl implements ModifyOneRight {
 
   private final DbState state;
-
-  private String repoId;
+  private final String repoId;
+  
   private String author;
   private String message;
 
@@ -52,7 +52,6 @@ public class ModifyOneRightImpl implements ModifyOneRight {
   private Collection<String> membersToRemove = new LinkedHashSet<>();
   
   @Override public ModifyOneRightImpl rightId(String rightId) {       this.rightId = RepoAssert.notEmpty(rightId,         () -> "rightId can't be empty!"); return this; }
-  @Override public ModifyOneRightImpl repoId(String repoId) {         this.repoId = RepoAssert.notEmpty(repoId,           () -> "repoId can't be empty!"); return this; }
   @Override public ModifyOneRightImpl author(String author) {         this.author = RepoAssert.notEmpty(author,           () -> "author can't be empty!"); return this; }
   @Override public ModifyOneRightImpl message(String message) {       this.message = RepoAssert.notEmpty(message,         () -> "message can't be empty!"); return this; }
   @Override public ModifyOneRightImpl externalId(String externalId) { this.externalId = Optional.ofNullable(externalId); return this; }

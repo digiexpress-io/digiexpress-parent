@@ -2,7 +2,7 @@ package io.resys.thena.docdb.models.git.diff;
 
 import java.util.function.Supplier;
 
-import io.resys.thena.docdb.api.DocDB.GitModel.GitRepoQuery;
+import io.resys.thena.docdb.api.ThenaClient.GitModel.GitRepoQuery;
 import io.resys.thena.docdb.api.actions.CommitActions;
 
 /*-

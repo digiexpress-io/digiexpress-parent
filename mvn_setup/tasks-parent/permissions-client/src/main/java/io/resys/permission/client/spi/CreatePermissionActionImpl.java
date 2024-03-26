@@ -23,13 +23,12 @@ public class CreatePermissionActionImpl implements CreatePermissionAction {
 
 
   public Uni<OneRightEnvelope> createRequest(CreatePermission command){
-    final CreateOneRight createOneRight = ctx.getOrg().commit().createOneRight();
+    final CreateOneRight createOneRight = ctx.getOrg(ctx.getConfig().getRepoId()).commit().createOneRight();
     
       if(command.getCommandType() == PermissionCommandType.CREATE_PERMISSION) {
         CreatePermission permission = (CreatePermission) command; 
       
         return createOneRight
-          .repoId(ctx.getConfig().getRepoId())
           .rightName(permission.getName())
           .rightDescription(permission.getDescription())
           .message("created permission")

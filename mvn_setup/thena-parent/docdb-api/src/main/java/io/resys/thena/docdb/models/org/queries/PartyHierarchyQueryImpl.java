@@ -25,19 +25,13 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class PartyHierarchyQueryImpl implements PartyHierarchyQuery {
   private final DbState state;
-  private String repoId;
+  private final String repoId;
   
-  @Override
-  public PartyHierarchyQuery repoId(String repoId) {
-    RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
-    this.repoId = repoId;
-    return this;
-  }
   @Override
   public Uni<QueryEnvelope<OrgPartyHierarchy>> get(String groupIdOrNameOrExternalId) {
     RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
     
-    return new OrgProjectQueryImpl(state).projectName(repoId).get()
+    return new OrgProjectQueryImpl(state, repoId).get()
         .onItem().transform(resp -> {
           if(resp.getStatus() != QueryEnvelopeStatus.OK) {
             return resp.toType();
@@ -53,7 +47,7 @@ public class PartyHierarchyQueryImpl implements PartyHierarchyQuery {
   }
   @Override
   public Uni<QueryEnvelopeList<OrgPartyHierarchy>> findAll() {
-    return new OrgProjectQueryImpl(state).projectName(repoId).get()
+    return new OrgProjectQueryImpl(state, repoId).get()
         .onItem().transform(resp -> {
           if(resp.getStatus() != QueryEnvelopeStatus.OK) {
             return resp.toListOfType();

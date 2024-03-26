@@ -35,8 +35,8 @@ import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import io.resys.thena.docdb.api.DocDB;
-import io.resys.thena.docdb.api.actions.RepoActions.RepoResult;
+import io.resys.thena.docdb.api.ThenaClient;
+import io.resys.thena.docdb.api.actions.TenantModel.RepoResult;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.Repo.RepoType;
 import io.resys.thena.docdb.jackson.VertexExtModule;
@@ -52,7 +52,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class FileTestTemplate {
-  private DocDB client;
+  private ThenaClient client;
 
   //private File file = new File("src/test/resources");
   private final String db = "junit";
@@ -64,15 +64,15 @@ public class FileTestTemplate {
       new VertxModule(),
       new VertexExtModule());
   private static AtomicInteger index = new AtomicInteger(1);
-  private BiConsumer<DocDB, Repo> callback;
+  private BiConsumer<ThenaClient, Repo> callback;
   private Repo repo;
   
   public FileTestTemplate() {
   }
-  public FileTestTemplate(BiConsumer<DocDB, Repo> callback) {
+  public FileTestTemplate(BiConsumer<ThenaClient, Repo> callback) {
     this.callback = callback;
   }  
-  public DocDB getClient() {
+  public ThenaClient getClient() {
     return client;
   }
   public Repo getRepo() {
@@ -97,7 +97,7 @@ public class FileTestTemplate {
         .errorHandler(new FileErrors())
         .build();
     
-    repo = this.client.repo().projectBuilder().name("junit" + index.incrementAndGet(), RepoType.git).build().await().atMost(Duration.ofSeconds(10)).getRepo();
+    repo = this.client.tenants().commit().name("junit" + index.incrementAndGet(), RepoType.git).build().await().atMost(Duration.ofSeconds(10)).getRepo();
     if(callback != null) {
       callback.accept(client, repo);
     }
@@ -110,7 +110,7 @@ public class FileTestTemplate {
     
   public RepoResult createRepo(String name) {
     
-    RepoResult repo = client.repo().projectBuilder()
+    RepoResult repo = client.tenants().commit()
         .name(name, RepoType.git)
         .build()
         .await().atMost(Duration.ofMinutes(1));
@@ -119,7 +119,7 @@ public class FileTestTemplate {
     return repo;
   }
   
-  public DocDB getClient(Repo repo) {
+  public ThenaClient getClient(Repo repo) {
     // final var ctx = ClientCollections.defaults(db).toRepo(repo);
     return client;
   }

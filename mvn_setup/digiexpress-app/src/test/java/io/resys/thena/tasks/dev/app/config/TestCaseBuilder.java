@@ -35,7 +35,7 @@ import io.resys.sysconfig.client.spi.asset.AssetClientImpl;
 import io.resys.sysconfig.client.spi.executor.ExecutorClientImpl;
 import io.resys.sysconfig.client.spi.executor.ExecutorStoreImpl;
 import io.resys.sysconfig.client.spi.store.DocumentConfig.DocumentGidProvider;
-import io.resys.thena.docdb.api.DocDB;
+import io.resys.thena.docdb.api.ThenaClient;
 import io.resys.thena.docdb.jackson.VertexExtModule;
 import io.resys.thena.docdb.spi.DbCollections;
 import io.resys.thena.docdb.spi.DbState;
@@ -65,7 +65,7 @@ public class TestCaseBuilder {
   private AssetClient assetClient;
   private ExecutorClient executorClient;
   private TenantConfigClient tenantClient;
-  private final DocDB doc;
+  private final ThenaClient doc;
   private final DbState docState;
   private final String author = "jane.doe@morgue.com";
   private final String repoId;
@@ -301,7 +301,7 @@ public class TestCaseBuilder {
     DatabindCodec.prettyMapper().registerModules(modules);
     return DatabindCodec.mapper(); 
   }
-  private DocDB getClient(io.vertx.mutiny.pgclient.PgPool pgPool, String db) {
+  private ThenaClient getClient(io.vertx.mutiny.pgclient.PgPool pgPool, String db) {
     return DbStateSqlImpl.create().client(pgPool).db(db).errorHandler(new PgErrors()).build();
   }
 }

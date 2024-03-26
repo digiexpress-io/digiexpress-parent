@@ -13,26 +13,27 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class OrgCommitActionsImpl implements OrgCommitActions {
   private final DbState state;
+  private final String repoId;
 
   @Override
   public CreateOneMember createOneMember() {
-    return new CreateOneMemberImpl(state);
+    return new CreateOneMemberImpl(state, repoId);
   }
   @Override
   public CreateOneParty createOneParty() {
-    return new CreateOnePartyImpl(state);
+    return new CreateOnePartyImpl(state, repoId);
   }
   @Override
   public CreateOneRight createOneRight() {
-  	return new CreateOneRoleImpl(state);
+  	return new CreateOneRoleImpl(state, repoId);
   }
   @Override
   public ModifyOneMember modifyOneMember() {
-    return new ModifyOneMemberImpl(state);
+    return new ModifyOneMemberImpl(state, repoId);
   }
   @Override
   public ModifyOneRight modifyOneRight() {
-    return new ModifyOneRightImpl(state);
+    return new ModifyOneRightImpl(state, repoId);
   }
   @Override
   public ModifyOneParty modifyOneParty() {

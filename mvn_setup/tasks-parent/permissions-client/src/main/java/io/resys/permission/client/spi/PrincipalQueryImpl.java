@@ -21,7 +21,7 @@ public class PrincipalQueryImpl implements PrincipalQuery {
   @Override
   public Uni<Principal> get(String principalId) {
     final var repoId = ctx.getConfig().getRepoId();
-    final Uni<QueryEnvelope<OrgMemberHierarchy>> user = ctx.getOrg().find().memberHierarchyQuery().repoId(repoId).get(principalId);
+    final Uni<QueryEnvelope<OrgMemberHierarchy>> user = ctx.getOrg(repoId).find().memberHierarchyQuery().get(principalId);
     return user.onItem().transform((response) -> {
       if(response.getStatus() != QueryEnvelopeStatus.OK) {
         final var msg = "Failed to get principal by id = '%s'!".formatted(principalId);
@@ -44,7 +44,7 @@ public class PrincipalQueryImpl implements PrincipalQuery {
   @Override
   public Uni<List<Principal>> findAllPrincipals() {
     final var repoId = ctx.getConfig().getRepoId();
-    final Uni<QueryEnvelopeList<OrgMemberHierarchy>> users = ctx.getOrg().find().memberHierarchyQuery().repoId(repoId).findAll();
+    final Uni<QueryEnvelopeList<OrgMemberHierarchy>> users = ctx.getOrg(repoId).find().memberHierarchyQuery().findAll();
     return users.onItem().transform((response) -> {
       if(response.getStatus() != QueryEnvelopeStatus.OK) {
         final var msg = "Failed to find all principals!";

@@ -26,7 +26,7 @@ import org.immutables.value.Value;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.resys.thena.docdb.api.DocDB;
+import io.resys.thena.docdb.api.ThenaClient;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
 import io.resys.thena.docdb.api.models.ThenaGitObjects.PullObject;
 import io.smallrye.mutiny.Uni;
@@ -38,7 +38,7 @@ import io.vertx.core.json.JsonObject;
 
 @Value.Immutable
 public interface StencilConfig {
-  DocDB getClient();
+  ThenaClient getClient();
   String getRepoName();
   String getHeadName();
   AuthorProvider getAuthorProvider();

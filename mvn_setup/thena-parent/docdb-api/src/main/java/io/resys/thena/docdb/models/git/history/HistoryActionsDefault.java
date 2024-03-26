@@ -28,10 +28,11 @@ import lombok.RequiredArgsConstructor;
 public class HistoryActionsDefault implements HistoryActions {
 
   private final DbState state;
+  private final String repoId;
 
   @Override
   public BlobHistoryQuery blobQuery() {
-    return new BlobHistoryQueryImpl(state);
+    return new BlobHistoryQueryImpl(state, repoId);
   }
 
 }

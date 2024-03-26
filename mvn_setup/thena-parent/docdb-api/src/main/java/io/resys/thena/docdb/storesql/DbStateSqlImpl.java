@@ -22,7 +22,7 @@ import java.util.function.Function;
  * #L%
  */
 
-import io.resys.thena.docdb.api.DocDB;
+import io.resys.thena.docdb.api.ThenaClient;
 import io.resys.thena.docdb.models.doc.DocQueries;
 import io.resys.thena.docdb.models.doc.DocState;
 import io.resys.thena.docdb.models.git.GitQueries;
@@ -31,7 +31,7 @@ import io.resys.thena.docdb.models.org.OrgQueries;
 import io.resys.thena.docdb.models.org.OrgState;
 import io.resys.thena.docdb.spi.DbCollections;
 import io.resys.thena.docdb.spi.DbState;
-import io.resys.thena.docdb.spi.DocDBDefault;
+import io.resys.thena.docdb.spi.ThenaClientPgSql;
 import io.resys.thena.docdb.storesql.GitDbQueriesSqlImpl.ClientQuerySqlContext;
 import io.resys.thena.docdb.storesql.builders.RepoBuilderSqlPool;
 import io.resys.thena.docdb.storesql.statement.SqlMapperImpl;
@@ -122,7 +122,7 @@ public class DbStateSqlImpl implements DbState {
     public static DocQueries defaultDocQuery(ClientQuerySqlContext ctx) { return new DocDbQueriesSqlImpl(ctx); }
     public static OrgQueries defaultOrgQuery(ClientQuerySqlContext ctx) { return new OrgDbQueriesSqlImpl(ctx); }
     
-    public DocDB build() {
+    public ThenaClient build() {
       RepoAssert.notNull(client, () -> "client must be defined!");
       RepoAssert.notNull(db, () -> "db must be defined!");
       
@@ -138,7 +138,7 @@ public class DbStateSqlImpl implements DbState {
       
       final var state = new DbStateSqlImpl(ctx, client, errorHandler, sqlSchema, sqlMapper, sqlBuilder, gitQuery, docQuery, orgQuery);
       
-      return new DocDBDefault(state);
+      return new ThenaClientPgSql(state);
     }
   }
 }

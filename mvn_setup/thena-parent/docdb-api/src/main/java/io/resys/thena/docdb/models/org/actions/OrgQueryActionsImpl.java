@@ -11,24 +11,25 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class OrgQueryActionsImpl implements OrgQueryActions {
   private final DbState state;
-
+  private final String repoId;
+  
   @Override
   public MemberObjectsQuery memberQuery() {
-    return new MemberObjectsQueryImpl(state);
+    return new MemberObjectsQueryImpl(state, repoId);
   }
 
 	@Override
 	public MemberHierarchyQuery memberHierarchyQuery() {
-		return new MemberHierarchyQueryImpl(state);
+		return new MemberHierarchyQueryImpl(state, repoId);
 	}
 
   @Override
   public PartyHierarchyQuery partyHierarchyQuery() {
-    return new PartyHierarchyQueryImpl(state);
+    return new PartyHierarchyQueryImpl(state, repoId);
   }
 
   @Override
   public RightHierarchyQuery rightHierarchyQuery() {
-    return new RightHierarchyQueryImpl(state);
+    return new RightHierarchyQueryImpl(state, repoId);
   }
 }

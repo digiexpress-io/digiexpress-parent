@@ -102,8 +102,8 @@ public class DeleteAllTasksVisitor implements DocPullAndCommitVisitor<Task>{
   
   private CommitBuilder visitCommitCommand(DocumentConfig config) {
     final var client = config.getClient();
-    return client.git().commit().commitBuilder()
-      .head(config.getProjectName(), config.getHeadName())
+    return client.git(config.getProjectName()).commit().commitBuilder()
+      .branchName(config.getHeadName())
       .latestCommit()
       .author(config.getAuthor().get());
   }

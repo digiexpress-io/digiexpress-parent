@@ -14,7 +14,7 @@ import io.dialob.client.spi.store.DialobStoreConfig.AuthorProvider;
 import io.dialob.client.spi.store.DialobStoreConfig.GidProvider;
 import io.dialob.client.spi.support.DialobAssert;
 import io.dialob.client.spi.support.OidUtils;
-import io.resys.thena.docdb.api.DocDB;
+import io.resys.thena.docdb.api.ThenaClient;
 import io.resys.thena.docdb.storefile.DocDBFactoryFile;
 import io.resys.thena.docdb.storefile.FileErrors;
 import io.resys.thena.docdb.storefile.spi.FilePoolImpl;
@@ -115,7 +115,7 @@ public class DialobStoreFileImpl extends DialobStoreTemplate implements DialobSt
           this.db);
       }
 
-      final DocDB thena;
+      final ThenaClient thena;
       if(pool == null) {
         DialobAssert.notNull(db, () -> "db must be defined!");
         final var pgPool = new FilePoolImpl(new File(db), objectMapper);

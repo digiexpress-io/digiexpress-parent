@@ -10,7 +10,7 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Assertions;
 
-import io.resys.thena.docdb.api.DocDB;
+import io.resys.thena.docdb.api.ThenaClient;
 import io.resys.thena.docdb.api.actions.OrgCommitActions.ModType;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.Repo.CommitResultStatus;
@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class GenerateTestData {
-  private final DocDB docDb;
+  private final ThenaClient docDb;
   
 
   public void populate(Repo repo) {
@@ -48,8 +48,7 @@ public class GenerateTestData {
     }
     
     for(final var entry : groupsByUsers.entrySet()) {
-      final var builder = docDb.org().commit().modifyOneMember()
-          .repoId(repo.getId())
+      final var builder = docDb.org(repo.getId()).commit().modifyOneMember()
           .userId(entry.getKey())
           .author("ar-")
           .message("created membership");
@@ -96,8 +95,7 @@ public class GenerateTestData {
       
       
       final var externalId = root.getString("external_id");
-      final var result = docDb.org().commit().createOneParty()
-          .repoId(repo.getId())
+      final var result = docDb.org(repo.getId()).commit().createOneParty()
           .partyName(groupName)
           .partyDescription("created from tenant")
           .externalId(externalId)
@@ -129,8 +127,7 @@ public class GenerateTestData {
     takenGroupNames.add(groupNameInit);
     
     final var externalId = json.getString("external_id");
-    final var result = docDb.org().commit().createOneParty()
-        .repoId(repo.getId())
+    final var result = docDb.org(repo.getId()).commit().createOneParty()
         .parentId(json.getString("parent_group_external_id"))
         .partyName(groupName)
         .partyDescription("location")
@@ -162,8 +159,7 @@ public class GenerateTestData {
       takenUsernames.add(userNameInit);
       final var userName = userNameInit + suffix;
       
-      final var result = docDb.org().commit().createOneMember()
-        .repoId(repo.getId())
+      final var result = docDb.org(repo.getId()).commit().createOneMember()
         .userName(userName)
         .email(userName + "@digiexpress.io")
         .externalId(user.getString("external_id"))
@@ -176,8 +172,7 @@ public class GenerateTestData {
   }
   
   public void createRoles(Repo repo) {
-    var result = docDb.org().commit().createOneRight()
-        .repoId(repo.getId())
+    var result = docDb.org(repo.getId()).commit().createOneRight()
         .externalId("0")
         .rightName("VIEWER")
         .rightDescription("direct user and group role")
@@ -186,8 +181,7 @@ public class GenerateTestData {
         .build().await().atMost(Duration.ofMinutes(1));
       Assertions.assertEquals(CommitResultStatus.OK, result.getStatus());
  
-    result = docDb.org().commit().createOneRight()
-        .repoId(repo.getId())
+    result = docDb.org(repo.getId()).commit().createOneRight()
         .externalId("1")
         .rightName("USER")
         .rightDescription("direct user and group role")
@@ -196,8 +190,7 @@ public class GenerateTestData {
         .build().await().atMost(Duration.ofMinutes(1));
     Assertions.assertEquals(CommitResultStatus.OK, result.getStatus());
     
-    result = docDb.org().commit().createOneRight()
-        .repoId(repo.getId())
+    result = docDb.org(repo.getId()).commit().createOneRight()
         .externalId("2")
         .rightName("MANAGER")
         .rightDescription("direct user and group role")
@@ -213,8 +206,7 @@ public class GenerateTestData {
     for(final var userRaw : users) {
       final var user = (JsonObject) userRaw;
       
-      final var result = docDb.org().commit().modifyOneMember()
-        .repoId(repo.getId())
+      final var result = docDb.org(repo.getId()).commit().modifyOneMember()
         .userId(user.getString("user_external_id"))
         .modifyPartyRight(ModType.ADD, user.getString("group_external_id"), user.getString("role_external_id"))
         .author("au-")

@@ -42,7 +42,7 @@ import io.resys.hdes.client.spi.store.ThenaConfig.AuthorProvider;
 import io.resys.hdes.client.spi.store.ThenaConfig.GidProvider;
 import io.resys.hdes.client.spi.store.ThenaStoreTemplate;
 import io.resys.hdes.client.spi.util.HdesAssert;
-import io.resys.thena.docdb.api.DocDB;
+import io.resys.thena.docdb.api.ThenaClient;
 import io.resys.thena.docdb.storefile.DocDBFactoryFile;
 import io.resys.thena.docdb.storefile.FileErrors;
 import io.resys.thena.docdb.storefile.spi.FilePoolImpl;
@@ -154,7 +154,7 @@ public class HdesStoreFileImpl extends ThenaStoreTemplate implements HdesStore {
           this.db);
       }
       
-      final DocDB thena;
+      final ThenaClient thena;
       if(pool == null) {
         HdesAssert.notNull(db, () -> "asset direction for db must be defined!");
         final var pgPool = new FilePoolImpl(new File(db), objectMapper);

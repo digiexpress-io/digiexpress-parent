@@ -41,7 +41,7 @@ public class UpdateRoleActionImpl implements UpdateRoleAction {
   
   
   public Uni<OnePartyEnvelope> createRequest(String id, List<RoleUpdateCommand> commands) {
-    final ModifyOneParty modifyOneParty = ctx.getOrg().commit().modifyOneParty();
+    final ModifyOneParty modifyOneParty = ctx.getOrg(ctx.getConfig().getRepoId()).commit().modifyOneParty();
     
     for (RoleUpdateCommand command : commands) {
       switch(command.getCommandType()) {
@@ -85,7 +85,6 @@ public class UpdateRoleActionImpl implements UpdateRoleAction {
     
     return modifyOneParty
       .partyId(id) 
-      .repoId(ctx.getConfig().getRepoId())
       .message("Role update")
       .author(ctx.getConfig().getAuthor().get())
       .build();

@@ -22,7 +22,7 @@ package io.resys.thena.docdb.models.git;
 
 import java.util.stream.Collectors;
 
-import io.resys.thena.docdb.api.DocDB.GitModel.GitRepoQuery;
+import io.resys.thena.docdb.api.ThenaClient.GitModel.GitRepoQuery;
 import io.resys.thena.docdb.api.models.ImmutableGitRepoObjects;
 import io.resys.thena.docdb.api.models.ImmutableQueryEnvelope;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
@@ -44,7 +44,7 @@ import lombok.extern.slf4j.Slf4j;
 @Data @Accessors(fluent = true)
 public class GitRepoQueryImpl implements GitRepoQuery {
   private final DbState state;
-  private String projectName; //repo name
+  private final String projectName; //repo name
 
   @Override
   public Uni<QueryEnvelope<GitRepoObjects>> get() {

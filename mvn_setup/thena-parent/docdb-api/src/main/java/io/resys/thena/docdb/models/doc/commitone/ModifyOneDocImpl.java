@@ -7,7 +7,6 @@ import io.resys.thena.docdb.api.actions.DocCommitActions.OneDocEnvelope;
 import io.resys.thena.docdb.api.actions.ImmutableOneDocEnvelope;
 import io.resys.thena.docdb.api.models.ImmutableMessage;
 import io.resys.thena.docdb.api.models.Repo;
-import io.resys.thena.docdb.api.models.Repo.CommitResultStatus;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocLock;
 import io.resys.thena.docdb.models.doc.DocState.DocRepo;
 import io.resys.thena.docdb.models.doc.ImmutableDocLockCriteria;
@@ -28,12 +27,11 @@ public class ModifyOneDocImpl implements ModifyOneDoc {
   private JsonObject appendMeta = null;
   private boolean remove;
   
-  private String repoId;
+  private final String repoId;
   private String docId;
   private String author;
   private String message;
 
-  @Override public ModifyOneDocImpl repoId(String repoId) { this.repoId = RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!"); return this; }
   @Override public ModifyOneDocImpl remove() { this.remove = true; return this; }
   @Override public ModifyOneDocImpl meta(JsonObject blob) { this.appendMeta = RepoAssert.notNull(blob, () -> "merge can't be null!"); return this; }
   @Override public ModifyOneDocImpl docId(String docId) { this.docId = docId; return this; }

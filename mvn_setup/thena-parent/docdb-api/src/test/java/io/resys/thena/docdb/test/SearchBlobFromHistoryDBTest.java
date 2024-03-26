@@ -47,8 +47,8 @@ public class SearchBlobFromHistoryDBTest extends DbTestTemplate {
   public SearchBlobFromHistoryDBTest() {
     super((client, repo) -> {
       
-      client.git().commit().commitBuilder()
-          .head(repo.getName(), "main")
+      client.git(repo).commit().commitBuilder()
+          .branchName("main")
           .append("ID-1", new JsonObject(Map.of(
               "type", "person",
               "name", "sam", 
@@ -76,8 +76,8 @@ public class SearchBlobFromHistoryDBTest extends DbTestTemplate {
   public void addSamVimesChanges(int changes, String id) {
     final var client = getClient();
     for(int index = 0; index < changes; index++) { 
-      client.git().commit().commitBuilder()
-      .head(getRepo().getName(), "main")
+      client.git(getRepo().getName()).commit().commitBuilder()
+      .branchName("main")
       .append(id, JsonObject.of(
         "type", "person",
         "name", "sam", "lastName", "vimes",
@@ -95,8 +95,8 @@ public class SearchBlobFromHistoryDBTest extends DbTestTemplate {
   public void addCassandraChaseChanges(int changes, String id) {
     final var client = getClient();
     for(int index = 0; index < changes; index++) { 
-      client.git().commit().commitBuilder()
-      .head(getRepo().getName(), "main")
+      client.git(getRepo().getName()).commit().commitBuilder()
+      .branchName("main")
       .append(id, JsonObject.of(
         "type", "person",
         "name", "cassandra", "lastName", "chase",
@@ -117,8 +117,8 @@ public class SearchBlobFromHistoryDBTest extends DbTestTemplate {
     addSamVimesChanges(20, "ID-1");
     addCassandraChaseChanges(20, "ID-2");
     
-    final var history = getClient().git().history().blobQuery()
-      .head(getRepo().getName(), "main")
+    final var history = getClient().git(getRepo().getName()).history().blobQuery()
+      .branchName("main")
       .matchBy(ImmutableMatchCriteria.builder().type(MatchCriteriaType.EQUALS).key("name").value("sam").build())
       .latestOnly()
       .get()
@@ -137,8 +137,8 @@ public class SearchBlobFromHistoryDBTest extends DbTestTemplate {
     addSamVimesChanges(20, "ID-1");
     addCassandraChaseChanges(20, "ID-2");
     
-    final var history = getClient().git().history().blobQuery()
-      .head(getRepo().getName(), "main")
+    final var history = getClient().git(getRepo().getName()).history().blobQuery()
+      .branchName("main")
       .matchBy(ImmutableMatchCriteria.builder().type(MatchCriteriaType.LIKE).key("name").value("sam").build())
       .latestOnly()
       .get()
@@ -159,8 +159,8 @@ public class SearchBlobFromHistoryDBTest extends DbTestTemplate {
     addCassandraChaseChanges(20, "ID-2");
     
     
-    var history = getClient().git().history().blobQuery()
-      .head(getRepo().getName(), "main")
+    var history = getClient().git(getRepo().getName()).history().blobQuery()
+      .branchName("main")
       .matchBy(ImmutableMatchCriteria.builder().type(MatchCriteriaType.LIKE).key("name").value("sam").build())
       .latestOnly(false)
       .get()
@@ -170,8 +170,8 @@ public class SearchBlobFromHistoryDBTest extends DbTestTemplate {
     log.debug("Found 41 historic entries: \r\n {}", JsonArray.of(history).encodePrettily());
     
     
-    history = getClient().git().history().blobQuery()
-        .head(getRepo().getName(), "main")
+    history = getClient().git(getRepo().getName()).history().blobQuery()
+        .branchName("main")
         .matchBy(ImmutableMatchCriteria.builder().type(MatchCriteriaType.EQUALS).key("name").value("sam").build())
         .latestOnly(false)
         .get()

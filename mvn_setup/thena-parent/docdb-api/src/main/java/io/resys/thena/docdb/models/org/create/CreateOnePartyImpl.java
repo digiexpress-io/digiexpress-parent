@@ -25,7 +25,7 @@ public class CreateOnePartyImpl implements CreateOneParty {
 
   private final DbState state;
 
-  private String repoId;
+  private final String repoId;
   private String author;
   private String message;
 
@@ -37,7 +37,6 @@ public class CreateOnePartyImpl implements CreateOneParty {
   private List<String> addUsersToGroup = new ArrayList<>();
   private List<String> addRolesToGroup = new ArrayList<>();
 
-  @Override public CreateOnePartyImpl repoId(String repoId) {         this.repoId = RepoAssert.notEmpty(repoId,           () -> "repoId can't be empty!"); return this; }
   @Override public CreateOnePartyImpl author(String author) {         this.author = RepoAssert.notEmpty(author,           () -> "author can't be empty!"); return this; }
   @Override public CreateOnePartyImpl message(String message) {       this.message = RepoAssert.notEmpty(message,         () -> "message can't be empty!"); return this; }
   @Override public CreateOnePartyImpl partyName(String groupName) {   this.groupName = RepoAssert.notEmpty(groupName,     () -> "groupName can't be empty!"); return this; }

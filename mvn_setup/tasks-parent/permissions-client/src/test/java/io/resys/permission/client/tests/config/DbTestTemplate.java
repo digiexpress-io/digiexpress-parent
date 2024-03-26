@@ -18,7 +18,7 @@ import io.resys.permission.client.api.PermissionClient;
 import io.resys.permission.client.spi.PermissionClientImpl;
 import io.resys.permission.client.spi.PermissionStore;
 import io.resys.permission.client.spi.PermissionStoreImpl;
-import io.resys.thena.docdb.api.DocDB;
+import io.resys.thena.docdb.api.ThenaClient;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.jackson.VertexExtModule;
 import io.resys.thena.docdb.spi.DbCollections;
@@ -60,7 +60,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DbTestTemplate {
 	private boolean STORE_TO_DEBUG_DB = false;
-  private DocDB docDb;
+  private ThenaClient docDb;
   @Inject io.vertx.mutiny.pgclient.PgPool pgPool;
   @Inject io.vertx.mutiny.core.Vertx vertx;
   
@@ -130,7 +130,7 @@ public class DbTestTemplate {
   public void tearDown() {
   }
 
-  public DocDB getDocDb() {
+  public ThenaClient getDocDb() {
     return docDb;
   }
   public PermissionClient getClient() {

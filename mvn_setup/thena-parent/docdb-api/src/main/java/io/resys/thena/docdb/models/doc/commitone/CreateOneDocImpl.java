@@ -23,7 +23,7 @@ public class CreateOneDocImpl implements CreateOneDoc {
   private JsonObject appendMeta;
 
   private String parentDocId;
-  private String repoId;
+  private final String repoId;
   private String docId;
   private String externalId;
   private String docType;
@@ -32,7 +32,7 @@ public class CreateOneDocImpl implements CreateOneDoc {
   private String message;
   private String ownerId;
 
-  @Override public CreateOneDocImpl repoId(String repoId) {         this.repoId = RepoAssert.notEmpty(repoId,           () -> "repoId can't be empty!"); return this; }
+
   @Override public CreateOneDocImpl branchName(String branchName) { this.branchName = RepoAssert.isName(branchName,     () -> "branchName has invalid charecters!"); return this; }
   @Override public CreateOneDocImpl author(String author) {         this.author = RepoAssert.notEmpty(author,           () -> "author can't be empty!"); return this; }
   @Override public CreateOneDocImpl message(String message) {       this.message = RepoAssert.notEmpty(message,         () -> "message can't be empty!"); return this; }

@@ -39,7 +39,6 @@ public interface TagActions {
   TagQuery tagQuery();
   
   interface TagQuery {
-    TagQuery projectName(String projectName);
     TagQuery tagName(String tagName);
     
     Multi<Tag> findAll();
@@ -49,7 +48,7 @@ public interface TagActions {
   
   interface TagBuilder {
     TagBuilder tagName(String name);
-    TagBuilder head(String projectName, String branchNameOrCommitOrTag);
+    TagBuilder head(String branchNameOrCommitOrTag);
     TagBuilder author(String author);
     TagBuilder message(String message);    
     Uni<TagResult> build();

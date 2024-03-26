@@ -26,13 +26,15 @@ import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.resys.thena.docdb.api.DocDB;
+import io.resys.thena.docdb.api.ThenaClient;
 import io.resys.thena.docdb.api.actions.BranchActions;
 import io.resys.thena.docdb.api.actions.CommitActions;
 import io.resys.thena.docdb.api.actions.DiffActions;
 import io.resys.thena.docdb.api.actions.HistoryActions;
 import io.resys.thena.docdb.api.actions.PullActions;
-import io.resys.thena.docdb.api.actions.RepoActions;
+import io.resys.thena.docdb.api.actions.TenantModel;
+import io.resys.thena.docdb.api.actions.TenantModel.RepoResult;
+import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.actions.TagActions;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.ImmutableBranch;
@@ -65,7 +67,7 @@ public class StencilStoreInMemory implements StencilStore {
       })
       .repoName("in-memory")
       .headName("in-memory")
-      .client(new DocDBInMemeory());
+      .client(new ThenaClientInMemeory());
     this.config = init.build();
   }
   
@@ -87,14 +89,14 @@ public class StencilStoreInMemory implements StencilStore {
     
   }
   
-  private static class DocDBInMemeory implements DocDB {
+  private static class ThenaClientInMemeory implements ThenaClient {
     @Override
-    public RepoActions repo() {
+    public TenantModel tenants() {
       throw new IllegalArgumentException("no read or writes supported!");
     }
 
     @Override
-    public GitModel git() {
+    public GitModel git(String repoId) {
       return new GitModel() {
         
         @Override
@@ -128,12 +130,42 @@ public class StencilStoreInMemory implements StencilStore {
       };
     }
     @Override
-    public DocModel doc() {
+    public DocModel doc(String repoId) {
       throw new IllegalArgumentException("no read or writes supported!");
     }
 
     @Override
-    public OrgModel org() {
+    public OrgModel org(String repoId) {
+      throw new IllegalArgumentException("no read or writes supported!");
+    }
+
+    @Override
+    public GitModel git(RepoResult repo) {
+      throw new IllegalArgumentException("no read or writes supported!");
+    }
+
+    @Override
+    public GitModel git(Repo repo) {
+      throw new IllegalArgumentException("no read or writes supported!");
+    }
+
+    @Override
+    public DocModel doc(RepoResult repo) {
+      throw new IllegalArgumentException("no read or writes supported!");
+    }
+
+    @Override
+    public DocModel doc(Repo repo) {
+      throw new IllegalArgumentException("no read or writes supported!");
+    }
+
+    @Override
+    public OrgModel org(RepoResult repo) {
+      throw new IllegalArgumentException("no read or writes supported!");
+    }
+
+    @Override
+    public OrgModel org(Repo repo) {
       throw new IllegalArgumentException("no read or writes supported!");
     }
     

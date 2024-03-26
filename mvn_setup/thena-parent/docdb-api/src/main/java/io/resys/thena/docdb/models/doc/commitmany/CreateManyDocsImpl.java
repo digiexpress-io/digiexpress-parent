@@ -26,8 +26,8 @@ import lombok.RequiredArgsConstructor;
 public class CreateManyDocsImpl implements CreateManyDocs {
   private final DbState state;
   private final List<DocBatchForOne> items = new ArrayList<DocBatchForOne>();
+  private final String repoId;
   
-  private String repoId;
   private String branchName;
   private String docType;
   private String author;
@@ -35,7 +35,6 @@ public class CreateManyDocsImpl implements CreateManyDocs {
 
   private AddItemToCreateDoc lasItemBuilder;
   
-  @Override public CreateManyDocs repoId(String repoId)         { this.repoId = RepoAssert.notEmpty(repoId,       () -> "repoId can't be empty!"); return this; }
   @Override public CreateManyDocs branchName(String branchName) { this.branchName = RepoAssert.isName(branchName, () -> "branchName has invalid charecters!"); return this;}
   @Override public CreateManyDocs docType(String docType)       { this.docType = RepoAssert.notEmpty(docType,     () -> "docType can't be empty!"); return this; }
   @Override public CreateManyDocs author(String author)         { this.author = RepoAssert.notEmpty(author,       () -> "author can't be empty!"); return this; }

@@ -31,8 +31,8 @@ import org.junit.jupiter.api.Test;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
 import io.resys.thena.docdb.api.actions.CommitActions.CommitResultEnvelope;
-import io.resys.thena.docdb.api.actions.RepoActions.RepoResult;
-import io.resys.thena.docdb.api.actions.RepoActions.RepoStatus;
+import io.resys.thena.docdb.api.actions.TenantModel.RepoResult;
+import io.resys.thena.docdb.api.actions.TenantModel.RepoStatus;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.Repo.RepoType;
 import io.resys.thena.docdb.test.config.DbTestTemplate;
@@ -56,7 +56,7 @@ public class SimpleGitTest extends DbTestTemplate {
   @Test
   public void crateRepoAddAndDeleteFile() {
     // create project
-    RepoResult repo = getClient().repo().projectBuilder()
+    RepoResult repo = getClient().tenants().commit()
         .name("crateRepoAddAndDeleteFile", RepoType.git)
         .build()
         .await().atMost(Duration.ofMinutes(1));
@@ -64,8 +64,8 @@ public class SimpleGitTest extends DbTestTemplate {
     Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
     
     // Create head and first commit
-    CommitResultEnvelope commit_0 = getClient().git().commit().commitBuilder()
-      .head(repo.getRepo().getName(), "main")
+    CommitResultEnvelope commit_0 = getClient().git(repo).commit().commitBuilder()
+      .branchName("main")
       .append("readme.md", new JsonObject(Map.of(
           "type", "person",
           "name", "sam", 
@@ -81,8 +81,8 @@ public class SimpleGitTest extends DbTestTemplate {
     
     
     // Create head and first commit
-    CommitResultEnvelope commit_1 = getClient().git().commit().commitBuilder()
-      .head(repo.getRepo().getName(), "main")
+    CommitResultEnvelope commit_1 = getClient().git(repo).commit().commitBuilder()
+      .branchName( "main")
       .parent(commit_0.getCommit().getId())
       .remove("readme.md")
       .author("same vimes")
@@ -99,7 +99,7 @@ public class SimpleGitTest extends DbTestTemplate {
   @Test
   public void crateRepoWithOneCommit() {
     // create project
-    RepoResult repo = getClient().repo().projectBuilder()
+    RepoResult repo = getClient().tenants().commit()
         .name("project-x", RepoType.git)
         .build()
         .await().atMost(Duration.ofMinutes(1));
@@ -107,13 +107,12 @@ public class SimpleGitTest extends DbTestTemplate {
     Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
     
     // Create head and first commit
-    CommitResultEnvelope commit_0 = getClient().git().commit().commitBuilder()
-      .head("project-x", "main")
+    CommitResultEnvelope commit_0 = getClient().git(repo).commit().commitBuilder()
+      .branchName("main")
       .append("readme.md", JsonObject.of("doc", "readme content"))
       .append("file1.json", JsonObject.of())
       .append("fileFromObject.txt", JsonObject.mapFrom(ImmutableTestContent.builder().id("10").name("sam vimes").build()))
       .author("same vimes")
-      .head("project-x", "main")
       .message("first commit!")
       .build()
       .onFailure().invoke(e -> e.printStackTrace()).onFailure().recoverWithNull()
@@ -128,7 +127,7 @@ public class SimpleGitTest extends DbTestTemplate {
   @Test
   public void createRepoWithTwoCommits() {
     // create project
-    RepoResult repo = getClient().repo().projectBuilder()
+    RepoResult repo = getClient().tenants().commit()
         .name("project-xy", RepoType.git)
         .build()
         .await().atMost(Duration.ofMinutes(1));
@@ -136,8 +135,8 @@ public class SimpleGitTest extends DbTestTemplate {
     Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
     
     // Create head and first commit
-    CommitResultEnvelope commit_0 = getClient().git().commit().commitBuilder()
-      .head(repo.getRepo().getName(), "main")
+    CommitResultEnvelope commit_0 = getClient().git(repo).commit().commitBuilder()
+      .branchName("main")
       .append("readme.md", JsonObject.of("doc", "readme content"))
       .append("file1.json", JsonObject.of())
       .append("fileFromObject.txt", JsonObject.mapFrom(ImmutableTestContent.builder().id("10").name("sam vimes").build()))
@@ -152,8 +151,8 @@ public class SimpleGitTest extends DbTestTemplate {
     
     
     // Create head and first commit
-    CommitResultEnvelope commit_1 = getClient().git().commit().commitBuilder()
-      .head(repo.getRepo().getName(), "main")
+    CommitResultEnvelope commit_1 = getClient().git(repo).commit().commitBuilder()
+      .branchName("main")
       .parent(commit_0.getCommit().getId())
       .append("readme.md", JsonObject.of("doc", "readme content"))
       .append("file1.json", JsonObject.of())

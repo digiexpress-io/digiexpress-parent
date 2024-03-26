@@ -36,7 +36,7 @@ import lombok.experimental.Accessors;
 @Data @Accessors(fluent = true)
 public class AnyTagQuery implements TagQuery {
   private final DbState state;
-  private String projectName; //repoId
+  private final String projectName; //repoId
   private String tagName;
   
   @Override

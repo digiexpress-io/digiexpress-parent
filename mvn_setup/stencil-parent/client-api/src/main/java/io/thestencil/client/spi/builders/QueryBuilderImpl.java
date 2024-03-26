@@ -58,7 +58,7 @@ public class QueryBuilderImpl extends PersistenceCommands implements QueryBuilde
   @Override
   public Uni<SiteState> head() {
     final var siteName = config.getRepoName() + ":" + config.getHeadName();
-    return config.getClient().git().project().projectName(config.getRepoName()).get().onItem()
+    return config.getClient().git(config.getRepoName()).project().get().onItem()
       .transformToUni(repo -> {
         if(repo == null) {
          return Uni.createFrom().item(ImmutableSiteState.builder()
@@ -67,9 +67,8 @@ public class QueryBuilderImpl extends PersistenceCommands implements QueryBuilde
               .build()); 
         }
       
-        return config.getClient().git()
+        return config.getClient().git(config.getRepoName())
             .branch().branchQuery()
-            .projectName(config.getRepoName())
             .branchName(config.getHeadName())
             .docsIncluded()
             .get().onItem()
@@ -144,8 +143,7 @@ public class QueryBuilderImpl extends PersistenceCommands implements QueryBuilde
   }
   
   private Uni<SiteState> getCommitState(EntityState<Release> release) {
-    return config.getClient().git().commit().commitQuery()
-    .projectName(config.getRepoName())
+    return config.getClient().git(config.getRepoName()).commit().commitQuery()
     .branchNameOrCommitOrTag(release.getEntity().getBody().getParentCommit())
     .docsIncluded()
     .get().onItem()
@@ -164,9 +162,8 @@ public class QueryBuilderImpl extends PersistenceCommands implements QueryBuilde
   @SuppressWarnings("unchecked")
   @Override
   public <T extends EntityBody> Uni<List<Entity<T>>> head(List<String> ids, EntityType type) {
-    return config.getClient().git()
+    return config.getClient().git(config.getRepoName())
     .pull().pullQuery()
-    .projectName(config.getRepoName())
     .branchNameOrCommitOrTag(config.getHeadName())
     .docId(ids)
     .findAll().onItem()

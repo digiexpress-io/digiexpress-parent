@@ -15,7 +15,7 @@ import io.dialob.client.spi.store.DialobStoreConfig;
 import io.dialob.client.spi.store.ImmutableDialobStoreConfig;
 import io.dialob.client.spi.support.DialobAssert;
 import io.dialob.client.spi.support.OidUtils;
-import io.resys.thena.docdb.api.DocDB;
+import io.resys.thena.docdb.api.ThenaClient;
 import io.resys.thena.docdb.storesql.DbStateSqlImpl;
 import io.resys.thena.docdb.storesql.PgErrors;
 import io.vertx.core.json.JsonObject;
@@ -154,7 +154,7 @@ public class PgSqlDialobStore extends DialobStoreTemplate implements DialobStore
           this.pgPass == null ? "null" : "***");
       }
 
-      final DocDB thena;
+      final ThenaClient thena;
       if(pgPool == null) {
         DialobAssert.notNull(pgHost, () -> "pgHost must be defined!");
         DialobAssert.notNull(pgPort, () -> "pgPort must be defined!");

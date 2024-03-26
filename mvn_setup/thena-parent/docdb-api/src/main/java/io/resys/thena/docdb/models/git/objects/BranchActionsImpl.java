@@ -28,9 +28,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BranchActionsImpl implements BranchActions {
   private final DbState state;
+  private final String repoId;
 
   @Override
   public BranchObjectsQuery branchQuery() {
-    return new BranchObjectsQueryImpl(state);
+    return new BranchObjectsQueryImpl(state, repoId);
   }
 }

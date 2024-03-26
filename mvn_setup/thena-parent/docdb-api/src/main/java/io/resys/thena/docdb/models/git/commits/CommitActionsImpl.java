@@ -37,13 +37,15 @@ import lombok.extern.slf4j.Slf4j;
 public class CommitActionsImpl implements CommitActions {
 
   private final DbState state;
+  private final String repoId;
+  
   @Override
   public CommitBuilder commitBuilder() {
-    return new CommitBuilderImpl(state);
+    return new CommitBuilderImpl(state, repoId);
   }
 
   @Override
-  public Uni<List<Commit>> findAllCommits(String repoId) {
+  public Uni<List<Commit>> findAllCommits() {
     return state.project().getByNameOrId(repoId).onItem()
         .transformToUni((Repo existing) -> {
           if(existing == null) {
@@ -56,7 +58,7 @@ public class CommitActionsImpl implements CommitActions {
         });
   }
   @Override
-  public Uni<List<Tree>> findAllCommitTrees(String repoId) {
+  public Uni<List<Tree>> findAllCommitTrees() {
     return state.project().getByNameOrId(repoId).onItem()
         .transformToUni((Repo existing) -> {
           if(existing == null) {

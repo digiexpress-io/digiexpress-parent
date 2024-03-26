@@ -26,19 +26,13 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class RightHierarchyQueryImpl implements RightHierarchyQuery {
   private final DbState state;
-  private String repoId;
+  private final String repoId;
   
-  @Override
-  public RightHierarchyQuery repoId(String repoId) {
-    RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
-    this.repoId = repoId;
-    return this;
-  }
   @Override
   public Uni<QueryEnvelope<OrgRightHierarchy>> get(String roleIdOrNameOrExternalId) {
     RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
     
-    return new OrgProjectQueryImpl(state).projectName(repoId).get()
+    return new OrgProjectQueryImpl(state, repoId).get()
         .onItem().transform(resp -> {
           if(resp.getStatus() != QueryEnvelopeStatus.OK) {
             return resp.toType();
@@ -54,7 +48,7 @@ public class RightHierarchyQueryImpl implements RightHierarchyQuery {
   }
   @Override
   public Uni<QueryEnvelopeList<OrgRightHierarchy>> findAll() {
-    return new OrgProjectQueryImpl(state).projectName(repoId).get()
+    return new OrgProjectQueryImpl(state, repoId).get()
         .onItem().transform(resp -> {
           if(resp.getStatus() != QueryEnvelopeStatus.OK) {
             return resp.toListOfType();
@@ -104,7 +98,7 @@ public class RightHierarchyQueryImpl implements RightHierarchyQuery {
     
     RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
     
-    return new OrgProjectQueryImpl(state).projectName(repoId).get()
+    return new OrgProjectQueryImpl(state, repoId).get()
         .onItem().transform(resp -> {
           if(resp.getStatus() != QueryEnvelopeStatus.OK) {
             return resp.toType();

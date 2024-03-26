@@ -7,8 +7,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
-import io.resys.thena.docdb.api.DocDB;
-import io.resys.thena.docdb.api.actions.RepoActions.RepoResult;
+import io.resys.thena.docdb.api.ThenaClient;
+import io.resys.thena.docdb.api.actions.TenantModel.RepoResult;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.Repo.RepoType;
 import io.resys.thena.docdb.models.git.GitPrinter;
@@ -28,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class PgTestTemplate {
-  private DocDB client;
+  private ThenaClient client;
   @Inject
   io.vertx.mutiny.pgclient.PgPool pgPool;
   
@@ -41,7 +41,7 @@ public class PgTestTemplate {
         .client(pgPool)
         .errorHandler(new PgErrors())
         .build();
-    this.client.repo().projectBuilder().name("junit", RepoType.git).build();
+    this.client.tenants().commit().name("junit", RepoType.git).build();
   }
   
   @AfterEach
@@ -58,7 +58,7 @@ public class PgTestTemplate {
     connection.closeAndForget();
   }
 
-  public DocDB getClient() {
+  public ThenaClient getClient() {
     return client;
   }
   
@@ -73,14 +73,14 @@ public class PgTestTemplate {
   }
   
   public void prettyPrint(String repoId) {
-    Repo repo = getClient().git().project().projectName(repoId).get()
+    Repo repo = getClient().git(repoId).project().get()
         .await().atMost(Duration.ofMinutes(1)).getRepo();
     
     printRepo(repo);
   }
 
   public String toRepoExport(String repoId) {
-    Repo repo = getClient().git().project().projectName(repoId).get()
+    Repo repo = getClient().git(repoId).project().get()
         .await().atMost(Duration.ofMinutes(1)).getRepo();
     final String result = new TestExporter(createState()).print(repo);
     return result;
@@ -88,10 +88,10 @@ public class PgTestTemplate {
 
   
   public StencilComposer getPersistence(String repoId) {
-    final DocDB client = getClient();
+    final ThenaClient client = getClient();
     
     // create project
-    RepoResult repo = getClient().repo().projectBuilder()
+    RepoResult repo = getClient().tenants().commit()
         .name(repoId, RepoType.git)
         .build()
         .await().atMost(Duration.ofMinutes(1));

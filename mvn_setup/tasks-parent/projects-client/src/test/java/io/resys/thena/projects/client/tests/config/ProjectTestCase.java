@@ -37,7 +37,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.resys.thena.docdb.jackson.VertexExtModule;
 import io.resys.thena.docdb.models.git.GitPrinter;
-import io.resys.thena.docdb.spi.DocDBDefault;
+import io.resys.thena.docdb.spi.ThenaClientPgSql;
 import io.resys.thena.projects.client.api.TenantConfigClient;
 import io.resys.thena.projects.client.api.model.Document.DocumentType;
 import io.resys.thena.projects.client.spi.DocumentStoreImpl;
@@ -48,9 +48,7 @@ import io.vertx.core.json.jackson.DatabindCodec;
 import io.vertx.core.json.jackson.VertxModule;
 import io.vertx.mutiny.sqlclient.Pool;
 import jakarta.inject.Inject;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 public class ProjectTestCase {
   @Inject io.vertx.mutiny.pgclient.PgPool pgPool;
   public final Duration atMost = Duration.ofMinutes(5);
@@ -109,14 +107,6 @@ public class ProjectTestCase {
     return DatabindCodec.mapper(); 
   }
 
-  public void assertCommits(String repoName) {
-    final var config = getStore().getConfig();
-    final var state = ((DocDBDefault) config.getClient()).getState();
-    final var commits = config.getClient().git().commit().findAllCommits(repoName).await().atMost(atMost);
-    log.debug("Total commits: {}", commits.size());
-    
-  }
-  
   @AfterEach
   public void tearDown() {
     store = null;
@@ -136,7 +126,7 @@ public class ProjectTestCase {
 
   public String printRepo(TenantConfigClient client) {
     final var config = ((ProjectsClientImpl) client).getCtx().getConfig();
-    final var state = ((DocDBDefault) config.getClient()).getState();
+    final var state = ((ThenaClientPgSql) config.getClient()).getState();
     final var repo = client.getRepo().await().atMost(Duration.ofMinutes(1));
     final String result = new GitPrinter(state).printWithStaticIds(repo);
     return result;
@@ -144,7 +134,7 @@ public class ProjectTestCase {
   
   public String toStaticData(TenantConfigClient client) {
     final var config = ((ProjectsClientImpl) client).getCtx().getConfig();
-    final var state = ((DocDBDefault) config.getClient()).getState();
+    final var state = ((ThenaClientPgSql) config.getClient()).getState();
     final var repo = client.getRepo().await().atMost(Duration.ofMinutes(1));
     return new RepositoryToStaticData(state).print(repo);
   }

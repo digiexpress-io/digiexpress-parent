@@ -15,7 +15,7 @@ import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import io.resys.thena.docdb.api.DocDB;
+import io.resys.thena.docdb.api.ThenaClient;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.Repo.RepoType;
 import io.resys.thena.docdb.jackson.VertexExtModule;
@@ -60,18 +60,18 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DbTestTemplate {
 	private boolean STORE_TO_DEBUG_DB = false;
-  private DocDB client;
+  private ThenaClient client;
   @Inject io.vertx.mutiny.pgclient.PgPool pgPool;
   @Inject io.vertx.mutiny.core.Vertx vertx;
   
   private static AtomicInteger index = new AtomicInteger(1);
   private String db;
-  private BiConsumer<DocDB, Repo> callback;
+  private BiConsumer<ThenaClient, Repo> callback;
   private Repo repo;
   
   public DbTestTemplate() {
   }
-  public DbTestTemplate(BiConsumer<DocDB, Repo> callback) {
+  public DbTestTemplate(BiConsumer<ThenaClient, Repo> callback) {
     this.callback = callback;
   }  
   
@@ -113,7 +113,7 @@ public class DbTestTemplate {
 
 
     if(callback != null) {
-      repo = this.client.repo().projectBuilder()
+      repo = this.client.tenants().commit()
           .name("junit" + index.incrementAndGet(), RepoType.git)
           .build()
           .await().atMost(Duration.ofSeconds(10)).getRepo();
@@ -135,7 +135,7 @@ public class DbTestTemplate {
   public void tearDown() {
   }
 
-  public DocDB getClient() {
+  public ThenaClient getClient() {
     return client;
   }
   

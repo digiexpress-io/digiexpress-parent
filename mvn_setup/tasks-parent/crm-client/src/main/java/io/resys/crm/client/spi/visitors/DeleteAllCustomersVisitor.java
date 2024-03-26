@@ -54,8 +54,7 @@ public class DeleteAllCustomersVisitor implements DocObjectsVisitor<Uni<List<Cus
   
   @Override
   public DocObjectsQuery start(DocumentConfig config, DocObjectsQuery query) {
-    this.removeCommand = config.getClient().doc().commit().modifyManyDocs()
-        .repoId(config.getRepoId())
+    this.removeCommand = config.getClient().doc(config.getRepoId()).commit().modifyManyDocs()
         .author(config.getAuthor().get())
         .message("Delete Tenants");
     

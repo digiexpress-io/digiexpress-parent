@@ -33,10 +33,10 @@ import io.resys.thena.docdb.api.models.ThenaEnvelope;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 
-public interface RepoActions {
+public interface TenantModel {
 
-  RepoQuery projectsQuery();
-  RepoBuilder projectBuilder();  
+  RepoQuery find();
+  RepoBuilder commit();  
 
   interface RepoQuery {
     RepoQuery id(String id);

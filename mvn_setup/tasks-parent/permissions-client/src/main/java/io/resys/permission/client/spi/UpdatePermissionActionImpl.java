@@ -40,7 +40,7 @@ public class UpdatePermissionActionImpl implements UpdatePermissionAction {
 
   public Uni<OneRightEnvelope> createRequest(String id, List<PermissionUpdateCommand> commands){
     
-    final ModifyOneRight modifyOneRight = ctx.getOrg().commit().modifyOneRight();
+    final ModifyOneRight modifyOneRight = ctx.getOrg(ctx.getConfig().getRepoId()).commit().modifyOneRight();
     for(PermissionUpdateCommand command : commands) {
       switch(command.getCommandType()) {
       
@@ -67,7 +67,6 @@ public class UpdatePermissionActionImpl implements UpdatePermissionAction {
     }
       return modifyOneRight
         .rightId(id)
-        .repoId(ctx.getConfig().getRepoId())
         .message("Permission update")
         .author(ctx.getConfig().getAuthor().get())
         .build();

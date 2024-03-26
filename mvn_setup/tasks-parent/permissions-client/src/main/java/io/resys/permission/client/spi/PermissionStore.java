@@ -2,8 +2,8 @@ package io.resys.permission.client.spi;
 
 import org.immutables.value.Value;
 
-import io.resys.thena.docdb.api.DocDB;
-import io.resys.thena.docdb.api.DocDB.OrgModel;
+import io.resys.thena.docdb.api.ThenaClient;
+import io.resys.thena.docdb.api.ThenaClient.OrgModel;
 import io.resys.thena.docdb.api.models.Repo;
 
 /*-
@@ -32,7 +32,7 @@ public interface PermissionStore {
   PermissionRepositoryQuery query();
   PermissionStoreConfig getConfig();
   Uni<Repo> getRepo();
-  OrgModel getOrg();
+  OrgModel getOrg(String repoId);
   PermissionStore withRepoId(String repoId);
   
   interface PermissionRepositoryQuery {
@@ -47,7 +47,7 @@ public interface PermissionStore {
 
   @Value.Immutable
   public interface PermissionStoreConfig {
-    DocDB getClient();
+    ThenaClient getClient();
     String getRepoId();
     PermissionAuthorProvider getAuthor();
   }

@@ -15,7 +15,7 @@ import io.dialob.client.api.DialobStore.StoreRepoBuilder;
 import io.dialob.client.pgsql.PgSqlDialobStore;
 import io.dialob.client.spi.DialobStoreTemplate;
 import io.dialob.client.spi.support.RepositoryToStaticData;
-import io.resys.thena.docdb.api.DocDB;
+import io.resys.thena.docdb.api.ThenaClient;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.models.git.GitPrinter;
 import io.resys.thena.docdb.spi.DbCollections;
@@ -98,19 +98,19 @@ public class PgTestTemplate {
   }
 
   public void prettyPrint(String repoId) {
-    Repo repo = getThena().repo().projectsQuery().id(repoId).get()
+    Repo repo = getThena().tenants().find().id(repoId).get()
         .await().atMost(Duration.ofMinutes(1));
     printRepo(repo);
   }
 
   public String toRepoExport(String repoName) {
-    Repo repo = getThena().repo().projectsQuery().id(repoName).get()
+    Repo repo = getThena().tenants().find().id(repoName).get()
         .await().atMost(Duration.ofMinutes(1));
     final String result = new RepositoryToStaticData(createState(repo.getName())).print(repo);
     return result;
   }
 
-  public DocDB getThena() {
+  public ThenaClient getThena() {
     return store.getConfig().getClient();
   }
 

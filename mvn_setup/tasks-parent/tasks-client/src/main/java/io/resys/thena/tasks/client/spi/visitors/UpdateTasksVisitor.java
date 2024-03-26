@@ -57,8 +57,8 @@ public class UpdateTasksVisitor implements DocPullAndCommitVisitor<Task> {
     this.commandsByTaskId = commands.stream()
         .collect(Collectors.groupingBy(TaskUpdateCommand::getTaskId));
     this.taskIds = new ArrayList<>(commandsByTaskId.keySet());
-    this.commitBuilder = config.getClient().git().commit().commitBuilder()
-        .head(config.getProjectName(), config.getHeadName())
+    this.commitBuilder = config.getClient().git(config.getProjectName()).commit().commitBuilder()
+        .branchName(config.getHeadName())
         .message("Update tasks: " + commandsByTaskId.size())
         .latestCommit()
         .author(config.getAuthor().get());

@@ -8,7 +8,6 @@ import io.resys.thena.docdb.api.actions.DocCommitActions.OneDocEnvelope;
 import io.resys.thena.docdb.api.actions.ImmutableOneDocEnvelope;
 import io.resys.thena.docdb.api.models.ImmutableMessage;
 import io.resys.thena.docdb.api.models.Repo;
-import io.resys.thena.docdb.api.models.Repo.CommitResultStatus;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranchLock;
 import io.resys.thena.docdb.models.doc.DocState.DocRepo;
 import io.resys.thena.docdb.models.doc.ImmutableDocBranchLockCriteria;
@@ -31,14 +30,13 @@ public class ModifyOneDocBranchImpl implements ModifyOneDocBranch {
   private String versionToModify = null;
   
   private String docId;
-  private String repoId;
+  private final String repoId;
   private String branchName;
   private String author;
   private String message;
   private boolean remove;
 
   @Override public ModifyOneDocBranchImpl docId(String docId) { this.docId = RepoAssert.notEmpty(docId, () -> "docId can't be empty!"); return this; }
-  @Override public ModifyOneDocBranchImpl repoId(String repoId) { this.repoId = RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!"); return this; }
   @Override public ModifyOneDocBranchImpl parent(String versionToModify) { this.versionToModify = versionToModify; return this; }
   @Override public ModifyOneDocBranchImpl parentIsLatest() { this.versionToModify = null; return this; }
   @Override public ModifyOneDocBranchImpl remove() { this.remove = true; return this; }

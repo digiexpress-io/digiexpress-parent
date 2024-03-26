@@ -31,20 +31,30 @@ import io.resys.thena.docdb.api.actions.OrgCommitActions;
 import io.resys.thena.docdb.api.actions.OrgHistoryActions;
 import io.resys.thena.docdb.api.actions.OrgQueryActions;
 import io.resys.thena.docdb.api.actions.PullActions;
-import io.resys.thena.docdb.api.actions.RepoActions;
 import io.resys.thena.docdb.api.actions.TagActions;
+import io.resys.thena.docdb.api.actions.TenantModel;
+import io.resys.thena.docdb.api.actions.TenantModel.RepoResult;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
+import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.ThenaDocObjects.DocProjectObjects;
 import io.resys.thena.docdb.api.models.ThenaGitObjects.GitRepoObjects;
 import io.resys.thena.docdb.api.models.ThenaOrgObjects.OrgProjectObjects;
 import io.smallrye.mutiny.Uni;
 
-public interface DocDB {
-  RepoActions repo();
+public interface ThenaClient {  
+  TenantModel tenants();
   
-  GitModel git();
-  DocModel doc();
-  OrgModel org();
+  GitModel git(String tenantIdOrName);
+  GitModel git(RepoResult repo);
+  GitModel git(Repo repo);
+  
+  DocModel doc(String tenantIdOrName);
+  DocModel doc(RepoResult repo);
+  DocModel doc(Repo repo);
+  
+  OrgModel org(String tenantIdOrName);
+  OrgModel org(RepoResult repo);
+  OrgModel org(Repo repo);
   
 
   interface OrgModel {
@@ -55,7 +65,6 @@ public interface DocDB {
 
     // build world state
     interface OrgProjectQuery {
-      OrgProjectQuery projectName(String projectName);
       Uni<QueryEnvelope<OrgProjectObjects>> get();
     }
   }
@@ -87,7 +96,6 @@ public interface DocDB {
     
     // build world state
     interface GitRepoQuery {
-      GitRepoQuery projectName(String projectName);
       Uni<QueryEnvelope<GitRepoObjects>> get();
     }
 

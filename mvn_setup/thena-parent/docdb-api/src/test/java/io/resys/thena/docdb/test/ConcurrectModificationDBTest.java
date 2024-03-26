@@ -38,8 +38,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
 import io.resys.thena.docdb.api.actions.CommitActions.CommitResultEnvelope;
-import io.resys.thena.docdb.api.actions.RepoActions.RepoResult;
-import io.resys.thena.docdb.api.actions.RepoActions.RepoStatus;
+import io.resys.thena.docdb.api.actions.TenantModel.RepoResult;
+import io.resys.thena.docdb.api.actions.TenantModel.RepoStatus;
 import io.resys.thena.docdb.api.models.Repo.CommitResultStatus;
 import io.resys.thena.docdb.api.models.Repo.RepoType;
 import io.resys.thena.docdb.test.config.DbTestTemplate;
@@ -69,7 +69,7 @@ public class ConcurrectModificationDBTest extends DbTestTemplate {
   @Test
   public void crateRepoWithOneCommit() {
     // create project
-    RepoResult repo = getClient().repo().projectBuilder()
+    RepoResult repo = getClient().tenants().commit()
         .name("user-tasks", RepoType.git)
         .build()
         .await().atMost(Duration.ofMinutes(1));
@@ -77,8 +77,8 @@ public class ConcurrectModificationDBTest extends DbTestTemplate {
     Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
     
     // Create head and first commit
-    getClient().git().commit().commitBuilder()
-        .head(repo.getRepo().getName(), "main")
+    getClient().git(repo).commit().commitBuilder()
+        .branchName("main")
         .append("user-1", JsonObject.mapFrom(ImmutableUseTasks.builder().id("user-1").userName("sam vimes 1").addTasks(0).build()))
         .author("same vimes")
         .message("init user with one task")
@@ -89,8 +89,8 @@ public class ConcurrectModificationDBTest extends DbTestTemplate {
     
     runInserts(repo, 100);
     
-    final var state = getClient().git().branch().branchQuery()
-      .projectName(repo.getRepo().getName()).branchName("main")
+    final var state = getClient().git(repo).branch().branchQuery()
+      .branchName("main")
       .docsIncluded(true)
       .get().await().atMost(Duration.ofMinutes(1));
     
@@ -116,8 +116,8 @@ public class ConcurrectModificationDBTest extends DbTestTemplate {
     for(int index = 0; index < total; index++) {
       // Create head and first commit
       final var session = index;
-      Uni<CommitResultEnvelope> commit_0 = getClient().git().commit().commitBuilder()
-        .head(repo.getRepo().getName(), "main")
+      Uni<CommitResultEnvelope> commit_0 = getClient().git(repo).commit().commitBuilder()
+        .branchName("main")
         .latestCommit()
         .merge("user-1", (previous) -> {
           final var next = ImmutableUseTasks.builder().from(previous.mapTo(UseTasks.class)).addTasks(this.index.incrementAndGet()).build();

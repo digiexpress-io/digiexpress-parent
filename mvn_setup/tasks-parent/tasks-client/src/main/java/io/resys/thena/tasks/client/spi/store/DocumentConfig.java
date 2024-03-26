@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
 
 import org.immutables.value.Value;
 
-import io.resys.thena.docdb.api.DocDB;
+import io.resys.thena.docdb.api.ThenaClient;
 import io.resys.thena.docdb.api.actions.BranchActions.BranchObjectsQuery;
 import io.resys.thena.docdb.api.actions.CommitActions.CommitBuilder;
 import io.resys.thena.docdb.api.actions.CommitActions.CommitResultEnvelope;
@@ -44,7 +44,7 @@ import io.smallrye.mutiny.Uni;
 
 @Value.Immutable
 public interface DocumentConfig {
-  DocDB getClient();
+  ThenaClient getClient();
   String getProjectName();
   String getHeadName();
   DocumentGidProvider getGid();
@@ -101,9 +101,8 @@ public interface DocumentConfig {
   }
 
   default <T> Uni<T> accept(DocBranchVisitor<T> visitor) {
-    final var builder = visitor.start(this, getClient().git()
+    final var builder = visitor.start(this, getClient().git(getProjectName())
         .branch().branchQuery()
-        .projectName(getProjectName())
         .branchName(getHeadName()));
     
     return builder.get()
@@ -112,9 +111,8 @@ public interface DocumentConfig {
   }
   
   default <T> Uni<T> accept(DocPullObjectVisitor<T> visitor) {
-    final PullObjectsQuery builder = visitor.start(this, getClient().git()
+    final PullObjectsQuery builder = visitor.start(this, getClient().git(getProjectName())
         .pull().pullQuery()
-        .projectName(getProjectName())
         .branchNameOrCommitOrTag(getHeadName()));
     
     return builder.get()
@@ -124,9 +122,8 @@ public interface DocumentConfig {
 
   
   default <T> Uni<List<T>> accept(DocPullObjectsVisitor<T> visitor) {
-    final PullObjectsQuery builder = visitor.start(this, getClient().git()
+    final PullObjectsQuery builder = visitor.start(this, getClient().git(getProjectName())
         .pull().pullQuery()
-        .projectName(getProjectName())
         .branchNameOrCommitOrTag(getHeadName()));
     
     return builder.findAll()
@@ -136,9 +133,8 @@ public interface DocumentConfig {
 
   
   default <T> Uni<List<T>> accept(DocPullAndCommitVisitor<T> visitor) {
-    final var prefilled = getClient().git()
+    final var prefilled = getClient().git(getProjectName())
         .pull().pullQuery()
-        .projectName(getProjectName())
         .branchNameOrCommitOrTag(getHeadName());
     
     final Uni<QueryEnvelope<PullObjects>> query = visitor.start(this, prefilled).findAll();
@@ -148,11 +144,11 @@ public interface DocumentConfig {
   }
   
   default <T> Uni<List<T>> accept(DocCommitVisitor<T> visitor) {
-    final var prefilled = getClient().git()
+    final var prefilled = getClient().git(getProjectName())
         .commit().commitBuilder()
         .latestCommit()
         .author(getAuthor().get())
-        .head(getProjectName(),getHeadName());
+        .branchName(getHeadName());
     
     final Uni<CommitResultEnvelope> query = visitor.start(this, prefilled).build();
     return query
@@ -161,10 +157,10 @@ public interface DocumentConfig {
   }
   
   default <T> Uni<List<T>> accept(DocHistoryVisitor<T> visitor) {
-    final var prefilled = getClient().git()
+    final var prefilled = getClient().git(getProjectName())
         .history()
         .blobQuery()
-        .head(getProjectName(), getHeadName());
+        .branchName(getHeadName());
     
     final Uni<QueryEnvelope<HistoryObjects>> query = visitor.start(this, prefilled).get();
     return query

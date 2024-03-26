@@ -1,6 +1,6 @@
 package io.resys.thena.docdb.models.org.queries;
 
-import io.resys.thena.docdb.api.DocDB.OrgModel.OrgProjectQuery;
+import io.resys.thena.docdb.api.ThenaClient.OrgModel.OrgProjectQuery;
 import io.resys.thena.docdb.api.models.ImmutableOrgProjectObjects;
 import io.resys.thena.docdb.api.models.ImmutableQueryEnvelope;
 import io.resys.thena.docdb.api.models.QueryEnvelope;
@@ -18,14 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class OrgProjectQueryImpl implements OrgProjectQuery {
   private final DbState state;
-  private String repoId;
-
-  @Override
-  public OrgProjectQuery projectName(String repoId) {
-    RepoAssert.notEmpty(repoId, () -> "projectName can't be empty!");
-    this.repoId = repoId;
-    return this;
-  }
+  private final String repoId;
 
   @Override
   public Uni<QueryEnvelope<OrgProjectObjects>> get() {

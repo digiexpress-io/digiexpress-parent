@@ -20,21 +20,21 @@ package io.resys.thena.docdb.spi;
  * #L%
  */
 
-import io.resys.thena.docdb.api.actions.RepoActions;
+import io.resys.thena.docdb.api.actions.TenantModel;
 import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class RepoActionsImpl implements RepoActions {
+public class RepoActionsImpl implements TenantModel {
   private final DbState state;
 
   @Override
-  public RepoQuery projectsQuery() {
+  public RepoQuery find() {
     return new RepoQueryImpl(state);
   }
 
   @Override
-  public RepoBuilder projectBuilder() {
+  public RepoBuilder commit() {
     return new RepoBuilderImpl(state);
   }
 }

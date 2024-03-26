@@ -28,8 +28,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import io.resys.thena.docdb.api.actions.CommitActions.CommitResultEnvelope;
-import io.resys.thena.docdb.api.actions.RepoActions.RepoResult;
-import io.resys.thena.docdb.api.actions.RepoActions.RepoStatus;
+import io.resys.thena.docdb.api.actions.TenantModel.RepoResult;
+import io.resys.thena.docdb.api.actions.TenantModel.RepoStatus;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.test.config.FileTestTemplate;
 import io.vertx.core.json.JsonObject;
@@ -53,8 +53,8 @@ public class FileReadWriteTest extends FileTestTemplate {
     Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
     
     // Create head and first commit
-    CommitResultEnvelope commit_0 = getClient(repo.getRepo()).git().commit().commitBuilder()
-      .head(repo.getRepo().getName(), "main")
+    CommitResultEnvelope commit_0 = getClient(repo.getRepo()).git(repo).commit().commitBuilder()
+      .branchName("main")
       .append("readme.md", JsonObject.of("content", "readme content"))
       .author("same vimes")
       .message("first commit!")
@@ -67,8 +67,8 @@ public class FileReadWriteTest extends FileTestTemplate {
     
     
     // Create head and first commit
-    CommitResultEnvelope commit_1 = getClient(repo.getRepo()).git().commit().commitBuilder()
-      .head(repo.getRepo().getName(), "main")
+    CommitResultEnvelope commit_1 = getClient(repo.getRepo()).git(repo).commit().commitBuilder()
+      .branchName("main")
       .parent(commit_0.getCommit().getId())
       .remove("readme.md")
       .author("same vimes")
@@ -89,13 +89,12 @@ public class FileReadWriteTest extends FileTestTemplate {
     Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
     
     // Create head and first commit
-    CommitResultEnvelope commit_0 = getClient(repo.getRepo()).git().commit().commitBuilder()
-      .head("project-x", "main")
+    CommitResultEnvelope commit_0 = getClient(repo.getRepo()).git(repo).commit().commitBuilder()
+      .branchName("main")
       .append("readme.md", JsonObject.of("content", "readme content"))
       .append("file1.json", JsonObject.of("content", ""))
       .append("fileFromObject.txt", JsonObject.mapFrom(ImmutableTestContent.builder().id("10").name("sam vimes 1").build()))
       .author("same vimes")
-      .head("project-x", "main")
       .message("first commit!")
       .build()
       .onFailure().invoke(e -> e.printStackTrace()).onFailure().recoverWithNull()
@@ -114,8 +113,8 @@ public class FileReadWriteTest extends FileTestTemplate {
     Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
     
     // Create head and first commit
-    CommitResultEnvelope commit_0 = getClient(repo.getRepo()).git().commit().commitBuilder()
-      .head(repo.getRepo().getName(), "main")
+    CommitResultEnvelope commit_0 = getClient(repo.getRepo()).git(repo).commit().commitBuilder()
+      .branchName("main")
       .append("readme.md", JsonObject.of("content", "readme content"))
       .append("file1.json", JsonObject.of("content", ""))
       .append("fileFromObject.txt", JsonObject.mapFrom(ImmutableTestContent.builder().id("10").name("sam vimes 1").build()))
@@ -130,8 +129,8 @@ public class FileReadWriteTest extends FileTestTemplate {
     
     
     // Create head and first commit
-    CommitResultEnvelope commit_1 = getClient(repo.getRepo()).git().commit().commitBuilder()
-      .head(repo.getRepo().getName(), "main")
+    CommitResultEnvelope commit_1 = getClient(repo.getRepo()).git(repo).commit().commitBuilder()
+      .branchName("main")
       .parent(commit_0.getCommit().getId())
       .append("readme.md", JsonObject.of("content", "readme content"))
       .append("file1.json", JsonObject.of("content", ""))

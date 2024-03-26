@@ -84,7 +84,7 @@ public class ProjectsClientImpl implements TenantConfigClient {
         RepoAssert.isTrue(type == TenantRepoConfigType.TENANT, () -> "can only query from tenant config repo!");
         
         final var client = ctx.getConfig().getClient();
-        return client.repo().projectsQuery().id(repoName)
+        return client.tenants().find().id(repoName)
             .get().onItem().transformToUni(existing -> {
               if(existing == null) {
                 final Optional<TenantConfig> result = Optional.empty();

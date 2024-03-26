@@ -56,9 +56,8 @@ public class CommitBuilderImpl implements CommitBuilder {
   private final Map<String, JsonObject> appendBlobs = new HashMap<>();
   private final Map<String, JsonObjectMerge> mergeBlobs = new HashMap<>();
   private final List<String> deleteBlobs = new ArrayList<>();
+  private final String repoId;
   
-  private String headGid;
-  private String repoId;
   private String headName;
   private String author;
   private String message;
@@ -66,18 +65,9 @@ public class CommitBuilderImpl implements CommitBuilder {
   private Boolean parentIsLatest = Boolean.FALSE;
 
   @Override
-  public CommitBuilder id(String headGid) {
-    RepoAssert.isEmpty(headName, () -> "Can't defined id when head is defined!");
-    this.headGid = headGid;
-    return this;
-  }
-  @Override
-  public CommitBuilder head(String repoId, String headName) {
-    RepoAssert.isEmpty(headGid, () -> "Can't defined head when id is defined!");
-    RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
+  public CommitBuilder branchName(String headName) {
     RepoAssert.notEmpty(headName, () -> "headName can't be empty!");
     RepoAssert.isName(headName, () -> "headName has invalid charecters!");
-    this.repoId = repoId;
     this.headName = headName;
     return this;
   }
@@ -142,13 +132,6 @@ public class CommitBuilderImpl implements CommitBuilder {
     RepoAssert.notEmpty(author, () -> "author can't be empty!");
     RepoAssert.notEmpty(message, () -> "message can't be empty!");
     RepoAssert.isTrue(!appendBlobs.isEmpty() || !deleteBlobs.isEmpty() || !mergeBlobs.isEmpty(), () -> "Nothing to commit, no content!");
-    
-    if(this.headGid != null) {
-      final var id = Identifiers.fromRepoHeadGid(this.headGid);
-      this.repoId = id[0];
-      this.headName = id[1];
-    }
-    RepoAssert.notEmpty(repoId, () -> "Can't resolve repoId!");
     RepoAssert.notEmpty(headName, () -> "Can't resolve headName!");
 
     // final var totalOperation = appendBlobs.size() + deleteBlobs.size() + mergeBlobs.size();

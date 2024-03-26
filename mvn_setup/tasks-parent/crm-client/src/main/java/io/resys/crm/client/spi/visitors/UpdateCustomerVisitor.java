@@ -71,12 +71,10 @@ public class UpdateCustomerVisitor implements DocObjectsVisitor<Uni<List<Custome
     this.commandsByCustomerId = commands.stream()
         .collect(Collectors.groupingBy(CustomerUpdateCommand::getCustomerId));
     this.customerIds = new ArrayList<>(commandsByCustomerId.keySet());
-    this.updateBuilder = config.getClient().doc().commit().modifyManyBranches()
-        .repoId(config.getRepoId())
+    this.updateBuilder = config.getClient().doc(config.getRepoId()).commit().modifyManyBranches()
         .message("Update customers: " + commandsByCustomerId.size())
         .author(config.getAuthor().get());
-    this.createBuilder = config.getClient().doc().commit().createManyDocs()
-        .repoId(config.getRepoId())
+    this.createBuilder = config.getClient().doc(config.getRepoId()).commit().createManyDocs()
         .docType(Document.DocumentType.CUSTOMER.name())
         .message("Upsert customers: " + commandsByCustomerId.size())
         .author(config.getAuthor().get())

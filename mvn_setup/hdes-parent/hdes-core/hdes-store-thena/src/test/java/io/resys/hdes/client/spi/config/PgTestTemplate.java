@@ -15,7 +15,7 @@ import io.resys.hdes.client.spi.ThenaStore;
 import io.resys.hdes.client.spi.config.HdesClientConfig.DependencyInjectionContext;
 import io.resys.hdes.client.spi.config.HdesClientConfig.ServiceInit;
 import io.resys.hdes.client.spi.util.RepositoryToStaticData;
-import io.resys.thena.docdb.api.DocDB;
+import io.resys.thena.docdb.api.ThenaClient;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.models.git.GitPrinter;
 import io.resys.thena.docdb.spi.DbCollections;
@@ -68,21 +68,15 @@ public class PgTestTemplate {
     final String result = new GitPrinter(createState(repo.getName())).print(repo);
     log.debug(result);
   }
-  
-  public void prettyPrint(String repoId) {
-    Repo repo = getThena().git().project().get()
-        .await().atMost(Duration.ofMinutes(1)).getRepo(); 
-    printRepo(repo);
-  }
 
   public String toRepoExport(String repoName) {
-    final var repo = getThena().git().project().projectName(repoName).get()
+    final var repo = getThena().git(repoName).project().get()
         .await().atMost(Duration.ofMinutes(1)).getRepo();
     final String result = new RepositoryToStaticData(createState(repoName)).print(repo);
     return result;
   }
 
-  public DocDB getThena() {
+  public ThenaClient getThena() {
     return store.getConfig().getClient();
   }
   

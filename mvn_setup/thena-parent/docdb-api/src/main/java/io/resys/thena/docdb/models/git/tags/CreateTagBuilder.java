@@ -40,8 +40,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CreateTagBuilder implements TagBuilder {
   private final DbState state;
+  private final String repoId;
   
-  private String repoId;
   private String commitIdOrHead;
   private String tagName;
   private String author;
@@ -53,8 +53,7 @@ public class CreateTagBuilder implements TagBuilder {
     return this;
   }
   @Override
-  public TagBuilder head(String repoId, String commitIdOrHead) {
-    this.repoId = repoId;
+  public TagBuilder head(String commitIdOrHead) {
     this.commitIdOrHead = commitIdOrHead;
     return this;
   }

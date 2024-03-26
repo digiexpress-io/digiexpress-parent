@@ -58,12 +58,10 @@ public class DeleteAllTenantsVisitor implements DocObjectsVisitor<Uni<List<Tenan
   @Override
   public DocObjectsQuery start(DocumentConfig config, DocObjectsQuery query) {
     // Create two commands: one for making changes by adding archive flag, the other for deleting Project from commit tree
-    this.archiveCommand = config.getClient().doc().commit().modifyManyBranches()
-        .repoId(config.getRepoId())
+    this.archiveCommand = config.getClient().doc(config.getRepoId()).commit().modifyManyBranches()
         .author(config.getAuthor().get())
         .message("Archive Tenants");
-    this.removeCommand = config.getClient().doc().commit().modifyManyDocs()
-        .repoId(config.getRepoId())
+    this.removeCommand = config.getClient().doc(config.getRepoId()).commit().modifyManyDocs()
         .author(config.getAuthor().get())
         .message("Delete Tenants");
     

@@ -39,7 +39,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class DocObjectsQueryImpl implements DocObjectsQuery {
   private final DbState state;
-  private String repoId;
+  private final String repoId;
   private final ImmutableFlattedCriteria.Builder criteria = ImmutableFlattedCriteria.builder().onlyActiveDocs(true).children(false);
   
   @Override public DocObjectsQuery matchIds(List<String> matchId) { this.criteria.addAllMatchId(matchId); return this; }
@@ -47,12 +47,6 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
   @Override public DocObjectsQuery docType(String docType) { this.criteria.docType(docType); return this; }
   @Override public DocObjectsQuery children(boolean children) { this.criteria.children(children); return this; }
   
-  @Override
-  public DocObjectsQuery repoId(String repoId) {
-    RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
-    this.repoId = repoId;
-    return this;
-  }
   @Override
   public DocObjectsQuery matchId(String matchId) {
     RepoAssert.notEmpty(repoId, () -> "matchId can't be empty!");

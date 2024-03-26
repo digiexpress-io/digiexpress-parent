@@ -30,8 +30,8 @@ import lombok.RequiredArgsConstructor;
 public class CreateOneMemberImpl implements CreateOneMember {
 
   private final DbState state;
-
-  private String repoId;
+  private final String repoId;
+  
   private String author;
   private String message;
 
@@ -43,8 +43,6 @@ public class CreateOneMemberImpl implements CreateOneMember {
   private Collection<String> addUserToRoles = new LinkedHashSet<>();
   private Map<String, List<String>> addUserToGroupRoles = new LinkedHashMap<>();
 
-  
-  @Override public CreateOneMemberImpl repoId(String repoId) {         this.repoId = RepoAssert.notEmpty(repoId,           () -> "repoId can't be empty!"); return this; }
   @Override public CreateOneMemberImpl author(String author) {         this.author = RepoAssert.notEmpty(author,           () -> "author can't be empty!"); return this; }
   @Override public CreateOneMemberImpl message(String message) {       this.message = RepoAssert.notEmpty(message,         () -> "message can't be empty!"); return this; }
   @Override public CreateOneMemberImpl userName(String userName) {     this.userName = RepoAssert.notEmpty(userName,       () -> "userName can't be empty!"); return this; }
@@ -64,7 +62,6 @@ public class CreateOneMemberImpl implements CreateOneMember {
   
   @Override
   public Uni<OneMemberEnvelope> build() {
-    RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
     RepoAssert.notEmpty(author, () -> "author can't be empty!");
     RepoAssert.notEmpty(message, () -> "message can't be empty!");
     RepoAssert.notEmpty(userName, () -> "userName can't be empty!");

@@ -50,8 +50,8 @@ public class PersistenceCommands implements ThenaConfig.Commands {
   
   @Override
   public Uni<StoreEntity> delete(StoreEntity toBeDeleted) {
-    return config.getClient().git().commit().commitBuilder()
-        .head(config.getRepoName(), config.getHeadName())
+    return config.getClient().git(config.getRepoName()).commit().commitBuilder()
+        .branchName(config.getHeadName())
         .message("Delete type: '" + toBeDeleted.getBodyType() + "', with id: '" + toBeDeleted.getId() + "'")
         .latestCommit()
         .author(config.getAuthorProvider().getAuthor())
@@ -67,8 +67,8 @@ public class PersistenceCommands implements ThenaConfig.Commands {
 
   @Override
   public Uni<StoreEntity> save(StoreEntity toBeSaved) {
-    return config.getClient().git().commit().commitBuilder()
-      .head(config.getRepoName(), config.getHeadName())
+    return config.getClient().git(config.getRepoName()).commit().commitBuilder()
+      .branchName(config.getHeadName())
       .message("Save type: '" + toBeSaved.getBodyType() + "', with id: '" + toBeSaved.getId() + "'")
       .latestCommit()
       .author(config.getAuthorProvider().getAuthor())
@@ -85,7 +85,7 @@ public class PersistenceCommands implements ThenaConfig.Commands {
 
   @Override
   public Uni<Collection<StoreEntity>> save(Collection<StoreEntity> entities) {
-    final var commitBuilder = config.getClient().git().commit().commitBuilder().head(config.getRepoName(), config.getHeadName());
+    final var commitBuilder = config.getClient().git(config.getRepoName()).commit().commitBuilder().branchName(config.getHeadName());
     final StoreEntity first = entities.iterator().next();
     
     for(final var target : entities) {
@@ -107,9 +107,8 @@ public class PersistenceCommands implements ThenaConfig.Commands {
 
   @Override
   public Uni<StoreState> get() {
-    return config.getClient().git()
+    return config.getClient().git(config.getRepoName())
         .branch().branchQuery()
-        .projectName(config.getRepoName())
         .branchName(config.getHeadName())
         .docsIncluded()
         .get()
@@ -148,9 +147,8 @@ public class PersistenceCommands implements ThenaConfig.Commands {
 
   @Override
   public Uni<EntityState> getEntityState(String id) {
-    return config.getClient().git()
+    return config.getClient().git(config.getRepoName())
         .pull().pullQuery()
-        .projectName(config.getRepoName())
         .branchNameOrCommitOrTag(config.getHeadName())
         .docId(id)
         .get().onItem()

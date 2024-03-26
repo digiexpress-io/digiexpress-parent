@@ -22,7 +22,7 @@ public class RoleQueryImpl implements RoleQuery {
   @Override
   public Uni<Role> get(String roleId) {
     final var repoId = ctx.getConfig().getRepoId();
-    final Uni<QueryEnvelope<OrgPartyHierarchy>> role = ctx.getOrg().find().partyHierarchyQuery().repoId(repoId).get(roleId);
+    final Uni<QueryEnvelope<OrgPartyHierarchy>> role = ctx.getOrg(repoId).find().partyHierarchyQuery().get(roleId);
     
     return role.onItem().transform((response) -> {
       if(response.getStatus() != QueryEnvelopeStatus.OK) {
@@ -45,7 +45,7 @@ public class RoleQueryImpl implements RoleQuery {
   @Override
   public Uni<List<Role>> findAllRoles() {
     final var repoId = ctx.getConfig().getRepoId();
-    final Uni<QueryEnvelopeList<OrgPartyHierarchy>> roles = ctx.getOrg().find().partyHierarchyQuery().repoId(repoId).findAll();
+    final Uni<QueryEnvelopeList<OrgPartyHierarchy>> roles = ctx.getOrg(repoId).find().partyHierarchyQuery().findAll();
     
     return roles.onItem().transform((response) -> {
       if(response.getStatus() != QueryEnvelopeStatus.OK) {

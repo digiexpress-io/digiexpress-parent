@@ -8,6 +8,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class OrgHistoryActionsImpl implements OrgHistoryActions {
   private final DbState state;
-
+  private final String repoId; 
 
 }

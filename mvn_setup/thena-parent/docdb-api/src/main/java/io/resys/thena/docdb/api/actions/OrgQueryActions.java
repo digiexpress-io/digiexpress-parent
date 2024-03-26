@@ -19,14 +19,11 @@ public interface OrgQueryActions {
   //OrphanedUserQuery orphanedUserQuery();
   
   interface MemberObjectsQuery {
-    MemberObjectsQuery repoId(String repoId);
-    
     Uni<QueryEnvelope<OrgMember>> get(String userId);
     Uni<QueryEnvelopeList<OrgMember>> findAll();
   }
 
   interface RightHierarchyQuery {
-    RightHierarchyQuery repoId(String repoId);
     Uni<QueryEnvelope<OrgRightHierarchy>> get(String idOrNameOrExtId);
     <T extends ThenaObjects> Uni<QueryEnvelope<T>> get(String idOrNameOrExtId, OrgAnyTreeContainerVisitor<T> visitor);
     Uni<QueryEnvelopeList<OrgRightHierarchy>> findAll();
@@ -34,13 +31,11 @@ public interface OrgQueryActions {
 
   
   interface MemberHierarchyQuery {
-  	MemberHierarchyQuery repoId(String repoId);
   	Uni<QueryEnvelope<OrgMemberHierarchy>> get(String idOrNameOrExtId);
   	Uni<QueryEnvelopeList<OrgMemberHierarchy>> findAll();
   }
   
   interface PartyHierarchyQuery {
-    PartyHierarchyQuery repoId(String repoId);
     Uni<QueryEnvelope<OrgPartyHierarchy>> get(String idOrNameOrExtId);
     Uni<QueryEnvelopeList<OrgPartyHierarchy>> findAll();
     

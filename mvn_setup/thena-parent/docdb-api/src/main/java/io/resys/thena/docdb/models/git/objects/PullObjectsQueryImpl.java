@@ -52,7 +52,7 @@ import lombok.extern.slf4j.Slf4j;
 public class PullObjectsQueryImpl implements PullObjectsQuery {
   private final DbState state;
   private final List<MatchCriteria> blobCriteria = new ArrayList<>();
-  private String projectName;
+  private final String projectName;
   private String branchNameOrCommitOrTag; //anyId;
   private List<String> docIds = new ArrayList<>();
 

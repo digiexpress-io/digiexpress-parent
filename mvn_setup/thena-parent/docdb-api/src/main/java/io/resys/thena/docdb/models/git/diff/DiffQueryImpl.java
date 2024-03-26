@@ -23,7 +23,7 @@ package io.resys.thena.docdb.models.git.diff;
 import java.util.Arrays;
 import java.util.function.Supplier;
 
-import io.resys.thena.docdb.api.DocDB.GitModel.GitRepoQuery;
+import io.resys.thena.docdb.api.ThenaClient.GitModel.GitRepoQuery;
 import io.resys.thena.docdb.api.actions.CommitActions;
 import io.resys.thena.docdb.api.actions.DiffActions.DiffQuery;
 import io.resys.thena.docdb.api.actions.DiffActions.DiffResult;
@@ -49,20 +49,18 @@ public class DiffQueryImpl implements DiffQuery {
   private final CommitActions commits;
   private final Supplier<GitRepoQuery> repos;
   
-  private String projectName;  //RepoIdOrName;
   private String left;  //HeadOrCommitOrTag;
   private String right; //HeadOrCommitOrTag;
 
   @Override
   public Uni<DiffResult<Diff>> get() {
-    RepoAssert.notEmpty(projectName, () -> "projectIdOrName is not defined!");
     RepoAssert.notEmpty(left, () -> "left is not defined!");
     RepoAssert.notEmpty(right, () -> "right is not defined!");
     
     return Uni.combine().all().unis(
-        repos.get().projectName(projectName).get(),
-        commits.commitQuery().branchNameOrCommitOrTag(left).projectName(projectName).get(), 
-        commits.commitQuery().branchNameOrCommitOrTag(right).projectName(projectName).get())
+        repos.get().get(),
+        commits.commitQuery().branchNameOrCommitOrTag(left).get(), 
+        commits.commitQuery().branchNameOrCommitOrTag(right).get())
 
       .asTuple().onItem().transform(tuple -> {
         final var objects = tuple.getItem1();

@@ -49,7 +49,7 @@ public class SysConfigClientImpl implements SysConfigClient {
         RepoAssert.notEmpty(repoName, () -> "repoName must be defined!");
         
         final var client = ctx.getConfig().getClient();
-        return client.repo().projectsQuery().id(repoName)
+        return client.tenants().find().id(repoName)
             .get().onItem().transform(existing -> {
               if(existing == null) {
                 final Optional<SysConfigClient> result = Optional.empty();

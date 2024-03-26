@@ -27,7 +27,6 @@ public interface OrgCommitActions {
 
 
   interface CreateOneMember {
-    CreateOneMember repoId(String repoId);
     CreateOneMember author(String author);
     CreateOneMember message(String message);
   
@@ -45,7 +44,6 @@ public interface OrgCommitActions {
   }
   
   interface CreateOneParty {
-    CreateOneParty repoId(String repoId);
     CreateOneParty author(String author);
     CreateOneParty message(String message);
    
@@ -62,7 +60,6 @@ public interface OrgCommitActions {
   
   
   interface CreateOneRight {
-    CreateOneRight repoId(String repoId);
     CreateOneRight author(String author);
     CreateOneRight message(String message);
     
@@ -78,7 +75,6 @@ public interface OrgCommitActions {
   
 
   interface ModifyOneMember {
-    ModifyOneMember repoId(String repoId);
     ModifyOneMember author(String author);
     ModifyOneMember message(String message);
   
@@ -97,7 +93,6 @@ public interface OrgCommitActions {
 
 
   interface ModifyOneParty {
-    ModifyOneParty repoId(String repoId);
     ModifyOneParty author(String author);
     ModifyOneParty message(String message);
     
@@ -116,7 +111,6 @@ public interface OrgCommitActions {
 
   
   interface ModifyOneRight {
-    ModifyOneRight repoId(String repoId);
     ModifyOneRight author(String author);
     ModifyOneRight message(String message);
     

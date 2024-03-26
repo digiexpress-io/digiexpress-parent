@@ -20,7 +20,7 @@ package io.thestencil.client.spi.exceptions;
  * #L%
  */
 
-import io.resys.thena.docdb.api.actions.RepoActions.RepoResult;
+import io.resys.thena.docdb.api.actions.TenantModel.RepoResult;
 
 public class RepoException extends RuntimeException {
   private static final long serialVersionUID = 7190168525508589141L;

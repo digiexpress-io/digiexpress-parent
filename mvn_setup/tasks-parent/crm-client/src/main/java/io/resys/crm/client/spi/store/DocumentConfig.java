@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
 import org.immutables.value.Value;
 
 import io.resys.crm.client.api.model.Document.DocumentType;
-import io.resys.thena.docdb.api.DocDB;
+import io.resys.thena.docdb.api.ThenaClient;
 import io.resys.thena.docdb.api.actions.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.docdb.api.actions.DocCommitActions.CreateManyDocs;
 import io.resys.thena.docdb.api.actions.DocQueryActions.DocObjectsQuery;
@@ -40,7 +40,7 @@ import io.smallrye.mutiny.Uni;
 
 @Value.Immutable
 public interface DocumentConfig {
-  DocDB getClient();
+  ThenaClient getClient();
   String getRepoId();
   String getBranchName();
   DocumentGidProvider getGid();
@@ -77,9 +77,8 @@ public interface DocumentConfig {
   
   
   default <T> Uni<List<T>> accept(DocCreateVisitor<T> visitor) {
-    final var builder = visitor.start(this, getClient().doc()
+    final var builder = visitor.start(this, getClient().doc(getRepoId())
         .commit().createManyDocs()
-        .repoId(getRepoId())
         .branchName(getBranchName()));
     
     return builder.build()
@@ -88,9 +87,8 @@ public interface DocumentConfig {
   }
   
   default <T> Uni<T> accept(DocObjectsVisitor<T> visitor) {
-    final var builder = visitor.start(this, getClient().doc()
+    final var builder = visitor.start(this, getClient().doc(getRepoId())
         .find().docQuery()
-        .repoId(getRepoId())
         .branchName(getBranchName()));
     
     return builder.findAll()
@@ -99,9 +97,8 @@ public interface DocumentConfig {
   }
   
   default <T> Uni<T> accept(DocObjectVisitor<T> visitor) {
-    final var builder = visitor.start(this, getClient().doc()
+    final var builder = visitor.start(this, getClient().doc(getRepoId())
         .find().docQuery()
-        .repoId(getRepoId())
         .branchName(getBranchName()));
     
     return builder.get()

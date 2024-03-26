@@ -15,7 +15,6 @@ import io.resys.thena.docdb.api.models.ImmutableDocCommit;
 import io.resys.thena.docdb.api.models.ImmutableDocLog;
 import io.resys.thena.docdb.api.models.ImmutableMessage;
 import io.resys.thena.docdb.api.models.Repo;
-import io.resys.thena.docdb.api.models.Repo.CommitResultStatus;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranchLock;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocLog;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocStatus;
@@ -42,14 +41,13 @@ public class CreateOneDocBranchImpl implements CreateOneDocBranch {
   private JsonObject appendLogs = null;
 
   private String docId;
-  private String repoId;
+  private final String repoId;
   private String branchName;
   private String branchFrom;
   private String author;
   private String message;
 
   @Override public CreateOneDocBranchImpl docId(String docId) { this.docId = RepoAssert.notEmpty(docId,               () -> "docId can't be empty!"); return this; }
-  @Override public CreateOneDocBranchImpl repoId(String repoId) { this.repoId = RepoAssert.notEmpty(repoId,               () -> "repoId can't be empty!"); return this; }
   @Override public CreateOneDocBranchImpl branchName(String branchName) { this.branchName = RepoAssert.isName(branchName, () -> "branchName has invalid charecters!"); return this; }
   @Override public CreateOneDocBranchImpl append(JsonObject blob) { this.appendBlobs = RepoAssert.notNull(blob,           () -> "blob can't be empty!"); return this; }
   @Override public CreateOneDocBranchImpl author(String author) { this.author = RepoAssert.notEmpty(author,               () -> "author can't be empty!"); return this; }

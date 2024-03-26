@@ -28,8 +28,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.resys.sysconfig.client.api.model.Document.DocumentType;
 import io.resys.sysconfig.client.spi.store.DocumentConfig.DocumentAuthorProvider;
 import io.resys.sysconfig.client.spi.store.DocumentConfig.DocumentGidProvider;
-import io.resys.thena.docdb.api.DocDB;
-import io.resys.thena.docdb.api.actions.RepoActions.RepoStatus;
+import io.resys.thena.docdb.api.ThenaClient;
+import io.resys.thena.docdb.api.actions.TenantModel.RepoStatus;
 import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.Repo.RepoType;
@@ -62,7 +62,7 @@ public class DocumentStoreImpl implements DocumentStore {
   @Override
   public Uni<Repo> getRepo() {
     final var client = config.getClient();
-    return client.repo().projectsQuery().id(config.getRepoId()).get();
+    return client.tenants().find().id(config.getRepoId()).get();
   }
   @Override public DocumentConfig getConfig() { return config; }
   @Override public DocumentRepositoryQuery query() {
@@ -81,7 +81,7 @@ public class DocumentStoreImpl implements DocumentStore {
   private Uni<DocumentStore> createRepoOrGetRepo(String repoName, String headName) {
     final var client = config.getClient();
     
-    return client.repo().projectsQuery().id(repoName).get()
+    return client.tenants().find().id(repoName).get()
         .onItem().transformToUni(repo -> {        
           if(repo == null) {
             return createRepo(repoName, headName); 
@@ -92,7 +92,7 @@ public class DocumentStoreImpl implements DocumentStore {
   
   private Uni<Void> deleteRepos() {
     final var client = config.getClient();
-    final var existingRepos = client.repo().projectsQuery().findAll();
+    final var existingRepos = client.tenants().find().findAll();
     
     
     return existingRepos.onItem().transformToUni((repo) -> {
@@ -100,7 +100,7 @@ public class DocumentStoreImpl implements DocumentStore {
         final var repoId = repo.getId();
         final var rev = repo.getRev();
         
-        return client.repo().projectsQuery().id(repoId).rev(rev).delete();
+        return client.tenants().find().id(repoId).rev(rev).delete();
       })
       .concatenate().collect().asList()
       .onItem().transformToUni((junk) -> Uni.createFrom().voidItem());
@@ -109,12 +109,12 @@ public class DocumentStoreImpl implements DocumentStore {
   private Uni<DocumentStore> deleteRepo(String repoName, String headName) {
     RepoAssert.notNull(repoName, () -> "repoName must be defined!");
     final var client = config.getClient();
-    final var existingRepo = client.git().project().projectName(repoName).get();
+    final var existingRepo = client.git(repoName).project().get();
     
     
     return existingRepo.onItem().transformToUni((repoResult) -> {
       if(repoResult.getStatus() != QueryEnvelopeStatus.OK) {
-        throw new DocumentStoreException("CRM_REPO_GET_FOR_DELETE_FAIL", 
+        throw new DocumentStoreException("SYS_CONFIG_REPO_GET_FOR_DELETE_FAIL", 
             ImmutableDocumentExceptionMsg.builder()
             .id(repoResult.getStatus().toString())
             .value(repoName)
@@ -126,7 +126,7 @@ public class DocumentStoreImpl implements DocumentStore {
       final var rev = repoResult.getRepo().getRev();
       final var docStore = createClientStore(repoName, headName);
       
-      return client.repo().projectsQuery().id(repoId).rev(rev).delete()
+      return client.tenants().find().id(repoId).rev(rev).delete()
           .onItem().transform(junk -> docStore);
     });
   }
@@ -135,10 +135,10 @@ public class DocumentStoreImpl implements DocumentStore {
     RepoAssert.notNull(repoName, () -> "repoName must be defined!");
     
     final var client = config.getClient();
-    final var newRepo = client.repo().projectBuilder().name(repoName, RepoType.doc).build();
+    final var newRepo = client.tenants().commit().name(repoName, RepoType.doc).build();
     return newRepo.onItem().transform((repoResult) -> {
       if(repoResult.getStatus() != RepoStatus.OK) {
-        throw new DocumentStoreException("CRM_REPO_CREATE_FAIL", 
+        throw new DocumentStoreException("SYS_CONFIG_REPO_CREATE_FAIL", 
             ImmutableDocumentExceptionMsg.builder()
             .id(repoResult.getStatus().toString())
             .value(repoName)
@@ -218,7 +218,7 @@ public class DocumentStoreImpl implements DocumentStore {
         log.debug(msg.toString());
       }
       
-      final DocDB thena;
+      final ThenaClient thena;
       if(pgPool == null) {
         RepoAssert.notNull(pgHost, () -> "pgHost must be defined!");
         RepoAssert.notNull(pgPort, () -> "pgPort must be defined!");

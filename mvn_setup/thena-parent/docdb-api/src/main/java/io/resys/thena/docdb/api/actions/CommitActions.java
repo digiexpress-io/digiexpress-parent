@@ -40,14 +40,13 @@ import io.vertx.core.json.JsonObject;
 public interface CommitActions {
   CommitBuilder commitBuilder();
   CommitQuery commitQuery();
-  Uni<List<Commit>> findAllCommits(String repoId);  // head GID to what to append
-  Uni<List<Tree>> findAllCommitTrees(String repoId);  // head GID to what to append
+  Uni<List<Commit>> findAllCommits();  // head GID to what to append
+  Uni<List<Tree>> findAllCommitTrees();  // head GID to what to append
   
   interface CommitBuilder {
-    CommitBuilder id(@Nullable String headGid); // OPTIONAL head GID to what to append
     CommitBuilder parent(String parentCommit); // for validations
     CommitBuilder latestCommit();
-    CommitBuilder head(String projectName, String branchName); // head GID to what to append
+    CommitBuilder branchName(String branchName); // head GID to what to append
     CommitBuilder append(String docId, JsonObject doc);
     CommitBuilder merge(String docId, JsonObjectMerge doc);
     CommitBuilder remove(String docId);
@@ -59,7 +58,6 @@ public interface CommitActions {
   
   // build REF world state, no blobs by default
   interface CommitQuery {
-    CommitQuery projectName(String projectName);
     CommitQuery branchNameOrCommitOrTag(String branchNameOrCommitOrTag);
     CommitQuery docsIncluded();
     CommitQuery docsIncluded(boolean load);

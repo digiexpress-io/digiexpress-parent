@@ -20,7 +20,7 @@ package io.resys.thena.docdb.storefile;
  * #L%
  */
 
-import io.resys.thena.docdb.api.DocDB;
+import io.resys.thena.docdb.api.ThenaClient;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.models.doc.DocState;
 import io.resys.thena.docdb.models.git.GitInserts;
@@ -29,7 +29,7 @@ import io.resys.thena.docdb.models.git.GitState;
 import io.resys.thena.docdb.models.org.OrgState;
 import io.resys.thena.docdb.spi.DbCollections;
 import io.resys.thena.docdb.spi.DbState;
-import io.resys.thena.docdb.spi.DocDBDefault;
+import io.resys.thena.docdb.spi.ThenaClientPgSql;
 import io.resys.thena.docdb.storefile.queries.ClientInsertBuilderFilePool;
 import io.resys.thena.docdb.storefile.queries.RepoBuilderFilePool;
 import io.resys.thena.docdb.storefile.tables.ImmutableFileClientWrapper;
@@ -162,13 +162,13 @@ public class DocDBFactoryFile {
       this.client = client;
       return this;
     }
-    public DocDB build() {
+    public ThenaClient build() {
       RepoAssert.notNull(client, () -> "client must be defined!");
       RepoAssert.notNull(db, () -> "db must be defined!");
       RepoAssert.notNull(errorHandler, () -> "errorHandler must be defined!");
 
       final var ctx = DbCollections.defaults(db);
-      return new DocDBDefault(state(ctx, client, errorHandler));
+      return new ThenaClientPgSql(state(ctx, client, errorHandler));
     }
   }
 }

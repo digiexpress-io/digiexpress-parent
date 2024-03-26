@@ -36,8 +36,8 @@ import lombok.RequiredArgsConstructor;
 public class ModifyOneMemberImpl implements ModifyOneMember {
 
   private final DbState state;
-
-  private String repoId;
+  private final String repoId;
+  
   private String author;
   private String message;
 
@@ -58,10 +58,6 @@ public class ModifyOneMemberImpl implements ModifyOneMember {
   
   @Override public ModifyOneMemberImpl userId(String userId) {
     this.memberId = RepoAssert.notEmpty(userId, () -> "userId can't be empty!"); 
-    return this; 
-  }
-  @Override public ModifyOneMemberImpl repoId(String repoId) {
-    this.repoId = RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!"); 
     return this; 
   }
   @Override public ModifyOneMemberImpl author(String author) {

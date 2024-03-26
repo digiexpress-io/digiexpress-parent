@@ -37,7 +37,6 @@ public interface DiffActions {
   DiffQuery diffQuery();
   
   interface DiffQuery {
-    DiffQuery projectName(String projectName);
     DiffQuery left(String headOrCommitOrTag);
     DiffQuery right(String headOrCommitOrTag);
     Uni<DiffResult<Diff>> get();

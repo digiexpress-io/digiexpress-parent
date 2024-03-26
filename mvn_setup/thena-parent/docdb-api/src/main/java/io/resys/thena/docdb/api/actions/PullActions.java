@@ -38,7 +38,6 @@ public interface PullActions {
   PullObjectsQuery pullQuery();
   
   interface PullObjectsQuery {
-    PullObjectsQuery projectName(String repoName);
     PullObjectsQuery branchNameOrCommitOrTag(String branchNameOrCommitOrTag);
     PullObjectsQuery docId(List<String> blobName);
     PullObjectsQuery docId(String blobName);

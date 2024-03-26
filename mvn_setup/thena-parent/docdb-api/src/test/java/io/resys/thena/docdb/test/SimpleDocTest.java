@@ -22,8 +22,8 @@ package io.resys.thena.docdb.test;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
-import io.resys.thena.docdb.api.actions.RepoActions.RepoResult;
-import io.resys.thena.docdb.api.actions.RepoActions.RepoStatus;
+import io.resys.thena.docdb.api.actions.TenantModel.RepoResult;
+import io.resys.thena.docdb.api.actions.TenantModel.RepoStatus;
 import io.resys.thena.docdb.api.models.Repo.RepoType;
 import io.resys.thena.docdb.test.config.DbTestTemplate;
 import io.resys.thena.docdb.test.config.PgProfile;
@@ -51,7 +51,7 @@ public class SimpleDocTest extends DbTestTemplate {
   @Test
   public void crateRepoAddAndDeleteFile() {
     // create project
-    RepoResult repo = getClient().repo().projectBuilder()
+    RepoResult repo = getClient().tenants().commit()
         .name("SimpleDocTest-1", RepoType.doc)
         .build()
         .await().atMost(Duration.ofMinutes(1));
@@ -59,10 +59,9 @@ public class SimpleDocTest extends DbTestTemplate {
     Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
     
     // branch 1
-    final var createdDoc = getClient().doc().commit()
+    final var createdDoc = getClient().doc(repo).commit()
       .createOneDoc()
       .docType("customer-data")
-      .repoId(repo.getRepo().getId())
       .externalId("bobs-ssn-id")
       .branchName("main")
       .append(JsonObject.of("first_name", "bob", "last_name", "flop"))
@@ -72,10 +71,9 @@ public class SimpleDocTest extends DbTestTemplate {
     .build().await().atMost(Duration.ofMinutes(1));
 
     // branch 2
-    final var branchDoc = getClient().doc().commit()
+    final var branchDoc = getClient().doc(repo).commit()
       .branchOneDoc()
       .docId(createdDoc.getDoc().getId())
-      .repoId(repo.getRepo().getId())
       .branchFrom(createdDoc.getBranch().getBranchName())
       .branchName("dev")
       .append(JsonObject.of("first_name", "bob", "last_name", "flop-2"))
@@ -85,9 +83,8 @@ public class SimpleDocTest extends DbTestTemplate {
     .build().await().atMost(Duration.ofMinutes(1));
     
     // meta update, 1 commit into each branch
-    getClient().doc().commit()
+    getClient().doc(repo).commit()
       .modifyOneDoc()
-      .repoId(repo.getRepo().getId())
       .docId(createdDoc.getDoc().getId())
       .meta(JsonObject.of("super cool field 1", "cool meta about the document"))
       .author("jane.doe@morgue.com")
@@ -96,11 +93,11 @@ public class SimpleDocTest extends DbTestTemplate {
 
     
     // update dev branch with new data
-    getClient().doc().commit().modifyOneBranch()
+    getClient().doc(repo).commit().modifyOneBranch()
       .docId(branchDoc.getDoc().getId())
       .branchName(branchDoc.getBranch().getBranchName())
       .append(JsonObject.of("branch new content", "something in here", "last_name", "used to be -> flop-2"))
-      .repoId(repo.getRepo().getId())
+
       .author("jane.doe@morgue.com")
       .message("edited dev branch")
     .build().await().atMost(Duration.ofMinutes(1));
@@ -108,8 +105,7 @@ public class SimpleDocTest extends DbTestTemplate {
     assertRepo(repo.getRepo(), "doc-db-test-cases/crud-test-1.txt");
     
     
-    final var findAllDocs = getClient().doc().find().docQuery()
-        .repoId(repo.getRepo().getId())
+    final var findAllDocs = getClient().doc(repo).find().docQuery()
         .children(true)
         .findAll()
     .await().atMost(Duration.ofMinutes(1));
@@ -121,8 +117,7 @@ public class SimpleDocTest extends DbTestTemplate {
     Assertions.assertEquals(1, findAllDocs.getObjects().getBranches().size());
     Assertions.assertEquals(2, findAllDocs.getObjects().getBranches().get(createdDoc.getDoc().getId()).size());
     
-    final var findAllMainBranchDocs = getClient().doc().find().docQuery()
-        .repoId(repo.getRepo().getId())
+    final var findAllMainBranchDocs = getClient().doc(repo).find().docQuery()
         .branchName("main")
         .docType("customer-data")
         .findAll()
@@ -138,7 +133,7 @@ public class SimpleDocTest extends DbTestTemplate {
   @Test
   public void parentChild() {
     // create project
-    RepoResult repo = getClient().repo().projectBuilder()
+    RepoResult repo = getClient().tenants().commit()
         .name("SimpleDocTest-parent-child", RepoType.doc)
         .build()
         .await().atMost(Duration.ofMinutes(1));
@@ -146,10 +141,9 @@ public class SimpleDocTest extends DbTestTemplate {
     Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
     
     // doc 1
-    final var parentDoc = getClient().doc().commit()
+    final var parentDoc = getClient().doc(repo).commit()
       .createOneDoc()
       .docType("customer-data")
-      .repoId(repo.getRepo().getId())
       .externalId("bobs-ssn-id")
       .branchName("main")
       .append(JsonObject.of("first_name", "bob", "last_name", "flop"))
@@ -159,11 +153,10 @@ public class SimpleDocTest extends DbTestTemplate {
     .build().await().atMost(Duration.ofMinutes(1));
 
     // doc 1 child
-    final var childDoc = getClient().doc().commit()
+    final var childDoc = getClient().doc(repo).commit()
         .createOneDoc()
         .parentDocId(parentDoc.getDoc().getId())
         .docType("customer-data")
-        .repoId(repo.getRepo().getId())
         .externalId("bobs-child-ssn-id")
         .branchName("main")
         .append(JsonObject.of("first_name", "bob_child", "last_name", "flop"))
@@ -173,8 +166,7 @@ public class SimpleDocTest extends DbTestTemplate {
     .build().await().atMost(Duration.ofMinutes(1));
     
 
-    final var findAllDocs = getClient().doc().find().docQuery()
-        .repoId(repo.getRepo().getId())
+    final var findAllDocs = getClient().doc(repo).find().docQuery()
         .children(true)
         .findAll()
     .await().atMost(Duration.ofMinutes(1));
@@ -187,8 +179,7 @@ public class SimpleDocTest extends DbTestTemplate {
     
     
     // find parent document
-    final var findParent = getClient().doc().find().docQuery()
-        .repoId(repo.getRepo().getId())
+    final var findParent = getClient().doc(repo).find().docQuery()
         .branchName("main")
         .docType("customer-data")
         .matchId("bobs-ssn-id")
@@ -200,8 +191,7 @@ public class SimpleDocTest extends DbTestTemplate {
     
 
     // find parent with child document
-    final var findParentWithChild = getClient().doc().find().docQuery()
-        .repoId(repo.getRepo().getId())
+    final var findParentWithChild = getClient().doc(repo).find().docQuery()
         .branchName("main")
         .docType("customer-data")
         .matchId("bobs-ssn-id")
@@ -215,8 +205,7 @@ public class SimpleDocTest extends DbTestTemplate {
     
     
     // delete documents
-    getClient().doc().commit().modifyManyDocs()
-      .repoId(repo.getRepo().getId())
+    getClient().doc(repo).commit().modifyManyDocs()
       .message("deleting docs")
       .author("jane.doe@morgue.com")
       .item().docId(parentDoc.getDoc().getId()).remove().next()
@@ -224,8 +213,7 @@ public class SimpleDocTest extends DbTestTemplate {
       .build()
     .await().atMost(Duration.ofMinutes(1));
     
-    final var findAllDocsAfterDelete = getClient().doc().find().docQuery()
-        .repoId(repo.getRepo().getId()).findAll()
+    final var findAllDocsAfterDelete = getClient().doc(repo).find().docQuery().findAll()
     .await().atMost(Duration.ofMinutes(1));
     Assertions.assertEquals(0, findAllDocsAfterDelete.getObjects().getDocs().size());
     

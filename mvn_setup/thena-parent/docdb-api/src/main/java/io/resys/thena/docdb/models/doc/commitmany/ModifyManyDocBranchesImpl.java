@@ -12,7 +12,6 @@ import io.resys.thena.docdb.api.actions.DocCommitActions.ModifyManyDocBranches;
 import io.resys.thena.docdb.api.actions.ImmutableManyDocsEnvelope;
 import io.resys.thena.docdb.api.models.ImmutableMessage;
 import io.resys.thena.docdb.api.models.Repo;
-import io.resys.thena.docdb.api.models.Repo.CommitResultStatus;
 import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranchLock;
 import io.resys.thena.docdb.models.doc.DocQueries.DocBranchLockCriteria;
 import io.resys.thena.docdb.models.doc.DocState.DocRepo;
@@ -33,7 +32,7 @@ import lombok.RequiredArgsConstructor;
 public class ModifyManyDocBranchesImpl implements ModifyManyDocBranches {
 
   private final DbState state;
-  private String repoId;
+  private final String repoId;
   private String branchName;
   private String author;
   private String message;
@@ -53,7 +52,6 @@ public class ModifyManyDocBranchesImpl implements ModifyManyDocBranches {
     private JsonObjectMerge appendMerge;
   }
   @Override public int getItemsAdded() { return items.size();}
-  @Override public ModifyManyDocBranchesImpl repoId(String repoId) { this.repoId = RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!"); return this; }
   @Override public ModifyManyDocBranchesImpl branchName(String branchName) { this.branchName = RepoAssert.notEmpty(branchName, () -> "branchName can't be empty!"); return this; }
   @Override public ModifyManyDocBranchesImpl author(String author) { this.author = RepoAssert.notEmpty(author, () -> "author can't be empty!"); return this; }
   @Override public ModifyManyDocBranchesImpl message(String message) { this.message = RepoAssert.notEmpty(message, () -> "message can't be empty!"); return this; }

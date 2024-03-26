@@ -15,33 +15,34 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class DocAppendActionsImpl implements DocCommitActions {
   private final DbState state;
+  private final String repoId;
 
   @Override
   public CreateOneDoc createOneDoc() {
-    return new CreateOneDocImpl(state);
+    return new CreateOneDocImpl(state, repoId);
   }
   @Override
   public ModifyOneDoc modifyOneDoc() {
-    return new ModifyOneDocImpl(state);
+    return new ModifyOneDocImpl(state, repoId);
   }
   @Override
   public CreateOneDocBranch branchOneDoc() {
-    return new CreateOneDocBranchImpl(state);
+    return new CreateOneDocBranchImpl(state, repoId);
   }
   @Override
   public ModifyOneDocBranch modifyOneBranch() {
-    return new ModifyOneDocBranchImpl(state);
+    return new ModifyOneDocBranchImpl(state, repoId);
   }
   @Override
   public CreateManyDocs createManyDocs() {
-    return new CreateManyDocsImpl(state);
+    return new CreateManyDocsImpl(state, repoId);
   }
   @Override
   public ModifyManyDocBranches modifyManyBranches() {
-    return new ModifyManyDocBranchesImpl(state);
+    return new ModifyManyDocBranchesImpl(state, repoId);
   }
   @Override
   public ModifyManyDocs modifyManyDocs() {
-    return new ModifyManyDocsImpl(state);
+    return new ModifyManyDocsImpl(state, repoId);
   }
 }

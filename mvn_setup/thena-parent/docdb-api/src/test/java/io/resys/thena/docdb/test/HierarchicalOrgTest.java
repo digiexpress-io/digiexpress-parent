@@ -14,8 +14,8 @@ import org.junit.jupiter.api.Test;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
 import io.resys.thena.docdb.api.actions.OrgCommitActions.ModType;
-import io.resys.thena.docdb.api.actions.RepoActions.RepoResult;
-import io.resys.thena.docdb.api.actions.RepoActions.RepoStatus;
+import io.resys.thena.docdb.api.actions.TenantModel.RepoResult;
+import io.resys.thena.docdb.api.actions.TenantModel.RepoStatus;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.Repo.CommitResultStatus;
 import io.resys.thena.docdb.api.models.Repo.RepoType;
@@ -33,7 +33,7 @@ public class HierarchicalOrgTest extends DbTestTemplate {
   @Test  
   public void populate() {
     // create project
-    RepoResult repo = getClient().repo().projectBuilder()
+    RepoResult repo = getClient().tenants().commit()
         .name("HierarchicalOrgTest-1", RepoType.org)
         .build()
         .await().atMost(Duration.ofMinutes(1));
@@ -46,8 +46,7 @@ public class HierarchicalOrgTest extends DbTestTemplate {
     createRoles(repo.getRepo());
     createUserGroupRoles(repo.getRepo());
     
-    final var groupHierarchy = getClient().org().find().partyHierarchyQuery()
-        .repoId(repo.getRepo().getId())
+    final var groupHierarchy = getClient().org(repo).find().partyHierarchyQuery()
         .findAll().await().atMost(Duration.ofMinutes(1));
     
     final var groups = groupHierarchy.getObjects()
@@ -461,8 +460,7 @@ Testi 1::tenant <= you are here
     }
     
     for(final var entry : groupsByUsers.entrySet()) {
-      final var builder = getClient().org().commit().modifyOneMember()
-          .repoId(repo.getId())
+      final var builder = getClient().org(repo).commit().modifyOneMember()
           .userId(entry.getKey())
           .author("ar-")
           .message("created membership");
@@ -510,8 +508,8 @@ Testi 1::tenant <= you are here
       
       
       final var externalId = root.getString("external_id");
-      final var result = getClient().org().commit().createOneParty()
-          .repoId(repo.getId())
+      final var result = getClient().org(repo).commit().createOneParty()
+
           .partyName(groupName)
           .partyDescription("created from tenant")
           .externalId(externalId)
@@ -543,8 +541,7 @@ Testi 1::tenant <= you are here
     takenGroupNames.add(groupNameInit);
     
     final var externalId = json.getString("external_id");
-    final var result = getClient().org().commit().createOneParty()
-        .repoId(repo.getId())
+    final var result = getClient().org(repo).commit().createOneParty()
         .parentId(json.getString("parent_group_external_id"))
         .partyName(groupName)
         .partyDescription("location")
@@ -576,8 +573,7 @@ Testi 1::tenant <= you are here
       takenUsernames.add(userNameInit);
       final var userName = userNameInit + suffix;
       
-      final var result = getClient().org().commit().createOneMember()
-        .repoId(repo.getId())
+      final var result = getClient().org(repo).commit().createOneMember()
         .userName(userName)
         .email(userName + "@digiexpress.io")
         .externalId(user.getString("external_id"))
@@ -590,8 +586,7 @@ Testi 1::tenant <= you are here
   }
   
   public void createRoles(Repo repo) {
-    var result = getClient().org().commit().createOneRight()
-        .repoId(repo.getId())
+    var result = getClient().org(repo).commit().createOneRight()
         .externalId("0")
         .rightName("VIEWER")
         .rightDescription("direct user and group role")
@@ -600,8 +595,7 @@ Testi 1::tenant <= you are here
         .build().await().atMost(Duration.ofMinutes(1));
       Assertions.assertEquals(CommitResultStatus.OK, result.getStatus());
  
-    result = getClient().org().commit().createOneRight()
-        .repoId(repo.getId())
+    result = getClient().org(repo).commit().createOneRight()
         .externalId("1")
         .rightName("USER")
         .rightDescription("direct user and group role")
@@ -610,8 +604,7 @@ Testi 1::tenant <= you are here
         .build().await().atMost(Duration.ofMinutes(1));
     Assertions.assertEquals(CommitResultStatus.OK, result.getStatus());
     
-    result = getClient().org().commit().createOneRight()
-        .repoId(repo.getId())
+    result = getClient().org(repo).commit().createOneRight()
         .externalId("2")
         .rightName("MANAGER")
         .rightDescription("direct user and group role")
@@ -627,8 +620,7 @@ Testi 1::tenant <= you are here
     for(final var userRaw : users) {
       final var user = (JsonObject) userRaw;
       
-      final var builder = getClient().org().commit().modifyOneMember()
-        .repoId(repo.getId())
+      final var builder = getClient().org(repo).commit().modifyOneMember()
         .userId(user.getString("user_external_id"))
         .author("au-")
         .message("created user group role association");

@@ -25,9 +25,9 @@ import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.resys.thena.docdb.api.DocDB;
-import io.resys.thena.docdb.api.DocDB.OrgModel;
-import io.resys.thena.docdb.api.actions.RepoActions.RepoStatus;
+import io.resys.thena.docdb.api.ThenaClient;
+import io.resys.thena.docdb.api.ThenaClient.OrgModel;
+import io.resys.thena.docdb.api.actions.TenantModel.RepoStatus;
 import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.Repo.RepoType;
@@ -52,8 +52,8 @@ public class PermissionStoreImpl implements PermissionStore {
   private final PermissionStoreConfig config;
   
   @Override
-  public OrgModel getOrg() {
-    return config.getClient().org();
+  public OrgModel getOrg(String repoId) {
+    return config.getClient().org(repoId);
   }
   @Override
   public PermissionStore withRepoId(String repoId) {
@@ -62,7 +62,7 @@ public class PermissionStoreImpl implements PermissionStore {
   @Override
   public Uni<Repo> getRepo() {
     final var client = config.getClient();
-    return client.repo().projectsQuery().id(config.getRepoId()).get();
+    return client.tenants().find().id(config.getRepoId()).get();
   }
   @Override public PermissionStoreConfig getConfig() { return config; }
   @Override public PermissionRepositoryQuery query() {
@@ -80,7 +80,7 @@ public class PermissionStoreImpl implements PermissionStore {
   private Uni<PermissionStore> createRepoOrGetRepo(String repoName) {
     final var client = config.getClient();
     
-    return client.repo().projectsQuery().id(repoName).get()
+    return client.tenants().find().id(repoName).get()
         .onItem().transformToUni(repo -> {        
           if(repo == null) {
             return createRepo(repoName); 
@@ -91,7 +91,7 @@ public class PermissionStoreImpl implements PermissionStore {
   
   private Uni<Void> deleteRepos() {
     final var client = config.getClient();
-    final var existingRepos = client.repo().projectsQuery().findAll();
+    final var existingRepos = client.tenants().find().findAll();
     
     
     return existingRepos.onItem().transformToUni((repo) -> {
@@ -99,7 +99,7 @@ public class PermissionStoreImpl implements PermissionStore {
         final var repoId = repo.getId();
         final var rev = repo.getRev();
         
-        return client.repo().projectsQuery().id(repoId).rev(rev).delete();
+        return client.tenants().find().id(repoId).rev(rev).delete();
       })
       .concatenate().collect().asList()
       .onItem().transformToUni((junk) -> Uni.createFrom().voidItem());
@@ -108,7 +108,7 @@ public class PermissionStoreImpl implements PermissionStore {
   private Uni<PermissionStore> deleteRepo(String repoName) {
     RepoAssert.notNull(repoName, () -> "repoName must be defined!");
     final var client = config.getClient();
-    final var existingRepo = client.org().project().projectName(repoName).get();
+    final var existingRepo = client.org(repoName).project().get();
     
     
     return existingRepo.onItem().transformToUni((repoResult) -> {
@@ -125,7 +125,7 @@ public class PermissionStoreImpl implements PermissionStore {
       final var rev = repoResult.getRepo().getRev();
       final var docStore = createClientStore(repoName);
       
-      return client.repo().projectsQuery().id(repoId).rev(rev).delete()
+      return client.tenants().find().id(repoId).rev(rev).delete()
           .onItem().transform(junk -> docStore);
     });
   }
@@ -134,7 +134,7 @@ public class PermissionStoreImpl implements PermissionStore {
     RepoAssert.notNull(repoName, () -> "repoName must be defined!");
     
     final var client = config.getClient();
-    final var newRepo = client.repo().projectBuilder().name(repoName, RepoType.org).build();
+    final var newRepo = client.tenants().commit().name(repoName, RepoType.org).build();
     return newRepo.onItem().transform((repoResult) -> {
       if(repoResult.getStatus() != RepoStatus.OK) {
         throw new PermissionStoreException("PERMISSION_REPO_CREATE_FAIL", 
@@ -210,7 +210,7 @@ public class PermissionStoreImpl implements PermissionStore {
           this.pgPass == null ? "null" : "***");
       }
       
-      final DocDB thena;
+      final ThenaClient thena;
       if(pgPool == null) {
         RepoAssert.notNull(pgHost, () -> "pgHost must be defined!");
         RepoAssert.notNull(pgPort, () -> "pgPort must be defined!");

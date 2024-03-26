@@ -45,16 +45,14 @@ import io.resys.crm.client.spi.CrmClientImpl;
 import io.resys.crm.client.spi.DocumentStoreImpl;
 import io.resys.crm.client.spi.store.DocumentConfig.DocumentGidProvider;
 import io.resys.thena.docdb.jackson.VertexExtModule;
-import io.resys.thena.docdb.spi.DocDBDefault;
+import io.resys.thena.docdb.spi.ThenaClientPgSql;
 import io.resys.thena.docdb.support.DocDbPrinter;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.json.jackson.DatabindCodec;
 import io.vertx.core.json.jackson.VertxModule;
 import io.vertx.mutiny.sqlclient.Pool;
 import jakarta.inject.Inject;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 public class CustomerTestCase {
   @Inject io.vertx.mutiny.pgclient.PgPool pgPool;
   public final Duration atMost = Duration.ofMinutes(5);
@@ -113,14 +111,6 @@ public class CustomerTestCase {
     return DatabindCodec.mapper(); 
   }
 
-  public void assertCommits(String repoName) {
-    final var config = getStore().getConfig();
-    final var state = ((DocDBDefault) config.getClient()).getState();
-    final var commits = config.getClient().git().commit().findAllCommits(repoName).await().atMost(atMost);
-    log.debug("Total commits: {}", commits.size());
-    
-  }
-  
   @AfterEach
   public void tearDown() {
     store = null;
@@ -140,7 +130,7 @@ public class CustomerTestCase {
 
   public String printRepo(CrmClient client) {
     final var config = ((CrmClientImpl) client).getCtx().getConfig();
-    final var state = ((DocDBDefault) config.getClient()).getState();
+    final var state = ((ThenaClientPgSql) config.getClient()).getState();
     final var repo = client.getRepo().await().atMost(Duration.ofMinutes(1));
     final String result = new DocDbPrinter(state).printWithStaticIds(repo);
     return result;
@@ -148,7 +138,7 @@ public class CustomerTestCase {
   
   public String toStaticData(CrmClient client) {
     final var config = ((CrmClientImpl) client).getCtx().getConfig();
-    final var state = ((DocDBDefault) config.getClient()).getState();
+    final var state = ((ThenaClientPgSql) config.getClient()).getState();
     final var repo = client.getRepo().await().atMost(Duration.ofMinutes(1));
     return new DocDbPrinter(state).printWithStaticIds(repo);
   }

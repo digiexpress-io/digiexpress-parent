@@ -42,14 +42,13 @@ public class CreateRoleActionImpl implements CreateRoleAction {
   
   
   public Uni<OnePartyEnvelope> createRequest(CreateRole command) {
-    final CreateOneParty createOneParty = ctx.getOrg().commit().createOneParty();
+    final CreateOneParty createOneParty = ctx.getOrg(ctx.getConfig().getRepoId()).commit().createOneParty();
 
     if(command.getCommandType() == RoleCommandType.CREATE_ROLE) {
       CreateRole role = (CreateRole) command;
     
     
     return createOneParty
-        .repoId(ctx.getConfig().getRepoId())
         .message("created role")
         .author(ctx.getConfig().getAuthor().get())
 

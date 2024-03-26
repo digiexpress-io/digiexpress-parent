@@ -29,8 +29,8 @@ import org.junit.jupiter.api.Disabled;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
 import io.resys.thena.docdb.api.actions.CommitActions.CommitResultEnvelope;
-import io.resys.thena.docdb.api.actions.RepoActions.RepoResult;
-import io.resys.thena.docdb.api.actions.RepoActions.RepoStatus;
+import io.resys.thena.docdb.api.actions.TenantModel.RepoResult;
+import io.resys.thena.docdb.api.actions.TenantModel.RepoStatus;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.Repo.RepoType;
 import io.resys.thena.docdb.test.config.DbTestTemplate;
@@ -49,7 +49,7 @@ public class MetricsDBtest extends DbTestTemplate {
 
   //@org.junit.jupiter.api.Test
   public void metrics() {
-    RepoResult repo = getClient().repo().projectBuilder()
+    RepoResult repo = getClient().tenants().commit()
         .name("create repo for metrics", RepoType.git)
         .build()
         .await().atMost(Duration.ofMinutes(1));
@@ -71,11 +71,10 @@ public class MetricsDBtest extends DbTestTemplate {
   
   private void select(RepoResult repo) {
     final var start = System.currentTimeMillis();
-    final var repoState = getClient().repo().projectsQuery().id(repo.getRepo().getId()).get().await().atMost(Duration.ofMinutes(1));
+    final var repoState = getClient().tenants().find().id(repo.getRepo().getId()).get().await().atMost(Duration.ofMinutes(1));
     
-    final var blobs = getClient().git().branch()
+    final var blobs = getClient().git(repoState).branch()
             .branchQuery()
-            .projectName(repo.getRepo().getName())
             .branchName("main")
             .docsIncluded()
             .get()
@@ -89,8 +88,8 @@ public class MetricsDBtest extends DbTestTemplate {
   
   private void runInserts(RepoResult repo, int total) {
     
-    final var builder = getClient().git().commit().commitBuilder().latestCommit()
-      .head(repo.getRepo().getName(), "main")
+    final var builder = getClient().git(repo).commit().commitBuilder().latestCommit()
+      .branchName("main")
       .author("same vimes")
       .message("Commiting!");
 

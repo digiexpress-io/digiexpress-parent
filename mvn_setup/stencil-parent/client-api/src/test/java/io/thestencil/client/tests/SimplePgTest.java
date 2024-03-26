@@ -29,8 +29,8 @@ import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
-import io.resys.thena.docdb.api.actions.RepoActions.RepoResult;
-import io.resys.thena.docdb.api.actions.RepoActions.RepoStatus;
+import io.resys.thena.docdb.api.actions.TenantModel.RepoResult;
+import io.resys.thena.docdb.api.actions.TenantModel.RepoStatus;
 import io.resys.thena.docdb.api.models.Repo.CommitResultStatus;
 import io.resys.thena.docdb.api.models.Repo.RepoType;
 import io.thestencil.client.tests.util.PgProfile;
@@ -52,7 +52,7 @@ public class SimplePgTest extends PgTestTemplate {
   @Test
   public void crateRepoWithOneCommit() {
     // create project
-    RepoResult repo = getClient().repo().projectBuilder()
+    RepoResult repo = getClient().tenants().commit()
         .name("project-x", RepoType.git)
         .build()
         .await().atMost(Duration.ofMinutes(1));
@@ -60,11 +60,10 @@ public class SimplePgTest extends PgTestTemplate {
     Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
     
     // Create head and first commit
-    final var commit_0 = getClient().git().commit().commitBuilder()
-      .head("project-x", "main")
+    final var commit_0 = getClient().git("project-x").commit().commitBuilder()
+      .branchName("main")
       .append("fileFromObject.txt", JsonObject.mapFrom(ImmutableTestContent.builder().id("10").name("sam vimes").build()))
       .author("same vimes")
-      .head("project-x", "main")
       .message("first commit!")
       .build()
       .await().atMost(Duration.ofMinutes(1));
@@ -78,7 +77,7 @@ public class SimplePgTest extends PgTestTemplate {
   @Test
   public void crateRepoWithTwoCommits() {
     // create project
-    RepoResult repo = getClient().repo().projectBuilder()
+    RepoResult repo = getClient().tenants().commit()
         .name("project-xy", RepoType.git)
         .build()
         .await().atMost(Duration.ofMinutes(1));
@@ -86,8 +85,8 @@ public class SimplePgTest extends PgTestTemplate {
     Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
     
     // Create head and first commit
-    var commit_0 = getClient().git().commit().commitBuilder()
-      .head(repo.getRepo().getName(), "main")
+    var commit_0 = getClient().git(repo.getRepo().getName()).commit().commitBuilder()
+      .branchName("main")
       .append("fileFromObject.txt", JsonObject.mapFrom(ImmutableTestContent.builder().id("10").name("sam vimes").build()))
       .author("same vimes")
       .message("first commit!")
@@ -99,8 +98,8 @@ public class SimplePgTest extends PgTestTemplate {
     
     
     // Create head and first commit
-    var commit_1 = getClient().git().commit().commitBuilder()
-      .head(repo.getRepo().getName(), "main")
+    var commit_1 = getClient().git(repo.getRepo().getName()).commit().commitBuilder()
+      .branchName("main")
       .parent(commit_0.getCommit().getId())
       .append("fileFromObject.txt", JsonObject.mapFrom(ImmutableTestContent.builder().id("10").name("sam vimes 1").build()))
       .author("same vimes")

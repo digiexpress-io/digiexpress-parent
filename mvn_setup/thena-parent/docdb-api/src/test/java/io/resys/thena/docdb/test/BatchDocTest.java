@@ -22,8 +22,8 @@ package io.resys.thena.docdb.test;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
-import io.resys.thena.docdb.api.actions.RepoActions.RepoResult;
-import io.resys.thena.docdb.api.actions.RepoActions.RepoStatus;
+import io.resys.thena.docdb.api.actions.TenantModel.RepoResult;
+import io.resys.thena.docdb.api.actions.TenantModel.RepoStatus;
 import io.resys.thena.docdb.api.models.Repo.RepoType;
 import io.resys.thena.docdb.test.config.DbTestTemplate;
 import io.resys.thena.docdb.test.config.PgProfile;
@@ -52,17 +52,16 @@ public class BatchDocTest extends DbTestTemplate {
   public void batch10Docs() {
     // create project
     // with main branch, commit log na doc id from json
-    RepoResult repo = getClient().repo().projectBuilder()
+    RepoResult repo = getClient().tenants().commit()
         .name("BatchDocTest-1", RepoType.doc)
         .build()
         .await().atMost(Duration.ofMinutes(1));
     log.debug("created repo {}", repo);
     Assertions.assertEquals(RepoStatus.OK, repo.getStatus());
     
-    final var createdDoc = getClient().doc().commit()
+    final var createdDoc = getClient().doc(repo).commit()
         .createManyDocs()
         .branchName("main")
-        .repoId(repo.getRepo().getId())
         .docType("customer-data")
         .message("batching tests")
         .author("jane.doe@morgue.com");
@@ -77,9 +76,7 @@ public class BatchDocTest extends DbTestTemplate {
     final var inserted = createdDoc.build().await().atMost(Duration.ofMinutes(1));
 
     
-    final var findAllDocs = getClient().doc().find().docQuery()
-        .repoId(repo.getRepo().getId())
-        .findAll()
+    final var findAllDocs = getClient().doc(repo).find().docQuery().findAll()
     .await().atMost(Duration.ofMinutes(1));
     
     Assertions.assertEquals(10, findAllDocs.getObjects().getDocs().size());
@@ -88,8 +85,7 @@ public class BatchDocTest extends DbTestTemplate {
     
     // update branches
     // update dev branch with new data
-    final var modifyBranch = getClient().doc().commit().modifyManyBranches()
-      .repoId(repo.getRepo().getId())
+    final var modifyBranch = getClient().doc(repo).commit().modifyManyBranches()
       .author("jane.doe@morgue.com")
       .message("edit dev branch")
       .branchName("main");
@@ -104,8 +100,7 @@ public class BatchDocTest extends DbTestTemplate {
     
     
     // Modify all doc-s meta data
-    final var modifyManyDocs = getClient().doc().commit().modifyManyDocs()
-        .repoId(repo.getRepo().getId())
+    final var modifyManyDocs = getClient().doc(repo).commit().modifyManyDocs()
         .author("jane.doe@morgue.com")
         .message("edit dev branch");
       

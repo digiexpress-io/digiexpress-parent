@@ -38,7 +38,7 @@ public class UpdatePrincipalActionImpl implements UpdatePrincipalAction {
   }
         
   public Uni<OneMemberEnvelope> createRequest(String id, List<PrincipalUpdateCommand> commands){
-    final ModifyOneMember modifyOneMember = ctx.getOrg().commit().modifyOneMember();
+    final ModifyOneMember modifyOneMember = ctx.getOrg(ctx.getConfig().getRepoId()).commit().modifyOneMember();
 
     for (PrincipalUpdateCommand command : commands) {
       switch(command.getCommandType()) {
@@ -69,7 +69,6 @@ public class UpdatePrincipalActionImpl implements UpdatePrincipalAction {
     
     return modifyOneMember
       .userId(id)
-      .repoId(ctx.getConfig().getRepoId())
       .author(ctx.getConfig().getAuthor().get())
       .message("Principal update")
       .build();

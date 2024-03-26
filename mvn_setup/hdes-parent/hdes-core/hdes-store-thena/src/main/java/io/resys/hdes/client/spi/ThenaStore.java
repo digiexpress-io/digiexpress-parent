@@ -20,7 +20,7 @@ import io.resys.hdes.client.spi.store.ImmutableThenaConfig;
 import io.resys.hdes.client.spi.store.ThenaConfig;
 import io.resys.hdes.client.spi.store.ThenaStoreTemplate;
 import io.resys.hdes.client.spi.util.HdesAssert;
-import io.resys.thena.docdb.api.DocDB;
+import io.resys.thena.docdb.api.ThenaClient;
 import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.docdb.storesql.DbStateSqlImpl;
 import io.resys.thena.docdb.storesql.PgErrors;
@@ -50,7 +50,7 @@ public class ThenaStore extends ThenaStoreTemplate implements HdesStore {
     return new BranchQuery() {
       @Override
       public Uni<List<Branch>> findAll() {
-        return getConfig().getClient().git().project().projectName(getRepoName())
+        return getConfig().getClient().git(getRepoName()).project()
             .get().onItem().transform(objects -> {
               if(objects.getStatus() != QueryEnvelopeStatus.OK) {
                 throw new StoreException("HDES_BRANCH_QUERY_FAIL", null, 
@@ -197,7 +197,7 @@ public class ThenaStore extends ThenaStoreTemplate implements HdesStore {
           this.pgPass == null ? "null" : "***");
       }
       
-      final DocDB thena;
+      final ThenaClient thena;
       if(pgPool == null) {
         HdesAssert.notNull(pgHost, () -> "pgHost must be defined!");
         HdesAssert.notNull(pgPort, () -> "pgPort must be defined!");

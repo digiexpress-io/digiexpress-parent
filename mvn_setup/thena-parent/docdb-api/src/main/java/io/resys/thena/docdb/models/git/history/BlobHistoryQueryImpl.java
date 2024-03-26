@@ -46,25 +46,26 @@ import lombok.extern.slf4j.Slf4j;
 public class BlobHistoryQueryImpl implements BlobHistoryQuery {
   private final DbState state;
   private final List<MatchCriteria> criteria = new ArrayList<>();
-  private String projectName;
+  private final String repoId;
+  
   private String branchName;
   private boolean latestOnly;
   private String docId;
 
   @Override public BlobHistoryQuery matchBy(MatchCriteria ... criteria) { this.criteria.addAll(Arrays.asList(criteria)); return this; }
   @Override public BlobHistoryQuery matchBy(List<MatchCriteria> criteria) { this.criteria.addAll(criteria); return this; }
-  @Override public BlobHistoryQuery head(String projectName, String branchName) { this.projectName = projectName; this.branchName = branchName; return this; }
+  @Override public BlobHistoryQuery branchName(String branchName) { this.branchName = branchName; return this; }
   @Override public BlobHistoryQuery latestOnly() { this.latestOnly = true; return this; }
   
   @Override
   public Uni<QueryEnvelope<HistoryObjects>> get() {
-    RepoAssert.notEmpty(projectName, () -> "projectName is not defined!");
+    RepoAssert.notEmpty(repoId, () -> "repoId is not defined!");
     RepoAssert.notEmpty(branchName, () -> "branchName is not defined!");
     
-    return state.project().getByNameOrId(projectName).onItem()
+    return state.project().getByNameOrId(repoId).onItem()
     .transformToUni((Repo existing) -> {
       if(existing == null) {
-        return Uni.createFrom().item(QueryEnvelope.repoNotFound(projectName, log));
+        return Uni.createFrom().item(QueryEnvelope.repoNotFound(repoId, log));
       }
       final var ctx = state.toGitState().withRepo(existing);
       return ctx.query().blobHistory()

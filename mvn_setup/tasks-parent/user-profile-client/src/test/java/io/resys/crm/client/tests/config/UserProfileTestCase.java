@@ -40,7 +40,7 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.resys.thena.docdb.jackson.VertexExtModule;
-import io.resys.thena.docdb.spi.DocDBDefault;
+import io.resys.thena.docdb.spi.ThenaClientPgSql;
 import io.resys.thena.docdb.support.DocDbPrinter;
 import io.resys.userprofile.client.api.UserProfileClient;
 import io.resys.userprofile.client.api.model.Document.DocumentType;
@@ -115,8 +115,8 @@ public class UserProfileTestCase {
 
   public void assertCommits(String repoName) {
     final var config = getStore().getConfig();
-    final var state = ((DocDBDefault) config.getClient()).getState();
-    final var commits = config.getClient().git().commit().findAllCommits(repoName).await().atMost(atMost);
+    final var state = ((ThenaClientPgSql) config.getClient()).getState();
+    final var commits = config.getClient().git(repoName).commit().findAllCommits().await().atMost(atMost);
     log.debug("Total commits: {}", commits.size());
     
   }
@@ -140,7 +140,7 @@ public class UserProfileTestCase {
 
   public String printRepo(UserProfileClient client) {
     final var config = ((UserProfileClientImpl) client).getCtx().getConfig();
-    final var state = ((DocDBDefault) config.getClient()).getState();
+    final var state = ((ThenaClientPgSql) config.getClient()).getState();
     final var repo = client.getRepo().await().atMost(Duration.ofMinutes(1));
     final String result = new DocDbPrinter(state).printWithStaticIds(repo);
     return result;
@@ -148,7 +148,7 @@ public class UserProfileTestCase {
   
   public String toStaticData(UserProfileClient client) {
     final var config = ((UserProfileClientImpl) client).getCtx().getConfig();
-    final var state = ((DocDBDefault) config.getClient()).getState();
+    final var state = ((ThenaClientPgSql) config.getClient()).getState();
     final var repo = client.getRepo().await().atMost(Duration.ofMinutes(1));
     return new DocDbPrinter(state).printWithStaticIds(repo);
   }

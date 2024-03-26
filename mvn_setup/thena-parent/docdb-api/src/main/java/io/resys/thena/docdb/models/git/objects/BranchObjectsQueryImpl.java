@@ -49,8 +49,8 @@ import lombok.extern.slf4j.Slf4j;
 @Data @Accessors(fluent = true)
 public class BranchObjectsQueryImpl implements BranchObjectsQuery {
   private final DbState state;
+  private final String repoId;
   private final List<MatchCriteria> blobCriteria = new ArrayList<>();
-  private String projectName; //repo name
   private String branchName;
   private boolean docsIncluded;
   @Override public BranchObjectsQueryImpl matchBy(List<MatchCriteria> blobCriteria) { this.blobCriteria.addAll(blobCriteria); return this; }
@@ -62,13 +62,12 @@ public class BranchObjectsQueryImpl implements BranchObjectsQuery {
   }
   @Override
   public Uni<QueryEnvelope<BranchObjects>> get() {
-    RepoAssert.notEmpty(projectName, () -> "projectName is not defined!");
     RepoAssert.notEmpty(branchName, () -> "branchName is not defined!");
     
-    return state.project().getByNameOrId(projectName).onItem()
+    return state.project().getByNameOrId(repoId).onItem()
     .transformToUni((Repo existing) -> {
       if(existing == null) {
-        return Uni.createFrom().item(QueryEnvelope.repoNotFound(projectName, log));
+        return Uni.createFrom().item(QueryEnvelope.repoNotFound(repoId, log));
       }
       return getRef(existing, branchName, state.toGitState().withRepo(existing));
     });

@@ -23,14 +23,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class MemberObjectsQueryImpl implements MemberObjectsQuery {
   private final DbState state;
-  private String repoId;
+  private final String repoId;
 
-  @Override
-  public MemberObjectsQuery repoId(String repoId) {
-    RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
-    this.repoId = repoId;
-    return this;
-  }
   @Override
   public Uni<QueryEnvelope<OrgMember>> get(String userId) {
     RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");

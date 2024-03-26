@@ -13,8 +13,8 @@ import org.junit.jupiter.api.Test;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
 import io.resys.thena.docdb.api.actions.OrgCommitActions.ModType;
-import io.resys.thena.docdb.api.actions.RepoActions.RepoResult;
-import io.resys.thena.docdb.api.actions.RepoActions.RepoStatus;
+import io.resys.thena.docdb.api.actions.TenantModel.RepoResult;
+import io.resys.thena.docdb.api.actions.TenantModel.RepoStatus;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.api.models.Repo.RepoType;
 import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgParty;
@@ -41,7 +41,7 @@ public class HierarchicalOrgMemberTest extends DbTestTemplate {
   @Test
   public void createRepoAndUserGroups() {
     // create project
-    RepoResult repo = getClient().repo().projectBuilder()
+    RepoResult repo = getClient().tenants().commit()
         .name("HierarchicalOrgUserTest-1", RepoType.org)
         .build()
         .await().atMost(Duration.ofMinutes(1));
@@ -85,8 +85,7 @@ public class HierarchicalOrgMemberTest extends DbTestTemplate {
     */
     
     // user 2 sanity
-    var userGroupsAndRoles2 = getClient().org().find().memberHierarchyQuery()
-        .repoId(repo.getRepo().getId())
+    var userGroupsAndRoles2 = getClient().org(repo).find().memberHierarchyQuery()
         .get(userId2.getId()).await().atMost(Duration.ofMinutes(1)).getObjects();
     
     
@@ -111,8 +110,7 @@ user-2
         """, userGroupsAndRoles2.getLog());
     
     // modify user 2
-    getClient().org().commit().modifyOneMember()
-        .repoId(repo.getRepo().getId())
+    getClient().org(repo).commit().modifyOneMember()
         .userId(userGroupsAndRoles2.getUserId())
         .modifyParties(ModType.ADD, root1.getId())
         .modifyRights(ModType.ADD, bakerMain.getId())
@@ -124,8 +122,7 @@ user-2
         .build().await().atMost(Duration.ofMinutes(1))
         .getMember();
     
-    userGroupsAndRoles2 = getClient().org().find().memberHierarchyQuery()
-        .repoId(repo.getRepo().getId())
+    userGroupsAndRoles2 = getClient().org(repo).find().memberHierarchyQuery()
         .get(userId2.getId()).await().atMost(Duration.ofMinutes(1)).getObjects(); 
     Assertions.assertEquals("""
 super-user
@@ -145,8 +142,7 @@ super-user
     
     
     // remove user 2 from child-1.2.2 group
-    getClient().org().commit().modifyOneMember()
-        .repoId(repo.getRepo().getId())
+    getClient().org(repo).commit().modifyOneMember()
         .userId(userGroupsAndRoles2.getUserId())
         .modifyParties(ModType.DISABLED, child1_2_2.getId())
         .author("au")
@@ -154,8 +150,7 @@ super-user
         .build().await().atMost(Duration.ofMinutes(1))
         .getMember();
     
-    userGroupsAndRoles2 = getClient().org().find().memberHierarchyQuery()
-        .repoId(repo.getRepo().getId())
+    userGroupsAndRoles2 = getClient().org(repo).find().memberHierarchyQuery()
         .get(userId2.getId()).await().atMost(Duration.ofMinutes(1)).getObjects(); 
     Assertions.assertEquals("""
 super-user
@@ -182,8 +177,7 @@ super-user
     
     
     // Reject changes because there are non
-    final var rejectNoChanges = getClient().org().commit().modifyOneMember()
-      .repoId(repo.getRepo().getId())
+    final var rejectNoChanges = getClient().org(repo).commit().modifyOneMember()
       .userId(userGroupsAndRoles2.getUserId())
       .modifyParties(ModType.DISABLED, child1_2_2.getId())
       .author("au")
@@ -192,8 +186,7 @@ super-user
       .getStatus();
     Assertions.assertEquals(Repo.CommitResultStatus.NO_CHANGES, rejectNoChanges);
     
-    userGroupsAndRoles2 = getClient().org().find().memberHierarchyQuery()
-        .repoId(repo.getRepo().getId())
+    userGroupsAndRoles2 = getClient().org(repo).find().memberHierarchyQuery()
         .get(userId2.getId()).await().atMost(Duration.ofMinutes(1)).getObjects(); 
     Assertions.assertEquals("""
 super-user
@@ -220,8 +213,7 @@ super-user
     //printRepo(repo.getRepo()); //LOG THE DB 
     
     // 
-    final var users = getClient().org().find().memberHierarchyQuery()
-        .repoId(repo.getRepo().getId())
+    final var users = getClient().org(repo).find().memberHierarchyQuery()
         .findAll().await().atMost(Duration.ofMinutes(1));
     Assertions.assertEquals(2, users.getObjects().size());
     
@@ -230,8 +222,7 @@ super-user
 
   
   private OrgMember createUser(String userName, RepoResult repo, List<OrgParty> groups, List<OrgRight> roles) {
-    return getClient().org().commit().createOneMember()
-        .repoId(repo.getRepo().getId())
+    return getClient().org(repo).commit().createOneMember()
         .addMemberToParties(groups.stream().map(group -> group.getId()).toList())
         .addMemberRight(roles.stream().map(role -> role.getId()).toList())
         .userName(userName)
@@ -244,8 +235,7 @@ super-user
   }
   
   private OrgParty createRootGroup(String groupName, RepoResult repo, OrgRight ...roles) {
-    return getClient().org().commit().createOneParty()
-        .repoId(repo.getRepo().getId())
+    return getClient().org(repo).commit().createOneParty()
         .partyName(groupName)
         .partyDescription("gd-")
         .addRightsToParty(
@@ -260,8 +250,7 @@ super-user
   }
   
   private OrgParty createChildGroup(String groupName, String parentId, RepoResult repo, OrgRight ...roles) {
-    return getClient().org().commit().createOneParty()
-        .repoId(repo.getRepo().getId())
+    return getClient().org(repo).commit().createOneParty()
         .partyName(groupName)
         .partyDescription("gd-")
         .parentId(parentId)
@@ -277,8 +266,7 @@ super-user
   }
   
   private OrgRight createRole(RepoResult repo, String roleName) {
-    return getClient().org().commit().createOneRight()
-        .repoId(repo.getRepo().getId())
+    return getClient().org(repo).commit().createOneRight()
         .rightName(roleName)
         .rightDescription("rd-")
         .author("ar-")

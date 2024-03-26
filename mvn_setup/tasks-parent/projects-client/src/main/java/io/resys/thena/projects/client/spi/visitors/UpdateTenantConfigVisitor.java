@@ -64,8 +64,7 @@ public class UpdateTenantConfigVisitor implements DocObjectsVisitor<Uni<List<Ten
     this.commandsByTenantId = commands.stream()
         .collect(Collectors.groupingBy(TenantConfigUpdateCommand::getTenantConfigId));
     this.tenantIds = new ArrayList<>(commandsByTenantId.keySet());
-    this.commitBuilder = config.getClient().doc().commit().modifyManyBranches()
-        .repoId(config.getRepoId())
+    this.commitBuilder = config.getClient().doc(config.getRepoId()).commit().modifyManyBranches()
         .message("Update Tenants: " + commandsByTenantId.size())
         .author(config.getAuthor().get());
   }
