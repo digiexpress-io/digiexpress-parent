@@ -9,45 +9,44 @@ import org.junit.jupiter.api.Test;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
 import io.resys.permission.client.api.PermissionClient;
+import io.resys.permission.client.api.model.ImmutableCreatePrincipal;
 import io.resys.permission.client.api.model.Principal;
 import io.resys.permission.client.tests.config.DbTestTemplate;
-import io.resys.permission.client.tests.config.GenerateTestData;
 import io.resys.permission.client.tests.config.OrgPgProfile;
-import io.resys.thena.docdb.api.models.Repo;
-import io.vertx.core.json.JsonArray;
-import lombok.extern.slf4j.Slf4j;
 
 @QuarkusTest
 @TestProfile(OrgPgProfile.class)
-@Slf4j
 public class PrincipalQueryTest extends DbTestTemplate {
 
+  public Principal createPrincipalForTest(PermissionClient client) {
+    
+    return client.createPrincipal().createOne(ImmutableCreatePrincipal.builder()
+        .comment("Added new tester to system")
+        .userId("user-1")
+        .name("John Cena")
+        .email("muscles@super-cool.com")
+        .build()).await().atMost(Duration.ofMinutes(1));
+  }
+  
   
   @Test  
   public void basicTest() {
-    // create project
+    
     final PermissionClient client = getClient().repoQuery()
         .repoName("PrincipalQueryTest-1")
         .create()
         .await().atMost(Duration.ofMinutes(1));
 
-    final Repo repo = client.getRepo().await().atMost(Duration.ofMinutes(1));
-    log.debug("created repo {}", repo);
-    new GenerateTestData(getDocDb()).populate(repo);
-
+    final var createdPrincipal = createPrincipalForTest(client);
+    
+    Assertions.assertEquals("John Cena", client.principalQuery().get(createdPrincipal.getId()).await().atMost(Duration.ofMinutes(1)).getName());
     
     final List<Principal> allPrincipals = client
         .principalQuery().findAllPrincipals()
         .await().atMost(Duration.ofMinutes(1));
   
-    for(final var principal: allPrincipals) {
-      final var foundByName = client
-        .principalQuery().get(principal.getName())
-        .await().atMost(Duration.ofMinutes(1));
-  
-      Assertions.assertEquals(principal.getId(), foundByName.getId());
-    }
-    log.debug(new JsonArray(allPrincipals).encodePrettily());
+    
+    Assertions.assertEquals(1, allPrincipals.size());
   }
 
   

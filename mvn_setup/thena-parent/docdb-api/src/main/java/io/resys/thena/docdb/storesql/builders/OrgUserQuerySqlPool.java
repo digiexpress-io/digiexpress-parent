@@ -105,9 +105,9 @@ public class OrgUserQuerySqlPool implements OrgQueries.MemberQuery {
 
   @Override
   public Uni<List<OrgRightFlattened>> findAllRightsByMemberId(String userId) {
-    final var sql = sqlBuilder.orgMembers().findAllRolesByUserId(userId);
+    final var sql = sqlBuilder.orgMembers().findAllRightsByMemberId(userId);
     if(log.isDebugEnabled()) {
-      log.debug("User findAllRolesByUserId query, with props: {} \r\n{}", 
+      log.debug("User findAllRightsByMemberId query, with props: {} \r\n{}", 
           sql.getProps().deepToString(),
           sql.getValue());
     }

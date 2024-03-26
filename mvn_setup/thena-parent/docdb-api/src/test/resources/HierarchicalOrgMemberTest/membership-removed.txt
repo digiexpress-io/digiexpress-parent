@@ -214,4 +214,4 @@ Actors status
     memberId: 3
     partyId: null
     rightId: null
-    status: DISABLED
+    status: IN_FORCE

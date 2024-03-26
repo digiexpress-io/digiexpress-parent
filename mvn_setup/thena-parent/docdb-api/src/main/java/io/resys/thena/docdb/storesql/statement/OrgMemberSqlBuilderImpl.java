@@ -207,27 +207,29 @@ SELECT * FROM child;
 	}
 
   @Override
-  public SqlTuple findAllRolesByUserId(String userId) {
+  public SqlTuple findAllRightsByMemberId(String userId) {
     final var sql = new SqlStatement()
         
         .append("SELECT ").ln()
-        .append("  role.id                  as right_id, ").ln()
-        .append("  right_status.actor_status as right_status, ").ln()
-        .append("  right_status.id           as right_status_id, ").ln()
-        .append("  role.right_name           as right_name, ").ln()
-        .append("  role.right_description    as right_description ").ln()
+        .append("  rights.id                   as right_id, ").ln()
+        .append("  rights.right_name           as right_name, ").ln()
+        .append("  rights.right_description    as right_description, ").ln()
+        .append("  member_rights.party_id      as party_id, ").ln()
+        .append("  right_status.actor_status   as right_status, ").ln()
+        .append("  right_status.id             as right_status_id ").ln()
         
         .append("FROM ").ln()
-        .append("  ").append(options.getOrgRights()).append(" as role").ln()
-        .append("INNER JOIN ").append(options.getOrgMemberRights()).append(" as user_roles").ln()
+        .append("  ").append(options.getOrgRights()).append(" as rights").ln()
+        .append("INNER JOIN ").append(options.getOrgMemberRights()).append(" as member_rights").ln()
         .append("  ON(").ln()
-        .append("    user_roles.right_id = role.id").ln()
-        .append("    and user_roles.member_id = $1").ln()
+        .append("    member_rights.right_id = rights.id").ln()
+        .append("    and member_rights.member_id = $1").ln()
+        .append("    and member_rights.party_id is null").ln()
          .append("  ) ").ln()
         
         .append("LEFT JOIN ").append(options.getOrgActorStatus()).append(" as right_status").ln()
         .append("  ON(").ln()
-        .append("    right_status.right_id = role.id").ln()
+        .append("    right_status.right_id = rights.id").ln()
         .append("    and right_status.party_id is null").ln()
         .append("    and (right_status.member_id is null or right_status.member_id = $1)").ln()
         .append("  ) ").ln();

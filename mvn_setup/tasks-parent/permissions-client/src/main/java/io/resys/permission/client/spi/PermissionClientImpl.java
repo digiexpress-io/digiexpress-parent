@@ -66,6 +66,10 @@ public class PermissionClientImpl implements PermissionClient {
   public CreateRoleAction createRole() {
     return new CreateRoleActionImpl(ctx);
   }
+  
+  public CreatePrincipalAction createPrincipal() {
+    return new CreatePrincipalActionImpl(ctx);
+  }
 
   @Override
   public UpdatePermissionAction updatePermission() {

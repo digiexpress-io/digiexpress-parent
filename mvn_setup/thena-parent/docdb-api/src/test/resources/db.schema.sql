@@ -223,7 +223,7 @@ CREATE TABLE org_member_rights
   member_id VARCHAR(40) NOT NULL,
   right_id VARCHAR(40) NOT NULL,
   party_id VARCHAR(40),
-  UNIQUE (member_id, right_id, party_id)
+  UNIQUE NULLS NOT DISTINCT(member_id, right_id, party_id)
 );
 CREATE INDEX org_member_rights_COMMIT_INDEX ON org_member_rights (commit_id);
 CREATE INDEX org_member_rights_RIGHT_INDEX ON org_member_rights (right_id);
@@ -253,7 +253,7 @@ CREATE TABLE org_actor_status
   right_id VARCHAR(40),
   party_id VARCHAR(40),
   actor_status VARCHAR(100) NOT NULL,
-  UNIQUE (member_id, right_id, party_id)
+  UNIQUE NULLS NOT DISTINCT(member_id, right_id, party_id)
 );
 CREATE INDEX org_actor_status_COMMIT_INDEX ON org_actor_status (commit_id);
 CREATE INDEX org_actor_status_RIGHT_INDEX ON org_actor_status (right_id);

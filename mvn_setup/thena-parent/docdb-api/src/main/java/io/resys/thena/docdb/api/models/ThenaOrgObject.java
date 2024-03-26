@@ -39,7 +39,7 @@ public interface ThenaOrgObject {
   }
 
   @Value.Immutable
-  interface OrgRightFlattened extends ThenaOrgObject {
+  interface OrgRightFlattened extends ThenaOrgObject { // member rights
     String getRightId();
     String getRightName();
     String getRightDescription();

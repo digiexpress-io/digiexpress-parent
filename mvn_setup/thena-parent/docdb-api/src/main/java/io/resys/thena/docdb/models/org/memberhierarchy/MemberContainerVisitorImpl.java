@@ -25,7 +25,11 @@ public class MemberContainerVisitorImpl implements UserContainerVisitor<MemberTr
   public MemberContainerVisitorImpl(List<OrgRightFlattened> input) {
     super();
     input.forEach(role -> {
-      RepoAssert.isTrue(!roleData.containsKey(role.getRightId()), () -> "There can't be overlapping errors for role with name: " + role.getRightName());
+      RepoAssert.isTrue(!roleData.containsKey(role.getRightId()), () -> 
+        "rightName/" + role.getRightName() + "/" +
+        "rightId/" + role.getRightId() + "/" +
+        "There can't be overlapping rights!");
+      
       roleData.put(role.getRightId(), role);
       
       if(!roleStatus.containsKey(role.getRightStatusId()) && role.getRightStatusId() != null) {
