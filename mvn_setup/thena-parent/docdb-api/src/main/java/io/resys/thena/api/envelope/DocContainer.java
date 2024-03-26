@@ -1,4 +1,4 @@
-package io.resys.thena.api.entities;
+package io.resys.thena.api.envelope;
 
 import java.util.List;
 

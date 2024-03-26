@@ -30,12 +30,12 @@ import org.immutables.value.Value;
 
 import io.resys.thena.api.actions.GitPullActions.MatchCriteria;
 import io.resys.thena.api.entities.CommitResultStatus;
-import io.resys.thena.api.entities.GitContainer;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.git.Blob;
 import io.resys.thena.api.entities.git.Commit;
 import io.resys.thena.api.entities.git.Tree;
 import io.resys.thena.api.envelope.BlobContainer;
+import io.resys.thena.api.envelope.GitContainer;
 import io.resys.thena.api.envelope.Message;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.ThenaEnvelope;

@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.resys.permission.client.api.model.Principal.Permission;
 import io.resys.permission.client.api.model.Principal.Role;
-import io.resys.thena.api.entities.ThenaContainer;
+import io.resys.thena.api.envelope.ThenaContainer;
 
 @Value.Immutable @JsonSerialize(as = ImmutableRoleHierarchyContainer.class) @JsonDeserialize(as = ImmutableRoleHierarchyContainer.class)
 public interface RoleHierarchyContainer extends ThenaContainer {

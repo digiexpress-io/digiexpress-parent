@@ -28,7 +28,6 @@ import org.immutables.value.Value;
 import org.slf4j.Logger;
 
 import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.api.entities.ThenaContainer;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.api.exceptions.RepoException;
 

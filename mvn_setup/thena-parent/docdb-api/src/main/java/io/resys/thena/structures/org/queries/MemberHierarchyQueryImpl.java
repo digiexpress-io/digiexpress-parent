@@ -6,7 +6,6 @@ import java.util.List;
 
 import io.resys.thena.api.actions.OrgQueryActions.MemberHierarchyQuery;
 import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.api.entities.ThenaContainer;
 import io.resys.thena.api.entities.org.OrgMember;
 import io.resys.thena.api.entities.org.OrgMemberFlattened;
 import io.resys.thena.api.entities.org.OrgMemberHierarchyEntry;
@@ -16,6 +15,7 @@ import io.resys.thena.api.envelope.ImmutableQueryEnvelope;
 import io.resys.thena.api.envelope.ImmutableQueryEnvelopeList;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelopeList;
+import io.resys.thena.api.envelope.ThenaContainer;
 import io.resys.thena.api.envelope.QueryEnvelope.DocNotFoundException;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.spi.DbState;

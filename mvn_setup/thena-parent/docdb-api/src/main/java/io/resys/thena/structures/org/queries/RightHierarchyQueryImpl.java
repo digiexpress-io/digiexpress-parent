@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import io.resys.thena.api.actions.OrgQueryActions.RightHierarchyQuery;
-import io.resys.thena.api.entities.ThenaContainer;
 import io.resys.thena.api.entities.org.ThenaOrgObjects.OrgProjectObjects;
 import io.resys.thena.api.entities.org.ThenaOrgObjects.OrgRightHierarchy;
 import io.resys.thena.api.envelope.ImmutableQueryEnvelope;
 import io.resys.thena.api.envelope.ImmutableQueryEnvelopeList;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelopeList;
+import io.resys.thena.api.envelope.ThenaContainer;
 import io.resys.thena.api.envelope.OrgTreeContainer.OrgAnyTreeContainerVisitor;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.spi.DbState;

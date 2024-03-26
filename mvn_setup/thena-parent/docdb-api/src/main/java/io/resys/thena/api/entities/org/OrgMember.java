@@ -8,9 +8,9 @@ import org.immutables.value.Value;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import io.resys.thena.api.entities.ThenaContainer;
 import io.resys.thena.api.entities.org.ThenaOrgObject.IsOrgObject;
 import io.resys.thena.api.entities.org.ThenaOrgObject.IsOrgVersionObject;
+import io.resys.thena.api.envelope.ThenaContainer;
 
 @Value.Immutable
 public

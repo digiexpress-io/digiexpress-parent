@@ -7,11 +7,11 @@ import java.util.Map;
 
 import org.immutables.value.Value;
 
-import io.resys.thena.api.entities.DocContainer;
 import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.DocBranch;
 import io.resys.thena.api.entities.doc.DocCommit;
 import io.resys.thena.api.entities.doc.DocLog;
+import io.resys.thena.api.envelope.DocContainer;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.smallrye.mutiny.Uni;
 

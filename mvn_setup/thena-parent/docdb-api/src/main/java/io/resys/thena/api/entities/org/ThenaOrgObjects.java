@@ -7,7 +7,7 @@ import javax.annotation.Nullable;
 
 import org.immutables.value.Value;
 
-import io.resys.thena.api.entities.ThenaContainer;
+import io.resys.thena.api.envelope.ThenaContainer;
 
 public interface ThenaOrgObjects extends ThenaContainer {
   

@@ -17,8 +17,6 @@ import io.resys.thena.api.actions.OrgHistoryActions;
 import io.resys.thena.api.actions.OrgQueryActions;
 import io.resys.thena.api.actions.TenantActions;
 import io.resys.thena.api.actions.TenantActions.RepoResult;
-import io.resys.thena.api.entities.DocContainer;
-import io.resys.thena.api.entities.GitContainer;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.doc.DocBranch;
 import io.resys.thena.api.entities.doc.DocEntity.IsDocObject;
@@ -26,6 +24,8 @@ import io.resys.thena.api.entities.git.Branch;
 import io.resys.thena.api.entities.git.GitEntity.IsGitObject;
 import io.resys.thena.api.entities.git.Tag;
 import io.resys.thena.api.entities.org.ThenaOrgObjects.OrgProjectObjects;
+import io.resys.thena.api.envelope.DocContainer;
+import io.resys.thena.api.envelope.GitContainer;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.smallrye.mutiny.Uni;
 
