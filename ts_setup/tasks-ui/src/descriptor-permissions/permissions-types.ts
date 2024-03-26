@@ -1,3 +1,6 @@
+//TODO THIS FILE IS DEPRECATED TYPES
+
+
 export type PrincipalId = string;
 export type RoleId = string;
 export type PermissionId = string;
@@ -5,6 +8,7 @@ export type PermissionId = string;
 type PrincipalName = string;
 type RoleName = string;
 type PermissionName = string;
+
 
 export type ActorStatus = 'ENABLED' | 'DISABLED'; // Actors cannot be deleted -- instead, they are "disabled"
 
