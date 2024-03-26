@@ -13,7 +13,7 @@ import io.resys.permission.client.api.model.Principal.Permission;
 import io.resys.permission.client.tests.config.DbTestTemplate;
 import io.resys.permission.client.tests.config.GenerateTestData;
 import io.resys.permission.client.tests.config.OrgPgProfile;
-import io.resys.thena.docdb.api.models.Repo;
+import io.resys.thena.api.models.Repo;
 import io.vertx.core.json.JsonArray;
 import lombok.extern.slf4j.Slf4j;
 

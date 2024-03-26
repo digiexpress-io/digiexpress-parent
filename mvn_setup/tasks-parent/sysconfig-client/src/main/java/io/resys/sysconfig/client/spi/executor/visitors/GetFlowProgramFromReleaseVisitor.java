@@ -16,7 +16,7 @@ import io.resys.sysconfig.client.api.model.SysConfigRelease.SysConfigAsset;
 import io.resys.sysconfig.client.spi.executor.ExecutorStore.WrenchFlow;
 import io.resys.sysconfig.client.spi.executor.ImmutableWrenchFlow;
 import io.resys.sysconfig.client.spi.executor.exceptions.ExecutorException;
-import io.resys.thena.docdb.support.ErrorMsg;
+import io.resys.thena.support.ErrorMsg;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 

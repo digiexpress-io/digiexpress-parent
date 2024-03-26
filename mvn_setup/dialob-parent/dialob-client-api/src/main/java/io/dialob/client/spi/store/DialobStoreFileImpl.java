@@ -14,11 +14,11 @@ import io.dialob.client.spi.store.DialobStoreConfig.AuthorProvider;
 import io.dialob.client.spi.store.DialobStoreConfig.GidProvider;
 import io.dialob.client.spi.support.DialobAssert;
 import io.dialob.client.spi.support.OidUtils;
-import io.resys.thena.docdb.api.ThenaClient;
-import io.resys.thena.docdb.storefile.DocDBFactoryFile;
-import io.resys.thena.docdb.storefile.FileErrors;
-import io.resys.thena.docdb.storefile.spi.FilePoolImpl;
-import io.resys.thena.docdb.storefile.tables.Table.FilePool;
+import io.resys.thena.api.ThenaClient;
+import io.resys.thena.storefile.DocDBFactoryFile;
+import io.resys.thena.storefile.FileErrors;
+import io.resys.thena.storefile.spi.FilePoolImpl;
+import io.resys.thena.storefile.tables.Table.FilePool;
 import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 

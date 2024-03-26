@@ -7,7 +7,7 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.quarkus.jackson.ObjectMapperCustomizer;
-import io.resys.thena.docdb.jackson.VertexExtModule;
+import io.resys.thena.jackson.VertexExtModule;
 import io.vertx.core.json.jackson.VertxModule;
 import jakarta.inject.Singleton;
 

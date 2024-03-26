@@ -10,10 +10,10 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Assertions;
 
-import io.resys.thena.docdb.api.ThenaClient;
-import io.resys.thena.docdb.api.actions.OrgCommitActions.ModType;
-import io.resys.thena.docdb.api.models.Repo;
-import io.resys.thena.docdb.api.models.Repo.CommitResultStatus;
+import io.resys.thena.api.ThenaClient;
+import io.resys.thena.api.actions.OrgCommitActions.ModType;
+import io.resys.thena.api.models.Repo;
+import io.resys.thena.api.models.Repo.CommitResultStatus;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;

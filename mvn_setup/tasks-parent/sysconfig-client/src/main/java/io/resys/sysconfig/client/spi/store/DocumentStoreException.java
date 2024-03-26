@@ -30,12 +30,12 @@ import org.immutables.value.Value;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import io.resys.thena.docdb.api.actions.CommitActions.CommitResultEnvelope;
-import io.resys.thena.docdb.api.actions.DocCommitActions.ManyDocsEnvelope;
-import io.resys.thena.docdb.api.actions.DocCommitActions.OneDocEnvelope;
-import io.resys.thena.docdb.api.models.QueryEnvelope;
-import io.resys.thena.docdb.api.models.ThenaGitObjects.PullObject;
-import io.resys.thena.docdb.api.models.ThenaGitObjects.PullObjects;
+import io.resys.thena.api.actions.CommitActions.CommitResultEnvelope;
+import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
+import io.resys.thena.api.actions.DocCommitActions.OneDocEnvelope;
+import io.resys.thena.api.models.QueryEnvelope;
+import io.resys.thena.api.models.ThenaGitObjects.PullObject;
+import io.resys.thena.api.models.ThenaGitObjects.PullObjects;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 

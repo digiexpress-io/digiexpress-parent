@@ -15,10 +15,10 @@ import io.resys.hdes.client.spi.composer.ComposerEntityMapper;
 import io.resys.hdes.client.spi.composer.CreateEntityVisitor;
 import io.resys.sysconfig.client.api.AssetClient.WrenchAssetEntry;
 import io.resys.sysconfig.client.api.AssetClient.WrenchAssets;
+import io.resys.thena.support.OidUtils;
 import io.resys.sysconfig.client.api.ImmutableAssetParam;
 import io.resys.sysconfig.client.api.ImmutableWrenchAssetEntry;
 import io.resys.sysconfig.client.api.ImmutableWrenchAssets;
-import io.resys.thena.docdb.support.OidUtils;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

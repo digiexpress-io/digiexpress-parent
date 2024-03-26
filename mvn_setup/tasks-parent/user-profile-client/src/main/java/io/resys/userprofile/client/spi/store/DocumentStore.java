@@ -1,6 +1,6 @@
 package io.resys.userprofile.client.spi.store;
 
-import io.resys.thena.docdb.api.models.Repo;
+import io.resys.thena.api.models.Repo;
 
 /*-
  * #%L

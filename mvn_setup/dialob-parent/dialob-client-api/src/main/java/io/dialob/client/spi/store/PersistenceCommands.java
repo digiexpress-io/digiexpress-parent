@@ -30,12 +30,12 @@ import io.dialob.client.api.ImmutableStoreExceptionMsg;
 import io.dialob.client.api.ImmutableStoreState;
 import io.dialob.client.spi.exceptions.StoreException;
 import io.dialob.client.spi.store.DialobStoreConfig.EntityState;
-import io.resys.thena.docdb.api.actions.CommitActions.CommitResultEnvelope;
-import io.resys.thena.docdb.api.models.QueryEnvelope;
-import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
-import io.resys.thena.docdb.api.models.Repo.CommitResultStatus;
-import io.resys.thena.docdb.api.models.ThenaGitObjects.PullObject;
-import io.resys.thena.docdb.api.models.ThenaGitObjects.PullObjects;
+import io.resys.thena.api.actions.CommitActions.CommitResultEnvelope;
+import io.resys.thena.api.models.QueryEnvelope;
+import io.resys.thena.api.models.QueryEnvelope.QueryEnvelopeStatus;
+import io.resys.thena.api.models.Repo.CommitResultStatus;
+import io.resys.thena.api.models.ThenaGitObjects.PullObject;
+import io.resys.thena.api.models.ThenaGitObjects.PullObjects;
 import io.smallrye.mutiny.Uni;
 
 

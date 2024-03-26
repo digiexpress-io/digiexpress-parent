@@ -26,16 +26,16 @@ import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.resys.thena.docdb.api.ThenaClient;
-import io.resys.thena.docdb.api.actions.BranchActions;
-import io.resys.thena.docdb.api.actions.CommitActions;
-import io.resys.thena.docdb.api.actions.DiffActions;
-import io.resys.thena.docdb.api.actions.HistoryActions;
-import io.resys.thena.docdb.api.actions.PullActions;
-import io.resys.thena.docdb.api.actions.TenantActions;
-import io.resys.thena.docdb.api.actions.TenantActions.RepoResult;
-import io.resys.thena.docdb.api.models.Repo;
-import io.resys.thena.docdb.api.actions.TagActions;
+import io.resys.thena.api.ThenaClient;
+import io.resys.thena.api.actions.BranchActions;
+import io.resys.thena.api.actions.CommitActions;
+import io.resys.thena.api.actions.DiffActions;
+import io.resys.thena.api.actions.HistoryActions;
+import io.resys.thena.api.actions.PullActions;
+import io.resys.thena.api.actions.TagActions;
+import io.resys.thena.api.actions.TenantActions;
+import io.resys.thena.api.actions.TenantActions.RepoResult;
+import io.resys.thena.api.models.Repo;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.ImmutableBranch;
 import io.thestencil.client.api.ImmutableStencilConfig;

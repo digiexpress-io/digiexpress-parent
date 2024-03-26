@@ -9,7 +9,7 @@ import io.resys.crm.client.api.model.Customer;
 import io.resys.crm.client.api.model.CustomerCommand.CreateCustomer;
 import io.resys.crm.client.api.model.CustomerCommand.CustomerUpdateCommand;
 import io.resys.crm.client.api.model.CustomerCommand.UpsertSuomiFiPerson;
-import io.resys.thena.docdb.api.models.Repo;
+import io.resys.thena.api.models.Repo;
 import io.smallrye.mutiny.Uni;
 
 public interface CrmClient {

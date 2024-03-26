@@ -26,18 +26,18 @@ import javax.annotation.Nullable;
 
 import org.immutables.value.Value;
 
-import io.resys.thena.docdb.api.ThenaClient;
-import io.resys.thena.docdb.api.actions.BranchActions.BranchObjectsQuery;
-import io.resys.thena.docdb.api.actions.CommitActions.CommitBuilder;
-import io.resys.thena.docdb.api.actions.CommitActions.CommitResultEnvelope;
-import io.resys.thena.docdb.api.actions.HistoryActions.BlobHistoryQuery;
-import io.resys.thena.docdb.api.actions.PullActions.PullObjectsQuery;
-import io.resys.thena.docdb.api.models.QueryEnvelope;
-import io.resys.thena.docdb.api.models.ThenaGitObject.Commit;
-import io.resys.thena.docdb.api.models.ThenaGitObjects.BranchObjects;
-import io.resys.thena.docdb.api.models.ThenaGitObjects.HistoryObjects;
-import io.resys.thena.docdb.api.models.ThenaGitObjects.PullObject;
-import io.resys.thena.docdb.api.models.ThenaGitObjects.PullObjects;
+import io.resys.thena.api.ThenaClient;
+import io.resys.thena.api.actions.BranchActions.BranchObjectsQuery;
+import io.resys.thena.api.actions.CommitActions.CommitBuilder;
+import io.resys.thena.api.actions.CommitActions.CommitResultEnvelope;
+import io.resys.thena.api.actions.HistoryActions.BlobHistoryQuery;
+import io.resys.thena.api.actions.PullActions.PullObjectsQuery;
+import io.resys.thena.api.models.QueryEnvelope;
+import io.resys.thena.api.models.ThenaGitObject.Commit;
+import io.resys.thena.api.models.ThenaGitObjects.BranchObjects;
+import io.resys.thena.api.models.ThenaGitObjects.HistoryObjects;
+import io.resys.thena.api.models.ThenaGitObjects.PullObject;
+import io.resys.thena.api.models.ThenaGitObjects.PullObjects;
 import io.resys.thena.tasks.client.api.model.Document.DocumentType;
 import io.smallrye.mutiny.Uni;
 

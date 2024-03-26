@@ -17,7 +17,7 @@ import io.resys.sysconfig.client.api.model.ImmutableSysConfigInstance;
 import io.resys.sysconfig.client.api.model.SysConfigInstance;
 import io.resys.sysconfig.client.api.model.SysConfigInstance.FillCompleted;
 import io.resys.sysconfig.client.spi.support.SysConfigAssert;
-import io.resys.thena.docdb.support.OidUtils;
+import io.resys.thena.support.OidUtils;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 

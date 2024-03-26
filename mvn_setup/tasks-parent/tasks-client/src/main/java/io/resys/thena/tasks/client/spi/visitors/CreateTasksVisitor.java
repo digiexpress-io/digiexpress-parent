@@ -25,10 +25,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import io.resys.thena.docdb.api.actions.CommitActions.CommitBuilder;
-import io.resys.thena.docdb.api.actions.CommitActions.CommitResultEnvelope;
-import io.resys.thena.docdb.api.models.Repo.CommitResultStatus;
-import io.resys.thena.docdb.api.models.ThenaGitObject.Commit;
+import io.resys.thena.api.actions.CommitActions.CommitBuilder;
+import io.resys.thena.api.actions.CommitActions.CommitResultEnvelope;
+import io.resys.thena.api.models.Repo.CommitResultStatus;
+import io.resys.thena.api.models.ThenaGitObject.Commit;
 import io.resys.thena.tasks.client.api.model.Task;
 import io.resys.thena.tasks.client.api.model.TaskCommand.CreateTask;
 import io.resys.thena.tasks.client.spi.store.DocumentConfig;

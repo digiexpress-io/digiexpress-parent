@@ -30,9 +30,9 @@ import java.util.function.Function;
 
 import org.apache.commons.io.IOUtils;
 
-import io.resys.thena.docdb.api.models.Repo;
-import io.resys.thena.docdb.api.models.ThenaGitObject.TreeValue;
-import io.resys.thena.docdb.spi.DbState;
+import io.resys.thena.api.models.Repo;
+import io.resys.thena.api.models.ThenaGitObject.TreeValue;
+import io.resys.thena.spi.DbState;
 import io.vertx.core.json.JsonObject;
 
 public class RepositoryToStaticData {

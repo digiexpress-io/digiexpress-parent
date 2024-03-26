@@ -1,7 +1,7 @@
 package io.resys.thena.projects.client.spi.store;
 
-import io.resys.thena.docdb.api.models.Repo;
-import io.resys.thena.docdb.api.models.Repo.RepoType;
+import io.resys.thena.api.models.Repo;
+import io.resys.thena.api.models.Repo.RepoType;
 
 /*-
  * #%L

@@ -27,10 +27,10 @@ import org.immutables.value.Value;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import io.resys.thena.docdb.api.actions.CommitActions.CommitResultEnvelope;
-import io.resys.thena.docdb.api.actions.TenantActions.RepoResult;
-import io.resys.thena.docdb.api.actions.TenantActions.RepoStatus;
-import io.resys.thena.docdb.api.models.Repo;
+import io.resys.thena.api.actions.CommitActions.CommitResultEnvelope;
+import io.resys.thena.api.actions.TenantActions.RepoResult;
+import io.resys.thena.api.actions.TenantActions.RepoStatus;
+import io.resys.thena.api.models.Repo;
 import io.resys.thena.docdb.test.config.FileTestTemplate;
 import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;

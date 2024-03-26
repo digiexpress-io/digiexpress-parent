@@ -24,12 +24,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import io.resys.thena.docdb.api.actions.BranchActions.BranchObjectsQuery;
-import io.resys.thena.docdb.api.actions.ImmutableMatchCriteria;
-import io.resys.thena.docdb.api.actions.PullActions.MatchCriteriaType;
-import io.resys.thena.docdb.api.models.QueryEnvelope;
-import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
-import io.resys.thena.docdb.api.models.ThenaGitObjects.BranchObjects;
+import io.resys.thena.api.actions.ImmutableMatchCriteria;
+import io.resys.thena.api.actions.BranchActions.BranchObjectsQuery;
+import io.resys.thena.api.actions.PullActions.MatchCriteriaType;
+import io.resys.thena.api.models.QueryEnvelope;
+import io.resys.thena.api.models.QueryEnvelope.QueryEnvelopeStatus;
+import io.resys.thena.api.models.ThenaGitObjects.BranchObjects;
 import io.resys.thena.tasks.client.api.model.Document;
 import io.resys.thena.tasks.client.api.model.ImmutableTask;
 import io.resys.thena.tasks.client.api.model.Task;

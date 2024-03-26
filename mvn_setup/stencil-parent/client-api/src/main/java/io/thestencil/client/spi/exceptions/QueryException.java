@@ -22,8 +22,8 @@ package io.thestencil.client.spi.exceptions;
 
 import java.util.List;
 
-import io.resys.thena.docdb.api.models.Message;
-import io.resys.thena.docdb.api.models.QueryEnvelope;
+import io.resys.thena.api.models.Message;
+import io.resys.thena.api.models.QueryEnvelope;
 import io.thestencil.client.api.StencilClient.EntityType;
 
 public class QueryException extends RuntimeException {

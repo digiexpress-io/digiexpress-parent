@@ -27,14 +27,14 @@ import javax.annotation.Nullable;
 import org.immutables.value.Value;
 
 import io.resys.crm.client.api.model.Document.DocumentType;
-import io.resys.thena.docdb.api.ThenaClient;
-import io.resys.thena.docdb.api.actions.DocCommitActions.ManyDocsEnvelope;
-import io.resys.thena.docdb.api.actions.DocCommitActions.CreateManyDocs;
-import io.resys.thena.docdb.api.actions.DocQueryActions.DocObjectsQuery;
-import io.resys.thena.docdb.api.models.QueryEnvelope;
-import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranch;
-import io.resys.thena.docdb.api.models.ThenaDocObjects.DocObject;
-import io.resys.thena.docdb.api.models.ThenaDocObjects.DocObjects;
+import io.resys.thena.api.ThenaClient;
+import io.resys.thena.api.actions.DocCommitActions.CreateManyDocs;
+import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
+import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
+import io.resys.thena.api.models.QueryEnvelope;
+import io.resys.thena.api.models.ThenaDocObject.DocBranch;
+import io.resys.thena.api.models.ThenaDocObjects.DocObject;
+import io.resys.thena.api.models.ThenaDocObjects.DocObjects;
 import io.smallrye.mutiny.Uni;
 
 

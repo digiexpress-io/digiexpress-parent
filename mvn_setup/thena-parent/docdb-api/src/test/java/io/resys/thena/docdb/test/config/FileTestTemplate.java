@@ -35,17 +35,17 @@ import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import io.resys.thena.docdb.api.ThenaClient;
-import io.resys.thena.docdb.api.actions.TenantActions.RepoResult;
-import io.resys.thena.docdb.api.models.Repo;
-import io.resys.thena.docdb.api.models.Repo.RepoType;
-import io.resys.thena.docdb.jackson.VertexExtModule;
-import io.resys.thena.docdb.models.git.GitPrinter;
-import io.resys.thena.docdb.spi.DbCollections;
-import io.resys.thena.docdb.spi.DbState;
-import io.resys.thena.docdb.storefile.DocDBFactoryFile;
-import io.resys.thena.docdb.storefile.FileErrors;
-import io.resys.thena.docdb.storefile.spi.FilePoolImpl;
+import io.resys.thena.api.ThenaClient;
+import io.resys.thena.api.actions.TenantActions.RepoResult;
+import io.resys.thena.api.models.Repo;
+import io.resys.thena.api.models.Repo.RepoType;
+import io.resys.thena.jackson.VertexExtModule;
+import io.resys.thena.models.git.GitPrinter;
+import io.resys.thena.spi.DbCollections;
+import io.resys.thena.spi.DbState;
+import io.resys.thena.storefile.DocDBFactoryFile;
+import io.resys.thena.storefile.FileErrors;
+import io.resys.thena.storefile.spi.FilePoolImpl;
 import io.vertx.core.json.jackson.VertxModule;
 import lombok.extern.slf4j.Slf4j;
 

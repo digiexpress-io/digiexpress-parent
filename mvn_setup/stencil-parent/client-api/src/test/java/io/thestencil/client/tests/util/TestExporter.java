@@ -3,9 +3,10 @@ package io.thestencil.client.tests.util;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
-import io.resys.thena.docdb.api.models.Repo;
-import io.resys.thena.docdb.api.models.ThenaGitObject.TreeValue;
-import io.resys.thena.docdb.spi.DbState;
+
+import io.resys.thena.api.models.Repo;
+import io.resys.thena.api.models.ThenaGitObject.TreeValue;
+import io.resys.thena.spi.DbState;
 import io.thestencil.client.api.StencilClient.EntityType;
 import org.apache.commons.io.IOUtils;
 

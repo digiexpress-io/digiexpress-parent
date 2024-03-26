@@ -12,7 +12,7 @@ import io.resys.sysconfig.client.api.model.SysConfigCommand.SysConfigUpdateComma
 import io.resys.sysconfig.client.api.model.SysConfigDeployment;
 import io.resys.sysconfig.client.api.model.SysConfigDeploymentCommand.CreateSysConfigDeployment;
 import io.resys.sysconfig.client.api.model.SysConfigRelease;
-import io.resys.thena.docdb.api.models.Repo;
+import io.resys.thena.api.models.Repo;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfig;
 import io.smallrye.mutiny.Uni;
 

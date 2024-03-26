@@ -8,8 +8,8 @@ import io.resys.crm.client.spi.actions.CustomerQueryImpl;
 import io.resys.crm.client.spi.actions.UpdateCustomerActionImpl;
 import io.resys.crm.client.spi.store.DocumentStore;
 import io.resys.crm.client.spi.store.MainBranch;
-import io.resys.thena.docdb.api.models.Repo;
-import io.resys.thena.docdb.support.RepoAssert;
+import io.resys.thena.api.models.Repo;
+import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 

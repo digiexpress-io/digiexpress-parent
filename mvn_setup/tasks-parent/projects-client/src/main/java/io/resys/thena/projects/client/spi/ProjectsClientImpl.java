@@ -2,9 +2,8 @@ package io.resys.thena.projects.client.spi;
 
 import java.util.Optional;
 
-import io.resys.thena.docdb.api.models.Repo;
-import io.resys.thena.docdb.api.models.Repo.RepoType;
-import io.resys.thena.docdb.support.RepoAssert;
+import io.resys.thena.api.models.Repo;
+import io.resys.thena.api.models.Repo.RepoType;
 import io.resys.thena.projects.client.api.TenantConfigClient;
 import io.resys.thena.projects.client.api.model.TenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
@@ -13,6 +12,7 @@ import io.resys.thena.projects.client.spi.actions.CreateTenantConfigImpl;
 import io.resys.thena.projects.client.spi.actions.UpdateTenantConfigImpl;
 import io.resys.thena.projects.client.spi.store.DocumentStore;
 import io.resys.thena.projects.client.spi.store.MainBranch;
+import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 

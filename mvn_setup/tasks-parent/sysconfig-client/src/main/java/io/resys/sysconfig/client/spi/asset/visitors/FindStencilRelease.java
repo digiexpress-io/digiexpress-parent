@@ -5,7 +5,7 @@ import java.time.Instant;
 import io.resys.sysconfig.client.api.AssetClient.StencilAssets;
 import io.resys.sysconfig.client.api.ImmutableStencilAssets;
 import io.resys.sysconfig.client.spi.asset.exceptions.AssetClientException;
-import io.resys.thena.docdb.support.ErrorMsg;
+import io.resys.thena.support.ErrorMsg;
 import io.thestencil.client.api.StencilClient;
 import io.thestencil.client.api.StencilClient.Release;
 import io.thestencil.client.api.StencilComposer.SiteState;

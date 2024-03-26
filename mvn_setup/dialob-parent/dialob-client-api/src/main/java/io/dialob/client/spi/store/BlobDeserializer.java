@@ -23,8 +23,8 @@ package io.dialob.client.spi.store;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.dialob.client.api.DialobStore.StoreEntity;
+import io.resys.thena.api.models.ThenaGitObject.Blob;
 import io.dialob.client.api.ImmutableStoreEntity;
-import io.resys.thena.docdb.api.models.ThenaGitObject.Blob;
 
 
 public class BlobDeserializer implements DialobStoreConfig.Deserializer {

@@ -10,11 +10,11 @@ import io.resys.permission.client.api.model.Principal;
 import io.resys.permission.client.api.model.PrincipalCommand.ChangePrincipalRoles;
 import io.resys.permission.client.api.model.PrincipalCommand.ChangePrincipalStatus;
 import io.resys.permission.client.api.model.PrincipalCommand.PrincipalUpdateCommand;
-import io.resys.thena.docdb.api.actions.OrgCommitActions.ModType;
-import io.resys.thena.docdb.api.actions.OrgCommitActions.ModifyOneMember;
-import io.resys.thena.docdb.api.actions.OrgCommitActions.OneMemberEnvelope;
-import io.resys.thena.docdb.api.models.Repo;
-import io.resys.thena.docdb.support.RepoAssert;
+import io.resys.thena.api.actions.OrgCommitActions.ModType;
+import io.resys.thena.api.actions.OrgCommitActions.ModifyOneMember;
+import io.resys.thena.api.actions.OrgCommitActions.OneMemberEnvelope;
+import io.resys.thena.api.models.Repo;
+import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 

@@ -9,16 +9,16 @@ import io.resys.permission.client.api.model.ImmutablePrincipal;
 import io.resys.permission.client.api.model.ImmutableRole;
 import io.resys.permission.client.api.model.ImmutableRoleHierarchyContainer;
 import io.resys.permission.client.api.model.RoleHierarchyContainer;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatusType;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMember;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMemberRight;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgMembership;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgParty;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgPartyRight;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgRight;
-import io.resys.thena.docdb.api.visitors.OrgPartyContainerVisitor;
-import io.resys.thena.docdb.api.visitors.OrgTreeContainer.OrgAnyTreeContainerContext;
-import io.resys.thena.docdb.api.visitors.OrgTreeContainer.OrgAnyTreeContainerVisitor;
+import io.resys.thena.api.models.ThenaOrgObject.OrgActorStatusType;
+import io.resys.thena.api.models.ThenaOrgObject.OrgMember;
+import io.resys.thena.api.models.ThenaOrgObject.OrgMemberRight;
+import io.resys.thena.api.models.ThenaOrgObject.OrgMembership;
+import io.resys.thena.api.models.ThenaOrgObject.OrgParty;
+import io.resys.thena.api.models.ThenaOrgObject.OrgPartyRight;
+import io.resys.thena.api.models.ThenaOrgObject.OrgRight;
+import io.resys.thena.api.visitors.OrgPartyContainerVisitor;
+import io.resys.thena.api.visitors.OrgTreeContainer.OrgAnyTreeContainerContext;
+import io.resys.thena.api.visitors.OrgTreeContainer.OrgAnyTreeContainerVisitor;
 
 
 public class RoleHierarchyQueryVisitor extends OrgPartyContainerVisitor<RoleHierarchyContainer> 

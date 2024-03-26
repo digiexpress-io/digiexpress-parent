@@ -2,8 +2,8 @@ package io.resys.userprofile.client.spi;
 
 import java.util.Optional;
 
-import io.resys.thena.docdb.api.models.Repo;
-import io.resys.thena.docdb.support.RepoAssert;
+import io.resys.thena.api.models.Repo;
+import io.resys.thena.support.RepoAssert;
 import io.resys.userprofile.client.api.UserProfileClient;
 import io.resys.userprofile.client.spi.actions.CreateUserProfileActionImpl;
 import io.resys.userprofile.client.spi.actions.UpdateUserProfileActionImpl;

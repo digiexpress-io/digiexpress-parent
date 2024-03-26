@@ -25,9 +25,9 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import io.resys.thena.docdb.api.actions.TenantActions.RepoStatus;
-import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
-import io.resys.thena.docdb.api.models.Repo.RepoType;
+import io.resys.thena.api.actions.TenantActions.RepoStatus;
+import io.resys.thena.api.models.QueryEnvelope.QueryEnvelopeStatus;
+import io.resys.thena.api.models.Repo.RepoType;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.ImmutableBranch;
 import io.thestencil.client.api.ImmutableStencilConfig;

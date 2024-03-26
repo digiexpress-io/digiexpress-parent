@@ -36,10 +36,10 @@ import io.resys.crm.client.spi.store.DocumentConfig;
 import io.resys.crm.client.spi.store.DocumentConfig.DocCreateVisitor;
 import io.resys.crm.client.spi.store.DocumentStoreException;
 import io.resys.crm.client.spi.visitors.CustomerCommandVisitor.NoChangesException;
-import io.resys.thena.docdb.api.actions.DocCommitActions.CreateManyDocs;
-import io.resys.thena.docdb.api.actions.DocCommitActions.ManyDocsEnvelope;
-import io.resys.thena.docdb.api.models.Repo.CommitResultStatus;
-import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranch;
+import io.resys.thena.api.actions.DocCommitActions.CreateManyDocs;
+import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
+import io.resys.thena.api.models.Repo.CommitResultStatus;
+import io.resys.thena.api.models.ThenaDocObject.DocBranch;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 

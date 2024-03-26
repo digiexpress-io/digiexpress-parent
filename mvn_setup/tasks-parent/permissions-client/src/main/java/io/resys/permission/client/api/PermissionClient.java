@@ -11,8 +11,8 @@ import io.resys.permission.client.api.model.Principal.Role;
 import io.resys.permission.client.api.model.PrincipalCommand.PrincipalUpdateCommand;
 import io.resys.permission.client.api.model.RoleCommand.CreateRole;
 import io.resys.permission.client.api.model.RoleCommand.RoleUpdateCommand;
+import io.resys.thena.api.models.Repo;
 import io.resys.permission.client.api.model.RoleHierarchyContainer;
-import io.resys.thena.docdb.api.models.Repo;
 import io.smallrye.mutiny.Uni;
 
 

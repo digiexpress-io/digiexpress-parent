@@ -29,10 +29,10 @@ import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
-import io.resys.thena.docdb.api.actions.TenantActions.RepoResult;
-import io.resys.thena.docdb.api.actions.TenantActions.RepoStatus;
-import io.resys.thena.docdb.api.models.Repo.CommitResultStatus;
-import io.resys.thena.docdb.api.models.Repo.RepoType;
+import io.resys.thena.api.actions.TenantActions.RepoResult;
+import io.resys.thena.api.actions.TenantActions.RepoStatus;
+import io.resys.thena.api.models.Repo.CommitResultStatus;
+import io.resys.thena.api.models.Repo.RepoType;
 import io.thestencil.client.tests.util.PgProfile;
 import io.thestencil.client.tests.util.PgTestTemplate;
 import io.vertx.core.json.JsonObject;

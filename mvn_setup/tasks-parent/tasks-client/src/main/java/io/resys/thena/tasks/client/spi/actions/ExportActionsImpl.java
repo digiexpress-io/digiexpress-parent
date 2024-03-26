@@ -23,7 +23,7 @@ package io.resys.thena.tasks.client.spi.actions;
 import java.time.Instant;
 import java.time.LocalDate;
 
-import io.resys.thena.docdb.support.RepoAssert;
+import io.resys.thena.support.RepoAssert;
 import io.resys.thena.tasks.client.api.actions.ExportActions;
 import io.resys.thena.tasks.client.api.model.Export;
 import io.resys.thena.tasks.client.spi.store.DocumentStore;

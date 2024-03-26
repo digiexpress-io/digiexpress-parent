@@ -25,7 +25,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import io.resys.thena.docdb.support.RepoAssert;
+import io.resys.thena.support.RepoAssert;
 import io.resys.thena.tasks.client.api.actions.TaskActions.UpdateTasks;
 import io.resys.thena.tasks.client.api.model.Task;
 import io.resys.thena.tasks.client.api.model.TaskCommand.TaskUpdateCommand;

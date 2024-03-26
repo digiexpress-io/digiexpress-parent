@@ -16,7 +16,7 @@ import io.resys.sysconfig.client.api.model.SysConfigInstance.FlowCompleted;
 import io.resys.sysconfig.client.spi.executor.ExecutorStore;
 import io.resys.sysconfig.client.spi.executor.ExecutorStore.WrenchFlow;
 import io.resys.sysconfig.client.spi.support.SysConfigAssert;
-import io.resys.thena.docdb.support.OidUtils;
+import io.resys.thena.support.OidUtils;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 

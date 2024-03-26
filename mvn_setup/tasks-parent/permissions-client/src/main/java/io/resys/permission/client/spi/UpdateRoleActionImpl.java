@@ -12,12 +12,12 @@ import io.resys.permission.client.api.model.RoleCommand.ChangeRoleName;
 import io.resys.permission.client.api.model.RoleCommand.ChangeRolePermissions;
 import io.resys.permission.client.api.model.RoleCommand.ChangeRoleStatus;
 import io.resys.permission.client.api.model.RoleCommand.RoleUpdateCommand;
-import io.resys.thena.docdb.api.actions.OrgCommitActions.ModType;
-import io.resys.thena.docdb.api.actions.OrgCommitActions.ModifyOneParty;
-import io.resys.thena.docdb.api.actions.OrgCommitActions.OnePartyEnvelope;
-import io.resys.thena.docdb.api.models.Repo;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatusType;
-import io.resys.thena.docdb.support.RepoAssert;
+import io.resys.thena.api.actions.OrgCommitActions.ModType;
+import io.resys.thena.api.actions.OrgCommitActions.ModifyOneParty;
+import io.resys.thena.api.actions.OrgCommitActions.OnePartyEnvelope;
+import io.resys.thena.api.models.Repo;
+import io.resys.thena.api.models.ThenaOrgObject.OrgActorStatusType;
+import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 

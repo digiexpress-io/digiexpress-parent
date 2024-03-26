@@ -26,12 +26,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import io.resys.thena.docdb.api.actions.CommitActions.CommitBuilder;
-import io.resys.thena.docdb.api.actions.PullActions.PullObjectsQuery;
-import io.resys.thena.docdb.api.models.QueryEnvelope;
-import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
-import io.resys.thena.docdb.api.models.Repo.CommitResultStatus;
-import io.resys.thena.docdb.api.models.ThenaGitObjects.PullObjects;
+import io.resys.thena.api.actions.CommitActions.CommitBuilder;
+import io.resys.thena.api.actions.PullActions.PullObjectsQuery;
+import io.resys.thena.api.models.QueryEnvelope;
+import io.resys.thena.api.models.QueryEnvelope.QueryEnvelopeStatus;
+import io.resys.thena.api.models.Repo.CommitResultStatus;
+import io.resys.thena.api.models.ThenaGitObjects.PullObjects;
 import io.resys.thena.tasks.client.api.model.ImmutableTask;
 import io.resys.thena.tasks.client.api.model.Task;
 import io.resys.thena.tasks.client.api.model.TaskCommand.TaskUpdateCommand;

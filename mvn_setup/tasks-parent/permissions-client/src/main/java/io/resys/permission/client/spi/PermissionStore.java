@@ -2,9 +2,9 @@ package io.resys.permission.client.spi;
 
 import org.immutables.value.Value;
 
-import io.resys.thena.docdb.api.ThenaClient;
-import io.resys.thena.docdb.api.ThenaClient.OrgStructuredTenant;
-import io.resys.thena.docdb.api.models.Repo;
+import io.resys.thena.api.ThenaClient;
+import io.resys.thena.api.ThenaClient.OrgStructuredTenant;
+import io.resys.thena.api.models.Repo;
 
 /*-
  * #%L

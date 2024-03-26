@@ -25,16 +25,16 @@ import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.resys.thena.docdb.api.ThenaClient;
-import io.resys.thena.docdb.api.ThenaClient.OrgStructuredTenant;
-import io.resys.thena.docdb.api.actions.TenantActions.RepoStatus;
-import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
-import io.resys.thena.docdb.api.models.Repo;
-import io.resys.thena.docdb.api.models.Repo.RepoType;
-import io.resys.thena.docdb.spi.ImmutableDocumentExceptionMsg;
-import io.resys.thena.docdb.storesql.DbStateSqlImpl;
-import io.resys.thena.docdb.storesql.PgErrors;
-import io.resys.thena.docdb.support.RepoAssert;
+import io.resys.thena.api.ThenaClient;
+import io.resys.thena.api.ThenaClient.OrgStructuredTenant;
+import io.resys.thena.api.actions.TenantActions.RepoStatus;
+import io.resys.thena.api.models.Repo;
+import io.resys.thena.api.models.QueryEnvelope.QueryEnvelopeStatus;
+import io.resys.thena.api.models.Repo.RepoType;
+import io.resys.thena.spi.ImmutableDocumentExceptionMsg;
+import io.resys.thena.storesql.DbStateSqlImpl;
+import io.resys.thena.storesql.PgErrors;
+import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.sqlclient.PoolOptions;

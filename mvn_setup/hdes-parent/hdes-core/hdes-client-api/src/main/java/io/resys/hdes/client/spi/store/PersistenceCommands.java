@@ -30,12 +30,12 @@ import io.resys.hdes.client.api.ImmutableStoreExceptionMsg;
 import io.resys.hdes.client.api.ImmutableStoreState;
 import io.resys.hdes.client.api.exceptions.StoreException;
 import io.resys.hdes.client.spi.store.ThenaConfig.EntityState;
-import io.resys.thena.docdb.api.actions.CommitActions.CommitResultEnvelope;
-import io.resys.thena.docdb.api.models.QueryEnvelope;
-import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
-import io.resys.thena.docdb.api.models.Repo.CommitResultStatus;
-import io.resys.thena.docdb.api.models.ThenaGitObjects.PullObject;
-import io.resys.thena.docdb.api.models.ThenaGitObjects.PullObjects;
+import io.resys.thena.api.actions.CommitActions.CommitResultEnvelope;
+import io.resys.thena.api.models.QueryEnvelope;
+import io.resys.thena.api.models.QueryEnvelope.QueryEnvelopeStatus;
+import io.resys.thena.api.models.Repo.CommitResultStatus;
+import io.resys.thena.api.models.ThenaGitObjects.PullObject;
+import io.resys.thena.api.models.ThenaGitObjects.PullObjects;
 import io.smallrye.mutiny.Uni;
 
 

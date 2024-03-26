@@ -27,10 +27,10 @@ import org.immutables.value.Value;
 import io.dialob.client.api.DialobDocument.DocumentType;
 import io.dialob.client.api.DialobStore.StoreEntity;
 import io.dialob.client.api.DialobStore.StoreState;
-import io.resys.thena.docdb.api.ThenaClient;
-import io.resys.thena.docdb.api.models.QueryEnvelope;
-import io.resys.thena.docdb.api.models.ThenaGitObject.Blob;
-import io.resys.thena.docdb.api.models.ThenaGitObjects.PullObject;
+import io.resys.thena.api.ThenaClient;
+import io.resys.thena.api.models.QueryEnvelope;
+import io.resys.thena.api.models.ThenaGitObject.Blob;
+import io.resys.thena.api.models.ThenaGitObjects.PullObject;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 

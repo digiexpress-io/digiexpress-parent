@@ -2,8 +2,8 @@ package io.resys.permission.client.spi;
 
 import io.resys.permission.client.api.PermissionClient.RoleHierarchyQuery;
 import io.resys.permission.client.api.model.RoleHierarchyContainer;
-import io.resys.thena.docdb.api.models.QueryEnvelope;
-import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
+import io.resys.thena.api.models.QueryEnvelope;
+import io.resys.thena.api.models.QueryEnvelope.QueryEnvelopeStatus;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

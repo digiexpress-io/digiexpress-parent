@@ -39,9 +39,9 @@ import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import io.resys.thena.docdb.jackson.VertexExtModule;
-import io.resys.thena.docdb.spi.ThenaClientPgSql;
-import io.resys.thena.docdb.support.DocDbPrinter;
+import io.resys.thena.jackson.VertexExtModule;
+import io.resys.thena.spi.ThenaClientPgSql;
+import io.resys.thena.support.DocDbPrinter;
 import io.resys.userprofile.client.api.UserProfileClient;
 import io.resys.userprofile.client.api.model.Document.DocumentType;
 import io.resys.userprofile.client.spi.UserProfileClientImpl;

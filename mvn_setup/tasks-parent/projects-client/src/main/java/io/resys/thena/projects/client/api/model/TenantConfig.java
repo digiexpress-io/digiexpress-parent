@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import io.resys.thena.docdb.support.ErrorMsg;
+import io.resys.thena.support.ErrorMsg;
 import io.vertx.core.json.JsonObject;
 
 

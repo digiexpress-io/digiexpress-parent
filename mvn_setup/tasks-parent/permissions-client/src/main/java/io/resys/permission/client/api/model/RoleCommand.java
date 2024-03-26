@@ -36,7 +36,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.resys.permission.client.api.model.PermissionCommand.ChangeType;
 import io.resys.permission.client.api.model.Principal.Permission;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatusType;
+import io.resys.thena.api.models.ThenaOrgObject.OrgActorStatusType;
 
 
 

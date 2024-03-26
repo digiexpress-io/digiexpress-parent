@@ -31,9 +31,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-import io.resys.thena.docdb.api.models.Repo;
-import io.resys.thena.docdb.api.models.ThenaGitObject.TreeValue;
-import io.resys.thena.docdb.spi.DbState;
+import io.resys.thena.api.models.Repo;
+import io.resys.thena.api.models.ThenaGitObject.TreeValue;
+import io.resys.thena.spi.DbState;
 
 public class RepositoryToStaticData {
   private final DbState state;

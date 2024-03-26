@@ -24,7 +24,7 @@ import java.util.Arrays;
 
 import java.util.List;
 
-import io.resys.thena.docdb.support.RepoAssert;
+import io.resys.thena.support.RepoAssert;
 import io.resys.userprofile.client.api.UserProfileClient.UpdateUserProfileAction;
 import io.resys.userprofile.client.api.model.UserProfile;
 import io.resys.userprofile.client.api.model.UserProfileCommand.UserProfileUpdateCommand;

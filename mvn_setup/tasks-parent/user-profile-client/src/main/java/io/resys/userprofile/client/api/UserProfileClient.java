@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-import io.resys.thena.docdb.api.models.Repo;
+import io.resys.thena.api.models.Repo;
 import io.resys.userprofile.client.api.model.UserProfile;
 import io.resys.userprofile.client.api.model.UserProfileCommand.CreateUserProfile;
 import io.resys.userprofile.client.api.model.UserProfileCommand.UpsertUserProfile;

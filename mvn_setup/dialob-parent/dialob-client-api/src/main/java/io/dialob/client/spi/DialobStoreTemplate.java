@@ -21,11 +21,11 @@ import io.dialob.client.spi.store.PersistenceCommands;
 import io.dialob.client.spi.support.DialobAssert;
 import io.dialob.client.spi.support.OidUtils;
 import io.dialob.client.spi.support.Sha2;
-import io.resys.thena.docdb.api.actions.CommitActions.CommitBuilder;
-import io.resys.thena.docdb.api.actions.TenantActions.RepoStatus;
-import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
-import io.resys.thena.docdb.api.models.Repo.CommitResultStatus;
-import io.resys.thena.docdb.api.models.Repo.RepoType;
+import io.resys.thena.api.actions.CommitActions.CommitBuilder;
+import io.resys.thena.api.actions.TenantActions.RepoStatus;
+import io.resys.thena.api.models.QueryEnvelope.QueryEnvelopeStatus;
+import io.resys.thena.api.models.Repo.CommitResultStatus;
+import io.resys.thena.api.models.Repo.RepoType;
 import io.smallrye.mutiny.Uni;
 
 public class DialobStoreTemplate extends PersistenceCommands implements DialobStore {

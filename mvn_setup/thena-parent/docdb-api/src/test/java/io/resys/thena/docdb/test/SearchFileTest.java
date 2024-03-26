@@ -28,8 +28,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.junit.QuarkusTest;
-import io.resys.thena.docdb.api.actions.ImmutableMatchCriteria;
-import io.resys.thena.docdb.api.actions.PullActions.MatchCriteriaType;
+import io.resys.thena.api.actions.ImmutableMatchCriteria;
+import io.resys.thena.api.actions.PullActions.MatchCriteriaType;
 import io.resys.thena.docdb.test.config.FileTestTemplate;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;

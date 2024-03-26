@@ -1,6 +1,6 @@
 package io.resys.thena.tasks.client.spi.actions;
 
-import io.resys.thena.docdb.support.RepoAssert;
+import io.resys.thena.support.RepoAssert;
 import io.resys.thena.tasks.client.api.actions.TaskActions;
 import io.resys.thena.tasks.client.api.model.Task;
 import io.resys.thena.tasks.client.spi.store.DocumentStore;

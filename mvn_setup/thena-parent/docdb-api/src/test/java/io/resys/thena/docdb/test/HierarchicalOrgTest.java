@@ -13,12 +13,12 @@ import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
-import io.resys.thena.docdb.api.actions.OrgCommitActions.ModType;
-import io.resys.thena.docdb.api.actions.TenantActions.RepoResult;
-import io.resys.thena.docdb.api.actions.TenantActions.RepoStatus;
-import io.resys.thena.docdb.api.models.Repo;
-import io.resys.thena.docdb.api.models.Repo.CommitResultStatus;
-import io.resys.thena.docdb.api.models.Repo.RepoType;
+import io.resys.thena.api.actions.OrgCommitActions.ModType;
+import io.resys.thena.api.actions.TenantActions.RepoResult;
+import io.resys.thena.api.actions.TenantActions.RepoStatus;
+import io.resys.thena.api.models.Repo;
+import io.resys.thena.api.models.Repo.CommitResultStatus;
+import io.resys.thena.api.models.Repo.RepoType;
 import io.resys.thena.docdb.test.config.DbTestTemplate;
 import io.resys.thena.docdb.test.config.PgProfile;
 import io.vertx.core.json.JsonArray;

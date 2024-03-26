@@ -25,12 +25,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import io.resys.thena.docdb.support.RepoAssert;
 import io.resys.thena.projects.client.api.TenantConfigClient.UpdateTenantConfigAction;
 import io.resys.thena.projects.client.api.model.TenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfigCommand.TenantConfigUpdateCommand;
 import io.resys.thena.projects.client.spi.store.DocumentStore;
 import io.resys.thena.projects.client.spi.visitors.UpdateTenantConfigVisitor;
+import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 

@@ -2,14 +2,14 @@ package io.resys.userprofile.client.spi.visitors;
 
 import java.util.List;
 
-import io.resys.thena.docdb.api.actions.DocQueryActions.DocObjectsQuery;
-import io.resys.thena.docdb.api.models.QueryEnvelope;
-import io.resys.thena.docdb.api.models.QueryEnvelope.QueryEnvelopeStatus;
-import io.resys.thena.docdb.api.models.ThenaDocObject.Doc;
-import io.resys.thena.docdb.api.models.ThenaDocObject.DocBranch;
-import io.resys.thena.docdb.api.models.ThenaDocObject.DocCommit;
-import io.resys.thena.docdb.api.models.ThenaDocObject.DocLog;
-import io.resys.thena.docdb.api.models.ThenaDocObjects.DocObject;
+import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
+import io.resys.thena.api.models.QueryEnvelope;
+import io.resys.thena.api.models.QueryEnvelope.QueryEnvelopeStatus;
+import io.resys.thena.api.models.ThenaDocObject.Doc;
+import io.resys.thena.api.models.ThenaDocObject.DocBranch;
+import io.resys.thena.api.models.ThenaDocObject.DocCommit;
+import io.resys.thena.api.models.ThenaDocObject.DocLog;
+import io.resys.thena.api.models.ThenaDocObjects.DocObject;
 import io.resys.userprofile.client.api.model.ImmutableUserProfile;
 import io.resys.userprofile.client.api.model.UserProfile;
 import io.resys.userprofile.client.spi.store.DocumentConfig;

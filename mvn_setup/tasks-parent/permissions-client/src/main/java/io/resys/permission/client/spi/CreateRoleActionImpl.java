@@ -5,10 +5,10 @@ import io.resys.permission.client.api.model.ImmutableRole;
 import io.resys.permission.client.api.model.Principal.Role;
 import io.resys.permission.client.api.model.RoleCommand.CreateRole;
 import io.resys.permission.client.api.model.RoleCommand.RoleCommandType;
-import io.resys.thena.docdb.api.actions.OrgCommitActions.CreateOneParty;
-import io.resys.thena.docdb.api.actions.OrgCommitActions.OnePartyEnvelope;
-import io.resys.thena.docdb.api.models.Repo;
-import io.resys.thena.docdb.api.models.ThenaOrgObject.OrgActorStatusType;
+import io.resys.thena.api.actions.OrgCommitActions.CreateOneParty;
+import io.resys.thena.api.actions.OrgCommitActions.OnePartyEnvelope;
+import io.resys.thena.api.models.Repo;
+import io.resys.thena.api.models.ThenaOrgObject.OrgActorStatusType;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 

@@ -26,9 +26,9 @@ import org.immutables.value.Value;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.resys.thena.docdb.api.ThenaClient;
-import io.resys.thena.docdb.api.models.QueryEnvelope;
-import io.resys.thena.docdb.api.models.ThenaGitObjects.PullObject;
+import io.resys.thena.api.ThenaClient;
+import io.resys.thena.api.models.QueryEnvelope;
+import io.resys.thena.api.models.ThenaGitObjects.PullObject;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.StencilClient.Entity;
 import io.thestencil.client.api.StencilClient.EntityBody;

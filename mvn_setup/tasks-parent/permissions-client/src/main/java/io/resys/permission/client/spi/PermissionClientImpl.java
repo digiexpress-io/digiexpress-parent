@@ -3,8 +3,8 @@ package io.resys.permission.client.spi;
 import java.util.Optional;
 
 import io.resys.permission.client.api.PermissionClient;
-import io.resys.thena.docdb.api.models.Repo;
-import io.resys.thena.docdb.support.RepoAssert;
+import io.resys.thena.api.models.Repo;
+import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
