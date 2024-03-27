@@ -2,8 +2,9 @@ import React from 'react';
 import { TextField, IconButton, Alert, AlertTitle, Box } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useIntl } from 'react-intl';
-import { Principal, PrincipalId, RoleId } from 'descriptor-permissions';
-import { permissions_mock_data, usePermissions } from '../PermissionsContext';
+import { RoleId } from 'descriptor-permissions';
+
+import { usePermissions } from '../PermissionsContext';
 import Burger from 'components-burger';
 import { SectionLayout } from 'components-generic';
 

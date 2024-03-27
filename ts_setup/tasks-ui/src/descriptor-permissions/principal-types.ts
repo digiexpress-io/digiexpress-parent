@@ -1,4 +1,4 @@
-import { ActorStatus, ChangeType } from './descriptor-types';
+import { ActorStatus, ChangeType } from './types';
 
 export type PrincipalId = string;
 export type PrincipalName = string;
@@ -10,11 +10,14 @@ export interface Principal {
 
   status: ActorStatus;               // users are not deleted; instead, they are disabled
   roles: string[];                   // all role names, irrelevant of inheritance 
-  permissions: string[];             // all permission names, irrelevant of inheritance
 
+  /*
+  permissions: string[];             // all permission names, irrelevant of inheritance
   directRoles: string[];             // explicitly-given membership in the given role
   directRolePermissions: string[];   // inherited from the role that is directly connected to the principal
   directPermissions: string[];       // explicitly given to this principal only
+
+  */
 }
 
 export interface PrincipalCommand {
@@ -23,30 +26,31 @@ export interface PrincipalCommand {
 }
 
 export type PrincipalCommandType =
-  'CreatePrincipal' |
-  'ChangePrincipalRoles' |
-  'ChangePrincipalStatus';
+  'CREATE_PRINCIPAL' |
+  'CHANGE_PRINCIPAL_ROLES' |
+  'CHANGE_PRINCIPAL_STATUS';
 
-export interface PrincipalUpdateCommand<T extends PrincipalCommandType> extends PrincipalCommand {
-  id: PrincipalId;
-  commandType: T;
-}
+export interface PrincipalUpdateCommand extends PrincipalCommand { }
 
 export interface CreatePrincipal {
-  commandType: 'CreatePrincipal';
+  commandType: 'CREATE_PRINCIPAL';
   name: PrincipalName;
   email: string;
   roles: string[];
   permissions: string[];
 }
 
-export interface ChangePrincipalRoles extends PrincipalUpdateCommand<'ChangePrincipalRoles'> {
+export interface ChangePrincipalRoles extends PrincipalUpdateCommand {
+  id: PrincipalId;
   roles: string;        // id/name/extId
   changeType: ChangeType;
+  commandType: 'CHANGE_PRINCIPAL_ROLES';
 }
 
-export interface ChangePrincipalStatus extends PrincipalUpdateCommand<'ChangePrincipalStatus'> {
+export interface ChangePrincipalStatus extends PrincipalUpdateCommand {
+  id: PrincipalId;
   status: ActorStatus;
+  commandType: 'CHANGE_PRINCIPAL_STATUS';
 }
 
 

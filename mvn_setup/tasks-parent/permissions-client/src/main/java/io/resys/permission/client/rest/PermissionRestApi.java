@@ -8,6 +8,7 @@ import io.resys.permission.client.api.model.Principal;
 import io.resys.permission.client.api.model.Principal.Permission;
 import io.resys.permission.client.api.model.Principal.Role;
 import io.resys.permission.client.api.model.PrincipalCommand.PrincipalUpdateCommand;
+import io.resys.permission.client.api.model.RoleCommand.CreateRole;
 import io.resys.permission.client.api.model.RoleCommand.RoleUpdateCommand;
 import io.smallrye.mutiny.Uni;
 import jakarta.ws.rs.Consumes;
@@ -44,7 +45,7 @@ public interface PermissionRestApi {
   Uni<Permission> updatePermission(@PathParam("permissionId") String permissionId, List<PermissionUpdateCommand> commands);
   
   @GET @Path("roles") @Produces(MediaType.APPLICATION_JSON)
-  Uni<List<Role>> findAllRoles();
+  Uni<List<Role>> findAllRoles(CreateRole role);
   
   @POST @Path("roles") @Produces(MediaType.APPLICATION_JSON)
   Uni<Role> createRole();

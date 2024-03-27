@@ -36,6 +36,8 @@ import io.resys.hdes.client.spi.ThenaStore;
 import io.resys.hdes.client.spi.config.HdesClientConfig.DependencyInjectionContext;
 import io.resys.hdes.client.spi.config.HdesClientConfig.ServiceInit;
 import io.resys.hdes.client.spi.store.ImmutableThenaConfig;
+import io.resys.permission.client.api.PermissionClient;
+import io.resys.permission.client.spi.PermissionClientImpl;
 import io.resys.sysconfig.client.api.ImmutableAssetClientConfig;
 import io.resys.sysconfig.client.api.SysConfigClient;
 import io.resys.sysconfig.client.spi.SysConfigClientImpl;
@@ -135,6 +137,15 @@ public class BeanFactory {
     return new CurrentUserRecord(vimes, "first name", "last-name", "first.last@digiexpress.io");
   }
 
+  @Produces
+  public PermissionClient permissionClient(CurrentPgPool currentPgPool, ObjectMapper om) {
+    final var store = io.resys.permission.client.spi.PermissionStoreImpl.builder()
+      .repoName("")
+      .pgPool(currentPgPool.pgPool)
+      .objectMapper(om)
+      .build();
+    return new PermissionClientImpl(store);
+  }
 
   @Produces
   public TaskClient taskClient(CurrentPgPool currentPgPool, ObjectMapper om) {
@@ -145,7 +156,6 @@ public class BeanFactory {
       .build();
     return new TaskClientImpl(store);
   }
-
   @Produces
   public TenantConfigClient tenantClient(ObjectMapper om, CurrentPgPool currentPgPool) {
     final var store = io.resys.thena.projects.client.spi.DocumentStoreImpl.builder()

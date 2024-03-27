@@ -68,6 +68,7 @@ public class ProjectsClientImpl implements TenantConfigClient {
         case CRM: { repo.repoType(StructureType.doc); break; }
         case TENANT: { repo.repoType(StructureType.doc); break; }
         case SYS_CONFIG: { repo.repoType(StructureType.doc); break; }
+        case PERMISSIONS: { repo.repoType(StructureType.org); break; }
         case USER_PROFILE: { repo.repoType(StructureType.doc); break; }
 
         case DIALOB: { repo.repoType(StructureType.git); break; }

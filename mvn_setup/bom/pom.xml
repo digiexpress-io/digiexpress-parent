@@ -236,8 +236,8 @@ permissions and limitations under the
         <artifactId>dialob-composer-spring</artifactId>
         <version>${project.version}</version>
       </dependency>
-      
-      
+
+
       <dependency>
         <groupId>io.digiexpress</groupId>
         <artifactId>thena-tasks-client</artifactId>
@@ -261,6 +261,11 @@ permissions and limitations under the
       <dependency>
         <groupId>io.digiexpress</groupId>
         <artifactId>thena-sysconfig-client</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>thena-permission-client</artifactId>
         <version>${project.version}</version>
       </dependency>
 

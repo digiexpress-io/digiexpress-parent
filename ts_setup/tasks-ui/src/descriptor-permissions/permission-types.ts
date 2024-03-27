@@ -1,13 +1,14 @@
-import { ActorStatus } from './descriptor-types';
+import { ActorStatus } from './types';
 
 export type PermissionId = string;
 export type PermissionName = string;
 
+
 export interface Permission {
   id: PermissionId;
-  name: PermissionName;
+  name: string;
   description: string;
-  status: ActorStatus
+  status: ActorStatus;
 }
 
 export interface PermissionCommand {
@@ -16,32 +17,47 @@ export interface PermissionCommand {
 }
 
 export type PermissionCommandType =
-  'CreatePermission' |
-  'ChangePermissionName' |
-  'ChangePermissionDescription' |
-  'ChangePermissionStatus';
+  'CREATE_PERMISSION' |
+  'CHANGE_PERMISSION_NAME' |
+  'CHANGE_PERMISSION_DESCRIPTION' |
+  'CHANGE_PERMISSION_STATUS';
 
-export interface PermissionUpdateCommand<T extends PermissionCommandType> extends PermissionCommand {
-  id: PermissionId;
-  commandType: T;
-}
+export interface PermissionUpdateCommand extends PermissionCommand { }
 
 export interface CreatePermission {
-  commandType: 'CreatePermission';
-  name: PermissionName;
-  description: string;
-  roles: string[];
-}
-
-export interface ChangePermissionName extends PermissionUpdateCommand<'ChangePermissionName'> {
-  name: PermissionName;
-}
-
-export interface ChangePermissionDescription extends PermissionUpdateCommand<'ChangePermissionDescription'> {
+  commandType: 'CREATE_PERMISSION';
+  name: string;
   description: string;
 }
 
-export interface ChangePermissionStatus extends PermissionUpdateCommand<'ChangePermissionStatus'> {
+export interface ChangePermissionName extends PermissionUpdateCommand {
+  id: PermissionId;
+  name: string;
+  commandType: 'CHANGE_PERMISSION_NAME';
+}
+
+export interface ChangePermissionDescription extends PermissionUpdateCommand {
+  id: PermissionId;
+  description: string;
+  commandType: 'CHANGE_PERMISSION_DESCRIPTION'
+}
+
+export interface ChangePermissionStatus extends PermissionUpdateCommand {
+  id: PermissionId;
   status: ActorStatus;
+  commandType: 'CHANGE_PERMISSION_STATUS'
+}
+
+export interface PermissionPagination {
+  page: number; //starts from 1
+  total: { pages: number, records: number };
+  records: Permission[];
+}
+
+export interface PermissionStore {
+  findPermissions(): Promise<Permission[]>;
+  getPermission(id: PermissionId): Promise<Permission>;
+  createPermission(command: CreatePermission): Promise<Permission>;
+  updatePermission(id: PermissionId, commands: PermissionUpdateCommand[]): Promise<Permission>;
 }
 

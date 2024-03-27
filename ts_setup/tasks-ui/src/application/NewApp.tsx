@@ -27,7 +27,7 @@ window.LOGGER = {
   config: {
     format: 'STRING',
     level: 'ERROR',
-    values: process.env.REACT_APP_LOCAL_DEV_MODE  ? getLogProps() : {}
+    values: process.env.REACT_APP_LOCAL_DEV_MODE ? getLogProps() : {}
   }
 }
 
@@ -71,6 +71,7 @@ const store: TaskClient.Store = new TaskClient.DefaultStore({
     { id: 'CONFIG', url: baseUrl + "/q/digiexpress/api/" },
     { id: 'HEALTH', url: baseUrl + "/q/digiexpress/api/" },
     { id: 'SYS_CONFIG', url: baseUrl + "/q/digiexpress/api/" },
+    { id: 'PERMISSIONS', url: baseUrl + "/q/digiexpress/api/" },
     { id: 'EXT_DIALOB', url: baseUrl + "/q/digiexpress/api/dialob/" },
     { id: 'EXT_DIALOB_EDIT', url: baseUrl + "/q/digiexpress/api/dialob/api/edit" },
 

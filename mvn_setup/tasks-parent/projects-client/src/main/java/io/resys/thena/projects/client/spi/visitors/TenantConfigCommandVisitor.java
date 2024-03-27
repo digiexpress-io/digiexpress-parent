@@ -107,6 +107,10 @@ public class TenantConfigCommandVisitor {
           .repoId(nextRepoId())
           .repoType(TenantRepoConfigType.USER_PROFILE)
           .build())
+      .addRepoConfigs(ImmutableTenantRepoConfig.builder()
+          .repoId(nextRepoId())
+          .repoType(TenantRepoConfigType.PERMISSIONS)
+          .build())
       .addTransactions(
           ImmutableTenantConfigTransaction.builder()
           .id("1")

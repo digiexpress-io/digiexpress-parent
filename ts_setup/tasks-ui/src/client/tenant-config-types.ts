@@ -7,16 +7,17 @@ export type TenantConfigTransactionId = string;
 
 export type RepoId = string;
 export type RepoType = (
-  'TASKS' | 
-  'CRM' | 
-  'STENCIL' | 
-  'WRENCH' | 
-  'DIALOB' | 
-  'CONFIG' | 
-  'HEALTH' | 
-  'USER_PROFILE' | 
-  'EXT_DIALOB' | 
-  'EXT_DIALOB_EDIT' | 
+  'PERMISSIONS' |
+  'TASKS' |
+  'CRM' |
+  'STENCIL' |
+  'WRENCH' |
+  'DIALOB' |
+  'CONFIG' |
+  'HEALTH' |
+  'USER_PROFILE' |
+  'EXT_DIALOB' |
+  'EXT_DIALOB_EDIT' |
   'TENANT' |
   'SYS_CONFIG');
 export type AppType = 'APP_FRONTOFFICE' | "APP_CRM" | "APP_DIALOB" | "APP_STENCIL" | "APP_WRENCH" | "APP_TASKS";

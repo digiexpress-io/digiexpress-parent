@@ -55,37 +55,37 @@ public class TestResource implements TaskRestApi {
   }
 
   @Override
-  public Uni<List<Task>> findTasks(String projectId) {
+  public Uni<List<Task>> findTasks() {
     return Uni.createFrom().item(Arrays.asList(mockTask));
   }
 
   @Override
-  public Uni<List<Task>> createTasks(String projectId, List<CreateTask> commands) {
+  public Uni<List<Task>> createTasks(List<CreateTask> commands) {
     return Uni.createFrom().item(commands.stream().map(e -> mockTask).collect(Collectors.toList()));
   }
 
   @Override
-  public Uni<List<Task>> updateTasks(String projectId, List<TaskUpdateCommand> commands) {
+  public Uni<List<Task>> updateTasks(List<TaskUpdateCommand> commands) {
     return Uni.createFrom().item(commands.stream().map(e -> mockTask).collect(Collectors.toList()));
   }
 
   @Override
-  public Uni<Task> updateTask(String projectId, String taskId, List<TaskUpdateCommand> commands) {
+  public Uni<Task> updateTask(String taskId, List<TaskUpdateCommand> commands) {
     return Uni.createFrom().item(mockTask);
   }
 
   @Override
-  public Uni<List<Task>> findArchivedTasks(String projectId, LocalDate fromCreatedOrUpdated) {
+  public Uni<List<Task>> findArchivedTasks(LocalDate fromCreatedOrUpdated) {
     return Uni.createFrom().item(Arrays.asList(mockTask, mockTask));
   }
 
   @Override
-  public Uni<Task> deleteOneTask(String projectId, String taskId, List<TaskUpdateCommand> command) {
+  public Uni<Task> deleteOneTask(String taskId, List<TaskUpdateCommand> command) {
     return Uni.createFrom().item(mockTask);
   }
 
   @Override
-  public Uni<List<Task>> deleteTasks(String projectId, List<TaskUpdateCommand> commands) {
+  public Uni<List<Task>> deleteTasks(List<TaskUpdateCommand> commands) {
     return Uni.createFrom().item(Arrays.asList(mockTask, mockTask));
   }
 

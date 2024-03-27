@@ -46,6 +46,11 @@
       <groupId>io.digiexpress</groupId>
       <artifactId>thena-userprofile-client</artifactId>
     </dependency>
+    <dependency>
+      <groupId>io.digiexpress</groupId>
+      <artifactId>thena-permission-client</artifactId>
+    </dependency>
+
 
     <dependency>
       <groupId>io.quarkus</groupId>

@@ -1,18 +1,20 @@
-import { ActorStatus, ChangeType } from './descriptor-types';
+import { ActorStatus, ChangeType } from './types';
+import { Permission } from './permission-types';
+import { Principal } from './principal-types';
 
 export type RoleId = string;
 export type RoleName = string;
 
 export interface Role {
   id: RoleId;
-  parentId: RoleId | undefined;
+  //parentId: RoleId | undefined; TODO
   name: RoleName;
   description: string;
 
   status: ActorStatus;
 
-  permissions: string[];  // permission names
-  principals: string[];   // user names
+  permissions: Permission[];  // permission names
+  principals: Principal[];   // user names
 }
 
 export interface RoleCommand {
@@ -20,17 +22,14 @@ export interface RoleCommand {
   commandType: RoleCommandType;
 }
 
-export interface RoleUpdateCommand<T extends RoleCommandType> extends RoleCommand {
-  id: RoleId;
-  commandType: T;
-}
+export interface RoleUpdateCommand extends RoleCommand { }
 
 export type RoleCommandType =
-  'CreateRole' |
-  'ChangeRoleName' |
-  'ChangeRoleDescription' |
-  'ChangeRoleStatus' |
-  'ChangeRolePermissions';
+  'CREATE_ROLE' |
+  'CHANGE_ROLE_NAME' |
+  'CHANGE_ROLE_DESCRIPTION' |
+  'CHANGE_ROLE_STATUS' |
+  'CHANGE_ROLE_PERMISSIONS';
 
 export interface CreateRole {
   commandType: 'CreateRole';
@@ -39,19 +38,27 @@ export interface CreateRole {
   permissions: string[];
 }
 
-export interface ChangeRoleName extends RoleUpdateCommand<'ChangeRoleName'> {
+export interface ChangeRoleName extends RoleUpdateCommand {
+  id: RoleId;
   name: RoleName;
+  commandType: 'CHANGE_ROLE_NAME';
 }
 
-export interface ChangeRoleDescription extends RoleUpdateCommand<'ChangeRoleDescription'> {
+export interface ChangeRoleDescription extends RoleUpdateCommand {
+  id: RoleId;
   description: string;
+  commandType: 'CHANGE_ROLE_DESCRIPTION';
 }
 
-export interface ChangeRoleStatus extends RoleUpdateCommand<'ChangeRoleStatus'> {
+export interface ChangeRoleStatus extends RoleUpdateCommand {
+  id: RoleId;
   status: ActorStatus;
+  commandType: 'CHANGE_ROLE_STATUS';
 }
 
-export interface ChangeRolePermissions extends RoleUpdateCommand<'ChangeRolePermissions'> {
+export interface ChangeRolePermissions extends RoleUpdateCommand {
+  id: RoleId;
   permissions: string[];
   changeType: ChangeType;
+  commandType: 'CHANGE_ROLE_PERMISSIONS';
 }

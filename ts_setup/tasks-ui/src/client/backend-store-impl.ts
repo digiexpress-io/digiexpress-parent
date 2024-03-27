@@ -128,7 +128,7 @@ class DefaultStore implements Store {
     const next = { ...this._defRef, headers: { ...this._defRef.headers } };
 
     // @ts-ignore
-    next.headers['Project-ID'] = this._repos[repoType].repoId;
+    // next.headers['Project-ID'] = this._repos[repoType].repoId;
 
     return next;
   }

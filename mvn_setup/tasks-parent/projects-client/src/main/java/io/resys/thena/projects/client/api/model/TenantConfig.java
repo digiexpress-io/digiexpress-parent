@@ -47,7 +47,9 @@ public interface TenantConfig extends Document {
 
 
   enum TenantStatus { IN_FORCE, ARCHIVED }
-  enum TenantRepoConfigType { WRENCH, STENCIL, TASKS, DIALOB, CRM, TENANT, SYS_CONFIG, USER_PROFILE }
+  enum TenantRepoConfigType { 
+    WRENCH, STENCIL, TASKS, DIALOB, CRM, TENANT, SYS_CONFIG, USER_PROFILE, PERMISSIONS
+  }
   
   
   @Value.Immutable @JsonSerialize(as = ImmutableTenantRepoConfig.class) @JsonDeserialize(as = ImmutableTenantRepoConfig.class)

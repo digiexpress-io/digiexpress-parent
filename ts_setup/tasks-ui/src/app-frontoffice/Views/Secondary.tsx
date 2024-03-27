@@ -132,7 +132,8 @@ const Secondary: React.FC<{ init?: { profile: UserProfileAndOrg, backend: Backen
   function handleMyoverview() { actions.handleTabAdd({ id: 'myoverview', label: <FormattedMessage id="activities.myoverview.title" /> }) }
   function handleInbox() { actions.handleTabAdd({ id: 'inbox', label: <FormattedMessage id="activities.inbox.title" /> }) }
   function handleDeployments() { actions.handleTabAdd({ id: 'deployments', label: <FormattedMessage id="activities.deployments.title" /> }) }
-  function handlePermissionsOverview() { actions.handleTabAdd({ id: 'rolesOverview', label: <FormattedMessage id="activities.permissions.roles.title" /> }) }
+  function handleRolesOverview() { actions.handleTabAdd({ id: 'rolesOverview', label: <FormattedMessage id="activities.permissions.roles.title" /> }) }
+  function handlePermissionsOverview() { actions.handleTabAdd({ id: 'permissionsOverview', label: <FormattedMessage id="activities.permissions.title" /> }) }
 
   function handleTenant() { actions.handleTabAdd({ id: 'tenant', label: <FormattedMessage id="activities.frontoffice.crm.tenant.title" /> }) }
   function handleCurrentUserProfile() { actions.handleTabAdd({ id: 'currentUserProfile', label: <FormattedMessage id="activities.frontoffice.userProfile.title" /> }) }
@@ -143,7 +144,7 @@ const Secondary: React.FC<{ init?: { profile: UserProfileAndOrg, backend: Backen
   React.useEffect(() => {
     //handleTaskSearch();
     //handleDeployments();
-    handlePermissionsOverview();
+    handleRolesOverview();
   }, []);
 
 
@@ -208,11 +209,11 @@ const Secondary: React.FC<{ init?: { profile: UserProfileAndOrg, backend: Backen
 
         <StyledExplorerTab value='explorer.permissions' label={<FormattedMessage id="explorer.frontoffice.permissions.menuOption" />} onClick={undefined}
           icon={<SecurityIcon fontSize='small' />} />
-        <StyledExplorerSubTab value='explorer.permissions.roles' label={<FormattedMessage id="explorer.frontoffice.permissions.roles.menuOption" />} onClick={handlePermissionsOverview}
+        <StyledExplorerSubTab value='explorer.permissions.roles' label={<FormattedMessage id="explorer.frontoffice.permissions.roles.menuOption" />} onClick={handleRolesOverview}
           icon={<DnsOutlinedIcon fontSize='small' />} />
         <StyledExplorerSubTab value='explorer.permissions.users' label={<FormattedMessage id="explorer.frontoffice.permissions.users.menuOption" />} onClick={undefined}
           icon={<AdminPanelSettingsOutlinedIcon fontSize='small' />} />
-        <StyledExplorerSubTab value='explorer.permissions.permissions' label={<FormattedMessage id="explorer.frontoffice.permissions.allPermissions.menuOption" />} onClick={undefined}
+        <StyledExplorerSubTab value='explorer.permissions.permissions' label={<FormattedMessage id="explorer.frontoffice.permissions.allPermissions.menuOption" />} onClick={handlePermissionsOverview}
           icon={<AdminPanelSettingsOutlinedIcon fontSize='small' />} />
         <StyledExplorerSubTab value='explorer.permissions.orgChart' label={<FormattedMessage id="explorer.frontoffice.permissions.orgChart.menuOption" />} onClick={handleOrgChart}
           icon={<AdminPanelSettingsOutlinedIcon fontSize='small' />} />

@@ -1,6 +1,5 @@
-
-//import SysConfig from './SysConfig';
 import RolesOverview from './Roles'
 import DeOrgChart from './OrgChart';
+import { PermissionsOverview } from './Permissions';
 
-export { RolesOverview, DeOrgChart };
+export { RolesOverview, DeOrgChart, PermissionsOverview };
