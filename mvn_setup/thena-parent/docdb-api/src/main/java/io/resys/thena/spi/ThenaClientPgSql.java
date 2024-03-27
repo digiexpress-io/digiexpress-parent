@@ -40,7 +40,7 @@ public class ThenaClientPgSql implements ThenaClient {
   
   @Override
   public TenantActions tenants() {
-    return new RepoActionsImpl(state);
+    return new TenantActionsImpl(state);
   }
   public DbState getState() {
     return state;

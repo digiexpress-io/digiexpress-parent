@@ -11,7 +11,7 @@ import lombok.experimental.Accessors;
 
 @RequiredArgsConstructor
 @Data @Accessors(fluent = true)
-public class RepoQueryImpl implements TenantActions.TenantQuery {
+public class TenantQueryImpl implements TenantActions.TenantQuery {
 
   private final DbState state;
   private String id;

@@ -16,13 +16,13 @@ import lombok.extern.slf4j.Slf4j;
 
 @RequiredArgsConstructor
 @Slf4j
-public class RepoBuilderImpl implements TenantActions.TenantBuilder {
+public class TenantBuilderImpl implements TenantActions.TenantBuilder {
 
   private final DbState state;
   private String name;
   private StructureType type;
   
-  public RepoBuilderImpl name(String name, StructureType type) {
+  public TenantBuilderImpl name(String name, StructureType type) {
     this.name = name;
     this.type = type;
     return this;

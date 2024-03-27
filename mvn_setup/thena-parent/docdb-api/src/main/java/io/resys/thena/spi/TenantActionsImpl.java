@@ -5,16 +5,16 @@ import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class RepoActionsImpl implements TenantActions {
+public class TenantActionsImpl implements TenantActions {
   private final DbState state;
 
   @Override
   public TenantQuery find() {
-    return new RepoQueryImpl(state);
+    return new TenantQueryImpl(state);
   }
 
   @Override
   public TenantBuilder commit() {
-    return new RepoBuilderImpl(state);
+    return new TenantBuilderImpl(state);
   }
 }
