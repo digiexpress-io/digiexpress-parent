@@ -58,6 +58,7 @@ public class GitRepoQueryImpl implements GitTenantQuery {
     });
   }
   
+
   private Uni<QueryEnvelope<ThenaClient.GitRepoObjects>> getState(GitState ctx) {
     final Uni<ThenaClient.GitRepoObjects> objects = Uni.combine().all().unis(
         getRefs(ctx),
@@ -65,7 +66,7 @@ public class GitRepoQueryImpl implements GitTenantQuery {
         getBlobs(ctx),
         getTrees(ctx),
         getCommits(ctx)
-    ).combinedWith(raw -> {
+    ).with(raw -> {
       final var builder = ImmutableGitRepoObjects.builder();
       raw.stream().map(r -> (ThenaClient.GitRepoObjects) r).forEach(r -> builder
           .putAllBranches(r.getBranches())

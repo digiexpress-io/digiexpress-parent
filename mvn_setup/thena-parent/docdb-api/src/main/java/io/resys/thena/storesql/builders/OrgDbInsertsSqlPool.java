@@ -162,7 +162,7 @@ public class OrgDbInsertsSqlPool implements OrgInserts {
     		    statusInsertUni, statusUpdateUni,
     		    treeUni
     		 )
-    		.combinedWith(OrgBatchForOne.class, (List<OrgBatchForOne> items) -> merge(inputBatch, items));
+    		.with(OrgBatchForOne.class, (List<OrgBatchForOne> items) -> merge(inputBatch, items));
   }
 
   

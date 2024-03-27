@@ -44,8 +44,8 @@
     <validation-gl.version>10.1.15</validation-gl.version>
 
     <!-- quarkus -->
-    <quarkus.version>3.2.11.Final</quarkus.version>
-    <quarkus-jandex.version>3.1.6</quarkus-jandex.version>
+    <quarkus.version>3.8.2</quarkus.version>
+    <quarkus-jandex.version>3.1.7</quarkus-jandex.version>
 
 
     <!-- Spring -->
@@ -353,7 +353,7 @@
       </dependency>
 
 
-      <!-- Quarkus -->
+<!-- Quarkus -->
       <dependency>
         <groupId>io.quarkus</groupId>
         <artifactId>quarkus-bom</artifactId>
