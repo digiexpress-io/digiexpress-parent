@@ -19,17 +19,17 @@ public class TenantQueryImpl implements TenantActions.TenantQuery {
 
   @Override
   public Multi<Tenant> findAll() {
-   return state.project().findAll(); 
+   return state.tenant().findAll(); 
   }
 
   @Override
   public Uni<Tenant> get() {
     RepoAssert.notEmpty(id, () -> "Define id or name!");
-    return state.project().getByNameOrId(id);
+    return state.tenant().getByNameOrId(id);
   }
 
   @Override
   public Uni<Tenant> delete() {
-    return get().onItem().transformToUni(repo -> state.project().delete(repo));
+    return get().onItem().transformToUni(repo -> state.tenant().delete(repo));
   }
 }

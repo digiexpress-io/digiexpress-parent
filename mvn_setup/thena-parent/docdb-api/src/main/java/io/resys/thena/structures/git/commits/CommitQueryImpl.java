@@ -34,7 +34,7 @@ import io.resys.thena.api.envelope.ImmutableQueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.spi.DbState;
-import io.resys.thena.structures.git.GitState.GitRepo;
+import io.resys.thena.structures.git.GitState.GitTenant;
 import io.resys.thena.structures.git.objects.ObjectsUtils;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
@@ -61,12 +61,12 @@ public class CommitQueryImpl implements CommitQuery {
     RepoAssert.notEmpty(projectName, () -> "projectName is not defined!");
     RepoAssert.notEmpty(branchNameOrCommitOrTag, () -> "branchNameOrCommitOrTag is not defined!");
     
-    return state.project().getByNameOrId(projectName).onItem()
+    return state.tenant().getByNameOrId(projectName).onItem()
     .transformToUni((Tenant existing) -> {
       if(existing == null) {
         return Uni.createFrom().item(QueryEnvelope.repoNotFound(projectName, log));
       }
-      final var ctx = state.toGitState().withRepo(existing);
+      final var ctx = state.toGitState().withTenant(existing);
       
       return ObjectsUtils.findCommit(ctx, branchNameOrCommitOrTag)
         .onItem().transformToUni(commit -> {
@@ -79,7 +79,7 @@ public class CommitQueryImpl implements CommitQuery {
   }
   
   
-  private Uni<QueryEnvelope<CommitObjects>> getState(Tenant repo, Commit commit, GitRepo ctx) {
+  private Uni<QueryEnvelope<CommitObjects>> getState(Tenant repo, Commit commit, GitTenant ctx) {
     return ObjectsUtils.getTree(commit, ctx).onItem()
     .transformToUni(tree -> {
       if(this.docsIncluded) {
@@ -108,7 +108,7 @@ public class CommitQueryImpl implements CommitQuery {
     });
   }
   
-  private static Uni<ImmutableCommitObjects.Builder> getBlobs(Tree tree, GitRepo ctx, List<MatchCriteria> blobCriteria) {
+  private static Uni<ImmutableCommitObjects.Builder> getBlobs(Tree tree, GitTenant ctx, List<MatchCriteria> blobCriteria) {
     return ctx.query().blobs().findAll(tree.getId(), blobCriteria)
         .collect().asList().onItem()
         .transform(blobs -> {

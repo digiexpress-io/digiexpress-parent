@@ -37,7 +37,7 @@ public class MemberHierarchyQueryImpl implements MemberHierarchyQuery {
 	public Uni<QueryEnvelope<OrgMemberHierarchy>> get(String userId) {
 		RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
 		
-    return state.project().getByNameOrId(repoId)
+    return state.tenant().getByNameOrId(repoId)
     .onItem().transformToUni((Tenant existing) -> {
       if(existing == null) {
         return Uni.createFrom().item(QueryEnvelope.repoNotFound(repoId, log));
@@ -50,7 +50,7 @@ public class MemberHierarchyQueryImpl implements MemberHierarchyQuery {
   public Uni<QueryEnvelopeList<OrgMemberHierarchy>> findAll() {
     RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
     
-    return state.project().getByNameOrId(repoId)
+    return state.tenant().getByNameOrId(repoId)
     .onItem().transformToUni((Tenant existing) -> {
       if(existing == null) {
         return Uni.createFrom().item(QueryEnvelopeList.repoNotFound(repoId, log));

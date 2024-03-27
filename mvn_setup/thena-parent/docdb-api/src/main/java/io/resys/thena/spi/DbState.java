@@ -12,7 +12,7 @@ public interface DbState {
   DbCollections getCollections();
   ErrorHandler getErrorHandler();
   
-  RepoBuilder project();
+  RepoBuilder tenant();
   GitState toGitState();
   DocState toDocState();
   OrgState toOrgState();

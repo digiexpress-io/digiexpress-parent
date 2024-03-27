@@ -26,27 +26,27 @@ public class CommitActionsImpl implements GitCommitActions {
 
   @Override
   public Uni<List<Commit>> findAllCommits() {
-    return state.project().getByNameOrId(repoId).onItem()
+    return state.tenant().getByNameOrId(repoId).onItem()
         .transformToUni((Tenant existing) -> {
           if(existing == null) {
             final var ex = RepoException.builder().notRepoWithName(repoId);
             log.error(ex.getText());
             throw new RepoException(ex.getText());
           }
-          final var repoCtx = state.toGitState().withRepo(existing);      
+          final var repoCtx = state.toGitState().withTenant(existing);      
           return repoCtx.query().commits().findAll().collect().asList();
         });
   }
   @Override
   public Uni<List<Tree>> findAllCommitTrees() {
-    return state.project().getByNameOrId(repoId).onItem()
+    return state.tenant().getByNameOrId(repoId).onItem()
         .transformToUni((Tenant existing) -> {
           if(existing == null) {
             final var ex = RepoException.builder().notRepoWithName(repoId);
             log.error(ex.getText());
             throw new RepoException(ex.getText());
           }
-          final var repoCtx = state.toGitState().withRepo(existing);      
+          final var repoCtx = state.toGitState().withTenant(existing);      
           return repoCtx.query().trees().findAll().collect().asList();
         });
   }

@@ -4,19 +4,13 @@ import io.resys.thena.api.entities.Tenant;
 import io.smallrye.mutiny.Uni;
 
 public interface GitState {
-  Uni<GitInserts> insert(String repoNameOrId);
-  GitInserts insert(Tenant repo);
-  
-  Uni<GitQueries> query(String repoNameOrId);
-  GitQueries query(Tenant repo);
-  
-  GitRepo withRepo(Tenant repo);
-  Uni<GitRepo> withRepo(String repoNameOrId);
+  GitTenant withTenant(Tenant repo);
+  Uni<GitTenant> withTenant(String repoNameOrId);
   <R> Uni<R> withTransaction(String repoId, String headName, TransactionFunction<R> callback);
   
 
-  interface GitRepo {
-    String getRepoName();
+  interface GitTenant {
+    String getTenantName();
     Tenant getRepo();
     GitInserts insert();
     GitQueries query();
@@ -24,6 +18,6 @@ public interface GitState {
   
   @FunctionalInterface
   interface TransactionFunction<R> {
-    Uni<R> apply(GitRepo repoState);
+    Uni<R> apply(GitTenant repoState);
   }
 }

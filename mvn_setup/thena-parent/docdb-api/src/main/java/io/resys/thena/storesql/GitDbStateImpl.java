@@ -7,12 +7,9 @@ import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.exceptions.RepoException;
 import io.resys.thena.spi.DbCollections;
 import io.resys.thena.spi.DbState.RepoBuilder;
-import io.resys.thena.storesql.ImmutableClientQuerySqlContext;
 import io.resys.thena.storesql.GitDbQueriesSqlImpl.ClientQuerySqlContext;
-import io.resys.thena.storesql.builders.GitDbInsertsSqlPool;
 import io.resys.thena.storesql.builders.RepoBuilderSqlPool;
 import io.resys.thena.storesql.support.ImmutableSqlClientWrapper;
-import io.resys.thena.structures.git.GitInserts;
 import io.resys.thena.structures.git.GitQueries;
 import io.resys.thena.structures.git.GitState;
 import io.resys.thena.support.ErrorHandler;
@@ -64,49 +61,14 @@ public class GitDbStateImpl implements GitState {
     });
   }
   @Override
-  public Uni<GitQueries> query(String repoNameOrId) {
-    return project().getByNameOrId(repoNameOrId).onItem().transform(repo -> query(repo));
-  }
-  @Override
-  public Uni<GitInserts> insert(String repoNameOrId) {
-    return project().getByNameOrId(repoNameOrId).onItem().transform(repo -> insert(repo));
-  }
-  @Override
-  public Uni<GitRepo> withRepo(String repoNameOrId) {
-    return project().getByNameOrId(repoNameOrId).onItem().transform(repo -> withRepo(repo));
+  public Uni<GitTenant> withTenant(String repoNameOrId) {
+    return project().getByNameOrId(repoNameOrId).onItem().transform(repo -> withTenant(repo));
   }
   public RepoBuilder project() {
     return new RepoBuilderSqlPool(pool, null, ctx, sqlSchema.apply(ctx), sqlMapper.apply(ctx), sqlBuilder.apply(ctx), handler);
   }
   @Override
-  public GitInserts insert(Tenant repo) {
-    final var wrapper = ImmutableSqlClientWrapper.builder()
-        .repo(repo)
-        .pool(pool)
-        .tx(Optional.empty())
-        .names(ctx.toRepo(repo))
-        .build();
-    return new GitDbInsertsSqlPool(wrapper, sqlMapper.apply(wrapper.getNames()), sqlBuilder.apply(wrapper.getNames()), handler);
-  }
-  @Override
-  public GitQueries query(Tenant repo) {
-    final var wrapper = ImmutableSqlClientWrapper.builder()
-        .repo(repo)
-        .pool(pool)
-        .tx(Optional.empty())
-        .names(ctx.toRepo(repo))
-        .build();
-    final var ctx = ImmutableClientQuerySqlContext.builder()
-      .mapper(sqlMapper.apply(wrapper.getNames()))
-      .builder(sqlBuilder.apply(wrapper.getNames()))
-      .wrapper(wrapper)
-      .errorHandler(handler)
-      .build();
-    
-    return clientQuery.apply(ctx);
-  }
-  @Override
-  public GitRepo withRepo(Tenant repo) {
+  public GitTenant withTenant(Tenant repo) {
     final var wrapper = ImmutableSqlClientWrapper.builder()
         .repo(repo)
         .pool(pool)

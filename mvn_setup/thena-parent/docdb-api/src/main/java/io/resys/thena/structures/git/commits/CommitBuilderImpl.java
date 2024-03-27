@@ -37,7 +37,7 @@ import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.api.actions.ImmutableCommitResultEnvelope;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.structures.git.GitInserts.BatchStatus;
-import io.resys.thena.structures.git.GitState.GitRepo;
+import io.resys.thena.structures.git.GitState.GitTenant;
 import io.resys.thena.structures.git.ImmutableLockCriteria;
 import io.resys.thena.structures.git.commits.CommitBatchBuilder.CommitTreeState;
 import io.resys.thena.support.Identifiers;
@@ -165,7 +165,7 @@ public class CommitBuilderImpl implements CommitBuilder {
     
   }
   
-  private Uni<CommitResultEnvelope> doInLock(CommitLock lock, GitRepo tx) {
+  private Uni<CommitResultEnvelope> doInLock(CommitLock lock, GitTenant tx) {
     final var gid = Identifiers.toRepoHeadGid(repoId, headName);  
     final var init = CommitTreeState.builder().ref(lock.getBranch()).refName(headName).gid(gid).repo(tx.getRepo());
     

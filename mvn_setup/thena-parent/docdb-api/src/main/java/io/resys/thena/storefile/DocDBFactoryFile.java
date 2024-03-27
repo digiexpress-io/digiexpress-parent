@@ -36,7 +36,7 @@ public class DocDBFactoryFile {
         return ctx;
       }
       @Override
-      public RepoBuilder project() {
+      public RepoBuilder tenant() {
         return new RepoBuilderFilePool(client, ctx, sqlMapper(ctx), sqlBuilder(ctx), handler);
       }
       @Override
@@ -44,55 +44,29 @@ public class DocDBFactoryFile {
         return new GitState() {
           @Override
           public <R> Uni<R> withTransaction(String repoId, String headName, TransactionFunction<R> callback) {
-            return project().getByNameOrId(repoId).onItem().transformToUni(repo -> {
-              final GitRepo repoState = withRepo(repo);
+            return tenant().getByNameOrId(repoId).onItem().transformToUni(repo -> {
+              final GitTenant repoState = withTenant(repo);
               return callback.apply(repoState);
             });
           }
           @Override
-          public Uni<GitRepo> withRepo(String repoNameOrId) {
-            return project().getByNameOrId(repoNameOrId).onItem().transform(repo -> withRepo(repo));
+          public Uni<GitTenant> withTenant(String repoNameOrId) {
+            return tenant().getByNameOrId(repoNameOrId).onItem().transform(repo -> withTenant(repo));
           }
           @Override
-          public Uni<GitInserts> insert(String repoNameOrId) {
-            return project().getByNameOrId(repoNameOrId).onItem().transform(repo -> insert(repo));
-          }
-          @Override
-          public GitInserts insert(Tenant repo) {
+          public GitTenant withTenant(Tenant repo) {
             final var wrapper = ImmutableFileClientWrapper.builder()
                 .repo(repo)
                 .client(client)
                 .names(ctx.toRepo(repo))
                 .build();
-            return new ClientInsertBuilderFilePool(wrapper.getClient(), sqlMapper(wrapper.getNames()), sqlBuilder(wrapper.getNames()), handler);
-          }
-          @Override
-          public Uni<GitQueries> query(String repoNameOrId) {
-            return project().getByNameOrId(repoNameOrId).onItem().transform(repo -> query(repo));
-          }
-          @Override
-          public GitQueries query(Tenant repo) {
-            final var wrapper = ImmutableFileClientWrapper.builder()
-                .repo(repo)
-                .client(client)
-                .names(ctx.toRepo(repo))
-                .build();
-            return new ClientQueryFilePool(wrapper, sqlMapper(wrapper.getNames()), sqlBuilder(wrapper.getNames()), handler);
-          }
-          @Override
-          public GitRepo withRepo(Tenant repo) {
-            final var wrapper = ImmutableFileClientWrapper.builder()
-                .repo(repo)
-                .client(client)
-                .names(ctx.toRepo(repo))
-                .build();
-            return new GitRepo() {
+            return new GitTenant() {
               @Override
               public Tenant getRepo() {
                 return wrapper.getRepo();
               }
               @Override
-              public String getRepoName() {
+              public String getTenantName() {
                 return repo.getName();
               }
               @Override

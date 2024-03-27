@@ -59,7 +59,7 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
   public Uni<QueryEnvelope<DocQueryActions.DocObject>> get() {
     final var criteria = this.criteria.build();
     
-    return state.project().getByNameOrId(repoId)
+    return state.tenant().getByNameOrId(repoId)
     .onItem().transformToUni((Tenant existing) -> {
       if(existing == null) {
         return Uni.createFrom().item(QueryEnvelope.repoNotFound(repoId, log));
@@ -90,7 +90,7 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
   public Uni<QueryEnvelope<DocQueryActions.DocObjects>> findAll() {
     final var criteria = this.criteria.build();
     
-    return state.project().getByNameOrId(repoId)
+    return state.tenant().getByNameOrId(repoId)
     .onItem().transformToUni((Tenant existing) -> {
       if(existing == null) {
         return Uni.createFrom().item(QueryEnvelope.repoNotFound(repoId, log));

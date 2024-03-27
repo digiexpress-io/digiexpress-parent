@@ -28,39 +28,39 @@ import io.resys.thena.api.actions.GitPullActions.MatchCriteria;
 import io.resys.thena.api.entities.git.Blob;
 import io.resys.thena.api.entities.git.Commit;
 import io.resys.thena.api.entities.git.Tree;
-import io.resys.thena.structures.git.GitState.GitRepo;
+import io.resys.thena.structures.git.GitState.GitTenant;
 import io.smallrye.mutiny.Uni;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class ObjectsUtils {
-  public static Uni<String> getTagCommit(String tagName, GitRepo ctx) {
+  public static Uni<String> getTagCommit(String tagName, GitTenant ctx) {
     return ctx.query().tags().name(tagName).getFirst()
         .onItem().transform(tag -> tag == null ? null : tag.getCommit());
   }
-  public static Uni<String> getRefCommit(String refName, GitRepo ctx) {
+  public static Uni<String> getRefCommit(String refName, GitTenant ctx) {
     return ctx.query().refs().name(refName)
         .onItem().transform(ref -> ref == null ? null : ref.getCommit());
   }
-  public static Uni<Tree> getTree(Commit commit, GitRepo ctx) {
+  public static Uni<Tree> getTree(Commit commit, GitTenant ctx) {
     return ctx.query().trees().getById(commit.getTree());
   }
-  public static Uni<Commit> getCommit(String commit, GitRepo ctx) {
+  public static Uni<Commit> getCommit(String commit, GitTenant ctx) {
     return ctx.query().commits().getById(commit);
   }
-  public static Uni<Commit> findCommit(GitRepo ctx, String anyId) {
+  public static Uni<Commit> findCommit(GitTenant ctx, String anyId) {
     
     return ObjectsUtils.getTagCommit(anyId, ctx)
       .onItem().transformToUni(tag -> {
         if(tag == null) {
-          log.info("Can't find from repo: '{}' a tag: '{}' trying to find by ref: '{}'", ctx.getRepoName(), anyId, anyId);
+          log.info("Can't find from repo: '{}' a tag: '{}' trying to find by ref: '{}'", ctx.getTenantName(), anyId, anyId);
           return ObjectsUtils.getRefCommit(anyId, ctx);
         }
         return Uni.createFrom().item(tag);
       })
       .onItem().transformToUni(commitId -> {
         if(commitId == null) {
-          log.info("Can't find from repo: '{}' a ref: '{}' trying to find by commit: '{}'", ctx.getRepoName(), anyId, anyId);
+          log.info("Can't find from repo: '{}' a ref: '{}' trying to find by commit: '{}'", ctx.getTenantName(), anyId, anyId);
           return ObjectsUtils.getCommit(anyId, ctx);
         }
         return ObjectsUtils.getCommit(commitId, ctx);
@@ -68,7 +68,7 @@ public class ObjectsUtils {
   }
   
 
-  public static Uni<Map<String, Blob>> getBlobs(Tree tree, List<MatchCriteria> blobCriteria, GitRepo ctx) {
+  public static Uni<Map<String, Blob>> getBlobs(Tree tree, List<MatchCriteria> blobCriteria, GitTenant ctx) {
     return ctx.query().blobs().findAll(tree.getId(), blobCriteria).collect().asList().onItem()
         .transform(blobs -> blobs.stream().collect(Collectors.toMap(r -> r.getId(), r -> r)));
   }

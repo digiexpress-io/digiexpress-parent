@@ -30,12 +30,12 @@ import io.resys.thena.storesql.builders.GitDbInsertsSqlPool;
 import io.resys.thena.storesql.support.ImmutableSqlClientWrapper;
 import io.resys.thena.structures.git.GitInserts;
 import io.resys.thena.structures.git.GitQueries;
-import io.resys.thena.structures.git.GitState.GitRepo;
+import io.resys.thena.structures.git.GitState.GitTenant;
 import io.resys.thena.support.ErrorHandler;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class GitRepoImpl implements GitRepo {
+public class GitRepoImpl implements GitTenant {
   private final ImmutableSqlClientWrapper wrapper;
   private final ErrorHandler handler; 
   private final Function<DbCollections, SqlMapper> sqlMapper;
@@ -43,7 +43,7 @@ public class GitRepoImpl implements GitRepo {
   private final Function<ClientQuerySqlContext, GitQueries> clientQuery;
   
   @Override
-  public String getRepoName() {
+  public String getTenantName() {
     return wrapper.getRepo().getName();
   }
   @Override

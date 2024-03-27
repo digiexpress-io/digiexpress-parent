@@ -36,7 +36,7 @@ import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.api.exceptions.RepoException;
 import io.resys.thena.spi.DbState;
-import io.resys.thena.structures.git.GitState.GitRepo;
+import io.resys.thena.structures.git.GitState.GitTenant;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import lombok.Data;
@@ -65,16 +65,16 @@ public class BranchObjectsQueryImpl implements BranchObjectsQuery {
   public Uni<QueryEnvelope<GitBranchActions.BranchObjects>> get() {
     RepoAssert.notEmpty(branchName, () -> "branchName is not defined!");
     
-    return state.project().getByNameOrId(repoId).onItem()
+    return state.tenant().getByNameOrId(repoId).onItem()
     .transformToUni((Tenant existing) -> {
       if(existing == null) {
         return Uni.createFrom().item(QueryEnvelope.repoNotFound(repoId, log));
       }
-      return getRef(existing, branchName, state.toGitState().withRepo(existing));
+      return getRef(existing, branchName, state.toGitState().withTenant(existing));
     });
   }
   
-  private Uni<QueryEnvelope<GitBranchActions.BranchObjects>> getRef(Tenant repo, String refName, GitRepo ctx) {
+  private Uni<QueryEnvelope<GitBranchActions.BranchObjects>> getRef(Tenant repo, String refName, GitTenant ctx) {
 
     return ctx.query().refs().name(refName).onItem()
         .transformToUni(ref -> {
@@ -94,7 +94,7 @@ public class BranchObjectsQueryImpl implements BranchObjectsQuery {
         });
   }
   
-  private Uni<QueryEnvelope<GitBranchActions.BranchObjects>> getState(Tenant repo, Branch ref, GitRepo ctx) {
+  private Uni<QueryEnvelope<GitBranchActions.BranchObjects>> getState(Tenant repo, Branch ref, GitTenant ctx) {
     return ObjectsUtils.getCommit(ref.getCommit(), ctx).onItem()
         .transformToUni(commit -> ObjectsUtils.getTree(commit, ctx).onItem()
         .transformToUni(tree -> {

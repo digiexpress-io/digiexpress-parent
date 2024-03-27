@@ -30,9 +30,10 @@ public abstract class DbCollections {
     T withOptions(DbCollections options);
   }
   
-  
   public abstract String getDb();
   public abstract String getRepos();
+  
+  // git structures
   public abstract String getRefs();
   public abstract String getTags();
   public abstract String getBlobs();
@@ -40,13 +41,13 @@ public abstract class DbCollections {
   public abstract String getTreeItems();
   public abstract String getCommits();
   
-  
+  // doc structures
   public abstract String getDocCommits();
   public abstract String getDocBranch();
   public abstract String getDocLog();
   public abstract String getDoc();
   
-  
+  // org structures
   public abstract String getOrgRights();
   public abstract String getOrgParties();
   public abstract String getOrgPartyRights();

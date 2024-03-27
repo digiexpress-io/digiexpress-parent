@@ -36,7 +36,7 @@ public class TenantBuilderImpl implements TenantActions.TenantBuilder {
     RepoAssert.notNull(type, () -> "type name not defined!");
     RepoAssert.isName(name, () -> "repo name has invalid characters!");
 
-    return state.project().getByName(name)
+    return state.tenant().getByName(name)
       .onItem().transformToUni((Tenant existing) -> {
       
       final Uni<TenantCommitResult> result;
@@ -47,7 +47,7 @@ public class TenantBuilderImpl implements TenantActions.TenantBuilder {
             .addMessages(RepoException.builder().nameNotUnique(existing.getName(), existing.getId()))
             .build());
       } else {
-        result = state.project().findAll()
+        result = state.tenant().findAll()
         .collect().asList().onItem()
         .transformToUni((allRepos) -> { 
           
@@ -59,7 +59,7 @@ public class TenantBuilderImpl implements TenantActions.TenantBuilder {
               .prefix("nested_" + (allRepos.size() + 10) + "_")
               .build();
           
-          return state.project().insert(newRepo)
+          return state.tenant().insert(newRepo)
             .onItem().transform(next -> (TenantCommitResult) ImmutableTenantCommitResult.builder()
                 .repo(next)
                 .status(CommitStatus.OK)

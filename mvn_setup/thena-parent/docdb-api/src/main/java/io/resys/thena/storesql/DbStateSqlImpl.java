@@ -37,7 +37,7 @@ public class DbStateSqlImpl implements DbState {
   @Override public DbCollections getCollections() { return ctx; }
   
   @Override
-  public RepoBuilder project() {
+  public RepoBuilder tenant() {
     return new RepoBuilderSqlPool(pool, null, ctx, sqlSchema.apply(ctx), sqlMapper.apply(ctx), sqlBuilder.apply(ctx), handler);
   }
   @Override

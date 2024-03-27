@@ -29,7 +29,7 @@ public class MemberObjectsQueryImpl implements MemberObjectsQuery {
   public Uni<QueryEnvelope<OrgMember>> get(String userId) {
     RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
 
-    return state.project().getByNameOrId(repoId)
+    return state.tenant().getByNameOrId(repoId)
     .onItem().transformToUni((Tenant existing) -> {
       if(existing == null) {
         return Uni.createFrom().item(QueryEnvelope.repoNotFound(repoId, log));
@@ -48,7 +48,7 @@ public class MemberObjectsQueryImpl implements MemberObjectsQuery {
   @Override
   public Uni<QueryEnvelopeList<OrgMember>> findAll() {
     RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
-    return state.project().getByNameOrId(repoId)
+    return state.tenant().getByNameOrId(repoId)
     .onItem().transformToUni((Tenant existing) -> {
       if(existing == null) {
         return Uni.createFrom().item(QueryEnvelope.repoNotFoundList(repoId, log));

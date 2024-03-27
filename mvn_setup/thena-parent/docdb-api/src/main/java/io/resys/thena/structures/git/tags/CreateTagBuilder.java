@@ -32,7 +32,7 @@ import io.resys.thena.api.entities.git.Branch;
 import io.resys.thena.api.entities.git.Commit;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.spi.DbState;
-import io.resys.thena.structures.git.GitState.GitRepo;
+import io.resys.thena.structures.git.GitState.GitTenant;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -75,7 +75,7 @@ public class CreateTagBuilder implements TagBuilder {
     RepoAssert.notEmpty(commitIdOrHead, () -> "commitIdOrHead can't be empty!");
     RepoAssert.notEmpty(tagName, () -> "tagName can't be empty!");
     
-    return state.project().getByNameOrId(repoId).onItem()
+    return state.tenant().getByNameOrId(repoId).onItem()
         .transformToUni(repo -> {
           if(repo == null) {
             return Uni.createFrom().item(ImmutableTagResult.builder()
@@ -89,7 +89,7 @@ public class CreateTagBuilder implements TagBuilder {
                 .build());
           }
           
-          final var ctx = this.state.toGitState().withRepo(repo);
+          final var ctx = this.state.toGitState().withTenant(repo);
           return findRef(ctx, commitIdOrHead).onItem()
             .transformToUni(ref -> findCommit(ctx, ref == null ? commitIdOrHead : ref.getCommit())).onItem()
             .transformToUni(commit -> {
@@ -125,19 +125,19 @@ public class CreateTagBuilder implements TagBuilder {
         });
   }
 
-  private Uni<Tag> findTag(GitRepo state, String tagName) {
+  private Uni<Tag> findTag(GitTenant state, String tagName) {
     return state.query().tags().name(tagName).getFirst();
   }
 
-  private Uni<Branch> findRef(GitRepo state, String refNameOrCommit) {
+  private Uni<Branch> findRef(GitTenant state, String refNameOrCommit) {
     return state.query().refs().nameOrCommit(refNameOrCommit);
   }
   
-  private Uni<Commit> findCommit(GitRepo state, String commit) {
+  private Uni<Commit> findCommit(GitTenant state, String commit) {
     return state.query().commits().getById(commit);
   }
   
-  private Uni<TagResult> createTag(GitRepo state, String commit) {
+  private Uni<TagResult> createTag(GitTenant state, String commit) {
     final var tag = ImmutableTag.builder()
         .commit(commit)
         .name(tagName)

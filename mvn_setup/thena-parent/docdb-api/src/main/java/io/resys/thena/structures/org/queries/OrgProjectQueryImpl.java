@@ -24,7 +24,7 @@ public class OrgProjectQueryImpl implements OrgProjectQuery {
   public Uni<QueryEnvelope<OrgProjectObjects>> get() {
     RepoAssert.notEmpty(repoId, () -> "projectName can't be empty!");
     
-    return state.project().getByNameOrId(repoId)
+    return state.tenant().getByNameOrId(repoId)
     .onItem().transformToUni((Tenant existing) -> {
       if(existing == null) {
         return Uni.createFrom().item(QueryEnvelope.repoNotFound(repoId, log));

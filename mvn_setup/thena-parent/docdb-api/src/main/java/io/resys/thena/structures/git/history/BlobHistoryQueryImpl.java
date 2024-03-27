@@ -63,12 +63,12 @@ public class BlobHistoryQueryImpl implements BlobHistoryQuery {
     RepoAssert.notEmpty(repoId, () -> "repoId is not defined!");
     RepoAssert.notEmpty(branchName, () -> "branchName is not defined!");
     
-    return state.project().getByNameOrId(repoId).onItem()
+    return state.tenant().getByNameOrId(repoId).onItem()
     .transformToUni((Tenant existing) -> {
       if(existing == null) {
         return Uni.createFrom().item(QueryEnvelope.repoNotFound(repoId, log));
       }
-      final var ctx = state.toGitState().withRepo(existing);
+      final var ctx = state.toGitState().withTenant(existing);
       return ctx.query().blobHistory()
         .latestOnly(latestOnly)
         .blobName(docId)
