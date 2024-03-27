@@ -98,7 +98,7 @@ public abstract class ThenaStoreTemplate extends PersistenceCommands implements 
       public Uni<Boolean> createIfNot() {
         final var client = config.getClient();
         
-        return client.git(config.getRepoName()).project().get().onItem().transformToUni(repo -> {
+        return client.git(config.getRepoName()).tenants().get().onItem().transformToUni(repo -> {
           if(repo == null) {
             return client.tenants().commit().name(config.getRepoName(), StructureType.git).build().onItem().transform(newRepo -> true); 
           }

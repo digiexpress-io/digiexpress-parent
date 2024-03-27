@@ -69,7 +69,7 @@ public class PgTestTemplate {
   }
 
   public String toRepoExport(String repoName) {
-    final var repo = getThena().git(repoName).project().get()
+    final var repo = getThena().git(repoName).tenants().get()
         .await().atMost(Duration.ofMinutes(1)).getRepo();
     final String result = new RepositoryToStaticData(createState(repoName)).print(repo);
     return result;

@@ -95,7 +95,7 @@ public class DocumentStoreImpl implements DocumentStore {
   private Uni<DocumentStore> deleteRepo(String repoName, String headName) {
     RepoAssert.notNull(repoName, () -> "repoName must be defined!");
     final var client = config.getClient();
-    final var existingRepo = client.git(repoName).project().get();
+    final var existingRepo = client.git(repoName).tenants().get();
     
     
     return existingRepo.onItem().transformToUni((repoResult) -> {

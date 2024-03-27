@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 
 import io.resys.thena.api.ImmutableGitRepoObjects;
 import io.resys.thena.api.ThenaClient;
-import io.resys.thena.api.ThenaClient.GitRepoQuery;
+import io.resys.thena.api.ThenaClient.GitTenantQuery;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.envelope.ImmutableQueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope;
@@ -41,7 +41,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 @Data @Accessors(fluent = true)
-public class GitRepoQueryImpl implements GitRepoQuery {
+public class GitRepoQueryImpl implements GitTenantQuery {
   private final DbState state;
   private final String projectName; //repo name
 

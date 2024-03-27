@@ -58,7 +58,7 @@ public class QueryBuilderImpl extends PersistenceCommands implements QueryBuilde
   @Override
   public Uni<SiteState> head() {
     final var siteName = config.getRepoName() + ":" + config.getHeadName();
-    return config.getClient().git(config.getRepoName()).project().get().onItem()
+    return config.getClient().git(config.getRepoName()).tenants().get().onItem()
       .transformToUni(repo -> {
         if(repo == null) {
          return Uni.createFrom().item(ImmutableSiteState.builder()

@@ -107,7 +107,7 @@ public class PermissionStoreImpl implements PermissionStore {
   private Uni<PermissionStore> deleteRepo(String repoName) {
     RepoAssert.notNull(repoName, () -> "repoName must be defined!");
     final var client = config.getClient();
-    final var existingRepo = client.org(repoName).project().get();
+    final var existingRepo = client.org(repoName).tenants().get();
     
     
     return existingRepo.onItem().transformToUni((repoResult) -> {

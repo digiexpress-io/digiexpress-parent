@@ -71,14 +71,14 @@ public class PgTestTemplate {
   }
   
   public void prettyPrint(String repoId) {
-    Tenant repo = getClient().git(repoId).project().get()
+    Tenant repo = getClient().git(repoId).tenants().get()
         .await().atMost(Duration.ofMinutes(1)).getRepo();
     
     printRepo(repo);
   }
 
   public String toRepoExport(String repoId) {
-    Tenant repo = getClient().git(repoId).project().get()
+    Tenant repo = getClient().git(repoId).tenants().get()
         .await().atMost(Duration.ofMinutes(1)).getRepo();
     final String result = new TestExporter(createState()).print(repo);
     return result;

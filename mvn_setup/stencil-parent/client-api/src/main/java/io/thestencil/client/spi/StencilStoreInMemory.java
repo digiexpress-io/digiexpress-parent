@@ -124,7 +124,7 @@ public class StencilStoreInMemory implements StencilStore {
           throw new IllegalArgumentException("no read or writes supported!");
         }
         @Override
-        public GitRepoQuery project() {
+        public GitTenantQuery tenants() {
           throw new IllegalArgumentException("no read or writes supported!");
         }
       };

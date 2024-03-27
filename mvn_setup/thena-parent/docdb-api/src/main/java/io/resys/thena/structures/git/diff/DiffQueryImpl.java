@@ -25,7 +25,7 @@ import java.util.Arrays;
 import java.util.function.Supplier;
 
 import io.resys.thena.api.ThenaClient;
-import io.resys.thena.api.ThenaClient.GitRepoQuery;
+import io.resys.thena.api.ThenaClient.GitTenantQuery;
 import io.resys.thena.api.actions.GitCommitActions;
 import io.resys.thena.api.actions.GitCommitActions.CommitObjects;
 import io.resys.thena.api.actions.GitDiffActions.DiffQuery;
@@ -48,7 +48,7 @@ public class DiffQueryImpl implements DiffQuery {
   private final DbState state;
   private final GitPullActions objects;
   private final GitCommitActions commits;
-  private final Supplier<GitRepoQuery> repos;
+  private final Supplier<GitTenantQuery> repos;
   
   private String left;  //HeadOrCommitOrTag;
   private String right; //HeadOrCommitOrTag;

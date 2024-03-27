@@ -49,7 +49,7 @@ public interface ThenaClient {
     OrgCommitActions commit();
     OrgQueryActions find();
     OrgHistoryActions history();
-    OrgProjectQuery project();
+    OrgProjectQuery tenants();
   }
   // build world state
   interface OrgProjectQuery {
@@ -81,11 +81,11 @@ public interface ThenaClient {
     GitHistoryActions history();
     GitPullActions pull();
     GitBranchActions branch();
-    GitRepoQuery project();
+    GitTenantQuery tenants();
   }
   
   // build world state
-  interface GitRepoQuery {
+  interface GitTenantQuery {
     Uni<QueryEnvelope<ThenaClient.GitRepoObjects>> get();
   }
 

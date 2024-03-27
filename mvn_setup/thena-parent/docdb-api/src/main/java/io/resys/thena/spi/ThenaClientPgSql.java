@@ -50,12 +50,12 @@ public class ThenaClientPgSql implements ThenaClient {
   public GitStructuredTenant git(String repoId) {
     RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
     return new GitStructuredTenant() {
-      @Override public GitRepoQuery project() { return new GitRepoQueryImpl(state, repoId); }
+      @Override public GitTenantQuery tenants() { return new GitRepoQueryImpl(state, repoId); }
       @Override public GitCommitActions commit() { return new CommitActionsImpl(state, repoId); }
       @Override public GitTagActions tag() { return new TagActionsDefault(state, repoId); }
       @Override public GitHistoryActions history() { return new HistoryActionsDefault(state, repoId); }
       @Override public GitPullActions pull() { return new ObjectsActionsImpl(state, repoId); }
-      @Override public GitDiffActions diff() { return new DiffActionsImpl(state, pull(), commit(), () -> project()); }
+      @Override public GitDiffActions diff() { return new DiffActionsImpl(state, pull(), commit(), () -> tenants()); }
       @Override public GitBranchActions branch() { return new BranchActionsImpl(state, repoId); }
     };
   }
@@ -76,7 +76,7 @@ public class ThenaClientPgSql implements ThenaClient {
       @Override public OrgHistoryActions history() { return new OrgHistoryActionsImpl(state, repoId); }
       @Override public OrgQueryActions find() { return new OrgQueryActionsImpl(state, repoId); }
       @Override public OrgCommitActions commit() { return new OrgCommitActionsImpl(state, repoId); }
-      @Override public OrgProjectQuery project() { return new OrgProjectQueryImpl(state, repoId); }
+      @Override public OrgProjectQuery tenants() { return new OrgProjectQueryImpl(state, repoId); }
     };
   }
   @Override

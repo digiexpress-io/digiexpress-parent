@@ -49,7 +49,7 @@ public class ThenaStore extends ThenaStoreTemplate implements HdesStore {
     return new BranchQuery() {
       @Override
       public Uni<List<Branch>> findAll() {
-        return getConfig().getClient().git(getRepoName()).project()
+        return getConfig().getClient().git(getRepoName()).tenants()
             .get().onItem().transform(objects -> {
               if(objects.getStatus() != QueryEnvelopeStatus.OK) {
                 throw new StoreException("HDES_BRANCH_QUERY_FAIL", null, 
