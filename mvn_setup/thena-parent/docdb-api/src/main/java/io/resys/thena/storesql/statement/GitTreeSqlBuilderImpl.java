@@ -1,12 +1,12 @@
 package io.resys.thena.storesql.statement;
 
 import io.resys.thena.api.entities.git.Tree;
+import io.resys.thena.datasource.ImmutableSql;
+import io.resys.thena.datasource.ImmutableSqlTuple;
+import io.resys.thena.datasource.SqlQueryBuilder.GitTreeSqlBuilder;
+import io.resys.thena.datasource.SqlQueryBuilder.Sql;
+import io.resys.thena.datasource.SqlQueryBuilder.SqlTuple;
 import io.resys.thena.spi.DbCollections;
-import io.resys.thena.storesql.ImmutableSql;
-import io.resys.thena.storesql.ImmutableSqlTuple;
-import io.resys.thena.storesql.SqlBuilder.GitTreeSqlBuilder;
-import io.resys.thena.storesql.SqlBuilder.Sql;
-import io.resys.thena.storesql.SqlBuilder.SqlTuple;
 import io.resys.thena.storesql.support.SqlStatement;
 import io.vertx.mutiny.sqlclient.Tuple;
 import lombok.RequiredArgsConstructor;

@@ -26,6 +26,7 @@ public class PrincipalCreateAndUpdateTest extends DbTestTemplate {
         .build())
         .await().atMost(Duration.ofMinutes(1));
   }
+  @SuppressWarnings("unused")
   @Disabled
   @Test
   public void createPrincipalAndUpdateTest() {

@@ -1,5 +1,6 @@
 package io.resys.thena.storesql;
 
+import io.resys.thena.datasource.SqlQueryBuilder;
 import io.resys.thena.spi.DbCollections;
 import io.resys.thena.storesql.statement.DocBranchSqlBuilderImpl;
 import io.resys.thena.storesql.statement.DocCommitSqlBuilderImpl;
@@ -24,7 +25,7 @@ import io.resys.thena.storesql.statement.RepoSqlBuilderImpl;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class SqlBuilderImpl implements SqlBuilder {
+public class SqlBuilderImpl implements SqlQueryBuilder {
   protected final DbCollections ctx;
 
   @Override
@@ -56,7 +57,7 @@ public class SqlBuilderImpl implements SqlBuilder {
     return new GitCommitSqlBuilderImpl(ctx);
   }
   @Override
-  public SqlBuilder withOptions(DbCollections options) {
+  public SqlQueryBuilder withOptions(DbCollections options) {
     return new SqlBuilderImpl(options);
   }
   @Override

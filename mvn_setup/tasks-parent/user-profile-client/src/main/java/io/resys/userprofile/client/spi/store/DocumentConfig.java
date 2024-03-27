@@ -30,8 +30,6 @@ import io.resys.thena.api.ThenaClient;
 import io.resys.thena.api.actions.DocCommitActions.CreateManyDocs;
 import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.api.actions.DocQueryActions;
-import io.resys.thena.api.actions.DocQueryActions.DocObject;
-import io.resys.thena.api.actions.DocQueryActions.DocObjects;
 import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.api.entities.doc.DocBranch;
 import io.resys.thena.api.envelope.QueryEnvelope;

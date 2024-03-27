@@ -89,7 +89,7 @@ public class PgTestTemplate {
 
   private DbState createState(String repoName) {
     final var ctx = DbCollections.defaults(repoName);
-    return DbStateSqlImpl.state(ctx, pgPool, new PgErrors());
+    return DbStateSqlImpl.create(ctx, pgPool);
   }
 
   public void printRepo(Tenant repo) {

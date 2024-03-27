@@ -1,71 +1,113 @@
 package io.resys.thena.storesql;
 
+import java.util.Optional;
 import java.util.function.Function;
 
 import io.resys.thena.api.ThenaClient;
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.exceptions.RepoException;
+import io.resys.thena.datasource.SqlDataMapper;
+import io.resys.thena.datasource.SqlQueryBuilder;
+import io.resys.thena.datasource.SqlSchema;
+import io.resys.thena.datasource.ThenaDataSource;
+import io.resys.thena.datasource.ThenaSqlDataSource;
+import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
+import io.resys.thena.datasource.ThenaSqlDataSourceImpl;
 import io.resys.thena.spi.DbCollections;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.spi.ThenaClientPgSql;
-import io.resys.thena.storesql.GitDbQueriesSqlImpl.ClientQuerySqlContext;
 import io.resys.thena.storesql.builders.RepoBuilderSqlPool;
-import io.resys.thena.storesql.statement.SqlMapperImpl;
-import io.resys.thena.storesql.statement.SqlSchemaImpl;
-import io.resys.thena.structures.doc.DocQueries;
 import io.resys.thena.structures.doc.DocState;
-import io.resys.thena.structures.git.GitQueries;
 import io.resys.thena.structures.git.GitState;
-import io.resys.thena.structures.org.OrgQueries;
+import io.resys.thena.structures.git.GitState.TransactionFunction;
 import io.resys.thena.structures.org.OrgState;
-import io.resys.thena.support.ErrorHandler;
 import io.resys.thena.support.RepoAssert;
+import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RequiredArgsConstructor
+@Slf4j
 public class DbStateSqlImpl implements DbState {
-  final DbCollections ctx;
-  final io.vertx.mutiny.sqlclient.Pool pool; 
-  final ErrorHandler handler;
-  final Function<DbCollections, SqlSchema> sqlSchema; 
-  final Function<DbCollections, SqlMapper> sqlMapper;
-  final Function<DbCollections, SqlBuilder> sqlBuilder;
-  final Function<ClientQuerySqlContext, GitQueries> gitQuery;
-  final Function<ClientQuerySqlContext, DocQueries> docQuery;
-  final Function<ClientQuerySqlContext, OrgQueries> orgQuery;
-  
-  
-  @Override public ErrorHandler getErrorHandler() { return handler; }
-  @Override public DbCollections getCollections() { return ctx; }
-  
+  private final ThenaSqlDataSource dataSource;
+
+  @Override
+  public ThenaDataSource getDataSource() {
+    return dataSource;
+  }
   @Override
   public RepoBuilder tenant() {
-    return new RepoBuilderSqlPool(pool, null, ctx, sqlSchema.apply(ctx), sqlMapper.apply(ctx), sqlBuilder.apply(ctx), handler);
+    return new RepoBuilderSqlPool(dataSource);
   }
   @Override
-  public GitState toGitState() {
-    return new GitDbStateImpl(ctx, pool, handler, sqlSchema, sqlMapper, sqlBuilder, gitQuery);
+  public Uni<GitState> toGitState(String tenantId) {
+    return tenant().getByNameOrId(tenantId).onItem().transformToUni(tenant -> {
+      if(tenant == null) {
+        return tenantNotFound(tenantId);
+      }
+      return Uni.createFrom().item(toGitState(tenant));
+    });
   }
   @Override
-  public DocState toDocState() {
-    return new DocDbStateImpl(ctx, pool, handler, sqlSchema, sqlMapper, sqlBuilder, docQuery);
+  public GitState toGitState(Tenant repo) {
+    return new GitDbStateImpl(dataSource.withTenant(repo));
   }
   @Override
-  public OrgState toOrgState() {
-    return new OrgDbStateImpl(ctx, pool, handler, sqlSchema, sqlMapper, sqlBuilder, orgQuery);
+  public <R> Uni<R> withGitTransaction(String tenantId, TransactionFunction<R> callback) {
+    return toGitState(tenantId).onItem().transformToUni(state -> state.withTransaction(callback));
   }
-  public static DbState state(
-      final DbCollections ctx,
-      final io.vertx.mutiny.sqlclient.Pool client, 
-      final ErrorHandler handler) {
-    
-    return new DbStateSqlImpl(
-      ctx, client, handler, 
-      Builder::defaultSqlSchema, 
-      Builder::defaultSqlMapper,
-      Builder::defaultSqlBuilder,
-      Builder::defaultGitQuery,
-      Builder::defaultDocQuery,
-      Builder::defaultOrgQuery        
+  @Override
+  public Uni<DocState> toDocState(String tenantId) {
+    return tenant().getByNameOrId(tenantId).onItem().transformToUni(tenant -> {
+      if(tenant == null) {
+        return tenantNotFound(tenantId);
+      }
+      return Uni.createFrom().item(toDocState(tenant));
+    });
+  }
+  @Override
+  public DocState toDocState(Tenant repo) {
+    return new DocDbStateImpl(dataSource.withTenant(repo));
+  }
+  @Override
+  public <R> Uni<R> withDocTransaction(String tenantId, io.resys.thena.structures.doc.DocState.TransactionFunction<R> callback) {
+    return toDocState(tenantId).onItem().transformToUni(state -> state.withTransaction(callback));
+  }
+  @Override
+  public Uni<OrgState> toOrgState(String tenantId) {
+    return tenant().getByNameOrId(tenantId).onItem().transformToUni(tenant -> {
+      if(tenant == null) {
+        return tenantNotFound(tenantId);
+      }
+      return Uni.createFrom().item(toOrgState(tenant));
+    });
+  }
+  @Override
+  public OrgState toOrgState(Tenant repo) {
+    return new OrgDbStateImpl(dataSource.withTenant(repo));
+  }
+  @Override
+  public <R> Uni<R> withOrgTransaction(String tenantId, io.resys.thena.structures.org.OrgState.TransactionFunction<R> callback) {
+    return toOrgState(tenantId).onItem().transformToUni(state -> state.withTransaction(callback));
+  }
+  private <T> Uni<T> tenantNotFound(String tenantId) {
+    return tenant().findAll().collect().asList().onItem().transform(repos -> {
+      final var ex = RepoException.builder().notRepoWithName(tenantId, repos);
+      log.error(ex.getText());
+      throw new RepoException(ex.getText());
+    }); 
+  }
+
+  public static DbStateSqlImpl create(DbCollections names, io.vertx.mutiny.sqlclient.Pool client) {
+    final var errorHandler = new PgErrors(names);
+    final var dataSource = new ThenaSqlDataSourceImpl(
+        "", names, client, errorHandler, 
+        Optional.empty(),
+        Builder.defaultSqlSchema(names), 
+        Builder.defaultSqlMapper(names), 
+        Builder.defaultSqlBuilder(names)
     );
+    return new DbStateSqlImpl(dataSource);
   }
   
   public static Builder create() {
@@ -75,49 +117,44 @@ public class DbStateSqlImpl implements DbState {
   public static class Builder {
     private io.vertx.mutiny.sqlclient.Pool client;
     private String db = "docdb";
-    private ErrorHandler errorHandler;
+    private ThenaSqlDataSourceErrorHandler errorHandler;
     private Function<DbCollections, SqlSchema> sqlSchema; 
-    private Function<DbCollections, SqlMapper> sqlMapper;
-    private Function<DbCollections, SqlBuilder> sqlBuilder;
-    private Function<ClientQuerySqlContext, GitQueries> gitQuery;
-    private Function<ClientQuerySqlContext, DocQueries> docQuery;
-    private Function<ClientQuerySqlContext, OrgQueries> orgQuery;
+    private Function<DbCollections, SqlDataMapper> sqlMapper;
+    private Function<DbCollections, SqlQueryBuilder> sqlBuilder;
     
-    public Builder sqlMapper(Function<DbCollections, SqlMapper> sqlMapper) {this.sqlMapper = sqlMapper; return this; }
-    public Builder sqlBuilder(Function<DbCollections, SqlBuilder> sqlBuilder) {this.sqlBuilder = sqlBuilder; return this; }
+    public Builder sqlMapper(Function<DbCollections, SqlDataMapper> sqlMapper) {this.sqlMapper = sqlMapper; return this; }
+    public Builder sqlBuilder(Function<DbCollections, SqlQueryBuilder> sqlBuilder) {this.sqlBuilder = sqlBuilder; return this; }
     public Builder sqlSchema(Function<DbCollections, SqlSchema> sqlSchema) {this.sqlSchema = sqlSchema; return this; }
-    public Builder gitQuery(Function<ClientQuerySqlContext, GitQueries> sqlQuery) {this.gitQuery = sqlQuery; return this; }
-    public Builder docQuery(Function<ClientQuerySqlContext, DocQueries> docQuery) {this.docQuery = docQuery; return this; }
-    public Builder orgQuery(Function<ClientQuerySqlContext, OrgQueries> orgQuery) {this.orgQuery = orgQuery; return this; }
     
-    
-    public Builder errorHandler(ErrorHandler errorHandler) {this.errorHandler = errorHandler; return this; }
+    public Builder errorHandler(ThenaSqlDataSourceErrorHandler errorHandler) {this.errorHandler = errorHandler; return this; }
     public Builder db(String db) { this.db = db; return this; }
     public Builder client(io.vertx.mutiny.sqlclient.Pool client) { this.client = client; return this; }
 
-    public static SqlBuilder defaultSqlBuilder(DbCollections ctx) { return new SqlBuilderImpl(ctx); }
-    public static SqlMapper defaultSqlMapper(DbCollections ctx) { return new SqlMapperImpl(ctx); }
+    public static SqlQueryBuilder defaultSqlBuilder(DbCollections ctx) { return new SqlBuilderImpl(ctx); }
+    public static SqlDataMapper defaultSqlMapper(DbCollections ctx) { return new SqlMapperImpl(ctx); }
     public static SqlSchema defaultSqlSchema(DbCollections ctx) { return new SqlSchemaImpl(ctx); }
-    public static GitQueries defaultGitQuery(ClientQuerySqlContext ctx) { return new GitDbQueriesSqlImpl(ctx); }
-    public static DocQueries defaultDocQuery(ClientQuerySqlContext ctx) { return new DocDbQueriesSqlImpl(ctx); }
-    public static OrgQueries defaultOrgQuery(ClientQuerySqlContext ctx) { return new OrgDbQueriesSqlImpl(ctx); }
     
     public ThenaClient build() {
       RepoAssert.notNull(client, () -> "client must be defined!");
       RepoAssert.notNull(db, () -> "db must be defined!");
       
-      this.errorHandler = new PgErrors();
-
+      
       final var ctx = DbCollections.defaults(db);
+      this.errorHandler = new PgErrors(ctx);
+      
       final Function<DbCollections, SqlSchema> sqlSchema = this.sqlSchema == null ? Builder::defaultSqlSchema : this.sqlSchema;
-      final Function<DbCollections, SqlMapper> sqlMapper = this.sqlMapper == null ? Builder::defaultSqlMapper : this.sqlMapper;
-      final Function<DbCollections, SqlBuilder> sqlBuilder = this.sqlBuilder == null ? Builder::defaultSqlBuilder : this.sqlBuilder;
-      final Function<ClientQuerySqlContext, GitQueries> gitQuery = this.gitQuery == null ? Builder::defaultGitQuery : this.gitQuery;
-      final Function<ClientQuerySqlContext, DocQueries> docQuery = this.gitQuery == null ? Builder::defaultDocQuery : this.docQuery;
-      final Function<ClientQuerySqlContext, OrgQueries> orgQuery = this.gitQuery == null ? Builder::defaultOrgQuery : this.orgQuery;      
+      final Function<DbCollections, SqlDataMapper> sqlMapper = this.sqlMapper == null ? Builder::defaultSqlMapper : this.sqlMapper;
+      final Function<DbCollections, SqlQueryBuilder> sqlBuilder = this.sqlBuilder == null ? Builder::defaultSqlBuilder : this.sqlBuilder;
       
-      final var state = new DbStateSqlImpl(ctx, client, errorHandler, sqlSchema, sqlMapper, sqlBuilder, gitQuery, docQuery, orgQuery);
+      final var dataSource = new ThenaSqlDataSourceImpl(
+          db, ctx, client, errorHandler, 
+          Optional.empty(),
+          sqlSchema.apply(ctx), 
+          sqlMapper.apply(ctx), 
+          sqlBuilder.apply(ctx)
+      );
       
+      final var state = new DbStateSqlImpl(dataSource);
       return new ThenaClientPgSql(state);
     }
   }

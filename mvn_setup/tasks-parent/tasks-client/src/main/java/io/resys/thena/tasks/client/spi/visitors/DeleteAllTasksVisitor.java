@@ -29,7 +29,6 @@ import io.resys.thena.api.actions.GitCommitActions.CommitBuilder;
 import io.resys.thena.api.actions.GitCommitActions.CommitResultEnvelope;
 import io.resys.thena.api.actions.GitPullActions;
 import io.resys.thena.api.actions.GitPullActions.MatchCriteria;
-import io.resys.thena.api.actions.GitPullActions.PullObjects;
 import io.resys.thena.api.actions.GitPullActions.PullObjectsQuery;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.envelope.QueryEnvelope;

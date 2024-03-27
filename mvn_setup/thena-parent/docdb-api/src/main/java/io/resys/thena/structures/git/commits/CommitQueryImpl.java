@@ -25,8 +25,8 @@ import java.util.List;
 
 import io.resys.thena.api.actions.GitCommitActions.CommitObjects;
 import io.resys.thena.api.actions.GitCommitActions.CommitQuery;
-import io.resys.thena.api.actions.ImmutableCommitObjects;
 import io.resys.thena.api.actions.GitPullActions.MatchCriteria;
+import io.resys.thena.api.actions.ImmutableCommitObjects;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.git.Commit;
 import io.resys.thena.api.entities.git.Tree;
@@ -34,7 +34,7 @@ import io.resys.thena.api.envelope.ImmutableQueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.spi.DbState;
-import io.resys.thena.structures.git.GitState.GitTenant;
+import io.resys.thena.structures.git.GitState;
 import io.resys.thena.structures.git.objects.ObjectsUtils;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
@@ -66,7 +66,7 @@ public class CommitQueryImpl implements CommitQuery {
       if(existing == null) {
         return Uni.createFrom().item(QueryEnvelope.repoNotFound(projectName, log));
       }
-      final var ctx = state.toGitState().withTenant(existing);
+      final var ctx = state.toGitState(existing);
       
       return ObjectsUtils.findCommit(ctx, branchNameOrCommitOrTag)
         .onItem().transformToUni(commit -> {
@@ -79,7 +79,7 @@ public class CommitQueryImpl implements CommitQuery {
   }
   
   
-  private Uni<QueryEnvelope<CommitObjects>> getState(Tenant repo, Commit commit, GitTenant ctx) {
+  private Uni<QueryEnvelope<CommitObjects>> getState(Tenant repo, Commit commit, GitState ctx) {
     return ObjectsUtils.getTree(commit, ctx).onItem()
     .transformToUni(tree -> {
       if(this.docsIncluded) {
@@ -108,7 +108,7 @@ public class CommitQueryImpl implements CommitQuery {
     });
   }
   
-  private static Uni<ImmutableCommitObjects.Builder> getBlobs(Tree tree, GitTenant ctx, List<MatchCriteria> blobCriteria) {
+  private static Uni<ImmutableCommitObjects.Builder> getBlobs(Tree tree, GitState ctx, List<MatchCriteria> blobCriteria) {
     return ctx.query().blobs().findAll(tree.getId(), blobCriteria)
         .collect().asList().onItem()
         .transform(blobs -> {

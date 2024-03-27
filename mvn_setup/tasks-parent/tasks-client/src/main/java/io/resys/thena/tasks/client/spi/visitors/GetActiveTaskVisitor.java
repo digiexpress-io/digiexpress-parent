@@ -1,7 +1,6 @@
 package io.resys.thena.tasks.client.spi.visitors;
 
 import io.resys.thena.api.actions.GitPullActions;
-import io.resys.thena.api.actions.GitPullActions.PullObject;
 import io.resys.thena.api.actions.GitPullActions.PullObjectsQuery;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;

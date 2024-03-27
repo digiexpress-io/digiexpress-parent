@@ -111,7 +111,6 @@ public class TaskTestCase {
 
   public void assertCommits(String repoName) {
     final var config = getStore().getConfig();
-    final var state = ((ThenaClientPgSql) config.getClient()).getState();
     final var commits = config.getClient().git(repoName).commit().findAllCommits().await().atMost(atMost);
     log.debug("Total commits: {}", commits.size());
     

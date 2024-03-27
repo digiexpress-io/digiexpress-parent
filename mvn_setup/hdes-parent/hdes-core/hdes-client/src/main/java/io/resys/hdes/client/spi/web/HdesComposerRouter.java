@@ -200,7 +200,7 @@ public class HdesComposerRouter extends HdesRouterTemplate {
     
    // return new JsonObject(event.getBody()).mapTo(type);
     try {
-      return objectMapper.readValue(event.getBody().getBytes(), type);
+      return objectMapper.readValue(event.body().buffer().getBytes(), type);
     } catch(IOException e) {
       throw new RuntimeException(e.getMessage(), e);
     }
@@ -210,7 +210,7 @@ public class HdesComposerRouter extends HdesRouterTemplate {
     
    // return new JsonObject(event.getBody()).mapTo(type);
     try {
-      return objectMapper.readValue(event.getBody().getBytes(), new TypeReference<List<T>>(){});
+      return objectMapper.readValue(event.body().buffer().getBytes(), new TypeReference<List<T>>(){});
     } catch(IOException e) {
       throw new RuntimeException(e.getMessage(), e);
     }

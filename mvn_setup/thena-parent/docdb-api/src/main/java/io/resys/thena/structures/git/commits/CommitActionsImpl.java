@@ -33,7 +33,7 @@ public class CommitActionsImpl implements GitCommitActions {
             log.error(ex.getText());
             throw new RepoException(ex.getText());
           }
-          final var repoCtx = state.toGitState().withTenant(existing);      
+          final var repoCtx = state.toGitState(existing);      
           return repoCtx.query().commits().findAll().collect().asList();
         });
   }
@@ -46,7 +46,7 @@ public class CommitActionsImpl implements GitCommitActions {
             log.error(ex.getText());
             throw new RepoException(ex.getText());
           }
-          final var repoCtx = state.toGitState().withTenant(existing);      
+          final var repoCtx = state.toGitState(existing);      
           return repoCtx.query().trees().findAll().collect().asList();
         });
   }

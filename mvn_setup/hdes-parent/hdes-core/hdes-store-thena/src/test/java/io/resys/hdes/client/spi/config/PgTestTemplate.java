@@ -20,7 +20,6 @@ import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.spi.DbCollections;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.storesql.DbStateSqlImpl;
-import io.resys.thena.storesql.PgErrors;
 import io.resys.thena.structures.git.GitPrinter;
 import io.vertx.mutiny.sqlclient.Pool;
 import jakarta.inject.Inject;
@@ -61,7 +60,7 @@ public class PgTestTemplate {
 
   private DbState createState(String repoName) {
     final var ctx = DbCollections.defaults(repoName);
-    return DbStateSqlImpl.state(ctx, pgPool, new PgErrors());
+    return DbStateSqlImpl.create(ctx, pgPool);
   }
   
   public void printRepo(Tenant repo) {

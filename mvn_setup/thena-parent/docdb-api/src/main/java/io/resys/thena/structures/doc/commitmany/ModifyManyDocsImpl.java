@@ -8,13 +8,13 @@ import java.util.stream.Collectors;
 import io.resys.thena.api.actions.DocCommitActions.AddItemToModifyDoc;
 import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.api.actions.DocCommitActions.ModifyManyDocs;
+import io.resys.thena.api.actions.ImmutableManyDocsEnvelope;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.doc.DocLock;
 import io.resys.thena.api.envelope.ImmutableMessage;
-import io.resys.thena.api.actions.ImmutableManyDocsEnvelope;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.structures.doc.DocQueries.DocLockCriteria;
-import io.resys.thena.structures.doc.DocState.DocRepo;
+import io.resys.thena.structures.doc.DocState;
 import io.resys.thena.structures.doc.ImmutableDocBatchForMany;
 import io.resys.thena.structures.doc.ImmutableDocLockCriteria;
 import io.resys.thena.structures.doc.support.BatchForOneBranchModify;
@@ -86,20 +86,20 @@ public class ModifyManyDocsImpl implements ModifyManyDocs {
         .collect(Collectors.toList());
       
     
-    return this.state.toDocState().withTransaction(repoId, tx -> tx.query().branches().getDocLocks(crit).onItem().transformToUni(lock -> {
+    return this.state.withDocTransaction(repoId, tx -> tx.query().branches().getDocLocks(crit).onItem().transformToUni(lock -> {
       final ManyDocsEnvelope validation = validateRepo(lock, items);
       if(validation != null) {
         return Uni.createFrom().item(validation);
       }
       return doInLock(lock, items, tx);
     }))
-    .onFailure(err -> state.getErrorHandler().isLocked(err)).retry()
+    .onFailure(err -> state.getDataSource().isLocked(err)).retry()
       .withJitter(0.3) // every retry increase time by x 3
       .withBackOff(Duration.ofMillis(100))
       .atMost(100);
   }
   
-  private Uni<ManyDocsEnvelope> doInLock(List<DocLock> locks, List<ItemModData> items, DocRepo tx) {
+  private Uni<ManyDocsEnvelope> doInLock(List<DocLock> locks, List<ItemModData> items, DocState tx) {
     final var lockById = locks.stream()
         .collect(Collectors.toMap(
           i -> i.getDoc().get().getId(),
@@ -108,7 +108,7 @@ public class ModifyManyDocsImpl implements ModifyManyDocs {
       
       final var logs = new ArrayList<String>();
       final var many = ImmutableDocBatchForMany.builder()
-          .repo(tx.getRepo())
+          .repo(tx.getDataSource().getTenant())
           .status(BatchStatus.OK);
       for(ItemModData item : items) {
         final var lock = lockById.get(item.getDocId());

@@ -22,17 +22,17 @@ package io.resys.thena.structures.git.tags;
 
 import java.time.LocalDateTime;
 
-import io.resys.thena.api.actions.ImmutableTagResult;
 import io.resys.thena.api.actions.GitTagActions.TagBuilder;
 import io.resys.thena.api.actions.GitTagActions.TagResult;
 import io.resys.thena.api.actions.GitTagActions.TagResultStatus;
-import io.resys.thena.api.entities.git.ImmutableTag;
-import io.resys.thena.api.entities.git.Tag;
+import io.resys.thena.api.actions.ImmutableTagResult;
 import io.resys.thena.api.entities.git.Branch;
 import io.resys.thena.api.entities.git.Commit;
+import io.resys.thena.api.entities.git.ImmutableTag;
+import io.resys.thena.api.entities.git.Tag;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.spi.DbState;
-import io.resys.thena.structures.git.GitState.GitTenant;
+import io.resys.thena.structures.git.GitState;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -89,7 +89,7 @@ public class CreateTagBuilder implements TagBuilder {
                 .build());
           }
           
-          final var ctx = this.state.toGitState().withTenant(repo);
+          final var ctx = this.state.toGitState(repo);
           return findRef(ctx, commitIdOrHead).onItem()
             .transformToUni(ref -> findCommit(ctx, ref == null ? commitIdOrHead : ref.getCommit())).onItem()
             .transformToUni(commit -> {
@@ -125,19 +125,19 @@ public class CreateTagBuilder implements TagBuilder {
         });
   }
 
-  private Uni<Tag> findTag(GitTenant state, String tagName) {
+  private Uni<Tag> findTag(GitState state, String tagName) {
     return state.query().tags().name(tagName).getFirst();
   }
 
-  private Uni<Branch> findRef(GitTenant state, String refNameOrCommit) {
+  private Uni<Branch> findRef(GitState state, String refNameOrCommit) {
     return state.query().refs().nameOrCommit(refNameOrCommit);
   }
   
-  private Uni<Commit> findCommit(GitTenant state, String commit) {
+  private Uni<Commit> findCommit(GitState state, String commit) {
     return state.query().commits().getById(commit);
   }
   
-  private Uni<TagResult> createTag(GitTenant state, String commit) {
+  private Uni<TagResult> createTag(GitState state, String commit) {
     final var tag = ImmutableTag.builder()
         .commit(commit)
         .name(tagName)

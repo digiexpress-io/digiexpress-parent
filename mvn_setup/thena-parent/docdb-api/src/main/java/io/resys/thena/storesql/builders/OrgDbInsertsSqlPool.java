@@ -7,14 +7,12 @@ import java.util.function.Predicate;
 
 import io.resys.thena.api.entities.org.ThenaOrgObject.IsOrgObject;
 import io.resys.thena.api.envelope.ImmutableMessage;
-import io.resys.thena.storesql.SqlBuilder;
-import io.resys.thena.storesql.SqlMapper;
+import io.resys.thena.datasource.SqlQueryBuilder;
+import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.storesql.support.Execute;
-import io.resys.thena.storesql.support.SqlClientWrapper;
 import io.resys.thena.structures.git.GitInserts.BatchStatus;
 import io.resys.thena.structures.org.ImmutableOrgBatchForOne;
 import io.resys.thena.structures.org.OrgInserts;
-import io.resys.thena.support.ErrorHandler;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -22,13 +20,14 @@ import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
-@RequiredArgsConstructor
 public class OrgDbInsertsSqlPool implements OrgInserts {
-  private final SqlClientWrapper wrapper;
-  private final SqlMapper sqlMapper;
-  private final SqlBuilder sqlBuilder;
-  private final ErrorHandler errorHandler;
+  private final ThenaSqlDataSource wrapper;
+  private final SqlQueryBuilder sqlBuilder;
   
+  public OrgDbInsertsSqlPool(ThenaSqlDataSource dataSource) {
+    this.wrapper = dataSource;
+    this.sqlBuilder = dataSource.getQueryBuilder();
+  }
   @RequiredArgsConstructor
   private static class IsInsert implements Predicate<IsOrgObject>  {
     private final OrgBatchForOne inputBatch;

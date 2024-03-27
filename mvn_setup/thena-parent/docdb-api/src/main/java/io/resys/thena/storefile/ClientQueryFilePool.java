@@ -1,5 +1,6 @@
 package io.resys.thena.storefile;
 
+import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
 import io.resys.thena.storefile.queries.BlobHistoryFilePool;
 import io.resys.thena.storefile.queries.BlobQueryFilePool;
 import io.resys.thena.storefile.queries.CommitQueryFilePool;
@@ -9,7 +10,6 @@ import io.resys.thena.storefile.queries.TreeQueryFilePool;
 import io.resys.thena.storefile.tables.Table.FileClientWrapper;
 import io.resys.thena.storefile.tables.Table.FileMapper;
 import io.resys.thena.structures.git.GitQueries;
-import io.resys.thena.support.ErrorHandler;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -18,7 +18,7 @@ public class ClientQueryFilePool implements GitQueries {
   private final FileClientWrapper wrapper;
   private final FileMapper mapper;
   private final FileBuilder builder;
-  private final ErrorHandler errorHandler;
+  private final ThenaSqlDataSourceErrorHandler errorHandler;
   
   @Override
   public GitTagQuery tags() {

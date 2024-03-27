@@ -1,13 +1,13 @@
-package io.resys.thena.storesql;
+package io.resys.thena.datasource;
 
+import io.resys.thena.datasource.SqlQueryBuilder.Sql;
 import io.resys.thena.spi.DbCollections;
-import io.resys.thena.storesql.SqlBuilder.Sql;
 
 public interface SqlSchema extends DbCollections.WithOptions<SqlSchema>{
   SqlSchema withOptions(DbCollections options);
   
 
-  // create git like db mdoel
+  // create git like db model
   Sql createGitBlobs();
 
   Sql createGitCommits();

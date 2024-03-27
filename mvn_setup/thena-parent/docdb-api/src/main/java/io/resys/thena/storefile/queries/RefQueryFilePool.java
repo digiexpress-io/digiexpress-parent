@@ -23,13 +23,13 @@ package io.resys.thena.storefile.queries;
 import java.util.Collection;
 
 import io.resys.thena.api.entities.git.Branch;
+import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
+import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlSchemaFailed;
 import io.resys.thena.storefile.FileBuilder;
 import io.resys.thena.storefile.tables.Table.FileMapper;
 import io.resys.thena.storefile.tables.Table.FilePool;
 import io.resys.thena.structures.git.GitQueries.GitRefQuery;
-import io.resys.thena.support.ErrorHandler;
 import io.resys.thena.support.RepoAssert;
-import io.resys.thena.support.ErrorHandler.SqlSchemaFailed;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +41,7 @@ public class RefQueryFilePool implements GitRefQuery {
   private final FilePool client;
   private final FileMapper mapper;
   private final FileBuilder sqlBuilder;
-  private final ErrorHandler errorHandler;
+  private final ThenaSqlDataSourceErrorHandler errorHandler;
 
   @Override
   public Uni<Branch> nameOrCommit(String refNameOrCommit) {

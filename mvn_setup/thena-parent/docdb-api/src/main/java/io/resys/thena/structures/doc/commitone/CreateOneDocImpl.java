@@ -1,11 +1,11 @@
 package io.resys.thena.structures.doc.commitone;
 
-import io.resys.thena.api.actions.ImmutableOneDocEnvelope;
 import io.resys.thena.api.actions.DocCommitActions.CreateOneDoc;
 import io.resys.thena.api.actions.DocCommitActions.OneDocEnvelope;
+import io.resys.thena.api.actions.ImmutableOneDocEnvelope;
 import io.resys.thena.spi.DataMapper;
 import io.resys.thena.spi.DbState;
-import io.resys.thena.structures.doc.DocState.DocRepo;
+import io.resys.thena.structures.doc.DocState;
 import io.resys.thena.structures.doc.support.BatchForOneDocCreate;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
@@ -56,11 +56,11 @@ public class CreateOneDocImpl implements CreateOneDoc {
     RepoAssert.notEmpty(docType, () -> "docType can't be empty!");
     RepoAssert.notNull(appendBlobs, () -> "Nothing to commit, no content!");
         
-    return this.state.toDocState().withTransaction(repoId, this::doInTx);
+    return this.state.withDocTransaction(repoId, this::doInTx);
   }
   
-  private Uni<OneDocEnvelope> doInTx(DocRepo tx) {  
-    final var batch = new BatchForOneDocCreate(tx.getRepo().getId(), docType, author, message, branchName)
+  private Uni<OneDocEnvelope> doInTx(DocState tx) {  
+    final var batch = new BatchForOneDocCreate(tx.getTenantId(), docType, author, message, branchName)
         .docId(docId)
         .ownerId(ownerId)
         .externalId(externalId)

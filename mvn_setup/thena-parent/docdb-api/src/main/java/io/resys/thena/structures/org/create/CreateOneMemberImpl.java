@@ -20,7 +20,7 @@ import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.spi.DataMapper;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.structures.org.OrgInserts.OrgBatchForOne;
-import io.resys.thena.structures.org.OrgState.OrgRepo;
+import io.resys.thena.structures.org.OrgState;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -67,10 +67,10 @@ public class CreateOneMemberImpl implements CreateOneMember {
     RepoAssert.notEmpty(userName, () -> "userName can't be empty!");
     RepoAssert.notEmpty(email, () -> "email can't be empty!");
 
-    return this.state.toOrgState().withTransaction(repoId, this::doInTx);
+    return this.state.withOrgTransaction(repoId, this::doInTx);
   }
   
-  private Uni<OneMemberEnvelope> doInTx(OrgRepo tx) {
+  private Uni<OneMemberEnvelope> doInTx(OrgState tx) {
     final List<String> groupIds = new ArrayList<>();
     groupIds.addAll(addUserToGroups);
     groupIds.addAll(addUserToGroupRoles.keySet());
@@ -101,7 +101,7 @@ public class CreateOneMemberImpl implements CreateOneMember {
 
   
   private Uni<OneMemberEnvelope> createUser(
-      OrgRepo tx, 
+      OrgState tx, 
       List<OrgParty> allGroups, List<OrgRight> allRoles) {
     
     final List<OrgParty> addToGroups = new ArrayList<>();
@@ -190,7 +190,7 @@ public class CreateOneMemberImpl implements CreateOneMember {
           .build());
     }
 
-    final OrgBatchForOne batch = new BatchForOneMemberCreate(tx.getRepo().getId(), author, message)
+    final OrgBatchForOne batch = new BatchForOneMemberCreate(tx.getDataSource().getTenant().getId(), author, message)
         .externalId(externalId)
         .email(email)
         .addToGroups(addToGroups)

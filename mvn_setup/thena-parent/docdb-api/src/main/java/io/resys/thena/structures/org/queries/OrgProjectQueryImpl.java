@@ -24,17 +24,16 @@ public class OrgProjectQueryImpl implements OrgProjectQuery {
   public Uni<QueryEnvelope<OrgProjectObjects>> get() {
     RepoAssert.notEmpty(repoId, () -> "projectName can't be empty!");
     
-    return state.tenant().getByNameOrId(repoId)
-    .onItem().transformToUni((Tenant existing) -> {
-      if(existing == null) {
-        return Uni.createFrom().item(QueryEnvelope.repoNotFound(repoId, log));
-      }
-      return getProjectObjects(state.toOrgState().query(existing), existing)
-        .onFailure().recoverWithItem(e -> QueryEnvelope.fatalError(existing, "Failed to fetch the world state", log, e));
+    return state.toOrgState(repoId)
+    .onItem().transformToUni(orgState -> {
+      final Tenant repo = orgState.getDataSource().getTenant();      
+      return getProjectObjects(orgState.query())
+        .onFailure().recoverWithItem(e -> QueryEnvelope.fatalError(repo, "Failed to fetch the world state", log, e));
     });
   }
 
-  private Uni<QueryEnvelope<OrgProjectObjects>> getProjectObjects(OrgQueries org, Tenant repo) {
+  private Uni<QueryEnvelope<OrgProjectObjects>> getProjectObjects(OrgQueries org) {
+
     return Uni.combine().all().unis(
         org.parties().findAll().collect().asList(),
         org.members().findAll().collect().asList(),

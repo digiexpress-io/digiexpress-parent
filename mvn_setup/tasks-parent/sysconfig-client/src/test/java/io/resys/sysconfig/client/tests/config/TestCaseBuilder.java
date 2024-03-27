@@ -56,6 +56,7 @@ import io.vertx.core.json.jackson.DatabindCodec;
 import io.vertx.core.json.jackson.VertxModule;
 import lombok.extern.slf4j.Slf4j;
 
+@SuppressWarnings("unused")
 @Slf4j
 public class TestCaseBuilder {
   public final ObjectMapper objectMapper;
@@ -76,7 +77,7 @@ public class TestCaseBuilder {
     
     
     this.doc = getClient(pgPool, "junit");
-    this.docState = DbStateSqlImpl.state(DbCollections.defaults("junit"), pgPool, new PgErrors());
+    this.docState = DbStateSqlImpl.create(DbCollections.defaults("junit"), pgPool);
     this.repoId = repoId;
     
     final var stencil = createStencilInit(pgPool, objectMapper);
@@ -220,7 +221,7 @@ public class TestCaseBuilder {
   }
   
   private StencilClient createStencilInit(io.vertx.mutiny.pgclient.PgPool pgPool, ObjectMapper objectMapper) {
-    final var docDb = DbStateSqlImpl.create().client(pgPool).errorHandler(new PgErrors()).build();
+    final var docDb = DbStateSqlImpl.create().client(pgPool).build();
     final var deserializer = new ZoeDeserializer(objectMapper);
     final var store = StencilStoreImpl.builder()
         .config((builder) -> builder
@@ -302,6 +303,6 @@ public class TestCaseBuilder {
     return DatabindCodec.mapper(); 
   }
   private ThenaClient getClient(io.vertx.mutiny.pgclient.PgPool pgPool, String db) {
-    return DbStateSqlImpl.create().client(pgPool).db(db).errorHandler(new PgErrors()).build();
+    return DbStateSqlImpl.create().client(pgPool).db(db).build();
   }
 }

@@ -1,11 +1,15 @@
 package io.resys.thena.storesql;
 
-import io.resys.thena.support.ErrorHandler;
+import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
+import io.resys.thena.spi.DbCollections;
 import io.vertx.pgclient.PgException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class PgErrors implements ErrorHandler {
+@RequiredArgsConstructor
+public class PgErrors implements ThenaSqlDataSourceErrorHandler {
+  private final DbCollections options;
   
   public boolean notFound(Throwable e) {
     if(e instanceof PgException) {
@@ -34,7 +38,7 @@ public class PgErrors implements ErrorHandler {
     return false;
   }
   
-  public void deadEnd(String additionalMsg, Throwable e) {
+  public static void deadEnd(String additionalMsg, Throwable e) {
     log.error(System.lineSeparator() + 
         "  - message: " + additionalMsg + System.lineSeparator() +
         "  - exception: " + e.getMessage(), e);
@@ -93,5 +97,9 @@ public class PgErrors implements ErrorHandler {
   	
     log.error(msg, e);
 	}
- 
+
+  @Override
+  public ThenaSqlDataSourceErrorHandler withOptions(DbCollections options) {
+    return new PgErrors(options);
+  }
 }

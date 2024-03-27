@@ -26,7 +26,7 @@ public class DocDbPrinter {
       return next;
     };
   
-    final var ctx = state.toDocState().withRepo(repo);
+    final var ctx = state.toDocState(repo);
     StringBuilder result = new StringBuilder();
     
     result
@@ -104,7 +104,7 @@ public class DocDbPrinter {
   }
   
   public String print(Tenant repo) {
-   final var ctx = state.toDocState().withRepo(repo);
+   final var ctx = state.toDocState(repo);
     
     StringBuilder result = new StringBuilder();
     result

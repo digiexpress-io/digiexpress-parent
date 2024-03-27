@@ -24,7 +24,6 @@ import io.resys.thena.jackson.VertexExtModule;
 import io.resys.thena.spi.DbCollections;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.storesql.DbStateSqlImpl;
-import io.resys.thena.storesql.PgErrors;
 import io.resys.thena.structures.git.GitPrinter;
 import io.resys.thena.support.DocDbPrinter;
 import io.resys.thena.support.OrgDbPrinter;
@@ -110,13 +109,7 @@ public class DbTestTemplate {
     DatabindCodec.mapper().registerModules(modules);
     DatabindCodec.prettyMapper().registerModules(modules);
 
-    this.client = DbStateSqlImpl.create()
-        .db("junit")
-        .client(pgPool)
-        .errorHandler(new PgErrors())
-        .build();
-
-
+    this.client = DbStateSqlImpl.create().db("junit").client(pgPool).build();
     if(callback != null) {
       repo = this.client.tenants().commit()
           .name("junit" + index.incrementAndGet(), StructureType.git)
@@ -146,7 +139,7 @@ public class DbTestTemplate {
   
   public DbState createState() {
     final var ctx = DbCollections.defaults(db);
-    return DbStateSqlImpl.state(ctx, pgPool, new PgErrors());
+    return DbStateSqlImpl.create(ctx, pgPool);
   }
   
   public void printRepo(Tenant repo) {

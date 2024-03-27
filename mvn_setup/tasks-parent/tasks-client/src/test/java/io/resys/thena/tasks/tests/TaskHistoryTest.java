@@ -1,5 +1,10 @@
 package io.resys.thena.tasks.tests;
 
+import java.time.Duration;
+
+import org.json.JSONException;
+import org.junit.jupiter.api.Assertions;
+
 /*-
  * #%L
  * thena-tasks-client
@@ -22,6 +27,7 @@ package io.resys.thena.tasks.tests;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
 import io.resys.thena.tasks.client.api.model.ImmutableAssignTaskReporter;
@@ -34,10 +40,6 @@ import io.resys.thena.tasks.tests.config.TaskPgProfile;
 import io.resys.thena.tasks.tests.config.TaskTestCase;
 import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;
-import org.json.JSONException;
-import org.junit.jupiter.api.Assertions;
-
-import java.time.Duration;
 
 @Slf4j
 @QuarkusTest
@@ -46,6 +48,8 @@ public class TaskHistoryTest extends TaskTestCase {
 
   private static final String repoName = TaskHistoryTest.class.getSimpleName();
 
+
+  @SuppressWarnings("unused")
   @org.junit.jupiter.api.Test
   public void createTaskAndUpdateAndGetHistory() throws JsonProcessingException, JSONException {
     final var client = getClient().repo().query().repoName(repoName).createIfNot().await().atMost(atMost);

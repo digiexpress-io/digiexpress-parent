@@ -7,31 +7,27 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import io.resys.thena.api.actions.DocQueryActions;
+import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.api.actions.ImmutableDocObject;
 import io.resys.thena.api.actions.ImmutableDocObjects;
-import io.resys.thena.api.actions.DocQueryActions;
-import io.resys.thena.api.actions.DocQueryActions.DocObject;
-import io.resys.thena.api.actions.DocQueryActions.DocObjects;
-import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.api.entities.doc.ImmutableDoc;
-import io.resys.thena.api.entities.doc.ImmutableDocBranch;
-import io.resys.thena.api.entities.doc.ImmutableDocCommit;
-import io.resys.thena.api.entities.doc.ImmutableDocLog;
 import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.DocBranch;
 import io.resys.thena.api.entities.doc.DocCommit;
 import io.resys.thena.api.entities.doc.DocFlatted;
 import io.resys.thena.api.entities.doc.DocLog;
+import io.resys.thena.api.entities.doc.ImmutableDoc;
+import io.resys.thena.api.entities.doc.ImmutableDocBranch;
+import io.resys.thena.api.entities.doc.ImmutableDocCommit;
+import io.resys.thena.api.entities.doc.ImmutableDocLog;
 import io.resys.thena.api.envelope.ImmutableQueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope;
-import io.resys.thena.api.envelope.ThenaContainer;
 import io.resys.thena.api.envelope.QueryEnvelope.DocNotFoundException;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
+import io.resys.thena.api.envelope.ThenaContainer;
 import io.resys.thena.spi.DbState;
-import io.resys.thena.structures.doc.DocQueries;
 import io.resys.thena.structures.doc.ImmutableFlattedCriteria;
-import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,54 +46,44 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
   
   @Override
   public DocObjectsQuery matchId(String matchId) {
-    RepoAssert.notEmpty(repoId, () -> "matchId can't be empty!");
     this.criteria.addMatchId(matchId);
     return this;
   }
-  
   @Override
   public Uni<QueryEnvelope<DocQueryActions.DocObject>> get() {
     final var criteria = this.criteria.build();
+    return state.toDocState(repoId).onItem().transformToUni(docState -> {
+      final var existing = docState.getDataSource().getTenant();
+      return docState.query().docs().findAllFlatted(criteria).collect().asList()
+        .onItem().transform(data -> {
+          if(data.isEmpty()) {
+            return docNotFound(existing, new DocNotFoundException());
+          }
+          final var docIds = data.stream().map(d -> d.getDocId()).collect(Collectors.toSet());
+          if(docIds.size() > 1) {
+            return docUnexpected(existing, docIds);
+          }
+          
+          final var objects = toDocObject(data);
+          return ImmutableQueryEnvelope.<DocQueryActions.DocObject>builder()
+              .repo(existing)
+              .status(QueryEnvelopeStatus.OK)
+              .objects(objects)
+              .build();
+        });
     
-    return state.tenant().getByNameOrId(repoId)
-    .onItem().transformToUni((Tenant existing) -> {
-      if(existing == null) {
-        return Uni.createFrom().item(QueryEnvelope.repoNotFound(repoId, log));
-      }
-      return state.toDocState().query(repoId)
-          .onItem().transformToMulti((DocQueries repo) -> repo.docs().findAllFlatted(criteria))
-          .collect().asList()
-          .onItem().transform(data -> {
-            if(data.isEmpty()) {
-              return docNotFound(existing, new DocNotFoundException());
-            }
-            final var docIds = data.stream().map(d -> d.getDocId()).collect(Collectors.toSet());
-            if(docIds.size() > 1) {
-              return docUnexpected(existing, docIds);
-            }
-            
-            final var objects = toDocObject(data);
-            return ImmutableQueryEnvelope.<DocQueryActions.DocObject>builder()
-                .repo(existing)
-                .status(QueryEnvelopeStatus.OK)
-                .objects(objects)
-                .build();
-          });
     });
+      
+
   }
 
   @Override
   public Uni<QueryEnvelope<DocQueryActions.DocObjects>> findAll() {
     final var criteria = this.criteria.build();
     
-    return state.tenant().getByNameOrId(repoId)
-    .onItem().transformToUni((Tenant existing) -> {
-      if(existing == null) {
-        return Uni.createFrom().item(QueryEnvelope.repoNotFound(repoId, log));
-      }
-      return state.toDocState().query(repoId)
-          .onItem().transformToMulti((DocQueries repo) -> repo.docs().findAllFlatted(criteria))
-          .collect().asList()
+    return state.toDocState(repoId).onItem().transformToUni((docState) -> {
+      final var existing = docState.getDataSource().getTenant();
+      return docState.query().docs().findAllFlatted(criteria).collect().asList()
           .onItem().transform(data -> ImmutableQueryEnvelope.<DocQueryActions.DocObjects>builder()
               .repo(existing)
               .status(QueryEnvelopeStatus.OK)

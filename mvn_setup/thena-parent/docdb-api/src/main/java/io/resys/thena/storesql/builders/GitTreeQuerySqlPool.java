@@ -4,27 +4,33 @@ import io.resys.thena.api.LogConstants;
 import io.resys.thena.api.entities.git.ImmutableTree;
 import io.resys.thena.api.entities.git.Tree;
 import io.resys.thena.api.entities.git.TreeValue;
-import io.resys.thena.storesql.SqlBuilder;
-import io.resys.thena.storesql.SqlMapper;
-import io.resys.thena.storesql.support.SqlClientWrapper;
+import io.resys.thena.datasource.SqlDataMapper;
+import io.resys.thena.datasource.SqlQueryBuilder;
+import io.resys.thena.datasource.ThenaSqlDataSource;
+import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
+import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlFailed;
+import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlTupleFailed;
 import io.resys.thena.structures.git.GitQueries.GitTreeQuery;
-import io.resys.thena.support.ErrorHandler;
-import io.resys.thena.support.ErrorHandler.SqlFailed;
-import io.resys.thena.support.ErrorHandler.SqlTupleFailed;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.sqlclient.RowSet;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j(topic = LogConstants.SHOW_SQL)
-@RequiredArgsConstructor
 public class GitTreeQuerySqlPool implements GitTreeQuery {
 
-  private final SqlClientWrapper wrapper;
-  private final SqlMapper sqlMapper;
-  private final SqlBuilder sqlBuilder;
-  private final ErrorHandler errorHandler;
+  private final ThenaSqlDataSource wrapper;
+  private final SqlDataMapper sqlMapper;
+  private final SqlQueryBuilder sqlBuilder;
+  private final ThenaSqlDataSourceErrorHandler errorHandler;
+  
+  public GitTreeQuerySqlPool(ThenaSqlDataSource dataSource) {
+    this.wrapper = dataSource;
+    this.sqlMapper = dataSource.getDataMapper();
+    this.sqlBuilder = dataSource.getQueryBuilder();
+    this.errorHandler = dataSource.getErrorHandler();
+  }
+  
   @Override
   public Uni<Tree> getById(String tree) {
     final var sql = sqlBuilder.treeItems().getByTreeId(tree);

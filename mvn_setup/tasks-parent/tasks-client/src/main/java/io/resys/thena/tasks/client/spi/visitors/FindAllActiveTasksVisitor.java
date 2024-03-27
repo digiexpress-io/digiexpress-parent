@@ -24,11 +24,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import io.resys.thena.api.actions.ImmutableMatchCriteria;
 import io.resys.thena.api.actions.GitBranchActions;
-import io.resys.thena.api.actions.GitBranchActions.BranchObjects;
 import io.resys.thena.api.actions.GitBranchActions.BranchObjectsQuery;
 import io.resys.thena.api.actions.GitPullActions.MatchCriteriaType;
+import io.resys.thena.api.actions.ImmutableMatchCriteria;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.tasks.client.api.model.Document;

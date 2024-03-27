@@ -1,10 +1,11 @@
 package io.resys.thena.storefile;
 
-import io.resys.thena.support.ErrorHandler;
+import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
+import io.resys.thena.spi.DbCollections;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class FileErrors implements ErrorHandler {
+public class FileErrors implements ThenaSqlDataSourceErrorHandler {
 
   @Override
   public boolean notFound(Throwable e) {
@@ -42,4 +43,9 @@ public class FileErrors implements ErrorHandler {
 	public void deadEnd(SqlTupleListFailed e) {
 		log.error(e.getMessage(), e);
 	}
+
+  @Override
+  public ThenaSqlDataSourceErrorHandler withOptions(DbCollections options) {
+    return this;
+  }
 }

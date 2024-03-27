@@ -5,17 +5,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import io.resys.thena.api.actions.GitCommitActions.JsonObjectMerge;
 import io.resys.thena.api.actions.DocCommitActions.AddItemToModifyDocBranch;
 import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.api.actions.DocCommitActions.ModifyManyDocBranches;
+import io.resys.thena.api.actions.GitCommitActions.JsonObjectMerge;
+import io.resys.thena.api.actions.ImmutableManyDocsEnvelope;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.doc.DocBranchLock;
 import io.resys.thena.api.envelope.ImmutableMessage;
-import io.resys.thena.api.actions.ImmutableManyDocsEnvelope;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.structures.doc.DocQueries.DocBranchLockCriteria;
-import io.resys.thena.structures.doc.DocState.DocRepo;
+import io.resys.thena.structures.doc.DocState;
 import io.resys.thena.structures.doc.ImmutableDocBatchForMany;
 import io.resys.thena.structures.doc.ImmutableDocBranchLockCriteria;
 import io.resys.thena.structures.doc.support.BatchForOneBranchModify;
@@ -102,14 +102,14 @@ public class ModifyManyDocBranchesImpl implements ModifyManyDocBranches {
       .collect(Collectors.toList());
     
     
-    return this.state.toDocState().withTransaction(repoId, tx -> tx.query().branches().getBranchLocks(crit).onItem().transformToUni(locks -> {
+    return this.state.withDocTransaction(repoId, tx -> tx.query().branches().getBranchLocks(crit).onItem().transformToUni(locks -> {
       final ManyDocsEnvelope validation = validateRepo(locks, items);
       if(validation != null) {
         return Uni.createFrom().item(validation);
       }
       return doInLock(locks, items, tx);
     }))
-    .onFailure(err -> state.getErrorHandler().isLocked(err)).retry()
+    .onFailure(err -> state.getDataSource().isLocked(err)).retry()
       .withJitter(0.3) // every retry increase time by x 3
       .withBackOff(Duration.ofMillis(100))
       .atMost(100);
@@ -165,7 +165,7 @@ public class ModifyManyDocBranchesImpl implements ModifyManyDocBranches {
     return null;
   }
 
-  private Uni<ManyDocsEnvelope> doInLock(List<DocBranchLock> locks, List<ItemModData> items, DocRepo tx) {
+  private Uni<ManyDocsEnvelope> doInLock(List<DocBranchLock> locks, List<ItemModData> items, DocState tx) {
     final var lockByName = locks.stream()
       .filter(i -> i.getDoc().isPresent() && i.getBranch().isPresent())
       .collect(Collectors.toMap(
@@ -175,7 +175,7 @@ public class ModifyManyDocBranchesImpl implements ModifyManyDocBranches {
     
     final var logs = new ArrayList<String>();
     final var many = ImmutableDocBatchForMany.builder()
-        .repo(tx.getRepo())
+        .repo(tx.getDataSource().getTenant())
         .status(BatchStatus.OK);
     for(ItemModData item : items) {
       final var lock = lockByName.get(item.getDocId() + "/" + item.getBranchName());

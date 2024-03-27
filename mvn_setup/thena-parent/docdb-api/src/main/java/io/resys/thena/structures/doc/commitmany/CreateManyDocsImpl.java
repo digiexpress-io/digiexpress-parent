@@ -8,12 +8,12 @@ import java.util.stream.Collectors;
 import io.resys.thena.api.actions.DocCommitActions.AddItemToCreateDoc;
 import io.resys.thena.api.actions.DocCommitActions.CreateManyDocs;
 import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
-import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.api.actions.ImmutableManyDocsEnvelope;
+import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.spi.DataMapper;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.structures.doc.DocInserts.DocBatchForOne;
-import io.resys.thena.structures.doc.DocState.DocRepo;
+import io.resys.thena.structures.doc.DocState;
 import io.resys.thena.structures.doc.ImmutableDocBatchForMany;
 import io.resys.thena.structures.doc.support.BatchForOneDocCreate;
 import io.resys.thena.structures.git.GitInserts.BatchStatus;
@@ -78,12 +78,12 @@ public class CreateManyDocsImpl implements CreateManyDocs {
     RepoAssert.isTrue(!items.isEmpty(), () -> "Nothing to commit, no items!");
     
     
-    return this.state.toDocState().withTransaction(repoId, this::doInTx);
+    return this.state.withDocTransaction(repoId, this::doInTx);
   }
   
-  private Uni<ManyDocsEnvelope> doInTx(DocRepo tx) {  
+  private Uni<ManyDocsEnvelope> doInTx(DocState tx) {  
     final var batch = ImmutableDocBatchForMany.builder()
-        .repo(tx.getRepo())
+        .repo(tx.getDataSource().getTenant())
         .status(BatchStatus.OK)
         .log(ImmutableMessage.builder()
             .text(String.join("\r\n" + "\r\n", items.stream().map(i -> i.getLog().getText()).collect(Collectors.toList())))

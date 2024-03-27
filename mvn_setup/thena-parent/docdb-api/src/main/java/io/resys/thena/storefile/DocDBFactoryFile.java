@@ -2,6 +2,9 @@ package io.resys.thena.storefile;
 
 import io.resys.thena.api.ThenaClient;
 import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.datasource.ThenaDataSource;
+import io.resys.thena.datasource.ThenaFileDataSourceImpl;
+import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
 import io.resys.thena.spi.DbCollections;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.spi.ThenaClientPgSql;
@@ -14,8 +17,8 @@ import io.resys.thena.structures.doc.DocState;
 import io.resys.thena.structures.git.GitInserts;
 import io.resys.thena.structures.git.GitQueries;
 import io.resys.thena.structures.git.GitState;
+import io.resys.thena.structures.git.GitState.TransactionFunction;
 import io.resys.thena.structures.org.OrgState;
-import io.resys.thena.support.ErrorHandler;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 
@@ -25,73 +28,82 @@ public class DocDBFactoryFile {
     return new Builder();
   }
 
-  public static DbState state(DbCollections ctx, FilePool client, ErrorHandler handler) {
+  public static DbState state(DbCollections ctx, FilePool client, ThenaSqlDataSourceErrorHandler handler) {
     return new DbState() {
-      @Override
-      public ErrorHandler getErrorHandler() {
-        return handler;
-      }
-      @Override
-      public DbCollections getCollections() {
-        return ctx;
-      }
       @Override
       public RepoBuilder tenant() {
         return new RepoBuilderFilePool(client, ctx, sqlMapper(ctx), sqlBuilder(ctx), handler);
       }
       @Override
-      public GitState toGitState() {
+      public <R> Uni<R> withGitTransaction(String tenantId, TransactionFunction<R> callback) {
+        return toGitState(tenantId).onItem().transformToUni(state -> state.withTransaction(callback));
+      }
+      @Override
+      public Uni<GitState> toGitState(String tenantId) {
+        return tenant().getByNameOrId(tenantId).onItem().transform(repo -> toGitState(repo));
+      }
+      @Override
+      public GitState toGitState(Tenant repo) {
+        final var wrapper = ImmutableFileClientWrapper.builder()
+            .repo(repo)
+            .client(client)
+            .names(ctx.toRepo(repo))
+            .build();
+        final var dataSource = new ThenaFileDataSourceImpl(repo, ctx);
         return new GitState() {
           @Override
-          public <R> Uni<R> withTransaction(String repoId, String headName, TransactionFunction<R> callback) {
-            return tenant().getByNameOrId(repoId).onItem().transformToUni(repo -> {
-              final GitTenant repoState = withTenant(repo);
-              return callback.apply(repoState);
+          public GitQueries query() {
+            return new ClientQueryFilePool(wrapper, sqlMapper(wrapper.getNames()), sqlBuilder(wrapper.getNames()), handler);
+          }
+          @Override
+          public GitInserts insert() {
+            return new ClientInsertBuilderFilePool(wrapper.getClient(), sqlMapper(wrapper.getNames()), sqlBuilder(wrapper.getNames()), handler);
+          }
+          @Override
+          public <R> Uni<R> withTransaction(TransactionFunction<R> callback) {
+            return tenant().getByNameOrId(wrapper.getRepo().getId()).onItem().transformToUni(repo -> {
+              return callback.apply(this);
             });
           }
           @Override
-          public Uni<GitTenant> withTenant(String repoNameOrId) {
-            return tenant().getByNameOrId(repoNameOrId).onItem().transform(repo -> withTenant(repo));
-          }
-          @Override
-          public GitTenant withTenant(Tenant repo) {
-            final var wrapper = ImmutableFileClientWrapper.builder()
-                .repo(repo)
-                .client(client)
-                .names(ctx.toRepo(repo))
-                .build();
-            return new GitTenant() {
-              @Override
-              public Tenant getRepo() {
-                return wrapper.getRepo();
-              }
-              @Override
-              public String getTenantName() {
-                return repo.getName();
-              }
-              @Override
-              public GitQueries query() {
-                return new ClientQueryFilePool(wrapper, sqlMapper(wrapper.getNames()), sqlBuilder(wrapper.getNames()), handler);
-              }
-              @Override
-              public GitInserts insert() {
-                return new ClientInsertBuilderFilePool(wrapper.getClient(), sqlMapper(wrapper.getNames()), sqlBuilder(wrapper.getNames()), handler);
-              }
-            };
+          public ThenaDataSource getDataSource() {
+            return dataSource;
           }
         };
       }
       @Override
-      public DocState toDocState() {
+      public ThenaDataSource getDataSource() {
         throw new RuntimeException("not implemented");
       }
       @Override
-      public OrgState toOrgState() {
+      public Uni<DocState> toDocState(String tenantId) {
         throw new RuntimeException("not implemented");
       }
-    };
-  }
+      @Override
+      public DocState toDocState(Tenant repo) {
+        throw new RuntimeException("not implemented");
+      }
+      @Override
+      public <R> Uni<R> withDocTransaction(String tenantId,
+          io.resys.thena.structures.doc.DocState.TransactionFunction<R> callback) {
+        throw new RuntimeException("not implemented");
+      }
+      @Override
+      public Uni<OrgState> toOrgState(String tenantId) {
+        throw new RuntimeException("not implemented");
+      }
+      @Override
+      public OrgState toOrgState(Tenant repo) {
+        throw new RuntimeException("not implemented");
+      }
+      @Override
+      public <R> Uni<R> withOrgTransaction(String tenantId,
+          io.resys.thena.structures.org.OrgState.TransactionFunction<R> callback) {
+        throw new RuntimeException("not implemented");
+      }
 
+    };
+  }  
   public static FileBuilder sqlBuilder(DbCollections ctx) {
     return new DefaultFileBuilder(ctx);
   }
@@ -102,9 +114,9 @@ public class DocDBFactoryFile {
   public static class Builder {
     private FilePool client;
     private String db = "docdb";
-    private ErrorHandler errorHandler;
+    private ThenaSqlDataSourceErrorHandler errorHandler;
     
-    public Builder errorHandler(ErrorHandler errorHandler) {
+    public Builder errorHandler(ThenaSqlDataSourceErrorHandler errorHandler) {
       this.errorHandler = errorHandler;
       return this;
     }

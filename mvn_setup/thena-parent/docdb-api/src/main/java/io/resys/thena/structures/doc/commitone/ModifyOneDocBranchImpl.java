@@ -2,16 +2,16 @@ package io.resys.thena.structures.doc.commitone;
 
 import java.time.Duration;
 
-import io.resys.thena.api.actions.GitCommitActions.JsonObjectMerge;
 import io.resys.thena.api.actions.DocCommitActions.ModifyOneDocBranch;
 import io.resys.thena.api.actions.DocCommitActions.OneDocEnvelope;
+import io.resys.thena.api.actions.GitCommitActions.JsonObjectMerge;
+import io.resys.thena.api.actions.ImmutableOneDocEnvelope;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.doc.DocBranchLock;
 import io.resys.thena.api.envelope.ImmutableMessage;
-import io.resys.thena.api.actions.ImmutableOneDocEnvelope;
 import io.resys.thena.spi.DataMapper;
 import io.resys.thena.spi.DbState;
-import io.resys.thena.structures.doc.DocState.DocRepo;
+import io.resys.thena.structures.doc.DocState;
 import io.resys.thena.structures.doc.ImmutableDocBranchLockCriteria;
 import io.resys.thena.structures.doc.support.BatchForOneBranchModify;
 import io.resys.thena.support.RepoAssert;
@@ -60,14 +60,14 @@ public class ModifyOneDocBranchImpl implements ModifyOneDocBranch {
         .docId(docId)
         .build();
     
-    return this.state.toDocState().withTransaction(repoId, tx -> tx.query().branches().getBranchLock(crit).onItem().transformToUni(lock -> {
+    return this.state.withDocTransaction(repoId, tx -> tx.query().branches().getBranchLock(crit).onItem().transformToUni(lock -> {
       final OneDocEnvelope validation = validateRepo(lock);
       if(validation != null) {
         return Uni.createFrom().item(validation);
       }
       return doInLock(lock, tx);
     }))
-    .onFailure(err -> state.getErrorHandler().isLocked(err)).retry()
+    .onFailure(err -> this.state.getDataSource().isLocked(err)).retry()
       .withJitter(0.3) // every retry increase time by x 3
       .withBackOff(Duration.ofMillis(100))
       .atMost(100);
@@ -111,7 +111,7 @@ public class ModifyOneDocBranchImpl implements ModifyOneDocBranch {
     return null;
   }
 
-  private Uni<OneDocEnvelope> doInLock(DocBranchLock lock, DocRepo tx) {  
+  private Uni<OneDocEnvelope> doInLock(DocBranchLock lock, DocState tx) {  
     final var batch = new BatchForOneBranchModify(lock, tx, author)
       .append(appendBlobs)
       .merge(appendMerge)

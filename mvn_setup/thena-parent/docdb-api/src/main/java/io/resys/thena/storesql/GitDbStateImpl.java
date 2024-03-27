@@ -1,81 +1,30 @@
 package io.resys.thena.storesql;
 
-import java.util.Optional;
-import java.util.function.Function;
-
-import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.api.exceptions.RepoException;
-import io.resys.thena.spi.DbCollections;
-import io.resys.thena.spi.DbState.RepoBuilder;
-import io.resys.thena.storesql.GitDbQueriesSqlImpl.ClientQuerySqlContext;
-import io.resys.thena.storesql.builders.RepoBuilderSqlPool;
-import io.resys.thena.storesql.support.ImmutableSqlClientWrapper;
+import io.resys.thena.datasource.ThenaSqlDataSource;
+import io.resys.thena.structures.git.GitInserts;
 import io.resys.thena.structures.git.GitQueries;
 import io.resys.thena.structures.git.GitState;
-import io.resys.thena.support.ErrorHandler;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @RequiredArgsConstructor
-@Slf4j
 public class GitDbStateImpl implements GitState {
-  private final DbCollections ctx;
-  private final io.vertx.mutiny.sqlclient.Pool pool; 
-  private final ErrorHandler handler;
-  private final Function<DbCollections, SqlSchema> sqlSchema; 
-  private final Function<DbCollections, SqlMapper> sqlMapper;
-  private final Function<DbCollections, SqlBuilder> sqlBuilder;
-  private final Function<ClientQuerySqlContext, GitQueries> clientQuery;
+  private final ThenaSqlDataSource dataSource;
   
   @Override
-  public <R> Uni<R> withTransaction(String repoId, String headName, TransactionFunction<R> callback) {
-    return pool.withTransaction(conn -> {
-      final var repoPool = new RepoBuilderSqlPool(pool, conn, ctx, sqlSchema.apply(ctx), sqlMapper.apply(ctx), sqlBuilder.apply(ctx), handler);
-      return repoPool.getByNameOrId(repoId)
-        .onItem().transformToUni((repo -> {
-          if(repo == null) {
-            return repoPool.findAll().collect().asList().onItem().transform(repos -> {
-              final var ex = RepoException.builder().notRepoWithName(repoId, repos);
-              log.error(ex.getText());
-              throw new RepoException(ex.getText());
-            });
-          }
-          
-          return Uni.createFrom().item(repo);
-        }))
-        .onItem().transformToUni((Tenant existing) -> {
-          if(existing == null) {
-            final var ex = RepoException.builder().notRepoWithName(repoId);
-            log.error(ex.getText());
-            throw new RepoException(ex.getText());
-          }
-          final var wrapper = ImmutableSqlClientWrapper.builder()
-              .repo(existing)
-              .pool(pool)
-              .tx(conn)
-              .names(ctx.toRepo(existing))
-              .build();
-          return callback.apply(new GitRepoImpl(wrapper, handler, sqlMapper, sqlBuilder, clientQuery));
-        });
-    });
+  public <R> Uni<R> withTransaction(TransactionFunction<R> callback) {
+    return dataSource.getPool().withTransaction(conn -> callback.apply(new GitDbStateImpl(dataSource.withTx(conn))));
   }
   @Override
-  public Uni<GitTenant> withTenant(String repoNameOrId) {
-    return project().getByNameOrId(repoNameOrId).onItem().transform(repo -> withTenant(repo));
-  }
-  public RepoBuilder project() {
-    return new RepoBuilderSqlPool(pool, null, ctx, sqlSchema.apply(ctx), sqlMapper.apply(ctx), sqlBuilder.apply(ctx), handler);
+  public GitInserts insert() {
+    return new GitDbInsertsSqlPool(dataSource);
   }
   @Override
-  public GitTenant withTenant(Tenant repo) {
-    final var wrapper = ImmutableSqlClientWrapper.builder()
-        .repo(repo)
-        .pool(pool)
-        .tx(Optional.empty())
-        .names(ctx.toRepo(repo))
-        .build();
-    return new GitRepoImpl(wrapper, handler, sqlMapper, sqlBuilder, clientQuery);
+  public GitQueries query() {
+    return new GitDbQueriesSqlImpl(dataSource);
   }
-  
+  @Override
+  public ThenaSqlDataSource getDataSource() {
+    return dataSource;
+  }
 }

@@ -1,4 +1,4 @@
-package io.resys.thena.storesql;
+package io.resys.thena.datasource;
 
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.doc.Doc;
@@ -25,10 +25,11 @@ import io.resys.thena.api.entities.org.OrgPartyRight;
 import io.resys.thena.api.entities.org.OrgRight;
 import io.resys.thena.api.entities.org.OrgRightFlattened;
 import io.resys.thena.spi.DataMapper;
+import io.resys.thena.spi.DbCollections;
 import io.vertx.core.json.JsonObject;
 import io.vertx.mutiny.sqlclient.Row;
 
-public interface SqlMapper extends DataMapper<Row>{
+public interface SqlDataMapper extends DataMapper<Row>{
   Tenant repo(Row row);
 
   Doc doc(Row row);
@@ -58,4 +59,6 @@ public interface SqlMapper extends DataMapper<Row>{
   OrgActorStatus orgActorStatus(Row row); 
   
   JsonObject jsonObject(Row row, String columnName);
+  
+  SqlDataMapper withOptions(DbCollections options);
 }

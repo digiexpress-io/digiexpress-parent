@@ -14,7 +14,6 @@ import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.spi.DbCollections;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.storesql.DbStateSqlImpl;
-import io.resys.thena.storesql.PgErrors;
 import io.resys.thena.structures.git.GitPrinter;
 import io.thestencil.client.api.StencilComposer;
 import io.thestencil.client.spi.StencilClientImpl;
@@ -39,7 +38,6 @@ public class PgTestTemplate {
     this.client = DbStateSqlImpl.create()
         .db("junit")
         .client(pgPool)
-        .errorHandler(new PgErrors())
         .build();
     this.client.tenants().commit().name("junit", StructureType.git).build();
   }
@@ -64,7 +62,7 @@ public class PgTestTemplate {
   
   public DbState createState() {
     final var ctx = DbCollections.defaults("junit");
-    return DbStateSqlImpl.state(ctx, pgPool, new PgErrors());
+    return DbStateSqlImpl.create(ctx, pgPool);
   }
   
   public void printRepo(Tenant repo) {
@@ -87,6 +85,7 @@ public class PgTestTemplate {
   }
 
   
+  @SuppressWarnings("unused")
   public StencilComposer getPersistence(String repoId) {
     final ThenaClient client = getClient();
     

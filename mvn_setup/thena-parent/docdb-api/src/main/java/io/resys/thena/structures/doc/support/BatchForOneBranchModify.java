@@ -7,21 +7,20 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import io.resys.thena.api.actions.GitCommitActions.JsonObjectMerge;
 import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
+import io.resys.thena.api.actions.GitCommitActions.JsonObjectMerge;
+import io.resys.thena.api.actions.ImmutableManyDocsEnvelope;
+import io.resys.thena.api.entities.doc.Doc;
+import io.resys.thena.api.entities.doc.DocBranchLock;
+import io.resys.thena.api.entities.doc.DocLog;
 import io.resys.thena.api.entities.doc.ImmutableDocBranch;
 import io.resys.thena.api.entities.doc.ImmutableDocCommit;
 import io.resys.thena.api.entities.doc.ImmutableDocLog;
-import io.resys.thena.api.entities.doc.Doc;
-import io.resys.thena.api.entities.doc.Doc.DocStatus;
-import io.resys.thena.api.entities.doc.DocBranchLock;
-import io.resys.thena.api.entities.doc.DocLog;
 import io.resys.thena.api.envelope.ImmutableMessage;
-import io.resys.thena.api.actions.ImmutableManyDocsEnvelope;
 import io.resys.thena.spi.DataMapper;
 import io.resys.thena.structures.doc.DocInserts.DocBatchForMany;
 import io.resys.thena.structures.doc.DocInserts.DocBatchForOne;
-import io.resys.thena.structures.doc.DocState.DocRepo;
+import io.resys.thena.structures.doc.DocState;
 import io.resys.thena.structures.doc.ImmutableDocBatchForOne;
 import io.resys.thena.structures.git.GitInserts.BatchStatus;
 import io.resys.thena.structures.git.commits.CommitLogger;
@@ -36,7 +35,7 @@ import lombok.RequiredArgsConstructor;
 public class BatchForOneBranchModify {
 
   private final DocBranchLock lock; 
-  private final DocRepo tx;
+  private final DocState tx;
   private final String author;
   
   private JsonObject appendBlobs;
@@ -118,7 +117,7 @@ public class BatchForOneBranchModify {
     }
 
     return ImmutableDocBatchForOne.builder()
-      .repoId(tx.getRepo().getId())
+      .repoId(tx.getDataSource().getTenant().getId())
       .status(BatchStatus.OK)
       .doc(doc)
       .addDocBranch(docBranch)

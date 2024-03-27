@@ -1,9 +1,9 @@
 package io.resys.thena.storesql.support;
 
-import io.resys.thena.storesql.SqlBuilder.Sql;
-import io.resys.thena.storesql.SqlBuilder.SqlTuple;
-import io.resys.thena.storesql.SqlBuilder.SqlTupleList;
-import io.resys.thena.support.ErrorHandler.SqlExecutionFailed;
+import io.resys.thena.datasource.SqlQueryBuilder.Sql;
+import io.resys.thena.datasource.SqlQueryBuilder.SqlTuple;
+import io.resys.thena.datasource.SqlQueryBuilder.SqlTupleList;
+import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlExecutionFailed;
 import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.sqlclient.Row;
 import io.vertx.mutiny.sqlclient.RowSet;

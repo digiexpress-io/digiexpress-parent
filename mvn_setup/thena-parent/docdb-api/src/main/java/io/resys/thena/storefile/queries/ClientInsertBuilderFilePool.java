@@ -8,6 +8,8 @@ import io.resys.thena.api.entities.git.Commit;
 import io.resys.thena.api.entities.git.Tag;
 import io.resys.thena.api.entities.git.Tree;
 import io.resys.thena.api.envelope.ImmutableMessage;
+import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
+import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlSchemaFailed;
 import io.resys.thena.storefile.FileBuilder;
 import io.resys.thena.storefile.tables.Table.FileMapper;
 import io.resys.thena.storefile.tables.Table.FilePool;
@@ -17,8 +19,6 @@ import io.resys.thena.structures.git.GitInserts;
 import io.resys.thena.structures.git.ImmutableGitBatch;
 import io.resys.thena.structures.git.ImmutableInsertResult;
 import io.resys.thena.structures.git.ImmutableUpsertResult;
-import io.resys.thena.support.ErrorHandler;
-import io.resys.thena.support.ErrorHandler.SqlSchemaFailed;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +29,7 @@ public class ClientInsertBuilderFilePool implements GitInserts {
   private final FilePool client;
   private final FileMapper mapper;
   private final FileBuilder sqlBuilder;
-  private final ErrorHandler errorHandler;
+  private final ThenaSqlDataSourceErrorHandler errorHandler;
   
 
   @Override

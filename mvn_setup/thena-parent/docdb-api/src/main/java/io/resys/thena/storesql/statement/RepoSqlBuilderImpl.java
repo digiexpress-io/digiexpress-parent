@@ -1,12 +1,12 @@
 package io.resys.thena.storesql.statement;
 
 import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.datasource.ImmutableSql;
+import io.resys.thena.datasource.ImmutableSqlTuple;
+import io.resys.thena.datasource.SqlQueryBuilder.RepoSqlBuilder;
+import io.resys.thena.datasource.SqlQueryBuilder.Sql;
+import io.resys.thena.datasource.SqlQueryBuilder.SqlTuple;
 import io.resys.thena.spi.DbCollections;
-import io.resys.thena.storesql.ImmutableSql;
-import io.resys.thena.storesql.ImmutableSqlTuple;
-import io.resys.thena.storesql.SqlBuilder.RepoSqlBuilder;
-import io.resys.thena.storesql.SqlBuilder.Sql;
-import io.resys.thena.storesql.SqlBuilder.SqlTuple;
 import io.resys.thena.storesql.support.SqlStatement;
 import io.vertx.mutiny.sqlclient.Tuple;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 public class RepoSqlBuilderImpl implements RepoSqlBuilder {
   private final DbCollections options;
   
-
   @Override
   public SqlTuple exists() {
     return ImmutableSqlTuple.builder().value(new SqlStatement().ln()
@@ -25,14 +24,14 @@ public class RepoSqlBuilderImpl implements RepoSqlBuilder {
         .append("  FROM information_schema.tables").ln()
         .append("  WHERE table_name = ?1").ln()
         .append(")").ln().build())
-        .props(Tuple.of(options.getRepos()))
+        .props(Tuple.of(options.getTenant()))
         .build();
   }  
   @Override
   public Sql findAll() {
     return ImmutableSql.builder()
         .value(new SqlStatement()
-        .append("SELECT * FROM ").append(options.getRepos())
+        .append("SELECT * FROM ").append(options.getTenant())
         .build())
         .build();
   }
@@ -40,7 +39,7 @@ public class RepoSqlBuilderImpl implements RepoSqlBuilder {
   public SqlTuple getByName(String name) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
-        .append("SELECT * FROM ").append(options.getRepos())
+        .append("SELECT * FROM ").append(options.getTenant())
         .append(" WHERE name = $1")
         .append(" FETCH FIRST ROW ONLY")
         .build())
@@ -51,7 +50,7 @@ public class RepoSqlBuilderImpl implements RepoSqlBuilder {
   public SqlTuple getByNameOrId(String name) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
-        .append("SELECT * FROM ").append(options.getRepos())
+        .append("SELECT * FROM ").append(options.getTenant())
         .append(" WHERE name = $1 OR id = $1")
         .append(" FETCH FIRST ROW ONLY")
         .build())
@@ -62,7 +61,7 @@ public class RepoSqlBuilderImpl implements RepoSqlBuilder {
   public SqlTuple insertOne(Tenant newRepo) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
-        .append("INSERT INTO ").append(options.getRepos())
+        .append("INSERT INTO ").append(options.getTenant())
         .append(" (id, rev, prefix, name, type) VALUES($1, $2, $3, $4, $5)")
         .build())
         .props(Tuple.of(newRepo.getId(), newRepo.getRev(), newRepo.getPrefix(), newRepo.getName(), newRepo.getType()))
@@ -73,7 +72,7 @@ public class RepoSqlBuilderImpl implements RepoSqlBuilder {
   public SqlTuple deleteOne(Tenant newRepo) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
-        .append("DELETE FROM ").append(options.getRepos())
+        .append("DELETE FROM ").append(options.getTenant())
         .append(" WHERE id = $1")
         .build())
         .props(Tuple.of(newRepo.getId()))

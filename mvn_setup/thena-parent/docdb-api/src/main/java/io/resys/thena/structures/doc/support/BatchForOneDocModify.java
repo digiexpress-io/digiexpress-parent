@@ -5,18 +5,17 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import io.resys.thena.api.entities.doc.Doc;
+import io.resys.thena.api.entities.doc.DocBranchLock;
+import io.resys.thena.api.entities.doc.DocLock;
+import io.resys.thena.api.entities.doc.DocLog;
 import io.resys.thena.api.entities.doc.ImmutableDoc;
 import io.resys.thena.api.entities.doc.ImmutableDocBranch;
 import io.resys.thena.api.entities.doc.ImmutableDocCommit;
 import io.resys.thena.api.entities.doc.ImmutableDocLog;
-import io.resys.thena.api.entities.doc.Doc;
-import io.resys.thena.api.entities.doc.Doc.DocStatus;
-import io.resys.thena.api.entities.doc.DocBranchLock;
-import io.resys.thena.api.entities.doc.DocLock;
-import io.resys.thena.api.entities.doc.DocLog;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.structures.doc.DocInserts.DocBatchForOne;
-import io.resys.thena.structures.doc.DocState.DocRepo;
+import io.resys.thena.structures.doc.DocState;
 import io.resys.thena.structures.doc.ImmutableDocBatchForOne;
 import io.resys.thena.structures.git.GitInserts.BatchStatus;
 import io.resys.thena.structures.git.commits.CommitLogger;
@@ -31,7 +30,7 @@ import lombok.RequiredArgsConstructor;
 public class BatchForOneDocModify {
 
   private final DocLock docLock;
-  private final DocRepo tx;
+  private final DocState tx;
   private final String author;
   private String message;
   private JsonObject appendLogs;
@@ -59,19 +58,19 @@ public class BatchForOneDocModify {
       .build();
     
     final var batchBuilder = ImmutableDocBatchForOne.builder()
-      .repoId(tx.getRepo().getId())
+      .repoId(tx.getDataSource().getTenant().getId())
       .status(BatchStatus.OK)
       .doc(doc)
       .addAllDocLock(docLock.getBranches());
 
     final var logger = new CommitLogger();
-    docLock.getBranches().forEach(branchLock -> appendToBranch(doc, branchLock, tx, batchBuilder, logger));
+    docLock.getBranches().forEach(branchLock -> appendToBranch(doc, branchLock, batchBuilder, logger));
     
     return batchBuilder.log(ImmutableMessage.builder().text(logger.toString()).build()).build();
   }
   
 
-  private void appendToBranch(Doc doc, DocBranchLock lock, DocRepo tx, ImmutableDocBatchForOne.Builder batch, CommitLogger logger) {
+  private void appendToBranch(Doc doc, DocBranchLock lock, ImmutableDocBatchForOne.Builder batch, CommitLogger logger) {
     final var branchId = lock.getBranch().get().getId();
 
     

@@ -26,7 +26,6 @@ import io.resys.thena.jackson.VertexExtModule;
 import io.resys.thena.spi.DbCollections;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.storesql.DbStateSqlImpl;
-import io.resys.thena.storesql.PgErrors;
 import io.resys.thena.support.OrgDbPrinter;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.json.jackson.DatabindCodec;
@@ -110,7 +109,6 @@ public class DbTestTemplate {
     this.docDb = DbStateSqlImpl.create()
       .db(db)
       .client(pgPool)
-      .errorHandler(new PgErrors())
       .build();
 
     store = PermissionStoreImpl.builder()
@@ -143,7 +141,7 @@ public class DbTestTemplate {
   
   public DbState createState() {
     final var ctx = DbCollections.defaults(db);
-    return DbStateSqlImpl.state(ctx, pgPool, new PgErrors());
+    return DbStateSqlImpl.create(ctx, pgPool);
   }
   
   public void printRepo(Tenant repo) {

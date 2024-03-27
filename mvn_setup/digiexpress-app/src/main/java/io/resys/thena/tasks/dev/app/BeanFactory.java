@@ -45,7 +45,6 @@ import io.resys.thena.projects.client.api.TenantConfigClient;
 import io.resys.thena.projects.client.spi.ProjectsClientImpl;
 import io.resys.thena.projects.client.spi.store.MainBranch;
 import io.resys.thena.storesql.DbStateSqlImpl;
-import io.resys.thena.storesql.PgErrors;
 import io.resys.thena.tasks.client.api.TaskClient;
 import io.resys.thena.tasks.client.api.model.ImmutableTask;
 import io.resys.thena.tasks.client.api.model.ImmutableTaskComment;
@@ -159,7 +158,7 @@ public class BeanFactory {
 
   @Produces
   public StencilClient stencilClient(Vertx vertx, ObjectMapper om, CurrentTenant currentProject, CurrentPgPool currentPgPool) {
-    final var docDb = DbStateSqlImpl.create().client(currentPgPool.pgPool).errorHandler(new PgErrors()).build();
+    final var docDb = DbStateSqlImpl.create().client(currentPgPool.pgPool).build();
     final var deserializer = new ZoeDeserializer(om);
     final var store = StencilStoreImpl.builder()
       .config((builder) -> builder
@@ -198,7 +197,7 @@ public class BeanFactory {
   @Produces
   public HdesClient hdesClient(CurrentPgPool currentPgPool, ObjectMapper om) {
     final var config = ImmutableThenaConfig.builder()
-        .client(DbStateSqlImpl.create().client(currentPgPool.pgPool).db("").errorHandler(new PgErrors()).build())
+        .client(DbStateSqlImpl.create().client(currentPgPool.pgPool).db("").build())
         .repoName("")
         .headName(MainBranch.HEAD_NAME)
         .gidProvider((type) -> OidUtils.gen())
@@ -225,7 +224,7 @@ public class BeanFactory {
     final var dialobFr = defaultDialobFr();
     final var asyncFunctionInvoker = new AsyncFunctionInvoker(dialobFr);
     final var config = ImmutableDialobStoreConfig.builder()
-        .client(DbStateSqlImpl.create().client(currentPgPool.pgPool).db("").errorHandler(new PgErrors()).build())
+        .client(DbStateSqlImpl.create().client(currentPgPool.pgPool).db("").build())
         .repoName("")
         .headName(MainBranch.HEAD_NAME)
         .gidProvider((type) -> OidUtils.gen())

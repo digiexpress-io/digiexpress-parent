@@ -30,14 +30,14 @@ import java.util.Map;
 import io.resys.thena.api.actions.GitCommitActions.CommitBuilder;
 import io.resys.thena.api.actions.GitCommitActions.CommitResultEnvelope;
 import io.resys.thena.api.actions.GitCommitActions.JsonObjectMerge;
+import io.resys.thena.api.actions.ImmutableCommitResultEnvelope;
 import io.resys.thena.api.entities.CommitLockStatus;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.git.CommitLock;
 import io.resys.thena.api.envelope.ImmutableMessage;
-import io.resys.thena.api.actions.ImmutableCommitResultEnvelope;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.structures.git.GitInserts.BatchStatus;
-import io.resys.thena.structures.git.GitState.GitTenant;
+import io.resys.thena.structures.git.GitState;
 import io.resys.thena.structures.git.ImmutableLockCriteria;
 import io.resys.thena.structures.git.commits.CommitBatchBuilder.CommitTreeState;
 import io.resys.thena.support.Identifiers;
@@ -137,24 +137,23 @@ public class CommitBuilderImpl implements CommitBuilder {
     // final var totalOperation = appendBlobs.size() + deleteBlobs.size() + mergeBlobs.size();
     
     final var crit = ImmutableLockCriteria.builder().headName(headName).commitId(parentCommit).treeValueIds(mergeBlobs.keySet()).build();
-    return this.state.toGitState().withTransaction(repoId, headName, tx -> tx.query().commits().getLock(crit)
+    return this.state.withGitTransaction(repoId, tx -> tx.query().commits().getLock(crit)
       .onItem().transformToUni(lock -> {
         final var validation = validateRepo(lock, parentCommit);
         if(validation != null) {
           return Uni.createFrom().item(validation);
         }
         return doInLock(lock, tx);
-
       })
     )
-    .onFailure(err -> state.getErrorHandler().isLocked(err))
+    .onFailure(err -> state.getDataSource().isLocked(err))
     .retry()
       .withJitter(0.3) // every retry increase time by x 3
       .withBackOff(Duration.ofMillis(100))
       .atMost(100)
     .onFailure().invoke(err -> {
       
-      if(state.getErrorHandler().isLocked(err)) {
+      if(state.getDataSource().isLocked(err)) {
         // giving up
         log.error("Could not get the lock for commits, because it is busy after 100 retries, msg: {}", err.getMessage(), err);
       } else {
@@ -165,9 +164,9 @@ public class CommitBuilderImpl implements CommitBuilder {
     
   }
   
-  private Uni<CommitResultEnvelope> doInLock(CommitLock lock, GitTenant tx) {
+  private Uni<CommitResultEnvelope> doInLock(CommitLock lock, GitState tx) {
     final var gid = Identifiers.toRepoHeadGid(repoId, headName);  
-    final var init = CommitTreeState.builder().ref(lock.getBranch()).refName(headName).gid(gid).repo(tx.getRepo());
+    final var init = CommitTreeState.builder().ref(lock.getBranch()).refName(headName).gid(gid).repo(tx.getDataSource().getTenant());
     
     if(lock.getStatus() == CommitLockStatus.NOT_FOUND) {
       // nothing to add

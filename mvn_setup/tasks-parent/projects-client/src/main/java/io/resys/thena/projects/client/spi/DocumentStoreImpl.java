@@ -34,15 +34,14 @@ import io.resys.thena.projects.client.api.model.Document.DocumentType;
 import io.resys.thena.projects.client.spi.store.DocumentConfig;
 import io.resys.thena.projects.client.spi.store.DocumentConfig.DocumentAuthorProvider;
 import io.resys.thena.projects.client.spi.store.DocumentConfig.DocumentGidProvider;
-import io.resys.thena.storesql.DbStateSqlImpl;
-import io.resys.thena.storesql.PgErrors;
-import io.resys.thena.support.OidUtils;
-import io.resys.thena.support.RepoAssert;
 import io.resys.thena.projects.client.spi.store.DocumentStore;
 import io.resys.thena.projects.client.spi.store.DocumentStoreException;
 import io.resys.thena.projects.client.spi.store.ImmutableDocumentConfig;
 import io.resys.thena.projects.client.spi.store.ImmutableDocumentExceptionMsg;
 import io.resys.thena.projects.client.spi.store.MainBranch;
+import io.resys.thena.storesql.DbStateSqlImpl;
+import io.resys.thena.support.OidUtils;
+import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.sqlclient.PoolOptions;
@@ -251,9 +250,9 @@ public class DocumentStoreImpl implements DocumentStore {
         
         final io.vertx.mutiny.pgclient.PgPool pgPool = io.vertx.mutiny.pgclient.PgPool.pool(connectOptions, poolOptions);
         
-        thena = DbStateSqlImpl.create().client(pgPool).db(repoName).errorHandler(new PgErrors()).build();
+        thena = DbStateSqlImpl.create().client(pgPool).db(repoName).build();
       } else {
-        thena = DbStateSqlImpl.create().client(pgPool).db(repoName).errorHandler(new PgErrors()).build();
+        thena = DbStateSqlImpl.create().client(pgPool).db(repoName).build();
       }
       
       final DocumentConfig config = ImmutableDocumentConfig.builder()

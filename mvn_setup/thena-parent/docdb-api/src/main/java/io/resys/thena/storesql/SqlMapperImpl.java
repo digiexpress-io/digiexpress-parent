@@ -1,4 +1,4 @@
-package io.resys.thena.storesql.statement;
+package io.resys.thena.storesql;
 
 /*-
  * #%L
@@ -75,14 +75,14 @@ import io.resys.thena.api.entities.org.OrgParty;
 import io.resys.thena.api.entities.org.OrgPartyRight;
 import io.resys.thena.api.entities.org.OrgRight;
 import io.resys.thena.api.entities.org.OrgRightFlattened;
+import io.resys.thena.datasource.SqlDataMapper;
 import io.resys.thena.spi.DbCollections;
-import io.resys.thena.storesql.SqlMapper;
 import io.vertx.core.json.JsonObject;
 import io.vertx.mutiny.sqlclient.Row;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class SqlMapperImpl implements SqlMapper {
+public class SqlMapperImpl implements SqlDataMapper {
 
   protected final DbCollections ctx;
  
@@ -427,5 +427,9 @@ public class SqlMapperImpl implements SqlMapper {
         .partyId(row.getString("party_id"))
         .value(actorStatus != null ? OrgActorStatus.OrgActorStatusType.valueOf(actorStatus) : null)
         .build();
+  }
+  @Override
+  public SqlDataMapper withOptions(DbCollections options) {
+    return new SqlMapperImpl(options);
   }
 }

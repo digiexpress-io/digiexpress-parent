@@ -46,9 +46,7 @@ import io.resys.thena.tasks.client.api.model.Task;
 import io.resys.thena.tasks.client.api.model.Task.Priority;
 import io.resys.thena.tasks.tests.config.TaskPgProfile;
 import io.resys.thena.tasks.tests.config.TaskTestCase;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @QuarkusTest
 @TestProfile(TaskPgProfile.class)
 public class TaskUpdateTest extends TaskTestCase {

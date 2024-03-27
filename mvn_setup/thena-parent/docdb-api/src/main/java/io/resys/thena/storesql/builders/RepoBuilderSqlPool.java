@@ -3,15 +3,11 @@ package io.resys.thena.storesql.builders;
 import io.resys.thena.api.LogConstants;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
-import io.resys.thena.spi.DbCollections;
+import io.resys.thena.datasource.ThenaSqlDataSource;
+import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlFailed;
+import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlSchemaFailed;
+import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlTupleFailed;
 import io.resys.thena.spi.DbState.RepoBuilder;
-import io.resys.thena.storesql.SqlBuilder;
-import io.resys.thena.storesql.SqlMapper;
-import io.resys.thena.storesql.SqlSchema;
-import io.resys.thena.support.ErrorHandler;
-import io.resys.thena.support.ErrorHandler.SqlFailed;
-import io.resys.thena.support.ErrorHandler.SqlSchemaFailed;
-import io.resys.thena.support.ErrorHandler.SqlTupleFailed;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.sqlclient.RowSet;
@@ -23,25 +19,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j(topic = LogConstants.SHOW_SQL)
 @RequiredArgsConstructor
 public class RepoBuilderSqlPool implements RepoBuilder {
-  private final io.vertx.mutiny.sqlclient.Pool pool;
-  private final io.vertx.mutiny.sqlclient.SqlClient client;
-  private final DbCollections names;
-  private final SqlSchema sqlSchema;
-  private final SqlMapper sqlMapper;
-  private final SqlBuilder sqlBuilder;
-  private final ErrorHandler errorHandler;
-
+  private final ThenaSqlDataSource dataSource;
   
   private io.vertx.mutiny.sqlclient.SqlClient getClient() {
-    if(client == null) {
-      return pool;
-    }
-    return client;
+    return dataSource.getClient();
   }
 
   @Override
   public Uni<Tenant> getByName(String name) {
-    final var sql = sqlBuilder.repo().getByName(name);
+    final var sql = dataSource.getQueryBuilder().repo().getByName(name);
     if(log.isDebugEnabled()) {
       log.debug("Repo by name query, with props: {} \r\n{}", 
           sql.getProps().deepToString(), 
@@ -49,7 +35,7 @@ public class RepoBuilderSqlPool implements RepoBuilder {
     }
     
     return getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.repo(row))
+        .mapping(row -> dataSource.getDataMapper().repo(row))
         .execute(sql.getProps())
         .onItem()
         .transform((RowSet<Tenant> rowset) -> {
@@ -59,17 +45,17 @@ public class RepoBuilderSqlPool implements RepoBuilder {
           }
           return null;
         })
-        .onFailure(e -> errorHandler.notFound(e)).recoverWithNull()
+        .onFailure(e -> dataSource.getErrorHandler().notFound(e)).recoverWithNull()
         .onFailure().invoke(e -> {
           
           
-          errorHandler.deadEnd(new SqlTupleFailed("Can't find 'REPOS' by 'name'!", sql, e));
+          dataSource.getErrorHandler().deadEnd(new SqlTupleFailed("Can't find 'REPOS' by 'name'!", sql, e));
         });
   }
 
   @Override
   public Uni<Tenant> getByNameOrId(String nameOrId) {
-    final var sql = sqlBuilder.repo().getByNameOrId(nameOrId);
+    final var sql = dataSource.getQueryBuilder().repo().getByNameOrId(nameOrId);
     
     if(log.isDebugEnabled()) {
       log.debug("Repo by nameOrId query, with props: {} \r\n{}", 
@@ -79,7 +65,7 @@ public class RepoBuilderSqlPool implements RepoBuilder {
     
     
     return getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.repo(row))
+        .mapping(row -> dataSource.getDataMapper().repo(row))
         .execute(sql.getProps())
         .onItem()
         .transform((RowSet<Tenant> rowset) -> {
@@ -89,17 +75,18 @@ public class RepoBuilderSqlPool implements RepoBuilder {
           }
           return null;
         })
-        .onFailure(e -> errorHandler.notFound(e)).recoverWithNull()
-        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'REPOS' by 'name' or 'id'!", sql, e)));
+        .onFailure(e -> dataSource.getErrorHandler().notFound(e)).recoverWithNull()
+        .onFailure().invoke(e -> dataSource.getErrorHandler().deadEnd(new SqlTupleFailed("Can't find 'REPOS' by 'name' or 'id'!", sql, e)));
   }
   
   @Override
   public Uni<Tenant> insert(final Tenant newRepo) {
-    final var next = names.toRepo(newRepo);
-    final var sqlSchema = this.sqlSchema.withOptions(next);
-    
+    final var next = dataSource.withTenant(newRepo);
+    final var sqlSchema = next.getSchema();
+    final var sqlQuery = next.getQueryBuilder();
+    final var pool = next.getPool();
     return pool.withTransaction(tx -> {
-      final var repoInsert = this.sqlBuilder.withOptions(next).repo().insertOne(newRepo);
+      final var repoInsert = sqlQuery.repo().insertOne(newRepo);
       final var tablesCreate = new StringBuilder();
       
       if(newRepo.getType() == StructureType.git) {
@@ -161,16 +148,15 @@ public class RepoBuilderSqlPool implements RepoBuilder {
       
       final Uni<Void> create = getClient().preparedQuery(sqlSchema.createRepo().getValue()).execute()
           .onItem().transformToUni(data -> Uni.createFrom().voidItem())
-          .onFailure().invoke(e -> errorHandler.deadEnd(new SqlFailed("Can't create table 'REPO'!", sqlSchema.createRepo(), e)));
+          .onFailure().invoke(e -> next.getErrorHandler().deadEnd(new SqlFailed("Can't create table 'REPO'!", sqlSchema.createRepo(), e)));
       
       
       final Uni<Void> insert = tx.preparedQuery(repoInsert.getValue()).execute(repoInsert.getProps())
           .onItem().transformToUni(rowSet -> Uni.createFrom().voidItem())
-          .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't insert into 'REPO'!", repoInsert, e)));
+          .onFailure().invoke(e -> next.getErrorHandler().deadEnd(new SqlTupleFailed("Can't insert into 'REPO'!", repoInsert, e)));
       final Uni<Void> nested = tx.query(tablesCreate.toString()).execute()
           .onItem().transformToUni(rowSet -> Uni.createFrom().voidItem())
-          .onFailure().invoke(e -> errorHandler.deadEnd(new SqlSchemaFailed("Can't create tables!", tablesCreate.toString(), e)));
-      
+          .onFailure().invoke(e -> next.getErrorHandler().deadEnd(new SqlSchemaFailed("Can't create tables!", tablesCreate.toString(), e)));
       
       return create
           .onItem().transformToUni((junk) -> insert)
@@ -181,7 +167,7 @@ public class RepoBuilderSqlPool implements RepoBuilder {
 
   @Override
   public Multi<Tenant> findAll() {
-    final var sql = this.sqlBuilder.repo().findAll();
+    final var sql = this.dataSource.getQueryBuilder().repo().findAll();
     if(log.isDebugEnabled()) {
       log.debug("Fina all repos query, with props: {} \r\n{}", 
           "", 
@@ -190,22 +176,23 @@ public class RepoBuilderSqlPool implements RepoBuilder {
     
     
     return getClient().preparedQuery(sql.getValue())
-    .mapping(row -> sqlMapper.repo(row))
+    .mapping(row -> dataSource.getDataMapper().repo(row))
     .execute()
     .onItem()
     .transformToMulti((RowSet<Tenant> rowset) -> Multi.createFrom().iterable(rowset))
-    .onFailure(e -> errorHandler.notFound(e)).recoverWithCompletion()
-    .onFailure().invoke(e -> errorHandler.deadEnd(new SqlFailed("Can't find 'REPOS'!", sql, e)));
+    .onFailure(e -> dataSource.getErrorHandler().notFound(e)).recoverWithCompletion()
+    .onFailure().invoke(e -> dataSource.getErrorHandler().deadEnd(new SqlFailed("Can't find 'REPOS'!", sql, e)));
   }
   
   
   @Override
   public Uni<Tenant> delete(final Tenant newRepo) {
-    final var next = names.toRepo(newRepo);
-    final var sqlSchema = this.sqlSchema.withOptions(next);
-    
+    final var next = dataSource.withTenant(newRepo);
+    final var sqlSchema = next.getSchema();
+    final var sqlQuery = next.getQueryBuilder();
+    final var pool = next.getPool();
     return pool.withTransaction(tx -> {
-      final var repoDelete = this.sqlBuilder.withOptions(next).repo().deleteOne(newRepo);
+      final var repoDelete = sqlQuery.repo().deleteOne(newRepo);
       final var tablesDrop = new StringBuilder();
       
       if(newRepo.getType() == StructureType.git) {
@@ -257,10 +244,10 @@ public class RepoBuilderSqlPool implements RepoBuilder {
       
       final Uni<Void> insert = tx.preparedQuery(repoDelete.getValue()).execute(repoDelete.getProps())
           .onItem().transformToUni(rowSet -> Uni.createFrom().voidItem())
-          .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't delete from 'REPO'!", repoDelete, e)));
+          .onFailure().invoke(e -> next.getErrorHandler().deadEnd(new SqlTupleFailed("Can't delete from 'REPO'!", repoDelete, e)));
       final Uni<Void> nested = tx.query(tablesDrop.toString()).execute()
           .onItem().transformToUni(rowSet -> Uni.createFrom().voidItem())
-          .onFailure().invoke(e -> errorHandler.deadEnd(new SqlSchemaFailed("Can't drop tables!", tablesDrop.toString(), e)));
+          .onFailure().invoke(e -> next.getErrorHandler().deadEnd(new SqlSchemaFailed("Can't drop tables!", tablesDrop.toString(), e)));
       
       return insert
           .onItem().transformToUni(junk -> nested)

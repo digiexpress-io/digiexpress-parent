@@ -27,7 +27,6 @@ import javax.annotation.Nullable;
 
 import io.resys.thena.api.actions.GitHistoryActions;
 import io.resys.thena.api.actions.GitHistoryActions.BlobHistoryQuery;
-import io.resys.thena.api.actions.GitHistoryActions.HistoryObjects;
 import io.resys.thena.api.actions.GitPullActions.MatchCriteria;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;

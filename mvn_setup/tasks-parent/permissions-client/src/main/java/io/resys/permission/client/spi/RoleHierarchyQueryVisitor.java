@@ -10,7 +10,6 @@ import io.resys.permission.client.api.model.ImmutableRole;
 import io.resys.permission.client.api.model.ImmutableRoleHierarchyContainer;
 import io.resys.permission.client.api.model.RoleHierarchyContainer;
 import io.resys.thena.api.entities.org.OrgActorStatus;
-import io.resys.thena.api.entities.org.OrgActorStatus.OrgActorStatusType;
 import io.resys.thena.api.entities.org.OrgMember;
 import io.resys.thena.api.entities.org.OrgMemberRight;
 import io.resys.thena.api.entities.org.OrgMembership;

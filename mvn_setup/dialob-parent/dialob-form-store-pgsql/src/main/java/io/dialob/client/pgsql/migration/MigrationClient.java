@@ -82,7 +82,7 @@ public class MigrationClient {
           pool.
           preparedQuery(sql.getValue()).execute()
               .onItem().transformToUni(data -> Uni.createFrom().voidItem())
-              .onFailure().invoke(e -> new PgErrors().deadEnd("Can't migrate: " + sql.getId() + " sql:'" + sql.getValue() + "'!", e))
+              .onFailure().invoke(e -> PgErrors.deadEnd("Can't migrate: " + sql.getId() + " sql:'" + sql.getValue() + "'!", e))
               .await().atMost(Duration.ofSeconds(5));
         }
       }

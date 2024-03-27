@@ -28,16 +28,12 @@ import org.immutables.value.Value;
 
 import io.resys.thena.api.ThenaClient;
 import io.resys.thena.api.actions.GitBranchActions;
-import io.resys.thena.api.actions.GitBranchActions.BranchObjects;
 import io.resys.thena.api.actions.GitBranchActions.BranchObjectsQuery;
 import io.resys.thena.api.actions.GitCommitActions.CommitBuilder;
 import io.resys.thena.api.actions.GitCommitActions.CommitResultEnvelope;
 import io.resys.thena.api.actions.GitHistoryActions;
 import io.resys.thena.api.actions.GitHistoryActions.BlobHistoryQuery;
-import io.resys.thena.api.actions.GitHistoryActions.HistoryObjects;
 import io.resys.thena.api.actions.GitPullActions;
-import io.resys.thena.api.actions.GitPullActions.PullObject;
-import io.resys.thena.api.actions.GitPullActions.PullObjects;
 import io.resys.thena.api.actions.GitPullActions.PullObjectsQuery;
 import io.resys.thena.api.entities.git.Commit;
 import io.resys.thena.api.envelope.QueryEnvelope;

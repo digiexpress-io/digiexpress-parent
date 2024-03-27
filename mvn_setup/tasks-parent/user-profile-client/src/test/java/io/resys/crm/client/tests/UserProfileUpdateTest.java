@@ -43,6 +43,7 @@ public class UserProfileUpdateTest extends UserProfileTestCase {
   }
   
   
+  @SuppressWarnings("unused")
   @org.junit.jupiter.api.Test
   public void changeUserDetailsFirstName() {
     final var repoName = UserProfileUpdateTest.class.getSimpleName() + "ChangeUserDetailsFirstName";

@@ -59,7 +59,7 @@ public class GitPrinter {
   }
   
   public String print(Tenant repo) {
-   final var ctx = state.toGitState().withTenant(repo);
+   final var ctx = state.toGitState(repo);
     
     StringBuilder result = new StringBuilder();
 
@@ -170,7 +170,7 @@ public class GitPrinter {
       return next;
     };
 
-    final var ctx = state.toGitState().withTenant(repo);
+    final var ctx = state.toGitState(repo);
     
     StringBuilder result = new StringBuilder();
 

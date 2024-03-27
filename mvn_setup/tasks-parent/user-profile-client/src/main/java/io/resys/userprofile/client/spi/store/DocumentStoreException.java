@@ -26,15 +26,13 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import io.resys.thena.api.actions.GitCommitActions.CommitResultEnvelope;
 import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
+import io.resys.thena.api.actions.GitCommitActions.CommitResultEnvelope;
 import io.resys.thena.api.actions.GitPullActions;
-import io.resys.thena.api.actions.GitPullActions.PullObject;
-import io.resys.thena.api.actions.GitPullActions.PullObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.spi.ExMessageFormatter;
-import io.resys.thena.spi.ImmutableDocumentExceptionMsg;
 import io.resys.thena.spi.ExMessageFormatter.DocumentExceptionMsg;
+import io.resys.thena.spi.ImmutableDocumentExceptionMsg;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 

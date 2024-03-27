@@ -44,8 +44,8 @@ import io.resys.thena.spi.ThenaClientPgSql;
 import io.resys.thena.support.DocDbPrinter;
 import io.resys.userprofile.client.api.UserProfileClient;
 import io.resys.userprofile.client.api.model.Document.DocumentType;
-import io.resys.userprofile.client.spi.UserProfileClientImpl;
 import io.resys.userprofile.client.spi.DocumentStoreImpl;
+import io.resys.userprofile.client.spi.UserProfileClientImpl;
 import io.resys.userprofile.client.spi.store.DocumentConfig.DocumentGidProvider;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.json.jackson.DatabindCodec;
@@ -115,7 +115,6 @@ public class UserProfileTestCase {
 
   public void assertCommits(String repoName) {
     final var config = getStore().getConfig();
-    final var state = ((ThenaClientPgSql) config.getClient()).getState();
     final var commits = config.getClient().git(repoName).commit().findAllCommits().await().atMost(atMost);
     log.debug("Total commits: {}", commits.size());
     

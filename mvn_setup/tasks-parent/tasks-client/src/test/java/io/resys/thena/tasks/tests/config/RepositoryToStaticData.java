@@ -54,7 +54,7 @@ public class RepositoryToStaticData {
       return next;
     };
 
-    final var ctx = state.toGitState().withTenant(repo);
+    final var ctx = state.toGitState(repo);
     
     StringBuilder result = new StringBuilder();
 

@@ -24,7 +24,7 @@ import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.spi.DataMapper;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.structures.org.OrgInserts.OrgBatchForOne;
-import io.resys.thena.structures.org.OrgState.OrgRepo;
+import io.resys.thena.structures.org.OrgState;
 import io.resys.thena.structures.org.modify.BatchForOneMemberModify.NoMemberChangesException;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
@@ -150,11 +150,11 @@ public class ModifyOneMemberImpl implements ModifyOneMember {
     RepoAssert.notEmptyIfDefined(userName, () -> "userName can't be empty!");
     RepoAssert.notEmptyIfDefined(email, () -> "email can't be empty!");
 
-    return this.state.toOrgState().withTransaction(repoId, this::doInTx);
+    return this.state.withOrgTransaction(repoId, this::doInTx);
   }
   
   
-  private Uni<OneMemberEnvelope> doInTx(OrgRepo tx) {
+  private Uni<OneMemberEnvelope> doInTx(OrgState tx) {
 		// parties
 		final Uni<List<OrgParty>> partyPromise = this.allParties.isEmpty() ? 
 			Uni.createFrom().item(Collections.emptyList()) : 
@@ -200,7 +200,7 @@ public class ModifyOneMemberImpl implements ModifyOneMember {
   }
   
   private OneMemberEnvelope validateQueryResponse(
-      OrgRepo tx, 
+      OrgState tx, 
       OrgMember member, 
       List<OrgParty> parties, 
       List<OrgRight> rights) {
@@ -242,7 +242,7 @@ public class ModifyOneMemberImpl implements ModifyOneMember {
   }
   
   private Uni<OneMemberEnvelope> createResponse(
-      OrgRepo tx, 
+      OrgState tx, 
       OrgMember member, 
       List<OrgParty> parties, 
       List<OrgRight> rights,
@@ -254,7 +254,7 @@ public class ModifyOneMemberImpl implements ModifyOneMember {
     final Map<String, List<OrgRight>> addGroupsBy = new HashMap<>();
     final Map<String, String> addGroupMapping = new HashMap<>();
     
-    final var modify = new BatchForOneMemberModify(tx.getRepo().getId(), author, message)
+    final var modify = new BatchForOneMemberModify(tx.getTenantId(), author, message)
       .newExternalId(externalId)
       .newEmail(email)
       .newUserName(userName)

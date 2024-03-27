@@ -1,9 +1,9 @@
-package io.resys.thena.storesql.statement;
+package io.resys.thena.storesql;
 
+import io.resys.thena.datasource.ImmutableSql;
+import io.resys.thena.datasource.SqlQueryBuilder.Sql;
+import io.resys.thena.datasource.SqlSchema;
 import io.resys.thena.spi.DbCollections;
-import io.resys.thena.storesql.ImmutableSql;
-import io.resys.thena.storesql.SqlSchema;
-import io.resys.thena.storesql.SqlBuilder.Sql;
 import io.resys.thena.storesql.support.SqlStatement;
 import lombok.RequiredArgsConstructor;
 
@@ -15,7 +15,7 @@ public class SqlSchemaImpl implements SqlSchema {
   @Override
   public Sql createRepo() {
     return ImmutableSql.builder().value(new SqlStatement()
-        .append("CREATE TABLE IF NOT EXISTS ").append(options.getRepos()).ln()
+        .append("CREATE TABLE IF NOT EXISTS ").append(options.getTenant()).ln()
         .append("(").ln()
         .append("  id VARCHAR(40) PRIMARY KEY,").ln()
         .append("  rev VARCHAR(40) NOT NULL,").ln()
@@ -695,7 +695,7 @@ public class SqlSchemaImpl implements SqlSchema {
   }
   
   
-  @Override public Sql dropRepo() { return dropTableIfNotExists(options.getRepos()); }
+  @Override public Sql dropRepo() { return dropTableIfNotExists(options.getTenant()); }
   @Override public Sql dropGitBlobs() { return dropTableIfNotExists(options.getBlobs()); }
   @Override public Sql dropGitCommits() { return dropTableIfNotExists(options.getCommits()); }
   @Override public Sql dropGitTreeItems() { return dropTableIfNotExists(options.getTreeItems()); }

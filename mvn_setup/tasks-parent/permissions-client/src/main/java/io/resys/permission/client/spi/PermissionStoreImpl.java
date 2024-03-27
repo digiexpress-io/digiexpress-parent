@@ -33,7 +33,6 @@ import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.spi.ImmutableDocumentExceptionMsg;
 import io.resys.thena.storesql.DbStateSqlImpl;
-import io.resys.thena.storesql.PgErrors;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import io.vertx.pgclient.PgConnectOptions;
@@ -230,9 +229,9 @@ public class PermissionStoreImpl implements PermissionStore {
         
         final io.vertx.mutiny.pgclient.PgPool pgPool = io.vertx.mutiny.pgclient.PgPool.pool(connectOptions, poolOptions);
         
-        thena = DbStateSqlImpl.create().client(pgPool).db(repoName).errorHandler(new PgErrors()).build();
+        thena = DbStateSqlImpl.create().client(pgPool).db(repoName).build();
       } else {
-        thena = DbStateSqlImpl.create().client(pgPool).db(repoName).errorHandler(new PgErrors()).build();
+        thena = DbStateSqlImpl.create().client(pgPool).db(repoName).build();
       }
       
       final PermissionStoreConfig config = ImmutablePermissionStoreConfig.builder()

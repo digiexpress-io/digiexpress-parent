@@ -31,7 +31,6 @@ import io.resys.userprofile.client.spi.store.DocumentConfig;
 
 
 public class UserProfileCommandVisitor {
-  private final DocumentConfig ctx;
   private final UserProfile start;
   private final List<UserProfileCommand> visitedCommands = new ArrayList<>();
   private ImmutableUserProfile current;
@@ -39,13 +38,11 @@ public class UserProfileCommandVisitor {
   public UserProfileCommandVisitor(DocumentConfig ctx) {
     this.start = null;
     this.current = null;
-    this.ctx = ctx;
   }
   
   public UserProfileCommandVisitor(UserProfile start, DocumentConfig ctx) {
     this.start = start;
     this.current = ImmutableUserProfile.builder().from(start).build();
-    this.ctx = ctx;
   }
   
   public UserProfile visitTransaction(List<? extends UserProfileCommand> commands) throws NoChangesException {
@@ -249,11 +246,10 @@ public class UserProfileCommandVisitor {
 
   
   public static class NoChangesException extends Exception {
-    
+    private static final long serialVersionUID = 5955370217897065513L;
   }
 
   public static class UpdateUserProfileVisitorException extends RuntimeException {
-
     private static final long serialVersionUID = -1385190644836838881L;
 
     public UpdateUserProfileVisitorException(String message, Throwable cause) {

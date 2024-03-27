@@ -31,7 +31,7 @@ public class OrgDbPrinter {
   
     
     
-    final var ctx = state.toOrgState().withRepo(repo);
+    final var ctx = state.toOrgState(repo);
     StringBuilder result = new StringBuilder();
     
     result
@@ -198,7 +198,7 @@ public class OrgDbPrinter {
   }
   
   public String print(Tenant repo) {
-   final var ctx = state.toOrgState().withRepo(repo);
+   final var ctx = state.toOrgState(repo);
     
     StringBuilder result = new StringBuilder();
     result

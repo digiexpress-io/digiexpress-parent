@@ -22,7 +22,7 @@ import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.spi.DataMapper;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.structures.org.OrgInserts.OrgBatchForOne;
-import io.resys.thena.structures.org.OrgState.OrgRepo;
+import io.resys.thena.structures.org.OrgState;
 import io.resys.thena.structures.org.modify.BatchForOneRightModify.NoRightChangesException;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
@@ -124,11 +124,11 @@ public class ModifyOneRightImpl implements ModifyOneRight {
     RepoAssert.notEmptyIfDefined(rightName, () -> "rightName can't be empty!");
     RepoAssert.notEmptyIfDefined(rightDescription, () -> "email can't be empty!");
 
-    return this.state.toOrgState().withTransaction(repoId, this::doInTx);
+    return this.state.withOrgTransaction(repoId, this::doInTx);
   }
   
   
-  private Uni<OneRightEnvelope> doInTx(OrgRepo tx) {
+  private Uni<OneRightEnvelope> doInTx(OrgState tx) {
 		// find all parties
 		final Uni<List<OrgParty>> partiesPromise = this.allParties.isEmpty() ? 
 			Uni.createFrom().item(Collections.emptyList()) : 
@@ -223,7 +223,7 @@ public class ModifyOneRightImpl implements ModifyOneRight {
       
 
   private Uni<OneRightEnvelope> createResponse(
-      OrgRepo tx, 
+      OrgState tx, 
       List<OrgParty> parties, 
       List<OrgMember> members,
       List<OrgPartyRight> partyRights,
@@ -232,7 +232,7 @@ public class ModifyOneRightImpl implements ModifyOneRight {
       OrgRight right) throws NoRightChangesException {
     
     
-    final var modify = new BatchForOneRightModify(tx.getRepo().getId(), author, message)
+    final var modify = new BatchForOneRightModify(tx.getTenantId(), author, message)
         .current(right)
         .currentMemberRights(memberRights)
         .currentRightStatus(rightStatus)

@@ -51,7 +51,7 @@ public class UserProfileQueryImpl implements UserProfileQuery {
 
   @Override
   public Uni<List<UserProfile>> deleteAll(String userId, Instant targetDate) {
-    return ctx.getConfig().accept(new DeleteAllUserProfilesVisitor(userId, targetDate))
+    return ctx.getConfig().accept(new DeleteAllUserProfilesVisitor())
         .onItem().transformToUni(unwrap -> unwrap);
   }
   

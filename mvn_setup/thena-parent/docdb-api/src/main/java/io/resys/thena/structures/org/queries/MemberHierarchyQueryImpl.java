@@ -14,12 +14,12 @@ import io.resys.thena.api.entities.org.ThenaOrgObjects.OrgMemberHierarchy;
 import io.resys.thena.api.envelope.ImmutableQueryEnvelope;
 import io.resys.thena.api.envelope.ImmutableQueryEnvelopeList;
 import io.resys.thena.api.envelope.QueryEnvelope;
-import io.resys.thena.api.envelope.QueryEnvelopeList;
-import io.resys.thena.api.envelope.ThenaContainer;
 import io.resys.thena.api.envelope.QueryEnvelope.DocNotFoundException;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
+import io.resys.thena.api.envelope.QueryEnvelopeList;
+import io.resys.thena.api.envelope.ThenaContainer;
 import io.resys.thena.spi.DbState;
-import io.resys.thena.structures.org.OrgQueries;
+import io.resys.thena.structures.org.OrgState;
 import io.resys.thena.structures.org.memberhierarchy.MemberTreeBuilder;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Multi;
@@ -37,40 +37,29 @@ public class MemberHierarchyQueryImpl implements MemberHierarchyQuery {
 	public Uni<QueryEnvelope<OrgMemberHierarchy>> get(String userId) {
 		RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
 		
-    return state.tenant().getByNameOrId(repoId)
-    .onItem().transformToUni((Tenant existing) -> {
-      if(existing == null) {
-        return Uni.createFrom().item(QueryEnvelope.repoNotFound(repoId, log));
-      }
-      
-      return getUser(state.toOrgState().query(existing), existing, userId);
-    });
+    return state.toOrgState(repoId).onItem().transformToUni(orgState -> getUser(orgState, userId));
 	}
   @Override
   public Uni<QueryEnvelopeList<OrgMemberHierarchy>> findAll() {
     RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
     
-    return state.tenant().getByNameOrId(repoId)
-    .onItem().transformToUni((Tenant existing) -> {
-      if(existing == null) {
-        return Uni.createFrom().item(QueryEnvelopeList.repoNotFound(repoId, log));
-      }
+    return this.state.toOrgState(repoId)
+    .onItem().transformToUni(state -> {
       
-      final var state = this.state.toOrgState().query(existing);
-      final Multi<OrgMember> users = state.members().findAll();
-      final Multi<QueryEnvelope<OrgMemberHierarchy>> userAndGroups = users.onItem().transformToUni(user -> getUser(state, existing, user.getId())).merge();
+      final Multi<OrgMember> users = state.query().members().findAll();
+      final Multi<QueryEnvelope<OrgMemberHierarchy>> userAndGroups = users.onItem().transformToUni(user -> getUser(state, user.getId())).merge();
       return userAndGroups.collect().asList().onItem().transform(this::createUsersResult);
     });
   }
 	
-	private Uni<QueryEnvelope<OrgMemberHierarchy>> getUser(OrgQueries org, Tenant existing, String userId) {
-    return org.members().getStatusById(userId).onItem().transformToUni(user -> {
+	private Uni<QueryEnvelope<OrgMemberHierarchy>> getUser(OrgState org, String userId) {
+    return org.query().members().getStatusById(userId).onItem().transformToUni(user -> {
       if(user == null) {
-        return Uni.createFrom().item(docNotFound(existing, userId, new DocNotFoundException()));
+        return Uni.createFrom().item(docNotFound(org.getDataSource().getTenant(), userId, new DocNotFoundException()));
       }
       return Uni.combine().all().unis(
-          org.members().findAllRightsByMemberId(user.getId()),
-          org.members().findAllMemberHierarchyEntries(user.getId())
+          org.query().members().findAllRightsByMemberId(user.getId()),
+          org.query().members().findAllMemberHierarchyEntries(user.getId())
         ).asTuple()
         .onItem().transform(tuple -> createUserResult(user, tuple.getItem2(), tuple.getItem1()));
     });

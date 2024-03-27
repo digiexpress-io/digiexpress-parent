@@ -26,12 +26,14 @@ import io.resys.thena.api.entities.Tenant;
 
 @Value.Immutable
 public abstract class DbCollections {
+  private static final DbCollections DEFAULTS = defaults("");
+  
   public interface WithOptions<T extends WithOptions<T>> {
     T withOptions(DbCollections options);
   }
   
   public abstract String getDb();
-  public abstract String getRepos();
+  public abstract String getTenant();
   
   // git structures
   public abstract String getRefs();
@@ -59,34 +61,35 @@ public abstract class DbCollections {
   public abstract String getOrgCommitTrees();
   public abstract String getOrgActorData();
   
-  
   public DbCollections toRepo(Tenant repo) {
-    String prefix = repo.getPrefix();
+    final String prefix = repo.getPrefix();
+    
     return ImmutableDbCollections.builder()
         .db(this.getDb())
-        .repos(this.getRepos())
-        .refs(      prefix + this.getRefs())
-        .tags(      prefix + this.getTags())
-        .blobs(     prefix + this.getBlobs())
-        .trees(     prefix + this.getTrees())
-        .treeItems( prefix + this.getTreeItems())
-        .commits(   prefix + this.getCommits())
+        .tenant(this.getTenant())
         
-        .docCommits(prefix + this.getDocCommits())
-        .docBranch( prefix + this.getDocBranch())
-        .docLog(    prefix + this.getDocLog())
-        .doc(       prefix + this.getDoc())
+        .refs(      prefix + DEFAULTS.getRefs())
+        .tags(      prefix + DEFAULTS.getTags())
+        .blobs(     prefix + DEFAULTS.getBlobs())
+        .trees(     prefix + DEFAULTS.getTrees())
+        .treeItems( prefix + DEFAULTS.getTreeItems())
+        .commits(   prefix + DEFAULTS.getCommits())
         
-        .orgRights(         prefix + this.getOrgRights())
-        .orgParties(        prefix + this.getOrgParties())
-        .orgPartyRights(    prefix + this.getOrgPartyRights())
-        .orgMembers(        prefix + this.getOrgMembers())
-        .orgMemberRights(   prefix + this.getOrgMemberRights())
-        .orgMemberships(    prefix + this.getOrgMemberships())
-        .orgActorStatus(    prefix + this.getOrgActorStatus())
-        .orgCommits(        prefix + this.getOrgCommits())
-        .orgCommitTrees(    prefix + this.getOrgCommitTrees())
-        .orgActorData(      prefix + this.getOrgActorData())
+        .docCommits(prefix + DEFAULTS.getDocCommits())
+        .docBranch( prefix + DEFAULTS.getDocBranch())
+        .docLog(    prefix + DEFAULTS.getDocLog())
+        .doc(       prefix + DEFAULTS.getDoc())
+        
+        .orgRights(         prefix + DEFAULTS.getOrgRights())
+        .orgParties(        prefix + DEFAULTS.getOrgParties())
+        .orgPartyRights(    prefix + DEFAULTS.getOrgPartyRights())
+        .orgMembers(        prefix + DEFAULTS.getOrgMembers())
+        .orgMemberRights(   prefix + DEFAULTS.getOrgMemberRights())
+        .orgMemberships(    prefix + DEFAULTS.getOrgMemberships())
+        .orgActorStatus(    prefix + DEFAULTS.getOrgActorStatus())
+        .orgCommits(        prefix + DEFAULTS.getOrgCommits())
+        .orgCommitTrees(    prefix + DEFAULTS.getOrgCommitTrees())
+        .orgActorData(      prefix + DEFAULTS.getOrgActorData())
         
         .build();
   }
@@ -94,7 +97,7 @@ public abstract class DbCollections {
   public static DbCollections defaults(String db) {
     return ImmutableDbCollections.builder()
         .db(db == null ? "docdb" : db)
-        .repos("repos")
+        .tenant("repos")
         
         .refs("refs")
         .tags("tags")

@@ -1,6 +1,7 @@
 package io.resys.thena.storesql;
 
-import io.resys.thena.storesql.GitDbQueriesSqlImpl.ClientQuerySqlContext;
+import io.resys.thena.datasource.ThenaDataSource;
+import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.storesql.builders.OrgActorStatusQuerySqlPool;
 import io.resys.thena.storesql.builders.OrgGroupQuerySqlPool;
 import io.resys.thena.storesql.builders.OrgGroupRoleQuerySqlPool;
@@ -14,39 +15,42 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class OrgDbQueriesSqlImpl implements OrgQueries {
+  private final ThenaSqlDataSource dataSource;
   
-  protected final ClientQuerySqlContext context;
-
   @Override
   public MemberQuery members() {
-    return new OrgUserQuerySqlPool(context.getWrapper(), context.getMapper(), context.getBuilder(), context.getErrorHandler());
+    return new OrgUserQuerySqlPool(dataSource);
   }
   @Override
   public PartyQuery parties() {
-    return new OrgGroupQuerySqlPool(context.getWrapper(), context.getMapper(), context.getBuilder(), context.getErrorHandler());
+    return new OrgGroupQuerySqlPool(dataSource);
   }
   @Override
   public RightsQuery rights() {
-    return new OrgRoleQuerySqlPool(context.getWrapper(), context.getMapper(), context.getBuilder(), context.getErrorHandler());
+    return new OrgRoleQuerySqlPool(dataSource);
   }
 	@Override
 	public MembershipQuery memberships() {
-    return new OrgUserMembershipsQuerySqlPool(context.getWrapper(), context.getMapper(), context.getBuilder(), context.getErrorHandler());
+    return new OrgUserMembershipsQuerySqlPool(dataSource);
 	}
 	@Override
 	public MemberRightsQuery memberRights() {
-    return new OrgMemberRightsQueryImpl(context.getWrapper(), context.getMapper(), context.getBuilder(), context.getErrorHandler());
+    return new OrgMemberRightsQueryImpl(dataSource);
 	}
 	@Override
 	public PartyRightsQuery partyRights() {
-    return new OrgGroupRoleQuerySqlPool(context.getWrapper(), context.getMapper(), context.getBuilder(), context.getErrorHandler());
+    return new OrgGroupRoleQuerySqlPool(dataSource);
 	}
+  @Override
+  public ActorStatusQuery actorStatus() {
+    return new OrgActorStatusQuerySqlPool(dataSource);
+  }
   @Override
   public CommitQuery commits() {
     return null;
   }
   @Override
-  public ActorStatusQuery actorStatus() {
-    return new OrgActorStatusQuerySqlPool(context.getWrapper(), context.getMapper(), context.getBuilder(), context.getErrorHandler());
+  public ThenaDataSource getDataSource() {
+    return dataSource;
   }
 }

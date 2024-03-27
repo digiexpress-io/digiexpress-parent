@@ -27,7 +27,7 @@ import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.spi.DataMapper;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.structures.org.OrgInserts.OrgBatchForOne;
-import io.resys.thena.structures.org.OrgState.OrgRepo;
+import io.resys.thena.structures.org.OrgState;
 import io.resys.thena.structures.org.modify.BatchForOnePartyModify.NoPartyChangesException;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
@@ -158,11 +158,11 @@ public class ModifyOnePartyImpl implements ModifyOneParty {
     RepoAssert.notEmptyIfDefined(partyDescription, () -> "partyDescription can't be empty!");
     RepoAssert.notEmptyIfDefined(externalId, () -> "externalId can't be empty!");
 
-    return this.state.toOrgState().withTransaction(repoId, this::doInTx);
+    return this.state.withOrgTransaction(repoId, this::doInTx);
   }
   
   
-  private Uni<OnePartyEnvelope> doInTx(OrgRepo tx) {
+  private Uni<OnePartyEnvelope> doInTx(OrgState tx) {
 		// members
 		final Uni<List<OrgMember>> memberPromise = this.allMembers.isEmpty() ? 
 			Uni.createFrom().item(Collections.emptyList()) : 
@@ -221,7 +221,7 @@ public class ModifyOnePartyImpl implements ModifyOneParty {
   }
   
   private OnePartyEnvelope validateQueryResponse(
-      OrgRepo tx, 
+      OrgState tx, 
       List<OrgMember> members, 
       OrgParty party, 
       List<OrgRight> rights,
@@ -282,7 +282,7 @@ public class ModifyOnePartyImpl implements ModifyOneParty {
   }
   
   private Uni<OnePartyEnvelope> createResponse(
-      OrgRepo tx, 
+      OrgState tx, 
       List<OrgMember> members, 
       OrgParty party, 
       List<OrgRight> rights,
@@ -296,7 +296,7 @@ public class ModifyOnePartyImpl implements ModifyOneParty {
     final Map<String, List<OrgRight>> addMembersWithRights = new HashMap<>();
     final Map<String, String> addGroupMapping = new HashMap<>();
     
-    final var modify = new BatchForOnePartyModify(tx.getRepo().getId(), author, message)
+    final var modify = new BatchForOnePartyModify(tx.getTenantId(), author, message)
       .newExternalId(externalId)
       .newPartyName(partyName)
       .newPartyDesc(partyDescription)

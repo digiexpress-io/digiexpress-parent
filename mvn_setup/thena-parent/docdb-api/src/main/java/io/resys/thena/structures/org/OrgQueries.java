@@ -14,11 +14,12 @@ import io.resys.thena.api.entities.org.OrgParty;
 import io.resys.thena.api.entities.org.OrgPartyRight;
 import io.resys.thena.api.entities.org.OrgRight;
 import io.resys.thena.api.entities.org.OrgRightFlattened;
+import io.resys.thena.datasource.ThenaDataSource;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 
 public interface OrgQueries {
-  
+  ThenaDataSource getDataSource();
   PartyQuery parties();
   MembershipQuery memberships();
   RightsQuery rights();

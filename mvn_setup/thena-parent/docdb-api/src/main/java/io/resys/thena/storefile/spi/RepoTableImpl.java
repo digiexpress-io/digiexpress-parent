@@ -52,7 +52,7 @@ public class RepoTableImpl implements RepoTable {
     this.ctx = ctx;
     this.db = db;
     this.objectMapper = objectMapper;
-    this.repoTable = new FileTable<RepoTable.RepoTableRow>(db, ctx.getRepos(), objectMapper, RepoTable.RepoTableRow.class, new TypeReference<List<RepoTable.RepoTableRow>>() {}) {};
+    this.repoTable = new FileTable<RepoTable.RepoTableRow>(db, ctx.getTenant(), objectMapper, RepoTable.RepoTableRow.class, new TypeReference<List<RepoTable.RepoTableRow>>() {}) {};
     this.blobs = new BlobTableImpl(db, ctx, objectMapper);
     this.commits = new CommitTableImpl(db, ctx, objectMapper);
     this.refs = new RefTableImpl(db, ctx, objectMapper);

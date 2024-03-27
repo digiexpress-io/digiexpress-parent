@@ -6,6 +6,8 @@ import java.util.Collection;
 import java.util.List;
 
 import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
+import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlSchemaFailed;
 import io.resys.thena.spi.DbCollections;
 import io.resys.thena.spi.DbState.RepoBuilder;
 import io.resys.thena.storefile.FileBuilder;
@@ -15,8 +17,6 @@ import io.resys.thena.storefile.tables.Table.FilePreparedQuery;
 import io.resys.thena.storefile.tables.Table.FileStatement;
 import io.resys.thena.storefile.tables.Table.FileTuple;
 import io.resys.thena.storefile.tables.Table.FileTupleList;
-import io.resys.thena.support.ErrorHandler;
-import io.resys.thena.support.ErrorHandler.SqlSchemaFailed;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.groups.UniJoin.JoinAllStrategy;
@@ -28,7 +28,7 @@ public class RepoBuilderFilePool implements RepoBuilder {
   private final DbCollections names;
   private final FileMapper mapper;
   private final FileBuilder builder;
-  private final ErrorHandler errorHandler;
+  private final ThenaSqlDataSourceErrorHandler errorHandler;
 
 
   @Override

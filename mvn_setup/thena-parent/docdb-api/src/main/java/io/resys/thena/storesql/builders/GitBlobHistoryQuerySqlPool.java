@@ -27,9 +27,9 @@ import java.util.List;
 import io.resys.thena.api.LogConstants;
 import io.resys.thena.api.actions.GitPullActions.MatchCriteria;
 import io.resys.thena.api.entities.git.BlobHistory;
-import io.resys.thena.storesql.GitDbQueriesSqlImpl.ClientQuerySqlContext;
+import io.resys.thena.datasource.ThenaSqlDataSource;
+import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlTupleFailed;
 import io.resys.thena.structures.git.GitQueries.GitBlobHistoryQuery;
-import io.resys.thena.support.ErrorHandler.SqlTupleFailed;
 import io.smallrye.mutiny.Multi;
 import io.vertx.mutiny.sqlclient.RowSet;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +39,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class GitBlobHistoryQuerySqlPool implements GitBlobHistoryQuery {
 
-  private final ClientQuerySqlContext context;
+  private final ThenaSqlDataSource context;
   private boolean latestOnly;
   private String name;
   private List<MatchCriteria> criteria = new ArrayList<>();
@@ -51,9 +51,9 @@ public class GitBlobHistoryQuerySqlPool implements GitBlobHistoryQuery {
   
   @Override
   public Multi<BlobHistory> find() {
-    final var sql = context.getBuilder().blobs().find(name, latestOnly, criteria);
-    final var stream = context.getWrapper().getClient().preparedQuery(sql.getValue())
-        .mapping(row -> context.getMapper().blobHistory(row));
+    final var sql = context.getQueryBuilder().blobs().find(name, latestOnly, criteria);
+    final var stream = context.getClient().preparedQuery(sql.getValue())
+        .mapping(row -> context.getDataMapper().blobHistory(row));
     
     if(log.isDebugEnabled()) {
       log.debug("Blob history query, with props: {} \r\n{}", 

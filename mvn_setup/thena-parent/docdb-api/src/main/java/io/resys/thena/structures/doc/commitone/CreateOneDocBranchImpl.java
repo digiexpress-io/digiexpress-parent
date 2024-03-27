@@ -9,19 +9,18 @@ import java.util.Optional;
 
 import io.resys.thena.api.actions.DocCommitActions.CreateOneDocBranch;
 import io.resys.thena.api.actions.DocCommitActions.OneDocEnvelope;
+import io.resys.thena.api.actions.ImmutableOneDocEnvelope;
 import io.resys.thena.api.entities.CommitResultStatus;
+import io.resys.thena.api.entities.doc.Doc;
+import io.resys.thena.api.entities.doc.DocBranchLock;
+import io.resys.thena.api.entities.doc.DocLog;
 import io.resys.thena.api.entities.doc.ImmutableDocBranch;
 import io.resys.thena.api.entities.doc.ImmutableDocCommit;
 import io.resys.thena.api.entities.doc.ImmutableDocLog;
-import io.resys.thena.api.entities.doc.Doc;
-import io.resys.thena.api.entities.doc.Doc.DocStatus;
-import io.resys.thena.api.entities.doc.DocBranchLock;
-import io.resys.thena.api.entities.doc.DocLog;
 import io.resys.thena.api.envelope.ImmutableMessage;
-import io.resys.thena.api.actions.ImmutableOneDocEnvelope;
 import io.resys.thena.spi.DataMapper;
 import io.resys.thena.spi.DbState;
-import io.resys.thena.structures.doc.DocState.DocRepo;
+import io.resys.thena.structures.doc.DocState;
 import io.resys.thena.structures.doc.ImmutableDocBatchForOne;
 import io.resys.thena.structures.doc.ImmutableDocBranchLockCriteria;
 import io.resys.thena.structures.git.GitInserts.BatchStatus;
@@ -38,11 +37,13 @@ import lombok.RequiredArgsConstructor;
 public class CreateOneDocBranchImpl implements CreateOneDocBranch {
 
   private final DbState state;
+  private final String repoId;
+  
   private JsonObject appendBlobs = null;
   private JsonObject appendLogs = null;
 
   private String docId;
-  private final String repoId;
+
   private String branchName;
   private String branchFrom;
   private String author;
@@ -59,7 +60,6 @@ public class CreateOneDocBranchImpl implements CreateOneDocBranch {
   @Override
   public Uni<OneDocEnvelope> build() {
     RepoAssert.notEmpty(branchName, () -> "branchName can't be empty!");
-    RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
     RepoAssert.notEmpty(docId, () -> "docId can't be empty!");
     RepoAssert.notEmpty(author, () -> "author can't be empty!");
     RepoAssert.notEmpty(branchFrom, () -> "branchFrom can't be empty!");
@@ -71,14 +71,15 @@ public class CreateOneDocBranchImpl implements CreateOneDocBranch {
         .docId(docId)
         .build();
     
-    return this.state.toDocState().withTransaction(repoId, tx -> tx.query().branches().getBranchLock(crit).onItem().transformToUni(lock -> {
+    
+    return this.state.withDocTransaction(repoId, tx -> tx.query().branches().getBranchLock(crit).onItem().transformToUni(lock -> {
       final OneDocEnvelope validation = validateRepo(lock);
       if(validation != null) {
         return Uni.createFrom().item(validation);
       }
       return doInLock(lock, tx);
     }))
-    .onFailure(err -> state.getErrorHandler().isLocked(err)).retry()
+    .onFailure(err -> this.state.getDataSource().isLocked(err)).retry()
       .withJitter(0.3) // every retry increase time by x 3
       .withBackOff(Duration.ofMillis(100))
       .atMost(100);
@@ -105,7 +106,7 @@ public class CreateOneDocBranchImpl implements CreateOneDocBranch {
   }
   
   
-  private Uni<OneDocEnvelope> doInLock(DocBranchLock lock, DocRepo tx) {  
+  private Uni<OneDocEnvelope> doInLock(DocBranchLock lock, DocState tx) {  
     final var branchId = OidUtils.gen();
     final var doc = lock.getDoc().get();
     
@@ -163,7 +164,7 @@ public class CreateOneDocBranchImpl implements CreateOneDocBranch {
     }
 
     final var batch = ImmutableDocBatchForOne.builder()
-      .repoId(tx.getRepo().getId())
+      .repoId(tx.getDataSource().getTenant().getId())
       .status(BatchStatus.OK)
       .doc(Optional.empty())
       .addDocBranch(docBranch)

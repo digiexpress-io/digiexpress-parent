@@ -8,12 +8,11 @@ import io.resys.thena.api.entities.org.OrgMember;
 import io.resys.thena.api.envelope.ImmutableQueryEnvelope;
 import io.resys.thena.api.envelope.ImmutableQueryEnvelopeList;
 import io.resys.thena.api.envelope.QueryEnvelope;
-import io.resys.thena.api.envelope.QueryEnvelopeList;
-import io.resys.thena.api.envelope.ThenaContainer;
 import io.resys.thena.api.envelope.QueryEnvelope.DocNotFoundException;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
+import io.resys.thena.api.envelope.QueryEnvelopeList;
+import io.resys.thena.api.envelope.ThenaContainer;
 import io.resys.thena.spi.DbState;
-import io.resys.thena.structures.org.OrgQueries;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -29,32 +28,28 @@ public class MemberObjectsQueryImpl implements MemberObjectsQuery {
   public Uni<QueryEnvelope<OrgMember>> get(String userId) {
     RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
 
-    return state.tenant().getByNameOrId(repoId)
-    .onItem().transformToUni((Tenant existing) -> {
-      if(existing == null) {
-        return Uni.createFrom().item(QueryEnvelope.repoNotFound(repoId, log));
-      }
-      return state.toOrgState().query(repoId)
-        .onItem().transformToUni((OrgQueries repo) -> repo.members().getById(userId))
-        .onItem().transformToUni(data -> {
-          if(data == null) {
-            return Uni.createFrom().item(docNotFound(existing, userId, new DocNotFoundException()));
-          }
-          return getUserObject(existing, data);
+    return state.toOrgState(repoId)
+        .onItem().transformToUni(orgState -> {
+          final var tenant = orgState.getDataSource().getTenant();
+          return orgState.query().members().getById(userId)
+            .onItem().transformToUni(data -> {
+              if(data == null) {
+                return Uni.createFrom().item(docNotFound(tenant, userId, new DocNotFoundException()));
+              }
+              return getUserObject(tenant, data);
+            });
+          
         });
-    });
   }
  
   @Override
   public Uni<QueryEnvelopeList<OrgMember>> findAll() {
     RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
-    return state.tenant().getByNameOrId(repoId)
-    .onItem().transformToUni((Tenant existing) -> {
-      if(existing == null) {
-        return Uni.createFrom().item(QueryEnvelope.repoNotFoundList(repoId, log));
-      }
-      return state.toOrgState().query(repoId)
-        .onItem().transformToUni((OrgQueries repo) -> repo.members().findAll().collect().asList())
+    return state.toOrgState(repoId)
+    .onItem().transformToUni((orgState) -> {
+      final Tenant existing = orgState.getDataSource().getTenant();
+      
+      return orgState.query().members().findAll().collect().asList()
         .onItem().transformToUni(data -> getUserObjects(existing, data));
     });
   }

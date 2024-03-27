@@ -26,6 +26,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import io.resys.thena.api.entities.git.ImmutableCommitLock;
+import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
+import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlSchemaFailed;
 import io.resys.thena.api.entities.CommitLockStatus;
 import io.resys.thena.api.entities.git.Commit;
 import io.resys.thena.api.entities.git.CommitLock;
@@ -34,8 +36,6 @@ import io.resys.thena.storefile.tables.Table.FileMapper;
 import io.resys.thena.storefile.tables.Table.FilePool;
 import io.resys.thena.structures.git.GitQueries.GitCommitQuery;
 import io.resys.thena.structures.git.GitQueries.LockCriteria;
-import io.resys.thena.support.ErrorHandler;
-import io.resys.thena.support.ErrorHandler.SqlSchemaFailed;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -45,7 +45,7 @@ public class CommitQueryFilePool implements GitCommitQuery {
   private final FilePool client;
   private final FileMapper mapper;
   private final FileBuilder builder;
-  private final ErrorHandler errorHandler;
+  private final ThenaSqlDataSourceErrorHandler errorHandler;
 
   @Override
   public Uni<Commit> getById(String commit) {

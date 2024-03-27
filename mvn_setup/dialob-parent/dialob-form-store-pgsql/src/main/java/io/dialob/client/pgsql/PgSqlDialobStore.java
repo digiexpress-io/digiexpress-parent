@@ -17,7 +17,6 @@ import io.dialob.client.spi.support.DialobAssert;
 import io.dialob.client.spi.support.OidUtils;
 import io.resys.thena.api.ThenaClient;
 import io.resys.thena.storesql.DbStateSqlImpl;
-import io.resys.thena.storesql.PgErrors;
 import io.vertx.core.json.JsonObject;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.sqlclient.PoolOptions;
@@ -174,9 +173,9 @@ public class PgSqlDialobStore extends DialobStoreTemplate implements DialobStore
 
         final io.vertx.mutiny.pgclient.PgPool pgPool = io.vertx.mutiny.pgclient.PgPool.pool(connectOptions, poolOptions);
 
-        thena = DbStateSqlImpl.create().client(pgPool).db(repoName).errorHandler(new PgErrors()).build();
+        thena = DbStateSqlImpl.create().client(pgPool).db(repoName).build();
       } else {
-        thena = DbStateSqlImpl.create().client(pgPool).db(repoName).errorHandler(new PgErrors()).build();
+        thena = DbStateSqlImpl.create().client(pgPool).db(repoName).build();
       }
 
       final ObjectMapper objectMapper = getObjectMapper();

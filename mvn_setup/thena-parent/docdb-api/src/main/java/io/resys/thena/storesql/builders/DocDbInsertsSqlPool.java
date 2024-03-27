@@ -5,28 +5,27 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import io.resys.thena.api.envelope.ImmutableMessage;
-import io.resys.thena.storesql.SqlBuilder;
-import io.resys.thena.storesql.SqlMapper;
+import io.resys.thena.datasource.SqlQueryBuilder;
+import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.storesql.support.Execute;
-import io.resys.thena.storesql.support.SqlClientWrapper;
 import io.resys.thena.structures.doc.DocInserts;
 import io.resys.thena.structures.doc.ImmutableDocBatchForMany;
 import io.resys.thena.structures.doc.ImmutableDocBatchForOne;
 import io.resys.thena.structures.git.GitInserts.BatchStatus;
-import io.resys.thena.support.ErrorHandler;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@RequiredArgsConstructor
 public class DocDbInsertsSqlPool implements DocInserts {
-  private final SqlClientWrapper wrapper;
-  private final SqlMapper sqlMapper;
-  private final SqlBuilder sqlBuilder;
-  private final ErrorHandler errorHandler;
+  private final ThenaSqlDataSource wrapper;
+  private final SqlQueryBuilder sqlBuilder;
 
+  public DocDbInsertsSqlPool(ThenaSqlDataSource dataSource) {
+    this.wrapper = dataSource;
+    this.sqlBuilder = dataSource.getQueryBuilder();
+  }
+  
   @Override
   public Uni<DocBatchForMany> batchMany(DocBatchForMany many) {
     final List<DocBatchForOne> output = many.getItems();

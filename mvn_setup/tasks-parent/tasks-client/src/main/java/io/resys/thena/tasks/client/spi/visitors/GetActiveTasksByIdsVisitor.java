@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import io.resys.thena.api.actions.GitPullActions;
-import io.resys.thena.api.actions.GitPullActions.PullObjects;
 import io.resys.thena.api.actions.GitPullActions.PullObjectsQuery;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;

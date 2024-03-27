@@ -24,11 +24,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import io.resys.thena.api.actions.ImmutableHistoryObjects;
 import io.resys.thena.api.actions.GitHistoryActions;
 import io.resys.thena.api.actions.GitHistoryActions.BlobHistoryQuery;
-import io.resys.thena.api.actions.GitHistoryActions.HistoryObjects;
 import io.resys.thena.api.actions.GitPullActions.MatchCriteria;
+import io.resys.thena.api.actions.ImmutableHistoryObjects;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.envelope.ImmutableQueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope;
@@ -68,7 +67,7 @@ public class BlobHistoryQueryImpl implements BlobHistoryQuery {
       if(existing == null) {
         return Uni.createFrom().item(QueryEnvelope.repoNotFound(repoId, log));
       }
-      final var ctx = state.toGitState().withTenant(existing);
+      final var ctx = state.toGitState(existing);
       return ctx.query().blobHistory()
         .latestOnly(latestOnly)
         .blobName(docId)

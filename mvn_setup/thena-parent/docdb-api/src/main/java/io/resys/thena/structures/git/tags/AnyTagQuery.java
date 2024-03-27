@@ -43,7 +43,7 @@ public class AnyTagQuery implements TagQuery {
   public Multi<Tag> findAll() {
     RepoAssert.notEmpty(projectName, () -> "projectName can't be empty!");
 
-    return state.toGitState().withTenant(projectName)
+    return state.toGitState(projectName)
         .onItem().transformToMulti(f -> f.query().tags().name(tagName).find());
   }
   @Override
@@ -51,7 +51,7 @@ public class AnyTagQuery implements TagQuery {
     RepoAssert.notEmpty(projectName, () -> "projectName can't be empty!");
     RepoAssert.notEmpty(tagName, () -> "tagName can't be empty!");
     
-    return state.toGitState().withTenant(projectName)
+    return state.toGitState(projectName)
         .onItem().transformToUni(f -> f.query().tags().name(tagName).getFirst())
         .onItem().transform(tag -> Optional.ofNullable(tag));
   }
@@ -60,7 +60,7 @@ public class AnyTagQuery implements TagQuery {
     RepoAssert.notEmpty(projectName, () -> "projectName can't be empty!");
     RepoAssert.notEmpty(tagName, () -> "tagName can't be empty!");
     
-    return state.toGitState().withTenant(projectName)
+    return state.toGitState(projectName)
     .onItem().transformToUni(state -> 
       state.query().tags().name(tagName).getFirst().onItem().transformToUni(tag -> {
         if(tag == null) {

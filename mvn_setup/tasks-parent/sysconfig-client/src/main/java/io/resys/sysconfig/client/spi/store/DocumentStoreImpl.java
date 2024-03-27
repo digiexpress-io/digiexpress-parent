@@ -35,7 +35,6 @@ import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.projects.client.spi.store.MainBranch;
 import io.resys.thena.storesql.DbStateSqlImpl;
-import io.resys.thena.storesql.PgErrors;
 import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
@@ -238,9 +237,9 @@ public class DocumentStoreImpl implements DocumentStore {
         
         final io.vertx.mutiny.pgclient.PgPool pgPool = io.vertx.mutiny.pgclient.PgPool.pool(connectOptions, poolOptions);
         
-        thena = DbStateSqlImpl.create().client(pgPool).db(repoName).errorHandler(new PgErrors()).build();
+        thena = DbStateSqlImpl.create().client(pgPool).db(repoName).build();
       } else {
-        thena = DbStateSqlImpl.create().client(pgPool).db(repoName).errorHandler(new PgErrors()).build();
+        thena = DbStateSqlImpl.create().client(pgPool).db(repoName).build();
       }
       
       final DocumentConfig config = ImmutableDocumentConfig.builder()

@@ -12,7 +12,7 @@ import io.resys.thena.api.entities.org.OrgParty;
 import io.resys.thena.spi.DataMapper;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.structures.org.OrgInserts.OrgBatchForOne;
-import io.resys.thena.structures.org.OrgState.OrgRepo;
+import io.resys.thena.structures.org.OrgState;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -50,10 +50,10 @@ public class CreateOneRoleImpl implements CreateOneRight {
     RepoAssert.notEmpty(roleName, () -> "roleName can't be empty!");
     RepoAssert.notEmpty(roleDescription, () -> "roleDescription can't be empty!");
 
-    return this.state.toOrgState().withTransaction(repoId, this::doInTx);
+    return this.state.withOrgTransaction(repoId, this::doInTx);
   }
   
-  private Uni<OneRightEnvelope> doInTx(OrgRepo tx) {
+  private Uni<OneRightEnvelope> doInTx(OrgState tx) {
 		// find users
 		final Uni<List<OrgMember>> usersUni = this.addRoleToUsers.isEmpty() ? 
 			Uni.createFrom().item(Collections.emptyList()) : 
@@ -75,8 +75,8 @@ public class CreateOneRoleImpl implements CreateOneRight {
 		);
   }
 
-  private Uni<OneRightEnvelope> createRole(OrgRepo tx, List<OrgMember> users, List<OrgParty> groups) {
-    final OrgBatchForOne batch = new BatchForOneRightCreate(tx.getRepo().getId(), author, message)
+  private Uni<OneRightEnvelope> createRole(OrgState tx, List<OrgMember> users, List<OrgParty> groups) {
+    final OrgBatchForOne batch = new BatchForOneRightCreate(tx.getTenantId(), author, message)
         .externalId(externalId)
         .users(users)
         .parties(groups)

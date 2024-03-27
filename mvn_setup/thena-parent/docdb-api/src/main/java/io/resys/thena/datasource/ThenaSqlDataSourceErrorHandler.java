@@ -1,8 +1,9 @@
-package io.resys.thena.support;
+package io.resys.thena.datasource;
 
-import io.resys.thena.storesql.SqlBuilder.Sql;
-import io.resys.thena.storesql.SqlBuilder.SqlTuple;
-import io.resys.thena.storesql.SqlBuilder.SqlTupleList;
+import io.resys.thena.datasource.SqlQueryBuilder.Sql;
+import io.resys.thena.datasource.SqlQueryBuilder.SqlTuple;
+import io.resys.thena.datasource.SqlQueryBuilder.SqlTupleList;
+import io.resys.thena.spi.DbCollections;
 
 /*-
  * #%L
@@ -24,7 +25,8 @@ import io.resys.thena.storesql.SqlBuilder.SqlTupleList;
  * #L%
  */
 
-public interface ErrorHandler {    
+public interface ThenaSqlDataSourceErrorHandler {
+  ThenaSqlDataSourceErrorHandler withOptions(DbCollections options);
   boolean notFound(Throwable e);
   boolean duplicate(Throwable e);
   boolean isLocked(Throwable e);

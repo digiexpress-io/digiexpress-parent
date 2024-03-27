@@ -1,4 +1,4 @@
-package io.resys.thena.storesql;
+package io.resys.thena.datasource;
 
 import java.util.Collection;
 
@@ -56,7 +56,7 @@ import io.resys.thena.structures.doc.DocQueries.FlattedCriteria;
 import io.resys.thena.structures.git.GitQueries.LockCriteria;
 import io.vertx.mutiny.sqlclient.Tuple;
 
-public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
+public interface SqlQueryBuilder extends DbCollections.WithOptions<SqlQueryBuilder> {
 
   RepoSqlBuilder repo();
   
@@ -84,7 +84,7 @@ public interface SqlBuilder extends DbCollections.WithOptions<SqlBuilder> {
   OrgMemberRightSqlBuilder orgMemberRights();
   OrgPartyRightSqlBuilder orgPartyRights();
   
-  SqlBuilder withOptions(DbCollections options);
+  SqlQueryBuilder withOptions(DbCollections options);
 
   interface RepoSqlBuilder {
     SqlTuple exists();

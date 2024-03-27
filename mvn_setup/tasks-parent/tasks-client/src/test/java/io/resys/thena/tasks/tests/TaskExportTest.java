@@ -1,5 +1,9 @@
 package io.resys.thena.tasks.tests;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+
 /*-
  * #%L
  * thena-tasks-client
@@ -31,16 +35,11 @@ import io.resys.thena.tasks.client.api.model.Task;
 import io.resys.thena.tasks.client.api.model.Task.Priority;
 import io.resys.thena.tasks.tests.config.TaskPgProfile;
 import io.resys.thena.tasks.tests.config.TaskTestCase;
-import lombok.extern.slf4j.Slf4j;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
-
-@Slf4j
 @QuarkusTest
 @TestProfile(TaskPgProfile.class)
 public class TaskExportTest extends TaskTestCase {
+  @SuppressWarnings("unused")
   @org.junit.jupiter.api.Test
   public void createExportTest() throws JsonProcessingException, JSONException {
     final var repoName = TaskExportTest.class.getSimpleName() + "createExportTest";

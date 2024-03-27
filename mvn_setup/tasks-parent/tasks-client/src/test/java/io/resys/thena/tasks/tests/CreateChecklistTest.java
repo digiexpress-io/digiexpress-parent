@@ -1,5 +1,8 @@
 package io.resys.thena.tasks.tests;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+
 import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.junit.QuarkusTest;
@@ -16,12 +19,8 @@ import io.resys.thena.tasks.client.api.model.Task;
 import io.resys.thena.tasks.client.api.model.Task.Priority;
 import io.resys.thena.tasks.tests.config.TaskPgProfile;
 import io.resys.thena.tasks.tests.config.TaskTestCase;
-import lombok.extern.slf4j.Slf4j;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
 
-@Slf4j
 @QuarkusTest
 @TestProfile(TaskPgProfile.class)
 public class CreateChecklistTest extends TaskTestCase {

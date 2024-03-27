@@ -1,4 +1,4 @@
-package io.resys.thena.storesql.builders;
+package io.resys.thena.storesql;
 
 import io.resys.thena.api.entities.git.Blob;
 import io.resys.thena.api.entities.git.Branch;
@@ -6,30 +6,34 @@ import io.resys.thena.api.entities.git.Commit;
 import io.resys.thena.api.entities.git.Tag;
 import io.resys.thena.api.entities.git.Tree;
 import io.resys.thena.api.envelope.ImmutableMessage;
-import io.resys.thena.storesql.SqlBuilder;
-import io.resys.thena.storesql.SqlMapper;
+import io.resys.thena.datasource.SqlDataMapper;
+import io.resys.thena.datasource.SqlQueryBuilder;
+import io.resys.thena.datasource.ThenaSqlDataSource;
+import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
+import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlTupleFailed;
+import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlTupleListFailed;
 import io.resys.thena.storesql.support.Execute;
-import io.resys.thena.storesql.support.SqlClientWrapper;
 import io.resys.thena.structures.git.GitInserts;
 import io.resys.thena.structures.git.ImmutableGitBatch;
 import io.resys.thena.structures.git.ImmutableInsertResult;
 import io.resys.thena.structures.git.ImmutableUpsertResult;
-import io.resys.thena.support.ErrorHandler;
-import io.resys.thena.support.ErrorHandler.SqlTupleFailed;
-import io.resys.thena.support.ErrorHandler.SqlTupleListFailed;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@RequiredArgsConstructor
 public class GitDbInsertsSqlPool implements GitInserts {
-  private final SqlClientWrapper wrapper;
-  private final SqlMapper sqlMapper;
-  private final SqlBuilder sqlBuilder;
-  private final ErrorHandler errorHandler;
+  private final ThenaSqlDataSource wrapper;
+  private final SqlDataMapper sqlMapper;
+  private final SqlQueryBuilder sqlBuilder;
+  private final ThenaSqlDataSourceErrorHandler errorHandler;
   
+  public GitDbInsertsSqlPool(ThenaSqlDataSource dataSource) {
+    this.wrapper = dataSource;
+    this.sqlMapper = dataSource.getDataMapper();
+    this.sqlBuilder = dataSource.getQueryBuilder();
+    this.errorHandler = dataSource.getErrorHandler();
+  }
 
   @Override
   public Uni<InsertResult> tag(Tag tag) {
