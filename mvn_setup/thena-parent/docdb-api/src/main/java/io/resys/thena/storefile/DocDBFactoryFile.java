@@ -2,10 +2,10 @@ package io.resys.thena.storefile;
 
 import io.resys.thena.api.ThenaClient;
 import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.datasource.ThenaDataSource;
 import io.resys.thena.datasource.ThenaFileDataSourceImpl;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
-import io.resys.thena.spi.DbCollections;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.spi.ThenaClientPgSql;
 import io.resys.thena.storefile.queries.ClientInsertBuilderFilePool;
@@ -28,10 +28,10 @@ public class DocDBFactoryFile {
     return new Builder();
   }
 
-  public static DbState state(DbCollections ctx, FilePool client, ThenaSqlDataSourceErrorHandler handler) {
+  public static DbState state(TenantTableNames ctx, FilePool client, ThenaSqlDataSourceErrorHandler handler) {
     return new DbState() {
       @Override
-      public RepoBuilder tenant() {
+      public InternalTenantQuery tenant() {
         return new RepoBuilderFilePool(client, ctx, sqlMapper(ctx), sqlBuilder(ctx), handler);
       }
       @Override
@@ -104,10 +104,10 @@ public class DocDBFactoryFile {
 
     };
   }  
-  public static FileBuilder sqlBuilder(DbCollections ctx) {
+  public static FileBuilder sqlBuilder(TenantTableNames ctx) {
     return new DefaultFileBuilder(ctx);
   }
-  public static FileMapper sqlMapper(DbCollections ctx) {
+  public static FileMapper sqlMapper(TenantTableNames ctx) {
     return new DefaultFileMapper();
   }
   
@@ -133,7 +133,7 @@ public class DocDBFactoryFile {
       RepoAssert.notNull(db, () -> "db must be defined!");
       RepoAssert.notNull(errorHandler, () -> "errorHandler must be defined!");
 
-      final var ctx = DbCollections.defaults(db);
+      final var ctx = TenantTableNames.defaults(db);
       return new ThenaClientPgSql(state(ctx, client, errorHandler));
     }
   }

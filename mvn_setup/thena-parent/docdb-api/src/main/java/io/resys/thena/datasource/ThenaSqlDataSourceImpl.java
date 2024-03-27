@@ -5,13 +5,12 @@ import java.util.Optional;
 import io.resys.thena.api.entities.ImmutableTenant;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
-import io.resys.thena.spi.DbCollections;
 import io.vertx.mutiny.sqlclient.Pool;
 import io.vertx.mutiny.sqlclient.SqlClient;
 
 public class ThenaSqlDataSourceImpl implements ThenaSqlDataSource {
   private final Tenant tenant;
-  private final DbCollections tenantTableNames;
+  private final TenantTableNames tenantTableNames;
   private final io.vertx.mutiny.sqlclient.Pool pool;
   private final ThenaSqlDataSourceErrorHandler errorHandler;
   private final Optional<SqlClient> tx;
@@ -22,7 +21,7 @@ public class ThenaSqlDataSourceImpl implements ThenaSqlDataSource {
   
   public ThenaSqlDataSourceImpl(
       Tenant tenant, 
-      DbCollections tenantTableNames, 
+      TenantTableNames tenantTableNames, 
       Pool pool,
       ThenaSqlDataSourceErrorHandler errorHandler, 
       Optional<SqlClient> tx, 
@@ -33,8 +32,8 @@ public class ThenaSqlDataSourceImpl implements ThenaSqlDataSource {
     this.tenant = tenant;
     this.tenantTableNames = tenantTableNames.toRepo(tenant);
     this.dataMapper = dataMapper.withOptions(this.tenantTableNames);
-    this.queryBuilder = queryBuilder.withOptions(this.tenantTableNames);
-    this.schema = schema.withOptions(this.tenantTableNames);
+    this.queryBuilder = queryBuilder.withTenant(this.tenantTableNames);
+    this.schema = schema.withTenant(this.tenantTableNames);
     this.errorHandler = errorHandler.withOptions(this.tenantTableNames);
     this.pool = pool;
     this.tx = tx;
@@ -43,7 +42,7 @@ public class ThenaSqlDataSourceImpl implements ThenaSqlDataSource {
   
   public ThenaSqlDataSourceImpl(
       String tenant, 
-      DbCollections tenantTableNames, 
+      TenantTableNames tenantTableNames, 
       Pool pool,
       ThenaSqlDataSourceErrorHandler errorHandler, 
       Optional<SqlClient> tx, 
@@ -61,9 +60,9 @@ public class ThenaSqlDataSourceImpl implements ThenaSqlDataSource {
         .build();
     this.tenantTableNames = tenantTableNames.toRepo(this.tenant);
     this.dataMapper = dataMapper.withOptions(this.tenantTableNames);
-    this.queryBuilder = queryBuilder.withOptions(this.tenantTableNames);
+    this.queryBuilder = queryBuilder.withTenant(this.tenantTableNames);
     this.errorHandler = errorHandler.withOptions(this.tenantTableNames);
-    this.schema = schema.withOptions(this.tenantTableNames);
+    this.schema = schema.withTenant(this.tenantTableNames);
     this.pool = pool;
     this.tx = tx;
   }
@@ -73,7 +72,7 @@ public class ThenaSqlDataSourceImpl implements ThenaSqlDataSource {
     return tenant;
   }
   @Override
-  public DbCollections getTenantTableNames() {
+  public TenantTableNames getTenantTableNames() {
     return tenantTableNames;
   }
   @Override

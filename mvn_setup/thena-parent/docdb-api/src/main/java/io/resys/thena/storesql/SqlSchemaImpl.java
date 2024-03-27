@@ -1,16 +1,16 @@
 package io.resys.thena.storesql;
 
+import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.SqlQueryBuilder.Sql;
 import io.resys.thena.datasource.SqlSchema;
-import io.resys.thena.spi.DbCollections;
 import io.resys.thena.storesql.support.SqlStatement;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class SqlSchemaImpl implements SqlSchema {
 
-  protected final DbCollections options;
+  protected final TenantTableNames options;
   
   @Override
   public Sql createRepo() {
@@ -179,7 +179,7 @@ public class SqlSchemaImpl implements SqlSchema {
   }
   
   @Override
-  public SqlSchemaImpl withOptions(DbCollections options) {
+  public SqlSchemaImpl withTenant(TenantTableNames options) {
     return new SqlSchemaImpl(options);
   }
 

@@ -1,4 +1,4 @@
-package io.resys.thena.spi;
+package io.resys.thena.datasource;
 
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.Tenant;

@@ -26,12 +26,12 @@ import java.util.Arrays;
 import java.util.List;
 
 import io.resys.thena.api.entities.git.Commit;
+import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.SqlQueryBuilder.GitCommitSqlBuilder;
 import io.resys.thena.datasource.SqlQueryBuilder.Sql;
 import io.resys.thena.datasource.SqlQueryBuilder.SqlTuple;
-import io.resys.thena.spi.DbCollections;
 import io.resys.thena.storesql.support.SqlStatement;
 import io.resys.thena.structures.git.GitQueries.LockCriteria;
 import io.vertx.mutiny.sqlclient.Tuple;
@@ -39,7 +39,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class GitCommitSqlBuilderImpl implements GitCommitSqlBuilder {
-  private final DbCollections options;
+  private final TenantTableNames options;
  
   @Override
   public Sql findAll() {

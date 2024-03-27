@@ -49,14 +49,13 @@ import io.resys.thena.api.entities.org.OrgMembership;
 import io.resys.thena.api.entities.org.OrgParty;
 import io.resys.thena.api.entities.org.OrgPartyRight;
 import io.resys.thena.api.entities.org.OrgRight;
-import io.resys.thena.spi.DbCollections;
 import io.resys.thena.structures.doc.DocQueries.DocBranchLockCriteria;
 import io.resys.thena.structures.doc.DocQueries.DocLockCriteria;
 import io.resys.thena.structures.doc.DocQueries.FlattedCriteria;
 import io.resys.thena.structures.git.GitQueries.LockCriteria;
 import io.vertx.mutiny.sqlclient.Tuple;
 
-public interface SqlQueryBuilder extends DbCollections.WithOptions<SqlQueryBuilder> {
+public interface SqlQueryBuilder extends TenantTableNames.WithTenant<SqlQueryBuilder> {
 
   RepoSqlBuilder repo();
   
@@ -84,7 +83,7 @@ public interface SqlQueryBuilder extends DbCollections.WithOptions<SqlQueryBuild
   OrgMemberRightSqlBuilder orgMemberRights();
   OrgPartyRightSqlBuilder orgPartyRights();
   
-  SqlQueryBuilder withOptions(DbCollections options);
+  SqlQueryBuilder withTenant(TenantTableNames options);
 
   interface RepoSqlBuilder {
     SqlTuple exists();

@@ -17,7 +17,7 @@ import io.resys.hdes.client.spi.config.HdesClientConfig.ServiceInit;
 import io.resys.hdes.client.spi.util.RepositoryToStaticData;
 import io.resys.thena.api.ThenaClient;
 import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.spi.DbCollections;
+import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.storesql.DbStateSqlImpl;
 import io.resys.thena.structures.git.GitPrinter;
@@ -59,7 +59,7 @@ public class PgTestTemplate {
   }
 
   private DbState createState(String repoName) {
-    final var ctx = DbCollections.defaults(repoName);
+    final var ctx = TenantTableNames.defaults(repoName);
     return DbStateSqlImpl.create(ctx, pgPool);
   }
   

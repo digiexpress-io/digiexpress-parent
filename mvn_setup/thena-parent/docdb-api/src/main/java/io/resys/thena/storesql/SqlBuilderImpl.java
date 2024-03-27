@@ -1,7 +1,7 @@
 package io.resys.thena.storesql;
 
+import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.datasource.SqlQueryBuilder;
-import io.resys.thena.spi.DbCollections;
 import io.resys.thena.storesql.statement.DocBranchSqlBuilderImpl;
 import io.resys.thena.storesql.statement.DocCommitSqlBuilderImpl;
 import io.resys.thena.storesql.statement.DocLogSqlBuilderImpl;
@@ -26,7 +26,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class SqlBuilderImpl implements SqlQueryBuilder {
-  protected final DbCollections ctx;
+  protected final TenantTableNames ctx;
 
   @Override
   public RepoSqlBuilder repo() {
@@ -57,7 +57,7 @@ public class SqlBuilderImpl implements SqlQueryBuilder {
     return new GitCommitSqlBuilderImpl(ctx);
   }
   @Override
-  public SqlQueryBuilder withOptions(DbCollections options) {
+  public SqlQueryBuilder withTenant(TenantTableNames options) {
     return new SqlBuilderImpl(options);
   }
   @Override

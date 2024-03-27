@@ -75,8 +75,8 @@ import io.resys.thena.api.entities.org.OrgParty;
 import io.resys.thena.api.entities.org.OrgPartyRight;
 import io.resys.thena.api.entities.org.OrgRight;
 import io.resys.thena.api.entities.org.OrgRightFlattened;
+import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.datasource.SqlDataMapper;
-import io.resys.thena.spi.DbCollections;
 import io.vertx.core.json.JsonObject;
 import io.vertx.mutiny.sqlclient.Row;
 import lombok.RequiredArgsConstructor;
@@ -84,7 +84,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SqlMapperImpl implements SqlDataMapper {
 
-  protected final DbCollections ctx;
+  protected final TenantTableNames ctx;
  
   @Override
   public Tenant repo(Row row) {
@@ -429,7 +429,7 @@ public class SqlMapperImpl implements SqlDataMapper {
         .build();
   }
   @Override
-  public SqlDataMapper withOptions(DbCollections options) {
+  public SqlDataMapper withOptions(TenantTableNames options) {
     return new SqlMapperImpl(options);
   }
 }

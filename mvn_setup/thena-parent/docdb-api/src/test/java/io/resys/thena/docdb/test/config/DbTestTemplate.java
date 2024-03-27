@@ -20,8 +20,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.resys.thena.api.ThenaClient;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
+import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.jackson.VertexExtModule;
-import io.resys.thena.spi.DbCollections;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.storesql.DbStateSqlImpl;
 import io.resys.thena.structures.git.GitPrinter;
@@ -138,7 +138,7 @@ public class DbTestTemplate {
   }
   
   public DbState createState() {
-    final var ctx = DbCollections.defaults(db);
+    final var ctx = TenantTableNames.defaults(db);
     return DbStateSqlImpl.create(ctx, pgPool);
   }
   

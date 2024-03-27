@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import io.resys.thena.api.entities.org.OrgMembership;
+import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.ImmutableSqlTupleList;
@@ -12,14 +13,13 @@ import io.resys.thena.datasource.SqlQueryBuilder.OrgMembershipsSqlBuilder;
 import io.resys.thena.datasource.SqlQueryBuilder.Sql;
 import io.resys.thena.datasource.SqlQueryBuilder.SqlTuple;
 import io.resys.thena.datasource.SqlQueryBuilder.SqlTupleList;
-import io.resys.thena.spi.DbCollections;
 import io.resys.thena.storesql.support.SqlStatement;
 import io.vertx.mutiny.sqlclient.Tuple;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class OrgMembershipsSqlBuilderImpl implements OrgMembershipsSqlBuilder {
-  private final DbCollections options;
+  private final TenantTableNames options;
   
   @Override
   public SqlTuple findAll(List<String> id) {

@@ -39,8 +39,8 @@ import io.resys.thena.api.ThenaClient;
 import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
+import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.jackson.VertexExtModule;
-import io.resys.thena.spi.DbCollections;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.storefile.DocDBFactoryFile;
 import io.resys.thena.storefile.FileErrors;
@@ -81,7 +81,7 @@ public class FileTestTemplate {
   
   @BeforeEach
   public void setUp() {
-    final var ctx = DbCollections.defaults(db);
+    final var ctx = TenantTableNames.defaults(db);
     final var file = new File(this.file, ctx.getDb());
     file.mkdir();
 
@@ -125,12 +125,12 @@ public class FileTestTemplate {
   }
   
   public DbState createState() {
-    final var ctx = DbCollections.defaults(db);
+    final var ctx = TenantTableNames.defaults(db);
     return DocDBFactoryFile.state(ctx, new FilePoolImpl(file, objectMapper), new FileErrors());
   }
   
   public void printRepo(Tenant repo) {
-    final var ctx = DbCollections.defaults(db);
+    final var ctx = TenantTableNames.defaults(db);
     final var state = DocDBFactoryFile.state(ctx, new FilePoolImpl(file, objectMapper), new FileErrors());
     
     final String result = new GitPrinter(state).print(repo);

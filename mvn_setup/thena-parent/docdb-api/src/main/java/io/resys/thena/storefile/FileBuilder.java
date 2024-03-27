@@ -29,12 +29,12 @@ import io.resys.thena.api.entities.git.Commit;
 import io.resys.thena.api.entities.git.Tag;
 import io.resys.thena.api.entities.git.Tree;
 import io.resys.thena.api.entities.git.TreeValue;
-import io.resys.thena.spi.DbCollections;
+import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.storefile.tables.Table.FileStatement;
 import io.resys.thena.storefile.tables.Table.FileTuple;
 import io.resys.thena.storefile.tables.Table.FileTupleList;
 
-public interface FileBuilder extends DbCollections.WithOptions<FileBuilder>{
+public interface FileBuilder extends TenantTableNames.WithTenant<FileBuilder>{
 
   RepoFileBuilder repo();
   RefFileBuilder refs();
@@ -43,7 +43,7 @@ public interface FileBuilder extends DbCollections.WithOptions<FileBuilder>{
   CommitFileBuilder commits();
   TreeFileBuilder trees();
   TreeItemFileBuilder treeItems();
-  FileBuilder withOptions(DbCollections options);
+  FileBuilder withTenant(TenantTableNames options);
 
   interface RepoFileBuilder {
     FileTuple exists();

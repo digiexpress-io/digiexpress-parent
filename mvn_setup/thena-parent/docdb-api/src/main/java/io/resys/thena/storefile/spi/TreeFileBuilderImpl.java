@@ -24,7 +24,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import io.resys.thena.api.entities.git.Tree;
-import io.resys.thena.spi.DbCollections;
+import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.storefile.FileBuilder.TreeFileBuilder;
 import io.resys.thena.storefile.tables.ImmutableFileStatement;
 import io.resys.thena.storefile.tables.ImmutableFileTuple;
@@ -38,7 +38,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TreeFileBuilderImpl implements TreeFileBuilder {
 
-  private final DbCollections ctx;
+  private final TenantTableNames ctx;
   
   @Override
   public FileStatement create() {

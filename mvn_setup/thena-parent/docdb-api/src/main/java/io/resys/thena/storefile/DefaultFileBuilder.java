@@ -1,6 +1,6 @@
 package io.resys.thena.storefile;
 
-import io.resys.thena.spi.DbCollections;
+import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.storefile.spi.BlobFileBuilderImpl;
 import io.resys.thena.storefile.spi.CommitFileBuilderImpl;
 import io.resys.thena.storefile.spi.RefFileBuilderImpl;
@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class DefaultFileBuilder implements FileBuilder {
-  private final DbCollections ctx;
+  private final TenantTableNames ctx;
 
   @Override
   public RepoFileBuilder repo() {
@@ -50,7 +50,7 @@ public class DefaultFileBuilder implements FileBuilder {
   }
 
   @Override
-  public FileBuilder withOptions(DbCollections options) {
+  public FileBuilder withTenant(TenantTableNames options) {
     return new DefaultFileBuilder(options);
   }
 }

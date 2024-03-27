@@ -1,4 +1,4 @@
-package io.resys.thena.spi;
+package io.resys.thena.datasource;
 
 /*-
  * #%L
@@ -25,11 +25,11 @@ import org.immutables.value.Value;
 import io.resys.thena.api.entities.Tenant;
 
 @Value.Immutable
-public abstract class DbCollections {
-  private static final DbCollections DEFAULTS = defaults("");
+public abstract class TenantTableNames {
+  private static final TenantTableNames DEFAULTS = defaults("");
   
-  public interface WithOptions<T extends WithOptions<T>> {
-    T withOptions(DbCollections options);
+  public interface WithTenant<T extends WithTenant<T>> {
+    T withTenant(TenantTableNames options);
   }
   
   public abstract String getDb();
@@ -61,10 +61,10 @@ public abstract class DbCollections {
   public abstract String getOrgCommitTrees();
   public abstract String getOrgActorData();
   
-  public DbCollections toRepo(Tenant repo) {
+  public TenantTableNames toRepo(Tenant repo) {
     final String prefix = repo.getPrefix();
     
-    return ImmutableDbCollections.builder()
+    return ImmutableTenantTableNames.builder()
         .db(this.getDb())
         .tenant(this.getTenant())
         
@@ -94,8 +94,8 @@ public abstract class DbCollections {
         .build();
   }
   
-  public static DbCollections defaults(String db) {
-    return ImmutableDbCollections.builder()
+  public static TenantTableNames defaults(String db) {
+    return ImmutableTenantTableNames.builder()
         .db(db == null ? "docdb" : db)
         .tenant("repos")
         

@@ -17,7 +17,7 @@ import io.resys.thena.api.entities.doc.ImmutableDocBranch;
 import io.resys.thena.api.entities.doc.ImmutableDocCommit;
 import io.resys.thena.api.entities.doc.ImmutableDocLog;
 import io.resys.thena.api.envelope.ImmutableMessage;
-import io.resys.thena.spi.DataMapper;
+import io.resys.thena.datasource.DataMapper;
 import io.resys.thena.structures.doc.DocInserts.DocBatchForMany;
 import io.resys.thena.structures.doc.DocInserts.DocBatchForOne;
 import io.resys.thena.structures.doc.DocState;

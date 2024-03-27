@@ -1,10 +1,9 @@
 package io.resys.thena.datasource;
 
 import io.resys.thena.datasource.SqlQueryBuilder.Sql;
-import io.resys.thena.spi.DbCollections;
 
-public interface SqlSchema extends DbCollections.WithOptions<SqlSchema>{
-  SqlSchema withOptions(DbCollections options);
+public interface SqlSchema extends TenantTableNames.WithTenant<SqlSchema>{
+  SqlSchema withTenant(TenantTableNames options);
   
 
   // create git like db model

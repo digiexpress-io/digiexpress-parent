@@ -7,7 +7,7 @@ import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlFailed;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlSchemaFailed;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlTupleFailed;
-import io.resys.thena.spi.DbState.RepoBuilder;
+import io.resys.thena.spi.DbState.InternalTenantQuery;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.sqlclient.RowSet;
@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j(topic = LogConstants.SHOW_SQL)
 @RequiredArgsConstructor
-public class RepoBuilderSqlPool implements RepoBuilder {
+public class RepoBuilderSqlPool implements InternalTenantQuery {
   private final ThenaSqlDataSource dataSource;
   
   private io.vertx.mutiny.sqlclient.SqlClient getClient() {

@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.spi.DbCollections;
+import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.storefile.FileBuilder.RepoFileBuilder;
 import io.resys.thena.storefile.tables.ImmutableFileStatement;
 import io.resys.thena.storefile.tables.ImmutableFileTuple;
@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class RepoFileBuilderImpl implements RepoFileBuilder {
-  private final DbCollections ctx;
+  private final TenantTableNames ctx;
 
   @Override
   public FileTuple exists() {

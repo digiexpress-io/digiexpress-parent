@@ -26,7 +26,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.resys.thena.api.entities.Tenant.StructureType;
-import io.resys.thena.spi.DbCollections;
+import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.storefile.tables.ImmutableRepoTableRow;
 import io.resys.thena.storefile.tables.RepoTable.RepoTableRow;
 
@@ -39,7 +39,7 @@ public interface RepoTable extends Table<RepoTableRow> {
   TreeItemTable getTreeItems();
   TreeTable getTrees();
   
-  DbCollections getContext();
+  TenantTableNames getContext();
   
   @Value.Immutable @JsonSerialize(as = ImmutableRepoTableRow.class) @JsonDeserialize(as = ImmutableRepoTableRow.class)
   interface RepoTableRow extends Table.Row {
@@ -50,6 +50,6 @@ public interface RepoTable extends Table<RepoTableRow> {
     StructureType getType();
   }
   
-  RepoTable withContext(DbCollections ctx);
+  RepoTable withContext(TenantTableNames ctx);
   
 }

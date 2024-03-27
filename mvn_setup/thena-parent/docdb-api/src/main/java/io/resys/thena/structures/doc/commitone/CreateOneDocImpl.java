@@ -2,8 +2,8 @@ package io.resys.thena.structures.doc.commitone;
 
 import io.resys.thena.api.actions.DocCommitActions.CreateOneDoc;
 import io.resys.thena.api.actions.DocCommitActions.OneDocEnvelope;
+import io.resys.thena.datasource.DataMapper;
 import io.resys.thena.api.actions.ImmutableOneDocEnvelope;
-import io.resys.thena.spi.DataMapper;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.structures.doc.DocState;
 import io.resys.thena.structures.doc.support.BatchForOneDocCreate;

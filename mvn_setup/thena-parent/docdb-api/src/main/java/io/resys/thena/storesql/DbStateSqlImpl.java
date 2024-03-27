@@ -6,6 +6,7 @@ import java.util.function.Function;
 import io.resys.thena.api.ThenaClient;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.exceptions.RepoException;
+import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.datasource.SqlDataMapper;
 import io.resys.thena.datasource.SqlQueryBuilder;
 import io.resys.thena.datasource.SqlSchema;
@@ -13,7 +14,6 @@ import io.resys.thena.datasource.ThenaDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
 import io.resys.thena.datasource.ThenaSqlDataSourceImpl;
-import io.resys.thena.spi.DbCollections;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.spi.ThenaClientPgSql;
 import io.resys.thena.storesql.builders.RepoBuilderSqlPool;
@@ -36,7 +36,7 @@ public class DbStateSqlImpl implements DbState {
     return dataSource;
   }
   @Override
-  public RepoBuilder tenant() {
+  public InternalTenantQuery tenant() {
     return new RepoBuilderSqlPool(dataSource);
   }
   @Override
@@ -98,7 +98,7 @@ public class DbStateSqlImpl implements DbState {
     }); 
   }
 
-  public static DbStateSqlImpl create(DbCollections names, io.vertx.mutiny.sqlclient.Pool client) {
+  public static DbStateSqlImpl create(TenantTableNames names, io.vertx.mutiny.sqlclient.Pool client) {
     final var errorHandler = new PgErrors(names);
     final var dataSource = new ThenaSqlDataSourceImpl(
         "", names, client, errorHandler, 
@@ -118,33 +118,33 @@ public class DbStateSqlImpl implements DbState {
     private io.vertx.mutiny.sqlclient.Pool client;
     private String db = "docdb";
     private ThenaSqlDataSourceErrorHandler errorHandler;
-    private Function<DbCollections, SqlSchema> sqlSchema; 
-    private Function<DbCollections, SqlDataMapper> sqlMapper;
-    private Function<DbCollections, SqlQueryBuilder> sqlBuilder;
+    private Function<TenantTableNames, SqlSchema> sqlSchema; 
+    private Function<TenantTableNames, SqlDataMapper> sqlMapper;
+    private Function<TenantTableNames, SqlQueryBuilder> sqlBuilder;
     
-    public Builder sqlMapper(Function<DbCollections, SqlDataMapper> sqlMapper) {this.sqlMapper = sqlMapper; return this; }
-    public Builder sqlBuilder(Function<DbCollections, SqlQueryBuilder> sqlBuilder) {this.sqlBuilder = sqlBuilder; return this; }
-    public Builder sqlSchema(Function<DbCollections, SqlSchema> sqlSchema) {this.sqlSchema = sqlSchema; return this; }
+    public Builder sqlMapper(Function<TenantTableNames, SqlDataMapper> sqlMapper) {this.sqlMapper = sqlMapper; return this; }
+    public Builder sqlBuilder(Function<TenantTableNames, SqlQueryBuilder> sqlBuilder) {this.sqlBuilder = sqlBuilder; return this; }
+    public Builder sqlSchema(Function<TenantTableNames, SqlSchema> sqlSchema) {this.sqlSchema = sqlSchema; return this; }
     
     public Builder errorHandler(ThenaSqlDataSourceErrorHandler errorHandler) {this.errorHandler = errorHandler; return this; }
     public Builder db(String db) { this.db = db; return this; }
     public Builder client(io.vertx.mutiny.sqlclient.Pool client) { this.client = client; return this; }
 
-    public static SqlQueryBuilder defaultSqlBuilder(DbCollections ctx) { return new SqlBuilderImpl(ctx); }
-    public static SqlDataMapper defaultSqlMapper(DbCollections ctx) { return new SqlMapperImpl(ctx); }
-    public static SqlSchema defaultSqlSchema(DbCollections ctx) { return new SqlSchemaImpl(ctx); }
+    public static SqlQueryBuilder defaultSqlBuilder(TenantTableNames ctx) { return new SqlBuilderImpl(ctx); }
+    public static SqlDataMapper defaultSqlMapper(TenantTableNames ctx) { return new SqlMapperImpl(ctx); }
+    public static SqlSchema defaultSqlSchema(TenantTableNames ctx) { return new SqlSchemaImpl(ctx); }
     
     public ThenaClient build() {
       RepoAssert.notNull(client, () -> "client must be defined!");
       RepoAssert.notNull(db, () -> "db must be defined!");
       
       
-      final var ctx = DbCollections.defaults(db);
+      final var ctx = TenantTableNames.defaults(db);
       this.errorHandler = new PgErrors(ctx);
       
-      final Function<DbCollections, SqlSchema> sqlSchema = this.sqlSchema == null ? Builder::defaultSqlSchema : this.sqlSchema;
-      final Function<DbCollections, SqlDataMapper> sqlMapper = this.sqlMapper == null ? Builder::defaultSqlMapper : this.sqlMapper;
-      final Function<DbCollections, SqlQueryBuilder> sqlBuilder = this.sqlBuilder == null ? Builder::defaultSqlBuilder : this.sqlBuilder;
+      final Function<TenantTableNames, SqlSchema> sqlSchema = this.sqlSchema == null ? Builder::defaultSqlSchema : this.sqlSchema;
+      final Function<TenantTableNames, SqlDataMapper> sqlMapper = this.sqlMapper == null ? Builder::defaultSqlMapper : this.sqlMapper;
+      final Function<TenantTableNames, SqlQueryBuilder> sqlBuilder = this.sqlBuilder == null ? Builder::defaultSqlBuilder : this.sqlBuilder;
       
       final var dataSource = new ThenaSqlDataSourceImpl(
           db, ctx, client, errorHandler, 

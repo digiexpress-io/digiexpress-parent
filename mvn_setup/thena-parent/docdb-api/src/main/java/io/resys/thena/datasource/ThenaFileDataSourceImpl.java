@@ -1,14 +1,13 @@
 package io.resys.thena.datasource;
 
 import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.spi.DbCollections;
 
 public class ThenaFileDataSourceImpl implements ThenaFileDataSource {
 
   private final Tenant tenant;
-  private final DbCollections tenantTableNames;
+  private final TenantTableNames tenantTableNames;
     
-  public ThenaFileDataSourceImpl(Tenant tenant, DbCollections tenantTableNames) {
+  public ThenaFileDataSourceImpl(Tenant tenant, TenantTableNames tenantTableNames) {
     super();
     this.tenant = tenant;
     this.tenantTableNames = tenantTableNames.toRepo(tenant);
@@ -24,7 +23,7 @@ public class ThenaFileDataSourceImpl implements ThenaFileDataSource {
   }
 
   @Override
-  public DbCollections getTenantTableNames() {
+  public TenantTableNames getTenantTableNames() {
     return tenantTableNames;
   }
 

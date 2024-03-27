@@ -24,8 +24,6 @@ import io.resys.thena.api.entities.org.OrgParty;
 import io.resys.thena.api.entities.org.OrgPartyRight;
 import io.resys.thena.api.entities.org.OrgRight;
 import io.resys.thena.api.entities.org.OrgRightFlattened;
-import io.resys.thena.spi.DataMapper;
-import io.resys.thena.spi.DbCollections;
 import io.vertx.core.json.JsonObject;
 import io.vertx.mutiny.sqlclient.Row;
 
@@ -60,5 +58,5 @@ public interface SqlDataMapper extends DataMapper<Row>{
   
   JsonObject jsonObject(Row row, String columnName);
   
-  SqlDataMapper withOptions(DbCollections options);
+  SqlDataMapper withOptions(TenantTableNames options);
 }

@@ -3,7 +3,6 @@ package io.resys.thena.datasource;
 import io.resys.thena.datasource.SqlQueryBuilder.Sql;
 import io.resys.thena.datasource.SqlQueryBuilder.SqlTuple;
 import io.resys.thena.datasource.SqlQueryBuilder.SqlTupleList;
-import io.resys.thena.spi.DbCollections;
 
 /*-
  * #%L
@@ -26,7 +25,7 @@ import io.resys.thena.spi.DbCollections;
  */
 
 public interface ThenaSqlDataSourceErrorHandler {
-  ThenaSqlDataSourceErrorHandler withOptions(DbCollections options);
+  ThenaSqlDataSourceErrorHandler withOptions(TenantTableNames options);
   boolean notFound(Throwable e);
   boolean duplicate(Throwable e);
   boolean isLocked(Throwable e);

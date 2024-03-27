@@ -1,7 +1,7 @@
 package io.resys.thena.storesql;
 
+import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
-import io.resys.thena.spi.DbCollections;
 import io.vertx.pgclient.PgException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 public class PgErrors implements ThenaSqlDataSourceErrorHandler {
-  private final DbCollections options;
+  private final TenantTableNames options;
   
   public boolean notFound(Throwable e) {
     if(e instanceof PgException) {
@@ -99,7 +99,7 @@ public class PgErrors implements ThenaSqlDataSourceErrorHandler {
 	}
 
   @Override
-  public ThenaSqlDataSourceErrorHandler withOptions(DbCollections options) {
+  public ThenaSqlDataSourceErrorHandler withOptions(TenantTableNames options) {
     return new PgErrors(options);
   }
 }

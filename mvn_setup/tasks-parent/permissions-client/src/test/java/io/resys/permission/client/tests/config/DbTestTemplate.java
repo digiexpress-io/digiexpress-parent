@@ -22,8 +22,8 @@ import io.resys.permission.client.spi.PermissionStore;
 import io.resys.permission.client.spi.PermissionStoreImpl;
 import io.resys.thena.api.ThenaClient;
 import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.jackson.VertexExtModule;
-import io.resys.thena.spi.DbCollections;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.storesql.DbStateSqlImpl;
 import io.resys.thena.support.OrgDbPrinter;
@@ -140,7 +140,7 @@ public class DbTestTemplate {
   }
   
   public DbState createState() {
-    final var ctx = DbCollections.defaults(db);
+    final var ctx = TenantTableNames.defaults(db);
     return DbStateSqlImpl.create(ctx, pgPool);
   }
   

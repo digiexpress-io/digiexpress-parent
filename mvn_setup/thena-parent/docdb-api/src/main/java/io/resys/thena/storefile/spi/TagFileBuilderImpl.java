@@ -25,7 +25,7 @@ import java.util.Collections;
 import java.util.stream.Collectors;
 
 import io.resys.thena.api.entities.git.Tag;
-import io.resys.thena.spi.DbCollections;
+import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.storefile.FileBuilder.TagFileBuilder;
 import io.resys.thena.storefile.tables.ImmutableFileStatement;
 import io.resys.thena.storefile.tables.ImmutableFileTuple;
@@ -39,7 +39,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TagFileBuilderImpl implements TagFileBuilder {
   
-  private final DbCollections ctx;
+  private final TenantTableNames ctx;
   
   @Override
   public FileStatement create() {

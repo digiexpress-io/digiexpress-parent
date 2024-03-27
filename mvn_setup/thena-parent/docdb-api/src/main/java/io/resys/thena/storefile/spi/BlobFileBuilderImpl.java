@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import io.resys.thena.api.entities.git.Blob;
-import io.resys.thena.spi.DbCollections;
+import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.storefile.FileBuilder.BlobFileBuilder;
 import io.resys.thena.storefile.tables.ImmutableBlobTableRow;
 import io.resys.thena.storefile.tables.ImmutableFileStatement;
@@ -45,7 +45,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BlobFileBuilderImpl implements BlobFileBuilder {
   
-  private final DbCollections ctx;
+  private final TenantTableNames ctx;
   
   @Override
   public FileStatement create() {

@@ -21,7 +21,7 @@ import io.resys.thena.api.entities.org.OrgMembership;
 import io.resys.thena.api.entities.org.OrgParty;
 import io.resys.thena.api.entities.org.OrgRight;
 import io.resys.thena.api.envelope.ImmutableMessage;
-import io.resys.thena.spi.DataMapper;
+import io.resys.thena.datasource.DataMapper;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.structures.org.OrgInserts.OrgBatchForOne;
 import io.resys.thena.structures.org.OrgState;

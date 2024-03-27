@@ -26,8 +26,8 @@ import java.util.function.Function;
 import org.immutables.value.Value;
 
 import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.spi.DataMapper;
-import io.resys.thena.spi.DbCollections;
+import io.resys.thena.datasource.DataMapper;
+import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.storefile.tables.Table.Row;
 import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.sqlclient.Tuple;
@@ -53,7 +53,7 @@ public interface Table<T extends Row>  {
   
   interface FileMapper extends DataMapper<Table.Row> { }
   interface Connection {
-    RepoTable getRepoTable(DbCollections ctx);
+    RepoTable getRepoTable(TenantTableNames ctx);
   }
   
   interface FilePool {
@@ -71,7 +71,7 @@ public interface Table<T extends Row>  {
   interface FileClientWrapper {
     Tenant getRepo();
     FilePool getClient();
-    DbCollections getNames();    
+    TenantTableNames getNames();    
   }
   
   interface FileCommand {

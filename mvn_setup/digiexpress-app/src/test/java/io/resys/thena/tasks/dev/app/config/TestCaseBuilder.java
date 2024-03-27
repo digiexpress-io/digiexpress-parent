@@ -36,13 +36,13 @@ import io.resys.sysconfig.client.spi.executor.ExecutorClientImpl;
 import io.resys.sysconfig.client.spi.executor.ExecutorStoreImpl;
 import io.resys.sysconfig.client.spi.store.DocumentConfig.DocumentGidProvider;
 import io.resys.thena.api.ThenaClient;
+import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.jackson.VertexExtModule;
 import io.resys.thena.projects.client.api.TenantConfigClient;
 import io.resys.thena.projects.client.api.model.TenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
 import io.resys.thena.projects.client.spi.ProjectsClientImpl;
 import io.resys.thena.projects.client.spi.store.MainBranch;
-import io.resys.thena.spi.DbCollections;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.storesql.DbStateSqlImpl;
 import io.smallrye.mutiny.Uni;
@@ -77,7 +77,7 @@ public class TestCaseBuilder {
     
     
     this.doc = getClient(pgPool, "junit");
-    this.docState = DbStateSqlImpl.create(DbCollections.defaults("junit"), pgPool);
+    this.docState = DbStateSqlImpl.create(TenantTableNames.defaults("junit"), pgPool);
     this.repoId = repoId;
     
     final var stencil = createStencilInit(pgPool, objectMapper);

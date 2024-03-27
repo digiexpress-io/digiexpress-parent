@@ -10,7 +10,7 @@ import io.smallrye.mutiny.Uni;
 
 public interface DbState {
   ThenaDataSource getDataSource();
-  RepoBuilder tenant();
+  InternalTenantQuery tenant();
   
   Uni<GitState> toGitState(String tenantId);
   GitState toGitState(Tenant repo);
@@ -24,7 +24,7 @@ public interface DbState {
   OrgState toOrgState(Tenant repo);
   <R> Uni<R> withOrgTransaction(String tenantId, OrgState.TransactionFunction<R> callback);
   
-  interface RepoBuilder {
+  interface InternalTenantQuery {
     Uni<Tenant> getByName(String name);
     Uni<Tenant> getByNameOrId(String nameOrId);
     Multi<Tenant> findAll();

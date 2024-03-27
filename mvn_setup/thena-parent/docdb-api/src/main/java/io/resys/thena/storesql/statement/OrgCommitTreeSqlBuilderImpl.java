@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 import io.resys.thena.api.entities.org.OrgCommitTree;
+import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.ImmutableSqlTupleList;
@@ -11,14 +12,13 @@ import io.resys.thena.datasource.SqlQueryBuilder.OrgCommitTreeSqlBuilder;
 import io.resys.thena.datasource.SqlQueryBuilder.Sql;
 import io.resys.thena.datasource.SqlQueryBuilder.SqlTuple;
 import io.resys.thena.datasource.SqlQueryBuilder.SqlTupleList;
-import io.resys.thena.spi.DbCollections;
 import io.resys.thena.storesql.support.SqlStatement;
 import io.vertx.mutiny.sqlclient.Tuple;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class OrgCommitTreeSqlBuilderImpl implements OrgCommitTreeSqlBuilder {
-  private final DbCollections options;
+  private final TenantTableNames options;
   @Override
   public Sql findAll() {
     return ImmutableSql.builder()

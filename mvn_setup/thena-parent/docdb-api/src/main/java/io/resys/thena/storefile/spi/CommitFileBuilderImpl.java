@@ -24,7 +24,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import io.resys.thena.api.entities.git.Commit;
-import io.resys.thena.spi.DbCollections;
+import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.storefile.FileBuilder.CommitFileBuilder;
 import io.resys.thena.storefile.tables.ImmutableCommitTableRow;
 import io.resys.thena.storefile.tables.ImmutableFileStatement;
@@ -38,7 +38,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CommitFileBuilderImpl implements CommitFileBuilder {
 
-  private final DbCollections ctx;
+  private final TenantTableNames ctx;
   
   @Override
   public FileStatement create() {

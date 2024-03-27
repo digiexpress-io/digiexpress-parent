@@ -1,19 +1,19 @@
 package io.resys.thena.storesql.statement;
 
 import io.resys.thena.api.entities.git.Tree;
+import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.SqlQueryBuilder.GitTreeSqlBuilder;
 import io.resys.thena.datasource.SqlQueryBuilder.Sql;
 import io.resys.thena.datasource.SqlQueryBuilder.SqlTuple;
-import io.resys.thena.spi.DbCollections;
 import io.resys.thena.storesql.support.SqlStatement;
 import io.vertx.mutiny.sqlclient.Tuple;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class GitTreeSqlBuilderImpl implements GitTreeSqlBuilder {
-  private final DbCollections options;
+  private final TenantTableNames options;
   
   @Override
   public Sql findAll() {

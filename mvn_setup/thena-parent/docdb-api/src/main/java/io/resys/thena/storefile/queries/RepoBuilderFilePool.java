@@ -6,10 +6,10 @@ import java.util.Collection;
 import java.util.List;
 
 import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlSchemaFailed;
-import io.resys.thena.spi.DbCollections;
-import io.resys.thena.spi.DbState.RepoBuilder;
+import io.resys.thena.spi.DbState.InternalTenantQuery;
 import io.resys.thena.storefile.FileBuilder;
 import io.resys.thena.storefile.tables.Table.FileMapper;
 import io.resys.thena.storefile.tables.Table.FilePool;
@@ -23,9 +23,9 @@ import io.smallrye.mutiny.groups.UniJoin.JoinAllStrategy;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class RepoBuilderFilePool implements RepoBuilder {
+public class RepoBuilderFilePool implements InternalTenantQuery {
   private final FilePool client;
-  private final DbCollections names;
+  private final TenantTableNames names;
   private final FileMapper mapper;
   private final FileBuilder builder;
   private final ThenaSqlDataSourceErrorHandler errorHandler;
@@ -74,7 +74,7 @@ public class RepoBuilderFilePool implements RepoBuilder {
   @Override
   public Uni<Tenant> insert(final Tenant newRepo) {
     final var next = names.toRepo(newRepo);
-    final var sqlBuilder = this.builder.withOptions(next);
+    final var sqlBuilder = this.builder.withTenant(next);
     final var repoInsert = sqlBuilder.repo().insertOne(newRepo);
     final var tablesCreate = Arrays.asList(
       sqlBuilder.blobs().create(),
