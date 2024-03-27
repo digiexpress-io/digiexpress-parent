@@ -14,7 +14,7 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
 import io.resys.thena.api.actions.OrgCommitActions.ModType;
 import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
-import io.resys.thena.api.actions.TenantActions.TenantStatus;
+import io.resys.thena.api.actions.TenantActions.CommitStatus;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.api.entities.org.OrgMember;
@@ -47,7 +47,7 @@ public class HierarchicalOrgPartyQueryTest extends DbTestTemplate {
         .build()
         .await().atMost(Duration.ofMinutes(1));
     log.debug("created repo {}", repo);
-    Assertions.assertEquals(TenantStatus.OK, repo.getStatus());
+    Assertions.assertEquals(CommitStatus.OK, repo.getStatus());
 
     final var jailer1 = createRole(repo, "jailer-1");
     final var jailer2 = createRole(repo, "jailer-2");

@@ -30,7 +30,7 @@ import io.resys.crm.client.spi.store.DocumentConfig;
 import io.resys.crm.client.spi.store.DocumentConfig.DocumentAuthorProvider;
 import io.resys.crm.client.spi.store.DocumentConfig.DocumentGidProvider;
 import io.resys.thena.api.ThenaClient;
-import io.resys.thena.api.actions.TenantActions.TenantStatus;
+import io.resys.thena.api.actions.TenantActions.CommitStatus;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
@@ -142,7 +142,7 @@ public class DocumentStoreImpl implements DocumentStore {
     final var client = config.getClient();
     final var newRepo = client.tenants().commit().name(repoName, StructureType.doc).build();
     return newRepo.onItem().transform((repoResult) -> {
-      if(repoResult.getStatus() != TenantStatus.OK) {
+      if(repoResult.getStatus() != CommitStatus.OK) {
         throw new DocumentStoreException("CRM_REPO_CREATE_FAIL", 
             ImmutableDocumentExceptionMsg.builder()
             .id(repoResult.getStatus().toString())

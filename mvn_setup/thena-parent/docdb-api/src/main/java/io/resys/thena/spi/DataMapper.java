@@ -38,7 +38,6 @@ public interface DataMapper<T> {
   DocCommit docCommit(T row);
   DocBranchLock docBranchLock(T row);
   
-  
   static CommitResultStatus mapStatus(BatchStatus src) {
     if(src == BatchStatus.OK) {
       return CommitResultStatus.OK;

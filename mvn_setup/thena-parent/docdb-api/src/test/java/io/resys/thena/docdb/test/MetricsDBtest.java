@@ -30,7 +30,7 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
 import io.resys.thena.api.actions.GitCommitActions.CommitResultEnvelope;
 import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
-import io.resys.thena.api.actions.TenantActions.TenantStatus;
+import io.resys.thena.api.actions.TenantActions.CommitStatus;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.docdb.test.config.DbTestTemplate;
@@ -54,7 +54,7 @@ public class MetricsDBtest extends DbTestTemplate {
         .build()
         .await().atMost(Duration.ofMinutes(1));
     log.debug("created repo {}", repo);
-    Assertions.assertEquals(TenantStatus.OK, repo.getStatus());
+    Assertions.assertEquals(CommitStatus.OK, repo.getStatus());
     
     // ~ millis 37282
     runInserts(repo, 500000);

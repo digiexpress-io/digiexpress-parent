@@ -27,7 +27,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.resys.thena.api.ThenaClient;
 import io.resys.thena.api.ThenaClient.OrgStructuredTenant;
-import io.resys.thena.api.actions.TenantActions.TenantStatus;
+import io.resys.thena.api.actions.TenantActions.CommitStatus;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
@@ -136,7 +136,7 @@ public class PermissionStoreImpl implements PermissionStore {
     final var client = config.getClient();
     final var newRepo = client.tenants().commit().name(repoName, StructureType.org).build();
     return newRepo.onItem().transform((repoResult) -> {
-      if(repoResult.getStatus() != TenantStatus.OK) {
+      if(repoResult.getStatus() != CommitStatus.OK) {
         throw new PermissionStoreException("PERMISSION_REPO_CREATE_FAIL", 
             ImmutableDocumentExceptionMsg.builder()
             .id(repoResult.getStatus().toString())

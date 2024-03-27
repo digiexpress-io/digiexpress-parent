@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Test;
 
 import io.resys.thena.api.actions.GitCommitActions.CommitResultEnvelope;
 import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
-import io.resys.thena.api.actions.TenantActions.TenantStatus;
+import io.resys.thena.api.actions.TenantActions.CommitStatus;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.docdb.test.config.FileTestTemplate;
 import io.vertx.core.json.JsonObject;
@@ -50,7 +50,7 @@ public class FileReadWriteTest extends FileTestTemplate {
   public void crateRepoAddAndDeleteFile() {
     // create project
     TenantCommitResult repo = createRepo("crateRepoAddAndDeleteFile");
-    Assertions.assertEquals(TenantStatus.OK, repo.getStatus());
+    Assertions.assertEquals(CommitStatus.OK, repo.getStatus());
     
     // Create head and first commit
     CommitResultEnvelope commit_0 = getClient(repo.getRepo()).git(repo).commit().commitBuilder()
@@ -86,7 +86,7 @@ public class FileReadWriteTest extends FileTestTemplate {
   public void crateRepoWithOneCommit() {
     // create project
     TenantCommitResult repo = createRepo("project-x");
-    Assertions.assertEquals(TenantStatus.OK, repo.getStatus());
+    Assertions.assertEquals(CommitStatus.OK, repo.getStatus());
     
     // Create head and first commit
     CommitResultEnvelope commit_0 = getClient(repo.getRepo()).git(repo).commit().commitBuilder()
@@ -110,7 +110,7 @@ public class FileReadWriteTest extends FileTestTemplate {
   public void createRepoWithTwoCommits() {
     // create project
     TenantCommitResult repo = createRepo("project-xy");
-    Assertions.assertEquals(TenantStatus.OK, repo.getStatus());
+    Assertions.assertEquals(CommitStatus.OK, repo.getStatus());
     
     // Create head and first commit
     CommitResultEnvelope commit_0 = getClient(repo.getRepo()).git(repo).commit().commitBuilder()

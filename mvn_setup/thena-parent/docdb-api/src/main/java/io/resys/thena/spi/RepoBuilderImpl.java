@@ -3,7 +3,7 @@ package io.resys.thena.spi;
 import io.resys.thena.api.actions.ImmutableTenantCommitResult;
 import io.resys.thena.api.actions.TenantActions;
 import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
-import io.resys.thena.api.actions.TenantActions.TenantStatus;
+import io.resys.thena.api.actions.TenantActions.CommitStatus;
 import io.resys.thena.api.entities.ImmutableTenant;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @RequiredArgsConstructor
 @Slf4j
-public class RepoBuilderImpl implements TenantActions.RepoBuilder {
+public class RepoBuilderImpl implements TenantActions.TenantBuilder {
 
   private final DbState state;
   private String name;
@@ -43,7 +43,7 @@ public class RepoBuilderImpl implements TenantActions.RepoBuilder {
       if(existing != null) {
         log.error("Existing repository found with name '{}'", name);
         result = Uni.createFrom().item(ImmutableTenantCommitResult.builder()
-            .status(TenantStatus.CONFLICT)
+            .status(CommitStatus.CONFLICT)
             .addMessages(RepoException.builder().nameNotUnique(existing.getName(), existing.getId()))
             .build());
       } else {
@@ -62,7 +62,7 @@ public class RepoBuilderImpl implements TenantActions.RepoBuilder {
           return state.project().insert(newRepo)
             .onItem().transform(next -> (TenantCommitResult) ImmutableTenantCommitResult.builder()
                 .repo(next)
-                .status(TenantStatus.OK)
+                .status(CommitStatus.OK)
                 .build());
         });
       }

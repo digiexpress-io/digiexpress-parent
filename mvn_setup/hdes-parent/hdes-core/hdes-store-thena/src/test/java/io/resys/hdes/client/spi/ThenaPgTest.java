@@ -33,7 +33,7 @@ import io.quarkus.test.junit.TestProfile;
 import io.resys.hdes.client.spi.config.PgProfile;
 import io.resys.hdes.client.spi.config.PgTestTemplate;
 import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
-import io.resys.thena.api.actions.TenantActions.TenantStatus;
+import io.resys.thena.api.actions.TenantActions.CommitStatus;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.vertx.core.json.JsonObject;
@@ -59,7 +59,7 @@ public class ThenaPgTest extends PgTestTemplate {
         .build()
         .await().atMost(Duration.ofMinutes(1));
     log.debug("created repo {}", repo);
-    Assertions.assertEquals(TenantStatus.OK, repo.getStatus());
+    Assertions.assertEquals(CommitStatus.OK, repo.getStatus());
     
     // Create head and first commit
     var commit_0 = getThena().git("project-x").commit().commitBuilder()
@@ -86,7 +86,7 @@ public class ThenaPgTest extends PgTestTemplate {
         .build()
         .await().atMost(Duration.ofMinutes(1));
     log.debug("created repo {}", repo);
-    Assertions.assertEquals(TenantStatus.OK, repo.getStatus());
+    Assertions.assertEquals(CommitStatus.OK, repo.getStatus());
     
     // Create head and first commit
     var commit_0 = getThena().git(repo.getRepo().getName()).commit().commitBuilder()

@@ -31,7 +31,7 @@ import io.resys.hdes.client.api.ast.AstBody.AstBodyType;
 import io.resys.hdes.client.api.exceptions.StoreException;
 import io.resys.hdes.client.spi.store.ThenaConfig.EntityState;
 import io.resys.hdes.client.spi.util.HdesAssert;
-import io.resys.thena.api.actions.TenantActions.TenantStatus;
+import io.resys.thena.api.actions.TenantActions.CommitStatus;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
@@ -73,7 +73,7 @@ public abstract class ThenaStoreTemplate extends PersistenceCommands implements 
         final var client = config.getClient();
         final var newRepo = client.tenants().commit().name(repoName, StructureType.git).build();
         return newRepo.onItem().transform((repoResult) -> {
-          if(repoResult.getStatus() != TenantStatus.OK) {
+          if(repoResult.getStatus() != CommitStatus.OK) {
             throw new StoreException("REPO_CREATE_FAIL", null, 
                 ImmutableStoreExceptionMsg.builder()
                 .id(repoResult.getStatus().toString())

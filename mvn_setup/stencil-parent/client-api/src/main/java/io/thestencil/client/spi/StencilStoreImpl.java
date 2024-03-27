@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import io.resys.thena.api.actions.TenantActions.TenantStatus;
+import io.resys.thena.api.actions.TenantActions.CommitStatus;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.smallrye.mutiny.Uni;
@@ -113,7 +113,7 @@ public class StencilStoreImpl extends PersistenceCommands implements StencilStor
         final var client = config.getClient();
         final var newRepo = client.tenants().commit().name(repoName, StructureType.git).build();
         return newRepo.onItem().transform((repoResult) -> {
-          if(repoResult.getStatus() != TenantStatus.OK) {
+          if(repoResult.getStatus() != CommitStatus.OK) {
             throw new RepoException("Can't create repository with name: '"  + repoName + "'!", repoResult); 
           }
           return build();

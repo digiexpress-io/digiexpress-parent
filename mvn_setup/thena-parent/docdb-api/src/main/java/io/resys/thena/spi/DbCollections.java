@@ -23,7 +23,6 @@ package io.resys.thena.spi;
 import org.immutables.value.Value;
 
 import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.spi.ImmutableDbCollections;
 
 @Value.Immutable
 public abstract class DbCollections {
@@ -58,9 +57,6 @@ public abstract class DbCollections {
   public abstract String getOrgCommits();
   public abstract String getOrgCommitTrees();
   public abstract String getOrgActorData();
-  
-  
-  
   
   
   public DbCollections toRepo(Tenant repo) {

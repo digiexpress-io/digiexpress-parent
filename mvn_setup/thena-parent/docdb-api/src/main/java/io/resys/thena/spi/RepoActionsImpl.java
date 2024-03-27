@@ -9,12 +9,12 @@ public class RepoActionsImpl implements TenantActions {
   private final DbState state;
 
   @Override
-  public RepoQuery find() {
+  public TenantQuery find() {
     return new RepoQueryImpl(state);
   }
 
   @Override
-  public RepoBuilder commit() {
+  public TenantBuilder commit() {
     return new RepoBuilderImpl(state);
   }
 }

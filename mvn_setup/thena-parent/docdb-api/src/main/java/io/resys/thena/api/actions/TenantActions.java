@@ -35,23 +35,23 @@ import io.smallrye.mutiny.Uni;
 
 public interface TenantActions {
 
-  RepoQuery find();
-  RepoBuilder commit();  
+  TenantQuery find();
+  TenantBuilder commit();  
 
-  interface RepoQuery {
-    RepoQuery id(String id);
-    RepoQuery rev(String rev);
+  interface TenantQuery {
+    TenantQuery id(String id);
+    TenantQuery rev(String rev);
     Multi<Tenant> findAll();
     Uni<Tenant> delete();
     Uni<Tenant> get();
   }
   
-  interface RepoBuilder {
-    RepoBuilder name(String name, StructureType type);
+  interface TenantBuilder {
+    TenantBuilder name(String name, StructureType type);
     Uni<TenantCommitResult> build();
   }
   
-  enum TenantStatus {
+  enum CommitStatus {
     OK, CONFLICT
   }
   
@@ -59,7 +59,7 @@ public interface TenantActions {
   interface TenantCommitResult extends ThenaEnvelope {
     @Nullable
     Tenant getRepo();
-    TenantStatus getStatus();
+    CommitStatus getStatus();
     List<Message> getMessages();
   }
 }
