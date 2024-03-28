@@ -3,6 +3,7 @@ package io.resys.thena.storesql.builders;
 import io.resys.thena.api.LogConstants;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
+import io.resys.thena.datasource.ThenaSqlClient;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlFailed;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlSchemaFailed;
@@ -21,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 public class RepoBuilderSqlPool implements InternalTenantQuery {
   private final ThenaSqlDataSource dataSource;
   
-  private io.vertx.mutiny.sqlclient.SqlClient getClient() {
+  private ThenaSqlClient getClient() {
     return dataSource.getClient();
   }
 

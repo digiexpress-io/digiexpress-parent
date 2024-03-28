@@ -14,6 +14,7 @@ import io.resys.thena.datasource.ThenaDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
 import io.resys.thena.datasource.ThenaSqlDataSourceImpl;
+import io.resys.thena.datasource.vertx.ThenaSqlPoolVertx;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.spi.ThenaClientPgSql;
 import io.resys.thena.storesql.builders.RepoBuilderSqlPool;
@@ -99,9 +100,10 @@ public class DbStateSqlImpl implements DbState {
   }
 
   public static DbStateSqlImpl create(TenantTableNames names, io.vertx.mutiny.sqlclient.Pool client) {
+    final var pool = new ThenaSqlPoolVertx(client);
     final var errorHandler = new PgErrors(names);
     final var dataSource = new ThenaSqlDataSourceImpl(
-        "", names, client, errorHandler, 
+        "", names, pool, errorHandler, 
         Optional.empty(),
         Builder.defaultSqlSchema(names), 
         Builder.defaultSqlMapper(names), 
@@ -145,9 +147,10 @@ public class DbStateSqlImpl implements DbState {
       final Function<TenantTableNames, SqlSchema> sqlSchema = this.sqlSchema == null ? Builder::defaultSqlSchema : this.sqlSchema;
       final Function<TenantTableNames, SqlDataMapper> sqlMapper = this.sqlMapper == null ? Builder::defaultSqlMapper : this.sqlMapper;
       final Function<TenantTableNames, SqlQueryBuilder> sqlBuilder = this.sqlBuilder == null ? Builder::defaultSqlBuilder : this.sqlBuilder;
+      final var pool = new ThenaSqlPoolVertx(client);
       
       final var dataSource = new ThenaSqlDataSourceImpl(
-          db, ctx, client, errorHandler, 
+          db, ctx, pool, errorHandler, 
           Optional.empty(),
           sqlSchema.apply(ctx), 
           sqlMapper.apply(ctx), 

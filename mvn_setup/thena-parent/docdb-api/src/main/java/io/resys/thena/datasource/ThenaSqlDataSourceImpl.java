@@ -5,15 +5,14 @@ import java.util.Optional;
 import io.resys.thena.api.entities.ImmutableTenant;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
-import io.vertx.mutiny.sqlclient.Pool;
-import io.vertx.mutiny.sqlclient.SqlClient;
+import io.resys.thena.datasource.ThenaSqlClient.ThenaSqlPool;
 
 public class ThenaSqlDataSourceImpl implements ThenaSqlDataSource {
   private final Tenant tenant;
   private final TenantTableNames tenantTableNames;
-  private final io.vertx.mutiny.sqlclient.Pool pool;
+  private final ThenaSqlPool pool;
   private final ThenaSqlDataSourceErrorHandler errorHandler;
-  private final Optional<SqlClient> tx;
+  private final Optional<ThenaSqlClient> tx;
   private final SqlSchema schema;
   private final SqlDataMapper dataMapper;
   private final SqlQueryBuilder queryBuilder;
@@ -22,9 +21,9 @@ public class ThenaSqlDataSourceImpl implements ThenaSqlDataSource {
   public ThenaSqlDataSourceImpl(
       Tenant tenant, 
       TenantTableNames tenantTableNames, 
-      Pool pool,
+      ThenaSqlPool pool,
       ThenaSqlDataSourceErrorHandler errorHandler, 
-      Optional<SqlClient> tx, 
+      Optional<ThenaSqlClient> tx, 
       SqlSchema schema,
       SqlDataMapper dataMapper,
       SqlQueryBuilder queryBuilder) {
@@ -43,9 +42,9 @@ public class ThenaSqlDataSourceImpl implements ThenaSqlDataSource {
   public ThenaSqlDataSourceImpl(
       String tenant, 
       TenantTableNames tenantTableNames, 
-      Pool pool,
+      ThenaSqlPool pool,
       ThenaSqlDataSourceErrorHandler errorHandler, 
-      Optional<SqlClient> tx, 
+      Optional<ThenaSqlClient> tx, 
       SqlSchema schema,
       SqlDataMapper dataMapper,
       SqlQueryBuilder queryBuilder) {
@@ -76,7 +75,7 @@ public class ThenaSqlDataSourceImpl implements ThenaSqlDataSource {
     return tenantTableNames;
   }
   @Override
-  public Pool getPool() {
+  public ThenaSqlPool getPool() {
     return pool;
   }
   @Override
@@ -84,7 +83,7 @@ public class ThenaSqlDataSourceImpl implements ThenaSqlDataSource {
     return errorHandler;
   }
   @Override
-  public Optional<SqlClient> getTx() {
+  public Optional<ThenaSqlClient> getTx() {
     return tx;
   }
   @Override
@@ -110,7 +109,7 @@ public class ThenaSqlDataSourceImpl implements ThenaSqlDataSource {
   }
 
   @Override
-  public ThenaSqlDataSource withTx(SqlClient tx) {
+  public ThenaSqlDataSource withTx(ThenaSqlClient tx) {
     return new ThenaSqlDataSourceImpl(tenant, tenantTableNames, pool, errorHandler, Optional.of(tx), schema, dataMapper, queryBuilder);
   }
 
