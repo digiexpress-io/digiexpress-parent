@@ -110,6 +110,7 @@ public class ConfigResource {
   }
   
   public Uni<TenantConfigClient> createChildRepo(TenantRepoConfig config) {
-    return tenantClient.query().repoName(config.getRepoId(), config.getRepoType()).createIfNot();
+    return tenantClient.query()
+        .repoName(config.getRepoId(), config.getRepoType()).createIfNot();
   }
 }

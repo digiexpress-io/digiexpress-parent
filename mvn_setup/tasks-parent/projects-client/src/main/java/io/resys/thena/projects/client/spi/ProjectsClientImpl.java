@@ -62,7 +62,7 @@ public class ProjectsClientImpl implements TenantConfigClient {
       public RepositoryQuery repoName(String repoName, TenantRepoConfigType type) {
         this.repoName = repoName;
         this.type = type;
-        repo.repoName(repoName).headName(MainBranch.HEAD_NAME);
+        repo.repoName(type.name()).externalId(repoName).headName(MainBranch.HEAD_NAME);
         
         switch (type) {
         case CRM: { repo.repoType(StructureType.doc); break; }
