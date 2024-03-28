@@ -53,8 +53,7 @@ public class PermissionsResource implements PermissionRestApi {
 
   @Override
   public Uni<Permission> createPermission(CreatePermission command) {
-    // TODO Auto-generated method stub
-    return null;
+    return getClient().onItem().transformToUni(client -> client.createPermission().createOne(command));
   }
 
   @Override

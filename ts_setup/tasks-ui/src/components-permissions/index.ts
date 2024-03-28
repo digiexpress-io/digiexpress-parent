@@ -1,5 +1,5 @@
 import RolesOverview from './Roles'
 import DeOrgChart from './OrgChart';
-import { PermissionsOverview } from './Permissions';
+import { PermissionsOverview } from './PermissionsOverview';
 
 export { RolesOverview, DeOrgChart, PermissionsOverview };

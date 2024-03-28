@@ -591,6 +591,10 @@ const en = {
   'permissions.permission.status': 'Status',
   'permissions.permission.none': 'No permissions found',
   'permissions.permission.select': 'Permissions',
+  'permissions.permission.create': 'Create a new permission',
+  'permissions.permission.name.create.placeholder': 'Enter a permission name',
+  'permissions.permission.description.create.placeholder': 'Enter a description of this permission',
+
 
   'permissions.createRole.role_parent': 'Parent role',
   'permissions.createRole.role_permissions': 'Permissions',

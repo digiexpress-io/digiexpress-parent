@@ -5,6 +5,7 @@ import { LayoutList, NavigationButton, FilterByString } from 'components-generic
 import RoleCreateDialog from '../RoleCreate';
 import { OneRoleData } from './OneRoleData';
 import { PermissionsProvider, TabTypes, usePermissions } from '../PermissionsContext';
+import { PermissionCreateDialog } from '../PermissionCreate';
 
 
 const color_create_role = colors.cyan;
@@ -13,7 +14,9 @@ const color_create_permission = colors.steelblue;
 
 const RoleNavigation: React.FC = () => {
   const [roleCreateOpen, setRoleCreateOpen] = React.useState(false);
-  const { setActiveTab, activeTab } = usePermissions();
+  const [permissionCreateOpen, setPermissionCreateOpen] = React.useState(false);
+
+  const { activeTab } = usePermissions();
   const { id } = activeTab;
 
   function getLocale(id: TabTypes) {
@@ -28,8 +31,13 @@ const RoleNavigation: React.FC = () => {
     setRoleCreateOpen(prev => !prev);
   }
 
+  function handlePermissionCreate() {
+    setPermissionCreateOpen(prev => !prev);
+  }
+
   return (<>
     <RoleCreateDialog open={roleCreateOpen} onClose={handleRoleCreate} />
+    <PermissionCreateDialog open={permissionCreateOpen} onClose={handlePermissionCreate} />
 
     <FilterByString defaultValue={''} onChange={handleSearch} />
     <NavigationButton id='permissions.navButton.role.create'
@@ -41,13 +49,13 @@ const RoleNavigation: React.FC = () => {
       values={getLocale('permission_create')}
       color={color_create_permission}
       active={id === 'permission_create'}
-      onClick={() => setActiveTab("permission_create")} />
+      onClick={handlePermissionCreate} />
   </>);
 }
 
 
 
-const PermissionsLayout: React.FC = () => {
+const RolesOverviewLayout: React.FC = () => {
   const { roles } = usePermissions();
   if (!roles) {
     return null;
@@ -61,7 +69,7 @@ const PermissionsLayout: React.FC = () => {
 
 
 const RolesOverviewLoader: React.FC = () => {
-  return (<PermissionsProvider><PermissionsLayout /></PermissionsProvider>);
+  return (<PermissionsProvider><RolesOverviewLayout /></PermissionsProvider>);
 }
 
 export default RolesOverviewLoader;
