@@ -21,20 +21,17 @@ package io.resys.permission.client.api.model;
  */
 
 import java.io.Serializable;
-import java.time.Instant;
 import java.util.List;
-
-import javax.annotation.Nullable;
 
 import org.immutables.value.Value;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import io.resys.permission.client.api.model.Principal.Role;
 import io.resys.thena.api.entities.org.OrgActorStatus;
 
 
@@ -51,15 +48,8 @@ import io.resys.thena.api.entities.org.OrgActorStatus;
 })
 
 public interface PermissionCommand extends Serializable {
-
-  @Nullable String getUserId();
-  @Nullable Instant getTargetDate();
   PermissionCommandType getCommandType();
   String getComment(); // for auditing purposes, user who made changes must describe why, in a comment.
-  
-  
-  PermissionCommand withUserId(String userId);
-  PermissionCommand withTargetDate(Instant targetDate);
   
   enum PermissionCommandType {
     CREATE_PERMISSION,
@@ -76,9 +66,11 @@ public interface PermissionCommand extends Serializable {
   @Value.Immutable @JsonSerialize(as = ImmutableCreatePermission.class) @JsonDeserialize(as = ImmutableCreatePermission.class)
   interface CreatePermission extends PermissionCommand {
     String getName();
+    String getComment();
     String getDescription();
-    List<Role> getRoles();
+    List<String> getRoles();
     
+    @JsonIgnore
     @Value.Default
     @Override default PermissionCommandType getCommandType() { return PermissionCommandType.CREATE_PERMISSION; }
   }
@@ -92,31 +84,40 @@ public interface PermissionCommand extends Serializable {
     @Type(value = ImmutableChangePermissionDescription.class, name = "CHANGE_PERMISSION_DESCRIPTION"), 
     @Type(value = ImmutableChangePermissionStatus.class, name = "CHANGE_PERMISSION_STATUS"), 
   })
-  
   interface PermissionUpdateCommand extends PermissionCommand {
     String getId();
-    PermissionUpdateCommand withUserId(String userId);
-    PermissionUpdateCommand withTargetDate(Instant targetDate);
   }
   
   @Value.Immutable @JsonSerialize(as = ImmutableChangePermissionName.class) @JsonDeserialize(as = ImmutableChangePermissionName.class)
   interface ChangePermissionName extends PermissionUpdateCommand {
+    String getId();
+    String getComment();
     String getName();
     
+    @JsonIgnore
+    @Value.Default
     @Override default PermissionCommandType getCommandType() { return PermissionCommandType.CHANGE_PERMISSION_NAME; }
   }
   
   @Value.Immutable @JsonSerialize(as = ImmutableChangePermissionDescription.class) @JsonDeserialize(as = ImmutableChangePermissionDescription.class)
   interface ChangePermissionDescription extends PermissionUpdateCommand {
+    String getId();
+    String getComment();
     String getDescription();
     
+    @JsonIgnore
+    @Value.Default
     @Override default PermissionCommandType getCommandType() { return PermissionCommandType.CHANGE_PERMISSION_DESCRIPTION; }
   }
   
   @Value.Immutable @JsonSerialize(as = ImmutableChangePermissionStatus.class) @JsonDeserialize(as = ImmutableChangePermissionStatus.class)
   interface ChangePermissionStatus extends PermissionUpdateCommand {
+    String getId();
+    String getComment();
     OrgActorStatus.OrgActorStatusType getStatus();
     
+    @JsonIgnore
+    @Value.Default
     @Override default PermissionCommandType getCommandType() { return PermissionCommandType.CHANGE_PERMISSION_STATUS; }
   }
   

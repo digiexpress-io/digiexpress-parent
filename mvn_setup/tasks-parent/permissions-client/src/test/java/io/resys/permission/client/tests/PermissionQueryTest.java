@@ -26,7 +26,6 @@ public class PermissionQueryTest extends DbTestTemplate {
   public Permission createPermissionForQuery(PermissionClient client, String name, String description) {
     
    return client.createPermission().createOne(ImmutableCreatePermission.builder()
-       .userId("user-1")
        .comment("Created permission 1")
        .name(name)
        .description(description)

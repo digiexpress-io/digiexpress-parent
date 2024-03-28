@@ -21,13 +21,13 @@ export class ImmutablePermissionStore implements PermissionStore {
   async createPermission(command: CreatePermission): Promise<Permission> {
     return await this._store.fetch<Permission>(`permissions`, {
       method: 'POST',
-      body: JSON.stringify([command]),
+      body: JSON.stringify(command),
       repoType: 'PERMISSIONS'
     });
   }
 
   async getPermission(id: string): Promise<Permission> {
-    return this._store.fetch<Permission>(`permissions/${id}`, { repoType: 'PERMISSIONS' });
+    return await this._store.fetch<Permission>(`permissions/${id}`, { repoType: 'PERMISSIONS' });
   }
 
   async findPermissions(): Promise<Permission[]> {

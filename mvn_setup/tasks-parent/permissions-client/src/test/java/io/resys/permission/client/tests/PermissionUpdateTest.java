@@ -22,7 +22,6 @@ public class PermissionUpdateTest extends DbTestTemplate {
   
   public Permission createPermissionForUpdate(PermissionClient client) {
     return client.createPermission().createOne(ImmutableCreatePermission.builder()
-        .userId("user-1")
         .comment("New permission for update")
         .name("DB-write")
         .description("For admins only!")

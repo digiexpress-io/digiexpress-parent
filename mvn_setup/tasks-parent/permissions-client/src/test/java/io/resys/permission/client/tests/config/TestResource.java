@@ -1,9 +1,9 @@
-package io.resys.thena.tasks.dev.app;
+package io.resys.permission.client.tests.config;
 
-
+import java.util.Arrays;
 import java.util.List;
 
-import io.resys.permission.client.api.PermissionClient;
+import io.resys.permission.client.api.model.ImmutablePermission;
 import io.resys.permission.client.api.model.PermissionCommand.CreatePermission;
 import io.resys.permission.client.api.model.PermissionCommand.PermissionUpdateCommand;
 import io.resys.permission.client.api.model.Principal;
@@ -13,27 +13,27 @@ import io.resys.permission.client.api.model.PrincipalCommand.PrincipalUpdateComm
 import io.resys.permission.client.api.model.RoleCommand.CreateRole;
 import io.resys.permission.client.api.model.RoleCommand.RoleUpdateCommand;
 import io.resys.permission.client.rest.PermissionRestApi;
-import io.resys.thena.projects.client.api.TenantConfigClient;
-import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfig;
-import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
+import io.resys.thena.api.entities.org.OrgActorStatus;
 import io.smallrye.mutiny.Uni;
-import jakarta.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.Path;
 
 @Path("q/digiexpress/api")
-public class PermissionsResource implements PermissionRestApi {
+@ApplicationScoped
+public class TestResource implements PermissionRestApi {
 
-  @Inject PermissionClient permissions;
-  @Inject CurrentTenant currentTenant;
-  @Inject CurrentUser currentUser;
-  @Inject TenantConfigClient tenantClient;
-
+  private final Permission perm = ImmutablePermission.builder()
+      .name("test-perm")
+      .version("1")
+      .description("desc")
+      .status(OrgActorStatus.OrgActorStatusType.IN_FORCE)
+      .id("permissionId-1")
+      .build();
+  
   @Override
   public Uni<List<Principal>> findAllPrincipals() {
-    // TODO Auto-generated method stub
     return null;
   }
-
   @Override
   public Uni<Principal> getPrincipalById(String principalId) {
     // TODO Auto-generated method stub
@@ -48,22 +48,24 @@ public class PermissionsResource implements PermissionRestApi {
 
   @Override
   public Uni<List<Permission>> findAllPermissions() {
-    return getClient().onItem().transformToUni(client -> client.permissionQuery().findAllPermissions());
+    return Uni.createFrom().item(Arrays.asList(perm));
   }
 
   @Override
   public Uni<Permission> createPermission(CreatePermission command) {
-    return getClient().onItem().transformToUni(client -> client.createPermission().createOne(command));
+    return Uni.createFrom().item(perm);
   }
 
   @Override
   public Uni<Permission> getPermissionById(String permissionId) {
-    return getClient().onItem().transformToUni(client -> client.permissionQuery().get(permissionId));
+    // TODO Auto-generated method stub
+    return null;
   }
 
   @Override
   public Uni<Permission> updatePermission(String permissionId, List<PermissionUpdateCommand> commands) {
-    return getClient().onItem().transformToUni(client -> client.updatePermission().updateOne(commands));
+    // TODO Auto-generated method stub
+    return null;
   }
 
   @Override
@@ -88,16 +90,6 @@ public class PermissionsResource implements PermissionRestApi {
   public Uni<Role> getRoleById(String roleId) {
     // TODO Auto-generated method stub
     return null;
-  }
-  
-  private Uni<PermissionClient> getClient() {
-    //    return getClient().onItem().transformToUni(client -> client.tasks().updateTask().updateOne(modifiedCommands));
-    return getPermissionConfig().onItem().transform(config -> permissions.withRepoId(config.getRepoId()));
-  }
-  
-  private Uni<TenantRepoConfig> getPermissionConfig() {
-    return tenantClient.queryActiveTenantConfig().get(currentTenant.tenantId())
-        .onItem().transform(config -> config.getRepoConfig(TenantRepoConfigType.PERMISSIONS));
   }
 
 }

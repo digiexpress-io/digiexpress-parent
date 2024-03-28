@@ -25,9 +25,11 @@ export type PermissionCommandType =
 export interface PermissionUpdateCommand extends PermissionCommand { }
 
 export interface CreatePermission {
-  commandType: 'CREATE_PERMISSION';
   name: string;
+  comment: string;
   description: string;
+  commandType: 'CREATE_PERMISSION';
+  roles: string[];
 }
 
 export interface ChangePermissionName extends PermissionUpdateCommand {

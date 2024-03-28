@@ -25,7 +25,6 @@ public class PermissionCreateAndUpdateTest extends DbTestTemplate {
         .comment("created my first permission")
         .name("My first permission")
         .description("Cool description here")
-        .userId("user-1")
         .build())
       .await().atMost(Duration.ofMinutes(1));
   }
@@ -42,7 +41,6 @@ public class PermissionCreateAndUpdateTest extends DbTestTemplate {
 
     final var updatedName = client.updatePermission().updateOne(ImmutableChangePermissionName.builder()
         .id(created.getId())  
-        .userId("user-1")
         .name("New name for my first permission")
         .comment("Original name was wrong")
         .build())
@@ -52,7 +50,6 @@ public class PermissionCreateAndUpdateTest extends DbTestTemplate {
     
     final var updatedDesc = client.updatePermission().updateOne(ImmutableChangePermissionDescription.builder()
         .id(updatedName.getId())  
-        .userId("user-1")
         .description("An even better description here")
         .comment("new description")
         .build())

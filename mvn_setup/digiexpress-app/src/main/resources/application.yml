@@ -47,6 +47,8 @@ tenant:
       category:
         io.resys:
           level: DEBUG
+        org.jboss.resteasy.reactive.server.handlers.RequestDeserializeHandler: 
+          level: DEBUG
       console:  
         json: false
 
