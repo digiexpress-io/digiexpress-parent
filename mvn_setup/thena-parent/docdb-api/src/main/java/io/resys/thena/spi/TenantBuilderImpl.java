@@ -19,9 +19,15 @@ import lombok.extern.slf4j.Slf4j;
 public class TenantBuilderImpl implements TenantActions.TenantBuilder {
 
   private final DbState state;
+  private String externalId;
   private String name;
   private StructureType type;
-  
+
+  public TenantBuilderImpl externalId(String externalId) {
+    this.externalId = externalId;
+    return this;
+  }
+  @Override
   public TenantBuilderImpl name(String name, StructureType type) {
     this.name = name;
     this.type = type;
@@ -36,9 +42,11 @@ public class TenantBuilderImpl implements TenantActions.TenantBuilder {
     RepoAssert.notNull(type, () -> "type name not defined!");
     RepoAssert.isName(name, () -> "repo name has invalid characters!");
 
+    
+    
     return state.tenant().getByName(name)
       .onItem().transformToUni((Tenant existing) -> {
-      
+     
       final Uni<TenantCommitResult> result;
       if(existing != null) {
         log.error("Existing repository found with name '{}'", name);
@@ -49,14 +57,18 @@ public class TenantBuilderImpl implements TenantActions.TenantBuilder {
       } else {
         result = state.tenant().findAll()
         .collect().asList().onItem()
-        .transformToUni((allRepos) -> { 
+        .transformToUni((allRepos) -> {
+          final var codeName = name.toUpperCase();
+          final var prefixStart = codeName.substring(0, Math.min(codeName.length(), 10));
           
+          final var prefix = prefixStart.replace("-", "_") + (allRepos.size() + 10) + "_" ;
           final var newRepo = ImmutableTenant.builder()
               .id(Identifiers.uuid())
               .rev(Identifiers.uuid())
               .type(type)
               .name(name)
-              .prefix("nested_" + (allRepos.size() + 10) + "_")
+              .externalId(externalId)
+              .prefix(prefix)
               .build();
           
           return state.tenant().insert(newRepo)

@@ -86,7 +86,7 @@ public interface SqlSchema extends TenantTableNames.WithTenant<SqlSchema>{
   
   
   // central tracker for tables
-  Sql createRepo();
+  Sql createTenant();
   Sql dropRepo();
 
 

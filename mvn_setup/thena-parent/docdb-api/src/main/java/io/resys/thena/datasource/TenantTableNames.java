@@ -97,14 +97,14 @@ public abstract class TenantTableNames {
   public static TenantTableNames defaults(String db) {
     return ImmutableTenantTableNames.builder()
         .db(db == null ? "docdb" : db)
-        .tenant("repos")
+        .tenant("tenants")
         
-        .refs("refs")
-        .tags("tags")
-        .blobs("blobs")
-        .trees("trees")
-        .treeItems("treeItems")
-        .commits("commits")
+        .refs("git_refs")
+        .tags("git_tags")
+        .blobs("git_blobs")
+        .trees("git_trees")
+        .treeItems("git_treeItems")
+        .commits("git_commits")
         
         .docCommits("doc_commits")
         .docBranch("doc_branch")

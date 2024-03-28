@@ -92,6 +92,7 @@ public class SqlMapperImpl implements SqlDataMapper {
         .id(row.getString("id"))
         .rev(row.getString("rev"))
         .name(row.getString("name"))
+        .externalId(row.getString("external_id"))
         .type(StructureType.valueOf(row.getString("type")))
         .prefix(row.getString("prefix"))
         .build();

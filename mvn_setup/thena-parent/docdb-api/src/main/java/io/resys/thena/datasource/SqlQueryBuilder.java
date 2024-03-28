@@ -57,7 +57,7 @@ import io.vertx.mutiny.sqlclient.Tuple;
 
 public interface SqlQueryBuilder extends TenantTableNames.WithTenant<SqlQueryBuilder> {
 
-  RepoSqlBuilder repo();
+  TenantSqlBuilder repo();
   
   DocSqlBuilder docs();
   DocLogSqlBuilder docLogs();
@@ -85,7 +85,7 @@ public interface SqlQueryBuilder extends TenantTableNames.WithTenant<SqlQueryBui
   
   SqlQueryBuilder withTenant(TenantTableNames options);
 
-  interface RepoSqlBuilder {
+  interface TenantSqlBuilder {
     SqlTuple exists();
     Sql findAll();
     SqlTuple getByName(String name);

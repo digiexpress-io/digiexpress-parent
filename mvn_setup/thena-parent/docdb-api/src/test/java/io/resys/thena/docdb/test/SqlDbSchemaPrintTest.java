@@ -42,9 +42,8 @@ public class SqlDbSchemaPrintTest {
   public void printSchema() throws IOException {
     final var sqlSchema = new SqlSchemaImpl(TenantTableNames.defaults("public"));
     
-
     final var schema = new StringBuilder()
-      .append(sqlSchema.createRepo().getValue())
+      .append(sqlSchema.createTenant().getValue())
       .append(sqlSchema.createGitBlobs().getValue())
       .append(sqlSchema.createGitCommits().getValue())
       .append(sqlSchema.createGitTreeItems().getValue())

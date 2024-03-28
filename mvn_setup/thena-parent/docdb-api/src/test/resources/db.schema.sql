@@ -1,20 +1,23 @@
-CREATE TABLE IF NOT EXISTS repos
+CREATE TABLE IF NOT EXISTS tenants
 (
   id VARCHAR(40) PRIMARY KEY,
   rev VARCHAR(40) NOT NULL,
   prefix VARCHAR(40) NOT NULL,
   type VARCHAR(3) NOT NULL,
   name VARCHAR(255) NOT NULL,
-  UNIQUE(name), UNIQUE(rev), UNIQUE(prefix)
-)
+  external_id VARCHAR(255),
+  UNIQUE(name), UNIQUE(rev), UNIQUE(prefix), UNIQUE(external_id)
+);
+CREATE INDEX IF NOT EXISTS tenants_NAME_INDEX ON tenants (name);
+CREATE INDEX IF NOT EXISTS tenants_EXT_INDEX ON tenants (external_id);
 
-CREATE TABLE blobs
+CREATE TABLE git_blobs
 (
   id VARCHAR(40) PRIMARY KEY,
   value jsonb NOT NULL
 );
 
-CREATE TABLE commits
+CREATE TABLE git_commits
 (
   id VARCHAR(40) PRIMARY KEY,
   datetime VARCHAR(29) NOT NULL,
@@ -24,20 +27,24 @@ CREATE TABLE commits
   parent VARCHAR(40),
   merge VARCHAR(40)
 );
+CREATE INDEX git_commits_TREE_INDEX ON git_commits (tree);
+CREATE INDEX git_commits_PARENT_INDEX ON git_commits (tree);
 
-CREATE TABLE treeItems(  id SERIAL PRIMARY KEY,  name VARCHAR(255) NOT NULL,  blob VARCHAR(40) NOT NULL,  tree VARCHAR(40) NOT NULL);
-CREATE TABLE trees
+CREATE TABLE git_treeItems(  id SERIAL PRIMARY KEY,  name VARCHAR(255) NOT NULL,  blob VARCHAR(40) NOT NULL,  tree VARCHAR(40) NOT NULL);CREATE INDEX git_treeItems_TREE_INDEX ON git_treeItems (tree);
+CREATE INDEX git_treeItems_PARENT_INDEX ON git_treeItems (tree);
+
+CREATE TABLE git_trees
 (
   id VARCHAR(40) PRIMARY KEY
 );
 
-CREATE TABLE refs
+CREATE TABLE git_refs
 (
   name VARCHAR(100) PRIMARY KEY,
   commit VARCHAR(40) NOT NULL
 );
 
-CREATE TABLE tags
+CREATE TABLE git_tags
 (
   id VARCHAR(40) PRIMARY KEY,
   commit VARCHAR(40) NOT NULL,
@@ -46,39 +53,36 @@ CREATE TABLE tags
   message VARCHAR(100) NOT NULL
 );
 
-ALTER TABLE commits
-  ADD CONSTRAINT commits_COMMIT_PARENT_FK
+ALTER TABLE git_commits
+  ADD CONSTRAINT git_commits_COMMIT_PARENT_FK
   FOREIGN KEY (parent)
-  REFERENCES commits (id);
-ALTER TABLE commits
-  ADD CONSTRAINT commits_COMMIT_TREE_FK
+  REFERENCES git_commits (id);
+ALTER TABLE git_commits
+  ADD CONSTRAINT git_commits_COMMIT_TREE_FK
   FOREIGN KEY (tree)
-  REFERENCES trees (id);
-CREATE INDEX commits_TREE_INDEX ON treeItems (tree);
-CREATE INDEX commits_PARENT_INDEX ON treeItems (tree);
+  REFERENCES git_trees (id);
 
-ALTER TABLE refs
-  ADD CONSTRAINT refs_REF_COMMIT_FK
+ALTER TABLE git_refs
+  ADD CONSTRAINT git_refs_REF_COMMIT_FK
   FOREIGN KEY (commit)
-  REFERENCES commits (id);
+  REFERENCES git_commits (id);
 
-ALTER TABLE tags
-  ADD CONSTRAINT tags_TAG_COMMIT_FK
+ALTER TABLE git_tags
+  ADD CONSTRAINT git_tags_TAG_COMMIT_FK
   FOREIGN KEY (commit)
-  REFERENCES commits (id);
+  REFERENCES git_commits (id);
 
-ALTER TABLE treeItems
-  ADD CONSTRAINT treeItems_TREE_ITEM_BLOB_FK
+ALTER TABLE git_treeItems
+  ADD CONSTRAINT git_treeItems_TREE_ITEM_BLOB_FK
   FOREIGN KEY (blob)
-  REFERENCES blobs (id);
-ALTER TABLE treeItems
-  ADD CONSTRAINT treeItems_TREE_ITEM_PARENT_FK
+  REFERENCES git_blobs (id);
+ALTER TABLE git_treeItems
+  ADD CONSTRAINT git_treeItems_TREE_ITEM_PARENT_FK
   FOREIGN KEY (tree)
-  REFERENCES trees (id);
-ALTER TABLE treeItems
-  ADD CONSTRAINT treeItems_TREE_NAME_BLOB_UNIQUE
+  REFERENCES git_trees (id);
+ALTER TABLE git_treeItems
+  ADD CONSTRAINT git_treeItems_TREE_NAME_BLOB_UNIQUE
   UNIQUE (tree, name, blob);
-CREATE INDEX treeItems_TREE_INDEX ON treeItems (tree);
 
 CREATE TABLE doc
 (

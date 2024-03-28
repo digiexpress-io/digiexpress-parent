@@ -22,12 +22,16 @@ package io.resys.thena.api.entities;
 
 import org.immutables.value.Value;
 
+import jakarta.annotation.Nullable;
+
+
 @Value.Immutable
 public interface Tenant {
   String getId();
   String getRev();
   String getPrefix();
   String getName();
+  @Nullable String getExternalId();
   StructureType getType();
   
   enum StructureType { doc, git, org }

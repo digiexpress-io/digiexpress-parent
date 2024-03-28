@@ -29,7 +29,7 @@ public class SqlBuilderImpl implements SqlQueryBuilder {
   protected final TenantTableNames ctx;
 
   @Override
-  public RepoSqlBuilder repo() {
+  public TenantSqlBuilder repo() {
     return new RepoSqlBuilderImpl(ctx);
   }
   @Override

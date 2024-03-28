@@ -13,7 +13,7 @@ public class SqlSchemaImpl implements SqlSchema {
   protected final TenantTableNames options;
   
   @Override
-  public Sql createRepo() {
+  public Sql createTenant() {
     return ImmutableSql.builder().value(new SqlStatement()
         .append("CREATE TABLE IF NOT EXISTS ").append(options.getTenant()).ln()
         .append("(").ln()
@@ -22,8 +22,15 @@ public class SqlSchemaImpl implements SqlSchema {
         .append("  prefix VARCHAR(40) NOT NULL,").ln()
         .append("  type VARCHAR(3) NOT NULL,").ln()
         .append("  name VARCHAR(255) NOT NULL,").ln()
-        .append("  UNIQUE(name), UNIQUE(rev), UNIQUE(prefix)").ln()
-        .append(")").ln()
+        .append("  external_id VARCHAR(255),").ln()
+        .append("  UNIQUE(name), UNIQUE(rev), UNIQUE(prefix), UNIQUE(external_id)").ln()
+        .append(");").ln()
+
+        .append("CREATE INDEX IF NOT EXISTS ").append(options.getTenant()).append("_NAME_INDEX")
+        .append(" ON ").append(options.getTenant()).append(" (name);").ln()
+        .append("CREATE INDEX IF NOT EXISTS ").append(options.getTenant()).append("_EXT_INDEX")
+        .append(" ON ").append(options.getTenant()).append(" (external_id);").ln()
+        
         .build()).build();
   }
   
@@ -55,6 +62,12 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("  parent VARCHAR(40),").ln()
     .append("  merge VARCHAR(40)").ln()
     .append(");").ln()
+    
+    .append("CREATE INDEX ").append(options.getCommits()).append("_TREE_INDEX")
+    .append(" ON ").append(options.getCommits()).append(" (tree);").ln()
+    
+    .append("CREATE INDEX ").append(options.getCommits()).append("_PARENT_INDEX")
+    .append(" ON ").append(options.getCommits()).append(" (tree);").ln()
     .build()).build();
   }
   
@@ -71,12 +84,6 @@ public class SqlSchemaImpl implements SqlSchema {
         .append("  ADD CONSTRAINT ").append(options.getCommits()).append("_COMMIT_TREE_FK").ln()
         .append("  FOREIGN KEY (tree)").ln()
         .append("  REFERENCES ").append(options.getTrees()).append(" (id);").ln()
-        
-        .append("CREATE INDEX ").append(options.getCommits()).append("_TREE_INDEX")
-        .append(" ON ").append(options.getTreeItems()).append(" (tree);").ln()
-        
-        .append("CREATE INDEX ").append(options.getCommits()).append("_PARENT_INDEX")
-        .append(" ON ").append(options.getTreeItems()).append(" (tree);").ln()
         .build())
         .build();
   }
@@ -92,6 +99,13 @@ public class SqlSchemaImpl implements SqlSchema {
     .append("  blob VARCHAR(40) NOT NULL,")
     .append("  tree VARCHAR(40) NOT NULL")
     .append(");")
+    
+    .append("CREATE INDEX ").append(options.getTreeItems()).append("_TREE_INDEX")
+    .append(" ON ").append(options.getTreeItems()).append(" (tree);").ln()
+    
+    .append("CREATE INDEX ").append(options.getTreeItems()).append("_PARENT_INDEX")
+    .append(" ON ").append(options.getTreeItems()).append(" (tree);").ln()
+    
     .build()).build();
   }
   @Override
@@ -109,13 +123,6 @@ public class SqlSchemaImpl implements SqlSchema {
         .append("ALTER TABLE ").append(options.getTreeItems()).ln()
         .append("  ADD CONSTRAINT ").append(options.getTreeItems()).append("_TREE_NAME_BLOB_UNIQUE").ln()
         .append("  UNIQUE (tree, name, blob);").ln()
-        
-        .append("CREATE INDEX ").append(options.getTreeItems()).append("_TREE_INDEX")
-        .append(" ON ").append(options.getTreeItems()).append(" (tree);").ln()
-//        .append("CREATE INDEX ").append(options.getTreeItems()).append("_TREE_BLOB_INDEX")
-//        .append(" ON ").append(options.getTreeItems()).append(" (tree, blob);").ln()
-//        .append("CREATE INDEX ").append(options.getTreeItems()).append("_TREE_NAME_INDEX")
-//        .append(" ON ").append(options.getTreeItems()).append(" (tree, name);").ln()
         .build())
         .build();
   }

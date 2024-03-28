@@ -146,14 +146,14 @@ public class RepoBuilderSqlPool implements InternalTenantQuery {
             .toString());
       }
       
-      final Uni<Void> create = getClient().preparedQuery(sqlSchema.createRepo().getValue()).execute()
+      final Uni<Void> create = getClient().query(sqlSchema.createTenant().getValue()).execute()
           .onItem().transformToUni(data -> Uni.createFrom().voidItem())
-          .onFailure().invoke(e -> next.getErrorHandler().deadEnd(new SqlFailed("Can't create table 'REPO'!", sqlSchema.createRepo(), e)));
+          .onFailure().invoke(e -> next.getErrorHandler().deadEnd(new SqlFailed("Can't create table 'TENANT'!", sqlSchema.createTenant(), e)));
       
       
       final Uni<Void> insert = tx.preparedQuery(repoInsert.getValue()).execute(repoInsert.getProps())
           .onItem().transformToUni(rowSet -> Uni.createFrom().voidItem())
-          .onFailure().invoke(e -> next.getErrorHandler().deadEnd(new SqlTupleFailed("Can't insert into 'REPO'!", repoInsert, e)));
+          .onFailure().invoke(e -> next.getErrorHandler().deadEnd(new SqlTupleFailed("Can't insert into 'TENANT'!", repoInsert, e)));
       final Uni<Void> nested = tx.query(tablesCreate.toString()).execute()
           .onItem().transformToUni(rowSet -> Uni.createFrom().voidItem())
           .onFailure().invoke(e -> next.getErrorHandler().deadEnd(new SqlSchemaFailed("Can't create tables!", tablesCreate.toString(), e)));

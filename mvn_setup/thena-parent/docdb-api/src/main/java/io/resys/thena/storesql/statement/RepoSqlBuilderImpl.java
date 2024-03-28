@@ -4,7 +4,7 @@ import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
-import io.resys.thena.datasource.SqlQueryBuilder.RepoSqlBuilder;
+import io.resys.thena.datasource.SqlQueryBuilder.TenantSqlBuilder;
 import io.resys.thena.datasource.SqlQueryBuilder.Sql;
 import io.resys.thena.datasource.SqlQueryBuilder.SqlTuple;
 import io.resys.thena.storesql.support.SqlStatement;
@@ -12,7 +12,7 @@ import io.vertx.mutiny.sqlclient.Tuple;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class RepoSqlBuilderImpl implements RepoSqlBuilder {
+public class RepoSqlBuilderImpl implements TenantSqlBuilder {
   private final TenantTableNames options;
   
   @Override
@@ -51,7 +51,7 @@ public class RepoSqlBuilderImpl implements RepoSqlBuilder {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT * FROM ").append(options.getTenant())
-        .append(" WHERE name = $1 OR id = $1")
+        .append(" WHERE name = $1 OR id = $1 OR external_id = $1")
         .append(" FETCH FIRST ROW ONLY")
         .build())
         .props(Tuple.of(name))
@@ -62,9 +62,9 @@ public class RepoSqlBuilderImpl implements RepoSqlBuilder {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getTenant())
-        .append(" (id, rev, prefix, name, type) VALUES($1, $2, $3, $4, $5)")
+        .append(" (id, rev, prefix, name, type, external_id) VALUES($1, $2, $3, $4, $5, $6)")
         .build())
-        .props(Tuple.of(newRepo.getId(), newRepo.getRev(), newRepo.getPrefix(), newRepo.getName(), newRepo.getType()))
+        .props(Tuple.of(newRepo.getId(), newRepo.getRev(), newRepo.getPrefix(), newRepo.getName(), newRepo.getType(), newRepo.getExternalId()))
         .build();
   }
   

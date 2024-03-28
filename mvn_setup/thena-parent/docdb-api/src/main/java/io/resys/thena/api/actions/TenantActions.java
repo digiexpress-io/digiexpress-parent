@@ -47,6 +47,7 @@ public interface TenantActions {
   }
   
   interface TenantBuilder {
+    TenantBuilder externalId(String externalId); // optional can be null
     TenantBuilder name(String name, StructureType type);
     Uni<TenantCommitResult> build();
   }
