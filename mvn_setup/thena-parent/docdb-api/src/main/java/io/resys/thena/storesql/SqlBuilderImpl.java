@@ -2,10 +2,6 @@ package io.resys.thena.storesql;
 
 import io.resys.thena.datasource.SqlQueryBuilder;
 import io.resys.thena.datasource.TenantTableNames;
-import io.resys.thena.storesql.statement.DocBranchSqlBuilderImpl;
-import io.resys.thena.storesql.statement.DocCommitSqlBuilderImpl;
-import io.resys.thena.storesql.statement.DocLogSqlBuilderImpl;
-import io.resys.thena.storesql.statement.DocSqlBuilderImpl;
 import io.resys.thena.storesql.statement.OrgActorStatusSqlBuilderImpl;
 import io.resys.thena.storesql.statement.OrgCommitSqlBuilderImpl;
 import io.resys.thena.storesql.statement.OrgCommitTreeSqlBuilderImpl;
@@ -29,22 +25,6 @@ public class SqlBuilderImpl implements SqlQueryBuilder {
   @Override
   public SqlQueryBuilder withTenant(TenantTableNames options) {
     return new SqlBuilderImpl(options);
-  }
-  @Override
-  public DocSqlBuilder docs() {
-    return new DocSqlBuilderImpl(ctx);
-  }
-  @Override
-  public DocLogSqlBuilder docLogs() {
-    return new DocLogSqlBuilderImpl(ctx);
-  }
-  @Override
-  public DocCommitSqlBuilder docCommits() {
-    return new DocCommitSqlBuilderImpl(ctx);
-  }
-  @Override
-  public DocBranchSqlBuilder docBranches() {
-    return new DocBranchSqlBuilderImpl(ctx);
   }
   @Override
   public OrgMemberSqlBuilder orgMembers() {

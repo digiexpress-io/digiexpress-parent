@@ -12,14 +12,7 @@ import io.resys.thena.structures.git.GitInserts.BatchStatus;
 
 public interface DataMapper<T> {
   Tenant repo(T row);
-  
-  Doc doc(T row);
-  DocFlatted docFlatted(T row);
-  DocLog docLog(T row);
-  DocBranch docBranch(T row);
-  DocCommit docCommit(T row);
-  DocBranchLock docBranchLock(T row);
-  
+
   static CommitResultStatus mapStatus(BatchStatus src) {
     if(src == BatchStatus.OK) {
       return CommitResultStatus.OK;

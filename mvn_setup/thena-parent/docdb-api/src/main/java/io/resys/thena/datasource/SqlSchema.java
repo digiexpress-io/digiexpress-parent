@@ -5,7 +5,7 @@ import io.resys.thena.datasource.SqlQueryBuilder.Sql;
 public interface SqlSchema extends TenantTableNames.WithTenant<SqlSchema> {
   SqlSchema withTenant(TenantTableNames options);
   
-  // single doc db model
+  /* single doc db model
   Sql createDoc();
   
   Sql createDocBranch();
@@ -21,7 +21,7 @@ public interface SqlSchema extends TenantTableNames.WithTenant<SqlSchema> {
   Sql dropDocBranch();
   Sql dropDocCommit();
   Sql dropDocLog();
-  
+  */
   
   
   // organization model

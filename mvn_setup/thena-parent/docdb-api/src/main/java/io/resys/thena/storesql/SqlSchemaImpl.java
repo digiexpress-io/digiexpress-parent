@@ -1,9 +1,9 @@
 package io.resys.thena.storesql;
 
-import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.SqlQueryBuilder.Sql;
 import io.resys.thena.datasource.SqlSchema;
+import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.storesql.support.SqlStatement;
 import lombok.RequiredArgsConstructor;
 
@@ -37,163 +37,6 @@ public class SqlSchemaImpl implements SqlSchema {
   @Override
   public SqlSchemaImpl withTenant(TenantTableNames options) {
     return new SqlSchemaImpl(options);
-  }
-
-  @Override
-  public Sql createDoc() {
-    return ImmutableSql.builder().value(new SqlStatement().ln()
-    .append("CREATE TABLE ").append(options.getDoc()).ln()
-    .append("(").ln()
-    .append("  id VARCHAR(40) PRIMARY KEY,").ln()
-    .append("  external_id VARCHAR(40) UNIQUE,").ln()
-    .append("  external_id_deleted VARCHAR(40),").ln()
-    .append("  owner_id VARCHAR(40),").ln()
-    .append("  doc_parent_id VARCHAR(40),").ln()
-    .append("  doc_type VARCHAR(40) NOT NULL,").ln()
-    .append("  doc_status VARCHAR(8) NOT NULL,").ln()
-    .append("  doc_meta jsonb").ln()
-    .append(");").ln()
-    
-    .append("CREATE INDEX ").append(options.getDoc()).append("_DOC_EXT_ID_INDEX")
-    .append(" ON ").append(options.getDoc()).append(" (external_id);").ln()
-
-    .append("CREATE INDEX ").append(options.getDoc()).append("_DOC_PARENT_ID_INDEX")
-    .append(" ON ").append(options.getDoc()).append(" (doc_parent_id);").ln()
-
-    .append("CREATE INDEX ").append(options.getDoc()).append("_DOC_TYPE_INDEX")
-    .append(" ON ").append(options.getDoc()).append(" (doc_type);").ln()
-
-    .append("CREATE INDEX ").append(options.getDoc()).append("_DOC_OWNER_INDEX")
-    .append(" ON ").append(options.getDoc()).append(" (owner_id);").ln()
-
-    // internal foreign key
-    .append("ALTER TABLE ").append(options.getDoc()).ln()
-    .append("  ADD CONSTRAINT ").append(options.getDoc()).append("_DOC_PARENT_FK").ln()
-    .append("  FOREIGN KEY (doc_parent_id)").ln()
-    .append("  REFERENCES ").append(options.getDoc()).append(" (id);").ln().ln()
-      
-    .build()).build();
-  }
-
-  @Override
-  public Sql createDocBranch() {
-    return ImmutableSql.builder().value(new SqlStatement().ln()
-    .append("CREATE TABLE ").append(options.getDocBranch()).ln()
-    .append("(").ln()
-    .append("  branch_name VARCHAR(255) NOT NULL,").ln()
-    .append("  branch_name_deleted VARCHAR(255),").ln()
-    .append("  branch_id VARCHAR(40) NOT NULL,").ln()
-    .append("  commit_id VARCHAR(40) NOT NULL,").ln()
-    .append("  branch_status VARCHAR(8) NOT NULL,").ln()
-    .append("  doc_id VARCHAR(40),").ln()
-    .append("  value jsonb NOT NULL,").ln()
-    .append("  PRIMARY KEY (branch_id),").ln()
-    .append("  UNIQUE (doc_id, branch_name)").ln()
-    .append(");").ln()
-    
-    .append("CREATE INDEX ").append(options.getDocBranch()).append("_DOC_DOC_ID_INDEX")
-    .append(" ON ").append(options.getDocBranch()).append(" (doc_id);").ln()
-
-    .append("CREATE INDEX ").append(options.getDocBranch()).append("_DOC_BRANCH_NAME_INDEX")
-    .append(" ON ").append(options.getDocBranch()).append(" (branch_name);").ln()
-    
-    .append("CREATE INDEX ").append(options.getDocBranch()).append("_DOC_COMMIT_ID_INDEX")
-    .append(" ON ").append(options.getDocBranch()).append(" (commit_id);").ln()
-    
-    .build()).build();
-  }
-  
-  @Override
-  public Sql createDocCommits() {
-    return ImmutableSql.builder().value(new SqlStatement().ln()
-    .append("CREATE TABLE ").append(options.getDocCommits()).ln()
-    .append("(").ln()
-    .append("  id VARCHAR(40) PRIMARY KEY,").ln()
-    .append("  branch_id VARCHAR(40) NOT NULL,").ln()
-    .append("  doc_id VARCHAR(40) NOT NULL,").ln()
-    .append("  datetime VARCHAR(29) NOT NULL,").ln()
-    .append("  author VARCHAR(40) NOT NULL,").ln()
-    .append("  message VARCHAR(255) NOT NULL,").ln()
-    .append("  parent VARCHAR(40)").ln()
-    .append(");").ln()
-    
-    .append("CREATE INDEX ").append(options.getDocCommits()).append("_DOC_COMMIT_DOC_ID_INDEX")
-    .append(" ON ").append(options.getDocCommits()).append(" (doc_id);").ln()
-    
-    .append("CREATE INDEX ").append(options.getDocCommits()).append("_DOC_COMMIT_PARENT_INDEX")
-    .append(" ON ").append(options.getDocCommits()).append(" (parent);").ln()
-    
-    .append("CREATE INDEX ").append(options.getDocCommits()).append("_DOC_COMMIT_BRANCH_ID_INDEX")
-    .append(" ON ").append(options.getDocCommits()).append(" (branch_id);").ln()
-
-     // internal foreign key
-    .append("ALTER TABLE ").append(options.getDocCommits()).ln()
-    .append("  ADD CONSTRAINT ").append(options.getDocCommits()).append("_DOC_COMMIT_PARENT_FK").ln()
-    .append("  FOREIGN KEY (parent)").ln()
-    .append("  REFERENCES ").append(options.getDocCommits()).append(" (id);").ln().ln()
-    
-    .build()).build();
-  }
-  
-  @Override
-  public Sql createDocLog() {
-    return ImmutableSql.builder().value(new SqlStatement().ln()
-    .append("CREATE TABLE ").append(options.getDocLog()).ln()
-    .append("(").ln()
-    .append("  id VARCHAR(40) PRIMARY KEY,").ln()
-    .append("  commit_id VARCHAR(40) NOT NULL,").ln()
-    .append("  value jsonb NOT NULL").ln()
-    .append(");").ln()
-    
-
-    .append("CREATE INDEX ").append(options.getDocLog()).append("_DOC_LOG_COMMIT_ID_INDEX")
-    .append(" ON ").append(options.getDocLog()).append(" (commit_id);").ln()
-    
-    .build()).build();
-  }
-
-  @Override
-  public Sql createDocCommitsConstraints() {
-    return ImmutableSql.builder()
-        .value(new SqlStatement().ln()
-        .append("ALTER TABLE ").append(options.getDocCommits()).ln()
-        .append("  ADD CONSTRAINT ").append(options.getDocCommits()).append("_DOC_COMMIT_FK").ln()
-        .append("  FOREIGN KEY (doc_id)").ln()
-        .append("  REFERENCES ").append(options.getDoc()).append(" (id);").ln().ln()
-        
-//        .append("ALTER TABLE ").append(options.getDocCommits()).ln()
-//        .append("  ADD CONSTRAINT ").append(options.getDocCommits()).append("_BRANCH_ID_FK").ln()
-//        .append("  FOREIGN KEY (branch_id)").ln()
-//        .append("  REFERENCES ").append(options.getDocBranch()).append(" (branch_id);").ln().ln()
-            
-        .build())
-        .build();
-  }
-
-  @Override
-  public Sql createDocLogConstraints() {
-    return ImmutableSql.builder()
-        .value(new SqlStatement().ln()
-        .append("ALTER TABLE ").append(options.getDocLog()).ln()
-        .append("  ADD CONSTRAINT ").append(options.getDocLog()).append("_DOC_LOG_COMMIT_FK").ln()
-        .append("  FOREIGN KEY (commit_id)").ln()
-        .append("  REFERENCES ").append(options.getDocCommits()).append(" (id);").ln().ln()
-        
-        .build())
-        .build();
-  }
-  
-
-  @Override
-  public Sql createDocBranchConstraints() {
-    return ImmutableSql.builder()
-        .value(new SqlStatement().ln()
-        .append("ALTER TABLE ").append(options.getDocBranch()).ln()
-        .append("  ADD CONSTRAINT ").append(options.getDocBranch()).append("_DOC_ID_FK").ln()
-        .append("  FOREIGN KEY (doc_id)").ln()
-        .append("  REFERENCES ").append(options.getDoc()).append(" (id);").ln().ln()
-        .build())
-        .build();
   }
 
   @Override
@@ -552,12 +395,6 @@ public class SqlSchemaImpl implements SqlSchema {
   
   
   @Override public Sql dropRepo() { return dropTableIfNotExists(options.getTenant()); }
-  @Override public Sql dropDoc() { return dropTableIfNotExists(options.getDoc()); }
-  @Override public Sql dropDocBranch() { return dropTableIfNotExists(options.getDocBranch()); }
-  @Override public Sql dropDocCommit() { return dropTableIfNotExists(options.getDocCommits()); }
-  @Override public Sql dropDocLog() { return dropTableIfNotExists(options.getDocLog()); }
-  
-
   @Override public Sql dropOrgRights() { return dropTableIfNotExists(options.getOrgRights()); }
   @Override public Sql dropOrgParties() { return dropTableIfNotExists(options.getOrgParties()); }
   @Override public Sql dropOrgPartyRights() { return dropTableIfNotExists(options.getOrgPartyRights()); }

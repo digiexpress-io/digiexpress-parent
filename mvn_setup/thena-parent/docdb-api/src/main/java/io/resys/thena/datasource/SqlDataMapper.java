@@ -22,13 +22,13 @@ import io.vertx.mutiny.sqlclient.Row;
 
 public interface SqlDataMapper extends DataMapper<Row>{
   Tenant repo(Row row);
-
+  /*
   Doc doc(Row row);
   DocFlatted docFlatted(Row row);
   DocLog docLog(Row row);
   DocBranch docBranch(Row row);
   DocCommit docCommit(Row row);
-  DocBranchLock docBranchLock(Row row);
+  DocBranchLock docBranchLock(Row row);*/
 
   OrgRight orgRight(Row row);
   OrgMember orgMember(Row row);

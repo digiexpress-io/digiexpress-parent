@@ -3,8 +3,7 @@ package io.resys.thena.storesql.builders;
 import io.resys.thena.api.LogConstants;
 import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.DocFlatted;
-import io.resys.thena.datasource.SqlDataMapper;
-import io.resys.thena.datasource.SqlQueryBuilder;
+import io.resys.thena.api.registry.DocRegistry;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlFailed;
@@ -20,26 +19,24 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j(topic = LogConstants.SHOW_SQL)
 public class DocQuerySqlPool implements DocQuery {
   private final ThenaSqlDataSource wrapper;
-  private final SqlDataMapper sqlMapper;
-  private final SqlQueryBuilder sqlBuilder;
+  private final DocRegistry registry;
   private final ThenaSqlDataSourceErrorHandler errorHandler;
   
   public DocQuerySqlPool(ThenaSqlDataSource dataSource) {
     this.wrapper = dataSource;
-    this.sqlMapper = dataSource.getDataMapper();
-    this.sqlBuilder = dataSource.getQueryBuilder();
+    this.registry = dataSource.getRegistry().doc();
     this.errorHandler = dataSource.getErrorHandler();
   }
   @Override
   public Uni<Doc> getById(String id) {
-    final var sql = sqlBuilder.docs().getById(id);
+    final var sql = registry.docs().getById(id);
     if(log.isDebugEnabled()) {
       log.debug("Doc byId query, with props: {} \r\n{}", 
           sql.getProps().deepToString(),
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.doc(row))
+        .mapping(registry.docs().defaultMapper())
         .execute(sql.getProps())
         .onItem()
         .transform((RowSet<Doc> rowset) -> {
@@ -54,14 +51,14 @@ public class DocQuerySqlPool implements DocQuery {
   }
   @Override
   public Multi<Doc> findAll() {
-    final var sql = sqlBuilder.docs().findAll();
+    final var sql = registry.docs().findAll();
     if(log.isDebugEnabled()) {
       log.debug("Doc findAll query, with props: {} \r\n{}", 
           "",
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.doc(row))
+        .mapping(registry.docs().defaultMapper())
         .execute()
         .onItem()
         .transformToMulti((RowSet<Doc> rowset) -> Multi.createFrom().iterable(rowset))
@@ -69,14 +66,14 @@ public class DocQuerySqlPool implements DocQuery {
   }
   @Override
   public Multi<DocFlatted> findAllFlatted() {
-    final var sql = sqlBuilder.docs().findAllFlatted();
+    final var sql = registry.docs().findAllFlatted();
     if(log.isDebugEnabled()) {
       log.debug("Doc findAllFlatted query, with props: {} \r\n{}", 
           "",
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.docFlatted(row))
+        .mapping(registry.docs().docFlattedMapper())
         .execute()
         .onItem()
         .transformToMulti((RowSet<DocFlatted> rowset) -> Multi.createFrom().iterable(rowset))
@@ -84,14 +81,14 @@ public class DocQuerySqlPool implements DocQuery {
   }
   @Override
   public Multi<DocFlatted> findAllFlatted(FlattedCriteria criteria) {
-    final var sql = sqlBuilder.docs().findAllFlatted(criteria);
+    final var sql = registry.docs().findAllFlatted(criteria);
     if(log.isDebugEnabled()) {
       log.debug("Doc findAllFlattedByAnyId query, with props: {} \r\n{}", 
           sql.getProps().deepToString(),
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.docFlatted(row))
+        .mapping(registry.docs().docFlattedMapper())
         .execute(sql.getProps())
         .onItem()
         .transformToMulti((RowSet<DocFlatted> rowset) -> Multi.createFrom().iterable(rowset))

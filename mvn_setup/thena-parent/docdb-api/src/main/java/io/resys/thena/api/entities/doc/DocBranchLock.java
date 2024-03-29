@@ -7,8 +7,7 @@ import org.immutables.value.Value;
 import io.resys.thena.api.entities.CommitLockStatus;
 
 @Value.Immutable
-public  
-interface DocBranchLock extends DocEntity {
+public interface DocBranchLock extends DocEntity {
   CommitLockStatus getStatus();
   Optional<Doc> getDoc();
   Optional<DocBranch> getBranch();

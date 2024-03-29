@@ -12,8 +12,7 @@ import io.resys.thena.api.entities.doc.DocBranch;
 import io.resys.thena.api.entities.doc.DocBranchLock;
 import io.resys.thena.api.entities.doc.DocLock;
 import io.resys.thena.api.entities.doc.ImmutableDocLock;
-import io.resys.thena.datasource.SqlDataMapper;
-import io.resys.thena.datasource.SqlQueryBuilder;
+import io.resys.thena.api.registry.DocRegistry;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlFailed;
@@ -30,27 +29,25 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j(topic = LogConstants.SHOW_SQL)
 public class DocBranchQuerySqlPool implements DocBranchQuery {
   private final ThenaSqlDataSource wrapper;
-  private final SqlDataMapper sqlMapper;
-  private final SqlQueryBuilder sqlBuilder;
+  private final DocRegistry registry;
   private final ThenaSqlDataSourceErrorHandler errorHandler;
 
   public DocBranchQuerySqlPool(ThenaSqlDataSource dataSource) {
     this.wrapper = dataSource;
-    this.sqlMapper = dataSource.getDataMapper();
-    this.sqlBuilder = dataSource.getQueryBuilder();
+    this.registry = dataSource.getRegistry().doc();
     this.errorHandler = dataSource.getErrorHandler();
   }
 
   @Override
   public Uni<DocBranch> getById(String id) {
-    final var sql = sqlBuilder.docBranches().getById(id);
+    final var sql = registry.docBranches().getById(id);
     if(log.isDebugEnabled()) {
       log.debug("DocBranch byId query, with props: {} \r\n{}", 
           sql.getProps().deepToString(),
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.docBranch(row))
+        .mapping(registry.docBranches().defaultMapper())
         .execute(sql.getProps())
         .onItem()
         .transform((RowSet<DocBranch> rowset) -> {
@@ -65,14 +62,14 @@ public class DocBranchQuerySqlPool implements DocBranchQuery {
   }
   @Override
   public Multi<DocBranch> findAll() {
-    final var sql = sqlBuilder.docBranches().findAll();
+    final var sql = registry.docBranches().findAll();
     if(log.isDebugEnabled()) {
       log.debug("DocLog findAll query, with props: {} \r\n{}", 
           "",
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.docBranch(row))
+        .mapping(registry.docBranches().defaultMapper())
         .execute()
         .onItem()
         .transformToMulti((RowSet<DocBranch> rowset) -> Multi.createFrom().iterable(rowset))
@@ -81,7 +78,7 @@ public class DocBranchQuerySqlPool implements DocBranchQuery {
   
   @Override
   public Uni<DocBranchLock> getBranchLock(DocBranchLockCriteria crit) {
-    final var sql = sqlBuilder.docBranches().getBranchLock(crit);
+    final var sql = registry.docBranches().getBranchLock(crit);
     if(log.isDebugEnabled()) {
       log.debug("DocBranch: {} getLock for ONE branch query, with props: {} \r\n{}",
           DocCommitQuerySqlPool.class,
@@ -90,7 +87,7 @@ public class DocBranchQuerySqlPool implements DocBranchQuery {
     }
     
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.docBranchLock(row))
+        .mapping(registry.docBranches().docBranchLockMapper())
         .execute(sql.getProps())
         .onItem()
         .transform((RowSet<DocBranchLock> rowset) -> {
@@ -104,7 +101,7 @@ public class DocBranchQuerySqlPool implements DocBranchQuery {
   }
   @Override
   public Uni<DocLock> getDocLock(DocLockCriteria crit) {
-    final var sql = sqlBuilder.docBranches().getDocLock(crit);
+    final var sql = registry.docBranches().getDocLock(crit);
     if(log.isDebugEnabled()) {
       log.debug("DocBranch: {} getLock for ALL doc branches query, with props: {} \r\n{}",
           DocCommitQuerySqlPool.class,
@@ -116,7 +113,7 @@ public class DocBranchQuerySqlPool implements DocBranchQuery {
     }
     
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.docBranchLock(row))
+        .mapping(registry.docBranches().docBranchLockMapper())
         .execute(sql.getProps())
         .onItem()
         .transform((RowSet<DocBranchLock> rowset) -> {
@@ -137,7 +134,7 @@ public class DocBranchQuerySqlPool implements DocBranchQuery {
   }
   @Override
   public Uni<List<DocBranchLock>> getBranchLocks(List<DocBranchLockCriteria> crit) {
-    final var sql = sqlBuilder.docBranches().getBranchLocks(crit);
+    final var sql = registry.docBranches().getBranchLocks(crit);
     if(log.isDebugEnabled()) {
       log.debug("DocBranch: {} getLocks for branches query, with props: {} \r\n{}",
           DocCommitQuerySqlPool.class,
@@ -146,7 +143,7 @@ public class DocBranchQuerySqlPool implements DocBranchQuery {
     }
     
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.docBranchLock(row))
+        .mapping(registry.docBranches().docBranchLockMapper())
         .execute(sql.getProps())
         .onItem()
         .transform((RowSet<DocBranchLock> rowset) -> {
@@ -166,7 +163,7 @@ public class DocBranchQuerySqlPool implements DocBranchQuery {
   
   @Override
   public Uni<List<DocLock>> getDocLocks(List<DocLockCriteria> crit) {
-    final var sql = sqlBuilder.docBranches().getDocLocks(crit);
+    final var sql = registry.docBranches().getDocLocks(crit);
     if(log.isDebugEnabled()) {
       log.debug("Doc: {} getLocks for ALL branches query, with props: {} \r\n{}",
           DocCommitQuerySqlPool.class,
@@ -175,7 +172,7 @@ public class DocBranchQuerySqlPool implements DocBranchQuery {
     }
     
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.docBranchLock(row))
+        .mapping(registry.docBranches().docBranchLockMapper())
         .execute(sql.getProps())
         .onItem()
         .transform((RowSet<DocBranchLock> rowset) -> {

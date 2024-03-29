@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import io.resys.thena.api.envelope.ImmutableMessage;
-import io.resys.thena.datasource.SqlQueryBuilder;
+import io.resys.thena.api.registry.DocRegistry;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.storesql.support.Execute;
 import io.resys.thena.structures.doc.DocInserts;
@@ -19,11 +19,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DocDbInsertsSqlPool implements DocInserts {
   private final ThenaSqlDataSource wrapper;
-  private final SqlQueryBuilder sqlBuilder;
+  private final DocRegistry registry;
 
   public DocDbInsertsSqlPool(ThenaSqlDataSource dataSource) {
     this.wrapper = dataSource;
-    this.sqlBuilder = dataSource.getQueryBuilder();
+    this.registry = dataSource.getRegistry().doc();
   }
   
   @Override
@@ -33,11 +33,11 @@ public class DocDbInsertsSqlPool implements DocInserts {
     final var tx = wrapper.getClient();
     
     
-    final var docInserts = sqlBuilder.docs().insertMany(output.stream()
+    final var docInserts = registry.docs().insertMany(output.stream()
         .filter(item -> item.getDocLock().isEmpty())
         .filter(item -> !item.getDoc().isEmpty())
         .map(item -> item.getDoc().get()).collect(Collectors.toList()));
-    final var docUpdated = sqlBuilder.docs().updateMany(output.stream()
+    final var docUpdated = registry.docs().updateMany(output.stream()
         .filter(item -> !item.getDocLock().isEmpty())
         .filter(item -> !item.getDoc().isEmpty())
         .map(item -> item.getDoc().get()).collect(Collectors.toList()));
@@ -47,21 +47,21 @@ public class DocDbInsertsSqlPool implements DocInserts {
         .map(branch -> branch.getBranch().get().getId())
         .collect(Collectors.toList());
     
-    final var commitsInsert = sqlBuilder.docCommits()
+    final var commitsInsert = registry.docCommits()
         .insertAll(output.stream().flatMap(e -> e.getDocCommit().stream())
         .collect(Collectors.toList()));
     
-    final var branchInsert = sqlBuilder.docBranches()
+    final var branchInsert = registry.docBranches()
         .insertAll(output.stream().flatMap(e -> e.getDocBranch().stream())
         .filter(branch -> !lockedBranchIds.contains(branch.getId()))
         .collect(Collectors.toList()));
     
-    final var branchUpdate = sqlBuilder.docBranches()
+    final var branchUpdate = registry.docBranches()
         .updateAll(output.stream().flatMap(e -> e.getDocBranch().stream())
         .filter(branch -> lockedBranchIds.contains(branch.getId()))
         .collect(Collectors.toList()));
     
-    final var logsInsert = sqlBuilder.docLogs()
+    final var logsInsert = registry.docLogs()
         .insertAll(output.stream().flatMap(e -> e.getDocLogs().stream())
         .collect(Collectors.toList()));
     
@@ -110,16 +110,16 @@ public class DocDbInsertsSqlPool implements DocInserts {
     
     final var docsInsert = output.getDoc().map(doc -> {
       if(output.getDocLock().isEmpty()) {
-        return sqlBuilder.docs().insertOne(doc);  
+        return registry.docs().insertOne(doc);  
       }
-      return sqlBuilder.docs().updateOne(doc);
+      return registry.docs().updateOne(doc);
     });
     
     final var lockedBranchIds = output.getDocLock().stream().map(branch -> branch.getBranch().get().getId()).collect(Collectors.toList());
-    final var commitsInsert = sqlBuilder.docCommits().insertAll(output.getDocCommit());
-    final var branchInsert = sqlBuilder.docBranches().insertAll(output.getDocBranch().stream().filter(branch -> !lockedBranchIds.contains(branch.getId())).collect(Collectors.toList()));
-    final var branchUpdate = sqlBuilder.docBranches().updateAll(output.getDocBranch().stream().filter(branch -> lockedBranchIds.contains(branch.getId())).collect(Collectors.toList()));
-    final var logsInsert = sqlBuilder.docLogs().insertAll(output.getDocLogs());
+    final var commitsInsert = registry.docCommits().insertAll(output.getDocCommit());
+    final var branchInsert = registry.docBranches().insertAll(output.getDocBranch().stream().filter(branch -> !lockedBranchIds.contains(branch.getId())).collect(Collectors.toList()));
+    final var branchUpdate = registry.docBranches().updateAll(output.getDocBranch().stream().filter(branch -> lockedBranchIds.contains(branch.getId())).collect(Collectors.toList()));
+    final var logsInsert = registry.docLogs().insertAll(output.getDocLogs());
     
     
     final Uni<DocBatchForOne> docsUni;

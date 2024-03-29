@@ -1,23 +1,27 @@
-package io.resys.thena.storesql.statement;
+package io.resys.thena.registry.doc;
 
 import java.util.Collection;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import io.resys.thena.api.entities.doc.DocLog;
-import io.resys.thena.datasource.TenantTableNames;
+import io.resys.thena.api.entities.doc.ImmutableDocLog;
+import io.resys.thena.api.registry.doc.DocLogRegistry;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.ImmutableSqlTupleList;
-import io.resys.thena.datasource.SqlQueryBuilder.DocLogSqlBuilder;
 import io.resys.thena.datasource.SqlQueryBuilder.Sql;
 import io.resys.thena.datasource.SqlQueryBuilder.SqlTuple;
 import io.resys.thena.datasource.SqlQueryBuilder.SqlTupleList;
+import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.storesql.support.SqlStatement;
+import io.vertx.core.json.JsonObject;
+import io.vertx.mutiny.sqlclient.Row;
 import io.vertx.mutiny.sqlclient.Tuple;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class DocLogSqlBuilderImpl implements DocLogSqlBuilder {
+public class DocLogRegistrySqlImpl implements DocLogRegistry {
   private final TenantTableNames options;
   
   @Override
@@ -94,6 +98,60 @@ public class DocLogSqlBuilderImpl implements DocLogSqlBuilder {
             .map(doc -> Tuple.of(doc.getId(), doc.getDocCommitId(), doc.getValue()))
             .collect(Collectors.toList()))
         .build();
+  }
+
+  @Override
+  public Function<Row, DocLog> defaultMapper() {
+    return DocLogRegistrySqlImpl::docLog;
+  }
+
+  private static DocLog docLog(Row row) {
+    return ImmutableDocLog.builder()
+        .id(row.getString("id"))
+        .docId(row.getString("doc_id"))
+        .branchId(row.getString("branch_id"))
+        .docCommitId(row.getString("commit_id"))
+        .value(jsonObject(row, "value"))
+        .build();
+  }
+  private static JsonObject jsonObject(Row row, String columnName) {
+    // string based - new JsonObject(row.getString(columnName));
+    return row.getJsonObject(columnName);
+  }
+  
+  @Override
+  public Sql createTable() {
+    return ImmutableSql.builder().value(new SqlStatement().ln()
+    .append("CREATE TABLE ").append(options.getDocLog()).ln()
+    .append("(").ln()
+    .append("  id VARCHAR(40) PRIMARY KEY,").ln()
+    .append("  commit_id VARCHAR(40) NOT NULL,").ln()
+    .append("  value jsonb NOT NULL").ln()
+    .append(");").ln()
+    
+
+    .append("CREATE INDEX ").append(options.getDocLog()).append("_DOC_LOG_COMMIT_ID_INDEX")
+    .append(" ON ").append(options.getDocLog()).append(" (commit_id);").ln()
+    
+    .build()).build();
+  }
+  @Override
+  public Sql createConstraints() {
+    return ImmutableSql.builder()
+        .value(new SqlStatement().ln()
+        .append("ALTER TABLE ").append(options.getDocLog()).ln()
+        .append("  ADD CONSTRAINT ").append(options.getDocLog()).append("_DOC_LOG_COMMIT_FK").ln()
+        .append("  FOREIGN KEY (commit_id)").ln()
+        .append("  REFERENCES ").append(options.getDocCommits()).append(" (id);").ln().ln()
+        
+        .build())
+        .build();
+  }
+  @Override
+  public Sql dropTable() {
+    return ImmutableSql.builder().value(new SqlStatement()
+        .append("DROP TABLE ").append(options.getDocLog()).append(";").ln()
+        .build()).build();
   }
 
 }

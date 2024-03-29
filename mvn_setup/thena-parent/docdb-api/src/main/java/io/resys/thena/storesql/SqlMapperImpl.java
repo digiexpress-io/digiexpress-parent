@@ -1,44 +1,8 @@
 package io.resys.thena.storesql;
 
-/*-
- * #%L
- * thena-docdb-pgsql
- * %%
- * Copyright (C) 2021 Copyright 2021 ReSys OÜ
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
- */
-
-import java.time.LocalDateTime;
-import java.util.Optional;
-
-import io.resys.thena.api.entities.CommitLockStatus;
 import io.resys.thena.api.entities.ImmutableTenant;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
-import io.resys.thena.api.entities.doc.Doc;
-import io.resys.thena.api.entities.doc.DocBranch;
-import io.resys.thena.api.entities.doc.DocBranchLock;
-import io.resys.thena.api.entities.doc.DocCommit;
-import io.resys.thena.api.entities.doc.DocFlatted;
-import io.resys.thena.api.entities.doc.DocLog;
-import io.resys.thena.api.entities.doc.ImmutableDoc;
-import io.resys.thena.api.entities.doc.ImmutableDocBranch;
-import io.resys.thena.api.entities.doc.ImmutableDocBranchLock;
-import io.resys.thena.api.entities.doc.ImmutableDocCommit;
-import io.resys.thena.api.entities.doc.ImmutableDocFlatted;
-import io.resys.thena.api.entities.doc.ImmutableDocLog;
 import io.resys.thena.api.entities.org.ImmutableOrgActorStatus;
 import io.resys.thena.api.entities.org.ImmutableOrgMember;
 import io.resys.thena.api.entities.org.ImmutableOrgMemberFlattened;
@@ -87,116 +51,8 @@ public class SqlMapperImpl implements SqlDataMapper {
     // string based - new JsonObject(row.getString(columnName));
     return row.getJsonObject(columnName);
   }
-  @Override
-  public DocCommit docCommit(Row row) {
-    return ImmutableDocCommit.builder()
-        .id(row.getString("id"))
-        .author(row.getString("author"))
-        .dateTime(LocalDateTime.parse(row.getString("datetime")))
-        .message(row.getString("message"))
-        .parent(Optional.ofNullable(row.getString("parent")))
-        .branchId(row.getString("branch_id"))
-        .docId(row.getString("doc_id"))
-        .build();
-  }
-  
-  @Override
-  public DocBranchLock docBranchLock(Row row) {
-    return ImmutableDocBranchLock.builder()
-        .status(CommitLockStatus.LOCK_TAKEN)
-        .doc(ImmutableDoc.builder()
-            .id(row.getString("doc_id"))
-            .externalId(row.getString("external_id"))
-            .externalIdDeleted(row.getString("external_id_deleted"))
-            .parentId(row.getString("doc_parent_id"))
-            .type(row.getString("doc_type"))
-            .status(Doc.DocStatus.valueOf(row.getString("doc_status")))
-            .meta(jsonObject(row, "doc_meta"))
-            .build())
-        .branch(ImmutableDocBranch.builder()
-            .id(row.getString("branch_id"))
-            .docId(row.getString("doc_id"))
-            .status(Doc.DocStatus.valueOf(row.getString("branch_status")))
-            .commitId(row.getString("commit_id"))
-            .branchName(row.getString("branch_name"))
-            .branchNameDeleted(row.getString("branch_name_deleted"))
-            .value(jsonObject(row, "branch_value"))
-            .status(Doc.DocStatus.valueOf(row.getString("branch_status")))
-            .build())
-        .commit(ImmutableDocCommit.builder()
-            .id(row.getString("commit_id"))
-            .author(row.getString("author"))
-            .dateTime(LocalDateTime.parse(row.getString("datetime")))
-            .message(row.getString("message"))
-            .parent(Optional.ofNullable(row.getString("commit_parent")))
-            .branchId(row.getString("branch_id"))
-            .docId(row.getString("doc_id"))
-            .build())
-        .build();
-  }
-  @Override
-  public Doc doc(Row row) {
-    return ImmutableDoc.builder()
-        .id(row.getString("id"))
-        .externalId(row.getString("external_id"))
-        .parentId(row.getString("doc_parent_id"))
-        .externalIdDeleted(row.getString("external_id_deleted"))
-        .type(row.getString("doc_type"))
-        .status(Doc.DocStatus.valueOf(row.getString("doc_status")))
-        .meta(jsonObject(row, "doc_meta"))
-        .build();
-  }
-  @Override
-  public DocLog docLog(Row row) {
-    return ImmutableDocLog.builder()
-        .id(row.getString("id"))
-        .docId(row.getString("doc_id"))
-        .branchId(row.getString("branch_id"))
-        .docCommitId(row.getString("commit_id"))
-        .value(jsonObject(row, "value"))
-        .build();
-  }
-  @Override
-  public DocBranch docBranch(Row row) {
-    return ImmutableDocBranch.builder()
-        .id(row.getString("branch_id"))
-        .docId(row.getString("doc_id"))
-        .commitId(row.getString("commit_id"))
-        .branchName(row.getString("branch_name"))
-        .branchNameDeleted(row.getString("branch_name_deleted"))
-        .value(jsonObject(row, "value"))
-        .status(Doc.DocStatus.valueOf(row.getString("branch_status")))
-        .build();
-    
-  }
-  @Override
-  public DocFlatted docFlatted(Row row) {
-    return ImmutableDocFlatted.builder()
-        .externalId(row.getString("external_id"))
-        .docId(row.getString("doc_id"))
-        .docType(row.getString("doc_type"))
-        .docStatus(Doc.DocStatus.valueOf(row.getString("doc_status")))
-        .docMeta(Optional.ofNullable(jsonObject(row, "doc_meta")))
-        .docParentId(Optional.ofNullable(row.getString("doc_parent_id")))
-        .externalIdDeleted(Optional.ofNullable(row.getString("external_id_deleted")))
-        
-        .branchId(row.getString("branch_id"))
-        .branchName(row.getString("branch_name"))
-        .branchNameDeleted(Optional.ofNullable(row.getString("branch_name_deleted")))
-        .branchValue(jsonObject(row, "branch_value"))
-        .branchStatus(Doc.DocStatus.valueOf(row.getString("branch_status")))
-        
-        .commitId(row.getString("commit_id"))
-        .commitAuthor(row.getString("commit_author"))
-        .commitMessage(row.getString("commit_message"))
-        .commitParent(Optional.ofNullable(row.getString("commit_parent")))
-        .commitDateTime(LocalDateTime.parse(row.getString("commit_datetime")))
-        
-        .docLogId(Optional.ofNullable(row.getString("doc_log_id")))
-        .docLogValue(Optional.ofNullable(jsonObject(row, "doc_log_value")))
-        
-        .build();
-  }
+
+ 
   @Override
   public OrgMember orgMember(Row row) {
     return ImmutableOrgMember.builder()

@@ -59,13 +59,7 @@ public interface SqlQueryBuilder extends TenantTableNames.WithTenant<SqlQueryBui
 
   TenantSqlBuilder repo();
   
-  DocSqlBuilder docs();
-  DocLogSqlBuilder docLogs();
-  DocCommitSqlBuilder docCommits();
-  DocBranchSqlBuilder docBranches();
-  
 
-  
   OrgMemberSqlBuilder orgMembers();
   OrgPartySqlBuilder orgParties();
   OrgMembershipsSqlBuilder orgMemberships();
@@ -187,50 +181,6 @@ public interface SqlQueryBuilder extends TenantTableNames.WithTenant<SqlQueryBui
     SqlTuple findByCommmitId(String commitId);
     Sql findAll();
     SqlTupleList insertAll(Collection<OrgCommitTree> tree);
-  }
-  
-  interface DocCommitSqlBuilder {
-    SqlTuple getById(String id);
-    Sql findAll();
-    SqlTuple insertOne(DocCommit commit);
-    SqlTupleList insertAll(Collection<DocCommit> commits);
-  }
-  
-  interface DocSqlBuilder {
-    SqlTuple findAllFlatted(FlattedCriteria criteria);
-    Sql findAllFlatted();
-    SqlTuple findById(String id); // matches by external_id or id or parent_id
-    SqlTuple getById(String id);  // matches by external_id or id
-    SqlTuple deleteById(String id);
-    Sql findAll();
-    SqlTuple insertOne(Doc doc);
-    SqlTuple updateOne(Doc doc);
-    
-    SqlTupleList insertMany(List<Doc> docs);
-    SqlTupleList updateMany(List<Doc> docs);
-  }
-  
-  interface DocLogSqlBuilder {
-    SqlTuple getById(String id);
-    SqlTuple findByBranchId(String branchId);
-    Sql findAll();
-    SqlTuple insertOne(DocLog doc);
-    SqlTupleList insertAll(Collection<DocLog> logs);
-  }
-  
-  
-  
-  interface DocBranchSqlBuilder {
-    SqlTuple getById(String branchId);
-    SqlTuple updateOne(DocBranch doc);
-    SqlTuple insertOne(DocBranch doc);
-    SqlTupleList insertAll(Collection<DocBranch> docs);
-    SqlTupleList updateAll(List<DocBranch> doc);
-    SqlTuple getBranchLock(DocBranchLockCriteria crit);
-    SqlTuple getBranchLocks(List<DocBranchLockCriteria> crit);
-    SqlTuple getDocLock(DocLockCriteria crit);
-    SqlTuple getDocLocks(List<DocLockCriteria> crit);
-    Sql findAll();
   }
   
   

@@ -31,6 +31,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import io.resys.thena.datasource.TenantTableNames;
+import io.resys.thena.registry.doc.DocRegistrySqlImpl;
 import io.resys.thena.registry.git.GitRegistrySqlImpl;
 import io.resys.thena.storesql.SqlSchemaImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +45,7 @@ public class SqlDbSchemaPrintTest {
     final var names = TenantTableNames.defaults("public");
     final var sqlSchema = new SqlSchemaImpl(names);
     final var git = new GitRegistrySqlImpl(names);
+    final var doc = new DocRegistrySqlImpl(names);
     
     final var schema = new StringBuilder()
       .append(sqlSchema.createTenant().getValue())
@@ -59,13 +61,13 @@ public class SqlDbSchemaPrintTest {
       .append(git.treeValues().createConstraints().getValue())
       
       
-      .append(sqlSchema.createDoc().getValue())
-      .append(sqlSchema.createDocBranch().getValue())
-      .append(sqlSchema.createDocBranchConstraints().getValue())
-      .append(sqlSchema.createDocCommits().getValue())
-      .append(sqlSchema.createDocCommitsConstraints().getValue())
-      .append(sqlSchema.createDocLog().getValue())
-      .append(sqlSchema.createDocLogConstraints().getValue())
+      .append(doc.docs().createTable().getValue())
+      .append(doc.docBranches().createTable().getValue())
+      .append(doc.docBranches().createConstraints().getValue())
+      .append(doc.docCommits().createTable().getValue())
+      .append(doc.docCommits().createConstraints().getValue())
+      .append(doc.docLogs().createTable().getValue())
+      .append(doc.docLogs().createConstraints().getValue())
       
       
       .append(sqlSchema.createOrgRights().getValue())

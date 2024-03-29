@@ -16,9 +16,10 @@ import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
 import io.resys.thena.datasource.ThenaSqlDataSourceImpl;
 import io.resys.thena.datasource.vertx.ThenaSqlPoolVertx;
+import io.resys.thena.registry.ThenaRegistrySqlImpl;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.spi.ThenaClientPgSql;
-import io.resys.thena.storesql.builders.RepoBuilderSqlPool;
+import io.resys.thena.storesql.builders.InternalTenantQueryImpl;
 import io.resys.thena.structures.doc.DocState;
 import io.resys.thena.structures.git.GitState;
 import io.resys.thena.structures.git.GitState.TransactionFunction;
@@ -39,7 +40,7 @@ public class DbStateSqlImpl implements DbState {
   }
   @Override
   public InternalTenantQuery tenant() {
-    return new RepoBuilderSqlPool(dataSource);
+    return new InternalTenantQueryImpl(dataSource);
   }
   @Override
   public Uni<GitState> toGitState(String tenantId) {

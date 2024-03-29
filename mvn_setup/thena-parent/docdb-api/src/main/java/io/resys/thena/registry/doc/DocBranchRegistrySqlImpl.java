@@ -1,27 +1,39 @@
-package io.resys.thena.storesql.statement;
+package io.resys.thena.registry.doc;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import io.resys.thena.api.entities.CommitLockStatus;
+import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.DocBranch;
-import io.resys.thena.datasource.TenantTableNames;
+import io.resys.thena.api.entities.doc.DocBranchLock;
+import io.resys.thena.api.entities.doc.ImmutableDoc;
+import io.resys.thena.api.entities.doc.ImmutableDocBranch;
+import io.resys.thena.api.entities.doc.ImmutableDocBranchLock;
+import io.resys.thena.api.entities.doc.ImmutableDocCommit;
+import io.resys.thena.api.registry.doc.DocBranchRegistry;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.ImmutableSqlTupleList;
-import io.resys.thena.datasource.SqlQueryBuilder.DocBranchSqlBuilder;
 import io.resys.thena.datasource.SqlQueryBuilder.Sql;
 import io.resys.thena.datasource.SqlQueryBuilder.SqlTuple;
 import io.resys.thena.datasource.SqlQueryBuilder.SqlTupleList;
+import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.storesql.support.SqlStatement;
 import io.resys.thena.structures.doc.DocQueries.DocBranchLockCriteria;
 import io.resys.thena.structures.doc.DocQueries.DocLockCriteria;
+import io.vertx.core.json.JsonObject;
+import io.vertx.mutiny.sqlclient.Row;
 import io.vertx.mutiny.sqlclient.Tuple;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class DocBranchSqlBuilderImpl implements DocBranchSqlBuilder {
+public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
   private final TenantTableNames options;
 
   @Override
@@ -266,5 +278,110 @@ public class DocBranchSqlBuilderImpl implements DocBranchSqlBuilder {
         .props(Tuple.from(props))
         .build();  
   }
+  @Override
+  public Function<Row, DocBranch> defaultMapper() {
+    return DocBranchRegistrySqlImpl::docBranch;
+  }
 
+  @Override
+  public Function<Row, DocBranchLock> docBranchLockMapper() {
+    return DocBranchRegistrySqlImpl::docBranchLock;
+  }
+
+  private static DocBranch docBranch(Row row) {
+    return ImmutableDocBranch.builder()
+        .id(row.getString("branch_id"))
+        .docId(row.getString("doc_id"))
+        .commitId(row.getString("commit_id"))
+        .branchName(row.getString("branch_name"))
+        .branchNameDeleted(row.getString("branch_name_deleted"))
+        .value(jsonObject(row, "value"))
+        .status(Doc.DocStatus.valueOf(row.getString("branch_status")))
+        .build();
+  }
+
+  private static DocBranchLock docBranchLock(Row row) {
+    return ImmutableDocBranchLock.builder()
+        .status(CommitLockStatus.LOCK_TAKEN)
+        .doc(ImmutableDoc.builder()
+            .id(row.getString("doc_id"))
+            .externalId(row.getString("external_id"))
+            .externalIdDeleted(row.getString("external_id_deleted"))
+            .parentId(row.getString("doc_parent_id"))
+            .type(row.getString("doc_type"))
+            .status(Doc.DocStatus.valueOf(row.getString("doc_status")))
+            .meta(jsonObject(row, "doc_meta"))
+            .build())
+        .branch(ImmutableDocBranch.builder()
+            .id(row.getString("branch_id"))
+            .docId(row.getString("doc_id"))
+            .status(Doc.DocStatus.valueOf(row.getString("branch_status")))
+            .commitId(row.getString("commit_id"))
+            .branchName(row.getString("branch_name"))
+            .branchNameDeleted(row.getString("branch_name_deleted"))
+            .value(jsonObject(row, "branch_value"))
+            .status(Doc.DocStatus.valueOf(row.getString("branch_status")))
+            .build())
+        .commit(ImmutableDocCommit.builder()
+            .id(row.getString("commit_id"))
+            .author(row.getString("author"))
+            .dateTime(LocalDateTime.parse(row.getString("datetime")))
+            .message(row.getString("message"))
+            .parent(Optional.ofNullable(row.getString("commit_parent")))
+            .branchId(row.getString("branch_id"))
+            .docId(row.getString("doc_id"))
+            .build())
+        .build();
+  }
+  private static JsonObject jsonObject(Row row, String columnName) {
+    // string based - new JsonObject(row.getString(columnName));
+    return row.getJsonObject(columnName);
+  }
+
+  @Override
+  public Sql createTable() {
+    return ImmutableSql.builder().value(new SqlStatement().ln()
+        .append("CREATE TABLE ").append(options.getDocBranch()).ln()
+        .append("(").ln()
+        .append("  branch_name VARCHAR(255) NOT NULL,").ln()
+        .append("  branch_name_deleted VARCHAR(255),").ln()
+        .append("  branch_id VARCHAR(40) NOT NULL,").ln()
+        .append("  commit_id VARCHAR(40) NOT NULL,").ln()
+        .append("  branch_status VARCHAR(8) NOT NULL,").ln()
+        .append("  doc_id VARCHAR(40),").ln()
+        .append("  value jsonb NOT NULL,").ln()
+        .append("  PRIMARY KEY (branch_id),").ln()
+        .append("  UNIQUE (doc_id, branch_name)").ln()
+        .append(");").ln()
+        
+        .append("CREATE INDEX ").append(options.getDocBranch()).append("_DOC_DOC_ID_INDEX")
+        .append(" ON ").append(options.getDocBranch()).append(" (doc_id);").ln()
+
+        .append("CREATE INDEX ").append(options.getDocBranch()).append("_DOC_BRANCH_NAME_INDEX")
+        .append(" ON ").append(options.getDocBranch()).append(" (branch_name);").ln()
+        
+        .append("CREATE INDEX ").append(options.getDocBranch()).append("_DOC_COMMIT_ID_INDEX")
+        .append(" ON ").append(options.getDocBranch()).append(" (commit_id);").ln()
+        
+        .build()).build();
+  }
+
+  @Override
+  public Sql createConstraints() {
+    return ImmutableSql.builder()
+        .value(new SqlStatement().ln()
+        .append("ALTER TABLE ").append(options.getDocBranch()).ln()
+        .append("  ADD CONSTRAINT ").append(options.getDocBranch()).append("_DOC_ID_FK").ln()
+        .append("  FOREIGN KEY (doc_id)").ln()
+        .append("  REFERENCES ").append(options.getDoc()).append(" (id);").ln().ln()
+        .build())
+        .build();
+  }
+
+  @Override
+  public Sql dropTable() {
+    return ImmutableSql.builder().value(new SqlStatement()
+        .append("DROP TABLE ").append(options.getDocBranch()).append(";").ln()
+        .build()).build();
+  }
 }

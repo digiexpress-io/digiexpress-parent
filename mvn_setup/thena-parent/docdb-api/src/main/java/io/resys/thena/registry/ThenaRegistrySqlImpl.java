@@ -5,6 +5,7 @@ import io.resys.thena.api.registry.GitRegistry;
 import io.resys.thena.api.registry.OrgRegistry;
 import io.resys.thena.api.registry.ThenaRegistry;
 import io.resys.thena.datasource.TenantTableNames;
+import io.resys.thena.registry.doc.DocRegistrySqlImpl;
 import io.resys.thena.registry.git.GitRegistrySqlImpl;
 
 
@@ -19,7 +20,7 @@ public class ThenaRegistrySqlImpl implements ThenaRegistry {
     super();
     this.ctx = ctx;
     this.org = null;
-    this.doc = null;
+    this.doc = new DocRegistrySqlImpl(ctx);
     this.git = new GitRegistrySqlImpl(ctx);
   }
   

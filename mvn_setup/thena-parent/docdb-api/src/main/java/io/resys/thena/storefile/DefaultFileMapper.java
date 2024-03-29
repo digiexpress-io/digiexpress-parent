@@ -25,12 +25,11 @@ import java.util.Optional;
 
 import io.resys.thena.api.entities.ImmutableTenant;
 import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.api.entities.doc.Doc;
-import io.resys.thena.api.entities.doc.DocBranch;
-import io.resys.thena.api.entities.doc.DocBranchLock;
-import io.resys.thena.api.entities.doc.DocCommit;
-import io.resys.thena.api.entities.doc.DocFlatted;
-import io.resys.thena.api.entities.doc.DocLog;
+import io.resys.thena.api.entities.git.Blob;
+import io.resys.thena.api.entities.git.BlobHistory;
+import io.resys.thena.api.entities.git.Branch;
+import io.resys.thena.api.entities.git.Commit;
+import io.resys.thena.api.entities.git.CommitTree;
 import io.resys.thena.api.entities.git.ImmutableBlob;
 import io.resys.thena.api.entities.git.ImmutableBranch;
 import io.resys.thena.api.entities.git.ImmutableCommit;
@@ -40,11 +39,6 @@ import io.resys.thena.api.entities.git.ImmutableTreeValue;
 import io.resys.thena.api.entities.git.Tag;
 import io.resys.thena.api.entities.git.Tree;
 import io.resys.thena.api.entities.git.TreeValue;
-import io.resys.thena.api.entities.git.Blob;
-import io.resys.thena.api.entities.git.BlobHistory;
-import io.resys.thena.api.entities.git.Branch;
-import io.resys.thena.api.entities.git.Commit;
-import io.resys.thena.api.entities.git.CommitTree;
 import io.resys.thena.storefile.tables.BlobTable.BlobTableRow;
 import io.resys.thena.storefile.tables.CommitTable.CommitTableRow;
 import io.resys.thena.storefile.tables.RefTable.RefTableRow;
@@ -139,30 +133,6 @@ public class DefaultFileMapper implements FileMapper {
   }
   @Override
   public BlobHistory blobHistory(Row row) {
-    throw new IllegalArgumentException("Not required for filebase impl.");
-  }
-  @Override
-  public Doc doc(Row row) {
-    throw new IllegalArgumentException("Not required for filebase impl.");
-  }
-  @Override
-  public DocFlatted docFlatted(Row row) {
-    throw new IllegalArgumentException("Not required for filebase impl.");
-  }
-  @Override
-  public DocLog docLog(Row row) {
-    throw new IllegalArgumentException("Not required for filebase impl.");
-  }
-  @Override
-  public DocBranch docBranch(Row row) {
-    throw new IllegalArgumentException("Not required for filebase impl.");
-  }
-  @Override
-  public DocCommit docCommit(Row row) {
-    throw new IllegalArgumentException("Not required for filebase impl.");
-  }
-  @Override
-  public DocBranchLock docBranchLock(Row row) {
     throw new IllegalArgumentException("Not required for filebase impl.");
   }
 }

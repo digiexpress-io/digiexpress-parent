@@ -19,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j(topic = LogConstants.SHOW_SQL)
 @RequiredArgsConstructor
-public class RepoBuilderSqlPool implements InternalTenantQuery {
+public class InternalTenantQueryImpl implements InternalTenantQuery {
   private final ThenaSqlDataSource dataSource;
   
   private ThenaSqlClient getClient() {
@@ -84,9 +84,11 @@ public class RepoBuilderSqlPool implements InternalTenantQuery {
   public Uni<Tenant> insert(final Tenant newRepo) {
     final var next = dataSource.withTenant(newRepo);
     final var git = next.getRegistry().git();
+    final var doc = next.getRegistry().doc();
     final var sqlSchema = next.getSchema();
     final var sqlQuery = next.getQueryBuilder();
     final var pool = next.getPool();
+    
     return pool.withTransaction(tx -> {
       final var repoInsert = sqlQuery.repo().insertOne(newRepo);
       final var tablesCreate = new StringBuilder();
@@ -131,14 +133,14 @@ public class RepoBuilderSqlPool implements InternalTenantQuery {
         
       } else  {
         tablesCreate
-          .append(sqlSchema.createDoc().getValue())
-          .append(sqlSchema.createDocBranch().getValue())
-          .append(sqlSchema.createDocCommits().getValue())
-          .append(sqlSchema.createDocLog().getValue())
+          .append(doc.docs().createTable().getValue())
+          .append(doc.docBranches().createTable().getValue())
+          .append(doc.docCommits().createTable().getValue())
+          .append(doc.docLogs().createTable().getValue())
   
-          .append(sqlSchema.createDocBranchConstraints().getValue())
-          .append(sqlSchema.createDocCommitsConstraints().getValue())
-          .append(sqlSchema.createDocLogConstraints().getValue())
+          .append(doc.docBranches().createConstraints().getValue())
+          .append(doc.docCommits().createConstraints().getValue())
+          .append(doc.docLogs().createConstraints().getValue())
           .toString();
       }
       
@@ -192,6 +194,7 @@ public class RepoBuilderSqlPool implements InternalTenantQuery {
   public Uni<Tenant> delete(final Tenant newRepo) {
     final var next = dataSource.withTenant(newRepo);
     final var git = next.getRegistry().git();
+    final var doc = next.getRegistry().doc();
     final var sqlSchema = next.getSchema();
     
     final var sqlQuery = next.getQueryBuilder();
@@ -226,10 +229,10 @@ public class RepoBuilderSqlPool implements InternalTenantQuery {
         
       } else {
         tablesDrop
-        .append(sqlSchema.dropDocLog().getValue())
-        .append(sqlSchema.dropDocCommit().getValue())
-        .append(sqlSchema.dropDocBranch().getValue())
-        .append(sqlSchema.dropDoc().getValue());        
+        .append(doc.docLogs().dropTable().getValue())
+        .append(doc.docCommits().dropTable().getValue())
+        .append(doc.docBranches().dropTable().getValue())
+        .append(doc.docs().dropTable().getValue());        
         
       }
       

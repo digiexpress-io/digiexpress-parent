@@ -1,25 +1,33 @@
-package io.resys.thena.storesql.statement;
+package io.resys.thena.registry.doc;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import io.resys.thena.api.entities.doc.Doc;
-import io.resys.thena.datasource.TenantTableNames;
+import io.resys.thena.api.entities.doc.DocFlatted;
+import io.resys.thena.api.entities.doc.ImmutableDoc;
+import io.resys.thena.api.entities.doc.ImmutableDocFlatted;
+import io.resys.thena.api.registry.doc.DocMainRegistry;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.ImmutableSqlTupleList;
-import io.resys.thena.datasource.SqlQueryBuilder.DocSqlBuilder;
 import io.resys.thena.datasource.SqlQueryBuilder.Sql;
 import io.resys.thena.datasource.SqlQueryBuilder.SqlTuple;
 import io.resys.thena.datasource.SqlQueryBuilder.SqlTupleList;
+import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.storesql.support.SqlStatement;
 import io.resys.thena.structures.doc.DocQueries.FlattedCriteria;
+import io.vertx.core.json.JsonObject;
+import io.vertx.mutiny.sqlclient.Row;
 import io.vertx.mutiny.sqlclient.Tuple;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class DocSqlBuilderImpl implements DocSqlBuilder {
+public class DocMainRegistrySqlImpl implements DocMainRegistry {
   private final TenantTableNames options;
   
   @Override
@@ -241,4 +249,102 @@ public class DocSqlBuilderImpl implements DocSqlBuilder {
         .props(Tuple.from(props))
         .build();  
   }
+  @Override
+  public Function<Row, Doc> defaultMapper() {
+    return DocMainRegistrySqlImpl::doc;
+  }
+  @Override
+  public Function<Row, DocFlatted> docFlattedMapper() {
+    return DocMainRegistrySqlImpl::docFlatted;
+  }
+  private static Doc doc(Row row) {
+    return ImmutableDoc.builder()
+        .id(row.getString("id"))
+        .externalId(row.getString("external_id"))
+        .parentId(row.getString("doc_parent_id"))
+        .externalIdDeleted(row.getString("external_id_deleted"))
+        .type(row.getString("doc_type"))
+        .status(Doc.DocStatus.valueOf(row.getString("doc_status")))
+        .meta(jsonObject(row, "doc_meta"))
+        .build();
+  }
+  private static DocFlatted docFlatted(Row row) {
+    return ImmutableDocFlatted.builder()
+        .externalId(row.getString("external_id"))
+        .docId(row.getString("doc_id"))
+        .docType(row.getString("doc_type"))
+        .docStatus(Doc.DocStatus.valueOf(row.getString("doc_status")))
+        .docMeta(Optional.ofNullable(jsonObject(row, "doc_meta")))
+        .docParentId(Optional.ofNullable(row.getString("doc_parent_id")))
+        .externalIdDeleted(Optional.ofNullable(row.getString("external_id_deleted")))
+        
+        .branchId(row.getString("branch_id"))
+        .branchName(row.getString("branch_name"))
+        .branchNameDeleted(Optional.ofNullable(row.getString("branch_name_deleted")))
+        .branchValue(jsonObject(row, "branch_value"))
+        .branchStatus(Doc.DocStatus.valueOf(row.getString("branch_status")))
+        
+        .commitId(row.getString("commit_id"))
+        .commitAuthor(row.getString("commit_author"))
+        .commitMessage(row.getString("commit_message"))
+        .commitParent(Optional.ofNullable(row.getString("commit_parent")))
+        .commitDateTime(LocalDateTime.parse(row.getString("commit_datetime")))
+        
+        .docLogId(Optional.ofNullable(row.getString("doc_log_id")))
+        .docLogValue(Optional.ofNullable(jsonObject(row, "doc_log_value")))
+        
+        .build();
+  }
+  
+  private static JsonObject jsonObject(Row row, String columnName) {
+    // string based - new JsonObject(row.getString(columnName));
+    return row.getJsonObject(columnName);
+  }
+  @Override
+  public Sql createTable() {
+    return ImmutableSql.builder().value(new SqlStatement().ln()
+        .append("CREATE TABLE ").append(options.getDoc()).ln()
+        .append("(").ln()
+        .append("  id VARCHAR(40) PRIMARY KEY,").ln()
+        .append("  external_id VARCHAR(40) UNIQUE,").ln()
+        .append("  external_id_deleted VARCHAR(40),").ln()
+        .append("  owner_id VARCHAR(40),").ln()
+        .append("  doc_parent_id VARCHAR(40),").ln()
+        .append("  doc_type VARCHAR(40) NOT NULL,").ln()
+        .append("  doc_status VARCHAR(8) NOT NULL,").ln()
+        .append("  doc_meta jsonb").ln()
+        .append(");").ln()
+        
+        .append("CREATE INDEX ").append(options.getDoc()).append("_DOC_EXT_ID_INDEX")
+        .append(" ON ").append(options.getDoc()).append(" (external_id);").ln()
+
+        .append("CREATE INDEX ").append(options.getDoc()).append("_DOC_PARENT_ID_INDEX")
+        .append(" ON ").append(options.getDoc()).append(" (doc_parent_id);").ln()
+
+        .append("CREATE INDEX ").append(options.getDoc()).append("_DOC_TYPE_INDEX")
+        .append(" ON ").append(options.getDoc()).append(" (doc_type);").ln()
+
+        .append("CREATE INDEX ").append(options.getDoc()).append("_DOC_OWNER_INDEX")
+        .append(" ON ").append(options.getDoc()).append(" (owner_id);").ln()
+
+        // internal foreign key
+        .append("ALTER TABLE ").append(options.getDoc()).ln()
+        .append("  ADD CONSTRAINT ").append(options.getDoc()).append("_DOC_PARENT_FK").ln()
+        .append("  FOREIGN KEY (doc_parent_id)").ln()
+        .append("  REFERENCES ").append(options.getDoc()).append(" (id);").ln().ln()
+          
+        .build()).build();
+  }
+  @Override
+  public Sql createConstraints() {
+    return ImmutableSql.builder().value("").build();
+  }
+  @Override
+  public Sql dropTable() {
+    return ImmutableSql.builder().value(new SqlStatement()
+        .append("DROP TABLE ").append(options.getDoc()).append(";").ln()
+        .build()).build();
+  }
+
+
 }

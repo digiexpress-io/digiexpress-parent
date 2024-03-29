@@ -2,8 +2,7 @@ package io.resys.thena.storesql.builders;
 
 import io.resys.thena.api.LogConstants;
 import io.resys.thena.api.entities.doc.DocLog;
-import io.resys.thena.datasource.SqlDataMapper;
-import io.resys.thena.datasource.SqlQueryBuilder;
+import io.resys.thena.api.registry.DocRegistry;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlFailed;
@@ -18,26 +17,24 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j(topic = LogConstants.SHOW_SQL)
 public class DocLogQuerySqlPool implements DocLogQuery {
   private final ThenaSqlDataSource wrapper;
-  private final SqlDataMapper sqlMapper;
-  private final SqlQueryBuilder sqlBuilder;
+  private final DocRegistry registry;
   private final ThenaSqlDataSourceErrorHandler errorHandler;
   
   public DocLogQuerySqlPool(ThenaSqlDataSource dataSource) {
     this.wrapper = dataSource;
-    this.sqlMapper = dataSource.getDataMapper();
-    this.sqlBuilder = dataSource.getQueryBuilder();
+    this.registry = dataSource.getRegistry().doc();
     this.errorHandler = dataSource.getErrorHandler();
   }
   @Override
   public Uni<DocLog> getById(String id) {
-    final var sql = sqlBuilder.docLogs().getById(id);
+    final var sql = registry.docLogs().getById(id);
     if(log.isDebugEnabled()) {
       log.debug("DocLog byId query, with props: {} \r\n{}", 
           sql.getProps().deepToString(),
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.docLog(row))
+        .mapping(registry.docLogs().defaultMapper())
         .execute(sql.getProps())
         .onItem()
         .transform((RowSet<DocLog> rowset) -> {
@@ -52,14 +49,14 @@ public class DocLogQuerySqlPool implements DocLogQuery {
   }
   @Override
   public Multi<DocLog> findAll() {
-    final var sql = sqlBuilder.docLogs().findAll();
+    final var sql = registry.docLogs().findAll();
     if(log.isDebugEnabled()) {
       log.debug("DocLog findAll query, with props: {} \r\n{}", 
           "",
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.docLog(row))
+        .mapping(registry.docLogs().defaultMapper())
         .execute()
         .onItem()
         .transformToMulti((RowSet<DocLog> rowset) -> Multi.createFrom().iterable(rowset))
