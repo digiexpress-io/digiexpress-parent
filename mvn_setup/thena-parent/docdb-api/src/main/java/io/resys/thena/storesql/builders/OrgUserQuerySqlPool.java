@@ -8,8 +8,7 @@ import io.resys.thena.api.entities.org.OrgMember;
 import io.resys.thena.api.entities.org.OrgMemberFlattened;
 import io.resys.thena.api.entities.org.OrgMemberHierarchyEntry;
 import io.resys.thena.api.entities.org.OrgRightFlattened;
-import io.resys.thena.datasource.SqlDataMapper;
-import io.resys.thena.datasource.SqlQueryBuilder;
+import io.resys.thena.api.registry.OrgRegistry;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlFailed;
@@ -24,25 +23,24 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j(topic = LogConstants.SHOW_SQL)
 public class OrgUserQuerySqlPool implements OrgQueries.MemberQuery {
   private final ThenaSqlDataSource wrapper;
-  private final SqlDataMapper sqlMapper;
-  private final SqlQueryBuilder sqlBuilder;
+  private final OrgRegistry registry;
   private final ThenaSqlDataSourceErrorHandler errorHandler;
+  
   public OrgUserQuerySqlPool(ThenaSqlDataSource dataSource) {
     this.wrapper = dataSource;
-    this.sqlMapper = dataSource.getDataMapper();
-    this.sqlBuilder = dataSource.getQueryBuilder();
+    this.registry = dataSource.getRegistry().org();
     this.errorHandler = dataSource.getErrorHandler();
   }
   @Override
   public Multi<OrgMember> findAll() {
-    final var sql = sqlBuilder.orgMembers().findAll();
+    final var sql = registry.orgMembers().findAll();
     if(log.isDebugEnabled()) {
       log.debug("User findAll query, with props: {} \r\n{}", 
           "",
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.orgMember(row))
+        .mapping(registry.orgMembers().defaultMapper())
         .execute()
         .onItem()
         .transformToMulti((RowSet<OrgMember> rowset) -> Multi.createFrom().iterable(rowset))
@@ -51,14 +49,14 @@ public class OrgUserQuerySqlPool implements OrgQueries.MemberQuery {
   
   @Override
   public Multi<OrgMember> findAll(Collection<String> id) {
-    final var sql = sqlBuilder.orgMembers().findAll(id);
+    final var sql = registry.orgMembers().findAll(id);
     if(log.isDebugEnabled()) {
       log.debug("User findAll query, with props: {} \r\n{}", 
           "",
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.orgMember(row))
+        .mapping(registry.orgMembers().defaultMapper())
         .execute(sql.getProps())
         .onItem()
         .transformToMulti((RowSet<OrgMember> rowset) -> Multi.createFrom().iterable(rowset))
@@ -68,14 +66,14 @@ public class OrgUserQuerySqlPool implements OrgQueries.MemberQuery {
 
   @Override
   public Uni<OrgMember> getById(String id) {
-    final var sql = sqlBuilder.orgMembers().getById(id);
+    final var sql = registry.orgMembers().getById(id);
     if(log.isDebugEnabled()) {
       log.debug("User byId query, with props: {} \r\n{}", 
           sql.getProps().deepToString(),
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.orgMember(row))
+        .mapping(registry.orgMembers().defaultMapper())
         .execute(sql.getProps())
         .onItem()
         .transform((RowSet<OrgMember> rowset) -> {
@@ -91,14 +89,14 @@ public class OrgUserQuerySqlPool implements OrgQueries.MemberQuery {
   
 	@Override
 	public Uni<List<OrgMemberHierarchyEntry>> findAllMemberHierarchyEntries(String userId) {
-    final var sql = sqlBuilder.orgMembers().findAllUserPartiesAndRightsByMemberId(userId);
+    final var sql = registry.orgMembers().findAllUserPartiesAndRightsByMemberId(userId);
     if(log.isDebugEnabled()) {
       log.debug("User findAllUserHierarchyEntries query, with props: {} \r\n{}", 
       		sql.getProps().deepToString(),
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.orgMemberHierarchyEntry(row))
+        .mapping(registry.orgMembers().memberHierarchyEntryMapper())
         .execute(sql.getProps())
         .onItem()
         .transformToMulti((RowSet<OrgMemberHierarchyEntry> rowset) -> Multi.createFrom().iterable(rowset))
@@ -108,14 +106,14 @@ public class OrgUserQuerySqlPool implements OrgQueries.MemberQuery {
 
   @Override
   public Uni<List<OrgRightFlattened>> findAllRightsByMemberId(String userId) {
-    final var sql = sqlBuilder.orgMembers().findAllRightsByMemberId(userId);
+    final var sql = registry.orgMembers().findAllRightsByMemberId(userId);
     if(log.isDebugEnabled()) {
       log.debug("User findAllRightsByMemberId query, with props: {} \r\n{}", 
           sql.getProps().deepToString(),
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.orgOrgRightFlattened(row))
+        .mapping(registry.orgMembers().rightFlattenedMapper())
         .execute(sql.getProps())
         .onItem()
         .transformToMulti((RowSet<OrgRightFlattened> rowset) -> Multi.createFrom().iterable(rowset))
@@ -125,14 +123,14 @@ public class OrgUserQuerySqlPool implements OrgQueries.MemberQuery {
 
   @Override
   public Uni<OrgMemberFlattened> getStatusById(String userId) {
-    final var sql = sqlBuilder.orgMembers().getStatusByUserId(userId);
+    final var sql = registry.orgMembers().getStatusByUserId(userId);
     if(log.isDebugEnabled()) {
       log.debug("User getStatusById query, with props: {} \r\n{}", 
           sql.getProps().deepToString(),
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.orgMemberFlattened(row))
+        .mapping(registry.orgMembers().memberFlattenedMapper())
         .execute(sql.getProps())
         .onItem()
         .transform((RowSet<OrgMemberFlattened> rowset) -> {

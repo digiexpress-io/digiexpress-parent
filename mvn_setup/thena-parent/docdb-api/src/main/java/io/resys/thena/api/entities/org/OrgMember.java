@@ -11,10 +11,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.resys.thena.api.entities.org.ThenaOrgObject.IsOrgObject;
 import io.resys.thena.api.entities.org.ThenaOrgObject.IsOrgVersionObject;
 import io.resys.thena.api.envelope.ThenaContainer;
+import io.resys.thena.api.registry.ThenaRegistryService.ThenaTable;
 
 @Value.Immutable
 public
-interface OrgMember extends ThenaOrgObject, ThenaContainer, IsOrgObject, IsOrgVersionObject {
+interface OrgMember extends ThenaOrgObject, ThenaContainer, IsOrgObject, IsOrgVersionObject, ThenaTable {
   String getId();
   String getCommitId();
   @Nullable String getExternalId();

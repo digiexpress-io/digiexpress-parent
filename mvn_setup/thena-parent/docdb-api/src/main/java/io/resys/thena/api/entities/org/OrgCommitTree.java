@@ -7,11 +7,12 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.resys.thena.api.entities.org.ThenaOrgObject.IsOrgObject;
+import io.resys.thena.api.registry.ThenaRegistryService.ThenaTable;
 import io.vertx.core.json.JsonObject;
 
 @Value.Immutable
 public
-interface OrgCommitTree extends ThenaOrgObject, IsOrgObject {
+interface OrgCommitTree extends ThenaOrgObject, IsOrgObject, ThenaTable {
   enum OrgOperationType {
     ADD, MOD, REM
   }

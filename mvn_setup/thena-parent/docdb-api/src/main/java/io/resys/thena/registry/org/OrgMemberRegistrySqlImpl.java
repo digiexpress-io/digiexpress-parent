@@ -1,24 +1,34 @@
-package io.resys.thena.storesql.statement;
+package io.resys.thena.registry.org;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import io.resys.thena.api.entities.org.ImmutableOrgMember;
+import io.resys.thena.api.entities.org.ImmutableOrgMemberFlattened;
+import io.resys.thena.api.entities.org.ImmutableOrgMemberHierarchyEntry;
+import io.resys.thena.api.entities.org.ImmutableOrgRightFlattened;
+import io.resys.thena.api.entities.org.OrgActorStatus;
 import io.resys.thena.api.entities.org.OrgMember;
-import io.resys.thena.datasource.TenantTableNames;
+import io.resys.thena.api.entities.org.OrgMemberFlattened;
+import io.resys.thena.api.entities.org.OrgMemberHierarchyEntry;
+import io.resys.thena.api.entities.org.OrgRightFlattened;
+import io.resys.thena.api.registry.org.OrgMemberRegistry;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.ImmutableSqlTupleList;
-import io.resys.thena.datasource.SqlQueryBuilder.OrgMemberSqlBuilder;
 import io.resys.thena.datasource.SqlQueryBuilder.Sql;
 import io.resys.thena.datasource.SqlQueryBuilder.SqlTuple;
 import io.resys.thena.datasource.SqlQueryBuilder.SqlTupleList;
+import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.storesql.support.SqlStatement;
+import io.vertx.mutiny.sqlclient.Row;
 import io.vertx.mutiny.sqlclient.Tuple;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class OrgMemberSqlBuilderImpl implements OrgMemberSqlBuilder {
+public class OrgMemberRegistrySqlImpl implements OrgMemberRegistry {
   private final TenantTableNames options;
   
   @Override
@@ -259,6 +269,133 @@ SELECT * FROM child;
         .append("WHERE (users.id = $1 OR users.external_id = $1 OR users.username = $1)").ln()
         .build())
         .props(Tuple.of(userId))
+        .build();
+  }
+  
+
+  @Override
+  public Function<Row, OrgRightFlattened> rightFlattenedMapper() {
+    return OrgMemberRegistrySqlImpl::orgRightFlattened;
+  }
+  @Override
+  public Function<Row, OrgMemberFlattened> memberFlattenedMapper() {
+    return OrgMemberRegistrySqlImpl::orgMemberFlattened;
+  }
+  @Override
+  public Function<Row, OrgMemberHierarchyEntry> memberHierarchyEntryMapper() {
+    return OrgMemberRegistrySqlImpl::orgMemberHierarchyEntry;
+  }
+  @Override
+  public Function<Row, OrgMember> defaultMapper() {
+    return OrgMemberRegistrySqlImpl::orgMember;
+  }
+  private static OrgMember orgMember(Row row) {
+    return ImmutableOrgMember.builder()
+        .id(row.getString("id"))
+        .externalId(row.getString("external_id"))
+        .commitId(row.getString("commit_id"))
+        .userName(row.getString("username"))
+        .email(row.getString("email"))
+        .build();
+  }
+  private static OrgMemberHierarchyEntry orgMemberHierarchyEntry(Row row) {
+    final var roleStatus = row.getString("right_status");
+    final var groupStatus = row.getString("status");
+    
+    return ImmutableOrgMemberHierarchyEntry.builder()
+        .partyId(row.getString("id"))
+        .partyParentId(row.getString("parent_id"))
+        .partyName(row.getString("party_name"))
+        .partyDescription(row.getString("party_description"))
+        .membershipId(row.getString("membership_id"))
+        
+        .partyStatusId(row.getString("status_id"))
+        .partyStatus(groupStatus != null ? OrgActorStatus.OrgActorStatusType.valueOf(groupStatus) : null)
+        .partyStatusMemberId(row.getString("status_member_id"))
+        
+        .rightId(row.getString("right_id"))
+        .rightName(row.getString("right_name"))
+        .rightDescription(row.getString("right_description"))
+        
+        .rightStatus(roleStatus != null ? OrgActorStatus.OrgActorStatusType.valueOf(roleStatus) : null)
+        .rightStatusId(row.getString("right_status_id"))
+        .build();
+  }
+  
+  private static OrgRightFlattened orgRightFlattened(Row row) {
+    final var roleStatus = row.getString("right_status");
+    return ImmutableOrgRightFlattened.builder()
+        .rightId(row.getString("right_id"))
+        .rightName(row.getString("right_name"))
+        .rightDescription(row.getString("right_description"))
+        .rightStatus(roleStatus != null ? OrgActorStatus.OrgActorStatusType.valueOf(roleStatus) : null)
+        .rightStatusId(row.getString("right_status_id"))
+        .build();
+  }
+  private static OrgMemberFlattened orgMemberFlattened(Row row) {
+    final var userStatus = row.getString("user_status");
+    return ImmutableOrgMemberFlattened.builder()
+        .id(row.getString("id"))
+        .externalId(row.getString("external_id"))
+        .commitId(row.getString("commit_id"))
+        .userName(row.getString("username"))
+        .email(row.getString("email"))
+        .status(userStatus != null ? OrgActorStatus.OrgActorStatusType.valueOf(userStatus) : null)
+        .statusId(row.getString("user_status_id"))
+        .build();
+  }
+
+  @Override
+  public Sql createTable() {
+    return ImmutableSql.builder().value(new SqlStatement().ln()
+    .append("CREATE TABLE ").append(options.getOrgMembers()).ln()
+    .append("(").ln()
+    .append("  id VARCHAR(40) PRIMARY KEY,").ln()
+    .append("  commit_id VARCHAR(40) NOT NULL,").ln()
+    .append("  external_id VARCHAR(40) UNIQUE,").ln()
+    .append("  username VARCHAR(255) UNIQUE NOT NULL,").ln()
+    .append("  email VARCHAR(255) NOT NULL").ln()
+    .append(");").ln()
+    
+    
+    .append("CREATE INDEX ").append(options.getOrgMembers()).append("_COMMIT_INDEX")
+    .append(" ON ").append(options.getOrgMembers()).append(" (commit_id);").ln()
+
+    .append("CREATE INDEX ").append(options.getOrgMembers()).append("_EXTERNAL_INDEX")
+    .append(" ON ").append(options.getOrgMembers()).append(" (external_id);").ln()
+
+    .append("CREATE INDEX ").append(options.getOrgMembers()).append("_MEMBER_NAME_INDEX")
+    .append(" ON ").append(options.getOrgMembers()).append(" (username);").ln()
+
+    .build()).build();
+  }
+
+  @Override
+  public Sql createConstraints() {
+    return ImmutableSql.builder().value(new SqlStatement()
+        .append(createOrgUserFk(options.getOrgMemberships())).ln()
+        .append(createOrgUserFk(options.getOrgMemberRights())).ln()
+        
+        .append(createOrgUserFk(options.getOrgActorData())).ln()
+        .append(createOrgUserFk(options.getOrgActorStatus())).ln()
+        .build())
+        .build();
+  }
+
+  @Override
+  public Sql dropTable() {
+    return ImmutableSql.builder().value(new SqlStatement()
+        .append("DROP TABLE ").append(options.getOrgMembers()).append(";").ln()
+        .build()).build();
+  }
+
+
+  private String createOrgUserFk(String tableNameThatPointToCommits) {
+    return  new SqlStatement().ln()
+        .append("ALTER TABLE ").append(tableNameThatPointToCommits).ln()
+        .append("  ADD CONSTRAINT ").append(tableNameThatPointToCommits).append("_MEMBER_FK").ln()
+        .append("  FOREIGN KEY (member_id)").ln()
+        .append("  REFERENCES ").append(options.getOrgMembers()).append(" (id);").ln().ln()
         .build();
   }
 }

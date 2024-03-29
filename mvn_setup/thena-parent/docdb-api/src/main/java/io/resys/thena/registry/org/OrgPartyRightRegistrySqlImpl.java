@@ -1,24 +1,27 @@
-package io.resys.thena.storesql.statement;
+package io.resys.thena.registry.org;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import io.resys.thena.api.entities.org.ImmutableOrgPartyRight;
 import io.resys.thena.api.entities.org.OrgPartyRight;
-import io.resys.thena.datasource.TenantTableNames;
+import io.resys.thena.api.registry.org.OrgPartyRightRegistry;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.ImmutableSqlTupleList;
-import io.resys.thena.datasource.SqlQueryBuilder.OrgPartyRightSqlBuilder;
 import io.resys.thena.datasource.SqlQueryBuilder.Sql;
 import io.resys.thena.datasource.SqlQueryBuilder.SqlTuple;
 import io.resys.thena.datasource.SqlQueryBuilder.SqlTupleList;
+import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.storesql.support.SqlStatement;
+import io.vertx.mutiny.sqlclient.Row;
 import io.vertx.mutiny.sqlclient.Tuple;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class OrgPartyRightSqlBuilderImpl implements OrgPartyRightSqlBuilder {
+public class OrgPartyRightRegistrySqlImpl implements OrgPartyRightRegistry {
   private final TenantTableNames options;
   
   @Override
@@ -122,4 +125,53 @@ public class OrgPartyRightSqlBuilderImpl implements OrgPartyRightSqlBuilder {
             .collect(Collectors.toList()))
         .build();
   }
+  private static OrgPartyRight orgPartyRright(Row row) {
+    return ImmutableOrgPartyRight.builder()
+        .id(row.getString("id"))
+        .commitId(row.getString("commit_id"))
+        .rightId(row.getString("right_id"))
+        .partyId(row.getString("party_id"))
+        .build();
+  }
+  @Override
+  public Function<Row, OrgPartyRight> defaultMapper() {
+    return OrgPartyRightRegistrySqlImpl::orgPartyRright;
+  }
+  @Override
+  public Sql createTable() {
+    return ImmutableSql.builder().value(new SqlStatement().ln()
+    .append("CREATE TABLE ").append(options.getOrgPartyRights()).ln()
+    .append("(").ln()
+    .append("  id VARCHAR(40) PRIMARY KEY,").ln()
+    .append("  commit_id VARCHAR(40) NOT NULL,").ln()
+    .append("  party_id VARCHAR(40) NOT NULL,").ln()
+    .append("  right_id VARCHAR(40) NOT NULL,").ln()
+    .append("  UNIQUE (right_id, party_id)").ln()
+    .append(");").ln()
+    
+    
+    .append("CREATE INDEX ").append(options.getOrgPartyRights()).append("_COMMIT_INDEX")
+    .append(" ON ").append(options.getOrgPartyRights()).append(" (commit_id);").ln()
+
+    .append("CREATE INDEX ").append(options.getOrgPartyRights()).append("_PARTY_INDEX")
+    .append(" ON ").append(options.getOrgPartyRights()).append(" (party_id);").ln()
+
+    .append("CREATE INDEX ").append(options.getOrgPartyRights()).append("_RIGHT_INDEX")
+    .append(" ON ").append(options.getOrgPartyRights()).append(" (right_id);").ln()    
+
+    .build()).build();
+  }
+
+  @Override
+  public Sql createConstraints() {
+    return ImmutableSql.builder().value("").build();
+  }
+
+  @Override
+  public Sql dropTable() {
+    return ImmutableSql.builder().value(new SqlStatement()
+        .append("DROP TABLE ").append(options.getOrgPartyRights()).append(";").ln()
+        .build()).build();
+  }
+
 }

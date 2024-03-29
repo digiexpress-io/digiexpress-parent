@@ -4,8 +4,7 @@ import java.util.Collection;
 
 import io.resys.thena.api.LogConstants;
 import io.resys.thena.api.entities.org.OrgParty;
-import io.resys.thena.datasource.SqlDataMapper;
-import io.resys.thena.datasource.SqlQueryBuilder;
+import io.resys.thena.api.registry.OrgRegistry;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlFailed;
@@ -20,25 +19,24 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j(topic = LogConstants.SHOW_SQL)
 public class OrgGroupQuerySqlPool implements OrgQueries.PartyQuery {
   private final ThenaSqlDataSource wrapper;
-  private final SqlDataMapper sqlMapper;
-  private final SqlQueryBuilder sqlBuilder;
+  private final OrgRegistry registry;
   private final ThenaSqlDataSourceErrorHandler errorHandler;
+  
   public OrgGroupQuerySqlPool(ThenaSqlDataSource dataSource) {
     this.wrapper = dataSource;
-    this.sqlMapper = dataSource.getDataMapper();
-    this.sqlBuilder = dataSource.getQueryBuilder();
+    this.registry = dataSource.getRegistry().org();
     this.errorHandler = dataSource.getErrorHandler();
   }
   @Override
   public Multi<OrgParty> findAll() {
-    final var sql = sqlBuilder.orgParties().findAll();
+    final var sql = registry.orgParties().findAll();
     if(log.isDebugEnabled()) {
       log.debug("Group findAll query, with props: {} \r\n{}", 
           "",
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.orgParty(row))
+        .mapping(registry.orgParties().defaultMapper())
         .execute()
         .onItem()
         .transformToMulti((RowSet<OrgParty> rowset) -> Multi.createFrom().iterable(rowset))
@@ -47,14 +45,14 @@ public class OrgGroupQuerySqlPool implements OrgQueries.PartyQuery {
   
   @Override
   public Multi<OrgParty> findAll(Collection<String> id) {
-    final var sql = sqlBuilder.orgParties().findAll(id);
+    final var sql = registry.orgParties().findAll(id);
     if(log.isDebugEnabled()) {
       log.debug("Group findAll query, with props: {} \r\n{}", 
           "",
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.orgParty(row))
+        .mapping(registry.orgParties().defaultMapper())
         .execute(sql.getProps())
         .onItem()
         .transformToMulti((RowSet<OrgParty> rowset) -> Multi.createFrom().iterable(rowset))
@@ -63,14 +61,14 @@ public class OrgGroupQuerySqlPool implements OrgQueries.PartyQuery {
 
   @Override
   public Uni<OrgParty> getById(String id) {
-    final var sql = sqlBuilder.orgParties().getById(id);
+    final var sql = registry.orgParties().getById(id);
     if(log.isDebugEnabled()) {
       log.debug("Group byId query, with props: {} \r\n{}", 
           sql.getProps().deepToString(),
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.orgParty(row))
+        .mapping(registry.orgParties().defaultMapper())
         .execute(sql.getProps())
         .onItem()
         .transform((RowSet<OrgParty> rowset) -> {

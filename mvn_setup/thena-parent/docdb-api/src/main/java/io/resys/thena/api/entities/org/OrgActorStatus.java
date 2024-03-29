@@ -8,10 +8,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.resys.thena.api.entities.org.ThenaOrgObject.IsOrgObject;
 import io.resys.thena.api.entities.org.ThenaOrgObject.IsOrgVersionObject;
+import io.resys.thena.api.registry.ThenaRegistryService.ThenaTable;
 
 @Value.Immutable
 public
-interface OrgActorStatus extends ThenaOrgObject, IsOrgObject, IsOrgVersionObject {
+interface OrgActorStatus extends ThenaOrgObject, IsOrgObject, IsOrgVersionObject, ThenaTable {
   enum OrgActorStatusType {
     IN_FORCE, DISABLED
   }

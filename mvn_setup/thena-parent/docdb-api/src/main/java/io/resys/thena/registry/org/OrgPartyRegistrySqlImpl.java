@@ -1,24 +1,27 @@
-package io.resys.thena.storesql.statement;
+package io.resys.thena.registry.org;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import io.resys.thena.api.entities.org.ImmutableOrgParty;
 import io.resys.thena.api.entities.org.OrgParty;
-import io.resys.thena.datasource.TenantTableNames;
+import io.resys.thena.api.registry.org.OrgPartyRegistry;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.ImmutableSqlTupleList;
-import io.resys.thena.datasource.SqlQueryBuilder.OrgPartySqlBuilder;
 import io.resys.thena.datasource.SqlQueryBuilder.Sql;
 import io.resys.thena.datasource.SqlQueryBuilder.SqlTuple;
 import io.resys.thena.datasource.SqlQueryBuilder.SqlTupleList;
+import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.storesql.support.SqlStatement;
+import io.vertx.mutiny.sqlclient.Row;
 import io.vertx.mutiny.sqlclient.Tuple;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class OrgPartySqlBuilderImpl implements OrgPartySqlBuilder {
+public class OrgPartyRegistrySqlImpl implements OrgPartyRegistry {
   private final TenantTableNames options;
   
   @Override
@@ -112,4 +115,86 @@ public class OrgPartySqlBuilderImpl implements OrgPartySqlBuilder {
             .collect(Collectors.toList()))
         .build();
   }
+
+  @Override
+  public Function<Row, OrgParty> defaultMapper() {
+    return OrgPartyRegistrySqlImpl::orgParty;
+  }
+  private static OrgParty orgParty(Row row) {
+    return ImmutableOrgParty.builder()
+        .id(row.getString("id"))
+        .externalId(row.getString("external_id"))
+        .parentId(row.getString("parent_id"))
+        .commitId(row.getString("commit_id"))
+        .partyName(row.getString("party_name"))
+        .partyDescription(row.getString("party_description"))
+        .build();
+  }
+
+  @Override
+  public Sql createTable() {
+    return ImmutableSql.builder().value(new SqlStatement().ln()
+    .append("CREATE TABLE ").append(options.getOrgParties()).ln()
+    .append("(").ln()
+    .append("  id VARCHAR(40) PRIMARY KEY,").ln()
+    .append("  commit_id VARCHAR(40) NOT NULL,").ln()
+    .append("  external_id VARCHAR(40) UNIQUE,").ln()
+    .append("  parent_id VARCHAR(40),").ln()
+    .append("  party_name VARCHAR(255) UNIQUE NOT NULL,").ln()
+    .append("  party_description VARCHAR(255) NOT NULL").ln()
+    .append(");").ln().ln()
+    
+    // parent id, references self
+    .append("ALTER TABLE ").append(options.getOrgParties()).ln()
+    .append("  ADD CONSTRAINT ").append(options.getOrgParties()).append("_PARENT_FK").ln()
+    .append("  FOREIGN KEY (parent_id)").ln()
+    .append("  REFERENCES ").append(options.getOrgParties()).append(" (id);").ln()
+
+    
+    .append("CREATE INDEX ").append(options.getOrgParties()).append("_NAME_INDEX")
+    .append(" ON ").append(options.getOrgParties()).append(" (party_name);").ln()
+    
+    .append("CREATE INDEX ").append(options.getOrgParties()).append("_COMMIT_INDEX")
+    .append(" ON ").append(options.getOrgParties()).append(" (commit_id);").ln()
+
+    .append("CREATE INDEX ").append(options.getOrgParties()).append("_EXTERNAL_INDEX")
+    .append(" ON ").append(options.getOrgParties()).append(" (external_id);").ln()
+    
+    
+    .build()).build();
+  }
+
+  @Override
+  public Sql createConstraints() {
+    return ImmutableSql.builder().value(new SqlStatement()
+        .append(createOrgGroupFk(options.getOrgActorData())).ln()
+        .append(createOrgGroupFk(options.getOrgActorStatus())).ln()
+        .append(createOrgGroupFk(options.getOrgPartyRights())).ln()
+        .append(createOrgGroupFk(options.getOrgMemberRights())).ln()
+        .append(createOrgGroupFk(options.getOrgMemberships())).ln()
+        
+        .append("ALTER TABLE ").append(options.getOrgMemberRights()).ln()
+        .append("  ADD CONSTRAINT ").append(options.getOrgMemberRights()).append("_PARTY_MEMBER_FK").ln()
+        .append("  FOREIGN KEY (party_id, member_id)").ln()
+        .append("  REFERENCES ").append(options.getOrgMemberships()).append(" (party_id, member_id);").ln().ln()
+                
+        .build())
+        .build();
+  }
+
+  @Override
+  public Sql dropTable() {
+    return ImmutableSql.builder().value(new SqlStatement()
+        .append("DROP TABLE ").append(options.getOrgParties()).append(";").ln()
+        .build()).build();
+  }
+  private String createOrgGroupFk(String tableNameThatPointToCommits) {
+    return new SqlStatement().ln()
+        .append("ALTER TABLE ").append(tableNameThatPointToCommits).ln()
+        .append("  ADD CONSTRAINT ").append(tableNameThatPointToCommits).append("_PARTY_FK").ln()
+        .append("  FOREIGN KEY (party_id)").ln()
+        .append("  REFERENCES ").append(options.getOrgParties()).append(" (id);").ln().ln()
+        .build();
+  }
+
 }

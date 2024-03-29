@@ -7,7 +7,7 @@ import java.util.function.Predicate;
 
 import io.resys.thena.api.entities.org.ThenaOrgObject.IsOrgObject;
 import io.resys.thena.api.envelope.ImmutableMessage;
-import io.resys.thena.datasource.SqlQueryBuilder;
+import io.resys.thena.api.registry.OrgRegistry;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.storesql.support.Execute;
 import io.resys.thena.structures.git.GitInserts.BatchStatus;
@@ -22,11 +22,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class OrgDbInsertsSqlPool implements OrgInserts {
   private final ThenaSqlDataSource wrapper;
-  private final SqlQueryBuilder sqlBuilder;
+  private final OrgRegistry registry;
   
   public OrgDbInsertsSqlPool(ThenaSqlDataSource dataSource) {
     this.wrapper = dataSource;
-    this.sqlBuilder = dataSource.getQueryBuilder();
+    this.registry = dataSource.getRegistry().org();
   }
   @RequiredArgsConstructor
   private static class IsInsert implements Predicate<IsOrgObject>  {
@@ -52,32 +52,32 @@ public class OrgDbInsertsSqlPool implements OrgInserts {
     final var isInsert = new IsInsert(inputBatch);
     final var isUpdate = new IsUpdate(inputBatch);
 
-    final var memberInsert = sqlBuilder.orgMembers().insertAll(inputBatch.getMembers().stream().filter(isInsert).toList());
-    final var membersUpdate = sqlBuilder.orgMembers().updateMany(inputBatch.getMembers().stream().filter(isUpdate).toList());
+    final var memberInsert = registry.orgMembers().insertAll(inputBatch.getMembers().stream().filter(isInsert).toList());
+    final var membersUpdate = registry.orgMembers().updateMany(inputBatch.getMembers().stream().filter(isUpdate).toList());
     
-    final var partiesInsert = sqlBuilder.orgParties().insertAll(inputBatch.getParties().stream().filter(isInsert).toList());
-    final var partiesUpdate = sqlBuilder.orgParties().updateMany(inputBatch.getParties().stream().filter(isUpdate).toList());
-    final var membershipsInsert = sqlBuilder.orgMemberships().insertAll(inputBatch.getMemberships());
-    
-    
-    final var rightsInsert = sqlBuilder.orgRights().insertAll(inputBatch.getRights().stream().filter(isInsert).toList());
-    final var rightsUpdate = sqlBuilder.orgRights().updateMany(inputBatch.getRights().stream().filter(isUpdate).toList());
-    final var memberRightsInsert = sqlBuilder.orgMemberRights().insertAll(inputBatch.getMemberRights());
-    final var partyRightsInsert = sqlBuilder.orgPartyRights().insertAll(inputBatch.getPartyRights());
+    final var partiesInsert = registry.orgParties().insertAll(inputBatch.getParties().stream().filter(isInsert).toList());
+    final var partiesUpdate = registry.orgParties().updateMany(inputBatch.getParties().stream().filter(isUpdate).toList());
+    final var membershipsInsert = registry.orgMemberships().insertAll(inputBatch.getMemberships());
     
     
-    final var statusInsert = sqlBuilder.orgActorStatus().insertAll(inputBatch.getActorStatus().stream().filter(isInsert).toList());
-    final var statusUpdate = sqlBuilder.orgActorStatus().updateMany(inputBatch.getActorStatus().stream().filter(isUpdate).toList());
+    final var rightsInsert = registry.orgRights().insertAll(inputBatch.getRights().stream().filter(isInsert).toList());
+    final var rightsUpdate = registry.orgRights().updateMany(inputBatch.getRights().stream().filter(isUpdate).toList());
+    final var memberRightsInsert = registry.orgMemberRights().insertAll(inputBatch.getMemberRights());
+    final var partyRightsInsert = registry.orgPartyRights().insertAll(inputBatch.getPartyRights());
     
     
-    final var commitInsert = sqlBuilder.orgCommits().insertOne(inputBatch.getCommit());
-    final var treeInsert = sqlBuilder.orgCommitTrees().insertAll(inputBatch.getCommit().getTree());
+    final var statusInsert = registry.orgActorStatus().insertAll(inputBatch.getActorStatus().stream().filter(isInsert).toList());
+    final var statusUpdate = registry.orgActorStatus().updateMany(inputBatch.getActorStatus().stream().filter(isUpdate).toList());
+    
+    
+    final var commitInsert = registry.orgCommits().insertOne(inputBatch.getCommit());
+    final var treeInsert = registry.orgCommitTrees().insertAll(inputBatch.getCommit().getTree());
     
 
-    final var partyRightsDelete = sqlBuilder.orgPartyRights().deleteAll(inputBatch.getPartyRightToDelete());
-    final var memberRightsDelete = sqlBuilder.orgMemberRights().deleteAll(inputBatch.getMemberRightsToDelete());
-    final var actorStatusDelete = sqlBuilder.orgActorStatus().deleteAll(inputBatch.getStatusToDelete());
-    final var membershipsDelete = sqlBuilder.orgMemberships().deleteAll(inputBatch.getMembershipsToDelete());
+    final var partyRightsDelete = registry.orgPartyRights().deleteAll(inputBatch.getPartyRightToDelete());
+    final var memberRightsDelete = registry.orgMemberRights().deleteAll(inputBatch.getMemberRightsToDelete());
+    final var actorStatusDelete = registry.orgActorStatus().deleteAll(inputBatch.getStatusToDelete());
+    final var membershipsDelete = registry.orgMemberships().deleteAll(inputBatch.getMembershipsToDelete());
 
     
     final Uni<OrgBatchForOne> partyRightsDeleteUni = Execute.apply(tx, partyRightsDelete).onItem()

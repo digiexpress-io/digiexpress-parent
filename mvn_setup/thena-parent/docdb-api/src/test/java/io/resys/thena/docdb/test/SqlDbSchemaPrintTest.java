@@ -33,6 +33,7 @@ import org.junit.jupiter.api.Test;
 import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.registry.doc.DocRegistrySqlImpl;
 import io.resys.thena.registry.git.GitRegistrySqlImpl;
+import io.resys.thena.registry.org.OrgRegistrySqlImpl;
 import io.resys.thena.storesql.SqlSchemaImpl;
 import lombok.extern.slf4j.Slf4j;
 
@@ -46,6 +47,7 @@ public class SqlDbSchemaPrintTest {
     final var sqlSchema = new SqlSchemaImpl(names);
     final var git = new GitRegistrySqlImpl(names);
     final var doc = new DocRegistrySqlImpl(names);
+    final var org = new OrgRegistrySqlImpl(names);
     
     final var schema = new StringBuilder()
       .append(sqlSchema.createTenant().getValue())
@@ -70,19 +72,19 @@ public class SqlDbSchemaPrintTest {
       .append(doc.docLogs().createConstraints().getValue())
       
       
-      .append(sqlSchema.createOrgRights().getValue())
-      .append(sqlSchema.createOrgParties().getValue())
-      .append(sqlSchema.createOrgPartyRights().getValue())
-      .append(sqlSchema.createOrgMembers().getValue())
-      .append(sqlSchema.createOrgMemberRights().getValue())
-      .append(sqlSchema.createOrgMemberships().getValue())
-      .append(sqlSchema.createOrgActorStatus().getValue())
-      .append(sqlSchema.createOrgCommits().getValue())
-      .append(sqlSchema.createOrgActorData().getValue())
-      .append(sqlSchema.createOrgRightsConstraints().getValue())
-      .append(sqlSchema.createOrgMemberConstraints().getValue())
-      .append(sqlSchema.createOrgPartyConstraints().getValue())
-      .append(sqlSchema.createOrgCommitConstraints().getValue())
+      .append(org.orgRights().createTable().getValue())
+      .append(org.orgParties().createTable().getValue())
+      .append(org.orgPartyRights().createTable().getValue())
+      .append(org.orgMembers().createTable().getValue())
+      .append(org.orgMemberRights().createTable().getValue())
+      .append(org.orgMemberships().createTable().getValue())
+      .append(org.orgActorStatus().createTable().getValue())
+      .append(org.orgCommits().createTable().getValue())
+      .append(org.orgActorData().createTable().getValue())
+      .append(org.orgRights().createConstraints().getValue())
+      .append(org.orgMembers().createConstraints().getValue())
+      .append(org.orgParties().createConstraints().getValue())
+      .append(org.orgCommits().createConstraints().getValue())
       
       .toString();
     

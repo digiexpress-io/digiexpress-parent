@@ -1,23 +1,25 @@
-package io.resys.thena.storesql.statement;
+package io.resys.thena.registry.org;
 
 import java.util.Collection;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import io.resys.thena.api.entities.org.OrgCommitTree;
-import io.resys.thena.datasource.TenantTableNames;
+import io.resys.thena.api.registry.org.OrgCommitTreeRegistry;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.ImmutableSqlTupleList;
-import io.resys.thena.datasource.SqlQueryBuilder.OrgCommitTreeSqlBuilder;
 import io.resys.thena.datasource.SqlQueryBuilder.Sql;
 import io.resys.thena.datasource.SqlQueryBuilder.SqlTuple;
 import io.resys.thena.datasource.SqlQueryBuilder.SqlTupleList;
+import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.storesql.support.SqlStatement;
+import io.vertx.mutiny.sqlclient.Row;
 import io.vertx.mutiny.sqlclient.Tuple;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class OrgCommitTreeSqlBuilderImpl implements OrgCommitTreeSqlBuilder {
+public class OrgCommitTreeRegistrySqlImpl implements OrgCommitTreeRegistry {
   private final TenantTableNames options;
   @Override
   public Sql findAll() {
@@ -61,4 +63,21 @@ public class OrgCommitTreeSqlBuilderImpl implements OrgCommitTreeSqlBuilder {
         .props(Tuple.of(commitId))
         .build();
   }
+  @Override
+  public Function<Row, OrgCommitTree> defaultMapper() {
+    throw new RuntimeException("Not implemented");
+  }
+  @Override
+  public Sql createTable() {
+    return ImmutableSql.builder().value("").build();
+  }
+  @Override
+  public Sql createConstraints() {
+    return ImmutableSql.builder().value("").build();
+  }
+  @Override
+  public Sql dropTable() {
+    return ImmutableSql.builder().value("").build();
+  }
+
 }

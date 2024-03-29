@@ -22,26 +22,6 @@ import io.vertx.mutiny.sqlclient.Row;
 
 public interface SqlDataMapper extends DataMapper<Row>{
   Tenant repo(Row row);
-  /*
-  Doc doc(Row row);
-  DocFlatted docFlatted(Row row);
-  DocLog docLog(Row row);
-  DocBranch docBranch(Row row);
-  DocCommit docCommit(Row row);
-  DocBranchLock docBranchLock(Row row);*/
-
-  OrgRight orgRight(Row row);
-  OrgMember orgMember(Row row);
-  OrgParty orgParty(Row row);
-  OrgMemberRight orgMemberRight(Row row);
-  OrgPartyRight orgPartyRright(Row row);
-  OrgMembership orgMembership(Row row);
-  OrgMemberHierarchyEntry orgMemberHierarchyEntry(Row row);
-  OrgRightFlattened orgOrgRightFlattened(Row row);
-  OrgMemberFlattened orgMemberFlattened(Row row);
-  OrgActorStatus orgActorStatus(Row row); 
-  
   JsonObject jsonObject(Row row, String columnName);
-  
   SqlDataMapper withOptions(TenantTableNames options);
 }

@@ -1,24 +1,27 @@
-package io.resys.thena.storesql.statement;
+package io.resys.thena.registry.org;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import io.resys.thena.api.entities.org.ImmutableOrgActorStatus;
 import io.resys.thena.api.entities.org.OrgActorStatus;
-import io.resys.thena.datasource.TenantTableNames;
+import io.resys.thena.api.registry.org.OrgActorStatusRegistry;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.ImmutableSqlTupleList;
-import io.resys.thena.datasource.SqlQueryBuilder.OrgActorStatusSqlBuilder;
 import io.resys.thena.datasource.SqlQueryBuilder.Sql;
 import io.resys.thena.datasource.SqlQueryBuilder.SqlTuple;
 import io.resys.thena.datasource.SqlQueryBuilder.SqlTupleList;
+import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.storesql.support.SqlStatement;
+import io.vertx.mutiny.sqlclient.Row;
 import io.vertx.mutiny.sqlclient.Tuple;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class OrgActorStatusSqlBuilderImpl implements OrgActorStatusSqlBuilder {
+public class OrgActorStatusRegistrySqlImpl implements OrgActorStatusRegistry {
   private final TenantTableNames options;
   
   @Override
@@ -155,4 +158,64 @@ public class OrgActorStatusSqlBuilderImpl implements OrgActorStatusSqlBuilder {
         .props(Tuple.of(partyId))
         .build();
   }
+  
+  @Override
+  public Function<Row, OrgActorStatus> defaultMapper() {
+    return OrgActorStatusRegistrySqlImpl::orgActorStatus;
+  }
+  private static OrgActorStatus orgActorStatus(Row row) {
+    final var actorStatus = row.getString("actor_status");
+    return ImmutableOrgActorStatus.builder()
+        .id(row.getString("id"))
+        .commitId(row.getString("commit_id"))
+        .memberId(row.getString("member_id"))
+        .rightId(row.getString("right_id"))
+        .partyId(row.getString("party_id"))
+        .value(actorStatus != null ? OrgActorStatus.OrgActorStatusType.valueOf(actorStatus) : null)
+        .build();
+  }
+
+  @Override
+  public Sql createTable() {
+    return ImmutableSql.builder().value(new SqlStatement().ln()
+    .append("CREATE TABLE ").append(options.getOrgActorStatus()).ln()
+    .append("(").ln()
+    .append("  id VARCHAR(40) PRIMARY KEY,").ln()
+    .append("  commit_id VARCHAR(40) NOT NULL,").ln()
+    .append("  member_id VARCHAR(40),").ln()
+    .append("  right_id VARCHAR(40),").ln()
+    .append("  party_id VARCHAR(40),").ln()
+    .append("  actor_status VARCHAR(100) NOT NULL,").ln() // visibility: in_force | archived 
+    .append("  UNIQUE NULLS NOT DISTINCT(member_id, right_id, party_id)").ln()
+    .append(");").ln()
+    
+    .append("CREATE INDEX ").append(options.getOrgActorStatus()).append("_COMMIT_INDEX")
+    .append(" ON ").append(options.getOrgActorStatus()).append(" (commit_id);").ln()
+
+    .append("CREATE INDEX ").append(options.getOrgActorStatus()).append("_RIGHT_INDEX")
+    .append(" ON ").append(options.getOrgActorStatus()).append(" (right_id);").ln()
+    
+    .append("CREATE INDEX ").append(options.getOrgActorStatus()).append("_MEMBER_INDEX")
+    .append(" ON ").append(options.getOrgActorStatus()).append(" (member_id);").ln()
+    
+    .append("CREATE INDEX ").append(options.getOrgActorStatus()).append("_PARTY_INDEX")
+    .append(" ON ").append(options.getOrgActorStatus()).append(" (party_id);").ln()
+    
+
+    .build()).build();
+  }
+
+  @Override
+  public Sql createConstraints() {
+    return ImmutableSql.builder().value("").build();
+  }
+
+  @Override
+  public Sql dropTable() {
+    return ImmutableSql.builder().value(new SqlStatement()
+        .append("DROP TABLE ").append(options.getOrgActorStatus()).append(";").ln()
+        .build()).build();
+  }
+
+
 }

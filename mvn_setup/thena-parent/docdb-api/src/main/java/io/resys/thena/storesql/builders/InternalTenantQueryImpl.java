@@ -85,6 +85,7 @@ public class InternalTenantQueryImpl implements InternalTenantQuery {
     final var next = dataSource.withTenant(newRepo);
     final var git = next.getRegistry().git();
     final var doc = next.getRegistry().doc();
+    final var org = next.getRegistry().org();
     final var sqlSchema = next.getSchema();
     final var sqlQuery = next.getQueryBuilder();
     final var pool = next.getPool();
@@ -111,23 +112,22 @@ public class InternalTenantQueryImpl implements InternalTenantQuery {
       } else if(newRepo.getType() == StructureType.org) {
         
         tablesCreate
-          .append(sqlSchema.createOrgRights().getValue())
-          .append(sqlSchema.createOrgParties().getValue())
-          .append(sqlSchema.createOrgPartyRights().getValue())
+          .append(org.orgRights().createTable().getValue())
+          .append(org.orgParties().createTable().getValue())
+          .append(org.orgPartyRights().createTable().getValue())
           
-          .append(sqlSchema.createOrgMembers().getValue())
-          .append(sqlSchema.createOrgMemberRights().getValue())
-          .append(sqlSchema.createOrgMemberships().getValue())
-          
+          .append(org.orgMembers().createTable().getValue())
+          .append(org.orgMemberRights().createTable().getValue())
+          .append(org.orgMemberships().createTable().getValue())
 
-          .append(sqlSchema.createOrgActorStatus().getValue())
-          .append(sqlSchema.createOrgCommits().getValue())
-          .append(sqlSchema.createOrgActorData().getValue())
+          .append(org.orgActorStatus().createTable().getValue())
+          .append(org.orgCommits().createTable().getValue())
+          .append(org.orgActorData().createTable().getValue())
           
-          .append(sqlSchema.createOrgRightsConstraints().getValue())
-          .append(sqlSchema.createOrgMemberConstraints().getValue())
-          .append(sqlSchema.createOrgPartyConstraints().getValue())
-          .append(sqlSchema.createOrgCommitConstraints().getValue())
+          .append(org.orgRights().createConstraints().getValue())
+          .append(org.orgMembers().createConstraints().getValue())
+          .append(org.orgParties().createConstraints().getValue())
+          .append(org.orgCommits().createConstraints().getValue())
           
           .toString();
         
@@ -195,7 +195,7 @@ public class InternalTenantQueryImpl implements InternalTenantQuery {
     final var next = dataSource.withTenant(newRepo);
     final var git = next.getRegistry().git();
     final var doc = next.getRegistry().doc();
-    final var sqlSchema = next.getSchema();
+    final var org = next.getRegistry().org();
     
     final var sqlQuery = next.getQueryBuilder();
     final var pool = next.getPool();
@@ -215,17 +215,20 @@ public class InternalTenantQueryImpl implements InternalTenantQuery {
       } else if(newRepo.getType() == StructureType.org) {
         
         tablesDrop
-        .append(sqlSchema.dropOrgRights().getValue())
-        .append(sqlSchema.dropOrgParties().getValue())
-        .append(sqlSchema.dropOrgPartyRights().getValue())
-
-        .append(sqlSchema.dropOrgMembers().getValue())
-        .append(sqlSchema.dropOrgMemberRights().getValue())
-        .append(sqlSchema.dropOrgMemberships().getValue())
+        .append(org.orgActorData().dropTable().getValue())
+        .append(org.orgActorStatus().dropTable().getValue())
         
-        .append(sqlSchema.dropOrgActorStatus().getValue())
-        .append(sqlSchema.dropOrgActorLogs().getValue())
-        .append(sqlSchema.dropOrgActorData().getValue());
+        .append(org.orgRights().dropTable().getValue())
+        .append(org.orgParties().dropTable().getValue())
+        .append(org.orgPartyRights().dropTable().getValue())
+
+        .append(org.orgMembers().dropTable().getValue())
+        .append(org.orgMemberRights().dropTable().getValue())
+        .append(org.orgMemberships().dropTable().getValue())
+        
+        .append(org.orgCommitTrees().dropTable().getValue())
+        .append(org.orgCommits().dropTable().getValue());
+        
         
       } else {
         tablesDrop

@@ -1,24 +1,27 @@
-package io.resys.thena.storesql.statement;
+package io.resys.thena.registry.org;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import io.resys.thena.api.entities.org.ImmutableOrgRight;
 import io.resys.thena.api.entities.org.OrgRight;
-import io.resys.thena.datasource.TenantTableNames;
+import io.resys.thena.api.registry.org.OrgRightRegistry;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.ImmutableSqlTupleList;
-import io.resys.thena.datasource.SqlQueryBuilder.OrgRightSqlBuilder;
 import io.resys.thena.datasource.SqlQueryBuilder.Sql;
 import io.resys.thena.datasource.SqlQueryBuilder.SqlTuple;
 import io.resys.thena.datasource.SqlQueryBuilder.SqlTupleList;
+import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.storesql.support.SqlStatement;
+import io.vertx.mutiny.sqlclient.Row;
 import io.vertx.mutiny.sqlclient.Tuple;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class OrgRightSqlBuilderImpl implements OrgRightSqlBuilder {
+public class OrgRightRegistrySqlImpl implements OrgRightRegistry {
   private final TenantTableNames options;
   
   @Override
@@ -112,4 +115,71 @@ public class OrgRightSqlBuilderImpl implements OrgRightSqlBuilder {
             .collect(Collectors.toList()))
         .build();
   }
+  
+  private static OrgRight orgRight(Row row) {
+    return ImmutableOrgRight.builder()
+        .id(row.getString("id"))
+        .externalId(row.getString("external_id"))
+        .rightName(row.getString("right_name"))
+        .rightDescription(row.getString("right_description"))
+        .commitId(row.getString("commit_id"))
+        .build();
+  }
+  @Override
+  public Function<Row, OrgRight> defaultMapper() {
+    return OrgRightRegistrySqlImpl::orgRight;
+  }
+  @Override
+  public Sql createTable() {
+    return ImmutableSql.builder().value(new SqlStatement().ln()
+    .append("CREATE TABLE ").append(options.getOrgRights()).ln()
+    .append("(").ln()
+    .append("  id VARCHAR(40) PRIMARY KEY,").ln()
+    .append("  commit_id VARCHAR(40) NOT NULL,").ln()
+    .append("  external_id VARCHAR(40) UNIQUE,").ln()
+    .append("  right_name VARCHAR(255) UNIQUE NOT NULL,").ln()
+    .append("  right_description VARCHAR(255) NOT NULL").ln()
+    .append(");").ln()
+    
+    
+    .append("CREATE INDEX ").append(options.getOrgRights()).append("_NAME_INDEX")
+    .append(" ON ").append(options.getOrgRights()).append(" (right_name);").ln()
+    
+    .append("CREATE INDEX ").append(options.getOrgRights()).append("_COMMIT_INDEX")
+    .append(" ON ").append(options.getOrgRights()).append(" (commit_id);").ln()
+    
+    .append("CREATE INDEX ").append(options.getOrgRights()).append("_EXTERNAL_INDEX")
+    .append(" ON ").append(options.getOrgRights()).append(" (external_id);").ln()
+    
+
+    .build()).build();
+  }
+
+  @Override
+  public Sql createConstraints() {
+    return ImmutableSql.builder().value(new SqlStatement()
+        .append(createOrgRoleFk(options.getOrgActorData())).ln()
+        .append(createOrgRoleFk(options.getOrgActorStatus())).ln()
+        
+        .append(createOrgRoleFk(options.getOrgMemberRights())).ln()
+        .append(createOrgRoleFk(options.getOrgPartyRights())).ln()
+        .build())
+        .build();
+  }
+
+  @Override
+  public Sql dropTable() {
+    return ImmutableSql.builder().value(new SqlStatement()
+        .append("DROP TABLE ").append(options.getOrgRights()).append(";").ln()
+        .build()).build();
+  }
+  private String createOrgRoleFk(String tableNameThatPointToCommits) {
+    return  new SqlStatement().ln()
+        .append("ALTER TABLE ").append(tableNameThatPointToCommits).ln()
+        .append("  ADD CONSTRAINT ").append(tableNameThatPointToCommits).append("_RIGHT_FK").ln()
+        .append("  FOREIGN KEY (right_id)").ln()
+        .append("  REFERENCES ").append(options.getOrgRights()).append(" (id);").ln().ln()
+        .build();
+  }
+
 }

@@ -4,8 +4,7 @@ import java.util.List;
 
 import io.resys.thena.api.LogConstants;
 import io.resys.thena.api.entities.org.OrgPartyRight;
-import io.resys.thena.datasource.SqlDataMapper;
-import io.resys.thena.datasource.SqlQueryBuilder;
+import io.resys.thena.api.registry.OrgRegistry;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlFailed;
@@ -20,25 +19,24 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j(topic = LogConstants.SHOW_SQL)
 public class OrgGroupRoleQuerySqlPool implements OrgQueries.PartyRightsQuery {
   private final ThenaSqlDataSource wrapper;
-  private final SqlDataMapper sqlMapper;
-  private final SqlQueryBuilder sqlBuilder;
+  private final OrgRegistry registry;
   private final ThenaSqlDataSourceErrorHandler errorHandler;
+  
   public OrgGroupRoleQuerySqlPool(ThenaSqlDataSource dataSource) {
     this.wrapper = dataSource;
-    this.sqlMapper = dataSource.getDataMapper();
-    this.sqlBuilder = dataSource.getQueryBuilder();
+    this.registry = dataSource.getRegistry().org();
     this.errorHandler = dataSource.getErrorHandler();
   }
   @Override
   public Multi<OrgPartyRight> findAll() {
-    final var sql = sqlBuilder.orgPartyRights().findAll();
+    final var sql = registry.orgPartyRights().findAll();
     if(log.isDebugEnabled()) {
       log.debug("GroupRole findAll query, with props: {} \r\n{}", 
           "",
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.orgPartyRright(row))
+        .mapping(registry.orgPartyRights().defaultMapper())
         .execute()
         .onItem()
         .transformToMulti((RowSet<OrgPartyRight> rowset) -> Multi.createFrom().iterable(rowset))
@@ -47,14 +45,14 @@ public class OrgGroupRoleQuerySqlPool implements OrgQueries.PartyRightsQuery {
   
   @Override
   public Multi<OrgPartyRight> findAll(List<String> id) {
-    final var sql = sqlBuilder.orgPartyRights().findAll(id);
+    final var sql = registry.orgPartyRights().findAll(id);
     if(log.isDebugEnabled()) {
       log.debug("GroupRole findAll query, with props: {} \r\n{}", 
           "",
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.orgPartyRright(row))
+        .mapping(registry.orgPartyRights().defaultMapper())
         .execute(sql.getProps())
         .onItem()
         .transformToMulti((RowSet<OrgPartyRight> rowset) -> Multi.createFrom().iterable(rowset))
@@ -63,14 +61,14 @@ public class OrgGroupRoleQuerySqlPool implements OrgQueries.PartyRightsQuery {
 
   @Override
   public Uni<OrgPartyRight> getById(String id) {
-    final var sql = sqlBuilder.orgPartyRights().getById(id);
+    final var sql = registry.orgPartyRights().getById(id);
     if(log.isDebugEnabled()) {
       log.debug("GroupRole byId query, with props: {} \r\n{}", 
           sql.getProps().deepToString(),
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.orgPartyRright(row))
+        .mapping(registry.orgPartyRights().defaultMapper())
         .execute(sql.getProps())
         .onItem()
         .transform((RowSet<OrgPartyRight> rowset) -> {
@@ -86,14 +84,14 @@ public class OrgGroupRoleQuerySqlPool implements OrgQueries.PartyRightsQuery {
 
 	@Override
 	public Multi<OrgPartyRight> findAllByPartyId(String id) {
-    final var sql = sqlBuilder.orgPartyRights().findAllByGroupId(id);
+    final var sql = registry.orgPartyRights().findAllByGroupId(id);
     if(log.isDebugEnabled()) {
       log.debug("GroupRole findAllByGroupId query, with props: {} \r\n{}", 
           "",
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.orgPartyRright(row))
+        .mapping(registry.orgPartyRights().defaultMapper())
         .execute(sql.getProps())
         .onItem()
         .transformToMulti((RowSet<OrgPartyRight> rowset) -> Multi.createFrom().iterable(rowset))
@@ -102,14 +100,14 @@ public class OrgGroupRoleQuerySqlPool implements OrgQueries.PartyRightsQuery {
 
 	@Override
 	public Multi<OrgPartyRight> findAllByRightId(String id) {
-    final var sql = sqlBuilder.orgPartyRights().findAllByRoleId(id);
+    final var sql = registry.orgPartyRights().findAllByRoleId(id);
     if(log.isDebugEnabled()) {
       log.debug("UserRole findAllByRoleId query, with props: {} \r\n{}", 
           "",
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.orgPartyRright(row))
+        .mapping(registry.orgPartyRights().defaultMapper())
         .execute(sql.getProps())
         .onItem()
         .transformToMulti((RowSet<OrgPartyRight> rowset) -> Multi.createFrom().iterable(rowset))
