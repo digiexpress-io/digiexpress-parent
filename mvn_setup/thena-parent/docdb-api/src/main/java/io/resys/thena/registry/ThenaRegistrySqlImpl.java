@@ -1,11 +1,11 @@
-package io.resys.thena.storesql;
+package io.resys.thena.registry;
 
 import io.resys.thena.api.registry.DocRegistry;
 import io.resys.thena.api.registry.GitRegistry;
 import io.resys.thena.api.registry.OrgRegistry;
 import io.resys.thena.api.registry.ThenaRegistry;
 import io.resys.thena.datasource.TenantTableNames;
-import io.resys.thena.storesql.registry.GitRegistrySqlImpl;
+import io.resys.thena.registry.git.GitRegistrySqlImpl;
 
 
 public class ThenaRegistrySqlImpl implements ThenaRegistry {

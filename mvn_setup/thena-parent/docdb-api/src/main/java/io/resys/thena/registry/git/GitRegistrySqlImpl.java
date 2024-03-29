@@ -1,4 +1,4 @@
-package io.resys.thena.storesql.registry;
+package io.resys.thena.registry.git;
 
 import io.resys.thena.api.registry.GitRegistry;
 import io.resys.thena.api.registry.git.BlobRegistry;

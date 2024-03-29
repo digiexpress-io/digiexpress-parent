@@ -31,8 +31,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import io.resys.thena.datasource.TenantTableNames;
+import io.resys.thena.registry.git.GitRegistrySqlImpl;
 import io.resys.thena.storesql.SqlSchemaImpl;
-import io.resys.thena.storesql.registry.GitRegistrySqlImpl;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

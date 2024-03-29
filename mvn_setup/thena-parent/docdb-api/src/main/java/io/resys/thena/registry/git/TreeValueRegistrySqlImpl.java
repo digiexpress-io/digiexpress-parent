@@ -1,4 +1,4 @@
-package io.resys.thena.storesql.registry;
+package io.resys.thena.registry.git;
 
 import java.util.function.Function;
 
