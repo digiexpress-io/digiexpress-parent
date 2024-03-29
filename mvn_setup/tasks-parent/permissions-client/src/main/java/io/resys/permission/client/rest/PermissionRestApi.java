@@ -45,10 +45,10 @@ public interface PermissionRestApi {
   Uni<Permission> updatePermission(@PathParam("permissionId") String permissionId, List<PermissionUpdateCommand> commands);
   
   @GET @Path("roles") @Produces(MediaType.APPLICATION_JSON)
-  Uni<List<Role>> findAllRoles(CreateRole role);
+  Uni<List<Role>> findAllRoles();
   
   @POST @Path("roles") @Produces(MediaType.APPLICATION_JSON)
-  Uni<Role> createRole();
+  Uni<Role> createRole(CreateRole command);
   
   @PUT @Path("roles/{roleId}") @Produces(MediaType.APPLICATION_JSON) @Consumes(MediaType.APPLICATION_JSON)
   Uni<Role> updateRole(@PathParam("roleId") String roleId, List<RoleUpdateCommand> commands);

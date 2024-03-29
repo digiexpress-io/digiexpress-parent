@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -16,8 +15,10 @@ import io.restassured.RestAssured;
 import io.resys.permission.client.api.model.ImmutableChangePermissionName;
 import io.resys.permission.client.api.model.ImmutableChangeRoleName;
 import io.resys.permission.client.api.model.ImmutableCreatePermission;
+import io.resys.permission.client.api.model.ImmutableCreateRole;
 import io.resys.permission.client.api.model.PermissionCommand.PermissionUpdateCommand;
 import io.resys.permission.client.api.model.Principal.Permission;
+import io.resys.permission.client.api.model.Principal.Role;
 import jakarta.inject.Inject;
 
 @QuarkusTest
@@ -87,28 +88,65 @@ public class RestApiTest {
       .when().put("/q/digiexpress/api/permissions/permissionId-1").then()
       .statusCode(200).contentType("application/json")
       .extract().as(Permission.class);
-    Assertions.assertEquals("permissionId-1", response.getId());
-    
+    Assertions.assertEquals("permissionId-1", response.getId()); 
   } 
   
-  @Disabled
+  @Test
+  public void findAllRoles() throws JsonProcessingException {
+    
+    final Role[] response = RestAssured.given().when()
+      .get("/q/digiexpress/api/roles").then()
+      .statusCode(200)
+      .contentType("application/json")
+      .extract().as(Role[].class);
+  
+    Assertions.assertEquals("roleId-1", response[0].getId());
+  }
+  
+  @Test
+  public void getOneRole() throws JsonProcessingException {
+    
+    final Role response = RestAssured.given()
+      .get("/q/digiexpress/api/roles/roleId-1").then()
+      .statusCode(200).contentType("application/json")
+      .extract().as(Role.class);
+  
+    Assertions.assertEquals("roleId-1", response.getId());
+  }
+  
   @Test
   public void updateOneRole() throws JsonProcessingException {    
 
     final var body = ImmutableChangeRoleName.builder()
-      .id("permissionId-1")
-      .name("Changed permission name")
-      .comment("updated permission name")
+      .id("roleId-1")
+      .name("Awesome role name")
+      .comment("User-updated role name")
       .build();
     
-  
-    final Permission response = RestAssured.given()
+    final Role response = RestAssured.given()
       .body(Arrays.asList(body, body)).accept("application/json").contentType("application/json")
-      .when().put("/q/digiexpress/api/roles/permissionId-1").then()
+      .when().put("/q/digiexpress/api/roles/roleId-1").then()
       .log().body()
       .statusCode(200).contentType("application/json")
-      .extract().as(Permission.class);
-    Assertions.assertEquals("permissionId-1", response.getId());
+      .extract().as(Role.class);
+    Assertions.assertEquals("roleId-1", response.getId());
+  }
+
+  @Test
+  public void postOneRole() throws JsonProcessingException {    
     
-  }  
+    final var body = ImmutableCreateRole.builder()
+      .name("ROLE ONE")
+      .description("my first role")
+      .comment("I created my first role")
+      .build();
+
+    final Role response = RestAssured.given()
+      .body(body).accept("application/json").contentType("application/json")
+      .when().post("/q/digiexpress/api/roles").then()
+      .statusCode(200).contentType("application/json")
+      .extract().as(Role.class);
+  
+    Assertions.assertEquals("roleId-1", response.getId());
+  }
 }

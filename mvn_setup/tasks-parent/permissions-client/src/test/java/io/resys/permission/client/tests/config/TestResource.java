@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import io.resys.permission.client.api.model.ImmutablePermission;
+import io.resys.permission.client.api.model.ImmutableRole;
 import io.resys.permission.client.api.model.PermissionCommand.CreatePermission;
 import io.resys.permission.client.api.model.PermissionCommand.PermissionUpdateCommand;
 import io.resys.permission.client.api.model.Principal;
@@ -28,6 +29,15 @@ public class TestResource implements PermissionRestApi {
       .description("desc")
       .status(OrgActorStatus.OrgActorStatusType.IN_FORCE)
       .id("permissionId-1")
+      .build();
+  
+  private final Role role = ImmutableRole.builder()
+      .name("test-role")
+      .version("1")
+      .description("role desc")
+      .parentId(null)
+      .status(OrgActorStatus.OrgActorStatusType.IN_FORCE)
+      .id("roleId-1")
       .build();
   
   @Override
@@ -67,27 +77,22 @@ public class TestResource implements PermissionRestApi {
   }
 
   @Override
-  public Uni<List<Role>> findAllRoles(CreateRole role) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public Uni<Role> createRole() {
-    // TODO Auto-generated method stub
-    return null;
+  public Uni<Role> createRole(CreateRole command) {
+    return Uni.createFrom().item(role);
   }
 
   @Override
   public Uni<Role> updateRole(String roleId, List<RoleUpdateCommand> commands) {
-    // TODO Auto-generated method stub
-    return null;
+    return Uni.createFrom().item(role);
   }
 
   @Override
   public Uni<Role> getRoleById(String roleId) {
-    // TODO Auto-generated method stub
-    return null;
+    return Uni.createFrom().item(role);
+  }
+  @Override
+  public Uni<List<Role>> findAllRoles() {
+    return Uni.createFrom().item(Arrays.asList(role));
   }
 
 }

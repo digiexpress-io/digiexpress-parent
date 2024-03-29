@@ -92,6 +92,8 @@ public interface RoleCommand extends Serializable {
   interface ChangeRoleName extends RoleUpdateCommand {
     String getId();
     String getName();
+    
+    @Value.Default
     @Override default RoleCommandType getCommandType() { return RoleCommandType.CHANGE_ROLE_NAME; }
   }
   
@@ -99,6 +101,7 @@ public interface RoleCommand extends Serializable {
   interface ChangeRoleDescription extends RoleUpdateCommand {
     String getDescription();
     
+    @Value.Default
     @Override default RoleCommandType getCommandType() { return RoleCommandType.CHANGE_ROLE_DESCRIPTION; }
   }
   
@@ -106,6 +109,7 @@ public interface RoleCommand extends Serializable {
   interface ChangeRoleStatus extends RoleUpdateCommand {
     OrgActorStatus.OrgActorStatusType getStatus();
     
+    @Value.Default
     @Override default RoleCommandType getCommandType() { return RoleCommandType.CHANGE_ROLE_STATUS; }
   }
   
@@ -113,6 +117,8 @@ public interface RoleCommand extends Serializable {
   interface ChangeRolePermissions extends RoleUpdateCommand {
     List<String> getPermissions();
     ChangeType getChangeType();
+    
+    @Value.Default
     @Override default RoleCommandType getCommandType() { return RoleCommandType.CHANGE_ROLE_PERMISSIONS; }
   }
   

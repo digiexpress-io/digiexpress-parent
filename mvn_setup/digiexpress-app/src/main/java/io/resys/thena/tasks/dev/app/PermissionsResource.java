@@ -67,37 +67,32 @@ public class PermissionsResource implements PermissionRestApi {
   }
 
   @Override
-  public Uni<List<Role>> findAllRoles(CreateRole role) {
-    // TODO Auto-generated method stub
-    return null;
+  public Uni<List<Role>> findAllRoles() {
+    return getClient().onItem().transformToUni(client -> client.roleQuery().findAllRoles());
   }
 
   @Override
-  public Uni<Role> createRole() {
-    // TODO Auto-generated method stub
-    return null;
+  public Uni<Role> createRole(CreateRole role) {
+    return getClient().onItem().transformToUni(client -> client.createRole().createOne(role));
   }
 
   @Override
   public Uni<Role> updateRole(String roleId, List<RoleUpdateCommand> commands) {
-    // TODO Auto-generated method stub
-    return null;
+    return getClient().onItem().transformToUni(client -> client.updateRole().updateOne(commands));
   }
 
   @Override
   public Uni<Role> getRoleById(String roleId) {
-    // TODO Auto-generated method stub
-    return null;
+    return getClient().onItem().transformToUni(client -> client.roleQuery().get(roleId));
   }
   
   private Uni<PermissionClient> getClient() {
-    //    return getClient().onItem().transformToUni(client -> client.tasks().updateTask().updateOne(modifiedCommands));
     return getPermissionConfig().onItem().transform(config -> permissions.withRepoId(config.getRepoId()));
   }
   
   private Uni<TenantRepoConfig> getPermissionConfig() {
     return tenantClient.queryActiveTenantConfig().get(currentTenant.tenantId())
-        .onItem().transform(config -> config.getRepoConfig(TenantRepoConfigType.PERMISSIONS));
+      .onItem().transform(config -> config.getRepoConfig(TenantRepoConfigType.PERMISSIONS));
   }
 
 }
