@@ -2,8 +2,7 @@ package io.resys.thena.storesql.builders;
 
 import io.resys.thena.api.LogConstants;
 import io.resys.thena.api.entities.git.Tag;
-import io.resys.thena.datasource.SqlDataMapper;
-import io.resys.thena.datasource.SqlQueryBuilder;
+import io.resys.thena.api.registry.GitRegistry;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlFailed;
@@ -22,16 +21,14 @@ import lombok.extern.slf4j.Slf4j;
 public class GitTagQuerySqlPool implements GitTagQuery {
   
   private final ThenaSqlDataSource wrapper;
-  private final SqlDataMapper sqlMapper;
-  private final SqlQueryBuilder sqlBuilder;
+  private final GitRegistry registry;
   private final ThenaSqlDataSourceErrorHandler errorHandler;
 
   private String name;
 
   public GitTagQuerySqlPool(ThenaSqlDataSource dataSource) {
     this.wrapper = dataSource;
-    this.sqlMapper = dataSource.getDataMapper();
-    this.sqlBuilder = dataSource.getQueryBuilder();
+    this.registry = dataSource.getRegistry().git();
     this.errorHandler = dataSource.getErrorHandler();
   }
   
@@ -42,7 +39,7 @@ public class GitTagQuerySqlPool implements GitTagQuery {
   }
   @Override
   public Uni<DeleteResult> delete() {
-    final var sql = sqlBuilder.tags().deleteByName(name);
+    final var sql = registry.tags().deleteByName(name);
     if(log.isDebugEnabled()) {
       log.debug("Tag delete query, with props: {} \r\n{}", 
           sql.getProps().deepToString(),
@@ -56,14 +53,14 @@ public class GitTagQuerySqlPool implements GitTagQuery {
   }
   @Override
   public Uni<Tag> getFirst() {
-    final var sql = sqlBuilder.tags().getFirst();
+    final var sql = registry.tags().getFirst();
     if(log.isDebugEnabled()) {
       log.debug("Tag getFirst query, with props: {} \r\n{}", 
           "",
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.tag(row))
+        .mapping(registry.tags().defaultMapper())
         .execute()
         .onItem()
         .transform((RowSet<Tag> rowset) -> {
@@ -78,20 +75,20 @@ public class GitTagQuerySqlPool implements GitTagQuery {
   @Override
   public Multi<Tag> find() {
     if(name == null || name.isBlank()) {
-      final var sql = sqlBuilder.tags().findAll();
+      final var sql = registry.tags().findAll();
       if(log.isDebugEnabled()) {
         log.debug("Tag findAll query, with props: {} \r\n{}", 
             "",
             sql.getValue());
       }
       return wrapper.getClient().preparedQuery(sql.getValue())
-          .mapping(row -> sqlMapper.tag(row))
+          .mapping(registry.tags().defaultMapper())
           .execute()
           .onItem()
           .transformToMulti((RowSet<Tag> rowset) -> Multi.createFrom().iterable(rowset))
           .onFailure().invoke(e -> errorHandler.deadEnd(new SqlFailed("Can't find 'TAG'!", sql, e)));      
     }
-    final var sql = sqlBuilder.tags().getByName(name);
+    final var sql = registry.tags().getByName(name);
     
     if(log.isDebugEnabled()) {
       log.debug("Tag getByName query, with props: {} \r\n{}", 
@@ -99,7 +96,7 @@ public class GitTagQuerySqlPool implements GitTagQuery {
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.tag(row))
+        .mapping(registry.tags().defaultMapper())
         .execute(sql.getProps())
         .onItem()
         .transformToMulti((RowSet<Tag> rowset) -> Multi.createFrom().iterable(rowset))

@@ -6,10 +6,11 @@ import java.util.function.Function;
 import io.resys.thena.api.ThenaClient;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.exceptions.RepoException;
-import io.resys.thena.datasource.TenantTableNames;
+import io.resys.thena.api.registry.ThenaRegistry;
 import io.resys.thena.datasource.SqlDataMapper;
 import io.resys.thena.datasource.SqlQueryBuilder;
 import io.resys.thena.datasource.SqlSchema;
+import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.datasource.ThenaDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
@@ -107,7 +108,8 @@ public class DbStateSqlImpl implements DbState {
         Optional.empty(),
         Builder.defaultSqlSchema(names), 
         Builder.defaultSqlMapper(names), 
-        Builder.defaultSqlBuilder(names)
+        Builder.defaultSqlBuilder(names),
+        Builder.defaultRegistry(names)
     );
     return new DbStateSqlImpl(dataSource);
   }
@@ -123,10 +125,12 @@ public class DbStateSqlImpl implements DbState {
     private Function<TenantTableNames, SqlSchema> sqlSchema; 
     private Function<TenantTableNames, SqlDataMapper> sqlMapper;
     private Function<TenantTableNames, SqlQueryBuilder> sqlBuilder;
+    private Function<TenantTableNames, ThenaRegistry> registry;
     
     public Builder sqlMapper(Function<TenantTableNames, SqlDataMapper> sqlMapper) {this.sqlMapper = sqlMapper; return this; }
     public Builder sqlBuilder(Function<TenantTableNames, SqlQueryBuilder> sqlBuilder) {this.sqlBuilder = sqlBuilder; return this; }
     public Builder sqlSchema(Function<TenantTableNames, SqlSchema> sqlSchema) {this.sqlSchema = sqlSchema; return this; }
+    public Builder registry(Function<TenantTableNames, ThenaRegistry> registry) {this.registry = registry; return this; }
     
     public Builder errorHandler(ThenaSqlDataSourceErrorHandler errorHandler) {this.errorHandler = errorHandler; return this; }
     public Builder db(String db) { this.db = db; return this; }
@@ -135,6 +139,7 @@ public class DbStateSqlImpl implements DbState {
     public static SqlQueryBuilder defaultSqlBuilder(TenantTableNames ctx) { return new SqlBuilderImpl(ctx); }
     public static SqlDataMapper defaultSqlMapper(TenantTableNames ctx) { return new SqlMapperImpl(ctx); }
     public static SqlSchema defaultSqlSchema(TenantTableNames ctx) { return new SqlSchemaImpl(ctx); }
+    public static ThenaRegistry defaultRegistry(TenantTableNames ctx) { return new ThenaRegistrySqlImpl(ctx); }
     
     public ThenaClient build() {
       RepoAssert.notNull(client, () -> "client must be defined!");
@@ -147,6 +152,8 @@ public class DbStateSqlImpl implements DbState {
       final Function<TenantTableNames, SqlSchema> sqlSchema = this.sqlSchema == null ? Builder::defaultSqlSchema : this.sqlSchema;
       final Function<TenantTableNames, SqlDataMapper> sqlMapper = this.sqlMapper == null ? Builder::defaultSqlMapper : this.sqlMapper;
       final Function<TenantTableNames, SqlQueryBuilder> sqlBuilder = this.sqlBuilder == null ? Builder::defaultSqlBuilder : this.sqlBuilder;
+      
+      final Function<TenantTableNames, ThenaRegistry> registry = this.registry == null ? Builder::defaultRegistry : this.registry;
       final var pool = new ThenaSqlPoolVertx(client);
       
       final var dataSource = new ThenaSqlDataSourceImpl(
@@ -154,7 +161,8 @@ public class DbStateSqlImpl implements DbState {
           Optional.empty(),
           sqlSchema.apply(ctx), 
           sqlMapper.apply(ctx), 
-          sqlBuilder.apply(ctx)
+          sqlBuilder.apply(ctx),
+          registry.apply(ctx)
       );
       
       final var state = new DbStateSqlImpl(dataSource);

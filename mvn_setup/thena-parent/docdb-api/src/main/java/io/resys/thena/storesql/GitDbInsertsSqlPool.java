@@ -1,13 +1,13 @@
 package io.resys.thena.storesql;
 
+
 import io.resys.thena.api.entities.git.Blob;
 import io.resys.thena.api.entities.git.Branch;
 import io.resys.thena.api.entities.git.Commit;
 import io.resys.thena.api.entities.git.Tag;
 import io.resys.thena.api.entities.git.Tree;
 import io.resys.thena.api.envelope.ImmutableMessage;
-import io.resys.thena.datasource.SqlDataMapper;
-import io.resys.thena.datasource.SqlQueryBuilder;
+import io.resys.thena.api.registry.GitRegistry;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlTupleFailed;
@@ -24,20 +24,18 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class GitDbInsertsSqlPool implements GitInserts {
   private final ThenaSqlDataSource wrapper;
-  private final SqlDataMapper sqlMapper;
-  private final SqlQueryBuilder sqlBuilder;
+  private final GitRegistry registry;
   private final ThenaSqlDataSourceErrorHandler errorHandler;
   
   public GitDbInsertsSqlPool(ThenaSqlDataSource dataSource) {
     this.wrapper = dataSource;
-    this.sqlMapper = dataSource.getDataMapper();
-    this.sqlBuilder = dataSource.getQueryBuilder();
+    this.registry = dataSource.getRegistry().git();
     this.errorHandler = dataSource.getErrorHandler();
   }
 
   @Override
   public Uni<InsertResult> tag(Tag tag) {
-    final var tagInsert = sqlBuilder.tags().insertOne(tag);
+    final var tagInsert = registry.tags().insertOne(tag);
     return wrapper.getClient().preparedQuery(tagInsert.getValue()).execute(tagInsert.getProps())
         .onItem().transform(inserted -> (InsertResult) ImmutableInsertResult.builder().duplicate(false).build())
         .onFailure(e -> errorHandler.duplicate(e))
@@ -47,7 +45,7 @@ public class GitDbInsertsSqlPool implements GitInserts {
 
   @Override
   public Uni<UpsertResult> blob(Blob blob) {
-    final var blobsInsert = sqlBuilder.blobs().insertOne(blob);
+    final var blobsInsert = registry.blobs().insertOne(blob);
     
     return wrapper.getClient().preparedQuery(blobsInsert.getValue()).execute(blobsInsert.getProps())
         .onItem()
@@ -83,9 +81,9 @@ public class GitDbInsertsSqlPool implements GitInserts {
   }
 
   public Uni<UpsertResult> ref(Branch ref, Commit commit) {
-    final var findByName = sqlBuilder.refs().getByName(ref.getName());
+    final var findByName = registry.branches().getByName(ref.getName());
     return wrapper.getClient().preparedQuery(findByName.getValue())
-        .mapping(r -> sqlMapper.ref(r))
+        .mapping(registry.branches().defaultMapper())
         .execute(findByName.getProps())
     .onItem().transformToUni(item -> {
       final var exists = item.iterator();
@@ -99,7 +97,7 @@ public class GitDbInsertsSqlPool implements GitInserts {
   
   
   public Uni<UpsertResult> updateRef(Branch ref, Commit commit) {
-    final var refInsert = sqlBuilder.refs().updateOne(ref, commit);
+    final var refInsert = registry.branches().updateOne(ref, commit);
     return wrapper.getClient().preparedQuery(refInsert.getValue()).execute(refInsert.getProps())
         .onItem()
         .transform(updateResult -> {
@@ -138,7 +136,7 @@ public class GitDbInsertsSqlPool implements GitInserts {
   
   
   private Uni<UpsertResult> createRef(Branch ref, Commit commit) {
-    final var refsInsert = sqlBuilder.refs().insertOne(ref);
+    final var refsInsert = registry.branches().insertOne(ref);
     return wrapper.getClient().preparedQuery(refsInsert.getValue()).execute(refsInsert.getProps())
         .onItem()
         .transform(updateResult -> (UpsertResult) ImmutableUpsertResult.builder()
@@ -174,8 +172,8 @@ public class GitDbInsertsSqlPool implements GitInserts {
 
   @Override
   public Uni<UpsertResult> tree(Tree tree) {
-    final var treeInsert = sqlBuilder.trees().insertOne(tree);
-    final var treeValueInsert = sqlBuilder.treeItems().insertAll(tree);
+    final var treeInsert = registry.trees().insertOne(tree);
+    final var treeValueInsert = registry.treeValues().insertAll(tree);
     
     RepoAssert.isTrue(this.wrapper.getTx().isPresent(), () -> "Transaction must be started!");
     final var tx = wrapper.getClient();
@@ -221,7 +219,7 @@ public class GitDbInsertsSqlPool implements GitInserts {
   
   @Override
   public Uni<UpsertResult> commit(Commit commit) {
-    final var commitsInsert = sqlBuilder.commits().insertOne(commit);
+    final var commitsInsert = registry.commits().insertOne(commit);
     return wrapper.getClient().preparedQuery(commitsInsert.getValue()).execute(commitsInsert.getProps())
         .onItem()
         .transform(updateResult -> (UpsertResult) ImmutableUpsertResult.builder()
@@ -258,10 +256,10 @@ public class GitDbInsertsSqlPool implements GitInserts {
   
   @Override
   public Uni<GitBatch> batch(GitBatch output) {    
-    final var blobsInsert = sqlBuilder.blobs().insertAll(output.getBlobs());
-    final var treeInsert = sqlBuilder.trees().insertOne(output.getTree());
-    final var treeValueInsert = sqlBuilder.treeItems().insertAll(output.getTree());
-    final var commitsInsert = sqlBuilder.commits().insertOne(output.getCommit());
+    final var blobsInsert = registry.blobs().insertAll(output.getBlobs());
+    final var treeInsert = registry.trees().insertOne(output.getTree());
+    final var treeValueInsert = registry.treeValues().insertAll(output.getTree());
+    final var commitsInsert = registry.commits().insertOne(output.getCommit());
     
     RepoAssert.isTrue(this.wrapper.getTx().isPresent(), () -> "Transaction must be started!");
     final var tx = wrapper.getClient();    
@@ -303,11 +301,11 @@ public class GitDbInsertsSqlPool implements GitInserts {
     
     final Uni<GitBatch> refUni;
     if(refExists) {
-      refUni = Execute.apply(tx, sqlBuilder.refs().updateOne(output.getRef().getRef(), output.getCommit()))
+      refUni = Execute.apply(tx, registry.branches().updateOne(output.getRef().getRef(), output.getCommit()))
           .onItem().transform(row -> successOutput(output, "Existing ref: " + ref.getName() + ", updated with commit: " + ref.getCommit()))
           .onFailure().recoverWithItem(e -> failOutput(output, "Failed to update ref", e));
     } else {
-      refUni = Execute.apply(tx, sqlBuilder.refs().insertOne(output.getRef().getRef()))
+      refUni = Execute.apply(tx, registry.branches().insertOne(output.getRef().getRef()))
           .onItem().transform(row -> successOutput(output, "New ref created: " + ref.getName() + ": " + ref.getCommit()))
           .onFailure().recoverWithItem(e -> failOutput(output, "Failed to create ref", e));
         

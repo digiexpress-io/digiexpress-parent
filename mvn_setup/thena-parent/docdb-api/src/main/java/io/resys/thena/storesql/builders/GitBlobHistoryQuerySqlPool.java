@@ -51,9 +51,11 @@ public class GitBlobHistoryQuerySqlPool implements GitBlobHistoryQuery {
   
   @Override
   public Multi<BlobHistory> find() {
-    final var sql = context.getQueryBuilder().blobs().find(name, latestOnly, criteria);
+    final var registry = context.getRegistry().git().blobs();
+    
+    final var sql = registry.find(name, latestOnly, criteria);
     final var stream = context.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> context.getDataMapper().blobHistory(row));
+        .mapping(registry.historyMapper());
     
     if(log.isDebugEnabled()) {
       log.debug("Blob history query, with props: {} \r\n{}", 

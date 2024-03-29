@@ -1,18 +1,22 @@
-package io.resys.thena.storesql.statement;
+package io.resys.thena.storesql.registry;
 
+import java.util.function.Function;
+
+import io.resys.thena.api.entities.git.ImmutableTree;
 import io.resys.thena.api.entities.git.Tree;
-import io.resys.thena.datasource.TenantTableNames;
+import io.resys.thena.api.registry.git.TreeRegistry;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
-import io.resys.thena.datasource.SqlQueryBuilder.GitTreeSqlBuilder;
 import io.resys.thena.datasource.SqlQueryBuilder.Sql;
 import io.resys.thena.datasource.SqlQueryBuilder.SqlTuple;
+import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.storesql.support.SqlStatement;
+import io.vertx.mutiny.sqlclient.Row;
 import io.vertx.mutiny.sqlclient.Tuple;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class GitTreeSqlBuilderImpl implements GitTreeSqlBuilder {
+public class TreeRegistrySqlImpl implements TreeRegistry {
   private final TenantTableNames options;
   
   @Override
@@ -44,5 +48,31 @@ public class GitTreeSqlBuilderImpl implements GitTreeSqlBuilder {
         .build())
         .props(Tuple.of(tree.getId()))
         .build();
+  }
+  @Override
+  public Function<Row, Tree> defaultMapper() {
+    return TreeRegistrySqlImpl::tree;
+  }
+  private static Tree tree(Row row) {
+    return ImmutableTree.builder().id(row.getString("id")).build();
+  }
+  @Override
+  public Sql createTable() {
+    return ImmutableSql.builder().value(new SqlStatement().ln()
+    .append("CREATE TABLE ").append(options.getTrees()).ln()
+    .append("(").ln()
+    .append("  id VARCHAR(40) PRIMARY KEY").ln()
+    .append(");").ln()
+    .build()).build();
+  }
+  @Override
+  public Sql createConstraints() {
+    return ImmutableSql.builder().value("").build();
+  }
+  @Override
+  public Sql dropTable() {
+    return ImmutableSql.builder().value(new SqlStatement()
+        .append("DROP TABLE ").append(options.getTrees()).append(";").ln()
+        .build()).build();
   }
 }

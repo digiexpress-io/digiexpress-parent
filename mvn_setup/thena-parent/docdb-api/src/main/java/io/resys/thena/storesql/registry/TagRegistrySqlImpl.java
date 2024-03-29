@@ -1,18 +1,23 @@
-package io.resys.thena.storesql.statement;
+package io.resys.thena.storesql.registry;
 
+import java.time.LocalDateTime;
+import java.util.function.Function;
+
+import io.resys.thena.api.entities.git.ImmutableTag;
 import io.resys.thena.api.entities.git.Tag;
-import io.resys.thena.datasource.TenantTableNames;
+import io.resys.thena.api.registry.git.TagRegistry;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
-import io.resys.thena.datasource.SqlQueryBuilder.GitTagSqlBuilder;
 import io.resys.thena.datasource.SqlQueryBuilder.Sql;
 import io.resys.thena.datasource.SqlQueryBuilder.SqlTuple;
+import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.storesql.support.SqlStatement;
+import io.vertx.mutiny.sqlclient.Row;
 import io.vertx.mutiny.sqlclient.Tuple;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class GitTagSqlBuilderImpl implements GitTagSqlBuilder {
+public class TagRegistrySqlImpl implements TagRegistry {
   
   private final TenantTableNames options;
   
@@ -23,6 +28,11 @@ public class GitTagSqlBuilderImpl implements GitTagSqlBuilder {
         .append("SELECT * FROM ").append(options.getTags())
         .build())
         .build();
+  }
+
+  @Override
+  public SqlTuple getById(String id) {
+    return getByName(id);
   }
   @Override
   public SqlTuple getByName(String name) {
@@ -63,5 +73,49 @@ public class GitTagSqlBuilderImpl implements GitTagSqlBuilder {
         .build())
         .props(Tuple.of(newTag.getName(), newTag.getCommit(), newTag.getDateTime().toString(), newTag.getAuthor(), newTag.getMessage()))
         .build();
+  }
+  
+  @Override
+  public Function<Row, Tag> defaultMapper() {
+    return TagRegistrySqlImpl::tag;
+  }
+  private static Tag tag(Row row) {
+    return ImmutableTag.builder()
+        .author(row.getString("author"))
+        .dateTime(LocalDateTime.parse(row.getString("datetime")))
+        .message(row.getString("message"))
+        .commit(row.getString("commit"))
+        .name(row.getString("id"))
+        .build();
+  }
+  @Override
+  public Sql createTable() {
+    return ImmutableSql.builder().value(new SqlStatement().ln()
+      .append("CREATE TABLE ").append(options.getTags()).ln()
+      .append("(").ln()
+      .append("  id VARCHAR(40) PRIMARY KEY,").ln()
+      .append("  commit VARCHAR(40) NOT NULL,").ln()
+      .append("  datetime VARCHAR(29) NOT NULL,").ln()
+      .append("  author VARCHAR(40) NOT NULL,").ln()
+      .append("  message VARCHAR(100) NOT NULL").ln()
+      .append(");").ln()
+      .build())
+      .build();
+  }
+  @Override
+  public Sql createConstraints() {
+    return ImmutableSql.builder()
+        .value(new SqlStatement().ln()
+        .append("ALTER TABLE ").append(options.getTags()).ln()
+        .append("  ADD CONSTRAINT ").append(options.getTags()).append("_TAG_COMMIT_FK").ln()
+        .append("  FOREIGN KEY (commit)").ln()
+        .append("  REFERENCES ").append(options.getCommits()).append(" (id);").ln()
+        .build())
+        .build();
+  }
+  @Override
+  public Sql dropTable() {
+    // TODO Auto-generated method stub
+    return null;
   }
 }

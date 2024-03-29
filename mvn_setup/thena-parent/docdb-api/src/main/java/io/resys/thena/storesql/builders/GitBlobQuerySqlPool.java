@@ -26,8 +26,7 @@ import java.util.List;
 import io.resys.thena.api.LogConstants;
 import io.resys.thena.api.actions.GitPullActions.MatchCriteria;
 import io.resys.thena.api.entities.git.Blob;
-import io.resys.thena.datasource.SqlDataMapper;
-import io.resys.thena.datasource.SqlQueryBuilder;
+import io.resys.thena.api.registry.git.BlobRegistry;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlFailed;
@@ -43,20 +42,20 @@ import lombok.extern.slf4j.Slf4j;
 public class GitBlobQuerySqlPool implements GitBlobQuery {
 
   private final ThenaSqlDataSource wrapper;
-  private final SqlDataMapper sqlMapper;
-  private final SqlQueryBuilder sqlBuilder;
+  private final BlobRegistry registry;
   private final ThenaSqlDataSourceErrorHandler errorHandler;
   
   public GitBlobQuerySqlPool(ThenaSqlDataSource dataSource) {
     this.wrapper = dataSource;
-    this.sqlMapper = dataSource.getDataMapper();
-    this.sqlBuilder = dataSource.getQueryBuilder();
+    this.registry = dataSource.getRegistry().git().blobs();
     this.errorHandler = dataSource.getErrorHandler();
   }
   
   @Override
   public Uni<Blob> getById(String blobId) {
-    final var sql = sqlBuilder.blobs().getById(blobId);
+
+    
+    final var sql = registry.getById(blobId);
     if(log.isDebugEnabled()) {
       log.debug("Blob: {} get byId query, with props: {} \r\n{}",
           GitBlobQuerySqlPool.class,
@@ -64,7 +63,7 @@ public class GitBlobQuerySqlPool implements GitBlobQuery {
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.blob(row))
+        .mapping(registry.defaultMapper())
         .execute(sql.getProps())
         .onItem()
         .transform((RowSet<Blob> rowset) -> {
@@ -79,14 +78,14 @@ public class GitBlobQuerySqlPool implements GitBlobQuery {
   }
   @Override
   public Multi<Blob> findAll() {
-    final var sql = sqlBuilder.blobs().findAll();
+    final var sql = registry.findAll();
     if(log.isDebugEnabled()) {
       log.debug("Blob findAll query, with props: {} \r\n{}", 
           "", 
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.blob(row))
+        .mapping(registry.defaultMapper())
         .execute()
         .onItem()
         .transformToMulti((RowSet<Blob> rowset) -> Multi.createFrom().iterable(rowset))
@@ -94,7 +93,7 @@ public class GitBlobQuerySqlPool implements GitBlobQuery {
   }
   @Override
   public Multi<Blob> findAll(String treeId, List<MatchCriteria> criteria) {
-    final var sql = sqlBuilder.blobs().findByTree(treeId, criteria);
+    final var sql = registry.findByTree(treeId, criteria);
     if(log.isDebugEnabled()) {
       log.debug("Blob: {} findByTreeId query, with props: {} \r\n{}",
           GitBlobQuerySqlPool.class,
@@ -102,7 +101,7 @@ public class GitBlobQuerySqlPool implements GitBlobQuery {
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.blob(row))
+        .mapping(registry.defaultMapper())
         .execute(sql.getProps())
         .onItem()
         .transformToMulti((RowSet<Blob> rowset) -> Multi.createFrom().iterable(rowset))
@@ -112,7 +111,7 @@ public class GitBlobQuerySqlPool implements GitBlobQuery {
   public Multi<Blob> findAll(String treeId, List<String> docIds, List<MatchCriteria> criteria) {
     RepoAssert.isTrue(!docIds.isEmpty(), () -> "docIds is not defined!");
     
-    final var sql = sqlBuilder.blobs().findByTree(treeId, docIds, criteria);
+    final var sql = registry.findByTree(treeId, docIds, criteria);
     if(log.isDebugEnabled()) {
       log.debug("Blob: {} findByTreeId query, with props: {} \r\n{}",
           GitBlobQuerySqlPool.class,
@@ -120,7 +119,7 @@ public class GitBlobQuerySqlPool implements GitBlobQuery {
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.blob(row))
+        .mapping(registry.defaultMapper())
         .execute(sql.getProps())
         .onItem()
         .transformToMulti((RowSet<Blob> rowset) -> Multi.createFrom().iterable(rowset))
@@ -128,14 +127,14 @@ public class GitBlobQuerySqlPool implements GitBlobQuery {
   }
   
   public Uni<List<Blob>> findById(List<String> blobId) {
-    final var sql = sqlBuilder.blobs().findByIds(blobId);
+    final var sql = registry.findByIds(blobId);
     if(log.isDebugEnabled()) {
       log.debug("Blob findById query, with props: {} \r\n{}", 
           sql.getProps().deepToString(), 
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.blob(row))
+        .mapping(registry.defaultMapper())
         .execute(sql.getProps())
         .onItem()
         .transform((RowSet<Blob> rowset) -> {

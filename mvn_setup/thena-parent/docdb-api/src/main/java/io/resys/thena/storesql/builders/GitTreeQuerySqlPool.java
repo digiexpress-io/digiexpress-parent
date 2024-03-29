@@ -4,8 +4,7 @@ import io.resys.thena.api.LogConstants;
 import io.resys.thena.api.entities.git.ImmutableTree;
 import io.resys.thena.api.entities.git.Tree;
 import io.resys.thena.api.entities.git.TreeValue;
-import io.resys.thena.datasource.SqlDataMapper;
-import io.resys.thena.datasource.SqlQueryBuilder;
+import io.resys.thena.api.registry.GitRegistry;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlFailed;
@@ -20,20 +19,18 @@ import lombok.extern.slf4j.Slf4j;
 public class GitTreeQuerySqlPool implements GitTreeQuery {
 
   private final ThenaSqlDataSource wrapper;
-  private final SqlDataMapper sqlMapper;
-  private final SqlQueryBuilder sqlBuilder;
+  private final GitRegistry registry;
   private final ThenaSqlDataSourceErrorHandler errorHandler;
   
   public GitTreeQuerySqlPool(ThenaSqlDataSource dataSource) {
     this.wrapper = dataSource;
-    this.sqlMapper = dataSource.getDataMapper();
-    this.sqlBuilder = dataSource.getQueryBuilder();
+    this.registry = dataSource.getRegistry().git();
     this.errorHandler = dataSource.getErrorHandler();
   }
   
   @Override
   public Uni<Tree> getById(String tree) {
-    final var sql = sqlBuilder.treeItems().getByTreeId(tree);
+    final var sql = registry.treeValues().getByTreeId(tree);
     if(log.isDebugEnabled()) {
       log.debug("Tree: {} getById query, with props: {} \r\n{}",
           GitTreeQuerySqlPool.class,
@@ -41,7 +38,7 @@ public class GitTreeQuerySqlPool implements GitTreeQuery {
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.treeItem(row))
+        .mapping(registry.treeValues().defaultMapper())
         .execute(sql.getProps())
         .onItem()
         .transform((RowSet<TreeValue> rowset) -> {
@@ -57,7 +54,7 @@ public class GitTreeQuerySqlPool implements GitTreeQuery {
   }
   @Override
   public Multi<Tree> findAll() {
-    final var sql = sqlBuilder.trees().findAll();
+    final var sql = registry.trees().findAll();
     if(log.isDebugEnabled()) {
       log.debug("Tree: {} findAll query, with props: {} \r\n{}", 
           GitTreeQuerySqlPool.class,
@@ -65,7 +62,7 @@ public class GitTreeQuerySqlPool implements GitTreeQuery {
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.tree(row))
+        .mapping(registry.trees().defaultMapper())
         .execute()
         .onItem()
         .transformToMulti((RowSet<Tree> rowset) -> Multi.createFrom().iterable(rowset))

@@ -1,19 +1,23 @@
-package io.resys.thena.storesql.statement;
+package io.resys.thena.storesql.registry;
+
+import java.util.function.Function;
 
 import io.resys.thena.api.entities.git.Branch;
 import io.resys.thena.api.entities.git.Commit;
-import io.resys.thena.datasource.TenantTableNames;
+import io.resys.thena.api.entities.git.ImmutableBranch;
+import io.resys.thena.api.registry.git.BranchRegistry;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
-import io.resys.thena.datasource.SqlQueryBuilder.GitRefSqlBuilder;
 import io.resys.thena.datasource.SqlQueryBuilder.Sql;
 import io.resys.thena.datasource.SqlQueryBuilder.SqlTuple;
+import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.storesql.support.SqlStatement;
+import io.vertx.mutiny.sqlclient.Row;
 import io.vertx.mutiny.sqlclient.Tuple;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class GitRefSqlBuilderImpl implements GitRefSqlBuilder {
+public class BranchRegistrySqlImpl implements BranchRegistry {
   private final TenantTableNames options;
 
   @Override
@@ -80,5 +84,56 @@ public class GitRefSqlBuilderImpl implements GitRefSqlBuilder {
         .props(Tuple.of(ref.getCommit(), ref.getName(), commit.getParent().get()))
         .build();
   }
-  
+
+  @Override
+  public SqlTuple getById(String id) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT * FROM ").append(options.getRefs())
+        .append(" WHERE id = $1 OR name = $1")
+        .append(" FETCH FIRST ROW ONLY")
+        .build())
+        .props(Tuple.of(id))
+        .build();
+  }
+
+  @Override
+  public Function<Row, Branch> defaultMapper() {
+    return BranchRegistrySqlImpl::ref;
+  }
+  private static Branch ref(Row row) {
+    return ImmutableBranch.builder()
+        .name(row.getString("name"))
+        .commit(row.getString("commit"))
+        .build();
+  }
+  @Override
+  public Sql createTable() {
+    return ImmutableSql.builder().value(new SqlStatement().ln()
+    .append("CREATE TABLE ").append(options.getRefs()).ln()
+    .append("(").ln()
+    .append("  name VARCHAR(100) PRIMARY KEY,").ln()
+    .append("  commit VARCHAR(40) NOT NULL").ln()
+    .append(");").ln()
+    .build()).build();
+  }
+
+  @Override
+  public Sql createConstraints() {
+    return ImmutableSql.builder()
+        .value(new SqlStatement().ln()
+        .append("ALTER TABLE ").append(options.getRefs()).ln()
+        .append("  ADD CONSTRAINT ").append(options.getRefs()).append("_REF_COMMIT_FK").ln()
+        .append("  FOREIGN KEY (commit)").ln()
+        .append("  REFERENCES ").append(options.getCommits()).append(" (id);").ln()
+        .build())
+        .build();
+  }
+
+  @Override
+  public Sql dropTable() {
+    return ImmutableSql.builder().value(new SqlStatement()
+        .append("DROP TABLE ").append(options.getRefs()).append(";").ln()
+        .build()).build();
+  }
 }

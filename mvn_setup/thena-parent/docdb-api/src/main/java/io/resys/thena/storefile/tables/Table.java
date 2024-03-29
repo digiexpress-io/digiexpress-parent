@@ -26,6 +26,14 @@ import java.util.function.Function;
 import org.immutables.value.Value;
 
 import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.git.Blob;
+import io.resys.thena.api.entities.git.BlobHistory;
+import io.resys.thena.api.entities.git.Branch;
+import io.resys.thena.api.entities.git.Commit;
+import io.resys.thena.api.entities.git.CommitTree;
+import io.resys.thena.api.entities.git.Tag;
+import io.resys.thena.api.entities.git.Tree;
+import io.resys.thena.api.entities.git.TreeValue;
 import io.resys.thena.datasource.DataMapper;
 import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.storefile.tables.Table.Row;
@@ -51,7 +59,24 @@ public interface Table<T extends Row>  {
   interface RowExists extends Row { boolean getExists(); }
 
   
-  interface FileMapper extends DataMapper<Table.Row> { }
+  interface FileMapper extends DataMapper<Table.Row> { 
+    Tenant repo(Table.Row row);
+    
+    Commit commit(Table.Row row);
+    Tree tree(Table.Row row);
+    TreeValue treeItem(Table.Row row);
+    Tag tag(Table.Row row);
+    Branch ref(Table.Row row);
+    Blob blob(Table.Row row);
+    BlobHistory blobHistory(Table.Row row);
+    CommitTree commitTree(Table.Row row);
+    CommitTree commitTreeWithBlobs(Table.Row row);
+     
+    
+  }
+  
+
+  
   interface Connection {
     RepoTable getRepoTable(TenantTableNames ctx);
   }

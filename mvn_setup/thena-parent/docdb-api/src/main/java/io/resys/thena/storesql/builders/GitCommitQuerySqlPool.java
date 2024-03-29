@@ -32,8 +32,7 @@ import io.resys.thena.api.entities.git.ImmutableBranch;
 import io.resys.thena.api.entities.git.ImmutableCommit;
 import io.resys.thena.api.entities.git.ImmutableCommitLock;
 import io.resys.thena.api.entities.git.ImmutableTree;
-import io.resys.thena.datasource.SqlDataMapper;
-import io.resys.thena.datasource.SqlQueryBuilder;
+import io.resys.thena.api.registry.git.CommitRegistry;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlFailed;
@@ -49,27 +48,25 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j(topic = LogConstants.SHOW_SQL)
 public class GitCommitQuerySqlPool implements GitCommitQuery {
   private final ThenaSqlDataSource wrapper;
-  private final SqlDataMapper sqlMapper;
-  private final SqlQueryBuilder sqlBuilder;
+  private final CommitRegistry registry;
   private final ThenaSqlDataSourceErrorHandler errorHandler;
 
   public GitCommitQuerySqlPool(ThenaSqlDataSource dataSource) {
     this.wrapper = dataSource;
-    this.sqlMapper = dataSource.getDataMapper();
-    this.sqlBuilder = dataSource.getQueryBuilder();
+    this.registry = dataSource.getRegistry().git().commits();
     this.errorHandler = dataSource.getErrorHandler();
   }
   
   @Override
   public Uni<Commit> getById(String commit) {
-    final var sql = sqlBuilder.commits().getById(commit);
+    final var sql = registry.getById(commit);
     if(log.isDebugEnabled()) {
       log.debug("Commit byId query, with props: {} \r\n{}", 
           sql.getProps().deepToString(),
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.commit(row))
+        .mapping(registry.defaultMapper())
         .execute(sql.getProps())
         .onItem()
         .transform((RowSet<Commit> rowset) -> {
@@ -84,14 +81,14 @@ public class GitCommitQuerySqlPool implements GitCommitQuery {
   }
   @Override
   public Multi<Commit> findAll() {
-    final var sql = sqlBuilder.commits().findAll();
+    final var sql = registry.findAll();
     if(log.isDebugEnabled()) {
       log.debug("Commit findAll query, with props: {} \r\n{}", 
           "",
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(row -> sqlMapper.commit(row))
+        .mapping(registry.defaultMapper())
         .execute()
         .onItem()
         .transformToMulti((RowSet<Commit> rowset) -> Multi.createFrom().iterable(rowset))
@@ -99,7 +96,7 @@ public class GitCommitQuerySqlPool implements GitCommitQuery {
   }
   @Override
   public Uni<CommitLock> getLock(LockCriteria crit) {
-    final var sql = sqlBuilder.commits().getLock(crit);
+    final var sql = registry.getLock(crit);
     if(log.isDebugEnabled()) {
       log.debug("Commit: {} getLock query, with props: {} \r\n {}",
           GitCommitQuerySqlPool.class,
@@ -108,9 +105,9 @@ public class GitCommitQuerySqlPool implements GitCommitQuery {
     }
     final Function<io.vertx.mutiny.sqlclient.Row, CommitTree> mapper;
     if(crit.getTreeValueIds().isEmpty()) {
-      mapper = (row) -> sqlMapper.commitTree(row);
+      mapper = registry.commitTreeMapper();
     } else {
-      mapper = (row) -> sqlMapper.commitTreeWithBlobs(row);
+      mapper = registry.commitTreeWithBlobsMapper();
     }
     
     return wrapper.getClient().preparedQuery(sql.getValue())

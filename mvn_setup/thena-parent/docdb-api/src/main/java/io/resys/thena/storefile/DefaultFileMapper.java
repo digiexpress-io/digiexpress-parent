@@ -130,7 +130,7 @@ public class DefaultFileMapper implements FileMapper {
         .build();
   }
   @Override
-  public CommitTree commitTreeWithBlobs(io.vertx.mutiny.sqlclient.Row row) {
+  public CommitTree commitTreeWithBlobs(Row row) {
     throw new IllegalArgumentException("Not required for filebase impl.");
   }
   @Override

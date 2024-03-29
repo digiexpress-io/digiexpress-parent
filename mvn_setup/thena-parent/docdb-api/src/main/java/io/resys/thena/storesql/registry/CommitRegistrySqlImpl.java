@@ -1,5 +1,6 @@
-package io.resys.thena.storesql.statement;
+package io.resys.thena.storesql.registry;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 /*-
@@ -24,21 +25,30 @@ import java.util.ArrayList;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
 
 import io.resys.thena.api.entities.git.Commit;
-import io.resys.thena.datasource.TenantTableNames;
+import io.resys.thena.api.entities.git.CommitTree;
+import io.resys.thena.api.entities.git.ImmutableBlob;
+import io.resys.thena.api.entities.git.ImmutableCommit;
+import io.resys.thena.api.entities.git.ImmutableCommitTree;
+import io.resys.thena.api.entities.git.ImmutableTreeValue;
+import io.resys.thena.api.registry.git.CommitRegistry;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
-import io.resys.thena.datasource.SqlQueryBuilder.GitCommitSqlBuilder;
 import io.resys.thena.datasource.SqlQueryBuilder.Sql;
 import io.resys.thena.datasource.SqlQueryBuilder.SqlTuple;
+import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.storesql.support.SqlStatement;
 import io.resys.thena.structures.git.GitQueries.LockCriteria;
+import io.vertx.core.json.JsonObject;
+import io.vertx.mutiny.sqlclient.Row;
 import io.vertx.mutiny.sqlclient.Tuple;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class GitCommitSqlBuilderImpl implements GitCommitSqlBuilder {
+public class CommitRegistrySqlImpl implements CommitRegistry {
   private final TenantTableNames options;
  
   @Override
@@ -148,6 +158,111 @@ public class GitCommitSqlBuilderImpl implements GitCommitSqlBuilder {
         .build())
         .props(Tuple.from(props))
         .build();
-  }  
+  }
+  @Override
+  public Function<Row, Commit> defaultMapper() {
+    return CommitRegistrySqlImpl::commit;
+  }
   
+  @Override
+  public Function<Row, CommitTree> commitTreeMapper() {
+    return CommitRegistrySqlImpl::commitTree;
+  }
+  @Override
+  public Function<Row, CommitTree> commitTreeWithBlobsMapper() {
+    return CommitRegistrySqlImpl::commitTreeWithBlobs;
+  }  
+
+  private static Commit commit(Row row) {
+    return ImmutableCommit.builder()
+        .id(row.getString("id"))
+        .author(row.getString("author"))
+        .dateTime(LocalDateTime.parse(row.getString("datetime")))
+        .message(row.getString("message"))
+        .parent(Optional.ofNullable(row.getString("parent")))
+        .merge(Optional.ofNullable(row.getString("merge")))
+        .tree(row.getString("tree"))
+        .build();
+  }
+
+  
+  private static CommitTree commitTree(Row row) {
+    return commitTreeInternal(row)
+        .blob(Optional.empty())
+        .build();
+  }
+
+  private static CommitTree commitTreeWithBlobs(Row row) {
+    return commitTreeInternal(row)
+        .blob(ImmutableBlob.builder()
+            .id(row.getString("blob_id"))
+            .value(jsonObject(row, "blob_value"))
+            .build())
+        .build();
+  }
+  private static JsonObject jsonObject(Row row, String columnName) {
+    // string based - new JsonObject(row.getString(columnName));
+    return row.getJsonObject(columnName);
+  }
+  private static ImmutableCommitTree.Builder commitTreeInternal(Row row) {
+    final var blob = row.getString("blob_id");
+    final var blobName = row.getString("blob_name");
+    return ImmutableCommitTree.builder()
+        .treeId(row.getString("tree_id"))
+        .commitId(row.getString("commit_id"))
+        .commitParent(row.getString("commit_parent"))
+        .commitAuthor(row.getString("author"))
+        .commitDateTime(LocalDateTime.parse(row.getString("datetime")))
+        .commitMessage(row.getString("message"))
+        .commitMerge(row.getString("merge"))
+        .branchName(row.getString("ref_name"))
+        .treeValue(blob == null ? Optional.empty() : Optional.of(ImmutableTreeValue.builder()
+            .blob(blob)
+            .name(blobName)
+            .build()));
+  }
+  
+  @Override
+  public Sql createTable() {
+    return ImmutableSql.builder().value(new SqlStatement().ln()
+    .append("CREATE TABLE ").append(options.getCommits()).ln()
+    .append("(").ln()
+    .append("  id VARCHAR(40) PRIMARY KEY,").ln()
+    .append("  datetime VARCHAR(29) NOT NULL,").ln()
+    .append("  author VARCHAR(40) NOT NULL,").ln()
+    .append("  message VARCHAR(255) NOT NULL,").ln()
+    .append("  tree VARCHAR(40) NOT NULL,").ln()
+    .append("  parent VARCHAR(40),").ln()
+    .append("  merge VARCHAR(40)").ln()
+    .append(");").ln()
+    
+    .append("CREATE INDEX ").append(options.getCommits()).append("_TREE_INDEX")
+    .append(" ON ").append(options.getCommits()).append(" (tree);").ln()
+    
+    .append("CREATE INDEX ").append(options.getCommits()).append("_PARENT_INDEX")
+    .append(" ON ").append(options.getCommits()).append(" (tree);").ln()
+    .build()).build();
+  }
+  @Override
+  public Sql createConstraints() {
+    return ImmutableSql.builder()
+        .value(new SqlStatement().ln()
+        .append("ALTER TABLE ").append(options.getCommits()).ln()
+        .append("  ADD CONSTRAINT ").append(options.getCommits()).append("_COMMIT_PARENT_FK").ln()
+        .append("  FOREIGN KEY (parent)").ln()
+        .append("  REFERENCES ").append(options.getCommits()).append(" (id);").ln()
+        
+        .append("ALTER TABLE ").append(options.getCommits()).ln()
+        .append("  ADD CONSTRAINT ").append(options.getCommits()).append("_COMMIT_TREE_FK").ln()
+        .append("  FOREIGN KEY (tree)").ln()
+        .append("  REFERENCES ").append(options.getTrees()).append(" (id);").ln()
+        .build())
+        .build();
+  }
+  @Override
+  public Sql dropTable() {
+    return ImmutableSql.builder().value(new SqlStatement()
+        .append("DROP TABLE ").append(options.getCommits()).append(";").ln()
+        .build()).build();
+  }
 }

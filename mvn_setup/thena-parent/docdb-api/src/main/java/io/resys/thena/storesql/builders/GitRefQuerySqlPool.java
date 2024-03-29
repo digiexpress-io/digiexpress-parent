@@ -2,8 +2,7 @@ package io.resys.thena.storesql.builders;
 
 import io.resys.thena.api.LogConstants;
 import io.resys.thena.api.entities.git.Branch;
-import io.resys.thena.datasource.SqlDataMapper;
-import io.resys.thena.datasource.SqlQueryBuilder;
+import io.resys.thena.api.registry.GitRegistry;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlFailed;
@@ -20,28 +19,26 @@ import lombok.extern.slf4j.Slf4j;
 public class GitRefQuerySqlPool implements GitRefQuery {
 
   private final ThenaSqlDataSource wrapper;
-  private final SqlDataMapper sqlMapper;
-  private final SqlQueryBuilder sqlBuilder;
   private final ThenaSqlDataSourceErrorHandler errorHandler;
+  private final GitRegistry registry;
 
   public GitRefQuerySqlPool(ThenaSqlDataSource dataSource) {
     this.wrapper = dataSource;
-    this.sqlMapper = dataSource.getDataMapper();
-    this.sqlBuilder = dataSource.getQueryBuilder();
+    this.registry = dataSource.getRegistry().git();
     this.errorHandler = dataSource.getErrorHandler();
   }
   
   @Override
   public Uni<Branch> nameOrCommit(String refNameOrCommit) {
     RepoAssert.notEmpty(refNameOrCommit, () -> "refNameOrCommit must be defined!");
-    final var sql = sqlBuilder.refs().getByNameOrCommit(refNameOrCommit);
+    final var sql = registry.branches().getByNameOrCommit(refNameOrCommit);
     if(log.isDebugEnabled()) {
       log.debug("Ref refNameOrCommit query, with props: {} \r\n{}", 
           sql.getProps().deepToString(),
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-      .mapping(row -> sqlMapper.ref(row))
+      .mapping(registry.branches().defaultMapper())
       .execute(sql.getProps())
       .onItem()
       .transform((RowSet<Branch> rowset) -> {
@@ -55,7 +52,7 @@ public class GitRefQuerySqlPool implements GitRefQuery {
   }
   @Override
   public Uni<Branch> get() {
-    final var sql = sqlBuilder.refs().getFirst();
+    final var sql = registry.branches().getFirst();
     if(log.isDebugEnabled()) {
       log.debug("Ref get query, with props: {} \r\n{}", 
           "",
@@ -63,7 +60,7 @@ public class GitRefQuerySqlPool implements GitRefQuery {
     }
 
     return wrapper.getClient().preparedQuery(sql.getValue())
-      .mapping(row -> sqlMapper.ref(row))
+      .mapping(registry.branches().defaultMapper())
       .execute()
       .onItem()
       .transform((RowSet<Branch> rowset) -> {
@@ -77,14 +74,14 @@ public class GitRefQuerySqlPool implements GitRefQuery {
   }
   @Override
   public Multi<Branch> findAll() {
-    final var sql = sqlBuilder.refs().findAll();
+    final var sql = registry.branches().findAll();
     if(log.isDebugEnabled()) {
       log.debug("Ref findAll query, with props: {} \r\n{}", 
           "",
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-      .mapping(row -> sqlMapper.ref(row))
+      .mapping(registry.branches().defaultMapper())
       .execute()
       .onItem()
       .transformToMulti((RowSet<Branch> rowset) -> Multi.createFrom().iterable(rowset))
@@ -93,7 +90,7 @@ public class GitRefQuerySqlPool implements GitRefQuery {
   @Override
   public Uni<Branch> name(String name) {
     RepoAssert.notEmpty(name, () -> "name must be defined!");
-    final var sql = sqlBuilder.refs().getByName(name);
+    final var sql = registry.branches().getByName(name);
     
     if(log.isDebugEnabled()) {
       log.debug("Ref getByName query, with props: {} \r\n{}", 
@@ -101,7 +98,7 @@ public class GitRefQuerySqlPool implements GitRefQuery {
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-      .mapping(row -> sqlMapper.ref(row))
+      .mapping(registry.branches().defaultMapper())
       .execute(sql.getProps())
       .onItem()
       .transform((RowSet<Branch> rowset) -> {

@@ -83,6 +83,7 @@ public class RepoBuilderSqlPool implements InternalTenantQuery {
   @Override
   public Uni<Tenant> insert(final Tenant newRepo) {
     final var next = dataSource.withTenant(newRepo);
+    final var git = next.getRegistry().git();
     final var sqlSchema = next.getSchema();
     final var sqlQuery = next.getQueryBuilder();
     final var pool = next.getPool();
@@ -91,17 +92,18 @@ public class RepoBuilderSqlPool implements InternalTenantQuery {
       final var tablesCreate = new StringBuilder();
       
       if(newRepo.getType() == StructureType.git) {
-        tablesCreate.append(sqlSchema.createGitBlobs().getValue())
-          .append(sqlSchema.createGitCommits().getValue())
-          .append(sqlSchema.createGitTreeItems().getValue())
-          .append(sqlSchema.createGitTrees().getValue())
-          .append(sqlSchema.createGitRefs().getValue())
-          .append(sqlSchema.createGitTags().getValue())
+        tablesCreate.append(git.blobs().createTable().getValue())
+          .append(git.commits().createTable().getValue())
+          .append(git.treeValues().createTable().getValue())
+          .append(git.trees().createTable().getValue())
+          .append(git.branches().createTable().getValue())
+          .append(git.tags().createTable().getValue())
           
-          .append(sqlSchema.createGitCommitsConstraints().getValue())
-          .append(sqlSchema.createGitRefsConstraints().getValue())
-          .append(sqlSchema.createGitTagsConstraints().getValue())
-          .append(sqlSchema.createGitTreeItemsConstraints().getValue())
+          .append(git.commits().createConstraints().getValue())
+          .append(git.branches().createConstraints().getValue())
+          .append(git.tags().createConstraints().getValue())
+          .append(git.trees().createConstraints().getValue())
+          .append(git.treeValues().createConstraints().getValue())
           .toString();
         
       } else if(newRepo.getType() == StructureType.org) {
@@ -189,7 +191,9 @@ public class RepoBuilderSqlPool implements InternalTenantQuery {
   @Override
   public Uni<Tenant> delete(final Tenant newRepo) {
     final var next = dataSource.withTenant(newRepo);
+    final var git = next.getRegistry().git();
     final var sqlSchema = next.getSchema();
+    
     final var sqlQuery = next.getQueryBuilder();
     final var pool = next.getPool();
     return pool.withTransaction(tx -> {
@@ -198,12 +202,12 @@ public class RepoBuilderSqlPool implements InternalTenantQuery {
       
       if(newRepo.getType() == StructureType.git) {
         tablesDrop
-        .append(sqlSchema.dropGitRefs().getValue())
-        .append(sqlSchema.dropGitTags().getValue())
-        .append(sqlSchema.dropGitCommits().getValue())
-        .append(sqlSchema.dropGitTreeItems().getValue())
-        .append(sqlSchema.dropGitTrees().getValue())
-        .append(sqlSchema.dropGitBlobs().getValue());
+        .append(git.branches().dropTable().getValue())
+        .append(git.tags().dropTable().getValue())
+        .append(git.commits().dropTable().getValue())
+        .append(git.treeValues().dropTable().getValue())
+        .append(git.trees().dropTable().getValue())
+        .append(git.blobs().dropTable().getValue());
         
       } else if(newRepo.getType() == StructureType.org) {
         

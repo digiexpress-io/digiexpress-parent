@@ -1,4 +1,4 @@
-package io.resys.thena.storesql.statement;
+package io.resys.thena.storesql.registry;
 
 import java.io.Serializable;
 import java.time.format.DateTimeFormatter;
@@ -28,28 +28,33 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import io.resys.thena.api.actions.GitPullActions.MatchCriteria;
 import io.resys.thena.api.actions.GitPullActions.MatchCriteriaType;
 import io.resys.thena.api.entities.git.Blob;
-import io.resys.thena.datasource.TenantTableNames;
+import io.resys.thena.api.entities.git.BlobHistory;
+import io.resys.thena.api.entities.git.ImmutableBlob;
+import io.resys.thena.api.entities.git.ImmutableBlobHistory;
+import io.resys.thena.api.registry.git.BlobRegistry;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.ImmutableSqlTupleList;
-import io.resys.thena.datasource.SqlQueryBuilder.GitBlobSqlBuilder;
 import io.resys.thena.datasource.SqlQueryBuilder.Sql;
 import io.resys.thena.datasource.SqlQueryBuilder.SqlTuple;
 import io.resys.thena.datasource.SqlQueryBuilder.SqlTupleList;
+import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.storesql.support.SqlStatement;
 import io.resys.thena.support.RepoAssert;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.mutiny.sqlclient.Row;
 import io.vertx.mutiny.sqlclient.Tuple;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class GitBlobSqlBuilderImpl implements GitBlobSqlBuilder {
+public class BlobRegistrySqlImpl implements BlobRegistry {
   protected final TenantTableNames options;
   
   @Override
@@ -369,5 +374,61 @@ WHERE blobs.value LIKE $1
         .value(sql)
         .props(Tuple.from(conditions.getProps()))
         .build();
+  }
+ 
+  @Override
+  public Function<Row, Blob> defaultMapper() {
+    return BlobRegistrySqlImpl::blob;
+  }
+  @Override
+  public Function<Row, BlobHistory> historyMapper() {
+    return BlobRegistrySqlImpl::blobHistory;
+  }
+  
+  private static Blob blob(Row row) {
+    return ImmutableBlob.builder()
+        .id(row.getString("id"))
+        .value(jsonObject(row, "value"))
+        .build();
+  }
+  private static BlobHistory blobHistory(Row row) { 
+    return ImmutableBlobHistory.builder()
+        .treeId(row.getString("tree"))
+        .treeValueName(row.getString("blob_name"))
+        .commit(row.getString("commit_id"))
+        .blob(ImmutableBlob.builder()
+            .id(row.getString("blob_id"))
+            .value(jsonObject(row, "blob_value"))
+            .build())
+        .build();
+  }
+  private static JsonObject jsonObject(Row row, String columnName) {
+    // string based - new JsonObject(row.getString(columnName));
+    return row.getJsonObject(columnName);
+  }
+  
+  
+
+  @Override
+  public Sql createTable() {
+    return ImmutableSql.builder().value(new SqlStatement().ln()
+    .append("CREATE TABLE ").append(options.getBlobs()).ln()
+    .append("(").ln()
+    .append("  id VARCHAR(40) PRIMARY KEY,").ln()
+    .append("  value jsonb NOT NULL").ln()
+    
+    // string based -- .append("  value TEXT NOT NULL").ln()
+    .append(");").ln()
+    .build()).build();
+  }
+  @Override
+  public Sql createConstraints() {
+    return ImmutableSql.builder().value(new SqlStatement().append("").build()).build();
+  }
+  @Override
+  public Sql dropTable() {
+    return ImmutableSql.builder().value(new SqlStatement()
+        .append("DROP TABLE ").append(options.getBlobs()).append(";").ln()
+        .build()).build();
   }
 }

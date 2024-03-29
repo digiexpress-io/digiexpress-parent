@@ -32,6 +32,7 @@ import org.junit.jupiter.api.Test;
 
 import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.storesql.SqlSchemaImpl;
+import io.resys.thena.storesql.registry.GitRegistrySqlImpl;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -40,20 +41,22 @@ public class SqlDbSchemaPrintTest {
   final Charset UTF_8 = StandardCharsets.UTF_8;
   @Test
   public void printSchema() throws IOException {
-    final var sqlSchema = new SqlSchemaImpl(TenantTableNames.defaults("public"));
+    final var names = TenantTableNames.defaults("public");
+    final var sqlSchema = new SqlSchemaImpl(names);
+    final var git = new GitRegistrySqlImpl(names);
     
     final var schema = new StringBuilder()
       .append(sqlSchema.createTenant().getValue())
-      .append(sqlSchema.createGitBlobs().getValue())
-      .append(sqlSchema.createGitCommits().getValue())
-      .append(sqlSchema.createGitTreeItems().getValue())
-      .append(sqlSchema.createGitTrees().getValue())
-      .append(sqlSchema.createGitRefs().getValue())
-      .append(sqlSchema.createGitTags().getValue())
-      .append(sqlSchema.createGitCommitsConstraints().getValue())
-      .append(sqlSchema.createGitRefsConstraints().getValue())
-      .append(sqlSchema.createGitTagsConstraints().getValue())
-      .append(sqlSchema.createGitTreeItemsConstraints().getValue())
+      .append(git.blobs().createTable().getValue())
+      .append(git.commits().createTable().getValue())
+      .append(git.treeValues().createTable().getValue())
+      .append(git.trees().createTable().getValue())
+      .append(git.branches().createTable().getValue())
+      .append(git.tags().createTable().getValue())
+      .append(git.commits().createConstraints().getValue())
+      .append(git.branches().createConstraints().getValue())
+      .append(git.tags().createConstraints().getValue())
+      .append(git.treeValues().createConstraints().getValue())
       
       
       .append(sqlSchema.createDoc().getValue())

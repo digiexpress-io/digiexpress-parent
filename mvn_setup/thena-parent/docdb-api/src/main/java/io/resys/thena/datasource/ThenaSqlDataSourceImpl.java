@@ -5,6 +5,7 @@ import java.util.Optional;
 import io.resys.thena.api.entities.ImmutableTenant;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
+import io.resys.thena.api.registry.ThenaRegistry;
 import io.resys.thena.datasource.ThenaSqlClient.ThenaSqlPool;
 
 public class ThenaSqlDataSourceImpl implements ThenaSqlDataSource {
@@ -16,6 +17,7 @@ public class ThenaSqlDataSourceImpl implements ThenaSqlDataSource {
   private final SqlSchema schema;
   private final SqlDataMapper dataMapper;
   private final SqlQueryBuilder queryBuilder;
+  private final ThenaRegistry registry;
   private final boolean isTenantLoaded;
   
   public ThenaSqlDataSourceImpl(
@@ -23,16 +25,19 @@ public class ThenaSqlDataSourceImpl implements ThenaSqlDataSource {
       TenantTableNames tenantTableNames, 
       ThenaSqlPool pool,
       ThenaSqlDataSourceErrorHandler errorHandler, 
-      Optional<ThenaSqlClient> tx, 
+      Optional<ThenaSqlClient> tx,
+      
       SqlSchema schema,
       SqlDataMapper dataMapper,
-      SqlQueryBuilder queryBuilder) {
+      SqlQueryBuilder queryBuilder,
+      ThenaRegistry registry) {
     super();
     this.tenant = tenant;
     this.tenantTableNames = tenantTableNames.toRepo(tenant);
     this.dataMapper = dataMapper.withOptions(this.tenantTableNames);
     this.queryBuilder = queryBuilder.withTenant(this.tenantTableNames);
     this.schema = schema.withTenant(this.tenantTableNames);
+    this.registry = registry.withTenant(this.tenantTableNames);
     this.errorHandler = errorHandler.withOptions(this.tenantTableNames);
     this.pool = pool;
     this.tx = tx;
@@ -45,9 +50,11 @@ public class ThenaSqlDataSourceImpl implements ThenaSqlDataSource {
       ThenaSqlPool pool,
       ThenaSqlDataSourceErrorHandler errorHandler, 
       Optional<ThenaSqlClient> tx, 
+      
       SqlSchema schema,
       SqlDataMapper dataMapper,
-      SqlQueryBuilder queryBuilder) {
+      SqlQueryBuilder queryBuilder,
+      ThenaRegistry registry) {
     super();
     this.isTenantLoaded = false;
     this.tenant = ImmutableTenant.builder()
@@ -62,6 +69,7 @@ public class ThenaSqlDataSourceImpl implements ThenaSqlDataSource {
     this.queryBuilder = queryBuilder.withTenant(this.tenantTableNames);
     this.errorHandler = errorHandler.withOptions(this.tenantTableNames);
     this.schema = schema.withTenant(this.tenantTableNames);
+    this.registry = registry.withTenant(this.tenantTableNames);
     this.pool = pool;
     this.tx = tx;
   }
@@ -100,7 +108,7 @@ public class ThenaSqlDataSourceImpl implements ThenaSqlDataSource {
   }
   @Override
   public ThenaSqlDataSource withTenant(Tenant tenant) {
-    return new ThenaSqlDataSourceImpl(tenant, tenantTableNames, pool, errorHandler, tx, schema, dataMapper, queryBuilder);
+    return new ThenaSqlDataSourceImpl(tenant, tenantTableNames, pool, errorHandler, tx, schema, dataMapper, queryBuilder, registry);
   }
 
   @Override
@@ -110,11 +118,15 @@ public class ThenaSqlDataSourceImpl implements ThenaSqlDataSource {
 
   @Override
   public ThenaSqlDataSource withTx(ThenaSqlClient tx) {
-    return new ThenaSqlDataSourceImpl(tenant, tenantTableNames, pool, errorHandler, Optional.of(tx), schema, dataMapper, queryBuilder);
+    return new ThenaSqlDataSourceImpl(tenant, tenantTableNames, pool, errorHandler, Optional.of(tx), schema, dataMapper, queryBuilder, registry);
   }
 
   @Override
   public boolean isTenantLoaded() {
     return isTenantLoaded;
+  }
+  @Override
+  public ThenaRegistry getRegistry() {
+    return registry;
   }
 }

@@ -2,35 +2,8 @@ package io.resys.thena.datasource;
 
 import io.resys.thena.datasource.SqlQueryBuilder.Sql;
 
-public interface SqlSchema extends TenantTableNames.WithTenant<SqlSchema>{
+public interface SqlSchema extends TenantTableNames.WithTenant<SqlSchema> {
   SqlSchema withTenant(TenantTableNames options);
-  
-
-  // create git like db model
-  Sql createGitBlobs();
-
-  Sql createGitCommits();
-  Sql createGitCommitsConstraints();
-  
-  Sql createGitTreeItemsConstraints();
-  Sql createGitTreeItems();
-
-  Sql createGitTrees();
-
-  Sql createGitRefs();
-  Sql createGitRefsConstraints();
-
-  Sql createGitTags();
-  Sql createGitTagsConstraints();
-  
-  Sql dropGitBlobs();
-  Sql dropGitCommits();
-  Sql dropGitTreeItems();
-  Sql dropGitTrees();
-  Sql dropGitRefs();
-  Sql dropGitTags();
-  
-  
   
   // single doc db model
   Sql createDoc();

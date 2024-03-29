@@ -7,13 +7,6 @@ import io.resys.thena.api.entities.doc.DocBranchLock;
 import io.resys.thena.api.entities.doc.DocCommit;
 import io.resys.thena.api.entities.doc.DocFlatted;
 import io.resys.thena.api.entities.doc.DocLog;
-import io.resys.thena.api.entities.git.Blob;
-import io.resys.thena.api.entities.git.BlobHistory;
-import io.resys.thena.api.entities.git.Branch;
-import io.resys.thena.api.entities.git.Commit;
-import io.resys.thena.api.entities.git.Tag;
-import io.resys.thena.api.entities.git.Tree;
-import io.resys.thena.api.entities.git.TreeValue;
 import io.resys.thena.api.entities.org.OrgActorStatus;
 import io.resys.thena.api.entities.org.OrgMember;
 import io.resys.thena.api.entities.org.OrgMemberFlattened;
@@ -36,14 +29,6 @@ public interface SqlDataMapper extends DataMapper<Row>{
   DocBranch docBranch(Row row);
   DocCommit docCommit(Row row);
   DocBranchLock docBranchLock(Row row);
-  
-  Commit commit(Row row);
-  Tree tree(Row row);
-  TreeValue treeItem(Row row);
-  Tag tag(Row row);
-  Branch ref(Row row);
-  Blob blob(Row row);
-  BlobHistory blobHistory(Row row);
 
   OrgRight orgRight(Row row);
   OrgMember orgMember(Row row);

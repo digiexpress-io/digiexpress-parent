@@ -64,12 +64,7 @@ public interface SqlQueryBuilder extends TenantTableNames.WithTenant<SqlQueryBui
   DocCommitSqlBuilder docCommits();
   DocBranchSqlBuilder docBranches();
   
-  GitRefSqlBuilder refs();
-  GitTagSqlBuilder tags();
-  GitBlobSqlBuilder blobs();
-  GitCommitSqlBuilder commits();
-  GitTreeSqlBuilder trees();
-  GitTreeItemSqlBuilder treeItems();
+
   
   OrgMemberSqlBuilder orgMembers();
   OrgPartySqlBuilder orgParties();
@@ -239,59 +234,6 @@ public interface SqlQueryBuilder extends TenantTableNames.WithTenant<SqlQueryBui
   }
   
   
-  
-  interface GitBlobSqlBuilder {
-    SqlTuple getById(String blobId);
-    
-    SqlTuple insertOne(Blob blob);
-    SqlTupleList insertAll(Collection<Blob> blobs);
-    
-    SqlTuple find(@Nullable String name, boolean latestOnly, List<MatchCriteria> criteria);
-    SqlTuple findByTree(String treeId, List<MatchCriteria> criteria);
-    SqlTuple findByTree(String treeId, List<String> blobNames, List<MatchCriteria> criteria);
-    SqlTuple findByIds(Collection<String> blobId);
-    Sql findAll();
-  }
-  
-  
-  
-  interface GitRefSqlBuilder {
-    SqlTuple getByName(String name);
-    SqlTuple getByNameOrCommit(String refNameOrCommit);
-    Sql getFirst();
-    Sql findAll();
-    SqlTuple insertOne(Branch ref);
-    SqlTuple updateOne(Branch ref, Commit commit);
-  }
-  
-  interface GitTagSqlBuilder {
-    SqlTuple getByName(String name);
-    SqlTuple deleteByName(String name);
-    Sql findAll();
-    Sql getFirst();
-    SqlTuple insertOne(Tag tag);
-  }
-  
-  interface GitTreeSqlBuilder {
-    SqlTuple getById(String id);
-    Sql findAll();
-    SqlTuple insertOne(Tree tree);
-  }
-  
-  
-  interface GitCommitSqlBuilder {
-    SqlTuple getById(String id);
-    SqlTuple getLock(LockCriteria crit);
-    Sql findAll();
-    SqlTuple insertOne(Commit commit);
-  }
-  
-  interface GitTreeItemSqlBuilder {
-    SqlTuple getByTreeId(String treeId);
-    Sql findAll();
-    SqlTuple insertOne(Tree tree, TreeValue item);
-    SqlTupleList insertAll(Tree item);
-  }
   
   @Value.Immutable
   interface Sql {

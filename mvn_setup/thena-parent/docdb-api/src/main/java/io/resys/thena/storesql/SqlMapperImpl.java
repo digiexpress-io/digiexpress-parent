@@ -39,22 +39,6 @@ import io.resys.thena.api.entities.doc.ImmutableDocBranchLock;
 import io.resys.thena.api.entities.doc.ImmutableDocCommit;
 import io.resys.thena.api.entities.doc.ImmutableDocFlatted;
 import io.resys.thena.api.entities.doc.ImmutableDocLog;
-import io.resys.thena.api.entities.git.Blob;
-import io.resys.thena.api.entities.git.BlobHistory;
-import io.resys.thena.api.entities.git.Branch;
-import io.resys.thena.api.entities.git.Commit;
-import io.resys.thena.api.entities.git.CommitTree;
-import io.resys.thena.api.entities.git.ImmutableBlob;
-import io.resys.thena.api.entities.git.ImmutableBlobHistory;
-import io.resys.thena.api.entities.git.ImmutableBranch;
-import io.resys.thena.api.entities.git.ImmutableCommit;
-import io.resys.thena.api.entities.git.ImmutableCommitTree;
-import io.resys.thena.api.entities.git.ImmutableTag;
-import io.resys.thena.api.entities.git.ImmutableTree;
-import io.resys.thena.api.entities.git.ImmutableTreeValue;
-import io.resys.thena.api.entities.git.Tag;
-import io.resys.thena.api.entities.git.Tree;
-import io.resys.thena.api.entities.git.TreeValue;
 import io.resys.thena.api.entities.org.ImmutableOrgActorStatus;
 import io.resys.thena.api.entities.org.ImmutableOrgMember;
 import io.resys.thena.api.entities.org.ImmutableOrgMemberFlattened;
@@ -75,8 +59,8 @@ import io.resys.thena.api.entities.org.OrgParty;
 import io.resys.thena.api.entities.org.OrgPartyRight;
 import io.resys.thena.api.entities.org.OrgRight;
 import io.resys.thena.api.entities.org.OrgRightFlattened;
-import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.datasource.SqlDataMapper;
+import io.resys.thena.datasource.TenantTableNames;
 import io.vertx.core.json.JsonObject;
 import io.vertx.mutiny.sqlclient.Row;
 import lombok.RequiredArgsConstructor;
@@ -97,100 +81,6 @@ public class SqlMapperImpl implements SqlDataMapper {
         .prefix(row.getString("prefix"))
         .build();
   }
-  @Override
-  public Commit commit(Row row) {
-    return ImmutableCommit.builder()
-        .id(row.getString("id"))
-        .author(row.getString("author"))
-        .dateTime(LocalDateTime.parse(row.getString("datetime")))
-        .message(row.getString("message"))
-        .parent(Optional.ofNullable(row.getString("parent")))
-        .merge(Optional.ofNullable(row.getString("merge")))
-        .tree(row.getString("tree"))
-        .build();
-  }
-  @Override
-  public Tree tree(Row row) {
-    return ImmutableTree.builder().id(row.getString("id")).build();
-  }
-  @Override
-  public TreeValue treeItem(Row row) {
-    return ImmutableTreeValue.builder()
-        .name(row.getString("name"))
-        .blob(row.getString("blob"))
-        .build();
-  }
-  @Override
-  public Tag tag(Row row) {
-    return ImmutableTag.builder()
-        .author(row.getString("author"))
-        .dateTime(LocalDateTime.parse(row.getString("datetime")))
-        .message(row.getString("message"))
-        .commit(row.getString("commit"))
-        .name(row.getString("id"))
-        .build();
-  }
-  @Override
-  public Branch ref(Row row) {
-    return ImmutableBranch.builder()
-        .name(row.getString("name"))
-        .commit(row.getString("commit"))
-        .build();
-  }
-  @Override
-  public Blob blob(Row row) {
-    return ImmutableBlob.builder()
-        .id(row.getString("id"))
-        .value(jsonObject(row, "value"))
-        .build();
-  }
-  @Override
-  public BlobHistory blobHistory(Row row) { 
-    return ImmutableBlobHistory.builder()
-        .treeId(row.getString("tree"))
-        .treeValueName(row.getString("blob_name"))
-        .commit(row.getString("commit_id"))
-        .blob(ImmutableBlob.builder()
-            .id(row.getString("blob_id"))
-            .value(jsonObject(row, "blob_value"))
-            .build())
-        .build();
-  }
-  @Override
-  public CommitTree commitTree(Row row) {
-    return commitTreeInternal(row)
-        .blob(Optional.empty())
-        .build();
-  }
-  @Override
-  public CommitTree commitTreeWithBlobs(Row row) {
-    return commitTreeInternal(row)
-        .blob(ImmutableBlob.builder()
-            .id(row.getString("blob_id"))
-            .value(jsonObject(row, "blob_value"))
-            .build())
-        .build();
-  }
-  
-  
-  public ImmutableCommitTree.Builder commitTreeInternal(Row row) {
-    final var blob = row.getString("blob_id");
-    final var blobName = row.getString("blob_name");
-    return ImmutableCommitTree.builder()
-        .treeId(row.getString("tree_id"))
-        .commitId(row.getString("commit_id"))
-        .commitParent(row.getString("commit_parent"))
-        .commitAuthor(row.getString("author"))
-        .commitDateTime(LocalDateTime.parse(row.getString("datetime")))
-        .commitMessage(row.getString("message"))
-        .commitMerge(row.getString("merge"))
-        .branchName(row.getString("ref_name"))
-        .treeValue(blob == null ? Optional.empty() : Optional.of(ImmutableTreeValue.builder()
-            .blob(blob)
-            .name(blobName)
-            .build()));
-  }
-  
   
   @Override
   public JsonObject jsonObject(Row row, String columnName) {
