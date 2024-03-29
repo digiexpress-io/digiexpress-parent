@@ -21,10 +21,7 @@ package io.resys.permission.client.api.model;
  */
 
 import java.io.Serializable;
-import java.time.Instant;
 import java.util.List;
-
-import javax.annotation.Nullable;
 
 import org.immutables.value.Value;
 
@@ -53,14 +50,8 @@ import io.resys.thena.api.entities.org.OrgActorStatus;
 })
 
 public interface RoleCommand extends Serializable {
-  @Nullable String getUserId();
-  @Nullable Instant getTargetDate();
   RoleCommandType getCommandType();
   String getComment(); // for auditing purposes, user who made changes must describe why, in a comment.
-  
-  
-  RoleCommand withUserId(String userId);
-  RoleCommand withTargetDate(Instant targetDate);
   
   enum RoleCommandType {
     CREATE_ROLE, 
@@ -95,14 +86,12 @@ public interface RoleCommand extends Serializable {
   
   interface RoleUpdateCommand extends RoleCommand {
     String getId();
-    RoleUpdateCommand withUserId(String userId);
-    RoleUpdateCommand withTargetDate(Instant targetDate);
   }
   
   @Value.Immutable @JsonSerialize(as = ImmutableChangeRoleName.class) @JsonDeserialize(as = ImmutableChangeRoleName.class)
   interface ChangeRoleName extends RoleUpdateCommand {
+    String getId();
     String getName();
-    
     @Override default RoleCommandType getCommandType() { return RoleCommandType.CHANGE_ROLE_NAME; }
   }
   

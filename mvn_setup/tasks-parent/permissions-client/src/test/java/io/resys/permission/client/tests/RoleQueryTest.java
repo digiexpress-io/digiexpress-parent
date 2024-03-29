@@ -24,7 +24,6 @@ public class RoleQueryTest extends DbTestTemplate {
   public Role createRoleForQuery(PermissionClient client, String name, String description) {
     
     return client.createRole().createOne(ImmutableCreateRole.builder()
-        .userId("user-1")
         .comment("Created role")
         .name(name)
         .description(description)

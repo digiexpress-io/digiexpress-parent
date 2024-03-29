@@ -17,15 +17,15 @@ public class BeanFactoryForTests {
   @Produces
   public ObjectMapper objectMapper() {
     final var modules = new com.fasterxml.jackson.databind.Module[] {
-        new JavaTimeModule(), 
-        new Jdk8Module(), 
-        new GuavaModule(),
-        new VertxModule(),
-        new VertexExtModule()
-        };
-      DatabindCodec.mapper().registerModules(modules);
-      DatabindCodec.prettyMapper().registerModules(modules);
-      
+      new JavaTimeModule(), 
+      new Jdk8Module(), 
+      new GuavaModule(),
+      new VertxModule(),
+      new VertexExtModule()
+      };
+    DatabindCodec.mapper().registerModules(modules);
+    DatabindCodec.prettyMapper().registerModules(modules);
+    
     return DatabindCodec.mapper(); 
   }
 }

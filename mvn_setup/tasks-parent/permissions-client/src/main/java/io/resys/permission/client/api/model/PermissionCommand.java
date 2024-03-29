@@ -25,7 +25,6 @@ import java.util.List;
 
 import org.immutables.value.Value;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -70,7 +69,6 @@ public interface PermissionCommand extends Serializable {
     String getDescription();
     List<String> getRoles();
     
-    @JsonIgnore
     @Value.Default
     @Override default PermissionCommandType getCommandType() { return PermissionCommandType.CREATE_PERMISSION; }
   }
@@ -94,7 +92,6 @@ public interface PermissionCommand extends Serializable {
     String getComment();
     String getName();
     
-    @JsonIgnore
     @Value.Default
     @Override default PermissionCommandType getCommandType() { return PermissionCommandType.CHANGE_PERMISSION_NAME; }
   }
@@ -105,7 +102,6 @@ public interface PermissionCommand extends Serializable {
     String getComment();
     String getDescription();
     
-    @JsonIgnore
     @Value.Default
     @Override default PermissionCommandType getCommandType() { return PermissionCommandType.CHANGE_PERMISSION_DESCRIPTION; }
   }
@@ -116,7 +112,6 @@ public interface PermissionCommand extends Serializable {
     String getComment();
     OrgActorStatus.OrgActorStatusType getStatus();
     
-    @JsonIgnore
     @Value.Default
     @Override default PermissionCommandType getCommandType() { return PermissionCommandType.CHANGE_PERMISSION_STATUS; }
   }

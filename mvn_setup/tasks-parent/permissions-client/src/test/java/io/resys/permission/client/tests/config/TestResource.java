@@ -22,8 +22,8 @@ import jakarta.ws.rs.Path;
 @ApplicationScoped
 public class TestResource implements PermissionRestApi {
 
-  private final Permission perm = ImmutablePermission.builder()
-      .name("test-perm")
+  private final Permission permission = ImmutablePermission.builder()
+      .name("test-permission")
       .version("1")
       .description("desc")
       .status(OrgActorStatus.OrgActorStatusType.IN_FORCE)
@@ -48,24 +48,22 @@ public class TestResource implements PermissionRestApi {
 
   @Override
   public Uni<List<Permission>> findAllPermissions() {
-    return Uni.createFrom().item(Arrays.asList(perm));
+    return Uni.createFrom().item(Arrays.asList(permission));
   }
 
   @Override
   public Uni<Permission> createPermission(CreatePermission command) {
-    return Uni.createFrom().item(perm);
+    return Uni.createFrom().item(permission);
   }
 
   @Override
   public Uni<Permission> getPermissionById(String permissionId) {
-    // TODO Auto-generated method stub
-    return null;
+    return Uni.createFrom().item(permission);
   }
 
   @Override
   public Uni<Permission> updatePermission(String permissionId, List<PermissionUpdateCommand> commands) {
-    // TODO Auto-generated method stub
-    return null;
+    return Uni.createFrom().item(permission);
   }
 
   @Override

@@ -21,7 +21,6 @@ public class RoleUpdateTest extends DbTestTemplate {
   
   public Role createRoleForTest(PermissionClient client) {
     return client.createRole().createOne(ImmutableCreateRole.builder()
-        .userId("user-1")
         .comment("New role needed")
         .name("front-office-trainee")
         .description("temporary for 3 weeks")

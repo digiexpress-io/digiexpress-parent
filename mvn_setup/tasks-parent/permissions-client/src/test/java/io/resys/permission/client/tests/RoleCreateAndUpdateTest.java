@@ -25,7 +25,6 @@ public class RoleCreateAndUpdateTest extends DbTestTemplate {
           .name("My first role")
           .description("Description for my first role")
           .comment("Role created")
-          .userId("user-1")
         .build())
       .await().atMost(Duration.ofMinutes(1));
   }
@@ -42,7 +41,7 @@ public class RoleCreateAndUpdateTest extends DbTestTemplate {
     
     final var updatedName = client.updateRole().updateOne(ImmutableChangeRoleName.builder()
         .id(created.getId())
-        .userId("user-1")
+
         .comment("Name change requested by admin")
         .name("Updated role name is super good")
         .build())
@@ -52,7 +51,6 @@ public class RoleCreateAndUpdateTest extends DbTestTemplate {
     
     final var updatedDescription = client.updateRole().updateOne(ImmutableChangeRoleDescription.builder()
         .id(updatedName.getId())
-        .userId("user-1")
         .comment("Corrected typo in name")
         .description("New description")
         .build())
