@@ -31,10 +31,8 @@ import io.resys.thena.api.registry.git.TreeValueRegistry;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.ImmutableSqlTupleList;
-import io.resys.thena.datasource.SqlQueryBuilder.Sql;
-import io.resys.thena.datasource.SqlQueryBuilder.SqlTuple;
-import io.resys.thena.datasource.SqlQueryBuilder.SqlTupleList;
 import io.resys.thena.datasource.TenantTableNames;
+import io.resys.thena.datasource.ThenaSqlClient;
 import io.resys.thena.storesql.support.SqlStatement;
 import io.vertx.mutiny.sqlclient.Row;
 import io.vertx.mutiny.sqlclient.Tuple;
@@ -45,7 +43,7 @@ public class TreeValueRegistrySqlImpl implements TreeValueRegistry {
   private final TenantTableNames options;
   
   @Override
-  public Sql findAll() {
+  public ThenaSqlClient.Sql findAll() {
     return ImmutableSql.builder()
         .value(new SqlStatement()
         .append("SELECT * FROM ").append(options.getTreeItems())
@@ -54,7 +52,7 @@ public class TreeValueRegistrySqlImpl implements TreeValueRegistry {
   }
 
   @Override
-  public SqlTuple getById(String id) {
+  public ThenaSqlClient.SqlTuple getById(String id) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT * ").ln()
@@ -65,7 +63,7 @@ public class TreeValueRegistrySqlImpl implements TreeValueRegistry {
         .build();
   }
   @Override
-  public SqlTuple getByTreeId(String treeId) {
+  public ThenaSqlClient.SqlTuple getByTreeId(String treeId) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT * ").ln()
@@ -76,7 +74,7 @@ public class TreeValueRegistrySqlImpl implements TreeValueRegistry {
         .build();
   }
   @Override
-  public SqlTuple insertOne(Tree tree, TreeValue item) {
+  public ThenaSqlClient.SqlTuple insertOne(Tree tree, TreeValue item) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getTreeItems())
@@ -87,7 +85,7 @@ public class TreeValueRegistrySqlImpl implements TreeValueRegistry {
         .build();
   }
   @Override
-  public SqlTupleList insertAll(Tree item) {
+  public ThenaSqlClient.SqlTupleList insertAll(Tree item) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getTreeItems())
@@ -100,7 +98,7 @@ public class TreeValueRegistrySqlImpl implements TreeValueRegistry {
         .build();
   }
   @Override
-  public Sql createTable() {
+  public ThenaSqlClient.Sql createTable() {
     return ImmutableSql.builder().value(new SqlStatement().ln()
     .append("CREATE TABLE ").append(options.getTreeItems())
     .append("(")
@@ -119,7 +117,7 @@ public class TreeValueRegistrySqlImpl implements TreeValueRegistry {
     .build()).build();
   }
   @Override
-  public Sql createConstraints() {
+  public ThenaSqlClient.Sql createConstraints() {
     return ImmutableSql.builder()
         .value(new SqlStatement().ln()
         .append("ALTER TABLE ").append(options.getTreeItems()).ln()
@@ -137,7 +135,7 @@ public class TreeValueRegistrySqlImpl implements TreeValueRegistry {
         .build();
   }
   @Override
-  public Sql dropTable() {
+  public ThenaSqlClient.Sql dropTable() {
     return ImmutableSql.builder().value(new SqlStatement()
         .append("DROP TABLE ").append(options.getTreeItems()).append(";").ln()
         .build()).build();

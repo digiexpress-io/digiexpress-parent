@@ -17,7 +17,7 @@ import io.resys.thena.api.entities.org.OrgParty;
 import io.resys.thena.api.entities.org.OrgPartyRight;
 import io.resys.thena.api.entities.org.ThenaOrgObject.IsOrgObject;
 import io.resys.thena.api.envelope.ImmutableMessage;
-import io.resys.thena.structures.git.GitInserts.BatchStatus;
+import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.org.ImmutableOrgBatchForOne;
 import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;

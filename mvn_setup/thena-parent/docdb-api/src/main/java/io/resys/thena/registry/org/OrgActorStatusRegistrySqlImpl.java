@@ -11,10 +11,8 @@ import io.resys.thena.api.registry.org.OrgActorStatusRegistry;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.ImmutableSqlTupleList;
-import io.resys.thena.datasource.SqlQueryBuilder.Sql;
-import io.resys.thena.datasource.SqlQueryBuilder.SqlTuple;
-import io.resys.thena.datasource.SqlQueryBuilder.SqlTupleList;
 import io.resys.thena.datasource.TenantTableNames;
+import io.resys.thena.datasource.ThenaSqlClient;
 import io.resys.thena.storesql.support.SqlStatement;
 import io.vertx.mutiny.sqlclient.Row;
 import io.vertx.mutiny.sqlclient.Tuple;
@@ -25,7 +23,7 @@ public class OrgActorStatusRegistrySqlImpl implements OrgActorStatusRegistry {
   private final TenantTableNames options;
   
   @Override
-  public SqlTuple findAll(List<String> id) {
+  public ThenaSqlClient.SqlTuple findAll(List<String> id) {
     final var sql = new SqlStatement()
       .append("SELECT * ").ln()
       .append("  FROM ").append(options.getOrgActorStatus()).ln()
@@ -47,7 +45,7 @@ public class OrgActorStatusRegistrySqlImpl implements OrgActorStatusRegistry {
   }
   
   @Override
-  public Sql findAll() {
+  public ThenaSqlClient.Sql findAll() {
     return ImmutableSql.builder()
         .value(new SqlStatement()
         .append("SELECT * FROM ").append(options.getOrgActorStatus())
@@ -55,7 +53,7 @@ public class OrgActorStatusRegistrySqlImpl implements OrgActorStatusRegistry {
         .build();
   }
   @Override
-  public SqlTuple getById(String id) {
+  public ThenaSqlClient.SqlTuple getById(String id) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT * ").ln()
@@ -66,7 +64,7 @@ public class OrgActorStatusRegistrySqlImpl implements OrgActorStatusRegistry {
         .build();
   }
   @Override
-  public SqlTuple findAllByIdRightId(String rightId) {
+  public ThenaSqlClient.SqlTuple findAllByIdRightId(String rightId) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT * ").ln()
@@ -77,7 +75,7 @@ public class OrgActorStatusRegistrySqlImpl implements OrgActorStatusRegistry {
         .build();
   }
   @Override
-  public SqlTuple findAllByMemberId(String memberId) {
+  public ThenaSqlClient.SqlTuple findAllByMemberId(String memberId) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT * ").ln()
@@ -88,7 +86,7 @@ public class OrgActorStatusRegistrySqlImpl implements OrgActorStatusRegistry {
         .build();
   }
   @Override
-  public SqlTuple insertOne(OrgActorStatus doc) {
+  public ThenaSqlClient.SqlTuple insertOne(OrgActorStatus doc) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getOrgActorStatus())
@@ -98,7 +96,7 @@ public class OrgActorStatusRegistrySqlImpl implements OrgActorStatusRegistry {
         .build();
   }
   @Override
-  public SqlTuple updateOne(OrgActorStatus doc) {
+  public ThenaSqlClient.SqlTuple updateOne(OrgActorStatus doc) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("UPDATE ").append(options.getOrgActorStatus())
@@ -109,7 +107,7 @@ public class OrgActorStatusRegistrySqlImpl implements OrgActorStatusRegistry {
         .build();
   }
   @Override
-  public SqlTupleList insertAll(Collection<OrgActorStatus> users) {
+  public ThenaSqlClient.SqlTupleList insertAll(Collection<OrgActorStatus> users) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getOrgActorStatus())
@@ -121,7 +119,7 @@ public class OrgActorStatusRegistrySqlImpl implements OrgActorStatusRegistry {
         .build();
   }
   @Override
-  public SqlTupleList updateMany(Collection<OrgActorStatus> users) {
+  public ThenaSqlClient.SqlTupleList updateMany(Collection<OrgActorStatus> users) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("UPDATE ").append(options.getOrgActorStatus())
@@ -135,7 +133,7 @@ public class OrgActorStatusRegistrySqlImpl implements OrgActorStatusRegistry {
   }
 
   @Override
-  public SqlTupleList deleteAll(Collection<OrgActorStatus> users) {
+  public ThenaSqlClient.SqlTupleList deleteAll(Collection<OrgActorStatus> users) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("DELETE FROM ").append(options.getOrgActorStatus())
@@ -148,7 +146,7 @@ public class OrgActorStatusRegistrySqlImpl implements OrgActorStatusRegistry {
   }
 
   @Override
-  public SqlTuple findAllByPartyId(String partyId) {
+  public ThenaSqlClient.SqlTuple findAllByPartyId(String partyId) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT * ").ln()
@@ -176,7 +174,7 @@ public class OrgActorStatusRegistrySqlImpl implements OrgActorStatusRegistry {
   }
 
   @Override
-  public Sql createTable() {
+  public ThenaSqlClient.Sql createTable() {
     return ImmutableSql.builder().value(new SqlStatement().ln()
     .append("CREATE TABLE ").append(options.getOrgActorStatus()).ln()
     .append("(").ln()
@@ -206,12 +204,12 @@ public class OrgActorStatusRegistrySqlImpl implements OrgActorStatusRegistry {
   }
 
   @Override
-  public Sql createConstraints() {
+  public ThenaSqlClient.Sql createConstraints() {
     return ImmutableSql.builder().value("").build();
   }
 
   @Override
-  public Sql dropTable() {
+  public ThenaSqlClient.Sql dropTable() {
     return ImmutableSql.builder().value(new SqlStatement()
         .append("DROP TABLE ").append(options.getOrgActorStatus()).append(";").ln()
         .build()).build();

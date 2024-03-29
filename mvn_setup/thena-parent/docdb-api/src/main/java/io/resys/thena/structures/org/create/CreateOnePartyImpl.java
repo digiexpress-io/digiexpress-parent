@@ -11,8 +11,8 @@ import io.resys.thena.api.actions.OrgCommitActions.OnePartyEnvelope;
 import io.resys.thena.api.entities.org.OrgMember;
 import io.resys.thena.api.entities.org.OrgParty;
 import io.resys.thena.api.entities.org.OrgRight;
-import io.resys.thena.datasource.DataMapper;
 import io.resys.thena.spi.DbState;
+import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.org.OrgInserts.OrgBatchForOne;
 import io.resys.thena.structures.org.OrgState;
 import io.resys.thena.support.RepoAssert;
@@ -104,7 +104,7 @@ public class CreateOnePartyImpl implements CreateOneParty {
         .party(rsp.getParties().isEmpty() ? null : rsp.getParties().get(0))
         .addMessages(rsp.getLog())
         .addAllMessages(rsp.getMessages())
-        .status(DataMapper.mapStatus(rsp.getStatus()))
+        .status(BatchStatus.mapStatus(rsp.getStatus()))
         .build();
       	
       });

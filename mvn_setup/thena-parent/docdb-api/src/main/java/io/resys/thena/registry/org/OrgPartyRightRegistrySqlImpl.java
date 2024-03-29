@@ -11,10 +11,8 @@ import io.resys.thena.api.registry.org.OrgPartyRightRegistry;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.ImmutableSqlTupleList;
-import io.resys.thena.datasource.SqlQueryBuilder.Sql;
-import io.resys.thena.datasource.SqlQueryBuilder.SqlTuple;
-import io.resys.thena.datasource.SqlQueryBuilder.SqlTupleList;
 import io.resys.thena.datasource.TenantTableNames;
+import io.resys.thena.datasource.ThenaSqlClient;
 import io.resys.thena.storesql.support.SqlStatement;
 import io.vertx.mutiny.sqlclient.Row;
 import io.vertx.mutiny.sqlclient.Tuple;
@@ -25,7 +23,7 @@ public class OrgPartyRightRegistrySqlImpl implements OrgPartyRightRegistry {
   private final TenantTableNames options;
   
   @Override
-  public SqlTuple findAll(List<String> id) {
+  public ThenaSqlClient.SqlTuple findAll(List<String> id) {
     final var sql = new SqlStatement()
       .append("SELECT * ").ln()
       .append("  FROM ").append(options.getOrgMemberRights()).ln()
@@ -49,7 +47,7 @@ public class OrgPartyRightRegistrySqlImpl implements OrgPartyRightRegistry {
   }
   
   @Override
-  public Sql findAll() {
+  public ThenaSqlClient.Sql findAll() {
     return ImmutableSql.builder()
         .value(new SqlStatement()
         .append("SELECT * FROM ").append(options.getOrgPartyRights())
@@ -57,7 +55,7 @@ public class OrgPartyRightRegistrySqlImpl implements OrgPartyRightRegistry {
         .build();
   }
   @Override
-  public SqlTuple getById(String id) {
+  public ThenaSqlClient.SqlTuple getById(String id) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT * ").ln()
@@ -69,7 +67,7 @@ public class OrgPartyRightRegistrySqlImpl implements OrgPartyRightRegistry {
   }
 
 	@Override
-	public SqlTuple findAllByGroupId(String userId) {
+	public ThenaSqlClient.SqlTuple findAllByGroupId(String userId) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT * ").ln()
@@ -80,7 +78,7 @@ public class OrgPartyRightRegistrySqlImpl implements OrgPartyRightRegistry {
         .build();
 	}
 	@Override
-	public SqlTuple findAllByRoleId(String userId) {
+	public ThenaSqlClient.SqlTuple findAllByRoleId(String userId) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT * ").ln()
@@ -91,7 +89,7 @@ public class OrgPartyRightRegistrySqlImpl implements OrgPartyRightRegistry {
         .build();
 	}
   @Override
-  public SqlTuple insertOne(OrgPartyRight doc) {
+  public ThenaSqlClient.SqlTuple insertOne(OrgPartyRight doc) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getOrgPartyRights())
@@ -101,7 +99,7 @@ public class OrgPartyRightRegistrySqlImpl implements OrgPartyRightRegistry {
         .build();
   }
   @Override
-  public SqlTupleList insertAll(Collection<OrgPartyRight> users) {
+  public ThenaSqlClient.SqlTupleList insertAll(Collection<OrgPartyRight> users) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getOrgPartyRights())
@@ -114,7 +112,7 @@ public class OrgPartyRightRegistrySqlImpl implements OrgPartyRightRegistry {
   }
 
   @Override
-  public SqlTupleList deleteAll(Collection<OrgPartyRight> roles) {
+  public ThenaSqlClient.SqlTupleList deleteAll(Collection<OrgPartyRight> roles) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("DELETE FROM ").append(options.getOrgPartyRights())
@@ -138,7 +136,7 @@ public class OrgPartyRightRegistrySqlImpl implements OrgPartyRightRegistry {
     return OrgPartyRightRegistrySqlImpl::orgPartyRright;
   }
   @Override
-  public Sql createTable() {
+  public ThenaSqlClient.Sql createTable() {
     return ImmutableSql.builder().value(new SqlStatement().ln()
     .append("CREATE TABLE ").append(options.getOrgPartyRights()).ln()
     .append("(").ln()
@@ -163,12 +161,12 @@ public class OrgPartyRightRegistrySqlImpl implements OrgPartyRightRegistry {
   }
 
   @Override
-  public Sql createConstraints() {
+  public ThenaSqlClient.Sql createConstraints() {
     return ImmutableSql.builder().value("").build();
   }
 
   @Override
-  public Sql dropTable() {
+  public ThenaSqlClient.Sql dropTable() {
     return ImmutableSql.builder().value(new SqlStatement()
         .append("DROP TABLE ").append(options.getOrgPartyRights()).append(";").ln()
         .build()).build();

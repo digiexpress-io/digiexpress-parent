@@ -27,7 +27,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.datasource.TenantTableNames;
-import io.resys.thena.storefile.tables.ImmutableRepoTableRow;
 import io.resys.thena.storefile.tables.RepoTable.RepoTableRow;
 
 public interface RepoTable extends Table<RepoTableRow> {

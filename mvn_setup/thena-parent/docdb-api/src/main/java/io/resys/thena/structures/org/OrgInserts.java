@@ -34,7 +34,7 @@ import io.resys.thena.api.entities.org.OrgParty;
 import io.resys.thena.api.entities.org.OrgPartyRight;
 import io.resys.thena.api.entities.org.OrgRight;
 import io.resys.thena.api.envelope.Message;
-import io.resys.thena.structures.git.GitInserts.BatchStatus;
+import io.resys.thena.structures.BatchStatus;
 import io.smallrye.mutiny.Uni;
 
 public interface OrgInserts {

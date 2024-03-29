@@ -3,6 +3,7 @@ package io.resys.thena.registry;
 import io.resys.thena.api.registry.DocRegistry;
 import io.resys.thena.api.registry.GitRegistry;
 import io.resys.thena.api.registry.OrgRegistry;
+import io.resys.thena.api.registry.TenantRegistry;
 import io.resys.thena.api.registry.ThenaRegistry;
 import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.registry.doc.DocRegistrySqlImpl;
@@ -16,6 +17,7 @@ public class ThenaRegistrySqlImpl implements ThenaRegistry {
   private final OrgRegistry org;
   private final GitRegistry git;
   private final DocRegistry doc;
+  private final TenantRegistry tenant;
   
   public ThenaRegistrySqlImpl(TenantTableNames ctx) {
     super();
@@ -23,6 +25,7 @@ public class ThenaRegistrySqlImpl implements ThenaRegistry {
     this.org = new OrgRegistrySqlImpl(ctx);
     this.doc = new DocRegistrySqlImpl(ctx);
     this.git = new GitRegistrySqlImpl(ctx);
+    this.tenant = new TenantRegistrySqlImpl(ctx);
   }
   
   @Override
@@ -40,5 +43,9 @@ public class ThenaRegistrySqlImpl implements ThenaRegistry {
   @Override
   public DocRegistry doc() {
     return doc;
+  }
+  @Override
+  public TenantRegistry tenant() {
+    return tenant;
   }
 }

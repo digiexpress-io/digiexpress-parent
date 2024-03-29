@@ -31,10 +31,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import io.resys.thena.datasource.TenantTableNames;
+import io.resys.thena.registry.TenantRegistrySqlImpl;
 import io.resys.thena.registry.doc.DocRegistrySqlImpl;
 import io.resys.thena.registry.git.GitRegistrySqlImpl;
 import io.resys.thena.registry.org.OrgRegistrySqlImpl;
-import io.resys.thena.storesql.SqlSchemaImpl;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -44,13 +44,13 @@ public class SqlDbSchemaPrintTest {
   @Test
   public void printSchema() throws IOException {
     final var names = TenantTableNames.defaults("public");
-    final var sqlSchema = new SqlSchemaImpl(names);
+    final var sqlSchema = new TenantRegistrySqlImpl(names);
     final var git = new GitRegistrySqlImpl(names);
     final var doc = new DocRegistrySqlImpl(names);
     final var org = new OrgRegistrySqlImpl(names);
     
     final var schema = new StringBuilder()
-      .append(sqlSchema.createTenant().getValue())
+      .append(sqlSchema.createTable().getValue())
       .append(git.blobs().createTable().getValue())
       .append(git.commits().createTable().getValue())
       .append(git.treeValues().createTable().getValue())

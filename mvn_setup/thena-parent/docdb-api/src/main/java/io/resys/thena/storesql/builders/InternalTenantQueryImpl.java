@@ -28,7 +28,7 @@ public class InternalTenantQueryImpl implements InternalTenantQuery {
 
   @Override
   public Uni<Tenant> getByName(String name) {
-    final var sql = dataSource.getQueryBuilder().repo().getByName(name);
+    final var sql = dataSource.getRegistry().tenant().getByName(name);
     if(log.isDebugEnabled()) {
       log.debug("Repo by name query, with props: {} \r\n{}", 
           sql.getProps().deepToString(), 
@@ -36,7 +36,7 @@ public class InternalTenantQueryImpl implements InternalTenantQuery {
     }
     
     return getClient().preparedQuery(sql.getValue())
-        .mapping(row -> dataSource.getDataMapper().repo(row))
+        .mapping(dataSource.getRegistry().tenant().defaultMapper())
         .execute(sql.getProps())
         .onItem()
         .transform((RowSet<Tenant> rowset) -> {
@@ -56,7 +56,7 @@ public class InternalTenantQueryImpl implements InternalTenantQuery {
 
   @Override
   public Uni<Tenant> getByNameOrId(String nameOrId) {
-    final var sql = dataSource.getQueryBuilder().repo().getByNameOrId(nameOrId);
+    final var sql = dataSource.getRegistry().tenant().getByNameOrId(nameOrId);
     
     if(log.isDebugEnabled()) {
       log.debug("Repo by nameOrId query, with props: {} \r\n{}", 
@@ -64,9 +64,8 @@ public class InternalTenantQueryImpl implements InternalTenantQuery {
           sql.getValue());
     }
     
-    
     return getClient().preparedQuery(sql.getValue())
-        .mapping(row -> dataSource.getDataMapper().repo(row))
+        .mapping(dataSource.getRegistry().tenant().defaultMapper())
         .execute(sql.getProps())
         .onItem()
         .transform((RowSet<Tenant> rowset) -> {
@@ -86,12 +85,11 @@ public class InternalTenantQueryImpl implements InternalTenantQuery {
     final var git = next.getRegistry().git();
     final var doc = next.getRegistry().doc();
     final var org = next.getRegistry().org();
-    final var sqlSchema = next.getSchema();
-    final var sqlQuery = next.getQueryBuilder();
+    final var sqlQuery = next.getRegistry();
     final var pool = next.getPool();
     
     return pool.withTransaction(tx -> {
-      final var repoInsert = sqlQuery.repo().insertOne(newRepo);
+      final var tenantInsert = sqlQuery.tenant().insertOne(newRepo);
       final var tablesCreate = new StringBuilder();
       
       if(newRepo.getType() == StructureType.git) {
@@ -151,14 +149,14 @@ public class InternalTenantQueryImpl implements InternalTenantQuery {
             .toString());
       }
       
-      final Uni<Void> create = getClient().query(sqlSchema.createTenant().getValue()).execute()
+      final Uni<Void> create = getClient().query(dataSource.getRegistry().tenant().createTable().getValue()).execute()
           .onItem().transformToUni(data -> Uni.createFrom().voidItem())
-          .onFailure().invoke(e -> next.getErrorHandler().deadEnd(new SqlFailed("Can't create table 'TENANT'!", sqlSchema.createTenant(), e)));
+          .onFailure().invoke(e -> next.getErrorHandler().deadEnd(new SqlFailed("Can't create table 'TENANT'!", dataSource.getRegistry().tenant().createTable(), e)));
       
       
-      final Uni<Void> insert = tx.preparedQuery(repoInsert.getValue()).execute(repoInsert.getProps())
+      final Uni<Void> insert = tx.preparedQuery(tenantInsert.getValue()).execute(tenantInsert.getProps())
           .onItem().transformToUni(rowSet -> Uni.createFrom().voidItem())
-          .onFailure().invoke(e -> next.getErrorHandler().deadEnd(new SqlTupleFailed("Can't insert into 'TENANT'!", repoInsert, e)));
+          .onFailure().invoke(e -> next.getErrorHandler().deadEnd(new SqlTupleFailed("Can't insert into 'TENANT'!", tenantInsert, e)));
       final Uni<Void> nested = tx.query(tablesCreate.toString()).execute()
           .onItem().transformToUni(rowSet -> Uni.createFrom().voidItem())
           .onFailure().invoke(e -> next.getErrorHandler().deadEnd(new SqlSchemaFailed("Can't create tables!", tablesCreate.toString(), e)));
@@ -172,16 +170,16 @@ public class InternalTenantQueryImpl implements InternalTenantQuery {
 
   @Override
   public Multi<Tenant> findAll() {
-    final var sql = this.dataSource.getQueryBuilder().repo().findAll();
+    final var sql = this.dataSource.getRegistry().tenant().findAll();
     if(log.isDebugEnabled()) {
-      log.debug("Fina all repos query, with props: {} \r\n{}", 
+      log.debug("Fina all tenants query, with props: {} \r\n{}", 
           "", 
           sql.getValue());
     }
     
     
     return getClient().preparedQuery(sql.getValue())
-    .mapping(row -> dataSource.getDataMapper().repo(row))
+        .mapping(dataSource.getRegistry().tenant().defaultMapper())
     .execute()
     .onItem()
     .transformToMulti((RowSet<Tenant> rowset) -> Multi.createFrom().iterable(rowset))
@@ -197,10 +195,10 @@ public class InternalTenantQueryImpl implements InternalTenantQuery {
     final var doc = next.getRegistry().doc();
     final var org = next.getRegistry().org();
     
-    final var sqlQuery = next.getQueryBuilder();
+    final var sqlQuery = next.getRegistry();
     final var pool = next.getPool();
     return pool.withTransaction(tx -> {
-      final var repoDelete = sqlQuery.repo().deleteOne(newRepo);
+      final var tenantDelete = sqlQuery.tenant().deleteOne(newRepo);
       final var tablesDrop = new StringBuilder();
       
       if(newRepo.getType() == StructureType.git) {
@@ -241,9 +239,9 @@ public class InternalTenantQueryImpl implements InternalTenantQuery {
       
       
       if(log.isDebugEnabled()) {
-        log.debug("Delete repo by name query, with props: {} \r\n{}", 
-            repoDelete.getProps().deepToString(), 
-            repoDelete.getValue());
+        log.debug("Delete tenant by name query, with props: {} \r\n{}", 
+            tenantDelete.getProps().deepToString(), 
+            tenantDelete.getValue());
         
         
         log.debug(new StringBuilder("Drop schema: ")
@@ -253,9 +251,9 @@ public class InternalTenantQueryImpl implements InternalTenantQuery {
       }
       
       
-      final Uni<Void> insert = tx.preparedQuery(repoDelete.getValue()).execute(repoDelete.getProps())
+      final Uni<Void> insert = tx.preparedQuery(tenantDelete.getValue()).execute(tenantDelete.getProps())
           .onItem().transformToUni(rowSet -> Uni.createFrom().voidItem())
-          .onFailure().invoke(e -> next.getErrorHandler().deadEnd(new SqlTupleFailed("Can't delete from 'REPO'!", repoDelete, e)));
+          .onFailure().invoke(e -> next.getErrorHandler().deadEnd(new SqlTupleFailed("Can't delete from 'REPO'!", tenantDelete, e)));
       final Uni<Void> nested = tx.query(tablesDrop.toString()).execute()
           .onItem().transformToUni(rowSet -> Uni.createFrom().voidItem())
           .onFailure().invoke(e -> next.getErrorHandler().deadEnd(new SqlSchemaFailed("Can't drop tables!", tablesDrop.toString(), e)));

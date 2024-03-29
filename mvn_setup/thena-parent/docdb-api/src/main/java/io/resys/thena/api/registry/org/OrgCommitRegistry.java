@@ -5,20 +5,18 @@ import java.util.function.Function;
 
 import io.resys.thena.api.entities.org.OrgCommit;
 import io.resys.thena.api.registry.ThenaRegistryService;
-import io.resys.thena.datasource.SqlQueryBuilder.Sql;
-import io.resys.thena.datasource.SqlQueryBuilder.SqlTuple;
-import io.resys.thena.datasource.SqlQueryBuilder.SqlTupleList;
+import io.resys.thena.datasource.ThenaSqlClient;
 
 
 public interface OrgCommitRegistry extends ThenaRegistryService<OrgCommit, io.vertx.mutiny.sqlclient.Row> {
-  SqlTuple getById(String id);
-  Sql findAll();
-  SqlTuple insertOne(OrgCommit commit);
-  SqlTupleList insertAll(Collection<OrgCommit> commit);
+  ThenaSqlClient.SqlTuple getById(String id);
+  ThenaSqlClient.Sql findAll();
+  ThenaSqlClient.SqlTuple insertOne(OrgCommit commit);
+  ThenaSqlClient.SqlTupleList insertAll(Collection<OrgCommit> commit);
   
-  Sql createTable();
-  Sql createConstraints();
-  Sql dropTable();
+  ThenaSqlClient.Sql createTable();
+  ThenaSqlClient.Sql createConstraints();
+  ThenaSqlClient.Sql dropTable();
   
   Function<io.vertx.mutiny.sqlclient.Row, OrgCommit> defaultMapper();
   

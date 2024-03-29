@@ -32,6 +32,8 @@ import io.resys.thena.api.entities.git.Commit;
 import io.resys.thena.api.entities.git.Tag;
 import io.resys.thena.api.entities.git.Tree;
 import io.resys.thena.api.envelope.Message;
+import io.resys.thena.structures.BatchStatus;
+import io.resys.thena.structures.UpsertStatus;
 import io.smallrye.mutiny.Uni;
 
 public interface GitInserts {
@@ -42,9 +44,6 @@ public interface GitInserts {
   Uni<UpsertResult> tree(Tree tree);
   Uni<UpsertResult> commit(Commit commit);
   Uni<GitBatch> batch(GitBatch output);
-  
-  enum UpsertStatus { OK, DUPLICATE, ERROR, CONFLICT }
-  enum BatchStatus { OK, EMPTY, ERROR, CONFLICT }
   
   @Value.Immutable
   interface GitBatch {

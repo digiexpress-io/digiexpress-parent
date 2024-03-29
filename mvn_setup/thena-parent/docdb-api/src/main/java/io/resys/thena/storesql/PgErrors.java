@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 public class PgErrors implements ThenaSqlDataSourceErrorHandler {
+  @SuppressWarnings("unused")
   private final TenantTableNames options;
   
   public boolean notFound(Throwable e) {

@@ -22,11 +22,12 @@ package io.resys.thena.api.entities;
 
 import org.immutables.value.Value;
 
+import io.resys.thena.api.registry.ThenaRegistryService.ThenaTable;
 import jakarta.annotation.Nullable;
 
 
 @Value.Immutable
-public interface Tenant {
+public interface Tenant extends ThenaTable {
   String getId();
   String getRev();
   String getPrefix();

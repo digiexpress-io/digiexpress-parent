@@ -15,10 +15,8 @@ import io.resys.thena.api.registry.doc.DocMainRegistry;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.ImmutableSqlTupleList;
-import io.resys.thena.datasource.SqlQueryBuilder.Sql;
-import io.resys.thena.datasource.SqlQueryBuilder.SqlTuple;
-import io.resys.thena.datasource.SqlQueryBuilder.SqlTupleList;
 import io.resys.thena.datasource.TenantTableNames;
+import io.resys.thena.datasource.ThenaSqlClient;
 import io.resys.thena.storesql.support.SqlStatement;
 import io.resys.thena.structures.doc.DocQueries.FlattedCriteria;
 import io.vertx.core.json.JsonObject;
@@ -31,7 +29,7 @@ public class DocMainRegistrySqlImpl implements DocMainRegistry {
   private final TenantTableNames options;
   
   @Override
-  public Sql findAll() {
+  public ThenaSqlClient.Sql findAll() {
     return ImmutableSql.builder()
         .value(new SqlStatement()
         .append("SELECT * FROM ").append(options.getDoc())
@@ -39,7 +37,7 @@ public class DocMainRegistrySqlImpl implements DocMainRegistry {
         .build();
   }
   @Override
-  public SqlTuple getById(String id) {
+  public ThenaSqlClient.SqlTuple getById(String id) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT * ").ln()
@@ -50,7 +48,7 @@ public class DocMainRegistrySqlImpl implements DocMainRegistry {
         .build();
   }
   @Override
-  public SqlTuple findById(String id) {
+  public ThenaSqlClient.SqlTuple findById(String id) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT * ").ln()
@@ -67,7 +65,7 @@ public class DocMainRegistrySqlImpl implements DocMainRegistry {
         .build();
   }
   @Override
-  public SqlTuple insertOne(Doc doc) {
+  public ThenaSqlClient.SqlTuple insertOne(Doc doc) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getDoc())
@@ -77,7 +75,7 @@ public class DocMainRegistrySqlImpl implements DocMainRegistry {
         .build();
   }
   @Override
-  public SqlTuple deleteById(String id) {
+  public ThenaSqlClient.SqlTuple deleteById(String id) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("DELETE FROM ").append(options.getDoc())
@@ -90,7 +88,7 @@ public class DocMainRegistrySqlImpl implements DocMainRegistry {
         .build();
   }
   @Override
-  public SqlTuple updateOne(Doc doc) {
+  public ThenaSqlClient.SqlTuple updateOne(Doc doc) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("UPDATE ").append(options.getDoc())
@@ -102,7 +100,7 @@ public class DocMainRegistrySqlImpl implements DocMainRegistry {
   }
   
   @Override
-  public SqlTupleList insertMany(List<Doc> docs) {
+  public ThenaSqlClient.SqlTupleList insertMany(List<Doc> docs) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getDoc())
@@ -114,7 +112,7 @@ public class DocMainRegistrySqlImpl implements DocMainRegistry {
         .build();
   }
   @Override
-  public SqlTupleList updateMany(List<Doc> docs) {
+  public ThenaSqlClient.SqlTupleList updateMany(List<Doc> docs) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("UPDATE ").append(options.getDoc())
@@ -128,7 +126,7 @@ public class DocMainRegistrySqlImpl implements DocMainRegistry {
   }
 
   @Override
-  public Sql findAllFlatted() {
+  public ThenaSqlClient.Sql findAllFlatted() {
     return ImmutableSql.builder()
         .value(new SqlStatement()
         .append("SELECT ")
@@ -165,7 +163,7 @@ public class DocMainRegistrySqlImpl implements DocMainRegistry {
         .build();  
   }
   @Override
-  public SqlTuple findAllFlatted(FlattedCriteria criteria) {
+  public ThenaSqlClient.SqlTuple findAllFlatted(FlattedCriteria criteria) {
     
     final var props = new ArrayList<Object>();
     final var additional = new StringBuilder();
@@ -301,7 +299,7 @@ public class DocMainRegistrySqlImpl implements DocMainRegistry {
     return row.getJsonObject(columnName);
   }
   @Override
-  public Sql createTable() {
+  public ThenaSqlClient.Sql createTable() {
     return ImmutableSql.builder().value(new SqlStatement().ln()
         .append("CREATE TABLE ").append(options.getDoc()).ln()
         .append("(").ln()
@@ -336,11 +334,11 @@ public class DocMainRegistrySqlImpl implements DocMainRegistry {
         .build()).build();
   }
   @Override
-  public Sql createConstraints() {
+  public ThenaSqlClient.Sql createConstraints() {
     return ImmutableSql.builder().value("").build();
   }
   @Override
-  public Sql dropTable() {
+  public ThenaSqlClient.Sql dropTable() {
     return ImmutableSql.builder().value(new SqlStatement()
         .append("DROP TABLE ").append(options.getDoc()).append(";").ln()
         .build()).build();

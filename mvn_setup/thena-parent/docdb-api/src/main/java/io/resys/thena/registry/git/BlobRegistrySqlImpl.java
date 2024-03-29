@@ -41,10 +41,8 @@ import io.resys.thena.api.registry.git.BlobRegistry;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.ImmutableSqlTupleList;
-import io.resys.thena.datasource.SqlQueryBuilder.Sql;
-import io.resys.thena.datasource.SqlQueryBuilder.SqlTuple;
-import io.resys.thena.datasource.SqlQueryBuilder.SqlTupleList;
 import io.resys.thena.datasource.TenantTableNames;
+import io.resys.thena.datasource.ThenaSqlClient;
 import io.resys.thena.storesql.support.SqlStatement;
 import io.resys.thena.support.RepoAssert;
 import io.vertx.core.json.JsonArray;
@@ -58,7 +56,7 @@ public class BlobRegistrySqlImpl implements BlobRegistry {
   protected final TenantTableNames options;
   
   @Override
-  public Sql findAll() {
+  public ThenaSqlClient.Sql findAll() {
     return ImmutableSql.builder()
         .value(new SqlStatement()
         .append("SELECT * FROM ").append(options.getBlobs())
@@ -66,7 +64,7 @@ public class BlobRegistrySqlImpl implements BlobRegistry {
         .build();
   }
   @Override
-  public SqlTuple getById(String blobId) {
+  public ThenaSqlClient.SqlTuple getById(String blobId) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT * FROM ").append(options.getBlobs())
@@ -77,7 +75,7 @@ public class BlobRegistrySqlImpl implements BlobRegistry {
         .build();
   }
   @Override
-  public SqlTuple findByIds(Collection<String> blobId) {
+  public ThenaSqlClient.SqlTuple findByIds(Collection<String> blobId) {
     StringBuilder params = new StringBuilder();
     List<String> tuple = new ArrayList<>();
     
@@ -101,7 +99,7 @@ public class BlobRegistrySqlImpl implements BlobRegistry {
         .build();
   }
   @Override
-  public SqlTuple findByTree(String treeId, List<MatchCriteria> criteria) {
+  public ThenaSqlClient.SqlTuple findByTree(String treeId, List<MatchCriteria> criteria) {
     final var conditions = createWhereCriteria(criteria);
     final var props = new LinkedList<>(conditions.getProps());
     final var treeIdPos = props.size() + 1;
@@ -122,7 +120,7 @@ public class BlobRegistrySqlImpl implements BlobRegistry {
         .build();
   }
   @Override
-  public SqlTuple findByTree(String treeId, List<String> blobNames, List<MatchCriteria> criteria) {
+  public ThenaSqlClient.SqlTuple findByTree(String treeId, List<String> blobNames, List<MatchCriteria> criteria) {
     final var conditions = createWhereCriteria(criteria);
     final var props = new LinkedList<>(conditions.getProps());
     final var treeIdPos = props.size() + 1;
@@ -259,7 +257,7 @@ WHERE blobs.value LIKE $1
 
   
   @Override
-  public SqlTuple insertOne(Blob blob) {
+  public ThenaSqlClient.SqlTuple insertOne(Blob blob) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getBlobs())
@@ -270,7 +268,7 @@ WHERE blobs.value LIKE $1
         .build();
   }
   @Override
-  public SqlTupleList insertAll(Collection<Blob> blobs) {
+  public ThenaSqlClient.SqlTupleList insertAll(Collection<Blob> blobs) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getBlobs())
@@ -347,7 +345,7 @@ WHERE blobs.value LIKE $1
   }
   
   @Override
-  public SqlTuple find(String name, boolean latestOnly, List<MatchCriteria> criteria) {
+  public ThenaSqlClient.SqlTuple find(String name, boolean latestOnly, List<MatchCriteria> criteria) {
 
     final String sql;
     final var conditions = createWhereCriteria(criteria);
@@ -410,7 +408,7 @@ WHERE blobs.value LIKE $1
   
 
   @Override
-  public Sql createTable() {
+  public ThenaSqlClient.Sql createTable() {
     return ImmutableSql.builder().value(new SqlStatement().ln()
     .append("CREATE TABLE ").append(options.getBlobs()).ln()
     .append("(").ln()
@@ -422,11 +420,11 @@ WHERE blobs.value LIKE $1
     .build()).build();
   }
   @Override
-  public Sql createConstraints() {
+  public ThenaSqlClient.Sql createConstraints() {
     return ImmutableSql.builder().value(new SqlStatement().append("").build()).build();
   }
   @Override
-  public Sql dropTable() {
+  public ThenaSqlClient.Sql dropTable() {
     return ImmutableSql.builder().value(new SqlStatement()
         .append("DROP TABLE ").append(options.getBlobs()).append(";").ln()
         .build()).build();

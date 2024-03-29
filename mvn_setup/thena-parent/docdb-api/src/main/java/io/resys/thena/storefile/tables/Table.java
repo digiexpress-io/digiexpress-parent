@@ -34,7 +34,6 @@ import io.resys.thena.api.entities.git.CommitTree;
 import io.resys.thena.api.entities.git.Tag;
 import io.resys.thena.api.entities.git.Tree;
 import io.resys.thena.api.entities.git.TreeValue;
-import io.resys.thena.datasource.DataMapper;
 import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.storefile.tables.Table.Row;
 import io.smallrye.mutiny.Uni;
@@ -59,7 +58,7 @@ public interface Table<T extends Row>  {
   interface RowExists extends Row { boolean getExists(); }
 
   
-  interface FileMapper extends DataMapper<Table.Row> { 
+  interface FileMapper { 
     Tenant repo(Table.Row row);
     
     Commit commit(Table.Row row);

@@ -32,7 +32,7 @@ import io.resys.thena.api.entities.doc.DocBranchLock;
 import io.resys.thena.api.entities.doc.DocCommit;
 import io.resys.thena.api.entities.doc.DocLog;
 import io.resys.thena.api.envelope.Message;
-import io.resys.thena.structures.git.GitInserts.BatchStatus;
+import io.resys.thena.structures.BatchStatus;
 import io.smallrye.mutiny.Uni;
 
 public interface DocInserts {

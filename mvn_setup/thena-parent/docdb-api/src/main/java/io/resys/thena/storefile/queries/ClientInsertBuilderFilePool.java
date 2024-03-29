@@ -15,6 +15,8 @@ import io.resys.thena.storefile.tables.Table.FileMapper;
 import io.resys.thena.storefile.tables.Table.FilePool;
 import io.resys.thena.storefile.tables.Table.FileTuple;
 import io.resys.thena.storefile.tables.Table.FileTupleList;
+import io.resys.thena.structures.BatchStatus;
+import io.resys.thena.structures.UpsertStatus;
 import io.resys.thena.structures.git.GitInserts;
 import io.resys.thena.structures.git.ImmutableGitBatch;
 import io.resys.thena.structures.git.ImmutableInsertResult;

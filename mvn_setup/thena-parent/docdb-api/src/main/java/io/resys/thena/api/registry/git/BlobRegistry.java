@@ -10,26 +10,24 @@ import io.resys.thena.api.actions.GitPullActions.MatchCriteria;
 import io.resys.thena.api.entities.git.Blob;
 import io.resys.thena.api.entities.git.BlobHistory;
 import io.resys.thena.api.registry.ThenaRegistryService;
-import io.resys.thena.datasource.SqlQueryBuilder.Sql;
-import io.resys.thena.datasource.SqlQueryBuilder.SqlTuple;
-import io.resys.thena.datasource.SqlQueryBuilder.SqlTupleList;
+import io.resys.thena.datasource.ThenaSqlClient;
 
 
 public interface BlobRegistry extends ThenaRegistryService<Blob, io.vertx.mutiny.sqlclient.Row> {
-  Sql findAll();
-  SqlTuple getById(String blobId);
+  ThenaSqlClient.Sql findAll();
+  ThenaSqlClient.SqlTuple getById(String blobId);
   
-  SqlTuple insertOne(Blob blob);
-  SqlTupleList insertAll(Collection<Blob> blobs);
+  ThenaSqlClient.SqlTuple insertOne(Blob blob);
+  ThenaSqlClient.SqlTupleList insertAll(Collection<Blob> blobs);
   
-  SqlTuple find(@Nullable String name, boolean latestOnly, List<MatchCriteria> criteria);
-  SqlTuple findByTree(String treeId, List<MatchCriteria> criteria);
-  SqlTuple findByTree(String treeId, List<String> blobNames, List<MatchCriteria> criteria);
-  SqlTuple findByIds(Collection<String> blobId);
+  ThenaSqlClient.SqlTuple find(@Nullable String name, boolean latestOnly, List<MatchCriteria> criteria);
+  ThenaSqlClient.SqlTuple findByTree(String treeId, List<MatchCriteria> criteria);
+  ThenaSqlClient.SqlTuple findByTree(String treeId, List<String> blobNames, List<MatchCriteria> criteria);
+  ThenaSqlClient.SqlTuple findByIds(Collection<String> blobId);
   
-  Sql createTable();
-  Sql createConstraints();
-  Sql dropTable();
+  ThenaSqlClient.Sql createTable();
+  ThenaSqlClient.Sql createConstraints();
+  ThenaSqlClient.Sql dropTable();
   
   Function<io.vertx.mutiny.sqlclient.Row, Blob> defaultMapper();
   

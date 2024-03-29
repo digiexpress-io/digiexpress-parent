@@ -11,10 +11,8 @@ import io.resys.thena.api.registry.org.OrgPartyRegistry;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.ImmutableSqlTupleList;
-import io.resys.thena.datasource.SqlQueryBuilder.Sql;
-import io.resys.thena.datasource.SqlQueryBuilder.SqlTuple;
-import io.resys.thena.datasource.SqlQueryBuilder.SqlTupleList;
 import io.resys.thena.datasource.TenantTableNames;
+import io.resys.thena.datasource.ThenaSqlClient;
 import io.resys.thena.storesql.support.SqlStatement;
 import io.vertx.mutiny.sqlclient.Row;
 import io.vertx.mutiny.sqlclient.Tuple;
@@ -25,7 +23,7 @@ public class OrgPartyRegistrySqlImpl implements OrgPartyRegistry {
   private final TenantTableNames options;
   
   @Override
-  public SqlTuple findAll(Collection<String> id) {
+  public ThenaSqlClient.SqlTuple findAll(Collection<String> id) {
     final var sql = new SqlStatement()
       .append("SELECT * ").ln()
       .append("  FROM ").append(options.getOrgParties()).ln()
@@ -51,7 +49,7 @@ public class OrgPartyRegistrySqlImpl implements OrgPartyRegistry {
   }
   
   @Override
-  public Sql findAll() {
+  public ThenaSqlClient.Sql findAll() {
     return ImmutableSql.builder()
         .value(new SqlStatement()
         .append("SELECT * FROM ").append(options.getOrgParties())
@@ -59,7 +57,7 @@ public class OrgPartyRegistrySqlImpl implements OrgPartyRegistry {
         .build();
   }
   @Override
-  public SqlTuple getById(String id) {
+  public ThenaSqlClient.SqlTuple getById(String id) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT * ").ln()
@@ -70,7 +68,7 @@ public class OrgPartyRegistrySqlImpl implements OrgPartyRegistry {
         .build();
   }
   @Override
-  public SqlTuple insertOne(OrgParty doc) {
+  public ThenaSqlClient.SqlTuple insertOne(OrgParty doc) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getOrgParties())
@@ -80,7 +78,7 @@ public class OrgPartyRegistrySqlImpl implements OrgPartyRegistry {
         .build();
   }
   @Override
-  public SqlTuple updateOne(OrgParty doc) {
+  public ThenaSqlClient.SqlTuple updateOne(OrgParty doc) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("UPDATE ").append(options.getOrgMembers())
@@ -91,7 +89,7 @@ public class OrgPartyRegistrySqlImpl implements OrgPartyRegistry {
         .build();
   }
   @Override
-  public SqlTupleList insertAll(Collection<OrgParty> users) {
+  public ThenaSqlClient.SqlTupleList insertAll(Collection<OrgParty> users) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getOrgParties())
@@ -103,7 +101,7 @@ public class OrgPartyRegistrySqlImpl implements OrgPartyRegistry {
         .build();
   }
   @Override
-  public SqlTupleList updateMany(Collection<OrgParty> users) {
+  public ThenaSqlClient.SqlTupleList updateMany(Collection<OrgParty> users) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("UPDATE ").append(options.getOrgParties())
@@ -132,7 +130,7 @@ public class OrgPartyRegistrySqlImpl implements OrgPartyRegistry {
   }
 
   @Override
-  public Sql createTable() {
+  public ThenaSqlClient.Sql createTable() {
     return ImmutableSql.builder().value(new SqlStatement().ln()
     .append("CREATE TABLE ").append(options.getOrgParties()).ln()
     .append("(").ln()
@@ -165,7 +163,7 @@ public class OrgPartyRegistrySqlImpl implements OrgPartyRegistry {
   }
 
   @Override
-  public Sql createConstraints() {
+  public ThenaSqlClient.Sql createConstraints() {
     return ImmutableSql.builder().value(new SqlStatement()
         .append(createOrgGroupFk(options.getOrgActorData())).ln()
         .append(createOrgGroupFk(options.getOrgActorStatus())).ln()
@@ -183,7 +181,7 @@ public class OrgPartyRegistrySqlImpl implements OrgPartyRegistry {
   }
 
   @Override
-  public Sql dropTable() {
+  public ThenaSqlClient.Sql dropTable() {
     return ImmutableSql.builder().value(new SqlStatement()
         .append("DROP TABLE ").append(options.getOrgParties()).append(";").ln()
         .build()).build();

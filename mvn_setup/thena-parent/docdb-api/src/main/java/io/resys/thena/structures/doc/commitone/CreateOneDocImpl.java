@@ -2,9 +2,9 @@ package io.resys.thena.structures.doc.commitone;
 
 import io.resys.thena.api.actions.DocCommitActions.CreateOneDoc;
 import io.resys.thena.api.actions.DocCommitActions.OneDocEnvelope;
-import io.resys.thena.datasource.DataMapper;
 import io.resys.thena.api.actions.ImmutableOneDocEnvelope;
 import io.resys.thena.spi.DbState;
+import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.doc.DocState;
 import io.resys.thena.structures.doc.support.BatchForOneDocCreate;
 import io.resys.thena.support.RepoAssert;
@@ -78,7 +78,7 @@ public class CreateOneDocImpl implements CreateOneDoc {
         .branch(batch.getDocBranch().iterator().next())
         .addMessages(rsp.getLog())
         .addAllMessages(rsp.getMessages())
-        .status(DataMapper.mapStatus(rsp.getStatus()))
+        .status(BatchStatus.mapStatus(rsp.getStatus()))
         .build());
   }
 

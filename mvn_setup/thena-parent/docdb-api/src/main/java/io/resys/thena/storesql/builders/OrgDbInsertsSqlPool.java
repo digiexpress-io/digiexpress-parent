@@ -10,7 +10,7 @@ import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.api.registry.OrgRegistry;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.storesql.support.Execute;
-import io.resys.thena.structures.git.GitInserts.BatchStatus;
+import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.org.ImmutableOrgBatchForOne;
 import io.resys.thena.structures.org.OrgInserts;
 import io.resys.thena.support.RepoAssert;

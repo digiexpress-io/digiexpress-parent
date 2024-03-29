@@ -1,9 +1,5 @@
 package io.resys.thena.datasource;
 
-import io.resys.thena.datasource.SqlQueryBuilder.Sql;
-import io.resys.thena.datasource.SqlQueryBuilder.SqlTuple;
-import io.resys.thena.datasource.SqlQueryBuilder.SqlTupleList;
-
 /*-
  * #%L
  * thena-docdb-api
@@ -58,34 +54,34 @@ public interface ThenaSqlDataSourceErrorHandler {
 	}	
 	public static class SqlFailed extends RuntimeException {
 		private static final long serialVersionUID = -6960481243464191887L;
-		private final Sql sql;
-		public SqlFailed(String message, Sql sql, Throwable cause) {
+		private final ThenaSqlClient.Sql sql;
+		public SqlFailed(String message, ThenaSqlClient.Sql sql, Throwable cause) {
 			super(message, cause);
 			this.sql = sql;
 		}		
-		public Sql getSql() {
+		public ThenaSqlClient.Sql getSql() {
 			return sql;
 		}
 	}	
 	public static class SqlTupleFailed extends RuntimeException {
 		private static final long serialVersionUID = -6960481243464191887L;
-		private final SqlTuple sql;
-		public SqlTupleFailed(String message, SqlTuple sql, Throwable cause) {
+		private final ThenaSqlClient.SqlTuple sql;
+		public SqlTupleFailed(String message, ThenaSqlClient.SqlTuple sql, Throwable cause) {
 			super(message, cause);
 			this.sql = sql;
 		}		
-		public SqlTuple getSql() {
+		public ThenaSqlClient.SqlTuple getSql() {
 			return sql;
 		}
 	}	
 	public static class SqlTupleListFailed extends RuntimeException {
 		private static final long serialVersionUID = -6960481243464191887L;
-		private final SqlTupleList sql;
-		public SqlTupleListFailed(String message, SqlTupleList sql, Throwable cause) {
+		private final ThenaSqlClient.SqlTupleList sql;
+		public SqlTupleListFailed(String message, ThenaSqlClient.SqlTupleList sql, Throwable cause) {
 			super(message, cause);
 			this.sql = sql;
 		}		
-		public SqlTupleList getSql() {
+		public ThenaSqlClient.SqlTupleList getSql() {
 			return sql;
 		}
 	}	

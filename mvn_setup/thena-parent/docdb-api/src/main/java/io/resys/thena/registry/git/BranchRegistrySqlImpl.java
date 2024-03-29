@@ -8,9 +8,8 @@ import io.resys.thena.api.entities.git.ImmutableBranch;
 import io.resys.thena.api.registry.git.BranchRegistry;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
-import io.resys.thena.datasource.SqlQueryBuilder.Sql;
-import io.resys.thena.datasource.SqlQueryBuilder.SqlTuple;
 import io.resys.thena.datasource.TenantTableNames;
+import io.resys.thena.datasource.ThenaSqlClient;
 import io.resys.thena.storesql.support.SqlStatement;
 import io.vertx.mutiny.sqlclient.Row;
 import io.vertx.mutiny.sqlclient.Tuple;
@@ -21,7 +20,7 @@ public class BranchRegistrySqlImpl implements BranchRegistry {
   private final TenantTableNames options;
 
   @Override
-  public Sql findAll() {
+  public ThenaSqlClient.Sql findAll() {
     return ImmutableSql.builder()
         .value(new SqlStatement()
         .append("SELECT * FROM ").append(options.getRefs())
@@ -30,7 +29,7 @@ public class BranchRegistrySqlImpl implements BranchRegistry {
   }
 
   @Override
-  public SqlTuple getByName(String name) {
+  public ThenaSqlClient.SqlTuple getByName(String name) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT * FROM ").append(options.getRefs())
@@ -41,7 +40,7 @@ public class BranchRegistrySqlImpl implements BranchRegistry {
         .build();
   }
   @Override
-  public SqlTuple getByNameOrCommit(String refNameOrCommit) {
+  public ThenaSqlClient.SqlTuple getByNameOrCommit(String refNameOrCommit) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT * FROM ").append(options.getRefs())
@@ -53,7 +52,7 @@ public class BranchRegistrySqlImpl implements BranchRegistry {
   }
 
   @Override
-  public Sql getFirst() {
+  public ThenaSqlClient.Sql getFirst() {
     return ImmutableSql.builder()
         .value(new SqlStatement()
         .append("SELECT * FROM ").append(options.getRefs())
@@ -63,7 +62,7 @@ public class BranchRegistrySqlImpl implements BranchRegistry {
   }
 
   @Override
-  public SqlTuple insertOne(Branch ref) {
+  public ThenaSqlClient.SqlTuple insertOne(Branch ref) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getRefs())
@@ -74,7 +73,7 @@ public class BranchRegistrySqlImpl implements BranchRegistry {
   }
 
   @Override
-  public SqlTuple updateOne(Branch ref, Commit commit) {
+  public ThenaSqlClient.SqlTuple updateOne(Branch ref, Commit commit) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("UPDATE ").append(options.getRefs())
@@ -86,7 +85,7 @@ public class BranchRegistrySqlImpl implements BranchRegistry {
   }
 
   @Override
-  public SqlTuple getById(String id) {
+  public ThenaSqlClient.SqlTuple getById(String id) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT * FROM ").append(options.getRefs())
@@ -108,7 +107,7 @@ public class BranchRegistrySqlImpl implements BranchRegistry {
         .build();
   }
   @Override
-  public Sql createTable() {
+  public ThenaSqlClient.Sql createTable() {
     return ImmutableSql.builder().value(new SqlStatement().ln()
     .append("CREATE TABLE ").append(options.getRefs()).ln()
     .append("(").ln()
@@ -119,7 +118,7 @@ public class BranchRegistrySqlImpl implements BranchRegistry {
   }
 
   @Override
-  public Sql createConstraints() {
+  public ThenaSqlClient.Sql createConstraints() {
     return ImmutableSql.builder()
         .value(new SqlStatement().ln()
         .append("ALTER TABLE ").append(options.getRefs()).ln()
@@ -131,7 +130,7 @@ public class BranchRegistrySqlImpl implements BranchRegistry {
   }
 
   @Override
-  public Sql dropTable() {
+  public ThenaSqlClient.Sql dropTable() {
     return ImmutableSql.builder().value(new SqlStatement()
         .append("DROP TABLE ").append(options.getRefs()).append(";").ln()
         .build()).build();

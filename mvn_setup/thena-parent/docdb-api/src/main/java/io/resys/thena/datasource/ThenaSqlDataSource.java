@@ -27,10 +27,6 @@ public interface ThenaSqlDataSource extends ThenaDataSource {
   
   boolean isTenantLoaded();
   ThenaRegistry getRegistry();
-  
-  SqlSchema getSchema();
-  SqlDataMapper getDataMapper();
-  SqlQueryBuilder getQueryBuilder();
   ThenaSqlDataSourceErrorHandler getErrorHandler();
   
 

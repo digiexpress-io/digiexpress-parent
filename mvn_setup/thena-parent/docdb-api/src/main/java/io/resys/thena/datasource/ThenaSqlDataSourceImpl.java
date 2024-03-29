@@ -14,9 +14,6 @@ public class ThenaSqlDataSourceImpl implements ThenaSqlDataSource {
   private final ThenaSqlPool pool;
   private final ThenaSqlDataSourceErrorHandler errorHandler;
   private final Optional<ThenaSqlClient> tx;
-  private final SqlSchema schema;
-  private final SqlDataMapper dataMapper;
-  private final SqlQueryBuilder queryBuilder;
   private final ThenaRegistry registry;
   private final boolean isTenantLoaded;
   
@@ -26,17 +23,10 @@ public class ThenaSqlDataSourceImpl implements ThenaSqlDataSource {
       ThenaSqlPool pool,
       ThenaSqlDataSourceErrorHandler errorHandler, 
       Optional<ThenaSqlClient> tx,
-      
-      SqlSchema schema,
-      SqlDataMapper dataMapper,
-      SqlQueryBuilder queryBuilder,
       ThenaRegistry registry) {
     super();
     this.tenant = tenant;
     this.tenantTableNames = tenantTableNames.toRepo(tenant);
-    this.dataMapper = dataMapper.withOptions(this.tenantTableNames);
-    this.queryBuilder = queryBuilder.withTenant(this.tenantTableNames);
-    this.schema = schema.withTenant(this.tenantTableNames);
     this.registry = registry.withTenant(this.tenantTableNames);
     this.errorHandler = errorHandler.withOptions(this.tenantTableNames);
     this.pool = pool;
@@ -50,10 +40,6 @@ public class ThenaSqlDataSourceImpl implements ThenaSqlDataSource {
       ThenaSqlPool pool,
       ThenaSqlDataSourceErrorHandler errorHandler, 
       Optional<ThenaSqlClient> tx, 
-      
-      SqlSchema schema,
-      SqlDataMapper dataMapper,
-      SqlQueryBuilder queryBuilder,
       ThenaRegistry registry) {
     super();
     this.isTenantLoaded = false;
@@ -65,10 +51,7 @@ public class ThenaSqlDataSourceImpl implements ThenaSqlDataSource {
         .prefix("")
         .build();
     this.tenantTableNames = tenantTableNames.toRepo(this.tenant);
-    this.dataMapper = dataMapper.withOptions(this.tenantTableNames);
-    this.queryBuilder = queryBuilder.withTenant(this.tenantTableNames);
     this.errorHandler = errorHandler.withOptions(this.tenantTableNames);
-    this.schema = schema.withTenant(this.tenantTableNames);
     this.registry = registry.withTenant(this.tenantTableNames);
     this.pool = pool;
     this.tx = tx;
@@ -95,20 +78,8 @@ public class ThenaSqlDataSourceImpl implements ThenaSqlDataSource {
     return tx;
   }
   @Override
-  public SqlDataMapper getDataMapper() {
-    return dataMapper;
-  }
-  @Override
-  public SqlSchema getSchema() {
-    return schema;
-  }
-  @Override
-  public SqlQueryBuilder getQueryBuilder() {
-    return queryBuilder;
-  }
-  @Override
   public ThenaSqlDataSource withTenant(Tenant tenant) {
-    return new ThenaSqlDataSourceImpl(tenant, tenantTableNames, pool, errorHandler, tx, schema, dataMapper, queryBuilder, registry);
+    return new ThenaSqlDataSourceImpl(tenant, tenantTableNames, pool, errorHandler, tx, registry);
   }
 
   @Override
@@ -118,7 +89,7 @@ public class ThenaSqlDataSourceImpl implements ThenaSqlDataSource {
 
   @Override
   public ThenaSqlDataSource withTx(ThenaSqlClient tx) {
-    return new ThenaSqlDataSourceImpl(tenant, tenantTableNames, pool, errorHandler, Optional.of(tx), schema, dataMapper, queryBuilder, registry);
+    return new ThenaSqlDataSourceImpl(tenant, tenantTableNames, pool, errorHandler, Optional.of(tx), registry);
   }
 
   @Override

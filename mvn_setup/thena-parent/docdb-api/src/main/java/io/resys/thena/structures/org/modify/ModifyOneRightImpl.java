@@ -19,8 +19,8 @@ import io.resys.thena.api.entities.org.OrgParty;
 import io.resys.thena.api.entities.org.OrgPartyRight;
 import io.resys.thena.api.entities.org.OrgRight;
 import io.resys.thena.api.envelope.ImmutableMessage;
-import io.resys.thena.datasource.DataMapper;
 import io.resys.thena.spi.DbState;
+import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.org.OrgInserts.OrgBatchForOne;
 import io.resys.thena.structures.org.OrgState;
 import io.resys.thena.structures.org.modify.BatchForOneRightModify.NoRightChangesException;
@@ -280,7 +280,7 @@ public class ModifyOneRightImpl implements ModifyOneRight {
           .right(rsp.getRights().isEmpty() ? null : rsp.getRights().get(0))
           .addMessages(rsp.getLog())
           .addAllMessages(rsp.getMessages())
-          .status(DataMapper.mapStatus(rsp.getStatus()))
+          .status(BatchStatus.mapStatus(rsp.getStatus()))
           .build());
 
   }

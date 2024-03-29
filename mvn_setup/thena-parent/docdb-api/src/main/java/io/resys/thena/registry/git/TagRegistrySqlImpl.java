@@ -8,9 +8,8 @@ import io.resys.thena.api.entities.git.Tag;
 import io.resys.thena.api.registry.git.TagRegistry;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
-import io.resys.thena.datasource.SqlQueryBuilder.Sql;
-import io.resys.thena.datasource.SqlQueryBuilder.SqlTuple;
 import io.resys.thena.datasource.TenantTableNames;
+import io.resys.thena.datasource.ThenaSqlClient;
 import io.resys.thena.storesql.support.SqlStatement;
 import io.vertx.mutiny.sqlclient.Row;
 import io.vertx.mutiny.sqlclient.Tuple;
@@ -22,7 +21,7 @@ public class TagRegistrySqlImpl implements TagRegistry {
   private final TenantTableNames options;
   
   @Override
-  public Sql findAll() {
+  public ThenaSqlClient.Sql findAll() {
     return ImmutableSql.builder()
         .value(new SqlStatement()
         .append("SELECT * FROM ").append(options.getTags())
@@ -31,11 +30,11 @@ public class TagRegistrySqlImpl implements TagRegistry {
   }
 
   @Override
-  public SqlTuple getById(String id) {
+  public ThenaSqlClient.SqlTuple getById(String id) {
     return getByName(id);
   }
   @Override
-  public SqlTuple getByName(String name) {
+  public ThenaSqlClient.SqlTuple getByName(String name) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT * FROM ").append(options.getTags())
@@ -46,7 +45,7 @@ public class TagRegistrySqlImpl implements TagRegistry {
         .build();
   }
   @Override
-  public SqlTuple deleteByName(String name) {
+  public ThenaSqlClient.SqlTuple deleteByName(String name) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("DELETE FROM ").append(options.getTags())
@@ -56,7 +55,7 @@ public class TagRegistrySqlImpl implements TagRegistry {
         .build();
   }
   @Override
-  public Sql getFirst() {
+  public ThenaSqlClient.Sql getFirst() {
     return ImmutableSql.builder()
         .value(new SqlStatement()
         .append("SELECT * FROM ").append(options.getTags())
@@ -65,7 +64,7 @@ public class TagRegistrySqlImpl implements TagRegistry {
         .build();
   }
   @Override
-  public SqlTuple insertOne(Tag newTag) {
+  public ThenaSqlClient.SqlTuple insertOne(Tag newTag) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getTags())
@@ -89,7 +88,7 @@ public class TagRegistrySqlImpl implements TagRegistry {
         .build();
   }
   @Override
-  public Sql createTable() {
+  public ThenaSqlClient.Sql createTable() {
     return ImmutableSql.builder().value(new SqlStatement().ln()
       .append("CREATE TABLE ").append(options.getTags()).ln()
       .append("(").ln()
@@ -103,7 +102,7 @@ public class TagRegistrySqlImpl implements TagRegistry {
       .build();
   }
   @Override
-  public Sql createConstraints() {
+  public ThenaSqlClient.Sql createConstraints() {
     return ImmutableSql.builder()
         .value(new SqlStatement().ln()
         .append("ALTER TABLE ").append(options.getTags()).ln()
@@ -114,7 +113,7 @@ public class TagRegistrySqlImpl implements TagRegistry {
         .build();
   }
   @Override
-  public Sql dropTable() {
+  public ThenaSqlClient.Sql dropTable() {
     // TODO Auto-generated method stub
     return null;
   }

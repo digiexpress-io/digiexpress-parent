@@ -10,13 +10,12 @@ import io.resys.thena.api.actions.DocCommitActions.CreateManyDocs;
 import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.api.actions.ImmutableManyDocsEnvelope;
 import io.resys.thena.api.envelope.ImmutableMessage;
-import io.resys.thena.datasource.DataMapper;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.structures.doc.DocInserts.DocBatchForOne;
+import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.doc.DocState;
 import io.resys.thena.structures.doc.ImmutableDocBatchForMany;
 import io.resys.thena.structures.doc.support.BatchForOneDocCreate;
-import io.resys.thena.structures.git.GitInserts.BatchStatus;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
@@ -111,7 +110,7 @@ public class CreateManyDocsImpl implements CreateManyDocs {
             .flatMap(i -> i.getMessages().stream())
             .collect(Collectors.toList()))
         
-        .status(DataMapper.mapStatus(rsp.getStatus()))
+        .status(BatchStatus.mapStatus(rsp.getStatus()))
         .build());
   }
 }

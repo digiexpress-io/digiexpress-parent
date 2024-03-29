@@ -25,7 +25,6 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import io.resys.thena.storefile.tables.ImmutableTagTableRow;
 import io.resys.thena.storefile.tables.TagTable.TagTableRow;
 
 public interface TagTable extends Table<TagTableRow> {

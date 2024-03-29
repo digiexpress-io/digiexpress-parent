@@ -34,10 +34,8 @@ import io.resys.thena.api.registry.doc.DocCommitRegistry;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.ImmutableSqlTupleList;
-import io.resys.thena.datasource.SqlQueryBuilder.Sql;
-import io.resys.thena.datasource.SqlQueryBuilder.SqlTuple;
-import io.resys.thena.datasource.SqlQueryBuilder.SqlTupleList;
 import io.resys.thena.datasource.TenantTableNames;
+import io.resys.thena.datasource.ThenaSqlClient;
 import io.resys.thena.storesql.support.SqlStatement;
 import io.vertx.mutiny.sqlclient.Row;
 import io.vertx.mutiny.sqlclient.Tuple;
@@ -48,7 +46,7 @@ public class DocCommitRegistrySqlImpl implements DocCommitRegistry {
   private final TenantTableNames options;
  
   @Override
-  public Sql findAll() {
+  public ThenaSqlClient.Sql findAll() {
     return ImmutableSql.builder()
         .value(new SqlStatement()
         .append("SELECT * FROM ").append(options.getDocCommits())
@@ -56,7 +54,7 @@ public class DocCommitRegistrySqlImpl implements DocCommitRegistry {
         .build();
   }
   @Override
-  public SqlTuple getById(String id) {
+  public ThenaSqlClient.SqlTuple getById(String id) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT * FROM ").append(options.getDocCommits())
@@ -67,7 +65,7 @@ public class DocCommitRegistrySqlImpl implements DocCommitRegistry {
         .build();
   }
   @Override
-  public SqlTuple insertOne(DocCommit commit) {
+  public ThenaSqlClient.SqlTuple insertOne(DocCommit commit) {
     final var message = getMessage(commit);
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
@@ -82,7 +80,7 @@ public class DocCommitRegistrySqlImpl implements DocCommitRegistry {
   
 
   @Override
-  public SqlTupleList insertAll(Collection<DocCommit> commits) {
+  public ThenaSqlClient.SqlTupleList insertAll(Collection<DocCommit> commits) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getDocCommits())
@@ -122,7 +120,7 @@ public class DocCommitRegistrySqlImpl implements DocCommitRegistry {
         .build();
   }
   @Override
-  public Sql createTable() {
+  public ThenaSqlClient.Sql createTable() {
     return ImmutableSql.builder().value(new SqlStatement().ln()
     .append("CREATE TABLE ").append(options.getDocCommits()).ln()
     .append("(").ln()
@@ -153,7 +151,7 @@ public class DocCommitRegistrySqlImpl implements DocCommitRegistry {
     .build()).build();
   }
   @Override
-  public Sql createConstraints() {
+  public ThenaSqlClient.Sql createConstraints() {
     return ImmutableSql.builder()
         .value(new SqlStatement().ln()
         .append("ALTER TABLE ").append(options.getDocCommits()).ln()
@@ -170,7 +168,7 @@ public class DocCommitRegistrySqlImpl implements DocCommitRegistry {
         .build();
   }
   @Override
-  public Sql dropTable() {
+  public ThenaSqlClient.Sql dropTable() {
     return ImmutableSql.builder().value(new SqlStatement()
         .append("DROP TABLE ").append(options.getDocCommits()).append(";").ln()
         .build()).build();

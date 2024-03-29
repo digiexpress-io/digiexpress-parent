@@ -18,12 +18,11 @@ import io.resys.thena.api.entities.doc.ImmutableDocBranch;
 import io.resys.thena.api.entities.doc.ImmutableDocCommit;
 import io.resys.thena.api.entities.doc.ImmutableDocLog;
 import io.resys.thena.api.envelope.ImmutableMessage;
-import io.resys.thena.datasource.DataMapper;
 import io.resys.thena.spi.DbState;
+import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.doc.DocState;
 import io.resys.thena.structures.doc.ImmutableDocBatchForOne;
 import io.resys.thena.structures.doc.ImmutableDocBranchLockCriteria;
-import io.resys.thena.structures.git.GitInserts.BatchStatus;
 import io.resys.thena.structures.git.commits.CommitLogger;
 import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
@@ -181,7 +180,7 @@ public class CreateOneDocBranchImpl implements CreateOneDocBranch {
         .commit(rsp.getDocCommit().iterator().next())
         .addMessages(rsp.getLog())
         .addAllMessages(rsp.getMessages())
-        .status(DataMapper.mapStatus(rsp.getStatus()))
+        .status(BatchStatus.mapStatus(rsp.getStatus()))
         .build());
   }
 

@@ -1,7 +1,5 @@
 package io.resys.thena.datasource.vertx;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Function;
 
 import io.resys.thena.datasource.ThenaSqlClient;

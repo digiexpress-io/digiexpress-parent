@@ -8,8 +8,8 @@ import io.resys.thena.api.actions.ImmutableOneDocEnvelope;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.doc.DocLock;
 import io.resys.thena.api.envelope.ImmutableMessage;
-import io.resys.thena.datasource.DataMapper;
 import io.resys.thena.spi.DbState;
+import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.doc.DocState;
 import io.resys.thena.structures.doc.ImmutableDocLockCriteria;
 import io.resys.thena.structures.doc.support.BatchForOneDocModify;
@@ -72,7 +72,7 @@ public class ModifyOneDocImpl implements ModifyOneDoc {
       .doc(batch.getDoc().get())
       .addMessages(rsp.getLog())
       .addAllMessages(rsp.getMessages())
-      .status(DataMapper.mapStatus(rsp.getStatus()))
+      .status(BatchStatus.mapStatus(rsp.getStatus()))
       .build());
   }
   

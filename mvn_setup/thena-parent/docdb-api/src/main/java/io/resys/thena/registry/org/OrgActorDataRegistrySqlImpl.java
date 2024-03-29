@@ -6,9 +6,8 @@ import io.resys.thena.api.entities.org.OrgActorData;
 import io.resys.thena.api.registry.org.OrgActorDataRegistry;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
-import io.resys.thena.datasource.SqlQueryBuilder.Sql;
-import io.resys.thena.datasource.SqlQueryBuilder.SqlTuple;
 import io.resys.thena.datasource.TenantTableNames;
+import io.resys.thena.datasource.ThenaSqlClient;
 import io.resys.thena.storesql.support.SqlStatement;
 import io.vertx.mutiny.sqlclient.Row;
 import io.vertx.mutiny.sqlclient.Tuple;
@@ -21,7 +20,7 @@ public class OrgActorDataRegistrySqlImpl implements OrgActorDataRegistry {
 
   
   @Override
-  public Sql findAll() {
+  public ThenaSqlClient.Sql findAll() {
     return ImmutableSql.builder()
         .value(new SqlStatement()
         .append("SELECT * FROM ").append(options.getOrgActorData())
@@ -29,7 +28,7 @@ public class OrgActorDataRegistrySqlImpl implements OrgActorDataRegistry {
         .build();
   }
   @Override
-  public SqlTuple getById(String id) {
+  public ThenaSqlClient.SqlTuple getById(String id) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT * ").ln()
@@ -46,7 +45,7 @@ public class OrgActorDataRegistrySqlImpl implements OrgActorDataRegistry {
   }
 
   @Override
-  public Sql createTable() {
+  public ThenaSqlClient.Sql createTable() {
     return ImmutableSql.builder().value(new SqlStatement().ln()
     .append("CREATE TABLE ").append(options.getOrgActorData()).ln()
     .append("(").ln()
@@ -77,12 +76,12 @@ public class OrgActorDataRegistrySqlImpl implements OrgActorDataRegistry {
   }
 
   @Override
-  public Sql createConstraints() {
+  public ThenaSqlClient.Sql createConstraints() {
     return ImmutableSql.builder().value("").build();
   }
 
   @Override
-  public Sql dropTable() {
+  public ThenaSqlClient.Sql dropTable() {
     return ImmutableSql.builder().value(new SqlStatement()
         .append("DROP TABLE ").append(options.getOrgActorData()).append(";").ln()
         .build()).build();

@@ -18,10 +18,8 @@ import io.resys.thena.api.registry.org.OrgMemberRegistry;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.ImmutableSqlTupleList;
-import io.resys.thena.datasource.SqlQueryBuilder.Sql;
-import io.resys.thena.datasource.SqlQueryBuilder.SqlTuple;
-import io.resys.thena.datasource.SqlQueryBuilder.SqlTupleList;
 import io.resys.thena.datasource.TenantTableNames;
+import io.resys.thena.datasource.ThenaSqlClient;
 import io.resys.thena.storesql.support.SqlStatement;
 import io.vertx.mutiny.sqlclient.Row;
 import io.vertx.mutiny.sqlclient.Tuple;
@@ -32,7 +30,7 @@ public class OrgMemberRegistrySqlImpl implements OrgMemberRegistry {
   private final TenantTableNames options;
   
   @Override
-  public SqlTuple findAll(Collection<String> id) {
+  public ThenaSqlClient.SqlTuple findAll(Collection<String> id) {
     final var sql = new SqlStatement()
       .append("SELECT * ").ln()
       .append("  FROM ").append(options.getOrgMembers()).ln()
@@ -58,7 +56,7 @@ public class OrgMemberRegistrySqlImpl implements OrgMemberRegistry {
   }
   
   @Override
-  public Sql findAll() {
+  public ThenaSqlClient.Sql findAll() {
     return ImmutableSql.builder()
         .value(new SqlStatement()
         .append("SELECT * FROM ").append(options.getOrgMembers())
@@ -66,7 +64,7 @@ public class OrgMemberRegistrySqlImpl implements OrgMemberRegistry {
         .build();
   }
   @Override
-  public SqlTuple getById(String id) {
+  public ThenaSqlClient.SqlTuple getById(String id) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT * ").ln()
@@ -77,7 +75,7 @@ public class OrgMemberRegistrySqlImpl implements OrgMemberRegistry {
         .build();
   }
   @Override
-  public SqlTuple insertOne(OrgMember doc) {
+  public ThenaSqlClient.SqlTuple insertOne(OrgMember doc) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getOrgMembers())
@@ -87,7 +85,7 @@ public class OrgMemberRegistrySqlImpl implements OrgMemberRegistry {
         .build();
   }
   @Override
-  public SqlTuple updateOne(OrgMember doc) {
+  public ThenaSqlClient.SqlTuple updateOne(OrgMember doc) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("UPDATE ").append(options.getOrgMembers())
@@ -98,7 +96,7 @@ public class OrgMemberRegistrySqlImpl implements OrgMemberRegistry {
         .build();
   }
   @Override
-  public SqlTupleList insertAll(Collection<OrgMember> users) {
+  public ThenaSqlClient.SqlTupleList insertAll(Collection<OrgMember> users) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getOrgMembers())
@@ -110,7 +108,7 @@ public class OrgMemberRegistrySqlImpl implements OrgMemberRegistry {
         .build();
   }
   @Override
-  public SqlTupleList updateMany(Collection<OrgMember> users) {
+  public ThenaSqlClient.SqlTupleList updateMany(Collection<OrgMember> users) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("UPDATE ").append(options.getOrgMembers())
@@ -148,7 +146,7 @@ SELECT * FROM child;
 */
   
 	@Override
-	public SqlTuple findAllUserPartiesAndRightsByMemberId(String userId) {
+	public ThenaSqlClient.SqlTuple findAllUserPartiesAndRightsByMemberId(String userId) {
     final var sql = new SqlStatement()
         .append("WITH RECURSIVE child AS (").ln()
         
@@ -217,7 +215,7 @@ SELECT * FROM child;
 	}
 
   @Override
-  public SqlTuple findAllRightsByMemberId(String userId) {
+  public ThenaSqlClient.SqlTuple findAllRightsByMemberId(String userId) {
     final var sql = new SqlStatement()
         
         .append("SELECT ").ln()
@@ -251,7 +249,7 @@ SELECT * FROM child;
   }
 
   @Override
-  public SqlTuple getStatusByUserId(String userId) {
+  public ThenaSqlClient.SqlTuple getStatusByUserId(String userId) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT ").ln()
@@ -346,7 +344,7 @@ SELECT * FROM child;
   }
 
   @Override
-  public Sql createTable() {
+  public ThenaSqlClient.Sql createTable() {
     return ImmutableSql.builder().value(new SqlStatement().ln()
     .append("CREATE TABLE ").append(options.getOrgMembers()).ln()
     .append("(").ln()
@@ -371,7 +369,7 @@ SELECT * FROM child;
   }
 
   @Override
-  public Sql createConstraints() {
+  public ThenaSqlClient.Sql createConstraints() {
     return ImmutableSql.builder().value(new SqlStatement()
         .append(createOrgUserFk(options.getOrgMemberships())).ln()
         .append(createOrgUserFk(options.getOrgMemberRights())).ln()
@@ -383,7 +381,7 @@ SELECT * FROM child;
   }
 
   @Override
-  public Sql dropTable() {
+  public ThenaSqlClient.Sql dropTable() {
     return ImmutableSql.builder().value(new SqlStatement()
         .append("DROP TABLE ").append(options.getOrgMembers()).append(";").ln()
         .build()).build();

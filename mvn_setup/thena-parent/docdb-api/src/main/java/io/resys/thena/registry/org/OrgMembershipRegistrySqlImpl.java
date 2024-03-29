@@ -11,10 +11,8 @@ import io.resys.thena.api.registry.org.OrgMembershipRegistry;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.ImmutableSqlTupleList;
-import io.resys.thena.datasource.SqlQueryBuilder.Sql;
-import io.resys.thena.datasource.SqlQueryBuilder.SqlTuple;
-import io.resys.thena.datasource.SqlQueryBuilder.SqlTupleList;
 import io.resys.thena.datasource.TenantTableNames;
+import io.resys.thena.datasource.ThenaSqlClient;
 import io.resys.thena.storesql.support.SqlStatement;
 import io.vertx.mutiny.sqlclient.Row;
 import io.vertx.mutiny.sqlclient.Tuple;
@@ -25,7 +23,7 @@ public class OrgMembershipRegistrySqlImpl implements OrgMembershipRegistry {
   private final TenantTableNames options;
   
   @Override
-  public SqlTuple findAll(List<String> id) {
+  public ThenaSqlClient.SqlTuple findAll(List<String> id) {
     final var sql = new SqlStatement()
       .append("SELECT * ").ln()
       .append("  FROM ").append(options.getOrgMemberships()).ln()
@@ -47,7 +45,7 @@ public class OrgMembershipRegistrySqlImpl implements OrgMembershipRegistry {
   }
   
   @Override
-  public Sql findAll() {
+  public ThenaSqlClient.Sql findAll() {
     return ImmutableSql.builder()
         .value(new SqlStatement()
         .append("SELECT * FROM ").append(options.getOrgMemberships())
@@ -55,7 +53,7 @@ public class OrgMembershipRegistrySqlImpl implements OrgMembershipRegistry {
         .build();
   }
   @Override
-  public SqlTuple getById(String id) {
+  public ThenaSqlClient.SqlTuple getById(String id) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT * ").ln()
@@ -68,7 +66,7 @@ public class OrgMembershipRegistrySqlImpl implements OrgMembershipRegistry {
   
 
 	@Override
-	public SqlTuple findAllByGroupId(String groupId) {
+	public ThenaSqlClient.SqlTuple findAllByGroupId(String groupId) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT * ").ln()
@@ -80,7 +78,7 @@ public class OrgMembershipRegistrySqlImpl implements OrgMembershipRegistry {
 	}
 
 	@Override
-	public SqlTuple findAllByUserId(String userId) {
+	public ThenaSqlClient.SqlTuple findAllByUserId(String userId) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT * ").ln()
@@ -91,7 +89,7 @@ public class OrgMembershipRegistrySqlImpl implements OrgMembershipRegistry {
         .build();
 	}
   @Override
-  public SqlTuple insertOne(OrgMembership doc) {
+  public ThenaSqlClient.SqlTuple insertOne(OrgMembership doc) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getOrgMemberships())
@@ -101,7 +99,7 @@ public class OrgMembershipRegistrySqlImpl implements OrgMembershipRegistry {
         .build();
   }
   @Override
-  public SqlTupleList insertAll(Collection<OrgMembership> users) {
+  public ThenaSqlClient.SqlTupleList insertAll(Collection<OrgMembership> users) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getOrgMemberships())
@@ -113,7 +111,7 @@ public class OrgMembershipRegistrySqlImpl implements OrgMembershipRegistry {
         .build();
   }
   @Override
-  public SqlTupleList deleteAll(Collection<OrgMembership> users) {
+  public ThenaSqlClient.SqlTupleList deleteAll(Collection<OrgMembership> users) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("DELETE FROM ").append(options.getOrgMemberships())
@@ -138,7 +136,7 @@ public class OrgMembershipRegistrySqlImpl implements OrgMembershipRegistry {
   }
 
   @Override
-  public Sql createTable() {
+  public ThenaSqlClient.Sql createTable() {
     return ImmutableSql.builder().value(new SqlStatement().ln()
     .append("CREATE TABLE ").append(options.getOrgMemberships()).ln()
     .append("(").ln()
@@ -166,12 +164,12 @@ public class OrgMembershipRegistrySqlImpl implements OrgMembershipRegistry {
   }
 
   @Override
-  public Sql createConstraints() {
+  public ThenaSqlClient.Sql createConstraints() {
     return ImmutableSql.builder().value("").build();
   }
 
   @Override
-  public Sql dropTable() {
+  public ThenaSqlClient.Sql dropTable() {
     return ImmutableSql.builder().value(new SqlStatement()
         .append("DROP TABLE ").append(options.getOrgMemberships()).append(";").ln()
         .build()).build();

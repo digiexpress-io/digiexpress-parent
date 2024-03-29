@@ -4,18 +4,17 @@ import java.util.function.Function;
 
 import io.resys.thena.api.entities.git.Tree;
 import io.resys.thena.api.registry.ThenaRegistryService;
-import io.resys.thena.datasource.SqlQueryBuilder.Sql;
-import io.resys.thena.datasource.SqlQueryBuilder.SqlTuple;
+import io.resys.thena.datasource.ThenaSqlClient;
 
 
 public interface TreeRegistry extends ThenaRegistryService<Tree, io.vertx.mutiny.sqlclient.Row> {
-  SqlTuple getById(String id);
-  Sql findAll();
-  SqlTuple insertOne(Tree tree);
+  ThenaSqlClient.SqlTuple getById(String id);
+  ThenaSqlClient.Sql findAll();
+  ThenaSqlClient.SqlTuple insertOne(Tree tree);
   
-  Sql createTable();
-  Sql createConstraints();
-  Sql dropTable();
+  ThenaSqlClient.Sql createTable();
+  ThenaSqlClient.Sql createConstraints();
+  ThenaSqlClient.Sql dropTable();
   
   Function<io.vertx.mutiny.sqlclient.Row, Tree> defaultMapper();
 }

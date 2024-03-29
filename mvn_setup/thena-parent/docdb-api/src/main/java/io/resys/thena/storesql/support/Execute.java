@@ -1,8 +1,5 @@
 package io.resys.thena.storesql.support;
 
-import io.resys.thena.datasource.SqlQueryBuilder.Sql;
-import io.resys.thena.datasource.SqlQueryBuilder.SqlTuple;
-import io.resys.thena.datasource.SqlQueryBuilder.SqlTupleList;
 import io.resys.thena.datasource.ThenaSqlClient;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlExecutionFailed;
 import io.smallrye.mutiny.Uni;
@@ -17,7 +14,7 @@ public class Execute {
 		private static final long serialVersionUID = -6960481243464191887L;
 	}
 
-  public static Uni<RowSet<Row>> apply(ThenaSqlClient client, Sql sql) {
+  public static Uni<RowSet<Row>> apply(ThenaSqlClient client, ThenaSqlClient.Sql sql) {
   	final var failFrom = new SQLExecutionExceptionForTracingStack();
   	
     return client.preparedQuery(sql.getValue()).execute()
@@ -34,7 +31,7 @@ public class Execute {
     });
   }
   
-  public static Uni<RowSet<Row>> apply(ThenaSqlClient client, SqlTuple sql) {
+  public static Uni<RowSet<Row>> apply(ThenaSqlClient client, ThenaSqlClient.SqlTuple sql) {
   	final var failFrom = new SQLExecutionExceptionForTracingStack();
   	
     return client.preparedQuery(sql.getValue()).execute(sql.getProps())
@@ -50,7 +47,7 @@ public class Execute {
           return new SqlExecutionFailed(msg, failFrom); 
         });
   }
-  public static Uni<RowSet<Row>> apply(ThenaSqlClient client, SqlTupleList sql) {
+  public static Uni<RowSet<Row>> apply(ThenaSqlClient client, ThenaSqlClient.SqlTupleList sql) {
     if(sql.getProps().isEmpty()) {
       log.trace(System.lineSeparator() +
           "Skipping batch SQL command with no values to update or insert." + System.lineSeparator() +

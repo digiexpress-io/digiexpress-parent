@@ -25,7 +25,6 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import io.resys.thena.storefile.tables.ImmutableRefTableRow;
 import io.resys.thena.storefile.tables.RefTable.RefTableRow;
 
 public interface RefTable extends Table<RefTableRow> {

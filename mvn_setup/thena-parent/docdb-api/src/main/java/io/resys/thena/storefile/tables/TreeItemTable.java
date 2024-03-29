@@ -25,7 +25,6 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import io.resys.thena.storefile.tables.ImmutableTreeItemTableRow;
 import io.resys.thena.storefile.tables.TreeItemTable.TreeItemTableRow;
 
 public interface TreeItemTable extends Table<TreeItemTableRow> {

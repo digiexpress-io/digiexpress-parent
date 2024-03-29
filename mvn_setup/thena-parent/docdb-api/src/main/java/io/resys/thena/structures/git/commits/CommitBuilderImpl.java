@@ -36,7 +36,7 @@ import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.git.CommitLock;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.spi.DbState;
-import io.resys.thena.structures.git.GitInserts.BatchStatus;
+import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.git.GitState;
 import io.resys.thena.structures.git.ImmutableLockCriteria;
 import io.resys.thena.structures.git.commits.CommitBatchBuilder.CommitTreeState;

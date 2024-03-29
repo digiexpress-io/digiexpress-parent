@@ -20,10 +20,8 @@ import io.resys.thena.api.registry.doc.DocBranchRegistry;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.ImmutableSqlTupleList;
-import io.resys.thena.datasource.SqlQueryBuilder.Sql;
-import io.resys.thena.datasource.SqlQueryBuilder.SqlTuple;
-import io.resys.thena.datasource.SqlQueryBuilder.SqlTupleList;
 import io.resys.thena.datasource.TenantTableNames;
+import io.resys.thena.datasource.ThenaSqlClient;
 import io.resys.thena.storesql.support.SqlStatement;
 import io.resys.thena.structures.doc.DocQueries.DocBranchLockCriteria;
 import io.resys.thena.structures.doc.DocQueries.DocLockCriteria;
@@ -37,7 +35,7 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
   private final TenantTableNames options;
 
   @Override
-  public Sql findAll() {
+  public ThenaSqlClient.Sql findAll() {
     return ImmutableSql.builder()
         .value(new SqlStatement()
         .append("SELECT * FROM ").append(options.getDocBranch())
@@ -46,7 +44,7 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
   }
 
   @Override
-  public SqlTuple getById(String branchId) {
+  public ThenaSqlClient.SqlTuple getById(String branchId) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT * FROM ").append(options.getDocBranch())
@@ -57,7 +55,7 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
         .build();
   }
   @Override
-  public SqlTuple insertOne(DocBranch ref) {
+  public ThenaSqlClient.SqlTuple insertOne(DocBranch ref) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getDocBranch())
@@ -69,7 +67,7 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
 
 
   @Override
-  public SqlTupleList insertAll(Collection<DocBranch> docs) {
+  public ThenaSqlClient.SqlTupleList insertAll(Collection<DocBranch> docs) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getDocBranch())
@@ -82,7 +80,7 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
   }  
   
   @Override
-  public SqlTuple updateOne(DocBranch ref) {
+  public ThenaSqlClient.SqlTuple updateOne(DocBranch ref) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("UPDATE ").append(options.getDocBranch())
@@ -94,7 +92,7 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
   }
   
   @Override
-  public SqlTuple getBranchLock(DocBranchLockCriteria crit) {
+  public ThenaSqlClient.SqlTuple getBranchLock(DocBranchLockCriteria crit) {
     final var branchName = crit.getBranchName();
     final var docId = crit.getDocId();
 
@@ -131,7 +129,7 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
   }
   
   @Override
-  public SqlTuple getDocLock(DocLockCriteria crit) {
+  public ThenaSqlClient.SqlTuple getDocLock(DocLockCriteria crit) {
     final var docId = crit.getDocId();
 
     return ImmutableSqlTuple.builder()
@@ -167,7 +165,7 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
   }
 
   @Override
-  public SqlTupleList updateAll(List<DocBranch> docs) {
+  public ThenaSqlClient.SqlTupleList updateAll(List<DocBranch> docs) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("UPDATE ").append(options.getDocBranch())
@@ -181,7 +179,7 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
   }
 
   @Override
-  public SqlTuple getBranchLocks(List<DocBranchLockCriteria> criteria) {
+  public ThenaSqlClient.SqlTuple getBranchLocks(List<DocBranchLockCriteria> criteria) {
     final var props = new ArrayList<Object>();
     var index = 1;
     final var where = new StringBuilder();
@@ -232,7 +230,7 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
   
   
   @Override
-  public SqlTuple getDocLocks(List<DocLockCriteria> criteria) {
+  public ThenaSqlClient.SqlTuple getDocLocks(List<DocLockCriteria> criteria) {
     final var props = new ArrayList<Object>();
     var index = 1;
     final var where = new StringBuilder();
@@ -339,7 +337,7 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
   }
 
   @Override
-  public Sql createTable() {
+  public ThenaSqlClient.Sql createTable() {
     return ImmutableSql.builder().value(new SqlStatement().ln()
         .append("CREATE TABLE ").append(options.getDocBranch()).ln()
         .append("(").ln()
@@ -367,7 +365,7 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
   }
 
   @Override
-  public Sql createConstraints() {
+  public ThenaSqlClient.Sql createConstraints() {
     return ImmutableSql.builder()
         .value(new SqlStatement().ln()
         .append("ALTER TABLE ").append(options.getDocBranch()).ln()
@@ -379,7 +377,7 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
   }
 
   @Override
-  public Sql dropTable() {
+  public ThenaSqlClient.Sql dropTable() {
     return ImmutableSql.builder().value(new SqlStatement()
         .append("DROP TABLE ").append(options.getDocBranch()).append(";").ln()
         .build()).build();

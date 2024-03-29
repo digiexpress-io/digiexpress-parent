@@ -13,6 +13,8 @@ import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlTupleFailed;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlTupleListFailed;
 import io.resys.thena.storesql.support.Execute;
+import io.resys.thena.structures.BatchStatus;
+import io.resys.thena.structures.UpsertStatus;
 import io.resys.thena.structures.git.GitInserts;
 import io.resys.thena.structures.git.ImmutableGitBatch;
 import io.resys.thena.structures.git.ImmutableInsertResult;

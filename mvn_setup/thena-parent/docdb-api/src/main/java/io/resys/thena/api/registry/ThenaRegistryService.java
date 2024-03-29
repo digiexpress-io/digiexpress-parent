@@ -3,15 +3,14 @@ package io.resys.thena.api.registry;
 import java.util.function.Function;
 
 import io.resys.thena.api.registry.ThenaRegistryService.ThenaTable;
-import io.resys.thena.datasource.SqlQueryBuilder.Sql;
-import io.resys.thena.datasource.SqlQueryBuilder.SqlTuple;
+import io.resys.thena.datasource.ThenaSqlClient;
 
 public interface ThenaRegistryService<T extends ThenaTable, R> {
   // marker interface
   interface ThenaTable {}
   
-  Sql findAll();
-  SqlTuple getById(String id);
+  ThenaSqlClient.Sql findAll();
+  ThenaSqlClient.SqlTuple getById(String id);
   
   /*
   SqlTuple insertOne(T entity);
@@ -24,9 +23,9 @@ public interface ThenaRegistryService<T extends ThenaTable, R> {
   SqlTuple deleteOne(T repo);
   */
   
-  Sql createTable();
-  Sql createConstraints();
-  Sql dropTable();
+  ThenaSqlClient.Sql createTable();
+  ThenaSqlClient.Sql createConstraints();
+  ThenaSqlClient.Sql dropTable();
   
   Function<R, T> defaultMapper();
 }

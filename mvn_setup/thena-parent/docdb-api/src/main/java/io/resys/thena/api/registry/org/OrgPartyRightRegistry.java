@@ -6,25 +6,23 @@ import java.util.function.Function;
 
 import io.resys.thena.api.entities.org.OrgPartyRight;
 import io.resys.thena.api.registry.ThenaRegistryService;
-import io.resys.thena.datasource.SqlQueryBuilder.Sql;
-import io.resys.thena.datasource.SqlQueryBuilder.SqlTuple;
-import io.resys.thena.datasource.SqlQueryBuilder.SqlTupleList;
+import io.resys.thena.datasource.ThenaSqlClient;
 
 
 public interface OrgPartyRightRegistry extends ThenaRegistryService<OrgPartyRight, io.vertx.mutiny.sqlclient.Row> {
-  SqlTuple getById(String id); 
-  SqlTuple findAllByGroupId(String groupId); 
-  SqlTuple findAllByRoleId(String groupId);
-  SqlTuple findAll(List<String> id);
-  Sql findAll();
+  ThenaSqlClient.SqlTuple getById(String id); 
+  ThenaSqlClient.SqlTuple findAllByGroupId(String groupId); 
+  ThenaSqlClient.SqlTuple findAllByRoleId(String groupId);
+  ThenaSqlClient.SqlTuple findAll(List<String> id);
+  ThenaSqlClient.Sql findAll();
   
-  SqlTuple insertOne(OrgPartyRight role);
-  SqlTupleList insertAll(Collection<OrgPartyRight> roles);
-  SqlTupleList deleteAll(Collection<OrgPartyRight> roles);
+  ThenaSqlClient.SqlTuple insertOne(OrgPartyRight role);
+  ThenaSqlClient.SqlTupleList insertAll(Collection<OrgPartyRight> roles);
+  ThenaSqlClient.SqlTupleList deleteAll(Collection<OrgPartyRight> roles);
   
-  Sql createTable();
-  Sql createConstraints();
-  Sql dropTable();
+  ThenaSqlClient.Sql createTable();
+  ThenaSqlClient.Sql createConstraints();
+  ThenaSqlClient.Sql dropTable();
   
   Function<io.vertx.mutiny.sqlclient.Row, OrgPartyRight> defaultMapper();
 }
