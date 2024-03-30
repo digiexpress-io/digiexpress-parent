@@ -35,5 +35,5 @@ public interface Tenant extends ThenaTable {
   @Nullable String getExternalId();
   StructureType getType();
   
-  enum StructureType { doc, git, org }
+  enum StructureType { doc, git, org, grim }
 }
