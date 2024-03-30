@@ -14,6 +14,8 @@ import jakarta.annotation.Nullable;
 public interface GrimMission extends IsGrimObject, ThenaTable {
   String getId();
   String getCommitId();
+
+  @Nullable String getMissionParentId();
   
   @Nullable String getExternalId();
   @Nullable String getMissionStatus();

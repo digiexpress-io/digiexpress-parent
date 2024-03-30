@@ -14,10 +14,10 @@ public interface GrimMissionLink extends IsGrimObject, ThenaTable {
   String getId();
   String getCommitId();
   String getMissionId();
-  @Nullable String getExternalId();
+  String getExternalId();
 
   String getLinkType();
-  JsonObject getLinkBody();
+  @Nullable JsonObject getLinkBody();
   
   @Nullable GrimOneOfRelations getRelation(); // one of sub entities
   
