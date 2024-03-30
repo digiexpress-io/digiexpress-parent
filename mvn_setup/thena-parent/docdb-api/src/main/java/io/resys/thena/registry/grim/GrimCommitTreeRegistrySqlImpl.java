@@ -53,7 +53,11 @@ public class GrimCommitTreeRegistrySqlImpl implements GrimCommitTreeRegistry {
     .append("  id VARCHAR(40) PRIMARY KEY,").ln()
     .append("  commit_id VARCHAR(40) NOT NULL,").ln()
     
+    .append("  command_type VARCHAR(255),").ln()
+    .append("  command_body JSONB").ln()
     .append(");").ln()
+    
+    
     .build()).build();
   }
 

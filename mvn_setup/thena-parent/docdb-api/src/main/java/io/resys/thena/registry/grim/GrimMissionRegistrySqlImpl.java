@@ -62,12 +62,13 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
     .append("  mission_start_date TIMESTAMP,").ln()
     .append("  mission_due_date TIMESTAMP").ln()
     
+    .append(");").ln()
+    
     .append("ALTER TABLE ").append(options.getGrimMission()).ln()
     .append("  ADD CONSTRAINT ").append(options.getGrimMission()).append("_PARENT_FK").ln()
     .append("  FOREIGN KEY (parent_id)").ln()
     .append("  REFERENCES ").append(options.getGrimMission()).append(" (id);").ln()
     
-    .append(");").ln()
     .build()).build();
   }
 

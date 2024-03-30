@@ -53,8 +53,11 @@ public class GrimCommitViewerRegistrySqlImpl implements GrimCommitViewerRegistry
     .append("(").ln()
     .append("  id VARCHAR(40) PRIMARY KEY,").ln()
     .append("  commit_id VARCHAR(40) NOT NULL,").ln()
-    
-    
+    .append("  object_id VARCHAR(40) NOT NULL,").ln()
+    .append("  object_type VARCHAR(255) NOT NULL,").ln()
+    .append("  used_by VARCHAR(255) NOT NULL,").ln()
+    .append("  used_for VARCHAR(255) NOT NULL,").ln()
+    .append("  created_at TIMESTAMP WITH TIME ZONE NOT NULL").ln()
     .append(");").ln()
     .build()).build();
   }

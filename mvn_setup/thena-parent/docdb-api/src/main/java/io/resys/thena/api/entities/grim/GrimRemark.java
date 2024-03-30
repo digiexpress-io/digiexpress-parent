@@ -18,6 +18,7 @@ public interface GrimRemark extends IsGrimObject, ThenaTable {
   String getRemarkText();
   @Nullable String getRemarkStatus();
   String getReporterId();
+  @Nullable GrimOneOfRelations getRelation(); // one of sub entities
   
   @JsonIgnore @Override default public GrimDocType getDocType() { return GrimDocType.GRIM_REMARK; };
 }
