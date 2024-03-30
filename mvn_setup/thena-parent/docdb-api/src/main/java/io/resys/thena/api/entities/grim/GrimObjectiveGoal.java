@@ -1,5 +1,7 @@
 package io.resys.thena.api.entities.grim;
 
+import java.time.LocalDate;
+
 import org.immutables.value.Value;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -17,6 +19,10 @@ public interface GrimObjectiveGoal extends IsGrimObject, ThenaTable {
   String getMissionId(); // transitive resolved using objective 
   
   @Nullable String getGoalStatus();
+  
+  @Nullable LocalDate getStartDate();
+  @Nullable LocalDate getDueDate();
+  
   
   @JsonIgnore @Override default public GrimDocType getDocType() { return GrimDocType.GRIM_OBJECTIVE_GOAL; };
 }

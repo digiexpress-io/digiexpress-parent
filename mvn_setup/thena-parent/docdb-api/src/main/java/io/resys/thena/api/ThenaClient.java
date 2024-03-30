@@ -12,6 +12,8 @@ import io.resys.thena.api.actions.GitDiffActions;
 import io.resys.thena.api.actions.GitHistoryActions;
 import io.resys.thena.api.actions.GitPullActions;
 import io.resys.thena.api.actions.GitTagActions;
+import io.resys.thena.api.actions.GrimCommitActions;
+import io.resys.thena.api.actions.GrimQueryActions;
 import io.resys.thena.api.actions.OrgCommitActions;
 import io.resys.thena.api.actions.OrgHistoryActions;
 import io.resys.thena.api.actions.OrgQueryActions;
@@ -23,6 +25,7 @@ import io.resys.thena.api.entities.doc.DocEntity.IsDocObject;
 import io.resys.thena.api.entities.git.Branch;
 import io.resys.thena.api.entities.git.GitEntity.IsGitObject;
 import io.resys.thena.api.entities.git.Tag;
+import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimProjectObjects;
 import io.resys.thena.api.entities.org.ThenaOrgObjects.OrgProjectObjects;
 import io.resys.thena.api.envelope.DocContainer;
 import io.resys.thena.api.envelope.QueryEnvelope;
@@ -43,8 +46,26 @@ public interface ThenaClient {
   OrgStructuredTenant org(String tenantIdOrName);
   OrgStructuredTenant org(TenantCommitResult repo);
   OrgStructuredTenant org(Tenant repo);
-  
 
+  GrimStructuredTenant grim(String tenantIdOrName);
+  GrimStructuredTenant grim(TenantCommitResult repo);
+  GrimStructuredTenant grim(Tenant repo);
+
+  
+  // workflow/task like structure
+  interface GrimStructuredTenant {
+    GrimCommitActions commit();
+    GrimQueryActions find();
+    GrimProjectQuery tenants();
+  }
+  // build world state
+  interface GrimProjectQuery {
+    Uni<QueryEnvelope<GrimProjectObjects>> get();
+  }
+
+
+  
+  // organization tree like structure 
   interface OrgStructuredTenant {
     OrgCommitActions commit();
     OrgQueryActions find();

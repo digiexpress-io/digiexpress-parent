@@ -1,5 +1,7 @@
 package io.resys.thena.api.entities.grim;
 
+import java.time.LocalDate;
+
 import org.immutables.value.Value;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -15,6 +17,10 @@ public interface GrimMission extends IsGrimObject, ThenaTable {
   
   @Nullable String getExternalId();
   @Nullable String getMissionStatus();
+  @Nullable String getMissionPriority();
+  @Nullable String getReporterId();
+  @Nullable LocalDate getStartDate();
+  @Nullable LocalDate getDueDate();
   
   @JsonIgnore @Override default public GrimDocType getDocType() { return GrimDocType.GRIM_MISSION; };
 }

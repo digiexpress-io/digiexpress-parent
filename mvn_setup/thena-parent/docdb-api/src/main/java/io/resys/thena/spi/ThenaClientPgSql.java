@@ -9,6 +9,8 @@ import io.resys.thena.api.actions.GitDiffActions;
 import io.resys.thena.api.actions.GitHistoryActions;
 import io.resys.thena.api.actions.GitPullActions;
 import io.resys.thena.api.actions.GitTagActions;
+import io.resys.thena.api.actions.GrimCommitActions;
+import io.resys.thena.api.actions.GrimQueryActions;
 import io.resys.thena.api.actions.OrgCommitActions;
 import io.resys.thena.api.actions.OrgHistoryActions;
 import io.resys.thena.api.actions.OrgQueryActions;
@@ -80,6 +82,16 @@ public class ThenaClientPgSql implements ThenaClient {
     };
   }
   @Override
+  public GrimStructuredTenant grim(String repoId) {
+    RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
+    return new GrimStructuredTenant() {
+      @Override public GrimQueryActions find() { return null; }
+      @Override public GrimCommitActions commit() { return null; }
+      @Override public GrimProjectQuery tenants() { return null; }
+    };
+  }
+
+  @Override
   public GitStructuredTenant git(TenantCommitResult repo) {
     return git(repo.getRepo().getId());
   }
@@ -102,5 +114,13 @@ public class ThenaClientPgSql implements ThenaClient {
   @Override
   public OrgStructuredTenant org(Tenant repo) {
     return this.org(repo.getId());
+  }
+  @Override
+  public GrimStructuredTenant grim(TenantCommitResult repo) {
+    return grim(repo.getRepo().getId());
+  }
+  @Override
+  public GrimStructuredTenant grim(Tenant repo) {
+    return this.grim(repo.getId());
   }
 }

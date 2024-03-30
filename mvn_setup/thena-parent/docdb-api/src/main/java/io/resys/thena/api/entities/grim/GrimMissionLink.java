@@ -10,7 +10,7 @@ import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
 
 @Value.Immutable
-public interface GrimMissionLinks extends IsGrimObject, ThenaTable {
+public interface GrimMissionLink extends IsGrimObject, ThenaTable {
   String getId();
   String getCommitId();
   String getMissionId();

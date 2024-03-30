@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.IsGrimObject;
 import io.resys.thena.api.registry.ThenaRegistryService.ThenaTable;
 import io.vertx.core.json.JsonObject;
+import jakarta.annotation.Nullable;
 
 @Value.Immutable
 public interface GrimLabel extends IsGrimObject, ThenaTable {
@@ -14,7 +15,8 @@ public interface GrimLabel extends IsGrimObject, ThenaTable {
   String getCommitId();
   
   String getLabelType();
-  JsonObject getLabelBody();
+  String getLabelValue();
+  @Nullable JsonObject getLabelBody();
   
   @JsonIgnore @Override default public GrimDocType getDocType() { return GrimDocType.GRIM_LABEL; };
 }
