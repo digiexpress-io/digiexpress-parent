@@ -35,6 +35,19 @@ public abstract class TenantTableNames {
   public abstract String getDb();
   public abstract String getTenant();
   
+  public abstract String getGrimAssignment();
+  public abstract String getGrimCommit();
+  public abstract String getGrimCommitTree();
+  public abstract String getGrimCommitViewer();
+  public abstract String getGrimLabel();
+  public abstract String getGrimMission();
+  public abstract String getGrimMissionData();
+  public abstract String getGrimMissionLabel();
+  public abstract String getGrimMissionLink();
+  public abstract String getGrimObjective();
+  public abstract String getGrimObjectiveGoal();
+  public abstract String getGrimRemark();
+  
   // git structures
   public abstract String getRefs();
   public abstract String getTags();
@@ -91,6 +104,19 @@ public abstract class TenantTableNames {
         .orgCommitTrees(    prefix + DEFAULTS.getOrgCommitTrees())
         .orgActorData(      prefix + DEFAULTS.getOrgActorData())
         
+        .grimAssignment(    prefix + DEFAULTS.getGrimAssignment())
+        .grimCommit(        prefix + DEFAULTS.getGrimCommit())
+        .grimCommitTree(    prefix + DEFAULTS.getGrimCommitTree())
+        .grimCommitViewer(  prefix + DEFAULTS.getGrimCommitViewer())
+        .grimLabel(         prefix + DEFAULTS.getGrimLabel())
+        .grimMission(       prefix + DEFAULTS.getGrimMission())
+        .grimMissionData(   prefix + DEFAULTS.getGrimMissionData())
+        .grimMissionLabel(  prefix + DEFAULTS.getGrimMissionLabel())
+        .grimMissionLink(   prefix + DEFAULTS.getGrimMissionLink())
+        .grimObjective(     prefix + DEFAULTS.getGrimObjective())
+        .grimObjectiveGoal( prefix + DEFAULTS.getGrimObjectiveGoal())
+        .grimRemark(        prefix + DEFAULTS.getGrimRemark())
+        
         .build();
   }
   
@@ -122,6 +148,19 @@ public abstract class TenantTableNames {
         .orgCommitTrees("org_commit_trees")
         .orgActorStatus("org_actor_status")
         .orgActorData("org_actor_data")
+        
+        .grimAssignment("grim_assignment")
+        .grimCommit("grim_commit")
+        .grimCommitTree("grim_commit_tree")
+        .grimCommitViewer("grim_commit_viewer")
+        .grimLabel("grim_label")
+        .grimMission("grim_mission")
+        .grimMissionData("grim_mission_data")
+        .grimMissionLabel("grim_mission_label")
+        .grimMissionLink("grim_mission_link")
+        .grimObjective("grim_objective")
+        .grimObjectiveGoal("grim_objective_goal")
+        .grimRemark("grim_remark")
         
         .build();
   }
