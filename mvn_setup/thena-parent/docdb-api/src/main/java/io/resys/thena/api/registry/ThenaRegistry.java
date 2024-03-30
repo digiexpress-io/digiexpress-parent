@@ -7,4 +7,5 @@ public interface ThenaRegistry extends TenantTableNames.WithTenant<ThenaRegistry
   OrgRegistry org();
   GitRegistry git();
   DocRegistry doc();
+  GrimRegistry grim();
 }

@@ -3,6 +3,18 @@ package io.resys.thena.storesql.builders;
 import io.resys.thena.api.LogConstants;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
+import io.resys.thena.api.registry.grim.GrimAssignmentRegistry;
+import io.resys.thena.api.registry.grim.GrimCommitRegistry;
+import io.resys.thena.api.registry.grim.GrimCommitTreeRegistry;
+import io.resys.thena.api.registry.grim.GrimCommitViewerRegistry;
+import io.resys.thena.api.registry.grim.GrimLabelRegistry;
+import io.resys.thena.api.registry.grim.GrimMissionDataRegistry;
+import io.resys.thena.api.registry.grim.GrimMissionLabelRegistry;
+import io.resys.thena.api.registry.grim.GrimMissionLinkRegistry;
+import io.resys.thena.api.registry.grim.GrimMissionRegistry;
+import io.resys.thena.api.registry.grim.GrimObjectiveGoalRegistry;
+import io.resys.thena.api.registry.grim.GrimObjectiveRegistry;
+import io.resys.thena.api.registry.grim.GrimRemarkRegistry;
 import io.resys.thena.datasource.ThenaSqlClient;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlFailed;
@@ -85,6 +97,7 @@ public class InternalTenantQueryImpl implements InternalTenantQuery {
     final var git = next.getRegistry().git();
     final var doc = next.getRegistry().doc();
     final var org = next.getRegistry().org();
+    final var grim = next.getRegistry().grim();
     final var sqlQuery = next.getRegistry();
     final var pool = next.getPool();
     
@@ -93,7 +106,8 @@ public class InternalTenantQueryImpl implements InternalTenantQuery {
       final var tablesCreate = new StringBuilder();
       
       if(newRepo.getType() == StructureType.git) {
-        tablesCreate.append(git.blobs().createTable().getValue())
+        tablesCreate
+          .append(git.blobs().createTable().getValue())
           .append(git.commits().createTable().getValue())
           .append(git.treeValues().createTable().getValue())
           .append(git.trees().createTable().getValue())
@@ -106,7 +120,34 @@ public class InternalTenantQueryImpl implements InternalTenantQuery {
           .append(git.trees().createConstraints().getValue())
           .append(git.treeValues().createConstraints().getValue())
           .toString();
+      } else if(newRepo.getType() == StructureType.grim) {
+        tablesCreate
+        .append(grim.assignments().createTable().getValue())
+        .append(grim.commits().createTable().getValue())
+        .append(grim.commitTrees().createTable().getValue())
+        .append(grim.commitViewers().createTable().getValue())
+        .append(grim.labels().createTable().getValue())
+        .append(grim.missionData().createTable().getValue())
+        .append(grim.missionLabels().createTable().getValue())
+        .append(grim.missionsLinks().createTable().getValue())
+        .append(grim.mission().createTable().getValue())
+        .append(grim.goals().createTable().getValue())
+        .append(grim.objectives().createTable().getValue())
+        .append(grim.remarks().createTable().getValue())
         
+        .append(grim.assignments().createConstraints().getValue())
+        .append(grim.commits().createConstraints().getValue())
+        .append(grim.commitTrees().createConstraints().getValue())
+        .append(grim.commitViewers().createConstraints().getValue())
+        .append(grim.labels().createConstraints().getValue())
+        .append(grim.missionData().createConstraints().getValue())
+        .append(grim.missionLabels().createConstraints().getValue())
+        .append(grim.missionsLinks().createConstraints().getValue())
+        .append(grim.mission().createConstraints().getValue())
+        .append(grim.goals().createConstraints().getValue())
+        .append(grim.objectives().createConstraints().getValue())
+        .append(grim.remarks().createConstraints().getValue())
+        ;
       } else if(newRepo.getType() == StructureType.org) {
         
         tablesCreate
@@ -194,6 +235,7 @@ public class InternalTenantQueryImpl implements InternalTenantQuery {
     final var git = next.getRegistry().git();
     final var doc = next.getRegistry().doc();
     final var org = next.getRegistry().org();
+    final var grim = next.getRegistry().grim();
     
     final var sqlQuery = next.getRegistry();
     final var pool = next.getPool();
@@ -209,7 +251,22 @@ public class InternalTenantQueryImpl implements InternalTenantQuery {
         .append(git.treeValues().dropTable().getValue())
         .append(git.trees().dropTable().getValue())
         .append(git.blobs().dropTable().getValue());
-        
+
+      } else if(newRepo.getType() == StructureType.grim) {
+        tablesDrop
+        .append(grim.assignments().dropTable().getValue())
+        .append(grim.commits().dropTable().getValue())
+        .append(grim.commitTrees().dropTable().getValue())
+        .append(grim.commitViewers().dropTable().getValue())
+        .append(grim.labels().dropTable().getValue())
+        .append(grim.missionData().dropTable().getValue())
+        .append(grim.missionLabels().dropTable().getValue())
+        .append(grim.missionsLinks().dropTable().getValue())
+        .append(grim.mission().dropTable().getValue())
+        .append(grim.goals().dropTable().getValue())
+        .append(grim.objectives().dropTable().getValue())
+        .append(grim.remarks().dropTable().getValue())
+        ;
       } else if(newRepo.getType() == StructureType.org) {
         
         tablesDrop
