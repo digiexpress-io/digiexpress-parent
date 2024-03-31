@@ -13,7 +13,8 @@ public interface GrimAssignmentRegistry extends ThenaRegistryService<GrimAssignm
   ThenaSqlClient.SqlTuple getById(String id);
 
   ThenaSqlClient.SqlTuple findAllByMissionIds(Collection<String> id);
-  ThenaSqlClient.SqlTupleList insertAll(Collection<GrimAssignment> users);  
+  ThenaSqlClient.SqlTupleList insertAll(Collection<GrimAssignment> assignments);
+  ThenaSqlClient.SqlTupleList deleteAll(Collection<GrimAssignment> assignments);
   
   ThenaSqlClient.Sql createTable();
   ThenaSqlClient.Sql createConstraints();

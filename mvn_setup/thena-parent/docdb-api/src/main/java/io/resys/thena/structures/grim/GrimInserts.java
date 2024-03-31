@@ -62,7 +62,12 @@ public interface GrimInserts {
     List<GrimCommitViewer> getCommitViewers();
     
     // Objects to update
-    List<String> getIdentifiersForUpdates();
+    List<GrimMissionData> getUpdateData();
+    List<GrimRemark> getUpdateRemarks();
+    List<GrimObjectiveGoal> getUpdateGoals();
+    List<GrimObjective> getUpdateObjectives();
+    List<GrimMission> getUpdateMissions();
+    List<GrimLabel> getUpdateLabels();
 
     // Objects to delete
     List<GrimAssignment> getDeleteAssignments();

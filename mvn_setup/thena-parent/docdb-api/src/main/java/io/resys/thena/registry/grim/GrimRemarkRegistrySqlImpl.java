@@ -1,5 +1,6 @@
 package io.resys.thena.registry.grim;
 
+import java.util.Collection;
 import java.util.function.Function;
 
 import io.resys.thena.api.entities.grim.GrimRemark;
@@ -10,6 +11,8 @@ import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.datasource.ThenaSqlClient;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
+import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
+import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
 import io.resys.thena.storesql.support.SqlStatement;
 import io.vertx.mutiny.sqlclient.Row;
 import io.vertx.mutiny.sqlclient.Tuple;
@@ -107,6 +110,36 @@ public class GrimRemarkRegistrySqlImpl implements GrimRemarkRegistry {
       
       return ImmutableGrimRemark.builder().build();
     };
+  }
+
+  @Override
+  public SqlTuple findAllByMissionIds(Collection<String> id) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT * ").ln()
+        .append("  FROM ").append(options.getGrimRemark()).ln()
+        .append("  WHERE (mission_id = ANY($1))").ln() 
+        .build())
+        .props(Tuple.of(id))
+        .build();
+  }
+
+  @Override
+  public SqlTupleList insertAll(Collection<GrimRemark> remarks) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public SqlTupleList deleteAll(Collection<GrimRemark> remarks) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public SqlTupleList updateAll(Collection<GrimRemark> remarks) {
+    // TODO Auto-generated method stub
+    return null;
   }
 
 }

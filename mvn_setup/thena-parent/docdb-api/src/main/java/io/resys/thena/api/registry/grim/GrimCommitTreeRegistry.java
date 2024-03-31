@@ -1,5 +1,7 @@
 package io.resys.thena.api.registry.grim;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.function.Function;
 
 import io.resys.thena.api.entities.grim.GrimCommitTree;
@@ -10,9 +12,8 @@ import io.resys.thena.datasource.ThenaSqlClient;
 public interface GrimCommitTreeRegistry extends ThenaRegistryService<GrimCommitTree, io.vertx.mutiny.sqlclient.Row> {
   ThenaSqlClient.Sql findAll();
   ThenaSqlClient.SqlTuple getById(String id);
-  
-  ThenaSqlClient.SqlTuple findAllByCommitId(String commitId);
-  
+  ThenaSqlClient.SqlTuple findAllByCommitIds(List<String> commitId);
+  ThenaSqlClient.SqlTupleList insertAll(Collection<GrimCommitTree> commits);
   
   ThenaSqlClient.Sql createTable();
   ThenaSqlClient.Sql createConstraints();

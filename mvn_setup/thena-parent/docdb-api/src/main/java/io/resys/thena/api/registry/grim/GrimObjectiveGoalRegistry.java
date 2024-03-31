@@ -12,8 +12,10 @@ public interface GrimObjectiveGoalRegistry extends ThenaRegistryService<GrimObje
   ThenaSqlClient.Sql findAll();
   ThenaSqlClient.SqlTuple getById(String id);
   
-  ThenaSqlClient.SqlTuple findAllByMissionId(Collection<String> id);
-  ThenaSqlClient.SqlTupleList insertAll(Collection<GrimObjectiveGoal> users);
+  ThenaSqlClient.SqlTuple findAllByMissionIds(Collection<String> id);
+  ThenaSqlClient.SqlTupleList insertAll(Collection<GrimObjectiveGoal> goals);
+  ThenaSqlClient.SqlTupleList updateAll(Collection<GrimObjectiveGoal> goals);
+  ThenaSqlClient.SqlTupleList deleteAll(Collection<GrimObjectiveGoal> goals);
   
   ThenaSqlClient.Sql createTable();
   ThenaSqlClient.Sql createConstraints();

@@ -11,9 +11,10 @@ import io.resys.thena.datasource.ThenaSqlClient;
 public interface GrimObjectiveRegistry extends ThenaRegistryService<GrimObjective, io.vertx.mutiny.sqlclient.Row> {
   ThenaSqlClient.Sql findAll();
   ThenaSqlClient.SqlTuple getById(String id);
-  ThenaSqlClient.SqlTuple findAllByMissionId(Collection<String> id);
-  ThenaSqlClient.SqlTupleList insertAll(Collection<GrimObjective> users);
-  
+  ThenaSqlClient.SqlTuple findAllByMissionIds(Collection<String> id);
+  ThenaSqlClient.SqlTupleList insertAll(Collection<GrimObjective> objective);
+  ThenaSqlClient.SqlTupleList deleteAll(Collection<GrimObjective> objective);
+  ThenaSqlClient.SqlTupleList updateAll(Collection<GrimObjective> objective);
   
   ThenaSqlClient.Sql createTable();
   ThenaSqlClient.Sql createConstraints();

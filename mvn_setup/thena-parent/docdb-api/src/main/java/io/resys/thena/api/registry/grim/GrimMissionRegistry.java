@@ -12,8 +12,8 @@ public interface GrimMissionRegistry extends ThenaRegistryService<GrimMission, i
   ThenaSqlClient.Sql findAll();
   ThenaSqlClient.SqlTuple getById(String id);
   
-  ThenaSqlClient.SqlTuple findAllByMissionId(Collection<String> id);
-  ThenaSqlClient.SqlTupleList insertAll(Collection<GrimMission> users);
+  ThenaSqlClient.SqlTuple findAllByMissionIds(Collection<String> id);
+  ThenaSqlClient.SqlTupleList insertAll(Collection<GrimMission> mission);
   
   ThenaSqlClient.Sql createTable();
   ThenaSqlClient.Sql createConstraints();

@@ -11,8 +11,9 @@ import io.resys.thena.datasource.ThenaSqlClient;
 public interface GrimMissionDataRegistry extends ThenaRegistryService<GrimMissionData, io.vertx.mutiny.sqlclient.Row> {
   ThenaSqlClient.Sql findAll();
   ThenaSqlClient.SqlTuple getById(String id);
-  ThenaSqlClient.SqlTuple findAllByMissionId(Collection<String> id);
-  ThenaSqlClient.SqlTupleList insertAll(Collection<GrimMissionData> users);
+  ThenaSqlClient.SqlTuple findAllByMissionIds(Collection<String> id);
+  ThenaSqlClient.SqlTupleList insertAll(Collection<GrimMissionData> data);
+  ThenaSqlClient.SqlTupleList updatetAll(Collection<GrimMissionData> data);
   
   ThenaSqlClient.Sql createTable();
   ThenaSqlClient.Sql createConstraints();

@@ -1,5 +1,6 @@
 package io.resys.thena.registry.grim;
 
+import java.util.Collection;
 import java.util.function.Function;
 
 import io.resys.thena.api.entities.grim.GrimLabel;
@@ -10,6 +11,7 @@ import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.datasource.ThenaSqlClient;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
+import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
 import io.resys.thena.storesql.support.SqlStatement;
 import io.vertx.mutiny.sqlclient.Row;
 import io.vertx.mutiny.sqlclient.Tuple;
@@ -88,6 +90,12 @@ public class GrimLabelRegistrySqlImpl implements GrimLabelRegistry {
       
       return ImmutableGrimLabel.builder().build();
     };
+  }
+
+  @Override
+  public SqlTupleList insertAll(Collection<GrimLabel> labels) {
+    // TODO Auto-generated method stub
+    return null;
   }
 
 }

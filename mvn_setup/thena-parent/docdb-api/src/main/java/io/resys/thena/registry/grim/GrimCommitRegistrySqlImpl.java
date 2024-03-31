@@ -1,5 +1,6 @@
 package io.resys.thena.registry.grim;
 
+import java.util.Collection;
 import java.util.function.Function;
 
 import io.resys.thena.api.entities.grim.GrimCommit;
@@ -10,6 +11,8 @@ import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.datasource.ThenaSqlClient;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
+import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
+import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
 import io.resys.thena.storesql.support.SqlStatement;
 import io.vertx.mutiny.sqlclient.Row;
 import io.vertx.mutiny.sqlclient.Tuple;
@@ -54,6 +57,8 @@ public class GrimCommitRegistrySqlImpl implements GrimCommitRegistry {
     .append("(").ln()
     .append("  commit_id VARCHAR(40) PRIMARY KEY,").ln()
     .append("  parent_id VARCHAR(40),").ln()
+    .append("  mission_id VARCHAR(40),").ln()
+    .append("  label_id VARCHAR(40),").ln()
     .append("  created_at TIMESTAMP WITH TIME ZONE NOT NULL,").ln()
     .append("  commit_log TEXT NOT NULL,").ln()
     
@@ -66,6 +71,13 @@ public class GrimCommitRegistrySqlImpl implements GrimCommitRegistry {
     .append("CREATE INDEX ").append(options.getGrimCommit()).append("_PARENT_INDEX")
     .append(" ON ").append(options.getGrimCommit()).append(" (parent_id);").ln()
 
+    .append("CREATE INDEX ").append(options.getGrimCommit()).append("_MISSION_INDEX")
+    .append(" ON ").append(options.getGrimCommit()).append(" (mission_id);").ln()
+
+    .append("CREATE INDEX ").append(options.getGrimCommit()).append("_LABEL_INDEX")
+    .append(" ON ").append(options.getGrimCommit()).append(" (label_id);").ln()
+
+    
     .append("CREATE INDEX ").append(options.getGrimCommit()).append("_AUTH_INDEX")
     .append(" ON ").append(options.getGrimCommit()).append(" (commit_author);").ln()
     
@@ -114,6 +126,36 @@ public class GrimCommitRegistrySqlImpl implements GrimCommitRegistry {
         .append("  ADD CONSTRAINT ").append(tableNameThatPointToCommits).append("_COMMIT_FK").ln()
         .append("  FOREIGN KEY (commit_id)").ln()
         .append("  REFERENCES ").append(options.getGrimCommit()).append(" (commit_id);").ln().ln()
+        .build();
+  }
+
+  @Override
+  public SqlTuple findAllByIds(Collection<String> id) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT * ").ln()
+        .append("  FROM ").append(options.getGrimCommit()).ln()
+        .append("  WHERE (id = ANY($1))").ln() 
+        .build())
+        .props(Tuple.of(id))
+        .build();
+  }
+
+  @Override
+  public SqlTupleList insertAll(Collection<GrimCommit> commits) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public SqlTuple findAllByMissionIds(Collection<String> id) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT * ").ln()
+        .append("  FROM ").append(options.getGrimCommit()).ln()
+        .append("  WHERE (mission_id = ANY($1))").ln() 
+        .build())
+        .props(Tuple.of(id))
         .build();
   }
 
