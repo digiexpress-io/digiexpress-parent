@@ -10,6 +10,7 @@ import io.resys.thena.datasource.ThenaSqlClient;
 public interface GrimCommitViewerRegistry extends ThenaRegistryService<GrimCommitViewer, io.vertx.mutiny.sqlclient.Row> {
   ThenaSqlClient.Sql findAll();
   ThenaSqlClient.SqlTuple getById(String id);
+  ThenaSqlClient.SqlTuple findAllByMissionId(String commitId);
   
   ThenaSqlClient.Sql createTable();
   ThenaSqlClient.Sql createConstraints();

@@ -1,5 +1,6 @@
 package io.resys.thena.api.registry.grim;
 
+import java.util.Collection;
 import java.util.function.Function;
 
 import io.resys.thena.api.entities.grim.GrimMission;
@@ -10,6 +11,9 @@ import io.resys.thena.datasource.ThenaSqlClient;
 public interface GrimMissionRegistry extends ThenaRegistryService<GrimMission, io.vertx.mutiny.sqlclient.Row> {
   ThenaSqlClient.Sql findAll();
   ThenaSqlClient.SqlTuple getById(String id);
+  
+  ThenaSqlClient.SqlTuple findAllByMissionId(Collection<String> id);
+  ThenaSqlClient.SqlTupleList insertAll(Collection<GrimMission> users);
   
   ThenaSqlClient.Sql createTable();
   ThenaSqlClient.Sql createConstraints();
