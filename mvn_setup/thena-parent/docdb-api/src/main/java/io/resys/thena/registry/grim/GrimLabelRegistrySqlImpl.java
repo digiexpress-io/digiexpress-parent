@@ -2,12 +2,14 @@ package io.resys.thena.registry.grim;
 
 import java.util.Collection;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import io.resys.thena.api.entities.grim.GrimLabel;
 import io.resys.thena.api.entities.grim.ImmutableGrimLabel;
 import io.resys.thena.api.registry.grim.GrimLabelRegistry;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
+import io.resys.thena.datasource.ImmutableSqlTupleList;
 import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.datasource.ThenaSqlClient;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
@@ -97,5 +99,17 @@ public class GrimLabelRegistrySqlImpl implements GrimLabelRegistry {
     // TODO Auto-generated method stub
     return null;
   }
-
+  
+  
+  public SqlTupleList deleteAll(Collection<GrimLabel> labels) {
+    return ImmutableSqlTupleList.builder()
+      .value(new SqlStatement()
+      .append("DELETE FROM ").append(options.getGrimLabel())
+      .append(" WHERE id = $1")
+      .build())
+      .props(labels.stream()
+          .map(doc -> Tuple.from(new Object[]{doc.getId()}))
+          .collect(Collectors.toList()))
+      .build();
+  }
 }

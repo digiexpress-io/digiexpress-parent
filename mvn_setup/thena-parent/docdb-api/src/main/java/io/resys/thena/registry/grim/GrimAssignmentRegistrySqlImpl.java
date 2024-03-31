@@ -2,12 +2,14 @@ package io.resys.thena.registry.grim;
 
 import java.util.Collection;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import io.resys.thena.api.entities.grim.GrimAssignment;
 import io.resys.thena.api.entities.grim.ImmutableGrimAssignment;
 import io.resys.thena.api.registry.grim.GrimAssignmentRegistry;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
+import io.resys.thena.datasource.ImmutableSqlTupleList;
 import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.datasource.ThenaSqlClient;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
@@ -63,17 +65,49 @@ public class GrimAssignmentRegistrySqlImpl implements GrimAssignmentRegistry {
         .build();
   }
 
-
-  @Override
-  public SqlTupleList insertAll(Collection<GrimAssignment> users) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
   @Override
   public SqlTupleList deleteAll(Collection<GrimAssignment> assignments) {
-    // TODO Auto-generated method stub
-    return null;
+    return ImmutableSqlTupleList.builder()
+        .value(new SqlStatement()
+        .append("DELETE FROM ").append(options.getGrimAssignment())
+        .append(" WHERE id = $1")
+        .build())
+        .props(assignments.stream()
+            .map(doc -> Tuple.from(new Object[]{doc.getId()}))
+            .collect(Collectors.toList()))
+        .build();
+  }
+
+
+  @Override
+  public SqlTupleList insertAll(Collection<GrimAssignment> asssignments) {
+    return ImmutableSqlTupleList.builder()
+        .value(new SqlStatement()
+        .append("INSERT INTO ").append(options.getGrimAssignment()).ln()
+        .append(" (id,").ln()
+        .append("  commit_id,").ln()
+        .append("  mission_id,").ln()
+        .append("  objective_id,").ln()
+        .append("  goal_id,").ln()
+        .append("  remark_id, ").ln()
+        .append("  assignee, ").ln()
+        .append("  assignment_type)").ln()
+        
+        .append(" VALUES($1, $2, $3, $4, $5, $6, $7, $8)").ln()
+        .build())
+        .props(asssignments.stream()
+            .map(doc -> Tuple.from(new Object[]{ 
+                doc.getId(), 
+                doc.getMissionId(),
+                doc.getCommitId(),
+                doc.getRelation() == null ? null : doc.getRelation().getObjectiveId(),
+                doc.getRelation() == null ? null : doc.getRelation().getObjectiveGoalId(),
+                doc.getRelation() == null ? null : doc.getRelation().getRemarkId(),
+                doc.getAssignee(),
+                doc.getAssignmentType(),
+             }))
+            .collect(Collectors.toList()))
+        .build();
   }
 
   @Override

@@ -2,12 +2,14 @@ package io.resys.thena.registry.grim;
 
 import java.util.Collection;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import io.resys.thena.api.entities.grim.GrimMissionLink;
 import io.resys.thena.api.entities.grim.ImmutableGrimMissionLink;
 import io.resys.thena.api.registry.grim.GrimMissionLinkRegistry;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
+import io.resys.thena.datasource.ImmutableSqlTupleList;
 import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.datasource.ThenaSqlClient;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
@@ -126,7 +128,7 @@ public class GrimMissionLinkRegistrySqlImpl implements GrimMissionLinkRegistry {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT * ").ln()
-        .append("  FROM ").append(options.getGrimRemark()).ln()
+        .append("  FROM ").append(options.getGrimMissionLink()).ln()
         .append("  WHERE (mission_id = ANY($1))").ln() 
         .build())
         .props(Tuple.of(id))
@@ -139,8 +141,15 @@ public class GrimMissionLinkRegistrySqlImpl implements GrimMissionLinkRegistry {
   }
   @Override
   public SqlTupleList deleteAll(Collection<GrimMissionLink> links) {
-    // TODO Auto-generated method stub
-    return null;
+    return ImmutableSqlTupleList.builder()
+        .value(new SqlStatement()
+        .append("DELETE FROM ").append(options.getGrimMissionLink())
+        .append(" WHERE id = $1")
+        .build())
+        .props(links.stream()
+            .map(doc -> Tuple.from(new Object[]{doc.getId()}))
+            .collect(Collectors.toList()))
+        .build();
   }
 
 }

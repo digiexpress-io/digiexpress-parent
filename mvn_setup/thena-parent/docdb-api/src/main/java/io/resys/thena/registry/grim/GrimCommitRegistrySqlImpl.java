@@ -2,12 +2,14 @@ package io.resys.thena.registry.grim;
 
 import java.util.Collection;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import io.resys.thena.api.entities.grim.GrimCommit;
 import io.resys.thena.api.entities.grim.ImmutableGrimCommit;
 import io.resys.thena.api.registry.grim.GrimCommitRegistry;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
+import io.resys.thena.datasource.ImmutableSqlTupleList;
 import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.datasource.ThenaSqlClient;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
@@ -50,6 +52,36 @@ public class GrimCommitRegistrySqlImpl implements GrimCommitRegistry {
         .build();
   }
 
+  @Override
+  public SqlTupleList insertAll(Collection<GrimCommit> commits) {
+    return ImmutableSqlTupleList.builder()
+        .value(new SqlStatement()
+        .append("INSERT INTO ").append(options.getGrimCommit()).ln()
+        .append(" (commit_id,").ln()
+        .append("  parent_id,").ln()
+        .append("  mission_id,").ln()
+        .append("  label_id,").ln()
+        .append("  created_at,").ln()
+        .append("  commit_log, ").ln()
+        .append("  commit_author, ").ln()
+        .append("  commit_message)").ln()
+        
+        .append(" VALUES($1, $2, $3, $4, $5, $6, $7, $8)").ln()
+        .build())
+        .props(commits.stream()
+            .map(doc -> Tuple.from(new Object[]{ 
+                doc.getId(), 
+                doc.getParentCommitId(),
+                doc.getMissionId(),
+                doc.getLabelId(),
+                doc.getCreatedAt(),
+                doc.getCommitLog(),
+                doc.getCommitAuthor(),
+                doc.getCommitMessage(),
+             }))
+            .collect(Collectors.toList()))
+        .build();
+  }
   @Override
   public Sql createTable() {
     return ImmutableSql.builder().value(new SqlStatement().ln()
@@ -139,12 +171,6 @@ public class GrimCommitRegistrySqlImpl implements GrimCommitRegistry {
         .build())
         .props(Tuple.of(id))
         .build();
-  }
-
-  @Override
-  public SqlTupleList insertAll(Collection<GrimCommit> commits) {
-    // TODO Auto-generated method stub
-    return null;
   }
 
   @Override

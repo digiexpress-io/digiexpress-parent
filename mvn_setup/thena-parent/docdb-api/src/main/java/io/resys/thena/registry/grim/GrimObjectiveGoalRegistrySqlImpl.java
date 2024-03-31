@@ -2,12 +2,14 @@ package io.resys.thena.registry.grim;
 
 import java.util.Collection;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import io.resys.thena.api.entities.grim.GrimObjectiveGoal;
 import io.resys.thena.api.entities.grim.ImmutableGrimObjectiveGoal;
 import io.resys.thena.api.registry.grim.GrimObjectiveGoalRegistry;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
+import io.resys.thena.datasource.ImmutableSqlTupleList;
 import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.datasource.ThenaSqlClient;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
@@ -118,8 +120,15 @@ public class GrimObjectiveGoalRegistrySqlImpl implements GrimObjectiveGoalRegist
   }
   @Override
   public SqlTupleList deleteAll(Collection<GrimObjectiveGoal> goals) {
-    // TODO Auto-generated method stub
-    return null;
+    return ImmutableSqlTupleList.builder()
+        .value(new SqlStatement()
+        .append("DELETE FROM ").append(options.getGrimObjectiveGoal())
+        .append(" WHERE id = $1")
+        .build())
+        .props(goals.stream()
+            .map(doc -> Tuple.from(new Object[]{doc.getId()}))
+            .collect(Collectors.toList()))
+        .build();
   }
 
 }
