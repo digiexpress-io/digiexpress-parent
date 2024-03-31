@@ -64,7 +64,7 @@ public class GrimCommitTreeRegistrySqlImpl implements GrimCommitTreeRegistry {
   @Override
   public Sql createConstraints() {
     return ImmutableSql.builder().value(new SqlStatement()
-        
+    .ln().append("--- constraints for").append(options.getGrimCommitTree()).ln()
     .build()).build();
   }
 

@@ -63,15 +63,41 @@ public class GrimRemarkRegistrySqlImpl implements GrimRemarkRegistry {
     .append("  goal_id VARCHAR(40)").ln()
     
     .append(");").ln()
+    
+    .append("CREATE INDEX ").append(options.getGrimRemark()).append("_MISSION_INDEX")
+    .append(" ON ").append(options.getGrimRemark()).append(" (mission_id);").ln()
+    
+    .append("CREATE INDEX ").append(options.getGrimRemark()).append("_OBJECTIVE_INDEX")
+    .append(" ON ").append(options.getGrimRemark()).append(" (objective_id);").ln()
+    
+    .append("CREATE INDEX ").append(options.getGrimRemark()).append("_GOAL_INDEX")
+    .append(" ON ").append(options.getGrimRemark()).append(" (goal_id);").ln()
+    
+    
     .build()).build();
   }
 
 
   @Override
   public Sql createConstraints() {
-    return ImmutableSql.builder().value(new SqlStatement()
-        
-    .build()).build();
+    return ImmutableSql.builder().value(new SqlStatement().ln()
+      
+      .append("ALTER TABLE ").append(options.getGrimRemark()).ln()
+      .append("  ADD CONSTRAINT ").append(options.getGrimRemark()).append("_MISSION_FK").ln()
+      .append("  FOREIGN KEY (mission_id)").ln()
+      .append("  REFERENCES ").append(options.getGrimMission()).append(" (id);").ln().ln()
+      
+      .append("ALTER TABLE ").append(options.getGrimRemark()).ln()
+      .append("  ADD CONSTRAINT ").append(options.getGrimRemark()).append("_OBJECTIVE_FK").ln()
+      .append("  FOREIGN KEY (objective_id)").ln()
+      .append("  REFERENCES ").append(options.getGrimObjective()).append(" (id);").ln().ln()
+      
+      .append("ALTER TABLE ").append(options.getGrimRemark()).ln()
+      .append("  ADD CONSTRAINT ").append(options.getGrimRemark()).append("_GOAL_FK").ln()
+      .append("  FOREIGN KEY (goal_id)").ln()
+      .append("  REFERENCES ").append(options.getGrimObjectiveGoal()).append(" (id);").ln().ln()
+      
+      .build()).build();
   }
 
 

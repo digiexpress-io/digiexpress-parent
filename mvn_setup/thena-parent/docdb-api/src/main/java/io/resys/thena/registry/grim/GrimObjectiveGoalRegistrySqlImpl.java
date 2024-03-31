@@ -60,7 +60,11 @@ public class GrimObjectiveGoalRegistrySqlImpl implements GrimObjectiveGoalRegist
     .append("  goal_start_date TIMESTAMP,").ln()
     .append("  goal_due_date TIMESTAMP").ln()
     
-    .append(");").ln()
+    .append(");").ln()    
+    
+    .append("CREATE INDEX ").append(options.getGrimObjectiveGoal()).append("_OBJECTIVE_INDEX")
+    .append(" ON ").append(options.getGrimObjectiveGoal()).append(" (objective_id);").ln()
+    
     .build()).build();
   }
 
@@ -68,7 +72,13 @@ public class GrimObjectiveGoalRegistrySqlImpl implements GrimObjectiveGoalRegist
   @Override
   public Sql createConstraints() {
     return ImmutableSql.builder().value(new SqlStatement()
-        
+    .ln().append("--- constraints for").append(options.getGrimObjectiveGoal()).ln()
+    
+    .append("ALTER TABLE ").append(options.getGrimObjectiveGoal()).ln()
+    .append("  ADD CONSTRAINT ").append(options.getGrimObjectiveGoal()).append("_OBJECTIVE_FK").ln()
+    .append("  FOREIGN KEY (objective_id)").ln()
+    .append("  REFERENCES ").append(options.getGrimObjective()).append(" (id);").ln().ln()
+
     .build()).build();
   }
 

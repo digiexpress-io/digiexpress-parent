@@ -65,12 +65,48 @@ public class GrimMissionLinkRegistrySqlImpl implements GrimMissionLinkRegistry {
     .append("  UNIQUE NULLS NOT DISTINCT(mission_id, objective_id, goal_id, remark_id, link_type, external_id)").ln()
     
     .append(");").ln()
+    
+    .append("CREATE INDEX ").append(options.getGrimMissionLink()).append("_MISSION_INDEX")
+    .append(" ON ").append(options.getGrimMissionLink()).append(" (mission_id);").ln()
+    
+    .append("CREATE INDEX ").append(options.getGrimMissionLink()).append("_OBJECTIVE_INDEX")
+    .append(" ON ").append(options.getGrimMissionLink()).append(" (objective_id);").ln()
+    
+    .append("CREATE INDEX ").append(options.getGrimMissionLink()).append("_GOAL_INDEX")
+    .append(" ON ").append(options.getGrimMissionLink()).append(" (goal_id);").ln()
+    
+    .append("CREATE INDEX ").append(options.getGrimMissionLink()).append("_REMARK_INDEX")
+    .append(" ON ").append(options.getGrimMissionLink()).append(" (remark_id);").ln()
+    
+    
     .build()).build();
   }
 
   @Override
   public Sql createConstraints() {
     return ImmutableSql.builder().value(new SqlStatement()
+    .ln().append("--- constraints for").append(options.getGrimMissionLink()).ln()
+    
+    .append("ALTER TABLE ").append(options.getGrimMissionLink()).ln()
+    .append("  ADD CONSTRAINT ").append(options.getGrimMissionLink()).append("_MISSION_FK").ln()
+    .append("  FOREIGN KEY (mission_id)").ln()
+    .append("  REFERENCES ").append(options.getGrimMission()).append(" (id);").ln().ln()
+    
+    .append("ALTER TABLE ").append(options.getGrimMissionLink()).ln()
+    .append("  ADD CONSTRAINT ").append(options.getGrimMissionLink()).append("_OBJECTIVE_FK").ln()
+    .append("  FOREIGN KEY (objective_id)").ln()
+    .append("  REFERENCES ").append(options.getGrimObjective()).append(" (id);").ln().ln()
+    
+    .append("ALTER TABLE ").append(options.getGrimMissionLink()).ln()
+    .append("  ADD CONSTRAINT ").append(options.getGrimMissionLink()).append("_GOAL_FK").ln()
+    .append("  FOREIGN KEY (goal_id)").ln()
+    .append("  REFERENCES ").append(options.getGrimObjectiveGoal()).append(" (id);").ln().ln()
+    
+    .append("ALTER TABLE ").append(options.getGrimMissionLink()).ln()
+    .append("  ADD CONSTRAINT ").append(options.getGrimMissionLink()).append("_REMARK_FK").ln()
+    .append("  FOREIGN KEY (remark_id)").ln()
+    .append("  REFERENCES ").append(options.getGrimRemark()).append(" (id);").ln().ln()
+    
         
     .build()).build();
   }

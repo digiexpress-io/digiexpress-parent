@@ -53,7 +53,7 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
     .append("(").ln()
     .append("  id VARCHAR(40) PRIMARY KEY,").ln()
     .append("  commit_id VARCHAR(40) NOT NULL,").ln()
-    .append("  parent_id VARCHAR(40),").ln()
+    .append("  parent_mission_id VARCHAR(40),").ln()
     .append("  external_id VARCHAR(40) UNIQUE,").ln()
     .append("  reporter_id VARCHAR(255),").ln()
     
@@ -66,7 +66,7 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
     
     .append("ALTER TABLE ").append(options.getGrimMission()).ln()
     .append("  ADD CONSTRAINT ").append(options.getGrimMission()).append("_PARENT_FK").ln()
-    .append("  FOREIGN KEY (parent_id)").ln()
+    .append("  FOREIGN KEY (parent_mission_id)").ln()
     .append("  REFERENCES ").append(options.getGrimMission()).append(" (id);").ln()
     
     .build()).build();
@@ -76,7 +76,11 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
   @Override
   public Sql createConstraints() {
     return ImmutableSql.builder().value(new SqlStatement()
-        
+    .ln().append("--- constraints for").append(options.getGrimMission()).ln()
+
+    .append("CREATE INDEX ").append(options.getGrimMission()).append("_PARENT_INDEX")
+    .append(" ON ").append(options.getGrimMission()).append(" (parent_mission_id);").ln()
+    
     .build()).build();
   }
 

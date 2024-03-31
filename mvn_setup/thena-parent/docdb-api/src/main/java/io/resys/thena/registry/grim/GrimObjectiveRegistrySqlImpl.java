@@ -59,6 +59,14 @@ public class GrimObjectiveRegistrySqlImpl implements GrimObjectiveRegistry {
     .append("  objective_due_date TIMESTAMP").ln()
     
     .append(");").ln()
+    
+    .append("CREATE INDEX ").append(options.getGrimObjective()).append("_MISSION_INDEX")
+    .append(" ON ").append(options.getGrimObjective()).append(" (mission_id);").ln()
+    
+    .append("CREATE INDEX ").append(options.getGrimObjective()).append("_STATUS_INDEX")
+    .append(" ON ").append(options.getGrimObjective()).append(" (objective_status);").ln()
+    
+    
     .build()).build();
   }
 
@@ -66,7 +74,12 @@ public class GrimObjectiveRegistrySqlImpl implements GrimObjectiveRegistry {
   @Override
   public Sql createConstraints() {
     return ImmutableSql.builder().value(new SqlStatement()
-        
+    .ln().append("--- constraints for").append(options.getGrimObjective()).ln()
+    .append("ALTER TABLE ").append(options.getGrimObjective()).ln()
+    .append("  ADD CONSTRAINT ").append(options.getGrimObjective()).append("_MISSION_FK").ln()
+    .append("  FOREIGN KEY (mission_id)").ln()
+    .append("  REFERENCES ").append(options.getGrimMission()).append(" (id);").ln().ln()
+    
     .build()).build();
   }
 

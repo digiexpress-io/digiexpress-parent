@@ -84,7 +84,18 @@ public class GrimCommitRegistrySqlImpl implements GrimCommitRegistry {
   @Override
   public Sql createConstraints() {
     return ImmutableSql.builder().value(new SqlStatement()
-        
+      .ln().append("--- constraints for").append(options.getGrimCommit()).ln()
+     .append(createGrimCommitFk(options.getGrimAssignment()))
+     .append(createGrimCommitFk(options.getGrimCommitTree()))
+     .append(createGrimCommitFk(options.getGrimCommitViewer()))
+     .append(createGrimCommitFk(options.getGrimLabel()))
+     .append(createGrimCommitFk(options.getGrimMission()))
+     .append(createGrimCommitFk(options.getGrimMissionData()))
+     .append(createGrimCommitFk(options.getGrimMissionLabel()))
+     .append(createGrimCommitFk(options.getGrimMissionLink()))
+     .append(createGrimCommitFk(options.getGrimObjective()))
+     .append(createGrimCommitFk(options.getGrimObjectiveGoal()))
+     .append(createGrimCommitFk(options.getGrimRemark()))
     .build()).build();
   }
 
@@ -95,6 +106,15 @@ public class GrimCommitRegistrySqlImpl implements GrimCommitRegistry {
       
       return ImmutableGrimCommit.builder().build();
     };
+  }
+  
+  private String createGrimCommitFk(String tableNameThatPointToCommits) {
+    return new SqlStatement().ln()
+        .append("ALTER TABLE ").append(tableNameThatPointToCommits).ln()
+        .append("  ADD CONSTRAINT ").append(tableNameThatPointToCommits).append("_COMMIT_FK").ln()
+        .append("  FOREIGN KEY (commit_id)").ln()
+        .append("  REFERENCES ").append(options.getGrimCommit()).append(" (commit_id);").ln().ln()
+        .build();
   }
 
 }

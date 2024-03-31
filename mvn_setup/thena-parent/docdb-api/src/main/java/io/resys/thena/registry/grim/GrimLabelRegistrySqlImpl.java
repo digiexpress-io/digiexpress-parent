@@ -63,6 +63,12 @@ public class GrimLabelRegistrySqlImpl implements GrimLabelRegistry {
     
     
     .append(");").ln()
+    
+
+    .append("CREATE INDEX ").append(options.getGrimLabel()).append("_TYPE_VALUE_INDEX")
+    .append(" ON ").append(options.getGrimLabel()).append(" (label_type, label_value);").ln()
+    
+    
     .build()).build();
   }
 
@@ -70,7 +76,8 @@ public class GrimLabelRegistrySqlImpl implements GrimLabelRegistry {
   @Override
   public Sql createConstraints() {
     return ImmutableSql.builder().value(new SqlStatement()
-        
+    .ln().append("--- constraints for").append(options.getGrimLabel()).ln()
+
     .build()).build();
   }
 

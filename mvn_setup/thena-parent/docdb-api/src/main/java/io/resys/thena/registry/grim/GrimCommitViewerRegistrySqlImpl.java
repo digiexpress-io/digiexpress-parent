@@ -66,7 +66,7 @@ public class GrimCommitViewerRegistrySqlImpl implements GrimCommitViewerRegistry
   @Override
   public Sql createConstraints() {
     return ImmutableSql.builder().value(new SqlStatement()
-        
+    .ln().append("--- constraints for").append(options.getGrimCommitViewer()).ln()
     .build()).build();
   }
 

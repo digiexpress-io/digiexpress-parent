@@ -67,6 +67,21 @@ public class GrimAssignmentRegistrySqlImpl implements GrimAssignmentRegistry {
     .append("  UNIQUE NULLS NOT DISTINCT(mission_id, objective_id, goal_id, remark_id, assignee, assignment_type)").ln()
     
     .append(");").ln()
+    
+    
+    .append("CREATE INDEX ").append(options.getGrimAssignment()).append("_MISSION_INDEX")
+    .append(" ON ").append(options.getGrimAssignment()).append(" (mission_id);").ln()
+    
+    .append("CREATE INDEX ").append(options.getGrimAssignment()).append("_OBJECTIVE_INDEX")
+    .append(" ON ").append(options.getGrimAssignment()).append(" (objective_id);").ln()
+    
+    .append("CREATE INDEX ").append(options.getGrimAssignment()).append("_GOAL_INDEX")
+    .append(" ON ").append(options.getGrimAssignment()).append(" (goal_id);").ln()
+    
+    .append("CREATE INDEX ").append(options.getGrimAssignment()).append("_REMARK_INDEX")
+    .append(" ON ").append(options.getGrimAssignment()).append(" (remark_id);").ln()
+    
+    
     .build()).build();
   }
 
@@ -74,7 +89,29 @@ public class GrimAssignmentRegistrySqlImpl implements GrimAssignmentRegistry {
   @Override
   public Sql createConstraints() {
     return ImmutableSql.builder().value(new SqlStatement()
-        
+    .ln().append("--- constraints for").append(options.getGrimAssignment()).ln()
+    
+    .append("ALTER TABLE ").append(options.getGrimAssignment()).ln()
+    .append("  ADD CONSTRAINT ").append(options.getGrimAssignment()).append("_MISSION_FK").ln()
+    .append("  FOREIGN KEY (mission_id)").ln()
+    .append("  REFERENCES ").append(options.getGrimMission()).append(" (id);").ln().ln()
+    
+    .append("ALTER TABLE ").append(options.getGrimAssignment()).ln()
+    .append("  ADD CONSTRAINT ").append(options.getGrimAssignment()).append("_OBJECTIVE_FK").ln()
+    .append("  FOREIGN KEY (objective_id)").ln()
+    .append("  REFERENCES ").append(options.getGrimObjective()).append(" (id);").ln().ln()
+    
+    .append("ALTER TABLE ").append(options.getGrimAssignment()).ln()
+    .append("  ADD CONSTRAINT ").append(options.getGrimAssignment()).append("_GOAL_FK").ln()
+    .append("  FOREIGN KEY (goal_id)").ln()
+    .append("  REFERENCES ").append(options.getGrimObjectiveGoal()).append(" (id);").ln().ln()
+    
+    .append("ALTER TABLE ").append(options.getGrimAssignment()).ln()
+    .append("  ADD CONSTRAINT ").append(options.getGrimAssignment()).append("_REMARK_FK").ln()
+    .append("  FOREIGN KEY (remark_id)").ln()
+    .append("  REFERENCES ").append(options.getGrimRemark()).append(" (id);").ln().ln()
+
+    
     .build()).build();
   }
 
