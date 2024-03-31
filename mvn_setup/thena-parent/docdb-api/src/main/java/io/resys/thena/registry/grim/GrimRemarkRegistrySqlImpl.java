@@ -60,7 +60,7 @@ public class GrimRemarkRegistrySqlImpl implements GrimRemarkRegistry {
     
     .append("  mission_id VARCHAR(40) NOT NULL,").ln()
     .append("  objective_id VARCHAR(40),").ln()
-    .append("  goal_id VARCHAR(40),").ln()
+    .append("  goal_id VARCHAR(40)").ln()
     
     .append(");").ln()
     .build()).build();

@@ -55,7 +55,7 @@ public class GrimObjectiveGoalRegistrySqlImpl implements GrimObjectiveGoalRegist
     .append("  id VARCHAR(40) PRIMARY KEY,").ln()
     .append("  commit_id VARCHAR(40) NOT NULL,").ln()
     
-    .append("  objective_id VARCHAR(40) NOT_NULL,").ln()
+    .append("  objective_id VARCHAR(40) NOT NULL,").ln()
     .append("  goal_status VARCHAR(100),").ln()
     .append("  goal_start_date TIMESTAMP,").ln()
     .append("  goal_due_date TIMESTAMP").ln()

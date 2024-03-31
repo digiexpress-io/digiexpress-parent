@@ -118,7 +118,7 @@ public class TenantRegistrySqlImpl implements TenantRegistry {
         .append("  id VARCHAR(40) PRIMARY KEY,").ln()
         .append("  rev VARCHAR(40) NOT NULL,").ln()
         .append("  prefix VARCHAR(40) NOT NULL,").ln()
-        .append("  type VARCHAR(3) NOT NULL,").ln()
+        .append("  type VARCHAR(40) NOT NULL,").ln()
         .append("  name VARCHAR(255) NOT NULL,").ln()
         .append("  external_id VARCHAR(255),").ln()
         .append("  UNIQUE(name), UNIQUE(rev), UNIQUE(prefix), UNIQUE(external_id)").ln()
