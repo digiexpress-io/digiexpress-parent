@@ -29,7 +29,7 @@ public class SimpleGrimTest extends DbTestTemplate {
   }
 
   @Test
-  public void createRepoAndUser() {
+  public void createGrimStruct() {
     // create project
     TenantCommitResult repo = getClient().tenants().commit()
         .name("SimpleGrimTest-1", StructureType.grim)

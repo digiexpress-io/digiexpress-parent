@@ -149,7 +149,8 @@ public class DbTestTemplate {
     } else if(repo.getType() == StructureType.org) {
       final String result = new OrgDbPrinter(createState()).print(repo);
       log.debug(result);
-    } else {
+      
+    } else if(repo.getType() == StructureType.git) {
       final String result = new GitPrinter(createState()).print(repo);
       log.debug(result);
     }
