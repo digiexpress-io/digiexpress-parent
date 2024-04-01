@@ -81,8 +81,28 @@ public class GrimObjectiveRegistrySqlImpl implements GrimObjectiveRegistry {
 
   @Override
   public SqlTupleList updateAll(Collection<GrimObjective> objective) {
-fdfsdf
-    return null;
+    return ImmutableSqlTupleList.builder()
+        .value(new SqlStatement()
+        .append("UPDATE ").append(options.getGrimObjective())
+        .append(" SET").ln()
+        .append("  commit_id = $1,").ln()
+
+        .append("  objective_status = $2,").ln()
+        .append("  objective_start_date = $3,").ln()
+        .append("  objective_due_date = $4").ln()
+        .append(" WHERE id = $5")
+        .build())
+        .props(objective.stream()
+            .map(doc -> Tuple.from(new Object[]{ 
+                doc.getCommitId(),
+                doc.getObjectiveStatus(),
+                doc.getStartDate(),
+                doc.getDueDate(),
+                
+                doc.getId(), 
+             }))
+            .collect(Collectors.toList()))
+        .build();
   }
   @Override
   public Sql createTable() {

@@ -77,6 +77,10 @@ public class GrimRemarkRegistrySqlImpl implements GrimRemarkRegistry {
                 doc.getRelation() == null ? null : doc.getRelation().getObjectiveId(),
                 doc.getRelation() == null ? null : doc.getRelation().getObjectiveGoalId(),
                 doc.getRelation() == null ? null : doc.getRelation().getRemarkId(),
+                    
+                doc.getReporterId(),
+                doc.getRemarkStatus(),
+                doc.getRemarkText(),
              }))
             .collect(Collectors.toList()))
         .build();
@@ -84,8 +88,27 @@ public class GrimRemarkRegistrySqlImpl implements GrimRemarkRegistry {
 
   @Override
   public SqlTupleList insertAll(Collection<GrimRemark> remarks) {
-dsjkfsdhkfg
-    return null;
+    return ImmutableSqlTupleList.builder()
+        .value(new SqlStatement()
+        .append("UPDATE ").append(options.getGrimObjective())
+        .append(" SET").ln()
+        .append("  commit_id = $1,").ln()
+
+        .append("  reporter_id = $2,").ln()
+        .append("  remark_status = $3,").ln()
+        .append("  remark_text = $4").ln()
+        .append(" WHERE id = $5")
+        .build())
+        .props(remarks.stream()
+            .map(doc -> Tuple.from(new Object[]{ 
+                doc.getCommitId(),
+                doc.getReporterId(),
+                doc.getRemarkStatus(),
+                doc.getRemarkText(),
+                doc.getId(), 
+             }))
+            .collect(Collectors.toList()))
+        .build();
   }
   @Override
   public Sql createTable() {

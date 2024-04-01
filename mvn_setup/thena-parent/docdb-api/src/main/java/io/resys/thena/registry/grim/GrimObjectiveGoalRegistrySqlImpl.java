@@ -81,8 +81,28 @@ public class GrimObjectiveGoalRegistrySqlImpl implements GrimObjectiveGoalRegist
   }
   @Override
   public SqlTupleList updateAll(Collection<GrimObjectiveGoal> goals) {
-sdfsdf
-    return null;
+    return ImmutableSqlTupleList.builder()
+        .value(new SqlStatement()
+        .append("UPDATE ").append(options.getGrimObjectiveGoal())
+        .append(" SET").ln()
+        .append("  commit_id = $1,").ln()
+
+        .append("  goal_status = $2,").ln()
+        .append("  goal_start_date = $3,").ln()
+        .append("  goal_due_date = $4").ln()
+        .append(" WHERE id = $5")
+        .build())
+        .props(goals.stream()
+            .map(doc -> Tuple.from(new Object[]{ 
+                doc.getCommitId(),
+                doc.getGoalStatus(),
+                doc.getStartDate(),
+                doc.getDueDate(),
+                
+                doc.getId(), 
+             }))
+            .collect(Collectors.toList()))
+        .build();
   }
   @Override
   public Sql createTable() {
