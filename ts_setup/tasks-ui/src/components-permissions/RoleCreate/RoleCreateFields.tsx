@@ -7,44 +7,10 @@ import { RoleId } from 'descriptor-permissions';
 import { usePermissions } from '../PermissionsContext';
 import Burger from 'components-burger';
 import { SectionLayout } from 'components-generic';
+import { StyledRoleCreateTransferList } from './StyledRoleCreateTransferList';
 
 
 const NONE_SELECTED_ID = 'none';
-
-/*
-const RolePrincipals: React.FC = () => {
-  const [principalIds, setPrincipalIds] = React.useState<PrincipalId[]>([]);
-  const [selectedPrincipals, setSelectedPrincipals] = React.useState<string[]>([]);
-  const principals: Principal[] = permissions_mock_data.testRoles.flatMap((r) => r.principals);
-  const principalsMenuItems = principals.map((principal) => ({ id: principal.id, value: principal.name }));
-
-  function handlePrincipalsChange(selectedIds: string[]) {
-    setPrincipalIds(selectedIds);
-    if (selectedIds.includes(NONE_SELECTED_ID)) {
-      setPrincipalIds([NONE_SELECTED_ID]);
-    }
-    setSelectedPrincipals(selectedIds.map(principalId => principals.find(p => p.id === principalId)?.name || ''));
-  };
-
-
-  return (<>
-    <Alert severity='info'>
-      <AlertTitle>
-        Selected members will blah blah
-      </AlertTitle>
-    </Alert>
-
-    <Burger.SelectMultiple
-      label='permissions.principals.select'
-      onChange={handlePrincipalsChange}
-      selected={principalIds}
-      items={principalsMenuItems}
-      empty={{ id: NONE_SELECTED_ID, label: 'permissions.select.none' }}
-    />
-  </>
-  )
-}
-*/
 
 const RoleParent: React.FC = () => {
   const { roles } = usePermissions();
@@ -176,7 +142,7 @@ const RolePermissions: React.FC = () => {
   }
 
   return (
-    <Burger.TransferList
+    <StyledRoleCreateTransferList
       title="permissions.title"
       titleArgs={{ name: 'fun name' }}
       searchTitle="permissions.search.title"
@@ -221,7 +187,7 @@ const RolePrincipals: React.FC = () => {
 
 
   return (
-    <Burger.TransferList
+    <StyledRoleCreateTransferList
       title="permissions.principals.title"
       titleArgs={{ name: 'fun name' }}
       searchTitle="permissions.principals.search.title"

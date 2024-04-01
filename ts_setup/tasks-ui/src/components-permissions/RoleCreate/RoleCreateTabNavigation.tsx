@@ -52,10 +52,7 @@ const RoleDialogRightLayout: React.FC = () => {
     return <>no roles here on the right side!</>;
   }
 
-  const navigation = <RoleCreateTabsNav />;
-  const pagination = <></>;
-  const items = <></>;
-  return (<LayoutList slots={{ navigation, items, pagination }} />)
+  return (<RoleCreateTabsNav />)
 }
 
 
