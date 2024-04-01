@@ -124,10 +124,10 @@ public class CreateManyMissionsImpl implements CreateManyMissions {
       next = ImmutableGrimBatchForOne.builder()
           // merge init state
           .from(start)
-           // merge commit state
-          .from(logger.close())
           // merge mission state
           .from(created)
+          // merge commit state
+          .from(logger.close())
           .build();
     }
     

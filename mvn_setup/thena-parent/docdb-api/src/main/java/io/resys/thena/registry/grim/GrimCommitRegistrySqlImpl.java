@@ -157,7 +157,7 @@ public class GrimCommitRegistrySqlImpl implements GrimCommitRegistry {
           .createdAt(row.getOffsetDateTime("created_at"))
           .commitLog(row.getString("commit_log"))
           .commitAuthor(row.getString("commit_author"))
-          .commitMessage(row.getString("commit_message)"))
+          .commitMessage(row.getString("commit_message"))
           
           .build();
     };

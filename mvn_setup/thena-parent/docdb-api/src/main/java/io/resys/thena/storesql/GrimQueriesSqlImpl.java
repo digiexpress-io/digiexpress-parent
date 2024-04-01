@@ -47,4 +47,9 @@ public class GrimQueriesSqlImpl implements GrimQueries {
       }
     };
   }
+
+  @Override
+  public MissionQuery missions() {
+    return new GrimMissionContainerQuerySqlImpl(dataSource);
+  }
 }

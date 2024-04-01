@@ -25,6 +25,7 @@ import io.resys.thena.jackson.VertexExtModule;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.storesql.DbStateSqlImpl;
 import io.resys.thena.structures.git.GitPrinter;
+import io.resys.thena.structures.grim.GrimPrinter;
 import io.resys.thena.support.DocDbPrinter;
 import io.resys.thena.support.OrgDbPrinter;
 import io.vertx.core.json.JsonObject;
@@ -152,6 +153,10 @@ public class DbTestTemplate {
       
     } else if(repo.getType() == StructureType.git) {
       final String result = new GitPrinter(createState()).print(repo);
+      log.debug(result);
+      
+    } else if(repo.getType() == StructureType.grim) {
+      final String result = new GrimPrinter(createState()).print(repo);
       log.debug(result);
     }
   }

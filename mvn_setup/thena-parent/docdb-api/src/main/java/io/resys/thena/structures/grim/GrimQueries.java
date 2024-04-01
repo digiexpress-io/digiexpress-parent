@@ -11,6 +11,7 @@ import io.smallrye.mutiny.Uni;
 public interface GrimQueries {
   ThenaDataSource getDataSource();
   LabelQuery labels();
+  MissionQuery missions();
 
   interface LabelQuery {
     Uni<List<GrimLabel>> findAll();    

@@ -88,6 +88,7 @@ public class GrimCommitLogger {
     return this;
   }
   public GrimCommitLogger visit(GrimOpType type, GrimMission entity) {
+    this.commit.missionId(entity.getId());
     add(type, entity);
     return this;
   }
@@ -153,7 +154,7 @@ public class GrimCommitLogger {
 
       for(final var logEntries : this.added.stream().collect(Collectors.groupingBy(e -> e.getDocType(), Collectors.toList())).entrySet()) {
         log
-        .append("  + ").append(logEntries.getKey()).append(": ").append(logEntries.getValue().size())
+        .append("  + ").append(logEntries.getKey()).append(": added ").append(logEntries.getValue().size())
         .append(System.lineSeparator());
         
         for(final var value : logEntries.getValue()) {
@@ -172,7 +173,7 @@ public class GrimCommitLogger {
 
       for(final var logEntries : this.removed.stream().collect(Collectors.groupingBy(e -> e.getDocType(), Collectors.toList())).entrySet()) {
         log
-        .append("  - ").append(logEntries.getKey()).append(": ").append(logEntries.getValue().size())
+        .append("  - ").append(logEntries.getKey()).append(": deleted ").append(logEntries.getValue().size())
         .append(System.lineSeparator());
         
         for(final var value : logEntries.getValue()) {
@@ -191,7 +192,7 @@ public class GrimCommitLogger {
 
       for(final var logEntries : this.updated.stream().collect(Collectors.groupingBy(e -> e.getDocType(), Collectors.toList())).entrySet()) {
         log
-        .append("  + ").append(logEntries.getKey()).append(": ").append(logEntries.getValue().size())
+        .append("  + ").append(logEntries.getKey()).append(": merged ").append(logEntries.getValue().size())
         .append(System.lineSeparator());
         
         for(final var value : logEntries.getValue()) {
@@ -201,7 +202,7 @@ public class GrimCommitLogger {
     }
     
     
-    this.next.addCommits(this.commit.build());
+    this.next.addCommits(this.commit.commitLog(log.toString()).build()).log("");
     return this.next.build();
   }
 }

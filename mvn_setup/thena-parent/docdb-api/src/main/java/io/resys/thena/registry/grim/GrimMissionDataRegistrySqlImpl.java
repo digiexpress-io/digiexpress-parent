@@ -186,9 +186,9 @@ public class GrimMissionDataRegistrySqlImpl implements GrimMissionDataRegistry {
           .commitId(row.getString("commit_id"))
           .missionId(row.getString("mission_id"))
           .relation(GrimRegistrySqlImpl.toRelations(objectiveId, goalId, remarkId))
-          .title(row.getString("objective_id"))
-          .description(row.getString("objective_id"))
-          .dataExtension(row.getJsonObject("objective_id"))
+          .title(row.getString("title"))
+          .description(row.getString("description"))
+          .dataExtension(row.getJsonObject("data_extension"))
           .build();
     };
   }
