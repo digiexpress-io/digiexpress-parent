@@ -36,7 +36,10 @@ public class GrimObjectiveGoalRegistrySqlImpl implements GrimObjectiveGoalRegist
   public ThenaSqlClient.Sql findAll() {
     return ImmutableSql.builder()
         .value(new SqlStatement()
-        .append("SELECT * FROM ").append(options.getGrimObjectiveGoal())
+        .append("SELECT goal.*, objective.mission_id as mission_id ").ln()
+        .append(" FROM ").append(options.getGrimObjectiveGoal()).append(" as goal ").ln()
+        .append(" RIGHT JOIN ").append(options.getGrimObjective()).append(" as objective").ln()
+        .append(" ON(goal.objective_id = objective.id)").ln()
         .build())
         .build();
   }
@@ -44,14 +47,28 @@ public class GrimObjectiveGoalRegistrySqlImpl implements GrimObjectiveGoalRegist
   public ThenaSqlClient.SqlTuple getById(String id) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
-        .append("SELECT * ").ln()
-        .append("  FROM ").append(options.getGrimObjectiveGoal()).ln()
-        .append("  WHERE (id = $1)").ln() 
+        .append("SELECT goal.*, objective.mission_id as mission_id ").ln()
+        .append(" FROM ").append(options.getGrimObjectiveGoal()).append(" as goal ").ln()
+        .append(" RIGHT JOIN ").append(options.getGrimObjective()).append(" as objective").ln()
+        .append(" ON(goal.objective_id = objective.id)").ln()
+        .append(" WHERE (goal.id = $1)").ln() 
         .build())
         .props(Tuple.of(id))
         .build();
   }
-
+  @Override
+  public SqlTuple findAllByMissionIds(Collection<String> id) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT goal.*, objective.mission_id as mission_id ").ln()
+        .append(" FROM ").append(options.getGrimObjectiveGoal()).append(" as goal ").ln()
+        .append(" RIGHT JOIN ").append(options.getGrimObjective()).append(" as objective").ln()
+        .append(" ON(goal.objective_id = objective.id)").ln()
+        .append(" WHERE (objective.mission_id = ANY($1))").ln() 
+        .build())
+        .props(Tuple.of(id))
+        .build();
+  }
   @Override
   public SqlTupleList insertAll(Collection<GrimObjectiveGoal> goals) {
     return ImmutableSqlTupleList.builder()
@@ -145,22 +162,11 @@ public class GrimObjectiveGoalRegistrySqlImpl implements GrimObjectiveGoalRegist
       return ImmutableGrimObjectiveGoal.builder()
           .id(row.getString("id"))
           .commitId(row.getString("commit_id"))
+          .missionId(row.getString("mission_id"))
           .build();
     };
   }
-  @Override
-  public SqlTuple findAllByMissionIds(Collection<String> id) {
-    return ImmutableSqlTuple.builder()
-        .value(new SqlStatement()
-        .append("SELECT goal.* ").ln()
-        .append(" FROM ").append(options.getGrimObjectiveGoal()).append(" as goal ").ln()
-        .append(" RIGHT JOIN ").append(options.getGrimObjective()).append(" as objective").ln()
-        .append(" ON(goal.objective_id = objective.id)").ln()
-        .append(" WHERE (objective.mission_id = ANY($1))").ln() 
-        .build())
-        .props(Tuple.of(id))
-        .build();
-  }
+
   @Override
   public SqlTupleList deleteAll(Collection<GrimObjectiveGoal> goals) {
     return ImmutableSqlTupleList.builder()

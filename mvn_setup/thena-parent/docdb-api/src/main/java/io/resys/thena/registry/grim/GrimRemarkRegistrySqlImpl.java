@@ -184,6 +184,7 @@ public class GrimRemarkRegistrySqlImpl implements GrimRemarkRegistry {
       return ImmutableGrimRemark.builder()
           .id(row.getString("id"))
           .commitId(row.getString("commit_id"))
+          .missionId(row.getString("mission_id"))
           .relation(GrimRegistrySqlImpl.toRelations(objectiveId, goalId, remarkId))
           .build();
     };

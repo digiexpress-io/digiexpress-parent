@@ -36,7 +36,10 @@ public class GrimCommitTreeRegistrySqlImpl implements GrimCommitTreeRegistry {
   public ThenaSqlClient.Sql findAll() {
     return ImmutableSql.builder()
         .value(new SqlStatement()
-        .append("SELECT * FROM ").append(options.getGrimCommitTree())
+        .append("SELECT tree.*, commit.mission_id as mission_id, commit.label_id as label_id").ln()
+        .append(" FROM ").append(options.getGrimCommitTree()).append(" as tree ").ln()
+        .append(" RIGHT JOIN ").append(options.getGrimCommit()).append(" as commit").ln()
+        .append(" ON(tree.commit_id = commit.commit_id)").ln()
         .build())
         .build();
   }
@@ -50,6 +53,17 @@ public class GrimCommitTreeRegistrySqlImpl implements GrimCommitTreeRegistry {
         .build())
         .props(Tuple.of(id))
         .build();
+  }
+  @Override
+  public SqlTuple findAllByCommitIds(List<String> commitId) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT * ").ln()
+        .append("  FROM ").append(options.getGrimCommitTree()).ln()
+        .append("  WHERE (commit_id = ANY($1))").ln() 
+        .build())
+        .props(Tuple.of(commitId))
+        .build();    
   }
   @Override
   public Sql createTable() {
@@ -103,18 +117,10 @@ public class GrimCommitTreeRegistrySqlImpl implements GrimCommitTreeRegistry {
       return ImmutableGrimCommitTree.builder()
           .id(row.getString("id"))
           .commitId(row.getString("commit_id"))
+          .missionId(row.getString("mission_id"))
+          .labelId(row.getString("label_id"))
           .build();
     };
   }
-  @Override
-  public SqlTuple findAllByCommitIds(List<String> commitId) {
-    return ImmutableSqlTuple.builder()
-        .value(new SqlStatement()
-        .append("SELECT * ").ln()
-        .append("  FROM ").append(options.getGrimCommitTree()).ln()
-        .append("  WHERE (commit_id = ANY($1))").ln() 
-        .build())
-        .props(Tuple.of(commitId))
-        .build();    
-  }
+
 }

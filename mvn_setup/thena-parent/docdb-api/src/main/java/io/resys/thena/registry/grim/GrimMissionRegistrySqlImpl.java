@@ -176,6 +176,7 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
       return ImmutableGrimMission.builder()
           .id(row.getString("id"))
           .commitId(row.getString("commit_id"))
+          
           .build();
     };
   }

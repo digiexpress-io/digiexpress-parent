@@ -147,6 +147,7 @@ public class GrimObjectiveRegistrySqlImpl implements GrimObjectiveRegistry {
       return ImmutableGrimObjective.builder()
           .id(row.getString("id"))
           .commitId(row.getString("commit_id"))
+          .missionId(row.getString("mission_id"))
           .build();
     };
   }

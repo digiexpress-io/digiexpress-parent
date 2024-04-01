@@ -150,6 +150,7 @@ public class GrimCommitRegistrySqlImpl implements GrimCommitRegistry {
       
       return ImmutableGrimCommit.builder()
           .commitId(row.getString("commit_id"))
+          .missionId(row.getString("mission_id"))
           .build();
     };
   }
