@@ -25,7 +25,6 @@ public class PrincipalQueryTest extends DbTestTemplate {
     
     return client.createPrincipal().createOne(ImmutableCreatePrincipal.builder()
         .comment("Added new tester to system")
-        .userId("user-1")
         .name(name)
         .email(email)
         .build()).await().atMost(Duration.ofMinutes(1));

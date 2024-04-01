@@ -21,10 +21,7 @@ package io.resys.permission.client.api.model;
  */
 
 import java.io.Serializable;
-import java.time.Instant;
 import java.util.List;
-
-import javax.annotation.Nullable;
 
 import org.immutables.value.Value;
 
@@ -50,14 +47,8 @@ import io.resys.thena.api.entities.org.OrgActorStatus;
 })
 
 public interface PrincipalCommand extends Serializable {
-  @Nullable String getUserId();
-  @Nullable Instant getTargetDate();
   PrincipalCommandType getCommandType();
   String getComment(); // for auditing purposes, user who made changes must describe why, in a comment.
-  
-  
-  PrincipalCommand withUserId(String userId);
-  PrincipalCommand withTargetDate(Instant targetDate);
   
   enum PrincipalCommandType {
     CREATE_PRINCIPAL,
@@ -87,14 +78,14 @@ public interface PrincipalCommand extends Serializable {
   
   interface PrincipalUpdateCommand extends PrincipalCommand {
     String getId();
-    PrincipalUpdateCommand withUserId(String userId);
-    PrincipalUpdateCommand withTargetDate(Instant targetDate);
   }
 
   @Value.Immutable @JsonSerialize(as = ImmutableChangePrincipalRoles.class) @JsonDeserialize(as = ImmutableChangePrincipalRoles.class)
   interface ChangePrincipalRoles extends PrincipalUpdateCommand {
     List<String> getRoles(); // id/name/extId
     ChangeType getChangeType();
+    
+    @Value.Default
     @Override default PrincipalCommandType getCommandType() { return PrincipalCommandType.CHANGE_PRINCIPAL_ROLES; }
   }
   
@@ -102,6 +93,7 @@ public interface PrincipalCommand extends Serializable {
   interface ChangePrincipalStatus extends PrincipalUpdateCommand {
     OrgActorStatus.OrgActorStatusType getStatus();
     
+    @Value.Default
     @Override default PrincipalCommandType getCommandType() { return PrincipalCommandType.CHANGE_PRINCIPAL_STATUS; }
   }
 

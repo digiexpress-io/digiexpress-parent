@@ -30,20 +30,17 @@ public class PermissionsResource implements PermissionRestApi {
 
   @Override
   public Uni<List<Principal>> findAllPrincipals() {
-    // TODO Auto-generated method stub
-    return null;
+    return getClient().onItem().transformToUni(client -> client.principalQuery().findAllPrincipals());
   }
 
   @Override
   public Uni<Principal> getPrincipalById(String principalId) {
-    // TODO Auto-generated method stub
-    return null;
+    return getClient().onItem().transformToUni(client -> client.principalQuery().get(principalId));
   }
 
   @Override
   public Uni<Principal> updatePrincipal(String principalId, List<PrincipalUpdateCommand> commands) {
-    // TODO Auto-generated method stub
-    return null;
+    return getClient().onItem().transformToUni(client -> client.updatePrincipal().updateOne(commands));
   }
 
   @Override

@@ -21,6 +21,7 @@ package io.resys.permission.client.api.model;
  */
 
 import java.io.Serializable;
+import java.security.Permission;
 import java.util.List;
 
 import org.immutables.value.Value;
@@ -32,7 +33,6 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.resys.permission.client.api.model.PermissionCommand.ChangeType;
-import io.resys.permission.client.api.model.Principal.Permission;
 import io.resys.thena.api.entities.org.OrgActorStatus;
 
 
@@ -90,7 +90,6 @@ public interface RoleCommand extends Serializable {
   
   @Value.Immutable @JsonSerialize(as = ImmutableChangeRoleName.class) @JsonDeserialize(as = ImmutableChangeRoleName.class)
   interface ChangeRoleName extends RoleUpdateCommand {
-    String getId();
     String getName();
     
     @Value.Default

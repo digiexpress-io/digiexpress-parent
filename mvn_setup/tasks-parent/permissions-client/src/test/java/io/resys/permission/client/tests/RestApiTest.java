@@ -17,6 +17,7 @@ import io.resys.permission.client.api.model.ImmutableChangeRoleName;
 import io.resys.permission.client.api.model.ImmutableCreatePermission;
 import io.resys.permission.client.api.model.ImmutableCreateRole;
 import io.resys.permission.client.api.model.PermissionCommand.PermissionUpdateCommand;
+import io.resys.permission.client.api.model.Principal;
 import io.resys.permission.client.api.model.Principal.Permission;
 import io.resys.permission.client.api.model.Principal.Role;
 import jakarta.inject.Inject;
@@ -149,4 +150,31 @@ public class RestApiTest {
   
     Assertions.assertEquals("roleId-1", response.getId());
   }
+
+  @Test
+  public void findAllPrincipals() {
+    
+    final Principal[] response = RestAssured.given()
+        .get("/q/digiexpress/api/principals").then()
+        .contentType("application/json")
+        .statusCode(200).contentType("application/json")
+        .extract().as(Principal[].class);
+    
+    Assertions.assertEquals("principalId-1", response[0].getId());
+  }
+  
+  public void getOnePrincipal() {
+    
+
+  }
+  
 }
+
+
+
+
+
+
+
+
+
