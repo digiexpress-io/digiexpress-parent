@@ -1,8 +1,13 @@
-import { ActorStatus } from './types';
+import { ActorStatus, ChangeType } from './types';
 
 export type PermissionId = string;
 export type PermissionName = string;
+export type RoleId = string;
+export type RoleName = string;
+export type PrincipalId = string;
+export type PrincipalName = string;
 
+//-------------------------PERMISSION-----------------------------
 
 export interface Permission {
   id: PermissionId;
@@ -56,10 +61,127 @@ export interface PermissionPagination {
   records: Permission[];
 }
 
+//-------------------------ROLE-----------------------------
+
+export interface Role {
+  id: RoleId;
+  //parentId: RoleId | undefined; TODO
+  name: RoleName;
+  description: string;
+
+  status: ActorStatus;
+
+  permissions: Permission[];  // permission names
+  principals: Principal[];   // user names
+}
+
+export interface RoleCommand {
+  targetDate?: string;
+  commandType: RoleCommandType;
+}
+
+export interface RoleUpdateCommand extends RoleCommand { }
+
+export type RoleCommandType =
+  'CREATE_ROLE' |
+  'CHANGE_ROLE_NAME' |
+  'CHANGE_ROLE_DESCRIPTION' |
+  'CHANGE_ROLE_STATUS' |
+  'CHANGE_ROLE_PERMISSIONS';
+
+export interface CreateRole {
+  commandType: 'CreateRole';
+  name: RoleName;
+  description: string;
+  permissions: string[];
+}
+
+export interface ChangeRoleName extends RoleUpdateCommand {
+  id: RoleId;
+  name: RoleName;
+  commandType: 'CHANGE_ROLE_NAME';
+}
+
+export interface ChangeRoleDescription extends RoleUpdateCommand {
+  id: RoleId;
+  description: string;
+  commandType: 'CHANGE_ROLE_DESCRIPTION';
+}
+
+export interface ChangeRoleStatus extends RoleUpdateCommand {
+  id: RoleId;
+  status: ActorStatus;
+  commandType: 'CHANGE_ROLE_STATUS';
+}
+
+export interface ChangeRolePermissions extends RoleUpdateCommand {
+  id: RoleId;
+  permissions: string[];
+  changeType: ChangeType;
+  commandType: 'CHANGE_ROLE_PERMISSIONS';
+}
+
+//-------------------------PRINCIPAL-----------------------------
+
+export interface Principal {
+  id: PrincipalId;
+  name: PrincipalName;
+  email: string;
+
+  status: ActorStatus;               // users are not deleted; instead, they are disabled
+  roles: string[];                   // all role names, irrelevant of inheritance 
+
+  /*
+  permissions: string[];             // all permission names, irrelevant of inheritance
+  directRoles: string[];             // explicitly-given membership in the given role
+  directRolePermissions: string[];   // inherited from the role that is directly connected to the principal
+  directPermissions: string[];       // explicitly given to this principal only
+
+  */
+}
+
+export interface PrincipalCommand {
+  targetDate?: string;
+  commandType: PrincipalCommandType;
+}
+
+export type PrincipalCommandType =
+  'CREATE_PRINCIPAL' |
+  'CHANGE_PRINCIPAL_ROLES' |
+  'CHANGE_PRINCIPAL_STATUS';
+
+export interface PrincipalUpdateCommand extends PrincipalCommand { }
+
+export interface CreatePrincipal {
+  commandType: 'CREATE_PRINCIPAL';
+  name: PrincipalName;
+  email: string;
+  roles: string[];
+  permissions: string[];
+}
+
+export interface ChangePrincipalRoles extends PrincipalUpdateCommand {
+  id: PrincipalId;
+  roles: string;        // id/name/extId
+  changeType: ChangeType;
+  commandType: 'CHANGE_PRINCIPAL_ROLES';
+}
+
+export interface ChangePrincipalStatus extends PrincipalUpdateCommand {
+  id: PrincipalId;
+  status: ActorStatus;
+  commandType: 'CHANGE_PRINCIPAL_STATUS';
+}
+
 export interface PermissionStore {
   findAllPermissions(): Promise<Permission[]>;
   getPermission(id: PermissionId): Promise<Permission>;
   createPermission(command: CreatePermission): Promise<Permission>;
   updatePermission(id: PermissionId, commands: PermissionUpdateCommand[]): Promise<Permission>;
+
+  findAllRoles(): Promise<Role[]>;
+  getRole(id: RoleId): Promise<Role>;
+  createRole(command: CreateRole): Promise<Role>;
+  updateRole(id: RoleId, commands: RoleUpdateCommand[]): Promise<Permission>;
 }
 

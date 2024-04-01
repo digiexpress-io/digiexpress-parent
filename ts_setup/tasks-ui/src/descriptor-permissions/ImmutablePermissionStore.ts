@@ -1,4 +1,4 @@
-import { CreatePermission, Permission, PermissionStore, PermissionUpdateCommand } from './permission-types';
+import { CreatePermission, CreateRole, Permission, PermissionStore, PermissionUpdateCommand, Role, RoleUpdateCommand } from './permission-types';
 
 
 export interface PermissionStoreConfig {
@@ -42,4 +42,27 @@ export class ImmutablePermissionStore implements PermissionStore {
     });
   }
 
+  async createRole(command: CreateRole): Promise<Role> {
+    return await this._store.fetch<Role>(`roles`, {
+      method: 'POST',
+      body: JSON.stringify(command),
+      repoType: 'PERMISSIONS'
+    });
+  }
+
+  async getRole(id: string): Promise<Role> {
+    return await this._store.fetch<Role>(`roles/${id}`, { repoType: 'PERMISSIONS' });
+  }
+
+  async findAllRoles(): Promise<Role[]> {
+    return await this._store.fetch<Role[]>(`roles`, { repoType: 'PERMISSIONS' });
+  }
+
+  async updateRole(id: string, commands: RoleUpdateCommand[]): Promise<Permission> {
+    return await this._store.fetch<Role>(`roles/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(commands),
+      repoType: 'PERMISSIONS'
+    });
+  }
 }
