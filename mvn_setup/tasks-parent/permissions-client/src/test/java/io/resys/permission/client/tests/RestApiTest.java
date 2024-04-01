@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.RestAssured;
 import io.resys.permission.client.api.model.ImmutableChangePermissionName;
+import io.resys.permission.client.api.model.ImmutableChangePrincipalStatus;
 import io.resys.permission.client.api.model.ImmutableChangeRoleName;
 import io.resys.permission.client.api.model.ImmutableCreatePermission;
 import io.resys.permission.client.api.model.ImmutableCreateRole;
@@ -20,6 +21,7 @@ import io.resys.permission.client.api.model.PermissionCommand.PermissionUpdateCo
 import io.resys.permission.client.api.model.Principal;
 import io.resys.permission.client.api.model.Principal.Permission;
 import io.resys.permission.client.api.model.Principal.Role;
+import io.resys.thena.api.entities.org.OrgActorStatus.OrgActorStatusType;
 import jakarta.inject.Inject;
 
 @QuarkusTest
@@ -165,7 +167,31 @@ public class RestApiTest {
   
   public void getOnePrincipal() {
     
+    final Principal response = RestAssured.given()
+        .get("/q/digiexpress/api/principals/principalId-1").then()
+        .contentType("application/json")
+        .statusCode(200).contentType("application/json")
+        .extract().as(Principal.class);
+    
+    Assertions.assertEquals("principalId-1", response.getId());
 
+  }
+  
+  public void updateOnePrincipal() {
+    
+    final var body = ImmutableChangePrincipalStatus.builder()
+        .id("principalId-1")
+        .comment("User is no longer active in the system")
+        .status(OrgActorStatusType.DISABLED)
+        .build();
+    
+    final Principal response = RestAssured.given()
+        .body(body).accept("application/json").contentType("application/json")
+        .get("q/digiexpress/api/principals/principalId-1").then()
+        .statusCode(200).contentType("application/json")
+        .extract().as(Principal.class);
+    
+    Assertions.assertEquals("DISABLED", response.getStatus());
   }
   
 }
