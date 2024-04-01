@@ -2,12 +2,13 @@ import React from 'react';
 import { TextField, IconButton, Alert, AlertTitle, Box } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useIntl } from 'react-intl';
-import { RoleId } from 'descriptor-permissions';
+import { CreateRole, ImmutablePermissionStore, RoleId } from 'descriptor-permissions';
 
 import { usePermissions } from '../PermissionsContext';
 import Burger from 'components-burger';
 import { SectionLayout } from 'components-generic';
 import { StyledRoleCreateTransferList } from './StyledRoleCreateTransferList';
+import Context from 'context';
 
 
 const NONE_SELECTED_ID = 'none';
@@ -48,15 +49,23 @@ const RoleParent: React.FC = () => {
 }
 
 const RoleName: React.FC<{}> = () => {
+  const backend = Context.useBackend();
   const [name, setName] = React.useState('');
   const intl = useIntl();
 
+  async function handleRoleCreate() {
+    const command: CreateRole = {
+      commandType: 'CREATE_ROLE',
+      description: 'New role created',
+      comment: 'This comment is for my first role',
+      permissions: [],
+      name
+    }
+    await new ImmutablePermissionStore(backend.store).createRole(command);
+    console.log("new role created", name)
+  }
   function handleRoleNameChange(event: React.ChangeEvent<HTMLInputElement>) {
     setName(event.target.value);
-  }
-  //TODO
-  async function handleChange() {
-
   }
 
   return (<TextField InputProps={{ disableUnderline: true }} variant='standard'
@@ -64,7 +73,7 @@ const RoleName: React.FC<{}> = () => {
     fullWidth
     value={name}
     onChange={handleRoleNameChange}
-    onBlur={handleChange}
+    onBlur={handleRoleCreate}
   />);
 }
 

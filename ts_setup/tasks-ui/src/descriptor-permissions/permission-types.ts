@@ -17,8 +17,7 @@ export interface Permission {
 }
 
 export interface PermissionCommand {
-  targetDate: string | undefined;
-  commandType: PermissionCommandType;
+  comment: string;
 }
 
 export type PermissionCommandType =
@@ -76,8 +75,7 @@ export interface Role {
 }
 
 export interface RoleCommand {
-  targetDate?: string;
-  commandType: RoleCommandType;
+  comment: string;
 }
 
 export interface RoleUpdateCommand extends RoleCommand { }
@@ -90,10 +88,11 @@ export type RoleCommandType =
   'CHANGE_ROLE_PERMISSIONS';
 
 export interface CreateRole {
-  commandType: 'CreateRole';
+  commandType: 'CREATE_ROLE';
   name: RoleName;
   description: string;
   permissions: string[];
+  comment: string;
 }
 
 export interface ChangeRoleName extends RoleUpdateCommand {
@@ -141,8 +140,7 @@ export interface Principal {
 }
 
 export interface PrincipalCommand {
-  targetDate?: string;
-  commandType: PrincipalCommandType;
+  comment: string;
 }
 
 export type PrincipalCommandType =

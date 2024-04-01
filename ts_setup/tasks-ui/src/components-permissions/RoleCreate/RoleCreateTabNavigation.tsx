@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Tabs, Tab, Stack } from '@mui/material';
-import { LayoutList, FilterByString } from 'components-generic';
+import { FilterByString } from 'components-generic';
 
 import { PermissionsProvider, usePermissions } from '../PermissionsContext';
 import Fields from './RoleCreateFields';

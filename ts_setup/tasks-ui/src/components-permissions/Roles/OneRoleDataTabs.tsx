@@ -41,6 +41,7 @@ export const OneRoleDataTabs: React.FC<{ role: Role }> = ({ role }) => {
         <Tab label={<FormattedMessage id='permissions.roles.overview.tab.permissions' />} />
         <Tab label={<FormattedMessage id='permissions.roles.overview.tab.members' />} />
       </Tabs>
+
       <TabContent selected={tabValue} id={0}>
         <RoleDetails role={role} />
       </TabContent>

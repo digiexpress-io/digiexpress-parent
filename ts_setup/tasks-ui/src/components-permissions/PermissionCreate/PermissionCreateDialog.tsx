@@ -49,8 +49,6 @@ const PermissionCreateDialog: React.FC<{ open: boolean, onClose: () => void }> =
   const [description, setDescription] = React.useState('description');
   const [comment, setComment] = React.useState('comment value');
 
-
-
   async function handlePermissionCreate() {
     const command: CreatePermission = {
       commandType: 'CREATE_PERMISSION',
