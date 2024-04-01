@@ -7,6 +7,7 @@ import io.resys.permission.client.api.model.PermissionCommand.PermissionUpdateCo
 import io.resys.permission.client.api.model.Principal;
 import io.resys.permission.client.api.model.Principal.Permission;
 import io.resys.permission.client.api.model.Principal.Role;
+import io.resys.permission.client.api.model.PrincipalCommand.CreatePrincipal;
 import io.resys.permission.client.api.model.PrincipalCommand.PrincipalUpdateCommand;
 import io.resys.permission.client.api.model.RoleCommand.CreateRole;
 import io.resys.permission.client.api.model.RoleCommand.RoleUpdateCommand;
@@ -31,6 +32,9 @@ public interface PermissionRestApi {
   
   @PUT @Path("principals/{principalId}") @Produces(MediaType.APPLICATION_JSON) @Consumes(MediaType.APPLICATION_JSON)
   Uni<Principal> updatePrincipal(@PathParam("principalId") String principalId, List<PrincipalUpdateCommand> commands);
+  
+  @POST @Path("principals") @Produces(MediaType.APPLICATION_JSON) @Consumes(MediaType.APPLICATION_JSON)
+  Uni<Principal> createPrincipal(CreatePrincipal command);
   
   @GET @Path("permissions") @Produces(MediaType.APPLICATION_JSON)
   Uni<List<Permission>> findAllPermissions();

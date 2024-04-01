@@ -14,6 +14,7 @@ import io.resys.thena.api.actions.OrgCommitActions.ModType;
 import io.resys.thena.api.actions.OrgCommitActions.ModifyOneMember;
 import io.resys.thena.api.actions.OrgCommitActions.OneMemberEnvelope;
 import io.resys.thena.api.entities.CommitResultStatus;
+import io.resys.thena.api.entities.org.OrgActorStatus.OrgActorStatusType;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -91,7 +92,7 @@ public class UpdatePrincipalActionImpl implements UpdatePrincipalAction {
       .name(principal.getUserName())
       .email(principal.getEmail())
       .roles(null)
-      .status(null)
+      .status(OrgActorStatusType.IN_FORCE)
       .build();
   }
 

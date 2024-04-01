@@ -9,6 +9,7 @@ import io.resys.permission.client.api.model.PermissionCommand.PermissionUpdateCo
 import io.resys.permission.client.api.model.Principal;
 import io.resys.permission.client.api.model.Principal.Permission;
 import io.resys.permission.client.api.model.Principal.Role;
+import io.resys.permission.client.api.model.PrincipalCommand.CreatePrincipal;
 import io.resys.permission.client.api.model.PrincipalCommand.PrincipalUpdateCommand;
 import io.resys.permission.client.api.model.RoleCommand.CreateRole;
 import io.resys.permission.client.api.model.RoleCommand.RoleUpdateCommand;
@@ -33,6 +34,11 @@ public class PermissionsResource implements PermissionRestApi {
     return getClient().onItem().transformToUni(client -> client.principalQuery().findAllPrincipals());
   }
 
+  @Override
+  public Uni<Principal> createPrincipal(CreatePrincipal command) {
+    return getClient().onItem().transformToUni(client -> client.createPrincipal().createOne(command));
+  }
+  
   @Override
   public Uni<Principal> getPrincipalById(String principalId) {
     return getClient().onItem().transformToUni(client -> client.principalQuery().get(principalId));

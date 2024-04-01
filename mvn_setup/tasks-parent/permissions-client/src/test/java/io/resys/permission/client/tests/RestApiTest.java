@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -16,6 +17,7 @@ import io.resys.permission.client.api.model.ImmutableChangePermissionName;
 import io.resys.permission.client.api.model.ImmutableChangePrincipalStatus;
 import io.resys.permission.client.api.model.ImmutableChangeRoleName;
 import io.resys.permission.client.api.model.ImmutableCreatePermission;
+import io.resys.permission.client.api.model.ImmutableCreatePrincipal;
 import io.resys.permission.client.api.model.ImmutableCreateRole;
 import io.resys.permission.client.api.model.PermissionCommand.PermissionUpdateCommand;
 import io.resys.permission.client.api.model.Principal;
@@ -177,21 +179,42 @@ public class RestApiTest {
 
   }
   
+  @Disabled //TODO
+  @Test
   public void updateOnePrincipal() {
     
     final var body = ImmutableChangePrincipalStatus.builder()
         .id("principalId-1")
         .comment("User is no longer active in the system")
         .status(OrgActorStatusType.DISABLED)
+        .build();   
+  
+    final Principal response = RestAssured.given()
+        .body(body).accept("application/json").contentType("application/json")
+        .when().put("q/digiexpress/api/principals/principalId-1").then()
+        .log().body()
+        .statusCode(200).contentType("application/json")
+        .extract().as(Principal.class);
+    
+    Assertions.assertEquals(OrgActorStatusType.DISABLED, response.getStatus());
+  }
+  
+  @Test
+  public void postOnePrincipal() {
+    
+    final var body = ImmutableCreatePrincipal.builder()
+        .name("Dirk Redbull")
+        .email("dirk.redbull1976@gmail.com")
+        .comment("New user added")
         .build();
     
     final Principal response = RestAssured.given()
         .body(body).accept("application/json").contentType("application/json")
-        .get("q/digiexpress/api/principals/principalId-1").then()
+        .when().post("/q/digiexpress/api/principals").then()
         .statusCode(200).contentType("application/json")
         .extract().as(Principal.class);
     
-    Assertions.assertEquals("DISABLED", response.getStatus());
+    Assertions.assertEquals("principalId-1", response.getId());    
   }
   
 }
