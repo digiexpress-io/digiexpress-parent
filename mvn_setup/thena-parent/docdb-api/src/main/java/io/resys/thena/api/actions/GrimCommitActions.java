@@ -67,8 +67,7 @@ public interface GrimCommitActions {
   interface CreateManyMissions {
     CreateManyMissions commitAuthor(String author);
     CreateManyMissions commitMessage(String message);
-    CreateManyMissions commitCommands(List<? extends Serializable> commands);
-    CreateManyMissions addMission(Consumer<MissionChanges> addMission);
+    CreateManyMissions addMission(List<? extends Serializable> commands, Consumer<MissionChanges> addMission);
     Uni<ManyMissionsEnvelope> build();
   }
   
