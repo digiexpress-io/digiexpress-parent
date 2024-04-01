@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS tenants
   id VARCHAR(40) PRIMARY KEY,
   rev VARCHAR(40) NOT NULL,
   prefix VARCHAR(40) NOT NULL,
-  type VARCHAR(3) NOT NULL,
+  type VARCHAR(40) NOT NULL,
   name VARCHAR(255) NOT NULL,
   external_id VARCHAR(255),
   UNIQUE(name), UNIQUE(rev), UNIQUE(prefix), UNIQUE(external_id)
