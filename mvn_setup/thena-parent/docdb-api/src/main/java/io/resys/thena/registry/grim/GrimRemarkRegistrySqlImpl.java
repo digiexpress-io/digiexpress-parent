@@ -83,6 +83,11 @@ public class GrimRemarkRegistrySqlImpl implements GrimRemarkRegistry {
   }
 
   @Override
+  public SqlTupleList insertAll(Collection<GrimRemark> remarks) {
+dsjkfsdhkfg
+    return null;
+  }
+  @Override
   public Sql createTable() {
     return ImmutableSql.builder().value(new SqlStatement().ln()
     .append("CREATE TABLE ").append(options.getGrimRemark()).ln()
@@ -158,11 +163,6 @@ public class GrimRemarkRegistrySqlImpl implements GrimRemarkRegistry {
         .build();
   }
 
-  @Override
-  public SqlTupleList insertAll(Collection<GrimRemark> remarks) {
-    // TODO Auto-generated method stub
-    return null;
-  }
   @Override
   public SqlTupleList deleteAll(Collection<GrimRemark> remarks) {
     return ImmutableSqlTupleList.builder()

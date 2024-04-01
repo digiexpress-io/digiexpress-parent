@@ -81,7 +81,7 @@ public class GrimObjectiveGoalRegistrySqlImpl implements GrimObjectiveGoalRegist
   }
   @Override
   public SqlTupleList updateAll(Collection<GrimObjectiveGoal> goals) {
-    // TODO Auto-generated method stub
+sdfsdf
     return null;
   }
   @Override

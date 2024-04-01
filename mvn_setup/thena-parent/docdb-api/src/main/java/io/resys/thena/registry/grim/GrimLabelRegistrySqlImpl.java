@@ -52,6 +52,30 @@ public class GrimLabelRegistrySqlImpl implements GrimLabelRegistry {
         .build();
   }
   @Override
+  public SqlTupleList updateAll(Collection<GrimLabel> labels) {
+    return ImmutableSqlTupleList.builder()
+        .value(new SqlStatement()
+        .append("UPDATE ").append(options.getGrimLabel())
+        .append(" SET").ln()
+        .append("  commit_id = $1,").ln()
+        .append("  label_type = $2,").ln()
+        .append("  label_value = $3,").ln()
+        .append("  label_body = $4").ln()
+        .append(" WHERE id = $5")
+        .build())
+        .props(labels.stream()
+            .map(doc -> Tuple.from(new Object[]{ 
+                doc.getCommitId(),
+                doc.getLabelType(),
+                doc.getLabelValue(),
+                doc.getLabelBody(),
+                
+                doc.getId()
+             }))
+            .collect(Collectors.toList()))
+        .build();
+  }
+  @Override
   public SqlTupleList insertAll(Collection<GrimLabel> labels) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()

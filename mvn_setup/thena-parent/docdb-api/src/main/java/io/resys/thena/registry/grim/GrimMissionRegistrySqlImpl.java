@@ -86,6 +86,39 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
         .build();
   }
   @Override
+  public SqlTupleList updateAll(Collection<GrimMission> mission) {
+    return ImmutableSqlTupleList.builder()
+        .value(new SqlStatement()
+        .append("UPDATE ").append(options.getGrimMission())
+        .append(" SET").ln()
+        .append("  commit_id = $1,").ln()
+        .append("  parent_mission_id = $2,").ln()
+        .append("  external_id = $3,").ln()
+        .append("  reporter_id = $4,").ln()
+        
+        .append("  mission_status = $5,").ln()
+        .append("  mission_priority = $6,").ln()
+        .append("  mission_start_date = $7,").ln()        
+        .append("  mission_due_date = $8").ln()
+        .append(" WHERE id = $9")
+        .build())
+        .props(mission.stream()
+            .map(doc -> Tuple.from(new Object[]{ 
+                doc.getCommitId(),
+                doc.getParentMissionId(),
+                doc.getReporterId(),
+                doc.getExternalId(),
+                doc.getMissionStatus(),
+                doc.getMissionPriority(),
+                doc.getStartDate(),
+                doc.getDueDate(),
+                
+                doc.getId(), 
+             }))
+            .collect(Collectors.toList()))
+        .build();
+  }
+  @Override
   public Sql createTable() {
     return ImmutableSql.builder().value(new SqlStatement().ln()
     .append("CREATE TABLE ").append(options.getGrimMission()).ln()
@@ -142,4 +175,5 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
         .props(Tuple.of(id))
         .build();
   }
+
 }

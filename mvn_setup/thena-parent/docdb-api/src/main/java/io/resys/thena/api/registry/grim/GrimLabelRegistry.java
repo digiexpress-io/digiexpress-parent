@@ -12,6 +12,7 @@ public interface GrimLabelRegistry extends ThenaRegistryService<GrimLabel, io.ve
   ThenaSqlClient.Sql findAll();
   ThenaSqlClient.SqlTuple getById(String id);
   ThenaSqlClient.SqlTupleList insertAll(Collection<GrimLabel> labels);
+  ThenaSqlClient.SqlTupleList updateAll(Collection<GrimLabel> labels);
   
   ThenaSqlClient.Sql createTable();
   ThenaSqlClient.Sql createConstraints();

@@ -86,6 +86,29 @@ public class GrimMissionDataRegistrySqlImpl implements GrimMissionDataRegistry {
         .build();
   }
   @Override
+  public SqlTupleList updatetAll(Collection<GrimMissionData> data) {
+    return ImmutableSqlTupleList.builder()
+        .value(new SqlStatement()
+        .append("UPDATE ").append(options.getGrimLabel())
+        .append(" SET").ln()
+        .append("  commit_id = $1,").ln()
+        .append("  title = $2,").ln()
+        .append("  description = $3,").ln()
+        .append("  data_extension = $4").ln()
+        .append(" WHERE id = $5")
+        .build())
+        .props(data.stream()
+            .map(doc -> Tuple.from(new Object[]{ 
+                doc.getCommitId(),
+                doc.getTitle(),
+                doc.getDescription(),
+                doc.getDataExtension(),
+                doc.getId(), 
+             }))
+            .collect(Collectors.toList()))
+        .build();
+  }
+  @Override
   public Sql createTable() {
     return ImmutableSql.builder().value(new SqlStatement().ln()
     .append("CREATE TABLE ").append(options.getGrimMissionData()).ln()
@@ -169,10 +192,4 @@ public class GrimMissionDataRegistrySqlImpl implements GrimMissionDataRegistry {
         .props(Tuple.of(id))
         .build();
   }
-  @Override
-  public SqlTupleList updatetAll(Collection<GrimMissionData> data) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
 }

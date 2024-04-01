@@ -78,6 +78,12 @@ public class GrimObjectiveRegistrySqlImpl implements GrimObjectiveRegistry {
             .collect(Collectors.toList()))
         .build();
   }
+
+  @Override
+  public SqlTupleList updateAll(Collection<GrimObjective> objective) {
+fdfsdf
+    return null;
+  }
   @Override
   public Sql createTable() {
     return ImmutableSql.builder().value(new SqlStatement().ln()
@@ -143,11 +149,6 @@ public class GrimObjectiveRegistrySqlImpl implements GrimObjectiveRegistry {
             .map(doc -> Tuple.from(new Object[]{doc.getId()}))
             .collect(Collectors.toList()))
         .build();
-  }
-  @Override
-  public SqlTupleList updateAll(Collection<GrimObjective> objective) {
-    // TODO Auto-generated method stub
-    return null;
   }
 
 }
