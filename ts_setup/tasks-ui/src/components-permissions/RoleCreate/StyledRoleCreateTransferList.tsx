@@ -35,7 +35,7 @@ interface StyledTransferListProps {
 
 
 const StyledRoleCreateTransferList: React.FC<StyledTransferListProps> = (props) => {
-  const { title, headers, selected: initSelected, searchTitle, selectedTitle, searchPlaceholder, rows, renderCells, filterRow, cancel, submit } = props;
+  const { headers, selected: initSelected, searchTitle, selectedTitle, searchPlaceholder, rows, renderCells, filterRow } = props;
   const [search, setSearch] = React.useState("");
   const [searchResult, setSearchResult] = React.useState(rows);
   const [selected, setSelected] = React.useState(initSelected);

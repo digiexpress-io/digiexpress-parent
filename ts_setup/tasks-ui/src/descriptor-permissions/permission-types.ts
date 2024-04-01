@@ -57,7 +57,7 @@ export interface PermissionPagination {
 }
 
 export interface PermissionStore {
-  findPermissions(): Promise<Permission[]>;
+  findAllPermissions(): Promise<Permission[]>;
   getPermission(id: PermissionId): Promise<Permission>;
   createPermission(command: CreatePermission): Promise<Permission>;
   updatePermission(id: PermissionId, commands: PermissionUpdateCommand[]): Promise<Permission>;

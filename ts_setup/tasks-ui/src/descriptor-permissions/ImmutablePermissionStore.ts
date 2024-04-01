@@ -30,7 +30,7 @@ export class ImmutablePermissionStore implements PermissionStore {
     return await this._store.fetch<Permission>(`permissions/${id}`, { repoType: 'PERMISSIONS' });
   }
 
-  async findPermissions(): Promise<Permission[]> {
+  async findAllPermissions(): Promise<Permission[]> {
     return await this._store.fetch<Permission[]>(`permissions`, { repoType: 'PERMISSIONS' });
   }
 

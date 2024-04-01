@@ -10,7 +10,7 @@ const PermissionsOverview: React.FC = () => {
   const [permissions, setPermissions] = React.useState<Permission[]>();
 
   React.useEffect(() => {
-    new ImmutablePermissionStore(backend.store).findPermissions().then(setPermissions);
+    new ImmutablePermissionStore(backend.store).findAllPermissions().then(setPermissions);
   }, []);
 
   if (!permissions) {
