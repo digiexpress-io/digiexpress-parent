@@ -73,7 +73,7 @@ const RoleName: React.FC<{}> = () => {
     fullWidth
     value={name}
     onChange={handleRoleNameChange}
-    onBlur={handleRoleCreate}
+    onBlur={handleRoleCreate} //TODO remove the onBlur
   />);
 }
 

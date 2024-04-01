@@ -71,7 +71,7 @@ const Footer: React.FC<{ onClose: () => void, onCloseCreate: () => void }> = ({ 
 const RoleCreateDialog: React.FC<{ open: boolean, onClose: () => void }> = ({ open, onClose }) => {
   const permissions = Context.usePermissions();
 
-  function handleCloseCreate() {
+  function handleCloseCreate() { //TODO
     permissions.reload().then(() => {
       console.log("reloading")
       onClose();
