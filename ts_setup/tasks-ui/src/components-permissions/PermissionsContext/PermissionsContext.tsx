@@ -50,7 +50,7 @@ export const PermissionsProvider: React.FC<{ children: React.ReactNode }> = ({ c
   const [loading, setLoading] = React.useState(true);
   const [roles, setRoles] = React.useState<Role[]>([]);
   const [permissions, setPermissions] = React.useState<Permission[]>([]);
-  const [principals, setPrincipals] = React.useState<Principal[]>([]);
+  const [principals, setPrincipals] = React.useState<Principal[]>([]); //TODO implement
 
   const [store] = React.useState(new ImmutablePermissionStore(backend.store));
 
