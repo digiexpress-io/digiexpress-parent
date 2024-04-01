@@ -32,12 +32,12 @@ const Header: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   )
 }
 
-const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+const Footer: React.FC<{ onClose: () => void, onCloseCreate: () => void }> = ({ onClose, onCloseCreate }) => {
 
   return (
     <>
       <Burger.SecondaryButton label='buttons.cancel' onClick={onClose} />
-      <Burger.PrimaryButton label='buttons.accept' onClick={onClose} />
+      <Burger.PrimaryButton label='buttons.accept' onClick={onCloseCreate} />
     </>
   )
 }
@@ -80,7 +80,7 @@ const PermissionCreateDialog: React.FC<{ open: boolean, onClose: () => void }> =
       open={open}
       onClose={onClose}
       header={<Header onClose={onClose} />}
-      footer={<Footer onClose={handlePermissionCreate} />}
+      footer={<Footer onClose={onClose} onCloseCreate={handlePermissionCreate} />}
       right={<Right />}
       left={
         <>
