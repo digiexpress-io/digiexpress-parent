@@ -162,6 +162,7 @@ public class GrimMissionLabelRegistrySqlImpl implements GrimMissionLabelRegistry
           .id(row.getString("id"))
           .commitId(row.getString("commit_id"))
           .missionId(row.getString("mission_id"))
+          .labelId(row.getString("label_id"))
           .relation(GrimRegistrySqlImpl.toRelations(objectiveId, goalId, remarkId))
           .build();
     };

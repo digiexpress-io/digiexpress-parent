@@ -148,6 +148,11 @@ public class GrimObjectiveRegistrySqlImpl implements GrimObjectiveRegistry {
           .id(row.getString("id"))
           .commitId(row.getString("commit_id"))
           .missionId(row.getString("mission_id"))
+          
+          .objectiveStatus(row.getString("objective_status"))
+          .startDate(row.getLocalDate("objective_start_date"))
+          .dueDate(row.getLocalDate("objective_due_date"))
+
           .build();
     };
   }

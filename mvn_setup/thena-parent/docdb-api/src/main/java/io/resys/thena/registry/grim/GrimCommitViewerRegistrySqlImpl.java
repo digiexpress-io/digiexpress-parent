@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import io.resys.thena.api.entities.grim.GrimCommitViewer;
 import io.resys.thena.api.entities.grim.ImmutableGrimCommitViewer;
+import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimDocType;
 import io.resys.thena.api.registry.grim.GrimCommitViewerRegistry;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
@@ -71,7 +72,7 @@ public class GrimCommitViewerRegistrySqlImpl implements GrimCommitViewerRegistry
                 doc.getId(), 
                 doc.getCommitId(),
                 doc.getObjectId(),
-                doc.getObjectType(),
+                doc.getObjectType().name(),
                 doc.getUsedBy(),
                 doc.getUsedFor(),
                 doc.getCreatedAt()
@@ -111,6 +112,13 @@ public class GrimCommitViewerRegistrySqlImpl implements GrimCommitViewerRegistry
       return ImmutableGrimCommitViewer.builder()
           .id(row.getString("id"))
           .commitId(row.getString("commit_id"))
+
+          .objectId(row.getString("object_id"))
+          .objectType(GrimDocType.valueOf(row.getString("object_type")))
+          .usedBy(row.getString("used_by"))
+          .usedFor(row.getString("used_for"))
+          .createdAt(row.getOffsetDateTime("created_at"))
+          
           .build();
     };
   }

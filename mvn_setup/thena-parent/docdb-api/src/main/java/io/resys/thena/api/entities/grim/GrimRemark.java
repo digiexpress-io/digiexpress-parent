@@ -11,7 +11,6 @@ import jakarta.annotation.Nullable;
 @Value.Immutable
 public interface GrimRemark extends IsGrimObject, ThenaTable {
   String getId();
-  @Nullable String getParentId();
   String getCommitId();
   String getMissionId();
   

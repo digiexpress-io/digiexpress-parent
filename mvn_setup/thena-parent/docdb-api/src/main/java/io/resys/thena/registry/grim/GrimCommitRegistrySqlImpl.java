@@ -151,6 +151,14 @@ public class GrimCommitRegistrySqlImpl implements GrimCommitRegistry {
       return ImmutableGrimCommit.builder()
           .commitId(row.getString("commit_id"))
           .missionId(row.getString("mission_id"))
+
+          .parentCommitId(row.getString("parent_id"))
+          .labelId(row.getString("label_id"))
+          .createdAt(row.getOffsetDateTime("created_at"))
+          .commitLog(row.getString("commit_log"))
+          .commitAuthor(row.getString("commit_author"))
+          .commitMessage(row.getString("commit_message)"))
+          
           .build();
     };
   }

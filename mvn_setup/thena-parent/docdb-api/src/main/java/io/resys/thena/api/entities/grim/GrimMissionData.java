@@ -17,7 +17,6 @@ public interface GrimMissionData extends IsGrimObject, ThenaTable {
   
   String getTitle();
   String getDescription();
-  String getDataType();
   
   @Nullable JsonObject getDataExtension();
   @Nullable GrimOneOfRelations getRelation(); // one of sub entities

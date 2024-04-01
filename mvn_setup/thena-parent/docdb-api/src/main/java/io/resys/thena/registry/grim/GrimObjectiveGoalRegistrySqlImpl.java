@@ -158,11 +158,18 @@ public class GrimObjectiveGoalRegistrySqlImpl implements GrimObjectiveGoalRegist
   @Override
   public Function<Row, GrimObjectiveGoal> defaultMapper() {
     return (row) -> {
+
       
       return ImmutableGrimObjectiveGoal.builder()
           .id(row.getString("id"))
           .commitId(row.getString("commit_id"))
           .missionId(row.getString("mission_id"))
+          
+          .objectiveId(row.getString("objective_id"))
+          .goalStatus(row.getString("goal_status"))
+          .startDate(row.getLocalDate("goal_start_date"))
+          .dueDate(row.getLocalDate("goal_due_date"))
+          
           .build();
     };
   }

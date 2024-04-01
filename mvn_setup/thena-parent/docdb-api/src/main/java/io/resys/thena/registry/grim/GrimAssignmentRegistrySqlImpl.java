@@ -188,6 +188,9 @@ public class GrimAssignmentRegistrySqlImpl implements GrimAssignmentRegistry {
           .commitId(row.getString("commit_id"))
           .missionId(row.getString("mission_id"))
           .relation(GrimRegistrySqlImpl.toRelations(objectiveId, goalId, remarkId))
+          
+          .assignee(row.getString("assignee"))
+          .assignmentType(row.getString("assignment_type"))
           .build();
     };
   }

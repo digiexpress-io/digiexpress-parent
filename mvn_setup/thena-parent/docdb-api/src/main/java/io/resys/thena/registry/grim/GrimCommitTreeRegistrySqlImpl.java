@@ -119,6 +119,9 @@ public class GrimCommitTreeRegistrySqlImpl implements GrimCommitTreeRegistry {
           .commitId(row.getString("commit_id"))
           .missionId(row.getString("mission_id"))
           .labelId(row.getString("label_id"))
+          
+          .commandType(row.getString("command_type"))
+          .commandBody(row.getJsonObject("command_body"))
           .build();
     };
   }

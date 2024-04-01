@@ -135,6 +135,11 @@ public class GrimLabelRegistrySqlImpl implements GrimLabelRegistry {
       return ImmutableGrimLabel.builder()
           .id(row.getString("id"))
           .commitId(row.getString("commit_id"))
+          
+          .labelType(row.getString("label_type"))
+          .labelValue(row.getString("label_value"))
+          .labelBody(row.getJsonObject("label_body"))
+          
           .build();
     };
   }  

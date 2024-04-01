@@ -176,7 +176,18 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
       return ImmutableGrimMission.builder()
           .id(row.getString("id"))
           .commitId(row.getString("commit_id"))
+   
+          .parentMissionId(row.getString("parent_mission_id"))
+          .externalId(row.getString("external_id"))
+          .reporterId(row.getString("reporter_id"))
           
+          .missionStatus(row.getString("mission_status"))
+          .missionPriority(row.getString("mission_priority"))
+          .startDate(row.getLocalDate("mission_start_date"))        
+          .dueDate(row.getLocalDate("mission_due_date"))
+          
+          .archivedDate(row.getLocalDate("archived_date"))
+          .archivedStatus(row.getString("archived_status"))
           .build();
     };
   }

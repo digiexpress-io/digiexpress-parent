@@ -164,6 +164,10 @@ public class GrimMissionLinkRegistrySqlImpl implements GrimMissionLinkRegistry {
           .commitId(row.getString("commit_id"))
           .missionId(row.getString("mission_id"))
           .relation(GrimRegistrySqlImpl.toRelations(objectiveId, goalId, remarkId))
+          
+          .linkType(row.getString("link_type"))
+          .externalId(row.getString("external_id"))
+          .linkBody(row.getJsonObject("link_body"))
           .build();
     };
   }
