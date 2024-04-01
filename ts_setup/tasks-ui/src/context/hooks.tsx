@@ -10,6 +10,7 @@ import { TenantContext, TenantContextType } from 'descriptor-dialob';
 import { TasksContext, TasksContextType, TaskEditContext, TaskEditContextType } from 'descriptor-task';
 import { TenantConfigContext, TenantConfigContextType } from 'descriptor-tenant-config';
 import { saffron } from 'components-colors';
+import { PermissionsContext, PermissionsContextType } from 'components-permissions/PermissionsContext';
 
 const ArticleTabIndicator: React.FC<{ entity: Document }> = ({ entity }) => {
   const { isDocumentSaved } = useComposer();
@@ -73,6 +74,11 @@ export const useTasks = () => {
   return result;
 }
 
+export const usePermissions = () => {
+  const result: PermissionsContextType = React.useContext(PermissionsContext);
+  return result;
+}
+
 export const useDialobTenant = () => {
   const result: TenantContextType = React.useContext(TenantContext);
   return result;
@@ -124,17 +130,17 @@ export const useApp = () => {
       return;
     }
 
-/**
-    if (input === 'tasks' || input === 'TASKS') {
-      apps.actions.handleActive('app-tasks');
-      return;
-    }
- */
+    /**
+        if (input === 'tasks' || input === 'TASKS') {
+          apps.actions.handleActive('app-tasks');
+          return;
+        }
+     */
     if (input === 'stencil' || input === 'STENCIL') {
       apps.actions.handleActive('app-stencil');
       return;
     }
-    
+
     if (input === 'hdes' || input === 'WRENCH') {
       apps.actions.handleActive('app-hdes');
       return;

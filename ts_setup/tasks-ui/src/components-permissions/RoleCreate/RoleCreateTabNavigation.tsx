@@ -2,9 +2,10 @@ import React from 'react';
 import { Box, Tabs, Tab, Stack } from '@mui/material';
 import { FilterByString } from 'components-generic';
 
-import { PermissionsProvider, usePermissions } from '../PermissionsContext';
+import { PermissionsProvider } from '../PermissionsContext';
 import Fields from './RoleCreateFields';
 import { FormattedMessage } from 'react-intl';
+import Context from 'context';
 
 
 const TabContent: React.FC<{ selected: number, id: number, children: React.ReactNode }> = ({ selected, id, children }) => {
@@ -46,7 +47,7 @@ const RoleCreateTabsNav: React.FC = () => {
 
 
 const RoleDialogRightLayout: React.FC = () => {
-  const { roles } = usePermissions();
+  const { roles } = Context.usePermissions();
 
   if (!roles) {
     return <>no roles here on the right side!</>;

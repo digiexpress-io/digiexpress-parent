@@ -3,10 +3,8 @@ import React from 'react';
 import Context from 'context';
 import { SingleTabInit } from 'descriptor-tabbing';
 
-import { ImmutableSysConfigStore } from 'descriptor-sys-config';
-import { Permission, Principal, Role } from 'descriptor-permissions';
+import { ImmutablePermissionStore, Permission, Principal, Role } from 'descriptor-permissions';
 import { TabTypes, Tabbing, PermissionsContextType } from './permissions-context-types';
-import { testRoles } from './permissions-mock-data';
 
 const PermissionsTabbingProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   function initTabs(): Record<TabTypes, SingleTabInit<{}>> {
@@ -50,34 +48,50 @@ export const PermissionsContext = React.createContext<PermissionsContextType>({}
 export const PermissionsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const backend = Context.useBackend();
   const [loading, setLoading] = React.useState(true);
-  const [roles, setRoles] = React.useState<Role[]>(testRoles);
+  const [roles, setRoles] = React.useState<Role[]>([]);
   const [permissions, setPermissions] = React.useState<Permission[]>([]);
   const [principals, setPrincipals] = React.useState<Principal[]>([]);
 
-  const [store] = React.useState(new ImmutableSysConfigStore(backend.store));
+  const [store] = React.useState(new ImmutablePermissionStore(backend.store));
 
-  async function loadOneConfig(): Promise<void> {
-    return store
-      .findAllSysConfigs().then(allConfigs => {
-        setLoading(false);
-        if (allConfigs.length === 1) {
-          setRoles(testRoles);
-          setPermissions(testRoles.flatMap((role) => role.permissions));
-          setPrincipals(testRoles.flatMap((role) => role.principals));
-        }
-      })
+  async function loadAllRoles(): Promise<void> {
+    return store.findAllRoles().then(allRoles => {
+      setLoading(false);
+
+      if (allRoles.length) {
+        setRoles(allRoles);
+      }
+    })
       .catch(() => setLoading(false));
   }
 
+  async function loadAllPermissions(): Promise<void> {
+    return store.findAllPermissions().then(allPermissions => {
+      setLoading(false);
+      setPermissions(allPermissions);
+
+      if (allPermissions.length) {
+        setPermissions(allPermissions);
+      }
+    })
+      .catch(() => setLoading(false));
+  }
+
+
   // perform init
   React.useEffect(() => {
-    loadOneConfig();
+    loadAllRoles();
+    loadAllPermissions();
   }, []);
 
+
   const contextValue: PermissionsContextType = React.useMemo(() => {
-    function reload(): Promise<void> {
+
+    async function reload(): Promise<void> {
       setLoading(true);
-      return loadOneConfig();
+      return Promise.all([loadAllRoles, loadAllPermissions]).then((values) => {
+        console.log('loaded roles and permissions');
+      });
     }
     return { loading, reload, roles, permissions, principals };
   }, [loading, store, roles, permissions, principals]);

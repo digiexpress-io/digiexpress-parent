@@ -45,9 +45,16 @@ const Footer: React.FC<{ onClose: () => void, onCloseCreate: () => void }> = ({ 
 const PermissionCreateDialog: React.FC<{ open: boolean, onClose: () => void }> = ({ open, onClose }) => {
   const intl = useIntl();
   const backend = Context.useBackend();
+  const permissions = Context.usePermissions();
   const [name, setName] = React.useState('permission name');
   const [description, setDescription] = React.useState('description');
   const [comment, setComment] = React.useState('comment value');
+
+  function handleCloseCreate() {
+    permissions.reload().then(() => {
+      onClose();
+    });
+  }
 
   async function handlePermissionCreate() {
     const command: CreatePermission = {
@@ -58,7 +65,7 @@ const PermissionCreateDialog: React.FC<{ open: boolean, onClose: () => void }> =
       roles: []
     };
     await new ImmutablePermissionStore(backend.store).createPermission(command);
-    onClose();
+    handleCloseCreate();
   };
 
   function handleNameChange(event: React.ChangeEvent<HTMLInputElement>) {

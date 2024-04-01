@@ -10,7 +10,5 @@ export interface PermissionsContextType {
   principals: Principal[];
   loading: boolean; // is permissions loading
   reload(): Promise<void>;
-
-
 }
 

@@ -6,6 +6,7 @@ import { StyledFullScreenDialog } from 'components-generic';
 import Burger from 'components-burger';
 import Fields from './RoleCreateFields';
 import RoleCreateTabNavLoader from './RoleCreateTabNavigation';
+import Context from 'context';
 
 
 const Left: React.FC<{}> = () => {
@@ -57,22 +58,32 @@ const Header: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   )
 }
 
-const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+const Footer: React.FC<{ onClose: () => void, onCloseCreate: () => void }> = ({ onClose, onCloseCreate }) => {
+
   return (
     <>
       <Burger.SecondaryButton label='buttons.cancel' onClick={onClose} />
-      <Burger.PrimaryButton label='buttons.accept' onClick={onClose} />
+      <Burger.PrimaryButton label='buttons.accept' onClick={onCloseCreate} />
     </>
   )
 }
 
 const RoleCreateDialog: React.FC<{ open: boolean, onClose: () => void }> = ({ open, onClose }) => {
+  const permissions = Context.usePermissions();
+
+  function handleCloseCreate() {
+    permissions.reload().then(() => {
+      console.log("reloading")
+      onClose();
+    });
+  }
+
   return (
     <StyledFullScreenDialog
       open={open}
       onClose={onClose}
       header={<Header onClose={onClose} />}
-      footer={<Footer onClose={onClose} />}
+      footer={<Footer onClose={onClose} onCloseCreate={handleCloseCreate} />}
       left={<Left />}
       right={<Right />}
     />
