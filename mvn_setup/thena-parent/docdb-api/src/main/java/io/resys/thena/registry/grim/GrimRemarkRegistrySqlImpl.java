@@ -170,7 +170,10 @@ public class GrimRemarkRegistrySqlImpl implements GrimRemarkRegistry {
   public Function<Row, GrimRemark> defaultMapper() {
     return (row) -> {
       
-      return ImmutableGrimRemark.builder().build();
+      return ImmutableGrimRemark.builder()
+          .id(row.getString("id"))
+          .commitId(row.getString("commit_id"))
+          .build();
     };
   }
 

@@ -155,7 +155,10 @@ public class GrimMissionLabelRegistrySqlImpl implements GrimMissionLabelRegistry
   public Function<Row, GrimMissionLabel> defaultMapper() {
     return (row) -> {
       
-      return ImmutableGrimMissionLabel.builder().build();
+      return ImmutableGrimMissionLabel.builder()
+          .id(row.getString("id"))
+          .commitId(row.getString("commit_id"))
+          .build();
     };
   }
   @Override

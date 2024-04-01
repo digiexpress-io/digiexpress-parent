@@ -155,7 +155,10 @@ public class GrimMissionLinkRegistrySqlImpl implements GrimMissionLinkRegistry {
   public Function<Row, GrimMissionLink> defaultMapper() {
     return (row) -> {
       
-      return ImmutableGrimMissionLink.builder().build();
+      return ImmutableGrimMissionLink.builder()
+          .id(row.getString("id"))
+          .commitId(row.getString("commit_id"))
+          .build();
     };
   }
   @Override

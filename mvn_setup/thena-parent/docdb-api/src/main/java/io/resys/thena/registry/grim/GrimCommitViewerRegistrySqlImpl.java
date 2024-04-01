@@ -108,7 +108,10 @@ public class GrimCommitViewerRegistrySqlImpl implements GrimCommitViewerRegistry
   public Function<Row, GrimCommitViewer> defaultMapper() {
     return (row) -> {
       
-      return ImmutableGrimCommitViewer.builder().build();
+      return ImmutableGrimCommitViewer.builder()
+          .id(row.getString("id"))
+          .commitId(row.getString("commit_id"))
+          .build();
     };
   }
   @Override

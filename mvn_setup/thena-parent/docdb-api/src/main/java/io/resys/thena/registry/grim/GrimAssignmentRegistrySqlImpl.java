@@ -178,7 +178,10 @@ public class GrimAssignmentRegistrySqlImpl implements GrimAssignmentRegistry {
   @Override
   public Function<Row, GrimAssignment> defaultMapper() {
     return (row) -> {      
-      return ImmutableGrimAssignment.builder().build();
+      return ImmutableGrimAssignment.builder()
+          .id(row.getString("id"))
+          .commitId(row.getString("commit_id"))
+          .build();
     };
   }
 

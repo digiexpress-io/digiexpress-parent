@@ -148,7 +148,9 @@ public class GrimCommitRegistrySqlImpl implements GrimCommitRegistry {
   public Function<Row, GrimCommit> defaultMapper() {
     return (row) -> {
       
-      return ImmutableGrimCommit.builder().build();
+      return ImmutableGrimCommit.builder()
+          .commitId(row.getString("commit_id"))
+          .build();
     };
   }
   

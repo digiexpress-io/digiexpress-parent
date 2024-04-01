@@ -178,7 +178,10 @@ public class GrimMissionDataRegistrySqlImpl implements GrimMissionDataRegistry {
   public Function<Row, GrimMissionData> defaultMapper() {
     return (row) -> {
       
-      return ImmutableGrimMissionData.builder().build();
+      return ImmutableGrimMissionData.builder()
+          .id(row.getString("id"))
+          .commitId(row.getString("commit_id"))
+          .build();
     };
   }
   @Override

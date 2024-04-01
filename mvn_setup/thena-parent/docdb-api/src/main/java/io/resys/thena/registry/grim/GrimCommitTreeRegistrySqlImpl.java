@@ -100,7 +100,10 @@ public class GrimCommitTreeRegistrySqlImpl implements GrimCommitTreeRegistry {
   public Function<Row, GrimCommitTree> defaultMapper() {
     return (row) -> {
       
-      return ImmutableGrimCommitTree.builder().build();
+      return ImmutableGrimCommitTree.builder()
+          .id(row.getString("id"))
+          .commitId(row.getString("commit_id"))
+          .build();
     };
   }
   @Override

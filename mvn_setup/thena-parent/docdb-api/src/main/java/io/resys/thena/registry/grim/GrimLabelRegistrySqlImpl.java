@@ -132,7 +132,10 @@ public class GrimLabelRegistrySqlImpl implements GrimLabelRegistry {
   public Function<Row, GrimLabel> defaultMapper() {
     return (row) -> {
       
-      return ImmutableGrimLabel.builder().build();
+      return ImmutableGrimLabel.builder()
+          .id(row.getString("id"))
+          .commitId(row.getString("commit_id"))
+          .build();
     };
   }  
   

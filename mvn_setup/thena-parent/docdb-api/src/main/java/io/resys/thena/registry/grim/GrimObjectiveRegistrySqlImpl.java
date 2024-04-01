@@ -144,7 +144,10 @@ public class GrimObjectiveRegistrySqlImpl implements GrimObjectiveRegistry {
   public Function<Row, GrimObjective> defaultMapper() {
     return (row) -> {
       
-      return ImmutableGrimObjective.builder().build();
+      return ImmutableGrimObjective.builder()
+          .id(row.getString("id"))
+          .commitId(row.getString("commit_id"))
+          .build();
     };
   }
   @Override
