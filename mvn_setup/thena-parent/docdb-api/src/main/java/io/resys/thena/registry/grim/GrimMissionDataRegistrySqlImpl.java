@@ -177,10 +177,14 @@ public class GrimMissionDataRegistrySqlImpl implements GrimMissionDataRegistry {
   @Override
   public Function<Row, GrimMissionData> defaultMapper() {
     return (row) -> {
+      final var objectiveId = row.getString("objective_id");
+      final var goalId = row.getString("goal_id");
+      final var remarkId = row.getString("remark_id");
       
       return ImmutableGrimMissionData.builder()
           .id(row.getString("id"))
           .commitId(row.getString("commit_id"))
+          .relation(GrimRegistrySqlImpl.toRelations(objectiveId, goalId, remarkId))
           .build();
     };
   }

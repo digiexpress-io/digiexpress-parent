@@ -66,9 +66,12 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
         .append("  mission_status,").ln()
         .append("  mission_priority,").ln()
         .append("  mission_start_date,").ln()        
-        .append("  mission_due_date)").ln()
+        .append("  mission_due_date,").ln()
         
-        .append(" VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)").ln()
+        .append("  archived_date,").ln()
+        .append("  archived_status)").ln()
+        
+        .append(" VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)").ln()
         .build())
         .props(mission.stream()
             .map(doc -> Tuple.from(new Object[]{ 
@@ -81,6 +84,9 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
                 doc.getMissionPriority(),
                 doc.getStartDate(),
                 doc.getDueDate(),
+                
+                doc.getArchivedDate(),
+                doc.getArchivedStatus()
              }))
             .collect(Collectors.toList()))
         .build();
@@ -99,7 +105,10 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
         .append("  mission_status = $5,").ln()
         .append("  mission_priority = $6,").ln()
         .append("  mission_start_date = $7,").ln()        
-        .append("  mission_due_date = $8").ln()
+        .append("  mission_due_date = $8,").ln()
+        .append("  archived_date = $9,").ln()
+        .append("  archived_status = $10").ln()
+        
         .append(" WHERE id = $9")
         .build())
         .props(mission.stream()
@@ -112,6 +121,9 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
                 doc.getMissionPriority(),
                 doc.getStartDate(),
                 doc.getDueDate(),
+                
+                doc.getArchivedDate(),
+                doc.getArchivedStatus(),
                 
                 doc.getId(), 
              }))

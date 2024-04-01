@@ -23,6 +23,9 @@ public interface GrimMission extends IsGrimObject, ThenaTable {
   @Nullable String getReporterId();
   @Nullable LocalDate getStartDate();
   @Nullable LocalDate getDueDate();
+
+  @Nullable LocalDate getArchivedDate();
+  @Nullable String getArchivedStatus();
   
   @JsonIgnore @Override default public GrimDocType getDocType() { return GrimDocType.GRIM_MISSION; };
 }

@@ -1,5 +1,7 @@
 package io.resys.thena.registry.grim;
 
+import io.resys.thena.api.entities.grim.ImmutableGrimOneOfRelations;
+import io.resys.thena.api.entities.grim.ThenaGrimObject;
 import io.resys.thena.api.registry.GrimRegistry;
 import io.resys.thena.api.registry.grim.GrimAssignmentRegistry;
 import io.resys.thena.api.registry.grim.GrimCommitRegistry;
@@ -94,5 +96,25 @@ public class GrimRegistrySqlImpl implements GrimRegistry {
   @Override
   public GrimRemarkRegistry remarks() {
     return remarks;
+  }
+  
+  public static ImmutableGrimOneOfRelations toRelations(String objectiveId, String goalId, String remarkId) {
+    ThenaGrimObject.GrimRelationType relationType = null;
+    if(objectiveId != null) {
+      relationType = ThenaGrimObject.GrimRelationType.OBJECTIVE; 
+    } else if(goalId != null) {
+      relationType = ThenaGrimObject.GrimRelationType.GOAL;      
+    } else if(remarkId != null) {
+      relationType = ThenaGrimObject.GrimRelationType.REMARK;
+    }
+    if(relationType == null) {
+      return null;
+    }
+    return ImmutableGrimOneOfRelations.builder()
+        .objectiveGoalId(goalId)
+        .objectiveId(objectiveId)
+        .remarkId(remarkId)
+        .relationType(relationType)
+        .build();
   }
 }

@@ -62,12 +62,13 @@ public class GrimRemarkRegistrySqlImpl implements GrimRemarkRegistry {
         .append("  mission_id,").ln()
         .append("  objective_id,").ln()
         .append("  goal_id,").ln()
+        .append("  remark_id,").ln()
         
         .append("  reporter_id,").ln()
         .append("  remark_status,").ln()
         .append("  remark_text)").ln()
         
-        .append(" VALUES($1, $2, $3, $4, $5, $6, $7, $8)").ln()
+        .append(" VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)").ln()
         .build())
         .props(remarks.stream()
             .map(doc -> Tuple.from(new Object[]{ 
@@ -121,6 +122,7 @@ public class GrimRemarkRegistrySqlImpl implements GrimRemarkRegistry {
     .append("  mission_id VARCHAR(40) NOT NULL,").ln()
     .append("  objective_id VARCHAR(40),").ln()
     .append("  goal_id VARCHAR(40),").ln()
+    .append("  remark_id VARCHAR(40),").ln()
     
     .append("  reporter_id VARCHAR(255) NOT NULL,").ln()
     .append("  remark_status VARCHAR(100),").ln()
@@ -128,6 +130,11 @@ public class GrimRemarkRegistrySqlImpl implements GrimRemarkRegistry {
     
     
     .append(");").ln()
+    
+    .append("ALTER TABLE ").append(options.getGrimRemark()).ln()
+    .append("  ADD CONSTRAINT ").append(options.getGrimRemark()).append("_PARENT_FK").ln()
+    .append("  FOREIGN KEY (remark_id)").ln()
+    .append("  REFERENCES ").append(options.getGrimRemark()).append(" (id);").ln().ln()
     
     .append("CREATE INDEX ").append(options.getGrimRemark()).append("_MISSION_INDEX")
     .append(" ON ").append(options.getGrimRemark()).append(" (mission_id);").ln()
@@ -170,9 +177,14 @@ public class GrimRemarkRegistrySqlImpl implements GrimRemarkRegistry {
   public Function<Row, GrimRemark> defaultMapper() {
     return (row) -> {
       
+      final var objectiveId = row.getString("objective_id");
+      final var goalId = row.getString("goal_id");
+      final var remarkId = row.getString("remark_id");
+      
       return ImmutableGrimRemark.builder()
           .id(row.getString("id"))
           .commitId(row.getString("commit_id"))
+          .relation(GrimRegistrySqlImpl.toRelations(objectiveId, goalId, remarkId))
           .build();
     };
   }
