@@ -2,12 +2,14 @@ package io.resys.thena.registry.grim;
 
 import java.util.Collection;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import io.resys.thena.api.entities.grim.GrimCommitViewer;
 import io.resys.thena.api.entities.grim.ImmutableGrimCommitViewer;
 import io.resys.thena.api.registry.grim.GrimCommitViewerRegistry;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
+import io.resys.thena.datasource.ImmutableSqlTupleList;
 import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.datasource.ThenaSqlClient;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
@@ -47,6 +49,34 @@ public class GrimCommitViewerRegistrySqlImpl implements GrimCommitViewerRegistry
         .append("  WHERE (id = $1)").ln() 
         .build())
         .props(Tuple.of(id))
+        .build();
+  }
+  @Override
+  public SqlTupleList insertAll(Collection<GrimCommitViewer> commits) {
+    return ImmutableSqlTupleList.builder()
+        .value(new SqlStatement()
+        .append("INSERT INTO ").append(options.getGrimCommitViewer()).ln()
+        .append(" (id,").ln()
+        .append("  commit_id,").ln()
+        .append("  object_id,").ln()
+        .append("  object_type,").ln()
+        .append("  used_by,").ln()
+        .append("  used_for,").ln()
+        .append("  created_at)").ln()
+        
+        .append(" VALUES($1, $2, $3, $4, $5, $6, $7)").ln()
+        .build())
+        .props(commits.stream()
+            .map(doc -> Tuple.from(new Object[]{ 
+                doc.getId(), 
+                doc.getCommitId(),
+                doc.getObjectId(),
+                doc.getObjectType(),
+                doc.getUsedBy(),
+                doc.getUsedFor(),
+                doc.getCreatedAt()
+             }))
+            .collect(Collectors.toList()))
         .build();
   }
   @Override
@@ -92,11 +122,4 @@ public class GrimCommitViewerRegistrySqlImpl implements GrimCommitViewerRegistry
         .props(Tuple.of(id))
         .build();
   }
-  @Override
-  public SqlTupleList insertAll(Collection<GrimCommitViewer> commits) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-
 }

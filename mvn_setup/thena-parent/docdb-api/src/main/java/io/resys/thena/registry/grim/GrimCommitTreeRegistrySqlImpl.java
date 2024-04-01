@@ -3,12 +3,14 @@ package io.resys.thena.registry.grim;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import io.resys.thena.api.entities.grim.GrimCommitTree;
 import io.resys.thena.api.entities.grim.ImmutableGrimCommitTree;
 import io.resys.thena.api.registry.grim.GrimCommitTreeRegistry;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
+import io.resys.thena.datasource.ImmutableSqlTupleList;
 import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.datasource.ThenaSqlClient;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
@@ -64,6 +66,28 @@ public class GrimCommitTreeRegistrySqlImpl implements GrimCommitTreeRegistry {
     
     .build()).build();
   }
+  @Override
+  public SqlTupleList insertAll(Collection<GrimCommitTree> commits) {
+    return ImmutableSqlTupleList.builder()
+        .value(new SqlStatement()
+        .append("INSERT INTO ").append(options.getGrimCommit()).ln()
+        .append(" (id,").ln()
+        .append("  commit_id,").ln()
+        .append("  command_type,").ln()
+        .append("  command_body)").ln()
+        
+        .append(" VALUES($1, $2, $3, $4)").ln()
+        .build())
+        .props(commits.stream()
+            .map(doc -> Tuple.from(new Object[]{ 
+                doc.getId(), 
+                doc.getCommitId(),
+                doc.getCommandType(),
+                doc.getCommandBody()
+             }))
+            .collect(Collectors.toList()))
+        .build();
+  }
 
   @Override
   public Sql createConstraints() {
@@ -90,10 +114,4 @@ public class GrimCommitTreeRegistrySqlImpl implements GrimCommitTreeRegistry {
         .props(Tuple.of(commitId))
         .build();    
   }
-  @Override
-  public SqlTupleList insertAll(Collection<GrimCommitTree> commits) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
 }

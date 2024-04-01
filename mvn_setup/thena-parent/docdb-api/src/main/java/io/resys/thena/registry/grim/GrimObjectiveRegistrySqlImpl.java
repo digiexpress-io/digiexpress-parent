@@ -52,6 +52,33 @@ public class GrimObjectiveRegistrySqlImpl implements GrimObjectiveRegistry {
         .build();
   }
   @Override
+  public SqlTupleList insertAll(Collection<GrimObjective> objective) {
+    return ImmutableSqlTupleList.builder()
+        .value(new SqlStatement()
+        .append("INSERT INTO ").append(options.getGrimObjective()).ln()
+        .append(" (id,").ln()
+        .append("  commit_id,").ln()
+
+        .append("  mission_id,").ln()
+        .append("  objective_status,").ln()
+        .append("  objective_start_date,").ln()
+        .append("  objective_due_date)").ln()
+        
+        .append(" VALUES($1, $2, $3, $4, $5, $6)").ln()
+        .build())
+        .props(objective.stream()
+            .map(doc -> Tuple.from(new Object[]{ 
+                doc.getId(), 
+                doc.getCommitId(),
+                doc.getMissionId(),
+                doc.getObjectiveStatus(),
+                doc.getStartDate(),
+                doc.getDueDate()
+             }))
+            .collect(Collectors.toList()))
+        .build();
+  }
+  @Override
   public Sql createTable() {
     return ImmutableSql.builder().value(new SqlStatement().ln()
     .append("CREATE TABLE ").append(options.getGrimObjective()).ln()
@@ -62,7 +89,6 @@ public class GrimObjectiveRegistrySqlImpl implements GrimObjectiveRegistry {
     .append("  objective_status VARCHAR(100),").ln()
     .append("  objective_start_date TIMESTAMP,").ln()
     .append("  objective_due_date TIMESTAMP").ln()
-    
     .append(");").ln()
     
     .append("CREATE INDEX ").append(options.getGrimObjective()).append("_MISSION_INDEX")
@@ -70,7 +96,6 @@ public class GrimObjectiveRegistrySqlImpl implements GrimObjectiveRegistry {
     
     .append("CREATE INDEX ").append(options.getGrimObjective()).append("_STATUS_INDEX")
     .append(" ON ").append(options.getGrimObjective()).append(" (objective_status);").ln()
-    
     
     .build()).build();
   }
@@ -106,11 +131,6 @@ public class GrimObjectiveRegistrySqlImpl implements GrimObjectiveRegistry {
         .build())
         .props(Tuple.of(id))
         .build();
-  }
-  @Override
-  public SqlTupleList insertAll(Collection<GrimObjective> objective) {
-    // TODO Auto-generated method stub
-    return null;
   }
   @Override
   public SqlTupleList deleteAll(Collection<GrimObjective> objective) {

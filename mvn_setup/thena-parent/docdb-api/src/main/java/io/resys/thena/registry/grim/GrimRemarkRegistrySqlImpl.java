@@ -52,6 +52,37 @@ public class GrimRemarkRegistrySqlImpl implements GrimRemarkRegistry {
         .build();
   }
   @Override
+  public SqlTupleList updateAll(Collection<GrimRemark> remarks) {
+    return ImmutableSqlTupleList.builder()
+        .value(new SqlStatement()
+        .append("INSERT INTO ").append(options.getGrimRemark()).ln()
+        .append(" (id,").ln()
+        .append("  commit_id,").ln()
+
+        .append("  mission_id,").ln()
+        .append("  objective_id,").ln()
+        .append("  goal_id,").ln()
+        
+        .append("  reporter_id,").ln()
+        .append("  remark_status,").ln()
+        .append("  remark_text)").ln()
+        
+        .append(" VALUES($1, $2, $3, $4, $5, $6, $7, $8)").ln()
+        .build())
+        .props(remarks.stream()
+            .map(doc -> Tuple.from(new Object[]{ 
+                doc.getId(), 
+                doc.getCommitId(),
+                doc.getMissionId(),
+                doc.getRelation() == null ? null : doc.getRelation().getObjectiveId(),
+                doc.getRelation() == null ? null : doc.getRelation().getObjectiveGoalId(),
+                doc.getRelation() == null ? null : doc.getRelation().getRemarkId(),
+             }))
+            .collect(Collectors.toList()))
+        .build();
+  }
+
+  @Override
   public Sql createTable() {
     return ImmutableSql.builder().value(new SqlStatement().ln()
     .append("CREATE TABLE ").append(options.getGrimRemark()).ln()
@@ -59,13 +90,14 @@ public class GrimRemarkRegistrySqlImpl implements GrimRemarkRegistry {
     .append("  id VARCHAR(40) PRIMARY KEY,").ln()
     .append("  commit_id VARCHAR(40) NOT NULL,").ln()
   
-    .append("  reporter_id VARCHAR(255) NOT NULL,").ln()
-    .append("  remark_status VARCHAR(100),").ln()
-    .append("  remark_text TEXT NOT NULL,").ln()
-    
     .append("  mission_id VARCHAR(40) NOT NULL,").ln()
     .append("  objective_id VARCHAR(40),").ln()
-    .append("  goal_id VARCHAR(40)").ln()
+    .append("  goal_id VARCHAR(40),").ln()
+    
+    .append("  reporter_id VARCHAR(255) NOT NULL,").ln()
+    .append("  remark_status VARCHAR(100),").ln()
+    .append("  remark_text TEXT NOT NULL").ln()
+    
     
     .append(");").ln()
     
@@ -142,11 +174,6 @@ public class GrimRemarkRegistrySqlImpl implements GrimRemarkRegistry {
             .map(doc -> Tuple.from(new Object[]{doc.getId()}))
             .collect(Collectors.toList()))
         .build();
-  }
-  @Override
-  public SqlTupleList updateAll(Collection<GrimRemark> remarks) {
-    // TODO Auto-generated method stub
-    return null;
   }
 
 }

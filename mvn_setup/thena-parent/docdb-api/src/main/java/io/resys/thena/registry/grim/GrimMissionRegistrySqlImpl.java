@@ -2,12 +2,14 @@ package io.resys.thena.registry.grim;
 
 import java.util.Collection;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import io.resys.thena.api.entities.grim.GrimMission;
 import io.resys.thena.api.entities.grim.ImmutableGrimMission;
 import io.resys.thena.api.registry.grim.GrimMissionRegistry;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
+import io.resys.thena.datasource.ImmutableSqlTupleList;
 import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.datasource.ThenaSqlClient;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
@@ -47,6 +49,40 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
         .append("  WHERE (id = $1)").ln() 
         .build())
         .props(Tuple.of(id))
+        .build();
+  }
+  @Override
+  public SqlTupleList insertAll(Collection<GrimMission> mission) {
+    return ImmutableSqlTupleList.builder()
+        .value(new SqlStatement()
+        .append("INSERT INTO ").append(options.getGrimMission()).ln()
+        .append(" (id,").ln()
+        .append("  commit_id,").ln()
+
+        .append("  parent_mission_id,").ln()
+        .append("  external_id,").ln()
+        .append("  reporter_id,").ln()
+        
+        .append("  mission_status,").ln()
+        .append("  mission_priority,").ln()
+        .append("  mission_start_date,").ln()        
+        .append("  mission_due_date)").ln()
+        
+        .append(" VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)").ln()
+        .build())
+        .props(mission.stream()
+            .map(doc -> Tuple.from(new Object[]{ 
+                doc.getId(), 
+                doc.getCommitId(),
+                doc.getParentMissionId(),
+                doc.getReporterId(),
+                doc.getExternalId(),
+                doc.getMissionStatus(),
+                doc.getMissionPriority(),
+                doc.getStartDate(),
+                doc.getDueDate(),
+             }))
+            .collect(Collectors.toList()))
         .build();
   }
   @Override
@@ -106,10 +142,4 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
         .props(Tuple.of(id))
         .build();
   }
-  @Override
-  public SqlTupleList insertAll(Collection<GrimMission> mission) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
 }

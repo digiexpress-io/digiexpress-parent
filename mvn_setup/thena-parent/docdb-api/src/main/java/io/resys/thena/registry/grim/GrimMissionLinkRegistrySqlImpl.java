@@ -51,6 +51,41 @@ public class GrimMissionLinkRegistrySqlImpl implements GrimMissionLinkRegistry {
         .build();
   }
   @Override
+  public SqlTupleList insertAll(Collection<GrimMissionLink> links) {
+    return ImmutableSqlTupleList.builder()
+        .value(new SqlStatement()
+        .append("INSERT INTO ").append(options.getGrimMissionLink()).ln()
+        .append(" (id,").ln()
+        .append("  commit_id,").ln()
+
+        .append("  mission_id,").ln()
+        .append("  objective_id,").ln()
+        .append("  goal_id,").ln()
+        .append("  remark_id,").ln()
+        
+        .append("  link_type,").ln()
+        .append("  external_id,").ln()
+        .append("  link_body)").ln()
+        
+        .append(" VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)").ln()
+        .build())
+        .props(links.stream()
+            .map(doc -> Tuple.from(new Object[]{ 
+                doc.getId(), 
+                doc.getCommitId(),
+                doc.getMissionId(),
+                doc.getRelation() == null ? null : doc.getRelation().getObjectiveId(),
+                doc.getRelation() == null ? null : doc.getRelation().getObjectiveGoalId(),
+                doc.getRelation() == null ? null : doc.getRelation().getRemarkId(),
+                    
+                doc.getLinkType(),
+                doc.getExternalId(),
+                doc.getLinkBody()
+             }))
+            .collect(Collectors.toList()))
+        .build();
+  }
+  @Override
   public Sql createTable() {
     return ImmutableSql.builder().value(new SqlStatement().ln()
     .append("CREATE TABLE ").append(options.getGrimMissionLink()).ln()
@@ -134,11 +169,7 @@ public class GrimMissionLinkRegistrySqlImpl implements GrimMissionLinkRegistry {
         .props(Tuple.of(id))
         .build();
   }
-  @Override
-  public SqlTupleList insertAll(Collection<GrimMissionLink> links) {
-    // TODO Auto-generated method stub
-    return null;
-  }
+
   @Override
   public SqlTupleList deleteAll(Collection<GrimMissionLink> links) {
     return ImmutableSqlTupleList.builder()

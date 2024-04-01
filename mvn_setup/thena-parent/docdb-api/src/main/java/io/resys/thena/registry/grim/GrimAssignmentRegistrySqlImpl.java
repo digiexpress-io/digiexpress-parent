@@ -98,8 +98,8 @@ public class GrimAssignmentRegistrySqlImpl implements GrimAssignmentRegistry {
         .props(asssignments.stream()
             .map(doc -> Tuple.from(new Object[]{ 
                 doc.getId(), 
-                doc.getMissionId(),
                 doc.getCommitId(),
+                doc.getMissionId(),
                 doc.getRelation() == null ? null : doc.getRelation().getObjectiveId(),
                 doc.getRelation() == null ? null : doc.getRelation().getObjectiveGoalId(),
                 doc.getRelation() == null ? null : doc.getRelation().getRemarkId(),

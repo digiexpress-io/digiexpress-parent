@@ -53,18 +53,48 @@ public class GrimObjectiveGoalRegistrySqlImpl implements GrimObjectiveGoalRegist
   }
 
   @Override
+  public SqlTupleList insertAll(Collection<GrimObjectiveGoal> goals) {
+    return ImmutableSqlTupleList.builder()
+        .value(new SqlStatement()
+        .append("INSERT INTO ").append(options.getGrimObjectiveGoal()).ln()
+        .append(" (id,").ln()
+        .append("  commit_id,").ln()
+
+        .append("  objective_id,").ln()
+        .append("  goal_status,").ln()
+        .append("  goal_start_date,").ln()
+        .append("  goal_due_date)").ln()
+        
+        .append(" VALUES($1, $2, $3, $4, $5, $6)").ln()
+        .build())
+        .props(goals.stream()
+            .map(doc -> Tuple.from(new Object[]{ 
+                doc.getId(), 
+                doc.getCommitId(),
+                doc.getObjectiveId(),
+                doc.getGoalStatus(),
+                doc.getStartDate(),
+                doc.getDueDate()
+             }))
+            .collect(Collectors.toList()))
+        .build();
+  }
+  @Override
+  public SqlTupleList updateAll(Collection<GrimObjectiveGoal> goals) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+  @Override
   public Sql createTable() {
     return ImmutableSql.builder().value(new SqlStatement().ln()
     .append("CREATE TABLE ").append(options.getGrimObjectiveGoal()).ln()
     .append("(").ln()
     .append("  id VARCHAR(40) PRIMARY KEY,").ln()
     .append("  commit_id VARCHAR(40) NOT NULL,").ln()
-    
     .append("  objective_id VARCHAR(40) NOT NULL,").ln()
     .append("  goal_status VARCHAR(100),").ln()
     .append("  goal_start_date TIMESTAMP,").ln()
     .append("  goal_due_date TIMESTAMP").ln()
-    
     .append(");").ln()    
     
     .append("CREATE INDEX ").append(options.getGrimObjectiveGoal()).append("_OBJECTIVE_INDEX")
@@ -107,16 +137,6 @@ public class GrimObjectiveGoalRegistrySqlImpl implements GrimObjectiveGoalRegist
         .build())
         .props(Tuple.of(id))
         .build();
-  }
-  @Override
-  public SqlTupleList insertAll(Collection<GrimObjectiveGoal> goals) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-  @Override
-  public SqlTupleList updateAll(Collection<GrimObjectiveGoal> goals) {
-    // TODO Auto-generated method stub
-    return null;
   }
   @Override
   public SqlTupleList deleteAll(Collection<GrimObjectiveGoal> goals) {

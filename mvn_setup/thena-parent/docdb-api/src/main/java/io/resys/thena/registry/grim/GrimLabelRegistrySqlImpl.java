@@ -52,23 +52,41 @@ public class GrimLabelRegistrySqlImpl implements GrimLabelRegistry {
         .build();
   }
   @Override
+  public SqlTupleList insertAll(Collection<GrimLabel> labels) {
+    return ImmutableSqlTupleList.builder()
+        .value(new SqlStatement()
+        .append("INSERT INTO ").append(options.getGrimLabel()).ln()
+        .append(" (id,").ln()
+        .append("  commit_id,").ln()
+        .append("  label_type,").ln()
+        .append("  label_value,").ln()
+        .append("  label_body)").ln()
+        
+        .append(" VALUES($1, $2, $3, $4, $5)").ln()
+        .build())
+        .props(labels.stream()
+            .map(doc -> Tuple.from(new Object[]{ 
+                doc.getId(), 
+                doc.getCommitId(),
+                doc.getLabelType(),
+                doc.getLabelValue(),
+                doc.getLabelBody()
+             }))
+            .collect(Collectors.toList()))
+        .build();
+  }
+  @Override
   public Sql createTable() {
     return ImmutableSql.builder().value(new SqlStatement().ln()
     .append("CREATE TABLE ").append(options.getGrimLabel()).ln()
     .append("(").ln()
     .append("  id VARCHAR(40) PRIMARY KEY,").ln()
     .append("  commit_id VARCHAR(40) NOT NULL,").ln()
-    
     .append("  label_type VARCHAR(100) NOT NULL,").ln()
     .append("  label_value TEXT NOT NULL,").ln()
     .append("  label_body JSONB,").ln()
-    
     .append("  UNIQUE NULLS NOT DISTINCT(label_type, label_value)").ln()
-    
-    
     .append(");").ln()
-    
-
     .append("CREATE INDEX ").append(options.getGrimLabel()).append("_TYPE_VALUE_INDEX")
     .append(" ON ").append(options.getGrimLabel()).append(" (label_type, label_value);").ln()
     
@@ -92,14 +110,7 @@ public class GrimLabelRegistrySqlImpl implements GrimLabelRegistry {
       
       return ImmutableGrimLabel.builder().build();
     };
-  }
-
-  @Override
-  public SqlTupleList insertAll(Collection<GrimLabel> labels) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-  
+  }  
   
   public SqlTupleList deleteAll(Collection<GrimLabel> labels) {
     return ImmutableSqlTupleList.builder()

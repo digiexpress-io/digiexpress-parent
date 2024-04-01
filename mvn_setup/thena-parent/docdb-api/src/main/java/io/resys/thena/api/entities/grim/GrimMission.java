@@ -15,7 +15,7 @@ public interface GrimMission extends IsGrimObject, ThenaTable {
   String getId();
   String getCommitId();
 
-  @Nullable String getMissionParentId();
+  @Nullable String getParentMissionId();
   
   @Nullable String getExternalId();
   @Nullable String getMissionStatus();

@@ -52,6 +52,35 @@ public class GrimMissionLabelRegistrySqlImpl implements GrimMissionLabelRegistry
         .build();
   }
   @Override
+  public SqlTupleList insertAll(Collection<GrimMissionLabel> labels) {
+    return ImmutableSqlTupleList.builder()
+        .value(new SqlStatement()
+        .append("INSERT INTO ").append(options.getGrimMissionLabel()).ln()
+        .append(" (id,").ln()
+        .append("  commit_id,").ln()
+
+        .append("  label_id,").ln()
+        .append("  mission_id,").ln()
+        .append("  objective_id,").ln()
+        .append("  goal_id,").ln()
+        .append("  remark_id)").ln()
+        
+        .append(" VALUES($1, $2, $3, $4, $5, $6, $7)").ln()
+        .build())
+        .props(labels.stream()
+            .map(doc -> Tuple.from(new Object[]{ 
+                doc.getId(), 
+                doc.getCommitId(),
+                doc.getLabelId(),
+                doc.getMissionId(),
+                doc.getRelation() == null ? null : doc.getRelation().getObjectiveId(),
+                doc.getRelation() == null ? null : doc.getRelation().getObjectiveGoalId(),
+                doc.getRelation() == null ? null : doc.getRelation().getRemarkId(),
+             }))
+            .collect(Collectors.toList()))
+        .build();
+  }
+  @Override
   public Sql createTable() {
     return ImmutableSql.builder().value(new SqlStatement().ln()
     .append("CREATE TABLE ").append(options.getGrimMissionLabel()).ln()
@@ -64,6 +93,7 @@ public class GrimMissionLabelRegistrySqlImpl implements GrimMissionLabelRegistry
     .append("  objective_id VARCHAR(40),").ln()
     .append("  goal_id VARCHAR(40),").ln()
     .append("  remark_id VARCHAR(40),").ln()
+    
     .append("  UNIQUE NULLS NOT DISTINCT(mission_id, objective_id, goal_id, remark_id, label_id)").ln()    
     .append(");").ln()
 
@@ -138,11 +168,6 @@ public class GrimMissionLabelRegistrySqlImpl implements GrimMissionLabelRegistry
         .build())
         .props(Tuple.of(id))
         .build();
-  }
-  @Override
-  public SqlTupleList insertAll(Collection<GrimMissionLabel> users) {
-    // TODO Auto-generated method stub
-    return null;
   }
   @Override
   public SqlTupleList deleteAll(Collection<GrimMissionLabel> labels) {
