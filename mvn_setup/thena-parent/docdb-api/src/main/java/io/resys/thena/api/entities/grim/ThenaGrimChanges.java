@@ -2,8 +2,8 @@ package io.resys.thena.api.entities.grim;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
@@ -26,15 +26,16 @@ public interface ThenaGrimChanges {
     MissionChanges priority(@Nullable String priority);
     
     // nested builders
-    MissionChanges addAssignees(Supplier<AssignmentChanges> assignment);
-    MissionChanges addLabels(Supplier<LabelChanges> label);
-    MissionChanges addLink(Supplier<LinkChanges> link);
+    MissionChanges addAssignees(Consumer<AssignmentChanges> assignment);
+    MissionChanges addLabels(Consumer<LabelChanges> label);
+    MissionChanges addLink(Consumer<LinkChanges> link);
+    MissionChanges addRemark(Consumer<RemarkChanges> remark);
     
     <T> MissionChanges setAllAssignees(List<T> replacments, Function<T, AssignmentChanges> assignment);
     <T> MissionChanges setAllLabels(List<T> replacments, Function<T, LabelChanges> label);
     <T> MissionChanges setAllLinks(List<T> replacments, Function<T, LinkChanges> link);
     
-    MissionChanges addObjective(Supplier<ObjectiveChanges> goal);
+    MissionChanges addObjective(Consumer<ObjectiveChanges> goal);
     
     void build();
   }
@@ -69,6 +70,10 @@ public interface ThenaGrimChanges {
     ObjectiveChanges status(@Nullable String status);
     ObjectiveChanges startDate(@Nullable LocalDate startDate);
     ObjectiveChanges dueDate(@Nullable LocalDate dueDate);
+    
+    ObjectiveChanges addGoal(Consumer<GoalChanges> newGoal);
+    ObjectiveChanges addAssignees(Consumer<AssignmentChanges> assignment);
+    
     void build();    
   }    
   // support interface inside of callback
@@ -78,6 +83,8 @@ public interface ThenaGrimChanges {
     GoalChanges status(@Nullable String status);
     GoalChanges startDate(@Nullable LocalDate startDate);
     GoalChanges dueDate(@Nullable LocalDate dueDate);
+    
+    GoalChanges addAssignees(Consumer<AssignmentChanges> assignment);
     void build(); 
   }
   // support interface inside of callback

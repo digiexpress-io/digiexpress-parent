@@ -1,7 +1,6 @@
 package io.resys.thena.storesql;
 
 import io.resys.thena.datasource.ThenaSqlDataSource;
-import io.resys.thena.storesql.builders.OrgDbInsertsSqlPool;
 import io.resys.thena.structures.org.OrgInserts;
 import io.resys.thena.structures.org.OrgQueries;
 import io.resys.thena.structures.org.OrgState;

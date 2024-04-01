@@ -1,4 +1,4 @@
-package io.resys.thena.storesql.builders;
+package io.resys.thena.storesql;
 
 
 

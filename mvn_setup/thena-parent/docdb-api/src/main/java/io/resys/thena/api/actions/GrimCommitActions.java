@@ -1,7 +1,8 @@
 package io.resys.thena.api.actions;
 
+import java.io.Serializable;
 import java.util.List;
-import java.util.function.Supplier;
+import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
@@ -33,15 +34,15 @@ public interface GrimCommitActions {
     ModifyOneMission commitMessage(String message);
     ModifyOneMission commitCommands(List<?> commands);
     ModifyOneMission missionId(String missionId);
-    ModifyOneMission modifyMission(Supplier<MissionChanges> addMission);
+    ModifyOneMission modifyMission(Consumer<MissionChanges> addMission);
     
     ModifyOneMission removeGoal(String goalId);
     ModifyOneMission removeObjective(String objectiveId);
     ModifyOneMission removeRemark(String remarkId);
     
-    ModifyOneMission modifyGoal(String goalId, Supplier<GoalChanges> goal);
-    ModifyOneMission modifyObjective(String objectiveId, Supplier<ObjectiveChanges> objective);
-    ModifyOneMission modifyRemark(String remarkId, Supplier<RemarkChanges> objective);
+    ModifyOneMission modifyGoal(String goalId, Consumer<GoalChanges> goal);
+    ModifyOneMission modifyObjective(String objectiveId, Consumer<ObjectiveChanges> objective);
+    ModifyOneMission modifyRemark(String remarkId, Consumer<RemarkChanges> objective);
     Uni<OneMissionEnvelope> build();
   }
   
@@ -49,12 +50,12 @@ public interface GrimCommitActions {
     ModifyManyMissions commitAuthor(String author);
     ModifyManyMissions commitMessage(String message);
     ModifyManyMissions commitCommands(List<?> commands);
-    ModifyManyMissions modifyMission(String missionId, Supplier<MissionChanges> addMission);
+    ModifyManyMissions modifyMission(String missionId, Consumer<MissionChanges> addMission);
     
     // changes existing
-    MissionChanges modifyGoal(String goalId, Supplier<GoalChanges> goal);
-    MissionChanges modifyObjective(String objectiveId, Supplier<ObjectiveChanges> objective);
-    MissionChanges modifyRemark(String remarkId, Supplier<RemarkChanges> objective);
+    MissionChanges modifyGoal(String goalId, Consumer<GoalChanges> goal);
+    MissionChanges modifyObjective(String objectiveId, Consumer<ObjectiveChanges> objective);
+    MissionChanges modifyRemark(String remarkId, Consumer<RemarkChanges> objective);
     
     MissionChanges removeGoal(String goalId);
     MissionChanges removeObjective(String objectiveId);
@@ -66,8 +67,8 @@ public interface GrimCommitActions {
   interface CreateManyMissions {
     CreateManyMissions commitAuthor(String author);
     CreateManyMissions commitMessage(String message);
-    CreateManyMissions commitCommands(List<?> commands);
-    CreateManyMissions addMission(Supplier<MissionChanges> addMission);
+    CreateManyMissions commitCommands(List<? extends Serializable> commands);
+    CreateManyMissions addMission(Consumer<MissionChanges> addMission);
     Uni<ManyMissionsEnvelope> build();
   }
   
@@ -76,7 +77,7 @@ public interface GrimCommitActions {
     CreateOneMission commitAuthor(String author);
     CreateOneMission commitMessage(String message);
     CreateOneMission commitCommands(List<?> commands);
-    CreateOneMission mission(Supplier<MissionChanges> addMission);
+    CreateOneMission mission(Consumer<MissionChanges> addMission);
     Uni<OneMissionEnvelope> build();
   }
 

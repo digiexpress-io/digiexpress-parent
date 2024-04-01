@@ -86,7 +86,7 @@ public class GrimMissionDataRegistrySqlImpl implements GrimMissionDataRegistry {
         .build();
   }
   @Override
-  public SqlTupleList updatetAll(Collection<GrimMissionData> data) {
+  public SqlTupleList updateAll(Collection<GrimMissionData> data) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("UPDATE ").append(options.getGrimLabel())

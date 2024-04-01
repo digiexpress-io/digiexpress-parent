@@ -20,6 +20,7 @@ import io.resys.thena.storesql.builders.InternalTenantQueryImpl;
 import io.resys.thena.structures.doc.DocState;
 import io.resys.thena.structures.git.GitState;
 import io.resys.thena.structures.git.GitState.TransactionFunction;
+import io.resys.thena.structures.grim.GrimState;
 import io.resys.thena.structures.org.OrgState;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
@@ -39,6 +40,26 @@ public class DbStateSqlImpl implements DbState {
   public InternalTenantQuery tenant() {
     return new InternalTenantQueryImpl(dataSource);
   }
+
+  @Override
+  public Uni<GrimState> toGrimState(String tenantId) {
+    return tenant().getByNameOrId(tenantId).onItem().transformToUni(tenant -> {
+      if(tenant == null) {
+        return tenantNotFound(tenantId);
+      }
+      return Uni.createFrom().item(toGrimState(tenant));
+    });
+  }
+  @Override
+  public GrimState toGrimState(Tenant repo) {
+    return new GrimDbStateImpl(dataSource.withTenant(repo));
+  }
+  @Override
+  public <R> Uni<R> withGrimTransaction(String tenantId, io.resys.thena.structures.grim.GrimState.TransactionFunction<R> callback) {
+    return toGrimState(tenantId).onItem().transformToUni(state -> state.withTransaction(callback));
+  }
+  
+  // git state
   @Override
   public Uni<GitState> toGitState(String tenantId) {
     return tenant().getByNameOrId(tenantId).onItem().transformToUni(tenant -> {
@@ -56,6 +77,8 @@ public class DbStateSqlImpl implements DbState {
   public <R> Uni<R> withGitTransaction(String tenantId, TransactionFunction<R> callback) {
     return toGitState(tenantId).onItem().transformToUni(state -> state.withTransaction(callback));
   }
+  
+  // doc state
   @Override
   public Uni<DocState> toDocState(String tenantId) {
     return tenant().getByNameOrId(tenantId).onItem().transformToUni(tenant -> {
@@ -73,6 +96,8 @@ public class DbStateSqlImpl implements DbState {
   public <R> Uni<R> withDocTransaction(String tenantId, io.resys.thena.structures.doc.DocState.TransactionFunction<R> callback) {
     return toDocState(tenantId).onItem().transformToUni(state -> state.withTransaction(callback));
   }
+  
+  // org state
   @Override
   public Uni<OrgState> toOrgState(String tenantId) {
     return tenant().getByNameOrId(tenantId).onItem().transformToUni(tenant -> {

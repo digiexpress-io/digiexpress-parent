@@ -21,8 +21,8 @@ public interface GrimRegistry {
   GrimLabelRegistry labels();
   GrimMissionDataRegistry missionData();
   GrimMissionLabelRegistry missionLabels();
-  GrimMissionLinkRegistry missionsLinks();
-  GrimMissionRegistry mission();
+  GrimMissionLinkRegistry missionLinks();
+  GrimMissionRegistry missions();
   GrimObjectiveGoalRegistry goals();
   GrimObjectiveRegistry objectives();
   GrimRemarkRegistry remarks();

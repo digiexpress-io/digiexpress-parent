@@ -78,11 +78,11 @@ public class GrimRegistrySqlImpl implements GrimRegistry {
     return missionLabels;
   }
   @Override
-  public GrimMissionLinkRegistry missionsLinks() {
+  public GrimMissionLinkRegistry missionLinks() {
     return missionsLinks;
   }
   @Override
-  public GrimMissionRegistry mission() {
+  public GrimMissionRegistry missions() {
     return mission;
   }
   @Override

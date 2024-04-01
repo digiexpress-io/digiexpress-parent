@@ -4,6 +4,7 @@ import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.datasource.ThenaDataSource;
 import io.resys.thena.structures.doc.DocState;
 import io.resys.thena.structures.git.GitState;
+import io.resys.thena.structures.grim.GrimState;
 import io.resys.thena.structures.org.OrgState;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
@@ -11,6 +12,11 @@ import io.smallrye.mutiny.Uni;
 public interface DbState {
   ThenaDataSource getDataSource();
   InternalTenantQuery tenant();
+  
+  Uni<GrimState> toGrimState(String tenantId);
+  GrimState toGrimState(Tenant repo);
+  <R> Uni<R> withGrimTransaction(String tenantId, GrimState.TransactionFunction<R> callback);
+  
   
   Uni<GitState> toGitState(String tenantId);
   GitState toGitState(Tenant repo);
