@@ -73,7 +73,6 @@ const RoleCreateDialog: React.FC<{ open: boolean, onClose: () => void }> = ({ op
 
   function handleCloseCreate() { //TODO
     permissions.reload().then(() => {
-      console.log("reloading")
       onClose();
     });
   }

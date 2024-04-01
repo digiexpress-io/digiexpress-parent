@@ -51,13 +51,11 @@ export const PermissionsProvider: React.FC<{ children: React.ReactNode }> = ({ c
   const [roles, setRoles] = React.useState<Role[]>([]);
   const [permissions, setPermissions] = React.useState<Permission[]>([]);
   const [principals, setPrincipals] = React.useState<Principal[]>([]); //TODO implement
-
   const [store] = React.useState(new ImmutablePermissionStore(backend.store));
 
   async function loadAllRoles(): Promise<void> {
     return store.findAllRoles().then(allRoles => {
       setLoading(false);
-
       if (allRoles.length) {
         setRoles(allRoles);
       }
@@ -68,15 +66,12 @@ export const PermissionsProvider: React.FC<{ children: React.ReactNode }> = ({ c
   async function loadAllPermissions(): Promise<void> {
     return store.findAllPermissions().then(allPermissions => {
       setLoading(false);
-      setPermissions(allPermissions);
-
       if (allPermissions.length) {
         setPermissions(allPermissions);
       }
     })
       .catch(() => setLoading(false));
   }
-
 
   // perform init
   React.useEffect(() => {
@@ -86,7 +81,6 @@ export const PermissionsProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
 
   const contextValue: PermissionsContextType = React.useMemo(() => {
-
     async function reload(): Promise<void> {
       setLoading(true);
       return Promise.all([loadAllRoles, loadAllPermissions]).then((values) => {
