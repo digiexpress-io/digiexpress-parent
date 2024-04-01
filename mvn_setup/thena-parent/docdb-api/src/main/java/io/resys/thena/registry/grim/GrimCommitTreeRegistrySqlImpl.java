@@ -84,7 +84,7 @@ public class GrimCommitTreeRegistrySqlImpl implements GrimCommitTreeRegistry {
   public SqlTupleList insertAll(Collection<GrimCommitTree> commits) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
-        .append("INSERT INTO ").append(options.getGrimCommit()).ln()
+        .append("INSERT INTO ").append(options.getGrimCommitTree()).ln()
         .append(" (id,").ln()
         .append("  commit_id,").ln()
         .append("  command_type,").ln()

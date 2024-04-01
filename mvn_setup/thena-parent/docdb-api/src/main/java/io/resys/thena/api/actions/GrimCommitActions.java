@@ -1,6 +1,6 @@
 package io.resys.thena.api.actions;
 
-import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -17,6 +17,7 @@ import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer
 import io.resys.thena.api.envelope.Message;
 import io.resys.thena.api.envelope.ThenaEnvelope;
 import io.smallrye.mutiny.Uni;
+import io.vertx.core.json.JsonObject;
 
 
 
@@ -67,7 +68,7 @@ public interface GrimCommitActions {
   interface CreateManyMissions {
     CreateManyMissions commitAuthor(String author);
     CreateManyMissions commitMessage(String message);
-    CreateManyMissions addMission(List<? extends Serializable> commands, Consumer<MissionChanges> addMission);
+    CreateManyMissions addMission(Collection<JsonObject> commands, Consumer<MissionChanges> addMission);
     Uni<ManyMissionsEnvelope> build();
   }
   
@@ -85,6 +86,7 @@ public interface GrimCommitActions {
     String getRepoId();
     CommitResultStatus getStatus();
     List<Message> getMessages();
+    @Nullable String getLog();
     @Nullable List<GrimMissionContainer> getMissions();
   }
   @Value.Immutable

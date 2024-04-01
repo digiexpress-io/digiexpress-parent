@@ -70,7 +70,7 @@ public class GrimCommitRegistrySqlImpl implements GrimCommitRegistry {
         .build())
         .props(commits.stream()
             .map(doc -> Tuple.from(new Object[]{ 
-                doc.getId(), 
+                doc.getCommitId(), 
                 doc.getParentCommitId(),
                 doc.getMissionId(),
                 doc.getLabelId(),

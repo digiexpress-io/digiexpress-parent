@@ -157,31 +157,32 @@ public class GrimInsertsSqlImpl implements GrimInserts {
     
     return Uni.combine().all()
     		.unis(
-    		    del_assignements_uni,
-    		    del_links_uni,
-    		    del_missionLabels_uni,
-    		    del_remarks_uni,
+            del_assignements_uni,
+            del_links_uni,
+            del_missionLabels_uni,
+            del_remarks_uni,
+
+    		    ins_commits_uni,
+            ins_trees_uni,
+            ins_viewers_uni,
     		    
+            upd_mission_uni,
+            upd_labels_uni,
+            upd_missionObjectives_uni,
+            upd_missionGols_uni,
     		    upd_missionData_uni,
     		    upd_remarks_uni,
-    		    upd_missionGols_uni,
-    		    upd_missionObjectives_uni,
-    		    upd_mission_uni,
-    		    upd_labels_uni,
-    		    
+
     		    ins_mission_uni,
     		    ins_labels_uni,
+            ins_objectives_uni,
+            ins_goals_uni,
     		    ins_missionLabels_uni,
     		    ins_missionLinks_uni,
     		    ins_remarks_uni,
-    		    ins_objectives_uni,
-    		    ins_goals_uni,
     		    ins_data_uni,
-    		    ins_assignments_uni,
-    		    
-    		    ins_commits_uni,
-    		    ins_trees_uni,
-    		    ins_viewers_uni
+    		    ins_assignments_uni
+    		   
     		 )
     		.with(GrimBatchForOne.class, (List<GrimBatchForOne> items) -> merge(inputBatch, items));
   }
@@ -189,7 +190,7 @@ public class GrimInsertsSqlImpl implements GrimInserts {
   
   private GrimBatchForOne merge(GrimBatchForOne start, List<GrimBatchForOne> current) {
     final var builder = ImmutableGrimBatchForOne.builder().from(start);
-    final var log = new StringBuilder(start.getLog().getText());
+    final var log = new StringBuilder(start.getLog());
     var status = start.getStatus();
     for(GrimBatchForOne value : current) {
       if(value == null) {

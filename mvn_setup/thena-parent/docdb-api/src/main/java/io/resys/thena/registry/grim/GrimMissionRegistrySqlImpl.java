@@ -78,8 +78,9 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
                 doc.getId(), 
                 doc.getCommitId(),
                 doc.getParentMissionId(),
-                doc.getReporterId(),
                 doc.getExternalId(),
+                doc.getReporterId(),
+                
                 doc.getMissionStatus(),
                 doc.getMissionPriority(),
                 doc.getStartDate(),
@@ -143,8 +144,10 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
     
     .append("  mission_status VARCHAR(100),").ln()
     .append("  mission_priority VARCHAR(100),").ln()
-    .append("  mission_start_date TIMESTAMP,").ln()
-    .append("  mission_due_date TIMESTAMP").ln()
+    .append("  mission_start_date DATE,").ln()
+    .append("  mission_due_date DATE,").ln()
+    .append("  archived_date DATE,").ln()
+    .append("  archived_status VARCHAR(40)").ln()
     
     .append(");").ln()
     

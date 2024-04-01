@@ -130,8 +130,8 @@ public class GrimObjectiveGoalRegistrySqlImpl implements GrimObjectiveGoalRegist
     .append("  commit_id VARCHAR(40) NOT NULL,").ln()
     .append("  objective_id VARCHAR(40) NOT NULL,").ln()
     .append("  goal_status VARCHAR(100),").ln()
-    .append("  goal_start_date TIMESTAMP,").ln()
-    .append("  goal_due_date TIMESTAMP").ln()
+    .append("  goal_start_date DATE,").ln()
+    .append("  goal_due_date DATE").ln()
     .append(");").ln()    
     
     .append("CREATE INDEX ").append(options.getGrimObjectiveGoal()).append("_OBJECTIVE_INDEX")

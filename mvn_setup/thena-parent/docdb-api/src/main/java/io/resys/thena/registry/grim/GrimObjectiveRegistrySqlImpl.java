@@ -113,8 +113,8 @@ public class GrimObjectiveRegistrySqlImpl implements GrimObjectiveRegistry {
     .append("  commit_id VARCHAR(40) NOT NULL,").ln()
     .append("  mission_id VARCHAR(40) NOT NULL,").ln()
     .append("  objective_status VARCHAR(100),").ln()
-    .append("  objective_start_date TIMESTAMP,").ln()
-    .append("  objective_due_date TIMESTAMP").ln()
+    .append("  objective_start_date DATE,").ln()
+    .append("  objective_due_date DATE").ln()
     .append(");").ln()
     
     .append("CREATE INDEX ").append(options.getGrimObjective()).append("_MISSION_INDEX")

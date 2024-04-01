@@ -3,6 +3,7 @@ package io.resys.thena.docdb.test;
 import java.io.Serializable;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.Arrays;
 
 import org.immutables.value.Value;
 import org.junit.jupiter.api.Assertions;
@@ -45,7 +46,7 @@ public class SimpleGrimTest extends DbTestTemplate {
         .createManyMissions()
         .commitMessage("batching tests")
         .commitAuthor("jane.doe@morgue.com")
-        .addMission((MissionChanges newMission) -> {
+        .addMission(Arrays.asList(), (MissionChanges newMission) -> {
           
           newMission
             .title("my first mission to build a house")
@@ -90,7 +91,8 @@ public class SimpleGrimTest extends DbTestTemplate {
                 .build()
              ).build();
 
-        });
+        }).build()
+        .await().atMost(Duration.ofMinutes(1));;
     
     printRepo(repo.getRepo());
   }

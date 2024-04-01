@@ -76,9 +76,9 @@ public interface GrimInserts {
     List<GrimRemark> getDeleteRemarks();
     
     BatchStatus getStatus();
-    String getTenantoId();
+    String getTenantId();
 
-    Message getLog();
+    String getLog();
     List<Message> getMessages();
   }
 }

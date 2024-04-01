@@ -52,7 +52,7 @@ public class GrimRemarkRegistrySqlImpl implements GrimRemarkRegistry {
         .build();
   }
   @Override
-  public SqlTupleList updateAll(Collection<GrimRemark> remarks) {
+  public SqlTupleList insertAll(Collection<GrimRemark> remarks) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getGrimRemark()).ln()
@@ -88,10 +88,10 @@ public class GrimRemarkRegistrySqlImpl implements GrimRemarkRegistry {
   }
 
   @Override
-  public SqlTupleList insertAll(Collection<GrimRemark> remarks) {
+  public SqlTupleList updateAll(Collection<GrimRemark> remarks) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
-        .append("UPDATE ").append(options.getGrimObjective())
+        .append("UPDATE ").append(options.getGrimRemark())
         .append(" SET").ln()
         .append("  commit_id = $1,").ln()
 

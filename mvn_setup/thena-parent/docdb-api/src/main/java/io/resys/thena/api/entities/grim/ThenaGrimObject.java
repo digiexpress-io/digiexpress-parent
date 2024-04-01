@@ -47,8 +47,6 @@ public interface ThenaGrimObject {
     GRIM_MISSION_DATA,
     
     // infra object, tx log
-    GRIM_COMMIT,    
-    GRIM_COMMIT_TREE,
     GRIM_COMMIT_VIEWER,
   }
 }

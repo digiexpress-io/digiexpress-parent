@@ -31,9 +31,9 @@ public interface ThenaGrimChanges {
     MissionChanges addLink(Consumer<LinkChanges> link);
     MissionChanges addRemark(Consumer<RemarkChanges> remark);
     
-    <T> MissionChanges setAllAssignees(List<T> replacments, Function<T, AssignmentChanges> assignment);
-    <T> MissionChanges setAllLabels(List<T> replacments, Function<T, LabelChanges> label);
-    <T> MissionChanges setAllLinks(List<T> replacments, Function<T, LinkChanges> link);
+    <T> MissionChanges setAllAssignees(List<T> replacments, Function<T, Consumer<AssignmentChanges>> assignment);
+    <T> MissionChanges setAllLabels(List<T> replacments, Function<T, Consumer<LabelChanges>> label);
+    <T> MissionChanges setAllLinks(List<T> replacments, Function<T, Consumer<LinkChanges>> link);
     
     MissionChanges addObjective(Consumer<ObjectiveChanges> goal);
     
@@ -73,6 +73,7 @@ public interface ThenaGrimChanges {
     
     ObjectiveChanges addGoal(Consumer<GoalChanges> newGoal);
     ObjectiveChanges addAssignees(Consumer<AssignmentChanges> assignment);
+    <T> ObjectiveChanges setAllAssignees(List<T> replacments, Function<T, Consumer<AssignmentChanges>> assignment);
     
     void build();    
   }    
@@ -85,6 +86,7 @@ public interface ThenaGrimChanges {
     GoalChanges dueDate(@Nullable LocalDate dueDate);
     
     GoalChanges addAssignees(Consumer<AssignmentChanges> assignment);
+    <T> GoalChanges setAllAssignees(List<T> replacments, Function<T, Consumer<AssignmentChanges>> assignment);
     void build(); 
   }
   // support interface inside of callback
