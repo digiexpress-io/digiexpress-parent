@@ -1,26 +1,20 @@
 import React from 'react';
-import { Box, Typography } from '@mui/material';
-import { FormattedMessage } from 'react-intl';
+import { Box, Typography, TextField } from '@mui/material';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import { StyledFullScreenDialog } from 'components-generic';
 import Burger from 'components-burger';
+import { CreatePermission, ImmutablePermissionStore } from 'descriptor-permissions';
 import { Fields } from './PermissionCreateFields';
 
+import Context from 'context';
 
+
+/*  TODO
 const Left: React.FC<{}> = () => {
-  return (
-    <>
-      <Burger.Section>
-        <Typography fontWeight='bold'><FormattedMessage id='permissions.permission.name' /></Typography>
-        <Fields.PermissionName />
-      </Burger.Section>
-
-      <Burger.Section>
-        <Typography fontWeight='bold'><FormattedMessage id='permissions.permission.description' /></Typography>
-        <Fields.PermissionDescription />
-      </Burger.Section>
-    </>)
+  return (<Fields.PermissionsCreateFields />)
 }
+*/
 
 const Right: React.FC<{}> = () => {
   return (<>RIGHT</>);
@@ -39,6 +33,7 @@ const Header: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 }
 
 const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+
   return (
     <>
       <Burger.SecondaryButton label='buttons.cancel' onClick={onClose} />
@@ -48,14 +43,82 @@ const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 }
 
 const PermissionCreateDialog: React.FC<{ open: boolean, onClose: () => void }> = ({ open, onClose }) => {
+  const intl = useIntl();
+  const backend = Context.useBackend();
+  const [name, setName] = React.useState('permission name');
+  const [description, setDescription] = React.useState('description');
+  const [comment, setComment] = React.useState('comment value');
+
+
+
+  async function handlePermissionCreate() {
+    const command: CreatePermission = {
+      commandType: 'CREATE_PERMISSION',
+      comment,
+      name,
+      description,
+      roles: []
+    };
+    await new ImmutablePermissionStore(backend.store).createPermission(command);
+    onClose();
+  };
+
+  function handleNameChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setName(event.target.value);
+  }
+
+  function handleDescriptionChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setDescription(event.target.value);
+  }
+
+  function handleCommentChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setComment(event.target.value);
+  }
+
   return (
     <StyledFullScreenDialog
       open={open}
       onClose={onClose}
       header={<Header onClose={onClose} />}
-      footer={<Footer onClose={onClose} />}
-      left={<Left />}
+      footer={<Footer onClose={handlePermissionCreate} />}
       right={<Right />}
+      left={
+        <>
+          <Burger.Section>
+            <Typography fontWeight='bold'><FormattedMessage id='permissions.permission.name' /></Typography>
+            <TextField InputProps={{ disableUnderline: true }} variant='standard'
+              placeholder={intl.formatMessage({ id: 'permissions.permission.name.create.placeholder' })}
+              fullWidth
+              value={name}
+              onChange={handleNameChange}
+            />
+          </Burger.Section>
+
+          <Burger.Section>
+            <Typography fontWeight='bold'><FormattedMessage id='permissions.permission.description' /></Typography>
+            <TextField InputProps={{ disableUnderline: true }} variant='standard'
+              placeholder={intl.formatMessage({ id: 'permissions.permission.description.create.placeholder' })}
+              fullWidth
+              multiline
+              minRows={3}
+              maxRows={6}
+              value={description}
+              onChange={handleDescriptionChange}
+            />
+          </Burger.Section>
+
+          <Burger.Section>
+            <Typography fontWeight='bold'><FormattedMessage id='permissions.permission.createComment' /></Typography>
+            <TextField InputProps={{ disableUnderline: true }} variant='standard'
+              placeholder={intl.formatMessage({ id: 'permissions.permission.createComment.placeholder' })}
+              fullWidth
+              required
+              value={comment}
+              onChange={handleCommentChange}
+            />
+          </Burger.Section>
+        </>
+      }
     />
   )
 }

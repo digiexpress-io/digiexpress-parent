@@ -594,6 +594,8 @@ const en = {
   'permissions.permission.create': 'Create a new permission',
   'permissions.permission.name.create.placeholder': 'Enter a permission name',
   'permissions.permission.description.create.placeholder': 'Enter a description of this permission',
+  'permissions.permission.createComment': 'Comment',
+  'permissions.permission.createComment.placeholder': 'Note describing this change',
 
 
   'permissions.createRole.role_parent': 'Parent role',
