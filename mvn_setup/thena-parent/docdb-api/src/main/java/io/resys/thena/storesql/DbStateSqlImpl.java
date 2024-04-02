@@ -55,8 +55,8 @@ public class DbStateSqlImpl implements DbState {
     return new GrimDbStateImpl(dataSource.withTenant(repo));
   }
   @Override
-  public <R> Uni<R> withGrimTransaction(String tenantId, io.resys.thena.structures.grim.GrimState.TransactionFunction<R> callback) {
-    return toGrimState(tenantId).onItem().transformToUni(state -> state.withTransaction(callback));
+  public <R> Uni<R> withGrimTransaction(TxScope scope, io.resys.thena.structures.grim.GrimState.TransactionFunction<R> callback) {
+    return toGrimState(scope.getTenantId()).onItem().transformToUni(state -> state.withTransaction(callback));
   }
   
   // git state
@@ -74,8 +74,8 @@ public class DbStateSqlImpl implements DbState {
     return new GitDbStateImpl(dataSource.withTenant(repo));
   }
   @Override
-  public <R> Uni<R> withGitTransaction(String tenantId, TransactionFunction<R> callback) {
-    return toGitState(tenantId).onItem().transformToUni(state -> state.withTransaction(callback));
+  public <R> Uni<R> withGitTransaction(TxScope scope, TransactionFunction<R> callback) {
+    return toGitState(scope.getTenantId()).onItem().transformToUni(state -> state.withTransaction(callback));
   }
   
   // doc state
@@ -93,8 +93,8 @@ public class DbStateSqlImpl implements DbState {
     return new DocDbStateImpl(dataSource.withTenant(repo));
   }
   @Override
-  public <R> Uni<R> withDocTransaction(String tenantId, io.resys.thena.structures.doc.DocState.TransactionFunction<R> callback) {
-    return toDocState(tenantId).onItem().transformToUni(state -> state.withTransaction(callback));
+  public <R> Uni<R> withDocTransaction(TxScope scope, io.resys.thena.structures.doc.DocState.TransactionFunction<R> callback) {
+    return toDocState(scope.getTenantId()).onItem().transformToUni(state -> state.withTransaction(callback));
   }
   
   // org state
@@ -112,8 +112,8 @@ public class DbStateSqlImpl implements DbState {
     return new OrgDbStateImpl(dataSource.withTenant(repo));
   }
   @Override
-  public <R> Uni<R> withOrgTransaction(String tenantId, io.resys.thena.structures.org.OrgState.TransactionFunction<R> callback) {
-    return toOrgState(tenantId).onItem().transformToUni(state -> state.withTransaction(callback));
+  public <R> Uni<R> withOrgTransaction(TxScope scope, io.resys.thena.structures.org.OrgState.TransactionFunction<R> callback) {
+    return toOrgState(scope.getTenantId()).onItem().transformToUni(state -> state.withTransaction(callback));
   }
   private <T> Uni<T> tenantNotFound(String tenantId) {
     return tenant().findAll().collect().asList().onItem().transform(repos -> {

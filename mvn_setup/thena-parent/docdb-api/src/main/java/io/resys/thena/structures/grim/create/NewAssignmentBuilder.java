@@ -7,14 +7,13 @@ import io.resys.thena.api.entities.grim.ImmutableGrimAssignment;
 import io.resys.thena.api.entities.grim.ThenaGrimChanges;
 import io.resys.thena.api.entities.grim.ThenaGrimChanges.AssignmentChanges;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimOneOfRelations;
-import io.resys.thena.structures.grim.commitlog.GrimCommitLogger;
-import io.resys.thena.structures.grim.commitlog.GrimCommitLogger.GrimOpType;
+import io.resys.thena.structures.grim.commitlog.GrimCommitBuilder;
 import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
 import jakarta.annotation.Nullable;
 
 public class NewAssignmentBuilder implements ThenaGrimChanges.AssignmentChanges {
-  private final GrimCommitLogger logger;
+  private final GrimCommitBuilder logger;
   private final String missionId;
   private final @Nullable GrimOneOfRelations relation;
   private final Map<String, GrimAssignment> allAssignments;
@@ -22,7 +21,7 @@ public class NewAssignmentBuilder implements ThenaGrimChanges.AssignmentChanges 
   private boolean built;
   
   public NewAssignmentBuilder(
-      GrimCommitLogger logger, 
+      GrimCommitBuilder logger, 
       String missionId, 
       GrimOneOfRelations relation, 
       Map<String, GrimAssignment> allAssignments) {
@@ -76,7 +75,7 @@ public class NewAssignmentBuilder implements ThenaGrimChanges.AssignmentChanges 
         .count() == 0
         , () -> "can't have duplicate assignments!");
 
-    this.logger.visit(GrimOpType.ADD, built);
+    this.logger.add(built);
     return built;
   }
 

@@ -14,6 +14,7 @@ import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.doc.DocBranchLock;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.spi.DbState;
+import io.resys.thena.spi.ImmutableTxScope;
 import io.resys.thena.structures.doc.DocQueries.DocBranchLockCriteria;
 import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.doc.DocState;
@@ -101,8 +102,8 @@ public class ModifyManyDocBranchesImpl implements ModifyManyDocBranches {
           .build())
       .collect(Collectors.toList());
     
-    
-    return this.state.withDocTransaction(repoId, tx -> tx.query().branches().getBranchLocks(crit).onItem().transformToUni(locks -> {
+    final var scope = ImmutableTxScope.builder().commitAuthor(author).commitMessage(message).tenantId(repoId).build();
+    return this.state.withDocTransaction(scope, tx -> tx.query().branches().getBranchLocks(crit).onItem().transformToUni(locks -> {
       final ManyDocsEnvelope validation = validateRepo(locks, items);
       if(validation != null) {
         return Uni.createFrom().item(validation);

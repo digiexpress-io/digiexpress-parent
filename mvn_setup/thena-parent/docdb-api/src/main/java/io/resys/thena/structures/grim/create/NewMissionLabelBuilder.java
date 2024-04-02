@@ -12,15 +12,14 @@ import io.resys.thena.api.entities.grim.ImmutableGrimMissionLabel;
 import io.resys.thena.api.entities.grim.ThenaGrimChanges;
 import io.resys.thena.api.entities.grim.ThenaGrimChanges.LabelChanges;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimOneOfRelations;
-import io.resys.thena.structures.grim.commitlog.GrimCommitLogger;
-import io.resys.thena.structures.grim.commitlog.GrimCommitLogger.GrimOpType;
+import io.resys.thena.structures.grim.commitlog.GrimCommitBuilder;
 import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.tuples.Tuple2;
 import io.vertx.core.json.JsonObject;
 
 public class NewMissionLabelBuilder implements ThenaGrimChanges.LabelChanges {
-  private final GrimCommitLogger logger;
+  private final GrimCommitBuilder logger;
   private final String missionId;
 
   private final Map<String, GrimMissionLabel> all_missionLabels;
@@ -33,7 +32,7 @@ public class NewMissionLabelBuilder implements ThenaGrimChanges.LabelChanges {
   private GrimOneOfRelations rels;
   
   public NewMissionLabelBuilder(
-      GrimCommitLogger logger, 
+      GrimCommitBuilder logger, 
       String missionId, 
       GrimOneOfRelations relation, 
       Map<String, GrimMissionLabel> all_missionLabels,
@@ -90,7 +89,7 @@ public class NewMissionLabelBuilder implements ThenaGrimChanges.LabelChanges {
             .labelBody(labelBody)
             .build();
         getOrCreateLabel.setValue(newLabel);
-        logger.visit(GrimOpType.ADD, newLabel);
+        logger.add(newLabel);
         return newLabel;
       });
     
@@ -115,7 +114,7 @@ public class NewMissionLabelBuilder implements ThenaGrimChanges.LabelChanges {
         .count() == 0
         , () -> "can't have duplicate assignments!");
     
-    logger.visit(GrimOpType.ADD, built);
+    logger.add(built);
     return Tuple2.of(built, Optional.ofNullable(getOrCreateLabel.getValue()));
   }
 }

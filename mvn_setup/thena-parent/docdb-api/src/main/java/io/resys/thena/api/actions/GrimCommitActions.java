@@ -68,7 +68,7 @@ public interface GrimCommitActions {
   interface CreateManyMissions {
     CreateManyMissions commitAuthor(String author);
     CreateManyMissions commitMessage(String message);
-    CreateManyMissions addMission(Collection<JsonObject> commands, Consumer<MissionChanges> addMission);
+    CreateManyMissions addMission(Consumer<MissionChanges> addMission);
     Uni<ManyMissionsEnvelope> build();
   }
   
@@ -76,7 +76,6 @@ public interface GrimCommitActions {
   interface CreateOneMission {
     CreateOneMission commitAuthor(String author);
     CreateOneMission commitMessage(String message);
-    CreateOneMission commitCommands(List<?> commands);
     CreateOneMission mission(Consumer<MissionChanges> addMission);
     Uni<OneMissionEnvelope> build();
   }

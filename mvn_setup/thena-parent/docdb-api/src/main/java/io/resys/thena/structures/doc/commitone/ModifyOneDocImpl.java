@@ -9,6 +9,7 @@ import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.doc.DocLock;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.spi.DbState;
+import io.resys.thena.spi.ImmutableTxScope;
 import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.doc.DocState;
 import io.resys.thena.structures.doc.ImmutableDocLockCriteria;
@@ -45,7 +46,8 @@ public class ModifyOneDocImpl implements ModifyOneDoc {
     RepoAssert.notEmpty(message, () -> "message can't be empty!");
 
     final var crit = ImmutableDocLockCriteria.builder().docId(docId).build();    
-    return this.state.withDocTransaction(repoId, tx -> tx.query().branches().getDocLock(crit).onItem().transformToUni(lock -> {
+    final var scope = ImmutableTxScope.builder().commitAuthor(author).commitMessage(message).tenantId(repoId).build();
+    return this.state.withDocTransaction(scope, tx -> tx.query().branches().getDocLock(crit).onItem().transformToUni(lock -> {
       final OneDocEnvelope validation = validateRepo(lock);
       if(validation != null) {
         return Uni.createFrom().item(validation);

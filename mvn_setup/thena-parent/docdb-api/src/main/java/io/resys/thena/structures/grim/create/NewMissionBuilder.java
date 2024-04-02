@@ -14,6 +14,7 @@ import io.resys.thena.api.entities.grim.ImmutableGrimMission;
 import io.resys.thena.api.entities.grim.ImmutableGrimMissionData;
 import io.resys.thena.api.entities.grim.ThenaGrimChanges;
 import io.resys.thena.api.entities.grim.ThenaGrimChanges.AssignmentChanges;
+import io.resys.thena.api.entities.grim.ThenaGrimChanges.CommandChanges;
 import io.resys.thena.api.entities.grim.ThenaGrimChanges.LabelChanges;
 import io.resys.thena.api.entities.grim.ThenaGrimChanges.LinkChanges;
 import io.resys.thena.api.entities.grim.ThenaGrimChanges.MissionChanges;
@@ -21,15 +22,14 @@ import io.resys.thena.api.entities.grim.ThenaGrimChanges.ObjectiveChanges;
 import io.resys.thena.api.entities.grim.ThenaGrimChanges.RemarkChanges;
 import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.grim.ImmutableGrimBatchForOne;
-import io.resys.thena.structures.grim.commitlog.GrimCommitLogger;
-import io.resys.thena.structures.grim.commitlog.GrimCommitLogger.GrimOpType;
+import io.resys.thena.structures.grim.commitlog.GrimCommitBuilder;
 import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
 
 
 
 public class NewMissionBuilder implements ThenaGrimChanges.MissionChanges {
-  private final GrimCommitLogger logger;
+  private final GrimCommitBuilder logger;
   private final ImmutableGrimMission.Builder mission;
   private final String missionId;
   private final String commitId;
@@ -40,9 +40,8 @@ public class NewMissionBuilder implements ThenaGrimChanges.MissionChanges {
   private ImmutableGrimBatchForOne.Builder next;
   private boolean built;
   
-  public NewMissionBuilder(Map<String, GrimLabel> all_labels, GrimCommitLogger logger) {
+  public NewMissionBuilder(Map<String, GrimLabel> all_labels, GrimCommitBuilder logger) {
     super();
-    this.logger = logger;
     this.next = ImmutableGrimBatchForOne.builder()
         .tenantId(logger.getTenantId())
         .status(BatchStatus.OK)
@@ -59,6 +58,7 @@ public class NewMissionBuilder implements ThenaGrimChanges.MissionChanges {
       .title("")
       .description("");
     this.all_labels = new HashMap<>(all_labels);
+    this.logger = logger;
   }
 
   @Override
@@ -228,11 +228,23 @@ public class NewMissionBuilder implements ThenaGrimChanges.MissionChanges {
     final var data = this.missionMeta.build();
     final var mission = this.mission.build();
     
-    logger.visit(GrimOpType.ADD, mission);
-    logger.visit(GrimOpType.ADD, data);
+    logger.add(mission);
+    logger.add(data);
     
     next.addMissions(mission);
     next.addData(data);
     return next.build();
+  }
+
+  @Override
+  public <T> MissionChanges addCommand(Consumer<CommandChanges> command) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public <T> MissionChanges addCommands(List<T> replacments, Function<T, Consumer<CommandChanges>> command) {
+    // TODO Auto-generated method stub
+    return null;
   }
 }

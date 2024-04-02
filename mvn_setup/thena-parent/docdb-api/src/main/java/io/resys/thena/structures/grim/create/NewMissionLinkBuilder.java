@@ -7,22 +7,21 @@ import io.resys.thena.api.entities.grim.ImmutableGrimMissionLink;
 import io.resys.thena.api.entities.grim.ThenaGrimChanges;
 import io.resys.thena.api.entities.grim.ThenaGrimChanges.LinkChanges;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimOneOfRelations;
-import io.resys.thena.structures.grim.commitlog.GrimCommitLogger;
-import io.resys.thena.structures.grim.commitlog.GrimCommitLogger.GrimOpType;
+import io.resys.thena.structures.grim.commitlog.GrimCommitBuilder;
 import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
 import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
 
 public class NewMissionLinkBuilder implements ThenaGrimChanges.LinkChanges {
-  private final GrimCommitLogger logger;
+  private final GrimCommitBuilder logger;
   private final @Nullable GrimOneOfRelations relation;
   private final Map<String, GrimMissionLink> all_missionLinks;
   private ImmutableGrimMissionLink.Builder next; 
   private boolean built;
   
   public NewMissionLinkBuilder(
-      GrimCommitLogger logger, 
+      GrimCommitBuilder logger, 
       String missionId, 
       GrimOneOfRelations relation, 
       Map<String, GrimMissionLink> all_missionLinks) {
@@ -78,7 +77,7 @@ public class NewMissionLinkBuilder implements ThenaGrimChanges.LinkChanges {
         .count() == 0
         , () -> "can't have duplicate link of type: " + built.getLinkType() + ", with value: " + built.getExternalId() + "!");
     
-    this.logger.visit(GrimOpType.ADD, built);
+    this.logger.add(built);
     return built;
   }
 }

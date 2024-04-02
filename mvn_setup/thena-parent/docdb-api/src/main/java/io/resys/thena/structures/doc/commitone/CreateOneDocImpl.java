@@ -4,6 +4,7 @@ import io.resys.thena.api.actions.DocCommitActions.CreateOneDoc;
 import io.resys.thena.api.actions.DocCommitActions.OneDocEnvelope;
 import io.resys.thena.api.actions.ImmutableOneDocEnvelope;
 import io.resys.thena.spi.DbState;
+import io.resys.thena.spi.ImmutableTxScope;
 import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.doc.DocState;
 import io.resys.thena.structures.doc.support.BatchForOneDocCreate;
@@ -56,7 +57,8 @@ public class CreateOneDocImpl implements CreateOneDoc {
     RepoAssert.notEmpty(docType, () -> "docType can't be empty!");
     RepoAssert.notNull(appendBlobs, () -> "Nothing to commit, no content!");
         
-    return this.state.withDocTransaction(repoId, this::doInTx);
+    final var scope = ImmutableTxScope.builder().commitAuthor(author).commitMessage(message).tenantId(repoId).build();
+    return this.state.withDocTransaction(scope, this::doInTx);
   }
   
   private Uni<OneDocEnvelope> doInTx(DocState tx) {  

@@ -10,6 +10,7 @@ import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.doc.DocBranchLock;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.spi.DbState;
+import io.resys.thena.spi.ImmutableTxScope;
 import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.doc.DocState;
 import io.resys.thena.structures.doc.ImmutableDocBranchLockCriteria;
@@ -59,8 +60,8 @@ public class ModifyOneDocBranchImpl implements ModifyOneDocBranch {
         .branchName(branchName)
         .docId(docId)
         .build();
-    
-    return this.state.withDocTransaction(repoId, tx -> tx.query().branches().getBranchLock(crit).onItem().transformToUni(lock -> {
+    final var scope = ImmutableTxScope.builder().commitAuthor(author).commitMessage(message).tenantId(repoId).build();
+    return this.state.withDocTransaction(scope, tx -> tx.query().branches().getBranchLock(crit).onItem().transformToUni(lock -> {
       final OneDocEnvelope validation = validateRepo(lock);
       if(validation != null) {
         return Uni.createFrom().item(validation);

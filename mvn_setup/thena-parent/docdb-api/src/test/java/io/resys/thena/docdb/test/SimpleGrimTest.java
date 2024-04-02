@@ -46,7 +46,7 @@ public class SimpleGrimTest extends DbTestTemplate {
         .createManyMissions()
         .commitMessage("batching tests")
         .commitAuthor("jane.doe@morgue.com")
-        .addMission(Arrays.asList(), (MissionChanges newMission) -> {
+        .addMission((MissionChanges newMission) -> {
           
           newMission
             .title("my first mission to build a house")

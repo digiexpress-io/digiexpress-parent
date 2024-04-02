@@ -20,6 +20,7 @@ import io.resys.thena.api.entities.org.OrgPartyRight;
 import io.resys.thena.api.entities.org.OrgRight;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.spi.DbState;
+import io.resys.thena.spi.ImmutableTxScope;
 import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.org.OrgInserts.OrgBatchForOne;
 import io.resys.thena.structures.org.OrgState;
@@ -123,8 +124,8 @@ public class ModifyOneRightImpl implements ModifyOneRight {
     
     RepoAssert.notEmptyIfDefined(rightName, () -> "rightName can't be empty!");
     RepoAssert.notEmptyIfDefined(rightDescription, () -> "email can't be empty!");
-
-    return this.state.withOrgTransaction(repoId, this::doInTx);
+    final var scope = ImmutableTxScope.builder().commitAuthor(author).commitMessage(message).tenantId(repoId).build();
+    return this.state.withOrgTransaction(scope, this::doInTx);
   }
   
   

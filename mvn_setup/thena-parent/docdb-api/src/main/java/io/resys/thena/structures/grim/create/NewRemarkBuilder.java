@@ -7,21 +7,20 @@ import io.resys.thena.api.entities.grim.ImmutableGrimRemark;
 import io.resys.thena.api.entities.grim.ThenaGrimChanges;
 import io.resys.thena.api.entities.grim.ThenaGrimChanges.RemarkChanges;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimOneOfRelations;
-import io.resys.thena.structures.grim.commitlog.GrimCommitLogger;
-import io.resys.thena.structures.grim.commitlog.GrimCommitLogger.GrimOpType;
+import io.resys.thena.structures.grim.commitlog.GrimCommitBuilder;
 import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
 import jakarta.annotation.Nullable;
 
 public class NewRemarkBuilder implements ThenaGrimChanges.RemarkChanges {
-  private final GrimCommitLogger logger;
+  private final GrimCommitBuilder logger;
   private final @Nullable GrimOneOfRelations relation;
   private final Map<String, GrimRemark> all_remarks;
   private ImmutableGrimRemark.Builder next; 
   private boolean built;
   
   public NewRemarkBuilder(
-      GrimCommitLogger logger, 
+      GrimCommitBuilder logger, 
       String missionId, 
       GrimOneOfRelations relation, 
       Map<String, GrimRemark> all_remarks) {
@@ -68,7 +67,7 @@ public class NewRemarkBuilder implements ThenaGrimChanges.RemarkChanges {
     RepoAssert.isTrue(built, () -> "you must call RemarkChanges.build() to finalize mission CREATE or UPDATE!");
     final var built = next.relation(relation).build();
     
-    this.logger.visit(GrimOpType.ADD, built);
+    this.logger.add(built);
     return built;
   }
 

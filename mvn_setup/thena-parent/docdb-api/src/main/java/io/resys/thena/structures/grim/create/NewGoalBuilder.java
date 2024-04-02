@@ -21,13 +21,12 @@ import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimOneOfRelations;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimRelationType;
 import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.grim.ImmutableGrimBatchForOne;
-import io.resys.thena.structures.grim.commitlog.GrimCommitLogger;
-import io.resys.thena.structures.grim.commitlog.GrimCommitLogger.GrimOpType;
+import io.resys.thena.structures.grim.commitlog.GrimCommitBuilder;
 import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
 
 public class NewGoalBuilder implements ThenaGrimChanges.GoalChanges {
-  private final GrimCommitLogger logger;
+  private final GrimCommitBuilder logger;
   private final String missionId;
   private final Map<String, GrimLabel> all_labels;
   
@@ -38,7 +37,7 @@ public class NewGoalBuilder implements ThenaGrimChanges.GoalChanges {
   private final ImmutableGrimMissionData.Builder objectiveMeta;
   private boolean built;
   
-  public NewGoalBuilder(GrimCommitLogger logger, String missionId, String objectiveId, Map<String, GrimLabel> all_labels) {
+  public NewGoalBuilder(GrimCommitBuilder logger, String missionId, String objectiveId, Map<String, GrimLabel> all_labels) {
     super();
     this.logger = logger;
     this.missionId = missionId;
@@ -133,8 +132,8 @@ public class NewGoalBuilder implements ThenaGrimChanges.GoalChanges {
     final var data = this.objectiveMeta.build();
     final var goal = this.goal.build();
     
-    logger.visit(GrimOpType.ADD, goal);
-    logger.visit(GrimOpType.ADD, data);
+    logger.add(goal);
+    logger.add(data);
     
     this.batch.addGoals(goal);
     this.batch.addData(data);

@@ -2,9 +2,7 @@ package io.resys.thena.structures.grim.create;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -18,15 +16,15 @@ import io.resys.thena.api.entities.grim.GrimLabel;
 import io.resys.thena.api.entities.grim.ImmutableGrimCommit;
 import io.resys.thena.api.entities.grim.ThenaGrimChanges.MissionChanges;
 import io.resys.thena.spi.DbState;
+import io.resys.thena.spi.ImmutableTxScope;
 import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.grim.GrimInserts.GrimBatchForOne;
+import io.resys.thena.structures.grim.commitlog.GrimCommitBuilder;
 import io.resys.thena.structures.grim.GrimState;
 import io.resys.thena.structures.grim.ImmutableGrimBatchForOne;
-import io.resys.thena.structures.grim.commitlog.GrimCommitLogger;
 import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
-import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
 
@@ -38,7 +36,7 @@ public class CreateManyMissionsImpl implements CreateManyMissions {
   
   private String author;
   private String message;
-  private final LinkedHashMap<Collection<JsonObject>, Consumer<MissionChanges>> missions = new LinkedHashMap<>();
+  private final List<Consumer<MissionChanges>> missions = new ArrayList<>();
   
   @Override
   public CreateManyMissions commitAuthor(String author) {
@@ -51,10 +49,9 @@ public class CreateManyMissionsImpl implements CreateManyMissions {
     return this;
   }
   @Override
-  public CreateManyMissions addMission(Collection<JsonObject> newCommands, Consumer<MissionChanges> addMission) {
-    RepoAssert.notNull(newCommands, () -> "newCommands can't be empty!");
+  public CreateManyMissions addMission(Consumer<MissionChanges> addMission) {
     RepoAssert.notNull(addMission, () -> "addMission can't be empty!");
-    missions.put(new ArrayList<JsonObject>(newCommands), addMission);
+    missions.add(addMission);
     return this;
   }
 
@@ -65,7 +62,8 @@ public class CreateManyMissionsImpl implements CreateManyMissions {
     RepoAssert.notEmpty(message, () -> "message can't be empty!");
     RepoAssert.notEmpty(missions, () -> "missions can't be empty!");
 
-    return this.state.withGrimTransaction(tenantId, this::doInTx);
+    final var scope = ImmutableTxScope.builder().commitAuthor(author).commitMessage(message).tenantId(tenantId).build();
+    return this.state.withGrimTransaction(scope, this::doInTx);
   }
 
   private Uni<ManyMissionsEnvelope> doInTx(GrimState tx) {
@@ -94,14 +92,12 @@ public class CreateManyMissionsImpl implements CreateManyMissions {
         .status(BatchStatus.OK)
         .log("")
         .build();
-
+    final var createdAt = OffsetDateTime.now();
     ImmutableGrimBatchForOne next = start;
     final GrimCommit parentCommit;
     if(this.missions.size() == 1) {
       parentCommit = null;
     } else {
-      final var createdAt = OffsetDateTime.now();
-
       parentCommit = ImmutableGrimCommit.builder()
         .commitId(OidUtils.gen())
         .commitAuthor(author)
@@ -112,22 +108,31 @@ public class CreateManyMissionsImpl implements CreateManyMissions {
       next.withCommits(parentCommit);
     }
     
-    for(final var entry : this.missions.entrySet()) {
-      final var logger = new GrimCommitLogger(tenantId, author, message, parentCommit, entry.getKey());
+    for(final var entry : this.missions) {
+      
+      final var logger = new GrimCommitBuilder(tenantId, 
+          ImmutableGrimCommit.builder()
+            .commitId(OidUtils.gen())
+            .commitAuthor(author)
+            .commitMessage(message)
+            .commitLog("")
+            .createdAt(createdAt)
+            .parentCommitId(parentCommit == null ? null : parentCommit.getCommitId())
+            .build()
+      );
+      
       final var newMission = new NewMissionBuilder(Collections.unmodifiableMap(all_labels), logger);
-      entry.getValue().accept(newMission);
+      entry.accept(newMission);
       final var created = newMission.close();
       created.getLabels().forEach(e -> all_labels.put(e.getId(), e));
       created.getUpdateLabels().forEach(e -> all_labels.put(e.getId(), e));      
       
+      final var missionId = created.getMissions().iterator().next().getId();
       
       next = ImmutableGrimBatchForOne.builder()
-          // merge init state
           .from(start)
-          // merge mission state
           .from(created)
-          // merge commit state
-          .from(logger.close())
+          .from(logger.withMissionId(missionId).close())
           .build();
     }
     

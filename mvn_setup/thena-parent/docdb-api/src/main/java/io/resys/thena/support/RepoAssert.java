@@ -46,7 +46,7 @@ public class RepoAssert {
     }
     return object;
   }
-  public static List<String> notEmpty(List<String> object, Supplier<String> message) {
+  public static <T> List<T> notEmpty(List<T> object, Supplier<String> message) {
     if (object == null || object.isEmpty()) {
       throw new RepoException(getMessage(message));
     }

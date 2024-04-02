@@ -11,6 +11,7 @@ import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.api.actions.ImmutableManyDocsEnvelope;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.spi.DbState;
+import io.resys.thena.spi.ImmutableTxScope;
 import io.resys.thena.structures.doc.DocInserts.DocBatchForOne;
 import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.doc.DocState;
@@ -76,8 +77,8 @@ public class CreateManyDocsImpl implements CreateManyDocs {
     RepoAssert.notEmpty(docType, () -> "docType can't be empty!");
     RepoAssert.isTrue(!items.isEmpty(), () -> "Nothing to commit, no items!");
     
-    
-    return this.state.withDocTransaction(repoId, this::doInTx);
+    final var scope = ImmutableTxScope.builder().commitAuthor(author).commitMessage(message).tenantId(repoId).build();
+    return this.state.withDocTransaction(scope, this::doInTx);
   }
   
   private Uni<ManyDocsEnvelope> doInTx(DocState tx) {  

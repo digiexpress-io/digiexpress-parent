@@ -30,7 +30,9 @@ public interface ThenaGrimChanges {
     MissionChanges addLabels(Consumer<LabelChanges> label);
     MissionChanges addLink(Consumer<LinkChanges> link);
     MissionChanges addRemark(Consumer<RemarkChanges> remark);
+    <T> MissionChanges addCommand(Consumer<CommandChanges> command);    
     
+    <T> MissionChanges addCommands(List<T> replacments, Function<T, Consumer<CommandChanges>> command);    
     <T> MissionChanges setAllAssignees(List<T> replacments, Function<T, Consumer<AssignmentChanges>> assignment);
     <T> MissionChanges setAllLabels(List<T> replacments, Function<T, Consumer<LabelChanges>> label);
     <T> MissionChanges setAllLinks(List<T> replacments, Function<T, Consumer<LinkChanges>> link);
@@ -95,6 +97,13 @@ public interface ThenaGrimChanges {
     RemarkChanges remarkStatus(@Nullable String remarkStatus);
     RemarkChanges reporterId(String reporterId);
     RemarkChanges oneOfRelations(@Nullable GrimOneOfRelations rels);
+    void build(); 
+  }
+  
+  // support interface inside of callback
+  interface CommandChanges {
+    CommandChanges commandValue(JsonObject command);
+    CommandChanges commandBody(JsonObject command);
     void build(); 
   }
 }

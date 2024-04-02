@@ -36,6 +36,7 @@ import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.git.CommitLock;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.spi.DbState;
+import io.resys.thena.spi.ImmutableTxScope;
 import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.git.GitState;
 import io.resys.thena.structures.git.ImmutableLockCriteria;
@@ -136,8 +137,9 @@ public class CommitBuilderImpl implements CommitBuilder {
 
     // final var totalOperation = appendBlobs.size() + deleteBlobs.size() + mergeBlobs.size();
     
+    final var scope = ImmutableTxScope.builder().commitAuthor(author).commitMessage(message).tenantId(repoId).build();
     final var crit = ImmutableLockCriteria.builder().headName(headName).commitId(parentCommit).treeValueIds(mergeBlobs.keySet()).build();
-    return this.state.withGitTransaction(repoId, tx -> tx.query().commits().getLock(crit)
+    return this.state.withGitTransaction(scope, tx -> tx.query().commits().getLock(crit)
       .onItem().transformToUni(lock -> {
         final var validation = validateRepo(lock, parentCommit);
         if(validation != null) {

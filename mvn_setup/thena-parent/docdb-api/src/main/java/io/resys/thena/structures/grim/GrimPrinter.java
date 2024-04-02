@@ -25,7 +25,6 @@ import java.util.Map;
 import java.util.function.Function;
 
 import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.api.entities.git.Diff;
 import io.resys.thena.spi.DbState;
 import io.smallrye.mutiny.Multi;
 
@@ -114,9 +113,8 @@ public class GrimPrinter {
         result.append("  - ").append(data.getDocType()).append("::").append(ID.apply(data.getId())).append(System.lineSeparator());
       }
       for(final var data : item.getCommits().values()) {
-
         result
-          .append("  - ").append(data.getCommitId()).append(System.lineSeparator())
+          .append(System.lineSeparator())
           .append(data.getCommitLog())
           .append(System.lineSeparator());
       }      

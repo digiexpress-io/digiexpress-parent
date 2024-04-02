@@ -6,6 +6,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import io.resys.thena.api.entities.grim.GrimCommitTree;
+import io.resys.thena.api.entities.grim.GrimCommitTree.GrimCommitTreeOperation;
 import io.resys.thena.api.entities.grim.ImmutableGrimCommitTree;
 import io.resys.thena.api.registry.grim.GrimCommitTreeRegistry;
 import io.resys.thena.datasource.ImmutableSql;
@@ -73,8 +74,9 @@ public class GrimCommitTreeRegistrySqlImpl implements GrimCommitTreeRegistry {
     .append("  id VARCHAR(40) PRIMARY KEY,").ln()
     .append("  commit_id VARCHAR(40) NOT NULL,").ln()
     
-    .append("  command_type VARCHAR(255),").ln()
-    .append("  command_body JSONB").ln()
+    .append("  operation_type VARCHAR(40),").ln()
+    .append("  body_after JSONB,").ln()
+    .append("  body_before JSONB").ln()
     .append(");").ln()
     
     
@@ -87,17 +89,19 @@ public class GrimCommitTreeRegistrySqlImpl implements GrimCommitTreeRegistry {
         .append("INSERT INTO ").append(options.getGrimCommitTree()).ln()
         .append(" (id,").ln()
         .append("  commit_id,").ln()
-        .append("  command_type,").ln()
-        .append("  command_body)").ln()
+        .append("  operation_type,").ln()
+        .append("  body_after,").ln()
+        .append("  body_before)").ln()
         
-        .append(" VALUES($1, $2, $3, $4)").ln()
+        .append(" VALUES($1, $2, $3, $4, $5)").ln()
         .build())
         .props(commits.stream()
             .map(doc -> Tuple.from(new Object[]{ 
                 doc.getId(), 
                 doc.getCommitId(),
-                doc.getCommandType(),
-                doc.getCommandBody()
+                doc.getOperationType().name(),
+                doc.getBodyAfter(),
+                doc.getBodyBefore(),
              }))
             .collect(Collectors.toList()))
         .build();
@@ -120,8 +124,9 @@ public class GrimCommitTreeRegistrySqlImpl implements GrimCommitTreeRegistry {
           .missionId(row.getString("mission_id"))
           .labelId(row.getString("label_id"))
           
-          .commandType(row.getString("command_type"))
-          .commandBody(row.getJsonObject("command_body"))
+          .operationType(GrimCommitTreeOperation.valueOf(row.getString("operation_type")))
+          .bodyBefore(row.getJsonObject("body_before"))
+          .bodyAfter(row.getJsonObject("body_after"))
           .build();
     };
   }

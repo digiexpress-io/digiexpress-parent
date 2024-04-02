@@ -12,6 +12,7 @@ import io.resys.thena.api.entities.org.OrgMember;
 import io.resys.thena.api.entities.org.OrgParty;
 import io.resys.thena.api.entities.org.OrgRight;
 import io.resys.thena.spi.DbState;
+import io.resys.thena.spi.ImmutableTxScope;
 import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.org.OrgInserts.OrgBatchForOne;
 import io.resys.thena.structures.org.OrgState;
@@ -55,7 +56,8 @@ public class CreateOnePartyImpl implements CreateOneParty {
     RepoAssert.notEmpty(groupName, () -> "groupName can't be empty!");
     RepoAssert.notEmpty(groupDescription, () -> "groupDescription can't be empty!");
 
-    return this.state.withOrgTransaction(repoId, this::doInTx);
+    final var scope = ImmutableTxScope.builder().commitAuthor(author).commitMessage(message).tenantId(repoId).build();
+    return this.state.withOrgTransaction(scope, this::doInTx);
   }
   
   private Uni<OnePartyEnvelope> doInTx(OrgState tx) {
