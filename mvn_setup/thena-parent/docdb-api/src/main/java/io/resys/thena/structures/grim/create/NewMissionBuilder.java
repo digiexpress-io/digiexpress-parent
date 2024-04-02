@@ -7,20 +7,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import io.resys.thena.api.entities.grim.GrimLabel;
 import io.resys.thena.api.entities.grim.ImmutableGrimCommands;
 import io.resys.thena.api.entities.grim.ImmutableGrimMission;
 import io.resys.thena.api.entities.grim.ImmutableGrimMissionData;
-import io.resys.thena.api.entities.grim.ThenaGrimChanges;
-import io.resys.thena.api.entities.grim.ThenaGrimChanges.AssignmentChanges;
-import io.resys.thena.api.entities.grim.ThenaGrimChanges.LabelChanges;
-import io.resys.thena.api.entities.grim.ThenaGrimChanges.LinkChanges;
-import io.resys.thena.api.entities.grim.ThenaGrimChanges.MissionChanges;
-import io.resys.thena.api.entities.grim.ThenaGrimChanges.ObjectiveChanges;
-import io.resys.thena.api.entities.grim.ThenaGrimChanges.RemarkChanges;
+import io.resys.thena.api.entities.grim.ThenaGrimNewObject;
+import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewAssignment;
+import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewLabel;
+import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewLink;
+import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewMission;
+import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewObjective;
+import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewRemark;
 import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.grim.ImmutableGrimBatchForOne;
 import io.resys.thena.structures.grim.commitlog.GrimCommitBuilder;
@@ -30,7 +29,7 @@ import io.vertx.core.json.JsonObject;
 
 
 
-public class NewMissionBuilder implements ThenaGrimChanges.MissionChanges {
+public class NewMissionBuilder implements ThenaGrimNewObject.NewMission {
   private final GrimCommitBuilder logger;
   private final ImmutableGrimMission.Builder mission;
   private final String missionId;
@@ -64,47 +63,47 @@ public class NewMissionBuilder implements ThenaGrimChanges.MissionChanges {
   }
 
   @Override
-  public MissionChanges title(String title) {
+  public NewMission title(String title) {
     this.missionMeta.title(title);
     return this;
   }
   @Override
-  public MissionChanges description(String description) {
+  public NewMission description(String description) {
     this.missionMeta.title(description);
     return this;
   }
   @Override
-  public MissionChanges parentId(String parentId) {
+  public NewMission parentId(String parentId) {
     this.mission.parentMissionId(parentId);
     return this;
   }
   @Override
-  public MissionChanges reporterId(String reporterId) {
+  public NewMission reporterId(String reporterId) {
     this.mission.reporterId(reporterId);
     return this;
   }
   @Override
-  public MissionChanges status(String status) {
+  public NewMission status(String status) {
     this.mission.missionStatus(status);
     return this;
   }
   @Override
-  public MissionChanges startDate(LocalDate startDate) {
+  public NewMission startDate(LocalDate startDate) {
     this.mission.startDate(startDate);
     return this;
   }
   @Override
-  public MissionChanges dueDate(LocalDate dueDate) {
+  public NewMission dueDate(LocalDate dueDate) {
     this.mission.dueDate(dueDate);
     return this;
   }
   @Override
-  public MissionChanges priority(String priority) {
+  public NewMission priority(String priority) {
     this.mission.missionPriority(priority);
     return this;
   }
   @Override
-  public MissionChanges addAssignees(Consumer<AssignmentChanges> assignment) {
+  public NewMission addAssignees(Consumer<NewAssignment> assignment) {
     final var all_assignments = this.next.build().getAssignments().stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
     final var builder = new NewAssignmentBuilder(logger, missionId, null, all_assignments);
     assignment.accept(builder);
@@ -113,7 +112,7 @@ public class NewMissionBuilder implements ThenaGrimChanges.MissionChanges {
     return this;
   }
   @Override
-  public MissionChanges addLabels(Consumer<LabelChanges> label) {
+  public NewMission addLabels(Consumer<NewLabel> label) {
     final var all_mission_label = this.next.build().getMissionLabels().stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
     final var builder = new NewMissionLabelBuilder(
         logger, missionId, null, 
@@ -132,7 +131,7 @@ public class NewMissionBuilder implements ThenaGrimChanges.MissionChanges {
     return this;
   }
   @Override
-  public MissionChanges addLink(Consumer<LinkChanges> link) {
+  public NewMission addLink(Consumer<NewLink> link) {
     final var all_links = this.next.build().getLinks().stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
     final var builder = new NewMissionLinkBuilder(logger, missionId, null, all_links);
     link.accept(builder);
@@ -141,7 +140,7 @@ public class NewMissionBuilder implements ThenaGrimChanges.MissionChanges {
     return this;
   }
   @Override
-  public MissionChanges addRemark(Consumer<RemarkChanges> remark) {
+  public NewMission addRemark(Consumer<NewRemark> remark) {
     final var all_remarks = this.next.build().getRemarks().stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
     final var builder = new NewRemarkBuilder(logger, missionId, null, Collections.unmodifiableMap(all_remarks));
     remark.accept(builder);
@@ -150,68 +149,7 @@ public class NewMissionBuilder implements ThenaGrimChanges.MissionChanges {
     return this;
   }
   @Override
-  public <T> MissionChanges setAllAssignees(List<T> replacments, Function<T, Consumer<AssignmentChanges>> callbacks) {
-    // clear old
-    this.next.assignments(this.next.build().getAssignments().stream().filter(a -> a.getRelation() == null).toList());
-    final var all_assignments = this.next.build().getAssignments().stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
-    
-    // add new
-    for(final var replacement : replacments) {
-      final var assignment = callbacks.apply(replacement);
-      
-      final var builder = new NewAssignmentBuilder(logger, missionId, null, all_assignments);
-      assignment.accept(builder);
-
-      final var built = builder.close();
-      this.next.addAssignments(built);
-
-    }
-    
-    return this;
-  }
-  @Override
-  public <T> MissionChanges setAllLabels(List<T> replacments, Function<T, Consumer<LabelChanges>> callbacks) {
-    // clear old
-    this.next.missionLabels(this.next.build().getMissionLabels().stream().filter(a -> a.getRelation() == null).toList());
-    final var all_missionLabels = this.next.build().getMissionLabels().stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
-    
-    // add new
-    for(final var replacement : replacments) {
-      final var builder = new NewMissionLabelBuilder(
-          logger, missionId, null, 
-          Collections.unmodifiableMap(all_missionLabels),
-          Collections.unmodifiableMap(all_labels)
-      );
-      final var label = callbacks.apply(replacement);
-      label.accept(builder);
-      final var built = builder.close();
-      this.next.addMissionLabels(built.getItem1());
-      
-      if(built.getItem2().isPresent()) {
-        this.next.addLabels(built.getItem2().get());
-      }
-    }
-    return this;
-  }
-  @Override
-  public <T> MissionChanges setAllLinks(List<T> replacments, Function<T, Consumer<LinkChanges>> callback) {
-    // clear old
-    this.next.links(this.next.build().getLinks().stream().filter(a -> a.getRelation() == null).toList());
-    final var all_links = this.next.build().getLinks().stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
-    
-    // add new
-    for(final var replacement : replacments) {
-      final var builder = new NewMissionLinkBuilder(logger, missionId, null, Collections.unmodifiableMap(all_links));
-      final var link = callback.apply(replacement);
-      link.accept(builder);
-      
-      final var built = builder.close();
-      this.next.addLinks(built);
-    }
-    return this;
-  }
-  @Override
-  public MissionChanges addObjective(Consumer<ObjectiveChanges> objective) {
+  public NewMission addObjective(Consumer<NewObjective> objective) {
     final var builder = new NewObjectiveBuilder(logger, missionId, Collections.unmodifiableMap(all_labels));
     
     objective.accept(builder);
@@ -224,7 +162,7 @@ public class NewMissionBuilder implements ThenaGrimChanges.MissionChanges {
     this.built = true;
   }
   @Override
-  public MissionChanges addCommands(List<JsonObject> commandToAppend) {
+  public NewMission addCommands(List<JsonObject> commandToAppend) {
     next.addCommands(ImmutableGrimCommands.builder()
         .commands(commandToAppend)
         .commitId(logger.getCommitId())

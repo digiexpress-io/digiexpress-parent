@@ -9,8 +9,8 @@ import io.resys.thena.api.entities.grim.GrimLabel;
 import io.resys.thena.api.entities.grim.GrimMissionLabel;
 import io.resys.thena.api.entities.grim.ImmutableGrimLabel;
 import io.resys.thena.api.entities.grim.ImmutableGrimMissionLabel;
-import io.resys.thena.api.entities.grim.ThenaGrimChanges;
-import io.resys.thena.api.entities.grim.ThenaGrimChanges.LabelChanges;
+import io.resys.thena.api.entities.grim.ThenaGrimNewObject;
+import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewLabel;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimOneOfRelations;
 import io.resys.thena.structures.grim.commitlog.GrimCommitBuilder;
 import io.resys.thena.support.OidUtils;
@@ -18,7 +18,7 @@ import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.tuples.Tuple2;
 import io.vertx.core.json.JsonObject;
 
-public class NewMissionLabelBuilder implements ThenaGrimChanges.LabelChanges {
+public class NewMissionLabelBuilder implements ThenaGrimNewObject.NewLabel {
   private final GrimCommitBuilder logger;
   private final String missionId;
 
@@ -51,25 +51,20 @@ public class NewMissionLabelBuilder implements ThenaGrimChanges.LabelChanges {
     this.built = true;
   }
   @Override
-  public LabelChanges labelValue(String labelValue) {
+  public NewLabel labelValue(String labelValue) {
     RepoAssert.notEmpty(labelValue, () -> "labelValue must be defined!");
     this.labelValue = labelValue;
     return this;
   }
   @Override
-  public LabelChanges labelType(String labelType) {
+  public NewLabel labelType(String labelType) {
     this.labelType = labelType;
     return this;
   }
   @Override
-  public LabelChanges labelBody(JsonObject labelBody) {
+  public NewLabel labelBody(JsonObject labelBody) {
     this.labelBody = labelBody;
     return this;
-  }
-  @Override
-  public LabelChanges oneOfRelations(GrimOneOfRelations rels) {
-    this.rels = rels;
-    return null;
   }
   public Tuple2<ImmutableGrimMissionLabel, Optional<GrimLabel>> close() {
     RepoAssert.isTrue(built, () -> "you must call LabelChanges.build() to finalize mission CREATE or UPDATE!");

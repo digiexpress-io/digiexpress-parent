@@ -4,15 +4,15 @@ import java.util.Map;
 
 import io.resys.thena.api.entities.grim.GrimRemark;
 import io.resys.thena.api.entities.grim.ImmutableGrimRemark;
-import io.resys.thena.api.entities.grim.ThenaGrimChanges;
-import io.resys.thena.api.entities.grim.ThenaGrimChanges.RemarkChanges;
+import io.resys.thena.api.entities.grim.ThenaGrimNewObject;
+import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewRemark;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimOneOfRelations;
 import io.resys.thena.structures.grim.commitlog.GrimCommitBuilder;
 import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
 import jakarta.annotation.Nullable;
 
-public class NewRemarkBuilder implements ThenaGrimChanges.RemarkChanges {
+public class NewRemarkBuilder implements ThenaGrimNewObject.NewRemark {
   private final GrimCommitBuilder logger;
   private final @Nullable GrimOneOfRelations relation;
   private final Map<String, GrimRemark> all_remarks;
@@ -40,27 +40,19 @@ public class NewRemarkBuilder implements ThenaGrimChanges.RemarkChanges {
     this.built = true;
   }
   @Override
-  public RemarkChanges remarkText(String remarkText) {
+  public NewRemark remarkText(String remarkText) {
     RepoAssert.notEmpty(remarkText, () -> "remarkText can't be empty!");
     this.next.remarkText(remarkText);
     return this;
   }
   @Override
-  public RemarkChanges remarkStatus(String remarkStatus) {
+  public NewRemark remarkStatus(String remarkStatus) {
     this.next.remarkStatus(remarkStatus);
     return this;
   }
   @Override
-  public RemarkChanges reporterId(String reporterId) {
+  public NewRemark reporterId(String reporterId) {
     this.next.reporterId(reporterId);
-    return this;
-  }
-  @Override
-  public RemarkChanges oneOfRelations(GrimOneOfRelations rels) {
-    if(rels != null && rels.getRemarkId() != null) {
-      RepoAssert.isTrue(all_remarks.containsKey(rels.getObjectiveId()), () -> "can't find parent remark: '" + rels.getObjectiveId() + "'!");
-    }
-    
     return this;
   }
   public ImmutableGrimRemark close() {

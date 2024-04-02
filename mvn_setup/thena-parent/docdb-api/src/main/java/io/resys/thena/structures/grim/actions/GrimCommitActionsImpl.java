@@ -3,6 +3,7 @@ package io.resys.thena.structures.grim.actions;
 import io.resys.thena.api.actions.GrimCommitActions;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.structures.grim.create.CreateManyMissionsImpl;
+import io.resys.thena.structures.grim.modify.ModifyManyMissionsImpl;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -29,8 +30,7 @@ public class GrimCommitActionsImpl implements GrimCommitActions {
 
   @Override
   public ModifyManyMissions modifyManyMission() {
-    // TODO Auto-generated method stub
-    return null;
+    return new ModifyManyMissionsImpl(state, repoId);
   }
 
 }

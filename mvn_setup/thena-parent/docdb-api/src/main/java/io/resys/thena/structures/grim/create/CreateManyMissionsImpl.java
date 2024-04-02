@@ -14,7 +14,7 @@ import io.resys.thena.api.actions.ImmutableManyMissionsEnvelope;
 import io.resys.thena.api.entities.grim.GrimCommit;
 import io.resys.thena.api.entities.grim.GrimLabel;
 import io.resys.thena.api.entities.grim.ImmutableGrimCommit;
-import io.resys.thena.api.entities.grim.ThenaGrimChanges.MissionChanges;
+import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewMission;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.spi.ImmutableTxScope;
 import io.resys.thena.structures.BatchStatus;
@@ -36,7 +36,7 @@ public class CreateManyMissionsImpl implements CreateManyMissions {
   
   private String author;
   private String message;
-  private final List<Consumer<MissionChanges>> missions = new ArrayList<>();
+  private final List<Consumer<NewMission>> missions = new ArrayList<>();
   
   @Override
   public CreateManyMissions commitAuthor(String author) {
@@ -49,7 +49,7 @@ public class CreateManyMissionsImpl implements CreateManyMissions {
     return this;
   }
   @Override
-  public CreateManyMissions addMission(Consumer<MissionChanges> addMission) {
+  public CreateManyMissions addMission(Consumer<NewMission> addMission) {
     RepoAssert.notNull(addMission, () -> "addMission can't be empty!");
     missions.add(addMission);
     return this;
@@ -72,9 +72,11 @@ public class CreateManyMissionsImpl implements CreateManyMissions {
   
   private Uni<ManyMissionsEnvelope> createResponse(GrimState tx, GrimBatchForOne request) {
     return tx.insert().batchMany(request).onItem().transform(rsp -> {
+      
       return ImmutableManyMissionsEnvelope.builder()
           .repoId(tenantId)
           .log(rsp.getLog())
+          .missions(rsp.getMissions())
           .addAllMessages(rsp.getMessages())
           .status(BatchStatus.mapStatus(rsp.getStatus()))
           .build();      
@@ -135,7 +137,6 @@ public class CreateManyMissionsImpl implements CreateManyMissions {
           .from(logger.withMissionId(missionId).close())
           .build();
     }
-    
     return next;
   }
 }

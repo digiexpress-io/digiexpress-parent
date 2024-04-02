@@ -4,8 +4,8 @@ import java.util.Map;
 
 import io.resys.thena.api.entities.grim.GrimMissionLink;
 import io.resys.thena.api.entities.grim.ImmutableGrimMissionLink;
-import io.resys.thena.api.entities.grim.ThenaGrimChanges;
-import io.resys.thena.api.entities.grim.ThenaGrimChanges.LinkChanges;
+import io.resys.thena.api.entities.grim.ThenaGrimNewObject;
+import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewLink;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimOneOfRelations;
 import io.resys.thena.structures.grim.commitlog.GrimCommitBuilder;
 import io.resys.thena.support.OidUtils;
@@ -13,7 +13,7 @@ import io.resys.thena.support.RepoAssert;
 import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
 
-public class NewMissionLinkBuilder implements ThenaGrimChanges.LinkChanges {
+public class NewMissionLinkBuilder implements ThenaGrimNewObject.NewLink {
   private final GrimCommitBuilder logger;
   private final @Nullable GrimOneOfRelations relation;
   private final Map<String, GrimMissionLink> all_missionLinks;
@@ -39,26 +39,20 @@ public class NewMissionLinkBuilder implements ThenaGrimChanges.LinkChanges {
   }
   
   @Override
-  public LinkChanges linkType(String linkType) {
+  public NewLink linkType(String linkType) {
     this.next.linkType(linkType);
     return this;
   }
   @Override
-  public LinkChanges linkValue(String linkValue) {
+  public NewLink linkValue(String linkValue) {
     this.next.externalId(linkValue);
     return this;
   }
   @Override
-  public LinkChanges linkBody(JsonObject linkBody) {
+  public NewLink linkBody(JsonObject linkBody) {
     this.next.linkBody(linkBody);
     return this;
   }
-  @Override
-  public LinkChanges oneOfRelations(GrimOneOfRelations rels) {
-    this.next.relation(rels);
-    return this;
-  }
-
   public ImmutableGrimMissionLink close() {
     RepoAssert.isTrue(built, () -> "you must call LabelChanges.build() to finalize mission CREATE or UPDATE!");
     

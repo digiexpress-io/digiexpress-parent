@@ -1,23 +1,18 @@
 package io.resys.thena.structures.grim.create;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import com.google.common.collect.ImmutableMap;
-
-import io.resys.thena.api.entities.grim.GrimAssignment;
 import io.resys.thena.api.entities.grim.GrimLabel;
 import io.resys.thena.api.entities.grim.ImmutableGrimMissionData;
 import io.resys.thena.api.entities.grim.ImmutableGrimObjective;
 import io.resys.thena.api.entities.grim.ImmutableGrimOneOfRelations;
-import io.resys.thena.api.entities.grim.ThenaGrimChanges;
-import io.resys.thena.api.entities.grim.ThenaGrimChanges.AssignmentChanges;
-import io.resys.thena.api.entities.grim.ThenaGrimChanges.GoalChanges;
-import io.resys.thena.api.entities.grim.ThenaGrimChanges.ObjectiveChanges;
+import io.resys.thena.api.entities.grim.ThenaGrimNewObject;
+import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewAssignment;
+import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewGoal;
+import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewObjective;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimOneOfRelations;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimRelationType;
 import io.resys.thena.structures.BatchStatus;
@@ -26,7 +21,7 @@ import io.resys.thena.structures.grim.commitlog.GrimCommitBuilder;
 import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
 
-public class NewObjectiveBuilder implements ThenaGrimChanges.ObjectiveChanges {
+public class NewObjectiveBuilder implements ThenaGrimNewObject.NewObjective {
   private final GrimCommitBuilder logger;
   private final String missionId;
   private final Map<String, GrimLabel> all_labels;
@@ -71,65 +66,44 @@ public class NewObjectiveBuilder implements ThenaGrimChanges.ObjectiveChanges {
   }
 
   @Override
-  public ObjectiveChanges title(String title) {
+  public NewObjective title(String title) {
     this.objectiveMeta.title(title);
     return this;
   }
   @Override
-  public ObjectiveChanges description(String description) {
+  public NewObjective description(String description) {
     this.objectiveMeta.description(description);
     return this;
   }
   @Override
-  public ObjectiveChanges status(String status) {
+  public NewObjective status(String status) {
     this.objective.objectiveStatus(status);
     return this;
   }
   @Override
-  public ObjectiveChanges startDate(LocalDate startDate) {
+  public NewObjective startDate(LocalDate startDate) {
     this.objective.startDate(startDate);
     return this;
   }
   @Override
-  public ObjectiveChanges dueDate(LocalDate dueDate) {
+  public NewObjective dueDate(LocalDate dueDate) {
     this.objective.dueDate(dueDate);
     return this;
   }
   @Override
-  public ObjectiveChanges addGoal(Consumer<GoalChanges> newGoal) {
+  public NewObjective addGoal(Consumer<NewGoal> newGoal) {
     final var builder = new NewGoalBuilder(logger, missionId, objectiveId, all_labels);
     newGoal.accept(builder);
     this.batch.from(builder.close());
     return this;
   }
   @Override
-  public ObjectiveChanges addAssignees(Consumer<AssignmentChanges> assignment) {
+  public NewObjective addAssignees(Consumer<NewAssignment> assignment) {
     final var all_assignments = this.batch.build().getAssignments().stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
     final var builder = new NewAssignmentBuilder(logger, missionId, childRel, all_assignments);
     assignment.accept(builder);
     final var built = builder.close();
     this.batch.addAssignments(built);
-    return this;
-  }
-  @Override
-  public <T> ObjectiveChanges setAllAssignees(List<T> replacments, Function<T, Consumer<AssignmentChanges>> callbacks) {
-    // clear old
-    this.batch.assignments(this.batch.build().getAssignments().stream()
-        .filter(a -> a.getRelation().getObjectiveId().equals(objectiveId))
-        .toList());
-    
-    // add new
-    for(final var replacement : replacments) {
-      final var assignment = callbacks.apply(replacement);
-      
-      final var builder = new NewAssignmentBuilder(logger, missionId, childRel, ImmutableMap.<String, GrimAssignment>builder()
-          .putAll(this.batch.build().getAssignments().stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
-          .build());
-      assignment.accept(builder);
-
-      final var built = builder.close();
-      this.batch.addAssignments(built);
-    }
     return this;
   }
   public ImmutableGrimBatchForOne close() {

@@ -14,7 +14,7 @@ import io.quarkus.test.junit.TestProfile;
 import io.resys.thena.api.actions.TenantActions.CommitStatus;
 import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
 import io.resys.thena.api.entities.Tenant.StructureType;
-import io.resys.thena.api.entities.grim.ThenaGrimChanges.MissionChanges;
+import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewMission;
 import io.resys.thena.docdb.test.config.DbTestTemplate;
 import io.resys.thena.docdb.test.config.PgProfile;
 import io.vertx.core.json.JsonObject;
@@ -47,7 +47,7 @@ public class SimpleGrimTest extends DbTestTemplate {
         .createManyMissions()
         .commitMessage("batching tests")
         .commitAuthor("jane.doe@morgue.com")
-        .addMission((MissionChanges newMission) -> {
+        .addMission((NewMission newMission) -> {
           
           newMission
             .title("my first mission to build a house")
@@ -94,9 +94,32 @@ public class SimpleGrimTest extends DbTestTemplate {
              ).build();
 
         }).build()
-        .onFailure().recoverWithNull()
-        .await().atMost(Duration.ofMinutes(1));;
+        .await().atMost(Duration.ofMinutes(1));
     
+    final var newMission = createdTask.getMissions().iterator().next();
+    
+    getClient().grim(repo).commit().modifyManyMission()
+    .commitMessage("forgot to add comments to things")
+    .commitAuthor("jane.doe@morgue.com")
+    .modifyMission(newMission.getId(), (modifyMission) -> {
+      
+      modifyMission
+      .addCommands(Arrays.asList(JsonObject.of("commandType", "CREATE_REMARK")))
+      .addCommands(Arrays.asList(JsonObject.of("commandType", "CREATE_REMARK")))
+      
+      .addRemark((newRemark) -> 
+        newRemark
+        .remarkText("Not to self, give feedback to architects")
+        .build())
+      .addRemark((newRemark) -> 
+        newRemark
+        .remarkText("Note to self, compliment works on after job well done!")
+        .build())
+      .build();
+      
+    })
+    .build();
+        
     printRepo(repo.getRepo());
   }
   

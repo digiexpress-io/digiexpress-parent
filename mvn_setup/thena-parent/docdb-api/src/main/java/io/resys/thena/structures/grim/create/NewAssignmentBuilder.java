@@ -4,15 +4,15 @@ import java.util.Map;
 
 import io.resys.thena.api.entities.grim.GrimAssignment;
 import io.resys.thena.api.entities.grim.ImmutableGrimAssignment;
-import io.resys.thena.api.entities.grim.ThenaGrimChanges;
-import io.resys.thena.api.entities.grim.ThenaGrimChanges.AssignmentChanges;
+import io.resys.thena.api.entities.grim.ThenaGrimNewObject;
+import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewAssignment;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimOneOfRelations;
 import io.resys.thena.structures.grim.commitlog.GrimCommitBuilder;
 import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
 import jakarta.annotation.Nullable;
 
-public class NewAssignmentBuilder implements ThenaGrimChanges.AssignmentChanges {
+public class NewAssignmentBuilder implements ThenaGrimNewObject.NewAssignment {
   private final GrimCommitBuilder logger;
   private final String missionId;
   private final @Nullable GrimOneOfRelations relation;
@@ -37,21 +37,16 @@ public class NewAssignmentBuilder implements ThenaGrimChanges.AssignmentChanges 
         ;
   }
   @Override
-  public AssignmentChanges assignee(String assignee) {
+  public NewAssignment assignee(String assignee) {
     this.next.assignee(assignee);
     return this;
   }
 
   @Override
-  public AssignmentChanges assignmentType(String assignmentType) {
+  public NewAssignment assignmentType(String assignmentType) {
     this.next.assignmentType(assignmentType);
     return this;
   }
-  @Override
-  public AssignmentChanges oneOfRelations(GrimOneOfRelations rels) {
-    this.next.relation(rels);
-    return this;
-  }  
   @Override
   public void build() {
     this.built = true;

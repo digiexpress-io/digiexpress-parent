@@ -8,11 +8,11 @@ import javax.annotation.Nullable;
 import org.immutables.value.Value;
 
 import io.resys.thena.api.entities.CommitResultStatus;
-import io.resys.thena.api.entities.grim.ThenaGrimChanges.GoalChanges;
-import io.resys.thena.api.entities.grim.ThenaGrimChanges.MissionChanges;
-import io.resys.thena.api.entities.grim.ThenaGrimChanges.ObjectiveChanges;
-import io.resys.thena.api.entities.grim.ThenaGrimChanges.RemarkChanges;
-import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
+import io.resys.thena.api.entities.grim.GrimMission;
+import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewGoal;
+import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewMission;
+import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewObjective;
+import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewRemark;
 import io.resys.thena.api.envelope.Message;
 import io.resys.thena.api.envelope.ThenaEnvelope;
 import io.smallrye.mutiny.Uni;
@@ -33,32 +33,22 @@ public interface GrimCommitActions {
     ModifyOneMission commitMessage(String message);
     ModifyOneMission commitCommands(List<?> commands);
     ModifyOneMission missionId(String missionId);
-    ModifyOneMission modifyMission(Consumer<MissionChanges> addMission);
+    ModifyOneMission modifyMission(Consumer<NewMission> addMission);
     
     ModifyOneMission removeGoal(String goalId);
     ModifyOneMission removeObjective(String objectiveId);
     ModifyOneMission removeRemark(String remarkId);
     
-    ModifyOneMission modifyGoal(String goalId, Consumer<GoalChanges> goal);
-    ModifyOneMission modifyObjective(String objectiveId, Consumer<ObjectiveChanges> objective);
-    ModifyOneMission modifyRemark(String remarkId, Consumer<RemarkChanges> objective);
+    ModifyOneMission modifyGoal(String goalId, Consumer<NewGoal> goal);
+    ModifyOneMission modifyObjective(String objectiveId, Consumer<NewObjective> objective);
+    ModifyOneMission modifyRemark(String remarkId, Consumer<NewRemark> objective);
     Uni<OneMissionEnvelope> build();
   }
   
   interface ModifyManyMissions {
     ModifyManyMissions commitAuthor(String author);
     ModifyManyMissions commitMessage(String message);
-    ModifyManyMissions commitCommands(List<?> commands);
-    ModifyManyMissions modifyMission(String missionId, Consumer<MissionChanges> addMission);
-    
-    // changes existing
-    MissionChanges modifyGoal(String goalId, Consumer<GoalChanges> goal);
-    MissionChanges modifyObjective(String objectiveId, Consumer<ObjectiveChanges> objective);
-    MissionChanges modifyRemark(String remarkId, Consumer<RemarkChanges> objective);
-    
-    MissionChanges removeGoal(String goalId);
-    MissionChanges removeObjective(String objectiveId);
-    MissionChanges removeRemark(String remarkId);
+    ModifyManyMissions modifyMission(String missionId, Consumer<NewMission> addMission);
     
     Uni<ManyMissionsEnvelope> build();
   }
@@ -66,7 +56,7 @@ public interface GrimCommitActions {
   interface CreateManyMissions {
     CreateManyMissions commitAuthor(String author);
     CreateManyMissions commitMessage(String message);
-    CreateManyMissions addMission(Consumer<MissionChanges> addMission);
+    CreateManyMissions addMission(Consumer<NewMission> addMission);
     Uni<ManyMissionsEnvelope> build();
   }
   
@@ -74,7 +64,7 @@ public interface GrimCommitActions {
   interface CreateOneMission {
     CreateOneMission commitAuthor(String author);
     CreateOneMission commitMessage(String message);
-    CreateOneMission mission(Consumer<MissionChanges> addMission);
+    CreateOneMission mission(Consumer<NewMission> addMission);
     Uni<OneMissionEnvelope> build();
   }
 
@@ -84,13 +74,13 @@ public interface GrimCommitActions {
     CommitResultStatus getStatus();
     List<Message> getMessages();
     @Nullable String getLog();
-    @Nullable List<GrimMissionContainer> getMissions();
+    @Nullable List<GrimMission> getMissions();
   }
   @Value.Immutable
   interface OneMissionEnvelope extends ThenaEnvelope {
     String getRepoId();
     CommitResultStatus getStatus();
     List<Message> getMessages();
-    @Nullable GrimMissionContainer getMission();
+    @Nullable GrimMission getMission();
   }
 }
