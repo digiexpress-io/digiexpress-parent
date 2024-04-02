@@ -3,7 +3,7 @@ import { TextField, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useIntl } from 'react-intl';
 import Context from 'context';
-import { CreatePermission, ImmutablePermissionStore } from 'descriptor-permissions';
+import { CreatePermission, ImmutablePermissionStore } from 'descriptor-access-mgmt';
 
 //TODO
 const Name: React.FC<{}> = () => {

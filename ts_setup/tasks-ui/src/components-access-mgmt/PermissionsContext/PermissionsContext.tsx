@@ -2,7 +2,7 @@ import React from 'react';
 
 import Context from 'context';
 
-import { ImmutablePermissionStore, Permission, Principal, Role } from 'descriptor-permissions';
+import { ImmutablePermissionStore, Permission, Principal, Role } from 'descriptor-access-mgmt';
 import { PermissionsContextType } from './permissions-context-types';
 
 

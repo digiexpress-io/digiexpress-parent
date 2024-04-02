@@ -17,7 +17,7 @@ const modules: string[] = [
   'components-dialob',
   'components-dialob-composer',
   'components-user-profile',
-  'components-permissions',
+  'components-access-mgmt',
   'components-org-chart',
 
   'descriptor-customer',
@@ -32,7 +32,7 @@ const modules: string[] = [
   'descriptor-tabbing',
   'descriptor-prefs',
   'descriptor-dialob',
-  'descriptor-permissions',
+  'descriptor-access-mgmt',
 
   'descriptor-popper',
 

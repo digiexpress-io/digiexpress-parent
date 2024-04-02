@@ -1,4 +1,4 @@
-import { Permission, Principal, Role } from 'descriptor-permissions';
+import { Permission, Principal, Role } from 'descriptor-access-mgmt';
 
 
 export interface PermissionsContextType {

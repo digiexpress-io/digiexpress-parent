@@ -9,7 +9,7 @@ import SysConfig from 'components-sys-config';
 import Tasks from 'components-task';
 import Customer from 'components-customer';
 import { CurrentUserProfile, UserProfiles } from 'components-user-profile';
-import { RolesOverview, DeOrgChart, PermissionsOverview } from 'components-permissions';
+import { RolesOverview, DeOrgChart, PermissionsOverview } from 'components-access-mgmt';
 import { wash_me } from 'components-colors';
 import LoggerFactory from 'logger';
 

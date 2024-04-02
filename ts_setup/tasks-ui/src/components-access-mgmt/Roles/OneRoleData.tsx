@@ -4,7 +4,7 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
 import * as colors from 'components-colors';
 import Burger from 'components-burger';
-import { Role } from 'descriptor-permissions';
+import { Role } from 'descriptor-access-mgmt';
 
 import { OneRoleDataTabs } from './OneRoleDataTabs';
 

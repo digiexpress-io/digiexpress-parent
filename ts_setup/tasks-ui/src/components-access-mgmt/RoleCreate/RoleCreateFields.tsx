@@ -2,7 +2,7 @@ import React from 'react';
 import { TextField, IconButton, Alert, AlertTitle, Box } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useIntl } from 'react-intl';
-import { CreateRole, ImmutablePermissionStore, RoleId } from 'descriptor-permissions';
+import { CreateRole, ImmutablePermissionStore, RoleId } from 'descriptor-access-mgmt';
 
 import { usePermissions } from '../PermissionsContext';
 import Burger from 'components-burger';

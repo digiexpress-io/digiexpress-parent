@@ -1,12 +1,11 @@
 import React from 'react';
-import { Box, Typography, Tabs, Tab, Stack } from '@mui/material';
+import { Box, Typography, Tabs, Tab } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 
 import Burger from 'components-burger';
 import Fields from './RoleCreateFields';
 
 import { RoleCreateProvider, useRoleCreateTabs, RoleCreateTabTypes } from './RoleCreateContext';
-import RoleCreateTabNavLoader from './RoleCreateTabNavigation';
 
 
 import Context from 'context';

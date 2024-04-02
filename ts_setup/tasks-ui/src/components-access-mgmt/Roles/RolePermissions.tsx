@@ -2,7 +2,7 @@ import React from 'react';
 import { Stack, Divider, Alert } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 
-import { Role } from 'descriptor-permissions';
+import { Role } from 'descriptor-access-mgmt';
 import { SectionLayout } from 'components-generic';
 
 const RolePermissions: React.FC<{ role: Role }> = ({ role }) => {

@@ -6,7 +6,7 @@ import { RoleDetails } from './RoleDetails';
 import { RolePermissions } from './RolePermissions';
 import { RoleMembers } from './RoleMembers';
 
-import { Role } from 'descriptor-permissions';
+import { Role } from 'descriptor-access-mgmt';
 
 
 const TabContent: React.FC<{ selected: number, id: number, children: React.ReactNode }> = ({ selected, id, children }) => {

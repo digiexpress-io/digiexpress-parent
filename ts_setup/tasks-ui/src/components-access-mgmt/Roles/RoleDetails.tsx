@@ -1,6 +1,6 @@
 import React from 'react';
 import { Stack } from '@mui/material';
-import { Role } from 'descriptor-permissions';
+import { Role } from 'descriptor-access-mgmt';
 import { SectionLayout } from 'components-generic';
 
 

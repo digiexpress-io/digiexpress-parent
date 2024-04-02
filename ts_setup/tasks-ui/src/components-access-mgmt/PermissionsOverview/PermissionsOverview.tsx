@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography, Grid } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
-import { Permission, ImmutablePermissionStore } from 'descriptor-permissions';
+import { Permission, ImmutablePermissionStore } from 'descriptor-access-mgmt';
 import Context from 'context';
 
 

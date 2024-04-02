@@ -1,4 +1,4 @@
-import { Role } from 'descriptor-permissions';
+import { Role } from 'descriptor-access-mgmt';
 
 
 
