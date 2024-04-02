@@ -569,7 +569,7 @@ const en = {
   'permissions.role.member.none': 'No members found',
   'permissions.role.create': 'Create a role',
 
-  'permissions.role.roleParentalOverview': 'Parent roles',
+  'permissions.role.roleParentOverview': 'Parent role',
   'permissions.role.roleParentName': 'Name',
 
   'permissions.role.rolePermissionsOverview': 'Permissions',
@@ -581,6 +581,7 @@ const en = {
   'permissions.role.name.create.placeholder': 'Enter a role name',
   'permissions.role.description.create.placeholder': 'Enter a description of this role',
   'permissions.role.parentSelect': 'Role parent',
+  'permissions.role.roleParentName.none': 'No role parent selected',
   'permissions.role.name': 'Role name',
   'permissions.role.description': 'Role description',
 

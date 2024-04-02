@@ -1,12 +1,11 @@
 import React from 'react';
-import { Box, Typography, Tabs, Tab } from '@mui/material';
+import { Box, Typography, Tabs, Tab, Alert } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 
 import Burger from 'components-burger';
 import Fields from './RoleCreateFields';
 
-import { RoleCreateProvider, useRoleCreateTabs, RoleCreateTabTypes } from './RoleCreateContext';
-
+import { RoleCreateProvider, useTabs, TabTypes } from './RoleCreateContext';
 
 import Context from 'context';
 import { StyledDialogLarge } from '../Dialogs';
@@ -25,7 +24,7 @@ const Left: React.FC<{}> = () => {
       </Burger.Section>
 
       <Burger.Section>
-        <Typography fontWeight='bold'><FormattedMessage id='permissions.role.roleParentalOverview' /></Typography>
+        <Typography fontWeight='bold'><FormattedMessage id='permissions.role.roleParentOverview' /></Typography>
         <Fields.RoleParentOverview />
       </Burger.Section>
 
@@ -38,25 +37,20 @@ const Left: React.FC<{}> = () => {
         <Typography fontWeight='bold'><FormattedMessage id='permissions.role.roleMembersOverview' /></Typography>
         <Fields.RoleMembersOverview />
       </Burger.Section>
-
-
-      <Box sx={{ px: .5 }}>
-      </Box>
     </>)
 }
 
-const HEADER_MAPPING: RoleCreateTabTypes[] = [
+const HEADER_MAPPING: TabTypes[] = [
   'role_parent',
   'role_permissions',
   'role_members'
-]
-
+];
 
 const Header: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
-  const tabbing = useRoleCreateTabs();
+  const tabbing = useTabs();
   function handleTabValue(_event: React.SyntheticEvent, index: number) {
-    const newValue: RoleCreateTabTypes = HEADER_MAPPING[index];
+    const newValue: TabTypes = HEADER_MAPPING[index];
     tabbing.setActiveTab(newValue);
   }
 
@@ -82,10 +76,10 @@ const Header: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
 const Right: React.FC<{}> = () => {
   const { roles } = Context.usePermissions();
-  const tabbing = useRoleCreateTabs();
+  const tabbing = useTabs();
 
   if (!roles) {
-    return <>no roles here on the right side!</>;
+    return <Alert title='No roles defined' severity='warning' />;
   }
 
   if (tabbing.activeTab.id === 'role_parent') {

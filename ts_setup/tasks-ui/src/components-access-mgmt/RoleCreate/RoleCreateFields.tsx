@@ -1,49 +1,51 @@
 import React from 'react';
-import { TextField, IconButton, Alert, AlertTitle, Box } from '@mui/material';
+import { TextField, IconButton, Alert, AlertTitle, Box, Chip, Button } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useIntl } from 'react-intl';
-import { CreateRole, ImmutablePermissionStore, RoleId } from 'descriptor-access-mgmt';
 
-import { usePermissions } from '../AccessMgmtContext';
-import Burger from 'components-burger';
-import { SectionLayout } from 'components-generic';
+import { CreateRole, ImmutablePermissionStore } from 'descriptor-access-mgmt';
+import { SectionLayout, FilterByString } from 'components-generic';
 import { StyledRoleCreateTransferList } from './StyledRoleCreateTransferList';
+import { useNewRole } from './RoleCreateContext';
 import Context from 'context';
 
 
-const NONE_SELECTED_ID = 'none';
 
-const RoleParent: React.FC = () => {
-  const { roles } = usePermissions();
-  const [parentId, setParentId] = React.useState<RoleId>('');
+interface ChipData {
+  key: number;
+  label: string;
+}
 
-  let roleMenuItems;
+const CurrentlySelected: React.FC<{}> = () => {
+  const [data, setData] = React.useState<readonly ChipData[]>([
+    { key: 0, label: 'label here' }
+  ]);
 
-  if (!roles?.length) {
-    roleMenuItems = [{ id: '', value: '' }];
-  } else {
-    roleMenuItems = roles.map((role) => ({ id: role.id, value: role.name }))
-  }
-
-  function handleParentChange(selectedParent: string) {
-    setParentId(selectedParent);
+  const handleDelete = (chipToDelete: ChipData) => () => {
+    setData((chips) => chips.filter((chip) => chip.key !== chipToDelete.key));
   };
 
+  return (
+    <Alert severity='info' icon={false}>
+      <AlertTitle>Currently selected</AlertTitle>
+      {data.map((c) => <Chip sx={{ mx: '2px' }} label={c.label} key={c.key} onDelete={handleDelete(c)} />)}
+    </Alert>)
+}
+
+
+const RoleParent: React.FC = () => {
+  const { roles } = Context.usePermissions();
+  const { setParentId, setParentName } = useNewRole();
+
+  function handleParentChange(selectedParentId: string, selectedParentName: string) {
+    setParentId(selectedParentId);
+    setParentName(selectedParentName);
+  };
 
   return (<>
-    <Alert severity='info'>
-      <AlertTitle>
-        Selecting a parent role will inherit all parent permissions until the top-level parent
-      </AlertTitle>
-    </Alert>
-
-    <Burger.Select
-      label='permissions.role.parentSelect'
-      onChange={handleParentChange}
-      selected={parentId}
-      items={roleMenuItems}
-      empty={{ id: NONE_SELECTED_ID, label: 'permissions.select.none' }}
-    />
+    <CurrentlySelected />
+    <FilterByString onChange={() => { }} />
+    {roles.map((role) => <Box key={role.id}><Button variant='text' onClick={() => handleParentChange(role.id, role.name)}>{role.name}</Button></Box>)}
   </>
   )
 }
@@ -102,12 +104,14 @@ const RoleDescription: React.FC<{}> = () => {
 }
 
 const RoleParentOverview: React.FC<{}> = () => {
-  return (<Box>
-    <SectionLayout label='permissions.role.roleParentName' value={'role 1'} />
-    <SectionLayout label='permissions.role.roleParentName' value={'role 2'} />
-    <SectionLayout label='permissions.role.roleParentName' value={'role 3'} />
-    <SectionLayout label='permissions.role.roleParentName' value={'role 4'} />
-  </Box>);
+  const intl = useIntl();
+  const { entity } = useNewRole();
+  const parentRoleName = entity.parentName;
+
+  if (!parentRoleName) {
+    return (<SectionLayout label='permissions.role.roleParentName' value={intl.formatMessage({ id: 'permissions.role.roleParentName.none' })} />)
+  }
+  return (<SectionLayout label='permissions.role.roleParentName' value={parentRoleName} />);
 }
 
 
@@ -140,7 +144,7 @@ const CloseDialogButton: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
 const RolePermissions: React.FC = () => {
 
-  const { permissions } = usePermissions();
+  const { permissions } = Context.usePermissions();
 
   if (!permissions) {
     console.log('no permissions found')
@@ -150,7 +154,10 @@ const RolePermissions: React.FC = () => {
     console.log('click for save!')
   }
 
-  return (
+  return (<>
+    <CurrentlySelected />
+    <FilterByString onChange={() => { }} />
+
     <StyledRoleCreateTransferList
       title="permissions.title"
       titleArgs={{ name: 'fun name' }}
@@ -179,12 +186,13 @@ const RolePermissions: React.FC = () => {
         onClick: handleSave
       }}
     />
+  </>
   )
 }
 
 const RolePrincipals: React.FC = () => {
 
-  const { principals } = usePermissions();
+  const { principals } = Context.usePermissions();
 
   if (!principals) {
     console.log('no principals found')
@@ -195,7 +203,10 @@ const RolePrincipals: React.FC = () => {
   }
 
 
-  return (
+  return (<>
+    <CurrentlySelected />
+    <FilterByString onChange={() => { }} />
+
     <StyledRoleCreateTransferList
       title="permissions.principals.title"
       titleArgs={{ name: 'fun name' }}
@@ -231,6 +242,7 @@ const RolePrincipals: React.FC = () => {
         onClick: handleSave
       }}
     />
+  </>
   )
 }
 
