@@ -9,6 +9,7 @@ import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.sqlclient.Tuple;
 
 public interface ThenaSqlClient {
+  Uni<Void> rollback();
   ThenaPreparedQuery<io.vertx.mutiny.sqlclient.RowSet<io.vertx.mutiny.sqlclient.Row>> preparedQuery(String sql);
   ThenaQuery<io.vertx.mutiny.sqlclient.RowSet<io.vertx.mutiny.sqlclient.Row>> query(String sql);
 

@@ -1,6 +1,7 @@
 package io.resys.thena.structures.grim.create;
 
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -10,11 +11,11 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import io.resys.thena.api.entities.grim.GrimLabel;
+import io.resys.thena.api.entities.grim.ImmutableGrimCommands;
 import io.resys.thena.api.entities.grim.ImmutableGrimMission;
 import io.resys.thena.api.entities.grim.ImmutableGrimMissionData;
 import io.resys.thena.api.entities.grim.ThenaGrimChanges;
 import io.resys.thena.api.entities.grim.ThenaGrimChanges.AssignmentChanges;
-import io.resys.thena.api.entities.grim.ThenaGrimChanges.CommandChanges;
 import io.resys.thena.api.entities.grim.ThenaGrimChanges.LabelChanges;
 import io.resys.thena.api.entities.grim.ThenaGrimChanges.LinkChanges;
 import io.resys.thena.api.entities.grim.ThenaGrimChanges.MissionChanges;
@@ -25,6 +26,7 @@ import io.resys.thena.structures.grim.ImmutableGrimBatchForOne;
 import io.resys.thena.structures.grim.commitlog.GrimCommitBuilder;
 import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
+import io.vertx.core.json.JsonObject;
 
 
 
@@ -221,7 +223,17 @@ public class NewMissionBuilder implements ThenaGrimChanges.MissionChanges {
   public void build() {
     this.built = true;
   }
-
+  @Override
+  public MissionChanges addCommands(List<JsonObject> commandToAppend) {
+    next.addCommands(ImmutableGrimCommands.builder()
+        .commands(commandToAppend)
+        .commitId(logger.getCommitId())
+        .missionId(missionId)
+        .createdAt(OffsetDateTime.now())
+        .id(OidUtils.gen())
+        .build());
+    return this;
+  }
   public ImmutableGrimBatchForOne close() {
     RepoAssert.isTrue(built, () -> "you must call MissionChanges.build() to finalize mission CREATE or UPDATE!");
 
@@ -234,17 +246,5 @@ public class NewMissionBuilder implements ThenaGrimChanges.MissionChanges {
     next.addMissions(mission);
     next.addData(data);
     return next.build();
-  }
-
-  @Override
-  public <T> MissionChanges addCommand(Consumer<CommandChanges> command) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public <T> MissionChanges addCommands(List<T> replacments, Function<T, Consumer<CommandChanges>> command) {
-    // TODO Auto-generated method stub
-    return null;
   }
 }

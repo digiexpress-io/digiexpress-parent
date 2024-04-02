@@ -140,6 +140,7 @@ public class GrimCommitRegistrySqlImpl implements GrimCommitRegistry {
      .append(createGrimCommitFk(options.getGrimObjective()))
      .append(createGrimCommitFk(options.getGrimObjectiveGoal()))
      .append(createGrimCommitFk(options.getGrimRemark()))
+     .append(createGrimCommitFk(options.getGrimCommands()))
     .build()).build();
   }
 

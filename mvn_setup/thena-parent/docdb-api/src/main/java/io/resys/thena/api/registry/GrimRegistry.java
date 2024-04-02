@@ -1,6 +1,7 @@
 package io.resys.thena.api.registry;
 
 import io.resys.thena.api.registry.grim.GrimAssignmentRegistry;
+import io.resys.thena.api.registry.grim.GrimCommandsRegistry;
 import io.resys.thena.api.registry.grim.GrimCommitRegistry;
 import io.resys.thena.api.registry.grim.GrimCommitTreeRegistry;
 import io.resys.thena.api.registry.grim.GrimCommitViewerRegistry;
@@ -26,4 +27,5 @@ public interface GrimRegistry {
   GrimObjectiveGoalRegistry goals();
   GrimObjectiveRegistry objectives();
   GrimRemarkRegistry remarks();
+  GrimCommandsRegistry commands();
 }

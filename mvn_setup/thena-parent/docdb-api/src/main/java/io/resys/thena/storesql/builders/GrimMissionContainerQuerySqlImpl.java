@@ -1,9 +1,10 @@
-package io.resys.thena.storesql;
+package io.resys.thena.storesql.builders;
 
 import java.util.stream.Collectors;
 
 import io.resys.thena.api.LogConstants;
 import io.resys.thena.api.entities.grim.GrimAssignment;
+import io.resys.thena.api.entities.grim.GrimCommands;
 import io.resys.thena.api.entities.grim.GrimCommit;
 import io.resys.thena.api.entities.grim.GrimLabel;
 import io.resys.thena.api.entities.grim.GrimMission;
@@ -69,7 +70,8 @@ public class GrimMissionContainerQuerySqlImpl implements GrimQueries.MissionQuer
       findAllAssignments(),
       findAllCommits(),
       findAllMissions(),
-      findAllMissionLabels()
+      findAllMissionLabels(),
+      findAllCommands()
     ).with(GrimMissionContainer.class, (containers) -> {
       final var combined = ImmutableGrimMissionContainer.builder();
       containers.forEach(container -> combined.from(container));
@@ -267,6 +269,25 @@ public class GrimMissionContainerQuerySqlImpl implements GrimQueries.MissionQuer
         .onFailure().invoke(e -> errorHandler.deadEnd(new SqlFailed("Can't find 'MISSION_LABEL'!", sql, e)))
         .onItem().transform(items -> ImmutableGrimMissionContainer
             .builder().missionLabels(items.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
+            .build()
+        );
+  }
+  private Uni<GrimMissionContainer> findAllCommands() {
+    final var sql = registry.commands().findAll();
+    if(log.isDebugEnabled()) {
+      log.debug("User findAllCommands query, with props: {} \r\n{}", 
+          "",
+          sql.getValue());
+    }
+    return dataSource.getClient().preparedQuery(sql.getValue())
+        .mapping(registry.commands().defaultMapper())
+        .execute()
+        .onItem()
+        .transformToMulti((RowSet<GrimCommands> rowset) -> Multi.createFrom().iterable(rowset))
+        .collect().asList()
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlFailed("Can't find 'MISSION_COMMANDS'!", sql, e)))
+        .onItem().transform(items -> ImmutableGrimMissionContainer
+            .builder().commands(items.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
             .build()
         );
   }

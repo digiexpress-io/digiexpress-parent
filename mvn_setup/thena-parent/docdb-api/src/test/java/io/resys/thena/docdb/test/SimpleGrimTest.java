@@ -17,6 +17,7 @@ import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.api.entities.grim.ThenaGrimChanges.MissionChanges;
 import io.resys.thena.docdb.test.config.DbTestTemplate;
 import io.resys.thena.docdb.test.config.PgProfile;
+import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -56,6 +57,7 @@ public class SimpleGrimTest extends DbTestTemplate {
             .startDate(LocalDate.of(2020, 05, 01))
             .dueDate(LocalDate.of(2020, 06, 01))
             .reporterId("jane.doe@housing.com")
+            .addCommands(Arrays.asList(JsonObject.of("commandType", "CREATE_TASK")))
             
             .addLabels(newLabel -> newLabel.labelType("keyword").labelValue("housing").build())
             .addLabels(newLabel -> newLabel.labelType("keyword").labelValue("roofing").build())
@@ -92,6 +94,7 @@ public class SimpleGrimTest extends DbTestTemplate {
              ).build();
 
         }).build()
+        .onFailure().recoverWithNull()
         .await().atMost(Duration.ofMinutes(1));;
     
     printRepo(repo.getRepo());

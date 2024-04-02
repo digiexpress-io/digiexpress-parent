@@ -112,6 +112,9 @@ public class GrimPrinter {
       for(final var data : item.getRemarks().values()) {
         result.append("  - ").append(ID.apply(data.getId())).append("::").append(data.getDocType()).append(System.lineSeparator());
       }
+      for(final var data : item.getCommands().values()) {
+        result.append("  - ").append(ID.apply(data.getId())).append("::").append(data.getDocType()).append(System.lineSeparator());
+      }
       for(final var data : item.getCommits().values()) {
         result
           .append(System.lineSeparator())

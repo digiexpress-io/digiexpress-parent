@@ -25,6 +25,7 @@ import java.util.List;
 import org.immutables.value.Value;
 
 import io.resys.thena.api.entities.grim.GrimAssignment;
+import io.resys.thena.api.entities.grim.GrimCommands;
 import io.resys.thena.api.entities.grim.GrimCommit;
 import io.resys.thena.api.entities.grim.GrimCommitTree;
 import io.resys.thena.api.entities.grim.GrimCommitViewer;
@@ -55,6 +56,7 @@ public interface GrimInserts {
     List<GrimObjectiveGoal> getGoals();
     List<GrimMissionData> getData();
     List<GrimAssignment> getAssignments();
+    List<GrimCommands> getCommands();
     
     // Commit related
     List<GrimCommit> getCommits();

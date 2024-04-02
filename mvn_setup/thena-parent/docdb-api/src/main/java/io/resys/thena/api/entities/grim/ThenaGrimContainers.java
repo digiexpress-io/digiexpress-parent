@@ -24,6 +24,7 @@ public interface ThenaGrimContainers extends ThenaContainer {
     Map<String, GrimMissionData> getData();
     Map<String, GrimAssignment> getAssignments();
     Map<String, GrimCommit> getCommits(); 
+    Map<String, GrimCommands> getCommands(); 
     
     default List<GrimMissionContainer> groupByMission() {
       final var builders = new HashMap<String, ImmutableGrimMissionContainer.Builder>(); 
@@ -40,6 +41,7 @@ public interface ThenaGrimContainers extends ThenaContainer {
       getGoals().values().forEach(goals -> builders.get(goals.getMissionId()).putGoals(goals.getId(), goals));
       getData().values().forEach(data -> builders.get(data.getMissionId()).putData(data.getId(), data));
       getAssignments().values().forEach(assignment -> builders.get(assignment.getMissionId()).putAssignments(assignment.getId(), assignment));
+      getCommands().values().forEach(commands -> builders.get(commands.getMissionId()).putCommands(commands.getId(), commands));
       getCommits().values().stream().filter(e -> builders.containsKey(e.getMissionId())).forEach(commit -> builders.get(commit.getMissionId()).putCommits(commit.getCommitId(), commit));
       return builders.values().stream().map(builder -> builder.build()).collect(Collectors.toList());
     }
@@ -60,5 +62,7 @@ public interface ThenaGrimContainers extends ThenaContainer {
     Map<String, GrimCommit> getCommits();
     Map<String, GrimCommitTree> getCommitTrees();
     Map<String, GrimCommitViewer> getCommitViewers();
+    Map<String, GrimCommands> getCommands(); 
+    
   }
 }

@@ -26,9 +26,13 @@ public class ThenaSqlPoolVertx implements ThenaSqlPool {
   public <T> Uni<T> withTransaction(Function<ThenaSqlClient, Uni<T>> function) {
     return realPool.withTransaction(realTxClient -> doInTx(realTxClient, function));
   }
-  public <T> Uni<T> doInTx(io.vertx.mutiny.sqlclient.SqlClient realTxClient, Function<ThenaSqlClient, Uni<T>> function) {
+  public <T> Uni<T> doInTx(io.vertx.mutiny.sqlclient.SqlConnection realTxClient, Function<ThenaSqlClient, Uni<T>> function) {
     final var delegate = new ThenaSqlClientVertx(realTxClient);
     final Uni<T> result = function.apply(delegate);
     return result;
+  }
+  @Override
+  public Uni<Void> rollback() {
+    return Uni.createFrom().voidItem();
   }
 }

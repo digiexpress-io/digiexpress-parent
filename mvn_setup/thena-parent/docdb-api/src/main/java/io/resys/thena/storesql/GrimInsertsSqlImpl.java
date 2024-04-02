@@ -141,6 +141,7 @@ public class GrimInsertsSqlImpl implements GrimInserts {
     final var ins_commits = registry.commits().insertAll(inputBatch.getCommits());
     final var ins_trees = registry.commitTrees().insertAll(inputBatch.getCommitTrees());
     final var ins_viewers = registry.commitViewers().insertAll(inputBatch.getCommitViewers());
+    final var ins_commands = registry.commands().insertAll(inputBatch.getCommands());
     
     final Uni<GrimBatchForOne> ins_commits_uni = Execute.apply(tx, ins_commits).onItem()
         .transform(row -> successOutput(inputBatch, "Commits inserted, number of inserted entries: " + + (row == null ? 0 : row.rowCount())))
@@ -154,6 +155,9 @@ public class GrimInsertsSqlImpl implements GrimInserts {
         .transform(row -> successOutput(inputBatch, "Commit viewers inserted, number of inserted entries: " + + (row == null ? 0 : row.rowCount())))
         .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to insert commit viewers \r\n" + inputBatch.getCommitViewers(), e));
 
+    final Uni<GrimBatchForOne> ins_commands_uni = Execute.apply(tx, ins_commands).onItem()
+        .transform(row -> successOutput(inputBatch, "Commands inserted, number of inserted entries: " + + (row == null ? 0 : row.rowCount())))
+        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to insert commands \r\n" + inputBatch.getCommitViewers(), e));
     
     return Uni.combine().all()
     		.unis(
@@ -164,7 +168,6 @@ public class GrimInsertsSqlImpl implements GrimInserts {
 
     		    ins_commits_uni,
             ins_trees_uni,
-            ins_viewers_uni,
     		    
             upd_mission_uni,
             upd_labels_uni,
@@ -181,9 +184,12 @@ public class GrimInsertsSqlImpl implements GrimInserts {
     		    ins_missionLinks_uni,
     		    ins_remarks_uni,
     		    ins_data_uni,
-    		    ins_assignments_uni
-    		   
+    		    ins_assignments_uni,
+    		    
+            ins_viewers_uni,
+            ins_commands_uni
     		 )
+    		
     		.with(GrimBatchForOne.class, (List<GrimBatchForOne> items) -> merge(inputBatch, items));
   }
 

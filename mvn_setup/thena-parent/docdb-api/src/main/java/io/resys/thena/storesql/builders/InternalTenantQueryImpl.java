@@ -3,18 +3,6 @@ package io.resys.thena.storesql.builders;
 import io.resys.thena.api.LogConstants;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
-import io.resys.thena.api.registry.grim.GrimAssignmentRegistry;
-import io.resys.thena.api.registry.grim.GrimCommitRegistry;
-import io.resys.thena.api.registry.grim.GrimCommitTreeRegistry;
-import io.resys.thena.api.registry.grim.GrimCommitViewerRegistry;
-import io.resys.thena.api.registry.grim.GrimLabelRegistry;
-import io.resys.thena.api.registry.grim.GrimMissionDataRegistry;
-import io.resys.thena.api.registry.grim.GrimMissionLabelRegistry;
-import io.resys.thena.api.registry.grim.GrimMissionLinkRegistry;
-import io.resys.thena.api.registry.grim.GrimMissionRegistry;
-import io.resys.thena.api.registry.grim.GrimObjectiveGoalRegistry;
-import io.resys.thena.api.registry.grim.GrimObjectiveRegistry;
-import io.resys.thena.api.registry.grim.GrimRemarkRegistry;
 import io.resys.thena.datasource.ThenaSqlClient;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlFailed;
@@ -122,6 +110,7 @@ public class InternalTenantQueryImpl implements InternalTenantQuery {
           .toString();
       } else if(newRepo.getType() == StructureType.grim) {
         tablesCreate
+        .append(grim.commands().createTable().getValue())
         .append(grim.assignments().createTable().getValue())
         .append(grim.commits().createTable().getValue())
         .append(grim.commitTrees().createTable().getValue())
@@ -134,7 +123,8 @@ public class InternalTenantQueryImpl implements InternalTenantQuery {
         .append(grim.goals().createTable().getValue())
         .append(grim.objectives().createTable().getValue())
         .append(grim.remarks().createTable().getValue())
-        
+
+        .append(grim.commands().createConstraints().getValue())
         .append(grim.assignments().createConstraints().getValue())
         .append(grim.commits().createConstraints().getValue())
         .append(grim.commitTrees().createConstraints().getValue())
@@ -266,6 +256,7 @@ public class InternalTenantQueryImpl implements InternalTenantQuery {
         .append(grim.goals().dropTable().getValue())
         .append(grim.objectives().dropTable().getValue())
         .append(grim.remarks().dropTable().getValue())
+        .append(grim.commands().dropTable().getValue())
         ;
       } else if(newRepo.getType() == StructureType.org) {
         
