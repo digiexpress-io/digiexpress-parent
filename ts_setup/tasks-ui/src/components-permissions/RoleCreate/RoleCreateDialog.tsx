@@ -2,11 +2,11 @@ import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 
-import { StyledFullScreenDialog } from 'components-generic';
 import Burger from 'components-burger';
 import Fields from './RoleCreateFields';
 import RoleCreateTabNavLoader from './RoleCreateTabNavigation';
 import Context from 'context';
+import { StyledDialogLarge } from '../Dialogs';
 
 
 const Left: React.FC<{}> = () => {
@@ -78,7 +78,7 @@ const RoleCreateDialog: React.FC<{ open: boolean, onClose: () => void }> = ({ op
   }
 
   return (
-    <StyledFullScreenDialog
+    <StyledDialogLarge
       open={open}
       onClose={onClose}
       header={<Header onClose={onClose} />}

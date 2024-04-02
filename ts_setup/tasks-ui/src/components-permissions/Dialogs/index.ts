@@ -1,0 +1,1 @@
+export { StyledDialogLarge } from './StyledDialogLarge';
