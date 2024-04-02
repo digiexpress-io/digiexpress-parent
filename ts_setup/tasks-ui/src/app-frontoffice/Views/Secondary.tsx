@@ -207,7 +207,7 @@ const Secondary: React.FC<{ init?: { profile: UserProfileAndOrg, backend: Backen
         <StyledExplorerSubTab value='explorer.tenant' label={<FormattedMessage id="explorer.frontoffice.tenant.menuOption" />} onClick={handleTenant}
           icon={<CorporateFareOutlinedIcon fontSize='small' />} />
 
-        <StyledExplorerTab value='explorer.permissions' label={<FormattedMessage id="explorer.frontoffice.permissions.menuOption" />} onClick={undefined}
+        <StyledExplorerTab value='explorer.accessManagement' label={<FormattedMessage id="explorer.frontoffice.accessManagement.menuOption" />} onClick={undefined}
           icon={<SecurityIcon fontSize='small' />} />
         <StyledExplorerSubTab value='explorer.permissions.roles' label={<FormattedMessage id="explorer.frontoffice.permissions.roles.menuOption" />} onClick={handleRolesOverview}
           icon={<DnsOutlinedIcon fontSize='small' />} />

@@ -108,14 +108,14 @@ const createActivities: (props: {
     }
   },
   {
-    id: "permissions",
-    title: "activities.frontoffice.permissions.title",
+    id: "accessManagement",
+    title: "activities.frontoffice.accessManagement.title",
     content: {
-      label: "activities.frontoffice.permissions.desc"
+      label: "activities.frontoffice.accessManagement.desc"
     },
     primary: {
       label: "buttons.view",
-      onClick: () => actions.handleTabAdd({ id: 'permissions', label: <FormattedMessage id="activities.frontoffice.permissions.title" /> })
+      onClick: () => actions.handleTabAdd({ id: 'accessManagement', label: <FormattedMessage id="activities.frontoffice.accessManagement.title" /> })
     }
   }
 

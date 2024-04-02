@@ -441,8 +441,8 @@ const en = {
   'activities.frontoffice.deployments.title': 'Deployments',
   'activities.frontoffice.deployments.desc': 'View deployed assets by version number',
 
-  'activities.frontoffice.permissions.title': 'Permissions',
-  'activities.frontoffice.permissions.desc': 'Roles, permissions, and user access settings',
+  'activities.frontoffice.accessManagement.title': 'Access management',
+  'activities.frontoffice.accessManagement.desc': 'Roles, permissions, and user access settings',
 
   'activities.frontoffice.userProfile.title': 'User profile',
   'activities.frontoffice.userProfile.desc': 'My personal information, settings, preferences, and recent activity',
@@ -474,7 +474,7 @@ const en = {
   'explorer.frontoffice.userProfile.menuOption': 'User profile',
   'explorer.frontoffice.allUserProfiles.menuOption': 'All user profiles',
   'explorer.frontoffice.administration.menuOption': 'Administration',
-  'explorer.frontoffice.permissions.menuOption': 'Permissions',
+  'explorer.frontoffice.accessManagement.menuOption': 'Access Management',
   'explorer.frontoffice.permissions.roles.menuOption': 'Roles overview',
   'explorer.frontoffice.permissions.users.menuOption': 'All users',
   'explorer.frontoffice.permissions.allPermissions.menuOption': 'All permissions',

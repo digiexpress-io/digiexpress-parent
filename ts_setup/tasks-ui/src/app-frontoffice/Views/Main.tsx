@@ -62,7 +62,7 @@ const Main: React.FC<{}> = () => {
       return (<Box sx={root}><UserProfiles /></Box>)
     } else if (active.id === 'rolesOverview') {
       return (<Box sx={root}><RolesOverview /></Box>)
-    } else if (active.id === 'permissionsOverview') {
+    } else if (active.id === 'accessManagement') {
       return (<Box sx={root}><PermissionsOverview /></Box>)
     } else if (active.id === 'orgChart') {
       return (<Box sx={root}><DeOrgChart /></Box>)
