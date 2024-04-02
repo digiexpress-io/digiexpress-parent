@@ -95,22 +95,22 @@ public class GrimPrinter {
       result.append("Mission: ").append(ID.apply(mission.getId())).append(System.lineSeparator());
       
       for(final var data : item.getData().values()) {
-        result.append("  - ").append(data.getDocType()).append("::").append(ID.apply(data.getId())).append(System.lineSeparator());
+        result.append("  - ").append(ID.apply(data.getId())).append("::").append(data.getDocType()).append(System.lineSeparator());
       }
       for(final var data : item.getMissionLabels().values()) {
-        result.append("  - ").append(data.getDocType()).append("::").append(ID.apply(data.getId())).append(System.lineSeparator());
+        result.append("  - ").append(ID.apply(data.getId())).append("::").append(data.getDocType()).append(System.lineSeparator());
       }
       for(final var data : item.getLinks().values()) {
-        result.append("  - ").append(data.getDocType()).append("::").append(ID.apply(data.getId())).append(System.lineSeparator());
+        result.append("  - ").append(ID.apply(data.getId())).append("::").append(data.getDocType()).append(System.lineSeparator());
       }
       for(final var data : item.getObjectives().values()) {
-        result.append("  - ").append(data.getDocType()).append("::").append(ID.apply(data.getId())).append(System.lineSeparator());
+        result.append("  - ").append(ID.apply(data.getId())).append("::").append(data.getDocType()).append(System.lineSeparator());
       }
       for(final var data : item.getGoals().values()) {
-        result.append("  - ").append(data.getDocType()).append("::").append(ID.apply(data.getId())).append(System.lineSeparator());
+        result.append("  - ").append(ID.apply(data.getId())).append("::").append(data.getDocType()).append(System.lineSeparator());
       }
       for(final var data : item.getRemarks().values()) {
-        result.append("  - ").append(data.getDocType()).append("::").append(ID.apply(data.getId())).append(System.lineSeparator());
+        result.append("  - ").append(ID.apply(data.getId())).append("::").append(data.getDocType()).append(System.lineSeparator());
       }
       for(final var data : item.getCommits().values()) {
         result
