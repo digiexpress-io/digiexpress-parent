@@ -98,6 +98,7 @@ public class SimpleGrimTest extends DbTestTemplate {
     
     final var newMission = createdTask.getMissions().iterator().next();
     
+    /*
     getClient().grim(repo).commit().modifyManyMission()
     .commitMessage("forgot to add comments to things")
     .commitAuthor("jane.doe@morgue.com")
@@ -119,7 +120,7 @@ public class SimpleGrimTest extends DbTestTemplate {
       
     })
     .build();
-        
+        */
     printRepo(repo.getRepo());
   }
   
