@@ -4,7 +4,7 @@ import * as colors from 'components-colors';
 import { LayoutList, NavigationButton, FilterByString } from 'components-generic';
 import RoleCreateDialog from '../RoleCreate';
 import { OneRoleData } from './OneRoleData';
-import { PermissionsProvider, TabTypes, usePermissions } from '../PermissionsContext';
+import { PermissionsProvider, usePermissions } from '../PermissionsContext';
 import { PermissionCreateDialog } from '../PermissionCreate';
 
 
@@ -15,14 +15,6 @@ const color_create_permission = colors.steelblue;
 const RoleNavigation: React.FC = () => {
   const [roleCreateOpen, setRoleCreateOpen] = React.useState(false);
   const [permissionCreateOpen, setPermissionCreateOpen] = React.useState(false);
-
-  const { activeTab } = usePermissions();
-  const { id } = activeTab;
-
-  function getLocale(id: TabTypes) {
-    return { count: 0 };
-  }
-
   function handleSearch(value: React.ChangeEvent<HTMLInputElement>) {
 
   }
@@ -41,14 +33,14 @@ const RoleNavigation: React.FC = () => {
 
     <FilterByString defaultValue={''} onChange={handleSearch} />
     <NavigationButton id='permissions.navButton.role.create'
-      values={getLocale('role_create')}
+      values={{}}
       color={color_create_role}
-      active={id === 'role_create'}
+      active={false}
       onClick={handleRoleCreate} />
     <NavigationButton id='permissions.navButton.permission.create'
-      values={getLocale('permission_create')}
+      values={{}}
       color={color_create_permission}
-      active={id === 'permission_create'}
+      active={false}
       onClick={handlePermissionCreate} />
   </>);
 }

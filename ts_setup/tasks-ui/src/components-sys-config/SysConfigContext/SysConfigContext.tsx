@@ -13,11 +13,11 @@ import { TabTypes, Tabbing, SysConfigContextType } from './sys-config-context-ty
 
 
 
-const SysConfigTabbingProvider: React.FC<{children: React.ReactNode}> = ({children}) => {
+const SysConfigTabbingProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   function initTabs(): Record<TabTypes, SingleTabInit<{}>> {
     return {
-      current_config: { body: {}, active: true  },
-      all_config: { body: {}, active: false  }
+      current_config: { body: {}, active: true },
+      all_config: { body: {}, active: false }
     };
   }
   return (
@@ -36,8 +36,8 @@ export function useSysConfig() {
     tabbing.withTabActivity(tabId);
   }
 
-  return { 
-    activeTab, 
+  return {
+    activeTab,
     setActiveTab,
     sysConfig,
     hdesSite,
@@ -50,7 +50,7 @@ const SysConfigContext = React.createContext<SysConfigContextType>({} as any);
 
 
 
-export const SysConfigProvider: React.FC<{children: React.ReactNode}> = ({children}) => {
+export const SysConfigProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const backend = Context.useBackend();
   const [loading, setLoading] = React.useState(true);
   const [sysConfig, setSysConfig] = React.useState<SysConfig>();
@@ -62,13 +62,13 @@ export const SysConfigProvider: React.FC<{children: React.ReactNode}> = ({childr
 
   async function loadOneConfig(): Promise<void> {
     return store
-    .findAllSysConfigs().then(allConfigs => {
-      setLoading(false);
-      if(allConfigs.length === 1) {
-        setSysConfig(allConfigs[0]);
-      }
-    })
-    .catch(() => setLoading(false));
+      .findAllSysConfigs().then(allConfigs => {
+        setLoading(false);
+        if (allConfigs.length === 1) {
+          setSysConfig(allConfigs[0]);
+        }
+      })
+      .catch(() => setLoading(false));
   }
 
 
@@ -87,13 +87,13 @@ export const SysConfigProvider: React.FC<{children: React.ReactNode}> = ({childr
 
 
   React.useEffect(() => {
-    if(sysConfigId) {
+    if (sysConfigId) {
       loadHdesSite(sysConfigId);
     }
   }, [sysConfigId]);
 
   React.useEffect(() => {
-    if(sysConfigId) {
+    if (sysConfigId) {
       loadStencilSite(sysConfigId);
     }
   }, [sysConfigId]);
