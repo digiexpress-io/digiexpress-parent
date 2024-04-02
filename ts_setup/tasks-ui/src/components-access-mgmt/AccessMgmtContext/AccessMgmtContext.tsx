@@ -3,7 +3,7 @@ import React from 'react';
 import Context from 'context';
 
 import { ImmutablePermissionStore, Permission, Principal, Role } from 'descriptor-access-mgmt';
-import { PermissionsContextType } from './permissions-context-types';
+import { AccessMgmtContextType } from './access-mgmt-context-types';
 
 
 
@@ -18,7 +18,7 @@ export function usePermissions() {
 }
 
 
-export const AccessMgmtContext = React.createContext<PermissionsContextType>({} as any);
+export const AccessMgmtContext = React.createContext<AccessMgmtContextType>({} as any);
 
 export const AccessMgmtContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const backend = Context.useBackend();
@@ -55,7 +55,7 @@ export const AccessMgmtContextProvider: React.FC<{ children: React.ReactNode }> 
   }, []);
 
 
-  const contextValue: PermissionsContextType = React.useMemo(() => {
+  const contextValue: AccessMgmtContextType = React.useMemo(() => {
     async function reload(): Promise<void> {
       setLoading(true);
       return Promise.all([loadAllRoles, loadAllPermissions]).then((values) => {

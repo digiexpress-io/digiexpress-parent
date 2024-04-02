@@ -10,7 +10,7 @@ import { TenantContext, TenantContextType } from 'descriptor-dialob';
 import { TasksContext, TasksContextType, TaskEditContext, TaskEditContextType } from 'descriptor-task';
 import { TenantConfigContext, TenantConfigContextType } from 'descriptor-tenant-config';
 import { saffron } from 'components-colors';
-import { AccessMgmtContext, PermissionsContextType } from 'components-access-mgmt/AccessMgmtContext';
+import { AccessMgmtContext, AccessMgmtContextType } from 'components-access-mgmt/AccessMgmtContext';
 
 const ArticleTabIndicator: React.FC<{ entity: Document }> = ({ entity }) => {
   const { isDocumentSaved } = useComposer();
@@ -75,7 +75,7 @@ export const useTasks = () => {
 }
 
 export const usePermissions = () => {
-  const result: PermissionsContextType = React.useContext(AccessMgmtContext);
+  const result: AccessMgmtContextType = React.useContext(AccessMgmtContext);
   return result;
 }
 

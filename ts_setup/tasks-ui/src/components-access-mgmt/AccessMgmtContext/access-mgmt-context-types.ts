@@ -1,7 +1,7 @@
 import { Permission, Principal, Role } from 'descriptor-access-mgmt';
 
 
-export interface PermissionsContextType {
+export interface AccessMgmtContextType {
   roles: Role[];
   permissions: Permission[];
   principals: Principal[];
