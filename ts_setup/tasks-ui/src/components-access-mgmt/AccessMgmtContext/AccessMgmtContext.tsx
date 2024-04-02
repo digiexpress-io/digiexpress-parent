@@ -3,20 +3,22 @@ import React from 'react';
 import Context from 'context';
 
 import { ImmutablePermissionStore, Permission, Principal, Role } from 'descriptor-access-mgmt';
-import { AccessMgmtContextType } from './access-mgmt-context-types';
+
+export interface AccessMgmtContextType {
+  roles: Role[];
+  permissions: Permission[];
+  principals: Principal[];
+  loading: boolean; // is permissions loading
+  reload(): Promise<void>;
+  getPermissionById(permissionId: string): Permission;
+}
 
 
 
 export function usePermissions() {
-  const { roles, permissions, principals } = React.useContext(AccessMgmtContext);
-
-  return {
-    roles,
-    permissions,
-    principals
-  };
+  const result = React.useContext(AccessMgmtContext);
+  return result;
 }
-
 
 export const AccessMgmtContext = React.createContext<AccessMgmtContextType>({} as any);
 
@@ -62,7 +64,15 @@ export const AccessMgmtContextProvider: React.FC<{ children: React.ReactNode }> 
         console.log('loaded roles and permissions');
       });
     }
-    return { loading, reload, roles, permissions, principals };
+    function getPermissionById(permissionId: string) {
+      const result = roles.find((role) => role.id === permissionId);
+      if (!result) {
+        throw new Error("Permission not found by id: " + permissionId);
+      }
+      return result;
+    }
+
+    return { loading, reload, roles, permissions, principals, getPermissionById };
   }, [loading, store, roles, permissions, principals]);
 
 

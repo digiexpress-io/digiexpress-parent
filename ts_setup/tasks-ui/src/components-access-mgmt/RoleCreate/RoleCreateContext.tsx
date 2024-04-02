@@ -8,7 +8,6 @@ export interface NewRole {
   description: string;
   permissions: readonly string[]; // name or id of the permission
   parentId: string | undefined;
-  parentName: string | undefined;
   principals: readonly string[]; // name or id of the member
   commitComment: string;
 }
@@ -17,8 +16,7 @@ export interface NewRoleContextType {
   setName(newName: string): void;
   setDescription(newDescription: string): void;
   setCommitComment(newCommitComment: string): void;
-  setParentId(newParentId: string): void;
-  setParentName(newParentName: string): void;
+  setParentId(newParentId: string | undefined): void;
   addPermission(newPermission: string): void;
   removePermission(permissionToRemove: string): void;
   addPrincipal(newPrincipal: string): void;
@@ -32,7 +30,6 @@ const NewRoleProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
     name: "",
     description: "",
     parentId: undefined,
-    parentName: "",
     principals: [],
     permissions: []
   });
@@ -41,7 +38,6 @@ const NewRoleProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
   const setDescription = React.useCallback((description: string) => setNewRole(previous => ({ ...previous, description })), []);
   const setCommitComment = React.useCallback((commitComment: string) => setNewRole(previous => ({ ...previous, commitComment })), []);
   const setParentId = React.useCallback((parentId: string) => setNewRole(previous => ({ ...previous, parentId })), []);
-  const setParentName = React.useCallback((parentName: string) => setNewRole(previous => ({ ...previous, parentName })), []);
 
   const addPermission = React.useCallback((newPermission: string) => setNewRole(previous => {
     if (previous.permissions.includes(newPermission)) {
@@ -82,12 +78,11 @@ const NewRoleProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
     setDescription,
     setCommitComment,
     setParentId,
-    setParentName,
     addPermission,
     removePermission,
     addPrincipal,
     removePrincipal
-  }), [entity, setName, setDescription, setCommitComment, setParentId, setParentName, addPermission, removePermission, addPrincipal, removePrincipal]);
+  }), [entity, setName, setDescription, setCommitComment, setParentId, addPermission, removePermission, addPrincipal, removePrincipal]);
 
   return (<NewRoleContext.Provider value={contextValue}>{children}</NewRoleContext.Provider>);
 }

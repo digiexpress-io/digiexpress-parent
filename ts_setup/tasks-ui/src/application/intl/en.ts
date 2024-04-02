@@ -586,6 +586,7 @@ const en = {
   'permissions.role.description': 'Role description',
 
   'permissions.select.none': 'None',
+  'permissions.select.currentSelection': 'Current selection',
 
   'permissions.permission.name': 'Name',
   'permissions.permission.description': 'Description',
