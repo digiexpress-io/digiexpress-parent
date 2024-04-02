@@ -1,5 +1,5 @@
 import { getInstance as createTabsContext, SingleTabInit, Tab } from 'descriptor-tabbing';
-import { PermissionsProvider } from '../PermissionsContext';
+import { PermissionsProvider } from '../AccessMgmtContext';
 
 const RoleCreateTabsContext = createTabsContext<RoleCreateTabTypes, RoleCreateTabState>();
 function initAllTabs(): Record<RoleCreateTabTypes, SingleTabInit<RoleCreateTabState>> {

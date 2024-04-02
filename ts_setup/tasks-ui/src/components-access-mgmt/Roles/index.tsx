@@ -4,7 +4,7 @@ import * as colors from 'components-colors';
 import { LayoutList, NavigationButton, FilterByString } from 'components-generic';
 import RoleCreateDialog from '../RoleCreate';
 import { OneRoleData } from './OneRoleData';
-import { PermissionsProvider, usePermissions } from '../PermissionsContext';
+import { PermissionsProvider, usePermissions } from '../AccessMgmtContext';
 import { PermissionCreateDialog } from '../PermissionCreate';
 
 

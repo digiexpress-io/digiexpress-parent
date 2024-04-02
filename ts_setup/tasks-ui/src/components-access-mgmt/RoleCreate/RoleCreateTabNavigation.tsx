@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Tabs, Tab, Stack } from '@mui/material';
 import { FilterByString } from 'components-generic';
 
-import { PermissionsProvider } from '../PermissionsContext';
+import { PermissionsProvider } from '../AccessMgmtContext';
 import Fields from './RoleCreateFields';
 import { FormattedMessage } from 'react-intl';
 import Context from 'context';

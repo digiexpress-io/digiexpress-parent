@@ -4,7 +4,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useIntl } from 'react-intl';
 import { CreateRole, ImmutablePermissionStore, RoleId } from 'descriptor-access-mgmt';
 
-import { usePermissions } from '../PermissionsContext';
+import { usePermissions } from '../AccessMgmtContext';
 import Burger from 'components-burger';
 import { SectionLayout } from 'components-generic';
 import { StyledRoleCreateTransferList } from './StyledRoleCreateTransferList';

@@ -8,7 +8,7 @@ import { PermissionsContextType } from './permissions-context-types';
 
 
 export function usePermissions() {
-  const { roles, permissions, principals } = React.useContext(PermissionsContext);
+  const { roles, permissions, principals } = React.useContext(AccessMgmtContext);
 
   return {
     roles,
@@ -18,7 +18,7 @@ export function usePermissions() {
 }
 
 
-export const PermissionsContext = React.createContext<PermissionsContextType>({} as any);
+export const AccessMgmtContext = React.createContext<PermissionsContextType>({} as any);
 
 export const PermissionsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const backend = Context.useBackend();
@@ -66,7 +66,7 @@ export const PermissionsProvider: React.FC<{ children: React.ReactNode }> = ({ c
   }, [loading, store, roles, permissions, principals]);
 
 
-  return (<PermissionsContext.Provider value={contextValue}>
+  return (<AccessMgmtContext.Provider value={contextValue}>
     {children}
-  </PermissionsContext.Provider>);
+  </AccessMgmtContext.Provider>);
 }
