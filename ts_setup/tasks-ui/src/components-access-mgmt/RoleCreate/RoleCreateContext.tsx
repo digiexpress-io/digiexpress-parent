@@ -1,5 +1,5 @@
 import { getInstance as createTabsContext, SingleTabInit, Tab } from 'descriptor-tabbing';
-import { PermissionsProvider } from '../AccessMgmtContext';
+import { AccessMgmtContextProvider } from '../AccessMgmtContext';
 
 const RoleCreateTabsContext = createTabsContext<RoleCreateTabTypes, RoleCreateTabState>();
 function initAllTabs(): Record<RoleCreateTabTypes, SingleTabInit<RoleCreateTabState>> {
@@ -15,11 +15,11 @@ export interface RoleCreateTabState {
 }
 export const RoleCreateProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
-    <PermissionsProvider>
+    <AccessMgmtContextProvider>
       <RoleCreateTabsContext.Provider init={initAllTabs()}>
         <>{children}</>
       </RoleCreateTabsContext.Provider>
-    </PermissionsProvider>
+    </AccessMgmtContextProvider>
   );
 }
 

@@ -20,7 +20,7 @@ export function usePermissions() {
 
 export const AccessMgmtContext = React.createContext<PermissionsContextType>({} as any);
 
-export const PermissionsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AccessMgmtContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const backend = Context.useBackend();
   const [loading, setLoading] = React.useState(true);
   const [roles, setRoles] = React.useState<Role[]>([]);

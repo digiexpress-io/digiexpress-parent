@@ -4,7 +4,7 @@ import * as colors from 'components-colors';
 import { LayoutList, NavigationButton, FilterByString } from 'components-generic';
 import RoleCreateDialog from '../RoleCreate';
 import { OneRoleData } from './OneRoleData';
-import { PermissionsProvider, usePermissions } from '../AccessMgmtContext';
+import { AccessMgmtContextProvider, usePermissions } from '../AccessMgmtContext';
 import { PermissionCreateDialog } from '../PermissionCreate';
 
 
@@ -61,7 +61,7 @@ const RolesOverviewLayout: React.FC = () => {
 
 
 const RolesOverviewLoader: React.FC = () => {
-  return (<PermissionsProvider><RolesOverviewLayout /></PermissionsProvider>);
+  return (<AccessMgmtContextProvider><RolesOverviewLayout /></AccessMgmtContextProvider>);
 }
 
 export default RolesOverviewLoader;

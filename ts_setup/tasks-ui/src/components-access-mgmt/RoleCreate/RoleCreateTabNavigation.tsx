@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Tabs, Tab, Stack } from '@mui/material';
 import { FilterByString } from 'components-generic';
 
-import { PermissionsProvider } from '../AccessMgmtContext';
+import { AccessMgmtContextProvider } from '../AccessMgmtContext';
 import Fields from './RoleCreateFields';
 import { FormattedMessage } from 'react-intl';
 import Context from 'context';
@@ -58,7 +58,7 @@ const RoleDialogRightLayout: React.FC = () => {
 
 
 const RoleCreateTabsNavLoader: React.FC = () => {
-  return (<PermissionsProvider><RoleDialogRightLayout /></PermissionsProvider>);
+  return (<AccessMgmtContextProvider><RoleDialogRightLayout /></AccessMgmtContextProvider>);
 }
 
 export default RoleCreateTabsNavLoader;
