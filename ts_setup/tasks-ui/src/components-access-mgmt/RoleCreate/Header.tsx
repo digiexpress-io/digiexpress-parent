@@ -42,7 +42,6 @@ const Header: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           <Tab label={<FormattedMessage id='permissions.createRole.role_members' />} />
         </Tabs>
       </Box>
-      <Box flexGrow={1} />
       <CloseDialogButton onClose={onClose} />
     </Box>
   )

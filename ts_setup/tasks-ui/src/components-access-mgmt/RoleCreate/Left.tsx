@@ -4,30 +4,15 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import Burger from 'components-burger';
 
 import { SectionLayout } from 'components-generic';
-import Context from 'context';
-import { CreateRole, ImmutablePermissionStore } from 'descriptor-access-mgmt';
 import { useNewRole } from './RoleCreateContext';
 import { usePermissions } from 'components-access-mgmt/AccessMgmtContext';
 
 
 
 const RoleName: React.FC<{}> = () => {
-  const backend = Context.useBackend();
-
-  const [name, setName] = React.useState('');
+  const { setName, entity } = useNewRole();
   const intl = useIntl();
 
-  async function handleRoleCreate() {
-    const command: CreateRole = {
-      commandType: 'CREATE_ROLE',
-      description: 'New role created',
-      comment: 'This comment is for my first role',
-      permissions: [],
-      name
-    }
-    await new ImmutablePermissionStore(backend.store).createRole(command);
-    console.log("new role created", name)
-  }
   function handleRoleNameChange(event: React.ChangeEvent<HTMLInputElement>) {
     setName(event.target.value);
   }
@@ -35,22 +20,17 @@ const RoleName: React.FC<{}> = () => {
   return (<TextField InputProps={{ disableUnderline: true }} variant='standard'
     placeholder={intl.formatMessage({ id: 'permissions.role.name.create.placeholder' })}
     fullWidth
-    value={name}
+    value={entity.name}
     onChange={handleRoleNameChange}
-    onBlur={handleRoleCreate} //TODO remove the onBlur
   />);
 }
 
 const RoleDescription: React.FC<{}> = () => {
-  const [description, setDescription] = React.useState('');
+  const { setDescription, entity } = useNewRole();
   const intl = useIntl();
 
   function handleDescriptionChange(event: React.ChangeEvent<HTMLInputElement>) {
     setDescription(event.target.value);
-  }
-
-  async function handleChange() {
-
   }
 
   return (<TextField InputProps={{ disableUnderline: true }} variant='standard'
@@ -59,9 +39,24 @@ const RoleDescription: React.FC<{}> = () => {
     multiline
     minRows={3}
     maxRows={6}
-    value={description}
+    value={entity.description}
     onChange={handleDescriptionChange}
-    onBlur={handleChange}
+  />);
+}
+
+const RoleCommitComment: React.FC<{}> = () => {
+  const { setCommitComment, entity } = useNewRole();
+  const intl = useIntl();
+
+  function handleCommitCommentChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setCommitComment(event.target.value);
+  }
+
+  return (<TextField InputProps={{ disableUnderline: true }} variant='standard'
+    placeholder={intl.formatMessage({ id: 'permissions.role.commitComment.placeholder' })}
+    fullWidth
+    value={entity.commitComment}
+    onChange={handleCommitCommentChange}
   />);
 }
 
@@ -82,6 +77,11 @@ export const Left: React.FC<{}> = () => {
       <Burger.Section>
         <Typography fontWeight='bold'><FormattedMessage id='permissions.role.description' /></Typography>
         <RoleDescription />
+      </Burger.Section>
+
+      <Burger.Section>
+        <Typography fontWeight='bold'><FormattedMessage id='permissions.role.commitComment' /></Typography>
+        <RoleCommitComment />
       </Burger.Section>
 
       <Burger.Section>

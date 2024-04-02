@@ -1,31 +1,45 @@
 import React from 'react';
 import Burger from 'components-burger';
-import { RoleCreateProvider } from './RoleCreateContext';
+import { RoleCreateProvider, useNewRole } from './RoleCreateContext';
 import Context from 'context';
 
 import { StyledDialogLarge } from '../Dialogs';
 import Header from './Header';
 import { Left } from './Left';
 import { Right } from './Right';
+import { CreateRole, ImmutablePermissionStore } from 'descriptor-access-mgmt';
+
+const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+  const { reload } = Context.usePermissions();
 
 
-const Footer: React.FC<{ onClose: () => void, onCloseCreate: () => void }> = ({ onClose, onCloseCreate }) => {
+  const backend = Context.useBackend();
+  const { entity } = useNewRole();
+
+  async function handleRoleCreate() {
+    const { name, description, commitComment, parentId, permissions } = entity;
+    const command: CreateRole = {
+      commandType: 'CREATE_ROLE',
+      name,
+      description,
+      //parentId,
+      comment: commitComment,
+      permissions: []
+    }
+    await new ImmutablePermissionStore(backend.store).createRole(command);
+    await reload();
+    onClose();
+  }
+
   return (
     <>
       <Burger.SecondaryButton label='buttons.cancel' onClick={onClose} />
-      <Burger.PrimaryButton label='buttons.accept' onClick={onCloseCreate} />
+      <Burger.PrimaryButton label='buttons.accept' onClick={handleRoleCreate} />
     </>
   )
 }
 
 const RoleCreateDialog: React.FC<{ open: boolean, onClose: () => void }> = ({ open, onClose }) => {
-  const permissions = Context.usePermissions();
-
-  function handleCloseCreate() {
-    permissions.reload().then(() => {
-      onClose();
-    });
-  }
 
   return (
     <RoleCreateProvider>
@@ -33,7 +47,7 @@ const RoleCreateDialog: React.FC<{ open: boolean, onClose: () => void }> = ({ op
         open={open}
         onClose={onClose}
         header={<Header onClose={onClose} />}
-        footer={<Footer onClose={onClose} onCloseCreate={handleCloseCreate} />}
+        footer={<Footer onClose={onClose} />}
         left={<Left />}
         right={<Right />}
       />

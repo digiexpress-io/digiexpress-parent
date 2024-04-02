@@ -3,6 +3,7 @@ import { Role } from 'descriptor-access-mgmt';
 
 
 export const testRoles: Role[] = [
+  /*
   {
     id: '7yh4dR', description: 'All office staff -- default user roles', name: 'Tasks user',
     permissions: [
@@ -53,6 +54,7 @@ export const testRoles: Role[] = [
     ],
     status: 'IN_FORCE'
   }
+  */
 ];
 
 

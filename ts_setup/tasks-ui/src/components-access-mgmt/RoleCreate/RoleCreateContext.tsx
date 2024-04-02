@@ -1,6 +1,6 @@
 import React from 'react';
 import { getInstance as createTabsContext, SingleTabInit, Tab } from 'descriptor-tabbing';
-import { AccessMgmtContextProvider } from '../AccessMgmtContext';
+
 
 // New role related
 export interface NewRole {
@@ -34,17 +34,17 @@ const NewRoleProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
     permissions: []
   });
 
-  const setName = React.useCallback((name: string) => setNewRole(previous => ({ ...previous, name })), []);
-  const setDescription = React.useCallback((description: string) => setNewRole(previous => ({ ...previous, description })), []);
-  const setCommitComment = React.useCallback((commitComment: string) => setNewRole(previous => ({ ...previous, commitComment })), []);
-  const setParentId = React.useCallback((parentId: string) => setNewRole(previous => ({ ...previous, parentId })), []);
+  const setName = React.useCallback((name: string) => setNewRole(previous => Object.freeze({ ...previous, name })), []);
+  const setDescription = React.useCallback((description: string) => setNewRole(previous => Object.freeze({ ...previous, description })), []);
+  const setCommitComment = React.useCallback((commitComment: string) => setNewRole(previous => Object.freeze({ ...previous, commitComment })), []);
+  const setParentId = React.useCallback((parentId: string) => setNewRole(previous => Object.freeze({ ...previous, parentId })), []);
 
   const addPermission = React.useCallback((newPermission: string) => setNewRole(previous => {
     if (previous.permissions.includes(newPermission)) {
       return previous;
     }
     const updatedPermissions = [...previous.permissions, newPermission];
-    return { ...previous, permissions: Object.freeze(updatedPermissions) };
+    return Object.freeze({ ...previous, permissions: Object.freeze(updatedPermissions) });
   }), []);
 
   const removePermission = React.useCallback((permissionToRemove: string) => setNewRole(previous => {
@@ -72,17 +72,19 @@ const NewRoleProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
   }), []);
 
 
-  const contextValue: NewRoleContextType = React.useMemo(() => ({
-    entity,
-    setName,
-    setDescription,
-    setCommitComment,
-    setParentId,
-    addPermission,
-    removePermission,
-    addPrincipal,
-    removePrincipal
-  }), [entity, setName, setDescription, setCommitComment, setParentId, addPermission, removePermission, addPrincipal, removePrincipal]);
+  const contextValue: NewRoleContextType = React.useMemo(() => {
+    return {
+      entity,
+      setName,
+      setDescription,
+      setCommitComment,
+      setParentId,
+      addPermission,
+      removePermission,
+      addPrincipal,
+      removePrincipal
+    }
+  }, [entity, setName, setDescription, setCommitComment, setParentId, addPermission, removePermission, addPrincipal, removePrincipal]);
 
   return (<NewRoleContext.Provider value={contextValue}>{children}</NewRoleContext.Provider>);
 }
@@ -120,12 +122,10 @@ export function useTabs() {
 // Root of all
 export const RoleCreateProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
-    <AccessMgmtContextProvider>
-      <TabsContext.Provider init={initAllTabs()}>
-        <NewRoleProvider>
-          <>{children}</>
-        </NewRoleProvider>
-      </TabsContext.Provider>
-    </AccessMgmtContextProvider>
+    <TabsContext.Provider init={initAllTabs()}>
+      <NewRoleProvider>
+        <>{children}</>
+      </NewRoleProvider>
+    </TabsContext.Provider>
   );
 }

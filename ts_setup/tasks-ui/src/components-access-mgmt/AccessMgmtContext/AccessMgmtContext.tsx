@@ -1,5 +1,4 @@
 import React from 'react';
-
 import Context from 'context';
 
 import { ImmutablePermissionStore, Permission, Principal, Role } from 'descriptor-access-mgmt';
@@ -59,8 +58,7 @@ export const AccessMgmtContextProvider: React.FC<{ children: React.ReactNode }> 
 
   const contextValue: AccessMgmtContextType = React.useMemo(() => {
     async function reload(): Promise<void> {
-      setLoading(true);
-      return Promise.all([loadAllRoles, loadAllPermissions]).then((values) => {
+      await Promise.all([loadAllRoles(), loadAllPermissions()]).then((_values) => {
         console.log('loaded roles and permissions');
       });
     }
@@ -73,7 +71,7 @@ export const AccessMgmtContextProvider: React.FC<{ children: React.ReactNode }> 
     }
 
     return { loading, reload, roles, permissions, principals, getPermissionById };
-  }, [loading, store, roles, permissions, principals]);
+  }, [loading, store, roles, permissions, principals, loadAllRoles, loadAllPermissions]);
 
 
   return (<AccessMgmtContext.Provider value={contextValue}>

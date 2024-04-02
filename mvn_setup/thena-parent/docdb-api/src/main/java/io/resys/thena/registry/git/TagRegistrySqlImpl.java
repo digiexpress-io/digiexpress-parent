@@ -114,7 +114,8 @@ public class TagRegistrySqlImpl implements TagRegistry {
   }
   @Override
   public ThenaSqlClient.Sql dropTable() {
-    // TODO Auto-generated method stub
-    return null;
+    return ImmutableSql.builder().value(new SqlStatement()
+        .append("DROP TABLE ").append(options.getTags()).append(";").ln()
+        .build()).build();
   }
 }

@@ -263,14 +263,13 @@ public class InternalTenantQueryImpl implements InternalTenantQuery {
         tablesDrop
         .append(org.orgActorData().dropTable().getValue())
         .append(org.orgActorStatus().dropTable().getValue())
-        
-        .append(org.orgRights().dropTable().getValue())
-        .append(org.orgParties().dropTable().getValue())
         .append(org.orgPartyRights().dropTable().getValue())
-
-        .append(org.orgMembers().dropTable().getValue())
         .append(org.orgMemberRights().dropTable().getValue())
         .append(org.orgMemberships().dropTable().getValue())
+
+        .append(org.orgMembers().dropTable().getValue())
+        .append(org.orgParties().dropTable().getValue())
+        .append(org.orgRights().dropTable().getValue())
         
         .append(org.orgCommitTrees().dropTable().getValue())
         .append(org.orgCommits().dropTable().getValue());

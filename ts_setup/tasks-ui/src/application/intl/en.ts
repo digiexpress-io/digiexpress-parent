@@ -571,6 +571,8 @@ const en = {
 
   'permissions.role.roleParentOverview': 'Parent role',
   'permissions.role.roleParentName': 'Name',
+  'permissions.role.commitComment': 'Comment',
+  'permissions.role.commitComment.placeholder': 'Description of this change',
 
   'permissions.role.rolePermissionsOverview': 'Permissions',
   'permissions.role.permissions.permissionName': 'Name',
@@ -584,6 +586,7 @@ const en = {
   'permissions.role.roleParentName.none': 'No role parent selected',
   'permissions.role.name': 'Role name',
   'permissions.role.description': 'Role description',
+
 
   'permissions.select.none': 'None',
   'permissions.select.currentSelection': 'Current selection',

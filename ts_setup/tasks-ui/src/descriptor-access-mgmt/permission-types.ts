@@ -64,7 +64,7 @@ export interface PermissionPagination {
 
 export interface Role {
   id: RoleId;
-  //parentId: RoleId | undefined; TODO
+  parentId: RoleId | undefined;
   name: RoleName;
   description: string;
 
@@ -93,6 +93,7 @@ export interface CreateRole {
   description: string;
   permissions: string[];
   comment: string;
+  //parentId: string | undefined;
 }
 
 export interface ChangeRoleName extends RoleUpdateCommand {
