@@ -27,6 +27,7 @@ import io.resys.thena.structures.git.objects.BranchActionsImpl;
 import io.resys.thena.structures.git.objects.ObjectsActionsImpl;
 import io.resys.thena.structures.git.tags.TagActionsDefault;
 import io.resys.thena.structures.grim.actions.GrimCommitActionsImpl;
+import io.resys.thena.structures.grim.actions.GrimQueryActionsImpl;
 import io.resys.thena.structures.org.actions.OrgCommitActionsImpl;
 import io.resys.thena.structures.org.actions.OrgHistoryActionsImpl;
 import io.resys.thena.structures.org.actions.OrgQueryActionsImpl;
@@ -86,7 +87,7 @@ public class ThenaClientPgSql implements ThenaClient {
   public GrimStructuredTenant grim(String repoId) {
     RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
     return new GrimStructuredTenant() {
-      @Override public GrimQueryActions find() { return null; }
+      @Override public GrimQueryActions find() { return new GrimQueryActionsImpl(state, repoId); }
       @Override public GrimCommitActions commit() { return new GrimCommitActionsImpl(state, repoId); }
       @Override public GrimProjectQuery tenants() { return null; }
     };

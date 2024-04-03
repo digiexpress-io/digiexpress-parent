@@ -59,8 +59,29 @@ public class GrimMissionContainerQuerySqlImpl implements GrimQueries.MissionQuer
   }
   @Override
   public Uni<GrimMissionContainer> getById(String missionId) {
-    // TODO Auto-generated method stub
-    return null;
+    this.missionIds.clear();
+    this.missionIds.add(missionId);
+    return Uni.combine().all().unis(
+        findAllLinks(),
+        findAllRemarks(),
+        findAllObjectives(),
+        findAllData(),
+        findAllGoals(),
+        findAllAssignments(),
+        findAllCommits(),
+        findAllMissions(),
+        findAllMissionLabels(),
+        findAllCommands()
+      ).with(GrimMissionContainer.class, (containers) -> {
+        final var combined = ImmutableGrimMissionContainer.builder();
+        containers.forEach(container -> combined.from(container));
+        final GrimMissionContainer built = combined.build();
+        final var result = built.groupByMission();
+        if(result.isEmpty()) {
+          return null;
+        }
+        return result.iterator().next();
+      });
   }
   @Override
   public Multi<GrimMissionContainer> findAll() {

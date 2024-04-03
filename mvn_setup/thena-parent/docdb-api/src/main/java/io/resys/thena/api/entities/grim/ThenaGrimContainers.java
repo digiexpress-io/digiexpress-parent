@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 
 import org.immutables.value.Value;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import io.resys.thena.api.entities.org.ThenaOrgObjects;
 import io.resys.thena.api.envelope.ThenaContainer;
 
@@ -14,6 +16,7 @@ public interface ThenaGrimContainers extends ThenaContainer {
 
   @Value.Immutable
   interface GrimMissionContainer extends ThenaOrgObjects { 
+    
     Map<String, GrimMission> getMissions();    
     Map<String, GrimMissionLabel> getMissionLabels();
     Map<String, GrimMissionLink> getLinks();
@@ -25,6 +28,12 @@ public interface ThenaGrimContainers extends ThenaContainer {
     Map<String, GrimCommit> getCommits(); 
     Map<String, GrimCommands> getCommands(); 
     
+    @JsonIgnore
+    default GrimMission getMission() {
+      return this.getMissions().values().iterator().next();
+    }
+
+    @JsonIgnore
     default List<GrimMissionContainer> groupByMission() {
       final var builders = new HashMap<String, ImmutableGrimMissionContainer.Builder>(); 
       for(final var mission : getMissions().values()) {

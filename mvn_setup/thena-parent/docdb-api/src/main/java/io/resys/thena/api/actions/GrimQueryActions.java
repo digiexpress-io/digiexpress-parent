@@ -9,7 +9,7 @@ public interface GrimQueryActions {
   MissionQuery missionQuery();
   
   interface MissionQuery {
-    MissionQuery orAssignment(String assignmentId, String assignementType); 
+    MissionQuery orAssignment(String assignementType, String assignmentId); 
     Uni<QueryEnvelope<GrimMissionContainer>> get(String missionIdOrExtId);
     Uni<QueryEnvelopeList<GrimMissionContainer>> findAll();
   }
