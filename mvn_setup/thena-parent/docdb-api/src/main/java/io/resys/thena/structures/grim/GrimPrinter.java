@@ -24,6 +24,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import com.google.common.collect.ComparisonChain;
+
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.spi.DbState;
 
@@ -50,6 +52,10 @@ public class GrimPrinter {
       if(!isStatic) {
         return id;
       }
+      if(id == null) {
+        return null;
+      }
+      
       if(replacements.containsKey(id)) {
         return replacements.get(id);
       }
@@ -72,42 +78,134 @@ public class GrimPrinter {
     .append(", type: ").append(repo.getType()).append(System.lineSeparator());
     
     ctx.query().missions().findAll()
+    .collect().asList()
     .onItem()
-    .transform(item -> {
-      final var mission = item.getMissions().values().iterator().next();      
-      result.append("Mission: ").append(ID.apply(mission.getId())).append(System.lineSeparator());
+    .transform(items -> {
+     
+      for(final var data : items.stream().flatMap(e -> e.getCommits().values().stream())
+          .sorted((a, b) -> ComparisonChain.start()
+              .compare(a.getCreatedAt(), b.getCreatedAt())
+              .result())
+          .toList()
+          ) {
+        ID.apply(data.getParentCommitId());
+        ID.apply(data.getCommitId());
+        ID.apply(data.getMissionId());
+      }
       
-      for(final var data : item.getData().values()) {
-        result.append("  - ").append(ID.apply(data.getId())).append("::").append(data.getDocType()).append(System.lineSeparator());
+      for(final var item : items.stream()
+          .sorted((a, b) -> ComparisonChain.start()
+              .compare(
+                  ID.apply(a.getMissions().values().iterator().next().getId()), 
+                  ID.apply(b.getMissions().values().iterator().next().getId())
+              ).result())
+          .toList()) {
+        
+
+        final var mission = item.getMissions().values().iterator().next();      
+        result.append("Mission: ").append(ID.apply(mission.getId())).append(System.lineSeparator());
+
+
+        
+        for(final var data : item.getAssignments().values().stream()
+            .sorted((a, b) -> ComparisonChain.start()
+                .compare(ID.apply(a.getCommitId()), ID.apply(b.getCommitId()))
+                .compare(a.getAssignmentType(), b.getAssignmentType())
+                .compare(a.getAssignee(), b.getAssignee())
+                .result())
+            .toList()) {
+          result.append("  - ").append(ID.apply(data.getId())).append("::").append(data.getDocType()).append(System.lineSeparator());
+        }
+        for(final var data : item.getData().values().stream()
+            .sorted((a, b) -> ComparisonChain.start()
+                .compare(ID.apply(a.getCommitId()), ID.apply(b.getCommitId()))
+                .compare(a.getTitle(), b.getTitle())
+                .result())
+            .toList()) {
+          result.append("  - ").append(ID.apply(data.getId())).append("::").append(data.getDocType()).append(System.lineSeparator());
+        }
+        
+        for(final var data : item.getMissionLabels().values().stream()
+            .sorted((a, b) -> ComparisonChain.start()
+                .compare(ID.apply(a.getCommitId()), ID.apply(b.getCommitId()))
+                .compare(a.getLabelType(), b.getLabelType())
+                .compare(a.getLabelValue(), b.getLabelValue())
+                .result())
+            .toList()) {
+          
+          result.append("  - ").append(ID.apply(data.getId())).append("::").append(data.getDocType()).append(System.lineSeparator());
+        }
+        for(final var data : item.getLinks().values().stream()
+            .sorted((a, b) -> ComparisonChain.start()
+                .compare(ID.apply(a.getCommitId()), ID.apply(b.getCommitId()))
+                .compare(a.getLinkType(), b.getLinkType())
+                .compare(a.getExternalId(), b.getExternalId())
+                .result())
+            .toList()) {
+          
+          result.append("  - ").append(ID.apply(data.getId())).append("::").append(data.getDocType()).append(System.lineSeparator());
+        }
+        for(final var data : item.getObjectives().values().stream()
+            .sorted((a, b) -> ComparisonChain.start()
+                .compare(ID.apply(a.getCommitId()), ID.apply(b.getCommitId()))
+                .compare(a.getObjectiveStatus()+ "", b.getObjectiveStatus()+ "")
+                .compare(a.getStartDate()+ "", b.getStartDate()+ "")
+                .compare(a.getDueDate()+ "", b.getDueDate()+ "")
+                .result())
+            .toList()) {
+          
+          result.append("  - ").append(ID.apply(data.getId())).append("::").append(data.getDocType()).append(System.lineSeparator());
+        }
+        for(final var data : item.getGoals().values().stream()
+            .sorted((a, b) -> ComparisonChain.start()
+                .compare(ID.apply(a.getCommitId()), ID.apply(b.getCommitId()))
+                .compare(a.getGoalStatus() + "", b.getGoalStatus()+ "")
+                .compare(a.getStartDate()+ "", b.getStartDate()+ "")
+                .compare(a.getDueDate()+ "", b.getDueDate()+ "")
+                .result())
+            .toList()) {
+          result.append("  - ").append(ID.apply(data.getId())).append("::").append(data.getDocType()).append(System.lineSeparator());
+        }
+        for(final var data : item.getRemarks().values().stream()          
+            .sorted((a, b) -> ComparisonChain.start()
+            .compare(ID.apply(a.getCommitId()), ID.apply(b.getCommitId()))
+            .compare(a.getRemarkText(), b.getRemarkText())
+            .compare(a.getReporterId()+ "", b.getReporterId()+ "")
+            .compare(a.getRemarkStatus()+ "", b.getRemarkStatus()+ "")
+            .result())
+        .toList()) {
+          
+          result.append("  - ").append(ID.apply(data.getId())).append("::").append(data.getDocType()).append(System.lineSeparator());
+        }
+        for(final var data : item.getCommands().values().stream()
+            .sorted((a, b) -> a.getCreatedAt().compareTo(b.getCreatedAt()))
+            .toList()) {
+          result.append("  - ").append(ID.apply(data.getId())).append("::").append(data.getDocType()).append(System.lineSeparator());
+        }
+        
+        
+        for(final var data : item.getCommits().values().stream()
+            .sorted((a, b) -> a.getCreatedAt().compareTo(b.getCreatedAt()))
+            .toList()) {
+          
+          var log = data.getCommitLog();
+          
+          for(final var entry : replacements.entrySet()) {
+            log = log.replace(entry.getKey(), entry.getValue());
+          }
+          
+          result
+            .append(System.lineSeparator())
+            .append(log)
+            .append(System.lineSeparator());
+        }      
+        
+        
       }
-      for(final var data : item.getMissionLabels().values()) {
-        result.append("  - ").append(ID.apply(data.getId())).append("::").append(data.getDocType()).append(System.lineSeparator());
-      }
-      for(final var data : item.getLinks().values()) {
-        result.append("  - ").append(ID.apply(data.getId())).append("::").append(data.getDocType()).append(System.lineSeparator());
-      }
-      for(final var data : item.getObjectives().values()) {
-        result.append("  - ").append(ID.apply(data.getId())).append("::").append(data.getDocType()).append(System.lineSeparator());
-      }
-      for(final var data : item.getGoals().values()) {
-        result.append("  - ").append(ID.apply(data.getId())).append("::").append(data.getDocType()).append(System.lineSeparator());
-      }
-      for(final var data : item.getRemarks().values()) {
-        result.append("  - ").append(ID.apply(data.getId())).append("::").append(data.getDocType()).append(System.lineSeparator());
-      }
-      for(final var data : item.getCommands().values()) {
-        result.append("  - ").append(ID.apply(data.getId())).append("::").append(data.getDocType()).append(System.lineSeparator());
-      }
-      for(final var data : item.getCommits().values()) {
-        result
-          .append(System.lineSeparator())
-          .append(data.getCommitLog())
-          .append(System.lineSeparator());
-      }      
-      return item;
       
+      return items;
     })
-    .collect().asList().await().indefinitely();;
+    .await().indefinitely();
     
     return result.toString();
   }

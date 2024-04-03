@@ -85,7 +85,7 @@ public class DbTestTemplate {
   	}
   	
   	final var connectOptions = new PgConnectOptions()
-  			.setDatabase("debug_org_db")
+  			.setDatabase("debug_task_db")
         .setHost("localhost")
         .setPort(5432)
         .setUser("postgres")
@@ -194,6 +194,8 @@ public class DbTestTemplate {
       return new DocDbPrinter(createState()).printWithStaticIds(client);
     } else if(client.getType() == StructureType.org) {
       return new OrgDbPrinter(createState()).printWithStaticIds(client, replacements);
+    } else if(client.getType() == StructureType.grim) {
+      return new GrimPrinter(createState()).printWithStaticIds(client, replacements);
     }
     return new GitPrinter(createState()).printWithStaticIds(client);
   }

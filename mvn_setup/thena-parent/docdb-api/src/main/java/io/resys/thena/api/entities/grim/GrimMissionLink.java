@@ -21,5 +21,5 @@ public interface GrimMissionLink extends IsGrimObject, ThenaTable {
   
   @Nullable GrimOneOfRelations getRelation(); // one of sub entities
   
-  @JsonIgnore @Override default public GrimDocType getDocType() { return GrimDocType.GRIM_MISSION; };
+  @JsonIgnore @Override default public GrimDocType getDocType() { return GrimDocType.GRIM_MISSION_LINKS; };
 }
