@@ -35,7 +35,6 @@ public interface ThenaGrimObject {
   }
   
   enum GrimDocType {
-    GRIM_LABEL,
     GRIM_MISSION,
     GRIM_MISSION_LINKS,
     GRIM_MISSION_LABEL,
@@ -49,5 +48,6 @@ public interface ThenaGrimObject {
     
     // infra object, tx log
     GRIM_COMMIT_VIEWER,
+    GRIM_COMMIT,
   }
 }

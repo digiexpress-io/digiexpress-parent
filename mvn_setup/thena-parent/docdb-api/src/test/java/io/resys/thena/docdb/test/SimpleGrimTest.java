@@ -98,7 +98,7 @@ public class SimpleGrimTest extends DbTestTemplate {
     
     final var newMission = createdTask.getMissions().iterator().next();
     
-    /*
+    // add comments
     getClient().grim(repo).commit().modifyManyMission()
     .commitMessage("forgot to add comments to things")
     .commitAuthor("jane.doe@morgue.com")
@@ -111,18 +111,36 @@ public class SimpleGrimTest extends DbTestTemplate {
       .addRemark((newRemark) -> 
         newRemark
         .remarkText("Not to self, give feedback to architects")
+        .reporterId("jane.doe@morgue.com")
         .build())
       .addRemark((newRemark) -> 
         newRemark
         .remarkText("Note to self, compliment works on after job well done!")
+        .reporterId("jane.doe@morgue.com")
         .build())
       .build();
       
     })
-    .build();
-        */
+    .build()
+    .await().atMost(Duration.ofMinutes(1));
+        
+    
+    // modify title
+    getClient().grim(repo).commit().modifyManyMission()
+    .commitMessage("changed the title")
+    .commitAuthor("jane.doe@morgue.com")
+    .modifyMission(newMission.getId(), (modifyMission) -> {
+      
+      modifyMission
+      .title("House plans for customer #198CC")
+      .addCommands(Arrays.asList(JsonObject.of("commandType", "CHANGE_TITLE")))
+      .build();
+      
+    })
+    .build()
+    .await().atMost(Duration.ofMinutes(1));
+        
+    
     printRepo(repo.getRepo());
   }
-  
-
 }

@@ -40,7 +40,6 @@ public abstract class TenantTableNames {
   public abstract String getGrimCommands();
   public abstract String getGrimCommitTree();
   public abstract String getGrimCommitViewer();
-  public abstract String getGrimLabel();
   public abstract String getGrimMission();
   public abstract String getGrimMissionData();
   public abstract String getGrimMissionLabel();
@@ -110,7 +109,6 @@ public abstract class TenantTableNames {
         .grimCommands(      prefix + DEFAULTS.getGrimCommands())
         .grimCommitTree(    prefix + DEFAULTS.getGrimCommitTree())
         .grimCommitViewer(  prefix + DEFAULTS.getGrimCommitViewer())
-        .grimLabel(         prefix + DEFAULTS.getGrimLabel())
         .grimMission(       prefix + DEFAULTS.getGrimMission())
         .grimMissionData(   prefix + DEFAULTS.getGrimMissionData())
         .grimMissionLabel(  prefix + DEFAULTS.getGrimMissionLabel())
@@ -155,7 +153,6 @@ public abstract class TenantTableNames {
         .grimCommit("grim_commit")
         .grimCommitTree("grim_commit_tree")
         .grimCommitViewer("grim_commit_viewer")
-        .grimLabel("grim_label")
         .grimMission("grim_mission")
         .grimCommands("grim_commands")
         .grimMissionData("grim_mission_data")

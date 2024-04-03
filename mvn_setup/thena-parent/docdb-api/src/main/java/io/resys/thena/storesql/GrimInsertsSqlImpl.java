@@ -61,7 +61,6 @@ public class GrimInsertsSqlImpl implements GrimInserts {
     final var upd_missionGols = registry.goals().updateAll(inputBatch.getUpdateGoals());
     final var upd_missionObjectives = registry.objectives().updateAll(inputBatch.getUpdateObjectives());
     final var upd_mission = registry.missions().updateAll(inputBatch.getUpdateMissions());
-    final var upd_labels = registry.labels().updateAll(inputBatch.getUpdateLabels());
     
     final Uni<GrimBatchForOne> upd_missionData_uni = Execute.apply(tx, upd_missionData).onItem()
         .transform(row -> successOutput(inputBatch, "Mission data updated, number of updated entries: " + + (row == null ? 0 : row.rowCount())))
@@ -83,14 +82,10 @@ public class GrimInsertsSqlImpl implements GrimInserts {
         .transform(row -> successOutput(inputBatch, "Mission updated, number of updated entries: " + + (row == null ? 0 : row.rowCount())))
         .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to update mission data \r\n" + inputBatch.getUpdateMissions(), e));
     
-    final Uni<GrimBatchForOne> upd_labels_uni = Execute.apply(tx, upd_labels).onItem()
-        .transform(row -> successOutput(inputBatch, "Mission labels updated, number of updated entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to update label data \r\n" + inputBatch.getUpdateLabels(), e));
 
     
     // INSERT OPERATIONS
     final var ins_mission = registry.missions().insertAll(inputBatch.getMissions());
-    final var ins_labels = registry.labels().insertAll(inputBatch.getLabels());
     final var ins_missionLabels = registry.missionLabels().insertAll(inputBatch.getMissionLabels());
     final var ins_missionLinks = registry.missionLinks().insertAll(inputBatch.getLinks());
     final var ins_remarks = registry.remarks().insertAll(inputBatch.getRemarks());
@@ -104,10 +99,6 @@ public class GrimInsertsSqlImpl implements GrimInserts {
         .transform(row -> successOutput(inputBatch, "Missions inserted, number of inserted entries: " + + (row == null ? 0 : row.rowCount())))
         .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to insert missions \r\n" + inputBatch.getMissions(), e));
 
-    final Uni<GrimBatchForOne> ins_labels_uni = Execute.apply(tx, ins_labels).onItem()
-        .transform(row -> successOutput(inputBatch, "Labels inserted, number of inserted entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to insert labels \r\n" + inputBatch.getLabels(), e));
-    
     final Uni<GrimBatchForOne> ins_missionLabels_uni = Execute.apply(tx, ins_missionLabels).onItem()
         .transform(row -> successOutput(inputBatch, "Missions labels inserted, number of inserted entries: " + + (row == null ? 0 : row.rowCount())))
         .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to insert mission labels \r\n" + inputBatch.getMissionLabels(), e));
@@ -170,14 +161,12 @@ public class GrimInsertsSqlImpl implements GrimInserts {
             ins_trees_uni,
     		    
             upd_mission_uni,
-            upd_labels_uni,
             upd_missionObjectives_uni,
             upd_missionGols_uni,
-    		    upd_missionData_uni,
+            upd_missionData_uni,
     		    upd_remarks_uni,
 
     		    ins_mission_uni,
-    		    ins_labels_uni,
             ins_objectives_uni,
             ins_goals_uni,
     		    ins_missionLabels_uni,

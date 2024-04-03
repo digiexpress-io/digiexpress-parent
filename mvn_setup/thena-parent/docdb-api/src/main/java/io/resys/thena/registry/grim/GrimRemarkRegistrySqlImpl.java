@@ -203,7 +203,7 @@ public class GrimRemarkRegistrySqlImpl implements GrimRemarkRegistry {
         .append("  FROM ").append(options.getGrimRemark()).ln()
         .append("  WHERE (mission_id = ANY($1))").ln() 
         .build())
-        .props(Tuple.of(id))
+        .props(Tuple.of(id.toArray()))
         .build();
   }
 

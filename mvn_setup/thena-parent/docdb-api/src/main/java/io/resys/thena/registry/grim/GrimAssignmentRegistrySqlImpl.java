@@ -61,7 +61,7 @@ public class GrimAssignmentRegistrySqlImpl implements GrimAssignmentRegistry {
         .append("  FROM ").append(options.getGrimAssignment()).ln()
         .append("  WHERE (mission_id = ANY($1))").ln() 
         .build())
-        .props(Tuple.of(id))
+        .props(Tuple.of(id.toArray()))
         .build();
   }
 

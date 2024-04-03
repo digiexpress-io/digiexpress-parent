@@ -26,7 +26,6 @@ import java.util.function.Function;
 
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.spi.DbState;
-import io.smallrye.mutiny.Multi;
 
 public class GrimPrinter {
   private final DbState state;
@@ -71,22 +70,6 @@ public class GrimPrinter {
     .append("    name: ").append(repo.getName())
     .append(", prefix: ").append(repo.getPrefix())
     .append(", type: ").append(repo.getType()).append(System.lineSeparator());
-    
-    result
-    .append(System.lineSeparator())
-    .append("Labels").append(System.lineSeparator());
-    
-    ctx.query().labels()
-    .findAll().onItem().transformToMulti(items -> Multi.createFrom().items(items.stream()))
-    .onItem()
-    .transform(item -> {
-      result.append("  - ")
-      .append(ID.apply(item.getId())).append(": ").append(item.getLabelType()).append("/").append(item.getLabelValue())
-      .append(System.lineSeparator());
-      return item;
-      
-    }).collect().asList().await().indefinitely();
-
     
     ctx.query().missions().findAll()
     .onItem()

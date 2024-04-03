@@ -2,26 +2,22 @@ package io.resys.thena.structures.grim.create;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 import io.resys.thena.api.actions.GrimCommitActions.CreateManyMissions;
 import io.resys.thena.api.actions.GrimCommitActions.ManyMissionsEnvelope;
 import io.resys.thena.api.actions.ImmutableManyMissionsEnvelope;
 import io.resys.thena.api.entities.grim.GrimCommit;
-import io.resys.thena.api.entities.grim.GrimLabel;
 import io.resys.thena.api.entities.grim.ImmutableGrimCommit;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewMission;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.spi.ImmutableTxScope;
 import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.grim.GrimInserts.GrimBatchForOne;
-import io.resys.thena.structures.grim.commitlog.GrimCommitBuilder;
 import io.resys.thena.structures.grim.GrimState;
 import io.resys.thena.structures.grim.ImmutableGrimBatchForOne;
+import io.resys.thena.structures.grim.commitlog.GrimCommitBuilder;
 import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
@@ -84,11 +80,7 @@ public class CreateManyMissionsImpl implements CreateManyMissions {
   }
   
   private Uni<GrimBatchForOne> createRequest(GrimState tx) {
-    return tx.query().labels().findAll().onItem().transform(labels -> createRequest(tx, labels));
-  }
   
-  private GrimBatchForOne createRequest(GrimState tx, List<GrimLabel> labels) {
-    final Map<String, GrimLabel> all_labels = labels.stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
     final var start = ImmutableGrimBatchForOne.builder()
         .tenantId(tenantId)
         .status(BatchStatus.OK)
@@ -123,11 +115,9 @@ public class CreateManyMissionsImpl implements CreateManyMissions {
             .build()
       );
       
-      final var newMission = new NewMissionBuilder(Collections.unmodifiableMap(all_labels), logger);
+      final var newMission = new NewMissionBuilder(logger);
       entry.accept(newMission);
       final var created = newMission.close();
-      created.getLabels().forEach(e -> all_labels.put(e.getId(), e));
-      created.getUpdateLabels().forEach(e -> all_labels.put(e.getId(), e));      
       
       final var missionId = created.getMissions().iterator().next().getId();
       
@@ -137,6 +127,6 @@ public class CreateManyMissionsImpl implements CreateManyMissions {
           .from(logger.withMissionId(missionId).close())
           .build();
     }
-    return next;
+    return Uni.createFrom().item(next);
   }
 }

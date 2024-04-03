@@ -1,5 +1,6 @@
 package io.resys.thena.registry.grim;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -60,20 +61,18 @@ public class GrimCommitRegistrySqlImpl implements GrimCommitRegistry {
         .append(" (commit_id,").ln()
         .append("  parent_id,").ln()
         .append("  mission_id,").ln()
-        .append("  label_id,").ln()
         .append("  created_at,").ln()
         .append("  commit_log, ").ln()
         .append("  commit_author, ").ln()
         .append("  commit_message)").ln()
         
-        .append(" VALUES($1, $2, $3, $4, $5, $6, $7, $8)").ln()
+        .append(" VALUES($1, $2, $3, $4, $5, $6, $7)").ln()
         .build())
         .props(commits.stream()
             .map(doc -> Tuple.from(new Object[]{ 
                 doc.getCommitId(), 
                 doc.getParentCommitId(),
                 doc.getMissionId(),
-                doc.getLabelId(),
                 doc.getCreatedAt(),
                 doc.getCommitLog(),
                 doc.getCommitAuthor(),
@@ -90,7 +89,6 @@ public class GrimCommitRegistrySqlImpl implements GrimCommitRegistry {
     .append("  commit_id VARCHAR(40) PRIMARY KEY,").ln()
     .append("  parent_id VARCHAR(40),").ln()
     .append("  mission_id VARCHAR(40),").ln()
-    .append("  label_id VARCHAR(40),").ln()
     .append("  created_at TIMESTAMP WITH TIME ZONE NOT NULL,").ln()
     .append("  commit_log TEXT NOT NULL,").ln()
     
@@ -105,10 +103,6 @@ public class GrimCommitRegistrySqlImpl implements GrimCommitRegistry {
 
     .append("CREATE INDEX ").append(options.getGrimCommit()).append("_MISSION_INDEX")
     .append(" ON ").append(options.getGrimCommit()).append(" (mission_id);").ln()
-
-    .append("CREATE INDEX ").append(options.getGrimCommit()).append("_LABEL_INDEX")
-    .append(" ON ").append(options.getGrimCommit()).append(" (label_id);").ln()
-
     
     .append("CREATE INDEX ").append(options.getGrimCommit()).append("_AUTH_INDEX")
     .append(" ON ").append(options.getGrimCommit()).append(" (commit_author);").ln()
@@ -132,7 +126,6 @@ public class GrimCommitRegistrySqlImpl implements GrimCommitRegistry {
      .append(createGrimCommitFk(options.getGrimAssignment()))
      .append(createGrimCommitFk(options.getGrimCommitTree()))
      .append(createGrimCommitFk(options.getGrimCommitViewer()))
-     .append(createGrimCommitFk(options.getGrimLabel()))
      .append(createGrimCommitFk(options.getGrimMission()))
      .append(createGrimCommitFk(options.getGrimMissionData()))
      .append(createGrimCommitFk(options.getGrimMissionLabel()))
@@ -154,7 +147,6 @@ public class GrimCommitRegistrySqlImpl implements GrimCommitRegistry {
           .missionId(row.getString("mission_id"))
 
           .parentCommitId(row.getString("parent_id"))
-          .labelId(row.getString("label_id"))
           .createdAt(row.getOffsetDateTime("created_at"))
           .commitLog(row.getString("commit_log"))
           .commitAuthor(row.getString("commit_author"))
@@ -181,7 +173,7 @@ public class GrimCommitRegistrySqlImpl implements GrimCommitRegistry {
         .append("  FROM ").append(options.getGrimCommit()).ln()
         .append("  WHERE (id = ANY($1))").ln() 
         .build())
-        .props(Tuple.of(id))
+        .props(Tuple.from(new ArrayList<>(id)))
         .build();
   }
 
@@ -193,7 +185,7 @@ public class GrimCommitRegistrySqlImpl implements GrimCommitRegistry {
         .append("  FROM ").append(options.getGrimCommit()).ln()
         .append("  WHERE (mission_id = ANY($1))").ln() 
         .build())
-        .props(Tuple.of(id))
+        .props(Tuple.of(id.toArray()))
         .build();
   }
 

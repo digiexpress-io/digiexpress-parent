@@ -29,7 +29,6 @@ import io.resys.thena.api.entities.grim.GrimCommands;
 import io.resys.thena.api.entities.grim.GrimCommit;
 import io.resys.thena.api.entities.grim.GrimCommitTree;
 import io.resys.thena.api.entities.grim.GrimCommitViewer;
-import io.resys.thena.api.entities.grim.GrimLabel;
 import io.resys.thena.api.entities.grim.GrimMission;
 import io.resys.thena.api.entities.grim.GrimMissionData;
 import io.resys.thena.api.entities.grim.GrimMissionLabel;
@@ -48,7 +47,6 @@ public interface GrimInserts {
   @Value.Immutable
   interface GrimBatchForOne {
     List<GrimMission> getMissions();
-    List<GrimLabel> getLabels();
     List<GrimMissionLabel> getMissionLabels();
     List<GrimMissionLink> getLinks();
     List<GrimRemark> getRemarks();
@@ -69,7 +67,6 @@ public interface GrimInserts {
     List<GrimObjectiveGoal> getUpdateGoals();
     List<GrimObjective> getUpdateObjectives();
     List<GrimMission> getUpdateMissions();
-    List<GrimLabel> getUpdateLabels();
 
     // Objects to delete
     List<GrimAssignment> getDeleteAssignments();

@@ -5,6 +5,9 @@ import java.util.function.Function;
 
 import org.immutables.value.Value;
 
+import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlFailed;
+import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlTupleFailed;
+import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlTupleListFailed;
 import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.sqlclient.Tuple;
 
@@ -32,6 +35,10 @@ public interface ThenaSqlClient {
   @Value.Immutable
   interface Sql {
     String getValue();
+    
+    default SqlFailed failed(Throwable t, String message, Object ...args) {
+      return new SqlFailed(message.formatted(args), this, t);
+    }
   }
 
   @Value.Immutable
@@ -60,11 +67,19 @@ public interface ThenaSqlClient {
       sb.append("]");
       return sb.toString();
     }
+    
+    default SqlTupleFailed failed(Throwable t, String message, Object ...args) {
+      return new SqlTupleFailed(message.formatted(args), this, t);
+    }
   }
 
   @Value.Immutable
   interface SqlTupleList {
     String getValue();
     List<Tuple> getProps();
+    
+    default SqlTupleListFailed failed(Throwable t, String message, Object ...args) {
+      return new SqlTupleListFailed(message.formatted(args), this, t);
+    }
   }
 }

@@ -5,7 +5,6 @@ import io.resys.thena.api.registry.grim.GrimCommandsRegistry;
 import io.resys.thena.api.registry.grim.GrimCommitRegistry;
 import io.resys.thena.api.registry.grim.GrimCommitTreeRegistry;
 import io.resys.thena.api.registry.grim.GrimCommitViewerRegistry;
-import io.resys.thena.api.registry.grim.GrimLabelRegistry;
 import io.resys.thena.api.registry.grim.GrimMissionDataRegistry;
 import io.resys.thena.api.registry.grim.GrimMissionLabelRegistry;
 import io.resys.thena.api.registry.grim.GrimMissionLinkRegistry;
@@ -19,7 +18,6 @@ public interface GrimRegistry {
   GrimCommitRegistry commits();
   GrimCommitTreeRegistry commitTrees();
   GrimCommitViewerRegistry commitViewers();
-  GrimLabelRegistry labels();
   GrimMissionDataRegistry missionData();
   GrimMissionLabelRegistry missionLabels();
   GrimMissionLinkRegistry missionLinks();

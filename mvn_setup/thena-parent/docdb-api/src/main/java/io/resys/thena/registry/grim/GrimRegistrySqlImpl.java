@@ -8,7 +8,6 @@ import io.resys.thena.api.registry.grim.GrimCommandsRegistry;
 import io.resys.thena.api.registry.grim.GrimCommitRegistry;
 import io.resys.thena.api.registry.grim.GrimCommitTreeRegistry;
 import io.resys.thena.api.registry.grim.GrimCommitViewerRegistry;
-import io.resys.thena.api.registry.grim.GrimLabelRegistry;
 import io.resys.thena.api.registry.grim.GrimMissionDataRegistry;
 import io.resys.thena.api.registry.grim.GrimMissionLabelRegistry;
 import io.resys.thena.api.registry.grim.GrimMissionLinkRegistry;
@@ -25,7 +24,6 @@ public class GrimRegistrySqlImpl implements GrimRegistry {
   private final GrimCommitRegistry commits;
   private final GrimCommitTreeRegistry commitTrees;
   private final GrimCommitViewerRegistry commitViewers;
-  private final GrimLabelRegistry labels;
   private final GrimMissionDataRegistry missionData;
   private final GrimMissionLabelRegistry missionLabels;
   private final GrimMissionLinkRegistry missionsLinks;
@@ -41,7 +39,6 @@ public class GrimRegistrySqlImpl implements GrimRegistry {
     commits = new GrimCommitRegistrySqlImpl(options);
     commitTrees = new GrimCommitTreeRegistrySqlImpl(options);
     commitViewers = new GrimCommitViewerRegistrySqlImpl(options);
-    labels = new GrimLabelRegistrySqlImpl(options);
     missionData = new GrimMissionDataRegistrySqlImpl(options);
     missionLabels = new GrimMissionLabelRegistrySqlImpl(options);
     missionsLinks = new GrimMissionLinkRegistrySqlImpl(options);
@@ -67,10 +64,6 @@ public class GrimRegistrySqlImpl implements GrimRegistry {
   @Override
   public GrimCommitViewerRegistry commitViewers() {
     return commitViewers;
-  }
-  @Override
-  public GrimLabelRegistry labels() {
-    return labels;
   }
   @Override
   public GrimMissionDataRegistry missionData() {

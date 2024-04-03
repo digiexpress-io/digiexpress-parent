@@ -110,7 +110,7 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
         .append("  archived_date = $9,").ln()
         .append("  archived_status = $10").ln()
         
-        .append(" WHERE id = $9")
+        .append(" WHERE id = $11")
         .build())
         .props(mission.stream()
             .map(doc -> Tuple.from(new Object[]{ 
@@ -200,9 +200,9 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
         .value(new SqlStatement()
         .append("SELECT * ").ln()
         .append("  FROM ").append(options.getGrimMission()).ln()
-        .append("  WHERE (mission_id = ANY($1))").ln() 
+        .append("  WHERE (id = ANY($1))").ln() 
         .build())
-        .props(Tuple.of(id))
+        .props(Tuple.of(id.toArray()))
         .build();
   }
 

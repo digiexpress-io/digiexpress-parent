@@ -3,13 +3,10 @@ package io.resys.thena.structures.grim.create;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import io.resys.thena.api.entities.grim.GrimLabel;
 import io.resys.thena.api.entities.grim.ImmutableGrimCommands;
 import io.resys.thena.api.entities.grim.ImmutableGrimMission;
 import io.resys.thena.api.entities.grim.ImmutableGrimMissionData;
@@ -35,13 +32,11 @@ public class NewMissionBuilder implements ThenaGrimNewObject.NewMission {
   private final String missionId;
   private final String commitId;
   private final ImmutableGrimMissionData.Builder missionMeta;
-  private final Map<String, GrimLabel> all_labels;
-
   
   private ImmutableGrimBatchForOne.Builder next;
   private boolean built;
   
-  public NewMissionBuilder(Map<String, GrimLabel> all_labels, GrimCommitBuilder logger) {
+  public NewMissionBuilder(GrimCommitBuilder logger) {
     super();
     this.next = ImmutableGrimBatchForOne.builder()
         .tenantId(logger.getTenantId())
@@ -58,7 +53,6 @@ public class NewMissionBuilder implements ThenaGrimNewObject.NewMission {
       .missionId(missionId)
       .title("")
       .description("");
-    this.all_labels = new HashMap<>(all_labels);
     this.logger = logger;
   }
 
@@ -116,18 +110,13 @@ public class NewMissionBuilder implements ThenaGrimNewObject.NewMission {
     final var all_mission_label = this.next.build().getMissionLabels().stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
     final var builder = new NewMissionLabelBuilder(
         logger, missionId, null, 
-        all_mission_label,
-        Collections.unmodifiableMap(all_labels)
+        all_mission_label
     );
     
     label.accept(builder);
     final var built = builder.close();
-    this.next.addMissionLabels(built.getItem1());
+    this.next.addMissionLabels(built);
     
-    if(built.getItem2().isPresent()) {
-      this.next.addLabels(built.getItem2().get());
-      this.all_labels.put(built.getItem2().get().getId(), built.getItem2().get());
-    }
     return this;
   }
   @Override
@@ -150,7 +139,7 @@ public class NewMissionBuilder implements ThenaGrimNewObject.NewMission {
   }
   @Override
   public NewMission addObjective(Consumer<NewObjective> objective) {
-    final var builder = new NewObjectiveBuilder(logger, missionId, Collections.unmodifiableMap(all_labels));
+    final var builder = new NewObjectiveBuilder(logger, missionId);
     
     objective.accept(builder);
     final var built = builder.close();

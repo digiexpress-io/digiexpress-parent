@@ -1,11 +1,9 @@
 package io.resys.thena.structures.grim.create;
 
 import java.time.LocalDate;
-import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import io.resys.thena.api.entities.grim.GrimLabel;
 import io.resys.thena.api.entities.grim.ImmutableGrimMissionData;
 import io.resys.thena.api.entities.grim.ImmutableGrimObjective;
 import io.resys.thena.api.entities.grim.ImmutableGrimOneOfRelations;
@@ -24,7 +22,6 @@ import io.resys.thena.support.RepoAssert;
 public class NewObjectiveBuilder implements ThenaGrimNewObject.NewObjective {
   private final GrimCommitBuilder logger;
   private final String missionId;
-  private final Map<String, GrimLabel> all_labels;
   
   private final ImmutableGrimBatchForOne.Builder batch;
   private final GrimOneOfRelations childRel;
@@ -33,11 +30,10 @@ public class NewObjectiveBuilder implements ThenaGrimNewObject.NewObjective {
   private final ImmutableGrimMissionData.Builder objectiveMeta;
   private boolean built;
   
-  public NewObjectiveBuilder(GrimCommitBuilder logger, String missionId,  Map<String, GrimLabel> all_labels) {
+  public NewObjectiveBuilder(GrimCommitBuilder logger, String missionId) {
     super();
     this.logger = logger;
     this.missionId = missionId;
-    this.all_labels = all_labels;
     this.objectiveId = OidUtils.gen();
     this.batch = ImmutableGrimBatchForOne.builder()
         .tenantId(logger.getTenantId())
@@ -92,7 +88,7 @@ public class NewObjectiveBuilder implements ThenaGrimNewObject.NewObjective {
   }
   @Override
   public NewObjective addGoal(Consumer<NewGoal> newGoal) {
-    final var builder = new NewGoalBuilder(logger, missionId, objectiveId, all_labels);
+    final var builder = new NewGoalBuilder(logger, missionId, objectiveId);
     newGoal.accept(builder);
     this.batch.from(builder.close());
     return this;

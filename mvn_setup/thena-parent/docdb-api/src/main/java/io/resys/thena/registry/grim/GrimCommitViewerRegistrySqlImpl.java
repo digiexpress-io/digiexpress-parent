@@ -130,7 +130,7 @@ public class GrimCommitViewerRegistrySqlImpl implements GrimCommitViewerRegistry
         .append("  FROM ").append(options.getGrimCommitViewer()).ln()
         .append("  WHERE (object_id = ANY($1))").ln() 
         .build())
-        .props(Tuple.of(id))
+        .props(Tuple.of(id.toArray()))
         .build();
   }
 }

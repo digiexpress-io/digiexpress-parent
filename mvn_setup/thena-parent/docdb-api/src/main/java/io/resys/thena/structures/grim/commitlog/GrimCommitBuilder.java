@@ -46,6 +46,17 @@ public class GrimCommitBuilder {
     this.logger.add(entity);
     return this;
   }
+  public GrimCommitBuilder merge(IsGrimObject previous, IsGrimObject next) {
+    this.next.addCommitTrees(ImmutableGrimCommitTree.builder()
+        .id(OidUtils.gen())
+        .commitId(commitId)
+        .operationType(GrimCommitTreeOperation.ADD)
+        .bodyBefore(JsonObject.mapFrom(previous))
+        .bodyAfter(JsonObject.mapFrom(next))
+        .build());
+    this.logger.merge(previous, next);
+    return this;
+  }
   public ImmutableGrimBatchForOne close() { 
     return this.next
         .addCommits(this.commit.commitLog(this.logger.build()).build())

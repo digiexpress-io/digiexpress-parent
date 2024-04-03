@@ -1,25 +1,17 @@
 package io.resys.thena.storesql.builders;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.stream.Collectors;
 
 import io.resys.thena.api.LogConstants;
-import io.resys.thena.api.entities.grim.GrimAssignment;
-import io.resys.thena.api.entities.grim.GrimCommands;
-import io.resys.thena.api.entities.grim.GrimCommit;
-import io.resys.thena.api.entities.grim.GrimLabel;
-import io.resys.thena.api.entities.grim.GrimMission;
-import io.resys.thena.api.entities.grim.GrimMissionData;
-import io.resys.thena.api.entities.grim.GrimMissionLabel;
-import io.resys.thena.api.entities.grim.GrimMissionLink;
-import io.resys.thena.api.entities.grim.GrimObjective;
-import io.resys.thena.api.entities.grim.GrimObjectiveGoal;
-import io.resys.thena.api.entities.grim.GrimRemark;
 import io.resys.thena.api.entities.grim.ImmutableGrimMissionContainer;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
+import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimDocType;
 import io.resys.thena.api.registry.GrimRegistry;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
-import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlFailed;
 import io.resys.thena.structures.grim.GrimQueries;
 import io.resys.thena.structures.grim.GrimQueries.MissionQuery;
 import io.smallrye.mutiny.Multi;
@@ -34,6 +26,15 @@ public class GrimMissionContainerQuerySqlImpl implements GrimQueries.MissionQuer
   private final ThenaSqlDataSource dataSource;
   private final GrimRegistry registry;
   private final ThenaSqlDataSourceErrorHandler errorHandler;
+  private final Collection<GrimDocType> docsToExclude = new LinkedHashSet<>();
+  private final Collection<String> missionIds = new LinkedHashSet<>();
+  private final Collection<AssignmentFilter> assignments = new LinkedHashSet<>();
+  
+  @lombok.Data @lombok.Builder
+  private static class AssignmentFilter {
+    private final String assignmentType;
+    private final String assignmentValue; 
+  }
   
   public GrimMissionContainerQuerySqlImpl(ThenaSqlDataSource dataSource) {
     super();
@@ -41,17 +42,20 @@ public class GrimMissionContainerQuerySqlImpl implements GrimQueries.MissionQuer
     this.registry = dataSource.getRegistry().grim();
     this.errorHandler = dataSource.getErrorHandler();
   }
-
   @Override
-  public MissionQuery addMissionIdFilter(String missionId) {
-    // TODO Auto-generated method stub
-    return null;
+  public MissionQuery excludeDocs(GrimDocType... docs) {
+    docsToExclude.addAll(Arrays.asList(docs));
+    return this;
   }
-
+  @Override
+  public MissionQuery addMissionIdFilter(String... missionId) {
+    missionIds.addAll(Arrays.asList(missionId));
+    return this;
+  }
   @Override
   public MissionQuery addAssignmentFilter(String assignmentType, String assignmentValue) {
-    // TODO Auto-generated method stub
-    return null;
+    assignments.add(AssignmentFilter.builder().assignmentType(assignmentType).assignmentValue(assignmentValue).build());
+    return this;
   }
   @Override
   public Uni<GrimMissionContainer> getById(String missionId) {
@@ -61,7 +65,6 @@ public class GrimMissionContainerQuerySqlImpl implements GrimQueries.MissionQuer
   @Override
   public Multi<GrimMissionContainer> findAll() {
     return Uni.combine().all().unis(
-      findAllLabels(),
       findAllLinks(),
       findAllRemarks(),
       findAllObjectives(),
@@ -79,96 +82,208 @@ public class GrimMissionContainerQuerySqlImpl implements GrimQueries.MissionQuer
       return built.groupByMission();
     }).onItem().transformToMulti(e -> Multi.createFrom().items(e.stream()));
   }
+  
+  
   private Uni<GrimMissionContainer> findAllCommits() {
-    final var sql = registry.commits().findAll();
+    if(docsToExclude.contains(GrimDocType.GRIM_COMMIT)) {
+      return Uni.createFrom().item(ImmutableGrimMissionContainer.builder().build());
+    }
+    // query ALL COMMITS everything
+    if(missionIds.isEmpty()) {
+      final var sql = registry.commits().findAll();
+      if(log.isDebugEnabled()) {
+        log.debug("User findAllCommits query, with props: {} \r\n{}", 
+            "",
+            sql.getValue());
+      }
+      return dataSource.getClient().preparedQuery(sql.getValue())
+          .mapping(registry.commits().defaultMapper())
+          .execute().onItem()
+          .transformToMulti(RowSet::toMulti).collect().asList()
+          .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find '%s'!", GrimDocType.GRIM_COMMIT)))
+          .onItem().transform(items -> ImmutableGrimMissionContainer
+              .builder().commits(items.stream().collect(Collectors.toMap(e -> e.getCommitId(), e -> e)))
+              .build()
+          );
+    }
+    
+    // query COMMITS by mission id
+    final var sql = registry.commits().findAllByMissionIds(missionIds);
     if(log.isDebugEnabled()) {
       log.debug("User findAllCommits query, with props: {} \r\n{}", 
-          "",
+          sql.getPropsDeepString(),
           sql.getValue());
     }
     return dataSource.getClient().preparedQuery(sql.getValue())
         .mapping(registry.commits().defaultMapper())
-        .execute()
-        .onItem()
-        .transformToMulti((RowSet<GrimCommit> rowset) -> Multi.createFrom().iterable(rowset))
-        .collect().asList()
-        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlFailed("Can't find 'COMMIT'!", sql, e)))
+        .execute(sql.getProps()).onItem()
+        .transformToMulti(RowSet::toMulti).collect().asList()
+        .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find '%s'!", GrimDocType.GRIM_COMMIT)))
         .onItem().transform(items -> ImmutableGrimMissionContainer
             .builder().commits(items.stream().collect(Collectors.toMap(e -> e.getCommitId(), e -> e)))
             .build()
         );
   }
   private Uni<GrimMissionContainer> findAllAssignments() {
-    final var sql = registry.assignments().findAll();
+    if(docsToExclude.contains(GrimDocType.GRIM_ASSIGNMENT)) {
+      return Uni.createFrom().item(ImmutableGrimMissionContainer.builder().build());
+    }
+    // query ALL ASSIGNMENTS everything
+    if(missionIds.isEmpty()) {
+      final var sql = registry.assignments().findAll();
+      if(log.isDebugEnabled()) {
+        log.debug("User findAllAssignments query, with props: {} \r\n{}", 
+            "",
+            sql.getValue());
+      }
+      return dataSource.getClient().preparedQuery(sql.getValue())
+          .mapping(registry.assignments().defaultMapper())
+          .execute()
+          .onItem()
+          .transformToMulti(RowSet::toMulti).collect().asList()
+          .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find '%s'!", GrimDocType.GRIM_ASSIGNMENT)))
+          .onItem().transform(items -> ImmutableGrimMissionContainer
+              .builder().assignments(items.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
+              .build()
+          );
+    }
+    
+    // query ASSIGNMENTS by mission id
+    final var sql = registry.assignments().findAllByMissionIds(missionIds);
     if(log.isDebugEnabled()) {
       log.debug("User findAllAssignments query, with props: {} \r\n{}", 
-          "",
+          sql.getPropsDeepString(),
           sql.getValue());
     }
     return dataSource.getClient().preparedQuery(sql.getValue())
         .mapping(registry.assignments().defaultMapper())
-        .execute()
+        .execute(sql.getProps())
         .onItem()
-        .transformToMulti((RowSet<GrimAssignment> rowset) -> Multi.createFrom().iterable(rowset))
-        .collect().asList()
-        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlFailed("Can't find 'ASSIGNMENT'!", sql, e)))
+        .transformToMulti(RowSet::toMulti).collect().asList()
+        .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find '%s'!", GrimDocType.GRIM_ASSIGNMENT)))
         .onItem().transform(items -> ImmutableGrimMissionContainer
             .builder().assignments(items.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
             .build()
         );
   }
   private Uni<GrimMissionContainer> findAllGoals() {
-    final var sql = registry.goals().findAll();
+    if(docsToExclude.contains(GrimDocType.GRIM_OBJECTIVE_GOAL)) {
+      return Uni.createFrom().item(ImmutableGrimMissionContainer.builder().build());
+    }
+    
+    // query ALL GOALS everything
+    if(missionIds.isEmpty()) {
+      final var sql = registry.goals().findAll();
+      if(log.isDebugEnabled()) {
+        log.debug("User findAllGoals query, with props: {} \r\n{}", 
+            "",
+            sql.getValue());
+      }
+      return dataSource.getClient().preparedQuery(sql.getValue())
+          .mapping(registry.goals().defaultMapper())
+          .execute()
+          .onItem()
+          .transformToMulti(RowSet::toMulti).collect().asList()
+          .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find '%s'!", GrimDocType.GRIM_OBJECTIVE_GOAL)))
+          .onItem().transform(items -> ImmutableGrimMissionContainer
+              .builder().goals(items.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
+              .build()
+          );
+    }
+    
+    final var sql = registry.goals().findAllByMissionIds(missionIds);
     if(log.isDebugEnabled()) {
       log.debug("User findAllGoals query, with props: {} \r\n{}", 
-          "",
+          sql.getPropsDeepString(),
           sql.getValue());
     }
     return dataSource.getClient().preparedQuery(sql.getValue())
         .mapping(registry.goals().defaultMapper())
-        .execute()
+        .execute(sql.getProps())
         .onItem()
-        .transformToMulti((RowSet<GrimObjectiveGoal> rowset) -> Multi.createFrom().iterable(rowset))
-        .collect().asList()
-        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlFailed("Can't find 'GOALS'!", sql, e)))
+        .transformToMulti(RowSet::toMulti).collect().asList()
+        .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find '%s'!", GrimDocType.GRIM_OBJECTIVE_GOAL)))
         .onItem().transform(items -> ImmutableGrimMissionContainer
             .builder().goals(items.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
             .build()
         );
   }
   private Uni<GrimMissionContainer> findAllData() {
-    final var sql = registry.missionData().findAll();
+    if(docsToExclude.contains(GrimDocType.GRIM_MISSION_DATA)) {
+      return Uni.createFrom().item(ImmutableGrimMissionContainer.builder().build());
+    }
+    
+    if(missionIds.isEmpty()) {
+      final var sql = registry.missionData().findAll();
+      if(log.isDebugEnabled()) {
+        log.debug("User findAllData query, with props: {} \r\n{}", 
+            "",
+            sql.getValue());
+      }
+      return dataSource.getClient().preparedQuery(sql.getValue())
+          .mapping(registry.missionData().defaultMapper())
+          .execute()
+          .onItem()
+          .transformToMulti(RowSet::toMulti).collect().asList()
+          .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find '%s'!", GrimDocType.GRIM_MISSION_DATA)))
+          .onItem().transform(items -> ImmutableGrimMissionContainer
+              .builder().data(items.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
+              .build()
+          );
+    }
+    
+    final var sql = registry.missionData().findAllByMissionIds(missionIds);
     if(log.isDebugEnabled()) {
       log.debug("User findAllData query, with props: {} \r\n{}", 
-          "",
+          sql.getPropsDeepString(),
           sql.getValue());
     }
     return dataSource.getClient().preparedQuery(sql.getValue())
         .mapping(registry.missionData().defaultMapper())
-        .execute()
+        .execute(sql.getProps())
         .onItem()
-        .transformToMulti((RowSet<GrimMissionData> rowset) -> Multi.createFrom().iterable(rowset))
-        .collect().asList()
-        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlFailed("Can't find 'MISSION_DATA'!", sql, e)))
+        .transformToMulti(RowSet::toMulti).collect().asList()
+        .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find '%s'!", GrimDocType.GRIM_MISSION_DATA)))
         .onItem().transform(items -> ImmutableGrimMissionContainer
             .builder().data(items.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
             .build()
         );
   }
   private Uni<GrimMissionContainer> findAllObjectives() {
-    final var sql = registry.objectives().findAll();
+    if(docsToExclude.contains(GrimDocType.GRIM_OBJECTIVE)) {
+      return Uni.createFrom().item(ImmutableGrimMissionContainer.builder().build());
+    }
+    if(missionIds.isEmpty()) {
+      final var sql = registry.objectives().findAll();
+      if(log.isDebugEnabled()) {
+        log.debug("User findAllObjectives query, with props: {} \r\n{}", 
+            "",
+            sql.getValue());
+      }
+      return dataSource.getClient().preparedQuery(sql.getValue())
+          .mapping(registry.objectives().defaultMapper())
+          .execute()
+          .onItem()
+          .transformToMulti(RowSet::toMulti).collect().asList()
+          .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find '%s'!", GrimDocType.GRIM_OBJECTIVE)))
+          .onItem().transform(items -> ImmutableGrimMissionContainer
+              .builder().objectives(items.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
+              .build()
+          );
+    }
+    
+    final var sql = registry.objectives().findAllByMissionIds(missionIds);
     if(log.isDebugEnabled()) {
       log.debug("User findAllObjectives query, with props: {} \r\n{}", 
-          "",
+          sql.getPropsDeepString(),
           sql.getValue());
     }
     return dataSource.getClient().preparedQuery(sql.getValue())
         .mapping(registry.objectives().defaultMapper())
-        .execute()
+        .execute(sql.getProps())
         .onItem()
-        .transformToMulti((RowSet<GrimObjective> rowset) -> Multi.createFrom().iterable(rowset))
-        .collect().asList()
-        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlFailed("Can't find 'LABEL'!", sql, e)))
+        .transformToMulti(RowSet::toMulti).collect().asList()
+        .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find '%s'!", GrimDocType.GRIM_OBJECTIVE)))
         .onItem().transform(items -> ImmutableGrimMissionContainer
             .builder().objectives(items.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
             .build()
@@ -176,19 +291,39 @@ public class GrimMissionContainerQuerySqlImpl implements GrimQueries.MissionQuer
   }
   
   private Uni<GrimMissionContainer> findAllRemarks() {
-    final var sql = registry.remarks().findAll();
+    if(docsToExclude.contains(GrimDocType.GRIM_REMARK)) {
+      return Uni.createFrom().item(ImmutableGrimMissionContainer.builder().build());
+    }
+    if(missionIds.isEmpty()) {
+      final var sql = registry.remarks().findAll();
+      if(log.isDebugEnabled()) {
+        log.debug("User findAllRemarks query, with props: {} \r\n{}", 
+            "",
+            sql.getValue());
+      }
+      return dataSource.getClient().preparedQuery(sql.getValue())
+          .mapping(registry.remarks().defaultMapper())
+          .execute()
+          .onItem()
+          .transformToMulti(RowSet::toMulti).collect().asList()
+          .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find '%s'!", GrimDocType.GRIM_REMARK)))
+          .onItem().transform(items -> ImmutableGrimMissionContainer
+              .builder().remarks(items.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
+              .build()
+          );
+    }
+    final var sql = registry.remarks().findAllByMissionIds(missionIds);
     if(log.isDebugEnabled()) {
       log.debug("User findAllRemarks query, with props: {} \r\n{}", 
-          "",
+          sql.getPropsDeepString(),
           sql.getValue());
     }
     return dataSource.getClient().preparedQuery(sql.getValue())
         .mapping(registry.remarks().defaultMapper())
-        .execute()
+        .execute(sql.getProps())
         .onItem()
-        .transformToMulti((RowSet<GrimRemark> rowset) -> Multi.createFrom().iterable(rowset))
-        .collect().asList()
-        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlFailed("Can't find 'LABEL'!", sql, e)))
+        .transformToMulti(RowSet::toMulti).collect().asList()
+        .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find '%s'!", GrimDocType.GRIM_REMARK)))
         .onItem().transform(items -> ImmutableGrimMissionContainer
             .builder().remarks(items.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
             .build()
@@ -196,96 +331,162 @@ public class GrimMissionContainerQuerySqlImpl implements GrimQueries.MissionQuer
   }
 
   private Uni<GrimMissionContainer> findAllLinks() {
-    final var sql = registry.missionLinks().findAll();
+    if(docsToExclude.contains(GrimDocType.GRIM_MISSION_LINKS)) {
+      return Uni.createFrom().item(ImmutableGrimMissionContainer.builder().build());
+    }
+    if(missionIds.isEmpty()) {
+      final var sql = registry.missionLinks().findAll();
+      if(log.isDebugEnabled()) {
+        log.debug("User findAllLinks query, with props: {} \r\n{}", 
+            "",
+            sql.getValue());
+      }
+      return dataSource.getClient().preparedQuery(sql.getValue())
+          .mapping(registry.missionLinks().defaultMapper())
+          .execute()
+          .onItem()
+          .transformToMulti(RowSet::toMulti).collect().asList()
+          .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find '%s'!", GrimDocType.GRIM_MISSION_LINKS)))
+          .onItem().transform(items -> ImmutableGrimMissionContainer
+              .builder().links(items.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
+              .build()
+          );
+    }
+    final var sql = registry.missionLinks().findAllByMissionIds(missionIds);
     if(log.isDebugEnabled()) {
       log.debug("User findAllLinks query, with props: {} \r\n{}", 
-          "",
+          sql.getPropsDeepString(),
           sql.getValue());
     }
     return dataSource.getClient().preparedQuery(sql.getValue())
         .mapping(registry.missionLinks().defaultMapper())
-        .execute()
+        .execute(sql.getProps())
         .onItem()
-        .transformToMulti((RowSet<GrimMissionLink> rowset) -> Multi.createFrom().iterable(rowset))
-        .collect().asList()
-        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlFailed("Can't find 'LABEL'!", sql, e)))
+        .transformToMulti(RowSet::toMulti).collect().asList()
+        .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find '%s'!", GrimDocType.GRIM_MISSION_LINKS)))
         .onItem().transform(items -> ImmutableGrimMissionContainer
             .builder().links(items.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
             .build()
         );
   }
-  
-  private Uni<GrimMissionContainer> findAllLabels() {
-    final var sql = registry.labels().findAll();
-    if(log.isDebugEnabled()) {
-      log.debug("User findAllLabels query, with props: {} \r\n{}", 
-          "",
-          sql.getValue());
-    }
-    return dataSource.getClient().preparedQuery(sql.getValue())
-        .mapping(registry.labels().defaultMapper())
-        .execute()
-        .onItem()
-        .transformToMulti((RowSet<GrimLabel> rowset) -> Multi.createFrom().iterable(rowset))
-        .collect().asList()
-        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlFailed("Can't find 'LABEL'!", sql, e)))
-        .onItem().transform(items -> ImmutableGrimMissionContainer
-            .builder().labels(items.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
-            .build()
-        );
-  }
+
   private Uni<GrimMissionContainer> findAllMissions() {
-    final var sql = registry.missions().findAll();
+    if(docsToExclude.contains(GrimDocType.GRIM_MISSION)) {
+      return Uni.createFrom().item(ImmutableGrimMissionContainer.builder().build());
+    }
+    
+    if(missionIds.isEmpty()) {
+      final var sql = registry.missions().findAll();
+      if(log.isDebugEnabled()) {
+        log.debug("User findAllMissions query, with props: {} \r\n{}", 
+            "",
+            sql.getValue());
+      }
+      return dataSource.getClient().preparedQuery(sql.getValue())
+          .mapping(registry.missions().defaultMapper())
+          .execute()
+          .onItem()
+          .transformToMulti(RowSet::toMulti).collect().asList()
+          .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find '%s'!", GrimDocType.GRIM_MISSION)))
+          .onItem().transform(items -> ImmutableGrimMissionContainer
+              .builder().missions(items.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
+              .build()
+          );
+    }
+    
+    final var sql = registry.missions().findAllByMissionIds(missionIds);
     if(log.isDebugEnabled()) {
       log.debug("User findAllMissions query, with props: {} \r\n{}", 
-          "",
+          sql.getPropsDeepString(),
           sql.getValue());
     }
     return dataSource.getClient().preparedQuery(sql.getValue())
         .mapping(registry.missions().defaultMapper())
-        .execute()
+        .execute(sql.getProps())
         .onItem()
-        .transformToMulti((RowSet<GrimMission> rowset) -> Multi.createFrom().iterable(rowset))
-        .collect().asList()
-        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlFailed("Can't find 'MISSION'!", sql, e)))
+        .transformToMulti(RowSet::toMulti).collect().asList()
+        .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find '%s'!", GrimDocType.GRIM_MISSION)))
         .onItem().transform(items -> ImmutableGrimMissionContainer
             .builder().missions(items.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
             .build()
         );
   }
   private Uni<GrimMissionContainer> findAllMissionLabels() {
-    final var sql = registry.missionLabels().findAll();
+    if(docsToExclude.contains(GrimDocType.GRIM_MISSION_LABEL)) {
+      return Uni.createFrom().item(ImmutableGrimMissionContainer.builder().build());
+    }
+    
+    if(missionIds.isEmpty()) {
+      final var sql = registry.missionLabels().findAll();
+      if(log.isDebugEnabled()) {
+        log.debug("User findAllMissionLabels query, with props: {} \r\n{}", 
+            "",
+            sql.getValue());
+      }
+      return dataSource.getClient().preparedQuery(sql.getValue())
+          .mapping(registry.missionLabels().defaultMapper())
+          .execute()
+          .onItem()
+          .transformToMulti(RowSet::toMulti).collect().asList()
+          .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find '%s'!", GrimDocType.GRIM_MISSION_LABEL)))
+          .onItem().transform(items -> ImmutableGrimMissionContainer
+              .builder().missionLabels(items.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
+              .build()
+          );
+    }
+    
+    final var sql = registry.missionLabels().findAllByMissionIds(missionIds);
     if(log.isDebugEnabled()) {
       log.debug("User findAllMissionLabels query, with props: {} \r\n{}", 
-          "",
+          sql.getPropsDeepString(),
           sql.getValue());
     }
     return dataSource.getClient().preparedQuery(sql.getValue())
         .mapping(registry.missionLabels().defaultMapper())
-        .execute()
+        .execute(sql.getProps())
         .onItem()
-        .transformToMulti((RowSet<GrimMissionLabel> rowset) -> Multi.createFrom().iterable(rowset))
-        .collect().asList()
-        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlFailed("Can't find 'MISSION_LABEL'!", sql, e)))
+        .transformToMulti(RowSet::toMulti).collect().asList()
+        .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find '%s'!", GrimDocType.GRIM_MISSION_LABEL)))
         .onItem().transform(items -> ImmutableGrimMissionContainer
             .builder().missionLabels(items.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
             .build()
         );
   }
   private Uni<GrimMissionContainer> findAllCommands() {
-    final var sql = registry.commands().findAll();
+    if(docsToExclude.contains(GrimDocType.GRIM_COMMANDS)) {
+      return Uni.createFrom().item(ImmutableGrimMissionContainer.builder().build());
+    }
+    if(missionIds.isEmpty()) {
+      final var sql = registry.commands().findAll();
+      if(log.isDebugEnabled()) {
+        log.debug("User findAllCommands query, with props: {} \r\n{}", 
+            "",
+            sql.getValue());
+      }
+      return dataSource.getClient().preparedQuery(sql.getValue())
+          .mapping(registry.commands().defaultMapper())
+          .execute()
+          .onItem()
+          .transformToMulti(RowSet::toMulti).collect().asList()
+          .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find '%s'!", GrimDocType.GRIM_COMMANDS)))
+          .onItem().transform(items -> ImmutableGrimMissionContainer
+              .builder().commands(items.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
+              .build()
+          );
+    }
+    
+    final var sql = registry.commands().findAllByMissionIds(missionIds);
     if(log.isDebugEnabled()) {
       log.debug("User findAllCommands query, with props: {} \r\n{}", 
-          "",
+          sql.getPropsDeepString(),
           sql.getValue());
     }
     return dataSource.getClient().preparedQuery(sql.getValue())
         .mapping(registry.commands().defaultMapper())
-        .execute()
+        .execute(sql.getProps())
         .onItem()
-        .transformToMulti((RowSet<GrimCommands> rowset) -> Multi.createFrom().iterable(rowset))
-        .collect().asList()
-        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlFailed("Can't find 'MISSION_COMMANDS'!", sql, e)))
+        .transformToMulti(RowSet::toMulti).collect().asList()
+        .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find '%s'!", GrimDocType.GRIM_COMMANDS)))
         .onItem().transform(items -> ImmutableGrimMissionContainer
             .builder().commands(items.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
             .build()

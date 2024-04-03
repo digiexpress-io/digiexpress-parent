@@ -161,10 +161,10 @@ public class GrimObjectiveRegistrySqlImpl implements GrimObjectiveRegistry {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT * ").ln()
-        .append("  FROM ").append(options.getGrimMission()).ln()
+        .append("  FROM ").append(options.getGrimObjective()).ln()
         .append("  WHERE (mission_id = ANY($1))").ln() 
         .build())
-        .props(Tuple.of(id))
+        .props(Tuple.of(id.toArray()))
         .build();
   }
   @Override

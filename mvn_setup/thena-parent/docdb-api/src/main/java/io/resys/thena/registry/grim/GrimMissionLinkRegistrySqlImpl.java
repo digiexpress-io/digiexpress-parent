@@ -179,7 +179,7 @@ public class GrimMissionLinkRegistrySqlImpl implements GrimMissionLinkRegistry {
         .append("  FROM ").append(options.getGrimMissionLink()).ln()
         .append("  WHERE (mission_id = ANY($1))").ln() 
         .build())
-        .props(Tuple.of(id))
+        .props(Tuple.of(id.toArray()))
         .build();
   }
 

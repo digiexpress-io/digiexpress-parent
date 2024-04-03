@@ -89,7 +89,7 @@ public class GrimMissionDataRegistrySqlImpl implements GrimMissionDataRegistry {
   public SqlTupleList updateAll(Collection<GrimMissionData> data) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
-        .append("UPDATE ").append(options.getGrimLabel())
+        .append("UPDATE ").append(options.getGrimMissionData())
         .append(" SET").ln()
         .append("  commit_id = $1,").ln()
         .append("  title = $2,").ln()
@@ -200,7 +200,7 @@ public class GrimMissionDataRegistrySqlImpl implements GrimMissionDataRegistry {
         .append("  FROM ").append(options.getGrimMissionData()).ln()
         .append("  WHERE (mission_id = ANY($1))").ln() 
         .build())
-        .props(Tuple.of(id))
+        .props(Tuple.of(id.toArray()))
         .build();
   }
 }

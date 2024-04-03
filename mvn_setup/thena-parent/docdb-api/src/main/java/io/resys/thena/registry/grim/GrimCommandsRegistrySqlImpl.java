@@ -55,7 +55,7 @@ public class GrimCommandsRegistrySqlImpl implements GrimCommandsRegistry {
         .append(" ON(commands.commit_id = commits.commit_id)").ln()
         .append(" WHERE (commands.id = ANY($1))").ln() 
         .build())
-        .props(Tuple.of(id))
+        .props(Tuple.of(id.toArray()))
         .build();
   }
   @Override

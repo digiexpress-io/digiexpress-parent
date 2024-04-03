@@ -12,7 +12,6 @@ public interface GrimCommit extends ThenaTable {
   String getCommitId();
   @Nullable String getParentCommitId();  
   @Nullable String getMissionId();
-  @Nullable String getLabelId();
   
   OffsetDateTime getCreatedAt();
   String getCommitAuthor();

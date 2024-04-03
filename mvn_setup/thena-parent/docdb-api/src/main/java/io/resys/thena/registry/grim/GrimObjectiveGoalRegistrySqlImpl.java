@@ -66,7 +66,7 @@ public class GrimObjectiveGoalRegistrySqlImpl implements GrimObjectiveGoalRegist
         .append(" ON(goal.objective_id = objective.id)").ln()
         .append(" WHERE (objective.mission_id = ANY($1))").ln() 
         .build())
-        .props(Tuple.of(id))
+        .props(Tuple.of(id.toArray()))
         .build();
   }
   @Override

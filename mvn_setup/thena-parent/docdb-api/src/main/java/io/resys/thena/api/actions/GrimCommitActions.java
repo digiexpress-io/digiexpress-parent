@@ -9,6 +9,7 @@ import org.immutables.value.Value;
 
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.grim.GrimMission;
+import io.resys.thena.api.entities.grim.ThenaGrimMergeObject.MergeMission;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewGoal;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewMission;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewObjective;
@@ -48,7 +49,7 @@ public interface GrimCommitActions {
   interface ModifyManyMissions {
     ModifyManyMissions commitAuthor(String author);
     ModifyManyMissions commitMessage(String message);
-    ModifyManyMissions modifyMission(String missionId, Consumer<NewMission> addMission);
+    ModifyManyMissions modifyMission(String missionId, Consumer<MergeMission> mergeMission);
     
     Uni<ManyMissionsEnvelope> build();
   }

@@ -59,23 +59,29 @@ public class GrimMissionLabelRegistrySqlImpl implements GrimMissionLabelRegistry
         .append(" (id,").ln()
         .append("  commit_id,").ln()
 
-        .append("  label_id,").ln()
         .append("  mission_id,").ln()
         .append("  objective_id,").ln()
         .append("  goal_id,").ln()
-        .append("  remark_id)").ln()
+        .append("  remark_id,").ln()
         
-        .append(" VALUES($1, $2, $3, $4, $5, $6, $7)").ln()
+        .append("  label_type,").ln()
+        .append("  label_value,").ln()
+        .append("  label_body)").ln()
+        
+        .append(" VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)").ln()
         .build())
         .props(labels.stream()
             .map(doc -> Tuple.from(new Object[]{ 
                 doc.getId(), 
                 doc.getCommitId(),
-                doc.getLabelId(),
                 doc.getMissionId(),
                 doc.getRelation() == null ? null : doc.getRelation().getObjectiveId(),
                 doc.getRelation() == null ? null : doc.getRelation().getObjectiveGoalId(),
                 doc.getRelation() == null ? null : doc.getRelation().getRemarkId(),
+                    
+                doc.getLabelType(),
+                doc.getLabelValue(),
+                doc.getLabelBody()
              }))
             .collect(Collectors.toList()))
         .build();
@@ -88,13 +94,16 @@ public class GrimMissionLabelRegistrySqlImpl implements GrimMissionLabelRegistry
     .append("  id VARCHAR(40) PRIMARY KEY,").ln()
     .append("  commit_id VARCHAR(40) NOT NULL,").ln()
 
-    .append("  label_id VARCHAR(40) NOT NULL,").ln()
+    .append("  label_type VARCHAR(100) NOT NULL,").ln()
+    .append("  label_value VARCHAR(255) NOT NULL,").ln()
+    .append("  label_body JSONB,").ln()
+
     .append("  mission_id VARCHAR(40) NOT NULL,").ln()
     .append("  objective_id VARCHAR(40),").ln()
     .append("  goal_id VARCHAR(40),").ln()
     .append("  remark_id VARCHAR(40),").ln()
     
-    .append("  UNIQUE NULLS NOT DISTINCT(mission_id, objective_id, goal_id, remark_id, label_id)").ln()    
+    .append("  UNIQUE NULLS NOT DISTINCT(mission_id, objective_id, goal_id, remark_id, label_type, label_value)").ln()    
     .append(");").ln()
 
     
@@ -111,7 +120,7 @@ public class GrimMissionLabelRegistrySqlImpl implements GrimMissionLabelRegistry
     .append(" ON ").append(options.getGrimMissionLabel()).append(" (remark_id);").ln()
     
     .append("CREATE INDEX ").append(options.getGrimMissionLabel()).append("_LABEL_INDEX")
-    .append(" ON ").append(options.getGrimMissionLabel()).append(" (label_id);").ln()
+    .append(" ON ").append(options.getGrimMissionLabel()).append(" (label_value);").ln()
     
     
     .build()).build();
@@ -142,11 +151,6 @@ public class GrimMissionLabelRegistrySqlImpl implements GrimMissionLabelRegistry
         .append("  FOREIGN KEY (remark_id)").ln()
         .append("  REFERENCES ").append(options.getGrimRemark()).append(" (id);").ln().ln()
         
-        .append("ALTER TABLE ").append(options.getGrimMissionLabel()).ln()
-        .append("  ADD CONSTRAINT ").append(options.getGrimMissionLabel()).append("_LABEL_FK").ln()
-        .append("  FOREIGN KEY (label_id)").ln()
-        .append("  REFERENCES ").append(options.getGrimLabel()).append(" (id);").ln().ln()
-        
     .build()).build();
   }
 
@@ -162,7 +166,9 @@ public class GrimMissionLabelRegistrySqlImpl implements GrimMissionLabelRegistry
           .id(row.getString("id"))
           .commitId(row.getString("commit_id"))
           .missionId(row.getString("mission_id"))
-          .labelId(row.getString("label_id"))
+          .labelType(row.getString("label_type"))
+          .labelValue(row.getString("label_value"))
+          .labelBody(row.getJsonObject("label_body"))
           .relation(GrimRegistrySqlImpl.toRelations(objectiveId, goalId, remarkId))
           .build();
     };
@@ -175,7 +181,7 @@ public class GrimMissionLabelRegistrySqlImpl implements GrimMissionLabelRegistry
         .append("  FROM ").append(options.getGrimMissionLabel()).ln()
         .append("  WHERE (mission_id = ANY($1))").ln() 
         .build())
-        .props(Tuple.of(id))
+        .props(Tuple.of(id.toArray()))
         .build();
   }
   @Override

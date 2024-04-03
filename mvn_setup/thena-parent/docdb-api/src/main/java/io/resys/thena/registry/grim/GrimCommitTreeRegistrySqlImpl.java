@@ -63,7 +63,7 @@ public class GrimCommitTreeRegistrySqlImpl implements GrimCommitTreeRegistry {
         .append("  FROM ").append(options.getGrimCommitTree()).ln()
         .append("  WHERE (commit_id = ANY($1))").ln() 
         .build())
-        .props(Tuple.of(commitId))
+        .props(Tuple.of(commitId.toArray()))
         .build();    
   }
   @Override

@@ -15,7 +15,6 @@ public interface ThenaGrimContainers extends ThenaContainer {
   @Value.Immutable
   interface GrimMissionContainer extends ThenaOrgObjects { 
     Map<String, GrimMission> getMissions();    
-    Map<String, GrimLabel> getLabels();
     Map<String, GrimMissionLabel> getMissionLabels();
     Map<String, GrimMissionLink> getLinks();
     Map<String, GrimRemark> getRemarks();
@@ -29,11 +28,8 @@ public interface ThenaGrimContainers extends ThenaContainer {
     default List<GrimMissionContainer> groupByMission() {
       final var builders = new HashMap<String, ImmutableGrimMissionContainer.Builder>(); 
       for(final var mission : getMissions().values()) {
-        builders.put(mission.getId(), ImmutableGrimMissionContainer.builder()
-            .putMissions(mission.getId(), mission)
-            .labels(getLabels()));
+        builders.put(mission.getId(), ImmutableGrimMissionContainer.builder().putMissions(mission.getId(), mission));
       }
-      
       getMissionLabels().values().forEach(label -> builders.get(label.getMissionId()).putMissionLabels(label.getId(), label));
       getLinks().values().forEach(link -> builders.get(link.getMissionId()).putLinks(link.getId(), link));
       getRemarks().values().forEach(remark -> builders.get(remark.getMissionId()).putRemarks(remark.getId(), remark));
@@ -52,7 +48,6 @@ public interface ThenaGrimContainers extends ThenaContainer {
   @Value.Immutable
   interface GrimProjectObjects extends ThenaOrgObjects { 
     Map<String, GrimMission>  getMissions();
-    Map<String, GrimLabel> getLabels();
     Map<String, GrimMissionLink> getLinks();
     Map<String, GrimRemark> getRemarks();
     Map<String, GrimObjective> getObjectives();

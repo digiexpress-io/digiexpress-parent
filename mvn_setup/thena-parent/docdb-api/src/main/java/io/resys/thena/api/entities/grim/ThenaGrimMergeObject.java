@@ -10,6 +10,8 @@ import javax.annotation.Nullable;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewAssignment;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewLabel;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewLink;
+import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewObjective;
+import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewRemark;
 import io.vertx.core.json.JsonObject;
 
 // Generic interfaces for create/update/delete operations 
@@ -35,9 +37,9 @@ public interface ThenaGrimMergeObject {
     MergeMission addAssignees(Consumer<NewAssignment> assignment);
     MergeMission addLabels(Consumer<NewLabel> label);
     MergeMission addLink(Consumer<NewLink> link);
-    MergeMission addRemark(Consumer<MergeRemark> remark);
+    MergeMission addRemark(Consumer<NewRemark> remark);
     MergeMission addCommands(List<JsonObject> commandToAppend);    
-    MergeMission addObjective(Consumer<MergeObjective> goal);
+    MergeMission addObjective(Consumer<NewObjective> goal);
     
     
     MergeMission modifyGoal(String goalId, Consumer<MergeGoal> goal);
