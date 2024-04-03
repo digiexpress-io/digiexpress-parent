@@ -4,7 +4,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 
 import { StyledFullScreenDialog } from 'components-generic';
 import Burger from 'components-burger';
-import { CreatePermission, ImmutablePermissionStore } from 'descriptor-access-mgmt';
+import { CreatePermission, ImmutableAccessMgmtStore } from 'descriptor-access-mgmt';
 import { Fields } from './PermissionCreateFields';
 
 import Context from 'context';
@@ -64,7 +64,7 @@ const PermissionCreateDialog: React.FC<{ open: boolean, onClose: () => void }> =
       description,
       roles: []
     };
-    await new ImmutablePermissionStore(backend.store).createPermission(command);
+    await new ImmutableAccessMgmtStore(backend.store).createPermission(command);
     handleCloseCreate();
   };
 

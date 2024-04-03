@@ -2,10 +2,9 @@ import React from 'react';
 import { Alert, AlertTitle, Box, Chip, Button } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 
-import { CreateRole, ImmutablePermissionStore } from 'descriptor-access-mgmt';
 import { FilterByString } from 'components-generic';
 import { StyledRoleCreateTransferList } from './StyledRoleCreateTransferList';
-import { useNewRole, useTabs, TabTypes } from './RoleCreateContext';
+import { useNewRole, useTabs } from './RoleCreateContext';
 import Context from 'context';
 
 

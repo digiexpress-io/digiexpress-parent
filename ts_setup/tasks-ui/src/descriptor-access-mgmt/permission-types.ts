@@ -172,7 +172,7 @@ export interface ChangePrincipalStatus extends PrincipalUpdateCommand {
   commandType: 'CHANGE_PRINCIPAL_STATUS';
 }
 
-export interface PermissionStore {
+export interface AccessMgmtStore {
   findAllPermissions(): Promise<Permission[]>;
   getPermission(id: PermissionId): Promise<Permission>;
   createPermission(command: CreatePermission): Promise<Permission>;

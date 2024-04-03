@@ -1,2 +1,2 @@
-export * from './ImmutablePermissionStore';
+export * from './ImmutableAccessMgmtStore';
 export * from './permission-types';

@@ -1,19 +1,19 @@
-import { CreatePermission, CreateRole, Permission, PermissionStore, PermissionUpdateCommand, Role, RoleUpdateCommand } from './permission-types';
+import { CreatePermission, CreateRole, Permission, AccessMgmtStore, PermissionUpdateCommand, Role, RoleUpdateCommand } from './permission-types';
 
 
-export interface PermissionStoreConfig {
+export interface AccessMgmtStoreConfig {
   fetch<T>(path: string, init: RequestInit & { notFound?: () => T, repoType: 'PERMISSIONS' }): Promise<T>;
 }
 
-export class ImmutablePermissionStore implements PermissionStore {
-  private _store: PermissionStoreConfig;
+export class ImmutableAccessMgmtStore implements AccessMgmtStore {
+  private _store: AccessMgmtStoreConfig;
 
-  constructor(store: PermissionStoreConfig) {
+  constructor(store: AccessMgmtStoreConfig) {
     this._store = store;
   }
 
-  withStore(store: PermissionStoreConfig): ImmutablePermissionStore {
-    return new ImmutablePermissionStore(store);
+  withStore(store: AccessMgmtStoreConfig): ImmutableAccessMgmtStore {
+    return new ImmutableAccessMgmtStore(store);
   }
 
   get store() { return this._store }

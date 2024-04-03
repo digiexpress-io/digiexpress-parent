@@ -7,7 +7,7 @@ import { StyledDialogLarge } from '../Dialogs';
 import Header from './Header';
 import { Left } from './Left';
 import { Right } from './Right';
-import { CreateRole, ImmutablePermissionStore } from 'descriptor-access-mgmt';
+import { CreateRole, ImmutableAccessMgmtStore } from 'descriptor-access-mgmt';
 
 const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const { reload } = Context.usePermissions();
@@ -26,7 +26,7 @@ const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       comment: commitComment,
       permissions: []
     }
-    await new ImmutablePermissionStore(backend.store).createRole(command);
+    await new ImmutableAccessMgmtStore(backend.store).createRole(command);
     await reload();
     onClose();
   }

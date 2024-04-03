@@ -3,7 +3,7 @@ import { TextField, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useIntl } from 'react-intl';
 import Context from 'context';
-import { CreatePermission, ImmutablePermissionStore } from 'descriptor-access-mgmt';
+import { CreatePermission, ImmutableAccessMgmtStore } from 'descriptor-access-mgmt';
 
 //TODO
 const Name: React.FC<{}> = () => {
@@ -19,7 +19,7 @@ const Name: React.FC<{}> = () => {
       description: "New description",
       roles: []
     };
-    await new ImmutablePermissionStore(backend.store).createPermission(command);
+    await new ImmutableAccessMgmtStore(backend.store).createPermission(command);
   };
 
   function handleNameChange(event: React.ChangeEvent<HTMLInputElement>) {

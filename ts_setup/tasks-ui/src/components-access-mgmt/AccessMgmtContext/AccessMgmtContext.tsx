@@ -1,7 +1,7 @@
 import React from 'react';
 import Context from 'context';
 
-import { ImmutablePermissionStore, Permission, Principal, Role } from 'descriptor-access-mgmt';
+import { ImmutableAccessMgmtStore, Permission, Principal, Role } from 'descriptor-access-mgmt';
 
 export interface AccessMgmtContextType {
   roles: Role[];
@@ -27,7 +27,7 @@ export const AccessMgmtContextProvider: React.FC<{ children: React.ReactNode }> 
   const [roles, setRoles] = React.useState<Role[]>([]);
   const [permissions, setPermissions] = React.useState<Permission[]>([]);
   const [principals, setPrincipals] = React.useState<Principal[]>([]); //TODO implement
-  const [store] = React.useState(new ImmutablePermissionStore(backend.store));
+  const [store] = React.useState(new ImmutableAccessMgmtStore(backend.store));
 
   async function loadAllRoles(): Promise<void> {
     return store.findAllRoles().then(allRoles => {
