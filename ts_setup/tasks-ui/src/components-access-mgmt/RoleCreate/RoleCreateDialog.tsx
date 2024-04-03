@@ -10,7 +10,7 @@ import { Right } from './Right';
 import { CreateRole, ImmutableAccessMgmtStore } from 'descriptor-access-mgmt';
 
 const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
-  const { reload } = Context.usePermissions();
+  const { reload } = Context.useAccessMgmt();
 
 
   const backend = Context.useBackend();
@@ -22,9 +22,9 @@ const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       commandType: 'CREATE_ROLE',
       name,
       description,
-      //parentId,
+      parentId,
       comment: commitComment,
-      permissions: []
+      permissions: [...permissions]
     }
     await new ImmutableAccessMgmtStore(backend.store).createRole(command);
     await reload();

@@ -93,7 +93,7 @@ export interface CreateRole {
   description: string;
   permissions: string[];
   comment: string;
-  //parentId: string | undefined;
+  parentId: string | undefined;
 }
 
 export interface ChangeRoleName extends RoleUpdateCommand {

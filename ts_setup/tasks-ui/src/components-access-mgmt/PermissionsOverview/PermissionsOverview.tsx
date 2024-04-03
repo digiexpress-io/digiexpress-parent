@@ -4,10 +4,10 @@ import { FormattedMessage } from 'react-intl';
 import { Permission, ImmutableAccessMgmtStore } from 'descriptor-access-mgmt';
 import Context from 'context';
 
-
 const PermissionsOverview: React.FC = () => {
   const backend = Context.useBackend();
   const [permissions, setPermissions] = React.useState<Permission[]>();
+
 
   React.useEffect(() => {
     new ImmutableAccessMgmtStore(backend.store).findAllPermissions().then(setPermissions);

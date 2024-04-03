@@ -31,8 +31,6 @@ const Header: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     <Box display='flex' alignItems='center'>
       <Box width='50%' marginRight={5}>
         <Typography variant='h4'><FormattedMessage id='permissions.role.create' /></Typography>
-        <Box flexGrow={1} />
-        <CloseDialogButton onClose={onClose} />
       </Box>
 
       <Box width='50%'>

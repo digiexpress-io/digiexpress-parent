@@ -74,7 +74,7 @@ export const useTasks = () => {
   return result;
 }
 
-export const usePermissions = () => {
+export const useAccessMgmt = () => {
   const result: AccessMgmtContextType = React.useContext(AccessMgmtContext);
   return result;
 }

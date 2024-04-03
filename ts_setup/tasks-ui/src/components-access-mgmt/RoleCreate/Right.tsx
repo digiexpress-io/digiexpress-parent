@@ -26,7 +26,7 @@ const CurrentlySelected: React.FC<{ chips: string[], onRemoveChip: (index: numbe
 };
 
 const RoleParent: React.FC = () => {
-  const { roles, getPermissionById } = Context.usePermissions();
+  const { roles, getPermissionById } = Context.useAccessMgmt();
   const { setParentId, entity } = useNewRole();
   const parentRole = entity.parentId ? getPermissionById(entity.parentId) : undefined;
 
@@ -39,8 +39,7 @@ const RoleParent: React.FC = () => {
 }
 
 const RolePermissions: React.FC = () => {
-
-  const { permissions } = Context.usePermissions();
+  const { permissions } = Context.useAccessMgmt();
 
   if (!permissions) {
     console.log('no permissions found')
@@ -86,7 +85,7 @@ const RolePermissions: React.FC = () => {
 }
 
 const RolePrincipals: React.FC = () => {
-  const { principals } = Context.usePermissions();
+  const { principals } = Context.useAccessMgmt();
 
   if (!principals) {
     console.log('no principals found')

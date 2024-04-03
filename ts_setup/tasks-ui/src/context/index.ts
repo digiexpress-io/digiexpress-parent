@@ -23,7 +23,7 @@ declare namespace Context {
 
 
 namespace Context {
-  export const usePermissions = Hooks.usePermissions;
+  export const useAccessMgmt = Hooks.useAccessMgmt;
   export const useBackend = Hooks.useBackend;
   export const useTenantConfig = Hooks.useTenantConfig;
   export const useTasks = Hooks.useTasks;
