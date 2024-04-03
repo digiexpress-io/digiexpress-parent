@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert, AlertTitle, Box, Chip, Button, Stack, Grid } from '@mui/material';
+import { Alert, AlertTitle, Box, Chip, Stack } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 
 import { FilterByString, LayoutListItem } from 'components-generic';
@@ -16,12 +16,12 @@ const CurrentlySelected: React.FC<{ chips: string[], onRemoveChip: (index: numbe
       <AlertTitle><FormattedMessage id='permissions.select.currentSelection' /></AlertTitle>
       {chips.length ? chips.map((label, index) => (
         <Chip
-          sx={{ mx: '2px' }}
+          sx={{ m: '2px' }}
           label={label}
           key={index}
           onDelete={() => onRemoveChip(index)}
         />
-      )) : <FormattedMessage id='permissions.role.roleParentName.none' />}
+      )) : <FormattedMessage id='permissions.role.roleCreate.selection.none' />}
     </Alert>
   );
 };
@@ -49,48 +49,39 @@ const RoleParent: React.FC = () => {
   )
 }
 
+
 const RolePermissions: React.FC = () => {
   const { permissions } = Context.useAccessMgmt();
+  const { addPermission, removePermission, entity } = useNewRole();
+
 
   if (!permissions) {
     console.log('no permissions found')
   }
 
-  function handleSave() {
-    console.log('click for save!')
+  function handlePermission(permission: string) {
+    if (entity.permissions.includes(permission)) {
+      removePermission(permission);
+    }
+    else { addPermission(permission) };
   }
 
   return (<>
-    <FilterByString onChange={() => { }} />
+    <Stack spacing={1}>
+      <CurrentlySelected chips={entity.permissions ? [...entity.permissions] : []} onRemoveChip={(index) => removePermission(entity.permissions[index])} />
+      <FilterByString onChange={() => { }} />
+    </Stack>
 
-    <StyledRoleCreateTransferList
-      title="permissions.title"
-      titleArgs={{ name: 'fun name' }}
-      searchTitle="permissions.search.title"
-      selectedTitle="permissions.selectedPermissions"
-      headers={["permissions.permission.name", "permissions.permission.description"]}
-      rows={permissions
-        .sort((a, b) => a.name.localeCompare(b.name))
-        .map((permission) => permission.id)}
-      selected={permissions.map((r) => r.id)}
-      filterRow={(row, search) => {
-        const permission = permissions.find(permission => permission.id === row)?.name;
-        return ((permission && permission.toLowerCase().indexOf(search) > -1) ? true : false);
-      }}
-      renderCells={(row) => {
-        const { name, description } = permissions.find(permission => permission.id === row)!;
-        return [name, description];
-      }}
-      cancel={{
-        label: 'button.cancel',
-        onClick: () => { }
-      }}
-      submit={{
-        label: "button.apply",
-        disabled: false,
-        onClick: handleSave
-      }}
-    />
+    <Box sx={{ mt: 1 }}>
+      {permissions.map((permission, index) => <LayoutListItem key={permission.id}
+        index={index}
+        active={entity.permissions.includes(permission.name)}
+        onClick={() => handlePermission(permission.name)}>
+        {permission.name}
+      </LayoutListItem>
+      )}
+    </Box>
+
   </>
   )
 }

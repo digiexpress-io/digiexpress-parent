@@ -8,6 +8,7 @@ import { CreatePermission, ImmutableAccessMgmtStore } from 'descriptor-access-mg
 import { Fields } from './PermissionCreateFields';
 
 import Context from 'context';
+import { StyledDialogLarge } from 'components-access-mgmt/Dialogs';
 
 
 /*  TODO
@@ -50,6 +51,11 @@ const PermissionCreateDialog: React.FC<{ open: boolean, onClose: () => void }> =
   const [description, setDescription] = React.useState('description');
   const [comment, setComment] = React.useState('comment value');
 
+
+  if (!open) {
+    return null;
+  }
+
   function handleCloseCreate() {
     permissions.reload().then(() => {
       onClose();
@@ -81,7 +87,7 @@ const PermissionCreateDialog: React.FC<{ open: boolean, onClose: () => void }> =
   }
 
   return (
-    <StyledFullScreenDialog
+    <StyledDialogLarge
       open={open}
       onClose={onClose}
       header={<Header onClose={onClose} />}

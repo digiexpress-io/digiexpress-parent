@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, TextField } from '@mui/material';
+import { Typography, TextField, Box } from '@mui/material';
 import { FormattedMessage, useIntl } from 'react-intl';
 import Burger from 'components-burger';
 
@@ -66,7 +66,12 @@ export const Left: React.FC<{}> = () => {
   const { entity } = useNewRole();
   const { getPermissionById } = useAccessMgmt();
 
+  React.useEffect(() => {
+  }, [entity.permissions]);
+
+
   const parentRole = entity.parentId ? getPermissionById(entity.parentId) : undefined;
+
   return (
     <>
       <Burger.Section>
@@ -86,15 +91,14 @@ export const Left: React.FC<{}> = () => {
 
       <Burger.Section>
         <Typography fontWeight='bold'><FormattedMessage id='permissions.role.roleParentOverview' /></Typography>
-        <SectionLayout label='permissions.role.roleParentName' value={parentRole?.name} />
+        {parentRole?.name ? <SectionLayout label='permissions.role.roleParentName' value={parentRole?.name} /> :
+          <SectionLayout label='permissions.select.none' value={undefined} />}
       </Burger.Section>
 
       <Burger.Section>
         <Typography fontWeight='bold'><FormattedMessage id='permissions.role.rolePermissionsOverview' /></Typography>
-        <SectionLayout label='permissions.role.permissions.permissionName' value={'permission 1'} />
-        <SectionLayout label='permissions.role.permissions.permissionName' value={'permission 2'} />
-        <SectionLayout label='permissions.role.permissions.permissionName' value={'permission 3'} />
-        <SectionLayout label='permissions.role.permissions.permissionName' value={'permission 4'} />
+        {entity.permissions.length === 0 ? <SectionLayout label='permissions.select.none' value={undefined} /> :
+          entity.permissions.map((permission, index) => <SectionLayout label='permissions.permission.name' key={index} value={permission} />)}
       </Burger.Section>
 
       <Burger.Section>

@@ -5,7 +5,8 @@ import { blueberry_whip } from 'components-colors';
 
 
 const Section: React.FC<{ children: React.ReactNode, width?: string, loadingValue?: any, required?: boolean }> = (props) => {
-  const [label, content] = React.Children.toArray(props.children);
+  const children = React.Children.toArray(props.children);
+  const [label] = children;
   const loadingEnabled: boolean = Object.keys(props).includes("loadingValue");
   const showLoader: boolean = props.loadingValue ? false : true;
 
@@ -31,7 +32,7 @@ const Section: React.FC<{ children: React.ReactNode, width?: string, loadingValu
       </Box>
 
       <Box sx={{ borderRadius: '8px', border: 1, p: 2, borderColor: blueberry_whip }}>
-        {content}
+        {children.splice(1)}
         {loadingEnabled && showLoader && < CircularProgress size='10pt' />}
       </Box>
     </Box>
