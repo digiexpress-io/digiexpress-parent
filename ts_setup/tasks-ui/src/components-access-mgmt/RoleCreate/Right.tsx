@@ -1,9 +1,10 @@
 import React from 'react';
-import { Alert, AlertTitle, Box, Chip, Button } from '@mui/material';
+import { Alert, AlertTitle, Box, Chip, Button, Stack, Grid } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 
-import { FilterByString } from 'components-generic';
+import { FilterByString, LayoutListItem } from 'components-generic';
 import { StyledRoleCreateTransferList } from './StyledRoleCreateTransferList';
+
 import { useNewRole, useTabs } from './RoleCreateContext';
 import Context from 'context';
 
@@ -29,12 +30,22 @@ const RoleParent: React.FC = () => {
   const { roles, getPermissionById } = Context.useAccessMgmt();
   const { setParentId, entity } = useNewRole();
   const parentRole = entity.parentId ? getPermissionById(entity.parentId) : undefined;
-
-  return (<>
-    <CurrentlySelected chips={parentRole ? [parentRole.name] : []} onRemoveChip={() => setParentId(undefined)} />
-    <FilterByString onChange={() => { }} />
-    {roles.map((role) => <Box key={role.id}><Button variant='text' onClick={() => setParentId(role.id)}>{role.name}</Button></Box>)}
-  </>
+  return (
+    <>
+      <Stack spacing={1}>
+        <CurrentlySelected chips={parentRole ? [parentRole.name] : []} onRemoveChip={() => setParentId(undefined)} />
+        <FilterByString onChange={() => { }} />
+      </Stack>
+      <Box sx={{ mt: 1 }}>
+        {roles.map((role, index) => <LayoutListItem key={role.id}
+          index={index}
+          active={role.id === parentRole?.id}
+          onClick={() => setParentId(role.id)}>
+          {role.name}
+        </LayoutListItem>
+        )}
+      </Box>
+    </>
   )
 }
 

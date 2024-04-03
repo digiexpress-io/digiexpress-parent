@@ -36,9 +36,9 @@ interface StyledDialogLargeProps {
 const DialogBlock: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <Box sx={{ width: '50%', mt: 1 }} overflow='auto'>
-      <Stack spacing={dialog_padding}>
+      <Box display='flex' flexDirection='column' padding={dialog_padding}>
         {children}
-      </Stack>
+      </Box>
     </Box>
   )
 }

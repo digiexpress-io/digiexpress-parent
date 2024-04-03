@@ -1,6 +1,6 @@
 import { Theme, alpha, Box, useTheme } from '@mui/material';
 import { SxProps } from '@mui/system';
-import { cyan, wash_me, cyan_mud } from 'components-colors';
+import { cyan, cyan_mud } from 'components-colors';
 
 
 
@@ -36,7 +36,7 @@ export const LayoutListItem: React.FC<{
       return {
         p: 2,
         cursor: 'pointer',
-        backgroundColor: wash_me,
+        backgroundColor: undefined,
         color: 'text.primary'
       };
     }

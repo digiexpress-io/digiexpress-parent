@@ -40,6 +40,10 @@ const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 }
 
 const RoleCreateDialog: React.FC<{ open: boolean, onClose: () => void }> = ({ open, onClose }) => {
+  if (!open) {
+    return null;
+  }
+
 
   return (
     <RoleCreateProvider>
