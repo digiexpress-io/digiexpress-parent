@@ -192,27 +192,39 @@ public class MergeMissionBuilder implements MergeMission {
   }
 
   @Override
-  public MergeMission modifyRemark(String remarkId, Consumer<MergeRemark> objective) {
-    // TODO Auto-generated method stub
-    return null;
+  public MergeMission modifyRemark(String remarkId, Consumer<MergeRemark> mergeRemark) {
+    final var builder = new MergeRemarkBuilder(container, logger, missionId, remarkId);
+    mergeRemark.accept(builder);
+    final var built = builder.close();
+    this.batch.from(built);
+    return this;
   }
 
   @Override
   public MergeMission removeGoal(String goalId) {
-    // TODO Auto-generated method stub
+    final var currentGoal = container.getGoals().get(goalId);
+    RepoAssert.notNull(currentGoal, () -> "Can't find goal with id: '" + goalId + "' for mission: '" + missionId + "'!");
+    this.batch.addDeleteGoals(currentGoal);
+    this.logger.rm(currentGoal);
     return null;
   }
 
   @Override
   public MergeMission removeObjective(String objectiveId) {
-    // TODO Auto-generated method stub
+    final var currentObjective = container.getObjectives().get(objectiveId);
+    RepoAssert.notNull(currentObjective, () -> "Can't find objective with id: '" + objectiveId + "' for mission: '" + missionId + "'!");
+    this.batch.addDeleteObjectives(currentObjective);
+    this.logger.rm(currentObjective);
     return null;
   }
 
   @Override
   public MergeMission removeRemark(String remarkId) {
-    // TODO Auto-generated method stub
-    return null;
+    final var currentRemark = container.getRemarks().get(remarkId);
+    RepoAssert.notNull(currentRemark, () -> "Can't find remark with id: '" + remarkId + "' for mission: '" + missionId + "'!");
+    this.batch.addDeleteRemarks(currentRemark);
+    this.logger.rm(currentRemark);
+    return this;
   }
 
   @Override
@@ -221,7 +233,7 @@ public class MergeMissionBuilder implements MergeMission {
   }
 
   public ImmutableGrimBatchForOne close() {
-    RepoAssert.isTrue(built, () -> "you must call MissionChanges.build() to finalize mission CREATE or UPDATE!");
+    RepoAssert.isTrue(built, () -> "you must call MergeMission.build() to finalize mission CREATE or UPDATE!");
 
     // mission meta merge
     {

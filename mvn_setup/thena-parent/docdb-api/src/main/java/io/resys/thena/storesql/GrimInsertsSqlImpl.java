@@ -38,6 +38,8 @@ public class GrimInsertsSqlImpl implements GrimInserts {
     final var del_links = registry.missionLinks().deleteAll(inputBatch.getDeleteLinks());
     final var del_missionLabels = registry.missionLabels().deleteAll(inputBatch.getDeleteMissionLabels());
     final var del_remarks = registry.remarks().deleteAll(inputBatch.getDeleteRemarks());
+    final var del_goals = registry.goals().deleteAll(inputBatch.getDeleteGoals());
+    final var del_objectives = registry.objectives().deleteAll(inputBatch.getDeleteObjectives());
 
     final Uni<GrimBatchForOne> del_assignements_uni = Execute.apply(tx, del_assignements).onItem()
         .transform(row -> successOutput(inputBatch, "Assignments deleted, number of deleted entries: " + + (row == null ? 0 : row.rowCount())))
@@ -55,6 +57,16 @@ public class GrimInsertsSqlImpl implements GrimInserts {
         .transform(row -> successOutput(inputBatch, "Remarks deleted, number of deleted entries: " + + (row == null ? 0 : row.rowCount())))
         .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to delete remarks \r\n" + inputBatch.getDeleteRemarks(), e));
 
+    final Uni<GrimBatchForOne> del_goals_uni = Execute.apply(tx, del_goals).onItem()
+        .transform(row -> successOutput(inputBatch, "Goals deleted, number of deleted entries: " + + (row == null ? 0 : row.rowCount())))
+        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to delete goals \r\n" + inputBatch.getDeleteRemarks(), e));
+
+    final Uni<GrimBatchForOne> del_objectives_uni = Execute.apply(tx, del_objectives).onItem()
+        .transform(row -> successOutput(inputBatch, "Objectives deleted, number of deleted entries: " + + (row == null ? 0 : row.rowCount())))
+        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to delete objectives \r\n" + inputBatch.getDeleteRemarks(), e));
+
+    
+    
     // UPDATE OPERATIONS
     final var upd_missionData = registry.missionData().updateAll(inputBatch.getUpdateData());
     final var upd_remarks = registry.remarks().updateAll(inputBatch.getUpdateRemarks());
@@ -156,6 +168,8 @@ public class GrimInsertsSqlImpl implements GrimInserts {
             del_links_uni,
             del_missionLabels_uni,
             del_remarks_uni,
+            del_goals_uni,
+            del_objectives_uni,
 
     		    ins_commits_uni,
             ins_trees_uni,

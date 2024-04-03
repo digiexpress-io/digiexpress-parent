@@ -74,7 +74,7 @@ public class GrimPrinter {
     .append("  - id: ").append(ID.apply(repo.getId()))
     .append(", rev: ").append(ID.apply(repo.getRev())).append(System.lineSeparator())
     .append("    name: ").append(repo.getName())
-    .append(", prefix: ").append(repo.getPrefix())
+    .append(", prefix: ").append(ID.apply(repo.getPrefix()))
     .append(", type: ").append(repo.getType()).append(System.lineSeparator());
     
     ctx.query().missions().findAll()

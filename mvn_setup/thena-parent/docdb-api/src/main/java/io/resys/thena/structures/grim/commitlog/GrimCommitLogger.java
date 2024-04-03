@@ -19,15 +19,20 @@ public class GrimCommitLogger {
   private final StringBuilder removed = new StringBuilder();
   
   public void add(IsGrimObject entity) {    
+    count_added++;
     added
       .append("  + ").append(entity.getId()).append("::").append(entity.getDocType()).append(System.lineSeparator())
       .append("    ").append(JsonObject.mapFrom(entity)).append(System.lineSeparator());
   }
   
   public void remove(IsGrimObject entity) {
-
+    count_deleted++;
+    removed
+    .append("  - ").append(entity.getId()).append("::").append(entity.getDocType()).append(System.lineSeparator())
+    .append("    ").append(JsonObject.mapFrom(entity)).append(System.lineSeparator());
   }
   public void merge(IsGrimObject previous, IsGrimObject next) {
+    count_merged++;
     merged
     .append("  +- ").append(next.getId()).append("::").append(next.getDocType()).append(System.lineSeparator())
     .append("   -  ").append(JsonObject.mapFrom(previous)).append(System.lineSeparator())

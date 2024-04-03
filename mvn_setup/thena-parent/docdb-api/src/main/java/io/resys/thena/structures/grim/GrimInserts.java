@@ -73,6 +73,8 @@ public interface GrimInserts {
     List<GrimMissionLink> getDeleteLinks();
     List<GrimMissionLabel> getDeleteMissionLabels();
     List<GrimRemark> getDeleteRemarks();
+    List<GrimObjective> getDeleteObjectives();
+    List<GrimObjectiveGoal> getDeleteGoals();
     
     BatchStatus getStatus();
     String getTenantId();
