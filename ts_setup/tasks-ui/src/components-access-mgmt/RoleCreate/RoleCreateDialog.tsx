@@ -11,10 +11,10 @@ import { CreateRole, ImmutableAccessMgmtStore } from 'descriptor-access-mgmt';
 
 const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const { reload } = Context.useAccessMgmt();
-
-
   const backend = Context.useBackend();
   const { entity } = useNewRole();
+
+  const disabled = !entity.description || !entity.name || !entity.commitComment;
 
   async function handleRoleCreate() {
     const { name, description, commitComment, parentId, permissions } = entity;
@@ -34,7 +34,7 @@ const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   return (
     <>
       <Burger.SecondaryButton label='buttons.cancel' onClick={onClose} />
-      <Burger.PrimaryButton label='buttons.accept' onClick={handleRoleCreate} />
+      <Burger.PrimaryButton label='buttons.accept' disabled={disabled} onClick={handleRoleCreate} />
     </>
   )
 }
