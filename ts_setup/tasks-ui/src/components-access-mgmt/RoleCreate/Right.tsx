@@ -1,10 +1,7 @@
 import React from 'react';
 import { Alert, AlertTitle, Box, Chip, Stack } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
-
 import { FilterByString, LayoutListItem } from 'components-generic';
-import { StyledRoleCreateTransferList } from './StyledRoleCreateTransferList';
-
 import { useNewRole, useTabs } from './RoleCreateContext';
 import Context from 'context';
 
@@ -88,55 +85,36 @@ const RolePermissions: React.FC = () => {
 
 const RolePrincipals: React.FC = () => {
   const { principals } = Context.useAccessMgmt();
+  const { addPrincipal, removePrincipal, entity } = useNewRole();
 
   if (!principals) {
     console.log('no principals found')
   }
 
-  function handleSave() {
-    console.log('click for save!')
+  function handlePrincipal(principal: string) {
+    if (entity.principals.includes(principal)) {
+      removePrincipal(principal);
+    }
+    else { addPrincipal(principal) };
   }
-
 
   return (<>
 
-    <FilterByString onChange={() => { }} />
+    <Stack spacing={1}>
+      <CurrentlySelected chips={entity.principals ? [...entity.principals] : []} onRemoveChip={(index) => removePrincipal(entity.principals[index])} />
+      <FilterByString onChange={() => { }} />
+    </Stack>
 
-    <StyledRoleCreateTransferList
-      title="permissions.principals.title"
-      titleArgs={{ name: 'fun name' }}
-      searchTitle="permissions.principals.search.title"
-      selectedTitle="permissions.principals.selectedPrincipals"
-      headers={["permissions.principal.name"]}
-      rows={principals
-        .sort((a, b) => a.name.localeCompare(b.name))
-        .filter((principal, index, srcArray) => srcArray.findIndex(p => p.id === principal.id) === index)
-        .map((principal) => principal.id)
-      }
-      selected={principals
-        .filter((principal, index, srcArray) => srcArray
-          .findIndex(p => p.id === principal.id) === index)
-        .map((r) => r.id)}
-      filterRow={(row, search) => {
-        const principal = principals.find(principal => principal.id === row)?.name;
-        return ((principal && principal
-          .toLowerCase()
-          .indexOf(search) > -1) ? true : false);
-      }}
-      renderCells={(row) => {
-        const { name } = principals.find(principal => principal.id === row)!;
-        return [name];
-      }}
-      cancel={{
-        label: 'button.cancel',
-        onClick: () => { }
-      }}
-      submit={{
-        label: "button.apply",
-        disabled: false,
-        onClick: handleSave
-      }}
-    />
+    <Box sx={{ mt: 1 }}>
+      {principals.map((principal, index) => <LayoutListItem key={principal.id}
+        index={index}
+        active={entity.principals.includes(principal.name)}
+        onClick={() => handlePrincipal(principal.name)}>
+        {principal.name}
+      </LayoutListItem>
+      )}
+    </Box>
+
   </>
   )
 }
