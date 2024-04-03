@@ -1,4 +1,4 @@
-import { CreatePermission, CreateRole, Permission, AccessMgmtStore, PermissionUpdateCommand, Role, RoleUpdateCommand } from './permission-types';
+import { CreatePermission, CreateRole, Permission, AccessMgmtStore, PermissionUpdateCommand, Role, RoleUpdateCommand } from './access-mgmt-types';
 
 
 export interface AccessMgmtStoreConfig {
