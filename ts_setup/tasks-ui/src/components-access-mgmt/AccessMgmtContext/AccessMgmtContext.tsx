@@ -14,7 +14,7 @@ export interface AccessMgmtContextType {
 
 
 
-export function usePermissions() {
+export function useAccessMgmt() {
   const result = React.useContext(AccessMgmtContext);
   return result;
 }

@@ -5,7 +5,7 @@ import Burger from 'components-burger';
 
 import { SectionLayout } from 'components-generic';
 import { useNewRole } from './RoleCreateContext';
-import { usePermissions } from 'components-access-mgmt/AccessMgmtContext';
+import { useAccessMgmt } from 'components-access-mgmt/AccessMgmtContext';
 
 
 
@@ -64,7 +64,7 @@ const RoleCommitComment: React.FC<{}> = () => {
 
 export const Left: React.FC<{}> = () => {
   const { entity } = useNewRole();
-  const { getPermissionById } = usePermissions();
+  const { getPermissionById } = useAccessMgmt();
 
   const parentRole = entity.parentId ? getPermissionById(entity.parentId) : undefined;
   return (

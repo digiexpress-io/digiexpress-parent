@@ -4,7 +4,7 @@ import * as colors from 'components-colors';
 import { LayoutList, NavigationButton, FilterByString } from 'components-generic';
 import RoleCreateDialog from '../RoleCreate';
 import { OneRoleData } from './OneRoleData';
-import { AccessMgmtContextProvider, usePermissions } from '../AccessMgmtContext';
+import { AccessMgmtContextProvider, useAccessMgmt } from '../AccessMgmtContext';
 import { PermissionCreateDialog } from '../PermissionCreate';
 
 
@@ -48,7 +48,7 @@ const RoleNavigation: React.FC = () => {
 
 
 const RolesOverviewLayout: React.FC = () => {
-  const { roles } = usePermissions();
+  const { roles } = useAccessMgmt();
   if (!roles) {
     return null;
   }
