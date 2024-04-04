@@ -24,6 +24,8 @@ import java.util.List;
 
 import org.immutables.value.Value;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import io.resys.thena.api.entities.grim.GrimAssignment;
 import io.resys.thena.api.entities.grim.GrimCommands;
 import io.resys.thena.api.entities.grim.GrimCommit;
@@ -81,5 +83,35 @@ public interface GrimInserts {
 
     String getLog();
     List<Message> getMessages();
+    
+    @JsonIgnore
+    default boolean isEmpty() {
+      return 
+        this.getMissions().isEmpty() &&
+        this.getMissionLabels().isEmpty() &&
+        this.getLinks().isEmpty() &&
+        this.getRemarks().isEmpty() &&
+        this.getObjectives().isEmpty() &&
+        this.getGoals().isEmpty() &&
+        this.getData().isEmpty() &&
+        this.getAssignments().isEmpty() &&
+        this.getCommands().isEmpty() &&
+        
+        // Objects to update
+        this.getUpdateData().isEmpty() &&
+        this.getUpdateRemarks().isEmpty() &&
+        this.getUpdateGoals().isEmpty() &&
+        this.getUpdateObjectives().isEmpty() &&
+        this.getUpdateMissions().isEmpty() &&
+  
+        // Objects to delete
+        this.getDeleteAssignments().isEmpty() &&
+        this.getDeleteLinks().isEmpty() &&
+        this.getDeleteMissionLabels().isEmpty() &&
+        this.getDeleteRemarks().isEmpty() &&
+        this.getDeleteObjectives().isEmpty() &&
+        this.getDeleteGoals().isEmpty();
+    }
+    
   }
 }

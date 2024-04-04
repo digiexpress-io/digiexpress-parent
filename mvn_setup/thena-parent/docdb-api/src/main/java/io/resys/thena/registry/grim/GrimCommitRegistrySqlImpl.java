@@ -125,8 +125,7 @@ public class GrimCommitRegistrySqlImpl implements GrimCommitRegistry {
       .ln().append("--- constraints for").append(options.getGrimCommit()).ln()
      .append(createGrimCommitFk(options.getGrimAssignment()))
      .append(createGrimCommitFk(options.getGrimCommitTree()))
-     .append(createGrimCommitFk(options.getGrimCommitViewer()))
-     .append(createGrimCommitFk(options.getGrimMission()))
+     .append(createGrimCommitFk(options.getGrimCommitViewer()))     
      .append(createGrimCommitFk(options.getGrimMissionData()))
      .append(createGrimCommitFk(options.getGrimMissionLabel()))
      .append(createGrimCommitFk(options.getGrimMissionLink()))
@@ -134,6 +133,13 @@ public class GrimCommitRegistrySqlImpl implements GrimCommitRegistry {
      .append(createGrimCommitFk(options.getGrimObjectiveGoal()))
      .append(createGrimCommitFk(options.getGrimRemark()))
      .append(createGrimCommitFk(options.getGrimCommands()))
+     
+     // mission table
+     .append(createGrimCommitFk(options.getGrimMission()))
+     .append(createGrimCommitFk(options.getGrimMission(), "created_commit_id"))
+     .append(createGrimCommitFk(options.getGrimMission(), "updated_tree_commit_id"))
+     
+     
     .build()).build();
   }
 
@@ -155,7 +161,14 @@ public class GrimCommitRegistrySqlImpl implements GrimCommitRegistry {
           .build();
     };
   }
-  
+  private String createGrimCommitFk(String tableNameThatPointToCommits, String column) {
+    return new SqlStatement().ln()
+        .append("ALTER TABLE ").append(tableNameThatPointToCommits).ln()
+        .append("  ADD CONSTRAINT ").append(tableNameThatPointToCommits).append("_").append(column.toUpperCase()).append("_FK").ln()
+        .append("  FOREIGN KEY (" + column + ")").ln()
+        .append("  REFERENCES ").append(options.getGrimCommit()).append(" (commit_id);").ln().ln()
+        .build();
+  }
   private String createGrimCommitFk(String tableNameThatPointToCommits) {
     return new SqlStatement().ln()
         .append("ALTER TABLE ").append(tableNameThatPointToCommits).ln()

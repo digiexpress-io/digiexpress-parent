@@ -235,6 +235,7 @@ public class MergeMissionBuilder implements MergeMission {
   public ImmutableGrimBatchForOne close() {
     RepoAssert.isTrue(built, () -> "you must call MergeMission.build() to finalize mission CREATE or UPDATE!");
 
+    
     // mission meta merge
     {
       var data = this.nextMissionMeta.build();
@@ -260,11 +261,20 @@ public class MergeMissionBuilder implements MergeMission {
         mission = ImmutableGrimMission.builder()
             .from(mission)
             .commitId(this.logger.getCommitId())
+            .createdWithCommitId(this.logger.getCommitId())
             .build();
         logger.merge(previous, mission);
         batch.addUpdateMissions(mission);
+      } else if(!batch.build().isEmpty()) {
+        mission = ImmutableGrimMission.builder()
+            .from(mission)
+            .createdWithCommitId(this.logger.getCommitId())
+            .build();
       }
     }
+    
+
+    
     
     return batch.build();
   }

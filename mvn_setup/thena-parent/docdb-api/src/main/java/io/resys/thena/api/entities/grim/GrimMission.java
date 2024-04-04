@@ -1,6 +1,7 @@
 package io.resys.thena.api.entities.grim;
 
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 
 import org.immutables.value.Value;
 
@@ -14,9 +15,14 @@ import jakarta.annotation.Nullable;
 public interface GrimMission extends IsGrimObject, ThenaTable {
   String getId();
   String getCommitId();
-
-  @Nullable String getParentMissionId();
+  String getCreatedWithCommitId();
+  String getUpdatedTreeWithCommitId();
   
+  @Nullable OffsetDateTime getCreatedAt(); // Transitive from commit table
+  @Nullable OffsetDateTime getUpdatedAt(); // Transitive from commit table
+  @Nullable OffsetDateTime getTreeUpdatedAt(); // Transitive from commit table
+  
+  @Nullable String getParentMissionId();
   @Nullable String getExternalId();
   @Nullable String getMissionStatus();
   @Nullable String getMissionPriority();

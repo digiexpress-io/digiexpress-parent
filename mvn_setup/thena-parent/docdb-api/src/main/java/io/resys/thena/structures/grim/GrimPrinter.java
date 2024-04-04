@@ -1,5 +1,7 @@
 package io.resys.thena.structures.grim;
 
+import java.time.OffsetDateTime;
+
 /*-
  * #%L
  * thena-docdb-api
@@ -28,6 +30,7 @@ import com.google.common.collect.ComparisonChain;
 
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.spi.DbState;
+import io.vertx.core.json.jackson.DatabindCodec;
 
 public class GrimPrinter {
   private final DbState state;
@@ -47,7 +50,6 @@ public class GrimPrinter {
   
   public String internalPrinting(Tenant repo, boolean isStatic, final Map<String, String> collector) {
     final Map<String, String> replacements = collector != null ? collector : new HashMap<>();
-    
     final Function<String, String> ID = (id) -> {
       if(!isStatic) {
         return id;
@@ -62,6 +64,27 @@ public class GrimPrinter {
       final var next = String.valueOf(replacements.size() + 1);
       replacements.put(id, next);
       return next;
+    };
+    
+    final Function<OffsetDateTime, String> DATES = (input) -> {
+      if(input == null) {
+        return null;
+      }
+      try {
+        final var id = DatabindCodec.mapper().writeValueAsString(input);
+        if(!isStatic) {
+          return id.toString();
+        }
+  
+        if(replacements.containsKey(id)) {
+          return replacements.get(id);
+        }
+        final var next = "\"OffsetDateTime.now()\"";
+        replacements.put(id, next);
+        return next;
+      } catch(Exception e) {
+        throw new RuntimeException(e.getMessage(), e);
+      }
     };
 
     final var ctx = state.toGrimState(repo);
@@ -91,6 +114,8 @@ public class GrimPrinter {
         ID.apply(data.getParentCommitId());
         ID.apply(data.getCommitId());
         ID.apply(data.getMissionId());
+        
+        DATES.apply(data.getCreatedAt());
       }
       
       for(final var item : items.stream()
