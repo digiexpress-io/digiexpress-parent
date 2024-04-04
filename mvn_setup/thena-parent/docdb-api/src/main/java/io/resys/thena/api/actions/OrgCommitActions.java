@@ -154,6 +154,7 @@ public interface OrgCommitActions {
     List<Message> getMessages();
     
     @Nullable OrgParty getParty();
+    @Nullable List<OrgRight> getDirectRights();
   }
   
   enum ModType {

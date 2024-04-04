@@ -21,7 +21,6 @@ package io.resys.permission.client.api.model;
  */
 
 import java.io.Serializable;
-import java.security.Permission;
 import java.util.List;
 
 import org.immutables.value.Value;
@@ -65,7 +64,7 @@ public interface RoleCommand extends Serializable {
   interface CreateRole extends RoleCommand {
     String getName();
     String getDescription();
-    List<Permission> getPermissions();
+    List<String> getPermissions(); //Can be permission name or permission id or permission external id
     
     @Value.Default
     @Override default RoleCommandType getCommandType() { return RoleCommandType.CREATE_ROLE; }

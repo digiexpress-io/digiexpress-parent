@@ -9,7 +9,9 @@ import io.quarkus.test.junit.TestProfile;
 import io.resys.permission.client.api.PermissionClient;
 import io.resys.permission.client.api.model.ImmutableChangeRoleDescription;
 import io.resys.permission.client.api.model.ImmutableChangeRoleName;
+import io.resys.permission.client.api.model.ImmutableCreatePermission;
 import io.resys.permission.client.api.model.ImmutableCreateRole;
+import io.resys.permission.client.api.model.Principal.Permission;
 import io.resys.permission.client.api.model.Principal.Role;
 import io.resys.permission.client.tests.config.DbTestTemplate;
 import io.resys.permission.client.tests.config.OrgPgProfile;
@@ -18,6 +20,17 @@ import io.resys.permission.client.tests.config.OrgPgProfile;
 @TestProfile(OrgPgProfile.class)
 public class RoleCreateAndUpdateTest extends DbTestTemplate {
   
+  
+  private Permission createPermissionForRole(PermissionClient client, String name) {
+    return client.createPermission()
+      .createOne(ImmutableCreatePermission.builder()
+        .comment("created my first permission")
+        .name(name)
+        .description("Cool description here")
+        .build())
+      .await().atMost(Duration.ofMinutes(1));
+  }
+  
   private Role createRoleForUpdating(PermissionClient client) {
     
     return client.createRole()
@@ -25,6 +38,11 @@ public class RoleCreateAndUpdateTest extends DbTestTemplate {
           .name("My first role")
           .description("Description for my first role")
           .comment("Role created")
+          .addPermissions( 
+              createPermissionForRole(client, "perm-1").getName(),
+              createPermissionForRole(client, "perm-2").getName(),
+              createPermissionForRole(client, "perm-3").getName()
+              )
         .build())
       .await().atMost(Duration.ofMinutes(1));
   }
@@ -57,6 +75,9 @@ public class RoleCreateAndUpdateTest extends DbTestTemplate {
       .await().atMost(Duration.ofMinutes(1));
     
     Assertions.assertEquals("New description", client.roleQuery().get(updatedDescription.getId()).await().atMost(Duration.ofMinutes(1)).getDescription());
+    Assertions.assertEquals(3, created.getPermissions().size());    
+    Assertions.assertEquals(3, client.roleQuery().get(created.getId()).await().atMost(Duration.ofMinutes(1)).getPermissions().size());
+
   }
 }
 

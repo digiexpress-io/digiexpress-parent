@@ -67,14 +67,14 @@ public class OrgPartyRightRegistrySqlImpl implements OrgPartyRightRegistry {
   }
 
 	@Override
-	public ThenaSqlClient.SqlTuple findAllByGroupId(String userId) {
+	public ThenaSqlClient.SqlTuple findAllByPartyId(String partyId) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT * ").ln()
         .append("  FROM ").append(options.getOrgPartyRights()).ln()
         .append("  WHERE party_id = $1").ln() 
         .build())
-        .props(Tuple.of(userId))
+        .props(Tuple.of(partyId))
         .build();
 	}
 	@Override

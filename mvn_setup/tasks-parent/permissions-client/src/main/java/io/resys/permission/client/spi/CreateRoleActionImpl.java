@@ -22,25 +22,6 @@ public class CreateRoleActionImpl implements CreateRoleAction {
   }
   
   
-  public Role createResponse(OnePartyEnvelope response) {
-    
-    if(response.getStatus() != CommitResultStatus.OK) {
-      final var msg = "failed to created role";
-      throw new CreateRoleException(msg, response);
-    }
-    
-    final var role = response.getParty();
-    return ImmutableRole.builder()
-        .id(role.getId())
-        .version(role.getCommitId())
-      
-        .name(role.getPartyName())
-        .description(role.getPartyDescription())
-        .status(OrgActorStatus.OrgActorStatusType.IN_FORCE)
-        .build();
-  }
-  
-  
   public Uni<OnePartyEnvelope> createRequest(CreateRole command) {
     final CreateOneParty createOneParty = ctx.getOrg(ctx.getConfig().getRepoId()).commit().createOneParty();
 
@@ -54,12 +35,32 @@ public class CreateRoleActionImpl implements CreateRoleAction {
         
         .partyDescription(role.getDescription())
         .partyName(role.getName())
+        .addRightsToParty(role.getPermissions())
         .build();
     }
     
-    throw new CreateRoleException("failed to create role");
-    
+    throw new CreateRoleException("failed to create role"); 
   }
+  
+  public Role createResponse(OnePartyEnvelope response) {
+    if(response.getStatus() != CommitResultStatus.OK) {
+      final var msg = "failed to created role";
+      throw new CreateRoleException(msg, response);
+    }
+    
+    final var role = response.getParty();
+    return ImmutableRole.builder()
+        .id(role.getId())
+        .version(role.getCommitId())
+      
+        .name(role.getPartyName())
+        .description(role.getPartyDescription())
+        .status(OrgActorStatus.OrgActorStatusType.IN_FORCE)
+        .permissions(response.getDirectRights().stream().map(e -> e.getRightName()).toList())
+        .build();
+  }
+  
+  
   
   final static class CreateRoleException extends RuntimeException {
     private static final long serialVersionUID = 542587084478526731L;
@@ -72,11 +73,12 @@ public class CreateRoleActionImpl implements CreateRoleAction {
       super(message + System.lineSeparator() + " " +
           String.join(System.lineSeparator() + " ", response.getMessages().stream().map(e -> e.getText()).toList()));
             response.getMessages().forEach(e -> {
-              addSuppressed(e.getException());
+              if(e.getException() != null) {
+                addSuppressed(e.getException());
+              }
         });
     }
 
-    
   }
 
 }

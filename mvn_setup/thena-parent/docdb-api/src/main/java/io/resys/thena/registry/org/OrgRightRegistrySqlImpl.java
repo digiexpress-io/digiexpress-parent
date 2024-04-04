@@ -47,6 +47,23 @@ public class OrgRightRegistrySqlImpl implements OrgRightRegistry {
         .props(Tuple.from(new ArrayList<>(id)))
         .build();
   }
+  @Override
+  public ThenaSqlClient.SqlTuple findAllByPartyId(String partyId) {
+    final var sql = new SqlStatement()
+      .append("SELECT rights.* ").ln()
+      .append("  FROM ").append(options.getOrgPartyRights()).append(" as party ").ln()
+      .append("  LEFT JOIN ").append(options.getOrgRights()).append(" as rights ").ln()
+      .append("  ON (rights.id = party.right_id)")
+      .append("  WHERE party.party_id = $1").ln();
+    
+    
+    return ImmutableSqlTuple.builder()
+        .value(sql.build())
+        .props(Tuple.of(partyId))
+        .build();
+  }
+  
+  
   
   @Override
   public ThenaSqlClient.Sql findAll() {

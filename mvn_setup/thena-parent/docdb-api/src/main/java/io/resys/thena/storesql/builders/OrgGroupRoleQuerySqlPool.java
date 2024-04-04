@@ -83,11 +83,11 @@ public class OrgGroupRoleQuerySqlPool implements OrgQueries.PartyRightsQuery {
   }
 
 	@Override
-	public Multi<OrgPartyRight> findAllByPartyId(String id) {
-    final var sql = registry.orgPartyRights().findAllByGroupId(id);
+	public Multi<OrgPartyRight> findAllByPartyId(String partyId) {
+    final var sql = registry.orgPartyRights().findAllByPartyId(partyId);
     if(log.isDebugEnabled()) {
-      log.debug("GroupRole findAllByGroupId query, with props: {} \r\n{}", 
-          "",
+      log.debug("OrgPartyRight findAllByGroupId query, with props: {} \r\n{}", 
+          sql.getPropsDeepString(),
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())

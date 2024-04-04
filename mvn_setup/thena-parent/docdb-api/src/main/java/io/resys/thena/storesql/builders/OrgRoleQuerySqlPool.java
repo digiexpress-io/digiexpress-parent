@@ -81,4 +81,19 @@ public class OrgRoleQuerySqlPool implements OrgQueries.RightsQuery {
         .onFailure(e -> errorHandler.notFound(e)).recoverWithNull()
         .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't get 'RIGHTS' by 'id': '" + id + "'!", sql, e)));
   }
+  @Override
+  public Multi<OrgRight> findAllByPartyId(String id) {
+    final var sql = registry.orgRights().findAllByPartyId(id);
+    if(log.isDebugEnabled()) {
+      log.debug("Role findAllByPartyId query, with props: {} \r\n{}", 
+          "",
+          sql.getValue());
+    }
+    return wrapper.getClient().preparedQuery(sql.getValue())
+        .mapping(registry.orgRights().defaultMapper())
+        .execute(sql.getProps())
+        .onItem()
+        .transformToMulti((RowSet<OrgRight> rowset) -> Multi.createFrom().iterable(rowset))
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'RIGHTS'!", sql, e)));
+  }
 }

@@ -11,7 +11,6 @@ import io.resys.thena.api.entities.org.ImmutableOrgMembership;
 import io.resys.thena.api.entities.org.ImmutableOrgParty;
 import io.resys.thena.api.entities.org.ImmutableOrgPartyRight;
 import io.resys.thena.api.entities.org.OrgCommitTree;
-import io.resys.thena.api.entities.org.OrgCommitTree.OrgOperationType;
 import io.resys.thena.api.entities.org.OrgMember;
 import io.resys.thena.api.entities.org.OrgMembership;
 import io.resys.thena.api.entities.org.OrgParty;

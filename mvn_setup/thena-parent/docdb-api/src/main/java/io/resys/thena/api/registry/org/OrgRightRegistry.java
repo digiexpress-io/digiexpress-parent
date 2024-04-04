@@ -13,6 +13,7 @@ public interface OrgRightRegistry extends ThenaRegistryService<OrgRight, io.vert
   ThenaSqlClient.Sql findAll();
   ThenaSqlClient.SqlTuple findAll(Collection<String> id);
   ThenaSqlClient.SqlTuple insertOne(OrgRight role);
+  ThenaSqlClient.SqlTuple findAllByPartyId(String partyId);
   ThenaSqlClient.SqlTupleList insertAll(Collection<OrgRight> roles);
   ThenaSqlClient.SqlTuple updateOne(OrgRight role);
   ThenaSqlClient.SqlTupleList updateMany(Collection<OrgRight> roles);
@@ -22,4 +23,5 @@ public interface OrgRightRegistry extends ThenaRegistryService<OrgRight, io.vert
   ThenaSqlClient.Sql dropTable();
   
   Function<io.vertx.mutiny.sqlclient.Row, OrgRight> defaultMapper();
+
 }

@@ -81,6 +81,7 @@ public interface OrgQueries {
   interface RightsQuery {    
     Multi<OrgRight> findAll();
     Multi<OrgRight> findAll(Collection<String> id);
+    Multi<OrgRight> findAllByPartyId(String id);
     Uni<OrgRight> getById(String id);
   }
   

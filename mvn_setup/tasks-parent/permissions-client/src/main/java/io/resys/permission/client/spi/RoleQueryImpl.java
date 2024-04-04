@@ -7,8 +7,8 @@ import io.resys.permission.client.api.model.ImmutableRole;
 import io.resys.permission.client.api.model.Principal.Role;
 import io.resys.thena.api.entities.org.ThenaOrgObjects.OrgPartyHierarchy;
 import io.resys.thena.api.envelope.QueryEnvelope;
-import io.resys.thena.api.envelope.QueryEnvelopeList;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
+import io.resys.thena.api.envelope.QueryEnvelopeList;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -73,6 +73,7 @@ public class RoleQueryImpl implements RoleQuery {
       .name(party.getPartyName())
       .description(party.getPartyDescription())
       .status(party.getStatus())
+      .permissions(party.getDirectRights().stream().map((right -> right.getRightName())).toList())
       .build();
   }
   
