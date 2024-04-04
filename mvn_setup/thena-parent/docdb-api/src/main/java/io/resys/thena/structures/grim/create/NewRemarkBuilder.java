@@ -1,12 +1,19 @@
 package io.resys.thena.structures.grim.create;
 
 import java.util.Map;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import io.resys.thena.api.entities.grim.GrimRemark;
+import io.resys.thena.api.entities.grim.ImmutableGrimOneOfRelations;
 import io.resys.thena.api.entities.grim.ImmutableGrimRemark;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject;
+import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewAssignment;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewRemark;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimOneOfRelations;
+import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimRelationType;
+import io.resys.thena.structures.BatchStatus;
+import io.resys.thena.structures.grim.ImmutableGrimBatchForOne;
 import io.resys.thena.structures.grim.commitlog.GrimCommitBuilder;
 import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
@@ -16,7 +23,11 @@ public class NewRemarkBuilder implements ThenaGrimNewObject.NewRemark {
   private final GrimCommitBuilder logger;
   private final @Nullable GrimOneOfRelations relation;
   private final Map<String, GrimRemark> all_remarks;
+  private final ImmutableGrimBatchForOne.Builder batch;
+  private final String remarkId;
+  private final String missionId;
   private ImmutableGrimRemark.Builder next; 
+  
   private boolean built;
   
   public NewRemarkBuilder(
@@ -26,14 +37,21 @@ public class NewRemarkBuilder implements ThenaGrimNewObject.NewRemark {
       Map<String, GrimRemark> all_remarks) {
     
     super();
+    this.missionId = missionId;
     this.logger = logger;
     this.relation = relation;
     this.all_remarks = all_remarks;
+    this.remarkId = OidUtils.gen();
     this.next = ImmutableGrimRemark.builder()
-        .id(OidUtils.gen())
+        .id(remarkId)
         .missionId(missionId)
         .createdWithCommitId(logger.getCommitId())
         .commitId(logger.getCommitId());
+    
+    this.batch = ImmutableGrimBatchForOne.builder()
+        .tenantId(logger.getTenantId())
+        .status(BatchStatus.OK)
+        .log("");
   }
   
   @Override
@@ -56,13 +74,29 @@ public class NewRemarkBuilder implements ThenaGrimNewObject.NewRemark {
     this.next.reporterId(reporterId);
     return this;
   }
-  public ImmutableGrimRemark close() {
+  @Override
+  public NewRemark addAssignees(Consumer<NewAssignment> assignment) {
+    final var all_assignments = this.batch.build().getAssignments().stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
+    final var builder = new NewAssignmentBuilder(logger, missionId, 
+        ImmutableGrimOneOfRelations.builder()
+        .remarkId(remarkId)
+        .relationType(GrimRelationType.REMARK)
+        .build(), all_assignments);
+    
+    assignment.accept(builder);
+    final var built = builder.close();
+    this.batch.addAssignments(built);
+    return this;
+  }
+
+  public ImmutableGrimBatchForOne close() {
     RepoAssert.isTrue(built, () -> "you must call RemarkChanges.build() to finalize mission CREATE or UPDATE!");
     final var built = next.relation(relation).build();
     
     this.logger.add(built);
-    return built;
+    return this.batch.addRemarks(built).build();
   }
+
 
 
 }

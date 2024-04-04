@@ -28,7 +28,7 @@ public class GrimCommitBuilder {
         .tenantId(tenantId)
         .status(BatchStatus.OK)
         .log("");
-    this.logger = new GrimCommitLogger(tenantId, commit.getCommitId());
+    this.logger = new GrimCommitLogger(tenantId, commit);
   }
   public String getTenantId() {
     return tenantId;

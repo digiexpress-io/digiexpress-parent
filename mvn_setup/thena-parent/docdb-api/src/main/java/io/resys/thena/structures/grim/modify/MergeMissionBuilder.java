@@ -156,7 +156,7 @@ public class MergeMissionBuilder implements MergeMission {
     final var builder = new NewRemarkBuilder(logger, missionId, null, Collections.unmodifiableMap(all_remarks));
     remark.accept(builder);
     final var built = builder.close();
-    this.batch.addRemarks(built);
+    this.batch.from(built);
     return this;
   }
   @Override
@@ -206,7 +206,33 @@ public class MergeMissionBuilder implements MergeMission {
     RepoAssert.notNull(currentGoal, () -> "Can't find goal with id: '" + goalId + "' for mission: '" + missionId + "'!");
     this.batch.addDeleteGoals(currentGoal);
     this.logger.rm(currentGoal);
-    return null;
+    
+    this.container.getLinks().values().stream()
+    .filter(link -> link.getRelation() != null && goalId.equals(link.getRelation().getObjectiveGoalId())
+    ).forEach(link -> {
+      this.logger.rm(link);
+      this.batch.addDeleteLinks(link);
+    });
+    this.container.getMissionLabels().values().stream()
+    .filter(link -> link.getRelation() != null && goalId.equals(link.getRelation().getObjectiveGoalId())  
+    ).forEach(label -> {
+      this.logger.rm(label);
+      this.batch.addDeleteMissionLabels(label);
+    });
+    this.container.getData().values().stream()
+    .filter(link -> link.getRelation() != null && goalId.equals(link.getRelation().getObjectiveGoalId()) 
+    ).forEach(data -> {
+      this.logger.rm(data);
+      this.batch.addDeleteData(data);
+    });  
+    this.container.getAssignments().values().stream()
+    .filter(link -> link.getRelation() != null && goalId.equals(link.getRelation().getObjectiveGoalId()) 
+    ).forEach(data -> {
+      this.logger.rm(data);
+      this.batch.addDeleteAssignments(data);
+    });      
+    
+    return this;
   }
 
   @Override
@@ -215,15 +241,65 @@ public class MergeMissionBuilder implements MergeMission {
     RepoAssert.notNull(currentObjective, () -> "Can't find objective with id: '" + objectiveId + "' for mission: '" + missionId + "'!");
     this.batch.addDeleteObjectives(currentObjective);
     this.logger.rm(currentObjective);
-    return null;
+    
+    this.container.getLinks().values().stream()
+    .filter(link -> link.getRelation() != null && objectiveId.equals(link.getRelation().getObjectiveId())
+    ).forEach(link -> {
+      this.logger.rm(link);
+      this.batch.addDeleteLinks(link);
+    });
+    this.container.getMissionLabels().values().stream()
+    .filter(link -> link.getRelation() != null && objectiveId.equals(link.getRelation().getObjectiveId())  
+    ).forEach(label -> {
+      this.logger.rm(label);
+      this.batch.addDeleteMissionLabels(label);
+    });
+    this.container.getData().values().stream()
+    .filter(link -> link.getRelation() != null && objectiveId.equals(link.getRelation().getObjectiveId()) 
+    ).forEach(data -> {
+      this.logger.rm(data);
+      this.batch.addDeleteData(data);
+    });  
+    this.container.getAssignments().values().stream()
+    .filter(link -> link.getRelation() != null && objectiveId.equals(link.getRelation().getObjectiveId()) 
+    ).forEach(data -> {
+      this.logger.rm(data);
+      this.batch.addDeleteAssignments(data);
+    });
+    return this;
   }
 
   @Override
   public MergeMission removeRemark(String remarkId) {
     final var currentRemark = container.getRemarks().get(remarkId);
     RepoAssert.notNull(currentRemark, () -> "Can't find remark with id: '" + remarkId + "' for mission: '" + missionId + "'!");
-    this.batch.addDeleteRemarks(currentRemark);
+    
     this.logger.rm(currentRemark);
+    this.batch.addDeleteRemarks(currentRemark);
+    this.container.getLinks().values().stream()
+      .filter(link -> link.getRelation() != null && remarkId.equals(link.getRelation().getRemarkId()) 
+      ).forEach(link -> {
+        this.logger.rm(link);
+        this.batch.addDeleteLinks(link);
+      });
+    this.container.getMissionLabels().values().stream()
+    .filter(link -> link.getRelation() != null && remarkId.equals(link.getRelation().getRemarkId()) 
+    ).forEach(label -> {
+      this.logger.rm(label);
+      this.batch.addDeleteMissionLabels(label);
+    });
+    this.container.getData().values().stream()
+    .filter(link -> link.getRelation() != null && remarkId.equals(link.getRelation().getRemarkId())
+    ).forEach(data -> {
+      this.logger.rm(data);
+      this.batch.addDeleteData(data);
+    });
+    this.container.getAssignments().values().stream()
+    .filter(link -> link.getRelation() != null && remarkId.equals(link.getRelation().getRemarkId()) 
+    ).forEach(data -> {
+      this.logger.rm(data);
+      this.batch.addDeleteAssignments(data);
+    });
     return this;
   }
 

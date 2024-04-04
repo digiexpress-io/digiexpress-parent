@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import io.resys.thena.api.entities.grim.GrimMission;
 import io.resys.thena.api.entities.grim.ImmutableGrimMission;
+import io.resys.thena.api.entities.grim.ImmutableGrimMissionTransitives;
 import io.resys.thena.api.registry.grim.GrimMissionRegistry;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
@@ -40,7 +41,11 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
         .append(" mission.*, ")
         .append(" updated_commit.created_at       as updated_at,").ln()
         .append(" created_commit.created_at       as created_at,").ln()
-        .append(" updated_tree_commit.created_at  as tree_updated_at ").ln()
+        .append(" updated_tree_commit.created_at  as tree_updated_at,").ln()
+        
+        .append(" mission_data.title          as title,").ln()
+        .append(" mission_data.description    as description,").ln()
+        .append(" mission_data.data_extension as data_extension ").ln()
         
         .append(" FROM ").append(options.getGrimMission()).append(" as mission ").ln()
         
@@ -52,6 +57,9 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
         
         .append(" LEFT JOIN ").append(options.getGrimCommit()).append(" as updated_tree_commit").ln()
         .append(" ON(updated_tree_commit.commit_id = mission.updated_tree_commit_id)").ln()
+        
+        .append(" LEFT JOIN ").append(options.getGrimMissionData()).append(" as mission_data").ln()
+        .append(" ON(mission_data.mission_id = mission.id and objective_id is null and goal_id is null and remark_id is null)").ln()
         
         .build())
         .build();
@@ -64,7 +72,11 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
         .append(" mission.*, ")
         .append(" updated_commit.created_at       as updated_at,").ln()
         .append(" created_commit.created_at       as created_at,").ln()
-        .append(" updated_tree_commit.created_at  as tree_updated_at ").ln()
+        .append(" updated_tree_commit.created_at  as tree_updated_at, ").ln()
+        
+        .append(" mission_data.title          as title,").ln()
+        .append(" mission_data.description    as description,").ln()
+        .append(" mission_data.data_extension as data_extension ").ln()
         
         .append(" FROM ").append(options.getGrimMission()).append(" as mission ").ln()
         
@@ -77,7 +89,10 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
         .append(" LEFT JOIN ").append(options.getGrimCommit()).append(" as updated_tree_commit").ln()
         .append(" ON(updated_tree_commit.commit_id = mission.updated_tree_commit_id)").ln()
         
-        .append("  WHERE mission.id = $1").ln() 
+        .append(" LEFT JOIN ").append(options.getGrimMissionData()).append(" as mission_data").ln()
+        .append(" ON(mission_data.mission_id = mission.id and objective_id is null and goal_id is null and remark_id is null)").ln()
+        
+        .append(" WHERE mission.id = $1").ln() 
         .build())
         .props(Tuple.of(id))
         .build();
@@ -90,7 +105,11 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
         .append(" mission.*, ")
         .append(" updated_commit.created_at       as updated_at,").ln()
         .append(" created_commit.created_at       as created_at,").ln()
-        .append(" updated_tree_commit.created_at  as tree_updated_at ").ln()
+        .append(" updated_tree_commit.created_at  as tree_updated_at,").ln()
+        
+        .append(" mission_data.title          as title,").ln()
+        .append(" mission_data.description    as description,").ln()
+        .append(" mission_data.data_extension as data_extension ").ln()
         
         .append(" FROM ").append(options.getGrimMission()).append(" as mission ").ln()
         
@@ -102,6 +121,10 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
         
         .append(" LEFT JOIN ").append(options.getGrimCommit()).append(" as updated_tree_commit").ln()
         .append(" ON(updated_tree_commit.commit_id = mission.updated_tree_commit_id)").ln()
+        
+        .append(" LEFT JOIN ").append(options.getGrimMissionData()).append(" as mission_data").ln()
+        .append(" ON(mission_data.mission_id = mission.id and objective_id is null and goal_id is null and remark_id is null)").ln()
+        
         .append(" WHERE mission.id = ANY($1)").ln() 
         .build())
         .props(Tuple.of(id.toArray()))
@@ -261,13 +284,18 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
       return ImmutableGrimMission.builder()
           .id(row.getString("id"))
           .commitId(row.getString("commit_id"))
-   
-          .updatedAt(row.getOffsetDateTime("updated_at"))
-          .createdAt(row.getOffsetDateTime("created_at"))
-          .treeUpdatedAt(row.getOffsetDateTime("tree_updated_at"))
           .createdWithCommitId(row.getString("created_commit_id"))
           .updatedTreeWithCommitId(row.getString("updated_tree_commit_id"))
-          
+
+          .transitives(ImmutableGrimMissionTransitives.builder()
+            .title(row.getString("title"))
+            .description(row.getString("description"))
+            .dataExtension(row.getJsonObject("data_extension"))
+            .updatedAt(row.getOffsetDateTime("updated_at"))
+            .createdAt(row.getOffsetDateTime("created_at"))
+            .treeUpdatedAt(row.getOffsetDateTime("tree_updated_at"))
+            .build()
+          )
           
           .parentMissionId(row.getString("parent_mission_id"))
           .externalId(row.getString("external_id"))

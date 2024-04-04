@@ -42,7 +42,6 @@ public class NewGoalBuilder implements ThenaGrimNewObject.NewGoal {
         .id(OidUtils.gen())
         .createdWithCommitId(logger.getCommitId())
         .commitId(logger.getCommitId())
-        .missionId(missionId)
         .objectiveId(objectiveId)
         .id(goalId)
         ;

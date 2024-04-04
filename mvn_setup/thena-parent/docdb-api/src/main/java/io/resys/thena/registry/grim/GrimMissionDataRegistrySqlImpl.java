@@ -247,5 +247,17 @@ public class GrimMissionDataRegistrySqlImpl implements GrimMissionDataRegistry {
           .build();
     };
   }
+  @Override
+  public SqlTupleList deleteAll(Collection<GrimMissionData> links) {
+    return ImmutableSqlTupleList.builder()
+        .value(new SqlStatement()
+        .append("DELETE FROM ").append(options.getGrimMissionData())
+        .append(" WHERE id = $1")
+        .build())
+        .props(links.stream()
+            .map(doc -> Tuple.from(new Object[]{doc.getId()}))
+            .collect(Collectors.toList()))
+        .build();
+  }
 
 }

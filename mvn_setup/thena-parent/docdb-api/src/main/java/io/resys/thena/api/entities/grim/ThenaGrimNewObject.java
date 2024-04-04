@@ -97,6 +97,7 @@ public interface ThenaGrimNewObject {
     NewRemark remarkText(String remarkText);
     NewRemark remarkStatus(@Nullable String remarkStatus);
     NewRemark reporterId(String reporterId);
+    NewRemark addAssignees(Consumer<NewAssignment> assignment);
     void build(); 
   }
 }

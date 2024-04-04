@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import io.resys.thena.api.entities.grim.GrimObjective;
 import io.resys.thena.api.entities.grim.ImmutableGrimObjective;
+import io.resys.thena.api.entities.grim.ImmutableGrimObjectiveTransitives;
 import io.resys.thena.api.registry.grim.GrimObjectiveRegistry;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
@@ -38,8 +39,12 @@ public class GrimObjectiveRegistrySqlImpl implements GrimObjectiveRegistry {
         .value(new SqlStatement()
         .append("SELECT objective.*,").ln()
         .append(" updated_commit.created_at       as updated_at,").ln()
-        .append(" created_commit.created_at       as created_at").ln()
-
+        .append(" created_commit.created_at       as created_at,").ln()
+        
+        .append(" mission_data.title          as title,").ln()
+        .append(" mission_data.description    as description,").ln()
+        .append(" mission_data.data_extension as data_extension ").ln()
+        
         .append(" FROM ").append(options.getGrimObjective()).append(" as objective ")
         
         .append(" LEFT JOIN ").append(options.getGrimCommit()).append(" as updated_commit").ln()
@@ -48,6 +53,8 @@ public class GrimObjectiveRegistrySqlImpl implements GrimObjectiveRegistry {
         .append(" LEFT JOIN ").append(options.getGrimCommit()).append(" as created_commit").ln()
         .append(" ON(created_commit.commit_id = objective.created_commit_id)").ln()
         
+        .append(" LEFT JOIN ").append(options.getGrimMissionData()).append(" as mission_data").ln()
+        .append(" ON(mission_data.objective_id = objective.id)").ln()
         
         .build())
         .build();
@@ -58,8 +65,12 @@ public class GrimObjectiveRegistrySqlImpl implements GrimObjectiveRegistry {
         .value(new SqlStatement()
         .append("SELECT objective.*,").ln()
         .append(" updated_commit.created_at       as updated_at,").ln()
-        .append(" created_commit.created_at       as created_at").ln()
+        .append(" created_commit.created_at       as created_at,").ln()
 
+        .append(" mission_data.title          as title,").ln()
+        .append(" mission_data.description    as description,").ln()
+        .append(" mission_data.data_extension as data_extension ").ln()
+        
         .append(" FROM ").append(options.getGrimObjective()).append(" as objective ").ln()
         
         .append(" LEFT JOIN ").append(options.getGrimCommit()).append(" as updated_commit").ln()
@@ -67,6 +78,9 @@ public class GrimObjectiveRegistrySqlImpl implements GrimObjectiveRegistry {
         
         .append(" LEFT JOIN ").append(options.getGrimCommit()).append(" as created_commit").ln()
         .append(" ON(created_commit.commit_id = objective.created_commit_id)").ln()
+        
+        .append(" LEFT JOIN ").append(options.getGrimMissionData()).append(" as mission_data").ln()
+        .append(" ON(mission_data.objective_id = objective.id)").ln()
         
         .append(" WHERE objective.id = $1").ln() 
         .build())
@@ -79,8 +93,12 @@ public class GrimObjectiveRegistrySqlImpl implements GrimObjectiveRegistry {
         .value(new SqlStatement()
         .append("SELECT objective.*,").ln()
         .append(" updated_commit.created_at       as updated_at,").ln()
-        .append(" created_commit.created_at       as created_at").ln()
+        .append(" created_commit.created_at       as created_at,").ln()
 
+        .append(" mission_data.title          as title,").ln()
+        .append(" mission_data.description    as description,").ln()
+        .append(" mission_data.data_extension as data_extension ").ln()
+        
         .append(" FROM ").append(options.getGrimObjective()).append(" as objective ").ln()
         
         .append(" LEFT JOIN ").append(options.getGrimCommit()).append(" as updated_commit").ln()
@@ -88,6 +106,9 @@ public class GrimObjectiveRegistrySqlImpl implements GrimObjectiveRegistry {
         
         .append(" LEFT JOIN ").append(options.getGrimCommit()).append(" as created_commit").ln()
         .append(" ON(created_commit.commit_id = objective.created_commit_id)").ln()
+        
+        .append(" LEFT JOIN ").append(options.getGrimMissionData()).append(" as mission_data").ln()
+        .append(" ON(mission_data.objective_id = objective.id)").ln()
         
         .append(" WHERE objective.mission_id = ANY($1)").ln() 
         .build())
@@ -210,11 +231,17 @@ public class GrimObjectiveRegistrySqlImpl implements GrimObjectiveRegistry {
           .id(row.getString("id"))
           .commitId(row.getString("commit_id"))
           .missionId(row.getString("mission_id"))
-          
-          .updatedAt(row.getOffsetDateTime("updated_at"))
-          .createdAt(row.getOffsetDateTime("created_at"))
           .createdWithCommitId(row.getString("created_commit_id"))
           
+          .transitives(ImmutableGrimObjectiveTransitives.builder()
+            .title(row.getString("title"))
+            .description(row.getString("description"))
+            .dataExtension(row.getJsonObject("data_extension"))
+            .updatedAt(row.getOffsetDateTime("updated_at"))
+            .createdAt(row.getOffsetDateTime("created_at"))
+            .build()
+          )
+
           .objectiveStatus(row.getString("objective_status"))
           .startDate(row.getLocalDate("objective_start_date"))
           .dueDate(row.getLocalDate("objective_due_date"))

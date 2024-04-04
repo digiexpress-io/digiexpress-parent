@@ -43,7 +43,7 @@ public interface ThenaGrimContainers extends ThenaContainer {
       getLinks().values().forEach(link -> builders.get(link.getMissionId()).putLinks(link.getId(), link));
       getRemarks().values().forEach(remark -> builders.get(remark.getMissionId()).putRemarks(remark.getId(), remark));
       getObjectives().values().forEach(objective -> builders.get(objective.getMissionId()).putObjectives(objective.getId(), objective));
-      getGoals().values().forEach(goals -> builders.get(goals.getMissionId()).putGoals(goals.getId(), goals));
+      getGoals().values().forEach(goals -> builders.get(goals.getTransitives().getMissionId()).putGoals(goals.getId(), goals));
       getData().values().forEach(data -> builders.get(data.getMissionId()).putData(data.getId(), data));
       getAssignments().values().forEach(assignment -> builders.get(assignment.getMissionId()).putAssignments(assignment.getId(), assignment));
       getCommands().values().forEach(commands -> builders.get(commands.getMissionId()).putCommands(commands.getId(), commands));

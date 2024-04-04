@@ -29,6 +29,7 @@ import java.util.function.Function;
 import com.google.common.collect.ComparisonChain;
 
 import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimOneOfRelations;
 import io.resys.thena.spi.DbState;
 import io.vertx.core.json.jackson.DatabindCodec;
 
@@ -65,6 +66,24 @@ public class GrimPrinter {
       replacements.put(id, next);
       return next;
     };
+    
+    final Function<GrimOneOfRelations, String> RELS = (id) -> {
+
+      if(id == null) {
+        return "";
+      }
+      if(!isStatic) {
+        return id.getTargetId();
+      }
+
+      if(replacements.containsKey(id.getTargetId())) {
+        return replacements.get(id.getTargetId());
+      }
+      final var next = String.valueOf(replacements.size() + 1);
+      replacements.put(id.getTargetId(), next);
+      return next;
+    };
+    
     
     final Function<OffsetDateTime, String> DATES = (input) -> {
       if(input == null) {
@@ -130,51 +149,12 @@ public class GrimPrinter {
         final var mission = item.getMissions().values().iterator().next();      
         result.append("Mission: ").append(ID.apply(mission.getId())).append(System.lineSeparator());
 
-
-        
-        for(final var data : item.getAssignments().values().stream()
-            .sorted((a, b) -> ComparisonChain.start()
-                .compare(ID.apply(a.getCommitId()), ID.apply(b.getCommitId()))
-                .compare(a.getAssignmentType(), b.getAssignmentType())
-                .compare(a.getAssignee(), b.getAssignee())
-                .result())
-            .toList()) {
-          result.append("  - ").append(ID.apply(data.getId())).append("::").append(data.getDocType()).append(System.lineSeparator());
-        }
-        for(final var data : item.getData().values().stream()
-            .sorted((a, b) -> ComparisonChain.start()
-                .compare(ID.apply(a.getCommitId()), ID.apply(b.getCommitId()))
-                .compare(a.getTitle(), b.getTitle())
-                .result())
-            .toList()) {
-          result.append("  - ").append(ID.apply(data.getId())).append("::").append(data.getDocType()).append(System.lineSeparator());
-        }
-        
-        for(final var data : item.getMissionLabels().values().stream()
-            .sorted((a, b) -> ComparisonChain.start()
-                .compare(ID.apply(a.getCommitId()), ID.apply(b.getCommitId()))
-                .compare(a.getLabelType(), b.getLabelType())
-                .compare(a.getLabelValue(), b.getLabelValue())
-                .result())
-            .toList()) {
-          
-          result.append("  - ").append(ID.apply(data.getId())).append("::").append(data.getDocType()).append(System.lineSeparator());
-        }
-        for(final var data : item.getLinks().values().stream()
-            .sorted((a, b) -> ComparisonChain.start()
-                .compare(ID.apply(a.getCommitId()), ID.apply(b.getCommitId()))
-                .compare(a.getLinkType(), b.getLinkType())
-                .compare(a.getExternalId(), b.getExternalId())
-                .result())
-            .toList()) {
-          
-          result.append("  - ").append(ID.apply(data.getId())).append("::").append(data.getDocType()).append(System.lineSeparator());
-        }
         for(final var data : item.getObjectives().values().stream()
             .sorted((a, b) -> ComparisonChain.start()
                 .compare(ID.apply(a.getCommitId()), ID.apply(b.getCommitId()))
                 .compare(a.getObjectiveStatus()+ "", b.getObjectiveStatus()+ "")
                 .compare(a.getStartDate()+ "", b.getStartDate()+ "")
+                .compare(a.getDueDate()+ "", b.getDueDate()+ "")
                 .compare(a.getDueDate()+ "", b.getDueDate()+ "")
                 .result())
             .toList()) {
@@ -208,6 +188,48 @@ public class GrimPrinter {
           result.append("  - ").append(ID.apply(data.getId())).append("::").append(data.getDocType()).append(System.lineSeparator());
         }
         
+        for(final var data : item.getAssignments().values().stream()
+            .sorted((a, b) -> ComparisonChain.start()
+                .compare(ID.apply(a.getCommitId()), ID.apply(b.getCommitId()))
+                .compare(a.getAssignmentType(), b.getAssignmentType())
+                .compare(a.getAssignee(), b.getAssignee())
+                .compare(RELS.apply(a.getRelation()), RELS.apply(b.getRelation()))
+                .result())
+            .toList()) {
+          result.append("  - ").append(ID.apply(data.getId())).append("::").append(data.getDocType()).append(System.lineSeparator());
+        }
+        for(final var data : item.getData().values().stream()
+            .sorted((a, b) -> ComparisonChain.start()
+                .compare(ID.apply(a.getCommitId()), ID.apply(b.getCommitId()))
+                .compare(a.getTitle(), b.getTitle())
+                .compare(RELS.apply(a.getRelation()), RELS.apply(b.getRelation()))
+                .result())
+            .toList()) {
+          result.append("  - ").append(ID.apply(data.getId())).append("::").append(data.getDocType()).append(System.lineSeparator());
+        }
+        
+        for(final var data : item.getMissionLabels().values().stream()
+            .sorted((a, b) -> ComparisonChain.start()
+                .compare(ID.apply(a.getCommitId()), ID.apply(b.getCommitId()))
+                .compare(a.getLabelType(), b.getLabelType())
+                .compare(a.getLabelValue(), b.getLabelValue())
+                .compare(RELS.apply(a.getRelation()), RELS.apply(b.getRelation()))
+                .result())
+            .toList()) {
+          
+          result.append("  - ").append(ID.apply(data.getId())).append("::").append(data.getDocType()).append(System.lineSeparator());
+        }
+        for(final var data : item.getLinks().values().stream()
+            .sorted((a, b) -> ComparisonChain.start()
+                .compare(ID.apply(a.getCommitId()), ID.apply(b.getCommitId()))
+                .compare(a.getLinkType(), b.getLinkType())
+                .compare(a.getExternalId(), b.getExternalId())
+                .compare(RELS.apply(a.getRelation()), RELS.apply(b.getRelation()))
+                .result())
+            .toList()) {
+          
+          result.append("  - ").append(ID.apply(data.getId())).append("::").append(data.getDocType()).append(System.lineSeparator());
+        }
         
         for(final var data : item.getCommits().values().stream()
             .sorted((a, b) -> a.getCreatedAt().compareTo(b.getCreatedAt()))
@@ -223,9 +245,7 @@ public class GrimPrinter {
             .append(System.lineSeparator())
             .append(log)
             .append(System.lineSeparator());
-        }      
-        
-        
+        } 
       }
       
       return items;

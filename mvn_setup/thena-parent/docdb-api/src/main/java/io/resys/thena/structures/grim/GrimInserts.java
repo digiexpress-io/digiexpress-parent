@@ -76,6 +76,7 @@ public interface GrimInserts {
     List<GrimMissionLabel> getDeleteMissionLabels();
     List<GrimRemark> getDeleteRemarks();
     List<GrimObjective> getDeleteObjectives();
+    List<GrimMissionData> getDeleteData();
     List<GrimObjectiveGoal> getDeleteGoals();
     
     BatchStatus getStatus();

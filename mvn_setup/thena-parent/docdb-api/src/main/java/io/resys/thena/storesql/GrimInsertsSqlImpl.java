@@ -37,6 +37,7 @@ public class GrimInsertsSqlImpl implements GrimInserts {
     final var del_assignements = registry.assignments().deleteAll(inputBatch.getDeleteAssignments());
     final var del_links = registry.missionLinks().deleteAll(inputBatch.getDeleteLinks());
     final var del_missionLabels = registry.missionLabels().deleteAll(inputBatch.getDeleteMissionLabels());
+    final var del_missionData = registry.missionData().deleteAll(inputBatch.getDeleteData());
     final var del_remarks = registry.remarks().deleteAll(inputBatch.getDeleteRemarks());
     final var del_goals = registry.goals().deleteAll(inputBatch.getDeleteGoals());
     final var del_objectives = registry.objectives().deleteAll(inputBatch.getDeleteObjectives());
@@ -52,6 +53,10 @@ public class GrimInsertsSqlImpl implements GrimInserts {
     final Uni<GrimBatchForOne> del_missionLabels_uni = Execute.apply(tx, del_missionLabels).onItem()
         .transform(row -> successOutput(inputBatch, "Mission labels deleted, number of deleted entries: " + + (row == null ? 0 : row.rowCount())))
         .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to delete mission labels \r\n" + inputBatch.getDeleteMissionLabels(), e));
+
+    final Uni<GrimBatchForOne> del_data_uni = Execute.apply(tx, del_missionData).onItem()
+        .transform(row -> successOutput(inputBatch, "Data deleted, number of deleted entries: " + + (row == null ? 0 : row.rowCount())))
+        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to delete data \r\n" + inputBatch.getDeleteRemarks(), e));
 
     final Uni<GrimBatchForOne> del_remarks_uni = Execute.apply(tx, del_remarks).onItem()
         .transform(row -> successOutput(inputBatch, "Remarks deleted, number of deleted entries: " + + (row == null ? 0 : row.rowCount())))
@@ -167,6 +172,7 @@ public class GrimInsertsSqlImpl implements GrimInserts {
             del_assignements_uni,
             del_links_uni,
             del_missionLabels_uni,
+            del_data_uni,
             del_remarks_uni,
             del_goals_uni,
             del_objectives_uni,

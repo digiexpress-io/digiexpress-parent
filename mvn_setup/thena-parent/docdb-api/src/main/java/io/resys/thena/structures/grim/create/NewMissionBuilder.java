@@ -137,7 +137,7 @@ public class NewMissionBuilder implements ThenaGrimNewObject.NewMission {
     final var builder = new NewRemarkBuilder(logger, missionId, null, Collections.unmodifiableMap(all_remarks));
     remark.accept(builder);
     final var built = builder.close();
-    this.next.addRemarks(built);
+    this.next.from(built);
     return this;
   }
   @Override

@@ -1,25 +1,41 @@
 package io.resys.thena.structures.grim.commitlog;
 
-import com.google.common.base.Objects;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.google.common.base.Objects;
+import com.google.common.collect.ComparisonChain;
+
+import io.resys.thena.api.entities.grim.GrimAssignment;
+import io.resys.thena.api.entities.grim.GrimCommit;
+import io.resys.thena.api.entities.grim.GrimMissionLink;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.IsGrimObject;
 import io.vertx.core.json.JsonObject;
-import lombok.RequiredArgsConstructor;
 
 
 
-@RequiredArgsConstructor
 public class GrimCommitLogger {
   private final String tenantId;
   private final String commitId;
-  
+  private final GrimCommit commit;
+
   private int count_added;
   private int count_deleted;
   private int count_merged;
   private final StringBuilder added = new StringBuilder();
   private final StringBuilder merged = new StringBuilder();
-  private final StringBuilder removed = new StringBuilder();
+  private final List<IsGrimObject> removed = new ArrayList<>();
+    
   
+  
+  
+  public GrimCommitLogger(String tenantId, GrimCommit commit) {
+    super();
+    this.tenantId = tenantId;
+    this.commitId = commit.getCommitId();
+    this.commit = commit;
+  }
+
   public void add(IsGrimObject entity) {    
     count_added++;
     added
@@ -29,10 +45,49 @@ public class GrimCommitLogger {
   
   public void remove(IsGrimObject entity) {
     count_deleted++;
-    removed
-    .append("  - ").append(entity.getId()).append("::").append(entity.getDocType()).append(System.lineSeparator())
-    .append("    ").append(JsonObject.mapFrom(entity)).append(System.lineSeparator());
+    removed.add(entity);
   }
+  
+  private int compare(IsGrimObject a, IsGrimObject b) {
+    if(a.getDocType() != b.getDocType()) {
+      return a.getDocType().compareTo(b.getDocType());
+    }
+    
+    switch (a.getDocType()) {
+    case GRIM_ASSIGNMENT: {
+      final GrimAssignment a1 = (GrimAssignment) a;
+      final GrimAssignment a2 = (GrimAssignment) b;
+      return ComparisonChain.start()
+        .compare(a1.getAssignmentType(), a2.getAssignmentType())
+        .compare(a1.getAssignee(), a2.getAssignee())
+        .result();
+    }      
+    case GRIM_MISSION_LINKS: {
+      final GrimMissionLink a1 = (GrimMissionLink) a;
+      final GrimMissionLink a2 = (GrimMissionLink) b;
+      return ComparisonChain.start()
+        .compare(a1.getLinkType(), a2.getLinkType())
+        .compare(a1.getExternalId() + "", a2.getExternalId() + "")
+        .result();
+    }
+    }
+    
+    return 0;
+  }
+  
+  private String removed() {
+    final var result = new StringBuilder();
+    this.removed.stream()
+    .sorted(this::compare)
+    .forEach(entity -> {
+      result
+      .append("  - ").append(entity.getId()).append("::").append(entity.getDocType()).append(System.lineSeparator())
+      .append("    ").append(JsonObject.mapFrom(entity)).append(System.lineSeparator());
+    });;
+    
+    return result.toString();
+  }
+  
   public void merge(IsGrimObject previous, IsGrimObject next) {
     count_merged++;
     final var a = JsonObject.mapFrom(previous);
@@ -60,7 +115,8 @@ public class GrimCommitLogger {
  
   public String build() {
     return new StringBuilder()
-      .append("commit: ").append(commitId).append(", tenant: ").append(tenantId)
+      .append("commit: ").append(commitId).append(", tenant: ").append(tenantId).append(System.lineSeparator())
+      .append("author: ").append(commit.getCommitAuthor()).append(", message: ").append(commit.getCommitMessage())
       .append(System.lineSeparator())
       .append(" | created")
       .append(System.lineSeparator())
@@ -73,7 +129,7 @@ public class GrimCommitLogger {
       .append(System.lineSeparator())
       .append("  - deleted: ").append(count_deleted).append(" entries")
       .append(System.lineSeparator())
-      .append(removed)
+      .append(removed())
       
       .append(System.lineSeparator())
       .append(" | merged")
