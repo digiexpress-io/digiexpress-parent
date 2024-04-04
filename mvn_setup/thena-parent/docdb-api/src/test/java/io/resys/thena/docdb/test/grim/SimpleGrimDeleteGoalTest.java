@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Collections;
 
 import org.immutables.value.Value;
 import org.junit.jupiter.api.Assertions;
@@ -174,6 +175,10 @@ public class SimpleGrimDeleteGoalTest extends DbTestTemplate {
     .commitAuthor("jane.doe@morgue.com")
     .modifyMission(refreshedMission.getMission().getId(), (modifyMission) -> {
 
+      modifyMission.setAllLabels(Collections.emptyList(), null);
+      modifyMission.setAllAssignees(Collections.emptyList(), null);
+      modifyMission.setAllLinks(Collections.emptyList(), null);
+      
       refreshedMission.getGoals().values().stream()
       .forEach(goalToDelete -> modifyMission
       .removeGoal(goalToDelete.getId())
@@ -199,23 +204,13 @@ Repo
   - id: 1, rev: 2
     name: SimpleGrimUpdateTest-1, prefix: 3, type: grim
 Mission: 5
-  - 7::GRIM_OBJECTIVE
-  - 9::GRIM_OBJECTIVE_GOAL
   - 12::GRIM_COMMANDS
-  - 33::GRIM_COMMANDS
-  - 34::GRIM_COMMANDS
   - 35::GRIM_COMMANDS
-  - 15::GRIM_ASSIGNMENT
-  - 16::GRIM_ASSIGNMENT
-  - 17::GRIM_ASSIGNMENT
-  - 18::GRIM_ASSIGNMENT
+  - 36::GRIM_COMMANDS
+  - 37::GRIM_COMMANDS
+  - 38::GRIM_COMMANDS
+  - 39::GRIM_COMMANDS
   - 19::GRIM_MISSION_DATA
-  - 20::GRIM_MISSION_DATA
-  - 21::GRIM_MISSION_DATA
-  - 23::GRIM_MISSION_LABEL
-  - 24::GRIM_MISSION_LABEL
-  - 25::GRIM_MISSION_LINKS
-  - 26::GRIM_MISSION_LINKS
 
 commit: 4, tenant: 1
 author: jane.doe@morgue.com, message: batching tests
@@ -312,6 +307,30 @@ author: jane.doe@morgue.com, message: remove remark #2
     {"id":"14","commitId":"4","missionId":"5","assignee":"no-name-worker-4","assignmentType":"goal-worker","relation":{"objectiveId":null,"remarkId":null,"objectiveGoalId":"8","relationType":"GOAL"}}
   - 22::GRIM_MISSION_DATA
     {"id":"22","commitId":"4","createdWithCommitId":"4","missionId":"5","createdAt":"OffsetDateTime.now()","updatedAt":"OffsetDateTime.now()","title":"kitchen","description":"kitcher plan goes here!","dataExtension":null,"relation":{"objectiveId":null,"remarkId":null,"objectiveGoalId":"8","relationType":"GOAL"}}
+
+ | merged
+  +- merged: 0 entries
+
+
+commit: 33, tenant: 1
+author: jane.doe@morgue.com, message: remove remark #2
+ | created
+  + added new: 0 entries
+
+ | deleted
+  - deleted: 6 entries
+  - 7::GRIM_OBJECTIVE
+    {"id":"7","commitId":"4","createdWithCommitId":"4","missionId":"5","objectiveStatus":null,"startDate":[2023,1,1],"dueDate":[2024,1,1]}
+  - 9::GRIM_OBJECTIVE_GOAL
+    {"id":"9","commitId":"4","createdWithCommitId":"4","objectiveId":"7","goalStatus":null,"startDate":null,"dueDate":null}
+  - 15::GRIM_ASSIGNMENT
+    {"id":"15","commitId":"4","missionId":"5","assignee":"no-name-worker-1","assignmentType":"objective-worker","relation":{"objectiveId":"7","remarkId":null,"objectiveGoalId":null,"relationType":"OBJECTIVE"}}
+  - 16::GRIM_ASSIGNMENT
+    {"id":"16","commitId":"4","missionId":"5","assignee":"no-name-worker-2","assignmentType":"objective-worker","relation":{"objectiveId":"7","remarkId":null,"objectiveGoalId":null,"relationType":"OBJECTIVE"}}
+  - 20::GRIM_MISSION_DATA
+    {"id":"20","commitId":"4","createdWithCommitId":"4","missionId":"5","createdAt":"OffsetDateTime.now()","updatedAt":"OffsetDateTime.now()","title":"bathroom","description":"kitcher plan goes here!","dataExtension":null,"relation":{"objectiveId":null,"remarkId":null,"objectiveGoalId":"9","relationType":"GOAL"}}
+  - 21::GRIM_MISSION_DATA
+    {"id":"21","commitId":"4","createdWithCommitId":"4","missionId":"5","createdAt":"OffsetDateTime.now()","updatedAt":"OffsetDateTime.now()","title":"interior design ideas","description":"all ideas are welcome how we should design kitchen and bathroom!","dataExtension":null,"relation":{"objectiveId":"7","remarkId":null,"objectiveGoalId":null,"relationType":"OBJECTIVE"}}
 
  | merged
   +- merged: 0 entries

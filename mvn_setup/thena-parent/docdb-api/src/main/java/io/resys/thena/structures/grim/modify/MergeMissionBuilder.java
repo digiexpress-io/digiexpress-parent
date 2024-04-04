@@ -3,11 +3,15 @@ package io.resys.thena.structures.grim.modify;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import io.resys.thena.api.entities.grim.GrimAssignment;
+import io.resys.thena.api.entities.grim.GrimMissionLabel;
+import io.resys.thena.api.entities.grim.GrimMissionLink;
 import io.resys.thena.api.entities.grim.ImmutableGrimCommands;
 import io.resys.thena.api.entities.grim.ImmutableGrimMission;
 import io.resys.thena.api.entities.grim.ImmutableGrimMissionData;
@@ -99,21 +103,77 @@ public class MergeMissionBuilder implements MergeMission {
   }
 
   @Override
-  public <T> MergeMission setAllAssignees(List<T> replacments, Function<T, Consumer<NewAssignment>> assignment) {
-    // TODO Auto-generated method stub
-    return null;
+  public <T> MergeMission setAllAssignees(List<T> replacments, Function<T, Consumer<NewAssignment>> callbacks) {
+    // clear old
+    final var intermed = this.batch.build();
+    this.batch.assignments(intermed.getAssignments().stream().filter(a -> a.getRelation() != null).toList());
+    final var all_assignments = new HashMap<String, GrimAssignment>();
+    
+    // delete old
+    this.batch.addAllDeleteAssignments(container.getAssignments().values().stream().filter(a -> a.getRelation() == null).toList());
+    
+    // add new
+    for(final var replacement : replacments) {
+      final var assignment = callbacks.apply(replacement);
+      
+      final var builder = new NewAssignmentBuilder(logger, missionId, null, Collections.unmodifiableMap(all_assignments));
+      assignment.accept(builder);
+
+      final var built = builder.close();
+      all_assignments.put(built.getId(), built);
+      this.batch.addAssignments(built);
+
+    }
+    return this;
   }
 
   @Override
-  public <T> MergeMission setAllLabels(List<T> replacments, Function<T, Consumer<NewLabel>> label) {
-    // TODO Auto-generated method stub
-    return null;
+  public <T> MergeMission setAllLabels(List<T> replacments, Function<T, Consumer<NewLabel>> callbacks) {
+    // clear old
+    final var intermed = this.batch.build();
+    this.batch.missionLabels(intermed.getMissionLabels().stream().filter(a -> a.getRelation() != null).toList());
+    final var all_mission_label = new HashMap<String, GrimMissionLabel>();
+    
+    // delete old
+    this.batch.addAllDeleteMissionLabels(container.getMissionLabels().values().stream().filter(a -> a.getRelation() == null).toList());
+    
+    // add new
+    for(final var replacement : replacments) {
+      final var label = callbacks.apply(replacement);
+      
+      final var builder = new NewMissionLabelBuilder(logger, missionId, null,  all_mission_label);
+      label.accept(builder);
+
+      final var built = builder.close();
+      all_mission_label.put(built.getId(), built);
+      this.batch.addMissionLabels(built);
+
+    }
+    return this;
   }
 
   @Override
-  public <T> MergeMission setAllLinks(List<T> replacments, Function<T, Consumer<NewLink>> link) {
-    // TODO Auto-generated method stub
-    return null;
+  public <T> MergeMission setAllLinks(List<T> replacments, Function<T, Consumer<NewLink>> callbacks) {
+    // clear old
+    final var intermed = this.batch.build();
+    this.batch.links(intermed.getLinks().stream().filter(a -> a.getRelation() != null).toList());
+    final var all_links = new HashMap<String, GrimMissionLink>();
+    
+    // delete old
+    this.batch.addAllDeleteLinks(container.getLinks().values().stream().filter(a -> a.getRelation() == null).toList());
+    
+    // add new
+    for(final var replacement : replacments) {
+      final var link = callbacks.apply(replacement);
+      
+      final var builder = new NewMissionLinkBuilder(logger, missionId, null, Collections.unmodifiableMap(all_links));
+      link.accept(builder);
+
+      final var built = builder.close();
+      all_links.put(built.getId(), built);
+      this.batch.addLinks(built);
+    }
+    return this;
   }
 
   @Override
