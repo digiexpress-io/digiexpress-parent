@@ -52,6 +52,7 @@ const RolesOverviewLayout: React.FC = () => {
   if (!roles) {
     return null;
   }
+
   const navigation = <RoleNavigation />;
   const pagination = <></>;
   const items = roles.map(role => (<OneRoleData role={role} key={role.id} />));

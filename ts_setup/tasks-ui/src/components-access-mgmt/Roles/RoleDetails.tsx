@@ -4,7 +4,6 @@ import { Role } from 'descriptor-access-mgmt';
 import { SectionLayout } from 'components-generic';
 
 const RoleDetails: React.FC<{ role: Role }> = ({ role }) => {
-  console.log('role', role)
 
   return (
     <Stack spacing={1}>
