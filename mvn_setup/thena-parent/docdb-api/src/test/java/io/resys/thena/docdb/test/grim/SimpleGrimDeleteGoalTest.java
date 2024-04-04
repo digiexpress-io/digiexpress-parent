@@ -146,7 +146,7 @@ public class SimpleGrimDeleteGoalTest extends DbTestTemplate {
     .await().atMost(Duration.ofMinutes(1));
     
     
-    // remove goal
+    // remove kitchen goal
     getClient().grim(repo).commit().modifyManyMission()
     .commitMessage("remove remark #2")
     .commitAuthor("jane.doe@morgue.com")
@@ -155,6 +155,7 @@ public class SimpleGrimDeleteGoalTest extends DbTestTemplate {
       final var goalToDelete = newMission.getGoals().values().stream()
           .filter(e -> e.getTransitives().getTitle().equals("kitchen"))
           .findFirst().get();
+      
       modifyMission
       .removeGoal(goalToDelete.getId())
       .addCommands(Arrays.asList(JsonObject.of("commandType", "DELETE_GOAL")))
@@ -162,7 +163,34 @@ public class SimpleGrimDeleteGoalTest extends DbTestTemplate {
     })
     .build()
     .await().atMost(Duration.ofMinutes(1));
-        
+
+    
+    
+    final var refreshedMission = getClient().grim(repo).find().missionQuery().get(newMission.getMission().getId()).await().atMost(Duration.ofMinutes(1)).getObjects();
+    
+    // remove goals and objectives
+    getClient().grim(repo).commit().modifyManyMission()
+    .commitMessage("remove remark #2")
+    .commitAuthor("jane.doe@morgue.com")
+    .modifyMission(refreshedMission.getMission().getId(), (modifyMission) -> {
+
+      refreshedMission.getGoals().values().stream()
+      .forEach(goalToDelete -> modifyMission
+      .removeGoal(goalToDelete.getId())
+      .addCommands(Arrays.asList(JsonObject.of("commandType", "DELETE_GOAL")))
+      .build());
+      
+      refreshedMission.getObjectives().values().stream()
+      .forEach(objective -> modifyMission
+      .removeObjective(objective.getId())
+      .addCommands(Arrays.asList(JsonObject.of("commandType", "DELETE_OBJECTIVE")))
+      .build());
+      
+    })
+    .build()
+    .await().atMost(Duration.ofMinutes(1));
+
+   
     
     Assertions.assertEquals(
 """
