@@ -240,15 +240,25 @@ public class MergeMissionBuilder implements MergeMission {
   }
 
   @Override
-  public MergeMission modifyGoal(String goalId, Consumer<MergeGoal> goal) {
-    // TODO Auto-generated method stub
-    return null;
+  public MergeMission modifyGoal(String goalId, Consumer<MergeGoal> mergeGoal) {
+    final var currentGoal = container.getGoals().get(goalId);
+    RepoAssert.notNull(currentGoal, () -> "Can't find goal with id: '" + goalId + "' for mission: '" + missionId + "'!");
+    final var builder = new MergeGoalBuilder(container, logger, currentGoal);
+    mergeGoal.accept(builder);
+    final var built = builder.close();
+    this.batch.from(built);
+    return this;
   }
 
   @Override
-  public MergeMission modifyObjective(String objectiveId, Consumer<MergeObjective> objective) {
-    // TODO Auto-generated method stub
-    return null;
+  public MergeMission modifyObjective(String objectiveId, Consumer<MergeObjective> mergeObjective) {
+    final var currentObjective = container.getObjectives().get(objectiveId);
+    RepoAssert.notNull(currentObjective, () -> "Can't find objective with id: '" + objectiveId + "' for mission: '" + missionId + "'!");
+    final var builder = new MergeObjectiveBuilder(container, logger, currentObjective);
+    mergeObjective.accept(builder);
+    final var built = builder.close();
+    this.batch.from(built);
+    return this;
   }
 
   @Override

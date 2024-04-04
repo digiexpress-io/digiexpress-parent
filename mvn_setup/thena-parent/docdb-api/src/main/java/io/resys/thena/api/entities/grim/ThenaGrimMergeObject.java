@@ -61,10 +61,15 @@ public interface ThenaGrimMergeObject {
     MergeObjective startDate(@Nullable LocalDate startDate);
     MergeObjective dueDate(@Nullable LocalDate dueDate);
     
-    MergeObjective addGoal(Consumer<MergeGoal> MergeGoal);
+    MergeObjective addLabels(Consumer<NewLabel> label);
+    MergeObjective addLink(Consumer<NewLink> link);
     MergeObjective addAssignees(Consumer<NewAssignment> assignment);
+    MergeObjective addRemark(Consumer<NewRemark> remark);
     
     <T> MergeObjective setAllAssignees(List<T> replacments, Function<T, Consumer<NewAssignment>> assignment);
+    <T> MergeObjective setAllLabels(List<T> replacments, Function<T, Consumer<NewLabel>> label);
+    <T> MergeObjective setAllLinks(List<T> replacments, Function<T, Consumer<NewLink>> link);
+    
     void build();    
   }    
   // support interface inside of callback
@@ -75,8 +80,15 @@ public interface ThenaGrimMergeObject {
     MergeGoal startDate(@Nullable LocalDate startDate);
     MergeGoal dueDate(@Nullable LocalDate dueDate);
     
+    MergeGoal addLabels(Consumer<NewLabel> label);
+    MergeGoal addLink(Consumer<NewLink> link);
     MergeGoal addAssignees(Consumer<NewAssignment> assignment);
+    MergeGoal addRemark(Consumer<NewRemark> remark);
+    
     <T> MergeGoal setAllAssignees(List<T> replacments, Function<T, Consumer<NewAssignment>> assignment);
+    <T> MergeGoal setAllLabels(List<T> replacments, Function<T, Consumer<NewLabel>> label);
+    <T> MergeGoal setAllLinks(List<T> replacments, Function<T, Consumer<NewLink>> link);
+    
     void build(); 
   }
   // support interface inside of callback
