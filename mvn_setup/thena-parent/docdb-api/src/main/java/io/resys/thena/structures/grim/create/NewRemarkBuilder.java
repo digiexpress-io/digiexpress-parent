@@ -32,6 +32,7 @@ public class NewRemarkBuilder implements ThenaGrimNewObject.NewRemark {
     this.next = ImmutableGrimRemark.builder()
         .id(OidUtils.gen())
         .missionId(missionId)
+        .createdWithCommitId(logger.getCommitId())
         .commitId(logger.getCommitId());
   }
   

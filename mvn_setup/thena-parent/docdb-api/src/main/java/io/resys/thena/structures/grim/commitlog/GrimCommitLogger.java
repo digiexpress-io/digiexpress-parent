@@ -1,5 +1,7 @@
 package io.resys.thena.structures.grim.commitlog;
 
+import com.google.common.base.Objects;
+
 import io.resys.thena.api.entities.grim.ThenaGrimObject.IsGrimObject;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
@@ -33,10 +35,27 @@ public class GrimCommitLogger {
   }
   public void merge(IsGrimObject previous, IsGrimObject next) {
     count_merged++;
+    final var a = JsonObject.mapFrom(previous);
+    final var b = JsonObject.mapFrom(next);
+    
     merged
     .append("  +- ").append(next.getId()).append("::").append(next.getDocType()).append(System.lineSeparator())
-    .append("   -  ").append(JsonObject.mapFrom(previous)).append(System.lineSeparator())
-    .append("   +  ").append(JsonObject.mapFrom(next)).append(System.lineSeparator());    
+    .append("   -  ").append(a).append(System.lineSeparator())
+    .append("   +  ").append(b).append(System.lineSeparator());
+    
+    
+    for(final var entries : a.getMap().entrySet()) {
+      final var changedFrom = entries.getValue();
+      final var changedTo = b.getValue(entries.getKey());
+      if(Objects.equal(changedFrom, changedTo)) {
+        continue;
+      }
+      merged.append("   diff: ").append(entries.getKey())
+        .append(" :: ")
+        .append(changedFrom).append(" -> ").append(changedTo)
+        .append(System.lineSeparator());
+        
+    }
   }
  
   public String build() {

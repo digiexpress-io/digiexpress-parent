@@ -40,6 +40,7 @@ public class NewGoalBuilder implements ThenaGrimNewObject.NewGoal {
         .log("");
     this.goal = ImmutableGrimObjectiveGoal.builder()
         .id(OidUtils.gen())
+        .createdWithCommitId(logger.getCommitId())
         .commitId(logger.getCommitId())
         .missionId(missionId)
         .objectiveId(objectiveId)
@@ -51,6 +52,7 @@ public class NewGoalBuilder implements ThenaGrimNewObject.NewGoal {
         .build();
     this.objectiveMeta = ImmutableGrimMissionData.builder()
         .id(OidUtils.gen())
+        .createdWithCommitId(logger.getCommitId())
         .commitId(logger.getCommitId())
         .missionId(missionId)
         .relation(childRel)

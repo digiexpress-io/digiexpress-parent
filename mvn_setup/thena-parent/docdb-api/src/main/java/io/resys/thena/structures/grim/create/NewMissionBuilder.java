@@ -51,6 +51,7 @@ public class NewMissionBuilder implements ThenaGrimNewObject.NewMission {
         .createdWithCommitId(commitId);
     this.missionMeta = ImmutableGrimMissionData.builder()
       .id(OidUtils.gen())
+      .createdWithCommitId(logger.getCommitId())
       .commitId(commitId)
       .missionId(missionId)
       .title("")

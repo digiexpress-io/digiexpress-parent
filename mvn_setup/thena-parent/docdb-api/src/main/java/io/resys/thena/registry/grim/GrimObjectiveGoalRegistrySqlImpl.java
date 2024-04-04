@@ -36,10 +36,21 @@ public class GrimObjectiveGoalRegistrySqlImpl implements GrimObjectiveGoalRegist
   public ThenaSqlClient.Sql findAll() {
     return ImmutableSql.builder()
         .value(new SqlStatement()
-        .append("SELECT goal.*, objective.mission_id as mission_id ").ln()
+        .append("SELECT goal.*,").ln()
+        .append(" objective.mission_id            as mission_id,").ln()
+        .append(" updated_commit.created_at       as updated_at,").ln()
+        .append(" created_commit.created_at       as created_at").ln()
+        
         .append(" FROM ").append(options.getGrimObjectiveGoal()).append(" as goal ").ln()
         .append(" LEFT JOIN ").append(options.getGrimObjective()).append(" as objective").ln()
         .append(" ON(goal.objective_id = objective.id)").ln()
+        
+        .append(" LEFT JOIN ").append(options.getGrimCommit()).append(" as updated_commit").ln()
+        .append(" ON(updated_commit.commit_id = goal.commit_id)").ln()
+        
+        .append(" LEFT JOIN ").append(options.getGrimCommit()).append(" as created_commit").ln()
+        .append(" ON(created_commit.commit_id = goal.created_commit_id)").ln()
+        
         .build())
         .build();
   }
@@ -47,11 +58,22 @@ public class GrimObjectiveGoalRegistrySqlImpl implements GrimObjectiveGoalRegist
   public ThenaSqlClient.SqlTuple getById(String id) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
-        .append("SELECT goal.*, objective.mission_id as mission_id ").ln()
+        .append("SELECT goal.*,").ln()
+        .append(" objective.mission_id            as mission_id,").ln()
+        .append(" updated_commit.created_at       as updated_at,").ln()
+        .append(" created_commit.created_at       as created_at").ln()
+        
         .append(" FROM ").append(options.getGrimObjectiveGoal()).append(" as goal ").ln()
         .append(" LEFT JOIN ").append(options.getGrimObjective()).append(" as objective").ln()
         .append(" ON(goal.objective_id = objective.id)").ln()
-        .append(" WHERE (goal.id = $1)").ln() 
+        
+        .append(" LEFT JOIN ").append(options.getGrimCommit()).append(" as updated_commit").ln()
+        .append(" ON(updated_commit.commit_id = goal.commit_id)").ln()
+        
+        .append(" LEFT JOIN ").append(options.getGrimCommit()).append(" as created_commit").ln()
+        .append(" ON(created_commit.commit_id = goal.created_commit_id)").ln()
+        
+        .append(" WHERE goal.id = $1").ln() 
         .build())
         .props(Tuple.of(id))
         .build();
@@ -60,11 +82,22 @@ public class GrimObjectiveGoalRegistrySqlImpl implements GrimObjectiveGoalRegist
   public SqlTuple findAllByMissionIds(Collection<String> id) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
-        .append("SELECT goal.*, objective.mission_id as mission_id ").ln()
+        .append("SELECT goal.*,").ln()
+        .append(" objective.mission_id            as mission_id,").ln()
+        .append(" updated_commit.created_at       as updated_at,").ln()
+        .append(" created_commit.created_at       as created_at").ln()
+        
         .append(" FROM ").append(options.getGrimObjectiveGoal()).append(" as goal ").ln()
         .append(" LEFT JOIN ").append(options.getGrimObjective()).append(" as objective").ln()
         .append(" ON(goal.objective_id = objective.id)").ln()
-        .append(" WHERE (objective.mission_id = ANY($1))").ln() 
+        
+        .append(" LEFT JOIN ").append(options.getGrimCommit()).append(" as updated_commit").ln()
+        .append(" ON(updated_commit.commit_id = goal.commit_id)").ln()
+        
+        .append(" LEFT JOIN ").append(options.getGrimCommit()).append(" as created_commit").ln()
+        .append(" ON(created_commit.commit_id = goal.created_commit_id)").ln()
+        
+        .append(" WHERE objective.mission_id = ANY($1)").ln() 
         .build())
         .props(Tuple.of(id.toArray()))
         .build();
@@ -76,18 +109,20 @@ public class GrimObjectiveGoalRegistrySqlImpl implements GrimObjectiveGoalRegist
         .append("INSERT INTO ").append(options.getGrimObjectiveGoal()).ln()
         .append(" (id,").ln()
         .append("  commit_id,").ln()
-
+        .append("  created_commit_id,").ln()
+        
         .append("  objective_id,").ln()
         .append("  goal_status,").ln()
         .append("  goal_start_date,").ln()
         .append("  goal_due_date)").ln()
         
-        .append(" VALUES($1, $2, $3, $4, $5, $6)").ln()
+        .append(" VALUES($1, $2, $3, $4, $5, $6, $7)").ln()
         .build())
         .props(goals.stream()
             .map(doc -> Tuple.from(new Object[]{ 
                 doc.getId(), 
                 doc.getCommitId(),
+                doc.getCreatedWithCommitId(),
                 doc.getObjectiveId(),
                 doc.getGoalStatus(),
                 doc.getStartDate(),
@@ -128,11 +163,15 @@ public class GrimObjectiveGoalRegistrySqlImpl implements GrimObjectiveGoalRegist
     .append("(").ln()
     .append("  id VARCHAR(40) PRIMARY KEY,").ln()
     .append("  commit_id VARCHAR(40) NOT NULL,").ln()
+    .append("  created_commit_id VARCHAR(40) NOT NULL,").ln()
     .append("  objective_id VARCHAR(40) NOT NULL,").ln()
     .append("  goal_status VARCHAR(100),").ln()
     .append("  goal_start_date DATE,").ln()
     .append("  goal_due_date DATE").ln()
     .append(");").ln()    
+    
+    .append("CREATE INDEX ").append(options.getGrimObjectiveGoal()).append("_CREATED_INDEX")
+    .append(" ON ").append(options.getGrimObjectiveGoal()).append(" (created_commit_id);").ln()
     
     .append("CREATE INDEX ").append(options.getGrimObjectiveGoal()).append("_OBJECTIVE_INDEX")
     .append(" ON ").append(options.getGrimObjectiveGoal()).append(" (objective_id);").ln()
@@ -164,6 +203,10 @@ public class GrimObjectiveGoalRegistrySqlImpl implements GrimObjectiveGoalRegist
           .id(row.getString("id"))
           .commitId(row.getString("commit_id"))
           .missionId(row.getString("mission_id"))
+          
+          .updatedAt(row.getOffsetDateTime("updated_at"))
+          .createdAt(row.getOffsetDateTime("created_at"))
+          .createdWithCommitId(row.getString("created_commit_id"))
           
           .objectiveId(row.getString("objective_id"))
           .goalStatus(row.getString("goal_status"))

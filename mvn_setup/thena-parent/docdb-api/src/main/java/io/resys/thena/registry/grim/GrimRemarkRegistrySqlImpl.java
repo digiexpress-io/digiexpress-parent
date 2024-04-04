@@ -36,7 +36,18 @@ public class GrimRemarkRegistrySqlImpl implements GrimRemarkRegistry {
   public ThenaSqlClient.Sql findAll() {
     return ImmutableSql.builder()
         .value(new SqlStatement()
-        .append("SELECT * FROM ").append(options.getGrimRemark())
+        .append("SELECT remark.*,").ln()
+        .append(" updated_commit.created_at       as updated_at,").ln()
+        .append(" created_commit.created_at       as created_at").ln()
+
+        .append(" FROM ").append(options.getGrimRemark()).append(" as remark ")
+        
+        .append(" LEFT JOIN ").append(options.getGrimCommit()).append(" as updated_commit").ln()
+        .append(" ON(updated_commit.commit_id = remark.commit_id)").ln()
+        
+        .append(" LEFT JOIN ").append(options.getGrimCommit()).append(" as created_commit").ln()
+        .append(" ON(created_commit.commit_id = remark.created_commit_id)").ln()
+
         .build())
         .build();
   }
@@ -44,11 +55,42 @@ public class GrimRemarkRegistrySqlImpl implements GrimRemarkRegistry {
   public ThenaSqlClient.SqlTuple getById(String id) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
-        .append("SELECT * ").ln()
-        .append("  FROM ").append(options.getGrimRemark()).ln()
-        .append("  WHERE (id = $1)").ln() 
+        .append("SELECT remark.*,").ln()
+        .append(" updated_commit.created_at       as updated_at,").ln()
+        .append(" created_commit.created_at       as created_at").ln()
+
+        .append(" FROM ").append(options.getGrimRemark()).append(" as remark ")
+        
+        .append(" LEFT JOIN ").append(options.getGrimCommit()).append(" as updated_commit").ln()
+        .append(" ON(updated_commit.commit_id = remark.commit_id)").ln()
+        
+        .append(" LEFT JOIN ").append(options.getGrimCommit()).append(" as created_commit").ln()
+        .append(" ON(created_commit.commit_id = remark.created_commit_id)").ln()
+
+        .append(" WHERE remark.id = $1").ln() 
         .build())
         .props(Tuple.of(id))
+        .build();
+  }
+  @Override
+  public SqlTuple findAllByMissionIds(Collection<String> id) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT remark.*,").ln()
+        .append(" updated_commit.created_at       as updated_at,").ln()
+        .append(" created_commit.created_at       as created_at").ln()
+
+        .append(" FROM ").append(options.getGrimRemark()).append(" as remark ").ln()
+        
+        .append(" LEFT JOIN ").append(options.getGrimCommit()).append(" as updated_commit").ln()
+        .append(" ON(updated_commit.commit_id = remark.commit_id)").ln()
+        
+        .append(" LEFT JOIN ").append(options.getGrimCommit()).append(" as created_commit").ln()
+        .append(" ON(created_commit.commit_id = remark.created_commit_id)").ln()
+
+        .append(" WHERE remark.mission_id = ANY($1)").ln() 
+        .build())
+        .props(Tuple.of(id.toArray()))
         .build();
   }
   @Override
@@ -58,7 +100,8 @@ public class GrimRemarkRegistrySqlImpl implements GrimRemarkRegistry {
         .append("INSERT INTO ").append(options.getGrimRemark()).ln()
         .append(" (id,").ln()
         .append("  commit_id,").ln()
-
+        .append("  created_commit_id,").ln()
+        
         .append("  mission_id,").ln()
         .append("  objective_id,").ln()
         .append("  goal_id,").ln()
@@ -68,12 +111,14 @@ public class GrimRemarkRegistrySqlImpl implements GrimRemarkRegistry {
         .append("  remark_status,").ln()
         .append("  remark_text)").ln()
         
-        .append(" VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)").ln()
+        .append(" VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)").ln()
         .build())
         .props(remarks.stream()
             .map(doc -> Tuple.from(new Object[]{ 
                 doc.getId(), 
                 doc.getCommitId(),
+                doc.getCreatedWithCommitId(),
+                
                 doc.getMissionId(),
                 doc.getRelation() == null ? null : doc.getRelation().getObjectiveId(),
                 doc.getRelation() == null ? null : doc.getRelation().getObjectiveGoalId(),
@@ -118,7 +163,8 @@ public class GrimRemarkRegistrySqlImpl implements GrimRemarkRegistry {
     .append("(").ln()
     .append("  id VARCHAR(40) PRIMARY KEY,").ln()
     .append("  commit_id VARCHAR(40) NOT NULL,").ln()
-  
+    .append("  created_commit_id VARCHAR(40) NOT NULL,").ln()
+    
     .append("  mission_id VARCHAR(40) NOT NULL,").ln()
     .append("  objective_id VARCHAR(40),").ln()
     .append("  goal_id VARCHAR(40),").ln()
@@ -135,6 +181,9 @@ public class GrimRemarkRegistrySqlImpl implements GrimRemarkRegistry {
     .append("  ADD CONSTRAINT ").append(options.getGrimRemark()).append("_PARENT_FK").ln()
     .append("  FOREIGN KEY (remark_id)").ln()
     .append("  REFERENCES ").append(options.getGrimRemark()).append(" (id);").ln().ln()
+    
+    .append("CREATE INDEX ").append(options.getGrimRemark()).append("_CREATED_INDEX")
+    .append(" ON ").append(options.getGrimRemark()).append(" (created_commit_id);").ln()
     
     .append("CREATE INDEX ").append(options.getGrimRemark()).append("_MISSION_INDEX")
     .append(" ON ").append(options.getGrimRemark()).append(" (mission_id);").ln()
@@ -184,8 +233,12 @@ public class GrimRemarkRegistrySqlImpl implements GrimRemarkRegistry {
       return ImmutableGrimRemark.builder()
           .id(row.getString("id"))
           .commitId(row.getString("commit_id"))
-          .missionId(row.getString("mission_id"))
           
+          .updatedAt(row.getOffsetDateTime("updated_at"))
+          .createdAt(row.getOffsetDateTime("created_at"))
+          .createdWithCommitId(row.getString("created_commit_id"))
+          
+          .missionId(row.getString("mission_id"))
           .remarkText(row.getString("remark_text"))
           .remarkStatus(row.getString("remark_status"))
           .reporterId(row.getString("reporter_id"))
@@ -193,18 +246,6 @@ public class GrimRemarkRegistrySqlImpl implements GrimRemarkRegistry {
           .relation(GrimRegistrySqlImpl.toRelations(objectiveId, goalId, remarkId))
           .build();
     };
-  }
-
-  @Override
-  public SqlTuple findAllByMissionIds(Collection<String> id) {
-    return ImmutableSqlTuple.builder()
-        .value(new SqlStatement()
-        .append("SELECT * ").ln()
-        .append("  FROM ").append(options.getGrimRemark()).ln()
-        .append("  WHERE (mission_id = ANY($1))").ln() 
-        .build())
-        .props(Tuple.of(id.toArray()))
-        .build();
   }
 
   @Override

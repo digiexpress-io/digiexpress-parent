@@ -1,5 +1,7 @@
 package io.resys.thena.api.entities.grim;
 
+import java.time.OffsetDateTime;
+
 import org.immutables.value.Value;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -13,7 +15,11 @@ import jakarta.annotation.Nullable;
 public interface GrimMissionData extends IsGrimObject, ThenaTable {
   String getId();
   String getCommitId();
+  String getCreatedWithCommitId();
   String getMissionId();
+
+  @Nullable OffsetDateTime getCreatedAt(); // Transitive from commit table
+  @Nullable OffsetDateTime getUpdatedAt(); // Transitive from commit table
   
   String getTitle();
   String getDescription();

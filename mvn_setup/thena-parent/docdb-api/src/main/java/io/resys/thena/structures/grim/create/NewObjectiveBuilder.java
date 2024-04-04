@@ -40,6 +40,7 @@ public class NewObjectiveBuilder implements ThenaGrimNewObject.NewObjective {
         .status(BatchStatus.OK)
         .log("");
     this.objective = ImmutableGrimObjective.builder()
+        .createdWithCommitId(logger.getCommitId())
         .commitId(logger.getCommitId())
         .missionId(missionId)
         .id(objectiveId)
@@ -50,6 +51,7 @@ public class NewObjectiveBuilder implements ThenaGrimNewObject.NewObjective {
         .build();
     this.objectiveMeta = ImmutableGrimMissionData.builder()
         .id(OidUtils.gen())
+        .createdWithCommitId(logger.getCommitId())
         .commitId(logger.getCommitId())
         .missionId(missionId)
         .relation(childRel)

@@ -261,14 +261,14 @@ public class MergeMissionBuilder implements MergeMission {
         mission = ImmutableGrimMission.builder()
             .from(mission)
             .commitId(this.logger.getCommitId())
-            .createdWithCommitId(this.logger.getCommitId())
+            .updatedTreeWithCommitId(this.logger.getCommitId())
             .build();
         logger.merge(previous, mission);
         batch.addUpdateMissions(mission);
       } else if(!batch.build().isEmpty()) {
         mission = ImmutableGrimMission.builder()
             .from(mission)
-            .createdWithCommitId(this.logger.getCommitId())
+            .updatedTreeWithCommitId(this.logger.getCommitId())
             .build();
       }
     }

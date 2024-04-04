@@ -36,7 +36,19 @@ public class GrimObjectiveRegistrySqlImpl implements GrimObjectiveRegistry {
   public ThenaSqlClient.Sql findAll() {
     return ImmutableSql.builder()
         .value(new SqlStatement()
-        .append("SELECT * FROM ").append(options.getGrimObjective())
+        .append("SELECT objective.*,").ln()
+        .append(" updated_commit.created_at       as updated_at,").ln()
+        .append(" created_commit.created_at       as created_at").ln()
+
+        .append(" FROM ").append(options.getGrimObjective()).append(" as objective ")
+        
+        .append(" LEFT JOIN ").append(options.getGrimCommit()).append(" as updated_commit").ln()
+        .append(" ON(updated_commit.commit_id = objective.commit_id)").ln()
+        
+        .append(" LEFT JOIN ").append(options.getGrimCommit()).append(" as created_commit").ln()
+        .append(" ON(created_commit.commit_id = objective.created_commit_id)").ln()
+        
+        
         .build())
         .build();
   }
@@ -44,11 +56,54 @@ public class GrimObjectiveRegistrySqlImpl implements GrimObjectiveRegistry {
   public ThenaSqlClient.SqlTuple getById(String id) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
-        .append("SELECT * ").ln()
-        .append("  FROM ").append(options.getGrimObjective()).ln()
-        .append("  WHERE (id = $1)").ln() 
+        .append("SELECT objective.*,").ln()
+        .append(" updated_commit.created_at       as updated_at,").ln()
+        .append(" created_commit.created_at       as created_at").ln()
+
+        .append(" FROM ").append(options.getGrimObjective()).append(" as objective ").ln()
+        
+        .append(" LEFT JOIN ").append(options.getGrimCommit()).append(" as updated_commit").ln()
+        .append(" ON(updated_commit.commit_id = objective.commit_id)").ln()
+        
+        .append(" LEFT JOIN ").append(options.getGrimCommit()).append(" as created_commit").ln()
+        .append(" ON(created_commit.commit_id = objective.created_commit_id)").ln()
+        
+        .append(" WHERE objective.id = $1").ln() 
         .build())
         .props(Tuple.of(id))
+        .build();
+  }
+  @Override
+  public SqlTuple findAllByMissionIds(Collection<String> id) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT objective.*,").ln()
+        .append(" updated_commit.created_at       as updated_at,").ln()
+        .append(" created_commit.created_at       as created_at").ln()
+
+        .append(" FROM ").append(options.getGrimObjective()).append(" as objective ").ln()
+        
+        .append(" LEFT JOIN ").append(options.getGrimCommit()).append(" as updated_commit").ln()
+        .append(" ON(updated_commit.commit_id = objective.commit_id)").ln()
+        
+        .append(" LEFT JOIN ").append(options.getGrimCommit()).append(" as created_commit").ln()
+        .append(" ON(created_commit.commit_id = objective.created_commit_id)").ln()
+        
+        .append(" WHERE objective.mission_id = ANY($1)").ln() 
+        .build())
+        .props(Tuple.of(id.toArray()))
+        .build();
+  }
+  @Override
+  public SqlTupleList deleteAll(Collection<GrimObjective> objective) {
+    return ImmutableSqlTupleList.builder()
+        .value(new SqlStatement()
+        .append("DELETE FROM ").append(options.getGrimObjective())
+        .append(" WHERE id = $1")
+        .build())
+        .props(objective.stream()
+            .map(doc -> Tuple.from(new Object[]{doc.getId()}))
+            .collect(Collectors.toList()))
         .build();
   }
   @Override
@@ -58,18 +113,21 @@ public class GrimObjectiveRegistrySqlImpl implements GrimObjectiveRegistry {
         .append("INSERT INTO ").append(options.getGrimObjective()).ln()
         .append(" (id,").ln()
         .append("  commit_id,").ln()
-
+        .append("  created_commit_id,").ln()
+        
         .append("  mission_id,").ln()
         .append("  objective_status,").ln()
         .append("  objective_start_date,").ln()
         .append("  objective_due_date)").ln()
         
-        .append(" VALUES($1, $2, $3, $4, $5, $6)").ln()
+        .append(" VALUES($1, $2, $3, $4, $5, $6, $7)").ln()
         .build())
         .props(objective.stream()
             .map(doc -> Tuple.from(new Object[]{ 
                 doc.getId(), 
                 doc.getCommitId(),
+                doc.getCreatedWithCommitId(),
+                
                 doc.getMissionId(),
                 doc.getObjectiveStatus(),
                 doc.getStartDate(),
@@ -111,11 +169,15 @@ public class GrimObjectiveRegistrySqlImpl implements GrimObjectiveRegistry {
     .append("(").ln()
     .append("  id VARCHAR(40) PRIMARY KEY,").ln()
     .append("  commit_id VARCHAR(40) NOT NULL,").ln()
+    .append("  created_commit_id VARCHAR(40) NOT NULL,").ln()
     .append("  mission_id VARCHAR(40) NOT NULL,").ln()
     .append("  objective_status VARCHAR(100),").ln()
     .append("  objective_start_date DATE,").ln()
     .append("  objective_due_date DATE").ln()
     .append(");").ln()
+    
+    .append("CREATE INDEX ").append(options.getGrimObjective()).append("_CREATED_INDEX")
+    .append(" ON ").append(options.getGrimObjective()).append(" (created_commit_id);").ln()
     
     .append("CREATE INDEX ").append(options.getGrimObjective()).append("_MISSION_INDEX")
     .append(" ON ").append(options.getGrimObjective()).append(" (mission_id);").ln()
@@ -149,6 +211,10 @@ public class GrimObjectiveRegistrySqlImpl implements GrimObjectiveRegistry {
           .commitId(row.getString("commit_id"))
           .missionId(row.getString("mission_id"))
           
+          .updatedAt(row.getOffsetDateTime("updated_at"))
+          .createdAt(row.getOffsetDateTime("created_at"))
+          .createdWithCommitId(row.getString("created_commit_id"))
+          
           .objectiveStatus(row.getString("objective_status"))
           .startDate(row.getLocalDate("objective_start_date"))
           .dueDate(row.getLocalDate("objective_due_date"))
@@ -156,28 +222,4 @@ public class GrimObjectiveRegistrySqlImpl implements GrimObjectiveRegistry {
           .build();
     };
   }
-  @Override
-  public SqlTuple findAllByMissionIds(Collection<String> id) {
-    return ImmutableSqlTuple.builder()
-        .value(new SqlStatement()
-        .append("SELECT * ").ln()
-        .append("  FROM ").append(options.getGrimObjective()).ln()
-        .append("  WHERE (mission_id = ANY($1))").ln() 
-        .build())
-        .props(Tuple.of(id.toArray()))
-        .build();
-  }
-  @Override
-  public SqlTupleList deleteAll(Collection<GrimObjective> objective) {
-    return ImmutableSqlTupleList.builder()
-        .value(new SqlStatement()
-        .append("DELETE FROM ").append(options.getGrimObjective())
-        .append(" WHERE id = $1")
-        .build())
-        .props(objective.stream()
-            .map(doc -> Tuple.from(new Object[]{doc.getId()}))
-            .collect(Collectors.toList()))
-        .build();
-  }
-
 }
