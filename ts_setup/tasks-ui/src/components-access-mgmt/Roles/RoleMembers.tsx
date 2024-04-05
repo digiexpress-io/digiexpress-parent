@@ -14,7 +14,7 @@ const RoleMembers: React.FC<{ role: Role }> = ({ role }) => {
   return (
     <Stack spacing={1}>
       {role.principals.map((principal) => (
-        <SectionLayout label='permissions.role.member.name' value={principal.name} />
+        <SectionLayout label='permissions.role.member.name' value={principal} />
       ))
       }
     </Stack>

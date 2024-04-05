@@ -9,7 +9,8 @@ export interface AccessMgmtContextType {
   principals: Principal[];
   loading: boolean; // is permissions loading
   reload(): Promise<void>;
-  getPermissionById(permissionId: string): Permission;
+  getPermission(idOrNameOrExternalId: string): Permission;
+  getRole(idOrNameOrExternalId: string): Role;
 }
 
 
@@ -62,15 +63,21 @@ export const AccessMgmtContextProvider: React.FC<{ children: React.ReactNode }> 
         console.log('loaded roles and permissions');
       });
     }
-    function getPermissionById(permissionId: string) {
-      const result = roles.find((role) => role.id === permissionId);
+    function getPermission(idOrName: string) {
+      const result = permissions.find(({ id, name }) => id === idOrName || name === idOrName);
       if (!result) {
-        throw new Error("Permission not found by id: " + permissionId);
+        throw new Error("Permission not found by id/name/externalId: " + idOrName);
       }
       return result;
     }
-
-    return { loading, reload, roles, permissions, principals, getPermissionById };
+    function getRole(idOrName: string) {
+      const result = roles.find(({ id, name }) => id === idOrName || name === idOrName);
+      if (!result) {
+        throw new Error("Role not found by id/name/externalId: " + idOrName);
+      }
+      return result;
+    }
+    return { loading, reload, roles, permissions, principals, getPermission, getRole };
   }, [loading, store, roles, permissions, principals, loadAllRoles, loadAllPermissions]);
 
 

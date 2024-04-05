@@ -64,13 +64,13 @@ const RoleCommitComment: React.FC<{}> = () => {
 
 export const Left: React.FC<{}> = () => {
   const { entity } = useNewRole();
-  const { getPermissionById } = useAccessMgmt();
+  const { getRole } = useAccessMgmt();
 
   React.useEffect(() => {
   }, [entity.permissions]);
 
 
-  const parentRole = entity.parentId ? getPermissionById(entity.parentId) : undefined;
+  const parentRole = entity.parentId ? getRole(entity.parentId) : undefined;
 
   return (
     <>

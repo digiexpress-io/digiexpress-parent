@@ -1,11 +1,9 @@
 import React from 'react';
 import { Paper, Box, IconButton } from '@mui/material';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-
 import * as colors from 'components-colors';
 import Burger from 'components-burger';
 import { Role } from 'descriptor-access-mgmt';
-
 import { OneRoleDataTabs } from './OneRoleDataTabs';
 
 const sx = { borderRadius: '8px 8px 0px 0px', boxShadow: "unset", fontWeight: 'bolder' };

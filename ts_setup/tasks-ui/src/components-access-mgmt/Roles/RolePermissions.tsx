@@ -6,25 +6,37 @@ import { Role } from 'descriptor-access-mgmt';
 import { SectionLayout } from 'components-generic';
 import Context from 'context';
 
+const PermissionDivider: React.FC<{ index: number, role: Role }> = ({ index, role }) => {
+  return role.permissions.length - 1 !== index ? <Divider /> : null;
+}
+
+const OneRolePermission: React.FC<{ permissionName: string }> = ({ permissionName }) => {
+  const { getPermission } = Context.useAccessMgmt()
+  const { name, description, status } = getPermission(permissionName);
+
+  return (
+    <>
+      <SectionLayout label='permissions.permission.name' value={name} />
+      <SectionLayout label='permissions.permission.description' value={description} />
+      <SectionLayout label='permissions.permission.status' value={status} />
+    </>
+  );
+}
+
+
 const RolePermissions: React.FC<{ role: Role }> = ({ role }) => {
-  const { permissions } = Context.useAccessMgmt()
-
-
   if (!role.permissions.length) {
     return (<Alert severity='info'><FormattedMessage id='permissions.permission.none' /></Alert>)
   }
 
   return (
     <Stack spacing={1}>
-      {permissions.map((permission, index) => (
-        <React.Fragment key={index}>
-          <SectionLayout label='permissions.permission.name' value={permission.name} />
-          <SectionLayout label='permissions.permission.description' value={permission.description} />
-          <SectionLayout label='permissions.permission.status' value={permission.status} />
-          {role.permissions.length - 1 !== index ? <Divider /> : undefined}
-        </React.Fragment>
-      ))
-      }
+      {role.permissions.map((permissionName, index) => (
+        <>
+          <OneRolePermission key={permissionName} permissionName={permissionName} />
+          <PermissionDivider index={index} role={role} />
+        </>
+      ))}
     </Stack>
   )
 }

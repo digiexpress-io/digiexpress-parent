@@ -24,9 +24,9 @@ const CurrentlySelected: React.FC<{ chips: string[], onRemoveChip: (index: numbe
 };
 
 const RoleParent: React.FC = () => {
-  const { roles, getPermissionById } = Context.useAccessMgmt();
+  const { roles, getRole } = Context.useAccessMgmt();
   const { setParentId, entity } = useNewRole();
-  const parentRole = entity.parentId ? getPermissionById(entity.parentId) : undefined;
+  const parentRole = entity.parentId ? getRole(entity.parentId) : undefined;
   return (
     <>
       <Stack spacing={1}>

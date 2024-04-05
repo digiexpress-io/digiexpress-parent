@@ -70,8 +70,8 @@ export interface Role {
 
   status: ActorStatus;
 
-  permissions: Permission[];  // permission names
-  principals: Principal[];   // user names
+  permissions: string[];  // permission names
+  principals: string[];   // user names
 }
 
 export interface RoleCommand {
