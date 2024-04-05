@@ -13,15 +13,16 @@ const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const { reload } = Context.useAccessMgmt();
   const backend = Context.useBackend();
   const { entity } = useNewPermission();
+  const disabled = !entity.name || !entity.commitComment || !entity.description;
 
   async function handlePermissionCreate() {
-    const { commitComment, description, name } = entity;
+    const { commitComment, description, name, roles } = entity;
     const command: CreatePermission = {
       commandType: 'CREATE_PERMISSION',
       comment: commitComment,
       name,
       description,
-      roles: ["default role"]
+      roles: [...roles]
     };
     await new ImmutableAccessMgmtStore(backend.store).createPermission(command);
     await reload();
@@ -31,7 +32,7 @@ const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   return (
     <>
       <Burger.SecondaryButton label='buttons.cancel' onClick={onClose} />
-      <Burger.PrimaryButton label='buttons.accept' onClick={handlePermissionCreate} />
+      <Burger.PrimaryButton label='buttons.accept' onClick={handlePermissionCreate} disabled={disabled} />
     </>
   )
 }
