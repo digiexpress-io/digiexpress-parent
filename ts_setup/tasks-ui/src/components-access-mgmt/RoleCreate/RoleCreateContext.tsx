@@ -11,6 +11,7 @@ export interface NewRole {
   principals: readonly string[]; // name or id of the member
   commitComment: string;
 }
+
 export interface NewRoleContextType {
   entity: NewRole;
   setName(newName: string): void;

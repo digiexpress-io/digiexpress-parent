@@ -6,58 +6,53 @@ import { StyledDialogLarge } from 'components-access-mgmt/Dialogs';
 import { Header } from './Header';
 import { Left } from './Left';
 import { Right } from './Right';
+import { PermissionCreateProvider, useNewPermission } from './PermissionCreateContext';
 
 
-const Footer: React.FC<{ onClose: () => void, onCloseCreate: () => void }> = ({ onClose, onCloseCreate }) => {
+const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+  const { reload } = Context.useAccessMgmt();
+  const backend = Context.useBackend();
+  const { entity } = useNewPermission();
+
+  async function handlePermissionCreate() {
+    const { commitComment, description, name } = entity;
+    const command: CreatePermission = {
+      commandType: 'CREATE_PERMISSION',
+      comment: commitComment,
+      name,
+      description,
+      roles: ["default role"]
+    };
+    await new ImmutableAccessMgmtStore(backend.store).createPermission(command);
+    await reload();
+    onClose();
+  };
 
   return (
     <>
       <Burger.SecondaryButton label='buttons.cancel' onClick={onClose} />
-      <Burger.PrimaryButton label='buttons.accept' onClick={onCloseCreate} />
+      <Burger.PrimaryButton label='buttons.accept' onClick={handlePermissionCreate} />
     </>
   )
 }
-//TODO: When permission ctx is done
-const PermissionCreateDialog: React.FC<{ open: boolean, onClose: () => void }> = ({ open, onClose }) => {
-  const backend = Context.useBackend();
-  const permissions = Context.useAccessMgmt();
-  const [name, setName] = React.useState('permission name');
-  const [description, setDescription] = React.useState('description');
-  const [comment, setComment] = React.useState('comment value');
 
+const PermissionCreateDialog: React.FC<{ open: boolean, onClose: () => void }> = ({ open, onClose }) => {
 
   if (!open) {
     return null;
   }
 
-  function handleCloseCreate() {
-    permissions.reload().then(() => {
-      onClose();
-    });
-  }
-
-  async function handlePermissionCreate() {
-    const command: CreatePermission = {
-      commandType: 'CREATE_PERMISSION',
-      comment,
-      name,
-      description,
-      roles: []
-    };
-    await new ImmutableAccessMgmtStore(backend.store).createPermission(command);
-    handleCloseCreate();
-  };
-
-
   return (
-    <StyledDialogLarge
-      open={open}
-      onClose={onClose}
-      header={<Header onClose={onClose} />}
-      footer={<Footer onClose={onClose} onCloseCreate={handlePermissionCreate} />}
-      right={<Right />}
-      left={<Left />}
-    />
+    <PermissionCreateProvider>
+      <StyledDialogLarge
+        open={open}
+        onClose={onClose}
+        header={<Header onClose={onClose} />}
+        footer={<Footer onClose={onClose} />}
+        right={<Right />}
+        left={<Left />}
+      />
+    </PermissionCreateProvider>
   )
 }
 

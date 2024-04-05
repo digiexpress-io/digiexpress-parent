@@ -2,13 +2,11 @@ import React from 'react';
 import { Typography, TextField } from '@mui/material';
 import { FormattedMessage, useIntl } from 'react-intl';
 import Burger from 'components-burger';
+import { useNewPermission } from './PermissionCreateContext';
 
-//TODO: Status field
 const Left: React.FC<{}> = () => {
   const intl = useIntl();
-  const [name, setName] = React.useState('permission name');
-  const [description, setDescription] = React.useState('description');
-  const [comment, setComment] = React.useState('comment value');
+  const { entity, setCommitComment, setName, setDescription } = useNewPermission();
 
   function handleNameChange(event: React.ChangeEvent<HTMLInputElement>) {
     setName(event.target.value);
@@ -19,7 +17,7 @@ const Left: React.FC<{}> = () => {
   }
 
   function handleCommentChange(event: React.ChangeEvent<HTMLInputElement>) {
-    setComment(event.target.value);
+    setCommitComment(event.target.value);
   }
 
   return (<>
@@ -28,7 +26,7 @@ const Left: React.FC<{}> = () => {
       <TextField InputProps={{ disableUnderline: true }} variant='standard'
         placeholder={intl.formatMessage({ id: 'permissions.permission.name.create.placeholder' })}
         fullWidth
-        value={name}
+        value={entity.name}
         onChange={handleNameChange}
       />
     </Burger.Section>
@@ -41,7 +39,7 @@ const Left: React.FC<{}> = () => {
         multiline
         minRows={3}
         maxRows={6}
-        value={description}
+        value={entity.description}
         onChange={handleDescriptionChange}
       />
     </Burger.Section>
@@ -52,7 +50,7 @@ const Left: React.FC<{}> = () => {
         placeholder={intl.formatMessage({ id: 'permissions.permission.createComment.placeholder' })}
         fullWidth
         required
-        value={comment}
+        value={entity.commitComment}
         onChange={handleCommentChange}
       />
     </Burger.Section>
