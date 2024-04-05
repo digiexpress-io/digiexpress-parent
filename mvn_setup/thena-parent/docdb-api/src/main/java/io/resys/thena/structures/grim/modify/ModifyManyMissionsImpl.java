@@ -19,9 +19,9 @@ import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.spi.ImmutableTxScope;
 import io.resys.thena.structures.BatchStatus;
-import io.resys.thena.structures.grim.GrimInserts.GrimBatchForOne;
+import io.resys.thena.structures.grim.GrimInserts.GrimBatchMissions;
 import io.resys.thena.structures.grim.GrimState;
-import io.resys.thena.structures.grim.ImmutableGrimBatchForOne;
+import io.resys.thena.structures.grim.ImmutableGrimBatchMissions;
 import io.resys.thena.structures.grim.commitlog.GrimCommitBuilder;
 import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
@@ -86,10 +86,25 @@ public class ModifyManyMissionsImpl implements ModifyManyMissions {
   private Uni<ManyMissionsEnvelope> doInTx(GrimState tx) {
     return createRequest(tx)
         .collect().asList()
-        .onItem().transformToUni(request -> createResponse(tx, request));
+        .onItem().transformToUni(request -> createResponse(tx, request))
+        .onFailure(ModifyManyMissionsException.class).recoverWithItem(ex -> {
+          final ModifyManyMissionsException error = (ModifyManyMissionsException) ex;          
+          return ImmutableManyMissionsEnvelope.builder()
+            .repoId(tenantId)
+            .addMessages(ImmutableMessage.builder()
+                .text(new StringBuilder()
+                  .append("Commit to: '").append(tenantId).append("'").append(" is rejected.")
+                  .append(System.lineSeparator())
+                  .append("Message: ").append(error.getMessage())
+                  .toString())
+                .exception(error)
+                .build())
+            .status(CommitResultStatus.ERROR)
+          .build();
+        });
   }
 
-  private ManyMissionsEnvelope validateRequest(GrimState tx, List<GrimBatchForOne> request) {
+  private ManyMissionsEnvelope validateRequest(GrimState tx, List<GrimBatchMissions> request) {
     if(request.size() != this.missions.size()) {
       final var found = request.stream()
           .map(i -> i.getMissions().iterator().next().getId())
@@ -114,14 +129,14 @@ public class ModifyManyMissionsImpl implements ModifyManyMissions {
     return null;
   }
   
-  private Uni<ManyMissionsEnvelope> createResponse(GrimState tx, List<GrimBatchForOne> request) {
+  private Uni<ManyMissionsEnvelope> createResponse(GrimState tx, List<GrimBatchMissions> request) {
     final var isErrors = validateRequest(tx, request);
     if(isErrors != null) {
       return Uni.createFrom().item(isErrors);
     }
     
     // Merge requests
-    final var start = ImmutableGrimBatchForOne.builder()
+    final var start = ImmutableGrimBatchMissions.builder()
         .tenantId(tenantId)
         .log("")
         .status(BatchStatus.OK);
@@ -134,6 +149,11 @@ public class ModifyManyMissionsImpl implements ModifyManyMissions {
     
     // Patch all in current TX
     return tx.insert().batchMany(start.build()).onItem().transform(rsp -> {
+      
+      if(rsp.getStatus() == BatchStatus.CONFLICT || rsp.getStatus() == BatchStatus.ERROR) {
+        throw new ModifyManyMissionsException("Failed to modify missions!", rsp);
+      }
+      
       return ImmutableManyMissionsEnvelope.builder()
           .repoId(tenantId)
           .log(rsp.getLog())
@@ -144,27 +164,27 @@ public class ModifyManyMissionsImpl implements ModifyManyMissions {
     });
   }
   
-  private Multi<GrimBatchForOne> createRequest(GrimState tx) {
+  private Multi<GrimBatchMissions> createRequest(GrimState tx) {
     return tx.query().missions()
-    .addMissionIdFilter(this.missions.keySet().toArray(new String[]{}))
-    .excludeDocs(GrimDocType.GRIM_COMMANDS, GrimDocType.GRIM_COMMIT_VIEWER)
+    .missionId(this.missions.keySet().toArray(new String[]{}))
+    .excludeDocs(GrimDocType.GRIM_COMMANDS, GrimDocType.GRIM_COMMIT_VIEWER, GrimDocType.GRIM_COMMIT)
     .findAll().onItem().transform(labels -> createRequest(tx, labels));
   }
   
   
-  private GrimBatchForOne createRequest(GrimState tx, GrimMissionContainer container) {
+  private GrimBatchMissions createRequest(GrimState tx, GrimMissionContainer container) {
     RepoAssert.isTrue(container.getMissions().size() == 1, () -> "Mission container must be grouped by missions, one mission per container!");
     
     final var missionId =  container.getMissions().keySet().iterator().next();
     
-    final var start = ImmutableGrimBatchForOne.builder()
+    final var start = ImmutableGrimBatchMissions.builder()
         .tenantId(tenantId)
         .status(BatchStatus.OK)
         .log("")
         .build();
     final var createdAt = OffsetDateTime.now();
     
-    ImmutableGrimBatchForOne next = start;    
+    ImmutableGrimBatchMissions next = start;    
     final var logger = new GrimCommitBuilder(tenantId, 
         ImmutableGrimCommit.builder()
           .commitId(OidUtils.gen())
@@ -180,11 +200,24 @@ public class ModifyManyMissionsImpl implements ModifyManyMissions {
     this.missions.get(missionId).accept(mergeMission);
     final var created = mergeMission.close();
     
-    next = ImmutableGrimBatchForOne.builder()
+    next = ImmutableGrimBatchMissions.builder()
         .from(start)
         .from(created)
         .from(logger.withMissionId(missionId).close())
         .build();
     return next;
+  }
+  
+  
+  public static class ModifyManyMissionsException extends RuntimeException {
+    private static final long serialVersionUID = -6202574733069488724L;
+    private final GrimBatchMissions batch;
+    public ModifyManyMissionsException(String message, GrimBatchMissions batch) {
+      super(message);
+      this.batch = batch;
+    }
+    public GrimBatchMissions getBatch() {
+      return batch;
+    }
   }
 }

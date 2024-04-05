@@ -13,7 +13,7 @@ import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewRemark;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimOneOfRelations;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimRelationType;
 import io.resys.thena.structures.BatchStatus;
-import io.resys.thena.structures.grim.ImmutableGrimBatchForOne;
+import io.resys.thena.structures.grim.ImmutableGrimBatchMissions;
 import io.resys.thena.structures.grim.commitlog.GrimCommitBuilder;
 import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
@@ -23,7 +23,7 @@ public class NewRemarkBuilder implements ThenaGrimNewObject.NewRemark {
   private final GrimCommitBuilder logger;
   private final @Nullable GrimOneOfRelations relation;
   private final Map<String, GrimRemark> all_remarks;
-  private final ImmutableGrimBatchForOne.Builder batch;
+  private final ImmutableGrimBatchMissions.Builder batch;
   private final String remarkId;
   private final String missionId;
   private ImmutableGrimRemark.Builder next; 
@@ -48,7 +48,7 @@ public class NewRemarkBuilder implements ThenaGrimNewObject.NewRemark {
         .createdWithCommitId(logger.getCommitId())
         .commitId(logger.getCommitId());
     
-    this.batch = ImmutableGrimBatchForOne.builder()
+    this.batch = ImmutableGrimBatchMissions.builder()
         .tenantId(logger.getTenantId())
         .status(BatchStatus.OK)
         .log("");
@@ -89,7 +89,7 @@ public class NewRemarkBuilder implements ThenaGrimNewObject.NewRemark {
     return this;
   }
 
-  public ImmutableGrimBatchForOne close() {
+  public ImmutableGrimBatchMissions close() {
     RepoAssert.isTrue(built, () -> "you must call RemarkChanges.build() to finalize mission CREATE or UPDATE!");
     final var built = next.relation(relation).build();
     

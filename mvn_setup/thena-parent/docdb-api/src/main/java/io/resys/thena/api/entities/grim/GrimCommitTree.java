@@ -11,8 +11,6 @@ public interface GrimCommitTree extends ThenaTable {
   String getId();
   String getCommitId();
   @Nullable String getMissionId();  //transitive
-  @Nullable String getLabelId();    //transitive
-  
   GrimCommitTreeOperation getOperationType();
   
   @Nullable JsonObject getBodyBefore();

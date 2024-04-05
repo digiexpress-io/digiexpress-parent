@@ -8,16 +8,19 @@ import java.util.function.Consumer;
 import io.resys.thena.api.actions.GrimCommitActions.CreateManyMissions;
 import io.resys.thena.api.actions.GrimCommitActions.ManyMissionsEnvelope;
 import io.resys.thena.api.actions.ImmutableManyMissionsEnvelope;
+import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.grim.GrimCommit;
 import io.resys.thena.api.entities.grim.ImmutableGrimCommit;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewMission;
+import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.spi.ImmutableTxScope;
 import io.resys.thena.structures.BatchStatus;
-import io.resys.thena.structures.grim.GrimInserts.GrimBatchForOne;
+import io.resys.thena.structures.grim.GrimInserts.GrimBatchMissions;
 import io.resys.thena.structures.grim.GrimState;
-import io.resys.thena.structures.grim.ImmutableGrimBatchForOne;
+import io.resys.thena.structures.grim.ImmutableGrimBatchMissions;
 import io.resys.thena.structures.grim.commitlog.GrimCommitBuilder;
+import io.resys.thena.structures.grim.create.CreateOneMissionsImpl.CreateOneMissionException;
 import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
@@ -63,11 +66,30 @@ public class CreateManyMissionsImpl implements CreateManyMissions {
   }
 
   private Uni<ManyMissionsEnvelope> doInTx(GrimState tx) {
-    return createRequest(tx).onItem().transformToUni(request -> createResponse(tx, request));
+    return createRequest(tx).onItem().transformToUni(request -> createResponse(tx, request))
+        .onFailure(CreateManyMissionException.class).recoverWithItem(ex -> {
+          final CreateOneMissionException error = (CreateOneMissionException) ex;          
+          return ImmutableManyMissionsEnvelope.builder()
+            .repoId(tenantId)
+            .addMessages(ImmutableMessage.builder()
+                .text(new StringBuilder()
+                  .append("Commit to: '").append(tenantId).append("'").append(" is rejected.")
+                  .append(System.lineSeparator())
+                  .append("Message: ").append(error.getMessage())
+                  .toString())
+                .exception(error)
+                .build())
+            .status(CommitResultStatus.ERROR)
+          .build();
+        });
   }
   
-  private Uni<ManyMissionsEnvelope> createResponse(GrimState tx, GrimBatchForOne request) {
+  private Uni<ManyMissionsEnvelope> createResponse(GrimState tx, GrimBatchMissions request) {
     return tx.insert().batchMany(request).onItem().transform(rsp -> {
+      if(rsp.getStatus() == BatchStatus.CONFLICT || rsp.getStatus() == BatchStatus.ERROR) {
+        throw new CreateOneMissionException("Failed to create missions!", rsp);
+      }
+      
       final ManyMissionsEnvelope result = ImmutableManyMissionsEnvelope.builder()
           .repoId(tenantId)
           .log(rsp.getLog())
@@ -79,15 +101,15 @@ public class CreateManyMissionsImpl implements CreateManyMissions {
     });
   }
   
-  private Uni<GrimBatchForOne> createRequest(GrimState tx) {
+  private Uni<GrimBatchMissions> createRequest(GrimState tx) {
   
-    final var start = ImmutableGrimBatchForOne.builder()
+    final var start = ImmutableGrimBatchMissions.builder()
         .tenantId(tenantId)
         .status(BatchStatus.OK)
         .log("")
         .build();
     final var createdAt = OffsetDateTime.now();
-    ImmutableGrimBatchForOne next = start;
+    ImmutableGrimBatchMissions next = start;
     final GrimCommit parentCommit;
     if(this.missions.size() == 1) {
       parentCommit = null;
@@ -121,12 +143,24 @@ public class CreateManyMissionsImpl implements CreateManyMissions {
       
       final var missionId = created.getMissions().iterator().next().getId();
       
-      next = ImmutableGrimBatchForOne.builder()
+      next = ImmutableGrimBatchMissions.builder()
           .from(start)
           .from(created)
           .from(logger.withMissionId(missionId).close())
           .build();
     }
     return Uni.createFrom().item(next);
+  }
+  
+  public static class CreateManyMissionException extends RuntimeException {
+    private static final long serialVersionUID = -6202574733069488724L;
+    private final GrimBatchMissions batch;
+    public CreateManyMissionException(String message, GrimBatchMissions batch) {
+      super(message);
+      this.batch = batch;
+    }
+    public GrimBatchMissions getBatch() {
+      return batch;
+    }
   }
 }

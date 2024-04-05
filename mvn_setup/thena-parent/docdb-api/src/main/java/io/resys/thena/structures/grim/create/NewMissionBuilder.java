@@ -18,7 +18,7 @@ import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewMission;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewObjective;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewRemark;
 import io.resys.thena.structures.BatchStatus;
-import io.resys.thena.structures.grim.ImmutableGrimBatchForOne;
+import io.resys.thena.structures.grim.ImmutableGrimBatchMissions;
 import io.resys.thena.structures.grim.commitlog.GrimCommitBuilder;
 import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
@@ -33,12 +33,12 @@ public class NewMissionBuilder implements ThenaGrimNewObject.NewMission {
   private final String commitId;
   private final ImmutableGrimMissionData.Builder missionMeta;
   
-  private ImmutableGrimBatchForOne.Builder next;
+  private ImmutableGrimBatchMissions.Builder next;
   private boolean built;
   
   public NewMissionBuilder(GrimCommitBuilder logger) {
     super();
-    this.next = ImmutableGrimBatchForOne.builder()
+    this.next = ImmutableGrimBatchMissions.builder()
         .tenantId(logger.getTenantId())
         .status(BatchStatus.OK)
         .log("");
@@ -164,7 +164,7 @@ public class NewMissionBuilder implements ThenaGrimNewObject.NewMission {
         .build());
     return this;
   }
-  public ImmutableGrimBatchForOne close() {
+  public ImmutableGrimBatchMissions close() {
     RepoAssert.isTrue(built, () -> "you must call MissionChanges.build() to finalize mission CREATE or UPDATE!");
 
     final var data = this.missionMeta.build();

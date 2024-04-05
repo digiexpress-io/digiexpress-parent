@@ -44,10 +44,22 @@ import io.smallrye.mutiny.Uni;
 
 public interface GrimInserts {
   
-  Uni<GrimBatchForOne> batchMany(GrimBatchForOne output);
+  Uni<GrimBatchMissions> batchMany(GrimBatchMissions output);
+  Uni<GrimBatchForViewers> batchMany(GrimBatchForViewers output);
+
+  @Value.Immutable
+  interface GrimBatchForViewers {
+    List<GrimCommitViewer> getViewers();
+    List<GrimCommitViewer> getUpdateViewers();
+    String getLog();
+    List<Message> getMessages();
+    BatchStatus getStatus();
+    String getTenantId();
+  }
+  
   
   @Value.Immutable
-  interface GrimBatchForOne {
+  interface GrimBatchMissions {
     List<GrimMission> getMissions();
     List<GrimMissionLabel> getMissionLabels();
     List<GrimMissionLink> getLinks();

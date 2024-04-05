@@ -24,7 +24,7 @@ import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewRemark;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimOneOfRelations;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimRelationType;
 import io.resys.thena.structures.BatchStatus;
-import io.resys.thena.structures.grim.ImmutableGrimBatchForOne;
+import io.resys.thena.structures.grim.ImmutableGrimBatchMissions;
 import io.resys.thena.structures.grim.commitlog.GrimCommitBuilder;
 import io.resys.thena.structures.grim.create.NewAssignmentBuilder;
 import io.resys.thena.structures.grim.create.NewMissionLabelBuilder;
@@ -38,7 +38,7 @@ public class MergeGoalBuilder implements MergeGoal {
   private final GrimObjectiveGoal previous;
   private final GrimCommitBuilder logger;
   private final ImmutableGrimOneOfRelations childRel;
-  private final ImmutableGrimBatchForOne.Builder batch;
+  private final ImmutableGrimBatchMissions.Builder batch;
   private final ImmutableGrimObjectiveGoal.Builder nextGoal;
   private final ImmutableGrimMissionData.Builder nextGoalMeta;
   private final String missionId;
@@ -50,7 +50,7 @@ public class MergeGoalBuilder implements MergeGoal {
     this.logger = logger;
     this.previous = current;
     this.childRel = ImmutableGrimOneOfRelations.builder().relationType(GrimRelationType.GOAL).objectiveGoalId(current.getId()).build();
-    this.batch = ImmutableGrimBatchForOne.builder().tenantId(logger.getTenantId()).log("").status(BatchStatus.OK);
+    this.batch = ImmutableGrimBatchMissions.builder().tenantId(logger.getTenantId()).log("").status(BatchStatus.OK);
     this.nextGoal = ImmutableGrimObjectiveGoal.builder().from(current);
     this.missionId = container.getMissions().values().iterator().next().getId();
     this.nextGoalMeta = ImmutableGrimMissionData.builder()
@@ -215,7 +215,7 @@ public class MergeGoalBuilder implements MergeGoal {
     this.built = true;
   }
 
-  public ImmutableGrimBatchForOne close() {
+  public ImmutableGrimBatchMissions close() {
     RepoAssert.isTrue(built, () -> "you must call MergeGoal.build() to finalize mission CREATE or UPDATE!");
 
     

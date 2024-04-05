@@ -26,7 +26,8 @@ public interface ThenaGrimContainers extends ThenaContainer {
     Map<String, GrimMissionData> getData();
     Map<String, GrimAssignment> getAssignments();
     Map<String, GrimCommit> getCommits(); 
-    Map<String, GrimCommands> getCommands(); 
+    Map<String, GrimCommands> getCommands();
+    Map<String, GrimCommitViewer> getViews();
     
     @JsonIgnore
     default GrimMission getMission() {
@@ -47,6 +48,7 @@ public interface ThenaGrimContainers extends ThenaContainer {
       getData().values().forEach(data -> builders.get(data.getMissionId()).putData(data.getId(), data));
       getAssignments().values().forEach(assignment -> builders.get(assignment.getMissionId()).putAssignments(assignment.getId(), assignment));
       getCommands().values().forEach(commands -> builders.get(commands.getMissionId()).putCommands(commands.getId(), commands));
+      getViews().values().forEach(commands -> builders.get(commands.getMissionId()).putViews(commands.getId(), commands));
       getCommits().values().stream().filter(e -> builders.containsKey(e.getMissionId())).forEach(commit -> builders.get(commit.getMissionId()).putCommits(commit.getCommitId(), commit));
       return builders.values().stream().map(builder -> builder.build()).collect(Collectors.toList());
     }

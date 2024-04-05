@@ -8,12 +8,11 @@ import javax.annotation.Nullable;
 import org.immutables.value.Value;
 
 import io.resys.thena.api.entities.CommitResultStatus;
+import io.resys.thena.api.entities.grim.GrimCommitViewer;
 import io.resys.thena.api.entities.grim.GrimMission;
 import io.resys.thena.api.entities.grim.ThenaGrimMergeObject.MergeMission;
-import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewGoal;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewMission;
-import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewObjective;
-import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewRemark;
+import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimDocType;
 import io.resys.thena.api.envelope.Message;
 import io.resys.thena.api.envelope.ThenaEnvelope;
 import io.smallrye.mutiny.Uni;
@@ -28,21 +27,22 @@ public interface GrimCommitActions {
   ModifyOneMission modifyOneMission();
   ModifyManyMissions modifyManyMission();  
   
+  ModifyManyCommitViewers modifyManyCommitViewer();
   
+  interface ModifyManyCommitViewers {
+    ModifyManyCommitViewers usedFor(String usedFor);
+    ModifyManyCommitViewers commitAuthor(String author);
+    ModifyManyCommitViewers commitMessage(String message);
+    ModifyManyCommitViewers object(String commitId, GrimDocType docs, String objectId);
+    Uni<ManyCommitViewersEnvelope> build();
+  }
+
   interface ModifyOneMission {
     ModifyOneMission commitAuthor(String author);
     ModifyOneMission commitMessage(String message);
-    ModifyOneMission commitCommands(List<?> commands);
     ModifyOneMission missionId(String missionId);
-    ModifyOneMission modifyMission(Consumer<NewMission> addMission);
+    ModifyOneMission modifyMission(Consumer<MergeMission> addMission);
     
-    ModifyOneMission removeGoal(String goalId);
-    ModifyOneMission removeObjective(String objectiveId);
-    ModifyOneMission removeRemark(String remarkId);
-    
-    ModifyOneMission modifyGoal(String goalId, Consumer<NewGoal> goal);
-    ModifyOneMission modifyObjective(String objectiveId, Consumer<NewObjective> objective);
-    ModifyOneMission modifyRemark(String remarkId, Consumer<NewRemark> objective);
     Uni<OneMissionEnvelope> build();
   }
   
@@ -83,5 +83,14 @@ public interface GrimCommitActions {
     CommitResultStatus getStatus();
     List<Message> getMessages();
     @Nullable GrimMission getMission();
+  }
+  
+  @Value.Immutable
+  interface ManyCommitViewersEnvelope extends ThenaEnvelope {
+    String getRepoId();
+    CommitResultStatus getStatus();
+    List<Message> getMessages();
+    @Nullable String getLog();
+    @Nullable List<GrimCommitViewer> getViewers();
   }
 }

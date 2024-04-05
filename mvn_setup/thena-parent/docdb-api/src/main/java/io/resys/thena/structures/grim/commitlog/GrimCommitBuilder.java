@@ -6,7 +6,7 @@ import io.resys.thena.api.entities.grim.ImmutableGrimCommit;
 import io.resys.thena.api.entities.grim.ImmutableGrimCommitTree;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.IsGrimObject;
 import io.resys.thena.structures.BatchStatus;
-import io.resys.thena.structures.grim.ImmutableGrimBatchForOne;
+import io.resys.thena.structures.grim.ImmutableGrimBatchMissions;
 import io.resys.thena.support.OidUtils;
 import io.vertx.core.json.JsonObject;
 
@@ -16,7 +16,7 @@ public class GrimCommitBuilder {
   private final String tenantId;
   private final String commitId;
   private final ImmutableGrimCommit.Builder commit;
-  private final ImmutableGrimBatchForOne.Builder next;
+  private final ImmutableGrimBatchMissions.Builder next;
   private final GrimCommitLogger logger;
   
   public GrimCommitBuilder(String tenantId, GrimCommit commit) {
@@ -24,7 +24,7 @@ public class GrimCommitBuilder {
     this.commitId = commit.getCommitId();
     this.tenantId = tenantId;
     this.commit = ImmutableGrimCommit.builder().from(commit);
-    this.next = ImmutableGrimBatchForOne.builder()
+    this.next = ImmutableGrimBatchMissions.builder()
         .tenantId(tenantId)
         .status(BatchStatus.OK)
         .log("");
@@ -68,7 +68,7 @@ public class GrimCommitBuilder {
     this.logger.remove(current);
     return this;
   }
-  public ImmutableGrimBatchForOne close() { 
+  public ImmutableGrimBatchMissions close() { 
     return this.next
         .addCommits(this.commit.commitLog(this.logger.build()).build())
         .log("").build();

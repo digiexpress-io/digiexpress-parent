@@ -13,7 +13,7 @@ import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewGoal;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimOneOfRelations;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimRelationType;
 import io.resys.thena.structures.BatchStatus;
-import io.resys.thena.structures.grim.ImmutableGrimBatchForOne;
+import io.resys.thena.structures.grim.ImmutableGrimBatchMissions;
 import io.resys.thena.structures.grim.commitlog.GrimCommitBuilder;
 import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
@@ -22,7 +22,7 @@ public class NewGoalBuilder implements ThenaGrimNewObject.NewGoal {
   private final GrimCommitBuilder logger;
   private final String missionId;
   
-  private final ImmutableGrimBatchForOne.Builder batch;
+  private final ImmutableGrimBatchMissions.Builder batch;
   private final GrimOneOfRelations childRel;
   private final String goalId;
   private final ImmutableGrimObjectiveGoal.Builder goal;
@@ -34,7 +34,7 @@ public class NewGoalBuilder implements ThenaGrimNewObject.NewGoal {
     this.logger = logger;
     this.missionId = missionId;
     this.goalId = OidUtils.gen();
-    this.batch = ImmutableGrimBatchForOne.builder()
+    this.batch = ImmutableGrimBatchMissions.builder()
         .tenantId(logger.getTenantId())
         .status(BatchStatus.OK)
         .log("");
@@ -97,7 +97,7 @@ public class NewGoalBuilder implements ThenaGrimNewObject.NewGoal {
     this.batch.addAssignments(built);
     return this;
   }
-  public ImmutableGrimBatchForOne close() {
+  public ImmutableGrimBatchMissions close() {
     RepoAssert.isTrue(built, () -> "you must call GoalChanges.build() to finalize mission CREATE or UPDATE!");
     
     final var data = this.objectiveMeta.build();

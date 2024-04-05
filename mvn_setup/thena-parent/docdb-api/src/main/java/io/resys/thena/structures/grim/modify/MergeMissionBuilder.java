@@ -26,7 +26,7 @@ import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewLink;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewObjective;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewRemark;
 import io.resys.thena.structures.BatchStatus;
-import io.resys.thena.structures.grim.ImmutableGrimBatchForOne;
+import io.resys.thena.structures.grim.ImmutableGrimBatchMissions;
 import io.resys.thena.structures.grim.commitlog.GrimCommitBuilder;
 import io.resys.thena.structures.grim.create.NewAssignmentBuilder;
 import io.resys.thena.structures.grim.create.NewMissionLabelBuilder;
@@ -41,7 +41,7 @@ public class MergeMissionBuilder implements MergeMission {
   
   private final GrimMissionContainer container;
   private final GrimCommitBuilder logger;
-  private final ImmutableGrimBatchForOne.Builder batch;
+  private final ImmutableGrimBatchMissions.Builder batch;
   private final ImmutableGrimMission.Builder nextMission;
   private final ImmutableGrimMissionData.Builder nextMissionMeta;
   private final String missionId;
@@ -51,7 +51,7 @@ public class MergeMissionBuilder implements MergeMission {
     super();
     this.container = container;
     this.logger = logger;
-    this.batch = ImmutableGrimBatchForOne.builder().tenantId(logger.getTenantId()).log("").status(BatchStatus.OK);
+    this.batch = ImmutableGrimBatchMissions.builder().tenantId(logger.getTenantId()).log("").status(BatchStatus.OK);
     this.nextMission = ImmutableGrimMission.builder()
         .from(container.getMissions().values().iterator().next());
     this.missionId = container.getMissions().values().iterator().next().getId();
@@ -378,7 +378,7 @@ public class MergeMissionBuilder implements MergeMission {
     this.built = true;
   }
 
-  public ImmutableGrimBatchForOne close() {
+  public ImmutableGrimBatchMissions close() {
     RepoAssert.isTrue(built, () -> "you must call MergeMission.build() to finalize mission CREATE or UPDATE!");
 
     

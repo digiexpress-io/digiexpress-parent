@@ -5,14 +5,14 @@ import io.resys.thena.api.entities.grim.ImmutableGrimRemark;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
 import io.resys.thena.api.entities.grim.ThenaGrimMergeObject.MergeRemark;
 import io.resys.thena.structures.BatchStatus;
-import io.resys.thena.structures.grim.ImmutableGrimBatchForOne;
+import io.resys.thena.structures.grim.ImmutableGrimBatchMissions;
 import io.resys.thena.structures.grim.commitlog.GrimCommitBuilder;
 import io.resys.thena.support.RepoAssert;
 
 public class MergeRemarkBuilder implements MergeRemark {
 
   private final GrimCommitBuilder logger;
-  private final ImmutableGrimBatchForOne.Builder batch;
+  private final ImmutableGrimBatchMissions.Builder batch;
   private final GrimRemark currentRemark; 
   private final ImmutableGrimRemark.Builder nextRemark;
   private boolean built;
@@ -20,7 +20,7 @@ public class MergeRemarkBuilder implements MergeRemark {
   public MergeRemarkBuilder(GrimMissionContainer container, GrimCommitBuilder logger, String missionId, String remarkId) {
     super();
     this.logger = logger;
-    this.batch = ImmutableGrimBatchForOne.builder().tenantId(logger.getTenantId()).log("").status(BatchStatus.OK);
+    this.batch = ImmutableGrimBatchMissions.builder().tenantId(logger.getTenantId()).log("").status(BatchStatus.OK);
     this.currentRemark = container.getRemarks().get(remarkId);
     RepoAssert.notNull(currentRemark, () -> "Can't find remark with id: '" + remarkId + "' for mission: '" + missionId + "'!");
     this.nextRemark = ImmutableGrimRemark.builder().from(currentRemark);
@@ -44,7 +44,7 @@ public class MergeRemarkBuilder implements MergeRemark {
   public void build() {
     this.built = true;
   }
-  public ImmutableGrimBatchForOne close() {
+  public ImmutableGrimBatchMissions close() {
     RepoAssert.isTrue(built, () -> "you must call MergeRemark.build() to finalize mission MERGE!");
     
     var nextRemark = this.nextRemark.build();

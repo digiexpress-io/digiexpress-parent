@@ -37,7 +37,7 @@ public class GrimCommitTreeRegistrySqlImpl implements GrimCommitTreeRegistry {
   public ThenaSqlClient.Sql findAll() {
     return ImmutableSql.builder()
         .value(new SqlStatement()
-        .append("SELECT tree.*, commit.mission_id as mission_id, commit.label_id as label_id").ln()
+        .append("SELECT tree.*, commit.mission_id as mission_id").ln()
         .append(" FROM ").append(options.getGrimCommitTree()).append(" as tree ").ln()
         .append(" RIGHT JOIN ").append(options.getGrimCommit()).append(" as commit").ln()
         .append(" ON(tree.commit_id = commit.commit_id)").ln()
@@ -122,8 +122,6 @@ public class GrimCommitTreeRegistrySqlImpl implements GrimCommitTreeRegistry {
           .id(row.getString("id"))
           .commitId(row.getString("commit_id"))
           .missionId(row.getString("mission_id"))
-          .labelId(row.getString("label_id"))
-          
           .operationType(GrimCommitTreeOperation.valueOf(row.getString("operation_type")))
           .bodyBefore(row.getJsonObject("body_before"))
           .bodyAfter(row.getJsonObject("body_after"))

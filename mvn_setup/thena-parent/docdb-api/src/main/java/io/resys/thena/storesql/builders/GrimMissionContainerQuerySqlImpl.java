@@ -29,6 +29,7 @@ public class GrimMissionContainerQuerySqlImpl implements GrimQueries.MissionQuer
   private final Collection<GrimDocType> docsToExclude = new LinkedHashSet<>();
   private final Collection<String> missionIds = new LinkedHashSet<>();
   private final Collection<AssignmentFilter> assignments = new LinkedHashSet<>();
+  private String usedBy, usedFor;
   
   @lombok.Data @lombok.Builder
   private static class AssignmentFilter {
@@ -48,13 +49,19 @@ public class GrimMissionContainerQuerySqlImpl implements GrimQueries.MissionQuer
     return this;
   }
   @Override
-  public MissionQuery addMissionIdFilter(String... missionId) {
+  public MissionQuery missionId(String... missionId) {
     missionIds.addAll(Arrays.asList(missionId));
     return this;
   }
   @Override
-  public MissionQuery addAssignmentFilter(String assignmentType, String assignmentValue) {
+  public MissionQuery addAssignment(String assignmentType, String assignmentValue) {
     assignments.add(AssignmentFilter.builder().assignmentType(assignmentType).assignmentValue(assignmentValue).build());
+    return this;
+  }
+  @Override
+  public MissionQuery viewer(String usedBy, String usedFor) {
+    this.usedBy = usedBy;
+    this.usedFor = usedFor;
     return this;
   }
   @Override
@@ -71,7 +78,8 @@ public class GrimMissionContainerQuerySqlImpl implements GrimQueries.MissionQuer
         findAllCommits(),
         findAllMissions(),
         findAllMissionLabels(),
-        findAllCommands()
+        findAllCommands(),
+        findAllViewers()
       ).with(GrimMissionContainer.class, (containers) -> {
         final var combined = ImmutableGrimMissionContainer.builder();
         containers.forEach(container -> combined.from(container));
@@ -95,7 +103,8 @@ public class GrimMissionContainerQuerySqlImpl implements GrimQueries.MissionQuer
       findAllCommits(),
       findAllMissions(),
       findAllMissionLabels(),
-      findAllCommands()
+      findAllCommands(),
+      findAllViewers()
     ).with(GrimMissionContainer.class, (containers) -> {
       final var combined = ImmutableGrimMissionContainer.builder();
       containers.forEach(container -> combined.from(container));
@@ -510,6 +519,47 @@ public class GrimMissionContainerQuerySqlImpl implements GrimQueries.MissionQuer
         .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find '%s'!", GrimDocType.GRIM_COMMANDS)))
         .onItem().transform(items -> ImmutableGrimMissionContainer
             .builder().commands(items.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
+            .build()
+        );
+  }
+  
+  private Uni<GrimMissionContainer> findAllViewers() {
+    if(docsToExclude.contains(GrimDocType.GRIM_COMMIT_VIEWER) || usedBy == null || usedFor == null) {
+      return Uni.createFrom().item(ImmutableGrimMissionContainer.builder().build());
+    }
+    if(missionIds.isEmpty()) {
+      final var sql = registry.commitViewers().findAll();
+      if(log.isDebugEnabled()) {
+        log.debug("User findAllViewers query, with props: {} \r\n{}", 
+            "",
+            sql.getValue());
+      }
+      return dataSource.getClient().preparedQuery(sql.getValue())
+          .mapping(registry.commitViewers().defaultMapper())
+          .execute()
+          .onItem()
+          .transformToMulti(RowSet::toMulti).collect().asList()
+          .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find '%s'!", GrimDocType.GRIM_COMMIT_VIEWER)))
+          .onItem().transform(items -> ImmutableGrimMissionContainer
+              .builder().views(items.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
+              .build()
+          );
+    }
+    
+    final var sql = registry.commitViewers().findAllByMissionIdsUsedByAndCommit(missionIds, usedBy, usedFor);
+    if(log.isDebugEnabled()) {
+      log.debug("User findAllViewers query, with props: {} \r\n{}", 
+          sql.getPropsDeepString(),
+          sql.getValue());
+    }
+    return dataSource.getClient().preparedQuery(sql.getValue())
+        .mapping(registry.commitViewers().defaultMapper())
+        .execute(sql.getProps())
+        .onItem()
+        .transformToMulti(RowSet::toMulti).collect().asList()
+        .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find '%s'!", GrimDocType.GRIM_COMMIT_VIEWER)))
+        .onItem().transform(items -> ImmutableGrimMissionContainer
+            .builder().views(items.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
             .build()
         );
   }
