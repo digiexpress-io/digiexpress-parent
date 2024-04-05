@@ -78,7 +78,6 @@ const RolePermissions: React.FC = () => {
       </LayoutListItem>
       )}
     </Box>
-
   </>
   )
 }

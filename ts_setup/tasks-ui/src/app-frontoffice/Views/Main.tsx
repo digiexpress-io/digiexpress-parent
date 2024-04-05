@@ -9,7 +9,7 @@ import SysConfig from 'components-sys-config';
 import Tasks from 'components-task';
 import Customer from 'components-customer';
 import { CurrentUserProfile, UserProfiles } from 'components-user-profile';
-import { RolesOverview, DeOrgChart, PermissionsOverview } from 'components-access-mgmt';
+import { RolesOverview, DeOrgChart, PermissionsOverview, PrincipalsOverview } from 'components-access-mgmt';
 import { wash_me } from 'components-colors';
 import LoggerFactory from 'logger';
 
@@ -64,6 +64,8 @@ const Main: React.FC<{}> = () => {
       return (<Box sx={root}><RolesOverview /></Box>)
     } else if (active.id === 'permissionsOverview') {
       return (<Box sx={root}><PermissionsOverview /></Box>)
+    } else if (active.id === 'principalsOverview') {
+      return (<Box sx={root}><PrincipalsOverview /></Box>)
     } else if (active.id === 'orgChart') {
       return (<Box sx={root}><DeOrgChart /></Box>)
     } else if (active.id === 'reporting') {

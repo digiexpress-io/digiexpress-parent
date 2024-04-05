@@ -37,6 +37,7 @@ public class CreatePrincipalActionImpl implements CreatePrincipalAction {
       
       .userName(principal.getName())
       .email(principal.getEmail())
+      .addMemberToParties(principal.getRoles())
       .build();
      }
    
@@ -56,7 +57,6 @@ public class CreatePrincipalActionImpl implements CreatePrincipalAction {
     return ImmutablePrincipal.builder()
         .id(principal.getId())
         .version(principal.getCommitId())
-        
         .name(principal.getUserName())
         .email(principal.getEmail())
         .status(OrgActorStatusType.IN_FORCE)

@@ -1,4 +1,4 @@
-import { CreatePermission, CreateRole, Permission, AccessMgmtStore, PermissionUpdateCommand, Role, RoleUpdateCommand } from './access-mgmt-types';
+import { CreatePermission, CreateRole, Permission, AccessMgmtStore, PermissionUpdateCommand, Role, RoleUpdateCommand, CreatePrincipal, Principal } from './access-mgmt-types';
 
 
 export interface AccessMgmtStoreConfig {
@@ -62,6 +62,18 @@ export class ImmutableAccessMgmtStore implements AccessMgmtStore {
     return await this._store.fetch<Role>(`roles/${id}`, {
       method: 'PUT',
       body: JSON.stringify(commands),
+      repoType: 'PERMISSIONS'
+    });
+  }
+
+  async findAllPrincipals(): Promise<Principal[]> {
+    return await this._store.fetch<Principal[]>(`principals`, { repoType: 'PERMISSIONS' });
+  }
+
+  async createPrincipal(command: CreatePrincipal): Promise<Principal> {
+    return await this._store.fetch<Principal>(`principals`, {
+      method: 'POST',
+      body: JSON.stringify(command),
       repoType: 'PERMISSIONS'
     });
   }

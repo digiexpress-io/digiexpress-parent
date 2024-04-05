@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, TextField, Box } from '@mui/material';
+import { Typography, TextField } from '@mui/material';
 import { FormattedMessage, useIntl } from 'react-intl';
 import Burger from 'components-burger';
 
@@ -101,6 +101,7 @@ export const Left: React.FC<{}> = () => {
           entity.permissions.map((permission, index) => <SectionLayout label='permissions.permission.name' key={index} value={permission} />)}
       </Burger.Section>
 
+      //TODO Add principals
       <Burger.Section>
         <Typography fontWeight='bold'><FormattedMessage id='permissions.role.roleMembersOverview' /></Typography>
         <SectionLayout label='permissions.role.users.username' value={'member 1'} />

@@ -457,6 +457,8 @@ const en = {
   'activities.permissions.title': 'Permissions',
   'activities.permissions.roles.title': 'Roles',
 
+  'activities.principals.title': 'Role and permission members',
+
   'explorer.frontoffice.crm.menuOption': 'CRM data',
   'explorer.frontoffice.crm.customerSearch.menuOption': 'Customer search',
   'explorer.frontoffice.deployments.menuOption': 'Deployments',
@@ -554,6 +556,7 @@ const en = {
 
   'permissions.navButton.role.create': 'Create a role',
   'permissions.navButton.permission.create': 'Create a permission',
+  'permissions.navButton.principal.create': 'Create a user',
 
   'permissions.roles.roleMeta': 'Role metadata',
   'permissions.roles.description': 'Description',
@@ -568,6 +571,16 @@ const en = {
   'permissions.role.member.name': 'Username',
   'permissions.role.member.none': 'No members found',
   'permissions.role.create': 'Create a role',
+
+  'permissions.principal.create': 'Create a new user',
+  'permissions.principal.username': 'Username',
+  'permissions.principal.email': 'Email',
+  'permissions.principal.status': 'Status',
+  'permissions.principal.commitComment': 'Comment',
+  'permissions.principal.commitComment.placeholder': 'Enter a description of this change',
+  'permissions.principal.name.create.placeholder': 'Enter a username',
+  'permissions.principal.email.create.placeholder': 'Enter user email',
+
 
   'permissions.role.roleParentOverview': 'Parent role',
   'permissions.role.roleParentName': 'Name',

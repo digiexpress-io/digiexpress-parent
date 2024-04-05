@@ -134,6 +134,8 @@ const Secondary: React.FC<{ init?: { profile: UserProfileAndOrg, backend: Backen
   function handleDeployments() { actions.handleTabAdd({ id: 'deployments', label: <FormattedMessage id="activities.deployments.title" /> }) }
   function handleRolesOverview() { actions.handleTabAdd({ id: 'rolesOverview', label: <FormattedMessage id="activities.permissions.roles.title" /> }) }
   function handlePermissionsOverview() { actions.handleTabAdd({ id: 'permissionsOverview', label: <FormattedMessage id="activities.permissions.title" /> }) }
+  function handlePrincipalsOverview() { actions.handleTabAdd({ id: 'principalsOverview', label: <FormattedMessage id="activities.principals.title" /> }) }
+
 
   function handleTenant() { actions.handleTabAdd({ id: 'tenant', label: <FormattedMessage id="activities.frontoffice.crm.tenant.title" /> }) }
   function handleCurrentUserProfile() { actions.handleTabAdd({ id: 'currentUserProfile', label: <FormattedMessage id="activities.frontoffice.userProfile.title" /> }) }
@@ -211,7 +213,7 @@ const Secondary: React.FC<{ init?: { profile: UserProfileAndOrg, backend: Backen
           icon={<SecurityIcon fontSize='small' />} />
         <StyledExplorerSubTab value='explorer.permissions.roles' label={<FormattedMessage id="explorer.frontoffice.permissions.roles.menuOption" />} onClick={handleRolesOverview}
           icon={<DnsOutlinedIcon fontSize='small' />} />
-        <StyledExplorerSubTab value='explorer.permissions.users' label={<FormattedMessage id="explorer.frontoffice.permissions.users.menuOption" />} onClick={undefined}
+        <StyledExplorerSubTab value='explorer.permissions.users' label={<FormattedMessage id="explorer.frontoffice.permissions.users.menuOption" />} onClick={handlePrincipalsOverview}
           icon={<AdminPanelSettingsOutlinedIcon fontSize='small' />} />
         <StyledExplorerSubTab value='explorer.permissions.permissions' label={<FormattedMessage id="explorer.frontoffice.permissions.allPermissions.menuOption" />} onClick={handlePermissionsOverview}
           icon={<AdminPanelSettingsOutlinedIcon fontSize='small' />} />

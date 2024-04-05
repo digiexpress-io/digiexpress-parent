@@ -157,6 +157,7 @@ export interface CreatePrincipal {
   email: string;
   roles: string[];
   permissions: string[];
+  comment: string;
 }
 
 export interface ChangePrincipalRoles extends PrincipalUpdateCommand {
