@@ -276,12 +276,12 @@ public class GitDbInsertsSqlPool implements GitInserts {
     } else {
       blobUni = Execute.apply(tx, blobsInsert).onItem()
         .transform(row -> successOutput(output, "Blobs saved, number of new entries: " + row.rowCount()))
-        .onFailure().recoverWithItem(e -> failOutput(output, "Failed to create blobs", e));
+        .onFailure().transform(e -> failOutput(output, "Failed to create blobs", e));
     }
     
     final var treeUni = Execute.apply(tx, treeInsert).onItem()
       .transform(row -> successOutput(output, "Tree saved, number of new entries: " + row.rowCount()))
-      .onFailure().recoverWithItem(e -> failOutput(output, "Failed to create tree \r\n" + output.getTree(), e));
+      .onFailure().transform(e -> failOutput(output, "Failed to create tree \r\n" + output.getTree(), e));
 
     final Uni<GitBatch> treeValueUni;
     if(treeValueInsert.getProps().isEmpty()) {
@@ -289,13 +289,13 @@ public class GitDbInsertsSqlPool implements GitInserts {
     } else {
       treeValueUni = Execute.apply(tx, treeValueInsert).onItem()
           .transform(row -> successOutput(output, "Tree Values saved, number of new entries: " + row.rowCount()))
-          .onFailure().recoverWithItem(e -> failOutput(output, "Failed to create tree values", e)); 
+          .onFailure().transform(e -> failOutput(output, "Failed to create tree values", e)); 
     }
     
     
     final var commitUni = Execute.apply(tx, commitsInsert).onItem()
         .transform(row -> successOutput(output, "Commit saved, number of new entries: " + row.rowCount()))
-        .onFailure().recoverWithItem(e -> failOutput(output, "Failed to create commit", e));
+        .onFailure().transform(e -> failOutput(output, "Failed to create commit", e));
     
     final var refExists = output.getRef().getCreated();
     final var ref = output.getRef().getRef();
@@ -305,11 +305,11 @@ public class GitDbInsertsSqlPool implements GitInserts {
     if(refExists) {
       refUni = Execute.apply(tx, registry.branches().updateOne(output.getRef().getRef(), output.getCommit()))
           .onItem().transform(row -> successOutput(output, "Existing ref: " + ref.getName() + ", updated with commit: " + ref.getCommit()))
-          .onFailure().recoverWithItem(e -> failOutput(output, "Failed to update ref", e));
+          .onFailure().transform(e -> failOutput(output, "Failed to update ref", e));
     } else {
       refUni = Execute.apply(tx, registry.branches().insertOne(output.getRef().getRef()))
           .onItem().transform(row -> successOutput(output, "New ref created: " + ref.getName() + ": " + ref.getCommit()))
-          .onFailure().recoverWithItem(e -> failOutput(output, "Failed to create ref", e));
+          .onFailure().transform(e -> failOutput(output, "Failed to create ref", e));
         
     }
 
@@ -321,7 +321,12 @@ public class GitDbInsertsSqlPool implements GitInserts {
             tuple.getItem3(), 
             tuple.getItem4(), 
             tuple.getItem5()
-        ));
+        ))
+        .onFailure(GitBatchException.class)
+        .recoverWithItem((ex) -> {
+          final var batchError = (GitBatchException) ex;
+          return batchError.getBatch();
+        });
   }
 
   
@@ -348,13 +353,25 @@ public class GitDbInsertsSqlPool implements GitInserts {
       .build();
   }
   
-  private GitBatch failOutput(GitBatch current, String msg, Throwable t) {
+  private GitBatchException failOutput(GitBatch current, String msg, Throwable t) {
     log.error("Batch failed because of: " + msg, t);
-    return ImmutableGitBatch.builder()
+    return new GitBatchException(ImmutableGitBatch.builder()
         .from(current)
         .status(BatchStatus.ERROR)
         .addMessages(ImmutableMessage.builder().text(t.getMessage()).build())
         .addMessages(ImmutableMessage.builder().text(msg).build())
-        .build(); 
+        .build()); 
   }
+  
+  public static class GitBatchException extends RuntimeException {
+    private static final long serialVersionUID = -7251738425609399151L;
+    private final GitBatch batch;
+    
+    public GitBatchException(GitBatch batch) {
+      this.batch = batch;
+    }
+    public GitBatch getBatch() {
+      return batch;
+    }
+  } 
 }

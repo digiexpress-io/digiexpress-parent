@@ -68,14 +68,14 @@ public class CreateManyMissionsImpl implements CreateManyMissions {
   
   private Uni<ManyMissionsEnvelope> createResponse(GrimState tx, GrimBatchForOne request) {
     return tx.insert().batchMany(request).onItem().transform(rsp -> {
-      
-      return ImmutableManyMissionsEnvelope.builder()
+      final ManyMissionsEnvelope result = ImmutableManyMissionsEnvelope.builder()
           .repoId(tenantId)
           .log(rsp.getLog())
           .missions(rsp.getMissions())
           .addAllMessages(rsp.getMessages())
           .status(BatchStatus.mapStatus(rsp.getStatus()))
-          .build();      
+          .build();
+      return result;
     });
   }
   

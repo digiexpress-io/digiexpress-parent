@@ -1,4 +1,4 @@
-package io.resys.thena.storesql.builders;
+package io.resys.thena.storesql;
 
 
 import java.util.List;
@@ -68,28 +68,28 @@ public class DocDbInsertsSqlPool implements DocInserts {
     
     final Uni<DocBatchForMany> docsUni1 = Execute.apply(tx, docInserts).onItem()
         .transform(row -> successOutput(many, "Doc inserted, number of new entries: " + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(many, "Failed to create docs", e));
+        .onFailure().transform(e -> failOutput(many, "Failed to create docs", e));
 
     final Uni<DocBatchForMany> docsUni2 = Execute.apply(tx, docUpdated).onItem()
         .transform(row -> successOutput(many, "Doc updated, number of new entries: " + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(many, "Failed to update docs", e));
+        .onFailure().transform(e -> failOutput(many, "Failed to update docs", e));
         
     final Uni<DocBatchForMany> commitUni = Execute.apply(tx, commitsInsert).onItem()
         .transform(row -> successOutput(many, "Commit saved, number of new entries: " + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(many, "Failed to save commit", e));
+        .onFailure().transform(e -> failOutput(many, "Failed to save commit", e));
 
     final Uni<DocBatchForMany> branchUniInsert = Execute.apply(tx, branchInsert).onItem()
         .transform(row -> successOutput(many, "Branch saved, number of new entries: " + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(many, "Failed to save branch", e));
+        .onFailure().transform(e -> failOutput(many, "Failed to save branch", e));
     
     final Uni<DocBatchForMany> branchUniUpdate = Execute.apply(tx, branchUpdate).onItem()
         .transform(row -> successOutput(many, "Branch saved, number of updates entries: " + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(many, "Failed to save branch", e));
+        .onFailure().transform(e -> failOutput(many, "Failed to save branch", e));
     
     
     final Uni<DocBatchForMany> logUni = Execute.apply(tx, logsInsert).onItem()
         .transform(row -> successOutput(many, "Commit log saved, number of new entries: "  + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(many, "Failed to save  commit log", e));
+        .onFailure().transform(e -> failOutput(many, "Failed to save  commit log", e));
     
     return Uni.combine().all().unis(docsUni1, docsUni2, commitUni, branchUniInsert, branchUniUpdate, logUni).asTuple()
         .onItem().transform(tuple -> merge(many,
@@ -99,7 +99,12 @@ public class DocDbInsertsSqlPool implements DocInserts {
                 tuple.getItem4(),
                 tuple.getItem5(),
                 tuple.getItem6()
-        ));
+        ))
+        .onFailure(DocBatchManyException.class)
+        .recoverWithItem((ex) -> {
+          final var batchError = (DocBatchManyException) ex;
+          return batchError.getBatch();
+        });
   }
 
   
@@ -128,24 +133,24 @@ public class DocDbInsertsSqlPool implements DocInserts {
     } else {
       docsUni = Execute.apply(tx, docsInsert.get()).onItem()
           .transform(row -> successOutput(output, "Doc saved, number of new entries: " + row.rowCount()))
-          .onFailure().recoverWithItem(e -> failOutput(output, "Failed to create docs", e));
+          .onFailure().transform(e -> failOutput(output, "Failed to create docs", e));
     }
     
     final Uni<DocBatchForOne> commitUni = Execute.apply(tx, commitsInsert).onItem()
       .transform(row -> successOutput(output, "Commit saved, number of new entries: " + row.rowCount()))
-      .onFailure().recoverWithItem(e -> failOutput(output, "Failed to save commit \r\n" + output.getDocCommit(), e));
+      .onFailure().transform(e -> failOutput(output, "Failed to save commit \r\n" + output.getDocCommit(), e));
 
     final Uni<DocBatchForOne> branchUniInsert = Execute.apply(tx, branchInsert).onItem()
         .transform(row -> successOutput(output, "Branch saved, number of new entries: " + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(output, "Failed to save branch", e));
+        .onFailure().transform(e -> failOutput(output, "Failed to save branch", e));
     
     final Uni<DocBatchForOne> branchUniUpdate = Execute.apply(tx, branchUpdate).onItem()
         .transform(row -> successOutput(output, "Branch saved, number of updates entries: " + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(output, "Failed to save branch", e));
+        .onFailure().transform(e -> failOutput(output, "Failed to save branch", e));
     
     final Uni<DocBatchForOne> logUni = Execute.apply(tx, logsInsert).onItem()
         .transform(row -> successOutput(output, "Commit log saved, number of new entries: "  + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(output, "Failed to save  commit log", e));
+        .onFailure().transform(e -> failOutput(output, "Failed to save  commit log", e));
     
     return Uni.combine().all().unis(docsUni, commitUni, branchUniInsert, branchUniUpdate, logUni).asTuple()
         .onItem().transform(tuple -> merge(output, 
@@ -154,7 +159,12 @@ public class DocDbInsertsSqlPool implements DocInserts {
             tuple.getItem3(), 
             tuple.getItem4(),
             tuple.getItem5()
-        ));
+        ))
+        .onFailure(DocBatchOneException.class)
+        .recoverWithItem((ex) -> {
+          final var batchError = (DocBatchOneException) ex;
+          return batchError.getBatch();
+        });
   }
 
   private DocBatchForMany merge(DocBatchForMany start, DocBatchForMany ... current) {
@@ -202,14 +212,14 @@ public class DocDbInsertsSqlPool implements DocInserts {
       .addMessages(ImmutableMessage.builder().text(msg).build())
       .build();
   }
-  private DocBatchForMany failOutput(DocBatchForMany current, String msg, Throwable t) {
+  private DocBatchManyException failOutput(DocBatchForMany current, String msg, Throwable t) {
     log.error("Batch failed because of: " + msg, t);
-    return ImmutableDocBatchForMany.builder()
+    return new DocBatchManyException(ImmutableDocBatchForMany.builder()
         .from(current)
         .status(BatchStatus.ERROR)
         .addMessages(ImmutableMessage.builder().text(msg).build())
         .addMessages(ImmutableMessage.builder().text(t.getMessage()).build())
-        .build(); 
+        .build()); 
   }
   
   private DocBatchForOne successOutput(DocBatchForOne current, String msg) {
@@ -220,13 +230,37 @@ public class DocDbInsertsSqlPool implements DocInserts {
       .build();
   }
   
-  private DocBatchForOne failOutput(DocBatchForOne current, String msg, Throwable t) {
+  private DocBatchOneException failOutput(DocBatchForOne current, String msg, Throwable t) {
     log.error("Batch failed because of: " + msg, t);
-    return ImmutableDocBatchForOne.builder()
+    return new DocBatchOneException(ImmutableDocBatchForOne.builder()
         .from(current)
         .status(BatchStatus.ERROR)
         .addMessages(ImmutableMessage.builder().text(msg).build())
         .addMessages(ImmutableMessage.builder().text(t.getMessage()).build())
-        .build(); 
+        .build()); 
   }
+  
+  public static class DocBatchOneException extends RuntimeException {
+    private static final long serialVersionUID = -7251738425609399151L;
+    private final DocBatchForOne batch;
+    
+    public DocBatchOneException(DocBatchForOne batch) {
+      this.batch = batch;
+    }
+    public DocBatchForOne getBatch() {
+      return batch;
+    }
+  } 
+  
+  public static class DocBatchManyException extends RuntimeException {
+    private static final long serialVersionUID = -7251738425609399151L;
+    private final DocBatchForMany batch;
+    
+    public DocBatchManyException(DocBatchForMany batch) {
+      this.batch = batch;
+    }
+    public DocBatchForMany getBatch() {
+      return batch;
+    }
+  } 
 }

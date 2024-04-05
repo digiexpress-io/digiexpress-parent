@@ -82,70 +82,70 @@ public class OrgDbInsertsSqlPool implements OrgInserts {
     
     final Uni<OrgBatchForOne> partyRightsDeleteUni = Execute.apply(tx, partyRightsDelete).onItem()
         .transform(row -> successOutput(inputBatch, "Party rights deleted, number of deleted entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to delete party rights \r\n" + inputBatch.getMembers(), e));
+        .onFailure().transform(e -> failOutput(inputBatch, "Failed to delete party rights \r\n" + inputBatch.getMembers(), e));
     final Uni<OrgBatchForOne> memberRightsDeleteUni = Execute.apply(tx, memberRightsDelete).onItem()
         .transform(row -> successOutput(inputBatch, "Member rights deleted, number of deleted entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to delete member rights \r\n" + inputBatch.getMembers(), e));
+        .onFailure().transform(e -> failOutput(inputBatch, "Failed to delete member rights \r\n" + inputBatch.getMembers(), e));
     final Uni<OrgBatchForOne> actorStatusDeleteUni = Execute.apply(tx, actorStatusDelete).onItem()
         .transform(row -> successOutput(inputBatch, "Actor status deleted, number of deleted entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to delete actor status \r\n" + inputBatch.getMembers(), e));
+        .onFailure().transform(e -> failOutput(inputBatch, "Failed to delete actor status \r\n" + inputBatch.getMembers(), e));
     final Uni<OrgBatchForOne> membershipsDeleteUni = Execute.apply(tx, membershipsDelete).onItem()
         .transform(row -> successOutput(inputBatch, "Memberships deleted, number of deleted entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to delete memberships \r\n" + inputBatch.getMembers(), e));
+        .onFailure().transform(e -> failOutput(inputBatch, "Failed to delete memberships \r\n" + inputBatch.getMembers(), e));
     
     
     // Member insert/update
     final Uni<OrgBatchForOne> memberInsertUni = Execute.apply(tx, memberInsert).onItem()
         .transform(row -> successOutput(inputBatch, "Members saved, number of new entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to save members \r\n" + inputBatch.getMembers(), e));
+        .onFailure().transform(e -> failOutput(inputBatch, "Failed to save members \r\n" + inputBatch.getMembers(), e));
     final Uni<OrgBatchForOne> memberUpdateUni = Execute.apply(tx, membersUpdate).onItem()
         .transform(row -> successOutput(inputBatch, "Members saved, number of changed entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to change members \r\n" + inputBatch.getMembers(), e));
+        .onFailure().transform(e -> failOutput(inputBatch, "Failed to change members \r\n" + inputBatch.getMembers(), e));
 
     
     // Parties insert/update
     final Uni<OrgBatchForOne> partiesInsertUni = Execute.apply(tx, partiesInsert).onItem()
         .transform(row -> successOutput(inputBatch, "Parties saved, number of new entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to save parties \r\n" + inputBatch.getParties(), e));
+        .onFailure().transform(e -> failOutput(inputBatch, "Failed to save parties \r\n" + inputBatch.getParties(), e));
     final Uni<OrgBatchForOne> partiesUpdateUni = Execute.apply(tx, partiesUpdate).onItem()
         .transform(row -> successOutput(inputBatch, "Parties saved, number of changed entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to change parties \r\n" + inputBatch.getParties(), e));
+        .onFailure().transform(e -> failOutput(inputBatch, "Failed to change parties \r\n" + inputBatch.getParties(), e));
     
     final Uni<OrgBatchForOne> membershipUni = Execute.apply(tx, membershipsInsert).onItem()
         .transform(row -> successOutput(inputBatch, "Memberships saved, number of new entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to save memberships \r\n" + inputBatch.getMemberships(), e));
+        .onFailure().transform(e -> failOutput(inputBatch, "Failed to save memberships \r\n" + inputBatch.getMemberships(), e));
     
     // Role related
     final Uni<OrgBatchForOne> rightsInsertUni = Execute.apply(tx, rightsInsert).onItem()
         .transform(row -> successOutput(inputBatch, "Rights saved, number of new entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to save rights \r\n" + inputBatch.getRights(), e));
+        .onFailure().transform(e -> failOutput(inputBatch, "Failed to save rights \r\n" + inputBatch.getRights(), e));
     final Uni<OrgBatchForOne> rightsUpdateUni = Execute.apply(tx, rightsUpdate).onItem()
         .transform(row -> successOutput(inputBatch, "Rights saved, number of changed entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to change rights \r\n" + inputBatch.getRights(), e));
+        .onFailure().transform(e -> failOutput(inputBatch, "Failed to change rights \r\n" + inputBatch.getRights(), e));
     final Uni<OrgBatchForOne> partyRightsUni = Execute.apply(tx, partyRightsInsert).onItem()
         .transform(row -> successOutput(inputBatch, "Parties rights saved, number of new entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to save group rights \r\n" + inputBatch.getPartyRights(), e));
+        .onFailure().transform(e -> failOutput(inputBatch, "Failed to save group rights \r\n" + inputBatch.getPartyRights(), e));
     final Uni<OrgBatchForOne> memberRightsUni = Execute.apply(tx, memberRightsInsert).onItem()
         .transform(row -> successOutput(inputBatch, "Member rights saved, number of new entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to save rights \r\n" + inputBatch.getMemberRights(), e));
+        .onFailure().transform(e -> failOutput(inputBatch, "Failed to save rights \r\n" + inputBatch.getMemberRights(), e));
     
     // Status related
     final Uni<OrgBatchForOne> statusInsertUni = Execute.apply(tx, statusInsert).onItem()
         .transform(row -> successOutput(inputBatch, "Status saved, number of new entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to save status \r\n" + inputBatch.getParties(), e));
+        .onFailure().transform(e -> failOutput(inputBatch, "Failed to save status \r\n" + inputBatch.getParties(), e));
     final Uni<OrgBatchForOne> statusUpdateUni = Execute.apply(tx, statusUpdate).onItem()
         .transform(row -> successOutput(inputBatch, "Status saved, number of changed entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to change status \r\n" + inputBatch.getParties(), e));
+        .onFailure().transform(e -> failOutput(inputBatch, "Failed to change status \r\n" + inputBatch.getParties(), e));
     
     
     // Commit log
     final Uni<OrgBatchForOne> commitUni = Execute.apply(tx, commitInsert).onItem()
         .transform(row -> successOutput(inputBatch, "Commit saved, number of new entries: " + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to save commit", e));
+        .onFailure().transform(e -> failOutput(inputBatch, "Failed to save commit", e));
     
     final Uni<OrgBatchForOne> treeUni = Execute.apply(tx, treeInsert).onItem()
         .transform(row -> successOutput(inputBatch, "Commit tree saved, number of new entries: " + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to save commit tree", e));
+        .onFailure().transform(e -> failOutput(inputBatch, "Failed to save commit tree", e));
     
     // combine all
     return Uni.combine().all()
@@ -162,7 +162,12 @@ public class OrgDbInsertsSqlPool implements OrgInserts {
     		    statusInsertUni, statusUpdateUni,
     		    treeUni
     		 )
-    		.with(OrgBatchForOne.class, (List<OrgBatchForOne> items) -> merge(inputBatch, items));
+    		.with(OrgBatchForOne.class, (List<OrgBatchForOne> items) -> merge(inputBatch, items))
+    		.onFailure(OrgBatchException.class)
+        .recoverWithItem((ex) -> {
+          final var batchError = (OrgBatchException) ex;
+          return batchError.getBatch();
+        });
   }
 
   
@@ -192,13 +197,25 @@ public class OrgDbInsertsSqlPool implements OrgInserts {
       .build();
   }
   
-  private OrgBatchForOne failOutput(OrgBatchForOne current, String msg, Throwable t) {
+  private OrgBatchException failOutput(OrgBatchForOne current, String msg, Throwable t) {
     log.error("Batch failed because of: " + msg, t);
-    return ImmutableOrgBatchForOne.builder()
+    return new OrgBatchException(ImmutableOrgBatchForOne.builder()
         .from(current)
         .status(BatchStatus.ERROR)
         .addMessages(ImmutableMessage.builder().text(msg).exception(t).build())
         .addMessages(ImmutableMessage.builder().text(t.getMessage()).build())
-        .build(); 
+        .build()); 
   }
+  
+  public static class OrgBatchException extends RuntimeException {
+    private static final long serialVersionUID = -7251738425609399151L;
+    private final ImmutableOrgBatchForOne batch;
+    
+    public OrgBatchException(ImmutableOrgBatchForOne batch) {
+      this.batch = batch;
+    }
+    public ImmutableOrgBatchForOne getBatch() {
+      return batch;
+    }
+  } 
 }

@@ -89,7 +89,7 @@ public class SimpleGrimUpdateObjectiveAndGoalsTest extends DbTestTemplate {
   public void createAndUpdateMission() {
     // create project
     TenantCommitResult repo = getClient().tenants().commit()
-        .name("SimpleGrimUpdateMissionTest-1", StructureType.grim)
+        .name("SimpleGrimUpdateObjectiveAndGoalsTest-1", StructureType.grim)
         .build()
         .await().atMost(Duration.ofMinutes(1));
     log.debug("created repo {}", repo);
@@ -137,7 +137,7 @@ public class SimpleGrimUpdateObjectiveAndGoalsTest extends DbTestTemplate {
 
 Repo
   - id: 1, rev: 2
-    name: SimpleGrimUpdateMissionTest-1, prefix: 3, type: grim
+    name: SimpleGrimUpdateObjectiveAndGoalsTest-1, prefix: 3, type: grim
 Mission: 5
   - 9::GRIM_OBJECTIVE
   - 10::GRIM_OBJECTIVE_GOAL

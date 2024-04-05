@@ -44,31 +44,31 @@ public class GrimInsertsSqlImpl implements GrimInserts {
 
     final Uni<GrimBatchForOne> del_assignements_uni = Execute.apply(tx, del_assignements).onItem()
         .transform(row -> successOutput(inputBatch, "Assignments deleted, number of deleted entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to delete assignments \r\n" + inputBatch.getDeleteAssignments(), e));
+        .onFailure().transform(e -> failOutput(inputBatch, "Failed to delete assignments \r\n" + inputBatch.getDeleteAssignments(), e));
 
     final Uni<GrimBatchForOne> del_links_uni = Execute.apply(tx, del_links).onItem()
         .transform(row -> successOutput(inputBatch, "Mission links deleted, number of deleted entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to delete mission links \r\n" + inputBatch.getDeleteLinks(), e));
+        .onFailure().transform(e -> failOutput(inputBatch, "Failed to delete mission links \r\n" + inputBatch.getDeleteLinks(), e));
 
     final Uni<GrimBatchForOne> del_missionLabels_uni = Execute.apply(tx, del_missionLabels).onItem()
         .transform(row -> successOutput(inputBatch, "Mission labels deleted, number of deleted entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to delete mission labels \r\n" + inputBatch.getDeleteMissionLabels(), e));
+        .onFailure().transform(e -> failOutput(inputBatch, "Failed to delete mission labels \r\n" + inputBatch.getDeleteMissionLabels(), e));
 
     final Uni<GrimBatchForOne> del_data_uni = Execute.apply(tx, del_missionData).onItem()
         .transform(row -> successOutput(inputBatch, "Data deleted, number of deleted entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to delete data \r\n" + inputBatch.getDeleteRemarks(), e));
+        .onFailure().transform(e -> failOutput(inputBatch, "Failed to delete data \r\n" + inputBatch.getDeleteRemarks(), e));
 
     final Uni<GrimBatchForOne> del_remarks_uni = Execute.apply(tx, del_remarks).onItem()
         .transform(row -> successOutput(inputBatch, "Remarks deleted, number of deleted entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to delete remarks \r\n" + inputBatch.getDeleteRemarks(), e));
+        .onFailure().transform(e -> failOutput(inputBatch, "Failed to delete remarks \r\n" + inputBatch.getDeleteRemarks(), e));
 
     final Uni<GrimBatchForOne> del_goals_uni = Execute.apply(tx, del_goals).onItem()
         .transform(row -> successOutput(inputBatch, "Goals deleted, number of deleted entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to delete goals \r\n" + inputBatch.getDeleteRemarks(), e));
+        .onFailure().transform(e -> failOutput(inputBatch, "Failed to delete goals \r\n" + inputBatch.getDeleteRemarks(), e));
 
     final Uni<GrimBatchForOne> del_objectives_uni = Execute.apply(tx, del_objectives).onItem()
         .transform(row -> successOutput(inputBatch, "Objectives deleted, number of deleted entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to delete objectives \r\n" + inputBatch.getDeleteRemarks(), e));
+        .onFailure().transform(e -> failOutput(inputBatch, "Failed to delete objectives \r\n" + inputBatch.getDeleteRemarks(), e));
 
     
     
@@ -81,23 +81,23 @@ public class GrimInsertsSqlImpl implements GrimInserts {
     
     final Uni<GrimBatchForOne> upd_missionData_uni = Execute.apply(tx, upd_missionData).onItem()
         .transform(row -> successOutput(inputBatch, "Mission data updated, number of updated entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to update mission data \r\n" + inputBatch.getUpdateData(), e));
+        .onFailure().transform(e -> failOutput(inputBatch, "Failed to update mission data \r\n" + inputBatch.getUpdateData(), e));
 
     final Uni<GrimBatchForOne> upd_remarks_uni = Execute.apply(tx, upd_remarks).onItem()
         .transform(row -> successOutput(inputBatch, "Remarks updated, number of updated entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to update remarks \r\n" + inputBatch.getUpdateRemarks(), e));
+        .onFailure().transform(e -> failOutput(inputBatch, "Failed to update remarks \r\n" + inputBatch.getUpdateRemarks(), e));
 
     final Uni<GrimBatchForOne> upd_missionGols_uni = Execute.apply(tx, upd_missionGols).onItem()
         .transform(row -> successOutput(inputBatch, "Mission goals updated, number of updated entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to update mission goals \r\n" + inputBatch.getUpdateGoals(), e));
+        .onFailure().transform(e -> failOutput(inputBatch, "Failed to update mission goals \r\n" + inputBatch.getUpdateGoals(), e));
 
     final Uni<GrimBatchForOne> upd_missionObjectives_uni = Execute.apply(tx, upd_missionObjectives).onItem()
         .transform(row -> successOutput(inputBatch, "Mission objectives updated, number of updated entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to update mission objectives \r\n" + inputBatch.getUpdateObjectives(), e));
+        .onFailure().transform(e -> failOutput(inputBatch, "Failed to update mission objectives \r\n" + inputBatch.getUpdateObjectives(), e));
     
     final Uni<GrimBatchForOne> upd_mission_uni = Execute.apply(tx, upd_mission).onItem()
         .transform(row -> successOutput(inputBatch, "Mission updated, number of updated entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to update mission data \r\n" + inputBatch.getUpdateMissions(), e));
+        .onFailure().transform(e -> failOutput(inputBatch, "Failed to update mission data \r\n" + inputBatch.getUpdateMissions(), e));
     
 
     
@@ -114,35 +114,35 @@ public class GrimInsertsSqlImpl implements GrimInserts {
     
     final Uni<GrimBatchForOne> ins_mission_uni = Execute.apply(tx, ins_mission).onItem()
         .transform(row -> successOutput(inputBatch, "Missions inserted, number of inserted entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to insert missions \r\n" + inputBatch.getMissions(), e));
+        .onFailure().transform(e -> failOutput(inputBatch, "Failed to insert missions \r\n" + inputBatch.getMissions(), e));
 
     final Uni<GrimBatchForOne> ins_missionLabels_uni = Execute.apply(tx, ins_missionLabels).onItem()
         .transform(row -> successOutput(inputBatch, "Missions labels inserted, number of inserted entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to insert mission labels \r\n" + inputBatch.getMissionLabels(), e));
+        .onFailure().transform(e -> failOutput(inputBatch, "Failed to insert mission labels \r\n" + inputBatch.getMissionLabels(), e));
     
     final Uni<GrimBatchForOne> ins_missionLinks_uni = Execute.apply(tx, ins_missionLinks).onItem()
         .transform(row -> successOutput(inputBatch, "Mission links inserted, number of inserted entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to insert mission links \r\n" + inputBatch.getLinks(), e));
+        .onFailure().transform(e -> failOutput(inputBatch, "Failed to insert mission links \r\n" + inputBatch.getLinks(), e));
     
     final Uni<GrimBatchForOne> ins_remarks_uni = Execute.apply(tx, ins_remarks).onItem()
         .transform(row -> successOutput(inputBatch, "Remarks inserted, number of inserted entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to insert remarks \r\n" + inputBatch.getRemarks(), e));
+        .onFailure().transform(e -> failOutput(inputBatch, "Failed to insert remarks \r\n" + inputBatch.getRemarks(), e));
 
     final Uni<GrimBatchForOne> ins_objectives_uni = Execute.apply(tx, ins_objectives).onItem()
         .transform(row -> successOutput(inputBatch, "Objectives inserted, number of inserted entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to insert objectives \r\n" + inputBatch.getObjectives(), e));
+        .onFailure().transform(e -> failOutput(inputBatch, "Failed to insert objectives \r\n" + inputBatch.getObjectives(), e));
 
     final Uni<GrimBatchForOne> ins_goals_uni = Execute.apply(tx, ins_goals).onItem()
         .transform(row -> successOutput(inputBatch, "Goals inserted, number of inserted entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to insert goals \r\n" + inputBatch.getGoals(), e));
+        .onFailure().transform(e -> failOutput(inputBatch, "Failed to insert goals \r\n" + inputBatch.getGoals(), e));
 
     final Uni<GrimBatchForOne> ins_data_uni = Execute.apply(tx, ins_missionData).onItem()
         .transform(row -> successOutput(inputBatch, "Mission data inserted, number of inserted entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to insert mission data \r\n" + inputBatch.getData(), e));
+        .onFailure().transform(e -> failOutput(inputBatch, "Failed to insert mission data \r\n" + inputBatch.getData(), e));
 
     final Uni<GrimBatchForOne> ins_assignments_uni = Execute.apply(tx, ins_assignments).onItem()
         .transform(row -> successOutput(inputBatch, "Assignment inserted, number of inserted entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to insert assignment \r\n" + inputBatch.getAssignments(), e));
+        .onFailure().transform(e -> failOutput(inputBatch, "Failed to insert assignment \r\n" + inputBatch.getAssignments(), e));
 
     
     // INSERT COMMIT RELATED MODEL
@@ -153,19 +153,19 @@ public class GrimInsertsSqlImpl implements GrimInserts {
     
     final Uni<GrimBatchForOne> ins_commits_uni = Execute.apply(tx, ins_commits).onItem()
         .transform(row -> successOutput(inputBatch, "Commits inserted, number of inserted entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to insert commits \r\n" + inputBatch.getCommits(), e));
+        .onFailure().transform(e -> failOutput(inputBatch, "Failed to insert commits \r\n" + inputBatch.getCommits(), e));
 
     final Uni<GrimBatchForOne> ins_trees_uni = Execute.apply(tx, ins_trees).onItem()
         .transform(row -> successOutput(inputBatch, "Commit trees inserted, number of inserted entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to insert commit trees \r\n" + inputBatch.getCommitTrees(), e));
+        .onFailure().transform(e -> failOutput(inputBatch, "Failed to insert commit trees \r\n" + inputBatch.getCommitTrees(), e));
 
     final Uni<GrimBatchForOne> ins_viewers_uni = Execute.apply(tx, ins_viewers).onItem()
         .transform(row -> successOutput(inputBatch, "Commit viewers inserted, number of inserted entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to insert commit viewers \r\n" + inputBatch.getCommitViewers(), e));
+        .onFailure().transform(e -> failOutput(inputBatch, "Failed to insert commit viewers \r\n" + inputBatch.getCommitViewers(), e));
 
     final Uni<GrimBatchForOne> ins_commands_uni = Execute.apply(tx, ins_commands).onItem()
         .transform(row -> successOutput(inputBatch, "Commands inserted, number of inserted entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().recoverWithItem(e -> failOutput(inputBatch, "Failed to insert commands \r\n" + inputBatch.getCommitViewers(), e));
+        .onFailure().transform(e -> failOutput(inputBatch, "Failed to insert commands \r\n" + inputBatch.getCommitViewers(), e));
     
     return Uni.combine().all()
     		.unis(
@@ -198,8 +198,12 @@ public class GrimInsertsSqlImpl implements GrimInserts {
             ins_viewers_uni,
             ins_commands_uni
     		 )
-    		
-    		.with(GrimBatchForOne.class, (List<GrimBatchForOne> items) -> merge(inputBatch, items));
+    		.with(GrimBatchForOne.class, (List<GrimBatchForOne> items) -> merge(inputBatch, items))
+    		.onFailure(GrimBatchException.class)
+    		.recoverWithItem((ex) -> {
+    		  final var batchError = (GrimBatchException) ex;
+    		  return batchError.getBatch();
+    		});
   }
 
   
@@ -229,13 +233,25 @@ public class GrimInsertsSqlImpl implements GrimInserts {
       .build();
   }
   
-  private GrimBatchForOne failOutput(GrimBatchForOne current, String msg, Throwable t) {
+  private GrimBatchException failOutput(GrimBatchForOne current, String msg, Throwable t) {
     log.error("Batch failed because of: " + msg, t);
-    return ImmutableGrimBatchForOne.builder()
+    return new GrimBatchException(ImmutableGrimBatchForOne.builder()
         .from(current)
         .status(BatchStatus.ERROR)
         .addMessages(ImmutableMessage.builder().text(msg).exception(t).build())
         .addMessages(ImmutableMessage.builder().text(t.getMessage()).build())
-        .build(); 
+        .build()); 
   }
+  
+  public static class GrimBatchException extends RuntimeException {
+    private static final long serialVersionUID = -7251738425609399151L;
+    private final GrimBatchForOne batch;
+    
+    public GrimBatchException(GrimBatchForOne batch) {
+      this.batch = batch;
+    }
+    public GrimBatchForOne getBatch() {
+      return batch;
+    }
+  } 
 }

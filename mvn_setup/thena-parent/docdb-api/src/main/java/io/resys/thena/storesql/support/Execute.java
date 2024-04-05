@@ -35,7 +35,7 @@ public class Execute {
       final var msg = System.lineSeparator() +
           "Failed to execute SQL command." + System.lineSeparator() +
           "  message: " + e.getMessage() +
-          "  sql: " + sql.getValue() + System.lineSeparator();
+          "  sql: " + System.lineSeparator() + sql.getValue() + System.lineSeparator();
       final var failFrom = fillStack(new ThenaSqlBatchException(e));
       log.error(msg, failFrom);
       return new SqlExecutionFailed(msg, failFrom);
@@ -50,8 +50,8 @@ public class Execute {
           final var msg = System.lineSeparator() +
               "Failed to execute single SQL command." + System.lineSeparator() +
               "  message: " + e.getMessage() +
-              "  sql: " + sql.getValue() + System.lineSeparator() +
-              "  props:" + sql.getProps().deepToString() + System.lineSeparator();
+              "  props:" + sql.getProps().deepToString() + System.lineSeparator() +
+              "  sql: " + System.lineSeparator() + sql.getValue();
 
           final var failFrom = fillStack(new ThenaSqlBatchException(e));
           log.error(failFrom.getMessage(), failFrom);
@@ -73,13 +73,12 @@ public class Execute {
         	var index = 0;
         	for(final var tuple : sql.getProps()) {
         		entries.append(
-        				"  props[" + index++ + "]" + System.lineSeparator() + 
-        				"  " + tuple.deepToString()  + System.lineSeparator());
+        				"  - props[" + index++ + "] = " + tuple.deepToString()  + System.lineSeparator());
         	}
       		final var msg = System.lineSeparator() +
           "Failed to execute batch SQL command." + System.lineSeparator() +
           "  message: " + e.getMessage() + System.lineSeparator() +
-          "  sql: " + sql.getValue() +
+          "  sql: " + System.lineSeparator() + sql.getValue() +
           entries;
         	
           final var failFrom = fillStack(new ThenaSqlBatchException(e));
