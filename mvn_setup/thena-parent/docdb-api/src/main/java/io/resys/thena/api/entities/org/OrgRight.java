@@ -20,6 +20,7 @@ interface OrgRight extends ThenaOrgObject, IsOrgObject, IsOrgVersionObject, Then
   @Nullable String getExternalId();
   String getRightName();
   String getRightDescription();
+  OrgDocSubType getRightSubType();
   
   @JsonIgnore @Override default public OrgDocType getDocType() { return OrgDocType.OrgRole; };
   default boolean isMatch(String IdOrNameOrExtId) {

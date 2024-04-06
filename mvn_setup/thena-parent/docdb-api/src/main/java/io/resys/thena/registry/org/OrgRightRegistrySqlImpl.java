@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import io.resys.thena.api.entities.org.ImmutableOrgRight;
 import io.resys.thena.api.entities.org.OrgRight;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgDocSubType;
 import io.resys.thena.api.registry.org.OrgRightRegistry;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
@@ -89,9 +90,9 @@ public class OrgRightRegistrySqlImpl implements OrgRightRegistry {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getOrgRights())
-        .append(" (id, commit_id, external_id, right_name, right_description) VALUES($1, $2, $3, $4, $5)").ln()
+        .append(" (id, commit_id, external_id, right_name, right_description) VALUES($1, $2, $3, $4, $5, $6)").ln()
         .build())
-        .props(Tuple.from(new Object[]{ doc.getId(), doc.getCommitId(), doc.getExternalId(), doc.getRightName(), doc.getRightDescription() }))
+        .props(Tuple.from(new Object[]{ doc.getId(), doc.getCommitId(), doc.getExternalId(), doc.getRightName(), doc.getRightDescription(), doc.getRightSubType().name() }))
         .build();
   }
   @Override
@@ -99,10 +100,10 @@ public class OrgRightRegistrySqlImpl implements OrgRightRegistry {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("UPDATE ").append(options.getOrgRights())
-        .append(" SET external_id = $1, right_name = $2, right_description = $3, commit_id = $4")
-        .append(" WHERE id = $5")
+        .append(" SET external_id = $1, right_name = $2, right_description = $3, commit_id = $4, right_sub_type = $5")
+        .append(" WHERE id = $6")
         .build())
-        .props(Tuple.from(new Object[]{doc.getExternalId(), doc.getRightName(), doc.getRightDescription(), doc.getCommitId(), doc.getId()}))
+        .props(Tuple.from(new Object[]{doc.getExternalId(), doc.getRightName(), doc.getRightDescription(), doc.getCommitId(), doc.getId(), doc.getRightSubType().name()}))
         .build();
   }
   @Override
@@ -110,10 +111,10 @@ public class OrgRightRegistrySqlImpl implements OrgRightRegistry {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getOrgRights())
-        .append(" (id, commit_id, external_id, right_name, right_description) VALUES($1, $2, $3, $4, $5)").ln()
+        .append(" (id, commit_id, external_id, right_name, right_description, right_sub_type) VALUES($1, $2, $3, $4, $5, $6)").ln()
         .build())
         .props(users.stream()
-            .map(doc -> Tuple.from(new Object[]{ doc.getId(), doc.getCommitId(), doc.getExternalId(), doc.getRightName(), doc.getRightDescription() }))
+            .map(doc -> Tuple.from(new Object[]{ doc.getId(), doc.getCommitId(), doc.getExternalId(), doc.getRightName(), doc.getRightDescription(), doc.getRightSubType().name() }))
             .collect(Collectors.toList()))
         .build();
   }
@@ -122,11 +123,11 @@ public class OrgRightRegistrySqlImpl implements OrgRightRegistry {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("UPDATE ").append(options.getOrgRights())
-        .append(" SET external_id = $1, right_name = $2, right_description = $3, commit_id = $4")
-        .append(" WHERE id = $5")
+        .append(" SET external_id = $1, right_name = $2, right_description = $3, commit_id = $4, right_sub_type = $5")
+        .append(" WHERE id = $6")
         .build())
         .props(users.stream()
-            .map(doc -> Tuple.from(new Object[]{doc.getExternalId(), doc.getRightName(), doc.getRightDescription(), doc.getCommitId(), doc.getId()}))
+            .map(doc -> Tuple.from(new Object[]{doc.getExternalId(), doc.getRightName(), doc.getRightDescription(), doc.getCommitId(), doc.getRightSubType().name(), doc.getId()}))
             .collect(Collectors.toList()))
         .build();
   }
@@ -137,6 +138,7 @@ public class OrgRightRegistrySqlImpl implements OrgRightRegistry {
         .externalId(row.getString("external_id"))
         .rightName(row.getString("right_name"))
         .rightDescription(row.getString("right_description"))
+        .rightSubType(OrgDocSubType.valueOf(row.getString("right_sub_type")))
         .commitId(row.getString("commit_id"))
         .build();
   }
@@ -152,6 +154,7 @@ public class OrgRightRegistrySqlImpl implements OrgRightRegistry {
     .append("  id VARCHAR(40) PRIMARY KEY,").ln()
     .append("  commit_id VARCHAR(40) NOT NULL,").ln()
     .append("  external_id VARCHAR(40) UNIQUE,").ln()
+    .append("  right_sub_type VARCHAR(40) NOT NULL,").ln()
     .append("  right_name VARCHAR(255) UNIQUE NOT NULL,").ln()
     .append("  right_description VARCHAR(255) NOT NULL").ln()
     .append(");").ln()

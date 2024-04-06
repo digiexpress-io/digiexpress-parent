@@ -195,9 +195,9 @@ public class CreateOneMemberImpl implements CreateOneMember {
     final OrgBatchForOne batch = new BatchForOneMemberCreate(tx.getDataSource().getTenant().getId(), author, message)
         .externalId(externalId)
         .email(email)
-        .addToGroups(addToGroups)
-        .addToRoles(addToRoles)
-        .addUserToGroupRoles(groups)
+        .addToParty(addToGroups)
+        .addToRights(addToRoles)
+        .addToPartyWithRights(groups)
         .userName(userName)
         .create(); 
 

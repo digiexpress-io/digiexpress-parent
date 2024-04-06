@@ -20,6 +20,8 @@ interface OrgParty extends ThenaOrgObject, IsOrgObject, IsOrgVersionObject, Then
 
   @Nullable String getExternalId();
   @Nullable String getParentId();
+  
+  OrgDocSubType getPartySubType();
   String getPartyName(); 
   String getPartyDescription();
   

@@ -12,6 +12,7 @@ import io.resys.thena.api.entities.org.OrgActorStatus.OrgActorStatusType;
 import io.resys.thena.api.entities.org.OrgMember;
 import io.resys.thena.api.entities.org.OrgParty;
 import io.resys.thena.api.entities.org.OrgRight;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgDocSubType;
 import io.resys.thena.api.envelope.Message;
 import io.resys.thena.api.envelope.ThenaEnvelope;
 import io.smallrye.mutiny.Uni;
@@ -52,6 +53,7 @@ public interface OrgCommitActions {
     CreateOneParty externalId(@Nullable String externalId);
     CreateOneParty partyName(String groupName);
     CreateOneParty partyDescription(String groupDescription);
+    CreateOneParty partySubType(OrgDocSubType partySubType);
     
     CreateOneParty addMemberToParty(List<String> userId);
     CreateOneParty addRightsToParty(List<String> roledId);
@@ -63,11 +65,12 @@ public interface OrgCommitActions {
   interface CreateOneRight {
     CreateOneRight author(String author);
     CreateOneRight message(String message);
-    
+
     CreateOneRight externalId(@Nullable String externalId);
     CreateOneRight rightName(String roleName);
     CreateOneRight rightDescription(String roleDescription);
-
+    CreateOneRight rightSubType(OrgDocSubType rightSubType);
+    
     CreateOneRight addRightToMembers(List<String> userId);
     CreateOneRight addRightToParties(List<String> groupId);
         
@@ -102,6 +105,7 @@ public interface OrgCommitActions {
     ModifyOneParty externalId(@Nullable String externalId);
     ModifyOneParty partyName(String partyName);
     ModifyOneParty partyDescription(String partyDescription);
+    ModifyOneParty partySubType(OrgDocSubType partySubType);
     
     ModifyOneParty modifyMember(ModType type, String memberIdNameOrExtId);
     ModifyOneParty modifyRight(ModType type, String rightIdNameOrExtId);
@@ -119,6 +123,7 @@ public interface OrgCommitActions {
     ModifyOneRight externalId(@Nullable String externalId);
     ModifyOneRight rightName(String roleName);
     ModifyOneRight rightDescription(String roleDescription);
+    ModifyOneRight rightSubType(OrgDocSubType rightSubType);
     
     ModifyOneRight modifyMember(ModType type, String memberIdNameOrExtId);
     ModifyOneRight modifyParty(ModType type, String partyIdNameOrExtId);

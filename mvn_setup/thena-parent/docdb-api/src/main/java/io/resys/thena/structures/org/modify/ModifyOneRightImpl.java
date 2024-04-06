@@ -18,6 +18,7 @@ import io.resys.thena.api.entities.org.OrgMemberRight;
 import io.resys.thena.api.entities.org.OrgParty;
 import io.resys.thena.api.entities.org.OrgPartyRight;
 import io.resys.thena.api.entities.org.OrgRight;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgDocSubType;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.spi.ImmutableTxScope;
@@ -42,6 +43,7 @@ public class ModifyOneRightImpl implements ModifyOneRight {
   private String rightId;
   private Optional<String> rightName;
   private Optional<String> rightDescription;
+  private Optional<OrgDocSubType> rightSubType;
   private Optional<String> externalId;
 
   private Collection<String> allParties = new LinkedHashSet<>();
@@ -76,6 +78,10 @@ public class ModifyOneRightImpl implements ModifyOneRight {
   }
   @Override public ModifyOneRightImpl rightDescription(String rightDescription) { 
     this.rightDescription = Optional.ofNullable(RepoAssert.notEmpty(rightDescription, () -> "rightDescription can't be empty!")); 
+    return this; 
+  }
+  @Override public ModifyOneRightImpl rightSubType(OrgDocSubType rightSubType) { 
+    this.rightSubType = Optional.ofNullable(RepoAssert.notNull(rightSubType, () -> "rightSubType can't be null!")); 
     return this; 
   }
   @Override public ModifyOneRightImpl status(OrgActorStatusType status) {
@@ -121,9 +127,10 @@ public class ModifyOneRightImpl implements ModifyOneRight {
     RepoAssert.notEmpty(author, () -> "author can't be empty!");
     RepoAssert.notEmpty(message, () -> "message can't be empty!");
     RepoAssert.notEmpty(rightId, () -> "rightId can't be empty!");
-    
     RepoAssert.notEmptyIfDefined(rightName, () -> "rightName can't be empty!");
+    RepoAssert.notNullIfDefined(rightSubType, () -> "rightSubType can't be empty!");
     RepoAssert.notEmptyIfDefined(rightDescription, () -> "email can't be empty!");
+    
     final var scope = ImmutableTxScope.builder().commitAuthor(author).commitMessage(message).tenantId(repoId).build();
     return this.state.withOrgTransaction(scope, this::doInTx);
   }
@@ -241,6 +248,7 @@ public class ModifyOneRightImpl implements ModifyOneRight {
         .newExternalId(externalId)
         .newRightName(rightName)
         .newRightDescription(rightDescription)
+        .newRightSubType(rightSubType)
         .newStatus(status); 
 
     // Remove or add groups 

@@ -171,6 +171,7 @@ CREATE TABLE org_rights
   id VARCHAR(40) PRIMARY KEY,
   commit_id VARCHAR(40) NOT NULL,
   external_id VARCHAR(40) UNIQUE,
+  right_sub_type VARCHAR(40) NOT NULL,
   right_name VARCHAR(255) UNIQUE NOT NULL,
   right_description VARCHAR(255) NOT NULL
 );
@@ -185,7 +186,8 @@ CREATE TABLE org_parties
   external_id VARCHAR(40) UNIQUE,
   parent_id VARCHAR(40),
   party_name VARCHAR(255) UNIQUE NOT NULL,
-  party_description VARCHAR(255) NOT NULL
+  party_description VARCHAR(255) NOT NULL,
+  party_sub_type VARCHAR(40) NOT NULL
 );
 
 ALTER TABLE org_parties

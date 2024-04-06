@@ -46,6 +46,17 @@ public class RepoAssert {
     }
     return object;
   }
+  public static <T>T notNullIfDefined(Optional<T> src, Supplier<String> message) {
+    if(src == null) {
+      return null;
+    }
+    
+    final var object = src.orElseGet(null);
+    if (object == null) {
+      throw new RepoException(getMessage(message));
+    }
+    return object;
+  }
   public static <T> List<T> notEmpty(List<T> object, Supplier<String> message) {
     if (object == null || object.isEmpty()) {
       throw new RepoException(getMessage(message));

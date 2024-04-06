@@ -26,6 +26,7 @@ import io.resys.thena.api.entities.org.OrgParty;
 import io.resys.thena.api.entities.org.OrgPartyRight;
 import io.resys.thena.api.entities.org.OrgRight;
 import io.resys.thena.api.entities.org.ThenaOrgObject.IsOrgObject;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgDocSubType;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.org.ImmutableOrgBatchForOne;
@@ -63,12 +64,14 @@ public class BatchForOneRightModify {
   private Optional<String> newRightDescription;
   private Optional<String> newExternalId;
   private OrgActorStatusType newStatus;
+  private Optional<OrgDocSubType> newRightSubType;
 
   public BatchForOneRightModify current(OrgRight right) {                          this.current = right; return this; }
   public BatchForOneRightModify newRightDescription(Optional<String> rightDesc) {  this.newRightDescription = rightDesc; return this; }
   public BatchForOneRightModify newRightName(Optional<String> rightName) {         this.newRightName = rightName; return this; }
   public BatchForOneRightModify newExternalId(Optional<String> externalId) {       this.newExternalId = externalId; return this; }
   public BatchForOneRightModify newStatus(OrgActorStatusType newStatus) {          this.newStatus = newStatus; return this; }
+  public BatchForOneRightModify newRightSubType(Optional<OrgDocSubType> newRightSubType) {   this.newRightSubType = newRightSubType; return this; }
 
   public BatchForOneRightModify currentPartyRights(List<OrgPartyRight> partyRights) {    this.currentPartyRights = partyRights; return this; }
   public BatchForOneRightModify currentRightStatus(List<OrgActorStatus> rightStatus) {   this.currentActorStatus = rightStatus; return this; }
@@ -95,7 +98,7 @@ public class BatchForOneRightModify {
     RepoAssert.notNull(currentPartyRights,   () -> "partyRights can't be null!");
     RepoAssert.notNull(currentActorStatus,   () -> "rightStatus can't be null!");
     RepoAssert.notNull(currentMemberRights,  () -> "memberRights can't be null!");
-    
+    RepoAssert.notNullIfDefined(newRightSubType,  () -> "newRightSubType can't be null!");
     
     final var commitId = OidUtils.gen();
     final var createdAt = OffsetDateTime.now();
@@ -274,11 +277,13 @@ public class BatchForOneRightModify {
     .externalId(newExternalId == null ? current.getExternalId() : newExternalId.get())
     .rightName(newRightName == null ? current.getRightName() : newRightName.get())
     .rightDescription(newRightDescription == null  ? current.getRightDescription() : newRightDescription.get())
+    .rightSubType(newRightSubType == null  ? current.getRightSubType() : newRightSubType.get())
     .build();
     
     // no changes
     if( Objects.equal(newState.getRightDescription(), current.getRightDescription()) && 
         Objects.equal(newState.getExternalId(), current.getExternalId()) &&
+        Objects.equal(newState.getRightSubType(), current.getRightSubType()) &&
         Objects.equal(newState.getRightName(), current.getRightName())
         ) {
       return Optional.empty();

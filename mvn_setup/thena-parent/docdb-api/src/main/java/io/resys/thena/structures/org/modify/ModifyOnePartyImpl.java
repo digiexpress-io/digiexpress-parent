@@ -23,6 +23,7 @@ import io.resys.thena.api.entities.org.OrgMembership;
 import io.resys.thena.api.entities.org.OrgParty;
 import io.resys.thena.api.entities.org.OrgPartyRight;
 import io.resys.thena.api.entities.org.OrgRight;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgDocSubType;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.spi.ImmutableTxScope;
@@ -48,6 +49,7 @@ public class ModifyOnePartyImpl implements ModifyOneParty {
   private Optional<String> partyDescription;
   private Optional<String> parentPartyId;
   private Optional<String> externalId;
+  private Optional<OrgDocSubType> partySubType;
 
   private Collection<String> allMembers = new LinkedHashSet<>();
   private Collection<String> membersToAdd = new LinkedHashSet<>();
@@ -84,6 +86,10 @@ public class ModifyOnePartyImpl implements ModifyOneParty {
   }
   @Override public ModifyOnePartyImpl parentId(String parentId) {
     this.parentPartyId = Optional.ofNullable(RepoAssert.notEmpty(parentId, () -> "parentId can't be empty!")); 
+    return this; 
+  }
+  @Override public ModifyOnePartyImpl partySubType(OrgDocSubType partySubType) {
+    this.partySubType = Optional.ofNullable(RepoAssert.notNull(partySubType, () -> "partySubType can't be null!")); 
     return this; 
   }
   @Override public ModifyOnePartyImpl externalId(String externalId) { 
@@ -157,6 +163,7 @@ public class ModifyOnePartyImpl implements ModifyOneParty {
     
     RepoAssert.notEmptyIfDefined(partyName, () -> "partyName can't be empty!");
     RepoAssert.notEmptyIfDefined(partyDescription, () -> "partyDescription can't be empty!");
+    RepoAssert.notNullIfDefined(partySubType, () -> "partySubType can't be empty!");
     RepoAssert.notEmptyIfDefined(externalId, () -> "externalId can't be empty!");
 
     final var scope = ImmutableTxScope.builder().commitAuthor(author).commitMessage(message).tenantId(repoId).build();
@@ -302,6 +309,7 @@ public class ModifyOnePartyImpl implements ModifyOneParty {
       .newExternalId(externalId)
       .newPartyName(partyName)
       .newPartyDesc(partyDescription)
+      .newPartySubType(partySubType)
       .newParentPartyId(parent)
       .newStatus(newStatus)
       .current(party)

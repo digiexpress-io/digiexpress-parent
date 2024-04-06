@@ -10,12 +10,12 @@ import io.resys.thena.api.entities.org.ImmutableOrgMemberRight;
 import io.resys.thena.api.entities.org.ImmutableOrgPartyRight;
 import io.resys.thena.api.entities.org.ImmutableOrgRight;
 import io.resys.thena.api.entities.org.OrgCommitTree;
-import io.resys.thena.api.entities.org.OrgCommitTree.OrgOperationType;
 import io.resys.thena.api.entities.org.OrgMember;
 import io.resys.thena.api.entities.org.OrgMemberRight;
 import io.resys.thena.api.entities.org.OrgParty;
 import io.resys.thena.api.entities.org.OrgPartyRight;
 import io.resys.thena.api.entities.org.ThenaOrgObject.IsOrgObject;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgDocSubType;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.org.ImmutableOrgBatchForOne;
@@ -34,23 +34,25 @@ public class BatchForOneRightCreate {
 
   private List<OrgParty> parties; 
   private List<OrgMember> users;  
-  private String roleName;
-  private String roleDesc;
+  private String rightName;
+  private String rightDesc;
   private String externalId;
+  private OrgDocSubType rightSubType;
 
+  public BatchForOneRightCreate rightSubType(OrgDocSubType rightSubType) { this.rightSubType = rightSubType; return this; }
   public BatchForOneRightCreate parties(List<OrgParty> parties) { 		this.parties = parties; return this; }
   public BatchForOneRightCreate users(List<OrgMember> users) {    		this.users = users; return this; }
-  public BatchForOneRightCreate partyName(String roleName) {     		this.roleName = roleName; return this; }
-  public BatchForOneRightCreate partyDescription(String roleDesc) { this.roleDesc = roleDesc; return this; }
+  public BatchForOneRightCreate rightName(String rightName) {     		this.rightName = rightName; return this; }
+  public BatchForOneRightCreate rightDescription(String rightDescription) { this.rightDesc = rightDescription; return this; }
   public BatchForOneRightCreate externalId(String externalId) { 		this.externalId = externalId; return this; }
   
   public ImmutableOrgBatchForOne create() {
     RepoAssert.notEmpty(repoId,   () -> "repoId can't be empty!");
     RepoAssert.notEmpty(author,   () -> "author can't be empty!");
     RepoAssert.notEmpty(message,  () -> "message can't be empty!");
-    RepoAssert.notEmpty(roleName, () -> "roleName can't be empty!");
-    RepoAssert.notEmpty(roleDesc, () -> "roleDesc can't be empty!");
-    RepoAssert.notNull(parties,    () -> "parties can't be null!");
+    RepoAssert.notEmpty(rightName, () -> "rightName can't be empty!");
+    RepoAssert.notEmpty(rightDesc, () -> "rightDescription can't be empty!");
+    RepoAssert.notNull(parties,   () -> "parties can't be null!");
     RepoAssert.notNull(users,     () -> "roles can't be null!");
     
     final var commitId = OidUtils.gen();
@@ -61,8 +63,9 @@ public class BatchForOneRightCreate {
       .id(OidUtils.gen())
       .commitId(commitId)
       .externalId(externalId)
-      .rightName(roleName)
-      .rightDescription(roleDesc)
+      .rightName(rightName)
+      .rightDescription(rightDesc)
+      .rightSubType(rightSubType == null ? OrgDocSubType.NORMAL : rightSubType)
       .build();
     tree.add(addToTree(commitId, role));
     
@@ -98,7 +101,7 @@ public class BatchForOneRightCreate {
       .append(System.lineSeparator())
       .append("  + commit:          ").append(commitId).append(" tree: ").append(tree.size() + "").append(" entries")
       .append(System.lineSeparator())
-      .append("  + role:            ").append(role.getId()).append("::").append(roleName)
+      .append("  + role:            ").append(role.getId()).append("::").append(rightName)
       .append(System.lineSeparator())
       .append("  + added to parties: ").append(String.join(",", parties.stream().map(g -> g.getPartyName() + "::" + g.getId()).toList()))
       .append(System.lineSeparator())

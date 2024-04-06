@@ -31,6 +31,7 @@ import io.resys.thena.api.entities.org.OrgParty;
 import io.resys.thena.api.entities.org.OrgPartyRight;
 import io.resys.thena.api.entities.org.OrgRight;
 import io.resys.thena.api.entities.org.ThenaOrgObject.IsOrgObject;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgDocSubType;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.org.ImmutableOrgBatchForOne;
@@ -72,6 +73,7 @@ public class BatchForOnePartyModify {
   private Optional<String> newPartyDesc;
   private Optional<String> newExternalId;
   private Optional<OrgParty> newParentPartyId;
+  private Optional<OrgDocSubType> newPartySubType;
   private OrgActorStatusType newStatus;
   
   public BatchForOnePartyModify current(OrgParty current) {
@@ -100,6 +102,10 @@ public class BatchForOnePartyModify {
   }
   public BatchForOnePartyModify newPartyDesc(Optional<String> newDesc) {
     this.newPartyDesc = newDesc; 
+    return this; 
+  }
+  public BatchForOnePartyModify newPartySubType(Optional<OrgDocSubType> partySubType) {
+    this.newPartySubType = partySubType; 
     return this; 
   }
   public BatchForOnePartyModify newParentPartyId(Optional<OrgParty> newParentPartyId) {
@@ -137,9 +143,12 @@ public class BatchForOnePartyModify {
     RepoAssert.notNull(current,   () -> "member can't be null!");
     RepoAssert.notEmptyIfDefined(newPartyName, () -> "newPartyName can't be empty!");
     RepoAssert.notEmptyIfDefined(newPartyDesc, () -> "newPartyDesc can't be empty!");
+    RepoAssert.notNullIfDefined(newPartySubType, () -> "newPartySubType can't be null!");
     
     RepoAssert.notNull(modifyMemberships, () -> "parties can't be null!");
     RepoAssert.notNull(modifyPartyRights, () -> "rights can't be null!");
+    
+    
     
     
     for(final var member : addMemberWithRights.keySet()) {
@@ -323,12 +332,14 @@ public class BatchForOnePartyModify {
     .partyName(newPartyName == null ? current.getPartyName() : newPartyName.get())
     .partyDescription(newPartyDesc == null  ? current.getPartyDescription() : newPartyDesc.get())
     .parentId(newParentPartyId == null  ? current.getParentId() : newParentPartyId.get().getId())
+    .partySubType(newPartySubType == null  ? current.getPartySubType() : newPartySubType.get())
     .build();
     
     // no changes
     if( Objects.equal(newState.getPartyDescription(), current.getPartyDescription()) && 
         Objects.equal(newState.getExternalId(), current.getExternalId()) &&
         Objects.equal(newState.getParentId(), current.getParentId()) &&
+        Objects.equal(newState.getPartySubType(), current.getPartySubType()) &&
         Objects.equal(newState.getPartyName(), current.getPartyName())
         ) {
       return Optional.empty();

@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import io.resys.thena.api.entities.org.ImmutableOrgParty;
 import io.resys.thena.api.entities.org.OrgParty;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgDocSubType;
 import io.resys.thena.api.registry.org.OrgPartyRegistry;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
@@ -72,9 +73,9 @@ public class OrgPartyRegistrySqlImpl implements OrgPartyRegistry {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getOrgParties())
-        .append(" (id, commit_id, external_id, parent_id, party_name, party_description) VALUES($1, $2, $3, $4, $5, $6)").ln()
+        .append(" (id, commit_id, external_id, parent_id, party_name, party_description, party_sub_type) VALUES($1, $2, $3, $4, $5, $6, $7)").ln()
         .build())
-        .props(Tuple.from(new Object[]{ doc.getId(), doc.getCommitId(), doc.getExternalId(), doc.getParentId(), doc.getPartyName(), doc.getPartyDescription() }))
+        .props(Tuple.from(new Object[]{ doc.getId(), doc.getCommitId(), doc.getExternalId(), doc.getParentId(), doc.getPartyName(), doc.getPartyDescription(),  doc.getPartySubType().name()}))
         .build();
   }
   @Override
@@ -82,10 +83,10 @@ public class OrgPartyRegistrySqlImpl implements OrgPartyRegistry {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("UPDATE ").append(options.getOrgMembers())
-        .append(" SET external_id = $1, party_name = $2, party_description = $3, commit_id = $4")
-        .append(" WHERE id = $5")
+        .append(" SET external_id = $1, party_name = $2, party_description = $3, commit_id = $4, party_sub_type = $5")
+        .append(" WHERE id = $6")
         .build())
-        .props(Tuple.from(new Object[]{doc.getExternalId(), doc.getPartyName(), doc.getPartyDescription(), doc.getCommitId(), doc.getId()}))
+        .props(Tuple.from(new Object[]{doc.getExternalId(), doc.getPartyName(), doc.getPartyDescription(), doc.getCommitId(), doc.getPartySubType().name(), doc.getId()}))
         .build();
   }
   @Override
@@ -93,10 +94,10 @@ public class OrgPartyRegistrySqlImpl implements OrgPartyRegistry {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getOrgParties())
-        .append("  (id, commit_id, external_id, parent_id, party_name, party_description) VALUES($1, $2, $3, $4, $5, $6)").ln()
+        .append("  (id, commit_id, external_id, parent_id, party_name, party_description, party_sub_type) VALUES($1, $2, $3, $4, $5, $6, $7)").ln()
         .build())
         .props(users.stream()
-            .map(doc -> Tuple.from(new Object[]{ doc.getId(), doc.getCommitId(), doc.getExternalId(), doc.getParentId(), doc.getPartyName(), doc.getPartyDescription() }))
+            .map(doc -> Tuple.from(new Object[]{ doc.getId(), doc.getCommitId(), doc.getExternalId(), doc.getParentId(), doc.getPartyName(), doc.getPartyDescription(), doc.getPartySubType().name()}))
             .collect(Collectors.toList()))
         .build();
   }
@@ -126,6 +127,7 @@ public class OrgPartyRegistrySqlImpl implements OrgPartyRegistry {
         .commitId(row.getString("commit_id"))
         .partyName(row.getString("party_name"))
         .partyDescription(row.getString("party_description"))
+        .partySubType(OrgDocSubType.valueOf(row.getString("party_sub_type")))
         .build();
   }
 
@@ -139,7 +141,8 @@ public class OrgPartyRegistrySqlImpl implements OrgPartyRegistry {
     .append("  external_id VARCHAR(40) UNIQUE,").ln()
     .append("  parent_id VARCHAR(40),").ln()
     .append("  party_name VARCHAR(255) UNIQUE NOT NULL,").ln()
-    .append("  party_description VARCHAR(255) NOT NULL").ln()
+    .append("  party_description VARCHAR(255) NOT NULL,").ln()
+    .append("  party_sub_type VARCHAR(40) NOT NULL").ln()
     .append(");").ln().ln()
     
     // parent id, references self

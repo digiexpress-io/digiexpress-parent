@@ -12,6 +12,7 @@ import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.org.OrgMember;
 import io.resys.thena.api.entities.org.OrgParty;
 import io.resys.thena.api.entities.org.OrgRight;
+import io.resys.thena.api.entities.org.ThenaOrgObject.OrgDocSubType;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.spi.ImmutableTxScope;
@@ -34,16 +35,19 @@ public class CreateOnePartyImpl implements CreateOneParty {
 
   private String externalId;
   private String parentId;
-  private String groupName;
-  private String groupDescription;
-
+  private String partyName;
+  private String partyDescription;
+  private OrgDocSubType partySubType;
+  
   private List<String> addUsersToParty = new ArrayList<>();
   private List<String> addRightsToParty = new ArrayList<>();
 
   @Override public CreateOnePartyImpl author(String author) {         this.author = RepoAssert.notEmpty(author,           () -> "author can't be empty!"); return this; }
   @Override public CreateOnePartyImpl message(String message) {       this.message = RepoAssert.notEmpty(message,         () -> "message can't be empty!"); return this; }
-  @Override public CreateOnePartyImpl partyName(String groupName) {   this.groupName = RepoAssert.notEmpty(groupName,     () -> "groupName can't be empty!"); return this; }
-  @Override public CreateOnePartyImpl partyDescription(String desc) { this.groupDescription = RepoAssert.notEmpty(desc,   () -> "groupDescription can't be empty!"); return this; }
+  
+  @Override public CreateOnePartyImpl partySubType(OrgDocSubType partySubType) { this.partySubType = partySubType; return this; }
+  @Override public CreateOnePartyImpl partyName(String groupName) {              this.partyName = RepoAssert.notEmpty(groupName,       () -> "partyName can't be empty!"); return this; }
+  @Override public CreateOnePartyImpl partyDescription(String desc) {            this.partyDescription = RepoAssert.notEmpty(desc,     () -> "partyDescription can't be empty!"); return this; }
   
   @Override public CreateOnePartyImpl parentId(String parentId) {     this.parentId = parentId; return this; }
   @Override public CreateOnePartyImpl externalId(String externalId) { this.externalId = externalId; return this; }
@@ -55,8 +59,8 @@ public class CreateOnePartyImpl implements CreateOneParty {
     RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
     RepoAssert.notEmpty(author, () -> "author can't be empty!");
     RepoAssert.notEmpty(message, () -> "message can't be empty!");
-    RepoAssert.notEmpty(groupName, () -> "groupName can't be empty!");
-    RepoAssert.notEmpty(groupDescription, () -> "groupDescription can't be empty!");
+    RepoAssert.notEmpty(partyName, () -> "groupName can't be empty!");
+    RepoAssert.notEmpty(partyDescription, () -> "groupDescription can't be empty!");
 
     final var scope = ImmutableTxScope.builder().commitAuthor(author).commitMessage(message).tenantId(repoId).build();
     return this.state.withOrgTransaction(scope, this::doInTx);
@@ -106,11 +110,12 @@ public class CreateOnePartyImpl implements CreateOneParty {
     
     final OrgBatchForOne batch = new BatchForOnePartyCreate(tx.getTenantId(), author, message)
         .externalId(externalId)
-        .users(members)
-        .roles(rights)
-        .groupName(groupName)
-        .groupDescription(groupDescription)
+        .addMembers(members)
+        .addRights(rights)
+        .partyName(partyName)
+        .partyDescription(partyDescription)
         .parent(parent.orElse(null))
+        .partySubType(partySubType)
         .create();
 
     return tx.insert().batchMany(batch)
