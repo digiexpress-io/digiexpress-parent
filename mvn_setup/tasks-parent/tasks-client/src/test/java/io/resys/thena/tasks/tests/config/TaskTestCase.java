@@ -63,7 +63,7 @@ public class TaskTestCase {
   private boolean STORE_TO_DEBUG_DB = false;
   @Inject io.vertx.mutiny.pgclient.PgPool pgPool;
   @Inject io.vertx.mutiny.core.Vertx vertx;
-  public final Duration atMost = Duration.ofMinutes(5);
+  public final Duration atMost = Duration.ofSeconds(20);
   
   private TaskClient client;
   private TaskStoreImpl store;
@@ -112,7 +112,7 @@ public class TaskTestCase {
     var connection = pool.getConnection()
       .onFailure()
       .retry().withBackOff(Duration.ofMillis(10), Duration.ofSeconds(3)).atMost(20)
-      .await().atMost(Duration.ofSeconds(60));
+      .await().atMost(Duration.ofSeconds(10));
     connection.closeAndForget();
   }
 
@@ -167,7 +167,7 @@ public class TaskTestCase {
   public void assertRepo(TaskClient client, String expectedFileName) {
     final var expected = toExpectedFile(expectedFileName);
     final var actual = toStaticData(client);
-    Assertions.assertLinesMatch(expected.lines(), actual.lines());
+    Assertions.assertEquals(expected, actual);
     
   }
   public void assertEquals(String expectedFileName, Task actual) {

@@ -205,8 +205,8 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
             .map(doc -> Tuple.from(new Object[]{ 
                 doc.getCommitId(),
                 doc.getParentMissionId(),
-                doc.getReporterId(),
                 doc.getExternalId(),
+                doc.getReporterId(),
                 doc.getMissionStatus(),
                 doc.getMissionPriority(),
                 doc.getStartDate(),

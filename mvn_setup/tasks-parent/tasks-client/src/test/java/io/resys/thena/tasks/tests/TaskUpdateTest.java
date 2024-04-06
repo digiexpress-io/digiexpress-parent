@@ -244,7 +244,11 @@ public class TaskUpdateTest extends TaskTestCase {
     final var repoName = TaskUpdateTest.class.getSimpleName() + "UpdateAssignees";
     final var client = getClient().repo().query().repoName(repoName).createIfNot().await().atMost(atMost);
     final var task = createTaskForUpdating(client);
-
+    
+    // add to static data
+    toStaticData(client);
+    
+    
     client.tasks().updateTask().updateOne(ImmutableAssignTask.builder()
             .userId("tester-bob")
             .taskId(task.getId())

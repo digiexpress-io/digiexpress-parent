@@ -49,8 +49,4 @@ public class TaskActionsImpl implements TaskActions {
     return new ArchivedTasksQueryImpl(ctx);
   }
 
-  @Override
-  public TaskHistoryQuery queryTaskHistory() {
-    return new TaskHistoryQueryImpl(ctx);
-  }
 }

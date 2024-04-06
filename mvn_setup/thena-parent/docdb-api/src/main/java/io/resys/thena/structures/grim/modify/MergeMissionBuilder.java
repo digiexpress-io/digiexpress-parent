@@ -74,6 +74,7 @@ public class MergeMissionBuilder implements MergeMission {
   }
   @Override
   public MergeMission parentId(String parentId) {
+    RepoAssert.isTrue(parentId == null || !parentId.equals(missionId), () -> "parent mission id can't be itself!");
     this.nextMission.parentMissionId(parentId);
     return this;
   }

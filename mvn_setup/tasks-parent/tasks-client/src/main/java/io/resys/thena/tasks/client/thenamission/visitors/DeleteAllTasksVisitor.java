@@ -25,12 +25,13 @@ public class DeleteAllTasksVisitor implements TaskStoreConfig.QueryTasksVisitor<
   
   @Override
   public MissionQuery start(GrimStructuredTenant config, MissionQuery query) {
-    query.addAssignment(CreateTasksVisitor.ASSIGNMENT_TYPE_TASK_USER, user) 
+    //query.addAssignment(CreateTasksVisitor.ASSIGNMENT_TYPE_TASK_USER, user) 
     return query;
   }
 
   @Override
   public List<GrimMissionContainer> visitEnvelope(GrimStructuredTenant config, QueryEnvelopeList<GrimMissionContainer> envelope) {
+    /*
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
       throw DocumentStoreException.builder("GET_TASKS_BY_ASSIGNEES_FAIL")
         .add(config, envelope)
@@ -44,12 +45,12 @@ public class DeleteAllTasksVisitor implements TaskStoreConfig.QueryTasksVisitor<
         .add((callback) -> callback.addArgs(users.stream().collect(Collectors.joining(",", "{", "}"))))
         .build();
     }
-    /*ImmutableArchiveTask.builder()
+    ImmutableArchiveTask.builder()
     .taskId(taskId)
     .userId(userId)
     .targetDate(targetDate)
     .build()*/
-    return result;
+    return null;
   }
 
   @Override

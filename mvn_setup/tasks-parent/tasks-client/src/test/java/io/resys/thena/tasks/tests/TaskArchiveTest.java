@@ -1,5 +1,8 @@
 package io.resys.thena.tasks.tests;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+
 /*-
  * #%L
  * thena-tasks-client
@@ -33,9 +36,6 @@ import io.resys.thena.tasks.client.api.model.Task.Priority;
 import io.resys.thena.tasks.tests.config.TaskPgProfile;
 import io.resys.thena.tasks.tests.config.TaskTestCase;
 import lombok.extern.slf4j.Slf4j;
-
-import java.time.LocalDate;
-import java.time.ZoneId;
 
 @Slf4j
 @QuarkusTest
@@ -91,7 +91,6 @@ public class TaskArchiveTest extends TaskTestCase {
         .build())
     .await().atMost(atMost);
     
-    log.debug(super.printRepo(client));
 
     final var archivedTasks = client.tasks().queryArchivedTasks().findAll(LocalDate.ofInstant(getTargetDate(), ZoneId.of("UTC"))).await().atMost(atMost);
     Assertions.assertEquals(2, archivedTasks.size());
