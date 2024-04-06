@@ -24,7 +24,10 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -39,6 +42,8 @@ import io.resys.thena.jackson.VertexExtModule;
 import io.resys.thena.spi.ThenaClientPgSql;
 import io.resys.thena.structures.git.GitPrinter;
 import io.resys.thena.tasks.client.api.TaskClient;
+import io.resys.thena.tasks.client.api.model.Export;
+import io.resys.thena.tasks.client.api.model.Task;
 import io.resys.thena.tasks.client.thenagit.DocumentStoreImpl;
 import io.resys.thena.tasks.client.thenagit.TaskClientImpl;
 import io.resys.thena.tasks.client.thenamission.TaskStoreImpl;
@@ -185,10 +190,51 @@ public class TaskTestCase {
     Assertions.assertLinesMatch(expected.lines(), actual.lines());
     
   }
-  public void assertEquals(String expectedFileName, Object actual) {
+  public void assertEquals(String expectedFileName, Task actual) {
+    final var task_index = new AtomicInteger(0);
+    final Map<String, String> replacements = new HashMap<>();
+    final Function<Object, String> add = (input) -> {
+      if(input == null) {
+        return null;
+      }
+      
+      if(input instanceof Instant) {
+        final var value = JsonObject.of("targetDate", input).getString("targetDate");
+        replacements.put(value, JsonObject.of("targetDate", targetDate).getString("targetDate"));
+        return value;
+      }
+      final var value = task_index.incrementAndGet() + "_TASK";
+      replacements.put(input+ "", value);
+      return value;
+    };
+    
+    
+    add.apply(actual.getId());
+    add.apply(actual.getVersion());
+    add.apply(actual.getCreated());
+    add.apply(actual.getUpdated());
+    actual.getChecklist().forEach(e -> {
+      add.apply(e.getId());  
+      e.getItems().forEach(i -> add.apply(i.getId()));
+    });
+
+    actual.getTransactions().forEach(e -> {
+      add.apply(e.getId());
+    });
+    
+    var actualJson = JsonObject.mapFrom(actual).encodePrettily();
+    
+    for(final var entry : replacements.entrySet()) {
+      actualJson = actualJson.replace(entry.getKey(), entry.getValue());
+    }
+    
+    final var expected = toExpectedFile(expectedFileName);
+    Assertions.assertEquals(expected, actualJson);
+    
+  }
+  public void assertEquals(String expectedFileName, Export actual) {
     final var expected = toExpectedFile(expectedFileName);
     final var actualJson = JsonObject.mapFrom(actual).encodePrettily();
     Assertions.assertEquals(expected, actualJson);
-    
   }
 }

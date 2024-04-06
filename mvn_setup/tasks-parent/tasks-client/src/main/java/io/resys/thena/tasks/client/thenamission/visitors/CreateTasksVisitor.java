@@ -151,7 +151,7 @@ public class CreateTasksVisitor implements TaskStoreConfig.CreateManyTasksVisito
     .documentType(Document.DocumentType.TASK)
     .parentId(mission.getParentMissionId())
     .transactions(src.getCommands().values().stream()
-        .sorted((b, a) -> a.getCreatedAt().compareTo(b.getCreatedAt()))
+        .sorted((a, b) -> a.getCreatedAt().compareTo(b.getCreatedAt()))
         .map(command -> ImmutableTaskTransaction.builder()
             .id(command.getId())
             .commands(command.getCommands().stream().map(e -> e.mapTo(TaskCommand.class)).toList())
@@ -160,10 +160,12 @@ public class CreateTasksVisitor implements TaskStoreConfig.CreateManyTasksVisito
    .assigneeIds(src.getAssignments().values().stream()
        .filter(e -> e.getAssignmentType().equals(ASSIGNMENT_TYPE_TASK_USER))
        .map(e -> e.getAssignee())
+       .sorted()
        .toList())
    .roles(src.getAssignments().values().stream()
        .filter(e -> e.getAssignmentType().equals(ASSIGNMENT_TYPE_TASK_ROLE))
        .map(e -> e.getAssignee())
+       .sorted()
        .toList())
    .status(Task.Status.valueOf(mission.getMissionStatus()))
    .priority(Task.Priority.valueOf(mission.getMissionPriority()))
@@ -171,6 +173,7 @@ public class CreateTasksVisitor implements TaskStoreConfig.CreateManyTasksVisito
    .labels(src.getMissionLabels().values().stream()
        .filter(e -> e.getLabelType().equals(LABEL_TYPE_TASK))
        .map(e -> e.getLabelValue())
+       .sorted()
        .toList())
 
    .extensions(src.getLinks().values().stream()
@@ -205,6 +208,7 @@ public class CreateTasksVisitor implements TaskStoreConfig.CreateManyTasksVisito
 
       for(final var goal : Optional.ofNullable(goals.get(objective.getId())).orElse(Collections.emptyList())) {
         checklist.addItems(ImmutableChecklistItem.builder()
+            .id(goal.getId())
             .title(goal.getTransitives().getTitle())
             .dueDate(goal.getDueDate())
             .completed(Boolean.parseBoolean(goal.getGoalStatus()))
@@ -212,6 +216,7 @@ public class CreateTasksVisitor implements TaskStoreConfig.CreateManyTasksVisito
                .filter(e -> e.getAssignmentType().equals(ASSIGNMENT_TYPE_GOAL_USER))
                .filter(e -> e.isMatch(goal.getId()))
                .map(e -> e.getAssignee())
+               .sorted()
                .toList()
              )
             .build());

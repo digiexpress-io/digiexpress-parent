@@ -112,13 +112,5 @@ public interface Task extends Document {
     @Nullable String getReplyToId();
     String getCommentText();
     String getUsername();
-  }
-
-  @Value.Immutable @JsonSerialize(as = ImmutableTaskHistory.class) @JsonDeserialize(as = ImmutableTaskHistory.class)
-  interface TaskHistory {
-    String getId();
-    List<Task> getVersions();
-  }
-
-  
+  }  
 }

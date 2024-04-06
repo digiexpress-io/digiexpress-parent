@@ -1,6 +1,6 @@
 {
   "id" : "1_TASK",
-  "version" : "4",
+  "version" : "2_TASK",
   "created" : "2023-01-01T01:01:00Z",
   "updated" : "2023-01-01T01:01:00Z",
   "archived" : null,
@@ -8,7 +8,7 @@
   "dueDate" : null,
   "parentId" : null,
   "transactions" : [ {
-    "id" : "1",
+    "id" : "5_TASK",
     "commands" : [ {
       "commandType" : "CreateTask",
       "userId" : "user-1",
@@ -28,7 +28,7 @@
       "checklist" : [ ]
     } ]
   }, {
-    "id" : "2",
+    "id" : "6_TASK",
     "commands" : [ {
       "commandType" : "CreateChecklist",
       "userId" : "John smith",
@@ -38,7 +38,7 @@
       "checklist" : [ ]
     } ]
   }, {
-    "id" : "3",
+    "id" : "7_TASK",
     "commands" : [ {
       "commandType" : "ChangeChecklistTitle",
       "userId" : "John smith",
@@ -48,7 +48,7 @@
       "title" : "My second checklist"
     } ]
   }, {
-    "id" : "4",
+    "id" : "8_TASK",
     "commands" : [ {
       "commandType" : "AddChecklistItem",
       "userId" : "John smith",
@@ -76,7 +76,7 @@
     "title" : "My second checklist",
     "items" : [ {
       "id" : "4_TASK",
-      "assigneeIds" : [ "Jane smith", "Adam West" ],
+      "assigneeIds" : [ "Adam West", "Jane smith" ],
       "dueDate" : [ 2023, 1, 2 ],
       "completed" : false,
       "title" : "TODO1"

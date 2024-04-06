@@ -1,6 +1,6 @@
 {
   "id" : "1_TASK",
-  "version" : "2",
+  "version" : "2_TASK",
   "created" : "2023-01-01T01:01:00Z",
   "updated" : "2023-01-01T01:01:00Z",
   "archived" : null,
@@ -8,7 +8,7 @@
   "dueDate" : null,
   "parentId" : null,
   "transactions" : [ {
-    "id" : "1",
+    "id" : "4_TASK",
     "commands" : [ {
       "commandType" : "CreateTask",
       "userId" : "user-1",
@@ -28,7 +28,7 @@
       "checklist" : [ ]
     } ]
   }, {
-    "id" : "2",
+    "id" : "5_TASK",
     "commands" : [ {
       "commandType" : "CreateChecklist",
       "userId" : "John smith",

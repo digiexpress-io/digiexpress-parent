@@ -55,12 +55,12 @@ public class CreateChecklistTest extends TaskTestCase {
     .await().atMost(atMost);
     assertEquals("checklist-test-cases/create-checklist.json", taskWithChecklist);
 
-    
+    final var checkListId = taskWithChecklist.getChecklist().stream().findFirst().get().getId();    
     final var changeChecklistTitle = client.tasks().updateTask().updateOne(ImmutableChangeChecklistTitle.builder()
         .title("My second checklist")
         .userId("John smith")
         .taskId(task.getId())
-        .checklistId("3_TASK")
+        .checklistId(checkListId)
         .targetDate(getTargetDate())
         .build())
     .await().atMost(atMost);
@@ -71,7 +71,7 @@ public class CreateChecklistTest extends TaskTestCase {
     final var createChecklistWithItemAndAssignees = client.tasks().updateTask().updateOne(ImmutableAddChecklistItem.builder()
         .userId("John smith")
         .taskId(task.getId())
-        .checklistId("3_TASK")
+        .checklistId(checkListId)
         .addAssigneeIds("Jane smith", "Adam West")
         .title("TODO1")
         .dueDate(LocalDate.ofInstant(getTargetDate().plus(1, java.time.temporal.ChronoUnit.DAYS), ZoneId.of("UTC")))
@@ -82,12 +82,14 @@ public class CreateChecklistTest extends TaskTestCase {
 
     assertEquals("checklist-test-cases/create-checklist-item.json", createChecklistWithItemAndAssignees);
 
-
+    final var checkListItemId = createChecklistWithItemAndAssignees.getChecklist().stream()
+        .flatMap(e -> e.getItems().stream())
+        .findFirst().get().getId();
     final var changeChecklistItemCompleted = client.tasks().updateTask().updateOne(ImmutableChangeChecklistItemCompleted.builder()
         .userId("John smith")
         .taskId(task.getId())
-        .checklistId("3_TASK")
-        .checklistItemId("4_TASK")
+        .checklistId(checkListId)
+        .checklistItemId(checkListItemId)
         .completed(true)
         .targetDate(getTargetDate())
         .build())
@@ -98,8 +100,8 @@ public class CreateChecklistTest extends TaskTestCase {
     final var deleteChecklistItem = client.tasks().updateTask().updateOne(ImmutableDeleteChecklistItem.builder()
         .userId("John smith")
         .taskId(task.getId())
-        .checklistId("3_TASK")
-        .checklistItemId("4_TASK")
+        .checklistId(checkListId)
+        .checklistItemId(checkListItemId)
         .targetDate(getTargetDate())
         .build())
     .await().atMost(atMost);
@@ -111,7 +113,7 @@ public class CreateChecklistTest extends TaskTestCase {
     final var deleteChecklist = client.tasks().updateTask().updateOne(ImmutableDeleteChecklist.builder()
         .userId("John smith")
         .taskId(task.getId())
-        .checklistId("3_TASK")
+        .checklistId(checkListId)
         .targetDate(getTargetDate())
         .build())
     .await().atMost(atMost);

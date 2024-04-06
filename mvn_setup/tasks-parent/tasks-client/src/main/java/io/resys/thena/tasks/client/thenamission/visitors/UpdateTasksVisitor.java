@@ -260,10 +260,10 @@ public class UpdateTasksVisitor implements MergeTasksVisitor<List<Task>> {
   }
 
   public UpdateTasksVisitor visitCreateChecklist(CreateChecklist command, MergeMission merge) { 
-    command.getChecklist().forEach(checklist -> merge.addObjective(newObjective -> {
+    merge.addObjective(newObjective -> {
       command.getChecklist().forEach(checklistItem -> newObjective.addGoal(newGoal -> createGoal(checklistItem, newGoal)));
-      newObjective.title(checklist.getTitle()).build();
-    }));
+      newObjective.title(command.getTitle()).build();
+    });
    
     return this;
   }
@@ -281,7 +281,8 @@ public class UpdateTasksVisitor implements MergeTasksVisitor<List<Task>> {
       .status(command.getCompleted().toString())
       .build();
       
-    }));
+    }).build()
+    );
     return this;
   }
 
@@ -335,7 +336,7 @@ public class UpdateTasksVisitor implements MergeTasksVisitor<List<Task>> {
   }
 
   public UpdateTasksVisitor visitDeleteChecklistItem(DeleteChecklistItem command, MergeMission merge) { 
-    merge.removeObjective(command.getChecklistItemId());
+    merge.removeGoal(command.getChecklistItemId());
     return this;
   }
   

@@ -27,7 +27,6 @@ import java.util.Collection;
 import java.util.List;
 
 import io.resys.thena.tasks.client.api.model.Task;
-import io.resys.thena.tasks.client.api.model.Task.TaskHistory;
 import io.resys.thena.tasks.client.api.model.TaskCommand.CreateTask;
 import io.resys.thena.tasks.client.api.model.TaskCommand.TaskUpdateCommand;
 import io.smallrye.mutiny.Uni;
@@ -39,7 +38,6 @@ public interface TaskActions {
   UpdateTasks updateTask();
   ActiveTasksQuery queryActiveTasks();
   ArchivedTasksQuery queryArchivedTasks();
-  TaskHistoryQuery queryTaskHistory();
 
   interface CreateTasks {
     Uni<Task> createOne(CreateTask command);
@@ -67,10 +65,5 @@ public interface TaskActions {
     ArchivedTasksQuery reporterId(String reporterId);
     Uni<List<Task>> findAll(LocalDate fromCreatedOrUpdated);
   }
-  
-  interface TaskHistoryQuery {
-    Uni<TaskHistory> get(String taskId); 
-  }
-  
-  
+ 
 }

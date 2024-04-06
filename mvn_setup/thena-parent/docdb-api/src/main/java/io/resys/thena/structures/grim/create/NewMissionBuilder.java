@@ -66,7 +66,7 @@ public class NewMissionBuilder implements ThenaGrimNewObject.NewMission {
   }
   @Override
   public NewMission description(String description) {
-    this.missionMeta.title(description);
+    this.missionMeta.description(description);
     return this;
   }
   @Override
