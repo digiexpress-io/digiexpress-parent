@@ -1,4 +1,4 @@
-package io.resys.thena.tasks.client.spi;
+package io.resys.thena.tasks.client.thenagit;
 
 import java.util.stream.Collectors;
 
@@ -35,13 +35,13 @@ import io.resys.thena.storesql.DbStateSqlImpl;
 import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
 import io.resys.thena.tasks.client.api.model.Document.DocumentType;
-import io.resys.thena.tasks.client.spi.store.DocumentConfig;
-import io.resys.thena.tasks.client.spi.store.DocumentConfig.DocumentAuthorProvider;
-import io.resys.thena.tasks.client.spi.store.DocumentConfig.DocumentGidProvider;
-import io.resys.thena.tasks.client.spi.store.DocumentStore;
-import io.resys.thena.tasks.client.spi.store.DocumentStoreException;
-import io.resys.thena.tasks.client.spi.store.ImmutableDocumentConfig;
-import io.resys.thena.tasks.client.spi.store.MainBranch;
+import io.resys.thena.tasks.client.thenagit.store.DocumentConfig;
+import io.resys.thena.tasks.client.thenagit.store.DocumentConfig.DocumentAuthorProvider;
+import io.resys.thena.tasks.client.thenagit.store.DocumentConfig.DocumentGidProvider;
+import io.resys.thena.tasks.client.thenagit.store.DocumentStore;
+import io.resys.thena.tasks.client.thenagit.store.DocumentStoreException;
+import io.resys.thena.tasks.client.thenagit.store.ImmutableDocumentConfig;
+import io.resys.thena.tasks.client.thenagit.store.MainBranch;
 import io.smallrye.mutiny.Uni;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.sqlclient.PoolOptions;

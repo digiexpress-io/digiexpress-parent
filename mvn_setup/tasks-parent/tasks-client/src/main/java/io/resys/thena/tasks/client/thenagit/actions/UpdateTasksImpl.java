@@ -1,4 +1,4 @@
-package io.resys.thena.tasks.client.spi.actions;
+package io.resys.thena.tasks.client.thenagit.actions;
 
 import java.util.Arrays;
 
@@ -29,8 +29,8 @@ import io.resys.thena.support.RepoAssert;
 import io.resys.thena.tasks.client.api.actions.TaskActions.UpdateTasks;
 import io.resys.thena.tasks.client.api.model.Task;
 import io.resys.thena.tasks.client.api.model.TaskCommand.TaskUpdateCommand;
-import io.resys.thena.tasks.client.spi.store.DocumentStore;
-import io.resys.thena.tasks.client.spi.visitors.UpdateTasksVisitor;
+import io.resys.thena.tasks.client.thenagit.store.DocumentStore;
+import io.resys.thena.tasks.client.thenagit.visitors.UpdateTasksVisitor;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 

@@ -1,7 +1,7 @@
-package io.resys.thena.tasks.client.spi.visitors;
+package io.resys.thena.tasks.client.thenagit.visitors;
 
-import static io.resys.thena.tasks.client.spi.visitors.VisitorUtil.replaceItemInList;
-import static io.resys.thena.tasks.client.spi.visitors.VisitorUtil.requireTargetDate;
+import static io.resys.thena.tasks.client.thenagit.visitors.VisitorUtil.replaceItemInList;
+import static io.resys.thena.tasks.client.thenagit.visitors.VisitorUtil.requireTargetDate;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,8 +39,8 @@ import io.resys.thena.tasks.client.api.model.TaskCommand.CreateTask;
 import io.resys.thena.tasks.client.api.model.TaskCommand.CreateTaskExtension;
 import io.resys.thena.tasks.client.api.model.TaskCommand.DeleteChecklist;
 import io.resys.thena.tasks.client.api.model.TaskCommand.DeleteChecklistItem;
-import io.resys.thena.tasks.client.spi.store.DocumentConfig;
-import io.resys.thena.tasks.client.spi.visitors.VisitorUtil.UpdateTaskVisitorException;
+import io.resys.thena.tasks.client.thenagit.store.DocumentConfig;
+import io.resys.thena.tasks.client.thenagit.visitors.VisitorUtil.UpdateTaskVisitorException;
 
 
 public class TaskCommandVisitor {

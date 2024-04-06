@@ -1,4 +1,4 @@
-package io.resys.thena.tasks.client.spi.visitors;
+package io.resys.thena.tasks.client.thenagit.visitors;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -48,9 +48,9 @@ import io.resys.thena.tasks.client.api.model.ImmutableTask;
 import io.resys.thena.tasks.client.api.model.Task;
 import io.resys.thena.tasks.client.api.model.TaskCommand;
 import io.resys.thena.tasks.client.api.model.TaskCommand.ChangeTaskStatus;
-import io.resys.thena.tasks.client.spi.store.DocumentConfig;
-import io.resys.thena.tasks.client.spi.store.DocumentConfig.DocBranchVisitor;
-import io.resys.thena.tasks.client.spi.store.DocumentStoreException;
+import io.resys.thena.tasks.client.thenagit.store.DocumentConfig;
+import io.resys.thena.tasks.client.thenagit.store.DocumentStoreException;
+import io.resys.thena.tasks.client.thenagit.store.DocumentConfig.DocBranchVisitor;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 

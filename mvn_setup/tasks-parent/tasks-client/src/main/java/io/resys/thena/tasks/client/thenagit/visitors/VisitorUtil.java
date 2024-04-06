@@ -1,4 +1,4 @@
-package io.resys.thena.tasks.client.spi.visitors;
+package io.resys.thena.tasks.client.thenagit.visitors;
 
 import java.time.Instant;
 import java.util.ArrayList;

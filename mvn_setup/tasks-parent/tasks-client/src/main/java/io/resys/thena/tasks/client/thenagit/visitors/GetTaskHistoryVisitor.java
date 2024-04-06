@@ -1,4 +1,4 @@
-package io.resys.thena.tasks.client.spi.visitors;
+package io.resys.thena.tasks.client.thenagit.visitors;
 
 /*-
  * #%L
@@ -20,51 +20,35 @@ package io.resys.thena.tasks.client.spi.visitors;
  * #L%
  */
 
-import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
-
-import javax.annotation.Nullable;
 
 import io.resys.thena.api.actions.GitHistoryActions;
 import io.resys.thena.api.actions.GitHistoryActions.BlobHistoryQuery;
 import io.resys.thena.api.actions.GitPullActions.MatchCriteria;
+import io.resys.thena.api.entities.git.BlobHistory;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.tasks.client.api.model.Document;
 import io.resys.thena.tasks.client.api.model.ImmutableTask;
-import io.resys.thena.tasks.client.api.model.Task;
-import io.resys.thena.tasks.client.spi.store.DocumentConfig;
-import io.resys.thena.tasks.client.spi.store.DocumentConfig.DocHistoryVisitor;
-import io.resys.thena.tasks.client.spi.store.DocumentStoreException;
+import io.resys.thena.tasks.client.api.model.ImmutableTaskHistory;
+import io.resys.thena.tasks.client.api.model.Task.TaskHistory;
+import io.resys.thena.tasks.client.thenagit.store.DocumentConfig;
+import io.resys.thena.tasks.client.thenagit.store.DocumentStoreException;
+import io.resys.thena.tasks.client.thenagit.store.DocumentConfig.DocHistoryVisitor;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
-
 @RequiredArgsConstructor
-public class GetArchivedTasksVisitor implements DocHistoryVisitor<Task> {
-
-  private final @Nullable String likeTitle;
-  private final @Nullable String likeDescription;
-  private final @Nullable String reporterId;
-  private final LocalDate fromCreatedOrUpdated;
+public class GetTaskHistoryVisitor implements DocHistoryVisitor<TaskHistory> {
+  private final String taskId;
   
   @Override
   public BlobHistoryQuery start(DocumentConfig config, BlobHistoryQuery builder) {
-     builder.latestOnly(true).matchBy(
+     builder.latestOnly(false).matchBy(
       MatchCriteria.equalsTo("documentType", Document.DocumentType.TASK.name()),
-      MatchCriteria.notNull("archived")
-      //TODO MatchCriteria.greaterThanOrEqualTo("updated", fromCreatedOrUpdated.atStartOfDay())
+      MatchCriteria.equalsTo("id", taskId)
     );
-     
-     if(likeTitle != null) {
-       builder.matchBy(MatchCriteria.like("title", likeTitle));
-     }
-     if(likeDescription != null) {
-       builder.matchBy(MatchCriteria.like("description", likeDescription));
-     }
-     if(reporterId != null) {
-       builder.matchBy(MatchCriteria.equalsTo("reporterId", reporterId));
-     }
      
      return builder;
   }
@@ -72,12 +56,16 @@ public class GetArchivedTasksVisitor implements DocHistoryVisitor<Task> {
   @Override
   public GitHistoryActions.HistoryObjects visitEnvelope(DocumentConfig config, QueryEnvelope<GitHistoryActions.HistoryObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
-      throw DocumentStoreException.builder("FIND_ARCHIVED_TASKS_FAIL").add(config, envelope)
+      throw DocumentStoreException.builder("FIND_TASK_HISTORY_FAIL").add(config, envelope)
       .add(c -> c.addArgs(JsonObject.of(
-          "fromCreatedOrUpdated", fromCreatedOrUpdated,
-          "likeTitle", likeTitle,
-          "likeDescription", likeDescription,
-          "reporterId", reporterId
+          "taskId", taskId
+          ).encode()))
+      .build();
+    }
+    if(envelope.getObjects().getValues().isEmpty()) {
+      throw DocumentStoreException.builder("NO_TASK_HISTORY_TO_FIND").add(config, envelope)
+      .add(c -> c.addArgs(JsonObject.of(
+          "taskId", taskId
           ).encode()))
       .build();
     }
@@ -85,7 +73,20 @@ public class GetArchivedTasksVisitor implements DocHistoryVisitor<Task> {
   }
 
   @Override
-  public List<Task> end(DocumentConfig config, GitHistoryActions.HistoryObjects values) {
-    return values.accept(blob -> blob.mapTo(ImmutableTask.class));
+  public List<TaskHistory> end(DocumentConfig config, GitHistoryActions.HistoryObjects values) {
+    BlobHistory previous = null;
+    ImmutableTaskHistory.Builder historyBuilder = ImmutableTaskHistory.builder();
+    for(final var history : values.getValues()) {
+      if(previous != null && previous.getBlob().equals(history.getBlob())) {
+        previous = history;
+        continue;
+      }
+
+      historyBuilder.addVersions(history.getBlob().getValue().mapTo(ImmutableTask.class));
+      previous = history;
+    }
+
+    return Arrays.asList(historyBuilder.id("not implemented yet").build());
   }
 }
+  

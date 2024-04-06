@@ -1,4 +1,4 @@
-package io.resys.thena.tasks.client.spi.visitors;
+package io.resys.thena.tasks.client.thenagit.visitors;
 
 import io.resys.thena.tasks.client.api.model.Document.DocumentType;
 import io.resys.thena.tasks.client.api.model.ImmutableChecklist;
@@ -14,8 +14,8 @@ import io.resys.thena.tasks.client.api.model.TaskCommand.ChangeChecklistTitle;
 import io.resys.thena.tasks.client.api.model.TaskCommand.CreateChecklist;
 import io.resys.thena.tasks.client.api.model.TaskCommand.DeleteChecklist;
 import io.resys.thena.tasks.client.api.model.TaskCommand.DeleteChecklistItem;
-import io.resys.thena.tasks.client.spi.store.DocumentConfig;
-import io.resys.thena.tasks.client.spi.visitors.VisitorUtil.ChecklistMutator;
+import io.resys.thena.tasks.client.thenagit.store.DocumentConfig;
+import io.resys.thena.tasks.client.thenagit.visitors.VisitorUtil.ChecklistMutator;
 import lombok.RequiredArgsConstructor;
 
 

@@ -37,7 +37,7 @@ import io.resys.thena.tasks.client.api.TaskClient;
 import io.resys.thena.tasks.client.api.model.ImmutableCreateTask;
 import io.resys.thena.tasks.client.api.model.Task.Priority;
 import io.resys.thena.tasks.client.api.model.TaskCommand.CreateTask;
-import io.resys.thena.tasks.client.spi.store.MainBranch;
+import io.resys.thena.tasks.client.thenagit.store.MainBranch;
 import io.resys.thena.tasks.tests.config.TaskPgProfile;
 import io.resys.thena.tasks.tests.config.TaskTestCase;
 import io.smallrye.mutiny.Multi;

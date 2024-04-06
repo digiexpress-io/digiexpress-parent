@@ -1,4 +1,4 @@
-package io.resys.thena.tasks.client.spi.actions;
+package io.resys.thena.tasks.client.thenagit.actions;
 
 /*-
  * #%L
@@ -26,11 +26,11 @@ import java.util.List;
 
 import io.resys.thena.tasks.client.api.actions.TaskActions.ActiveTasksQuery;
 import io.resys.thena.tasks.client.api.model.Task;
-import io.resys.thena.tasks.client.spi.store.DocumentStore;
-import io.resys.thena.tasks.client.spi.visitors.DeleteAllTasksVisitor;
-import io.resys.thena.tasks.client.spi.visitors.FindAllActiveTasksVisitor;
-import io.resys.thena.tasks.client.spi.visitors.GetActiveTaskVisitor;
-import io.resys.thena.tasks.client.spi.visitors.GetActiveTasksByIdsVisitor;
+import io.resys.thena.tasks.client.thenagit.store.DocumentStore;
+import io.resys.thena.tasks.client.thenagit.visitors.DeleteAllTasksVisitor;
+import io.resys.thena.tasks.client.thenagit.visitors.FindAllActiveTasksVisitor;
+import io.resys.thena.tasks.client.thenagit.visitors.GetActiveTaskVisitor;
+import io.resys.thena.tasks.client.thenagit.visitors.GetActiveTasksByIdsVisitor;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 

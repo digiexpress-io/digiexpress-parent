@@ -1,4 +1,4 @@
-package io.resys.thena.tasks.client.spi.visitors;
+package io.resys.thena.tasks.client.thenagit.visitors;
 
 /*-
  * #%L
@@ -38,9 +38,9 @@ import io.resys.thena.tasks.client.api.model.ImmutableArchiveTask;
 import io.resys.thena.tasks.client.api.model.ImmutableTask;
 import io.resys.thena.tasks.client.api.model.ImmutableTaskTransaction;
 import io.resys.thena.tasks.client.api.model.Task;
-import io.resys.thena.tasks.client.spi.store.DocumentConfig;
-import io.resys.thena.tasks.client.spi.store.DocumentConfig.DocPullAndCommitVisitor;
-import io.resys.thena.tasks.client.spi.store.DocumentStoreException;
+import io.resys.thena.tasks.client.thenagit.store.DocumentConfig;
+import io.resys.thena.tasks.client.thenagit.store.DocumentStoreException;
+import io.resys.thena.tasks.client.thenagit.store.DocumentConfig.DocPullAndCommitVisitor;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;

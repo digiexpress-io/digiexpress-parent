@@ -1,4 +1,4 @@
-package io.resys.thena.tasks.client.spi.store;
+package io.resys.thena.tasks.client.thenagit.store;
 
 import java.util.List;
 

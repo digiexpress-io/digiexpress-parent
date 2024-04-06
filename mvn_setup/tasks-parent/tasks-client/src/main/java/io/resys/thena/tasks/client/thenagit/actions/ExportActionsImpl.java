@@ -1,4 +1,4 @@
-package io.resys.thena.tasks.client.spi.actions;
+package io.resys.thena.tasks.client.thenagit.actions;
 
 /*-
  * #%L
@@ -26,8 +26,8 @@ import java.time.LocalDate;
 import io.resys.thena.support.RepoAssert;
 import io.resys.thena.tasks.client.api.actions.ExportActions;
 import io.resys.thena.tasks.client.api.model.Export;
-import io.resys.thena.tasks.client.spi.store.DocumentStore;
-import io.resys.thena.tasks.client.spi.visitors.ExportVisitor;
+import io.resys.thena.tasks.client.thenagit.store.DocumentStore;
+import io.resys.thena.tasks.client.thenagit.visitors.ExportVisitor;
 import io.smallrye.mutiny.Uni;
 import lombok.AccessLevel;
 import lombok.Data;

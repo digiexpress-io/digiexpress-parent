@@ -35,7 +35,7 @@ import io.resys.thena.tasks.client.api.model.ImmutableChangeTaskPriority;
 import io.resys.thena.tasks.client.api.model.ImmutableChangeTaskStatus;
 import io.resys.thena.tasks.client.api.model.ImmutableCreateTask;
 import io.resys.thena.tasks.client.api.model.Task;
-import io.resys.thena.tasks.client.spi.store.DocumentStoreException;
+import io.resys.thena.tasks.client.thenagit.store.DocumentStoreException;
 import io.resys.thena.tasks.tests.config.TaskPgProfile;
 import io.resys.thena.tasks.tests.config.TaskTestCase;
 import io.vertx.core.json.JsonObject;

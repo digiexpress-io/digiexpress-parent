@@ -1,4 +1,4 @@
-package io.resys.thena.tasks.client.spi.visitors;
+package io.resys.thena.tasks.client.thenagit.visitors;
 
 /*-
  * #%L
@@ -31,9 +31,9 @@ import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.git.Commit;
 import io.resys.thena.tasks.client.api.model.Task;
 import io.resys.thena.tasks.client.api.model.TaskCommand.CreateTask;
-import io.resys.thena.tasks.client.spi.store.DocumentConfig;
-import io.resys.thena.tasks.client.spi.store.DocumentConfig.DocCommitVisitor;
-import io.resys.thena.tasks.client.spi.store.DocumentStoreException;
+import io.resys.thena.tasks.client.thenagit.store.DocumentConfig;
+import io.resys.thena.tasks.client.thenagit.store.DocumentStoreException;
+import io.resys.thena.tasks.client.thenagit.store.DocumentConfig.DocCommitVisitor;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 

@@ -1,4 +1,4 @@
-package io.resys.thena.tasks.client.spi.actions;
+package io.resys.thena.tasks.client.thenagit.actions;
 
 /*-
  * #%L
@@ -21,7 +21,7 @@ package io.resys.thena.tasks.client.spi.actions;
  */
 
 import io.resys.thena.tasks.client.api.actions.TaskActions;
-import io.resys.thena.tasks.client.spi.store.DocumentStore;
+import io.resys.thena.tasks.client.thenagit.store.DocumentStore;
 import lombok.RequiredArgsConstructor;
 
 
