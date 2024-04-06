@@ -67,8 +67,8 @@ public class DbTestTemplate {
   @Inject io.vertx.mutiny.core.Vertx vertx;
   
   private static AtomicInteger index = new AtomicInteger(1);
-  private String db;
   private BiConsumer<ThenaClient, Tenant> callback;
+  private String db;
   private Tenant repo;
   private final Map<String, String> replacements = new HashMap<>();
 

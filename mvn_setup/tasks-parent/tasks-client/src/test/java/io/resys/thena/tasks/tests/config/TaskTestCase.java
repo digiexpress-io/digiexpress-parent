@@ -1,5 +1,8 @@
 package io.resys.thena.tasks.tests.config;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+
 /*-
  * #%L
  * thena-tasks-client
@@ -29,6 +32,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
+import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,14 +42,14 @@ import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
+import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.jackson.VertexExtModule;
-import io.resys.thena.spi.ThenaClientPgSql;
-import io.resys.thena.structures.git.GitPrinter;
+import io.resys.thena.spi.DbState;
+import io.resys.thena.storesql.DbStateSqlImpl;
+import io.resys.thena.structures.grim.GrimPrinter;
 import io.resys.thena.tasks.client.api.TaskClient;
 import io.resys.thena.tasks.client.api.model.Export;
 import io.resys.thena.tasks.client.api.model.Task;
-import io.resys.thena.tasks.client.thenagit.DocumentStoreImpl;
-import io.resys.thena.tasks.client.thenagit.TaskClientImpl;
 import io.resys.thena.tasks.client.thenamission.TaskStoreImpl;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.json.jackson.DatabindCodec;
@@ -54,21 +58,21 @@ import io.vertx.mutiny.sqlclient.Pool;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.sqlclient.PoolOptions;
 import jakarta.inject.Inject;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 public class TaskTestCase {
   private boolean STORE_TO_DEBUG_DB = false;
   @Inject io.vertx.mutiny.pgclient.PgPool pgPool;
   @Inject io.vertx.mutiny.core.Vertx vertx;
   public final Duration atMost = Duration.ofMinutes(5);
   
-  private DocumentStoreImpl store;
   private TaskClient client;
+  private TaskStoreImpl store;
   private static final String DB = "junit-tasks-"; 
   private static final AtomicInteger DB_ID = new AtomicInteger();
   private static final Instant targetDate = LocalDateTime.of(2023, 1, 1, 1, 1).toInstant(ZoneOffset.UTC);
-  private final AtomicInteger id_provider = new AtomicInteger();
+  
+  private final Map<String, String> replacements = new HashMap<>();
+
   
 
   private void connectToDebugDb() {
@@ -89,29 +93,14 @@ public class TaskTestCase {
   
   @BeforeEach
   public void setUp() {
+    replacements.clear();
     connectToDebugDb();
     waitUntilPostgresqlAcceptsConnections(pgPool);
     final var db = DB + DB_ID.getAndIncrement();
-    /*store = DocumentStoreImpl.builder()
+    store = TaskStoreImpl.builder()
         .repoName(db).pgPool(pgPool).pgDb(db)
-        .gidProvider(new DocumentGidProvider() {
-          @Override
-          public String getNextVersion(DocumentType entity) {
-            return id_provider.incrementAndGet() + "_" + entity.name();
-          }
-          
-          @Override
-          public String getNextId(DocumentType entity) {
-            return id_provider.incrementAndGet() + "_" + entity.name();
-          }
-        })
         .build();
-        */
-    //client = new io.resys.thena.tasks.client.thenagit.TaskClientImpl(store);
-    
-    client = new io.resys.thena.tasks.client.thenamission.TaskClientImpl(TaskStoreImpl.builder()
-        .repoName(db).pgPool(pgPool).pgDb(db)
-        .build());
+    client = new io.resys.thena.tasks.client.thenamission.TaskClientImpl(store);
     
     objectMapper();
     
@@ -140,21 +129,10 @@ public class TaskTestCase {
       
     return DatabindCodec.mapper(); 
   }
-
-  public void assertCommits(String repoName) {
-    final var config = getStore().getConfig();
-    final var commits = config.getClient().git(repoName).commit().findAllCommits().await().atMost(atMost);
-    log.debug("Total commits: {}", commits.size());
-    
-  }
   
   @AfterEach
   public void tearDown() {
     store = null;
-  }
-
-  public DocumentStoreImpl getStore() {
-    return store;
   }
 
   public TaskClient getClient() {
@@ -164,24 +142,26 @@ public class TaskTestCase {
   public static Instant getTargetDate() {
     return targetDate;
   }
-
-  public String printRepo(TaskClient client) {
-    final var config = ((TaskClientImpl) client).getCtx().getConfig();
-    final var state = ((ThenaClientPgSql) config.getClient()).getState();
-    final var repo = client.repo().getRepo().await().atMost(Duration.ofMinutes(1));
-    final String result = new GitPrinter(state).printWithStaticIds(repo);
-    return result;
+  public DbState createState() {
+    final var ctx = TenantTableNames.defaults("");
+    return DbStateSqlImpl.create(ctx, pgPool);
   }
   
   public String toStaticData(TaskClient client) {
-    final var config = ((TaskClientImpl) client).getCtx().getConfig();
-    final var state = ((ThenaClientPgSql) config.getClient()).getState();
     final var repo = client.repo().getRepo().await().atMost(Duration.ofMinutes(1));
-    return new RepositoryToStaticData(state).print(repo);
+    return new GrimPrinter(createState()).printWithStaticIds(repo, replacements);
   }
   
   public static String toExpectedFile(String fileName) {
-    return RepositoryToStaticData.toString(TaskTestCase.class, fileName);
+    return toString(TaskTestCase.class, fileName);
+  }
+ 
+  private static String toString(Class<?> type, String resource) {
+    try {
+      return IOUtils.toString(type.getClassLoader().getResource(resource), StandardCharsets.UTF_8);
+    } catch (IOException e) {
+      throw new RuntimeException(e.getMessage(), e);
+    }
   }
   
   public void assertRepo(TaskClient client, String expectedFileName) {
@@ -220,7 +200,12 @@ public class TaskTestCase {
 
     actual.getTransactions().forEach(e -> {
       add.apply(e.getId());
+      for(final var c : e.getCommands()) {
+        add.apply(JsonObject.mapFrom(c).getString("checklistId"));
+        add.apply(JsonObject.mapFrom(c).getString("checklistItemId"));
+      }
     });
+    
     
     var actualJson = JsonObject.mapFrom(actual).encodePrettily();
     

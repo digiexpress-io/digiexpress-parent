@@ -44,17 +44,17 @@
       "userId" : "John smith",
       "targetDate" : "2023-01-01T01:01:00Z",
       "taskId" : "1_TASK",
-      "checklistId" : "3_TASK",
+      "checklistId" : "10_TASK",
       "title" : "My second checklist"
     } ]
   }, {
-    "id" : "8_TASK",
+    "id" : "9_TASK",
     "commands" : [ {
       "commandType" : "AddChecklistItem",
       "userId" : "John smith",
       "targetDate" : "2023-01-01T01:01:00Z",
       "taskId" : "1_TASK",
-      "checklistId" : "3_TASK",
+      "checklistId" : "10_TASK",
       "title" : "TODO1",
       "assigneeIds" : [ "Jane smith", "Adam West" ],
       "dueDate" : [ 2023, 1, 2 ],
@@ -72,7 +72,7 @@
   "extensions" : [ ],
   "comments" : [ ],
   "checklist" : [ {
-    "id" : "3_TASK",
+    "id" : "10_TASK",
     "title" : "My second checklist",
     "items" : [ {
       "id" : "4_TASK",

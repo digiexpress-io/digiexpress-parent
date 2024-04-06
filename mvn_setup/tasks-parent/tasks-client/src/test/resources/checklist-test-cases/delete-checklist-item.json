@@ -1,6 +1,6 @@
 {
   "id" : "1_TASK",
-  "version" : "6",
+  "version" : "2_TASK",
   "created" : "2023-01-01T01:01:00Z",
   "updated" : "2023-01-01T01:01:00Z",
   "archived" : null,
@@ -8,7 +8,7 @@
   "dueDate" : null,
   "parentId" : null,
   "transactions" : [ {
-    "id" : "1",
+    "id" : "4_TASK",
     "commands" : [ {
       "commandType" : "CreateTask",
       "userId" : "user-1",
@@ -28,7 +28,7 @@
       "checklist" : [ ]
     } ]
   }, {
-    "id" : "2",
+    "id" : "5_TASK",
     "commands" : [ {
       "commandType" : "CreateChecklist",
       "userId" : "John smith",
@@ -38,48 +38,48 @@
       "checklist" : [ ]
     } ]
   }, {
-    "id" : "3",
+    "id" : "6_TASK",
     "commands" : [ {
       "commandType" : "ChangeChecklistTitle",
       "userId" : "John smith",
       "targetDate" : "2023-01-01T01:01:00Z",
       "taskId" : "1_TASK",
-      "checklistId" : "3_TASK",
+      "checklistId" : "14_TASK",
       "title" : "My second checklist"
     } ]
   }, {
-    "id" : "4",
+    "id" : "8_TASK",
     "commands" : [ {
       "commandType" : "AddChecklistItem",
       "userId" : "John smith",
       "targetDate" : "2023-01-01T01:01:00Z",
       "taskId" : "1_TASK",
-      "checklistId" : "3_TASK",
+      "checklistId" : "14_TASK",
       "title" : "TODO1",
       "assigneeIds" : [ "Jane smith", "Adam West" ],
       "dueDate" : [ 2023, 1, 2 ],
       "completed" : false
     } ]
   }, {
-    "id" : "5",
+    "id" : "10_TASK",
     "commands" : [ {
       "commandType" : "ChangeChecklistItemCompleted",
       "userId" : "John smith",
       "targetDate" : "2023-01-01T01:01:00Z",
       "taskId" : "1_TASK",
-      "checklistId" : "3_TASK",
-      "checklistItemId" : "4_TASK",
+      "checklistId" : "14_TASK",
+      "checklistItemId" : "15_TASK",
       "completed" : true
     } ]
   }, {
-    "id" : "6",
+    "id" : "13_TASK",
     "commands" : [ {
       "commandType" : "DeleteChecklistItem",
       "userId" : "John smith",
       "targetDate" : "2023-01-01T01:01:00Z",
       "taskId" : "1_TASK",
-      "checklistId" : "3_TASK",
-      "checklistItemId" : "4_TASK"
+      "checklistId" : "14_TASK",
+      "checklistItemId" : "15_TASK"
     } ]
   } ],
   "roles" : [ "admin-users", "view-only-users" ],
@@ -93,7 +93,7 @@
   "extensions" : [ ],
   "comments" : [ ],
   "checklist" : [ {
-    "id" : "3_TASK",
+    "id" : "14_TASK",
     "title" : "My second checklist",
     "items" : [ ]
   } ],

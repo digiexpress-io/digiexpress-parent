@@ -96,7 +96,7 @@ public class TaskClientImpl implements TaskClient {
          
           @Override
           public Uni<List<Task>> deleteAll(String userId, Instant targetDate) {
-            return ctx.getConfig().accept(new DeleteAllTasksVisitor(userId, targetDate, ctx));
+            return null; ///ctx.getConfig().accept(new DeleteAllTasksVisitor(userId, targetDate, ctx));
           }
         };
       }    
@@ -129,12 +129,6 @@ public class TaskClientImpl implements TaskClient {
       }
       @Override
       public ArchivedTasksQuery queryArchivedTasks() {
-        // TODO Auto-generated method stub
-        return null;
-      }
-
-      @Override
-      public TaskHistoryQuery queryTaskHistory() {
         // TODO Auto-generated method stub
         return null;
       }

@@ -44,7 +44,7 @@
       "userId" : "John smith",
       "targetDate" : "2023-01-01T01:01:00Z",
       "taskId" : "1_TASK",
-      "checklistId" : "3_TASK",
+      "checklistId" : "7_TASK",
       "title" : "My second checklist"
     } ]
   } ],
@@ -59,7 +59,7 @@
   "extensions" : [ ],
   "comments" : [ ],
   "checklist" : [ {
-    "id" : "3_TASK",
+    "id" : "7_TASK",
     "title" : "My second checklist",
     "items" : [ ]
   } ],
