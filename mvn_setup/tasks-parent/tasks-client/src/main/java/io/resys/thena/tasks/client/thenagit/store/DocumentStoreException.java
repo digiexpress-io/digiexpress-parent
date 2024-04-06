@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 import io.resys.thena.api.ThenaClient.GrimStructuredTenant;
 import io.resys.thena.api.actions.GitCommitActions.CommitResultEnvelope;
 import io.resys.thena.api.actions.GitPullActions;
+import io.resys.thena.api.actions.GrimCommitActions.ManyMissionsEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelopeList;
 import io.resys.thena.spi.ExMessageFormatter;
@@ -48,17 +49,19 @@ public class DocumentStoreException extends RuntimeException {
   private final List<DocumentExceptionMsg> messages = new ArrayList<>();
   
   
-  public DocumentStoreException(String code, DocumentExceptionMsg ... msg) {
+  public DocumentStoreException(String code, List<Throwable> surpressed, DocumentExceptionMsg ... msg) {
     super(new ExMessageFormatter(code, null, msg).format());
     this.code = code;
     this.messages.addAll(Arrays.asList(msg));
     this.target = null;
+    surpressed.forEach(e -> this.addSuppressed(e));
   }
-  public DocumentStoreException(String code, JsonObject target, DocumentExceptionMsg ... msg) {
+  public DocumentStoreException(String code, JsonObject target, List<Throwable> surpressed, DocumentExceptionMsg ... msg) {
     super(new ExMessageFormatter(code, target, msg).format());
     this.code = code;
     this.messages.addAll(Arrays.asList(msg));
     this.target = target;
+    surpressed.forEach(e -> this.addSuppressed(e));
   }
 
   public String getCode() { return code; }
@@ -95,17 +98,34 @@ public class DocumentStoreException extends RuntimeException {
   public static class Builder {
     private final String id;
     private final ImmutableDocumentExceptionMsg.Builder msg = ImmutableDocumentExceptionMsg.builder();
+    private final List<Throwable> surpressed = new ArrayList<>();
     
     public Builder add(DocumentConfig config, QueryEnvelope<?> envelope) {
       msg.id(envelope.getRepo() == null ? config.getProjectName() : envelope.getRepo().getName())
       .value(envelope.getRepo() == null ? "no-repo" : envelope.getRepo().getId())
-      .addAllArgs(envelope.getMessages().stream().map(message->message.getText()).collect(Collectors.toList()));
+      .addAllArgs(envelope.getMessages().stream().map(message -> {
+        if(message.getException() != null) {
+          surpressed.add(message.getException());
+        }
+        return message.getText();
+      }).collect(Collectors.toList()));
       return this;
     }
     public Builder add(GrimStructuredTenant config, QueryEnvelopeList<?> envelope) {
       msg.id(envelope.getRepo() == null ? config.getTenantId(): envelope.getRepo().getName())
       .value(envelope.getRepo() == null ? "no-repo" : envelope.getRepo().getId())
-      .addAllArgs(envelope.getMessages().stream().map(message->message.getText()).collect(Collectors.toList()));
+      .addAllArgs(envelope.getMessages().stream() .map(message -> {
+        if(message.getException() != null) {
+          surpressed.add(message.getException());
+        }
+        return message.getText();
+      }).collect(Collectors.toList()));
+      return this;
+    }
+    public Builder add(GrimStructuredTenant config, ManyMissionsEnvelope envelope) {
+      msg.id(envelope.getRepoId() == null ? config.getTenantId(): envelope.getRepoId())
+      .value(envelope.getRepoId() == null ? config.getTenantId(): envelope.getRepoId())
+      .addAllArgs(envelope.getMessages().stream().map(message -> message.getText()).collect(Collectors.toList()));
       return this;
     }
     public Builder add(Consumer<ImmutableDocumentExceptionMsg.Builder> callback) {
@@ -114,7 +134,7 @@ public class DocumentStoreException extends RuntimeException {
     }
     
     public DocumentStoreException build() {
-      return new DocumentStoreException(id, msg.build());
+      return new DocumentStoreException(id, this.surpressed, msg.build());
     }
   }
 }

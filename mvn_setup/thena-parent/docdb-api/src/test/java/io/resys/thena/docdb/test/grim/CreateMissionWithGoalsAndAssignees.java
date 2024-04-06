@@ -103,7 +103,7 @@ public class CreateMissionWithGoalsAndAssignees extends DbTestTemplate {
     final var newMission = createdTask.getMissions().iterator().next();
     
     // add comments
-    getClient().grim(repo).commit().modifyManyMission()
+    getClient().grim(repo).commit().modifyManyMissions()
     .commitMessage("forgot to add comments to things")
     .commitAuthor("jane.doe@morgue.com")
     .modifyMission(newMission.getId(), (modifyMission) -> {
@@ -130,7 +130,7 @@ public class CreateMissionWithGoalsAndAssignees extends DbTestTemplate {
         
     
     // modify title
-    getClient().grim(repo).commit().modifyManyMission()
+    getClient().grim(repo).commit().modifyManyMissions()
     .commitMessage("changed the title")
     .commitAuthor("jane.doe@morgue.com")
     .modifyMission(newMission.getId(), (modifyMission) -> {

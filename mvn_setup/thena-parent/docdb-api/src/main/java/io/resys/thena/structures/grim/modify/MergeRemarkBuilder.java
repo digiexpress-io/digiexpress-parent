@@ -1,5 +1,7 @@
 package io.resys.thena.structures.grim.modify;
 
+import java.util.Map;
+
 import io.resys.thena.api.entities.grim.GrimRemark;
 import io.resys.thena.api.entities.grim.ImmutableGrimRemark;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
@@ -15,15 +17,18 @@ public class MergeRemarkBuilder implements MergeRemark {
   private final ImmutableGrimBatchMissions.Builder batch;
   private final GrimRemark currentRemark; 
   private final ImmutableGrimRemark.Builder nextRemark;
+  private final Map<String, GrimRemark> all_remarks;
   private boolean built;
 
-  public MergeRemarkBuilder(GrimMissionContainer container, GrimCommitBuilder logger, String missionId, String remarkId) {
+  public MergeRemarkBuilder(GrimMissionContainer container, GrimCommitBuilder logger, String missionId, String remarkId,
+      Map<String, GrimRemark> all_remarks) {
     super();
     this.logger = logger;
     this.batch = ImmutableGrimBatchMissions.builder().tenantId(logger.getTenantId()).log("").status(BatchStatus.OK);
     this.currentRemark = container.getRemarks().get(remarkId);
     RepoAssert.notNull(currentRemark, () -> "Can't find remark with id: '" + remarkId + "' for mission: '" + missionId + "'!");
     this.nextRemark = ImmutableGrimRemark.builder().from(currentRemark);
+    this.all_remarks = all_remarks;
   }
   @Override
   public MergeRemark remarkText(String remarkText) {
@@ -38,6 +43,12 @@ public class MergeRemarkBuilder implements MergeRemark {
   @Override
   public MergeRemark reporterId(String reporterId) {
     this.nextRemark.reporterId(reporterId);
+    return this;
+  }
+  @Override
+  public MergeRemark parentId(String parentId) {
+    RepoAssert.isTrue(all_remarks.containsKey(parentId), () -> "Can't find parent remark by id: '" +  parentId + "'!");
+    this.nextRemark.parentId(parentId);
     return this;
   }
   @Override

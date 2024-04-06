@@ -1,5 +1,6 @@
 package io.resys.thena.tasks.client.thenamission;
 
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 /*-
@@ -92,7 +93,8 @@ public class TaskStoreImpl implements TaskStore {
     
     return existingRepo.onItem().transformToUni((repoResult) -> {
       if(repoResult.getStatus() != QueryEnvelopeStatus.OK) {
-        throw new DocumentStoreException("REPO_GET_FOR_DELETE_FAIL", 
+        throw new DocumentStoreException("REPO_GET_FOR_DELETE_FAIL",
+            Collections.emptyList(),
             ImmutableDocumentExceptionMsg.builder()
             .id(repoResult.getStatus().toString())
             .value(repoName)
@@ -115,7 +117,8 @@ public class TaskStoreImpl implements TaskStore {
     final var newRepo = client.tenants().commit().name(repoName, StructureType.grim).build();
     return newRepo.onItem().transform((repoResult) -> {
       if(repoResult.getStatus() != CommitStatus.OK) {
-        throw new DocumentStoreException("REPO_CREATE_FAIL", 
+        throw new DocumentStoreException("REPO_CREATE_FAIL",
+            Collections.emptyList(),
             ImmutableDocumentExceptionMsg.builder()
             .id(repoResult.getStatus().toString())
             .value(repoName)

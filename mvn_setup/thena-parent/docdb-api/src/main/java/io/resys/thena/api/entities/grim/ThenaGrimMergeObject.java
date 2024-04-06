@@ -1,13 +1,16 @@
 package io.resys.thena.api.entities.grim;
 
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 import javax.annotation.Nullable;
 
+import io.resys.thena.api.entities.grim.ThenaGrimNewObject.MergeLink;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewAssignment;
+import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewGoal;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewLabel;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewLink;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewObjective;
@@ -25,14 +28,15 @@ public interface ThenaGrimMergeObject {
     MergeMission reporterId(@Nullable String reporterId);    
     
     MergeMission status(@Nullable String status);
+    MergeMission archivedAt(@Nullable OffsetDateTime archivedAt);
     MergeMission startDate(@Nullable LocalDate startDate);
     MergeMission dueDate(@Nullable LocalDate dueDate);
     MergeMission priority(@Nullable String priority);
     
     // nested builders
-    <T> MergeMission setAllAssignees(List<T> replacments, Function<T, Consumer<NewAssignment>> assignment);
-    <T> MergeMission setAllLabels(List<T> replacments, Function<T, Consumer<NewLabel>> label);
-    <T> MergeMission setAllLinks(List<T> replacments, Function<T, Consumer<NewLink>> link);
+    <T> MergeMission setAllAssignees(String assigneeType, List<T> replacments, Function<T, Consumer<NewAssignment>> assignment);
+    <T> MergeMission setAllLabels(String labelType, List<T> replacments, Function<T, Consumer<NewLabel>> label);
+    <T> MergeMission setAllLinks(String linkType, List<T> replacments, Function<T, Consumer<NewLink>> link);
     
     MergeMission addAssignees(Consumer<NewAssignment> assignment);
     MergeMission addLabels(Consumer<NewLabel> label);
@@ -41,7 +45,7 @@ public interface ThenaGrimMergeObject {
     MergeMission addCommands(List<JsonObject> commandToAppend);    
     MergeMission addObjective(Consumer<NewObjective> goal);
     
-    
+    MergeMission modifyLink(String linkId, Consumer<MergeLink> goal);
     MergeMission modifyGoal(String goalId, Consumer<MergeGoal> goal);
     MergeMission modifyObjective(String objectiveId, Consumer<MergeObjective> objective);
     MergeMission modifyRemark(String remarkId, Consumer<MergeRemark> objective);
@@ -61,6 +65,7 @@ public interface ThenaGrimMergeObject {
     MergeObjective startDate(@Nullable LocalDate startDate);
     MergeObjective dueDate(@Nullable LocalDate dueDate);
     
+    MergeObjective addGoal(Consumer<NewGoal> newGoal);
     MergeObjective addLabels(Consumer<NewLabel> label);
     MergeObjective addLink(Consumer<NewLink> link);
     MergeObjective addAssignees(Consumer<NewAssignment> assignment);
@@ -85,14 +90,15 @@ public interface ThenaGrimMergeObject {
     MergeGoal addAssignees(Consumer<NewAssignment> assignment);
     MergeGoal addRemark(Consumer<NewRemark> remark);
     
-    <T> MergeGoal setAllAssignees(List<T> replacments, Function<T, Consumer<NewAssignment>> assignment);
-    <T> MergeGoal setAllLabels(List<T> replacments, Function<T, Consumer<NewLabel>> label);
-    <T> MergeGoal setAllLinks(List<T> replacments, Function<T, Consumer<NewLink>> link);
+    <T> MergeGoal setAllAssignees(String assignmentType, List<T> replacments, Function<T, Consumer<NewAssignment>> assignment);
+    <T> MergeGoal setAllLabels(String labelType, List<T> replacments, Function<T, Consumer<NewLabel>> label);
+    <T> MergeGoal setAllLinks(String linkType, List<T> replacments, Function<T, Consumer<NewLink>> link);
     
     void build(); 
   }
   // support interface inside of callback
   interface MergeRemark {
+    MergeRemark parentId(@Nullable String parentId);
     MergeRemark remarkText(String remarkText);
     MergeRemark remarkStatus(@Nullable String remarkStatus);
     MergeRemark reporterId(String reporterId);

@@ -20,6 +20,7 @@ import io.resys.thena.api.entities.grim.ThenaGrimMergeObject.MergeGoal;
 import io.resys.thena.api.entities.grim.ThenaGrimMergeObject.MergeMission;
 import io.resys.thena.api.entities.grim.ThenaGrimMergeObject.MergeObjective;
 import io.resys.thena.api.entities.grim.ThenaGrimMergeObject.MergeRemark;
+import io.resys.thena.api.entities.grim.ThenaGrimNewObject.MergeLink;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewAssignment;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewLabel;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewLink;
@@ -101,16 +102,27 @@ public class MergeMissionBuilder implements MergeMission {
     this.nextMission.missionPriority(priority);
     return this;
   }
-
   @Override
-  public <T> MergeMission setAllAssignees(List<T> replacments, Function<T, Consumer<NewAssignment>> callbacks) {
+  public MergeMission archivedAt(OffsetDateTime archivedAt) {
+    this.nextMission.archivedAt(archivedAt);
+    return this;
+  }
+  @Override
+  public <T> MergeMission setAllAssignees(String assigneeType, List<T> replacments, Function<T, Consumer<NewAssignment>> callbacks) {
     // clear old
-    final var intermed = this.batch.build();
-    this.batch.assignments(intermed.getAssignments().stream().filter(a -> a.getRelation() != null).toList());
+    final var intermed = this.batch.build()
+        .getAssignments().stream()
+        .filter(a -> a.getRelation() != null)
+        .filter(e -> !e.getAssignmentType().equals(assigneeType))
+        .toList();
+    this.batch.assignments(intermed);
     final var all_assignments = new HashMap<String, GrimAssignment>();
     
     // delete old
-    this.batch.addAllDeleteAssignments(container.getAssignments().values().stream().filter(a -> a.getRelation() == null).toList());
+    this.batch.addAllDeleteAssignments(container.getAssignments().values().stream()
+        .filter(a -> a.getRelation() == null)
+        .filter(e -> e.getAssignmentType().equals(assigneeType))
+        .toList());
     
     // add new
     for(final var replacement : replacments) {
@@ -128,14 +140,21 @@ public class MergeMissionBuilder implements MergeMission {
   }
 
   @Override
-  public <T> MergeMission setAllLabels(List<T> replacments, Function<T, Consumer<NewLabel>> callbacks) {
+  public <T> MergeMission setAllLabels(String labelType, List<T> replacments, Function<T, Consumer<NewLabel>> callbacks) {
     // clear old
-    final var intermed = this.batch.build();
-    this.batch.missionLabels(intermed.getMissionLabels().stream().filter(a -> a.getRelation() != null).toList());
+    final var intermed = this.batch.build()
+        .getMissionLabels().stream()
+        .filter(a -> a.getRelation() != null)
+        .filter(e -> !e.getLabelType().equals(labelType))
+        .toList();
+    this.batch.missionLabels(intermed);
     final var all_mission_label = new HashMap<String, GrimMissionLabel>();
     
     // delete old
-    this.batch.addAllDeleteMissionLabels(container.getMissionLabels().values().stream().filter(a -> a.getRelation() == null).toList());
+    this.batch.addAllDeleteMissionLabels(container.getMissionLabels().values().stream()
+        .filter(a -> a.getRelation() == null)
+        .filter(e -> e.getLabelType().equals(labelType))
+        .toList());
     
     // add new
     for(final var replacement : replacments) {
@@ -153,14 +172,21 @@ public class MergeMissionBuilder implements MergeMission {
   }
 
   @Override
-  public <T> MergeMission setAllLinks(List<T> replacments, Function<T, Consumer<NewLink>> callbacks) {
+  public <T> MergeMission setAllLinks(String linkType, List<T> replacments, Function<T, Consumer<NewLink>> callbacks) {
     // clear old
-    final var intermed = this.batch.build();
-    this.batch.links(intermed.getLinks().stream().filter(a -> a.getRelation() != null).toList());
+    final var intermed = this.batch.build()
+        .getLinks().stream()
+        .filter(a -> a.getRelation() != null)
+        .filter(a -> !a.getLinkType().equals(linkType))
+        .toList();
+    this.batch.links(intermed);
     final var all_links = new HashMap<String, GrimMissionLink>();
     
     // delete old
-    this.batch.addAllDeleteLinks(container.getLinks().values().stream().filter(a -> a.getRelation() == null).toList());
+    this.batch.addAllDeleteLinks(container.getLinks().values().stream()
+        .filter(a -> a.getRelation() == null)
+        .filter(a -> a.getLinkType().equals(linkType))
+        .toList());
     
     // add new
     for(final var replacement : replacments) {
@@ -263,13 +289,20 @@ public class MergeMissionBuilder implements MergeMission {
 
   @Override
   public MergeMission modifyRemark(String remarkId, Consumer<MergeRemark> mergeRemark) {
-    final var builder = new MergeRemarkBuilder(container, logger, missionId, remarkId);
+    final var builder = new MergeRemarkBuilder(container, logger, missionId, remarkId, container.getRemarks());
     mergeRemark.accept(builder);
     final var built = builder.close();
     this.batch.from(built);
     return this;
   }
-
+  @Override
+  public MergeMission modifyLink(String linkId, Consumer<MergeLink> mergeLink) {
+    final var builder = new MergeLinkBuilder(container, logger, missionId, linkId);
+    mergeLink.accept(builder);
+    final var built = builder.close();
+    this.batch.from(built);
+    return this;
+  }
   @Override
   public MergeMission removeGoal(String goalId) {
     final var currentGoal = container.getGoals().get(goalId);

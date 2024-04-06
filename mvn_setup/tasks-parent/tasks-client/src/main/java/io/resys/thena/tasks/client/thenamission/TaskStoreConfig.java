@@ -30,6 +30,7 @@ import io.resys.thena.api.ThenaClient;
 import io.resys.thena.api.ThenaClient.GrimStructuredTenant;
 import io.resys.thena.api.actions.GrimCommitActions.CreateManyMissions;
 import io.resys.thena.api.actions.GrimCommitActions.ManyMissionsEnvelope;
+import io.resys.thena.api.actions.GrimCommitActions.ModifyManyMissions;
 import io.resys.thena.api.actions.GrimQueryActions.MissionQuery;
 import io.resys.thena.api.entities.grim.GrimMission;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
@@ -48,19 +49,26 @@ public interface TaskStoreConfig {
     String get();
   }
   
-  interface CreateManyMissionsVisitor<T> { 
+  interface CreateManyTasksVisitor<T> { 
     CreateManyMissions start(GrimStructuredTenant config, CreateManyMissions builder);
     @Nullable List<GrimMission> visitEnvelope(GrimStructuredTenant config, ManyMissionsEnvelope envelope);
     Uni<List<T>> end(GrimStructuredTenant config, @Nullable List<GrimMission> commit);
   }
 
-  interface MissionQueryVisitor<T> {
+  interface QueryTasksVisitor<T> {
     MissionQuery start(GrimStructuredTenant config, MissionQuery builder);
     @Nullable List<GrimMissionContainer> visitEnvelope(GrimStructuredTenant config, QueryEnvelopeList<GrimMissionContainer> envelope);
     Uni<T> end(GrimStructuredTenant config, @Nullable List<GrimMissionContainer> commit);    
   }
   
-  default <T> Uni<T> accept(MissionQueryVisitor<T> visitor) {
+  interface MergeTasksVisitor<T> { 
+    ModifyManyMissions start(GrimStructuredTenant config, ModifyManyMissions builder);
+    @Nullable List<GrimMission> visitEnvelope(GrimStructuredTenant config, ManyMissionsEnvelope envelope);
+    Uni<T> end(GrimStructuredTenant config, @Nullable List<GrimMission> commit);
+  }
+  
+  
+  default <T> Uni<T> accept(QueryTasksVisitor<T> visitor) {
     final var grim = getClient().grim(getTenantName());
     final var prefilled = grim.find().missionQuery();
     
@@ -69,8 +77,19 @@ public interface TaskStoreConfig {
         .onItem().transform(envelope -> visitor.visitEnvelope(grim, envelope))
         .onItem().transformToUni(ref -> visitor.end(grim, ref));
   }
-  
-  default <T> Uni<List<T>> accept(CreateManyMissionsVisitor<T> visitor) {
+
+  default <T> Uni<T> accept(MergeTasksVisitor<T> visitor) {
+    final var grim = getClient().grim(getTenantName());
+    final var prefilled = grim
+        .commit().modifyManyMissions()
+        .commitAuthor(getAuthor().get());
+    
+    final Uni<ManyMissionsEnvelope> query = visitor.start(grim, prefilled).build();
+    return query
+        .onItem().transform(envelope -> visitor.visitEnvelope(grim, envelope))
+        .onItem().transformToUni(ref -> visitor.end(grim, ref));
+  }
+  default <T> Uni<List<T>> accept(CreateManyTasksVisitor<T> visitor) {
     final var grim = getClient().grim(getTenantName());
     final var prefilled = grim
         .commit().createManyMissions()

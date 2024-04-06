@@ -1,26 +1,5 @@
 package io.resys.thena.tasks.client.thenamission.visitors;
 
-/*-
- * #%L
- * thena-tasks-client
- * %%
- * Copyright (C) 2021 - 2023 Copyright 2021 ReSys OÜ
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
- */
-
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,27 +17,28 @@ import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class FindAllTasksByIdVisitor implements TaskStoreConfig.QueryTasksVisitor<List<Task>> {
-  private final Collection<String> taskIds;
+public class FindAllTasksByRolesVisitor implements TaskStoreConfig.QueryTasksVisitor<List<Task>> {
+  private final Collection<String> roles;
   
   @Override
   public MissionQuery start(GrimStructuredTenant config, MissionQuery query) {
-    return query.addMissionId(new ArrayList<>(taskIds));
+    roles.forEach(role -> query.addAssignment(CreateTasksVisitor.ASSIGNMENT_TYPE_TASK_ROLE, role)); 
+    return query;
   }
 
   @Override
   public List<GrimMissionContainer> visitEnvelope(GrimStructuredTenant config, QueryEnvelopeList<GrimMissionContainer> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
-      throw DocumentStoreException.builder("GET_TASKS_BY_IDS_FAIL")
+      throw DocumentStoreException.builder("GET_TASKS_BY_ROLES_FAIL")
         .add(config, envelope)
-        .add((callback) -> callback.addArgs(taskIds.stream().collect(Collectors.joining(",", "{", "}"))))
+        .add((callback) -> callback.addArgs(roles.stream().collect(Collectors.joining(",", "{", "}"))))
         .build();
     }
     final var result = envelope.getObjects();
     if(result == null) {
-      throw DocumentStoreException.builder("GET_TASKS_BY_IDS_NOT_FOUND")   
+      throw DocumentStoreException.builder("GET_TASKS_BY_ROLES_FAIL")   
         .add(config, envelope)
-        .add((callback) -> callback.addArgs(taskIds.stream().collect(Collectors.joining(",", "{", "}"))))
+        .add((callback) -> callback.addArgs(roles.stream().collect(Collectors.joining(",", "{", "}"))))
         .build();
     }
     return result;

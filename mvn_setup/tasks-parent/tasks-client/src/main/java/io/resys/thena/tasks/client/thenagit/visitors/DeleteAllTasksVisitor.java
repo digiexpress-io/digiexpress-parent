@@ -86,14 +86,14 @@ public class DeleteAllTasksVisitor implements DocPullAndCommitVisitor<Task>{
         if(commit.getStatus() == CommitResultStatus.OK) {
           return commit;
         }
-        throw new DocumentStoreException("ARCHIVE_FAIL", DocumentStoreException.convertMessages(commit));
+        throw new DocumentStoreException("ARCHIVE_FAIL", Collections.emptyList(), DocumentStoreException.convertMessages(commit));
       })
       .onItem().transformToUni(archived -> removeCommand.build())
       .onItem().transform((CommitResultEnvelope commit) -> {
         if(commit.getStatus() == CommitResultStatus.OK) {
           return commit;
         }
-        throw new DocumentStoreException("REMOVE_FAIL", DocumentStoreException.convertMessages(commit));
+        throw new DocumentStoreException("REMOVE_FAIL", Collections.emptyList(), DocumentStoreException.convertMessages(commit));
       })
       .onItem().transform((commit) -> tasksRemoved);
   }

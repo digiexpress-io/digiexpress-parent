@@ -100,7 +100,7 @@ public class SimpleGrimUpdateObjectiveAndGoalsTest extends DbTestTemplate {
     final var goalToModify = newMission.getGoals().values().stream().filter(e -> e.getTransitives().getTitle().equals("kitchen")).findFirst().get();
     final var objectiveToModify = newMission.getObjectives().values().stream().filter(e -> e.getTransitives().getTitle().equals("interior design ideas")).findFirst().get();
     
-    getClient().grim(repo).commit().modifyManyMission()
+    getClient().grim(repo).commit().modifyManyMissions()
     .commitMessage("forgot to add comments to things")
     .commitAuthor("jane.doe@morgue.com")
     .modifyMission(newMission.getMission().getId(), (modifyMission) -> {

@@ -34,7 +34,7 @@ import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class CreateTasksVisitor implements TaskStoreConfig.CreateManyMissionsVisitor<Task> {
+public class CreateTasksVisitor implements TaskStoreConfig.CreateManyTasksVisitor<Task> {
   private final List<? extends CreateTask> commands;
   public static final String ASSIGNMENT_TYPE_TASK_USER = "task_user";
   public static final String ASSIGNMENT_TYPE_GOAL_USER = "goal_user";
@@ -50,7 +50,7 @@ public class CreateTasksVisitor implements TaskStoreConfig.CreateManyMissionsVis
     for(final var command : commands) {
       builder.addMission(newMission -> createTask(command, newMission));
     }
-    return builder.commitMessage("Creating tasks");
+    return builder.commitMessage("Creating tasks by: " + CreateTasksVisitor.class.getSimpleName());
   }
 
   private void createTask(CreateTask command, NewMission newMission) {
@@ -123,12 +123,12 @@ public class CreateTasksVisitor implements TaskStoreConfig.CreateManyMissionsVis
     if(envelope.getStatus() == CommitResultStatus.OK) {
       return envelope.getMissions();
     }
-    throw new DocumentStoreException("CREATE_TASKS_SAVE_FAIL", TaskStoreException.convertMessages(envelope));
+    throw DocumentStoreException.builder("CREATE_TASKS_SAVE_FAIL").add(config, envelope).build(); 
   }
 
   @Override
   public Uni<List<Task>> end(GrimStructuredTenant config, List<GrimMission> commit) {
-    return config.find().missionQuery().missionId(commit.stream().map(m -> m.getId()).toList()).findAll()
+    return config.find().missionQuery().addMissionId(commit.stream().map(m -> m.getId()).toList()).findAll()
         .onItem().transformToMulti(items -> Multi.createFrom().items(items.getObjects().stream()))
         .onItem().transform(CreateTasksVisitor::mapToTask)
         .collect().asList()

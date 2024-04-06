@@ -19,9 +19,9 @@ public interface GrimQueryActions {
   }
   
   interface MissionQuery {
-    MissionQuery assignment(String assignementType, String assignmentId);
+    MissionQuery addAssignment(String assignementType, String assignmentId);
     MissionQuery viewer(String userBy, String usedFor);
-    MissionQuery missionId(List<String> ids);
+    MissionQuery addMissionId(List<String> ids);
     
     Uni<QueryEnvelope<GrimMissionContainer>> get(String missionIdOrExtId);
     Uni<QueryEnvelopeList<GrimMissionContainer>> findAll();

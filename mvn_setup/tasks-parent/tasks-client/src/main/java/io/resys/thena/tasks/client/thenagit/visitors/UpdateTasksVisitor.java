@@ -1,6 +1,7 @@
 package io.resys.thena.tasks.client.thenagit.visitors;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /*-
  * #%L
@@ -85,7 +86,7 @@ public class UpdateTasksVisitor implements DocPullAndCommitVisitor<Task> {
         .build();
     }
     if(taskIds.size() != result.getBlob().size()) {
-      throw new DocumentStoreException("TASKS_UPDATE_FAIL_MISSING_TASKS", JsonObject.of("failedUpdates", taskIds));
+      throw new DocumentStoreException("TASKS_UPDATE_FAIL_MISSING_TASKS", JsonObject.of("failedUpdates", taskIds), Collections.emptyList());
     }
     return result;
   }
@@ -103,7 +104,7 @@ public class UpdateTasksVisitor implements DocPullAndCommitVisitor<Task> {
     return commitBuilder.build().onItem().transform(commit -> {
       if(commit.getStatus() != CommitResultStatus.OK) {
         final var failedUpdates = taskIds.stream().collect(Collectors.joining(",", "{", "}"));
-        throw new DocumentStoreException("TASKS_UPDATE_FAIL", JsonObject.of("failedUpdates", failedUpdates), DocumentStoreException.convertMessages(commit));
+        throw new DocumentStoreException("TASKS_UPDATE_FAIL", JsonObject.of("failedUpdates", failedUpdates), Collections.emptyList(), DocumentStoreException.convertMessages(commit));
       }
       return updatedTasks;
     });

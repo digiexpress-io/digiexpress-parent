@@ -16,6 +16,7 @@ public interface GrimRemark extends IsGrimObject, ThenaTable {
   String getCommitId();
   String getCreatedWithCommitId();
   String getMissionId();
+  @Nullable String getParentId();
   
   @Nullable OffsetDateTime getCreatedAt(); // Transitive from commit table
   @Nullable OffsetDateTime getUpdatedAt(); // Transitive from commit table

@@ -60,7 +60,7 @@ public class CreateTasksVisitor implements DocCommitVisitor<Task> {
     if(envelope.getStatus() == CommitResultStatus.OK) {
       return envelope.getCommit();
     }
-    throw new DocumentStoreException("SAVE_FAIL", DocumentStoreException.convertMessages(envelope));
+    throw new DocumentStoreException("SAVE_FAIL", Collections.emptyList(), DocumentStoreException.convertMessages(envelope));
   }
 
   @Override

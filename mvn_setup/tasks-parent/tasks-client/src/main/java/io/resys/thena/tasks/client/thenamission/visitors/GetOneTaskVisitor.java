@@ -15,13 +15,13 @@ import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class GetOneTaskVisitor implements TaskStoreConfig.MissionQueryVisitor<Task> {
+public class GetOneTaskVisitor implements TaskStoreConfig.QueryTasksVisitor<Task> {
   
   private final String id;
   
   @Override
   public MissionQuery start(GrimStructuredTenant config, MissionQuery query) {
-    return query.missionId(Arrays.asList(id));
+    return query.addMissionId(Arrays.asList(id));
   }
 
   @Override

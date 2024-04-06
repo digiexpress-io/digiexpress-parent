@@ -25,7 +25,7 @@ public interface GrimCommitActions {
   CreateManyMissions createManyMissions();
   
   ModifyOneMission modifyOneMission();
-  ModifyManyMissions modifyManyMission();  
+  ModifyManyMissions modifyManyMissions();  
   
   ModifyManyCommitViewers modifyManyCommitViewer();
   

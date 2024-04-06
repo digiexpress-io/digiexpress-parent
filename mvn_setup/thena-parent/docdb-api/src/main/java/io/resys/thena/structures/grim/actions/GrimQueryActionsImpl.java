@@ -34,7 +34,7 @@ public class GrimQueryActionsImpl implements GrimQueryActions {
       private List<String> ids;
 
       @Override
-      public MissionQuery missionId(List<String> ids) {
+      public MissionQuery addMissionId(List<String> ids) {
         if(this.ids == null) {
           this.ids = new ArrayList<>();
         }
@@ -42,7 +42,7 @@ public class GrimQueryActionsImpl implements GrimQueryActions {
         return this;
       }
       @Override
-      public MissionQuery assignment(String assignementType, String assignmentId) {
+      public MissionQuery addAssignment(String assignementType, String assignmentId) {
         assignments.add(Tuple2.of(assignementType, assignmentId));
         return this;
       }

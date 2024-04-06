@@ -106,7 +106,7 @@ public class SimpleGrimUpdateMissionTest extends DbTestTemplate {
     final var newMission = createMission(repo).getMissions().values().iterator().next();
     
     // add comments
-    getClient().grim(repo).commit().modifyManyMission()
+    getClient().grim(repo).commit().modifyManyMissions()
     .commitMessage("forgot to add comments to things")
     .commitAuthor("jane.doe@morgue.com")
     .modifyMission(newMission.getId(), (modifyMission) -> {
@@ -133,7 +133,7 @@ public class SimpleGrimUpdateMissionTest extends DbTestTemplate {
         
     
     // modify title
-    getClient().grim(repo).commit().modifyManyMission()
+    getClient().grim(repo).commit().modifyManyMissions()
     .commitMessage("changed the title")
     .commitAuthor("jane.doe@morgue.com")
     .modifyMission(newMission.getId(), (modifyMission) -> {

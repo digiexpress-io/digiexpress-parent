@@ -18,6 +18,7 @@ import io.resys.thena.api.entities.grim.ImmutableGrimOneOfRelations;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
 import io.resys.thena.api.entities.grim.ThenaGrimMergeObject.MergeObjective;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewAssignment;
+import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewGoal;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewLabel;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewLink;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewRemark;
@@ -27,6 +28,7 @@ import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.grim.ImmutableGrimBatchMissions;
 import io.resys.thena.structures.grim.commitlog.GrimCommitBuilder;
 import io.resys.thena.structures.grim.create.NewAssignmentBuilder;
+import io.resys.thena.structures.grim.create.NewGoalBuilder;
 import io.resys.thena.structures.grim.create.NewMissionLabelBuilder;
 import io.resys.thena.structures.grim.create.NewMissionLinkBuilder;
 import io.resys.thena.structures.grim.create.NewRemarkBuilder;
@@ -208,8 +210,14 @@ public class MergeObjectiveBuilder implements MergeObjective {
     this.batch.from(built);
     return this;
   }
-
-
+  @Override
+  public MergeObjective addGoal(Consumer<NewGoal> newGoal) {
+    final var builder = new NewGoalBuilder(logger, missionId, this.previous.getId());
+    newGoal.accept(builder);
+    this.batch.from(builder.close());
+    return this;
+  }
+  
   @Override
   public void build() {
     this.built = true;

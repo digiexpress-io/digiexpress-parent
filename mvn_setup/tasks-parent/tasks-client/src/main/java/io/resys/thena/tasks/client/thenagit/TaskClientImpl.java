@@ -22,9 +22,7 @@ package io.resys.thena.tasks.client.thenagit;
 
 import io.resys.thena.tasks.client.api.TaskClient;
 import io.resys.thena.tasks.client.api.actions.ExportActions;
-import io.resys.thena.tasks.client.api.actions.MigrationActions;
 import io.resys.thena.tasks.client.api.actions.RepositoryActions;
-import io.resys.thena.tasks.client.api.actions.StatisticsActions;
 import io.resys.thena.tasks.client.api.actions.TaskActions;
 import io.resys.thena.tasks.client.thenagit.actions.ExportActionsImpl;
 import io.resys.thena.tasks.client.thenagit.actions.RepositoryActionsImpl;
@@ -39,16 +37,6 @@ public class TaskClientImpl implements TaskClient {
   @Override
   public TaskActions tasks() {
     return new TaskActionsImpl(ctx);
-  }
-  @Override
-  public StatisticsActions statistics() {
-    // TODO Auto-generated method stub
-    return null;
-  }
-  @Override
-  public MigrationActions migrate() {
-    // TODO Auto-generated method stub
-    return null;
   }
   @Override
   public ExportActions export() {

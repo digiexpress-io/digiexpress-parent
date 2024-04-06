@@ -68,6 +68,12 @@ public interface ThenaGrimNewObject {
     NewLink linkValue(String linkValue);
     NewLink linkBody(@Nullable JsonObject linkBody);
     void build();
+  }
+  interface MergeLink {
+    MergeLink linkType(String linkType);
+    MergeLink linkValue(String linkValue);
+    MergeLink linkBody(@Nullable JsonObject linkBody);
+    void build();
   }  
   // support interface inside of callback
   interface NewObjective {
@@ -94,6 +100,7 @@ public interface ThenaGrimNewObject {
   }
   // support interface inside of callback
   interface NewRemark {
+    NewRemark parentId(@Nullable String parentId);
     NewRemark remarkText(String remarkText);
     NewRemark remarkStatus(@Nullable String remarkStatus);
     NewRemark reporterId(String reporterId);

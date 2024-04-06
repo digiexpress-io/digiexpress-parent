@@ -101,6 +101,7 @@ public class GrimRemarkRegistrySqlImpl implements GrimRemarkRegistry {
         .append(" (id,").ln()
         .append("  commit_id,").ln()
         .append("  created_commit_id,").ln()
+        .append("  parent_id,").ln()
         
         .append("  mission_id,").ln()
         .append("  objective_id,").ln()
@@ -111,7 +112,7 @@ public class GrimRemarkRegistrySqlImpl implements GrimRemarkRegistry {
         .append("  remark_status,").ln()
         .append("  remark_text)").ln()
         
-        .append(" VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)").ln()
+        .append(" VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)").ln()
         .build())
         .props(remarks.stream()
             .map(doc -> Tuple.from(new Object[]{ 
@@ -119,6 +120,7 @@ public class GrimRemarkRegistrySqlImpl implements GrimRemarkRegistry {
                 doc.getCommitId(),
                 doc.getCreatedWithCommitId(),
                 
+                doc.getParentId(),
                 doc.getMissionId(),
                 doc.getRelation() == null ? null : doc.getRelation().getObjectiveId(),
                 doc.getRelation() == null ? null : doc.getRelation().getObjectiveGoalId(),
@@ -140,14 +142,16 @@ public class GrimRemarkRegistrySqlImpl implements GrimRemarkRegistry {
         .append(" SET").ln()
         .append("  commit_id = $1,").ln()
 
-        .append("  reporter_id = $2,").ln()
-        .append("  remark_status = $3,").ln()
-        .append("  remark_text = $4").ln()
-        .append(" WHERE id = $5")
+        .append("  parent_id = $2,").ln()
+        .append("  reporter_id = $3,").ln()
+        .append("  remark_status = $4,").ln()
+        .append("  remark_text = $5").ln()
+        .append(" WHERE id = $6")
         .build())
         .props(remarks.stream()
             .map(doc -> Tuple.from(new Object[]{ 
                 doc.getCommitId(),
+                doc.getParentId(),
                 doc.getReporterId(),
                 doc.getRemarkStatus(),
                 doc.getRemarkText(),
@@ -163,6 +167,7 @@ public class GrimRemarkRegistrySqlImpl implements GrimRemarkRegistry {
     .append("(").ln()
     .append("  id VARCHAR(40) PRIMARY KEY,").ln()
     .append("  commit_id VARCHAR(40) NOT NULL,").ln()
+    .append("  parent_id VARCHAR(40),").ln()
     .append("  created_commit_id VARCHAR(40) NOT NULL,").ln()
     
     .append("  mission_id VARCHAR(40) NOT NULL,").ln()
@@ -178,8 +183,13 @@ public class GrimRemarkRegistrySqlImpl implements GrimRemarkRegistry {
     .append(");").ln()
     
     .append("ALTER TABLE ").append(options.getGrimRemark()).ln()
-    .append("  ADD CONSTRAINT ").append(options.getGrimRemark()).append("_PARENT_FK").ln()
+    .append("  ADD CONSTRAINT ").append(options.getGrimRemark()).append("_EXTRA_FK").ln()
     .append("  FOREIGN KEY (remark_id)").ln()
+    .append("  REFERENCES ").append(options.getGrimRemark()).append(" (id);").ln().ln()
+
+    .append("ALTER TABLE ").append(options.getGrimRemark()).ln()
+    .append("  ADD CONSTRAINT ").append(options.getGrimRemark()).append("_PARENT_FK").ln()
+    .append("  FOREIGN KEY (parent_id)").ln()
     .append("  REFERENCES ").append(options.getGrimRemark()).append(" (id);").ln().ln()
     
     .append("CREATE INDEX ").append(options.getGrimRemark()).append("_CREATED_INDEX")
@@ -233,6 +243,7 @@ public class GrimRemarkRegistrySqlImpl implements GrimRemarkRegistry {
       return ImmutableGrimRemark.builder()
           .id(row.getString("id"))
           .commitId(row.getString("commit_id"))
+          .parentId(row.getString("parent_id"))
           
           .updatedAt(row.getOffsetDateTime("updated_at"))
           .createdAt(row.getOffsetDateTime("created_at"))

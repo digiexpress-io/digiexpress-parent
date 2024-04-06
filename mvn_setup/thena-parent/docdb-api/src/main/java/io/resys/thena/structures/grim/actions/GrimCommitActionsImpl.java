@@ -27,7 +27,7 @@ public class GrimCommitActionsImpl implements GrimCommitActions {
     return new ModifyOneMissionImpl(state, repoId);
   }
   @Override
-  public ModifyManyMissions modifyManyMission() {
+  public ModifyManyMissions modifyManyMissions() {
     return new ModifyManyMissionsImpl(state, repoId);
   }
   @Override

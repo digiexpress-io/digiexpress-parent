@@ -111,7 +111,7 @@ public class SimpleGrimDeleteGoalTest extends DbTestTemplate {
     final var newMission = createMission(repo);
     
     // remove remark
-    getClient().grim(repo).commit().modifyManyMission()
+    getClient().grim(repo).commit().modifyManyMissions()
     .commitMessage("remove remark #1")
     .commitAuthor("jane.doe@morgue.com")
     .modifyMission(newMission.getMission().getId(), (modifyMission) -> {
@@ -130,7 +130,7 @@ public class SimpleGrimDeleteGoalTest extends DbTestTemplate {
     .await().atMost(Duration.ofMinutes(1));
     
     // remove remark
-    getClient().grim(repo).commit().modifyManyMission()
+    getClient().grim(repo).commit().modifyManyMissions()
     .commitMessage("remove remark #2")
     .commitAuthor("jane.doe@morgue.com")
     .modifyMission(newMission.getMission().getId(), (modifyMission) -> {
@@ -148,7 +148,7 @@ public class SimpleGrimDeleteGoalTest extends DbTestTemplate {
     
     
     // remove kitchen goal
-    getClient().grim(repo).commit().modifyManyMission()
+    getClient().grim(repo).commit().modifyManyMissions()
     .commitMessage("remove remark #2")
     .commitAuthor("jane.doe@morgue.com")
     .modifyMission(newMission.getMission().getId(), (modifyMission) -> {
@@ -170,14 +170,16 @@ public class SimpleGrimDeleteGoalTest extends DbTestTemplate {
     final var refreshedMission = getClient().grim(repo).find().missionQuery().get(newMission.getMission().getId()).await().atMost(Duration.ofMinutes(1)).getObjects();
     
     // remove goals and objectives
-    getClient().grim(repo).commit().modifyManyMission()
+    getClient().grim(repo).commit().modifyManyMissions()
     .commitMessage("remove remark #2")
     .commitAuthor("jane.doe@morgue.com")
     .modifyMission(refreshedMission.getMission().getId(), (modifyMission) -> {
 
-      modifyMission.setAllLabels(Collections.emptyList(), null);
-      modifyMission.setAllAssignees(Collections.emptyList(), null);
-      modifyMission.setAllLinks(Collections.emptyList(), null);
+      modifyMission.setAllLabels("keyword", Collections.emptyList(), null);
+      modifyMission.setAllAssignees("worker", Collections.emptyList(), null);
+      modifyMission.setAllLinks("project-plans", Collections.emptyList(), null);
+      modifyMission.setAllLinks("permits", Collections.emptyList(), null);
+      
       
       refreshedMission.getGoals().values().stream()
       .forEach(goalToDelete -> modifyMission

@@ -74,6 +74,15 @@ public class NewRemarkBuilder implements ThenaGrimNewObject.NewRemark {
     this.next.reporterId(reporterId);
     return this;
   }
+
+  @Override
+  public NewRemark parentId(String parentId) {
+    RepoAssert.isTrue(all_remarks.containsKey(parentId), () -> "Can't find parent remark by id: '" +  parentId + "'!");
+    this.next.parentId(parentId);
+    return this;
+  }
+
+
   @Override
   public NewRemark addAssignees(Consumer<NewAssignment> assignment) {
     final var all_assignments = this.batch.build().getAssignments().stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
@@ -96,7 +105,5 @@ public class NewRemarkBuilder implements ThenaGrimNewObject.NewRemark {
     this.logger.add(built);
     return this.batch.addRemarks(built).build();
   }
-
-
 
 }

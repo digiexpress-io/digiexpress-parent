@@ -95,13 +95,23 @@ public class MergeGoalBuilder implements MergeGoal {
   }
   
   @Override
-  public <T> MergeGoal setAllAssignees(List<T> replacments, Function<T, Consumer<NewAssignment>> callbacks) {
+  public <T> MergeGoal setAllAssignees(String assigneeType, List<T> replacments, Function<T, Consumer<NewAssignment>> callbacks) {
+    RepoAssert.notEmpty(assigneeType, () -> "assigneeType can't be empty!");
+    RepoAssert.notNull(replacments, () -> "replacments can't be empty!");
+    RepoAssert.notNull(callbacks, () -> "callbacks can't be empty!");
+
     // clear old
-    this.batch.assignments(Collections.emptyList());
-    final var all_assignments = new HashMap<String, GrimAssignment>();
+    final var saved = this.batch.build().getAssignments().stream()
+      .filter(e -> !e.getAssignmentType().equals(assigneeType))
+      .toList();
+    this.batch.assignments(saved);
+    final var all_assignments = new HashMap<String, GrimAssignment>(saved.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)));
     
     // delete old
-    this.batch.addAllDeleteAssignments(container.getAssignments().values().stream().filter(a -> isGoalRelation(a.getRelation())).toList());
+    this.batch.addAllDeleteAssignments(container.getAssignments().values().stream()
+        .filter(a -> isGoalRelation(a.getRelation()))
+        .filter(e -> e.getAssignmentType().equals(assigneeType))
+        .toList());
     
     // add new
     for(final var replacement : replacments) {
@@ -119,13 +129,19 @@ public class MergeGoalBuilder implements MergeGoal {
   }
 
   @Override
-  public <T> MergeGoal setAllLabels(List<T> replacments, Function<T, Consumer<NewLabel>> callbacks) {
+  public <T> MergeGoal setAllLabels(String labelType, List<T> replacments, Function<T, Consumer<NewLabel>> callbacks) {
     // clear old
+    final var saved = this.batch.build().getMissionLabels().stream()
+        .filter(e -> !e.getLabelType().equals(labelType))
+        .toList();
     this.batch.missionLabels(Collections.emptyList());
-    final var all_mission_label = new HashMap<String, GrimMissionLabel>();
+    final var all_mission_label = new HashMap<String, GrimMissionLabel>(saved.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)));
     
     // delete old
-    this.batch.addAllDeleteMissionLabels(container.getMissionLabels().values().stream().filter(a -> isGoalRelation(a.getRelation())).toList());
+    this.batch.addAllDeleteMissionLabels(container.getMissionLabels().values().stream()
+        .filter(a -> isGoalRelation(a.getRelation()))
+        .filter(e -> e.getLabelType().equals(labelType))
+        .toList());
     
     // add new
     for(final var replacement : replacments) {
@@ -143,13 +159,19 @@ public class MergeGoalBuilder implements MergeGoal {
   }
 
   @Override
-  public <T> MergeGoal setAllLinks(List<T> replacments, Function<T, Consumer<NewLink>> callbacks) {
+  public <T> MergeGoal setAllLinks(String linkType, List<T> replacments, Function<T, Consumer<NewLink>> callbacks) {
     // clear old
-    this.batch.links(Collections.emptyList());
-    final var all_links = new HashMap<String, GrimMissionLink>();
+    final var saved = this.batch.build().getLinks().stream()
+        .filter(e -> !e.getLinkType().equals(linkType))
+        .toList();
+    this.batch.links(saved);
+    final var all_links = new HashMap<String, GrimMissionLink>(saved.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)));
     
     // delete old
-    this.batch.addAllDeleteLinks(container.getLinks().values().stream().filter(a -> isGoalRelation(a.getRelation())).toList());
+    this.batch.addAllDeleteLinks(container.getLinks().values().stream()
+        .filter(a -> isGoalRelation(a.getRelation()))
+        .filter(a -> a.getLinkType().equals(linkType))
+        .toList());
     
     // add new
     for(final var replacement : replacments) {

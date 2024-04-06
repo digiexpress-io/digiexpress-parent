@@ -188,7 +188,7 @@ public class TaskTestCase {
   public void assertEquals(String expectedFileName, Object actual) {
     final var expected = toExpectedFile(expectedFileName);
     final var actualJson = JsonObject.mapFrom(actual).encodePrettily();
-    Assertions.assertLinesMatch(expected.lines(), actualJson.lines());
+    Assertions.assertEquals(expected, actualJson);
     
   }
 }

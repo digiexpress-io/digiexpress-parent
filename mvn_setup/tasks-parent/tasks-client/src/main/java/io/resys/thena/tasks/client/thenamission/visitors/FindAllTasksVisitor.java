@@ -12,7 +12,7 @@ import io.resys.thena.tasks.client.thenagit.store.DocumentStoreException;
 import io.resys.thena.tasks.client.thenamission.TaskStoreConfig;
 import io.smallrye.mutiny.Uni;
 
-public class FindAllTasksVisitor implements TaskStoreConfig.MissionQueryVisitor<List<Task>> {
+public class FindAllTasksVisitor implements TaskStoreConfig.QueryTasksVisitor<List<Task>> {
   @Override
   public MissionQuery start(GrimStructuredTenant config, MissionQuery query) {
     return query;
