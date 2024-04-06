@@ -1,4 +1,4 @@
-package io.resys.thena.tasks.client.thenagit.store;
+package io.resys.thena.tasks.client.thenamission.visitors;
 
 /*-
  * #%L
@@ -26,20 +26,20 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import io.resys.thena.api.ThenaClient.GrimStructuredTenant;
-import io.resys.thena.api.actions.GitCommitActions.CommitResultEnvelope;
 import io.resys.thena.api.actions.GitPullActions;
+import io.resys.thena.api.actions.GrimCommitActions.ManyMissionsEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope;
-import io.resys.thena.api.envelope.QueryEnvelopeList;
 import io.resys.thena.spi.ExMessageFormatter;
 import io.resys.thena.spi.ExMessageFormatter.DocumentExceptionMsg;
 import io.resys.thena.spi.ImmutableDocumentExceptionMsg;
+import io.resys.thena.support.OidUtils;
+import io.resys.thena.tasks.client.thenagit.store.DocumentConfig;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
 
 
-public class DocumentStoreException extends RuntimeException {
+public class TaskStoreException extends RuntimeException {
 
   private static final long serialVersionUID = 7058468238867536222L;
 
@@ -48,13 +48,13 @@ public class DocumentStoreException extends RuntimeException {
   private final List<DocumentExceptionMsg> messages = new ArrayList<>();
   
   
-  public DocumentStoreException(String code, DocumentExceptionMsg ... msg) {
+  public TaskStoreException(String code, DocumentExceptionMsg ... msg) {
     super(new ExMessageFormatter(code, null, msg).format());
     this.code = code;
     this.messages.addAll(Arrays.asList(msg));
     this.target = null;
   }
-  public DocumentStoreException(String code, JsonObject target, DocumentExceptionMsg ... msg) {
+  public TaskStoreException(String code, JsonObject target, DocumentExceptionMsg ... msg) {
     super(new ExMessageFormatter(code, target, msg).format());
     this.code = code;
     this.messages.addAll(Arrays.asList(msg));
@@ -66,9 +66,9 @@ public class DocumentStoreException extends RuntimeException {
   public JsonObject getTarget() { return target; }  
   
  
-  public static DocumentExceptionMsg convertMessages(CommitResultEnvelope commit) {
+  public static DocumentExceptionMsg convertMessages(ManyMissionsEnvelope commit) {
     return ImmutableDocumentExceptionMsg.builder()
-        .id(commit.getGid())
+        .id(OidUtils.gen())
         .value("") //TODO
         .addAllArgs(commit.getMessages().stream().map(message->message.getText()).collect(Collectors.toList()))
         .build();
@@ -102,19 +102,13 @@ public class DocumentStoreException extends RuntimeException {
       .addAllArgs(envelope.getMessages().stream().map(message->message.getText()).collect(Collectors.toList()));
       return this;
     }
-    public Builder add(GrimStructuredTenant config, QueryEnvelopeList<?> envelope) {
-      msg.id(envelope.getRepo() == null ? config.getTenantId(): envelope.getRepo().getName())
-      .value(envelope.getRepo() == null ? "no-repo" : envelope.getRepo().getId())
-      .addAllArgs(envelope.getMessages().stream().map(message->message.getText()).collect(Collectors.toList()));
-      return this;
-    }
     public Builder add(Consumer<ImmutableDocumentExceptionMsg.Builder> callback) {
       callback.accept(msg);
       return this;
     }
     
-    public DocumentStoreException build() {
-      return new DocumentStoreException(id, msg.build());
+    public TaskStoreException build() {
+      return new TaskStoreException(id, msg.build());
     }
   }
 }

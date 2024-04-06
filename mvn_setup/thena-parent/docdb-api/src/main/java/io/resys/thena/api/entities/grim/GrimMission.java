@@ -31,18 +31,18 @@ public interface GrimMission extends IsGrimObject, ThenaTable {
   @Nullable LocalDate getStartDate();
   @Nullable LocalDate getDueDate();
 
-  @Nullable LocalDate getArchivedDate();
+  @Nullable OffsetDateTime getArchivedAt();
   @Nullable String getArchivedStatus();
   
   @JsonIgnore @Override default public GrimDocType getDocType() { return GrimDocType.GRIM_MISSION; };
   
   @Value.Immutable
   interface GrimMissionTransitives {
-    @Nullable OffsetDateTime getCreatedAt(); // Transitive from commit table
-    @Nullable OffsetDateTime getUpdatedAt(); // Transitive from commit table
-    @Nullable OffsetDateTime getTreeUpdatedAt(); // Transitive from commit table
-    @Nullable String getTitle(); //Transitive from data table
-    @Nullable String getDescription(); //Transitive from data table
+    OffsetDateTime getCreatedAt(); // Transitive from commit table
+    OffsetDateTime getUpdatedAt(); // Transitive from commit table
+    OffsetDateTime getTreeUpdatedAt(); // Transitive from commit table
+    String getTitle(); //Transitive from data table
+    String getDescription(); //Transitive from data table
     @Nullable JsonObject getDataExtension();
   }
 }

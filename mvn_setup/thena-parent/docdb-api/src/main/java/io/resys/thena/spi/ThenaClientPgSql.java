@@ -90,6 +90,7 @@ public class ThenaClientPgSql implements ThenaClient {
       @Override public GrimQueryActions find() { return new GrimQueryActionsImpl(state, repoId); }
       @Override public GrimCommitActions commit() { return new GrimCommitActionsImpl(state, repoId); }
       @Override public GrimProjectQuery tenants() { return null; }
+      @Override public String getTenantId() { return repoId; }
     };
   }
 

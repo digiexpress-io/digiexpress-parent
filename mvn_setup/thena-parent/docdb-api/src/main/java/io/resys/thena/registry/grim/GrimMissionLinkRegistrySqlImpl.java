@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import io.resys.thena.api.entities.grim.GrimMissionLink;
 import io.resys.thena.api.entities.grim.ImmutableGrimMissionLink;
+import io.resys.thena.api.entities.grim.ImmutableGrimMissionLinkTransitives;
 import io.resys.thena.api.registry.grim.GrimMissionLinkRegistry;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
@@ -35,7 +36,17 @@ public class GrimMissionLinkRegistrySqlImpl implements GrimMissionLinkRegistry {
   public ThenaSqlClient.Sql findAll() {
     return ImmutableSql.builder()
         .value(new SqlStatement()
-        .append("SELECT * FROM ").append(options.getGrimMissionLink())
+        .append("SELECT links.*, ")
+        .append(" updated_commit.created_at       as updated_at,").ln()
+        .append(" created_commit.created_at       as created_at").ln()
+        
+        .append(" FROM ").append(options.getGrimMissionLink()).append(" as links").ln()
+        .append(" LEFT JOIN ").append(options.getGrimCommit()).append(" as updated_commit").ln()
+        .append(" ON(updated_commit.commit_id = links.commit_id)").ln()
+        
+        .append(" LEFT JOIN ").append(options.getGrimCommit()).append(" as created_commit").ln()
+        .append(" ON(created_commit.commit_id = links.created_commit_id)").ln()
+        
         .build())
         .build();
   }
@@ -43,11 +54,44 @@ public class GrimMissionLinkRegistrySqlImpl implements GrimMissionLinkRegistry {
   public ThenaSqlClient.SqlTuple getById(String id) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
-        .append("SELECT * ").ln()
-        .append("  FROM ").append(options.getGrimMissionLink()).ln()
-        .append("  WHERE (id = $1)").ln() 
+        .append("SELECT links.*, ")
+        .append(" updated_commit.created_at       as updated_at,").ln()
+        .append(" created_commit.created_at       as created_at").ln()
+        
+        .append(" FROM ").append(options.getGrimMissionLink()).append(" as links").ln()
+        .append(" LEFT JOIN ").append(options.getGrimCommit()).append(" as updated_commit").ln()
+        .append(" ON(updated_commit.commit_id = links.commit_id)").ln()
+        
+        .append(" LEFT JOIN ").append(options.getGrimCommit()).append(" as created_commit").ln()
+        .append(" ON(created_commit.commit_id = links.created_commit_id)").ln()
+        .append(" WHERE links.id = $1").ln() 
         .build())
         .props(Tuple.of(id))
+        .build();
+  }
+
+  @Override
+  public SqlTupleList updateAll(Collection<GrimMissionLink> mission) {
+    return ImmutableSqlTupleList.builder()
+        .value(new SqlStatement()
+        .append("UPDATE ").append(options.getGrimMissionLink())
+        .append(" SET").ln()
+        .append("  commit_id = $1,").ln()
+        .append("  link_type = $2,").ln()
+        .append("  external_id = $3,").ln()
+        .append("  link_body = $4").ln()
+        
+        .append(" WHERE id = $5")
+        .build())
+        .props(mission.stream()
+            .map(doc -> Tuple.from(new Object[]{ 
+                doc.getCommitId(),
+                doc.getLinkType(),
+                doc.getExternalId(),
+                doc.getLinkBody(),
+                doc.getId(), 
+             }))
+            .collect(Collectors.toList()))
         .build();
   }
   @Override
@@ -57,7 +101,7 @@ public class GrimMissionLinkRegistrySqlImpl implements GrimMissionLinkRegistry {
         .append("INSERT INTO ").append(options.getGrimMissionLink()).ln()
         .append(" (id,").ln()
         .append("  commit_id,").ln()
-
+        .append("  created_commit_id,").ln()
         .append("  mission_id,").ln()
         .append("  objective_id,").ln()
         .append("  goal_id,").ln()
@@ -67,12 +111,13 @@ public class GrimMissionLinkRegistrySqlImpl implements GrimMissionLinkRegistry {
         .append("  external_id,").ln()
         .append("  link_body)").ln()
         
-        .append(" VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)").ln()
+        .append(" VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)").ln()
         .build())
         .props(links.stream()
             .map(doc -> Tuple.from(new Object[]{ 
                 doc.getId(), 
                 doc.getCommitId(),
+                doc.getCreatedWithCommitId(),
                 doc.getMissionId(),
                 doc.getRelation() == null ? null : doc.getRelation().getObjectiveId(),
                 doc.getRelation() == null ? null : doc.getRelation().getObjectiveGoalId(),
@@ -92,6 +137,7 @@ public class GrimMissionLinkRegistrySqlImpl implements GrimMissionLinkRegistry {
     .append("(").ln()
     .append("  id VARCHAR(40) PRIMARY KEY,").ln()
     .append("  commit_id VARCHAR(40) NOT NULL,").ln()
+    .append("  created_commit_id VARCHAR(40) NOT NULL,").ln()
     
     .append("  mission_id VARCHAR(40) NOT NULL,").ln()
     .append("  objective_id VARCHAR(40),").ln()
@@ -162,9 +208,14 @@ public class GrimMissionLinkRegistrySqlImpl implements GrimMissionLinkRegistry {
       return ImmutableGrimMissionLink.builder()
           .id(row.getString("id"))
           .commitId(row.getString("commit_id"))
+          .createdWithCommitId(row.getString("created_commit_id"))
           .missionId(row.getString("mission_id"))
           .relation(GrimRegistrySqlImpl.toRelations(objectiveId, goalId, remarkId))
-          
+          .transitives(ImmutableGrimMissionLinkTransitives.builder()
+            .updatedAt(row.getOffsetDateTime("updated_at"))
+            .createdAt(row.getOffsetDateTime("created_at"))
+            .build()
+          )
           .linkType(row.getString("link_type"))
           .externalId(row.getString("external_id"))
           .linkBody(row.getJsonObject("link_body"))
@@ -175,9 +226,18 @@ public class GrimMissionLinkRegistrySqlImpl implements GrimMissionLinkRegistry {
   public SqlTuple findAllByMissionIds(Collection<String> id) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
-        .append("SELECT * ").ln()
-        .append("  FROM ").append(options.getGrimMissionLink()).ln()
-        .append("  WHERE (mission_id = ANY($1))").ln() 
+        .append("SELECT links.*, ")
+        .append(" updated_commit.created_at       as updated_at,").ln()
+        .append(" created_commit.created_at       as created_at").ln()
+        
+        .append(" FROM ").append(options.getGrimMissionLink()).append(" as links").ln()
+        .append(" LEFT JOIN ").append(options.getGrimCommit()).append(" as updated_commit").ln()
+        .append(" ON(updated_commit.commit_id = links.commit_id)").ln()
+        
+        .append(" LEFT JOIN ").append(options.getGrimCommit()).append(" as created_commit").ln()
+        .append(" ON(created_commit.commit_id = links.created_commit_id)").ln()
+        
+        .append("  WHERE links.mission_id = ANY($1)").ln() 
         .build())
         .props(Tuple.of(id.toArray()))
         .build();

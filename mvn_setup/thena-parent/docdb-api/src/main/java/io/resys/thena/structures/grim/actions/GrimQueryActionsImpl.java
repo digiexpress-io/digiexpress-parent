@@ -1,6 +1,7 @@
 package io.resys.thena.structures.grim.actions;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import io.resys.thena.api.actions.GrimQueryActions;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
@@ -30,6 +31,16 @@ public class GrimQueryActionsImpl implements GrimQueryActions {
     final var assignments = new ArrayList<Tuple2<String, String>>();
     return new MissionQuery() {
       private String usedBy, usedFor;
+      private List<String> ids;
+
+      @Override
+      public MissionQuery missionId(List<String> ids) {
+        if(this.ids == null) {
+          this.ids = new ArrayList<>();
+        }
+        this.ids.addAll(ids);
+        return this;
+      }
       @Override
       public MissionQuery assignment(String assignementType, String assignmentId) {
         assignments.add(Tuple2.of(assignementType, assignmentId));
@@ -66,6 +77,9 @@ public class GrimQueryActionsImpl implements GrimQueryActions {
           final var query = state.query().missions();
           if(usedBy != null) {
             query.viewer(usedBy, usedFor);
+          }
+          if(this.ids != null) {
+            query.missionId(this.ids.toArray(new String[] {}));
           }
           assignments.forEach(e -> query.addAssignment(e.getItem1(), e.getItem2()));
           return query.findAll().collect().asList().onItem().transform(items -> 

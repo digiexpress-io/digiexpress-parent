@@ -101,9 +101,9 @@ public class DocDbInsertsSqlPool implements DocInserts {
                 tuple.getItem6()
         ))
         .onFailure(DocBatchManyException.class)
-        .recoverWithItem((ex) -> {
+        .recoverWithUni((ex) -> {
           final var batchError = (DocBatchManyException) ex;
-          return batchError.getBatch();
+          return tx.rollback().onItem().transform(junk -> batchError.getBatch());
         });
   }
 

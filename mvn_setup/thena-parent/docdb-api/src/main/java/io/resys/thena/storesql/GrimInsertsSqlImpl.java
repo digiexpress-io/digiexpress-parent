@@ -14,10 +14,8 @@ import io.resys.thena.structures.grim.ImmutableGrimBatchForViewers;
 import io.resys.thena.structures.grim.ImmutableGrimBatchMissions;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
-import lombok.extern.slf4j.Slf4j;
 
 
-@Slf4j
 public class GrimInsertsSqlImpl implements GrimInserts {
   private final ThenaSqlDataSource wrapper;
   private final GrimRegistry registry;
@@ -48,9 +46,9 @@ public class GrimInsertsSqlImpl implements GrimInserts {
         .unis(ins_viewers_uni, upd_viewers_uni)
         .with(GrimBatchForViewers.class, (List<GrimBatchForViewers> items) -> merge(inputBatch, items))
         .onFailure(GrimViewerBatchException.class)
-        .recoverWithItem((ex) -> {
+        .recoverWithUni((ex) -> {
           final var batchError = (GrimViewerBatchException) ex;
-          return batchError.getBatch();
+          return tx.rollback().onItem().transform(junk -> batchError.getBatch());
         });
   }   
   @Override
@@ -103,6 +101,7 @@ public class GrimInsertsSqlImpl implements GrimInserts {
     final var upd_missionGols = registry.goals().updateAll(inputBatch.getUpdateGoals());
     final var upd_missionObjectives = registry.objectives().updateAll(inputBatch.getUpdateObjectives());
     final var upd_mission = registry.missions().updateAll(inputBatch.getUpdateMissions());
+    final var upd_links = registry.missionLinks().updateAll(inputBatch.getUpdateLinks());
     
     final Uni<GrimBatchMissions> upd_missionData_uni = Execute.apply(tx, upd_missionData).onItem()
         .transform(row -> successOutput(inputBatch, "Mission data updated, number of updated entries: " + + (row == null ? 0 : row.rowCount())))
@@ -121,8 +120,12 @@ public class GrimInsertsSqlImpl implements GrimInserts {
         .onFailure().transform(e -> failOutput(inputBatch, "Failed to update mission objectives \r\n" + inputBatch.getUpdateObjectives(), e));
     
     final Uni<GrimBatchMissions> upd_mission_uni = Execute.apply(tx, upd_mission).onItem()
-        .transform(row -> successOutput(inputBatch, "Mission updated, number of updated entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().transform(e -> failOutput(inputBatch, "Failed to update mission data \r\n" + inputBatch.getUpdateMissions(), e));
+        .transform(row -> successOutput(inputBatch, "Missions updated, number of updated entries: " + + (row == null ? 0 : row.rowCount())))
+        .onFailure().transform(e -> failOutput(inputBatch, "Failed to update missions \r\n" + inputBatch.getUpdateMissions(), e));
+    
+    final Uni<GrimBatchMissions> upd_links_uni = Execute.apply(tx, upd_links).onItem()
+        .transform(row -> successOutput(inputBatch, "Mission links updated, number of updated entries: " + + (row == null ? 0 : row.rowCount())))
+        .onFailure().transform(e -> failOutput(inputBatch, "Failed to update mission links \r\n" + inputBatch.getUpdateMissions(), e));
     
 
     
@@ -190,7 +193,7 @@ public class GrimInsertsSqlImpl implements GrimInserts {
 
     final Uni<GrimBatchMissions> ins_commands_uni = Execute.apply(tx, ins_commands).onItem()
         .transform(row -> successOutput(inputBatch, "Commands inserted, number of inserted entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().transform(e -> failOutput(inputBatch, "Failed to insert commands \r\n" + inputBatch.getCommitViewers(), e));
+        .onFailure().transform(e -> failOutput(inputBatch, "Failed to insert commands \r\n" + inputBatch.getCommands(), e));
     
     return Uni.combine().all()
     		.unis(
@@ -210,7 +213,8 @@ public class GrimInsertsSqlImpl implements GrimInserts {
             upd_missionGols_uni,
             upd_missionData_uni,
     		    upd_remarks_uni,
-
+    		    upd_links_uni,
+    		    
     		    ins_mission_uni,
             ins_objectives_uni,
             ins_goals_uni,
@@ -225,10 +229,11 @@ public class GrimInsertsSqlImpl implements GrimInserts {
     		 )
     		.with(GrimBatchMissions.class, (List<GrimBatchMissions> items) -> merge(inputBatch, items))
     		.onFailure(GrimMissionBatchException.class)
-    		.recoverWithItem((ex) -> {
+    		.recoverWithUni((ex) -> {
     		  final var batchError = (GrimMissionBatchException) ex;
-    		  return batchError.getBatch();
-    		});
+    		  return tx.rollback().onItem().transform(junk -> batchError.getBatch());
+    		})
+    		;
   }
 
   
@@ -259,7 +264,6 @@ public class GrimInsertsSqlImpl implements GrimInserts {
   }
   
   private GrimMissionBatchException failOutput(GrimBatchMissions current, String msg, Throwable t) {
-    log.error("Batch failed because of: " + msg, t);
     return new GrimMissionBatchException(ImmutableGrimBatchMissions.builder()
         .from(current)
         .status(BatchStatus.ERROR)
@@ -309,7 +313,6 @@ public class GrimInsertsSqlImpl implements GrimInserts {
   }
   
   private GrimViewerBatchException failOutput(GrimBatchForViewers current, String msg, Throwable t) {
-    log.error("Batch failed because of: " + msg, t);
     return new GrimViewerBatchException(ImmutableGrimBatchForViewers.builder()
         .from(current)
         .status(BatchStatus.ERROR)

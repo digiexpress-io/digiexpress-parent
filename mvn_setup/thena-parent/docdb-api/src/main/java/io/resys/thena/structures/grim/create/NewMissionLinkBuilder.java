@@ -29,7 +29,7 @@ public class NewMissionLinkBuilder implements ThenaGrimNewObject.NewLink {
     super();
     this.logger = logger;
     this.relation = relation;
-    this.next = ImmutableGrimMissionLink.builder().missionId(missionId).commitId(logger.getCommitId()).id(OidUtils.gen());
+    this.next = ImmutableGrimMissionLink.builder().missionId(missionId).commitId(logger.getCommitId()).createdWithCommitId(logger.getCommitId()).id(OidUtils.gen());
     this.all_missionLinks = all_missionLinks;
   }
   

@@ -121,7 +121,7 @@ public class CreateManyMissionsImpl implements CreateManyMissions {
         .createdAt(createdAt)
         .commitLog("batch of: " + this.missions.size() + " entries")
         .build();
-      next.withCommits(parentCommit);
+      next = next.withCommits(parentCommit);
     }
     
     for(final var entry : this.missions) {
@@ -144,7 +144,7 @@ public class CreateManyMissionsImpl implements CreateManyMissions {
       final var missionId = created.getMissions().iterator().next().getId();
       
       next = ImmutableGrimBatchMissions.builder()
-          .from(start)
+          .from(next)
           .from(created)
           .from(logger.withMissionId(missionId).close())
           .build();

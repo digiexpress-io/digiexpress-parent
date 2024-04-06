@@ -147,7 +147,7 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
         .append("  mission_start_date,").ln()        
         .append("  mission_due_date,").ln()
         
-        .append("  archived_date,").ln()
+        .append("  archived_at,").ln()
         .append("  archived_status,").ln()
         
         .append("  created_commit_id,").ln()
@@ -168,7 +168,7 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
                 doc.getStartDate(),
                 doc.getDueDate(),
                 
-                doc.getArchivedDate(),
+                doc.getArchivedAt(),
                 doc.getArchivedStatus(),
                 
                 doc.getCreatedWithCommitId(),
@@ -193,7 +193,7 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
         .append("  mission_priority = $6,").ln()
         .append("  mission_start_date = $7,").ln()        
         .append("  mission_due_date = $8,").ln()
-        .append("  archived_date = $9,").ln()
+        .append("  archived_at = $9,").ln()
         .append("  archived_status = $10,").ln()
         
         .append("  created_commit_id = $11,").ln()
@@ -212,7 +212,7 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
                 doc.getStartDate(),
                 doc.getDueDate(),
                 
-                doc.getArchivedDate(),
+                doc.getArchivedAt(),
                 doc.getArchivedStatus(),
                 
                 doc.getCreatedWithCommitId(),
@@ -241,7 +241,7 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
     .append("  mission_priority VARCHAR(100),").ln()
     .append("  mission_start_date DATE,").ln()
     .append("  mission_due_date DATE,").ln()
-    .append("  archived_date DATE,").ln()
+    .append("  archived_at TIMESTAMP WITH TIME ZONE,").ln()
     .append("  archived_status VARCHAR(40)").ln()
     
     .append(");").ln()
@@ -306,7 +306,7 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
           .startDate(row.getLocalDate("mission_start_date"))        
           .dueDate(row.getLocalDate("mission_due_date"))
           
-          .archivedDate(row.getLocalDate("archived_date"))
+          .archivedAt(row.getOffsetDateTime("archived_at"))
           .archivedStatus(row.getString("archived_status"))
           .build();
     };

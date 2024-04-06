@@ -137,7 +137,10 @@ public class CreateOneMissionsImpl implements CreateOneMission {
     private static final long serialVersionUID = -6202574733069488724L;
     private final GrimBatchMissions batch;
     public CreateOneMissionException(String message, GrimBatchMissions batch) {
-      super(message);
+      super(message + System.lineSeparator() + " " +
+          String.join(System.lineSeparator() + " ", batch.getMessages().stream().map(e -> e.getText()).toList()));
+      
+      batch.getMessages().stream().filter(e -> e.getException() != null).forEach(e -> addSuppressed(e.getException()));
       this.batch = batch;
     }
     public GrimBatchMissions getBatch() {

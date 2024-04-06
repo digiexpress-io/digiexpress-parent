@@ -81,6 +81,7 @@ public interface GrimInserts {
     List<GrimObjectiveGoal> getUpdateGoals();
     List<GrimObjective> getUpdateObjectives();
     List<GrimMission> getUpdateMissions();
+    List<GrimMissionLink> getUpdateLinks();
 
     // Objects to delete
     List<GrimAssignment> getDeleteAssignments();

@@ -323,9 +323,9 @@ public class GitDbInsertsSqlPool implements GitInserts {
             tuple.getItem5()
         ))
         .onFailure(GitBatchException.class)
-        .recoverWithItem((ex) -> {
+        .recoverWithUni((ex) -> {
           final var batchError = (GitBatchException) ex;
-          return batchError.getBatch();
+          return tx.rollback().onItem().transform(junk -> batchError.getBatch());
         });
   }
 

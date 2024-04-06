@@ -164,9 +164,9 @@ public class OrgDbInsertsSqlPool implements OrgInserts {
     		 )
     		.with(OrgBatchForOne.class, (List<OrgBatchForOne> items) -> merge(inputBatch, items))
     		.onFailure(OrgBatchException.class)
-        .recoverWithItem((ex) -> {
+        .recoverWithUni((ex) -> {
           final var batchError = (OrgBatchException) ex;
-          return batchError.getBatch();
+          return tx.rollback().onItem().transform(junk -> batchError.getBatch());
         });
   }
 

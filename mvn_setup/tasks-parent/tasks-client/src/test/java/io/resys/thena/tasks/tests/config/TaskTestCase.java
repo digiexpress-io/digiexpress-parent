@@ -39,34 +39,55 @@ import io.resys.thena.jackson.VertexExtModule;
 import io.resys.thena.spi.ThenaClientPgSql;
 import io.resys.thena.structures.git.GitPrinter;
 import io.resys.thena.tasks.client.api.TaskClient;
-import io.resys.thena.tasks.client.api.model.Document.DocumentType;
 import io.resys.thena.tasks.client.thenagit.DocumentStoreImpl;
 import io.resys.thena.tasks.client.thenagit.TaskClientImpl;
-import io.resys.thena.tasks.client.thenagit.store.DocumentConfig.DocumentGidProvider;
+import io.resys.thena.tasks.client.thenamission.TaskStoreImpl;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.json.jackson.DatabindCodec;
 import io.vertx.core.json.jackson.VertxModule;
 import io.vertx.mutiny.sqlclient.Pool;
+import io.vertx.pgclient.PgConnectOptions;
+import io.vertx.sqlclient.PoolOptions;
 import jakarta.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class TaskTestCase {
+  private boolean STORE_TO_DEBUG_DB = false;
   @Inject io.vertx.mutiny.pgclient.PgPool pgPool;
+  @Inject io.vertx.mutiny.core.Vertx vertx;
   public final Duration atMost = Duration.ofMinutes(5);
   
   private DocumentStoreImpl store;
-  private TaskClientImpl client;
+  private TaskClient client;
   private static final String DB = "junit-tasks-"; 
   private static final AtomicInteger DB_ID = new AtomicInteger();
   private static final Instant targetDate = LocalDateTime.of(2023, 1, 1, 1, 1).toInstant(ZoneOffset.UTC);
   private final AtomicInteger id_provider = new AtomicInteger();
   
+
+  private void connectToDebugDb() {
+    if(!STORE_TO_DEBUG_DB) {
+      return;
+    }
+    
+    final var connectOptions = new PgConnectOptions()
+        .setDatabase("debug_task_db")
+        .setHost("localhost")
+        .setPort(5432)
+        .setUser("postgres")
+        .setPassword("postgres");
+    final var poolOptions = new PoolOptions().setMaxSize(6);
+    this.pgPool = io.vertx.mutiny.pgclient.PgPool.pool(vertx, connectOptions, poolOptions);
+  }
+  
+  
   @BeforeEach
   public void setUp() {
+    connectToDebugDb();
     waitUntilPostgresqlAcceptsConnections(pgPool);
     final var db = DB + DB_ID.getAndIncrement();
-    store = DocumentStoreImpl.builder()
+    /*store = DocumentStoreImpl.builder()
         .repoName(db).pgPool(pgPool).pgDb(db)
         .gidProvider(new DocumentGidProvider() {
           @Override
@@ -80,7 +101,13 @@ public class TaskTestCase {
           }
         })
         .build();
-    client = new TaskClientImpl(store);
+        */
+    //client = new io.resys.thena.tasks.client.thenagit.TaskClientImpl(store);
+    
+    client = new io.resys.thena.tasks.client.thenamission.TaskClientImpl(TaskStoreImpl.builder()
+        .repoName(db).pgPool(pgPool).pgDb(db)
+        .build());
+    
     objectMapper();
     
   }
@@ -125,7 +152,7 @@ public class TaskTestCase {
     return store;
   }
 
-  public TaskClientImpl getClient() {
+  public TaskClient getClient() {
     return client;
   }
 

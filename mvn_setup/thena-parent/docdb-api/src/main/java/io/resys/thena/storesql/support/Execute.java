@@ -30,7 +30,6 @@ public class Execute {
   public static Uni<RowSet<Row>> apply(ThenaSqlClient client, ThenaSqlClient.Sql sql) {
 
     return client.preparedQuery(sql.getValue()).execute()
-    .onFailure().call(fail -> client.rollback())
     .onFailure().transform(e -> {
       final var msg = System.lineSeparator() +
           "Failed to execute SQL command." + System.lineSeparator() +
@@ -44,7 +43,6 @@ public class Execute {
 
   public static Uni<RowSet<Row>> apply(ThenaSqlClient client, ThenaSqlClient.SqlTuple sql) {
     return client.preparedQuery(sql.getValue()).execute(sql.getProps())
-        .onFailure().call(fail -> client.rollback())
         .onFailure().transform(e -> {
 
           final var msg = System.lineSeparator() +
@@ -66,7 +64,6 @@ public class Execute {
       return Uni.createFrom().nullItem();
     }
     return client.preparedQuery(sql.getValue()).executeBatch(sql.getProps())
-        .onFailure().call(fail -> client.rollback())
         .onFailure().transform(e -> {
 
           final var entries = new StringBuilder();

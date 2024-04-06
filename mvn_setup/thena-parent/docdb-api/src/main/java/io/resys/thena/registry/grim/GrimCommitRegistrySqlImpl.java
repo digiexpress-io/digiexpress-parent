@@ -137,6 +137,7 @@ public class GrimCommitRegistrySqlImpl implements GrimCommitRegistry {
      // mission table
      .append(createGrimCommitFk(options.getGrimMission()))
      .append(createGrimCommitFk(options.getGrimMission(), "created_commit_id"))
+     .append(createGrimCommitFk(options.getGrimMissionLink(), "created_commit_id"))
      .append(createGrimCommitFk(options.getGrimMission(), "updated_tree_commit_id"))
      
      

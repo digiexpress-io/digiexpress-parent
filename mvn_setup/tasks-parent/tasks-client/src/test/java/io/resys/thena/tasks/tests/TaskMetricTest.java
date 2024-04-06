@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONException;
+import org.junit.jupiter.api.Disabled;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -42,22 +43,27 @@ import lombok.extern.slf4j.Slf4j;
 @QuarkusTest
 @TestProfile(TaskPgProfile.class)
 public class TaskMetricTest extends TaskTestCase {
-  private final Duration atMost = Duration.ofSeconds(2);
+  private final Duration atMost = Duration.ofMinutes(10);
+  // SELECT pg_size_pretty( pg_total_relation_size('init_test10_grim_commit') )
+  // VACUUM (VERBOSE, ANALYZE) init_test10_grim_commit;
+  // vacuum full init_test10_grim_commit;
+  // SELECT pg_size_pretty( pg_total_relation_size('init_test10_grim_commit') )
   
-  //@org.junit.jupiter.api.Test
   
+  @Disabled
+  @org.junit.jupiter.api.Test
   public void createAndReadTheTask() throws JsonProcessingException, JSONException {
     final var client = getClient().repo().query().repoName("init-test").create().await().atMost(atMost);
     
-    runInserts(client, 1000);
+    runInserts(client, 10000);
     select(client);
   }
   
-  
+
   private void select(TaskClient client) {
     final var start = System.currentTimeMillis();
     
-    final var blobs = client.tasks().queryActiveTasks().findAll().await().atMost(Duration.ofMinutes(1));
+    final var blobs = client.tasks().queryActiveTasks().findAll().await().atMost(atMost);
     final var end = System.currentTimeMillis();
     
     log.debug("total time for selecting: {} entries is: {} millis", blobs.size(), end-start);

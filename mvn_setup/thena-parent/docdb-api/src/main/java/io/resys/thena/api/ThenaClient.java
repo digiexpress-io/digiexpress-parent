@@ -54,6 +54,7 @@ public interface ThenaClient {
   
   // workflow/task like structure
   interface GrimStructuredTenant {
+    String getTenantId();
     GrimCommitActions commit();
     GrimQueryActions find();
     GrimProjectQuery tenants();
