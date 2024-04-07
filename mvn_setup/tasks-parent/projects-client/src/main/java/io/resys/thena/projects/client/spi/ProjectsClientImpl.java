@@ -72,7 +72,7 @@ public class ProjectsClientImpl implements TenantConfigClient {
         case USER_PROFILE: { repo.repoType(StructureType.doc); break; }
 
         case DIALOB: { repo.repoType(StructureType.git); break; }
-        case TASKS: { repo.repoType(StructureType.git); break; }
+        case TASKS: { repo.repoType(StructureType.grim); break; }
         case STENCIL: { repo.repoType(StructureType.git); break; }
         case WRENCH: { repo.repoType(StructureType.git); break; }
         }
