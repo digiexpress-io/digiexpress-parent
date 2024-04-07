@@ -73,7 +73,8 @@ public class RoleQueryImpl implements RoleQuery {
       .name(party.getPartyName())
       .description(party.getPartyDescription())
       .status(party.getStatus())
-      .permissions(party.getDirectRights().stream().map((right -> right.getRightName())).toList())
+      .permissions(party.getDirectRights().stream().map(right -> right.getRightName()).toList())
+      .principals(party.getDirectMembers().stream().map(member -> member.getUserName()).toList())
       .build();
   }
   

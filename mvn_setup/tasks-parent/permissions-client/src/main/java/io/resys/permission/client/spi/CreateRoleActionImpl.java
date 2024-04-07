@@ -26,16 +26,15 @@ public class CreateRoleActionImpl implements CreateRoleAction {
     final CreateOneParty createOneParty = ctx.getOrg(ctx.getConfig().getRepoId()).commit().createOneParty();
 
     if(command.getCommandType() == RoleCommandType.CREATE_ROLE) {
-      CreateRole role = (CreateRole) command;
-    
+      final var role = (CreateRole) command;
     
     return createOneParty
         .message("created role")
         .author(ctx.getConfig().getAuthor().get())
-        
         .partyDescription(role.getDescription())
         .partyName(role.getName())
         .addRightsToParty(role.getPermissions())
+        .addMemberToParty(role.getPrincipals())
         .build();
     }
     
@@ -52,11 +51,11 @@ public class CreateRoleActionImpl implements CreateRoleAction {
     return ImmutableRole.builder()
         .id(role.getId())
         .version(role.getCommitId())
-      
         .name(role.getPartyName())
         .description(role.getPartyDescription())
         .status(OrgActorStatus.OrgActorStatusType.IN_FORCE)
         .permissions(response.getDirectRights().stream().map(e -> e.getRightName()).toList())
+        .principals(response.getDirectMembers().stream().map(e -> e.getUserName()).toList())
         .build();
   }
   

@@ -165,6 +165,7 @@ public interface OrgCommitActions {
     // in case of status not ok, nulls
     @Nullable OrgParty getParty();
     @Nullable List<OrgRight> getDirectRights();
+    @Nullable List<OrgMember> getDirectMembers();
   }
   
   enum ModType {

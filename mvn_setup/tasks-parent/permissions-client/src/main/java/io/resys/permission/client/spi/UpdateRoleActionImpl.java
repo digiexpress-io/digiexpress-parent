@@ -65,7 +65,7 @@ public class UpdateRoleActionImpl implements UpdateRoleAction {
       }
       
       case CHANGE_ROLE_PERMISSIONS: {
-        ChangeRolePermissions role = (ChangeRolePermissions) command;
+        final var role = (ChangeRolePermissions) command;
         
         if(role.getChangeType() == ChangeType.ADD) {
           role.getPermissions().forEach(perm -> modifyOneParty.modifyRight(ModType.ADD, perm));

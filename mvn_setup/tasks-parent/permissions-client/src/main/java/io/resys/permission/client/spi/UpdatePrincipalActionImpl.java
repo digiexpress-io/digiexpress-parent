@@ -45,7 +45,7 @@ public class UpdatePrincipalActionImpl implements UpdatePrincipalAction {
       switch(command.getCommandType()) {
       
       case CHANGE_PRINCIPAL_ROLES: {
-        ChangePrincipalRoles roles = (ChangePrincipalRoles) command;
+        final var roles = (ChangePrincipalRoles) command;
         
         if(roles.getChangeType() == ChangeType.ADD) {
           roles.getRoles().forEach(role -> modifyOneMember.modifyRights(ModType.ADD, role));
@@ -60,7 +60,7 @@ public class UpdatePrincipalActionImpl implements UpdatePrincipalAction {
       }
       
       case CHANGE_PRINCIPAL_STATUS: {
-        ChangePrincipalStatus status = (ChangePrincipalStatus) command;
+        final var status = (ChangePrincipalStatus) command;
         modifyOneMember.status(status.getStatus());
         break;
       }    

@@ -65,7 +65,8 @@ public interface RoleCommand extends Serializable {
     String getName();
     String getDescription();
     List<String> getPermissions(); //Can be permission name or permission id or permission external id
-    
+    List<String> getPrincipals();   // user names
+
     @Value.Default
     @Override default RoleCommandType getCommandType() { return RoleCommandType.CREATE_ROLE; }
   }

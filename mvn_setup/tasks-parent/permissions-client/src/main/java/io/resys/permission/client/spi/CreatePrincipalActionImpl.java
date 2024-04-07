@@ -28,7 +28,7 @@ public class CreatePrincipalActionImpl implements CreatePrincipalAction {
    final CreateOneMember createOneMember = ctx.getOrg(ctx.getConfig().getRepoId()).commit().createOneMember();
     
    if(command.getCommandType() == PrincipalCommandType.CREATE_PRINCIPAL) {
-     CreatePrincipal principal = (CreatePrincipal) command;
+     final var principal = (CreatePrincipal) command;
   
     
     return createOneMember

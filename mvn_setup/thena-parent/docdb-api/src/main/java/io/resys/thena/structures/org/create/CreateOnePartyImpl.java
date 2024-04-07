@@ -84,7 +84,7 @@ public class CreateOnePartyImpl implements CreateOneParty {
 	
 		// join data
 		return Uni.combine().all().unis(usersUni, rolesUni, parentUni).asTuple()
-		  .onItem().transformToUni(tuple -> createGroup(
+		  .onItem().transformToUni(tuple -> createParty(
 			  tx,
 	      tuple.getItem1(), 
 	      tuple.getItem2(), 
@@ -93,7 +93,7 @@ public class CreateOnePartyImpl implements CreateOneParty {
 		);
   }
 
-  private Uni<OnePartyEnvelope> createGroup(OrgState tx, List<OrgMember> members, List<OrgRight> rights, Optional<OrgParty> parent) {
+  private Uni<OnePartyEnvelope> createParty(OrgState tx, List<OrgMember> members, List<OrgRight> rights, Optional<OrgParty> parent) {
     
     // assert rights
     if(rights.size() != this.addRightsToParty.size()) {
@@ -104,6 +104,19 @@ public class CreateOnePartyImpl implements CreateOneParty {
           .status(CommitResultStatus.ERROR)
           .addMessages(ImmutableMessage.builder()
               .text("Could not find all rights(for party): \r\n found: \r\n" + found + " \r\n but requested: \r\n" + expected + "!")
+              .build())
+          .build());
+    }    
+
+    // members
+    if(members.size() != this.addUsersToParty.size()) {
+      final var found = String.join(", ", members.stream().map(e -> e.getUserName()).toList());
+      final var expected = String.join(", ", this.addUsersToParty);
+      return Uni.createFrom().item(ImmutableOnePartyEnvelope.builder()
+          .repoId(repoId)
+          .status(CommitResultStatus.ERROR)
+          .addMessages(ImmutableMessage.builder()
+              .text("Could not find all members(for party): \r\n found: \r\n" + found + " \r\n but requested: \r\n" + expected + "!")
               .build())
           .build());
     }    
@@ -123,6 +136,7 @@ public class CreateOnePartyImpl implements CreateOneParty {
       	return ImmutableOnePartyEnvelope.builder()
         .repoId(repoId)
         .party(rsp.getParties().isEmpty() ? null : rsp.getParties().get(0))
+        .directMembers(members)
         .addMessages(rsp.getLog())
         .addAllMessages(rsp.getMessages())
         .status(BatchStatus.mapStatus(rsp.getStatus()))

@@ -10,15 +10,31 @@ import io.resys.permission.client.api.PermissionClient;
 import io.resys.permission.client.api.model.ImmutableChangeRoleDescription;
 import io.resys.permission.client.api.model.ImmutableChangeRoleName;
 import io.resys.permission.client.api.model.ImmutableCreatePermission;
+import io.resys.permission.client.api.model.ImmutableCreatePrincipal;
 import io.resys.permission.client.api.model.ImmutableCreateRole;
+import io.resys.permission.client.api.model.Principal;
 import io.resys.permission.client.api.model.Principal.Permission;
 import io.resys.permission.client.api.model.Principal.Role;
 import io.resys.permission.client.tests.config.DbTestTemplate;
 import io.resys.permission.client.tests.config.OrgPgProfile;
+import io.vertx.core.json.Json;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @QuarkusTest
 @TestProfile(OrgPgProfile.class)
 public class RoleCreateAndUpdateTest extends DbTestTemplate {
+  
+  
+ private Principal createPrincipalForRole(PermissionClient client, String name) {
+    
+    return client.createPrincipal().createOne(ImmutableCreatePrincipal.builder()
+        .name(name)
+        .email("the-rock@muscles.org")
+        .comment("created new user")
+        .build())
+        .await().atMost(Duration.ofMinutes(1));
+  }
   
   
   private Permission createPermissionForRole(PermissionClient client, String name) {
@@ -43,6 +59,9 @@ public class RoleCreateAndUpdateTest extends DbTestTemplate {
               createPermissionForRole(client, "perm-2").getName(),
               createPermissionForRole(client, "perm-3").getName()
               )
+          .addPrincipals(
+              createPrincipalForRole(client, "Dwane Johnson").getName()
+              )
         .build())
       .await().atMost(Duration.ofMinutes(1));
   }
@@ -55,17 +74,19 @@ public class RoleCreateAndUpdateTest extends DbTestTemplate {
         .create()
         .await().atMost(Duration.ofMinutes(1));
     
-    final var created = createRoleForUpdating(client);
+    final var createdRole = createRoleForUpdating(client);
+    
+    log.debug(Json.encodePrettily(createdRole));
+    Assertions.assertEquals(1, createdRole.getPrincipals().size());
     
     final var updatedName = client.updateRole().updateOne(ImmutableChangeRoleName.builder()
-        .id(created.getId())
-
+        .id(createdRole.getId())
         .comment("Name change requested by admin")
         .name("Updated role name is super good")
         .build())
       .await().atMost(Duration.ofMinutes(1));
     
-    Assertions.assertEquals("Updated role name is super good", client.roleQuery().get(created.getId()).await().atMost(Duration.ofMinutes(1)).getName());
+    Assertions.assertEquals("Updated role name is super good", client.roleQuery().get(createdRole.getId()).await().atMost(Duration.ofMinutes(1)).getName());
     
     final var updatedDescription = client.updateRole().updateOne(ImmutableChangeRoleDescription.builder()
         .id(updatedName.getId())
@@ -75,8 +96,8 @@ public class RoleCreateAndUpdateTest extends DbTestTemplate {
       .await().atMost(Duration.ofMinutes(1));
     
     Assertions.assertEquals("New description", client.roleQuery().get(updatedDescription.getId()).await().atMost(Duration.ofMinutes(1)).getDescription());
-    Assertions.assertEquals(3, created.getPermissions().size());    
-    Assertions.assertEquals(3, client.roleQuery().get(created.getId()).await().atMost(Duration.ofMinutes(1)).getPermissions().size());
+    Assertions.assertEquals(3, createdRole.getPermissions().size());    
+    Assertions.assertEquals(3, client.roleQuery().get(createdRole.getId()).await().atMost(Duration.ofMinutes(1)).getPermissions().size());
 
   }
 }

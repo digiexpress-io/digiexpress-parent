@@ -45,19 +45,19 @@ public class UpdatePermissionActionImpl implements UpdatePermissionAction {
       switch(command.getCommandType()) {
       
       case CHANGE_PERMISSION_DESCRIPTION: {
-        ChangePermissionDescription description = (ChangePermissionDescription) command;
+        final var description = (ChangePermissionDescription) command;
         modifyOneRight.rightDescription(description.getDescription());
         break;
       }
       
       case CHANGE_PERMISSION_NAME: {
-        ChangePermissionName name = (ChangePermissionName) command;
+        final var name = (ChangePermissionName) command;
         modifyOneRight.rightName(name.getName());
         break;
       }
       
       case CHANGE_PERMISSION_STATUS: {
-        ChangePermissionStatus status = (ChangePermissionStatus) command;
+        final var status = (ChangePermissionStatus) command;
         modifyOneRight.status(status.getStatus());
         break;
       }
