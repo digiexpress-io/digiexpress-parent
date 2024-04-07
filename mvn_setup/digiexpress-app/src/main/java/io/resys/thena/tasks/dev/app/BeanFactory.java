@@ -51,7 +51,8 @@ import io.resys.thena.tasks.client.api.TaskClient;
 import io.resys.thena.tasks.client.api.model.ImmutableTask;
 import io.resys.thena.tasks.client.api.model.ImmutableTaskComment;
 import io.resys.thena.tasks.client.api.model.ImmutableTaskExtension;
-import io.resys.thena.tasks.client.spi.TaskClientImpl;
+import io.resys.thena.tasks.client.thenamission.TaskClientImpl;
+import io.resys.thena.tasks.client.thenamission.TaskStoreImpl;
 import io.resys.userprofile.client.api.UserProfileClient;
 import io.resys.userprofile.client.spi.UserProfileClientImpl;
 import io.thestencil.client.api.StencilClient;
@@ -149,7 +150,7 @@ public class BeanFactory {
 
   @Produces
   public TaskClient taskClient(CurrentPgPool currentPgPool, ObjectMapper om) {
-    final var store = io.resys.thena.tasks.client.spi.DocumentStoreImpl.builder()
+    final var store = TaskStoreImpl.builder()
       .repoName("")
       .pgPool(currentPgPool.pgPool)
       .objectMapper(om)

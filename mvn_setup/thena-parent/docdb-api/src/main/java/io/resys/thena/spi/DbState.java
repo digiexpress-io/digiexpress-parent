@@ -36,6 +36,7 @@ public interface DbState {
     Uni<Tenant> getByName(String name);
     Uni<Tenant> getByNameOrId(String nameOrId);
     Multi<Tenant> findAll();
+    Uni<Void> delete();
     Uni<Tenant> delete(Tenant newRepo);
     Uni<Tenant> insert(Tenant newRepo);
   }

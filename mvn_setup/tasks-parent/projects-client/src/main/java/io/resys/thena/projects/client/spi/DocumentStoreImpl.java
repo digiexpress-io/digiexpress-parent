@@ -94,19 +94,9 @@ public class DocumentStoreImpl implements DocumentStore {
   }
   
   private Uni<Void> deleteRepos() {
-    final var client = config.getClient();
-    final var existingRepos = client.tenants().find().findAll();
-    
-    
-    return existingRepos.onItem().transformToUni((repo) -> {
-        
-        final var repoId = repo.getId();
-        final var rev = repo.getRev();
-        
-        return client.tenants().find().id(repoId).rev(rev).delete();
-      })
-      .concatenate().collect().asList()
-      .onItem().transformToUni((junk) -> Uni.createFrom().voidItem());
+    final var client = config.getClient();    
+    return client.tenants().delete()
+    .onItem().transformToUni((junk) -> Uni.createFrom().voidItem());
   }
   
   private Uni<DocumentStore> deleteRepo(String repoName, String headName) {

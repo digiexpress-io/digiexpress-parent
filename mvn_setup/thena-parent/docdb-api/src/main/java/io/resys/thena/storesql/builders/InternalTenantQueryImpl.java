@@ -307,4 +307,14 @@ public class InternalTenantQueryImpl implements InternalTenantQuery {
           .onItem().transform(junk -> newRepo);
     });
   }
+
+  @Override
+  public Uni<Void> delete() {
+    final var tenantDelete = dataSource.getRegistry().tenant().dropTable();
+    final var pool = dataSource.getPool();
+    return  pool.query(tenantDelete.getValue()).execute()
+        .onItem().transformToUni(rowSet -> Uni.createFrom().voidItem())
+        .onFailure().invoke(e -> dataSource.getErrorHandler().deadEnd(new SqlSchemaFailed("Can't drop tenant table!", tenantDelete.getValue(), e)));
+    
+  }
 }
