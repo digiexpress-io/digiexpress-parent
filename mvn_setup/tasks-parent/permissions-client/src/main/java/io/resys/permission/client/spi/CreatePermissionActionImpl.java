@@ -34,6 +34,7 @@ public class CreatePermissionActionImpl implements CreatePermissionAction {
           .message("created permission")
           .author(ctx.getConfig().getAuthor().get())
           .addRightToParties(permission.getRoles())
+          .addRightToMembers(permission.getPrincipals())
           .build();
       }
       
@@ -54,6 +55,7 @@ public class CreatePermissionActionImpl implements CreatePermissionAction {
         .description(permission.getRightDescription())
         .name(permission.getRightName())
         .roles(response.getDirectParties().stream().map(party -> party.getPartyName()).toList())
+        .principals(response.getDirectMembers().stream().map(member -> member.getUserName()).toList())
         .build();
   }
 

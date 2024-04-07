@@ -11,15 +11,32 @@ import io.resys.permission.client.api.PermissionClient;
 import io.resys.permission.client.api.model.ImmutableChangePermissionDescription;
 import io.resys.permission.client.api.model.ImmutableChangePermissionName;
 import io.resys.permission.client.api.model.ImmutableCreatePermission;
+import io.resys.permission.client.api.model.ImmutableCreatePrincipal;
 import io.resys.permission.client.api.model.ImmutableCreateRole;
+import io.resys.permission.client.api.model.Principal;
 import io.resys.permission.client.api.model.Principal.Permission;
 import io.resys.permission.client.api.model.Principal.Role;
 import io.resys.permission.client.tests.config.DbTestTemplate;
 import io.resys.permission.client.tests.config.OrgPgProfile;
+import io.vertx.core.json.Json;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @QuarkusTest
 @TestProfile(OrgPgProfile.class)
 public class PermissionCreateAndUpdateTest extends DbTestTemplate {
+  
+  
+ private Principal createPrincipalForPermission(PermissionClient client, String name) {
+    
+    return client.createPrincipal()
+      .createOne(ImmutableCreatePrincipal.builder()
+          .name(name)
+          .email("john.smith@gmail.com")
+          .comment("added new user")
+        .build())
+      .await().atMost(Duration.ofMinutes(1));
+  }
   
  private Role createRoleForPermission(PermissionClient client, String name) {
     
@@ -42,6 +59,9 @@ public class PermissionCreateAndUpdateTest extends DbTestTemplate {
         .addRoles(
             createRoleForPermission(client, "ROLE_FOR_PERMISSION").getName()
             )
+        .addPrincipals(
+            createPrincipalForPermission(client, "John Smith").getName()
+            )
         .build())
       .await().atMost(Duration.ofMinutes(1));
   }
@@ -57,7 +77,8 @@ public class PermissionCreateAndUpdateTest extends DbTestTemplate {
     final var createdPermission = createPermissionForUpdating(client);
     
     Assertions.assertEquals(1, createdPermission.getRoles().size());
-
+    Assertions.assertEquals(1, createdPermission.getPrincipals().size());
+    log.debug(Json.encodePrettily(createdPermission));
 
     final var updatedName = client.updatePermission().updateOne(ImmutableChangePermissionName.builder()
         .id(createdPermission.getId())  

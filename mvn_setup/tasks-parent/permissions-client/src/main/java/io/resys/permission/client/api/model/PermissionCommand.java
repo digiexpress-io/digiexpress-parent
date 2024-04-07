@@ -67,7 +67,8 @@ public interface PermissionCommand extends Serializable {
     String getName();
     String getComment();
     String getDescription();
-    List<String> getRoles();
+    List<String> getPrincipals();   // user names
+    List<String> getRoles();        // role name or id or external id
     
     @Value.Default
     @Override default PermissionCommandType getCommandType() { return PermissionCommandType.CREATE_PERMISSION; }
