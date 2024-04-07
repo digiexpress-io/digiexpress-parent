@@ -1,5 +1,6 @@
 package io.resys.thena.structures.org.modify;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -239,6 +240,8 @@ public class ModifyOneRightImpl implements ModifyOneRight {
       List<OrgActorStatus> rightStatus,           
       OrgRight right) throws NoRightChangesException {
     
+    final var partiesAfterUpdate = new ArrayList<OrgParty>();
+    final var membersAfterUpdate = new ArrayList<OrgMember>();
     
     final var modify = new BatchForOneRightModify(tx.getTenantId(), author, message)
         .current(right)
@@ -290,6 +293,8 @@ public class ModifyOneRightImpl implements ModifyOneRight {
           .addMessages(rsp.getLog())
           .addAllMessages(rsp.getMessages())
           .status(BatchStatus.mapStatus(rsp.getStatus()))
+          .directParties(partiesAfterUpdate)
+          .directMembers(membersAfterUpdate)
           .build());
 
   }

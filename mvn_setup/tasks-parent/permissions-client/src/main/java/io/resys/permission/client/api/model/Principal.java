@@ -47,9 +47,8 @@ public interface Principal {
     String getVersion();
     String getName();  // example service.resource.verb --> pubsub.subscriptions.consume
     String getDescription();
+    List<String> getRoles();
     OrgActorStatus.OrgActorStatusType getStatus();
   }
-
-
 
 } 

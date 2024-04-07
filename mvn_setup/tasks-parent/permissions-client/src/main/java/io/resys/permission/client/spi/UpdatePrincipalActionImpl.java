@@ -102,7 +102,7 @@ public class UpdatePrincipalActionImpl implements UpdatePrincipalAction {
     public UpdatePrincipalException(String message, OneMemberEnvelope response) {
       super(message + System.lineSeparator() + " " +
         String.join(System.lineSeparator() + " ", response.getMessages().stream().map(e -> e.getText()).toList()));
-          response.getMessages().forEach(e -> {
+          response.getMessages().stream().filter(e -> e.getException() != null).forEach(e -> {
           addSuppressed(e.getException());
      });
     }

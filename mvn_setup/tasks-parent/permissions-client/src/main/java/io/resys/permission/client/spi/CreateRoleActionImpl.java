@@ -72,7 +72,7 @@ public class CreateRoleActionImpl implements CreateRoleAction {
     public CreateRoleException(String message, OnePartyEnvelope response) {
       super(message + System.lineSeparator() + " " +
           String.join(System.lineSeparator() + " ", response.getMessages().stream().map(e -> e.getText()).toList()));
-            response.getMessages().forEach(e -> {
+            response.getMessages().stream().filter(e -> e.getException() != null).forEach(e -> {
               if(e.getException() != null) {
                 addSuppressed(e.getException());
               }

@@ -11,7 +11,9 @@ import io.resys.permission.client.api.PermissionClient;
 import io.resys.permission.client.api.model.ImmutableChangePermissionDescription;
 import io.resys.permission.client.api.model.ImmutableChangePermissionName;
 import io.resys.permission.client.api.model.ImmutableCreatePermission;
+import io.resys.permission.client.api.model.ImmutableCreateRole;
 import io.resys.permission.client.api.model.Principal.Permission;
+import io.resys.permission.client.api.model.Principal.Role;
 import io.resys.permission.client.tests.config.DbTestTemplate;
 import io.resys.permission.client.tests.config.OrgPgProfile;
 
@@ -19,12 +21,27 @@ import io.resys.permission.client.tests.config.OrgPgProfile;
 @TestProfile(OrgPgProfile.class)
 public class PermissionCreateAndUpdateTest extends DbTestTemplate {
   
+ private Role createRoleForPermission(PermissionClient client, String name) {
+    
+    return client.createRole()
+      .createOne(ImmutableCreateRole.builder()
+          .name(name)
+          .description("Role created for adding to permission")
+          .comment("This was needed")
+        .build())
+      .await().atMost(Duration.ofMinutes(1));
+  }
+  
+  
   private Permission createPermissionForUpdating(PermissionClient client) {
     return client.createPermission()
       .createOne(ImmutableCreatePermission.builder()
         .comment("created my first permission")
         .name("My first permission")
         .description("Cool description here")
+        .addRoles(
+            createRoleForPermission(client, "ROLE_FOR_PERMISSION").getName()
+            )
         .build())
       .await().atMost(Duration.ofMinutes(1));
   }
@@ -37,16 +54,19 @@ public class PermissionCreateAndUpdateTest extends DbTestTemplate {
         .create()
         .await().atMost(Duration.ofMinutes(1));
     
-    final var created = createPermissionForUpdating(client);
+    final var createdPermission = createPermissionForUpdating(client);
+    
+    Assertions.assertEquals(1, createdPermission.getRoles().size());
+
 
     final var updatedName = client.updatePermission().updateOne(ImmutableChangePermissionName.builder()
-        .id(created.getId())  
+        .id(createdPermission.getId())  
         .name("New name for my first permission")
         .comment("Original name was wrong")
         .build())
       .await().atMost(Duration.ofMinutes(1));
     Assertions.assertEquals("New name for my first permission", updatedName.getName());
-    Assertions.assertEquals("New name for my first permission", client.permissionQuery().get(created.getId()).await().atMost(Duration.ofMinutes(1)).getName());
+    Assertions.assertEquals("New name for my first permission", client.permissionQuery().get(createdPermission.getId()).await().atMost(Duration.ofMinutes(1)).getName());
     
     final var updatedDesc = client.updatePermission().updateOne(ImmutableChangePermissionDescription.builder()
         .id(updatedName.getId())  
@@ -55,6 +75,7 @@ public class PermissionCreateAndUpdateTest extends DbTestTemplate {
         .build())
       .await().atMost(Duration.ofMinutes(1));
     Assertions.assertEquals("An even better description here", updatedDesc.getDescription());
-    Assertions.assertEquals("An even better description here", client.permissionQuery().get(created.getId()).await().atMost(Duration.ofMinutes(1)).getDescription());
+    Assertions.assertEquals("An even better description here", client.permissionQuery().get(createdPermission.getId()).await().atMost(Duration.ofMinutes(1)).getDescription());
+    
   }
 }

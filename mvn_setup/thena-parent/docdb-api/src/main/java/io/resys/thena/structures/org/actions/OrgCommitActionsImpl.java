@@ -4,7 +4,7 @@ import io.resys.thena.api.actions.OrgCommitActions;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.structures.org.create.CreateOneMemberImpl;
 import io.resys.thena.structures.org.create.CreateOnePartyImpl;
-import io.resys.thena.structures.org.create.CreateOneRoleImpl;
+import io.resys.thena.structures.org.create.CreateOneRightImpl;
 import io.resys.thena.structures.org.modify.ModifyOneMemberImpl;
 import io.resys.thena.structures.org.modify.ModifyOnePartyImpl;
 import io.resys.thena.structures.org.modify.ModifyOneRightImpl;
@@ -26,7 +26,7 @@ public class OrgCommitActionsImpl implements OrgCommitActions {
   }
   @Override
   public CreateOneRight createOneRight() {
-  	return new CreateOneRoleImpl(state, repoId);
+  	return new CreateOneRightImpl(state, repoId);
   }
   @Override
   public ModifyOneMember modifyOneMember() {

@@ -7,8 +7,8 @@ import io.resys.permission.client.api.model.ImmutablePermission;
 import io.resys.permission.client.api.model.Principal.Permission;
 import io.resys.thena.api.entities.org.ThenaOrgObjects.OrgRightHierarchy;
 import io.resys.thena.api.envelope.QueryEnvelope;
-import io.resys.thena.api.envelope.QueryEnvelopeList;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
+import io.resys.thena.api.envelope.QueryEnvelopeList;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +38,7 @@ public class PermissionQueryImpl implements PermissionQuery {
         throw exception;
       }
       return mapTo(response.getObjects());
-    }) ;
+    });
   }
 
   @Override
@@ -73,6 +73,7 @@ public class PermissionQueryImpl implements PermissionQuery {
       .name(permission.getRoleName())
       .description(permission.getRoleDescription())
       .status(permission.getStatus())
+      .roles(permission.getDirectGroup().stream().map((role -> role.getPartyName().toString())).toList())
       .build();
   }
 

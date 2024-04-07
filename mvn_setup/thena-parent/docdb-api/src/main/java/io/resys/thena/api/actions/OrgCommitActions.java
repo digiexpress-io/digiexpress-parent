@@ -139,7 +139,10 @@ public interface OrgCommitActions {
     CommitResultStatus getStatus();
     List<Message> getMessages();
 
+    // in case of status not ok, nulls
     @Nullable OrgRight getRight();
+    @Nullable List<OrgParty> getDirectParties();
+    @Nullable List<OrgMember> getDirectMembers();
   }
   
   
@@ -148,7 +151,8 @@ public interface OrgCommitActions {
     String getRepoId();
     CommitResultStatus getStatus();
     List<Message> getMessages();
-    
+
+    // in case of status not ok, nulls
     @Nullable OrgMember getMember();
   }
   
@@ -158,6 +162,7 @@ public interface OrgCommitActions {
     CommitResultStatus getStatus();
     List<Message> getMessages();
     
+    // in case of status not ok, nulls
     @Nullable OrgParty getParty();
     @Nullable List<OrgRight> getDirectRights();
   }

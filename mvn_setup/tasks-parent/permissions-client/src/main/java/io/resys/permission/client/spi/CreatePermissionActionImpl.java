@@ -26,13 +26,14 @@ public class CreatePermissionActionImpl implements CreatePermissionAction {
     final CreateOneRight createOneRight = ctx.getOrg(ctx.getConfig().getRepoId()).commit().createOneRight();
     
       if(command.getCommandType() == PermissionCommandType.CREATE_PERMISSION) {
-        CreatePermission permission = (CreatePermission) command; 
+        final var permission = (CreatePermission) command; 
       
         return createOneRight
           .rightName(permission.getName())
           .rightDescription(permission.getDescription())
           .message("created permission")
           .author(ctx.getConfig().getAuthor().get())
+          .addRightToParties(permission.getRoles())
           .build();
       }
       
@@ -52,6 +53,7 @@ public class CreatePermissionActionImpl implements CreatePermissionAction {
         .status(OrgActorStatus.OrgActorStatusType.IN_FORCE)
         .description(permission.getRightDescription())
         .name(permission.getRightName())
+        .roles(response.getDirectParties().stream().map(party -> party.getPartyName()).toList())
         .build();
   }
 
@@ -62,7 +64,7 @@ public class CreatePermissionActionImpl implements CreatePermissionAction {
     public CreatePermissionException(String message, OneRightEnvelope response) {
       super(message + System.lineSeparator() + " " +
           String.join(System.lineSeparator() + " ", response.getMessages().stream().map(e -> e.getText()).toList()));
-            response.getMessages().forEach(e -> {
+            response.getMessages().stream().filter(e -> e.getException() != null).forEach(e -> {
               addSuppressed(e.getException());
         });
     }
