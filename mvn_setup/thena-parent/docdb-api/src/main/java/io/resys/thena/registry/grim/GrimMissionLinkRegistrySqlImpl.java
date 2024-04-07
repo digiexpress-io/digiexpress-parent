@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import io.resys.thena.api.entities.grim.GrimMissionLink;
 import io.resys.thena.api.entities.grim.ImmutableGrimMissionLink;
 import io.resys.thena.api.entities.grim.ImmutableGrimMissionLinkTransitives;
+import io.resys.thena.api.registry.grim.GrimMissionFilter;
 import io.resys.thena.api.registry.grim.GrimMissionLinkRegistry;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
@@ -223,7 +224,7 @@ public class GrimMissionLinkRegistrySqlImpl implements GrimMissionLinkRegistry {
     };
   }
   @Override
-  public SqlTuple findAllByMissionIds(Collection<String> id) {
+  public SqlTuple findAllByMissionIds(GrimMissionFilter filter) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT links.*, ")

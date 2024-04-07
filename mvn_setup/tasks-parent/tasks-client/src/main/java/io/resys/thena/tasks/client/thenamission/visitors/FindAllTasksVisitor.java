@@ -3,7 +3,7 @@ package io.resys.thena.tasks.client.thenamission.visitors;
 import java.util.List;
 
 import io.resys.thena.api.ThenaClient.GrimStructuredTenant;
-import io.resys.thena.api.actions.GrimQueryActions.ArchiveQueryType;
+import io.resys.thena.api.actions.GrimQueryActions.GrimArchiveQueryType;
 import io.resys.thena.api.actions.GrimQueryActions.MissionQuery;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
@@ -15,7 +15,7 @@ import io.smallrye.mutiny.Uni;
 public class FindAllTasksVisitor implements TaskStoreConfig.QueryTasksVisitor<List<Task>> {
   @Override
   public MissionQuery start(GrimStructuredTenant config, MissionQuery query) {
-    return query.archived(ArchiveQueryType.ONLY_IN_FORCE);
+    return query.archived(GrimArchiveQueryType.ONLY_IN_FORCE);
   }
   @Override
   public List<GrimMissionContainer> visitEnvelope(GrimStructuredTenant config, QueryEnvelopeList<GrimMissionContainer> envelope) {

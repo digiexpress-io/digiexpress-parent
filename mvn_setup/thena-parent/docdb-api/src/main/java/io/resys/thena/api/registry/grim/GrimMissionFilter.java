@@ -5,14 +5,14 @@ import java.util.List;
 
 import org.immutables.value.Value;
 
-import io.resys.thena.api.actions.GrimQueryActions.ArchiveQueryType;
+import io.resys.thena.api.actions.GrimQueryActions.GrimArchiveQueryType;
 import jakarta.annotation.Nullable;
 
 @Value.Immutable
 public interface GrimMissionFilter {
   List<String> getMissionIds();
   List<GrimAssignmentFilter> getAssignments();
-  ArchiveQueryType getArchived();
+  GrimArchiveQueryType getArchived();
 
   @Nullable String getReporterId();
   @Nullable String getLikeTitle();

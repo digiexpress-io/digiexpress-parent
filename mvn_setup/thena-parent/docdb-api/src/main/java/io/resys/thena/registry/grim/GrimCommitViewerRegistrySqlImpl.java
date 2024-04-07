@@ -11,6 +11,7 @@ import io.resys.thena.api.entities.grim.ImmutableGrimAnyObject;
 import io.resys.thena.api.entities.grim.ImmutableGrimCommitViewer;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimDocType;
 import io.resys.thena.api.registry.grim.GrimCommitViewerRegistry;
+import io.resys.thena.api.registry.grim.GrimMissionFilter;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.ImmutableSqlTupleList;
@@ -164,7 +165,7 @@ public class GrimCommitViewerRegistrySqlImpl implements GrimCommitViewerRegistry
     };
   }
   @Override
-  public SqlTuple findAllByMissionIds(Collection<String> id) {
+  public SqlTuple findAllByMissionIds(GrimMissionFilter filter) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT * ").ln()

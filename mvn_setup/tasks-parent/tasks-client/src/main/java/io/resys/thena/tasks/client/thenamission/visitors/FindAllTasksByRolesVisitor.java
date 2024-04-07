@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import io.resys.thena.api.ThenaClient.GrimStructuredTenant;
-import io.resys.thena.api.actions.GrimQueryActions.ArchiveQueryType;
+import io.resys.thena.api.actions.GrimQueryActions.GrimArchiveQueryType;
 import io.resys.thena.api.actions.GrimQueryActions.MissionQuery;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
@@ -23,7 +23,7 @@ public class FindAllTasksByRolesVisitor implements TaskStoreConfig.QueryTasksVis
   @Override
   public MissionQuery start(GrimStructuredTenant config, MissionQuery query) {
     roles.forEach(role -> query.addAssignment(CreateTasksVisitor.ASSIGNMENT_TYPE_TASK_ROLE, role)); 
-    return query.archived(ArchiveQueryType.ONLY_IN_FORCE);
+    return query.archived(GrimArchiveQueryType.ONLY_IN_FORCE);
   }
 
   @Override

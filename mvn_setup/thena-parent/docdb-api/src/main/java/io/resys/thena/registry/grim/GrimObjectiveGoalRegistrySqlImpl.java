@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import io.resys.thena.api.entities.grim.GrimObjectiveGoal;
 import io.resys.thena.api.entities.grim.ImmutableGrimObjectiveGoal;
 import io.resys.thena.api.entities.grim.ImmutableGrimObjectiveGoalTransitives;
+import io.resys.thena.api.registry.grim.GrimMissionFilter;
 import io.resys.thena.api.registry.grim.GrimObjectiveGoalRegistry;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
@@ -94,7 +95,7 @@ public class GrimObjectiveGoalRegistrySqlImpl implements GrimObjectiveGoalRegist
         .build();
   }
   @Override
-  public SqlTuple findAllByMissionIds(Collection<String> id) {
+  public SqlTuple findAllByMissionIds(GrimMissionFilter filter) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT goal.*,").ln()

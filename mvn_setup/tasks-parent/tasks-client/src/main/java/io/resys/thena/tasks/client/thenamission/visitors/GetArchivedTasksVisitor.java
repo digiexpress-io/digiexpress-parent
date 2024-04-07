@@ -26,7 +26,7 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import io.resys.thena.api.ThenaClient.GrimStructuredTenant;
-import io.resys.thena.api.actions.GrimQueryActions.ArchiveQueryType;
+import io.resys.thena.api.actions.GrimQueryActions.GrimArchiveQueryType;
 import io.resys.thena.api.actions.GrimQueryActions.MissionQuery;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
@@ -48,7 +48,7 @@ public class GetArchivedTasksVisitor implements TaskStoreConfig.QueryTasksVisito
   
   @Override
   public MissionQuery start(GrimStructuredTenant config, MissionQuery builder) {
-     builder.archived(ArchiveQueryType.ONLY_ARCHIVED);
+     builder.archived(GrimArchiveQueryType.ONLY_ARCHIVED);
      
      if(likeTitle != null) {
        builder.likeTitle(likeTitle);

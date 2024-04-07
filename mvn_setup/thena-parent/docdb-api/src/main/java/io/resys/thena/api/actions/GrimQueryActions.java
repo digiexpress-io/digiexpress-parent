@@ -23,7 +23,7 @@ public interface GrimQueryActions {
     MissionQuery addAssignment(String assignementType, String assignmentId);
     MissionQuery viewer(String userBy, String usedFor);
     MissionQuery addMissionId(List<String> ids);
-    MissionQuery archived(ArchiveQueryType includeArchived);
+    MissionQuery archived(GrimArchiveQueryType includeArchived);
     
     MissionQuery reporterId(String reporterId);
     MissionQuery likeTitle(String likeTitle);
@@ -34,7 +34,7 @@ public interface GrimQueryActions {
     Uni<QueryEnvelopeList<GrimMissionContainer>> findAll();
   }
   
-  enum ArchiveQueryType {
+  enum GrimArchiveQueryType {
     ALL, ONLY_ARCHIVED, ONLY_IN_FORCE
   }
 }

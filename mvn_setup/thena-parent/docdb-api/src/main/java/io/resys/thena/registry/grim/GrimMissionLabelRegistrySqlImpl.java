@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import io.resys.thena.api.entities.grim.GrimMissionLabel;
 import io.resys.thena.api.entities.grim.ImmutableGrimMissionLabel;
+import io.resys.thena.api.registry.grim.GrimMissionFilter;
 import io.resys.thena.api.registry.grim.GrimMissionLabelRegistry;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
@@ -174,7 +175,7 @@ public class GrimMissionLabelRegistrySqlImpl implements GrimMissionLabelRegistry
     };
   }
   @Override
-  public SqlTuple findAllByMissionIds(Collection<String> id) {
+  public SqlTuple findAllByMissionIds(GrimMissionFilter filter) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT * ").ln()

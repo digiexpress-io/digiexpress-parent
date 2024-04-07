@@ -1,5 +1,6 @@
 package io.resys.thena.structures.grim.actions;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,9 +31,10 @@ public class GrimQueryActionsImpl implements GrimQueryActions {
   public MissionQuery missionQuery() {
     final var assignments = new ArrayList<Tuple2<String, String>>();
     return new MissionQuery() {
-      private String usedBy, usedFor;
+      private String usedBy, usedFor, reporterId, likeTitle, likeDescription;
       private List<String> ids;
-
+      private GrimArchiveQueryType includeArchived;
+      private LocalDate fromCreatedOrUpdated;
       @Override
       public MissionQuery addMissionId(List<String> ids) {
         if(this.ids == null) {
@@ -53,6 +55,31 @@ public class GrimQueryActionsImpl implements GrimQueryActions {
         return this;
       }
       @Override
+      public MissionQuery archived(GrimArchiveQueryType includeArchived) {
+        this.includeArchived = includeArchived;
+        return this;
+      }
+      @Override
+      public MissionQuery reporterId(String reporterId) {
+        this.reporterId = reporterId;
+        return this;
+      }
+      @Override
+      public MissionQuery likeTitle(String likeTitle) {
+        this.likeTitle = likeTitle;
+        return this;
+      }
+      @Override
+      public MissionQuery likeDescription(String likeDescription) {
+        this.likeDescription = likeDescription;
+        return this;
+      }
+      @Override
+      public MissionQuery fromCreatedOrUpdated(LocalDate fromCreatedOrUpdated) {
+        this.fromCreatedOrUpdated = fromCreatedOrUpdated;
+        return this;
+      }
+      @Override
       public Uni<QueryEnvelope<GrimMissionContainer>> get(String missionIdOrExtId) {
         return state.toGrimState(repoId).onItem().transformToUni(state -> {
           final var query = state.query().missions();
@@ -61,7 +88,13 @@ public class GrimQueryActionsImpl implements GrimQueryActions {
           }
           
           assignments.forEach(e -> query.addAssignment(e.getItem1(), e.getItem2()));
-          return query.getById(missionIdOrExtId).onItem().transform(items -> 
+          return query
+              .reporterId(reporterId)
+              .archived(includeArchived)
+              .fromCreatedOrUpdated(fromCreatedOrUpdated)
+              .likeDescription(likeDescription)
+              .likeTitle(likeTitle)
+              .getById(missionIdOrExtId).onItem().transform(items -> 
             ImmutableQueryEnvelope.<GrimMissionContainer>builder()
               .repo(state.getDataSource().getTenant())
               .status(QueryEnvelopeStatus.OK)
@@ -81,16 +114,24 @@ public class GrimQueryActionsImpl implements GrimQueryActions {
           if(this.ids != null) {
             query.missionId(this.ids.toArray(new String[] {}));
           }
+
           assignments.forEach(e -> query.addAssignment(e.getItem1(), e.getItem2()));
-          return query.findAll().collect().asList().onItem().transform(items -> 
-            ImmutableQueryEnvelopeList.<GrimMissionContainer>builder()
-              .repo(state.getDataSource().getTenant())
-              .status(QueryEnvelopeStatus.OK)
-              .objects(items)
-              .build()
+          return query
+              .reporterId(reporterId)
+              .archived(includeArchived)
+              .fromCreatedOrUpdated(fromCreatedOrUpdated)
+              .likeDescription(likeDescription)
+              .likeTitle(likeTitle)
+              .findAll().collect().asList().onItem().transform(items -> 
+                ImmutableQueryEnvelopeList.<GrimMissionContainer>builder()
+                  .repo(state.getDataSource().getTenant())
+                  .status(QueryEnvelopeStatus.OK)
+                  .objects(items)
+                  .build()
           );
         });
       }
+
     };
   }
 }
