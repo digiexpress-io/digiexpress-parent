@@ -32,7 +32,6 @@ import io.restassured.RestAssured;
 import io.resys.thena.tasks.client.api.model.ImmutableArchiveTask;
 import io.resys.thena.tasks.client.api.model.ImmutableChangeTaskStatus;
 import io.resys.thena.tasks.client.api.model.ImmutableCreateTask;
-import io.resys.thena.tasks.client.api.model.Project;
 import io.resys.thena.tasks.client.api.model.Task;
 import io.resys.thena.tasks.client.api.model.Task.Priority;
 import io.resys.thena.tasks.tests.config.TaskTestCase;
@@ -43,17 +42,7 @@ import io.resys.thena.tasks.tests.config.TaskTestCase;
 @QuarkusTest
 public class RestApiTest {
 
-  
-  @Test
-  public void projects() throws JsonProcessingException {
 
-    final Project[] response = RestAssured.given().when()
-      .get("/q/digiexpress/api/projects").then()
-      .statusCode(200).contentType("application/json")
-      .extract().as(Project[].class);
-
-    Assertions.assertEquals("project1", response[0].getId());
-  }
   
   @Test
   public void getTasks() throws JsonProcessingException {

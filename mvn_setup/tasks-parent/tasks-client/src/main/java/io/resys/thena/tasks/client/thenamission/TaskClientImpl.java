@@ -30,7 +30,6 @@ import io.resys.thena.support.RepoAssert;
  */
 
 import io.resys.thena.tasks.client.api.TaskClient;
-import io.resys.thena.tasks.client.api.actions.ExportActions;
 import io.resys.thena.tasks.client.api.actions.RepositoryActions;
 import io.resys.thena.tasks.client.api.actions.RepositoryQuery;
 import io.resys.thena.tasks.client.api.actions.TaskActions;
@@ -38,7 +37,6 @@ import io.resys.thena.tasks.client.api.model.Task;
 import io.resys.thena.tasks.client.api.model.TaskCommand.CreateTask;
 import io.resys.thena.tasks.client.api.model.TaskCommand.TaskUpdateCommand;
 import io.resys.thena.tasks.client.thenamission.visitors.CreateTasksVisitor;
-import io.resys.thena.tasks.client.thenamission.visitors.DeleteAllTasksVisitor;
 import io.resys.thena.tasks.client.thenamission.visitors.FindAllTasksByAssigneesVisitor;
 import io.resys.thena.tasks.client.thenamission.visitors.FindAllTasksByIdVisitor;
 import io.resys.thena.tasks.client.thenamission.visitors.FindAllTasksByRolesVisitor;
@@ -135,10 +133,6 @@ public class TaskClientImpl implements TaskClient {
     };
   }
 
-  @Override
-  public ExportActions export() {
-    return null;
-  }
   @Override
   public RepositoryActions repo() {
     return new RepositoryActions() {

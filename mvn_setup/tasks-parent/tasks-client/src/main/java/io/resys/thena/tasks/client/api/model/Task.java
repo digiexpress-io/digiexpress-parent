@@ -33,8 +33,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @Value.Immutable @JsonSerialize(as = ImmutableTask.class) @JsonDeserialize(as = ImmutableTask.class)
-public interface Task extends Document {
-
+public interface Task extends Serializable {
+  String getId();
+  String getVersion();
   Instant getCreated();
   Instant getUpdated();
   @Nullable Instant getArchived();
@@ -56,12 +57,6 @@ public interface Task extends Document {
   List<TaskComment> getComments();
   
   List<Checklist> getChecklist();
-  
-  
-  @Value.Default
-  default DocumentType getDocumentType() {
-    return DocumentType.TASK;
-  }
   
   enum Status { CREATED, IN_PROGRESS, COMPLETED, REJECTED }
   enum Priority { LOW, MEDIUM, HIGH }  

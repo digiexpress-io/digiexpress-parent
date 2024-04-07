@@ -25,19 +25,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import io.resys.thena.tasks.client.api.model.ImmutableProject;
 import io.resys.thena.tasks.client.api.model.ImmutableTask;
-import io.resys.thena.tasks.client.api.model.Project;
 import io.resys.thena.tasks.client.api.model.Task;
 import io.resys.thena.tasks.client.api.model.TaskCommand.CreateTask;
 import io.resys.thena.tasks.client.api.model.TaskCommand.TaskUpdateCommand;
 import io.resys.thena.tasks.client.rest.TaskRestApi;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
 
 @Path("q/digiexpress/api")
 @ApplicationScoped
@@ -47,12 +42,6 @@ public class TestResource implements TaskRestApi {
       .archived(TaskTestCase.getTargetDate()).created(TaskTestCase.getTargetDate())
       .updated(TaskTestCase.getTargetDate()).title("task-title1").priority(Task.Priority.HIGH)
       .status(Task.Status.CREATED).description("Very good task indeed").reporterId("John Smith").build();
-
-  @GET @Path("projects") @Produces(MediaType.APPLICATION_JSON)
-  public Uni<List<Project>> findProjects() {
-    return Uni.createFrom()
-        .item(Arrays.asList(ImmutableProject.builder().id("project1").version("project-version1").build()));
-  }
 
   @Override
   public Uni<List<Task>> findTasks() {

@@ -1,0 +1,25 @@
+
+Repo
+  - id: 1, rev: 2
+    name: TaskUpdateTestUpdateRoles
+
+Refs
+  - 3: main
+
+Tags
+
+Commits
+  - id: 4
+    tree: 5, parent: , message: Creating tasks
+  - id: 3
+    tree: 6, parent: 4, message: Update tasks: 1
+
+Trees
+  - id: 5
+    7: 1_TASK
+  - id: 6
+    8: 1_TASK
+
+Blobs
+  - 7: {"id":"1_TASK","roles":["admin-users","view-only-users"],"title":"very important title no: init","labels":[],"status":"CREATED","created":"2023-01-01T01:01:00Z","dueDate":null,"updated":"2023-01-01T01:01:00Z","version":"1","archived":null,"comments":[],"parentId":null,"priority":"LOW","checklist":[],"startDate":null,"extensions":[],"reporterId":"reporter-1","assigneeIds":["assignee-1","assignee-2"],"description":"first task ever no: init","documentType":"TASK","transactions":[{"id":"1","commands":[{"roles":["admin-users","view-only-users"],"title":"very important title no: init","labels":[],"status":null,"userId":"user-1","dueDate":null,"comments":[],"priority":"LOW","checklist":[],"startDate":null,"extensions":[],"reporterId":"reporter-1","targetDate":"2023-01-01T01:01:00Z","assigneeIds":["assignee-1","assignee-2"],"commandType":"CreateTask","description":"first task ever no: init"}]}]}
+  - 8: {"id":"1_TASK","roles":["new-role"],"title":"very important title no: init","labels":[],"status":"CREATED","created":"2023-01-01T01:01:00Z","dueDate":null,"updated":"2023-01-02T02:01:00Z","version":"2","archived":null,"comments":[],"parentId":null,"priority":"LOW","checklist":[],"startDate":null,"extensions":[],"reporterId":"reporter-1","assigneeIds":["assignee-1","assignee-2"],"description":"first task ever no: init","documentType":"TASK","transactions":[{"id":"1","commands":[{"roles":["admin-users","view-only-users"],"title":"very important title no: init","labels":[],"status":null,"userId":"user-1","dueDate":null,"comments":[],"priority":"LOW","checklist":[],"startDate":null,"extensions":[],"reporterId":"reporter-1","targetDate":"2023-01-01T01:01:00Z","assigneeIds":["assignee-1","assignee-2"],"commandType":"CreateTask","description":"first task ever no: init"}]},{"id":"2","commands":[{"roles":["new-role"],"taskId":"1_TASK","userId":"tester-bob","targetDate":"2023-01-02T02:01:00Z","commandType":"AssignTaskRoles"}]}]}

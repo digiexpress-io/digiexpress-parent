@@ -101,6 +101,5 @@
   "labels" : [ ],
   "extensions" : [ ],
   "comments" : [ ],
-  "checklist" : [ ],
-  "documentType" : "TASK"
+  "checklist" : [ ]
 }

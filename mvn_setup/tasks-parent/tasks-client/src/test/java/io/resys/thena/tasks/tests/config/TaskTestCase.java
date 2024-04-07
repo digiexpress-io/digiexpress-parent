@@ -30,13 +30,14 @@ import java.time.ZoneOffset;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Function;
 
 import org.apache.commons.io.IOUtils;
+import org.graalvm.polyglot.HostAccess.Export;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
@@ -48,7 +49,6 @@ import io.resys.thena.spi.DbState;
 import io.resys.thena.storesql.DbStateSqlImpl;
 import io.resys.thena.structures.grim.GrimPrinter;
 import io.resys.thena.tasks.client.api.TaskClient;
-import io.resys.thena.tasks.client.api.model.Export;
 import io.resys.thena.tasks.client.api.model.Task;
 import io.resys.thena.tasks.client.thenamission.TaskStoreImpl;
 import io.vertx.core.json.JsonObject;
@@ -67,13 +67,11 @@ public class TaskTestCase {
   
   private TaskClient client;
   private TaskStoreImpl store;
+  private AtomicInteger task_index;
   private static final String DB = "junit-tasks-"; 
   private static final AtomicInteger DB_ID = new AtomicInteger();
-  private static final Instant targetDate = LocalDateTime.of(2023, 1, 1, 1, 1).toInstant(ZoneOffset.UTC);
-  
+  private static final Instant targetDate = LocalDateTime.of(2023, 1, 1, 1, 1).toInstant(ZoneOffset.UTC);  
   private final Map<String, String> replacements = new HashMap<>();
-
-  
 
   private void connectToDebugDb() {
     if(!STORE_TO_DEBUG_DB) {
@@ -89,10 +87,27 @@ public class TaskTestCase {
     final var poolOptions = new PoolOptions().setMaxSize(6);
     this.pgPool = io.vertx.mutiny.pgclient.PgPool.pool(vertx, connectOptions, poolOptions);
   }
+
+  public void replaceWithStatic(Object input) {
+    if(input == null) {
+      return;
+    }
+    
+    if(input instanceof Instant) {
+      final var value = JsonObject.of("targetDate", input).getString("targetDate");
+      replacements.put(value, JsonObject.of("targetDate", targetDate).getString("targetDate"));
+      return;
+    }
+    final var value = task_index.incrementAndGet() + "_TASK";
+    replacements.put(input+ "", value);
+
+  }
+  
   
   
   @BeforeEach
   public void setUp() {
+    task_index = new AtomicInteger(0);
     replacements.clear();
     connectToDebugDb();
     waitUntilPostgresqlAcceptsConnections(pgPool);
@@ -125,7 +140,8 @@ public class TaskTestCase {
         new VertexExtModule()
         };
       DatabindCodec.mapper().registerModules(modules);
-      DatabindCodec.prettyMapper().registerModules(modules);
+      DatabindCodec.mapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+      //DatabindCodec.prettyMapper().registerModules(modules);
       
     return DatabindCodec.mapper(); 
   }
@@ -164,55 +180,40 @@ public class TaskTestCase {
     }
   }
   
-  public void assertRepo(TaskClient client, String expectedFileName) {
+  public void assertTenant(TaskClient client, String expectedFileName) {
     final var expected = toExpectedFile(expectedFileName);
     final var actual = toStaticData(client);
     Assertions.assertEquals(expected, actual);
     
   }
-  public void assertEquals(String expectedFileName, Task actual) {
-    final var task_index = new AtomicInteger(0);
-    final Map<String, String> replacements = new HashMap<>();
-    final Function<Object, String> add = (input) -> {
-      if(input == null) {
-        return null;
-      }
-      
-      if(input instanceof Instant) {
-        final var value = JsonObject.of("targetDate", input).getString("targetDate");
-        replacements.put(value, JsonObject.of("targetDate", targetDate).getString("targetDate"));
-        return value;
-      }
-      final var value = task_index.incrementAndGet() + "_TASK";
-      replacements.put(input+ "", value);
-      return value;
-    };
-    
-    
-    add.apply(actual.getId());
-    add.apply(actual.getVersion());
-    add.apply(actual.getCreated());
-    add.apply(actual.getUpdated());
+  public void assertTaskJson(String expectedFileName, Task actual) {
+    replaceWithStatic(actual.getId());
+    replaceWithStatic(actual.getParentId());
+    replaceWithStatic(actual.getVersion());
+    replaceWithStatic(actual.getCreated());
+    replaceWithStatic(actual.getUpdated());
     actual.getChecklist().forEach(e -> {
-      add.apply(e.getId());  
-      e.getItems().forEach(i -> add.apply(i.getId()));
+      replaceWithStatic(e.getId());  
+      e.getItems().forEach(i -> replaceWithStatic(i.getId()));
     });
-
+    actual.getExtensions().forEach(e -> {
+      replaceWithStatic(e.getId());
+      replaceWithStatic(e.getCreated());
+      replaceWithStatic(e.getUpdated());
+      
+    });
     actual.getTransactions().forEach(e -> {
-      add.apply(e.getId());
+      replaceWithStatic(e.getId());
       for(final var c : e.getCommands()) {
-        add.apply(JsonObject.mapFrom(c).getString("checklistId"));
-        add.apply(JsonObject.mapFrom(c).getString("checklistItemId"));
+        replaceWithStatic(JsonObject.mapFrom(c).getString("checklistId"));
+        replaceWithStatic(JsonObject.mapFrom(c).getString("checklistItemId"));
       }
     });
-    
-    
     var actualJson = JsonObject.mapFrom(actual).encodePrettily();
     
     for(final var entry : replacements.entrySet()) {
       actualJson = actualJson.replace(entry.getKey(), entry.getValue());
     }
-    
     final var expected = toExpectedFile(expectedFileName);
     Assertions.assertEquals(expected, actualJson);
     

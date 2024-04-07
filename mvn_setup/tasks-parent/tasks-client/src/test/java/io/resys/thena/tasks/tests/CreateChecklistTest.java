@@ -53,7 +53,7 @@ public class CreateChecklistTest extends TaskTestCase {
         .targetDate(getTargetDate())
         .build())
     .await().atMost(atMost);
-    assertEquals("checklist-test-cases/create-checklist.json", taskWithChecklist);
+    assertTaskJson("checklist-test-cases/create-checklist.json", taskWithChecklist);
 
     final var checkListId = taskWithChecklist.getChecklist().stream().findFirst().get().getId();    
     final var changeChecklistTitle = client.tasks().updateTask().updateOne(ImmutableChangeChecklistTitle.builder()
@@ -65,7 +65,7 @@ public class CreateChecklistTest extends TaskTestCase {
         .build())
     .await().atMost(atMost);
 
-    assertEquals("checklist-test-cases/change-checklist-title.json", changeChecklistTitle);
+    assertTaskJson("checklist-test-cases/change-checklist-title.json", changeChecklistTitle);
   
   
     final var createChecklistWithItemAndAssignees = client.tasks().updateTask().updateOne(ImmutableAddChecklistItem.builder()
@@ -80,7 +80,7 @@ public class CreateChecklistTest extends TaskTestCase {
         .build())
     .await().atMost(atMost);
 
-    assertEquals("checklist-test-cases/create-checklist-item.json", createChecklistWithItemAndAssignees);
+    assertTaskJson("checklist-test-cases/create-checklist-item.json", createChecklistWithItemAndAssignees);
 
     final var checkListItemId = createChecklistWithItemAndAssignees.getChecklist().stream()
         .flatMap(e -> e.getItems().stream())
@@ -95,7 +95,7 @@ public class CreateChecklistTest extends TaskTestCase {
         .build())
     .await().atMost(atMost);
 
-    assertEquals("checklist-test-cases/change-checklist-item-completed.json", changeChecklistItemCompleted);
+    assertTaskJson("checklist-test-cases/change-checklist-item-completed.json", changeChecklistItemCompleted);
 
     final var deleteChecklistItem = client.tasks().updateTask().updateOne(ImmutableDeleteChecklistItem.builder()
         .userId("John smith")
@@ -107,7 +107,7 @@ public class CreateChecklistTest extends TaskTestCase {
     .await().atMost(atMost);
 
 
-    assertEquals("checklist-test-cases/delete-checklist-item.json", deleteChecklistItem);
+    assertTaskJson("checklist-test-cases/delete-checklist-item.json", deleteChecklistItem);
 
 
     final var deleteChecklist = client.tasks().updateTask().updateOne(ImmutableDeleteChecklist.builder()
@@ -119,7 +119,7 @@ public class CreateChecklistTest extends TaskTestCase {
     .await().atMost(atMost);
 
 
-    assertEquals("checklist-test-cases/delete-checklist.json", deleteChecklist);
+    assertTaskJson("checklist-test-cases/delete-checklist.json", deleteChecklist);
 
   }
 

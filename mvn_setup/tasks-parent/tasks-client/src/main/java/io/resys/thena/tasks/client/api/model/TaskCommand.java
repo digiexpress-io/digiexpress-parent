@@ -81,8 +81,7 @@ public interface TaskCommand extends Serializable {
   @Nullable String getUserId();
   @Nullable Instant getTargetDate();
   TaskCommandType getCommandType();
-  
-  
+
   TaskCommand withUserId(String userId);
   TaskCommand withTargetDate(Instant targetDate);
   

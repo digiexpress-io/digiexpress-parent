@@ -1,32 +1,76 @@
 
 Repo
-  - id: 1, rev: 2
-    name: TaskUpdateTestUpdateParentTask
+  - id: 8, rev: 9
+    name: TaskUpdateTestUpdateParentTask, prefix: 10, type: grim
+Mission: 1_TASK
+  - 4_TASK::GRIM_COMMANDS
+  - 5_TASK::GRIM_COMMANDS
+  - 16::GRIM_ASSIGNMENT
+  - 17::GRIM_MISSION_DATA
 
-Refs
-  - 3: main
+commit: 13, tenant: TaskUpdateTestUpdateParentTask
+author: not-configured, message: Creating tasks by: CreateTasksVisitor
+ | created
+  + added new: 3 entries
+  + 16::GRIM_ASSIGNMENT
+    {"id":"16","commitId":"13","missionId":"1_TASK","assignee":"admin-users","assignmentType":"task_role","relation":null}
+  + 1_TASK::GRIM_MISSION
+    {"id":"1_TASK","commitId":"13","createdWithCommitId":"13","updatedTreeWithCommitId":"13","parentMissionId":null,"externalId":null,"missionStatus":"CREATED","missionPriority":"LOW","reporterId":"reporter-1","startDate":null,"dueDate":null,"archivedAt":null,"archivedStatus":null}
+  + 17::GRIM_MISSION_DATA
+    {"id":"17","commitId":"13","createdWithCommitId":"13","missionId":"1_TASK","createdAt":null,"updatedAt":null,"title":"sub task","description":"sub task description","dataExtension":null,"relation":null}
 
-Tags
+ | deleted
+  - deleted: 0 entries
 
-Commits
-  - id: 4
-    tree: 5, parent: , message: Creating tasks
-  - id: 6
-    tree: 7, parent: 4, message: Creating tasks
-  - id: 3
-    tree: 8, parent: 6, message: Update tasks: 1
+ | merged
+  +- merged: 0 entries
 
-Trees
-  - id: 5
-    9: 1_TASK
-  - id: 7
-    9: 1_TASK
-    10: 3_TASK
-  - id: 8
-    9: 1_TASK
-    11: 3_TASK
 
-Blobs
-  - 9: {"id":"1_TASK","roles":["admin-users","view-only-users"],"title":"very important title no: init","labels":[],"status":"CREATED","created":"2023-01-01T01:01:00Z","dueDate":null,"updated":"2023-01-01T01:01:00Z","version":"1","archived":null,"comments":[],"parentId":null,"priority":"LOW","checklist":[],"startDate":null,"extensions":[],"reporterId":"reporter-1","assigneeIds":["assignee-1","assignee-2"],"description":"first task ever no: init","documentType":"TASK","transactions":[{"id":"1","commands":[{"roles":["admin-users","view-only-users"],"title":"very important title no: init","labels":[],"status":null,"userId":"user-1","dueDate":null,"comments":[],"priority":"LOW","checklist":[],"startDate":null,"extensions":[],"reporterId":"reporter-1","targetDate":"2023-01-01T01:01:00Z","assigneeIds":["assignee-1","assignee-2"],"commandType":"CreateTask","description":"first task ever no: init"}]}]}
-  - 10: {"id":"3_TASK","roles":["admin-users"],"title":"sub task","labels":[],"status":"CREATED","created":"2023-01-01T01:01:00Z","dueDate":null,"updated":"2023-01-01T01:01:00Z","version":"1","archived":null,"comments":[],"parentId":null,"priority":"LOW","checklist":[],"startDate":null,"extensions":[],"reporterId":"reporter-1","assigneeIds":[],"description":"sub task description","documentType":"TASK","transactions":[{"id":"1","commands":[{"roles":["admin-users"],"title":"sub task","labels":[],"status":null,"userId":"user-1","dueDate":null,"comments":[],"priority":"LOW","checklist":[],"startDate":null,"extensions":[],"reporterId":"reporter-1","targetDate":"2023-01-01T01:01:00Z","assigneeIds":[],"commandType":"CreateTask","description":"sub task description"}]}]}
-  - 11: {"id":"3_TASK","roles":["admin-users"],"title":"sub task","labels":[],"status":"CREATED","created":"2023-01-01T01:01:00Z","dueDate":null,"updated":"2023-01-02T02:01:00Z","version":"2","archived":null,"comments":[],"parentId":"1_TASK","priority":"LOW","checklist":[],"startDate":null,"extensions":[],"reporterId":"reporter-1","assigneeIds":[],"description":"sub task description","documentType":"TASK","transactions":[{"id":"1","commands":[{"roles":["admin-users"],"title":"sub task","labels":[],"status":null,"userId":"user-1","dueDate":null,"comments":[],"priority":"LOW","checklist":[],"startDate":null,"extensions":[],"reporterId":"reporter-1","targetDate":"2023-01-01T01:01:00Z","assigneeIds":[],"commandType":"CreateTask","description":"sub task description"}]},{"id":"2","commands":[{"taskId":"3_TASK","userId":"tester-bob","parentId":"1_TASK","targetDate":"2023-01-02T02:01:00Z","commandType":"AssignTaskParent"}]}]}
+commit: 3_TASK, tenant: TaskUpdateTestUpdateParentTask
+author: not-configured, message: merging tasks from: UpdateTasksVisitor
+ | created
+  + added new: 0 entries
+
+ | deleted
+  - deleted: 0 entries
+
+ | merged
+  +- merged: 1 entries
+  +- 1_TASK::GRIM_MISSION
+   -  {"id":"1_TASK","commitId":"13","createdWithCommitId":"13","updatedTreeWithCommitId":"13","parentMissionId":null,"externalId":null,"missionStatus":"CREATED","missionPriority":"LOW","reporterId":"reporter-1","startDate":null,"dueDate":null,"archivedAt":null,"archivedStatus":null}
+   +  {"id":"1_TASK","commitId":"3_TASK","createdWithCommitId":"13","updatedTreeWithCommitId":"3_TASK","parentMissionId":"2_TASK","externalId":null,"missionStatus":"CREATED","missionPriority":"LOW","reporterId":"reporter-1","startDate":null,"dueDate":null,"archivedAt":null,"archivedStatus":null}
+   diff: commitId :: 13 -> 3_TASK
+   diff: updatedTreeWithCommitId :: 13 -> 3_TASK
+   diff: parentMissionId :: null -> 2_TASK
+
+Mission: 2_TASK
+  - 18::GRIM_COMMANDS
+  - 19::GRIM_ASSIGNMENT
+  - 20::GRIM_ASSIGNMENT
+  - 21::GRIM_ASSIGNMENT
+  - 22::GRIM_ASSIGNMENT
+  - 23::GRIM_MISSION_DATA
+
+commit: 11, tenant: TaskUpdateTestUpdateParentTask
+author: not-configured, message: Creating tasks by: CreateTasksVisitor
+ | created
+  + added new: 6 entries
+  + 21::GRIM_ASSIGNMENT
+    {"id":"21","commitId":"11","missionId":"2_TASK","assignee":"assignee-1","assignmentType":"task_user","relation":null}
+  + 22::GRIM_ASSIGNMENT
+    {"id":"22","commitId":"11","missionId":"2_TASK","assignee":"assignee-2","assignmentType":"task_user","relation":null}
+  + 19::GRIM_ASSIGNMENT
+    {"id":"19","commitId":"11","missionId":"2_TASK","assignee":"admin-users","assignmentType":"task_role","relation":null}
+  + 20::GRIM_ASSIGNMENT
+    {"id":"20","commitId":"11","missionId":"2_TASK","assignee":"view-only-users","assignmentType":"task_role","relation":null}
+  + 2_TASK::GRIM_MISSION
+    {"id":"2_TASK","commitId":"11","createdWithCommitId":"11","updatedTreeWithCommitId":"11","parentMissionId":null,"externalId":null,"missionStatus":"CREATED","missionPriority":"LOW","reporterId":"reporter-1","startDate":null,"dueDate":null,"archivedAt":null,"archivedStatus":null}
+  + 23::GRIM_MISSION_DATA
+    {"id":"23","commitId":"11","createdWithCommitId":"11","missionId":"2_TASK","createdAt":null,"updatedAt":null,"title":"very important title no: init","description":"first task ever no: init","dataExtension":null,"relation":null}
+
+ | deleted
+  - deleted: 0 entries
+
+ | merged
+  +- merged: 0 entries
+

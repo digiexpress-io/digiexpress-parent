@@ -14,7 +14,6 @@ import io.resys.thena.api.entities.grim.GrimMission;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewGoal;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewMission;
-import io.resys.thena.tasks.client.api.model.Document;
 import io.resys.thena.tasks.client.api.model.ImmutableChecklist;
 import io.resys.thena.tasks.client.api.model.ImmutableChecklistItem;
 import io.resys.thena.tasks.client.api.model.ImmutableTask;
@@ -148,7 +147,6 @@ public class CreateTasksVisitor implements TaskStoreConfig.CreateManyTasksVisito
     .archived(mission.getArchivedAt() == null ? null : mission.getArchivedAt().toInstant())
     .startDate(mission.getStartDate())
     .dueDate(mission.getDueDate())
-    .documentType(Document.DocumentType.TASK)
     .parentId(mission.getParentMissionId())
     .transactions(src.getCommands().values().stream()
         .sorted((a, b) -> a.getCreatedAt().compareTo(b.getCreatedAt()))

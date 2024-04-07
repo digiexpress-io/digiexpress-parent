@@ -1,26 +1,26 @@
 {
   "id" : "1_TASK",
-  "version" : "2_TASK",
+  "version" : "3_TASK",
   "created" : "2023-01-01T01:01:00Z",
   "updated" : "2023-01-01T01:01:00Z",
   "archived" : null,
   "startDate" : null,
   "dueDate" : null,
-  "parentId" : null,
+  "parentId" : "2_TASK",
   "transactions" : [ {
     "id" : "4_TASK",
     "commands" : [ {
       "commandType" : "CreateTask",
       "userId" : "user-1",
       "targetDate" : "2023-01-01T01:01:00Z",
-      "roles" : [ "admin-users", "view-only-users" ],
+      "roles" : [ "admin-users" ],
       "assigneeIds" : [ ],
       "reporterId" : "reporter-1",
       "status" : null,
       "startDate" : null,
       "dueDate" : null,
-      "title" : "Creating a task for checklists",
-      "description" : "This is the first task ever!",
+      "title" : "sub task",
+      "description" : "sub task description",
       "priority" : "LOW",
       "labels" : [ ],
       "extensions" : [ ],
@@ -30,27 +30,22 @@
   }, {
     "id" : "5_TASK",
     "commands" : [ {
-      "commandType" : "CreateChecklist",
-      "userId" : "John smith",
-      "targetDate" : "2023-01-01T01:01:00Z",
+      "commandType" : "AssignTaskParent",
+      "userId" : "tester-bob",
+      "targetDate" : "2023-01-02T02:01:00Z",
       "taskId" : "1_TASK",
-      "title" : "My first checklist",
-      "checklist" : [ ]
+      "parentId" : "2_TASK"
     } ]
   } ],
-  "roles" : [ "admin-users", "view-only-users" ],
+  "roles" : [ "admin-users" ],
   "assigneeIds" : [ ],
   "reporterId" : "reporter-1",
-  "title" : "Creating a task for checklists",
-  "description" : "This is the first task ever!",
+  "title" : "sub task",
+  "description" : "sub task description",
   "priority" : "LOW",
   "status" : "CREATED",
   "labels" : [ ],
   "extensions" : [ ],
   "comments" : [ ],
-  "checklist" : [ {
-    "id" : "3_TASK",
-    "title" : "My first checklist",
-    "items" : [ ]
-  } ]
+  "checklist" : [ ]
 }

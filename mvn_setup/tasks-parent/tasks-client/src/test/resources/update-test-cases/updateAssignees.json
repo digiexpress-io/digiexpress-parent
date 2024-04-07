@@ -8,19 +8,19 @@
   "dueDate" : null,
   "parentId" : null,
   "transactions" : [ {
-    "id" : "4_TASK",
+    "id" : "3_TASK",
     "commands" : [ {
       "commandType" : "CreateTask",
       "userId" : "user-1",
       "targetDate" : "2023-01-01T01:01:00Z",
       "roles" : [ "admin-users", "view-only-users" ],
-      "assigneeIds" : [ ],
+      "assigneeIds" : [ "assignee-1", "assignee-2" ],
       "reporterId" : "reporter-1",
       "status" : null,
       "startDate" : null,
       "dueDate" : null,
-      "title" : "Creating a task for checklists",
-      "description" : "This is the first task ever!",
+      "title" : "very important title no: init",
+      "description" : "first task ever no: init",
       "priority" : "LOW",
       "labels" : [ ],
       "extensions" : [ ],
@@ -28,29 +28,24 @@
       "checklist" : [ ]
     } ]
   }, {
-    "id" : "5_TASK",
+    "id" : "4_TASK",
     "commands" : [ {
-      "commandType" : "CreateChecklist",
-      "userId" : "John smith",
-      "targetDate" : "2023-01-01T01:01:00Z",
+      "commandType" : "AssignTask",
+      "userId" : "tester-bob",
+      "targetDate" : "2023-01-02T02:01:00Z",
       "taskId" : "1_TASK",
-      "title" : "My first checklist",
-      "checklist" : [ ]
+      "assigneeIds" : [ "new-assignee" ]
     } ]
   } ],
   "roles" : [ "admin-users", "view-only-users" ],
-  "assigneeIds" : [ ],
+  "assigneeIds" : [ "new-assignee" ],
   "reporterId" : "reporter-1",
-  "title" : "Creating a task for checklists",
-  "description" : "This is the first task ever!",
+  "title" : "very important title no: init",
+  "description" : "first task ever no: init",
   "priority" : "LOW",
   "status" : "CREATED",
   "labels" : [ ],
   "extensions" : [ ],
   "comments" : [ ],
-  "checklist" : [ {
-    "id" : "3_TASK",
-    "title" : "My first checklist",
-    "items" : [ ]
-  } ]
+  "checklist" : [ ]
 }

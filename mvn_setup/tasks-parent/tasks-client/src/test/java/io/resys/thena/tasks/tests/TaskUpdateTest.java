@@ -42,10 +42,12 @@ import io.resys.thena.tasks.client.api.model.ImmutableChangeTaskStatus;
 import io.resys.thena.tasks.client.api.model.ImmutableCommentOnTask;
 import io.resys.thena.tasks.client.api.model.ImmutableCreateTask;
 import io.resys.thena.tasks.client.api.model.ImmutableCreateTaskExtension;
+import io.resys.thena.tasks.client.api.model.ImmutableTask;
 import io.resys.thena.tasks.client.api.model.Task;
 import io.resys.thena.tasks.client.api.model.Task.Priority;
 import io.resys.thena.tasks.tests.config.TaskPgProfile;
 import io.resys.thena.tasks.tests.config.TaskTestCase;
+import io.vertx.core.json.JsonObject;
 
 @QuarkusTest
 @TestProfile(TaskPgProfile.class)
@@ -73,7 +75,7 @@ public class TaskUpdateTest extends TaskTestCase {
     final var client = getClient().repo().query().repoName(repoName).createIfNot().await().atMost(atMost);
     final var task = createTaskForUpdating(client);
     
-    client.tasks().updateTask().updateOne(ImmutableChangeTaskStatus.builder()
+    final var updated = client.tasks().updateTask().updateOne(ImmutableChangeTaskStatus.builder()
         .userId("tester-bob")
         .taskId(task.getId())
         .targetDate(
@@ -85,7 +87,8 @@ public class TaskUpdateTest extends TaskTestCase {
         .build())
     .await().atMost(atMost);
 
-    assertRepo(client, "update-test-cases/updateStatus.txt");
+    assertTaskJson("update-test-cases/updateStatus.json", updated);
+    assertTenant(client, "update-test-cases/updateStatus.txt");
   }
 
   @org.junit.jupiter.api.Test
@@ -94,7 +97,7 @@ public class TaskUpdateTest extends TaskTestCase {
     final var client = getClient().repo().query().repoName(repoName).createIfNot().await().atMost(atMost);
     final var task = createTaskForUpdating(client);
 
-    client.tasks().updateTask().updateOne(ImmutableChangeTaskPriority.builder()
+    final var updated = client.tasks().updateTask().updateOne(ImmutableChangeTaskPriority.builder()
             .userId("tester-bob")
             .taskId(task.getId())
             .targetDate(
@@ -105,8 +108,9 @@ public class TaskUpdateTest extends TaskTestCase {
             .priority(Priority.HIGH)
             .build())
         .await().atMost(atMost);
-
-    assertRepo(client, "update-test-cases/updatePriority.txt");
+    
+    assertTaskJson("update-test-cases/updatePriority.json", updated);
+    assertTenant(client, "update-test-cases/updatePriority.txt");
   }
 
   @org.junit.jupiter.api.Test
@@ -115,7 +119,7 @@ public class TaskUpdateTest extends TaskTestCase {
     final var client = getClient().repo().query().repoName(repoName).createIfNot().await().atMost(atMost);
     final var task = createTaskForUpdating(client);
 
-    client.tasks().updateTask().updateOne(ImmutableAssignTaskReporter.builder()
+    final var updated = client.tasks().updateTask().updateOne(ImmutableAssignTaskReporter.builder()
             .userId("tester-bob")
             .taskId(task.getId())
             .targetDate(
@@ -127,7 +131,8 @@ public class TaskUpdateTest extends TaskTestCase {
             .build())
         .await().atMost(atMost);
 
-    assertRepo(client, "update-test-cases/updateReporter.txt");
+    assertTaskJson("update-test-cases/updateReporter.json", updated);
+    assertTenant(client, "update-test-cases/updateReporter.txt");
   }
 
   @org.junit.jupiter.api.Test
@@ -136,7 +141,7 @@ public class TaskUpdateTest extends TaskTestCase {
     final var client = getClient().repo().query().repoName(repoName).createIfNot().await().atMost(atMost);
     final var task = createTaskForUpdating(client);
 
-    client.tasks().updateTask().updateOne(ImmutableArchiveTask.builder()
+    final var updated = client.tasks().updateTask().updateOne(ImmutableArchiveTask.builder()
             .userId("tester-bob")
             .taskId(task.getId())
             .targetDate(
@@ -147,7 +152,8 @@ public class TaskUpdateTest extends TaskTestCase {
             .build())
         .await().atMost(atMost);
 
-    assertRepo(client, "update-test-cases/archiveTaskViaUpdate.txt");
+    assertTaskJson("update-test-cases/archiveTaskViaUpdate.json", updated);
+    assertTenant(client, "update-test-cases/archiveTaskViaUpdate.txt");
   }
 
   @org.junit.jupiter.api.Test
@@ -156,7 +162,7 @@ public class TaskUpdateTest extends TaskTestCase {
     final var client = getClient().repo().query().repoName(repoName).createIfNot().await().atMost(atMost);
     final var task = createTaskForUpdating(client);
 
-    client.tasks().updateTask().updateOne(ImmutableCommentOnTask.builder()
+    final var addedComment = client.tasks().updateTask().updateOne(ImmutableCommentOnTask.builder()
             .userId("tester-bob")
             .taskId(task.getId())
             .targetDate(
@@ -166,9 +172,10 @@ public class TaskUpdateTest extends TaskTestCase {
             )
             .commentText("comment-1-text")
             .build())
-        .await().atMost(atMost);
+        .await().atMost(atMost)
+        .getComments().stream().findFirst().get();
 
-    client.tasks().updateTask().updateOne(ImmutableCommentOnTask.builder()
+    final var updated = client.tasks().updateTask().updateOne(ImmutableCommentOnTask.builder()
             .userId("tester-bob")
             .taskId(task.getId())
             .targetDate(
@@ -177,11 +184,19 @@ public class TaskUpdateTest extends TaskTestCase {
                 .plus(2, java.time.temporal.ChronoUnit.HOURS)
             )
             .commentText("comment-2-text")
-            .replyToCommentId("3_TASK")
+            .replyToCommentId(addedComment.getId())
             .build())
         .await().atMost(atMost);
 
-    assertRepo(client, "update-test-cases/addComments.txt");
+    System.out.println(JsonObject.mapFrom(
+        new JsonObject("""
+{"id":"1_TASK","roles":["admin-users","view-only-users"],"title":"very important title no: init","labels":[],"status":"CREATED","created":"2023-01-01T01:01:00Z","dueDate":null,"updated":"2023-01-02T03:01:00Z","version":"3","archived":null,"comments":[{"id":"3_TASK","created":"2023-01-02T02:01:00Z","username":"tester-bob","replyToId":null,"commentText":"comment-1-text"},{"id":"4_TASK","created":"2023-01-02T03:01:00Z","username":"tester-bob","replyToId":"3_TASK","commentText":"comment-2-text"}],"parentId":null,"priority":"LOW","checklist":[],"startDate":null,"extensions":[],"reporterId":"reporter-1","assigneeIds":["assignee-1","assignee-2"],"description":"first task ever no: init","documentType":"TASK","transactions":[{"id":"1","commands":[{"roles":["admin-users","view-only-users"],"title":"very important title no: init","labels":[],"status":null,"userId":"user-1","dueDate":null,"comments":[],"priority":"LOW","checklist":[],"startDate":null,"extensions":[],"reporterId":"reporter-1","targetDate":"2023-01-01T01:01:00Z","assigneeIds":["assignee-1","assignee-2"],"commandType":"CreateTask","description":"first task ever no: init"}]},{"id":"2","commands":[{"taskId":"1_TASK","userId":"tester-bob","targetDate":"2023-01-02T02:01:00Z","commandType":"CommentOnTask","commentText":"comment-1-text","replyToCommentId":null}]},{"id":"3","commands":[{"taskId":"1_TASK","userId":"tester-bob","targetDate":"2023-01-02T03:01:00Z","commandType":"CommentOnTask","commentText":"comment-2-text","replyToCommentId":"3_TASK"}]}]}
+            """)
+        .mapTo(ImmutableTask.class)
+        ).encodePrettily());
+    
+    assertTaskJson("update-test-cases/addComments.json", updated);
+    assertTenant(client, "update-test-cases/addComments.txt");
   }
 
   @org.junit.jupiter.api.Test
@@ -190,7 +205,7 @@ public class TaskUpdateTest extends TaskTestCase {
     final var client = getClient().repo().query().repoName(repoName).createIfNot().await().atMost(atMost);
     final var task = createTaskForUpdating(client);
 
-    client.tasks().updateTask().updateOne(ImmutableCommentOnTask.builder()
+    final var addedComment = client.tasks().updateTask().updateOne(ImmutableCommentOnTask.builder()
             .userId("tester-bob")
             .taskId(task.getId())
             .targetDate(
@@ -200,9 +215,10 @@ public class TaskUpdateTest extends TaskTestCase {
             )
             .commentText("comment-1-text")
             .build())
-        .await().atMost(atMost);
+        .await().atMost(atMost)
+        .getComments().stream().findFirst().get();
 
-    client.tasks().updateTask().updateOne(ImmutableChangeTaskComment.builder()
+    final var updated = client.tasks().updateTask().updateOne(ImmutableChangeTaskComment.builder()
             .userId("tester-bob")
             .taskId(task.getId())
             .targetDate(
@@ -210,12 +226,20 @@ public class TaskUpdateTest extends TaskTestCase {
                 .plus(1, java.time.temporal.ChronoUnit.DAYS)
                 .plus(2, java.time.temporal.ChronoUnit.HOURS)
             )
-            .commentId("3_TASK")
+            .commentId(addedComment.getId())
             .commentText("new-comment-text")
             .build())
         .await().atMost(atMost);
 
-    assertRepo(client, "update-test-cases/updateComment.txt");
+    System.out.println(JsonObject.mapFrom(
+        new JsonObject("""
+{"id":"1_TASK","roles":["admin-users","view-only-users"],"title":"very important title no: init","labels":[],"status":"CREATED","created":"2023-01-01T01:01:00Z","dueDate":null,"updated":"2023-01-02T03:01:00Z","version":"3","archived":null,"comments":[{"id":"3_TASK","created":"2023-01-02T03:01:00Z","username":"tester-bob","replyToId":null,"commentText":"new-comment-text"}],"parentId":null,"priority":"LOW","checklist":[],"startDate":null,"extensions":[],"reporterId":"reporter-1","assigneeIds":["assignee-1","assignee-2"],"description":"first task ever no: init","documentType":"TASK","transactions":[{"id":"1","commands":[{"roles":["admin-users","view-only-users"],"title":"very important title no: init","labels":[],"status":null,"userId":"user-1","dueDate":null,"comments":[],"priority":"LOW","checklist":[],"startDate":null,"extensions":[],"reporterId":"reporter-1","targetDate":"2023-01-01T01:01:00Z","assigneeIds":["assignee-1","assignee-2"],"commandType":"CreateTask","description":"first task ever no: init"}]},{"id":"2","commands":[{"taskId":"1_TASK","userId":"tester-bob","targetDate":"2023-01-02T02:01:00Z","commandType":"CommentOnTask","commentText":"comment-1-text","replyToCommentId":null}]},{"id":"3","commands":[{"taskId":"1_TASK","userId":"tester-bob","commentId":"3_TASK","targetDate":"2023-01-02T03:01:00Z","commandType":"ChangeTaskComment","commentText":"new-comment-text","replyToCommentId":null}]}]}
+            """)
+        .mapTo(ImmutableTask.class)
+        ).encodePrettily());
+    
+    assertTaskJson("update-test-cases/updateComment.json", updated);
+    assertTenant(client, "update-test-cases/updateComment.txt");
   }
 
   @org.junit.jupiter.api.Test
@@ -224,7 +248,11 @@ public class TaskUpdateTest extends TaskTestCase {
     final var client = getClient().repo().query().repoName(repoName).createIfNot().await().atMost(atMost);
     final var task = createTaskForUpdating(client);
 
-    client.tasks().updateTask().updateOne(ImmutableAssignTaskRoles.builder()
+    // add to static data
+    toStaticData(client);
+    
+    
+    final var updated = client.tasks().updateTask().updateOne(ImmutableAssignTaskRoles.builder()
             .userId("tester-bob")
             .taskId(task.getId())
             .targetDate(
@@ -236,7 +264,8 @@ public class TaskUpdateTest extends TaskTestCase {
             .build())
         .await().atMost(atMost);
 
-    assertRepo(client, "update-test-cases/updateRoles.txt");
+    assertTaskJson("update-test-cases/updateRoles.json", updated);
+    assertTenant(client, "update-test-cases/updateRoles.txt");
   }
 
   @org.junit.jupiter.api.Test
@@ -249,7 +278,7 @@ public class TaskUpdateTest extends TaskTestCase {
     toStaticData(client);
     
     
-    client.tasks().updateTask().updateOne(ImmutableAssignTask.builder()
+    final var updated = client.tasks().updateTask().updateOne(ImmutableAssignTask.builder()
             .userId("tester-bob")
             .taskId(task.getId())
             .targetDate(
@@ -261,7 +290,15 @@ public class TaskUpdateTest extends TaskTestCase {
             .build())
         .await().atMost(atMost);
 
-    assertRepo(client, "update-test-cases/updateAssignees.txt");
+    System.out.println(JsonObject.mapFrom(
+        new JsonObject("""
+{"id":"1_TASK","roles":["admin-users","view-only-users"],"title":"very important title no: init","labels":[],"status":"CREATED","created":"2023-01-01T01:01:00Z","dueDate":null,"updated":"2023-01-02T02:01:00Z","version":"2","archived":null,"comments":[],"parentId":null,"priority":"LOW","checklist":[],"startDate":null,"extensions":[],"reporterId":"reporter-1","assigneeIds":["new-assignee"],"description":"first task ever no: init","documentType":"TASK","transactions":[{"id":"1","commands":[{"roles":["admin-users","view-only-users"],"title":"very important title no: init","labels":[],"status":null,"userId":"user-1","dueDate":null,"comments":[],"priority":"LOW","checklist":[],"startDate":null,"extensions":[],"reporterId":"reporter-1","targetDate":"2023-01-01T01:01:00Z","assigneeIds":["assignee-1","assignee-2"],"commandType":"CreateTask","description":"first task ever no: init"}]},{"id":"2","commands":[{"taskId":"1_TASK","userId":"tester-bob","targetDate":"2023-01-02T02:01:00Z","assigneeIds":["new-assignee"],"commandType":"AssignTask"}]}]}
+            """)
+        .mapTo(ImmutableTask.class)
+        ).encodePrettily());
+    
+    assertTaskJson("update-test-cases/updateAssignees.json", updated);
+    assertTenant(client, "update-test-cases/updateAssignees.txt");
   }
 
   @org.junit.jupiter.api.Test
@@ -270,7 +307,7 @@ public class TaskUpdateTest extends TaskTestCase {
     final var client = getClient().repo().query().repoName(repoName).createIfNot().await().atMost(atMost);
     final var task = createTaskForUpdating(client);
 
-    client.tasks().updateTask().updateOne(ImmutableChangeTaskStartDate.builder()
+    final var updated = client.tasks().updateTask().updateOne(ImmutableChangeTaskStartDate.builder()
             .userId("tester-bob")
             .taskId(task.getId())
             .targetDate(
@@ -288,7 +325,8 @@ public class TaskUpdateTest extends TaskTestCase {
             .build())
         .await().atMost(atMost);
 
-    assertRepo(client, "update-test-cases/updateStartDate.txt");
+    assertTaskJson("update-test-cases/updateStartDate.json", updated);
+    assertTenant(client, "update-test-cases/updateStartDate.txt");
   }
 
   @org.junit.jupiter.api.Test
@@ -297,7 +335,7 @@ public class TaskUpdateTest extends TaskTestCase {
     final var client = getClient().repo().query().repoName(repoName).createIfNot().await().atMost(atMost);
     final var task = createTaskForUpdating(client);
 
-    client.tasks().updateTask().updateOne(ImmutableChangeTaskDueDate.builder()
+    final var updated = client.tasks().updateTask().updateOne(ImmutableChangeTaskDueDate.builder()
             .userId("tester-bob")
             .taskId(task.getId())
             .targetDate(
@@ -315,7 +353,8 @@ public class TaskUpdateTest extends TaskTestCase {
             .build())
         .await().atMost(atMost);
 
-    assertRepo(client, "update-test-cases/updateDueDate.txt");
+    assertTaskJson("update-test-cases/updateDueDate.json", updated);
+    assertTenant(client, "update-test-cases/updateDueDate.txt");
   }
 
   @org.junit.jupiter.api.Test
@@ -324,7 +363,7 @@ public class TaskUpdateTest extends TaskTestCase {
     final var client = getClient().repo().query().repoName(repoName).createIfNot().await().atMost(atMost);
     final var task = createTaskForUpdating(client);
 
-    client.tasks().updateTask().updateOne(ImmutableChangeTaskInfo.builder()
+    final var updated = client.tasks().updateTask().updateOne(ImmutableChangeTaskInfo.builder()
             .userId("tester-bob")
             .taskId(task.getId())
             .targetDate(
@@ -337,7 +376,8 @@ public class TaskUpdateTest extends TaskTestCase {
             .build())
         .await().atMost(atMost);
 
-    assertRepo(client, "update-test-cases/updateTaskInfo.txt");
+    assertTaskJson("update-test-cases/updateTaskInfo.json", updated);
+    assertTenant(client, "update-test-cases/updateTaskInfo.txt");
   }
 
   @org.junit.jupiter.api.Test
@@ -346,7 +386,7 @@ public class TaskUpdateTest extends TaskTestCase {
     final var client = getClient().repo().query().repoName(repoName).createIfNot().await().atMost(atMost);
     final var task = createTaskForUpdating(client);
 
-    client.tasks().updateTask().updateOne(ImmutableCreateTaskExtension.builder()
+    final var updated = client.tasks().updateTask().updateOne(ImmutableCreateTaskExtension.builder()
             .userId("tester-bob")
             .taskId(task.getId())
             .targetDate(
@@ -360,7 +400,8 @@ public class TaskUpdateTest extends TaskTestCase {
             .build())
         .await().atMost(atMost);
 
-    assertRepo(client, "update-test-cases/createTaskExtension.txt");
+    assertTaskJson("update-test-cases/createTaskExtension.json", updated);
+    assertTenant(client, "update-test-cases/createTaskExtension.txt");
   }
 
   @org.junit.jupiter.api.Test
@@ -369,7 +410,7 @@ public class TaskUpdateTest extends TaskTestCase {
     final var client = getClient().repo().query().repoName(repoName).createIfNot().await().atMost(atMost);
     final var task = createTaskForUpdating(client);
 
-    client.tasks().updateTask().updateOne(ImmutableCreateTaskExtension.builder()
+    final var createdExt = client.tasks().updateTask().updateOne(ImmutableCreateTaskExtension.builder()
             .userId("tester-bob")
             .taskId(task.getId())
             .targetDate(
@@ -381,9 +422,10 @@ public class TaskUpdateTest extends TaskTestCase {
             .name("attachment-1")
             .body("attachment-body")
             .build())
-        .await().atMost(atMost);
+        .await().atMost(atMost)
+        .getExtensions().stream().findFirst().get();
 
-    client.tasks().updateTask().updateOne(ImmutableChangeTaskExtension.builder()
+    final var updated = client.tasks().updateTask().updateOne(ImmutableChangeTaskExtension.builder()
             .userId("tester-bob")
             .taskId(task.getId())
             .targetDate(
@@ -391,14 +433,15 @@ public class TaskUpdateTest extends TaskTestCase {
                 .plus(1, java.time.temporal.ChronoUnit.DAYS)
                 .plus(2, java.time.temporal.ChronoUnit.HOURS)
             )
-            .id("3_TASK")
+            .id(createdExt.getId())
             .type("attachment")
             .name("attachment-1")
             .body("new-attachment-body")
             .build())
         .await().atMost(atMost);
 
-    assertRepo(client, "update-test-cases/updateTaskExtension.txt");
+    assertTaskJson("update-test-cases/updateTaskExtension.json", updated);
+    assertTenant(client, "update-test-cases/updateTaskExtension.txt");
   }
 
   @org.junit.jupiter.api.Test
@@ -420,7 +463,7 @@ public class TaskUpdateTest extends TaskTestCase {
             .build())
         .await().atMost(atMost);
 
-    client.tasks().updateTask().updateOne(ImmutableAssignTaskParent.builder()
+    final var updated = client.tasks().updateTask().updateOne(ImmutableAssignTaskParent.builder()
             .userId("tester-bob")
             .taskId(task2.getId())
             .targetDate(
@@ -431,8 +474,9 @@ public class TaskUpdateTest extends TaskTestCase {
             .parentId(task1.getId())
             .build())
         .await().atMost(atMost);
-
-    assertRepo(client, "update-test-cases/updateParentTask.txt");
+    
+    assertTaskJson("update-test-cases/updateParentTask.json", updated);
+    assertTenant(client, "update-test-cases/updateParentTask.txt");
   }
 
 
