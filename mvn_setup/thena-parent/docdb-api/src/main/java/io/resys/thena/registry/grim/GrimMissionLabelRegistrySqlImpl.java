@@ -176,13 +176,18 @@ public class GrimMissionLabelRegistrySqlImpl implements GrimMissionLabelRegistry
   }
   @Override
   public SqlTuple findAllByMissionIds(GrimMissionFilter filter) {
+    final var where = new GrimMissionSqlFilterBuilder(options).where(filter);
+    
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
-        .append("SELECT * ").ln()
-        .append("  FROM ").append(options.getGrimMissionLabel()).ln()
-        .append("  WHERE (mission_id = ANY($1))").ln() 
+        .append("SELECT mission_label.* ").ln()
+        .append("  FROM ").append(options.getGrimMissionLabel()).append(" as mission_label").ln()
+        
+        .append("  LEFT JOIN ").append(options.getGrimMission()).append(" as mission")
+        .append("  ON(mission_label.mission_id = mission.id)")
+        .append(where.getValue()) 
         .build())
-        .props(Tuple.of(id.toArray()))
+        .props(where.getProps())
         .build();
   }
   @Override

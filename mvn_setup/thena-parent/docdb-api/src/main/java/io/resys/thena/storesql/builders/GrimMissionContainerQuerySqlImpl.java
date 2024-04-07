@@ -1,9 +1,12 @@
 package io.resys.thena.storesql.builders;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import io.resys.thena.api.LogConstants;
@@ -34,6 +37,7 @@ public class GrimMissionContainerQuerySqlImpl implements GrimQueries.InternalMis
   private final ImmutableGrimMissionFilter.Builder builder = ImmutableGrimMissionFilter.builder();
   private ImmutableGrimMissionFilter filter;
   private String usedBy, usedFor;
+  private List<String> missionIds;
   
   
   public GrimMissionContainerQuerySqlImpl(ThenaSqlDataSource dataSource) {
@@ -49,7 +53,10 @@ public class GrimMissionContainerQuerySqlImpl implements GrimQueries.InternalMis
   }
   @Override
   public InternalMissionQuery missionId(String... missionId) {
-    builder.addAllMissionIds(Arrays.asList(missionId));
+    if(this.missionIds == null) {
+      this.missionIds = new ArrayList<>();
+    }
+    this.missionIds.addAll(Arrays.asList(missionId));
     return this;
   }
   @Override
@@ -117,7 +124,7 @@ public class GrimMissionContainerQuerySqlImpl implements GrimQueries.InternalMis
   }
   @Override
   public Multi<GrimMissionContainer> findAll() {
-    this.filter = builder.build();
+    this.filter = builder.missionIds(Optional.ofNullable(missionIds)).build();
     return Uni.combine().all().unis(
       findAllLinks(),
       findAllRemarks(),
@@ -369,7 +376,7 @@ public class GrimMissionContainerQuerySqlImpl implements GrimQueries.InternalMis
     if(docsToExclude.contains(GrimDocType.GRIM_COMMIT_VIEWER) || usedBy == null || usedFor == null) {
       return Uni.createFrom().item(ImmutableGrimMissionContainer.builder().build());
     }
-    if(filter.getMissionIds().isEmpty()) {
+    if(this.missionIds == null) {
       final var sql = registry.commitViewers().findAll();
       if(log.isDebugEnabled()) {
         log.debug("User findAllViewers query, with props: {} \r\n{}", 
@@ -388,7 +395,7 @@ public class GrimMissionContainerQuerySqlImpl implements GrimQueries.InternalMis
           );
     }
     
-    final var sql = registry.commitViewers().findAllByMissionIdsUsedByAndCommit(filter.getMissionIds(), usedBy, usedFor);
+    final var sql = registry.commitViewers().findAllByMissionIdsUsedByAndCommit(this.missionIds, usedBy, usedFor);
     if(log.isDebugEnabled()) {
       log.debug("User findAllViewers query, with props: {} \r\n{}", 
           sql.getPropsDeepString(),

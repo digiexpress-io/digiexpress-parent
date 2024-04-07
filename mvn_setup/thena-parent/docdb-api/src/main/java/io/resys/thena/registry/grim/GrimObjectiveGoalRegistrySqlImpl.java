@@ -36,6 +36,7 @@ public class GrimObjectiveGoalRegistrySqlImpl implements GrimObjectiveGoalRegist
   }
   @Override
   public ThenaSqlClient.Sql findAll() {
+
     return ImmutableSql.builder()
         .value(new SqlStatement()
         .append("SELECT goal.*,").ln()
@@ -96,6 +97,7 @@ public class GrimObjectiveGoalRegistrySqlImpl implements GrimObjectiveGoalRegist
   }
   @Override
   public SqlTuple findAllByMissionIds(GrimMissionFilter filter) {
+    final var where = new GrimMissionSqlFilterBuilder(options).where(filter);
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT goal.*,").ln()
@@ -120,9 +122,11 @@ public class GrimObjectiveGoalRegistrySqlImpl implements GrimObjectiveGoalRegist
         .append(" LEFT JOIN ").append(options.getGrimMissionData()).append(" as mission_data").ln()
         .append(" ON(mission_data.goal_id = goal.id)").ln()
         
-        .append(" WHERE objective.mission_id = ANY($1)").ln() 
+        .append(" LEFT JOIN ").append(options.getGrimMission()).append(" as mission")
+        .append(" ON(objective.mission_id = mission.id)")
+        .append(where.getValue()) 
         .build())
-        .props(Tuple.of(id.toArray()))
+        .props(where.getProps())
         .build();
   }
   @Override

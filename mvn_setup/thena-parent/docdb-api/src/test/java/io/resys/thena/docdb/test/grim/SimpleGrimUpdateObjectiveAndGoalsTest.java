@@ -174,13 +174,13 @@ author: jane.doe@morgue.com, message: batching tests
   + 20::GRIM_ASSIGNMENT
     {"id":"20","commitId":"4","missionId":"5","assignee":"jane-from-the-roofing","assignmentType":"worker","relation":null}
   + 29::GRIM_MISSION_LINKS
-    {"id":"29","commitId":"4","missionId":"5","externalId":"site.com/plans/1","linkType":"project-plans","linkBody":null,"relation":null}
+    {"id":"29","commitId":"4","createdWithCommitId":"4","missionId":"5","externalId":"site.com/plans/1","linkType":"project-plans","linkBody":null,"transitives":null,"relation":null}
   + 28::GRIM_MISSION_LINKS
-    {"id":"28","commitId":"4","missionId":"5","externalId":"site.com/permits/5","linkType":"permits","linkBody":null,"relation":null}
+    {"id":"28","commitId":"4","createdWithCommitId":"4","missionId":"5","externalId":"site.com/permits/5","linkType":"permits","linkBody":null,"transitives":null,"relation":null}
   + 13::GRIM_REMARK
-    {"id":"13","commitId":"4","createdWithCommitId":"4","missionId":"5","createdAt":null,"updatedAt":null,"remarkText":"Created main task for building a house!","remarkStatus":null,"reporterId":"jane.doe","relation":null}
+    {"id":"13","commitId":"4","createdWithCommitId":"4","missionId":"5","parentId":null,"createdAt":null,"updatedAt":null,"remarkText":"Created main task for building a house!","remarkStatus":null,"reporterId":"jane.doe","relation":null}
   + 12::GRIM_REMARK
-    {"id":"12","commitId":"4","createdWithCommitId":"4","missionId":"5","createdAt":null,"updatedAt":null,"remarkText":"Waiting for results already!","remarkStatus":null,"reporterId":"the.bob.clown","relation":null}
+    {"id":"12","commitId":"4","createdWithCommitId":"4","missionId":"5","parentId":null,"createdAt":null,"updatedAt":null,"remarkText":"Waiting for results already!","remarkStatus":null,"reporterId":"the.bob.clown","relation":null}
   + 18::GRIM_ASSIGNMENT
     {"id":"18","commitId":"4","missionId":"5","assignee":"no-name-worker-1","assignmentType":"objective-worker","relation":{"objectiveId":"9","remarkId":null,"objectiveGoalId":null,"relationType":"OBJECTIVE"}}
   + 19::GRIM_ASSIGNMENT
@@ -195,16 +195,16 @@ author: jane.doe@morgue.com, message: batching tests
     {"id":"25","commitId":"4","createdWithCommitId":"4","missionId":"5","createdAt":null,"updatedAt":null,"title":"kitchen","description":"kitcher plan goes here!","dataExtension":null,"relation":{"objectiveId":null,"remarkId":null,"objectiveGoalId":"10","relationType":"GOAL"}}
   + 11::GRIM_OBJECTIVE_GOAL
     {"id":"11","commitId":"4","createdWithCommitId":"4","objectiveId":"9","goalStatus":null,"startDate":null,"dueDate":null}
-  + 23::GRIM_MISSION_DATA
-    {"id":"23","commitId":"4","createdWithCommitId":"4","missionId":"5","createdAt":null,"updatedAt":null,"title":"bathroom","description":"kitcher plan goes here!","dataExtension":null,"relation":{"objectiveId":null,"remarkId":null,"objectiveGoalId":"11","relationType":"GOAL"}}
+  + 22::GRIM_MISSION_DATA
+    {"id":"22","commitId":"4","createdWithCommitId":"4","missionId":"5","createdAt":null,"updatedAt":null,"title":"bathroom","description":"kitcher plan goes here!","dataExtension":null,"relation":{"objectiveId":null,"remarkId":null,"objectiveGoalId":"11","relationType":"GOAL"}}
   + 9::GRIM_OBJECTIVE
     {"id":"9","commitId":"4","createdWithCommitId":"4","missionId":"5","objectiveStatus":null,"startDate":[2023,1,1],"dueDate":[2024,1,1]}
   + 24::GRIM_MISSION_DATA
     {"id":"24","commitId":"4","createdWithCommitId":"4","missionId":"5","createdAt":null,"updatedAt":null,"title":"interior design ideas","description":"all ideas are welcome how we should design kitchen and bathroom!","dataExtension":null,"relation":{"objectiveId":"9","remarkId":null,"objectiveGoalId":null,"relationType":"OBJECTIVE"}}
   + 5::GRIM_MISSION
-    {"id":"5","commitId":"4","createdWithCommitId":"4","updatedTreeWithCommitId":"4","parentMissionId":null,"externalId":null,"missionStatus":"OPEN","missionPriority":"HIGH","reporterId":"jane.doe@housing.com","startDate":[2020,5,1],"dueDate":[2020,6,1],"archivedDate":null,"archivedStatus":null}
-  + 22::GRIM_MISSION_DATA
-    {"id":"22","commitId":"4","createdWithCommitId":"4","missionId":"5","createdAt":null,"updatedAt":null,"title":"The best house ever","description":"","dataExtension":null,"relation":null}
+    {"id":"5","commitId":"4","createdWithCommitId":"4","updatedTreeWithCommitId":"4","parentMissionId":null,"externalId":null,"missionStatus":"OPEN","missionPriority":"HIGH","reporterId":"jane.doe@housing.com","startDate":[2020,5,1],"dueDate":[2020,6,1],"archivedAt":null,"archivedStatus":null}
+  + 23::GRIM_MISSION_DATA
+    {"id":"23","commitId":"4","createdWithCommitId":"4","missionId":"5","createdAt":null,"updatedAt":null,"title":"my first mission to build a house","description":"The best house ever","dataExtension":null,"relation":null}
 
  | deleted
   - deleted: 0 entries
@@ -224,8 +224,8 @@ author: jane.doe@morgue.com, message: forgot to add comments to things
  | merged
   +- merged: 3 entries
   +- 13::GRIM_REMARK
-   -  {"id":"13","commitId":"4","createdWithCommitId":"4","missionId":"5","createdAt":"OffsetDateTime.now()","updatedAt":"OffsetDateTime.now()","remarkText":"Created main task for building a house!","remarkStatus":null,"reporterId":"jane.doe","relation":null}
-   +  {"id":"13","commitId":"7","createdWithCommitId":"4","missionId":"5","createdAt":"OffsetDateTime.now()","updatedAt":"OffsetDateTime.now()","remarkText":"Main task for building customer #C19837 house","remarkStatus":null,"reporterId":"jane.doe","relation":null}
+   -  {"id":"13","commitId":"4","createdWithCommitId":"4","missionId":"5","parentId":null,"createdAt":"OffsetDateTime.now()","updatedAt":"OffsetDateTime.now()","remarkText":"Created main task for building a house!","remarkStatus":null,"reporterId":"jane.doe","relation":null}
+   +  {"id":"13","commitId":"7","createdWithCommitId":"4","missionId":"5","parentId":null,"createdAt":"OffsetDateTime.now()","updatedAt":"OffsetDateTime.now()","remarkText":"Main task for building customer #C19837 house","remarkStatus":null,"reporterId":"jane.doe","relation":null}
    diff: commitId :: 4 -> 7
    diff: remarkText :: Created main task for building a house! -> Main task for building customer #C19837 house
   +- 24::GRIM_MISSION_DATA

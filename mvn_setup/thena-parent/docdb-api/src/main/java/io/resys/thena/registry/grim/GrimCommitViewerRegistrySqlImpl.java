@@ -166,13 +166,17 @@ public class GrimCommitViewerRegistrySqlImpl implements GrimCommitViewerRegistry
   }
   @Override
   public SqlTuple findAllByMissionIds(GrimMissionFilter filter) {
+    final var where = new GrimMissionSqlFilterBuilder(options).where(filter);
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
-        .append("SELECT * ").ln()
-        .append("  FROM ").append(options.getGrimCommitViewer()).ln()
-        .append("  WHERE (object_id = ANY($1))").ln() 
+        .append("SELECT viewers.* ").ln()
+        .append("  FROM ").append(options.getGrimCommitViewer()).append(" as viewers").ln()
+        //.append("  WHERE (object_id = ANY($1))").ln()
+        .append("  LEFT JOIN ").append(options.getGrimMission()).append(" as mission")
+        .append("  ON(viewers.object_id = mission.id)")
+        .append(where.getValue()) 
         .build())
-        .props(Tuple.of(id.toArray()))
+        .props(where.getProps())
         .build();
   }
   @Override

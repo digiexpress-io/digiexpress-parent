@@ -225,6 +225,8 @@ public class GrimMissionLinkRegistrySqlImpl implements GrimMissionLinkRegistry {
   }
   @Override
   public SqlTuple findAllByMissionIds(GrimMissionFilter filter) {
+    final var where = new GrimMissionSqlFilterBuilder(options).where(filter);
+    
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT links.*, ")
@@ -238,9 +240,11 @@ public class GrimMissionLinkRegistrySqlImpl implements GrimMissionLinkRegistry {
         .append(" LEFT JOIN ").append(options.getGrimCommit()).append(" as created_commit").ln()
         .append(" ON(created_commit.commit_id = links.created_commit_id)").ln()
         
-        .append("  WHERE links.mission_id = ANY($1)").ln() 
+        .append(" LEFT JOIN ").append(options.getGrimMission()).append(" as mission")
+        .append(" ON(links.mission_id = mission.id)")
+        .append(where.getValue()) 
         .build())
-        .props(Tuple.of(id.toArray()))
+        .props(where.getProps())
         .build();
   }
 

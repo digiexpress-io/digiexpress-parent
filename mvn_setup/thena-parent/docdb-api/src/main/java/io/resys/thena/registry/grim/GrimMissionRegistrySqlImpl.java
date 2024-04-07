@@ -100,6 +100,7 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
   }
   @Override
   public SqlTuple findAllByMissionIds(GrimMissionFilter filter) {
+    final var where = new GrimMissionSqlFilterBuilder(options).where(filter);
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT ")
@@ -125,10 +126,10 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
         
         .append(" LEFT JOIN ").append(options.getGrimMissionData()).append(" as mission_data").ln()
         .append(" ON(mission_data.mission_id = mission.id and objective_id is null and goal_id is null and remark_id is null)").ln()
-        
-        .append(" WHERE mission.id = ANY($1)").ln() 
+
+        .append(where.getValue()) 
         .build())
-        .props(Tuple.of(id.toArray()))
+        .props(where.getProps())
         .build();
   }
   @Override

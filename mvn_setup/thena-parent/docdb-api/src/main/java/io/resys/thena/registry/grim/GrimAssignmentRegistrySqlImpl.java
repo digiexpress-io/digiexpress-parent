@@ -56,13 +56,17 @@ public class GrimAssignmentRegistrySqlImpl implements GrimAssignmentRegistry {
   
   @Override
   public SqlTuple findAllByMissionIds(GrimMissionFilter filter) {
+    final var where = new GrimMissionSqlFilterBuilder(options).where(filter);
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
-        .append("SELECT * ").ln()
-        .append("  FROM ").append(options.getGrimAssignment()).ln()
-        .append("  WHERE (mission_id = ANY($1))").ln() 
+        .append("SELECT assignment.* ").ln()
+        .append("  FROM ").append(options.getGrimAssignment()).append(" as assignment").ln()
+        
+        .append("  LEFT JOIN ").append(options.getGrimMission()).append(" as mission")
+        .append("  ON(assignment.mission_id = mission.id)")
+        .append(where.getValue())
         .build())
-        .props(Tuple.of(id.toArray()))
+        .props(where.getProps())
         .build();
   }
 

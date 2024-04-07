@@ -75,6 +75,7 @@ public class GrimRemarkRegistrySqlImpl implements GrimRemarkRegistry {
   }
   @Override
   public SqlTuple findAllByMissionIds(GrimMissionFilter filter) {
+    final var where = new GrimMissionSqlFilterBuilder(options).where(filter);
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT remark.*,").ln()
@@ -89,9 +90,11 @@ public class GrimRemarkRegistrySqlImpl implements GrimRemarkRegistry {
         .append(" LEFT JOIN ").append(options.getGrimCommit()).append(" as created_commit").ln()
         .append(" ON(created_commit.commit_id = remark.created_commit_id)").ln()
 
-        .append(" WHERE remark.mission_id = ANY($1)").ln() 
+        .append("  LEFT JOIN ").append(options.getGrimMission()).append(" as mission")
+        .append("  ON(remark.mission_id = mission.id)")
+        .append(where.getValue()) 
         .build())
-        .props(Tuple.of(id.toArray()))
+        .props(where.getProps())
         .build();
   }
   @Override
