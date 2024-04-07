@@ -9,7 +9,6 @@ import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.api.envelope.QueryEnvelopeList;
 import io.resys.thena.tasks.client.api.model.Task;
-import io.resys.thena.tasks.client.thenagit.store.DocumentStoreException;
 import io.resys.thena.tasks.client.thenamission.TaskStoreConfig;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;

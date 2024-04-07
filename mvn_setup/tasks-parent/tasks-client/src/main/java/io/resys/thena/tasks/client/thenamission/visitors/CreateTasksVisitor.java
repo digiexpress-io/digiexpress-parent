@@ -25,7 +25,6 @@ import io.resys.thena.tasks.client.api.model.Task.ChecklistItem;
 import io.resys.thena.tasks.client.api.model.Task.Status;
 import io.resys.thena.tasks.client.api.model.TaskCommand;
 import io.resys.thena.tasks.client.api.model.TaskCommand.CreateTask;
-import io.resys.thena.tasks.client.thenagit.store.DocumentStoreException;
 import io.resys.thena.tasks.client.thenamission.TaskStoreConfig;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
@@ -73,6 +72,7 @@ public class CreateTasksVisitor implements TaskStoreConfig.CreateManyTasksVisito
     
     command.getComments().forEach(comment -> newMission.addRemark(newRemark -> 
       newRemark
+      .parentId(comment.getReplyToId())
       .remarkText(comment.getCommentText())
       .reporterId(comment.getUsername())
       .build()
@@ -188,11 +188,13 @@ public class CreateTasksVisitor implements TaskStoreConfig.CreateManyTasksVisito
    
    .comments(src.getRemarks().values().stream()
        .filter(remark -> remark.getRelation() == null)
+       .sorted((a, b) -> a.getCreatedAt().compareTo(b.getCreatedAt()))
        .map(remark -> ImmutableTaskComment.builder()
            .id(remark.getId())
            .commentText(remark.getRemarkText())
            .created(remark.getCreatedAt().toInstant())
            .username(remark.getReporterId())
+           .replyToId(remark.getParentId())
            .build())
        .toList());
 

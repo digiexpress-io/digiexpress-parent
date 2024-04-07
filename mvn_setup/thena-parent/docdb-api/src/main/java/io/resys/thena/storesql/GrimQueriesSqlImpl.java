@@ -17,7 +17,7 @@ public class GrimQueriesSqlImpl implements GrimQueries {
     return dataSource;
   }
   @Override
-  public MissionQuery missions() {
+  public InternalMissionQuery missions() {
     return new GrimMissionContainerQuerySqlImpl(dataSource);
   }
   @Override

@@ -12,7 +12,8 @@ public interface GrimMissionLinkRegistry extends ThenaRegistryService<GrimMissio
   ThenaSqlClient.Sql findAll();
   ThenaSqlClient.SqlTuple getById(String id);
   
-  ThenaSqlClient.SqlTuple findAllByMissionIds(Collection<String> id);
+  ThenaSqlClient.SqlTuple findAllByMissionIds(GrimMissionFilter filter);
+  
   ThenaSqlClient.SqlTupleList insertAll(Collection<GrimMissionLink> links);
   ThenaSqlClient.SqlTupleList deleteAll(Collection<GrimMissionLink> links);
   ThenaSqlClient.SqlTupleList updateAll(Collection<GrimMissionLink> mission);

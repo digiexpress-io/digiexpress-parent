@@ -13,7 +13,7 @@ import io.smallrye.mutiny.Uni;
 
 public interface GrimQueries {
   ThenaDataSource getDataSource();
-  MissionQuery missions();
+  InternalMissionQuery missions();
   CommitViewerQuery commitViewer();
   
   interface CommitViewerQuery {
@@ -22,11 +22,13 @@ public interface GrimQueries {
   }
 
   
-  interface MissionQuery {
-    MissionQuery viewer(String userId, String usedBy);
-    MissionQuery excludeDocs(GrimDocType ...docs); // multiple will be OR
-    MissionQuery missionId(String ...missionId); // multiple will be OR
-    MissionQuery addAssignment(String assignmentType, String assignmentValue); // multiple will be OR
+  interface InternalMissionQuery {
+    
+    InternalMissionQuery viewer(String userId, String usedBy);
+    InternalMissionQuery excludeDocs(GrimDocType ...docs); // multiple will be OR
+    InternalMissionQuery archived(boolean includeArchived); // true to exclude any tasks with archiveAt date present
+    InternalMissionQuery missionId(String ...missionId); // multiple will be OR
+    InternalMissionQuery addAssignment(String assignmentType, String assignmentValue); // multiple will be OR
     
     Multi<GrimMissionContainer> findAll();
     Uni<GrimMissionContainer> getById(String missionId);

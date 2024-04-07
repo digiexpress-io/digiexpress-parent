@@ -1,6 +1,6 @@
 {
-  "id" : "1_TASK",
-  "version" : "2_TASK",
+  "id" : "13_TASK",
+  "version" : "14_TASK",
   "created" : "2023-01-01T01:01:00Z",
   "updated" : "2023-01-01T01:01:00Z",
   "archived" : null,
@@ -8,7 +8,7 @@
   "dueDate" : null,
   "parentId" : null,
   "transactions" : [ {
-    "id" : "5_TASK",
+    "id" : "17_TASK",
     "commands" : [ {
       "commandType" : "CreateTask",
       "userId" : "user-1",
@@ -28,33 +28,33 @@
       "checklist" : [ ]
     } ]
   }, {
-    "id" : "6_TASK",
+    "id" : "18_TASK",
     "commands" : [ {
       "commandType" : "CreateChecklist",
       "userId" : "John smith",
       "targetDate" : "2023-01-01T01:01:00Z",
-      "taskId" : "1_TASK",
+      "taskId" : "13_TASK",
       "title" : "My first checklist",
       "checklist" : [ ]
     } ]
   }, {
-    "id" : "7_TASK",
+    "id" : "19_TASK",
     "commands" : [ {
       "commandType" : "ChangeChecklistTitle",
       "userId" : "John smith",
       "targetDate" : "2023-01-01T01:01:00Z",
-      "taskId" : "1_TASK",
-      "checklistId" : "10_TASK",
+      "taskId" : "13_TASK",
+      "checklistId" : "22_TASK",
       "title" : "My second checklist"
     } ]
   }, {
-    "id" : "9_TASK",
+    "id" : "21_TASK",
     "commands" : [ {
       "commandType" : "AddChecklistItem",
       "userId" : "John smith",
       "targetDate" : "2023-01-01T01:01:00Z",
-      "taskId" : "1_TASK",
-      "checklistId" : "10_TASK",
+      "taskId" : "13_TASK",
+      "checklistId" : "22_TASK",
       "title" : "TODO1",
       "assigneeIds" : [ "Jane smith", "Adam West" ],
       "dueDate" : [ 2023, 1, 2 ],
@@ -72,10 +72,10 @@
   "extensions" : [ ],
   "comments" : [ ],
   "checklist" : [ {
-    "id" : "10_TASK",
+    "id" : "22_TASK",
     "title" : "My second checklist",
     "items" : [ {
-      "id" : "4_TASK",
+      "id" : "16_TASK",
       "assigneeIds" : [ "Adam West", "Jane smith" ],
       "dueDate" : [ 2023, 1, 2 ],
       "completed" : false,

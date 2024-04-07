@@ -1,6 +1,6 @@
 {
-  "id" : "1_TASK",
-  "version" : "2_TASK",
+  "id" : "51_TASK",
+  "version" : "52_TASK",
   "created" : "2023-01-01T01:01:00Z",
   "updated" : "2023-01-01T01:01:00Z",
   "archived" : null,
@@ -8,7 +8,7 @@
   "dueDate" : null,
   "parentId" : null,
   "transactions" : [ {
-    "id" : "3_TASK",
+    "id" : "53_TASK",
     "commands" : [ {
       "commandType" : "CreateTask",
       "userId" : "user-1",
@@ -28,67 +28,67 @@
       "checklist" : [ ]
     } ]
   }, {
-    "id" : "4_TASK",
+    "id" : "54_TASK",
     "commands" : [ {
       "commandType" : "CreateChecklist",
       "userId" : "John smith",
       "targetDate" : "2023-01-01T01:01:00Z",
-      "taskId" : "1_TASK",
+      "taskId" : "51_TASK",
       "title" : "My first checklist",
       "checklist" : [ ]
     } ]
   }, {
-    "id" : "5_TASK",
+    "id" : "55_TASK",
     "commands" : [ {
       "commandType" : "ChangeChecklistTitle",
       "userId" : "John smith",
       "targetDate" : "2023-01-01T01:01:00Z",
-      "taskId" : "1_TASK",
-      "checklistId" : "16_TASK",
+      "taskId" : "51_TASK",
+      "checklistId" : "66_TASK",
       "title" : "My second checklist"
     } ]
   }, {
-    "id" : "7_TASK",
+    "id" : "57_TASK",
     "commands" : [ {
       "commandType" : "AddChecklistItem",
       "userId" : "John smith",
       "targetDate" : "2023-01-01T01:01:00Z",
-      "taskId" : "1_TASK",
-      "checklistId" : "16_TASK",
+      "taskId" : "51_TASK",
+      "checklistId" : "66_TASK",
       "title" : "TODO1",
       "assigneeIds" : [ "Jane smith", "Adam West" ],
       "dueDate" : [ 2023, 1, 2 ],
       "completed" : false
     } ]
   }, {
-    "id" : "9_TASK",
+    "id" : "59_TASK",
     "commands" : [ {
       "commandType" : "ChangeChecklistItemCompleted",
       "userId" : "John smith",
       "targetDate" : "2023-01-01T01:01:00Z",
-      "taskId" : "1_TASK",
-      "checklistId" : "16_TASK",
-      "checklistItemId" : "14_TASK",
+      "taskId" : "51_TASK",
+      "checklistId" : "66_TASK",
+      "checklistItemId" : "64_TASK",
       "completed" : true
     } ]
   }, {
-    "id" : "12_TASK",
+    "id" : "62_TASK",
     "commands" : [ {
       "commandType" : "DeleteChecklistItem",
       "userId" : "John smith",
       "targetDate" : "2023-01-01T01:01:00Z",
-      "taskId" : "1_TASK",
-      "checklistId" : "16_TASK",
-      "checklistItemId" : "14_TASK"
+      "taskId" : "51_TASK",
+      "checklistId" : "66_TASK",
+      "checklistItemId" : "64_TASK"
     } ]
   }, {
-    "id" : "15_TASK",
+    "id" : "65_TASK",
     "commands" : [ {
       "commandType" : "DeleteChecklist",
       "userId" : "John smith",
       "targetDate" : "2023-01-01T01:01:00Z",
-      "taskId" : "1_TASK",
-      "checklistId" : "16_TASK"
+      "taskId" : "51_TASK",
+      "checklistId" : "66_TASK"
     } ]
   } ],
   "roles" : [ "admin-users", "view-only-users" ],

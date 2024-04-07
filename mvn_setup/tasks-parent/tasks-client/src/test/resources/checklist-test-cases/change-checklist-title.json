@@ -1,6 +1,6 @@
 {
-  "id" : "1_TASK",
-  "version" : "2_TASK",
+  "id" : "6_TASK",
+  "version" : "7_TASK",
   "created" : "2023-01-01T01:01:00Z",
   "updated" : "2023-01-01T01:01:00Z",
   "archived" : null,
@@ -8,7 +8,7 @@
   "dueDate" : null,
   "parentId" : null,
   "transactions" : [ {
-    "id" : "4_TASK",
+    "id" : "9_TASK",
     "commands" : [ {
       "commandType" : "CreateTask",
       "userId" : "user-1",
@@ -28,23 +28,23 @@
       "checklist" : [ ]
     } ]
   }, {
-    "id" : "5_TASK",
+    "id" : "10_TASK",
     "commands" : [ {
       "commandType" : "CreateChecklist",
       "userId" : "John smith",
       "targetDate" : "2023-01-01T01:01:00Z",
-      "taskId" : "1_TASK",
+      "taskId" : "6_TASK",
       "title" : "My first checklist",
       "checklist" : [ ]
     } ]
   }, {
-    "id" : "6_TASK",
+    "id" : "11_TASK",
     "commands" : [ {
       "commandType" : "ChangeChecklistTitle",
       "userId" : "John smith",
       "targetDate" : "2023-01-01T01:01:00Z",
-      "taskId" : "1_TASK",
-      "checklistId" : "7_TASK",
+      "taskId" : "6_TASK",
+      "checklistId" : "12_TASK",
       "title" : "My second checklist"
     } ]
   } ],
@@ -59,7 +59,7 @@
   "extensions" : [ ],
   "comments" : [ ],
   "checklist" : [ {
-    "id" : "7_TASK",
+    "id" : "12_TASK",
     "title" : "My second checklist",
     "items" : [ ]
   } ]

@@ -47,7 +47,7 @@ public class MergeRemarkBuilder implements MergeRemark {
   }
   @Override
   public MergeRemark parentId(String parentId) {
-    RepoAssert.isTrue(all_remarks.containsKey(parentId), () -> "Can't find parent remark by id: '" +  parentId + "'!");
+    RepoAssert.isTrue(parentId == null || all_remarks.containsKey(parentId), () -> "Can't find parent remark by id: '" +  parentId + "'!");
     this.nextRemark.parentId(parentId);
     return this;
   }

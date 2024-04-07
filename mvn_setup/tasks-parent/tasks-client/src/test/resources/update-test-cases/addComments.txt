@@ -1,30 +1,67 @@
 
 Repo
-  - id: 1, rev: 2
-    name: TaskUpdateTestAddComments
+  - id: 11, rev: 12
+    name: TaskUpdateTestAddComments, prefix: 13, type: grim
+Mission: 1_TASK
+  - 3_TASK::GRIM_REMARK
+  - 4_TASK::GRIM_REMARK
+  - 5_TASK::GRIM_COMMANDS
+  - 6_TASK::GRIM_COMMANDS
+  - 7_TASK::GRIM_COMMANDS
+  - 19::GRIM_ASSIGNMENT
+  - 20::GRIM_ASSIGNMENT
+  - 21::GRIM_ASSIGNMENT
+  - 22::GRIM_ASSIGNMENT
+  - 23::GRIM_MISSION_DATA
 
-Refs
-  - 3: main
+commit: 2_TASK, tenant: TaskUpdateTestAddComments
+author: not-configured, message: Creating tasks by: CreateTasksVisitor
+ | created
+  + added new: 6 entries
+  + 21::GRIM_ASSIGNMENT
+    {"id":"21","commitId":"2_TASK","missionId":"1_TASK","assignee":"assignee-1","assignmentType":"task_user","relation":null}
+  + 22::GRIM_ASSIGNMENT
+    {"id":"22","commitId":"2_TASK","missionId":"1_TASK","assignee":"assignee-2","assignmentType":"task_user","relation":null}
+  + 19::GRIM_ASSIGNMENT
+    {"id":"19","commitId":"2_TASK","missionId":"1_TASK","assignee":"admin-users","assignmentType":"task_role","relation":null}
+  + 20::GRIM_ASSIGNMENT
+    {"id":"20","commitId":"2_TASK","missionId":"1_TASK","assignee":"view-only-users","assignmentType":"task_role","relation":null}
+  + 1_TASK::GRIM_MISSION
+    {"id":"1_TASK","commitId":"2_TASK","createdWithCommitId":"2_TASK","updatedTreeWithCommitId":"2_TASK","parentMissionId":null,"externalId":null,"missionStatus":"CREATED","missionPriority":"LOW","reporterId":"reporter-1","startDate":null,"dueDate":null,"archivedAt":null,"archivedStatus":null}
+  + 23::GRIM_MISSION_DATA
+    {"id":"23","commitId":"2_TASK","createdWithCommitId":"2_TASK","missionId":"1_TASK","createdAt":null,"updatedAt":null,"title":"very important title no: init","description":"first task ever no: init","dataExtension":null,"relation":null}
 
-Tags
+ | deleted
+  - deleted: 0 entries
 
-Commits
-  - id: 4
-    tree: 5, parent: , message: Creating tasks
-  - id: 6
-    tree: 7, parent: 4, message: Update tasks: 1
-  - id: 3
-    tree: 8, parent: 6, message: Update tasks: 1
+ | merged
+  +- merged: 0 entries
 
-Trees
-  - id: 5
-    9: 1_TASK
-  - id: 7
-    10: 1_TASK
-  - id: 8
-    11: 1_TASK
 
-Blobs
-  - 9: {"id":"1_TASK","roles":["admin-users","view-only-users"],"title":"very important title no: init","labels":[],"status":"CREATED","created":"2023-01-01T01:01:00Z","dueDate":null,"updated":"2023-01-01T01:01:00Z","version":"1","archived":null,"comments":[],"parentId":null,"priority":"LOW","checklist":[],"startDate":null,"extensions":[],"reporterId":"reporter-1","assigneeIds":["assignee-1","assignee-2"],"description":"first task ever no: init","documentType":"TASK","transactions":[{"id":"1","commands":[{"roles":["admin-users","view-only-users"],"title":"very important title no: init","labels":[],"status":null,"userId":"user-1","dueDate":null,"comments":[],"priority":"LOW","checklist":[],"startDate":null,"extensions":[],"reporterId":"reporter-1","targetDate":"2023-01-01T01:01:00Z","assigneeIds":["assignee-1","assignee-2"],"commandType":"CreateTask","description":"first task ever no: init"}]}]}
-  - 10: {"id":"1_TASK","roles":["admin-users","view-only-users"],"title":"very important title no: init","labels":[],"status":"CREATED","created":"2023-01-01T01:01:00Z","dueDate":null,"updated":"2023-01-02T02:01:00Z","version":"2","archived":null,"comments":[{"id":"3_TASK","created":"2023-01-02T02:01:00Z","username":"tester-bob","replyToId":null,"commentText":"comment-1-text"}],"parentId":null,"priority":"LOW","checklist":[],"startDate":null,"extensions":[],"reporterId":"reporter-1","assigneeIds":["assignee-1","assignee-2"],"description":"first task ever no: init","documentType":"TASK","transactions":[{"id":"1","commands":[{"roles":["admin-users","view-only-users"],"title":"very important title no: init","labels":[],"status":null,"userId":"user-1","dueDate":null,"comments":[],"priority":"LOW","checklist":[],"startDate":null,"extensions":[],"reporterId":"reporter-1","targetDate":"2023-01-01T01:01:00Z","assigneeIds":["assignee-1","assignee-2"],"commandType":"CreateTask","description":"first task ever no: init"}]},{"id":"2","commands":[{"taskId":"1_TASK","userId":"tester-bob","targetDate":"2023-01-02T02:01:00Z","commandType":"CommentOnTask","commentText":"comment-1-text","replyToCommentId":null}]}]}
-  - 11: {"id":"1_TASK","roles":["admin-users","view-only-users"],"title":"very important title no: init","labels":[],"status":"CREATED","created":"2023-01-01T01:01:00Z","dueDate":null,"updated":"2023-01-02T03:01:00Z","version":"3","archived":null,"comments":[{"id":"3_TASK","created":"2023-01-02T02:01:00Z","username":"tester-bob","replyToId":null,"commentText":"comment-1-text"},{"id":"4_TASK","created":"2023-01-02T03:01:00Z","username":"tester-bob","replyToId":"3_TASK","commentText":"comment-2-text"}],"parentId":null,"priority":"LOW","checklist":[],"startDate":null,"extensions":[],"reporterId":"reporter-1","assigneeIds":["assignee-1","assignee-2"],"description":"first task ever no: init","documentType":"TASK","transactions":[{"id":"1","commands":[{"roles":["admin-users","view-only-users"],"title":"very important title no: init","labels":[],"status":null,"userId":"user-1","dueDate":null,"comments":[],"priority":"LOW","checklist":[],"startDate":null,"extensions":[],"reporterId":"reporter-1","targetDate":"2023-01-01T01:01:00Z","assigneeIds":["assignee-1","assignee-2"],"commandType":"CreateTask","description":"first task ever no: init"}]},{"id":"2","commands":[{"taskId":"1_TASK","userId":"tester-bob","targetDate":"2023-01-02T02:01:00Z","commandType":"CommentOnTask","commentText":"comment-1-text","replyToCommentId":null}]},{"id":"3","commands":[{"taskId":"1_TASK","userId":"tester-bob","targetDate":"2023-01-02T03:01:00Z","commandType":"CommentOnTask","commentText":"comment-2-text","replyToCommentId":"3_TASK"}]}]}
+commit: 15, tenant: TaskUpdateTestAddComments
+author: not-configured, message: merging tasks from: UpdateTasksVisitor
+ | created
+  + added new: 1 entries
+  + 3_TASK::GRIM_REMARK
+    {"id":"3_TASK","commitId":"15","createdWithCommitId":"15","missionId":"1_TASK","parentId":null,"createdAt":null,"updatedAt":null,"remarkText":"comment-1-text","remarkStatus":null,"reporterId":"tester-bob","relation":null}
+
+ | deleted
+  - deleted: 0 entries
+
+ | merged
+  +- merged: 0 entries
+
+
+commit: 17, tenant: TaskUpdateTestAddComments
+author: not-configured, message: merging tasks from: UpdateTasksVisitor
+ | created
+  + added new: 1 entries
+  + 4_TASK::GRIM_REMARK
+    {"id":"4_TASK","commitId":"17","createdWithCommitId":"17","missionId":"1_TASK","parentId":"3_TASK","createdAt":null,"updatedAt":null,"remarkText":"comment-2-text","remarkStatus":null,"reporterId":"tester-bob","relation":null}
+
+ | deleted
+  - deleted: 0 entries
+
+ | merged
+  +- merged: 0 entries
+

@@ -1,4 +1,4 @@
-package io.resys.thena.tasks.client.thenagit.store;
+package io.resys.thena.tasks.client.thenamission.visitors;
 
 /*-
  * #%L
@@ -99,18 +99,7 @@ public class DocumentStoreException extends RuntimeException {
     private final String id;
     private final ImmutableDocumentExceptionMsg.Builder msg = ImmutableDocumentExceptionMsg.builder();
     private final List<Throwable> surpressed = new ArrayList<>();
-    
-    public Builder add(DocumentConfig config, QueryEnvelope<?> envelope) {
-      msg.id(envelope.getRepo() == null ? config.getProjectName() : envelope.getRepo().getName())
-      .value(envelope.getRepo() == null ? "no-repo" : envelope.getRepo().getId())
-      .addAllArgs(envelope.getMessages().stream().map(message -> {
-        if(message.getException() != null) {
-          surpressed.add(message.getException());
-        }
-        return message.getText();
-      }).collect(Collectors.toList()));
-      return this;
-    }
+
     public Builder add(GrimStructuredTenant config, QueryEnvelopeList<?> envelope) {
       msg.id(envelope.getRepo() == null ? config.getTenantId(): envelope.getRepo().getName())
       .value(envelope.getRepo() == null ? "no-repo" : envelope.getRepo().getId())

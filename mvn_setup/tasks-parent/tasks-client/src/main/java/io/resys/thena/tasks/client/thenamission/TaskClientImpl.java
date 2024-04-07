@@ -1,6 +1,7 @@
 package io.resys.thena.tasks.client.thenamission;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -36,7 +37,9 @@ import io.resys.thena.tasks.client.api.actions.TaskActions;
 import io.resys.thena.tasks.client.api.model.Task;
 import io.resys.thena.tasks.client.api.model.TaskCommand.CreateTask;
 import io.resys.thena.tasks.client.api.model.TaskCommand.TaskUpdateCommand;
+import io.resys.thena.tasks.client.thenamission.visitors.GetArchivedTasksVisitor;
 import io.resys.thena.tasks.client.thenamission.visitors.CreateTasksVisitor;
+import io.resys.thena.tasks.client.thenamission.visitors.DeleteAllTasksVisitor;
 import io.resys.thena.tasks.client.thenamission.visitors.FindAllTasksByAssigneesVisitor;
 import io.resys.thena.tasks.client.thenamission.visitors.FindAllTasksByIdVisitor;
 import io.resys.thena.tasks.client.thenamission.visitors.FindAllTasksByRolesVisitor;
@@ -94,7 +97,7 @@ public class TaskClientImpl implements TaskClient {
          
           @Override
           public Uni<List<Task>> deleteAll(String userId, Instant targetDate) {
-            return null; ///ctx.getConfig().accept(new DeleteAllTasksVisitor(userId, targetDate, ctx));
+            return ctx.getConfig().accept(new DeleteAllTasksVisitor(userId, targetDate, ctx));
           }
         };
       }    
@@ -127,8 +130,15 @@ public class TaskClientImpl implements TaskClient {
       }
       @Override
       public ArchivedTasksQuery queryArchivedTasks() {
-        // TODO Auto-generated method stub
-        return null;
+        return new ArchivedTasksQuery() {
+          private String likeTitle, reporterId, likeDescription;
+          @Override public ArchivedTasksQuery title(String likeTitle) { this.likeTitle = likeTitle; return this; }
+          @Override public ArchivedTasksQuery reporterId(String reporterId) { this.reporterId = reporterId; return this; }
+          @Override public ArchivedTasksQuery description(String likeDescription) { this.likeDescription = likeDescription; return this; }          
+          @Override public Uni<List<Task>> findAll(LocalDate fromCreatedOrUpdated) {
+            return ctx.getConfig().accept(new GetArchivedTasksVisitor(likeTitle, likeDescription, reporterId, fromCreatedOrUpdated));
+          }
+        };
       }
     };
   }

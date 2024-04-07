@@ -9,9 +9,12 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import com.google.common.collect.ImmutableMap;
+
 import io.resys.thena.api.entities.grim.GrimAssignment;
 import io.resys.thena.api.entities.grim.GrimMissionLabel;
 import io.resys.thena.api.entities.grim.GrimMissionLink;
+import io.resys.thena.api.entities.grim.GrimRemark;
 import io.resys.thena.api.entities.grim.ImmutableGrimCommands;
 import io.resys.thena.api.entities.grim.ImmutableGrimMission;
 import io.resys.thena.api.entities.grim.ImmutableGrimMissionData;
@@ -239,7 +242,14 @@ public class MergeMissionBuilder implements MergeMission {
 
   @Override
   public MergeMission addRemark(Consumer<NewRemark> remark) {
-    final var all_remarks = this.batch.build().getRemarks().stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
+    final var current_remarks = this.batch.build().getRemarks().stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
+    final var all_remarks = ImmutableMap.<String, GrimRemark>builder()
+        .putAll(this.container.getRemarks().values().stream()
+            .filter(e -> !current_remarks.containsKey(e.getId()))
+            .collect(Collectors.toMap(e -> e.getId(), e -> e)))
+        .putAll(current_remarks)
+        .build();
+    
     final var builder = new NewRemarkBuilder(logger, missionId, null, Collections.unmodifiableMap(all_remarks));
     remark.accept(builder);
     final var built = builder.close();

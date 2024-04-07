@@ -196,6 +196,10 @@ public class TaskTestCase {
       replaceWithStatic(e.getId());  
       e.getItems().forEach(i -> replaceWithStatic(i.getId()));
     });
+    actual.getComments().forEach(e -> {
+      replaceWithStatic(e.getId());
+      replaceWithStatic(e.getCreated());
+    });
     actual.getExtensions().forEach(e -> {
       replaceWithStatic(e.getId());
       replaceWithStatic(e.getCreated());

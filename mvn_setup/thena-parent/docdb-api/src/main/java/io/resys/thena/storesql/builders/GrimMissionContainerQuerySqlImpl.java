@@ -13,7 +13,7 @@ import io.resys.thena.api.registry.GrimRegistry;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
 import io.resys.thena.structures.grim.GrimQueries;
-import io.resys.thena.structures.grim.GrimQueries.MissionQuery;
+import io.resys.thena.structures.grim.GrimQueries.InternalMissionQuery;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.sqlclient.RowSet;
@@ -21,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j(topic = LogConstants.SHOW_SQL)
-public class GrimMissionContainerQuerySqlImpl implements GrimQueries.MissionQuery {
+public class GrimMissionContainerQuerySqlImpl implements GrimQueries.InternalMissionQuery {
 
   private final ThenaSqlDataSource dataSource;
   private final GrimRegistry registry;
@@ -44,22 +44,22 @@ public class GrimMissionContainerQuerySqlImpl implements GrimQueries.MissionQuer
     this.errorHandler = dataSource.getErrorHandler();
   }
   @Override
-  public MissionQuery excludeDocs(GrimDocType... docs) {
+  public InternalMissionQuery excludeDocs(GrimDocType... docs) {
     docsToExclude.addAll(Arrays.asList(docs));
     return this;
   }
   @Override
-  public MissionQuery missionId(String... missionId) {
+  public InternalMissionQuery missionId(String... missionId) {
     missionIds.addAll(Arrays.asList(missionId));
     return this;
   }
   @Override
-  public MissionQuery addAssignment(String assignmentType, String assignmentValue) {
+  public InternalMissionQuery addAssignment(String assignmentType, String assignmentValue) {
     assignments.add(AssignmentFilter.builder().assignmentType(assignmentType).assignmentValue(assignmentValue).build());
     return this;
   }
   @Override
-  public MissionQuery viewer(String usedBy, String usedFor) {
+  public InternalMissionQuery viewer(String usedBy, String usedFor) {
     this.usedBy = usedBy;
     this.usedFor = usedFor;
     return this;

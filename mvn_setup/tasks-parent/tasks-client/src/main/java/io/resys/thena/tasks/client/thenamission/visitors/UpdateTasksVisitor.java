@@ -61,8 +61,6 @@ import io.resys.thena.tasks.client.api.model.TaskCommand.CreateTaskExtension;
 import io.resys.thena.tasks.client.api.model.TaskCommand.DeleteChecklist;
 import io.resys.thena.tasks.client.api.model.TaskCommand.DeleteChecklistItem;
 import io.resys.thena.tasks.client.api.model.TaskCommand.TaskUpdateCommand;
-import io.resys.thena.tasks.client.thenagit.store.DocumentStoreException;
-import io.resys.thena.tasks.client.thenagit.visitors.VisitorUtil.UpdateTaskVisitorException;
 import io.resys.thena.tasks.client.thenamission.TaskStore;
 import io.resys.thena.tasks.client.thenamission.TaskStoreConfig.MergeTasksVisitor;
 import io.smallrye.mutiny.Uni;
@@ -75,7 +73,7 @@ public class UpdateTasksVisitor implements MergeTasksVisitor<List<Task>> {
   private final Map<String, List<TaskUpdateCommand>> commandsByTaskId; 
   
   
-  public UpdateTasksVisitor(List<TaskUpdateCommand> commands, TaskStore ctx) {
+  public UpdateTasksVisitor(List<? extends TaskUpdateCommand> commands, TaskStore ctx) {
     super();
     this.ctx = ctx;
     this.commandsByTaskId = commands.stream()
@@ -366,4 +364,16 @@ public class UpdateTasksVisitor implements MergeTasksVisitor<List<Task>> {
     return ctx.getConfig().accept(new FindAllTasksByIdVisitor(taskIds));
   }
 
+  public static class UpdateTaskVisitorException extends RuntimeException {
+
+    private static final long serialVersionUID = -1385190644836838881L;
+
+    public UpdateTaskVisitorException(String message, Throwable cause) {
+      super(message, cause);
+    }
+
+    public UpdateTaskVisitorException(String message) {
+      super(message);
+    }
+  }
 }
