@@ -27,7 +27,6 @@ public class PrincipalUpdateTest extends DbTestTemplate {
   @Test
   public void getPrincipalAndAddRole() {
    
-  
     final PermissionClient client = getClient().repoQuery()
     .repoName("PrincipalUpdateTest-1")
     .create()

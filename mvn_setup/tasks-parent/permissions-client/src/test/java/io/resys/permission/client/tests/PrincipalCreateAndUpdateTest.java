@@ -2,7 +2,7 @@ package io.resys.permission.client.tests;
 
 import java.time.Duration;
 
-import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.junit.QuarkusTest;
@@ -12,7 +12,10 @@ import io.resys.permission.client.api.model.ImmutableCreatePrincipal;
 import io.resys.permission.client.api.model.Principal;
 import io.resys.permission.client.tests.config.DbTestTemplate;
 import io.resys.permission.client.tests.config.OrgPgProfile;
+import io.vertx.core.json.Json;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @QuarkusTest
 @TestProfile(OrgPgProfile.class)
 public class PrincipalCreateAndUpdateTest extends DbTestTemplate {
@@ -26,8 +29,8 @@ public class PrincipalCreateAndUpdateTest extends DbTestTemplate {
         .build())
         .await().atMost(Duration.ofMinutes(1));
   }
-  @SuppressWarnings("unused")
-  @Disabled
+  
+  
   @Test
   public void createPrincipalAndUpdateTest() {
     final PermissionClient client = getClient().repoQuery()
@@ -35,10 +38,10 @@ public class PrincipalCreateAndUpdateTest extends DbTestTemplate {
         .create()
         .await().atMost(Duration.ofMinutes(1));
     
-    
-    final var createdPrincipal = createPrincipalForUpdating(client); //TODO
-          
-  }
+    final var createdPrincipal = createPrincipalForUpdating(client);
   
-
+    
+    log.debug(Json.encodePrettily(createdPrincipal));
+    Assertions.assertEquals("Dwane Johnson", createdPrincipal.getName());
+  }
 }

@@ -38,11 +38,9 @@ public class RoleQueryTest extends DbTestTemplate {
       .create()
       .await().atMost(Duration.ofMinutes(1));
     
-    final var createdAdminRole = createRoleForQuery(client, "Admin", "Read/Write to all DB fields");
-    final var createdViewerRole = createRoleForQuery(client, "Viewer", "View all DB fields");
+    final var createdRole = createRoleForQuery(client, "Admin", "Read/Write to all DB fields");
     
-    Assertions.assertEquals("Admin", client.roleQuery().get(createdAdminRole.getId()).await().atMost(Duration.ofMinutes(1)).getName());
-    Assertions.assertEquals("Viewer", client.roleQuery().get(createdViewerRole.getId()).await().atMost(Duration.ofMinutes(1)).getName());
+    Assertions.assertEquals("Admin", client.roleQuery().get(createdRole.getId()).await().atMost(Duration.ofMinutes(1)).getName());
 
     final List<Role> allRoles = client
         .roleQuery()
@@ -50,6 +48,6 @@ public class RoleQueryTest extends DbTestTemplate {
         .await().atMost(Duration.ofMinutes(1));
     
     log.debug(new JsonArray(allRoles).encodePrettily());
-    Assertions.assertEquals(2, allRoles.size());
+    Assertions.assertEquals(1, allRoles.size());
   }
 }

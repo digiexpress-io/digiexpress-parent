@@ -13,11 +13,9 @@ import io.resys.permission.client.api.model.ImmutableCreatePermission;
 import io.resys.permission.client.api.model.Principal.Permission;
 import io.resys.permission.client.tests.config.DbTestTemplate;
 import io.resys.permission.client.tests.config.OrgPgProfile;
-import lombok.extern.slf4j.Slf4j;
 
 @QuarkusTest
 @TestProfile(OrgPgProfile.class)
-@Slf4j
 public class PermissionUpdateTest extends DbTestTemplate {
   
   public Permission createPermissionForUpdate(PermissionClient client) {
@@ -37,14 +35,15 @@ public class PermissionUpdateTest extends DbTestTemplate {
 
     final var createdPermission = createPermissionForUpdate(client);
     
-    final var updated = client.updatePermission().updateOne(ImmutableChangePermissionName.builder()
+    final var updatedPermission = client.updatePermission().updateOne(ImmutableChangePermissionName.builder()
       .id(createdPermission.getId())
       .name("SUPER USER AND MANAGER")
       .comment("Changed permission name for reasons")
       .build())
     .await().atMost(Duration.ofMinutes(5));
     
-    log.debug("Updated permission: {}", updated);
-    Assertions.assertEquals("SUPER USER AND MANAGER", client.permissionQuery().get(updated.getId()).await().atMost(Duration.ofMinutes(1)).getName());
+ 
+    Assertions.assertEquals("SUPER USER AND MANAGER", updatedPermission.getName());
+    Assertions.assertEquals("SUPER USER AND MANAGER", client.permissionQuery().get(updatedPermission.getId()).await().atMost(Duration.ofMinutes(1)).getName());
   }
 }

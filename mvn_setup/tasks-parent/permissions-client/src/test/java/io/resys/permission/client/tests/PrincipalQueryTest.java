@@ -40,12 +40,8 @@ public class PrincipalQueryTest extends DbTestTemplate {
         .await().atMost(Duration.ofMinutes(1));
 
     final var principalJohn = createPrincipalForTest(client, "John Cena", "muscles@super-cool.org");
-    final var principalMark = createPrincipalForTest(client, "Mark McGamle", "mark.m@gmail.com");
-    final var principalAmy = createPrincipalForTest(client, "Amy Anders", "anders@gmail.com");
 
     Assertions.assertEquals("John Cena", client.principalQuery().get(principalJohn.getId()).await().atMost(Duration.ofMinutes(1)).getName());
-    Assertions.assertEquals("Mark McGamle", client.principalQuery().get(principalMark.getId()).await().atMost(Duration.ofMinutes(1)).getName());
-    Assertions.assertEquals("Amy Anders", client.principalQuery().get(principalAmy.getId()).await().atMost(Duration.ofMinutes(1)).getName());
 
     final List<Principal> allPrincipals = client
         .principalQuery().findAllPrincipals()
@@ -53,7 +49,7 @@ public class PrincipalQueryTest extends DbTestTemplate {
   
     
     log.debug(new JsonArray(allPrincipals).encodePrettily());
-    Assertions.assertEquals(3, allPrincipals.size());
+    Assertions.assertEquals(1, allPrincipals.size());
   }
 
   

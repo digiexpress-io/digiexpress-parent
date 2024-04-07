@@ -36,16 +36,16 @@ public class RoleUpdateTest extends DbTestTemplate {
       .await().atMost(Duration.ofMinutes(1));
 
     final var createdRole = createRoleForTest(client);
-
     
-    final var updated = client.updateRole().updateOne(ImmutableChangeRoleName.builder()
+    final var updatedRole = client.updateRole().updateOne(ImmutableChangeRoleName.builder()
       .id(createdRole.getId())
       .name("The cool kids")
       .comment("This role is only for awesome people now")
       .build())
     .await().atMost(Duration.ofMinutes(1));
     
-   Assertions.assertEquals("The cool kids", client.roleQuery().get(updated.getId()).await().atMost(Duration.ofMinutes(1)).getName());
+   Assertions.assertEquals("The cool kids", updatedRole.getName());
+   Assertions.assertEquals("The cool kids", client.roleQuery().get(updatedRole.getId()).await().atMost(Duration.ofMinutes(1)).getName());
 
   }
 }
