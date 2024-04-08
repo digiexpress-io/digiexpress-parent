@@ -590,8 +590,12 @@ const en = {
   'permissions.role.rolePermissionsOverview': 'Permissions',
   'permissions.role.permissions.permissionName': 'Name',
 
-  'permissions.role.roleMembersOverview': 'Role members',
+  'permissions.role.rolePrincipalsOverview': 'Role members',
   'permissions.role.users.username': 'Username',
+
+  'role.principal.name': 'Username',
+  'role.principal.email': 'Email',
+  'role.principal.status': 'Status',
 
 
   'permissions.role.name.create.placeholder': 'Enter a role name',

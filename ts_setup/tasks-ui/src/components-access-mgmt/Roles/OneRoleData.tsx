@@ -22,7 +22,7 @@ export const OneRoleData: React.FC<{ role: Role }> = ({ role }) => {
           <OneRoleDataTabs role={role} />
         </Paper>
       </Box>
-    </Box >
+    </Box>
   );
 }
 

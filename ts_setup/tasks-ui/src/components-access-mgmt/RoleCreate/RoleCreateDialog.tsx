@@ -17,13 +17,14 @@ const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const disabled = !entity.description || !entity.name || !entity.commitComment;
 
   async function handleRoleCreate() {
-    const { name, description, commitComment, parentId, permissions } = entity;
+    const { name, description, commitComment, parentId, permissions, principals } = entity;
     const command: CreateRole = {
       commandType: 'CREATE_ROLE',
       name,
       description,
       parentId,
       comment: commitComment,
+      principals: [...principals],
       permissions: [...permissions]
     }
     await new ImmutableAccessMgmtStore(backend.store).createRole(command);

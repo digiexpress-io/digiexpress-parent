@@ -102,7 +102,7 @@ export const Left: React.FC<{}> = () => {
       </Burger.Section>
 
       <Burger.Section>
-        <Typography fontWeight='bold'><FormattedMessage id='permissions.role.roleMembersOverview' /></Typography>
+        <Typography fontWeight='bold'><FormattedMessage id='permissions.role.rolePrincipalsOverview' /></Typography>
         {entity.principals.length === 0 ? <SectionLayout label='permissions.select.none' value={undefined} /> :
           entity.principals.map((principal, index) => <SectionLayout label='permissions.role.users.username' key={index} value={principal} />)}
       </Burger.Section>

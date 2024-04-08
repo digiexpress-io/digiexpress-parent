@@ -1,10 +1,14 @@
 import React from 'react';
-import { Stack, Alert } from '@mui/material';
+import { Stack, Alert, Divider } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 
 import { Role } from 'descriptor-access-mgmt';
 import { SectionLayout } from 'components-generic';
 import { useAccessMgmt } from 'components-access-mgmt/AccessMgmtContext';
+
+const MembersDivider: React.FC<{ index: number, role: Role }> = ({ index, role }) => {
+  return role.principals.length - 1 !== index ? <Divider /> : null;
+}
 
 
 const OneRoleMembers: React.FC<{ principalName: string }> = ({ principalName }) => {
@@ -15,9 +19,9 @@ const OneRoleMembers: React.FC<{ principalName: string }> = ({ principalName }) 
 
   return (
     <>
-      <SectionLayout label='role.member.name' value={name} />
-      <SectionLayout label='role.member.email' value={email} />
-      <SectionLayout label='role.membber.status' value={status} />
+      <SectionLayout label='role.principal.name' value={name} />
+      <SectionLayout label='role.principal.email' value={email} />
+      <SectionLayout label='role.principal.status' value={status} />
     </>
   )
 }
@@ -32,7 +36,10 @@ const RoleMembers: React.FC<{ role: Role }> = ({ role }) => {
   return (
     <Stack spacing={1}>
       {role.principals.map((principalName, index) => (
-        <OneRoleMembers key={principalName} principalName={principalName} />
+        <>
+          <OneRoleMembers key={principalName} principalName={principalName} />
+          <MembersDivider index={index} role={role} />
+        </>
       ))
       }
     </Stack>

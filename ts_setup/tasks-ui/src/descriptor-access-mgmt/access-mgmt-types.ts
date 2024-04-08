@@ -92,6 +92,7 @@ export interface CreateRole {
   name: RoleName;
   description: string;
   permissions: string[];
+  principals: string[];
   comment: string;
   parentId: string | undefined;
 }
