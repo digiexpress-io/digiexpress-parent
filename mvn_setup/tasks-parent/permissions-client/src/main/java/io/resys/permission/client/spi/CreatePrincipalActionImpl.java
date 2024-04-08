@@ -62,6 +62,7 @@ public class CreatePrincipalActionImpl implements CreatePrincipalAction {
         .email(principal.getEmail())
         .status(OrgActorStatusType.IN_FORCE)
         .directPermissions(response.getDirectRights().stream().map(e -> e.getRightName()).toList())
+        .directRoles(response.getDirectParties().stream().map(e -> e.getPartyName()).toList())
         .build();
     
   }

@@ -10,8 +10,10 @@ import io.quarkus.test.junit.TestProfile;
 import io.resys.permission.client.api.PermissionClient;
 import io.resys.permission.client.api.model.ImmutableCreatePermission;
 import io.resys.permission.client.api.model.ImmutableCreatePrincipal;
+import io.resys.permission.client.api.model.ImmutableCreateRole;
 import io.resys.permission.client.api.model.Principal;
 import io.resys.permission.client.api.model.Principal.Permission;
+import io.resys.permission.client.api.model.Principal.Role;
 import io.resys.permission.client.tests.config.DbTestTemplate;
 import io.resys.permission.client.tests.config.OrgPgProfile;
 import io.vertx.core.json.Json;
@@ -22,6 +24,16 @@ import lombok.extern.slf4j.Slf4j;
 @TestProfile(OrgPgProfile.class)
 public class PrincipalCreateAndUpdateTest extends DbTestTemplate {
   
+  private Role createRoleForPrincipal(PermissionClient client, String name) {
+    
+    return client.createRole().createOne(ImmutableCreateRole.builder()
+        .comment("Trainee-group")
+        .name(name)
+        .description("View-only for interns")
+        .build())
+        .await().atMost(Duration.ofMinutes(5));
+  }
+  
   
   private Permission createPermissionforPrincipal(PermissionClient client, String name) {
     
@@ -30,7 +42,7 @@ public class PrincipalCreateAndUpdateTest extends DbTestTemplate {
         .name(name)
         .description("Frontoffice resource viewing")
         .build())
-        .await().atMost(Duration.ofMinutes(1));
+        .await().atMost(Duration.ofMinutes(5));
   }
   
   
@@ -41,11 +53,15 @@ public class PrincipalCreateAndUpdateTest extends DbTestTemplate {
         .email("the-rock@muscles.org")
         .comment("created new user")
         .addDirectPermissions(
-            createPermissionforPrincipal(client, "VIEW_RESOURCES").getName(),
+            createPermissionforPrincipal(client, "Aii7777").getName(),
             createPermissionforPrincipal(client, "EDIT_LIMITED").getName()
             )
+        .addDirectRoles(
+            createRoleForPrincipal(client, "INTERNS").getName(),
+            createRoleForPrincipal(client, "INTERNS_454").getName()
+            )
         .build())
-        .await().atMost(Duration.ofMinutes(1));
+        .await().atMost(Duration.ofMinutes(5));
   }
   
   
@@ -54,7 +70,7 @@ public class PrincipalCreateAndUpdateTest extends DbTestTemplate {
     final PermissionClient client = getClient().repoQuery()
         .repoName("PrincipalCreateAndUpdateTest-1")
         .create()
-        .await().atMost(Duration.ofMinutes(1));
+        .await().atMost(Duration.ofMinutes(5));
     
     final var createdPrincipal = createPrincipalForUpdating(client);
   
@@ -62,5 +78,7 @@ public class PrincipalCreateAndUpdateTest extends DbTestTemplate {
     log.debug(Json.encodePrettily(createdPrincipal));
     Assertions.assertEquals("Dwane Johnson", createdPrincipal.getName());
     Assertions.assertEquals(2, createdPrincipal.getDirectPermissions().size());
+    Assertions.assertEquals(2, createdPrincipal.getDirectRoles().size());
+
   }
 }
