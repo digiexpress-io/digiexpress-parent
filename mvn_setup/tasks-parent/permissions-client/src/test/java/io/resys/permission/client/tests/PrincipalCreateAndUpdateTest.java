@@ -24,16 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 @TestProfile(OrgPgProfile.class)
 public class PrincipalCreateAndUpdateTest extends DbTestTemplate {
   
-  private Role createRoleForPrincipal(PermissionClient client, String name) {
-    
-    return client.createRole().createOne(ImmutableCreateRole.builder()
-        .comment("Trainee-group")
-        .name(name)
-        .description("View-only for interns")
-        .build())
-        .await().atMost(Duration.ofMinutes(5));
-  }
-  
+
   
   private Permission createPermissionforPrincipal(PermissionClient client, String name) {
     
@@ -45,9 +36,19 @@ public class PrincipalCreateAndUpdateTest extends DbTestTemplate {
         .await().atMost(Duration.ofMinutes(5));
   }
   
+  private Role createRoleForPrincipal(PermissionClient client, String name) {
+    
+    return client.createRole().createOne(ImmutableCreateRole.builder()
+        .comment("Trainee-group")
+        .name(name)
+        .description("View-only for interns")
+        .build())
+        .await().atMost(Duration.ofMinutes(5));
+  }
+  
   
   private Principal createPrincipalForUpdating(PermissionClient client) {
-    
+        
     return client.createPrincipal().createOne(ImmutableCreatePrincipal.builder()
         .name("Dwane Johnson")
         .email("the-rock@muscles.org")
