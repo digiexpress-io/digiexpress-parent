@@ -130,14 +130,14 @@ export interface Principal {
 
   status: ActorStatus;               // users are not deleted; instead, they are disabled
   roles: string[];                   // all role names, irrelevant of inheritance 
-
-  /*
   permissions: string[];             // all permission names, irrelevant of inheritance
+
   directRoles: string[];             // explicitly-given membership in the given role
-  directRolePermissions: string[];   // inherited from the role that is directly connected to the principal
   directPermissions: string[];       // explicitly given to this principal only
 
-  */
+  // directRolePermissions: string[];   // inherited from the role that is directly connected to the principal
+
+
 }
 
 export interface PrincipalCommand {

@@ -101,13 +101,10 @@ export const Left: React.FC<{}> = () => {
           entity.permissions.map((permission, index) => <SectionLayout label='permissions.permission.name' key={index} value={permission} />)}
       </Burger.Section>
 
-      //TODO Add principals
       <Burger.Section>
         <Typography fontWeight='bold'><FormattedMessage id='permissions.role.roleMembersOverview' /></Typography>
-        <SectionLayout label='permissions.role.users.username' value={'member 1'} />
-        <SectionLayout label='permissions.role.users.username' value={'member 2'} />
-        <SectionLayout label='permissions.role.users.username' value={'member 3'} />
-        <SectionLayout label='permissions.role.users.username' value={'member 4'} />
+        {entity.principals.length === 0 ? <SectionLayout label='permissions.select.none' value={undefined} /> :
+          entity.principals.map((principal, index) => <SectionLayout label='permissions.role.users.username' key={index} value={principal} />)}
       </Burger.Section>
     </>)
 }
