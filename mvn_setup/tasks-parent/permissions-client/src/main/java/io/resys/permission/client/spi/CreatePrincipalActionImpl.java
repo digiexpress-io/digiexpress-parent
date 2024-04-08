@@ -37,8 +37,8 @@ public class CreatePrincipalActionImpl implements CreatePrincipalAction {
       
       .userName(principal.getName())
       .email(principal.getEmail())
-      .addMemberToParties(principal.getDirectRoles())
-      .addMemberRight(principal.getDirectPermissions())
+      .addMemberToParties(principal.getRoles())
+      .addMemberRight(principal.getPermissions())
       .build();
      }
    
@@ -55,12 +55,18 @@ public class CreatePrincipalActionImpl implements CreatePrincipalAction {
     
     final var principal = response.getMember();
     
+    
     return ImmutablePrincipal.builder()
         .id(principal.getId())
         .version(principal.getCommitId())
         .name(principal.getUserName())
         .email(principal.getEmail())
         .status(OrgActorStatusType.IN_FORCE)
+        
+        //TODO implement inheritance
+        .addAllRoles(response.getDirectParties().stream().map(e -> e.getPartyName()).toList())
+        .addAllPermissions(response.getDirectRights().stream().map(e -> e.getRightName()).toList())
+        
         .directPermissions(response.getDirectRights().stream().map(e -> e.getRightName()).toList())
         .directRoles(response.getDirectParties().stream().map(e -> e.getPartyName()).toList())
         .build();

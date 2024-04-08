@@ -26,7 +26,7 @@ public class PrincipalCreateAndUpdateTest extends DbTestTemplate {
   
 
   
-  private Permission createPermissionforPrincipal(PermissionClient client, String name) {
+  private Permission createPermission(PermissionClient client, String name) {
     
     return client.createPermission().createOne(ImmutableCreatePermission.builder()
         .comment("Needed for training purposes")
@@ -36,30 +36,29 @@ public class PrincipalCreateAndUpdateTest extends DbTestTemplate {
         .await().atMost(Duration.ofMinutes(5));
   }
   
-  private Role createRoleForPrincipal(PermissionClient client, String name) {
+  private Role createRoleWithoutPermissions(PermissionClient client, String roleName) {
     
     return client.createRole().createOne(ImmutableCreateRole.builder()
         .comment("Trainee-group")
-        .name(name)
+        .name(roleName)
         .description("View-only for interns")
         .build())
         .await().atMost(Duration.ofMinutes(5));
   }
   
   
-  private Principal createPrincipalForUpdating(PermissionClient client) {
-        
+  private Principal createPrincipal(PermissionClient client) {
+    
     return client.createPrincipal().createOne(ImmutableCreatePrincipal.builder()
         .name("Dwane Johnson")
         .email("the-rock@muscles.org")
         .comment("created new user")
-        .addDirectPermissions(
-            createPermissionforPrincipal(client, "Aii7777").getName(),
-            createPermissionforPrincipal(client, "EDIT_LIMITED").getName()
+        .addPermissions(
+            createPermission(client, "perm: Aii7777").getName(),
+            createPermission(client, "perm: EDIT_LIMITED").getName()
             )
-        .addDirectRoles(
-            createRoleForPrincipal(client, "INTERNS").getName(),
-            createRoleForPrincipal(client, "INTERNS_454").getName()
+        .addRoles(
+            createRoleWithoutPermissions(client, "role: INTERNS_454").getName()
             )
         .build())
         .await().atMost(Duration.ofMinutes(5));
@@ -73,13 +72,13 @@ public class PrincipalCreateAndUpdateTest extends DbTestTemplate {
         .create()
         .await().atMost(Duration.ofMinutes(5));
     
-    final var createdPrincipal = createPrincipalForUpdating(client);
-  
+    final var createdPrincipal = createPrincipal(client);
+
+    
+    Assertions.assertEquals("Dwane Johnson", createdPrincipal.getName());    
+    Assertions.assertEquals(1, createdPrincipal.getRoles().size());
+    Assertions.assertEquals(2, createdPrincipal.getPermissions().size());
     
     log.debug(Json.encodePrettily(createdPrincipal));
-    Assertions.assertEquals("Dwane Johnson", createdPrincipal.getName());
-    Assertions.assertEquals(2, createdPrincipal.getDirectPermissions().size());
-    Assertions.assertEquals(2, createdPrincipal.getDirectRoles().size());
-
   }
 }
