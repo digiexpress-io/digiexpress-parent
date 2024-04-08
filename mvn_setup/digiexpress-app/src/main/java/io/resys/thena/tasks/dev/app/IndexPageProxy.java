@@ -1,5 +1,10 @@
 package io.resys.thena.tasks.dev.app;
 
+import java.net.URL;
+
+import org.apache.commons.lang3.StringUtils;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+
 import io.quarkus.vertx.web.Route;
 import io.quarkus.vertx.web.RouteBase;
 import io.resys.thena.projects.client.api.TenantConfigClient;
@@ -14,13 +19,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.core.UriBuilder;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 
-import java.net.URL;
-
-@Slf4j
 @ApplicationScoped
 @RouteBase(path = "/portal")
 public class IndexPageProxy {
