@@ -1,4 +1,7 @@
-import { CreatePermission, CreateRole, Permission, AccessMgmtStore, PermissionUpdateCommand, Role, RoleUpdateCommand, CreatePrincipal, Principal } from './access-mgmt-types';
+import {
+  CreatePermission, CreateRole, Permission, AccessMgmtStore,
+  PermissionUpdateCommand, Role, RoleUpdateCommand, CreatePrincipal, Principal
+} from './access-mgmt-types';
 
 
 export interface AccessMgmtStoreConfig {
@@ -19,7 +22,7 @@ export class ImmutableAccessMgmtStore implements AccessMgmtStore {
   get store() { return this._store }
 
   async createPermission(command: CreatePermission): Promise<Permission> {
-    return await this._store.fetch<Permission>(`permissions`, {
+    return await this._store.fetch<Permission>(`am/permissions`, {
       method: 'POST',
       body: JSON.stringify(command),
       repoType: 'PERMISSIONS'
@@ -27,15 +30,15 @@ export class ImmutableAccessMgmtStore implements AccessMgmtStore {
   }
 
   async getPermission(id: string): Promise<Permission> {
-    return await this._store.fetch<Permission>(`permissions/${id}`, { repoType: 'PERMISSIONS' });
+    return await this._store.fetch<Permission>(`am/permissions/${id}`, { repoType: 'PERMISSIONS' });
   }
 
   async findAllPermissions(): Promise<Permission[]> {
-    return await this._store.fetch<Permission[]>(`permissions`, { repoType: 'PERMISSIONS' });
+    return await this._store.fetch<Permission[]>(`am/permissions`, { repoType: 'PERMISSIONS' });
   }
 
   async updatePermission(id: string, commands: PermissionUpdateCommand[]): Promise<Permission> {
-    return await this._store.fetch<Permission>(`permissions/${id}`, {
+    return await this._store.fetch<Permission>(`am/permissions/${id}`, {
       method: 'PUT',
       body: JSON.stringify(commands),
       repoType: 'PERMISSIONS'
@@ -43,7 +46,7 @@ export class ImmutableAccessMgmtStore implements AccessMgmtStore {
   }
 
   async createRole(command: CreateRole): Promise<Role> {
-    return await this._store.fetch<Role>(`roles`, {
+    return await this._store.fetch<Role>(`am/roles`, {
       method: 'POST',
       body: JSON.stringify(command),
       repoType: 'PERMISSIONS'
@@ -51,15 +54,15 @@ export class ImmutableAccessMgmtStore implements AccessMgmtStore {
   }
 
   async getRole(id: string): Promise<Role> {
-    return await this._store.fetch<Role>(`roles/${id}`, { repoType: 'PERMISSIONS' });
+    return await this._store.fetch<Role>(`am/roles/${id}`, { repoType: 'PERMISSIONS' });
   }
 
   async findAllRoles(): Promise<Role[]> {
-    return await this._store.fetch<Role[]>(`roles`, { repoType: 'PERMISSIONS' });
+    return await this._store.fetch<Role[]>(`am/roles`, { repoType: 'PERMISSIONS' });
   }
 
   async updateRole(id: string, commands: RoleUpdateCommand[]): Promise<Permission> {
-    return await this._store.fetch<Role>(`roles/${id}`, {
+    return await this._store.fetch<Role>(`am/roles/${id}`, {
       method: 'PUT',
       body: JSON.stringify(commands),
       repoType: 'PERMISSIONS'
@@ -67,11 +70,11 @@ export class ImmutableAccessMgmtStore implements AccessMgmtStore {
   }
 
   async findAllPrincipals(): Promise<Principal[]> {
-    return await this._store.fetch<Principal[]>(`principals`, { repoType: 'PERMISSIONS' });
+    return await this._store.fetch<Principal[]>(`am/principals`, { repoType: 'PERMISSIONS' });
   }
 
   async createPrincipal(command: CreatePrincipal): Promise<Principal> {
-    return await this._store.fetch<Principal>(`principals`, {
+    return await this._store.fetch<Principal>(`am/principals`, {
       method: 'POST',
       body: JSON.stringify(command),
       repoType: 'PERMISSIONS'
