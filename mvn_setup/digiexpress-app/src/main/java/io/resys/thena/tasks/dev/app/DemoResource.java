@@ -138,9 +138,8 @@ public class DemoResource {
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Path("reinit")
-  public Uni<TenantConfig> reinit() {
-    return tenantClient.query().deleteAll()
-        .onItem().transformToUni(junk -> init());
+  public Uni<Void> reinit() {
+    return tenantClient.query().deleteAll().onItem().transformToUni(junk -> Uni.createFrom().voidItem());
         //.onItem().transformToUni(config -> reinitAssets().onItem().transform(assets -> config));
   }
   

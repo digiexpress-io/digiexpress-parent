@@ -118,7 +118,6 @@ const TenantConfigSetup: React.FC<{ profile: UserProfileAndOrg }> = ({ profile }
 const CheckAppConnection = React.lazy(async () => {
   const head = await backend.health();
 
-
   if (head.contentType === 'NO_CONNECTION') {
     const Result: React.FC<{}> = () => <Connection.Down client={backend} />;
     return ({ default: Result })

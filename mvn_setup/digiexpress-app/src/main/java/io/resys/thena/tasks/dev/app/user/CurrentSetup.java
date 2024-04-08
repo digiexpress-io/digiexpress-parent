@@ -3,13 +3,16 @@ package io.resys.thena.tasks.dev.app.user;
 import java.time.Instant;
 
 import io.resys.permission.client.api.PermissionClient;
+import io.resys.permission.client.api.model.ImmutableCreatePermission;
 import io.resys.permission.client.api.model.ImmutableCreatePrincipal;
 import io.resys.permission.client.api.model.ImmutableCreateRole;
 import io.resys.thena.projects.client.api.TenantConfigClient;
 import io.resys.thena.projects.client.api.model.ImmutableCreateTenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
+import io.resys.thena.tasks.dev.app.security.BuiltInDataPermissions;
 import io.resys.thena.tasks.dev.app.security.BuiltInRoles;
+import io.resys.thena.tasks.dev.app.security.BuiltInUIPermissions;
 import io.resys.thena.tasks.dev.app.security.PrincipalCache;
 import io.resys.userprofile.client.api.UserProfileClient;
 import io.resys.userprofile.client.api.model.ImmutableUpsertUserProfile;
@@ -94,6 +97,35 @@ public class CurrentSetup {
                   .onItem().transformToUni(child -> tenantClient.query().repoName(child.getRepoId(), child.getRepoType()).createIfNot())
                   .concatenate().collect().asList()
                   .onItem().transform(junk -> tenantConfig);
+              })
+              .onFailure().transform(e -> {
+                e.printStackTrace();
+                return e;
+              })
+              .onItem().transformToUni(tenantConfig -> {
+                  final var permissionClient = getPermissionsClient(tenantConfig);
+                  
+                  return Multi.createFrom().items(BuiltInDataPermissions.values())
+                  .onItem().transformToUni(permission -> {
+                    // default data permissions
+                    return permissionClient.createPermission().createOne(ImmutableCreatePermission.builder()
+                        .name(permission.name())
+                        .description(permission.getDescription())
+                        .comment("created by default")
+                        .build());
+                  })
+                  .concatenate().collect().asList()
+                  .onItem().transformToMulti(junk_ -> Multi.createFrom().items(BuiltInUIPermissions.values()))
+                  .onItem().transformToUni(permission -> {
+                    // default ui permissions
+                    return permissionClient.createPermission().createOne(ImmutableCreatePermission.builder()
+                        .name(permission.name())
+                        .description(permission.getDescription())
+                        .comment("created by default")
+                        .build());
+                  }).concatenate().collect().asList()
+                  .onItem().transform(e -> tenantConfig);
+                
               });
         }
         return Uni.createFrom().item(config.get());
