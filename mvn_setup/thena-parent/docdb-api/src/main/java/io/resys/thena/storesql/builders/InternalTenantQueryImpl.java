@@ -243,17 +243,20 @@ public class InternalTenantQueryImpl implements InternalTenantQuery {
       } else if(newRepo.getType() == StructureType.grim) {
         tablesDrop
         .append(grim.assignments().dropTable().getValue())
-        .append(grim.commits().dropTable().getValue())
-        .append(grim.commitTrees().dropTable().getValue())
-        .append(grim.commitViewers().dropTable().getValue())
         .append(grim.missionData().dropTable().getValue())
         .append(grim.missionLabels().dropTable().getValue())
         .append(grim.missionLinks().dropTable().getValue())
-        .append(grim.missions().dropTable().getValue())
-        .append(grim.goals().dropTable().getValue())
-        .append(grim.objectives().dropTable().getValue())
         .append(grim.remarks().dropTable().getValue())
         .append(grim.commands().dropTable().getValue())
+        
+        .append(grim.goals().dropTable().getValue())
+        .append(grim.objectives().dropTable().getValue())
+        
+        .append(grim.commitTrees().dropTable().getValue())
+        .append(grim.commitViewers().dropTable().getValue())
+        .append(grim.missions().dropTable().getValue())
+        .append(grim.commits().dropTable().getValue())
+        
         ;
       } else if(newRepo.getType() == StructureType.org) {
         

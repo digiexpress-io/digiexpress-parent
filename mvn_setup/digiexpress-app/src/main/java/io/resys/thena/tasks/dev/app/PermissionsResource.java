@@ -17,17 +17,21 @@ import io.resys.permission.client.rest.PermissionRestApi;
 import io.resys.thena.projects.client.api.TenantConfigClient;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
+import io.resys.thena.tasks.dev.app.security.PrincipalCache;
 import io.smallrye.mutiny.Uni;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Path;
+import lombok.extern.slf4j.Slf4j;
 
-@Path("q/digiexpress/api")
+@Slf4j
+@Path("q/digiexpress/api/am")
 public class PermissionsResource implements PermissionRestApi {
 
   @Inject PermissionClient permissions;
   @Inject CurrentTenant currentTenant;
   @Inject CurrentUser currentUser;
   @Inject TenantConfigClient tenantClient;
+  @Inject PrincipalCache cache;
 
   @Override
   public Uni<List<Principal>> findAllPrincipals() {
@@ -36,7 +40,8 @@ public class PermissionsResource implements PermissionRestApi {
 
   @Override
   public Uni<Principal> createPrincipal(CreatePrincipal command) {
-    return getClient().onItem().transformToUni(client -> client.createPrincipal().createOne(command));
+    return getClient().onItem().transformToUni(client -> client.createPrincipal().createOne(command))
+        .onItem().transformToUni(this::invalidateCache);
   }
   
   @Override
@@ -46,7 +51,8 @@ public class PermissionsResource implements PermissionRestApi {
 
   @Override
   public Uni<Principal> updatePrincipal(String principalId, List<PrincipalUpdateCommand> commands) {
-    return getClient().onItem().transformToUni(client -> client.updatePrincipal().updateOne(commands));
+    return getClient().onItem().transformToUni(client -> client.updatePrincipal().updateOne(commands))
+        .onItem().transformToUni(this::invalidateCache);
   }
 
   @Override
@@ -56,7 +62,8 @@ public class PermissionsResource implements PermissionRestApi {
 
   @Override
   public Uni<Permission> createPermission(CreatePermission command) {
-    return getClient().onItem().transformToUni(client -> client.createPermission().createOne(command));
+    return getClient().onItem().transformToUni(client -> client.createPermission().createOne(command))
+        .onItem().transformToUni(this::invalidateCache);
   }
 
   @Override
@@ -66,7 +73,8 @@ public class PermissionsResource implements PermissionRestApi {
 
   @Override
   public Uni<Permission> updatePermission(String permissionId, List<PermissionUpdateCommand> commands) {
-    return getClient().onItem().transformToUni(client -> client.updatePermission().updateOne(commands));
+    return getClient().onItem().transformToUni(client -> client.updatePermission().updateOne(commands))
+        .onItem().transformToUni(this::invalidateCache);
   }
 
   @Override
@@ -76,12 +84,14 @@ public class PermissionsResource implements PermissionRestApi {
 
   @Override
   public Uni<Role> createRole(CreateRole role) {
-    return getClient().onItem().transformToUni(client -> client.createRole().createOne(role));
+    return getClient().onItem().transformToUni(client -> client.createRole().createOne(role))
+        .onItem().transformToUni(this::invalidateCache);
   }
 
   @Override
   public Uni<Role> updateRole(String roleId, List<RoleUpdateCommand> commands) {
-    return getClient().onItem().transformToUni(client -> client.updateRole().updateOne(commands));
+    return getClient().onItem().transformToUni(client -> client.updateRole().updateOne(commands))
+        .onItem().transformToUni(this::invalidateCache);
   }
 
   @Override
@@ -98,4 +108,13 @@ public class PermissionsResource implements PermissionRestApi {
       .onItem().transform(config -> config.getRepoConfig(TenantRepoConfigType.PERMISSIONS));
   }
 
+  
+  private <T> Uni<T> invalidateCache(T data) {
+    return cache.invalidate()
+        .onFailure().transform(e -> {
+          log.error("Failed to flush the cache for permissions, {}", e.getMessage(), e);
+          return e;
+        })
+        .onItem().transform(junk -> data); 
+  }
 }

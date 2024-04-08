@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd"
-  xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>io.digiexpress</groupId>
@@ -16,7 +14,6 @@
       <groupId>io.digiexpress</groupId>
       <artifactId>thena-sysconfig-client</artifactId>
     </dependency>
-
     <dependency>
       <groupId>io.digiexpress</groupId>
       <artifactId>dialob-form-store-pgsql</artifactId>
@@ -25,7 +22,6 @@
       <groupId>io.digiexpress</groupId>
       <artifactId>hdes-store-thena</artifactId>
     </dependency>
-
     <dependency>
       <groupId>io.digiexpress</groupId>
       <artifactId>thena-tasks-client</artifactId>
@@ -50,8 +46,6 @@
       <groupId>io.digiexpress</groupId>
       <artifactId>thena-permission-client</artifactId>
     </dependency>
-
-
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-smallrye-jwt</artifactId>
@@ -60,8 +54,6 @@
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-smallrye-jwt-build</artifactId>
     </dependency>
-
-    <!-- demo data generator-->
     <dependency>
       <groupId>com.github.javafaker</groupId>
       <artifactId>javafaker</artifactId>
@@ -78,7 +70,6 @@
       <artifactId>fin-id-utils</artifactId>
       <version>0.3</version>
     </dependency>
-
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-vertx</artifactId>
@@ -127,9 +118,11 @@
       <groupId>io.opentelemetry</groupId>
       <artifactId>opentelemetry-extension-trace-propagators</artifactId>
     </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-cache</artifactId>
+    </dependency>
   </dependencies>
-
-
   <build>
     <resources>
       <resource>
@@ -171,8 +164,7 @@
                 </goals>
                 <configuration>
                   <systemPropertyVariables>
-                    <native.image.path>
-                      ${project.build.directory}/${project.build.finalName}-runner</native.image.path>
+                    <native.image.path>${project.build.directory}/${project.build.finalName}-runner</native.image.path>
                     <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
                     <maven.home>${maven.home}</maven.home>
                   </systemPropertyVariables>

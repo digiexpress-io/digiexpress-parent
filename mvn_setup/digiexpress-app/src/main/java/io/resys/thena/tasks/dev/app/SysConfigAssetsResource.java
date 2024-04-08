@@ -10,7 +10,6 @@ import io.resys.sysconfig.client.rest.SysConfigAssetsRestApi;
 import io.resys.thena.projects.client.api.TenantConfigClient;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.StencilClient;
-import io.thestencil.client.api.StencilComposer.SiteState;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Path;
 

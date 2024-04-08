@@ -25,7 +25,6 @@ import io.dialob.client.spi.function.FunctionRegistryImpl;
 import io.dialob.client.spi.store.ImmutableDialobStoreConfig;
 import io.dialob.client.spi.support.OidUtils;
 import io.dialob.rule.parser.function.DefaultFunctions;
-import io.quarkus.arc.profile.IfBuildProfile;
 import io.quarkus.jackson.ObjectMapperCustomizer;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import io.resys.crm.client.api.CrmClient;
@@ -66,6 +65,7 @@ import io.vertx.core.json.jackson.VertxModule;
 import io.vertx.mutiny.core.Vertx;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.sqlclient.PoolOptions;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.context.Dependent;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.enterprise.inject.Produces;
@@ -113,12 +113,10 @@ public class BeanFactory {
   }
 
   @Produces
-  @RequestScoped
+  @ApplicationScoped
   public CurrentTenant currentTenant() {
     return new CurrentTenantRecord(tenantId, tenantsStoreId);
   }
-
-  @IfBuildProfile("prod")
   @Produces
   @RequestScoped
   public CurrentUser currentUserClaims(
@@ -129,15 +127,6 @@ public class BeanFactory {
   {
     return new CurrentUserRecord(userId, givenName, familyName, email);
   }
-  
-  @IfBuildProfile("dev")
-  @Produces
-  @RequestScoped
-  public CurrentUser currentUserDev() {
-    final var vimes = RandomDataProvider.ASSIGNEES.get(1);
-    return new CurrentUserRecord(vimes, "first name", "last-name", "first.last@digiexpress.io");
-  }
-
   @Produces
   public PermissionClient permissionClient(CurrentPgPool currentPgPool, ObjectMapper om) {
     final var store = io.resys.permission.client.spi.PermissionStoreImpl.builder()

@@ -1,5 +1,13 @@
 package io.resys.thena.tasks.dev.app;
 
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.apache.commons.text.similarity.LevenshteinDistance;
+
 import io.resys.crm.client.api.CrmClient;
 import io.resys.crm.client.api.model.Customer;
 import io.resys.crm.client.api.model.Customer.CustomerBodyType;
@@ -13,13 +21,6 @@ import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigTyp
 import io.smallrye.mutiny.Uni;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Path;
-import org.apache.commons.lang3.StringUtils;
-
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Path("q/digiexpress/api")
 public class CrmResource implements CrmRestApi {
@@ -67,7 +68,7 @@ public class CrmResource implements CrmRestApi {
 
       boolean isAtLeastOneNameMatch = false;
       for(final var name : customerNames) {
-        final var diff = StringUtils.getLevenshteinDistance(name, crit);
+        final var diff = LevenshteinDistance.getDefaultInstance().apply(name, crit);
         if(diff < 3) {
           isAtLeastOneNameMatch = true;
           break;

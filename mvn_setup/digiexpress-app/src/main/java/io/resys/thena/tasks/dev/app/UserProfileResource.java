@@ -14,7 +14,10 @@ import io.resys.userprofile.client.api.model.UserProfileCommand.UserProfileUpdat
 import io.resys.userprofile.client.rest.UserProfileRestApi;
 import io.smallrye.mutiny.Uni;
 import jakarta.inject.Inject;
+import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
 
 @Path("q/digiexpress/api")
 public class UserProfileResource implements UserProfileRestApi {
@@ -63,6 +66,13 @@ public class UserProfileResource implements UserProfileRestApi {
           return userProfileConfig;
       });
   }
+  
+  
+  @GET @Path("current-user") @Produces(MediaType.APPLICATION_JSON)
+  public CurrentUser currentUser() {
+    return this.currentUser;
+  }
+
 }
   
 
