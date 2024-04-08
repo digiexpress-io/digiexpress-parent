@@ -17,6 +17,7 @@ const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
   async function handlePermissionCreate() {
     const { commitComment, description, name, roles, principals } = entity;
+
     const command: CreatePermission = {
       commandType: 'CREATE_PERMISSION',
       comment: commitComment,

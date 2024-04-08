@@ -554,9 +554,9 @@ const en = {
   'permissions.roles.overview.tab.permissions': 'Permissions',
   'permissions.roles.overview.tab.members': 'Members',
 
-  'permissions.navButton.role.create': 'Create a role',
-  'permissions.navButton.permission.create': 'Create a permission',
-  'permissions.navButton.principal.create': 'Create a user',
+  'permissions.navButton.role.create': 'Create role',
+  'permissions.navButton.permission.create': 'Create permission',
+  'permissions.navButton.principal.create': 'Create member',
 
   'permissions.roles.roleMeta': 'Role metadata',
   'permissions.roles.description': 'Description',
@@ -572,7 +572,7 @@ const en = {
   'permissions.role.member.none': 'No members found',
   'permissions.role.create': 'Create a role',
 
-  'permissions.principal.create': 'Create a new user',
+  'permissions.principal.create': 'Create a new member',
   'permissions.principal.username': 'Username',
   'permissions.principal.email': 'Email',
   'permissions.principal.status': 'Status',
@@ -592,9 +592,9 @@ const en = {
   'permissions.role.roleParentName': 'Name',
   'permissions.role.commitComment': 'Comment',
   'permissions.role.commitComment.placeholder': 'Description of this change',
-  'permissions.role.rolePermissionsOverview': 'Permissions',
+  'permissions.role.rolePermissionsOverview': 'Permissions given to this Role',
   'permissions.role.permissions.permissionName': 'Name',
-  'permissions.role.rolePrincipalsOverview': 'Role members',
+  'permissions.role.rolePrincipalsOverview': 'Members assigned to this Role',
   'permissions.role.users.username': 'Username',
   'permissions.createPermission.roles': 'Roles',
   'permissions.createPermission.principals': 'Members',
@@ -609,8 +609,8 @@ const en = {
   'permissions.select.none': 'None',
   'permissions.select.currentSelection': 'Current selection',
 
-  'permissions.permission.name': 'Name',
-  'permissions.permission.description': 'Description',
+  'permissions.permission.name': 'Permission name',
+  'permissions.permission.description': 'Permission description',
   'permissions.permission.status': 'Status',
   'permissions.permission.none': 'No permissions found',
   'permissions.permission.select': 'Permissions',
@@ -619,6 +619,9 @@ const en = {
   'permissions.permission.description.create.placeholder': 'Enter a description of this permission',
   'permissions.permission.createComment': 'Comment',
   'permissions.permission.createComment.placeholder': 'Note describing this change',
+
+  'permissions.permission.rolePermissionsOverview': 'Roles to receive this Permission',
+  'permissions.permission.rolePrincipalsOverview': 'Members assigned to this Permission',
 
 
   'permissions.createRole.role_parent': 'Parent role',

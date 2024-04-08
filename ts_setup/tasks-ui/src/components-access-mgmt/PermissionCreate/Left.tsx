@@ -3,6 +3,7 @@ import { Typography, TextField } from '@mui/material';
 import { FormattedMessage, useIntl } from 'react-intl';
 import Burger from 'components-burger';
 import { useNewPermission } from './PermissionCreateContext';
+import { SectionLayout } from 'components-generic';
 
 const Left: React.FC<{}> = () => {
   const intl = useIntl();
@@ -53,6 +54,18 @@ const Left: React.FC<{}> = () => {
         value={entity.commitComment}
         onChange={handleCommentChange}
       />
+    </Burger.Section>
+
+    <Burger.Section>
+      <Typography fontWeight='bold'><FormattedMessage id='permissions.permission.rolePermissionsOverview' /></Typography>
+      {entity.roles.length === 0 ? <SectionLayout label='permissions.select.none' value={undefined} /> :
+        entity.roles.map((role, index) => <SectionLayout label='permissions.role.name' key={index} value={role} />)}
+    </Burger.Section>
+
+    <Burger.Section>
+      <Typography fontWeight='bold'><FormattedMessage id='permissions.permission.rolePrincipalsOverview' /></Typography>
+      {entity.principals.length === 0 ? <SectionLayout label='permissions.select.none' value={undefined} /> :
+        entity.principals.map((principal, index) => <SectionLayout label='permissions.role.users.username' key={index} value={principal} />)}
     </Burger.Section>
   </>
   );
