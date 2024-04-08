@@ -582,28 +582,28 @@ const en = {
   'permissions.principal.email.create.placeholder': 'Enter user email',
 
 
-  'permissions.role.roleParentOverview': 'Parent role',
-  'permissions.role.roleParentName': 'Name',
-  'permissions.role.commitComment': 'Comment',
-  'permissions.role.commitComment.placeholder': 'Description of this change',
-
-  'permissions.role.rolePermissionsOverview': 'Permissions',
-  'permissions.role.permissions.permissionName': 'Name',
-
-  'permissions.role.rolePrincipalsOverview': 'Role members',
-  'permissions.role.users.username': 'Username',
-
-  'role.principal.name': 'Username',
-  'role.principal.email': 'Email',
-  'role.principal.status': 'Status',
-
-
   'permissions.role.name.create.placeholder': 'Enter a role name',
   'permissions.role.description.create.placeholder': 'Enter a description of this role',
   'permissions.role.parentSelect': 'Role parent',
   'permissions.role.roleCreate.selection.none': 'Nothing selected',
   'permissions.role.name': 'Role name',
   'permissions.role.description': 'Role description',
+  'permissions.role.roleParentOverview': 'Parent role',
+  'permissions.role.roleParentName': 'Name',
+  'permissions.role.commitComment': 'Comment',
+  'permissions.role.commitComment.placeholder': 'Description of this change',
+  'permissions.role.rolePermissionsOverview': 'Permissions',
+  'permissions.role.permissions.permissionName': 'Name',
+  'permissions.role.rolePrincipalsOverview': 'Role members',
+  'permissions.role.users.username': 'Username',
+  'permissions.createPermission.roles': 'Roles',
+  'permissions.createPermission.principals': 'Members',
+
+
+  'role.principal.name': 'Username',
+  'role.principal.email': 'Email',
+  'role.principal.status': 'Status',
+
 
 
   'permissions.select.none': 'None',

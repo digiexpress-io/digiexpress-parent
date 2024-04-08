@@ -16,12 +16,13 @@ const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const disabled = !entity.name || !entity.commitComment || !entity.description;
 
   async function handlePermissionCreate() {
-    const { commitComment, description, name, roles } = entity;
+    const { commitComment, description, name, roles, principals } = entity;
     const command: CreatePermission = {
       commandType: 'CREATE_PERMISSION',
       comment: commitComment,
       name,
       description,
+      principals: [...principals],
       roles: [...roles]
     };
     await new ImmutableAccessMgmtStore(backend.store).createPermission(command);

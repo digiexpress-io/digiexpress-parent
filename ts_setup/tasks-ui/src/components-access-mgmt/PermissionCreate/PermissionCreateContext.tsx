@@ -1,10 +1,13 @@
 import React from 'react';
+import { getInstance as createTabsContext, SingleTabInit, Tab } from 'descriptor-tabbing';
+
 
 export interface NewPermission {
   name: string;
   description: string;
   commitComment: string;
   roles: readonly string[]; // name or id of the role
+  principals: readonly string[]; // name or id of the principal
 }
 
 
@@ -15,6 +18,8 @@ export interface NewPermissionContextType {
   setCommitComment(newCommitComment: string): void;
   addRole(newRole: string): void;
   removeRole(roleToRemove: string): void;
+  addPrincipal(newPrincipal: string): void;
+  removePrincipal(principalToRemove: string): void;
 }
 
 const NewPermissionContext = React.createContext<NewPermissionContextType>({} as any);
@@ -25,6 +30,7 @@ const NewPermissionProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     description: '',
     commitComment: '',
     roles: [],
+    principals: []
   });
 
   const setName = React.useCallback((name: string) => setNewPermission(previous => Object.freeze({ ...previous, name })), []);
@@ -49,6 +55,24 @@ const NewPermissionProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     return Object.freeze({ ...previous, roles: Object.freeze(updatedRoles) })
   }), []);
 
+  const addPrincipal = React.useCallback((newPrincipal: string) => setNewPermission(previous => {
+    if (previous.principals.includes(newPrincipal)) {
+      return previous;
+    }
+
+    const updatedPrincipals = [...previous.principals, newPrincipal];
+    return Object.freeze({ ...previous, principals: Object.freeze(updatedPrincipals) })
+  }), []);
+
+  const removePrincipal = React.useCallback((principalToRemove: string) => setNewPermission(previous => {
+    if (!previous.principals.includes(principalToRemove)) {
+      return previous;
+    }
+
+    const updatedPrincipals = [...previous.principals.filter(principal => principal !== principalToRemove)];
+    return Object.freeze({ ...previous, principals: Object.freeze(updatedPrincipals) })
+  }), []);
+
   const contextValue: NewPermissionContextType = React.useMemo(() => {
     return {
       entity,
@@ -56,9 +80,11 @@ const NewPermissionProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       setDescription,
       setCommitComment,
       addRole,
-      removeRole
+      removeRole,
+      addPrincipal,
+      removePrincipal
     }
-  }, [entity, setName, setDescription, setCommitComment, addRole, removeRole]);
+  }, [entity, setName, setDescription, setCommitComment, addRole, removeRole, addPrincipal, removePrincipal]);
 
   return <NewPermissionContext.Provider value={contextValue}>{children}</NewPermissionContext.Provider>
 }
@@ -68,8 +94,34 @@ export function useNewPermission(): NewPermissionContextType {
   return result;
 }
 
+const TabsContext = createTabsContext<TabTypes, TabState>();
+function initAllTabs(): Record<TabTypes, SingleTabInit<TabState>> {
+  return {
+    permission_roles: { body: {}, active: true },
+    permission_members: { body: {}, active: false }
+  };
+}
+
+export type TabTypes = 'permission_roles' | 'permission_members';
+export interface TabState { }
+export function useTabs() {
+  const tabbing = TabsContext.hooks.useTabbing();
+  const activeTab: Tab<TabTypes, TabState> = tabbing.getActiveTab();
+  function setActiveTab(next: TabTypes) {
+    tabbing.withTabActivity(next, { disableOthers: true });
+  }
+  return { activeTab, setActiveTab };
+}
+
+
 export const PermissionCreateProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  return <NewPermissionProvider>{children}</NewPermissionProvider>
+  return (
+    <TabsContext.Provider init={initAllTabs()}>
+      <NewPermissionProvider>
+        {children}
+      </NewPermissionProvider>
+    </TabsContext.Provider>
+  )
 }
 
 

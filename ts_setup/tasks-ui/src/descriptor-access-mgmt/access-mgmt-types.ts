@@ -34,6 +34,7 @@ export interface CreatePermission {
   description: string;
   commandType: 'CREATE_PERMISSION';
   roles: string[];
+  principals: string[];
 }
 
 export interface ChangePermissionName extends PermissionUpdateCommand {
