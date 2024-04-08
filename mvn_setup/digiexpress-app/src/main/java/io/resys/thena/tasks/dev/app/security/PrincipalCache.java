@@ -12,7 +12,7 @@ import io.resys.permission.client.api.PermissionClient;
 import io.resys.thena.projects.client.api.TenantConfigClient;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
-import io.resys.thena.tasks.dev.app.CurrentTenant;
+import io.resys.thena.tasks.dev.app.user.CurrentTenant;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;

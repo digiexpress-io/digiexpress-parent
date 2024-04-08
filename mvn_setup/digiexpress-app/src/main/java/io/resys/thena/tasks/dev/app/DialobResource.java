@@ -19,6 +19,8 @@ import io.resys.thena.projects.client.api.TenantConfigClient;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
 import io.resys.thena.projects.client.spi.store.MainBranch;
+import io.resys.thena.tasks.dev.app.user.CurrentTenant;
+import io.resys.thena.tasks.dev.app.user.CurrentUser;
 import io.smallrye.mutiny.Uni;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;

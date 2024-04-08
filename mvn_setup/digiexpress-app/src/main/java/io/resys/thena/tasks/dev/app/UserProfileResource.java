@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 import io.resys.thena.projects.client.api.TenantConfigClient;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
+import io.resys.thena.tasks.dev.app.user.CurrentTenant;
+import io.resys.thena.tasks.dev.app.user.CurrentUser;
 import io.resys.userprofile.client.api.UserProfileClient;
 import io.resys.userprofile.client.api.model.UserProfile;
 import io.resys.userprofile.client.api.model.UserProfileCommand.CreateUserProfile;
@@ -14,10 +16,7 @@ import io.resys.userprofile.client.api.model.UserProfileCommand.UserProfileUpdat
 import io.resys.userprofile.client.rest.UserProfileRestApi;
 import io.smallrye.mutiny.Uni;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
 
 @Path("q/digiexpress/api")
 public class UserProfileResource implements UserProfileRestApi {
@@ -66,13 +65,6 @@ public class UserProfileResource implements UserProfileRestApi {
           return userProfileConfig;
       });
   }
-  
-  
-  @GET @Path("current-user") @Produces(MediaType.APPLICATION_JSON)
-  public CurrentUser currentUser() {
-    return this.currentUser;
-  }
-
 }
   
 

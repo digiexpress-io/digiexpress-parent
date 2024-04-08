@@ -1,4 +1,4 @@
-package io.resys.thena.tasks.dev.app;
+package io.resys.thena.tasks.dev.app.demo;
 
 import java.time.Instant;
 import java.time.LocalDate;

@@ -1,4 +1,4 @@
-package io.resys.thena.tasks.dev.app;
+package io.resys.thena.tasks.dev.app.user;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 

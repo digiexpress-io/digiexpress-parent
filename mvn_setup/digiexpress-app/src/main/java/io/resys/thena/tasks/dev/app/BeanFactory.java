@@ -52,6 +52,8 @@ import io.resys.thena.tasks.client.api.model.ImmutableTaskComment;
 import io.resys.thena.tasks.client.api.model.ImmutableTaskExtension;
 import io.resys.thena.tasks.client.thenamission.TaskClientImpl;
 import io.resys.thena.tasks.client.thenamission.TaskStoreImpl;
+import io.resys.thena.tasks.dev.app.user.CurrentTenant;
+import io.resys.thena.tasks.dev.app.user.CurrentUser;
 import io.resys.userprofile.client.api.UserProfileClient;
 import io.resys.userprofile.client.spi.UserProfileClientImpl;
 import io.thestencil.client.api.StencilClient;

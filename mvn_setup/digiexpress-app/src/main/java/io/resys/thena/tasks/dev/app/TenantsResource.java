@@ -6,6 +6,8 @@ import io.resys.thena.projects.client.api.model.TenantConfigCommand.ArchiveTenan
 import io.resys.thena.projects.client.api.model.TenantConfigCommand.CreateTenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfigCommand.TenantConfigUpdateCommand;
 import io.resys.thena.projects.client.rest.TenantConfigRestApi;
+import io.resys.thena.tasks.dev.app.user.CurrentTenant;
+import io.resys.thena.tasks.dev.app.user.CurrentUser;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import jakarta.inject.Inject;

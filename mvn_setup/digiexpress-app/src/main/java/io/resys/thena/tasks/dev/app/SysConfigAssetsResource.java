@@ -8,6 +8,8 @@ import io.resys.sysconfig.client.api.SysConfigClient;
 import io.resys.sysconfig.client.api.model.SysConfig;
 import io.resys.sysconfig.client.rest.SysConfigAssetsRestApi;
 import io.resys.thena.projects.client.api.TenantConfigClient;
+import io.resys.thena.tasks.dev.app.user.CurrentTenant;
+import io.resys.thena.tasks.dev.app.user.CurrentUser;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.StencilClient;
 import jakarta.inject.Inject;

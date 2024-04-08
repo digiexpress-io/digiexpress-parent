@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.resys.thena.projects.client.api.TenantConfigClient;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
+import io.resys.thena.tasks.dev.app.user.CurrentTenant;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.StencilComposer;
 import io.thestencil.client.rest.StencilRestApi;

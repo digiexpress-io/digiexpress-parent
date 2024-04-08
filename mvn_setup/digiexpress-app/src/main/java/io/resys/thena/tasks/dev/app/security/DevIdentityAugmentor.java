@@ -11,7 +11,7 @@ import io.quarkus.security.identity.AuthenticationRequestContext;
 import io.quarkus.security.identity.SecurityIdentity;
 import io.quarkus.security.identity.SecurityIdentityAugmentor;
 import io.quarkus.security.runtime.QuarkusSecurityIdentity;
-import io.resys.thena.tasks.dev.app.RandomDataProvider;
+import io.resys.thena.tasks.dev.app.demo.RandomDataProvider;
 import io.smallrye.jwt.auth.principal.DefaultJWTCallerPrincipal;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;

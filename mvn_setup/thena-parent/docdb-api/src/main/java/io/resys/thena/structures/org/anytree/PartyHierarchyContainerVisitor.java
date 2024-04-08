@@ -4,7 +4,6 @@ import java.util.List;
 
 import io.resys.thena.api.entities.org.ImmutableOrgPartyHierarchy;
 import io.resys.thena.api.entities.org.OrgActorStatus;
-import io.resys.thena.api.entities.org.OrgActorStatus.OrgActorStatusType;
 import io.resys.thena.api.entities.org.OrgMember;
 import io.resys.thena.api.entities.org.OrgMemberRight;
 import io.resys.thena.api.entities.org.OrgMembership;
@@ -25,7 +24,7 @@ public class PartyHierarchyContainerVisitor extends OrgPartyContainerVisitor<Imm
   private final ImmutableOrgPartyHierarchy.Builder builder = ImmutableOrgPartyHierarchy.builder();
   
   private String foundGroupId;
-  
+  private boolean partyFound;
   
   public PartyHierarchyContainerVisitor(String groupIdOrNameOrExternalId) {
     super(true);
@@ -105,6 +104,7 @@ public class PartyHierarchyContainerVisitor extends OrgPartyContainerVisitor<Imm
         groupIdOrNameOrExternalId.equals(group.getPartyName()) ||
         groupIdOrNameOrExternalId.equals(group.getId())) {
       
+      partyFound = true;
       foundGroupId = group.getId();
       builder
         .partyId(group.getId())
@@ -127,7 +127,10 @@ public class PartyHierarchyContainerVisitor extends OrgPartyContainerVisitor<Imm
   
   @Override
   public ImmutableOrgPartyHierarchy close() {
-    return builder.log("").build();
+    if(partyFound) {
+      return builder.log("").build();
+    }
+    return null;
   }
   @Override
   protected TopPartyVisitor visitTop(OrgParty group, OrgAnyTreeContainerContext worldState) {

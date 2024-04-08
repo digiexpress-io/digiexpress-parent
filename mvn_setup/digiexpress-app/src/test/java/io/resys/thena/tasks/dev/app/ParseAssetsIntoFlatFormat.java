@@ -27,6 +27,7 @@ import io.resys.sysconfig.client.mig.visitors.WorkflowMigration.CommandData;
 import io.resys.thena.tasks.dev.app.BeanFactory.CurrentUserRecord;
 import io.resys.thena.tasks.dev.app.config.MigrationProfile;
 import io.resys.thena.tasks.dev.app.config.TestCase;
+import io.resys.thena.tasks.dev.app.user.CurrentUser;
 import io.thestencil.client.api.ImmutableSiteState;
 import io.thestencil.client.api.StencilComposer.SiteState;
 import io.thestencil.client.spi.StencilComposerImpl;

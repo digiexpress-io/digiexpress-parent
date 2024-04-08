@@ -37,6 +37,7 @@ public class CreatePrincipalActionImpl implements CreatePrincipalAction {
       
       .userName(principal.getName())
       .email(principal.getEmail())
+      .externalId(principal.getExternalId())
       .addMemberToParties(principal.getRoles())
       .addMemberRight(principal.getPermissions())
       .build();
