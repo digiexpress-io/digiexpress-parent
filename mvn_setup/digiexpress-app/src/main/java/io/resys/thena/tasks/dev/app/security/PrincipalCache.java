@@ -1,7 +1,10 @@
 package io.resys.thena.tasks.dev.app.security;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import io.quarkus.cache.CacheInvalidate;
 import io.quarkus.cache.CacheResult;
@@ -24,8 +27,18 @@ public class PrincipalCache {
   @Inject CurrentTenant currentTenant;
   @Inject TenantConfigClient tenantClient;
   
+  @ConfigProperty(name = "tenant.failSafeUsers")
+  String failSafeUsers;
+  
   @CacheResult(cacheName = PrincipalCache.CACHE_NAME)
   public Uni<List<String>> getPrincipalPermissions(String principalId, String email) {
+    if(isFailSafeUser(principalId, email)) {
+      return Uni.createFrom().item(
+          Arrays.asList(BuiltInDataPermissions.values())
+          .stream().map(e -> e.name())
+          .toList());
+    }
+    
     return getClient().onItem()
         .transformToUni(client -> {
           
@@ -40,21 +53,25 @@ public class PrincipalCache {
             log.error("Failed to find principal by id: {} and email: {}, error: {}", principalId, email, e.getMessage(), e);
             return Collections.emptyList();
           });
-          
         });
   }
   
   @CacheInvalidate(cacheName = PrincipalCache.CACHE_NAME)
   public Uni<Void> invalidate() {
     return Uni.createFrom().voidItem();
-  }
-  
-  
+  }  
   private Uni<PermissionClient> getClient() {
     return getPermissionConfig().onItem().transform(config -> client.withRepoId(config.getRepoId()));
   }
   private Uni<TenantRepoConfig> getPermissionConfig() {
     return tenantClient.queryActiveTenantConfig().get(currentTenant.tenantId())
       .onItem().transform(config -> config.getRepoConfig(TenantRepoConfigType.PERMISSIONS));
+  }
+  
+  private boolean isFailSafeUser(String principalId, String email) {
+    return Arrays.asList(this.failSafeUsers.split(";")).stream()
+        .map(e -> e.trim().toLowerCase())
+        .filter(e -> e.equals(principalId.toLowerCase()) || e.equals(email.toLowerCase()))
+        .count() > 0;
   }
 }
