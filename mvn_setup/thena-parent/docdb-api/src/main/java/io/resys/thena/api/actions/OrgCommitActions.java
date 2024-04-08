@@ -154,6 +154,7 @@ public interface OrgCommitActions {
 
     // in case of status not ok, nulls
     @Nullable OrgMember getMember();
+    @Nullable List<OrgRight> getDirectRights();
   }
   
   @Value.Immutable

@@ -38,6 +38,7 @@ public class CreatePrincipalActionImpl implements CreatePrincipalAction {
       .userName(principal.getName())
       .email(principal.getEmail())
       .addMemberToParties(principal.getRoles())
+      .addMemberRight(principal.getDirectPermissions())
       .build();
      }
    
@@ -60,7 +61,7 @@ public class CreatePrincipalActionImpl implements CreatePrincipalAction {
         .name(principal.getUserName())
         .email(principal.getEmail())
         .status(OrgActorStatusType.IN_FORCE)
-       // .permissions(null) TODO
+        .directPermissions(response.getDirectRights().stream().map(e -> e.getRightName()).toList())
        // .roles(null) TODO
         .build();
     

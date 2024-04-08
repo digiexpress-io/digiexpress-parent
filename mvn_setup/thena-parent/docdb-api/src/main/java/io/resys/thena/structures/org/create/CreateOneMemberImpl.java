@@ -207,6 +207,7 @@ public class CreateOneMemberImpl implements CreateOneMember {
         .member(rsp.getMembers().isEmpty() ? null : rsp.getMembers().get(0))
         .addMessages(rsp.getLog())
         .addAllMessages(rsp.getMessages())
+        .addAllDirectRights(addToRoles)
         .status(BatchStatus.mapStatus(rsp.getStatus()))
         .build());
   }
