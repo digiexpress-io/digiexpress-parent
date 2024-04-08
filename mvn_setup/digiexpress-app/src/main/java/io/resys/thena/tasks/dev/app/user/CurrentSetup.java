@@ -42,7 +42,7 @@ public class CurrentSetup {
         .onItem().transform(permissions -> 
           ImmutableCurrentUserConfig.builder()
           .profile(profile)
-          .tenant(currentTenant)
+          .tenant(tenant)
           .permissions(permissions)
           .build()
         );

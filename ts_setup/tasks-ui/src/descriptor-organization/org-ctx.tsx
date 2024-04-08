@@ -13,25 +13,13 @@ const init: OrgState = new OrgMutatorBuilderImpl({
 });
 
 const OrgProvider: React.FC<{ children: React.ReactNode, backend: Backend, profile: UserProfileAndOrg }> = ({ children, backend, profile }) => {
-
-  const [loading, setLoading] = React.useState<boolean>(true);
   const [state, setState] = React.useState<OrgState>(init);
   const setter: OrgDispatch = React.useCallback((mutator: OrgMutator) => setState(mutator), [setState]);
 
   const contextValue: OrgContextType = React.useMemo(() => {
-    return { state, setState: setter, loading, profile };
-  }, [state, setter, loading, profile]);
+    return { state, setState: setter, profile };
+  }, [state, setter, profile]);
 
-  React.useEffect(() => {
-    if (!loading) {
-      return;
-    }
-    backend.org().then(data => {
-      setLoading(false);
-      setState(prev => prev.withIam(data.user).withOrg(data.org))
-    });
-
-  }, [loading, setLoading, backend]);
 
   return (<OrgContext.Provider value={contextValue}>{children}</OrgContext.Provider>);
 };

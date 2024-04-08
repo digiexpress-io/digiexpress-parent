@@ -105,7 +105,6 @@ class DefaultStore implements Store {
     if (props.repoType === 'EXT_DIALOB') {
       return this._urls['EXT_DIALOB'];
     }
-
     return this._urls[props.repoType];
   }
 
@@ -178,6 +177,9 @@ class DefaultStore implements Store {
             });
           });
         });
+    }
+    if (response.status === 204) {
+      return {} as any;
     }
 
     if (!response.ok) {

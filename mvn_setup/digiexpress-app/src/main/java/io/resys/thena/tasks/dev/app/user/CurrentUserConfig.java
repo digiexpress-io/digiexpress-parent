@@ -5,6 +5,7 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import io.resys.thena.projects.client.api.model.TenantConfig;
 import io.resys.userprofile.client.api.model.UserProfile;
 import jakarta.annotation.Nullable;
 
@@ -14,7 +15,7 @@ import jakarta.annotation.Nullable;
 public interface CurrentUserConfig {
 
   @Nullable CurrentPermissions getPermissions();
-  @Nullable CurrentTenant getTenant();
+  @Nullable TenantConfig getTenant();
   @Nullable CurrentUser getUser();
   @Nullable UserProfile getProfile();
 }

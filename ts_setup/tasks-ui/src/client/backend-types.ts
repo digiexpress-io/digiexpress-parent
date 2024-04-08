@@ -17,9 +17,7 @@ export interface Backend {
   config: StoreConfig;
 
   currentUserProfile(): Promise<UserProfileAndOrg>;
-  currentTenant(): Promise<TenantConfig>;
   health(): Promise<Health>
-  org(): Promise<{ org: Org, user: User }>;
 }
 
 export interface StoreConfig {

@@ -1,12 +1,18 @@
 
+import { TenantConfig } from 'client';
+
 export type RoleId = string;
 export type NotificationType = string;
 export type UserId = string;
 
 export interface UserProfileAndOrg {
+  userId: string;
+  am: { 
+    permissions: string[];
+    roles: string[];
+  };
+  tenant: TenantConfig;
   user: UserProfile;
-  userId: UserId,
-  roles: RoleId[];
   today: Date;
 }
 

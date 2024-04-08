@@ -26,28 +26,11 @@ class SessionData implements Session {
   private _cache: SiteCache;
 
   constructor(props: {
-    profile?: UserProfileAndOrg;
+    profile: UserProfileAndOrg;
     pages?: Record<DocumentId, PageUpdate>;
     cache?: SiteCache;
   }) {
-    this._profile = props.profile ? props.profile : {
-      user: {
-        id: '',
-        created: new Date().toISOString(),
-        updated: new Date().toISOString(),
-        details: {
-          firstName: '',
-          lastName: '',
-          username: '',
-          email: ''
-        },
-        notificationSettings: [{
-          type: '',
-          enabled: true
-        }]
-      },
-      today: new Date(), userId: "", roles: []
-    };
+    this._profile = props.profile;
     this._pages = props.pages ? props.pages : {};
     this._cache = props.cache ? props.cache : new SiteCache(this._profile);
   }
@@ -152,7 +135,6 @@ class ImmutableTabData implements TabBody {
 
 
 class ActionsImpl implements Actions {
-
   private _sessionDispatch: Dispatch<SetStateAction<SessionData>>;
   private _service: Backend;
 
@@ -180,5 +162,5 @@ class ActionsImpl implements Actions {
 }
 
 
-const initSession = new SessionData({});
+const initSession = new SessionData({} as any);
 export { SessionData, ImmutableTabData, initSession, ActionsImpl };

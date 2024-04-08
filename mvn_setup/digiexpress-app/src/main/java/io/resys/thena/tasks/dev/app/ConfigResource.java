@@ -28,6 +28,13 @@ public class ConfigResource {
   public Uni<CurrentUserConfig> currentUserConfig() {
     return setup.getOrCreateCurrentUserConfig();
   }
+  
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("config/health")
+  public Uni<Void> health() {
+    return Uni.createFrom().voidItem();
+  }
    
   @GET
   @Produces(MediaType.APPLICATION_JSON)

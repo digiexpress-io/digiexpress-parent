@@ -3,7 +3,6 @@ import { UserProfileAndOrg } from 'descriptor-user-profile';
 
 export interface OrgContextType {
   setState: OrgDispatch;
-  loading: boolean;
   state: OrgState,
   profile: UserProfileAndOrg;
 }

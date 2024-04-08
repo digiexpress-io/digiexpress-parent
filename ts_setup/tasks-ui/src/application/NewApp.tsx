@@ -115,84 +115,11 @@ const TenantConfigSetup: React.FC<{ profile: UserProfileAndOrg }> = ({ profile }
   </Provider>)
 }
 
-
-
-const DialobOnlySetup: React.FC<{}> = () => {
-  const service = React.useMemo(() => {
-    return backend;
-  }, []);
-
-  const profile: UserProfileAndOrg = React.useMemo(() => {
-    return {
-      user: {
-        id: '',
-        created: new Date().toISOString(),
-        updated: new Date().toISOString(),
-        details: {
-          email: 'han@millenium_falcon@email.com',
-          firstName: 'Han',
-          lastName: 'Solo',
-          username: 'hansolo'
-        },
-        notificationSettings: [{
-          type: '',
-          enabled: true
-        }]
-      },
-      userId: 'han-solo',
-      roles: [],
-      today: new Date(),
-    };
-  }, []);
-
-  const tenantConfig: TenantConfig = React.useMemo(() => {
-    return {
-      id: '',
-      version: '',
-      name: '',
-      created: new Date(),
-      updated: new Date(),
-      archived: undefined,
-      status: 'IN_FORCE',
-      preferences: {
-        landingApp: 'app-tenant'
-      },
-      repoConfigs: [],
-      transactions: [],
-      documentType: "TENANT_CONFIG"
-    };
-  }, []);
-
-  const tenant: Burger.App<{}, any> = React.useMemo(() => AppTenant(service, profile), [service]);
-  const appId = tenantConfig.preferences.landingApp;
-
-  return (
-    <TenantConfigProvider tenantConfig={tenantConfig}>
-      <Provider service={service} profile={profile}>
-        <Burger.Provider children={[tenant]} secondary="toolbar.activities" appId={appId} />
-      </Provider>
-    </TenantConfigProvider>)
-}
-
-
 const CheckAppConnection = React.lazy(async () => {
   const head = await backend.health();
 
-  if (head.contentType === 'DIALOB_EXT') {
 
-    const Result: React.FC<{}> = () => {
-      const snackbar = useSnackbar();
-      const intl = useIntl();
-      React.useEffect(() => {
-        const msg = intl.formatMessage({ id: 'init.loaded' }, { name: head.contentType });
-        snackbar.enqueueSnackbar(msg, { variant: 'success' })
-      }, [intl, snackbar]);
-
-      return (<DialobOnlySetup />)
-    };
-    return ({ default: Result })
-
-  } else if (head.contentType === 'NO_CONNECTION') {
+  if (head.contentType === 'NO_CONNECTION') {
     const Result: React.FC<{}> = () => <Connection.Down client={backend} />;
     return ({ default: Result })
   } else if (head.contentType === 'BACKEND_NOT_FOUND') {
@@ -201,7 +128,7 @@ const CheckAppConnection = React.lazy(async () => {
   }
 
   const profile = await backend.currentUserProfile();
-  const tenantConfig = await backend.currentTenant();
+  const tenantConfig = profile.tenant;
 
   const Result: React.FC<{}> = () => {
     const snackbar = useSnackbar();

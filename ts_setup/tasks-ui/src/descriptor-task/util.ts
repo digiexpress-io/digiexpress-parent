@@ -18,7 +18,7 @@ export function getDaysUntilDue(task: Task, today: Date) {
 }
 
 export function getTeamspaceType(task: Task, profile: UserProfileAndOrg, today: Date): TeamGroupType | undefined {
-  if (profile.roles.filter((role) => task.roles.includes(role)).length === 0) {
+  if (profile.am.roles.filter((role) => task.roles.includes(role)).length === 0) {
     return undefined;
   }
 
