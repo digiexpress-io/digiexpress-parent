@@ -60,7 +60,7 @@ public interface PrincipalCommand extends Serializable {
   interface CreatePrincipal extends PrincipalCommand {
     String getName();
     String getEmail();
-    List<String> getRoles();
+    List<String> getDirectRoles();
     List<String> getDirectPermissions();
     
     @Value.Default

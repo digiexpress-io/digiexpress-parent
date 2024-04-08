@@ -138,7 +138,7 @@ public class TenantRegistrySqlImpl implements TenantRegistry {
   @Override
   public Sql dropTable() {
     return ImmutableSql.builder().value(new SqlStatement()
-        .append("DROP TABLE ").append(options.getTenant()).append(";").ln()
+        .append("DROP TABLE IF EXISTS ").append(options.getTenant()).append(";").ln()
         .build()).build();
   }
 }
