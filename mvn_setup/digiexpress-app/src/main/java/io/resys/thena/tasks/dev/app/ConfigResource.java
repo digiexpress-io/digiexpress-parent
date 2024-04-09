@@ -6,6 +6,7 @@ import java.util.Map;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
 import io.resys.thena.tasks.dev.app.user.CurrentSetup;
+import io.resys.thena.tasks.dev.app.user.CurrentUser;
 import io.resys.thena.tasks.dev.app.user.CurrentUserConfig;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
@@ -20,13 +21,13 @@ public class ConfigResource {
   
   @Inject JsonWebToken jwt;
   @Inject CurrentSetup setup;
-  
+  @Inject CurrentUser currentUser;
   
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Path("config/current-user")
   public Uni<CurrentUserConfig> currentUserConfig() {
-    return setup.getOrCreateCurrentUserConfig();
+    return setup.getOrCreateCurrentUserConfig(currentUser);
   }
   
   @GET

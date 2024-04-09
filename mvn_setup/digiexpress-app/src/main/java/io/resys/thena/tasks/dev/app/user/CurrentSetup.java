@@ -20,28 +20,27 @@ import io.resys.userprofile.client.api.model.ImmutableUserDetails;
 import io.resys.userprofile.client.api.model.UserProfile;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
-import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@RequestScoped
+@ApplicationScoped
 public class CurrentSetup {
   @Inject PermissionClient permissions;
   @Inject TenantConfigClient tenantClient;
   @Inject CurrentTenant currentTenant;
-  @Inject CurrentUser currentUser;
   @Inject UserProfileClient userProfileClient;
   @Inject PrincipalCache cache;
   
-  public Uni<CurrentUserConfig> getOrCreateCurrentUserConfig() {
+  public Uni<CurrentUserConfig> getOrCreateCurrentUserConfig(CurrentUser currentUser) {
     return getOrCreateTenant()
-        .onItem().transformToUni(tenant -> getOrCreateUserProfile(tenant)
-        .onItem().transformToUni(profile -> getOrCreateCurrentUserConfig(profile, tenant)));
+        .onItem().transformToUni(tenant -> getOrCreateUserProfile(tenant, currentUser)
+        .onItem().transformToUni(profile -> getOrCreateCurrentUserConfig(profile, tenant, currentUser)));
   }
   
-  private Uni<CurrentUserConfig> getOrCreateCurrentUserConfig(UserProfile profile, TenantConfig tenant) {
-    return getOrCreatePermissions(profile, tenant)
+  private Uni<CurrentUserConfig> getOrCreateCurrentUserConfig(UserProfile profile, TenantConfig tenant, CurrentUser currentUser) {
+    return getOrCreatePermissions(profile, tenant, currentUser)
         .onItem().transform(permissions -> 
           ImmutableCurrentUserConfig.builder()
           .profile(profile)
@@ -51,7 +50,7 @@ public class CurrentSetup {
         );
   }
   
-  private Uni<CurrentPermissions> getOrCreatePermissions(UserProfile profile, TenantConfig tenant) {
+  private Uni<CurrentPermissions> getOrCreatePermissions(UserProfile profile, TenantConfig tenant, CurrentUser currentUser) {
     final var client = getPermissionsClient(tenant);
     return client.roleQuery().get(BuiltInRoles.LOBBY.name())
     .onFailure().recoverWithUni(e -> {
@@ -74,7 +73,7 @@ public class CurrentSetup {
                 .addRoles(lobby.getName())
                 .build());
           });
-    })
+    }) 
     .onItem().transformToUni(principle -> invalidateCache(principle))
     .onItem().transformToUni(principle -> 
       cache.getPrincipalPermissions(principle.getId(), principle.getEmail())
@@ -85,66 +84,72 @@ public class CurrentSetup {
   private Uni<TenantConfig> getOrCreateTenant() {
     return tenantClient.query().repoName(currentTenant.tenantsStoreId(), TenantRepoConfigType.TENANT).get(currentTenant.tenantId())
       .onItem().transformToUni(config -> {
-        if(config.isEmpty()) {
-          return tenantClient.query().repoName(currentTenant.tenantsStoreId(), TenantRepoConfigType.TENANT).createIfNot()
-              .onItem().transformToUni(created -> tenantClient.createTenantConfig().createOne(ImmutableCreateTenantConfig.builder()
-                  .repoId(currentTenant.tenantsStoreId())
-                  .name(currentTenant.tenantId())
-                  .targetDate(Instant.now())
-                  .build()))
-              .onItem().transformToUni(tenantConfig -> {
-                return Multi.createFrom().items(tenantConfig.getRepoConfigs().stream())
-                  .onItem().transformToUni(child -> tenantClient.query().repoName(child.getRepoId(), child.getRepoType()).createIfNot())
-                  .concatenate().collect().asList()
-                  .onItem().transform(junk -> tenantConfig);
-              })
-              .onFailure().transform(e -> {
-                e.printStackTrace();
-                return e;
-              })
-              .onItem().transformToUni(tenantConfig -> {
-                  final var permissionClient = getPermissionsClient(tenantConfig);
-                  
-                  return Multi.createFrom().items(BuiltInDataPermissions.values())
-                  .onItem().transformToUni(permission -> {
-                    // default data permissions
-                    return permissionClient.createPermission().createOne(ImmutableCreatePermission.builder()
-                        .name(permission.name())
-                        .description(permission.getDescription())
-                        .comment("created by default")
-                        .build());
-                  })
-                  .concatenate().collect().asList()
-                  .onItem().transformToMulti(junk_ -> Multi.createFrom().items(BuiltInUIPermissions.values()))
-                  .onItem().transformToUni(permission -> {
-                    // default ui permissions
-                    return permissionClient.createPermission().createOne(ImmutableCreatePermission.builder()
-                        .name(permission.name())
-                        .description(permission.getDescription())
-                        .comment("created by default")
-                        .build());
-                  }).concatenate().collect().asList()
-                  .onItem().transform(e -> tenantConfig);
-                
-              });
+        if(config.isPresent()) {
+          return Uni.createFrom().item(config.get());
         }
-        return Uni.createFrom().item(config.get());
+        return createTenant()
+              .onItem().transformToUni(tenantConfig -> createPermissions(tenantConfig)
+              .onItem().transform(e -> tenantConfig));
       });
   }
   
-  private Uni<UserProfile> getOrCreateUserProfile(TenantConfig config) {
-    final var userProfileConfig = config.getRepoConfigs().stream().filter(entry -> entry.getRepoType() == TenantRepoConfigType.USER_PROFILE).findFirst().get();
-    return userProfileClient.withRepoId(userProfileConfig.getRepoId()).createUserProfile().createOne(ImmutableUpsertUserProfile.builder()
-      .userId(currentUser.getUserId())
-      .targetDate(Instant.now())
-      .id(currentUser.getUserId())
-      .details(ImmutableUserDetails.builder()
-          .username(currentUser.getUserId())
-          .firstName(currentUser.getGivenName())
-          .lastName(currentUser.getFamilyName())
-          .email(currentUser.getEmail())
-          .build())
-      .build());
+  
+  private Uni<TenantConfig> createTenant() {
+    return tenantClient.query().repoName(currentTenant.tenantsStoreId(), TenantRepoConfigType.TENANT).createIfNot()
+    .onItem().transformToUni(created -> tenantClient.createTenantConfig().createOne(ImmutableCreateTenantConfig.builder()
+        .repoId(currentTenant.tenantsStoreId())
+        .name(currentTenant.tenantId())
+        .targetDate(Instant.now())
+        .build()))
+    .onItem().transformToUni(tenantConfig -> {
+      return Multi.createFrom().items(tenantConfig.getRepoConfigs().stream())
+        .onItem().transformToUni(child -> tenantClient.query().repoName(child.getRepoId(), child.getRepoType()).createIfNot())
+        .concatenate().collect().asList()
+        .onItem().transform(junk -> tenantConfig);
+    });
+  }
+  
+  private Uni<Void> createPermissions(TenantConfig tenantConfig) {
+    final var permissionClient = getPermissionsClient(tenantConfig);
+    return Multi.createFrom().items(BuiltInDataPermissions.values())
+      .onItem().transformToUni(permission -> {
+        // default data permissions
+        final var command = ImmutableCreatePermission.builder()
+            .name(permission.name())
+            .description(permission.getDescription())
+            .comment("created by default")
+            .build();
+        return permissionClient.createPermission().createOne(command);
+      })
+      .concatenate().collect().asList()
+      .onItem().transformToMulti(junk_ -> Multi.createFrom().items(BuiltInUIPermissions.values()))
+      .onItem().transformToUni(permission -> {
+        // default ui permissions
+        final var command = ImmutableCreatePermission.builder()
+            .name(permission.name())
+            .description(permission.getDescription())
+            .comment("created by default")
+            .build();
+        return permissionClient.createPermission().createOne(command);
+      }).concatenate().collect().asList().onItem().transformToUni(e -> Uni.createFrom().voidItem());
+    
+  }
+  
+  private Uni<UserProfile> getOrCreateUserProfile(TenantConfig config, CurrentUser currentUser) {
+    final var userProfileConfig = config.getRepoConfig(TenantRepoConfigType.USER_PROFILE);
+    final var command = ImmutableUpsertUserProfile.builder()
+        .userId(currentUser.getUserId())
+        .targetDate(Instant.now())
+        .id(currentUser.getUserId())
+        .details(ImmutableUserDetails.builder()
+            .username(currentUser.getUserId())
+            .firstName(currentUser.getGivenName())
+            .lastName(currentUser.getFamilyName())
+            .email(currentUser.getEmail())
+            .build())
+        .build();
+    
+    return userProfileClient.withRepoId(userProfileConfig.getRepoId()).createUserProfile().createOne(command);
   }
   
 
