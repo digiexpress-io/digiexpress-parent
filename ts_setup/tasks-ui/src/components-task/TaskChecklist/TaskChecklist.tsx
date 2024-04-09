@@ -36,7 +36,7 @@ const TaskChecklist: React.FC<{ onChange: (commands: TaskUpdateCommand<any>[]) =
       taskId: ctx.task.id,
       completed: event.target.checked
     };
-    const updatedTask = await backend.updateActiveTask(ctx.task.id, [command]);
+    const updatedTask = await backend.updateActiveTask(ctx.task.id, [command], false);
     ctx.withTask(updatedTask);
   }
 
@@ -47,7 +47,7 @@ const TaskChecklist: React.FC<{ onChange: (commands: TaskUpdateCommand<any>[]) =
       taskId: ctx.task.id,
       title: checklistTitle
     };
-    const updatedTask = await backend.updateActiveTask(ctx.task.id, [command]);
+    const updatedTask = await backend.updateActiveTask(ctx.task.id, [command], false);
     ctx.withTask(updatedTask);
   }
 
@@ -59,7 +59,7 @@ const TaskChecklist: React.FC<{ onChange: (commands: TaskUpdateCommand<any>[]) =
       taskId: ctx.task.id,
       title: checklistItemTitle
     };
-    const updatedTask = await backend.updateActiveTask(ctx.task.id, [command]);
+    const updatedTask = await backend.updateActiveTask(ctx.task.id, [command], false);
     ctx.withTask(updatedTask);
   }
 
@@ -92,7 +92,7 @@ const TaskChecklist: React.FC<{ onChange: (commands: TaskUpdateCommand<any>[]) =
       title: "New checklist title",
       checklist: [{ id: '', assigneeIds: [], completed: false, dueDate: undefined, title: 'new to-do item' }]
     };
-    const updatedTask = await backend.updateActiveTask(ctx.task.id, [command]);
+    const updatedTask = await backend.updateActiveTask(ctx.task.id, [command], false);
     ctx.withTask(updatedTask);
   }
 
@@ -106,7 +106,7 @@ const TaskChecklist: React.FC<{ onChange: (commands: TaskUpdateCommand<any>[]) =
       dueDate: undefined,
       title: "New to-do item",
     };
-    const updatedTask = await backend.updateActiveTask(ctx.task.id, [command]);
+    const updatedTask = await backend.updateActiveTask(ctx.task.id, [command], false);
     ctx.withTask(updatedTask);
   }
 
@@ -117,7 +117,7 @@ const TaskChecklist: React.FC<{ onChange: (commands: TaskUpdateCommand<any>[]) =
       taskId: ctx.task.id,
       checklistId
     };
-    const updatedTask = await backend.updateActiveTask(ctx.task.id, [command]);
+    const updatedTask = await backend.updateActiveTask(ctx.task.id, [command], false);
     ctx.withTask(updatedTask);
   }
 
@@ -128,7 +128,7 @@ const TaskChecklist: React.FC<{ onChange: (commands: TaskUpdateCommand<any>[]) =
       checklistItemId,
       checklistId
     };
-    const updatedTask = await backend.updateActiveTask(ctx.task.id, [command]);
+    const updatedTask = await backend.updateActiveTask(ctx.task.id, [command], false);
     ctx.withTask(updatedTask);
   }
 

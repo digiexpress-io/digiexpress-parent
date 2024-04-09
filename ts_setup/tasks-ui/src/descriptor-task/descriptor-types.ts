@@ -142,7 +142,7 @@ export interface TasksContextType {
   store: TaskStore;
 
   createTask(command: CreateTask): Promise<Task>;
-  updateActiveTask(id: TaskId, commands: TaskUpdateCommand<any>[]): Promise<Task>;
+  updateActiveTask(id: TaskId, commands: TaskUpdateCommand<any>[], refresh?: boolean): Promise<Task>;
   getById(id: string): TaskDescriptor;
 
   reload: () => Promise<void>;

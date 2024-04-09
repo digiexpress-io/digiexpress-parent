@@ -83,9 +83,11 @@ export const TasksProvider: React.FC<{ children: React.ReactNode, init: { backen
       return store.getActiveTasks().then(data => withTasks(data.records));
     }
 
-    async function updateActiveTask(id: TaskId, commands: TaskUpdateCommand<any>[]) {
+    async function updateActiveTask(id: TaskId, commands: TaskUpdateCommand<any>[], refresh?: boolean) {
       const task = await store.updateActiveTask(id, commands);
-      await store.getActiveTasks().then(data => withTasks(data.records));
+      if(refresh === undefined || refresh === true) {
+        await store.getActiveTasks().then(data => withTasks(data.records));
+      }
       return task;
     }
 

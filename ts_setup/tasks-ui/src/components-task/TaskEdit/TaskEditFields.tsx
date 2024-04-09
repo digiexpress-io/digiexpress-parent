@@ -43,7 +43,7 @@ const Title: React.FC<{}> = () => {
       description: ctx.task.description,
       title
     };
-    const updatedTask = await backend.updateActiveTask(ctx.task.id, [command]);
+    const updatedTask = await backend.updateActiveTask(ctx.task.id, [command], false);
     ctx.withTask(updatedTask);
   }
 
@@ -73,7 +73,7 @@ const Description: React.FC<{}> = () => {
       title: ctx.task.title,
       description
     };
-    const updatedTask = await backend.updateActiveTask(ctx.task.id, [command]);
+    const updatedTask = await backend.updateActiveTask(ctx.task.id, [command], false);
     ctx.withTask(updatedTask);
   }
 
@@ -91,7 +91,7 @@ const Checklist: React.FC<{}> = () => {
   const backend = useTasks();
 
   async function handleChange(commands: TaskUpdateCommand<any>[]) {
-    const updatedTask = await backend.updateActiveTask(ctx.task.id, commands);
+    const updatedTask = await backend.updateActiveTask(ctx.task.id, commands, false);
     ctx.withTask(updatedTask);
   }
 
@@ -104,7 +104,7 @@ const Status: React.FC<{}> = () => {
   const backend = useTasks();
 
   async function handleStatusChange(command: ChangeTaskStatus) {
-    const updatedTask = await backend.updateActiveTask(ctx.task.id, [command]);
+    const updatedTask = await backend.updateActiveTask(ctx.task.id, [command], false);
     ctx.withTask(updatedTask);
   }
 
@@ -119,7 +119,7 @@ const Assignee: React.FC<{}> = () => {
 
   async function handleAssigneeChange(assigneeIds: PrincipalId[]) {
     const command: AssignTask = { assigneeIds, commandType: 'AssignTask', taskId: ctx.task.id };
-    const updatedTask = await backend.updateActiveTask(ctx.task.id, [command]);
+    const updatedTask = await backend.updateActiveTask(ctx.task.id, [command], false);
     ctx.withTask(updatedTask);
   }
 
@@ -133,7 +133,7 @@ const Roles: React.FC<{}> = () => {
   const backend = useTasks();
 
   async function handleRolesChange(command: AssignTaskRoles) {
-    const updatedTask = await backend.updateActiveTask(ctx.task.id, [command]);
+    const updatedTask = await backend.updateActiveTask(ctx.task.id, [command], false);
     ctx.withTask(updatedTask);
   }
 
@@ -145,7 +145,7 @@ const Priority: React.FC<{}> = () => {
   const backend = useTasks();
 
   async function handlePriorityChange(command: ChangeTaskPriority) {
-    const updatedTask = await backend.updateActiveTask(ctx.task.id, [command]);
+    const updatedTask = await backend.updateActiveTask(ctx.task.id, [command], false);
     ctx.withTask(updatedTask);
   }
 
@@ -159,7 +159,7 @@ const StartDate: React.FC = () => {
   const backend = useTasks();
 
   async function handleStartDateChange(command: ChangeTaskStartDate) {
-    const updatedTask = await backend.updateActiveTask(ctx.task.id, [command]);
+    const updatedTask = await backend.updateActiveTask(ctx.task.id, [command], false);
     ctx.withTask(updatedTask);
   }
 
@@ -177,7 +177,7 @@ const DueDate: React.FC = () => {
       taskId: ctx.task.id
     };
 
-    const updatedTask = await backend.updateActiveTask(ctx.task.id, [command]);
+    const updatedTask = await backend.updateActiveTask(ctx.task.id, [command], false);
     ctx.withTask(updatedTask);
   }
 
