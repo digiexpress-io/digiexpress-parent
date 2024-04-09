@@ -19,9 +19,9 @@ const OneRoleMembers: React.FC<{ principalName: string }> = ({ principalName }) 
 
   return (
     <>
-      <SectionLayout label='role.principal.name' value={name} />
-      <SectionLayout label='role.principal.email' value={email} />
-      <SectionLayout label='role.principal.status' value={status} />
+      <SectionLayout label='permissions.roles.principal.name' value={name} />
+      <SectionLayout label='permissions.roles.principal.email' value={email} />
+      <SectionLayout label='permissions.roles.principal.status' value={status} />
     </>
   )
 }
@@ -29,7 +29,7 @@ const OneRoleMembers: React.FC<{ principalName: string }> = ({ principalName }) 
 const RoleMembers: React.FC<{ role: Role }> = ({ role }) => {
 
   if (!role.principals.length) {
-    return (<Alert severity='info'><FormattedMessage id='permissions.role.member.none' /></Alert>)
+    return (<Alert severity='info'><FormattedMessage id='permissions.roleMembers.noneFound' /></Alert>)
   }
 
   console.log("principals", role.principals)

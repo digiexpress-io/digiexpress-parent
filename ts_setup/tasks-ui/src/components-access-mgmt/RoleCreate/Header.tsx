@@ -30,7 +30,7 @@ const Header: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   return (
     <Box display='flex' alignItems='center'>
       <Box width='50%' marginRight={5}>
-        <Typography variant='h4'><FormattedMessage id='permissions.role.create' /></Typography>
+        <Typography variant='h4'><FormattedMessage id='permissions.roles.create' /></Typography>
       </Box>
 
       <Box width='50%'>

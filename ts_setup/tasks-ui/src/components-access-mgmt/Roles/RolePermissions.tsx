@@ -26,7 +26,7 @@ const OneRolePermission: React.FC<{ permissionName: string }> = ({ permissionNam
 
 const RolePermissions: React.FC<{ role: Role }> = ({ role }) => {
   if (!role.permissions.length) {
-    return (<Alert severity='info'><FormattedMessage id='permissions.permission.none' /></Alert>)
+    return (<Alert severity='info'><FormattedMessage id='permissions.permissionName.noneFound' /></Alert>)
   }
 
   return (

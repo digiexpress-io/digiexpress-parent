@@ -546,65 +546,55 @@ const en = {
 
   'tasktable.header.spotlight.no_group': 'All tasks',
 
+  // --------------- ACCESS-MGMT START -----------------
+
   'permissions.title': 'Permissions',
   'permissions.selectedPermissions': 'Selected permissions',
   'permissions.search.title': 'Search available permissions',
-
-  'permissions.roles.overview.tab.details': 'Details',
-  'permissions.roles.overview.tab.permissions': 'Permissions',
-  'permissions.roles.overview.tab.members': 'Members',
 
   'permissions.navButton.role.create': 'Create role',
   'permissions.navButton.permission.create': 'Create permission',
   'permissions.navButton.principal.create': 'Create member',
 
+  'permissions.roleMembers.noneFound': 'No members found',
+  'permissions.permissionName.noneFound': 'No permissions found',
+
+  'permissions.roles.overview.tab.details': 'Details',
+  'permissions.roles.overview.tab.permissions': 'Permissions',
+  'permissions.roles.overview.tab.members': 'Members',
+
   'permissions.roles.roleMeta': 'Role metadata',
+  'permissions.roles.name': 'Role name',
   'permissions.roles.description': 'Description',
   'permissions.roles.status': 'Status',
+  'permissions.roles.commitComment': 'Comment',
+  'permissions.roles.commitComment.placeholder': 'Description of this change',
+  'permissions.roles.description.create.placeholder': 'Enter a description of this role',
+  'permissions.roles.name.create.placeholder': 'Enter a role name',
+
+  'permissions.roles.roleParentOverview': 'Parent role',
+  'permissions.roles.rolePermissionsOverview': 'Permissions given to this Role',
+  'permissions.roles.rolePrincipalsOverview': 'Members assigned to this Role',
+
   'permissions.roles.numberOfPrincpals': 'Total members',
   'permissions.roles.numberOfPermissions': 'Total permissions',
   'permissions.roles.title': 'Roles',
   'permissions.roles.search.title': 'Search for roles by role name',
   'permissions.roles.selectedRoles': 'Selected roles',
-  'permissions.principals.select': 'Select members to add',
 
-  'permissions.role.member.name': 'Username',
-  'permissions.role.member.none': 'No members found',
-  'permissions.role.create': 'Create a role',
+  'permissions.roles.principal.name': 'Username',
+  'permissions.roles.principal.email': 'Email',
+  'permissions.roles.principal.status': 'Status',
+  'permissions.roles.create': 'Create a role',
 
-  'permissions.principal.create': 'Create a new member',
-  'permissions.principal.username': 'Username',
-  'permissions.principal.email': 'Email',
-  'permissions.principal.status': 'Status',
-  'permissions.principal.commitComment': 'Comment',
-  'permissions.principal.commitComment.placeholder': 'Enter a description of this change',
-  'permissions.principal.name.create.placeholder': 'Enter a username',
-  'permissions.principal.email.create.placeholder': 'Enter user email',
-
-
-  'permissions.role.name.create.placeholder': 'Enter a role name',
-  'permissions.role.description.create.placeholder': 'Enter a description of this role',
   'permissions.role.parentSelect': 'Role parent',
   'permissions.role.roleCreate.selection.none': 'Nothing selected',
-  'permissions.role.name': 'Role name',
-  'permissions.role.description': 'Role description',
-  'permissions.role.roleParentOverview': 'Parent role',
   'permissions.role.roleParentName': 'Name',
-  'permissions.role.commitComment': 'Comment',
-  'permissions.role.commitComment.placeholder': 'Description of this change',
-  'permissions.role.rolePermissionsOverview': 'Permissions given to this Role',
+
   'permissions.role.permissions.permissionName': 'Name',
-  'permissions.role.rolePrincipalsOverview': 'Members assigned to this Role',
   'permissions.role.users.username': 'Username',
   'permissions.createPermission.roles': 'Roles',
   'permissions.createPermission.principals': 'Members',
-
-
-  'role.principal.name': 'Username',
-  'role.principal.email': 'Email',
-  'role.principal.status': 'Status',
-
-
 
   'permissions.select.none': 'None',
   'permissions.select.currentSelection': 'Current selection',
@@ -632,9 +622,16 @@ const en = {
   'permissions.principals.selectedPrincipals': 'Selected members',
   'permissions.principal.name': 'Member name',
   'permissions.principals.search.title': 'Search available members',
+  'permissions.principals.select': 'Select members to add',
 
-
-
+  'permissions.principal.create': 'Create a new member',
+  'permissions.principal.username': 'Username',
+  'permissions.principal.email': 'Email',
+  'permissions.principal.status': 'Status',
+  'permissions.principal.commitComment': 'Comment',
+  'permissions.principal.commitComment.placeholder': 'Enter a description of this change',
+  'permissions.principal.name.create.placeholder': 'Enter a username',
+  'permissions.principal.email.create.placeholder': 'Enter user email',
 };
 
 export default en;

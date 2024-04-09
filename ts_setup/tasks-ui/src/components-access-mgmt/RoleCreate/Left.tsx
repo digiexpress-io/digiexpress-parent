@@ -18,7 +18,7 @@ const RoleName: React.FC<{}> = () => {
   }
 
   return (<TextField InputProps={{ disableUnderline: true }} variant='standard'
-    placeholder={intl.formatMessage({ id: 'permissions.role.name.create.placeholder' })}
+    placeholder={intl.formatMessage({ id: 'permissions.roles.name.create.placeholder' })}
     fullWidth
     value={entity.name}
     onChange={handleRoleNameChange}
@@ -34,7 +34,7 @@ const RoleDescription: React.FC<{}> = () => {
   }
 
   return (<TextField InputProps={{ disableUnderline: true }} variant='standard'
-    placeholder={intl.formatMessage({ id: 'permissions.role.description.create.placeholder' })}
+    placeholder={intl.formatMessage({ id: 'permissions.roles.description.create.placeholder' })}
     fullWidth
     multiline
     minRows={3}
@@ -53,7 +53,7 @@ const RoleCommitComment: React.FC<{}> = () => {
   }
 
   return (<TextField InputProps={{ disableUnderline: true }} variant='standard'
-    placeholder={intl.formatMessage({ id: 'permissions.role.commitComment.placeholder' })}
+    placeholder={intl.formatMessage({ id: 'permissions.roles.commitComment.placeholder' })}
     fullWidth
     value={entity.commitComment}
     onChange={handleCommitCommentChange}
@@ -75,34 +75,34 @@ export const Left: React.FC<{}> = () => {
   return (
     <>
       <Burger.Section>
-        <Typography fontWeight='bold'><FormattedMessage id='permissions.role.name' /></Typography>
+        <Typography fontWeight='bold'><FormattedMessage id='permissions.roles.name' /></Typography>
         <RoleName />
       </Burger.Section>
 
       <Burger.Section>
-        <Typography fontWeight='bold'><FormattedMessage id='permissions.role.description' /></Typography>
+        <Typography fontWeight='bold'><FormattedMessage id='permissions.roles.description' /></Typography>
         <RoleDescription />
       </Burger.Section>
 
       <Burger.Section>
-        <Typography fontWeight='bold'><FormattedMessage id='permissions.role.commitComment' /></Typography>
+        <Typography fontWeight='bold'><FormattedMessage id='permissions.roles.commitComment' /></Typography>
         <RoleCommitComment />
       </Burger.Section>
 
       <Burger.Section>
-        <Typography fontWeight='bold'><FormattedMessage id='permissions.role.roleParentOverview' /></Typography>
+        <Typography fontWeight='bold'><FormattedMessage id='permissions.roles.roleParentOverview' /></Typography>
         {parentRole?.name ? <SectionLayout label='permissions.role.roleParentName' value={parentRole?.name} /> :
           <SectionLayout label='permissions.select.none' value={undefined} />}
       </Burger.Section>
 
       <Burger.Section>
-        <Typography fontWeight='bold'><FormattedMessage id='permissions.role.rolePermissionsOverview' /></Typography>
+        <Typography fontWeight='bold'><FormattedMessage id='permissions.roles.rolePermissionsOverview' /></Typography>
         {entity.permissions.length === 0 ? <SectionLayout label='permissions.select.none' value={undefined} /> :
           entity.permissions.map((permission, index) => <SectionLayout label='permissions.permission.name' key={index} value={permission} />)}
       </Burger.Section>
 
       <Burger.Section>
-        <Typography fontWeight='bold'><FormattedMessage id='permissions.role.rolePrincipalsOverview' /></Typography>
+        <Typography fontWeight='bold'><FormattedMessage id='permissions.roles.rolePrincipalsOverview' /></Typography>
         {entity.principals.length === 0 ? <SectionLayout label='permissions.select.none' value={undefined} /> :
           entity.principals.map((principal, index) => <SectionLayout label='permissions.role.users.username' key={index} value={principal} />)}
       </Burger.Section>
