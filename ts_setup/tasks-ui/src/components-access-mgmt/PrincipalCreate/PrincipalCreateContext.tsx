@@ -1,5 +1,6 @@
-import { ActorStatus } from 'descriptor-access-mgmt/types';
 import React from 'react';
+import { ActorStatus } from 'descriptor-access-mgmt/types';
+import { getInstance as createTabsContext, SingleTabInit, Tab } from 'descriptor-tabbing';
 
 export interface NewPrincipal {
   username: string;
@@ -90,6 +91,32 @@ export function useNewPrincipal(): NewPrincipalContextType {
   return result;
 }
 
+const TabsContext = createTabsContext<TabTypes, TabState>();
+function initAllTabs(): Record<TabTypes, SingleTabInit<TabState>> {
+  return {
+    principal_permissions: { body: {}, active: false },
+    principal_roles: { body: {}, active: true },
+  };
+}
+
+export type TabTypes = 'principal_permissions' | 'principal_roles';
+export interface TabState { }
+export function useTabs() {
+  const tabbing = TabsContext.hooks.useTabbing();
+  const activeTab: Tab<TabTypes, TabState> = tabbing.getActiveTab();
+  function setActiveTab(next: TabTypes) {
+    tabbing.withTabActivity(next, { disableOthers: true });
+  }
+  return { activeTab, setActiveTab };
+}
+
+
 export const PrincipalCreateProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  return (<NewPrincipalProvider>{children}</NewPrincipalProvider>)
+  return (
+    <TabsContext.Provider init={initAllTabs()}>
+      <NewPrincipalProvider>
+        <>{children}</>
+      </NewPrincipalProvider>
+    </TabsContext.Provider>
+  )
 }

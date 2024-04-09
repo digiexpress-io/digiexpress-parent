@@ -587,9 +587,6 @@ const en = {
   'permissions.roles.principal.status': 'Status',
   'permissions.roles.create': 'Create a role',
 
-  'permissions.role.parentSelect': 'Role parent',
-  'permissions.role.roleCreate.selection.none': 'Nothing selected',
-  'permissions.role.roleParentName': 'Name',
 
   'permissions.role.permissions.permissionName': 'Name',
   'permissions.role.users.username': 'Username',
@@ -617,12 +614,29 @@ const en = {
   'permissions.createRole.role_parent': 'Parent role',
   'permissions.createRole.role_permissions': 'Permissions',
   'permissions.createRole.role_members': 'Role members',
+  'permissions.createRole.selection.none': 'Nothing selected',
+
+  'permissions.role.parentSelect': 'Role parent',
+  'permissions.role.roleParentName': 'Name',
+
+
+  'permissions.createPrincipal.principal_permissions': 'Permissions',
+  'permissions.createPrincipal.principal_roles': 'Roles',
+  'permissions.createPrincipal.selection.none': 'Nothing selected',
 
   'permissions.principals.title': 'Role members',
   'permissions.principals.selectedPrincipals': 'Selected members',
   'permissions.principal.name': 'Member name',
   'permissions.principals.search.title': 'Search available members',
   'permissions.principals.select': 'Select members to add',
+
+  'permissions.principal.rolesOverview': 'Roles to which this member belongs',
+  'permissions.principal.rolesOverview.none': 'None',
+  'permissions.principals.rolesOverview.roleName': 'Name',
+  'permissions.principal.permissionsOverview': 'Permissions assigned to this member',
+  'permissions.principal.permissionsOverview.permissionName': 'Name',
+  'permissions.principal.permissionsOverview.none': 'None',
+
 
   'permissions.principal.create': 'Create a new member',
   'permissions.principal.username': 'Username',

@@ -6,7 +6,6 @@ import Burger from 'components-burger';
 import { SectionLayout } from 'components-generic';
 import { useNewPrincipal } from './PrincipalCreateContext';
 
-
 const PrincipalUsername: React.FC = () => {
   const intl = useIntl();
   const { setUsername, entity } = useNewPrincipal();
@@ -57,6 +56,7 @@ const PrincipalCommitComment: React.FC = () => {
 }
 
 export const Left: React.FC<{}> = () => {
+  const { entity } = useNewPrincipal();
 
   return (
     <>
@@ -76,11 +76,17 @@ export const Left: React.FC<{}> = () => {
       </Burger.Section>
 
       <Burger.Section>
-        <Typography fontWeight='bold'><FormattedMessage id='permissions.role.roleMembersOverview' /></Typography>
-        <SectionLayout label='permissions.role.users.username' value={'member 1'} />
-        <SectionLayout label='permissions.role.users.username' value={'member 2'} />
-        <SectionLayout label='permissions.role.users.username' value={'member 3'} />
-        <SectionLayout label='permissions.role.users.username' value={'member 4'} />
+        <Typography fontWeight='bold'><FormattedMessage id='permissions.principal.rolesOverview' /></Typography>
+        {entity.roles.length === 0 ? <SectionLayout label='permissions.principal.rolesOverview.none' value={undefined} /> :
+          entity.roles.map((role, index) => <SectionLayout label='permissions.principals.rolesOverview.roleName' value={role} key={index} />)}
+      </Burger.Section>
+
+      <Burger.Section>
+        <Typography fontWeight='bold'><FormattedMessage id='permissions.principal.permissionsOverview' /></Typography>
+        {entity.permissions.length === 0 ? <SectionLayout label='permissions.principal.permissionsOverview.none' value={undefined} /> :
+          entity.permissions.map((permission, index) => <SectionLayout label='permissions.principal.permissionsOverview.permissionName' value={permission} key={index} />)
+        }
+
       </Burger.Section>
     </>)
 }

@@ -22,9 +22,9 @@ const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       commandType: 'CREATE_PRINCIPAL',
       name: username,
       email,
+      comment: commitComment,
       permissions: [...permissions],
       roles: [...roles],
-      comment: commitComment,
     }
     await new ImmutableAccessMgmtStore(backend.store).createPrincipal(command);
     await reload();
