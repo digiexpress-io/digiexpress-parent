@@ -1,6 +1,7 @@
+import React from 'react';
 import { Backend, Store, Health } from './backend-types';
 
-export class ServiceImpl implements Backend {
+export class BackendImpl implements Backend {
   private _store: Store;
 
   constructor(store: Store) {
@@ -19,4 +20,17 @@ export class ServiceImpl implements Backend {
     const result: Health = { contentType: 'BACKEND_NOT_FOUND' };
     return result;
   }
+}
+
+export const BackendContext = React.createContext<Backend>({} as any);
+
+
+export const BackendProvider: React.FC<{ children: React.ReactNode, backend: Backend}> = (props) => {
+  const init = props.backend;
+  const contextValue = React.useMemo(() => init, [init]);
+  return (<BackendContext.Provider value={contextValue}>{props.children}</BackendContext.Provider>);
+}
+
+export const useBackend = () => {
+  return React.useContext(BackendContext);
 }

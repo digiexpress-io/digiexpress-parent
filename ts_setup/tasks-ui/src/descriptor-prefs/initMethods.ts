@@ -1,5 +1,5 @@
-import { Backend } from 'client';
-import { UserProfile, UpsertUiSettings, UiSettings, ImmutableUserProfileStore } from 'descriptor-access-mgmt';
+import { Backend } from 'descriptor-backend';
+import { UserProfile, UpsertUiSettings, UiSettings, ImmutableAmStore } from 'descriptor-access-mgmt';
 
 
 import { PreferenceInit, VisibilityRule, SortingRule, DataId, ConfigRule } from './pref-types';
@@ -30,7 +30,7 @@ async function storeSettings(backend: Backend, userId: string, pref: ImmutablePr
     uiSettings
   };
   try {
-    await new ImmutableUserProfileStore(backend.store).updateUserProfile(userId, [command]);
+    await new ImmutableAmStore(backend.store).updateUserProfile(userId, [command]);
     _logger.target(command).debug("stored ui settings");
   } catch(error) {
     _logger.target(command).warn("failed to store ui settings");

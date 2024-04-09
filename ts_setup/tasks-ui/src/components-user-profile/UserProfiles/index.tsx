@@ -1,8 +1,8 @@
 import React from 'react';
 import { TableHead, TableCell, TableRow, Box } from '@mui/material';
 
-import Context from 'context';
-import { UserProfileDescriptor, ImmutableUserProfileStore } from 'descriptor-access-mgmt';
+import Backend from 'descriptor-backend';
+import { UserProfileDescriptor, ImmutableAmStore } from 'descriptor-access-mgmt';
 import { NavigationSticky, FilterByString, TableBody, TableFillerRows } from 'components-generic';
 import { wash_me } from 'components-colors';
 
@@ -81,7 +81,7 @@ const columnTypes: (keyof UserProfileDescriptor)[] = [
 ]
 
 const UserProfiles: React.FC<{}> = () => {
-  const backend = Context.useBackend();
+  const backend = Backend.useBackend();
   const [columns, setColumns] = React.useState([...columnTypes]);
   const [state, setState] = React.useState<UserProfileSearchState>(initUserProfileSearchState());
   const [loading, setLoading] = React.useState<boolean>(false);
@@ -90,7 +90,7 @@ const UserProfiles: React.FC<{}> = () => {
   React.useEffect(() => {
     if (isSearchStringValid) {
       setLoading(true);
-      new ImmutableUserProfileStore(backend.store).findAllUserProfiles().then(newRecords => {
+      new ImmutableAmStore(backend.store).findAllUserProfiles().then(newRecords => {
         setState(prev => prev.withRecords(newRecords));
         setLoading(false);
       });

@@ -2,7 +2,7 @@ import React from 'react';
 
 import Burger from 'components-burger';
 
-import { Backend } from 'client';
+import { Backend } from 'descriptor-backend';
 
 
 import { TasksProvider } from 'descriptor-task';

@@ -7,7 +7,7 @@ import { OneRoleData } from './OneRoleData';
 
 import { PermissionCreateDialog } from '../PermissionCreate';
 import PrincipalCreateDialog from '../PrincipalCreate';
-import Context from 'context';
+import { useAm } from 'descriptor-access-mgmt';
 
 const color_create_role = colors.cyan;
 const color_create_permission = colors.steelblue;
@@ -61,7 +61,7 @@ const RoleNavigation: React.FC = () => {
 
 
 const RolesOverviewLoader: React.FC = () => {
-  const { roles } = Context.useAm();
+  const { roles } = useAm();
   const navigation = <RoleNavigation />;
   const pagination = <></>;
   const items = roles.map(role => (<OneRoleData role={role} key={role.id} />));

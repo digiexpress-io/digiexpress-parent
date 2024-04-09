@@ -2,21 +2,21 @@ import React from 'react';
 import { Stack, Typography, Paper, CircularProgress } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 import { FirstName, LastName, EmailAddress, NotificationSettings } from './UserProfileEditFields';
-import { UserProfileDescriptor, ImmutableUserProfileDescriptor, ImmutableUserProfileStore } from 'descriptor-access-mgmt';
+import { UserProfileDescriptor, ImmutableUserProfileDescriptor, ImmutableAmStore } from 'descriptor-access-mgmt';
 import { UserAvatar } from './UserAvatar';
-import Context from 'context';
+import Backend from 'descriptor-backend';
 
 import { SectionLayout } from 'components-generic';
 import Burger from 'components-burger';
 
 
 const CurrentUserProfile: React.FC<{}> = () => {
-  const backend = Context.useBackend();
+  const backend = Backend.useBackend();
   const [state, setState] = React.useState<UserProfileDescriptor>();
   const [loading, setLoading] = React.useState<boolean>(true);
 
   React.useEffect(() => {
-    new ImmutableUserProfileStore(backend.store).currentUserProfile()
+    new ImmutableAmStore(backend.store).currentUserProfile()
     .then(userProfile => {
       setState(new ImmutableUserProfileDescriptor(userProfile.user));
       setLoading(false);

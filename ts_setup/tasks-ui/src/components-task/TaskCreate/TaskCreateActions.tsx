@@ -1,14 +1,14 @@
 import React from 'react';
 import { Stack } from '@mui/material';
 import Burger from 'components-burger';
-import Context from 'context';
-
+import { useAm } from 'descriptor-access-mgmt';
+import { useTasks, useTaskEdit } from 'descriptor-task';
 
 
 const TaskCreateActions: React.FC<{ onClose: () => void }> = ({ onClose }) => {
-  const { userId } = Context.useAm()
-  const tasks = Context.useTasks();
-  const state = Context.useTaskEdit();
+  const { userId } = useAm()
+  const tasks = useTasks();
+  const state = useTaskEdit();
 
   const [open, setOpen] = React.useState(false);
 

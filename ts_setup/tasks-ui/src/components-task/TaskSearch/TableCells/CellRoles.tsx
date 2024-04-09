@@ -1,10 +1,6 @@
 import React from 'react';
 
-
-
-import Context from 'context';
-
-import { TaskDescriptor, AssignTaskRoles } from 'descriptor-task';
+import { TaskDescriptor, AssignTaskRoles, useTasks } from 'descriptor-task';
 import { StyledTableCell } from 'components-generic';
 
 import TaskRoles from '../../TaskRoles';
@@ -15,7 +11,7 @@ const FormattedCell: React.FC<{
   row: TaskDescriptor,
 }> = ({ row }) => {
 
-  const tasks = Context.useTasks();
+  const tasks = useTasks();
   async function handleChange(command: AssignTaskRoles) {
     await tasks.updateActiveTask(row.id, [command]);
   }

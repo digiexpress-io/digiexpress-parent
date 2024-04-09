@@ -3,15 +3,13 @@ import { Menu, MenuItem, MenuList, ListItemIcon, ListItemText, Typography, Circu
 import Check from '@mui/icons-material/Check';
 import { FormattedMessage } from 'react-intl';
 
-
-import Context from 'context';
 import Burger from 'components-burger';
 import { ButtonSearch } from 'components-generic';
-import { Tenant } from 'descriptor-dialob';
+import { Tenant, useDialobTenant } from 'descriptor-dialob';
 
 
 export const FilterByTenant: React.FC = () => {
-  const tenants = Context.useDialobTenant();
+  const tenants = useDialobTenant();
   const tenantsList: Tenant[] = tenants.state.tenants.map(tenant => tenant.source);
   const [loading, setLoading] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);

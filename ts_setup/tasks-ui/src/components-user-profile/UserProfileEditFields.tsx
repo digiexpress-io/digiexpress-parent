@@ -4,8 +4,8 @@ import { TextField, FormControl, FormControlLabel, FormGroup, Switch, Typography
 import { useIntl } from 'react-intl';
 
 
-import Context from 'context';
-import { UserProfileDescriptor, ChangeUserDetailsFirstName, ImmutableUserProfileStore } from 'descriptor-access-mgmt';
+import Backend from 'descriptor-backend';
+import { UserProfileDescriptor, ChangeUserDetailsFirstName, ImmutableAmStore } from 'descriptor-access-mgmt';
 import { blue_mud2, grey, purple } from 'components-colors';
 
 
@@ -13,7 +13,7 @@ import { blue_mud2, grey, purple } from 'components-colors';
 const FirstName: React.FC<{ init: UserProfileDescriptor }> = ({ init }) => {
 
   const intl = useIntl();
-  const backend = Context.useBackend();
+  const backend = Backend.useBackend();
   const [firstName, setFirstName] = React.useState(init.entry.details.firstName);
 
   function handleFirstNameChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -26,7 +26,7 @@ const FirstName: React.FC<{ init: UserProfileDescriptor }> = ({ init }) => {
       id: init.entry.id,
       firstName
     };
-    await new ImmutableUserProfileStore(backend.store).updateUserProfile(init.entry.id, [command]);
+    await new ImmutableAmStore(backend.store).updateUserProfile(init.entry.id, [command]);
   }
 
   return (<TextField InputProps={{ disableUnderline: true }} variant='standard'

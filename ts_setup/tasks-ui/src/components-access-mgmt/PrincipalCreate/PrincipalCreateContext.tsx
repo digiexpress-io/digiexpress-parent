@@ -1,5 +1,5 @@
 import React from 'react';
-import { ActorStatus } from 'descriptor-access-mgmt/types';
+import { ActorStatus } from 'descriptor-access-mgmt';
 import { getInstance as createTabsContext, SingleTabInit, Tab } from 'descriptor-tabbing';
 
 export interface NewPrincipal {

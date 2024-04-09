@@ -2,7 +2,7 @@ import { useNewPrincipal, useTabs } from './PrincipalCreateContext';
 import { Alert, AlertTitle, Box, Chip, Stack } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 import { FilterByString, LayoutListItem } from 'components-generic';
-import Context from 'context';
+import { useAm } from 'descriptor-access-mgmt';
 import React from 'react';
 
 
@@ -23,7 +23,7 @@ const CurrentlySelected: React.FC<{ chips: string[], onRemoveChip: (index: numbe
 };
 
 const PrincipalPermissions: React.FC = () => {
-  const { permissions } = Context.useAm();
+  const { permissions } = useAm();
   const { entity, addPermission, removePermission } = useNewPrincipal();
 
 
@@ -58,7 +58,7 @@ const PrincipalPermissions: React.FC = () => {
 }
 
 const PrincipalRoles: React.FC = () => {
-  const { roles } = Context.useAm();
+  const { roles } = useAm();
   const { entity, addRole, removeRole } = useNewPrincipal();
 
   if (!roles) {

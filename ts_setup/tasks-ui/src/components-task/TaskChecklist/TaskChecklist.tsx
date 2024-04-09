@@ -4,7 +4,7 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { FormattedMessage } from 'react-intl';
 
-import Context from 'context';
+import Backend from 'descriptor-backend';
 import { 
   TaskUpdateCommand, ChangeChecklistItemCompleted, ChangeChecklistTitle,
   DeleteChecklistItem, ChangeChecklistItemTitle, ChangeChecklistItemDueDate,
@@ -12,6 +12,7 @@ import {
   DeleteChecklist,
   AddChecklistItem,
   CreateChecklist, 
+  useTaskEdit, useTasks
 } from 'descriptor-task';
 
 import Burger from 'components-burger';
@@ -23,8 +24,8 @@ import DueDate from '../TaskDueDate';
 
 
 const TaskChecklist: React.FC<{ onChange: (commands: TaskUpdateCommand<any>[]) => Promise<void> }> = ({ onChange }) => {
-  const ctx = Context.useTaskEdit();
-  const backend = Context.useTasks();
+  const ctx = useTaskEdit();
+  const backend = useTasks();
 
   async function handleChecklistItemCompleted(checklistId: string, checklistItemId: string, event: React.ChangeEvent<HTMLInputElement>) {
 

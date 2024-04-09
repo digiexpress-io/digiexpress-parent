@@ -1,10 +1,9 @@
 import React from 'react';
 
 
-import Context from 'context';
 import Table from 'table';
 
-import { TenantEntryDescriptor } from 'descriptor-dialob';
+import { TenantEntryDescriptor, useDialobTenant } from 'descriptor-dialob';
 import { LayoutList, LayoutListFiller, LayoutListItem } from 'components-generic';
 
 import DialobItemActive from './DialobItemActive';
@@ -77,7 +76,7 @@ function filterTable(table: FormPaginationType, tenantEntries: TenantEntryDescri
 
 const DialobFormList: React.FC = () => {
 
-  const tenants = Context.useDialobTenant();
+  const tenants = useDialobTenant();
   const entries = tenants.state.tenantEntries;
 
   const [searchString, setSearchString] = React.useState<string>();
@@ -101,7 +100,7 @@ const DialobFormList: React.FC = () => {
 }
 
 export const DialobList: React.FC = () => {
-  const entries = Context.useDialobTenant();
+  const entries = useDialobTenant();
   if (entries.loading) {
     return <>...loading</>
   }

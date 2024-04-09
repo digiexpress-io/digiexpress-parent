@@ -1,15 +1,15 @@
 import React from 'react';
 import { Typography, Grid } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
-import { ImmutableAccessMgmtStore, Principal } from 'descriptor-access-mgmt';
-import Context from 'context';
+import { ImmutableAmStore, Principal } from 'descriptor-access-mgmt';
+import Backend from 'descriptor-backend';
 
 const PrincipalsOverview: React.FC = () => {
-  const backend = Context.useBackend();
+  const backend = Backend.useBackend();
   const [principals, setPrincipals] = React.useState<Principal[]>();
 
   React.useEffect(() => {
-    new ImmutableAccessMgmtStore(backend.store).findAllPrincipals().then(setPrincipals);
+    new ImmutableAmStore(backend.store).findAllPrincipals().then(setPrincipals);
   }, []);
 
   if (!principals) {

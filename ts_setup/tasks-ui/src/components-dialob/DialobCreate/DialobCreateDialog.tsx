@@ -7,8 +7,8 @@ import DialobCreateActions from './DialobCreateActions';
 import Fields from '../DialobFields/DialobTextFields';
 
 import Burger from 'components-burger';
-import Context from 'context';
-import { CreateFormRequest, ImmutableTenantStore, TenantEntryDescriptor } from 'descriptor-dialob';
+import Backend from 'descriptor-backend';
+import { CreateFormRequest, ImmutableTenantStore, TenantEntryDescriptor, useDialobTenant } from 'descriptor-dialob';
 import { sambucus, wash_me } from 'components-colors';
 
 const INIT_FORM: CreateFormRequest = {
@@ -29,8 +29,8 @@ const INIT_FORM: CreateFormRequest = {
 
 const DialobCreateDialog: React.FC<{ open: boolean, onClose: () => void, setActiveDialob: (entry?: TenantEntryDescriptor) => void }> = (props) => {
   const intl = useIntl();
-  const backend = Context.useBackend();
-  const tenants = Context.useDialobTenant();
+  const backend = Backend.useBackend();
+  const tenants = useDialobTenant();
   const [formName, setFormName] = React.useState<string>('');
   const initialFormTitle = intl.formatMessage({ id: 'dialob.form.create.dialog.initial.title' });
   const [formTitle, setFormTitle] = React.useState<string>(initialFormTitle);

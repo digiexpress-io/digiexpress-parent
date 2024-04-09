@@ -4,10 +4,10 @@ import { FormattedMessage } from 'react-intl';
 import { StyledFullScreenDialog } from 'components-generic';
 
 
-import Context from 'context';
+import Backend from 'descriptor-backend';
 import Burger from 'components-burger';
 import { ImmutableCustomerDescriptor, CustomerDescriptor, ImmutableCustomerStore } from 'descriptor-customer';
-
+import { useTasks } from 'descriptor-task';
 
 import Fields from './CustomerFields';
 
@@ -73,8 +73,8 @@ const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 }
 
 const CustomerDetailsDialog: React.FC<{ open: boolean, onClose: () => void, customer: string | undefined }> = (props) => {
-  const tasks = Context.useTasks();
-  const backend = Context.useBackend();
+  const tasks = useTasks();
+  const backend = Backend.useBackend();
   const [customer, setCustomer] = React.useState<CustomerDescriptor>();
 
   React.useEffect(() => {

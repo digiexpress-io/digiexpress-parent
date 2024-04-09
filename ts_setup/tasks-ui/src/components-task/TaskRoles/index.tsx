@@ -8,7 +8,7 @@ import { FormattedMessage } from 'react-intl';
 import { cyan } from 'components-colors';
 import { TaskDescriptor, AssignTaskRoles } from 'descriptor-task';
 import { Avatar, useAvatars, useAvatar } from 'descriptor-avatar';
-import { Role, useTaskRoles } from 'descriptor-access-mgmt';
+import { Role, useTaskRoles, useRoleDisplayName } from 'descriptor-access-mgmt';
 
 import { SearchFieldPopover } from '../SearchField';
 import { usePopover, TablePopover } from '../TablePopover';
@@ -120,10 +120,10 @@ const SelectRoles: React.FC<{
       <List dense sx={{ py: 0 }}>
       { searchResults.length ? searchResults.map(({ role, checked }) => 
         
-        (<MenuItem key={role.roleId} sx={{ display: "flex", pl: 0, py: 0 }} onClick={() => handleToggleRole(role, checked)}>
-            <RoleBackgroundColor roleId={role.roleId}/>
+        (<MenuItem key={role.id} sx={{ display: "flex", pl: 0, py: 0 }} onClick={() => handleToggleRole(role, checked)}>
+            <RoleBackgroundColor roleId={role.id}/>
             <Box ml={1}><Checkbox checked={checked} size='small' sx={checkboxSx} /></Box>
-            <ListItemText><Typography>{role.displayName}</Typography></ListItemText>
+            <ListItemText><Typography>{useRoleDisplayName(role)}</Typography></ListItemText>
           </MenuItem>)
         )
         

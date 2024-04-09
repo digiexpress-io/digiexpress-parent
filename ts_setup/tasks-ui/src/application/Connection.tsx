@@ -1,5 +1,5 @@
 import React from 'react';
-import { Backend } from 'client';
+import { Backend } from 'descriptor-backend';
 
 function sleep(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));

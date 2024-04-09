@@ -1,17 +1,18 @@
 import React from 'react';
 import Burger from 'components-burger';
 import { RoleCreateProvider, useNewRole } from './RoleCreateContext';
-import Context from 'context';
+import Backend from 'descriptor-backend';
 
 import { StyledDialogLarge } from '../Dialogs';
 import Header from './Header';
 import { Left } from './Left';
 import { Right } from './Right';
-import { CreateRole, ImmutableAccessMgmtStore } from 'descriptor-access-mgmt';
+import { CreateRole, ImmutableAmStore, useAm } from 'descriptor-access-mgmt';
+
 
 const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
-  const { reload } = Context.useAm();
-  const backend = Context.useBackend();
+  const { reload } = useAm();
+  const backend = Backend.useBackend();
   const { entity } = useNewRole();
 
   const disabled = !entity.description || !entity.name || !entity.commitComment;
@@ -27,7 +28,7 @@ const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       principals: [...principals],
       permissions: [...permissions]
     }
-    await new ImmutableAccessMgmtStore(backend.store).createRole(command);
+    await new ImmutableAmStore(backend.store).createRole(command);
     await reload();
     onClose();
   }

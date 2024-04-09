@@ -7,8 +7,8 @@ import AttachFileIcon from '@mui/icons-material/AttachFile';
 import CircleNotificationsOutlinedIcon from '@mui/icons-material/CircleNotificationsOutlined';
 import CloseIcon from '@mui/icons-material/Close';
 
-import Context from 'context';
 import { 
+  useTaskEdit, useTasks,
   ChangeTaskInfo, 
   TaskUpdateCommand, ChangeTaskStatus,
   AssignTask, AssignTaskRoles, ChangeTaskPriority,
@@ -26,8 +26,8 @@ import TaskStartDate from '../TaskStartDate';
 import TaskDueDate from '../TaskDueDate';
 
 const Title: React.FC<{}> = () => {
-  const ctx = Context.useTaskEdit();
-  const backend = Context.useTasks();
+  const ctx = useTaskEdit();
+  const backend = useTasks();
 
   const intl = useIntl();
   const [title, setTitle] = React.useState(ctx.task.title);
@@ -57,9 +57,9 @@ const Title: React.FC<{}> = () => {
 }
 
 const Description: React.FC<{}> = () => {
-  const ctx = Context.useTaskEdit();
+  const ctx = useTaskEdit();
   const [description, setDescription] = React.useState(ctx.task.description);
-  const backend = Context.useTasks();
+  const backend = useTasks();
   const intl = useIntl();
 
   function handleDescriptionChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -87,8 +87,8 @@ const Description: React.FC<{}> = () => {
 }
 
 const Checklist: React.FC<{}> = () => {
-  const ctx = Context.useTaskEdit();
-  const backend = Context.useTasks();
+  const ctx = useTaskEdit();
+  const backend = useTasks();
 
   async function handleChange(commands: TaskUpdateCommand<any>[]) {
     const updatedTask = await backend.updateActiveTask(ctx.task.id, commands);
@@ -100,8 +100,8 @@ const Checklist: React.FC<{}> = () => {
 }
 
 const Status: React.FC<{}> = () => {
-  const ctx = Context.useTaskEdit();
-  const backend = Context.useTasks();
+  const ctx = useTaskEdit();
+  const backend = useTasks();
 
   async function handleStatusChange(command: ChangeTaskStatus) {
     const updatedTask = await backend.updateActiveTask(ctx.task.id, [command]);
@@ -114,8 +114,8 @@ const Status: React.FC<{}> = () => {
 }
 
 const Assignee: React.FC<{}> = () => {
-  const ctx = Context.useTaskEdit();
-  const backend = Context.useTasks();
+  const ctx = useTaskEdit();
+  const backend = useTasks();
 
   async function handleAssigneeChange(assigneeIds: PrincipalId[]) {
     const command: AssignTask = { assigneeIds, commandType: 'AssignTask', taskId: ctx.task.id };
@@ -129,8 +129,8 @@ const Assignee: React.FC<{}> = () => {
 }
 
 const Roles: React.FC<{}> = () => {
-  const ctx = Context.useTaskEdit();
-  const backend = Context.useTasks();
+  const ctx = useTaskEdit();
+  const backend = useTasks();
 
   async function handleRolesChange(command: AssignTaskRoles) {
     const updatedTask = await backend.updateActiveTask(ctx.task.id, [command]);
@@ -141,8 +141,8 @@ const Roles: React.FC<{}> = () => {
 }
 
 const Priority: React.FC<{}> = () => {
-  const ctx = Context.useTaskEdit();
-  const backend = Context.useTasks();
+  const ctx = useTaskEdit();
+  const backend = useTasks();
 
   async function handlePriorityChange(command: ChangeTaskPriority) {
     const updatedTask = await backend.updateActiveTask(ctx.task.id, [command]);
@@ -155,8 +155,8 @@ const Priority: React.FC<{}> = () => {
 }
 
 const StartDate: React.FC = () => {
-  const ctx = Context.useTaskEdit();
-  const backend = Context.useTasks();
+  const ctx = useTaskEdit();
+  const backend = useTasks();
 
   async function handleStartDateChange(command: ChangeTaskStartDate) {
     const updatedTask = await backend.updateActiveTask(ctx.task.id, [command]);
@@ -167,8 +167,8 @@ const StartDate: React.FC = () => {
 }
 
 const DueDate: React.FC = () => {
-  const ctx = Context.useTaskEdit();
-  const backend = Context.useTasks();
+  const ctx = useTaskEdit();
+  const backend = useTasks();
 
   async function handleDueDateChange(dueDate: string | undefined) {
     const command: ChangeTaskDueDate = {

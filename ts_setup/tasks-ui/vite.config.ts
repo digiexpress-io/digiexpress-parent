@@ -30,12 +30,11 @@ const modules: string[] = [
   'descriptor-prefs',
   'descriptor-dialob',
   'descriptor-access-mgmt',
-
   'descriptor-popper',
-
   'descriptor-sys-config',
+  'descriptor-backend',
 
-  'client',
+
   'context',
   'table',
   'logger',

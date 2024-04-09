@@ -8,9 +8,11 @@ import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 import FeedbackOutlinedIcon from '@mui/icons-material/FeedbackOutlined';
 import TerminalIcon from '@mui/icons-material/Terminal';
 
-import Context from 'context';
+
 import Burger from 'components-burger';
 import { blueberry_whip, green_teal, sambucus } from 'components-colors';
+import { useApp } from './useApp';
+
 
 const StyledTab = styled(Tab)<TabProps>(({ theme }) => ({
   "&.MuiButtonBase-root": {
@@ -33,8 +35,7 @@ const StyledTabs = styled(Tabs)<TabsProps>(({ theme }) => ({
 
 
 const Toolbar: React.FC<{}> = () => {
-  const composer = Context.useComposer();
-  const app = Context.useApp();
+  const app = useApp();
   const drawer = Burger.useDrawer();
   const tabs = Burger.useTabs();
   const secondary = Burger.useSecondary();
@@ -44,38 +45,8 @@ const Toolbar: React.FC<{}> = () => {
   React.useEffect(() => tabActions.handleTabAdd({ id: 'activities', label: "Activities" }), [tabActions]);
 
 
-  //const articlePagesView = active?.data?.nav?.type === "ARTICLE_PAGES";
-  const unsavedPages = Object.values(composer.session.pages).filter(p => !p.saved);
   const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
-    if (newValue === 'toolbar.save' && unsavedPages) {
-      if (unsavedPages.length === 0) {
-        return;
-      }
-      const active = tabs.session.tabs.length ? tabs.session.tabs[tabs.session.history.open] : undefined;
-
-      const article = active ? composer.session.getEntity(active.id) : undefined;
-      if (!article) {
-        return;
-      }
-      const toBeSaved = unsavedPages.filter(p => !p.saved).filter(p => p.origin.id === article.id);
-      if (toBeSaved.length !== 1) {
-        return;
-      }
-
-      console.log("TODO SAVE")
-
-      /*
-      const unsavedArticlePages: Composer.PageUpdate = toBeSaved[0];
-      composer.service.update(article.id, unsavedArticlePages.value).then(success => {
-        composer.actions.handlePageUpdateRemove([article.id]);
-        enqueueSnackbar(<FormattedMessage id="activities.assets.saveSuccess" values={{ name: article.ast?.name }} />);
-        composer.actions.handleLoadSite(success);
-      }).catch((error) => {
-        
-      });
-      */
-
-    } else if (newValue === 'toolbar.activities') {
+    if (newValue === 'toolbar.activities') {
       tabs.actions.handleTabAdd({ id: 'activities', label: "Activities" });
 
     } else if (newValue === 'toolbar.tasks') {
@@ -89,6 +60,7 @@ const Toolbar: React.FC<{}> = () => {
 
     } else if (newValue === 'toolbar.expand') {
       drawer.actions.handleDrawerOpen(!drawerOpen)
+
     } else if (newValue === 'projects') {
       app.changeApp('frontoffice');
     }

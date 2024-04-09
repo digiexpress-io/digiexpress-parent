@@ -2,7 +2,6 @@ import React from 'react';
 import { Box } from '@mui/material';
 import { SxProps } from '@mui/system';
 
-import Context from 'context';
 import Burger from 'components-burger';
 import { CurrentTenant, DialobList } from 'components-dialob';
 import SysConfig from 'components-sys-config';
@@ -21,10 +20,8 @@ const root: SxProps = { height: '100%', backgroundColor: wash_me, width: '100%' 
 
 const Main: React.FC<{}> = () => {
   const layout = Burger.useTabs();
-  const { session } = Context.useComposer();
   const tabs = layout.session.tabs;
   const active = tabs.length ? tabs[layout.session.history.open] : undefined;
-  const entity = active ? session.getEntity(active.id) : undefined;
   log.debug("front office routing to tab", active?.id);
 
   //composers which are NOT linked directly with an article
@@ -72,12 +69,9 @@ const Main: React.FC<{}> = () => {
       return (<>reporting</>);
     }
 
-    if (entity) {
-      return <Box sx={root}>no view implemented entity editor: {JSON.stringify(active)}</Box>
-    }
-    throw new Error("unknown view: " + JSON.stringify(active, null, 2));
+    return <Box sx={root}>no view implemented entity editor: {JSON.stringify(active)}</Box>
 
-  }, [active, entity]);
+  }, [active]);
 }
 export { Main }
 

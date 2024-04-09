@@ -1,8 +1,6 @@
 import React from 'react';
 
-import Context from 'context';
-
-import { TaskDescriptor, AssignTask } from 'descriptor-task';
+import { TaskDescriptor, AssignTask, useTasks } from 'descriptor-task';
 import { StyledTableCell } from 'components-generic';
 import { PrincipalId } from 'descriptor-access-mgmt';
 
@@ -14,7 +12,7 @@ const FormattedCell: React.FC<{
   row: TaskDescriptor,
 }> = ({ row }) => {
 
-  const tasks = Context.useTasks();
+  const tasks = useTasks();
 
   async function handleChange(assigneeIds: PrincipalId[]) {
     const command: AssignTask = { assigneeIds, commandType: 'AssignTask', taskId: row.id };

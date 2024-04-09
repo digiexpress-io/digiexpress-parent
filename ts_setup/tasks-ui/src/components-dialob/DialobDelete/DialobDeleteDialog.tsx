@@ -3,9 +3,9 @@ import { Dialog, DialogContent, DialogTitle, Box, DialogActions, IconButton, Typ
 import CloseIcon from '@mui/icons-material/Close';
 import { FormattedMessage } from 'react-intl';
 
-import { DialobSession, ImmutableTenantStore, TenantEntryDescriptor } from 'descriptor-dialob';
+import { DialobSession, ImmutableTenantStore, TenantEntryDescriptor, useDialobTenant } from 'descriptor-dialob';
 import Burger from 'components-burger';
-import Context from 'context';
+import Backend from 'descriptor-backend';
 import { sambucus, wash_me } from 'components-colors';
 
 
@@ -14,8 +14,8 @@ const DialobDeleteDialog: React.FC<{
   onClose: () => void,
   entry: TenantEntryDescriptor
 }> = (props) => {
-  const backend = Context.useBackend();
-  const tenants = Context.useDialobTenant();
+  const backend = Backend.useBackend();
+  const tenants = useDialobTenant();
   const [sessions, setSessions] = React.useState<DialobSession[]>();
   const [loading, setLoading] = React.useState(false);
   const [deleting, setDeleting] = React.useState(false);

@@ -1,9 +1,9 @@
 import React from 'react';
 
-import Context from 'context';
+
 import Table from 'table';
 
-import { TaskDescriptor } from 'descriptor-task';
+import { TaskDescriptor, useTasks } from 'descriptor-task';
 import { ImmutableCollection, GroupingContextType } from 'descriptor-grouping';
 import { SingleTabInit } from 'descriptor-tabbing';
 
@@ -28,7 +28,7 @@ function initTable(id: string, grouping: GroupingContextType<TaskDescriptor>): T
 }
 
 export function useMyWork() {
-  const tasks = Context.useTasks();
+  const tasks = useTasks();
   const tabbing = Tabbing.hooks.useTabbing();
   const grouping = Grouping.hooks.useGrouping();
   const activeTab = tabbing.getActiveTab();
@@ -66,7 +66,7 @@ export function useMyWork() {
 }
 
 export const ContextReloader: React.FC<{children: React.ReactNode}> = ({children}) => {
-  const ctx = Context.useTasks();
+  const ctx = useTasks();
   const grouping = Grouping.hooks.useGrouping();
   const tabbing = Tabbing.hooks.useTabbing();
 
@@ -116,7 +116,7 @@ export const MyWorkTabbing: React.FC<{children: React.ReactNode}> = ({children})
 }
 
 export const MyWorkProvider: React.FC<{children: React.ReactNode}> = ({children}) => {
-  const ctx = Context.useTasks();
+  const ctx = useTasks();
 
   if (ctx.loading) {
     return <>...loading</>

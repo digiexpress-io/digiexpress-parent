@@ -9,8 +9,7 @@ import Customer from 'components-customer';
 import Burger from 'components-burger';
 
 
-import Context from 'context';
-import { TaskDescriptor, ChangeTaskStatus, AssignTaskRoles } from 'descriptor-task';
+import { TaskDescriptor, ChangeTaskStatus, AssignTaskRoles, useTasks } from 'descriptor-task';
 import { cyan } from 'components-colors';
 
 
@@ -59,7 +58,7 @@ function getTaskAlert(task: TaskDescriptor): { title: string, alertSeverity: Ale
 const TaskItemActive: React.FC<{ task: TaskDescriptor | undefined }> = ({ task }) => {
   const [crmOpen, setCrmkOpen] = React.useState(false);
   const [taskEditOpen, setTaskEditOpen] = React.useState(false);
-  const tasks = Context.useTasks();
+  const tasks = useTasks();
 
   async function handleStatusChange(command: ChangeTaskStatus) {
     if (!task) {

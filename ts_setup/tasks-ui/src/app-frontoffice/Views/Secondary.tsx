@@ -21,11 +21,12 @@ import FormatListBulletedOutlinedIcon from '@mui/icons-material/FormatListBullet
 import CorporateFareOutlinedIcon from '@mui/icons-material/CorporateFareOutlined';
 
 import { FormattedMessage } from 'react-intl';
+
 import Burger from 'components-burger';
-import Context from 'context';
 import { blueberry_whip, green_teal, sambucus } from 'components-colors';
 import { UserProfileAndOrg } from 'descriptor-access-mgmt';
-import { Backend } from 'client';
+import { Backend } from 'descriptor-backend';
+import { useApp } from './useApp';
 
 
 
@@ -110,7 +111,7 @@ const StyledTabs = styled(Tabs)<TabsProps>(({ theme }) => ({
 
 
 const Secondary: React.FC<{ init?: { profile: UserProfileAndOrg, backend: Backend } }> = ({ init }) => {
-  const app = Context.useApp();
+  const app = useApp();
   const { actions } = Burger.useTabs();
   const [active, setActive] = React.useState<string>('explorer.taskSearch');
 

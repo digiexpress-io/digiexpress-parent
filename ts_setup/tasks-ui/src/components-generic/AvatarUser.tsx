@@ -4,6 +4,7 @@ import { useAvatar } from 'descriptor-avatar';
 
 
 
+
 export const AvatarUser: React.FC<{ children: string }> = React.memo(({ children }) => {
 
   const avatar = useAvatar(children);

@@ -3,7 +3,8 @@ import { Alert, AlertTitle, Box, Chip, Stack } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 import { FilterByString, LayoutListItem } from 'components-generic';
 import { useNewPermission, useTabs } from './PermissionCreateContext';
-import Context from 'context';
+import { useAm } from 'descriptor-access-mgmt';
+
 
 const CurrentlySelected: React.FC<{ chips: string[], onRemoveChip: (index: number) => void }> = ({ chips, onRemoveChip }) => {
   return (
@@ -22,7 +23,7 @@ const CurrentlySelected: React.FC<{ chips: string[], onRemoveChip: (index: numbe
 };
 
 const PermissionRoles: React.FC = () => {
-  const { roles } = Context.useAm();
+  const { roles } = useAm();
   const { addRole, removeRole, entity } = useNewPermission();
 
   if (!roles) {
@@ -57,7 +58,7 @@ const PermissionRoles: React.FC = () => {
 
 
 const PermissionPrincipals: React.FC = () => {
-  const { principals } = Context.useAm();
+  const { principals } = useAm();
   const { addPrincipal, removePrincipal, entity } = useNewPermission();
 
   if (!principals) {

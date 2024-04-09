@@ -16,13 +16,12 @@ import { visuallyHidden } from '@mui/utils';
 import { FormattedMessage } from 'react-intl';
 
 import Table from 'table';
-import Context from 'context';
 
 import { TableBody, TableFillerRows } from 'components-generic';
 import { cyan_mud } from 'components-colors';
 
 import { PreferenceContextType } from 'descriptor-prefs';
-import { TaskDescriptor } from 'descriptor-task';
+import { TaskDescriptor, useTasks } from 'descriptor-task';
 import { useGrouping, GroupByTypes, useTaskPrefs, ColumnName } from '../TableContext';
 
 import { Title } from './TableTitle';
@@ -109,7 +108,7 @@ const Row: React.FC<{ rowId: number, row: TaskDescriptor, columns: ColumnName[] 
 
 
 const TableForGroupByPagination: React.FC<{ state: TaskPagination, setState: SetTaskPagination }> = (props) => {
-  const { loading } = Context.useTasks();
+  const { loading } = useTasks();
   const { state, setState } = props;
 
   return loading ? null :
@@ -168,7 +167,7 @@ export const HeaderCellWithPrefs: React.FC<{
 }
 
 export const TableForGroupBy: React.FC<{ groupByType: GroupByTypes, groupId: string }> = ({ groupByType, groupId }) => {
-  const { loading } = Context.useTasks();
+  const { loading } = useTasks();
   const prefCtx = useTaskPrefs();
   const { pref } = prefCtx;
   const grouping = useGrouping();

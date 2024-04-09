@@ -1,11 +1,11 @@
 import React from 'react';
 import { TextField } from '@mui/material';
 
-import Context from 'context';
+import Backend from 'descriptor-backend';
 
 import { 
   ChangeTaskPriority, ChangeTaskStatus, AssignTask, ChangeTaskDueDate,
-  AssignTaskRoles, ChangeTaskStartDate
+  AssignTaskRoles, ChangeTaskStartDate, useTaskEdit
 } from 'descriptor-task'
 import { PrincipalId } from 'descriptor-access-mgmt';
 
@@ -17,7 +17,7 @@ import TaskStartDate from '../TaskStartDate';
 import TaskDueDate from '../TaskDueDate';
 
 const Title: React.FC<{}> = () => {
-  const ctx = Context.useTaskEdit();
+  const ctx = useTaskEdit();
 
   function handleTitleChange(event: React.ChangeEvent<HTMLInputElement>) {
     ctx.withTask({ ...ctx.task.entry, title: event.target.value });
@@ -31,7 +31,7 @@ const Title: React.FC<{}> = () => {
 }
 
 const Description: React.FC<{}> = () => {
-  const ctx = Context.useTaskEdit();
+  const ctx = useTaskEdit();
 
   function handleDescriptionChange(event: React.ChangeEvent<HTMLInputElement>) {
     ctx.withTask({ ...ctx.task.entry, description: event.target.value });
@@ -48,7 +48,7 @@ const Description: React.FC<{}> = () => {
 }
 
 const Status: React.FC<{}> = () => {
-  const ctx = Context.useTaskEdit();
+  const ctx = useTaskEdit();
 
   async function handleStatusChange(command: ChangeTaskStatus) {
     ctx.withTask({ ...ctx.task.entry, status: command.status });
@@ -57,7 +57,7 @@ const Status: React.FC<{}> = () => {
 }
 
 const Priority: React.FC<{}> = () => {
-  const ctx = Context.useTaskEdit();
+  const ctx = useTaskEdit();
 
   async function handlePriorityChange(command: ChangeTaskPriority) {
     ctx.withTask({ ...ctx.task.entry, priority: command.priority });
@@ -67,7 +67,7 @@ const Priority: React.FC<{}> = () => {
 }
 
 const Assignees: React.FC<{}> = () => {
-  const ctx = Context.useTaskEdit();
+  const ctx = useTaskEdit();
 
   async function handleAssigneeChange(assigneeIds: PrincipalId[]) {
     const command: AssignTask = { assigneeIds, commandType: 'AssignTask', taskId: ctx.task.id };
@@ -78,7 +78,7 @@ const Assignees: React.FC<{}> = () => {
 }
 
 const Roles: React.FC<{}> = () => {
-  const ctx = Context.useTaskEdit();
+  const ctx = useTaskEdit();
 
   async function handleRolesChange(command: AssignTaskRoles) {
     ctx.withTask({ ...ctx.task.entry, roles: command.roles })
@@ -89,7 +89,7 @@ const Roles: React.FC<{}> = () => {
 
 
 const StartDate: React.FC = () => {
-  const ctx = Context.useTaskEdit();
+  const ctx = useTaskEdit();
 
   async function handleDateChange(command: ChangeTaskStartDate) {
     ctx.withTask({ ...ctx.task.entry, startDate: command.startDate })
@@ -99,7 +99,7 @@ const StartDate: React.FC = () => {
 
 
 const DueDate: React.FC = () => {
-  const ctx = Context.useTaskEdit();
+  const ctx = useTaskEdit();
 
   async function handleDateChange(dueDate: string | undefined) {
     const command: ChangeTaskDueDate = {

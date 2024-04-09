@@ -1,5 +1,5 @@
-import { ActorStatus, ChangeType } from './types';
-
+export type ActorStatus = 'IN_FORCE' | 'DISABLED'; // Actors cannot be deleted -- instead, they are "disabled"
+export type ChangeType = 'ADD' | 'REMOVE' | 'DISABLE';
 export type PermissionId = string;
 export type PermissionName = string;
 export type RoleId = string;
@@ -174,16 +174,3 @@ export interface ChangePrincipalStatus extends PrincipalUpdateCommand {
   status: ActorStatus;
   commandType: 'CHANGE_PRINCIPAL_STATUS';
 }
-
-export interface AccessMgmtStore {
-  findAllPermissions(): Promise<Permission[]>;
-  getPermission(id: PermissionId): Promise<Permission>;
-  createPermission(command: CreatePermission): Promise<Permission>;
-  updatePermission(id: PermissionId, commands: PermissionUpdateCommand[]): Promise<Permission>;
-
-  findAllRoles(): Promise<Role[]>;
-  getRole(id: RoleId): Promise<Role>;
-  createRole(command: CreateRole): Promise<Role>;
-  updateRole(id: RoleId, commands: RoleUpdateCommand[]): Promise<Permission>;
-}
-

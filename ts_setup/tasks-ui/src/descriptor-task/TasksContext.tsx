@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Backend } from 'client';
+import { Backend } from 'descriptor-backend';
 import { UserProfileAndOrg } from 'descriptor-access-mgmt';
 
 import { Task, TaskUpdateCommand, TaskId, CreateTask } from './backend-types';

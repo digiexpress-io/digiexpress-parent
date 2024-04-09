@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogTitle, Stack, Box, DialogActions, IconButt
 import CloseIcon from '@mui/icons-material/Close';
 import { FormattedMessage } from 'react-intl';
 
-import Context from 'context';
+import { useAm } from 'descriptor-access-mgmt';
 import { TaskEditProvider, Task } from 'descriptor-task';
 
 import Burger from 'components-burger';
@@ -45,7 +45,7 @@ function initTaskProps(userId: string): Task {
 }
 
 const TaskCreateDialog: React.FC<{ open: boolean, onClose: () => void }> = (props) => {
-  const { userId } = Context.useAm();
+  const { userId } = useAm();
 
   if (!props.open) {
     return null;

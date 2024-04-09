@@ -1,7 +1,7 @@
 import React from 'react';
 import { Grid, Stack, Typography, Paper } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
-import Context from 'context';
+import { useAm } from 'descriptor-access-mgmt';
 import Burger from 'components-burger';
 
 
@@ -22,7 +22,7 @@ const SectionLayout: React.FC<{ label: string, value: string | undefined }> = ({
 }
 
 const CurrentTenant: React.FC<{}> = () => {
-  const am = Context.useAm();
+  const am = useAm();
   const data = am.profile.tenant; 
 
   if (!data) {

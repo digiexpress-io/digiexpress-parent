@@ -3,8 +3,7 @@ import { Menu, MenuList, MenuItem, ListItemIcon, ListItemText, Typography } from
 import Check from '@mui/icons-material/Check';
 import { FormattedMessage } from 'react-intl';
 
-import Context from 'context';
-import { FilterByOwners, FilterBy } from 'descriptor-task';
+import { FilterByOwners, FilterBy, useTasks } from 'descriptor-task';
 import { ButtonSearch } from 'components-generic';
 
 
@@ -13,7 +12,7 @@ const FilterAssignees: React.FC<{
   value: readonly FilterBy[];
 }> = (props) => {
 
-  const ctx = Context.useTasks();
+  const ctx = useTasks();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);

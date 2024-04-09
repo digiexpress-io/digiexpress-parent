@@ -1,9 +1,8 @@
 import React from 'react';
 
-import Context from 'context';
 import Table from 'table';
 
-import { TaskDescriptor, TeamGroupType } from 'descriptor-task';
+import { TaskDescriptor, TeamGroupType, useTasks } from 'descriptor-task';
 import { SingleTabInit } from 'descriptor-tabbing';
 import { ImmutableCollection, GroupingContextType } from 'descriptor-grouping';
 
@@ -28,7 +27,7 @@ function initTable(id: TeamGroupType, grouping: GroupingContextType<TaskDescript
 }
 
 export function useTeamSpace() {
-  const tasks = Context.useTasks();
+  const tasks = useTasks();
   const tabbing = Tabbing.hooks.useTabbing();
   const grouping = Grouping.hooks.useGrouping();
   const activeTab = tabbing.getActiveTab();
@@ -66,7 +65,7 @@ export function useTeamSpace() {
 }
 
 export const ContextReloader: React.FC<{children: React.ReactNode}> = ({children}) => {
-  const ctx = Context.useTasks();
+  const ctx = useTasks();
   const grouping = Grouping.hooks.useGrouping();
   const tabbing = Tabbing.hooks.useTabbing();
 
@@ -114,7 +113,7 @@ export const TeamSpaceTabbing: React.FC<{children: React.ReactNode}> = ({childre
 }
 
 export const TeamSpaceProvider: React.FC<{children: React.ReactNode}> = ({children}) => {
-  const ctx = Context.useTasks();
+  const ctx = useTasks();
 
   if (ctx.loading) {
     return <>...loading</>

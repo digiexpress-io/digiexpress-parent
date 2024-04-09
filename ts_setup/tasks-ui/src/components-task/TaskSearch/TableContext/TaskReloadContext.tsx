@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Context from 'context';
+import { useTasks } from 'descriptor-task';
 import { useSearch } from './TaskSearchContext';
 import { useGrouping } from './TaskGroupingContext';
 
@@ -11,7 +11,7 @@ const _logger = LoggerFactory.getLogger();
 
 export const ReloadSearchCtx: React.FC = () => {
   const [loading, setLoading] = React.useState(0);
-  const { tasks } = Context.useTasks();
+  const { tasks } = useTasks();
   const searchCtx = useSearch();
 
   React.useEffect(() => {

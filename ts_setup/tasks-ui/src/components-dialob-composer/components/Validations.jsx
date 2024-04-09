@@ -23,7 +23,7 @@ class Validations extends Component {
   getErrors(index) {
     return this.props.errors
       ? this.props.errors.filter(e => e.get('type') === 'VALIDATION' && e.get('itemId') === this.props.item.get('id') && e.get('index') === index)
-      : new Immutable.List([]);;
+      : new Immutable.List([]);
   }
 
   newValidation(language) {

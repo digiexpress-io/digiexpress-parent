@@ -10,7 +10,7 @@ import { FormattedMessage } from 'react-intl';
 
 import { TenantEntryDescriptor, DialobTag, DialobForm, DialobVariable, DialobSession, ImmutableTenantStore } from 'descriptor-dialob';
 import Burger from 'components-burger';
-import Context from 'context';
+import Backend from 'descriptor-backend';
 
 import DialobDeleteDialog from '../DialobDelete';
 import DialobSessionsDialog from '../DialobSessions';
@@ -49,7 +49,7 @@ const StyledTitle: React.FC<{ children: string }> = ({ children }) => {
 
 
 const DialobFormTags: React.FC<{ entry: TenantEntryDescriptor }> = ({ entry }) => {
-  const backend = Context.useBackend();
+  const backend = Backend.useBackend();
   const [loading, setLoading] = React.useState(true);
   const [tags, setTags] = React.useState<DialobTag[]>([]);
 
@@ -74,7 +74,7 @@ const DialobFormTags: React.FC<{ entry: TenantEntryDescriptor }> = ({ entry }) =
 }
 
 const DialobFormLocales: React.FC<{ entry: TenantEntryDescriptor }> = ({ entry }) => {
-  const backend = Context.useBackend();
+  const backend = Backend.useBackend();
   const [loading, setLoading] = React.useState(true);
   const [locales, setLocales] = React.useState<string[]>([]);
 
@@ -100,7 +100,7 @@ const DialobFormLocales: React.FC<{ entry: TenantEntryDescriptor }> = ({ entry }
 }
 
 const DialobFormLabels: React.FC<{ entry: TenantEntryDescriptor }> = ({ entry }) => {
-  const backend = Context.useBackend();
+  const backend = Backend.useBackend();
   const [loading, setLoading] = React.useState(true);
   const [labels, setLabels] = React.useState<string[] | undefined>();
 
@@ -129,7 +129,7 @@ const VariableAvatar: React.FC<{ value: string }> = ({ value }) => {
 }
 
 const DialobFormVariables: React.FC<{ entry: TenantEntryDescriptor }> = ({ entry }) => {
-  const backend = Context.useBackend();
+  const backend = Backend.useBackend();
   const [loading, setLoading] = React.useState(true);
   const [variables, setVariables] = React.useState<DialobVariable[] | undefined>(undefined);
 
@@ -177,7 +177,7 @@ const DialobItemActive: React.FC<DialobItemActiveProps> = ({ entry, setActiveDia
 
 
   const [form, setForm] = React.useState<DialobForm | undefined>();
-  const backend = Context.useBackend();
+  const backend = Backend.useBackend();
 
   function handleDelete() {
     setDialobDeleteOpen(prev => !prev);

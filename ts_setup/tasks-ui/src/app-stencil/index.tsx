@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Burger from 'components-burger';
-import { Backend } from 'client';
+import { Backend } from 'descriptor-backend';
 import { Main, Secondary, Toolbar, Composer, StencilClient } from 'components-stencil';
 import { UserProfileAndOrg, TenantConfig } from 'descriptor-access-mgmt';
 

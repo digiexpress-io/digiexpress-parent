@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Context from 'context';
+import Backend from 'descriptor-backend';
 import { SingleTabInit } from 'descriptor-tabbing';
 
 import HdesClient from 'components-hdes/core';
@@ -51,7 +51,7 @@ const SysConfigContext = React.createContext<SysConfigContextType>({} as any);
 
 
 export const SysConfigProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const backend = Context.useBackend();
+  const backend = Backend.useBackend();
   const [loading, setLoading] = React.useState(true);
   const [sysConfig, setSysConfig] = React.useState<SysConfig>();
   const [hdesSite, setHdesSite] = React.useState<HdesClient.Site>();

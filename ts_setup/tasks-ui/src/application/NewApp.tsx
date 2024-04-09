@@ -4,22 +4,20 @@ import { IntlProvider, useIntl } from 'react-intl';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material';
 import { SnackbarProvider } from 'notistack';
 import { useSnackbar } from 'notistack';
-import Burger, { siteTheme } from 'components-burger';
 
-import Backend from 'client';
-
-import AppTenant from 'app-tenant';
 import AppStencil from 'app-stencil';
 import AppHdes from 'app-hdes';
 import AppFrontoffice from 'app-frontoffice';
 import LoggerFactory from 'logger';
 
-import { UserProfileAndOrg, ImmutableUserProfileStore, TenantConfigProvider, TenantConfig } from 'descriptor-access-mgmt';
+import Burger, { siteTheme } from 'components-burger';
+import Backend from 'descriptor-backend';
+import { UserProfileAndOrg, ImmutableAmStore, TenantConfig, AccessMgmtContextProvider } from 'descriptor-access-mgmt';
 
+import { BackendProvider } from 'descriptor-backend';
 import { getLogProps } from './_log_props_';
 import Connection from './Connection';
 import messages from './intl';
-import Provider from './Provider';
 
 
 window.LOGGER = {
@@ -59,7 +57,7 @@ const getUrl = () => {
 
 const baseUrl = getUrl();
 
-const store: Backend.Store = new Backend.DefaultStore({
+const store: Backend.Store = new Backend.BackendStoreImpl({
   urls: {
     'TASKS': baseUrl + "/q/digiexpress/api/",
     'TENANT': baseUrl + "/q/digiexpress/api/",
@@ -79,29 +77,21 @@ const store: Backend.Store = new Backend.DefaultStore({
   status: window._env_?.status,
 });
 
-const backend = new Backend.ServiceImpl(store)
+const backend = new Backend.BackendImpl(store)
 
 const TenantConfigSetup: React.FC<{ profile: UserProfileAndOrg, tenantConfig: TenantConfig }> = ({ profile, tenantConfig }) => {
   const hdes: Burger.App<{}, any> = React.useMemo(() => AppHdes(backend, profile, tenantConfig!), [backend, profile, tenantConfig]);
   const stencil: Burger.App<{}, any> = React.useMemo(() => AppStencil(backend, profile, tenantConfig!), [backend, profile, tenantConfig]);
-  const dialob: Burger.App<{}, any> = React.useMemo(() => AppTenant(backend, profile), [backend, profile]);
   const frontoffice: Burger.App<{}, any> = React.useMemo(() => AppFrontoffice(backend, profile), [backend, profile]);
-
   const appId = tenantConfig.preferences.landingApp;
-
-  return (<Provider service={backend} profile={profile}>
-    <Burger.Provider children={
-      [
-        stencil, hdes, dialob, frontoffice
-      ]
-    } secondary="toolbar.activities" drawerOpen appId={appId} />
-  </Provider>)
+  return (<Burger.Provider secondary="toolbar.activities" drawerOpen appId={appId} children={[ stencil, hdes, frontoffice ]} />)
 }
 
 
 
 const CheckAppConnection = React.lazy(async () => {
-  const head = await Promise.all([backend.health(), new ImmutableUserProfileStore(backend.store).currentUserProfile()]);
+  
+  const head = await Promise.all([backend.health(), new ImmutableAmStore(backend.store).currentUserProfile()]);
   const [health, profile] = head;
 
   if (health.contentType === 'NO_CONNECTION') {
@@ -116,13 +106,20 @@ const CheckAppConnection = React.lazy(async () => {
   const Result: React.FC<{}> = () => {
     const snackbar = useSnackbar();
     const intl = useIntl();
+    
     React.useEffect(() => {
       if (health.contentType === 'OK') {
         const msg = intl.formatMessage({ id: 'init.loaded' }, { name: tenantConfig.name });
         snackbar.enqueueSnackbar(msg, { variant: 'success' })
       }
     }, [intl, snackbar]);
-    return (<TenantConfigProvider tenantConfig={tenantConfig}><TenantConfigSetup profile={profile} tenantConfig={tenantConfig}/></TenantConfigProvider>)
+    return (
+      <BackendProvider backend={backend}>
+        <AccessMgmtContextProvider profile={profile} tenantConfig={tenantConfig}>
+          <TenantConfigSetup profile={profile} tenantConfig={tenantConfig}/>
+        </AccessMgmtContextProvider>
+      </BackendProvider>
+    )
   };
   return ({ default: Result })
 });

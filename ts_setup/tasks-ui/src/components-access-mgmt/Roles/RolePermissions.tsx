@@ -4,14 +4,14 @@ import { FormattedMessage } from 'react-intl';
 
 import { Role } from 'descriptor-access-mgmt';
 import { SectionLayout } from 'components-generic';
-import Context from 'context';
+import { useAm } from 'descriptor-access-mgmt';
 
 const PermissionDivider: React.FC<{ index: number, role: Role }> = ({ index, role }) => {
   return role.permissions.length - 1 !== index ? <Divider /> : null;
 }
 
 const OneRolePermission: React.FC<{ permissionName: string }> = ({ permissionName }) => {
-  const { getPermission } = Context.useAm()
+  const { getPermission } = useAm()
   const { name, description, status } = getPermission(permissionName);
 
   return (

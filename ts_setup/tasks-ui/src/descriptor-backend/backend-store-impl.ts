@@ -5,7 +5,7 @@ import LoggerFactory from 'logger';
 const log = LoggerFactory.getLogger();
 
 
-class DefaultStore implements Store {
+export class BackendStoreImpl implements Store {
   private _config: StoreConfig;
   private _updateStarted: boolean = false;
   private _iapSessionRefreshWindow: Window | null = null;
@@ -173,6 +173,4 @@ class DefaultStore implements Store {
     return text;
 
   }
-};
-
-export { DefaultStore };
+}

@@ -7,10 +7,9 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 
 
-import Context from 'context';
 import Burger from 'components-burger';
 import { cyan } from 'components-colors';
-import { TaskDescriptor, ChangeTaskStartDate } from 'descriptor-task';
+import { TaskDescriptor, ChangeTaskStartDate, useTaskEdit } from 'descriptor-task';
 
 
 
@@ -19,7 +18,7 @@ const TaskStartDate: React.FC<{
   onChange: (command: ChangeTaskStartDate) => Promise<void>
 }> = ({ onChange, task }) => {
 
-  const ctx = Context.useTaskEdit();
+  const ctx = useTaskEdit();
   const [open, setOpen] = React.useState(false);
 
   function handlePickerDialog() {

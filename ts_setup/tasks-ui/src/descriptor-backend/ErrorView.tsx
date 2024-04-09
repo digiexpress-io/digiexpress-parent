@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Typography, Divider } from '@mui/material';
 
-import { StoreError } from 'client';
+import { StoreError } from './error-types';
 
 
 

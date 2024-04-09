@@ -1,3 +1,3 @@
 import PrincipalCreateDialog from './PrincipalCreateDialog';
 
-export default PrincipalCreateDialog;;
+export default PrincipalCreateDialog;

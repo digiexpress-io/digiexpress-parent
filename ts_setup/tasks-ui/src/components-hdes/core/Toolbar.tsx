@@ -15,10 +15,10 @@ import FeedbackOutlinedIcon from '@mui/icons-material/FeedbackOutlined';
 import TerminalIcon from '@mui/icons-material/Terminal';
 import { useSnackbar } from 'notistack';
 
-import Context from 'context';
 import Burger from 'components-burger';
 import { Composer } from './context';
 import { blueberry_whip, green_teal, saffron, sambucus } from 'components-colors';
+import { useApp } from 'app-frontoffice/Views/useApp';
 
 
 const StyledTab = styled(Tab)<TabProps>(({ theme }) => ({
@@ -45,7 +45,7 @@ const Toolbar: React.FC<{}> = () => {
   const composer = Composer.useComposer();
   const drawer = Burger.useDrawer();
   const tabs = Burger.useTabs();
-  const app = Context.useApp();
+  const app = useApp();
   const secondary = Burger.useSecondary();
   const { enqueueSnackbar } = useSnackbar();
   

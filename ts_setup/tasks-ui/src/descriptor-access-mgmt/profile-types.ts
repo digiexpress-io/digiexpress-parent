@@ -1,6 +1,5 @@
-import { TenantConfig } from './tenant-config-types';
-
-import { PrincipalId } from './access-mgmt-types';
+import { TenantConfig } from './tenant-types';
+import { PrincipalId } from './permission-types';
 
 
 export type NotificationType = string;
@@ -129,14 +128,6 @@ export interface ChangeNotificationSetting extends UserProfileUpdateCommand<'Cha
 export interface ArchiveUserProfile extends UserProfileUpdateCommand<'ArchiveUserProfile'> {
   commandType: 'ArchiveUserProfile';
 }
-
-export interface UserProfileStore {
-  findAllUserProfiles(): Promise<UserProfile[]>
-  currentUserProfile(): Promise<UserProfileAndOrg>;
-  getUserProfileById(id: PrincipalId): Promise<UserProfile>
-  updateUserProfile(id: string, commands: UserProfileUpdateCommand<any>[]): Promise<UserProfile>
-}
-
 
 export interface UserProfileDescriptor {
   id: PrincipalId,

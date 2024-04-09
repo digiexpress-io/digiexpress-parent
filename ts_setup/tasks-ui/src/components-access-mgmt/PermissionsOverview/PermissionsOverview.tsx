@@ -1,16 +1,16 @@
 import React from 'react';
 import { Typography, Grid } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
-import { Permission, ImmutableAccessMgmtStore } from 'descriptor-access-mgmt';
-import Context from 'context';
+import { Permission, ImmutableAmStore } from 'descriptor-access-mgmt';
+import Backend from 'descriptor-backend';
 
 const PermissionsOverview: React.FC = () => {
-  const backend = Context.useBackend();
+  const backend = Backend.useBackend();
   const [permissions, setPermissions] = React.useState<Permission[]>();
 
 
   React.useEffect(() => {
-    new ImmutableAccessMgmtStore(backend.store).findAllPermissions().then(setPermissions);
+    new ImmutableAmStore(backend.store).findAllPermissions().then(setPermissions);
   }, []);
 
   if (!permissions) {

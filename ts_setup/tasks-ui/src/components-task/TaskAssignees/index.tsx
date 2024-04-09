@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 
 import { cyan } from 'components-colors';
 import { AvatarEmpty, AvatarUser, AvatarIndicator } from 'components-generic';
-import { PrincipalId, useTaskAssignees, Principal } from 'descriptor-access-mgmt';
+import { PrincipalId, useTaskAssignees, Principal, usePrincipalDisplayName } from 'descriptor-access-mgmt';
 
 import { SearchFieldPopover } from '../SearchField';
 import { TablePopover, usePopover } from '../TablePopover';
@@ -75,9 +75,9 @@ const SelectAssignees: React.FC<{
       <SearchFieldPopover onChange={setSearchString} />
       <List dense sx={{ py: 0 }}>
         {searchResults.length ? searchResults.map(({ user, checked }) => (
-          <MenuItem key={user.userId} sx={{ display: "flex", pl: 0, py: 0 }} onClick={() => handleToggleUser(user, checked)}>
+          <MenuItem key={user.id} sx={{ display: "flex", pl: 0, py: 0 }} onClick={() => handleToggleUser(user, checked)}>
             
-            <AvatarIndicator userId={user.userId} />
+            <AvatarIndicator userId={user.id} />
 
             <Box ml={1}>
               <Checkbox checked={checked} size='small'
@@ -89,7 +89,7 @@ const SelectAssignees: React.FC<{
                   },
                 }} />
             </Box>
-            <ListItemText><Typography>{user.displayName}</Typography></ListItemText>
+            <ListItemText><Typography>{usePrincipalDisplayName(user)}</Typography></ListItemText>
           </MenuItem>
         )) : (
           <Box display='flex'>

@@ -15,7 +15,7 @@ import { visuallyHidden } from '@mui/utils';
 import { FormattedMessage } from 'react-intl';
 
 import Table from 'table';
-import Context from 'context';
+import Backend from 'descriptor-backend';
 
 import { cyan_mud } from 'components-colors';
 import { NavigationSticky, FilterByString, TableBody, TableFillerRows } from 'components-generic';
@@ -23,7 +23,7 @@ import { NavigationSticky, FilterByString, TableBody, TableFillerRows } from 'co
 
 import { PreferenceContextType } from 'descriptor-prefs';
 import { CustomerDescriptor, ImmutableCustomerStore } from 'descriptor-customer';
-
+import { useTasks } from 'descriptor-task';
 
 import { useCustomerPrefs, ColumnName, ImmutableCustomersSearchState, CustomerTableProvider } from './TableContext';
 import CellMenu from './TableCell/CellMenu';
@@ -66,7 +66,7 @@ function initTable(prefCtx: PreferenceContextType): CustomerPagination {
 }
 
 const CustomerPagination: React.FC<{ state: CustomerPagination, setState: SetCustomerPagination }> = (props) => {
-  const { loading } = Context.useTasks();
+  const { loading } = useTasks();
   const { state, setState } = props;
 
   return loading ? null :
@@ -163,7 +163,7 @@ const TableTitle: React.FC = () => {
 }
 
 const CustomerTableDelegate: React.FC<{}> = () => {
-  const backend = Context.useBackend();
+  const backend = Backend.useBackend();
   const prefCtx = useCustomerPrefs();
   const { pref } = prefCtx;
 

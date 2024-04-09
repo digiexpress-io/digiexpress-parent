@@ -3,13 +3,13 @@ import { Dialog, DialogContent, DialogTitle, Box, DialogActions, IconButton, Typ
 import CloseIcon from '@mui/icons-material/Close';
 import { FormattedMessage, useIntl } from 'react-intl';
 
-import { ImmutableTenantStore, TenantEntryDescriptor } from 'descriptor-dialob';
+import { ImmutableTenantStore, TenantEntryDescriptor, useDialobTenant } from 'descriptor-dialob';
 import Burger from 'components-burger';
 
 import Fields from '../DialobFields/DialobTextFields';
 
 
-import Context from 'context';
+import Backend from 'descriptor-backend';
 import { sambucus, wash_me } from 'components-colors';
 
 
@@ -20,8 +20,8 @@ const DialobCopyDialog: React.FC<{
   entry: TenantEntryDescriptor
 }> = (props) => {
   const intl = useIntl();
-  const backend = Context.useBackend();
-  const tenants = Context.useDialobTenant();
+  const backend = Backend.useBackend();
+  const tenants = useDialobTenant();
   const [formName, setFormName] = React.useState<string>('');
   const prefix = intl.formatMessage({ id: 'dialob.form.copy.dialog.prefix' });
   const [formTitle, setFormTitle] = React.useState<string>(prefix + props.entry.formTitle);

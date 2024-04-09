@@ -1,10 +1,7 @@
 import React from 'react';
-import { Box, Typography, IconButton, TextField, Checkbox, Stack, Grid, Divider, Chip, Button, Alert } from '@mui/material';
+import { Box, Typography, Stack, Grid, Divider, Chip, Button, Alert } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { FormattedMessage } from 'react-intl';
-import Context from 'context';
-import Client from 'client';
 
 import Burger from 'components-burger';
 import { cyan } from 'components-colors';

@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Burger from 'components-burger';
-import { Backend } from 'client';
+import { Backend } from 'descriptor-backend';
 import Client, { Main, Secondary, Toolbar, ComposerProvider } from 'components-hdes/core';
 import { UserProfileAndOrg, TenantConfig } from 'descriptor-access-mgmt';
 

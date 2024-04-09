@@ -7,7 +7,8 @@ import { CustomerDescriptor } from 'descriptor-customer';
 import { TaskDescriptor } from 'descriptor-task';
 
 import Burger from 'components-burger';
-import Context from 'context';
+import { useTasks } from 'descriptor-task';
+
 
 const CustomerInfo: React.FC<{ customer: CustomerDescriptor }> = ({ customer }) => {
 
@@ -56,7 +57,7 @@ const CustomerContact: React.FC<{ customer: CustomerDescriptor }> = ({ customer 
 }
 
 const CustomerTask: React.FC<{ customer: CustomerDescriptor }> = ({ customer }) => {
-  const { tasks } = Context.useTasks();
+  const { tasks } = useTasks();
   const tasksByCustomer: TaskDescriptor[] = tasks.filter((task) => task.customerId === customer.entry.id);
 
   return (<>

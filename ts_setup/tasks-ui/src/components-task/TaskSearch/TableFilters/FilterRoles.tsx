@@ -3,15 +3,16 @@ import { Menu, ListItemText, MenuList, MenuItem, ListItemIcon, Typography } from
 import Check from '@mui/icons-material/Check';
 import { FormattedMessage } from 'react-intl';
 
-import Context from 'context';
-import { FilterByRoles, FilterBy } from 'descriptor-task';
+import { FilterByRoles, FilterBy, useTasks } from 'descriptor-task';
 import { ButtonSearch } from 'components-generic';
+
+
 
 const FilterRoles: React.FC<{
   onChange: (value: string[]) => void;
   value: readonly FilterBy[];
 }> = (props) => {
-  const ctx = Context.useTasks();
+  const ctx = useTasks();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {

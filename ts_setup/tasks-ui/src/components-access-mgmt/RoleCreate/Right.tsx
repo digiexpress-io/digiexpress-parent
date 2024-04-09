@@ -1,10 +1,11 @@
 import React from 'react';
 import { Alert, AlertTitle, Box, Chip, Stack } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
-import { FilterByString, LayoutListItem } from 'components-generic';
-import { useNewRole, useTabs } from './RoleCreateContext';
-import Context from 'context';
 
+import { FilterByString, LayoutListItem } from 'components-generic';
+import { useAm } from 'descriptor-access-mgmt';
+
+import { useNewRole, useTabs } from './RoleCreateContext';
 
 
 const CurrentlySelected: React.FC<{ chips: string[], onRemoveChip: (index: number) => void }> = ({ chips, onRemoveChip }) => {
@@ -24,7 +25,7 @@ const CurrentlySelected: React.FC<{ chips: string[], onRemoveChip: (index: numbe
 };
 
 const RoleParent: React.FC = () => {
-  const { roles, getRole } = Context.useAm();
+  const { roles, getRole } = useAm();
   const { setParentId, entity } = useNewRole();
   const parentRole = entity.parentId ? getRole(entity.parentId) : undefined;
   return (
@@ -48,7 +49,7 @@ const RoleParent: React.FC = () => {
 
 
 const RolePermissions: React.FC = () => {
-  const { permissions } = Context.useAm();
+  const { permissions } = useAm();
   const { addPermission, removePermission, entity } = useNewRole();
 
 
@@ -83,7 +84,7 @@ const RolePermissions: React.FC = () => {
 }
 
 const RolePrincipals: React.FC = () => {
-  const { principals } = Context.useAm();
+  const { principals } = useAm();
   const { addPrincipal, removePrincipal, entity } = useNewRole();
 
   if (!principals) {

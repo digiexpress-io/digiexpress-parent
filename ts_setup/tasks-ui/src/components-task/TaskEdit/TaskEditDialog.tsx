@@ -5,8 +5,7 @@ import CrmIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
 import { FormattedMessage } from 'react-intl';
 
 import Burger from 'components-burger';
-import Context from 'context';
-import { TaskDescriptor, TaskEditProvider } from 'descriptor-task';
+import { TaskDescriptor, TaskEditProvider, useTasks, useTaskEdit } from 'descriptor-task';
 
 
 import { StyledFullScreenDialog } from 'components-generic';
@@ -65,7 +64,7 @@ const Left: React.FC<{}> = () => {
 }
 
 const Right: React.FC<{}> = () => {
-  const { events } = Context.useTaskEdit();
+  const { events } = useTaskEdit();
 
   return (
     <>
@@ -103,7 +102,7 @@ const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 }
 
 const TaskEditDialog: React.FC<{ open: boolean, onClose: () => void, task?: TaskDescriptor }> = (props) => {
-  const tasks = Context.useTasks();
+  const tasks = useTasks();
 
   if (!props.open || !props.task) {
     return null;

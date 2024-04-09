@@ -1,8 +1,7 @@
 import React from 'react';
 
 
-import Context from 'context';
-import { TaskDescriptor, TaskSearch, ImmutableTaskSearch, TaskStatus, TaskPriority } from 'descriptor-task';
+import { TaskDescriptor, TaskSearch, ImmutableTaskSearch, TaskStatus, TaskPriority, useTasks } from 'descriptor-task';
 
 import { useTaskPrefsInit } from './TaskPrefsContext';
 
@@ -74,7 +73,7 @@ export function useSearch() {
  *  DELEGATE for loading all the contexts after first task loading...
  */
 const TaskSearchDelegate: React.FC<{ children: React.ReactNode, init: { groupBy: GroupByTypes, searchString: string}}> = ({children, init}) => {
-  const ctx = Context.useTasks();
+  const ctx = useTasks();
   const [groupBy, setGroupBy] = React.useState<GroupByTypes>(init.groupBy);
   const [state, setState] = React.useState<ImmutableTaskSearch>(new ImmutableTaskSearch({ data: ctx.tasks, searchString: init.searchString }));
 
@@ -111,7 +110,7 @@ const TaskSearchDelegate: React.FC<{ children: React.ReactNode, init: { groupBy:
  * Put all the contexts together with initial task loading
  */
 export const TaskSearchProvider: React.FC<{children: React.ReactNode}> = ({children}) => {
-  const taskCtx = Context.useTasks();
+  const taskCtx = useTasks();
   const prefsInit = useTaskPrefsInit();
 
   if (taskCtx.loading) {

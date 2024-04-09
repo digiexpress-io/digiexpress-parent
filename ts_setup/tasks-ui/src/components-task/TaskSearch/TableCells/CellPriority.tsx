@@ -1,9 +1,7 @@
 import React from 'react';
 
 
-import Context from 'context';
-
-import { TaskDescriptor, ChangeTaskPriority } from 'descriptor-task';
+import { TaskDescriptor, ChangeTaskPriority, useTasks } from 'descriptor-task';
 import { StyledTableCell } from 'components-generic';
 
 import TaskPriority from '../../TaskPriority';
@@ -13,7 +11,7 @@ const FormattedCell: React.FC<{
   rowId: number,
   row: TaskDescriptor
 }> = ({ row }) => {
-  const tasks = Context.useTasks();
+  const tasks = useTasks();
 
   async function handleChange(command: ChangeTaskPriority) {
     await tasks.updateActiveTask(row.id, [command]);

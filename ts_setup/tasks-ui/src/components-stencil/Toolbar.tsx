@@ -14,10 +14,10 @@ import TerminalIcon from '@mui/icons-material/Terminal';
 import SaveIcon from '@mui/icons-material/Save';
 import FeedbackOutlinedIcon from '@mui/icons-material/FeedbackOutlined';
 
-import Context from 'context';
 import { Composer, StencilClient } from './context';
 import { LocaleFilter } from './explorer/filter';
 import { blueberry_whip, green_teal, saffron, sambucus } from 'components-colors';
+import { useApp } from 'app-frontoffice/Views/useApp';
 
 
 const StyledTab = styled(Tab)<TabProps>(({ theme }) => ({
@@ -42,7 +42,7 @@ const StyledTabs = styled(Tabs)<TabsProps>(({ theme }) => ({
 
 const Toolbar: React.FC<{}> = () => {
   const { enqueueSnackbar } = useSnackbar();
-  const app = Context.useApp();
+  const app = useApp();
   const composer = Composer.useComposer();
   const tabsCtx = Burger.useTabs();
   const drawerCtx = Burger.useDrawer();

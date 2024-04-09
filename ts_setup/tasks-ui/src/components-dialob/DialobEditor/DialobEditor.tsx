@@ -1,9 +1,6 @@
 import React from 'react';
 import { Dialog } from '@mui/material';
-
-import Context from 'context';
-import { Backend } from 'client';
-
+import { Backend, useBackend } from 'descriptor-backend';
 import { DialobInit } from './DialobInit';
 
 
@@ -22,7 +19,7 @@ export const DialobEditor: React.FC<{
   form: { _id: string } | undefined,
 
 }> = ({ form, entry, onClose }) => {
-  const backend = Context.useBackend();
+  const backend = useBackend();
   
   const apiUrl = getApiUrl(backend);
   const tenantId = entry.tenantId;

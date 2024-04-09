@@ -1,9 +1,9 @@
 import React from 'react';
 import { Grid, Stack, Typography } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
-import { UserProfileDescriptor, ImmutableUserProfileDescriptor, ImmutableUserProfileStore } from 'descriptor-access-mgmt';
+import { UserProfileDescriptor, ImmutableUserProfileDescriptor, ImmutableAmStore } from 'descriptor-access-mgmt';
 import { NotificationSettings } from '../UserProfileEditFields';
-import Context from 'context';
+import Backend from 'descriptor-backend';
 
 import Burger from 'components-burger';
 
@@ -25,13 +25,13 @@ const SectionLayout: React.FC<{ label: string, value: string | React.ReactNode |
 }
 
 const SelectedUserProfileDialog: React.FC<{ open: boolean, onClose: () => void }> = ({ open, onClose }) => {
-  const backend = Context.useBackend();
+  const backend = Backend.useBackend();
 
   const [state, setState] = React.useState<UserProfileDescriptor>();
   const [loading, setLoading] = React.useState<boolean>(true);
 
   React.useEffect(() => {
-    new ImmutableUserProfileStore(backend.store).currentUserProfile().then(userProfile => {
+    new ImmutableAmStore(backend.store).currentUserProfile().then(userProfile => {
       setState(new ImmutableUserProfileDescriptor(userProfile.user));
       setLoading(false);
     });
