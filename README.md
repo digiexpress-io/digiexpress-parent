@@ -9,7 +9,7 @@ DigiExpress is an all-in-one solution that covers a full range of organizational
 4. User portal for providing content and forms to users (the Stencil)
 5. Worker / employee front office portal for handing tasks, communicating with customers, etc. 
 6. Task management system
-7. Access / user-rights management
+7. [Access / user-rights management](/docs/README_ACCESS_MGMT.md)
 8. Audit trail for tracking user access to resources, tasks, etc. 
 
 Data is managed via Thena: a JSON storage framework with GIT-like features on top of a relational database.
