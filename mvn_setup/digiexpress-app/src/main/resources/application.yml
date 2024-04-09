@@ -49,7 +49,7 @@ tenant:
       level: ERROR
       category:
         io.resys:
-          level: DEBUG
+          level: ERROR
         org.jboss.resteasy.reactive.server.handlers.RequestDeserializeHandler: 
           level: DEBUG
       console:  

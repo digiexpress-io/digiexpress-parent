@@ -170,7 +170,7 @@ const siteTheme = createTheme({
         }
       },
       defaultProps: {
-        variant: 'outlined',
+        variant: 'text',
       }
     },
 
