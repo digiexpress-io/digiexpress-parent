@@ -46,6 +46,20 @@ public class PrincipalCreateAndUpdateTest extends DbTestTemplate {
         .await().atMost(Duration.ofMinutes(5));
   }
   
+  private Role createRoleWithPermissions(PermissionClient client, String roleName) {
+    
+    return client.createRole().createOne(ImmutableCreateRole.builder()
+        .comment("Trainee-group")
+        .name(roleName)
+        .description("View-only for interns")
+        .addPermissions(
+            createPermission(client, "createdPermissionForRole-1").getName()
+            )
+        .build())
+        .await().atMost(Duration.ofMinutes(5));
+  }
+  
+  
   
   private Principal createPrincipal(PermissionClient client) {
     
@@ -54,11 +68,14 @@ public class PrincipalCreateAndUpdateTest extends DbTestTemplate {
         .email("the-rock@muscles.org")
         .comment("created new user")
         .addPermissions(
-            createPermission(client, "perm: Aii7777").getName(),
-            createPermission(client, "perm: EDIT_LIMITED").getName()
+            createPermission(client, "perm: VIEW_ALL").getName(),
+            createPermission(client, "perm: EDIT_LIMITED").getName(),
+            createPermission(client, "perm: MOD_ST_CT").getName()
+
             )
         .addRoles(
-            createRoleWithoutPermissions(client, "role: INTERNS_454").getName()
+            createRoleWithoutPermissions(client, "role: INTERNS_454").getName(),
+            createRoleWithPermissions(client, "role: ROLE_WITH_PERMISSION").getName()
             )
         .build())
         .await().atMost(Duration.ofMinutes(5));
@@ -73,12 +90,12 @@ public class PrincipalCreateAndUpdateTest extends DbTestTemplate {
         .await().atMost(Duration.ofMinutes(5));
     
     final var createdPrincipal = createPrincipal(client);
-
     
-    Assertions.assertEquals("Dwane Johnson", createdPrincipal.getName());    
-    Assertions.assertEquals(1, createdPrincipal.getRoles().size());
-    Assertions.assertEquals(2, createdPrincipal.getPermissions().size());
+    Assertions.assertEquals("Dwane Johnson", createdPrincipal.getName());   
+    Assertions.assertEquals(2, createdPrincipal.getRoles().size());
+    Assertions.assertEquals(3, createdPrincipal.getPermissions().size());
     
     log.debug(Json.encodePrettily(createdPrincipal));
+
   }
 }

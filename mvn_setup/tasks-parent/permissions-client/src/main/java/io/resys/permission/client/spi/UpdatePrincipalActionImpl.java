@@ -7,6 +7,7 @@ import io.resys.permission.client.api.PermissionClient.UpdatePrincipalAction;
 import io.resys.permission.client.api.model.ImmutablePrincipal;
 import io.resys.permission.client.api.model.PermissionCommand.ChangeType;
 import io.resys.permission.client.api.model.Principal;
+import io.resys.permission.client.api.model.PrincipalCommand.ChangePrincipalPermissions;
 import io.resys.permission.client.api.model.PrincipalCommand.ChangePrincipalRoles;
 import io.resys.permission.client.api.model.PrincipalCommand.ChangePrincipalStatus;
 import io.resys.permission.client.api.model.PrincipalCommand.PrincipalUpdateCommand;
@@ -48,13 +49,28 @@ public class UpdatePrincipalActionImpl implements UpdatePrincipalAction {
         final var roles = (ChangePrincipalRoles) command;
         
         if(roles.getChangeType() == ChangeType.ADD) {
-          roles.getRoles().forEach(role -> modifyOneMember.modifyRights(ModType.ADD, role));
+          roles.getRoles().forEach(role -> modifyOneMember.modifyParties(ModType.ADD, role));
           
         } else if(roles.getChangeType() == ChangeType.DISABLE) {          
-          roles.getRoles().forEach(role -> modifyOneMember.modifyRights(ModType.DISABLED, role));
+          roles.getRoles().forEach(role -> modifyOneMember.modifyParties(ModType.DISABLED, role));
           
         } else if(roles.getChangeType() == ChangeType.REMOVE) {
-          roles.getRoles().forEach(role -> modifyOneMember.modifyRights(ModType.REMOVE, role)); 
+          roles.getRoles().forEach(role -> modifyOneMember.modifyParties(ModType.REMOVE, role)); 
+        }
+        break;
+      }
+     
+      case CHANGE_PRINCIPAL_PERISSIONS: {
+        final var permissions = (ChangePrincipalPermissions) command;
+        
+        if(permissions.getChangeType() == ChangeType.ADD) {
+          permissions.getPermissions().forEach(perm -> modifyOneMember.modifyRights(ModType.ADD, perm));
+          
+        } else if(permissions.getChangeType() == ChangeType.DISABLE) {
+          permissions.getPermissions().forEach(perm -> modifyOneMember.modifyRights(ModType.DISABLED, perm));
+          
+        } else if(permissions.getChangeType() == ChangeType.REMOVE) {
+          permissions.getPermissions().forEach(perm -> modifyOneMember.modifyRights(ModType.REMOVE, perm));
         }
         break;
       }
@@ -67,6 +83,7 @@ public class UpdatePrincipalActionImpl implements UpdatePrincipalAction {
       default: throw new UpdatePrincipalException("Command type not found exception: " + command.getCommandType());
       }
     }
+    
     
     return modifyOneMember
       .memberId(id)
@@ -91,7 +108,8 @@ public class UpdatePrincipalActionImpl implements UpdatePrincipalAction {
       
       .name(principal.getUserName())
       .email(principal.getEmail())
-      .roles(null)
+      .roles(null) //TODO
+      .permissions(null) //TODO
       .status(OrgActorStatusType.IN_FORCE)
       .build();
   }

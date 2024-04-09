@@ -43,8 +43,9 @@ import jakarta.annotation.Nullable;
     property = "commandType")
 @JsonSubTypes({
   @Type(value = ImmutableCreatePrincipal.class, name = "CREATE_PRINCIPAL"), 
-  @Type(value = ImmutableChangePrincipalRoles.class, name = "CHANGE_PRINCIPAL_ROLES"), 
   @Type(value = ImmutableChangePrincipalStatus.class, name = "CHANGE_PRINCIPAL_STATUS"), 
+  @Type(value = ImmutableChangePrincipalRoles.class, name = "CHANGE_PRINCIPAL_ROLES"), 
+  @Type(value = ImmutableChangePrincipalPermissions.class, name = "CHANGE_PRINCIPAL_PERMISSIONS"), 
 })
 
 public interface PrincipalCommand extends Serializable {
@@ -53,8 +54,9 @@ public interface PrincipalCommand extends Serializable {
   
   enum PrincipalCommandType {
     CREATE_PRINCIPAL,
+    CHANGE_PRINCIPAL_STATUS,
     CHANGE_PRINCIPAL_ROLES,
-    CHANGE_PRINCIPAL_STATUS
+    CHANGE_PRINCIPAL_PERISSIONS,
   }
 
   @Value.Immutable @JsonSerialize(as = ImmutableCreatePrincipal.class) @JsonDeserialize( as = ImmutableCreatePrincipal.class)
@@ -76,6 +78,7 @@ public interface PrincipalCommand extends Serializable {
   @JsonSubTypes({
     @Type(value = ImmutableChangePrincipalRoles.class, name = "CHANGE_PRINCIPAL_ROLES"), 
     @Type(value = ImmutableChangePrincipalStatus.class, name = "CHANGE_PRINCIPAL_STATUS"), 
+    @Type(value = ImmutableChangePrincipalPermissions.class, name = "CHANGE_PRINCIPAL_PERMISSIONS")
   })
   
   interface PrincipalUpdateCommand extends PrincipalCommand {
@@ -89,6 +92,15 @@ public interface PrincipalCommand extends Serializable {
     
     @Value.Default
     @Override default PrincipalCommandType getCommandType() { return PrincipalCommandType.CHANGE_PRINCIPAL_ROLES; }
+  }
+  
+  @Value.Immutable @JsonSerialize(as = ImmutableChangePrincipalPermissions.class) @JsonDeserialize(as = ImmutableChangePrincipalPermissions.class)
+  interface ChangePrincipalPermissions extends PrincipalUpdateCommand {
+    List<String> getPermissions(); // id/name/extId
+    ChangeType getChangeType();
+    
+    @Value.Default
+    @Override default PrincipalCommandType getCommandType() { return PrincipalCommandType.CHANGE_PRINCIPAL_PERISSIONS; }
   }
   
   @Value.Immutable @JsonSerialize(as = ImmutableChangePrincipalStatus.class) @JsonDeserialize(as = ImmutableChangePrincipalStatus.class)
