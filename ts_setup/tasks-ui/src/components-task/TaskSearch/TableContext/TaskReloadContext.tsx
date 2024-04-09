@@ -10,20 +10,13 @@ const _logger = LoggerFactory.getLogger();
 
 
 export const ReloadSearchCtx: React.FC = () => {
-  const [loading, setLoading] = React.useState(0);
+
   const { tasks } = useTasks();
   const searchCtx = useSearch();
 
   React.useEffect(() => {
-    if (loading <= 1) {
-      return;
-    }
     _logger.debug("reloading task search context");
     searchCtx.withData(tasks);
-  }, [tasks]);
-
-  React.useEffect(() => {
-    setLoading(prev => prev + 1);
   }, [tasks]);
 
   return (null);
