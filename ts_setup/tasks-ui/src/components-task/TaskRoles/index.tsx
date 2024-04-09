@@ -8,8 +8,7 @@ import { FormattedMessage } from 'react-intl';
 import { cyan } from 'components-colors';
 import { TaskDescriptor, AssignTaskRoles } from 'descriptor-task';
 import { Avatar, useAvatars, useAvatar } from 'descriptor-avatar';
-import Context from 'context';
-import { Role } from 'client';
+import { Role, useTaskRoles } from 'descriptor-access-mgmt';
 
 import { SearchFieldPopover } from '../SearchField';
 import { usePopover, TablePopover } from '../TablePopover';
@@ -53,10 +52,11 @@ const RoleAvatars: React.FC<{
     <RoleAvatar />
 }
 
+
+
 const FullnamesAndAvatars: React.FC<{
   task: TaskDescriptor,
 }> = ({ task }) => {
-  const org = Context.useOrg();
 
   const avatars = useAvatars(task.roles);
   if(!avatars) {
@@ -67,7 +67,7 @@ const FullnamesAndAvatars: React.FC<{
     (<Stack spacing={1}>
       {avatars.map((role) => (<Box key={role.origin} display='flex' alignItems='center' sx={{ cursor: 'pointer' }}>
         <RoleAvatar key={role.origin}>{role}</RoleAvatar>
-        <Box pl={1}><Typography>{org.state.org.roles[role.origin]?.displayName}</Typography></Box>
+        <Box pl={1}><Typography>{role.displayName}</Typography></Box>
       </Box>))}
     </Stack>)
     :
@@ -89,18 +89,18 @@ const SelectRoles: React.FC<{
 
 
   const [newRoles, setNewRoles] = React.useState(task.roles);
-  const { setSearchString, searchResults } = Context.useRoles({ roles: newRoles });
+  const { setSearchString, searchResults } = useTaskRoles({ roles: newRoles });
 
   function handleToggleRole(role: Role, currentlyChecked: boolean) {
     setNewRoles(currentListOfRoleIds => {
-      const withoutCurrentRole = [...currentListOfRoleIds.filter((id) => id !== role.roleId)];
+      const withoutCurrentRole = [...currentListOfRoleIds.filter((id) => id !== role.id)];
 
       // remove role
       if (currentlyChecked) {
         return withoutCurrentRole;
       }
       // add role
-      return [...withoutCurrentRole, role.roleId];
+      return [...withoutCurrentRole, role.id];
     })
   }
 

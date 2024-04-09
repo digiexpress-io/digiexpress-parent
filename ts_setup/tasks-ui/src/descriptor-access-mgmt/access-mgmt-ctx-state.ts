@@ -1,17 +1,31 @@
-import {
-  UserId, User, Org, RoleId
-} from 'client';
 
-import {
-  OrgState, RoleSearchResult, UserSearchResult
-} from './org-ctx-types';
+export interface UserSearchResult {
+  checked: boolean,
+  user: User
+}
 
-interface ExtendedInit {
+export interface RoleSearchResult {
+  checked: boolean,
+  role: Role
+}
+
+export interface OrgState {
+  org: Org;
+  iam: User;
+
+  withOrg(value: Org): OrgState;
+  withIam(value: User): OrgState;
+
+  findUsers(searchFor: string, checkedUsers: UserId[]): UserSearchResult[];
+  findRoles(searchFor: string, checkedRoles: RoleId[]): RoleSearchResult[];
+}
+
+export interface ExtendedInit {
   org: Org;
   iam: User;
 }
 
-class OrgMutatorBuilderImpl implements OrgState {
+export class OrgMutatorBuilderImpl implements OrgState {
   private _org: Org;
   private _iam: User;
 
@@ -30,7 +44,7 @@ class OrgMutatorBuilderImpl implements OrgState {
   }
   findProjectUsers(searchFor: string, checkedUsers: UserId[]): UserSearchResult[] {
     const criteria = searchFor.toLowerCase();
-    const target = Object.values(this._org.users).filter(({ type }) => type === 'PROJECT_USER');
+    const target = Object.values(this._org.users);
 
     const result = criteria ?
       target.filter(entry => entry.displayName.toLowerCase().includes(criteria)) :
@@ -45,7 +59,7 @@ class OrgMutatorBuilderImpl implements OrgState {
 
   findUsers(searchFor: string, checkedUsers: UserId[]): UserSearchResult[] {
     const criteria = searchFor.toLowerCase();
-    const target = Object.values(this._org.users).filter(({ type }) => type === 'TASK_USER');;
+    const target = Object.values(this._org.users);
 
     const result = criteria ?
       target.filter(entry => entry.displayName.toLowerCase().includes(criteria)) :
@@ -81,6 +95,3 @@ class OrgMutatorBuilderImpl implements OrgState {
     }
   }
 }
-
-export { OrgMutatorBuilderImpl };
-export type { };

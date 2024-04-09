@@ -2,7 +2,7 @@ import React from 'react';
 import { TableHead, TableCell, TableRow, Box } from '@mui/material';
 
 import Context from 'context';
-import { UserProfileDescriptor, ImmutableUserProfileStore } from 'descriptor-user-profile';
+import { UserProfileDescriptor, ImmutableUserProfileStore } from 'descriptor-access-mgmt';
 import { NavigationSticky, FilterByString, TableBody, TableFillerRows } from 'components-generic';
 import { wash_me } from 'components-colors';
 

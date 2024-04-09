@@ -1,9 +1,9 @@
+import { TenantConfig } from './tenant-config-types';
 
-import { TenantConfig } from 'client';
+import { PrincipalId } from './access-mgmt-types';
 
-export type RoleId = string;
+
 export type NotificationType = string;
-export type UserId = string;
 
 export interface UserProfileAndOrg {
   userId: string;
@@ -54,7 +54,7 @@ export interface UiSettings {
 }
 
 export interface UserProfile {
-  id: UserId,
+  id: PrincipalId,
   created: string;
   updated: string;
   details: UserDetails;
@@ -69,7 +69,7 @@ export interface UserProfileTransaction {
 
 export interface UserProfileCommand {
   id: string;
-  userId?: UserId;
+  userId?: PrincipalId;
   targetDate?: Date;
   commandType: UserProfileCommandType;
 }
@@ -132,13 +132,14 @@ export interface ArchiveUserProfile extends UserProfileUpdateCommand<'ArchiveUse
 
 export interface UserProfileStore {
   findAllUserProfiles(): Promise<UserProfile[]>
-  getUserProfileById(id: UserId): Promise<UserProfile>
+  currentUserProfile(): Promise<UserProfileAndOrg>;
+  getUserProfileById(id: PrincipalId): Promise<UserProfile>
   updateUserProfile(id: string, commands: UserProfileUpdateCommand<any>[]): Promise<UserProfile>
 }
 
 
 export interface UserProfileDescriptor {
-  id: UserId,
+  id: PrincipalId,
   email: string | undefined,
   displayName: string,
   entry: UserProfile,

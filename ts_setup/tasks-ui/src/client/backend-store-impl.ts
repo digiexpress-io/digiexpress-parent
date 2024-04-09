@@ -1,6 +1,5 @@
 import { StoreErrorImpl } from './error-types';
-import { Store, StoreConfig } from './backend-types';
-import { TenantConfig, RepoConfig, RepoType } from './tenant-config-types';
+import { Store, StoreConfig, RepoType } from './backend-types';
 
 import LoggerFactory from 'logger';
 const log = LoggerFactory.getLogger();
@@ -11,22 +10,11 @@ class DefaultStore implements Store {
   private _updateStarted: boolean = false;
   private _iapSessionRefreshWindow: Window | null = null;
   private _defRef: RequestInit;
-  private _tenant: TenantConfig | undefined;
-  private _repos: Record<string, RepoConfig>;
   private _urls: Record<RepoType, string>;
 
-  constructor(config: StoreConfig, tenant?: TenantConfig) {
+  constructor(config: StoreConfig) {
     this._config = config;
-    this._tenant = tenant;
-    this._repos = tenant ? tenant.repoConfigs.reduce((acc, item) => ({
-      ...acc,
-      // @ts-ignore
-      [item.repoType]: item
-    }), {}) : {};
-
-    // @ts-ignore
-    this._urls = config.urls.reduce((acc, item) => ({ ...acc, [item.id]: item.url }), {});
-
+    this._urls = { ... config.urls};
     const headers = {
       "Content-Type": "application/json;charset=UTF-8",
     };
@@ -43,11 +31,6 @@ class DefaultStore implements Store {
     }
     log.target(config).debug("Composer::init DefaultStore");
   }
-
-  withTenantConfig(config: TenantConfig): DefaultStore {
-    return new DefaultStore(this._config, config);
-  }
-
   get config() {
     return this._config;
   }
@@ -102,9 +85,6 @@ class DefaultStore implements Store {
     if (props.repoType === 'HEALTH') {
       return this._urls['HEALTH'];
     }
-    if (props.repoType === 'EXT_DIALOB') {
-      return this._urls['EXT_DIALOB'];
-    }
     return this._urls[props.repoType];
   }
 
@@ -113,10 +93,6 @@ class DefaultStore implements Store {
     if (repoType === 'HEALTH') {
       return this._defRef;
     }
-    if (repoType === 'EXT_DIALOB') {
-      return this._defRef;
-    }
-
     if (repoType === 'CONFIG') {
       return this._defRef;
     }

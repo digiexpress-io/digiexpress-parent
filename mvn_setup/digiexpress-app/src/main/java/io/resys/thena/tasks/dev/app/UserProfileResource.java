@@ -33,6 +33,9 @@ public class UserProfileResource implements UserProfileRestApi {
   
   @Override
   public Uni<UserProfile> getUserProfileById(String profileId) {
+    if("current".equals(profileId)) {
+      return getUserProfileConfig().onItem().transformToUni(config -> userProfileClient.withRepoId(config.getRepoId()).userProfileQuery().get(currentUser.getUserId()));
+    }
     return getUserProfileConfig().onItem().transformToUni(config -> userProfileClient.withRepoId(config.getRepoId()).userProfileQuery().get(profileId));
   }
   

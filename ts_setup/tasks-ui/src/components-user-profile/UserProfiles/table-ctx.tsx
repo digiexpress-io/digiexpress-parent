@@ -4,7 +4,7 @@ import { Box, TablePagination, TableContainer, Table } from '@mui/material';
 
 import Pagination from 'table';
 
-import { UserProfileDescriptor, ImmutableUserProfileDescriptor, UserProfile } from 'descriptor-user-profile';
+import { UserProfileDescriptor, ImmutableUserProfileDescriptor, UserProfile } from 'descriptor-access-mgmt';
 import { PopperProvider, usePopper } from 'descriptor-popper';
 
 

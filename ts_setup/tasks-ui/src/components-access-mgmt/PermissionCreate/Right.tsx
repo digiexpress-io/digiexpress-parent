@@ -22,7 +22,7 @@ const CurrentlySelected: React.FC<{ chips: string[], onRemoveChip: (index: numbe
 };
 
 const PermissionRoles: React.FC = () => {
-  const { roles } = Context.useAccessMgmt();
+  const { roles } = Context.useAm();
   const { addRole, removeRole, entity } = useNewPermission();
 
   if (!roles) {
@@ -57,7 +57,7 @@ const PermissionRoles: React.FC = () => {
 
 
 const PermissionPrincipals: React.FC = () => {
-  const { principals } = Context.useAccessMgmt();
+  const { principals } = Context.useAm();
   const { addPrincipal, removePrincipal, entity } = useNewPermission();
 
   if (!principals) {

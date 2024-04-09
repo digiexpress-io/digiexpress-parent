@@ -8,7 +8,7 @@ import { Backend } from 'client';
 import { TasksProvider } from 'descriptor-task';
 import { TenantProvider } from 'descriptor-dialob';
 import { AvatarProvider } from 'descriptor-avatar';
-import { UserProfileAndOrg } from 'descriptor-user-profile';
+import { UserProfileAndOrg } from 'descriptor-access-mgmt';
 
 import Views from './Views';
 

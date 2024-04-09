@@ -1,4 +1,4 @@
-import { UserId } from 'descriptor-user-profile';
+import { PrincipalId } from 'descriptor-access-mgmt';
 import { TaskEditEvent, SingleEvent, AssignTaskEventBody, TaskDescriptor, SingleEventDiff } from './descriptor-types';
 import { TaskCommand, TaskTransaction } from './backend-types';
 
@@ -74,9 +74,9 @@ export class ImmutableTaskEditEvents {
 
 }
 
-function diffAssignTask(event: AssignTaskEventBody): SingleEventDiff<UserId>[] {
+function diffAssignTask(event: AssignTaskEventBody): SingleEventDiff<PrincipalId>[] {
   const changes = getChanges(event.fromCommand?.assigneeIds, event.toCommand.assigneeIds);
-  const result: SingleEventDiff<UserId>[] = [];
+  const result: SingleEventDiff<PrincipalId>[] = [];
   changes.added.forEach(added => result.push({ operation: 'ADDED', value: added, type: undefined }));
   changes.removed.forEach(removed => result.push({ operation: 'REMOVED', value: removed, type: undefined }));
   return result;

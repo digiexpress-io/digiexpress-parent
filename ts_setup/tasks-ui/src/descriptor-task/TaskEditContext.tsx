@@ -18,8 +18,7 @@ function today() {
 type WithTask = (task: Task) => void;
 
 export const TaskEditProvider: React.FC<{ children: React.ReactNode,  task: Task }> = ({ children, task }) => {
-  const { profile } = Context.useOrg();
-
+  const { profile } = Context.useAm();
   const [loading, setLoading] = React.useState<boolean>(true);
   const [desc, setDesc] = React.useState<ImmutableTaskDescriptor>(new ImmutableTaskDescriptor(task, profile, today()));
   const [events, setEvents] = React.useState(new ImmutableTaskEditEvents(desc).build());

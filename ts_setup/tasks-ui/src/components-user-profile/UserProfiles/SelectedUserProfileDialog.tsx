@@ -1,7 +1,7 @@
 import React from 'react';
 import { Grid, Stack, Typography } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
-import { UserProfileDescriptor, ImmutableUserProfileDescriptor } from 'descriptor-user-profile';
+import { UserProfileDescriptor, ImmutableUserProfileDescriptor, ImmutableUserProfileStore } from 'descriptor-access-mgmt';
 import { NotificationSettings } from '../UserProfileEditFields';
 import Context from 'context';
 
@@ -31,7 +31,7 @@ const SelectedUserProfileDialog: React.FC<{ open: boolean, onClose: () => void }
   const [loading, setLoading] = React.useState<boolean>(true);
 
   React.useEffect(() => {
-    backend.currentUserProfile().then(userProfile => {
+    new ImmutableUserProfileStore(backend.store).currentUserProfile().then(userProfile => {
       setState(new ImmutableUserProfileDescriptor(userProfile.user));
       setLoading(false);
     });

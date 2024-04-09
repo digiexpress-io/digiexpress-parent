@@ -10,7 +10,7 @@ import { Right } from './Right';
 import { CreateRole, ImmutableAccessMgmtStore } from 'descriptor-access-mgmt';
 
 const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
-  const { reload } = Context.useAccessMgmt();
+  const { reload } = Context.useAm();
   const backend = Context.useBackend();
   const { entity } = useNewRole();
 

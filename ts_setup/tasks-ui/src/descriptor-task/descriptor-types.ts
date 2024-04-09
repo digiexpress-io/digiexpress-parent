@@ -6,7 +6,7 @@ import {
   Task, TaskId, TaskStore, TaskUpdateCommand
 } from './backend-types';
 
-import { UserId, RoleId, UserProfileAndOrg } from 'descriptor-user-profile';
+import { PrincipalId, RoleId, UserProfileAndOrg } from 'descriptor-access-mgmt';
 
 import { bittersweet, emerald, orange, red, steelblue, ultraviolet } from 'components-colors';
 export type CustomerId = string;
@@ -26,7 +26,7 @@ export interface SingleEventDiff<T> {
 
 export interface ChangeTaskStartDateEventBody extends SingleEventBody<"ChangeTaskStartDate", ChangeTaskStartDate, Date> { }
 export interface CreateTaskEventBody extends SingleEventBody<"CreateTask", CreateTask, string> { }
-export interface AssignTaskReporterEventBody extends SingleEventBody<"AssignTaskReporter", AssignTaskReporter, UserId> { }
+export interface AssignTaskReporterEventBody extends SingleEventBody<"AssignTaskReporter", AssignTaskReporter, PrincipalId> { }
 export interface ArchiveTaskEventBody extends SingleEventBody<"ArchiveTask", ArchiveTask, Date> { }
 export interface ChangeTaskStatusEventBody extends SingleEventBody<"ChangeTaskStatus", ChangeTaskStatus, TaskStatus> { }
 export interface ChangeTaskPriorityEventBody extends SingleEventBody<"ChangeTaskPriority", ChangeTaskPriority, TaskPriority> { }
@@ -34,7 +34,7 @@ export interface AssignTaskParentEventBody extends SingleEventBody<"AssignTaskPa
 export interface CommentOnTaskEventBody extends SingleEventBody<"CommentOnTask", CommentOnTask, string> { }
 export interface ChangeTaskCommentEventBody extends SingleEventBody<"ChangeTaskComment", ChangeTaskComment, string> { }
 export interface AssignTaskRolesEventBody extends SingleEventBody<"AssignTaskRoles", AssignTaskRoles, RoleId> { }
-export interface AssignTaskEventBody extends SingleEventBody<"AssignTask", AssignTask, UserId> { }
+export interface AssignTaskEventBody extends SingleEventBody<"AssignTask", AssignTask, PrincipalId> { }
 export interface ChangeTaskDueDateEventBody extends SingleEventBody<"ChangeTaskDueDate", ChangeTaskDueDate, Date> { }
 export interface ChangeTaskInfoEventBody extends SingleEventBody<"ChangeTaskInfo", ChangeTaskInfo, string> { }
 export interface CreateTaskExtensionEventBody extends SingleEventBody<"CreateTaskExtension", CreateTaskExtension, string> { }
@@ -44,7 +44,7 @@ export interface ChangeChecklistTitleEventBody extends SingleEventBody<"ChangeCh
 export interface DeleteChecklistEventBody extends SingleEventBody<"DeleteChecklist", DeleteChecklist, string> { }
 export interface AddChecklistItemEventBody extends SingleEventBody<"AddChecklistItem", AddChecklistItem, string> { }
 export interface DeleteChecklistItemEventBody extends SingleEventBody<"DeleteChecklistItem", DeleteChecklistItem, string> { }
-export interface ChangeChecklistItemAssigneesEventBody extends SingleEventBody<"ChangeChecklistItemAssignees", ChangeChecklistItemAssignees, UserId> { }
+export interface ChangeChecklistItemAssigneesEventBody extends SingleEventBody<"ChangeChecklistItemAssignees", ChangeChecklistItemAssignees, PrincipalId> { }
 export interface ChangeChecklistItemCompletedEventBody extends SingleEventBody<"ChangeChecklistItemCompleted", ChangeChecklistItemCompleted, boolean> { }
 export interface ChangeChecklistItemDueDateEventBody extends SingleEventBody<"ChangeChecklistItemDueDate", ChangeChecklistItemDueDate, Date> { }
 export interface ChangeChecklistItemTitleEventBody extends SingleEventBody<"ChangeChecklistItemTitle", ChangeChecklistItemTitle, string> { }

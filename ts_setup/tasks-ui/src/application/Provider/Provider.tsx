@@ -4,8 +4,8 @@ import { initSession, SessionData, ActionsImpl } from 'context';
 import { Backend } from 'client';
 import { ClientContext, ComposerContext } from 'context/client-ctx';
 
-import { UserProfileAndOrg } from 'descriptor-user-profile';
-import { OrgProvider } from 'descriptor-organization';
+import { UserProfileAndOrg } from 'descriptor-access-mgmt';
+import { AmProvider } from 'descriptor-access-mgmt';
 import LoggerFactory from 'logger';
 
 
@@ -16,29 +16,20 @@ const Provider: React.FC<{ children: React.ReactNode, service: Backend, profile:
 
   const actions = React.useMemo(() => {
     log.debug("init ide dispatch");
-    return new ActionsImpl(dispatch, service);
-  }, [dispatch, service]);
+    return new ActionsImpl(dispatch);
+  }, [dispatch]);
 
   const contextValue = React.useMemo(() => {
     log.debug("init ide context value");
     return { session, actions };
   }, [session, actions]);
 
-  React.useLayoutEffect(() => {
-    log.debug("init ide data");
-    if (profile) {
-      actions.handleLoadProfile(profile);
-    } else {
-      actions.handleLoad();
-    }
-  }, [actions, profile]);
-
   return (
     <ClientContext.Provider value={service}>
       <ComposerContext.Provider value={contextValue}>
-        <OrgProvider backend={service} profile={profile}>
+        <AmProvider backend={service} profile={profile}>
           {children}
-        </OrgProvider>
+        </AmProvider>
       </ComposerContext.Provider>
     </ClientContext.Provider>);
 };

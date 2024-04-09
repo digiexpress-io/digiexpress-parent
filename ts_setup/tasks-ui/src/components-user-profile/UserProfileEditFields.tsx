@@ -5,7 +5,7 @@ import { useIntl } from 'react-intl';
 
 
 import Context from 'context';
-import { UserProfileDescriptor, ChangeUserDetailsFirstName, ImmutableUserProfileStore } from 'descriptor-user-profile'
+import { UserProfileDescriptor, ChangeUserDetailsFirstName, ImmutableUserProfileStore } from 'descriptor-access-mgmt';
 import { blue_mud2, grey, purple } from 'components-colors';
 
 

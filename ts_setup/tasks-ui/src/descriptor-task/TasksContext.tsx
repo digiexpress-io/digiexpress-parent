@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Backend } from 'client';
-import { UserProfileAndOrg } from 'descriptor-user-profile';
+import { UserProfileAndOrg } from 'descriptor-access-mgmt';
 
 import { Task, TaskUpdateCommand, TaskId, CreateTask } from './backend-types';
 import { TasksContextType, TaskDescriptor } from './descriptor-types';

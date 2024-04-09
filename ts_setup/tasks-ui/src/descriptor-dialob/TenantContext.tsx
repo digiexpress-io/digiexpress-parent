@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Backend } from 'client';
-import { UserProfileAndOrg } from 'descriptor-user-profile';
+import { UserProfileAndOrg } from 'descriptor-access-mgmt';
 
 
 import { TenantContextType, TenantEntry, Tenant, TenantId } from './types';

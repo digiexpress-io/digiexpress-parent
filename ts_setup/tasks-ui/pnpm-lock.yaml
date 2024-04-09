@@ -207,9 +207,6 @@ devDependencies:
   jest:
     specifier: ^29.7.0
     version: 29.7.0(@types/node@12.19.9)(ts-node@9.1.1)
-  node:
-    specifier: link:@@types/node
-    version: link:@@types/node
   style-loader:
     specifier: ^3.3.1
     version: 3.3.1(webpack@5.89.0)

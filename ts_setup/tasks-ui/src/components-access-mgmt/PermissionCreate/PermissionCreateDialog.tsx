@@ -10,7 +10,7 @@ import { PermissionCreateProvider, useNewPermission } from './PermissionCreateCo
 
 
 const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
-  const { reload } = Context.useAccessMgmt();
+  const { reload } = Context.useAm();
   const backend = Context.useBackend();
   const { entity } = useNewPermission();
   const disabled = !entity.name || !entity.commitComment || !entity.description;

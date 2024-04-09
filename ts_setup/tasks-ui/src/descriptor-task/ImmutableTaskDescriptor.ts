@@ -1,4 +1,4 @@
-import { UserProfileAndOrg } from 'descriptor-user-profile';
+import { UserProfileAndOrg } from 'descriptor-access-mgmt';
 import { Task, TaskExtension } from './backend-types';
 import { TaskDescriptor, AssigneeGroupType, TeamGroupType, CustomerId } from './descriptor-types';
 import { getDaysUntilDue, getMyWorkType, getTeamspaceType } from './util';

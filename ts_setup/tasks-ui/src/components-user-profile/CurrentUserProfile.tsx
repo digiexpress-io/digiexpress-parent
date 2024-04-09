@@ -2,7 +2,7 @@ import React from 'react';
 import { Stack, Typography, Paper, CircularProgress } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 import { FirstName, LastName, EmailAddress, NotificationSettings } from './UserProfileEditFields';
-import { UserProfileDescriptor, ImmutableUserProfileDescriptor } from 'descriptor-user-profile';
+import { UserProfileDescriptor, ImmutableUserProfileDescriptor, ImmutableUserProfileStore } from 'descriptor-access-mgmt';
 import { UserAvatar } from './UserAvatar';
 import Context from 'context';
 
@@ -16,7 +16,8 @@ const CurrentUserProfile: React.FC<{}> = () => {
   const [loading, setLoading] = React.useState<boolean>(true);
 
   React.useEffect(() => {
-    backend.currentUserProfile().then(userProfile => {
+    new ImmutableUserProfileStore(backend.store).currentUserProfile()
+    .then(userProfile => {
       setState(new ImmutableUserProfileDescriptor(userProfile.user));
       setLoading(false);
     });

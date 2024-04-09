@@ -7,7 +7,6 @@ import AttachFileIcon from '@mui/icons-material/AttachFile';
 import CircleNotificationsOutlinedIcon from '@mui/icons-material/CircleNotificationsOutlined';
 import CloseIcon from '@mui/icons-material/Close';
 
-import Client from 'client';
 import Context from 'context';
 import { 
   ChangeTaskInfo, 
@@ -15,6 +14,8 @@ import {
   AssignTask, AssignTaskRoles, ChangeTaskPriority,
   ChangeTaskStartDate, ChangeTaskDueDate
 } from 'descriptor-task';
+
+import { PrincipalId } from 'descriptor-access-mgmt';
 
 import TaskChecklist from '../TaskChecklist';
 import TaskAssignees from '../TaskAssignees';
@@ -116,7 +117,7 @@ const Assignee: React.FC<{}> = () => {
   const ctx = Context.useTaskEdit();
   const backend = Context.useTasks();
 
-  async function handleAssigneeChange(assigneeIds: Client.UserId[]) {
+  async function handleAssigneeChange(assigneeIds: PrincipalId[]) {
     const command: AssignTask = { assigneeIds, commandType: 'AssignTask', taskId: ctx.task.id };
     const updatedTask = await backend.updateActiveTask(ctx.task.id, [command]);
     ctx.withTask(updatedTask);

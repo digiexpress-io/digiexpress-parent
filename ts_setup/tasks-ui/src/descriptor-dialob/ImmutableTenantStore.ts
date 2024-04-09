@@ -3,7 +3,7 @@ import { Tenant, TenantEntry, TenantStore, TenantEntryPagination, DialobTag, Dia
 
 
 export interface TenantStoreConfig {
-  fetch<T>(path: string, init: RequestInit & { notFound?: () => T, repoType: 'EXT_DIALOB' }): Promise<T>;
+  fetch<T>(path: string, init: RequestInit & { notFound?: () => T, repoType: 'DIALOB' }): Promise<T>;
 }
 
 export class ImmutableTenantStore implements TenantStore {
@@ -18,7 +18,7 @@ export class ImmutableTenantStore implements TenantStore {
 
   async getTenants(): Promise<Tenant[]> {
     try {
-      return await this._store.fetch<Tenant[]>(`api/tenants`, { repoType: 'EXT_DIALOB' });
+      return await this._store.fetch<Tenant[]>(`dialob/api/tenants`, { repoType: 'DIALOB' });
     } catch (error) {
       console.error(error);
       return [];
@@ -26,7 +26,7 @@ export class ImmutableTenantStore implements TenantStore {
   }
   async getTenantEntries(id: string): Promise<TenantEntryPagination> {
     try {
-      const forms = await this._store.fetch<TenantEntry[]>(`api/forms`, { repoType: 'EXT_DIALOB' });
+      const forms = await this._store.fetch<TenantEntry[]>(`dialob/api/forms`, { repoType: 'DIALOB' });
       return {
         page: 1,
         total: { pages: 1, records: forms.length },
@@ -42,16 +42,16 @@ export class ImmutableTenantStore implements TenantStore {
     }
   }
   async getDialobTags(dialobFormId: string): Promise<DialobTag[]> {
-    return await this._store.fetch<DialobTag[]>(`api/forms/${dialobFormId}/tags`, { repoType: 'EXT_DIALOB' });
+    return await this._store.fetch<DialobTag[]>(`dialob/api/forms/${dialobFormId}/tags`, { repoType: 'DIALOB' });
   }
   async getDialobForm(dialobFormId: string): Promise<DialobForm> {
-    return await this._store.fetch<DialobForm>(`api/forms/${dialobFormId}`, { repoType: 'EXT_DIALOB' });
+    return await this._store.fetch<DialobForm>(`dialob/api/forms/${dialobFormId}`, { repoType: 'DIALOB' });
   }
   async createDialobForm(formData: CreateFormRequest, tenantId?: string): Promise<DialobFormResponse> {
     return await this._store.fetch<DialobForm>(`api/forms?tenantId=${tenantId}`, {
       method: 'POST',
       body: JSON.stringify(formData),
-      repoType: 'EXT_DIALOB'
+      repoType: 'DIALOB'
     })
       .then(form => {
         return { status: 'OK', form };
@@ -62,7 +62,7 @@ export class ImmutableTenantStore implements TenantStore {
       });
   }
   async copyDialobForm(formName: string, newFormName: string, newFormTitle: string, tenantId?: string): Promise<DialobFormResponse> {
-    return await this._store.fetch<DialobForm>(`api/forms/${formName}?tenantId=${tenantId}`, { repoType: 'EXT_DIALOB' })
+    return await this._store.fetch<DialobForm>(`dialob/api/forms/${formName}?tenantId=${tenantId}`, { repoType: 'DIALOB' })
       .then(
         formData => {
           const newForm = JSON.parse(JSON.stringify(formData));
@@ -79,9 +79,9 @@ export class ImmutableTenantStore implements TenantStore {
       );
   }
   async deleteDialobForm(formName: string, tenantId?: string): Promise<void> {
-    return await this._store.fetch<any>(`api/forms/${formName}?tenantId=${tenantId}`, {
+    return await this._store.fetch<any>(`dialob/api/forms/${formName}?tenantId=${tenantId}`, {
       method: 'DELETE',
-      repoType: 'EXT_DIALOB'
+      repoType: 'DIALOB'
     })
       .then((response) => {
         if (response.ok) {
@@ -94,12 +94,12 @@ export class ImmutableTenantStore implements TenantStore {
   }
   async getDialobSessions(props: { formId: FormId, technicalName: FormTechnicalName, tenantId: TenantId }): Promise<DialobSession[]> {
     try {
-      return await this._store.fetch<DialobSession[]>(`api/questionnaires/?formName=${props.technicalName}&tenantId=${props.tenantId}`, {
-        repoType: 'EXT_DIALOB'
+      return await this._store.fetch<DialobSession[]>(`dialob/api/questionnaires/?formName=${props.technicalName}&tenantId=${props.tenantId}`, {
+        repoType: 'DIALOB'
       })
     } catch (e) {
       console.log("falling back to typescript filtering", props);
-      const result: DialobSession[] = await this._store.fetch<DialobSession[]>(`api/questionnaires`, { repoType: 'EXT_DIALOB' });
+      const result: DialobSession[] = await this._store.fetch<DialobSession[]>(`dialob/api/questionnaires`, { repoType: 'DIALOB' });
       return result.filter(q => q.metadata.formId === props.formId && q.metadata.tenantId === props.tenantId);
     }
   }

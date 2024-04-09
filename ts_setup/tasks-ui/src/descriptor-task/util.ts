@@ -1,6 +1,6 @@
 import { parseISO, isAfter, isEqual, differenceInCalendarDays, differenceInDays } from 'date-fns';
 
-import { UserProfileAndOrg } from 'descriptor-user-profile';
+import { UserProfileAndOrg } from 'descriptor-access-mgmt';
 
 import { Task } from './backend-types';
 import { AssigneeGroupType, TeamGroupType, _nobody_ } from './descriptor-types';

@@ -11,7 +11,7 @@ const PermissionDivider: React.FC<{ index: number, role: Role }> = ({ index, rol
 }
 
 const OneRolePermission: React.FC<{ permissionName: string }> = ({ permissionName }) => {
-  const { getPermission } = Context.useAccessMgmt()
+  const { getPermission } = Context.useAm()
   const { name, description, status } = getPermission(permissionName);
 
   return (

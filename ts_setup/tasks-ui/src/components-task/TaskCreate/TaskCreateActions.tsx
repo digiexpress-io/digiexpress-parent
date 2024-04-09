@@ -6,7 +6,7 @@ import Context from 'context';
 
 
 const TaskCreateActions: React.FC<{ onClose: () => void }> = ({ onClose }) => {
-  const org = Context.useOrg();
+  const { userId } = Context.useAm()
   const tasks = Context.useTasks();
   const state = Context.useTaskEdit();
 
@@ -31,7 +31,7 @@ const TaskCreateActions: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
       roles: state.task.roles,
       assigneeIds: state.task.assignees,
-      reporterId: org.state.iam.userId,
+      reporterId: userId,
 
       labels: state.task.labels,
       extensions: state.task.entry.extensions,

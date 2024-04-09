@@ -6,7 +6,7 @@ import { Backend } from 'client';
 import { TenantProvider } from 'descriptor-dialob';
 
 import Views from './Views';
-import { UserProfileAndOrg } from 'descriptor-user-profile';
+import { UserProfileAndOrg } from 'descriptor-access-mgmt';
 
 
 function appTenant(backend: Backend, profile: UserProfileAndOrg): Burger.App<{}, { backend: Backend, profile: UserProfileAndOrg }> {

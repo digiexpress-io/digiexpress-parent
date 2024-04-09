@@ -45,14 +45,14 @@ function initTaskProps(userId: string): Task {
 }
 
 const TaskCreateDialog: React.FC<{ open: boolean, onClose: () => void }> = (props) => {
-  const org = Context.useOrg();
+  const { userId } = Context.useAm();
 
   if (!props.open) {
     return null;
   }
 
   return (
-    <TaskEditProvider task={initTaskProps(org.state.iam.userId)}>
+    <TaskEditProvider task={initTaskProps(userId)}>
       <Dialog open={true} fullWidth maxWidth='md'>
         <DialogTitle sx={{
           backgroundColor: wash_me,

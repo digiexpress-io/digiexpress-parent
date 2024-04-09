@@ -3,7 +3,7 @@ import { Box, MenuList, MenuItem, ListItemText } from '@mui/material';
 import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
 import { FormattedMessage } from 'react-intl';
 
-import { UserProfileDescriptor } from 'descriptor-user-profile';
+import { UserProfileDescriptor } from 'descriptor-access-mgmt';
 import { UserProfileSearchState } from './table-ctx';
 
 import { useTableCellPopover, StyledTableCell } from 'components-generic';

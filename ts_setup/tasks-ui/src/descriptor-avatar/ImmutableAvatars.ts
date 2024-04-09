@@ -77,7 +77,7 @@ export class ImmutableAvatars implements Avatars {
       const color = this.getNextColor(cache_colors);
       
 
-      const avatar: Avatar = Object.freeze({ origin, twoLetterCode, color, index: codeIndex });
+      const avatar: Avatar = Object.freeze({ origin, twoLetterCode, color, index: codeIndex, displayName: undefined });
       cache_colors.push(color);
       newData.push(avatar);
     }

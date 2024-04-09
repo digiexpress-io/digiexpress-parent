@@ -1,10 +1,10 @@
 import React from 'react';
 
-import Client from 'client';
 import Context from 'context';
 
 import { TaskDescriptor, AssignTask } from 'descriptor-task';
 import { StyledTableCell } from 'components-generic';
+import { PrincipalId } from 'descriptor-access-mgmt';
 
 import TaskAssignees from '../../TaskAssignees';
 
@@ -16,7 +16,7 @@ const FormattedCell: React.FC<{
 
   const tasks = Context.useTasks();
 
-  async function handleChange(assigneeIds: Client.UserId[]) {
+  async function handleChange(assigneeIds: PrincipalId[]) {
     const command: AssignTask = { assigneeIds, commandType: 'AssignTask', taskId: row.id };
     await tasks.updateActiveTask(row.id, [command]);
   }

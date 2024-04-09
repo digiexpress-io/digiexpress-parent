@@ -23,17 +23,11 @@ declare namespace Context {
 
 
 namespace Context {
-  export const useAccessMgmt = Hooks.useAccessMgmt;
+  export const useAm = Hooks.useAm;
   export const useBackend = Hooks.useBackend;
-  export const useTenantConfig = Hooks.useTenantConfig;
   export const useTasks = Hooks.useTasks;
   export const useDialobTenant = Hooks.useDialobTenant;
-  export const useOrg = Hooks.useOrg;
-  export const useAssignees = Hooks.useAssignees;
-  export const useProjectUsers = Hooks.useProjectUsers;
-  export const useRoles = Hooks.useRoles;
   export const useTaskEdit = Hooks.useTaskEdit;
-  export const useSite = Hooks.useSite;
   export const useUnsaved = Hooks.useUnsaved;
   export const useComposer = Hooks.useComposer;
   export const useSession = Hooks.useSession;

@@ -2,18 +2,16 @@ import React from 'react';
 import { AvatarGroup, Box, ListItemText, Checkbox, Button, List, MenuItem, Stack, Typography, Alert, AlertTitle } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 
-import Client from 'client';
-import Context from 'context';
 import { cyan } from 'components-colors';
 import { AvatarEmpty, AvatarUser, AvatarIndicator } from 'components-generic';
-
+import { PrincipalId, useTaskAssignees, Principal } from 'descriptor-access-mgmt';
 
 import { SearchFieldPopover } from '../SearchField';
 import { TablePopover, usePopover } from '../TablePopover';
 
 
 const AvatarsOnly: React.FC<{
-  task: { assignees: Client.UserId[] },
+  task: { assignees: PrincipalId[] },
 }> = ({ task }) => {
 
   if(task.assignees.length > 0) {
@@ -23,7 +21,7 @@ const AvatarsOnly: React.FC<{
 }
 
 const FullnamesAndAvatars: React.FC<{
-  task: { assignees: Client.UserId[] }
+  task: { assignees: PrincipalId[] }
 }> = ({ task }) => {
 
   if(task.assignees.length > 0) {
@@ -42,24 +40,24 @@ const FullnamesAndAvatars: React.FC<{
 
 const SelectAssignees: React.FC<{
   anchorEl: HTMLElement | null,
-  task: { assignees: Client.UserId[] },
-  onChange: (assigneeIds: Client.UserId[]) => Promise<void>,
+  task: { assignees: PrincipalId[] },
+  onChange: (assigneeIds: PrincipalId[]) => Promise<void>,
   onClose: () => void,
 }> = ({ anchorEl, task, onChange, onClose }) => {
   const [newAssignees, setNewAssignees] = React.useState(task.assignees);
-  const { setSearchString, searchResults } = Context.useAssignees({ assignees: newAssignees });
+  const { setSearchString, searchResults } = useTaskAssignees({ assignees: newAssignees });
 
 
-  function handleToggleUser(user: Client.User, currentlyChecked: boolean) {
+  function handleToggleUser(user: Principal, currentlyChecked: boolean) {
     setNewAssignees(currentListOfUserIds => {
-      const withoutCurrentUser = [...currentListOfUserIds.filter(id => id !== user.userId)];
+      const withoutCurrentUser = [...currentListOfUserIds.filter(id => id !== user.id)];
 
       // remove user
       if (currentlyChecked) {
         return withoutCurrentUser;
       }
       // add user
-      return [...withoutCurrentUser, user.userId];
+      return [...withoutCurrentUser, user.id];
     });
   }
 
@@ -106,8 +104,8 @@ const SelectAssignees: React.FC<{
 
 
 const TaskAssignees: React.FC<{
-  task: { assignees: Client.UserId[] },
-  onChange: (assigneeIds: Client.UserId[]) => Promise<void>,
+  task: { assignees: PrincipalId[] },
+  onChange: (assigneeIds: PrincipalId[]) => Promise<void>,
   fullnames?: boolean,
   disabled?: boolean,
 }> = ({ task, onChange, fullnames, disabled }) => {

@@ -1,12 +1,13 @@
 import React from 'react';
 import { TextField } from '@mui/material';
-import Client from 'client';
+
 import Context from 'context';
 
 import { 
   ChangeTaskPriority, ChangeTaskStatus, AssignTask, ChangeTaskDueDate,
   AssignTaskRoles, ChangeTaskStartDate
 } from 'descriptor-task'
+import { PrincipalId } from 'descriptor-access-mgmt';
 
 import TaskAssignees from '../TaskAssignees';
 import TaskStatus from '../TaskStatus';
@@ -68,7 +69,7 @@ const Priority: React.FC<{}> = () => {
 const Assignees: React.FC<{}> = () => {
   const ctx = Context.useTaskEdit();
 
-  async function handleAssigneeChange(assigneeIds: Client.UserId[]) {
+  async function handleAssigneeChange(assigneeIds: PrincipalId[]) {
     const command: AssignTask = { assigneeIds, commandType: 'AssignTask', taskId: ctx.task.id };
     ctx.withTask({ ...ctx.task.entry, assigneeIds: command.assigneeIds });
   }

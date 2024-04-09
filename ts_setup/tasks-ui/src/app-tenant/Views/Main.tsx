@@ -13,7 +13,7 @@ const root: SxProps = { height: '100%', backgroundColor: wash_me, width: '100%' 
 
 const Main: React.FC<{}> = () => {
   const layout = Burger.useTabs();
-  const { site, session } = Context.useComposer();
+  const { session } = Context.useComposer();
   const tabs = layout.session.tabs;
   const active = tabs.length ? tabs[layout.session.history.open] : undefined;
   const entity = active ? session.getEntity(active.id) : undefined;
@@ -41,7 +41,7 @@ const Main: React.FC<{}> = () => {
     }
     throw new Error("unknown view: " + JSON.stringify(active, null, 2));
 
-  }, [active, site, entity]);
+  }, [active, entity]);
 }
 export { Main }
 

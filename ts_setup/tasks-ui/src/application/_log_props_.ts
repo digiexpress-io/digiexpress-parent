@@ -19,9 +19,6 @@ export function getLogProps(): Record<string, LogLevel> {
     'src/descriptor-organization' : 'ERROR',
     'src/descriptor-project'      : 'ERROR',
     'src/descriptor-task'         : 'DEBUG',
-    'src/descriptor-tenant'       : 'DEBUG',
-    'src/descriptor-tenant-config' : 'ERROR',
-    'src/descriptor-user-profile' : 'ERROR',
     'src/descriptor-avatar'       : 'ERROR',
     'src/descriptor-popper'       : 'ERROR',
 

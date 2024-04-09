@@ -1,5 +1,5 @@
 import { Backend } from 'client';
-import { UserProfile, UpsertUiSettings, UiSettings, ImmutableUserProfileStore } from 'descriptor-user-profile';
+import { UserProfile, UpsertUiSettings, UiSettings, ImmutableUserProfileStore } from 'descriptor-access-mgmt';
 
 
 import { PreferenceInit, VisibilityRule, SortingRule, DataId, ConfigRule } from './pref-types';

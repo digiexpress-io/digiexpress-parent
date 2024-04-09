@@ -2,7 +2,7 @@ import React from 'react';
 import { CircularProgress } from '@mui/material';
 
 import Context from 'context';
-import { UserProfile } from 'descriptor-user-profile';
+import { ImmutableUserProfileStore, UserProfile } from 'descriptor-access-mgmt';
 
 import { PreferenceContextType, PreferenceInit } from './pref-types';
 import { WithSorting, WithConfig, initWithConfig, WithVisibility, WithVisibleFields, initPreference, initWithSorting, initWithVisibility, initWithVisibleFields } from './initMethods';
@@ -45,9 +45,9 @@ export const PreferenceProvider: React.FC<{ children: React.ReactElement, init: 
   const [loading, setLoading] = React.useState<boolean>(true);
 
   React.useEffect(() => {
-    backend.currentUserProfile().then(userProfile => {
+    new ImmutableUserProfileStore(backend.store).getUserProfileById("current").then(userProfile => {
       _logger.target({userProfile, init}).debug(`loading preference for ${init.id}`);
-      setState(userProfile.user);
+      setState(userProfile);
       setLoading(false);
     });
   }, []);

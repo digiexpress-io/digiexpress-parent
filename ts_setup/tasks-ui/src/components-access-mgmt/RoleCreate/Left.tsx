@@ -5,7 +5,7 @@ import Burger from 'components-burger';
 
 import { SectionLayout } from 'components-generic';
 import { useNewRole } from './RoleCreateContext';
-import { useAccessMgmt } from 'components-access-mgmt/AccessMgmtContext';
+import Context from 'context';
 
 
 //TODO: Status field
@@ -64,7 +64,7 @@ const RoleCommitComment: React.FC<{}> = () => {
 
 export const Left: React.FC<{}> = () => {
   const { entity } = useNewRole();
-  const { getRole } = useAccessMgmt();
+  const { getRole } = Context.useAm();
 
   React.useEffect(() => {
   }, [entity.permissions]);

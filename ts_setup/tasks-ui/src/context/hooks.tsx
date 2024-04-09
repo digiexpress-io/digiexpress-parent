@@ -1,16 +1,18 @@
 import React from 'react';
 import Burger from 'components-burger';
-import { Tab, TabEntity, TabBody, Document } from './composer-ctx-types';
-import { ImmutableTabData } from './composer-ctx-impl';
-import { ComposerContext, ComposerContextType, ClientContextType, ClientContext } from './client-ctx';
-import { UserId, RoleId, RepoType } from 'client';
 
-import { OrgContext, OrgContextType } from 'descriptor-organization';
+import { saffron } from 'components-colors';
+import { AmContext, AmContextType } from 'descriptor-access-mgmt';
 import { TenantContext, TenantContextType } from 'descriptor-dialob';
 import { TasksContext, TasksContextType, TaskEditContext, TaskEditContextType } from 'descriptor-task';
-import { TenantConfigContext, TenantConfigContextType } from 'descriptor-tenant-config';
-import { saffron } from 'components-colors';
-import { AccessMgmtContext, AccessMgmtContextType } from 'components-access-mgmt/AccessMgmtContext';
+
+
+import { ImmutableTabData } from './composer-ctx-impl';
+import { Tab, TabEntity, TabBody, Document } from './composer-ctx-types';
+import { ComposerContext, ComposerContextType, ClientContextType, ClientContext } from './client-ctx';
+
+
+
 
 const ArticleTabIndicator: React.FC<{ entity: Document }> = ({ entity }) => {
   const { isDocumentSaved } = useComposer();
@@ -63,7 +65,6 @@ const findTabInLayout = (article: Document, layout: Burger.TabsContextType): Tab
   }
   return undefined;
 }
-
 export const useTaskEdit = () => {
   const result: TaskEditContextType = React.useContext(TaskEditContext);
   return result;
@@ -73,88 +74,39 @@ export const useTasks = () => {
   const result: TasksContextType = React.useContext(TasksContext);
   return result;
 }
-
-export const useAccessMgmt = () => {
-  const result: AccessMgmtContextType = React.useContext(AccessMgmtContext);
+export const useAm = () => {
+  const result: AmContextType = React.useContext(AmContext);
   return result;
 }
-
 export const useDialobTenant = () => {
   const result: TenantContextType = React.useContext(TenantContext);
   return result;
 }
-
-export const useAssignees = (row: { assignees: UserId[] }) => {
-  const org = useOrg();
-  const { assignees } = row;
-  const [searchString, setSearchString] = React.useState<string>('');
-  const searchResults = React.useMemo(() => org.state.findUsers(searchString, assignees), [assignees, searchString, org]);
-  return { searchString, setSearchString, searchResults };
-}
-
-export const useProjectUsers = (row: { assignees: UserId[] }) => {
-  const org = useOrg();
-  const [searchString, setSearchString] = React.useState<string>('');
-  const searchResults = React.useMemo(() => org.state.findProjectUsers(searchString, row.assignees), [row, searchString, org]);
-  return { searchString, setSearchString, searchResults };
-}
-
-export const useRoles = (row: { roles: RoleId[] }) => {
-  const org = useOrg();
-  const [searchString, setSearchString] = React.useState<string>('');
-  const searchResults = React.useMemo(() => org.state.findRoles(searchString, row.roles), [row, searchString, org]);
-  return { searchString, setSearchString, searchResults };
-}
-
-export const useOrg = () => {
-  const result: OrgContextType = React.useContext(OrgContext);
-  return result;
-}
-
 export const useBackend = () => {
   const result: ClientContextType = React.useContext(ClientContext);
   return result;
 }
 
-export const useTenantConfig = () => {
-  const result: TenantConfigContextType = React.useContext(TenantConfigContext);
-  return result;
-}
 
 export const useApp = () => {
   const apps = Burger.useApps();
 
-  function changeApp(input: 'tasks' | 'frontoffice' | 'stencil' | 'hdes' | RepoType) {
+  function changeApp(input: 'tasks' | 'frontoffice' | 'stencil' | 'hdes') {
     if (input === 'frontoffice') {
       apps.actions.handleActive('app-frontoffice');
       return;
     }
-
-    /**
-        if (input === 'tasks' || input === 'TASKS') {
-          apps.actions.handleActive('app-tasks');
-          return;
-        }
-     */
-    if (input === 'stencil' || input === 'STENCIL') {
+    if (input === 'stencil') {
       apps.actions.handleActive('app-stencil');
       return;
     }
 
-    if (input === 'hdes' || input === 'WRENCH') {
+    if (input === 'hdes') {
       apps.actions.handleActive('app-hdes');
       return;
     }
   }
-
-
   return { changeApp };
-}
-
-
-export const useSite = () => {
-  const result: ComposerContextType = React.useContext(ComposerContext);
-  return result.session.profile;
 }
 
 export const useUnsaved = (entity: Document) => {
@@ -169,7 +121,6 @@ export const useComposer = () => {
   return {
     session: result.session,
     actions: result.actions,
-    site: result.session.profile,
     isDocumentSaved: isSaved,
     client
   };

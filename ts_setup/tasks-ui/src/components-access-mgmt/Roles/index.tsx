@@ -4,9 +4,10 @@ import * as colors from 'components-colors';
 import { LayoutList, NavigationButton, FilterByString } from 'components-generic';
 import RoleCreateDialog from '../RoleCreate';
 import { OneRoleData } from './OneRoleData';
-import { AccessMgmtContextProvider, useAccessMgmt } from '../AccessMgmtContext';
+
 import { PermissionCreateDialog } from '../PermissionCreate';
 import PrincipalCreateDialog from '../PrincipalCreate';
+import Context from 'context';
 
 const color_create_role = colors.cyan;
 const color_create_permission = colors.steelblue;
@@ -59,21 +60,12 @@ const RoleNavigation: React.FC = () => {
 
 
 
-const RolesOverviewLayout: React.FC = () => {
-  const { roles } = useAccessMgmt();
-  if (!roles) {
-    return null;
-  }
-
+const RolesOverviewLoader: React.FC = () => {
+  const { roles } = Context.useAm();
   const navigation = <RoleNavigation />;
   const pagination = <></>;
   const items = roles.map(role => (<OneRoleData role={role} key={role.id} />));
   return (<LayoutList slots={{ navigation, items, pagination }} />)
-}
-
-
-const RolesOverviewLoader: React.FC = () => {
-  return (<AccessMgmtContextProvider><RolesOverviewLayout /></AccessMgmtContextProvider>);
 }
 
 export default RolesOverviewLoader;

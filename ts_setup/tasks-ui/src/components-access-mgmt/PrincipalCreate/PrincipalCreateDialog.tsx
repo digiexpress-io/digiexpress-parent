@@ -10,7 +10,7 @@ import { PrincipalCreateProvider, useNewPrincipal } from './PrincipalCreateConte
 import { CreatePrincipal, ImmutableAccessMgmtStore } from 'descriptor-access-mgmt';
 
 const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
-  const { reload } = Context.useAccessMgmt();
+  const { reload } = Context.useAm();
   const backend = Context.useBackend();
   const { entity } = useNewPrincipal();
 

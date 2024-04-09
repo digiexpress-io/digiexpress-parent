@@ -1,10 +1,9 @@
 import React from 'react';
 
 import Burger from 'components-burger';
-import { Backend, TenantConfig } from 'client';
+import { Backend } from 'client';
 import Client, { Main, Secondary, Toolbar, ComposerProvider } from 'components-hdes/core';
-import { UserProfileAndOrg } from 'descriptor-user-profile';
-
+import { UserProfileAndOrg, TenantConfig } from 'descriptor-access-mgmt';
 
 function appHdes(backend: Backend, profile: UserProfileAndOrg, tenantConfig: TenantConfig): Burger.App<{}, {
   service: Client.Service,
@@ -12,7 +11,7 @@ function appHdes(backend: Backend, profile: UserProfileAndOrg, tenantConfig: Ten
 
   const projectId = tenantConfig.repoConfigs.find(c => c.repoType === 'HDES')?.repoId ?? ""
   const store: Client.Store = new Client.StoreImpl({ 
-    url: backend.config.urls[0].url + "hdes",
+    url: backend.config.urls.WRENCH + "hdes",
   });
   const service = new Client.ServiceImpl(store);
   

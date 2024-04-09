@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box } from '@mui/material';
 import Burger from 'components-burger';
-import { UserProfileDescriptor } from 'descriptor-user-profile';
+import { UserProfileDescriptor } from 'descriptor-access-mgmt';
 import { StyledTableCell } from 'components-generic';
 import TableCell from './TableCell';
 

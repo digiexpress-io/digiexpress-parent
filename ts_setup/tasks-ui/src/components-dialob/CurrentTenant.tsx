@@ -22,8 +22,8 @@ const SectionLayout: React.FC<{ label: string, value: string | undefined }> = ({
 }
 
 const CurrentTenant: React.FC<{}> = () => {
-  const tenant = Context.useTenantConfig();
-  const data = tenant.tenantConfig;
+  const am = Context.useAm();
+  const data = am.profile.tenant; 
 
   if (!data) {
     return (<>No data</>)

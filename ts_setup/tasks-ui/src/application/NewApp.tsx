@@ -6,16 +6,15 @@ import { SnackbarProvider } from 'notistack';
 import { useSnackbar } from 'notistack';
 import Burger, { siteTheme } from 'components-burger';
 
-import TaskClient, { TenantConfig } from 'client';
-import Context from 'context';
-import { TenantConfigProvider } from 'descriptor-tenant-config';
-import { UserProfileAndOrg } from 'descriptor-user-profile';
+import Backend from 'client';
 
 import AppTenant from 'app-tenant';
 import AppStencil from 'app-stencil';
 import AppHdes from 'app-hdes';
 import AppFrontoffice from 'app-frontoffice';
 import LoggerFactory from 'logger';
+
+import { UserProfileAndOrg, ImmutableUserProfileStore, TenantConfigProvider, TenantConfig } from 'descriptor-access-mgmt';
 
 import { getLogProps } from './_log_props_';
 import Connection from './Connection';
@@ -60,53 +59,37 @@ const getUrl = () => {
 
 const baseUrl = getUrl();
 
-const store: TaskClient.Store = new TaskClient.DefaultStore({
-  urls: [
-    { id: 'TASKS', url: baseUrl + "/q/digiexpress/api/" },
-    { id: 'TENANT', url: baseUrl + "/q/digiexpress/api/" },
-    { id: 'CRM', url: baseUrl + "/q/digiexpress/api/" },
-    { id: 'STENCIL', url: baseUrl + "/q/digiexpress/api/" },
-    { id: 'USER_PROFILE', url: baseUrl + "/q/digiexpress/api/" },
-    { id: 'WRENCH', url: baseUrl + "/q/digiexpress/api/" },
-    { id: 'CONFIG', url: baseUrl + "/q/digiexpress/api/" },
-    { id: 'HEALTH', url: baseUrl + "/q/digiexpress/api/" },
-    { id: 'SYS_CONFIG', url: baseUrl + "/q/digiexpress/api/" },
-    { id: 'PERMISSIONS', url: baseUrl + "/q/digiexpress/api/" },
-    { id: 'EXT_DIALOB', url: baseUrl + "/q/digiexpress/api/dialob/" },
-    { id: 'EXT_DIALOB_EDIT', url: baseUrl + "/q/digiexpress/api/dialob/api/edit" },
-
-    /*
-    { id: 'EXT_DIALOB', url: "http://localhost:92/dialob/" },
-    { id: 'EXT_DIALOB_EDIT', url: "http://localhost:92/dialob/api" },
-    */
-  ],
+const store: Backend.Store = new Backend.DefaultStore({
+  urls: {
+    'TASKS': baseUrl + "/q/digiexpress/api/",
+    'TENANT': baseUrl + "/q/digiexpress/api/",
+    'CRM': baseUrl + "/q/digiexpress/api/",
+    'STENCIL': baseUrl + "/q/digiexpress/api/",
+    'USER_PROFILE': baseUrl + "/q/digiexpress/api/",
+    'WRENCH': baseUrl + "/q/digiexpress/api/",
+    'CONFIG': baseUrl + "/q/digiexpress/api/",
+    'HEALTH': baseUrl + "/q/digiexpress/api/",
+    'SYS_CONFIG': baseUrl + "/q/digiexpress/api/",
+    'PERMISSIONS': baseUrl + "/q/digiexpress/api/",
+    'DIALOB': baseUrl + "/q/digiexpress/api/",
+  },
   performInitCheck: false,
   csrf: window._env_?.csrf,
   oidc: window._env_?.oidc,
   status: window._env_?.status,
 });
 
-const backend = new TaskClient.ServiceImpl(store)
+const backend = new Backend.ServiceImpl(store)
 
-
-const TenantConfigSetup: React.FC<{ profile: UserProfileAndOrg }> = ({ profile }) => {
-  const { tenantConfig } = Context.useTenantConfig();
-  if (!tenantConfig) {
-    throw new Error("Tenant must be defined!");
-  }
-
-  const service = React.useMemo(() => {
-    return backend.withTenantConfig(tenantConfig!);
-  }, [tenantConfig]);
-
-  const hdes: Burger.App<{}, any> = React.useMemo(() => AppHdes(service, profile, tenantConfig!), [service, profile, tenantConfig]);
-  const stencil: Burger.App<{}, any> = React.useMemo(() => AppStencil(service, profile, tenantConfig!), [service, profile, tenantConfig]);
-  const dialob: Burger.App<{}, any> = React.useMemo(() => AppTenant(service, profile), [service, profile]);
-  const frontoffice: Burger.App<{}, any> = React.useMemo(() => AppFrontoffice(service, profile), [service, profile]);
+const TenantConfigSetup: React.FC<{ profile: UserProfileAndOrg, tenantConfig: TenantConfig }> = ({ profile, tenantConfig }) => {
+  const hdes: Burger.App<{}, any> = React.useMemo(() => AppHdes(backend, profile, tenantConfig!), [backend, profile, tenantConfig]);
+  const stencil: Burger.App<{}, any> = React.useMemo(() => AppStencil(backend, profile, tenantConfig!), [backend, profile, tenantConfig]);
+  const dialob: Burger.App<{}, any> = React.useMemo(() => AppTenant(backend, profile), [backend, profile]);
+  const frontoffice: Burger.App<{}, any> = React.useMemo(() => AppFrontoffice(backend, profile), [backend, profile]);
 
   const appId = tenantConfig.preferences.landingApp;
 
-  return (<Provider service={service} profile={profile}>
+  return (<Provider service={backend} profile={profile}>
     <Burger.Provider children={
       [
         stencil, hdes, dialob, frontoffice
@@ -115,30 +98,31 @@ const TenantConfigSetup: React.FC<{ profile: UserProfileAndOrg }> = ({ profile }
   </Provider>)
 }
 
-const CheckAppConnection = React.lazy(async () => {
-  const head = await backend.health();
 
-  if (head.contentType === 'NO_CONNECTION') {
+
+const CheckAppConnection = React.lazy(async () => {
+  const head = await Promise.all([backend.health(), new ImmutableUserProfileStore(backend.store).currentUserProfile()]);
+  const [health, profile] = head;
+
+  if (health.contentType === 'NO_CONNECTION') {
     const Result: React.FC<{}> = () => <Connection.Down client={backend} />;
     return ({ default: Result })
-  } else if (head.contentType === 'BACKEND_NOT_FOUND') {
+  } else if (health.contentType === 'BACKEND_NOT_FOUND') {
     const Result: React.FC<{}> = () => <Connection.Misconfigured client={backend} />;
     return ({ default: Result })
   }
-
-  const profile = await backend.currentUserProfile();
+  
   const tenantConfig = profile.tenant;
-
   const Result: React.FC<{}> = () => {
     const snackbar = useSnackbar();
     const intl = useIntl();
     React.useEffect(() => {
-      if (head.contentType === 'OK') {
+      if (health.contentType === 'OK') {
         const msg = intl.formatMessage({ id: 'init.loaded' }, { name: tenantConfig.name });
         snackbar.enqueueSnackbar(msg, { variant: 'success' })
       }
     }, [intl, snackbar]);
-    return (<TenantConfigProvider tenantConfig={tenantConfig}><TenantConfigSetup profile={profile} /></TenantConfigProvider>)
+    return (<TenantConfigProvider tenantConfig={tenantConfig}><TenantConfigSetup profile={profile} tenantConfig={tenantConfig}/></TenantConfigProvider>)
   };
   return ({ default: Result })
 });

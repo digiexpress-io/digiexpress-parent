@@ -10,11 +10,11 @@ import TaskStatus from '../TaskStatus';
 import TaskEditDialog from '../TaskEdit';
 
 import Context from 'context';
-import Client from 'client';
 import { TaskDescriptor, ChangeTaskStatus, AssignTaskRoles, AssignTask } from 'descriptor-task';
 import Customer from 'components-customer';
 import Burger from 'components-burger';
 import { cyan } from 'components-colors';
+import { PrincipalId } from 'descriptor-access-mgmt';
 
 
 
@@ -72,7 +72,7 @@ const TaskItemActive: React.FC<{ task: TaskDescriptor | undefined }> = ({ task }
     await tasks.updateActiveTask(task.id, [command]);
   }
 
-  async function handleAssigneeChange(assigneeIds: Client.UserId[]) {
+  async function handleAssigneeChange(assigneeIds: PrincipalId[]) {
     if (!task) {
       return;
     }

@@ -2,9 +2,9 @@ import React from 'react';
 import { Stack, Alert, Divider } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 
-import { Role } from 'descriptor-access-mgmt';
+import { Role, useAm } from 'descriptor-access-mgmt';
 import { SectionLayout } from 'components-generic';
-import { useAccessMgmt } from 'components-access-mgmt/AccessMgmtContext';
+
 
 const MembersDivider: React.FC<{ index: number, role: Role }> = ({ index, role }) => {
   return role.principals.length - 1 !== index ? <Divider /> : null;
@@ -12,7 +12,7 @@ const MembersDivider: React.FC<{ index: number, role: Role }> = ({ index, role }
 
 
 const OneRoleMembers: React.FC<{ principalName: string }> = ({ principalName }) => {
-  const { getPrincipal } = useAccessMgmt();
+  const { getPrincipal } = useAm();
   const { name, email, status } = getPrincipal(principalName);
 
   console.log('name', name)

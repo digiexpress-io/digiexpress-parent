@@ -24,7 +24,7 @@ import { FormattedMessage } from 'react-intl';
 import Burger from 'components-burger';
 import Context from 'context';
 import { blueberry_whip, green_teal, sambucus } from 'components-colors';
-import { UserProfileAndOrg } from 'descriptor-user-profile';
+import { UserProfileAndOrg } from 'descriptor-access-mgmt';
 import { Backend } from 'client';
 
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Avatar, Box, Paper, Typography, CircularProgress } from '@mui/material';
-import { UserProfileDescriptor } from 'descriptor-user-profile';
+import { UserProfileDescriptor } from 'descriptor-access-mgmt';
 
 function stringToColor(string: String) {
   let hash = 0;

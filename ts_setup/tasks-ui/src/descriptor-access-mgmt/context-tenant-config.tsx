@@ -1,12 +1,11 @@
 import React from 'react';
-import { TenantConfigId, TenantConfig } from 'client';
-
-//export type ProjectType = RepoType | 'PROJECT';
+import { TenantConfigId, TenantConfig } from './tenant-config-types';
 
 export interface TenantConfigContextType {
   tenantConfigId: TenantConfigId | undefined;
   tenantConfig: TenantConfig | undefined;
 }
+
 export const TenantConfigContext = React.createContext<TenantConfigContextType>({
   tenantConfigId: '',
   tenantConfig: {
@@ -27,7 +26,7 @@ export const TenantConfigContext = React.createContext<TenantConfigContextType>(
 });
 
 
-const TenantConfigProvider: React.FC<{ children: React.ReactNode, tenantConfig: TenantConfig }> = ({ children, tenantConfig: init }) => {
+export const TenantConfigProvider: React.FC<{ children: React.ReactNode, tenantConfig: TenantConfig }> = ({ children, tenantConfig: init }) => {
   const [tenantConfig, setTenantConfig] = React.useState<TenantConfig>(init);
   const [tenantConfigId, setTenantConfigId] = React.useState<TenantConfigId>(init.id);
 
@@ -38,8 +37,4 @@ const TenantConfigProvider: React.FC<{ children: React.ReactNode, tenantConfig: 
   }, [tenantConfigId, tenantConfig]);
 
   return (<TenantConfigContext.Provider value={contextValue}>{children}</TenantConfigContext.Provider>);
-};
-
-
-export { TenantConfigProvider };
-
+}
