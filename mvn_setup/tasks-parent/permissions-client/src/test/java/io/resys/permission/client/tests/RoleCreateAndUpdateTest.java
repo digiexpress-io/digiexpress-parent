@@ -51,8 +51,8 @@ public class RoleCreateAndUpdateTest extends DbTestTemplate {
     
     return client.createRole()
       .createOne(ImmutableCreateRole.builder()
-          .name("My first role")
-          .description("Description for my first role")
+          .name("V1 Role Name")
+          .description("V1 Role Descriptino")
           .comment("Role created")
           .addPermissions( 
               createPermissionForRole(client, "perm-1").getName(),
@@ -76,29 +76,31 @@ public class RoleCreateAndUpdateTest extends DbTestTemplate {
     
     final var createdRole = createRoleForUpdating(client);
     
-    log.debug(Json.encodePrettily(createdRole));
     Assertions.assertEquals(1, createdRole.getPrincipals().size());
     
     final var updatedName = client.updateRole().updateOne(ImmutableChangeRoleName.builder()
         .id(createdRole.getId())
         .comment("Name change requested by admin")
-        .name("Updated role name is super good")
+        .name("V2 Role Name")
         .build())
       .await().atMost(Duration.ofMinutes(1));
     
-    Assertions.assertEquals("Updated role name is super good", client.roleQuery().get(createdRole.getId()).await().atMost(Duration.ofMinutes(1)).getName());
+    Assertions.assertEquals("V2 Role Name", client.roleQuery().get(createdRole.getId()).await().atMost(Duration.ofMinutes(1)).getName());
     
     final var updatedDescription = client.updateRole().updateOne(ImmutableChangeRoleDescription.builder()
         .id(updatedName.getId())
         .comment("Corrected typo in name")
-        .description("New description")
+        .description("V2 Role Description")
         .build())
       .await().atMost(Duration.ofMinutes(1));
     
-    Assertions.assertEquals("New description", client.roleQuery().get(updatedDescription.getId()).await().atMost(Duration.ofMinutes(1)).getDescription());
+    Assertions.assertEquals("V2 Role Description", client.roleQuery().get(updatedDescription.getId()).await().atMost(Duration.ofMinutes(1)).getDescription());
     Assertions.assertEquals(3, createdRole.getPermissions().size());    
     Assertions.assertEquals(3, client.roleQuery().get(createdRole.getId()).await().atMost(Duration.ofMinutes(1)).getPermissions().size());
-
+    
+    log.debug(Json.encodePrettily(createdRole));
+    log.debug(Json.encodePrettily(updatedName));
+    log.debug(Json.encodePrettily(updatedDescription));
   }
 }
 

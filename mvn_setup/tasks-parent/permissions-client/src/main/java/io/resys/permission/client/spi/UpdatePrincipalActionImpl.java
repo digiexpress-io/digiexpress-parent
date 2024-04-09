@@ -7,6 +7,8 @@ import io.resys.permission.client.api.PermissionClient.UpdatePrincipalAction;
 import io.resys.permission.client.api.model.ImmutablePrincipal;
 import io.resys.permission.client.api.model.PermissionCommand.ChangeType;
 import io.resys.permission.client.api.model.Principal;
+import io.resys.permission.client.api.model.PrincipalCommand.ChangePrincipalEmail;
+import io.resys.permission.client.api.model.PrincipalCommand.ChangePrincipalName;
 import io.resys.permission.client.api.model.PrincipalCommand.ChangePrincipalPermissions;
 import io.resys.permission.client.api.model.PrincipalCommand.ChangePrincipalRoles;
 import io.resys.permission.client.api.model.PrincipalCommand.ChangePrincipalStatus;
@@ -79,7 +81,20 @@ public class UpdatePrincipalActionImpl implements UpdatePrincipalAction {
         final var status = (ChangePrincipalStatus) command;
         modifyOneMember.status(status.getStatus());
         break;
-      }    
+      } 
+      
+      case CHANGE_PRINCIPAL_NAME: {
+        final var name = (ChangePrincipalName) command;
+        modifyOneMember.userName(name.getName());
+        break;
+      }
+      
+      case CHANGE_PRINCIPAL_EMAIL: {
+        final var email = (ChangePrincipalEmail) command;
+        modifyOneMember.email(email.getEmail());
+        break;
+      }
+      
       default: throw new UpdatePrincipalException("Command type not found exception: " + command.getCommandType());
       }
     }
@@ -108,8 +123,9 @@ public class UpdatePrincipalActionImpl implements UpdatePrincipalAction {
       
       .name(principal.getUserName())
       .email(principal.getEmail())
-      .roles(null) //TODO
-      .permissions(null) //TODO
+     // .roles(null) //TODO
+     // .permissions(null) //TODO
+    
       .status(OrgActorStatusType.IN_FORCE)
       .build();
   }

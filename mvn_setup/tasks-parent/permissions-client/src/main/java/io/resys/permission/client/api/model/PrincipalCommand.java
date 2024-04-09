@@ -44,6 +44,8 @@ import jakarta.annotation.Nullable;
 @JsonSubTypes({
   @Type(value = ImmutableCreatePrincipal.class, name = "CREATE_PRINCIPAL"), 
   @Type(value = ImmutableChangePrincipalStatus.class, name = "CHANGE_PRINCIPAL_STATUS"), 
+  @Type(value = ImmutableChangePrincipalName.class, name = "CHANGE_PRINCIPAL_NAME"), 
+  @Type(value = ImmutableChangePrincipalEmail.class, name = "CHANGE_PRINCIPAL_EMAIL"), 
   @Type(value = ImmutableChangePrincipalRoles.class, name = "CHANGE_PRINCIPAL_ROLES"), 
   @Type(value = ImmutableChangePrincipalPermissions.class, name = "CHANGE_PRINCIPAL_PERMISSIONS"), 
 })
@@ -55,6 +57,8 @@ public interface PrincipalCommand extends Serializable {
   enum PrincipalCommandType {
     CREATE_PRINCIPAL,
     CHANGE_PRINCIPAL_STATUS,
+    CHANGE_PRINCIPAL_NAME,
+    CHANGE_PRINCIPAL_EMAIL,
     CHANGE_PRINCIPAL_ROLES,
     CHANGE_PRINCIPAL_PERISSIONS,
   }
@@ -76,8 +80,10 @@ public interface PrincipalCommand extends Serializable {
       include = JsonTypeInfo.As.PROPERTY,
       property = "commandType")
   @JsonSubTypes({
-    @Type(value = ImmutableChangePrincipalRoles.class, name = "CHANGE_PRINCIPAL_ROLES"), 
     @Type(value = ImmutableChangePrincipalStatus.class, name = "CHANGE_PRINCIPAL_STATUS"), 
+    @Type(value = ImmutableChangePrincipalName.class, name = "CHANGE_PRINCIPAL_NAME"),
+    @Type(value = ImmutableChangePrincipalEmail.class, name = "CHANGE_PRINCIPAL_EMAIL"), 
+    @Type(value = ImmutableChangePrincipalRoles.class, name = "CHANGE_PRINCIPAL_ROLES"), 
     @Type(value = ImmutableChangePrincipalPermissions.class, name = "CHANGE_PRINCIPAL_PERMISSIONS")
   })
   
@@ -109,6 +115,22 @@ public interface PrincipalCommand extends Serializable {
     
     @Value.Default
     @Override default PrincipalCommandType getCommandType() { return PrincipalCommandType.CHANGE_PRINCIPAL_STATUS; }
+  }
+  
+  @Value.Immutable @JsonSerialize(as = ImmutableChangePrincipalName.class) @JsonDeserialize(as = ImmutableChangePrincipalName.class)
+  interface ChangePrincipalName extends PrincipalUpdateCommand {
+    String getName();
+    
+    @Value.Default
+    @Override default PrincipalCommandType getCommandType() { return PrincipalCommandType.CHANGE_PRINCIPAL_NAME; }
+  }
+  
+  @Value.Immutable @JsonSerialize(as = ImmutableChangePrincipalEmail.class) @JsonDeserialize(as = ImmutableChangePrincipalEmail.class)
+  interface ChangePrincipalEmail extends PrincipalUpdateCommand {
+    String getEmail();
+    
+    @Value.Default
+    @Override default PrincipalCommandType getCommandType() { return PrincipalCommandType.CHANGE_PRINCIPAL_EMAIL; }
   }
 
 }
