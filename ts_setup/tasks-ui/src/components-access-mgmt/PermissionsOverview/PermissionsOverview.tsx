@@ -1,16 +1,16 @@
 import React from 'react';
 import * as colors from 'components-colors';
 import { LayoutList, NavigationButton, LayoutListItem, FilterByString } from 'components-generic';
-import { ImmutableAmStore, Permission, useAm } from 'descriptor-access-mgmt';
+import { useAm } from 'descriptor-access-mgmt';
 import { PermissionItem } from './PermissionItem';
 import PermissionItemActive from './PermissionItemActive';
 
-import { ActivePermissionProvider, useActivePermission } from './ActivePermissionContext';
+import { PermissionsOverviewContextProvider, useActivePermission } from './PermissionsOverviewContext';
 
 const color_create_permission = colors.steelblue;
 
 const PermissionsNavigation: React.FC<{}> = () => {
-  //TODO
+
   function handleSearch(value: React.ChangeEvent<HTMLInputElement>) { }
 
   return (<>
@@ -26,7 +26,7 @@ const PermissionsNavigation: React.FC<{}> = () => {
 
 const PermissionItems: React.FC = () => {
   const { permissions } = useAm();
-  const { setActive, entity } = useActivePermission();
+  const { setActive, permissionId } = useActivePermission();
 
   if (!permissions) {
     return (<>no permissions defined</>);
@@ -35,7 +35,7 @@ const PermissionItems: React.FC = () => {
 
   return (<>
     {permissions.map((permission, index) => (
-      <LayoutListItem active={entity?.id === permission.id} index={index} key={permission.id} onClick={() => setActive(permission.id)}>
+      <LayoutListItem active={permissionId === permission.id} index={index} key={permission.id} onClick={() => setActive(permission.id)}>
         <PermissionItem key={permission.id} permission={permission} />
       </LayoutListItem>
     ))
@@ -59,9 +59,9 @@ const PermissionsOverviewLayout: React.FC = () => {
 
 const PermissionsOverview: React.FC<{}> = () => {
   return (
-    <ActivePermissionProvider>
+    <PermissionsOverviewContextProvider>
       <PermissionsOverviewLayout />
-    </ActivePermissionProvider>
+    </PermissionsOverviewContextProvider>
   );
 }
 

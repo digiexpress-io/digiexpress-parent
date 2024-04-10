@@ -1,21 +1,13 @@
 import React from 'react';
-import { Box, Stack, Alert, AlertTitle, Typography, IconButton, Skeleton, useTheme, AlertColor } from '@mui/material';
+import { Box, Stack, Typography, IconButton, Skeleton, useTheme } from '@mui/material';
 import EditIcon from '@mui/icons-material/ModeEditOutlineOutlined';
 import CrmIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
 import { FormattedMessage } from 'react-intl';
 
-/*
-import TaskAssignees from '../TaskAssignees';
-import TaskRoles from '../TaskRoles';
-import TaskStatus from '../TaskStatus';
-import TaskEditDialog from '../TaskEdit';
-*/
-
-
 import Burger from 'components-burger';
 import { cyan } from 'components-colors';
-import { Permission, useAm } from 'descriptor-access-mgmt';
-import { useActivePermission } from './ActivePermissionContext';
+import { useAm } from 'descriptor-access-mgmt';
+import { useActivePermission } from './PermissionsOverviewContext';
 
 
 
@@ -48,17 +40,17 @@ const StyledTitle: React.FC<{ children: string }> = ({ children }) => {
 
 const PermissionItemActive: React.FC = () => {
   const [taskEditOpen, setTaskEditOpen] = React.useState(false);
-  const { permissions, getPermission } = useAm();
-  const { entity } = useActivePermission();
+  const { permissions } = useAm();
+  const { permissionId } = useActivePermission();
 
-  const currentlyActivePerm = getPermission(entity.id);
+  const activePerm = permissions.find(permission => permission.id === permissionId);
 
   function handleTaskEdit() {
     setTaskEditOpen(prev => !prev);
   }
 
 
-  if (permissions) {
+  if (activePerm) {
     return (<>
       {/*<TaskEditDialog open={taskEditOpen} onClose={handleTaskEdit} task={task} /> */}
 
@@ -80,20 +72,19 @@ const PermissionItemActive: React.FC = () => {
         {/* title section */}
         <Burger.Section>
           <StyledTitle children='task.title' />
-          <Typography fontWeight='bold'>{currentlyActivePerm.name}</Typography>
+          <Typography fontWeight='bold'>{activePerm.name}</Typography>
         </Burger.Section>
 
         {/* description section */}
         <Burger.Section>
           <StyledTitle children='task.description' />
-          <Typography fontWeight='bold'>{currentlyActivePerm.description}</Typography>
+          <Typography fontWeight='bold'>{activePerm.description}</Typography>
         </Burger.Section>
 
         {/* status section */}
         <Burger.Section>
           <StyledTitle children='task.status' />
-          <Typography fontWeight='bold'>{currentlyActivePerm.status}</Typography>
-
+          <Typography fontWeight='bold'>{activePerm.status}</Typography>
         </Burger.Section>
 
       </StyledStack >
@@ -122,7 +113,7 @@ const PermissionItemActive: React.FC = () => {
 
 const PermissionItemActiveWithRefresh: React.FC<{}> = () => {
   const [dismount, setDismount] = React.useState(false);
-  const { entity } = useActivePermission();
+  const { permissionId } = useActivePermission();
 
   React.useEffect(() => {
     if (dismount) {
@@ -132,7 +123,7 @@ const PermissionItemActiveWithRefresh: React.FC<{}> = () => {
 
   React.useEffect(() => {
     setDismount(true);
-  }, [entity]);
+  }, [permissionId]);
 
   if (dismount) {
     return null;
