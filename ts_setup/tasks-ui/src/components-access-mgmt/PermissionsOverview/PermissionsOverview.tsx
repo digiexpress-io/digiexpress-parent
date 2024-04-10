@@ -1,39 +1,51 @@
 import React from 'react';
 import { Typography, Grid } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
+
+import * as colors from 'components-colors';
+import { LayoutList, NavigationButton, LayoutListItem, LayoutListFiller, FilterByString } from 'components-generic';
 import { Permission, ImmutableAmStore } from 'descriptor-access-mgmt';
 import Backend from 'descriptor-backend';
+import { PermissionItem } from './PermissionItem';
+import { PermissionCreateDialog } from 'components-access-mgmt/PermissionCreate';
 
-const PermissionsOverview: React.FC = () => {
-  const backend = Backend.useBackend();
-  const [permissions, setPermissions] = React.useState<Permission[]>();
+const color_create_permission = colors.steelblue;
 
-
-  React.useEffect(() => {
-    new ImmutableAmStore(backend.store).findAllPermissions().then(setPermissions);
-  }, []);
-
-  if (!permissions) {
-    return (<>no permissions defined</>);
-  }
+const PermissionsNavigation: React.FC<{}> = () => {
+  //TODO
+  function handleSearch(value: React.ChangeEvent<HTMLInputElement>) { }
 
   return (<>
-    {permissions.sort((a, b) => a.name.localeCompare(b.name)).map((permission) => <Grid container display='flex' spacing={2} key={permission.id}>
-      <Grid item lg={3}>
-        <Typography><FormattedMessage id='permissions.permission.name' />{": "}{permission.name}</Typography>
-      </Grid>
+    <FilterByString onChange={handleSearch} />
 
-      <Grid item lg={7}>
-        <Typography><FormattedMessage id='permissions.permission.description' />{": "}{permission.description}</Typography>
-      </Grid>
+    <NavigationButton id='permissions.navButton.permission.create'
+      values={{}}
+      color={color_create_permission}
+      active={false}
+      onClick={() => { }} />
+  </>);
+}
 
-      <Grid item lg={2}>
-        <Typography><FormattedMessage id='permissions.permission.status' />{": "}{permission.status}</Typography>
-      </Grid>
+//TODO
+const PermissionItems: React.FC = () => {
+  return (<PermissionItem />)
+}
 
-    </Grid>)}
 
-  </>)
+const PermissionsOverviewLayout: React.FC = () => {
+  const navigation = <PermissionsNavigation />;
+  const pagination = <></>;
+  const active = <div style={{ backgroundColor: 'pink' }}>ACTIVE</div>;
+  const items = <PermissionItems />;
+
+  return (<LayoutList slots={{ navigation, active, items, pagination }} />)
+}
+
+const PermissionsOverview: React.FC<{}> = () => {
+  return (
+
+    <PermissionsOverviewLayout />
+  );
 }
 
 export { PermissionsOverview };
