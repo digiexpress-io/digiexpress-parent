@@ -271,10 +271,10 @@ author: jane.doe@morgue.com, message: changed the title
    diff: title :: my first mission to build a house -> House plans for customer #198CC
    diff: description :: The best house ever -> Basic house plans for customer
   +- 5::GRIM_MISSION
-   -  {"id":"5","commitId":"4","createdWithCommitId":"4","updatedTreeWithCommitId":"4","parentMissionId":null,"externalId":null,"missionStatus":"OPEN","missionPriority":"HIGH","reporterId":"jane.doe@housing.com","startDate":[2020,5,1],"dueDate":[2020,6,1],"archivedAt":null,"archivedStatus":null}
+   -  {"id":"5","commitId":"4","createdWithCommitId":"4","updatedTreeWithCommitId":"7","parentMissionId":null,"externalId":null,"missionStatus":"OPEN","missionPriority":"HIGH","reporterId":"jane.doe@housing.com","startDate":[2020,5,1],"dueDate":[2020,6,1],"archivedAt":null,"archivedStatus":null}
    +  {"id":"5","commitId":"9","createdWithCommitId":"4","updatedTreeWithCommitId":"9","parentMissionId":null,"externalId":null,"missionStatus":"OPEN","missionPriority":"HIGH","reporterId":"jane.doe@morgue.com","startDate":null,"dueDate":null,"archivedAt":null,"archivedStatus":null}
    diff: commitId :: 4 -> 9
-   diff: updatedTreeWithCommitId :: 4 -> 9
+   diff: updatedTreeWithCommitId :: 7 -> 9
    diff: reporterId :: jane.doe@housing.com -> jane.doe@morgue.com
    diff: startDate :: [2020, 5, 1] -> null
    diff: dueDate :: [2020, 6, 1] -> null
