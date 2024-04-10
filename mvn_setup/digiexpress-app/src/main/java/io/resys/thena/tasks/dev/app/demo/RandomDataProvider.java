@@ -38,6 +38,8 @@ import com.github.mpolla.HetuUtil;
 import io.resys.crm.client.api.model.ImmutableCustomerAddress;
 import io.resys.crm.client.api.model.ImmutableCustomerContact;
 import io.resys.crm.client.api.model.ImmutablePerson;
+import io.resys.permission.client.api.model.Principal;
+import io.resys.permission.client.api.model.Principal.Role;
 import io.resys.thena.tasks.client.api.model.ImmutableChecklist;
 import io.resys.thena.tasks.client.api.model.ImmutableChecklistItem;
 import io.resys.thena.tasks.client.api.model.ImmutableTaskComment;
@@ -48,20 +50,13 @@ import io.resys.thena.tasks.client.api.model.Task.Priority;
 import io.resys.thena.tasks.client.api.model.Task.Status;
 import io.resys.thena.tasks.client.api.model.Task.TaskComment;
 import io.resys.thena.tasks.client.api.model.Task.TaskExtension;
+import io.smallrye.mutiny.tuples.Tuple2;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 public class RandomDataProvider {
   private final Faker faker = new Faker(new Locale("fi-FI"));
   private final Random rand = new Random();
-  
-  private final Map<Integer, String> ROLES = Map.of(
-      1, "admin-role",
-      2, "water-department",
-      3, "education-department",
-      4, "elderly-care-department",
-      5, "sanitization-department"
-      ); 
   
 
   private final Map<Integer, String> DOCS = Map.of(
@@ -86,13 +81,7 @@ public class RandomDataProvider {
       4, "Attach correct document"
       ); 
   
-  public static final Map<Integer, String> ASSIGNEES = Map.of(
-      1, "sam vimes",
-      2, "lord vetinari",
-      3, "lady sybil vimes",
-      4, "carrot ironfoundersson",
-      5, "nobby nobbs"); 
-  
+
   private final Map<Integer, String> SUBJECTS = Map.of(
       1, "Request for elderly care",
       2, "School application",
@@ -122,13 +111,13 @@ public class RandomDataProvider {
     return SUBJECTS.get(nextInt(1, SUBJECTS.size()));
   }
 
-  public List<String> getRoles() {
+  public List<String> getRoles(Tuple2<List<Principal>, List<Role>> permissions) {
     final var roles = new ArrayList<String>();
-    final var groups = nextInt(1, ROLES.size());
+    final var groups = nextInt(1, DemoOrg.ROLES.size());
     for(var index = 0; index < groups; index++) {
       boolean defined = false;
       do {
-        final var roleId = ROLES.get(nextInt(1, ROLES.size()));
+        final var roleId = DemoOrg.getRole(nextInt(1, DemoOrg.ROLES.size()), permissions);
         defined = roles.contains(roleId);
         if(!defined) {
           roles.add(roleId);
@@ -139,13 +128,13 @@ public class RandomDataProvider {
   }
 
   
-  public List<String> getAssigneeIds() {
+  public List<String> getAssigneeIds(Tuple2<List<Principal>, List<Role>> permissions) {
     final var assignees = new ArrayList<String>();
-    final var groups = nextInt(1, ASSIGNEES.size()) -1;
+    final var groups = nextInt(1, DemoOrg.ASSIGNEES.size()) -1;
     for(var index = 0; index < groups; index++) {
       boolean defined = false;
       do {
-        final var ownerId = ASSIGNEES.get(nextInt(1, ASSIGNEES.size()));
+        final var ownerId = DemoOrg.getAssignee(nextInt(1, DemoOrg.ASSIGNEES.size()), permissions);
         defined = assignees.contains(ownerId);
         if(!defined) {
           assignees.add(ownerId);
@@ -155,8 +144,8 @@ public class RandomDataProvider {
     return assignees;
   }
 
-  public String getReporterId() {
-    return ASSIGNEES.get(nextInt(1, ASSIGNEES.size()));
+  public String getReporterId(Tuple2<List<Principal>, List<Role>> permissions) {
+    return DemoOrg.getAssignee(nextInt(1, DemoOrg.ASSIGNEES.size()), permissions);
   }
   
   public List<TaskComment> getComments() {
@@ -232,7 +221,7 @@ public class RandomDataProvider {
     return new StartDateAndDueDate(startDate, dueDate);
   }
   
-  public List<Checklist> getChecklists(LocalDate today) {
+  public List<Checklist> getChecklists(LocalDate today, Tuple2<List<Principal>, List<Role>> permissions) {
     final var total = nextInt(1, 3) -1;
     final List<Checklist> result = new ArrayList<>();
     
@@ -241,7 +230,7 @@ public class RandomDataProvider {
       final var checklist = ImmutableChecklist.builder()
       .id(UUID.randomUUID().toString())
       .title(CHECKLIST_TITLE.get(nextInt(1, 4)))
-      .items(getChecklistItems(today))
+      .items(getChecklistItems(today, permissions))
       .build();
     
       result.add(checklist);
@@ -250,7 +239,7 @@ public class RandomDataProvider {
   }
 
   
-  public List<ChecklistItem> getChecklistItems(LocalDate today) {
+  public List<ChecklistItem> getChecklistItems(LocalDate today, Tuple2<List<Principal>, List<Role>> permissions) {
     final var total = nextInt(1, 3) -1;
     final List<ChecklistItem> result = new ArrayList<>();
     
@@ -259,7 +248,7 @@ public class RandomDataProvider {
       final var checklistItem = ImmutableChecklistItem.builder()
       .id(UUID.randomUUID().toString())
       .title(CHECKLIST_ITEM_TITLE.get(nextInt(1, 4)))
-      .addAllAssigneeIds(getAssigneeIds())
+      .addAllAssigneeIds(getAssigneeIds(permissions))
       .dueDate(today.plusDays(nextInt(1, 4)))
       .completed(nextInt(1, 2) == 2 ? true : false)
       .build();

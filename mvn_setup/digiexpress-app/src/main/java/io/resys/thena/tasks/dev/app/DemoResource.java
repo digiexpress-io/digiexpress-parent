@@ -8,6 +8,7 @@ import io.dialob.client.spi.DialobComposerImpl;
 import io.resys.crm.client.api.CrmClient;
 import io.resys.crm.client.api.model.Customer;
 import io.resys.hdes.client.spi.HdesComposerImpl;
+import io.resys.permission.client.api.PermissionClient;
 import io.resys.sysconfig.client.api.SysConfigClient;
 import io.resys.sysconfig.client.mig.MigrationClient;
 import io.resys.sysconfig.client.mig.model.MigrationAssets;
@@ -15,9 +16,13 @@ import io.resys.thena.projects.client.api.TenantConfigClient;
 import io.resys.thena.projects.client.api.model.TenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
 import io.resys.thena.tasks.client.api.TaskClient;
+import io.resys.thena.tasks.dev.app.demo.DemoOrg;
 import io.resys.thena.tasks.dev.app.demo.RandomDataProvider;
 import io.resys.thena.tasks.dev.app.demo.TaskGen;
+import io.resys.thena.tasks.dev.app.user.CurrentSetup;
 import io.resys.thena.tasks.dev.app.user.CurrentTenant;
+import io.resys.thena.tasks.dev.app.user.CurrentUser;
+import io.resys.thena.tasks.dev.app.user.CurrentUserConfig;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.StencilComposer.SiteState;
 import io.thestencil.client.spi.StencilComposerImpl;
@@ -32,11 +37,15 @@ import jakarta.ws.rs.core.MediaType;
 @Path("q/demo/api/")
 public class DemoResource {
   @Inject Vertx vertx;
+  @Inject PermissionClient permissions;
   @Inject TaskClient taskClient;
   @Inject CrmClient crmClient;
   @Inject TenantConfigClient tenantClient;
   @Inject CurrentTenant currentTenant;
   @Inject SysConfigClient sysConfigClient;
+  @Inject CurrentSetup setup;
+  @Inject CurrentUser currentUser;
+  @Inject DemoOrg demoOrg;
   
 
   @GET
@@ -48,14 +57,23 @@ public class DemoResource {
 
     return tenantClient.queryActiveTenantConfig().get(currentTenant.tenantId())
     .onItem().transformToUni(config -> {
-      final var crmConfig = config.getRepoConfigs().stream().filter(entry -> entry.getRepoType() == TenantRepoConfigType.CRM).findFirst().get();
-      final var taskConfig = config.getRepoConfigs().stream().filter(entry -> entry.getRepoType() == TenantRepoConfigType.TASKS).findFirst().get();
-
-      return crmClient.withRepoId(crmConfig.getRepoId()).createCustomer().upsertMany(new TaskGen().generateCustomers(windows))
-          .onItem().transformToUni((List<Customer> data) -> {
-            final var bulkTasks = new TaskGen().generateTasks(windows, data);
-            return taskClient.withRepoId(taskConfig.getRepoId()).tasks().createTask().createMany(bulkTasks);
-          }).onItem().transform(junk -> config);
+      final var crm = this.crmClient.withRepoId(config.getRepoConfig(TenantRepoConfigType.CRM).getRepoId());
+      final var tasks = this.taskClient.withRepoId(config.getRepoConfig(TenantRepoConfigType.TASKS).getRepoId());
+      final var permissions = this.permissions.withRepoId(config.getRepoConfig(TenantRepoConfigType.PERMISSIONS).getRepoId());
+      
+      return Uni.combine().all()
+      .unis(
+          permissions.principalQuery().findAllPrincipals(),
+          permissions.roleQuery().findAllRoles()
+       ).asTuple().onItem().transformToUni(tuple -> {
+         
+         return crm.createCustomer().upsertMany(new TaskGen().generateCustomers(windows))
+         .onItem().transformToUni((List<Customer> data) -> {
+           final var bulkTasks = new TaskGen().generateTasks(windows, data, tuple);
+           return tasks.tasks().createTask().createMany(bulkTasks);
+         });
+       })
+      .onItem().transform(junk -> config);
     });
   }
   
@@ -74,8 +92,10 @@ public class DemoResource {
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Path("reinit")
-  public Uni<Void> reinit() {
-    return tenantClient.query().deleteAll().onItem().transformToUni(junk -> Uni.createFrom().voidItem());
+  public Uni<CurrentUserConfig> reinit() {
+    return tenantClient.query().deleteAll().onItem()
+        .transformToUni(junk -> setup.getOrCreateCurrentUserConfig(currentUser))
+        .onItem().transformToUni(config -> demoOrg.generate().onItem().transform(junk -> config));
   }
   
   @GET
@@ -120,4 +140,5 @@ public class DemoResource {
     
     return Uni.createFrom().item(init);
   }
+  
 }

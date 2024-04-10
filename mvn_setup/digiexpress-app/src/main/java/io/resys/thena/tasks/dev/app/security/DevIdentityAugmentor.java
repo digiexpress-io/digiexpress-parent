@@ -11,7 +11,6 @@ import io.quarkus.security.identity.AuthenticationRequestContext;
 import io.quarkus.security.identity.SecurityIdentity;
 import io.quarkus.security.identity.SecurityIdentityAugmentor;
 import io.quarkus.security.runtime.QuarkusSecurityIdentity;
-import io.resys.thena.tasks.dev.app.demo.RandomDataProvider;
 import io.smallrye.jwt.auth.principal.DefaultJWTCallerPrincipal;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -44,7 +43,7 @@ public class DevIdentityAugmentor implements SecurityIdentityAugmentor {
   }
   
   private SecurityIdentity create(SecurityIdentity src) {
-    final var vimes = RandomDataProvider.ASSIGNEES.get(1);
+    final var vimes = "sam.vimes";
     final var claims = new JwtClaims();
     claims.setClaim(Claims.sub.name(), vimes);
     claims.setClaim(Claims.given_name.name(), "Sam");

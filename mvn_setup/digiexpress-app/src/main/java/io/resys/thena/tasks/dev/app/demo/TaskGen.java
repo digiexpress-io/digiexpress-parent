@@ -8,12 +8,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import io.resys.crm.client.api.model.Customer;
-import io.resys.crm.client.api.model.ImmutableUpsertSuomiFiPerson;
 import io.resys.crm.client.api.model.CustomerCommand.UpsertSuomiFiPerson;
+import io.resys.crm.client.api.model.ImmutableUpsertSuomiFiPerson;
+import io.resys.permission.client.api.model.Principal;
+import io.resys.permission.client.api.model.Principal.Role;
 import io.resys.thena.tasks.client.api.model.ImmutableCreateTask;
 import io.resys.thena.tasks.client.api.model.ImmutableTaskExtension;
 import io.resys.thena.tasks.client.api.model.Task.TaskExtensionType;
 import io.resys.thena.tasks.client.api.model.TaskCommand.CreateTask;
+import io.smallrye.mutiny.tuples.Tuple2;
 
 public class TaskGen {
 
@@ -36,7 +39,11 @@ public class TaskGen {
   }
   
   
-  public List<CreateTask> generateTasks(List<Integer> windows, List<Customer> customers) {
+  public List<CreateTask> generateTasks(
+      List<Integer> windows, 
+      List<Customer> customers,
+      Tuple2<List<Principal>, List<Role>> permissions
+   ) {
     
     final var targetDate = Instant.now();
     final var provider =  new RandomDataProvider();  
@@ -54,13 +61,13 @@ public class TaskGen {
           .startDate(startAndDueDate.getStartDate())
           .dueDate(startAndDueDate.getDueDate())
           .targetDate(targetDate.minus(10, java.time.temporal.ChronoUnit.DAYS))
-          .checklist(provider.getChecklists(LocalDate.ofInstant(targetDate, ZoneId.of("UTC"))))
+          .checklist(provider.getChecklists(LocalDate.ofInstant(targetDate, ZoneId.of("UTC")), permissions))
           .title(provider.getTitle())
           .description(provider.getDescription())
           .priority(provider.getPriority())
-          .roles(provider.getRoles())
-          .assigneeIds(provider.getAssigneeIds())
-          .reporterId(provider.getReporterId())
+          .roles(provider.getRoles(permissions))
+          .assigneeIds(provider.getAssigneeIds(permissions))
+          .reporterId(provider.getReporterId(permissions))
           .status(provider.getStatus())
           .userId("demo-gen-1")
           .addAllExtensions(provider.getExtensions())

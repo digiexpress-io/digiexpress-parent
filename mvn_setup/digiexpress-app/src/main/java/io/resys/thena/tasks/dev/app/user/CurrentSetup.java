@@ -52,33 +52,44 @@ public class CurrentSetup {
   
   private Uni<CurrentPermissions> getOrCreatePermissions(UserProfile profile, TenantConfig tenant, CurrentUser currentUser) {
     final var client = getPermissionsClient(tenant);
-    return client.roleQuery().get(BuiltInRoles.LOBBY.name())
-    .onFailure().recoverWithUni(e -> {
-      log.warn("App setup, system role: 'LOBBY' not defined, trying to create it!");
-      return client.createRole().createOne(ImmutableCreateRole.builder()
-          .comment("created by default on first user registration")
-          .name(BuiltInRoles.LOBBY.name())
-          .description(BuiltInRoles.LOBBY.getDescription())
-          .build());
-    })
-    .onItem().transformToUni(lobby -> {
-      return client.principalQuery().get(profile.getDetails().getUsername())
-          .onFailure().recoverWithUni(e -> {
-            log.warn("App setup, principle for user email: '{}' does not exists, trying to create it!");
-            return client.createPrincipal().createOne(ImmutableCreatePrincipal.builder()
-                .name(profile.getId())
-                .email(profile.getDetails().getEmail())
-                .externalId(currentUser.getUserId())
-                .comment("created by default on first user registration")
-                .addRoles(lobby.getName())
-                .build());
-          });
-    }) 
+    return createRoles(tenant)
+      .onItem().transformToUni(junk -> client.roleQuery().get(BuiltInRoles.LOBBY.name()))
+      .onItem().transformToUni(lobby -> {
+        return client.principalQuery().get(profile.getDetails().getUsername())
+            .onFailure().recoverWithUni(e -> {
+              log.warn("App setup, principle for user email: '{}' does not exists, trying to create it!");
+              return client.createPrincipal().createOne(ImmutableCreatePrincipal.builder()
+                  .name(profile.getId())
+                  .email(profile.getDetails().getEmail())
+                  .externalId(currentUser.getUserId())
+                  .comment("created by default on first user registration")
+                  .addRoles(lobby.getName())
+                  .build());
+            });
+      })
     .onItem().transformToUni(principle -> invalidateCache(principle))
     .onItem().transformToUni(principle -> 
       cache.getPrincipalPermissions(principle.getId(), principle.getEmail())
       .onItem().transform(permissions -> ImmutableCurrentPermissions.builder().addAllPermissions(permissions).build())
     );
+  }
+  
+  private Uni<Void> createRoles(TenantConfig tenant) {
+    final var client = getPermissionsClient(tenant);
+    return Multi.createFrom().items(BuiltInRoles.values())
+        .onItem().transformToUni(role -> {
+          return  client.roleQuery().get(role.name())
+            .onFailure().recoverWithUni(e -> {
+              log.warn("App setup, system role: '{}' not defined, trying to create it!", role.name());
+              return client.createRole().createOne(ImmutableCreateRole.builder()
+                  .comment("created by default on first user registration")
+                  .name(role.name())
+                  .description(role.getDescription())
+                  .build());
+            });
+        })
+        .concatenate().collect().asList()
+        .onItem().transformToUni(junk -> Uni.createFrom().voidItem());
   }
   
   private Uni<TenantConfig> getOrCreateTenant() {

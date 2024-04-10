@@ -87,7 +87,8 @@ public class PartyHierarchyQueryImpl implements PartyHierarchyQuery {
     final var ctx = new AnyTreeContainerContextImpl(init.getObjects());
     final var container = new AnyTreeContainerImpl(ctx);
     final var log = container.accept(new OrgPartyLogVisitor(groupIdOrNameOrExternalId, true));
-    final OrgPartyHierarchy group = container.accept(new PartyHierarchyContainerVisitor(groupIdOrNameOrExternalId)).withLog(log);
+    final var visited = container.accept(new PartyHierarchyContainerVisitor(groupIdOrNameOrExternalId));
+    final OrgPartyHierarchy group = visited == null ? null : visited.withLog(log);
     
     
     return ImmutableQueryEnvelope.<OrgPartyHierarchy>builder()
