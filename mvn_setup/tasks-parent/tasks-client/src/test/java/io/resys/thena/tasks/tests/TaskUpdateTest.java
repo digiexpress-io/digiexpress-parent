@@ -224,13 +224,6 @@ public class TaskUpdateTest extends TaskTestCase {
             .build())
         .await().atMost(atMost);
 
-    System.out.println(JsonObject.mapFrom(
-        new JsonObject("""
-{"id":"1_TASK","roles":["admin-users","view-only-users"],"title":"very important title no: init","labels":[],"status":"CREATED","created":"2023-01-01T01:01:00Z","dueDate":null,"updated":"2023-01-02T03:01:00Z","version":"3","archived":null,"comments":[{"id":"3_TASK","created":"2023-01-02T03:01:00Z","username":"tester-bob","replyToId":null,"commentText":"new-comment-text"}],"parentId":null,"priority":"LOW","checklist":[],"startDate":null,"extensions":[],"reporterId":"reporter-1","assigneeIds":["assignee-1","assignee-2"],"description":"first task ever no: init","documentType":"TASK","transactions":[{"id":"1","commands":[{"roles":["admin-users","view-only-users"],"title":"very important title no: init","labels":[],"status":null,"userId":"user-1","dueDate":null,"comments":[],"priority":"LOW","checklist":[],"startDate":null,"extensions":[],"reporterId":"reporter-1","targetDate":"2023-01-01T01:01:00Z","assigneeIds":["assignee-1","assignee-2"],"commandType":"CreateTask","description":"first task ever no: init"}]},{"id":"2","commands":[{"taskId":"1_TASK","userId":"tester-bob","targetDate":"2023-01-02T02:01:00Z","commandType":"CommentOnTask","commentText":"comment-1-text","replyToCommentId":null}]},{"id":"3","commands":[{"taskId":"1_TASK","userId":"tester-bob","commentId":"3_TASK","targetDate":"2023-01-02T03:01:00Z","commandType":"ChangeTaskComment","commentText":"new-comment-text","replyToCommentId":null}]}]}
-            """)
-        .mapTo(ImmutableTask.class)
-        ).encodePrettily());
-    
     assertTaskJson("update-test-cases/updateComment.json", updated);
     assertTenant(client, "update-test-cases/updateComment.txt");
   }
@@ -283,13 +276,6 @@ public class TaskUpdateTest extends TaskTestCase {
             .build())
         .await().atMost(atMost);
 
-    System.out.println(JsonObject.mapFrom(
-        new JsonObject("""
-{"id":"1_TASK","roles":["admin-users","view-only-users"],"title":"very important title no: init","labels":[],"status":"CREATED","created":"2023-01-01T01:01:00Z","dueDate":null,"updated":"2023-01-02T02:01:00Z","version":"2","archived":null,"comments":[],"parentId":null,"priority":"LOW","checklist":[],"startDate":null,"extensions":[],"reporterId":"reporter-1","assigneeIds":["new-assignee"],"description":"first task ever no: init","documentType":"TASK","transactions":[{"id":"1","commands":[{"roles":["admin-users","view-only-users"],"title":"very important title no: init","labels":[],"status":null,"userId":"user-1","dueDate":null,"comments":[],"priority":"LOW","checklist":[],"startDate":null,"extensions":[],"reporterId":"reporter-1","targetDate":"2023-01-01T01:01:00Z","assigneeIds":["assignee-1","assignee-2"],"commandType":"CreateTask","description":"first task ever no: init"}]},{"id":"2","commands":[{"taskId":"1_TASK","userId":"tester-bob","targetDate":"2023-01-02T02:01:00Z","assigneeIds":["new-assignee"],"commandType":"AssignTask"}]}]}
-            """)
-        .mapTo(ImmutableTask.class)
-        ).encodePrettily());
-    
     assertTaskJson("update-test-cases/updateAssignees.json", updated);
     assertTenant(client, "update-test-cases/updateAssignees.txt");
   }

@@ -1,7 +1,7 @@
 
 Repo
-  - id: 8, rev: 9
-    name: TaskUpdateTestCreateTaskExtension, prefix: 10, type: grim
+  - id: 9, rev: 10
+    name: TaskUpdateTestCreateTaskExtension, prefix: 11, type: grim
 Mission: 1_TASK
   - 4_TASK::GRIM_COMMANDS
   - 5_TASK::GRIM_COMMANDS
@@ -36,12 +36,12 @@ author: not-configured, message: Creating tasks by: CreateTasksVisitor
   +- merged: 0 entries
 
 
-commit: 12, tenant: TaskUpdateTestCreateTaskExtension
+commit: 6_TASK, tenant: TaskUpdateTestCreateTaskExtension
 author: not-configured, message: merging tasks from: UpdateTasksVisitor
  | created
   + added new: 1 entries
   + 3_TASK::GRIM_MISSION_LINKS
-    {"id":"3_TASK","commitId":"12","createdWithCommitId":"12","missionId":"1_TASK","externalId":"attachment-1","linkType":"task_extension","linkBody":{"type":"attachment","body":"attachment-body"},"transitives":null,"relation":null}
+    {"id":"3_TASK","commitId":"6_TASK","createdWithCommitId":"6_TASK","missionId":"1_TASK","externalId":"attachment-1","linkType":"task_extension","linkBody":{"type":"attachment","body":"attachment-body"},"transitives":null,"relation":null}
 
  | deleted
   - deleted: 0 entries

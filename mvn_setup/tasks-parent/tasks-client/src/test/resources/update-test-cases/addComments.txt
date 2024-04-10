@@ -1,7 +1,7 @@
 
 Repo
-  - id: 11, rev: 12
-    name: TaskUpdateTestAddComments, prefix: 13, type: grim
+  - id: 12, rev: 13
+    name: TaskUpdateTestAddComments, prefix: 14, type: grim
 Mission: 1_TASK
   - 3_TASK::GRIM_REMARK
   - 4_TASK::GRIM_REMARK
@@ -38,12 +38,12 @@ author: not-configured, message: Creating tasks by: CreateTasksVisitor
   +- merged: 0 entries
 
 
-commit: 15, tenant: TaskUpdateTestAddComments
+commit: 16, tenant: TaskUpdateTestAddComments
 author: not-configured, message: merging tasks from: UpdateTasksVisitor
  | created
   + added new: 1 entries
   + 3_TASK::GRIM_REMARK
-    {"id":"3_TASK","commitId":"15","createdWithCommitId":"15","missionId":"1_TASK","parentId":null,"createdAt":null,"updatedAt":null,"remarkText":"comment-1-text","remarkStatus":null,"reporterId":"tester-bob","relation":null}
+    {"id":"3_TASK","commitId":"16","createdWithCommitId":"16","missionId":"1_TASK","parentId":null,"createdAt":null,"updatedAt":null,"remarkText":"comment-1-text","remarkStatus":null,"reporterId":"tester-bob","relation":null}
 
  | deleted
   - deleted: 0 entries
@@ -52,12 +52,12 @@ author: not-configured, message: merging tasks from: UpdateTasksVisitor
   +- merged: 0 entries
 
 
-commit: 17, tenant: TaskUpdateTestAddComments
+commit: 8_TASK, tenant: TaskUpdateTestAddComments
 author: not-configured, message: merging tasks from: UpdateTasksVisitor
  | created
   + added new: 1 entries
   + 4_TASK::GRIM_REMARK
-    {"id":"4_TASK","commitId":"17","createdWithCommitId":"17","missionId":"1_TASK","parentId":"3_TASK","createdAt":null,"updatedAt":null,"remarkText":"comment-2-text","remarkStatus":null,"reporterId":"tester-bob","relation":null}
+    {"id":"4_TASK","commitId":"8_TASK","createdWithCommitId":"8_TASK","missionId":"1_TASK","parentId":"3_TASK","createdAt":null,"updatedAt":null,"remarkText":"comment-2-text","remarkStatus":null,"reporterId":"tester-bob","relation":null}
 
  | deleted
   - deleted: 0 entries

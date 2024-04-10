@@ -1,6 +1,7 @@
 {
-  "id" : "23_TASK",
-  "version" : "24_TASK",
+  "id" : "26_TASK",
+  "version" : "27_TASK",
+  "treeVersion" : "39_TASK",
   "created" : "2023-01-01T01:01:00Z",
   "updated" : "2023-01-01T01:01:00Z",
   "archived" : null,
@@ -8,7 +9,7 @@
   "dueDate" : null,
   "parentId" : null,
   "transactions" : [ {
-    "id" : "27_TASK",
+    "id" : "30_TASK",
     "commands" : [ {
       "commandType" : "CreateTask",
       "userId" : "user-1",
@@ -28,47 +29,47 @@
       "checklist" : [ ]
     } ]
   }, {
-    "id" : "28_TASK",
+    "id" : "31_TASK",
     "commands" : [ {
       "commandType" : "CreateChecklist",
       "userId" : "John smith",
       "targetDate" : "2023-01-01T01:01:00Z",
-      "taskId" : "23_TASK",
+      "taskId" : "26_TASK",
       "title" : "My first checklist",
       "checklist" : [ ]
     } ]
   }, {
-    "id" : "29_TASK",
+    "id" : "32_TASK",
     "commands" : [ {
       "commandType" : "ChangeChecklistTitle",
       "userId" : "John smith",
       "targetDate" : "2023-01-01T01:01:00Z",
-      "taskId" : "23_TASK",
-      "checklistId" : "34_TASK",
+      "taskId" : "26_TASK",
+      "checklistId" : "37_TASK",
       "title" : "My second checklist"
     } ]
   }, {
-    "id" : "31_TASK",
+    "id" : "34_TASK",
     "commands" : [ {
       "commandType" : "AddChecklistItem",
       "userId" : "John smith",
       "targetDate" : "2023-01-01T01:01:00Z",
-      "taskId" : "23_TASK",
-      "checklistId" : "34_TASK",
+      "taskId" : "26_TASK",
+      "checklistId" : "37_TASK",
       "title" : "TODO1",
       "assigneeIds" : [ "Jane smith", "Adam West" ],
       "dueDate" : [ 2023, 1, 2 ],
       "completed" : false
     } ]
   }, {
-    "id" : "33_TASK",
+    "id" : "36_TASK",
     "commands" : [ {
       "commandType" : "ChangeChecklistItemCompleted",
       "userId" : "John smith",
       "targetDate" : "2023-01-01T01:01:00Z",
-      "taskId" : "23_TASK",
-      "checklistId" : "34_TASK",
-      "checklistItemId" : "35_TASK",
+      "taskId" : "26_TASK",
+      "checklistId" : "37_TASK",
+      "checklistItemId" : "38_TASK",
       "completed" : true
     } ]
   } ],
@@ -83,10 +84,10 @@
   "extensions" : [ ],
   "comments" : [ ],
   "checklist" : [ {
-    "id" : "34_TASK",
+    "id" : "37_TASK",
     "title" : "My second checklist",
     "items" : [ {
-      "id" : "35_TASK",
+      "id" : "38_TASK",
       "assigneeIds" : [ "Adam West", "Jane smith" ],
       "dueDate" : [ 2023, 1, 2 ],
       "completed" : true,

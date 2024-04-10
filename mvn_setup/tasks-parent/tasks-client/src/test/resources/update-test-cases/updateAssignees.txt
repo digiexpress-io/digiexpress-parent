@@ -5,9 +5,9 @@ Repo
 Mission: 1_TASK
   - 3_TASK::GRIM_COMMANDS
   - 4_TASK::GRIM_COMMANDS
-  - 17::GRIM_ASSIGNMENT
   - 8::GRIM_ASSIGNMENT
   - 9::GRIM_ASSIGNMENT
+  - 17::GRIM_ASSIGNMENT
   - 12::GRIM_MISSION_DATA
 
 commit: 2_TASK, tenant: TaskUpdateTestUpdateAssignees
@@ -34,12 +34,12 @@ author: not-configured, message: Creating tasks by: CreateTasksVisitor
   +- merged: 0 entries
 
 
-commit: 15, tenant: TaskUpdateTestUpdateAssignees
+commit: 5_TASK, tenant: TaskUpdateTestUpdateAssignees
 author: not-configured, message: merging tasks from: UpdateTasksVisitor
  | created
   + added new: 1 entries
   + 17::GRIM_ASSIGNMENT
-    {"id":"17","commitId":"15","missionId":"1_TASK","assignee":"new-assignee","assignmentType":"task_user","relation":null}
+    {"id":"17","commitId":"5_TASK","missionId":"1_TASK","assignee":"new-assignee","assignmentType":"task_user","relation":null}
 
  | deleted
   - deleted: 0 entries

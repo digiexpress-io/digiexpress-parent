@@ -1,7 +1,7 @@
 
 Repo
-  - id: 10, rev: 11
-    name: TaskUpdateTestUpdateTaskExtension, prefix: 12, type: grim
+  - id: 11, rev: 12
+    name: TaskUpdateTestUpdateTaskExtension, prefix: 13, type: grim
 Mission: 1_TASK
   - 4_TASK::GRIM_COMMANDS
   - 5_TASK::GRIM_COMMANDS
@@ -37,12 +37,12 @@ author: not-configured, message: Creating tasks by: CreateTasksVisitor
   +- merged: 0 entries
 
 
-commit: 14, tenant: TaskUpdateTestUpdateTaskExtension
+commit: 15, tenant: TaskUpdateTestUpdateTaskExtension
 author: not-configured, message: merging tasks from: UpdateTasksVisitor
  | created
   + added new: 1 entries
   + 3_TASK::GRIM_MISSION_LINKS
-    {"id":"3_TASK","commitId":"14","createdWithCommitId":"14","missionId":"1_TASK","externalId":"attachment-1","linkType":"task_extension","linkBody":{"type":"attachment","body":"attachment-body"},"transitives":null,"relation":null}
+    {"id":"3_TASK","commitId":"15","createdWithCommitId":"15","missionId":"1_TASK","externalId":"attachment-1","linkType":"task_extension","linkBody":{"type":"attachment","body":"attachment-body"},"transitives":null,"relation":null}
 
  | deleted
   - deleted: 0 entries
@@ -51,7 +51,7 @@ author: not-configured, message: merging tasks from: UpdateTasksVisitor
   +- merged: 0 entries
 
 
-commit: 16, tenant: TaskUpdateTestUpdateTaskExtension
+commit: 7_TASK, tenant: TaskUpdateTestUpdateTaskExtension
 author: not-configured, message: merging tasks from: UpdateTasksVisitor
  | created
   + added new: 0 entries
@@ -62,9 +62,9 @@ author: not-configured, message: merging tasks from: UpdateTasksVisitor
  | merged
   +- merged: 1 entries
   +- 3_TASK::GRIM_MISSION_LINKS
-   -  {"id":"3_TASK","commitId":"14","createdWithCommitId":"14","missionId":"1_TASK","externalId":"attachment-1","linkType":"task_extension","linkBody":{"body":"attachment-body","type":"attachment"},"transitives":{"createdAt":"OffsetDateTime.now()","updatedAt":"OffsetDateTime.now()"},"relation":null}
-   +  {"id":"3_TASK","commitId":"16","createdWithCommitId":"14","missionId":"1_TASK","externalId":"attachment-1","linkType":"task_extension","linkBody":{"type":"attachment","body":"new-attachment-body"},"transitives":{"createdAt":"OffsetDateTime.now()","updatedAt":"OffsetDateTime.now()"},"relation":null}
-   diff: commitId :: 14 -> 16
+   -  {"id":"3_TASK","commitId":"15","createdWithCommitId":"15","missionId":"1_TASK","externalId":"attachment-1","linkType":"task_extension","linkBody":{"body":"attachment-body","type":"attachment"},"transitives":{"createdAt":"OffsetDateTime.now()","updatedAt":"OffsetDateTime.now()"},"relation":null}
+   +  {"id":"3_TASK","commitId":"7_TASK","createdWithCommitId":"15","missionId":"1_TASK","externalId":"attachment-1","linkType":"task_extension","linkBody":{"type":"attachment","body":"new-attachment-body"},"transitives":{"createdAt":"OffsetDateTime.now()","updatedAt":"OffsetDateTime.now()"},"relation":null}
+   diff: commitId :: 15 -> 7_TASK
    diff: linkBody :: {body=attachment-body, type=attachment} -> {"type":"attachment","body":"new-attachment-body"}
    diff: transitives :: {createdAt="OffsetDateTime.now()", updatedAt="OffsetDateTime.now()"} -> {"createdAt":"OffsetDateTime.now()","updatedAt":"OffsetDateTime.now()"}
 

@@ -26,7 +26,7 @@ author: not-configured, message: Creating tasks by: CreateTasksVisitor
   +- merged: 0 entries
 
 
-commit: 3_TASK, tenant: TaskUpdateTestUpdateParentTask
+commit: 6_TASK, tenant: TaskUpdateTestUpdateParentTask
 author: not-configured, message: merging tasks from: UpdateTasksVisitor
  | created
   + added new: 0 entries
@@ -38,9 +38,9 @@ author: not-configured, message: merging tasks from: UpdateTasksVisitor
   +- merged: 1 entries
   +- 1_TASK::GRIM_MISSION
    -  {"id":"1_TASK","commitId":"13","createdWithCommitId":"13","updatedTreeWithCommitId":"13","parentMissionId":null,"externalId":null,"missionStatus":"CREATED","missionPriority":"LOW","reporterId":"reporter-1","startDate":null,"dueDate":null,"archivedAt":null,"archivedStatus":null}
-   +  {"id":"1_TASK","commitId":"3_TASK","createdWithCommitId":"13","updatedTreeWithCommitId":"3_TASK","parentMissionId":"2_TASK","externalId":null,"missionStatus":"CREATED","missionPriority":"LOW","reporterId":"reporter-1","startDate":null,"dueDate":null,"archivedAt":null,"archivedStatus":null}
-   diff: commitId :: 13 -> 3_TASK
-   diff: updatedTreeWithCommitId :: 13 -> 3_TASK
+   +  {"id":"1_TASK","commitId":"6_TASK","createdWithCommitId":"13","updatedTreeWithCommitId":"6_TASK","parentMissionId":"2_TASK","externalId":null,"missionStatus":"CREATED","missionPriority":"LOW","reporterId":"reporter-1","startDate":null,"dueDate":null,"archivedAt":null,"archivedStatus":null}
+   diff: commitId :: 13 -> 6_TASK
+   diff: updatedTreeWithCommitId :: 13 -> 6_TASK
    diff: parentMissionId :: null -> 2_TASK
 
 Mission: 2_TASK

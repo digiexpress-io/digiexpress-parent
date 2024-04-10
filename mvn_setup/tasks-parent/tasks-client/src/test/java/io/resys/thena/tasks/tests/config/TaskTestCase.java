@@ -213,6 +213,7 @@ public class TaskTestCase {
         replaceWithStatic(JsonObject.mapFrom(c).getString("checklistItemId"));
       }
     });
+    replaceWithStatic(actual.getTreeVersion());
     var actualJson = JsonObject.mapFrom(actual).encodePrettily();
     
     for(final var entry : replacements.entrySet()) {
