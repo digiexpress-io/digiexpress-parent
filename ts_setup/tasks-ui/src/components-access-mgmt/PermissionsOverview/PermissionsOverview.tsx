@@ -1,15 +1,11 @@
 import React from 'react';
-import { Typography, Grid } from '@mui/material';
-import { FormattedMessage } from 'react-intl';
-
 import * as colors from 'components-colors';
-import { LayoutList, NavigationButton, LayoutListItem, LayoutListFiller, FilterByString } from 'components-generic';
-import { Permission, ImmutableAmStore } from 'descriptor-access-mgmt';
-import Backend from 'descriptor-backend';
+import { LayoutList, NavigationButton, LayoutListItem, FilterByString } from 'components-generic';
+import { ImmutableAmStore, Permission, useAm } from 'descriptor-access-mgmt';
 import { PermissionItem } from './PermissionItem';
-import { PermissionCreateDialog } from 'components-access-mgmt/PermissionCreate';
 import PermissionItemActive from './PermissionItemActive';
-import { useMyWork } from 'components-task/MyWork/MyWorkContext';
+
+import { ActivePermissionProvider, useActivePermission } from './ActivePermissionContext';
 
 const color_create_permission = colors.steelblue;
 
@@ -28,13 +24,28 @@ const PermissionsNavigation: React.FC<{}> = () => {
   </>);
 }
 
-//TODO
 const PermissionItems: React.FC = () => {
-  return (<PermissionItem />)
+  const { permissions } = useAm();
+  const { setActive, entity } = useActivePermission();
+
+  if (!permissions) {
+    return (<>no permissions defined</>);
+  }
+
+
+  return (<>
+    {permissions.map((permission, index) => (
+      <LayoutListItem active={entity?.id === permission.id} index={index} key={permission.id} onClick={() => setActive(permission.id)}>
+        <PermissionItem key={permission.id} permission={permission} />
+      </LayoutListItem>
+    ))
+    }
+  </>
+  )
 }
 
 const PermissionOverviewActive: React.FC = () => {
-  return (<PermissionItemActive task={undefined} />);
+  return (<PermissionItemActive />);
 }
 
 const PermissionsOverviewLayout: React.FC = () => {
@@ -48,8 +59,9 @@ const PermissionsOverviewLayout: React.FC = () => {
 
 const PermissionsOverview: React.FC<{}> = () => {
   return (
-
-    <PermissionsOverviewLayout />
+    <ActivePermissionProvider>
+      <PermissionsOverviewLayout />
+    </ActivePermissionProvider>
   );
 }
 

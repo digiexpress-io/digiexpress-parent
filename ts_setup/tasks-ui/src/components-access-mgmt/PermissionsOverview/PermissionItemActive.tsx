@@ -11,11 +11,11 @@ import TaskStatus from '../TaskStatus';
 import TaskEditDialog from '../TaskEdit';
 */
 
-import { TaskDescriptor, ChangeTaskStatus, AssignTaskRoles, AssignTask, useTasks } from 'descriptor-task';
-import Customer from 'components-customer';
+
 import Burger from 'components-burger';
 import { cyan } from 'components-colors';
-import { PrincipalId } from 'descriptor-access-mgmt';
+import { Permission, useAm } from 'descriptor-access-mgmt';
+import { useActivePermission } from './ActivePermissionContext';
 
 
 
@@ -46,76 +46,23 @@ const StyledTitle: React.FC<{ children: string }> = ({ children }) => {
   return (<Typography fontWeight='bold'><FormattedMessage id={children} /></Typography>)
 }
 
-function getTaskAlert(task: TaskDescriptor): { isDueDate: boolean, title: string, alertSeverity: AlertColor, alertMsg: string } {
-
-  if (task.assigneeGroupType === 'assigneeOverdue') {
-    return { alertSeverity: 'error', isDueDate: true, title: 'core.myWork.task.overdue.alert', alertMsg: 'core.myWork.task.dueDate' }
-  }
-  if (task.assigneeGroupType === 'assigneeStartsToday') {
-    return { alertSeverity: 'warning', isDueDate: true, title: 'core.myWork.task.startsToday.alert', alertMsg: 'core.myWork.task.dueDate' }
-  }
-  if (task.assigneeGroupType === 'assigneeCurrentlyWorking') {
-    return { alertSeverity: 'info', isDueDate: true, title: 'core.myWork.task.currentlyWorking.alert', alertMsg: 'core.myWork.task.dueDate' }
-  }
-  return { alertSeverity: 'success', isDueDate: true, title: 'core.myWork.task.available.alert', alertMsg: 'core.myWork.task.dueDate' }
-}
-
-const PermissionItemActive: React.FC<{ task: TaskDescriptor | undefined }> = ({ task }) => {
-  const [crmOpen, setCrmOpen] = React.useState(false);
+const PermissionItemActive: React.FC = () => {
   const [taskEditOpen, setTaskEditOpen] = React.useState(false);
+  const { permissions, getPermission } = useAm();
+  const { entity } = useActivePermission();
 
-  const tasks = useTasks();
-
-  async function handleStatusChange(command: ChangeTaskStatus) {
-    if (!task) {
-      return;
-    }
-    await tasks.updateActiveTask(task.id, [command]);
-  }
-
-  async function handleAssigneeChange(assigneeIds: PrincipalId[]) {
-    if (!task) {
-      return;
-    }
-    const command: AssignTask = { assigneeIds, commandType: 'AssignTask', taskId: task.id };
-    await tasks.updateActiveTask(task.id, [command]);
-  }
-
-  async function handleRoleChange(command: AssignTaskRoles) {
-    if (!task) {
-      return;
-    }
-    await tasks.updateActiveTask(task.id, [command]);
-  }
-
+  const currentlyActivePerm = getPermission(entity.id);
 
   function handleTaskEdit() {
     setTaskEditOpen(prev => !prev);
   }
 
 
-  if (task) {
-    const alert = getTaskAlert(task);
-
+  if (permissions) {
     return (<>
-      <Customer.CustomerDetailsDialog open={crmOpen} onClose={() => { }} customer={task.customerId} />
       {/*<TaskEditDialog open={taskEditOpen} onClose={handleTaskEdit} task={task} /> */}
 
       <StyledStack>
-
-        {/* duedate alert section */}
-        <Alert severity={alert.alertSeverity} variant='standard'>
-          <AlertTitle><FormattedMessage id={alert.title} /></AlertTitle>
-          <Typography variant='body2' fontWeight='bolder'>
-            {task.dueDate ? <FormattedMessage id={alert.alertMsg} values={{ dueDate: <Burger.DateTimeFormatter type='date' value={task.dueDate} /> }} />
-              :
-              <FormattedMessage id='task.dueDate.none' />}
-          </Typography>
-        </Alert>
-
-        {/* buttons section */}
-
-
         <Burger.Section>
           <StyledTitle children='task.tools' />
           <Stack direction='row' spacing={1} justifyContent='center'>
@@ -133,29 +80,20 @@ const PermissionItemActive: React.FC<{ task: TaskDescriptor | undefined }> = ({ 
         {/* title section */}
         <Burger.Section>
           <StyledTitle children='task.title' />
-          <Typography fontWeight='bold'>{task.title}</Typography>
+          <Typography fontWeight='bold'>{currentlyActivePerm.name}</Typography>
         </Burger.Section>
 
         {/* description section */}
         <Burger.Section>
           <StyledTitle children='task.description' />
-          <Typography>{task.description}</Typography>
-        </Burger.Section>
-
-        {/* assignee section */}
-        <Burger.Section>
-          <StyledTitle children='task.assignees' />
-        </Burger.Section>
-
-        {/* roles section */}
-        <Burger.Section>
-          <StyledTitle children='task.roles' />
-          <Box sx={{ cursor: 'pointer' }}></Box>
+          <Typography fontWeight='bold'>{currentlyActivePerm.description}</Typography>
         </Burger.Section>
 
         {/* status section */}
         <Burger.Section>
           <StyledTitle children='task.status' />
+          <Typography fontWeight='bold'>{currentlyActivePerm.status}</Typography>
+
         </Burger.Section>
 
       </StyledStack >
@@ -182,8 +120,9 @@ const PermissionItemActive: React.FC<{ task: TaskDescriptor | undefined }> = ({ 
   </StyledStack>);
 }
 
-const TaskItemActiveWithRefresh: React.FC<{ task: TaskDescriptor | undefined }> = ({ task }) => {
+const PermissionItemActiveWithRefresh: React.FC<{}> = () => {
   const [dismount, setDismount] = React.useState(false);
+  const { entity } = useActivePermission();
 
   React.useEffect(() => {
     if (dismount) {
@@ -193,14 +132,14 @@ const TaskItemActiveWithRefresh: React.FC<{ task: TaskDescriptor | undefined }> 
 
   React.useEffect(() => {
     setDismount(true);
-  }, [task]);
+  }, [entity]);
 
   if (dismount) {
     return null;
   }
 
-  return (<PermissionItemActive task={task} />)
+  return (<PermissionItemActive />)
 }
 
 
-export default TaskItemActiveWithRefresh;
+export default PermissionItemActiveWithRefresh;
