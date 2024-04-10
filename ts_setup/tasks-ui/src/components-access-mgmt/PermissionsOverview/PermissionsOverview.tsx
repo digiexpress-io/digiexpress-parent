@@ -8,6 +8,8 @@ import { Permission, ImmutableAmStore } from 'descriptor-access-mgmt';
 import Backend from 'descriptor-backend';
 import { PermissionItem } from './PermissionItem';
 import { PermissionCreateDialog } from 'components-access-mgmt/PermissionCreate';
+import PermissionItemActive from './PermissionItemActive';
+import { useMyWork } from 'components-task/MyWork/MyWorkContext';
 
 const color_create_permission = colors.steelblue;
 
@@ -31,11 +33,14 @@ const PermissionItems: React.FC = () => {
   return (<PermissionItem />)
 }
 
+const PermissionOverviewActive: React.FC = () => {
+  return (<PermissionItemActive task={undefined} />);
+}
 
 const PermissionsOverviewLayout: React.FC = () => {
   const navigation = <PermissionsNavigation />;
   const pagination = <></>;
-  const active = <div style={{ backgroundColor: 'pink' }}>ACTIVE</div>;
+  const active = <PermissionOverviewActive />;
   const items = <PermissionItems />;
 
   return (<LayoutList slots={{ navigation, active, items, pagination }} />)
