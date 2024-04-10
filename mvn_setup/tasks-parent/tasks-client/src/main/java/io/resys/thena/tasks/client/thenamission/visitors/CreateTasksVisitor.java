@@ -138,6 +138,7 @@ public class CreateTasksVisitor implements TaskStoreConfig.CreateManyTasksVisito
     final var mission = src.getMission();
     final var task = ImmutableTask.builder()
     .id(mission.getId())
+    .treeVersion(src.getMission().getUpdatedTreeWithCommitId())
     .reporterId(mission.getReporterId())
     .title(mission.getTransitives().getTitle())
     .description(mission.getTransitives().getDescription())

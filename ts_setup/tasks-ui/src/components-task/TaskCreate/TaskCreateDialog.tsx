@@ -17,6 +17,7 @@ import Fields from './TaskCreateFields';
 function initTaskProps(userId: string): Task {
   return {
     id: '',
+    treeVersion: '',
     title: 'new task title ',
     description: 'new task description',
     status: 'CREATED',

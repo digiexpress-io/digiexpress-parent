@@ -460,6 +460,7 @@ public class MergeMissionBuilder implements MergeMission {
             .from(mission)
             .updatedTreeWithCommitId(this.logger.getCommitId())
             .build();
+        batch.addUpdateMissions(mission);
       }
     }
     

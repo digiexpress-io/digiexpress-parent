@@ -61,6 +61,35 @@ function getRowBackgroundColor(index: number): SxProps {
   return { backgroundColor: 'background.paper' };
 }
 
+
+function taskPaginationPropsAreEqual(prev: TaskPagination, next: TaskPagination): boolean {
+  if(prev.src.length != next.src.length) {
+    return false;
+  }
+  if(prev.entries.length != next.entries.length) {
+    return false;
+  }
+
+
+  for(let index = 0; index < prev.entries.length; index++) {
+    const prevProps = prev.entries[index];
+    const nextProps = next.entries[index];
+
+    if(prevProps === undefined && nextProps === undefined) {
+      continue;
+    }
+
+    if(prevProps === undefined || nextProps === undefined) {
+      return false;
+    }
+    if(!prevProps.equals(nextProps)) {
+      return false;
+    }
+  }
+  return true;
+}
+
+
 function initTable(classifierValue: string, prefCtx: PreferenceContextType): TaskPagination {
   const prefGroup = getPrefSortGroup(classifierValue);
   const storedPref = prefCtx.pref.sorting.find(({ dataId }) => dataId.startsWith(prefGroup));
@@ -72,13 +101,17 @@ function initTable(classifierValue: string, prefCtx: PreferenceContextType): Tas
     order: storedPref?.direction ?? 'asc',
     sorted: true,
     rowsPerPage: 5,
+    propsAreEqual: taskPaginationPropsAreEqual
   })
 }
 
+interface RowProps {
+  rowId: number;
+  row: TaskDescriptor;
+  columns: ColumnName[];
+}
 
-
-const Row: React.FC<{ rowId: number, row: TaskDescriptor, columns: ColumnName[] }> = (props) => {
-  const { pref } = useTaskPrefs();
+const Row: React.FC<RowProps> = React.memo((props) => {
 
   const [hoverItemsActive, setHoverItemsActive] = React.useState(false);
   function handleEndHover() {
@@ -104,8 +137,15 @@ const Row: React.FC<{ rowId: number, row: TaskDescriptor, columns: ColumnName[] 
     {cells}
     <CellMenu {...props} active={hoverItemsActive} setDisabled={handleEndHover} />
   </MTableRow>);
-}
-
+},
+(prevProps: Readonly<RowProps>, nextProps: Readonly<RowProps>) => {
+  return (
+    prevProps.rowId == nextProps.rowId &&
+    prevProps.columns.filter(x => !nextProps.columns.includes(x)).length === 0 &&
+    prevProps.columns.length === nextProps.columns.length &&
+    prevProps.row.equals(nextProps.row))
+  }
+)
 
 const TableForGroupByPagination: React.FC<{ state: TaskPagination, setState: SetTaskPagination }> = (props) => {
   const { loading } = useTasks();
@@ -166,24 +206,23 @@ export const HeaderCellWithPrefs: React.FC<{
   </MTableCell>);
 }
 
-export const TableForGroupBy: React.FC<{ groupByType: GroupByTypes, groupId: string }> = ({ groupByType, groupId }) => {
+
+interface DelegateProps {
+  groupByType: GroupByTypes,
+  groupId: string,
+  content: TaskPagination,
+  setContent: React.Dispatch<React.SetStateAction<TaskPagination>>
+}
+
+const Delegate: React.FC<DelegateProps> = React.memo(({ groupByType, groupId, content, setContent }) => {
+
   const { loading } = useTasks();
   const prefCtx = useTaskPrefs();
   const { pref } = prefCtx;
-  const grouping = useGrouping();
 
-  const [content, setContent] = React.useState(initTable(groupId, prefCtx));
-  const columns: ColumnName[] = pref.visibility.filter(v => v.enabled).map(v => v.dataId as ColumnName);
-
-
-  React.useEffect(() => {
-    _logger.target(({updated: grouping.collection.updated})).debug(`reloading task table - ${groupId}`);
-    const group = grouping.getByGroupId(groupId);
-    const records = group?.value.map(index => grouping.collection.origin[index]);
-
-    setContent(prev => prev.withSrc(records))
-  }, [grouping]);
-  
+  const columns: ColumnName[] = React.useMemo(() => {
+    return pref.visibility.filter(v => v.enabled).map(v => v.dataId as ColumnName);
+  }, [pref]);
 
   return (<>
     <MTableContainer>
@@ -222,5 +261,38 @@ export const TableForGroupBy: React.FC<{ groupByType: GroupByTypes, groupId: str
       <TableForGroupByPagination state={content} setState={setContent}/>
     </Box>
   </>);
+
+},
+(prevProps: Readonly<DelegateProps>, nextProps: Readonly<DelegateProps>) => {
+  const isEqual = (
+    prevProps.groupByType == nextProps.groupByType &&
+    prevProps.groupId === nextProps.groupId &&
+    prevProps.content.equals(nextProps.content)
+  );
+  if(!isEqual) {
+    _logger.debug(`reloading task table - ${nextProps.groupId}`);
+  }
+  return (isEqual)
+  } 
+)
+
+export const TableForGroupBy: React.FC<{ groupByType: GroupByTypes, groupId: string }> = ({ groupByType, groupId }) => {
+  const prefCtx = useTaskPrefs();
+  const grouping = useGrouping();
+  const [content, setContent] = React.useState<TaskPagination>(initTable(groupId, prefCtx));
+  
+  React.useEffect(() => {
+    const group = grouping.getByGroupId(groupId);
+    const records = group?.value.map(index => grouping.collection.origin[index]);
+
+    setContent(prev => prev.withSrc(records))
+  }, [grouping]);
+
+
+  return (<Delegate 
+    content={content} 
+    setContent={setContent as React.Dispatch<React.SetStateAction<TaskPagination>>} 
+    groupByType={groupByType} groupId={groupId}
+  />);
 
 }

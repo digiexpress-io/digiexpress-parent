@@ -31,6 +31,13 @@ class ImmutableTaskDescriptor implements TaskDescriptor {
     this._teamspaceType = getTeamspaceType(entry, profile, today);
     this._profile = profile;
   }
+
+  equals(next: TaskDescriptor): boolean {
+    return ( 
+      this._entry.id === next.entry.id &&
+      this._entry.treeVersion === next.entry.treeVersion
+    )
+  }
   
   get transactions() { return this._entry.transactions }
   get assigneeGroupType() { return this._myWorkType }

@@ -103,12 +103,14 @@ export interface TaskDescriptor {
   transactions: TaskTransaction[];
   uploads: TaskExtension[];
   customerId: CustomerId | undefined;
-
+  
   assigneeGroupType: AssigneeGroupType | undefined;
   teamGroupType: TeamGroupType | undefined;
 
   checklist: Checklist[];
   profile: UserProfileAndOrg;
+
+  equals(next: TaskDescriptor): boolean
 }
 
 export interface TasksPaletteType {

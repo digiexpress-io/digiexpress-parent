@@ -39,6 +39,7 @@ import jakarta.ws.rs.Path;
 public class TestResource implements TaskRestApi {
 
   private final ImmutableTask mockTask = ImmutableTask.builder().id("task1").version("task-version1")
+      .treeVersion("")
       .archived(TaskTestCase.getTargetDate()).created(TaskTestCase.getTargetDate())
       .updated(TaskTestCase.getTargetDate()).title("task-title1").priority(Task.Priority.HIGH)
       .status(Task.Status.CREATED).description("Very good task indeed").reporterId("John Smith").build();

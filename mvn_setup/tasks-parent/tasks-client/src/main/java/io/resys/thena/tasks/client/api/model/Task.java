@@ -36,6 +36,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 public interface Task extends Serializable {
   String getId();
   String getVersion();
+  String getTreeVersion();
   Instant getCreated();
   Instant getUpdated();
   @Nullable Instant getArchived();

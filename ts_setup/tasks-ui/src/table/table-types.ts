@@ -6,6 +6,7 @@ export interface TablePagination<T extends DataType> {
   withPage: (page: number) => TablePagination<T>;
   withRowsPerPage: (rowsPerPage: number) => TablePagination<T>;
   withSrc: (src: T[]) => TablePagination<T>;
+  equals: (next: TablePagination<T>) => boolean;
 
   rowsPerPageOptions: number[];
   entries: T[];

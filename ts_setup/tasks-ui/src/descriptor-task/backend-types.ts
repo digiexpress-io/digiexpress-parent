@@ -4,6 +4,7 @@ export type TaskId = string;
 export interface Task {
   readonly created: string;
   readonly updated: string;
+  readonly treeVersion: string;
   readonly archived: string | undefined;
   readonly startDate: string | undefined;
   readonly dueDate: string | undefined;

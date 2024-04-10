@@ -46,18 +46,24 @@ const Navigation: React.FC<{}> = () => {
   );
 }
 
-const TaskTableGroup: React.FC = () => {
+const OneTable: React.FC<{ index: number, groupId: string, classifierName: GroupByTypes }> = React.memo((props) => {
+  return (<React.Fragment key={props.groupId}>
+    {props.index > 0 ? <Box sx={{ p: 2 }} /> : null}
+
+    <Box sx={{ width: '100%' }}>
+      <TableForGroupBy groupId={props.groupId} groupByType={props.classifierName} />
+    </Box>
+  </React.Fragment>)
+})
+
+const ManyTables: React.FC = () => {
   const { collection } = useGrouping();
 
-  return (<>{collection.groups.map((group, index) => (
-    <React.Fragment key={group.id}>
-      {index > 0 ? <Box sx={{ p: 2 }} /> : null}
-
-      <Box sx={{ width: '100%' }}>
-        <TableForGroupBy groupId={group.id} groupByType={collection.classifierName as GroupByTypes} />
-      </Box>
-    </React.Fragment>
-  ))}</>);
+  return (<>{collection.groups.map((group, index) => <OneTable 
+    index={index} 
+    groupId={group.id} 
+    classifierName={collection.classifierName as GroupByTypes}
+  />)}</>);
 }
 
 
@@ -72,7 +78,7 @@ export const TaskSearch: React.FC<{}> = () => {
             <TaskReloadProvider />
             <Navigation />
             <Box mt={1} />
-            <TaskTableGroup />
+            <ManyTables />
           
           </TaskGroupingProvider>
         </TaskSearchProvider>
