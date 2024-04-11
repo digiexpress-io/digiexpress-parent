@@ -85,7 +85,7 @@ public class ModifyOnePartyImpl implements ModifyOneParty {
     return this; 
   }
   @Override public ModifyOnePartyImpl parentId(String parentId) {
-    this.parentPartyId = Optional.ofNullable(RepoAssert.notEmpty(parentId, () -> "parentId can't be empty!")); 
+    this.parentPartyId = Optional.ofNullable(RepoAssert.notBlank(parentId, () -> "parentId can't be empty!")); 
     return this; 
   }
   @Override public ModifyOnePartyImpl partySubType(OrgDocSubType partySubType) {

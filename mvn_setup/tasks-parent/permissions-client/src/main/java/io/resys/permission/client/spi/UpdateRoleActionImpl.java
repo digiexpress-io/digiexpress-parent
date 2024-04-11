@@ -9,6 +9,7 @@ import io.resys.permission.client.api.model.PermissionCommand.ChangeType;
 import io.resys.permission.client.api.model.Principal.Role;
 import io.resys.permission.client.api.model.RoleCommand.ChangeRoleDescription;
 import io.resys.permission.client.api.model.RoleCommand.ChangeRoleName;
+import io.resys.permission.client.api.model.RoleCommand.ChangeRoleParent;
 import io.resys.permission.client.api.model.RoleCommand.ChangeRolePermissions;
 import io.resys.permission.client.api.model.RoleCommand.ChangeRoleStatus;
 import io.resys.permission.client.api.model.RoleCommand.RoleUpdateCommand;
@@ -61,6 +62,12 @@ public class UpdateRoleActionImpl implements UpdateRoleAction {
       case CHANGE_ROLE_STATUS: {
         final var status = (ChangeRoleStatus) command;
         modifyOneParty.status(status.getStatus());
+        break;
+      }
+      
+      case CHANGE_ROLE_PARENT: {
+        final var parent = (ChangeRoleParent) command;
+        modifyOneParty.parentId(parent.getParentId());
         break;
       }
       

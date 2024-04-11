@@ -75,6 +75,12 @@ public class RepoAssert {
     }
     return object;
   }
+  public static String notBlank(String object, Supplier<String> message) {
+    if (object != null && object.isBlank()) {
+      throw new RepoException(getMessage(message));
+    }
+    return object;
+  }
   public static <T> T isNull(T object, Supplier<String> message) {
     if (object == null) {
       return object;

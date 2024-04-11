@@ -33,6 +33,7 @@ public class CreateRoleActionImpl implements CreateRoleAction {
         .author(ctx.getConfig().getAuthor().get())
         .partyDescription(role.getDescription())
         .partyName(role.getName())
+        .parentId(role.getParentId())
         .addRightsToParty(role.getPermissions())
         .addMemberToParty(role.getPrincipals())
         .build();
@@ -54,6 +55,7 @@ public class CreateRoleActionImpl implements CreateRoleAction {
         .name(role.getPartyName())
         .description(role.getPartyDescription())
         .status(OrgActorStatus.OrgActorStatusType.IN_FORCE)
+        .parentId(role.getParentId())
         .permissions(response.getDirectRights().stream().map(e -> e.getRightName()).toList())
         .principals(response.getDirectMembers().stream().map(e -> e.getUserName()).toList())
         .build();

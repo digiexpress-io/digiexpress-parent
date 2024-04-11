@@ -331,7 +331,7 @@ public class BatchForOnePartyModify {
     .externalId(newExternalId == null ? current.getExternalId() : newExternalId.get())
     .partyName(newPartyName == null ? current.getPartyName() : newPartyName.get())
     .partyDescription(newPartyDesc == null  ? current.getPartyDescription() : newPartyDesc.get())
-    .parentId(newParentPartyId == null  ? current.getParentId() : newParentPartyId.get().getId())
+    .parentId(newParentPartyId == null ? current.getParentId() : newParentPartyId.map(e -> e.getId()).orElse(null))
     .partySubType(newPartySubType == null  ? current.getPartySubType() : newPartySubType.get())
     .build();
     
