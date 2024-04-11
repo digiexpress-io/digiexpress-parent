@@ -7,6 +7,7 @@ const RoleDetails: React.FC<{ role: Role }> = ({ role }) => {
 
   return (
     <Stack spacing={1}>
+      <SectionLayout label='permissions.roles.parent' value={role.parentId} />
       <SectionLayout label='permissions.roles.description' value={role.description} />
       <SectionLayout label='permissions.roles.numberOfPermissions' value={role.permissions.length} />
       <SectionLayout label='permissions.roles.numberOfPrincpals' value={role.principals.length} />

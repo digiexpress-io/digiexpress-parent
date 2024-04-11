@@ -9,7 +9,7 @@ import { OneRoleDataTabs } from './OneRoleDataTabs';
 const sx = { borderRadius: '8px 8px 0px 0px', boxShadow: "unset", fontWeight: 'bolder' };
 
 export const OneRoleData: React.FC<{ role: Role }> = ({ role }) => {
-
+  console.log(role)
   return (
     <Box sx={{ paddingTop: 1, paddingLeft: 1 }}>
       <Box>

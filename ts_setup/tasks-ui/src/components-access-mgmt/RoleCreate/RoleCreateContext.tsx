@@ -72,7 +72,6 @@ const NewRoleProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
     return ({ ...previous, principals: Object.freeze(updatedPrincipals) });
   }), []);
 
-
   const contextValue: NewRoleContextType = React.useMemo(() => {
     return {
       entity,
@@ -116,9 +115,6 @@ export function useTabs() {
   }
   return { activeTab, setActiveTab };
 }
-
-
-
 
 // Root of all
 export const RoleCreateProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {

@@ -28,6 +28,7 @@ export const OneRoleDataTabs: React.FC<{ role: Role }> = ({ role }) => {
     setTabValue(newValue);
   }
 
+  console.log(role)
 
   return (
     <Box sx={{ flexGrow: 1, bgcolor: 'background.paper', display: 'flex' }}>

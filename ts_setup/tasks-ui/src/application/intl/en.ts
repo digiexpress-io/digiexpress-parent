@@ -552,6 +552,9 @@ const en = {
   'permissions.selectedPermissions': 'Selected permissions',
   'permissions.search.title': 'Search available permissions',
 
+  'permissions.activePermission.tools': 'Tools',
+  'permissions.activePermission.edit': 'Edit',
+
   'permissions.navButton.role.create': 'Create role',
   'permissions.navButton.permission.create': 'Create permission',
   'permissions.navButton.principal.create': 'Create member',
@@ -566,6 +569,7 @@ const en = {
   'permissions.roles.roleMeta': 'Role metadata',
   'permissions.roles.name': 'Role name',
   'permissions.roles.description': 'Description',
+  'permissions.roles.parent': 'Parent role',
   'permissions.roles.status': 'Status',
   'permissions.roles.commitComment': 'Comment',
   'permissions.roles.commitComment.placeholder': 'Description of this change',
@@ -598,7 +602,7 @@ const en = {
 
   'permissions.permission.name': 'Permission name',
   'permissions.permission.description': 'Permission description',
-  'permissions.permission.status': 'Status',
+  'permissions.permission.status': 'Permission status',
   'permissions.permission.none': 'No permissions found',
   'permissions.permission.select': 'Permissions',
   'permissions.permission.create': 'Create a new permission',
@@ -618,6 +622,7 @@ const en = {
 
   'permissions.role.parentSelect': 'Role parent',
   'permissions.role.roleParentName': 'Name',
+  'permissions.role.roleCreate.selection.none': 'None',
 
 
   'permissions.createPrincipal.principal_permissions': 'Permissions',

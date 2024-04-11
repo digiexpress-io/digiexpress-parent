@@ -28,6 +28,18 @@ const RoleParent: React.FC = () => {
   const { roles, getRole } = useAm();
   const { setParentId, entity } = useNewRole();
   const parentRole = entity.parentId ? getRole(entity.parentId) : undefined;
+
+  function handleParentRole(parentRoleId: string | undefined, roleId: string) {
+    if (!parentRoleId) {
+      setParentId(roleId);
+    } else if (parentRoleId === roleId) {
+      setParentId(undefined);
+    } else {
+      setParentId(roleId);
+    }
+
+  }
+
   return (
     <>
       <Stack spacing={1}>
@@ -38,7 +50,7 @@ const RoleParent: React.FC = () => {
         {roles.map((role, index) => <LayoutListItem key={role.id}
           index={index}
           active={role.id === parentRole?.id}
-          onClick={() => setParentId(role.id)}>
+          onClick={() => handleParentRole(parentRole?.id, role.id)}>
           {role.name}
         </LayoutListItem>
         )}

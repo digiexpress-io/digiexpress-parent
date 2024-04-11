@@ -56,37 +56,32 @@ const PermissionItemActive: React.FC = () => {
 
       <StyledStack>
         <Burger.Section>
-          <StyledTitle children='task.tools' />
+          <StyledTitle children='permissions.activePermission.tools' />
           <Stack direction='row' spacing={1} justifyContent='center'>
             <Box display='flex' flexDirection='column' alignItems='center'>
               <IconButton onClick={handleTaskEdit}><EditIcon sx={{ color: cyan }} /></IconButton>
-              <Typography><FormattedMessage id='task.edit' /></Typography>
-            </Box>
-            <Box display='flex' flexDirection='column' alignItems='center'>
-              <IconButton onClick={() => { }}><CrmIcon sx={{ color: 'locale.dark' }} /></IconButton>
-              <Typography><FormattedMessage id='customer.details.view' /></Typography>
+              <Typography><FormattedMessage id='permissions.activePermission.edit' /></Typography>
             </Box>
           </Stack>
         </Burger.Section>
 
         {/* title section */}
         <Burger.Section>
-          <StyledTitle children='task.title' />
-          <Typography fontWeight='bold'>{activePerm.name}</Typography>
+          <StyledTitle children='permissions.permission.name' />
+          <Typography>{activePerm.name}</Typography>
         </Burger.Section>
 
         {/* description section */}
         <Burger.Section>
-          <StyledTitle children='task.description' />
-          <Typography fontWeight='bold'>{activePerm.description}</Typography>
+          <StyledTitle children='permissions.permission.description' />
+          <Typography>{activePerm.description}</Typography>
         </Burger.Section>
 
         {/* status section */}
         <Burger.Section>
-          <StyledTitle children='task.status' />
-          <Typography fontWeight='bold'>{activePerm.status}</Typography>
+          <StyledTitle children='permissions.permission.status' />
+          <Typography>{activePerm.status}</Typography>
         </Burger.Section>
-
       </StyledStack >
     </>
 
