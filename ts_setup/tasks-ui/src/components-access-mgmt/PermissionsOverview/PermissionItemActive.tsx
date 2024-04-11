@@ -1,7 +1,6 @@
 import React from 'react';
 import { Box, Stack, Typography, IconButton, Skeleton, useTheme } from '@mui/material';
 import EditIcon from '@mui/icons-material/ModeEditOutlineOutlined';
-import CrmIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
 import { FormattedMessage } from 'react-intl';
 
 import Burger from 'components-burger';
@@ -39,16 +38,10 @@ const StyledTitle: React.FC<{ children: string }> = ({ children }) => {
 }
 
 const PermissionItemActive: React.FC = () => {
-  const [taskEditOpen, setTaskEditOpen] = React.useState(false);
-  const { permissions } = useAm();
+  const { permissions, roles } = useAm();
   const { permissionId } = useActivePermission();
 
   const activePerm = permissions.find(permission => permission.id === permissionId);
-
-  function handleTaskEdit() {
-    setTaskEditOpen(prev => !prev);
-  }
-
 
   if (activePerm) {
     return (<>
@@ -59,7 +52,7 @@ const PermissionItemActive: React.FC = () => {
           <StyledTitle children='permissions.activePermission.tools' />
           <Stack direction='row' spacing={1} justifyContent='center'>
             <Box display='flex' flexDirection='column' alignItems='center'>
-              <IconButton onClick={handleTaskEdit}><EditIcon sx={{ color: cyan }} /></IconButton>
+              <IconButton onClick={() => { }}><EditIcon sx={{ color: cyan }} /></IconButton>
               <Typography><FormattedMessage id='permissions.activePermission.edit' /></Typography>
             </Box>
           </Stack>
