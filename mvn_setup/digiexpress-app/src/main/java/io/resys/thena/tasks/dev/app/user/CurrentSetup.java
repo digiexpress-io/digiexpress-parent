@@ -3,9 +3,11 @@ package io.resys.thena.tasks.dev.app.user;
 import java.time.Instant;
 
 import io.resys.permission.client.api.PermissionClient;
+import io.resys.permission.client.api.model.ImmutableChangePrincipalName;
 import io.resys.permission.client.api.model.ImmutableCreatePermission;
 import io.resys.permission.client.api.model.ImmutableCreatePrincipal;
 import io.resys.permission.client.api.model.ImmutableCreateRole;
+import io.resys.permission.client.api.model.Principal;
 import io.resys.thena.projects.client.api.TenantConfigClient;
 import io.resys.thena.projects.client.api.model.ImmutableCreateTenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig;
@@ -56,22 +58,49 @@ public class CurrentSetup {
       .onItem().transformToUni(junk -> client.roleQuery().get(BuiltInRoles.LOBBY.name()))
       .onItem().transformToUni(lobby -> {
         return client.principalQuery().get(profile.getDetails().getUsername())
-            .onFailure().recoverWithUni(e -> {
-              log.warn("App setup, principle for user email: '{}' does not exists, trying to create it!");
-              return client.createPrincipal().createOne(ImmutableCreatePrincipal.builder()
-                  .name(profile.getId())
-                  .email(profile.getDetails().getEmail())
-                  .externalId(currentUser.getUserId())
-                  .comment("created by default on first user registration")
-                  .addRoles(lobby.getName())
-                  .build());
-            });
+            .onFailure().recoverWithUni(e -> createOrLinkPrincipal(tenant, profile, currentUser));
       })
     .onItem().transformToUni(principle -> invalidateCache(principle))
     .onItem().transformToUni(principle -> 
       cache.getPrincipalPermissions(principle.getId(), principle.getEmail())
       .onItem().transform(permissions -> ImmutableCurrentPermissions.builder().addAllPermissions(permissions).build())
     );
+  }
+  
+  private Uni<Principal> createOrLinkPrincipal(
+      TenantConfig tenant, 
+      UserProfile profile,
+      CurrentUser currentUser) {
+    
+    final var client = getPermissionsClient(tenant);
+    return client.principalQuery().findAllPrincipals()
+    .onItem().transformToUni(allPrincipals -> {
+      
+      final var found = allPrincipals.stream()
+        .filter(p -> p.getEmail().equals(profile.getDetails().getEmail()))
+        .toList();
+      
+      // merge principal by email
+      if(found.size() == 1) {
+        log.warn("App setup, principle for user email: '{}' does not exists, but there is predefined principle with the email, updating principal to match the user!");
+        
+        client.updatePrincipal().updateOne(ImmutableChangePrincipalName.builder()
+            .name(profile.getId())
+            .id(found.iterator().next().getId())
+            .comment("upsert principal by email from log in")
+            .build());
+      }
+      
+      log.warn("App setup, principle for user email: '{}' does not exists, trying to create it!");
+      final var createPrincipal = ImmutableCreatePrincipal.builder()
+          .name(profile.getId())
+          .email(profile.getDetails().getEmail())
+          .externalId(currentUser.getUserId())
+          .comment("created by default on first user registration")
+          .addRoles(BuiltInRoles.LOBBY.name())
+          .build();
+      return client.createPrincipal().createOne(createPrincipal);
+    });
   }
   
   private Uni<Void> createRoles(TenantConfig tenant) {
@@ -159,7 +188,6 @@ public class CurrentSetup {
             .email(currentUser.getEmail())
             .build())
         .build();
-    
     return userProfileClient.withRepoId(userProfileConfig.getRepoId()).createUserProfile().createOne(command);
   }
   

@@ -2,6 +2,7 @@ package io.resys.thena.tasks.dev.app.security;
 
 import java.util.HashSet;
 
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.jwt.Claims;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.jose4j.jwt.JwtClaims;
@@ -23,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 @ApplicationScoped
 @Slf4j
 public class DevIdentityAugmentor implements SecurityIdentityAugmentor {
+  @ConfigProperty(name = "tenant.devLoggedInUser") String devLoggedInUser;
   @Inject PrincipalCache cache;
   
   @Override
@@ -43,12 +45,13 @@ public class DevIdentityAugmentor implements SecurityIdentityAugmentor {
   }
   
   private SecurityIdentity create(SecurityIdentity src) {
-    final var vimes = "sam.vimes";
+    final var devUser = devLoggedInUser.split("@")[0];
+    final var names = devUser.split("\\.");
     final var claims = new JwtClaims();
-    claims.setClaim(Claims.sub.name(), vimes);
-    claims.setClaim(Claims.given_name.name(), "Sam");
-    claims.setClaim(Claims.family_name.name(), "Vimes");
-    claims.setClaim(Claims.email.name(), "sam.vimes@digiexpress.io");
+    claims.setClaim(Claims.sub.name(), devUser);
+    claims.setClaim(Claims.given_name.name(), names[0]);
+    claims.setClaim(Claims.family_name.name(), names[1]);
+    claims.setClaim(Claims.email.name(), devLoggedInUser);
     
     final JsonWebToken principal = new DefaultJWTCallerPrincipal("DEV-TOKEN", claims);
     final QuarkusSecurityIdentity.Builder builder = QuarkusSecurityIdentity.builder(src);
