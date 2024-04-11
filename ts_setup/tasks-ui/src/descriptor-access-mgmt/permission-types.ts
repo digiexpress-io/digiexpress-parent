@@ -86,6 +86,7 @@ export type RoleCommandType =
   'CHANGE_ROLE_NAME' |
   'CHANGE_ROLE_DESCRIPTION' |
   'CHANGE_ROLE_STATUS' |
+  'CHANGE_ROLE_PARENT' |
   'CHANGE_ROLE_PERMISSIONS';
 
 export interface CreateRole {
@@ -95,13 +96,19 @@ export interface CreateRole {
   permissions: string[];
   principals: string[];
   comment: string;
-  parentId: string | undefined;
+  parentId: RoleId | undefined;
 }
 
 export interface ChangeRoleName extends RoleUpdateCommand {
   id: RoleId;
   name: RoleName;
   commandType: 'CHANGE_ROLE_NAME';
+}
+
+export interface ChangeRoleParent extends RoleUpdateCommand {
+  id: RoleId;
+  parentId: RoleId | undefined;
+  commandType: 'CHANGE_ROLE_PARENT';
 }
 
 export interface ChangeRoleDescription extends RoleUpdateCommand {

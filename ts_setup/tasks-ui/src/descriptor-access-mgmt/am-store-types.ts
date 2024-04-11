@@ -1,11 +1,11 @@
-import { 
-  Permission, PermissionId, Role, RoleId,  
+import {
+  Permission, PermissionId, Role, RoleId,
   PermissionUpdateCommand, RoleUpdateCommand,
-  CreatePermission, CreateRole, 
+  CreatePermission, CreateRole,
 } from "./permission-types";
 
-import { 
-  UserProfileAndOrg, UserProfileUpdateCommand, UserProfile 
+import {
+  UserProfileAndOrg, UserProfileUpdateCommand, UserProfile
 } from "./profile-types";
 
 
@@ -20,7 +20,7 @@ export interface AmStore {
   findAllRoles(): Promise<Role[]>;
   getRole(id: RoleId): Promise<Role>;
   createRole(command: CreateRole): Promise<Role>;
-  updateRole(id: RoleId, commands: RoleUpdateCommand[]): Promise<Permission>;
+  updateRole(id: RoleId, commands: RoleUpdateCommand[]): Promise<Role>;
 
   currentUserProfile(): Promise<UserProfileAndOrg>;
   getUserProfileById(id: string): Promise<UserProfile>;

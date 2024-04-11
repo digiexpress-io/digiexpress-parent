@@ -2,7 +2,7 @@ import type { UserProfile, UserProfileAndOrg, UserProfileUpdateCommand } from '.
 import type {
   Permission, Role, Principal,
   CreatePermission, CreateRole, CreatePrincipal,
-  PermissionUpdateCommand, RoleUpdateCommand, 
+  PermissionUpdateCommand, RoleUpdateCommand,
 } from './permission-types';
 
 import type { TenantConfig } from './tenant-types';
@@ -29,7 +29,7 @@ export class ImmutableAmStore implements AmStore {
   async currentUserProfile(): Promise<UserProfileAndOrg> {
     try {
       const config = await this._store.fetch<{
-        permissions: { permissions: string [] };
+        permissions: { permissions: string[] };
         user: {
           userId: string;
           email: string;
@@ -111,7 +111,7 @@ export class ImmutableAmStore implements AmStore {
     return await this._store.fetch<Role[]>(`am/roles`, { repoType: 'PERMISSIONS' });
   }
 
-  async updateRole(id: string, commands: RoleUpdateCommand[]): Promise<Permission> {
+  async updateRole(id: string, commands: RoleUpdateCommand[]): Promise<Role> {
     return await this._store.fetch<Role>(`am/roles/${id}`, {
       method: 'PUT',
       body: JSON.stringify(commands),
