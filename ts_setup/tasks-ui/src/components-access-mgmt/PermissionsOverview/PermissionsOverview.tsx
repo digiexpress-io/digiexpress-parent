@@ -2,7 +2,6 @@ import React from 'react';
 import { Typography, Grid } from '@mui/material';
 
 import * as colors from 'components-colors';
-
 import { LayoutList, NavigationButton, LayoutListItem, FilterByString } from 'components-generic';
 import { useAm } from 'descriptor-access-mgmt';
 import PermissionItemActive from './PermissionItemActive';

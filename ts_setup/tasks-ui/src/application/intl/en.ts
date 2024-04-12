@@ -555,6 +555,9 @@ const en = {
   'permissions.activePermission.tools': 'Tools',
   'permissions.activePermission.edit': 'Edit',
 
+  'permissions.activePrincipal.tools': 'Tools',
+  'permissions.activePrincipal.edit': 'Edit',
+
   'permissions.navButton.role.create': 'Create role',
   'permissions.navButton.permission.create': 'Create permission',
   'permissions.navButton.principal.create': 'Create member',

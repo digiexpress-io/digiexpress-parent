@@ -5,6 +5,7 @@ import * as colors from 'components-colors';
 import { useAm } from 'descriptor-access-mgmt';
 import { LayoutList, NavigationButton, LayoutListItem, FilterByString } from 'components-generic';
 import { PrincipalsOverviewProvider, useActivePrincipal } from './PrincipalsOverviewContext';
+import PrincipalItemActive from './PrincipalItemActive';
 
 const color_create_permission = colors.steelblue;
 
@@ -15,7 +16,7 @@ const PrincipalsNavigation: React.FC<{}> = () => {
   return (<>
     <FilterByString onChange={handleSearch} />
 
-    <NavigationButton id='permissions.navButton.permission.create'
+    <NavigationButton id='permissions.navButton.principal.create'
       values={{}}
       color={color_create_permission}
       active={false}
@@ -49,10 +50,15 @@ const PrincipalItems: React.FC = () => {
   </>)
 }
 
+const PrincipalOverviewActive: React.FC = () => {
+  return (<PrincipalItemActive />);
+}
+
+
 const PrincipalsOverview: React.FC = () => {
   const navigation = <PrincipalsNavigation />;
   const pagination = <></>;
-  const active = <>ACTIVE</>;
+  const active = <PrincipalOverviewActive />;
   const items = <PrincipalItems />;
 
   return (
