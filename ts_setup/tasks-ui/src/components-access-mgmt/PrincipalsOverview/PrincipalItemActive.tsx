@@ -58,13 +58,13 @@ const PrincipalItemActive: React.FC = () => {
           </Stack>
         </Burger.Section>
 
-        {/* title section */}
+        {/* name section */}
         <Burger.Section>
           <StyledTitle children='permissions.principal.name' />
           <Typography>{activePrincipal.name}</Typography>
         </Burger.Section>
 
-        {/* description section */}
+        {/* email section */}
         <Burger.Section>
           <StyledTitle children='permissions.principal.email' />
           <Typography>{activePrincipal.email}</Typography>
@@ -74,6 +74,22 @@ const PrincipalItemActive: React.FC = () => {
         <Burger.Section>
           <StyledTitle children='permissions.principal.status' />
           <Typography>{activePrincipal.status}</Typography>
+        </Burger.Section>
+
+        {/* direct roles section */}
+        <Burger.Section>
+          <StyledTitle children='permissions.principal.directRoles' />
+          {activePrincipal.directRoles.length ? activePrincipal.directRoles
+            .map(role => (<Typography key={role}>{role}</Typography>)) : <FormattedMessage id='permissions.principal.directRoles.none' />
+          }
+        </Burger.Section>
+
+        {/* direct permissions section */}
+        <Burger.Section>
+          <StyledTitle children='permissions.principal.directPermissions' />
+          {activePrincipal.directPermissions.length ? activePrincipal.directPermissions
+            .map(permission => (<Typography key={permission}>{permission}</Typography>)) : <FormattedMessage id='permissions.principal.directPermissions.none' />
+          }
         </Burger.Section>
       </StyledStack >
     </>

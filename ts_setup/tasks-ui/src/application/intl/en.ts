@@ -637,6 +637,10 @@ const en = {
   'permissions.principal.name': 'Member name',
   'permissions.principals.search.title': 'Search available members',
   'permissions.principals.select': 'Select members to add',
+  'permissions.principal.directRoles': 'Member direct roles',
+  'permissions.principal.directRoles.none': 'No direct roles',
+  'permissions.principal.directPermissions': 'Member direct permissions',
+  'permissions.principal.directPermissions.none': 'No direct permissions',
 
   'permissions.principal.rolesOverview': 'Roles to which this member belongs',
   'permissions.principal.rolesOverview.none': 'None',
