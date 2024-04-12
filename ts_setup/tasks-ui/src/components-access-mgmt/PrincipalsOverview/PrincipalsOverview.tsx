@@ -35,16 +35,12 @@ const PrincipalItems: React.FC = () => {
   return (<>
     {principals.map((principal, index) =>
       <LayoutListItem active={principalId === principal.id} index={index} key={index} onClick={() => setActivePrincipal(principal.id)}>
-        <Grid item sm={5} md={5} lg={5}>
+        <Grid item sm={6} md={6} lg={6}>
           <Typography noWrap>{principal.name}</Typography>
         </Grid>
 
-        <Grid item sm={5} md={5} lg={5}>
+        <Grid item sm={6} md={6} lg={6}>
           <Typography noWrap>{principal.email}</Typography>
-        </Grid>
-
-        <Grid item sm={2} md={2} lg={2}>
-          <Typography noWrap>{principal.status}</Typography>
         </Grid>
       </LayoutListItem>)}
   </>)
