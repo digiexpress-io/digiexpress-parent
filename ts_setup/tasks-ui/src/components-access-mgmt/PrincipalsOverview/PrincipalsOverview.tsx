@@ -1,38 +1,66 @@
 import React from 'react';
 import { Typography, Grid } from '@mui/material';
-import { FormattedMessage } from 'react-intl';
-import { ImmutableAmStore, Principal } from 'descriptor-access-mgmt';
-import Backend from 'descriptor-backend';
 
-const PrincipalsOverview: React.FC = () => {
-  const backend = Backend.useBackend();
-  const [principals, setPrincipals] = React.useState<Principal[]>();
+import * as colors from 'components-colors';
+import { useAm } from 'descriptor-access-mgmt';
+import { LayoutList, NavigationButton, LayoutListItem, FilterByString } from 'components-generic';
+import { PrincipalsOverviewProvider, useActivePrincipal } from './PrincipalsOverviewContext';
 
-  React.useEffect(() => {
-    new ImmutableAmStore(backend.store).findAllPrincipals().then(setPrincipals);
-  }, []);
+const color_create_permission = colors.steelblue;
+
+const PrincipalsNavigation: React.FC<{}> = () => {
+
+  function handleSearch(value: React.ChangeEvent<HTMLInputElement>) { }
+
+  return (<>
+    <FilterByString onChange={handleSearch} />
+
+    <NavigationButton id='permissions.navButton.permission.create'
+      values={{}}
+      color={color_create_permission}
+      active={false}
+      onClick={() => { }} />
+  </>);
+}
+
+const PrincipalItems: React.FC = () => {
+  const { principals } = useAm();
+  const { setActivePrincipal, principalId } = useActivePrincipal();
 
   if (!principals) {
     return (<>no users defined</>);
   }
 
   return (<>
-    {principals.sort((a, b) => a.name.localeCompare(b.name)).map((principal) => <Grid container display='flex' spacing={2} key={principal.id}>
-      <Grid item lg={3}>
-        <Typography><FormattedMessage id='permissions.principal.username' />{": "}{principal.name}</Typography>
-      </Grid>
+    {principals.map((principal, index) =>
+      <LayoutListItem active={principalId === principal.id} index={index} key={index} onClick={() => setActivePrincipal(principal.id)}>
+        <Grid item lg={5}>
+          <Typography>{principal.name}</Typography>
+        </Grid>
 
-      <Grid item lg={7}>
-        <Typography><FormattedMessage id='permissions.principal.email' />{": "}{principal.email}</Typography>
-      </Grid>
+        <Grid item lg={5}>
+          <Typography>{principal.email}</Typography>
+        </Grid>
 
-      <Grid item lg={2}>
-        <Typography><FormattedMessage id='permissions.principal.status' />{": "}{principal.status}</Typography>
-      </Grid>
-
-    </Grid>)}
-
+        <Grid item lg={2}>
+          <Typography>{principal.status}</Typography>
+        </Grid>
+      </LayoutListItem>)}
   </>)
+}
+
+const PrincipalsOverview: React.FC = () => {
+  const navigation = <PrincipalsNavigation />;
+  const pagination = <></>;
+  const active = <>ACTIVE</>;
+  const items = <PrincipalItems />;
+
+  return (
+    <PrincipalsOverviewProvider>
+      <LayoutList slots={{ navigation, active, items, pagination }} />
+    </PrincipalsOverviewProvider>
+  )
+
 }
 
 export { PrincipalsOverview };

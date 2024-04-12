@@ -5,19 +5,19 @@ import React from 'react';
 
 interface PermissionsOverviewContextType {
   permissionId: PermissionId | undefined,
-  setActive(id: string): void;
+  setActivePermission(id: string): void;
 }
 
 const PermissionsOverviewContext = React.createContext<PermissionsOverviewContextType>({} as any);
 
-export const PermissionsOverviewContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [permissionId, setActive] = React.useState<PermissionId>();
+export const PermissionsOverviewProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [permissionId, setActivePermission] = React.useState<PermissionId>();
 
   const contextValue: PermissionsOverviewContextType = React.useMemo(() => {
 
     return {
       permissionId,
-      setActive
+      setActivePermission
     }
   }, [permissionId]);
 

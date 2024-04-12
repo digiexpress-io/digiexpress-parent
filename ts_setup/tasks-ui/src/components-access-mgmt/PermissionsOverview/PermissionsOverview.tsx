@@ -1,17 +1,17 @@
 import React from 'react';
+import { Typography, Grid } from '@mui/material';
 
 import * as colors from 'components-colors';
+
 import { LayoutList, NavigationButton, LayoutListItem, FilterByString } from 'components-generic';
 import { useAm } from 'descriptor-access-mgmt';
-import { PermissionItem } from './PermissionItem';
 import PermissionItemActive from './PermissionItemActive';
 
-import { PermissionsOverviewContextProvider, useActivePermission } from './PermissionsOverviewContext';
+import { PermissionsOverviewProvider, useActivePermission } from './PermissionsOverviewContext';
 
 const color_create_permission = colors.steelblue;
 
 const PermissionsNavigation: React.FC<{}> = () => {
-
   function handleSearch(value: React.ChangeEvent<HTMLInputElement>) { }
 
   return (<>
@@ -27,7 +27,7 @@ const PermissionsNavigation: React.FC<{}> = () => {
 
 const PermissionItems: React.FC = () => {
   const { permissions } = useAm();
-  const { setActive, permissionId } = useActivePermission();
+  const { setActivePermission, permissionId } = useActivePermission();
 
   if (!permissions) {
     return (<>no permissions defined</>);
@@ -36,8 +36,18 @@ const PermissionItems: React.FC = () => {
 
   return (<>
     {permissions.map((permission, index) => (
-      <LayoutListItem active={permissionId === permission.id} index={index} key={permission.id} onClick={() => setActive(permission.id)}>
-        <PermissionItem key={permission.id} permission={permission} />
+      <LayoutListItem active={permissionId === permission.id} index={index} key={permission.id} onClick={() => setActivePermission(permission.id)}>
+        <Grid item sm={4} md={4} lg={4}>
+          <Typography noWrap>{permission.name}</Typography>
+        </Grid>
+
+        <Grid item sm={4} md={4} lg={6}>
+          <Typography noWrap>{permission.description}</Typography>
+        </Grid>
+
+        <Grid item sm={4} md={4} lg={2}>
+          <Typography noWrap>{permission.status}</Typography>
+        </Grid>
       </LayoutListItem>
     ))
     }
@@ -60,9 +70,9 @@ const PermissionsOverviewLayout: React.FC = () => {
 
 const PermissionsOverview: React.FC<{}> = () => {
   return (
-    <PermissionsOverviewContextProvider>
+    <PermissionsOverviewProvider>
       <PermissionsOverviewLayout />
-    </PermissionsOverviewContextProvider>
+    </PermissionsOverviewProvider>
   );
 }
 
