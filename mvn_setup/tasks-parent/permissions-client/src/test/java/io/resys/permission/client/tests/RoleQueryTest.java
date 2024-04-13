@@ -33,7 +33,7 @@ public class RoleQueryTest extends DbTestTemplate {
   @Test 
   public void roleQueryTest() {
     
-    final PermissionClient client = getClient().repoQuery()
+    final PermissionClient client = getClient().tenantQuery()
       .repoName("RoleQueryTest-1")
       .create()
       .await().atMost(Duration.ofMinutes(1));

@@ -27,12 +27,12 @@ public class PrincipalUpdateTest extends DbTestTemplate {
   @Test
   public void getPrincipalAndAddRole() {
    
-    final PermissionClient client = getClient().repoQuery()
+    final PermissionClient client = getClient().tenantQuery()
     .repoName("PrincipalUpdateTest-1")
     .create()
     .await().atMost(Duration.ofMinutes(1));
 
-    final Tenant repo = client.getRepo().await().atMost(Duration.ofMinutes(1));
+    final Tenant repo = client.getTenant().await().atMost(Duration.ofMinutes(1));
     log.debug("created repo {}", repo);
     new GenerateTestData(getDocDb()).populate(repo);
     

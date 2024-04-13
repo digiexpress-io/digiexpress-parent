@@ -18,8 +18,8 @@ import io.smallrye.mutiny.Uni;
 
 
 public interface PermissionClient {
-  RepositoryQuery repoQuery();
-  Uni<Tenant> getRepo();
+  PermissionTenantQuery tenantQuery();
+  Uni<Tenant> getTenant();
   PermissionClient withRepoId(String repoId);
 
   CreatePermissionAction createPermission();
@@ -82,8 +82,8 @@ public interface PermissionClient {
     Uni<RoleHierarchyContainer> get(String roleId);
   }
   
-  public interface RepositoryQuery {
-    RepositoryQuery repoName(String repoName);
+  public interface PermissionTenantQuery {
+    PermissionTenantQuery repoName(String repoName);
     PermissionClient build();
 
     Uni<PermissionClient> deleteAll();
@@ -92,6 +92,5 @@ public interface PermissionClient {
     Uni<PermissionClient> createIfNot();
     
     Uni<Optional<PermissionClient>> get();
-  } 
+  }
 }
-

@@ -30,7 +30,7 @@ public class RoleUpdateTest extends DbTestTemplate {
   @Test
   public void getRoleAndUpdateName() {
  
-    final PermissionClient client = getClient().repoQuery()
+    final PermissionClient client = getClient().tenantQuery()
       .repoName("RoleUpdateTest-1")
       .create()
       .await().atMost(Duration.ofMinutes(1));

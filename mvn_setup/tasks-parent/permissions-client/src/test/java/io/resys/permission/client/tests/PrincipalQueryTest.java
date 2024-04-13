@@ -34,7 +34,7 @@ public class PrincipalQueryTest extends DbTestTemplate {
   @Test  
   public void principalQueryTest() {
     
-    final PermissionClient client = getClient().repoQuery()
+    final PermissionClient client = getClient().tenantQuery()
         .repoName("PrincipalQueryTest-1")
         .create()
         .await().atMost(Duration.ofMinutes(1));

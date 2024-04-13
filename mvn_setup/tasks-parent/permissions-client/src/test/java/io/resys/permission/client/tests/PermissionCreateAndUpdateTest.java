@@ -69,7 +69,7 @@ public class PermissionCreateAndUpdateTest extends DbTestTemplate {
   @Test
   public void createPermissionAndUpdateTest() {
 
-    final PermissionClient client = getClient().repoQuery()
+    final PermissionClient client = getClient().tenantQuery()
         .repoName("PermissionCreateAndUpdateTest-1")
         .create()
         .await().atMost(Duration.ofMinutes(1));

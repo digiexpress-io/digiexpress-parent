@@ -22,16 +22,16 @@ public class PermissionClientImpl implements PermissionClient {
     return new PermissionClientImpl(ctx.withRepoId(repoId));
   }
   @Override
-  public Uni<Tenant> getRepo() {
+  public Uni<Tenant> getTenant() {
     return ctx.getRepo();
   }
   @Override
-  public RepositoryQuery repoQuery() {
+  public PermissionTenantQuery tenantQuery() {
     PermissionStore.PermissionRepositoryQuery repo = ctx.query();
-    return new RepositoryQuery() {
+    return new PermissionTenantQuery() {
       private String repoName;
       @Override
-      public RepositoryQuery repoName(String repoName) {
+      public PermissionTenantQuery repoName(String repoName) {
         this.repoName = repoName;
         repo.repoName(repoName);
         return this;

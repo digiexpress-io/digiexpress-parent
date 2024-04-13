@@ -86,7 +86,7 @@ public class PrincipalCreateAndUpdateTest extends DbTestTemplate {
   
   @Test
   public void createPrincipalAndUpdateTest() {
-    final PermissionClient client = getClient().repoQuery()
+    final PermissionClient client = getClient().tenantQuery()
         .repoName("PrincipalCreateAndUpdateTest-1")
         .create()
         .await().atMost(Duration.ofMinutes(5));
