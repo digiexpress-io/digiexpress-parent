@@ -11,6 +11,7 @@ import io.resys.thena.api.envelope.QueryEnvelopeList;
 import io.resys.thena.tasks.client.api.actions.TaskActions.TaskAccessEvaluator;
 import io.resys.thena.tasks.client.api.model.Task;
 import io.resys.thena.tasks.client.thenamission.TaskStoreConfig;
+import io.resys.thena.tasks.client.thenamission.support.EvaluateTaskAccess;
 import io.resys.thena.tasks.client.thenamission.support.TaskException;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -48,6 +49,7 @@ public class GetOneTaskVisitor implements TaskStoreConfig.QueryTasksVisitor<Task
   @Override
   public Uni<Task> end(GrimStructuredTenant config, List<GrimMissionContainer> commit) {
     final var task = CreateTasksVisitor.mapToTask(commit.iterator().next());
-    return Uni.createFrom().item(task);
+    final var access = EvaluateTaskAccess.of(this.access);
+    return Uni.createFrom().item(access.maskTask(task));
   }
 }
