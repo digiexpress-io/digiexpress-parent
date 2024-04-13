@@ -35,7 +35,7 @@ import io.resys.thena.spi.ImmutableDocumentExceptionMsg;
 import io.resys.thena.storesql.DbStateSqlImpl;
 import io.resys.thena.support.RepoAssert;
 import io.resys.thena.tasks.client.thenamission.TaskStoreConfig.TaskAuthorProvider;
-import io.resys.thena.tasks.client.thenamission.visitors.TaskException;
+import io.resys.thena.tasks.client.thenamission.support.TaskException;
 import io.smallrye.mutiny.Uni;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.sqlclient.PoolOptions;

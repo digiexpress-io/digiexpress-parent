@@ -14,6 +14,7 @@ import io.resys.thena.tasks.client.api.model.ImmutableArchiveTask;
 import io.resys.thena.tasks.client.api.model.Task;
 import io.resys.thena.tasks.client.thenamission.TaskStore;
 import io.resys.thena.tasks.client.thenamission.TaskStoreConfig;
+import io.resys.thena.tasks.client.thenamission.support.TaskException;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 

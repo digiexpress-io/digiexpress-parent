@@ -13,6 +13,7 @@ import io.resys.thena.api.envelope.QueryEnvelopeList;
 import io.resys.thena.tasks.client.api.actions.TaskActions.TaskAccessEvaluator;
 import io.resys.thena.tasks.client.api.model.Task;
 import io.resys.thena.tasks.client.thenamission.TaskStoreConfig;
+import io.resys.thena.tasks.client.thenamission.support.TaskException;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 

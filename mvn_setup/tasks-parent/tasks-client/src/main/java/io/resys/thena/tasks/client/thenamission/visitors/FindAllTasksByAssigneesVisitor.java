@@ -13,6 +13,7 @@ import io.resys.thena.api.envelope.QueryEnvelopeList;
 import io.resys.thena.tasks.client.api.actions.TaskActions.TaskAccessEvaluator;
 import io.resys.thena.tasks.client.api.model.Task;
 import io.resys.thena.tasks.client.thenamission.TaskStoreConfig;
+import io.resys.thena.tasks.client.thenamission.support.TaskException;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
@@ -21,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 public class FindAllTasksByAssigneesVisitor implements TaskStoreConfig.QueryTasksVisitor<List<Task>> {
   private final Collection<String> users;
   private final TaskAccessEvaluator access;
+  
   @Override
   public MissionQuery start(GrimStructuredTenant config, MissionQuery query) {
     users.forEach(user -> query.addAssignment(CreateTasksVisitor.ASSIGNMENT_TYPE_TASK_USER, user)); 

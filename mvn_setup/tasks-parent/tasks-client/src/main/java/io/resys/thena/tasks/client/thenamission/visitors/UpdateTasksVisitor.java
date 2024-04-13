@@ -64,6 +64,7 @@ import io.resys.thena.tasks.client.api.model.TaskCommand.DeleteChecklistItem;
 import io.resys.thena.tasks.client.api.model.TaskCommand.TaskUpdateCommand;
 import io.resys.thena.tasks.client.thenamission.TaskStore;
 import io.resys.thena.tasks.client.thenamission.TaskStoreConfig.MergeTasksVisitor;
+import io.resys.thena.tasks.client.thenamission.support.TaskException;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 
