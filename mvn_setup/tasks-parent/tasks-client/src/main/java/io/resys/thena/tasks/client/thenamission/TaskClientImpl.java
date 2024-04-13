@@ -31,8 +31,8 @@ import io.resys.thena.support.RepoAssert;
  */
 
 import io.resys.thena.tasks.client.api.TaskClient;
-import io.resys.thena.tasks.client.api.actions.RepositoryActions;
-import io.resys.thena.tasks.client.api.actions.RepositoryQuery;
+import io.resys.thena.tasks.client.api.actions.TaskTenantsActions;
+import io.resys.thena.tasks.client.api.actions.TaskTenantQuery;
 import io.resys.thena.tasks.client.api.actions.TaskActions;
 import io.resys.thena.tasks.client.api.model.Task;
 import io.resys.thena.tasks.client.api.model.TaskCommand.CreateTask;
@@ -144,16 +144,16 @@ public class TaskClientImpl implements TaskClient {
   }
 
   @Override
-  public RepositoryActions repo() {
-    return new RepositoryActions() {
+  public TaskTenantsActions tenants() {
+    return new TaskTenantsActions() {
       @Override
       public Uni<Tenant> getRepo() { return ctx.getRepo(); }
       @Override
-      public RepositoryQuery query() {
+      public TaskTenantQuery query() {
         final var query = ctx.query();
-        return new RepositoryQuery() {
-          @Override public RepositoryQuery repoName(String repoName) { query.tenantName(repoName); return this; }
-          @Override public RepositoryQuery headName(String headName) { return this; }
+        return new TaskTenantQuery() {
+          @Override public TaskTenantQuery repoName(String repoName) { query.tenantName(repoName); return this; }
+          @Override public TaskTenantQuery headName(String headName) { return this; }
           @Override public Uni<TaskClient> createIfNot() { return query.createIfNot().onItem().transform(doc -> new TaskClientImpl(doc)); }
           @Override public Uni<TaskClient> create() { return query.create().onItem().transform(doc -> new TaskClientImpl(doc)); }
           @Override public TaskClient build() { return new TaskClientImpl(query.build()); }

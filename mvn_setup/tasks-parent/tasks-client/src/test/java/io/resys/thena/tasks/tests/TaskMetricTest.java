@@ -53,7 +53,7 @@ public class TaskMetricTest extends TaskTestCase {
   @Disabled
   @org.junit.jupiter.api.Test
   public void createAndReadTheTask() throws JsonProcessingException, JSONException {
-    final var client = getClient().repo().query().repoName("init-test").create().await().atMost(atMost);
+    final var client = getClient().tenants().query().repoName("init-test").create().await().atMost(atMost);
     
     runInserts(client, 10000);
     select(client);

@@ -43,7 +43,7 @@ public class CreateChecklistTest extends TaskTestCase {
   @Test
   public void createChecklist() {
     final var repoName = CreateChecklistTest.class.getSimpleName() + "CreateChecklist";
-    final var client = getClient().repo().query().repoName(repoName).createIfNot().await().atMost(atMost);
+    final var client = getClient().tenants().query().repoName(repoName).createIfNot().await().atMost(atMost);
     final var task = createTask(client);
     
     final var taskWithChecklist = client.tasks().updateTask().updateOne(ImmutableCreateChecklist.builder()

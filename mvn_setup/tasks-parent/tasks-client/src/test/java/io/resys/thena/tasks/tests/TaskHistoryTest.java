@@ -45,7 +45,7 @@ public class TaskHistoryTest extends TaskTestCase {
   @SuppressWarnings("unused")
   @org.junit.jupiter.api.Test
   public void createTaskAndUpdateAndGetHistory() throws JsonProcessingException, JSONException {
-    final var client = getClient().repo().query().repoName(repoName).createIfNot().await().atMost(atMost);
+    final var client = getClient().tenants().query().repoName(repoName).createIfNot().await().atMost(atMost);
 
     Task createdTask_1 = client.tasks().createTask().createOne(ImmutableCreateTask.builder()
             .targetDate(getTargetDate())

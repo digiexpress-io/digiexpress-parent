@@ -23,9 +23,9 @@ package io.resys.thena.tasks.client.api.actions;
 import io.resys.thena.tasks.client.api.TaskClient;
 import io.smallrye.mutiny.Uni;
 
-public interface RepositoryQuery {
-  RepositoryQuery repoName(String repoName);
-  RepositoryQuery headName(String headName);
+public interface TaskTenantQuery {
+  TaskTenantQuery repoName(String repoName);
+  TaskTenantQuery headName(String headName);
   TaskClient build();
 
   Uni<TaskClient> delete();

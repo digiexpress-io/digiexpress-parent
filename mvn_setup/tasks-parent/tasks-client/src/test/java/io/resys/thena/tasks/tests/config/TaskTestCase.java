@@ -164,7 +164,7 @@ public class TaskTestCase {
   }
   
   public String toStaticData(TaskClient client) {
-    final var repo = client.repo().getRepo().await().atMost(Duration.ofMinutes(1));
+    final var repo = client.tenants().getRepo().await().atMost(Duration.ofMinutes(1));
     return new GrimPrinter(createState()).printWithStaticIds(repo, replacements);
   }
   

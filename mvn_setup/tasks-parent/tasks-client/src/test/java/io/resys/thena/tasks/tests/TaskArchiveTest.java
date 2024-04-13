@@ -45,7 +45,7 @@ public class TaskArchiveTest extends TaskTestCase {
   @org.junit.jupiter.api.Test
   public void createTaskAndUpdate() throws JsonProcessingException, JSONException {
     final var repoName = TaskArchiveTest.class.getSimpleName() + "CreateTaskAndUpdate";
-    final var client = getClient().repo().query().repoName(repoName).createIfNot().await().atMost(atMost);
+    final var client = getClient().tenants().query().repoName(repoName).createIfNot().await().atMost(atMost);
     
     // first commit
     @SuppressWarnings("unused")

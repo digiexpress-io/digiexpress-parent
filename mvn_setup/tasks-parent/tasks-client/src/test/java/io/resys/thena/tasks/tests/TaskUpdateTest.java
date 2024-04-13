@@ -72,7 +72,7 @@ public class TaskUpdateTest extends TaskTestCase {
   @org.junit.jupiter.api.Test
   public void updateStatus() {
     final var repoName = TaskUpdateTest.class.getSimpleName() + "UpdateStatus";
-    final var client = getClient().repo().query().repoName(repoName).createIfNot().await().atMost(atMost);
+    final var client = getClient().tenants().query().repoName(repoName).createIfNot().await().atMost(atMost);
     final var task = createTaskForUpdating(client);
     
     final var updated = client.tasks().updateTask().updateOne(ImmutableChangeTaskStatus.builder()
@@ -94,7 +94,7 @@ public class TaskUpdateTest extends TaskTestCase {
   @org.junit.jupiter.api.Test
   public void updatePriority() {
     final var repoName = TaskUpdateTest.class.getSimpleName() + "UpdatePriority";
-    final var client = getClient().repo().query().repoName(repoName).createIfNot().await().atMost(atMost);
+    final var client = getClient().tenants().query().repoName(repoName).createIfNot().await().atMost(atMost);
     final var task = createTaskForUpdating(client);
 
     final var updated = client.tasks().updateTask().updateOne(ImmutableChangeTaskPriority.builder()
@@ -116,7 +116,7 @@ public class TaskUpdateTest extends TaskTestCase {
   @org.junit.jupiter.api.Test
   public void updateReporter() {
     final var repoName = TaskUpdateTest.class.getSimpleName() + "UpdateReporter";
-    final var client = getClient().repo().query().repoName(repoName).createIfNot().await().atMost(atMost);
+    final var client = getClient().tenants().query().repoName(repoName).createIfNot().await().atMost(atMost);
     final var task = createTaskForUpdating(client);
 
     final var updated = client.tasks().updateTask().updateOne(ImmutableAssignTaskReporter.builder()
@@ -138,7 +138,7 @@ public class TaskUpdateTest extends TaskTestCase {
   @org.junit.jupiter.api.Test
   public void archiveTaskViaUpdate() {
     final var repoName = TaskUpdateTest.class.getSimpleName() + "ArchiveTaskViaUpdate";
-    final var client = getClient().repo().query().repoName(repoName).createIfNot().await().atMost(atMost);
+    final var client = getClient().tenants().query().repoName(repoName).createIfNot().await().atMost(atMost);
     final var task = createTaskForUpdating(client);
 
     final var updated = client.tasks().updateTask().updateOne(ImmutableArchiveTask.builder()
@@ -159,7 +159,7 @@ public class TaskUpdateTest extends TaskTestCase {
   @org.junit.jupiter.api.Test
   public void addComments() {
     final var repoName = TaskUpdateTest.class.getSimpleName() + "AddComments";
-    final var client = getClient().repo().query().repoName(repoName).createIfNot().await().atMost(atMost);
+    final var client = getClient().tenants().query().repoName(repoName).createIfNot().await().atMost(atMost);
     final var task = createTaskForUpdating(client);
 
     final var addedComment = client.tasks().updateTask().updateOne(ImmutableCommentOnTask.builder()
@@ -195,7 +195,7 @@ public class TaskUpdateTest extends TaskTestCase {
   @org.junit.jupiter.api.Test
   public void updateComment() {
     final var repoName = TaskUpdateTest.class.getSimpleName() + "UpdateComment";
-    final var client = getClient().repo().query().repoName(repoName).createIfNot().await().atMost(atMost);
+    final var client = getClient().tenants().query().repoName(repoName).createIfNot().await().atMost(atMost);
     final var task = createTaskForUpdating(client);
 
     final var addedComment = client.tasks().updateTask().updateOne(ImmutableCommentOnTask.builder()
@@ -231,7 +231,7 @@ public class TaskUpdateTest extends TaskTestCase {
   @org.junit.jupiter.api.Test
   public void updateRoles() {
     final var repoName = TaskUpdateTest.class.getSimpleName() + "UpdateRoles";
-    final var client = getClient().repo().query().repoName(repoName).createIfNot().await().atMost(atMost);
+    final var client = getClient().tenants().query().repoName(repoName).createIfNot().await().atMost(atMost);
     final var task = createTaskForUpdating(client);
 
     // add to static data
@@ -257,7 +257,7 @@ public class TaskUpdateTest extends TaskTestCase {
   @org.junit.jupiter.api.Test
   public void updateAssignees() {
     final var repoName = TaskUpdateTest.class.getSimpleName() + "UpdateAssignees";
-    final var client = getClient().repo().query().repoName(repoName).createIfNot().await().atMost(atMost);
+    final var client = getClient().tenants().query().repoName(repoName).createIfNot().await().atMost(atMost);
     final var task = createTaskForUpdating(client);
     
     // add to static data
@@ -283,7 +283,7 @@ public class TaskUpdateTest extends TaskTestCase {
   @org.junit.jupiter.api.Test
   public void updateStartDate() {
     final var repoName = TaskUpdateTest.class.getSimpleName() + "UpdateStartDate";
-    final var client = getClient().repo().query().repoName(repoName).createIfNot().await().atMost(atMost);
+    final var client = getClient().tenants().query().repoName(repoName).createIfNot().await().atMost(atMost);
     final var task = createTaskForUpdating(client);
 
     final var updated = client.tasks().updateTask().updateOne(ImmutableChangeTaskStartDate.builder()
@@ -311,7 +311,7 @@ public class TaskUpdateTest extends TaskTestCase {
   @org.junit.jupiter.api.Test
   public void updateDueDate() {
     final var repoName = TaskUpdateTest.class.getSimpleName() + "UpdateDueDate";
-    final var client = getClient().repo().query().repoName(repoName).createIfNot().await().atMost(atMost);
+    final var client = getClient().tenants().query().repoName(repoName).createIfNot().await().atMost(atMost);
     final var task = createTaskForUpdating(client);
 
     final var updated = client.tasks().updateTask().updateOne(ImmutableChangeTaskDueDate.builder()
@@ -339,7 +339,7 @@ public class TaskUpdateTest extends TaskTestCase {
   @org.junit.jupiter.api.Test
   public void updateTaskInfo() {
     final var repoName = TaskUpdateTest.class.getSimpleName() + "UpdateTaskInfo";
-    final var client = getClient().repo().query().repoName(repoName).createIfNot().await().atMost(atMost);
+    final var client = getClient().tenants().query().repoName(repoName).createIfNot().await().atMost(atMost);
     final var task = createTaskForUpdating(client);
 
     final var updated = client.tasks().updateTask().updateOne(ImmutableChangeTaskInfo.builder()
@@ -362,7 +362,7 @@ public class TaskUpdateTest extends TaskTestCase {
   @org.junit.jupiter.api.Test
   public void createTaskExtension() {
     final var repoName = TaskUpdateTest.class.getSimpleName() + "CreateTaskExtension";
-    final var client = getClient().repo().query().repoName(repoName).createIfNot().await().atMost(atMost);
+    final var client = getClient().tenants().query().repoName(repoName).createIfNot().await().atMost(atMost);
     final var task = createTaskForUpdating(client);
 
     final var updated = client.tasks().updateTask().updateOne(ImmutableCreateTaskExtension.builder()
@@ -386,7 +386,7 @@ public class TaskUpdateTest extends TaskTestCase {
   @org.junit.jupiter.api.Test
   public void updateTaskExtension() {
     final var repoName = TaskUpdateTest.class.getSimpleName() + "UpdateTaskExtension";
-    final var client = getClient().repo().query().repoName(repoName).createIfNot().await().atMost(atMost);
+    final var client = getClient().tenants().query().repoName(repoName).createIfNot().await().atMost(atMost);
     final var task = createTaskForUpdating(client);
 
     final var createdExt = client.tasks().updateTask().updateOne(ImmutableCreateTaskExtension.builder()
@@ -426,7 +426,7 @@ public class TaskUpdateTest extends TaskTestCase {
   @org.junit.jupiter.api.Test
   public void updateParentTask() {
     final var repoName = TaskUpdateTest.class.getSimpleName() + "UpdateParentTask";
-    final var client = getClient().repo().query().repoName(repoName).createIfNot().await().atMost(atMost);
+    final var client = getClient().tenants().query().repoName(repoName).createIfNot().await().atMost(atMost);
     final var task1 = createTaskForUpdating(client);
 
     final var task2 = client.tasks()
