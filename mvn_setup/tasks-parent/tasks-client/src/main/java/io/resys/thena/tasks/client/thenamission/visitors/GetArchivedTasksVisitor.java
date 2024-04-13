@@ -31,6 +31,7 @@ import io.resys.thena.api.actions.GrimQueryActions.MissionQuery;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.api.envelope.QueryEnvelopeList;
+import io.resys.thena.tasks.client.api.actions.TaskActions.TaskAccessEvaluator;
 import io.resys.thena.tasks.client.api.model.Task;
 import io.resys.thena.tasks.client.thenamission.TaskStoreConfig;
 import io.smallrye.mutiny.Uni;
@@ -45,6 +46,7 @@ public class GetArchivedTasksVisitor implements TaskStoreConfig.QueryTasksVisito
   private final @Nullable String likeDescription;
   private final @Nullable String reporterId;
   private final LocalDate fromCreatedOrUpdated;
+  private final TaskAccessEvaluator access;
   
   @Override
   public MissionQuery start(GrimStructuredTenant config, MissionQuery builder) {
@@ -66,7 +68,7 @@ public class GetArchivedTasksVisitor implements TaskStoreConfig.QueryTasksVisito
   public List<GrimMissionContainer> visitEnvelope(GrimStructuredTenant config, QueryEnvelopeList<GrimMissionContainer> envelope) {
     
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
-      throw DocumentStoreException.builder("FIND_ARCHIVED_TASKS_FAIL").add(config, envelope)
+      throw TaskException.builder("FIND_ARCHIVED_TASKS_FAIL").add(config, envelope)
       .add(c -> c.addArgs(JsonObject.of(
           "fromCreatedOrUpdated", fromCreatedOrUpdated,
           "likeTitle", likeTitle,

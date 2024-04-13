@@ -9,6 +9,7 @@ import io.resys.thena.api.actions.GrimQueryActions.MissionQuery;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.api.envelope.QueryEnvelopeList;
+import io.resys.thena.tasks.client.api.actions.TaskActions.TaskAccessEvaluator;
 import io.resys.thena.tasks.client.api.model.ImmutableArchiveTask;
 import io.resys.thena.tasks.client.api.model.Task;
 import io.resys.thena.tasks.client.thenamission.TaskStore;
@@ -22,6 +23,7 @@ public class DeleteAllTasksVisitor implements TaskStoreConfig.QueryTasksVisitor<
   private final String userId;
   private final Instant targetDate;
   private final TaskStore ctx;
+  private final TaskAccessEvaluator access;
   
   @Override
   public MissionQuery start(GrimStructuredTenant config, MissionQuery query) { 
@@ -30,7 +32,7 @@ public class DeleteAllTasksVisitor implements TaskStoreConfig.QueryTasksVisitor<
   @Override
   public List<GrimMissionContainer> visitEnvelope(GrimStructuredTenant config, QueryEnvelopeList<GrimMissionContainer> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
-      throw DocumentStoreException.builder("FIND_ALL_TASK_FOR_DELETE_FAIL")
+      throw TaskException.builder("FIND_ALL_TASK_FOR_DELETE_FAIL")
         .add(config, envelope)
         .build();
     }
@@ -46,6 +48,6 @@ public class DeleteAllTasksVisitor implements TaskStoreConfig.QueryTasksVisitor<
       .targetDate(targetDate)
       .build()      
      ).toList();
-    return ctx.getConfig().accept(new UpdateTasksVisitor(commands, ctx));
+    return ctx.getConfig().accept(new UpdateTasksVisitor(commands, ctx, access));
   }
 }

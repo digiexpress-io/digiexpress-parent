@@ -26,7 +26,6 @@ import java.util.Collection;
 
 import java.util.List;
 
-import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
 import io.resys.thena.tasks.client.api.model.Task;
 import io.resys.thena.tasks.client.api.model.TaskCommand.CreateTask;
 import io.resys.thena.tasks.client.api.model.TaskCommand.TaskUpdateCommand;
@@ -41,20 +40,20 @@ public interface TaskActions {
   ArchivedTasksQuery queryArchivedTasks();
 
   interface CreateTasks {
-    CreateTasks evalPermissions(TaskAccessPermissionEvaluator eval);
+    CreateTasks evalAccess(TaskAccessEvaluator eval);
     Uni<Task> createOne(CreateTask command);
     Uni<List<Task>> createMany(List<? extends CreateTask> commands);
   }
 
   interface UpdateTasks {
-    UpdateTasks evalPermissions(TaskAccessPermissionEvaluator eval);
+    UpdateTasks evalAccess(TaskAccessEvaluator eval);
     Uni<Task> updateOne(TaskUpdateCommand command);
     Uni<Task> updateOne(List<TaskUpdateCommand> commands);
     Uni<List<Task>> updateMany(List<TaskUpdateCommand> commands);
   }
 
   interface ActiveTasksQuery {
-    ActiveTasksQuery evalPermissions(TaskAccessPermissionEvaluator eval);
+    ActiveTasksQuery evalAccess(TaskAccessEvaluator eval);
     Uni<List<Task>> findAll();
     Uni<List<Task>> findByTaskIds(Collection<String> taskIds);
     Uni<List<Task>> findByRoles(Collection<String> roles);
@@ -64,14 +63,14 @@ public interface TaskActions {
   }
   
   interface ArchivedTasksQuery {
-    ArchivedTasksQuery evalPermissions(TaskAccessPermissionEvaluator eval);
+    ArchivedTasksQuery evalAccess(TaskAccessEvaluator eval);
     ArchivedTasksQuery title(String likeTitle); // like == doesn't need to match exactly. If a title contains "bob", then it can be matched by bob
     ArchivedTasksQuery description(String likeDescription);
     ArchivedTasksQuery reporterId(String reporterId);
     Uni<List<Task>> findAll(LocalDate fromCreatedOrUpdated);
   }
  
-  interface TaskAccessPermissionEvaluator {
-    boolean evaluate(GrimMissionContainer container);
+  interface TaskAccessEvaluator {
+    boolean evaluate(Task task);
   }
 }

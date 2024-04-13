@@ -14,6 +14,7 @@ import io.resys.thena.api.entities.grim.GrimMission;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewGoal;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewMission;
+import io.resys.thena.tasks.client.api.actions.TaskActions.TaskAccessEvaluator;
 import io.resys.thena.tasks.client.api.model.ImmutableChecklist;
 import io.resys.thena.tasks.client.api.model.ImmutableChecklistItem;
 import io.resys.thena.tasks.client.api.model.ImmutableTask;
@@ -34,6 +35,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CreateTasksVisitor implements TaskStoreConfig.CreateManyTasksVisitor<Task> {
   private final List<? extends CreateTask> commands;
+  private final TaskAccessEvaluator access;
   public static final String ASSIGNMENT_TYPE_TASK_USER = "task_user";
   public static final String ASSIGNMENT_TYPE_GOAL_USER = "goal_user";
   public static final String ASSIGNMENT_TYPE_TASK_ROLE = "task_role";
@@ -122,7 +124,7 @@ public class CreateTasksVisitor implements TaskStoreConfig.CreateManyTasksVisito
     if(envelope.getStatus() == CommitResultStatus.OK) {
       return envelope.getMissions();
     }
-    throw DocumentStoreException.builder("CREATE_TASKS_SAVE_FAIL").add(config, envelope).build(); 
+    throw TaskException.builder("CREATE_TASKS_SAVE_FAIL").add(config, envelope).build(); 
   }
 
   @Override

@@ -40,7 +40,7 @@ import lombok.RequiredArgsConstructor;
 
 
 
-public class DocumentStoreException extends RuntimeException {
+public class TaskException extends RuntimeException {
 
   private static final long serialVersionUID = 7058468238867536222L;
 
@@ -49,14 +49,14 @@ public class DocumentStoreException extends RuntimeException {
   private final List<DocumentExceptionMsg> messages = new ArrayList<>();
   
   
-  public DocumentStoreException(String code, List<Throwable> surpressed, DocumentExceptionMsg ... msg) {
+  public TaskException(String code, List<Throwable> surpressed, DocumentExceptionMsg ... msg) {
     super(new ExMessageFormatter(code, null, msg).format());
     this.code = code;
     this.messages.addAll(Arrays.asList(msg));
     this.target = null;
     surpressed.forEach(e -> this.addSuppressed(e));
   }
-  public DocumentStoreException(String code, JsonObject target, List<Throwable> surpressed, DocumentExceptionMsg ... msg) {
+  public TaskException(String code, JsonObject target, List<Throwable> surpressed, DocumentExceptionMsg ... msg) {
     super(new ExMessageFormatter(code, target, msg).format());
     this.code = code;
     this.messages.addAll(Arrays.asList(msg));
@@ -122,8 +122,8 @@ public class DocumentStoreException extends RuntimeException {
       return this;
     }
     
-    public DocumentStoreException build() {
-      return new DocumentStoreException(id, this.surpressed, msg.build());
+    public TaskException build() {
+      return new TaskException(id, this.surpressed, msg.build());
     }
   }
 }

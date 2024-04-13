@@ -30,6 +30,7 @@ import io.resys.thena.api.actions.GrimQueryActions.MissionQuery;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.api.envelope.QueryEnvelopeList;
+import io.resys.thena.tasks.client.api.actions.TaskActions.TaskAccessEvaluator;
 import io.resys.thena.tasks.client.api.model.Task;
 import io.resys.thena.tasks.client.thenamission.TaskStoreConfig;
 import io.smallrye.mutiny.Uni;
@@ -39,6 +40,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class FindAllTasksByIdVisitor implements TaskStoreConfig.QueryTasksVisitor<List<Task>> {
   private final Collection<String> taskIds;
+  private final TaskAccessEvaluator access;
   
   @Override
   public MissionQuery start(GrimStructuredTenant config, MissionQuery query) {
@@ -48,14 +50,14 @@ public class FindAllTasksByIdVisitor implements TaskStoreConfig.QueryTasksVisito
   @Override
   public List<GrimMissionContainer> visitEnvelope(GrimStructuredTenant config, QueryEnvelopeList<GrimMissionContainer> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
-      throw DocumentStoreException.builder("GET_TASKS_BY_IDS_FAIL")
+      throw TaskException.builder("GET_TASKS_BY_IDS_FAIL")
         .add(config, envelope)
         .add((callback) -> callback.addArgs(taskIds.stream().collect(Collectors.joining(",", "{", "}"))))
         .build();
     }
     final var result = envelope.getObjects();
     if(result == null) {
-      throw DocumentStoreException.builder("GET_TASKS_BY_IDS_NOT_FOUND")   
+      throw TaskException.builder("GET_TASKS_BY_IDS_NOT_FOUND")   
         .add(config, envelope)
         .add((callback) -> callback.addArgs(taskIds.stream().collect(Collectors.joining(",", "{", "}"))))
         .build();

@@ -60,50 +60,64 @@ public class TaskClientImpl implements TaskClient {
     return new TaskActions() {
       @Override
       public CreateTasks createTask() {
+
         return new CreateTasks() {
+          private TaskAccessEvaluator access;
           @Override
           public Uni<Task> createOne(CreateTask command) {
             return this.createMany(Arrays.asList(command)).onItem().transform(tasks -> tasks.get(0));
           }
           @Override
           public Uni<List<Task>> createMany(List<? extends CreateTask> commands) {
-            return ctx.getConfig().accept(new CreateTasksVisitor(commands));
+            return ctx.getConfig().accept(new CreateTasksVisitor(commands, access));
+          }
+          @Override
+          public CreateTasks evalAccess(TaskAccessEvaluator eval) {
+            this.access = eval;
+            return this;
           }
         };
       }
       @Override
       public ActiveTasksQuery queryActiveTasks() {
         return new ActiveTasksQuery() {
+          private TaskAccessEvaluator access;
           @Override
           public Uni<Task> get(String id) {
-            return ctx.getConfig().accept(new GetOneTaskVisitor(id));
+            return ctx.getConfig().accept(new GetOneTaskVisitor(id, this.access));
           }
           @Override
           public Uni<List<Task>> findByTaskIds(Collection<String> taskIds) {
-            return ctx.getConfig().accept(new FindAllTasksByIdVisitor(taskIds));
+            return ctx.getConfig().accept(new FindAllTasksByIdVisitor(taskIds, this.access));
           }
           @Override
           public Uni<List<Task>> findAll() {
-            return ctx.getConfig().accept(new FindAllTasksVisitor());
+            return ctx.getConfig().accept(new FindAllTasksVisitor(this.access));
           }
           @Override
           public Uni<List<Task>> findByRoles(Collection<String> roles) {
-            return ctx.getConfig().accept(new FindAllTasksByRolesVisitor(roles));
+            return ctx.getConfig().accept(new FindAllTasksByRolesVisitor(roles, this.access));
           }
           @Override
           public Uni<List<Task>> findByAssignee(Collection<String> assignees) {
-            return ctx.getConfig().accept(new FindAllTasksByAssigneesVisitor(assignees));
+            return ctx.getConfig().accept(new FindAllTasksByAssigneesVisitor(assignees, this.access));
           }
          
           @Override
           public Uni<List<Task>> deleteAll(String userId, Instant targetDate) {
-            return ctx.getConfig().accept(new DeleteAllTasksVisitor(userId, targetDate, ctx));
+            return ctx.getConfig().accept(new DeleteAllTasksVisitor(userId, targetDate, ctx, this.access));
+          }
+          @Override
+          public ActiveTasksQuery evalAccess(TaskAccessEvaluator eval) {
+            this.access = eval;
+            return this;
           }
         };
       }    
       @Override
       public UpdateTasks updateTask() {
         return new UpdateTasks() {
+          private TaskAccessEvaluator access;
           @Override
           public Uni<Task> updateOne(TaskUpdateCommand command) {        
             return updateOne(Arrays.asList(command));
@@ -116,7 +130,7 @@ public class TaskClientImpl implements TaskClient {
             final var uniqueTaskIds = commands.stream().map(command -> command.getTaskId()).distinct().collect(Collectors.toList());
             RepoAssert.isTrue(uniqueTaskIds.size() == 1, () -> "Task id-s must be same, but got: %s!", uniqueTaskIds);
             
-            return ctx.getConfig().accept(new UpdateTasksVisitor(commands, ctx))
+            return ctx.getConfig().accept(new UpdateTasksVisitor(commands, ctx, access))
                 .onItem().transform(tasks -> tasks.get(0));
           }
           @Override
@@ -124,19 +138,30 @@ public class TaskClientImpl implements TaskClient {
             RepoAssert.notNull(commands, () -> "commands must be defined!");
             RepoAssert.isTrue(commands.size() > 0, () -> "No commands to apply!");
 
-            return ctx.getConfig().accept(new UpdateTasksVisitor(commands, ctx));
+            return ctx.getConfig().accept(new UpdateTasksVisitor(commands, ctx, access));
+          }
+          @Override
+          public UpdateTasks evalAccess(TaskAccessEvaluator eval) {
+            this.access = eval;
+            return this;
           }
         };
       }
       @Override
       public ArchivedTasksQuery queryArchivedTasks() {
         return new ArchivedTasksQuery() {
+          private TaskAccessEvaluator access;
           private String likeTitle, reporterId, likeDescription;
           @Override public ArchivedTasksQuery title(String likeTitle) { this.likeTitle = likeTitle; return this; }
           @Override public ArchivedTasksQuery reporterId(String reporterId) { this.reporterId = reporterId; return this; }
           @Override public ArchivedTasksQuery description(String likeDescription) { this.likeDescription = likeDescription; return this; }          
           @Override public Uni<List<Task>> findAll(LocalDate fromCreatedOrUpdated) {
-            return ctx.getConfig().accept(new GetArchivedTasksVisitor(likeTitle, likeDescription, reporterId, fromCreatedOrUpdated));
+            return ctx.getConfig().accept(new GetArchivedTasksVisitor(likeTitle, likeDescription, reporterId, fromCreatedOrUpdated, access));
+          }
+          @Override
+          public ArchivedTasksQuery evalAccess(TaskAccessEvaluator eval) {
+            this.access = eval;
+            return this;
           }
         };
       }

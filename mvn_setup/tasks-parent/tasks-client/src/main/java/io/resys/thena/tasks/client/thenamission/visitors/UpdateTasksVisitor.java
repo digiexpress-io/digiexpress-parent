@@ -34,6 +34,7 @@ import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.grim.GrimMission;
 import io.resys.thena.api.entities.grim.ThenaGrimMergeObject.MergeMission;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewGoal;
+import io.resys.thena.tasks.client.api.actions.TaskActions.TaskAccessEvaluator;
 import io.resys.thena.tasks.client.api.model.Task;
 import io.resys.thena.tasks.client.api.model.Task.ChecklistItem;
 import io.resys.thena.tasks.client.api.model.TaskCommand;
@@ -71,11 +72,12 @@ public class UpdateTasksVisitor implements MergeTasksVisitor<List<Task>> {
   private final TaskStore ctx;
   private final List<String> taskIds;
   private final Map<String, List<TaskUpdateCommand>> commandsByTaskId; 
+  private final TaskAccessEvaluator access;
   
-  
-  public UpdateTasksVisitor(List<? extends TaskUpdateCommand> commands, TaskStore ctx) {
+  public UpdateTasksVisitor(List<? extends TaskUpdateCommand> commands, TaskStore ctx, TaskAccessEvaluator access) {
     super();
     this.ctx = ctx;
+    this.access = access;
     this.commandsByTaskId = commands.stream()
         .collect(Collectors.groupingBy(TaskUpdateCommand::getTaskId));
     this.taskIds = new ArrayList<>(commandsByTaskId.keySet());
@@ -354,14 +356,14 @@ public class UpdateTasksVisitor implements MergeTasksVisitor<List<Task>> {
   @Override
   public List<GrimMission> visitEnvelope(GrimStructuredTenant config, ManyMissionsEnvelope envelope) {
     if(envelope.getStatus() != CommitResultStatus.OK) {
-      throw DocumentStoreException.builder("TASKS_UPDATE_FAIL").add(config, envelope).build();
+      throw TaskException.builder("TASKS_UPDATE_FAIL").add(config, envelope).build();
     }
     return envelope.getMissions();
   }
 
   @Override
   public Uni<List<Task>> end(GrimStructuredTenant config, List<GrimMission> commit) {
-    return ctx.getConfig().accept(new FindAllTasksByIdVisitor(taskIds));
+    return ctx.getConfig().accept(new FindAllTasksByIdVisitor(taskIds, access));
   }
 
   public static class UpdateTaskVisitorException extends RuntimeException {

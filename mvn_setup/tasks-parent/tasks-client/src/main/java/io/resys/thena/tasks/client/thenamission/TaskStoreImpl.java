@@ -35,7 +35,7 @@ import io.resys.thena.spi.ImmutableDocumentExceptionMsg;
 import io.resys.thena.storesql.DbStateSqlImpl;
 import io.resys.thena.support.RepoAssert;
 import io.resys.thena.tasks.client.thenamission.TaskStoreConfig.TaskAuthorProvider;
-import io.resys.thena.tasks.client.thenamission.visitors.DocumentStoreException;
+import io.resys.thena.tasks.client.thenamission.visitors.TaskException;
 import io.smallrye.mutiny.Uni;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.sqlclient.PoolOptions;
@@ -93,7 +93,7 @@ public class TaskStoreImpl implements TaskStore {
     
     return existingRepo.onItem().transformToUni((repoResult) -> {
       if(repoResult.getStatus() != QueryEnvelopeStatus.OK) {
-        throw new DocumentStoreException("REPO_GET_FOR_DELETE_FAIL",
+        throw new TaskException("REPO_GET_FOR_DELETE_FAIL",
             Collections.emptyList(),
             ImmutableDocumentExceptionMsg.builder()
             .id(repoResult.getStatus().toString())
@@ -117,7 +117,7 @@ public class TaskStoreImpl implements TaskStore {
     final var newRepo = client.tenants().commit().name(repoName, StructureType.grim).build();
     return newRepo.onItem().transform((repoResult) -> {
       if(repoResult.getStatus() != CommitStatus.OK) {
-        throw new DocumentStoreException("REPO_CREATE_FAIL",
+        throw new TaskException("REPO_CREATE_FAIL",
             Collections.emptyList(),
             ImmutableDocumentExceptionMsg.builder()
             .id(repoResult.getStatus().toString())

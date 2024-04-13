@@ -8,11 +8,16 @@ import io.resys.thena.api.actions.GrimQueryActions.MissionQuery;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.api.envelope.QueryEnvelopeList;
+import io.resys.thena.tasks.client.api.actions.TaskActions.TaskAccessEvaluator;
 import io.resys.thena.tasks.client.api.model.Task;
 import io.resys.thena.tasks.client.thenamission.TaskStoreConfig;
 import io.smallrye.mutiny.Uni;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public class FindAllTasksVisitor implements TaskStoreConfig.QueryTasksVisitor<List<Task>> {
+  private final TaskAccessEvaluator access;
+  
   @Override
   public MissionQuery start(GrimStructuredTenant config, MissionQuery query) {
     return query.archived(GrimArchiveQueryType.ONLY_IN_FORCE);
@@ -20,7 +25,7 @@ public class FindAllTasksVisitor implements TaskStoreConfig.QueryTasksVisitor<Li
   @Override
   public List<GrimMissionContainer> visitEnvelope(GrimStructuredTenant config, QueryEnvelopeList<GrimMissionContainer> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
-      throw DocumentStoreException.builder("FIND_ALL_TASKS_FAIL").add(config, envelope).build();
+      throw TaskException.builder("FIND_ALL_TASKS_FAIL").add(config, envelope).build();
     }
     return envelope.getObjects();
   }

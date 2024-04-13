@@ -12,8 +12,8 @@ import io.resys.permission.client.api.model.PrincipalCommand.CreatePrincipal;
 import io.resys.permission.client.api.model.PrincipalCommand.PrincipalUpdateCommand;
 import io.resys.permission.client.api.model.RoleCommand.CreateRole;
 import io.resys.permission.client.api.model.RoleCommand.RoleUpdateCommand;
-import io.resys.thena.api.entities.Tenant;
 import io.resys.permission.client.api.model.RoleHierarchyContainer;
+import io.resys.thena.api.entities.Tenant;
 import io.smallrye.mutiny.Uni;
 
 
@@ -37,52 +37,62 @@ public interface PermissionClient {
   
   
   interface CreatePermissionAction {
+    CreatePermissionAction evalAccess(PermissionAccessEvaluator eval);
     Uni<Permission> createOne(CreatePermission command);
   }
   
   interface UpdatePermissionAction {
+    UpdatePermissionAction evalAccess(PermissionAccessEvaluator eval);
     Uni<Permission> updateOne(PermissionUpdateCommand command);
     Uni<Permission> updateOne(List<PermissionUpdateCommand> commands);
   }
   
   interface CreateRoleAction {
+    CreateRoleAction evalAccess(RoleAccessEvaluator eval);
     Uni<Role> createOne(CreateRole command);
   }
   
   interface UpdateRoleAction {
+    UpdateRoleAction evalAccess(RoleAccessEvaluator eval);
     Uni<Role> updateOne(RoleUpdateCommand command);
     Uni<Role> updateOne(List<RoleUpdateCommand> commands);
   }
   
   interface CreatePrincipalAction {
+    CreatePrincipalAction evalAccess(PrincipalAccessEvaluator eval);
     Uni<Principal> createOne(CreatePrincipal command);
   }
   
   interface UpdatePrincipalAction {
+    UpdatePrincipalAction evalAccess(PrincipalAccessEvaluator eval);
     Uni<Principal> updateOne(PrincipalUpdateCommand command);
     Uni<Principal> updateOne(List<PrincipalUpdateCommand> commands);
   }
   
   interface PermissionQuery {
+    PermissionQuery evalAccess(PermissionAccessEvaluator eval);
     Uni<Permission> get(String permissionId);    
     Uni<List<Permission>> findAllPermissions();
   }
   
   interface RoleQuery {
+    RoleQuery evalAccess(RoleAccessEvaluator eval);
     Uni<Role> get(String roleId);  
     Uni<List<Role>> findAllRoles();
   }
   
   interface PrincipalQuery {
+    PrincipalQuery evalAccess(PrincipalAccessEvaluator eval);
     Uni<Principal> get(String principalId);  
     Uni<List<Principal>> findAllPrincipals();
   }
   
   interface RoleHierarchyQuery {
+    RoleHierarchyQuery evalAccess(RoleHierarchyContainerAccessEvaluator eval);
     Uni<RoleHierarchyContainer> get(String roleId);
   }
   
-  public interface PermissionTenantQuery {
+  interface PermissionTenantQuery {
     PermissionTenantQuery repoName(String repoName);
     PermissionClient build();
 
@@ -92,5 +102,18 @@ public interface PermissionClient {
     Uni<PermissionClient> createIfNot();
     
     Uni<Optional<PermissionClient>> get();
+  }
+  
+  interface PrincipalAccessEvaluator {
+    boolean evaluate(Principal principal);
+  }
+  interface RoleAccessEvaluator {
+    boolean evaluate(Role role);
+  }
+  interface PermissionAccessEvaluator {
+    boolean evaluate(Permission permission);
+  }
+  interface RoleHierarchyContainerAccessEvaluator {
+    boolean evaluate(RoleHierarchyContainer role);
   }
 }
