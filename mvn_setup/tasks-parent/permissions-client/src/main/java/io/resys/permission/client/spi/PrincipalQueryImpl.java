@@ -2,6 +2,7 @@ package io.resys.permission.client.spi;
 
 import java.util.List;
 
+import io.resys.permission.client.api.PermissionClient.PrincipalAccessEvaluator;
 import io.resys.permission.client.api.PermissionClient.PrincipalQuery;
 import io.resys.permission.client.api.model.ImmutablePrincipal;
 import io.resys.permission.client.api.model.Principal;
@@ -87,6 +88,12 @@ public class PrincipalQueryImpl implements PrincipalQuery {
       super(message);
     }
     
+  }
+
+  @Override
+  public PrincipalQuery evalAccess(PrincipalAccessEvaluator eval) {
+    // TODO Auto-generated method stub
+    return null;
   }
   
 }

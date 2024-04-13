@@ -27,16 +27,16 @@ import io.resys.thena.tasks.client.api.model.Task.Status;
 import io.resys.thena.tasks.client.api.model.TaskCommand;
 import io.resys.thena.tasks.client.api.model.TaskCommand.CreateTask;
 import io.resys.thena.tasks.client.thenamission.TaskStoreConfig;
+import io.resys.thena.tasks.client.thenamission.support.EvaluateTaskAccess;
 import io.resys.thena.tasks.client.thenamission.support.TaskException;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
-import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
+
 public class CreateTasksVisitor implements TaskStoreConfig.CreateManyTasksVisitor<Task> {
   private final List<? extends CreateTask> commands;
-  private final TaskAccessEvaluator access;
+  private final EvaluateTaskAccess access;
   public static final String ASSIGNMENT_TYPE_TASK_USER = "task_user";
   public static final String ASSIGNMENT_TYPE_GOAL_USER = "goal_user";
   public static final String ASSIGNMENT_TYPE_TASK_ROLE = "task_role";
@@ -45,6 +45,12 @@ public class CreateTasksVisitor implements TaskStoreConfig.CreateManyTasksVisito
   
   public static final String LINK_TYPE_TASK_EXTENSION_BODY = "body";
   public static final String LINK_TYPE_TASK_EXTENSION_TYPE = "type";  
+  
+  public CreateTasksVisitor(List<? extends CreateTask> commands, TaskAccessEvaluator access) {
+    super();
+    this.commands = commands;
+    this.access = EvaluateTaskAccess.of(access);
+  }
   
   @Override
   public CreateManyMissions start(GrimStructuredTenant config, CreateManyMissions builder) {
@@ -56,6 +62,7 @@ public class CreateTasksVisitor implements TaskStoreConfig.CreateManyTasksVisito
 
   private void createTask(CreateTask command, NewMission newMission) {
     newMission
+    .onNewState(newState -> access.isCreateAccessGranted(CreateTasksVisitor.mapToTask(newState)))
     .addCommands(Arrays.asList(JsonObject.mapFrom(command)))
     .reporterId(command.getReporterId())
     .title(command.getTitle())

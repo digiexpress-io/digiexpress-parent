@@ -1,11 +1,13 @@
 package io.resys.thena.structures.grim.create;
 
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import io.resys.thena.api.entities.grim.ImmutableGrimMissionData;
 import io.resys.thena.api.entities.grim.ImmutableGrimObjectiveGoal;
+import io.resys.thena.api.entities.grim.ImmutableGrimObjectiveGoalTransitives;
 import io.resys.thena.api.entities.grim.ImmutableGrimOneOfRelations;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewAssignment;
@@ -21,6 +23,7 @@ import io.resys.thena.support.RepoAssert;
 public class NewGoalBuilder implements ThenaGrimNewObject.NewGoal {
   private final GrimCommitBuilder logger;
   private final String missionId;
+  private final OffsetDateTime createdAt = OffsetDateTime.now();
   
   private final ImmutableGrimBatchMissions.Builder batch;
   private final GrimOneOfRelations childRel;
@@ -101,7 +104,15 @@ public class NewGoalBuilder implements ThenaGrimNewObject.NewGoal {
     RepoAssert.isTrue(built, () -> "you must call GoalChanges.build() to finalize mission CREATE or UPDATE!");
     
     final var data = this.objectiveMeta.build();
-    final var goal = this.goal.build();
+    final var goal = this.goal
+        .transitives(ImmutableGrimObjectiveGoalTransitives.builder()
+            .title(data.getTitle())
+            .description(data.getDescription())
+            .missionId(missionId)
+            .createdAt(createdAt)
+            .updatedAt(createdAt)
+            .build())
+        .build();
     
     logger.add(goal);
     logger.add(data);

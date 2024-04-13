@@ -8,6 +8,7 @@ import java.util.function.Function;
 
 import javax.annotation.Nullable;
 
+import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.MergeLink;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewAssignment;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewGoal;
@@ -21,6 +22,7 @@ import io.vertx.core.json.JsonObject;
 public interface ThenaGrimMergeObject {  
   
   interface MergeMission {
+    MergeMission onCurrentState(Consumer<GrimMissionContainer> handleCurrentState);
     MergeMission title(String title);
     MergeMission description(String description);
     

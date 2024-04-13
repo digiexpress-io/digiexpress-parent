@@ -37,7 +37,7 @@ public class FindAllTasksVisitor implements TaskStoreConfig.QueryTasksVisitor<Li
     final var access = EvaluateTaskAccess.of(this.access);
     return Uni.createFrom().item(commit.stream()
         .map(CreateTasksVisitor::mapToTask)
-        .map(access::maskTask)
+        .map(access::isReadAccessGranted)
         .toList());
   }
 }

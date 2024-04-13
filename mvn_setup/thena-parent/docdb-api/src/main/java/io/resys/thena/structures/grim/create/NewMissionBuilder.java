@@ -9,7 +9,10 @@ import java.util.stream.Collectors;
 
 import io.resys.thena.api.entities.grim.ImmutableGrimCommands;
 import io.resys.thena.api.entities.grim.ImmutableGrimMission;
+import io.resys.thena.api.entities.grim.ImmutableGrimMissionContainer;
 import io.resys.thena.api.entities.grim.ImmutableGrimMissionData;
+import io.resys.thena.api.entities.grim.ImmutableGrimMissionTransitives;
+import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewAssignment;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewLabel;
@@ -32,8 +35,10 @@ public class NewMissionBuilder implements ThenaGrimNewObject.NewMission {
   private final String missionId;
   private final String commitId;
   private final ImmutableGrimMissionData.Builder missionMeta;
+  private final OffsetDateTime createdAt = OffsetDateTime.now();
   
   private ImmutableGrimBatchMissions.Builder next;
+  private Consumer<GrimMissionContainer> handleNewState;
   private boolean built;
   
   public NewMissionBuilder(GrimCommitBuilder logger) {
@@ -159,22 +164,59 @@ public class NewMissionBuilder implements ThenaGrimNewObject.NewMission {
         .commands(commandToAppend)
         .commitId(logger.getCommitId())
         .missionId(missionId)
-        .createdAt(OffsetDateTime.now())
+        .createdAt(createdAt)
         .id(OidUtils.gen())
         .build());
+    return this;
+  }
+  @Override
+  public NewMission onNewState(Consumer<GrimMissionContainer> handleNewState) {
+    this.handleNewState = handleNewState;
     return this;
   }
   public ImmutableGrimBatchMissions close() {
     RepoAssert.isTrue(built, () -> "you must call MissionChanges.build() to finalize mission CREATE or UPDATE!");
 
     final var data = this.missionMeta.build();
-    final var mission = this.mission.build();
+    final var mission = this.mission
+        .transitives(ImmutableGrimMissionTransitives.builder()
+            .title(data.getTitle())
+            .description(data.getDescription())
+            .createdAt(createdAt)
+            .updatedAt(createdAt)
+            .treeUpdatedAt(createdAt)
+            .build())
+        .build();
     
     logger.add(mission);
     logger.add(data);
     
     next.addMissions(mission);
     next.addData(data);
-    return next.build();
+    final var batch = next.build();
+    
+    onNewState(batch);
+    
+    return batch;
+  }
+  
+  private void onNewState(ImmutableGrimBatchMissions batch) {
+    if(handleNewState == null) {
+      return;
+    }
+    final var mission = batch.getMissions().iterator().next();
+    final var builders = ImmutableGrimMissionContainer.builder().putMissions(mission.getId(), mission);
+
+    batch.getMissionLabels().forEach(label -> builders.putMissionLabels(label.getId(), label));
+    batch.getLinks().forEach(link -> builders.putLinks(link.getId(), link));
+    batch.getRemarks().forEach(remark -> builders.putRemarks(remark.getId(), remark));
+    batch.getObjectives().forEach(objective -> builders.putObjectives(objective.getId(), objective));
+    batch.getGoals().forEach(goals -> builders.putGoals(goals.getId(), goals));
+    batch.getData().forEach(data -> builders.putData(data.getId(), data));
+    batch.getAssignments().forEach(assignment -> builders.putAssignments(assignment.getId(), assignment));
+    batch.getCommands().forEach(commands -> builders.putCommands(commands.getId(), commands));
+    batch.getCommits().forEach(commit -> builders.putCommits(commit.getCommitId(), commit));
+    final var container = builders.build();
+    handleNewState.accept(container);
   }
 }

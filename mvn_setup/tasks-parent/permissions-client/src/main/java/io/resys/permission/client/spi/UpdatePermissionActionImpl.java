@@ -3,6 +3,7 @@ package io.resys.permission.client.spi;
 import java.util.Arrays;
 import java.util.List;
 
+import io.resys.permission.client.api.PermissionClient.PermissionAccessEvaluator;
 import io.resys.permission.client.api.PermissionClient.UpdatePermissionAction;
 import io.resys.permission.client.api.model.ImmutablePermission;
 import io.resys.permission.client.api.model.PermissionCommand.ChangePermissionDescription;
@@ -104,5 +105,12 @@ public class UpdatePermissionActionImpl implements UpdatePermissionAction {
     public UpdatePermissionException(String message) {
       super(message);
     } 
+  }
+
+
+  @Override
+  public UpdatePermissionAction evalAccess(PermissionAccessEvaluator eval) {
+    // TODO Auto-generated method stub
+    return null;
   }
 }

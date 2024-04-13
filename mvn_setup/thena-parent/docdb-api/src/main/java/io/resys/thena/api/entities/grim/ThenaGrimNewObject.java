@@ -6,26 +6,13 @@ import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
+import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
 import io.vertx.core.json.JsonObject;
 
 // Generic interfaces for create/update/delete operations 
 public interface ThenaGrimNewObject {
 
-  
-  /* changes existing
-  MissionChanges modifyGoal(String goalId, Consumer<GoalChanges> goal);
-  MissionChanges modifyObjective(String objectiveId, Consumer<ObjectiveChanges> objective);
-  MissionChanges modifyRemark(String remarkId, Consumer<RemarkChanges> objective);
-  
-  MissionChanges removeGoal(String goalId);
-  MissionChanges removeObjective(String objectiveId);
-  MissionChanges removeRemark(String remarkId);
-  <T> MissionChanges setAllAssignees(List<T> replacments, Function<T, Consumer<AssignmentChanges>> assignment);
-  <T> MissionChanges setAllLabels(List<T> replacments, Function<T, Consumer<LabelChanges>> label);
-  <T> MissionChanges setAllLinks(List<T> replacments, Function<T, Consumer<LinkChanges>> link);
-  */
-  
-  
+
   interface NewMission {
     NewMission title(String title);
     NewMission description(String description);
@@ -45,7 +32,7 @@ public interface ThenaGrimNewObject {
     NewMission addRemark(Consumer<NewRemark> remark);
     NewMission addCommands(List<JsonObject> commandToAppend);    
     NewMission addObjective(Consumer<NewObjective> goal);
-    
+    NewMission onNewState(Consumer<GrimMissionContainer> handleNewState);
     void build();
   }
   

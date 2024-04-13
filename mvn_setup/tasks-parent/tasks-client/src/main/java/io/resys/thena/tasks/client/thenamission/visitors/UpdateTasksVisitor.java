@@ -32,6 +32,7 @@ import io.resys.thena.api.actions.GrimCommitActions.ManyMissionsEnvelope;
 import io.resys.thena.api.actions.GrimCommitActions.ModifyManyMissions;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.grim.GrimMission;
+import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
 import io.resys.thena.api.entities.grim.ThenaGrimMergeObject.MergeMission;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewGoal;
 import io.resys.thena.tasks.client.api.actions.TaskActions.TaskAccessEvaluator;
@@ -64,6 +65,7 @@ import io.resys.thena.tasks.client.api.model.TaskCommand.DeleteChecklistItem;
 import io.resys.thena.tasks.client.api.model.TaskCommand.TaskUpdateCommand;
 import io.resys.thena.tasks.client.thenamission.TaskStore;
 import io.resys.thena.tasks.client.thenamission.TaskStoreConfig.MergeTasksVisitor;
+import io.resys.thena.tasks.client.thenamission.support.EvaluateTaskAccess;
 import io.resys.thena.tasks.client.thenamission.support.TaskException;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
@@ -73,12 +75,12 @@ public class UpdateTasksVisitor implements MergeTasksVisitor<List<Task>> {
   private final TaskStore ctx;
   private final List<String> taskIds;
   private final Map<String, List<TaskUpdateCommand>> commandsByTaskId; 
-  private final TaskAccessEvaluator access;
+  private final EvaluateTaskAccess access;
   
   public UpdateTasksVisitor(List<? extends TaskUpdateCommand> commands, TaskStore ctx, TaskAccessEvaluator access) {
     super();
     this.ctx = ctx;
-    this.access = access;
+    this.access = EvaluateTaskAccess.of(access);
     this.commandsByTaskId = commands.stream()
         .collect(Collectors.groupingBy(TaskUpdateCommand::getTaskId));
     this.taskIds = new ArrayList<>(commandsByTaskId.keySet());
@@ -94,7 +96,13 @@ public class UpdateTasksVisitor implements MergeTasksVisitor<List<Task>> {
   private void modifyOneTask(List<TaskUpdateCommand> commands, MergeMission merge) {
     merge.addCommands(commands.stream().map(JsonObject::mapFrom).toList());
     commands.forEach(c -> visitCommand(c, merge));
+    merge.onCurrentState(this::evaluateAccess);
     merge.build();
+  }
+  
+  private void evaluateAccess(GrimMissionContainer currentState) {
+    final var currentTask = CreateTasksVisitor.mapToTask(currentState);
+    access.isUpdatedAccessGranted(currentTask);
   }
  
   private UpdateTasksVisitor visitCommand(TaskCommand command, MergeMission merge) {
@@ -364,11 +372,10 @@ public class UpdateTasksVisitor implements MergeTasksVisitor<List<Task>> {
 
   @Override
   public Uni<List<Task>> end(GrimStructuredTenant config, List<GrimMission> commit) {
-    return ctx.getConfig().accept(new FindAllTasksByIdVisitor(taskIds, access));
+    return ctx.getConfig().accept(new FindAllTasksByIdVisitor(taskIds, access.getEvaluator()));
   }
 
   public static class UpdateTaskVisitorException extends RuntimeException {
-
     private static final long serialVersionUID = -1385190644836838881L;
 
     public UpdateTaskVisitorException(String message, Throwable cause) {

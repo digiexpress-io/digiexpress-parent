@@ -14,6 +14,7 @@ import io.resys.thena.tasks.client.api.model.ImmutableArchiveTask;
 import io.resys.thena.tasks.client.api.model.Task;
 import io.resys.thena.tasks.client.thenamission.TaskStore;
 import io.resys.thena.tasks.client.thenamission.TaskStoreConfig;
+import io.resys.thena.tasks.client.thenamission.support.EvaluateTaskAccess;
 import io.resys.thena.tasks.client.thenamission.support.TaskException;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -41,14 +42,17 @@ public class DeleteAllTasksVisitor implements TaskStoreConfig.QueryTasksVisitor<
   }
   @Override
   public Uni<List<Task>> end(GrimStructuredTenant config, List<GrimMissionContainer> commit) {
-    
-    final var commands = commit.stream().map(container ->
-      ImmutableArchiveTask.builder()
-      .taskId(container.getMission().getId())
-      .userId(userId)
-      .targetDate(targetDate)
-      .build()      
-     ).toList();
-    return ctx.getConfig().accept(new UpdateTasksVisitor(commands, ctx, access));
+    final var access = EvaluateTaskAccess.of(this.access);
+    final var commands = commit.stream()
+        .map(container -> {
+          access.isDeleteAccessGranted(CreateTasksVisitor.mapToTask(container));
+          
+          return ImmutableArchiveTask.builder()
+            .taskId(container.getMission().getId())
+            .userId(userId)
+            .targetDate(targetDate)
+            .build(); 
+        }).toList();
+    return ctx.getConfig().accept(new UpdateTasksVisitor(commands, ctx, this.access));
   }
 }

@@ -1,6 +1,7 @@
 package io.resys.permission.client.spi;
 
 import io.resys.permission.client.api.PermissionClient.CreatePrincipalAction;
+import io.resys.permission.client.api.PermissionClient.PrincipalAccessEvaluator;
 import io.resys.permission.client.api.model.ImmutablePrincipal;
 import io.resys.permission.client.api.model.Principal;
 import io.resys.permission.client.api.model.PrincipalCommand.CreatePrincipal;
@@ -88,7 +89,13 @@ public class CreatePrincipalActionImpl implements CreatePrincipalAction {
               addSuppressed(e.getException());
         }); 
      }
-   }  
+   }
+
+  @Override
+  public CreatePrincipalAction evalAccess(PrincipalAccessEvaluator eval) {
+    // TODO Auto-generated method stub
+    return null;
+  }  
  }
 
 

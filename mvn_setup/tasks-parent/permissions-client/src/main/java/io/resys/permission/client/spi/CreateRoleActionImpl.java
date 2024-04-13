@@ -1,6 +1,7 @@
 package io.resys.permission.client.spi;
 
 import io.resys.permission.client.api.PermissionClient.CreateRoleAction;
+import io.resys.permission.client.api.PermissionClient.RoleAccessEvaluator;
 import io.resys.permission.client.api.model.ImmutableRole;
 import io.resys.permission.client.api.model.Principal.Role;
 import io.resys.permission.client.api.model.RoleCommand.CreateRole;
@@ -80,6 +81,14 @@ public class CreateRoleActionImpl implements CreateRoleAction {
         });
     }
 
+  }
+
+
+
+  @Override
+  public CreateRoleAction evalAccess(RoleAccessEvaluator eval) {
+    // TODO Auto-generated method stub
+    return null;
   }
 
 }

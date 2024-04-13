@@ -1,6 +1,7 @@
 package io.resys.permission.client.spi;
 
 import io.resys.permission.client.api.PermissionClient.CreatePermissionAction;
+import io.resys.permission.client.api.PermissionClient.PermissionAccessEvaluator;
 import io.resys.permission.client.api.model.ImmutablePermission;
 import io.resys.permission.client.api.model.PermissionCommand.CreatePermission;
 import io.resys.permission.client.api.model.PermissionCommand.PermissionCommandType;
@@ -76,5 +77,11 @@ public class CreatePermissionActionImpl implements CreatePermissionAction {
     }
 
     
+  }
+
+  @Override
+  public CreatePermissionAction evalAccess(PermissionAccessEvaluator eval) {
+    // TODO Auto-generated method stub
+    return null;
   }
 }

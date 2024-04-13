@@ -1,5 +1,6 @@
 package io.resys.permission.client.spi;
 
+import io.resys.permission.client.api.PermissionClient.RoleHierarchyContainerAccessEvaluator;
 import io.resys.permission.client.api.PermissionClient.RoleHierarchyQuery;
 import io.resys.permission.client.api.model.RoleHierarchyContainer;
 import io.resys.thena.api.envelope.QueryEnvelope;
@@ -45,6 +46,12 @@ public class RoleHierarchyQueryImpl implements RoleHierarchyQuery {
     public RoleHierarchyQueryException(String message) {
       super(message);
     }
+  }
+
+  @Override
+  public RoleHierarchyQuery evalAccess(RoleHierarchyContainerAccessEvaluator eval) {
+    // TODO Auto-generated method stub
+    return null;
   }
   
 }

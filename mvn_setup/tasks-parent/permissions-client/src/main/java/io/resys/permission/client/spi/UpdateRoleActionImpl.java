@@ -3,6 +3,7 @@ package io.resys.permission.client.spi;
 import java.util.Arrays;
 import java.util.List;
 
+import io.resys.permission.client.api.PermissionClient.RoleAccessEvaluator;
 import io.resys.permission.client.api.PermissionClient.UpdateRoleAction;
 import io.resys.permission.client.api.model.ImmutableRole;
 import io.resys.permission.client.api.model.PermissionCommand.ChangeType;
@@ -132,5 +133,12 @@ public class UpdateRoleActionImpl implements UpdateRoleAction {
     public UpdateRoleException(String message) {
       super(message);
     }
+  }
+
+
+  @Override
+  public UpdateRoleAction evalAccess(RoleAccessEvaluator eval) {
+    // TODO Auto-generated method stub
+    return null;
   }
 }

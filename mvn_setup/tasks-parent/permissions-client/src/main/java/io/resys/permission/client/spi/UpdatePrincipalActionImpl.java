@@ -3,6 +3,7 @@ package io.resys.permission.client.spi;
 import java.util.Arrays;
 import java.util.List;
 
+import io.resys.permission.client.api.PermissionClient.PrincipalAccessEvaluator;
 import io.resys.permission.client.api.PermissionClient.UpdatePrincipalAction;
 import io.resys.permission.client.api.model.ImmutablePrincipal;
 import io.resys.permission.client.api.model.PermissionCommand.ChangeType;
@@ -144,5 +145,11 @@ public class UpdatePrincipalActionImpl implements UpdatePrincipalAction {
     public UpdatePrincipalException(String message) {
       super(message);
     }
+  }
+
+  @Override
+  public UpdatePrincipalAction evalAccess(PrincipalAccessEvaluator eval) {
+    // TODO Auto-generated method stub
+    return null;
   }
 }

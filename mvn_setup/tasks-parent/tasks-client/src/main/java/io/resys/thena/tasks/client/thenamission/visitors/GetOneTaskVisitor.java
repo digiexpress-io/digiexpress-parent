@@ -50,6 +50,6 @@ public class GetOneTaskVisitor implements TaskStoreConfig.QueryTasksVisitor<Task
   public Uni<Task> end(GrimStructuredTenant config, List<GrimMissionContainer> commit) {
     final var task = CreateTasksVisitor.mapToTask(commit.iterator().next());
     final var access = EvaluateTaskAccess.of(this.access);
-    return Uni.createFrom().item(access.maskTask(task));
+    return Uni.createFrom().item(access.isReadAccessGranted(task));
   }
 }

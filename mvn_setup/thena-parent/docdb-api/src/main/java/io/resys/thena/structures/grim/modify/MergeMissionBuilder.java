@@ -49,6 +49,7 @@ public class MergeMissionBuilder implements MergeMission {
   private final ImmutableGrimMission.Builder nextMission;
   private final ImmutableGrimMissionData.Builder nextMissionMeta;
   private final String missionId;
+  private Consumer<GrimMissionContainer> handleCurrentState;
   private boolean built;
   
   public MergeMissionBuilder(GrimMissionContainer container, GrimCommitBuilder logger) {
@@ -416,15 +417,22 @@ public class MergeMissionBuilder implements MergeMission {
     });
     return this;
   }
-
+  @Override
+  public MergeMission onCurrentState(Consumer<GrimMissionContainer> handleCurrentState) {
+    this.handleCurrentState = handleCurrentState;
+    return this;
+  }
   @Override
   public void build() {
     this.built = true;
   }
-
   public ImmutableGrimBatchMissions close() {
     RepoAssert.isTrue(built, () -> "you must call MergeMission.build() to finalize mission CREATE or UPDATE!");
 
+    if(this.handleCurrentState != null) {
+      this.handleCurrentState.accept(container);
+    }
+    
     
     // mission meta merge
     {
@@ -463,9 +471,6 @@ public class MergeMissionBuilder implements MergeMission {
         batch.addUpdateMissions(mission);
       }
     }
-    
-
-    
     
     return batch.build();
   }

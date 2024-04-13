@@ -2,6 +2,7 @@ package io.resys.permission.client.spi;
 
 import java.util.List;
 
+import io.resys.permission.client.api.PermissionClient.PermissionAccessEvaluator;
 import io.resys.permission.client.api.PermissionClient.PermissionQuery;
 import io.resys.permission.client.api.model.ImmutablePermission;
 import io.resys.permission.client.api.model.Principal.Permission;
@@ -84,5 +85,12 @@ public class PermissionQueryImpl implements PermissionQuery {
     public PermissionQueryException(String message) {
       super(message);
     }
+  }
+
+
+  @Override
+  public PermissionQuery evalAccess(PermissionAccessEvaluator eval) {
+    // TODO Auto-generated method stub
+    return null;
   }
 }

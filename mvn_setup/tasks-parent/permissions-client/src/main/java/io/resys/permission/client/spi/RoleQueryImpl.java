@@ -2,6 +2,7 @@ package io.resys.permission.client.spi;
 
 import java.util.List;
 
+import io.resys.permission.client.api.PermissionClient.RoleAccessEvaluator;
 import io.resys.permission.client.api.PermissionClient.RoleQuery;
 import io.resys.permission.client.api.model.ImmutableRole;
 import io.resys.permission.client.api.model.Principal.Role;
@@ -84,6 +85,12 @@ public class RoleQueryImpl implements RoleQuery {
     public RoleQueryException(String message) {
       super(message);
     }
+  }
+
+  @Override
+  public RoleQuery evalAccess(RoleAccessEvaluator eval) {
+    // TODO Auto-generated method stub
+    return null;
   }
 
 }
