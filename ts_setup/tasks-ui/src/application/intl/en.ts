@@ -573,6 +573,7 @@ const en = {
   'permissions.roles.name': 'Role name',
   'permissions.roles.description': 'Description',
   'permissions.roles.parent': 'Parent role',
+  'permissions.roles.parent.none': 'None',
   'permissions.roles.status': 'Status',
   'permissions.roles.commitComment': 'Comment',
   'permissions.roles.commitComment.placeholder': 'Description of this change',
