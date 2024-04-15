@@ -7,6 +7,7 @@ import Burger from 'components-burger';
 import { cyan } from 'components-colors';
 import { useAm } from 'descriptor-access-mgmt';
 import { useActivePermission } from './PermissionsOverviewContext';
+import { PermissionEditDialog } from 'components-access-mgmt/PermissionEdit';
 
 
 
@@ -38,21 +39,26 @@ const StyledTitle: React.FC<{ children: string }> = ({ children }) => {
 }
 
 const PermissionItemActive: React.FC = () => {
-  const { permissions, roles } = useAm();
+  const { permissions } = useAm();
   const { permissionId } = useActivePermission();
+  const [editOpen, setEditOpen] = React.useState(false);
+
+  function handleEdit() {
+    setEditOpen(prev => !prev);
+  }
 
   const activePerm = permissions.find(permission => permission.id === permissionId);
 
   if (activePerm) {
     return (<>
-      {/*<TaskEditDialog open={taskEditOpen} onClose={handleTaskEdit} task={task} /> */}
+      <PermissionEditDialog open={editOpen} onClose={handleEdit} permission={activePerm} />
 
       <StyledStack>
         <Burger.Section>
           <StyledTitle children='permissions.activePermission.tools' />
           <Stack direction='row' spacing={1} justifyContent='center'>
             <Box display='flex' flexDirection='column' alignItems='center'>
-              <IconButton onClick={() => { }}><EditIcon sx={{ color: cyan }} /></IconButton>
+              <IconButton onClick={handleEdit}><EditIcon sx={{ color: cyan }} /></IconButton>
               <Typography><FormattedMessage id='permissions.activePermission.edit' /></Typography>
             </Box>
           </Stack>

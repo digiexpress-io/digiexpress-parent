@@ -148,8 +148,8 @@ const Secondary: React.FC<{ init?: { profile: UserProfileAndOrg, backend: Backen
     // handleTaskSearch();
     // handleDeployments();
     // handleRolesOverview();
-    // handlePermissionsOverview();
-    handlePrincipalsOverview();
+    handlePermissionsOverview();
+    // handlePrincipalsOverview();
   }, []);
 
 

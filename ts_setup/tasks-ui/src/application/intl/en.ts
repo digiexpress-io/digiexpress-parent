@@ -598,6 +598,7 @@ const en = {
 
   'permissions.role.permissions.permissionName': 'Name',
   'permissions.role.users.username': 'Username',
+  'permissions.role.name': 'Name',
   'permissions.createPermission.roles': 'Roles',
   'permissions.createPermission.principals': 'Members',
 

@@ -1,0 +1,1 @@
+export { PermissionEditDialog } from './PermissionEditDialog';
