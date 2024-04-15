@@ -57,8 +57,6 @@ export const PermissionEditProvider: React.FC<{ children: React.ReactNode, permi
     return result;
   }, [entity]);
 
-  console.log('commit comment', entity.commitComment)
-
   const contextValue: PermissionEditContextType = React.useMemo(() => {
     return {
       entity,
