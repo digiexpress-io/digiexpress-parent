@@ -205,7 +205,7 @@ public class CreateOneMemberImpl implements CreateOneMember {
       .onItem().transform(rsp -> ImmutableOneMemberEnvelope.builder()
         .repoId(repoId)
         .member(rsp.getMembers().isEmpty() ? null : rsp.getMembers().get(0))
-        .addMessages(rsp.getLog())
+        .addMessages(ImmutableMessage.builder().text(rsp.getLog()).build())
         .addAllMessages(rsp.getMessages())
         .addAllDirectRights(addToRoles)
         .addAllDirectParties(addToGroups)

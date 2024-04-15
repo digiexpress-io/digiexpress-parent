@@ -14,10 +14,10 @@ import io.resys.thena.api.envelope.ThenaContainer;
 import io.resys.thena.api.registry.ThenaRegistryService.ThenaTable;
 
 @Value.Immutable
-public
-interface OrgMember extends ThenaOrgObject, ThenaContainer, IsOrgObject, IsOrgVersionObject, ThenaTable {
+public interface OrgMember extends ThenaOrgObject, ThenaContainer, IsOrgObject, IsOrgVersionObject, ThenaTable {
   String getId();
   String getCommitId();
+  String getCreatedWithCommitId();
   @Nullable String getExternalId();
   String getUserName();
   String getEmail();

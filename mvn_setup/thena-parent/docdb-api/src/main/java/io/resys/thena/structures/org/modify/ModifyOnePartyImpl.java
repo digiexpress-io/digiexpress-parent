@@ -364,8 +364,8 @@ public class ModifyOnePartyImpl implements ModifyOneParty {
     return tx.insert().batchMany(batch)
         .onItem().transform(rsp -> ImmutableOnePartyEnvelope.builder()
           .repoId(repoId)
-          .party(rsp.getParties().isEmpty() ? null : rsp.getParties().get(0))
-          .addMessages(rsp.getLog())
+          .party(rsp.getPartiesToUpdate().isEmpty() ? null : rsp.getPartiesToUpdate().get(0))
+          .addMessages(ImmutableMessage.builder().text(rsp.getLog()).build())
           .addAllMessages(rsp.getMessages())
           .status(BatchStatus.mapStatus(rsp.getStatus()))
           .build());

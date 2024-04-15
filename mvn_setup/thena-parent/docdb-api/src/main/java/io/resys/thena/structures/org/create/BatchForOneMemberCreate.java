@@ -6,22 +6,18 @@ import java.util.List;
 import java.util.Map;
 
 import io.resys.thena.api.entities.org.ImmutableOrgCommit;
-import io.resys.thena.api.entities.org.ImmutableOrgCommitTree;
 import io.resys.thena.api.entities.org.ImmutableOrgMember;
 import io.resys.thena.api.entities.org.ImmutableOrgMemberRight;
 import io.resys.thena.api.entities.org.ImmutableOrgMembership;
-import io.resys.thena.api.entities.org.OrgCommitTree;
 import io.resys.thena.api.entities.org.OrgMemberRight;
 import io.resys.thena.api.entities.org.OrgMembership;
 import io.resys.thena.api.entities.org.OrgParty;
 import io.resys.thena.api.entities.org.OrgRight;
-import io.resys.thena.api.entities.org.ThenaOrgObject.IsOrgObject;
-import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.org.ImmutableOrgBatchForOne;
+import io.resys.thena.structures.org.commitlog.OrgCommitBuilder;
 import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
-import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
 
@@ -55,19 +51,26 @@ public class BatchForOneMemberCreate {
     RepoAssert.notNull(addToParty,    () -> "addToParty can't be null!");
     RepoAssert.notNull(addToRights,     () -> "addToRights can't be null!");
     RepoAssert.notNull(addToPartyWithRights, () -> "addToPartyWithRights can't be null!");
-    
+
     final var commitId = OidUtils.gen();
     final var createdAt = OffsetDateTime.now();
-    final var tree = new ArrayList<OrgCommitTree>();
+    final var commitBuilder = new OrgCommitBuilder(author, ImmutableOrgCommit.builder()
+        .commitId(commitId)
+        .commitAuthor(author)
+        .commitMessage(message)
+        .createdAt(createdAt)
+        .commitLog("")
+        .build());
     
     final var user = ImmutableOrgMember.builder()
       .id(OidUtils.gen())
+      .createdWithCommitId(commitId)
       .commitId(commitId)
       .externalId(externalId)
       .userName(userName)
       .email(email)
       .build();
-    tree.add(addToTree(commitId, user));
+    commitBuilder.add(user);
     
     
     final var memberships = new ArrayList<OrgMembership>();
@@ -78,7 +81,7 @@ public class BatchForOneMemberCreate {
           .memberId(user.getId())
           .commitId(commitId)
           .build();
-      tree.add(addToTree(commitId, membership));
+      commitBuilder.add(membership);
       memberships.add(membership);
     }
     
@@ -90,7 +93,7 @@ public class BatchForOneMemberCreate {
           .rightId(role.getId())
           .commitId(commitId)
           .build();
-      tree.add(addToTree(commitId, userRole));
+      commitBuilder.add(userRole);
       userRoles.add(userRole);
     }
     for(final var entry : this.addToPartyWithRights.entrySet()) {
@@ -102,53 +105,24 @@ public class BatchForOneMemberCreate {
             .partyId(entry.getKey().getId())
             .commitId(commitId)
             .build();
-        tree.add(addToTree(commitId, userRole));
+        commitBuilder.add(userRole);
         userRoles.add(userRole);
       }
     }
+
+    final var commit = commitBuilder.close();
     
-    final var logger = new StringBuilder();
-    logger.append(System.lineSeparator())
-      .append(" | created")
-      .append(System.lineSeparator())
-      .append("  + commit:          ").append(commitId).append(" tree: ").append(tree.size() + "").append(" entries")
-      .append(System.lineSeparator())
-      .append("  + user:            ").append(user.getId()).append("::").append(userName)
-      .append(System.lineSeparator())
-      .append("  + added to groups: ").append(String.join(",", addToParty.stream().map(g -> g.getPartyName() + "::" + g.getId()).toList()))
-      .append(System.lineSeparator())
-      .append("  + added to roles:  ").append(String.join(",", addToRights.stream().map(g -> g.getRightName() + "::" + g.getId()).toList()))
-      .append(System.lineSeparator());
-    
-    final var commit = ImmutableOrgCommit.builder()
-        .id(commitId)
-        .author(author)
-        .message(message)
-        .createdAt(createdAt)
-        .log(logger.toString())
-        .tree(tree)
-        .build();
 
     final var batch = ImmutableOrgBatchForOne.builder()
       .repoId(repoId)
       .status(BatchStatus.OK)
-      .commit(commit)
+      .commit(commit.getItem1())
+      .addAllCommitTrees(commit.getItem2())
       .addMembers(user)
       .memberships(memberships)
       .memberRights(userRoles)
-      .log(ImmutableMessage.builder().text(logger.toString()).build())
+      .log(commit.getItem1().getCommitLog())
       .build();
     return batch;
-  }
-  
-  public OrgCommitTree addToTree(String commitId, IsOrgObject target) {
-    return ImmutableOrgCommitTree.builder()
-        .actorId(target.getId())
-        .actorType(target.getDocType().name())
-        .commitId(commitId)
-        .operationType(OrgCommitTree.OrgOperationType.ADD)
-        .id(OidUtils.gen())
-        .value(JsonObject.mapFrom(target))
-        .build();
   }
 }

@@ -125,7 +125,7 @@ public class CreateOneRightImpl implements CreateOneRight {
       .onItem().transform(rsp -> ImmutableOneRightEnvelope.builder()
         .repoId(repoId)
         .right(rsp.getRights().isEmpty() ? null : rsp.getRights().get(0))
-        .addMessages(rsp.getLog())
+        .addMessages(ImmutableMessage.builder().text(rsp.getLog()).build())
         .addAllMessages(rsp.getMessages())
         .status(BatchStatus.mapStatus(rsp.getStatus()))
         .directParties(parties)

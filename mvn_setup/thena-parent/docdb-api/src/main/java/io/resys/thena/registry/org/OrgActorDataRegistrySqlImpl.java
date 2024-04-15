@@ -51,6 +51,7 @@ public class OrgActorDataRegistrySqlImpl implements OrgActorDataRegistry {
     .append("(").ln()
     .append("  id VARCHAR(40) PRIMARY KEY,").ln()
     .append("  commit_id VARCHAR(40) NOT NULL,").ln()
+    .append("  created_commit_id VARCHAR(40) NOT NULL,").ln()
     .append("  parent_id VARCHAR(40),").ln()
     .append("  external_id VARCHAR(40) UNIQUE,").ln()
     .append("  member_id VARCHAR(40),").ln()

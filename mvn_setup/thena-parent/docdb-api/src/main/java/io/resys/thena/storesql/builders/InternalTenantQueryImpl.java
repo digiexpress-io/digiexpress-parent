@@ -149,13 +149,14 @@ public class InternalTenantQueryImpl implements InternalTenantQuery {
 
           .append(org.orgActorStatus().createTable().getValue())
           .append(org.orgCommits().createTable().getValue())
+          .append(org.orgCommitTrees().createTable().getValue())
           .append(org.orgActorData().createTable().getValue())
           
           .append(org.orgRights().createConstraints().getValue())
           .append(org.orgMembers().createConstraints().getValue())
           .append(org.orgParties().createConstraints().getValue())
           .append(org.orgCommits().createConstraints().getValue())
-          
+          .append(org.orgCommitTrees().createConstraints().getValue())
           .toString();
         
       } else  {

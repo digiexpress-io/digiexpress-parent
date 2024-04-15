@@ -90,7 +90,7 @@ public class OrgRightRegistrySqlImpl implements OrgRightRegistry {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getOrgRights())
-        .append(" (id, commit_id, external_id, right_name, right_description) VALUES($1, $2, $3, $4, $5, $6)").ln()
+        .append(" (id, commit_id, created_commit_id, external_id, right_name, right_description) VALUES($1, $2, $2, $3, $4, $5, $6)").ln()
         .build())
         .props(Tuple.from(new Object[]{ doc.getId(), doc.getCommitId(), doc.getExternalId(), doc.getRightName(), doc.getRightDescription(), doc.getRightSubType().name() }))
         .build();
@@ -111,7 +111,7 @@ public class OrgRightRegistrySqlImpl implements OrgRightRegistry {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getOrgRights())
-        .append(" (id, commit_id, external_id, right_name, right_description, right_sub_type) VALUES($1, $2, $3, $4, $5, $6)").ln()
+        .append(" (id, commit_id, created_commit_id, external_id, right_name, right_description, right_sub_type) VALUES($1, $2, $2, $3, $4, $5, $6)").ln()
         .build())
         .props(users.stream()
             .map(doc -> Tuple.from(new Object[]{ doc.getId(), doc.getCommitId(), doc.getExternalId(), doc.getRightName(), doc.getRightDescription(), doc.getRightSubType().name() }))
@@ -135,6 +135,7 @@ public class OrgRightRegistrySqlImpl implements OrgRightRegistry {
   private static OrgRight orgRight(Row row) {
     return ImmutableOrgRight.builder()
         .id(row.getString("id"))
+        .createdWithCommitId("created_commit_id")
         .externalId(row.getString("external_id"))
         .rightName(row.getString("right_name"))
         .rightDescription(row.getString("right_description"))
@@ -153,6 +154,7 @@ public class OrgRightRegistrySqlImpl implements OrgRightRegistry {
     .append("(").ln()
     .append("  id VARCHAR(40) PRIMARY KEY,").ln()
     .append("  commit_id VARCHAR(40) NOT NULL,").ln()
+    .append("  created_commit_id VARCHAR(40) NOT NULL,").ln()
     .append("  external_id VARCHAR(40) UNIQUE,").ln()
     .append("  right_sub_type VARCHAR(40) NOT NULL,").ln()
     .append("  right_name VARCHAR(255) UNIQUE NOT NULL,").ln()
@@ -176,6 +178,7 @@ public class OrgRightRegistrySqlImpl implements OrgRightRegistry {
   @Override
   public ThenaSqlClient.Sql createConstraints() {
     return ImmutableSql.builder().value(new SqlStatement()
+        .ln().append("--- constraints for").append(options.getOrgRights()).ln()
         .append(createOrgRoleFk(options.getOrgActorData())).ln()
         .append(createOrgRoleFk(options.getOrgActorStatus())).ln()
         

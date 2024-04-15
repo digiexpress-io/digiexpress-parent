@@ -79,7 +79,7 @@ public class OrgMemberRegistrySqlImpl implements OrgMemberRegistry {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getOrgMembers())
-        .append(" (id, commit_id, external_id, username, email) VALUES($1, $2, $3, $4, $5)").ln()
+        .append(" (id, commit_id, created_commit_id, external_id, username, email) VALUES($1, $2, $2, $3, $4, $5)").ln()
         .build())
         .props(Tuple.from(new Object[]{ doc.getId(), doc.getCommitId(), doc.getExternalId(), doc.getUserName(), doc.getEmail() }))
         .build();
@@ -100,7 +100,7 @@ public class OrgMemberRegistrySqlImpl implements OrgMemberRegistry {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getOrgMembers())
-        .append(" (id, commit_id, external_id, username, email) VALUES($1, $2, $3, $4, $5)").ln()
+        .append(" (id, commit_id, created_commit_id, external_id, username, email) VALUES($1, $2, $2, $3, $4, $5)").ln()
         .build())
         .props(users.stream()
             .map(doc -> Tuple.from(new Object[]{ doc.getId(), doc.getCommitId(), doc.getExternalId(), doc.getUserName(), doc.getEmail() }))
@@ -292,6 +292,7 @@ SELECT * FROM child;
         .id(row.getString("id"))
         .externalId(row.getString("external_id"))
         .commitId(row.getString("commit_id"))
+        .createdWithCommitId("created_commit_id")
         .userName(row.getString("username"))
         .email(row.getString("email"))
         .build();
@@ -350,6 +351,7 @@ SELECT * FROM child;
     .append("(").ln()
     .append("  id VARCHAR(40) PRIMARY KEY,").ln()
     .append("  commit_id VARCHAR(40) NOT NULL,").ln()
+    .append("  created_commit_id VARCHAR(40) NOT NULL,").ln()
     .append("  external_id VARCHAR(40) UNIQUE,").ln()
     .append("  username VARCHAR(255) UNIQUE NOT NULL,").ln()
     .append("  email VARCHAR(255) NOT NULL").ln()
@@ -371,6 +373,7 @@ SELECT * FROM child;
   @Override
   public ThenaSqlClient.Sql createConstraints() {
     return ImmutableSql.builder().value(new SqlStatement()
+        .ln().append("--- constraints for").append(options.getOrgMembers()).ln()
         .append(createOrgUserFk(options.getOrgMemberships())).ln()
         .append(createOrgUserFk(options.getOrgMemberRights())).ln()
         

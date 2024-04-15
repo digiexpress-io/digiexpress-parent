@@ -27,6 +27,7 @@ import org.immutables.value.Value;
 import io.resys.thena.api.entities.org.OrgActorData;
 import io.resys.thena.api.entities.org.OrgActorStatus;
 import io.resys.thena.api.entities.org.OrgCommit;
+import io.resys.thena.api.entities.org.OrgCommitTree;
 import io.resys.thena.api.entities.org.OrgMember;
 import io.resys.thena.api.entities.org.OrgMemberRight;
 import io.resys.thena.api.entities.org.OrgMembership;
@@ -44,7 +45,7 @@ public interface OrgInserts {
   @Value.Immutable
   interface OrgBatchForOne {
     OrgCommit getCommit();
-    
+    List<OrgCommitTree> getCommitTrees();
     List<OrgActorData> getActorData();
     List<OrgActorStatus> getActorStatus();
     List<OrgParty> getParties();
@@ -53,18 +54,44 @@ public interface OrgInserts {
     List<OrgPartyRight> getPartyRights();
     List<OrgMemberRight> getMemberRights();
     List<OrgMembership> getMemberships(); 
-    List<String> getIdentifiersForUpdates();
+
 
     List<OrgMemberRight> getMemberRightsToDelete();
     List<OrgPartyRight> getPartyRightToDelete();
     List<OrgMembership> getMembershipsToDelete();
     List<OrgActorStatus> getStatusToDelete();
     
+    List<OrgMember> getMembersToUpdate();
+    List<OrgParty> getPartiesToUpdate();
+    List<OrgRight> getRightsToUpdate();
+    List<OrgActorStatus> getActorStatusToUpdate();
     
     BatchStatus getStatus();
     String getRepoId();
-
-    Message getLog();
+    String getLog();
     List<Message> getMessages();
+    
+    default boolean isEmpty() {
+      return 
+        this.getActorStatus().isEmpty() &&
+        this.getActorData().isEmpty() &&
+        this.getMemberRights().isEmpty() && 
+        this.getMemberships().isEmpty() &&
+        this.getPartyRights().isEmpty() &&
+        this.getMembers().isEmpty() &&
+        this.getParties().isEmpty() &&
+        this.getRights().isEmpty() &&
+        
+        this.getStatusToDelete().isEmpty() &&
+        this.getMemberRightsToDelete().isEmpty() &&
+        this.getMembershipsToDelete().isEmpty() &&
+        this.getPartyRightToDelete().isEmpty() &&
+  
+        this.getMembersToUpdate().isEmpty() &&
+        this.getPartiesToUpdate().isEmpty() &&
+        this.getRightsToUpdate().isEmpty() &&
+        this.getActorStatusToUpdate().isEmpty();   
+    }
+   
   }
 }

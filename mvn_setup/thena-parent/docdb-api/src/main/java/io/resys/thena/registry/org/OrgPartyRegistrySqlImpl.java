@@ -73,7 +73,7 @@ public class OrgPartyRegistrySqlImpl implements OrgPartyRegistry {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getOrgParties())
-        .append(" (id, commit_id, external_id, parent_id, party_name, party_description, party_sub_type) VALUES($1, $2, $3, $4, $5, $6, $7)").ln()
+        .append(" (id, commit_id, created_commit_id, external_id, parent_id, party_name, party_description, party_sub_type) VALUES($1, $2, $2, $3, $4, $5, $6, $7)").ln()
         .build())
         .props(Tuple.from(new Object[]{ doc.getId(), doc.getCommitId(), doc.getExternalId(), doc.getParentId(), doc.getPartyName(), doc.getPartyDescription(),  doc.getPartySubType().name()}))
         .build();
@@ -94,7 +94,7 @@ public class OrgPartyRegistrySqlImpl implements OrgPartyRegistry {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getOrgParties())
-        .append("  (id, commit_id, external_id, parent_id, party_name, party_description, party_sub_type) VALUES($1, $2, $3, $4, $5, $6, $7)").ln()
+        .append("  (id, commit_id, created_commit_id, external_id, parent_id, party_name, party_description, party_sub_type) VALUES($1, $2, $2, $3, $4, $5, $6, $7)").ln()
         .build())
         .props(users.stream()
             .map(doc -> Tuple.from(new Object[]{ doc.getId(), doc.getCommitId(), doc.getExternalId(), doc.getParentId(), doc.getPartyName(), doc.getPartyDescription(), doc.getPartySubType().name()}))
@@ -125,6 +125,7 @@ public class OrgPartyRegistrySqlImpl implements OrgPartyRegistry {
         .externalId(row.getString("external_id"))
         .parentId(row.getString("parent_id"))
         .commitId(row.getString("commit_id"))
+        .createdWithCommitId("created_commit_id")
         .partyName(row.getString("party_name"))
         .partyDescription(row.getString("party_description"))
         .partySubType(OrgDocSubType.valueOf(row.getString("party_sub_type")))
@@ -138,6 +139,7 @@ public class OrgPartyRegistrySqlImpl implements OrgPartyRegistry {
     .append("(").ln()
     .append("  id VARCHAR(40) PRIMARY KEY,").ln()
     .append("  commit_id VARCHAR(40) NOT NULL,").ln()
+    .append("  created_commit_id VARCHAR(40) NOT NULL,").ln()
     .append("  external_id VARCHAR(40) UNIQUE,").ln()
     .append("  parent_id VARCHAR(40),").ln()
     .append("  party_name VARCHAR(255) UNIQUE NOT NULL,").ln()
@@ -168,6 +170,7 @@ public class OrgPartyRegistrySqlImpl implements OrgPartyRegistry {
   @Override
   public ThenaSqlClient.Sql createConstraints() {
     return ImmutableSql.builder().value(new SqlStatement()
+        .ln().append("--- constraints for").append(options.getOrgParties()).ln()
         .append(createOrgGroupFk(options.getOrgActorData())).ln()
         .append(createOrgGroupFk(options.getOrgActorStatus())).ln()
         .append(createOrgGroupFk(options.getOrgPartyRights())).ln()

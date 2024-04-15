@@ -90,7 +90,7 @@ public class OrgActorStatusRegistrySqlImpl implements OrgActorStatusRegistry {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getOrgActorStatus())
-        .append(" (id, commit_id, member_id, right_id, party_id, actor_status) VALUES($1, $2, $3, $4, $5, $6)").ln()
+        .append(" (id, commit_id, created_commit_id, member_id, right_id, party_id, actor_status) VALUES($1, $2, $2, $3, $4, $5, $6)").ln()
         .build())
         .props(Tuple.from(new Object[]{ doc.getId(), doc.getCommitId(), doc.getMemberId(), doc.getRightId(), doc.getPartyId(), doc.getValue().name() }))
         .build();
@@ -111,7 +111,7 @@ public class OrgActorStatusRegistrySqlImpl implements OrgActorStatusRegistry {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getOrgActorStatus())
-        .append(" (id, commit_id, member_id, right_id, party_id, actor_status) VALUES($1, $2, $3, $4, $5, $6)").ln()
+        .append(" (id, commit_id,created_commit_id,  member_id, right_id, party_id, actor_status) VALUES($1, $2, $2, $3, $4, $5, $6)").ln()
         .build())
         .props(users.stream()
             .map(doc -> Tuple.from(new Object[]{ doc.getId(), doc.getCommitId(), doc.getMemberId(), doc.getRightId(), doc.getPartyId(), doc.getValue().name() }))
@@ -169,6 +169,7 @@ public class OrgActorStatusRegistrySqlImpl implements OrgActorStatusRegistry {
         .memberId(row.getString("member_id"))
         .rightId(row.getString("right_id"))
         .partyId(row.getString("party_id"))
+        .createdWithCommitId("created_commit_id")
         .value(actorStatus != null ? OrgActorStatus.OrgActorStatusType.valueOf(actorStatus) : null)
         .build();
   }
@@ -180,6 +181,7 @@ public class OrgActorStatusRegistrySqlImpl implements OrgActorStatusRegistry {
     .append("(").ln()
     .append("  id VARCHAR(40) PRIMARY KEY,").ln()
     .append("  commit_id VARCHAR(40) NOT NULL,").ln()
+    .append("  created_commit_id VARCHAR(40) NOT NULL,").ln()
     .append("  member_id VARCHAR(40),").ln()
     .append("  right_id VARCHAR(40),").ln()
     .append("  party_id VARCHAR(40),").ln()

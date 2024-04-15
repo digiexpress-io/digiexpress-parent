@@ -312,8 +312,8 @@ public class ModifyOneMemberImpl implements ModifyOneMember {
     return tx.insert().batchMany(batch)
         .onItem().transform(rsp -> ImmutableOneMemberEnvelope.builder()
           .repoId(repoId)
-          .member(rsp.getMembers().isEmpty() ? null : rsp.getMembers().get(0))
-          .addMessages(rsp.getLog())
+          .member(rsp.getMembersToUpdate().isEmpty() ? null : rsp.getMembersToUpdate().get(0))
+          .addMessages(ImmutableMessage.builder().text(rsp.getLog()).build())
           .addAllMessages(rsp.getMessages())
           .status(BatchStatus.mapStatus(rsp.getStatus()))
           .build());

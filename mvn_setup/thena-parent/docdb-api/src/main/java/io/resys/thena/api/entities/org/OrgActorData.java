@@ -11,10 +11,10 @@ import io.resys.thena.api.registry.ThenaRegistryService.ThenaTable;
 import io.vertx.core.json.JsonObject;
 
 @Value.Immutable
-public
-interface OrgActorData extends ThenaOrgObject, IsOrgObject, ThenaTable {
+public interface OrgActorData extends ThenaOrgObject, IsOrgObject, ThenaTable {
   String getId();
   String getCommitId();
+  String getCreatedWithCommitId();
   @Nullable String getParentId();
   @Nullable String getMemberId();
   @Nullable String getRightId();

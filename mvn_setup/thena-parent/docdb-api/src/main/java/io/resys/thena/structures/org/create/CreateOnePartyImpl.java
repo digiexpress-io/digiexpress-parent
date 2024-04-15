@@ -137,7 +137,7 @@ public class CreateOnePartyImpl implements CreateOneParty {
         .repoId(repoId)
         .party(rsp.getParties().isEmpty() ? null : rsp.getParties().get(0))
         .directMembers(members)
-        .addMessages(rsp.getLog())
+        .addMessages(ImmutableMessage.builder().text(rsp.getLog()).build())
         .addAllMessages(rsp.getMessages())
         .status(BatchStatus.mapStatus(rsp.getStatus()))
         .build();

@@ -13,11 +13,11 @@ import io.resys.thena.api.entities.org.ThenaOrgObject.IsOrgVersionObject;
 import io.resys.thena.api.registry.ThenaRegistryService.ThenaTable;
 
 @Value.Immutable
-public
-interface OrgParty extends ThenaOrgObject, IsOrgObject, IsOrgVersionObject, ThenaTable {
+public interface OrgParty extends ThenaOrgObject, IsOrgObject, IsOrgVersionObject, ThenaTable {
   String getId();
   String getCommitId();
-
+  String getCreatedWithCommitId();
+  
   @Nullable String getExternalId();
   @Nullable String getParentId();
   

@@ -39,14 +39,32 @@ public class OrgCommitTreeRegistrySqlImpl implements OrgCommitTreeRegistry {
         .build();
   }
   @Override
-  public ThenaSqlClient.SqlTupleList insertAll(Collection<OrgCommitTree> users) {
+  public ThenaSqlClient.SqlTupleList insertAll(Collection<OrgCommitTree> commits) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
-        .append("INSERT INTO ").append(options.getOrgCommitTrees())
-        .append(" (id, commit_id, parent_commit_id, actor_id, actor_type, value) VALUES($1, $2, $3, $4, $5, $6)").ln()
+        .append("INSERT INTO ").append(options.getOrgCommitTrees()).ln()
+        .append(" (id,").ln()
+        .append("  commit_id,").ln()
+        .append("  operation_type,").ln()
+        .append("  body_after,").ln()
+        .append("  body_before,").ln()
+        .append("  actor_id,").ln()
+        .append("  actor_type)").ln()
+        
+        
+        
+        .append(" VALUES($1, $2, $3, $4, $5, $6, $7)").ln()
         .build())
-        .props(users.stream()
-            .map(doc -> Tuple.from(new Object[]{ doc.getId(), doc.getCommitId(), doc.getParentCommitId(), doc.getActorId(), doc.getActorType(), doc.getValue() }))
+        .props(commits.stream()
+            .map(doc -> Tuple.from(new Object[]{ 
+                doc.getId(), 
+                doc.getCommitId(),
+                doc.getOperationType().name(),
+                doc.getBodyAfter(),
+                doc.getBodyBefore(),
+                doc.getActorId(),
+                doc.getActorType()
+             }))
             .collect(Collectors.toList()))
         .build();
   }
@@ -67,7 +85,30 @@ public class OrgCommitTreeRegistrySqlImpl implements OrgCommitTreeRegistry {
   }
   @Override
   public ThenaSqlClient.Sql createTable() {
-    return ImmutableSql.builder().value("").build();
+    return ImmutableSql.builder().value(new SqlStatement()
+            
+        .append("CREATE TABLE ").append(options.getOrgCommitTrees()).ln()
+        .append("(").ln()
+        .append("  id VARCHAR(40) PRIMARY KEY,").ln()
+        .append("  commit_id VARCHAR(40) NOT NULL,").ln()
+        
+        .append("  actor_id VARCHAR(40) NOT NULL,").ln()
+        .append("  actor_type VARCHAR(40) NOT NULL,").ln()
+
+        .append("  operation_type VARCHAR(40),").ln()
+        .append("  body_after JSONB,").ln()
+        .append("  body_before JSONB").ln()
+        
+        .append(");").ln().ln()
+        
+        .append("CREATE INDEX ").append(options.getOrgCommitTrees()).append("_ACTOR_INDEX")
+        .append(" ON ").append(options.getOrgCommitTrees()).append(" (actor_type, actor_id);").ln()
+        
+        .append("CREATE INDEX ").append(options.getOrgCommitTrees()).append("_COMMIT_INDEX")
+        .append(" ON ").append(options.getOrgCommitTrees()).append(" (commit_id);").ln()
+        
+        
+        .build()).build();
   }
   @Override
   public ThenaSqlClient.Sql createConstraints() {
@@ -75,7 +116,9 @@ public class OrgCommitTreeRegistrySqlImpl implements OrgCommitTreeRegistry {
   }
   @Override
   public ThenaSqlClient.Sql dropTable() {
-    return ImmutableSql.builder().value("").build();
+    return ImmutableSql.builder().value(new SqlStatement()
+        .append("DROP TABLE ").append(options.getOrgCommitTrees()).append(";").ln()
+        .build()).build();
   }
 
 }
