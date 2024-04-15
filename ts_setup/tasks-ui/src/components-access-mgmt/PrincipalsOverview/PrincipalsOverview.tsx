@@ -33,7 +33,7 @@ const PrincipalItems: React.FC = () => {
   }
 
   return (<>
-    {principals.map((principal, index) =>
+    {principals.sort((a, b) => a.name.localeCompare(b.name)).map((principal, index) =>
       <LayoutListItem active={principalId === principal.id} index={index} key={index} onClick={() => setActivePrincipal(principal.id)}>
         <Grid item sm={6} md={6} lg={6}>
           <Typography noWrap>{principal.name}</Typography>

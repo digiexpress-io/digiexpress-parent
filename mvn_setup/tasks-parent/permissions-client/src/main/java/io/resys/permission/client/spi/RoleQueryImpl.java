@@ -69,6 +69,7 @@ public class RoleQueryImpl implements RoleQuery {
  private Role mapTo(OrgPartyHierarchy party) {
     
     return ImmutableRole.builder()
+      .parentId(party.getParentPartyId())
       .id(party.getPartyId())
       .version(party.getCommitId())
       .name(party.getPartyName())

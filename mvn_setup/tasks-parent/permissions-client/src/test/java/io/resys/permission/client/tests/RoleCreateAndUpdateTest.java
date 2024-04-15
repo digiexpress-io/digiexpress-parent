@@ -90,6 +90,7 @@ public class RoleCreateAndUpdateTest extends DbTestTemplate {
         .await().atMost(Duration.ofMinutes(5));
     
     final var createdRole = createRoleForUpdating(client);
+    Assertions.assertNotNull(client.roleQuery().get(createdRole.getId()).await().atMost(Duration.ofMinutes(1)).getParentId(), "parentId can't be null!");
     
     Assertions.assertEquals(1, createdRole.getPrincipals().size());
     
