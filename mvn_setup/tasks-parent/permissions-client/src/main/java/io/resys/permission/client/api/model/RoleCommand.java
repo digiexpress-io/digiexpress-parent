@@ -33,7 +33,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import io.resys.permission.client.api.model.PermissionCommand.ChangeType;
 import io.resys.thena.api.entities.org.OrgActorStatus;
 
 
