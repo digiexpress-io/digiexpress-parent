@@ -318,4 +318,14 @@ public class ModifyOneMemberImpl implements ModifyOneMember {
           .status(BatchStatus.mapStatus(rsp.getStatus()))
           .build());
   }
+  @Override
+  public ModifyOneMember setAllParties(List<String> partyIdNameOrExtId) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+  @Override
+  public ModifyOneMember setAllRights(List<String> rightIdNameOrExtId) {
+    // TODO Auto-generated method stub
+    return null;
+  }
 }

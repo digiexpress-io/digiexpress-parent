@@ -298,5 +298,15 @@ public class ModifyOneRightImpl implements ModifyOneRight {
           .build());
 
   }
+  @Override
+  public ModifyOneRight setAllMembers(List<String> memberIdNameOrExtId) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+  @Override
+  public ModifyOneRight setAllParties(List<String> partyIdNameOrExtId) {
+    // TODO Auto-generated method stub
+    return null;
+  }
 
 }

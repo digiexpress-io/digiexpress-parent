@@ -12,6 +12,7 @@ import io.resys.permission.client.api.model.RoleCommand.ChangeRoleDescription;
 import io.resys.permission.client.api.model.RoleCommand.ChangeRoleName;
 import io.resys.permission.client.api.model.RoleCommand.ChangeRoleParent;
 import io.resys.permission.client.api.model.RoleCommand.ChangeRolePermissions;
+import io.resys.permission.client.api.model.RoleCommand.ChangeRolePrincipals;
 import io.resys.permission.client.api.model.RoleCommand.ChangeRoleStatus;
 import io.resys.permission.client.api.model.RoleCommand.RoleUpdateCommand;
 import io.resys.thena.api.actions.OrgCommitActions.ModType;
@@ -73,19 +74,46 @@ public class UpdateRoleActionImpl implements UpdateRoleAction {
       }
       
       case CHANGE_ROLE_PERMISSIONS: {
-        final var role = (ChangeRolePermissions) command;
+        final var permissions = (ChangeRolePermissions) command;
         
-        if(role.getChangeType() == ChangeType.ADD) {
-          role.getPermissions().forEach(perm -> modifyOneParty.modifyRight(ModType.ADD, perm));
+        if(permissions.getChangeType() == ChangeType.ADD) {
+          permissions.getPermissions().forEach(perm -> modifyOneParty.modifyRight(ModType.ADD, perm));
           
-        } else if(role.getChangeType() == ChangeType.DISABLE) {          
-          role.getPermissions().forEach(perm -> modifyOneParty.modifyRight(ModType.DISABLED, perm));
+        } else if(permissions.getChangeType() == ChangeType.DISABLE) {          
+          permissions.getPermissions().forEach(perm -> modifyOneParty.modifyRight(ModType.DISABLED, perm));
           
-        } else if(role.getChangeType() == ChangeType.REMOVE) {
-          role.getPermissions().forEach(perm -> modifyOneParty.modifyRight(ModType.REMOVE, perm)); 
+        } else if(permissions.getChangeType() == ChangeType.REMOVE) {
+          permissions.getPermissions().forEach(perm -> modifyOneParty.modifyRight(ModType.REMOVE, perm)); 
+          
+        } else if(permissions.getChangeType() == ChangeType.SET_ALL) {
+          modifyOneParty.setAllRights(permissions.getPermissions());
+          
+        } else {
+          throw new UpdateRoleException("Command type not found exception: " + command.getCommandType() + "/" + permissions.getChangeType());
         }
         break;
       }
+      
+      case CHANGE_ROLE_PRINCIPALS: {
+        final var principals = (ChangeRolePrincipals) command;
+        
+        if(principals.getChangeType() == ChangeType.ADD) {
+          principals.getPrincipals().forEach(principal -> modifyOneParty.modifyMember(ModType.ADD, principal));
+        
+        } else if(principals.getChangeType() == ChangeType.DISABLE) {
+          principals.getPrincipals().forEach(principal -> modifyOneParty.modifyMember(ModType.DISABLED, principal));
+
+        } else if(principals.getChangeType() == ChangeType.REMOVE) {
+          principals.getPrincipals().forEach(principal -> modifyOneParty.modifyMember(ModType.REMOVE, principal));
+        
+        } else if(principals.getChangeType() == ChangeType.SET_ALL) {
+          modifyOneParty.setAllMembers(principals.getPrincipals());
+        
+        } else {
+          throw new UpdateRoleException("Command type not found exception: " + command.getCommandType() + "/" + principals.getChangeType());
+        }
+      }
+      
       default: throw new UpdateRoleException("Command type not found exception ='%s'!".formatted(command.getCommandType())); 
       }
     }
@@ -114,8 +142,8 @@ public class UpdateRoleActionImpl implements UpdateRoleAction {
       .name(role.getPartyName())
       .description(role.getPartyDescription())
       .status(OrgActorStatusType.IN_FORCE)
-      // .permissions(null) TODO
-      // .principals(null)  TODO
+      //.permissions(response.getDirectRights().stream().map(right -> right.getRightName()).toList()) TODO backend doesn't return them
+      //.principals(response.getDirectMembers().stream().map(member -> member.getUserName()).toList()) TODO backend doesn't return them
       .build();
     }
   

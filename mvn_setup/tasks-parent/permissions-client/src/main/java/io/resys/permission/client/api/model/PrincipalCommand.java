@@ -60,7 +60,7 @@ public interface PrincipalCommand extends Serializable {
     
     
     CHANGE_PRINCIPAL_ROLES,
-    CHANGE_PRINCIPAL_PERISSIONS,
+    CHANGE_PRINCIPAL_PERMISSIONS,
   }
 
   @Value.Immutable @JsonSerialize(as = ImmutableCreatePrincipal.class) @JsonDeserialize( as = ImmutableCreatePrincipal.class)
@@ -110,7 +110,7 @@ public interface PrincipalCommand extends Serializable {
     ChangeType getChangeType();
     
     @Value.Default
-    @Override default PrincipalCommandType getCommandType() { return PrincipalCommandType.CHANGE_PRINCIPAL_PERISSIONS; }
+    @Override default PrincipalCommandType getCommandType() { return PrincipalCommandType.CHANGE_PRINCIPAL_PERMISSIONS; }
   }
   
   @Value.Immutable @JsonSerialize(as = ImmutableChangePrincipalStatus.class) @JsonDeserialize(as = ImmutableChangePrincipalStatus.class)

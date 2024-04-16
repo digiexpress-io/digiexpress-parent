@@ -69,7 +69,7 @@ public class UpdatePrincipalActionImpl implements UpdatePrincipalAction {
         break;
       }
      
-      case CHANGE_PRINCIPAL_PERISSIONS: {
+      case CHANGE_PRINCIPAL_PERMISSIONS: {
         final var permissions = (ChangePrincipalPermissions) command;
         
         if(permissions.getChangeType() == ChangeType.ADD) {
@@ -136,9 +136,8 @@ public class UpdatePrincipalActionImpl implements UpdatePrincipalAction {
       
       .name(principal.getUserName())
       .email(principal.getEmail())
-     // .roles(null) //TODO
-     // .permissions(null) //TODO
-    
+      //.roles(response.getDirectParties().stream().map(party -> party.getPartyName()).toList()) TODO backend doesn't return them
+      //.permissions(response.getDirectRights().stream().map(right -> right.getRightName()).toList())TODO backend doesn't return them
       .status(OrgActorStatusType.IN_FORCE)
       .build();
   }
