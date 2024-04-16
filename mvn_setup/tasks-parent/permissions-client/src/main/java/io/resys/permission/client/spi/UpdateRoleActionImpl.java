@@ -5,8 +5,8 @@ import java.util.List;
 
 import io.resys.permission.client.api.PermissionClient.RoleAccessEvaluator;
 import io.resys.permission.client.api.PermissionClient.UpdateRoleAction;
+import io.resys.permission.client.api.model.ChangeType;
 import io.resys.permission.client.api.model.ImmutableRole;
-import io.resys.permission.client.api.model.PermissionCommand.ChangeType;
 import io.resys.permission.client.api.model.Principal.Role;
 import io.resys.permission.client.api.model.RoleCommand.ChangeRoleDescription;
 import io.resys.permission.client.api.model.RoleCommand.ChangeRoleName;
