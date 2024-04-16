@@ -31,7 +31,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import io.resys.permission.client.api.model.PermissionCommand.ChangeType;
 import io.resys.thena.api.entities.org.OrgActorStatus;
 import jakarta.annotation.Nullable;
 
@@ -52,13 +51,14 @@ import jakarta.annotation.Nullable;
 
 public interface PrincipalCommand extends Serializable {
   PrincipalCommandType getCommandType();
-  String getComment(); // for auditing purposes, user who made changes must describe why, in a comment.
   
   enum PrincipalCommandType {
     CREATE_PRINCIPAL,
     CHANGE_PRINCIPAL_STATUS,
     CHANGE_PRINCIPAL_NAME,
     CHANGE_PRINCIPAL_EMAIL,
+    
+    
     CHANGE_PRINCIPAL_ROLES,
     CHANGE_PRINCIPAL_PERISSIONS,
   }
@@ -68,6 +68,7 @@ public interface PrincipalCommand extends Serializable {
     String getName();
     String getEmail();
     @Nullable String getExternalId();
+    String getComment(); // for auditing purposes, user who made changes must describe why, in a comment.
     List<String> getRoles();
     List<String> getPermissions();
 
@@ -86,15 +87,16 @@ public interface PrincipalCommand extends Serializable {
     @Type(value = ImmutableChangePrincipalRoles.class, name = "CHANGE_PRINCIPAL_ROLES"), 
     @Type(value = ImmutableChangePrincipalPermissions.class, name = "CHANGE_PRINCIPAL_PERMISSIONS")
   })
-  
   interface PrincipalUpdateCommand extends PrincipalCommand {
     String getId();
   }
 
   @Value.Immutable @JsonSerialize(as = ImmutableChangePrincipalRoles.class) @JsonDeserialize(as = ImmutableChangePrincipalRoles.class)
   interface ChangePrincipalRoles extends PrincipalUpdateCommand {
+    String getId();
     List<String> getRoles(); // id/name/extId
     ChangeType getChangeType();
+    String getComment(); // for auditing purposes, user who made changes must describe why, in a comment.
     
     @Value.Default
     @Override default PrincipalCommandType getCommandType() { return PrincipalCommandType.CHANGE_PRINCIPAL_ROLES; }
@@ -102,6 +104,8 @@ public interface PrincipalCommand extends Serializable {
   
   @Value.Immutable @JsonSerialize(as = ImmutableChangePrincipalPermissions.class) @JsonDeserialize(as = ImmutableChangePrincipalPermissions.class)
   interface ChangePrincipalPermissions extends PrincipalUpdateCommand {
+    String getId();
+    String getComment(); // for auditing purposes, user who made changes must describe why, in a comment.
     List<String> getPermissions(); // id/name/extId
     ChangeType getChangeType();
     
@@ -111,6 +115,8 @@ public interface PrincipalCommand extends Serializable {
   
   @Value.Immutable @JsonSerialize(as = ImmutableChangePrincipalStatus.class) @JsonDeserialize(as = ImmutableChangePrincipalStatus.class)
   interface ChangePrincipalStatus extends PrincipalUpdateCommand {
+    String getId();
+    String getComment(); // for auditing purposes, user who made changes must describe why, in a comment.
     OrgActorStatus.OrgActorStatusType getStatus();
     
     @Value.Default
@@ -119,7 +125,9 @@ public interface PrincipalCommand extends Serializable {
   
   @Value.Immutable @JsonSerialize(as = ImmutableChangePrincipalName.class) @JsonDeserialize(as = ImmutableChangePrincipalName.class)
   interface ChangePrincipalName extends PrincipalUpdateCommand {
+    String getId();
     String getName();
+    String getComment(); // for auditing purposes, user who made changes must describe why, in a comment.
     
     @Value.Default
     @Override default PrincipalCommandType getCommandType() { return PrincipalCommandType.CHANGE_PRINCIPAL_NAME; }
@@ -127,7 +135,9 @@ public interface PrincipalCommand extends Serializable {
   
   @Value.Immutable @JsonSerialize(as = ImmutableChangePrincipalEmail.class) @JsonDeserialize(as = ImmutableChangePrincipalEmail.class)
   interface ChangePrincipalEmail extends PrincipalUpdateCommand {
+    String getId();
     String getEmail();
+    String getComment(); // for auditing purposes, user who made changes must describe why, in a comment.
     
     @Value.Default
     @Override default PrincipalCommandType getCommandType() { return PrincipalCommandType.CHANGE_PRINCIPAL_EMAIL; }

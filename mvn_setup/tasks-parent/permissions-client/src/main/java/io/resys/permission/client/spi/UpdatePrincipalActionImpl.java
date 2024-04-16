@@ -5,8 +5,8 @@ import java.util.List;
 
 import io.resys.permission.client.api.PermissionClient.PrincipalAccessEvaluator;
 import io.resys.permission.client.api.PermissionClient.UpdatePrincipalAction;
+import io.resys.permission.client.api.model.ChangeType;
 import io.resys.permission.client.api.model.ImmutablePrincipal;
-import io.resys.permission.client.api.model.PermissionCommand.ChangeType;
 import io.resys.permission.client.api.model.Principal;
 import io.resys.permission.client.api.model.PrincipalCommand.ChangePrincipalEmail;
 import io.resys.permission.client.api.model.PrincipalCommand.ChangePrincipalName;
@@ -59,6 +59,12 @@ public class UpdatePrincipalActionImpl implements UpdatePrincipalAction {
           
         } else if(roles.getChangeType() == ChangeType.REMOVE) {
           roles.getRoles().forEach(role -> modifyOneMember.modifyParties(ModType.REMOVE, role)); 
+
+        } else if(roles.getChangeType() == ChangeType.SET_ALL) {
+          modifyOneMember.setAllParties(roles.getRoles()); 
+          
+        } else {
+          throw new UpdatePrincipalException("Command type not found exception: " + command.getCommandType() + "/" + roles.getChangeType());
         }
         break;
       }
@@ -74,6 +80,12 @@ public class UpdatePrincipalActionImpl implements UpdatePrincipalAction {
           
         } else if(permissions.getChangeType() == ChangeType.REMOVE) {
           permissions.getPermissions().forEach(perm -> modifyOneMember.modifyRights(ModType.REMOVE, perm));
+
+        } else if(permissions.getChangeType() == ChangeType.SET_ALL) {
+          modifyOneMember.setAllRights(permissions.getPermissions());
+          
+        } else {
+          throw new UpdatePrincipalException("Command type not found exception: " + command.getCommandType() + "/" + permissions.getChangeType());
         }
         break;
       }
