@@ -613,12 +613,18 @@ const en = {
   'permissions.permission.create': 'Create a new permission',
   'permissions.permission.name.create.placeholder': 'Enter a permission name',
   'permissions.permission.description.create.placeholder': 'Enter a description of this permission',
-  'permissions.permission.createComment': 'Comment',
-  'permissions.permission.createComment.placeholder': 'Note describing this change',
+  'permissions.permission.comment': 'Comment',
+  'permissions.permission.comment.placeholder': 'Note describing this change',
+
+  'permissions.permission.edit': 'Edit a permission',
+  'permissions.editPermission.roles': 'Roles',
+  'permissions.editPermission.principals': 'Members',
 
   'permissions.permission.rolePermissionsOverview': 'Roles to receive this Permission',
   'permissions.permission.rolePrincipalsOverview': 'Members assigned to this Permission',
 
+  'permissions.permission.edit.rolePermissionsOverview': 'Roles to which this permission belongs',
+  'permissions.permission.edit.rolePrincipalsOverview': 'Members who have this permission',
 
   'permissions.createRole.role_parent': 'Parent role',
   'permissions.createRole.role_permissions': 'Permissions',

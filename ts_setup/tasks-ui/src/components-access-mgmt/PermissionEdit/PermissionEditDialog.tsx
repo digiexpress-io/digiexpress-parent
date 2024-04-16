@@ -3,6 +3,8 @@ import Burger from 'components-burger';
 import { ImmutableAmStore, Permission, useAm } from 'descriptor-access-mgmt';
 import { StyledDialogLarge } from 'components-access-mgmt/Dialogs';
 import { Left } from './Left';
+import { Right } from './Right';
+import { Header } from './Header';
 import { PermissionEditProvider, usePermissionEdit } from './PermissionEditContext';
 import { useBackend } from 'descriptor-backend';
 
@@ -40,9 +42,9 @@ const PermissionEditDialog: React.FC<{ open: boolean, onClose: () => void, permi
       <StyledDialogLarge
         open={open}
         onClose={onClose}
-        header={<>HEADER</>}
+        header={<Header onClose={onClose} />}
         footer={<Footer onClose={onClose} />}
-        right={<>RIGHT</>}
+        right={<Right />}
         left={<Left />}
       />
     </PermissionEditProvider>

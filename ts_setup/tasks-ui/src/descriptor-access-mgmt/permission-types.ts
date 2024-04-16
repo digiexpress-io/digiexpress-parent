@@ -1,5 +1,5 @@
 export type ActorStatus = 'IN_FORCE' | 'DISABLED'; // Actors cannot be deleted -- instead, they are "disabled"
-export type ChangeType = 'ADD' | 'REMOVE' | 'DISABLE';
+export type ChangeType = 'ADD' | 'REMOVE' | 'DISABLE' | 'SET_ALL';
 export type PermissionId = string;
 export type PermissionName = string;
 export type RoleId = string;
@@ -14,6 +14,9 @@ export interface Permission {
   name: string;
   description: string;
   status: ActorStatus;
+
+  roles: string[];
+  principals: string[];
 }
 
 export interface PermissionCommand {
@@ -24,7 +27,9 @@ export type PermissionCommandType =
   'CREATE_PERMISSION' |
   'CHANGE_PERMISSION_NAME' |
   'CHANGE_PERMISSION_DESCRIPTION' |
-  'CHANGE_PERMISSION_STATUS';
+  'CHANGE_PERMISSION_STATUS' |
+  'CHANGE_PERMISSION_ROLES' |
+  'CHANGE_PERMISSION_PRINCIPALS';
 
 export interface PermissionUpdateCommand extends PermissionCommand { }
 
@@ -53,6 +58,20 @@ export interface ChangePermissionStatus extends PermissionUpdateCommand {
   id: PermissionId;
   status: ActorStatus;
   commandType: 'CHANGE_PERMISSION_STATUS'
+}
+
+export interface ChangePermissionRoles extends PermissionUpdateCommand {
+  id: PermissionId,
+  roles: string[];
+  changeType: ChangeType;
+  commandType: 'CHANGE_PERMISSION_ROLES';
+}
+
+export interface ChangePermissionPrincipals extends PermissionUpdateCommand {
+  id: PermissionId,
+  principals: string[];
+  changeType: ChangeType;
+  commandType: 'CHANGE_PERMISSION_PRINCIPALS';
 }
 
 export interface PermissionPagination {
@@ -87,7 +106,8 @@ export type RoleCommandType =
   'CHANGE_ROLE_DESCRIPTION' |
   'CHANGE_ROLE_STATUS' |
   'CHANGE_ROLE_PARENT' |
-  'CHANGE_ROLE_PERMISSIONS';
+  'CHANGE_ROLE_PERMISSIONS' |
+  'CHANGE_ROLE_PRINCIPALS';
 
 export interface CreateRole {
   commandType: 'CREATE_ROLE';
@@ -130,6 +150,13 @@ export interface ChangeRolePermissions extends RoleUpdateCommand {
   commandType: 'CHANGE_ROLE_PERMISSIONS';
 }
 
+export interface ChangeRolePrincipals extends RoleUpdateCommand {
+  id: RoleId;
+  principals: string[];
+  changeType: ChangeType;
+  commandType: 'CHANGE_ROLE_PRINCIPALS';
+}
+
 //-------------------------PRINCIPAL-----------------------------
 
 export interface Principal {
@@ -155,8 +182,9 @@ export interface PrincipalCommand {
 
 export type PrincipalCommandType =
   'CREATE_PRINCIPAL' |
-  'CHANGE_PRINCIPAL_ROLES' |
-  'CHANGE_PRINCIPAL_STATUS';
+  'CHANGE_PRINCIPAL_STATUS' |
+  'CHANGE_PRINCIPAL_PERMISSIONS' |
+  'CHANGE_PRINCIPAL_ROLES';
 
 export interface PrincipalUpdateCommand extends PrincipalCommand { }
 
@@ -169,15 +197,22 @@ export interface CreatePrincipal {
   comment: string;
 }
 
-export interface ChangePrincipalRoles extends PrincipalUpdateCommand {
-  id: PrincipalId;
-  roles: string;        // id/name/extId
-  changeType: ChangeType;
-  commandType: 'CHANGE_PRINCIPAL_ROLES';
-}
-
 export interface ChangePrincipalStatus extends PrincipalUpdateCommand {
   id: PrincipalId;
   status: ActorStatus;
   commandType: 'CHANGE_PRINCIPAL_STATUS';
+}
+
+export interface ChangePrincipalRoles extends PrincipalUpdateCommand {
+  id: PrincipalId;
+  roles: string[];        // id/name/extId
+  changeType: ChangeType;
+  commandType: 'CHANGE_PRINCIPAL_ROLES';
+}
+
+export interface ChangePrincipalPermissions extends PrincipalUpdateCommand {
+  id: PrincipalId;
+  permissions: string[];        // id/name/extId
+  changeType: ChangeType;
+  commandType: 'CHANGE_PRINCIPAL_PERMISSIONS';
 }

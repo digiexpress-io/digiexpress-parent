@@ -46,9 +46,9 @@ const Left: React.FC<{}> = () => {
     </Burger.Section>
 
     <Burger.Section>
-      <Typography fontWeight='bold'><FormattedMessage id='permissions.permission.createComment' /></Typography>
+      <Typography fontWeight='bold'><FormattedMessage id='permissions.permission.comment' /></Typography>
       <TextField InputProps={{ disableUnderline: true }} variant='standard'
-        placeholder={intl.formatMessage({ id: 'permissions.permission.createComment.placeholder' })}
+        placeholder={intl.formatMessage({ id: 'permissions.permission.comment.placeholder' })}
         fullWidth
         required
         value={entity.commitComment}
