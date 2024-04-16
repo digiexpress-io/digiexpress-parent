@@ -9,6 +9,9 @@ import com.google.common.collect.ComparisonChain;
 import io.resys.thena.api.entities.grim.GrimAssignment;
 import io.resys.thena.api.entities.grim.GrimCommit;
 import io.resys.thena.api.entities.grim.GrimMissionLink;
+import io.resys.thena.api.entities.grim.GrimRemark;
+import io.resys.thena.api.entities.grim.ImmutableGrimMissionLink;
+import io.resys.thena.api.entities.grim.ImmutableGrimRemark;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.IsGrimObject;
 import io.vertx.core.json.JsonObject;
 
@@ -40,7 +43,24 @@ public class GrimCommitLogger {
     count_added++;
     added
       .append("  + ").append(entity.getId()).append("::").append(entity.getDocType()).append(System.lineSeparator())
-      .append("    ").append(JsonObject.mapFrom(entity)).append(System.lineSeparator());
+      .append("    ").append(toJson(entity)).append(System.lineSeparator());
+  }
+  
+  private JsonObject toJson(IsGrimObject entity) {
+    
+    if(entity instanceof GrimMissionLink) {
+      final var link = ImmutableGrimMissionLink.builder().from((GrimMissionLink) entity)
+          .transitives(null)
+          .build();
+      return JsonObject.mapFrom(link);
+    } else if(entity instanceof GrimRemark) {
+      final var link = ImmutableGrimRemark.builder().from((GrimRemark) entity)
+          .transitives(null)
+          .build();
+      return JsonObject.mapFrom(link);
+    }
+    
+    return JsonObject.mapFrom(entity);
   }
   
   public void remove(IsGrimObject entity) {

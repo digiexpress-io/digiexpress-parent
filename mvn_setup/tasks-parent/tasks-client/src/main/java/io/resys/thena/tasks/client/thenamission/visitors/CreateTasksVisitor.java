@@ -199,11 +199,11 @@ public class CreateTasksVisitor implements TaskStoreConfig.CreateManyTasksVisito
    
    .comments(src.getRemarks().values().stream()
        .filter(remark -> remark.getRelation() == null)
-       .sorted((a, b) -> a.getCreatedAt().compareTo(b.getCreatedAt()))
+       .sorted((a, b) -> a.getTransitives().getCreatedAt().compareTo(b.getTransitives().getCreatedAt()))
        .map(remark -> ImmutableTaskComment.builder()
            .id(remark.getId())
            .commentText(remark.getRemarkText())
-           .created(remark.getCreatedAt().toInstant())
+           .created(remark.getTransitives().getCreatedAt().toInstant())
            .username(remark.getReporterId())
            .replyToId(remark.getParentId())
            .build())

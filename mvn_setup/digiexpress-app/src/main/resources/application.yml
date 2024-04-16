@@ -47,10 +47,10 @@ tenant:
     devLoggedInUser: olev.mutso@resys.io
   quarkus:
     log:
-      level: ERROR
+      level: WARN
       category:
         io.resys:
-          level: ERROR
+          level: DEBUG
         org.jboss.resteasy.reactive.server.handlers.RequestDeserializeHandler: 
           level: DEBUG
       console:  

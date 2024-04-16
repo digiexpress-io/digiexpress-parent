@@ -4,6 +4,7 @@ import java.util.Map;
 
 import io.resys.thena.api.entities.grim.GrimMissionLink;
 import io.resys.thena.api.entities.grim.ImmutableGrimMissionLink;
+import io.resys.thena.api.entities.grim.ImmutableGrimMissionLinkTransitives;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewLink;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimOneOfRelations;
@@ -29,7 +30,15 @@ public class NewMissionLinkBuilder implements ThenaGrimNewObject.NewLink {
     super();
     this.logger = logger;
     this.relation = relation;
-    this.next = ImmutableGrimMissionLink.builder().missionId(missionId).commitId(logger.getCommitId()).createdWithCommitId(logger.getCommitId()).id(OidUtils.gen());
+    this.next = ImmutableGrimMissionLink.builder()
+        .missionId(missionId)
+        .commitId(logger.getCommitId())
+        .createdWithCommitId(logger.getCommitId())
+        .transitives(ImmutableGrimMissionLinkTransitives.builder()
+            .updatedAt(logger.getCreatedAt())
+            .createdAt(logger.getCreatedAt())
+            .build())
+        .id(OidUtils.gen());
     this.all_missionLinks = all_missionLinks;
   }
   

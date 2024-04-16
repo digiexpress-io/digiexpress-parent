@@ -1,14 +1,14 @@
 package io.resys.thena.tasks.dev.app.security;
 
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import io.quarkus.cache.CacheInvalidate;
 import io.quarkus.cache.CacheResult;
 import io.resys.permission.client.api.PermissionClient;
+import io.resys.permission.client.api.model.ImmutablePrincipal;
+import io.resys.permission.client.api.model.Principal;
 import io.resys.thena.projects.client.api.TenantConfigClient;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
@@ -29,30 +29,23 @@ public class PrincipalCache {
   
   @ConfigProperty(name = "tenant.failSafeUsers")
   String failSafeUsers;
-  
+
   @CacheResult(cacheName = PrincipalCache.CACHE_NAME)
-  public Uni<List<String>> getPrincipalPermissions(String principalId, String email) {
-    if(isFailSafeUser(principalId, email)) {
-      return Uni.createFrom().item(
-          Arrays.asList(BuiltInDataPermissions.values())
-          .stream().map(e -> e.name())
-          .toList());
-    }
-    
+  public Uni<Principal> getPrincipalPermissions(String principalId, String email) {
     return getClient().onItem()
         .transformToUni(client -> {
-          
           return client.principalQuery().get(principalId)
           .onFailure()
           .recoverWithUni(e -> {
             log.warn("Failed to find principal by id: {}, trying to find by email: {}, error: {}", principalId, email, e.getMessage(), e);
             return client.principalQuery().get(email);
-          })
-          .onItem().transform(found -> found.getPermissions())
-          .onFailure().recoverWithItem(e -> {
-            log.error("Failed to find principal by id: {} and email: {}, error: {}", principalId, email, e.getMessage(), e);
-            return Collections.emptyList();
           });
+        }).onItem().transform(principal -> {
+          if(isFailSafeUser(principalId, email)) {
+            final var failSafe = Arrays.asList(BuiltInDataPermissions.values()).stream().map(e -> e.name()).toList();
+            return ImmutablePrincipal.builder().from(principal).addAllPermissions(failSafe).build();
+          }
+          return principal;
         });
   }
   

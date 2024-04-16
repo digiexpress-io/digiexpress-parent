@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import io.resys.thena.api.entities.grim.GrimRemark;
 import io.resys.thena.api.entities.grim.ImmutableGrimOneOfRelations;
 import io.resys.thena.api.entities.grim.ImmutableGrimRemark;
+import io.resys.thena.api.entities.grim.ImmutableGrimRemarkTransitives;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewAssignment;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewRemark;
@@ -46,7 +47,11 @@ public class NewRemarkBuilder implements ThenaGrimNewObject.NewRemark {
         .id(remarkId)
         .missionId(missionId)
         .createdWithCommitId(logger.getCommitId())
-        .commitId(logger.getCommitId());
+        .commitId(logger.getCommitId())
+        .transitives(ImmutableGrimRemarkTransitives.builder()
+            .updatedAt(logger.getCreatedAt())
+            .createdAt(logger.getCreatedAt())
+            .build());
     
     this.batch = ImmutableGrimBatchMissions.builder()
         .tenantId(logger.getTenantId())

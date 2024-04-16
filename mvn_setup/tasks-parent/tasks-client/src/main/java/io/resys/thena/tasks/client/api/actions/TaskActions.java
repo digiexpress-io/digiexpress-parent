@@ -71,6 +71,14 @@ public interface TaskActions {
   }
  
   interface TaskAccessEvaluator {
-    boolean evaluate(Task task);
+    TaskAccess getReadAccess(Task task);
+    TaskAccess getCreateAccess(Task task);
+    TaskAccess getUpdatedAccess(Task task);
+    TaskAccess getDeleteAccess(Task task);
+  }
+  
+  interface TaskAccess {
+    boolean isAccessGranted();
+    String getMessage();
   }
 }

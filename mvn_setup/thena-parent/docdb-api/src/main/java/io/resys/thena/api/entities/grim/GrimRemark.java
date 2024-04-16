@@ -17,9 +17,7 @@ public interface GrimRemark extends IsGrimObject, ThenaTable {
   String getCreatedWithCommitId();
   String getMissionId();
   @Nullable String getParentId();
-  
-  @Nullable OffsetDateTime getCreatedAt(); // Transitive from commit table
-  @Nullable OffsetDateTime getUpdatedAt(); // Transitive from commit table
+  @Nullable GrimRemarkTransitives getTransitives();
   
   String getRemarkText();
   @Nullable String getRemarkStatus();
@@ -27,4 +25,10 @@ public interface GrimRemark extends IsGrimObject, ThenaTable {
   @Nullable GrimOneOfRelations getRelation(); // one of sub entities
   
   @JsonIgnore @Override default public GrimDocType getDocType() { return GrimDocType.GRIM_REMARK; };
+  
+  @Value.Immutable
+  interface GrimRemarkTransitives {
+    OffsetDateTime getCreatedAt(); // Transitive from commit table
+    OffsetDateTime getUpdatedAt(); // Transitive from commit table
+  }
 }

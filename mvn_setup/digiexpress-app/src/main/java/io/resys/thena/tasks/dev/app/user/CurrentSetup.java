@@ -63,7 +63,7 @@ public class CurrentSetup {
     .onItem().transformToUni(principle -> invalidateCache(principle))
     .onItem().transformToUni(principle -> 
       cache.getPrincipalPermissions(principle.getId(), principle.getEmail())
-      .onItem().transform(permissions -> ImmutableCurrentPermissions.builder().addAllPermissions(permissions).build())
+      .onItem().transform(permissions -> ImmutableCurrentPermissions.builder().addAllPermissions(permissions.getPermissions()).build())
     );
   }
   

@@ -31,6 +31,7 @@ import com.google.common.collect.ComparisonChain;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimOneOfRelations;
 import io.resys.thena.spi.DbState;
+import io.vertx.core.json.JsonObject;
 import io.vertx.core.json.jackson.DatabindCodec;
 
 public class GrimPrinter {
@@ -50,6 +51,7 @@ public class GrimPrinter {
   
   
   public String internalPrinting(Tenant repo, boolean isStatic, final Map<String, String> collector) {
+    final Map<String, String> wipes = new HashMap<>();
     final Map<String, String> replacements = collector != null ? collector : new HashMap<>();
     final Function<String, String> ID = (id) -> {
       if(!isStatic) {
@@ -82,6 +84,22 @@ public class GrimPrinter {
       final var next = String.valueOf(replacements.size() + 1);
       replacements.put(id.getTargetId(), next);
       return next;
+    };
+
+    final Function<Object, String> TR = (input) -> {
+
+      if(input == null) {
+        return "null";
+      }
+      if(!isStatic) {
+        return "null";
+      }
+      final var id = JsonObject.mapFrom(input).encode();
+      if(wipes.containsKey(id)) {
+        return wipes.get(id);
+      }
+      wipes.put(id, "null");
+      return "null";
     };
     
     
@@ -228,6 +246,8 @@ public class GrimPrinter {
                 .result())
             .toList()) {
           
+          TR.apply(data.getTransitives());
+          
           result.append("  - ").append(ID.apply(data.getId())).append("::").append(data.getDocType()).append(System.lineSeparator());
         }
         
@@ -238,6 +258,9 @@ public class GrimPrinter {
           var log = data.getCommitLog();
           
           for(final var entry : replacements.entrySet()) {
+            log = log.replace(entry.getKey(), entry.getValue());
+          }
+          for(final var entry : wipes.entrySet()) {
             log = log.replace(entry.getKey(), entry.getValue());
           }
           

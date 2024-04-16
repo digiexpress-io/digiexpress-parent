@@ -37,7 +37,7 @@ public class ProdIdentityAugmentor implements SecurityIdentityAugmentor {
     final var email = (String) principal.getClaim(Claims.email.name());
     return cache.getPrincipalPermissions(sub, email).onItem()
         .transform(permissions -> QuarkusSecurityIdentity.builder(src)
-              .addRoles(new HashSet<>(permissions))
+              .addRoles(new HashSet<>(permissions.getPermissions()))
               .build());
   }
 }

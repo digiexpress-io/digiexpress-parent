@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import io.resys.thena.api.entities.grim.GrimRemark;
 import io.resys.thena.api.entities.grim.ImmutableGrimRemark;
+import io.resys.thena.api.entities.grim.ImmutableGrimRemarkTransitives;
 import io.resys.thena.api.registry.grim.GrimMissionFilter;
 import io.resys.thena.api.registry.grim.GrimRemarkRegistry;
 import io.resys.thena.datasource.ImmutableSql;
@@ -249,8 +250,13 @@ public class GrimRemarkRegistrySqlImpl implements GrimRemarkRegistry {
           .commitId(row.getString("commit_id"))
           .parentId(row.getString("parent_id"))
           
-          .updatedAt(row.getOffsetDateTime("updated_at"))
-          .createdAt(row.getOffsetDateTime("created_at"))
+          
+          .transitives(ImmutableGrimRemarkTransitives.builder()
+            .updatedAt(row.getOffsetDateTime("updated_at"))
+            .createdAt(row.getOffsetDateTime("created_at"))
+            .build()
+          )
+        
           .createdWithCommitId(row.getString("created_commit_id"))
           
           .missionId(row.getString("mission_id"))

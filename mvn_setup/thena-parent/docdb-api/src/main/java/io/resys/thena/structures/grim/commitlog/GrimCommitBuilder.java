@@ -1,5 +1,7 @@
 package io.resys.thena.structures.grim.commitlog;
 
+import java.time.OffsetDateTime;
+
 import io.resys.thena.api.entities.grim.GrimCommit;
 import io.resys.thena.api.entities.grim.GrimCommitTree.GrimCommitTreeOperation;
 import io.resys.thena.api.entities.grim.ImmutableGrimCommit;
@@ -18,7 +20,7 @@ public class GrimCommitBuilder {
   private final ImmutableGrimCommit.Builder commit;
   private final ImmutableGrimBatchMissions.Builder next;
   private final GrimCommitLogger logger;
-  
+  private final OffsetDateTime createdAt;
   public GrimCommitBuilder(String tenantId, GrimCommit commit) {
     super();
     this.commitId = commit.getCommitId();
@@ -29,12 +31,16 @@ public class GrimCommitBuilder {
         .status(BatchStatus.OK)
         .log("");
     this.logger = new GrimCommitLogger(tenantId, commit);
+    this.createdAt = commit.getCreatedAt();
   }
   public String getTenantId() {
     return tenantId;
   }
   public String getCommitId() {
     return commitId;
+  }
+  public OffsetDateTime getCreatedAt() {
+    return createdAt;
   }
   public GrimCommitBuilder add(IsGrimObject entity) {
     this.next.addCommitTrees(ImmutableGrimCommitTree.builder()
