@@ -87,7 +87,10 @@ public interface OrgCommitActions {
     ModifyOneMember userName(String userName);
     ModifyOneMember email(String email);
     ModifyOneMember status(OrgActorStatus.OrgActorStatusType status);
+
     
+    ModifyOneMember setAllParties(List<String> partyIdNameOrExtId);
+    ModifyOneMember setAllRights(List<String> rightIdNameOrExtId); // group.(id OR externalId OR rolename)
     ModifyOneMember modifyRights(ModType type, String rightIdNameOrExtId); // group.(id OR externalId OR rolename)
     ModifyOneMember modifyParties(ModType type, String partyIdNameOrExtId);
     ModifyOneMember modifyPartyRight(ModType type, String partyIdNameOrExtId, String rightIdNameOrExtId);
@@ -107,8 +110,12 @@ public interface OrgCommitActions {
     ModifyOneParty partyDescription(String partyDescription);
     ModifyOneParty partySubType(OrgDocSubType partySubType);
     
+    ModifyOneParty setAllMembers(List<String> memberIdNameOrExtId);
+    ModifyOneParty setAllRights(List<String> rightIdNameOrExtId);
+    
     ModifyOneParty modifyMember(ModType type, String memberIdNameOrExtId);
     ModifyOneParty modifyRight(ModType type, String rightIdNameOrExtId);
+    
     ModifyOneParty modifyMemberRight(ModType type, String memberIdNameOrExtId, String rightIdNameOrExtId);
     ModifyOneParty status(OrgActorStatusType status);    
     Uni<OnePartyEnvelope> build();
@@ -124,6 +131,9 @@ public interface OrgCommitActions {
     ModifyOneRight rightName(String roleName);
     ModifyOneRight rightDescription(String roleDescription);
     ModifyOneRight rightSubType(OrgDocSubType rightSubType);
+    
+    ModifyOneRight setAllMembers(List<String> memberIdNameOrExtId);
+    ModifyOneRight setAllParties(List<String> partyIdNameOrExtId);
     
     ModifyOneRight modifyMember(ModType type, String memberIdNameOrExtId);
     ModifyOneRight modifyParty(ModType type, String partyIdNameOrExtId);
