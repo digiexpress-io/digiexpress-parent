@@ -46,28 +46,30 @@ import io.resys.thena.api.entities.org.OrgActorStatus;
   @Type(value = ImmutableChangeRoleName.class, name = "CHANGE_ROLE_NAME"),  
   @Type(value = ImmutableChangeRoleDescription.class, name = "CHANGE_ROLE_DESCRIPTION"),  
   @Type(value = ImmutableChangeRoleStatus.class, name = "CHANGE_ROLE_STATUS"), 
+  @Type(value = ImmutableChangeRoleParent.class, name = "CHANGE_ROLE_PARENT"),
   @Type(value = ImmutableChangeRolePermissions.class, name = "CHANGE_ROLE_PERMISSIONS"), 
-  @Type(value = ImmutableChangeRoleParent.class, name = "CHANGE_ROLE_PARENT")
-
+  @Type(value = ImmutableChangeRolePrincipals.class, name = "CHANGE_ROLE_PRINCIPALS"), 
 })
 
 public interface RoleCommand extends Serializable {
   RoleCommandType getCommandType();
-  String getComment(); // for auditing purposes, user who made changes must describe why, in a comment.
   
   enum RoleCommandType {
     CREATE_ROLE, 
     CHANGE_ROLE_NAME, 
     CHANGE_ROLE_DESCRIPTION,
     CHANGE_ROLE_STATUS,
+    CHANGE_ROLE_PARENT,
     CHANGE_ROLE_PERMISSIONS,
-    CHANGE_ROLE_PARENT
+    CHANGE_ROLE_PRINCIPALS
   }
 
   @Value.Immutable @JsonSerialize(as = ImmutableCreateRole.class) @JsonDeserialize(as = ImmutableCreateRole.class)
   interface CreateRole extends RoleCommand {
     String getName();
     String getDescription();
+    String getComment(); // for auditing purposes, user who made changes must describe why, in a comment.
+
     List<String> getPermissions(); //Can be permission name or permission id or permission external id
     List<String> getPrincipals();   // user names
     @Nullable String getParentId();
@@ -85,8 +87,9 @@ public interface RoleCommand extends Serializable {
     @Type(value = ImmutableChangeRoleName.class, name = "CHANGE_ROLE_NAME"), 
     @Type(value = ImmutableChangeRoleDescription.class, name = "CHANGE_ROLE_DESCRIPTION"),  
     @Type(value = ImmutableChangeRoleStatus.class, name = "CHANGE_ROLE_STATUS"), 
+    @Type(value = ImmutableChangeRoleParent.class, name = "CHANGE_ROLE_PARENT"),
     @Type(value = ImmutableChangeRolePermissions.class, name = "CHANGE_ROLE_PERMISSIONS"), 
-    @Type(value = ImmutableChangeRoleParent.class, name = "CHANGE_ROLE_PARENT")
+    @Type(value = ImmutableChangeRolePrincipals.class, name = "CHANGE_ROLE_PRINCIPALS")
   })
 
   
@@ -96,44 +99,68 @@ public interface RoleCommand extends Serializable {
   
   @Value.Immutable @JsonSerialize(as = ImmutableChangeRoleName.class) @JsonDeserialize(as = ImmutableChangeRoleName.class)
   interface ChangeRoleName extends RoleUpdateCommand {
+    String getId();
     String getName();
-    
+    String getComment(); // for auditing purposes, user who made changes must describe why, in a comment.
+
     @Value.Default
     @Override default RoleCommandType getCommandType() { return RoleCommandType.CHANGE_ROLE_NAME; }
   }
   
   @Value.Immutable @JsonSerialize(as = ImmutableChangeRoleDescription.class) @JsonDeserialize(as = ImmutableChangeRoleDescription.class)
   interface ChangeRoleDescription extends RoleUpdateCommand {
+    String getId();
     String getDescription();
-    
+    String getComment(); // for auditing purposes, user who made changes must describe why, in a comment.
+
     @Value.Default
     @Override default RoleCommandType getCommandType() { return RoleCommandType.CHANGE_ROLE_DESCRIPTION; }
   }
   
   @Value.Immutable @JsonSerialize(as = ImmutableChangeRoleStatus.class) @JsonDeserialize(as = ImmutableChangeRoleStatus.class)
   interface ChangeRoleStatus extends RoleUpdateCommand {
+    String getId();
     OrgActorStatus.OrgActorStatusType getStatus();
-    
+    String getComment(); // for auditing purposes, user who made changes must describe why, in a comment.
+
     @Value.Default
     @Override default RoleCommandType getCommandType() { return RoleCommandType.CHANGE_ROLE_STATUS; }
   }
   
+  @Value.Immutable @JsonSerialize(as = ImmutableChangeRoleParent.class) @JsonDeserialize(as = ImmutableChangeRoleParent.class)
+  interface ChangeRoleParent extends RoleUpdateCommand {
+    String getId();
+    @Nullable String getParentId();
+    String getComment(); // for auditing purposes, user who made changes must describe why, in a comment.
+
+    @Value.Default
+    @Override default RoleCommandType getCommandType() { return RoleCommandType.CHANGE_ROLE_PARENT; }
+  }
+  
   @Value.Immutable @JsonSerialize(as = ImmutableChangeRolePermissions.class) @JsonDeserialize(as = ImmutableChangeRolePermissions.class)
   interface ChangeRolePermissions extends RoleUpdateCommand {
+    String getId();
     List<String> getPermissions();
     ChangeType getChangeType();
-    
+    String getComment(); // for auditing purposes, user who made changes must describe why, in a comment.
+
     @Value.Default
     @Override default RoleCommandType getCommandType() { return RoleCommandType.CHANGE_ROLE_PERMISSIONS; }
   }
   
-  @Value.Immutable @JsonSerialize(as = ImmutableChangeRoleParent.class) @JsonDeserialize(as = ImmutableChangeRoleParent.class)
-  interface ChangeRoleParent extends RoleUpdateCommand {
-    @Nullable String getParentId();
-    
+  @Value.Immutable @JsonSerialize(as = ImmutableChangeRolePrincipals.class) @JsonDeserialize(as = ImmutableChangeRolePrincipals.class)
+  interface ChangeRolePrincipals extends RoleUpdateCommand {
+    String getId();
+    List<String> getPrincipals();
+    ChangeType getChangeType();
+    String getComment(); // for auditing purposes, user who made changes must describe why, in a comment.
+
     @Value.Default
-    @Override default RoleCommandType getCommandType() { return RoleCommandType.CHANGE_ROLE_PARENT; }
+    @Override default RoleCommandType getCommandType() { return RoleCommandType.CHANGE_ROLE_PRINCIPALS; }
   }
+  
+  
+  
 }
 
 

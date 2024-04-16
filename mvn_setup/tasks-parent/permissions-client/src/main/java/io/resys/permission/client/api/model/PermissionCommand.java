@@ -44,24 +44,22 @@ import io.resys.thena.api.entities.org.OrgActorStatus;
   @Type(value = ImmutableChangePermissionName.class, name = "CHANGE_PERMISSION_NAME"), 
   @Type(value = ImmutableChangePermissionDescription.class, name = "CHANGE_PERMISSION_DESCRIPTION"), 
   @Type(value = ImmutableChangePermissionStatus.class, name = "CHANGE_PERMISSION_STATUS"), 
+  @Type(value = ImmutableChangePermissionRoles.class, name = "CHANGE_PERMISSION_ROLES"), 
+  @Type(value = ImmutableChangePermissionPrincipals.class, name = "CHANGE_PERMISSION_PRINCIPALS")
 })
 
 public interface PermissionCommand extends Serializable {
   PermissionCommandType getCommandType();
-  String getComment(); // for auditing purposes, user who made changes must describe why, in a comment.
   
   enum PermissionCommandType {
     CREATE_PERMISSION,
     CHANGE_PERMISSION_NAME,
     CHANGE_PERMISSION_DESCRIPTION,
     CHANGE_PERMISSION_STATUS,
+    CHANGE_PERMISSION_ROLES,
+    CHANGE_PERMISSION_PRINCIPALS
   }
 
-  enum ChangeType {
-    ADD, REMOVE, DISABLE
-  }
-  
-  
   @Value.Immutable @JsonSerialize(as = ImmutableCreatePermission.class) @JsonDeserialize(as = ImmutableCreatePermission.class)
   interface CreatePermission extends PermissionCommand {
     String getName();
@@ -82,6 +80,8 @@ public interface PermissionCommand extends Serializable {
     @Type(value = ImmutableChangePermissionName.class, name = "CHANGE_PERMISSION_NAME"), 
     @Type(value = ImmutableChangePermissionDescription.class, name = "CHANGE_PERMISSION_DESCRIPTION"), 
     @Type(value = ImmutableChangePermissionStatus.class, name = "CHANGE_PERMISSION_STATUS"), 
+    @Type(value = ImmutableChangePermissionRoles.class, name = "CHANGE_PERMISSION_ROLES"),
+    @Type(value = ImmutableChangePermissionPrincipals.class, name = "CHANGE_PERMISSION_PRINCIPALS")
   })
   interface PermissionUpdateCommand extends PermissionCommand {
     String getId();
@@ -117,6 +117,28 @@ public interface PermissionCommand extends Serializable {
     @Override default PermissionCommandType getCommandType() { return PermissionCommandType.CHANGE_PERMISSION_STATUS; }
   }
   
+  @Value.Immutable @JsonSerialize(as = ImmutableChangePermissionRoles.class) @JsonDeserialize(as = ImmutableChangePermissionRoles.class)
+  interface ChangePermissionRoles extends PermissionUpdateCommand {
+    String getId();
+    String getComment();
+    List<String> getRoles();
+    ChangeType getChangeType();
+    
+    @Value.Default
+    @Override default PermissionCommandType getCommandType() { return PermissionCommandType.CHANGE_PERMISSION_ROLES; }
+  }
+  
+  @Value.Immutable @JsonSerialize(as = ImmutableChangePermissionPrincipals.class) @JsonDeserialize(as = ImmutableChangePermissionPrincipals.class)
+  interface ChangePermissionPrincipals extends PermissionUpdateCommand {
+    String getId();
+    String getComment();
+    List<String> getPrincipals();
+    ChangeType getChangeType();
+    
+    @Value.Default
+    @Override default PermissionCommandType getCommandType() { return PermissionCommandType.CHANGE_PERMISSION_PRINCIPALS; }
+
+  }
 }
 
 
