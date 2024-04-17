@@ -13,7 +13,7 @@ interface RoleToEdit {
   permissions: readonly string[];
 }
 
-export interface RoleToEditContextType {
+interface RoleToEditContextType {
   entity: RoleToEdit;
   setName(newName: string): void;
   setDescription(newDescription: string): void;
@@ -70,7 +70,7 @@ function next(init: RoleToEdit): Readonly<RoleToEdit> { return Object.freeze(ini
 
 const RoleEditContext = React.createContext<RoleToEditContextType>({} as any);
 
-export const EditRoleProvider: React.FC<{ children: React.ReactNode, role: Role }> = ({ children, role }) => {
+export const RoleEditProvider: React.FC<{ children: React.ReactNode, role: Role }> = ({ children, role }) => {
   const { id, description, name, parentId, permissions, principals } = role;
 
   const [entity, setEntity] = React.useState<RoleToEdit>({
@@ -140,3 +140,9 @@ export const EditRoleProvider: React.FC<{ children: React.ReactNode, role: Role 
 
   return (<RoleEditContext.Provider value={contextValue}>{children}</RoleEditContext.Provider>)
 }
+
+export function useRoleEdit(): RoleToEditContextType {
+  const result: RoleToEditContextType = React.useContext(RoleEditContext);
+  return result;
+}
+

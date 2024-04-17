@@ -1,6 +1,5 @@
-
-import { PermissionId } from 'descriptor-access-mgmt';
 import React from 'react';
+import { PermissionId } from 'descriptor-access-mgmt';
 
 
 interface PermissionsOverviewContextType {

@@ -1,10 +1,9 @@
 import React from 'react';
-
 import * as colors from 'components-colors';
+
 import { LayoutList, NavigationButton, FilterByString } from 'components-generic';
 import RoleCreateDialog from '../RoleCreate';
 import { OneRoleData } from './OneRoleData';
-
 import { PermissionCreateDialog } from '../PermissionCreate';
 import PrincipalCreateDialog from '../PrincipalCreate';
 import { useAm } from 'descriptor-access-mgmt';
