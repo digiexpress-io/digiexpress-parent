@@ -1,5 +1,10 @@
-import { ChangeRoleDescription, ChangeRoleName, ChangeRoleParent, ChangeRolePermissions, ChangeRolePrincipals, Role, RoleId, RoleUpdateCommand } from 'descriptor-access-mgmt';
 import React from 'react';
+import {
+  ChangeRoleDescription, ChangeRoleName, ChangeRoleParent, ChangeRolePermissions, ChangeRolePrincipals,
+  Role, RoleId, RoleUpdateCommand
+} from 'descriptor-access-mgmt';
+import { getInstance as createTabsContext, SingleTabInit, Tab } from 'descriptor-tabbing';
+
 
 
 interface RoleToEdit {
@@ -70,7 +75,7 @@ function next(init: RoleToEdit): Readonly<RoleToEdit> { return Object.freeze(ini
 
 const RoleEditContext = React.createContext<RoleToEditContextType>({} as any);
 
-export const RoleEditProvider: React.FC<{ children: React.ReactNode, role: Role }> = ({ children, role }) => {
+export const EditRoleProvider: React.FC<{ children: React.ReactNode, role: Role }> = ({ children, role }) => {
   const { id, description, name, parentId, permissions, principals } = role;
 
   const [entity, setEntity] = React.useState<RoleToEdit>({
@@ -146,3 +151,33 @@ export function useRoleEdit(): RoleToEditContextType {
   return result;
 }
 
+
+const TabsContext = createTabsContext<TabTypes, TabState>();
+function initAllTabs(): Record<TabTypes, SingleTabInit<TabState>> {
+  return {
+    role_parent: { body: {}, active: true },
+    role_permissions: { body: {}, active: false },
+    role_members: { body: {}, active: false }
+  };
+}
+
+export type TabTypes = 'role_parent' | 'role_permissions' | 'role_members';
+export interface TabState { }
+export function useTabs() {
+  const tabbing = TabsContext.hooks.useTabbing();
+  const activeTab: Tab<TabTypes, TabState> = tabbing.getActiveTab();
+  function setActiveTab(next: TabTypes) {
+    tabbing.withTabActivity(next, { disableOthers: true });
+  }
+  return { activeTab, setActiveTab };
+}
+
+export const RoleEditProvider: React.FC<{ children: React.ReactNode, role: Role }> = ({ children, role }) => {
+  return (
+    <TabsContext.Provider init={initAllTabs()}>
+      <EditRoleProvider role={role}>
+        <>{children}</>
+      </EditRoleProvider>
+    </TabsContext.Provider>
+  );
+}

@@ -19,7 +19,7 @@ const CurrentlySelected: React.FC<{ chips: string[], onRemoveChip: (index: numbe
           key={index}
           onDelete={() => onRemoveChip(index)}
         />
-      )) : <FormattedMessage id='permissions.role.roleCreate.selection.none' />}
+      )) : <FormattedMessage id='permissions.role.selection.none' />}
     </Alert>
   );
 };

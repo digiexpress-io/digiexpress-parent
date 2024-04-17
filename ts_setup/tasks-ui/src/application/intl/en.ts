@@ -617,6 +617,8 @@ const en = {
   'permissions.permission.comment.placeholder': 'Note describing this change',
 
   'permissions.permission.edit': 'Edit a permission',
+  'permissions.role.edit': 'Edit a role',
+
   'permissions.editPermission.roles': 'Roles',
   'permissions.editPermission.principals': 'Members',
 
@@ -626,10 +628,10 @@ const en = {
   'permissions.permission.edit.rolePermissionsOverview': 'Roles to which this permission belongs',
   'permissions.permission.edit.rolePrincipalsOverview': 'Members who have this permission',
 
-  'permissions.createRole.role_parent': 'Parent role',
-  'permissions.createRole.role_permissions': 'Permissions',
-  'permissions.createRole.role_members': 'Role members',
-  'permissions.createRole.selection.none': 'Nothing selected',
+  'permissions.role.role_parent': 'Parent role',
+  'permissions.role.role_permissions': 'Permissions',
+  'permissions.role.role_members': 'Role members',
+  'permissions.role.selection.none': 'Nothing selected',
 
   'permissions.role.parentSelect': 'Role parent',
   'permissions.role.roleParentName': 'Name',

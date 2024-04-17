@@ -1,9 +1,9 @@
 import React from 'react';
-import { Box, Typography, Tabs, Tab, IconButton } from '@mui/material';
+import { Box, Typography, IconButton, Tabs, Tab } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
 import { FormattedMessage } from 'react-intl';
-import { useTabs, TabTypes } from './RoleCreateContext';
+import { TabTypes, useTabs } from './RoleEditContext';
 
 
 const HEADER_MAPPING: TabTypes[] = [
@@ -11,6 +11,7 @@ const HEADER_MAPPING: TabTypes[] = [
   'role_permissions',
   'role_members'
 ];
+
 
 const CloseDialogButton: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   return (
@@ -21,6 +22,7 @@ const CloseDialogButton: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 }
 
 const Header: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+
   const tabbing = useTabs();
   function handleTabValue(_event: React.SyntheticEvent, index: number) {
     const newValue: TabTypes = HEADER_MAPPING[index];
@@ -30,9 +32,8 @@ const Header: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   return (
     <Box display='flex' alignItems='center'>
       <Box width='50%' marginRight={5}>
-        <Typography variant='h4'><FormattedMessage id='permissions.roles.create' /></Typography>
+        <Typography variant='h4'><FormattedMessage id='permissions.role.edit' /></Typography>
       </Box>
-
       <Box width='50%'>
         <Tabs value={HEADER_MAPPING.indexOf(tabbing.activeTab.id)} onChange={handleTabValue}>
           <Tab label={<FormattedMessage id='permissions.role.role_parent' />} />
@@ -43,7 +44,6 @@ const Header: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       <CloseDialogButton onClose={onClose} />
     </Box>
   )
-
 }
 
-export default Header;
+export { Header }
