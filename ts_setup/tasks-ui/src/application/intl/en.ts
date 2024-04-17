@@ -580,6 +580,11 @@ const en = {
   'permissions.roles.description.create.placeholder': 'Enter a description of this role',
   'permissions.roles.name.create.placeholder': 'Enter a role name',
 
+  'permissions.roles.name.edit.placeholder': 'Enter a new name for this role',
+  'permissions.roles.description.edit.placeholder': 'Enter a new description for this role',
+
+
+
   'permissions.roles.roleParentOverview': 'Parent role',
   'permissions.roles.rolePermissionsOverview': 'Permissions given to this Role',
   'permissions.roles.rolePrincipalsOverview': 'Members assigned to this Role',
