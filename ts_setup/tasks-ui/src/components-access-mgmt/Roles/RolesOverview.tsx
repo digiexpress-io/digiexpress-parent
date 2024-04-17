@@ -60,7 +60,7 @@ const RoleNavigation: React.FC = () => {
 
 
 
-const RolesOverviewLoader: React.FC = () => {
+const RolesOverview: React.FC = () => {
   const { roles } = useAm();
   const navigation = <RoleNavigation />;
   const pagination = <></>;
@@ -68,4 +68,4 @@ const RolesOverviewLoader: React.FC = () => {
   return (<LayoutList slots={{ navigation, items, pagination }} />)
 }
 
-export default RolesOverviewLoader;
+export { RolesOverview };
