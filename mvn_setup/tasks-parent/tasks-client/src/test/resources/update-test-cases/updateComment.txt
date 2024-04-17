@@ -42,7 +42,7 @@ author: not-configured, message: merging tasks from: UpdateTasksVisitor
  | created
   + added new: 1 entries
   + 3_TASK::GRIM_REMARK
-    {"id":"3_TASK","commitId":"14","createdWithCommitId":"14","missionId":"1_TASK","parentId":null,"createdAt":null,"updatedAt":null,"remarkText":"comment-1-text","remarkStatus":null,"reporterId":"tester-bob","relation":null}
+    {"id":"3_TASK","commitId":"14","createdWithCommitId":"14","missionId":"1_TASK","parentId":null,"transitives":null,"remarkText":"comment-1-text","remarkStatus":null,"reporterId":"tester-bob","relation":null}
 
  | deleted
   - deleted: 0 entries
@@ -62,8 +62,8 @@ author: not-configured, message: merging tasks from: UpdateTasksVisitor
  | merged
   +- merged: 1 entries
   +- 3_TASK::GRIM_REMARK
-   -  {"id":"3_TASK","commitId":"14","createdWithCommitId":"14","missionId":"1_TASK","parentId":null,"createdAt":"OffsetDateTime.now()","updatedAt":"OffsetDateTime.now()","remarkText":"comment-1-text","remarkStatus":null,"reporterId":"tester-bob","relation":null}
-   +  {"id":"3_TASK","commitId":"7_TASK","createdWithCommitId":"14","missionId":"1_TASK","parentId":null,"createdAt":"OffsetDateTime.now()","updatedAt":"OffsetDateTime.now()","remarkText":"new-comment-text","remarkStatus":null,"reporterId":"tester-bob","relation":null}
+   -  {"id":"3_TASK","commitId":"14","createdWithCommitId":"14","missionId":"1_TASK","parentId":null,"transitives":null,"remarkText":"comment-1-text","remarkStatus":null,"reporterId":"tester-bob","relation":null}
+   +  {"id":"3_TASK","commitId":"7_TASK","createdWithCommitId":"14","missionId":"1_TASK","parentId":null,"transitives":null,"remarkText":"new-comment-text","remarkStatus":null,"reporterId":"tester-bob","relation":null}
    diff: commitId :: 14 -> 7_TASK
    diff: remarkText :: comment-1-text -> new-comment-text
 

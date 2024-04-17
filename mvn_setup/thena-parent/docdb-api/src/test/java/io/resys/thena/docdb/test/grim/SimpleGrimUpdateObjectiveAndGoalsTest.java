@@ -178,9 +178,9 @@ author: jane.doe@morgue.com, message: batching tests
   + 28::GRIM_MISSION_LINKS
     {"id":"28","commitId":"4","createdWithCommitId":"4","missionId":"5","externalId":"site.com/permits/5","linkType":"permits","linkBody":null,"transitives":null,"relation":null}
   + 13::GRIM_REMARK
-    {"id":"13","commitId":"4","createdWithCommitId":"4","missionId":"5","parentId":null,"createdAt":null,"updatedAt":null,"remarkText":"Created main task for building a house!","remarkStatus":null,"reporterId":"jane.doe","relation":null}
+    {"id":"13","commitId":"4","createdWithCommitId":"4","missionId":"5","parentId":null,"transitives":null,"remarkText":"Created main task for building a house!","remarkStatus":null,"reporterId":"jane.doe","relation":null}
   + 12::GRIM_REMARK
-    {"id":"12","commitId":"4","createdWithCommitId":"4","missionId":"5","parentId":null,"createdAt":null,"updatedAt":null,"remarkText":"Waiting for results already!","remarkStatus":null,"reporterId":"the.bob.clown","relation":null}
+    {"id":"12","commitId":"4","createdWithCommitId":"4","missionId":"5","parentId":null,"transitives":null,"remarkText":"Waiting for results already!","remarkStatus":null,"reporterId":"the.bob.clown","relation":null}
   + 18::GRIM_ASSIGNMENT
     {"id":"18","commitId":"4","missionId":"5","assignee":"no-name-worker-1","assignmentType":"objective-worker","relation":{"objectiveId":"9","remarkId":null,"objectiveGoalId":null,"relationType":"OBJECTIVE"}}
   + 19::GRIM_ASSIGNMENT
@@ -224,8 +224,8 @@ author: jane.doe@morgue.com, message: forgot to add comments to things
  | merged
   +- merged: 3 entries
   +- 13::GRIM_REMARK
-   -  {"id":"13","commitId":"4","createdWithCommitId":"4","missionId":"5","parentId":null,"createdAt":"OffsetDateTime.now()","updatedAt":"OffsetDateTime.now()","remarkText":"Created main task for building a house!","remarkStatus":null,"reporterId":"jane.doe","relation":null}
-   +  {"id":"13","commitId":"7","createdWithCommitId":"4","missionId":"5","parentId":null,"createdAt":"OffsetDateTime.now()","updatedAt":"OffsetDateTime.now()","remarkText":"Main task for building customer #C19837 house","remarkStatus":null,"reporterId":"jane.doe","relation":null}
+   -  {"id":"13","commitId":"4","createdWithCommitId":"4","missionId":"5","parentId":null,"transitives":null,"remarkText":"Created main task for building a house!","remarkStatus":null,"reporterId":"jane.doe","relation":null}
+   +  {"id":"13","commitId":"7","createdWithCommitId":"4","missionId":"5","parentId":null,"transitives":null,"remarkText":"Main task for building customer #C19837 house","remarkStatus":null,"reporterId":"jane.doe","relation":null}
    diff: commitId :: 4 -> 7
    diff: remarkText :: Created main task for building a house! -> Main task for building customer #C19837 house
   +- 24::GRIM_MISSION_DATA

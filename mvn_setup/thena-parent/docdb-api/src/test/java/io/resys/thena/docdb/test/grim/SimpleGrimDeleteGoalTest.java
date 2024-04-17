@@ -231,9 +231,9 @@ author: jane.doe@morgue.com, message: batching tests
   + 25::GRIM_MISSION_LINKS
     {"id":"25","commitId":"4","createdWithCommitId":"4","missionId":"5","externalId":"site.com/permits/5","linkType":"permits","linkBody":null,"transitives":null,"relation":null}
   + 10::GRIM_REMARK
-    {"id":"10","commitId":"4","createdWithCommitId":"4","missionId":"5","parentId":null,"createdAt":null,"updatedAt":null,"remarkText":"Created main task for building a house!","remarkStatus":null,"reporterId":"jane.doe","relation":null}
+    {"id":"10","commitId":"4","createdWithCommitId":"4","missionId":"5","parentId":null,"transitives":null,"remarkText":"Created main task for building a house!","remarkStatus":null,"reporterId":"jane.doe","relation":null}
   + 11::GRIM_REMARK
-    {"id":"11","commitId":"4","createdWithCommitId":"4","missionId":"5","parentId":null,"createdAt":null,"updatedAt":null,"remarkText":"Waiting for results already!","remarkStatus":null,"reporterId":"the.bob.clown","relation":null}
+    {"id":"11","commitId":"4","createdWithCommitId":"4","missionId":"5","parentId":null,"transitives":null,"remarkText":"Waiting for results already!","remarkStatus":null,"reporterId":"the.bob.clown","relation":null}
   + 15::GRIM_ASSIGNMENT
     {"id":"15","commitId":"4","missionId":"5","assignee":"no-name-worker-1","assignmentType":"objective-worker","relation":{"objectiveId":"7","remarkId":null,"objectiveGoalId":null,"relationType":"OBJECTIVE"}}
   + 16::GRIM_ASSIGNMENT
@@ -274,7 +274,7 @@ author: jane.doe@morgue.com, message: remove remark #1
  | deleted
   - deleted: 1 entries
   - 10::GRIM_REMARK
-    {"id":"10","commitId":"4","createdWithCommitId":"4","missionId":"5","parentId":null,"createdAt":"OffsetDateTime.now()","updatedAt":"OffsetDateTime.now()","remarkText":"Created main task for building a house!","remarkStatus":null,"reporterId":"jane.doe","relation":null}
+    {"id":"10","commitId":"4","createdWithCommitId":"4","missionId":"5","parentId":null,"transitives":null,"remarkText":"Created main task for building a house!","remarkStatus":null,"reporterId":"jane.doe","relation":null}
 
  | merged
   +- merged: 0 entries
@@ -288,7 +288,7 @@ author: jane.doe@morgue.com, message: remove remark #2
  | deleted
   - deleted: 1 entries
   - 11::GRIM_REMARK
-    {"id":"11","commitId":"4","createdWithCommitId":"4","missionId":"5","parentId":null,"createdAt":"OffsetDateTime.now()","updatedAt":"OffsetDateTime.now()","remarkText":"Waiting for results already!","remarkStatus":null,"reporterId":"the.bob.clown","relation":null}
+    {"id":"11","commitId":"4","createdWithCommitId":"4","missionId":"5","parentId":null,"transitives":null,"remarkText":"Waiting for results already!","remarkStatus":null,"reporterId":"the.bob.clown","relation":null}
 
  | merged
   +- merged: 0 entries

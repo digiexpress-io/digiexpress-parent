@@ -102,7 +102,7 @@ public class GrimCommitLogger {
     .forEach(entity -> {
       result
       .append("  - ").append(entity.getId()).append("::").append(entity.getDocType()).append(System.lineSeparator())
-      .append("    ").append(JsonObject.mapFrom(entity)).append(System.lineSeparator());
+      .append("    ").append(toJson(entity)).append(System.lineSeparator());
     });;
     
     return result.toString();
@@ -110,8 +110,8 @@ public class GrimCommitLogger {
   
   public void merge(IsGrimObject previous, IsGrimObject next) {
     count_merged++;
-    final var a = JsonObject.mapFrom(previous);
-    final var b = JsonObject.mapFrom(next);
+    final var a = toJson(previous);
+    final var b = toJson(next);
     
     merged
     .append("  +- ").append(next.getId()).append("::").append(next.getDocType()).append(System.lineSeparator())

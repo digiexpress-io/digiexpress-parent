@@ -203,9 +203,9 @@ author: jane.doe@morgue.com, message: batching tests
   + 34::GRIM_MISSION_LINKS
     {"id":"34","commitId":"4","createdWithCommitId":"4","missionId":"5","externalId":"site.com/permits/5","linkType":"permits","linkBody":null,"transitives":null,"relation":null}
   + 14::GRIM_REMARK
-    {"id":"14","commitId":"4","createdWithCommitId":"4","missionId":"5","parentId":null,"createdAt":null,"updatedAt":null,"remarkText":"Created main task for building a house!","remarkStatus":null,"reporterId":"jane.doe","relation":null}
+    {"id":"14","commitId":"4","createdWithCommitId":"4","missionId":"5","parentId":null,"transitives":null,"remarkText":"Created main task for building a house!","remarkStatus":null,"reporterId":"jane.doe","relation":null}
   + 15::GRIM_REMARK
-    {"id":"15","commitId":"4","createdWithCommitId":"4","missionId":"5","parentId":null,"createdAt":null,"updatedAt":null,"remarkText":"Waiting for results already!","remarkStatus":null,"reporterId":"the.bob.clown","relation":null}
+    {"id":"15","commitId":"4","createdWithCommitId":"4","missionId":"5","parentId":null,"transitives":null,"remarkText":"Waiting for results already!","remarkStatus":null,"reporterId":"the.bob.clown","relation":null}
   + 24::GRIM_ASSIGNMENT
     {"id":"24","commitId":"4","missionId":"5","assignee":"no-name-worker-1","assignmentType":"objective-worker","relation":{"objectiveId":"11","remarkId":null,"objectiveGoalId":null,"relationType":"OBJECTIVE"}}
   + 25::GRIM_ASSIGNMENT
@@ -243,9 +243,9 @@ author: jane.doe@morgue.com, message: forgot to add comments to things
  | created
   + added new: 2 entries
   + 16::GRIM_REMARK
-    {"id":"16","commitId":"7","createdWithCommitId":"7","missionId":"5","parentId":null,"createdAt":null,"updatedAt":null,"remarkText":"Not to self, give feedback to architects","remarkStatus":null,"reporterId":"jane.doe@morgue.com","relation":null}
+    {"id":"16","commitId":"7","createdWithCommitId":"7","missionId":"5","parentId":null,"transitives":null,"remarkText":"Not to self, give feedback to architects","remarkStatus":null,"reporterId":"jane.doe@morgue.com","relation":null}
   + 17::GRIM_REMARK
-    {"id":"17","commitId":"7","createdWithCommitId":"7","missionId":"5","parentId":null,"createdAt":null,"updatedAt":null,"remarkText":"Note to self, compliment works on after job well done!","remarkStatus":null,"reporterId":"jane.doe@morgue.com","relation":null}
+    {"id":"17","commitId":"7","createdWithCommitId":"7","missionId":"5","parentId":null,"transitives":null,"remarkText":"Note to self, compliment works on after job well done!","remarkStatus":null,"reporterId":"jane.doe@morgue.com","relation":null}
 
  | deleted
   - deleted: 0 entries
