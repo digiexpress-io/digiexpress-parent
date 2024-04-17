@@ -4,6 +4,7 @@ import { ImmutableAmStore, Role, useAm } from 'descriptor-access-mgmt';
 import { StyledDialogLarge } from 'components-access-mgmt/Dialogs';
 import { Header } from './Header';
 import { Left } from './Left';
+import { Right } from './Right';
 import { RoleEditProvider, useRoleEdit } from './RoleEditContext';
 import { useBackend } from 'descriptor-backend';
 
@@ -41,8 +42,8 @@ const RoleEditDialog: React.FC<{ open: boolean, onClose: () => void, role: Role 
         open={open}
         onClose={onClose}
         header={<Header onClose={onClose} />}
-        footer={< Footer onClose={onClose} />}
-        right={<></>}
+        footer={<Footer onClose={onClose} />}
+        right={<Right />}
         left={<Left />}
       />
     </RoleEditProvider>

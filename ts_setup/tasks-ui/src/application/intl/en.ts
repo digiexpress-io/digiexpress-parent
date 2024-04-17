@@ -636,16 +636,14 @@ const en = {
   'permissions.role.role_parent': 'Parent role',
   'permissions.role.role_permissions': 'Permissions',
   'permissions.role.role_members': 'Role members',
-  'permissions.role.selection.none': 'Nothing selected',
+
+  'permissions.selection.none': 'None',
 
   'permissions.role.parentSelect': 'Role parent',
   'permissions.role.roleParentName': 'Name',
-  'permissions.role.roleCreate.selection.none': 'None',
-
 
   'permissions.createPrincipal.principal_permissions': 'Permissions',
   'permissions.createPrincipal.principal_roles': 'Roles',
-  'permissions.createPrincipal.selection.none': 'Nothing selected',
 
   'permissions.principals.title': 'Role members',
   'permissions.principals.selectedPrincipals': 'Selected members',

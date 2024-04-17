@@ -17,7 +17,7 @@ const CurrentlySelected: React.FC<{ chips: string[], onRemoveChip: (index: numbe
           key={index}
           onDelete={() => onRemoveChip(index)}
         />
-      )) : <FormattedMessage id='permissions.createPrincipal.selection.none' />}
+      )) : <FormattedMessage id='permissions.selection.none' />}
     </Alert>
   );
 };

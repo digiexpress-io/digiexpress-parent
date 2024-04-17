@@ -66,7 +66,7 @@ function next(init: PermissionToEdit): Readonly<PermissionToEdit> { return Objec
 
 const PermissionEditContext = React.createContext<PermissionToEditContextType>({} as any);
 
-export const EditPermissionProvider: React.FC<{ children: React.ReactNode, permission: Permission }> = ({ children, permission }) => {
+const EditPermissionProvider: React.FC<{ children: React.ReactNode, permission: Permission }> = ({ children, permission }) => {
   const { id, name, description, principals, roles } = permission;
 
   const [entity, setEntity] = React.useState<PermissionToEdit>({

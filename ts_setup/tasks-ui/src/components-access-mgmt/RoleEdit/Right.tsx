@@ -1,11 +1,9 @@
 import React from 'react';
 import { Alert, AlertTitle, Box, Chip, Stack } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
-
 import { FilterByString, LayoutListItem } from 'components-generic';
-import { useAm } from 'descriptor-access-mgmt';
-
-import { useNewRole, useTabs } from './RoleCreateContext';
+import { RoleId, useAm } from 'descriptor-access-mgmt';
+import { useTabs, useRoleEdit, useSorted } from './RoleEditContext';
 
 
 const CurrentlySelected: React.FC<{ chips: string[], onRemoveChip: (index: number) => void }> = ({ chips, onRemoveChip }) => {
@@ -26,10 +24,10 @@ const CurrentlySelected: React.FC<{ chips: string[], onRemoveChip: (index: numbe
 
 const RoleParent: React.FC = () => {
   const { roles, getRole } = useAm();
-  const { setParentId, entity } = useNewRole();
+  const { setParentId, entity } = useRoleEdit();
   const parentRole = entity.parentId ? getRole(entity.parentId) : undefined;
 
-  function handleParentRole(parentRoleId: string | undefined, roleId: string) {
+  function handleParentRole(parentRoleId: RoleId | undefined, roleId: RoleId) {
     if (!parentRoleId) {
       setParentId(roleId);
     } else if (parentRoleId === roleId) {
@@ -37,7 +35,6 @@ const RoleParent: React.FC = () => {
     } else {
       setParentId(roleId);
     }
-
   }
 
   return (
@@ -47,13 +44,15 @@ const RoleParent: React.FC = () => {
         <FilterByString onChange={() => { }} />
       </Stack>
       <Box sx={{ mt: 1 }}>
-        {roles.map((role, index) => <LayoutListItem key={role.id}
-          index={index}
-          active={role.id === parentRole?.id}
-          onClick={() => handleParentRole(parentRole?.id, role.id)}>
-          {role.name}
-        </LayoutListItem>
-        )}
+        {roles
+          .sort((a, b) => a.name.localeCompare(b.name))
+          .map((role, index) => <LayoutListItem key={role.id}
+            index={index}
+            active={role.id === parentRole?.id}
+            onClick={() => handleParentRole(parentRole?.id, role.id)}>
+            {role.name}
+          </LayoutListItem>
+          )}
       </Box>
     </>
   )
@@ -62,8 +61,8 @@ const RoleParent: React.FC = () => {
 
 const RolePermissions: React.FC = () => {
   const { permissions } = useAm();
-  const { addPermission, removePermission, entity } = useNewRole();
-
+  const { addPermission, removePermission, entity } = useRoleEdit();
+  const { sortedItems } = useSorted(entity, permissions, 'permissions');
 
   if (!permissions) {
     console.log('no permissions found')
@@ -83,7 +82,7 @@ const RolePermissions: React.FC = () => {
     </Stack>
 
     <Box sx={{ mt: 1 }}>
-      {permissions.map((permission, index) => <LayoutListItem key={permission.id}
+      {sortedItems.map((permission, index) => <LayoutListItem key={permission.id}
         index={index}
         active={entity.permissions.includes(permission.name)}
         onClick={() => handlePermission(permission.name)}>
@@ -97,7 +96,8 @@ const RolePermissions: React.FC = () => {
 
 const RolePrincipals: React.FC = () => {
   const { principals } = useAm();
-  const { addPrincipal, removePrincipal, entity } = useNewRole();
+  const { addPrincipal, removePrincipal, entity } = useRoleEdit();
+  const { sortedItems } = useSorted(entity, principals, 'principals');
 
   if (!principals) {
     console.log('no principals found')
@@ -118,7 +118,7 @@ const RolePrincipals: React.FC = () => {
     </Stack>
 
     <Box sx={{ mt: 1 }}>
-      {principals.map((principal, index) => <LayoutListItem key={principal.id}
+      {sortedItems.map((principal, index) => <LayoutListItem key={principal.id}
         index={index}
         active={entity.principals.includes(principal.name)}
         onClick={() => handlePrincipal(principal.name)}>

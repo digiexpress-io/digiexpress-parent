@@ -1,7 +1,9 @@
 import React from 'react';
 import {
   ChangeRoleDescription, ChangeRoleName, ChangeRoleParent, ChangeRolePermissions, ChangeRolePrincipals,
-  Role, RoleId, RoleUpdateCommand
+  Permission,
+  Principal,
+  Role, RoleId, RoleUpdateCommand, useAm
 } from 'descriptor-access-mgmt';
 import { getInstance as createTabsContext, SingleTabInit, Tab } from 'descriptor-tabbing';
 
@@ -23,7 +25,7 @@ interface RoleToEditContextType {
   setName(newName: string): void;
   setDescription(newDescription: string): void;
   setCommitComment(newComment: string): void;
-  setParentId(newParentId: string): void;
+  setParentId(newParentId: string | undefined): void;
 
   addPrincipal(newPrincipal: string): void;
   removePrincipal(principalToRemove: string): void;
@@ -75,7 +77,7 @@ function next(init: RoleToEdit): Readonly<RoleToEdit> { return Object.freeze(ini
 
 const RoleEditContext = React.createContext<RoleToEditContextType>({} as any);
 
-export const EditRoleProvider: React.FC<{ children: React.ReactNode, role: Role }> = ({ children, role }) => {
+const EditRoleProvider: React.FC<{ children: React.ReactNode, role: Role }> = ({ children, role }) => {
   const { id, description, name, parentId, permissions, principals } = role;
 
   const [entity, setEntity] = React.useState<RoleToEdit>({
@@ -149,6 +151,28 @@ export const EditRoleProvider: React.FC<{ children: React.ReactNode, role: Role 
 export function useRoleEdit(): RoleToEditContextType {
   const result: RoleToEditContextType = React.useContext(RoleEditContext);
   return result;
+}
+
+export function useSorted<T extends Permission | Principal | Role>(entity: RoleToEdit, items: T[], key: 'permissions' | 'principals') {
+  let sortedItems = [...items]
+    .sort((item1: T, item2: T) => {
+      const item1BelongsToRole = entity[key].includes(item1.name);
+      const item2BelongsToRole = entity[key].includes(item2.name);
+
+      if (item1BelongsToRole && !item2BelongsToRole) {
+        return -1; // a comes before b
+      } else if (!item1BelongsToRole && item2BelongsToRole) {
+        return 1; // b comes before a
+      } else {
+        return 0; // keep the same order
+      }
+    })
+
+  if (key === 'principals') {
+    sortedItems.sort((a, b) => a.name.localeCompare(b.name));
+  }
+
+  return { sortedItems };
 }
 
 
