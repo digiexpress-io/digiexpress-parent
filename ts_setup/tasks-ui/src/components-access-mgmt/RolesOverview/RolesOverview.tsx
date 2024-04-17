@@ -63,7 +63,9 @@ const RolesOverview: React.FC = () => {
   const { roles } = useAm();
   const navigation = <RoleNavigation />;
   const pagination = <></>;
-  const items = roles.map(role => (<OneRoleData role={role} key={role.id} />));
+  const items = roles
+    .sort((a, b) => a.name.toLocaleLowerCase().localeCompare(b.name))
+    .map(role => (<OneRoleData role={role} key={role.id} />));
   return (<LayoutList slots={{ navigation, items, pagination }} />)
 }
 

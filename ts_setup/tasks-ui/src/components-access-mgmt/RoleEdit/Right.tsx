@@ -45,7 +45,7 @@ const RoleParent: React.FC = () => {
       </Stack>
       <Box sx={{ mt: 1 }}>
         {roles
-          .sort((a, b) => a.name.localeCompare(b.name))
+          .sort((a, b) => a.name.toLocaleLowerCase().localeCompare(b.name))
           .map((role, index) => <LayoutListItem key={role.id}
             index={index}
             active={role.id === parentRole?.id}

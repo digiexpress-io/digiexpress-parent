@@ -153,8 +153,9 @@ export function useRoleEdit(): RoleToEditContextType {
   return result;
 }
 
-export function useSorted<T extends Permission | Principal | Role>(entity: RoleToEdit, items: T[], key: 'permissions' | 'principals') {
+export function useSorted<T extends Permission | Principal>(entity: RoleToEdit, items: T[], key: 'permissions' | 'principals') {
   let sortedItems = [...items]
+    .sort((a, b) => a.name.toLocaleLowerCase().localeCompare(b.name))
     .sort((item1: T, item2: T) => {
       const item1BelongsToRole = entity[key].includes(item1.name);
       const item2BelongsToRole = entity[key].includes(item2.name);
@@ -167,10 +168,6 @@ export function useSorted<T extends Permission | Principal | Role>(entity: RoleT
         return 0; // keep the same order
       }
     })
-
-  if (key === 'principals') {
-    sortedItems.sort((a, b) => a.name.localeCompare(b.name));
-  }
 
   return { sortedItems };
 }
