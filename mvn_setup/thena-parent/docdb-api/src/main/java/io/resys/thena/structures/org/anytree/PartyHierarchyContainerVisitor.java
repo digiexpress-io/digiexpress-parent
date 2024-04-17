@@ -67,7 +67,7 @@ public class PartyHierarchyContainerVisitor extends OrgPartyContainerVisitor<Imm
     builder.addDirectMembers(user);
   }
   @Override
-  public void visitPartyRight(OrgParty group, OrgPartyRight groupRole, OrgRight role, boolean isDisabled) {
+  public void visitPartyRight(List<OrgParty> parents, OrgParty group, OrgPartyRight groupRole, OrgRight role, boolean isDisabled) {
     if(isDisabled) {
       return;
     }
@@ -75,6 +75,12 @@ public class PartyHierarchyContainerVisitor extends OrgPartyContainerVisitor<Imm
     if(foundGroupId == null) {
       return;
     }
+    
+    // visiting child right
+    if(parents.stream().filter(p -> p.getId().equals(foundGroupId)).findFirst().isPresent()) {
+      return;
+    }
+    
     builder.addDirectRights(role);    
   }
   @Override

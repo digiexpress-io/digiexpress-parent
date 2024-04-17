@@ -94,6 +94,7 @@ public class DemoOrg {
         ).onItem().transformToUni(roleName -> {
           log.warn("Demo setup, creating system role: '{}'!", roleName);
           final var createRole = ImmutableCreateRole.builder()
+              .parentId(BuiltInRoles.TASK_WORKER.name())
               .comment("created by default on first user registration")
               .name(roleName)
               .description("Demo role")

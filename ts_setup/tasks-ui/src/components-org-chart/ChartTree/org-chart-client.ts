@@ -55,5 +55,5 @@ function calcChildren(colspan: number): { shapes: BorderShape[] }[] {
 export function createChartNode(value: ChartProps): ChartNode {
   const colSpans = calcColSpan(value);
   const children = calcChildren(colSpans.colspan);
-  return { id: value.label, children, ...colSpans };
+  return { id: value.id, children, ...colSpans };
 }

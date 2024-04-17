@@ -79,7 +79,7 @@ public class OrgPartyLogVisitor extends OrgPartyContainerVisitor<String>
     
   }
   @Override
-  public void visitPartyRight(OrgParty group, OrgPartyRight groupRole, OrgRight role, boolean isDisabled) {
+  public void visitPartyRight(List<OrgParty> _parents, OrgParty group, OrgPartyRight groupRole, OrgRight role, boolean isDisabled) {
     if(isDisabled) {
       return;
     }

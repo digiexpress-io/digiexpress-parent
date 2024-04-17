@@ -671,6 +671,11 @@ const en = {
   'permissions.principal.commitComment.placeholder': 'Enter a description of this change',
   'permissions.principal.name.create.placeholder': 'Enter a username',
   'permissions.principal.email.create.placeholder': 'Enter user email',
+
+
+  'am.chart.tree.tip.name': 'Application roles',
+  'am.chart.tree.node.users': 'Members - {members}',
+  'am.chart.tree.node.permissions': 'Permissions - {permissions}'
 };
 
 export default en;

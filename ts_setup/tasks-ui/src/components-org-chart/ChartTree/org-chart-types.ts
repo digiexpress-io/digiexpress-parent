@@ -1,5 +1,6 @@
 export interface ChartProps {
-  label: string;
+  id: string;
+  label: React.ReactNode;
   expanded?: boolean;
   children?: ChartProps[];
 }

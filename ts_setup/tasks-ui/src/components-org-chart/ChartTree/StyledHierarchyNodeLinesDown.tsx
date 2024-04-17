@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { grey_light as line_color } from 'components-colors';
 import { ChartNode } from './org-chart-types';
 
 
@@ -7,7 +8,7 @@ const rowStyle: React.CSSProperties = {
   height: '30px'
 }
 const lineStyle: React.CSSProperties = {
-  background: "green",
+  background: line_color,
   margin: "0 auto",
   height: "20px",
   width: "1px",

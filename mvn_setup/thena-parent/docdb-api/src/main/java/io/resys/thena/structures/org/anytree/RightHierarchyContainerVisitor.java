@@ -10,7 +10,6 @@ import org.barfuin.texttree.api.TreeOptions;
 
 import io.resys.thena.api.entities.org.ImmutableOrgRightHierarchy;
 import io.resys.thena.api.entities.org.OrgActorStatus;
-import io.resys.thena.api.entities.org.OrgActorStatus.OrgActorStatusType;
 import io.resys.thena.api.entities.org.OrgMember;
 import io.resys.thena.api.entities.org.OrgMemberRight;
 import io.resys.thena.api.entities.org.OrgMembership;
@@ -158,7 +157,7 @@ public class RightHierarchyContainerVisitor extends OrgPartyContainerVisitor<Org
     }
 
     @Override
-    public void visitPartyRight(OrgParty group, OrgPartyRight groupRole, OrgRight role, boolean isDisabled) {
+    public void visitPartyRight(List<OrgParty> _parents, OrgParty group, OrgPartyRight groupRole, OrgRight role, boolean isDisabled) {
       if(isDisabled) {
         return;
       }

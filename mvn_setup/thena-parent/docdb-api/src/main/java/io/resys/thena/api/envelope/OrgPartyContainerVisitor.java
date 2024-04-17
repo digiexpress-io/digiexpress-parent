@@ -41,7 +41,7 @@ public abstract class OrgPartyContainerVisitor<T> implements OrgAnyTreeContainer
     
     // direct and inherited right
     void visitMemberPartyRight(OrgParty party, OrgMemberRight memberRight, OrgRight right, boolean isDisabled);
-    void visitPartyRight(OrgParty party, OrgPartyRight partyRight, OrgRight right, boolean isDisabled);
+    void visitPartyRight(List<OrgParty> parents, OrgParty party, OrgPartyRight partyRight, OrgRight right, boolean isDisabled);
     void visitChildParty(OrgParty party, boolean isDisabled);
     void end(OrgParty group, List<OrgParty> parents, boolean isDisabled);
   }
@@ -86,7 +86,7 @@ public abstract class OrgPartyContainerVisitor<T> implements OrgAnyTreeContainer
         continue;
       }
       
-      visitor.visitPartyRight(party, groupRole, role, groupRoleStatus || roleStatus);
+      visitor.visitPartyRight(parents, party, groupRole, role, groupRoleStatus || roleStatus);
     }
     
     // direct party members and their rights in current party

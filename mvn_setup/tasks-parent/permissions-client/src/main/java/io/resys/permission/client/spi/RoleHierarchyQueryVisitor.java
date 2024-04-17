@@ -59,7 +59,13 @@ public class RoleHierarchyQueryVisitor extends OrgPartyContainerVisitor<RoleHier
     
     return new TopPartyVisitor() {
       @Override 
-      public void visitPartyRight(OrgParty party, OrgPartyRight partyRight, OrgRight right, boolean isDisabled) {
+      public void visitPartyRight(List<OrgParty> parents, OrgParty party, OrgPartyRight partyRight, OrgRight right, boolean isDisabled) {
+        
+        // visiting child right
+        if(parents.stream().filter(p -> p.isMatch(idOrNameOrExtId)).findFirst().isPresent()) {
+          return;
+        }
+        
         role.addPermissions(right.getRightName()); 
       }
       @Override
@@ -121,7 +127,11 @@ public class RoleHierarchyQueryVisitor extends OrgPartyContainerVisitor<RoleHier
     
     return new PartyVisitor() {
       @Override 
-      public void visitPartyRight(OrgParty party, OrgPartyRight partyRight, OrgRight right, boolean isDisabled) {
+      public void visitPartyRight(List<OrgParty> parents, OrgParty party, OrgPartyRight partyRight, OrgRight right, boolean isDisabled) {
+        // visiting child right
+        if(parents.stream().filter(p -> p.isMatch(idOrNameOrExtId)).findFirst().isPresent()) {
+          return;
+        }
         role.addPermissions(right.getRightName()); 
       }
       @Override
