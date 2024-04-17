@@ -1,5 +1,8 @@
 import React from 'react';
-import { ActorStatus, Principal, PrincipalId } from 'descriptor-access-mgmt';
+import {
+  ActorStatus, ChangePrincipalPermissions, ChangePrincipalRoles,
+  Permission, Principal, PrincipalId, PrincipalUpdateCommand, Role
+} from 'descriptor-access-mgmt';
 import { getInstance as createTabsContext, SingleTabInit, Tab } from 'descriptor-tabbing';
 
 
@@ -23,13 +26,39 @@ interface PrincipalToEditContextType {
   setName: (newName: string) => void;
   setEmail: (newEmail: string) => void;
   setCommitComment: (newComment: string) => void;
-  setDescription: (newDescription: string) => void;
 
   addRole: (newRole: string) => void;
   removeRole: (roleToRemove: string) => void;
   addPermission: (newPermission: string) => void;
   removePermission: (permissionToRemove: string) => void;
+
+  getCommands: () => PrincipalUpdateCommand[];
 }
+
+class CommandBag {
+  private _result: PrincipalUpdateCommand[] = [];
+
+  push<T extends PrincipalUpdateCommand>(init: T) {
+    this._result.push(init);
+    return this;
+  }
+
+  build(entity: PrincipalToEdit, start: Principal): PrincipalUpdateCommand[] {
+    if ([entity.permissions].sort().join(',') !== [start.permissions].sort().join(',')) {
+      this.push<ChangePrincipalPermissions>({
+        commandType: 'CHANGE_PRINCIPAL_PERMISSIONS', changeType: 'SET_ALL', id: start.id, comment: '', permissions: [...entity.permissions]
+      })
+    }
+    if ([entity.roles].sort().join(',') !== [start.roles].sort().join(',')) {
+      this.push<ChangePrincipalRoles>({
+        commandType: 'CHANGE_PRINCIPAL_ROLES', changeType: 'SET_ALL', id: start.id, comment: '', roles: [...entity.roles]
+      })
+    }
+    return this._result;
+  }
+}
+
+function next(init: PrincipalToEdit): Readonly<PrincipalToEdit> { return Object.freeze(init); }
 
 const PrincipalEditContext = React.createContext<PrincipalToEditContextType>({} as any);
 
@@ -48,17 +77,16 @@ export const EditPrincipalProvider: React.FC<{ children: React.ReactNode, princi
     directRoles
   });
 
-  const setName = React.useCallback((name: string) => setEntity(previous => Object.freeze({ ...previous, name })), []);
-  const setEmail = React.useCallback((email: string) => setEntity(previous => Object.freeze({ ...previous, email })), []);
-  const setDescription = React.useCallback((description: string) => setEntity(previous => Object.freeze({ ...previous, description })), []);
-  const setCommitComment = React.useCallback((commitComment: string) => setEntity(previous => Object.freeze({ ...previous, commitComment })), []);
+  const setName = React.useCallback((name: string) => setEntity(previous => next({ ...previous, name })), []);
+  const setEmail = React.useCallback((email: string) => setEntity(previous => next({ ...previous, email })), []);
+  const setCommitComment = React.useCallback((commitComment: string) => setEntity(previous => next({ ...previous, commitComment })), []);
 
   const addRole = React.useCallback((newRole: string) => setEntity(previous => {
     if (previous.roles.includes(newRole)) {
       return previous;
     }
     const updatedRoles = [...previous.roles, newRole];
-    return Object.freeze({ ...previous, roles: Object.freeze(updatedRoles) });
+    return next({ ...previous, roles: Object.freeze(updatedRoles) });
   }), []);
 
 
@@ -67,7 +95,7 @@ export const EditPrincipalProvider: React.FC<{ children: React.ReactNode, princi
       return previous;
     }
     const updatedRoles = [...previous.roles.filter(role => role !== roleToRemove)];
-    return Object.freeze({ ...previous, roles: Object.freeze(updatedRoles) });
+    return next({ ...previous, roles: Object.freeze(updatedRoles) });
   }), []);
 
   const addPermission = React.useCallback((newPermission: string) => setEntity(previous => {
@@ -75,7 +103,7 @@ export const EditPrincipalProvider: React.FC<{ children: React.ReactNode, princi
       return previous;
     }
     const updatedPermissions = [...previous.permissions, newPermission];
-    return Object.freeze({ ...previous, permissions: Object.freeze(updatedPermissions) });
+    return next({ ...previous, permissions: Object.freeze(updatedPermissions) });
   }), []);
 
   const removePermission = React.useCallback((permissionToRemove: string) => setEntity(previous => {
@@ -83,23 +111,24 @@ export const EditPrincipalProvider: React.FC<{ children: React.ReactNode, princi
       return previous;
     }
     const updatedPermissions = [...previous.permissions.filter(permission => permission !== permissionToRemove)];
-    return Object.freeze({ ...previous, permissions: Object.freeze(updatedPermissions) });
+    return next({ ...previous, permissions: Object.freeze(updatedPermissions) });
   }), []);
+
+  const getCommands: () => PrincipalUpdateCommand[] = React.useCallback(() => new CommandBag().build(entity, principal), [entity, principal]);
 
   const contextValue: PrincipalToEditContextType = React.useMemo(() => {
     return {
       entity,
       setName,
       setEmail,
-      setDescription,
       setCommitComment,
-
       addRole,
       removeRole,
       addPermission,
-      removePermission
+      removePermission,
+      getCommands
     }
-  }, [entity, setName, setEmail, setDescription, setCommitComment, addRole, removeRole, addPermission, removePermission]);
+  }, [entity, setName, setEmail, setCommitComment, addRole, removeRole, addPermission, removePermission, getCommands]);
 
   return (<PrincipalEditContext.Provider value={contextValue}>{children}</PrincipalEditContext.Provider>)
 }
@@ -107,6 +136,25 @@ export const EditPrincipalProvider: React.FC<{ children: React.ReactNode, princi
 export function usePrincipalEdit() {
   const result: PrincipalToEditContextType = React.useContext(PrincipalEditContext);
   return result;
+}
+
+export function useSorted<T extends Permission | Role>(entity: PrincipalToEdit, items: T[], key: 'permissions' | 'roles') {
+  let sortedItems = [...items]
+    .sort((a, b) => a.name.toLocaleLowerCase().localeCompare(b.name))
+    .sort((item1: T, item2: T) => {
+      const item1BelongsToRole = entity[key].includes(item1.name);
+      const item2BelongsToRole = entity[key].includes(item2.name);
+
+      if (item1BelongsToRole && !item2BelongsToRole) {
+        return -1; // a comes before b
+      } else if (!item1BelongsToRole && item2BelongsToRole) {
+        return 1; // b comes before a
+      } else {
+        return 0; // keep the same order
+      }
+    })
+
+  return { sortedItems };
 }
 
 const TabsContext = createTabsContext<TabTypes, TabState>();
