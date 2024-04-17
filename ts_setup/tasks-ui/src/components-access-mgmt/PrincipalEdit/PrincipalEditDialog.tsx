@@ -17,22 +17,22 @@ const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
   const disabled = !entity.commitComment || !entity.email || !entity.name;
 
-  /*
-    async function handlePrincipalChange() {
-      const { id } = entity;
-  
-      await new ImmutableAmStore(backend.store).updateUserProfile(id, commands);
-      await reload();
-      onClose();
-    };
-  
-  */
+
+  async function handlePrincipalChange() {
+    const { id } = entity;
+
+    await new ImmutableAmStore(backend.store).updatePermission(id, commands);
+    await reload();
+    onClose();
+  };
+
+
 
 
   return (
     <>
       <Burger.SecondaryButton label='buttons.cancel' onClick={onClose} />
-      <Burger.PrimaryButton label='buttons.accept' disabled={disabled} onClick={() => { }} />
+      <Burger.PrimaryButton label='buttons.accept' disabled={disabled} onClick={handlePrincipalChange} />
     </>
   )
 }
