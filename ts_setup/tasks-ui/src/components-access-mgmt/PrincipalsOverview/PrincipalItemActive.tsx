@@ -7,6 +7,7 @@ import Burger from 'components-burger';
 import { cyan } from 'components-colors';
 import { useAm } from 'descriptor-access-mgmt';
 import { useActivePrincipal } from './PrincipalsOverviewContext';
+import { PrincipalEditDialog } from 'components-access-mgmt/PrincipalEdit/';
 
 
 
@@ -40,19 +41,24 @@ const StyledTitle: React.FC<{ children: string }> = ({ children }) => {
 const PrincipalItemActive: React.FC = () => {
   const { principals } = useAm();
   const { principalId } = useActivePrincipal();
+  const [editOpen, setEditOpen] = React.useState(false);
 
   const activePrincipal = principals.find(principal => principal.id === principalId);
 
+  function handleEdit() {
+    setEditOpen(prev => !prev);
+  }
+
   if (activePrincipal) {
     return (<>
-      {/*<TaskEditDialog open={taskEditOpen} onClose={handleTaskEdit} task={task} /> */}
+      <PrincipalEditDialog open={editOpen} onClose={handleEdit} principal={activePrincipal} />
 
       <StyledStack>
         <Burger.Section>
           <StyledTitle children='permissions.activePrincipal.tools' />
           <Stack direction='row' spacing={1} justifyContent='center'>
             <Box display='flex' flexDirection='column' alignItems='center'>
-              <IconButton onClick={() => { }}><EditIcon sx={{ color: cyan }} /></IconButton>
+              <IconButton onClick={handleEdit}><EditIcon sx={{ color: cyan }} /></IconButton>
               <Typography><FormattedMessage id='permissions.activePrincipal.edit' /></Typography>
             </Box>
           </Stack>

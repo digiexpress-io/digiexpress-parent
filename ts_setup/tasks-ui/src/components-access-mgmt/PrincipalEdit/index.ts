@@ -1,1 +1,1 @@
-export { }
+export { PrincipalEditDialog } from './PrincipalEditDialog';
