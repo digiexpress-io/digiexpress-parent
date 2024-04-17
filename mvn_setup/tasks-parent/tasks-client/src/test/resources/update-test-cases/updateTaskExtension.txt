@@ -62,9 +62,8 @@ author: not-configured, message: merging tasks from: UpdateTasksVisitor
  | merged
   +- merged: 1 entries
   +- 3_TASK::GRIM_MISSION_LINKS
-   -  {"id":"3_TASK","commitId":"15","createdWithCommitId":"15","missionId":"1_TASK","externalId":"attachment-1","linkType":"task_extension","linkBody":{"body":"attachment-body","type":"attachment"},"transitives":{"createdAt":"OffsetDateTime.now()","updatedAt":"OffsetDateTime.now()"},"relation":null}
-   +  {"id":"3_TASK","commitId":"7_TASK","createdWithCommitId":"15","missionId":"1_TASK","externalId":"attachment-1","linkType":"task_extension","linkBody":{"type":"attachment","body":"new-attachment-body"},"transitives":{"createdAt":"OffsetDateTime.now()","updatedAt":"OffsetDateTime.now()"},"relation":null}
+   -  {"id":"3_TASK","commitId":"15","createdWithCommitId":"15","missionId":"1_TASK","externalId":"attachment-1","linkType":"task_extension","linkBody":{"body":"attachment-body","type":"attachment"},"transitives":null,"relation":null}
+   +  {"id":"3_TASK","commitId":"7_TASK","createdWithCommitId":"15","missionId":"1_TASK","externalId":"attachment-1","linkType":"task_extension","linkBody":{"type":"attachment","body":"new-attachment-body"},"transitives":null,"relation":null}
    diff: commitId :: 15 -> 7_TASK
    diff: linkBody :: {body=attachment-body, type=attachment} -> {"type":"attachment","body":"new-attachment-body"}
-   diff: transitives :: {createdAt="OffsetDateTime.now()", updatedAt="OffsetDateTime.now()"} -> {"createdAt":"OffsetDateTime.now()","updatedAt":"OffsetDateTime.now()"}
 

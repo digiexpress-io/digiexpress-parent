@@ -43,7 +43,7 @@ author: not-configured, message: merging tasks from: UpdateTasksVisitor
  | created
   + added new: 1 entries
   + 3_TASK::GRIM_REMARK
-    {"id":"3_TASK","commitId":"16","createdWithCommitId":"16","missionId":"1_TASK","parentId":null,"createdAt":null,"updatedAt":null,"remarkText":"comment-1-text","remarkStatus":null,"reporterId":"tester-bob","relation":null}
+    {"id":"3_TASK","commitId":"16","createdWithCommitId":"16","missionId":"1_TASK","parentId":null,"transitives":null,"remarkText":"comment-1-text","remarkStatus":null,"reporterId":"tester-bob","relation":null}
 
  | deleted
   - deleted: 0 entries
@@ -57,7 +57,7 @@ author: not-configured, message: merging tasks from: UpdateTasksVisitor
  | created
   + added new: 1 entries
   + 4_TASK::GRIM_REMARK
-    {"id":"4_TASK","commitId":"8_TASK","createdWithCommitId":"8_TASK","missionId":"1_TASK","parentId":"3_TASK","createdAt":null,"updatedAt":null,"remarkText":"comment-2-text","remarkStatus":null,"reporterId":"tester-bob","relation":null}
+    {"id":"4_TASK","commitId":"8_TASK","createdWithCommitId":"8_TASK","missionId":"1_TASK","parentId":"3_TASK","transitives":null,"remarkText":"comment-2-text","remarkStatus":null,"reporterId":"tester-bob","relation":null}
 
  | deleted
   - deleted: 0 entries
