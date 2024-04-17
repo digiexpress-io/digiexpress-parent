@@ -1,12 +1,13 @@
 import React from 'react';
 import {
   ChangePermissionDescription, ChangePermissionName, ChangePermissionPrincipals,
+  ChangePermissionRoles,
   Permission, PermissionId, PermissionUpdateCommand
 } from 'descriptor-access-mgmt';
 import { getInstance as createTabsContext, SingleTabInit, Tab } from 'descriptor-tabbing';
 
 
-interface EditedPermission {
+interface PermissionToEdit {
   id: PermissionId;
   name: string;
   description: string;
@@ -15,16 +16,18 @@ interface EditedPermission {
   principals: readonly string[]; // name or id of the principal
 }
 
-export interface PermissionEditContextType {
-  entity: EditedPermission;
+export interface PermissionToEditContextType {
+  entity: PermissionToEdit;
   setName: (newName: string) => void;
   setDescription: (newDescription: string) => void;
   setCommitComment: (newComment: string) => void;
-  getCommands: () => PermissionUpdateCommand[];
+
   addRole: (newRole: string) => void;
   removeRole: (roleToRemove: string) => void;
   addPrincipal: (newPrincipal: string) => void;
   removePrincipal: (principalToRemove: string) => void;
+
+  getCommands: () => PermissionUpdateCommand[];
 }
 
 class CommandBag {
@@ -34,7 +37,7 @@ class CommandBag {
     return this;
   }
 
-  build(entity: EditedPermission, start: Permission): PermissionUpdateCommand[] {
+  build(entity: PermissionToEdit, start: Permission): PermissionUpdateCommand[] {
     if (entity.name !== start.name) {
       this.push<ChangePermissionName>({
         commandType: 'CHANGE_PERMISSION_NAME', id: start.id, name: entity.name, comment: '',
@@ -50,22 +53,29 @@ class CommandBag {
         commandType: 'CHANGE_PERMISSION_PRINCIPALS', id: start.id, changeType: 'SET_ALL', principals: [...entity.principals], comment: ''
       });
     }
+    if ([...entity.roles].sort().join(',') !== [...start.roles].sort().join(',')) {
+      this.push<ChangePermissionRoles>({
+        commandType: 'CHANGE_PERMISSION_ROLES', id: start.id, changeType: 'SET_ALL', roles: [...entity.roles], comment: ''
+      })
+    }
     return this._result;
   }
 }
 
-function next(init: EditedPermission): Readonly<EditedPermission> { return Object.freeze(init); }
+function next(init: PermissionToEdit): Readonly<PermissionToEdit> { return Object.freeze(init); }
 
-const PermissionEditContext = React.createContext<PermissionEditContextType>({} as any);
+const PermissionEditContext = React.createContext<PermissionToEditContextType>({} as any);
 
 export const EditPermissionProvider: React.FC<{ children: React.ReactNode, permission: Permission }> = ({ children, permission }) => {
-  const [entity, setEntity] = React.useState<EditedPermission>({
-    id: permission.id,
-    name: permission.name,
-    description: permission.description,
+  const { id, name, description, principals, roles } = permission;
+
+  const [entity, setEntity] = React.useState<PermissionToEdit>({
+    id,
+    name,
+    description,
     commitComment: '',
-    principals: [],
-    roles: []
+    principals,
+    roles
   });
 
   const setName = React.useCallback((name: string) => setEntity(previous => next({ ...previous, name })), []);
@@ -106,7 +116,7 @@ export const EditPermissionProvider: React.FC<{ children: React.ReactNode, permi
 
   const getCommands: () => PermissionUpdateCommand[] = React.useCallback(() => new CommandBag().build(entity, permission), [entity, permission]);
 
-  const contextValue: PermissionEditContextType = React.useMemo(() => {
+  const contextValue: PermissionToEditContextType = React.useMemo(() => {
     return {
       entity,
       setName,
@@ -123,8 +133,8 @@ export const EditPermissionProvider: React.FC<{ children: React.ReactNode, permi
   return (<PermissionEditContext.Provider value={contextValue}>{children}</PermissionEditContext.Provider>);
 }
 
-export function usePermissionEdit(): PermissionEditContextType {
-  const result: PermissionEditContextType = React.useContext(PermissionEditContext);
+export function usePermissionEdit(): PermissionToEditContextType {
+  const result: PermissionToEditContextType = React.useContext(PermissionEditContext);
   return result;
 }
 

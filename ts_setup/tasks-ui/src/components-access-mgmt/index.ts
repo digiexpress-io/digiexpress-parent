@@ -1,6 +1,6 @@
 import DeOrgChart from './OrgChart';
 
-import { RolesOverview } from './Roles'
+import { RolesOverview } from './RolesOverview'
 import { PermissionsOverview } from './PermissionsOverview';
 import { PrincipalsOverview } from './PrincipalsOverview';
 

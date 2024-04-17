@@ -53,7 +53,7 @@ const NewRoleProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
       return previous;
     }
     const updatedPermissions = [...previous.permissions.filter((p) => p !== permissionToRemove)];
-    return ({ ...previous, permissions: Object.freeze(updatedPermissions) });
+    return Object.freeze({ ...previous, permissions: Object.freeze(updatedPermissions) });
   }), []);
 
   const addPrincipal = React.useCallback((newPrincipal: string) => setNewRole(previous => {
@@ -61,7 +61,7 @@ const NewRoleProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
       return previous;
     }
     const updatedPrincipals = [...previous.principals, newPrincipal];
-    return ({ ...previous, principals: Object.freeze(updatedPrincipals) });
+    return Object.freeze({ ...previous, principals: Object.freeze(updatedPrincipals) });
   }), []);
 
   const removePrincipal = React.useCallback((principalToRemove: string) => setNewRole(previous => {
@@ -69,7 +69,7 @@ const NewRoleProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
       return previous;
     }
     const updatedPrincipals = [...previous.principals.filter((p) => p !== principalToRemove)];
-    return ({ ...previous, principals: Object.freeze(updatedPrincipals) });
+    return Object.freeze({ ...previous, principals: Object.freeze(updatedPrincipals) });
   }), []);
 
   const contextValue: NewRoleContextType = React.useMemo(() => {
