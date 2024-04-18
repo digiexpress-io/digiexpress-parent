@@ -335,9 +335,9 @@ public class ModifyOnePartyImpl implements ModifyOneParty {
   
   private Uni<OnePartyEnvelope> createResponse(
       OrgState tx, 
-      List<OrgMember> members, 
+      List<OrgMember> allRelatedMembers, 
       OrgParty party, 
-      List<OrgRight> rights,
+      List<OrgRight> allRelatedRights,
       List<OrgActorStatus> status,
       List<OrgMembership> memberships,
       List<OrgPartyRight> partyRights,
@@ -358,22 +358,35 @@ public class ModifyOnePartyImpl implements ModifyOneParty {
       .currentPartyRights(partyRights)
       .currentMemberRights(memberRights);
 
-    appendMembers(members, modify);
-    appendRights(rights, modify);
-    appendMemberAndRight(rights, members, modify);
-    setMembers(members, memberships, modify);
-    setRights(rights, partyRights, modify);
+    appendMembers(allRelatedMembers, modify);
+    appendRights(allRelatedRights, modify);
+    appendMemberAndRight(allRelatedRights, allRelatedMembers, modify);
+    setMembers(allRelatedMembers, memberships, modify);
+    setRights(allRelatedRights, partyRights, modify);
     
     
     final OrgBatchForOne batch = modify.create();
     return tx.insert().batchMany(batch)
-        .onItem().transform(rsp -> ImmutableOnePartyEnvelope.builder()
+        .onItem().transform(rsp -> {
+          
+          final var removedRights = rsp.getPartyRightToDelete().stream().map(r -> r.getRightId()).toList();
+          final var removedMembers = rsp.getMembershipsToDelete().stream().map(r -> r.getMemberId()).toList();
+
+          return ImmutableOnePartyEnvelope.builder()
           .repoId(repoId)
-          .party(rsp.getPartiesToUpdate().isEmpty() ? null : rsp.getPartiesToUpdate().get(0))
+          .party(rsp.getPartiesToUpdate().isEmpty() ? party : rsp.getPartiesToUpdate().get(0))
+          .directMembers(allRelatedMembers.stream()
+            .filter(member -> !removedMembers.contains(member.getId()))
+            .toList())
+          .directRights(allRelatedRights.stream()
+            .filter(right -> !removedRights.contains(right.getId()))
+            .toList()
+          )
           .addMessages(ImmutableMessage.builder().text(rsp.getLog()).build())
           .addAllMessages(rsp.getMessages())
           .status(BatchStatus.mapStatus(rsp.getStatus()))
-          .build());
+          .build();
+        });
   }
   
   private void appendMemberAndRight(List<OrgRight> rights, List<OrgMember> members, BatchForOnePartyModify modify) {

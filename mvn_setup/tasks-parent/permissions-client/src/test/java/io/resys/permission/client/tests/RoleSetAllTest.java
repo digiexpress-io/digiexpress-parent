@@ -1,5 +1,6 @@
 package io.resys.permission.client.tests;
 import java.time.Duration;
+import java.util.Arrays;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -56,7 +57,7 @@ public class RoleSetAllTest extends DbTestTemplate {
       
     final var role1 = createRole(client, "role1");
     
-    final var updatedRole1 = client.updateRole().updateOne(ImmutableChangeRolePermissions.builder()
+    final var updatePermissions = ImmutableChangeRolePermissions.builder()
         .id(role1.getId())
         .comment("added all perms")
         .changeType(ChangeType.SET_ALL)
@@ -65,8 +66,10 @@ public class RoleSetAllTest extends DbTestTemplate {
             createPermission(client, "perm2").getName(),
             createPermission(client, "perm3").getName()
             )
-        .build())
-        .await().atMost(Duration.ofMinutes(1));
+        .build();
+    final var updatedRole1 = client.updateRole().updateOne(Arrays.asList(
+        updatePermissions
+    )).await().atMost(Duration.ofMinutes(1));
 
     
     log.debug(Json.encodePrettily(updatedRole1));

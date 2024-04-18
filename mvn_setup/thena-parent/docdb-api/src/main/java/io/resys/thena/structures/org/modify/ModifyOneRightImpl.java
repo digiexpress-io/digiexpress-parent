@@ -240,8 +240,7 @@ public class ModifyOneRightImpl implements ModifyOneRight {
       List<OrgActorStatus> rightStatus,           
       OrgRight right) throws NoRightChangesException {
     
-    final var partiesAfterUpdate = new ArrayList<OrgParty>();
-    final var membersAfterUpdate = new ArrayList<OrgMember>();
+
     
     final var modify = new BatchForOneRightModify(tx.getTenantId(), author, message)
         .current(right)
@@ -284,6 +283,8 @@ public class ModifyOneRightImpl implements ModifyOneRight {
        }
     });
     
+    final var partiesAfterUpdate = new ArrayList<OrgParty>();
+    final var membersAfterUpdate = new ArrayList<OrgMember>();
     
     final OrgBatchForOne batch = modify.create();
     return tx.insert().batchMany(batch)

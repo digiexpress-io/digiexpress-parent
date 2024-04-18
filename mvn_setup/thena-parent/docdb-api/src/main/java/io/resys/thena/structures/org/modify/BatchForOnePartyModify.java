@@ -220,8 +220,7 @@ public class BatchForOnePartyModify {
       .build();
        
     // no changes
-    if( batch.isEmpty()) {
-      
+    if(batch.isEmpty()) {
       throw new NoPartyChangesException();
     }
     return batch;

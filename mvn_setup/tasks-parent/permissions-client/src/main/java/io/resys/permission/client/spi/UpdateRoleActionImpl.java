@@ -142,8 +142,8 @@ public class UpdateRoleActionImpl implements UpdateRoleAction {
       .name(role.getPartyName())
       .description(role.getPartyDescription())
       .status(OrgActorStatusType.IN_FORCE)
-      //.permissions(response.getDirectRights().stream().map(right -> right.getRightName()).toList()) TODO backend doesn't return them
-      //.principals(response.getDirectMembers().stream().map(member -> member.getUserName()).toList()) TODO backend doesn't return them
+      .permissions(response.getDirectRights().stream().map(right -> right.getRightName()).toList()) 
+      .principals(response.getDirectMembers().stream().map(member -> member.getUserName()).toList())
       .build();
     }
   
