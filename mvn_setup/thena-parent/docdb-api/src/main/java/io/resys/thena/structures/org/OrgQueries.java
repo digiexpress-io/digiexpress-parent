@@ -72,6 +72,8 @@ public interface OrgQueries {
   interface MemberQuery {
     Multi<OrgMember> findAll();
     Multi<OrgMember> findAll(Collection<String> id);
+    Multi<OrgMember> findAllByRightId(String rightId);
+    
     Uni<OrgMember> getById(String id); //user.id or user.email or user.external_id 
     Uni<List<OrgMemberHierarchyEntry>> findAllMemberHierarchyEntries(String memberId);
     Uni<List<OrgRightFlattened>> findAllRightsByMemberId(String memberId);
@@ -90,6 +92,7 @@ public interface OrgQueries {
   interface PartyQuery {
     Multi<OrgParty> findAll();
     Multi<OrgParty> findAll(Collection<String> id);
+    Multi<OrgParty> findAllByRightId(String rightId);
     Uni<OrgParty> getById(String id);
   }
 }

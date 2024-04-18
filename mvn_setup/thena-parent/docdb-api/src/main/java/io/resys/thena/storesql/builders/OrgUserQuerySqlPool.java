@@ -157,4 +157,19 @@ public class OrgUserQuerySqlPool implements OrgQueries.MemberQuery {
         .transformToMulti((RowSet<OrgMember> rowset) -> Multi.createFrom().iterable(rowset))
         .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't get 'MEMBER' by 'groupId': '" + id + "'!", sql, e)));
   }
+  @Override
+  public Multi<OrgMember> findAllByRightId(String rightId) {
+    final var sql = registry.orgMembers().findAllByRightId(rightId);
+    if(log.isDebugEnabled()) {
+      log.debug("User findAllByRightId query, with props: {} \r\n{}", 
+          sql.getProps().deepToString(),
+          sql.getValue());
+    }
+    return wrapper.getClient().preparedQuery(sql.getValue())
+        .mapping(registry.orgMembers().defaultMapper())
+        .execute(sql.getProps())
+        .onItem()
+        .transformToMulti((RowSet<OrgMember> rowset) -> Multi.createFrom().iterable(rowset))
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't get 'MEMBER' by 'rightId': '" + rightId + "'!", sql, e)));
+  }
 }

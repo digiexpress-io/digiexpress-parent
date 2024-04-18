@@ -270,6 +270,25 @@ SELECT * FROM child;
   }
   
   @Override
+  public SqlTuple findAllByRightId(String rightId) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT users.* ").ln()
+        .append("FROM ").append(options.getOrgRights()).append(" as right").ln()
+        
+        .append(" INNER JOIN ").append(options.getOrgMemberRights()).append(" as memberships").ln()
+        .append(" ON(right.id = memberships.right_id and memberships.party_id is null) ").ln()
+        
+        .append(" INNER JOIN ").append(options.getOrgMembers()).append(" as users").ln()
+        .append(" ON(users.id = memberships.member_id) ").ln()
+        
+        .append("WHERE (right.id = $1 OR right.external_id = $1 OR right.right_name = $1)").ln()
+        .build())
+        .props(Tuple.of(rightId))
+        .build();
+  }
+  
+  @Override
   public ThenaSqlClient.SqlTuple getStatusByUserId(String userId) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()

@@ -201,6 +201,7 @@ public class ModifyOnePartyImpl implements ModifyOneParty {
     final Uni<List<OrgMember>> memberPromiseFromAddingRemovingDisabling = this.allMembers.isEmpty() ? 
         Uni.createFrom().item(Collections.emptyList()) : 
         tx.query().members().findAll(allMembers).collect().asList();
+    
     final Uni<List<OrgMember>> memebrsPromiseExisting = tx.query().members().findAllByPartyId(partyId).collect().asList();
 		final Uni<List<OrgMember>> memberPromise =  Uni.combine().all().unis(
 		    memberPromiseFromAddingRemovingDisabling,

@@ -14,6 +14,7 @@ import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.ImmutableSqlTupleList;
 import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.datasource.ThenaSqlClient;
+import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.storesql.support.SqlStatement;
 import io.vertx.mutiny.sqlclient.Row;
 import io.vertx.mutiny.sqlclient.Tuple;
@@ -114,7 +115,22 @@ public class OrgPartyRegistrySqlImpl implements OrgPartyRegistry {
             .collect(Collectors.toList()))
         .build();
   }
-
+  
+  @Override
+  public SqlTuple findAllByRightId(String rightId) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT party.* ").ln()
+        .append("FROM ").append(options.getOrgRights()).append(" as right").ln()
+        
+        .append(" INNER JOIN ").append(options.getOrgPartyRights()).append(" as memberships").ln()
+        .append(" ON(right.id = memberships.right_id) ").ln()
+        
+        .append("WHERE (right.id = $1 OR right.external_id = $1 OR right.right_name = $1)").ln()
+        .build())
+        .props(Tuple.of(rightId))
+        .build();
+  }
   @Override
   public Function<Row, OrgParty> defaultMapper() {
     return OrgPartyRegistrySqlImpl::orgParty;

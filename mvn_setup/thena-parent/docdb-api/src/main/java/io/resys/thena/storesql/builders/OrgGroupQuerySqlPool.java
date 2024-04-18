@@ -81,4 +81,19 @@ public class OrgGroupQuerySqlPool implements OrgQueries.PartyQuery {
         .onFailure(e -> errorHandler.notFound(e)).recoverWithNull()
         .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't get 'PARTY' by 'id': '" + id + "'!", sql, e)));
   }
+  @Override
+  public Multi<OrgParty> findAllByRightId(String rightId) {
+    final var sql = registry.orgParties().findAllByRightId(rightId);
+    if(log.isDebugEnabled()) {
+      log.debug("Parties findAllByRightId query, with props: {} \r\n{}", 
+          "",
+          sql.getValue());
+    }
+    return wrapper.getClient().preparedQuery(sql.getValue())
+        .mapping(registry.orgParties().defaultMapper())
+        .execute(sql.getProps())
+        .onItem()
+        .transformToMulti((RowSet<OrgParty> rowset) -> Multi.createFrom().iterable(rowset))
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'PARTY'!", sql, e)));
+  }
 }
