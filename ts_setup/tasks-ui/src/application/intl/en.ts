@@ -583,8 +583,6 @@ const en = {
   'permissions.roles.name.edit.placeholder': 'Enter a new name for this role',
   'permissions.roles.description.edit.placeholder': 'Enter a new description for this role',
 
-
-
   'permissions.roles.roleParentOverview': 'Parent role',
   'permissions.roles.rolePermissionsOverview': 'Permissions given to this Role',
   'permissions.roles.rolePrincipalsOverview': 'Members assigned to this Role',
@@ -604,6 +602,13 @@ const en = {
   'permissions.role.permissions.permissionName': 'Name',
   'permissions.role.users.username': 'Username',
   'permissions.role.name': 'Name',
+  'permissions.role.roleParentName': 'Name',
+  'permissions.role.parentSelect': 'Role parent',
+  'permissions.role.role_parent': 'Parent role',
+  'permissions.role.role_permissions': 'Permissions',
+  'permissions.role.role_members': 'Role members',
+  'permissions.role.edit': 'Edit a role',
+
   'permissions.createPermission.roles': 'Roles',
   'permissions.createPermission.principals': 'Members',
 
@@ -622,7 +627,6 @@ const en = {
   'permissions.permission.comment.placeholder': 'Note describing this change',
 
   'permissions.permission.edit': 'Edit a permission',
-  'permissions.role.edit': 'Edit a role',
 
   'permissions.editPermission.roles': 'Roles',
   'permissions.editPermission.principals': 'Members',
@@ -633,14 +637,7 @@ const en = {
   'permissions.permission.edit.rolePermissionsOverview': 'Roles to which this permission belongs',
   'permissions.permission.edit.rolePrincipalsOverview': 'Members who have this permission',
 
-  'permissions.role.role_parent': 'Parent role',
-  'permissions.role.role_permissions': 'Permissions',
-  'permissions.role.role_members': 'Role members',
-
   'permissions.selection.none': 'None',
-
-  'permissions.role.parentSelect': 'Role parent',
-  'permissions.role.roleParentName': 'Name',
 
   'permissions.createPrincipal.principal_permissions': 'Permissions',
   'permissions.createPrincipal.principal_roles': 'Roles',
