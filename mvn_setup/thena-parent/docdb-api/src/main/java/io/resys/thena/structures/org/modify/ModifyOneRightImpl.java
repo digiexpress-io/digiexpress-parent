@@ -1,6 +1,5 @@
 package io.resys.thena.structures.org.modify;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -306,13 +305,12 @@ public class ModifyOneRightImpl implements ModifyOneRight {
     setParties(allRelatedParties, partyRights, modify);
     setMembers(allRelatedMembers, memberRights, modify);
     
-    final var partiesAfterUpdate = new ArrayList<OrgParty>();
     final OrgBatchForOne batch = modify.create();
     return tx.insert().batchMany(batch)
         .onItem().transform(rsp -> {
           
           final var removedMembers = rsp.getMemberRightsToDelete().stream().map(r -> r.getMemberId()).toList();
-
+          final var removedParties = rsp.getPartyRightToDelete().stream().map(r -> r.getPartyId()).toList();
           
           return ImmutableOneRightEnvelope.builder()
           .repoId(repoId)
@@ -320,7 +318,9 @@ public class ModifyOneRightImpl implements ModifyOneRight {
           .addMessages(ImmutableMessage.builder().text(rsp.getLog()).build())
           .addAllMessages(rsp.getMessages())
           .status(BatchStatus.mapStatus(rsp.getStatus()))
-          .directParties(partiesAfterUpdate)
+          .directParties(allRelatedParties.stream()
+              .filter(member -> !removedParties.contains(member.getId()))
+              .toList())
           .directMembers(allRelatedMembers.stream()
               .filter(member -> !removedMembers.contains(member.getId()))
               .toList())
