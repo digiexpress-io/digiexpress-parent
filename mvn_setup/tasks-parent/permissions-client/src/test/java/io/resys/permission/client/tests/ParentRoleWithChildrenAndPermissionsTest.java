@@ -72,22 +72,16 @@ public class ParentRoleWithChildrenAndPermissionsTest extends DbTestTemplate {
     final var childRole1 = createChildRole(client, "childRole1", "childRole1-desc", parentRole.getId(), "childRole1-perm1");
     final var childRole2 = createChildRole(client, "childRole2", "childRole2-desc", parentRole.getId(), "childRole2-perm2");
     
-    /*
-    final var updatedChildRole1 = client.updateRole().updateOne(ImmutableChangeRolePermissions.builder()
-        .id(childRole1.getId())
-        .comment("added parent permissions")
-        .addAllPermissions(parentRole.getPermissions())
-        .changeType(ChangeType.ADD)
-        .build())
-        .await().atMost(Duration.ofMinutes(1));
-    */
-    
+  
     log.debug(Json.encodePrettily(parentRole));
     log.debug(Json.encodePrettily(childRole1));
     log.debug(Json.encodePrettily(childRole2));
     
 
-    Assertions.assertEquals(1, childRole1.getPermissions().size());
+    Assertions.assertEquals("[parentRole-perm3]", parentRole.getPermissions().toString());
+    Assertions.assertEquals("[childRole1-perm1]", childRole1.getPermissions().toString());
+    Assertions.assertEquals("[childRole2-perm2]", childRole2.getPermissions().toString());
+    
     Assertions.assertEquals(parentRole.getId(), childRole1.getParentId());
     
   }
