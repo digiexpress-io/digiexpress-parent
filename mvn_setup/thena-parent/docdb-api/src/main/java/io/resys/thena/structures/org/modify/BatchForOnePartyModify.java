@@ -132,9 +132,6 @@ public class BatchForOnePartyModify {
     RepoAssert.notNull(modifyMemberships, () -> "parties can't be null!");
     RepoAssert.notNull(modifyPartyRights, () -> "rights can't be null!");
     
-    
-    
-    
     for(final var member : addMemberWithRights.keySet()) {
       final var exists = this.modifyMemberships.stream()
           .filter(e -> e.getType() == ModType.ADD)

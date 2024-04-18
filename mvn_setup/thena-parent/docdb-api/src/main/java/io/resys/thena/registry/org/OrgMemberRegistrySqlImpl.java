@@ -20,6 +20,7 @@ import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.ImmutableSqlTupleList;
 import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.datasource.ThenaSqlClient;
+import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.storesql.support.SqlStatement;
 import io.vertx.mutiny.sqlclient.Row;
 import io.vertx.mutiny.sqlclient.Tuple;
@@ -248,6 +249,26 @@ SELECT * FROM child;
         .build();
   }
 
+
+  @Override
+  public SqlTuple findAllByPartyId(String partyId) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT users.* ").ln()
+        .append("FROM ").append(options.getOrgParties()).append(" as party").ln()
+        
+        .append(" INNER JOIN ").append(options.getOrgMemberships()).append(" as memberships").ln()
+        .append(" ON(party.id = memberships.party_id) ").ln()
+        
+        .append(" INNER JOIN ").append(options.getOrgMembers()).append(" as users").ln()
+        .append(" ON(users.id = memberships.member_id) ").ln()
+        
+        .append("WHERE (party.id = $1 OR party.external_id = $1 OR party.party_name = $1)").ln()
+        .build())
+        .props(Tuple.of(partyId))
+        .build();
+  }
+  
   @Override
   public ThenaSqlClient.SqlTuple getStatusByUserId(String userId) {
     return ImmutableSqlTuple.builder()

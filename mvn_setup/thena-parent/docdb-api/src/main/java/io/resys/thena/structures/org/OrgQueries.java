@@ -76,6 +76,8 @@ public interface OrgQueries {
     Uni<List<OrgMemberHierarchyEntry>> findAllMemberHierarchyEntries(String memberId);
     Uni<List<OrgRightFlattened>> findAllRightsByMemberId(String memberId);
     Uni<OrgMemberFlattened> getStatusById(String memberId);
+    
+    Multi<OrgMember> findAllByPartyId(String id);
   }
   
   interface RightsQuery {    

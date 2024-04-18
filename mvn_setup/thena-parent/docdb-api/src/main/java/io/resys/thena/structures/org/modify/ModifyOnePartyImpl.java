@@ -9,6 +9,9 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import com.google.common.collect.ImmutableList;
 
 import io.resys.thena.api.actions.ImmutableOnePartyEnvelope;
 import io.resys.thena.api.actions.OrgCommitActions.ModType;
@@ -52,6 +55,7 @@ public class ModifyOnePartyImpl implements ModifyOneParty {
   private Optional<OrgDocSubType> partySubType;
 
   private Collection<String> allMembers = new LinkedHashSet<>();
+  private Collection<String> membersToSet;
   private Collection<String> membersToAdd = new LinkedHashSet<>();
   private Collection<String> membersToDisable = new LinkedHashSet<>();
   private Collection<String> membersToRemove = new LinkedHashSet<>();
@@ -60,6 +64,7 @@ public class ModifyOnePartyImpl implements ModifyOneParty {
   private Collection<String> rightsToRemove = new LinkedHashSet<>();
   private Collection<String> rightsToAdd = new LinkedHashSet<>();
   private Collection<String> rightsToDisable = new LinkedHashSet<>();
+  private Collection<String> rightsToSet;
   private Map<String, List<String>> addMemberWithRights = new HashMap<>();
   private Map<String, List<String>> disableMemberWithRights = new HashMap<>();
   private OrgActorStatusType newStatus;
@@ -98,6 +103,26 @@ public class ModifyOnePartyImpl implements ModifyOneParty {
   }
   @Override public ModifyOnePartyImpl status(OrgActorStatusType status) {
     this.newStatus = RepoAssert.notNull(status, () -> "new status can't be null!");
+    return this;
+  }
+  @Override public ModifyOneParty setAllMembers(List<String> memberIdNameOrExtId) {
+    this.membersToSet = new LinkedHashSet<>(RepoAssert.notNull(memberIdNameOrExtId, () -> "setAllMembers can't be null!"));
+    this.membersToAdd.clear();
+    this.membersToRemove.clear();
+    this.membersToDisable.clear();
+    this.addMemberWithRights.clear();
+    this.disableMemberWithRights.clear();
+    this.allMembers.clear();
+    this.allMembers.addAll(memberIdNameOrExtId);
+    return this;
+  }
+  @Override public ModifyOneParty setAllRights(List<String> rightIdNameOrExtId) {
+    this.rightsToSet = new LinkedHashSet<>(RepoAssert.notNull(rightIdNameOrExtId, () -> "setAllRights can't be null!"));
+    this.rightsToAdd.clear();
+    this.rightsToRemove.clear();
+    this.rightsToDisable.clear();
+    this.allRights.clear();
+    this.allRights.addAll(rightIdNameOrExtId);
     return this;
   }
   @Override 
@@ -173,13 +198,22 @@ public class ModifyOnePartyImpl implements ModifyOneParty {
   
   private Uni<OnePartyEnvelope> doInTx(OrgState tx) {
 		// members
-		final Uni<List<OrgMember>> memberPromise = this.allMembers.isEmpty() ? 
-			Uni.createFrom().item(Collections.emptyList()) : 
-			tx.query().members().findAll(allMembers).collect().asList();
+    final Uni<List<OrgMember>> memberPromiseFromAddingRemovingDisabling = this.allMembers.isEmpty() ? 
+        Uni.createFrom().item(Collections.emptyList()) : 
+        tx.query().members().findAll(allMembers).collect().asList();
+    final Uni<List<OrgMember>> memebrsPromiseExisting = tx.query().members().findAllByPartyId(partyId).collect().asList();
+		final Uni<List<OrgMember>> memberPromise =  Uni.combine().all().unis(
+		    memberPromiseFromAddingRemovingDisabling,
+        memebrsPromiseExisting
+    ).asTuple().onItem().transform(tuple -> 
+      ImmutableList.<OrgMember>builder()
+        .addAll(tuple.getItem1())
+        .addAll(tuple.getItem2())
+        .build()
+    );
 
 		// memberships
     final Uni<List<OrgMembership>> membershipsPromise = tx.query().memberships().findAllByPartyId(partyId).collect().asList();
-		
 		
 		// statuses
 		final Uni<List<OrgActorStatus>> statusPromise = tx.query().actorStatus().findAllByPartyId(partyId).collect().asList();
@@ -197,16 +231,25 @@ public class ModifyOnePartyImpl implements ModifyOneParty {
       parentPartyPromise = tx.query().parties().getById(parentPartyId.get()).onItem().transform(party -> Optional.ofNullable(party));  
     }
     
-		
 		// rights
     final Uni<List<OrgPartyRight>> partyRightsPromise = tx.query().partyRights().findAllByPartyId(partyId).collect().asList();
     final Uni<List<OrgMemberRight>> memberRightsPromise = tx.query().memberRights().findAllByPartyId(partyId).collect().asList();
-    final Uni<List<OrgRight>> rightsPromise = this.allRights.isEmpty() ? 
-        Uni.createFrom().item(Collections.emptyList()) :
-        tx.query().rights().findAll(allRights).collect().asList();
-      
-
     
+    final Uni<List<OrgRight>> rightsPromiseFromAddingRemovingDisabling = this.allRights.isEmpty() ? 
+            Uni.createFrom().item(Collections.emptyList()) :
+            tx.query().rights().findAll(allRights).collect().asList();
+    final Uni<List<OrgRight>> rightsPromiseExisting = tx.query().rights().findAllByPartyId(partyId).collect().asList();
+    
+    final Uni<List<OrgRight>> rightsPromise = Uni.combine().all().unis(
+        rightsPromiseFromAddingRemovingDisabling,
+        rightsPromiseExisting
+    ).asTuple().onItem().transform(tuple -> 
+      ImmutableList.<OrgRight>builder()
+        .addAll(tuple.getItem1())
+        .addAll(tuple.getItem2())
+        .build()
+    );
+      
 		// join data
 		return Uni.combine().all().unis(memberPromise, partyPromise, rightsPromise, statusPromise, membershipsPromise, partyRightsPromise, memberRightsPromise, parentPartyPromise).asTuple()
 		  .onItem().transformToUni(tuple -> {
@@ -299,12 +342,9 @@ public class ModifyOnePartyImpl implements ModifyOneParty {
       List<OrgMembership> memberships,
       List<OrgPartyRight> partyRights,
       List<OrgMemberRight> memberRights,
-      Optional<OrgParty> parent) throws NoPartyChangesException {
-    
-    final Map<OrgMember, List<OrgRight>> modifyMemberRightsInParty = new HashMap<>();
-    final Map<String, List<OrgRight>> addMembersWithRights = new HashMap<>();
-    final Map<String, String> addGroupMapping = new HashMap<>();
-    
+      Optional<OrgParty> parent) 
+  throws NoPartyChangesException {
+
     final var modify = new BatchForOnePartyModify(tx.getTenantId(), author, message)
       .newExternalId(externalId)
       .newPartyName(partyName)
@@ -318,7 +358,114 @@ public class ModifyOnePartyImpl implements ModifyOneParty {
       .currentPartyRights(partyRights)
       .currentMemberRights(memberRights);
 
-    // Remove or add groups 
+    appendMembers(members, modify);
+    appendRights(rights, modify);
+    appendMemberAndRight(rights, members, modify);
+    setMembers(members, memberships, modify);
+    setRights(rights, partyRights, modify);
+    
+    
+    final OrgBatchForOne batch = modify.create();
+    return tx.insert().batchMany(batch)
+        .onItem().transform(rsp -> ImmutableOnePartyEnvelope.builder()
+          .repoId(repoId)
+          .party(rsp.getPartiesToUpdate().isEmpty() ? null : rsp.getPartiesToUpdate().get(0))
+          .addMessages(ImmutableMessage.builder().text(rsp.getLog()).build())
+          .addAllMessages(rsp.getMessages())
+          .status(BatchStatus.mapStatus(rsp.getStatus()))
+          .build());
+  }
+  
+  private void appendMemberAndRight(List<OrgRight> rights, List<OrgMember> members, BatchForOnePartyModify modify) {
+    final Map<OrgMember, List<OrgRight>> modifyMemberRightsInParty = new HashMap<>();
+    final Map<String, List<OrgRight>> addMembersWithRights = new HashMap<>();
+    final Map<String, String> addGroupMapping = new HashMap<>();
+    
+    members.forEach(member -> {
+      final var addToGroupRole = this.addMemberWithRights.keySet().stream().filter(c -> member.isMatch(c)).findFirst();
+      if(addToGroupRole.isPresent()) {
+        final var roles = new ArrayList<OrgRight>();
+        addMembersWithRights.put(member.getId(), roles);
+        modifyMemberRightsInParty.put(member, roles);
+        addGroupMapping.put(addToGroupRole.get(), member.getId());
+      }
+    });
+    
+    rights.forEach(role -> {
+      for(final var entry : this.addMemberWithRights.entrySet()) {
+        final var addRoleToUserGroup = entry.getValue().stream().filter(c -> role.isMatch(c)).findFirst().isPresent();
+        if(addRoleToUserGroup) {
+          addMembersWithRights.get(addGroupMapping.get(entry.getKey())).add(role);
+        }
+      }
+    });
+    modify.modifyMemberRightsInParty(ModType.ADD, modifyMemberRightsInParty);  
+  }
+  
+  private void appendRights(List<OrgRight> rights, BatchForOnePartyModify modify) {
+
+   rights.forEach(right -> {
+      if(right.isMatch(rightsToAdd)) {
+        modify.modifyPartyRights(ModType.ADD, right);
+      }
+      if(right.isMatch(rightsToDisable)) {
+        modify.modifyPartyRights(ModType.DISABLED, right);
+      }
+      if(right.isMatch(rightsToRemove)) {
+        modify.modifyPartyRights(ModType.REMOVE, right);
+      }
+    });
+  }
+  
+  private void setRights(List<OrgRight> rights, List<OrgPartyRight> partyRights, BatchForOnePartyModify modify) {
+    if(this.rightsToSet == null) {
+      return;
+    }
+    
+    final var rightsById = rights.stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
+   
+    // removal all that are not part pf the new set
+    partyRights.forEach(partyRight -> {
+      final var right = rightsById.get(partyRight.getRightId());
+      
+      // already exists nothing to do
+      if(right.isMatch(this.rightsToSet)) {
+        return;
+      }
+      modify.modifyPartyRights(ModType.REMOVE, right);
+    });
+    
+    // add all new
+    rightsToSet.stream().map(id -> rights.stream().filter(m -> m.isMatch(id)).findFirst().get()).forEach(right -> {
+      modify.modifyPartyRights(ModType.ADD, right);      
+    });
+  }  
+  
+  private void setMembers(List<OrgMember> members, List<OrgMembership> memberships, BatchForOnePartyModify modify) {
+    if(this.membersToSet == null) {
+      return;
+    }
+    
+    final var byId = members.stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
+   
+    // removal all that are not part pf the new set
+    memberships.forEach(membership -> {
+      final var member = byId.get(membership.getMemberId());
+      
+      // already exists nothing to do
+      if(member.isMatch(this.membersToSet)) {
+        return;
+      }
+      modify.modifyMembership(ModType.REMOVE, member);
+    });
+    
+    // add all new
+    membersToSet.stream().map(id -> members.stream().filter(m -> m.isMatch(id)).findFirst().get()).forEach(member -> {
+      modify.modifyMembership(ModType.ADD, member);      
+    });
+  }  
+  
+  private void appendMembers(List<OrgMember> members, BatchForOnePartyModify modify) {
     members.forEach(member -> {
       if(member.isMatch(membersToAdd)) {
         modify.modifyMembership(ModType.ADD, member);
@@ -329,55 +476,6 @@ public class ModifyOnePartyImpl implements ModifyOneParty {
       if(member.isMatch(membersToRemove)) {
         modify.modifyMembership(ModType.REMOVE, member);
       }
-      final var addToGroupRole = this.addMemberWithRights.keySet().stream().filter(c -> member.isMatch(c)).findFirst();
-      if(addToGroupRole.isPresent()) {
-        final var roles = new ArrayList<OrgRight>();
-        addMembersWithRights.put(member.getId(), roles);
-        modifyMemberRightsInParty.put(member, roles);
-        addGroupMapping.put(addToGroupRole.get(), member.getId());
-      }
     });
-    
-    // Remove or add roles 
-    rights.forEach(role -> {
-      
-      if(role.isMatch(rightsToAdd)) {
-        modify.modifyPartyRights(ModType.ADD, role);
-      }
-      if(role.isMatch(rightsToDisable)) {
-        modify.modifyPartyRights(ModType.DISABLED, role);
-      }
-      if(role.isMatch(rightsToRemove)) {
-        modify.modifyPartyRights(ModType.REMOVE, role);
-      }      
-      for(final var entry : this.addMemberWithRights.entrySet()) {
-        final var addRoleToUserGroup = entry.getValue().stream().filter(c -> role.isMatch(c)).findFirst().isPresent();
-        if(addRoleToUserGroup) {
-          addMembersWithRights.get(addGroupMapping.get(entry.getKey())).add(role);
-        }
-      }
-    });
-    
-    final OrgBatchForOne batch = modify
-        .modifyMemberRightsInParty(ModType.ADD, modifyMemberRightsInParty)
-        .create();
-    return tx.insert().batchMany(batch)
-        .onItem().transform(rsp -> ImmutableOnePartyEnvelope.builder()
-          .repoId(repoId)
-          .party(rsp.getPartiesToUpdate().isEmpty() ? null : rsp.getPartiesToUpdate().get(0))
-          .addMessages(ImmutableMessage.builder().text(rsp.getLog()).build())
-          .addAllMessages(rsp.getMessages())
-          .status(BatchStatus.mapStatus(rsp.getStatus()))
-          .build());
-  }
-  @Override
-  public ModifyOneParty setAllMembers(List<String> memberIdNameOrExtId) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-  @Override
-  public ModifyOneParty setAllRights(List<String> rightIdNameOrExtId) {
-    // TODO Auto-generated method stub
-    return null;
   }
 }

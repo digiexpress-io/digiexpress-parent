@@ -142,4 +142,19 @@ public class OrgUserQuerySqlPool implements OrgQueries.MemberQuery {
         })
         .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'MEMBER_STATUS'!", sql, e)));
   }
+  @Override
+  public Multi<OrgMember> findAllByPartyId(String id) {
+    final var sql = registry.orgMembers().findAllByPartyId(id);
+    if(log.isDebugEnabled()) {
+      log.debug("User findAllByPartyId query, with props: {} \r\n{}", 
+          sql.getProps().deepToString(),
+          sql.getValue());
+    }
+    return wrapper.getClient().preparedQuery(sql.getValue())
+        .mapping(registry.orgMembers().defaultMapper())
+        .execute(sql.getProps())
+        .onItem()
+        .transformToMulti((RowSet<OrgMember> rowset) -> Multi.createFrom().iterable(rowset))
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't get 'MEMBER' by 'groupId': '" + id + "'!", sql, e)));
+  }
 }
