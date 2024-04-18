@@ -14,6 +14,7 @@ import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.ImmutableSqlTupleList;
 import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.datasource.ThenaSqlClient;
+import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.storesql.support.SqlStatement;
 import io.vertx.mutiny.sqlclient.Row;
 import io.vertx.mutiny.sqlclient.Tuple;
@@ -64,7 +65,21 @@ public class OrgRightRegistrySqlImpl implements OrgRightRegistry {
         .build();
   }
   
-  
+  @Override
+  public SqlTuple findAllByMemberId(String memberId) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT distinct rights.* ").ln()
+        .append("FROM ").append(options.getOrgRights()).append(" as rights").ln()
+        
+        .append(" INNER JOIN ").append(options.getOrgMemberRights()).append(" as memberships").ln()
+        .append(" ON(rights.id = memberships.right_id) ").ln()
+        
+        .append("WHERE (rights.id = $1 OR rights.external_id = $1 OR rights.right_name = $1)").ln()
+        .build())
+        .props(Tuple.of(memberId))
+        .build();
+  }
   
   @Override
   public ThenaSqlClient.Sql findAll() {

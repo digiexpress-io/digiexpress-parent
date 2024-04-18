@@ -86,6 +86,8 @@ public interface OrgQueries {
     Multi<OrgRight> findAll();
     Multi<OrgRight> findAll(Collection<String> id);
     Multi<OrgRight> findAllByPartyId(String id);
+    Multi<OrgRight> findAllByMemberId(String memberId);
+    
     Uni<OrgRight> getById(String id);
   }
   
@@ -93,6 +95,8 @@ public interface OrgQueries {
     Multi<OrgParty> findAll();
     Multi<OrgParty> findAll(Collection<String> id);
     Multi<OrgParty> findAllByRightId(String rightId);
+    Multi<OrgParty> findAllByMemberId(String memberId);
+    
     Uni<OrgParty> getById(String id);
   }
 }

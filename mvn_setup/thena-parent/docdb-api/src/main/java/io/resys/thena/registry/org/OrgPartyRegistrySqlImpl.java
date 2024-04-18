@@ -132,6 +132,26 @@ public class OrgPartyRegistrySqlImpl implements OrgPartyRegistry {
         .build();
   }
   @Override
+  public SqlTuple findAllByMemberId(String memberId) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT distinct party.* ").ln()
+        .append("FROM ").append(options.getOrgRights()).append(" as party").ln()
+        
+        .append(" INNER JOIN ").append(options.getOrgMemberships()).append(" as memberships").ln()
+        .append(" ON(party.id = memberships.party_id) ").ln()
+
+        .append(" INNER JOIN ").append(options.getOrgMembers()).append(" as member").ln()
+        .append(" ON(member.id = memberships.member_id) ").ln()
+        
+        .append("WHERE (member.id = $1 OR member.external_id = $1 OR member.username = $1)").ln()
+        .build())
+        .props(Tuple.of(memberId))
+        .build();
+  }
+
+  
+  @Override
   public Function<Row, OrgParty> defaultMapper() {
     return OrgPartyRegistrySqlImpl::orgParty;
   }
@@ -216,5 +236,4 @@ public class OrgPartyRegistrySqlImpl implements OrgPartyRegistry {
         .append("  REFERENCES ").append(options.getOrgParties()).append(" (id);").ln().ln()
         .build();
   }
-
 }

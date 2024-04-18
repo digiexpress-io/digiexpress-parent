@@ -13,6 +13,9 @@ public interface OrgPartyRegistry extends ThenaRegistryService<OrgParty, io.vert
   
   
   ThenaSqlClient.SqlTuple findAllByRightId(String rightId);
+  ThenaSqlClient.SqlTuple findAllByMemberId(String memberId);
+  
+  
   ThenaSqlClient.Sql findAll();
   ThenaSqlClient.SqlTuple findAll(Collection<String> id);
   ThenaSqlClient.SqlTuple insertOne(OrgParty group);

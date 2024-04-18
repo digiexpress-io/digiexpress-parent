@@ -82,11 +82,11 @@ public class OrgRoleQuerySqlPool implements OrgQueries.RightsQuery {
         .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't get 'RIGHTS' by 'id': '" + id + "'!", sql, e)));
   }
   @Override
-  public Multi<OrgRight> findAllByPartyId(String id) {
-    final var sql = registry.orgRights().findAllByPartyId(id);
+  public Multi<OrgRight> findAllByPartyId(String partyId) {
+    final var sql = registry.orgRights().findAllByPartyId(partyId);
     if(log.isDebugEnabled()) {
       log.debug("Role findAllByPartyId query, with props: {} \r\n{}", 
-          "",
+          partyId,
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
@@ -94,6 +94,21 @@ public class OrgRoleQuerySqlPool implements OrgQueries.RightsQuery {
         .execute(sql.getProps())
         .onItem()
         .transformToMulti((RowSet<OrgRight> rowset) -> Multi.createFrom().iterable(rowset))
-        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'RIGHTS'!", sql, e)));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't get 'RIGHTS' by 'partyId': '" + partyId + "'!", sql, e)));
+  }
+  @Override
+  public Multi<OrgRight> findAllByMemberId(String memberId) {
+    final var sql = registry.orgRights().findAllByMemberId(memberId);
+    if(log.isDebugEnabled()) {
+      log.debug("Role findAllByMemberId query, with props: {} \r\n{}", 
+          memberId,
+          sql.getValue());
+    }
+    return wrapper.getClient().preparedQuery(sql.getValue())
+        .mapping(registry.orgRights().defaultMapper())
+        .execute(sql.getProps())
+        .onItem()
+        .transformToMulti((RowSet<OrgRight> rowset) -> Multi.createFrom().iterable(rowset))
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't get 'RIGHTS' by 'memberId': '" + memberId + "'!", sql, e)));
   }
 }

@@ -86,7 +86,7 @@ public class OrgGroupQuerySqlPool implements OrgQueries.PartyQuery {
     final var sql = registry.orgParties().findAllByRightId(rightId);
     if(log.isDebugEnabled()) {
       log.debug("Parties findAllByRightId query, with props: {} \r\n{}", 
-          "",
+          rightId,
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
@@ -94,6 +94,21 @@ public class OrgGroupQuerySqlPool implements OrgQueries.PartyQuery {
         .execute(sql.getProps())
         .onItem()
         .transformToMulti((RowSet<OrgParty> rowset) -> Multi.createFrom().iterable(rowset))
-        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'PARTY'!", sql, e)));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'PARTY' by 'rightId': '" + rightId + "'!", sql, e)));
+  }
+  @Override
+  public Multi<OrgParty> findAllByMemberId(String memberId) {
+    final var sql = registry.orgParties().findAllByMemberId(memberId);
+    if(log.isDebugEnabled()) {
+      log.debug("Parties findAllByMemberId query, with props: {} \r\n{}", 
+          memberId,
+          sql.getValue());
+    }
+    return wrapper.getClient().preparedQuery(sql.getValue())
+        .mapping(registry.orgParties().defaultMapper())
+        .execute(sql.getProps())
+        .onItem()
+        .transformToMulti((RowSet<OrgParty> rowset) -> Multi.createFrom().iterable(rowset))
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'PARTY' by 'memberId': '" + memberId + "'!", sql, e)));
   }
 }

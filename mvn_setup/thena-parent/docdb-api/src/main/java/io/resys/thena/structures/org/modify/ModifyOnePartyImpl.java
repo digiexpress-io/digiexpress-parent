@@ -110,8 +110,6 @@ public class ModifyOnePartyImpl implements ModifyOneParty {
     this.membersToAdd.clear();
     this.membersToRemove.clear();
     this.membersToDisable.clear();
-    this.addMemberWithRights.clear();
-    this.disableMemberWithRights.clear();
     this.allMembers.clear();
     this.allMembers.addAll(memberIdNameOrExtId);
     return this;
