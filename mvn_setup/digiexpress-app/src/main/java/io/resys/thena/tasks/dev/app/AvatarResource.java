@@ -38,7 +38,7 @@ public class AvatarResource {
   public static enum AvatarType {
     CRM, ROLE, USER
   }
-  
+  /*
   @GET @Path("users/{userId}") @Produces(MediaType.APPLICATION_JSON)
   public Uni<Avatar> users(@PathParam("userId") String userId) {
     return userProfileClient.userProfileQuery().get(userId).onItem().transform(profile -> {
@@ -58,7 +58,7 @@ public class AvatarResource {
     return getComposer().onItem().transformToUni(composer -> composer.getStoreDump());
   }
   
-  /*
+  
   @GET @Path("crm/{clientId}") @Produces(MediaType.APPLICATION_JSON)
   public Uni<Avatar> clients(@PathParam("clientId") String clientId) {
     return getComposer().onItem().transformToUni(composer -> composer.getStoreDump());

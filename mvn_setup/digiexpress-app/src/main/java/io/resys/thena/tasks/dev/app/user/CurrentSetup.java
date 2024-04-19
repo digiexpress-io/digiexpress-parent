@@ -18,7 +18,6 @@ import io.resys.thena.tasks.dev.app.security.BuiltInUIPermissions;
 import io.resys.thena.tasks.dev.app.security.PrincipalCache;
 import io.resys.userprofile.client.api.UserProfileClient;
 import io.resys.userprofile.client.api.model.ImmutableUpsertUserProfile;
-import io.resys.userprofile.client.api.model.ImmutableUserDetails;
 import io.resys.userprofile.client.api.model.UserProfile;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
@@ -181,12 +180,10 @@ public class CurrentSetup {
         .userId(currentUser.getUserId())
         .targetDate(Instant.now())
         .id(currentUser.getUserId())
-        .details(ImmutableUserDetails.builder()
-            .username(currentUser.getUserId())
-            .firstName(currentUser.getGivenName())
-            .lastName(currentUser.getFamilyName())
-            .email(currentUser.getEmail())
-            .build())
+        .username(currentUser.getUserId())
+        .firstName(currentUser.getGivenName())
+        .lastName(currentUser.getFamilyName())
+        .email(currentUser.getEmail())
         .build();
     return userProfileClient.withRepoId(userProfileConfig.getRepoId()).createUserProfile().createOne(command);
   }
