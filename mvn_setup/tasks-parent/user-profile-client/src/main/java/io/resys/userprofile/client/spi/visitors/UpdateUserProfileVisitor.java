@@ -46,9 +46,9 @@ import io.resys.userprofile.client.api.model.ImmutableUserProfile;
 import io.resys.userprofile.client.api.model.UserProfile;
 import io.resys.userprofile.client.api.model.UserProfileCommand.UserProfileCommandType;
 import io.resys.userprofile.client.api.model.UserProfileCommand.UserProfileUpdateCommand;
-import io.resys.userprofile.client.spi.store.DocumentConfig;
-import io.resys.userprofile.client.spi.store.DocumentConfig.DocObjectsVisitor;
-import io.resys.userprofile.client.spi.store.DocumentStore;
+import io.resys.userprofile.client.spi.store.UserProfileStoreConfig;
+import io.resys.userprofile.client.spi.store.UserProfileStoreConfig.DocObjectsVisitor;
+import io.resys.userprofile.client.spi.store.UserProfileStore;
 import io.resys.userprofile.client.spi.store.DocumentStoreException;
 import io.resys.userprofile.client.spi.store.MainBranch;
 import io.resys.userprofile.client.spi.visitors.UserProfileCommandVisitor.NoChangesException;
@@ -57,14 +57,14 @@ import io.vertx.core.json.JsonObject;
 
 
 public class UpdateUserProfileVisitor implements DocObjectsVisitor<Uni<List<UserProfile>>> {
-  private final DocumentStore ctx;
+  private final UserProfileStore ctx;
   private final List<String> profileIds;
   private final ModifyManyDocBranches updateBuilder;
   private final CreateManyDocs createBuilder;
   private final Map<String, List<UserProfileUpdateCommand>> commandsByUserProfileId; 
   private final List<UserProfileCommandType> upserts = Arrays.asList(UserProfileCommandType.UpsertUserProfile);
   
-  public UpdateUserProfileVisitor(List<UserProfileUpdateCommand> commands, DocumentStore ctx) {
+  public UpdateUserProfileVisitor(List<UserProfileUpdateCommand> commands, UserProfileStore ctx) {
     super();
     this.ctx = ctx;
     final var config = ctx.getConfig();
@@ -82,12 +82,12 @@ public class UpdateUserProfileVisitor implements DocObjectsVisitor<Uni<List<User
   }
 
   @Override
-  public DocObjectsQuery start(DocumentConfig config, DocObjectsQuery builder) {
+  public DocObjectsQuery start(UserProfileStoreConfig config, DocObjectsQuery builder) {
     return builder.matchIds(profileIds).branchName(MainBranch.HEAD_NAME);
   }
 
   @Override
-  public DocQueryActions.DocObjects visitEnvelope(DocumentConfig config, QueryEnvelope<DocQueryActions.DocObjects> envelope) {
+  public DocQueryActions.DocObjects visitEnvelope(UserProfileStoreConfig config, QueryEnvelope<DocQueryActions.DocObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
       throw DocumentStoreException.builder("GET_USER_PROFILES_BY_IDS_FOR_UPDATE_FAIL")
         .add(config, envelope)
@@ -110,7 +110,7 @@ public class UpdateUserProfileVisitor implements DocObjectsVisitor<Uni<List<User
   }
 
   @Override
-  public Uni<List<UserProfile>> end(DocumentConfig config, DocQueryActions.DocObjects blob) {
+  public Uni<List<UserProfile>> end(UserProfileStoreConfig config, DocQueryActions.DocObjects blob) {
     return applyUpdates(config, blob).onItem()
       .transformToUni(updated -> applyInserts(config, blob).onItem().transform(inserted -> {
         final var result = new ArrayList<UserProfile>();
@@ -120,7 +120,7 @@ public class UpdateUserProfileVisitor implements DocObjectsVisitor<Uni<List<User
       }));
   }
   
-  private Uni<List<UserProfile>> applyInserts(DocumentConfig config, DocQueryActions.DocObjects blob) {
+  private Uni<List<UserProfile>> applyInserts(UserProfileStoreConfig config, DocQueryActions.DocObjects blob) {
     final var insertedProfiles = new ArrayList<UserProfile>(); 
     for(final var entry : commandsByUserProfileId.entrySet()) {
       try {
@@ -144,7 +144,7 @@ public class UpdateUserProfileVisitor implements DocObjectsVisitor<Uni<List<User
     return createBuilder.build().onItem().transform(envelope -> mapInsertedResponse(envelope, insertedProfiles));
   }
 
-  private Uni<List<UserProfile>> applyUpdates(DocumentConfig config, DocQueryActions.DocObjects blob) {
+  private Uni<List<UserProfile>> applyUpdates(UserProfileStoreConfig config, DocQueryActions.DocObjects blob) {
     final var updatedProfiles = blob.accept((Doc doc, DocBranch docBranch, DocCommit commit, List<DocLog> log) -> {  
       final var start = docBranch.getValue().mapTo(ImmutableUserProfile.class);
       

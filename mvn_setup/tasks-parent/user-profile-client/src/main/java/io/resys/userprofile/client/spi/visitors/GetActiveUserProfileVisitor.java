@@ -12,8 +12,8 @@ import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.userprofile.client.api.model.ImmutableUserProfile;
 import io.resys.userprofile.client.api.model.UserProfile;
-import io.resys.userprofile.client.spi.store.DocumentConfig;
-import io.resys.userprofile.client.spi.store.DocumentConfig.DocObjectVisitor;
+import io.resys.userprofile.client.spi.store.UserProfileStoreConfig;
+import io.resys.userprofile.client.spi.store.UserProfileStoreConfig.DocObjectVisitor;
 import io.resys.userprofile.client.spi.store.DocumentStoreException;
 import io.resys.userprofile.client.spi.store.MainBranch;
 import lombok.RequiredArgsConstructor;
@@ -24,12 +24,12 @@ public class GetActiveUserProfileVisitor implements DocObjectVisitor<UserProfile
   private final String id;
   
   @Override
-  public DocObjectsQuery start(DocumentConfig config, DocObjectsQuery query) {
+  public DocObjectsQuery start(UserProfileStoreConfig config, DocObjectsQuery query) {
     return query.matchId(id).branchName(MainBranch.HEAD_NAME);
   }
 
   @Override
-  public DocQueryActions.DocObject visitEnvelope(DocumentConfig config, QueryEnvelope<DocQueryActions.DocObject> envelope) {
+  public DocQueryActions.DocObject visitEnvelope(UserProfileStoreConfig config, QueryEnvelope<DocQueryActions.DocObject> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
       throw DocumentStoreException.builder("GET_USER_PROFILE_BY_ID_FAIL")
         .add(config, envelope)
@@ -47,7 +47,7 @@ public class GetActiveUserProfileVisitor implements DocObjectVisitor<UserProfile
   }
 
   @Override
-  public UserProfile end(DocumentConfig config, DocQueryActions.DocObject ref) {
+  public UserProfile end(UserProfileStoreConfig config, DocQueryActions.DocObject ref) {
     return ref.accept((Doc doc, DocBranch docBranch, DocCommit commit, List<DocLog> log) -> 
         docBranch.getValue()
         .mapTo(ImmutableUserProfile.class).withVersion(docBranch.getCommitId())

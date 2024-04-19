@@ -12,7 +12,6 @@ import io.restassured.RestAssured;
 import io.restassured.filter.log.LogDetail;
 import io.resys.userprofile.client.api.model.ImmutableCreateUserProfile;
 import io.resys.userprofile.client.api.model.ImmutableNotificationSetting;
-import io.resys.userprofile.client.api.model.ImmutableUserDetails;
 import io.resys.userprofile.client.api.model.UserProfile;
 import io.resys.userprofile.client.api.model.UserProfileCommand.UserProfileCommandType;
 
@@ -38,13 +37,10 @@ public class RestApiTest {
   public void postTwoUserProfiles() throws JsonProcessingException {
     final var body = ImmutableCreateUserProfile.builder()
         .id("personid")
-        .details(ImmutableUserDetails.builder()
-          .firstName("user first name")
-          .lastName("user last name")
-          .username("firstAndLastName")
-          .email("firstAndLastName@gmail.com")
-        .build())
-        
+        .firstName("user first name")
+        .lastName("user last name")
+        .username("firstAndLastName")
+        .email("firstAndLastName@gmail.com")
         .notificationSettings(Arrays.asList(ImmutableNotificationSetting.builder()
           .type("NEW_MESSAGE_RECEIVED")
           .enabled(true)

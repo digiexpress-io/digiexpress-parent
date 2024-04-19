@@ -8,20 +8,20 @@ import io.resys.userprofile.client.api.UserProfileClient;
 import io.resys.userprofile.client.spi.actions.CreateUserProfileActionImpl;
 import io.resys.userprofile.client.spi.actions.UpdateUserProfileActionImpl;
 import io.resys.userprofile.client.spi.actions.UserProfileQueryImpl;
-import io.resys.userprofile.client.spi.store.DocumentStore;
+import io.resys.userprofile.client.spi.store.UserProfileStore;
 import io.resys.userprofile.client.spi.store.MainBranch;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class UserProfileClientImpl implements UserProfileClient {
-  private final DocumentStore ctx;
+  private final UserProfileStore ctx;
   
-  public DocumentStore getCtx() { return ctx; }
+  public UserProfileStore getCtx() { return ctx; }
   
   @Override
   public UserProfileClient withRepoId(String repoId) {
-    return new UserProfileClientImpl(ctx.withRepoId(repoId));
+    return new UserProfileClientImpl(ctx.withTenantId(repoId));
   }
 
   @Override
@@ -46,7 +46,7 @@ public class UserProfileClientImpl implements UserProfileClient {
   
   @Override
   public RepositoryQuery repoQuery() {
-    DocumentStore.DocumentRepositoryQuery repo = ctx.query();
+    UserProfileStore.UserProfileTenantQuery repo = ctx.query();
     return new RepositoryQuery() {
       private String repoName;
       

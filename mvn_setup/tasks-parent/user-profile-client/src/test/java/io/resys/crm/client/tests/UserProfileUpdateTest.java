@@ -11,7 +11,6 @@ import io.resys.userprofile.client.api.model.ImmutableChangeUserDetailsFirstName
 import io.resys.userprofile.client.api.model.ImmutableCreateUserProfile;
 import io.resys.userprofile.client.api.model.ImmutableNotificationSetting;
 import io.resys.userprofile.client.api.model.ImmutableUpsertUserProfile;
-import io.resys.userprofile.client.api.model.ImmutableUserDetails;
 import io.resys.userprofile.client.api.model.UserProfile;
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,13 +25,10 @@ public class UserProfileUpdateTest extends UserProfileTestCase {
         .id("jerry-id-1")
         .targetDate(getTargetDate())
         .userId("userId1234")
-        .details(ImmutableUserDetails.builder()
-            .firstName("Jerry")
-            .lastName("Springer")
-            .username("jerryspringer")
-            .email("jerry@thejerryspringershow.com")
-            .build())
-
+        .firstName("Jerry")
+        .lastName("Springer")
+        .username("jerryspringer")
+        .email("jerry@thejerryspringershow.com")
         .notificationSettings(Arrays.asList(ImmutableNotificationSetting.builder()
             .type("TASK_ASSIGNED")
             .enabled(true)
@@ -72,7 +68,7 @@ public class UserProfileUpdateTest extends UserProfileTestCase {
         .userId("tester-bob")
         .targetDate(getTargetDate())
         .id(userProfile.getId())
-        .details(ImmutableUserDetails.builder().build())
+        .email(userProfile.getDetails().getEmail())
         .build())
     .await().atMost(atMost);
     

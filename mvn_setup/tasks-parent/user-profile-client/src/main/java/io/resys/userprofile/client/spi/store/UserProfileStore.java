@@ -24,21 +24,19 @@ import io.resys.thena.api.entities.Tenant;
 
 import io.smallrye.mutiny.Uni;
 
-public interface DocumentStore {
-  DocumentRepositoryQuery query();
-  DocumentConfig getConfig();
+public interface UserProfileStore {
+  UserProfileTenantQuery query();
+  UserProfileStoreConfig getConfig();
   Uni<Tenant> getRepo();
-  DocumentStore withRepoId(String repoId);
+  UserProfileStore withTenantId(String repoId);
   
-  interface DocumentRepositoryQuery {
-    DocumentRepositoryQuery repoName(String repoName);
-    DocumentRepositoryQuery headName(String headName);
-    DocumentStore build();
-    Uni<DocumentStore> delete();
-    Uni<DocumentStore> create();
-    Uni<DocumentStore> createIfNot();
+  interface UserProfileTenantQuery {
+    UserProfileTenantQuery repoName(String repoName);
+    UserProfileTenantQuery headName(String headName);
+    UserProfileStore build();
+    Uni<UserProfileStore> delete();
+    Uni<UserProfileStore> create();
+    Uni<UserProfileStore> createIfNot();
     Uni<Void> deleteAll();
-  } 
-  
-
+  }
 }

@@ -4,9 +4,13 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
+
 import io.resys.userprofile.client.api.model.Document.DocumentType;
+import io.resys.userprofile.client.api.model.ImmutableCreateUserProfile;
 import io.resys.userprofile.client.api.model.ImmutableNotificationSetting;
 import io.resys.userprofile.client.api.model.ImmutableUiSettingForConfig;
 import io.resys.userprofile.client.api.model.ImmutableUiSettingForVisibility;
@@ -27,7 +31,7 @@ import io.resys.userprofile.client.api.model.UserProfileCommand.CreateUserProfil
 import io.resys.userprofile.client.api.model.UserProfileCommand.UpsertUiSettings;
 import io.resys.userprofile.client.api.model.UserProfileCommand.UpsertUserProfile;
 import io.resys.userprofile.client.api.model.UserProfileCommand.UserProfileCommandType;
-import io.resys.userprofile.client.spi.store.DocumentConfig;
+import io.resys.userprofile.client.spi.store.UserProfileStoreConfig;
 
 
 public class UserProfileCommandVisitor {
@@ -35,14 +39,14 @@ public class UserProfileCommandVisitor {
   private final List<UserProfileCommand> visitedCommands = new ArrayList<>();
   private ImmutableUserProfile current;
   
-  public UserProfileCommandVisitor(DocumentConfig ctx) {
+  public UserProfileCommandVisitor(UserProfileStoreConfig ctx) {
     this.start = null;
     this.current = null;
   }
   
-  public UserProfileCommandVisitor(UserProfile start, DocumentConfig ctx) {
+  public UserProfileCommandVisitor(UserProfile start, UserProfileStoreConfig ctx) {
     this.start = start;
-    this.current = ImmutableUserProfile.builder().from(start).build();
+    this.current = ImmutableUserProfile.builder().from(start).build(); 
   }
   
   public UserProfile visitTransaction(List<? extends UserProfileCommand> commands) throws NoChangesException {
@@ -130,13 +134,47 @@ public class UserProfileCommandVisitor {
     return this.current;
   }
   
+  private ImmutableUserDetails createDetails(CreateUserProfile command) {
+    final var firstName = Optional.ofNullable(command.getFirstName()).orElse(createFirstName(command));
+    final var lastName = Optional.ofNullable(command.getLastName()).orElse(createLastName(command));
+    
+    final var details = ImmutableUserDetails.builder()
+        .username(Optional.ofNullable(command.getUsername()).orElse(createUserName(command)))
+        .firstName(firstName)
+        .lastName(lastName)
+        .email(command.getEmail())
+        .build();
+    
+    return details;
+  }
+  
+  private String createUserName(CreateUserProfile command) {
+    final var email = command.getEmail();
+    final var splitAt = email.indexOf("@");
+    if(splitAt <= 0) {
+      return email;
+    }
+    return email.substring(splitAt);
+  }
+  private String createFirstName(CreateUserProfile command) {
+    final var email = command.getEmail();
+    final var frags = email.split("\\.");
+    return StringUtils.capitalize(frags[0]);
+  }
+  private String createLastName(CreateUserProfile command) {
+    final var userName = createUserName(command);
+    final var frags = userName.split("\\.");
+    if(frags.length == 1) {
+      return StringUtils.capitalize(frags[0]);
+    }
+    return StringUtils.capitalize(frags[1]);
+  }
   private UserProfile visitCreateUserProfile(CreateUserProfile command) {
     final var id = command.getId();
     final var targetDate = requireTargetDate(command);
-    
     this.current = ImmutableUserProfile.builder()
       .id(id)
-      .details(ImmutableUserDetails.builder().from(command.getDetails()).build())
+      .details(createDetails(command))
       .notificationSettings(command.getNotificationSettings().stream()
           .map(e -> ImmutableNotificationSetting.builder()
               .from(e)
@@ -162,9 +200,15 @@ public class UserProfileCommandVisitor {
     final var targetDate = requireTargetDate(command);
     if(this.current == null) {
       final var id = command.getId();
+      final var details = createDetails(ImmutableCreateUserProfile.builder()
+          .username(command.getUsername())
+          .firstName(command.getFirstName())
+          .lastName(command.getLastName())
+          .email(command.getEmail())
+      .build());
       this.current = ImmutableUserProfile.builder()
           .id(id)
-          .details(ImmutableUserDetails.builder().from(command.getDetails()).build())
+          .details(details)
           .notificationSettings(command.getNotificationSettings().stream()
               .map(e -> ImmutableNotificationSetting.builder()
                   .from(e)

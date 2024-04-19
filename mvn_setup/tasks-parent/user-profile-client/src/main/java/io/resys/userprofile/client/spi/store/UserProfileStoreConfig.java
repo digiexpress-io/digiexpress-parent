@@ -38,7 +38,7 @@ import io.smallrye.mutiny.Uni;
 
 
 @Value.Immutable
-public interface DocumentConfig {
+public interface UserProfileStoreConfig {
   ThenaClient getClient();
   String getRepoId();
   String getBranchName();
@@ -57,21 +57,21 @@ public interface DocumentConfig {
   interface DocVisitor {}
   
   interface DocObjectsVisitor<T> extends DocVisitor { 
-    DocObjectsQuery start(DocumentConfig config, DocObjectsQuery builder);
-    @Nullable DocQueryActions.DocObjects visitEnvelope(DocumentConfig config, QueryEnvelope<DocQueryActions.DocObjects> envelope);
-    T end(DocumentConfig config, @Nullable DocQueryActions.DocObjects ref);
+    DocObjectsQuery start(UserProfileStoreConfig config, DocObjectsQuery builder);
+    @Nullable DocQueryActions.DocObjects visitEnvelope(UserProfileStoreConfig config, QueryEnvelope<DocQueryActions.DocObjects> envelope);
+    T end(UserProfileStoreConfig config, @Nullable DocQueryActions.DocObjects ref);
   }
   
   interface DocObjectVisitor<T> extends DocVisitor { 
-    DocObjectsQuery start(DocumentConfig config, DocObjectsQuery builder);
-    @Nullable DocQueryActions.DocObject visitEnvelope(DocumentConfig config, QueryEnvelope<DocQueryActions.DocObject> envelope);
-    T end(DocumentConfig config, @Nullable DocQueryActions.DocObject ref);
+    DocObjectsQuery start(UserProfileStoreConfig config, DocObjectsQuery builder);
+    @Nullable DocQueryActions.DocObject visitEnvelope(UserProfileStoreConfig config, QueryEnvelope<DocQueryActions.DocObject> envelope);
+    T end(UserProfileStoreConfig config, @Nullable DocQueryActions.DocObject ref);
   }
   
   interface DocCreateVisitor<T> extends DocVisitor { 
-    CreateManyDocs start(DocumentConfig config, CreateManyDocs builder);
-    List<DocBranch> visitEnvelope(DocumentConfig config, ManyDocsEnvelope envelope);
-    List<T> end(DocumentConfig config, List<DocBranch> commit);
+    CreateManyDocs start(UserProfileStoreConfig config, CreateManyDocs builder);
+    List<DocBranch> visitEnvelope(UserProfileStoreConfig config, ManyDocsEnvelope envelope);
+    List<T> end(UserProfileStoreConfig config, List<DocBranch> commit);
   }
   
   

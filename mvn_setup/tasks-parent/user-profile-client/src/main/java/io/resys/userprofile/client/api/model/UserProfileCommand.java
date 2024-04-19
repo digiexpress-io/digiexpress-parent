@@ -36,7 +36,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.resys.userprofile.client.api.model.UserProfile.NotificationSetting;
 import io.resys.userprofile.client.api.model.UserProfile.UiSettings;
-import io.resys.userprofile.client.api.model.UserProfile.UserDetails;
 
 
 
@@ -77,7 +76,16 @@ public interface UserProfileCommand extends Serializable {
 
   @Value.Immutable @JsonSerialize(as = ImmutableCreateUserProfile.class) @JsonDeserialize(as = ImmutableCreateUserProfile.class)
   interface CreateUserProfile extends UserProfileCommand {
-    UserDetails getDetails();
+
+    @Nullable String getUsername();
+    @Nullable String getFirstName();
+    @Nullable String getLastName();
+    @Nullable String getColorCode();
+    @Nullable String getLetterCode();
+    @Nullable String getDisplayName();
+    
+    String getEmail();
+    
     List<NotificationSetting> getNotificationSettings();
     
     @Value.Default
@@ -104,9 +112,11 @@ public interface UserProfileCommand extends Serializable {
   
   @Value.Immutable @JsonSerialize(as = ImmutableUpsertUserProfile.class) @JsonDeserialize(as = ImmutableUpsertUserProfile.class)
   interface UpsertUserProfile extends UserProfileUpdateCommand {
-    UserDetails getDetails();
+    @Nullable String getUsername();
+    @Nullable String getFirstName();
+    @Nullable String getLastName();
+    String getEmail();
     List<NotificationSetting> getNotificationSettings();
-    
     @Override default UserProfileCommandType getCommandType() { return UserProfileCommandType.UpsertUserProfile; }
   }
   

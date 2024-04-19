@@ -36,8 +36,8 @@ import io.resys.userprofile.client.api.model.Document;
 import io.resys.userprofile.client.api.model.ImmutableUserProfile;
 import io.resys.userprofile.client.api.model.UserProfile;
 import io.resys.userprofile.client.api.model.UserProfileCommand.CreateUserProfile;
-import io.resys.userprofile.client.spi.store.DocumentConfig;
-import io.resys.userprofile.client.spi.store.DocumentConfig.DocCreateVisitor;
+import io.resys.userprofile.client.spi.store.UserProfileStoreConfig;
+import io.resys.userprofile.client.spi.store.UserProfileStoreConfig.DocCreateVisitor;
 import io.resys.userprofile.client.spi.store.DocumentStoreException;
 import io.resys.userprofile.client.spi.visitors.UserProfileCommandVisitor.NoChangesException;
 import io.vertx.core.json.JsonObject;
@@ -49,7 +49,7 @@ public class CreateUserProfileVisitor implements DocCreateVisitor<UserProfile> {
   private final List<UserProfile> profiles = new ArrayList<UserProfile>();
   
   @Override
-  public CreateManyDocs start(DocumentConfig config, CreateManyDocs builder) {
+  public CreateManyDocs start(UserProfileStoreConfig config, CreateManyDocs builder) {
     builder
       .docType(Document.DocumentType.USER_PROFILE.name())
       .author(config.getAuthor().get())
@@ -73,7 +73,7 @@ public class CreateUserProfileVisitor implements DocCreateVisitor<UserProfile> {
   }
 
   @Override
-  public List<DocBranch> visitEnvelope(DocumentConfig config, ManyDocsEnvelope envelope) {
+  public List<DocBranch> visitEnvelope(UserProfileStoreConfig config, ManyDocsEnvelope envelope) {
     if(envelope.getStatus() == CommitResultStatus.OK) {
       return envelope.getBranch();
     }
@@ -81,7 +81,7 @@ public class CreateUserProfileVisitor implements DocCreateVisitor<UserProfile> {
   }
 
   @Override
-  public List<UserProfile> end(DocumentConfig config, List<DocBranch> branches) {
+  public List<UserProfile> end(UserProfileStoreConfig config, List<DocBranch> branches) {
     final Map<String, UserProfile> configsById = new HashMap<>(
         this.profiles.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)));
     

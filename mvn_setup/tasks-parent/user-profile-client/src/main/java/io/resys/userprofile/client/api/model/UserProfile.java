@@ -24,7 +24,7 @@ public interface UserProfile extends Document {
     @Nullable String getUsername();
     @Nullable String getFirstName();
     @Nullable String getLastName();
-    @Nullable String getEmail();
+    String getEmail();
   }
  
  @Value.Immutable @JsonSerialize(as = ImmutableNotificationSetting.class) @JsonDeserialize(as = ImmutableNotificationSetting.class)

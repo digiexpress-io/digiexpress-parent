@@ -44,9 +44,9 @@ import io.resys.thena.spi.ThenaClientPgSql;
 import io.resys.thena.support.DocDbPrinter;
 import io.resys.userprofile.client.api.UserProfileClient;
 import io.resys.userprofile.client.api.model.Document.DocumentType;
-import io.resys.userprofile.client.spi.DocumentStoreImpl;
+import io.resys.userprofile.client.spi.UserProfileStoreImpl;
 import io.resys.userprofile.client.spi.UserProfileClientImpl;
-import io.resys.userprofile.client.spi.store.DocumentConfig.DocumentGidProvider;
+import io.resys.userprofile.client.spi.store.UserProfileStoreConfig.DocumentGidProvider;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.json.jackson.DatabindCodec;
 import io.vertx.core.json.jackson.VertxModule;
@@ -59,7 +59,7 @@ public class UserProfileTestCase {
   @Inject io.vertx.mutiny.pgclient.PgPool pgPool;
   public final Duration atMost = Duration.ofMinutes(5);
   
-  private DocumentStoreImpl store;
+  private UserProfileStoreImpl store;
   private UserProfileClientImpl client;
   private static final String DB = "junit-crm-"; 
   private static final AtomicInteger DB_ID = new AtomicInteger();
@@ -70,7 +70,7 @@ public class UserProfileTestCase {
   public void setUp() {
     waitUntilPostgresqlAcceptsConnections(pgPool);
     final var db = DB + DB_ID.getAndIncrement();
-    store = DocumentStoreImpl.builder()
+    store = UserProfileStoreImpl.builder()
         .repoName(db).pgPool(pgPool).pgDb(db)
         .gidProvider(new DocumentGidProvider() {
           @Override
@@ -125,7 +125,7 @@ public class UserProfileTestCase {
     store = null;
   }
 
-  public DocumentStoreImpl getStore() {
+  public UserProfileStoreImpl getStore() {
     return store;
   }
 

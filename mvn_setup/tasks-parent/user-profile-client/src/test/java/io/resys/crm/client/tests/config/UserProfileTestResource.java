@@ -21,40 +21,7 @@ import jakarta.ws.rs.Path;
 @ApplicationScoped
 public class UserProfileTestResource implements UserProfileRestApi {
 
-  private final ImmutableUserProfile mockUserProfile = ImmutableUserProfile.builder()
-      .id("id-1234")
-      .version("v1.0")
-      .created(UserProfileTestCase.getTargetDate())
-      .updated(UserProfileTestCase.getTargetDate())
-      .details(ImmutableUserDetails.builder()
-          .firstName("Ron")
-          .lastName("Howard")
-          .email("ron_howard@gmail.com")
-          .username("ronhoward")
-          .build())
-
-      .notificationSettings(Arrays.asList(ImmutableNotificationSetting.builder()
-          .type("TASK_ASSIGNED")
-          .enabled(true)
-          .build()))
-      
-      .addTransactions(
-          ImmutableUserProfileTransaction.builder()
-          .id("transation-1")
-          .addCommands(ImmutableCreateUserProfile
-              .builder()
-              .id("id-1234")
-              .userId("userDonald")
-              .details(ImmutableUserDetails.builder()
-                  .firstName("Donald")
-                  .lastName("Trum")
-                  .email("donald@gmail.com")
-                  .username("donaldtrump")
-                  .build())
-              .build())
-          .build())
-      .documentType(DocumentType.USER_PROFILE)
-      .build();
+  private final ImmutableUserProfile mockUserProfile = getProfile();
 
   @Override
   public Uni<List<UserProfile>> findAllUserProfiles() {
@@ -81,5 +48,38 @@ public class UserProfileTestResource implements UserProfileRestApi {
     return Uni.createFrom().item(mockUserProfile);
   }
   
- 
+  private static ImmutableUserProfile getProfile() {
+    return ImmutableUserProfile.builder()
+    .id("id-1234")
+    .version("v1.0")
+    .created(UserProfileTestCase.getTargetDate())
+    .updated(UserProfileTestCase.getTargetDate())
+    .details(ImmutableUserDetails.builder()
+        .firstName("Ron")
+        .lastName("Howard")
+        .email("ron_howard@gmail.com")
+        .username("ronhoward")
+        .build())
+
+    .notificationSettings(Arrays.asList(ImmutableNotificationSetting.builder()
+        .type("TASK_ASSIGNED")
+        .enabled(true)
+        .build()))
+    
+    .addTransactions(
+        ImmutableUserProfileTransaction.builder()
+        .id("transation-1")
+        .addCommands(ImmutableCreateUserProfile
+            .builder()
+            .id("id-1234")
+            .userId("userDonald")
+            .firstName("Donald")
+            .lastName("Trum")
+            .email("donald@gmail.com")
+            .username("donaldtrump")
+            .build())
+        .build())
+    .documentType(DocumentType.USER_PROFILE)
+    .build();
+  }
 }

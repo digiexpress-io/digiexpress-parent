@@ -15,8 +15,8 @@ import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.userprofile.client.api.model.Document;
 import io.resys.userprofile.client.api.model.ImmutableUserProfile;
 import io.resys.userprofile.client.api.model.UserProfile;
-import io.resys.userprofile.client.spi.store.DocumentConfig;
-import io.resys.userprofile.client.spi.store.DocumentConfig.DocObjectsVisitor;
+import io.resys.userprofile.client.spi.store.UserProfileStoreConfig;
+import io.resys.userprofile.client.spi.store.UserProfileStoreConfig.DocObjectsVisitor;
 import io.resys.userprofile.client.spi.store.DocumentStoreException;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +29,7 @@ public class DeleteAllUserProfilesVisitor implements DocObjectsVisitor<Uni<List<
   private ModifyManyDocs removeCommand;
   
   @Override
-  public DocObjectsQuery start(DocumentConfig config, DocObjectsQuery query) {
+  public DocObjectsQuery start(UserProfileStoreConfig config, DocObjectsQuery query) {
     this.removeCommand = config.getClient().doc(config.getRepoId()).commit().modifyManyDocs()
         .author(config.getAuthor().get())
         .message("Delete Tenants");
@@ -39,7 +39,7 @@ public class DeleteAllUserProfilesVisitor implements DocObjectsVisitor<Uni<List<
   }
 
   @Override
-  public DocQueryActions.DocObjects visitEnvelope(DocumentConfig config, QueryEnvelope<DocQueryActions.DocObjects> envelope) {
+  public DocQueryActions.DocObjects visitEnvelope(UserProfileStoreConfig config, QueryEnvelope<DocQueryActions.DocObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
       throw DocumentStoreException.builder("FIND_ALL_USER_PROFILES_FAIL_FOR_DELETE").add(config, envelope).build();
     }
@@ -47,7 +47,7 @@ public class DeleteAllUserProfilesVisitor implements DocObjectsVisitor<Uni<List<
   }
   
   @Override
-  public Uni<List<UserProfile>> end(DocumentConfig config, DocQueryActions.DocObjects ref) {
+  public Uni<List<UserProfile>> end(UserProfileStoreConfig config, DocQueryActions.DocObjects ref) {
     if(ref == null) {
       return Uni.createFrom().item(Collections.emptyList());
     }

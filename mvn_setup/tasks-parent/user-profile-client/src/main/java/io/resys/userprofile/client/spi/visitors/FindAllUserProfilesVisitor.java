@@ -14,20 +14,20 @@ import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.userprofile.client.api.model.Document;
 import io.resys.userprofile.client.api.model.ImmutableUserProfile;
 import io.resys.userprofile.client.api.model.UserProfile;
-import io.resys.userprofile.client.spi.store.DocumentConfig;
-import io.resys.userprofile.client.spi.store.DocumentConfig.DocObjectsVisitor;
+import io.resys.userprofile.client.spi.store.UserProfileStoreConfig;
+import io.resys.userprofile.client.spi.store.UserProfileStoreConfig.DocObjectsVisitor;
 import io.resys.userprofile.client.spi.store.DocumentStoreException;
 import io.resys.userprofile.client.spi.store.MainBranch;
 
 public class FindAllUserProfilesVisitor implements DocObjectsVisitor<List<UserProfile>> {
   @Override
-  public DocObjectsQuery start(DocumentConfig config, DocObjectsQuery builder) {
+  public DocObjectsQuery start(UserProfileStoreConfig config, DocObjectsQuery builder) {
     return builder
         .docType(Document.DocumentType.USER_PROFILE.name())
         .branchName(MainBranch.HEAD_NAME);
   }
   @Override
-  public DocQueryActions.DocObjects visitEnvelope(DocumentConfig config, QueryEnvelope<DocQueryActions.DocObjects> envelope) {
+  public DocQueryActions.DocObjects visitEnvelope(UserProfileStoreConfig config, QueryEnvelope<DocQueryActions.DocObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
       throw DocumentStoreException.builder("FIND_ALL_USER_PROFILES_FAIL").add(config, envelope).build();
     }
@@ -35,7 +35,7 @@ public class FindAllUserProfilesVisitor implements DocObjectsVisitor<List<UserPr
   }
 
   @Override
-  public List<UserProfile> end(DocumentConfig config, DocQueryActions.DocObjects ref) {
+  public List<UserProfile> end(UserProfileStoreConfig config, DocQueryActions.DocObjects ref) {
     if(ref == null) {
       return Collections.emptyList();
     }

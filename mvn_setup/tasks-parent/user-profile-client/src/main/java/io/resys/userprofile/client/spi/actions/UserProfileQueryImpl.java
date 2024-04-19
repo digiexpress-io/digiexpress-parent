@@ -26,7 +26,7 @@ import java.util.List;
 
 import io.resys.userprofile.client.api.UserProfileClient.UserProfileQuery;
 import io.resys.userprofile.client.api.model.UserProfile;
-import io.resys.userprofile.client.spi.store.DocumentStore;
+import io.resys.userprofile.client.spi.store.UserProfileStore;
 import io.resys.userprofile.client.spi.visitors.DeleteAllUserProfilesVisitor;
 import io.resys.userprofile.client.spi.visitors.FindAllUserProfilesVisitor;
 import io.resys.userprofile.client.spi.visitors.GetActiveUserProfileVisitor;
@@ -37,7 +37,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class UserProfileQueryImpl implements UserProfileQuery {
-  private final DocumentStore ctx;
+  private final UserProfileStore ctx;
   
   @Override
   public Uni<UserProfile> get(String profileId) {
