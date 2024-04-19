@@ -74,10 +74,10 @@ public class RoleSetAllTest extends DbTestTemplate {
         .id(role1.getId())
         .comment("added all perms")
         .changeType(ChangeType.SET_ALL)
-        .addPermissions(
+        .permissions(Arrays.asList( 
             createPermission(client, "perm1").getName(),
             createPermission(client, "perm2").getName(),
-            createPermission(client, "perm3").getName()
+            createPermission(client, "perm3").getName())
             )
         .build();
     

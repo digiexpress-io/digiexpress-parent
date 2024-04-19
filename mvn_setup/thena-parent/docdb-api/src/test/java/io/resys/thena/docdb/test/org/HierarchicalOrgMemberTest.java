@@ -1,4 +1,4 @@
-package io.resys.thena.docdb.test;
+package io.resys.thena.docdb.test.org;
 
 import java.io.Serializable;
 import java.time.Duration;
@@ -13,8 +13,8 @@ import org.junit.jupiter.api.Test;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
 import io.resys.thena.api.actions.OrgCommitActions.ModType;
-import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
 import io.resys.thena.api.actions.TenantActions.CommitStatus;
+import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.api.entities.org.OrgActorStatus.OrgActorStatusType;
@@ -142,9 +142,7 @@ super-user
     
     // remove user 2 from child-1.2.2 group
     getClient().org(repo).commit().modifyOneMember()
-        
         .memberId(userGroupsAndRoles2.getUserId())
-
         .modifyParties(ModType.DISABLED, child1_2_2.getId())
         .author("au")
         .message("mod for user")

@@ -176,7 +176,7 @@ public class ModifyOneRightImpl implements ModifyOneRight {
       ImmutableList.<OrgParty>builder()
         .addAll(tuple.getItem1())
         .addAll(tuple.getItem2())
-        .build()
+        .build().stream().distinct().toList()
     );
 		
 		
@@ -193,7 +193,7 @@ public class ModifyOneRightImpl implements ModifyOneRight {
       ImmutableList.<OrgMember>builder()
         .addAll(tuple.getItem1())
         .addAll(tuple.getItem2())
-        .build()
+        .build().stream().distinct().toList()
     );
 		
 		// all right for parties

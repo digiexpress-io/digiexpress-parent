@@ -1,4 +1,4 @@
-package io.resys.thena.docdb.test;
+package io.resys.thena.docdb.test.org;
 
 import java.time.Duration;
 import java.util.ArrayList;

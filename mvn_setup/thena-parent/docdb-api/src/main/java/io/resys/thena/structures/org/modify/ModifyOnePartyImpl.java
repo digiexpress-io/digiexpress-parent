@@ -199,7 +199,6 @@ public class ModifyOnePartyImpl implements ModifyOneParty {
     final Uni<List<OrgMember>> memberPromiseFromAddingRemovingDisabling = this.allMembers.isEmpty() ? 
         Uni.createFrom().item(Collections.emptyList()) : 
         tx.query().members().findAll(allMembers).collect().asList();
-    
     final Uni<List<OrgMember>> memebrsPromiseExisting = tx.query().members().findAllByPartyId(partyId).collect().asList();
 		final Uni<List<OrgMember>> memberPromise =  Uni.combine().all().unis(
 		    memberPromiseFromAddingRemovingDisabling,
@@ -208,7 +207,7 @@ public class ModifyOnePartyImpl implements ModifyOneParty {
       ImmutableList.<OrgMember>builder()
         .addAll(tuple.getItem1())
         .addAll(tuple.getItem2())
-        .build()
+        .build().stream().distinct().toList()
     );
 
 		// memberships
@@ -230,15 +229,15 @@ public class ModifyOnePartyImpl implements ModifyOneParty {
       parentPartyPromise = tx.query().parties().getById(parentPartyId.get()).onItem().transform(party -> Optional.ofNullable(party));  
     }
     
-		// rights
+		// Connections to Rights
     final Uni<List<OrgPartyRight>> partyRightsPromise = tx.query().partyRights().findAllByPartyId(partyId).collect().asList();
     final Uni<List<OrgMemberRight>> memberRightsPromise = tx.query().memberRights().findAllByPartyId(partyId).collect().asList();
     
+    // Rights
     final Uni<List<OrgRight>> rightsPromiseFromAddingRemovingDisabling = this.allRights.isEmpty() ? 
             Uni.createFrom().item(Collections.emptyList()) :
             tx.query().rights().findAll(allRights).collect().asList();
     final Uni<List<OrgRight>> rightsPromiseExisting = tx.query().rights().findAllByPartyId(partyId).collect().asList();
-    
     final Uni<List<OrgRight>> rightsPromise = Uni.combine().all().unis(
         rightsPromiseFromAddingRemovingDisabling,
         rightsPromiseExisting
@@ -246,7 +245,7 @@ public class ModifyOnePartyImpl implements ModifyOneParty {
       ImmutableList.<OrgRight>builder()
         .addAll(tuple.getItem1())
         .addAll(tuple.getItem2())
-        .build()
+        .build().stream().distinct().toList()
     );
       
 		// join data

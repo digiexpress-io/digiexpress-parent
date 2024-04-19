@@ -185,7 +185,6 @@ public class ModifyOneMemberImpl implements ModifyOneMember {
 		final Uni<List<OrgParty>> partiesPromiseFromAddingRemovingDisabling = this.allParties.isEmpty() ? 
 			Uni.createFrom().item(Collections.emptyList()) : 
 			tx.query().parties().findAll(allParties).collect().asList();
-		
     final Uni<List<OrgParty>> partiesPromiseExisting = tx.query().parties().findAllByMemberId(memberId).collect().asList();
     final Uni<List<OrgParty>> partyPromise =  Uni.combine().all().unis(
         partiesPromiseFromAddingRemovingDisabling,
@@ -194,19 +193,14 @@ public class ModifyOneMemberImpl implements ModifyOneMember {
       ImmutableList.<OrgParty>builder()
         .addAll(tuple.getItem1())
         .addAll(tuple.getItem2())
-        .build());
+        .build().stream().distinct().toList()
+    );
 	
-
-		// memberships
-    final Uni<List<OrgMembership>> membershipsPromise = tx.query().memberships().findAllByMemberId(memberId).collect().asList();
-		
 		// rights
 		final Uni<List<OrgRight>> rightsPromiseFromAddingRemovingDisabling = this.allRights.isEmpty() ? 
 			Uni.createFrom().item(Collections.emptyList()) :
 			tx.query().rights().findAll(allRights).collect().asList();
-		
     final Uni<List<OrgRight>> rightsPromiseExisting = tx.query().rights().findAllByMemberId(memberId).collect().asList();
-    
     final Uni<List<OrgRight>> rightsPromise = Uni.combine().all().unis(
         rightsPromiseFromAddingRemovingDisabling,
         rightsPromiseExisting
@@ -214,9 +208,11 @@ public class ModifyOneMemberImpl implements ModifyOneMember {
       ImmutableList.<OrgRight>builder()
         .addAll(tuple.getItem1())
         .addAll(tuple.getItem2())
-        .build()
+        .build().stream().distinct().toList()
     );
 		
+    // memberships
+    final Uni<List<OrgMembership>> membershipsPromise = tx.query().memberships().findAllByMemberId(memberId).collect().asList();
 		
 		// statuses
 		final Uni<List<OrgActorStatus>> statusPromise = tx.query().actorStatus().findAllByMemberId(memberId).collect().asList();
