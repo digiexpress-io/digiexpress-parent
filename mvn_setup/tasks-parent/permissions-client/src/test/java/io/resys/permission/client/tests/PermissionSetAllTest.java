@@ -73,10 +73,10 @@ public class PermissionSetAllTest extends DbTestTemplate {
         .id(permission1.getId())
         .comment("added all roles")
         .changeType(ChangeType.SET_ALL)
-        .addRoles(
+        .roles(Arrays.asList(
             createRole(client, "role1").getName(),
             createRole(client, "role2").getName(),
-            createRole(client, "role3").getName()
+            createRole(client, "role3").getName())           
             )
         .build();
     
@@ -84,10 +84,10 @@ public class PermissionSetAllTest extends DbTestTemplate {
         .id(permission1.getId())
         .comment("added all principals")
         .changeType(ChangeType.SET_ALL)
-        .addPrincipals(
+        .principals(Arrays.asList(
             createPrincipal(client, "AmySmith").getName(),
             createPrincipal(client, "JohnDoe").getName(),
-            createPrincipal(client, "CommanderONeil").getName()
+            createPrincipal(client, "CommanderONeil").getName())
             )
         .build();
     
@@ -104,7 +104,10 @@ public class PermissionSetAllTest extends DbTestTemplate {
     Assertions.assertEquals("[AmySmith, JohnDoe, CommanderONeil]", updatedPermission1.getPrincipals().toString()); 
     Assertions.assertEquals("[role1, role2, role3]", updatedPermission1.getRoles().toString()); 
 
-    
+    final var queried = client.permissionQuery().get(updatedPermission1.getId()).await().atMost(Duration.ofMinutes(1));
+    Assertions.assertEquals("[AmySmith, JohnDoe, CommanderONeil]", queried.getPrincipals().toString());
+    Assertions.assertEquals("[role1, role2, role3]", queried.getRoles().toString());
+
   }
   
 }

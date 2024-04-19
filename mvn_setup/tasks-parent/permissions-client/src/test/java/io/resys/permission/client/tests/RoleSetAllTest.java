@@ -85,10 +85,10 @@ public class RoleSetAllTest extends DbTestTemplate {
         .id(role1.getId())
         .comment("added all principals")
         .changeType(ChangeType.SET_ALL)
-        .addPrincipals(
+        .principals(Arrays.asList(
             createPrincipal(client, "AmySmith").getName(),
             createPrincipal(client, "JohnDoe").getName(),
-            createPrincipal(client, "CommanderONeil").getName()
+            createPrincipal(client, "CommanderONeil").getName())
             )
         .build();
     

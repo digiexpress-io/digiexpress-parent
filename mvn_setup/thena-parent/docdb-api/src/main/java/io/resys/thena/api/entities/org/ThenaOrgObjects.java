@@ -66,7 +66,7 @@ public interface ThenaOrgObjects extends ThenaContainer {
     List<OrgRight> getDirectRights();  // roles that are enabled
     
     List<OrgMember> getDirectMembers();
-    List<OrgMember> getParenMembers();
+    List<OrgMember> getParentMembers();
     List<OrgMember> getChildMembers();
     
     List<OrgParty> getParentParties();
@@ -87,8 +87,8 @@ public interface ThenaOrgObjects extends ThenaContainer {
     List<OrgMember> getDirectMembers();
     List<OrgMember> getChildMembers();
     
-    List<OrgParty> getDirectGroup();
-    List<OrgParty> getChildGroup();
+    List<OrgParty> getDirectParty();
+    List<OrgParty> getChildParty();
   }
   
   

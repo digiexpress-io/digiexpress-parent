@@ -11,7 +11,6 @@ import java.util.Optional;
 import com.google.common.collect.ImmutableList;
 
 import io.resys.thena.api.entities.org.OrgActorStatus;
-import io.resys.thena.api.entities.org.OrgActorStatus.OrgActorStatusType;
 import io.resys.thena.api.entities.org.OrgMember;
 import io.resys.thena.api.entities.org.OrgMemberRight;
 import io.resys.thena.api.entities.org.OrgMembership;
@@ -164,6 +163,15 @@ public class AnyTreeContainerContextImpl implements OrgAnyTreeContainerContext {
     this.groupInheritedUsers = unmodifiableMap(inheritedMembersForParties);
   }
   
+
+  @Override
+  public List<OrgMemberRight> getMembersWithRights(String rightId) {
+    return worldState.getMemberRights()
+        .values().stream()
+        .filter(right -> right.getRightId().equals(rightId))
+        .filter(right -> right.getPartyId() == null)
+        .toList();
+  }
 
   private void putAllInheritedMembers(OrgParty party, List<OrgMembership> inheritedSoFar, Map<String, List<OrgMembership>> collector) {
     if(isStatusDisabled(getStatus(party))) {

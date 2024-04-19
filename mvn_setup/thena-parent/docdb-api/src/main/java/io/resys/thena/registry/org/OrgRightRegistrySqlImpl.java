@@ -154,7 +154,7 @@ public class OrgRightRegistrySqlImpl implements OrgRightRegistry {
   private static OrgRight orgRight(Row row) {
     return ImmutableOrgRight.builder()
         .id(row.getString("id"))
-        .createdWithCommitId("created_commit_id")
+        .createdWithCommitId(row.getString("created_commit_id"))
         .externalId(row.getString("external_id"))
         .rightName(row.getString("right_name"))
         .rightDescription(row.getString("right_description"))

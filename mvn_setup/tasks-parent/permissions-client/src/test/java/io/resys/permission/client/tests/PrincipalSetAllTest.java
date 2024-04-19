@@ -78,9 +78,9 @@ public class PrincipalSetAllTest extends DbTestTemplate {
        .id(createdPrincipal1.getId())
        .comment("adding all permissions")
        .changeType(ChangeType.SET_ALL)
-       .addPermissions(
+       .permissions(Arrays.asList(
            createPermission(client, "addedPerm1").getName(),
-           createPermission(client, "addedPerm2").getName()
+           createPermission(client, "addedPerm2").getName())
            )
        .build();
    
@@ -88,9 +88,9 @@ public class PrincipalSetAllTest extends DbTestTemplate {
        .id(createdPrincipal1.getId())
        .comment("adding all roles")
        .changeType(ChangeType.SET_ALL)
-       .addRoles(
+       .roles(Arrays.asList(
            createRole(client, "addedRole1").getName(),
-           createRole(client, "addedRole2").getName()
+           createRole(client, "addedRole2").getName())
            )
        .build();   
    
@@ -105,6 +105,10 @@ public class PrincipalSetAllTest extends DbTestTemplate {
    
    Assertions.assertEquals("[addedPerm1, addedPerm2]", updatedPrincipal1.getDirectPermissions().toString()); 
    Assertions.assertEquals("[addedRole1, addedRole2]", updatedPrincipal1.getDirectRoles().toString()); 
+   
+   Assertions.assertEquals("[addedPerm2, addedPerm1]", client.principalQuery().get(updatedPrincipal1.getId()).await().atMost(Duration.ofMinutes(1)).getPermissions().toString());
+   Assertions.assertEquals("[addedRole1, addedRole2]", client.principalQuery().get(updatedPrincipal1.getId()).await().atMost(Duration.ofMinutes(1)).getRoles().toString());
+
  }
   
 }

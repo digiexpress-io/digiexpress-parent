@@ -1,15 +1,12 @@
 package io.resys.thena.structures.org.anytree;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.barfuin.texttree.api.DefaultNode;
-import org.barfuin.texttree.api.TextTree;
-import org.barfuin.texttree.api.TreeOptions;
+import org.apache.commons.lang3.mutable.MutableObject;
 
 import io.resys.thena.api.entities.org.ImmutableOrgRightHierarchy;
 import io.resys.thena.api.entities.org.OrgActorStatus;
+import io.resys.thena.api.entities.org.OrgActorStatus.OrgActorStatusType;
 import io.resys.thena.api.entities.org.OrgMember;
 import io.resys.thena.api.entities.org.OrgMemberRight;
 import io.resys.thena.api.entities.org.OrgMembership;
@@ -29,26 +26,19 @@ public class RightHierarchyContainerVisitor extends OrgPartyContainerVisitor<Org
   
   private final String roleIdOrNameOrExternalId;
   private final ImmutableOrgRightHierarchy.Builder builder = ImmutableOrgRightHierarchy.builder();
-  private final Map<String, GroupVisitorForRole> visitorsByGroup = new HashMap<>();
+  private final StringBuilder log = new StringBuilder();
+  private final MutableObject<Boolean> foundParty = new MutableObject<>(false);
   
   private OrgAnyTreeContainerContext ctx;
-  private TopPartyVisitor currentVisitor;
   private OrgRight target;
-  private DefaultNode nodeRoot;
   
-  public RightHierarchyContainerVisitor(String roleIdOrNameOrExternalId) {
-    super(true);
+  public RightHierarchyContainerVisitor(String roleIdOrNameOrExternalId, boolean includeDisabled) {
+    super(includeDisabled, true);
     this.roleIdOrNameOrExternalId = roleIdOrNameOrExternalId;
   }
   public void start(OrgAnyTreeContainerContext ctx) {
     
-    final var target = ctx.getRights().stream()
-    .filter(role -> {
-      return roleIdOrNameOrExternalId.equals(role.getExternalId()) ||
-          roleIdOrNameOrExternalId.equals(role.getRightName()) ||
-          roleIdOrNameOrExternalId.equals(role.getId());
-    }).findAny();
-    
+    final var target = ctx.getRights().stream().filter(role -> role.isMatch(roleIdOrNameOrExternalId)).findAny();
     if(target.isEmpty()) {
       final var msg = new StringBuilder("Can't build role hierarchy!").append(System.lineSeparator()).append("Can't find the role!").append(System.lineSeparator())
           .append("  - tried to match by, id or name or external id: ").append(roleIdOrNameOrExternalId).append(System.lineSeparator())
@@ -66,146 +56,122 @@ public class RightHierarchyContainerVisitor extends OrgPartyContainerVisitor<Org
     }
     this.target = target.get();
     this.ctx = ctx;
-    this.nodeRoot = new DefaultNode(this.target.getRightName());
     super.start(ctx);
     
   }
   
   @Override
   public OrgRightHierarchy close() {
-    final var options = new TreeOptions();
-    final var tree = TextTree.newInstance(options).render(nodeRoot);
-
-    
-    return builder
+    final var result = builder
         .status(ctx.getStatus(target).map(status -> status.getValue()).orElse(OrgActorStatus.OrgActorStatusType.IN_FORCE))
-        .log(tree)
+        .log(log.toString())
         .roleId(target.getId())
         .commitId(target.getCommitId())
         .externalId(target.getExternalId())
         .roleName(target.getRightName())
         .roleDescription(target.getRightDescription())
-        .build();
+        .addAllDirectMembers(ctx.getMembersWithRights(target.getId()).stream()
+            .filter(member -> includeDisabled || ctx.getStatus(member).map(s -> s.getValue() == OrgActorStatusType.IN_FORCE).orElse(true))
+            .map(right -> ctx.getMember(right.getMemberId()))
+            .filter(member -> includeDisabled || ctx.getStatus(member).map(s -> s.getValue() == OrgActorStatusType.IN_FORCE).orElse(true))
+            .toList()
+        ).build();
+    
+    
+    return result
+        .withChildMembers(result.getChildMembers().stream().distinct().toList())
+        .withChildParty(result.getChildParty().stream().distinct().toList())
+        .withDirectMembers(result.getDirectMembers().stream().distinct().toList())
+        .withDirectParty(result.getDirectParty().stream().distinct().toList())
+        ;
   }
 
   @Override
   protected TopPartyVisitor visitTop(OrgParty group, OrgAnyTreeContainerContext worldState) {
-    final var currentVisitor = new GroupVisitorForRole(target, nodeRoot, ctx);
-    this.visitorsByGroup.put(group.getId(), currentVisitor);
-    this.currentVisitor = currentVisitor;
-    return this.currentVisitor;
+    return new CollectDirectPartiesAndMembersForRight(target, ctx, builder, this.log, this.foundParty);
   }
 
   @Override
   protected PartyVisitor visitChild(OrgParty group, OrgAnyTreeContainerContext worldState) {
-    return this.currentVisitor;
+    if(this.foundParty.getValue()) {
+      return new CollectAll(target, worldState, builder);
+    } else {
+      return new CollectDirectPartiesAndMembersForRight(target, ctx, builder, this.log, this.foundParty);
+    }
   }
   
   @RequiredArgsConstructor
-  private static class GroupVisitorForRole implements TopPartyVisitor {
+  private static class CollectAll implements TopPartyVisitor {
     private final OrgRight target;
-    private final DefaultNode nodeRoot;
     private final OrgAnyTreeContainerContext ctx;
+    private final ImmutableOrgRightHierarchy.Builder builder;
+
+    @Override 
+    public void start(OrgParty party, List<OrgParty> parents, List<OrgRight> parentRights, boolean isDisabled) {
+      builder.addChildParty(party);
+    }
     
-    private Boolean groupContainsRole;
-    private final Map<String, DefaultNode> nodesGroup = new HashMap<>();
-    private final Map<String, DefaultNode> nodesGroupMembers = new HashMap<>();
+    @Override
+    public void visitDirectMembership(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled) {
+      builder.addChildMembers(user);
+    }
     
     @Override
-    public void start(OrgParty group, List<OrgParty> parents, List<OrgRight> parentRights, boolean isDisabled) {
-      if(isDisabled) {
-        return;
+    public void visitDirectMemberPartyRight(OrgParty group, OrgMemberRight memberRight, OrgRight right, boolean isDisabled) {
+      final var member = ctx.getMember(memberRight.getMemberId());
+      if(right.getId().equals(target.getId())) {
+        builder.addDirectMembers(member);
       }
-      
-      if(groupContainsRole == null) {
-        return;
-      }
-      
-
-      final var groupNode = new DefaultNode(group.getPartyName());
-      nodesGroup.put(group.getId(), groupNode);
-      nodesGroup.get(group.getParentId()).addChild(groupNode);
     }
+    @Override public void visitDirectPartyRight(List<OrgParty> parents, OrgParty group, OrgPartyRight partyRight, OrgRight right, boolean isDisabled) {}
+    @Override public void end(OrgParty group, List<OrgParty> parents, boolean isDisabled) {}
+    @Override public void visitLog(String log) {}
+    @Override public void visitMembershipWithInheritance(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled) {}
+    @Override public void visitChildParty(OrgParty group, boolean isDisabled) {}
+  }
+  
+  
+  @RequiredArgsConstructor
+  private static class CollectDirectPartiesAndMembersForRight implements TopPartyVisitor {
+    private final OrgRight target;
+    private final OrgAnyTreeContainerContext ctx;
+    private final ImmutableOrgRightHierarchy.Builder builder;
+    private final StringBuilder log;
+    private final MutableObject<Boolean> foundParty;
 
     @Override
-    public void visitMembership(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled) {
-      if(isDisabled) {
-        return;
+    public void visitDirectMembership(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled) {
+      if(foundParty.getValue()) {
+        builder.addDirectMembers(user);
       }
-      
-      if(groupContainsRole == null) {
-        return;
-      }
-      
-      final var disabledSpecificallyForUser = ctx.getMemberRights(user.getId()).stream()
-          .filter(role -> role.getRightId().equals(target.getId()))
-          .filter(role -> ctx.isStatusDisabled(ctx.getStatus(role)))
-          .findAny().isPresent();
-      
-      if(disabledSpecificallyForUser) {
-        return;
-      }
-      
-      
-      nodesGroup.get(group.getId()).addChild(new DefaultNode(user.getUserName()));
     }
-
     @Override
-    public void visitMembershipWithInheritance(OrgParty group, OrgMembership membership, OrgMember user,
-        boolean isDisabled) {
-      
-    }
-
-    @Override
-    public void visitPartyRight(List<OrgParty> _parents, OrgParty group, OrgPartyRight groupRole, OrgRight role, boolean isDisabled) {
-      if(isDisabled) {
-        return;
-      }
-      
-      if(groupContainsRole != null) {
-        return;
-      }
-      
-      if(this.target.getId().equals(groupRole.getRightId())) {
-        groupContainsRole = true;
-        
-        final var groupNode = new DefaultNode(group.getPartyName() + " <= direct role");
-        nodesGroup.put(group.getId(), groupNode);
-        nodeRoot.addChild(groupNode);
+    public void visitDirectPartyRight(List<OrgParty> parents, OrgParty group, OrgPartyRight partyRight, OrgRight right, boolean isDisabled) {
+      if(right.getId().equals(target.getId())) {
+        foundParty.setValue(true);
       }
     }
     
     @Override
-    public void visitMemberPartyRight(OrgParty group, OrgMemberRight groupRole, OrgRight role, boolean isDisabled) {
-      if(isDisabled) {
-        return;
-      }
-      if(groupContainsRole != null) {
-        return;
-      }
-      if(this.target.getId().equals(groupRole.getRightId())) {
-        groupContainsRole = true;
-        
-        final var groupNode = new DefaultNode(group.getPartyName() + " <= inherited role");
-        nodesGroup.put(group.getId(), groupNode);
-        nodeRoot.addChild(groupNode);
+    public void visitDirectMemberPartyRight(OrgParty group, OrgMemberRight memberRight, OrgRight right, boolean isDisabled) {
+      if(right.getId().equals(target.getId())) {
+        builder.addDirectMembers(ctx.getMember(memberRight.getMemberId()));
       }
     }
-
-    @Override
-    public void visitChildParty(OrgParty group, boolean isDisabled) {
-      
-    }
-
     @Override
     public void end(OrgParty group, List<OrgParty> parents, boolean isDisabled) {
-      groupContainsRole = null;
+      if(foundParty.getValue()) {
+        builder.addDirectParty(group);
+      }
+      foundParty.setValue(false);
     }
-
     @Override
     public void visitLog(String log) {
-      
+      this.log.append(log).append(System.lineSeparator()).append(System.lineSeparator());
     }
+    @Override public void start(OrgParty party, List<OrgParty> parents, List<OrgRight> parentRights, boolean isDisabled) {}
+    @Override public void visitMembershipWithInheritance(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled) {}
+    @Override public void visitChildParty(OrgParty group, boolean isDisabled) {}
   }
   
   public static class RoleNotFoundForHierarchyException extends RuntimeException {

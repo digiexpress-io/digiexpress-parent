@@ -67,6 +67,12 @@ public class PermissionQueryImpl implements PermissionQuery {
   
   
   private Permission mapTo(OrgRightHierarchy permission) {
+    final var directRoles = permission.getDirectParty().stream().map((role -> role.getPartyName())).toList();
+    final var directPrincipals = permission.getDirectMembers().stream().map((member -> member.getUserName())).toList();
+    
+    final var inheritedRoles = permission.getChildParty().stream().map((role -> role.getPartyName())).toList();
+    final var inheritedPrincipals = permission.getChildMembers().stream().map((member -> member.getUserName())).toList();
+    
     
     return ImmutablePermission.builder()
       .id(permission.getRoleId())
@@ -74,8 +80,13 @@ public class PermissionQueryImpl implements PermissionQuery {
       .name(permission.getRoleName())
       .description(permission.getRoleDescription())
       .status(permission.getStatus())
-      .roles(permission.getDirectGroup().stream().map((role -> role.getPartyName().toString())).toList())
-      .principals(permission.getDirectMembers().stream().map((member -> member.getUserName().toString())).toList())
+      .addAllRoles(directRoles)
+      .addAllPrincipals(directPrincipals)
+      
+      .addAllRoles(inheritedRoles)
+      .addAllPrincipals(inheritedPrincipals)
+      
+      
       .build();
   }
 

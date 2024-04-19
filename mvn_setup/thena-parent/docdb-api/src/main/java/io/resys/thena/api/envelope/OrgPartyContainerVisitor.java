@@ -17,7 +17,7 @@ import io.resys.thena.api.envelope.OrgTreeContainer.OrgAnyTreeContainerVisitor;
 
 public abstract class OrgPartyContainerVisitor<T> implements OrgAnyTreeContainerVisitor<T> {
   
-  private final boolean includeDisabled;
+  protected final boolean includeDisabled;
   private final boolean log;
   
   public OrgPartyContainerVisitor(boolean includeDisabled) {
@@ -36,12 +36,12 @@ public abstract class OrgPartyContainerVisitor<T> implements OrgAnyTreeContainer
   public interface PartyVisitor {
     void start(OrgParty group, List<OrgParty> parents, List<OrgRight> parentRights, boolean isDisabled);
     
-    void visitMembership(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled);
+    void visitDirectMembership(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled);
     void visitMembershipWithInheritance(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled);
     
     // direct and inherited right
-    void visitMemberPartyRight(OrgParty party, OrgMemberRight memberRight, OrgRight right, boolean isDisabled);
-    void visitPartyRight(List<OrgParty> parents, OrgParty party, OrgPartyRight partyRight, OrgRight right, boolean isDisabled);
+    void visitDirectMemberPartyRight(OrgParty party, OrgMemberRight memberRight, OrgRight right, boolean isDisabled);
+    void visitDirectPartyRight(List<OrgParty> parents, OrgParty party, OrgPartyRight partyRight, OrgRight right, boolean isDisabled);
     void visitChildParty(OrgParty party, boolean isDisabled);
     void end(OrgParty group, List<OrgParty> parents, boolean isDisabled);
   }
@@ -86,7 +86,7 @@ public abstract class OrgPartyContainerVisitor<T> implements OrgAnyTreeContainer
         continue;
       }
       
-      visitor.visitPartyRight(parents, party, groupRole, role, groupRoleStatus || roleStatus);
+      visitor.visitDirectPartyRight(parents, party, groupRole, role, groupRoleStatus || roleStatus);
     }
     
     // direct party members and their rights in current party
@@ -100,7 +100,7 @@ public abstract class OrgPartyContainerVisitor<T> implements OrgAnyTreeContainer
         continue;
       }
       
-      visitor.visitMembership(party, member, user, isUserDisabled);
+      visitor.visitDirectMembership(party, member, user, isUserDisabled);
       
       // directly given to member but only for specified party via inheritance
       for(final var memberRight : worldState.getMemberRights(user.getId())) {
@@ -118,7 +118,7 @@ public abstract class OrgPartyContainerVisitor<T> implements OrgAnyTreeContainer
         if(isRoleDisabled && !includeDisabled) {
           continue;
         }
-        visitor.visitMemberPartyRight(party, memberRight, role, isRoleDisabled);
+        visitor.visitDirectMemberPartyRight(party, memberRight, role, isRoleDisabled);
       }
     }
     
@@ -138,7 +138,7 @@ public abstract class OrgPartyContainerVisitor<T> implements OrgAnyTreeContainer
         final var role = worldState.getRight(right.getRightId());
         final var groupRoleStatus = worldState.isStatusDisabled(worldState.getStatus(right));
         final var roleStatus = worldState.isStatusDisabled(worldState.getStatus(role));
-        visitor.visitMemberPartyRight(party, right, role, groupRoleStatus || roleStatus);
+        visitor.visitDirectMemberPartyRight(party, right, role, groupRoleStatus || roleStatus);
       }
       
     }

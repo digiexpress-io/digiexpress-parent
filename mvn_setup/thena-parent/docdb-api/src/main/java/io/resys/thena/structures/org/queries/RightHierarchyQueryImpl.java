@@ -8,11 +8,11 @@ import io.resys.thena.api.entities.org.ThenaOrgObjects.OrgProjectObjects;
 import io.resys.thena.api.entities.org.ThenaOrgObjects.OrgRightHierarchy;
 import io.resys.thena.api.envelope.ImmutableQueryEnvelope;
 import io.resys.thena.api.envelope.ImmutableQueryEnvelopeList;
+import io.resys.thena.api.envelope.OrgTreeContainer.OrgAnyTreeContainerVisitor;
 import io.resys.thena.api.envelope.QueryEnvelope;
+import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.api.envelope.QueryEnvelopeList;
 import io.resys.thena.api.envelope.ThenaContainer;
-import io.resys.thena.api.envelope.OrgTreeContainer.OrgAnyTreeContainerVisitor;
-import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.structures.org.anytree.AnyTreeContainerContextImpl;
 import io.resys.thena.structures.org.anytree.AnyTreeContainerImpl;
@@ -70,7 +70,7 @@ public class RightHierarchyQueryImpl implements RightHierarchyQuery {
     final var container = new AnyTreeContainerImpl(ctx);
     
     for(final var roleCriteria : init.getObjects().getRights().values().stream().sorted((a, b) -> a.getRightName().compareTo(b.getRightName())).toList()) {
-      final OrgRightHierarchy roleHierarchy = container.accept(new RightHierarchyContainerVisitor(roleCriteria.getId()));
+      final OrgRightHierarchy roleHierarchy = container.accept(new RightHierarchyContainerVisitor(roleCriteria.getId(), false));
       result.add(roleHierarchy);
     }
     return ImmutableQueryEnvelopeList.<OrgRightHierarchy>builder()
@@ -85,7 +85,7 @@ public class RightHierarchyQueryImpl implements RightHierarchyQuery {
       String roleIdOrNameOrExternalId) {
     
     final var ctx = new AnyTreeContainerContextImpl(init.getObjects());
-    final OrgRightHierarchy group = new AnyTreeContainerImpl(ctx).accept(new RightHierarchyContainerVisitor(roleIdOrNameOrExternalId));
+    final OrgRightHierarchy group = new AnyTreeContainerImpl(ctx).accept(new RightHierarchyContainerVisitor(roleIdOrNameOrExternalId, false));
     return ImmutableQueryEnvelope.<OrgRightHierarchy>builder()
         .objects(group)
         .repo(init.getRepo())
