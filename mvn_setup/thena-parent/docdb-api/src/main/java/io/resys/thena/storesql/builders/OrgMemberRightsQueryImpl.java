@@ -84,7 +84,7 @@ public class OrgMemberRightsQueryImpl implements OrgQueries.MemberRightsQuery {
 
 	@Override
 	public Multi<OrgMemberRight> findAllByMemberId(String id) {
-    final var sql = registry.orgMemberRights().findAllByUserId(id);
+    final var sql = registry.orgMemberRights().findAllByMemberId(id);
     if(log.isDebugEnabled()) {
       log.debug("MemberRight findAllByMemberId query, with props: {} \r\n{}", 
           id,

@@ -72,10 +72,14 @@ public class OrgRightRegistrySqlImpl implements OrgRightRegistry {
         .append("SELECT distinct rights.* ").ln()
         .append("FROM ").append(options.getOrgRights()).append(" as rights").ln()
         
-        .append(" INNER JOIN ").append(options.getOrgMemberRights()).append(" as memberships").ln()
-        .append(" ON(rights.id = memberships.right_id) ").ln()
+        .append(" INNER JOIN ").append(options.getOrgMemberRights()).append(" as member_rights").ln()
+        .append(" ON(rights.id = member_rights.right_id) ").ln()
+
+        .append(" INNER JOIN ").append(options.getOrgMembers()).append(" as members").ln()
+        .append(" ON(members.id = member_rights.member_id) ").ln()
         
-        .append("WHERE (rights.id = $1 OR rights.external_id = $1 OR rights.right_name = $1)").ln()
+        
+        .append("WHERE (members.id = $1 OR members.external_id = $1 OR members.username = $1)").ln()
         .build())
         .props(Tuple.of(memberId))
         .build();

@@ -3,6 +3,7 @@ package io.resys.permission.client.tests;
 import java.time.Duration;
 import java.util.Arrays;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.junit.QuarkusTest;
@@ -38,7 +39,7 @@ public class PermissionSetAllTest extends DbTestTemplate {
   }
   
   
-private Principal createPrincipal(PermissionClient client, String name) {
+ private Principal createPrincipal(PermissionClient client, String name) {
     
     return client.createPrincipal().createOne(ImmutableCreatePrincipal.builder()
         .name(name)
@@ -99,6 +100,10 @@ private Principal createPrincipal(PermissionClient client, String name) {
     
     log.debug(Json.encodePrettily(permission1));
     log.debug(Json.encodePrettily(updatedPermission1));
+    
+    Assertions.assertEquals("[AmySmith, JohnDoe, CommanderONeil]", updatedPermission1.getPrincipals().toString()); 
+    Assertions.assertEquals("[role1, role2, role3]", updatedPermission1.getRoles().toString()); 
+
     
   }
   

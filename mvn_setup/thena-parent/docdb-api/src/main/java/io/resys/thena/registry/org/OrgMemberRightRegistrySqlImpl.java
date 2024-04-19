@@ -67,14 +67,14 @@ public class OrgMemberRightRegistrySqlImpl implements OrgMemberRightRegistry {
   }
 
 	@Override
-	public ThenaSqlClient.SqlTuple findAllByUserId(String userId) {
+	public ThenaSqlClient.SqlTuple findAllByMemberId(String memberId) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT * ").ln()
         .append("  FROM ").append(options.getOrgMemberRights()).ln()
         .append("  WHERE member_id = $1").ln() 
         .build())
-        .props(Tuple.of(userId))
+        .props(Tuple.of(memberId))
         .build();
 	}
 	@Override

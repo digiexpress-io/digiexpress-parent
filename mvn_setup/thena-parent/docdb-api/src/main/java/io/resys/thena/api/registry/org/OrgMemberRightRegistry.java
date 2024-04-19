@@ -11,7 +11,7 @@ import io.resys.thena.datasource.ThenaSqlClient;
 
 public interface OrgMemberRightRegistry extends ThenaRegistryService<OrgMemberRight, io.vertx.mutiny.sqlclient.Row> {
   ThenaSqlClient.SqlTuple getById(String id); 
-  ThenaSqlClient.SqlTuple findAllByUserId(String userId);
+  ThenaSqlClient.SqlTuple findAllByMemberId(String userId);
   ThenaSqlClient.SqlTuple findAllByRoleId(String userId);
   ThenaSqlClient.SqlTuple findAllByPartyId(String partyId);
   ThenaSqlClient.Sql findAll();

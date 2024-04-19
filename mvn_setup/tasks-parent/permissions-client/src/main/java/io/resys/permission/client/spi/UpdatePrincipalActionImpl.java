@@ -129,6 +129,8 @@ public class UpdatePrincipalActionImpl implements UpdatePrincipalAction {
 
     
     final var principal = response.getMember();
+    final var roles = response.getDirectParties().stream().map(party -> party.getPartyName()).toList();
+    final var permissions = response.getDirectRights().stream().map(right -> right.getRightName()).toList();
     
     return ImmutablePrincipal.builder()
       .id(principal.getId())
@@ -136,8 +138,8 @@ public class UpdatePrincipalActionImpl implements UpdatePrincipalAction {
       
       .name(principal.getUserName())
       .email(principal.getEmail())
-      //.roles(response.getDirectParties().stream().map(party -> party.getPartyName()).toList()) TODO backend doesn't return them
-      //.permissions(response.getDirectRights().stream().map(right -> right.getRightName()).toList())TODO backend doesn't return them
+      .roles(roles).directRoles(roles)
+      .permissions(permissions).directPermissions(permissions)
       .status(OrgActorStatusType.IN_FORCE)
       .build();
   }

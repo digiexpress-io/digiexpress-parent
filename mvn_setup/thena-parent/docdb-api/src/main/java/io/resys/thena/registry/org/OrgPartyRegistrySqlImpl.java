@@ -139,7 +139,7 @@ public class OrgPartyRegistrySqlImpl implements OrgPartyRegistry {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT distinct party.* ").ln()
-        .append("FROM ").append(options.getOrgRights()).append(" as party").ln()
+        .append("FROM ").append(options.getOrgParties()).append(" as party").ln()
         
         .append(" INNER JOIN ").append(options.getOrgMemberships()).append(" as memberships").ln()
         .append(" ON(party.id = memberships.party_id) ").ln()

@@ -133,6 +133,8 @@ public class UpdateRoleActionImpl implements UpdateRoleAction {
       final var msg = "failed to update role by id ='%s'!".formatted(id);
       throw new UpdateRoleException(msg, response);
     }
+    final var permissions = response.getDirectRights().stream().map(right -> right.getRightName()).toList();
+    final var principals = response.getDirectMembers().stream().map(member -> member.getUserName()).toList();
     
     final var role = response.getParty();
     return ImmutableRole.builder()
@@ -143,8 +145,8 @@ public class UpdateRoleActionImpl implements UpdateRoleAction {
       .name(role.getPartyName())
       .description(role.getPartyDescription())
       .status(OrgActorStatusType.IN_FORCE)
-      .permissions(response.getDirectRights().stream().map(right -> right.getRightName()).toList()) 
-      .principals(response.getDirectMembers().stream().map(member -> member.getUserName()).toList())
+      .permissions(permissions) 
+      .principals(principals)
       .build();
     }
   
