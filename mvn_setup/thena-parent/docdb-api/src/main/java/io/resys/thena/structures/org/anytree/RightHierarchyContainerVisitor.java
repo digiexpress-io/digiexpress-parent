@@ -15,6 +15,7 @@ import io.resys.thena.api.entities.org.OrgPartyRight;
 import io.resys.thena.api.entities.org.OrgRight;
 import io.resys.thena.api.entities.org.ThenaOrgObjects.OrgRightHierarchy;
 import io.resys.thena.api.envelope.OrgPartyContainerVisitor;
+import io.resys.thena.api.envelope.OrgRightsLogVisitor;
 import io.resys.thena.api.envelope.OrgTreeContainer.OrgAnyTreeContainerContext;
 import io.resys.thena.api.envelope.OrgTreeContainer.OrgAnyTreeContainerVisitor;
 import lombok.RequiredArgsConstructor;
@@ -125,9 +126,9 @@ public class RightHierarchyContainerVisitor extends OrgPartyContainerVisitor<Org
     }
     @Override public void visitDirectPartyRight(List<OrgParty> parents, OrgParty group, OrgPartyRight partyRight, OrgRight right, boolean isDisabled) {}
     @Override public void end(OrgParty group, List<OrgParty> parents, boolean isDisabled) {}
-    @Override public void visitLog(String log) {}
     @Override public void visitMembershipWithInheritance(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled) {}
     @Override public void visitChildParty(OrgParty group, boolean isDisabled) {}
+    @Override public TopPartyLogger visitLogger(OrgParty party) { return null; }
   }
   
   
@@ -165,13 +166,21 @@ public class RightHierarchyContainerVisitor extends OrgPartyContainerVisitor<Org
       }
       foundParty.setValue(false);
     }
-    @Override
-    public void visitLog(String log) {
-      this.log.append(log).append(System.lineSeparator()).append(System.lineSeparator());
-    }
+
     @Override public void start(OrgParty party, List<OrgParty> parents, List<OrgRight> parentRights, boolean isDisabled) {}
     @Override public void visitMembershipWithInheritance(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled) {}
     @Override public void visitChildParty(OrgParty group, boolean isDisabled) {}
+    @Override public TopPartyLogger visitLogger(OrgParty party) {
+      return new OrgRightsLogVisitor(target) {
+        @Override
+        public String close() {
+          final var logData = super.close();
+          log.append(logData);
+          return logData;
+        }
+      };
+    
+    }
   }
   
   public static class RoleNotFoundForHierarchyException extends RuntimeException {

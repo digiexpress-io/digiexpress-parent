@@ -13,8 +13,8 @@ import org.junit.jupiter.api.Test;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
 import io.resys.thena.api.actions.OrgCommitActions.ModType;
-import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
 import io.resys.thena.api.actions.TenantActions.CommitStatus;
+import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.api.entities.org.OrgMember;
@@ -151,9 +151,7 @@ jailer-2
     
     final var roleHierarchy = getClient().org(repo).find().rightHierarchyQuery()
         .get(bakerMain.getId()).await().atMost(Duration.ofMinutes(1)).getObjects(); 
-    Assertions.assertEquals("""
-baker-main
-        """, roleHierarchy.getLog());
+    Assertions.assertEquals("", roleHierarchy.getLog());
     }
   }
 

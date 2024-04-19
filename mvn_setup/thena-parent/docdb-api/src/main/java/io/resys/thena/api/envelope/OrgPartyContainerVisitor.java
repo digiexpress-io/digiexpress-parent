@@ -13,6 +13,7 @@ import io.resys.thena.api.entities.org.OrgPartyRight;
 import io.resys.thena.api.entities.org.OrgRight;
 import io.resys.thena.api.envelope.OrgTreeContainer.OrgAnyTreeContainerContext;
 import io.resys.thena.api.envelope.OrgTreeContainer.OrgAnyTreeContainerVisitor;
+import jakarta.annotation.Nullable;
 
 
 public abstract class OrgPartyContainerVisitor<T> implements OrgAnyTreeContainerVisitor<T> {
@@ -32,7 +33,6 @@ public abstract class OrgPartyContainerVisitor<T> implements OrgAnyTreeContainer
     this.log = logging;
   }
 
-
   public interface PartyVisitor {
     void start(OrgParty group, List<OrgParty> parents, List<OrgRight> parentRights, boolean isDisabled);
     
@@ -45,9 +45,14 @@ public abstract class OrgPartyContainerVisitor<T> implements OrgAnyTreeContainer
     void visitChildParty(OrgParty party, boolean isDisabled);
     void end(OrgParty group, List<OrgParty> parents, boolean isDisabled);
   }
-  
+
   public interface TopPartyVisitor extends PartyVisitor {
-    void visitLog(String log);
+    @Nullable TopPartyLogger visitLogger(OrgParty party);
+  }
+  public interface TopPartyLogger extends TopPartyVisitor {
+    void start(OrgAnyTreeContainerContext worldState);
+    void visitGroup(OrgParty party, OrgAnyTreeContainerContext worldState, List<OrgParty> parents);
+    String close();
   }
   
   protected abstract TopPartyVisitor visitTop(OrgParty group, OrgAnyTreeContainerContext worldState);
@@ -59,7 +64,7 @@ public abstract class OrgPartyContainerVisitor<T> implements OrgAnyTreeContainer
       visitGroup(top, worldState, Collections.emptyList());
     }
   }
-  protected void visitGroup(OrgParty party, OrgAnyTreeContainerContext worldState, List<OrgParty> parents) {
+  public void visitGroup(OrgParty party, OrgAnyTreeContainerContext worldState, List<OrgParty> parents) {
     //final var parentGroupIds = parents.stream().map(e -> e.getId()).toList();
     final var visitor = party.getParentId() == null ? visitTop(party, worldState) : visitChild(party, worldState);
     final var isDisabledDirectly = worldState.isStatusDisabled(worldState.getStatus(party));
@@ -149,11 +154,15 @@ public abstract class OrgPartyContainerVisitor<T> implements OrgAnyTreeContainer
       visitGroup(child, worldState, nextParents);
     }
     
-    if(log && visitor instanceof TopPartyVisitor) {
-      final OrgPartyLogVisitor logger = new OrgPartyLogVisitor(party.getId(), false);
-      logger.visitGroup(party, worldState, Collections.emptyList());
-      final var loggedTree = logger.close();
-      ((TopPartyVisitor) visitor).visitLog(loggedTree);
+    if(log && visitor instanceof TopPartyVisitor && party.getParentId() == null) {
+      final var logger = ((TopPartyVisitor) visitor).visitLogger(party);
+      if(logger != null) {
+        logger.start(worldState);
+        logger.visitGroup(party, worldState, Collections.emptyList());
+        logger.close();
+        logger.end(party, parents, includeDisabled);
+      }
+      
     }
     
     visitor.end(party, parents, isDisabledDirectly || isDisabledUpward);

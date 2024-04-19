@@ -12,6 +12,7 @@ import io.resys.thena.api.entities.org.OrgPartyRight;
 import io.resys.thena.api.entities.org.OrgRight;
 import io.resys.thena.api.envelope.OrgPartyContainerVisitor;
 import io.resys.thena.api.envelope.OrgPartyContainerVisitor.TopPartyVisitor;
+import io.resys.thena.api.envelope.OrgPartyLogVisitor;
 import io.resys.thena.api.envelope.OrgTreeContainer.OrgAnyTreeContainerContext;
 import io.resys.thena.api.envelope.OrgTreeContainer.OrgAnyTreeContainerVisitor;
 
@@ -148,7 +149,15 @@ public class PartyHierarchyContainerVisitor extends OrgPartyContainerVisitor<Imm
   }
 
   @Override
-  public void visitLog(String log) {
-    
+  public TopPartyLogger visitLogger(OrgParty party) {
+    return new OrgPartyLogVisitor(party.getId(), false) {
+      @Override
+      public String close() {
+        final var log = super.close();
+        builder.log(log);
+        return log;
+      }
+    };
   }
+
 }

@@ -17,6 +17,7 @@ import io.resys.thena.api.entities.org.OrgParty;
 import io.resys.thena.api.entities.org.OrgPartyRight;
 import io.resys.thena.api.entities.org.OrgRight;
 import io.resys.thena.api.envelope.OrgPartyContainerVisitor;
+import io.resys.thena.api.envelope.OrgPartyLogVisitor;
 import io.resys.thena.api.envelope.OrgTreeContainer.OrgAnyTreeContainerContext;
 import io.resys.thena.api.envelope.OrgTreeContainer.OrgAnyTreeContainerVisitor;
 
@@ -92,12 +93,7 @@ public class RoleHierarchyQueryVisitor extends OrgPartyContainerVisitor<RoleHier
         }
         visitRole(role, party, parents, parentRights);
       }
-      @Override
-      public void visitLog(String log) {
-        if(roleFoundId != null) {
-          result.log(log);
-        }
-      }      
+
       @Override
       public void end(OrgParty group, List<OrgParty> parents, boolean isDisabled) {
         final var completedRole = role.build();
@@ -116,6 +112,20 @@ public class RoleHierarchyQueryVisitor extends OrgPartyContainerVisitor<RoleHier
         permissions.clear();
         principals.clear();
         roles.clear();
+      }
+      @Override
+      public TopPartyLogger visitLogger(OrgParty party) {
+        
+        return new OrgPartyLogVisitor(idOrNameOrExtId, includeDisabled) {
+          @Override
+          public String close() {
+            final var log = super.close();
+            if(roleFoundId != null) {
+              result.log(log);
+            }
+            return log;
+          }
+        };
       }
 
     };

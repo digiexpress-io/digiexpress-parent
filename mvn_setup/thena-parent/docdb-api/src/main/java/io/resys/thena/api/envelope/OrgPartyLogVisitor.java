@@ -14,15 +14,14 @@ import io.resys.thena.api.entities.org.OrgMembership;
 import io.resys.thena.api.entities.org.OrgParty;
 import io.resys.thena.api.entities.org.OrgPartyRight;
 import io.resys.thena.api.entities.org.OrgRight;
-import io.resys.thena.api.envelope.OrgPartyContainerVisitor.PartyVisitor;
-import io.resys.thena.api.envelope.OrgPartyContainerVisitor.TopPartyVisitor;
+import io.resys.thena.api.envelope.OrgPartyContainerVisitor.TopPartyLogger;
 import io.resys.thena.api.envelope.OrgTreeContainer.OrgAnyTreeContainerContext;
 import io.resys.thena.api.envelope.OrgTreeContainer.OrgAnyTreeContainerVisitor;
 
 
 
 public class OrgPartyLogVisitor extends OrgPartyContainerVisitor<String> 
-  implements OrgAnyTreeContainerVisitor<String>, PartyVisitor, TopPartyVisitor {
+  implements OrgAnyTreeContainerVisitor<String>, TopPartyLogger {
   
   private final String groupIdOrNameOrExternalId;
   private final DefaultNode nodeRoot = new DefaultNode("organization");
@@ -118,9 +117,7 @@ public class OrgPartyLogVisitor extends OrgPartyContainerVisitor<String>
     final var previousNode = group.getParentId() == null ? nodeRoot : nodesGroup.get(group.getParentId());    
 
     
-    if( groupIdOrNameOrExternalId.equals(group.getExternalId()) ||
-        groupIdOrNameOrExternalId.equals(group.getPartyName()) ||
-        groupIdOrNameOrExternalId.equals(group.getId())) {
+    if( group.isMatch(groupIdOrNameOrExternalId) ) {
       
       final var groupNode = new DefaultNode(group.getPartyName() + " <= you are here");
       previousNode.addChild(groupNode);
@@ -158,6 +155,8 @@ public class OrgPartyLogVisitor extends OrgPartyContainerVisitor<String>
   }
 
   @Override
-  public void visitLog(String log) { 
+  public TopPartyLogger visitLogger(OrgParty party) {
+    return null;
   }
+
 }
