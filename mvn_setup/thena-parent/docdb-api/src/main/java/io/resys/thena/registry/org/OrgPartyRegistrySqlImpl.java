@@ -121,12 +121,15 @@ public class OrgPartyRegistrySqlImpl implements OrgPartyRegistry {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT party.* ").ln()
-        .append("FROM ").append(options.getOrgRights()).append(" as right").ln()
+        .append("FROM ").append(options.getOrgRights()).append(" as rights").ln()
         
-        .append(" INNER JOIN ").append(options.getOrgPartyRights()).append(" as memberships").ln()
-        .append(" ON(right.id = memberships.right_id) ").ln()
+        .append(" INNER JOIN ").append(options.getOrgPartyRights()).append(" as party_rights").ln()
+        .append(" ON(rights.id = party_rights.right_id) ").ln()
         
-        .append("WHERE (right.id = $1 OR right.external_id = $1 OR right.right_name = $1)").ln()
+        .append(" INNER JOIN ").append(options.getOrgParties()).append(" as party").ln()
+        .append(" ON(party.id = party_rights.party_id) ").ln()
+        
+        .append("WHERE (rights.id = $1 OR rights.external_id = $1 OR rights.right_name = $1)").ln()
         .build())
         .props(Tuple.of(rightId))
         .build();

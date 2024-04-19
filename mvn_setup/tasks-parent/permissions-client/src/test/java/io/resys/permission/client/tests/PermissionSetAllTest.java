@@ -1,6 +1,7 @@
 package io.resys.permission.client.tests;
 
 import java.time.Duration;
+import java.util.Arrays;
 
 import org.junit.jupiter.api.Test;
 
@@ -90,13 +91,14 @@ private Principal createPrincipal(PermissionClient client, String name) {
         .build();
     
     
-    final var updatedPermission1 = client.updatePermission().updateOne(updatePrincipals).await().atMost(Duration.ofMinutes(1));
+    final var updatedPermission1 = client.updatePermission().updateOne(Arrays.asList(
+        updateRoles, 
+        updatePrincipals
+        )).await().atMost(Duration.ofMinutes(1));
     
     
     log.debug(Json.encodePrettily(permission1));
     log.debug(Json.encodePrettily(updatedPermission1));
-
-    
     
   }
   
