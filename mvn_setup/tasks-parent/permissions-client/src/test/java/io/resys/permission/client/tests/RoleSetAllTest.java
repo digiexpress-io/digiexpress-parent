@@ -10,8 +10,11 @@ import io.quarkus.test.junit.TestProfile;
 import io.resys.permission.client.api.PermissionClient;
 import io.resys.permission.client.api.model.ChangeType;
 import io.resys.permission.client.api.model.ImmutableChangeRolePermissions;
+import io.resys.permission.client.api.model.ImmutableChangeRolePrincipals;
 import io.resys.permission.client.api.model.ImmutableCreatePermission;
+import io.resys.permission.client.api.model.ImmutableCreatePrincipal;
 import io.resys.permission.client.api.model.ImmutableCreateRole;
+import io.resys.permission.client.api.model.Principal;
 import io.resys.permission.client.api.model.Principal.Permission;
 import io.resys.permission.client.api.model.Principal.Role;
 import io.resys.permission.client.tests.config.DbTestTemplate;
@@ -24,6 +27,16 @@ import lombok.extern.slf4j.Slf4j;
 @TestProfile(OrgPgProfile.class)
 public class RoleSetAllTest extends DbTestTemplate {
 
+  private Principal createPrincipal(PermissionClient client, String name) {
+    
+    return client.createPrincipal().createOne(ImmutableCreatePrincipal.builder()
+        .name(name)
+        .email("the-rock@muscles.org")
+        .comment("created new user")
+        .build())
+        .await().atMost(Duration.ofMinutes(5));
+  }
+  
   private Permission createPermission(PermissionClient client, String name) {
     return client.createPermission().createOne(ImmutableCreatePermission.builder()
         .name(name)
@@ -55,7 +68,7 @@ public class RoleSetAllTest extends DbTestTemplate {
         .await().atMost(Duration.ofMinutes(1));
     
       
-    final var role1 = createRole(client, "role1");
+    final var role1 = createRole(client, "roleForSetAll");
     
     final var updatePermissions = ImmutableChangeRolePermissions.builder()
         .id(role1.getId())
@@ -67,14 +80,30 @@ public class RoleSetAllTest extends DbTestTemplate {
             createPermission(client, "perm3").getName()
             )
         .build();
+    
+    final var updatePrincipals = ImmutableChangeRolePrincipals.builder()
+        .id(role1.getId())
+        .comment("added all principals")
+        .changeType(ChangeType.SET_ALL)
+        .addPrincipals(
+            createPrincipal(client, "AmySmith").getName(),
+            createPrincipal(client, "JohnDoe").getName(),
+            createPrincipal(client, "CommanderONeil").getName()
+            )
+        .build();
+    
     final var updatedRole1 = client.updateRole().updateOne(Arrays.asList(
-        updatePermissions
+        updatePermissions,
+        updatePrincipals
     )).await().atMost(Duration.ofMinutes(1));
 
     
     log.debug(Json.encodePrettily(updatedRole1));
     
-    Assertions.assertEquals(3, updatedRole1.getPermissions().size());
+    Assertions.assertEquals("[perm1, perm2, perm3]", updatedRole1.getPermissions().toString());
+    Assertions.assertEquals("[AmySmith, JohnDoe, CommanderONeil]", updatedRole1.getPrincipals().toString());
     
+    Assertions.assertEquals("[perm1, perm2, perm3]", client.roleQuery().get(updatedRole1.getId()).await().atMost(Duration.ofMinutes(1)).getPermissions().toString());
+    Assertions.assertEquals("[AmySmith, JohnDoe, CommanderONeil]", client.roleQuery().get(updatedRole1.getId()).await().atMost(Duration.ofMinutes(1)).getPrincipals().toString());
   }
 }

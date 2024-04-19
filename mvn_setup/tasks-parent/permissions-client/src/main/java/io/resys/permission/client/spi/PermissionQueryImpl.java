@@ -75,6 +75,7 @@ public class PermissionQueryImpl implements PermissionQuery {
       .description(permission.getRoleDescription())
       .status(permission.getStatus())
       .roles(permission.getDirectGroup().stream().map((role -> role.getPartyName().toString())).toList())
+      .principals(permission.getDirectMembers().stream().map((member -> member.getUserName().toString())).toList())
       .build();
   }
 

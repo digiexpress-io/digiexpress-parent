@@ -5,12 +5,16 @@ import java.util.List;
 
 import io.resys.permission.client.api.PermissionClient.PermissionAccessEvaluator;
 import io.resys.permission.client.api.PermissionClient.UpdatePermissionAction;
+import io.resys.permission.client.api.model.ChangeType;
 import io.resys.permission.client.api.model.ImmutablePermission;
 import io.resys.permission.client.api.model.PermissionCommand.ChangePermissionDescription;
 import io.resys.permission.client.api.model.PermissionCommand.ChangePermissionName;
+import io.resys.permission.client.api.model.PermissionCommand.ChangePermissionPrincipals;
+import io.resys.permission.client.api.model.PermissionCommand.ChangePermissionRoles;
 import io.resys.permission.client.api.model.PermissionCommand.ChangePermissionStatus;
 import io.resys.permission.client.api.model.PermissionCommand.PermissionUpdateCommand;
 import io.resys.permission.client.api.model.Principal.Permission;
+import io.resys.thena.api.actions.OrgCommitActions.ModType;
 import io.resys.thena.api.actions.OrgCommitActions.ModifyOneRight;
 import io.resys.thena.api.actions.OrgCommitActions.OneRightEnvelope;
 import io.resys.thena.api.entities.CommitResultStatus;
@@ -63,6 +67,49 @@ public class UpdatePermissionActionImpl implements UpdatePermissionAction {
         break;
       }
       
+      case CHANGE_PERMISSION_PRINCIPALS: {
+        final var principals = (ChangePermissionPrincipals) command;
+        
+        if(principals.getChangeType() == ChangeType.ADD) {
+          principals.getPrincipals().forEach(principal -> modifyOneRight.modifyMember(ModType.ADD, principal));
+          
+        } else if(principals.getChangeType() == ChangeType.DISABLE) {
+          principals.getPrincipals().forEach(principal -> modifyOneRight.modifyMember(ModType.DISABLED, principal));
+          
+        } else if(principals.getChangeType() == ChangeType.REMOVE) {
+          principals.getPrincipals().forEach(principal -> modifyOneRight.modifyMember(ModType.REMOVE, principal));
+
+        } else if(principals.getChangeType() == ChangeType.SET_ALL) {
+          modifyOneRight.setAllMembers(principals.getPrincipals());
+          
+        } else {
+          throw new UpdatePermissionException("Command type not found exception: " + command.getCommandType() + "/" + principals.getChangeType());
+        }
+        break;
+      }
+      
+      case CHANGE_PERMISSION_ROLES: {
+        final var roles = (ChangePermissionRoles) command;
+        
+        if(roles.getChangeType() == ChangeType.ADD) {
+          roles.getRoles().forEach(role -> modifyOneRight.modifyParty(ModType.ADD, role));
+          
+        } else if(roles.getChangeType() == ChangeType.DISABLE) {          
+          roles.getRoles().forEach(role -> modifyOneRight.modifyParty(ModType.DISABLED, role));
+          
+        } else if(roles.getChangeType() == ChangeType.REMOVE) {
+          roles.getRoles().forEach(role -> modifyOneRight.modifyParty(ModType.REMOVE, role)); 
+
+        } else if(roles.getChangeType() == ChangeType.SET_ALL) {
+          modifyOneRight.setAllParties(roles.getRoles()); 
+          
+        } else {
+          throw new UpdatePermissionException("Command type not found exception: " + command.getCommandType() + "/" + roles.getChangeType());
+        }
+        break;
+      }
+      
+      
       default: throw new UpdatePermissionException("Command type not found exception :" + command.getCommandType());
       }
     }
@@ -87,6 +134,8 @@ public class UpdatePermissionActionImpl implements UpdatePermissionAction {
       .description(right.getRightDescription())
       .name(right.getRightName())
       .status(OrgActorStatus.OrgActorStatusType.IN_FORCE)
+      .roles(response.getDirectParties().stream().map(party -> party.getPartyName()).toList()) 
+      .principals(response.getDirectMembers().stream().map(member -> member.getUserName()).toList())
       .build();
     }
 

@@ -84,8 +84,8 @@ public interface ThenaOrgObjects extends ThenaContainer {
     
     String getLog();
     
-    List<OrgMember> getDirectUsers();
-    List<OrgMember> getChildUsers();
+    List<OrgMember> getDirectMembers();
+    List<OrgMember> getChildMembers();
     
     List<OrgParty> getDirectGroup();
     List<OrgParty> getChildGroup();

@@ -112,6 +112,7 @@ public class UpdateRoleActionImpl implements UpdateRoleAction {
         } else {
           throw new UpdateRoleException("Command type not found exception: " + command.getCommandType() + "/" + principals.getChangeType());
         }
+        break;
       }
       
       default: throw new UpdateRoleException("Command type not found exception ='%s'!".formatted(command.getCommandType())); 

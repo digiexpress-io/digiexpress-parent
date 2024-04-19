@@ -437,7 +437,7 @@ public class BatchForOnePartyModify {
           .commitId(commitId)
           .build();
       this.batch.addMemberships(membership);
-      this.commitBuilder.merge(status, membership);
+      this.commitBuilder.add(membership);
     }
     
     if(status != null && status.getValue() != OrgActorStatusType.IN_FORCE) {
