@@ -9,8 +9,7 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import io.resys.thena.api.entities.org.OrgActorStatus;
-import io.resys.thena.api.entities.org.OrgActorStatus.OrgActorStatusType;
+import io.resys.thena.api.entities.org.OrgActorStatusType;
 import io.resys.thena.api.entities.org.OrgMemberHierarchyEntry;
 import io.resys.thena.api.entities.org.OrgRightFlattened;
 
@@ -101,7 +100,7 @@ public class MemberTree {
   private boolean calcGreyGroup() {
     final var directRemoval = this.groupValues.stream()
         .filter(e -> e.getPartyStatus() != null)
-        .filter(e -> e.getPartyStatus() != OrgActorStatus.OrgActorStatusType.IN_FORCE)
+        .filter(e -> e.getPartyStatus() != OrgActorStatusType.IN_FORCE)
         .count() > 0;
     
     if(directRemoval) {

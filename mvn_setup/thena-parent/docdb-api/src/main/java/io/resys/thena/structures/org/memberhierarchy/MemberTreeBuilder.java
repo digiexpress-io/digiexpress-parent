@@ -7,9 +7,8 @@ import org.slf4j.LoggerFactory;
 
 import io.resys.thena.api.LogConstants;
 import io.resys.thena.api.entities.org.ImmutableOrgMemberHierarchy;
-import io.resys.thena.api.entities.org.OrgActorStatus;
-import io.resys.thena.api.entities.org.OrgActorStatus.OrgActorStatusType;
-import io.resys.thena.api.entities.org.OrgMemberFlattened;
+import io.resys.thena.api.entities.org.OrgActorStatusType;
+import io.resys.thena.api.entities.org.OrgMember;
 import io.resys.thena.api.entities.org.OrgMemberHierarchyEntry;
 import io.resys.thena.api.entities.org.OrgRightFlattened;
 import io.resys.thena.api.entities.org.ThenaOrgObjects.OrgMemberHierarchy;
@@ -21,11 +20,11 @@ public class MemberTreeBuilder {
 
   private Logger logger;
   
-  private OrgMemberFlattened member;
+  private OrgMember member;
   private List<OrgMemberHierarchyEntry> partyData;
   private List<OrgRightFlattened> rightsData;
   
-  public MemberTreeBuilder member(OrgMemberFlattened member) {                  this.member = RepoAssert.notNull(member,        () -> "member can't be empty!"); return this; }
+  public MemberTreeBuilder member(OrgMember member) {                           this.member = RepoAssert.notNull(member,        () -> "member can't be empty!"); return this; }
   public MemberTreeBuilder partyData(List<OrgMemberHierarchyEntry> partyData) { this.partyData = RepoAssert.notNull(partyData,  () -> "partyData can't be empty!"); return this; }
   public MemberTreeBuilder rightData(List<OrgRightFlattened> rightsData) {      this.rightsData = RepoAssert.notNull(rightsData,() -> "rightsData can't be null!"); return this; }
   
@@ -52,7 +51,7 @@ public class MemberTreeBuilder {
       .externalId(member.getExternalId())
       .email(member.getEmail())
       .commitId(member.getCommitId())
-      .status(member.getStatus() == null ? OrgActorStatus.OrgActorStatusType.IN_FORCE : member.getStatus())
+      .status(member.getStatus() == null ? OrgActorStatusType.IN_FORCE : member.getStatus())
       .addAllUserRoleStatus(container.getRoleStatus())
       .addAllUserGroupStatus(container.getGroupStatus())
       .roleNames(result.getRoleNames())

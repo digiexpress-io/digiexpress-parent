@@ -18,7 +18,7 @@ import io.resys.thena.api.actions.OrgCommitActions.ModType;
 import io.resys.thena.api.actions.OrgCommitActions.ModifyOneRight;
 import io.resys.thena.api.actions.OrgCommitActions.OneRightEnvelope;
 import io.resys.thena.api.entities.CommitResultStatus;
-import io.resys.thena.api.entities.org.OrgActorStatus;
+import io.resys.thena.api.entities.org.OrgActorStatusType;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -73,9 +73,6 @@ public class UpdatePermissionActionImpl implements UpdatePermissionAction {
         if(principals.getChangeType() == ChangeType.ADD) {
           principals.getPrincipals().forEach(principal -> modifyOneRight.modifyMember(ModType.ADD, principal));
           
-        } else if(principals.getChangeType() == ChangeType.DISABLE) {
-          principals.getPrincipals().forEach(principal -> modifyOneRight.modifyMember(ModType.DISABLED, principal));
-          
         } else if(principals.getChangeType() == ChangeType.REMOVE) {
           principals.getPrincipals().forEach(principal -> modifyOneRight.modifyMember(ModType.REMOVE, principal));
 
@@ -93,9 +90,6 @@ public class UpdatePermissionActionImpl implements UpdatePermissionAction {
         
         if(roles.getChangeType() == ChangeType.ADD) {
           roles.getRoles().forEach(role -> modifyOneRight.modifyParty(ModType.ADD, role));
-          
-        } else if(roles.getChangeType() == ChangeType.DISABLE) {          
-          roles.getRoles().forEach(role -> modifyOneRight.modifyParty(ModType.DISABLED, role));
           
         } else if(roles.getChangeType() == ChangeType.REMOVE) {
           roles.getRoles().forEach(role -> modifyOneRight.modifyParty(ModType.REMOVE, role)); 
@@ -133,7 +127,7 @@ public class UpdatePermissionActionImpl implements UpdatePermissionAction {
 
       .description(right.getRightDescription())
       .name(right.getRightName())
-      .status(OrgActorStatus.OrgActorStatusType.IN_FORCE)
+      .status(OrgActorStatusType.IN_FORCE)
       .roles(response.getDirectParties().stream().map(party -> party.getPartyName()).toList()) 
       .principals(response.getDirectMembers().stream().map(member -> member.getUserName()).toList())
       .build();

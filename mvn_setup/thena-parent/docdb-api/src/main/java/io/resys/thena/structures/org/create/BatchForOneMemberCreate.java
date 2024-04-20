@@ -9,6 +9,7 @@ import io.resys.thena.api.entities.org.ImmutableOrgCommit;
 import io.resys.thena.api.entities.org.ImmutableOrgMember;
 import io.resys.thena.api.entities.org.ImmutableOrgMemberRight;
 import io.resys.thena.api.entities.org.ImmutableOrgMembership;
+import io.resys.thena.api.entities.org.OrgActorStatusType;
 import io.resys.thena.api.entities.org.OrgMemberRight;
 import io.resys.thena.api.entities.org.OrgMembership;
 import io.resys.thena.api.entities.org.OrgParty;
@@ -69,6 +70,7 @@ public class BatchForOneMemberCreate {
       .externalId(externalId)
       .userName(userName)
       .email(email)
+      .status(OrgActorStatusType.IN_FORCE)
       .build();
     commitBuilder.add(user);
     

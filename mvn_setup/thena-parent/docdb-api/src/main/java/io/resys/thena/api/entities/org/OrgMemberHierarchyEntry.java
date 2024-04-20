@@ -12,15 +12,11 @@ interface OrgMemberHierarchyEntry extends ThenaOrgObject {
 	String getPartyDescription();
 	@Nullable String getPartyParentId();
 	@Nullable String getMembershipId();
+	@Nullable String getMemberId();
+	@Nullable OrgActorStatusType getPartyStatus();
 	
-	@Nullable String getPartyStatusId();
-	@Nullable OrgActorStatus.OrgActorStatusType getPartyStatus();
-	@Nullable String getPartyStatusMemberId();
-
-	@Nullable String getRightName();
-	@Nullable String getRightDescription();
-  
   @Nullable String getRightId();
-  @Nullable String getRightStatusId();
-  @Nullable OrgActorStatus.OrgActorStatusType getRightStatus();    
+  @Nullable String getRightName();
+  @Nullable String getRightDescription();
+  @Nullable OrgActorStatusType getRightStatus();    
 }

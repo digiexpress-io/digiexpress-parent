@@ -16,8 +16,7 @@ import io.resys.permission.client.api.model.PrincipalCommand.PrincipalUpdateComm
 import io.resys.permission.client.api.model.RoleCommand.CreateRole;
 import io.resys.permission.client.api.model.RoleCommand.RoleUpdateCommand;
 import io.resys.permission.client.rest.PermissionRestApi;
-import io.resys.thena.api.entities.org.OrgActorStatus;
-import io.resys.thena.api.entities.org.OrgActorStatus.OrgActorStatusType;
+import io.resys.thena.api.entities.org.OrgActorStatusType;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.Path;
@@ -31,7 +30,7 @@ public class TestResource implements PermissionRestApi {
       .version("1")
       .name("test-permission")
       .description("desc")
-      .status(OrgActorStatus.OrgActorStatusType.IN_FORCE)
+      .status(OrgActorStatusType.IN_FORCE)
       .build();
   
   private final Role role = ImmutableRole.builder()
@@ -40,7 +39,7 @@ public class TestResource implements PermissionRestApi {
       .name("test-role")
       .description("role desc")
       .parentId(null)
-      .status(OrgActorStatus.OrgActorStatusType.IN_FORCE)
+      .status(OrgActorStatusType.IN_FORCE)
       .build();
   
   private final Principal principal = ImmutablePrincipal.builder()

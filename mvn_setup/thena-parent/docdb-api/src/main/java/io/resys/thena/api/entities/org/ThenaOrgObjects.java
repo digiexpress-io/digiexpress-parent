@@ -24,8 +24,6 @@ public interface ThenaOrgObjects extends ThenaContainer {
     Map<String, OrgMemberRight> getMemberRights();
     
     Map<String, OrgCommit> getCommits();
-    Map<String, OrgActorData> getActorData();
-    Map<String, OrgActorStatus> getActorStatus(); 
   }
   
   @Value.Immutable
@@ -37,7 +35,7 @@ public interface ThenaOrgObjects extends ThenaContainer {
     String getEmail();
     
     String getLog();
-    OrgActorStatus.OrgActorStatusType getStatus();
+    OrgActorStatusType getStatus();
     
     List<String> getRoleNames();  // roles that are enabled
     List<String> getGroupNames(); // groups that are enabled
@@ -60,7 +58,7 @@ public interface ThenaOrgObjects extends ThenaContainer {
     @Nullable String getExternalId();
     
     String getLog();
-    OrgActorStatus.OrgActorStatusType getStatus();
+    OrgActorStatusType getStatus();
     
     List<OrgRight> getRights();  // roles that are enabled
     List<OrgRight> getDirectRights();  // roles that are enabled
@@ -80,7 +78,7 @@ public interface ThenaOrgObjects extends ThenaContainer {
     @Nullable String getExternalId();
     String getRoleName();
     String getRoleDescription();
-    OrgActorStatus.OrgActorStatusType getStatus();
+    OrgActorStatusType getStatus();
     
     String getLog();
     
@@ -94,20 +92,12 @@ public interface ThenaOrgObjects extends ThenaContainer {
   
   @Value.Immutable
   interface OrgMemberPartyStatus extends ThenaOrgObjects {
-    String getStatusId();
-    String getGroupId();
-    OrgActorStatus.OrgActorStatusType getStatus();
-    default String getId() { 
-      return getStatusId(); 
-    }
+    String getPartyId();
+    OrgActorStatusType getStatus();
   }
   @Value.Immutable
   interface OrgMemberRightStatus extends ThenaOrgObjects {
-    String getStatusId();
-    String getRoleId();
-    OrgActorStatus.OrgActorStatusType getStatus();
-    default String getId() { 
-      return getStatusId(); 
-    }
+    String getRightId();
+    OrgActorStatusType getStatus();
   }
 }

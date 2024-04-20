@@ -40,8 +40,7 @@ public class OrgProjectQueryImpl implements OrgProjectQuery {
         org.rights().findAll().collect().asList(),
         org.memberships().findAll().collect().asList(),
         org.partyRights().findAll().collect().asList(),
-        org.memberRights().findAll().collect().asList(),
-        org.actorStatus().findAll().collect().asList()
+        org.memberRights().findAll().collect().asList()
     ).asTuple().onItem().transform(tuple -> {
       
       final var container = ImmutableOrgProjectObjects.builder();
@@ -63,9 +62,6 @@ public class OrgProjectQueryImpl implements OrgProjectQuery {
       
       // USER_ROLE 6
       tuple.getItem6().forEach(userRole -> container.putMemberRights(userRole.getId(), userRole));
-      
-      // ACTOR_STATUS 7
-      tuple.getItem7().forEach(status -> container.putActorStatus(status.getId(), status));
 
       final QueryEnvelope<OrgProjectObjects> envelope = ImmutableQueryEnvelope.<OrgProjectObjects>builder()
           .objects(container.build())

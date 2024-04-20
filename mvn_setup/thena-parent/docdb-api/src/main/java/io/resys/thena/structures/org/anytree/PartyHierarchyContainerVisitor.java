@@ -3,7 +3,7 @@ package io.resys.thena.structures.org.anytree;
 import java.util.List;
 
 import io.resys.thena.api.entities.org.ImmutableOrgPartyHierarchy;
-import io.resys.thena.api.entities.org.OrgActorStatus;
+import io.resys.thena.api.entities.org.OrgActorStatusType;
 import io.resys.thena.api.entities.org.OrgMember;
 import io.resys.thena.api.entities.org.OrgMemberRight;
 import io.resys.thena.api.entities.org.OrgMembership;
@@ -122,7 +122,7 @@ public class PartyHierarchyContainerVisitor extends OrgPartyContainerVisitor<Imm
         .parentPartyId(group.getParentId())
         .parentParties(parents)
 
-        .status(isDisabled ? OrgActorStatus.OrgActorStatusType.DISABLED : OrgActorStatus.OrgActorStatusType.IN_FORCE);
+        .status(isDisabled ? OrgActorStatusType.DISABLED : OrgActorStatusType.IN_FORCE);
     }
   }
   @Override

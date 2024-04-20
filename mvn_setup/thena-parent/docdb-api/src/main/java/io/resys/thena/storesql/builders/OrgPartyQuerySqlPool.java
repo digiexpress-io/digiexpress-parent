@@ -17,12 +17,12 @@ import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j(topic = LogConstants.SHOW_SQL)
-public class OrgGroupQuerySqlPool implements OrgQueries.PartyQuery {
+public class OrgPartyQuerySqlPool implements OrgQueries.PartyQuery {
   private final ThenaSqlDataSource wrapper;
   private final OrgRegistry registry;
   private final ThenaSqlDataSourceErrorHandler errorHandler;
   
-  public OrgGroupQuerySqlPool(ThenaSqlDataSource dataSource) {
+  public OrgPartyQuerySqlPool(ThenaSqlDataSource dataSource) {
     this.wrapper = dataSource;
     this.registry = dataSource.getRegistry().org();
     this.errorHandler = dataSource.getErrorHandler();
@@ -31,7 +31,7 @@ public class OrgGroupQuerySqlPool implements OrgQueries.PartyQuery {
   public Multi<OrgParty> findAll() {
     final var sql = registry.orgParties().findAll();
     if(log.isDebugEnabled()) {
-      log.debug("Group findAll query, with props: {} \r\n{}", 
+      log.debug("Parties findAll query, with props: {} \r\n{}", 
           "",
           sql.getValue());
     }
@@ -47,8 +47,8 @@ public class OrgGroupQuerySqlPool implements OrgQueries.PartyQuery {
   public Multi<OrgParty> findAll(Collection<String> id) {
     final var sql = registry.orgParties().findAll(id);
     if(log.isDebugEnabled()) {
-      log.debug("Group findAll query, with props: {} \r\n{}", 
-          "",
+      log.debug("Parties findAll query, with props: {} \r\n{}", 
+          sql.getProps().deepToString(),
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
@@ -63,7 +63,7 @@ public class OrgGroupQuerySqlPool implements OrgQueries.PartyQuery {
   public Uni<OrgParty> getById(String id) {
     final var sql = registry.orgParties().getById(id);
     if(log.isDebugEnabled()) {
-      log.debug("Group byId query, with props: {} \r\n{}", 
+      log.debug("Parties byId query, with props: {} \r\n{}", 
           sql.getProps().deepToString(),
           sql.getValue());
     }

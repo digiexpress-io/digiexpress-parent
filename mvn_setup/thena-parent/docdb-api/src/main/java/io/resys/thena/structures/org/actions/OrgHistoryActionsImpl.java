@@ -6,7 +6,9 @@ import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
+@SuppressWarnings("unused")
 public class OrgHistoryActionsImpl implements OrgHistoryActions {
+  
   private final DbState state;
   private final String repoId; 
 

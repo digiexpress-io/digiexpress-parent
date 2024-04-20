@@ -14,8 +14,7 @@ import io.resys.thena.api.actions.OrgCommitActions.ModType;
 import io.resys.thena.api.actions.OrgCommitActions.ModifyOneRight;
 import io.resys.thena.api.actions.OrgCommitActions.OneRightEnvelope;
 import io.resys.thena.api.entities.CommitResultStatus;
-import io.resys.thena.api.entities.org.OrgActorStatus;
-import io.resys.thena.api.entities.org.OrgActorStatus.OrgActorStatusType;
+import io.resys.thena.api.entities.org.OrgActorStatusType;
 import io.resys.thena.api.entities.org.OrgMember;
 import io.resys.thena.api.entities.org.OrgMemberRight;
 import io.resys.thena.api.entities.org.OrgParty;
@@ -51,13 +50,11 @@ public class ModifyOneRightImpl implements ModifyOneRight {
 
   private Collection<String> allParties = new LinkedHashSet<>();
   private Collection<String> partiesToAdd = new LinkedHashSet<>();
-  private Collection<String> partiesToDisable = new LinkedHashSet<>();
   private Collection<String> partiesToRemove = new LinkedHashSet<>();
   private Collection<String> partiesToSet;
   
   private Collection<String> allMembers = new LinkedHashSet<>();
   private Collection<String> membersToAdd = new LinkedHashSet<>();
-  private Collection<String> membersToDisable = new LinkedHashSet<>();
   private Collection<String> membersToRemove = new LinkedHashSet<>();
   private Collection<String> membersToSet;
   
@@ -102,8 +99,6 @@ public class ModifyOneRightImpl implements ModifyOneRight {
     this.allParties.add(partyIds);
     if(type == ModType.ADD) {
       partiesToAdd.add(partyIds);
-    } else if(type == ModType.DISABLED) {
-      partiesToDisable.add(partyIds);
     } else if(type == ModType.REMOVE) {
       partiesToRemove.add(partyIds);
     } else {
@@ -118,8 +113,6 @@ public class ModifyOneRightImpl implements ModifyOneRight {
     this.allMembers.add(memberIds);
     if(type == ModType.ADD) {
       membersToAdd.add(memberIds);
-    } else if(type == ModType.DISABLED) {
-      membersToDisable.add(memberIds);
     } else if(type == ModType.REMOVE) {
       membersToRemove.add(memberIds);
     } else {
@@ -132,7 +125,6 @@ public class ModifyOneRightImpl implements ModifyOneRight {
     this.membersToSet = new LinkedHashSet<>(RepoAssert.notNull(memberIdNameOrExtId, () -> "setAllMembers can't be null!"));
     this.membersToAdd.clear();
     this.membersToRemove.clear();
-    this.membersToDisable.clear();
     this.allMembers.clear();
     this.allMembers.addAll(memberIdNameOrExtId);
     return this;
@@ -142,7 +134,6 @@ public class ModifyOneRightImpl implements ModifyOneRight {
     this.partiesToSet = new LinkedHashSet<>(RepoAssert.notNull(partyIdNameOrExtId, () -> "setAllParties can't be null!"));
     this.partiesToAdd.clear();
     this.partiesToRemove.clear();
-    this.partiesToDisable.clear();
     this.allParties.clear();
     this.allParties.addAll(partyIdNameOrExtId);
     return this;
@@ -204,10 +195,6 @@ public class ModifyOneRightImpl implements ModifyOneRight {
 		final Uni<List<OrgMemberRight>> memberRightsPromise = 
       tx.query().memberRights().findAllByRightId(rightId).collect().asList();
     
-		// find right status
-		final Uni<List<OrgActorStatus>> rightStatusPromise = 
-	    tx.query().actorStatus().findAllByRightId(rightId).collect().asList();
-	    
 		final Uni<OrgRight> rightPromise = tx.query().rights().getById(rightId);
 		
 		// join data
@@ -215,9 +202,7 @@ public class ModifyOneRightImpl implements ModifyOneRight {
 		    partiesPromise, 
 		    membersPromise, 
 		    partyRightsPromise, 
-		    
-		    memberRightsPromise, 
-		    rightStatusPromise, 
+		    memberRightsPromise,
 		    rightPromise
 		).asTuple().onItem().transformToUni(tuple -> {
 		  
@@ -234,8 +219,7 @@ public class ModifyOneRightImpl implements ModifyOneRight {
            tuple.getItem2(),
            tuple.getItem3(),
            tuple.getItem4(),
-           tuple.getItem5(),
-           tuple.getItem6()
+           tuple.getItem5()
          );
          
        } catch(NoRightChangesException ex) {
@@ -285,13 +269,11 @@ public class ModifyOneRightImpl implements ModifyOneRight {
       List<OrgMember> allRelatedMembers,
       List<OrgPartyRight> partyRights,
       List<OrgMemberRight> memberRights, 
-      List<OrgActorStatus> rightStatus,           
       OrgRight right) throws NoRightChangesException {
 
     final var modify = new BatchForOneRightModify(tx.getTenantId(), author, message)
         .current(right)
         .currentMemberRights(memberRights)
-        .currentRightStatus(rightStatus)
         .currentPartyRights(partyRights)
         .newExternalId(externalId)
         .newRightName(rightName)
@@ -383,11 +365,6 @@ public class ModifyOneRightImpl implements ModifyOneRight {
       if( party.isMatch(partiesToAdd)) {
         modify.updateParty(ModType.ADD, party);
       }
-      
-      if( party.isMatch(partiesToDisable)) {
-         modify.updateParty(ModType.DISABLED, party);
-       }
-      
       if( party.isMatch(partiesToRemove)) {
         modify.updateParty(ModType.REMOVE, party);
       }
@@ -399,10 +376,6 @@ public class ModifyOneRightImpl implements ModifyOneRight {
       if( member.isMatch(membersToAdd) ) {
         modify.updateMember(ModType.ADD, member);
       }
-      
-      if( member.isMatch(membersToDisable) ) {
-        modify.updateMember(ModType.DISABLED, member);
-       }
       
       if( member.isMatch(membersToRemove) ) {
         modify.updateMember(ModType.REMOVE, member);

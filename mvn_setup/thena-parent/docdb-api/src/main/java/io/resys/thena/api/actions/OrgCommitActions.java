@@ -7,8 +7,7 @@ import javax.annotation.Nullable;
 import org.immutables.value.Value;
 
 import io.resys.thena.api.entities.CommitResultStatus;
-import io.resys.thena.api.entities.org.OrgActorStatus;
-import io.resys.thena.api.entities.org.OrgActorStatus.OrgActorStatusType;
+import io.resys.thena.api.entities.org.OrgActorStatusType;
 import io.resys.thena.api.entities.org.OrgMember;
 import io.resys.thena.api.entities.org.OrgParty;
 import io.resys.thena.api.entities.org.OrgRight;
@@ -86,7 +85,7 @@ public interface OrgCommitActions {
     ModifyOneMember externalId(@Nullable String externalId);
     ModifyOneMember userName(String userName);
     ModifyOneMember email(String email);
-    ModifyOneMember status(OrgActorStatus.OrgActorStatusType status);
+    ModifyOneMember status(OrgActorStatusType status);
 
     
     ModifyOneMember setAllParties(List<String> partyIdNameOrExtId);
@@ -181,6 +180,6 @@ public interface OrgCommitActions {
   }
   
   enum ModType {
-    ADD, DISABLED, REMOVE
+    ADD, REMOVE
   }
 }

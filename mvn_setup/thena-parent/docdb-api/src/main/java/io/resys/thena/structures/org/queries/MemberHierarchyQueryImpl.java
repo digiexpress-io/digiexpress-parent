@@ -5,19 +5,15 @@ import java.util.Collections;
 import java.util.List;
 
 import io.resys.thena.api.actions.OrgQueryActions.MemberHierarchyQuery;
-import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.org.OrgMember;
-import io.resys.thena.api.entities.org.OrgMemberFlattened;
 import io.resys.thena.api.entities.org.OrgMemberHierarchyEntry;
 import io.resys.thena.api.entities.org.OrgRightFlattened;
 import io.resys.thena.api.entities.org.ThenaOrgObjects.OrgMemberHierarchy;
 import io.resys.thena.api.envelope.ImmutableQueryEnvelope;
 import io.resys.thena.api.envelope.ImmutableQueryEnvelopeList;
 import io.resys.thena.api.envelope.QueryEnvelope;
-import io.resys.thena.api.envelope.QueryEnvelope.DocNotFoundException;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.api.envelope.QueryEnvelopeList;
-import io.resys.thena.api.envelope.ThenaContainer;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.structures.org.OrgState;
 import io.resys.thena.structures.org.memberhierarchy.MemberTreeBuilder;
@@ -25,9 +21,8 @@ import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
+
 @RequiredArgsConstructor
 public class MemberHierarchyQueryImpl implements MemberHierarchyQuery {
   private final DbState state;
@@ -53,20 +48,16 @@ public class MemberHierarchyQueryImpl implements MemberHierarchyQuery {
   }
 	
 	private Uni<QueryEnvelope<OrgMemberHierarchy>> getUser(OrgState org, String userId) {
-    return org.query().members().getStatusById(userId).onItem().transformToUni(user -> {
-      if(user == null) {
-        return Uni.createFrom().item(docNotFound(org.getDataSource().getTenant(), userId, new DocNotFoundException()));
-      }
-      return Uni.combine().all().unis(
-          org.query().members().findAllRightsByMemberId(user.getId()),
-          org.query().members().findAllMemberHierarchyEntries(user.getId())
-        ).asTuple()
-        .onItem().transform(tuple -> createUserResult(user, tuple.getItem2(), tuple.getItem1()));
-    });
+    return Uni.combine().all().unis(
+        org.query().members().getById(userId),
+        org.query().members().findAllRightsByMemberId(userId),
+        org.query().members().findAllMemberHierarchyEntries(userId)
+      ).asTuple()
+      .onItem().transform(tuple -> createUserResult(tuple.getItem1(), tuple.getItem2(), tuple.getItem3()));
 	}
 	
 
-	private QueryEnvelope<OrgMemberHierarchy> createUserResult(OrgMemberFlattened user, List<OrgMemberHierarchyEntry> groups, List<OrgRightFlattened> roles) {
+	private QueryEnvelope<OrgMemberHierarchy> createUserResult(OrgMember user, List<OrgRightFlattened> roles, List<OrgMemberHierarchyEntry> groups) {
     return ImmutableQueryEnvelope
         .<OrgMemberHierarchy>builder()
         .status(QueryEnvelopeStatus.OK)
@@ -89,15 +80,5 @@ public class MemberHierarchyQueryImpl implements MemberHierarchyQuery {
 	  }
 	  
     return builder.objects(Collections.unmodifiableList(objects)).build();
-  }
-  
-  private <T extends ThenaContainer> QueryEnvelope<T> docNotFound(
-      Tenant existing, String userId,
-      DocNotFoundException ex
-      ) {
-    final var msg = new StringBuilder()
-        .append("User groups and roles not found by given id = '").append(userId).append("', from repo: '").append(existing.getId()).append("'!")
-        .toString();
-    return QueryEnvelope.docNotFound(existing, log, msg, ex);
   }
 }

@@ -18,8 +18,7 @@ import io.resys.thena.api.actions.OrgCommitActions.ModType;
 import io.resys.thena.api.actions.OrgCommitActions.ModifyOneParty;
 import io.resys.thena.api.actions.OrgCommitActions.OnePartyEnvelope;
 import io.resys.thena.api.entities.CommitResultStatus;
-import io.resys.thena.api.entities.org.OrgActorStatus;
-import io.resys.thena.api.entities.org.OrgActorStatus.OrgActorStatusType;
+import io.resys.thena.api.entities.org.OrgActorStatusType;
 import io.resys.thena.api.entities.org.OrgMember;
 import io.resys.thena.api.entities.org.OrgMemberRight;
 import io.resys.thena.api.entities.org.OrgMembership;
@@ -57,16 +56,13 @@ public class ModifyOnePartyImpl implements ModifyOneParty {
   private Collection<String> allMembers = new LinkedHashSet<>();
   private Collection<String> membersToSet;
   private Collection<String> membersToAdd = new LinkedHashSet<>();
-  private Collection<String> membersToDisable = new LinkedHashSet<>();
   private Collection<String> membersToRemove = new LinkedHashSet<>();
   
   private Collection<String> allRights = new LinkedHashSet<>();
   private Collection<String> rightsToRemove = new LinkedHashSet<>();
   private Collection<String> rightsToAdd = new LinkedHashSet<>();
-  private Collection<String> rightsToDisable = new LinkedHashSet<>();
   private Collection<String> rightsToSet;
   private Map<String, List<String>> addMemberWithRights = new HashMap<>();
-  private Map<String, List<String>> disableMemberWithRights = new HashMap<>();
   private OrgActorStatusType newStatus;
   
   @Override public ModifyOnePartyImpl partyId(String partyId) {
@@ -109,7 +105,6 @@ public class ModifyOnePartyImpl implements ModifyOneParty {
     this.membersToSet = new LinkedHashSet<>(RepoAssert.notNull(memberIdNameOrExtId, () -> "setAllMembers can't be null!"));
     this.membersToAdd.clear();
     this.membersToRemove.clear();
-    this.membersToDisable.clear();
     this.allMembers.clear();
     this.allMembers.addAll(memberIdNameOrExtId);
     return this;
@@ -118,7 +113,6 @@ public class ModifyOnePartyImpl implements ModifyOneParty {
     this.rightsToSet = new LinkedHashSet<>(RepoAssert.notNull(rightIdNameOrExtId, () -> "setAllRights can't be null!"));
     this.rightsToAdd.clear();
     this.rightsToRemove.clear();
-    this.rightsToDisable.clear();
     this.allRights.clear();
     this.allRights.addAll(rightIdNameOrExtId);
     return this;
@@ -129,8 +123,6 @@ public class ModifyOnePartyImpl implements ModifyOneParty {
     this.allMembers.add(memberId);
     if(type == ModType.ADD) {
       membersToAdd.add(memberId);
-    } else if(type == ModType.DISABLED) {
-      membersToDisable.add(memberId);
     } else if(type == ModType.REMOVE) {
       membersToRemove.add(memberId);
     } else {
@@ -145,8 +137,6 @@ public class ModifyOnePartyImpl implements ModifyOneParty {
     this.allRights.add(rightId);
     if(type == ModType.ADD) {
       rightsToAdd.add(rightId);
-    } else if(type == ModType.DISABLED) {
-      rightsToDisable.add(rightId);
     } else if(type == ModType.REMOVE) {
       rightsToRemove.add(rightId);
     } else {
@@ -167,11 +157,6 @@ public class ModifyOnePartyImpl implements ModifyOneParty {
         this.addMemberWithRights.put(memberIdNameOrExtId, new ArrayList<>());
       }
       this.addMemberWithRights.get(memberIdNameOrExtId).add(rightIdNameOrExtId);
-    } else if(type == ModType.DISABLED) {
-      if(!this.disableMemberWithRights.containsKey(memberIdNameOrExtId)) {
-        this.disableMemberWithRights.put(memberIdNameOrExtId, new ArrayList<>());
-      }
-      this.disableMemberWithRights.get(memberIdNameOrExtId).add(rightIdNameOrExtId);
     } else {
       RepoAssert.fail("Unknown modification type: " + type + "!");
     }
@@ -213,9 +198,6 @@ public class ModifyOnePartyImpl implements ModifyOneParty {
 		// memberships
     final Uni<List<OrgMembership>> membershipsPromise = tx.query().memberships().findAllByPartyId(partyId).collect().asList();
 		
-		// statuses
-		final Uni<List<OrgActorStatus>> statusPromise = tx.query().actorStatus().findAllByPartyId(partyId).collect().asList();
-		
 		// party
 		final Uni<OrgParty> partyPromise = tx.query().parties().getById(partyId);
 
@@ -249,15 +231,15 @@ public class ModifyOnePartyImpl implements ModifyOneParty {
     );
       
 		// join data
-		return Uni.combine().all().unis(memberPromise, partyPromise, rightsPromise, statusPromise, membershipsPromise, partyRightsPromise, memberRightsPromise, parentPartyPromise).asTuple()
+		return Uni.combine().all().unis(memberPromise, partyPromise, rightsPromise, membershipsPromise, partyRightsPromise, memberRightsPromise, parentPartyPromise).asTuple()
 		  .onItem().transformToUni(tuple -> {
-		    final var validated = validateQueryResponse(tx, tuple.getItem1(), tuple.getItem2(), tuple.getItem3(), tuple.getItem8());
+		    final var validated = validateQueryResponse(tx, tuple.getItem1(), tuple.getItem2(), tuple.getItem3(), tuple.getItem7());
 		    if(validated != null) {
 		      return Uni.createFrom().item(validated);
 		    }
 		    
 		    try {
-		      return createResponse(tx, tuple.getItem1(), tuple.getItem2(), tuple.getItem3(), tuple.getItem4(), tuple.getItem5(), tuple.getItem6(), tuple.getItem7(), tuple.getItem8());
+		      return createResponse(tx, tuple.getItem1(), tuple.getItem2(), tuple.getItem3(), tuple.getItem4(), tuple.getItem5(), tuple.getItem6(), tuple.getItem7());
 		    } catch (NoPartyChangesException e) {
 		      return Uni.createFrom().item(ImmutableOnePartyEnvelope.builder()
             .repoId(repoId)
@@ -336,7 +318,6 @@ public class ModifyOnePartyImpl implements ModifyOneParty {
       List<OrgMember> allRelatedMembers, 
       OrgParty party, 
       List<OrgRight> allRelatedRights,
-      List<OrgActorStatus> status,
       List<OrgMembership> memberships,
       List<OrgPartyRight> partyRights,
       List<OrgMemberRight> memberRights,
@@ -351,7 +332,6 @@ public class ModifyOnePartyImpl implements ModifyOneParty {
       .newParentPartyId(parent)
       .newStatus(newStatus)
       .current(party)
-      .currentStatus(status)
       .currentMemberships(memberships)
       .currentPartyRights(partyRights)
       .currentMemberRights(memberRights);
@@ -419,9 +399,6 @@ public class ModifyOnePartyImpl implements ModifyOneParty {
       if(right.isMatch(rightsToAdd)) {
         modify.modifyPartyRights(ModType.ADD, right);
       }
-      if(right.isMatch(rightsToDisable)) {
-        modify.modifyPartyRights(ModType.DISABLED, right);
-      }
       if(right.isMatch(rightsToRemove)) {
         modify.modifyPartyRights(ModType.REMOVE, right);
       }
@@ -480,9 +457,6 @@ public class ModifyOnePartyImpl implements ModifyOneParty {
     members.forEach(member -> {
       if(member.isMatch(membersToAdd)) {
         modify.modifyMembership(ModType.ADD, member);
-      }
-      if(member.isMatch(membersToDisable)) {
-         modify.modifyMembership(ModType.DISABLED, member);
       }
       if(member.isMatch(membersToRemove)) {
         modify.modifyMembership(ModType.REMOVE, member);

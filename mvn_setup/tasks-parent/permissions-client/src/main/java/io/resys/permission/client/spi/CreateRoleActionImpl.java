@@ -9,7 +9,7 @@ import io.resys.permission.client.api.model.RoleCommand.RoleCommandType;
 import io.resys.thena.api.actions.OrgCommitActions.CreateOneParty;
 import io.resys.thena.api.actions.OrgCommitActions.OnePartyEnvelope;
 import io.resys.thena.api.entities.CommitResultStatus;
-import io.resys.thena.api.entities.org.OrgActorStatus;
+import io.resys.thena.api.entities.org.OrgActorStatusType;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
@@ -55,7 +55,7 @@ public class CreateRoleActionImpl implements CreateRoleAction {
         .version(role.getCommitId())
         .name(role.getPartyName())
         .description(role.getPartyDescription())
-        .status(OrgActorStatus.OrgActorStatusType.IN_FORCE)
+        .status(OrgActorStatusType.IN_FORCE)
         .parentId(role.getParentId())
         .permissions(response.getDirectRights().stream().map(e -> e.getRightName()).toList())
         .principals(response.getDirectMembers().stream().map(e -> e.getUserName()).toList())

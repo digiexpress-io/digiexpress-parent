@@ -12,6 +12,7 @@ import io.resys.thena.api.entities.org.ThenaOrgObject.IsOrgObject;
 import io.resys.thena.api.entities.org.ThenaOrgObject.IsOrgVersionObject;
 import io.resys.thena.api.envelope.ThenaContainer;
 import io.resys.thena.api.registry.ThenaRegistryService.ThenaTable;
+import io.vertx.core.json.JsonObject;
 
 @Value.Immutable
 public interface OrgMember extends ThenaOrgObject, ThenaContainer, IsOrgObject, IsOrgVersionObject, ThenaTable {
@@ -21,6 +22,9 @@ public interface OrgMember extends ThenaOrgObject, ThenaContainer, IsOrgObject, 
   @Nullable String getExternalId();
   String getUserName();
   String getEmail();
+  
+  OrgActorStatusType getStatus();
+  @Nullable JsonObject getDataExtension();
   
   @JsonIgnore @Override default public OrgDocType getDocType() { return OrgDocType.OrgUser; };
   

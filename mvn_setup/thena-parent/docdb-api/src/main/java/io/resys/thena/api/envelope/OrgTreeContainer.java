@@ -2,9 +2,7 @@ package io.resys.thena.api.envelope;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
-import io.resys.thena.api.entities.org.OrgActorStatus;
 import io.resys.thena.api.entities.org.OrgMember;
 import io.resys.thena.api.entities.org.OrgMemberRight;
 import io.resys.thena.api.entities.org.OrgMembership;
@@ -39,14 +37,6 @@ public interface OrgTreeContainer {
     
     List<OrgMembership> getPartyInheritedMembers(String partyId);
 
-    // Status for all entities
-    Optional<OrgActorStatus> getStatus(OrgParty party);
-    Optional<OrgActorStatus> getStatus(OrgMembership membership);
-    Optional<OrgActorStatus> getStatus(OrgMemberRight memberRight);
-    Optional<OrgActorStatus> getStatus(OrgPartyRight partyRight);
-    Optional<OrgActorStatus> getStatus(OrgMember member);
-    Optional<OrgActorStatus> getStatus(OrgRight right);
-    boolean isStatusDisabled(Optional<OrgActorStatus> status);
     boolean isPartyDisabledUpward(OrgParty group);
   }
 }

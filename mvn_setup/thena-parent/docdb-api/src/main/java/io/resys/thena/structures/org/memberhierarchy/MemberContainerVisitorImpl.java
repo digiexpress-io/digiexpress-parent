@@ -32,11 +32,10 @@ public class MemberContainerVisitorImpl implements UserContainerVisitor<MemberTr
       
       roleData.put(role.getRightId(), role);
       
-      if(!roleStatus.containsKey(role.getRightStatusId()) && role.getRightStatusId() != null) {
-        roleStatus.put(role.getRightStatusId() , ImmutableOrgMemberRightStatus.builder()
-          .roleId(role.getRightId())
+      if(!roleStatus.containsKey(role.getRightId()) && role.getRightId() != null) {
+        roleStatus.put(role.getRightId() , ImmutableOrgMemberRightStatus.builder()
+          .rightId(role.getRightId())
           .status(role.getRightStatus())
-          .statusId(role.getRightStatusId())
           .build());
       }
     });
@@ -50,11 +49,10 @@ public class MemberContainerVisitorImpl implements UserContainerVisitor<MemberTr
   }
   
   private void visitChild(MemberTree root, OrgMemberHierarchyEntry next) {
-    if(!groupStatus.containsKey(next.getPartyStatusId()) && next.getPartyStatusId() != null) {
-      groupStatus.put(next.getPartyStatusId(), ImmutableOrgMemberPartyStatus.builder()
-          .groupId(next.getPartyId())
+    if(!groupStatus.containsKey(next.getPartyId()) && next.getPartyId() != null) {
+      groupStatus.put(next.getPartyId(), ImmutableOrgMemberPartyStatus.builder()
+          .partyId(next.getPartyId())
           .status(next.getPartyStatus())
-          .statusId(next.getPartyStatusId())
           .build());
     }
     

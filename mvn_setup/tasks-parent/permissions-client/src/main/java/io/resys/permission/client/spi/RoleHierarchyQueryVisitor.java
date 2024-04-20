@@ -9,7 +9,7 @@ import io.resys.permission.client.api.model.ImmutablePrincipal;
 import io.resys.permission.client.api.model.ImmutableRole;
 import io.resys.permission.client.api.model.ImmutableRoleHierarchyContainer;
 import io.resys.permission.client.api.model.RoleHierarchyContainer;
-import io.resys.thena.api.entities.org.OrgActorStatus;
+import io.resys.thena.api.entities.org.OrgActorStatusType;
 import io.resys.thena.api.entities.org.OrgMember;
 import io.resys.thena.api.entities.org.OrgMemberRight;
 import io.resys.thena.api.entities.org.OrgMembership;
@@ -49,7 +49,7 @@ public class RoleHierarchyQueryVisitor extends OrgPartyContainerVisitor<RoleHier
     .name(party.getPartyName())
     .version(party.getCommitId())
     .description(party.getPartyDescription())
-    .status(OrgActorStatus.OrgActorStatusType.IN_FORCE)
+    .status(OrgActorStatusType.IN_FORCE)
     .parentId(party.getParentId())
     .addAllPermissions(parentRights.stream().map(r -> r.getRightName()).toList()); 
   }

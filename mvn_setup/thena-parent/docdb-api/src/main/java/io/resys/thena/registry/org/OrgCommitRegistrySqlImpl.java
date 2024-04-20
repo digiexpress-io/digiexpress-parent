@@ -99,8 +99,6 @@ public class OrgCommitRegistrySqlImpl implements OrgCommitRegistry {
     return ImmutableSql.builder().value(new SqlStatement()
         .ln().append("--- constraints for").append(options.getOrgCommits()).ln()
         
-        .append(createOrgCommitFk(options.getOrgActorData())).ln()
-        .append(createOrgCommitFk(options.getOrgActorStatus())).ln()
         .append(createOrgCommitFk(options.getOrgCommitTrees())).ln()
         .append(createOrgCommitFk(options.getOrgMembers())).ln()
         .append(createOrgCommitFk(options.getOrgMemberRights())).ln()        
@@ -109,8 +107,6 @@ public class OrgCommitRegistrySqlImpl implements OrgCommitRegistry {
         .append(createOrgCommitFk(options.getOrgPartyRights())).ln()
         .append(createOrgCommitFk(options.getOrgRights())).ln()
         
-        .append(createOrgCommitFk(options.getOrgActorData(), "created_commit_id")).ln()
-        .append(createOrgCommitFk(options.getOrgActorStatus(), "created_commit_id")).ln()
         .append(createOrgCommitFk(options.getOrgMembers(), "created_commit_id")).ln()
         .append(createOrgCommitFk(options.getOrgParties(), "created_commit_id")).ln()
         .append(createOrgCommitFk(options.getOrgRights(), "created_commit_id")).ln()

@@ -5,8 +5,7 @@ import java.util.List;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import io.resys.thena.api.entities.org.ImmutableOrgRightHierarchy;
-import io.resys.thena.api.entities.org.OrgActorStatus;
-import io.resys.thena.api.entities.org.OrgActorStatus.OrgActorStatusType;
+import io.resys.thena.api.entities.org.OrgActorStatusType;
 import io.resys.thena.api.entities.org.OrgMember;
 import io.resys.thena.api.entities.org.OrgMemberRight;
 import io.resys.thena.api.entities.org.OrgMembership;
@@ -64,7 +63,7 @@ public class RightHierarchyContainerVisitor extends OrgPartyContainerVisitor<Org
   @Override
   public OrgRightHierarchy close() {
     final var result = builder
-        .status(ctx.getStatus(target).map(status -> status.getValue()).orElse(OrgActorStatus.OrgActorStatusType.IN_FORCE))
+        .status(target.getStatus())
         .log(log.toString())
         .roleId(target.getId())
         .commitId(target.getCommitId())
@@ -72,9 +71,8 @@ public class RightHierarchyContainerVisitor extends OrgPartyContainerVisitor<Org
         .roleName(target.getRightName())
         .roleDescription(target.getRightDescription())
         .addAllDirectMembers(ctx.getMembersWithRights(target.getId()).stream()
-            .filter(member -> includeDisabled || ctx.getStatus(member).map(s -> s.getValue() == OrgActorStatusType.IN_FORCE).orElse(true))
             .map(right -> ctx.getMember(right.getMemberId()))
-            .filter(member -> includeDisabled || ctx.getStatus(member).map(s -> s.getValue() == OrgActorStatusType.IN_FORCE).orElse(true))
+            .filter(member -> includeDisabled || member.getStatus() == OrgActorStatusType.IN_FORCE)
             .toList()
         ).build();
     

@@ -1,8 +1,6 @@
 package io.resys.thena.registry.org;
 
 import io.resys.thena.api.registry.OrgRegistry;
-import io.resys.thena.api.registry.org.OrgActorDataRegistry;
-import io.resys.thena.api.registry.org.OrgActorStatusRegistry;
 import io.resys.thena.api.registry.org.OrgCommitRegistry;
 import io.resys.thena.api.registry.org.OrgCommitTreeRegistry;
 import io.resys.thena.api.registry.org.OrgMemberRegistry;
@@ -16,8 +14,6 @@ import io.resys.thena.datasource.TenantTableNames;
 public class OrgRegistrySqlImpl implements OrgRegistry {
   @SuppressWarnings("unused")
   private final TenantTableNames options;
-  private final OrgActorDataRegistry orgActorData;
-  private final OrgActorStatusRegistry orgActorStatus;
   private final OrgCommitRegistry orgCommits;
   private final OrgCommitTreeRegistry orgCommitTrees;
   private final OrgMemberRightRegistry orgMemberRights;
@@ -29,8 +25,6 @@ public class OrgRegistrySqlImpl implements OrgRegistry {
   
   public OrgRegistrySqlImpl(TenantTableNames options) {
     this.options = options;  
-    orgActorData = new OrgActorDataRegistrySqlImpl(options);
-    orgActorStatus = new OrgActorStatusRegistrySqlImpl(options);
     orgCommits = new OrgCommitRegistrySqlImpl(options);
     orgCommitTrees =new OrgCommitTreeRegistrySqlImpl(options);
     orgMemberRights = new OrgMemberRightRegistrySqlImpl(options);
@@ -39,16 +33,6 @@ public class OrgRegistrySqlImpl implements OrgRegistry {
     orgPartyRights =new OrgPartyRightRegistrySqlImpl(options);
     orgParties = new OrgPartyRegistrySqlImpl(options);
     orgRights = new OrgRightRegistrySqlImpl(options);
-  }
-  
-  @Override
-  public OrgActorDataRegistry orgActorData() {
-    return orgActorData;
-  }
-
-  @Override
-  public OrgActorStatusRegistry orgActorStatus() {
-    return orgActorStatus;
   }
 
   @Override

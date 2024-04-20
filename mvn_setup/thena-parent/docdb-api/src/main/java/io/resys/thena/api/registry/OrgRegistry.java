@@ -1,7 +1,5 @@
 package io.resys.thena.api.registry;
 
-import io.resys.thena.api.registry.org.OrgActorDataRegistry;
-import io.resys.thena.api.registry.org.OrgActorStatusRegistry;
 import io.resys.thena.api.registry.org.OrgCommitRegistry;
 import io.resys.thena.api.registry.org.OrgCommitTreeRegistry;
 import io.resys.thena.api.registry.org.OrgMemberRegistry;
@@ -12,8 +10,6 @@ import io.resys.thena.api.registry.org.OrgPartyRightRegistry;
 import io.resys.thena.api.registry.org.OrgRightRegistry;
 
 public interface OrgRegistry {
-  OrgActorDataRegistry orgActorData();
-  OrgActorStatusRegistry orgActorStatus();
   OrgCommitRegistry orgCommits();
   OrgCommitTreeRegistry orgCommitTrees();
   OrgMemberRightRegistry orgMemberRights();

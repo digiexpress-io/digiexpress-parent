@@ -9,8 +9,6 @@ public interface ThenaOrgObject {
   }
   
   enum OrgDocType {
-    OrgActorData, 
-    OrgActorStatus,
     OrgUserRole,
     OrgGroupRole,
     OrgUserMembership,

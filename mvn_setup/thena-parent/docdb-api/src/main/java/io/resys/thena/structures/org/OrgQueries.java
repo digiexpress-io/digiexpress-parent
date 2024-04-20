@@ -3,10 +3,8 @@ package io.resys.thena.structures.org;
 import java.util.Collection;
 import java.util.List;
 
-import io.resys.thena.api.entities.org.OrgActorStatus;
 import io.resys.thena.api.entities.org.OrgCommit;
 import io.resys.thena.api.entities.org.OrgMember;
-import io.resys.thena.api.entities.org.OrgMemberFlattened;
 import io.resys.thena.api.entities.org.OrgMemberHierarchyEntry;
 import io.resys.thena.api.entities.org.OrgMemberRight;
 import io.resys.thena.api.entities.org.OrgMembership;
@@ -27,18 +25,8 @@ public interface OrgQueries {
   PartyRightsQuery partyRights();
   MemberRightsQuery memberRights();
   
-  ActorStatusQuery actorStatus();
   CommitQuery commits();
-  
-  interface ActorStatusQuery {
-    Uni<OrgActorStatus> getById(String id);
-    Multi<OrgActorStatus> findAllByRightId(String id);
-    Multi<OrgActorStatus> findAllByMemberId(String id);
-    Multi<OrgActorStatus> findAllByPartyId(String id);
-    Multi<OrgActorStatus> findAll();
 
-
-  }
   interface MemberRightsQuery {
     Uni<OrgMemberRight> getById(String id);
     Multi<OrgMemberRight> findAll();
@@ -77,7 +65,6 @@ public interface OrgQueries {
     Uni<OrgMember> getById(String id); //user.id or user.email or user.external_id 
     Uni<List<OrgMemberHierarchyEntry>> findAllMemberHierarchyEntries(String memberId);
     Uni<List<OrgRightFlattened>> findAllRightsByMemberId(String memberId);
-    Uni<OrgMemberFlattened> getStatusById(String memberId);
     
     Multi<OrgMember> findAllByPartyId(String id);
   }

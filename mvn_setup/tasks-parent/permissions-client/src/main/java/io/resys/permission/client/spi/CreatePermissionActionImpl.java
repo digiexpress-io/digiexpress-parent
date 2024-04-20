@@ -9,7 +9,7 @@ import io.resys.permission.client.api.model.Principal.Permission;
 import io.resys.thena.api.actions.OrgCommitActions.CreateOneRight;
 import io.resys.thena.api.actions.OrgCommitActions.OneRightEnvelope;
 import io.resys.thena.api.entities.CommitResultStatus;
-import io.resys.thena.api.entities.org.OrgActorStatus;
+import io.resys.thena.api.entities.org.OrgActorStatusType;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
@@ -52,7 +52,7 @@ public class CreatePermissionActionImpl implements CreatePermissionAction {
     return ImmutablePermission.builder()
         .id(permission.getId())
         .version(permission.getCommitId())
-        .status(OrgActorStatus.OrgActorStatusType.IN_FORCE)
+        .status(OrgActorStatusType.IN_FORCE)
         .description(permission.getRightDescription())
         .name(permission.getRightName())
         .roles(response.getDirectParties().stream().map(party -> party.getPartyName()).toList())

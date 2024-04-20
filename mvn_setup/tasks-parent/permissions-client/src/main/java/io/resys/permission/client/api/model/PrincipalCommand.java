@@ -31,7 +31,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import io.resys.thena.api.entities.org.OrgActorStatus;
+import io.resys.thena.api.entities.org.OrgActorStatusType;
 import jakarta.annotation.Nullable;
 
 
@@ -117,7 +117,7 @@ public interface PrincipalCommand extends Serializable {
   interface ChangePrincipalStatus extends PrincipalUpdateCommand {
     String getId();
     String getComment(); // for auditing purposes, user who made changes must describe why, in a comment.
-    OrgActorStatus.OrgActorStatusType getStatus();
+    OrgActorStatusType getStatus();
     
     @Value.Default
     @Override default PrincipalCommandType getCommandType() { return PrincipalCommandType.CHANGE_PRINCIPAL_STATUS; }

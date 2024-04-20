@@ -167,33 +167,6 @@ public class OrgDbPrinter {
       return item;
     }).collect().asList().await().indefinitely();
     
-    
-    result
-    .append(System.lineSeparator())
-    .append("Actors status").append(System.lineSeparator());
-    ctx.query().actorStatus()
-    .findAll().onItem()
-    .transform(item -> {
-      result.append("  - id: ").append(ID.apply(item.getId())).append("    commitId: ").append(ID.apply(item.getCommitId()))
-        .append(System.lineSeparator())
-
-        .append("    memberId").append(": ").append(ID.apply(item.getMemberId()))
-        .append(System.lineSeparator())
-        
-        .append("    partyId").append(": ").append(ID.apply(item.getPartyId()))
-        .append(System.lineSeparator())
-
-        .append("    rightId").append(": ").append(ID.apply(item.getRightId()))
-        .append(System.lineSeparator())
-         
-        .append("    status").append(": ").append(item.getValue())
-        .append(System.lineSeparator())
-        ;
-      
-      return item;
-    }).collect().asList().await().indefinitely();
-    
-    
     return result.toString();
   }
   
@@ -339,28 +312,6 @@ public class OrgDbPrinter {
 
         .append("    rightId").append(": ").append(item.getRightId())
         .append(System.lineSeparator());
-      
-      return item;
-    }).collect().asList().await().indefinitely();
-    
-    result
-    .append(System.lineSeparator())
-    .append("Actors status").append(System.lineSeparator());
-    ctx.query().actorStatus()
-    .findAll().onItem()
-    .transform(item -> {
-      result.append("  - id: ").append(item.getId()).append("    commitId: ").append(item.getCommitId())
-        .append(System.lineSeparator())
-        
-        .append("    partyId").append(": ").append(item.getPartyId())
-        .append(System.lineSeparator())
-
-        .append("    rightId").append(": ").append(item.getRightId())
-        .append(System.lineSeparator())
-         
-        .append("    status").append(": ").append(item.getValue())
-        .append(System.lineSeparator())
-        ;
       
       return item;
     }).collect().asList().await().indefinitely();

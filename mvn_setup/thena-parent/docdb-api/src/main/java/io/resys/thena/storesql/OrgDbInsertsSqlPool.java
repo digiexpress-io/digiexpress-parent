@@ -43,18 +43,12 @@ public class OrgDbInsertsSqlPool implements OrgInserts {
     final var memberRightsInsert = registry.orgMemberRights().insertAll(inputBatch.getMemberRights());
     final var partyRightsInsert = registry.orgPartyRights().insertAll(inputBatch.getPartyRights());
     
-    
-    final var statusInsert = registry.orgActorStatus().insertAll(inputBatch.getActorStatus());
-    final var statusUpdate = registry.orgActorStatus().updateMany(inputBatch.getActorStatusToUpdate());
-    
-    
     final var commitInsert = registry.orgCommits().insertOne(inputBatch.getCommit());
     final var treeInsert = registry.orgCommitTrees().insertAll(inputBatch.getCommitTrees());
     
 
     final var partyRightsDelete = registry.orgPartyRights().deleteAll(inputBatch.getPartyRightToDelete());
     final var memberRightsDelete = registry.orgMemberRights().deleteAll(inputBatch.getMemberRightsToDelete());
-    final var actorStatusDelete = registry.orgActorStatus().deleteAll(inputBatch.getStatusToDelete());
     final var membershipsDelete = registry.orgMemberships().deleteAll(inputBatch.getMembershipsToDelete());
 
     
@@ -64,9 +58,6 @@ public class OrgDbInsertsSqlPool implements OrgInserts {
     final Uni<OrgBatchForOne> memberRightsDeleteUni = Execute.apply(tx, memberRightsDelete).onItem()
         .transform(row -> successOutput(inputBatch, "Member rights deleted, number of deleted entries: " + + (row == null ? 0 : row.rowCount())))
         .onFailure().transform(e -> failOutput(inputBatch, "Failed to delete member rights \r\n" + inputBatch.getMembers(), e));
-    final Uni<OrgBatchForOne> actorStatusDeleteUni = Execute.apply(tx, actorStatusDelete).onItem()
-        .transform(row -> successOutput(inputBatch, "Actor status deleted, number of deleted entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().transform(e -> failOutput(inputBatch, "Failed to delete actor status \r\n" + inputBatch.getMembers(), e));
     final Uni<OrgBatchForOne> membershipsDeleteUni = Execute.apply(tx, membershipsDelete).onItem()
         .transform(row -> successOutput(inputBatch, "Memberships deleted, number of deleted entries: " + + (row == null ? 0 : row.rowCount())))
         .onFailure().transform(e -> failOutput(inputBatch, "Failed to delete memberships \r\n" + inputBatch.getMembers(), e));
@@ -107,15 +98,6 @@ public class OrgDbInsertsSqlPool implements OrgInserts {
         .transform(row -> successOutput(inputBatch, "Member rights saved, number of new entries: " + + (row == null ? 0 : row.rowCount())))
         .onFailure().transform(e -> failOutput(inputBatch, "Failed to save rights \r\n" + inputBatch.getMemberRights(), e));
     
-    // Status related
-    final Uni<OrgBatchForOne> statusInsertUni = Execute.apply(tx, statusInsert).onItem()
-        .transform(row -> successOutput(inputBatch, "Status saved, number of new entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().transform(e -> failOutput(inputBatch, "Failed to save status \r\n" + inputBatch.getParties(), e));
-    final Uni<OrgBatchForOne> statusUpdateUni = Execute.apply(tx, statusUpdate).onItem()
-        .transform(row -> successOutput(inputBatch, "Status saved, number of changed entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().transform(e -> failOutput(inputBatch, "Failed to change status \r\n" + inputBatch.getParties(), e));
-    
-    
     // Commit log
     final Uni<OrgBatchForOne> commitUni = Execute.apply(tx, commitInsert).onItem()
         .transform(row -> successOutput(inputBatch, "Commit saved, number of new entries: " + (row == null ? 0 : row.rowCount())))
@@ -130,14 +112,12 @@ public class OrgDbInsertsSqlPool implements OrgInserts {
     		.unis(
     		    partyRightsDeleteUni,
     		    memberRightsDeleteUni,
-    		    actorStatusDeleteUni,
     		    membershipsDeleteUni,
     		    
     		    commitUni,
     		    memberInsertUni, memberUpdateUni, 
     		    partiesInsertUni, partiesUpdateUni, membershipUni, 
     		    rightsInsertUni, rightsUpdateUni, partyRightsUni, memberRightsUni,
-    		    statusInsertUni, statusUpdateUni,
     		    treeUni
     		 )
     		.with(OrgBatchForOne.class, (List<OrgBatchForOne> items) -> merge(inputBatch, items))

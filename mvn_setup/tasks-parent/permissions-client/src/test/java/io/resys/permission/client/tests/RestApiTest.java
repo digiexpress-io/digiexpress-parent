@@ -23,7 +23,7 @@ import io.resys.permission.client.api.model.PermissionCommand.PermissionUpdateCo
 import io.resys.permission.client.api.model.Principal;
 import io.resys.permission.client.api.model.Principal.Permission;
 import io.resys.permission.client.api.model.Principal.Role;
-import io.resys.thena.api.entities.org.OrgActorStatus.OrgActorStatusType;
+import io.resys.thena.api.entities.org.OrgActorStatusType;
 import jakarta.inject.Inject;
 
 @QuarkusTest

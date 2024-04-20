@@ -24,8 +24,6 @@ import java.util.List;
 
 import org.immutables.value.Value;
 
-import io.resys.thena.api.entities.org.OrgActorData;
-import io.resys.thena.api.entities.org.OrgActorStatus;
 import io.resys.thena.api.entities.org.OrgCommit;
 import io.resys.thena.api.entities.org.OrgCommitTree;
 import io.resys.thena.api.entities.org.OrgMember;
@@ -46,8 +44,6 @@ public interface OrgInserts {
   interface OrgBatchForOne {
     OrgCommit getCommit();
     List<OrgCommitTree> getCommitTrees();
-    List<OrgActorData> getActorData();
-    List<OrgActorStatus> getActorStatus();
     List<OrgParty> getParties();
     List<OrgRight> getRights();
     List<OrgMember> getMembers();
@@ -59,12 +55,10 @@ public interface OrgInserts {
     List<OrgMemberRight> getMemberRightsToDelete();
     List<OrgPartyRight> getPartyRightToDelete();
     List<OrgMembership> getMembershipsToDelete();
-    List<OrgActorStatus> getStatusToDelete();
     
     List<OrgMember> getMembersToUpdate();
     List<OrgParty> getPartiesToUpdate();
     List<OrgRight> getRightsToUpdate();
-    List<OrgActorStatus> getActorStatusToUpdate();
     
     BatchStatus getStatus();
     String getRepoId();
@@ -73,8 +67,6 @@ public interface OrgInserts {
     
     default boolean isEmpty() {
       return 
-        this.getActorStatus().isEmpty() &&
-        this.getActorData().isEmpty() &&
         this.getMemberRights().isEmpty() && 
         this.getMemberships().isEmpty() &&
         this.getPartyRights().isEmpty() &&
@@ -82,15 +74,13 @@ public interface OrgInserts {
         this.getParties().isEmpty() &&
         this.getRights().isEmpty() &&
         
-        this.getStatusToDelete().isEmpty() &&
         this.getMemberRightsToDelete().isEmpty() &&
         this.getMembershipsToDelete().isEmpty() &&
         this.getPartyRightToDelete().isEmpty() &&
   
         this.getMembersToUpdate().isEmpty() &&
         this.getPartiesToUpdate().isEmpty() &&
-        this.getRightsToUpdate().isEmpty() &&
-        this.getActorStatusToUpdate().isEmpty();   
+        this.getRightsToUpdate().isEmpty();   
     }
    
   }

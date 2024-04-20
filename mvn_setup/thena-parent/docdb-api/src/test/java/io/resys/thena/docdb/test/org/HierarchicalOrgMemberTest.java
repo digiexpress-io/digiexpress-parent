@@ -17,7 +17,7 @@ import io.resys.thena.api.actions.TenantActions.CommitStatus;
 import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.Tenant.StructureType;
-import io.resys.thena.api.entities.org.OrgActorStatus.OrgActorStatusType;
+import io.resys.thena.api.entities.org.OrgActorStatusType;
 import io.resys.thena.api.entities.org.OrgMember;
 import io.resys.thena.api.entities.org.OrgParty;
 import io.resys.thena.api.entities.org.OrgRight;
@@ -140,14 +140,13 @@ super-user
         """, userGroupsAndRoles2.getLog());
     
     
-    // remove user 2 from child-1.2.2 group
-    getClient().org(repo).commit().modifyOneMember()
-        .memberId(userGroupsAndRoles2.getUserId())
-        .modifyParties(ModType.DISABLED, child1_2_2.getId())
-        .author("au")
-        .message("mod for user")
-        .build().await().atMost(Duration.ofMinutes(1))
-        .getMember();
+    getClient().org(repo).commit().modifyOneParty()
+      .partyId(child1_2_2.getId())
+      .status(OrgActorStatusType.DISABLED)
+      .author("au")
+      .message("mod for user")
+      .build().await().atMost(Duration.ofMinutes(1));
+      
     assertRepo(repo.getRepo(), "HierarchicalOrgMemberTest/membership-disabled.txt");
     
     userGroupsAndRoles2 = getClient().org(repo).find().memberHierarchyQuery()
@@ -177,15 +176,13 @@ super-user
     
     
     // Reject changes because there are non
-    final var rejectNoChanges = getClient().org(repo).commit().modifyOneMember()
-      .memberId(userGroupsAndRoles2.getUserId())
-
-      .modifyParties(ModType.DISABLED, child1_2_2.getId())
-      .author("au")
-      .message("mod for user")
-      .build().await().atMost(Duration.ofMinutes(1))
-      .getStatus();
-    Assertions.assertEquals(CommitResultStatus.NO_CHANGES, rejectNoChanges);
+    final var rejectNoChanges = getClient().org(repo).commit().modifyOneParty()
+        .partyId(child1_2_2.getId())
+        .status(OrgActorStatusType.DISABLED)
+        .author("au")
+        .message("mod for user")
+        .build().await().atMost(Duration.ofMinutes(1));
+    Assertions.assertEquals(CommitResultStatus.NO_CHANGES, rejectNoChanges.getStatus());
     
     userGroupsAndRoles2 = getClient().org(repo).find().memberHierarchyQuery()
         .get(userId2.getId()).await().atMost(Duration.ofMinutes(1)).getObjects(); 

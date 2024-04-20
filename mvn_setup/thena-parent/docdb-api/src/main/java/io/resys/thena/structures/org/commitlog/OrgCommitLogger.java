@@ -49,9 +49,9 @@ public class OrgCommitLogger {
     if(a.getDocType() != b.getDocType()) {
       return a.getDocType().compareTo(b.getDocType());
     }
-    
-    switch (a.getDocType()) {
     /*
+    switch (a.getDocType()) {
+    
     case GRIM_ASSIGNMENT: {
       final GrimAssignment a1 = (GrimAssignment) a;
       final GrimAssignment a2 = (GrimAssignment) b;
@@ -59,9 +59,9 @@ public class OrgCommitLogger {
         .compare(a1.getAssignmentType(), a2.getAssignmentType())
         .compare(a1.getAssignee(), a2.getAssignee())
         .result();
-    }*/
     }
-    
+    }
+    */
     return 0;
   }
   

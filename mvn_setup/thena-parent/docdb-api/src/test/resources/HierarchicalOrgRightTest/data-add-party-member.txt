@@ -88,5 +88,3 @@ Party rights
   - id: 21    commitId: 20
     partyId: 11
     rightId: 17
-
-Actors status

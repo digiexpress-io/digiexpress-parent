@@ -69,10 +69,9 @@ public abstract class TenantTableNames {
   public abstract String getOrgMembers();
   public abstract String getOrgMemberRights();
   public abstract String getOrgMemberships();
-  public abstract String getOrgActorStatus();
   public abstract String getOrgCommits();
   public abstract String getOrgCommitTrees();
-  public abstract String getOrgActorData();
+
   
   public TenantTableNames toRepo(Tenant repo) {
     final String prefix = repo.getPrefix();
@@ -99,10 +98,9 @@ public abstract class TenantTableNames {
         .orgMembers(        prefix + DEFAULTS.getOrgMembers())
         .orgMemberRights(   prefix + DEFAULTS.getOrgMemberRights())
         .orgMemberships(    prefix + DEFAULTS.getOrgMemberships())
-        .orgActorStatus(    prefix + DEFAULTS.getOrgActorStatus())
         .orgCommits(        prefix + DEFAULTS.getOrgCommits())
         .orgCommitTrees(    prefix + DEFAULTS.getOrgCommitTrees())
-        .orgActorData(      prefix + DEFAULTS.getOrgActorData())
+
         
         .grimAssignment(    prefix + DEFAULTS.getGrimAssignment())
         .grimCommit(        prefix + DEFAULTS.getGrimCommit())
@@ -146,8 +144,6 @@ public abstract class TenantTableNames {
         
         .orgCommits("org_commits")
         .orgCommitTrees("org_commit_trees")
-        .orgActorStatus("org_actor_status")
-        .orgActorData("org_actor_data")
         
         .grimAssignment("grim_assignment")
         .grimCommit("grim_commit")

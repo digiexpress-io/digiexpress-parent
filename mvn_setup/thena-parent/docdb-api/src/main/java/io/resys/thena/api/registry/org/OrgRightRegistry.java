@@ -13,12 +13,10 @@ public interface OrgRightRegistry extends ThenaRegistryService<OrgRight, io.vert
   ThenaSqlClient.Sql findAll();
   
   ThenaSqlClient.SqlTuple findAll(Collection<String> id);
-  ThenaSqlClient.SqlTuple insertOne(OrgRight role);
   ThenaSqlClient.SqlTuple findAllByPartyId(String partyId);
   ThenaSqlClient.SqlTuple findAllByMemberId(String memberId);
   
   ThenaSqlClient.SqlTupleList insertAll(Collection<OrgRight> roles);
-  ThenaSqlClient.SqlTuple updateOne(OrgRight role);
   ThenaSqlClient.SqlTupleList updateMany(Collection<OrgRight> roles);
   
   ThenaSqlClient.Sql createTable();

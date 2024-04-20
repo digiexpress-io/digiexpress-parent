@@ -17,12 +17,12 @@ import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j(topic = LogConstants.SHOW_SQL)
-public class OrgUserMembershipsQuerySqlPool implements OrgQueries.MembershipQuery {
+public class OrgMembershipsQuerySqlPool implements OrgQueries.MembershipQuery {
   private final ThenaSqlDataSource wrapper;
   private final OrgRegistry registry;
   private final ThenaSqlDataSourceErrorHandler errorHandler;
   
-  public OrgUserMembershipsQuerySqlPool(ThenaSqlDataSource dataSource) {
+  public OrgMembershipsQuerySqlPool(ThenaSqlDataSource dataSource) {
     this.wrapper = dataSource;
     this.registry = dataSource.getRegistry().org();
     this.errorHandler = dataSource.getErrorHandler();

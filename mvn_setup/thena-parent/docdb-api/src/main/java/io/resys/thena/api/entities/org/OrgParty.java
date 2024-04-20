@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.resys.thena.api.entities.org.ThenaOrgObject.IsOrgObject;
 import io.resys.thena.api.entities.org.ThenaOrgObject.IsOrgVersionObject;
 import io.resys.thena.api.registry.ThenaRegistryService.ThenaTable;
+import io.vertx.core.json.JsonObject;
 
 @Value.Immutable
 public interface OrgParty extends ThenaOrgObject, IsOrgObject, IsOrgVersionObject, ThenaTable {
@@ -24,6 +25,10 @@ public interface OrgParty extends ThenaOrgObject, IsOrgObject, IsOrgVersionObjec
   OrgDocSubType getPartySubType();
   String getPartyName(); 
   String getPartyDescription();
+
+  OrgActorStatusType getStatus();
+  @Nullable JsonObject getDataExtension();
+  
   
   @JsonIgnore @Override default public OrgDocType getDocType() { return OrgDocType.OrgGroup; };
   

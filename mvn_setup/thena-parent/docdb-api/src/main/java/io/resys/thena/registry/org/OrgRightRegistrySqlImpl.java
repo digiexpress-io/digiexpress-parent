@@ -6,6 +6,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import io.resys.thena.api.entities.org.ImmutableOrgRight;
+import io.resys.thena.api.entities.org.OrgActorStatusType;
 import io.resys.thena.api.entities.org.OrgRight;
 import io.resys.thena.api.entities.org.ThenaOrgObject.OrgDocSubType;
 import io.resys.thena.api.registry.org.OrgRightRegistry;
@@ -105,35 +106,24 @@ public class OrgRightRegistrySqlImpl implements OrgRightRegistry {
         .build();
   }
   @Override
-  public ThenaSqlClient.SqlTuple insertOne(OrgRight doc) {
-    return ImmutableSqlTuple.builder()
-        .value(new SqlStatement()
-        .append("INSERT INTO ").append(options.getOrgRights())
-        .append(" (id, commit_id, created_commit_id, external_id, right_name, right_description) VALUES($1, $2, $2, $3, $4, $5, $6)").ln()
-        .build())
-        .props(Tuple.from(new Object[]{ doc.getId(), doc.getCommitId(), doc.getExternalId(), doc.getRightName(), doc.getRightDescription(), doc.getRightSubType().name() }))
-        .build();
-  }
-  @Override
-  public ThenaSqlClient.SqlTuple updateOne(OrgRight doc) {
-    return ImmutableSqlTuple.builder()
-        .value(new SqlStatement()
-        .append("UPDATE ").append(options.getOrgRights())
-        .append(" SET external_id = $1, right_name = $2, right_description = $3, commit_id = $4, right_sub_type = $5")
-        .append(" WHERE id = $6")
-        .build())
-        .props(Tuple.from(new Object[]{doc.getExternalId(), doc.getRightName(), doc.getRightDescription(), doc.getCommitId(), doc.getId(), doc.getRightSubType().name()}))
-        .build();
-  }
-  @Override
   public ThenaSqlClient.SqlTupleList insertAll(Collection<OrgRight> users) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getOrgRights())
-        .append(" (id, commit_id, created_commit_id, external_id, right_name, right_description, right_sub_type) VALUES($1, $2, $2, $3, $4, $5, $6)").ln()
+        .append(" (id, commit_id, created_commit_id, external_id, right_name, right_description, right_sub_type, right_status, right_data_extension)").ln()
+        .append(" VALUES($1, $2, $2, $3, $4, $5, $6, $7, $8)").ln()
         .build())
         .props(users.stream()
-            .map(doc -> Tuple.from(new Object[]{ doc.getId(), doc.getCommitId(), doc.getExternalId(), doc.getRightName(), doc.getRightDescription(), doc.getRightSubType().name() }))
+            .map(doc -> Tuple.from(new Object[]{ 
+                doc.getId(), 
+                doc.getCommitId(), 
+                doc.getExternalId(), 
+                doc.getRightName(), 
+                doc.getRightDescription(), 
+                doc.getRightSubType().name(),
+                doc.getStatus(),
+                doc.getDataExtension()
+             }))
             .collect(Collectors.toList()))
         .build();
   }
@@ -142,11 +132,20 @@ public class OrgRightRegistrySqlImpl implements OrgRightRegistry {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("UPDATE ").append(options.getOrgRights())
-        .append(" SET external_id = $1, right_name = $2, right_description = $3, commit_id = $4, right_sub_type = $5")
-        .append(" WHERE id = $6")
+        .append(" SET external_id = $1, right_name = $2, right_description = $3, commit_id = $4, right_sub_type = $5, right_status = $6, right_data_extension = $7")
+        .append(" WHERE id = $8")
         .build())
         .props(users.stream()
-            .map(doc -> Tuple.from(new Object[]{doc.getExternalId(), doc.getRightName(), doc.getRightDescription(), doc.getCommitId(), doc.getRightSubType().name(), doc.getId()}))
+            .map(doc -> Tuple.from(new Object[]{
+                doc.getExternalId(), 
+                doc.getRightName(), 
+                doc.getRightDescription(), 
+                doc.getCommitId(), 
+                doc.getRightSubType().name(),
+                doc.getStatus(),
+                doc.getDataExtension(),
+                doc.getId()
+             }))
             .collect(Collectors.toList()))
         .build();
   }
@@ -160,6 +159,8 @@ public class OrgRightRegistrySqlImpl implements OrgRightRegistry {
         .rightDescription(row.getString("right_description"))
         .rightSubType(OrgDocSubType.valueOf(row.getString("right_sub_type")))
         .commitId(row.getString("commit_id"))
+        .status(OrgActorStatusType.valueOf(row.getString("right_status")))
+        .dataExtension(row.getJsonObject("right_data_extension"))
         .build();
   }
   @Override
@@ -177,7 +178,11 @@ public class OrgRightRegistrySqlImpl implements OrgRightRegistry {
     .append("  external_id VARCHAR(40) UNIQUE,").ln()
     .append("  right_sub_type VARCHAR(40) NOT NULL,").ln()
     .append("  right_name VARCHAR(255) UNIQUE NOT NULL,").ln()
-    .append("  right_description VARCHAR(255) NOT NULL").ln()
+    .append("  right_description VARCHAR(255) NOT NULL,").ln()
+    
+    .append("  right_status VARCHAR(40) NOT NULL,").ln()
+    .append("  right_data_extension JSONB").ln()
+    
     .append(");").ln()
     
     
@@ -198,9 +203,6 @@ public class OrgRightRegistrySqlImpl implements OrgRightRegistry {
   public ThenaSqlClient.Sql createConstraints() {
     return ImmutableSql.builder().value(new SqlStatement()
         .ln().append("--- constraints for").append(options.getOrgRights()).ln()
-        .append(createOrgRoleFk(options.getOrgActorData())).ln()
-        .append(createOrgRoleFk(options.getOrgActorStatus())).ln()
-        
         .append(createOrgRoleFk(options.getOrgMemberRights())).ln()
         .append(createOrgRoleFk(options.getOrgPartyRights())).ln()
         .build())

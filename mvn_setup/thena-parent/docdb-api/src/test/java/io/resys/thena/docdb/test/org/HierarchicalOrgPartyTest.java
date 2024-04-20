@@ -169,7 +169,7 @@ group-1
     // remove user 2 from child-1.2.2 group
     getClient().org(repo).commit().modifyOneMember()
         .memberId(userId2.getId())
-        .modifyParties(ModType.DISABLED, child1_2_2.getId())
+        .modifyParties(ModType.REMOVE, child1_2_2.getId())
         .author("au")
         .message("mod for user")
         .build().await().atMost(Duration.ofMinutes(1))
@@ -217,7 +217,7 @@ group-1
     // Reject changes because there are non
     final var rejectNoChanges = getClient().org(repo).commit().modifyOneMember()
       .memberId(userId2.getId())
-      .modifyParties(ModType.DISABLED, child1_2_2.getId())
+      .modifyParties(ModType.REMOVE, child1_2_2.getId())
       .author("au")
       .message("mod for user")
       .build().await().atMost(Duration.ofMinutes(1))

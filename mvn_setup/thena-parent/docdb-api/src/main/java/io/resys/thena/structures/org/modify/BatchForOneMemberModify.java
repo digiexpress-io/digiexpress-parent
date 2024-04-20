@@ -12,12 +12,11 @@ import java.util.stream.Collectors;
 import com.google.common.base.Objects;
 
 import io.resys.thena.api.actions.OrgCommitActions.ModType;
-import io.resys.thena.api.entities.org.ImmutableOrgActorStatus;
 import io.resys.thena.api.entities.org.ImmutableOrgCommit;
 import io.resys.thena.api.entities.org.ImmutableOrgMember;
 import io.resys.thena.api.entities.org.ImmutableOrgMemberRight;
 import io.resys.thena.api.entities.org.ImmutableOrgMembership;
-import io.resys.thena.api.entities.org.OrgActorStatus;
+import io.resys.thena.api.entities.org.OrgActorStatusType;
 import io.resys.thena.api.entities.org.OrgMember;
 import io.resys.thena.api.entities.org.OrgMemberRight;
 import io.resys.thena.api.entities.org.OrgMembership;
@@ -46,13 +45,11 @@ public class BatchForOneMemberModify {
   private final ImmutableOrgBatchForOne.Builder batch = ImmutableOrgBatchForOne.builder();
   private final List<OrgMemberRight> currentMemberRights = new ArrayList<>();
   private final List<OrgMembership> currentMemberships = new ArrayList<>();
-  private final List<OrgActorStatus> currentActorStatus = new ArrayList<>();
-
 
   private Optional<String> newMemberName;
   private Optional<String> newEmail;
   private Optional<String> newExternalId;
-  private OrgActorStatus.OrgActorStatusType newStatus;
+  private OrgActorStatusType newStatus;
   
   public BatchForOneMemberModify current(OrgMember current) {
     this.current = current; 
@@ -64,10 +61,6 @@ public class BatchForOneMemberModify {
   }
   public BatchForOneMemberModify currentMemberRights(List<OrgMemberRight> currentMemberRights) { 
     this.currentMemberRights.addAll(currentMemberRights);
-    return this; 
-  }
-  public BatchForOneMemberModify currentStatus(List<OrgActorStatus> status) { 
-    this.currentActorStatus.addAll(status);
     return this; 
   }
   public BatchForOneMemberModify newUserName(Optional<String> memberName) {
@@ -82,7 +75,7 @@ public class BatchForOneMemberModify {
     this.newExternalId = externalId;
     return this; 
   }
-  public BatchForOneMemberModify newStatus(OrgActorStatus.OrgActorStatusType newStatus) { 
+  public BatchForOneMemberModify newStatus(OrgActorStatusType newStatus) { 
     this.newStatus = newStatus;
     return this; 
   }
@@ -127,40 +120,29 @@ public class BatchForOneMemberModify {
     // member
     visitMemberChanges(commitId);
     
-    // member status
-    final var memberStatus = this.currentActorStatus.stream().filter(g -> g.getRightId() == null && g.getPartyId() == null).findFirst();
-    visitMemberStatus(commitId, memberStatus.orElse(null));
     
     // parties
     final var memebrShipInParty = this.currentMemberships.stream().filter(g -> g.getPartyId() != null).collect(Collectors.toMap(e -> e.getPartyId(), e -> e));
-    final var statusInParty = this.currentActorStatus.stream().filter(g -> g.getPartyId() != null && g.getRightId() == null).collect(Collectors.toMap(e -> e.getPartyId(), e -> e));
     for(final var entry : modifyMemberships) {
-      final var status = statusInParty.get(entry.getGroup().getId());
       final var membership = memebrShipInParty.get(entry.getGroup().getId());
       if(entry.getType() == ModType.ADD) {
-        this.visitAddMembership(entry.getGroup(), membership, status, commitId);  
-      } else if(entry.getType() == ModType.DISABLED) {
-        this.visitDisableMembership(entry.getGroup(), membership, status, commitId);
+        this.visitAddMembership(entry.getGroup(), membership, commitId);  
       } else if(entry.getType() == ModType.REMOVE) {
-        this.visitRemoveMembership(entry.getGroup(), membership, status, commitId);
+        this.visitRemoveMembership(entry.getGroup(), membership, commitId);
       } else {
         RepoAssert.fail("Unknown modification type: " + entry.getType() + "!"); 
       }
     }
     
     // rights
-    final var statusInRights = this.currentActorStatus.stream().filter(g -> g.getRightId() != null && g.getPartyId() == null).collect(Collectors.toMap(e -> e.getRightId(), e -> e));
+    
     final var rightsByRightIdId = this.currentMemberRights.stream().collect(Collectors.groupingBy(OrgMemberRight::getRightId));
     for(final var entry : modifyMemberRights) {
-      final var status = statusInRights.get(entry.getRole().getId());
       final var rights = Optional.ofNullable(rightsByRightIdId.get(entry.getRole().getId())).orElse(Collections.emptyList());
-      
       if(entry.getType() == ModType.ADD) {
-        this.visitAddRightForMember(entry.getRole(), rights, status, Optional.empty(), commitId);  
-      } else if(entry.getType() == ModType.DISABLED) {
-        this.visitDisableRightForMember(entry.getRole(), rights, status, Optional.empty(), commitId);
+        this.visitAddRightForMember(entry.getRole(), rights, Optional.empty(), commitId);  
       } else if(entry.getType() == ModType.REMOVE) {
-        this.visitRemoveRightForMember(entry.getRole(), rights, status, Optional.empty(), commitId);
+        this.visitRemoveRightForMember(entry.getRole(), rights, Optional.empty(), commitId);
       } else {
         RepoAssert.fail("Unknown modification type: " + entry.getType() + "!"); 
       }
@@ -170,12 +152,8 @@ public class BatchForOneMemberModify {
       for(final OrgRight role : entry.getValue()) {
         final var party = Optional.of(entry.getKey());
         final var rights = Optional.ofNullable(rightsByRightIdId.get(role.getId())).orElse(Collections.emptyList());
-        final var status = this.currentActorStatus.stream()
-            .filter(g -> role.getId().equals(g.getRightId()))
-            .filter(g -> entry.getKey().getId().equals(g.getPartyId()))
-            .findFirst().orElse(null);
 
-        this.visitAddRightForMember(role, rights, status, party, commitId);
+        this.visitAddRightForMember(role, rights, party, commitId);
       }
     }
     ;
@@ -206,11 +184,13 @@ public class BatchForOneMemberModify {
     .externalId(newExternalId == null ? current.getExternalId() : newExternalId.get())
     .userName(newMemberName == null ? current.getUserName() : newMemberName.get())
     .email(newEmail == null  ? current.getEmail() : newEmail.get())
+    .status(newStatus == null ? current.getStatus() : newStatus)
     .build();
     
     // no changes
     if( Objects.equal(newState.getEmail(), current.getEmail()) && 
         Objects.equal(newState.getExternalId(), current.getExternalId()) &&
+        Objects.equal(newState.getStatus(), current.getStatus()) &&
         Objects.equal(newState.getUserName(), current.getUserName())
         ) {
       return;
@@ -218,92 +198,10 @@ public class BatchForOneMemberModify {
     this.commitBuilder.merge(current, newState);
     this.batch.addMembersToUpdate(newState);
   }
-  
-  private void visitMemberStatus(String commitId, OrgActorStatus status) {
-    if(this.newStatus == null) {
-      return;
-    }
-    if(status != null && status.getValue() == newStatus) {
-      return;
-    }
-     
-    if(status == null) {
-      final var newStatus = ImmutableOrgActorStatus.builder()
-        .id(OidUtils.gen())
-        .commitId(commitId)
-        .createdWithCommitId(commitId)
-        .memberId(current.getId())
-        .value(this.newStatus)
-        .build();
-      this.batch.addActorStatus(newStatus);
-      this.commitBuilder.add(newStatus);
-    } else {
-      final var newStatus = ImmutableOrgActorStatus.builder().from(status).value(this.newStatus).build();
-      this.commitBuilder.merge(status, newStatus);
-      this.batch.addActorStatusToUpdate(newStatus);      
-    }
-  }
 
-  private void visitDisableRightForMember(
-      OrgRight entry, 
-      List<OrgMemberRight> memberRights, 
-      OrgActorStatus status, 
-      Optional<OrgParty> group, String commitId) {
-    
-    final var partyId = group.map(g -> g.getId()).orElse(null);
-    final var exists = memberRights.stream()
-        .filter(e -> 
-          (e.getPartyId() == null && partyId == null) ||
-          (e.getPartyId() != null && partyId != null && partyId.equals(e.getPartyId()))
-        )
-        .count() > 0;
-        
-    if(!exists) {
-      final var membership = ImmutableOrgMemberRight.builder()
-          .id(OidUtils.gen())
-          .rightId(entry.getId())
-          .memberId(current.getId())
-          .commitId(commitId)
-          .partyId(partyId)
-          .build();
-      this.batch.addMemberRights(membership);
-      this.commitBuilder.add(membership);
-    }
-    
-    if(status == null) {
-      final var roleStatus = ImmutableOrgActorStatus.builder()
-          .id(OidUtils.gen())
-          .rightId(entry.getId())
-          .memberId(current.getId())
-          .commitId(commitId)
-          .value(OrgActorStatus.OrgActorStatusType.DISABLED)
-          .build();      
-      this.batch.addActorStatus(roleStatus);
-      this.commitBuilder.add(roleStatus);
-      return;
-    }
-    
-    // already removed
-    if(status.getValue() == OrgActorStatus.OrgActorStatusType.DISABLED) {
-      return;
-    }
-
-    final var roleStatus = ImmutableOrgActorStatus.builder()
-        .id(status.getId())
-        .rightId(entry.getId())
-        .memberId(current.getId())
-        .commitId(commitId)
-        .value(OrgActorStatus.OrgActorStatusType.DISABLED)
-        .build();
-    
-    this.batch.addActorStatusToUpdate(roleStatus);
-    this.commitBuilder.merge(status, roleStatus);
-  }
-  
   private void visitRemoveRightForMember(
       OrgRight entry, 
-      List<OrgMemberRight> memberRights, 
-      OrgActorStatus status, 
+      List<OrgMemberRight> memberRights,  
       Optional<OrgParty> group, String commitId) {
     
     final var partyId = group.map(g -> g.getId()).orElse(null);
@@ -316,20 +214,11 @@ public class BatchForOneMemberModify {
       this.batch.addMemberRightsToDelete(memberRight);
       this.commitBuilder.rm(memberRight);
     });
-    
-    
-    // nothing to remove
-    if(status == null) {
-      return;
-    }
-    this.batch.addStatusToDelete(status);
-    this.commitBuilder.rm(status);
   }
   
   private void visitAddRightForMember(
       OrgRight entry, 
       List<OrgMemberRight> memberRights, 
-      OrgActorStatus status, 
       Optional<OrgParty> group, String commitId) {
     
     final var partyId = group.map(g -> g.getId()).orElse(null);
@@ -351,74 +240,17 @@ public class BatchForOneMemberModify {
       this.commitBuilder.add(membership);
     }
     
-    if(status != null) {
-      final var roleStatus = ImmutableOrgActorStatus.builder()
-          .id(status.getId())
-          .rightId(entry.getId())
-          .memberId(current.getId())
-          .commitId(commitId)
-          .partyId(group.map(g -> g.getId()).orElse(null))
-          .value(OrgActorStatus.OrgActorStatusType.IN_FORCE)
-          .build();
-      this.batch.addActorStatusToUpdate(roleStatus);
-      this.commitBuilder.merge(status, roleStatus);
-    }
   }
-  
-  private void visitDisableMembership(OrgParty entry, OrgMembership currentMembership, OrgActorStatus status, String commitId) {
-    if(currentMembership == null) {
-      final var membership = ImmutableOrgMembership.builder()
-          .id(OidUtils.gen())
-          .partyId(entry.getId())
-          .memberId(current.getId())
-          .commitId(commitId)
-          .build();
-      this.batch.addMemberships(membership);
-      this.commitBuilder.add(membership);
-    }
-    
-    if(status == null) {
-      final var groupStatus = ImmutableOrgActorStatus.builder()
-          .id(OidUtils.gen())
-          .createdWithCommitId(commitId)
-          .partyId(entry.getId())
-          .memberId(current.getId())
-          .commitId(commitId)
-          .value(OrgActorStatus.OrgActorStatusType.DISABLED)
-          .build();
-      this.batch.addActorStatus(groupStatus);
-      this.commitBuilder.add(groupStatus);
-      return;
-    }
-    
-    // already disabled
-    if(status.getValue() == OrgActorStatus.OrgActorStatusType.DISABLED) {
-      return;
-    }
 
-    final var groupStatus = ImmutableOrgActorStatus.builder()
-        .id(status.getId())
-        .partyId(entry.getId())
-        .memberId(current.getId())
-        .commitId(commitId)
-        .value(OrgActorStatus.OrgActorStatusType.DISABLED)
-        .build();
-    this.batch.addActorStatusToUpdate(groupStatus);
-    this.commitBuilder.merge(status, groupStatus);
-  }
   
-  private void visitRemoveMembership(OrgParty entry, OrgMembership currentMembership, OrgActorStatus status, String commitId) {
+  private void visitRemoveMembership(OrgParty entry, OrgMembership currentMembership, String commitId) {
     if(currentMembership != null) {
       this.batch.addMembershipsToDelete(currentMembership);
       this.commitBuilder.rm(currentMembership);
     }
-    if(status != null) {
-      this.batch.addStatusToDelete(status);
-      this.commitBuilder.rm(status);
-    }
   }
   
-  private void visitAddMembership(OrgParty entry, OrgMembership currentMembership, OrgActorStatus status, String commitId) {
+  private void visitAddMembership(OrgParty entry, OrgMembership currentMembership, String commitId) {
     if(currentMembership == null) {
       final var membership = ImmutableOrgMembership.builder()
           .id(OidUtils.gen())
@@ -428,18 +260,6 @@ public class BatchForOneMemberModify {
           .build();
       this.batch.addMemberships(membership);
       this.commitBuilder.add(membership);
-    }
-    
-    if(status != null && status.getValue() != OrgActorStatus.OrgActorStatusType.IN_FORCE) {
-      final var groupStatus = ImmutableOrgActorStatus.builder()
-          .id(status.getId())
-          .partyId(entry.getId())
-          .memberId(current.getId())
-          .commitId(commitId)
-          .value(OrgActorStatus.OrgActorStatusType.IN_FORCE)
-          .build();
-      this.batch.addStatusToDelete(groupStatus);
-      this.commitBuilder.merge(status, groupStatus);
     }
   }
   

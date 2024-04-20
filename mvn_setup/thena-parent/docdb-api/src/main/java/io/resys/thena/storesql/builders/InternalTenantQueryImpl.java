@@ -146,11 +146,8 @@ public class InternalTenantQueryImpl implements InternalTenantQuery {
           .append(org.orgMembers().createTable().getValue())
           .append(org.orgMemberRights().createTable().getValue())
           .append(org.orgMemberships().createTable().getValue())
-
-          .append(org.orgActorStatus().createTable().getValue())
           .append(org.orgCommits().createTable().getValue())
           .append(org.orgCommitTrees().createTable().getValue())
-          .append(org.orgActorData().createTable().getValue())
           
           .append(org.orgRights().createConstraints().getValue())
           .append(org.orgMembers().createConstraints().getValue())
@@ -262,8 +259,6 @@ public class InternalTenantQueryImpl implements InternalTenantQuery {
       } else if(newRepo.getType() == StructureType.org) {
         
         tablesDrop
-        .append(org.orgActorData().dropTable().getValue())
-        .append(org.orgActorStatus().dropTable().getValue())
         .append(org.orgPartyRights().dropTable().getValue())
         .append(org.orgMemberRights().dropTable().getValue())
         .append(org.orgMemberships().dropTable().getValue())

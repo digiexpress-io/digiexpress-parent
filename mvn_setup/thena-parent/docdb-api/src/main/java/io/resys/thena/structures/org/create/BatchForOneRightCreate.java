@@ -8,6 +8,7 @@ import io.resys.thena.api.entities.org.ImmutableOrgCommit;
 import io.resys.thena.api.entities.org.ImmutableOrgMemberRight;
 import io.resys.thena.api.entities.org.ImmutableOrgPartyRight;
 import io.resys.thena.api.entities.org.ImmutableOrgRight;
+import io.resys.thena.api.entities.org.OrgActorStatusType;
 import io.resys.thena.api.entities.org.OrgMember;
 import io.resys.thena.api.entities.org.OrgMemberRight;
 import io.resys.thena.api.entities.org.OrgParty;
@@ -70,6 +71,7 @@ public class BatchForOneRightCreate {
       .rightName(rightName)
       .rightDescription(rightDesc)
       .rightSubType(rightSubType == null ? OrgDocSubType.NORMAL : rightSubType)
+      .status(OrgActorStatusType.IN_FORCE)
       .build();
     commitBuilder.add(role);
     

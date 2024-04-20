@@ -81,20 +81,3 @@ Rights
 Member rights
 
 Party rights
-
-Actors status
-  - id: 19    commitId: 20
-    memberId: null
-    partyId: 11
-    rightId: null
-    status: IN_FORCE
-  - id: 21    commitId: 23
-    memberId: 1
-    partyId: 11
-    rightId: null
-    status: IN_FORCE
-  - id: 22    commitId: 23
-    memberId: null
-    partyId: 11
-    rightId: 17
-    status: IN_FORCE

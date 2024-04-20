@@ -10,7 +10,5 @@ interface OrgRightFlattened extends ThenaOrgObject {
   String getRightId();
   String getRightName();
   String getRightDescription();
-  
-  @Nullable String getRightStatusId();
-  @Nullable OrgActorStatus.OrgActorStatusType getRightStatus();
+  @Nullable OrgActorStatusType getRightStatus();
 }

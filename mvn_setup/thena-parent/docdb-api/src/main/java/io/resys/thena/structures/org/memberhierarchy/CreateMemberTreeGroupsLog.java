@@ -10,7 +10,7 @@ import org.barfuin.texttree.api.DefaultNode;
 import org.barfuin.texttree.api.TextTree;
 import org.barfuin.texttree.api.TreeOptions;
 
-import io.resys.thena.api.entities.org.OrgMemberFlattened;
+import io.resys.thena.api.entities.org.OrgMember;
 import io.resys.thena.api.entities.org.OrgRightFlattened;
 
 
@@ -25,7 +25,7 @@ public class CreateMemberTreeGroupsLog extends BottomUpVisitorTemplate<String> {
   private final Map<String, DefaultNode> rolesByGroup = new HashMap<>();
   
   
-  public CreateMemberTreeGroupsLog(List<OrgRightFlattened> globalRoles, OrgMemberFlattened user) {
+  public CreateMemberTreeGroupsLog(List<OrgRightFlattened> globalRoles, OrgMember user) {
     super(globalRoles);
     this.userNode = new DefaultNode(user.getUserName());
   } 

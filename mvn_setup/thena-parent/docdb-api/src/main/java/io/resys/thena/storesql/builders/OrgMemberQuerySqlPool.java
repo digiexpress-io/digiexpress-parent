@@ -5,7 +5,6 @@ import java.util.List;
 
 import io.resys.thena.api.LogConstants;
 import io.resys.thena.api.entities.org.OrgMember;
-import io.resys.thena.api.entities.org.OrgMemberFlattened;
 import io.resys.thena.api.entities.org.OrgMemberHierarchyEntry;
 import io.resys.thena.api.entities.org.OrgRightFlattened;
 import io.resys.thena.api.registry.OrgRegistry;
@@ -21,12 +20,12 @@ import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j(topic = LogConstants.SHOW_SQL)
-public class OrgUserQuerySqlPool implements OrgQueries.MemberQuery {
+public class OrgMemberQuerySqlPool implements OrgQueries.MemberQuery {
   private final ThenaSqlDataSource wrapper;
   private final OrgRegistry registry;
   private final ThenaSqlDataSourceErrorHandler errorHandler;
   
-  public OrgUserQuerySqlPool(ThenaSqlDataSource dataSource) {
+  public OrgMemberQuerySqlPool(ThenaSqlDataSource dataSource) {
     this.wrapper = dataSource;
     this.registry = dataSource.getRegistry().org();
     this.errorHandler = dataSource.getErrorHandler();
@@ -121,27 +120,6 @@ public class OrgUserQuerySqlPool implements OrgQueries.MemberQuery {
         .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'MEMBER_DIRECT_RIGHTS'!", sql, e)));
   }
 
-  @Override
-  public Uni<OrgMemberFlattened> getStatusById(String userId) {
-    final var sql = registry.orgMembers().getStatusByUserId(userId);
-    if(log.isDebugEnabled()) {
-      log.debug("User getStatusById query, with props: {} \r\n{}", 
-          sql.getProps().deepToString(),
-          sql.getValue());
-    }
-    return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(registry.orgMembers().memberFlattenedMapper())
-        .execute(sql.getProps())
-        .onItem()
-        .transform((RowSet<OrgMemberFlattened> rowset) -> {
-          final var it = rowset.iterator();
-          if(it.hasNext()) {
-            return it.next();
-          }
-          return null;
-        })
-        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'MEMBER_STATUS'!", sql, e)));
-  }
   @Override
   public Multi<OrgMember> findAllByPartyId(String id) {
     final var sql = registry.orgMembers().findAllByPartyId(id);

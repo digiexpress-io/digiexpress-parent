@@ -9,6 +9,7 @@ import io.resys.thena.api.entities.org.ImmutableOrgCommit;
 import io.resys.thena.api.entities.org.ImmutableOrgMembership;
 import io.resys.thena.api.entities.org.ImmutableOrgParty;
 import io.resys.thena.api.entities.org.ImmutableOrgPartyRight;
+import io.resys.thena.api.entities.org.OrgActorStatusType;
 import io.resys.thena.api.entities.org.OrgMember;
 import io.resys.thena.api.entities.org.OrgMembership;
 import io.resys.thena.api.entities.org.OrgParty;
@@ -74,6 +75,7 @@ public class BatchForOnePartyCreate {
       .partyDescription(partyDescription)
       .parentId(Optional.ofNullable(parent).map(p -> p.getId()).orElse(null))
       .partySubType(partySubType == null ? OrgDocSubType.NORMAL : partySubType)
+      .status(OrgActorStatusType.IN_FORCE)
       .build();
     commitBuilder.add(group);
     

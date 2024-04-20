@@ -19,7 +19,7 @@ import io.resys.thena.api.actions.OrgCommitActions.ModType;
 import io.resys.thena.api.actions.OrgCommitActions.ModifyOneParty;
 import io.resys.thena.api.actions.OrgCommitActions.OnePartyEnvelope;
 import io.resys.thena.api.entities.CommitResultStatus;
-import io.resys.thena.api.entities.org.OrgActorStatus.OrgActorStatusType;
+import io.resys.thena.api.entities.org.OrgActorStatusType;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -79,9 +79,6 @@ public class UpdateRoleActionImpl implements UpdateRoleAction {
         if(permissions.getChangeType() == ChangeType.ADD) {
           permissions.getPermissions().forEach(perm -> modifyOneParty.modifyRight(ModType.ADD, perm));
           
-        } else if(permissions.getChangeType() == ChangeType.DISABLE) {          
-          permissions.getPermissions().forEach(perm -> modifyOneParty.modifyRight(ModType.DISABLED, perm));
-          
         } else if(permissions.getChangeType() == ChangeType.REMOVE) {
           permissions.getPermissions().forEach(perm -> modifyOneParty.modifyRight(ModType.REMOVE, perm)); 
           
@@ -100,9 +97,6 @@ public class UpdateRoleActionImpl implements UpdateRoleAction {
         if(principals.getChangeType() == ChangeType.ADD) {
           principals.getPrincipals().forEach(principal -> modifyOneParty.modifyMember(ModType.ADD, principal));
         
-        } else if(principals.getChangeType() == ChangeType.DISABLE) {
-          principals.getPrincipals().forEach(principal -> modifyOneParty.modifyMember(ModType.DISABLED, principal));
-
         } else if(principals.getChangeType() == ChangeType.REMOVE) {
           principals.getPrincipals().forEach(principal -> modifyOneParty.modifyMember(ModType.REMOVE, principal));
         

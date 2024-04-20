@@ -17,12 +17,12 @@ import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j(topic = LogConstants.SHOW_SQL)
-public class OrgRoleQuerySqlPool implements OrgQueries.RightsQuery {
+public class OrgRightsQuerySqlPool implements OrgQueries.RightsQuery {
   private final ThenaSqlDataSource wrapper;
   private final OrgRegistry registry;
   private final ThenaSqlDataSourceErrorHandler errorHandler;
   
-  public OrgRoleQuerySqlPool(ThenaSqlDataSource dataSource) {
+  public OrgRightsQuerySqlPool(ThenaSqlDataSource dataSource) {
     this.wrapper = dataSource;
     this.registry = dataSource.getRegistry().org();
     this.errorHandler = dataSource.getErrorHandler();
@@ -31,7 +31,7 @@ public class OrgRoleQuerySqlPool implements OrgQueries.RightsQuery {
   public Multi<OrgRight> findAll() {
     final var sql = registry.orgRights().findAll();
     if(log.isDebugEnabled()) {
-      log.debug("Role findAll query, with props: {} \r\n{}", 
+      log.debug("OrgRight findAll query, with props: {} \r\n{}", 
           "",
           sql.getValue());
     }
@@ -47,8 +47,8 @@ public class OrgRoleQuerySqlPool implements OrgQueries.RightsQuery {
   public Multi<OrgRight> findAll(Collection<String> id) {
     final var sql = registry.orgRights().findAll(id);
     if(log.isDebugEnabled()) {
-      log.debug("Role findAll query, with props: {} \r\n{}", 
-          "",
+      log.debug("OrgRight findAll query, with props: {} \r\n{}", 
+          sql.getPropsDeepString(),
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
@@ -63,7 +63,7 @@ public class OrgRoleQuerySqlPool implements OrgQueries.RightsQuery {
   public Uni<OrgRight> getById(String id) {
     final var sql = registry.orgRights().getById(id);
     if(log.isDebugEnabled()) {
-      log.debug("Role byId query, with props: {} \r\n{}", 
+      log.debug("OrgRight byId query, with props: {} \r\n{}", 
           sql.getProps().deepToString(),
           sql.getValue());
     }
@@ -85,7 +85,7 @@ public class OrgRoleQuerySqlPool implements OrgQueries.RightsQuery {
   public Multi<OrgRight> findAllByPartyId(String partyId) {
     final var sql = registry.orgRights().findAllByPartyId(partyId);
     if(log.isDebugEnabled()) {
-      log.debug("Role findAllByPartyId query, with props: {} \r\n{}", 
+      log.debug("OrgRight findAllByPartyId query, with props: {} \r\n{}", 
           partyId,
           sql.getValue());
     }
@@ -100,7 +100,7 @@ public class OrgRoleQuerySqlPool implements OrgQueries.RightsQuery {
   public Multi<OrgRight> findAllByMemberId(String memberId) {
     final var sql = registry.orgRights().findAllByMemberId(memberId);
     if(log.isDebugEnabled()) {
-      log.debug("Role findAllByMemberId query, with props: {} \r\n{}", 
+      log.debug("OrgRight findAllByMemberId query, with props: {} \r\n{}", 
           memberId,
           sql.getValue());
     }

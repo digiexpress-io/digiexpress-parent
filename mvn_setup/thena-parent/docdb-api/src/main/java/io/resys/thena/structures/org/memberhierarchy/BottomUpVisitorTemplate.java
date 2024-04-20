@@ -8,8 +8,7 @@ import org.immutables.value.Value;
 
 import io.resys.thena.api.entities.org.ImmutableOrgMemberPartyStatus;
 import io.resys.thena.api.entities.org.ImmutableOrgMemberRightStatus;
-import io.resys.thena.api.entities.org.OrgActorStatus;
-import io.resys.thena.api.entities.org.OrgActorStatus.OrgActorStatusType;
+import io.resys.thena.api.entities.org.OrgActorStatusType;
 import io.resys.thena.api.entities.org.OrgMemberHierarchyEntry;
 import io.resys.thena.api.entities.org.OrgRightFlattened;
 import io.resys.thena.structures.org.memberhierarchy.MemberTreeContainer.BottomUpVisitor;
@@ -20,7 +19,6 @@ public abstract class BottomUpVisitorTemplate<T> implements BottomUpVisitor<T> {
   private final List<String> inheritanceDisabledFromBottom = new ArrayList<>();
   private final List<String> groupsDisabled = new ArrayList<>();
   private final List<String> rolesDisabled = new ArrayList<>();
-  private final List<String> visited = new ArrayList<>();
   private final List<OrgRightFlattened> globalRoles;
   private boolean initDone;
   
@@ -51,7 +49,7 @@ public abstract class BottomUpVisitorTemplate<T> implements BottomUpVisitor<T> {
   }
   
   private void visitGlobalRole(OrgRightFlattened globalRole) {
-    if((globalRole.getRightStatus() == null || globalRole.getRightStatus() == OrgActorStatus.OrgActorStatusType.IN_FORCE)) {
+    if((globalRole.getRightStatus() == null || globalRole.getRightStatus() == OrgActorStatusType.IN_FORCE)) {
       visitGlobalRoleEnabled(globalRole.getRightName());
     } else {
       visitGlobalRoleDisabled(globalRole.getRightName());
@@ -115,58 +113,51 @@ public abstract class BottomUpVisitorTemplate<T> implements BottomUpVisitor<T> {
       groupsDisabled.add(value.getPartyId());
     }
     
-    if(value.getPartyStatusId() == null || this.visited.contains(value.getPartyStatusId())) {
+    if(value.getPartyId() == null) {
       return;
     }
     
     // Extract status
     final var result = ImmutableOrgMemberPartyStatus.builder()
-        .groupId(value.getPartyId())
+        .partyId(value.getPartyId())
         .status(value.getPartyStatus())
-        .statusId(value.getPartyStatusId())
         .build();
     
     // disable one group
-    if(result.getStatus() != OrgActorStatus.OrgActorStatusType.IN_FORCE) {
+    if(result.getStatus() != OrgActorStatusType.IN_FORCE) {
       groupsDisabled.add(value.getPartyId());
     }
     
     // disable the whole chain
-    if(result.getStatus() != OrgActorStatus.OrgActorStatusType.IN_FORCE && value.getPartyParentId() != null) {
+    if(result.getStatus() != OrgActorStatusType.IN_FORCE && value.getPartyParentId() != null) {
       inheritanceDisabledFromBottom.add(value.getPartyParentId());
     }
   }
   
   private void visitRoleStatus(OrgMemberHierarchyEntry value) {
-    if(value.getRightStatusId() == null || this.visited.contains(value.getRightStatusId())) {
+    if(value.getRightId() == null) {
       return;
     }
-    
     // extract status
     final var result = ImmutableOrgMemberRightStatus.builder()
-        .roleId(value.getRightId())
+        .rightId(value.getRightId())
         .status(value.getRightStatus())
-        .statusId(value.getRightStatusId())
         .build();
 
-    if(result.getStatus() != OrgActorStatus.OrgActorStatusType.IN_FORCE) {
-      rolesDisabled.add(result.getRoleId());
+    if(result.getStatus() != OrgActorStatusType.IN_FORCE) {
+      rolesDisabled.add(result.getRightId());
     }
   }
   
   private void visitRoleStatus(OrgRightFlattened value) {
-    if(value.getRightStatusId() == null || this.visited.contains(value.getRightStatusId())) {
-      return;
-    }
     
     // extract status
     final var result = ImmutableOrgMemberRightStatus.builder()
-        .roleId(value.getRightId())
+        .rightId(value.getRightId())
         .status(value.getRightStatus())
-        .statusId(value.getRightStatusId())
         .build();
-    if(result.getStatus() != OrgActorStatus.OrgActorStatusType.IN_FORCE) {
-      rolesDisabled.add(result.getRoleId());
+    if(result.getStatus() != OrgActorStatusType.IN_FORCE) {
+      rolesDisabled.add(result.getRightId());
     }
   }
   

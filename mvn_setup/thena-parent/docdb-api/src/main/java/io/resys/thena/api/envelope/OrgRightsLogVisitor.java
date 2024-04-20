@@ -27,7 +27,6 @@ public class OrgRightsLogVisitor extends OrgPartyContainerVisitor<String>
   private final Map<String, DefaultNode> nodesGroupMembers = new HashMap<>();
   private final OrgRight target;
   
-  private OrgAnyTreeContainerContext ctx;
   private DefaultNode nodeRoot;
   private Boolean groupContainsRole;
   
@@ -36,7 +35,6 @@ public class OrgRightsLogVisitor extends OrgPartyContainerVisitor<String>
     this.target = target;
   }
   public void start(OrgAnyTreeContainerContext ctx) {
-    this.ctx = ctx;
     super.start(ctx);
     
   }
@@ -89,17 +87,6 @@ public class OrgRightsLogVisitor extends OrgPartyContainerVisitor<String>
     if(groupContainsRole == null) {
       return;
     }
-    
-    final var disabledSpecificallyForUser = ctx.getMemberRights(user.getId()).stream()
-        .filter(role -> role.getRightId().equals(target.getId()))
-        .filter(role -> ctx.isStatusDisabled(ctx.getStatus(role)))
-        .findAny().isPresent();
-    
-    if(disabledSpecificallyForUser) {
-      return;
-    }
-    
-    
     nodesGroup.get(group.getId()).addChild(new DefaultNode(user.getUserName()));
   }
 

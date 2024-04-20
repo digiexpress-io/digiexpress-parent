@@ -68,10 +68,12 @@ public class GrimCommitLogger {
     removed.add(entity);
   }
   
+  @SuppressWarnings({ "incomplete-switch" }) 
   private int compare(IsGrimObject a, IsGrimObject b) {
     if(a.getDocType() != b.getDocType()) {
       return a.getDocType().compareTo(b.getDocType());
     }
+    
     
     switch (a.getDocType()) {
     case GRIM_ASSIGNMENT: {

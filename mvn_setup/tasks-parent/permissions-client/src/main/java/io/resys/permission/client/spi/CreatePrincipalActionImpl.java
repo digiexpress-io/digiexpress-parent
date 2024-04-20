@@ -9,7 +9,7 @@ import io.resys.permission.client.api.model.PrincipalCommand.PrincipalCommandTyp
 import io.resys.thena.api.actions.OrgCommitActions.CreateOneMember;
 import io.resys.thena.api.actions.OrgCommitActions.OneMemberEnvelope;
 import io.resys.thena.api.entities.CommitResultStatus;
-import io.resys.thena.api.entities.org.OrgActorStatus.OrgActorStatusType;
+import io.resys.thena.api.entities.org.OrgActorStatusType;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 

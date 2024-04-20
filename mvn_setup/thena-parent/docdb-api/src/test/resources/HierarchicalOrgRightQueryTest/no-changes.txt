@@ -208,10 +208,3 @@ Party rights
   - id: 52    commitId: 14
     partyId: 13
     rightId: 43
-
-Actors status
-  - id: 55    commitId: 56
-    memberId: 3
-    partyId: 13
-    rightId: null
-    status: DISABLED

@@ -33,7 +33,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import io.resys.thena.api.entities.org.OrgActorStatus;
+import io.resys.thena.api.entities.org.OrgActorStatusType;
 
 
 
@@ -120,7 +120,7 @@ public interface RoleCommand extends Serializable {
   @Value.Immutable @JsonSerialize(as = ImmutableChangeRoleStatus.class) @JsonDeserialize(as = ImmutableChangeRoleStatus.class)
   interface ChangeRoleStatus extends RoleUpdateCommand {
     String getId();
-    OrgActorStatus.OrgActorStatusType getStatus();
+    OrgActorStatusType getStatus();
     String getComment(); // for auditing purposes, user who made changes must describe why, in a comment.
 
     @Value.Default

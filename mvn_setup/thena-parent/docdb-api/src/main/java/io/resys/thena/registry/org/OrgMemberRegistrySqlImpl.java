@@ -6,12 +6,10 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import io.resys.thena.api.entities.org.ImmutableOrgMember;
-import io.resys.thena.api.entities.org.ImmutableOrgMemberFlattened;
 import io.resys.thena.api.entities.org.ImmutableOrgMemberHierarchyEntry;
 import io.resys.thena.api.entities.org.ImmutableOrgRightFlattened;
-import io.resys.thena.api.entities.org.OrgActorStatus;
+import io.resys.thena.api.entities.org.OrgActorStatusType;
 import io.resys.thena.api.entities.org.OrgMember;
-import io.resys.thena.api.entities.org.OrgMemberFlattened;
 import io.resys.thena.api.entities.org.OrgMemberHierarchyEntry;
 import io.resys.thena.api.entities.org.OrgRightFlattened;
 import io.resys.thena.api.registry.org.OrgMemberRegistry;
@@ -76,35 +74,23 @@ public class OrgMemberRegistrySqlImpl implements OrgMemberRegistry {
         .build();
   }
   @Override
-  public ThenaSqlClient.SqlTuple insertOne(OrgMember doc) {
-    return ImmutableSqlTuple.builder()
-        .value(new SqlStatement()
-        .append("INSERT INTO ").append(options.getOrgMembers())
-        .append(" (id, commit_id, created_commit_id, external_id, username, email) VALUES($1, $2, $2, $3, $4, $5)").ln()
-        .build())
-        .props(Tuple.from(new Object[]{ doc.getId(), doc.getCommitId(), doc.getExternalId(), doc.getUserName(), doc.getEmail() }))
-        .build();
-  }
-  @Override
-  public ThenaSqlClient.SqlTuple updateOne(OrgMember doc) {
-    return ImmutableSqlTuple.builder()
-        .value(new SqlStatement()
-        .append("UPDATE ").append(options.getOrgMembers())
-        .append(" SET external_id = $1, username = $2, email = $3, commit_id = $4")
-        .append(" WHERE id = $5")
-        .build())
-        .props(Tuple.from(new Object[]{doc.getExternalId(), doc.getUserName(), doc.getEmail(), doc.getCommitId(), doc.getId()}))
-        .build();
-  }
-  @Override
   public ThenaSqlClient.SqlTupleList insertAll(Collection<OrgMember> users) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getOrgMembers())
-        .append(" (id, commit_id, created_commit_id, external_id, username, email) VALUES($1, $2, $2, $3, $4, $5)").ln()
+        .append(" (id, commit_id, created_commit_id, external_id, username, email, member_status, member_data_extension)").ln()
+        .append(" VALUES($1, $2, $2, $3, $4, $5, $6, $7)").ln()
         .build())
         .props(users.stream()
-            .map(doc -> Tuple.from(new Object[]{ doc.getId(), doc.getCommitId(), doc.getExternalId(), doc.getUserName(), doc.getEmail() }))
+            .map(doc -> Tuple.from(new Object[]{ 
+                doc.getId(), 
+                doc.getCommitId(), 
+                doc.getExternalId(), 
+                doc.getUserName(), 
+                doc.getEmail(), 
+                doc.getStatus(), 
+                doc.getDataExtension() 
+             }))
             .collect(Collectors.toList()))
         .build();
   }
@@ -113,11 +99,19 @@ public class OrgMemberRegistrySqlImpl implements OrgMemberRegistry {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("UPDATE ").append(options.getOrgMembers())
-        .append(" SET external_id = $1, username = $2, email = $3, commit_id = $4")
-        .append(" WHERE id = $5")
+        .append(" SET external_id = $1, username = $2, email = $3, commit_id = $4, member_status = $5, member_data_extension = $6 ")
+        .append(" WHERE id = $7")
         .build())
         .props(users.stream()
-            .map(doc -> Tuple.from(new Object[]{ doc.getExternalId(), doc.getUserName(), doc.getEmail(), doc.getCommitId(), doc.getId() }))
+            .map(doc -> Tuple.from(new Object[]{ 
+                doc.getExternalId(), 
+                doc.getUserName(), 
+                doc.getEmail(), 
+                doc.getCommitId(),
+                doc.getStatus(), 
+                doc.getDataExtension(), 
+                doc.getId() 
+             }))
             .collect(Collectors.toList()))
         .build();
   }
@@ -152,7 +146,7 @@ SELECT * FROM child;
         .append("WITH RECURSIVE child AS (").ln()
         
         // starting point
-        .append("  SELECT id, parent_id, party_name, party_description").ln()
+        .append("  SELECT id, parent_id, party_name, party_description, party_status, party_data_extension").ln()
         .append("  FROM ").append(options.getOrgParties()).ln()
         .append("  WHERE id in( ").ln()
         .append("    SELECT DISTINCT party_id ")
@@ -163,49 +157,38 @@ SELECT * FROM child;
         .append("  UNION ALL ").ln()
         
         // recursion from bottom to up, join parent to each child until the tip
-        .append("  SELECT parent.id, parent.parent_id, parent.party_name, parent.party_description").ln()
+        .append("  SELECT parent.id, parent.parent_id, parent.party_name, parent.party_description, parent.party_status, parent.party_data_extension").ln()
         .append("  FROM ").append(options.getOrgParties()).append(" as parent").ln()
         .append("  INNER JOIN child on (parent.id = child.parent_id) ").ln()
         
     		.append(")").ln()
     		
         .append("SELECT ").ln()
-        .append("  groups.id                as id, ").ln()
-        .append("  groups.parent_id         as parent_id, ").ln()
-        .append("  groups.party_name        as party_name, ").ln()
-        .append("  groups.party_description as party_description, ").ln()
-        .append("  direct_memberships.id    as membership_id, ").ln()
+        .append("  parties.id                as id, ").ln()
+        .append("  parties.parent_id         as parent_id, ").ln()
+        .append("  parties.party_name        as party_name, ").ln()
+        .append("  parties.party_description as party_description, ").ln()
+        .append("  parties.party_status      as party_status, ").ln()
 
-        .append("  group_status.id              as status_id, ").ln()
-        .append("  group_status.actor_status    as status, ").ln()
-        .append("  group_status.member_id         as status_member_id, ").ln()
-
-        .append("  group_roles.right_id          as right_id, ").ln()
-        .append("  role.right_name               as right_name, ").ln()
-        .append("  role.right_description        as right_description, ").ln()
-        .append("  right_status.actor_status     as right_status, ").ln()
-        .append("  right_status.id               as right_status_id ").ln()
+        .append("  direct_memberships.id        as membership_id, ").ln()
+        .append("  direct_memberships.member_id as member_id, ").ln()
+        
+        .append("  rights.id                as right_id, ").ln()
+        .append("  rights.right_name        as right_name, ").ln()
+        .append("  rights.right_description as right_description, ").ln()
+        .append("  rights.right_status      as right_status ").ln()
         
         .append("FROM ").ln()
-        .append("  (SELECT DISTINCT id, parent_id, party_name, party_description from child) as groups").ln()
+        .append("  (SELECT DISTINCT id, parent_id, party_name, party_description, party_status, party_data_extension from child) as parties").ln()
         
         .append("  LEFT JOIN ").append(options.getOrgMemberships()).append(" as direct_memberships").ln()        
-        .append("  ON(direct_memberships.party_id = groups.id and direct_memberships.member_id = $1) ").ln()
+        .append("  ON(direct_memberships.party_id = parties.id and direct_memberships.member_id = $1) ").ln()
         
-        .append("  LEFT JOIN ").append(options.getOrgActorStatus()).append(" as group_status").ln()
-        .append("  ON(group_status.party_id = groups.id and (group_status.member_id is null or group_status.member_id = $1) and group_status.right_id is null) ").ln()
+        .append("  LEFT JOIN ").append(options.getOrgPartyRights()).append(" as party_rights").ln()
+        .append("  ON(party_rights.party_id = parties.id) ").ln()
     
-        .append("  LEFT JOIN ").append(options.getOrgPartyRights()).append(" as group_roles").ln()
-        .append("  ON(group_roles.party_id = groups.id) ").ln()
-    
-        .append("  LEFT JOIN ").append(options.getOrgActorStatus()).append(" as right_status").ln()
-        .append("  ON(right_status.party_id = groups.id ").ln()
-        .append("    and right_status.right_id = group_roles.right_id ").ln()
-        .append("    and (right_status.member_id is null or right_status.member_id = $1)").ln()
-        .append("  ) ").ln()
-        
-        .append("  LEFT JOIN ").append(options.getOrgRights()).append(" as role").ln()
-        .append("  ON(role.id = group_roles.right_id)").ln()
+        .append("  LEFT JOIN ").append(options.getOrgRights()).append(" as rights").ln()
+        .append("  ON(rights.id = party_rights.right_id)").ln()
         ;
     
         
@@ -223,10 +206,9 @@ SELECT * FROM child;
         .append("  rights.id                   as right_id, ").ln()
         .append("  rights.right_name           as right_name, ").ln()
         .append("  rights.right_description    as right_description, ").ln()
-        .append("  member_rights.party_id      as party_id, ").ln()
-        .append("  right_status.actor_status   as right_status, ").ln()
-        .append("  right_status.id             as right_status_id ").ln()
-        
+        .append("  rights.right_status         as right_status, ").ln()
+        .append("  member_rights.party_id      as party_id ").ln()
+
         .append("FROM ").ln()
         .append("  ").append(options.getOrgRights()).append(" as rights").ln()
         .append("INNER JOIN ").append(options.getOrgMemberRights()).append(" as member_rights").ln()
@@ -234,14 +216,7 @@ SELECT * FROM child;
         .append("    member_rights.right_id = rights.id").ln()
         .append("    and member_rights.member_id = $1").ln()
         .append("    and member_rights.party_id is null").ln()
-         .append("  ) ").ln()
-        
-        .append("LEFT JOIN ").append(options.getOrgActorStatus()).append(" as right_status").ln()
-        .append("  ON(").ln()
-        .append("    right_status.right_id = rights.id").ln()
-        .append("    and right_status.party_id is null").ln()
-        .append("    and (right_status.member_id is null or right_status.member_id = $1)").ln()
-        .append("  ) ").ln();
+        .append("  )").ln();
 
     return ImmutableSqlTuple.builder()
         .value(sql.build())
@@ -287,37 +262,9 @@ SELECT * FROM child;
         .props(Tuple.of(rightId))
         .build();
   }
-  
-  @Override
-  public ThenaSqlClient.SqlTuple getStatusByUserId(String userId) {
-    return ImmutableSqlTuple.builder()
-        .value(new SqlStatement()
-        .append("SELECT ").ln()
-        .append("  users.* ,").ln()
-        .append("  user_status.actor_status as user_status,").ln()
-        .append("  user_status.id as user_status_id").ln()
-        .append("FROM ").append(options.getOrgMembers()).append(" as users").ln()
-
-        .append("LEFT JOIN ").append(options.getOrgActorStatus()).append(" as user_status").ln()
-        .append("ON(").ln()
-        .append("  user_status.member_id = users.id").ln()
-        .append("  and user_status.right_id is null").ln()
-        .append("  and user_status.party_id is null").ln()
-        .append(") ").ln()
-        .append("WHERE (users.id = $1 OR users.external_id = $1 OR users.username = $1)").ln()
-        .build())
-        .props(Tuple.of(userId))
-        .build();
-  }
-  
-
   @Override
   public Function<Row, OrgRightFlattened> rightFlattenedMapper() {
     return OrgMemberRegistrySqlImpl::orgRightFlattened;
-  }
-  @Override
-  public Function<Row, OrgMemberFlattened> memberFlattenedMapper() {
-    return OrgMemberRegistrySqlImpl::orgMemberFlattened;
   }
   @Override
   public Function<Row, OrgMemberHierarchyEntry> memberHierarchyEntryMapper() {
@@ -335,55 +282,39 @@ SELECT * FROM child;
         .createdWithCommitId("created_commit_id")
         .userName(row.getString("username"))
         .email(row.getString("email"))
+        .dataExtension(row.getJsonObject("member_data_extension"))
+        .status(OrgActorStatusType.valueOf(row.getString("member_status")))
         .build();
   }
   private static OrgMemberHierarchyEntry orgMemberHierarchyEntry(Row row) {
-    final var roleStatus = row.getString("right_status");
-    final var groupStatus = row.getString("status");
+    final var rightStatus = row.getString("right_status");
+    final var partyStatus = row.getString("party_status");
     
     return ImmutableOrgMemberHierarchyEntry.builder()
         .partyId(row.getString("id"))
         .partyParentId(row.getString("parent_id"))
         .partyName(row.getString("party_name"))
         .partyDescription(row.getString("party_description"))
+        .partyStatus(partyStatus != null ? OrgActorStatusType.valueOf(partyStatus) : null)
+        
         .membershipId(row.getString("membership_id"))
+        .memberId(row.getString("member_id"))
         
-        .partyStatusId(row.getString("status_id"))
-        .partyStatus(groupStatus != null ? OrgActorStatus.OrgActorStatusType.valueOf(groupStatus) : null)
-        .partyStatusMemberId(row.getString("status_member_id"))
-        
+        .rightStatus(rightStatus != null ? OrgActorStatusType.valueOf(rightStatus) : null)
         .rightId(row.getString("right_id"))
         .rightName(row.getString("right_name"))
-        .rightDescription(row.getString("right_description"))
-        
-        .rightStatus(roleStatus != null ? OrgActorStatus.OrgActorStatusType.valueOf(roleStatus) : null)
-        .rightStatusId(row.getString("right_status_id"))
+        .rightDescription(row.getString("right_description"))        
         .build();
   }
   
   private static OrgRightFlattened orgRightFlattened(Row row) {
-    final var roleStatus = row.getString("right_status");
     return ImmutableOrgRightFlattened.builder()
         .rightId(row.getString("right_id"))
         .rightName(row.getString("right_name"))
         .rightDescription(row.getString("right_description"))
-        .rightStatus(roleStatus != null ? OrgActorStatus.OrgActorStatusType.valueOf(roleStatus) : null)
-        .rightStatusId(row.getString("right_status_id"))
+        .rightStatus(OrgActorStatusType.valueOf(row.getString("right_status")))
         .build();
   }
-  private static OrgMemberFlattened orgMemberFlattened(Row row) {
-    final var userStatus = row.getString("user_status");
-    return ImmutableOrgMemberFlattened.builder()
-        .id(row.getString("id"))
-        .externalId(row.getString("external_id"))
-        .commitId(row.getString("commit_id"))
-        .userName(row.getString("username"))
-        .email(row.getString("email"))
-        .status(userStatus != null ? OrgActorStatus.OrgActorStatusType.valueOf(userStatus) : null)
-        .statusId(row.getString("user_status_id"))
-        .build();
-  }
-
   @Override
   public ThenaSqlClient.Sql createTable() {
     return ImmutableSql.builder().value(new SqlStatement().ln()
@@ -393,6 +324,8 @@ SELECT * FROM child;
     .append("  commit_id VARCHAR(40) NOT NULL,").ln()
     .append("  created_commit_id VARCHAR(40) NOT NULL,").ln()
     .append("  external_id VARCHAR(40) UNIQUE,").ln()
+    .append("  member_status VARCHAR(40) NOT NULL,").ln()
+    .append("  member_data_extension JSONB,").ln()    
     .append("  username VARCHAR(255) UNIQUE NOT NULL,").ln()
     .append("  email VARCHAR(255) NOT NULL").ln()
     .append(");").ln()
@@ -417,8 +350,6 @@ SELECT * FROM child;
         .append(createOrgUserFk(options.getOrgMemberships())).ln()
         .append(createOrgUserFk(options.getOrgMemberRights())).ln()
         
-        .append(createOrgUserFk(options.getOrgActorData())).ln()
-        .append(createOrgUserFk(options.getOrgActorStatus())).ln()
         .build())
         .build();
   }
