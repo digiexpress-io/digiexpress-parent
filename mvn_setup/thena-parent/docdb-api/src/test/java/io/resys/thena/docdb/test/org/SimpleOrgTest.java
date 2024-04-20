@@ -1,4 +1,4 @@
-package io.resys.thena.docdb.test;
+package io.resys.thena.docdb.test.org;
 
 import java.io.Serializable;
 import java.time.Duration;

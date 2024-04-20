@@ -174,7 +174,9 @@ CREATE TABLE org_rights
   external_id VARCHAR(40) UNIQUE,
   right_sub_type VARCHAR(40) NOT NULL,
   right_name VARCHAR(255) UNIQUE NOT NULL,
-  right_description VARCHAR(255) NOT NULL
+  right_description VARCHAR(255) NOT NULL,
+  right_status VARCHAR(40) NOT NULL,
+  right_data_extension JSONB
 );
 CREATE INDEX org_rights_NAME_INDEX ON org_rights (right_name);
 CREATE INDEX org_rights_COMMIT_INDEX ON org_rights (commit_id);
@@ -189,6 +191,8 @@ CREATE TABLE org_parties
   parent_id VARCHAR(40),
   party_name VARCHAR(255) UNIQUE NOT NULL,
   party_description VARCHAR(255) NOT NULL,
+  party_status VARCHAR(40) NOT NULL,
+  party_data_extension JSONB,
   party_sub_type VARCHAR(40) NOT NULL
 );
 
@@ -218,6 +222,8 @@ CREATE TABLE org_members
   commit_id VARCHAR(40) NOT NULL,
   created_commit_id VARCHAR(40) NOT NULL,
   external_id VARCHAR(40) UNIQUE,
+  member_status VARCHAR(40) NOT NULL,
+  member_data_extension JSONB,
   username VARCHAR(255) UNIQUE NOT NULL,
   email VARCHAR(255) NOT NULL
 );
@@ -254,22 +260,6 @@ CREATE INDEX org_memberships_MEMBER_INDEX ON org_memberships (member_id);
 CREATE INDEX org_memberships_PARTY_INDEX ON org_memberships (party_id);
 CREATE INDEX org_memberships_REF_INDEX ON org_memberships (party_id, member_id);
 
-CREATE TABLE org_actor_status
-(
-  id VARCHAR(40) PRIMARY KEY,
-  commit_id VARCHAR(40) NOT NULL,
-  created_commit_id VARCHAR(40) NOT NULL,
-  member_id VARCHAR(40),
-  right_id VARCHAR(40),
-  party_id VARCHAR(40),
-  actor_status VARCHAR(100) NOT NULL,
-  UNIQUE NULLS NOT DISTINCT(member_id, right_id, party_id)
-);
-CREATE INDEX org_actor_status_COMMIT_INDEX ON org_actor_status (commit_id);
-CREATE INDEX org_actor_status_RIGHT_INDEX ON org_actor_status (right_id);
-CREATE INDEX org_actor_status_MEMBER_INDEX ON org_actor_status (member_id);
-CREATE INDEX org_actor_status_PARTY_INDEX ON org_actor_status (party_id);
-
 CREATE TABLE org_commits
 (
   commit_id VARCHAR(40) PRIMARY KEY,
@@ -286,42 +276,7 @@ ALTER TABLE org_commits
   REFERENCES org_commits (commit_id);
 CREATE INDEX org_commits_PARENT_INDEX ON org_commits (parent_id);
 
-CREATE TABLE org_actor_data
-(
-  id VARCHAR(40) PRIMARY KEY,
-  commit_id VARCHAR(40) NOT NULL,
-  created_commit_id VARCHAR(40) NOT NULL,
-  parent_id VARCHAR(40),
-  external_id VARCHAR(40) UNIQUE,
-  member_id VARCHAR(40),
-  right_id VARCHAR(40),
-  party_id VARCHAR(40),
-  data_type VARCHAR(255) NOT NULL,
-  value JSONB NOT NULL,
-  commit_author VARCHAR(255) NOT NULL,
-  commit_message VARCHAR(255) NOT NULL
-);
-
-ALTER TABLE org_actor_data
-  ADD CONSTRAINT org_actor_data_PARENT_FK
-  FOREIGN KEY (parent_id)
-  REFERENCES org_actor_data (id);
-
 --- constraints fororg_rights
-
-ALTER TABLE org_actor_data
-  ADD CONSTRAINT org_actor_data_RIGHT_FK
-  FOREIGN KEY (right_id)
-  REFERENCES org_rights (id);
-
-
-
-ALTER TABLE org_actor_status
-  ADD CONSTRAINT org_actor_status_RIGHT_FK
-  FOREIGN KEY (right_id)
-  REFERENCES org_rights (id);
-
-
 
 ALTER TABLE org_member_rights
   ADD CONSTRAINT org_member_rights_RIGHT_FK
@@ -353,35 +308,7 @@ ALTER TABLE org_member_rights
 
 
 
-ALTER TABLE org_actor_data
-  ADD CONSTRAINT org_actor_data_MEMBER_FK
-  FOREIGN KEY (member_id)
-  REFERENCES org_members (id);
-
-
-
-ALTER TABLE org_actor_status
-  ADD CONSTRAINT org_actor_status_MEMBER_FK
-  FOREIGN KEY (member_id)
-  REFERENCES org_members (id);
-
-
-
 --- constraints fororg_parties
-
-ALTER TABLE org_actor_data
-  ADD CONSTRAINT org_actor_data_PARTY_FK
-  FOREIGN KEY (party_id)
-  REFERENCES org_parties (id);
-
-
-
-ALTER TABLE org_actor_status
-  ADD CONSTRAINT org_actor_status_PARTY_FK
-  FOREIGN KEY (party_id)
-  REFERENCES org_parties (id);
-
-
 
 ALTER TABLE org_party_rights
   ADD CONSTRAINT org_party_rights_PARTY_FK
@@ -410,20 +337,6 @@ ALTER TABLE org_member_rights
 
 
 --- constraints fororg_commits
-
-ALTER TABLE org_actor_data
-  ADD CONSTRAINT org_actor_data_COMMIT_FK
-  FOREIGN KEY (commit_id)
-  REFERENCES org_commits (commit_id);
-
-
-
-ALTER TABLE org_actor_status
-  ADD CONSTRAINT org_actor_status_COMMIT_FK
-  FOREIGN KEY (commit_id)
-  REFERENCES org_commits (commit_id);
-
-
 
 ALTER TABLE org_commit_trees
   ADD CONSTRAINT org_commit_trees_COMMIT_FK
@@ -470,20 +383,6 @@ ALTER TABLE org_party_rights
 ALTER TABLE org_rights
   ADD CONSTRAINT org_rights_COMMIT_FK
   FOREIGN KEY (commit_id)
-  REFERENCES org_commits (commit_id);
-
-
-
-ALTER TABLE org_actor_data
-  ADD CONSTRAINT org_actor_data_CREATED_COMMIT_ID_FK
-  FOREIGN KEY (created_commit_id)
-  REFERENCES org_commits (commit_id);
-
-
-
-ALTER TABLE org_actor_status
-  ADD CONSTRAINT org_actor_status_CREATED_COMMIT_ID_FK
-  FOREIGN KEY (created_commit_id)
   REFERENCES org_commits (commit_id);
 
 
