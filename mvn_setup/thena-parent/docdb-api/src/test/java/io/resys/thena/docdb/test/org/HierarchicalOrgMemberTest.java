@@ -86,7 +86,7 @@ public class HierarchicalOrgMemberTest extends DbTestTemplate {
         .get(userId2.getId()).await().atMost(Duration.ofMinutes(1)).getObjects();
     
     
-    Assertions.assertEquals(userId2.getId(), userGroupsAndRoles2.getUserId());
+    Assertions.assertEquals(userId2.getId(), userGroupsAndRoles2.getMember().getId());
     Assertions.assertEquals("[child-1.2.2, child-1.2, group-1]", userGroupsAndRoles2.getGroupNames().toString());
     Assertions.assertEquals("[jailer-main, jailer-2, jailer-3, jailer-1]", userGroupsAndRoles2.getRoleNames().toString());
     
@@ -108,7 +108,7 @@ user-2
     
     // modify user 2
     getClient().org(repo).commit().modifyOneMember()
-        .memberId(userGroupsAndRoles2.getUserId())
+        .memberId(userGroupsAndRoles2.getMember().getId())
         .modifyParties(ModType.ADD, root1.getId())
         .modifyRights(ModType.ADD, bakerMain.getId())
         .userName("super-user")
@@ -166,7 +166,7 @@ super-user
      `--- child-1.2.2
         """, userGroupsAndRoles2.getLog());
     
-    Assertions.assertEquals(userId2.getId(), userGroupsAndRoles2.getUserId());
+    Assertions.assertEquals(userId2.getId(), userGroupsAndRoles2.getMember().getId());
     Assertions.assertEquals("[group-1]", userGroupsAndRoles2.getGroupNames().toString());
     Assertions.assertEquals("[jailer-main, baker-main, jailer-1]", userGroupsAndRoles2.getRoleNames().toString());
     
@@ -201,7 +201,7 @@ super-user
      `--- child-1.2.2
         """, userGroupsAndRoles2.getLog());
     
-    Assertions.assertEquals(userId2.getId(), userGroupsAndRoles2.getUserId());
+    Assertions.assertEquals(userId2.getId(), userGroupsAndRoles2.getMember().getId());
     Assertions.assertEquals("[group-1]", userGroupsAndRoles2.getGroupNames().toString());
     Assertions.assertEquals("[jailer-main, baker-main, jailer-1]", userGroupsAndRoles2.getRoleNames().toString());
     
@@ -217,7 +217,7 @@ super-user
     
     // disable member
     getClient().org(repo).commit().modifyOneMember()
-      .memberId(userGroupsAndRoles2.getUserId())
+      .memberId(userGroupsAndRoles2.getMember().getId())
       .status(OrgActorStatusType.DISABLED)
       .author("au")
       .message("mod for user")
@@ -227,7 +227,7 @@ super-user
     
     // enable member
     getClient().org(repo).commit().modifyOneMember()
-      .memberId(userGroupsAndRoles2.getUserId())
+      .memberId(userGroupsAndRoles2.getMember().getId())
       .status(OrgActorStatusType.IN_FORCE)
       .author("au")
       .message("mod for user")
@@ -237,7 +237,7 @@ super-user
 
     
     getClient().org(repo).commit().modifyOneMember()
-      .memberId(userGroupsAndRoles2.getUserId())
+      .memberId(userGroupsAndRoles2.getMember().getId())
       .modifyParties(ModType.REMOVE, child1_2_2.getId())
       .author("au")
       .message("mod for user")

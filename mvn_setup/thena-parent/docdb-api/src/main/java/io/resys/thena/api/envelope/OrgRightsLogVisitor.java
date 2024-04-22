@@ -79,7 +79,7 @@ public class OrgRightsLogVisitor extends OrgPartyContainerVisitor<String>
   }
 
   @Override
-  public void visitDirectMembership(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled) {
+  public void visitMembership(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled) {
     if(isDisabled) {
       return;
     }
@@ -88,12 +88,6 @@ public class OrgRightsLogVisitor extends OrgPartyContainerVisitor<String>
       return;
     }
     nodesGroup.get(group.getId()).addChild(new DefaultNode(user.getUserName()));
-  }
-
-  @Override
-  public void visitInheritedMembership(OrgParty group, OrgMembership membership, OrgMember user,
-      boolean isDisabled) {
-    
   }
 
   @Override
@@ -116,7 +110,7 @@ public class OrgRightsLogVisitor extends OrgPartyContainerVisitor<String>
   }
   
   @Override
-  public void visitMemberRight(OrgParty group, OrgMemberRight groupRole, OrgRight role, boolean isDisabled) {
+  public void visitMemberRight(OrgParty group, OrgMember user, OrgMemberRight groupRole, OrgRight role, boolean isDisabled) {
     if(isDisabled) {
       return;
     }
@@ -130,11 +124,6 @@ public class OrgRightsLogVisitor extends OrgPartyContainerVisitor<String>
       nodesGroup.put(group.getId(), groupNode);
       nodeRoot.addChild(groupNode);
     }
-  }
-
-  @Override
-  public void visitChildParty(OrgParty group, boolean isDisabled) {
-    
   }
 
   @Override

@@ -14,8 +14,8 @@ import org.junit.jupiter.api.Test;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
 import io.resys.thena.api.actions.OrgCommitActions.ModType;
-import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
 import io.resys.thena.api.actions.TenantActions.CommitStatus;
+import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
@@ -51,8 +51,8 @@ public class HierarchicalOrgTest extends DbTestTemplate {
     
     final var groups = groupHierarchy.getObjects()
       .stream()
-      .sorted((a, b) -> a.getExternalId().compareTo(b.getExternalId()))
-      .filter(e -> e.getParentPartyId() == null)
+      .sorted((a, b) -> a.getParty().getExternalId().compareTo(b.getParty().getExternalId()))
+      .filter(e -> e.getParty().getParentId() == null)
       .map(e -> e.getLog())
       .toList();
     

@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 
 import io.resys.thena.api.LogConstants;
 import io.resys.thena.api.entities.org.ImmutableOrgMemberHierarchy;
-import io.resys.thena.api.entities.org.OrgActorStatusType;
 import io.resys.thena.api.entities.org.OrgMember;
 import io.resys.thena.api.entities.org.OrgMemberHierarchyEntry;
 import io.resys.thena.api.entities.org.OrgRightFlattened;
@@ -46,12 +45,7 @@ public class MemberTreeBuilder {
     
     
     return ImmutableOrgMemberHierarchy.builder()
-      .userId(member.getId())
-      .userName(member.getUserName())
-      .externalId(member.getExternalId())
-      .email(member.getEmail())
-      .commitId(member.getCommitId())
-      .status(member.getStatus() == null ? OrgActorStatusType.IN_FORCE : member.getStatus())
+      .member(member)
       .addAllUserRoleStatus(container.getRoleStatus())
       .addAllUserGroupStatus(container.getGroupStatus())
       .roleNames(result.getRoleNames())

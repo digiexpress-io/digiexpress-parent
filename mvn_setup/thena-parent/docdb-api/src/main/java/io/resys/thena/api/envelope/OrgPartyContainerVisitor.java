@@ -36,15 +36,11 @@ public abstract class OrgPartyContainerVisitor<T> implements OrgAnyTreeContainer
 
   public interface PartyVisitor {
     void start(OrgParty directParty, List<OrgParty> parents, List<OrgRight> parentRights, boolean isDisabled);
-    
-    void visitDirectMembership(OrgParty directParty, OrgMembership membership, OrgMember user, boolean isDisabled);
-    void visitInheritedMembership(OrgParty directParty, OrgMembership membership, OrgMember user, boolean isDisabled);
-    
+    void visitMembership(OrgParty directParty, OrgMembership membership, OrgMember user, boolean isDisabled);
     void visitPartyRight(OrgParty directParty, OrgPartyRight partyRight, OrgRight right, boolean isDisabled);
     
     // direct and inherited member with right
-    void visitMemberRight(OrgParty directParty, OrgMemberRight memberRight, OrgRight right, boolean isDisabled);
-    void visitChildParty(OrgParty myDirectNextLevelChild, boolean isDisabled);
+    void visitMemberRight(OrgParty directParty, OrgMember member, OrgMemberRight memberRight, OrgRight right, boolean isDisabled);
     void end(OrgParty group, List<OrgParty> parents, boolean isDisabled);
   }
 
@@ -94,15 +90,15 @@ public abstract class OrgPartyContainerVisitor<T> implements OrgAnyTreeContainer
     }
     
     // direct party members and their rights in current party
-    for(final var member : worldState.getPartyMemberships(party.getId())) {
-      final var user = worldState.getMember(member.getMemberId());
+    for(final var membership : worldState.getPartyMemberships(party.getId())) {
+      final var user = worldState.getMember(membership.getMemberId());
       final var isUserDisabled = user.getStatus() == OrgActorStatusType.DISABLED;
       
       if(isUserDisabled && !includeDisabled) {
         continue;
       }
       
-      visitor.visitDirectMembership(party, member, user, isUserDisabled);
+      visitor.visitMembership(party, membership, user, isUserDisabled);
       
       // directly given to member but only for specified party via inheritance
       for(final var memberRight : worldState.getMemberRights(user.getId())) {
@@ -118,15 +114,15 @@ public abstract class OrgPartyContainerVisitor<T> implements OrgAnyTreeContainer
         if(isRoleDisabled && !includeDisabled) {
           continue;
         }
-        visitor.visitMemberRight(party, memberRight, role, isRoleDisabled);
+        
+        
+        visitor.visitMemberRight(party, user, memberRight, role, isRoleDisabled);
       }
     }
     
     // inherited members and their rights
     for(final var inheritedMembership : worldState.getPartyInheritedMembers(party.getId())) {
       final var inheritedMember = worldState.getMember(inheritedMembership.getMemberId());
-      visitor.visitInheritedMembership(party, inheritedMembership, inheritedMember, false);
-      
       for(final var memberRight : worldState.getMemberRights(inheritedMember.getId())) {
         if(memberRight.getPartyId() == null) {
           continue;
@@ -141,7 +137,8 @@ public abstract class OrgPartyContainerVisitor<T> implements OrgAnyTreeContainer
         if(isDisabled && !includeDisabled) {
           continue;
         }
-        visitor.visitMemberRight(party, memberRight, right, isDisabled);
+        
+        visitor.visitMemberRight(party, inheritedMember, memberRight, right, isDisabled);
       }
       
     }
@@ -151,7 +148,6 @@ public abstract class OrgPartyContainerVisitor<T> implements OrgAnyTreeContainer
     
     
     for(final var child : worldState.getPartyChildren(party.getId())) {
-      visitor.visitChildParty(child, child.getStatus() == OrgActorStatusType.DISABLED);
       visitGroup(child, worldState, nextParents);
     }
     

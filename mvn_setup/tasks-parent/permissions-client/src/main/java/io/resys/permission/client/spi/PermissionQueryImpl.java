@@ -75,11 +75,11 @@ public class PermissionQueryImpl implements PermissionQuery {
     
     
     return ImmutablePermission.builder()
-      .id(permission.getRoleId())
-      .version(permission.getCommitId())
-      .name(permission.getRoleName())
-      .description(permission.getRoleDescription())
-      .status(permission.getStatus())
+      .id(permission.getRight().getId())
+      .version(permission.getRight().getCommitId())
+      .name(permission.getRight().getRightName())
+      .description(permission.getRight().getRightDescription())
+      .status(permission.getRight().getStatus())
       .addAllRoles(directRoles)
       .addAllPrincipals(directPrincipals)
       

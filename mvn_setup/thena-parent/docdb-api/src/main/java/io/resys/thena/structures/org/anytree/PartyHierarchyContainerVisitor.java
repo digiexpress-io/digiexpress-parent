@@ -28,7 +28,7 @@ public class PartyHierarchyContainerVisitor extends OrgPartyContainerVisitor<Imm
   private boolean partyFound;
   
   public PartyHierarchyContainerVisitor(String partyIdOrNameOrExternalId) {
-    super(true);
+    super(false);
     this.partyIdOrNameOrExternalId = partyIdOrNameOrExternalId;
   }
   
@@ -38,32 +38,15 @@ public class PartyHierarchyContainerVisitor extends OrgPartyContainerVisitor<Imm
     }
     return false;  
   }
-  
   @Override
-  public void visitInheritedMembership(OrgParty party, OrgMembership membership, OrgMember user, boolean isDisabled) {
-    if(isDisabled) {
-      return;
-    }
-    if(foundPartyId == null) {
-      return;
-    }
-  }
-  @Override
-  public void visitDirectMembership(OrgParty party, OrgMembership membership, OrgMember user, boolean isDisabled) {
-    if(isDisabled) {
-      return;
-    }
+  public void visitMembership(OrgParty party, OrgMembership membership, OrgMember user, boolean isDisabled) {
     if(!isDirectParty(party)) {
       return;
     }
-    builder.addDirectMembers(user);
+    builder.addMembers(user);
   }
   @Override
   public void visitPartyRight(OrgParty party, OrgPartyRight partyRight, OrgRight right, boolean isDisabled) {
-    if(isDisabled) {
-      return;
-    }
-    
     if(foundPartyId == null) {
       return;
     }
@@ -71,23 +54,7 @@ public class PartyHierarchyContainerVisitor extends OrgPartyContainerVisitor<Imm
     builder.addDirectRights(right);    
   }
   @Override
-  public void visitMemberRight(OrgParty party, OrgMemberRight partyRight, OrgRight right, boolean isDisabled) {
-    if(isDisabled) {
-      return;
-    }
-    
-  }
-  
-  @Override
-  public void visitChildParty(OrgParty party, boolean isDisabled) {
-    if(isDisabled) {
-      return;
-    }
-    
-    if(foundPartyId == null) {
-      return;
-    }
-    builder.addChildParties(party);
+  public void visitMemberRight(OrgParty party, OrgMember user, OrgMemberRight partyRight, OrgRight right, boolean isDisabled) {
   }
   @Override
   public void start(OrgParty party, List<OrgParty> parents, List<OrgRight> parentRights, boolean isDisabled) {
@@ -96,12 +63,7 @@ public class PartyHierarchyContainerVisitor extends OrgPartyContainerVisitor<Imm
       partyFound = true;
       foundPartyId = party.getId();
       builder
-        .partyId(party.getId())
-        .partyName(party.getPartyName())
-        .partyDescription(party.getPartyDescription())
-        .externalId(party.getExternalId())
-        .commitId(party.getCommitId())
-        .parentPartyId(party.getParentId())
+        .party(party)
         .parentParties(parents)
         .parentRights(parentRights)
         .status(isDisabled ? OrgActorStatusType.DISABLED : OrgActorStatusType.IN_FORCE);

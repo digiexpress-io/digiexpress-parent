@@ -53,11 +53,12 @@ public class CreateOneMemberImpl implements CreateOneMember {
   @Override public CreateOneMemberImpl addMemberToParties(String ... addUserToGroups) { this.addUserToGroups.addAll(Arrays.asList(addUserToGroups)); return this; }
   @Override public CreateOneMemberImpl addMemberToParties(List<String> addUserToGroups) { this.addUserToGroups.addAll(RepoAssert.notNull(addUserToGroups, () -> "addUserToGroups can't be empty!")); return this; }
   @Override public CreateOneMemberImpl addMemberRight(List<String> addUserToRoles) { this.addUserToRoles.addAll(RepoAssert.notNull(addUserToRoles, () -> "addUserToRoles can't be empty!")); return this; }
-  @Override public CreateOneMember addMemberToPartyRight(String groupId, List<String> roledId) {
-    RepoAssert.notEmpty(groupId, () -> "groupId can't be empty!");
-    RepoAssert.notEmpty(roledId, () -> "roledId can't be empty!");
-    RepoAssert.isTrue(!addUserToGroupRoles.containsKey(groupId), () -> "groupId already defined!");
-    addUserToGroupRoles.put(groupId, roledId);
+  
+  @Override public CreateOneMember addMemberToPartyRight(String partyId, List<String> rightId) {
+    RepoAssert.notEmpty(partyId, () -> "partyId can't be empty!");
+    RepoAssert.notEmpty(rightId, () -> "rightId can't be empty!");
+    RepoAssert.isTrue(!addUserToGroupRoles.containsKey(partyId), () -> "partyId already defined!");
+    addUserToGroupRoles.put(partyId, rightId);
     return this;
   } 
   
@@ -73,18 +74,18 @@ public class CreateOneMemberImpl implements CreateOneMember {
   }
   
   private Uni<OneMemberEnvelope> doInTx(OrgState tx) {
-    final List<String> groupIds = new ArrayList<>();
-    groupIds.addAll(addUserToGroups);
-    groupIds.addAll(addUserToGroupRoles.keySet());
+    final List<String> partyIds = new ArrayList<>();
+    partyIds.addAll(addUserToGroups);
+    partyIds.addAll(addUserToGroupRoles.keySet());
     
     final List<String> roleIds = new ArrayList<>();
     roleIds.addAll(addUserToRoles);
     roleIds.addAll(addUserToGroupRoles.values().stream().flatMap(e -> e.stream()).toList());
     
 		// find groups
-		final Uni<List<OrgParty>> groupsUni = groupIds.isEmpty() ? 
+		final Uni<List<OrgParty>> groupsUni = partyIds.isEmpty() ? 
 			Uni.createFrom().item(Collections.emptyList()) : 
-			tx.query().parties().findAll(groupIds.stream().distinct().toList()).collect().asList();
+			tx.query().parties().findAll(partyIds.stream().distinct().toList()).collect().asList();
 		
 		// roles
 		final Uni<List<OrgRight>> rolesUni = roleIds.isEmpty() ? 

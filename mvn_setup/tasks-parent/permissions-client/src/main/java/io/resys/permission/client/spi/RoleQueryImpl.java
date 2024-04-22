@@ -66,19 +66,19 @@ public class RoleQueryImpl implements RoleQuery {
     });
   }
   
- private Role mapTo(OrgPartyHierarchy party) {
+ private Role mapTo(OrgPartyHierarchy hierarchy) {
     
     return ImmutableRole.builder()
-      .parentId(party.getParentPartyId())
-      .id(party.getPartyId())
-      .version(party.getCommitId())
-      .name(party.getPartyName())
-      .description(party.getPartyDescription())
-      .status(party.getStatus())
+      .parentId(hierarchy.getParty().getParentId())
+      .id(hierarchy.getParty().getId())
+      .version(hierarchy.getParty().getCommitId())
+      .name(hierarchy.getParty().getPartyName())
+      .description(hierarchy.getParty().getPartyDescription())
+      .status(hierarchy.getStatus())
       
-      .addAllPermissions(party.getParentRights().stream().map(right -> right.getRightName()).toList())
-      .addAllPermissions(party.getDirectRights().stream().map(right -> right.getRightName()).toList())
-      .addAllPrincipals(party.getDirectMembers().stream().map(member -> member.getUserName()).toList())
+      .addAllPermissions(hierarchy.getParentRights().stream().map(right -> right.getRightName()).toList())
+      .addAllPermissions(hierarchy.getDirectRights().stream().map(right -> right.getRightName()).toList())
+      .addAllPrincipals(hierarchy.getMembers().stream().map(member -> member.getUserName()).toList())
       .build();
   }
   

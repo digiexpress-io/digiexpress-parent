@@ -65,11 +65,7 @@ public class RightHierarchyContainerVisitor extends OrgPartyContainerVisitor<Org
     final var result = builder
         .status(target.getStatus())
         .log(log.toString())
-        .roleId(target.getId())
-        .commitId(target.getCommitId())
-        .externalId(target.getExternalId())
-        .roleName(target.getRightName())
-        .roleDescription(target.getRightDescription())
+        .right(target)
         .addAllDirectMembers(ctx.getMembersWithRights(target.getId()).stream()
             .map(right -> ctx.getMember(right.getMemberId()))
             .filter(member -> includeDisabled || member.getStatus() == OrgActorStatusType.IN_FORCE)
@@ -111,12 +107,12 @@ public class RightHierarchyContainerVisitor extends OrgPartyContainerVisitor<Org
     }
     
     @Override
-    public void visitDirectMembership(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled) {
+    public void visitMembership(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled) {
       builder.addChildMembers(user);
     }
     
     @Override
-    public void visitMemberRight(OrgParty group, OrgMemberRight memberRight, OrgRight right, boolean isDisabled) {
+    public void visitMemberRight(OrgParty group, OrgMember user, OrgMemberRight memberRight, OrgRight right, boolean isDisabled) {
       final var member = ctx.getMember(memberRight.getMemberId());
       if(right.getId().equals(target.getId())) {
         builder.addDirectMembers(member);
@@ -124,8 +120,6 @@ public class RightHierarchyContainerVisitor extends OrgPartyContainerVisitor<Org
     }
     @Override public void visitPartyRight(OrgParty group, OrgPartyRight partyRight, OrgRight right, boolean isDisabled) {}
     @Override public void end(OrgParty group, List<OrgParty> parents, boolean isDisabled) {}
-    @Override public void visitInheritedMembership(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled) {}
-    @Override public void visitChildParty(OrgParty group, boolean isDisabled) {}
     @Override public TopPartyLogger visitLogger(OrgParty party) { return null; }
   }
   
@@ -139,7 +133,7 @@ public class RightHierarchyContainerVisitor extends OrgPartyContainerVisitor<Org
     private final MutableObject<Boolean> foundParty;
 
     @Override
-    public void visitDirectMembership(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled) {
+    public void visitMembership(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled) {
       if(foundParty.getValue()) {
         builder.addDirectMembers(user);
       }
@@ -152,7 +146,7 @@ public class RightHierarchyContainerVisitor extends OrgPartyContainerVisitor<Org
     }
     
     @Override
-    public void visitMemberRight(OrgParty group, OrgMemberRight memberRight, OrgRight right, boolean isDisabled) {
+    public void visitMemberRight(OrgParty group, OrgMember user, OrgMemberRight memberRight, OrgRight right, boolean isDisabled) {
       if(right.getId().equals(target.getId())) {
         builder.addDirectMembers(ctx.getMember(memberRight.getMemberId()));
       }
@@ -166,8 +160,6 @@ public class RightHierarchyContainerVisitor extends OrgPartyContainerVisitor<Org
     }
 
     @Override public void start(OrgParty party, List<OrgParty> parents, List<OrgRight> parentRights, boolean isDisabled) {}
-    @Override public void visitInheritedMembership(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled) {}
-    @Override public void visitChildParty(OrgParty group, boolean isDisabled) {}
     @Override public TopPartyLogger visitLogger(OrgParty party) {
       return new OrgRightsLogVisitor(target) {
         @Override

@@ -8,8 +8,8 @@ import io.resys.permission.client.api.model.ImmutablePrincipal;
 import io.resys.permission.client.api.model.Principal;
 import io.resys.thena.api.entities.org.ThenaOrgObjects.OrgMemberHierarchy;
 import io.resys.thena.api.envelope.QueryEnvelope;
-import io.resys.thena.api.envelope.QueryEnvelopeList;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
+import io.resys.thena.api.envelope.QueryEnvelopeList;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -68,11 +68,11 @@ public class PrincipalQueryImpl implements PrincipalQuery {
   private Principal mapTo(OrgMemberHierarchy user) {
         
     return ImmutablePrincipal.builder()
-        .id(user.getUserId())
-        .version(user.getCommitId()) //TODO
-        .name(user.getUserName())
-        .email(user.getEmail())
-        .status(user.getStatus())
+        .id(user.getMember().getId())
+        .version(user.getMember().getCommitId()) //TODO
+        .name(user.getMember().getUserName())
+        .email(user.getMember().getEmail())
+        .status(user.getMember().getStatus())
         .addAllDirectPermissions(user.getDirectRoleNames())
         .addAllDirectRoles(user.getDirectGroupNames())
         .addAllRoles(user.getGroupNames())

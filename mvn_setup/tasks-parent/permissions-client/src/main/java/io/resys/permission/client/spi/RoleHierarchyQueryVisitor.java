@@ -64,20 +64,12 @@ public class RoleHierarchyQueryVisitor extends OrgPartyContainerVisitor<RoleHier
         role.addPermissions(right.getRightName()); 
       }
       @Override
-      public void visitMemberRight(OrgParty party, OrgMemberRight memberRight, OrgRight right, boolean isDisabled) {
+      public void visitMemberRight(OrgParty party, OrgMember member, OrgMemberRight memberRight, OrgRight right, boolean isDisabled) {
         // role.addPermissions(right.getRightName()); 
       }
       @Override
-      public void visitInheritedMembership(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled) {
-        role.addPrincipals(user.getUserName());
-      }
-      @Override
-      public void visitDirectMembership(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled) {
+      public void visitMembership(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled) {
         role.addPrincipals(user.getUserName()); // direct members
-      }
-      @Override
-      public void visitChildParty(OrgParty party, boolean isDisabled) {
-        
       }
       
       @Override
@@ -134,19 +126,12 @@ public class RoleHierarchyQueryVisitor extends OrgPartyContainerVisitor<RoleHier
         role.addPermissions(right.getRightName()); 
       }
       @Override
-      public void visitMemberRight(OrgParty party, OrgMemberRight memberRight, OrgRight right, boolean isDisabled) {
+      public void visitMemberRight(OrgParty party, OrgMember member, OrgMemberRight memberRight, OrgRight right, boolean isDisabled) {
         //role.addPermissions(right.getRightName()); 
       }
       @Override
-      public void visitInheritedMembership(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled) {
+      public void visitMembership(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled) {
         role.addPrincipals(user.getUserName());
-      }
-      @Override
-      public void visitDirectMembership(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled) {
-        role.addPrincipals(user.getUserName());
-      }
-      @Override
-      public void visitChildParty(OrgParty party, boolean isDisabled) {
       }
       @Override
       public void start(OrgParty party, List<OrgParty> parents, List<OrgRight> parentRights, boolean isDisabled) {

@@ -41,25 +41,7 @@ public class OrgPartyLogVisitor extends OrgPartyContainerVisitor<String>
   }
 
   @Override
-  public void visitInheritedMembership(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled) {
-    if(isDisabled) {
-      return;
-    }
-    
-    if(!nodesGroupMembers.containsKey(group.getId())) {
-      final var users = new DefaultNode("users");
-      nodesGroup.get(group.getId()).addChild(users);
-      nodesGroupMembers.put(group.getId(), users);
-    }
-    final var userNodeId = group.getId() + user.getId();
-    if(!nodesGroupUsers.containsKey(userNodeId)) {
-      final var nodeUser = new DefaultNode(user.getUserName() + "::inherited");
-      nodesGroupMembers.get(group.getId()).addChild(nodeUser);
-      nodesGroupUsers.put(userNodeId, nodeUser);
-    }
-  }
-  @Override
-  public void visitDirectMembership(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled) {
+  public void visitMembership(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled) {
     if(isDisabled) {
       return;
     }
@@ -90,10 +72,23 @@ public class OrgPartyLogVisitor extends OrgPartyContainerVisitor<String>
     nodesGroupRoles.get(group.getId()).addChild(new DefaultNode(role.getRightName()));
   }
   @Override
-  public void visitMemberRight(OrgParty party, OrgMemberRight memberRight, OrgRight right, boolean isDisabled) {
+  public void visitMemberRight(OrgParty party, OrgMember user, OrgMemberRight memberRight, OrgRight right, boolean isDisabled) {
     if(isDisabled) {
       return;
     }
+    
+    if(!nodesGroupMembers.containsKey(party.getId())) {
+      final var users = new DefaultNode("users");
+      nodesGroup.get(party.getId()).addChild(users);
+      nodesGroupMembers.put(party.getId(), users);
+    }
+    final var userNodeId = party.getId() + memberRight.getMemberId();
+    if(!nodesGroupUsers.containsKey(userNodeId)) {
+      final var nodeUser = new DefaultNode(user.getUserName() + "::inherited");
+      nodesGroupMembers.get(party.getId()).addChild(nodeUser);
+      nodesGroupUsers.put(userNodeId, nodeUser);
+    }
+    
     final var isDirect = memberRight.getPartyId().equals(party.getId());
     final var nodeId = party.getId() + memberRight.getMemberId();
     final DefaultNode userNode = nodesGroupUsers.get(nodeId);
@@ -103,13 +98,6 @@ public class OrgPartyLogVisitor extends OrgPartyContainerVisitor<String>
       userNode.setText(userNode.getText().substring(0, userNode.getText().length() -1) + ", " + rightName + ")");            
     } else {
       userNode.setText(userNode.getText() + " (" + rightName + ")");
-    }
-  }
-  
-  @Override
-  public void visitChildParty(OrgParty group, boolean isDisabled) {
-    if(isDisabled) {
-      return;
     }
   }
   @Override
