@@ -60,21 +60,15 @@ public class RoleHierarchyQueryVisitor extends OrgPartyContainerVisitor<RoleHier
     
     return new TopPartyVisitor() {
       @Override 
-      public void visitDirectPartyRight(List<OrgParty> parents, OrgParty party, OrgPartyRight partyRight, OrgRight right, boolean isDisabled) {
-        
-        // visiting child right
-        if(parents.stream().filter(p -> p.isMatch(idOrNameOrExtId)).findFirst().isPresent()) {
-          return;
-        }
-        
+      public void visitPartyRight(OrgParty party, OrgPartyRight partyRight, OrgRight right, boolean isDisabled) {
         role.addPermissions(right.getRightName()); 
       }
       @Override
-      public void visitDirectMemberPartyRight(OrgParty party, OrgMemberRight memberRight, OrgRight right, boolean isDisabled) {
-        //role.addPermissions(right.getRightName()); 
+      public void visitMemberRight(OrgParty party, OrgMemberRight memberRight, OrgRight right, boolean isDisabled) {
+        // role.addPermissions(right.getRightName()); 
       }
       @Override
-      public void visitMembershipWithInheritance(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled) {
+      public void visitInheritedMembership(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled) {
         role.addPrincipals(user.getUserName());
       }
       @Override
@@ -102,8 +96,8 @@ public class RoleHierarchyQueryVisitor extends OrgPartyContainerVisitor<RoleHier
         if(roleFoundId != null) {
           
           result
-            .rootRoleId(group.getId())
-            .targetRoleId(roleFoundId)
+            .topRoleId(group.getId())
+            .bottomRoleId(roleFoundId)
             .putAllPrincipals(principals)
             .putAllPermissions(permissions)
             .putAllRoles(roles);
@@ -115,7 +109,6 @@ public class RoleHierarchyQueryVisitor extends OrgPartyContainerVisitor<RoleHier
       }
       @Override
       public TopPartyLogger visitLogger(OrgParty party) {
-        
         return new OrgPartyLogVisitor(idOrNameOrExtId, includeDisabled) {
           @Override
           public String close() {
@@ -137,19 +130,15 @@ public class RoleHierarchyQueryVisitor extends OrgPartyContainerVisitor<RoleHier
     
     return new PartyVisitor() {
       @Override 
-      public void visitDirectPartyRight(List<OrgParty> parents, OrgParty party, OrgPartyRight partyRight, OrgRight right, boolean isDisabled) {
-        // visiting child right
-        if(parents.stream().filter(p -> p.isMatch(idOrNameOrExtId)).findFirst().isPresent()) {
-          return;
-        }
+      public void visitPartyRight(OrgParty party, OrgPartyRight partyRight, OrgRight right, boolean isDisabled) {
         role.addPermissions(right.getRightName()); 
       }
       @Override
-      public void visitDirectMemberPartyRight(OrgParty party, OrgMemberRight memberRight, OrgRight right, boolean isDisabled) {
+      public void visitMemberRight(OrgParty party, OrgMemberRight memberRight, OrgRight right, boolean isDisabled) {
         //role.addPermissions(right.getRightName()); 
       }
       @Override
-      public void visitMembershipWithInheritance(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled) {
+      public void visitInheritedMembership(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled) {
         role.addPrincipals(user.getUserName());
       }
       @Override

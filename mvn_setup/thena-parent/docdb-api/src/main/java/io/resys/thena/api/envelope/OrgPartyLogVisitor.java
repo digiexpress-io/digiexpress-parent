@@ -41,7 +41,7 @@ public class OrgPartyLogVisitor extends OrgPartyContainerVisitor<String>
   }
 
   @Override
-  public void visitMembershipWithInheritance(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled) {
+  public void visitInheritedMembership(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled) {
     if(isDisabled) {
       return;
     }
@@ -78,7 +78,7 @@ public class OrgPartyLogVisitor extends OrgPartyContainerVisitor<String>
     
   }
   @Override
-  public void visitDirectPartyRight(List<OrgParty> _parents, OrgParty group, OrgPartyRight groupRole, OrgRight role, boolean isDisabled) {
+  public void visitPartyRight(OrgParty group, OrgPartyRight groupRole, OrgRight role, boolean isDisabled) {
     if(isDisabled) {
       return;
     }
@@ -90,7 +90,7 @@ public class OrgPartyLogVisitor extends OrgPartyContainerVisitor<String>
     nodesGroupRoles.get(group.getId()).addChild(new DefaultNode(role.getRightName()));
   }
   @Override
-  public void visitDirectMemberPartyRight(OrgParty party, OrgMemberRight memberRight, OrgRight right, boolean isDisabled) {
+  public void visitMemberRight(OrgParty party, OrgMemberRight memberRight, OrgRight right, boolean isDisabled) {
     if(isDisabled) {
       return;
     }

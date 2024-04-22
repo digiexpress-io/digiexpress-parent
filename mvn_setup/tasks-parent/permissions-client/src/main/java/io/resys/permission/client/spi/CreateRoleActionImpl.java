@@ -2,14 +2,12 @@ package io.resys.permission.client.spi;
 
 import io.resys.permission.client.api.PermissionClient.CreateRoleAction;
 import io.resys.permission.client.api.PermissionClient.RoleAccessEvaluator;
-import io.resys.permission.client.api.model.ImmutableRole;
 import io.resys.permission.client.api.model.Principal.Role;
 import io.resys.permission.client.api.model.RoleCommand.CreateRole;
 import io.resys.permission.client.api.model.RoleCommand.RoleCommandType;
 import io.resys.thena.api.actions.OrgCommitActions.CreateOneParty;
 import io.resys.thena.api.actions.OrgCommitActions.OnePartyEnvelope;
 import io.resys.thena.api.entities.CommitResultStatus;
-import io.resys.thena.api.entities.org.OrgActorStatusType;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
@@ -19,7 +17,8 @@ public class CreateRoleActionImpl implements CreateRoleAction {
 
   @Override
   public Uni<Role> createOne(CreateRole command) {
-    return createRequest(command).onItem().transform(response -> createResponse(response));
+    return createRequest(command)
+        .onItem().transformToUni(response -> createResponse(response));
   }
   
   
@@ -43,23 +42,14 @@ public class CreateRoleActionImpl implements CreateRoleAction {
     throw new CreateRoleException("failed to create role"); 
   }
   
-  public Role createResponse(OnePartyEnvelope response) {
+  public Uni<Role> createResponse(OnePartyEnvelope response) {
     if(response.getStatus() != CommitResultStatus.OK) {
       final var msg = "failed to created role";
       throw new CreateRoleException(msg, response);
     }
     
     final var role = response.getParty();
-    return ImmutableRole.builder()
-        .id(role.getId())
-        .version(role.getCommitId())
-        .name(role.getPartyName())
-        .description(role.getPartyDescription())
-        .status(OrgActorStatusType.IN_FORCE)
-        .parentId(role.getParentId())
-        .permissions(response.getDirectRights().stream().map(e -> e.getRightName()).toList())
-        .principals(response.getDirectMembers().stream().map(e -> e.getUserName()).toList())
-        .build();
+    return new RoleQueryImpl(ctx).get(role.getId());
   }
   
   

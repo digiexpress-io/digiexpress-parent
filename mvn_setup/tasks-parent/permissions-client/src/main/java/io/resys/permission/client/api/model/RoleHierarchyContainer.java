@@ -13,8 +13,8 @@ import io.resys.thena.api.envelope.ThenaContainer;
 
 @Value.Immutable @JsonSerialize(as = ImmutableRoleHierarchyContainer.class) @JsonDeserialize(as = ImmutableRoleHierarchyContainer.class)
 public interface RoleHierarchyContainer extends ThenaContainer {
-  String getTargetRoleId();
-  String getRootRoleId();
+  String getBottomRoleId(); // where it all ends, the object we are trying to find
+  String getTopRoleId(); // where it all starts, tip of the tree
   
   Map<String, Role> getRoles();
   Map<String, Permission> getPermissions(); // permissions by id

@@ -91,13 +91,13 @@ public class OrgRightsLogVisitor extends OrgPartyContainerVisitor<String>
   }
 
   @Override
-  public void visitMembershipWithInheritance(OrgParty group, OrgMembership membership, OrgMember user,
+  public void visitInheritedMembership(OrgParty group, OrgMembership membership, OrgMember user,
       boolean isDisabled) {
     
   }
 
   @Override
-  public void visitDirectPartyRight(List<OrgParty> _parents, OrgParty group, OrgPartyRight groupRole, OrgRight role, boolean isDisabled) {
+  public void visitPartyRight(OrgParty group, OrgPartyRight groupRole, OrgRight role, boolean isDisabled) {
     if(isDisabled) {
       return;
     }
@@ -116,7 +116,7 @@ public class OrgRightsLogVisitor extends OrgPartyContainerVisitor<String>
   }
   
   @Override
-  public void visitDirectMemberPartyRight(OrgParty group, OrgMemberRight groupRole, OrgRight role, boolean isDisabled) {
+  public void visitMemberRight(OrgParty group, OrgMemberRight groupRole, OrgRight role, boolean isDisabled) {
     if(isDisabled) {
       return;
     }

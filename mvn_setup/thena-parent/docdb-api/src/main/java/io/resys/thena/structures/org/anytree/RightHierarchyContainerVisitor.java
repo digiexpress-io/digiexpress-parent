@@ -116,15 +116,15 @@ public class RightHierarchyContainerVisitor extends OrgPartyContainerVisitor<Org
     }
     
     @Override
-    public void visitDirectMemberPartyRight(OrgParty group, OrgMemberRight memberRight, OrgRight right, boolean isDisabled) {
+    public void visitMemberRight(OrgParty group, OrgMemberRight memberRight, OrgRight right, boolean isDisabled) {
       final var member = ctx.getMember(memberRight.getMemberId());
       if(right.getId().equals(target.getId())) {
         builder.addDirectMembers(member);
       }
     }
-    @Override public void visitDirectPartyRight(List<OrgParty> parents, OrgParty group, OrgPartyRight partyRight, OrgRight right, boolean isDisabled) {}
+    @Override public void visitPartyRight(OrgParty group, OrgPartyRight partyRight, OrgRight right, boolean isDisabled) {}
     @Override public void end(OrgParty group, List<OrgParty> parents, boolean isDisabled) {}
-    @Override public void visitMembershipWithInheritance(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled) {}
+    @Override public void visitInheritedMembership(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled) {}
     @Override public void visitChildParty(OrgParty group, boolean isDisabled) {}
     @Override public TopPartyLogger visitLogger(OrgParty party) { return null; }
   }
@@ -145,14 +145,14 @@ public class RightHierarchyContainerVisitor extends OrgPartyContainerVisitor<Org
       }
     }
     @Override
-    public void visitDirectPartyRight(List<OrgParty> parents, OrgParty group, OrgPartyRight partyRight, OrgRight right, boolean isDisabled) {
+    public void visitPartyRight(OrgParty group, OrgPartyRight partyRight, OrgRight right, boolean isDisabled) {
       if(right.getId().equals(target.getId())) {
         foundParty.setValue(true);
       }
     }
     
     @Override
-    public void visitDirectMemberPartyRight(OrgParty group, OrgMemberRight memberRight, OrgRight right, boolean isDisabled) {
+    public void visitMemberRight(OrgParty group, OrgMemberRight memberRight, OrgRight right, boolean isDisabled) {
       if(right.getId().equals(target.getId())) {
         builder.addDirectMembers(ctx.getMember(memberRight.getMemberId()));
       }
@@ -166,7 +166,7 @@ public class RightHierarchyContainerVisitor extends OrgPartyContainerVisitor<Org
     }
 
     @Override public void start(OrgParty party, List<OrgParty> parents, List<OrgRight> parentRights, boolean isDisabled) {}
-    @Override public void visitMembershipWithInheritance(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled) {}
+    @Override public void visitInheritedMembership(OrgParty group, OrgMembership membership, OrgMember user, boolean isDisabled) {}
     @Override public void visitChildParty(OrgParty group, boolean isDisabled) {}
     @Override public TopPartyLogger visitLogger(OrgParty party) {
       return new OrgRightsLogVisitor(target) {

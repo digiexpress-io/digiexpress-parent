@@ -10,8 +10,8 @@ import io.resys.thena.api.envelope.ImmutableQueryEnvelope;
 import io.resys.thena.api.envelope.ImmutableQueryEnvelopeList;
 import io.resys.thena.api.envelope.OrgPartyLogVisitor;
 import io.resys.thena.api.envelope.QueryEnvelope;
-import io.resys.thena.api.envelope.QueryEnvelopeList;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
+import io.resys.thena.api.envelope.QueryEnvelopeList;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.structures.org.anytree.AnyTreeContainerContextImpl;
 import io.resys.thena.structures.org.anytree.AnyTreeContainerImpl;
@@ -38,7 +38,7 @@ public class PartyHierarchyQueryImpl implements PartyHierarchyQuery {
           }
           
           try {
-            final QueryEnvelope<OrgPartyHierarchy> success = createGroupHierarchy(resp, groupIdOrNameOrExternalId);
+            final QueryEnvelope<OrgPartyHierarchy> success = createOneHierarchy(resp, groupIdOrNameOrExternalId);
             return success;
           } catch(Exception e) {
             return QueryEnvelope.fatalError(resp.getRepo(), "Failed to build hierarchy for all groups", log, e);
@@ -54,7 +54,7 @@ public class PartyHierarchyQueryImpl implements PartyHierarchyQuery {
           }
           
           try {
-            final QueryEnvelopeList<OrgPartyHierarchy> success = createGroupHierarchy(resp);
+            final QueryEnvelopeList<OrgPartyHierarchy> success = createManyHierarchies(resp);
             return success;
           } catch(Exception e) {
             final QueryEnvelope<OrgPartyHierarchy> fail = QueryEnvelope.fatalError(resp.getRepo(), "Failed to build hierarchy for all groups", log, e);
@@ -63,7 +63,7 @@ public class PartyHierarchyQueryImpl implements PartyHierarchyQuery {
         });
   }
 
-  private QueryEnvelopeList<OrgPartyHierarchy> createGroupHierarchy(QueryEnvelope<OrgProjectObjects> init) {
+  private QueryEnvelopeList<OrgPartyHierarchy> createManyHierarchies(QueryEnvelope<OrgProjectObjects> init) {
     final var groups = new ArrayList<OrgPartyHierarchy>();
     final var ctx = new AnyTreeContainerContextImpl(init.getObjects());
     final var container = new AnyTreeContainerImpl(ctx);
@@ -80,9 +80,7 @@ public class PartyHierarchyQueryImpl implements PartyHierarchyQuery {
         .build();
   }
   
-  private QueryEnvelope<OrgPartyHierarchy> createGroupHierarchy(
-      QueryEnvelope<OrgProjectObjects> init, 
-      String groupIdOrNameOrExternalId) {
+  private QueryEnvelope<OrgPartyHierarchy> createOneHierarchy(QueryEnvelope<OrgProjectObjects> init, String groupIdOrNameOrExternalId) {
     
     final var ctx = new AnyTreeContainerContextImpl(init.getObjects());
     final var container = new AnyTreeContainerImpl(ctx);

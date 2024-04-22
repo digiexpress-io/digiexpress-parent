@@ -133,26 +133,23 @@ public class CreateOnePartyImpl implements CreateOneParty {
 
     return tx.insert().batchMany(batch)
       .onItem().transform(rsp -> {
-      	return ImmutableOnePartyEnvelope.builder()
-        .repoId(repoId)
-        .party(rsp.getParties().isEmpty() ? null : rsp.getParties().get(0))
-        .directMembers(members)
-        .addMessages(ImmutableMessage.builder().text(rsp.getLog()).build())
-        .addAllMessages(rsp.getMessages())
-        .status(BatchStatus.mapStatus(rsp.getStatus()))
-        .build();
-      })
-      .onItem().transformToUni(rsp -> {
-        if(rsp.getStatus() == CommitResultStatus.CONFLICT || rsp.getStatus() == CommitResultStatus.ERROR) {
-          return Uni.createFrom().item(rsp);
+        
+        if(rsp.getStatus() == BatchStatus.CONFLICT || rsp.getStatus() == BatchStatus.ERROR) {
+          return ImmutableOnePartyEnvelope.builder()
+            .repoId(repoId)
+            .status(BatchStatus.mapStatus(rsp.getStatus()))
+            .messages(rsp.getMessages())
+            .build();
         }
         
-        return tx.query().rights().findAllByPartyId(rsp.getParty().getId())
-            .collect().asList()
-            .onItem().transform(direct -> ImmutableOnePartyEnvelope.builder()
-                .from(rsp)
-                .directRights(direct)
-                .build());
+      	return ImmutableOnePartyEnvelope.builder()
+          .repoId(repoId)
+          .party(rsp.getParties().isEmpty() ? null : rsp.getParties().get(0))
+          .directMembers(members)
+          .addMessages(ImmutableMessage.builder().text(rsp.getLog()).build())
+          .addAllMessages(rsp.getMessages())
+          .status(BatchStatus.mapStatus(rsp.getStatus()))
+          .build();
       });
   } 
 }
