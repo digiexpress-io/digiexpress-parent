@@ -67,11 +67,13 @@ public class CreateOneDocImpl implements CreateOneDoc {
   }
   
   private Uni<OneDocEnvelope> doInTx(DocState tx) {  
-    final var batch = new BatchForOneDocCreate(tx.getTenantId(), docType, author, message, branchName)
+    final var batch = new BatchForOneDocCreate(tx.getTenantId(), author, message)
         .docId(docId)
+        .docType(docType)
         .ownerId(ownerId)
         .externalId(externalId)
         .parentDocId(parentDocId)
+        .branchName(branchName)
         .commands(commands)
         .meta(docMeta)
         .branchContent(branchContent)

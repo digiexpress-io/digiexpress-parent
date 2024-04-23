@@ -11,12 +11,12 @@ import io.resys.thena.api.actions.DocCommitActions.ModifyManyDocBranches;
 import io.resys.thena.api.actions.GitCommitActions.JsonObjectMerge;
 import io.resys.thena.api.actions.ImmutableManyDocsEnvelope;
 import io.resys.thena.api.entities.CommitResultStatus;
-import io.resys.thena.api.entities.doc.DocBranchLock;
+import io.resys.thena.api.entities.doc.DocLock.DocBranchLock;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.spi.ImmutableTxScope;
-import io.resys.thena.structures.doc.DocQueries.DocBranchLockCriteria;
 import io.resys.thena.structures.BatchStatus;
+import io.resys.thena.structures.doc.DocQueries.DocBranchLockCriteria;
 import io.resys.thena.structures.doc.DocState;
 import io.resys.thena.structures.doc.ImmutableDocBatchForMany;
 import io.resys.thena.structures.doc.ImmutableDocBranchLockCriteria;
@@ -45,30 +45,27 @@ public class ModifyManyDocBranchesImpl implements ModifyManyDocBranches {
     private Boolean parentIsLatest;
     private Boolean remove;
     private String versionToModify;
-    private String message;
     private String branchName;
     private String docId;
-    private JsonObject appendBlob;
-    private JsonObject appendLog;
-    private JsonObjectMerge appendMerge;
+    private JsonObject replace;
+    private List<JsonObject> commands;
+    private JsonObjectMerge merge;
   }
   @Override public int getItemsAdded() { return items.size();}
-  @Override public ModifyManyDocBranchesImpl branchName(String branchName) { this.branchName = RepoAssert.notEmpty(branchName, () -> "branchName can't be empty!"); return this; }
-  @Override public ModifyManyDocBranchesImpl author(String author) { this.author = RepoAssert.notEmpty(author, () -> "author can't be empty!"); return this; }
-  @Override public ModifyManyDocBranchesImpl message(String message) { this.message = RepoAssert.notEmpty(message, () -> "message can't be empty!"); return this; }
+  @Override public ModifyManyDocBranchesImpl commitAuthor(String author) { this.author = RepoAssert.notEmpty(author, () -> "commitAuthor can't be empty!"); return this; }
+  @Override public ModifyManyDocBranchesImpl commitMessage(String message) { this.message = RepoAssert.notEmpty(message, () -> "commitMessage can't be empty!"); return this; }
   @Override public AddItemToModifyDocBranch item() {
     final var parent = this;
-    final var item = ItemModData.builder().branchName(branchName).message(message);
+    final var item = ItemModData.builder().branchName(branchName);
     lastItem = new AddItemToModifyDocBranch() {
       @Override public AddItemToModifyDocBranch docId(String docId) { item.docId(docId); return this; }
       @Override public AddItemToModifyDocBranch remove() { item.remove(true); return this; }
       @Override public AddItemToModifyDocBranch parentIsLatest() { item.parentIsLatest(true); return this; }
-      @Override public AddItemToModifyDocBranch parent(String versionToModify) { item.versionToModify(versionToModify); return this; }
-      @Override public AddItemToModifyDocBranch message(String message) { item.message(message); return this; }
-      @Override public AddItemToModifyDocBranch merge(JsonObjectMerge merge) { item.appendMerge(merge); return this; }
-      @Override public AddItemToModifyDocBranch log(JsonObject doc) { item.appendLog(doc); return this; }
+      @Override public AddItemToModifyDocBranch commit(String versionToModify) { item.versionToModify(versionToModify); return this; }
+      @Override public AddItemToModifyDocBranch merge(JsonObjectMerge merge) { item.merge(merge); return this; }
+      @Override public AddItemToModifyDocBranch commands(List<JsonObject> doc) { item.commands(doc); return this; }
       @Override public AddItemToModifyDocBranch branchName(String branchName) { item.branchName(branchName); return this; }
-      @Override public AddItemToModifyDocBranch append(JsonObject doc) { item.appendBlob(doc); return this; }
+      @Override public AddItemToModifyDocBranch replace(JsonObject doc) { item.replace(doc); return this; }
       @Override
       public ModifyManyDocBranches next() {
         final var result = item.build();
@@ -76,8 +73,7 @@ public class ModifyManyDocBranchesImpl implements ModifyManyDocBranches {
         RepoAssert.notEmpty(result.docId, () -> "docId can't be empty!");
         RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
         RepoAssert.notEmpty(author, () -> "author can't be empty!");
-        RepoAssert.notEmpty(result.message, () -> "message can't be empty!");
-        RepoAssert.isTrue(result.appendBlob != null || result.appendMerge != null, () -> "Nothing to commit, no content!");
+        RepoAssert.isTrue(result.replace != null || result.merge != null, () -> "Nothing to commit, no content!");
         
         lastItem = null;
         items.add(result);
@@ -134,8 +130,8 @@ public class ModifyManyDocBranchesImpl implements ModifyManyDocBranches {
               .text(new StringBuilder()
                 .append("Commit to: '").append(repoId).append("'")
                 .append(" is rejected.")
-                .append(" Could not find all items: expected: '").append(items.size()).append("' but found: '").branchContent(state.size()).branchContent("'!\r\n")
-                .branchContent("  - not found: ").branchContent(String.join(",", notFound))
+                .append(" Could not find all items: expected: '").append(items.size()).append("' but found: '").append(state.size()).append("'!\r\n")
+                .append("  - not found: ").append(String.join(",", notFound))
                 .toString())
               .build())
           .status(CommitResultStatus.ERROR)
@@ -154,7 +150,7 @@ public class ModifyManyDocBranchesImpl implements ModifyManyDocBranches {
         .append("Commit to: '").append(repoId).append("'")
         .append(" is rejected.")
         .append(" Your head is: '").append(versionToModify).append("')")
-        .append(" but remote is: '").branchContent(state.getCommit().get().getId()).branchContent("'!")
+        .append(" but remote is: '").append(state.getCommit().get().getId()).append("'!")
         .toString();
       
       return ImmutableManyDocsEnvelope.builder()
@@ -176,7 +172,7 @@ public class ModifyManyDocBranchesImpl implements ModifyManyDocBranches {
     
     final var logs = new ArrayList<String>();
     final var many = ImmutableDocBatchForMany.builder()
-        .repo(tx.getDataSource().getTenant())
+        .repo(tx.getDataSource().getTenant().getId())
         .status(BatchStatus.OK);
     for(ItemModData item : items) {
       final var lock = lockByName.get(item.getDocId() + "/" + item.getBranchName());
@@ -185,21 +181,18 @@ public class ModifyManyDocBranchesImpl implements ModifyManyDocBranches {
         many.status(BatchStatus.ERROR).addAllMessages(valid.getMessages());
       }
       
-      final var batch = new BatchForOneBranchModify(lock, tx, author)
-        .replace(item.getAppendBlob())
-        .merge(item.getAppendMerge())
-        .message(item.getMessage())
-        .log(item.getAppendLog())
+      final var batch = new BatchForOneBranchModify(lock, tx, author, message)
+        .replace(item.getReplace())
+        .merge(item.getMerge())
+        .commands(item.getCommands())
         .remove(item.getRemove() == null ? false : item.getRemove())
         .create();
       
-      logs.add(batch.getLog().getText());
+      logs.add(batch.getLog());
       many.addItems(batch);
     }
     final var changes = many
-        .log(ImmutableMessage.builder()
-            .text(String.join("\r\n" + "\r\n", logs))
-            .build())
+        .log(String.join("\r\n" + "\r\n", logs))
         .build();
     if(changes.getStatus() != BatchStatus.OK) {
       return Uni.createFrom().item(BatchForOneBranchModify.mapTo(changes));

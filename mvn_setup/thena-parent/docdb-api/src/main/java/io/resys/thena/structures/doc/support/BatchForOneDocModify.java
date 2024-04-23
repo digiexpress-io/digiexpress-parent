@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.DocLock;
@@ -40,9 +41,9 @@ public class BatchForOneDocModify {
   private JsonObject appendMeta;
   private boolean remove;
 
-  public BatchForOneDocModify externalId(String externalId) { this.externalId = externalId; return this; }
-  public BatchForOneDocModify parentId(String parentId) { this.parentId = parentId; return this; }
-  public BatchForOneDocModify ownerId(String ownerId) { this.ownerId = ownerId; return this; }
+  public BatchForOneDocModify externalId(Optional<String> externalId) { this.externalId = externalId; return this; }
+  public BatchForOneDocModify parentId(Optional<String> parentId) { this.parentId = parentId; return this; }
+  public BatchForOneDocModify ownerId(Optional<String> ownerId) { this.ownerId = ownerId; return this; }
   public BatchForOneDocModify remove(boolean remove) { this.remove = remove; return this; }
   public BatchForOneDocModify commands(List<JsonObject> log) { this.commands = log; return this; }
   public BatchForOneDocModify meta(JsonObject meta) { this.appendMeta = meta; return this; }

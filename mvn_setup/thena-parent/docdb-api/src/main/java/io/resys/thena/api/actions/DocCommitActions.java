@@ -65,7 +65,8 @@ public interface DocCommitActions {
     AddItemToCreateDoc meta(@Nullable JsonObject docMeta);
     AddItemToCreateDoc externalId(@Nullable String externalId);
     AddItemToCreateDoc ownerId(@Nullable String ownerId);
-    AddItemToCreateDoc branch(String branchName, JsonObject branchContent); // first branch of the document, when empty generated as 'main' by the system
+    AddItemToCreateDoc branchName(String branchName); // first branch of the document, when empty generated as 'main' by the system
+    AddItemToCreateDoc branchContent(JsonObject branchContent); 
     AddItemToCreateDoc commands(List<JsonObject> commands);
     
     CreateManyDocs next();
@@ -101,6 +102,7 @@ public interface DocCommitActions {
     AddItemToModifyDoc externalId(@Nullable String externalId); // user given unique id
     AddItemToModifyDoc ownerId(@Nullable String ownerId);       //user given 'grouping' identifier for claiming ownership  
     AddItemToModifyDoc meta(@Nullable JsonObject docMeta);
+    AddItemToModifyDoc commands(@Nullable List<JsonObject> docMeta);
     AddItemToModifyDoc remove();
     ModifyManyDocs next();
   }

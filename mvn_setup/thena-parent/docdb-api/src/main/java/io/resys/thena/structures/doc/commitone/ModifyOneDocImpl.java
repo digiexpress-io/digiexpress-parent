@@ -2,6 +2,7 @@ package io.resys.thena.structures.doc.commitone;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.Optional;
 
 import io.resys.thena.api.actions.DocCommitActions.ModifyOneDoc;
 import io.resys.thena.api.actions.DocCommitActions.OneDocEnvelope;
@@ -33,18 +34,18 @@ public class ModifyOneDocImpl implements ModifyOneDoc {
   
   private final String repoId;
   private String docId;
-  private String parentDocId;
-  private String externalId;
-  private String ownerId;
+  private Optional<String> parentDocId;
+  private Optional<String> externalId;
+  private Optional<String> ownerId;
   private String author;
   private String message;
 
-  @Override public ModifyOneDocImpl parentDocId(String parentDocId) { this.parentDocId = parentDocId; return this; }
-  @Override public ModifyOneDocImpl externalId(String externalId) { this.externalId = externalId; return this; }
+  @Override public ModifyOneDocImpl parentDocId(String parentDocId) { this.parentDocId = Optional.ofNullable(parentDocId); return this; }
+  @Override public ModifyOneDocImpl externalId(String externalId) { this.externalId = Optional.ofNullable(externalId); return this; }
   @Override public ModifyOneDocImpl remove() { this.remove = true; return this; }
   @Override public ModifyOneDocImpl meta(JsonObject blob) { this.meta = RepoAssert.notNull(meta, () -> "meta can't be null!"); return this; }
   @Override public ModifyOneDocImpl docId(String docId) { this.docId = docId; return this; }
-  @Override public ModifyOneDocImpl ownerId(String ownerId) { this.ownerId = ownerId; return this; }
+  @Override public ModifyOneDocImpl ownerId(String ownerId) { this.ownerId = Optional.ofNullable(ownerId); return this; }
   @Override public ModifyOneDocImpl commitAuthor(String author) { this.author = RepoAssert.notEmpty(author, () -> "commitAuthor can't be empty!"); return this; }
   @Override public ModifyOneDocImpl commitMessage(String message) { this.message = RepoAssert.notEmpty(message, () -> "commitMessage can't be empty!"); return this; }
   @Override public ModifyOneDocImpl commands(List<JsonObject> commands) { this.commands = commands; return this; }

@@ -3,6 +3,7 @@ package io.resys.thena.structures.doc.commitmany;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import io.resys.thena.api.actions.DocCommitActions.AddItemToModifyDoc;
@@ -14,8 +15,8 @@ import io.resys.thena.api.entities.doc.DocLock;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.spi.ImmutableTxScope;
-import io.resys.thena.structures.doc.DocQueries.DocLockCriteria;
 import io.resys.thena.structures.BatchStatus;
+import io.resys.thena.structures.doc.DocQueries.DocLockCriteria;
 import io.resys.thena.structures.doc.DocState;
 import io.resys.thena.structures.doc.ImmutableDocBatchForMany;
 import io.resys.thena.structures.doc.ImmutableDocLockCriteria;
@@ -43,28 +44,31 @@ public class ModifyManyDocsImpl implements ModifyManyDocs {
   @Data @Builder
   private static class ItemModData {
     private Boolean remove;
-    private String message;
     private String docId;
-    private JsonObject appendLog;
+    private Optional<String> parentDocId;
+    private Optional<String> ownerId;
+    private Optional<String> externalId;
+    private List<JsonObject> commands;
     private JsonObject appendMeta;
   }
   
-  @Override public ModifyManyDocsImpl author(String author) { this.author = RepoAssert.notEmpty(author, () -> "author can't be empty!"); return this; }
-  @Override public ModifyManyDocsImpl message(String message) { this.message = RepoAssert.notEmpty(message, () -> "message can't be empty!"); return this; }
+  @Override public ModifyManyDocsImpl commitAuthor(String author) { this.author = RepoAssert.notEmpty(author, () -> "author can't be empty!"); return this; }
+  @Override public ModifyManyDocsImpl commitMessage(String message) { this.message = RepoAssert.notEmpty(message, () -> "message can't be empty!"); return this; }
   @Override public AddItemToModifyDoc item() {
     final var parent = this;
-    final var item = ItemModData.builder().message(message);
+    final var item = ItemModData.builder();
     lastItem = new AddItemToModifyDoc() {
       @Override public AddItemToModifyDoc docId(String docId) { item.docId(docId); return this; }
+      @Override public AddItemToModifyDoc externalId(String externalId) { item.externalId(Optional.ofNullable(externalId)); return this; }
+      @Override public AddItemToModifyDoc parentDocId(String parentDocId) { item.parentDocId(Optional.ofNullable(parentDocId)); return this; }
+      @Override public AddItemToModifyDoc ownerId(String ownerId) { item.ownerId(Optional.ofNullable(ownerId)); return this; }
       @Override public AddItemToModifyDoc remove() { item.remove(true); return this; }
-      @Override public AddItemToModifyDoc message(String message) { item.message(message); return this; }
-      @Override public AddItemToModifyDoc log(JsonObject log) { item.appendLog(log); return this; }
+      @Override public AddItemToModifyDoc commands(List<JsonObject> log) { item.commands(log); return this; }
       @Override public AddItemToModifyDoc meta(JsonObject meta) { item.appendMeta(meta); return this; }
       @Override public ModifyManyDocs next() {
         final var result = item.build();
         RepoAssert.notEmpty(result.docId, () -> "docId can't be empty!");
         RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
-        RepoAssert.notEmpty(result.message, () -> "message can't be empty!");
         
         lastItem = null;
         items.add(result);
@@ -109,34 +113,31 @@ public class ModifyManyDocsImpl implements ModifyManyDocs {
       
       final var logs = new ArrayList<String>();
       final var many = ImmutableDocBatchForMany.builder()
-          .repo(tx.getDataSource().getTenant())
+          .repo(tx.getDataSource().getTenant().getId())
           .status(BatchStatus.OK);
       for(ItemModData item : items) {
         final var lock = lockById.get(item.getDocId());
-        final var valid = validateDocLock(lock, item);;
+        final var valid = validateDocLock(lock, item);
         if(valid != null) {
           many.status(BatchStatus.ERROR).addAllMessages(valid.getMessages());
         }
         
-        final var batch = new BatchForOneDocModify(lock, tx, author)
-          .message(item.getMessage())
-          .log(item.getAppendLog())
+        final var batch = new BatchForOneDocModify(lock, tx, author, message)
           .meta(item.getAppendMeta())
           .remove(item.getRemove() == null ? false : item.getRemove())
+          .commands(item.getCommands())
+          .parentId(item.getParentDocId())
+          .ownerId(item.getOwnerId())
+          .externalId(item.getExternalId())
           .create();
         
-        logs.add(batch.getLog().getText());
+        logs.add(batch.getLog());
         many.addItems(batch);
       }
-      final var changes = many
-          .log(ImmutableMessage.builder()
-              .text(String.join("\r\n" + "\r\n", logs))
-              .build())
-          .build();
+      final var changes = many.log(String.join("\r\n" + "\r\n", logs)).build();
       if(changes.getStatus() != BatchStatus.OK) {
         return Uni.createFrom().item(BatchForOneBranchModify.mapTo(changes));
       }
-      
       return tx.insert().batchMany(changes).onItem().transform(BatchForOneBranchModify::mapTo);
   }
   

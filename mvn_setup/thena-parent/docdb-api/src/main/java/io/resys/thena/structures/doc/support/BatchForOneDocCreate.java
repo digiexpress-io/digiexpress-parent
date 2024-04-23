@@ -25,11 +25,12 @@ import lombok.RequiredArgsConstructor;
 public class BatchForOneDocCreate {
 
   private final String repoId;
-  private final String docType;
+
   private final String author;
   private final String message;
-  private final String branchName;
-
+  
+  private String docType;
+  private String branchName;
   private String docId;
   private String parentDocId;
   private String externalId;
@@ -45,7 +46,8 @@ public class BatchForOneDocCreate {
   public BatchForOneDocCreate commands(List<JsonObject> log) {this.commands = log; return this; }
   public BatchForOneDocCreate meta(JsonObject meta) {         this.docMeta = meta; return this; }
   public BatchForOneDocCreate branchContent(JsonObject blob) {this.branchContent = RepoAssert.notNull(blob, () -> "branchContent can't be empty!"); return this; }
-  
+  public BatchForOneDocCreate branchName(String branchName) { this.branchName = RepoAssert.isName(branchName, () -> "branchName has invalid charecters!"); return this;}
+  public BatchForOneDocCreate docType(String docType)       { this.docType = RepoAssert.notEmpty(docType,     () -> "docType can't be empty!"); return this; }
   
   public DocBatchForOne create() {
     RepoAssert.notEmpty(branchName, () -> "branchName can't be empty!");
