@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 import io.resys.thena.api.entities.doc.DocLog;
 import io.resys.thena.api.entities.doc.ImmutableDocLog;
-import io.resys.thena.api.registry.doc.DocLogRegistry;
+import io.resys.thena.api.registry.doc.DocCommitTreeRegistry;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.ImmutableSqlTupleList;
@@ -19,7 +19,7 @@ import io.vertx.mutiny.sqlclient.Tuple;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class DocLogRegistrySqlImpl implements DocLogRegistry {
+public class DocLogRegistrySqlImpl implements DocCommitTreeRegistry {
   private final TenantTableNames options;
   
   @Override

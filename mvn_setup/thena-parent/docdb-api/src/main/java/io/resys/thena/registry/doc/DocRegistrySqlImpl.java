@@ -22,7 +22,7 @@ public class DocRegistrySqlImpl implements DocRegistry {
     this.options = options;
     this.docBranches = new DocBranchRegistrySqlImpl(options);
     this.docCommits = new DocCommitRegistrySqlImpl(options);
-    this.docLogs = new DocCommitTreeRegistrySqlImpl(options);
+    this.docLogs = new DocLogRegistrySqlImpl(options);
     this.docCommands = new DocCommandsRegistrySqlImpl(options);
     this.docs = new DocMainRegistrySqlImpl(options);
   }
