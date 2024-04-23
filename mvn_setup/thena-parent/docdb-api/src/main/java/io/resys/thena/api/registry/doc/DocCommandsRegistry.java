@@ -7,7 +7,6 @@ import java.util.function.Function;
 import org.immutables.value.Value;
 
 import io.resys.thena.api.entities.doc.DocCommands;
-import io.resys.thena.api.entities.grim.GrimCommands;
 import io.resys.thena.api.registry.ThenaRegistryService;
 import io.resys.thena.datasource.ThenaSqlClient;
 
