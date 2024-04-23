@@ -1,6 +1,5 @@
 package io.resys.thena.registry.doc;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -22,6 +21,7 @@ import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.ImmutableSqlTupleList;
 import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.datasource.ThenaSqlClient;
+import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.storesql.support.SqlStatement;
 import io.resys.thena.structures.doc.DocQueries.DocBranchLockCriteria;
 import io.resys.thena.structures.doc.DocQueries.DocLockCriteria;
@@ -76,7 +76,6 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
         .value(new SqlStatement()
         .append("SELECT ")
         .append("  doc.external_id as external_id,").ln()
-        .append("  doc.external_id_deleted as external_id_deleted,").ln()
         .append("  doc.doc_type as doc_type,").ln()
         .append("  doc.doc_status as doc_status,").ln()
         .append("  doc.doc_meta as doc_meta,").ln()
@@ -85,7 +84,6 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
         .append("  branch.doc_id as doc_id,").ln()
         .append("  branch.branch_id as branch_id,").ln()
         .append("  branch.branch_name as branch_name,").ln()
-        .append("  branch.branch_name_deleted as branch_name_deleted,").ln()
         .append("  branch.commit_id as branch_commit_id,").ln()
         .append("  branch.branch_status as branch_status,").ln()
         .append("  branch.value as branch_value,").ln()
@@ -112,7 +110,6 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
         .value(new SqlStatement()
         .append("SELECT ")
         .append("  doc.external_id as external_id,").ln()
-        .append("  doc.external_id_deleted as external_id_deleted,").ln()
         .append("  doc.doc_type as doc_type,").ln()
         .append("  doc.doc_status as doc_status,").ln()
         .append("  doc.doc_meta as doc_meta,").ln()
@@ -121,7 +118,6 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
         .append("  branch.doc_id as doc_id,").ln()
         .append("  branch.branch_id as branch_id,").ln()
         .append("  branch.branch_name as branch_name,").ln()
-        .append("  branch.branch_name_deleted as branch_name_deleted,").ln()
         .append("  branch.commit_id as branch_commit_id,").ln()
         .append("  branch.branch_status as branch_status,").ln()
         .append("  branch.value as branch_value,").ln()
@@ -139,18 +135,22 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
         .props(Tuple.of(docId))
         .build();  
   }
+  
+  @Override
+  public SqlTuple findAllById(List<String> docId, String branchIdOrName) {
+    // TODO Auto-generated method stub
+    return null;
+  }
 
   @Override
   public ThenaSqlClient.SqlTupleList updateAll(List<DocBranch> docs) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("UPDATE ").append(options.getDocBranch())
-        .append(" SET commit_id = $1, branch_name = $2, value = $3, branch_name_deleted = $4")
+        .append(" SET commit_id = $1, branch_name = $2, value = $3, branch_status = $4")
         .append(" WHERE branch_id = $5")
         .build())        
-        .props(docs.stream().map(ref -> {
-          return Tuple.of(ref.getCommitId(), ref.getBranchName(), ref.getValue(), ref.getBranchNameDeleted(), ref.getId());
-        }) .collect(Collectors.toList()))
+        .props(docs.stream().map(ref -> Tuple.of(ref.getCommitId(), ref.getBranchName(), ref.getValue(), ref.getStatus(), ref.getId())).collect(Collectors.toList()))
         .build();
   }
 
@@ -176,7 +176,6 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
         .value(new SqlStatement()
         .append("SELECT ")
         .append("  doc.external_id as external_id,").ln()
-        .append("  doc.external_id_deleted as external_id_deleted,").ln()
         .append("  doc.doc_type as doc_type,").ln()
         .append("  doc.doc_status as doc_status,").ln()
         .append("  doc.doc_meta as doc_meta,").ln()
@@ -185,7 +184,6 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
         .append("  branch.doc_id as doc_id,").ln()
         .append("  branch.branch_id as branch_id,").ln()
         .append("  branch.branch_name as branch_name,").ln()
-        .append("  branch.branch_name_deleted as branch_name_deleted,").ln()
         .append("  branch.commit_id as branch_commit_id,").ln()
         .append("  branch.branch_status as branch_status,").ln()
         .append("  branch.value as branch_value,").ln()
@@ -225,19 +223,20 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
         .value(new SqlStatement()
         .append("SELECT ")
         .append("  doc.external_id as external_id,").ln()
-        .append("  doc.external_id_deleted as external_id_deleted,").ln()
         .append("  doc.doc_type as doc_type,").ln()
         .append("  doc.doc_status as doc_status,").ln()
         .append("  doc.doc_meta as doc_meta,").ln()
         .append("  doc.doc_parent_id as doc_parent_id,").ln()
+        .append("  doc.commit_id as doc_commit_id,").ln()
+        .append("  doc.created_with_commit_id as doc_created_commit_id,")
         
         .append("  branch.doc_id as doc_id,").ln()
         .append("  branch.branch_id as branch_id,").ln()
         .append("  branch.branch_name as branch_name,").ln()
-        .append("  branch.branch_name_deleted as branch_name_deleted,").ln()
         .append("  branch.commit_id as branch_commit_id,").ln()
         .append("  branch.branch_status as branch_status,").ln()
         .append("  branch.value as branch_value,").ln()
+        .append("  branch.created_with_commit_id as branch_created_with_commit_id,")
         
         .append("  commits.author as author,").ln()
         .append("  commits.datetime as datetime,").ln()
@@ -268,7 +267,7 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
         .docId(row.getString("doc_id"))
         .commitId(row.getString("commit_id"))
         .branchName(row.getString("branch_name"))
-        .branchNameDeleted(row.getString("branch_name_deleted"))
+        .createdWithCommitId(row.getString("created_commit_id"))
         .value(jsonObject(row, "value"))
         .status(Doc.DocStatus.valueOf(row.getString("branch_status")))
         .build();
@@ -280,27 +279,28 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
         .doc(ImmutableDoc.builder()
             .id(row.getString("doc_id"))
             .externalId(row.getString("external_id"))
-            .externalIdDeleted(row.getString("external_id_deleted"))
+            .createdWithCommitId(row.getString("doc_created_commit_id"))
             .parentId(row.getString("doc_parent_id"))
             .type(row.getString("doc_type"))
             .status(Doc.DocStatus.valueOf(row.getString("doc_status")))
             .meta(jsonObject(row, "doc_meta"))
+            .commitId(row.getString("doc_commit_id"))
             .build())
         .branch(ImmutableDocBranch.builder()
             .id(row.getString("branch_id"))
             .docId(row.getString("doc_id"))
             .status(Doc.DocStatus.valueOf(row.getString("branch_status")))
-            .commitId(row.getString("commit_id"))
+            .commitId(row.getString("branch_commit_id"))
             .branchName(row.getString("branch_name"))
-            .branchNameDeleted(row.getString("branch_name_deleted"))
+            .createdWithCommitId(row.getString("branch_created_with_commit_id"))
             .value(jsonObject(row, "branch_value"))
             .status(Doc.DocStatus.valueOf(row.getString("branch_status")))
             .build())
         .commit(ImmutableDocCommit.builder()
             .id(row.getString("commit_id"))
-            .author(row.getString("author"))
-            .dateTime(LocalDateTime.parse(row.getString("datetime")))
-            .message(row.getString("message"))
+            .commitAuthor(row.getString("author"))
+            .createdAt(row.getOffsetDateTime("datetime"))
+            .commitMessage(row.getString("message"))
             .parent(Optional.ofNullable(row.getString("commit_parent")))
             .branchId(row.getString("branch_id"))
             .docId(row.getString("doc_id"))

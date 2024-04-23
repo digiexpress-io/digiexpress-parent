@@ -305,7 +305,6 @@ public class DocMainRegistrySqlImpl implements DocMainRegistry {
         .append("(").ln()
         .append("  id VARCHAR(40) PRIMARY KEY,").ln()
         .append("  external_id VARCHAR(40) UNIQUE,").ln()
-        .append("  external_id_deleted VARCHAR(40),").ln()
         .append("  owner_id VARCHAR(40),").ln()
         .append("  doc_parent_id VARCHAR(40),").ln()
         .append("  doc_type VARCHAR(40) NOT NULL,").ln()

@@ -1,26 +1,5 @@
 package io.resys.thena.registry.doc;
 
-import java.time.LocalDateTime;
-
-/*-
- * #%L
- * thena-docdb-pgsql
- * %%
- * Copyright (C) 2021 Copyright 2021 ReSys OÜ
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
- */
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -36,6 +15,7 @@ import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.ImmutableSqlTupleList;
 import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.datasource.ThenaSqlClient;
+import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.storesql.support.SqlStatement;
 import io.vertx.mutiny.sqlclient.Row;
 import io.vertx.mutiny.sqlclient.Tuple;
@@ -65,45 +45,45 @@ public class DocCommitRegistrySqlImpl implements DocCommitRegistry {
         .build();
   }
   @Override
-  public ThenaSqlClient.SqlTuple insertOne(DocCommit commit) {
-    final var message = getMessage(commit);
+  public SqlTuple findAllByDocIdsAndBranch(Collection<String> id, String branchId) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
-        .append("INSERT INTO ").append(options.getDocCommits())
-        .append(" (id, datetime, author, message, branch_id, doc_id, parent) VALUES($1, $2, $3, $4, $5, $6, $7)")
+        .append("SELECT commits.* FROM ").append(options.getDocCommits()).append(" as commits ").ln()
+        
+        .append(" INNER JOIN ").append(options.getDoc()).append(" as docs").ln()
+        .append(" ON(docs.id = commits.doc_id) ").ln()
+        
+        .append(" LEFT JOIN ").append(options.getDocBranch()).append(" as branches").ln()
+        .append(" ON(branches.doc_id = docs.id)")
+        
+        .append(" WHERE ").ln() 
+        .append(" (docs.id = ANY($1) or docs.external_id = ANY($1)) ").ln()
+        .append(" AND ").ln()
+        .append(" (branch.branch_name = $2 OR branch.id = $2)").ln()
+        
         .build())
-        .props(Tuple.from(Arrays.asList(
-            commit.getId(), commit.getDateTime().toString(), commit.getAuthor(), message, 
-            commit.getBranchId(), commit.getDocId(), commit.getParent().orElse(null))))
+        .props(Tuple.of(id, branchId))
         .build();
   }
   
-
   @Override
   public ThenaSqlClient.SqlTupleList insertAll(Collection<DocCommit> commits) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getDocCommits())
-        .append(" (id, datetime, author, message, branch_id, doc_id, parent) VALUES($1, $2, $3, $4, $5, $6, $7)")
+        .append(" (id, datetime, author, message, branch_id, doc_id, parent, commit_log) VALUES($1, $2, $3, $4, $5, $6, $7, $8)")
         .build())
         .props(commits.stream().map(commit -> {
-          final var message = getMessage(commit);
+          
           return Tuple.from(Arrays.asList(
-              commit.getId(), commit.getDateTime().toString(), commit.getAuthor(), message, 
-              commit.getBranchId(), commit.getDocId(), commit.getParent().orElse(null)));
+              commit.getId(), commit.getCreatedAt(), commit.getCommitAuthor(), commit.getCommitMessage(), 
+              commit.getBranchId(), commit.getDocId(), commit.getParent().orElse(null), commit.getCommitLog()));
           
         }) .collect(Collectors.toList()))
         .build();
   }
   
-  private String getMessage(DocCommit commit) {
 
-    var message = commit.getMessage();
-    if(commit.getMessage().length() > 254) {
-      message = message.substring(0, 254);
-    }
-    return message;
-  }
   @Override
   public Function<Row, DocCommit> defaultMapper() {
     return DocCommitRegistrySqlImpl::docCommit;
@@ -111,11 +91,12 @@ public class DocCommitRegistrySqlImpl implements DocCommitRegistry {
   private static DocCommit docCommit(Row row) {
     return ImmutableDocCommit.builder()
         .id(row.getString("id"))
-        .author(row.getString("author"))
-        .dateTime(LocalDateTime.parse(row.getString("datetime")))
-        .message(row.getString("message"))
+        .commitAuthor(row.getString("author"))
+        .createdAt(row.getOffsetDateTime("datetime"))
+        .commitMessage(row.getString("message"))
         .parent(Optional.ofNullable(row.getString("parent")))
         .branchId(row.getString("branch_id"))
+        .commitLog(row.getString("commit_log"))
         .docId(row.getString("doc_id"))
         .build();
   }
@@ -125,11 +106,12 @@ public class DocCommitRegistrySqlImpl implements DocCommitRegistry {
     .append("CREATE TABLE ").append(options.getDocCommits()).ln()
     .append("(").ln()
     .append("  id VARCHAR(40) PRIMARY KEY,").ln()
-    .append("  branch_id VARCHAR(40) NOT NULL,").ln()
+    .append("  branch_id VARCHAR(40),").ln()
     .append("  doc_id VARCHAR(40) NOT NULL,").ln()
-    .append("  datetime VARCHAR(29) NOT NULL,").ln()
-    .append("  author VARCHAR(40) NOT NULL,").ln()
-    .append("  message VARCHAR(255) NOT NULL,").ln()
+    .append("  datetime TIMESTAMP WITH TIME ZONE NOT NULL,").ln()
+    .append("  author VARCHAR(255) NOT NULL,").ln()
+    .append("  message TEXT NOT NULL,").ln()
+    .append("  commit_log TEXT NOT NULL,").ln()
     .append("  parent VARCHAR(40)").ln()
     .append(");").ln()
     
@@ -173,5 +155,5 @@ public class DocCommitRegistrySqlImpl implements DocCommitRegistry {
         .append("DROP TABLE ").append(options.getDocCommits()).append(";").ln()
         .build()).build();
   }
-  
+
 }
