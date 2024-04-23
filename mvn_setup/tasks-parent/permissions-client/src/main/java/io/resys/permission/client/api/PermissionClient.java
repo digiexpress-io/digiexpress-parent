@@ -12,7 +12,6 @@ import io.resys.permission.client.api.model.PrincipalCommand.CreatePrincipal;
 import io.resys.permission.client.api.model.PrincipalCommand.PrincipalUpdateCommand;
 import io.resys.permission.client.api.model.RoleCommand.CreateRole;
 import io.resys.permission.client.api.model.RoleCommand.RoleUpdateCommand;
-import io.resys.permission.client.api.model.RoleHierarchyContainer;
 import io.resys.thena.api.entities.Tenant;
 import io.smallrye.mutiny.Uni;
 
@@ -33,7 +32,6 @@ public interface PermissionClient {
   PermissionQuery permissionQuery();
   RoleQuery roleQuery();
   PrincipalQuery principalQuery();
-  RoleHierarchyQuery roleHierarchyQuery();
   
   
   interface CreatePermissionAction {
@@ -87,11 +85,6 @@ public interface PermissionClient {
     Uni<List<Principal>> findAllPrincipals();
   }
   
-  interface RoleHierarchyQuery {
-    RoleHierarchyQuery evalAccess(RoleHierarchyContainerAccessEvaluator eval);
-    Uni<RoleHierarchyContainer> get(String roleId);
-  }
-  
   interface PermissionTenantQuery {
     PermissionTenantQuery repoName(String repoName);
     PermissionClient build();
@@ -112,8 +105,5 @@ public interface PermissionClient {
   }
   interface PermissionAccessEvaluator {
     boolean evaluate(Permission permission);
-  }
-  interface RoleHierarchyContainerAccessEvaluator {
-    boolean evaluate(RoleHierarchyContainer role);
   }
 }

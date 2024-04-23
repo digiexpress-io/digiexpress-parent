@@ -46,7 +46,6 @@ public interface ThenaOrgObjects extends ThenaContainer {
     List<OrgParty> getParentParties();
     
     String getLog();
-    OrgActorStatusType getStatus();
     
     List<OrgRight> getDirectRights();  // roles that are enabled
     List<OrgRight> getParentRights();  // roles that are enabled
@@ -58,7 +57,6 @@ public interface ThenaOrgObjects extends ThenaContainer {
   @Value.Immutable
   interface OrgRightHierarchy extends ThenaOrgObjects {
     OrgRight getRight();
-    OrgActorStatusType getStatus();
     
     String getLog();
     

@@ -100,9 +100,4 @@ public class PermissionClientImpl implements PermissionClient {
   public PrincipalQuery principalQuery() {
     return new PrincipalQueryImpl(ctx);
   }
-
-  @Override
-  public RoleHierarchyQuery roleHierarchyQuery() {
-    return new RoleHierarchyQueryImpl(ctx);
-  }
 }

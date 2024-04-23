@@ -74,7 +74,7 @@ public class RoleQueryImpl implements RoleQuery {
       .version(hierarchy.getParty().getCommitId())
       .name(hierarchy.getParty().getPartyName())
       .description(hierarchy.getParty().getPartyDescription())
-      .status(hierarchy.getStatus())
+      .status(hierarchy.getParty().getStatus())
       
       .addAllPermissions(hierarchy.getParentRights().stream().map(right -> right.getRightName()).toList())
       .addAllPermissions(hierarchy.getDirectRights().stream().map(right -> right.getRightName()).toList())

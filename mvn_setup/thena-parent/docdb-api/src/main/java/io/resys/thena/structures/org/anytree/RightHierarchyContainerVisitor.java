@@ -63,7 +63,6 @@ public class RightHierarchyContainerVisitor extends OrgPartyContainerVisitor<Org
   @Override
   public OrgRightHierarchy close() {
     final var result = builder
-        .status(target.getStatus())
         .log(log.toString())
         .right(target)
         .addAllDirectMembers(ctx.getMembersWithRights(target.getId()).stream()
