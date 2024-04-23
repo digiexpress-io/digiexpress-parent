@@ -29,6 +29,7 @@ import org.immutables.value.Value;
 import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.DocBranch;
 import io.resys.thena.api.entities.doc.DocCommit;
+import io.resys.thena.api.entities.doc.DocCommitTree;
 import io.resys.thena.api.entities.doc.DocFlatted;
 import io.resys.thena.api.entities.doc.DocLock;
 import io.resys.thena.api.entities.doc.DocLock.DocBranchLock;
@@ -68,8 +69,8 @@ public interface DocQueries {
   }
 
   interface DocLogQuery {
-    Multi<DocLog> findAll();
-    Uni<DocLog> getById(String logId);
+    Multi<DocCommitTree> findAll();
+    Uni<List<DocCommitTree>> getByCommitId(String logId);
   }
 
   @Value.Immutable
