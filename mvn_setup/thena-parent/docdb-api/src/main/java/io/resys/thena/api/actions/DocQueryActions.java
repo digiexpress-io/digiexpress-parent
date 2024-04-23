@@ -11,21 +11,18 @@ public interface DocQueryActions {
   DocObjectsQuery docQuery();
 
   enum IncludeInQuery {
-    CHILD_DOCS,
-    COMMIT_TREE,
+    ALL,
+    
     COMMANDS,
-    BRANCHES
+    COMMITS,
+    COMMIT_TREE
   } 
   
   interface DocObjectsQuery {
-    DocObjectsQuery matchId(String matchId);          // can be external id/doc id
-    DocObjectsQuery matchIds(List<String> matchId);   // can be external id/doc id
     DocObjectsQuery branchName(String branchName);
-    DocObjectsQuery docType(String docType);
     DocObjectsQuery include(IncludeInQuery ... includeChildren);
     
-    Uni<QueryEnvelope<DocObject>> get();
-    Uni<QueryEnvelope<DocTenantObjects>> findAll();
+    Uni<QueryEnvelope<DocObject>> get(String matchId);
+    Uni<QueryEnvelope<DocTenantObjects>> findAll(List<String> matchId);
   }
-  
 }

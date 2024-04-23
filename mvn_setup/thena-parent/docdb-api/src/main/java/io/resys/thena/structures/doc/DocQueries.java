@@ -1,5 +1,6 @@
 package io.resys.thena.structures.doc;
 
+import java.util.Collection;
 import java.util.List;
 
 /*-
@@ -24,14 +25,44 @@ import java.util.List;
 
 import org.immutables.value.Value;
 
+import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.DocBranch;
+import io.resys.thena.api.entities.doc.DocCommands;
+import io.resys.thena.api.entities.doc.DocCommit;
+import io.resys.thena.api.entities.doc.DocCommitTree;
 import io.resys.thena.api.entities.doc.DocLock;
 import io.resys.thena.api.entities.doc.DocLock.DocBranchLock;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 
 public interface DocQueries {
+  
+  DocQuery docs();
+  DocCommitQuery commits();
   DocBranchQuery branches();
+  DocCommitTreeQuery trees();
+  DocCommandsQuery commands();
+  
+  interface DocQuery {
+    Multi<Doc> findAll();
+    Multi<Doc> findAllById(Collection<String> ids);
+    Uni<Doc> getById(String ids);
+  }
+  
+  interface DocCommitQuery {
+    Multi<DocCommit> findAll();
+    Multi<DocCommit> findAllByDocIdsAndBranch(Collection<String> id, String branchId);
+  }
+  
+  interface DocCommitTreeQuery {
+    Multi<DocCommitTree> findAll();
+    Multi<DocCommitTree> findAllByDocIdsAndBranch(Collection<String> id, String branchId);
+  }
+  
+  interface DocCommandsQuery {
+    Multi<DocCommands> findAll();
+    Multi<DocCommands> findAllByDocIds(Collection<String> id, String branchId);
+  }  
   
   interface DocBranchQuery {
     Multi<DocBranch> findAll();
@@ -42,6 +73,8 @@ public interface DocQueries {
     Uni<DocLock> getDocLock(DocLockCriteria criteria);
     Uni<List<DocLock>> getDocLocks(List<DocLockCriteria> criteria);
     Uni<DocBranch> getById(String branchId);
+    
+    Multi<DocBranch> findAllById(List<String> docId, String branchIdOrName);
   }
 
   @Value.Immutable

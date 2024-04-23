@@ -1,15 +1,15 @@
 package io.resys.thena.storesql.builders;
 
+import java.util.Collection;
+
 import io.resys.thena.api.LogConstants;
 import io.resys.thena.api.entities.doc.Doc;
-import io.resys.thena.api.entities.doc.DocFlatted;
 import io.resys.thena.api.registry.DocRegistry;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlFailed;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlTupleFailed;
 import io.resys.thena.structures.doc.DocQueries.DocQuery;
-import io.resys.thena.structures.doc.DocQueries.FlattedCriteria;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.sqlclient.RowSet;
@@ -65,33 +65,18 @@ public class DocQuerySqlPool implements DocQuery {
         .onFailure().invoke(e -> errorHandler.deadEnd(new SqlFailed("Can't find 'DOC'!", sql, e)));
   }
   @Override
-  public Multi<DocFlatted> findAllFlatted() {
-    final var sql = registry.docs().findAllFlatted();
+  public Multi<Doc> findAllById(Collection<String> ids) {
+    final var sql = registry.docs().findAllByIds(ids);
     if(log.isDebugEnabled()) {
-      log.debug("Doc findAllFlatted query, with props: {} \r\n{}", 
-          "",
+      log.debug("Doc findAllByIds query, with props: {} \r\n{}", 
+          sql.getPropsDeepString(),
           sql.getValue());
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(registry.docs().docFlattedMapper())
+        .mapping(registry.docs().defaultMapper())
         .execute()
         .onItem()
-        .transformToMulti((RowSet<DocFlatted> rowset) -> Multi.createFrom().iterable(rowset))
-        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlFailed("Can't find 'DOC FLATTED'!", sql, e)));
-  }
-  @Override
-  public Multi<DocFlatted> findAllFlatted(FlattedCriteria criteria) {
-    final var sql = registry.docs().findAllFlatted(criteria);
-    if(log.isDebugEnabled()) {
-      log.debug("Doc findAllFlattedByAnyId query, with props: {} \r\n{}", 
-          sql.getProps().deepToString(),
-          sql.getValue());
-    }
-    return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(registry.docs().docFlattedMapper())
-        .execute(sql.getProps())
-        .onItem()
-        .transformToMulti((RowSet<DocFlatted> rowset) -> Multi.createFrom().iterable(rowset))
-        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'DOC FLATTED' by any id!", sql, e)));
+        .transformToMulti((RowSet<Doc> rowset) -> Multi.createFrom().iterable(rowset))
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't get 'DOC' by 'id': '" + ids + "'!", sql, e)));
   }
 }

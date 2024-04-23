@@ -88,7 +88,7 @@ public class SimpleDocTest extends DbTestTemplate {
     
     
     final var findAllDocs = getClient().doc(repo).find().docQuery()
-        .include(IncludeInQuery.CHILD_DOCS)
+        .include(IncludeInQuery.ALL)
         .findAll()
     .await().atMost(Duration.ofMinutes(1));
     
@@ -148,7 +148,7 @@ public class SimpleDocTest extends DbTestTemplate {
     
 
     final var findAllDocs = getClient().doc(repo).find().docQuery()
-        .include(IncludeInQuery.CHILD_DOCS)
+        .include(IncludeInQuery.ALL)
         .findAll()
     .await().atMost(Duration.ofMinutes(1));
     
@@ -176,7 +176,7 @@ public class SimpleDocTest extends DbTestTemplate {
         .branchName("main")
         .docType("customer-data")
         .matchId("bobs-ssn-id")
-        .include(IncludeInQuery.CHILD_DOCS)
+        .include(IncludeInQuery.ALL)
         .findAll()
     .await().atMost(Duration.ofMinutes(1));
     Assertions.assertEquals(2, findParentWithChild.getObjects().getDocs().size());

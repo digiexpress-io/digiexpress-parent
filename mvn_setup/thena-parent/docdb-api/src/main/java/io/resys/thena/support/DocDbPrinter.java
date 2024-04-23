@@ -87,7 +87,7 @@ public class DocDbPrinter {
     .append(System.lineSeparator())
     .append("Logs").append(System.lineSeparator());
     
-    ctx.query().logs()
+    ctx.query().trees()
     .findAll().onItem()
     .transform(item -> {
       result.append("  - id: ").append(ID.apply(item.getId())).append(System.lineSeparator())
@@ -177,7 +177,7 @@ public class DocDbPrinter {
     .append(System.lineSeparator())
     .append("Logs").append(System.lineSeparator());
     
-    ctx.query().logs()
+    ctx.query().trees()
     .findAll().onItem()
     .transform(item -> {
       result.append("  - id: ").append(item.getId()).append(System.lineSeparator())
