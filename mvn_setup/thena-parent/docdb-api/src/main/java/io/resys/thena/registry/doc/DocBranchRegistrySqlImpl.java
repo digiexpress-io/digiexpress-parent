@@ -1,6 +1,7 @@
 package io.resys.thena.registry.doc;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -59,11 +60,12 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getDocBranch())
-        .append(" (branch_id, branch_name, branch_status, commit_id, doc_id, value) VALUES($1, $2, $3, $4, $5, $6)")
+        .append(" (branch_id, branch_name, branch_status, commit_id, doc_id, value, created_with_commit_id) VALUES($1, $2, $3, $4, $5, $6, $7)")
         .build())
-        .props(docs.stream().map(ref -> {
-          return Tuple.of(ref.getId(), ref.getBranchName(), ref.getStatus().name(), ref.getCommitId(), ref.getDocId(), ref.getValue());
-        }) .collect(Collectors.toList()))
+        .props(docs.stream().map(ref -> Tuple.tuple(Arrays.asList(
+              ref.getId(), ref.getBranchName(), ref.getStatus().name(), ref.getCommitId(), ref.getDocId(), ref.getValue(), ref.getCreatedWithCommitId()
+          ))
+        ) .collect(Collectors.toList()))
         .build();
   }  
   
