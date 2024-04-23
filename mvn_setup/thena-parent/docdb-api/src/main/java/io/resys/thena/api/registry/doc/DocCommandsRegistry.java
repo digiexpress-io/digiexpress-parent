@@ -16,7 +16,7 @@ public interface DocCommandsRegistry extends ThenaRegistryService<DocCommands, i
   ThenaSqlClient.Sql findAll();
   ThenaSqlClient.SqlTuple findAllByIds(Collection<String> id);
   ThenaSqlClient.SqlTuple findAllByMissionIds(List<DocCommandFilter> filter);
-  ThenaSqlClient.SqlTupleList insertAll(Collection<GrimCommands> commits);  
+  ThenaSqlClient.SqlTupleList insertAll(Collection<DocCommands> commits);  
   ThenaSqlClient.SqlTuple getById(String id);
   
   ThenaSqlClient.Sql createTable();

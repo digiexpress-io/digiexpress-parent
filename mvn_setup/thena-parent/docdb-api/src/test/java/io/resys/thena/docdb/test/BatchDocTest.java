@@ -69,7 +69,7 @@ public class BatchDocTest extends DbTestTemplate {
     for(int index = 0; index < 10; index++) {
       createdDoc.item()
         .externalId("bobs-ssn-id-" + index)      
-        .append(JsonObject.of("id", "id-" + index, "first_name", "bob", "last_name", "flop"))
+        .branchContent(JsonObject.of("id", "id-" + index, "first_name", "bob", "last_name", "flop"))
         .log(JsonObject.of("some_cool_command", "create_customer"))
         .next();
     }

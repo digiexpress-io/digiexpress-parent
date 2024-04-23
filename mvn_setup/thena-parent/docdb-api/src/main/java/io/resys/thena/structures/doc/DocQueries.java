@@ -28,10 +28,10 @@ import org.immutables.value.Value;
 
 import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.DocBranch;
-import io.resys.thena.api.entities.doc.DocBranchLock;
 import io.resys.thena.api.entities.doc.DocCommit;
 import io.resys.thena.api.entities.doc.DocFlatted;
 import io.resys.thena.api.entities.doc.DocLock;
+import io.resys.thena.api.entities.doc.DocLock.DocBranchLock;
 import io.resys.thena.api.entities.doc.DocLog;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;

@@ -12,6 +12,7 @@ import io.resys.thena.structures.doc.DocQueries.FlattedCriteria;
 public interface DocMainRegistry extends ThenaRegistryService<Doc, io.vertx.mutiny.sqlclient.Row> {
   ThenaSqlClient.SqlTuple findAllFlatted(FlattedCriteria criteria);
   ThenaSqlClient.Sql findAllFlatted();
+  
   ThenaSqlClient.SqlTuple findById(String id); // matches by external_id or id or parent_id
   ThenaSqlClient.SqlTuple getById(String id);  // matches by external_id or id
   ThenaSqlClient.SqlTuple deleteById(String id);

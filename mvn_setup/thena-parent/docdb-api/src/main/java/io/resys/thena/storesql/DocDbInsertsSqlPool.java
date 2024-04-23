@@ -11,7 +11,6 @@ import io.resys.thena.storesql.support.Execute;
 import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.doc.DocInserts;
 import io.resys.thena.structures.doc.ImmutableDocBatchForMany;
-import io.resys.thena.structures.doc.ImmutableDocBatchForOne;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import lombok.extern.slf4j.Slf4j;
@@ -61,9 +60,14 @@ public class DocDbInsertsSqlPool implements DocInserts {
         .filter(branch -> lockedBranchIds.contains(branch.getId()))
         .collect(Collectors.toList()));
     
-    final var logsInsert = registry.docLogs()
-        .insertAll(output.stream().flatMap(e -> e.getDocLogs().stream())
+    final var logsInsert = registry.docCommitTrees()
+        .insertAll(output.stream().flatMap(e -> e.getDocCommitTree().stream())
         .collect(Collectors.toList()));
+    
+    final var commandsInsert = registry.docCommands()
+        .insertAll(output.stream().flatMap(e -> e.getDocCommands().stream())
+        .collect(Collectors.toList()));
+    
     
     
     final Uni<DocBatchForMany> docsUni1 = Execute.apply(tx, docInserts).onItem()
@@ -86,19 +90,24 @@ public class DocDbInsertsSqlPool implements DocInserts {
         .transform(row -> successOutput(many, "Branch saved, number of updates entries: " + (row == null ? 0 : row.rowCount())))
         .onFailure().transform(e -> failOutput(many, "Failed to save branch", e));
     
-    
     final Uni<DocBatchForMany> logUni = Execute.apply(tx, logsInsert).onItem()
-        .transform(row -> successOutput(many, "Commit log saved, number of new entries: "  + (row == null ? 0 : row.rowCount())))
-        .onFailure().transform(e -> failOutput(many, "Failed to save  commit log", e));
+        .transform(row -> successOutput(many, "Commit trees saved, number of new entries: "  + (row == null ? 0 : row.rowCount())))
+        .onFailure().transform(e -> failOutput(many, "Failed to save commit trees", e));
     
-    return Uni.combine().all().unis(docsUni1, docsUni2, commitUni, branchUniInsert, branchUniUpdate, logUni).asTuple()
+    final Uni<DocBatchForMany> commandsUni = Execute.apply(tx, commandsInsert).onItem()
+        .transform(row -> successOutput(many, "Commands saved, number of new entries: "  + (row == null ? 0 : row.rowCount())))
+        .onFailure().transform(e -> failOutput(many, "Failed to save commands", e));
+    
+    
+    return Uni.combine().all().unis(docsUni1, docsUni2, commitUni, branchUniInsert, branchUniUpdate, logUni, commandsUni).asTuple()
         .onItem().transform(tuple -> merge(many,
                 tuple.getItem1(), 
                 tuple.getItem2(), 
                 tuple.getItem3(), 
                 tuple.getItem4(),
                 tuple.getItem5(),
-                tuple.getItem6()
+                tuple.getItem6(),
+                tuple.getItem7()
         ))
         .onFailure(DocBatchManyException.class)
         .recoverWithUni((ex) -> {
@@ -108,64 +117,6 @@ public class DocDbInsertsSqlPool implements DocInserts {
   }
 
   
-  @Override
-  public Uni<DocBatchForOne> batchOne(DocBatchForOne output) {
-    RepoAssert.isTrue(this.wrapper.getTx().isPresent(), () -> "Transaction must be started!");
-    final var tx = wrapper.getClient();
-    
-    final var docsInsert = output.getDoc().map(doc -> {
-      if(output.getDocLock().isEmpty()) {
-        return registry.docs().insertOne(doc);  
-      }
-      return registry.docs().updateOne(doc);
-    });
-    
-    final var lockedBranchIds = output.getDocLock().stream().map(branch -> branch.getBranch().get().getId()).collect(Collectors.toList());
-    final var commitsInsert = registry.docCommits().insertAll(output.getDocCommit());
-    final var branchInsert = registry.docBranches().insertAll(output.getDocBranch().stream().filter(branch -> !lockedBranchIds.contains(branch.getId())).collect(Collectors.toList()));
-    final var branchUpdate = registry.docBranches().updateAll(output.getDocBranch().stream().filter(branch -> lockedBranchIds.contains(branch.getId())).collect(Collectors.toList()));
-    final var logsInsert = registry.docLogs().insertAll(output.getDocLogs());
-    
-    
-    final Uni<DocBatchForOne> docsUni;
-    if(docsInsert.isEmpty()) {
-      docsUni = Uni.createFrom().item(successOutput(output, "Doc has no data, skipping doc entry"));    
-    } else {
-      docsUni = Execute.apply(tx, docsInsert.get()).onItem()
-          .transform(row -> successOutput(output, "Doc saved, number of new entries: " + row.rowCount()))
-          .onFailure().transform(e -> failOutput(output, "Failed to create docs", e));
-    }
-    
-    final Uni<DocBatchForOne> commitUni = Execute.apply(tx, commitsInsert).onItem()
-      .transform(row -> successOutput(output, "Commit saved, number of new entries: " + row.rowCount()))
-      .onFailure().transform(e -> failOutput(output, "Failed to save commit \r\n" + output.getDocCommit(), e));
-
-    final Uni<DocBatchForOne> branchUniInsert = Execute.apply(tx, branchInsert).onItem()
-        .transform(row -> successOutput(output, "Branch saved, number of new entries: " + (row == null ? 0 : row.rowCount())))
-        .onFailure().transform(e -> failOutput(output, "Failed to save branch", e));
-    
-    final Uni<DocBatchForOne> branchUniUpdate = Execute.apply(tx, branchUpdate).onItem()
-        .transform(row -> successOutput(output, "Branch saved, number of updates entries: " + (row == null ? 0 : row.rowCount())))
-        .onFailure().transform(e -> failOutput(output, "Failed to save branch", e));
-    
-    final Uni<DocBatchForOne> logUni = Execute.apply(tx, logsInsert).onItem()
-        .transform(row -> successOutput(output, "Commit log saved, number of new entries: "  + (row == null ? 0 : row.rowCount())))
-        .onFailure().transform(e -> failOutput(output, "Failed to save  commit log", e));
-    
-    return Uni.combine().all().unis(docsUni, commitUni, branchUniInsert, branchUniUpdate, logUni).asTuple()
-        .onItem().transform(tuple -> merge(output, 
-            tuple.getItem1(), 
-            tuple.getItem2(), 
-            tuple.getItem3(), 
-            tuple.getItem4(),
-            tuple.getItem5()
-        ))
-        .onFailure(DocBatchOneException.class)
-        .recoverWithItem((ex) -> {
-          final var batchError = (DocBatchOneException) ex;
-          return batchError.getBatch();
-        });
-  }
 
   private DocBatchForMany merge(DocBatchForMany start, DocBatchForMany ... current) {
     final var builder = ImmutableDocBatchForMany.builder().from(start);
@@ -185,26 +136,7 @@ public class DocDbInsertsSqlPool implements DocInserts {
     
     return builder.status(status).build();
   }  
-  
-  
-  private DocBatchForOne merge(DocBatchForOne start, DocBatchForOne ... current) {
-    final var builder = ImmutableDocBatchForOne.builder().from(start);
-    final var log = new StringBuilder(start.getLog().getText());
-    var status = start.getStatus();
-    for(DocBatchForOne value : current) {
-      if(value == null) {
-        continue;
-      }
-      
-      if(status != BatchStatus.ERROR) {
-        status = value.getStatus();
-      }
-      log.append("\r\n\r\n").append(value.getLog());
-      builder.addAllMessages(value.getMessages());
-    }
-    
-    return builder.status(status).build();
-  }
+
   private DocBatchForMany successOutput(DocBatchForMany current, String msg) {
     return ImmutableDocBatchForMany.builder()
       .from(current)
@@ -217,29 +149,10 @@ public class DocDbInsertsSqlPool implements DocInserts {
     return new DocBatchManyException(ImmutableDocBatchForMany.builder()
         .from(current)
         .status(BatchStatus.ERROR)
-        .addMessages(ImmutableMessage.builder().text(msg).build())
-        .addMessages(ImmutableMessage.builder().text(t.getMessage()).build())
+        .addMessages(ImmutableMessage.builder().text(msg).exception(t).build())
         .build()); 
   }
-  
-  private DocBatchForOne successOutput(DocBatchForOne current, String msg) {
-    return ImmutableDocBatchForOne.builder()
-      .from(current)
-      .status(BatchStatus.OK)
-      .addMessages(ImmutableMessage.builder().text(msg).build())
-      .build();
-  }
-  
-  private DocBatchOneException failOutput(DocBatchForOne current, String msg, Throwable t) {
-    log.error("Batch failed because of: " + msg, t);
-    return new DocBatchOneException(ImmutableDocBatchForOne.builder()
-        .from(current)
-        .status(BatchStatus.ERROR)
-        .addMessages(ImmutableMessage.builder().text(msg).build())
-        .addMessages(ImmutableMessage.builder().text(t.getMessage()).build())
-        .build()); 
-  }
-  
+
   public static class DocBatchOneException extends RuntimeException {
     private static final long serialVersionUID = -7251738425609399151L;
     private final DocBatchForOne batch;

@@ -160,12 +160,17 @@ public class InternalTenantQueryImpl implements InternalTenantQuery {
         tablesCreate
           .append(doc.docs().createTable().getValue())
           .append(doc.docBranches().createTable().getValue())
+          .append(doc.docCommands().createTable().getValue())
           .append(doc.docCommits().createTable().getValue())
-          .append(doc.docLogs().createTable().getValue())
+          .append(doc.docCommitTrees().createTable().getValue())
+          
   
+          .append(doc.docs().createConstraints().getValue())
           .append(doc.docBranches().createConstraints().getValue())
+          .append(doc.docCommands().createConstraints().getValue())
           .append(doc.docCommits().createConstraints().getValue())
-          .append(doc.docLogs().createConstraints().getValue())
+          .append(doc.docCommitTrees().createConstraints().getValue())
+          
           .toString();
       }
       
@@ -273,11 +278,11 @@ public class InternalTenantQueryImpl implements InternalTenantQuery {
         
       } else {
         tablesDrop
-        .append(doc.docLogs().dropTable().getValue())
+        .append(doc.docCommitTrees().dropTable().getValue())
         .append(doc.docCommits().dropTable().getValue())
+        .append(doc.docCommands().dropTable().getValue())
         .append(doc.docBranches().dropTable().getValue())
         .append(doc.docs().dropTable().getValue());        
-        
       }
       
       

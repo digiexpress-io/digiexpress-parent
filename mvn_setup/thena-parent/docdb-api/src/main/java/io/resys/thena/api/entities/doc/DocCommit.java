@@ -14,7 +14,7 @@ public interface DocCommit extends DocEntity, IsDocObject, ThenaTable {
   String getDocId();
   Optional<String> getParent();
   
-  Optional<String> getBranchName();
+  Optional<String> getBranchId();
 
   OffsetDateTime getCreatedAt();
   String getCommitAuthor();

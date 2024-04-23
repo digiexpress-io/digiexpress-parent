@@ -43,13 +43,13 @@ public interface DocContainer extends ThenaContainer {
       
       // commands ONLY for branches
       final var commands = getCommands().values().stream()
-          .filter(c -> c.getBranchName().isPresent())
-          .collect(Collectors.groupingBy(b -> b.getDocId() + "::" + b.getBranchName().get()));
+          .filter(c -> c.getBranchId().isPresent())
+          .collect(Collectors.groupingBy(b -> b.getBranchId().get()));
       
       // commitTrees only for branches
       final var commitTrees = getCommitTrees().values().stream()
-          .filter(c -> c.getBranchName().isPresent())
-          .collect(Collectors.groupingBy(b -> b.getDocId() + "::" + b.getBranchName().get()));
+          .filter(c -> c.getBranchId().isPresent())
+          .collect(Collectors.groupingBy(b -> b.getBranchId().get()));
       
       
       for(final var doc : getDocs().values()) {
@@ -58,8 +58,8 @@ public interface DocContainer extends ThenaContainer {
         }
         
         for(final var branch : branches.get(doc.getId())) {
-          final List<DocCommands> branchCommands = commands.get(branch.getDocId() + "::" + branch.getBranchName());
-          final List<DocCommitTree> branchCommitTrees = commitTrees.get(branch.getDocId() + "::" + branch.getBranchName());
+          final List<DocCommands> branchCommands = commands.get(branch.getId());
+          final List<DocCommitTree> branchCommitTrees = commitTrees.get(branch.getId());
           final var commit = getCommits().get(branch.getCommitId());
           final T value = visitor.visit(doc, branch, commit, branchCommands, branchCommitTrees);
           result.add(value);
@@ -87,18 +87,18 @@ public interface DocContainer extends ThenaContainer {
       
       // commands ONLY for branches
       final var commands = getCommands().values().stream()
-          .filter(c -> c.getBranchName().isPresent())
-          .collect(Collectors.groupingBy(b -> b.getDocId() + "::" + b.getBranchName().get()));
+          .filter(c -> c.getBranchId().isPresent())
+          .collect(Collectors.groupingBy(b -> b.getBranchId().get()));
       
       // commitTrees only for branches
       final var commitTrees = getCommitTrees().values().stream()
-          .filter(c -> c.getBranchName().isPresent())
-          .collect(Collectors.groupingBy(b -> b.getDocId() + "::" + b.getBranchName().get()));
+          .filter(c -> c.getBranchId().isPresent())
+          .collect(Collectors.groupingBy(b -> b.getBranchId().get()));
       
       
       for(final var branch : branches.get(doc.getId())) {
-        final List<DocCommands> branchCommands = commands.get(branch.getDocId() + "::" + branch.getBranchName());
-        final List<DocCommitTree> branchCommitTrees = commitTrees.get(branch.getDocId() + "::" + branch.getBranchName());
+        final List<DocCommands> branchCommands = commands.get(branch.getId());
+        final List<DocCommitTree> branchCommitTrees = commitTrees.get(branch.getId());
         final var commit = getCommits().get(branch.getCommitId());
         final T value = visitor.visit(doc, branch, commit, branchCommands, branchCommitTrees);
         result.add(value);

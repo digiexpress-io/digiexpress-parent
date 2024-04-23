@@ -73,11 +73,11 @@ public class DocDbPrinter {
       result.append("  - id: ").append(ID.apply(item.getId()))
       .append(System.lineSeparator())
       .append("    doc id: ").append(ID.apply(item.getDocId()))
-      .append(", branch id: ").append(ID.apply(item.getBranchId()))
-      .append(", parent: ").append(ID.apply(item.getParent().orElse("")))
-      .append(", message: ").append(item.getMessage())
-      .append(", author: ").append(item.getAuthor())
-      .append(System.lineSeparator());
+      .append(", branch id: ").branchContent(ID.apply(item.getBranchId()))
+      .branchContent(", parent: ").branchContent(ID.apply(item.getParent().orElse("")))
+      .branchContent(", message: ").branchContent(item.getMessage())
+      .branchContent(", author: ").branchContent(item.getAuthor())
+      .branchContent(System.lineSeparator());
       
       return item;
     }).collect().asList().await().indefinitely();
@@ -90,11 +90,11 @@ public class DocDbPrinter {
     ctx.query().logs()
     .findAll().onItem()
     .transform(item -> {
-      result.append("  - id: ").append(ID.apply(item.getId())).append(System.lineSeparator())
-      .append("    doc id: ").append(ID.apply(item.getDocCommitId()))
-      .append(System.lineSeparator())
-      .append("    log value: ").append(item.getValue())
-      .append(System.lineSeparator())
+      result.branchContent("  - id: ").branchContent(ID.apply(item.getId())).branchContent(System.lineSeparator())
+      .branchContent("    doc id: ").branchContent(ID.apply(item.getDocCommitId()))
+      .branchContent(System.lineSeparator())
+      .branchContent("    log value: ").branchContent(item.getValue())
+      .branchContent(System.lineSeparator())
       ;
       
       return item;
@@ -160,12 +160,12 @@ public class DocDbPrinter {
       result.append("  - id: ").append(item.getId())
       .append(System.lineSeparator())
       .append("    doc id: ").append(item.getDocId())
-      .append(", branch id: ").append(item.getBranchId())
-      .append(", dateTime: ").append(item.getDateTime())
-      .append(", parent: ").append(item.getParent().orElse(""))
-      .append(", message: ").append(item.getMessage())
-      .append(", author: ").append(item.getAuthor())
-      .append(System.lineSeparator());
+      .append(", branch id: ").branchContent(item.getBranchId())
+      .branchContent(", dateTime: ").branchContent(item.getDateTime())
+      .branchContent(", parent: ").branchContent(item.getParent().orElse(""))
+      .branchContent(", message: ").branchContent(item.getMessage())
+      .branchContent(", author: ").branchContent(item.getAuthor())
+      .branchContent(System.lineSeparator());
       
       return item;
     }).collect().asList().await().indefinitely();
@@ -178,11 +178,11 @@ public class DocDbPrinter {
     ctx.query().logs()
     .findAll().onItem()
     .transform(item -> {
-      result.append("  - id: ").append(item.getId()).append(System.lineSeparator())
-      .append("    doc id: ").append(item.getDocCommitId())
-      .append(System.lineSeparator())
-      .append("    log value: ").append(item.getValue())
-      .append(System.lineSeparator())
+      result.branchContent("  - id: ").branchContent(item.getId()).branchContent(System.lineSeparator())
+      .branchContent("    doc id: ").branchContent(item.getDocCommitId())
+      .branchContent(System.lineSeparator())
+      .branchContent("    log value: ").branchContent(item.getValue())
+      .branchContent(System.lineSeparator())
       ;
       
       return item;

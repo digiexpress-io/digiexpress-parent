@@ -106,22 +106,6 @@ public class BatchForOneDocModify {
           .build()
         );
 
-    logger
-      .append(" | changed")
-      .append(System.lineSeparator())
-      .append("  + doc:        ").append(doc.getId())
-      .append(System.lineSeparator())
-      .append("  + doc branch: ").append(docBranch.getId())
-      .append(System.lineSeparator())
-      .append("  + doc commit: ").append(commit.getId())
-      .append(System.lineSeparator());
-    
-    if(!docLogs.isEmpty()) {
-      logger
-      .append("  + doc log:    ").append(docLogs.stream().findFirst().get().getId())
-      .append(System.lineSeparator());
-    }
-
     batch.addDocBranch(docBranch).addDocCommit(commit).addAllDocLogs(docLogs);
   }
 }

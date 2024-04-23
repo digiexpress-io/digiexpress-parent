@@ -148,19 +148,19 @@ public class CreateOneDocBranchImpl implements CreateOneDocBranch {
     logger
       .append(" | created")
       .append(System.lineSeparator())
-      .append("  + doc:        ").append(doc.getId())
-      .append(System.lineSeparator())
-      .append("  + doc branch: ").append(docBranch.getId())
-      .append(System.lineSeparator())
-      .append("  + doc commit: ").append(commit.getId())
-      .append(System.lineSeparator())
-      .append("  + doc parent: ").append(commit.getParent().get())
-      .append(System.lineSeparator());
+      .append("  + doc:        ").branchContent(doc.getId())
+      .branchContent(System.lineSeparator())
+      .branchContent("  + doc branch: ").branchContent(docBranch.getId())
+      .branchContent(System.lineSeparator())
+      .branchContent("  + doc commit: ").branchContent(commit.getId())
+      .branchContent(System.lineSeparator())
+      .branchContent("  + doc parent: ").branchContent(commit.getParent().get())
+      .branchContent(System.lineSeparator());
     
     if(!docLogs.isEmpty()) {
       logger
-      .append("  + doc log:    ").append(docLogs.stream().findFirst().get().getId())
-      .append(System.lineSeparator());
+      .append("  + doc log:    ").branchContent(docLogs.stream().findFirst().get().getId())
+      .branchContent(System.lineSeparator());
     }
 
     final var batch = ImmutableDocBatchForOne.builder()

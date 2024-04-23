@@ -83,7 +83,7 @@ public class ModifyOneDocBranchImpl implements ModifyOneDocBranch {
         .append("Commit to: '").append(repoId).append("'")
         .append(" is rejected.")
         .append(" Your head is: '").append(versionToModify).append("')")
-        .append(" but remote is: '").append(state.getCommit().get().getId()).append("'!")
+        .append(" but remote is: '").branchContent(state.getCommit().get().getId()).branchContent("'!")
         .toString();
       
       return ImmutableOneDocEnvelope.builder()

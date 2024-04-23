@@ -6,18 +6,22 @@ import java.util.Optional;
 
 import org.immutables.value.Value;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import io.resys.thena.api.entities.doc.DocEntity.IsDocObject;
 import io.resys.thena.api.registry.ThenaRegistryService.ThenaTable;
 import io.vertx.core.json.JsonObject;
 
 @Value.Immutable
-public interface DocCommands extends DocEntity, ThenaTable {
+public interface DocCommands extends DocEntity, IsDocObject, ThenaTable {
   String getId();
   String getCommitId();
   
   String getDocId();
-  Optional<String> getBranchName();
+  Optional<String> getBranchId();
   OffsetDateTime getCreatedAt(); // transitive from commit
 
   List<JsonObject> getCommands();
   
+  @JsonIgnore @Override default public DocType getDocType() { return DocType.DOC_BRANCH; };
 }

@@ -6,6 +6,8 @@ import javax.annotation.Nullable;
 
 import org.immutables.value.Value;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import io.resys.thena.api.entities.doc.DocEntity.IsDocObject;
 import io.resys.thena.api.registry.ThenaRegistryService.ThenaTable;
 import io.vertx.core.json.JsonObject;
@@ -23,4 +25,6 @@ public interface DocBranch extends DocEntity, IsDocObject, ThenaTable {
   Doc.DocStatus getStatus();
   
   @Nullable JsonObject getValue();  // null when json loading is disabled
+  
+  @JsonIgnore @Override default public DocType getDocType() { return DocType.DOC_BRANCH; };
 }

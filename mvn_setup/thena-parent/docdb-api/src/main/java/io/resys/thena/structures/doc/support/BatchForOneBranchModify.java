@@ -11,15 +11,15 @@ import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.api.actions.GitCommitActions.JsonObjectMerge;
 import io.resys.thena.api.actions.ImmutableManyDocsEnvelope;
 import io.resys.thena.api.entities.doc.Doc;
-import io.resys.thena.api.entities.doc.DocBranchLock;
+import io.resys.thena.api.entities.doc.DocLock.DocBranchLock;
 import io.resys.thena.api.entities.doc.DocLog;
 import io.resys.thena.api.entities.doc.ImmutableDocBranch;
 import io.resys.thena.api.entities.doc.ImmutableDocCommit;
 import io.resys.thena.api.entities.doc.ImmutableDocLog;
 import io.resys.thena.api.envelope.ImmutableMessage;
+import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.doc.DocInserts.DocBatchForMany;
 import io.resys.thena.structures.doc.DocInserts.DocBatchForOne;
-import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.doc.DocState;
 import io.resys.thena.structures.doc.ImmutableDocBatchForOne;
 import io.resys.thena.structures.git.commits.CommitLogger;
@@ -76,6 +76,7 @@ public class BatchForOneBranchModify {
       .branchId(branchId)
       .parent(lock.getCommit().get().getId())
       .build();
+    
     final var docBranch = ImmutableDocBranch.builder()
       .from(lock.getBranch().get())
       .value(appendBlobs)
@@ -96,24 +97,6 @@ public class BatchForOneBranchModify {
           .build()
         );
 
-    final var logger = new CommitLogger();
-    logger
-      .append(" | changed")
-      .append(System.lineSeparator())
-      .append("  + doc:        ").append(doc.getId())
-      .append(System.lineSeparator())
-      .append("  + doc branch: ").append(docBranch.getId())
-      .append(System.lineSeparator())
-      .append("  + doc commit: ").append(commit.getId())
-      .append(System.lineSeparator())
-      .append("  + doc parent: ").append(commit.getParent().get())
-      .append(System.lineSeparator());
-    
-    if(!docLogs.isEmpty()) {
-      logger
-      .append("  + doc log:    ").append(docLogs.stream().findFirst().get().getId())
-      .append(System.lineSeparator());
-    }
 
     return ImmutableDocBatchForOne.builder()
       .repoId(tx.getDataSource().getTenant().getId())

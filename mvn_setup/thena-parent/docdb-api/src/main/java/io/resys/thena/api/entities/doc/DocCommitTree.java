@@ -13,11 +13,12 @@ public interface DocCommitTree extends ThenaTable {
   String getId();
   String getCommitId();
   String getDocId();
-  Optional<String> getBranchName();
+  Optional<String> getBranchId();
   DocCommitTreeOperation getOperationType();
 
   @Nullable JsonObject getBodyPatch();
-  @Nullable JsonObject getBodyValue();
+  @Nullable JsonObject getBodyBefore();
+  @Nullable JsonObject getBodyAfter();
 
   enum DocCommitTreeOperation { ADD, REMOVE, MERGE }
 }

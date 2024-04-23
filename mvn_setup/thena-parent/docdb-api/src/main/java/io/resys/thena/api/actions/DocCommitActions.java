@@ -16,8 +16,8 @@ import io.resys.thena.api.entities.doc.DocCommitTree;
 import io.resys.thena.api.envelope.Message;
 import io.resys.thena.api.envelope.ThenaEnvelope;
 import io.smallrye.mutiny.Uni;
-import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+
 
 public interface DocCommitActions {
   CreateOneDoc createOneDoc();
@@ -45,8 +45,9 @@ public interface DocCommitActions {
     CreateOneDoc commitAuthor(String author);
     CreateOneDoc commitMessage(String message);
     
-    CreateOneDoc branch(String branchName, JsonObject branchContent); // first branch of the document, when empty generated as 'main' by the system
-    CreateOneDoc commands(JsonArray commands);
+    CreateOneDoc branchName(String branchName); // first branch of the document, when empty generated as 'main' by the system
+    CreateOneDoc branchContent(JsonObject branchContent);
+    CreateOneDoc commands(List<JsonObject> commands);
     
     Uni<OneDocEnvelope> build();
   }
@@ -65,7 +66,7 @@ public interface DocCommitActions {
     AddItemToCreateDoc externalId(@Nullable String externalId);
     AddItemToCreateDoc ownerId(@Nullable String ownerId);
     AddItemToCreateDoc branch(String branchName, JsonObject branchContent); // first branch of the document, when empty generated as 'main' by the system
-    AddItemToCreateDoc commands(JsonArray commands);
+    AddItemToCreateDoc commands(List<JsonObject> commands);
     
     CreateManyDocs next();
   }
@@ -113,7 +114,7 @@ public interface DocCommitActions {
     CreateOneDocBranch commitAuthor(String author);
     CreateOneDocBranch commitMessage(String message);
     
-    CreateOneDocBranch commands(JsonArray commands);
+    CreateOneDocBranch commands(List<JsonObject> commands);
     CreateOneDocBranch branch(String branchName, JsonObject branchContent);
     
     Uni<OneDocEnvelope> build();
@@ -127,7 +128,7 @@ public interface DocCommitActions {
     ModifyOneDocBranch commitMessage(String message);
     
     ModifyOneDocBranch branchName(String branchName);
-    ModifyOneDocBranch commands(JsonArray commands);
+    ModifyOneDocBranch commands(List<JsonObject> commands);
     ModifyOneDocBranch replace(JsonObject newContent); 
     ModifyOneDocBranch merge(JsonObjectMerge doc);
 
@@ -150,7 +151,7 @@ public interface DocCommitActions {
     AddItemToModifyDocBranch commit(String versionToModify);
     AddItemToModifyDocBranch parentIsLatest();
     AddItemToModifyDocBranch branchName(String branchName);
-    AddItemToModifyDocBranch commands(JsonArray commands);
+    AddItemToModifyDocBranch commands(List<JsonObject> commands);
     AddItemToModifyDocBranch replace(JsonObject newContent); 
     AddItemToModifyDocBranch merge(JsonObjectMerge doc);
     AddItemToModifyDocBranch remove(); // deletes the branch

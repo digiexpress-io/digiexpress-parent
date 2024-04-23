@@ -10,6 +10,7 @@ import io.resys.thena.structures.doc.DocState;
 import io.resys.thena.structures.doc.support.BatchForOneDocCreate;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
@@ -19,9 +20,9 @@ public class CreateOneDocImpl implements CreateOneDoc {
 
   private final DbState state;
   
-  private JsonObject appendBlobs;
-  private JsonObject appendLogs;
-  private JsonObject appendMeta;
+  private JsonObject branchContent;
+  private JsonArray commands;
+  private JsonObject docMeta;
 
   private String parentDocId;
   private final String repoId;
@@ -35,17 +36,17 @@ public class CreateOneDocImpl implements CreateOneDoc {
 
 
   @Override public CreateOneDocImpl branchName(String branchName) { this.branchName = RepoAssert.isName(branchName,     () -> "branchName has invalid charecters!"); return this; }
-  @Override public CreateOneDocImpl author(String author) {         this.author = RepoAssert.notEmpty(author,           () -> "author can't be empty!"); return this; }
-  @Override public CreateOneDocImpl message(String message) {       this.message = RepoAssert.notEmpty(message,         () -> "message can't be empty!"); return this; }
+  @Override public CreateOneDocImpl branchContent(JsonObject blob) {this.branchContent = RepoAssert.notNull(blob,         () -> "branchContent can't be empty!"); return this; }
+  @Override public CreateOneDocImpl commitAuthor(String author) {   this.author = RepoAssert.notEmpty(author,           () -> "commitAuthor can't be empty!"); return this; }
+  @Override public CreateOneDocImpl commitMessage(String message) { this.message = RepoAssert.notEmpty(message,         () -> "commitMessage can't be empty!"); return this; }
   @Override public CreateOneDocImpl docType(String docType) {       this.docType = RepoAssert.notEmpty(docType,         () -> "docType can't be empty!"); return this;}
-  @Override public CreateOneDocImpl append(JsonObject blob) {       this.appendBlobs = RepoAssert.notNull(blob,         () -> "append can't be empty!"); return this; }
 
   @Override public CreateOneDocImpl parentDocId(String parentId) {  this.parentDocId = parentId; return this; }
   @Override public CreateOneDocImpl docId(String docId) {           this.docId = docId; return this; }
   @Override public CreateOneDocImpl externalId(String externalId) { this.externalId = externalId; return this; }
   @Override public CreateOneDocImpl ownerId(String ownerId) {       this.ownerId = ownerId; return this; }
-  @Override public CreateOneDocImpl log(JsonObject appendLogs) {    this.appendLogs = appendLogs; return this; }
-  @Override public CreateOneDocImpl meta(JsonObject appendMeta) {   this.appendMeta = appendMeta; return this; }
+  @Override public CreateOneDocImpl commands(JsonArray commands) {  this.commands = commands; return this; }
+  @Override public CreateOneDocImpl meta(JsonObject docMeta) {      this.docMeta = docMeta; return this; }
   
   
   @Override
@@ -55,7 +56,7 @@ public class CreateOneDocImpl implements CreateOneDoc {
     RepoAssert.notEmpty(author, () -> "author can't be empty!");
     RepoAssert.notEmpty(message, () -> "message can't be empty!");
     RepoAssert.notEmpty(docType, () -> "docType can't be empty!");
-    RepoAssert.notNull(appendBlobs, () -> "Nothing to commit, no content!");
+    RepoAssert.notNull(branchContent, () -> "Nothing to commit, no content!");
         
     final var scope = ImmutableTxScope.builder().commitAuthor(author).commitMessage(message).tenantId(repoId).build();
     return this.state.withDocTransaction(scope, this::doInTx);
@@ -67,9 +68,9 @@ public class CreateOneDocImpl implements CreateOneDoc {
         .ownerId(ownerId)
         .externalId(externalId)
         .parentDocId(parentDocId)
-        .log(appendLogs)
-        .meta(appendMeta)
-        .append(appendBlobs)
+        .commands(commands)
+        .meta(docMeta)
+        .branchContent(branchContent)
         .create();
 
     return tx.insert().batchOne(batch)

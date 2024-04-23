@@ -134,8 +134,8 @@ public class ModifyManyDocBranchesImpl implements ModifyManyDocBranches {
               .text(new StringBuilder()
                 .append("Commit to: '").append(repoId).append("'")
                 .append(" is rejected.")
-                .append(" Could not find all items: expected: '").append(items.size()).append("' but found: '").append(state.size()).append("'!\r\n")
-                .append("  - not found: ").append(String.join(",", notFound))
+                .append(" Could not find all items: expected: '").append(items.size()).append("' but found: '").branchContent(state.size()).branchContent("'!\r\n")
+                .branchContent("  - not found: ").branchContent(String.join(",", notFound))
                 .toString())
               .build())
           .status(CommitResultStatus.ERROR)
@@ -154,7 +154,7 @@ public class ModifyManyDocBranchesImpl implements ModifyManyDocBranches {
         .append("Commit to: '").append(repoId).append("'")
         .append(" is rejected.")
         .append(" Your head is: '").append(versionToModify).append("')")
-        .append(" but remote is: '").append(state.getCommit().get().getId()).append("'!")
+        .append(" but remote is: '").branchContent(state.getCommit().get().getId()).branchContent("'!")
         .toString();
       
       return ImmutableManyDocsEnvelope.builder()
