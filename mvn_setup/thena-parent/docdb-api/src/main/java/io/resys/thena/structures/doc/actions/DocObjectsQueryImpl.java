@@ -167,5 +167,40 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
       .toString();
     return QueryEnvelope.docUnexpected(existing, log, msg);
   }
+  @Override
+  public Uni<QueryEnvelope<DocTenantObjects>> findAll() {
+    return state.toDocState(repoId).onItem().transformToUni(docState -> {
+      final var tenant = docState.getDataSource().getTenant();
+      
+      // Query commits only on demand
+      final Uni<List<DocCommit>> commits = this.include.contains(IncludeInQuery.ALL) || this.include.contains(IncludeInQuery.COMMITS) ?
+          docState.query().commits().findAll().collect().asList() :
+          Uni.createFrom().item(Collections.emptyList());
+      
+      // Query trees only on demand
+      final Uni<List<DocCommitTree>> trees = this.include.contains(IncludeInQuery.ALL) || this.include.contains(IncludeInQuery.COMMIT_TREE) ?
+          docState.query().trees().findAll().collect().asList() :
+          Uni.createFrom().item(Collections.emptyList());
+      
+      // Query commands only on demand
+      final Uni<List<DocCommands>> commands = this.include.contains(IncludeInQuery.ALL) || this.include.contains(IncludeInQuery.COMMANDS) ?
+          docState.query().commands().findAll().collect().asList() :
+          Uni.createFrom().item(Collections.emptyList());
+      
+      return Uni.combine().all().unis(
+          docState.query().docs().findAll().collect().asList(),
+          docState.query().branches().findAll().collect().asList(),
+          commits, trees, commands
+      ).asTuple()
+      .onItem().transform(data -> {
+          final var objects = toDocObjects(data.getItem1(), data.getItem2(), data.getItem3(), data.getItem4(), data.getItem5());
+          return ImmutableQueryEnvelope.<DocTenantObjects>builder()
+              .repo(tenant)
+              .status(QueryEnvelopeStatus.OK)
+              .objects(objects)
+              .build();
+        });
+    });
+  }
 
 }

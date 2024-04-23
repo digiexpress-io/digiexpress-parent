@@ -24,5 +24,6 @@ public interface DocQueryActions {
     
     Uni<QueryEnvelope<DocObject>> get(String matchId);
     Uni<QueryEnvelope<DocTenantObjects>> findAll(List<String> matchId);
+    Uni<QueryEnvelope<DocTenantObjects>> findAll();
   }
 }
