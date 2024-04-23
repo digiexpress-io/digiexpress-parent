@@ -11,7 +11,8 @@ import io.resys.thena.datasource.ThenaSqlClient;
 
 public interface DocCommitTreeRegistry extends ThenaRegistryService<DocCommitTree, io.vertx.mutiny.sqlclient.Row> {
   ThenaSqlClient.Sql findAll();
-  ThenaSqlClient.SqlTuple getById(String id);
+  ThenaSqlClient.SqlTuple findAllByDocIdsAndBranch(Collection<String> id, String branchId);
+  
   ThenaSqlClient.SqlTuple findAllByCommitIds(List<String> commitId);
   ThenaSqlClient.SqlTupleList insertAll(Collection<DocCommitTree> commits);
   

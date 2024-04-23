@@ -61,7 +61,7 @@ public interface DocQueries {
   
   interface DocCommandsQuery {
     Multi<DocCommands> findAll();
-    Multi<DocCommands> findAllByDocIds(Collection<String> id, String branchId);
+    Multi<DocCommands> findAllByDocIdsAndBranch(Collection<String> id, String branchId);
   }  
   
   interface DocBranchQuery {

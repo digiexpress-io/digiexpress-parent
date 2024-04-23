@@ -57,7 +57,7 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
       
       // Query commands only on demand
       final Uni<List<DocCommands>> commands = this.include.contains(IncludeInQuery.ALL) || this.include.contains(IncludeInQuery.COMMANDS) ?
-          docState.query().commands().findAllByDocIds(Arrays.asList(id), branchName).collect().asList() :
+          docState.query().commands().findAllByDocIdsAndBranch(Arrays.asList(id), branchName).collect().asList() :
           Uni.createFrom().item(Collections.emptyList());
       
       return Uni.combine().all().unis(
@@ -101,7 +101,7 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
       
       // Query commands only on demand
       final Uni<List<DocCommands>> commands = this.include.contains(IncludeInQuery.ALL) || this.include.contains(IncludeInQuery.COMMANDS) ?
-          docState.query().commands().findAllByDocIds(docs, branchName).collect().asList() :
+          docState.query().commands().findAllByDocIdsAndBranch(docs, branchName).collect().asList() :
           Uni.createFrom().item(Collections.emptyList());
       
       return Uni.combine().all().unis(

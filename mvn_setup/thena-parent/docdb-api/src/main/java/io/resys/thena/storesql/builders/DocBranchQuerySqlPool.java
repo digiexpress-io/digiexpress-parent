@@ -199,4 +199,23 @@ public class DocBranchQuerySqlPool implements DocBranchQuery {
           errorHandler.deadEnd(new SqlTupleFailed("Can't lock branch for docs: '" + String.join(", ", source) + "'!", sql, e));
         });
   }
+
+  @Override
+  public Multi<DocBranch> findAllById(List<String> docId, String branchIdOrName) {
+    final var sql = registry.docBranches().findAllById(docId, branchIdOrName);
+    if(log.isDebugEnabled()) {
+      log.debug("DocBranch findAllById query, with props: {} \r\n{}", 
+          sql.getPropsDeepString(),
+          sql.getValue());
+    }
+    return wrapper.getClient().preparedQuery(sql.getValue())
+        .mapping(registry.docBranches().defaultMapper())
+        .execute(sql.getProps())
+        .onItem()
+        .transformToMulti((RowSet<DocBranch> rowset) -> Multi.createFrom().iterable(rowset))
+        .onFailure().invoke(e -> {
+          errorHandler.deadEnd(new SqlTupleFailed("Can't find 'DOC_BRANCH', for doc id:'" + String.join(", ", docId) + "'!", sql, e));
+        });
+    
+  }
 }

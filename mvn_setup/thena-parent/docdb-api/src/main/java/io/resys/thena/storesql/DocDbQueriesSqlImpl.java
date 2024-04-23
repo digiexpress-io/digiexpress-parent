@@ -2,6 +2,7 @@ package io.resys.thena.storesql;
 
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.storesql.builders.DocBranchQuerySqlPool;
+import io.resys.thena.storesql.builders.DocCommandsQuerySqlPool;
 import io.resys.thena.storesql.builders.DocCommitQuerySqlPool;
 import io.resys.thena.storesql.builders.DocLogQuerySqlPool;
 import io.resys.thena.storesql.builders.DocQuerySqlPool;
@@ -20,7 +21,7 @@ public class DocDbQueriesSqlImpl implements DocQueries {
 
   @Override
   public DocQuery docs() {
-    return new DocBranchQuerySqlPool(dataSource);
+    return new DocQuerySqlPool(dataSource);
   }
 
   @Override
@@ -35,6 +36,6 @@ public class DocDbQueriesSqlImpl implements DocQueries {
 
   @Override
   public DocCommandsQuery commands() {
-    return new DocQuerySqlPool(dataSource);
+    return new DocCommandsQuerySqlPool(dataSource);
   }
 }

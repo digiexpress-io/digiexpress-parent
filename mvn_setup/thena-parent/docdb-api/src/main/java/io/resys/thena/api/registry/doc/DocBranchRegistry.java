@@ -23,6 +23,7 @@ public interface DocBranchRegistry extends ThenaRegistryService<DocBranch, io.ve
   ThenaSqlClient.SqlTuple getDocLocks(List<DocLockCriteria> crit);
   ThenaSqlClient.Sql findAll();
   
+  ThenaSqlClient.SqlTuple findAllById(List<String> docId, String branchIdOrName);
   
   ThenaSqlClient.Sql createTable();
   ThenaSqlClient.Sql createConstraints();
