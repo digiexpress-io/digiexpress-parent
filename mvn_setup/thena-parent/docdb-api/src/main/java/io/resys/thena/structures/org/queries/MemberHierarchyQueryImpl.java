@@ -1,22 +1,35 @@
 package io.resys.thena.structures.org.queries;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import io.resys.thena.api.actions.OrgQueryActions.MemberHierarchyQuery;
+import io.resys.thena.api.entities.org.ImmutableOrgMemberHierarchy;
+import io.resys.thena.api.entities.org.ImmutableOrgProjectObjects;
+import io.resys.thena.api.entities.org.OrgActorStatusType;
 import io.resys.thena.api.entities.org.OrgMember;
-import io.resys.thena.api.entities.org.OrgMemberHierarchyEntry;
-import io.resys.thena.api.entities.org.OrgRightFlattened;
+import io.resys.thena.api.entities.org.OrgMemberRight;
+import io.resys.thena.api.entities.org.OrgMembership;
+import io.resys.thena.api.entities.org.OrgParty;
+import io.resys.thena.api.entities.org.OrgPartyRight;
+import io.resys.thena.api.entities.org.OrgRight;
 import io.resys.thena.api.entities.org.ThenaOrgObjects.OrgMemberHierarchy;
+import io.resys.thena.api.entities.org.ThenaOrgObjects.OrgPartyHierarchy;
 import io.resys.thena.api.envelope.ImmutableQueryEnvelope;
 import io.resys.thena.api.envelope.ImmutableQueryEnvelopeList;
+import io.resys.thena.api.envelope.OrgPartyLogVisitor;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.api.envelope.QueryEnvelopeList;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.structures.org.OrgState;
-import io.resys.thena.structures.org.memberhierarchy.MemberTreeBuilder;
+import io.resys.thena.structures.org.anytree.AnyTreeContainerContextImpl;
+import io.resys.thena.structures.org.anytree.AnyTreeContainerImpl;
+import io.resys.thena.structures.org.anytree.PartyHierarchyContainerVisitor;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
@@ -50,18 +63,93 @@ public class MemberHierarchyQueryImpl implements MemberHierarchyQuery {
 	private Uni<QueryEnvelope<OrgMemberHierarchy>> getUser(OrgState org, String userId) {
     return Uni.combine().all().unis(
         org.query().members().getById(userId),
-        org.query().members().findAllRightsByMemberId(userId),
-        org.query().members().findAllMemberHierarchyEntries(userId)
+        org.query().memberships().findAllByMemberId(userId).collect().asList(),
+        org.query().memberRights().findAllByMemberId(userId).collect().asList(),
+        org.query().partyRights().findAll().collect().asList(),
+        org.query().parties().findAll().collect().asList(),
+        org.query().rights().findAll().collect().asList()
+        
       ).asTuple()
-      .onItem().transform(tuple -> createUserResult(tuple.getItem1(), tuple.getItem2(), tuple.getItem3()));
+      .onItem().transform(tuple -> createUserResult(tuple.getItem1(), tuple.getItem2(), tuple.getItem3(), tuple.getItem4(), tuple.getItem5(), tuple.getItem6()));
 	}
 	
 
-	private QueryEnvelope<OrgMemberHierarchy> createUserResult(OrgMember user, List<OrgRightFlattened> roles, List<OrgMemberHierarchyEntry> groups) {
+	private QueryEnvelope<OrgMemberHierarchy> createUserResult(
+	    OrgMember member, 
+	    List<OrgMembership> memberships,
+	    List<OrgMemberRight> memberRights, 
+	    List<OrgPartyRight> partyRights, 
+	    List<OrgParty> parties,
+	    List<OrgRight> rights
+  ) {
+	  
+
+    final var ctx = new AnyTreeContainerContextImpl(ImmutableOrgProjectObjects.builder()
+        .parties(parties.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
+        .memberships(memberships.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
+        .members(Arrays.asList(member).stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
+        .memberRights(memberRights.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
+        .partyRights(partyRights.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
+        .rights(rights.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
+        .build());
+    final var container = new AnyTreeContainerImpl(ctx);
+    final var logger = new StringBuilder();
+
+
+    final var allPartyNames = new HashSet<String>();
+    final var allRightNames = new HashSet<String>();
+
+    for(final var criteria : parties.stream()
+        .sorted((a, b) -> a.getPartyName().compareTo(b.getPartyName()))
+        .toList()) {
+      
+      if(criteria.getStatus() != OrgActorStatusType.IN_FORCE) {
+        continue;
+      }
+      
+      final var log = container.accept(new OrgPartyLogVisitor(criteria.getId(), false));
+      final var visited = container.accept(new PartyHierarchyContainerVisitor(criteria.getId()));
+      final OrgPartyHierarchy party = visited.withLog(log);
+      
+      if(party.getMembers().isEmpty()) {
+        continue;
+      }
+      logger
+      .append(log)
+      .append(System.lineSeparator())
+      .append(System.lineSeparator()); 
+      
+      allRightNames.addAll(party.getParentRights().stream().map(e -> e.getRightName()).toList());
+      allRightNames.addAll(party.getDirectRights().stream().map(e -> e.getRightName()).toList());
+      allPartyNames.add(party.getParty().getPartyName());      
+    }
+	  
+    final var directRights = memberRights.stream()
+        .map(r -> ctx.getRight(r.getRightId()))
+        .filter(r -> r.getStatus() == OrgActorStatusType.IN_FORCE)
+        .map(r -> r.getRightName())
+        .toList();
+    
+    allRightNames.addAll(directRights.stream().sorted().toList());
+    
     return ImmutableQueryEnvelope
         .<OrgMemberHierarchy>builder()
         .status(QueryEnvelopeStatus.OK)
-        .objects(new MemberTreeBuilder().member(user).partyData(groups).rightData(roles).build())
+        .objects(ImmutableOrgMemberHierarchy.builder()
+            .member(member)
+
+            .addAllDirectRightNames(directRights.stream().sorted().toList())
+            .addAllRightNames(allRightNames.stream().sorted().toList())
+            
+            .addAllPartyNames(allPartyNames.stream().sorted().toList())
+            .addAllDirectPartyNames(memberships.stream()
+                .map(m -> ctx.getParty(m.getPartyId()))
+                .filter(m -> m.getStatus() == OrgActorStatusType.IN_FORCE)
+                .map(party -> party.getPartyName())
+                .sorted()
+                .toList())
+            .log(logger.toString())
+            .build())
         .build();
 	}
 	

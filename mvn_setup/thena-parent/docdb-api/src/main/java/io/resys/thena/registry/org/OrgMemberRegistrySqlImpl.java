@@ -6,11 +6,9 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import io.resys.thena.api.entities.org.ImmutableOrgMember;
-import io.resys.thena.api.entities.org.ImmutableOrgMemberHierarchyEntry;
 import io.resys.thena.api.entities.org.ImmutableOrgRightFlattened;
 import io.resys.thena.api.entities.org.OrgActorStatusType;
 import io.resys.thena.api.entities.org.OrgMember;
-import io.resys.thena.api.entities.org.OrgMemberHierarchyEntry;
 import io.resys.thena.api.entities.org.OrgRightFlattened;
 import io.resys.thena.api.registry.org.OrgMemberRegistry;
 import io.resys.thena.datasource.ImmutableSql;
@@ -267,10 +265,6 @@ SELECT * FROM child;
     return OrgMemberRegistrySqlImpl::orgRightFlattened;
   }
   @Override
-  public Function<Row, OrgMemberHierarchyEntry> memberHierarchyEntryMapper() {
-    return OrgMemberRegistrySqlImpl::orgMemberHierarchyEntry;
-  }
-  @Override
   public Function<Row, OrgMember> defaultMapper() {
     return OrgMemberRegistrySqlImpl::orgMember;
   }
@@ -284,26 +278,6 @@ SELECT * FROM child;
         .email(row.getString("email"))
         .dataExtension(row.getJsonObject("member_data_extension"))
         .status(OrgActorStatusType.valueOf(row.getString("member_status")))
-        .build();
-  }
-  private static OrgMemberHierarchyEntry orgMemberHierarchyEntry(Row row) {
-    final var rightStatus = row.getString("right_status");
-    final var partyStatus = row.getString("party_status");
-    
-    return ImmutableOrgMemberHierarchyEntry.builder()
-        .partyId(row.getString("id"))
-        .partyParentId(row.getString("parent_id"))
-        .partyName(row.getString("party_name"))
-        .partyDescription(row.getString("party_description"))
-        .partyStatus(partyStatus != null ? OrgActorStatusType.valueOf(partyStatus) : null)
-        
-        .membershipId(row.getString("membership_id"))
-        .memberId(row.getString("member_id"))
-        
-        .rightStatus(rightStatus != null ? OrgActorStatusType.valueOf(rightStatus) : null)
-        .rightId(row.getString("right_id"))
-        .rightName(row.getString("right_name"))
-        .rightDescription(row.getString("right_description"))        
         .build();
   }
   

@@ -1,12 +1,9 @@
 package io.resys.thena.storesql.builders;
 
 import java.util.Collection;
-import java.util.List;
 
 import io.resys.thena.api.LogConstants;
 import io.resys.thena.api.entities.org.OrgMember;
-import io.resys.thena.api.entities.org.OrgMemberHierarchyEntry;
-import io.resys.thena.api.entities.org.OrgRightFlattened;
 import io.resys.thena.api.registry.OrgRegistry;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
@@ -86,40 +83,6 @@ public class OrgMemberQuerySqlPool implements OrgQueries.MemberQuery {
         .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't get 'MEMBER' by 'id': '" + id + "'!", sql, e)));
   }
   
-	@Override
-	public Uni<List<OrgMemberHierarchyEntry>> findAllMemberHierarchyEntries(String userId) {
-    final var sql = registry.orgMembers().findAllUserPartiesAndRightsByMemberId(userId);
-    if(log.isDebugEnabled()) {
-      log.debug("User findAllUserHierarchyEntries query, with props: {} \r\n{}", 
-      		sql.getProps().deepToString(),
-          sql.getValue());
-    }
-    return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(registry.orgMembers().memberHierarchyEntryMapper())
-        .execute(sql.getProps())
-        .onItem()
-        .transformToMulti((RowSet<OrgMemberHierarchyEntry> rowset) -> Multi.createFrom().iterable(rowset))
-        .collect().asList()
-        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'MEMBER_PARTY_RIGHTS'!", sql, e)));
-	}
-
-  @Override
-  public Uni<List<OrgRightFlattened>> findAllRightsByMemberId(String userId) {
-    final var sql = registry.orgMembers().findAllRightsByMemberId(userId);
-    if(log.isDebugEnabled()) {
-      log.debug("User findAllRightsByMemberId query, with props: {} \r\n{}", 
-          sql.getProps().deepToString(),
-          sql.getValue());
-    }
-    return wrapper.getClient().preparedQuery(sql.getValue())
-        .mapping(registry.orgMembers().rightFlattenedMapper())
-        .execute(sql.getProps())
-        .onItem()
-        .transformToMulti((RowSet<OrgRightFlattened> rowset) -> Multi.createFrom().iterable(rowset))
-        .collect().asList()
-        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'MEMBER_DIRECT_RIGHTS'!", sql, e)));
-  }
-
   @Override
   public Multi<OrgMember> findAllByPartyId(String id) {
     final var sql = registry.orgMembers().findAllByPartyId(id);

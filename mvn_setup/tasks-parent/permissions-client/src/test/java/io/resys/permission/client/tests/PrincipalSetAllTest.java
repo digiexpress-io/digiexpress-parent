@@ -106,7 +106,7 @@ public class PrincipalSetAllTest extends DbTestTemplate {
    Assertions.assertEquals("[addedPerm1, addedPerm2]", updatedPrincipal1.getDirectPermissions().toString()); 
    Assertions.assertEquals("[addedRole1, addedRole2]", updatedPrincipal1.getDirectRoles().toString()); 
    
-   Assertions.assertEquals("[addedPerm2, addedPerm1]", client.principalQuery().get(updatedPrincipal1.getId()).await().atMost(Duration.ofMinutes(1)).getPermissions().toString());
+   Assertions.assertEquals("[addedPerm1, addedPerm2]", client.principalQuery().get(updatedPrincipal1.getId()).await().atMost(Duration.ofMinutes(1)).getPermissions().toString());
    Assertions.assertEquals("[addedRole1, addedRole2]", client.principalQuery().get(updatedPrincipal1.getId()).await().atMost(Duration.ofMinutes(1)).getRoles().toString());
 
  }

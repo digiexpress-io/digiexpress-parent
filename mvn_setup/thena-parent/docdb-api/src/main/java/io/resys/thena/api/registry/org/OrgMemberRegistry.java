@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.function.Function;
 
 import io.resys.thena.api.entities.org.OrgMember;
-import io.resys.thena.api.entities.org.OrgMemberHierarchyEntry;
 import io.resys.thena.api.entities.org.OrgRightFlattened;
 import io.resys.thena.api.registry.ThenaRegistryService;
 import io.resys.thena.datasource.ThenaSqlClient;
@@ -30,6 +29,6 @@ public interface OrgMemberRegistry extends ThenaRegistryService<OrgMember, io.ve
   
   Function<io.vertx.mutiny.sqlclient.Row, OrgMember> defaultMapper();
   Function<io.vertx.mutiny.sqlclient.Row, OrgRightFlattened> rightFlattenedMapper();
-  Function<io.vertx.mutiny.sqlclient.Row, OrgMemberHierarchyEntry> memberHierarchyEntryMapper();
+
   
 }

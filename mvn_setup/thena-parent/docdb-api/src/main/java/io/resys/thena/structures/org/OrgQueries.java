@@ -5,13 +5,11 @@ import java.util.List;
 
 import io.resys.thena.api.entities.org.OrgCommit;
 import io.resys.thena.api.entities.org.OrgMember;
-import io.resys.thena.api.entities.org.OrgMemberHierarchyEntry;
 import io.resys.thena.api.entities.org.OrgMemberRight;
 import io.resys.thena.api.entities.org.OrgMembership;
 import io.resys.thena.api.entities.org.OrgParty;
 import io.resys.thena.api.entities.org.OrgPartyRight;
 import io.resys.thena.api.entities.org.OrgRight;
-import io.resys.thena.api.entities.org.OrgRightFlattened;
 import io.resys.thena.datasource.ThenaDataSource;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
@@ -63,9 +61,6 @@ public interface OrgQueries {
     Multi<OrgMember> findAllByRightId(String rightId);
     
     Uni<OrgMember> getById(String id); //user.id or user.email or user.external_id 
-    Uni<List<OrgMemberHierarchyEntry>> findAllMemberHierarchyEntries(String memberId);
-    Uni<List<OrgRightFlattened>> findAllRightsByMemberId(String memberId);
-    
     Multi<OrgMember> findAllByPartyId(String id);
   }
   

@@ -81,9 +81,13 @@ public class OrgMembershipRegistrySqlImpl implements OrgMembershipRegistry {
 	public ThenaSqlClient.SqlTuple findAllByUserId(String userId) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
-        .append("SELECT * ").ln()
-        .append("  FROM ").append(options.getOrgMemberships()).ln()
-        .append("  WHERE member_id = $1").ln() 
+        .append("SELECT membership.* ").ln()
+        .append("  FROM ").append(options.getOrgMemberships()).append(" as membership").ln()
+        
+        .append("  LEFT JOIN ").append(options.getOrgMembers()).append(" as member").ln()
+        .append("  ON(member.id = membership.member_id)")
+        .append("  WHERE member.id = $1 OR member.external_id = $1 OR member.username = $1").ln()
+        
         .build())
         .props(Tuple.of(userId))
         .build();

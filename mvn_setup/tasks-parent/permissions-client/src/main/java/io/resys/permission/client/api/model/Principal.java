@@ -20,10 +20,8 @@ public interface Principal {
   String getEmail();
   
   List<String> getRoles(); // all role names, irrelevant of inheritance 
-  List<String> getPermissions(); // all permission names, irrelevant of inheritance 
-  
+  List<String> getPermissions(); // all permission names, irrelevant of inheritance   
   List<String> getDirectRoles(); // explicitly-given membership in the given role
-  List<String> getDirectRolePermissions(); // inherited from the role that is directly connected to the principal
   List<String> getDirectPermissions(); // explicitly given to this principal only
   
   OrgActorStatusType getStatus();

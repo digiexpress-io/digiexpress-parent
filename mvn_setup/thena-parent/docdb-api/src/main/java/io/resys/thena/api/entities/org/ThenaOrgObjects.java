@@ -30,14 +30,14 @@ public interface ThenaOrgObjects extends ThenaContainer {
     
     String getLog();
     
-    List<String> getRoleNames();  // roles that are enabled
-    List<String> getGroupNames(); // groups that are enabled
+    List<String> getRightNames();  // roles that are enabled
+    List<String> getPartyNames(); // groups that are enabled
 
-    List<String> getDirectRoleNames();  // roles that are enabled
-    List<String> getDirectGroupNames(); // groups that are enabled
+    List<String> getDirectRightNames();  // roles that are enabled
+    List<String> getDirectPartyNames(); // groups that are enabled
     
-    List<OrgMemberPartyStatus> getUserGroupStatus();
-    List<OrgMemberRightStatus> getUserRoleStatus();
+    List<OrgMemberPartyStatus> getPartyStatus();
+    List<OrgMemberRightStatus> getRightStatus();
   }
   
   @Value.Immutable

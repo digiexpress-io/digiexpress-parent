@@ -73,10 +73,12 @@ public class PrincipalQueryImpl implements PrincipalQuery {
         .name(user.getMember().getUserName())
         .email(user.getMember().getEmail())
         .status(user.getMember().getStatus())
-        .addAllDirectPermissions(user.getDirectRoleNames())
-        .addAllDirectRoles(user.getDirectGroupNames())
-        .addAllRoles(user.getGroupNames())
-        .addAllPermissions(user.getRoleNames())
+        
+        .addAllDirectPermissions(user.getDirectRightNames())
+        .addAllDirectRoles(user.getDirectPartyNames())
+        
+        .addAllRoles(user.getPartyNames())
+        .addAllPermissions(user.getRightNames())
         .build();
   }
 
