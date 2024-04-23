@@ -55,7 +55,7 @@ public class PrincipalCreateAndUpdateTest extends DbTestTemplate {
         .name(roleName)
         .description("View-only for interns")
         .addPermissions(
-            createPermission(client, "createdPermissionForRole-1").getName()
+            createPermission(client, "PERM-X").getName()
             )
         .build())
         .await().atMost(Duration.ofMinutes(5));
@@ -70,14 +70,14 @@ public class PrincipalCreateAndUpdateTest extends DbTestTemplate {
         .email("the-rock@muscles.org")
         .comment("created new user")
         .addPermissions(
-            createPermission(client, "perm: VIEW_ALL").getName(),
-            createPermission(client, "perm: EDIT_LIMITED").getName(),
-            createPermission(client, "perm: MOD_ST_CT").getName()
+            createPermission(client, "PERM-1").getName(),
+            createPermission(client, "PERM-2").getName(),
+            createPermission(client, "PERM-3").getName()
 
             )
         .addRoles(
-            createRoleWithoutPermissions(client, "role: INTERNS_454").getName(),
-            createRoleWithPermissions(client, "role: ROLE_WITH_PERMISSION").getName()
+            createRoleWithoutPermissions(client, "ROLE-1").getName(),
+            createRoleWithPermissions(client, "ROLE-2").getName()
             )
         .build())
         .await().atMost(Duration.ofMinutes(5));
@@ -91,14 +91,27 @@ public class PrincipalCreateAndUpdateTest extends DbTestTemplate {
         .create()
         .await().atMost(Duration.ofMinutes(5));
     
-    final var createdPrincipal = createPrincipal(client);
+    final var principal1 = createPrincipal(client);
+
+    log.debug(Json.encodePrettily(principal1));
+    Assertions.assertEquals("Dwane Johnson", principal1.getName());   
+    Assertions.assertEquals(2, principal1.getRoles().size());
+    Assertions.assertEquals(3, principal1.getPermissions().size());
+    Assertions.assertEquals("[PERM-1, PERM-2, PERM-3, PERM-X]", client.principalQuery().get(principal1.getId()).await().atMost(Duration.ofMinutes(1)).getPermissions().toString());
+
     
     final var updatedPrincipalName = client.updatePrincipal().updateOne(ImmutableChangePrincipalName.builder()
-        .id(createdPrincipal.getId())
+        .id(principal1.getId())
         .comment("Needed to update name as spelling was incorrect")
         .name("Amanda McNally")
         .build())
         .await().atMost(Duration.ofMinutes(5));
+    
+    log.debug(Json.encodePrettily(updatedPrincipalName));
+    Assertions.assertEquals("Amanda McNally", updatedPrincipalName.getName());
+    Assertions.assertEquals("[PERM-1, PERM-2, PERM-3, PERM-X]", client.principalQuery().get(updatedPrincipalName.getId()).await().atMost(Duration.ofMinutes(1)).getPermissions().toString());
+    Assertions.assertEquals("Amanda McNally", client.principalQuery().get(updatedPrincipalName.getId()).await().atMost(Duration.ofMinutes(1)).getName().toString());
+
     
     final var updatedPrincipalEmail = client.updatePrincipal().updateOne(ImmutableChangePrincipalEmail.builder()
         .id(updatedPrincipalName.getId())
@@ -107,15 +120,13 @@ public class PrincipalCreateAndUpdateTest extends DbTestTemplate {
         .build())
         .await().atMost(Duration.ofMinutes(5));
     
-    Assertions.assertEquals("Dwane Johnson", createdPrincipal.getName());   
-    Assertions.assertEquals("Amanda McNally", updatedPrincipalName.getName());
-    Assertions.assertEquals("a.mcnally@mail.com", updatedPrincipalEmail.getEmail());
-    Assertions.assertEquals(2, createdPrincipal.getRoles().size());
-    Assertions.assertEquals(3, createdPrincipal.getPermissions().size());
-    
-    log.debug(Json.encodePrettily(createdPrincipal));
-    log.debug(Json.encodePrettily(updatedPrincipalName));
     log.debug(Json.encodePrettily(updatedPrincipalEmail));
+    Assertions.assertEquals("a.mcnally@mail.com", updatedPrincipalEmail.getEmail());
+    Assertions.assertEquals("a.mcnally@mail.com", client.principalQuery().get(updatedPrincipalName.getId()).await().atMost(Duration.ofMinutes(1)).getEmail().toString());
+
+    
+    
+
 
 
   }

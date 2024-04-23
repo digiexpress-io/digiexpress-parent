@@ -106,13 +106,6 @@ public class PrincipalHierarchyTest extends DbTestTemplate {
     // query returns permissions directly assigned to principal (no inherited)
     Assertions.assertEquals("[PERM-1, PERM-2, PERM-3]", query.getDirectPermissions().toString());
     
-    /*
-     *  What is the actual difference between a principal's direct roles and just roles??? 
-     *  If no difference, why do we need both?
-     *  Shouldn't principals inherit permissions from roles they are a member of? 
-     *  Why do we need direct role permissions? Shouldn't all permissions (direct and inherited) be available in .permissions()?
-     */
-   
     }
   }
 }
