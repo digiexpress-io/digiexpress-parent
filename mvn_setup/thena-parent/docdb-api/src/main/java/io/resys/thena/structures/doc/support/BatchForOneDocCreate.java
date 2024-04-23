@@ -12,8 +12,6 @@ import io.resys.thena.api.entities.doc.ImmutableDoc;
 import io.resys.thena.api.entities.doc.ImmutableDocBranch;
 import io.resys.thena.api.entities.doc.ImmutableDocCommands;
 import io.resys.thena.api.entities.doc.ImmutableDocCommit;
-import io.resys.thena.api.envelope.ImmutableMessage;
-import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.doc.DocInserts.DocBatchForOne;
 import io.resys.thena.structures.doc.ImmutableDocBatchForOne;
 import io.resys.thena.structures.doc.commitlog.DocCommitBuilder;
@@ -104,14 +102,12 @@ public class BatchForOneDocCreate {
 
     final var commit = commitBuilder.close();
     final var batch = ImmutableDocBatchForOne.builder()
-      .repoId(repoId)
-      .status(BatchStatus.OK)
       .doc(doc)
       .addDocBranch(docBranch)
       .addDocCommit(commit.getItem1())
       .addAllDocCommitTree(commit.getItem2())
       .addAllDocCommands(docLogs)
-      .log(ImmutableMessage.builder().text(commit.getItem1().getCommitLog()).build())
+      .log(commit.getItem1().getCommitLog())
       .build();
     return batch;
   }

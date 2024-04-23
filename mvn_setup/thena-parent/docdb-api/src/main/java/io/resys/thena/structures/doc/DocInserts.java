@@ -25,7 +25,6 @@ import java.util.Optional;
 
 import org.immutables.value.Value;
 
-import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.DocBranch;
 import io.resys.thena.api.entities.doc.DocCommands;
@@ -40,18 +39,13 @@ public interface DocInserts {
   
   @Value.Immutable
   interface DocBatchForOne {
-    BatchStatus getStatus();
-    String getRepoId();
-    
     Optional<Doc> getDoc();
-    
     List<DocBranchLock> getDocLock();
     List<DocBranch> getDocBranch();
     List<DocCommit> getDocCommit();
     List<DocCommitTree> getDocCommitTree();
     List<DocCommands> getDocCommands();
-
-    Message getLog();
+    String getLog();
     List<Message> getMessages();
   }
   
@@ -60,11 +54,10 @@ public interface DocInserts {
   @Value.Immutable
   interface DocBatchForMany {
     BatchStatus getStatus();
-    Tenant getRepo();
+    String getRepo();
     
     List<DocBatchForOne> getItems();
-
-    Message getLog();
+    String getLog();
     List<Message> getMessages();
   }
 }

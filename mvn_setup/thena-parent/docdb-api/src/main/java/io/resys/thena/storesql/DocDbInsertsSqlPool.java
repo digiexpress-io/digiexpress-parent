@@ -120,7 +120,7 @@ public class DocDbInsertsSqlPool implements DocInserts {
 
   private DocBatchForMany merge(DocBatchForMany start, DocBatchForMany ... current) {
     final var builder = ImmutableDocBatchForMany.builder().from(start);
-    final var log = new StringBuilder(start.getLog().getText());
+    final var log = new StringBuilder(start.getLog());
     var status = start.getStatus();
     for(DocBatchForMany value : current) {
       if(value == null) {

@@ -1,16 +1,20 @@
 package io.resys.thena.structures.doc.commitone;
 
+import java.util.List;
+
 import io.resys.thena.api.actions.DocCommitActions.CreateOneDoc;
 import io.resys.thena.api.actions.DocCommitActions.OneDocEnvelope;
 import io.resys.thena.api.actions.ImmutableOneDocEnvelope;
+import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.spi.ImmutableTxScope;
 import io.resys.thena.structures.BatchStatus;
+import io.resys.thena.structures.doc.DocInserts.DocBatchForMany;
 import io.resys.thena.structures.doc.DocState;
+import io.resys.thena.structures.doc.ImmutableDocBatchForMany;
 import io.resys.thena.structures.doc.support.BatchForOneDocCreate;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
-import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
@@ -21,7 +25,7 @@ public class CreateOneDocImpl implements CreateOneDoc {
   private final DbState state;
   
   private JsonObject branchContent;
-  private JsonArray commands;
+  private List<JsonObject> commands;
   private JsonObject docMeta;
 
   private String parentDocId;
@@ -45,7 +49,7 @@ public class CreateOneDocImpl implements CreateOneDoc {
   @Override public CreateOneDocImpl docId(String docId) {           this.docId = docId; return this; }
   @Override public CreateOneDocImpl externalId(String externalId) { this.externalId = externalId; return this; }
   @Override public CreateOneDocImpl ownerId(String ownerId) {       this.ownerId = ownerId; return this; }
-  @Override public CreateOneDocImpl commands(JsonArray commands) {  this.commands = commands; return this; }
+  @Override public CreateOneDocImpl commands(List<JsonObject> commands) {  this.commands = commands; return this; }
   @Override public CreateOneDocImpl meta(JsonObject docMeta) {      this.docMeta = docMeta; return this; }
   
   
@@ -73,16 +77,41 @@ public class CreateOneDocImpl implements CreateOneDoc {
         .branchContent(branchContent)
         .create();
 
-    return tx.insert().batchOne(batch)
-      .onItem().transform(rsp -> ImmutableOneDocEnvelope.builder()
-        .repoId(repoId)
-        .doc(batch.getDoc().get())
-        .commit(rsp.getDocCommit().iterator().next())
-        .branch(batch.getDocBranch().iterator().next())
-        .addMessages(rsp.getLog())
-        .addAllMessages(rsp.getMessages())
-        .status(BatchStatus.mapStatus(rsp.getStatus()))
-        .build());
+    return tx.insert().batchMany(ImmutableDocBatchForMany.builder()
+        .addItems(batch)
+        .repo(repoId)
+        .status(BatchStatus.OK)
+        .log("")
+        .build())
+      .onItem().transform(rsp -> {
+        if(rsp.getStatus() == BatchStatus.CONFLICT || rsp.getStatus() == BatchStatus.ERROR) {
+          throw new CreateOneDocException("Failed to create document!", rsp);
+        }
+
+        return ImmutableOneDocEnvelope.builder()
+          .repoId(repoId)
+          .doc(batch.getDoc().get())
+          .commit(batch.getDocCommit().iterator().next())
+          .branch(batch.getDocBranch().iterator().next())
+          .commands(batch.getDocCommands())
+          .commitTree(batch.getDocCommitTree())
+          .addMessages(ImmutableMessage.builder().text(rsp.getLog()).build())
+          .addAllMessages(rsp.getMessages())
+          .status(BatchStatus.mapStatus(rsp.getStatus()))
+          .build();
+      });
   }
 
+  
+  public static class CreateOneDocException extends RuntimeException {
+    private static final long serialVersionUID = -6202574733069488724L;
+    private final DocBatchForMany batch;
+    public CreateOneDocException(String message, DocBatchForMany batch) {
+      super(message);
+      this.batch = batch;
+    }
+    public DocBatchForMany getBatch() {
+      return batch;
+    }
+  }
 }
