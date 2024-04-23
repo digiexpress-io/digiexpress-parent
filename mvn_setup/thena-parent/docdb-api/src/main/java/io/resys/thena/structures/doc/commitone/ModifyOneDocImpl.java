@@ -28,11 +28,12 @@ import lombok.RequiredArgsConstructor;
 public class ModifyOneDocImpl implements ModifyOneDoc {
 
   private final DbState state;
-  private List<JsonObject> commands = null;
-  private JsonObject meta = null;
+  private final String repoId;
+  
+  private List<JsonObject> commands;
+  private Optional<JsonObject> meta;
   private boolean remove;
   
-  private final String repoId;
   private String docId;
   private Optional<String> parentDocId;
   private Optional<String> externalId;
@@ -43,7 +44,7 @@ public class ModifyOneDocImpl implements ModifyOneDoc {
   @Override public ModifyOneDocImpl parentDocId(String parentDocId) { this.parentDocId = Optional.ofNullable(parentDocId); return this; }
   @Override public ModifyOneDocImpl externalId(String externalId) { this.externalId = Optional.ofNullable(externalId); return this; }
   @Override public ModifyOneDocImpl remove() { this.remove = true; return this; }
-  @Override public ModifyOneDocImpl meta(JsonObject blob) { this.meta = RepoAssert.notNull(meta, () -> "meta can't be null!"); return this; }
+  @Override public ModifyOneDocImpl meta(JsonObject blob) { this.meta = Optional.ofNullable(blob); return this; }
   @Override public ModifyOneDocImpl docId(String docId) { this.docId = docId; return this; }
   @Override public ModifyOneDocImpl ownerId(String ownerId) { this.ownerId = Optional.ofNullable(ownerId); return this; }
   @Override public ModifyOneDocImpl commitAuthor(String author) { this.author = RepoAssert.notEmpty(author, () -> "commitAuthor can't be empty!"); return this; }

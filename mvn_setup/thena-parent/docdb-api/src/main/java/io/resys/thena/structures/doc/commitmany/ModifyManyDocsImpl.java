@@ -49,7 +49,7 @@ public class ModifyManyDocsImpl implements ModifyManyDocs {
     private Optional<String> ownerId;
     private Optional<String> externalId;
     private List<JsonObject> commands;
-    private JsonObject appendMeta;
+    private Optional<JsonObject> meta;
   }
   
   @Override public ModifyManyDocsImpl commitAuthor(String author) { this.author = RepoAssert.notEmpty(author, () -> "author can't be empty!"); return this; }
@@ -64,7 +64,7 @@ public class ModifyManyDocsImpl implements ModifyManyDocs {
       @Override public AddItemToModifyDoc ownerId(String ownerId) { item.ownerId(Optional.ofNullable(ownerId)); return this; }
       @Override public AddItemToModifyDoc remove() { item.remove(true); return this; }
       @Override public AddItemToModifyDoc commands(List<JsonObject> log) { item.commands(log); return this; }
-      @Override public AddItemToModifyDoc meta(JsonObject meta) { item.appendMeta(meta); return this; }
+      @Override public AddItemToModifyDoc meta(JsonObject meta) { item.meta(Optional.ofNullable(meta)); return this; }
       @Override public ModifyManyDocs next() {
         final var result = item.build();
         RepoAssert.notEmpty(result.docId, () -> "docId can't be empty!");
@@ -123,7 +123,7 @@ public class ModifyManyDocsImpl implements ModifyManyDocs {
         }
         
         final var batch = new BatchForOneDocModify(lock, tx, author, message)
-          .meta(item.getAppendMeta())
+          .meta(item.getMeta())
           .remove(item.getRemove() == null ? false : item.getRemove())
           .commands(item.getCommands())
           .parentId(item.getParentDocId())

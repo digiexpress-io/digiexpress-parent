@@ -1,6 +1,7 @@
 package io.resys.thena.structures.doc.support;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -20,6 +21,7 @@ import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.doc.DocInserts.DocBatchForMany;
 import io.resys.thena.structures.doc.DocInserts.DocBatchForOne;
+import io.resys.thena.structures.doc.commitlog.DocCommitBuilder;
 import io.resys.thena.structures.doc.DocState;
 import io.resys.thena.structures.doc.ImmutableDocBatchForOne;
 import io.resys.thena.support.OidUtils;
@@ -59,6 +61,18 @@ public class BatchForOneBranchModify {
     
     final var branchId = lock.getBranch().get().getId();
     final var doc = lock.getDoc().get();
+    
+    final var commitBuilder = new DocCommitBuilder(repoId, ImmutableDocCommit.builder()
+        .id(OidUtils.gen())
+        .docId(docId)
+        .branchId(branchId)
+        .createdAt(OffsetDateTime.now())
+        .commitAuthor(this.author)
+        .commitMessage(this.message)
+        .parent(Optional.empty())
+        .build());
+    
+    
     
     final var template = ImmutableDocCommit.builder()
       .id("commit-template")

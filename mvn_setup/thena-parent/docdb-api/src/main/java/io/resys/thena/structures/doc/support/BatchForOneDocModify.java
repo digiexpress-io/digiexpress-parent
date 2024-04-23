@@ -1,28 +1,24 @@
 package io.resys.thena.structures.doc.support;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import io.resys.thena.api.entities.doc.Doc;
+import io.resys.thena.api.entities.doc.DocCommands;
 import io.resys.thena.api.entities.doc.DocLock;
-import io.resys.thena.api.entities.doc.DocLock.DocBranchLock;
-import io.resys.thena.api.entities.doc.DocLog;
 import io.resys.thena.api.entities.doc.ImmutableDoc;
 import io.resys.thena.api.entities.doc.ImmutableDocBranch;
+import io.resys.thena.api.entities.doc.ImmutableDocCommands;
 import io.resys.thena.api.entities.doc.ImmutableDocCommit;
-import io.resys.thena.api.entities.doc.ImmutableDocLog;
-import io.resys.thena.api.envelope.ImmutableMessage;
-import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.doc.DocInserts.DocBatchForOne;
 import io.resys.thena.structures.doc.DocState;
 import io.resys.thena.structures.doc.ImmutableDocBatchForOne;
-import io.resys.thena.structures.git.commits.CommitLogger;
+import io.resys.thena.structures.doc.commitlog.DocCommitBuilder;
 import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
-import io.resys.thena.support.Sha2;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
@@ -35,10 +31,10 @@ public class BatchForOneDocModify {
   private final String author;
   private final String message;
   private List<JsonObject> commands = null;
-  private String ownerId;
-  private String parentId;
-  private String externalId;
-  private JsonObject appendMeta;
+  private Optional<String> ownerId;
+  private Optional<String> parentId;
+  private Optional<String> externalId;
+  private Optional<JsonObject> appendMeta;
   private boolean remove;
 
   public BatchForOneDocModify externalId(Optional<String> externalId) { this.externalId = externalId; return this; }
@@ -46,7 +42,7 @@ public class BatchForOneDocModify {
   public BatchForOneDocModify ownerId(Optional<String> ownerId) { this.ownerId = ownerId; return this; }
   public BatchForOneDocModify remove(boolean remove) { this.remove = remove; return this; }
   public BatchForOneDocModify commands(List<JsonObject> log) { this.commands = log; return this; }
-  public BatchForOneDocModify meta(JsonObject meta) { this.appendMeta = meta; return this; }
+  public BatchForOneDocModify meta(Optional<JsonObject> meta) { this.appendMeta = meta; return this; }
   
   public DocBatchForOne create() {
     RepoAssert.notNull(docLock, () -> "docLock can't be empty!");
@@ -54,64 +50,67 @@ public class BatchForOneDocModify {
     RepoAssert.notEmpty(author, () -> "author can't be empty!");
     RepoAssert.notEmpty(message, () -> "message can't be empty!");
     
+    final var commitBuilder = new DocCommitBuilder(tx.getTenantId(), ImmutableDocCommit.builder()
+        .id(OidUtils.gen())
+        .docId(docLock.getDoc().get().getId())
+        .createdAt(OffsetDateTime.now())
+        .commitAuthor(this.author)
+        .commitMessage(this.message)
+        .parent(docLock.getDoc().get().getCommitId())
+        .build());
+    
 
     final var doc = ImmutableDoc.builder()
       .from(docLock.getDoc().get())
-      .meta(appendMeta)
+      .meta(appendMeta == null ? docLock.getDoc().get().getMeta() : appendMeta.get())
       .status(remove ? Doc.DocStatus.ARCHIVED : Doc.DocStatus.IN_FORCE)
-      .externalId(remove ?  OidUtils.gen(): docLock.getDoc().get().getExternalId())
-      .externalIdDeleted(remove ? docLock.getDoc().get().getExternalId() : null)
+      .parentId(this.parentId == null ? docLock.getDoc().get().getParentId() : this.parentId.orElse(null))
+      .ownerId(this.ownerId == null ? docLock.getDoc().get().getOwnerId() : this.ownerId.orElse(null))
+      .externalId(this.externalId == null ? docLock.getDoc().get().getExternalId() : this.externalId.orElse(null))
+      .commitId(commitBuilder.getCommitId())
       .build();
     
-    final var batchBuilder = ImmutableDocBatchForOne.builder()
-      .repoId(tx.getDataSource().getTenant().getId())
-      .status(BatchStatus.OK)
-      .doc(doc)
-      .addAllDocLock(docLock.getBranches());
-
-    final var logger = new CommitLogger();
-    docLock.getBranches().forEach(branchLock -> appendToBranch(doc, branchLock, batchBuilder, logger));
+    commitBuilder.merge(docLock.getDoc().get(), doc);
     
-    return batchBuilder.log(ImmutableMessage.builder().text(logger.toString()).build()).build();
+    final var batchBuilder = ImmutableDocBatchForOne.builder();
+    
+    for(final var lock : docLock.getBranches()) {
+      if(remove && lock.getBranch().get().getStatus() == Doc.DocStatus.ARCHIVED) {
+        continue;
+      }
+      
+      final var docBranch = ImmutableDocBranch.builder()
+        .from(lock.getBranch().get())
+        .status(remove ? Doc.DocStatus.ARCHIVED : Doc.DocStatus.IN_FORCE)
+        .branchName(remove ? OidUtils.gen(): lock.getBranch().get().getBranchName())
+        .build();
+      
+      batchBuilder.addDocBranch(docBranch);
+      commitBuilder.merge(lock.getBranch().get(), docBranch);
+    }
+  
+    final List<DocCommands> docLogs = commands == null ? Collections.emptyList() : Arrays.asList(
+        ImmutableDocCommands.builder()
+          .id(OidUtils.gen())
+          .docId(doc.getId())
+          .commitId(commitBuilder.getCommitId())
+          .commands(commands)
+          .build()
+        );
+    docLogs.forEach(command -> commitBuilder.add(command));
+    
+    final var commit = commitBuilder.close();
+    
+    return batchBuilder
+        .doc(doc)
+        .addDocCommit(commit.getItem1())
+        .addAllDocCommitTree(commit.getItem2())
+        .addAllDocCommands(docLogs)
+        .log(commit.getItem1().getCommitLog())
+        .addAllDocLock(docLock.getBranches())
+        .build();
   }
   
 
-  private void appendToBranch(Doc doc, DocBranchLock lock, ImmutableDocBatchForOne.Builder batch, CommitLogger logger) {
-    final var branchId = lock.getBranch().get().getId();
 
-    
-    final var template = ImmutableDocCommit.builder()
-      .id("commit-template")
-      .docId(doc.getId())
-      .branchId(branchId)
-      .dateTime(LocalDateTime.now())      
-      .author(this.author)
-      .message(this.message)
-      .parent(lock.getBranch().get().getCommitId())
-      .build();
-    final var commit = ImmutableDocCommit.builder()
-      .from(template)
-      .id(Sha2.commitId(template))
-      .branchId(branchId)
-      .build();
-    final var docBranch = ImmutableDocBranch.builder()
-      .from(lock.getBranch().get())
-      .status(remove ? Doc.DocStatus.ARCHIVED : Doc.DocStatus.IN_FORCE)
-      .branchName(remove ? OidUtils.gen(): lock.getBranch().get().getBranchName())
-      .branchNameDeleted(remove ? lock.getBranch().get().getBranchName() : null)
-      .commitId(commit.getId())
-      .build();
-    
-    final List<DocLog> docLogs = appendLogs == null ? Collections.emptyList() : Arrays.asList(
-        ImmutableDocLog.builder()
-          .id(OidUtils.gen())
-          .docId(doc.getId())
-          .branchId(branchId)
-          .docCommitId(commit.getId())
-          .value(appendLogs)
-          .build()
-        );
-
-    batch.addDocBranch(docBranch).addDocCommit(commit).addAllDocLogs(docLogs);
-  }
 }
