@@ -2,7 +2,6 @@ package io.resys.thena.structures.doc.actions;
 
 import io.resys.thena.api.actions.DocQueryActions;
 import io.resys.thena.spi.DbState;
-import io.resys.thena.structures.doc.queries.DocObjectsQueryImpl;
 import io.resys.thena.support.RepoAssert;
 import lombok.RequiredArgsConstructor;
 

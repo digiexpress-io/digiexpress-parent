@@ -2,8 +2,6 @@ package io.resys.thena.structures.doc;
 
 import java.util.List;
 
-import javax.annotation.Nullable;
-
 /*-
  * #%L
  * thena-docdb-api
@@ -26,35 +24,14 @@ import javax.annotation.Nullable;
 
 import org.immutables.value.Value;
 
-import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.DocBranch;
-import io.resys.thena.api.entities.doc.DocCommit;
-import io.resys.thena.api.entities.doc.DocCommitTree;
-import io.resys.thena.api.entities.doc.DocFlatted;
 import io.resys.thena.api.entities.doc.DocLock;
 import io.resys.thena.api.entities.doc.DocLock.DocBranchLock;
-import io.resys.thena.api.entities.doc.DocLog;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 
 public interface DocQueries {
-  
-  DocQuery docs();
   DocBranchQuery branches();
-  DocCommitQuery commits();
-  DocLogQuery logs();  
-  
-  interface DocQuery {
-    Multi<DocFlatted> findAllFlatted(FlattedCriteria criteria);
-    Multi<DocFlatted> findAllFlatted();
-    Multi<Doc> findAll();
-    Uni<Doc> getById(String id);
-  }
-  
-  interface DocCommitQuery {
-    Uni<DocCommit> getById(String commitId);
-    Multi<DocCommit> findAll();
-  }
   
   interface DocBranchQuery {
     Multi<DocBranch> findAll();
@@ -64,24 +41,7 @@ public interface DocQueries {
     
     Uni<DocLock> getDocLock(DocLockCriteria criteria);
     Uni<List<DocLock>> getDocLocks(List<DocLockCriteria> criteria);
-    
     Uni<DocBranch> getById(String branchId);
-  }
-
-  interface DocLogQuery {
-    Multi<DocCommitTree> findAll();
-    Uni<List<DocCommitTree>> getByCommitId(String logId);
-  }
-
-  @Value.Immutable
-  interface FlattedCriteria {
-    List<String> getMatchId();
-    @Nullable String getBranchName();
-    @Nullable String getDocType();
-    
-    @Nullable Boolean getMatchOwners();
-    boolean getChildren();
-    boolean getOnlyActiveDocs();
   }
 
   @Value.Immutable

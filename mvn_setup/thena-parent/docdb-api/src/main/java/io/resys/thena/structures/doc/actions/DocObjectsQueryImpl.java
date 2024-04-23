@@ -1,4 +1,4 @@
-package io.resys.thena.structures.doc.queries;
+package io.resys.thena.structures.doc.actions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 
 import io.resys.thena.api.actions.DocQueryActions;
 import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
-import io.resys.thena.api.actions.ImmutableDocObject;
 import io.resys.thena.api.actions.ImmutableDocObjects;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.doc.Doc;
@@ -21,6 +20,9 @@ import io.resys.thena.api.entities.doc.ImmutableDoc;
 import io.resys.thena.api.entities.doc.ImmutableDocBranch;
 import io.resys.thena.api.entities.doc.ImmutableDocCommit;
 import io.resys.thena.api.entities.doc.ImmutableDocLog;
+import io.resys.thena.api.envelope.DocContainer.DocObject;
+import io.resys.thena.api.envelope.DocContainer.DocTenantObjects;
+import io.resys.thena.api.envelope.ImmutableDocObject;
 import io.resys.thena.api.envelope.ImmutableQueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.DocNotFoundException;
@@ -50,7 +52,7 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
     return this;
   }
   @Override
-  public Uni<QueryEnvelope<DocQueryActions.DocObject>> get() {
+  public Uni<QueryEnvelope<DocObject>> get() {
     final var criteria = this.criteria.build();
     return state.toDocState(repoId).onItem().transformToUni(docState -> {
       final var existing = docState.getDataSource().getTenant();
@@ -78,7 +80,7 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
   }
 
   @Override
-  public Uni<QueryEnvelope<DocQueryActions.DocObjects>> findAll() {
+  public Uni<QueryEnvelope<DocTenantObjects>> findAll() {
     final var criteria = this.criteria.build();
     
     return state.toDocState(repoId).onItem().transformToUni((docState) -> {
@@ -91,7 +93,7 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
               .build());
     });
   }
-  private DocQueryActions.DocObjects toDocObjects(List<DocFlatted> data) {
+  private DocTenantObjects toDocObjects(List<DocFlatted> data) {
     
     final var docs = new HashMap<String, Doc>();
     final var logs = new HashMap<String, List<DocLog>>();
@@ -128,7 +130,7 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
         .build(); 
   }
   
-  private DocQueryActions.DocObject toDocObject(List<DocFlatted> data) {
+  private DocObject toDocObject(List<DocFlatted> data) {
     final var builder = ImmutableDocObject.builder();
     final var docIds = new HashSet<String>();
     final var logs = new HashMap<String, List<DocLog>>();
@@ -156,48 +158,6 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
       }
     }
    return builder.logs(logs).commits(commits).branches(branches).build(); 
-  }
-
-  private DocLog toDocLog(DocFlatted entry) {
-    return ImmutableDocLog.builder()
-    .id(entry.getDocLogId().get())
-    .docId(entry.getDocId())
-    .branchId(entry.getBranchId())
-    .docCommitId(entry.getCommitId())
-    .value(entry.getDocLogValue().orElse(null))
-    .build();
-  }
-  
-  private Doc toDoc(DocFlatted entry) {
-    return ImmutableDoc.builder()
-    .externalId(entry.getExternalId())
-    .id(entry.getDocId())
-    .type(entry.getDocType())
-    .meta(entry.getDocMeta().orElse(null))
-    .status(entry.getDocStatus())
-    .build();
-  }
-  
-  private DocCommit toDocCommit(DocFlatted entry) {
-    return ImmutableDocCommit.builder()
-    .id(entry.getCommitId())
-    .docId(entry.getDocId())
-    .dateTime(entry.getCommitDateTime())
-    .branchId(entry.getBranchId())
-    .parent(entry.getCommitParent())
-    .message(entry.getCommitMessage())
-    .author(entry.getCommitAuthor())
-    .build();
-  }  
-  private DocBranch toDocBranch(DocFlatted entry) {
-    return ImmutableDocBranch.builder()
-    .id(entry.getBranchId())
-    .docId(entry.getDocId())
-    .commitId(entry.getCommitId())
-    .branchName(entry.getBranchName())
-    .status(entry.getBranchStatus())
-    .value(entry.getBranchValue())
-    .build();
   }
   
   private <T extends ThenaContainer> QueryEnvelope<T> docNotFound(Tenant existing, DocNotFoundException ex) {
