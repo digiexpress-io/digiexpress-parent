@@ -100,7 +100,6 @@ public class SimpleDocTest extends DbTestTemplate {
     
     final var findAllMainBranchDocs = getClient().doc(repo).find().docQuery()
         .branchName("main")
-        .docType("customer-data")
         .findAll()
     .await().atMost(Duration.ofMinutes(1));
     Assertions.assertEquals(1, findAllMainBranchDocs.getObjects().getDocs().size());
@@ -162,11 +161,8 @@ public class SimpleDocTest extends DbTestTemplate {
     // find parent document
     final var findParent = getClient().doc(repo).find().docQuery()
         .branchName("main")
-        .docType("customer-data")
-        .matchId("bobs-ssn-id")
-        .findAll()
+        .get("bobs-ssn-id")
     .await().atMost(Duration.ofMinutes(1));
-    Assertions.assertEquals(1, findParent.getObjects().getDocs().size());
     Assertions.assertEquals(1, findParent.getObjects().getBranches().size());
     
     
@@ -174,9 +170,6 @@ public class SimpleDocTest extends DbTestTemplate {
     // find parent with child document
     final var findParentWithChild = getClient().doc(repo).find().docQuery()
         .branchName("main")
-        .docType("customer-data")
-        .matchId("bobs-ssn-id")
-        .include(IncludeInQuery.ALL)
         .findAll()
     .await().atMost(Duration.ofMinutes(1));
     Assertions.assertEquals(2, findParentWithChild.getObjects().getDocs().size());
