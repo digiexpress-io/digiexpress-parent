@@ -1,0 +1,43 @@
+{
+  "_id": "6623d15c0575d9f395a5393d",
+  "index": 0,
+  "guid": "66ae4093-a887-4cdf-91a7-d81415be988c",
+  "isActive": false,
+  "balance": "$2,142.72",
+  "picture": "http://placehold.it/32x32",
+  "age": 39,
+  "eyeColor": "blue",
+  "name": "Travis Pena",
+  "gender": "male",
+  "company": "EMTRAC",
+  "email": "travispena@emtrac.com",
+  "phone": "+1 (857) 502-2385",
+  "address": "760 Coleridge Street, Wheaton, Arkansas, 5527",
+  "about": "Mollit in magna fugiat anim ullamco est consequat cupidatat proident. Esse cupidatat sint magna aute ex eu quis nisi officia irure sunt anim cillum commodo. Pariatur adipisicing duis in eiusmod et laborum ea. Dolor et labore in duis.\r\n",  
+  "latitude": -41.080307,
+  "tags": [
+    "ut",
+    "dolore",
+    "exercitation",
+    "est",
+    "labore",
+    "ea",
+    "sit"
+  ],
+  "friends": [
+    {
+      "id": 2,
+      "name": "Olivia England"
+    },
+    {
+      "id": 0,
+      "name": "Dixon Wright"
+    },
+    {
+      "id": 5,
+      "name": "Olivia England"
+    }
+  ],
+  "greeting": "Hello, Travis Pena! You have -7 unread messages.",
+  "favoriteFruit": "bananaBig"
+}

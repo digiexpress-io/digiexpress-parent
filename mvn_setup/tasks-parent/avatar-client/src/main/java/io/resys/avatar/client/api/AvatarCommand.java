@@ -33,11 +33,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import io.resys.userprofile.client.api.ImmutableChangeAvatarColorCode;
-import io.resys.userprofile.client.api.ImmutableChangeAvatarDisplayName;
-import io.resys.userprofile.client.api.ImmutableChangeAvatarLetterCode;
-import io.resys.userprofile.client.api.ImmutableCreateAvatar;
-
 
 
 @JsonTypeInfo(

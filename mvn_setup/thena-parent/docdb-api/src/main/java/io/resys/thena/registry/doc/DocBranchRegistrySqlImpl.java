@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 import io.resys.thena.api.entities.CommitLockStatus;
 import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.DocBranch;
-import io.resys.thena.api.entities.doc.DocBranchLock;
+import io.resys.thena.api.entities.doc.DocLock.DocBranchLock;
 import io.resys.thena.api.entities.doc.ImmutableDoc;
 import io.resys.thena.api.entities.doc.ImmutableDocBranch;
 import io.resys.thena.api.entities.doc.ImmutableDocBranchLock;
@@ -55,18 +55,6 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
         .build();
   }
   @Override
-  public ThenaSqlClient.SqlTuple insertOne(DocBranch ref) {
-    return ImmutableSqlTuple.builder()
-        .value(new SqlStatement()
-        .append("INSERT INTO ").append(options.getDocBranch())
-        .append(" (branch_id, branch_name, branch_status, commit_id, doc_id, value) VALUES($1, $2, $3, $4, $5, $6)")
-        .build())
-        .props(Tuple.of(ref.getId(), ref.getBranchName(), ref.getStatus().name(), ref.getCommitId(), ref.getDocId(), ref.getValue()))
-        .build();
-  }
-
-
-  @Override
   public ThenaSqlClient.SqlTupleList insertAll(Collection<DocBranch> docs) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
@@ -78,18 +66,6 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
         }) .collect(Collectors.toList()))
         .build();
   }  
-  
-  @Override
-  public ThenaSqlClient.SqlTuple updateOne(DocBranch ref) {
-    return ImmutableSqlTuple.builder()
-        .value(new SqlStatement()
-        .append("UPDATE ").append(options.getDocBranch())
-        .append(" SET commit = $1, branch_name = $2, value = $3, branch_name_deleted = $4")
-        .append(" WHERE branch_id = $5")
-        .build())
-        .props(Tuple.of(ref.getCommitId(), ref.getBranchName(), ref.getValue(), ref.getBranchNameDeleted(), ref.getId()))
-        .build();
-  }
   
   @Override
   public ThenaSqlClient.SqlTuple getBranchLock(DocBranchLockCriteria crit) {
@@ -341,13 +317,14 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
     return ImmutableSql.builder().value(new SqlStatement().ln()
         .append("CREATE TABLE ").append(options.getDocBranch()).ln()
         .append("(").ln()
-        .append("  branch_name VARCHAR(255) NOT NULL,").ln()
-        .append("  branch_name_deleted VARCHAR(255),").ln()
-        .append("  branch_id VARCHAR(40) NOT NULL,").ln()
-        .append("  commit_id VARCHAR(40) NOT NULL,").ln()
-        .append("  branch_status VARCHAR(8) NOT NULL,").ln()
-        .append("  doc_id VARCHAR(40),").ln()
-        .append("  value jsonb NOT NULL,").ln()
+        .append("  doc_id                   VARCHAR(40) NOT NULL,").ln()
+        .append("  branch_id                VARCHAR(40) NOT NULL,").ln()
+        .append("  commit_id                VARCHAR(40) NOT NULL,").ln()
+        .append("  created_with_commit_id   VARCHAR(40) NOT NULL,").ln()
+        .append("  branch_name              VARCHAR(255) NOT NULL,").ln()
+        .append("  branch_status            VARCHAR(40) NOT NULL,").ln()
+        .append("  value                    JSONB NOT NULL,").ln()
+        
         .append("  PRIMARY KEY (branch_id),").ln()
         .append("  UNIQUE (doc_id, branch_name)").ln()
         .append(");").ln()

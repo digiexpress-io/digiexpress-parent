@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.function.Function;
 
 import io.resys.thena.api.entities.doc.Doc;
-import io.resys.thena.api.entities.doc.DocFlatted;
 import io.resys.thena.api.registry.ThenaRegistryService;
 import io.resys.thena.datasource.ThenaSqlClient;
 import io.resys.thena.structures.doc.DocQueries.FlattedCriteria;
@@ -17,8 +16,6 @@ public interface DocMainRegistry extends ThenaRegistryService<Doc, io.vertx.muti
   ThenaSqlClient.SqlTuple getById(String id);  // matches by external_id or id
   ThenaSqlClient.SqlTuple deleteById(String id);
   ThenaSqlClient.Sql findAll();
-  ThenaSqlClient.SqlTuple insertOne(Doc doc);
-  ThenaSqlClient.SqlTuple updateOne(Doc doc);
   
   ThenaSqlClient.SqlTupleList insertMany(List<Doc> docs);
   ThenaSqlClient.SqlTupleList updateMany(List<Doc> docs);
@@ -28,6 +25,5 @@ public interface DocMainRegistry extends ThenaRegistryService<Doc, io.vertx.muti
   ThenaSqlClient.Sql dropTable();
   
   Function<io.vertx.mutiny.sqlclient.Row, Doc> defaultMapper();
-  Function<io.vertx.mutiny.sqlclient.Row, DocFlatted> docFlattedMapper();
   
 }

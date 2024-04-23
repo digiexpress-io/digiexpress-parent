@@ -8,14 +8,9 @@
     <version>999-SNAPSHOT</version>
   </parent>
   <packaging>jar</packaging>
-  <artifactId>thena-docdb-api</artifactId>
+  <artifactId>thena-docdb-jsonpatch</artifactId>
 
   <dependencies>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-collections4</artifactId>
-    </dependency>
-
     <dependency>
       <groupId>io.smallrye.reactive</groupId>
       <artifactId>smallrye-mutiny-vertx-sql-client</artifactId>

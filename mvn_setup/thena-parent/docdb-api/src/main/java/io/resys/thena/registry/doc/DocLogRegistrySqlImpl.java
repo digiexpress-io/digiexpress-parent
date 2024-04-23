@@ -93,7 +93,7 @@ public class DocLogRegistrySqlImpl implements DocLogRegistry {
         .append(" (id, commit_id, value) VALUES($1, $2, $3)").ln()
         .build())
         .props(logs.stream()
-            .map(doc -> Tuple.of(doc.getId(), doc.getDocCommitId(), doc.getValue()))
+            .map(doc -> Tuple.diff(doc.getId(), doc.getDocCommitId(), doc.getValue()))
             .collect(Collectors.toList()))
         .build();
   }

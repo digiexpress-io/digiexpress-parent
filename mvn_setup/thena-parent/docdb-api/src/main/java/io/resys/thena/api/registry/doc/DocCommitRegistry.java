@@ -12,7 +12,6 @@ public interface DocCommitRegistry extends ThenaRegistryService<DocCommit, io.ve
   
   ThenaSqlClient.SqlTuple getById(String id);
   ThenaSqlClient.Sql findAll();
-  ThenaSqlClient.SqlTuple insertOne(DocCommit commit);
   ThenaSqlClient.SqlTupleList insertAll(Collection<DocCommit> commits);
   
   ThenaSqlClient.Sql createTable();

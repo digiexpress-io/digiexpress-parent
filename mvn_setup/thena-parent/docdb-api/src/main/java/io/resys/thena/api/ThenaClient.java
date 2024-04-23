@@ -20,14 +20,12 @@ import io.resys.thena.api.actions.OrgQueryActions;
 import io.resys.thena.api.actions.TenantActions;
 import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
 import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.api.entities.doc.DocBranch;
-import io.resys.thena.api.entities.doc.DocEntity.IsDocObject;
 import io.resys.thena.api.entities.git.Branch;
 import io.resys.thena.api.entities.git.GitEntity.IsGitObject;
 import io.resys.thena.api.entities.git.Tag;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimProjectObjects;
 import io.resys.thena.api.entities.org.ThenaOrgObjects.OrgProjectObjects;
-import io.resys.thena.api.envelope.DocContainer;
+import io.resys.thena.api.envelope.DocContainer.DocTenantObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.ThenaContainer;
 import io.smallrye.mutiny.Uni;
@@ -86,13 +84,8 @@ public interface ThenaClient {
   }
   // build world state
   interface DocProjectQuery {
-    DocProjectQuery projectName(String projectName);
-    Uni<QueryEnvelope<ThenaClient.DocProjectObjects>> get();
-  }
-  @Value.Immutable
-  interface DocProjectObjects extends DocContainer {
-    Map<String, DocBranch> getBranches();
-    Map<String, IsDocObject> getValues();   
+    DocProjectQuery tenant(String tenantId);
+    Uni<QueryEnvelope<DocTenantObjects>> get();
   }
   
   // multi doc model, cropped git replica

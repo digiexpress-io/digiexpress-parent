@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.function.Function;
 
 import io.resys.thena.api.entities.doc.DocBranch;
-import io.resys.thena.api.entities.doc.DocBranchLock;
+import io.resys.thena.api.entities.doc.DocLock.DocBranchLock;
 import io.resys.thena.api.registry.ThenaRegistryService;
 import io.resys.thena.datasource.ThenaSqlClient;
 import io.resys.thena.structures.doc.DocQueries.DocBranchLockCriteria;
@@ -14,8 +14,7 @@ import io.resys.thena.structures.doc.DocQueries.DocLockCriteria;
 
 public interface DocBranchRegistry extends ThenaRegistryService<DocBranch, io.vertx.mutiny.sqlclient.Row> {
   ThenaSqlClient.SqlTuple getById(String branchId);
-  ThenaSqlClient.SqlTuple updateOne(DocBranch doc);
-  ThenaSqlClient.SqlTuple insertOne(DocBranch doc);
+
   ThenaSqlClient.SqlTupleList insertAll(Collection<DocBranch> docs);
   ThenaSqlClient.SqlTupleList updateAll(List<DocBranch> doc);
   ThenaSqlClient.SqlTuple getBranchLock(DocBranchLockCriteria crit);
