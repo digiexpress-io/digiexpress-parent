@@ -1,5 +1,13 @@
 package io.resys.thena.docdb.test;
 
+import java.io.Serializable;
+import java.time.Duration;
+import java.util.Arrays;
+
+import org.immutables.value.Value;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 /*-
  * #%L
  * thena-docdb-mongo
@@ -22,19 +30,13 @@ package io.resys.thena.docdb.test;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
-import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
 import io.resys.thena.api.actions.TenantActions.CommitStatus;
+import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.docdb.test.config.DbTestTemplate;
 import io.resys.thena.docdb.test.config.PgProfile;
 import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;
-import org.immutables.value.Value;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
-import java.io.Serializable;
-import java.time.Duration;
 
 
 @QuarkusTest
@@ -61,16 +63,16 @@ public class BatchDocTest extends DbTestTemplate {
     
     final var createdDoc = getClient().doc(repo).commit()
         .createManyDocs()
-        .branchName("main")
-        .docType("customer-data")
-        .message("batching tests")
-        .author("jane.doe@morgue.com");
+        .commitMessage("batching tests")
+        .commitAuthor("jane.doe@morgue.com");
     
     for(int index = 0; index < 10; index++) {
       createdDoc.item()
         .externalId("bobs-ssn-id-" + index)      
         .branchContent(JsonObject.of("id", "id-" + index, "first_name", "bob", "last_name", "flop"))
-        .log(JsonObject.of("some_cool_command", "create_customer"))
+        .commands(Arrays.asList(JsonObject.of("some_cool_command", "create_customer")))
+        .branchName("main")
+        .docType("customer-data")
         .next();
     }
     final var inserted = createdDoc.build().await().atMost(Duration.ofMinutes(1));
@@ -86,12 +88,12 @@ public class BatchDocTest extends DbTestTemplate {
     // update branches
     // update dev branch with new data
     final var modifyBranch = getClient().doc(repo).commit().modifyManyBranches()
-      .author("jane.doe@morgue.com")
-      .message("edit dev branch")
-      .branchName("main");
+      .commitAuthor("jane.doe@morgue.com")
+      .commitMessage("edit dev branch");
     
     for(final var createdBranch : inserted.getBranch()) {
       modifyBranch.item()
+        .branchName("main")
         .docId(createdBranch.getDocId())
         .merge(old -> old.copy().put("added new field", "super cool field"))
         .next();
@@ -101,14 +103,14 @@ public class BatchDocTest extends DbTestTemplate {
     
     // Modify all doc-s meta data
     final var modifyManyDocs = getClient().doc(repo).commit().modifyManyDocs()
-        .author("jane.doe@morgue.com")
-        .message("edit dev branch");
+        .commitAuthor("jane.doe@morgue.com")
+        .commitMessage("edit dev branch");
       
       for(final var createdBranch : inserted.getBranch()) {
         modifyManyDocs.item()
           .docId(createdBranch.getDocId())
           .meta(JsonObject.of("meta data", "some cool to add to meta"))
-          .log(JsonObject.of("logging", "added meta"))
+          .commands(Arrays.asList(JsonObject.of("logging", "added meta")))
           .next();
       }
       modifyManyDocs.build().await().atMost(Duration.ofMinutes(1));
