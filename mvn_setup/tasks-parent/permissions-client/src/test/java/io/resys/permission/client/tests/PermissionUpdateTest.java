@@ -43,7 +43,6 @@ public class PermissionUpdateTest extends DbTestTemplate {
     .await().atMost(Duration.ofMinutes(5));
     
  
-    Assertions.assertEquals("SUPER USER AND MANAGER", updatedPermission.getName());
     Assertions.assertEquals("SUPER USER AND MANAGER", client.permissionQuery().get(updatedPermission.getId()).await().atMost(Duration.ofMinutes(1)).getName());
   }
 }

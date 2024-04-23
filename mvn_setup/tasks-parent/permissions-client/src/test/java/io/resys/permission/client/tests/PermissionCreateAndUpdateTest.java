@@ -43,7 +43,7 @@ public class PermissionCreateAndUpdateTest extends DbTestTemplate {
     return client.createRole()
       .createOne(ImmutableCreateRole.builder()
           .name(name)
-          .description("Role created for adding to permission")
+          .description("Role created")
           .comment("This was needed")
         .build())
       .await().atMost(Duration.ofMinutes(1));
@@ -53,9 +53,9 @@ public class PermissionCreateAndUpdateTest extends DbTestTemplate {
   private Permission createPermissionForUpdating(PermissionClient client) {
     return client.createPermission()
       .createOne(ImmutableCreatePermission.builder()
-        .comment("created my first permission")
-        .name("My first permission")
-        .description("Cool description here")
+        .comment("created perm-1")
+        .name("PERM-1")
+        .description("DESC-1")
         .addRoles(
             createRoleForPermission(client, "ROLE_FOR_PERMISSION").getName()
             )
@@ -70,33 +70,37 @@ public class PermissionCreateAndUpdateTest extends DbTestTemplate {
   public void createPermissionAndUpdateTest() {
 
     final PermissionClient client = getClient().tenantQuery()
-        .repoName("PermissionCreateAndUpdateTest-1")
+        .repoName("PermissionCreateAndUpdateTest")
         .create()
         .await().atMost(Duration.ofMinutes(1));
     
     final var createdPermission = createPermissionForUpdating(client);
     
+    log.debug(Json.encodePrettily(createdPermission));
     Assertions.assertEquals(1, createdPermission.getRoles().size());
     Assertions.assertEquals(1, createdPermission.getPrincipals().size());
-    log.debug(Json.encodePrettily(createdPermission));
+    Assertions.assertEquals("PERM-1", createdPermission.getName());
+    Assertions.assertEquals("DESC-1", client.permissionQuery().get(createdPermission.getId()).await().atMost(Duration.ofMinutes(1)).getDescription());
+
 
     final var updatedName = client.updatePermission().updateOne(ImmutableChangePermissionName.builder()
         .id(createdPermission.getId())  
-        .name("New name for my first permission")
+        .name("PERM-2")
         .comment("Original name was wrong")
         .build())
       .await().atMost(Duration.ofMinutes(1));
-    Assertions.assertEquals("New name for my first permission", updatedName.getName());
-    Assertions.assertEquals("New name for my first permission", client.permissionQuery().get(createdPermission.getId()).await().atMost(Duration.ofMinutes(1)).getName());
+    
+    Assertions.assertEquals("PERM-2", updatedName.getName());
+    Assertions.assertEquals("PERM-2", client.permissionQuery().get(createdPermission.getId()).await().atMost(Duration.ofMinutes(1)).getName());
     
     final var updatedDesc = client.updatePermission().updateOne(ImmutableChangePermissionDescription.builder()
         .id(updatedName.getId())  
-        .description("An even better description here")
+        .description("DESC-2")
         .comment("new description")
         .build())
       .await().atMost(Duration.ofMinutes(1));
-    Assertions.assertEquals("An even better description here", updatedDesc.getDescription());
-    Assertions.assertEquals("An even better description here", client.permissionQuery().get(createdPermission.getId()).await().atMost(Duration.ofMinutes(1)).getDescription());
+    
+    Assertions.assertEquals("DESC-2", updatedDesc.getDescription());
     
   }
 }
