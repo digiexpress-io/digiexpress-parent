@@ -22,7 +22,6 @@ import io.resys.thena.structures.doc.DocInserts.DocBatchForMany;
 import io.resys.thena.structures.doc.DocInserts.DocBatchForOne;
 import io.resys.thena.structures.doc.DocState;
 import io.resys.thena.structures.doc.ImmutableDocBatchForOne;
-import io.resys.thena.structures.git.commits.CommitLogger;
 import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
 import io.resys.thena.support.Sha2;
@@ -36,19 +35,19 @@ public class BatchForOneBranchModify {
   private final DocBranchLock lock; 
   private final DocState tx;
   private final String author;
+  private final String message;
   
   private JsonObject appendBlobs;
-  private JsonObject appendLogs;
+  private List<JsonObject> appendLogs;
   private JsonObjectMerge appendMerge;
   
-  private String message;
+  
   private boolean remove;
 
   public BatchForOneBranchModify remove(boolean remove) { this.remove = remove; return this; }
-  public BatchForOneBranchModify append(JsonObject append) { this.appendBlobs = append; return this; }
+  public BatchForOneBranchModify replace(JsonObject append) { this.appendBlobs = append; return this; }
   public BatchForOneBranchModify merge(JsonObjectMerge merge) { this.appendMerge = merge; return this; }
-  public BatchForOneBranchModify message(String message) { this.message = RepoAssert.notEmpty(message, () -> "message can't be empty!"); return this; }
-  public BatchForOneBranchModify log(JsonObject doc) { this.appendLogs = doc; return this; }
+  public BatchForOneBranchModify commands(List<JsonObject> doc) { this.appendLogs = doc; return this; }
   
 
   public DocBatchForOne create() {

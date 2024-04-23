@@ -186,7 +186,7 @@ public class ModifyManyDocBranchesImpl implements ModifyManyDocBranches {
       }
       
       final var batch = new BatchForOneBranchModify(lock, tx, author)
-        .append(item.getAppendBlob())
+        .replace(item.getAppendBlob())
         .merge(item.getAppendMerge())
         .message(item.getMessage())
         .log(item.getAppendLog())

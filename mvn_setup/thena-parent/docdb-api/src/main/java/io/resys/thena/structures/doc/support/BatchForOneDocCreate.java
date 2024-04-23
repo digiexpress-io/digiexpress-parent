@@ -57,26 +57,27 @@ public class BatchForOneDocCreate {
     
     // fallbacks: json.id ?? this.docId ?? generate doc id
     final var docId = Optional.ofNullable(this.docId).orElseGet(() -> Optional.ofNullable(branchContent.getString("id")).orElse(OidUtils.gen()));
-    final var branchId = OidUtils.gen(); 
-    final var doc = ImmutableDoc.builder()
-        .id(docId)
-        .ownerId(ownerId)
-        .parentId(parentDocId)
-        .externalId(Optional.ofNullable(this.externalId == null || this.externalId.trim().isEmpty() ? null : this.externalId).orElse(OidUtils.gen()))
-        .type(docType)
-        .status(Doc.DocStatus.IN_FORCE)
-        .meta(docMeta)
-        .build();
-    
+    final var branchId = OidUtils.gen();
     final var commitBuilder = new DocCommitBuilder(repoId, ImmutableDocCommit.builder()
         .id(OidUtils.gen())
-        .docId(doc.getId())
+        .docId(docId)
         .branchId(branchId)
         .createdAt(OffsetDateTime.now())
         .commitAuthor(this.author)
         .commitMessage(this.message)
         .parent(Optional.empty())
         .build());
+    
+    final var doc = ImmutableDoc.builder()
+        .id(docId)
+        .ownerId(ownerId)
+        .parentId(parentDocId)
+        .createdWithCommitId(commitBuilder.getCommitId())
+        .externalId(Optional.ofNullable(this.externalId == null || this.externalId.trim().isEmpty() ? null : this.externalId).orElse(OidUtils.gen()))
+        .type(docType)
+        .status(Doc.DocStatus.IN_FORCE)
+        .meta(docMeta)
+        .build();
     commitBuilder.add(doc);
     
     final var docBranch = ImmutableDocBranch.builder()

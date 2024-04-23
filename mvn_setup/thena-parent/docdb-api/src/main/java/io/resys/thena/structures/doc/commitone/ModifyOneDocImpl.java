@@ -1,6 +1,7 @@
 package io.resys.thena.structures.doc.commitone;
 
 import java.time.Duration;
+import java.util.List;
 
 import io.resys.thena.api.actions.DocCommitActions.ModifyOneDoc;
 import io.resys.thena.api.actions.DocCommitActions.OneDocEnvelope;
@@ -11,7 +12,9 @@ import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.spi.ImmutableTxScope;
 import io.resys.thena.structures.BatchStatus;
+import io.resys.thena.structures.doc.DocInserts.DocBatchForMany;
 import io.resys.thena.structures.doc.DocState;
+import io.resys.thena.structures.doc.ImmutableDocBatchForMany;
 import io.resys.thena.structures.doc.ImmutableDocLockCriteria;
 import io.resys.thena.structures.doc.support.BatchForOneDocModify;
 import io.resys.thena.support.RepoAssert;
@@ -24,26 +27,32 @@ import lombok.RequiredArgsConstructor;
 public class ModifyOneDocImpl implements ModifyOneDoc {
 
   private final DbState state;
-  private JsonObject appendLogs = null;
-  private JsonObject appendMeta = null;
+  private List<JsonObject> commands = null;
+  private JsonObject meta = null;
   private boolean remove;
   
   private final String repoId;
   private String docId;
+  private String parentDocId;
+  private String externalId;
+  private String ownerId;
   private String author;
   private String message;
 
+  @Override public ModifyOneDocImpl parentDocId(String parentDocId) { this.parentDocId = parentDocId; return this; }
+  @Override public ModifyOneDocImpl externalId(String externalId) { this.externalId = externalId; return this; }
   @Override public ModifyOneDocImpl remove() { this.remove = true; return this; }
-  @Override public ModifyOneDocImpl meta(JsonObject blob) { this.appendMeta = RepoAssert.notNull(blob, () -> "merge can't be null!"); return this; }
+  @Override public ModifyOneDocImpl meta(JsonObject blob) { this.meta = RepoAssert.notNull(meta, () -> "meta can't be null!"); return this; }
   @Override public ModifyOneDocImpl docId(String docId) { this.docId = docId; return this; }
-  @Override public ModifyOneDocImpl author(String author) { this.author = RepoAssert.notEmpty(author, () -> "author can't be empty!"); return this; }
-  @Override public ModifyOneDocImpl message(String message) { this.message = RepoAssert.notEmpty(message, () -> "message can't be empty!"); return this; }
-  @Override public ModifyOneDocImpl log(JsonObject doc) { this.appendLogs = doc; return this; }
+  @Override public ModifyOneDocImpl ownerId(String ownerId) { this.ownerId = ownerId; return this; }
+  @Override public ModifyOneDocImpl commitAuthor(String author) { this.author = RepoAssert.notEmpty(author, () -> "commitAuthor can't be empty!"); return this; }
+  @Override public ModifyOneDocImpl commitMessage(String message) { this.message = RepoAssert.notEmpty(message, () -> "commitMessage can't be empty!"); return this; }
+  @Override public ModifyOneDocImpl commands(List<JsonObject> commands) { this.commands = commands; return this; }
   @Override
   public Uni<OneDocEnvelope> build() {
     RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
-    RepoAssert.notEmpty(author, () -> "author can't be empty!");
-    RepoAssert.notEmpty(message, () -> "message can't be empty!");
+    RepoAssert.notEmpty(author, () -> "commitAuthor can't be empty!");
+    RepoAssert.notEmpty(message, () -> "commitMessage can't be empty!");
 
     final var crit = ImmutableDocLockCriteria.builder().docId(docId).build();    
     final var scope = ImmutableTxScope.builder().commitAuthor(author).commitMessage(message).tenantId(repoId).build();
@@ -62,20 +71,33 @@ public class ModifyOneDocImpl implements ModifyOneDoc {
   
   private Uni<OneDocEnvelope> doInLock(DocLock docLock, DocState tx) {
 
-    final var batch = new BatchForOneDocModify(docLock, tx, author)
-        .message(message)
-        .log(appendLogs)
-        .meta(appendMeta)
+    final var batch = new BatchForOneDocModify(docLock, tx, author, message)
+        .commands(commands)
+        .meta(meta)
+        .ownerId(ownerId)
+        .parentId(parentDocId)
+        .remove(remove)
+        .externalId(externalId)
         .create();
     
-    return tx.insert().batchOne(batch)
-    .onItem().transform(rsp -> ImmutableOneDocEnvelope.builder()
-      .repoId(repoId)
-      .doc(batch.getDoc().get())
-      .addMessages(rsp.getLog())
-      .addAllMessages(rsp.getMessages())
-      .status(BatchStatus.mapStatus(rsp.getStatus()))
-      .build());
+    return tx.insert().batchMany(ImmutableDocBatchForMany.builder().addItems(batch).repo(repoId).status(BatchStatus.OK).log("").build())
+    .onItem().transform(rsp -> {
+      
+      if(rsp.getStatus() == BatchStatus.CONFLICT || rsp.getStatus() == BatchStatus.ERROR) {
+        throw new ModifyOneDocException("Failed to modify document!", rsp);
+      }
+      return ImmutableOneDocEnvelope.builder()
+        .repoId(repoId)
+        .doc(batch.getDoc().get())
+        .commit(batch.getDocCommit().iterator().next())
+        .branch(batch.getDocBranch().iterator().next())
+        .commands(batch.getDocCommands())
+        .commitTree(batch.getDocCommitTree())
+        .addMessages(ImmutableMessage.builder().text(rsp.getLog()).build())
+        .addAllMessages(rsp.getMessages())
+        .status(BatchStatus.mapStatus(rsp.getStatus()))
+        .build();
+    });
   }
   
   private OneDocEnvelope validateRepo(DocLock state) {
@@ -95,5 +117,18 @@ public class ModifyOneDocImpl implements ModifyOneDoc {
       
     }
     return null;
+  }
+  
+  
+  public static class ModifyOneDocException extends RuntimeException {
+    private static final long serialVersionUID = -6202574733069488724L;
+    private final DocBatchForMany batch;
+    public ModifyOneDocException(String message, DocBatchForMany batch) {
+      super(message);
+      this.batch = batch;
+    }
+    public DocBatchForMany getBatch() {
+      return batch;
+    }
   }
 }

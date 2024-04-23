@@ -1,18 +1,21 @@
 package io.resys.thena.structures.doc.commitone;
 
 import java.time.Duration;
+import java.util.List;
 
 import io.resys.thena.api.actions.DocCommitActions.ModifyOneDocBranch;
 import io.resys.thena.api.actions.DocCommitActions.OneDocEnvelope;
 import io.resys.thena.api.actions.GitCommitActions.JsonObjectMerge;
 import io.resys.thena.api.actions.ImmutableOneDocEnvelope;
 import io.resys.thena.api.entities.CommitResultStatus;
-import io.resys.thena.api.entities.doc.DocBranchLock;
+import io.resys.thena.api.entities.doc.DocLock.DocBranchLock;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.spi.ImmutableTxScope;
 import io.resys.thena.structures.BatchStatus;
+import io.resys.thena.structures.doc.DocInserts.DocBatchForMany;
 import io.resys.thena.structures.doc.DocState;
+import io.resys.thena.structures.doc.ImmutableDocBatchForMany;
 import io.resys.thena.structures.doc.ImmutableDocBranchLockCriteria;
 import io.resys.thena.structures.doc.support.BatchForOneBranchModify;
 import io.resys.thena.support.RepoAssert;
@@ -25,9 +28,9 @@ import lombok.RequiredArgsConstructor;
 public class ModifyOneDocBranchImpl implements ModifyOneDocBranch {
 
   private final DbState state;
-  private JsonObject appendBlobs = null;
-  private JsonObject appendLogs = null;
-  private JsonObjectMerge appendMerge = null;
+  private JsonObject replace = null;
+  private List<JsonObject> commands = null;
+  private JsonObjectMerge merge = null;
   private String versionToModify = null;
   
   private String docId;
@@ -38,15 +41,15 @@ public class ModifyOneDocBranchImpl implements ModifyOneDocBranch {
   private boolean remove;
 
   @Override public ModifyOneDocBranchImpl docId(String docId) { this.docId = RepoAssert.notEmpty(docId, () -> "docId can't be empty!"); return this; }
-  @Override public ModifyOneDocBranchImpl parent(String versionToModify) { this.versionToModify = versionToModify; return this; }
+  @Override public ModifyOneDocBranchImpl commit(String versionToModify) { this.versionToModify = versionToModify; return this; }
   @Override public ModifyOneDocBranchImpl parentIsLatest() { this.versionToModify = null; return this; }
   @Override public ModifyOneDocBranchImpl remove() { this.remove = true; return this; }
   @Override public ModifyOneDocBranchImpl branchName(String branchName) { this.branchName = RepoAssert.notNull(branchName, () -> "branchName can't be empty!"); return this; }
-  @Override public ModifyOneDocBranchImpl append(JsonObject append) { this.appendBlobs = RepoAssert.notNull(append, () -> "append can't be empty!"); return this; }
-  @Override public ModifyOneDocBranchImpl merge(JsonObjectMerge merge) { this.appendMerge = RepoAssert.notNull(merge, () -> "merge can't be empty!"); return this; }
-  @Override public ModifyOneDocBranchImpl author(String author) { this.author = RepoAssert.notEmpty(author, () -> "author can't be empty!"); return this; }
-  @Override public ModifyOneDocBranchImpl message(String message) { this.message = RepoAssert.notEmpty(message, () -> "message can't be empty!"); return this; }
-  @Override public ModifyOneDocBranchImpl log(JsonObject doc) { this.appendLogs = doc; return this; }
+  @Override public ModifyOneDocBranchImpl replace(JsonObject append) { this.replace = RepoAssert.notNull(append, () -> "replace can't be empty!"); return this; }
+  @Override public ModifyOneDocBranchImpl merge(JsonObjectMerge merge) { this.merge = RepoAssert.notNull(merge, () -> "merge can't be empty!"); return this; }
+  @Override public ModifyOneDocBranchImpl commitAuthor(String author) { this.author = RepoAssert.notEmpty(author, () -> "commitAuthor can't be empty!"); return this; }
+  @Override public ModifyOneDocBranchImpl commitMessage(String message) { this.message = RepoAssert.notEmpty(message, () -> "commitMessage can't be empty!"); return this; }
+  @Override public ModifyOneDocBranchImpl commands(List<JsonObject> commands) { this.commands = commands; return this; }
   
   @Override
   public Uni<OneDocEnvelope> build() {
@@ -55,7 +58,8 @@ public class ModifyOneDocBranchImpl implements ModifyOneDocBranch {
     RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
     RepoAssert.notEmpty(author, () -> "author can't be empty!");
     RepoAssert.notEmpty(message, () -> "message can't be empty!");
-    RepoAssert.isTrue(appendBlobs != null || appendMerge != null, () -> "Nothing to commit, no content!");
+    RepoAssert.isTrue(replace != null || merge != null, () -> "Nothing to commit, no content!");
+    
     final var crit = ImmutableDocBranchLockCriteria.builder()
         .branchName(branchName)
         .docId(docId)
@@ -83,7 +87,7 @@ public class ModifyOneDocBranchImpl implements ModifyOneDocBranch {
         .append("Commit to: '").append(repoId).append("'")
         .append(" is rejected.")
         .append(" Your head is: '").append(versionToModify).append("')")
-        .append(" but remote is: '").branchContent(state.getCommit().get().getId()).branchContent("'!")
+        .append(" but remote is: '").append(state.getCommit().get().getId()).append("'!")
         .toString();
       
       return ImmutableOneDocEnvelope.builder()
@@ -113,23 +117,42 @@ public class ModifyOneDocBranchImpl implements ModifyOneDocBranch {
   }
 
   private Uni<OneDocEnvelope> doInLock(DocBranchLock lock, DocState tx) {  
-    final var batch = new BatchForOneBranchModify(lock, tx, author)
-      .append(appendBlobs)
-      .merge(appendMerge)
-      .message(message)
-      .log(appendLogs)
+    final var batch = new BatchForOneBranchModify(lock, tx, author, message)
+      .replace(replace)
+      .merge(merge)
+      .commands(commands)
       .remove(remove)
       .create();
 
-    return tx.insert().batchOne(batch)
-      .onItem().transform(rsp -> ImmutableOneDocEnvelope.builder()
-        .repoId(repoId)
-        .doc(batch.getDoc().get())
-        .commit(rsp.getDocCommit().iterator().next())
-        .addMessages(rsp.getLog())
-        .addAllMessages(rsp.getMessages())
-        .status(BatchStatus.mapStatus(rsp.getStatus()))
-        .build());
+    return tx.insert().batchMany(ImmutableDocBatchForMany.builder().addItems(batch).repo(repoId).status(BatchStatus.OK).log("").build())
+      .onItem().transform(rsp -> {
+        
+        if(rsp.getStatus() == BatchStatus.CONFLICT || rsp.getStatus() == BatchStatus.ERROR) {
+          throw new ModifyOneDocBranchException("Failed to modify document branch!", rsp);
+        }
+        return ImmutableOneDocEnvelope.builder()
+          .repoId(repoId)
+          .doc(batch.getDoc().get())
+          .commit(batch.getDocCommit().iterator().next())
+          .branch(batch.getDocBranch().iterator().next())
+          .commands(batch.getDocCommands())
+          .commitTree(batch.getDocCommitTree())
+          .addMessages(ImmutableMessage.builder().text(rsp.getLog()).build())
+          .addAllMessages(rsp.getMessages())
+          .status(BatchStatus.mapStatus(rsp.getStatus()))
+          .build();
+      });
   }
   
+  public static class ModifyOneDocBranchException extends RuntimeException {
+    private static final long serialVersionUID = -6202574733069488724L;
+    private final DocBatchForMany batch;
+    public ModifyOneDocBranchException(String message, DocBatchForMany batch) {
+      super(message);
+      this.batch = batch;
+    }
+    public DocBatchForMany getBatch() {
+      return batch;
+    }
+  }
 }

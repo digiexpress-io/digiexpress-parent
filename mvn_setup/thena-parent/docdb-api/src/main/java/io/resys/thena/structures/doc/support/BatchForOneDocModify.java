@@ -6,16 +6,16 @@ import java.util.Collections;
 import java.util.List;
 
 import io.resys.thena.api.entities.doc.Doc;
-import io.resys.thena.api.entities.doc.DocBranchLock;
 import io.resys.thena.api.entities.doc.DocLock;
+import io.resys.thena.api.entities.doc.DocLock.DocBranchLock;
 import io.resys.thena.api.entities.doc.DocLog;
 import io.resys.thena.api.entities.doc.ImmutableDoc;
 import io.resys.thena.api.entities.doc.ImmutableDocBranch;
 import io.resys.thena.api.entities.doc.ImmutableDocCommit;
 import io.resys.thena.api.entities.doc.ImmutableDocLog;
 import io.resys.thena.api.envelope.ImmutableMessage;
-import io.resys.thena.structures.doc.DocInserts.DocBatchForOne;
 import io.resys.thena.structures.BatchStatus;
+import io.resys.thena.structures.doc.DocInserts.DocBatchForOne;
 import io.resys.thena.structures.doc.DocState;
 import io.resys.thena.structures.doc.ImmutableDocBatchForOne;
 import io.resys.thena.structures.git.commits.CommitLogger;
@@ -32,15 +32,20 @@ public class BatchForOneDocModify {
   private final DocLock docLock;
   private final DocState tx;
   private final String author;
-  private String message;
-  private JsonObject appendLogs;
+  private final String message;
+  private List<JsonObject> commands = null;
+  private String ownerId;
+  private String parentId;
+  private String externalId;
   private JsonObject appendMeta;
   private boolean remove;
 
+  public BatchForOneDocModify externalId(String externalId) { this.externalId = externalId; return this; }
+  public BatchForOneDocModify parentId(String parentId) { this.parentId = parentId; return this; }
+  public BatchForOneDocModify ownerId(String ownerId) { this.ownerId = ownerId; return this; }
   public BatchForOneDocModify remove(boolean remove) { this.remove = remove; return this; }
-  public BatchForOneDocModify log(JsonObject log) { this.appendLogs = log; return this; }
+  public BatchForOneDocModify commands(List<JsonObject> log) { this.commands = log; return this; }
   public BatchForOneDocModify meta(JsonObject meta) { this.appendMeta = meta; return this; }
-  public BatchForOneDocModify message(String message) { this.message = RepoAssert.notEmpty(message, () -> "message can't be empty!"); return this; }
   
   public DocBatchForOne create() {
     RepoAssert.notNull(docLock, () -> "docLock can't be empty!");

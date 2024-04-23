@@ -83,6 +83,7 @@ public interface DocCommitActions {
     ModifyOneDoc externalId(@Nullable String externalId); // user given unique id
     ModifyOneDoc ownerId(@Nullable String ownerId);       //user given 'grouping' identifier for claiming ownership  
     ModifyOneDoc meta(@Nullable JsonObject docMeta);
+    ModifyOneDoc commands(List<JsonObject> commands);
     
     ModifyOneDoc remove();   // remove the whole document                         
     Uni<OneDocEnvelope> build();
@@ -115,7 +116,8 @@ public interface DocCommitActions {
     CreateOneDocBranch commitMessage(String message);
     
     CreateOneDocBranch commands(List<JsonObject> commands);
-    CreateOneDocBranch branch(String branchName, JsonObject branchContent);
+    CreateOneDocBranch branchName(String branchName);
+    CreateOneDocBranch branchContent(JsonObject branchContent);
     
     Uni<OneDocEnvelope> build();
   }
