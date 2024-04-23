@@ -134,6 +134,15 @@ public class RoleHierarchyTest extends DbTestTemplate {
     // query returns all permissions created in ROOT
     Assertions.assertEquals("[PERM-1, PERM-2]", tip.getPermissions().toString());
     
+    // query returns all permissions from ROOT/CHILD-1
+    Assertions.assertEquals("[PERM-1, PERM-2, CHILD-PERM-3]", child1.getPermissions().toString());
+    
+    // query returns all permissions from ROOT/CHILD-1/CHILD-2
+    Assertions.assertEquals("[PERM-1, PERM-2, CHILD-PERM-3, CHILD-PERM-4]", child2.getPermissions().toString());
+    
+    // query returns all principals created in CHILD-2
+    Assertions.assertEquals("[PRINC-2]", child1.getPrincipals().toString());
+    
     // query returns all permissions from ROOT/CHILD-1/CHILD-2
     Assertions.assertEquals("[PERM-1, PERM-2, CHILD-PERM-3, CHILD-PERM-4]", child2.getPermissions().toString());
     
