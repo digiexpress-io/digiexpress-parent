@@ -59,10 +59,10 @@ public class DocCommitRegistrySqlImpl implements DocCommitRegistry {
         .append(" WHERE ").ln() 
         .append(" (docs.id = ANY($1) or docs.external_id = ANY($1)) ").ln()
         .append(" AND ").ln()
-        .append(" (branch.branch_name = $2 OR branch.id = $2)").ln()
+        .append(" (branches.branch_name = $2 OR branches.branch_id = $2)").ln()
         
         .build())
-        .props(Tuple.of(id, branchId))
+        .props(Tuple.of(id.toArray(), branchId))
         .build();
   }
   

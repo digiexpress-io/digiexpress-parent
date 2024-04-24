@@ -86,7 +86,7 @@ public class DocMainRegistrySqlImpl implements DocMainRegistry {
         
         .append(" WHERE docs.id = ANY($1) OR docs.external_id = ANY($1)").ln()
         .build())
-        .props(Tuple.of(ids))
+        .props(Tuple.of(ids.toArray()))
         .build();
   }
 

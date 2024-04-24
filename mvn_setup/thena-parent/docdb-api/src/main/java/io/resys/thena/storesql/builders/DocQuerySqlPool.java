@@ -74,7 +74,7 @@ public class DocQuerySqlPool implements DocQuery {
     }
     return wrapper.getClient().preparedQuery(sql.getValue())
         .mapping(registry.docs().defaultMapper())
-        .execute()
+        .execute(sql.getProps())
         .onItem()
         .transformToMulti((RowSet<Doc> rowset) -> Multi.createFrom().iterable(rowset))
         .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't get 'DOC' by 'id': '" + ids + "'!", sql, e)));

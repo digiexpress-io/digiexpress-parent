@@ -114,20 +114,19 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
         
         .append(" INNER JOIN ").append(options.getDoc()).append(" as docs").ln()
         .append(" ON(branch.doc_id = docs.id)")
-        
-        .append(" WHERE ").ln() 
-        .append(" (docs.id = ANY($1) or docs.external_id = ANY($1)) ").ln()
-        .append(" AND ").ln()
-        .append(" (branch.branch_name = $2 OR branch.id = $2)").ln()
-        
+
         .append(" LEFT JOIN ").append(options.getDocCommits()).append(" as branch_updated_commit").ln()
         .append(" ON(branch_updated_commit.id = branch.commit_id)").ln()
         .append(" LEFT JOIN ").append(options.getDocCommits()).append(" as branch_created_commit").ln()
         .append(" ON(branch_created_commit.id = branch.created_with_commit_id)").ln()
 
+        .append(" WHERE ").ln() 
+        .append(" (docs.id = ANY($1) or docs.external_id = ANY($1)) ").ln()
+        .append(" AND ").ln()
+        .append(" (branch.branch_name = $2 OR branch.branch_id = $2)").ln()
         
         .build())
-        .props(Tuple.of(docId, branchIdOrName))
+        .props(Tuple.of(docId.toArray(), branchIdOrName))
         .build();
   }
 

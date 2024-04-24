@@ -14,6 +14,7 @@ import io.resys.thena.api.actions.DocQueryActions.IncludeInQuery;
 import io.resys.thena.api.actions.TenantActions.CommitStatus;
 import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
 import io.resys.thena.api.entities.Tenant.StructureType;
+import io.resys.thena.api.entities.doc.Doc.DocStatus;
 import io.resys.thena.docdb.test.config.DbTestTemplate;
 import io.resys.thena.docdb.test.config.PgProfile;
 import io.vertx.core.json.JsonObject;
@@ -187,9 +188,7 @@ public class SimpleDocTest extends DbTestTemplate {
     
     final var findAllDocsAfterDelete = getClient().doc(repo).find().docQuery().findAll()
     .await().atMost(Duration.ofMinutes(1));
-    Assertions.assertEquals(0, findAllDocsAfterDelete.getObjects().getDocs().size());
-    
-    
-    printRepo(repo.getRepo());
+    Assertions.assertEquals(2, findAllDocsAfterDelete.getObjects().getDocs()
+        .values().stream().filter(e -> e.getStatus() == DocStatus.ARCHIVED).count());
   }
 }

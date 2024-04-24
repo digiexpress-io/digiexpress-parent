@@ -62,10 +62,10 @@ public class DocLogRegistrySqlImpl implements DocCommitTreeRegistry {
         .append(" WHERE ").ln() 
         .append(" (docs.id = ANY($1) or docs.external_id = ANY($1)) ").ln()
         .append(" AND ").ln()
-        .append(" (branch.id IS NULL OR branch.branch_name = $2 OR branch.id = $2)").ln()
+        .append(" (branches.branch_id IS NULL OR branches.branch_name = $2 OR branches.branch_id = $2)").ln()
         
         .build())
-        .props(Tuple.of(id, branchId))
+        .props(Tuple.of(id.toArray(), branchId))
         .build();
   }
   @Override
@@ -76,7 +76,7 @@ public class DocLogRegistrySqlImpl implements DocCommitTreeRegistry {
         .append("  FROM ").append(options.getDocLog()).append(" AS doc_log").ln()
         .append("  WHERE doc_log.commit_id = ANY($1)").ln()
         .build())
-        .props(Tuple.of(commitId))
+        .props(Tuple.of(commitId.toArray()))
         .build();
   }
 
