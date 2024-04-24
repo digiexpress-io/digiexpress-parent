@@ -12,7 +12,7 @@ const modules: string[] = [
   'components-hdes',
   'components-project',
   'components-stencil',
-  'components-sys-config',
+  'components-asset-mgmt',
   'components-task',
   'components-dialob',
   'components-dialob-composer',

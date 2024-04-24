@@ -15,33 +15,33 @@ const StencilRelease: React.FC<{ index: number }> = ({ index }) => {
   if (!sysConfig) {
     return null;
   }
-  if(!stencilSite) {
+  if (!stencilSite) {
     return null;
   }
   const service = sysConfig.services[index];
 
   return <Box>
-    <StencilArticles release={stencilSite} service={service}/>
+    <StencilArticles release={stencilSite} service={service} />
   </Box>
 
 }
 
 const StencilArticles: React.FC<{ release: StencilClient.Release, service: SysConfigService }> = ({ release, service }) => {
-  
-  const workflow = release.body.workflows.find(wk => wk.value === service.serviceName);  
 
-  if(!workflow) {
+  const workflow = release.body.workflows.find(wk => wk.value === service.serviceName);
+
+  if (!workflow) {
     return <Box>articles: not available</Box>;
   }
   function handleArticleToggle() {
-    
+
   }
-  
+
   return <Box>
     articles: {workflow.articles
       .flatMap(articleId => release.body.articles.filter(article => article.id === articleId))
-      .map(article => (<Burger.SecondaryButton  
-        label={article.name} 
+      .map(article => (<Burger.SecondaryButton
+        label={article.name}
         onClick={handleArticleToggle} />))}
   </Box>
 }
@@ -63,7 +63,7 @@ export const SysConfigForm: React.FC<{ index: number }> = ({ index }) => {
 
   return (
     <>
-      {active ? <DialobEditor onClose={handleFormToggle} form={{_id: service.formId}} entry={{ tenantId: "whatever-thx-mikki" }}/> : null }
+      {active ? <DialobEditor onClose={handleFormToggle} form={{ _id: service.formId }} entry={{ tenantId: "whatever-thx-mikki" }} /> : null}
       <Paper sx={{ minHeight: '100px' }} >
         <Box display="flex">
           <Box sx={{
@@ -78,11 +78,11 @@ export const SysConfigForm: React.FC<{ index: number }> = ({ index }) => {
             <Box>service name: {service.serviceName}</Box>
             <StencilRelease index={index} />
             <Box>form:
-            <Burger.SecondaryButton  
-              label={"open dialob composer"} 
-              onClick={handleFormToggle} />
+              <Burger.SecondaryButton
+                label={"assetMgmt.dialobComposer.open"}
+                onClick={handleFormToggle} />
             </Box>
-            
+
           </Box>
         </Box>
       </Paper>
