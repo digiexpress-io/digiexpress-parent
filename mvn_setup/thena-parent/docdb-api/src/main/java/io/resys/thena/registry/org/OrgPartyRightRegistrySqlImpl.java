@@ -167,7 +167,12 @@ public class OrgPartyRightRegistrySqlImpl implements OrgPartyRightRegistry {
 
   @Override
   public ThenaSqlClient.Sql dropTable() {
+    
     return ImmutableSql.builder().value(new SqlStatement()
+        
+        .append("DROP TABLE IF EXISTS ").append(options.getPrefix()).append("org_actor_data;").ln() // TODO:: can be removed
+        .append("DROP TABLE IF EXISTS ").append(options.getPrefix()).append("org_actor_status;").ln() // TODO:: can be removed
+        
         .append("DROP TABLE ").append(options.getOrgPartyRights()).append(";").ln()
         .build()).build();
   }

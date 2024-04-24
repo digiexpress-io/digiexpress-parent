@@ -9,6 +9,7 @@ import io.quarkus.cache.CacheResult;
 import io.resys.permission.client.api.PermissionClient;
 import io.resys.permission.client.api.model.ImmutablePrincipal;
 import io.resys.permission.client.api.model.Principal;
+import io.resys.thena.api.entities.org.OrgActorStatusType;
 import io.resys.thena.projects.client.api.TenantConfigClient;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
@@ -46,7 +47,29 @@ public class PrincipalCache {
             return ImmutablePrincipal.builder().from(principal).addAllPermissions(failSafe).build();
           }
           return principal;
-        });
+        })
+        .onFailure().recoverWithItem(() -> onFailureRecoverWith(principalId, email));
+  }
+  
+  private Principal onFailureRecoverWith(String principalId, String email) {
+    if(isFailSafeUser(principalId, email)) {
+      final var failSafe = Arrays.asList(BuiltInDataPermissions.values()).stream().map(e -> e.name()).toList();
+      return ImmutablePrincipal.builder()
+          .id(principalId)
+          .version("")
+          .email(email)
+          .status(OrgActorStatusType.IN_FORCE)
+          .name(principalId)
+          .addAllPermissions(failSafe).build();
+    }
+    
+    return ImmutablePrincipal.builder()
+        .id(principalId)
+        .version("")
+        .email(email)
+        .status(OrgActorStatusType.IN_FORCE)
+        .name(principalId)
+        .build();
   }
   
   @CacheInvalidate(cacheName = PrincipalCache.CACHE_NAME)

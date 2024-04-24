@@ -34,6 +34,7 @@ public abstract class TenantTableNames {
   
   public abstract String getDb();
   public abstract String getTenant();
+  public abstract String getPrefix();
   
   public abstract String getGrimAssignment();
   public abstract String getGrimCommit();
@@ -79,6 +80,7 @@ public abstract class TenantTableNames {
     return ImmutableTenantTableNames.builder()
         .db(this.getDb())
         .tenant(this.getTenant())
+        .prefix(prefix)
         
         .refs(      prefix + DEFAULTS.getRefs())
         .tags(      prefix + DEFAULTS.getTags())
@@ -122,6 +124,7 @@ public abstract class TenantTableNames {
     return ImmutableTenantTableNames.builder()
         .db(db == null ? "docdb" : db)
         .tenant("tenants")
+        .prefix("")
         
         .refs("git_refs")
         .tags("git_tags")

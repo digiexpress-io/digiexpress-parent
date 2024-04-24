@@ -205,6 +205,7 @@ public class UserProfileCommandVisitor {
           .firstName(command.getFirstName())
           .lastName(command.getLastName())
           .email(command.getEmail())
+          .id(id)
       .build());
       this.current = ImmutableUserProfile.builder()
           .id(id)
