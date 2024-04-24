@@ -31,8 +31,6 @@ const MaterialUIResizeRoleChildrenFailure: React.FC<{ role: Role }> = ({ role })
 }
 
 const MaterialUIResizeRoleFailure: React.FC<{ role: Role }> = ({ role }) => {
-  ;
-
   return (<div style={{ visibility: 'hidden', height: '1px' }}>
     <div style={{ display: 'flex' }}>
       <div style={{ width: "60px" }}></div>
@@ -40,7 +38,7 @@ const MaterialUIResizeRoleFailure: React.FC<{ role: Role }> = ({ role }) => {
     </div>
     <div style={{ display: 'flex' }}>
       <div style={{ width: "60px" }}></div>
-      <div><b><FormattedMessage id="am.chart.tree.node.users" values={{ permissions: role.principals.length }} /></b></div>
+      <div><b><FormattedMessage id="am.chart.tree.node.users" values={{ members: role.principals.length }} /></b></div>
     </div>
   </div>)
 }
@@ -58,7 +56,7 @@ const RoleHeader: React.FC<{ role: Role }> = ({ role }) => {
   return (<ListSubheader component="div" sx={{ lineHeight: 2, whiteSpace: "normal" }}>
     {name}
     <IconButton onClick={handleClick}><HelpOutline /></IconButton>
-    
+
     <Popper id={role.id} open={open} anchorEl={anchorEl}>
       <Box sx={{ border: 1, p: 1, bgcolor: 'background.paper' }}>
         {description}
@@ -87,8 +85,8 @@ export const RoleContainer: React.FC<{ role: Role }> = ({ role }) => {
 
 
   const principals = React.useMemo(() => role.principals.map(id => getPrincipal(id))
-    .map(principal => (
-      <ListItemButton sx={{ pl: 4 }}>
+    .map((principal) => (
+      <ListItemButton sx={{ pl: 4 }} key={principal.id}>
         <ListItemIcon><PersonIcon /></ListItemIcon>
         <ListItemText primary={principal.name} />
       </ListItemButton>
@@ -96,7 +94,7 @@ export const RoleContainer: React.FC<{ role: Role }> = ({ role }) => {
 
   const permissions = React.useMemo(() => role.permissions.map(id => getPermission(id))
     .map(perm => (
-      <ListItemButton sx={{ pl: 4 }}>
+      <ListItemButton sx={{ pl: 4 }} key={perm.id}>
         <ListItemIcon><Policy /></ListItemIcon>
         <ListItemText primary={perm.name} />
       </ListItemButton>
