@@ -413,6 +413,7 @@ const en = {
   'userprofileTable.menu.viewUser': 'View user',
 
   'activities.deployments.title': 'Deployments',
+  'activities.releaseMgmt.title': 'Release management',
 
   'activities.frontoffice.title': 'Front office',
   'activities.frontoffice.desc': 'Manage CRM data, perform task management, and manage Dialob, Wrench, and Stencil assets',
@@ -450,18 +451,22 @@ const en = {
   'activities.frontoffice.allUserProfiles.title': 'All user profiles',
   'activities.frontoffice.allUserProfiles.desc': 'View all registered users',
 
-  'activities.frontoffice.permissions.orgChart.title': 'Org chart',
+  'activities.frontoffice.permissions.rolesOverview.title': 'Overview',
   'activities.frontoffice.permissions.orgChart.desc': 'Permissions, roles, users',
 
-  'activities.profile.title': 'My profile',
-  'activities.permissions.title': 'Permissions',
-  'activities.permissions.roles.title': 'Roles',
+  'activities.frontoffice.allPermissions.title': 'All permissions',
+  'activities.frontoffice.allRoles.title': 'All roles',
+  'activities.frontoffice.allUsers.title': 'All users',
 
-  'activities.principals.title': 'Role and permission members',
+  'activities.frontoffice.systemOverview.title': 'System overiview',
+
+
+  'activities.profile.title': 'My profile',
 
   'explorer.frontoffice.crm.menuOption': 'CRM data',
   'explorer.frontoffice.crm.customerSearch.menuOption': 'Customer search',
   'explorer.frontoffice.deployments.menuOption': 'Deployments',
+  'explorer.frontoffice.releaseMgmt.menuOption': 'Release management',
   'explorer.frontoffice.tasks.menuOption': 'Task management',
   'explorer.frontoffice.stencil.menuOption': 'Stencil content',
   'explorer.frontoffice.wrench.menuOption': 'Wrench assets',
@@ -472,15 +477,18 @@ const en = {
   'explorer.frontoffice.inbox.menuOption': 'My inbox',
   'explorer.frontoffice.myoverview.menuOption': 'My daily overview',
   'explorer.frontoffice.myhistory.menuOption': 'My activity history',
-  'explorer.frontoffice.config.menuOption': 'System configuration',
+  'explorer.frontoffice.assetMgmt.menuOption': 'Asset management',
   'explorer.frontoffice.userProfile.menuOption': 'User profile',
-  'explorer.frontoffice.allUserProfiles.menuOption': 'All user profiles',
   'explorer.frontoffice.administration.menuOption': 'Administration',
+
   'explorer.frontoffice.accessManagement.menuOption': 'Access Management',
-  'explorer.frontoffice.permissions.roles.menuOption': 'Roles overview',
-  'explorer.frontoffice.permissions.users.menuOption': 'All users',
-  'explorer.frontoffice.permissions.allPermissions.menuOption': 'All permissions',
-  'explorer.frontoffice.permissions.orgChart.menuOption': 'Org chart',
+  'explorer.frontoffice.accessManagement.allUsers.menuOption': 'All users',
+  'explorer.frontoffice.accessManagement.allPermissions.menuOption': 'All permissions',
+  'explorer.frontoffice.accessManagement.allRoles.menuOption': 'All roles',
+  'explorer.frontoffice.accessManagement.orgChart.menuOption': 'Overview',
+
+  'explorer.frontoffice.allUserProfiles.menuOption': 'All user profiles',
+  'explorer.frontoffice.allRoles.menuOption': 'All roles',
 
 
   'explorer.frontoffice.tenant.menuOption': 'Tenant',

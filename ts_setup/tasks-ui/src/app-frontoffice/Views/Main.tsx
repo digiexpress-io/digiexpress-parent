@@ -57,13 +57,13 @@ const Main: React.FC<{}> = () => {
       return (<Box sx={root}><CurrentUserProfile /></Box>)
     } else if (active.id === 'allUserProfiles') {
       return (<Box sx={root}><UserProfiles /></Box>)
-    } else if (active.id === 'rolesOverview') {
+    } else if (active.id === 'allRoles') {
       return (<Box sx={root}><RolesOverview /></Box>)
-    } else if (active.id === 'permissionsOverview') {
+    } else if (active.id === 'allPermissions') {
       return (<Box sx={root}><PermissionsOverview /></Box>)
-    } else if (active.id === 'principalsOverview') {
+    } else if (active.id === 'allPrincipals') {
       return (<Box sx={root}><PrincipalsOverview /></Box>)
-    } else if (active.id === 'orgChart') {
+    } else if (active.id === 'rolesOverview') {
       return (<Box sx={root}><DeOrgChart /></Box>)
     } else if (active.id === 'reporting') {
       return (<>reporting</>);
