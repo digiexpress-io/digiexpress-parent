@@ -86,8 +86,8 @@ public class DocLogRegistrySqlImpl implements DocCommitTreeRegistry {
     return ImmutableSqlTupleList.builder()
     .value(new SqlStatement()
     .append("INSERT INTO ").append(options.getDocLog())
-    .append(" (id, commit_id, doc_id, branch_id, operation_type, body_after, body_before, body_patch)").ln()
-    .append(" VALUES($1, $2, $3, $4, $5, $6, $7, $8)").ln()
+    .append(" (id, commit_id, doc_id, branch_id, operation_type, body_after, body_before, body_patch, body_type)").ln()
+    .append(" VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)").ln()
     .build())
     .props(logs.stream()
         .map(doc -> Tuple.from(Arrays.asList(
@@ -98,7 +98,8 @@ public class DocLogRegistrySqlImpl implements DocCommitTreeRegistry {
             doc.getOperationType().name(),
             doc.getBodyAfter(), 
             doc.getBodyBefore(), 
-            doc.getBodyPatch()
+            doc.getBodyPatch(),
+            doc.getBodyType()
         )))
         .collect(Collectors.toList()))
     .build();
@@ -114,6 +115,7 @@ public class DocLogRegistrySqlImpl implements DocCommitTreeRegistry {
     .append("  doc_id VARCHAR(40) NOT NULL,").ln()
     .append("  branch_id VARCHAR(40),").ln()
     .append("  operation_type VARCHAR(100) NOT NULL,").ln()
+    .append("  body_type VARCHAR(100) NOT NULL,").ln()
     
     .append("  body_after jsonb,").ln()
     .append("  body_before jsonb,").ln()
@@ -153,7 +155,8 @@ public class DocLogRegistrySqlImpl implements DocCommitTreeRegistry {
       .operationType(DocCommitTreeOperation.valueOf(row.getString("operation_type")))
       .bodyAfter(row.getJsonObject("body_after"))
       .bodyBefore(row.getJsonObject("body_before"))
-      .bodyPatch(row.getJsonObject("body_patch"))
+      .bodyPatch(row.getJsonArray("body_patch"))
+      .bodyType(row.getString("body_type"))
       .build();
   }  
   @Override

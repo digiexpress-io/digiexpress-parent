@@ -82,7 +82,7 @@ public class DocCommandsRegistrySqlImpl implements DocCommandsRegistry {
         .append("SELECT commands.*, commits.created_at as created_at, commits.author as created_by ")
         .append(" FROM ").append(options.getDocCommands()).append(" as commands")
         .append(" LEFT JOIN ").append(options.getDocCommits()).append(" as commits").ln()
-        .append(" ON(commands.commit_id = commits.commit_id)").ln()
+        .append(" ON(commands.commit_id = commits.id)").ln()
         .build())
         .build();
   }
@@ -94,7 +94,7 @@ public class DocCommandsRegistrySqlImpl implements DocCommandsRegistry {
         .append("SELECT commands.*, commits.created_at as created_at, commits.author as created_by ")
         .append(" FROM ").append(options.getDocCommands()).append(" as commands")
         .append(" LEFT JOIN ").append(options.getDocCommits()).append(" as commits").ln()
-        .append(" ON(commands.commit_id = commits.commit_id)").ln()
+        .append(" ON(commands.commit_id = commits.id)").ln()
         .append(" WHERE (commands.id = $1)").ln() 
         .build())
         .props(Tuple.of(id))

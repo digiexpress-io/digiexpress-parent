@@ -7,10 +7,6 @@ import com.google.common.base.Objects;
 
 import io.resys.thena.api.entities.doc.DocCommit;
 import io.resys.thena.api.entities.doc.DocEntity.IsDocObject;
-import io.resys.thena.api.entities.grim.GrimMissionLink;
-import io.resys.thena.api.entities.grim.GrimRemark;
-import io.resys.thena.api.entities.grim.ImmutableGrimMissionLink;
-import io.resys.thena.api.entities.grim.ImmutableGrimRemark;
 import io.vertx.core.json.JsonObject;
 
 
@@ -34,7 +30,7 @@ public class DocCommitLogger {
     this.commit = commit;
   }
 
-  public void add(IsDocObject entity) {    
+  public void add(IsDocObject entity) {
     count_added++;
     added
       .append("  + ").append(entity.getId()).append("::").append(entity.getDocType()).append(System.lineSeparator())
@@ -42,19 +38,6 @@ public class DocCommitLogger {
   }
   
   private JsonObject toJson(IsDocObject entity) {
-    
-    if(entity instanceof GrimMissionLink) {
-      final var link = ImmutableGrimMissionLink.builder().from((GrimMissionLink) entity)
-          .transitives(null)
-          .build();
-      return JsonObject.mapFrom(link);
-    } else if(entity instanceof GrimRemark) {
-      final var link = ImmutableGrimRemark.builder().from((GrimRemark) entity)
-          .transitives(null)
-          .build();
-      return JsonObject.mapFrom(link);
-    }
-    
     return JsonObject.mapFrom(entity);
   }
   
@@ -63,7 +46,6 @@ public class DocCommitLogger {
     removed.add(entity);
   }
   
-  @SuppressWarnings({ "incomplete-switch" }) 
   private int compare(IsDocObject a, IsDocObject b) {
     if(a.getDocType() != b.getDocType()) {
       return a.getDocType().compareTo(b.getDocType());

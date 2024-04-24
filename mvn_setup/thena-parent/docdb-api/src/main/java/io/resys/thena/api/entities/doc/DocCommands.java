@@ -24,5 +24,5 @@ public interface DocCommands extends DocEntity, IsDocObject, ThenaTable {
   
   List<JsonObject> getCommands();
   
-  @JsonIgnore @Override default public DocType getDocType() { return DocType.DOC_BRANCH; };
+  @JsonIgnore @Override default public DocType getDocType() { return DocType.DOC_COMMANDS; };
 }

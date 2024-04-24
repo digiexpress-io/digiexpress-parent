@@ -5,6 +5,6 @@ public interface DocEntity {
   
   
   enum DocType {
-    DOC, DOC_BRANCH, DOC_COMMANDS 
+    DOC, DOC_BRANCH, DOC_COMMANDS, DOC_BRANCH_PATCH
   }
 }

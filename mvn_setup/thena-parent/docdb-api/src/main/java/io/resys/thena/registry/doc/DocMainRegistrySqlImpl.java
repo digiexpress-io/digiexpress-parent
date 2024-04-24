@@ -84,7 +84,7 @@ public class DocMainRegistrySqlImpl implements DocMainRegistry {
         .append(" LEFT JOIN ").append(options.getDocCommits()).append(" as created_commit").ln()
         .append(" ON(created_commit.id = docs.created_with_commit_id)").ln()
         
-        .append(" WHERE doc.id = ANY($1) OR docs.external_id = ANY($1)").ln()
+        .append(" WHERE docs.id = ANY($1) OR docs.external_id = ANY($1)").ln()
         .build())
         .props(Tuple.of(ids))
         .build();

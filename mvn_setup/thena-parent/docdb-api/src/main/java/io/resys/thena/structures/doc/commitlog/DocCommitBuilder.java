@@ -6,14 +6,21 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import org.immutables.value.Value;
+
+import io.resys.thena.api.entities.doc.DocBranch;
 import io.resys.thena.api.entities.doc.DocCommit;
 import io.resys.thena.api.entities.doc.DocCommitTree;
 import io.resys.thena.api.entities.doc.DocCommitTree.DocCommitTreeOperation;
+import io.resys.thena.api.entities.doc.DocEntity.DocType;
 import io.resys.thena.api.entities.doc.DocEntity.IsDocObject;
+import io.resys.thena.api.entities.doc.ImmutableDocBranch;
 import io.resys.thena.api.entities.doc.ImmutableDocCommit;
 import io.resys.thena.api.entities.doc.ImmutableDocCommitTree;
+import io.resys.thena.jsonpatch.JsonPatch;
 import io.resys.thena.support.OidUtils;
 import io.smallrye.mutiny.tuples.Tuple2;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 
 
@@ -46,7 +53,41 @@ public class DocCommitBuilder {
   public OffsetDateTime getCreatedAt() {
     return createdAt;
   }
+  
+  
   public DocCommitBuilder add(IsDocObject entity) {
+    if(entity instanceof DocBranch) {
+      final var branch = (DocBranch) entity;
+      final var emptyJsonObject = new JsonObject("{}");
+      final var diff = JsonPatch.diff(emptyJsonObject, branch.getValue());
+
+      this.trees.add(ImmutableDocCommitTree.builder()
+          .id(OidUtils.gen())
+          .commitId(commitId)
+          .docId(docId)
+          .branchId(branchId)
+          .operationType(DocCommitTreeOperation.ADD)
+          .bodyType(entity.getDocType().name())
+          .bodyAfter(JsonObject.mapFrom(ImmutableDocBranch.builder().from(branch)
+              .value(emptyJsonObject)
+              .build()))
+          .build());
+      this.trees.add(ImmutableDocCommitTree.builder()
+          .id(OidUtils.gen())
+          .commitId(commitId)
+          .docId(docId)
+          .branchId(branchId)
+          .operationType(DocCommitTreeOperation.ADD)
+          .bodyPatch(diff.getValue())
+          .bodyType(DocType.DOC_BRANCH_PATCH.name())
+          .build());
+      this.logger.add(ImmutableDocBranchPatch.builder()
+          .id(entity.getId())
+          .patchValue(diff.getValue())
+          .build());
+      return this;
+    }
+    
     this.trees.add(ImmutableDocCommitTree.builder()
         .id(OidUtils.gen())
         .commitId(commitId)
@@ -54,19 +95,58 @@ public class DocCommitBuilder {
         .branchId(branchId)
         .operationType(DocCommitTreeOperation.ADD)
         .bodyAfter(JsonObject.mapFrom(entity))
+        .bodyType(entity.getDocType().name())
         .build());
     this.logger.add(entity);
     return this;
   }
   public DocCommitBuilder merge(IsDocObject previous, IsDocObject next) {
+    
+
+    if(previous instanceof DocBranch) {
+      final var branchPrev = (DocBranch) previous;
+      final var branchNext = (DocBranch) next;
+      final var diff = JsonPatch.diff(branchPrev.getValue(), branchNext.getValue());
+      final var emptyJsonObject = new JsonObject("{}");
+      this.trees.add(ImmutableDocCommitTree.builder()
+          .id(OidUtils.gen())
+          .commitId(commitId)
+          .docId(docId)
+          .branchId(branchId)
+          .operationType(DocCommitTreeOperation.MERGE)
+          .bodyBefore(JsonObject.mapFrom(ImmutableDocBranch.builder().from(branchPrev)
+              .value(emptyJsonObject)
+              .build()))
+          .bodyAfter(JsonObject.mapFrom(ImmutableDocBranch.builder().from(branchNext)
+              .value(emptyJsonObject)
+              .build()))
+          .bodyType(next.getDocType().name())
+          .build());
+      this.trees.add(ImmutableDocCommitTree.builder()
+          .id(OidUtils.gen())
+          .commitId(commitId)
+          .docId(docId)
+          .branchId(branchId)
+          .operationType(DocCommitTreeOperation.MERGE)
+          .bodyPatch(diff.getValue())
+          .bodyType(DocType.DOC_BRANCH_PATCH.name())
+          .build());
+      this.logger.add(ImmutableDocBranchPatch.builder()
+          .id(branchPrev.getId())
+          .patchValue(diff.getValue())
+          .build());
+      return this;
+    }
+    
     this.trees.add(ImmutableDocCommitTree.builder()
         .id(OidUtils.gen())
         .commitId(commitId)
         .docId(docId)
         .branchId(branchId)
-        .operationType(DocCommitTreeOperation.ADD)
+        .operationType(DocCommitTreeOperation.MERGE)
         .bodyBefore(JsonObject.mapFrom(previous))
         .bodyAfter(JsonObject.mapFrom(next))
+        .bodyType(next.getDocType().name())
         .build());
     this.logger.merge(previous, next);
     return this;
@@ -79,6 +159,7 @@ public class DocCommitBuilder {
         .commitId(commitId)
         .operationType(DocCommitTreeOperation.REMOVE)
         .bodyBefore(JsonObject.mapFrom(current))
+        .bodyType(current.getDocType().name())
         .bodyAfter(null)
         .build());
     this.logger.remove(current);
@@ -88,4 +169,16 @@ public class DocCommitBuilder {
     final var commit = this.commit.commitLog(this.logger.build()).build();
     return Tuple2.of(commit, Collections.unmodifiableList(this.trees));
   }
+  
+  @Value.Immutable
+  interface DocBranchPatch extends IsDocObject {
+    
+    JsonArray getPatchValue();
+    
+    @Override
+    default DocType getDocType() {
+      return DocType.DOC_BRANCH_PATCH;
+    }
+  }
+  
 }

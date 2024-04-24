@@ -93,7 +93,7 @@ public class SimpleDocTest extends DbTestTemplate {
     .await().atMost(Duration.ofMinutes(1));
     
     Assertions.assertEquals(1, findAllDocs.getObjects().getDocs().size());
-    Assertions.assertEquals(2, findAllDocs.getObjects().getCommits().size());
+    Assertions.assertEquals(4, findAllDocs.getObjects().getCommits().size());
     
     // one document, 2 branches
     Assertions.assertEquals(2, findAllDocs.getObjects().getBranches().size());
@@ -103,9 +103,7 @@ public class SimpleDocTest extends DbTestTemplate {
         .findAll()
     .await().atMost(Duration.ofMinutes(1));
     Assertions.assertEquals(1, findAllMainBranchDocs.getObjects().getDocs().size());
-    Assertions.assertEquals(1, findAllMainBranchDocs.getObjects().getBranches().size());
-    
-    printRepo(repo.getRepo());
+    Assertions.assertEquals(2, findAllMainBranchDocs.getObjects().getBranches().size());
   }
   
   

@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.immutables.value.Value;
 
 import io.resys.thena.api.registry.ThenaRegistryService.ThenaTable;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
 
@@ -15,8 +16,9 @@ public interface DocCommitTree extends ThenaTable {
   String getDocId();
   Optional<String> getBranchId();
   DocCommitTreeOperation getOperationType();
-
-  @Nullable JsonObject getBodyPatch();
+  String getBodyType();
+  
+  @Nullable JsonArray getBodyPatch();
   @Nullable JsonObject getBodyBefore();
   @Nullable JsonObject getBodyAfter();
 

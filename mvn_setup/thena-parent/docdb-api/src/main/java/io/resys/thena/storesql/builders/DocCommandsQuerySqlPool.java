@@ -39,7 +39,7 @@ public class DocCommandsQuerySqlPool implements DocCommandsQuery {
         .execute(sql.getProps())
         .onItem()
         .transformToMulti((RowSet<DocCommands> rowset) -> Multi.createFrom().iterable(rowset))
-        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't get 'DOC_COMMIT_TREE' by id: '" + id + "'!", sql, e)));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't get 'DOC_COMMANDS' by id: '" + id + "'!", sql, e)));
   }
   @Override
   public Multi<DocCommands> findAll() {
@@ -54,6 +54,6 @@ public class DocCommandsQuerySqlPool implements DocCommandsQuery {
         .execute()
         .onItem()
         .transformToMulti((RowSet<DocCommands> rowset) -> Multi.createFrom().iterable(rowset))
-        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlFailed("Can't find 'DOC_COMMIT_TREE'!", sql, e)));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlFailed("Can't find 'DOC_COMMANDS'!", sql, e)));
   }
 }

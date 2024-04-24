@@ -15,6 +15,20 @@ public class DocDbPrinter {
     this.state = state;
   }
   
+  private String removeAttr(String target, String attr) {
+    
+    var proc = target;
+    var index = -1;
+    while((index = proc.indexOf(attr + "\":")) > -1) {
+      final var start = proc.substring(0, index -1);
+      final var end = proc.substring(index);
+      
+      proc = start + end.substring(end.indexOf(",")+1);
+    }
+    
+    return proc;
+  }
+  
   public String printWithStaticIds(Tenant repo) {
     final Map<String, String> replacements = new HashMap<>();
     final Function<String, String> ID = (id) -> {
@@ -26,8 +40,10 @@ public class DocDbPrinter {
       return next;
     };
   
+    ID.apply(repo.getId());
+    
     final var ctx = state.toDocState(repo);
-    StringBuilder result = new StringBuilder();
+    final StringBuilder result = new StringBuilder();
     
     result
     .append(System.lineSeparator())
@@ -36,9 +52,10 @@ public class DocDbPrinter {
     ctx.query().docs()
     .findAll().onItem()
     .transform(item -> {
-      result.append("  - ")
-      .append(ID.apply(item.getId())).append(": ").append(item.getExternalId())
-      .append(System.lineSeparator());
+      result
+        .append("  - ")
+        .append(ID.apply(item.getId())).append(": ").append(item.getExternalId())
+        .append(System.lineSeparator());      
       return item;
     }).collect().asList().await().indefinitely();
 
@@ -50,18 +67,39 @@ public class DocDbPrinter {
     ctx.query().branches()
     .findAll().onItem()
     .transform(item -> {
-      result.append("  - branch name: ").append(item.getBranchName()).append("/").append(ID.apply(item.getId()))
+      result.append("  - branch name: ").append(item.getBranchName())
       .append(System.lineSeparator())
-      .append("    doc id: ").append(ID.apply(item.getDocId()))
-      .append(System.lineSeparator())
-      .append("    commit id: ").append(ID.apply(item.getCommitId()))
-      .append(System.lineSeparator())
+      .append("    branch id: ").append(ID.apply(item.getId())).append(System.lineSeparator())
+      .append("    doc id: ").append(item.getDocId()).append(System.lineSeparator())      
+      .append("    commit id: ").append(ID.apply(item.getCommitId())).append(System.lineSeparator())
       
       .append("    ").append(item.getValue().toString())
       .append(System.lineSeparator());
       
       return item;
     }).collect().asList().await().indefinitely();
+    
+    
+    result
+    .append(System.lineSeparator())
+    .append("Commands").append(System.lineSeparator());
+    
+    
+    ctx.query().commands()
+    .findAll().onItem()
+    .transform(item -> {
+      
+      result.append("  - commands for doc: ").append(item.getDocId())
+      .append(System.lineSeparator())
+      .append("    commands id: ").append(ID.apply(item.getId())).append(System.lineSeparator())
+      .append("    branch id: ").append(item.getBranchId().orElse("")).append(System.lineSeparator())
+      .append("    value: ").append(item.getCommands()).append(System.lineSeparator())      
+
+      .append(System.lineSeparator());
+      
+      return item;
+    }).collect().asList().await().indefinitely();
+    
     
     result
     .append(System.lineSeparator())
@@ -77,7 +115,13 @@ public class DocDbPrinter {
       .append(", parent: ").append(ID.apply(item.getParent().orElse("")))
       .append(", message: ").append(item.getCommitMessage())
       .append(", author: ").append(item.getCommitAuthor())
+      .append(System.lineSeparator())
+      
+      .append("  - commit log:").append(System.lineSeparator())
+      .append(item.getCommitLog())
+      .append(System.lineSeparator())
       .append(System.lineSeparator());
+      
       
       return item;
     }).collect().asList().await().indefinitely();
@@ -90,9 +134,8 @@ public class DocDbPrinter {
     ctx.query().trees()
     .findAll().onItem()
     .transform(item -> {
-      result.append("  - id: ").append(ID.apply(item.getId())).append(System.lineSeparator())
-      .append("    doc id: ").append(ID.apply(item.getCommitId()))
-      .append(System.lineSeparator())
+      result.append("  - id: ")
+      .append(ID.apply(item.getId())).append("::").append(item.getBodyType()).append(System.lineSeparator())
       .append("    log patch: ").append(item.getBodyPatch())
       .append("    log before: ").append(item.getBodyBefore())
       .append("    log after: ").append(item.getBodyAfter())
@@ -102,7 +145,19 @@ public class DocDbPrinter {
       return item;
     }).collect().asList().await().indefinitely();
     
-    return result.toString();
+    
+    var log = result.toString();
+    for(final var entry : replacements.entrySet()) {
+      if(entry.getKey() == null || entry.getKey().isEmpty()) {
+        continue;
+      }
+      log = log.replace(entry.getKey(), entry.getValue());
+    } 
+    
+    log = removeAttr(log, "createdAt");
+    log = removeAttr(log, "updatedAt");
+    
+    return log;
   }
   
   public String print(Tenant repo) {
@@ -159,14 +214,19 @@ public class DocDbPrinter {
     ctx.query().commits()
     .findAll().onItem()
     .transform(item -> {
-      result.append("  - id: ").append(item.getId())
-      .append(System.lineSeparator())
+      result
+      .append("  - id: ").append(item.getId()).append(System.lineSeparator())
       .append("    doc id: ").append(item.getDocId())
       .append(", branch id: ").append(item.getBranchId())
       .append(", dateTime: ").append(item.getCreatedAt())
       .append(", parent: ").append(item.getParent().orElse(""))
       .append(", message: ").append(item.getCommitMessage())
       .append(", author: ").append(item.getCommitAuthor())
+      .append(System.lineSeparator())
+      
+      .append("  - commit log:").append(System.lineSeparator())
+      .append(item.getCommitLog())
+      .append(System.lineSeparator())
       .append(System.lineSeparator());
       
       return item;
@@ -180,7 +240,7 @@ public class DocDbPrinter {
     ctx.query().trees()
     .findAll().onItem()
     .transform(item -> {
-      result.append("  - id: ").append(item.getId()).append(System.lineSeparator())
+      result.append("  - id: ").append(item.getId()).append("::").append(item.getBodyType()).append(System.lineSeparator())
       .append("    log patch: ").append(item.getBodyPatch())
       .append("    log before: ").append(item.getBodyBefore())
       .append("    log after: ").append(item.getBodyAfter())
